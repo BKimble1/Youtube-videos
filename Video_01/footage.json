@@ -1,0 +1,37 @@
+{
+  "video": "Video_01",
+  "title": "Proving What I Know - Video 01",
+  "review_dir": "review",
+  "settings": {
+    "review_short_side": 720,
+    "clip_seconds": 120,
+    "clip_max_bytes": 25000000,
+    "sample_seconds": 20
+  },
+  "recordings": [
+    {
+      "id": "IMG_6102",
+      "file": "raw/IMG_6102.MOV",
+      "also_in": "raw/iCloud Photos from Blake Kimble (3).zip",
+      "size_bytes": 1863108120,
+      "crc32": "bde11bc8",
+      "recorded": "2026-10-01T21:23:48-04:00",
+      "ignore_rotation_flag": true,
+      "rotation_note": "The file's display matrix says rotate -90 (portrait), but the stored 3840x2160 pixels are already upright landscape. Honouring the flag turns the picture sideways, so the flag is ignored.",
+      "sample_start_s": 228,
+      "sample_note": "3:48-4:08. Head steady and centred; eyes visibly move up/down between lines, plus a blink."
+    },
+    {
+      "id": "IMG_6103",
+      "file": "raw/IMG_6103.MOV",
+      "also_in": "raw/iCloud Photos from Blake Kimble (3).zip",
+      "size_bytes": 2223590138,
+      "crc32": "4fbf759e",
+      "recorded": "2026-10-01T21:34:42-04:00",
+      "ignore_rotation_flag": false,
+      "rotation_note": "No rotation flag; stored landscape pixels are upright.",
+      "sample_start_s": 120,
+      "sample_note": "2:00-2:20. Head steady and centred; sideways glance and a blink. Framing is tight at the top (forehead/hair cropped), eyes fully in frame."
+    }
+  ]
+}

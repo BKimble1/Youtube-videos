@@ -7,6 +7,30 @@ desktop.ini
 # Temp / cache files from editing
 *.tmp
 *.part
+*.partial
 tmp/
 cache/
 *.log
+
+# Large media stays on local disk, never on GitHub.
+# Per-video footage folders (originals, phone exports, review copies):
+Video_*/raw/
+Video_*/exports/
+Video_*/review/
+# ...and any media file anywhere else in the tree, in either case.
+*.[mM][oO][vV]
+*.[mM][pP]4
+*.[mM]4[vV]
+*.[mM][kK][vV]
+*.[aA][vV][iI]
+*.[wW][eE][bB][mM]
+*.[hH][eE][iI][cC]
+*.[wW][aA][vV]
+*.[mM][pP]3
+*.[mM]4[aA]
+*.[aA][aA][cC]
+*.[fF][lL][aA][cC]
+*.[zZ][iI][pP]
+
+# Python
+__pycache__/

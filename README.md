@@ -1,30 +1,36 @@
 # YouTube Videos
 
-Source footage and edited renders for YouTube videos.
+Preparation scripts and footage notes for YouTube videos. The footage itself stays on local disk.
 
 ## Layout
 
-| Folder    | What goes here                                   |
-|-----------|--------------------------------------------------|
-| `raw/`    | Unedited source clips. Drop new footage here.    |
-| `assets/` | Music, sound effects, images, overlays, logos.   |
-| `output/` | Edited / rendered videos.                        |
+| Path                     | What goes here                                                  | In git? |
+|--------------------------|-----------------------------------------------------------------|---------|
+| `Video_NN/FOOTAGE.md`    | Where that video's footage lives, what each file is, review files | yes     |
+| `Video_NN/footage.json`  | Manifest the scripts read (originals, checksums, per-file settings) | yes     |
+| `Video_NN/raw/`          | Original recordings, untouched                                  | no      |
+| `Video_NN/exports/`      | Exports from the phone / editor                                 | no      |
+| `Video_NN/review/`       | Smaller review copies made by `scripts/prepare_review.py`       | no      |
+| `scripts/`               | Reproducible preparation and verification scripts              | yes     |
+| `assets/`, `output/`, `raw/` | Original repo placeholders                                 | no media |
 
-Optionally group by video, e.g. `raw/my-video-title/clip1.mp4`.
+## Large media stays out of GitHub
 
-## Adding video files
+`.gitignore` blocks every `Video_*/raw|exports|review` folder and all common video, audio and
+zip files anywhere in the tree, so `git add .` can't pick up footage. `FOOTAGE.md` in each video
+folder records where the files are instead. (`.gitattributes` still routes media to Git LFS, as a
+safety net if a file is ever force-added.)
 
-Video and audio files are stored with [Git LFS](https://git-lfs.com) (see `.gitattributes`),
-so large files don't bloat the repo.
+## Making review copies
+
+Needs FFmpeg 7+ on PATH (`winget install Gyan.FFmpeg`) and Python 3.10+. No Python packages are
+required (numpy, if installed, speeds up one verification check).
 
 ```bash
-git lfs install            # once per machine
-git add raw/
-git commit -m "Add footage for <video>"
-git push
+python scripts/prepare_review.py Video_01/footage.json   # skips files that already exist; --force to redo
+python scripts/verify_review.py  Video_01/footage.json   # checks every review file, exits non-zero on failure
 ```
 
-Notes:
-- GitHub's browser upload is capped at 25 MB per file. Use the command line for bigger clips.
-- Without LFS, GitHub rejects any file over 100 MB.
-- GitHub LFS has storage and bandwidth quotas, so check your usage if you upload a lot of footage.
+Review copies are unedited: no pauses cut, nothing reordered, no music, no eye correction.
+HDR is tone-mapped to SDR BT.709 and rotation is handled per recording (see `footage.json`).
+On a machine with a Vulkan GPU it uses libplacebo for tone mapping, otherwise zscale on the CPU.
