@@ -1,0 +1,12 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+
+# Temp / cache files from editing
+*.tmp
+*.part
+tmp/
+cache/
+*.log
