@@ -64,6 +64,7 @@ below records only checks that were run, with their results. Where a check could
 | Loudness | −16.0 LUFS, −1.3 dBTP (audio unchanged between renders) |
 | Black frames ≥ 0.25 s | none (the end fade is 22 frames, deliberate) |
 | Frozen video ≥ 4 s | none detected (the first render had one, on the end card; fixed) |
+| Native 4K master | 3840×2160, 8,425 frames, BT.709, 80 MiB; −16.0 LUFS, −1.3 dBTP; no black or frozen video detected (`qa/tech_Future_Got_Weird_Video_01_Pass_2_4K.md`). Spot frame 5640 checked at 1:1 against the 1080p composition. |
 | Fixed frames re-checked by still | S3 1:10 panel fully inside the frame; S6 3:03 "6 + 1 − 1 − 1 − 1 = 4" complete above the score; S7 3:16 table with no covering labels; S10 end card words popping on their cues |
 
 ## Known soft spots (not faults, but things a human should judge)

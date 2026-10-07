@@ -8,6 +8,7 @@ Selected: title **"Why AI Is So Confidently Wrong"**, thumbnail **A ("SO SURE. S
 | File | What it is |
 |---|---|
 | `exports/Future_Got_Weird_Video_01_Pass_2_1080p.mp4` | Master. 1920×1080, 30 fps, H.264 High (CRF 16, slow), BT.709 tagged, AAC 320 kb/s 48 kHz stereo, fast start. Loudness −16 LUFS integrated, true peak ≤ −1.3 dBTP. |
+| `exports/Future_Got_Weird_Video_01_Pass_2_4K.mp4` | Optional native 4K master (3840×2160, true vector rasterisation at scale 2, same encoder settings and audio, 80 MiB). Upload this one if you want YouTube's higher-bitrate ladder; otherwise the 1080p master. |
 | `exports/Future_Got_Weird_Video_01_Pass_2.en.srt` | English subtitles from the final narration's word timings (102 cues). |
 | `thumbnails/thumbnail_A.jpg` (alternates `_B.jpg`, `_C.jpg`) | 1920×1080 JPEGs under 2 MB; PNG originals alongside. |
 | `package/UPLOAD_PACKAGE.md` | Title options, paste-ready description with chapters, sources and credits, tags, pre-publish checklist. |
@@ -33,7 +34,7 @@ Clearly labelled smaller copies for review, not for upload:
 | `source/` + `source/package-lock.json` | The editable Remotion project with its lockfile. `README.md` has the rebuild steps. |
 | `qa/QA_REPORT.md` | What was checked, how, and what only a human can check. |
 | `qa/CORRECTIONS.md` | Everything found and fixed during pass 2. |
-| `backup/` | Split-part backups (< 25 MiB each) of the master, preview, narration stem, selected takes and selected SFX, with SHA-256 checksums and reconstruction scripts. |
+| `backup/` | Split-part backups (< 25 MiB each) of the 1080p master, the 4K master, the review copy, the preview, the SRT, the narration, music bed and mix (FLAC), the selected takes and the selected SFX, with SHA-256 checksums and reconstruction scripts (`backup/*/reconstruct.py`). |
 
 Channel-level documents live one directory up: `../CHANNEL_BRIEF.md`, `../STYLE_GUIDE.md`, `../REFERENCE_NOTES.md`.
 

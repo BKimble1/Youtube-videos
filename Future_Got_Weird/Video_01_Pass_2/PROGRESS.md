@@ -35,7 +35,7 @@ manifest, stems, backups and documentation are in place. Nobody has watched or l
 | SFX cue placements | 193 |
 | Scenes / cue words used by scene code | 10 / 141 |
 | Mix | −16.0 LUFS integrated, −1.3 dBTP, LRA 3.5 LU |
-| Master | H.264 High, CRF 16, BT.709, AAC 320 kb/s, fast start, 46 MB |
+| Master | H.264 High, CRF 16, BT.709, AAC 320 kb/s, fast start, 46 MB (1080p); native 4K master 80 MiB |
 
 ## Not done, and why
 
