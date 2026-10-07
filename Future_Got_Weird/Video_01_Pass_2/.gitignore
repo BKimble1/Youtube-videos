@@ -32,3 +32,6 @@ qa/frames/*
 backup/_stage/
 *.flac
 !backup/**/*.part*
+
+# render logs and pids are session scratch
+qa/render/
