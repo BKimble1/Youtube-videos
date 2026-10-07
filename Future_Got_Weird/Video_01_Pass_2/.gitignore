@@ -1,0 +1,26 @@
+node_modules/
+**/node_modules/
+.cache/
+__pycache__/
+*.pyc
+previews/
+audio/music/stems/
+audio/music/music_bed.wav
+audio/mix/stem_*.wav
+audio/mix/final_mix.wav
+audio/sfx/sfx_track.wav
+audio/narration/narration_*.wav
+source/public/audio/
+.env
+*.key
+# Audio/video are Git LFS types in this repo (.gitattributes); the LFS host is not reachable from the
+# production session, so media stays local and is backed up as split parts under backup/.
+*.wav
+*.mp4
+*.mp3
+*.m4a
+qa/frames/
+qa/clips/
+qa/determinism/
+qa/render_chain.status
+exports/*.zip

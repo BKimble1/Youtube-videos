@@ -1,0 +1,169 @@
+{
+ "model": "eleven_v4",
+ "voice_name": "Marcus K",
+ "voice_id": "3H55HGnNE1XjYxigHSAS",
+ "blocks": [
+  {
+   "id": "b01",
+   "segments": [
+    "s01",
+    "s02",
+    "s03",
+    "s04",
+    "s05"
+   ],
+   "prompt": "Three popular AI models were asked one question: what was the title of Adam /kəˈlaɪz/ dissertation?\n\nChatGPT handed over a full title, a university, and a year. DeepSeek gave a different title. Llama gave a third.\n\nThree polished answers. All wrong. Not one even had the right year.\n\nAnd Adam /kəˈlaɪ/? He's the lead author of the paper that reported this test.\n\nVery professional. Very fictional.",
+   "words_per_segment": [
+    16,
+    20,
+    12,
+    14,
+    4
+   ],
+   "chars": 397
+  },
+  {
+   "id": "b02",
+   "segments": [
+    "s06",
+    "s07"
+   ],
+   "prompt": "So how can a wrong answer sound that sure? Here's the short version.\n\nA chatbot is built to write what's likely to come next. Checking whether it's true is a different job. And some of the tests used to grade these systems quietly reward guessing.",
+   "words_per_segment": [
+    13,
+    32
+   ],
+   "chars": 247
+  },
+  {
+   "id": "b03",
+   "segments": [
+    "s08",
+    "s09",
+    "s10",
+    "s11",
+    "s12"
+   ],
+   "prompt": "Let's take ChatGPT's answer apart.\n\nA language model builds text out of tokens: chunks that are sometimes whole words, sometimes fragments. In /ˌdʒiːpiːˈtiːfɔːrˈoʊz/ tokenizer, “/kəˈlaɪ/” comes out as “/kæl/” and “/aɪ/.”\n\nAt every step, the model scores all the possible next chunks and picks one. Then it goes again. Token after token, an answer rolls out.\n\nHere, it's choosing the last digit of the year. Those scores say which chunk is likely. They do not say which one is true.\n\nModern chatbots add more on top: instruction training, step-by-step reasoning, sometimes web search. But the words still come out this way, one piece at a time.",
+   "words_per_segment": [
+    5,
+    26,
+    25,
+    24,
+    26
+   ],
+   "chars": 643
+  },
+  {
+   "id": "b04",
+   "segments": [
+    "s13",
+    "s14",
+    "s15",
+    "s16"
+   ],
+   "prompt": "So why would the likely answer be wrong? Think about what the model learned from.\n\nThe sound of a dissertation title is everywhere. “Methods.” “Algorithms.” “Machine Learning.” Shelf after shelf, the same shape.\n\nBut one specific researcher's title? That might show up rarely, or not at all. And like a birthday, there's no pattern to work it out from.\n\nSo the model does what it was built to do. It fills the gap with a title-shaped answer. And the confidence comes with it, because that's part of the pattern too. “Is entitled.” No “I think.” No “maybe.”",
+   "words_per_segment": [
+    15,
+    18,
+    26,
+    38
+   ],
+   "chars": 556
+  },
+  {
+   "id": "b05",
+   "segments": [
+    "s17",
+    "s18",
+    "s19"
+   ],
+   "prompt": "Here's the actual record. /kəˈlaɪz/ thesis: “Probabilistic and On-line Methods in Machine Learning.” Carnegie Mellon, May 2001.\n\nChatGPT got the university right. The year was off by one. The title was invented. And every detail came out looking exactly as solid as the true one.\n\nA confident font is still just a font.",
+   "words_per_segment": [
+    17,
+    28,
+    8
+   ],
+   "chars": 319
+  },
+  {
+   "id": "b06",
+   "segments": [
+    "s20",
+    "s21",
+    "s22",
+    "s23",
+    "s24"
+   ],
+   "prompt": "Now, why guess at all? Why not just say “I don't know”? The researchers argue that part of the answer is how models get graded.\n\nPicture a ten-question quiz. Right answer: one point. Wrong answer: zero. “I don't know”: also zero.\n\nTwo contestants. Both know six answers. The honest one leaves the other four blank. Six points.\n\nThe guesser takes a shot at all four. Four options each, so on average, one lands. Seven points.\n\nOne lucky guess. Three wrong answers. Somehow, a trophy.",
+   "words_per_segment": [
+    25,
+    16,
+    16,
+    18,
+    9
+   ],
+   "chars": 482
+  },
+  {
+   "id": "b07",
+   "segments": [
+    "s25",
+    "s26",
+    "s27"
+   ],
+   "prompt": "Now change one rule. A wrong answer costs a point. The honest one: still six. The guesser: six, plus one, minus three. Four. The trophy walks back.\n\nThe researchers checked ten widely used benchmarks in mid-2025. Nine graded strictly right or wrong, with no credit at all for “I don't know.”\n\nTrain and rank models on tests like that, and guessing pays. It's one explanation, not the whole story. But it is a simple one.",
+   "words_per_segment": [
+    27,
+    24,
+    24
+   ],
+   "chars": 420
+  },
+  {
+   "id": "b08",
+   "segments": [
+    "s28"
+   ],
+   "prompt": "So what helps? Search and retrieval, when they bring the real record into the room. Reasoning, sometimes. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
+   "words_per_segment": [
+    35
+   ],
+   "chars": 221
+  },
+  {
+   "id": "b09",
+   "segments": [
+    "s29",
+    "s30",
+    "s31",
+    "s32"
+   ],
+   "prompt": "Which leaves the unglamorous move: check.\n\nTwo questions. Does the source exist? And does it actually say this?\n\nTake the ChatGPT slip. Is there a thesis by Adam /kəˈlaɪ/ at Carnegie Mellon? Yes. Does it say “Boosting, Online Algorithms,” 2002? No. It says “Probabilistic and On-line Methods,” 2001.\n\nSource exists. Claim fails. Stamp it.",
+   "words_per_segment": [
+    6,
+    12,
+    30,
+    6
+   ],
+   "chars": 338
+  },
+  {
+   "id": "b10",
+   "segments": [
+    "s33",
+    "s34",
+    "s35",
+    "s36"
+   ],
+   "prompt": "So why is AI so confidently wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have.\n\nSo when an answer matters, don't ask whether it sounds right. Ask what the evidence is, and whether it actually says this.\n\nWorks on chatbots. Works pretty well on people, too.\n\nThis is Future Got Weird. AI moves fast; we make it make sense. New episodes twice a week, if you'd like to subscribe.",
+   "words_per_segment": [
+    25,
+    22,
+    9,
+    23
+   ],
+   "chars": 450
+  }
+ ]
+}
