@@ -41,3 +41,6 @@ qa/v1_review/*.jpg
 qa/v1_review/*.png
 qa/v2_*/*.jpg
 qa/v2_*/*.png
+
+# scene agents work in isolated copies; the lead merges their scene files
+work/

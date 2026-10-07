@@ -2,15 +2,44 @@ import React from 'react';
 import {C, F, H, OUTLINE, W} from '../theme';
 import {clamp01, lerp, rand} from '../lib/anim';
 
-export type Span = {text: string; mark?: 'coral' | 'teal' | 'strike' | 'dim' | 'ink'; markT?: number};
+export type Span = {text: string; mark?: 'coral' | 'teal' | 'strike' | 'dim' | 'ink' | 'ring'; markT?: number; tone?: 'coral' | 'teal' | 'saffron' | 'ink'; pulse?: number};
 
-/** Inline text with animated marks: underline sweep (coral/teal), strike-through, dim. */
+const RING_COL = {coral: C.coral, teal: C.teal, saffron: C.saffronDeep, ink: C.ink};
+
+/** A marker loop drawn round an inline span (t: 0 → 1 draws it; it overshoots its start like a real pen). */
+export const RingMark: React.FC<{t: number; tone?: 'coral' | 'teal' | 'saffron' | 'ink'; padX?: number; padY?: number; width?: number}> = ({t, tone = 'coral', padX = 14, padY = 8, width = 5}) => {
+  if (t <= 0) return null;
+  // hand-drawn ellipse in a 0..100 box, starting top-left and running ~380 degrees
+  const pts: string[] = [];
+  const n = 40;
+  for (let i = 0; i <= n; i++) {
+    const a = -2.2 + (i / n) * (Math.PI * 2 * 1.06);
+    const r = 1 + 0.035 * Math.sin(i * 1.7);
+    pts.push(`${(50 + Math.cos(a) * 50 * r).toFixed(2)},${(50 + Math.sin(a) * 50 * r * (1 - i / n * 0.06)).toFixed(2)}`);
+  }
+  return (
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{position: 'absolute', left: -padX, top: -padY, width: `calc(100% + ${padX * 2}px)`, height: `calc(100% + ${padY * 2}px)`, overflow: 'visible', pointerEvents: 'none'}}>
+      <polyline points={pts.join(' ')} fill="none" stroke={RING_COL[tone]} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - Math.min(1, t)} />
+    </svg>
+  );
+};
+
+const bgOf = (m: Span['mark']) => (m === 'coral' ? C.coralLight : m === 'teal' ? C.tealLight : C.saffronLight);
+
+/** Inline text with animated marks: underline sweep (coral/teal), strike-through, dim, marker ring. */
 export const Marked: React.FC<{spans: Span[]; style?: React.CSSProperties}> = ({spans, style}) => (
   <span style={style}>
     {spans.map((s, i) => {
       const t = s.markT ?? (s.mark ? 1 : 0);
       if (!s.mark || t <= 0) return <span key={i}>{s.text}</span>;
       if (s.mark === 'dim') return <span key={i} style={{opacity: 1 - 0.6 * t}}>{s.text}</span>;
+      if (s.mark === 'ring')
+        return (
+          <span key={i} style={{position: 'relative', whiteSpace: 'nowrap'}}>
+            {s.text}
+            <RingMark t={t} tone={s.tone ?? 'coral'} />
+          </span>
+        );
       if (s.mark === 'strike')
         return (
           <span key={i} style={{position: 'relative', whiteSpace: 'nowrap'}}>
@@ -19,7 +48,8 @@ export const Marked: React.FC<{spans: Span[]; style?: React.CSSProperties}> = ({
           </span>
         );
       const col = s.mark === 'coral' ? C.coral : s.mark === 'teal' ? C.teal : C.ink;
-      const bg = s.mark === 'coral' ? C.coralLight : s.mark === 'teal' ? C.tealLight : C.saffronLight;
+      const bg = bgOf(s.mark);
+      const glow = s.pulse && s.pulse > 0 ? `, 0 0 ${18 * s.pulse}px ${6 * s.pulse}px rgba(255,199,68,${0.85 * s.pulse})` : '';
       return (
         <span
           key={i}
@@ -27,7 +57,7 @@ export const Marked: React.FC<{spans: Span[]; style?: React.CSSProperties}> = ({
             backgroundImage: `linear-gradient(${bg}, ${bg})`,
             backgroundRepeat: 'no-repeat',
             backgroundSize: `${t * 100}% 100%`,
-            boxShadow: t > 0.98 ? `inset 0 -5px 0 0 ${col}` : 'none',
+            boxShadow: t > 0.98 ? `inset 0 -5px 0 0 ${col}${glow}` : 'none',
             borderRadius: 4,
             padding: '0 4px',
             margin: '0 -4px',

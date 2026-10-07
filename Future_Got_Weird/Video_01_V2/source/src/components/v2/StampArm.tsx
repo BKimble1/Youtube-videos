@@ -13,26 +13,32 @@ import {E, impact, kf, strike, tw} from '../../lib/motion';
  *   hits:    contact frames (each should fall after the matching target's `at`)
  *   enter / exit: frames when the arm starts rising into frame / finishes leaving
  */
-export type StampTarget = {at: number; x: number; y: number};
+export type StampTarget = {at: number; x: number; y: number; move?: number};
+/** Per-hit timing: lift (anticipation frames), down (fall frames), hold (contact frames), up (recoil frames), and
+ *  `wind` (how far above the hover height the anticipation lifts, as a fraction of the hover; default 0.35). */
+export type StrikeShape = {lift?: number; down?: number; hold?: number; up?: number; wind?: number};
 
 export const StampArm: React.FC<{
   g: number;
   targets: StampTarget[];
   hits: number[];
+  shapes?: StrikeShape[];
   enter: number;
   exit: number;
   scale?: number;
+  hover?: number;
+  arcHeight?: number;
   sleeve?: string;
   skin?: string;
   inkColor?: string;
-}> = ({g, targets, hits, enter, exit, scale = 1.4, sleeve = C.coral, skin = '#F7D9C4', inkColor = C.coral}) => {
+}> = ({g, targets, hits, shapes = [], enter, exit, scale = 1.4, hover: hover0, arcHeight = 50, sleeve = C.inkSoft, skin = '#F2C9A8', inkColor = C.coral}) => {
   if (g < enter || g > exit + 2 || targets.length === 0) return null;
-  const hover = 95 * scale;
+  const hover = hover0 ?? 95 * scale;
   // travel between targets: x, y keyframed with arcs
-  const moveDur = 9;
   const xs: [number, number, ((x: number) => number)?][] = [];
   const ys: [number, number, ((x: number) => number)?][] = [];
   targets.forEach((t, i) => {
+    const moveDur = t.move ?? 9;
     if (i === 0) {
       xs.push([t.at, t.x]);
       ys.push([t.at, t.y]);
@@ -46,13 +52,22 @@ export const StampArm: React.FC<{
   // arc lift while travelling between targets
   let arc = 0;
   targets.forEach((t, i) => {
-    if (i > 0 && g > t.at - moveDur && g < t.at) arc = Math.sin(((g - (t.at - moveDur)) / moveDur) * Math.PI) * 50 * scale;
+    const moveDur = t.move ?? 9;
+    if (i > 0 && g > t.at - moveDur && g < t.at) arc = Math.sin(((g - (t.at - moveDur)) / moveDur) * Math.PI) * arcHeight * scale;
   });
-  // press: sum of strike envelopes (only one is active at a time)
-  const press = hits.reduce((acc, h) => {
-    const s = strike(g, h);
-    return Math.abs(s) > Math.abs(acc) ? s : acc;
-  }, 0);
+  // press: the strike whose window contains g (the latest one if windows touch)
+  let press = 0;
+  hits.forEach((h, i) => {
+    const sh = shapes[i] ?? {};
+    const lift = sh.lift ?? 7;
+    const down = sh.down ?? 3;
+    const hold = sh.hold ?? 3;
+    const up = sh.up ?? 9;
+    if (g >= h - lift - down && g < h + hold + up) {
+      const v = strike(g, h, lift, down, hold, up);
+      press = v < 0 ? v * ((sh.wind ?? 0.35) / 0.35) : v;
+    }
+  });
   // entry from below / exit downwards
   const inT = tw(g, enter, 14, E.out);
   const outT = tw(g, exit - 12, 12, E.in);

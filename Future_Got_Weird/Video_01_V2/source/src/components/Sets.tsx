@@ -9,7 +9,8 @@ import {BookRow} from './Props';
 /** Flat colour wall with a faint cutout-paper dot texture (static, no drift). */
 export const Wall: React.FC<{color: string; dots?: string; children?: React.ReactNode; depth?: number}> = ({color, dots, children, depth = 0.7}) => (
   <Layer depth={depth}>
-    <AbsoluteFill style={{background: color, left: -200, right: -200, top: -200, bottom: -200, width: W + 400, height: H + 400}}>
+    {/* the colour runs 400 px further than the dotted area (box-shadow spread), so wide camera moves never find the edge */}
+    <AbsoluteFill style={{background: color, left: -200, right: -200, top: -200, bottom: -200, width: W + 400, height: H + 400, boxShadow: `0 0 0 400px ${color}`}}>
       {dots && (
         <svg width={W + 400} height={H + 400} style={{position: 'absolute', left: 0, top: 0}}>
           {Array.from({length: 70}).map((_, i) => (
@@ -32,7 +33,7 @@ export const Floor: React.FC<{color: string; y?: number; depth?: number; stripe?
 );
 
 /** The answer counter: a long wooden counter with three service windows, a hanging sign, a bell. */
-export const CounterSet: React.FC<{signText?: string; windows?: number; children?: React.ReactNode; front?: React.ReactNode; wallColor?: string}> = ({signText = 'ANSWERS', windows = 3, children, front, wallColor = C.saffron}) => (
+export const CounterSet: React.FC<{signText?: string; windows?: number; children?: React.ReactNode; front?: React.ReactNode; wallColor?: string; signRotate?: number; counterNudge?: number; wallExtra?: React.ReactNode}> = ({signText = 'ANSWERS', windows = 3, children, front, wallColor = C.saffron, signRotate = 0, counterNudge = 0, wallExtra}) => (
   <>
     <Wall color={wallColor} dots={C.saffronDeep} depth={0.75}>
       {/* three arched service windows on the back wall */}
@@ -45,20 +46,24 @@ export const CounterSet: React.FC<{signText?: string; windows?: number; children
         );
       })}
       {/* hanging sign */}
-      <div style={{position: 'absolute', left: 200 + 960 - 230, top: 200 + 70}}>
+      <div style={{position: 'absolute', left: 200 + 960 - 230, top: 200 + 70, transform: `rotate(${signRotate}deg)`, transformOrigin: '230px -70px'}}>
         <div style={{position: 'absolute', left: 60, top: -70, width: 4, height: 70, background: C.ink}} />
         <div style={{position: 'absolute', left: 396, top: -70, width: 4, height: 70, background: C.ink}} />
         <Sign bg={C.cream} size={48} width={460} style={{boxSizing: 'border-box'}}>{signText}</Sign>
       </div>
+      {wallExtra}
     </Wall>
     {children}
     {/* counter front (foreground plane) */}
     <Layer depth={1.08}>
-      <div style={{position: 'absolute', left: -200, right: -200, top: 690, height: 36, background: C.woodLight, border: `${OUTLINE}px solid ${C.ink}`, borderRadius: 6}} />
-      <div style={{position: 'absolute', left: -200, right: -200, top: 722, height: 420, background: C.wood, borderTop: `${OUTLINE}px solid ${C.ink}`}}>
-        {Array.from({length: 7}).map((_, i) => (
-          <div key={i} style={{position: 'absolute', left: 120 + i * 300, top: 40, width: 230, height: 150, border: `${OUTLINE}px solid ${C.woodDeep}`, borderRadius: 10, opacity: 0.8}} />
-        ))}
+      {/* counterNudge: a 1-2 px shudder when something is stamped on it */}
+      <div style={{position: 'absolute', inset: 0, transform: `translateY(${counterNudge}px)`}}>
+        <div style={{position: 'absolute', left: -600, right: -600, top: 690, height: 36, background: C.woodLight, border: `${OUTLINE}px solid ${C.ink}`, borderRadius: 6}} />
+        <div style={{position: 'absolute', left: -600, right: -600, top: 722, height: 420, background: C.wood, borderTop: `${OUTLINE}px solid ${C.ink}`}}>
+          {Array.from({length: 10}).map((_, i) => (
+            <div key={i} style={{position: 'absolute', left: 220 + i * 300, top: 40, width: 230, height: 150, border: `${OUTLINE}px solid ${C.woodDeep}`, borderRadius: 10, opacity: 0.8}} />
+          ))}
+        </div>
       </div>
       {front}
     </Layer>
@@ -139,7 +144,7 @@ export const PaperField: React.FC<{children?: React.ReactNode; color?: string}> 
 );
 
 /** Channel wordmark (original). */
-export const Wordmark: React.FC<{size?: number; style?: React.CSSProperties; tagline?: boolean; reveal?: [number, number, number]; taglineT?: [number, number]}> = ({size = 120, style, tagline, reveal = [1, 1, 1], taglineT = [1, 1]}) => (
+export const Wordmark: React.FC<{size?: number; style?: React.CSSProperties; tagline?: boolean; reveal?: [number, number, number]; taglineT?: [number, number]; underline?: string; underlineT?: number}> = ({size = 120, style, tagline, reveal = [1, 1, 1], taglineT = [1, 1], underline = C.saffron, underlineT = 1}) => (
   <div style={{textAlign: 'center', ...style}}>
     <div style={{display: 'inline-block', position: 'relative'}}>
       <div style={{fontFamily: F.display, fontWeight: 700, fontSize: size, lineHeight: 1, color: C.ink, letterSpacing: '-0.01em'}}>
@@ -149,7 +154,7 @@ export const Wordmark: React.FC<{size?: number; style?: React.CSSProperties; tag
           </span>
         ))}
       </div>
-      <div style={{position: 'absolute', left: -size * 0.1, right: -size * 0.1, bottom: -size * 0.12, height: size * 0.18, background: C.saffron, zIndex: -1, borderRadius: size * 0.09, transform: 'rotate(-1deg)'}} />
+      <div style={{position: 'absolute', left: -size * 0.1, right: -size * 0.1, bottom: -size * 0.12, height: size * 0.18, background: underline, zIndex: -1, borderRadius: size * 0.09, transform: 'rotate(-1deg)', clipPath: `inset(0 ${(1 - underlineT) * 100}% 0 0)`}} />
     </div>
     {tagline && (
       <div style={{marginTop: size * 0.32, fontFamily: F.body, fontWeight: 800, fontSize: size * 0.3, color: C.inkSoft}}>

@@ -26,10 +26,16 @@ ap.add_argument("out")
 ap.add_argument("--fps", type=float, default=3.0)
 ap.add_argument("--per-sheet", type=int, default=36)
 ap.add_argument("--tile", type=int, default=480)
+ap.add_argument("--offset", type=int, default=0, help="global frame of the first video frame (scene clips)")
+ap.add_argument("--only", default="", help="comma-separated scene ids to report")
 args = ap.parse_args()
+OFF = args.offset
 
 tl = json.load(open(args.timeline))
 FPS = tl["fps"]
+if args.only:
+    keep = set(args.only.split(","))
+    tl["scenes"] = [s for s in tl["scenes"] if s["id"] in keep]
 os.makedirs(args.out, exist_ok=True)
 try:
     FONT = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 15)
@@ -58,13 +64,13 @@ def decode(w, h, step=1):
         if len(b) < n:
             break
         if i % step == 0:
-            yield i, np.frombuffer(b, np.uint8).reshape(h, w, 3)
+            yield i + OFF, np.frombuffer(b, np.uint8).reshape(h, w, 3)
         i += 1
     p.wait()
 
 
 # ---------------------------------------------------------------- motion energy at full frame rate
-energy = []
+energy = [0.0] * OFF
 prev = None
 for i, fr in decode(320, 180):
     g = fr.astype(np.float32).mean(axis=2)
@@ -73,7 +79,7 @@ for i, fr in decode(320, 180):
 energy = np.array(energy)
 STILL = 0.05          # mean |dLuma| per frame below this = effectively nothing moves
 runs = []
-i = 0
+i = OFF
 while i < len(energy):
     if energy[i] < STILL:
         j = i

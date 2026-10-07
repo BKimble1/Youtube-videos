@@ -80,6 +80,35 @@ export const handPos = (arm: Arm, side: -1 | 1) => {
   return {ex, ey, hx, hy, angle: side * (arm.a + arm.b)};
 };
 
+/**
+ * Two-bone IK: the arm (side -1 = L, +1 = R) that puts the hand on a point in character-local coords (ground at 0,0,
+ * before scale and bob). elbow 1 = elbow hangs below the shoulder-hand line (natural), -1 = elbow up.
+ * Out-of-reach targets give a straight arm pointing at them.
+ */
+export const reachLocal = (tx: number, ty: number, side: -1 | 1, elbow: 1 | -1 = 1): Arm => {
+  const sx = SHOULDER_X * side;
+  const dx = (tx - sx) * side;
+  const dy = ty - SHOULDER_Y;
+  const d = Math.min(UPPER + FORE - 0.5, Math.max(Math.abs(UPPER - FORE) + 0.5, Math.hypot(dx, dy)));
+  const th = Math.atan2(dx, dy);
+  const gam = Math.acos(Math.max(-1, Math.min(1, (UPPER * UPPER + d * d - FORE * FORE) / (2 * UPPER * d))));
+  const a = th - elbow * gam;
+  const ex = Math.sin(a) * UPPER;
+  const ey = Math.cos(a) * UPPER;
+  const f = Math.atan2(dx - ex, dy - ey);
+  return {a: (a * 180) / Math.PI, b: ((f - a) * 180) / Math.PI};
+};
+
+/** World-space reach for a character drawn at (x, y) with `scale` and pose bob `bob`. */
+export const reach = (ch: {x: number; y: number; scale: number; bob?: number}, side: -1 | 1, wx: number, wy: number, elbow: 1 | -1 = 1): Arm =>
+  reachLocal((wx - ch.x) / ch.scale, (wy - ch.y) / ch.scale - (ch.bob ?? 0), side, elbow);
+
+/** Where the hand of an arm lands in world space for a character at (x, y, scale, bob). */
+export const handWorld = (ch: {x: number; y: number; scale: number; bob?: number}, arm: Arm, side: -1 | 1) => {
+  const h = handPos(arm, side);
+  return {x: ch.x + h.hx * ch.scale, y: ch.y + (h.hy + (ch.bob ?? 0)) * ch.scale};
+};
+
 const ArmShape: React.FC<{arm: Arm; side: -1 | 1; skin: string; sleeve: string; children?: React.ReactNode}> = ({arm, side, skin, sleeve, children}) => {
   const {ex, ey, hx, hy, angle} = handPos(arm, side);
   const sx = SHOULDER_X * side;
