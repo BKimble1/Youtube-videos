@@ -7,8 +7,8 @@
   "voice_name": "Marcus K",
   "voice_id": "3H55HGnNE1XjYxigHSAS"
  },
- "durationInFrames": 9550,
- "durationSeconds": 318.325,
+ "durationInFrames": 9555,
+ "durationSeconds": 318.495,
  "scenes": [
   {
    "id": "S1",
@@ -28,17 +28,17 @@
   {
    "id": "S4",
    "from": 5212,
-   "to": 7190
+   "to": 7195
   },
   {
    "id": "S5",
-   "from": 7190,
-   "to": 8737
+   "from": 7195,
+   "to": 8742
   },
   {
    "id": "S6",
-   "from": 8737,
-   "to": 9550
+   "from": 8742,
+   "to": 9555
   }
  ],
  "segments": [
@@ -3200,1160 +3200,1160 @@
   {
    "id": "s29",
    "scene": "S4",
-   "from": 6882,
-   "to": 7173,
+   "from": 6887,
+   "to": 7178,
    "text": "Their fix: state the penalty for wrong answers up front, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one.",
    "timing": "engine",
    "words": [
     {
      "w": "Their",
-     "from": 6882,
-     "to": 6886
+     "from": 6887,
+     "to": 6891
     },
     {
      "w": "fix:",
-     "from": 6892,
-     "to": 6910
+     "from": 6897,
+     "to": 6915
     },
     {
      "w": "state",
-     "from": 6913,
-     "to": 6920
+     "from": 6918,
+     "to": 6925
     },
     {
      "w": "the",
-     "from": 6921,
-     "to": 6922
+     "from": 6926,
+     "to": 6927
     },
     {
      "w": "penalty",
-     "from": 6925,
-     "to": 6934
-    },
-    {
-     "w": "for",
-     "from": 6937,
+     "from": 6930,
      "to": 6939
     },
     {
-     "w": "wrong",
+     "w": "for",
      "from": 6942,
-     "to": 6949
+     "to": 6944
+    },
+    {
+     "w": "wrong",
+     "from": 6947,
+     "to": 6954
     },
     {
      "w": "answers",
-     "from": 6955,
-     "to": 6961
+     "from": 6960,
+     "to": 6966
     },
     {
      "w": "up",
-     "from": 6964,
-     "to": 6968
+     "from": 6969,
+     "to": 6973
     },
     {
      "w": "front,",
-     "from": 6973,
-     "to": 6985
-    },
-    {
-     "w": "so",
-     "from": 6987,
+     "from": 6978,
      "to": 6990
     },
     {
-     "w": "admitting",
+     "w": "so",
      "from": 6992,
-     "to": 6999
+     "to": 6995
+    },
+    {
+     "w": "admitting",
+     "from": 6997,
+     "to": 7004
     },
     {
      "w": "uncertainty",
-     "from": 7002,
-     "to": 7021
+     "from": 7007,
+     "to": 7026
     },
     {
      "w": "can",
-     "from": 7023,
-     "to": 7028
+     "from": 7028,
+     "to": 7033
     },
     {
      "w": "win.",
-     "from": 7033,
-     "to": 7052
+     "from": 7038,
+     "to": 7057
     },
     {
      "w": "It's",
-     "from": 7053,
-     "to": 7059
+     "from": 7058,
+     "to": 7064
     },
     {
      "w": "one",
-     "from": 7060,
-     "to": 7062
+     "from": 7065,
+     "to": 7067
     },
     {
      "w": "explanation,",
-     "from": 7064,
-     "to": 7090
-    },
-    {
-     "w": "not",
-     "from": 7093,
+     "from": 7069,
      "to": 7095
     },
     {
+     "w": "not",
+     "from": 7098,
+     "to": 7100
+    },
+    {
      "w": "the",
-     "from": 7096,
-     "to": 7098
+     "from": 7101,
+     "to": 7103
     },
     {
      "w": "whole",
-     "from": 7100,
-     "to": 7102
+     "from": 7105,
+     "to": 7107
     },
     {
      "w": "story,",
-     "from": 7105,
-     "to": 7124
+     "from": 7110,
+     "to": 7129
     },
     {
      "w": "but",
-     "from": 7126,
-     "to": 7131
+     "from": 7131,
+     "to": 7136
     },
     {
      "w": "a",
-     "from": 7132,
-     "to": 7134
+     "from": 7137,
+     "to": 7139
     },
     {
      "w": "surprisingly",
-     "from": 7136,
-     "to": 7155
+     "from": 7141,
+     "to": 7160
     },
     {
      "w": "simple",
-     "from": 7158,
-     "to": 7165
+     "from": 7163,
+     "to": 7170
     },
     {
      "w": "one.",
-     "from": 7167,
-     "to": 7182
+     "from": 7172,
+     "to": 7187
     }
    ]
   },
   {
    "id": "s30",
    "scene": "S5",
-   "from": 7200,
-   "to": 7354,
+   "from": 7205,
+   "to": 7359,
    "text": "So what actually helps? Start with the unglamorous move: check the record.",
    "timing": "engine",
    "words": [
     {
      "w": "So",
-     "from": 7199,
-     "to": 7205
+     "from": 7204,
+     "to": 7210
     },
     {
      "w": "what",
-     "from": 7207,
-     "to": 7217
+     "from": 7212,
+     "to": 7222
     },
     {
      "w": "actually",
-     "from": 7219,
-     "to": 7230
+     "from": 7224,
+     "to": 7235
     },
     {
      "w": "helps?",
-     "from": 7231,
-     "to": 7247
+     "from": 7236,
+     "to": 7252
     },
     {
      "w": "Start",
-     "from": 7264,
-     "to": 7271
-    },
-    {
-     "w": "with",
-     "from": 7274,
+     "from": 7269,
      "to": 7276
     },
     {
+     "w": "with",
+     "from": 7279,
+     "to": 7281
+    },
+    {
      "w": "the",
-     "from": 7277,
-     "to": 7279
+     "from": 7282,
+     "to": 7284
     },
     {
      "w": "unglamorous",
-     "from": 7283,
-     "to": 7300
+     "from": 7288,
+     "to": 7305
     },
     {
      "w": "move:",
-     "from": 7303,
-     "to": 7324
+     "from": 7308,
+     "to": 7329
     },
     {
      "w": "check",
-     "from": 7327,
-     "to": 7334
+     "from": 7332,
+     "to": 7339
     },
     {
      "w": "the",
-     "from": 7335,
-     "to": 7336
+     "from": 7340,
+     "to": 7341
     },
     {
      "w": "record.",
-     "from": 7339,
-     "to": 7360
+     "from": 7344,
+     "to": 7365
     }
    ]
   },
   {
    "id": "s31",
    "scene": "S5",
-   "from": 7367,
-   "to": 7598,
+   "from": 7372,
+   "to": 7603,
    "text": "Here's Kalai's actual thesis. \u201cProbabilistic and On-line Methods in Machine Learning.\u201d Carnegie Mellon, May 2001.",
    "timing": "engine",
    "words": [
     {
      "w": "Here's",
-     "from": 7367,
-     "to": 7372
+     "from": 7372,
+     "to": 7377
     },
     {
      "w": "Kalai's",
-     "from": 7375,
-     "to": 7387
+     "from": 7380,
+     "to": 7392
     },
     {
      "w": "actual",
-     "from": 7393,
-     "to": 7399
+     "from": 7398,
+     "to": 7404
     },
     {
      "w": "thesis.",
-     "from": 7401,
-     "to": 7423
+     "from": 7406,
+     "to": 7428
     },
     {
      "w": "\u201cProbabilistic",
-     "from": 7430,
-     "to": 7456
-    },
-    {
-     "w": "and",
-     "from": 7459,
+     "from": 7435,
      "to": 7461
     },
     {
+     "w": "and",
+     "from": 7464,
+     "to": 7466
+    },
+    {
      "w": "On-line",
-     "from": 7466,
-     "to": 7475
+     "from": 7471,
+     "to": 7480
     },
     {
      "w": "Methods",
-     "from": 7478,
-     "to": 7490
+     "from": 7483,
+     "to": 7495
     },
     {
      "w": "in",
-     "from": 7492,
-     "to": 7493
+     "from": 7497,
+     "to": 7498
     },
     {
      "w": "Machine",
-     "from": 7495,
-     "to": 7504
+     "from": 7500,
+     "to": 7509
     },
     {
      "w": "Learning.\u201d",
-     "from": 7507,
-     "to": 7525
+     "from": 7512,
+     "to": 7530
     },
     {
      "w": "Carnegie",
-     "from": 7531,
-     "to": 7543
+     "from": 7536,
+     "to": 7548
     },
     {
      "w": "Mellon,",
-     "from": 7544,
-     "to": 7559
+     "from": 7549,
+     "to": 7564
     },
     {
      "w": "May",
-     "from": 7562,
-     "to": 7569
+     "from": 7567,
+     "to": 7574
     },
     {
      "w": "2001.",
-     "from": 7571,
-     "to": 7604
+     "from": 7576,
+     "to": 7609
     }
    ]
   },
   {
    "id": "s32",
    "scene": "S5",
-   "from": 7613,
-   "to": 7789,
+   "from": 7618,
+   "to": 7794,
    "text": "And checking means more than spotting a citation. Does the source exist, and does it actually say this?",
    "timing": "engine",
    "words": [
     {
      "w": "And",
-     "from": 7612,
-     "to": 7617
+     "from": 7617,
+     "to": 7622
     },
     {
      "w": "checking",
-     "from": 7623,
-     "to": 7629
+     "from": 7628,
+     "to": 7634
     },
     {
      "w": "means",
-     "from": 7631,
-     "to": 7639
+     "from": 7636,
+     "to": 7644
     },
     {
      "w": "more",
-     "from": 7641,
-     "to": 7646
-    },
-    {
-     "w": "than",
-     "from": 7648,
+     "from": 7646,
      "to": 7651
     },
     {
+     "w": "than",
+     "from": 7653,
+     "to": 7656
+    },
+    {
      "w": "spotting",
-     "from": 7654,
-     "to": 7660
+     "from": 7659,
+     "to": 7665
     },
     {
      "w": "a",
-     "from": 7663,
-     "to": 7664
+     "from": 7668,
+     "to": 7669
     },
     {
      "w": "citation.",
-     "from": 7665,
-     "to": 7696
-    },
-    {
-     "w": "Does",
-     "from": 7699,
+     "from": 7670,
      "to": 7701
     },
     {
+     "w": "Does",
+     "from": 7704,
+     "to": 7706
+    },
+    {
      "w": "the",
-     "from": 7703,
-     "to": 7705
+     "from": 7708,
+     "to": 7710
     },
     {
      "w": "source",
-     "from": 7706,
-     "to": 7713
+     "from": 7711,
+     "to": 7718
     },
     {
      "w": "exist,",
-     "from": 7715,
-     "to": 7737
+     "from": 7720,
+     "to": 7742
     },
     {
      "w": "and",
-     "from": 7741,
-     "to": 7744
-    },
-    {
-     "w": "does",
-     "from": 7747,
+     "from": 7746,
      "to": 7749
     },
     {
+     "w": "does",
+     "from": 7752,
+     "to": 7754
+    },
+    {
      "w": "it",
-     "from": 7751,
-     "to": 7756
+     "from": 7756,
+     "to": 7761
     },
     {
      "w": "actually",
-     "from": 7759,
-     "to": 7771
+     "from": 7764,
+     "to": 7776
     },
     {
      "w": "say",
-     "from": 7773,
-     "to": 7778
+     "from": 7778,
+     "to": 7783
     },
     {
      "w": "this?",
-     "from": 7780,
-     "to": 7797
+     "from": 7785,
+     "to": 7802
     }
    ]
   },
   {
    "id": "s33",
    "scene": "S5",
-   "from": 7810,
-   "to": 8071,
+   "from": 7815,
+   "to": 8076,
    "text": "Inside one Claude model, Anthropic researchers found a default circuit for \u201cI can't answer.\u201d Recognizing a familiar name switches it off.",
    "timing": "engine",
    "words": [
     {
      "w": "Inside",
-     "from": 7809,
-     "to": 7821
+     "from": 7815,
+     "to": 7827
     },
     {
      "w": "one",
-     "from": 7826,
-     "to": 7831
+     "from": 7831,
+     "to": 7836
     },
     {
      "w": "Claude",
-     "from": 7833,
-     "to": 7843
+     "from": 7839,
+     "to": 7848
     },
     {
      "w": "model,",
-     "from": 7845,
-     "to": 7862
+     "from": 7851,
+     "to": 7867
     },
     {
      "w": "Anthropic",
-     "from": 7865,
-     "to": 7879
+     "from": 7870,
+     "to": 7884
     },
     {
      "w": "researchers",
-     "from": 7885,
-     "to": 7896
+     "from": 7890,
+     "to": 7901
     },
     {
      "w": "found",
-     "from": 7898,
-     "to": 7903
+     "from": 7903,
+     "to": 7908
     },
     {
      "w": "a",
-     "from": 7904,
-     "to": 7905
+     "from": 7909,
+     "to": 7911
     },
     {
      "w": "default",
-     "from": 7908,
-     "to": 7920
+     "from": 7913,
+     "to": 7925
     },
     {
      "w": "circuit",
-     "from": 7922,
-     "to": 7932
+     "from": 7927,
+     "to": 7937
     },
     {
      "w": "for",
-     "from": 7934,
-     "to": 7941
+     "from": 7939,
+     "to": 7947
     },
     {
      "w": "\u201cI",
-     "from": 7951,
-     "to": 7953
+     "from": 7956,
+     "to": 7959
     },
     {
      "w": "can't",
-     "from": 7958,
-     "to": 7965
+     "from": 7963,
+     "to": 7971
     },
     {
      "w": "answer.\u201d",
-     "from": 7968,
-     "to": 7999
+     "from": 7973,
+     "to": 8004
     },
     {
      "w": "Recognizing",
-     "from": 8001,
-     "to": 8018
+     "from": 8007,
+     "to": 8023
     },
     {
      "w": "a",
-     "from": 8019,
-     "to": 8020
+     "from": 8024,
+     "to": 8025
     },
     {
      "w": "familiar",
-     "from": 8021,
-     "to": 8033
+     "from": 8026,
+     "to": 8038
     },
     {
      "w": "name",
-     "from": 8035,
-     "to": 8045
+     "from": 8040,
+     "to": 8050
     },
     {
      "w": "switches",
-     "from": 8049,
-     "to": 8059
+     "from": 8055,
+     "to": 8064
     },
     {
      "w": "it",
-     "from": 8060,
-     "to": 8061
+     "from": 8065,
+     "to": 8067
     },
     {
      "w": "off.",
-     "from": 8064,
-     "to": 8073
+     "from": 8069,
+     "to": 8079
     }
    ]
   },
   {
    "id": "s34",
    "scene": "S5",
-   "from": 8090,
-   "to": 8380,
+   "from": 8095,
+   "to": 8385,
    "text": "When that recognition misfires, when a name seems familiar but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts.",
    "timing": "engine",
    "words": [
     {
      "w": "When",
-     "from": 8088,
-     "to": 8093
+     "from": 8093,
+     "to": 8098
     },
     {
      "w": "that",
-     "from": 8095,
-     "to": 8097
+     "from": 8100,
+     "to": 8103
     },
     {
      "w": "recognition",
-     "from": 8100,
-     "to": 8114
+     "from": 8105,
+     "to": 8119
     },
     {
      "w": "misfires,",
-     "from": 8117,
-     "to": 8145
+     "from": 8122,
+     "to": 8151
     },
     {
      "w": "when",
-     "from": 8148,
-     "to": 8150
+     "from": 8153,
+     "to": 8155
     },
     {
      "w": "a",
-     "from": 8151,
-     "to": 8153
+     "from": 8157,
+     "to": 8158
     },
     {
      "w": "name",
-     "from": 8156,
-     "to": 8160
+     "from": 8161,
+     "to": 8165
     },
     {
      "w": "seems",
-     "from": 8165,
-     "to": 8174
+     "from": 8170,
+     "to": 8179
     },
     {
      "w": "familiar",
-     "from": 8175,
-     "to": 8189
+     "from": 8181,
+     "to": 8194
     },
     {
      "w": "but",
-     "from": 8191,
-     "to": 8193
+     "from": 8196,
+     "to": 8199
     },
     {
      "w": "the",
-     "from": 8196,
-     "to": 8197
+     "from": 8201,
+     "to": 8202
     },
     {
      "w": "facts",
-     "from": 8198,
-     "to": 8208
+     "from": 8203,
+     "to": 8213
     },
     {
      "w": "aren't",
-     "from": 8210,
-     "to": 8215
+     "from": 8215,
+     "to": 8220
     },
     {
      "w": "there,",
-     "from": 8219,
-     "to": 8237
+     "from": 8224,
+     "to": 8242
     },
     {
      "w": "the",
-     "from": 8239,
-     "to": 8240
+     "from": 8244,
+     "to": 8245
     },
     {
      "w": "model",
-     "from": 8241,
-     "to": 8249
+     "from": 8247,
+     "to": 8254
     },
     {
      "w": "can",
-     "from": 8251,
-     "to": 8253
+     "from": 8256,
+     "to": 8259
     },
     {
      "w": "produce",
-     "from": 8256,
-     "to": 8263
-    },
-    {
-     "w": "a",
-     "from": 8265,
+     "from": 8261,
      "to": 8268
     },
     {
+     "w": "a",
+     "from": 8271,
+     "to": 8273
+    },
+    {
      "w": "plausible",
-     "from": 8270,
-     "to": 8282
+     "from": 8275,
+     "to": 8287
     },
     {
      "w": "guess.",
-     "from": 8285,
-     "to": 8299
+     "from": 8290,
+     "to": 8304
     },
     {
      "w": "Knowing",
-     "from": 8316,
-     "to": 8323
+     "from": 8321,
+     "to": 8328
     },
     {
      "w": "a",
-     "from": 8324,
-     "to": 8325
+     "from": 8329,
+     "to": 8331
     },
     {
      "w": "name",
-     "from": 8328,
-     "to": 8340
+     "from": 8333,
+     "to": 8345
     },
     {
      "w": "isn't",
-     "from": 8342,
-     "to": 8352
+     "from": 8347,
+     "to": 8357
     },
     {
      "w": "knowing",
-     "from": 8354,
-     "to": 8359
-    },
-    {
-     "w": "the",
-     "from": 8361,
+     "from": 8359,
      "to": 8364
     },
     {
+     "w": "the",
+     "from": 8367,
+     "to": 8369
+    },
+    {
      "w": "facts.",
-     "from": 8366,
-     "to": 8381
+     "from": 8371,
+     "to": 8386
     }
    ]
   },
   {
    "id": "s35",
    "scene": "S5",
-   "from": 8393,
-   "to": 8720,
+   "from": 8398,
+   "to": 8725,
    "text": "Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
    "timing": "engine",
    "words": [
     {
      "w": "Search,",
-     "from": 8395,
-     "to": 8409
+     "from": 8400,
+     "to": 8415
     },
     {
      "w": "retrieval,",
-     "from": 8412,
-     "to": 8429
+     "from": 8417,
+     "to": 8434
     },
     {
      "w": "and",
-     "from": 8430,
-     "to": 8431
+     "from": 8435,
+     "to": 8436
     },
     {
      "w": "longer",
-     "from": 8433,
-     "to": 8443
+     "from": 8439,
+     "to": 8448
     },
     {
      "w": "reasoning",
-     "from": 8445,
-     "to": 8457
+     "from": 8451,
+     "to": 8463
     },
     {
      "w": "can",
-     "from": 8460,
-     "to": 8462
+     "from": 8465,
+     "to": 8467
     },
     {
      "w": "help",
-     "from": 8465,
-     "to": 8472
-    },
-    {
-     "w": "when",
-     "from": 8474,
+     "from": 8470,
      "to": 8477
     },
     {
+     "w": "when",
+     "from": 8479,
+     "to": 8482
+    },
+    {
      "w": "they",
-     "from": 8478,
-     "to": 8479
+     "from": 8483,
+     "to": 8484
     },
     {
      "w": "bring",
-     "from": 8481,
-     "to": 8486
-    },
-    {
-     "w": "in",
      "from": 8487,
-     "to": 8489
-    },
-    {
-     "w": "the",
-     "from": 8490,
      "to": 8491
     },
     {
-     "w": "right",
+     "w": "in",
      "from": 8493,
-     "to": 8498
-    },
-    {
-     "w": "evidence.",
-     "from": 8501,
-     "to": 8515
-    },
-    {
-     "w": "Turning",
-     "from": 8532,
-     "to": 8541
-    },
-    {
-     "w": "down",
-     "from": 8544,
-     "to": 8546
+     "to": 8494
     },
     {
      "w": "the",
-     "from": 8547,
-     "to": 8549
+     "from": 8495,
+     "to": 8496
+    },
+    {
+     "w": "right",
+     "from": 8499,
+     "to": 8503
+    },
+    {
+     "w": "evidence.",
+     "from": 8506,
+     "to": 8520
+    },
+    {
+     "w": "Turning",
+     "from": 8537,
+     "to": 8547
+    },
+    {
+     "w": "down",
+     "from": 8549,
+     "to": 8551
+    },
+    {
+     "w": "the",
+     "from": 8553,
+     "to": 8554
     },
     {
      "w": "randomness",
-     "from": 8551,
-     "to": 8568
+     "from": 8556,
+     "to": 8573
     },
     {
      "w": "makes",
-     "from": 8571,
-     "to": 8575
+     "from": 8577,
+     "to": 8580
     },
     {
      "w": "answers",
-     "from": 8577,
-     "to": 8587
-    },
-    {
-     "w": "more",
-     "from": 8589,
+     "from": 8583,
      "to": 8592
     },
     {
+     "w": "more",
+     "from": 8595,
+     "to": 8597
+    },
+    {
      "w": "consistent,",
-     "from": 8594,
-     "to": 8621
+     "from": 8599,
+     "to": 8626
     },
     {
      "w": "not",
-     "from": 8624,
-     "to": 8628
+     "from": 8629,
+     "to": 8633
     },
     {
      "w": "necessarily",
-     "from": 8629,
-     "to": 8647
-    },
-    {
-     "w": "more",
-     "from": 8649,
+     "from": 8634,
      "to": 8652
     },
     {
+     "w": "more",
+     "from": 8655,
+     "to": 8657
+    },
+    {
      "w": "correct.",
-     "from": 8654,
-     "to": 8669
+     "from": 8659,
+     "to": 8674
     },
     {
      "w": "None",
-     "from": 8683,
-     "to": 8688
+     "from": 8688,
+     "to": 8693
     },
     {
      "w": "of",
-     "from": 8689,
-     "to": 8690
-    },
-    {
-     "w": "it",
-     "from": 8693,
+     "from": 8694,
      "to": 8695
     },
     {
-     "w": "is",
-     "from": 8697,
+     "w": "it",
+     "from": 8698,
      "to": 8700
     },
     {
+     "w": "is",
+     "from": 8703,
+     "to": 8705
+    },
+    {
      "w": "a",
-     "from": 8701,
-     "to": 8702
+     "from": 8706,
+     "to": 8707
     },
     {
      "w": "guarantee.",
-     "from": 8703,
-     "to": 8729
+     "from": 8709,
+     "to": 8734
     }
    ]
   },
   {
    "id": "s36",
    "scene": "S6",
-   "from": 8747,
-   "to": 9034,
+   "from": 8752,
+   "to": 9039,
    "text": "So why does AI sound right when it's wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have.",
    "timing": "engine",
    "words": [
     {
      "w": "So",
-     "from": 8747,
-     "to": 8751
+     "from": 8752,
+     "to": 8757
     },
     {
      "w": "why",
-     "from": 8759,
-     "to": 8763
+     "from": 8764,
+     "to": 8769
     },
     {
      "w": "does",
-     "from": 8766,
-     "to": 8768
+     "from": 8771,
+     "to": 8773
     },
     {
      "w": "AI",
-     "from": 8773,
-     "to": 8783
+     "from": 8778,
+     "to": 8788
     },
     {
      "w": "sound",
-     "from": 8787,
-     "to": 8792
+     "from": 8793,
+     "to": 8797
     },
     {
      "w": "right",
-     "from": 8797,
-     "to": 8807
+     "from": 8802,
+     "to": 8812
     },
     {
      "w": "when",
-     "from": 8809,
-     "to": 8811
+     "from": 8814,
+     "to": 8817
     },
     {
      "w": "it's",
-     "from": 8813,
-     "to": 8816
+     "from": 8818,
+     "to": 8821
     },
     {
      "w": "wrong?",
-     "from": 8819,
-     "to": 8838
+     "from": 8824,
+     "to": 8843
     },
     {
      "w": "Because",
-     "from": 8845,
-     "to": 8852
+     "from": 8850,
+     "to": 8857
     },
     {
      "w": "sounding",
-     "from": 8853,
-     "to": 8864
+     "from": 8859,
+     "to": 8869
     },
     {
      "w": "right",
-     "from": 8867,
-     "to": 8876
+     "from": 8872,
+     "to": 8881
     },
     {
      "w": "comes",
-     "from": 8880,
-     "to": 8883
+     "from": 8885,
+     "to": 8889
     },
     {
      "w": "from",
-     "from": 8887,
-     "to": 8891
+     "from": 8892,
+     "to": 8896
     },
     {
      "w": "patterns",
-     "from": 8897,
-     "to": 8903
+     "from": 8902,
+     "to": 8908
     },
     {
      "w": "in",
-     "from": 8905,
-     "to": 8907
+     "from": 8910,
+     "to": 8913
     },
     {
      "w": "language,",
-     "from": 8915,
-     "to": 8931
+     "from": 8920,
+     "to": 8937
     },
     {
      "w": "and",
-     "from": 8935,
-     "to": 8939
+     "from": 8940,
+     "to": 8944
     },
     {
      "w": "being",
-     "from": 8941,
-     "to": 8948
+     "from": 8946,
+     "to": 8953
     },
     {
      "w": "right",
-     "from": 8951,
-     "to": 8960
+     "from": 8956,
+     "to": 8965
     },
     {
      "w": "takes",
-     "from": 8965,
-     "to": 8970
+     "from": 8970,
+     "to": 8975
     },
     {
      "w": "evidence",
-     "from": 8971,
-     "to": 8982
-    },
-    {
-     "w": "the",
-     "from": 8984,
+     "from": 8976,
      "to": 8987
     },
     {
+     "w": "the",
+     "from": 8989,
+     "to": 8992
+    },
+    {
      "w": "model",
-     "from": 8991,
-     "to": 8996
+     "from": 8997,
+     "to": 9001
     },
     {
      "w": "doesn't",
-     "from": 8999,
-     "to": 9003
+     "from": 9004,
+     "to": 9009
     },
     {
      "w": "always",
-     "from": 9006,
-     "to": 9013
+     "from": 9011,
+     "to": 9018
     },
     {
      "w": "have.",
-     "from": 9019,
-     "to": 9039
+     "from": 9024,
+     "to": 9045
     }
    ]
   },
   {
    "id": "s37",
    "scene": "S6",
-   "from": 9058,
-   "to": 9271,
+   "from": 9063,
+   "to": 9277,
    "text": "So when an answer matters, don't ask whether it sounds right. Ask: what's the evidence, and does it actually say this?",
    "timing": "engine",
    "words": [
     {
      "w": "So",
-     "from": 9059,
-     "to": 9061
+     "from": 9064,
+     "to": 9066
     },
     {
      "w": "when",
-     "from": 9063,
-     "to": 9064
-    },
-    {
-     "w": "an",
-     "from": 9066,
+     "from": 9068,
      "to": 9069
     },
     {
+     "w": "an",
+     "from": 9071,
+     "to": 9074
+    },
+    {
      "w": "answer",
-     "from": 9073,
-     "to": 9078
+     "from": 9078,
+     "to": 9083
     },
     {
      "w": "matters,",
-     "from": 9081,
-     "to": 9102
+     "from": 9086,
+     "to": 9107
     },
     {
      "w": "don't",
-     "from": 9103,
-     "to": 9109
+     "from": 9108,
+     "to": 9114
     },
     {
      "w": "ask",
-     "from": 9113,
-     "to": 9117
+     "from": 9118,
+     "to": 9122
     },
     {
      "w": "whether",
-     "from": 9120,
-     "to": 9124
+     "from": 9125,
+     "to": 9129
     },
     {
      "w": "it",
-     "from": 9127,
-     "to": 9131
+     "from": 9132,
+     "to": 9136
     },
     {
      "w": "sounds",
-     "from": 9137,
-     "to": 9143
+     "from": 9142,
+     "to": 9148
     },
     {
      "w": "right.",
-     "from": 9148,
-     "to": 9165
+     "from": 9153,
+     "to": 9170
     },
     {
      "w": "Ask:",
-     "from": 9169,
-     "to": 9181
+     "from": 9174,
+     "to": 9186
     },
     {
      "w": "what's",
-     "from": 9184,
-     "to": 9189
+     "from": 9189,
+     "to": 9194
     },
     {
      "w": "the",
-     "from": 9191,
-     "to": 9193
+     "from": 9196,
+     "to": 9198
     },
     {
      "w": "evidence,",
-     "from": 9196,
-     "to": 9215
+     "from": 9201,
+     "to": 9220
     },
     {
      "w": "and",
-     "from": 9219,
-     "to": 9222
-    },
-    {
-     "w": "does",
-     "from": 9225,
+     "from": 9224,
      "to": 9227
     },
     {
+     "w": "does",
+     "from": 9230,
+     "to": 9232
+    },
+    {
      "w": "it",
-     "from": 9229,
-     "to": 9234
+     "from": 9234,
+     "to": 9239
     },
     {
      "w": "actually",
-     "from": 9241,
-     "to": 9249
+     "from": 9246,
+     "to": 9254
     },
     {
      "w": "say",
-     "from": 9252,
-     "to": 9256
+     "from": 9257,
+     "to": 9261
     },
     {
      "w": "this?",
-     "from": 9259,
-     "to": 9277
+     "from": 9264,
+     "to": 9282
     }
    ]
   },
   {
    "id": "s38",
    "scene": "S6",
-   "from": 9298,
-   "to": 9390,
+   "from": 9304,
+   "to": 9395,
    "text": "It works on chatbots. It works pretty well on people, too.",
    "timing": "engine",
    "words": [
     {
      "w": "It",
-     "from": 9298,
-     "to": 9300
+     "from": 9303,
+     "to": 9305
     },
     {
      "w": "works",
-     "from": 9303,
-     "to": 9307
-    },
-    {
-     "w": "on",
-     "from": 9310,
+     "from": 9308,
      "to": 9312
     },
     {
+     "w": "on",
+     "from": 9315,
+     "to": 9317
+    },
+    {
      "w": "chatbots.",
-     "from": 9316,
-     "to": 9341
+     "from": 9321,
+     "to": 9346
     },
     {
      "w": "It",
-     "from": 9342,
-     "to": 9343
+     "from": 9347,
+     "to": 9348
     },
     {
      "w": "works",
-     "from": 9346,
-     "to": 9351
+     "from": 9351,
+     "to": 9356
     },
     {
      "w": "pretty",
-     "from": 9353,
-     "to": 9358
-    },
-    {
-     "w": "well",
-     "from": 9360,
+     "from": 9358,
      "to": 9363
     },
     {
-     "w": "on",
+     "w": "well",
      "from": 9365,
-     "to": 9370
+     "to": 9368
+    },
+    {
+     "w": "on",
+     "from": 9370,
+     "to": 9375
     },
     {
      "w": "people,",
-     "from": 9375,
-     "to": 9381
+     "from": 9380,
+     "to": 9386
     },
     {
      "w": "too.",
-     "from": 9382,
-     "to": 9396
+     "from": 9387,
+     "to": 9401
     }
    ]
   }

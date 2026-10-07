@@ -104,7 +104,11 @@ export const S1Hook: React.FC = () => {
   const cKalai = at('s05', 'Kalai?');
   const cResearchers = at('s05', "He's");
   const cDiff = at('s06', 'different');
-  const cGold = at('s06', 'gold-medal');
+  const cFive = at('s06', 'five');
+  const cSix = at('s06', 'six');
+  const cCredited = at('s06', 'credited');
+  const cSame = at('s07', 'same');
+  const cStill = at('s07', 'still');
   const cSo = at('s07', 'So');
   const cSure = at('s07', 'sure');
   const cWrong = at('s07', 'wrong');
@@ -115,9 +119,10 @@ export const S1Hook: React.FC = () => {
   const cEnd = segEnd('s07b');
 
   // ---- Prompt card with a type-on synced to the narration ----
-  const promptIn = ramp(g, c0, 10);
+  // first frame already shows the layout (dim question + label), so the video never opens on an empty screen
+  const promptIn = 1;
   const chipsT = ramp(g, cChatbots - 6, 12) * (1 - ramp(g, cGPT - 14, 10));
-  const kickerT = ramp(g, 0, 10) * (1 - ramp(g, cGPT - 14, 10));
+  const kickerT = 1 - ramp(g, cGPT - 14, 10);
   const readTitle = ramp(g, at('s02', 'Boosting,'), 40, (x) => x);
   const readTitleMark = ramp(g, at('s02', 'Boosting,'), 70, (x) => x);
   const readYearMark = ramp(g, at('s02', '2002.'), 10);
@@ -135,11 +140,13 @@ export const S1Hook: React.FC = () => {
   const cSplit = c06 + 12; // the split screen arrives just after the lead-author tag has had time to read
 
   const splitIn = ramp(g, cSplit - 2, 16);
-  const reportedT = ramp(g, at('s06', 'reported'), 14);
-  const goldT = ramp(g, cGold, 16);
-  const splitOut = ramp(g, cSo - 4, 14);
+  const creditT = ramp(g, cCredited - 4, 14);
+  const sameT = ramp(g, cDiff - 2, 16);
+  const samePulse = ramp(g, cSame - 4, 10) * (1 - ramp(g, cSame + 26, 18));
+  // the split holds while the narration still refers to it ("...take on olympiad problems"), then hands off
+  const splitOut = ramp(g, cStill - 8, 16, easeInOut);
 
-  const titleIn = ramp(g, cSo + 4, 18);
+  const titleIn = ramp(g, cStill - 2, 18);
   const sureT = ramp(g, cSure - 6, 10);
   const wrongT = ramp(g, cWrong - 6, 10);
   const handoff = ramp(g, cApart, 30, easeInOut);
@@ -230,58 +237,55 @@ export const S1Hook: React.FC = () => {
         <SourceLine opacity={paperIn}>Kalai et al. (2025), arXiv:2509.04664, p. 1 · CC BY 4.0</SourceLine>
       </AbsoluteFill>
 
-      {/* --- Contrast: a different system, a different test --- */}
-      <AbsoluteFill style={{opacity: splitIn * (1 - splitOut)}}>
-        <div style={{position: 'absolute', left: 120, top: 170, width: 800}}>
-          <Tag tone="teal">Capability</Tag>
-          <div style={{marginTop: 30, fontFamily: F.sans, fontWeight: 750, fontSize: 52, color: C.text, lineHeight: 1.1}}>
-            International Mathematical Olympiad 2025
+      {/* --- Contrast: a different system, a different test ---
+           Left shows only what the opened PDF supports: written solutions to P1-P5, credited to
+           Gemini Deep Think (no score, grading or medal claim). */}
+      <AbsoluteFill style={{opacity: splitIn * (1 - splitOut), transform: `scale(${lerp(1, 0.97, splitOut)})`}}>
+        <div style={{position: 'absolute', left: 110, top: 128, width: 780}}>
+          <Tag tone="teal">Published solutions · IMO 2025</Tag>
+          <div style={{marginTop: 22, transform: `translateY(${(1 - splitIn) * 24}px)`}}>
+            <Doc
+              src="img/imo2025_solutions_p01.png"
+              width={720}
+              aspect={1300 / 1790}
+              pad={18}
+              boxes={[{x: 0.004, y: 0.022, w: 0.745, h: 0.05, t: creditT, tone: 'teal', label: 'Credited to Gemini Deep Think', labelSide: 'bottom'}]}
+            />
           </div>
-          {/* Only what the opened PDF shows: written solutions for P1-P5 (no score, no grading). */}
-          <div style={{marginTop: 34, fontFamily: F.sans, fontSize: 22, fontWeight: 600, color: C.muted, letterSpacing: '0.04em', opacity: ramp(g, cSplit + 8, 12)}}>
-            Written solutions published (PDF)
-          </div>
-          <div style={{display: 'flex', gap: 18, marginTop: 14}}>
+          <div style={{display: 'flex', gap: 12, marginTop: 26}}>
             {[0, 1, 2, 3, 4, 5].map((p) => {
-              const on = p < 5 ? ramp(g, cSplit + 10 + p * 4, 10) : 0;
+              const solved = p < 5;
+              const on = solved ? ramp(g, cFive - 6 + p * 3, 10) : ramp(g, cSix - 4, 12);
               return (
                 <div
                   key={p}
                   style={{
-                    width: 104,
-                    height: 104,
-                    borderRadius: 16,
-                    border: `2px solid ${p < 5 ? `rgba(60,201,180,${0.3 + 0.7 * on})` : C.lineStrong}`,
-                    background: p < 5 ? `rgba(60,201,180,${0.16 * on})` : 'transparent',
+                    width: solved ? 108 : 160,
+                    height: 78,
+                    borderRadius: 12,
+                    border: solved ? `2px solid rgba(60,201,180,${0.25 + 0.75 * on})` : `2px dashed rgba(133,146,168,${0.35 + 0.5 * on})`,
+                    background: solved ? `rgba(60,201,180,${0.15 * on})` : 'transparent',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontFamily: F.sans,
-                    color: p < 5 ? C.text : C.muted,
                   }}
                 >
-                  <div style={{fontSize: 30, fontWeight: 700, color: p < 5 ? C.text : C.muted}}>P{p + 1}</div>
-                  <div style={{fontSize: 18, fontWeight: 600, color: p < 5 ? C.teal : C.muted, opacity: p < 5 ? on : 1, marginTop: 4}}>{p < 5 ? 'solution' : '—'}</div>
+                  <div style={{fontSize: 26, fontWeight: 700, color: solved ? C.text : C.muted}}>P{p + 1}</div>
+                  <div style={{fontSize: 15, fontWeight: 650, letterSpacing: '0.04em', color: solved ? C.teal : C.muted, opacity: on, marginTop: 2, whiteSpace: 'nowrap'}}>
+                    {solved ? 'SOLUTION' : 'NOT INCLUDED'}
+                  </div>
                 </div>
               );
             })}
           </div>
-          <div style={{marginTop: 40, fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.text, opacity: reportedT, lineHeight: 1.2}}>
-            Reported by Google DeepMind:
-          </div>
-          <div style={{fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.teal, opacity: goldT, lineHeight: 1.2}}>gold-medal standard</div>
-          <div style={{marginTop: 16, fontFamily: F.sans, fontSize: 26, color: C.textDim, opacity: goldT, lineHeight: 1.4}}>
-            Gemini Deep Think · Google DeepMind
-            <br />
-            July 2025
-          </div>
         </div>
 
-        <div style={{position: 'absolute', left: 1040, top: 170, width: 760}}>
-          <Tag tone="coral">Invented titles</Tag>
-          <div style={{marginTop: 30, fontFamily: F.sans, fontWeight: 750, fontSize: 52, color: C.text, lineHeight: 1.1}}>A dissertation title</div>
-          <div style={{marginTop: 44, display: 'flex', flexDirection: 'column', gap: 14}}>
+        <div style={{position: 'absolute', left: 1030, top: 128, width: 780}}>
+          <Tag tone="coral">Invented titles · May 2025</Tag>
+          <div style={{marginTop: 30, fontFamily: F.sans, fontWeight: 750, fontSize: 50, color: C.text, lineHeight: 1.1}}>A dissertation title</div>
+          <div style={{marginTop: 34, display: 'flex', flexDirection: 'column', gap: 14}}>
             {ANSWERS.map((a, i) => (
               <div
                 key={i}
@@ -291,9 +295,11 @@ export const S1Hook: React.FC = () => {
                   border: `1.5px solid ${C.lineStrong}`,
                   padding: '16px 22px',
                   fontFamily: F.serif,
-                  fontSize: 26,
+                  fontSize: 27,
+                  lineHeight: 1.3,
                   color: C.text,
                   opacity: ramp(g, cSplit + 8 + i * 4, 12),
+                  transform: `translateY(${(1 - ramp(g, cSplit + 8 + i * 4, 12)) * 14}px)`,
                 }}
               >
                 <span style={{fontFamily: F.sans, fontWeight: 700, fontSize: 22, color: C.muted, marginRight: 14}}>{a.model}</span>
@@ -301,18 +307,32 @@ export const S1Hook: React.FC = () => {
               </div>
             ))}
           </div>
-          <div style={{marginTop: 26, fontFamily: F.sans, fontSize: 26, color: C.textDim, lineHeight: 1.4}}>
+          <div style={{marginTop: 24, fontFamily: F.sans, fontSize: 24, color: C.textDim, lineHeight: 1.45}}>
             GPT-4o · DeepSeek-R1 · Llama-4-Scout
             <br />
-            May 9, 2025 · no web search
+            accessed May 9, 2025 · no web search
           </div>
         </div>
-        <div style={{position: 'absolute', left: 960, top: 190, bottom: 210, width: 2, background: C.line}} />
-        <div style={{position: 'absolute', left: 0, right: 0, top: 850, textAlign: 'center', fontFamily: F.sans, fontSize: 30, fontWeight: 600, color: C.textDim, opacity: goldT}}>
-          Different systems, different tests, same basic technology: language models.
+        <div style={{position: 'absolute', left: 960, top: 150, bottom: 230, width: 2, background: C.line}} />
+        <div
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 892,
+            textAlign: 'center',
+            fontFamily: F.sans,
+            fontSize: 30,
+            fontWeight: 600,
+            color: samePulse > 0.01 ? C.text : C.textDim,
+            opacity: sameT,
+            transform: `scale(${1 + 0.03 * samePulse})`,
+          }}
+        >
+          Different systems, different tests. Same basic technology: <span style={{color: C.text, fontWeight: 720}}>language models</span>.
         </div>
         <SourceLine opacity={splitIn}>
-          IMO 2025: reported by Google DeepMind, Jul 21, 2025; published solutions: storage.googleapis.com/deepmind-media/gemini/IMO_2025.pdf
+          Left: Google DeepMind, IMO_2025.pdf, p. 1 (published Jul 21, 2025), storage.googleapis.com/deepmind-media/gemini/
           <br />
           Right: Kalai et al. (2025), Table 1
         </SourceLine>

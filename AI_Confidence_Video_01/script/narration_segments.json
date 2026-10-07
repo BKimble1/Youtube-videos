@@ -183,7 +183,7 @@
    "id": "s28",
    "scene": "S4",
    "text": "When the researchers checked ten popular benchmarks, nine graded strictly right or wrong, with zero credit for “I don't know.” Train and rank models on tests like that, and guessing pays.",
-   "pause_after_ms": 350
+   "pause_after_ms": 700
   },
   {
    "id": "s29",

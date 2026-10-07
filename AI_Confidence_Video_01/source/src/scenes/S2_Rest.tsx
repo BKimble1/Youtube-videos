@@ -5,7 +5,7 @@ import {Doc} from '../components/Doc';
 import {SourceLine, Tag} from '../components/ui';
 import {useG} from '../lib/SceneFrame';
 import {at, segEnd} from '../lib/timeline';
-import {easeInOut, ramp, rand} from '../lib/anim';
+import {easeInOut, lerp, ramp, rand} from '../lib/anim';
 import {C, F} from '../theme';
 import {S2Inside} from './S2_Inside';
 
@@ -36,6 +36,7 @@ export const S2Rest: React.FC = () => {
   const m1 = ramp(g, cScores, 22, easeInOut);
   const m2 = ramp(g, cNot, 14);
   const trueT = ramp(g, cNot + 6, 14);
+  const liftT = ramp(g, cNot - 2, 24, easeInOut); // block starts centred, rises to make room for the conclusion
   const mOut = ramp(g, cModern - 6, 14);
   const stIn = ramp(g, cModern, 16);
   const ring1 = ramp(g, cInstr, 16);
@@ -108,7 +109,7 @@ export const S2Rest: React.FC = () => {
       {/* Likely vs true */}
       <AbsoluteFill style={{opacity: mIn * (1 - mOut)}}>
         <Backdrop />
-        <div style={{position: 'absolute', left: 170, top: 230, width: 1580}}>
+        <div style={{position: 'absolute', left: 170, top: lerp(350, 210, liftT), width: 1580}}>
           <div style={{fontFamily: F.sans, fontSize: 26, fontWeight: 700, letterSpacing: '0.12em', color: C.muted}}>WHAT THE SCORE MEASURES</div>
           <div style={{marginTop: 40, display: 'flex', alignItems: 'center', gap: 40}}>
             <div style={{width: 700, fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.text}}>How likely to come next</div>

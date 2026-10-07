@@ -151,6 +151,8 @@ export const S3Convincing: React.FC = () => {
   const einIn = ramp(g, cFamous, 16);
   const einPaper = ramp(g, cPaper, 16);
   const oneIn = ramp(g, cBut, 16);
+  // once the quoted paper line leaves, the two columns settle to the vertical centre of the frame
+  const colDrop = ramp(g, cBut - 4, 26, easeInOut);
   const rarelyT = ramp(g, at('s18', 'rarely'), 10);
   const onceT = ramp(g, cOnce, 10);
   const neverT = ramp(g, cNever, 10);
@@ -218,7 +220,7 @@ export const S3Convincing: React.FC = () => {
 
       {/* Einstein: frequently referenced. One researcher: maybe once, maybe never. */}
       <AbsoluteFill style={{opacity: (einIn) * (1 - bOut)}}>
-        <div style={{position: 'absolute', left: 150, top: 150, width: 720}}>
+        <div style={{position: 'absolute', left: 150, top: lerp(150, 290, colDrop), width: 720}}>
           <div style={{fontFamily: F.sans, fontSize: 26, fontWeight: 700, letterSpacing: '0.12em', color: C.muted}}>A FAMOUS FACT</div>
           <div style={{position: 'relative', marginTop: 40, height: 300}}>
             {Array.from({length: 7}).map((_, k) => (
@@ -249,7 +251,7 @@ export const S3Convincing: React.FC = () => {
           </div>
           <div style={{marginTop: 30, fontFamily: F.sans, fontSize: 30, fontWeight: 650, color: C.teal}}>written about many, many times</div>
         </div>
-        <div style={{position: 'absolute', left: 1040, top: 150, width: 720, opacity: oneIn}}>
+        <div style={{position: 'absolute', left: 1040, top: lerp(150, 290, colDrop), width: 720, opacity: oneIn}}>
           <div style={{fontFamily: F.sans, fontSize: 26, fontWeight: 700, letterSpacing: '0.12em', color: C.muted}}>ONE RESEARCHER’S THESIS</div>
           <div
             style={{

@@ -367,139 +367,139 @@ Train and rank models on tests like that,
 and guessing pays.
 
 84
-00:03:49,385 --> 00:03:52,825
+00:03:49,555 --> 00:03:52,995
 Their fix: state the penalty
 for wrong answers up front,
 
 85
-00:03:52,905 --> 00:03:55,065
+00:03:53,075 --> 00:03:55,235
 so admitting uncertainty can win.
 
 86
-00:03:55,105 --> 00:03:57,465
+00:03:55,275 --> 00:03:57,635
 It's one explanation, not the whole story,
 
 87
-00:03:57,545 --> 00:03:59,385
+00:03:57,715 --> 00:03:59,555
 but a surprisingly simple one.
 
 88
-00:03:59,980 --> 00:04:01,580
+00:04:00,150 --> 00:04:01,750
 So what actually helps?
 
 89
-00:04:02,140 --> 00:04:04,140
+00:04:02,310 --> 00:04:04,310
 Start with the unglamorous move:
 
 90
-00:04:04,220 --> 00:04:05,340
+00:04:04,390 --> 00:04:05,510
 check the record.
 
 91
-00:04:05,580 --> 00:04:07,420
+00:04:05,750 --> 00:04:07,590
 Here's Kalai's actual thesis.
 
 92
-00:04:07,660 --> 00:04:10,820
+00:04:07,830 --> 00:04:10,990
 “Probabilistic and On-line
 Methods in Machine Learning.”
 
 93
-00:04:11,020 --> 00:04:13,460
+00:04:11,190 --> 00:04:13,630
 Carnegie Mellon, May 2001.
 
 94
-00:04:13,740 --> 00:04:16,540
+00:04:13,910 --> 00:04:16,710
 And checking means more
 than spotting a citation.
 
 95
-00:04:16,620 --> 00:04:19,900
+00:04:16,790 --> 00:04:20,070
 Does the source exist, and
 does it actually say this?
 
 96
-00:04:20,315 --> 00:04:24,715
+00:04:20,485 --> 00:04:24,885
 Inside one Claude model, Anthropic
 researchers found a default circuit for
 
 97
-00:04:25,035 --> 00:04:26,635
+00:04:25,205 --> 00:04:26,805
 “I can't answer.”
 
 98
-00:04:26,715 --> 00:04:29,115
+00:04:26,885 --> 00:04:29,285
 Recognizing a familiar
 name switches it off.
 
 99
-00:04:29,595 --> 00:04:31,515
+00:04:29,765 --> 00:04:31,685
 When that recognition misfires,
 
 100
-00:04:31,595 --> 00:04:34,555
+00:04:31,765 --> 00:04:34,725
 when a name seems familiar
 but the facts aren't there,
 
 101
-00:04:34,635 --> 00:04:36,635
+00:04:34,805 --> 00:04:36,805
 the model can produce a plausible guess.
 
 102
-00:04:37,195 --> 00:04:39,355
+00:04:37,365 --> 00:04:39,525
 Knowing a name isn't knowing the facts.
 
 103
-00:04:39,835 --> 00:04:43,275
+00:04:40,005 --> 00:04:43,445
 Search, retrieval, and longer reasoning
 can help when they bring in the right
 
 104
-00:04:43,355 --> 00:04:44,255
+00:04:43,525 --> 00:04:44,425
 evidence.
 
 105
-00:04:44,395 --> 00:04:47,355
+00:04:44,565 --> 00:04:47,525
 Turning down the randomness
 makes answers more consistent,
 
 106
-00:04:47,475 --> 00:04:48,955
+00:04:47,645 --> 00:04:49,125
 not necessarily more correct.
 
 107
-00:04:49,435 --> 00:04:50,955
+00:04:49,605 --> 00:04:51,125
 None of it is a guarantee.
 
 108
-00:04:51,555 --> 00:04:54,595
+00:04:51,725 --> 00:04:54,765
 So why does AI sound
 right when it's wrong?
 
 109
-00:04:54,835 --> 00:04:57,715
+00:04:55,005 --> 00:04:57,885
 Because sounding right comes
 from patterns in language,
 
 110
-00:04:57,835 --> 00:05:01,315
+00:04:58,005 --> 00:05:01,485
 and being right takes evidence
 the model doesn't always have.
 
 111
-00:05:01,965 --> 00:05:05,485
+00:05:02,135 --> 00:05:05,655
 So when an answer matters, don't
 ask whether it sounds right.
 
 112
-00:05:05,645 --> 00:05:09,245
+00:05:05,815 --> 00:05:09,415
 Ask: what's the evidence, and
 does it actually say this?
 
 113
-00:05:09,925 --> 00:05:11,365
+00:05:10,095 --> 00:05:11,535
 It works on chatbots.
 
 114
-00:05:11,405 --> 00:05:13,205
+00:05:11,575 --> 00:05:13,375
 It works pretty well on people, too.
