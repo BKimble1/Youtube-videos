@@ -1,0 +1,417 @@
+{
+ "amb_conveyor": {
+  "file": "amb_conveyor.wav",
+  "sync_s": 0.0,
+  "class": "loop",
+  "gain_db": 0,
+  "dur_s": 5.7,
+  "source": "audio/sfx/v2/raw/amb_conveyor_v3.mp3"
+ },
+ "amb_counter": {
+  "file": "amb_counter.wav",
+  "sync_s": 0.0,
+  "class": "loop",
+  "gain_db": 0,
+  "dur_s": 5.7,
+  "source": "audio/sfx/v2/raw/amb_counter_v2.mp3"
+ },
+ "amb_gameshow": {
+  "file": "amb_gameshow.wav",
+  "sync_s": 0.0,
+  "class": "loop",
+  "gain_db": 0,
+  "dur_s": 5.7,
+  "source": "audio/sfx/v2/raw/amb_gameshow_v2.mp3"
+ },
+ "amb_library": {
+  "file": "amb_library.wav",
+  "sync_s": 0.0,
+  "class": "loop",
+  "gain_db": 0,
+  "dur_s": 5.7,
+  "source": "audio/sfx/v2/raw/amb_library_v2.mp3"
+ },
+ "amb_machine": {
+  "file": "amb_machine.wav",
+  "sync_s": 0.0,
+  "class": "loop",
+  "gain_db": 0,
+  "dur_s": 5.7,
+  "source": "audio/sfx/v2/raw/amb_machine_v3.mp3"
+ },
+ "bell_ding": {
+  "file": "bell_ding.wav",
+  "sync_s": 0.0,
+  "class": "hit",
+  "gain_db": -7,
+  "dur_s": 0.9,
+  "source": "audio/sfx/v2/raw/bell_ding_v1.mp3"
+ },
+ "book_slide": {
+  "file": "book_slide.wav",
+  "sync_s": 0.18,
+  "class": "stop",
+  "gain_db": -8,
+  "dur_s": 0.45,
+  "source": "audio/sfx/v2/raw/book_slide_v1.mp3"
+ },
+ "buzzer_wrong": {
+  "file": "buzzer_wrong.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -6,
+  "dur_s": 0.44,
+  "source": "audio/sfx/v2/raw/buzzer_wrong_v2.mp3"
+ },
+ "card_flick": {
+  "file": "card_flick.wav",
+  "sync_s": 0.06,
+  "class": "hit",
+  "gain_db": -8,
+  "dur_s": 0.18,
+  "source": "audio/sfx/v2/raw/card_flick_v1.mp3"
+ },
+ "card_slide": {
+  "file": "card_slide.wav",
+  "sync_s": 0.03,
+  "class": "stroke",
+  "gain_db": -7,
+  "dur_s": 0.6,
+  "source": "audio/sfx/v2/raw/card_slide_v3.mp3"
+ },
+ "chip_pop": {
+  "file": "chip_pop.wav",
+  "sync_s": 0.0,
+  "class": "hit",
+  "gain_db": -11,
+  "dur_s": 0.15,
+  "source": "audio/sfx/v2/raw/chip_pop_v3.mp3"
+ },
+ "claim_fails": {
+  "file": "claim_fails.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -2,
+  "dur_s": 1.32,
+  "source": "audio/sfx/v2/raw/claim_fails_v1.mp3"
+ },
+ "conveyor_clunk": {
+  "file": "conveyor_clunk.wav",
+  "sync_s": 0.67,
+  "class": "hit",
+  "gain_db": -8,
+  "dur_s": 1.0,
+  "source": "audio/sfx/v2/raw/conveyor_clunk_v1.mp3"
+ },
+ "conveyor_run": {
+  "file": "conveyor_run.wav",
+  "sync_s": 0.0,
+  "class": "loop",
+  "gain_db": -14,
+  "dur_s": 2.7,
+  "source": "audio/sfx/v2/raw/conveyor_run_v2.mp3"
+ },
+ "crowd_aww": {
+  "file": "crowd_aww.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -8,
+  "dur_s": 1.46,
+  "source": "audio/sfx/v2/raw/crowd_aww_v2.mp3"
+ },
+ "crowd_cheer": {
+  "file": "crowd_cheer.wav",
+  "sync_s": 0.0,
+  "class": "loop",
+  "gain_db": -8,
+  "dur_s": 2.18,
+  "source": "audio/sfx/v2/raw/crowd_cheer_v2.mp3"
+ },
+ "ding_right": {
+  "file": "ding_right.wav",
+  "sync_s": 0.0,
+  "class": "hit",
+  "gain_db": -6,
+  "dur_s": 0.72,
+  "source": "audio/sfx/v2/raw/ding_right_v1.mp3"
+ },
+ "drawer_close": {
+  "file": "drawer_close.wav",
+  "sync_s": 0.4,
+  "class": "stop",
+  "gain_db": -7,
+  "dur_s": 0.58,
+  "source": "audio/sfx/v2/raw/drawer_close_v1.mp3"
+ },
+ "drawer_open": {
+  "file": "drawer_open.wav",
+  "sync_s": 0.57,
+  "class": "stop",
+  "gain_db": -6,
+  "dur_s": 1.0,
+  "source": "audio/sfx/elevenlabs/drawer_v1.mp3"
+ },
+ "fanfare_small": {
+  "file": "fanfare_small.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -5,
+  "dur_s": 1.64,
+  "source": "audio/sfx/elevenlabs/fanfare_v2.mp3"
+ },
+ "gavel": {
+  "file": "gavel.wav",
+  "sync_s": 0.0,
+  "class": "hit",
+  "gain_db": -1,
+  "dur_s": 0.46,
+  "source": "audio/sfx/v2/raw/gavel_v1.mp3"
+ },
+ "glint": {
+  "file": "glint.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -14,
+  "dur_s": 0.9,
+  "source": "audio/sfx/v2/raw/glint_v3.mp3"
+ },
+ "hanger_click": {
+  "file": "hanger_click.wav",
+  "sync_s": 0.41,
+  "class": "hit",
+  "gain_db": -9,
+  "dur_s": 0.62,
+  "source": "audio/sfx/v2/raw/hanger_click_v3.mp3"
+ },
+ "indicator_no": {
+  "file": "indicator_no.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -8,
+  "dur_s": 0.7,
+  "source": "audio/sfx/v2/raw/indicator_no_v2.mp3"
+ },
+ "indicator_yes": {
+  "file": "indicator_yes.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -8,
+  "dur_s": 0.74,
+  "source": "audio/sfx/v2/raw/indicator_yes_v2.mp3"
+ },
+ "logo_hit": {
+  "file": "logo_hit.wav",
+  "sync_s": 0.0,
+  "class": "hit",
+  "gain_db": -4,
+  "dur_s": 1.74,
+  "source": "audio/sfx/elevenlabs/impact_v3.mp3"
+ },
+ "machine_clunk": {
+  "file": "machine_clunk.wav",
+  "sync_s": 0.07,
+  "class": "hit",
+  "gain_db": -6,
+  "dur_s": 0.85,
+  "source": "audio/sfx/v2/raw/machine_clunk_v4.mp3"
+ },
+ "machine_hum": {
+  "file": "machine_hum.wav",
+  "sync_s": 0.0,
+  "class": "loop",
+  "gain_db": -16,
+  "dur_s": 3.7,
+  "source": "audio/sfx/v2/raw/machine_hum_v1.mp3"
+ },
+ "marker_circle": {
+  "file": "marker_circle.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -9,
+  "dur_s": 0.99,
+  "source": "audio/sfx/v2/raw/marker_circle_v1.mp3"
+ },
+ "marker_sweep": {
+  "file": "marker_sweep.wav",
+  "sync_s": 0.03,
+  "class": "stroke",
+  "gain_db": -9,
+  "dur_s": 0.55,
+  "source": "audio/sfx/elevenlabs/marker_v3.mp3"
+ },
+ "page_turn": {
+  "file": "page_turn.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -9,
+  "dur_s": 0.81,
+  "source": "audio/sfx/v2/raw/page_turn_v2.mp3"
+ },
+ "paper_flap": {
+  "file": "paper_flap.wav",
+  "sync_s": 0.03,
+  "class": "stroke",
+  "gain_db": -8,
+  "dur_s": 0.32,
+  "source": "audio/sfx/v2/raw/paper_flap_v1.mp3"
+ },
+ "paper_lift": {
+  "file": "paper_lift.wav",
+  "sync_s": 0.03,
+  "class": "stroke",
+  "gain_db": -9,
+  "dur_s": 0.73,
+  "source": "audio/sfx/v2/raw/paper_lift_v3.mp3"
+ },
+ "paper_slap": {
+  "file": "paper_slap.wav",
+  "sync_s": 0.08,
+  "class": "hit",
+  "gain_db": -6,
+  "dur_s": 0.21,
+  "source": "audio/sfx/v2/raw/paper_slap_v2.mp3"
+ },
+ "paper_slide": {
+  "file": "paper_slide.wav",
+  "sync_s": 0.03,
+  "class": "stroke",
+  "gain_db": -7,
+  "dur_s": 1.72,
+  "source": "audio/sfx/elevenlabs/paper2_v2.mp3"
+ },
+ "paper_swish": {
+  "file": "paper_swish.wav",
+  "sync_s": 0.03,
+  "class": "stroke",
+  "gain_db": -8,
+  "dur_s": 0.42,
+  "source": "audio/sfx/v2/raw/paper_swish_v3.mp3"
+ },
+ "pencil_tap": {
+  "file": "pencil_tap.wav",
+  "sync_s": 0.04,
+  "class": "hit",
+  "gain_db": -10,
+  "dur_s": 0.17,
+  "source": "audio/sfx/v2/raw/pencil_tap_v1.mp3"
+ },
+ "pop_tick": {
+  "file": "pop_tick.wav",
+  "sync_s": 0.02,
+  "class": "hit",
+  "gain_db": -10,
+  "dur_s": 0.16,
+  "source": "audio/sfx/elevenlabs/tock_v4.mp3"
+ },
+ "printer_feed": {
+  "file": "printer_feed.wav",
+  "sync_s": 0.02,
+  "class": "stroke",
+  "gain_db": -8,
+  "dur_s": 1.31,
+  "source": "audio/sfx/v2/raw/printer_feed_v1.mp3"
+ },
+ "prob_tick": {
+  "file": "prob_tick.wav",
+  "sync_s": 0.0,
+  "class": "hit",
+  "gain_db": -14,
+  "source": "numpy synth"
+ },
+ "scanner_sweep": {
+  "file": "scanner_sweep.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -9,
+  "dur_s": 1.26,
+  "source": "audio/sfx/v2/raw/scanner_sweep_v4.mp3"
+ },
+ "score_flip": {
+  "file": "score_flip.wav",
+  "sync_s": 0.19,
+  "class": "hit",
+  "gain_db": -8,
+  "dur_s": 0.28,
+  "source": "audio/sfx/v2/raw/score_flip_v4.mp3"
+ },
+ "stamp_heavy": {
+  "file": "stamp_heavy.wav",
+  "sync_s": 0.0,
+  "class": "hit",
+  "gain_db": 0,
+  "dur_s": 0.39,
+  "source": "audio/sfx/v2/raw/stamp_heavy_v1.mp3"
+ },
+ "stamp_light": {
+  "file": "stamp_light.wav",
+  "sync_s": 0.04,
+  "class": "hit",
+  "gain_db": -3,
+  "dur_s": 0.17,
+  "source": "audio/sfx/elevenlabs/stamp_v2.mp3"
+ },
+ "tape_rip": {
+  "file": "tape_rip.wav",
+  "sync_s": 0.0,
+  "class": "stroke",
+  "gain_db": -10,
+  "dur_s": 0.96,
+  "source": "audio/sfx/v2/raw/tape_rip_v2.mp3"
+ },
+ "thud_soft": {
+  "file": "thud_soft.wav",
+  "sync_s": 0.34,
+  "class": "hit",
+  "gain_db": -7,
+  "dur_s": 0.54,
+  "source": "audio/sfx/elevenlabs/tap_v1.mp3"
+ },
+ "token_lock": {
+  "file": "token_lock.wav",
+  "sync_s": 0.04,
+  "class": "hit",
+  "gain_db": -8,
+  "dur_s": 0.14,
+  "source": "audio/sfx/elevenlabs/token_v4.mp3"
+ },
+ "token_select": {
+  "file": "token_select.wav",
+  "sync_s": 0.0,
+  "class": "hit",
+  "gain_db": -9,
+  "dur_s": 0.14,
+  "source": "audio/sfx/v2/raw/token_select_v3.mp3"
+ },
+ "trophy_clink": {
+  "file": "trophy_clink.wav",
+  "sync_s": 0.03,
+  "class": "hit",
+  "gain_db": -7,
+  "dur_s": 0.38,
+  "source": "audio/sfx/v2/raw/trophy_clink_v4.mp3"
+ },
+ "trophy_steps": {
+  "file": "trophy_steps.wav",
+  "sync_s": 0.0,
+  "class": "loop",
+  "gain_db": -9,
+  "dur_s": 1.18,
+  "source": "audio/sfx/v2/raw/trophy_steps_v1.mp3"
+ },
+ "typewriter_tick": {
+  "file": "typewriter_tick.wav",
+  "sync_s": 0.03,
+  "class": "hit",
+  "gain_db": -10,
+  "dur_s": 0.18,
+  "source": "audio/sfx/v2/raw/typewriter_tick_v3.mp3"
+ },
+ "whoosh_soft": {
+  "file": "whoosh_soft.wav",
+  "sync_s": 0.03,
+  "class": "stroke",
+  "gain_db": -12,
+  "dur_s": 0.88,
+  "source": "audio/sfx/elevenlabs/whoosh_v3.mp3"
+ }
+}

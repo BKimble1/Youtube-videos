@@ -1,0 +1,890 @@
+[
+{
+"scene": "S1",
+"f": 0,
+"t": 0.0,
+"kind": "amb_counter",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 15,
+"t": 0.5,
+"kind": "paper_flap",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 15,
+"t": 0.5,
+"kind": "hanger_click",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 18,
+"t": 0.6,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 28,
+"t": 0.933,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 42,
+"t": 1.4,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 68,
+"t": 2.267,
+"kind": "stamp_light",
+"gain": -12,
+"note": "guard-rail label stamped on the ticket"
+},
+{
+"scene": "S1",
+"f": 116,
+"t": 3.867,
+"kind": "typewriter_tick",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 121,
+"t": 4.033,
+"kind": "typewriter_tick",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 125,
+"t": 4.167,
+"kind": "typewriter_tick",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 133,
+"t": 4.433,
+"kind": "typewriter_tick",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 140,
+"t": 4.667,
+"kind": "typewriter_tick",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 145,
+"t": 4.833,
+"kind": "typewriter_tick",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 152,
+"t": 5.067,
+"kind": "typewriter_tick",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 165,
+"t": 5.5,
+"kind": "typewriter_tick",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 177,
+"t": 5.9,
+"kind": "bell_ding",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 193,
+"t": 6.433,
+"kind": "paper_swish",
+"gain": -12,
+"note": "ticket pulled up on its strings"
+},
+{
+"scene": "S1",
+"f": 199,
+"t": 6.633,
+"kind": "paper_lift",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 213,
+"t": 7.1,
+"kind": "paper_slide",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 227,
+"t": 7.567,
+"kind": "paper_slap",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 228,
+"t": 7.6,
+"kind": "glint",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 330,
+"t": 11.0,
+"kind": "paper_lift",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 339,
+"t": 11.3,
+"kind": "paper_slide",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 351,
+"t": 11.7,
+"kind": "paper_slap",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 352,
+"t": 11.733,
+"kind": "glint",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 386,
+"t": 12.867,
+"kind": "paper_lift",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 394,
+"t": 13.133,
+"kind": "paper_slide",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 406,
+"t": 13.533,
+"kind": "paper_slap",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 407,
+"t": 13.567,
+"kind": "glint",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 254,
+"t": 8.467,
+"kind": "marker_sweep",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 275,
+"t": 9.167,
+"kind": "marker_circle",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 309,
+"t": 10.3,
+"kind": "marker_sweep",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 317,
+"t": 10.567,
+"kind": "pencil_tap",
+"gain": -8,
+"note": "A taps his slip twice"
+},
+{
+"scene": "S1",
+"f": 324,
+"t": 10.8,
+"kind": "pencil_tap",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 360,
+"t": 12.0,
+"kind": "marker_sweep",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 410,
+"t": 13.667,
+"kind": "marker_sweep",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 439,
+"t": 14.633,
+"kind": "glint",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 443,
+"t": 14.767,
+"kind": "glint",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 447,
+"t": 14.9,
+"kind": "glint",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 457,
+"t": 15.233,
+"kind": "whoosh_soft",
+"gain": -12,
+"note": "the checking hand rises into frame"
+},
+{
+"scene": "S1",
+"f": 486,
+"t": 16.2,
+"kind": "stamp_light",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 496,
+"t": 16.533,
+"kind": "stamp_light",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 508,
+"t": 16.933,
+"kind": "stamp_heavy",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 530,
+"t": 17.667,
+"kind": "marker_circle",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 538,
+"t": 17.933,
+"kind": "marker_circle",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 546,
+"t": 18.2,
+"kind": "marker_circle",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 566,
+"t": 18.867,
+"kind": "chip_pop",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 587,
+"t": 19.567,
+"kind": "paper_flap",
+"gain": -6,
+"note": "the ticket drops back down"
+},
+{
+"scene": "S1",
+"f": 599,
+"t": 19.967,
+"kind": "hanger_click",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 609,
+"t": 20.3,
+"kind": "marker_circle",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 638,
+"t": 21.267,
+"kind": "whoosh_soft",
+"gain": -14,
+"note": "the ring lifts off the ticket"
+},
+{
+"scene": "S1",
+"f": 646,
+"t": 21.533,
+"kind": "paper_slap",
+"gain": -3,
+"note": "the paper lands on the counter"
+},
+{
+"scene": "S1",
+"f": 650,
+"t": 21.667,
+"kind": "tape_rip",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 654,
+"t": 21.8,
+"kind": "tape_rip",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 652,
+"t": 21.733,
+"kind": "chip_pop",
+"gain": 0,
+"note": "Lead author"
+},
+{
+"scene": "S1",
+"f": 672,
+"t": 22.4,
+"kind": "marker_sweep",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 680,
+"t": 22.667,
+"kind": "marker_sweep",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 680,
+"t": 22.667,
+"kind": "paper_slide",
+"gain": -5,
+"note": "source tab slides out"
+},
+{
+"scene": "S1",
+"f": 712,
+"t": 23.733,
+"kind": "paper_swish",
+"gain": 0,
+"note": "the checker whisks the paper away"
+},
+{
+"scene": "S1",
+"f": 730,
+"t": 24.333,
+"kind": "chip_pop",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 788,
+"t": 26.267,
+"kind": "stamp_light",
+"gain": -4,
+"note": "the punchline stamps in (an echo of the WRONG stamps)"
+},
+{
+"scene": "S1",
+"f": 804,
+"t": 26.8,
+"kind": "pencil_tap",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S1",
+"f": 801,
+"t": 26.7,
+"kind": "paper_lift",
+"gain": -4,
+"note": "slip A lifts toward camera into S2"
+},
+{
+"scene": "S2",
+"f": 818,
+"t": 27.267,
+"kind": "thud_soft",
+"gain": -6,
+"note": "slip A lands on the paper"
+},
+{
+"scene": "S2",
+"f": 823,
+"t": 27.433,
+"kind": "stamp_light",
+"gain": -14,
+"note": "WRONG after-thump"
+},
+{
+"scene": "S2",
+"f": 831,
+"t": 27.7,
+"kind": "paper_slide",
+"gain": -14,
+"note": "kicker slides down"
+},
+{
+"scene": "S2",
+"f": 863,
+"t": 28.767,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 867,
+"t": 28.9,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 900,
+"t": 30.0,
+"kind": "logo_hit",
+"gain": -6,
+"note": "Confidently drops into the title"
+},
+{
+"scene": "S2",
+"f": 905,
+"t": 30.167,
+"kind": "glint",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 925,
+"t": 30.833,
+"kind": "paper_swish",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 937,
+"t": 31.233,
+"kind": "chip_pop",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 937,
+"t": 31.233,
+"kind": "paper_slap",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 942,
+"t": 31.4,
+"kind": "paper_slap",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 947,
+"t": 31.567,
+"kind": "paper_slap",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 973,
+"t": 32.433,
+"kind": "card_flick",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1069,
+"t": 35.633,
+"kind": "card_flick",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1155,
+"t": 38.5,
+"kind": "card_flick",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 995,
+"t": 33.167,
+"kind": "prob_tick",
+"gain": -14,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1006,
+"t": 33.533,
+"kind": "prob_tick",
+"gain": -14,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1021,
+"t": 34.033,
+"kind": "token_select",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1036,
+"t": 34.533,
+"kind": "paper_lift",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1041,
+"t": 34.7,
+"kind": "token_lock",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1071,
+"t": 35.7,
+"kind": "conveyor_run",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1091,
+"t": 36.367,
+"kind": "machine_clunk",
+"gain": -6,
+"note": "the locked shutter rattles"
+},
+{
+"scene": "S2",
+"f": 1100,
+"t": 36.667,
+"kind": "hanger_click",
+"gain": -8,
+"note": "CLOSED sign swings"
+},
+{
+"scene": "S2",
+"f": 1112,
+"t": 37.067,
+"kind": "card_flick",
+"gain": -8,
+"note": "slip deflected past the booth"
+},
+{
+"scene": "S2",
+"f": 1126,
+"t": 37.533,
+"kind": "stamp_light",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1159,
+"t": 38.633,
+"kind": "chip_pop",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1167,
+"t": 38.9,
+"kind": "score_flip",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1173,
+"t": 39.1,
+"kind": "score_flip",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1179,
+"t": 39.3,
+"kind": "score_flip",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1185,
+"t": 39.5,
+"kind": "score_flip",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1191,
+"t": 39.7,
+"kind": "score_flip",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1197,
+"t": 39.9,
+"kind": "score_flip",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1170,
+"t": 39.0,
+"kind": "score_flip",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1176,
+"t": 39.2,
+"kind": "score_flip",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1182,
+"t": 39.4,
+"kind": "score_flip",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1188,
+"t": 39.6,
+"kind": "score_flip",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1194,
+"t": 39.8,
+"kind": "score_flip",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1200,
+"t": 40.0,
+"kind": "score_flip",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1220,
+"t": 40.667,
+"kind": "score_flip",
+"gain": -6,
+"note": "the sly seventh point"
+},
+{
+"scene": "S2",
+"f": 1235,
+"t": 41.167,
+"kind": "glint",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1252,
+"t": 41.733,
+"kind": "stamp_heavy",
+"gain": -4,
+"note": "GUESSING PAYS"
+},
+{
+"scene": "S2",
+"f": 1264,
+"t": 42.133,
+"kind": "whoosh_soft",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1274,
+"t": 42.467,
+"kind": "thud_soft",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1276,
+"t": 42.533,
+"kind": "pop_tick",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1280,
+"t": 42.667,
+"kind": "pop_tick",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1284,
+"t": 42.8,
+"kind": "pop_tick",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1286,
+"t": 42.867,
+"kind": "logo_hit",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S2",
+"f": 1305,
+"t": 43.5,
+"kind": "whoosh_soft",
+"gain": -10,
+"note": "brand card lifts away"
+}
+]

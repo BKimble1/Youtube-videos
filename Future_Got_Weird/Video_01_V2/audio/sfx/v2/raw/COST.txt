@@ -1,0 +1,6 @@
+Total spent (sum of per-generation credit costs reported by the ElevenLabs tool responses): 904.91 credits (~USD 0.1645) for 144 generations
+Model: eleven_text_to_sound_v2 (ElevenLabs Sound Effects v2), flow "FGW V2 SFX" (ixyOFJL5LrLUH7pADfMu)
+Reported rate: 3.333 credits (0.0606 US cents) per requested second of audio, per variation.
+Remaining credits: not reported by the tools.
+20 variation requests were rejected with 429 rate_limit_exceeded (no credit cost reported for them).
+Note: the pre-run estimate_only calls quoted 3212 credits / 58.4 US cents for 164 variations (902 + 2046 + 264 credits), about 3.3x the per-generation prices reported afterwards. The total above uses the per-generation prices.
