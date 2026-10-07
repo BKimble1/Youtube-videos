@@ -1,0 +1,160 @@
+{
+ "part_bytes": 25165824,
+ "files": [
+  {
+   "name": "AI_Confidence_Video_01_project.zip",
+   "bytes": 100176058,
+   "sha256": "bfd0021a7bd01bc8a611d209bbae565d1b2d17f510de1c959ce1f3d44a383810",
+   "parts": [
+    {
+     "name": "AI_Confidence_Video_01_project.zip.part001",
+     "bytes": 25165824,
+     "sha256": "3b52a7aa98800594d01accf4829224e655ba93bf71ae185d9be90b7a2dc5cdca"
+    },
+    {
+     "name": "AI_Confidence_Video_01_project.zip.part002",
+     "bytes": 25165824,
+     "sha256": "721e7c52c701fe560ef8532ce3685e3a2ca606f3eef8dfba3b92658e2492c495"
+    },
+    {
+     "name": "AI_Confidence_Video_01_project.zip.part003",
+     "bytes": 25165824,
+     "sha256": "f0469eeb8ba98fb0235e2385051047a19b3c7938ffc0c9681c7324da9377815f"
+    },
+    {
+     "name": "AI_Confidence_Video_01_project.zip.part004",
+     "bytes": 24678586,
+     "sha256": "b418cbe2a2ea8a90d7bbd755b6436b778faec5261478291a0fde61e28c2d02dc"
+    }
+   ]
+  },
+  {
+   "name": "Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4",
+   "bytes": 104123810,
+   "sha256": "3747fd1d4d45ec9a389b4f1ace7de828f2cec605a4580847fae9f0a11307c5f6",
+   "parts": [
+    {
+     "name": "Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4.part001",
+     "bytes": 25165824,
+     "sha256": "90139025451a61456fa2e4c00969982c518519df08de42d5d636d500f224ca48"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4.part002",
+     "bytes": 25165824,
+     "sha256": "ab3fa800fbaa597bbde931be55930fd406ddf849bca1a83da2f06e6461d72197"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4.part003",
+     "bytes": 25165824,
+     "sha256": "625b29bd35d390598a9de739d69678382ccab97cf767ba530b489b6242fff9d5"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4.part004",
+     "bytes": 25165824,
+     "sha256": "5daddc37ba1d2d97cb42628733bebcc3f8dccbdd3d273c63d1545b74bf159401"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4.part005",
+     "bytes": 3460514,
+     "sha256": "509428d9101e47010dac60393fd026550874c4532c5bdf3cc76789de33dbd059"
+    }
+   ]
+  },
+  {
+   "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4",
+   "bytes": 262253043,
+   "sha256": "31913e2f7a946b16d16bc0edc676e0148c36a20c9dcce526a28c3f708432c0ab",
+   "parts": [
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part001",
+     "bytes": 25165824,
+     "sha256": "3a4130fdd893b0264a36ea1610cbe1a86b7607f01a74c2dfa2df1448a1bcdad2"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part002",
+     "bytes": 25165824,
+     "sha256": "14553cf77b5920fb806042ebb4344490eb74925a4b9f08d0a804b028c6245f22"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part003",
+     "bytes": 25165824,
+     "sha256": "90cdf75d4244954d7fc8b69f9ba2c1c34159f4feb94380b53b438f615b6e72f9"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part004",
+     "bytes": 25165824,
+     "sha256": "1bb50e13b8a36c46f2b3ff620e54fa6ae7592d007a60eb8540705fd6c2813d5b"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part005",
+     "bytes": 25165824,
+     "sha256": "9d483dd17de6aedc375cb3e45a0f06005d1b18c9f9dd042e8b92b6278783ad81"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part006",
+     "bytes": 25165824,
+     "sha256": "0d8ed979997a5a3b408870428c7a795b04be132d05043056980e8b317e9bef2f"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part007",
+     "bytes": 25165824,
+     "sha256": "c2b6117aa94cd8e635b5f5d30f39f9f54472a3911537e0fe275507a6f6b47a36"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part008",
+     "bytes": 25165824,
+     "sha256": "ce279c887501653e439c3706b2dd7c955b695fe01c3a9dd86a37dc0c5ae10c25"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part009",
+     "bytes": 25165824,
+     "sha256": "761a691bf3fccb3f919d974225534f92e94a3b21ce7a199287af82fb6eacb01f"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part010",
+     "bytes": 25165824,
+     "sha256": "3789a5e32339cb391f038525f246a2a40f95b677bb2715adb84590a167f20e18"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4.part011",
+     "bytes": 10594803,
+     "sha256": "0017ad92adcdd147bef9f0da1ff1e71c95ddb874c37ec9508e85be74acb0658f"
+    }
+   ]
+  },
+  {
+   "name": "Video_01_PREVIEW_720p_DRAFT-NARRATION.mp4",
+   "bytes": 28752447,
+   "sha256": "d12984d34b98f88b8be334b1166a31a4c9b37243b6f6890f691b0a1c7f657fb7",
+   "parts": [
+    {
+     "name": "Video_01_PREVIEW_720p_DRAFT-NARRATION.mp4.part001",
+     "bytes": 25165824,
+     "sha256": "f75c7a43f268107ff613c46663ec05bac9a265aa609446f23db6d11e4600365b"
+    },
+    {
+     "name": "Video_01_PREVIEW_720p_DRAFT-NARRATION.mp4.part002",
+     "bytes": 3586623,
+     "sha256": "27a783586fa5941e23615507e3f8bd3cbce524f7983092d1f65492f627ffa6e7"
+    }
+   ]
+  },
+  {
+   "name": "Video_01_narration_stem_DRAFT.wav",
+   "bytes": 43128102,
+   "sha256": "2c4989c262d6fe9616f651e8ee67369d5139321c4514f69ac053f1a1f4afb72a",
+   "parts": [
+    {
+     "name": "Video_01_narration_stem_DRAFT.wav.part001",
+     "bytes": 25165824,
+     "sha256": "7df683c08d9c892dfdfc2f3eb338c5f15100e92a8544b99bc5cea44e4756b071"
+    },
+    {
+     "name": "Video_01_narration_stem_DRAFT.wav.part002",
+     "bytes": 17962278,
+     "sha256": "a1ed28858fdefbc7abeb97d2b8cd48f343b697a7aaa3b096b3966b0b5907ce3f"
+    }
+   ]
+  }
+ ]
+}
