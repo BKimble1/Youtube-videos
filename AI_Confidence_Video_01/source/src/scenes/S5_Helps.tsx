@@ -75,10 +75,10 @@ export const S5Helps: React.FC = () => {
   const cEnd = segEnd('s35');
 
   // Phase A: library photo + headline
-  const photoT = ramp(g, c0 - 8, 20) * (1 - ramp(g, cHere - 6, 14));
-  const headT = ramp(g, at('s30', 'unglamorous') - 4, 14);
+  const photoT = ramp(g, c0 - 8, 20) * (1 - ramp(g, cHere + 6, 12));
+  const headT = ramp(g, at('s30', 'move:') - 2, 14);
   // Phase B: thesis title page + checklist
-  const thesisIn = ramp(g, cHere, 18);
+  const thesisIn = ramp(g, cHere + 12, 16);
   const boxTitle = ramp(g, cProb, 16);
   const boxCMU = ramp(g, cCarnegie, 14);
   const boxDate = ramp(g, cMay, 14);
@@ -89,8 +89,7 @@ export const S5Helps: React.FC = () => {
   const thesisOut = ramp(g, at('s33', 'Claude') - 8, 8);
   // Phase C: Anthropic finding
   const anthIn = ramp(g, at('s33', 'Claude'), 10);
-  const headerT = ramp(g, at('s33', 'Claude'), 10) * (1 - ramp(g, cAnthropic + 8, 8));
-  const figT = ramp(g, cAnthropic + 14, 10) * (1 - ramp(g, cFor + 2, 8));
+  const figT = ramp(g, at('s33', 'Claude'), 10) * (1 - ramp(g, cFor + 2, 8));
   const diagIn = ramp(g, cFor + 8, 12);
   const famOn = ramp(g, cFamiliarName, 12);
   const inhibit = ramp(g, cSwitches, 16, easeInOut);
@@ -180,24 +179,23 @@ export const S5Helps: React.FC = () => {
               </div>
             </div>
           ))}
-          <div style={{marginTop: 34, opacity: q2}}>
-            <Doc src="img/paper_p19_kalai2001.png" width={690} aspect={167 / 2000} pad={14} />
-            <div style={{fontFamily: F.sans, fontSize: 20, color: C.muted, marginTop: 10}}>Also listed in the paper’s own references (p. 19)</div>
+          <div style={{marginTop: 34, opacity: q1, padding: '16px 22px', borderRadius: 14, background: C.paper, maxWidth: 740}}>
+            <div style={{fontFamily: F.serif, fontSize: 24, color: C.ink, lineHeight: 1.35}}>
+              Adam Kalai. 2001. Probabilistic and on-line methods in machine learning. PhD Thesis. Carnegie Mellon University.
+            </div>
           </div>
+          <div style={{fontFamily: F.sans, fontSize: 20, color: C.muted, marginTop: 10, opacity: q1}}>Also listed in the 2025 paper’s own references (p. 19, quoted)</div>
         </div>
         <SourceLine opacity={thesisIn}>Thesis title page: A. Kalai, Carnegie Mellon University, May 16, 2001 (CMU-CS-01-132), via Microsoft Research’s copy · Reference: Kalai et al. (2025), p. 19</SourceLine>
       </AbsoluteFill>
 
       {/* Anthropic: where "I don't know" lives (one model) */}
       <AbsoluteFill style={{opacity: anthIn * (1 - anthOut)}}>
-        <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: headerT}}>
-          <div style={{borderRadius: 14, overflow: 'hidden', boxShadow: '0 40px 90px rgba(0,0,0,0.5)'}}>
-            <Img src={staticFile('img/anthropic_header.png')} style={{width: 1500, display: 'block'}} />
-          </div>
-        </AbsoluteFill>
-        <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: figT}}>
-          <div style={{background: '#fff', padding: 24, borderRadius: 14, boxShadow: '0 40px 90px rgba(0,0,0,0.5)'}}>
-            <Img src={staticFile('img/anthropic_fig7.png')} style={{width: 1180, display: 'block'}} />
+        <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: figT, paddingBottom: 60}}>
+          <div style={{background: '#fff', padding: 24, borderRadius: 14, boxShadow: '0 40px 90px rgba(0,0,0,0.5)', transform: `scale(${1 + 0.025 * ramp(g, at('s33', 'Claude'), cFor - at('s33', 'Claude'), (x) => x)})`}}>
+            <Img src={staticFile('img/anthropic_header.png')} style={{width: 1000, display: 'block'}} />
+            <div style={{height: 1, background: 'rgba(0,0,0,0.12)', margin: '10px 0 14px'}} />
+            <Img src={staticFile('img/anthropic_fig7.png')} style={{width: 1000, display: 'block'}} />
           </div>
         </AbsoluteFill>
         {/* Simplified diagram, redrawn */}
@@ -207,8 +205,8 @@ export const S5Helps: React.FC = () => {
           </div>
           <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0}}>
             <defs>
-              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill={C.textDim} />
+              <marker id="arr" viewBox="0 0 14 10" refX="13" refY="5" markerWidth="8.4" markerHeight="6" orient="auto">
+                <path d="M 0 1.5 L 14 5 L 0 8.5 z" fill={C.textDim} />
               </marker>
             </defs>
             {/* familiar -> can't answer : inhibition (bar end) */}
@@ -220,7 +218,7 @@ export const S5Helps: React.FC = () => {
             {/* can't answer -> output */}
             <path d="M 1140 330 C 1260 330, 1300 470, 1335 500" stroke={C.textDim} strokeWidth={3} fill="none" markerEnd="url(#arr)" opacity={0.25 + 0.75 * canOn} />
             {/* facts -> output */}
-            <path d="M 1140 750 C 1260 750, 1300 610, 1335 580" stroke={C.textDim} strokeWidth={3} fill="none" markerEnd="url(#arr)" opacity={misfire ? 0.25 : famOn} />
+            <path d="M 1140 750 C 1260 750, 1300 610, 1335 580" stroke={C.textDim} strokeWidth={3} fill="none" markerEnd="url(#arr)" opacity={misfire ? 0.25 : 0.25 + 0.75 * inhibit} />
           </svg>
           <Node x={420} y={540} w={300} label="Familiar name?" sub={famOn > 0.5 ? 'yes' : 'checking…'} on={famOn} tone="text" />
           <Node x={960} y={330} w={360} label="“I can’t answer”" sub="on by default" on={canOn} tone="teal" />
@@ -237,12 +235,12 @@ export const S5Helps: React.FC = () => {
           <div style={{position: 'absolute', left: 0, right: 0, top: 900, textAlign: 'center', fontFamily: F.sans, fontSize: 40, fontWeight: 650, color: C.text, opacity: knowingT}}>
             Knowing a name isn’t knowing the facts.
           </div>
-          <div style={{position: 'absolute', left: 250, top: 640, opacity: misT}}>
+          <div style={{position: 'absolute', left: 140, top: 640, opacity: misT}}>
             <Tag tone="coral">Misfire: name feels familiar</Tag>
           </div>
         </AbsoluteFill>
         <SourceLine opacity={anthIn}>
-          {figT > 0.5 || headerT > 0.5 ? 'Article and figure: Anthropic, “Tracing the thoughts of a large language model” (Mar 27, 2025)' : 'Diagram: our simplified redraw, based on Anthropic (Mar 27, 2025)'} · one Claude model (Claude 3.5 Haiku, per Anthropic’s summary)
+          {g < cFor + 6 ? 'Article and figure: Anthropic, “Tracing the thoughts of a large language model” (Mar 27, 2025)' : 'Diagram: our simplified redraw, based on Anthropic (Mar 27, 2025)'} · one Claude model (Claude 3.5 Haiku, per Anthropic’s summary)
         </SourceLine>
       </AbsoluteFill>
 
@@ -276,8 +274,10 @@ export const S5Helps: React.FC = () => {
                 </div>
               ))}
             </div>
-            <div style={{fontFamily: F.sans, fontSize: 30, fontWeight: 650, color: C.text, opacity: consT, lineHeight: 1.3}}>
-              more consistent ≠ more correct
+            <div style={{flex: 1, fontFamily: F.sans, fontSize: 28, fontWeight: 650, color: C.text, opacity: consT, lineHeight: 1.3}}>
+              More consistent,
+              <br />
+              not necessarily more correct
             </div>
           </div>
           <div style={{marginTop: 16, opacity: consT}}>

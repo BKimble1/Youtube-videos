@@ -23,9 +23,9 @@ export const S6Payoff: React.FC = () => {
   const cPeople = at('s38', 'people,');
   const cEnd = segEnd('s38');
 
-  const qT = ramp(g, c0, 14) * (1 - ramp(g, cBecause - 2, 12));
-  const linesIn = ramp(g, cBecause - 3, 10);
-  const l1 = ramp(g, cBecause - 3, 12);
+  const qT = ramp(g, c0, 14) * (1 - ramp(g, cBecause - 9, 8)); // fully out before the answer rows start
+  const linesIn = ramp(g, cBecause, 10);
+  const l1 = ramp(g, cBecause, 12);
   const l2 = ramp(g, cBeing - 4, 14);
   const linesOut = ramp(g, cDont - 8, 14);
   const soundsT = ramp(g, cDont - 2, 14);
@@ -71,7 +71,7 @@ export const S6Payoff: React.FC = () => {
       <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: soundsT * (1 - habitOut)}}>
         <div style={{position: 'relative', fontFamily: F.sans, fontSize: 52, fontWeight: 600, color: C.muted, marginBottom: 70}}>
           Does it sound right?
-          <div style={{position: 'absolute', left: -10, top: '52%', height: 5, width: `calc(${strikeT * 100}% + 20px)`, background: C.muted, borderRadius: 3}} />
+          <div style={{position: 'absolute', left: -10, top: '52%', height: 5, width: `calc(${strikeT * 100}% + ${strikeT * 20}px)`, background: C.muted, borderRadius: 3, opacity: strikeT > 0 ? 1 : 0}} />
         </div>
         <div style={{opacity: askT, transform: `translateY(${(1 - askT) * 16}px)`, textAlign: 'center'}}>
           <Headline size={96}>What’s the evidence,</Headline>
