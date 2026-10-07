@@ -32,7 +32,7 @@ cd Youtube-videos/AI_Confidence_Video_01/backup/final_v6
 sh reconstruct.sh ~/Desktop/video01_final        # Windows: python reconstruct.py C:\Users\you\Desktop\video01_final
 ```
 
-Every part and every rebuilt file is checked against `SHA256SUMS`. A fresh clone was verified this way (see `backup/final_v6/VERIFICATION.md`).
+Every part and every rebuilt file is checked against its SHA-256 checksum. `reconstruct.sh` reads `SHA256SUMS`; `reconstruct.py` reads the same values (and byte counts) from `manifest.json`. A fresh clone was verified this way (see `backup/final_v6/VERIFICATION.md`).
 
 ## Recommendations
 
@@ -40,7 +40,7 @@ Every part and every rebuilt file is checked against `SHA256SUMS`. A fresh clone
 - **Thumbnail:** **A, "IT MADE THIS UP".** It shows GPT-4o's published, fabricated dissertation title, highlighted in coral. It has one focal point and one short phrase, and the first 30 seconds show exactly this. Use B ("LIKELY ≠ TRUE") or C ("3 titles. All made up.") as a later A/B test.
 - **Subtitles:** upload `Video_01_AI_Confidence.en.srt` as English captions instead of relying on auto-captions. In this project's speech-recognition tests, "Kalai", "DeepSeek" and "Llama" were the words most often misheard.
 
-## Watch-through checklist (about 6 minutes; once on headphones, once on a phone speaker)
+## Watch-through checklist (5:18.5 per pass; once on headphones, once on a phone speaker)
 
 | Time | Look / listen for |
 |---|---|
@@ -50,7 +50,7 @@ Every part and every rebuilt file is checked against `SHA256SUMS`. A fresh clone
 | 0:57, 1:57, 2:53, 3:59, 4:51 | Scene changes: the low whoosh should be barely noticed, not distracting. |
 | 1:00–1:50 | Token section: ticks are audible but sit under the voice. Numbers and labels are readable on a phone. |
 | 2:40–2:53 | ChatGPT vs record comparison: underlines and the "Wrong year" tag are readable on a phone. |
-| 3:15–3:37 | Quiz: a wooden tock on each score (6, 7, then 4). The penalty tones follow. |
+| 3:15–3:37 | Quiz: a wooden tock as each score appears (6 at 3:15, 7 at 3:21). Then three short penalty tones on "minus three" (3:35) and the tock on 4 (3:36). |
 | 3:39–3:50 | Table 2 tally to 9/10. "Guessing pays." stays up long enough to read. |
 | 4:06–4:20 | The thesis page lands. Chime for "is there a real source", low tone for "does it actually say this". |
 | 5:05–5:18 | Strike-through sound on "Does it sound right?". The end card is readable, the music resolves and fades, and nothing cuts off abruptly. |

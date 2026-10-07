@@ -58,7 +58,7 @@ Durable notes so work can resume if the session is interrupted. Newest entries a
 ## 14:35Z — final v6 (ElevenLabs) in progress → delivered when the 4K finishes
 - Backup of the complete draft (v5) verified by fresh clone before any change.
 - ElevenLabs connector: TTS v4, Scribe and Sound Effects work; music/image/video are unavailable (restricted connector). The score stays original and is regenerated to the new timing.
-- Voice audition (Marcus K / Craig / Grounded Woman, 4 takes each): Marcus K chosen (0 % blind WER, widest intonation, cleanest pauses).
+- Voice audition (Marcus K / Craig / Grounded Woman, 4 takes each): Marcus K chosen (0 % blind WER, most loudness contrast and pitch variation, cleanest pauses).
 - Narration: 12 blocks × 4 takes on eleven_v4, scored, picked, cut at pauses with Scribe forced alignment; blind Scribe WER 0.4 %. Runtime 5:18.5.
 - DeepMind line revised to what the opened PDF supports (no gold/score claim); S1 panel rebuilt around the real PDF page.
 - Sound: 6 ElevenLabs SFX (24 variations measured) at 26 synced cues; look-ahead ducking; mix -16.0 LUFS / -1.3 dBTP.

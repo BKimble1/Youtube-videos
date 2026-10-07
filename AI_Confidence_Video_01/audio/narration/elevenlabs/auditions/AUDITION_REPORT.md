@@ -72,7 +72,7 @@ intelligibility check.
 **Marcus K** is selected:
 
 - Intelligibility is joint best (0 % blind Scribe WER).
-- It has the most intonation movement and loudness contrast (13 st range, 6.5-6.8 dB intensity SD), which keeps a ten-minute explanation lively without sounding like an advert.
+- It has the most loudness contrast (6.5-6.8 dB intensity SD) and the highest pitch variation (F0 SD about 5.6 st; its ~13 st range is close to Craig's ~13.8 st), which keeps a five-minute explanation lively without sounding like an advert.
 - The cleanest pause floor (about -61 dBFS) means nothing builds up under the music and sound effects.
 - About 152 wpm overall, with 10-11 deliberate pauses, gives a documentary pace that leaves room for the visuals.
 - Its delivery is consistent across all four takes, which matters for a narration generated in many blocks.

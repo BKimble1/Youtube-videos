@@ -14,7 +14,7 @@ Honest alternatives:
 
 ## Thumbnail
 
-**Recommended: `thumbnails/thumbnail_A.jpg` ("IT MADE THIS UP")**
+**Recommended: `thumbnails/Video_01_thumbnail_A.jpg` ("IT MADE THIS UP")**
 
 - One focal point: GPT-4o's published, fabricated title, highlighted in coral.
 - One short phrase.
@@ -30,7 +30,7 @@ None of the three uses logos, real people's faces, a scandal framing or a claim 
 ## Description (paste-ready)
 
 ```
-Researchers asked three popular chatbots for the title of one scientist's PhD dissertation. All three answered fluently, specifically, confidently, and none got the title or the year right. So how can AI do impressive things and still sound sure while being wrong?
+Researchers asked three popular chatbots for the title of one scientist's PhD dissertation. All three answered fluently, specifically, confidently, and none got the title or the year right. So how can language models do impressive things and still sound sure while being wrong?
 
 This video takes one of those answers apart: how a language model writes token by token, why "likely text" isn't the same as "true," why some training and grading incentives reward a confident guess over "I don't know," and the habit that actually helps: check whether the evidence exists and actually says what's claimed.
 
@@ -44,7 +44,6 @@ Chapters
 
 Main sources
 • Kalai, Nachum, Vempala & Zhang (2025), "Why Language Models Hallucinate," arXiv:2509.04664 — https://arxiv.org/abs/2509.04664 (CC BY 4.0). Table 1: GPT-4o, DeepSeek-R1 and Llama-4-Scout, accessed May 9, 2025, no web search. Birthday example: DeepSeek-V3, May 11, 2025.
-• OpenAI, "Why language models hallucinate" — https://openai.com/index/why-language-models-hallucinate/
 • Adam Kalai (2001), "Probabilistic and On-line Methods in Machine Learning," PhD thesis, Carnegie Mellon University, CMU-CS-01-132 — https://www.microsoft.com/en-us/research/wp-content/uploads/2016/11/pre-2003-thesis.pdf
 • Anthropic (Mar 27, 2025), "Tracing the thoughts of a large language model" (model studied: Claude 3.5 Haiku) — https://www.anthropic.com/research/tracing-thoughts-language-model
 • Google DeepMind, "Gemini Deep Think for International Mathematical Olympiad 2025" (published solutions to Problems 1–5, Jul 21, 2025) — https://storage.googleapis.com/deepmind-media/gemini/IMO_2025.pdf

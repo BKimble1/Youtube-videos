@@ -6,7 +6,7 @@ Inputs : source/public/audio/narration.wav (from build_timeline.py), audio/music
          audio/sfx/sfx_track.wav
 Outputs: source/public/audio/mix.wav (used by the Remotion render)
          audio/mix/final_mix.wav, audio/mix/stem_narration.wav, stem_music_ducked.wav, stem_sfx.wav
-Usage  : python3 tools/mix.py [--music-db -19] [--duck-db 9]
+Usage  : python3 tools/mix.py [--music-lufs -26] [--duck-db 8] [--sfx-db 0] [--target-lufs -16] [--no-public]
 """
 import argparse
 import json

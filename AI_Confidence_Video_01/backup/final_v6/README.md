@@ -19,5 +19,6 @@ Windows, or anywhere with Python 3:
 python reconstruct.py C:\Users\you\Desktop\video01_final
 ```
 
-Both scripts check every part and every rebuilt file against `SHA256SUMS`. They print `OK` per file, then
-"All files rebuilt and verified."
+Both scripts check every part and every rebuilt file against its SHA-256 checksum: `reconstruct.sh` reads
+`SHA256SUMS`, and `reconstruct.py` reads the same values (and byte counts) from `manifest.json`. They print `OK` per
+file, then "All files rebuilt and verified."

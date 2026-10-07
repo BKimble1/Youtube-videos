@@ -3,13 +3,13 @@
  "files": [
   {
    "name": "ElevenLabs_sound_effects.zip",
-   "bytes": 656013,
-   "sha256": "220c83b76c71ebc6cdf8b2cb6d5aea69cbfa3f8f1fffcf24896a90ef2fdcd950",
+   "bytes": 656262,
+   "sha256": "8768b5c7aebf4effdf181bb31ae9a91a18e2e6cb51c38aa576ab239123080711",
    "parts": [
     {
      "name": "ElevenLabs_sound_effects.zip.part001",
-     "bytes": 656013,
-     "sha256": "220c83b76c71ebc6cdf8b2cb6d5aea69cbfa3f8f1fffcf24896a90ef2fdcd950"
+     "bytes": 656262,
+     "sha256": "8768b5c7aebf4effdf181bb31ae9a91a18e2e6cb51c38aa576ab239123080711"
     }
    ]
   }

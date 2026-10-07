@@ -23,7 +23,7 @@ effects, the mix, and the Remotion (React/TypeScript) motion-graphics source.
 
 ## Requirements
 
-- Node 22 + npm, Python 3.11+ (`numpy scipy soundfile pyloudnorm mido`), FFmpeg 6+, FluidSynth +
+- Node 22 + npm, Python 3.11+ (`numpy scipy soundfile pyloudnorm mido pillow`; optional `praat-parselmouth` for scoring takes), FFmpeg 6+, FluidSynth +
   `musescore-general-soundfont` (Ubuntu: `apt-get install fluidsynth musescore-general-soundfont`).
 - Chromium for Remotion. Normally Remotion downloads its own headless shell. In the production
   container that host was blocked, so `source/remotion.config.ts` points at a local Playwright build;
@@ -44,16 +44,21 @@ Run from the project root (`AI_Confidence_Video_01/`):
 #       their MP3s and Scribe alignments live in audio/narration/elevenlabs/takes/ (restore them from
 #       backup/elevenlabs_narration_takes/ if needed). To regenerate: python3 tools/el_blocks.py writes the
 #       block prompts, generate each block on eleven_v4 in an ElevenLabs Flow, fetch with tools/el_fetch.py,
-#       score with tools/eval_blocks.py, pick in selection.json, align with Scribe, then:
+#       score with `python3 tools/eval_blocks.py --no-asr` (needs praat-parselmouth; the Whisper-tiny WER
+#       column also needs a local transformers.js ASR helper, set via ASR_SCRATCH, which is not included),
+#       pick in selection.json, align with Scribe, then:
 python3 tools/el_assemble.py           # cut the picked takes into per-segment WAVs + manifest
 ENGINE=elevenlabs
-#    (tools/elevenlabs_narration.py is the equivalent direct-API path if ELEVENLABS_API_KEY is set.)
+#    (Untested alternative with ELEVENLABS_API_KEY: python3 tools/elevenlabs_narration.py narrate --voice <ID>.
+#     It synthesizes per segment, not per block, and reads tts_text_elevenlabs (not tts_v4), so add that
+#     field for the Kalai lines s01, s05, s09, s12, s31 first. It writes the same s*.wav + manifest.json.)
 #    b) draft (offline, Kokoro-82M; see audio/narration/auditions_local/AUDITIONS.md for one-time setup):
 #       python tools/draft_tts.py --setup && python tools/draft_tts.py --voice af_heart --speed 1.0
 #       ENGINE=draft_local
 
 # 2. Timing: concatenated narration, scene/word frames, subtitles
 python3 tools/build_timeline.py --engine $ENGINE
+cp script/subtitles_$ENGINE.srt exports/Video_01_AI_Confidence.en.srt   # the upload copy
 python3 tools/check_cues.py            # every animation cue must match a spoken word
 
 # 3. Music, SFX, mix (≈ -16 LUFS integrated, ≤ -1 dBTP)
@@ -74,6 +79,7 @@ cd .. && bash tools/finalize.sh exports/render_4k.mp4 exports/Video_01_AI_Confid
 
 # 6. Thumbnails, script export
 cd source && for t in A B C; do npx remotion still src/index.ts Thumb$t ../thumbnails/thumbnail_$t.png; done
+cd .. && for t in A B C; do python3 -c "from PIL import Image; Image.open('thumbnails/thumbnail_$t.png').convert('RGB').save('thumbnails/Video_01_thumbnail_$t.jpg', quality=92)"; done
 cd .. && python3 tools/export_script.py
 ```
 
@@ -81,11 +87,16 @@ Preview anything interactively with `cd source && npm run studio`.
 
 ## Editing notes
 
-- **Change a line of narration:** edit `script/narration_segments.json`, regenerate only that segment
-  (`--only s21`), then rerun steps 2–4. The animations are keyed to spoken words through
+- **Change a line of narration:** edit `text` (and `tts_v4`, keeping the same word count) in
+  `script/narration_segments.json` and run `python3 tools/el_blocks.py`. Regenerate the block that holds the
+  segment (e.g. b07 for s21) on eleven_v4 in an ElevenLabs Flow, fetch it with `tools/el_fetch.py`, point
+  `audio/narration/elevenlabs/selection.json` at the new take and its Scribe `.align.json`, run
+  `python3 tools/el_assemble.py`, then rerun steps 2–4. (Kokoro draft only: `python3 tools/draft_tts.py --only s21`.)
+  The animations are keyed to spoken words through
   `at('s21', 'year:')` calls, so `tools/check_cues.py` tells you if an edit removed a cue word.
-- **Pronunciation:** use `tts_text` in a segment (Kokoro inline phonemes like `[Kalai](/kəlˈI/)`, or a
-  respelling such as `Ka-lie` for ElevenLabs). Display text and subtitles always come from `text`.
+- **Pronunciation:** the final ElevenLabs narration reads `tts_v4` (IPA between slashes, e.g. `/kəˈlaɪz/`), which
+  must have the same word count as `text` (`tools/el_blocks.py` checks). `tts_text` is for the Kokoro draft
+  (inline phonemes like `[Kalai](/kəlˈI/)`). Display text and subtitles always come from `text`.
 - **Colour meaning:** teal = supporting evidence, coral = the mistaken detail. Both always appear with a
   text label. See `source/src/theme.ts`.
 - **Illustrative vs real:** token splits are real (o200k_base). Next-token percentages and the quiz
@@ -94,7 +105,8 @@ Preview anything interactively with `cd source && npm run studio`.
 ## Licences and credits
 
 See `assets/asset_manifest.csv` and `package/UPLOAD_PACKAGE.md`. Kalai et al. (2025) material is CC BY 4.0.
-Smithsonian photos are CC0. The Anthropic header and figure are shown briefly for commentary. The Google
+Smithsonian photos are CC0. The Anthropic header and figure are shown briefly for commentary. The title page of
+Adam Kalai's 2001 Carnegie Mellon thesis (CMU-CS-01-132) is shown briefly, with credit, to check a factual claim. The Google
 DeepMind IMO 2025 solutions page is quoted briefly for commentary. The music is original, rendered with the
 MuseScore General SoundFont (MIT). The SFX are original synthesized accents plus ElevenLabs sound effects
 generated for this video. The narration is ElevenLabs TTS. Use of both follows the account's ElevenLabs plan
