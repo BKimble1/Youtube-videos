@@ -22,7 +22,7 @@ import urllib.request
 ap = argparse.ArgumentParser()
 ap.add_argument("sessions")
 ap.add_argument("out")
-ap.add_argument("--transcripts", default="/root/.claude/projects")
+ap.add_argument("--transcripts", default=os.environ.get("TRANSCRIPTS_DIR", "transcripts"), help="directory of the generation-session logs to scan (env TRANSCRIPTS_DIR)")
 a = ap.parse_args()
 
 pat = re.compile(r"https://storage\.googleapis\.com/xi-backend/database/workspace/[0-9a-f]+/content_generation/"

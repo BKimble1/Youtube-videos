@@ -22,8 +22,9 @@ small life), never because the animation ran out.
 - Keep the exported component name of your scene unchanged (Main.tsx imports it). Keep any other export other scenes
   import (e.g. S1 re-exports `SLIPS`).
 - `npx tsc --noEmit -p .` must pass in your copy before you finish.
-- Never put anything about the channel owner (name, biography, school, face, voice, portfolio, personal links,
-  "BK", "Fab One", "Idlery") into the video. No model identifiers or credentials anywhere.
+- Never put anything about the channel owner into the video: no name, initials, other brands, biography, school,
+  face, voice, portfolio or personal links (the full list is in the owner's private brief). No model identifiers or
+  credentials anywhere.
 - Do not commit or push; the lead merges your file.
 
 ## 3. Timeline and cues

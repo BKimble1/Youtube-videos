@@ -44,3 +44,8 @@ qa/v2_*/*.png
 
 # scene agents work in isolated copies; the lead merges their scene files
 work/
+
+# rebuilt backup archives and restore snapshots are local only (the committed parts are the backup)
+backup/**/*.tar
+backup/**/*.tar.tmp
+work_snapshot/

@@ -19,7 +19,7 @@ import urllib.request
 
 ap = argparse.ArgumentParser()
 ap.add_argument("takes")
-ap.add_argument("--transcripts", default="/root/.claude/projects")
+ap.add_argument("--transcripts", default=os.environ.get("TRANSCRIPTS_DIR", "transcripts"), help="directory of the generation-session logs to scan (env TRANSCRIPTS_DIR)")
 a = ap.parse_args()
 
 reg = {}

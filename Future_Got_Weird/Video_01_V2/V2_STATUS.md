@@ -1,7 +1,7 @@
 # Video 01 · V2 — baseline status (frozen as Git tag `fgw-video01-v2-baseline`)
 
 This records exactly what the V2 production pass contains at the moment it was frozen as the baseline, and what is
-not finished. The tag points at the commit that adds this file; later work on the branch does not change it.
+not finished. The tag marks the baseline commit; later work on the branch does not move it.
 
 **V2 is not finished.** The narration, the shared animation kit, the cold open (S1), the short version (S2), the
 transition system and the sound / music pipeline are done. Scenes S3–S10 in `source/` are still the V1 scene code
@@ -26,8 +26,9 @@ remains the pass-2 / V1 render in `../Video_01_Pass_2/exports/` (backed up in `.
 - **Transitions** (`source/src/Main.tsx`): per-boundary cut / reveal / wipe / iris, with shared hand-off geometry.
 - **S1 (cold open) and S2 (the short version)** rebuilt to the V2 brief (word-keyed beats, directed camera, real hand
   contact, physical stamps, the ticket-to-paper match, the deadpan close-up, the slip-lift cut into S2, performing
-  claim cards, the brand card that lifts away into S3). Motion QA: S1 0 % still, S2 ≈ 8 % before its last fix
-  (V1: 39 % and 74 %).
+  claim cards, the brand card that lifts away into S3). Motion QA (`qa/v2_motion/S1_motion.json`, `S2_motion.json`,
+  `tools/qa_dense.py`): no still run of 0.8 s or more in either scene (V1: 39 % and 74 % of the time still,
+  `qa/v1_review/motion.json`).
 - **Sound and music pipeline**: `tools/collect_sfx.mjs` (cue sheets exported by the scenes), `sfx_lib.py` (52-kind
   measured effect library from 144 new ElevenLabs takes + 10 reused pass-2 effects + 1 synth tick; choices in
   `audio/sfx/v2/SELECTION_V2.md`), `make_sfx_v2.py` (frame-accurate placement + ambience stem),
@@ -41,7 +42,10 @@ remains the pass-2 / V1 render in `../Video_01_Pass_2/exports/` (backed up in `.
 1. **S3–S10 V2 rebuilds are not merged.** Builder passes were complete for S3, S4, S5, S6, S7, S9 and S10 and
    running for S8; the independent director review-and-fix passes had just started (S6). Their code lives in the
    isolated copies `work/<scene>/source` (Git-ignored) and is snapshotted in `backup/v2_baseline/v2_wip_scenes.tar`
-   (restored to `work_snapshot/`). None of it has been reviewed or merged into `source/`.
+   (restored to `work_snapshot/`), as it stood at 2026-10-07 23:12 UTC; edits made after that are only in `work/`.
+   None of it has been reviewed or merged into `source/`. When merging, take only each scene's own files
+   (`src/scenes/<S>_*.tsx`, `src/components/v2/<S>_*.tsx`): the work copies were seeded before the last shared-kit
+   changes, so their `Sets.tsx`, `S1_Counter.tsx` and `S2_ShortVersion.tsx` are older than the baseline's.
 2. **Sound for S3–S10.** The pipeline runs, but only S1 and S2 export cue sheets so far; the mix in
    `audio/mix/v2/` is a first pass with S1/S2 effects only, and `source/public/audio/mix.wav` (needed by the `Main`
    composition) has not been written for V2.
@@ -57,9 +61,13 @@ cd Future_Got_Weird/Video_01_V2
 (cd backup/v2_baseline && sh reconstruct.sh && python3 restore_v2.py)   # media, verified sample by sample
 (cd source && npm ci && npx tsc --noEmit -p .)                          # project
 (cd source && SCALE=0.5 node stills.mjs /tmp/stills 0 "word:s03:None+4")   # any frame (COMP=Preview, muted)
-node tools/collect_sfx.mjs source audio/sfx/v2/cues.json && python3 tools/sfx_lib.py && python3 tools/make_sfx_v2.py
-python3 tools/make_music_v2.py && python3 tools/mix_v2.py                 # writes source/public/audio/mix.wav
+python3 tools/mix_v2.py                                                  # writes source/public/audio/mix.wav
 ```
+
+After `restore_v2.py` the media is complete and `mix_v2.py` alone produces the mix. To re-derive the sound from the
+scenes' cue sheets instead: `node tools/collect_sfx.mjs source audio/sfx/v2/cues.json && python3 tools/sfx_lib.py &&
+python3 tools/make_sfx_v2.py && python3 tools/make_music_v2.py && python3 tools/mix_v2.py` (the music needs FluidSynth
+and the MuseScore General SoundFont).
 
 ## Costs recorded during V2
 

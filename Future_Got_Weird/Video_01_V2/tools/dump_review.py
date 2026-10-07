@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Write each scene's V1 shot review (from the review workflow journal) to qa/v1_review/S<n>_analysis.md."""
 import json, os, re, sys
-J = sys.argv[1] if len(sys.argv) > 1 else '/root/.claude/projects/-home-user-Youtube-videos/942fed74-9746-5c11-9bde-e8a953092ef0/subagents/workflows/wf_927c6674-82b/journal.jsonl'
+if len(sys.argv) < 2:
+    sys.exit('usage: dump_review.py <review workflow journal.jsonl>')
+J = sys.argv[1]
 out = os.path.join(os.path.dirname(__file__), '..', 'qa', 'v1_review')
 done = []
 for ln in open(J):

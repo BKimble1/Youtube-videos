@@ -1,0 +1,13 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S1": {
+   "seconds": 27.2,
+   "mean_energy": 4.758,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  }
+ },
+ "still_runs": []
+}

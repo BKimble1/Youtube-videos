@@ -5,7 +5,7 @@ Targets (production choices, not platform rules): about -16 LUFS integrated, <= 
 Inputs : source/public/audio/narration.wav (from build_timeline.py), audio/music/v2/music_bed.wav (make_music_v2.py),
          audio/sfx/v2/sfx_track.wav + amb_track.wav (make_sfx_v2.py)
 Outputs: source/public/audio/mix.wav (used by the Remotion render)
-         audio/mix/final_mix.wav, audio/mix/stem_narration.wav, stem_music_ducked.wav, stem_sfx.wav
+         audio/mix/v2/final_mix.wav, audio/mix/v2/stem_narration.wav, stem_music_ducked.wav, stem_sfx.wav (effects + room tones)
 Usage  : python3 tools/mix_v2.py [--music-lufs -27] [--duck-db 9] [--sfx-db 0] [--amb-lufs -46]
 """
 import argparse

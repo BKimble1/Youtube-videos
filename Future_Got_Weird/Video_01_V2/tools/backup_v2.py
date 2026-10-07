@@ -3,9 +3,9 @@
 
   python3 tools/backup_v2.py            -> backup/v2_baseline/  (git-friendly parts + checksums + restore scripts)
 
-Archives (each split into < 24 MiB parts by tools/backup_split.py, with SHA256SUMS, manifest.json, reconstruct.sh/.py):
+Archives (each split into parts of at most 24 MiB by tools/backup_split.py, with SHA256SUMS, manifest.json, reconstruct.sh/.py):
   v2_audio_sources.tar   byte-exact, not reproducible: ElevenLabs narration takes (68 MP3), the 144 new ElevenLabs
-                         sound-effect takes (+ registry, cost note), the 10 reused pass-2 effects
+                         sound-effect takes (+ registry, cost note), the 18 pass-2 effects (10 reused by sfx_lib.py)
   v2_audio_rendered.tar  every PCM WAV the project uses or produced, stored as lossless FLAC (sample-exact; the
                          original subtype and a SHA-256 of the decoded integer samples are recorded per file):
                          assembled narration (36 segments + the full narration track), effect library, effect and
