@@ -5,7 +5,7 @@ metaphors and jokes as the finished V1 (pass 2), with new narration (ElevenLabs 
 animated scenes. 1920×1080, 30 fps, 4:48.2 with the V2 narration.
 
 **Status: V2 is not finished.** Read `V2_STATUS.md` first: it lists what is done, what is not, and how to rebuild.
-The baseline is frozen as the Git tag `fgw-video01-v2-baseline`. The finished film is still the V1 / pass-2 render
+The baseline is frozen as a fixed commit named in `BASELINE.md`. The finished film is still the V1 / pass-2 render
 in `../Video_01_Pass_2/exports/`.
 
 - `V2_BRIEF.md` — the owner's brief for this pass

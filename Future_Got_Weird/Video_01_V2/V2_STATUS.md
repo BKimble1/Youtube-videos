@@ -1,7 +1,11 @@
-# Video 01 · V2 — baseline status (frozen as Git tag `fgw-video01-v2-baseline`)
+# Video 01 · V2 — baseline status
 
 This records exactly what the V2 production pass contains at the moment it was frozen as the baseline, and what is
-not finished. The tag marks the baseline commit; later work on the branch does not move it.
+not finished. The baseline is one fixed commit on branch `claude/new-session-96c7w8`; its hash is recorded in
+`BASELINE.md` next to this file (added in the commit right after it). Check it out with
+`git checkout <hash> -- Future_Got_Weird/Video_01_V2` or `git worktree add <dir> <hash>`; later work on the branch
+does not change it. (A tag, `fgw-video01-v2-baseline`, marks it in the production workspace; the remote did not
+accept tag pushes from that environment.)
 
 **V2 is not finished.** The narration, the shared animation kit, the cold open (S1), the short version (S2), the
 transition system and the sound / music pipeline are done. Scenes S3–S10 in `source/` are still the V1 scene code
