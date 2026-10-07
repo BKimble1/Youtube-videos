@@ -153,7 +153,7 @@ export const S5Helps: React.FC = () => {
             </div>
           </div>
           {[
-            {q: 'Does the source exist?', a: 'Yes: Kalai’s real CMU thesis, CMU-CS-01-132', t: q1, tone: 'teal' as const},
+            {q: 'Is there a real source?', a: 'Yes: Kalai’s actual CMU thesis (CMU-CS-01-132)', t: q1, tone: 'teal' as const},
             {q: 'Does it actually say this?', a: 'No: a different title, and 2001, not 2002', t: q2, tone: 'coral' as const},
           ].map((r, i) => (
             <div key={i} style={{display: 'flex', alignItems: 'center', gap: 22, marginTop: 30, opacity: 0.35 + 0.65 * r.t}}>
@@ -203,7 +203,7 @@ export const S5Helps: React.FC = () => {
         {/* Simplified diagram, redrawn */}
         <AbsoluteFill style={{opacity: diagIn}}>
           <div style={{position: 'absolute', left: 0, right: 0, top: 64, textAlign: 'center', fontFamily: F.sans, fontSize: 26, fontWeight: 700, letterSpacing: '0.12em', color: C.muted}}>
-            ONE MECHANISM, IN ONE MODEL (SIMPLIFIED)
+            WHY A FAMILIAR NAME ISN’T ENOUGH · ONE MECHANISM, ONE MODEL (SIMPLIFIED)
           </div>
           <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0}}>
             <defs>
@@ -261,6 +261,7 @@ export const S5Helps: React.FC = () => {
         </div>
         <div style={{position: 'absolute', left: 225, top: 384, fontFamily: F.sans, fontSize: 32, fontWeight: 650, color: C.teal, opacity: ramp(g, at('s35', 'help') - 2, 12)}}>
           …help when they bring in the right evidence.
+          <span style={{marginLeft: 24, fontSize: 26, fontWeight: 500, color: C.textDim}}>e.g. the actual thesis record: 2001</span>
         </div>
         <div style={{position: 'absolute', left: 225, top: 480, width: 1470, borderRadius: 20, background: C.surface, border: `1.5px solid ${C.lineStrong}`, padding: 32, opacity: randT}}>
           <div style={{display: 'flex', alignItems: 'center', gap: 40}}>

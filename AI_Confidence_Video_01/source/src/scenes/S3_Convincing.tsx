@@ -11,9 +11,10 @@ import {C, F} from '../theme';
 const PATTERN_WORDS = ['Methods', 'Algorithms', 'Machine Learning', 'Learning', 'Theory', 'Analysis', 'Online', 'Models', 'Topics in', 'Approaches to', 'Efficient', 'Probabilistic', 'Interactive', 'Games', 'Boosting', 'Optimization'];
 const GPT_TITLE = ['“Boosting,', 'Online', 'Algorithms,', 'and', 'Other', 'Topics', 'in', 'Machine', 'Learning.”'];
 
-const Field: React.FC<{label: string; value: string; state: number; tone: 'coral' | 'teal' | 'none'; tag?: string; serif?: boolean; rowH: number}> = ({
+const Field: React.FC<{label: string; value: string; state: number; tone: 'coral' | 'teal' | 'none'; tag?: string; serif?: boolean; rowH: number; shared?: string[]}> = ({
   label,
   value,
+  shared,
   state,
   tone,
   tag,
@@ -26,6 +27,28 @@ const Field: React.FC<{label: string; value: string; state: number; tone: 'coral
     <div style={{display: 'flex', alignItems: 'flex-start', gap: 20, padding: '16px 0', borderTop: `1px solid ${C.line}`, height: rowH, boxSizing: 'border-box'}}>
       <div style={{width: 96, flexShrink: 0, fontFamily: F.sans, fontSize: 20, fontWeight: 700, letterSpacing: '0.1em', color: C.muted, paddingTop: 8}}>{label}</div>
       <div style={{flex: 1}}>
+        {shared ? (
+          <span style={{fontFamily: F.serif, fontSize: 31, lineHeight: 1.3, fontWeight: 450, color: C.text}}>
+            {value.split(/(\s+)/).map((tok, i) => {
+              const isShared = shared.includes(tok.replace(/[“”,.]/g, ''));
+              if (/^\s+$/.test(tok)) return <span key={i}>{tok}</span>;
+              return (
+                <span
+                  key={i}
+                  style={{
+                    backgroundImage: !isShared && tone !== 'none' ? `linear-gradient(${bg}, ${bg})` : undefined,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: `${state * 100}% 100%`,
+                    boxShadow: state > 0.98 && !isShared ? `inset 0 -4px 0 ${col}` : state > 0.98 ? `inset 0 -2px 0 ${C.muted}` : undefined,
+                    borderRadius: 3,
+                  }}
+                >
+                  {tok}
+                </span>
+              );
+            })}
+          </span>
+        ) : (
         <span
           style={{
             fontFamily: serif ? F.serif : F.sans,
@@ -42,6 +65,7 @@ const Field: React.FC<{label: string; value: string; state: number; tone: 'coral
         >
           {value}
         </span>
+        )}
       </div>
       <div style={{width: tag ? 140 : 0, flexShrink: 0, display: 'flex', justifyContent: 'flex-end', paddingTop: 6, opacity: tag ? state : 0}}>
         {tag && (
@@ -331,17 +355,19 @@ export const S3Convincing: React.FC = () => {
                 tone={isRecord ? 'teal' : 'coral'}
                 tag={isRecord ? undefined : 'Different title'}
                 rowH={172}
+                shared={isRecord ? undefined : ['Online', 'in', 'Machine', 'Learning']}
               />
               <Field label="SCHOOL" value={isRecord ? 'Carnegie Mellon University' : 'CMU'} state={sameT} tone="teal" tag={isRecord ? undefined : 'Matches'} rowH={78} />
               <Field label="YEAR" value={isRecord ? '2001' : '2002'} state={yearT} tone={isRecord ? 'teal' : 'coral'} tag={isRecord ? undefined : 'Wrong year'} rowH={78} />
             </div>
           );
         })}
-        <div style={{position: 'absolute', left: 1040, top: 625, opacity: evidT, transform: `translateY(${(1 - evidT) * 30}px)`}}>
-          <Doc src="img/thesis_title_block.png" width={740} aspect={1386 / 3264} pad={18} boxes={[{x: 0.415, y: 0.745, w: 0.17, h: 0.075, t: evidBox, tone: 'teal'}]} />
+        <div style={{position: 'absolute', left: 1060, top: 600, opacity: evidT, transform: `translateY(${(1 - evidT) * 30}px)`}}>
+          <Doc src="img/thesis_title_block.png" width={690} aspect={1386 / 3264} pad={16} boxes={[{x: 0.415, y: 0.745, w: 0.17, h: 0.075, t: evidBox, tone: 'teal'}]} />
         </div>
         <div style={{position: 'absolute', left: 90, top: 800, width: 840, fontFamily: F.sans, fontSize: 34, fontWeight: 650, color: C.text, lineHeight: 1.3, opacity: solidT}}>
           The invented details look exactly as solid as the true one.
+          <div style={{marginTop: 14, fontFamily: F.sans, fontSize: 24, fontWeight: 500, color: C.muted}}>Grey underline = words both titles share; coral = invented.</div>
         </div>
         <SourceLine opacity={sbsIn}>
           Left: ChatGPT (GPT-4o) as excerpted in Kalai et al. (2025), Table 1, accessed May&nbsp;9,&nbsp;2025, no web search

@@ -32,3 +32,10 @@ Durable notes so work can resume if the session is interrupted. Newest entries a
 - Thumbnails A/B/C rendered (thumbnails/). README, package/UPLOAD_PACKAGE.md, tools/finalize.sh, tools/check_cues.py written.
 - Git: code/docs pushed. LFS host (lfs.github.com) is blocked by network policy → audio/video kept local (.gitignore) — must be pushed from a machine with LFS access or after allowing the host.
 - ASR (whisper-tiny) check: ~7.8% WER, misses are recognizer weaknesses (phonemes verified with misaki).
+
+## 07:20Z — review pass complete, v3 final-quality render running
+- 7-agent frame review of v1 (per act + story/pacing): 70+ findings; all medium/high fixed (see qa/QA_REPORT.md).
+- Two cue bugs found by review (first-occurrence word matches for "Six"/"Ask") fixed with occurrence-specific cues.
+- Script v1.2: s01 matches the quoted prompt ("dissertation", no "PhD"); pauses trimmed; end-card tail 5.2 s. Runtime 4:59.5.
+- Thumbnails exported as JPG (thumbnails/Video_01_thumbnail_[A-C].jpg). Recommended: A.
+- 4K test: 3840x2160 renders at ~1.4 fps (≈1¾ h for the full film). Document crops re-rendered at 600 dpi so the 4K master is native.

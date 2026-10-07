@@ -57,6 +57,15 @@ export const S6Payoff: React.FC = () => {
           <div style={{fontFamily: F.sans, fontSize: 60, color: C.muted, opacity: l2}}>←</div>
           <div style={{fontFamily: F.sans, fontSize: 60, fontWeight: 650, color: C.teal, opacity: l2}}>evidence</div>
         </div>
+        <div style={{marginTop: 64, display: 'flex', gap: 40, alignItems: 'center', opacity: ramp(g, cEvidence, 14)}}>
+          <div style={{padding: '14px 24px', borderRadius: 14, border: `1.5px solid ${C.coral}`, background: C.coralDim, fontFamily: F.serif, fontSize: 28, color: C.text}}>
+            “…completed in 2002 at CMU”
+          </div>
+          <div style={{fontFamily: F.sans, fontSize: 30, color: C.muted}}>vs.</div>
+          <div style={{padding: '14px 24px', borderRadius: 14, border: `1.5px solid ${C.teal}`, background: C.tealDim, fontFamily: F.serif, fontSize: 28, color: C.text}}>
+            Thesis title page: May 16, 2001
+          </div>
+        </div>
       </AbsoluteFill>
 
       <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: soundsT * (1 - habitOut)}}>

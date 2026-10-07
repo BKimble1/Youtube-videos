@@ -146,8 +146,8 @@ export const S1Hook: React.FC = () => {
   const isntT = ramp(g, cIsnt - 2, 12);
   const sceneOut = 1 - ramp(g, cEnd + 6, 10);
 
-  const marksTitle = ramp(g, cTitle, 16);
-  const marksYear = ramp(g, cYear, 16);
+  const marksTitle = ramp(g, cTitle - 6, 14);
+  const marksYear = ramp(g, cYear - 6, 14);
 
   return (
     <AbsoluteFill style={{opacity: sceneOut}}>
@@ -205,8 +205,8 @@ export const S1Hook: React.FC = () => {
         </div>
 
         <RowCard i={0} t={ramp(g, cGPT, 16)} markTitle={marksTitle} markYear={marksYear} y={262} read={readTitle} readTitle={readTitleMark} readYear={readYearMark} glow={polished} />
-        <RowCard i={1} t={ramp(g, cDS, 16)} markTitle={ramp(g, cTitle + 5, 16)} markYear={ramp(g, cYear + 5, 16)} y={512} glow={polished} />
-        <RowCard i={2} t={ramp(g, cLL, 16)} markTitle={ramp(g, cTitle + 10, 16)} markYear={ramp(g, cYear + 10, 16)} y={692} glow={polished} />
+        <RowCard i={1} t={ramp(g, cDS, 16)} markTitle={ramp(g, cTitle - 2, 14)} markYear={ramp(g, cYear - 2, 14)} y={512} glow={polished} />
+        <RowCard i={2} t={ramp(g, cLL, 16)} markTitle={ramp(g, cTitle + 2, 14)} markYear={ramp(g, cYear + 2, 14)} y={692} glow={polished} />
 
         <SourceLine opacity={ramp(g, cGPT, 12)}>
           Excerpts as published in Kalai, Nachum, Vempala &amp; Zhang (2025), “Why Language Models Hallucinate,” Table 1
@@ -311,15 +311,15 @@ export const S1Hook: React.FC = () => {
 
       {/* --- The question of the video --- */}
       <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: titleIn * (1 - 0.85 * handoff), transform: `scale(${1 + 0.08 * handoff})`}}>
-        <div style={{textAlign: 'center', transform: `translateY(${(1 - titleIn) * 20 - 70 * shortT}px)`}}>
+        <div style={{textAlign: 'center', transform: `translateY(${(1 - titleIn) * 20 - 90 * shortT}px) scale(${1 - 0.12 * shortT})`}}>
           <Headline size={124} style={{fontWeight: 780}}>
-            Why AI sounds <span style={{color: C.text, opacity: 0.35 + 0.65 * sureT}}>right</span>
+            Why AI Sounds <span style={{color: C.text, opacity: 0.35 + 0.65 * sureT}}>Right</span>
           </Headline>
           <Headline size={124} style={{fontWeight: 780, marginTop: 10}}>
-            when it’s <span style={{color: wrongT > 0.5 ? C.coral : C.text, opacity: 0.35 + 0.65 * wrongT}}>wrong</span>
+            When It’s <span style={{color: wrongT > 0.5 ? C.coral : C.text, opacity: 0.35 + 0.65 * wrongT}}>Wrong</span>
           </Headline>
-          <div style={{marginTop: 70, opacity: shortT, fontFamily: F.sans, fontSize: 46, fontWeight: 600, color: C.textDim}}>
-            <span style={{fontWeight: 750, color: C.muted, letterSpacing: '0.08em', fontSize: 30, marginRight: 22}}>SHORT ANSWER</span>
+          <div style={{marginTop: 64, opacity: shortT, fontFamily: F.sans, fontWeight: 750, color: C.muted, letterSpacing: '0.1em', fontSize: 28}}>SHORT ANSWER</div>
+          <div style={{marginTop: 14, opacity: shortT, fontFamily: F.sans, fontSize: 60, fontWeight: 680, color: C.textDim, letterSpacing: '-0.01em'}}>
             <span style={{opacity: likelyT}}>It writes what’s likely.</span>{' '}
             <span style={{opacity: isntT, color: C.text}}>Likely isn’t always true.</span>
           </div>

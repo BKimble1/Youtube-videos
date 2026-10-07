@@ -145,6 +145,11 @@ export const S4Incentive: React.FC = () => {
 
   const tableIn = ramp(g, cChecked - 1, 12);
   const colBin = ramp(g, cNine, 16);
+  // row-by-row tally (rows of Table 2 body; WildBench, row 5, is the exception)
+  const tallyStart = cChecked + 10;
+  const tallyEnd = cNine + 6;
+  const tallyRow = Math.max(-1, Math.min(9, Math.floor(((g - tallyStart) / Math.max(1, tallyEnd - tallyStart)) * 10)));
+  const tallyCount = tallyRow < 0 ? 0 : Array.from({length: tallyRow + 1}).filter((_, r) => r !== 4).length;
   const colIdk = ramp(g, cZero, 16);
   const tableOut = ramp(g, cFix - 6, 14);
   const instrIn = ramp(g, cFix, 18);
@@ -272,12 +277,17 @@ export const S4Incentive: React.FC = () => {
             width={1080}
             aspect={1125 / 1967}
             boxes={[
+              ...(g >= tallyStart && g < tallyEnd + 6
+                ? [{x: 0.02, y: 0.286 + Math.max(0, tallyRow) * 0.0502, w: 0.95, h: 0.044, t: 1, tone: (tallyRow === 4 ? 'ink' : 'teal') as 'ink' | 'teal', padY: 1}]
+                : []),
               {x: 0.633, y: 0.235, w: 0.187, h: 0.555, t: colBin, tone: 'teal'},
               {x: 0.84, y: 0.235, w: 0.128, h: 0.555, t: colIdk, tone: 'teal'},
             ]}
           />
           <div style={{width: 520}}>
-            <div style={{fontFamily: F.mono, fontSize: 110, fontWeight: 700, color: C.text, opacity: colBin}}>9 / 10</div>
+            <div style={{fontFamily: F.mono, fontSize: 110, fontWeight: 700, color: C.text, opacity: g >= tallyStart ? 1 : 0}}>
+              {g < tallyEnd ? tallyCount : 9} <span style={{color: C.muted}}>/ 10</span>
+            </div>
             <div style={{fontFamily: F.sans, fontSize: 32, fontWeight: 600, color: C.textDim, opacity: colBin, lineHeight: 1.3}}>
               of the popular benchmarks the authors checked were graded strictly right-or-wrong
             </div>
