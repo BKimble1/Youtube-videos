@@ -1,6 +1,6 @@
 # QA report: Video 01, "Why AI Sounds Right When It's Wrong"
 
-Status: **work in progress.** The sections below record only checks that were actually performed.
+Status: **v5 delivered (draft narration).** The sections below record only checks that were actually performed.
 
 ## Limits of this inspection (read first)
 
@@ -69,13 +69,13 @@ Ending: the end card now has a 5.2 s tail, held about 3 s at full opacity. The r
 
 Subtitles: two sub-1-second flash cues were merged. The file now has 112 phrase cues, each ≤ ~45 characters per line and ≥ 0.9 s.
 
-## Delivered 1080p (v4): technical verification (measured on `exports/Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4`)
+## Delivered 1080p (v5): technical verification (measured on `exports/Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4`)
 
-The v3 render gave identical measurements. v4 changes only visuals, so the audio is bit-identical.
+The v3 and v4 renders gave identical measurements. v4 and v5 changed only visuals, so the audio is bit-identical.
 
 | Check | Tool | Result |
 |---|---|---|
-| Container, codecs | ffprobe | MP4, H.264 High, yuv420p, BT.709 primaries/transfer/matrix, TV range, 1920×1080, 30/1 fps (constant) · AAC-LC 48 kHz stereo, 317 kb/s · 106.5 MB (CRF 16, x264 slow) |
+| Container, codecs | ffprobe | MP4, H.264 High, yuv420p, BT.709 primaries/transfer/matrix, TV range, 1920×1080, 30/1 fps (constant) · AAC-LC 48 kHz stereo, 317 kb/s · 104.1 MB (CRF 16, x264 slow) |
 | Duration | ffprobe | 299.52 s (4:59.5). The audio mix is 299.50 s, so A/V lengths match to within 1 frame |
 | Fast start | top-level atom scan | `ftyp, moov, free, mdat`, so moov comes before mdat ✓ |
 | Loudness | ffmpeg ebur128 (true peak) | **-16.0 LUFS integrated**, LRA 1.8 LU, **true peak -1.3 dBTP** ✓ |
@@ -149,3 +149,5 @@ For every real image, the largest drawn width (CSS width × every push and zoom 
 | Anthropic Fig. 7 | 1650 px | ≈ 815 px | ≈ 1630 px | native: the card was reduced from 1000 to 780 px for this |
 
 Before this audit, the 4K master would have drawn Fig. 7 at about 1.27× and the library photo at up to about 1.14×. Both were fixed in v5. The 1080p cut was native throughout.
+
+**v5 delivered file check:** frames pulled from the finalized MP4 at 1:29.6, 2:17.8, 3:45.5 and 4:05.0 show all four v5 changes: the short caption, the pattern-word underline sweep, the library pan at native scale, and the 780 px Anthropic card. The technical checks match v4: -16.0 LUFS, -1.3 dBTP, faststart, no freezes; the only black is the 0.33 s end fade.
