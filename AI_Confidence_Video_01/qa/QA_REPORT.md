@@ -28,7 +28,7 @@ Status: **work in progress.** The sections below record only checks that were ac
 ## Review findings fixed before the v2 render
 
 Accuracy and labels:
-- The IMO score now reads "Reported: 35/42", with an attributed source line.
+- The IMO score was attributed ("Reported: 35/42") with a source line. In v4 the score was removed entirely (see the v3 verification below).
 - "Fabrication" was renamed "Invented titles".
 - The DeepSeek-V3 birthday card is labelled as a different model from Table 1.
 - Claim cards and source lines carry "May 9, 2025, no web search".
@@ -83,3 +83,37 @@ Subtitles: two sub-1-second flash cues were merged. The file now has 112 phrase 
 | Narration stem | ebur128 | Re-exported with headroom: -20.7 LUFS, -1.5 dBTP (mono, 24-bit). The first export clipped (+0.2 dBFS) and was caught and fixed |
 | Subtitles | custom checker | 112 cues, built from the engine's word timings for this exact audio. None shorter than 0.9 s; lines ≤ ~45 characters |
 | Animation cues | tools/check_cues.py | Every `at(segment, word)` cue resolves |
+
+## v3 verification review (regression check before locking the cut)
+
+Three independent reviewers covered S1+S2, S3+S4 and S5+S6. They worked from the v3 contact sheets (`qa/review_v3/`) and from full-resolution frames pulled from the v3 render.
+
+**Confirmed fixed:** 52 of the earlier review fixes were confirmed on screen (21, 20 and 11 per reviewer).
+
+**Not fully landed or newly introduced, all fixed for v4:**
+
+| Time (v3) | Severity | Finding | v4 fix |
+|---|---|---|---|
+| 1:20.6–1:28.0 | medium | Birthday excerpt held about 7.4 s with nothing changing (a side effect of the earlier empty-frame fix) | Empty "Attempt 1/2/3 · ??-??" cards appear on "differently". A teal box marks "If you know, just respond with DD-MM." on "only if you know". The wrong dates fill the cards on "three different dates". Slow push on the excerpt |
+| 1:51.5–1:58.4 | medium | Word field: "Machine Learning" overlapped a dim "Learning" ("Machine Learningrning"); edge words clipped during the push | New layout: rows filled left to right with estimated widths and a minimum gap, then justified. Each row drifts as a unit, and margins allow for the drift and push. No overlaps (checked on stills) |
+| 0:31–0:39 | low (accuracy) | "35 / 42" and the P1–P5 ticks were search-only (sources.md rule 27) | Removed. The panel now shows only what the opened solutions PDF supports: "Written solutions published (PDF): P1–P5" (no ticks, no grading), then "Reported by Google DeepMind: gold-medal standard". "Advanced version" (search-only) also removed |
+| 4:29.2 | medium (accuracy) | "more consistent ≠ more correct" dropped the required hedge and stranded "correct" | "More consistent, / not necessarily more correct" (deliberate break). sources.md A5 updated |
+| 0:29.7–0:30.6 | low | "Lead author" tag readable for only about 0.6 s | Tag lands on "He's"; the split screen arrives after it (about 1.8 s readable) |
+| 0:35–0:39, 1:44 | low | Widows: "standard", "· Right:", "token." | Deliberate line breaks |
+| 0:45.3–0:47.0 | low | "It writes what's likely." sat off-centre until the second sentence appeared | Two centred lines |
+| 2:37.5 | low | "and" underlined as invented, but it is shared with the real title | Marked as a shared word |
+| 2:39.5 | low | Thesis date box touched the report-number line | Box tightened from pixel-measured line bands; crop slightly larger |
+| 3:27.6–3:33.4 | low | Table 2 held 5.8 s while the narration says "guessing pays" | Callback chip "Our quiz under these rules: Guesser 7 > Honest 6 / Guessing pays." plus a slow push |
+| 3:45.8 | low | "Check the record." appeared about 1.5 s before it is spoken | Cued to "move:", held longer; the thesis enters after it |
+| 4:01.9–4:03.5 | medium (carry-over) | Paper reference card too small to read in about 1.6 s | Shown as a readable quoted citation (serif, 24 px) together with "Is there a real source?", on screen about 3 s |
+| 4:03.6–4:07.3 | low | Three dips in 4 s; Anthropic figure up only about 1.9 s; credit line flickered during a dip | Article header and Fig. 7 on one card, one transition to the redraw (about 3.4 s); credit switches only at that cut |
+| 4:09.7–4:10.6 | low (carry-over) | Facts → "I don't know" drawn bright for about 0.9 s before "switches off" | That path stays dim until the inhibition line has drawn |
+| 4:12.5–4:21.2 | low (carry-over) | Arrowhead into "Facts" read as pointing up; the arrow cut the coral pill | Narrower arrowheads; pill moved clear |
+| 4:37.25 | low | Last ghosted crossfade (question vs. answer rows) | Sequential |
+| 4:45.4–4:46.6 | low | Strike-through stub read as a stray hyphen | Hidden until the strike starts drawing |
+
+Not changed, and why:
+- The "never?" chip (about 0.7 s) is limited by the narration's pace.
+- The "−" signs in the equation are already true minus signs (U+2212).
+
+Each fix was checked on full-resolution stills at the exact narration cue (`source/stills.mjs`). `tools/check_cues.py` and `tsc` pass. The audio did not change: no SFX or music cue depends on the moved visuals.

@@ -39,3 +39,9 @@ Durable notes so work can resume if the session is interrupted. Newest entries a
 - Script v1.2: s01 matches the quoted prompt ("dissertation", no "PhD"); pauses trimmed; end-card tail 5.2 s. Runtime 4:59.5.
 - Thumbnails exported as JPG (thumbnails/Video_01_thumbnail_[A-C].jpg). Recommended: A.
 - 4K test: 3840x2160 renders at ~1.4 fps (≈1¾ h for the full film). Document crops re-rendered at 600 dpi so the 4K master is native.
+
+## 08:20Z — v3 verified, v4 fixes in, v4 1080p rendering
+- v3 passed technical QA (-16.0 LUFS, -1.3 dBTP, faststart, no freezes).
+- 3-agent verification of v3: 52 earlier fixes confirmed. 3 medium and about 14 low items found (static birthday beat, word-field overlap, the temperature hedge, carry-overs in the Anthropic diagram). All fixed and checked on full-res stills. Details in qa/QA_REPORT.md.
+- IMO panel: the search-only "35 / 42" score was removed. It now shows only what the opened solutions PDF supports, plus the attributed "reported gold-medal standard".
+- Next: finalize v4, then the 4K master, then a final regression look at the v4 sheets, then the zip and handoff.
