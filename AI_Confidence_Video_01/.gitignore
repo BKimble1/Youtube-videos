@@ -38,3 +38,5 @@ qa/review_v3/*.png
 qa/review_v4/*.png
 qa/review_v4/frames/
 qa/render_chain.status
+# The project zip duplicates the repository contents (and is ~100 MB); it stays local
+exports/*.zip

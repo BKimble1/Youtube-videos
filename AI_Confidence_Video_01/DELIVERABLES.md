@@ -30,5 +30,5 @@ The on-screen "DRAFT · TEMPORARY VOICE" label then disappears automatically, an
 
 **Git note.** Audio and video files are Git LFS types in this repository. The LFS host was blocked from the
 production session, so the media files exist only in the session's working folder and in the project zip.
-They were not pushed to GitHub. Code, research, script, images and documents were pushed to the branch
+They were not pushed to GitHub. The project zip (about 100 MB) also stays local, since it duplicates the repository contents. Code, research, script, images and documents were pushed to the branch
 `claude/youtube-ai-confidence-video-2f39dg`.
