@@ -1,0 +1,17 @@
+{
+ "part_bytes": 25165824,
+ "files": [
+  {
+   "name": "ElevenLabs_voice_auditions.zip",
+   "bytes": 5232479,
+   "sha256": "842f88c16729c8776b57676261739402ed579d0a57aa5d4f34b125dd91e06323",
+   "parts": [
+    {
+     "name": "ElevenLabs_voice_auditions.zip.part001",
+     "bytes": 5232479,
+     "sha256": "842f88c16729c8776b57676261739402ed579d0a57aa5d4f34b125dd91e06323"
+    }
+   ]
+  }
+ ]
+}

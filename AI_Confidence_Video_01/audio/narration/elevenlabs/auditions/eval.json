@@ -1,0 +1,654 @@
+[
+ {
+  "file": "marcusk_t1.mp3",
+  "duration_s": 25.2,
+  "wpm_speaking": 192.6,
+  "wpm_overall": 151.5,
+  "pauses_over_180ms": 11,
+  "pause_list": [
+   [
+    3.66,
+    0.64
+   ],
+   [
+    6.66,
+    0.63
+   ],
+   [
+    8.62,
+    0.54
+   ],
+   [
+    10.76,
+    0.49
+   ],
+   [
+    12.32,
+    0.64
+   ],
+   [
+    14.82,
+    0.34
+   ],
+   [
+    15.98,
+    0.55
+   ],
+   [
+    17.66,
+    0.23
+   ],
+   [
+    18.66,
+    0.58
+   ],
+   [
+    21.01,
+    0.48
+   ],
+   [
+    22.33,
+    0.2
+   ]
+  ],
+  "f0_median_hz": 97.0,
+  "f0_range_st_10_90": 13.61,
+  "f0_sd_st": 5.83,
+  "intensity_sd_db": 6.76,
+  "hnr_db": 8.2,
+  "noise_floor_dbfs": -61.0,
+  "lufs": -27.1,
+  "true_peak_dbtp": -6.0,
+  "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Collized Disertation? Three Polish dancers. Not one had the right title. Or even the right year. A language model writes in tokens, chunks of text. Some are whole words, some are fragments. Each token is really a number, and at every step, the model scores every possible next token.",
+  "wer_whisper_tiny": 0.079
+ },
+ {
+  "file": "marcusk_t2.mp3",
+  "duration_s": 25.12,
+  "wpm_speaking": 188.0,
+  "wpm_overall": 151.9,
+  "pauses_over_180ms": 10,
+  "pause_list": [
+   [
+    3.64,
+    0.58
+   ],
+   [
+    6.7,
+    0.7
+   ],
+   [
+    8.78,
+    0.5
+   ],
+   [
+    10.88,
+    0.45
+   ],
+   [
+    12.42,
+    0.58
+   ],
+   [
+    14.89,
+    0.33
+   ],
+   [
+    16.08,
+    0.48
+   ],
+   [
+    17.75,
+    0.23
+   ],
+   [
+    18.76,
+    0.55
+   ],
+   [
+    20.97,
+    0.38
+   ]
+  ],
+  "f0_median_hz": 96.4,
+  "f0_range_st_10_90": 13.12,
+  "f0_sd_st": 5.24,
+  "intensity_sd_db": 6.48,
+  "hnr_db": 7.8,
+  "noise_floor_dbfs": -60.8,
+  "lufs": -27.2,
+  "true_peak_dbtp": -7.3,
+  "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Collis' dissertation? Three polished answers. Not one had the right title. Or even the right year. A language model writes in tokens, chunks of text. Some are whole words, some are fragments. Each token is really a number, and at every step, the model scores every possible next token.",
+  "wer_whisper_tiny": 0.032
+ },
+ {
+  "file": "marcusk_t3.mp3",
+  "duration_s": 24.88,
+  "wpm_speaking": 192.9,
+  "wpm_overall": 153.5,
+  "pauses_over_180ms": 10,
+  "pause_list": [
+   [
+    3.57,
+    0.67
+   ],
+   [
+    6.56,
+    0.66
+   ],
+   [
+    8.54,
+    0.53
+   ],
+   [
+    10.64,
+    0.54
+   ],
+   [
+    12.24,
+    0.63
+   ],
+   [
+    14.73,
+    0.28
+   ],
+   [
+    15.82,
+    0.47
+   ],
+   [
+    18.45,
+    0.55
+   ],
+   [
+    20.65,
+    0.48
+   ],
+   [
+    21.98,
+    0.21
+   ]
+  ],
+  "f0_median_hz": 96.7,
+  "f0_range_st_10_90": 13.16,
+  "f0_sd_st": 5.73,
+  "intensity_sd_db": 6.7,
+  "hnr_db": 7.9,
+  "noise_floor_dbfs": -60.2,
+  "lufs": -27.0,
+  "true_peak_dbtp": -6.6,
+  "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Collise dissertation? Three polished answers. Not one had the right title. Or even the right year. A language model writes in tokens, chunks of text. Some are whole words, some are fragments. Each token is really a number, and at every step, the model scores every possible next token.",
+  "wer_whisper_tiny": 0.032
+ },
+ {
+  "file": "marcusk_t4.mp3",
+  "duration_s": 25.28,
+  "wpm_speaking": 190.2,
+  "wpm_overall": 150.9,
+  "pauses_over_180ms": 11,
+  "pause_list": [
+   [
+    3.57,
+    0.56
+   ],
+   [
+    6.61,
+    0.74
+   ],
+   [
+    8.7,
+    0.47
+   ],
+   [
+    10.7,
+    0.48
+   ],
+   [
+    12.26,
+    0.62
+   ],
+   [
+    14.73,
+    0.32
+   ],
+   [
+    15.88,
+    0.52
+   ],
+   [
+    17.59,
+    0.22
+   ],
+   [
+    18.79,
+    0.6
+   ],
+   [
+    21.0,
+    0.45
+   ],
+   [
+    22.35,
+    0.2
+   ]
+  ],
+  "f0_median_hz": 96.6,
+  "f0_range_st_10_90": 12.79,
+  "f0_sd_st": 5.44,
+  "intensity_sd_db": 6.7,
+  "hnr_db": 7.8,
+  "noise_floor_dbfs": -60.7,
+  "lufs": -26.8,
+  "true_peak_dbtp": -7.1,
+  "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Colleys' dissertation? Three polished answers. Not one had the right title. Or even the right year. A language model writes in tokens, chunks of text. Some are whole words. Some are fragments. Each token is really a number, and at every step, the model scores every possible next token.",
+  "wer_whisper_tiny": 0.032
+ },
+ {
+  "file": "craig_t1.mp3",
+  "duration_s": 25.36,
+  "wpm_speaking": 163.6,
+  "wpm_overall": 149.1,
+  "pauses_over_180ms": 7,
+  "pause_list": [
+   [
+    7.17,
+    0.36
+   ],
+   [
+    9.08,
+    0.3
+   ],
+   [
+    12.55,
+    0.48
+   ],
+   [
+    15.06,
+    0.2
+   ],
+   [
+    16.16,
+    0.36
+   ],
+   [
+    19.07,
+    0.33
+   ],
+   [
+    21.29,
+    0.22
+   ]
+  ],
+  "f0_median_hz": 133.6,
+  "f0_range_st_10_90": 13.76,
+  "f0_sd_st": 5.04,
+  "intensity_sd_db": 4.48,
+  "hnr_db": 4.9,
+  "noise_floor_dbfs": -46.5,
+  "lufs": -23.5,
+  "true_peak_dbtp": -3.1,
+  "asr_text": "Researchers asked three popular chat box ones simple question. What was the type of actualization? Three politicians. Not one had the right type or even the right year. A language model writes in tokens, chunks of text. Some are whole words, some are fragments. Each token is really a number. And in every step, the model scores every possible next token.",
+  "wer_whisper_tiny": 0.175
+ },
+ {
+  "file": "craig_t2.mp3",
+  "duration_s": 25.6,
+  "wpm_speaking": 149.9,
+  "wpm_overall": 147.7,
+  "pauses_over_180ms": 1,
+  "pause_list": [
+   [
+    12.53,
+    0.38
+   ]
+  ],
+  "f0_median_hz": 132.6,
+  "f0_range_st_10_90": 13.87,
+  "f0_sd_st": 5.59,
+  "intensity_sd_db": 4.55,
+  "hnr_db": 4.6,
+  "noise_floor_dbfs": -45.1,
+  "lufs": -23.5,
+  "true_peak_dbtp": -2.6,
+  "asr_text": "Researchers asked three popular chat box ones, one simple question. What was the title of \"Adden Collitis Disitation\"? Three Polish dancers. Not one had the right title. Or even the right year. A language model writing tokens, chunks of text. Some are whole words, some are fragments. Each token is really a number. And in every step, the model scores every possible next token.",
+  "wer_whisper_tiny": 0.175
+ },
+ {
+  "file": "craig_t3.mp3",
+  "duration_s": 25.6,
+  "wpm_speaking": 168.0,
+  "wpm_overall": 148.9,
+  "pauses_over_180ms": 9,
+  "pause_list": [
+   [
+    4.03,
+    0.33
+   ],
+   [
+    7.19,
+    0.4
+   ],
+   [
+    9.02,
+    0.38
+   ],
+   [
+    11.11,
+    0.28
+   ],
+   [
+    12.68,
+    0.55
+   ],
+   [
+    15.22,
+    0.2
+   ],
+   [
+    16.34,
+    0.33
+   ],
+   [
+    19.16,
+    0.23
+   ],
+   [
+    21.45,
+    0.19
+   ]
+  ],
+  "f0_median_hz": 136.9,
+  "f0_range_st_10_90": 12.94,
+  "f0_sd_st": 5.3,
+  "intensity_sd_db": 4.62,
+  "hnr_db": 4.2,
+  "noise_floor_dbfs": -47.3,
+  "lufs": -23.5,
+  "true_peak_dbtp": -4.4,
+  "asr_text": "Researchers asked three popular chat box ones simple questions. What was the title of \"Adden Colleagues\" dissertation? Three polystyrene answers. Not one had the right title. Even the right year. I like which model writes in tokens, chunks of text, some of the whole words, some of the fragments. Each token is really a number, and in every step the model scores every possible next token.",
+  "wer_whisper_tiny": 0.254
+ },
+ {
+  "file": "craig_t4.mp3",
+  "duration_s": 25.2,
+  "wpm_speaking": 166.5,
+  "wpm_overall": 150.0,
+  "pauses_over_180ms": 8,
+  "pause_list": [
+   [
+    4.14,
+    0.24
+   ],
+   [
+    7.19,
+    0.21
+   ],
+   [
+    9.0,
+    0.24
+   ],
+   [
+    10.95,
+    0.28
+   ],
+   [
+    12.54,
+    0.49
+   ],
+   [
+    16.08,
+    0.35
+   ],
+   [
+    18.85,
+    0.49
+   ],
+   [
+    21.18,
+    0.2
+   ]
+  ],
+  "f0_median_hz": 132.1,
+  "f0_range_st_10_90": 14.77,
+  "f0_sd_st": 5.38,
+  "intensity_sd_db": 4.6,
+  "hnr_db": 4.5,
+  "noise_floor_dbfs": -47.0,
+  "lufs": -23.3,
+  "true_peak_dbtp": -3.0,
+  "asr_text": "Researchers asked three popular chat box ones, one simple question. What was the title of \"animalized\" dissertation? Three Polish answers. Not one had the right title. Even the right year. A language model writes in tokens, chunks of text. Some are whole words, some are fragments. Each token is really a number, and in every step the model scores every possible next token.",
+  "wer_whisper_tiny": 0.127
+ },
+ {
+  "file": "grounded_t1.mp3",
+  "duration_s": 27.92,
+  "wpm_speaking": 159.0,
+  "wpm_overall": 135.4,
+  "pauses_over_180ms": 10,
+  "pause_list": [
+   [
+    4.15,
+    0.52
+   ],
+   [
+    7.35,
+    0.49
+   ],
+   [
+    9.62,
+    0.42
+   ],
+   [
+    11.88,
+    0.4
+   ],
+   [
+    13.65,
+    0.53
+   ],
+   [
+    16.24,
+    0.28
+   ],
+   [
+    17.68,
+    0.33
+   ],
+   [
+    19.42,
+    0.21
+   ],
+   [
+    20.82,
+    0.54
+   ],
+   [
+    23.35,
+    0.43
+   ]
+  ],
+  "f0_median_hz": 202.6,
+  "f0_range_st_10_90": 10.02,
+  "f0_sd_st": 4.63,
+  "intensity_sd_db": 5.28,
+  "hnr_db": 13.0,
+  "noise_floor_dbfs": -54.7,
+  "lufs": -28.7,
+  "true_peak_dbtp": -7.1,
+  "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Collise dissertation? Three polished answers. Not one had the right title, or even the right year. A language model writes in tokens, chunks of text. Some are whole words, some are fragments. Each token is really a number, and at every step, the model scores every possible next token.",
+  "wer_whisper_tiny": 0.032
+ },
+ {
+  "file": "grounded_t2.mp3",
+  "duration_s": 27.92,
+  "wpm_speaking": 157.4,
+  "wpm_overall": 135.4,
+  "pauses_over_180ms": 9,
+  "pause_list": [
+   [
+    4.14,
+    0.53
+   ],
+   [
+    7.45,
+    0.45
+   ],
+   [
+    9.66,
+    0.4
+   ],
+   [
+    11.89,
+    0.33
+   ],
+   [
+    13.5,
+    0.68
+   ],
+   [
+    16.32,
+    0.22
+   ],
+   [
+    17.71,
+    0.3
+   ],
+   [
+    20.86,
+    0.5
+   ],
+   [
+    23.24,
+    0.49
+   ]
+  ],
+  "f0_median_hz": 201.5,
+  "f0_range_st_10_90": 9.3,
+  "f0_sd_st": 4.36,
+  "intensity_sd_db": 5.25,
+  "hnr_db": 12.6,
+  "noise_floor_dbfs": -55.8,
+  "lufs": -28.6,
+  "true_peak_dbtp": -8.1,
+  "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Collise dissertation? Three polished answers. Not one had the right title. Or even the right year. A language model writes in tokens. Chunks of text. Some are whole words. Some are fragments. Each token is really a number. And at every step, the model scores every possible next token.",
+  "wer_whisper_tiny": 0.032
+ },
+ {
+  "file": "grounded_t3.mp3",
+  "duration_s": 28.48,
+  "wpm_speaking": 157.8,
+  "wpm_overall": 132.7,
+  "pauses_over_180ms": 10,
+  "pause_list": [
+   [
+    4.11,
+    0.5
+   ],
+   [
+    7.42,
+    0.48
+   ],
+   [
+    9.69,
+    0.42
+   ],
+   [
+    11.92,
+    0.43
+   ],
+   [
+    13.68,
+    0.66
+   ],
+   [
+    16.47,
+    0.3
+   ],
+   [
+    17.81,
+    0.35
+   ],
+   [
+    19.67,
+    0.26
+   ],
+   [
+    21.14,
+    0.62
+   ],
+   [
+    23.79,
+    0.5
+   ]
+  ],
+  "f0_median_hz": 202.2,
+  "f0_range_st_10_90": 8.9,
+  "f0_sd_st": 4.75,
+  "intensity_sd_db": 5.19,
+  "hnr_db": 12.3,
+  "noise_floor_dbfs": -59.9,
+  "lufs": -28.8,
+  "true_peak_dbtp": -9.2,
+  "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Collise dissertation? Three polished answers. Not one had the right title. Or even the right year. A language model writes in tokens. Chunks of text. Some are whole words. Some are fragments. Each token is really a number, and at every step, the model scores every possible next token.",
+  "wer_whisper_tiny": 0.032
+ },
+ {
+  "file": "grounded_t4.mp3",
+  "duration_s": 27.92,
+  "wpm_speaking": 160.4,
+  "wpm_overall": 136.4,
+  "pauses_over_180ms": 10,
+  "pause_list": [
+   [
+    4.07,
+    0.52
+   ],
+   [
+    7.47,
+    0.42
+   ],
+   [
+    9.63,
+    0.38
+   ],
+   [
+    11.81,
+    0.37
+   ],
+   [
+    13.49,
+    0.55
+   ],
+   [
+    16.14,
+    0.23
+   ],
+   [
+    17.39,
+    0.45
+   ],
+   [
+    19.25,
+    0.22
+   ],
+   [
+    20.64,
+    0.54
+   ],
+   [
+    23.19,
+    0.46
+   ]
+  ],
+  "f0_median_hz": 202.3,
+  "f0_range_st_10_90": 9.27,
+  "f0_sd_st": 4.59,
+  "intensity_sd_db": 5.15,
+  "hnr_db": 12.0,
+  "noise_floor_dbfs": -56.1,
+  "lufs": -28.8,
+  "true_peak_dbtp": -9.7,
+  "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Collise dissertation? Three polished answers. Not one had the right title. Or even the right year. A language model writes in tokens, chunks of text. Some are whole words. Some are fragments. Each token is really a number, and at every step, the model scores every possible next token.",
+  "wer_whisper_tiny": 0.032
+ }
+]
