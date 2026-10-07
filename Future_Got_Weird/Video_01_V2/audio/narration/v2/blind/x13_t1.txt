@@ -1,0 +1,1 @@
+The researchers checked ten widely used benchmarks in mid-2025. Nine graded strictly right or wrong with no credit at all for, I don't know. Train and rank models on tests like that and guessing pays. It's one explanation, not the whole story, but it is a simple one

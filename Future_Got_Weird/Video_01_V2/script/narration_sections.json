@@ -1,0 +1,232 @@
+{
+ "model": "eleven_v4",
+ "voice_name": "Test Voice",
+ "voice_id": "kk5XaSLo2XAw0sKM98zU",
+ "sections": [
+  {
+   "id": "x01",
+   "segments": [
+    "s01",
+    "s02"
+   ],
+   "prompt": "[curious] Three popular AI models were asked one question: what was the title of Adam /kəˈlaɪz/ dissertation?\n\n[lightly amused] ChatGPT handed over a full title, a university, and a year. DeepSeek gave a different title. Llama gave a third.",
+   "words_per_segment": [
+    16,
+    20
+   ],
+   "chars": 240
+  },
+  {
+   "id": "x02",
+   "segments": [
+    "s03",
+    "s04",
+    "s05"
+   ],
+   "prompt": "Three different answers… [firmly] None of them are right. Not one even had the right year.\n\n[curious] And Adam /kəˈlaɪ/? He's the lead author of the paper that reported this test.\n\n[dryly] Very professional… Very fictional.",
+   "words_per_segment": [
+    15,
+    14,
+    4
+   ],
+   "chars": 223
+  },
+  {
+   "id": "x03",
+   "segments": [
+    "s06",
+    "s07"
+   ],
+   "prompt": "[curious] So how can a wrong answer sound that sure? [warmly] Here's the short version.\n\n[confidently] A chatbot is built to write what's likely to come next. Checking whether it's true is a different job. And some of the tests used to grade these systems [mischievously] quietly reward guessing.",
+   "words_per_segment": [
+    13,
+    32
+   ],
+   "chars": 296
+  },
+  {
+   "id": "x04",
+   "segments": [
+    "s08",
+    "s09"
+   ],
+   "prompt": "[energetic] Let's take ChatGPT's answer apart.\n\nA language model builds text out of tokens: chunks that are sometimes whole words, sometimes fragments. In /ˌdʒiːpiːˈtiːfɔːrˈoʊz/ tokenizer, “/kəˈlaɪ/” comes out as “/kæl/” and “/aɪ/.”",
+   "words_per_segment": [
+    5,
+    26
+   ],
+   "chars": 232
+  },
+  {
+   "id": "x05",
+   "segments": [
+    "s10",
+    "s11"
+   ],
+   "prompt": "At every step, the model scores all the possible next chunks and picks one. Then it goes again. Token after token, an answer rolls out.\n\nHere, it's choosing the last digit of the year. Those scores say which chunk is likely. [short pause] They do NOT say which one is true.",
+   "words_per_segment": [
+    25,
+    24
+   ],
+   "chars": 273
+  },
+  {
+   "id": "x06",
+   "segments": [
+    "s12",
+    "s13"
+   ],
+   "prompt": "Modern chatbots add more on top: instruction training, step-by-step reasoning, sometimes web search. But the words still come out this way… one piece at a time.\n\n[curious] So why would the likely answer be wrong? Think about what the model learned from.",
+   "words_per_segment": [
+    26,
+    15
+   ],
+   "chars": 253
+  },
+  {
+   "id": "x07",
+   "segments": [
+    "s14",
+    "s15"
+   ],
+   "prompt": "The sound of a dissertation title is everywhere. “Methods.” “Algorithms.” “Machine Learning.” [lightly amused] Shelf after shelf, the same shape.\n\nBut one specific researcher's title? That might show up rarely… or not at all. And like a birthday, there's no pattern to work it out from.",
+   "words_per_segment": [
+    18,
+    26
+   ],
+   "chars": 286
+  },
+  {
+   "id": "x08",
+   "segments": [
+    "s16"
+   ],
+   "prompt": "So the model does what it was built to do. It fills the gap with a title-shaped answer. And the confidence comes with it, because that's part of the pattern too. [amused] “Is entitled.” No “I think.” No “maybe.”",
+   "words_per_segment": [
+    38
+   ],
+   "chars": 211
+  },
+  {
+   "id": "x09",
+   "segments": [
+    "s17",
+    "s18",
+    "s19"
+   ],
+   "prompt": "[clearly] Here's the actual record. /kəˈlaɪz/ thesis: “Probabilistic and On-line Methods in Machine Learning.” Carnegie Mellon, May 2001.\n\nChatGPT got the university right. The year was off by one. The title was invented. And every detail came out looking exactly as solid as the true one.\n\n[dryly] A confident font… is still just a font.",
+   "words_per_segment": [
+    17,
+    28,
+    8
+   ],
+   "chars": 338
+  },
+  {
+   "id": "x10",
+   "segments": [
+    "s20",
+    "s21"
+   ],
+   "prompt": "[curious] Now, why guess at all? Why not just say “I don't know”? The researchers argue that part of the answer is how models get graded.\n\n[playfully] Picture a ten-question quiz. Right answer: one point. Wrong answer: zero. “I don't know”: also zero.",
+   "words_per_segment": [
+    25,
+    16
+   ],
+   "chars": 251
+  },
+  {
+   "id": "x11",
+   "segments": [
+    "s22",
+    "s23",
+    "s24"
+   ],
+   "prompt": "Two contestants. Both know six answers. The honest one leaves the other four blank. Six points.\n\nThe guesser takes a shot at all four. Four options each, so on average, one lands. [lightly amused] Seven points.\n\nOne lucky guess. Three wrong answers… [dryly amused] Somehow, a trophy.",
+   "words_per_segment": [
+    16,
+    18,
+    9
+   ],
+   "chars": 283
+  },
+  {
+   "id": "x12",
+   "segments": [
+    "s25"
+   ],
+   "prompt": "Now change one rule. A wrong answer costs a point. The honest one: still six. The guesser: six, plus one, minus three… Four. [amused] The trophy walks back.",
+   "words_per_segment": [
+    27
+   ],
+   "chars": 156
+  },
+  {
+   "id": "x13",
+   "segments": [
+    "s26",
+    "s27"
+   ],
+   "prompt": "[clearly] The researchers checked ten widely used benchmarks in mid-2025. Nine graded strictly right or wrong, with no credit at all for “I don't know.”\n\nTrain and rank models on tests like that, and guessing pays. It's one explanation, not the whole story. But it is a simple one.",
+   "words_per_segment": [
+    24,
+    24
+   ],
+   "chars": 281
+  },
+  {
+   "id": "x14",
+   "segments": [
+    "s28",
+    "s29",
+    "s30"
+   ],
+   "prompt": "[curious] So what helps? Search and retrieval, when they bring the real record into the room. Reasoning, sometimes. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.\n\n[confidently] The unglamorous move: check.\n\nTwo questions. Does the source exist? And does it ACTUALLY say this?",
+   "words_per_segment": [
+    35,
+    4,
+    12
+   ],
+   "chars": 345
+  },
+  {
+   "id": "x15",
+   "segments": [
+    "s31",
+    "s32"
+   ],
+   "prompt": "Take the ChatGPT slip. Is there a thesis by Adam /kəˈlaɪ/ at Carnegie Mellon? Yes. Does it say “Boosting, Online Algorithms,” 2002? No. It says “Probabilistic and On-line Methods,” 2001.\n\nSource exists. Claim fails. [satisfied] Stamp it.",
+   "words_per_segment": [
+    30,
+    6
+   ],
+   "chars": 237
+  },
+  {
+   "id": "x16",
+   "segments": [
+    "s33",
+    "s34"
+   ],
+   "prompt": "[thoughtfully] So why is AI so confidently wrong? Because sounding right comes from patterns in language… and being right takes evidence the model doesn't always have.\n\nSo when an answer matters, don't ask whether it sounds right. Ask what the evidence is… and whether it actually says this.",
+   "words_per_segment": [
+    25,
+    22
+   ],
+   "chars": 291
+  },
+  {
+   "id": "x17",
+   "segments": [
+    "s35",
+    "s36"
+   ],
+   "prompt": "[lightly amused] Works on chatbots. Works pretty well on people, too.\n\n[warmly] This is Future Got Weird. AI moves fast; we make it make sense. New episodes twice a week, if you'd like to subscribe.",
+   "words_per_segment": [
+    9,
+    23
+   ],
+   "chars": 198
+  }
+ ]
+}

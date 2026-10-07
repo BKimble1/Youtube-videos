@@ -1,0 +1,1 @@
+So how can a wrong answer sound that sure? Here's the short version. A chatbot is built to write what's likely to come next. Checking whether it's true is a different job, and some of the tests used to grade these systems quietly reward guessing

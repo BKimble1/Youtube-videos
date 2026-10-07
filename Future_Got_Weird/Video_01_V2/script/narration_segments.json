@@ -1,0 +1,299 @@
+{
+ "title": "Why AI Is So Confidently Wrong",
+ "channel": "Future Got Weird",
+ "version": "V2 (2026-10-07)",
+ "voice_name": "Test Voice",
+ "voice_id": "kk5XaSLo2XAw0sKM98zU",
+ "model": "eleven_v4",
+ "notes": "text = display/subtitle text. tts = Eleven v4 prompt with delivery tags in [brackets] and IPA between slashes; with tags and punctuation-only tokens removed it has the same words as text, so forced-alignment timings map 1:1.",
+ "segments": [
+  {
+   "id": "s01",
+   "scene": "S1",
+   "text": "Three popular AI models were asked one question: what was the title of Adam Kalai's dissertation?",
+   "tts": "[curious] Three popular AI models were asked one question: what was the title of Adam /kəˈlaɪz/ dissertation?",
+   "pause_after_ms": 350,
+   "direction": "cold open: curious, quick, a question you want answered"
+  },
+  {
+   "id": "s02",
+   "scene": "S1",
+   "text": "ChatGPT handed over a full title, a university, and a year. DeepSeek gave a different title. Llama gave a third.",
+   "tts": "[lightly amused] ChatGPT handed over a full title, a university, and a year. DeepSeek gave a different title. Llama gave a third.",
+   "pause_after_ms": 450,
+   "direction": "escalating: each answer arrives sure of itself; slight comic lift on 'a third'"
+  },
+  {
+   "id": "s03",
+   "scene": "S1",
+   "text": "Three different answers. None of them are right. Not one even had the right year.",
+   "tts": "Three different answers… [firmly] None of them are right. Not one even had the right year.",
+   "pause_after_ms": 500,
+   "direction": "small pause after 'answers'; 'None of them are right' lands, lower and firm"
+  },
+  {
+   "id": "s04",
+   "scene": "S1",
+   "text": "And Adam Kalai? He's the lead author of the paper that reported this test.",
+   "tts": "[curious] And Adam /kəˈlaɪ/? He's the lead author of the paper that reported this test.",
+   "pause_after_ms": 450,
+   "direction": "a little reveal, conversational"
+  },
+  {
+   "id": "s05",
+   "scene": "S1",
+   "text": "Very professional. Very fictional.",
+   "tts": "[dryly] Very professional… Very fictional.",
+   "pause_after_ms": 900,
+   "direction": "joke 1: dry, a beat between the two halves"
+  },
+  {
+   "id": "s06",
+   "scene": "S2",
+   "text": "So how can a wrong answer sound that sure? Here's the short version.",
+   "tts": "[curious] So how can a wrong answer sound that sure? [warmly] Here's the short version.",
+   "pause_after_ms": 350,
+   "direction": "the title question, genuinely curious; then friendly"
+  },
+  {
+   "id": "s07",
+   "scene": "S2",
+   "text": "A chatbot is built to write what's likely to come next. Checking whether it's true is a different job. And some of the tests used to grade these systems quietly reward guessing.",
+   "tts": "[confidently] A chatbot is built to write what's likely to come next. Checking whether it's true is a different job. And some of the tests used to grade these systems [mischievously] quietly reward guessing.",
+   "pause_after_ms": 2200,
+   "direction": "three clean claims, confident; a knowing smile on 'quietly reward guessing'"
+  },
+  {
+   "id": "s08",
+   "scene": "S3",
+   "text": "Let's take ChatGPT's answer apart.",
+   "tts": "[energetic] Let's take ChatGPT's answer apart.",
+   "pause_after_ms": 350,
+   "direction": "energy up: we're going inside"
+  },
+  {
+   "id": "s09",
+   "scene": "S3",
+   "text": "A language model builds text out of tokens: chunks that are sometimes whole words, sometimes fragments. In GPT-4o's tokenizer, “Kalai” comes out as “Kal” and “ai.”",
+   "tts": "A language model builds text out of tokens: chunks that are sometimes whole words, sometimes fragments. In /ˌdʒiːpiːˈtiːfɔːrˈoʊz/ tokenizer, “/kəˈlaɪ/” comes out as “/kæl/” and “/aɪ/.”",
+   "pause_after_ms": 400,
+   "direction": "explanation moving confidently; playful on 'Kal' and 'ai'"
+  },
+  {
+   "id": "s10",
+   "scene": "S3",
+   "text": "At every step, the model scores all the possible next chunks and picks one. Then it goes again. Token after token, an answer rolls out.",
+   "tts": "At every step, the model scores all the possible next chunks and picks one. Then it goes again. Token after token, an answer rolls out.",
+   "pause_after_ms": 400,
+   "direction": "rhythmic, mechanical cadence without sounding robotic"
+  },
+  {
+   "id": "s11",
+   "scene": "S3",
+   "text": "Here, it's choosing the last digit of the year. Those scores say which chunk is likely. They do not say which one is true.",
+   "tts": "Here, it's choosing the last digit of the year. Those scores say which chunk is likely. [short pause] They do NOT say which one is true.",
+   "pause_after_ms": 600,
+   "direction": "the key distinction: slight pause, emphasis on 'not'"
+  },
+  {
+   "id": "s12",
+   "scene": "S3",
+   "text": "Modern chatbots add more on top: instruction training, step-by-step reasoning, sometimes web search. But the words still come out this way, one piece at a time.",
+   "tts": "Modern chatbots add more on top: instruction training, step-by-step reasoning, sometimes web search. But the words still come out this way… one piece at a time.",
+   "pause_after_ms": 700,
+   "direction": "list moves briskly; settle on 'one piece at a time'"
+  },
+  {
+   "id": "s13",
+   "scene": "S4",
+   "text": "So why would the likely answer be wrong? Think about what the model learned from.",
+   "tts": "[curious] So why would the likely answer be wrong? Think about what the model learned from.",
+   "pause_after_ms": 350,
+   "direction": "curious turn"
+  },
+  {
+   "id": "s14",
+   "scene": "S4",
+   "text": "The sound of a dissertation title is everywhere. “Methods.” “Algorithms.” “Machine Learning.” Shelf after shelf, the same shape.",
+   "tts": "The sound of a dissertation title is everywhere. “Methods.” “Algorithms.” “Machine Learning.” [lightly amused] Shelf after shelf, the same shape.",
+   "pause_after_ms": 400,
+   "direction": "the three words read like spines being tapped; amused at 'the same shape'"
+  },
+  {
+   "id": "s15",
+   "scene": "S4",
+   "text": "But one specific researcher's title? That might show up rarely, or not at all. And like a birthday, there's no pattern to work it out from.",
+   "tts": "But one specific researcher's title? That might show up rarely… or not at all. And like a birthday, there's no pattern to work it out from.",
+   "pause_after_ms": 450,
+   "direction": "quieter, thoughtful"
+  },
+  {
+   "id": "s16",
+   "scene": "S4",
+   "text": "So the model does what it was built to do. It fills the gap with a title-shaped answer. And the confidence comes with it, because that's part of the pattern too. “Is entitled.” No “I think.” No “maybe.”",
+   "tts": "So the model does what it was built to do. It fills the gap with a title-shaped answer. And the confidence comes with it, because that's part of the pattern too. [amused] “Is entitled.” No “I think.” No “maybe.”",
+   "pause_after_ms": 700,
+   "direction": "builds; the three quotes are crisp and a little amused"
+  },
+  {
+   "id": "s17",
+   "scene": "S5",
+   "text": "Here's the actual record. Kalai's thesis: “Probabilistic and On-line Methods in Machine Learning.” Carnegie Mellon, May 2001.",
+   "tts": "[clearly] Here's the actual record. /kəˈlaɪz/ thesis: “Probabilistic and On-line Methods in Machine Learning.” Carnegie Mellon, May 2001.",
+   "pause_after_ms": 500,
+   "direction": "evidence: clear, unhurried, a touch quieter"
+  },
+  {
+   "id": "s18",
+   "scene": "S5",
+   "text": "ChatGPT got the university right. The year was off by one. The title was invented. And every detail came out looking exactly as solid as the true one.",
+   "tts": "ChatGPT got the university right. The year was off by one. The title was invented. And every detail came out looking exactly as solid as the true one.",
+   "pause_after_ms": 900,
+   "direction": "three verdicts, each a beat; the last sentence lands"
+  },
+  {
+   "id": "s19",
+   "scene": "S5",
+   "text": "A confident font is still just a font.",
+   "tts": "[dryly] A confident font… is still just a font.",
+   "pause_after_ms": 1000,
+   "direction": "joke 2: give it room; dry, unhurried"
+  },
+  {
+   "id": "s20",
+   "scene": "S6",
+   "text": "Now, why guess at all? Why not just say “I don't know”? The researchers argue that part of the answer is how models get graded.",
+   "tts": "[curious] Now, why guess at all? Why not just say “I don't know”? The researchers argue that part of the answer is how models get graded.",
+   "pause_after_ms": 400,
+   "direction": "playful curiosity; game-show energy starts"
+  },
+  {
+   "id": "s21",
+   "scene": "S6",
+   "text": "Picture a ten-question quiz. Right answer: one point. Wrong answer: zero. “I don't know”: also zero.",
+   "tts": "[playfully] Picture a ten-question quiz. Right answer: one point. Wrong answer: zero. “I don't know”: also zero.",
+   "pause_after_ms": 350,
+   "direction": "rules, briskly, like a host"
+  },
+  {
+   "id": "s22",
+   "scene": "S6",
+   "text": "Two contestants. Both know six answers. The honest one leaves the other four blank. Six points.",
+   "tts": "Two contestants. Both know six answers. The honest one leaves the other four blank. Six points.",
+   "pause_after_ms": 350,
+   "direction": "clean, a little deadpan on 'six points'"
+  },
+  {
+   "id": "s23",
+   "scene": "S6",
+   "text": "The guesser takes a shot at all four. Four options each, so on average, one lands. Seven points.",
+   "tts": "The guesser takes a shot at all four. Four options each, so on average, one lands. [lightly amused] Seven points.",
+   "pause_after_ms": 500,
+   "direction": "'Seven points' slightly amused"
+  },
+  {
+   "id": "s24",
+   "scene": "S6",
+   "text": "One lucky guess. Three wrong answers. Somehow, a trophy.",
+   "tts": "One lucky guess. Three wrong answers… [dryly amused] Somehow, a trophy.",
+   "pause_after_ms": 900,
+   "direction": "joke 3: the best comic beat; dry and slightly amused on 'Somehow, a trophy'"
+  },
+  {
+   "id": "s25",
+   "scene": "S6",
+   "text": "Now change one rule. A wrong answer costs a point. The honest one: still six. The guesser: six, plus one, minus three. Four. The trophy walks back.",
+   "tts": "Now change one rule. A wrong answer costs a point. The honest one: still six. The guesser: six, plus one, minus three… Four. [amused] The trophy walks back.",
+   "pause_after_ms": 800,
+   "direction": "arithmetic with momentum; small beat before 'Four'; amused on the trophy"
+  },
+  {
+   "id": "s26",
+   "scene": "S7",
+   "text": "The researchers checked ten widely used benchmarks in mid-2025. Nine graded strictly right or wrong, with no credit at all for “I don't know.”",
+   "tts": "[clearly] The researchers checked ten widely used benchmarks in mid-2025. Nine graded strictly right or wrong, with no credit at all for “I don't know.”",
+   "pause_after_ms": 400,
+   "direction": "evidence: pull back, clear"
+  },
+  {
+   "id": "s27",
+   "scene": "S7",
+   "text": "Train and rank models on tests like that, and guessing pays. It's one explanation, not the whole story. But it is a simple one.",
+   "tts": "Train and rank models on tests like that, and guessing pays. It's one explanation, not the whole story. But it is a simple one.",
+   "pause_after_ms": 800,
+   "direction": "honest caveat, conversational"
+  },
+  {
+   "id": "s28",
+   "scene": "S8",
+   "text": "So what helps? Search and retrieval, when they bring the real record into the room. Reasoning, sometimes. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
+   "tts": "[curious] So what helps? Search and retrieval, when they bring the real record into the room. Reasoning, sometimes. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
+   "pause_after_ms": 600,
+   "direction": "brisk list; 'None of it is a guarantee' plain"
+  },
+  {
+   "id": "s29",
+   "scene": "S9",
+   "text": "The unglamorous move: check.",
+   "tts": "[confidently] The unglamorous move: check.",
+   "pause_after_ms": 450,
+   "direction": "simple and confident"
+  },
+  {
+   "id": "s30",
+   "scene": "S9",
+   "text": "Two questions. Does the source exist? And does it actually say this?",
+   "tts": "Two questions. Does the source exist? And does it ACTUALLY say this?",
+   "pause_after_ms": 450,
+   "direction": "two clean questions"
+  },
+  {
+   "id": "s31",
+   "scene": "S9",
+   "text": "Take the ChatGPT slip. Is there a thesis by Adam Kalai at Carnegie Mellon? Yes. Does it say “Boosting, Online Algorithms,” 2002? No. It says “Probabilistic and On-line Methods,” 2001.",
+   "tts": "Take the ChatGPT slip. Is there a thesis by Adam /kəˈlaɪ/ at Carnegie Mellon? Yes. Does it say “Boosting, Online Algorithms,” 2002? No. It says “Probabilistic and On-line Methods,” 2001.",
+   "pause_after_ms": 450,
+   "direction": "demonstration with momentum; crisp yes / no"
+  },
+  {
+   "id": "s32",
+   "scene": "S9",
+   "text": "Source exists. Claim fails. Stamp it.",
+   "tts": "Source exists. Claim fails. [satisfied] Stamp it.",
+   "pause_after_ms": 900,
+   "direction": "three beats; small satisfaction on 'Stamp it'"
+  },
+  {
+   "id": "s33",
+   "scene": "S10",
+   "text": "So why is AI so confidently wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have.",
+   "tts": "[thoughtfully] So why is AI so confidently wrong? Because sounding right comes from patterns in language… and being right takes evidence the model doesn't always have.",
+   "pause_after_ms": 700,
+   "direction": "conclusion: slows slightly, conclusive"
+  },
+  {
+   "id": "s34",
+   "scene": "S10",
+   "text": "So when an answer matters, don't ask whether it sounds right. Ask what the evidence is, and whether it actually says this.",
+   "tts": "So when an answer matters, don't ask whether it sounds right. Ask what the evidence is… and whether it actually says this.",
+   "pause_after_ms": 700,
+   "direction": "conclusive, warm, not preachy"
+  },
+  {
+   "id": "s35",
+   "scene": "S10",
+   "text": "Works on chatbots. Works pretty well on people, too.",
+   "tts": "[lightly amused] Works on chatbots. Works pretty well on people, too.",
+   "pause_after_ms": 900,
+   "direction": "joke 4: light"
+  },
+  {
+   "id": "s36",
+   "scene": "S10",
+   "text": "This is Future Got Weird. AI moves fast; we make it make sense. New episodes twice a week, if you'd like to subscribe.",
+   "tts": "[warmly] This is Future Got Weird. AI moves fast; we make it make sense. New episodes twice a week, if you'd like to subscribe.",
+   "pause_after_ms": 0,
+   "direction": "friendly sign-off, clean"
+  }
+ ]
+}

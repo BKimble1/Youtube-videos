@@ -1,0 +1,442 @@
+1
+00:00:00,450 --> 00:00:03,810
+Three popular AI models
+were asked one question:
+
+2
+00:00:03,890 --> 00:00:06,750
+what was the title of
+Adam Kalai's dissertation?
+
+3
+00:00:06,930 --> 00:00:09,130
+ChatGPT handed over a full title,
+
+4
+00:00:09,210 --> 00:00:10,990
+a university, and a year.
+
+5
+00:00:11,170 --> 00:00:13,010
+DeepSeek gave a different title.
+
+6
+00:00:13,090 --> 00:00:14,590
+Llama gave a third.
+
+7
+00:00:14,770 --> 00:00:17,790
+Three polished answers. All wrong.
+
+8
+00:00:17,890 --> 00:00:19,870
+Not one even had the right year.
+
+9
+00:00:19,970 --> 00:00:21,230
+And Adam Kalai?
+
+10
+00:00:21,330 --> 00:00:25,840
+He's the lead author of the paper that
+reported this test. Very professional.
+
+11
+00:00:25,920 --> 00:00:27,340
+Very fictional.
+
+12
+00:00:27,685 --> 00:00:30,965
+So how can a wrong answer sound that sure?
+
+13
+00:00:31,045 --> 00:00:32,330
+Here's the short version.
+
+14
+00:00:32,410 --> 00:00:35,685
+A chatbot is built to write
+what's likely to come next.
+
+15
+00:00:35,765 --> 00:00:38,325
+Checking whether it's
+true is a different job.
+
+16
+00:00:38,405 --> 00:00:42,865
+And some of the tests used to grade
+these systems quietly reward guessing.
+
+17
+00:00:44,675 --> 00:00:47,135
+Let's take ChatGPT's answer apart.
+
+18
+00:00:47,315 --> 00:00:50,195
+A language model builds
+text out of tokens:
+
+19
+00:00:50,275 --> 00:00:53,635
+chunks that are sometimes whole
+words, sometimes fragments.
+
+20
+00:00:53,715 --> 00:00:59,215
+In GPT-4o's tokenizer, “Kalai”
+comes out as “Kal” and “ai.”
+
+21
+00:00:59,475 --> 00:01:03,875
+At every step, the model scores all
+the possible next chunks and picks one.
+
+22
+00:01:03,955 --> 00:01:05,073
+Then it goes again.
+
+23
+00:01:05,235 --> 00:01:07,855
+Token after token, an answer rolls out.
+
+24
+00:01:08,035 --> 00:01:10,755
+Here, it's choosing the
+last digit of the year.
+
+25
+00:01:10,835 --> 00:01:13,155
+Those scores say which chunk is likely.
+
+26
+00:01:13,235 --> 00:01:15,375
+They do not say which one is true.
+
+27
+00:01:15,650 --> 00:01:17,930
+Modern chatbots add more on top:
+
+28
+00:01:18,010 --> 00:01:20,370
+instruction training,
+step-by-step reasoning,
+
+29
+00:01:20,450 --> 00:01:21,810
+sometimes web search.
+
+30
+00:01:21,890 --> 00:01:23,890
+But the words still come out this way,
+
+31
+00:01:23,970 --> 00:01:25,550
+one piece at a time.
+
+32
+00:01:25,775 --> 00:01:28,395
+So why would the likely answer be wrong?
+
+33
+00:01:28,655 --> 00:01:30,735
+Think about what the model learned from.
+
+34
+00:01:30,815 --> 00:01:35,615
+The sound of a dissertation title is
+everywhere. “Methods.” “Algorithms.”
+
+35
+00:01:35,695 --> 00:01:36,875
+“Machine Learning.”
+
+36
+00:01:37,055 --> 00:01:39,675
+Shelf after shelf, the same shape.
+
+37
+00:01:39,855 --> 00:01:42,075
+But one specific researcher's title?
+
+38
+00:01:42,175 --> 00:01:44,635
+That might show up rarely, or not at all.
+
+39
+00:01:44,815 --> 00:01:47,900
+And like a birthday, there's
+no pattern to work it out from.
+
+40
+00:01:47,980 --> 00:01:50,140
+So the model does what it was built to do.
+
+41
+00:01:50,220 --> 00:01:52,780
+It fills the gap with
+a title-shaped answer.
+
+42
+00:01:52,860 --> 00:01:54,260
+And the confidence comes with it,
+
+43
+00:01:54,340 --> 00:01:57,560
+because that's part of the
+pattern too. “Is entitled.”
+
+44
+00:01:57,660 --> 00:02:00,440
+No “I think.” No “maybe.”
+
+45
+00:02:00,715 --> 00:02:02,475
+Here's the actual record.
+
+46
+00:02:02,555 --> 00:02:07,255
+Kalai's thesis: “Probabilistic and
+On-line Methods in Machine Learning.”
+
+47
+00:02:07,355 --> 00:02:10,015
+Carnegie Mellon, May 2001.
+
+48
+00:02:10,095 --> 00:02:12,395
+ChatGPT got the university right.
+
+49
+00:02:12,495 --> 00:02:14,095
+The year was off by one.
+
+50
+00:02:14,175 --> 00:02:15,775
+The title was invented.
+
+51
+00:02:15,855 --> 00:02:19,915
+And every detail came out looking
+exactly as solid as the true one.
+
+52
+00:02:20,095 --> 00:02:23,195
+A confident font is still just a font.
+
+53
+00:02:23,470 --> 00:02:25,230
+Now, why guess at all?
+
+54
+00:02:25,310 --> 00:02:27,270
+Why not just say “I don't know”?
+
+55
+00:02:27,350 --> 00:02:31,435
+The researchers argue that part of
+the answer is how models get graded.
+
+56
+00:02:31,515 --> 00:02:33,355
+Picture a ten-question quiz.
+
+57
+00:02:33,435 --> 00:02:35,155
+Right answer: one point.
+
+58
+00:02:35,235 --> 00:02:36,955
+Wrong answer: zero.
+
+59
+00:02:37,035 --> 00:02:40,635
+“I don't know”: also
+zero. Two contestants.
+
+60
+00:02:40,715 --> 00:02:42,355
+Both know six answers.
+
+61
+00:02:42,435 --> 00:02:45,875
+The honest one leaves the
+other four blank. Six points.
+
+62
+00:02:45,955 --> 00:02:48,235
+The guesser takes a shot at all four.
+
+63
+00:02:48,315 --> 00:02:52,775
+Four options each, so on
+average, one lands. Seven points.
+
+64
+00:02:52,955 --> 00:02:54,195
+One lucky guess.
+
+65
+00:02:54,275 --> 00:02:55,515
+Three wrong answers.
+
+66
+00:02:55,595 --> 00:02:57,415
+Somehow, a trophy.
+
+67
+00:02:57,605 --> 00:02:59,185
+Now change one rule.
+
+68
+00:02:59,285 --> 00:03:01,425
+A wrong answer costs a point.
+
+69
+00:03:01,605 --> 00:03:03,745
+The honest one: still six.
+
+70
+00:03:03,845 --> 00:03:08,145
+The guesser: six, plus
+one, minus three. Four.
+
+71
+00:03:08,325 --> 00:03:09,825
+The trophy walks back.
+
+72
+00:03:10,295 --> 00:03:14,775
+The researchers checked ten widely
+used benchmarks in mid-2025.
+
+73
+00:03:14,855 --> 00:03:17,015
+Nine graded strictly right or wrong,
+
+74
+00:03:17,095 --> 00:03:19,507
+with no credit at all for “I don't know.”
+
+75
+00:03:19,735 --> 00:03:21,815
+Train and rank models on tests like that,
+
+76
+00:03:21,895 --> 00:03:23,315
+and guessing pays.
+
+77
+00:03:23,495 --> 00:03:25,966
+It's one explanation, not the whole story.
+
+78
+00:03:26,055 --> 00:03:27,875
+But it is a simple one.
+
+79
+00:03:28,065 --> 00:03:29,245
+So what helps?
+
+80
+00:03:29,425 --> 00:03:33,105
+Search and retrieval, when they
+bring the real record into the room.
+
+81
+00:03:33,185 --> 00:03:35,105
+Reasoning, sometimes.
+
+82
+00:03:35,185 --> 00:03:38,225
+Turning down the randomness
+makes answers more consistent,
+
+83
+00:03:38,305 --> 00:03:40,125
+not necessarily more correct.
+
+84
+00:03:40,305 --> 00:03:42,205
+None of it is a guarantee.
+
+85
+00:03:42,290 --> 00:03:46,430
+Which leaves the unglamorous
+move: check. Two questions.
+
+86
+00:03:46,530 --> 00:03:47,890
+Does the source exist?
+
+87
+00:03:47,970 --> 00:03:50,110
+And does it actually say this?
+
+88
+00:03:50,370 --> 00:03:52,030
+Take the ChatGPT slip.
+
+89
+00:03:52,210 --> 00:03:55,950
+Is there a thesis by Adam
+Kalai at Carnegie Mellon? Yes.
+
+90
+00:03:56,130 --> 00:04:00,530
+Does it say “Boosting,
+Online Algorithms,” 2002? No.
+
+91
+00:04:00,610 --> 00:04:06,765
+It says “Probabilistic and On-line
+Methods,” 2001. Source exists. Claim fails.
+
+92
+00:04:06,845 --> 00:04:07,865
+Stamp it.
+
+93
+00:04:08,160 --> 00:04:10,960
+So why is AI so confidently wrong?
+
+94
+00:04:11,040 --> 00:04:13,960
+Because sounding right comes
+from patterns in language,
+
+95
+00:04:14,040 --> 00:04:17,660
+and being right takes evidence
+the model doesn't always have.
+
+96
+00:04:17,790 --> 00:04:21,230
+So when an answer matters, don't
+ask whether it sounds right.
+
+97
+00:04:21,310 --> 00:04:24,685
+Ask what the evidence is, and
+whether it actually says this.
+
+98
+00:04:24,765 --> 00:04:26,085
+Works on chatbots.
+
+99
+00:04:26,165 --> 00:04:28,345
+Works pretty well on people, too.
+
+100
+00:04:28,785 --> 00:04:30,625
+This is Future Got Weird.
+
+101
+00:04:30,705 --> 00:04:33,585
+AI moves fast; we make it make sense.
+
+102
+00:04:33,665 --> 00:04:36,841
+New episodes twice a week,
+if you'd like to subscribe.

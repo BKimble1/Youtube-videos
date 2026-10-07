@@ -1,0 +1,1 @@
+Modern chatbots add more on top: instruction training, step-by-step reasoning, sometimes web search. But the words still come out this way, one piece at a time. So why would the likely answer be wrong? Think about what the model learned from

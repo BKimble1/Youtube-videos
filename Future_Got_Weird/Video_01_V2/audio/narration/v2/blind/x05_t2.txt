@@ -1,0 +1,1 @@
+At every step, the model scores all the possible next chunks and picks one. Then it goes again. Token after token, an answer rolls out. Here, it's choosing the last digit of the year. Those scores say which chunk is likely. They do not say which one is true

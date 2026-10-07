@@ -1,0 +1,1 @@
+So the model does what it was built to do. It fills the gap with a title-shaped answer, and the confidence comes with it because that's part of the pattern too. Is entitled. No, I think. No, maybe

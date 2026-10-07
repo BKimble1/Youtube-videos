@@ -1,0 +1,43 @@
+node_modules/
+**/node_modules/
+.cache/
+__pycache__/
+*.pyc
+previews/
+audio/music/stems/
+audio/music/music_bed.wav
+audio/mix/stem_*.wav
+audio/mix/final_mix.wav
+audio/sfx/sfx_track.wav
+audio/narration/narration_*.wav
+source/public/audio/
+.env
+*.key
+# Audio/video are Git LFS types in this repo (.gitattributes); the LFS host is not reachable from the
+# production session, so media stays local and is backed up as split parts under backup/.
+*.wav
+*.mp4
+*.mp3
+*.m4a
+qa/clips/
+qa/determinism/
+qa/render_chain.status
+exports/*.zip
+# pass-2 additions: dev check frames and the per-frame QA material stay local; the contact sheets are kept
+qa/dev/
+qa/frames/*
+!qa/frames/sheet_*.jpg
+!qa/frames/phone/
+!qa/frames/frame_stats.json
+backup/_stage/
+*.flac
+!backup/**/*.part*
+
+# render logs and pids are session scratch
+qa/render/
+
+# V2: dense review sheets of V1 are regenerated with tools/qa_dense.py; keep only their motion summary
+qa/v1_review/*.jpg
+qa/v1_review/*.png
+qa/v2_*/*.jpg
+qa/v2_*/*.png

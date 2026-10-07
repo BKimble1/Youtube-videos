@@ -1,0 +1,1 @@
+Let's take ChatGPT's answer apart. A language model builds text out of tokens, chunks that are sometimes whole words, sometimes fragments. In GPT-4o's tokenizer, Kalai comes out as Kal and ai.

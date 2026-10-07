@@ -1,0 +1,957 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S1": {
+   "seconds": 27.3,
+   "mean_energy": 2.029,
+   "still_seconds": 10.6,
+   "still_share": 0.388,
+   "longest_still_s": 2.23
+  },
+  "S2": {
+   "seconds": 17.0,
+   "mean_energy": 0.393,
+   "still_seconds": 12.7,
+   "still_share": 0.743,
+   "longest_still_s": 2.97
+  },
+  "S3": {
+   "seconds": 41.1,
+   "mean_energy": 1.069,
+   "still_seconds": 28.8,
+   "still_share": 0.701,
+   "longest_still_s": 3.8
+  },
+  "S4": {
+   "seconds": 35.0,
+   "mean_energy": 2.317,
+   "still_seconds": 22.4,
+   "still_share": 0.64,
+   "longest_still_s": 2.7
+  },
+  "S5": {
+   "seconds": 22.8,
+   "mean_energy": 1.216,
+   "still_seconds": 16.0,
+   "still_share": 0.704,
+   "longest_still_s": 2.77
+  },
+  "S6": {
+   "seconds": 46.8,
+   "mean_energy": 0.669,
+   "still_seconds": 22.2,
+   "still_share": 0.475,
+   "longest_still_s": 2.73
+  },
+  "S7": {
+   "seconds": 17.8,
+   "mean_energy": 0.667,
+   "still_seconds": 10.7,
+   "still_share": 0.601,
+   "longest_still_s": 3.13
+  },
+  "S8": {
+   "seconds": 14.2,
+   "mean_energy": 1.201,
+   "still_seconds": 7.6,
+   "still_share": 0.533,
+   "longest_still_s": 1.63
+  },
+  "S9": {
+   "seconds": 25.9,
+   "mean_energy": 0.488,
+   "still_seconds": 18.2,
+   "still_share": 0.703,
+   "longest_still_s": 3.1
+  },
+  "S10": {
+   "seconds": 33.0,
+   "mean_energy": 0.77,
+   "still_seconds": 19.7,
+   "still_share": 0.597,
+   "longest_still_s": 2.8
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S1",
+   "from": 33,
+   "to": 82,
+   "seconds": 1.67,
+   "t": "0:01.1",
+   "spoken": "popular AI models were asked one question:"
+  },
+  {
+   "scene": "S1",
+   "from": 94,
+   "to": 119,
+   "seconds": 0.87,
+   "t": "0:03.1",
+   "spoken": "question: what was the"
+  },
+  {
+   "scene": "S1",
+   "from": 145,
+   "to": 199,
+   "seconds": 1.83,
+   "t": "0:04.8",
+   "spoken": "title of Adam Kalai's dissertation? ChatGPT"
+  },
+  {
+   "scene": "S1",
+   "from": 283,
+   "to": 309,
+   "seconds": 0.9,
+   "t": "0:09.4",
+   "spoken": "title, a university, and a year."
+  },
+  {
+   "scene": "S1",
+   "from": 546,
+   "to": 572,
+   "seconds": 0.9,
+   "t": "0:18.2",
+   "spoken": "Not one even had the right year."
+  },
+  {
+   "scene": "S1",
+   "from": 618,
+   "to": 652,
+   "seconds": 1.17,
+   "t": "0:20.6",
+   "spoken": "Adam Kalai? He's the lead author"
+  },
+  {
+   "scene": "S1",
+   "from": 660,
+   "to": 726,
+   "seconds": 2.23,
+   "t": "0:22.0",
+   "spoken": "lead author of the paper that reported this test."
+  },
+  {
+   "scene": "S1",
+   "from": 754,
+   "to": 784,
+   "seconds": 1.03,
+   "t": "0:25.1",
+   "spoken": "professional. Very fictional."
+  },
+  {
+   "scene": "S2",
+   "from": 852,
+   "to": 901,
+   "seconds": 1.67,
+   "t": "0:28.4",
+   "spoken": "how can a wrong answer sound that sure?"
+  },
+  {
+   "scene": "S2",
+   "from": 907,
+   "to": 938,
+   "seconds": 1.07,
+   "t": "0:30.2",
+   "spoken": "that sure? Here's the short"
+  },
+  {
+   "scene": "S2",
+   "from": 952,
+   "to": 975,
+   "seconds": 0.8,
+   "t": "0:31.7",
+   "spoken": "short version. A chatbot"
+  },
+  {
+   "scene": "S2",
+   "from": 987,
+   "to": 1025,
+   "seconds": 1.3,
+   "t": "0:32.9",
+   "spoken": "chatbot is built to write what's likely"
+  },
+  {
+   "scene": "S2",
+   "from": 1032,
+   "to": 1073,
+   "seconds": 1.4,
+   "t": "0:34.4",
+   "spoken": "what's likely to come next. Checking"
+  },
+  {
+   "scene": "S2",
+   "from": 1085,
+   "to": 1173,
+   "seconds": 2.97,
+   "t": "0:36.2",
+   "spoken": "Checking whether it's true is a different job. And some of the tests used"
+  },
+  {
+   "scene": "S2",
+   "from": 1183,
+   "to": 1256,
+   "seconds": 2.47,
+   "t": "0:39.4",
+   "spoken": "tests used to grade these systems quietly reward guessing."
+  },
+  {
+   "scene": "S2",
+   "from": 1297,
+   "to": 1325,
+   "seconds": 0.97,
+   "t": "0:43.2",
+   "spoken": ""
+  },
+  {
+   "scene": "S3",
+   "from": 1353,
+   "to": 1385,
+   "seconds": 1.1,
+   "t": "0:45.1",
+   "spoken": "Let's take ChatGPT's answer apart."
+  },
+  {
+   "scene": "S3",
+   "from": 1408,
+   "to": 1473,
+   "seconds": 2.2,
+   "t": "0:46.9",
+   "spoken": "apart. A language model builds text out of tokens:"
+  },
+  {
+   "scene": "S3",
+   "from": 1492,
+   "to": 1543,
+   "seconds": 1.73,
+   "t": "0:49.7",
+   "spoken": "tokens: chunks that are sometimes whole words,"
+  },
+  {
+   "scene": "S3",
+   "from": 1548,
+   "to": 1574,
+   "seconds": 0.9,
+   "t": "0:51.6",
+   "spoken": "sometimes whole words, sometimes fragments."
+  },
+  {
+   "scene": "S3",
+   "from": 1585,
+   "to": 1610,
+   "seconds": 0.87,
+   "t": "0:52.8",
+   "spoken": "sometimes fragments. In GPT-4o's"
+  },
+  {
+   "scene": "S3",
+   "from": 1627,
+   "to": 1713,
+   "seconds": 2.9,
+   "t": "0:54.2",
+   "spoken": "GPT-4o's tokenizer, \u201cKalai\u201d comes out as \u201cKal\u201d"
+  },
+  {
+   "scene": "S3",
+   "from": 1725,
+   "to": 1749,
+   "seconds": 0.83,
+   "t": "0:57.5",
+   "spoken": "\u201cKal\u201d and \u201cai.\u201d"
+  },
+  {
+   "scene": "S3",
+   "from": 1798,
+   "to": 1827,
+   "seconds": 1.0,
+   "t": "0:59.9",
+   "spoken": "every step, the model scores"
+  },
+  {
+   "scene": "S3",
+   "from": 1835,
+   "to": 1892,
+   "seconds": 1.93,
+   "t": "1:01.2",
+   "spoken": "scores all the possible next chunks and picks one."
+  },
+  {
+   "scene": "S3",
+   "from": 1994,
+   "to": 2035,
+   "seconds": 1.4,
+   "t": "1:06.5",
+   "spoken": "token, an answer rolls out. Here,"
+  },
+  {
+   "scene": "S3",
+   "from": 2054,
+   "to": 2167,
+   "seconds": 3.8,
+   "t": "1:08.5",
+   "spoken": "Here, it's choosing the last digit of the year. Those scores say which chunk is likely."
+  },
+  {
+   "scene": "S3",
+   "from": 2171,
+   "to": 2230,
+   "seconds": 2.0,
+   "t": "1:12.4",
+   "spoken": "chunk is likely. They do not say which one is"
+  },
+  {
+   "scene": "S3",
+   "from": 2236,
+   "to": 2262,
+   "seconds": 0.9,
+   "t": "1:14.5",
+   "spoken": "which one is true. Modern"
+  },
+  {
+   "scene": "S3",
+   "from": 2279,
+   "to": 2336,
+   "seconds": 1.93,
+   "t": "1:16.0",
+   "spoken": "Modern chatbots add more on top: instruction"
+  },
+  {
+   "scene": "S3",
+   "from": 2380,
+   "to": 2422,
+   "seconds": 1.43,
+   "t": "1:19.3",
+   "spoken": "step-by-step reasoning, sometimes web"
+  },
+  {
+   "scene": "S3",
+   "from": 2434,
+   "to": 2457,
+   "seconds": 0.8,
+   "t": "1:21.1",
+   "spoken": "web search. But the words"
+  },
+  {
+   "scene": "S3",
+   "from": 2465,
+   "to": 2520,
+   "seconds": 1.87,
+   "t": "1:22.2",
+   "spoken": "But the words still come out this way, one piece"
+  },
+  {
+   "scene": "S3",
+   "from": 2522,
+   "to": 2557,
+   "seconds": 1.2,
+   "t": "1:24.1",
+   "spoken": "way, one piece at a time."
+  },
+  {
+   "scene": "S4",
+   "from": 2611,
+   "to": 2691,
+   "seconds": 2.7,
+   "t": "1:27.0",
+   "spoken": "likely answer be wrong? Think about what the model learned from."
+  },
+  {
+   "scene": "S4",
+   "from": 2764,
+   "to": 2814,
+   "seconds": 1.7,
+   "t": "1:32.1",
+   "spoken": "dissertation title is everywhere. \u201cMethods.\u201d"
+  },
+  {
+   "scene": "S4",
+   "from": 2928,
+   "to": 2985,
+   "seconds": 1.93,
+   "t": "1:37.6",
+   "spoken": "Shelf after shelf, the same shape."
+  },
+  {
+   "scene": "S4",
+   "from": 3020,
+   "to": 3085,
+   "seconds": 2.2,
+   "t": "1:40.7",
+   "spoken": "specific researcher's title? That might show up rarely,"
+  },
+  {
+   "scene": "S4",
+   "from": 3093,
+   "to": 3157,
+   "seconds": 2.17,
+   "t": "1:43.1",
+   "spoken": "up rarely, or not at all. And like a birthday,"
+  },
+  {
+   "scene": "S4",
+   "from": 3162,
+   "to": 3186,
+   "seconds": 0.83,
+   "t": "1:45.4",
+   "spoken": "a birthday, there's no pattern"
+  },
+  {
+   "scene": "S4",
+   "from": 3191,
+   "to": 3226,
+   "seconds": 1.2,
+   "t": "1:46.4",
+   "spoken": "no pattern to work it out from."
+  },
+  {
+   "scene": "S4",
+   "from": 3250,
+   "to": 3307,
+   "seconds": 1.93,
+   "t": "1:48.3",
+   "spoken": "So the model does what it was built to do. It fills"
+  },
+  {
+   "scene": "S4",
+   "from": 3349,
+   "to": 3402,
+   "seconds": 1.8,
+   "t": "1:51.6",
+   "spoken": "a title-shaped answer. And the confidence comes"
+  },
+  {
+   "scene": "S4",
+   "from": 3409,
+   "to": 3485,
+   "seconds": 2.57,
+   "t": "1:53.6",
+   "spoken": "confidence comes with it, because that's part of the pattern too. \u201cIs"
+  },
+  {
+   "scene": "S4",
+   "from": 3494,
+   "to": 3539,
+   "seconds": 1.53,
+   "t": "1:56.5",
+   "spoken": "\u201cIs entitled.\u201d No \u201cI think.\u201d"
+  },
+  {
+   "scene": "S4",
+   "from": 3546,
+   "to": 3572,
+   "seconds": 0.9,
+   "t": "1:58.2",
+   "spoken": "\u201cI think.\u201d No \u201cmaybe.\u201d"
+  },
+  {
+   "scene": "S4",
+   "from": 3579,
+   "to": 3606,
+   "seconds": 0.93,
+   "t": "1:59.3",
+   "spoken": "No \u201cmaybe.\u201d"
+  },
+  {
+   "scene": "S5",
+   "from": 3649,
+   "to": 3712,
+   "seconds": 2.13,
+   "t": "2:01.6",
+   "spoken": "actual record. Kalai's thesis: \u201cProbabilistic"
+  },
+  {
+   "scene": "S5",
+   "from": 3733,
+   "to": 3815,
+   "seconds": 2.77,
+   "t": "2:04.4",
+   "spoken": "\u201cProbabilistic and On-line Methods in Machine Learning.\u201d Carnegie"
+  },
+  {
+   "scene": "S5",
+   "from": 3863,
+   "to": 3891,
+   "seconds": 0.97,
+   "t": "2:08.8",
+   "spoken": "May 2001."
+  },
+  {
+   "scene": "S5",
+   "from": 3923,
+   "to": 3980,
+   "seconds": 1.93,
+   "t": "2:10.8",
+   "spoken": "ChatGPT got the university right. The year was"
+  },
+  {
+   "scene": "S5",
+   "from": 3983,
+   "to": 4030,
+   "seconds": 1.6,
+   "t": "2:12.8",
+   "spoken": "The year was off by one. The title"
+  },
+  {
+   "scene": "S5",
+   "from": 4040,
+   "to": 4085,
+   "seconds": 1.53,
+   "t": "2:14.7",
+   "spoken": "title was invented. And every"
+  },
+  {
+   "scene": "S5",
+   "from": 4087,
+   "to": 4151,
+   "seconds": 2.17,
+   "t": "2:16.2",
+   "spoken": "And every detail came out looking exactly as solid"
+  },
+  {
+   "scene": "S5",
+   "from": 4153,
+   "to": 4206,
+   "seconds": 1.8,
+   "t": "2:18.4",
+   "spoken": "exactly as solid as the true one. A confident"
+  },
+  {
+   "scene": "S5",
+   "from": 4221,
+   "to": 4254,
+   "seconds": 1.13,
+   "t": "2:20.7",
+   "spoken": "confident font is still just"
+  },
+  {
+   "scene": "S6",
+   "from": 4367,
+   "to": 4401,
+   "seconds": 1.17,
+   "t": "2:25.6",
+   "spoken": "Why not just say \u201cI don't know\u201d?"
+  },
+  {
+   "scene": "S6",
+   "from": 4403,
+   "to": 4432,
+   "seconds": 1.0,
+   "t": "2:26.8",
+   "spoken": "don't know\u201d? The researchers argue"
+  },
+  {
+   "scene": "S6",
+   "from": 4453,
+   "to": 4510,
+   "seconds": 1.93,
+   "t": "2:28.4",
+   "spoken": "argue that part of the answer is how models get graded."
+  },
+  {
+   "scene": "S6",
+   "from": 4563,
+   "to": 4599,
+   "seconds": 1.23,
+   "t": "2:32.1",
+   "spoken": "a ten-question quiz. Right answer:"
+  },
+  {
+   "scene": "S6",
+   "from": 4607,
+   "to": 4651,
+   "seconds": 1.5,
+   "t": "2:33.6",
+   "spoken": "quiz. Right answer: one point. Wrong"
+  },
+  {
+   "scene": "S6",
+   "from": 4673,
+   "to": 4707,
+   "seconds": 1.17,
+   "t": "2:35.8",
+   "spoken": "answer: zero. \u201cI don't"
+  },
+  {
+   "scene": "S6",
+   "from": 4716,
+   "to": 4776,
+   "seconds": 2.03,
+   "t": "2:37.2",
+   "spoken": "zero. \u201cI don't know\u201d: also zero. Two"
+  },
+  {
+   "scene": "S6",
+   "from": 4851,
+   "to": 4901,
+   "seconds": 1.7,
+   "t": "2:41.7",
+   "spoken": "six answers. The honest one leaves the other"
+  },
+  {
+   "scene": "S6",
+   "from": 4924,
+   "to": 4976,
+   "seconds": 1.77,
+   "t": "2:44.1",
+   "spoken": "four blank. Six points. The guesser"
+  },
+  {
+   "scene": "S6",
+   "from": 5157,
+   "to": 5187,
+   "seconds": 1.03,
+   "t": "2:51.9",
+   "spoken": "Seven points. One lucky"
+  },
+  {
+   "scene": "S6",
+   "from": 5195,
+   "to": 5218,
+   "seconds": 0.8,
+   "t": "2:53.2",
+   "spoken": "One lucky guess."
+  },
+  {
+   "scene": "S6",
+   "from": 5342,
+   "to": 5401,
+   "seconds": 2.0,
+   "t": "2:58.1",
+   "spoken": "Now change one rule. A wrong answer costs"
+  },
+  {
+   "scene": "S6",
+   "from": 5443,
+   "to": 5480,
+   "seconds": 1.27,
+   "t": "3:01.4",
+   "spoken": "point. The honest one: still six."
+  },
+  {
+   "scene": "S6",
+   "from": 5485,
+   "to": 5566,
+   "seconds": 2.73,
+   "t": "3:02.8",
+   "spoken": "one: still six. The guesser: six, plus one,"
+  },
+  {
+   "scene": "S6",
+   "from": 5568,
+   "to": 5593,
+   "seconds": 0.87,
+   "t": "3:05.6",
+   "spoken": "six, plus one, minus three."
+  },
+  {
+   "scene": "S7",
+   "from": 5751,
+   "to": 5840,
+   "seconds": 3.0,
+   "t": "3:11.7",
+   "spoken": "ten widely used benchmarks in mid-2025. Nine"
+  },
+  {
+   "scene": "S7",
+   "from": 5924,
+   "to": 5955,
+   "seconds": 1.07,
+   "t": "3:17.5",
+   "spoken": "with no credit at all for \u201cI don't"
+  },
+  {
+   "scene": "S7",
+   "from": 5957,
+   "to": 5986,
+   "seconds": 1.0,
+   "t": "3:18.6",
+   "spoken": "for \u201cI don't know.\u201d Train"
+  },
+  {
+   "scene": "S7",
+   "from": 6024,
+   "to": 6071,
+   "seconds": 1.6,
+   "t": "3:20.8",
+   "spoken": "models on tests like that, and guessing pays."
+  },
+  {
+   "scene": "S7",
+   "from": 6079,
+   "to": 6105,
+   "seconds": 0.9,
+   "t": "3:22.6",
+   "spoken": "guessing pays. It's one"
+  },
+  {
+   "scene": "S7",
+   "from": 6112,
+   "to": 6205,
+   "seconds": 3.13,
+   "t": "3:23.7",
+   "spoken": "It's one explanation, not the whole story. But it is a simple one."
+  },
+  {
+   "scene": "S8",
+   "from": 6246,
+   "to": 6279,
+   "seconds": 1.13,
+   "t": "3:28.2",
+   "spoken": "So what helps? Search"
+  },
+  {
+   "scene": "S8",
+   "from": 6322,
+   "to": 6370,
+   "seconds": 1.63,
+   "t": "3:30.7",
+   "spoken": "retrieval, when they bring the real record into the room."
+  },
+  {
+   "scene": "S8",
+   "from": 6421,
+   "to": 6448,
+   "seconds": 0.93,
+   "t": "3:34.0",
+   "spoken": "Reasoning, sometimes. Turning"
+  },
+  {
+   "scene": "S8",
+   "from": 6481,
+   "to": 6514,
+   "seconds": 1.13,
+   "t": "3:36.0",
+   "spoken": "the randomness makes answers more consistent,"
+  },
+  {
+   "scene": "S8",
+   "from": 6540,
+   "to": 6570,
+   "seconds": 1.03,
+   "t": "3:38.0",
+   "spoken": "consistent, not necessarily more correct."
+  },
+  {
+   "scene": "S8",
+   "from": 6582,
+   "to": 6605,
+   "seconds": 0.8,
+   "t": "3:39.4",
+   "spoken": "more correct. None"
+  },
+  {
+   "scene": "S8",
+   "from": 6626,
+   "to": 6653,
+   "seconds": 0.93,
+   "t": "3:40.9",
+   "spoken": "of it is a guarantee."
+  },
+  {
+   "scene": "S9",
+   "from": 6666,
+   "to": 6733,
+   "seconds": 2.27,
+   "t": "3:42.2",
+   "spoken": "guarantee. Which leaves the unglamorous move: check."
+  },
+  {
+   "scene": "S9",
+   "from": 6776,
+   "to": 6868,
+   "seconds": 3.1,
+   "t": "3:45.9",
+   "spoken": "questions. Does the source exist? And does it actually"
+  },
+  {
+   "scene": "S9",
+   "from": 6879,
+   "to": 6905,
+   "seconds": 0.9,
+   "t": "3:49.3",
+   "spoken": "actually say this? Take"
+  },
+  {
+   "scene": "S9",
+   "from": 6933,
+   "to": 6972,
+   "seconds": 1.33,
+   "t": "3:51.1",
+   "spoken": "ChatGPT slip. Is there a thesis"
+  },
+  {
+   "scene": "S9",
+   "from": 7024,
+   "to": 7057,
+   "seconds": 1.13,
+   "t": "3:54.1",
+   "spoken": "Kalai at Carnegie Mellon? Yes."
+  },
+  {
+   "scene": "S9",
+   "from": 7059,
+   "to": 7089,
+   "seconds": 1.03,
+   "t": "3:55.3",
+   "spoken": "Yes. Does it say"
+  },
+  {
+   "scene": "S9",
+   "from": 7100,
+   "to": 7129,
+   "seconds": 1.0,
+   "t": "3:56.7",
+   "spoken": "it say \u201cBoosting, Online"
+  },
+  {
+   "scene": "S9",
+   "from": 7134,
+   "to": 7160,
+   "seconds": 0.9,
+   "t": "3:57.8",
+   "spoken": "\u201cBoosting, Online Algorithms,\u201d 2002?"
+  },
+  {
+   "scene": "S9",
+   "from": 7162,
+   "to": 7198,
+   "seconds": 1.23,
+   "t": "3:58.7",
+   "spoken": "Algorithms,\u201d 2002? No."
+  },
+  {
+   "scene": "S9",
+   "from": 7200,
+   "to": 7239,
+   "seconds": 1.33,
+   "t": "4:00.0",
+   "spoken": "2002? No. It says \u201cProbabilistic"
+  },
+  {
+   "scene": "S9",
+   "from": 7244,
+   "to": 7286,
+   "seconds": 1.43,
+   "t": "4:01.5",
+   "spoken": "\u201cProbabilistic and On-line Methods,\u201d 2001."
+  },
+  {
+   "scene": "S9",
+   "from": 7290,
+   "to": 7336,
+   "seconds": 1.57,
+   "t": "4:03.0",
+   "spoken": "Methods,\u201d 2001. Source"
+  },
+  {
+   "scene": "S9",
+   "from": 7372,
+   "to": 7400,
+   "seconds": 0.97,
+   "t": "4:05.7",
+   "spoken": "exists. Claim fails. Stamp"
+  },
+  {
+   "scene": "S10",
+   "from": 7464,
+   "to": 7511,
+   "seconds": 1.6,
+   "t": "4:08.8",
+   "spoken": "why is AI so confidently wrong?"
+  },
+  {
+   "scene": "S10",
+   "from": 7543,
+   "to": 7569,
+   "seconds": 0.9,
+   "t": "4:11.4",
+   "spoken": "Because sounding right comes from patterns"
+  },
+  {
+   "scene": "S10",
+   "from": 7583,
+   "to": 7621,
+   "seconds": 1.3,
+   "t": "4:12.8",
+   "spoken": "from patterns in language, and being"
+  },
+  {
+   "scene": "S10",
+   "from": 7684,
+   "to": 7731,
+   "seconds": 1.6,
+   "t": "4:16.1",
+   "spoken": "model doesn't always have. So when"
+  },
+  {
+   "scene": "S10",
+   "from": 7733,
+   "to": 7773,
+   "seconds": 1.37,
+   "t": "4:17.8",
+   "spoken": "So when an answer matters, don't"
+  },
+  {
+   "scene": "S10",
+   "from": 7800,
+   "to": 7841,
+   "seconds": 1.4,
+   "t": "4:20.0",
+   "spoken": "ask whether it sounds right. Ask what the"
+  },
+  {
+   "scene": "S10",
+   "from": 7843,
+   "to": 7890,
+   "seconds": 1.6,
+   "t": "4:21.4",
+   "spoken": "right. Ask what the evidence is, and whether it actually"
+  },
+  {
+   "scene": "S10",
+   "from": 7912,
+   "to": 7947,
+   "seconds": 1.2,
+   "t": "4:23.7",
+   "spoken": "actually says this. Works on chatbots."
+  },
+  {
+   "scene": "S10",
+   "from": 8122,
+   "to": 8162,
+   "seconds": 1.37,
+   "t": "4:30.7",
+   "spoken": "Weird. AI moves fast; we"
+  },
+  {
+   "scene": "S10",
+   "from": 8168,
+   "to": 8227,
+   "seconds": 2.0,
+   "t": "4:32.3",
+   "spoken": "fast; we make it make sense. New episodes twice"
+  },
+  {
+   "scene": "S10",
+   "from": 8235,
+   "to": 8271,
+   "seconds": 1.23,
+   "t": "4:34.5",
+   "spoken": "episodes twice a week, if you'd like to subscribe."
+  },
+  {
+   "scene": "S10",
+   "from": 8277,
+   "to": 8316,
+   "seconds": 1.33,
+   "t": "4:35.9",
+   "spoken": "subscribe."
+  },
+  {
+   "scene": "S10",
+   "from": 8318,
+   "to": 8401,
+   "seconds": 2.8,
+   "t": "4:37.3",
+   "spoken": ""
+  }
+ ]
+}

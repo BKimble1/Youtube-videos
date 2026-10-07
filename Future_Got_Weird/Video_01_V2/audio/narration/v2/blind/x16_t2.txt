@@ -1,0 +1,1 @@
+So why is AI so confidently wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have. So when an answer matters, don't ask whether it sounds right. Ask what the evidence is and whether it actually says this
