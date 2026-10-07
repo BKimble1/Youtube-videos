@@ -54,3 +54,12 @@ Durable notes so work can resume if the session is interrupted. Newest entries a
 - 720p review copy for sending: exports/Video_01_PREVIEW_720p_DRAFT-NARRATION.mp4 (27 MiB).
 - Project zip: exports/AI_Confidence_Video_01_project.zip (100 MB, 281 files, no node_modules, caches or credentials; credential grep passed).
 - Remaining for a final, non-draft cut: ElevenLabs narration (needs the API key and api.elevenlabs.io allowed), then README steps 1–5.
+
+## 14:35Z — final v6 (ElevenLabs) in progress → delivered when the 4K finishes
+- Backup of the complete draft (v5) verified by fresh clone before any change.
+- ElevenLabs connector: TTS v4, Scribe and Sound Effects work; music/image/video are unavailable (restricted connector). The score stays original and is regenerated to the new timing.
+- Voice audition (Marcus K / Craig / Grounded Woman, 4 takes each): Marcus K chosen (0 % blind WER, widest intonation, cleanest pauses).
+- Narration: 12 blocks × 4 takes on eleven_v4, scored, picked, cut at pauses with Scribe forced alignment; blind Scribe WER 0.4 %. Runtime 5:18.5.
+- DeepMind line revised to what the opened PDF supports (no gold/score claim); S1 panel rebuilt around the real PDF page.
+- Sound: 6 ElevenLabs SFX (24 variations measured) at 26 synced cues; look-ahead ducking; mix -16.0 LUFS / -1.3 dBTP.
+- Final 1080p rendered, remuxed with the final mix, verified (-16.0 LUFS, -1.2 dBTP, faststart, clean decode); backed up as parts with the narration stem and a 720p preview.
