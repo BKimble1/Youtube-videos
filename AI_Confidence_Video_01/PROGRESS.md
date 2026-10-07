@@ -63,3 +63,6 @@ Durable notes so work can resume if the session is interrupted. Newest entries a
 - DeepMind line revised to what the opened PDF supports (no gold/score claim); S1 panel rebuilt around the real PDF page.
 - Sound: 6 ElevenLabs SFX (24 variations measured) at 26 synced cues; look-ahead ducking; mix -16.0 LUFS / -1.3 dBTP.
 - Final 1080p rendered, remuxed with the final mix, verified (-16.0 LUFS, -1.2 dBTP, faststart, clean decode); backed up as parts with the narration stem and a 720p preview.
+- 4K master rendered (1 h 44 min), remuxed with the final mix, verified (-16.0 LUFS, -1.2 dBTP, faststart, clean decode, native 4K detail); render input mix.wav synced to the final mix.
+- Independent 12-agent audit of the delivery docs: 31 verified findings fixed (paths, timestamps, measurement wording, stale notes).
+- Project zip rebuilt (126 MB, 452 files, no backups/exports/credentials). backup/final_v6 now holds 1080p, 4K, narration stem, project zip and 720p preview as checksummed parts.

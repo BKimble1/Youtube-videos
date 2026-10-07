@@ -2,6 +2,43 @@
  "part_bytes": 25165824,
  "files": [
   {
+   "name": "AI_Confidence_Video_01_project.zip",
+   "bytes": 126255164,
+   "sha256": "5ebcbd12a8b89f7f6ec28fe65eaadb9dee716a04138ace51240665fc867079dd",
+   "parts": [
+    {
+     "name": "AI_Confidence_Video_01_project.zip.part001",
+     "bytes": 25165824,
+     "sha256": "2b68a9a88ae7d5907c820e2fc46374ba1cd7e5150f6e426df3896a2bbb792e47"
+    },
+    {
+     "name": "AI_Confidence_Video_01_project.zip.part002",
+     "bytes": 25165824,
+     "sha256": "d961c02450efafd222aef69b9ec7c489cb313171c18cac1b9e88f0009dcd2733"
+    },
+    {
+     "name": "AI_Confidence_Video_01_project.zip.part003",
+     "bytes": 25165824,
+     "sha256": "b26c28ed9edf9924eefb5cdd7c6db2162e61b69a63686853dfac499d52665dee"
+    },
+    {
+     "name": "AI_Confidence_Video_01_project.zip.part004",
+     "bytes": 25165824,
+     "sha256": "3c0b9b0e433764bc95c0343fc830a5a7f8e30399d1b5fb5e073720a3f75a2e63"
+    },
+    {
+     "name": "AI_Confidence_Video_01_project.zip.part005",
+     "bytes": 25165824,
+     "sha256": "9b2dd6d50b4f26b5240e644e64d6e883c8103e38a42461166896ff1afbece30f"
+    },
+    {
+     "name": "AI_Confidence_Video_01_project.zip.part006",
+     "bytes": 426044,
+     "sha256": "4d66cbe08302bb9d96d159cb9b3b59f7d90b15480b43604ba1cb38ea6c145079"
+    }
+   ]
+  },
+  {
    "name": "Video_01_AI_Confidence_Final_1080p.mp4",
    "bytes": 109333558,
    "sha256": "cd183347b7aef8b55093ba18ea51c43c82fc5955211986f3763af3051dccde56",
@@ -30,6 +67,73 @@
      "name": "Video_01_AI_Confidence_Final_1080p.mp4.part005",
      "bytes": 8670262,
      "sha256": "edd59f447c8f593638a05fd84afafc34802a3d215375caf30320628ce165517c"
+    }
+   ]
+  },
+  {
+   "name": "Video_01_AI_Confidence_Master_4K.mp4",
+   "bytes": 278123626,
+   "sha256": "45f2affa2bf16093de61960a46b84c9ee0c2c193aaac0780536e7d6ab376125d",
+   "parts": [
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part001",
+     "bytes": 25165824,
+     "sha256": "b128603a23e6c4481034b2bc5e1012f2943b48f1d87b56a28fcf7ab9f133e7f9"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part002",
+     "bytes": 25165824,
+     "sha256": "1aa5f2efca42b40e5b27f066116aa59c2d200d5e981b30468cbd8d0c081da67d"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part003",
+     "bytes": 25165824,
+     "sha256": "36772ecaccfa5fe830c84cf19837b89aa75cfd6ebc5dda36c1df055ab04d60c1"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part004",
+     "bytes": 25165824,
+     "sha256": "377b897783fcf0f2b3c4fe7d753b6b94c535589bb08f00e322dc1f5041d348ae"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part005",
+     "bytes": 25165824,
+     "sha256": "6b3e637c2c877ac152d62cbdba54d0c725097085454b5eea18221e834e3929f1"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part006",
+     "bytes": 25165824,
+     "sha256": "816d9334f0d3f2416fb18a4a99fbe2a015422b8dc2f67e20afd6e1c6e1306e24"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part007",
+     "bytes": 25165824,
+     "sha256": "052d534cff54b209433e3b68b74ef9699701fba8c6c2d57e171c827033d207bd"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part008",
+     "bytes": 25165824,
+     "sha256": "83c79cfee3134f13184a5229903f3a4df9b8a522104afa50d0fb3fccbb88c70d"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part009",
+     "bytes": 25165824,
+     "sha256": "f0c46fabab5c09214e011a1a7e1a1ae4917c58b03acb9582d739015c64ccd028"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part010",
+     "bytes": 25165824,
+     "sha256": "1cb3f19bfed4e703a66c1574e499f16baf0926291a86f53d704dc57945d2c1d9"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part011",
+     "bytes": 25165824,
+     "sha256": "c783427e94fc4fff77df3cf5b35aa5b14fc2b80b92405774b6a32cd5d1a9dd5c"
+    },
+    {
+     "name": "Video_01_AI_Confidence_Master_4K.mp4.part012",
+     "bytes": 1299562,
+     "sha256": "769b6f511f7c3bcc2397eb03f45d65ad61d6f4ba4f9c7a1068917e4fe9e96ba8"
     }
    ]
   },
