@@ -92,8 +92,12 @@ export const Doc: React.FC<{
   );
 };
 
-/** Full-bleed archival photo with a slow, subtle push and a dark gradient for legibility. */
-export const Photo: React.FC<{src: string; t: number; zoomFrom?: number; zoomTo?: number; originX?: number; originY?: number; darken?: number}> = ({
+/**
+ * Full-bleed archival photo with slow motion and a dark gradient for legibility.
+ * Motion is either a push (zoomFrom -> zoomTo) or, to stay at native resolution in the 4K master,
+ * a vertical pan across the cropped-off part of the photo (panY: [from%, to%] with zoom 1).
+ */
+export const Photo: React.FC<{src: string; t: number; zoomFrom?: number; zoomTo?: number; originX?: number; originY?: number; darken?: number; panY?: [number, number]}> = ({
   src,
   t,
   zoomFrom = 1.04,
@@ -101,6 +105,7 @@ export const Photo: React.FC<{src: string; t: number; zoomFrom?: number; zoomTo?
   originX = 50,
   originY = 50,
   darken = 0.55,
+  panY,
 }) => (
   <div style={{position: 'absolute', inset: 0, overflow: 'hidden'}}>
     <Img
@@ -109,6 +114,7 @@ export const Photo: React.FC<{src: string; t: number; zoomFrom?: number; zoomTo?
         width: '100%',
         height: '100%',
         objectFit: 'cover',
+        objectPosition: panY ? `50% ${panY[0] + (panY[1] - panY[0]) * t}%` : undefined,
         transform: `scale(${zoomFrom + (zoomTo - zoomFrom) * t})`,
         transformOrigin: `${originX}% ${originY}%`,
         filter: 'grayscale(1) contrast(1.05)',

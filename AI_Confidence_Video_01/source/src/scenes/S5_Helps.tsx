@@ -115,7 +115,7 @@ export const S5Helps: React.FC = () => {
 
       {/* Library photo */}
       <AbsoluteFill style={{opacity: photoT}}>
-        <Photo src="img/photo_library_stacks_1912.jpg" t={ramp(g, c0 - 8, 150, (x) => x)} zoomFrom={1.03} zoomTo={1.12} originX={60} originY={45} darken={0.5} />
+        <Photo src="img/photo_library_stacks_1912.jpg" t={ramp(g, c0 - 8, 150, (x) => x)} zoomFrom={1} zoomTo={1} panY={[30, 58]} darken={0.5} />
         <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
           <div style={{fontFamily: F.sans, fontSize: 44, fontWeight: 650, color: C.textDim, marginBottom: 26, opacity: ramp(g, c0 - 2, 14), textShadow: '0 4px 30px rgba(0,0,0,0.7)'}}>
             So what actually helps?
@@ -193,9 +193,10 @@ export const S5Helps: React.FC = () => {
       <AbsoluteFill style={{opacity: anthIn * (1 - anthOut)}}>
         <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: figT, paddingBottom: 60}}>
           <div style={{background: '#fff', padding: 24, borderRadius: 14, boxShadow: '0 40px 90px rgba(0,0,0,0.5)', transform: `scale(${1 + 0.025 * ramp(g, at('s33', 'Claude'), cFor - at('s33', 'Claude'), (x) => x)})`}}>
-            <Img src={staticFile('img/anthropic_header.png')} style={{width: 1000, display: 'block'}} />
+            <Img src={staticFile('img/anthropic_header.png')} style={{width: 780, display: 'block'}} />
             <div style={{height: 1, background: 'rgba(0,0,0,0.12)', margin: '10px 0 14px'}} />
-            <Img src={staticFile('img/anthropic_fig7.png')} style={{width: 1000, display: 'block'}} />
+            {/* 780 px x push x scene push stays under the 1650 px source even in the 4K master (2x) */}
+            <Img src={staticFile('img/anthropic_fig7.png')} style={{width: 780, display: 'block'}} />
           </div>
         </AbsoluteFill>
         {/* Simplified diagram, redrawn */}
