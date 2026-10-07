@@ -43,6 +43,12 @@ stills and contact sheets (nobody watched the film in real time; see `QA_REPORT.
 | S10 | `freezedetect` found the only ≥ 4 s freeze in the film: the end card held still for 5.2 s from 4:29 | The wordmark's three words pop on "Future", "Got", "Weird."; the tagline's two halves land on "AI" and "we"; the Subscribe chip nudges twice while the card holds |
 | Thumbnails | A: the slip and its stamp ran off the bottom. C: the Llama slip and the DeepSeek stamp ran off the right edge | Slips repositioned and narrowed |
 
+## Found in the second full render
+
+| Scene | Problem | Fix |
+|---|---|---|
+| S6 | The arithmetic box reserved space for terms that had not appeared yet, so it showed as an empty dark bar beside the score for two seconds | Terms are added to the box only once they are spoken, so the box grows from the right edge |
+
 ## Sound
 
 | Problem | Fix |

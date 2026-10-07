@@ -166,7 +166,7 @@ export const S6GameShow: React.FC = () => {
                 {/* the arithmetic for the rule change */}
                 {changeT > 0 && (
                   <div style={{position: 'absolute', right: 60, top: 505, fontFamily: F.mono, fontSize: 30, color: C.white, opacity: ramp(g, cStill, 10), whiteSpace: 'pre', background: C.ink, padding: '6px 16px', borderRadius: 10, border: `3px solid ${C.ink}`}}>
-                    6<span style={{opacity: plusT}}> + 1</span><span style={{opacity: penalty(0)}}> − 1</span><span style={{opacity: penalty(1)}}> − 1</span><span style={{opacity: penalty(2)}}> − 1</span><span style={{opacity: fourT, color: C.saffron}}> = 4</span>
+                    6{plusT > 0 && <span style={{opacity: plusT}}> + 1</span>}{penalty(0) > 0 && <span style={{opacity: penalty(0)}}> − 1</span>}{penalty(1) > 0 && <span style={{opacity: penalty(1)}}> − 1</span>}{penalty(2) > 0 && <span style={{opacity: penalty(2)}}> − 1</span>}{fourT > 0 && <span style={{opacity: fourT, color: C.saffron}}> = 4</span>}
                   </div>
                 )}
               </>
