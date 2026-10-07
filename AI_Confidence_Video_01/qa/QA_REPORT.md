@@ -134,3 +134,18 @@ They raised two low-severity carry-overs from earlier versions. Both were fixed 
 | 2:16.6–2:20.6 | The assembled ChatGPT title held nearly static for about 4.0 s. Only the slow push was moving; the strict freeze detector did not fire | On "usually looks like", a muted underline sweeps across the title words that also filled the earlier pattern field (Boosting, Online, Algorithms, Topics in, Machine Learning) |
 
 Both were checked on full-resolution stills at the narration cue.
+
+## Resolution audit (no upscaled real assets)
+
+For every real image, the largest drawn width (CSS width × every push and zoom × the 2× render scale of the 4K master) was compared against the source width. Sizes come from `source/public/img/`.
+
+| Asset | Source width | Max drawn, 1080p | Max drawn, 4K master | Status |
+|---|---|---|---|---|
+| Paper crops (p.1 header, birthday, Fig. 1, Einstein, Table 2, instruction) | 3700–4000 px (600 dpi) | ≤ 1600 px | ≤ 3200 px | native |
+| Thesis title page / title block | 4080 / 3264 px | ≤ 860 / 770 px | ≤ 1720 / 1540 px | native |
+| 1929 test-booklet photo (framed) | 3394 px | ≈ 790 px | ≈ 1570 px | native |
+| 1912 library photo (full-bleed) | 3840 px | 1920 px | ≈ 3850 px (scene push ≤ 0.3%) | native: the zoom was replaced by a vertical pan |
+| Anthropic article header | 3200 px | ≈ 815 px | ≈ 1630 px | native |
+| Anthropic Fig. 7 | 1650 px | ≈ 815 px | ≈ 1630 px | native: the card was reduced from 1000 to 780 px for this |
+
+Before this audit, the 4K master would have drawn Fig. 7 at about 1.27× and the library photo at up to about 1.14×. Both were fixed in v5. The 1080p cut was native throughout.
