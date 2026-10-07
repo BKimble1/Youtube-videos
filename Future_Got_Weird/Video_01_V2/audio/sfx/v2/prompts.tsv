@@ -1,0 +1,42 @@
+kind	seconds	influence	prompt
+paper_flap	1	0.6	A single stiff card ticket flapping once in the air and settling, light papery flutter, close, dry, no reverb
+paper_lift	1	0.6	A sheet of paper lifted off a wooden counter, a soft peel and a short rustle, close, dry, no reverb
+paper_swish	1	0.6	A sheet of paper whisked quickly off a table, one fast papery swish, close, dry, no reverb
+paper_slap	1	0.6	A thick sheet of paper set down firmly on a wooden desk, one crisp flat slap, close, dry, no reverb
+card_flick	1	0.6	A small playing card flicked over and set down on a table with a light snap, close, dry, no reverb
+card_slide	1	0.6	A small index card sliding out of a tight wooden drawer, one short smooth scrape, close, dry, no reverb
+page_turn	1	0.6	A single page of a thick book turning over, crisp paper swoosh, close, dry, no reverb
+tape_rip	1	0.6	A short strip of sticky tape torn off a roll and pressed onto paper, close, dry, no reverb
+marker_circle	1	0.6	A felt-tip marker drawing one quick circle on paper, a short squeaky looping stroke, close, dry, no reverb
+pencil_tap	0.5	0.6	A wooden pencil tapped once on a wooden counter, a small dry tick, close, no reverb
+typewriter_tick	0.5	0.7	A single typewriter key strike, one crisp mechanical clack, close, dry, no reverb
+hanger_click	1	0.6	A small hanging cardboard sign catching on its strings, a light creak and a soft wooden click, dry
+bell_ding	1.5	0.6	A single tap on a silver service counter bell, one bright clear ding with a short ring
+chip_pop	0.5	0.6	A small soft cartoon pop, like a tiny cork, very short, playful, dry
+glint	1	0.5	A tiny bright sparkle shimmer, a short soft twinkle, magical but subtle
+conveyor_run	3	0.6	A small mechanical conveyor belt running steadily, soft rubber rollers ticking and a gentle motor hum, even and continuous
+conveyor_clunk	1	0.6	A small conveyor belt indexing forward one step and stopping with a soft mechanical clunk, dry
+token_select	0.5	0.6	A small wooden block lifted and set down, one light hollow wooden knock, close, dry
+drawer_close	1	0.6	A small wooden card catalogue drawer pushed shut, a short wooden slide ending in a soft thump, dry
+book_slide	1	0.6	A hardback book slid along a wooden shelf, one short dry scrape, close, no reverb
+machine_clunk	1	0.6	A cartoon machine lever engaging with a solid metallic clunk and a tiny spring rattle, dry
+machine_hum	4	0.5	A low steady electrical machine hum with a faint soft mechanical whir, even and continuous, no changes
+scanner_sweep	1.5	0.6	A document scanner light bar sweeping across paper, a smooth gentle rising electronic whir that stops cleanly
+indicator_yes	1	0.6	A soft friendly positive electronic chime, two rising notes, short and clean
+indicator_no	1	0.6	A soft negative electronic blip, two low descending notes, short, not harsh
+claim_fails	1.5	0.6	A heavy mechanical press coming down with a decisive thunk followed by a short low buzz, cartoonish
+printer_feed	1.5	0.6	A small desktop printer feeding one sheet of paper out, a short mechanical whir and paper slide
+buzzer_wrong	1	0.7	A classic game show wrong answer buzzer, one short comical low buzz
+ding_right	1	0.7	A game show correct answer ding, a bright cheerful bell hit
+score_flip	0.5	0.7	A mechanical flip-digit scoreboard flipping one digit, a quick plastic clack
+crowd_cheer	2.5	0.5	A small studio audience cheering and clapping briefly, happy, then fading
+crowd_aww	1.5	0.5	A small studio audience saying a sympathetic aww together
+trophy_clink	1	0.6	A small metal trophy set down on a wooden table, one bright metallic clink
+trophy_steps	1.5	0.6	Tiny cartoon footsteps of a small metal figure trotting, light quick metallic clinks
+gavel	1	0.7	A single wooden gavel strike on a sound block, one sharp resonant knock
+stamp_heavy	1	0.6	A heavy rubber stamp slammed onto paper on a wooden counter, deep thud with a wooden knock, dry
+amb_counter	6	0.4	Quiet indoor service counter room tone, soft air and a very faint distant murmur, even and continuous
+amb_conveyor	6	0.4	Quiet small workshop room tone with a distant soft machine rhythm, even and continuous
+amb_library	6	0.4	Quiet library room tone, soft air, very faint distant page rustle, even and continuous
+amb_gameshow	6	0.4	Quiet TV studio room tone before a show, faint audience murmur, even and continuous
+amb_machine	6	0.4	A quiet room with machines humming gently, soft electrical hum, even and continuous

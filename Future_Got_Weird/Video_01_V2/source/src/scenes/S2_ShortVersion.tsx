@@ -155,11 +155,11 @@ const CardBack: React.FC<{n: number}> = ({n}) => (
 const CANDS = ['ai', 'ian', 'os'];
 const Card1: React.FC<{g: number}> = ({g}) => {
   // three candidate next chunks; their bars jostle, one wins on "likely", lifts and drops into the sentence on "come next."
-  const jost = tw(g, K.built - 4, 8) * (1 - tw(g, K.likely - 2, 6));
+  const jost = tw(g, FLIP[0] + 8, 8) * (1 - tw(g, K.likely - 2, 6));
   const win = sp(g, K.likely - 1, SOFT);
   const base = [0.46, 0.38, 0.3];
   const final = [0.88, 0.22, 0.1];
-  const bars = base.map((b, i) => lerp(b + jost * 0.16 * Math.sin(g * 0.45 + i * 2.1), final[i], Math.min(1, win)));
+  const bars = base.map((b, i) => lerp(b + jost * 0.22 * Math.sin(g * 0.42 + i * 2.1), final[i], Math.min(1, win)));
   const fly = tw(g, K.come + 1, 9, E.inOut);
   const lifted = bell(g, K.come - 3, 6) * -10;
   const landed = g >= K.next + 1;
@@ -188,7 +188,8 @@ const Card1: React.FC<{g: number}> = ({g}) => {
         const dim = !isWin ? Math.min(1, win) : 0;
         if (isWin && landed) return null;
         const x = isWin ? wx : tileX(i);
-        const y = isWin ? wy : 226 + dim * 4;
+        const bob = jost * 4 * Math.sin(g * 0.42 + i * 2.1 + 1.2);
+        const y = (isWin ? wy : 226 + dim * 4) + (isWin && fly > 0 ? 0 : bob);
         return (
           <div key={c} style={{position: 'absolute', left: x, top: y, width: 130, height: 76, background: sel > 0.5 ? C.saffron : C.cream, border: `${OUTLINE + sel * 2}px solid ${C.ink}`, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: F.serif, fontSize: 46, color: C.ink, opacity: 1 - dim * 0.45, transform: `scale(${1 + 0.15 * sel * (1 - fly)})`, boxShadow: `4px 5px 0 ${C.shadow}`}}>
             {c}
