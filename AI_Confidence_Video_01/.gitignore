@@ -35,3 +35,5 @@ audio/mix/final_mix.wav
 
 # v3 review sheets are committed as JPEG copies
 qa/review_v3/*.png
+qa/review_v4/*.png
+qa/review_v4/frames/

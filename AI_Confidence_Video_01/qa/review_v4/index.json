@@ -1,0 +1,74 @@
+{
+ "S1": {
+  "from_s": 0.0,
+  "to_s": 51.0,
+  "sheets": [
+   "qa/review_v4/S1_sheet01.png",
+   "qa/review_v4/S1_sheet02.png",
+   "qa/review_v4/S1_sheet03.png",
+   "qa/review_v4/S1_sheet04.png",
+   "qa/review_v4/S1_sheet05.png",
+   "qa/review_v4/S1_sheet06.png"
+  ]
+ },
+ "S2": {
+  "from_s": 51.0,
+  "to_s": 106.97,
+  "sheets": [
+   "qa/review_v4/S2_sheet01.png",
+   "qa/review_v4/S2_sheet02.png",
+   "qa/review_v4/S2_sheet03.png",
+   "qa/review_v4/S2_sheet04.png",
+   "qa/review_v4/S2_sheet05.png",
+   "qa/review_v4/S2_sheet06.png",
+   "qa/review_v4/S2_sheet07.png"
+  ]
+ },
+ "S3": {
+  "from_s": 106.97,
+  "to_s": 161.83,
+  "sheets": [
+   "qa/review_v4/S3_sheet01.png",
+   "qa/review_v4/S3_sheet02.png",
+   "qa/review_v4/S3_sheet03.png",
+   "qa/review_v4/S3_sheet04.png",
+   "qa/review_v4/S3_sheet05.png",
+   "qa/review_v4/S3_sheet06.png",
+   "qa/review_v4/S3_sheet07.png"
+  ]
+ },
+ "S4": {
+  "from_s": 161.83,
+  "to_s": 223.47,
+  "sheets": [
+   "qa/review_v4/S4_sheet01.png",
+   "qa/review_v4/S4_sheet02.png",
+   "qa/review_v4/S4_sheet03.png",
+   "qa/review_v4/S4_sheet04.png",
+   "qa/review_v4/S4_sheet05.png",
+   "qa/review_v4/S4_sheet06.png",
+   "qa/review_v4/S4_sheet07.png"
+  ]
+ },
+ "S5": {
+  "from_s": 223.47,
+  "to_s": 274.0,
+  "sheets": [
+   "qa/review_v4/S5_sheet01.png",
+   "qa/review_v4/S5_sheet02.png",
+   "qa/review_v4/S5_sheet03.png",
+   "qa/review_v4/S5_sheet04.png",
+   "qa/review_v4/S5_sheet05.png",
+   "qa/review_v4/S5_sheet06.png"
+  ]
+ },
+ "S6": {
+  "from_s": 274.0,
+  "to_s": 299.5,
+  "sheets": [
+   "qa/review_v4/S6_sheet01.png",
+   "qa/review_v4/S6_sheet02.png",
+   "qa/review_v4/S6_sheet03.png"
+  ]
+ }
+}

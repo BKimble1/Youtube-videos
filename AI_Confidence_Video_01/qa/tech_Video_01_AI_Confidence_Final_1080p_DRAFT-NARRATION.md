@@ -11,7 +11,7 @@ height=1080
 pix_fmt=yuv420p
 r_frame_rate=30/1
 avg_frame_rate=30/1
-bit_rate=2150145
+bit_rate=2517439
 index=1
 codec_name=aac
 profile=LC
@@ -22,8 +22,8 @@ r_frame_rate=0/0
 avg_frame_rate=0/0
 bit_rate=317375
 duration=299.520000
-size=92710155
-bit_rate=2476232
+size=106456605
+bit_rate=2843392
 ```
 
 ## Fast start (moov before mdat)
@@ -34,7 +34,7 @@ faststart: True
 
 ## Loudness (EBU R128, ffmpeg ebur128 with true peak)
 ```
-[Parsed_ebur128_0 @ 0x5652f6776cc0] Summary:
+[Parsed_ebur128_0 @ 0x55a305e54cc0] Summary:
 
   Integrated loudness:
     I:         -16.0 LUFS
@@ -52,7 +52,7 @@ faststart: True
 
 ## Black frames (>=0.25 s) and frozen video (>=4 s)
 ```
-[blackdetect @ 0x7f36940065c0] black_start:299.133 black_end:299.467 black_duration:0.333333
+[blackdetect @ 0x7fbfc80065c0] black_start:299.133 black_end:299.467 black_duration:0.333333
 ```
 
 ## Decode check (full decode, errors only)
