@@ -11,6 +11,44 @@ import {C, F} from '../theme';
 const PATTERN_WORDS = ['Methods', 'Algorithms', 'Machine Learning', 'Learning', 'Theory', 'Analysis', 'Online', 'Models', 'Topics in', 'Approaches to', 'Efficient', 'Probabilistic', 'Interactive', 'Games', 'Boosting', 'Optimization'];
 const GPT_TITLE = ['“Boosting,', 'Online', 'Algorithms,', 'and', 'Other', 'Topics', 'in', 'Machine', 'Learning.”'];
 
+const isKeyWord = (w: string) => w === 'Methods' || w === 'Algorithms' || w === 'Machine Learning';
+
+/**
+ * Word-field layout, computed once: each row is filled left to right with estimated widths and a
+ * minimum gap, then justified, so words never overlap. Each row drifts as a unit (alternating
+ * direction), and the margins leave room for the drift and the scene's slow push-in.
+ */
+const CLOUD = (() => {
+  const L = 150;
+  const R = 1770;
+  const MIN_GAP = 70;
+  const out: {w: string; i: number; x: number; y: number; size: number; row: number}[] = [];
+  let i = 0;
+  for (let row = 0; row < 8; row++) {
+    const items: {w: string; i: number; size: number; width: number}[] = [];
+    let used = 0;
+    for (;;) {
+      const w = PATTERN_WORDS[i % PATTERN_WORDS.length];
+      const size = isKeyWord(w) ? 40 : 26 + rand(i * 7) * 14;
+      const width = w.length * size * 0.52;
+      const need = used + (items.length ? MIN_GAP : 0) + width;
+      if (need > R - L) break;
+      items.push({w, i, size, width});
+      used = need;
+      i++;
+    }
+    const slack = R - L - used;
+    const lead = slack * (0.1 + 0.4 * rand(row * 11 + 2));
+    const perGap = items.length > 1 ? (slack - lead) / (items.length - 1) : 0;
+    let x = L + lead;
+    for (const it of items) {
+      out.push({w: it.w, i: it.i, x, y: 120 + row * 92 + (rand(it.i * 9 + 3) - 0.5) * 30, size: it.size, row});
+      x += it.width + MIN_GAP + perGap;
+    }
+  }
+  return out;
+})();
+
 const Field: React.FC<{label: string; value: string; state: number; tone: 'coral' | 'teal' | 'none'; tag?: string; serif?: boolean; rowH: number; shared?: string[]}> = ({
   label,
   value,
@@ -148,25 +186,20 @@ export const S3Convincing: React.FC = () => {
 
       {/* Pattern field: the style of a dissertation title is everywhere (illustration) */}
       <AbsoluteFill style={{opacity: fieldIn * (1 - fieldOut)}}>
-        {Array.from({length: 40}).map((_, i) => {
-          const w = PATTERN_WORDS[i % PATTERN_WORDS.length];
-          const col = i % 5;
-          const row = Math.floor(i / 5);
-          const x = 90 + col * 360 + (rand(i * 5 + 1) - 0.5) * 120 + (row % 2) * 120;
-          const y = 120 + row * 92 + (rand(i * 9 + 3) - 0.5) * 30;
+        {CLOUD.map(({w, i, x, y, size, row}) => {
           const appear = ramp(g, cLook + rand(i * 3) * (cEverywhere + 40 - cLook), 14);
-          const drift = (g - cEverywhere) * (0.25 + rand(i * 17) * 0.4);
-          const isKey = w === 'Methods' || w === 'Algorithms' || w === 'Machine Learning';
+          const drift = (g - (cLook + cFamous) / 2) * (0.12 + rand(row * 13 + 5) * 0.12) * (row % 2 ? 1 : -1);
+          const isKey = isKeyWord(w);
           const keyT = isKey ? ramp(g, cMethods, 14) : 0;
           return (
             <div
               key={i}
               style={{
                 position: 'absolute',
-                left: x - drift,
+                left: x + drift,
                 top: y,
                 fontFamily: F.serif,
-                fontSize: isKey ? 40 : 26 + rand(i * 7) * 14,
+                fontSize: size,
                 color: isKey ? `rgba(243,238,228,${0.25 + 0.65 * keyT})` : 'rgba(185,193,207,0.22)',
                 opacity: appear,
                 whiteSpace: 'nowrap',
@@ -355,7 +388,7 @@ export const S3Convincing: React.FC = () => {
                 tone={isRecord ? 'teal' : 'coral'}
                 tag={isRecord ? undefined : 'Different title'}
                 rowH={172}
-                shared={isRecord ? undefined : ['Online', 'in', 'Machine', 'Learning']}
+                shared={isRecord ? undefined : ['Online', 'and', 'in', 'Machine', 'Learning']}
               />
               <Field label="SCHOOL" value={isRecord ? 'Carnegie Mellon University' : 'CMU'} state={sameT} tone="teal" tag={isRecord ? undefined : 'Matches'} rowH={78} />
               <Field label="YEAR" value={isRecord ? '2001' : '2002'} state={yearT} tone={isRecord ? 'teal' : 'coral'} tag={isRecord ? undefined : 'Wrong year'} rowH={78} />
@@ -363,7 +396,7 @@ export const S3Convincing: React.FC = () => {
           );
         })}
         <div style={{position: 'absolute', left: 1060, top: 600, opacity: evidT, transform: `translateY(${(1 - evidT) * 30}px)`}}>
-          <Doc src="img/thesis_title_block.png" width={690} aspect={1386 / 3264} pad={16} boxes={[{x: 0.415, y: 0.745, w: 0.17, h: 0.075, t: evidBox, tone: 'teal'}]} />
+          <Doc src="img/thesis_title_block.png" width={730} aspect={1386 / 3264} pad={16} boxes={[{x: 0.418, y: 0.748, w: 0.162, h: 0.07, padY: 2, t: evidBox, tone: 'teal'}]} />
         </div>
         <div style={{position: 'absolute', left: 90, top: 800, width: 840, fontFamily: F.sans, fontSize: 34, fontWeight: 650, color: C.text, lineHeight: 1.3, opacity: solidT}}>
           The invented details look exactly as solid as the true one.

@@ -102,7 +102,7 @@ export const S1Hook: React.FC = () => {
   const cTitle = at('s04', 'title');
   const cYear = at('s04', 'year');
   const cKalai = at('s05', 'Kalai?');
-  const cResearchers = at('s05', 'lead');
+  const cResearchers = at('s05', "He's");
   const cDiff = at('s06', 'different');
   const cGold = at('s06', 'gold-medal');
   const cSo = at('s07', 'So');
@@ -128,12 +128,14 @@ export const S1Hook: React.FC = () => {
   const promptScale = lerp(1, 0.62, promptUp);
 
   const cardsOut = ramp(g, cKalai - 4, 16, easeInOut);
-  const paperIn = ramp(g, cKalai + 10, 16);
+  const paperIn = ramp(g, cKalai, 14);
   const paperBox = ramp(g, cResearchers, 16);
   const c06 = at('s06');
-  const paperOut = ramp(g, c06 - 10, 12);
+  const paperOut = ramp(g, c06 + 4, 8);
+  const cSplit = c06 + 12; // the split screen arrives just after the lead-author tag has had time to read
 
-  const splitIn = ramp(g, c06 - 2, 16);
+  const splitIn = ramp(g, cSplit - 2, 16);
+  const reportedT = ramp(g, at('s06', 'reported'), 14);
   const goldT = ramp(g, cGold, 16);
   const splitOut = ramp(g, cSo - 4, 14);
 
@@ -237,7 +239,7 @@ export const S1Hook: React.FC = () => {
           </div>
           <div style={{display: 'flex', gap: 18, marginTop: 44}}>
             {[0, 1, 2, 3, 4, 5].map((p) => {
-              const on = p < 5 ? ramp(g, c06 + 10 + p * 4, 10) : 0;
+              const on = p < 5 ? ramp(g, cSplit + 10 + p * 4, 10) : 0;
               return (
                 <div
                   key={p}
@@ -261,9 +263,10 @@ export const S1Hook: React.FC = () => {
               );
             })}
           </div>
-          <div style={{marginTop: 40, fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.text, opacity: goldT}}>
-            Reported: 35 / 42 · gold-medal standard
+          <div style={{marginTop: 40, fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.text, opacity: reportedT, lineHeight: 1.2}}>
+            Reported: 35 / 42
           </div>
+          <div style={{fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.teal, opacity: goldT, lineHeight: 1.2}}>gold-medal standard</div>
           <div style={{marginTop: 16, fontFamily: F.sans, fontSize: 26, color: C.textDim, opacity: goldT, lineHeight: 1.4}}>
             Gemini Deep Think (advanced version) · Google DeepMind
             <br />
@@ -286,7 +289,7 @@ export const S1Hook: React.FC = () => {
                   fontFamily: F.serif,
                   fontSize: 26,
                   color: C.text,
-                  opacity: ramp(g, c06 + 8 + i * 4, 12),
+                  opacity: ramp(g, cSplit + 8 + i * 4, 12),
                 }}
               >
                 <span style={{fontFamily: F.sans, fontWeight: 700, fontSize: 22, color: C.muted, marginRight: 14}}>{a.model}</span>
@@ -305,7 +308,9 @@ export const S1Hook: React.FC = () => {
           Different systems, different tests, same basic technology: language models.
         </div>
         <SourceLine opacity={splitIn}>
-          IMO 2025: reported by Google DeepMind, Jul 21, 2025; published solutions: storage.googleapis.com/deepmind-media/gemini/IMO_2025.pdf · Right: Kalai et al. (2025), Table 1
+          IMO 2025: reported by Google DeepMind, Jul 21, 2025; published solutions: storage.googleapis.com/deepmind-media/gemini/IMO_2025.pdf
+          <br />
+          Right: Kalai et al. (2025), Table 1
         </SourceLine>
       </AbsoluteFill>
 
@@ -319,9 +324,9 @@ export const S1Hook: React.FC = () => {
             When It’s <span style={{color: wrongT > 0.5 ? C.coral : C.text, opacity: 0.35 + 0.65 * wrongT}}>Wrong</span>
           </Headline>
           <div style={{marginTop: 64, opacity: shortT, fontFamily: F.sans, fontWeight: 750, color: C.muted, letterSpacing: '0.1em', fontSize: 28}}>SHORT ANSWER</div>
-          <div style={{marginTop: 14, opacity: shortT, fontFamily: F.sans, fontSize: 60, fontWeight: 680, color: C.textDim, letterSpacing: '-0.01em'}}>
-            <span style={{opacity: likelyT}}>It writes what’s likely.</span>{' '}
-            <span style={{opacity: isntT, color: C.text}}>Likely isn’t always true.</span>
+          <div style={{marginTop: 14, opacity: shortT, fontFamily: F.sans, fontSize: 56, fontWeight: 680, color: C.textDim, letterSpacing: '-0.01em', lineHeight: 1.25}}>
+            <div style={{opacity: likelyT}}>It writes what’s likely.</div>
+            <div style={{opacity: isntT, color: C.text}}>Likely isn’t always true.</div>
           </div>
         </div>
       </AbsoluteFill>

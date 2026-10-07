@@ -16,6 +16,8 @@ export const S2Rest: React.FC = () => {
   const cBecause = at('s12', 'Because');
   const cAsked = at('s12', 'Asked');
   const cThree = at('s12', 'three', 1);
+  const cDiffer = at('s12', 'differently.');
+  const cOnly = at('s12', 'only');
   const cKey = at('s13', "Here's");
   const cScores = at('s13', 'scores');
   const cNot = at('s13', 'Not');
@@ -52,19 +54,24 @@ export const S2Rest: React.FC = () => {
           <div style={{marginBottom: 18}}>
             <Tag tone="slate" caps={false} size={20}>Model here: DeepSeek-V3, May 11, 2025 (not one of the three in Table 1)</Tag>
           </div>
-          <Doc
-            src="img/paper_p01_birthday.png"
-            width={1300}
-            aspect={299 / 2000}
-            pad={22}
-            boxes={[
-              {x: 0.083, y: 0.628, w: 0.302, h: 0.15, t: ramp(g, cThree, 14), tone: 'coral'},
-              {x: 0.014, y: 0.852, w: 0.262, h: 0.125, t: ramp(g, cThree + 24, 14), tone: 'teal'},
-            ]}
-          />
+          <div style={{transform: `scale(${1 + 0.035 * ramp(g, cBecause, cKey - cBecause, (x) => x)})`}}>
+            <Doc
+              src="img/paper_p01_birthday.png"
+              width={1300}
+              aspect={299 / 2000}
+              pad={22}
+              boxes={[
+                {x: 0.505, y: 0.07, w: 0.412, h: 0.2, t: ramp(g, cOnly - 2, 14), tone: 'teal'},
+                {x: 0.083, y: 0.628, w: 0.302, h: 0.15, t: ramp(g, cThree, 14), tone: 'coral'},
+                {x: 0.014, y: 0.852, w: 0.262, h: 0.125, t: ramp(g, cThree + 24, 14), tone: 'teal'},
+              ]}
+            />
+          </div>
         </div>
         <div style={{position: 'absolute', left: 0, right: 0, top: 560, display: 'flex', justifyContent: 'center', gap: 40}}>
           {DATES.map((d, i) => {
+            // empty outlines on "differently", filled with each wrong date on "three different dates"
+            const shell = ramp(g, cDiffer + i * 5, 12);
             const t = ramp(g, cThree + i * 7, 12);
             return (
               <div
@@ -73,15 +80,19 @@ export const S2Rest: React.FC = () => {
                   width: 380,
                   padding: '28px 30px',
                   borderRadius: 20,
-                  background: `linear-gradient(180deg, ${C.surfaceHi} 0%, ${C.surface} 100%)`,
-                  border: `1.5px solid ${C.lineStrong}`,
-                  opacity: t,
-                  transform: `translateY(${(1 - t) * 30}px) rotate(${(rand(i + 3) - 0.5) * 3}deg)`,
+                  position: 'relative',
+                  background: `linear-gradient(180deg, rgba(27,41,71,${t}) 0%, rgba(21,33,58,${t}) 100%)`,
+                  border: `1.5px ${t > 0.5 ? 'solid' : 'dashed'} ${C.lineStrong}`,
+                  opacity: shell,
+                  transform: `translateY(${(1 - shell) * 30 - t * 6}px) rotate(${(rand(i + 3) - 0.5) * 3 * t}deg)`,
                 }}
               >
                 <div style={{fontFamily: F.sans, fontSize: 22, color: C.muted}}>Attempt {i + 1}</div>
-                <div style={{fontFamily: F.mono, fontSize: 78, fontWeight: 700, color: C.text, marginTop: 6}}>{d}</div>
-                <div style={{marginTop: 12}}>
+                <div style={{position: 'relative', height: 94, marginTop: 6}}>
+                  <div style={{position: 'absolute', fontFamily: F.mono, fontSize: 78, fontWeight: 700, color: C.muted, opacity: 0.6 * (1 - t)}}>??-??</div>
+                  <div style={{position: 'absolute', fontFamily: F.mono, fontSize: 78, fontWeight: 700, color: C.text, opacity: t}}>{d}</div>
+                </div>
+                <div style={{marginTop: 12, opacity: t}}>
                   <Tag tone="coral" size={17}>✕ Incorrect</Tag>
                 </div>
               </div>
@@ -153,7 +164,9 @@ export const S2Rest: React.FC = () => {
           })}
         </div>
         <div style={{position: 'absolute', left: 1150, top: 610, width: 700, fontFamily: F.sans, fontSize: 38, fontWeight: 700, color: C.text, opacity: streamT}}>
-          The answer is still written token by token.
+          The answer is still written
+          <br />
+          token by token.
         </div>
       </AbsoluteFill>
     </AbsoluteFill>

@@ -151,6 +151,9 @@ export const S4Incentive: React.FC = () => {
   const tallyRow = Math.max(-1, Math.min(9, Math.floor(((g - tallyStart) / Math.max(1, tallyEnd - tallyStart)) * 10)));
   const tallyCount = tallyRow < 0 ? 0 : Array.from({length: tallyRow + 1}).filter((_, r) => r !== 4).length;
   const colIdk = ramp(g, cZero, 16);
+  const paysT = ramp(g, at('s28', 'Train'), 14);
+  const paysWord = ramp(g, at('s28', 'guessing'), 12);
+  const tablePush = ramp(g, cChecked, cFix - cChecked, (x) => x);
   const tableOut = ramp(g, cFix - 6, 14);
   const instrIn = ramp(g, cFix, 18);
   const oneT = ramp(g, cOne, 14);
@@ -271,7 +274,7 @@ export const S4Incentive: React.FC = () => {
 
       {/* Real evidence: Table 2 */}
       <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: tableIn * (1 - tableOut)}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: 60}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: 60, transform: `scale(${1 + 0.025 * tablePush})`}}>
           <Doc
             src="img/paper_p14_table2.png"
             width={1080}
@@ -294,6 +297,13 @@ export const S4Incentive: React.FC = () => {
             <div style={{fontFamily: F.sans, fontSize: 22, color: C.muted, opacity: colBin, marginTop: 8}}>a mid-2025 snapshot</div>
             <div style={{marginTop: 34, fontFamily: F.sans, fontSize: 32, fontWeight: 600, color: C.textDim, opacity: colIdk, lineHeight: 1.3}}>
               …and those nine give <span style={{color: C.text, fontWeight: 750}}>no credit</span> for “I don’t know”
+            </div>
+            <div style={{marginTop: 30, opacity: paysT, transform: `translateY(${(1 - paysT) * 14}px)`, display: 'inline-block', padding: '14px 22px', borderRadius: 14, border: `1.5px solid ${C.lineStrong}`, background: C.surface}}>
+              <div style={{fontFamily: F.sans, fontSize: 19, fontWeight: 700, letterSpacing: '0.1em', color: C.muted}}>OUR QUIZ UNDER THESE RULES</div>
+              <div style={{marginTop: 6, fontFamily: F.sans, fontSize: 32, fontWeight: 700, color: C.text}}>
+                Guesser <span style={{fontFamily: F.mono}}>7</span> <span style={{color: C.muted}}>&gt;</span> Honest <span style={{fontFamily: F.mono}}>6</span>
+              </div>
+              <div style={{maxHeight: 48 * paysWord, overflow: 'hidden', opacity: paysWord, fontFamily: F.sans, fontSize: 32, fontWeight: 700, color: C.teal}}>Guessing pays.</div>
             </div>
           </div>
         </div>
