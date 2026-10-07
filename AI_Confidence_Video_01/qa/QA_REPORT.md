@@ -69,11 +69,13 @@ Ending: the end card now has a 5.2 s tail, held about 3 s at full opacity. The r
 
 Subtitles: two sub-1-second flash cues were merged. The file now has 112 phrase cues, each ≤ ~45 characters per line and ≥ 0.9 s.
 
-## v3 render: technical verification (measured on `exports/Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4`)
+## Delivered 1080p (v4): technical verification (measured on `exports/Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4`)
+
+The v3 render gave identical measurements. v4 changes only visuals, so the audio is bit-identical.
 
 | Check | Tool | Result |
 |---|---|---|
-| Container, codecs | ffprobe | MP4, H.264 High, yuv420p, BT.709 tagged, 1920×1080, 30/1 fps (constant) · AAC-LC 48 kHz stereo, 317 kb/s |
+| Container, codecs | ffprobe | MP4, H.264 High, yuv420p, BT.709 primaries/transfer/matrix, TV range, 1920×1080, 30/1 fps (constant) · AAC-LC 48 kHz stereo, 317 kb/s · 106.5 MB (CRF 16, x264 slow) |
 | Duration | ffprobe | 299.52 s (4:59.5). The audio mix is 299.50 s, so A/V lengths match to within 1 frame |
 | Fast start | top-level atom scan | `ftyp, moov, free, mdat`, so moov comes before mdat ✓ |
 | Loudness | ffmpeg ebur128 (true peak) | **-16.0 LUFS integrated**, LRA 1.8 LU, **true peak -1.3 dBTP** ✓ |
