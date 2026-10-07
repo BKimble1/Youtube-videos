@@ -1,0 +1,44 @@
+{
+"words": [
+{
+"word": "A",
+"start": 0.15,
+"end": 0.23
+},
+{
+"word": "confident",
+"start": 0.31,
+"end": 0.71
+},
+{
+"word": "font",
+"start": 0.79,
+"end": 1.11
+},
+{
+"word": "is",
+"start": 1.35,
+"end": 1.51
+},
+{
+"word": "still",
+"start": 1.67,
+"end": 1.83
+},
+{
+"word": "just",
+"start": 1.99,
+"end": 2.15
+},
+{
+"word": "a",
+"start": 2.19,
+"end": 2.23
+},
+{
+"word": "font.",
+"start": 2.31,
+"end": 2.95
+}
+]
+}

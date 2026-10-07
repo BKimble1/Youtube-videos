@@ -1,0 +1,84 @@
+{
+"words": [
+{
+"word": "Three",
+"start": 0.0,
+"end": 0.24
+},
+{
+"word": "popular",
+"start": 0.32,
+"end": 0.72
+},
+{
+"word": "AI",
+"start": 0.8,
+"end": 1.04
+},
+{
+"word": "models",
+"start": 1.12,
+"end": 1.44
+},
+{
+"word": "were",
+"start": 1.52,
+"end": 1.6
+},
+{
+"word": "asked",
+"start": 1.68,
+"end": 1.92
+},
+{
+"word": "one",
+"start": 2.08,
+"end": 2.24
+},
+{
+"word": "question:",
+"start": 2.32,
+"end": 3.36
+},
+{
+"word": "what",
+"start": 3.44,
+"end": 3.52
+},
+{
+"word": "was",
+"start": 3.6,
+"end": 3.68
+},
+{
+"word": "the",
+"start": 3.76,
+"end": 3.84
+},
+{
+"word": "title",
+"start": 4.0,
+"end": 4.16
+},
+{
+"word": "of",
+"start": 4.24,
+"end": 4.4
+},
+{
+"word": "Adam",
+"start": 4.48,
+"end": 4.72
+},
+{
+"word": "Kalai's",
+"start": 4.8,
+"end": 5.2
+},
+{
+"word": "dissertation?",
+"start": 5.24,
+"end": 6.0
+}
+]
+}

@@ -6,12 +6,16 @@ doc = json.load(open(os.path.join(ROOT, "script/narration_segments.json"), encod
 tl = json.load(open(os.path.join(ROOT, "source/src/data/timeline.json"), encoding="utf-8"))
 seg_t = {s["id"]: s["from"] / tl["fps"] for s in tl["segments"]}
 ACTS = {
-    "S1": "Act 1 — The contradiction",
-    "S2": "Act 2 — Where the answer comes from (Inside the sentence)",
-    "S3": "Act 3 — Why good wording can hide an error (The convincing wrong answer)",
-    "S4": "Act 4 — The surprising incentive (The incentive experiment)",
-    "S5": "Act 5 — What improves the situation",
-    "S6": "Act 6 — The payoff",
+    "S1": "Scene 1 — The counter (hook)",
+    "S2": "Scene 2 — The short version (title moment and promise)",
+    "S3": "Scene 3 — The token machine (mechanism)",
+    "S4": "Scene 4 — The library (patterns in, pattern-shaped answers out)",
+    "S5": "Scene 5 — The record (the real thesis)",
+    "S6": "Scene 6 — The game show (the quiz and the scoring rule)",
+    "S7": "Scene 7 — Benchmarks (Table 2)",
+    "S8": "Scene 8 — What helps, and what it does not guarantee",
+    "S9": "Scene 9 — Verify (two questions)",
+    "S10": "Scene 10 — Payoff and end card",
 }
 words = sum(len(s["text"].split()) for s in doc["segments"])
 out = [f"# {doc['title']} — final script ({doc['version']})", "",

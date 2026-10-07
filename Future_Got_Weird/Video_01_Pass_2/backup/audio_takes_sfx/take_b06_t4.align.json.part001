@@ -1,0 +1,511 @@
+{
+"words": [
+{
+"text": "Now,",
+"type": "word",
+"start": 0,
+"end": 0.48
+},
+{
+"text": "why",
+"type": "word",
+"start": 0.56,
+"end": 0.72
+},
+{
+"text": "guess",
+"type": "word",
+"start": 0.8,
+"end": 0.96
+},
+{
+"text": "at",
+"type": "word",
+"start": 1.04,
+"end": 1.12
+},
+{
+"text": "all?",
+"type": "word",
+"start": 1.24,
+"end": 1.76
+},
+{
+"text": "Why",
+"type": "word",
+"start": 1.84,
+"end": 1.92
+},
+{
+"text": "not",
+"type": "word",
+"start": 2,
+"end": 2.08
+},
+{
+"text": "just",
+"type": "word",
+"start": 2.16,
+"end": 2.24
+},
+{
+"text": "say",
+"type": "word",
+"start": 2.32,
+"end": 2.56
+},
+{
+"text": "“I",
+"type": "word",
+"start": 2.8,
+"end": 2.88
+},
+{
+"text": "don't",
+"type": "word",
+"start": 2.96,
+"end": 3.04
+},
+{
+"text": "know”?",
+"type": "word",
+"start": 3.12,
+"end": 3.84
+},
+{
+"text": "The",
+"type": "word",
+"start": 3.88,
+"end": 3.92
+},
+{
+"text": "researchers",
+"type": "word",
+"start": 4.12,
+"end": 4.48
+},
+{
+"text": "argue",
+"type": "word",
+"start": 4.56,
+"end": 4.8
+},
+{
+"text": "that",
+"type": "word",
+"start": 4.88,
+"end": 5.04
+},
+{
+"text": "part",
+"type": "word",
+"start": 5.12,
+"end": 5.28
+},
+{
+"text": "of",
+"type": "word",
+"start": 5.32,
+"end": 5.36
+},
+{
+"text": "the",
+"type": "word",
+"start": 5.44,
+"end": 5.52
+},
+{
+"text": "answer",
+"type": "word",
+"start": 5.6,
+"end": 5.92
+},
+{
+"text": "is",
+"type": "word",
+"start": 6,
+"end": 6.08
+},
+{
+"text": "how",
+"type": "word",
+"start": 6.2,
+"end": 6.32
+},
+{
+"text": "models",
+"type": "word",
+"start": 6.48,
+"end": 6.64
+},
+{
+"text": "get",
+"type": "word",
+"start": 6.72,
+"end": 6.88
+},
+{
+"text": "graded.",
+"type": "word",
+"start": 7.08,
+"end": 7.76
+},
+{
+"text": "Picture",
+"type": "word",
+"start": 7.92,
+"end": 8.08
+},
+{
+"text": "a",
+"type": "word",
+"start": 8.16,
+"end": 8.24
+},
+{
+"text": "ten-question",
+"type": "word",
+"start": 8.36,
+"end": 8.88
+},
+{
+"text": "quiz.",
+"type": "word",
+"start": 8.96,
+"end": 9.76
+},
+{
+"text": "Right",
+"type": "word",
+"start": 9.84,
+"end": 9.92
+},
+{
+"text": "answer:",
+"type": "word",
+"start": 10,
+"end": 10.64
+},
+{
+"text": "one",
+"type": "word",
+"start": 10.72,
+"end": 10.8
+},
+{
+"text": "point.",
+"type": "word",
+"start": 10.88,
+"end": 11.52
+},
+{
+"text": "Wrong",
+"type": "word",
+"start": 11.64,
+"end": 11.76
+},
+{
+"text": "answer:",
+"type": "word",
+"start": 11.84,
+"end": 12.48
+},
+{
+"text": "zero.",
+"type": "word",
+"start": 12.56,
+"end": 13.36
+},
+{
+"text": "“I",
+"type": "word",
+"start": 13.44,
+"end": 13.52
+},
+{
+"text": "don't",
+"type": "word",
+"start": 13.56,
+"end": 13.68
+},
+{
+"text": "know”:",
+"type": "word",
+"start": 13.76,
+"end": 14.48
+},
+{
+"text": "also",
+"type": "word",
+"start": 14.64,
+"end": 14.8
+},
+{
+"text": "zero.",
+"type": "word",
+"start": 14.88,
+"end": 15.68
+},
+{
+"text": "Two",
+"type": "word",
+"start": 15.76,
+"end": 15.84
+},
+{
+"text": "contestants.",
+"type": "word",
+"start": 15.92,
+"end": 16.88
+},
+{
+"text": "Both",
+"type": "word",
+"start": 17,
+"end": 17.12
+},
+{
+"text": "know",
+"type": "word",
+"start": 17.2,
+"end": 17.44
+},
+{
+"text": "six",
+"type": "word",
+"start": 17.56,
+"end": 17.68
+},
+{
+"text": "answers.",
+"type": "word",
+"start": 17.92,
+"end": 18.64
+},
+{
+"text": "The",
+"type": "word",
+"start": 18.72,
+"end": 18.8
+},
+{
+"text": "honest",
+"type": "word",
+"start": 18.88,
+"end": 19.12
+},
+{
+"text": "one",
+"type": "word",
+"start": 19.2,
+"end": 19.36
+},
+{
+"text": "leaves",
+"type": "word",
+"start": 19.44,
+"end": 19.6
+},
+{
+"text": "the",
+"type": "word",
+"start": 19.68,
+"end": 19.76
+},
+{
+"text": "other",
+"type": "word",
+"start": 19.88,
+"end": 20
+},
+{
+"text": "four",
+"type": "word",
+"start": 20.08,
+"end": 20.16
+},
+{
+"text": "blank.",
+"type": "word",
+"start": 20.24,
+"end": 20.96
+},
+{
+"text": "Six",
+"type": "word",
+"start": 21.04,
+"end": 21.2
+},
+{
+"text": "points.",
+"type": "word",
+"start": 21.28,
+"end": 22.08
+},
+{
+"text": "The",
+"type": "word",
+"start": 22.12,
+"end": 22.16
+},
+{
+"text": "guesser",
+"type": "word",
+"start": 22.24,
+"end": 22.64
+},
+{
+"text": "takes",
+"type": "word",
+"start": 22.72,
+"end": 22.8
+},
+{
+"text": "a",
+"type": "word",
+"start": 22.88,
+"end": 22.92
+},
+{
+"text": "shot",
+"type": "word",
+"start": 22.96,
+"end": 23.2
+},
+{
+"text": "at",
+"type": "word",
+"start": 23.28,
+"end": 23.36
+},
+{
+"text": "all",
+"type": "word",
+"start": 23.44,
+"end": 23.6
+},
+{
+"text": "four.",
+"type": "word",
+"start": 23.68,
+"end": 24.4
+},
+{
+"text": "Four",
+"type": "word",
+"start": 24.48,
+"end": 24.56
+},
+{
+"text": "options",
+"type": "word",
+"start": 24.64,
+"end": 24.96
+},
+{
+"text": "each,",
+"type": "word",
+"start": 25.04,
+"end": 25.28
+},
+{
+"text": "so",
+"type": "word",
+"start": 25.36,
+"end": 25.6
+},
+{
+"text": "on",
+"type": "word",
+"start": 25.68,
+"end": 25.84
+},
+{
+"text": "average,",
+"type": "word",
+"start": 25.92,
+"end": 26.48
+},
+{
+"text": "one",
+"type": "word",
+"start": 26.56,
+"end": 26.64
+},
+{
+"text": "lands.",
+"type": "word",
+"start": 26.72,
+"end": 27.52
+},
+{
+"text": "Seven",
+"type": "word",
+"start": 27.64,
+"end": 27.76
+},
+{
+"text": "points.",
+"type": "word",
+"start": 27.84,
+"end": 28.64
+},
+{
+"text": "One",
+"type": "word",
+"start": 28.72,
+"end": 28.88
+},
+{
+"text": "lucky",
+"type": "word",
+"start": 28.96,
+"end": 29.2
+},
+{
+"text": "guess.",
+"type": "word",
+"start": 29.4,
+"end": 29.92
+},
+{
+"text": "Three",
+"type": "word",
+"start": 30.04,
+"end": 30.16
+},
+{
+"text": "wrong",
+"type": "word",
+"start": 30.24,
+"end": 30.4
+},
+{
+"text": "answers.",
+"type": "word",
+"start": 30.48,
+"end": 31.28
+},
+{
+"text": "Somehow,",
+"type": "word",
+"start": 31.36,
+"end": 32
+},
+{
+"text": "a",
+"type": "word",
+"start": 32.04,
+"end": 32.08
+},
+{
+"text": "trophy.",
+"type": "word",
+"start": 32.16,
+"end": 32.88
+}
+],
+"text": "Now, why guess at all? Why not just say “I don't know”? The researchers argue that part of the answer is how models get graded.\n\nPicture a ten-question quiz. Right answer: one point. Wrong answer: zero. “I don't know”: also zero.\n\nTwo contestants. Both know six answers. The honest one leaves the other four blank. Six points.\n\nThe guesser takes a shot at all four. Four options each, so on average, one lands. Seven points.\n\nOne lucky guess. Three wrong answers. Somehow, a trophy.",
+"generation_id": "ORaXoFYhr02ZEd5hg0jj",
+"source_generation": "WaWyk5PWb1tz78TVpVFW"
+}

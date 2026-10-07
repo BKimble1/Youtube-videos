@@ -1,0 +1,129 @@
+{
+"words": [
+{
+"word": "So",
+"start": 0.0,
+"end": 0.16
+},
+{
+"word": "why",
+"start": 0.24,
+"end": 0.4
+},
+{
+"word": "is",
+"start": 0.48,
+"end": 0.56
+},
+{
+"word": "AI",
+"start": 0.64,
+"end": 1.04
+},
+{
+"word": "so",
+"start": 1.16,
+"end": 1.28
+},
+{
+"word": "confidently",
+"start": 1.36,
+"end": 1.92
+},
+{
+"word": "wrong?",
+"start": 2.0,
+"end": 2.64
+},
+{
+"word": "Because",
+"start": 2.88,
+"end": 3.12
+},
+{
+"word": "sounding",
+"start": 3.2,
+"end": 3.52
+},
+{
+"word": "right",
+"start": 3.6,
+"end": 3.92
+},
+{
+"word": "comes",
+"start": 4.04,
+"end": 4.16
+},
+{
+"word": "from",
+"start": 4.24,
+"end": 4.32
+},
+{
+"word": "patterns",
+"start": 4.4,
+"end": 4.8
+},
+{
+"word": "in",
+"start": 4.84,
+"end": 4.88
+},
+{
+"word": "language,",
+"start": 4.96,
+"end": 5.76
+},
+{
+"word": "and",
+"start": 5.88,
+"end": 6.0
+},
+{
+"word": "being",
+"start": 6.16,
+"end": 6.32
+},
+{
+"word": "right",
+"start": 6.4,
+"end": 6.64
+},
+{
+"word": "takes",
+"start": 6.72,
+"end": 6.96
+},
+{
+"word": "evidence",
+"start": 7.04,
+"end": 7.44
+},
+{
+"word": "the",
+"start": 7.48,
+"end": 7.52
+},
+{
+"word": "model",
+"start": 7.6,
+"end": 7.84
+},
+{
+"word": "doesn't",
+"start": 7.92,
+"end": 8.08
+},
+{
+"word": "always",
+"start": 8.16,
+"end": 8.4
+},
+{
+"word": "have.",
+"start": 8.48,
+"end": 9.2
+}
+]
+}

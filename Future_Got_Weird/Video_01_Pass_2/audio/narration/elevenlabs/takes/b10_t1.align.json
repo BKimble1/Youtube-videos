@@ -1,0 +1,481 @@
+{
+"words": [
+{
+"text": "So",
+"type": "word",
+"start": 0,
+"end": 0.16
+},
+{
+"text": "why",
+"type": "word",
+"start": 0.24,
+"end": 0.4
+},
+{
+"text": "is",
+"type": "word",
+"start": 0.48,
+"end": 0.56
+},
+{
+"text": "AI",
+"type": "word",
+"start": 0.64,
+"end": 1.04
+},
+{
+"text": "so",
+"type": "word",
+"start": 1.16,
+"end": 1.28
+},
+{
+"text": "confidently",
+"type": "word",
+"start": 1.36,
+"end": 1.92
+},
+{
+"text": "wrong?",
+"type": "word",
+"start": 2,
+"end": 2.64
+},
+{
+"text": "Because",
+"type": "word",
+"start": 2.88,
+"end": 3.12
+},
+{
+"text": "sounding",
+"type": "word",
+"start": 3.2,
+"end": 3.52
+},
+{
+"text": "right",
+"type": "word",
+"start": 3.6,
+"end": 3.92
+},
+{
+"text": "comes",
+"type": "word",
+"start": 4.04,
+"end": 4.16
+},
+{
+"text": "from",
+"type": "word",
+"start": 4.24,
+"end": 4.32
+},
+{
+"text": "patterns",
+"type": "word",
+"start": 4.4,
+"end": 4.8
+},
+{
+"text": "in",
+"type": "word",
+"start": 4.84,
+"end": 4.88
+},
+{
+"text": "language,",
+"type": "word",
+"start": 4.96,
+"end": 5.76
+},
+{
+"text": "and",
+"type": "word",
+"start": 5.88,
+"end": 6
+},
+{
+"text": "being",
+"type": "word",
+"start": 6.16,
+"end": 6.32
+},
+{
+"text": "right",
+"type": "word",
+"start": 6.4,
+"end": 6.64
+},
+{
+"text": "takes",
+"type": "word",
+"start": 6.72,
+"end": 6.96
+},
+{
+"text": "evidence",
+"type": "word",
+"start": 7.04,
+"end": 7.44
+},
+{
+"text": "the",
+"type": "word",
+"start": 7.48,
+"end": 7.52
+},
+{
+"text": "model",
+"type": "word",
+"start": 7.6,
+"end": 7.84
+},
+{
+"text": "doesn't",
+"type": "word",
+"start": 7.92,
+"end": 8.08
+},
+{
+"text": "always",
+"type": "word",
+"start": 8.16,
+"end": 8.4
+},
+{
+"text": "have.",
+"type": "word",
+"start": 8.48,
+"end": 9.2
+},
+{
+"text": "So",
+"type": "word",
+"start": 9.24,
+"end": 9.28
+},
+{
+"text": "when",
+"type": "word",
+"start": 9.36,
+"end": 9.44
+},
+{
+"text": "an",
+"type": "word",
+"start": 9.52,
+"end": 9.6
+},
+{
+"text": "answer",
+"type": "word",
+"start": 9.68,
+"end": 9.92
+},
+{
+"text": "matters,",
+"type": "word",
+"start": 10,
+"end": 10.72
+},
+{
+"text": "don't",
+"type": "word",
+"start": 10.8,
+"end": 10.96
+},
+{
+"text": "ask",
+"type": "word",
+"start": 11.08,
+"end": 11.2
+},
+{
+"text": "whether",
+"type": "word",
+"start": 11.32,
+"end": 11.44
+},
+{
+"text": "it",
+"type": "word",
+"start": 11.52,
+"end": 11.6
+},
+{
+"text": "sounds",
+"type": "word",
+"start": 11.68,
+"end": 12
+},
+{
+"text": "right.",
+"type": "word",
+"start": 12.12,
+"end": 12.64
+},
+{
+"text": "Ask",
+"type": "word",
+"start": 12.76,
+"end": 12.88
+},
+{
+"text": "what",
+"type": "word",
+"start": 12.92,
+"end": 12.96
+},
+{
+"text": "the",
+"type": "word",
+"start": 13.04,
+"end": 13.12
+},
+{
+"text": "evidence",
+"type": "word",
+"start": 13.2,
+"end": 13.6
+},
+{
+"text": "is,",
+"type": "word",
+"start": 13.68,
+"end": 14
+},
+{
+"text": "and",
+"type": "word",
+"start": 14.08,
+"end": 14.16
+},
+{
+"text": "whether",
+"type": "word",
+"start": 14.28,
+"end": 14.4
+},
+{
+"text": "it",
+"type": "word",
+"start": 14.48,
+"end": 14.56
+},
+{
+"text": "actually",
+"type": "word",
+"start": 14.64,
+"end": 15.12
+},
+{
+"text": "says",
+"type": "word",
+"start": 15.24,
+"end": 15.36
+},
+{
+"text": "this.",
+"type": "word",
+"start": 15.44,
+"end": 15.92
+},
+{
+"text": "Works",
+"type": "word",
+"start": 16.16,
+"end": 16.4
+},
+{
+"text": "on",
+"type": "word",
+"start": 16.44,
+"end": 16.48
+},
+{
+"text": "chatbots.",
+"type": "word",
+"start": 16.56,
+"end": 17.44
+},
+{
+"text": "Works",
+"type": "word",
+"start": 17.56,
+"end": 17.68
+},
+{
+"text": "pretty",
+"type": "word",
+"start": 17.76,
+"end": 17.92
+},
+{
+"text": "well",
+"type": "word",
+"start": 18,
+"end": 18.08
+},
+{
+"text": "on",
+"type": "word",
+"start": 18.16,
+"end": 18.24
+},
+{
+"text": "people,",
+"type": "word",
+"start": 18.4,
+"end": 18.64
+},
+{
+"text": "too.",
+"type": "word",
+"start": 18.76,
+"end": 19.44
+},
+{
+"text": "This",
+"type": "word",
+"start": 19.52,
+"end": 19.84
+},
+{
+"text": "is",
+"type": "word",
+"start": 19.92,
+"end": 20
+},
+{
+"text": "Future",
+"type": "word",
+"start": 20.08,
+"end": 20.32
+},
+{
+"text": "Got",
+"type": "word",
+"start": 20.4,
+"end": 20.56
+},
+{
+"text": "Weird.",
+"type": "word",
+"start": 20.64,
+"end": 21.36
+},
+{
+"text": "AI",
+"type": "word",
+"start": 21.44,
+"end": 21.68
+},
+{
+"text": "moves",
+"type": "word",
+"start": 21.8,
+"end": 21.92
+},
+{
+"text": "fast;",
+"type": "word",
+"start": 22,
+"end": 22.72
+},
+{
+"text": "we",
+"type": "word",
+"start": 22.88,
+"end": 23.04
+},
+{
+"text": "make",
+"type": "word",
+"start": 23.12,
+"end": 23.2
+},
+{
+"text": "it",
+"type": "word",
+"start": 23.28,
+"end": 23.36
+},
+{
+"text": "make",
+"type": "word",
+"start": 23.44,
+"end": 23.52
+},
+{
+"text": "sense.",
+"type": "word",
+"start": 23.6,
+"end": 24.32
+},
+{
+"text": "New",
+"type": "word",
+"start": 24.4,
+"end": 24.48
+},
+{
+"text": "episodes",
+"type": "word",
+"start": 24.56,
+"end": 24.96
+},
+{
+"text": "twice",
+"type": "word",
+"start": 25.04,
+"end": 25.28
+},
+{
+"text": "a",
+"type": "word",
+"start": 25.32,
+"end": 25.36
+},
+{
+"text": "week,",
+"type": "word",
+"start": 25.48,
+"end": 25.76
+},
+{
+"text": "if",
+"type": "word",
+"start": 25.8,
+"end": 25.84
+},
+{
+"text": "you'd",
+"type": "word",
+"start": 25.92,
+"end": 26
+},
+{
+"text": "like",
+"type": "word",
+"start": 26.08,
+"end": 26.16
+},
+{
+"text": "to",
+"type": "word",
+"start": 26.2,
+"end": 26.24
+},
+{
+"text": "subscribe.",
+"type": "word",
+"start": 26.52,
+"end": 27.04
+}
+],
+"text": "So why is AI so confidently wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have.\n\nSo when an answer matters, don't ask whether it sounds right. Ask what the evidence is, and whether it actually says this.\n\nWorks on chatbots. Works pretty well on people, too.\n\nThis is Future Got Weird. AI moves fast; we make it make sense. New episodes twice a week, if you'd like to subscribe.",
+"generation_id": "DKPeYuc7O9uiVubrFBsm",
+"source_generation": "uuwu5uY9yZbLAcvDC7Du"
+}

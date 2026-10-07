@@ -1,0 +1,134 @@
+{
+"words": [
+{
+"word": "Modern",
+"start": 0.085,
+"end": 0.325
+},
+{
+"word": "chatbots",
+"start": 0.405,
+"end": 0.885
+},
+{
+"word": "add",
+"start": 0.965,
+"end": 1.045
+},
+{
+"word": "more",
+"start": 1.125,
+"end": 1.285
+},
+{
+"word": "on",
+"start": 1.365,
+"end": 1.445
+},
+{
+"word": "top:",
+"start": 1.525,
+"end": 2.165
+},
+{
+"word": "instruction",
+"start": 2.445,
+"end": 2.725
+},
+{
+"word": "training,",
+"start": 2.965,
+"end": 3.365
+},
+{
+"word": "step-by-step",
+"start": 3.485,
+"end": 4.005
+},
+{
+"word": "reasoning,",
+"start": 4.085,
+"end": 4.805
+},
+{
+"word": "sometimes",
+"start": 4.885,
+"end": 5.205
+},
+{
+"word": "web",
+"start": 5.285,
+"end": 5.445
+},
+{
+"word": "search.",
+"start": 5.525,
+"end": 6.085
+},
+{
+"word": "But",
+"start": 6.325,
+"end": 6.405
+},
+{
+"word": "the",
+"start": 6.445,
+"end": 6.485
+},
+{
+"word": "words",
+"start": 6.565,
+"end": 6.885
+},
+{
+"word": "still",
+"start": 7.005,
+"end": 7.125
+},
+{
+"word": "come",
+"start": 7.205,
+"end": 7.285
+},
+{
+"word": "out",
+"start": 7.365,
+"end": 7.525
+},
+{
+"word": "this",
+"start": 7.605,
+"end": 7.685
+},
+{
+"word": "way,",
+"start": 7.765,
+"end": 8.325
+},
+{
+"word": "one",
+"start": 8.405,
+"end": 8.565
+},
+{
+"word": "piece",
+"start": 8.645,
+"end": 8.885
+},
+{
+"word": "at",
+"start": 8.925,
+"end": 8.965
+},
+{
+"word": "a",
+"start": 9.045,
+"end": 9.085
+},
+{
+"word": "time.",
+"start": 9.125,
+"end": 9.685
+}
+]
+}

@@ -1,0 +1,277 @@
+{
+"words": [
+{
+"text": "So",
+"type": "word",
+"start": 0,
+"end": 0.16
+},
+{
+"text": "how",
+"type": "word",
+"start": 0.4,
+"end": 0.56
+},
+{
+"text": "can",
+"type": "word",
+"start": 0.64,
+"end": 0.72
+},
+{
+"text": "a",
+"type": "word",
+"start": 0.76,
+"end": 0.8
+},
+{
+"text": "wrong",
+"type": "word",
+"start": 0.96,
+"end": 1.2
+},
+{
+"text": "answer",
+"type": "word",
+"start": 1.28,
+"end": 1.6
+},
+{
+"text": "sound",
+"type": "word",
+"start": 1.68,
+"end": 1.92
+},
+{
+"text": "that",
+"type": "word",
+"start": 2.08,
+"end": 2.32
+},
+{
+"text": "sure?",
+"type": "word",
+"start": 2.4,
+"end": 3.08
+},
+{
+"text": "Here's",
+"type": "word",
+"start": 3.36,
+"end": 3.52
+},
+{
+"text": "the",
+"type": "word",
+"start": 3.56,
+"end": 3.6
+},
+{
+"text": "short",
+"type": "word",
+"start": 3.68,
+"end": 3.84
+},
+{
+"text": "version.",
+"type": "word",
+"start": 3.92,
+"end": 4.32
+},
+{
+"text": "A",
+"type": "word",
+"start": 4.72,
+"end": 4.88
+},
+{
+"text": "chatbot",
+"type": "word",
+"start": 5.04,
+"end": 5.36
+},
+{
+"text": "is",
+"type": "word",
+"start": 5.44,
+"end": 5.52
+},
+{
+"text": "built",
+"type": "word",
+"start": 5.6,
+"end": 5.76
+},
+{
+"text": "to",
+"type": "word",
+"start": 5.84,
+"end": 5.92
+},
+{
+"text": "write",
+"type": "word",
+"start": 6.04,
+"end": 6.16
+},
+{
+"text": "what's",
+"type": "word",
+"start": 6.24,
+"end": 6.4
+},
+{
+"text": "likely",
+"type": "word",
+"start": 6.48,
+"end": 6.8
+},
+{
+"text": "to",
+"type": "word",
+"start": 6.84,
+"end": 6.88
+},
+{
+"text": "come",
+"type": "word",
+"start": 6.96,
+"end": 7.12
+},
+{
+"text": "next.",
+"type": "word",
+"start": 7.2,
+"end": 7.84
+},
+{
+"text": "Checking",
+"type": "word",
+"start": 8.08,
+"end": 8.4
+},
+{
+"text": "whether",
+"type": "word",
+"start": 8.52,
+"end": 8.64
+},
+{
+"text": "it's",
+"type": "word",
+"start": 8.68,
+"end": 8.88
+},
+{
+"text": "true",
+"type": "word",
+"start": 9.08,
+"end": 9.28
+},
+{
+"text": "is",
+"type": "word",
+"start": 9.36,
+"end": 9.44
+},
+{
+"text": "a",
+"type": "word",
+"start": 9.52,
+"end": 9.6
+},
+{
+"text": "different",
+"type": "word",
+"start": 9.76,
+"end": 9.92
+},
+{
+"text": "job.",
+"type": "word",
+"start": 10,
+"end": 10.52
+},
+{
+"text": "And",
+"type": "word",
+"start": 10.72,
+"end": 10.8
+},
+{
+"text": "some",
+"type": "word",
+"start": 10.88,
+"end": 10.96
+},
+{
+"text": "of",
+"type": "word",
+"start": 11.04,
+"end": 11.08
+},
+{
+"text": "the",
+"type": "word",
+"start": 11.12,
+"end": 11.2
+},
+{
+"text": "tests",
+"type": "word",
+"start": 11.4,
+"end": 11.6
+},
+{
+"text": "used",
+"type": "word",
+"start": 11.68,
+"end": 11.84
+},
+{
+"text": "to",
+"type": "word",
+"start": 11.92,
+"end": 12
+},
+{
+"text": "grade",
+"type": "word",
+"start": 12.12,
+"end": 12.24
+},
+{
+"text": "these",
+"type": "word",
+"start": 12.32,
+"end": 12.48
+},
+{
+"text": "systems",
+"type": "word",
+"start": 12.76,
+"end": 13.04
+},
+{
+"text": "quietly",
+"type": "word",
+"start": 13.12,
+"end": 13.6
+},
+{
+"text": "reward",
+"type": "word",
+"start": 13.84,
+"end": 14.08
+},
+{
+"text": "guessing.",
+"type": "word",
+"start": 14.24,
+"end": 14.88
+}
+],
+"text": "So how can a wrong answer sound that sure? Here's the short version.\n\nA chatbot is built to write what's likely to come next. Checking whether it's true is a different job. And some of the tests used to grade these systems quietly reward guessing.",
+"generation_id": "XrrW29YCw0WWvNMiPKmK",
+"source_generation": "nXPvP1rYhusRveHJM1LN"
+}

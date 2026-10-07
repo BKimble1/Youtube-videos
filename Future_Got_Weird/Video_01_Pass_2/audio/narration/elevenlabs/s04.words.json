@@ -1,0 +1,74 @@
+{
+"words": [
+{
+"word": "And",
+"start": 0.1,
+"end": 0.26
+},
+{
+"word": "Adam",
+"start": 0.38,
+"end": 0.5
+},
+{
+"word": "Kalai?",
+"start": 0.58,
+"end": 1.06
+},
+{
+"word": "He's",
+"start": 1.46,
+"end": 1.62
+},
+{
+"word": "the",
+"start": 1.7,
+"end": 1.78
+},
+{
+"word": "lead",
+"start": 1.86,
+"end": 2.02
+},
+{
+"word": "author",
+"start": 2.1,
+"end": 2.34
+},
+{
+"word": "of",
+"start": 2.38,
+"end": 2.42
+},
+{
+"word": "the",
+"start": 2.5,
+"end": 2.58
+},
+{
+"word": "paper",
+"start": 2.7,
+"end": 2.82
+},
+{
+"word": "that",
+"start": 2.9,
+"end": 2.98
+},
+{
+"word": "reported",
+"start": 3.06,
+"end": 3.46
+},
+{
+"word": "this",
+"start": 3.54,
+"end": 3.62
+},
+{
+"word": "test.",
+"start": 3.7,
+"end": 4.1
+}
+]
+}

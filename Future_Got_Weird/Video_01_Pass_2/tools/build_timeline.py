@@ -35,7 +35,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FPS = 30
 SR = 48000
 LEAD_IN_S = 0.45      # silence before the first word
-TAIL_S = 5.2          # time after the last word (end card + music tail)
+TAIL_S = 4.6          # time after the last word (end card + music tail)
 SCENE_LEAD_S = 0.35   # a scene's visuals start this long before its first word
 
 

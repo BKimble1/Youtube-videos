@@ -1,0 +1,124 @@
+{
+"words": [
+{
+"word": "Here,",
+"start": 0.08,
+"end": 0.4
+},
+{
+"word": "it's",
+"start": 0.48,
+"end": 0.64
+},
+{
+"word": "choosing",
+"start": 0.72,
+"end": 0.96
+},
+{
+"word": "the",
+"start": 1.04,
+"end": 1.08
+},
+{
+"word": "last",
+"start": 1.12,
+"end": 1.36
+},
+{
+"word": "digit",
+"start": 1.44,
+"end": 1.68
+},
+{
+"word": "of",
+"start": 1.72,
+"end": 1.76
+},
+{
+"word": "the",
+"start": 1.84,
+"end": 1.88
+},
+{
+"word": "year.",
+"start": 1.92,
+"end": 2.32
+},
+{
+"word": "Those",
+"start": 2.88,
+"end": 3.04
+},
+{
+"word": "scores",
+"start": 3.12,
+"end": 3.52
+},
+{
+"word": "say",
+"start": 3.6,
+"end": 3.68
+},
+{
+"word": "which",
+"start": 3.76,
+"end": 3.92
+},
+{
+"word": "chunk",
+"start": 4.0,
+"end": 4.24
+},
+{
+"word": "is",
+"start": 4.32,
+"end": 4.4
+},
+{
+"word": "likely.",
+"start": 4.48,
+"end": 4.96
+},
+{
+"word": "They",
+"start": 5.28,
+"end": 5.36
+},
+{
+"word": "do",
+"start": 5.44,
+"end": 5.52
+},
+{
+"word": "not",
+"start": 5.6,
+"end": 5.84
+},
+{
+"word": "say",
+"start": 5.92,
+"end": 6.08
+},
+{
+"word": "which",
+"start": 6.16,
+"end": 6.32
+},
+{
+"word": "one",
+"start": 6.4,
+"end": 6.48
+},
+{
+"word": "is",
+"start": 6.56,
+"end": 6.64
+},
+{
+"word": "true.",
+"start": 6.72,
+"end": 7.12
+}
+]
+}

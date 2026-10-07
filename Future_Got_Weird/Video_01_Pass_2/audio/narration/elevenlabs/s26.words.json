@@ -1,0 +1,124 @@
+{
+"words": [
+{
+"word": "The",
+"start": 0.335,
+"end": 0.375
+},
+{
+"word": "researchers",
+"start": 0.415,
+"end": 0.975
+},
+{
+"word": "checked",
+"start": 1.135,
+"end": 1.295
+},
+{
+"word": "ten",
+"start": 1.375,
+"end": 1.695
+},
+{
+"word": "widely",
+"start": 1.775,
+"end": 2.095
+},
+{
+"word": "used",
+"start": 2.175,
+"end": 2.415
+},
+{
+"word": "benchmarks",
+"start": 2.495,
+"end": 2.975
+},
+{
+"word": "in",
+"start": 3.055,
+"end": 3.135
+},
+{
+"word": "mid-2025.",
+"start": 3.215,
+"end": 4.815
+},
+{
+"word": "Nine",
+"start": 4.895,
+"end": 5.215
+},
+{
+"word": "graded",
+"start": 5.295,
+"end": 5.615
+},
+{
+"word": "strictly",
+"start": 5.695,
+"end": 6.095
+},
+{
+"word": "right",
+"start": 6.255,
+"end": 6.415
+},
+{
+"word": "or",
+"start": 6.495,
+"end": 6.575
+},
+{
+"word": "wrong,",
+"start": 6.655,
+"end": 7.055
+},
+{
+"word": "with",
+"start": 7.135,
+"end": 7.215
+},
+{
+"word": "no",
+"start": 7.295,
+"end": 7.455
+},
+{
+"word": "credit",
+"start": 7.535,
+"end": 7.775
+},
+{
+"word": "at",
+"start": 7.855,
+"end": 7.935
+},
+{
+"word": "all",
+"start": 8.015,
+"end": 8.175
+},
+{
+"word": "for",
+"start": 8.255,
+"end": 8.415
+},
+{
+"word": "“I",
+"start": 8.575,
+"end": 8.655
+},
+{
+"word": "don't",
+"start": 8.735,
+"end": 8.855
+},
+{
+"word": "know.”",
+"start": 8.895,
+"end": 9.215
+}
+]
+}

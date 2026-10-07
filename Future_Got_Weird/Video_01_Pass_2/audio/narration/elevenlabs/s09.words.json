@@ -1,0 +1,134 @@
+{
+"words": [
+{
+"word": "A",
+"start": 0.085,
+"end": 0.165
+},
+{
+"word": "language",
+"start": 0.325,
+"end": 0.485
+},
+{
+"word": "model",
+"start": 0.565,
+"end": 0.885
+},
+{
+"word": "builds",
+"start": 0.965,
+"end": 1.245
+},
+{
+"word": "text",
+"start": 1.285,
+"end": 1.605
+},
+{
+"word": "out",
+"start": 1.685,
+"end": 1.765
+},
+{
+"word": "of",
+"start": 1.805,
+"end": 1.845
+},
+{
+"word": "tokens:",
+"start": 1.925,
+"end": 2.965
+},
+{
+"word": "chunks",
+"start": 3.045,
+"end": 3.365
+},
+{
+"word": "that",
+"start": 3.405,
+"end": 3.445
+},
+{
+"word": "are",
+"start": 3.525,
+"end": 3.605
+},
+{
+"word": "sometimes",
+"start": 3.845,
+"end": 4.085
+},
+{
+"word": "whole",
+"start": 4.205,
+"end": 4.325
+},
+{
+"word": "words,",
+"start": 4.405,
+"end": 4.965
+},
+{
+"word": "sometimes",
+"start": 5.165,
+"end": 5.365
+},
+{
+"word": "fragments.",
+"start": 5.485,
+"end": 6.005
+},
+{
+"word": "In",
+"start": 6.485,
+"end": 6.565
+},
+{
+"word": "GPT-4o's",
+"start": 6.645,
+"end": 7.445
+},
+{
+"word": "tokenizer,",
+"start": 7.765,
+"end": 8.485
+},
+{
+"word": "“Kalai”",
+"start": 8.512,
+"end": 9.205
+},
+{
+"word": "comes",
+"start": 9.285,
+"end": 9.445
+},
+{
+"word": "out",
+"start": 9.525,
+"end": 9.685
+},
+{
+"word": "as",
+"start": 9.765,
+"end": 9.925
+},
+{
+"word": "“Kal”",
+"start": 10.085,
+"end": 10.725
+},
+{
+"word": "and",
+"start": 10.845,
+"end": 10.965
+},
+{
+"word": "“ai.”",
+"start": 11.205,
+"end": 11.685
+}
+]
+}

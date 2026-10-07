@@ -1,0 +1,64 @@
+{
+"words": [
+{
+"word": "Three",
+"start": 0.295,
+"end": 0.615
+},
+{
+"word": "polished",
+"start": 0.855,
+"end": 1.255
+},
+{
+"word": "answers.",
+"start": 1.335,
+"end": 1.895
+},
+{
+"word": "All",
+"start": 2.295,
+"end": 2.455
+},
+{
+"word": "wrong.",
+"start": 2.535,
+"end": 3.015
+},
+{
+"word": "Not",
+"start": 3.415,
+"end": 3.575
+},
+{
+"word": "one",
+"start": 3.735,
+"end": 3.895
+},
+{
+"word": "even",
+"start": 3.975,
+"end": 4.135
+},
+{
+"word": "had",
+"start": 4.215,
+"end": 4.295
+},
+{
+"word": "the",
+"start": 4.335,
+"end": 4.375
+},
+{
+"word": "right",
+"start": 4.495,
+"end": 4.615
+},
+{
+"word": "year.",
+"start": 4.695,
+"end": 5.095
+}
+]
+}

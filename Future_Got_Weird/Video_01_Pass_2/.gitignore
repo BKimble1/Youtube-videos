@@ -19,8 +19,16 @@ source/public/audio/
 *.mp4
 *.mp3
 *.m4a
-qa/frames/
 qa/clips/
 qa/determinism/
 qa/render_chain.status
 exports/*.zip
+# pass-2 additions: dev check frames and the per-frame QA material stay local; the contact sheets are kept
+qa/dev/
+qa/frames/*
+!qa/frames/sheet_*.jpg
+!qa/frames/phone/
+!qa/frames/frame_stats.json
+backup/_stage/
+*.flac
+!backup/**/*.part*

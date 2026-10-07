@@ -1,0 +1,69 @@
+{
+"words": [
+{
+"word": "So",
+"start": 0.0,
+"end": 0.16
+},
+{
+"word": "how",
+"start": 0.4,
+"end": 0.56
+},
+{
+"word": "can",
+"start": 0.64,
+"end": 0.72
+},
+{
+"word": "a",
+"start": 0.76,
+"end": 0.8
+},
+{
+"word": "wrong",
+"start": 0.96,
+"end": 1.2
+},
+{
+"word": "answer",
+"start": 1.28,
+"end": 1.6
+},
+{
+"word": "sound",
+"start": 1.68,
+"end": 1.92
+},
+{
+"word": "that",
+"start": 2.08,
+"end": 2.32
+},
+{
+"word": "sure?",
+"start": 2.4,
+"end": 3.08
+},
+{
+"word": "Here's",
+"start": 3.36,
+"end": 3.52
+},
+{
+"word": "the",
+"start": 3.56,
+"end": 3.6
+},
+{
+"word": "short",
+"start": 3.68,
+"end": 3.84
+},
+{
+"word": "version.",
+"start": 3.92,
+"end": 4.32
+}
+]
+}

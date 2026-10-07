@@ -1,0 +1,114 @@
+{
+"words": [
+{
+"word": "So",
+"start": 0.125,
+"end": 0.165
+},
+{
+"word": "when",
+"start": 0.245,
+"end": 0.325
+},
+{
+"word": "an",
+"start": 0.405,
+"end": 0.485
+},
+{
+"word": "answer",
+"start": 0.565,
+"end": 0.805
+},
+{
+"word": "matters,",
+"start": 0.885,
+"end": 1.605
+},
+{
+"word": "don't",
+"start": 1.685,
+"end": 1.845
+},
+{
+"word": "ask",
+"start": 1.965,
+"end": 2.085
+},
+{
+"word": "whether",
+"start": 2.205,
+"end": 2.325
+},
+{
+"word": "it",
+"start": 2.405,
+"end": 2.485
+},
+{
+"word": "sounds",
+"start": 2.565,
+"end": 2.885
+},
+{
+"word": "right.",
+"start": 3.005,
+"end": 3.525
+},
+{
+"word": "Ask",
+"start": 3.645,
+"end": 3.765
+},
+{
+"word": "what",
+"start": 3.805,
+"end": 3.845
+},
+{
+"word": "the",
+"start": 3.925,
+"end": 4.005
+},
+{
+"word": "evidence",
+"start": 4.085,
+"end": 4.485
+},
+{
+"word": "is,",
+"start": 4.565,
+"end": 4.885
+},
+{
+"word": "and",
+"start": 4.965,
+"end": 5.045
+},
+{
+"word": "whether",
+"start": 5.165,
+"end": 5.285
+},
+{
+"word": "it",
+"start": 5.365,
+"end": 5.445
+},
+{
+"word": "actually",
+"start": 5.525,
+"end": 6.005
+},
+{
+"word": "says",
+"start": 6.125,
+"end": 6.245
+},
+{
+"word": "this.",
+"start": 6.325,
+"end": 6.805
+}
+]
+}

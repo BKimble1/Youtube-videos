@@ -1,0 +1,1090 @@
+[
+ {
+  "t": 3.033,
+  "frame": 91,
+  "name": "S1 question card up (synth)"
+ },
+ {
+  "t": 6.093,
+  "frame": 183,
+  "name": "slip A slides out [EL slide]",
+  "sync_frame": 220
+ },
+ {
+  "t": 8.54,
+  "frame": 256,
+  "name": "mark title on slip A [EL marker]",
+  "sync_frame": 258
+ },
+ {
+  "t": 9.278,
+  "frame": 278,
+  "name": "mark university on slip A [EL marker]",
+  "sync_frame": 280
+ },
+ {
+  "t": 10.25,
+  "frame": 308,
+  "name": "mark year on slip A [EL marker]",
+  "sync_frame": 309
+ },
+ {
+  "t": 10.387,
+  "frame": 312,
+  "name": "slip B slides out [EL slide]",
+  "sync_frame": 347
+ },
+ {
+  "t": 12.375,
+  "frame": 371,
+  "name": "slip C slides out [EL slide]",
+  "sync_frame": 405
+ },
+ {
+  "t": 16.717,
+  "frame": 502,
+  "name": "stamp WRONG on slip A [EL stamp]",
+  "sync_frame": 506
+ },
+ {
+  "t": 17.055,
+  "frame": 512,
+  "name": "stamp WRONG on slip B [EL stamp]",
+  "sync_frame": 516
+ },
+ {
+  "t": 17.393,
+  "frame": 522,
+  "name": "stamp WRONG on slip C [EL stamp]",
+  "sync_frame": 526
+ },
+ {
+  "t": 18.973,
+  "frame": 569,
+  "name": "circle the years, first [EL marker]",
+  "sync_frame": 571
+ },
+ {
+  "t": 19.183,
+  "frame": 576,
+  "name": "circle the years, rest [EL marker]",
+  "sync_frame": 577
+ },
+ {
+  "t": 19.925,
+  "frame": 598,
+  "name": "paper header lands [EL paper]",
+  "sync_frame": 615
+ },
+ {
+  "t": 21.668,
+  "frame": 650,
+  "name": "box around the lead author [EL marker]",
+  "sync_frame": 652
+ },
+ {
+  "t": 26.873,
+  "frame": 806,
+  "name": "wipe into S2 [EL whoosh]",
+  "sync_frame": 820
+ },
+ {
+  "t": 29.6,
+  "frame": 888,
+  "name": "title swell (synth)"
+ },
+ {
+  "t": 30.11,
+  "frame": 903,
+  "name": "title hit [EL impact]",
+  "sync_frame": 903
+ },
+ {
+  "t": 31.028,
+  "frame": 931,
+  "name": "panels change [EL whoosh]",
+  "sync_frame": 943
+ },
+ {
+  "t": 32.74,
+  "frame": 982,
+  "name": "claim panel 1 lands [EL tap]",
+  "sync_frame": 984
+ },
+ {
+  "t": 34.173,
+  "frame": 1025,
+  "name": "underline: likely [EL marker]",
+  "sync_frame": 1027
+ },
+ {
+  "t": 36.007,
+  "frame": 1080,
+  "name": "claim panel 2 lands [EL tap]",
+  "sync_frame": 1082
+ },
+ {
+  "t": 37.445,
+  "frame": 1123,
+  "name": "underline: different tests [EL marker]",
+  "sync_frame": 1125
+ },
+ {
+  "t": 39.345,
+  "frame": 1180,
+  "name": "claim panel 3 lands [EL tap]",
+  "sync_frame": 1182
+ },
+ {
+  "t": 41.865,
+  "frame": 1256,
+  "name": "GUESSING PAYS stamp (no hand) [EL stamp]",
+  "sync_frame": 1260
+ },
+ {
+  "t": 42.54,
+  "frame": 1276,
+  "name": "channel sting in [EL whoosh]",
+  "sync_frame": 1290
+ },
+ {
+  "t": 43.922,
+  "frame": 1318,
+  "name": "wipe into S3 [EL whoosh]",
+  "sync_frame": 1331
+ },
+ {
+  "t": 45.462,
+  "frame": 1364,
+  "name": "the slip unfolds on the track [EL slide]",
+  "sync_frame": 1403
+ },
+ {
+  "t": 49.098,
+  "frame": 1473,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.143,
+  "frame": 1474,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.189,
+  "frame": 1476,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.228,
+  "frame": 1477,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.279,
+  "frame": 1478,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.319,
+  "frame": 1480,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.351,
+  "frame": 1481,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.4,
+  "frame": 1482,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.439,
+  "frame": 1483,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.481,
+  "frame": 1484,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.531,
+  "frame": 1486,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.566,
+  "frame": 1487,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.609,
+  "frame": 1488,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 49.65,
+  "frame": 1489,
+  "name": "token split (synth)"
+ },
+ {
+  "t": 57.237,
+  "frame": 1717,
+  "name": "tile: Kal [EL tile]",
+  "sync_frame": 1721
+ },
+ {
+  "t": 58.447,
+  "frame": 1753,
+  "name": "tile: ai [EL tile]",
+  "sync_frame": 1757
+ },
+ {
+  "t": 60.9,
+  "frame": 1827,
+  "name": "scorer sweep (synth)"
+ },
+ {
+  "t": 60.967,
+  "frame": 1829,
+  "name": "scorer sweep (synth)"
+ },
+ {
+  "t": 61.033,
+  "frame": 1831,
+  "name": "scorer sweep (synth)"
+ },
+ {
+  "t": 61.1,
+  "frame": 1833,
+  "name": "scorer sweep (synth)"
+ },
+ {
+  "t": 61.167,
+  "frame": 1835,
+  "name": "scorer sweep (synth)"
+ },
+ {
+  "t": 61.233,
+  "frame": 1837,
+  "name": "scorer sweep (synth)"
+ },
+ {
+  "t": 61.3,
+  "frame": 1839,
+  "name": "scorer sweep (synth)"
+ },
+ {
+  "t": 61.367,
+  "frame": 1841,
+  "name": "scorer sweep (synth)"
+ },
+ {
+  "t": 61.433,
+  "frame": 1843,
+  "name": "scorer sweep (synth)"
+ },
+ {
+  "t": 63.533,
+  "frame": 1906,
+  "name": "pick settles (synth)"
+ },
+ {
+  "t": 64.233,
+  "frame": 1927,
+  "name": "scorer reload (synth)"
+ },
+ {
+  "t": 64.313,
+  "frame": 1929,
+  "name": "scorer reload (synth)"
+ },
+ {
+  "t": 64.393,
+  "frame": 1932,
+  "name": "scorer reload (synth)"
+ },
+ {
+  "t": 64.473,
+  "frame": 1934,
+  "name": "scorer reload (synth)"
+ },
+ {
+  "t": 64.553,
+  "frame": 1937,
+  "name": "scorer reload (synth)"
+ },
+ {
+  "t": 65.167,
+  "frame": 1955,
+  "name": "second pick settles (synth)"
+ },
+ {
+  "t": 65.442,
+  "frame": 1963,
+  "name": "roll-out tile 1 [EL tile]",
+  "sync_frame": 1967
+ },
+ {
+  "t": 65.647,
+  "frame": 1969,
+  "name": "roll-out tile 2 [EL tile]",
+  "sync_frame": 1973
+ },
+ {
+  "t": 65.837,
+  "frame": 1975,
+  "name": "roll-out tile 3 [EL tile]",
+  "sync_frame": 1979
+ },
+ {
+  "t": 66.042,
+  "frame": 1981,
+  "name": "roll-out tile 4 [EL tile]",
+  "sync_frame": 1985
+ },
+ {
+  "t": 66.247,
+  "frame": 1987,
+  "name": "roll-out tile 5 [EL tile]",
+  "sync_frame": 1991
+ },
+ {
+  "t": 66.437,
+  "frame": 1993,
+  "name": "roll-out tile 6 [EL tile]",
+  "sync_frame": 1997
+ },
+ {
+  "t": 72.433,
+  "frame": 2173,
+  "name": "likely (synth)"
+ },
+ {
+  "t": 74.667,
+  "frame": 2240,
+  "name": "not the true one (synth)"
+ },
+ {
+  "t": 78.197,
+  "frame": 2346,
+  "name": "module bolts on: instruction [EL tap]",
+  "sync_frame": 2348
+ },
+ {
+  "t": 79.268,
+  "frame": 2378,
+  "name": "module bolts on: step-by-step [EL tap]",
+  "sync_frame": 2380
+ },
+ {
+  "t": 81.068,
+  "frame": 2432,
+  "name": "module bolts on: web [EL tap]",
+  "sync_frame": 2434
+ },
+ {
+  "t": 84.07,
+  "frame": 2522,
+  "name": "piece by piece [EL tile]",
+  "sync_frame": 2526
+ },
+ {
+  "t": 84.242,
+  "frame": 2527,
+  "name": "piece by piece [EL tile]",
+  "sync_frame": 2531
+ },
+ {
+  "t": 84.413,
+  "frame": 2532,
+  "name": "piece by piece [EL tile]",
+  "sync_frame": 2536
+ },
+ {
+  "t": 84.993,
+  "frame": 2550,
+  "name": "wipe into S4 [EL whoosh]",
+  "sync_frame": 2563
+ },
+ {
+  "t": 93.913,
+  "frame": 2817,
+  "name": "book lights up: \u201cMethods.\u201d [EL tock]",
+  "sync_frame": 2818
+ },
+ {
+  "t": 94.547,
+  "frame": 2836,
+  "name": "book lights up: \u201cAlgorithms.\u201d [EL tock]",
+  "sync_frame": 2837
+ },
+ {
+  "t": 95.747,
+  "frame": 2872,
+  "name": "book lights up: \u201cMachine [EL tock]",
+  "sync_frame": 2873
+ },
+ {
+  "t": 100.163,
+  "frame": 3005,
+  "name": "catalogue drawer opens [EL drawer]",
+  "sync_frame": 3022
+ },
+ {
+  "t": 105.345,
+  "frame": 3160,
+  "name": "birthday cake lands [EL tap]",
+  "sync_frame": 3162
+ },
+ {
+  "t": 110.453,
+  "frame": 3314,
+  "name": "the made-up slip settles [EL slide]",
+  "sync_frame": 3349
+ },
+ {
+  "t": 110.7,
+  "frame": 3321,
+  "name": "word flies in (synth)"
+ },
+ {
+  "t": 110.867,
+  "frame": 3326,
+  "name": "word flies in (synth)"
+ },
+ {
+  "t": 111.033,
+  "frame": 3331,
+  "name": "word flies in (synth)"
+ },
+ {
+  "t": 113.327,
+  "frame": 3400,
+  "name": "IS ENTITLED seal lands [EL stamp]",
+  "sync_frame": 3410
+ },
+ {
+  "t": 118.24,
+  "frame": 3547,
+  "name": "strike: I think [EL marker]",
+  "sync_frame": 3549
+ },
+ {
+  "t": 119.345,
+  "frame": 3580,
+  "name": "strike: maybe [EL marker]",
+  "sync_frame": 3582
+ },
+ {
+  "t": 119.94,
+  "frame": 3598,
+  "name": "wipe into S5 [EL whoosh]",
+  "sync_frame": 3612
+ },
+ {
+  "t": 120.458,
+  "frame": 3614,
+  "name": "thesis title block lands [EL paper]",
+  "sync_frame": 3631
+ },
+ {
+  "t": 123.94,
+  "frame": 3718,
+  "name": "highlight box: \u201cProbabilistic [EL marker]",
+  "sync_frame": 3720
+ },
+ {
+  "t": 127.312,
+  "frame": 3819,
+  "name": "highlight box: Carnegie [EL marker]",
+  "sync_frame": 3821
+ },
+ {
+  "t": 128.345,
+  "frame": 3850,
+  "name": "highlight box: May [EL marker]",
+  "sync_frame": 3852
+ },
+ {
+  "t": 129.06,
+  "frame": 3872,
+  "name": "the ChatGPT slip comes alongside [EL slide]",
+  "sync_frame": 3909
+ },
+ {
+  "t": 131.797,
+  "frame": 3954,
+  "name": "university matches (synth)"
+ },
+ {
+  "t": 133.583,
+  "frame": 4008,
+  "name": "year off by one (synth)"
+ },
+ {
+  "t": 135.017,
+  "frame": 4051,
+  "name": "title invented (synth)"
+ },
+ {
+  "t": 140.402,
+  "frame": 4212,
+  "name": "magnifier lands [EL tap]",
+  "sync_frame": 4214
+ },
+ {
+  "t": 142.722,
+  "frame": 4282,
+  "name": "wipe into S6 [EL whoosh]",
+  "sync_frame": 4295
+ },
+ {
+  "t": 150.507,
+  "frame": 4515,
+  "name": "sign lands [EL tap]",
+  "sync_frame": 4517
+ },
+ {
+  "t": 153.547,
+  "frame": 4606,
+  "name": "rule card: Right [EL tock]",
+  "sync_frame": 4607
+ },
+ {
+  "t": 155.347,
+  "frame": 4660,
+  "name": "rule card: Wrong [EL tock]",
+  "sync_frame": 4661
+ },
+ {
+  "t": 157.147,
+  "frame": 4714,
+  "name": "rule card: \u201cI [EL tock]",
+  "sync_frame": 4715
+ },
+ {
+  "t": 159.733,
+  "frame": 4792,
+  "name": "podiums land (synth)"
+ },
+ {
+  "t": 160.87,
+  "frame": 4826,
+  "name": "honest tile known 1 [EL tile]",
+  "sync_frame": 4830
+ },
+ {
+  "t": 160.975,
+  "frame": 4829,
+  "name": "honest tile known 2 [EL tile]",
+  "sync_frame": 4833
+ },
+ {
+  "t": 161.075,
+  "frame": 4832,
+  "name": "honest tile known 3 [EL tile]",
+  "sync_frame": 4836
+ },
+ {
+  "t": 161.17,
+  "frame": 4835,
+  "name": "honest tile known 4 [EL tile]",
+  "sync_frame": 4839
+ },
+ {
+  "t": 161.275,
+  "frame": 4838,
+  "name": "honest tile known 5 [EL tile]",
+  "sync_frame": 4842
+ },
+ {
+  "t": 161.343,
+  "frame": 4840,
+  "name": "Honest: 6 [EL tock]",
+  "sync_frame": 4840
+ },
+ {
+  "t": 161.375,
+  "frame": 4841,
+  "name": "honest tile known 6 [EL tile]",
+  "sync_frame": 4845
+ },
+ {
+  "t": 163.722,
+  "frame": 4912,
+  "name": "honest tile blank 1 [EL tile]",
+  "sync_frame": 4916
+ },
+ {
+  "t": 163.855,
+  "frame": 4916,
+  "name": "honest tile blank 2 [EL tile]",
+  "sync_frame": 4920
+ },
+ {
+  "t": 163.988,
+  "frame": 4920,
+  "name": "honest tile blank 3 [EL tile]",
+  "sync_frame": 4924
+ },
+ {
+  "t": 164.122,
+  "frame": 4924,
+  "name": "honest tile blank 4 [EL tile]",
+  "sync_frame": 4928
+ },
+ {
+  "t": 170.603,
+  "frame": 5118,
+  "name": "guesser tile resolves 1 [EL tile]",
+  "sync_frame": 5122
+ },
+ {
+  "t": 170.742,
+  "frame": 5122,
+  "name": "guesser tile resolves 2 [EL tile]",
+  "sync_frame": 5126
+ },
+ {
+  "t": 170.88,
+  "frame": 5126,
+  "name": "guesser tile resolves 3 [EL tile]",
+  "sync_frame": 5130
+ },
+ {
+  "t": 171.013,
+  "frame": 5130,
+  "name": "guesser tile resolves 4 [EL tile]",
+  "sync_frame": 5134
+ },
+ {
+  "t": 171.543,
+  "frame": 5146,
+  "name": "Guesser: 7 [EL tock]",
+  "sync_frame": 5146
+ },
+ {
+  "t": 172.997,
+  "frame": 5190,
+  "name": "one lucky guess (synth)"
+ },
+ {
+  "t": 174.317,
+  "frame": 5230,
+  "name": "three wrong (synth)"
+ },
+ {
+  "t": 175.578,
+  "frame": 5267,
+  "name": "confetti [EL slide]",
+  "sync_frame": 5296
+ },
+ {
+  "t": 176.333,
+  "frame": 5290,
+  "name": "the guesser gets the trophy [EL fanfare]",
+  "sync_frame": 5290
+ },
+ {
+  "t": 180.263,
+  "frame": 5408,
+  "name": "rule card flips (synth)"
+ },
+ {
+  "t": 185.633,
+  "frame": 5569,
+  "name": "plus one (synth)"
+ },
+ {
+  "t": 186.6,
+  "frame": 5598,
+  "name": "minus one (synth)"
+ },
+ {
+  "t": 186.767,
+  "frame": 5603,
+  "name": "minus one (synth)"
+ },
+ {
+  "t": 186.933,
+  "frame": 5608,
+  "name": "minus one (synth)"
+ },
+ {
+  "t": 187.677,
+  "frame": 5630,
+  "name": "Guesser: 4 [EL tock]",
+  "sync_frame": 5630
+ },
+ {
+  "t": 188.452,
+  "frame": 5654,
+  "name": "trophy footstep 1 [EL tock]",
+  "sync_frame": 5654
+ },
+ {
+  "t": 188.618,
+  "frame": 5659,
+  "name": "trophy footstep 2 [EL tock]",
+  "sync_frame": 5659
+ },
+ {
+  "t": 188.785,
+  "frame": 5664,
+  "name": "trophy footstep 3 [EL tock]",
+  "sync_frame": 5664
+ },
+ {
+  "t": 188.952,
+  "frame": 5669,
+  "name": "trophy footstep 4 [EL tock]",
+  "sync_frame": 5669
+ },
+ {
+  "t": 189.118,
+  "frame": 5674,
+  "name": "trophy footstep 5 [EL tock]",
+  "sync_frame": 5674
+ },
+ {
+  "t": 189.285,
+  "frame": 5679,
+  "name": "trophy footstep 6 [EL tock]",
+  "sync_frame": 5679
+ },
+ {
+  "t": 189.452,
+  "frame": 5684,
+  "name": "trophy footstep 7 [EL tock]",
+  "sync_frame": 5684
+ },
+ {
+  "t": 189.493,
+  "frame": 5685,
+  "name": "wipe into S7 [EL whoosh]",
+  "sync_frame": 5698
+ },
+ {
+  "t": 189.992,
+  "frame": 5700,
+  "name": "Table 2 lands [EL paper]",
+  "sync_frame": 5717
+ },
+ {
+  "t": 194.733,
+  "frame": 5842,
+  "name": "tally mark (row 1) (synth)"
+ },
+ {
+  "t": 194.893,
+  "frame": 5847,
+  "name": "tally mark (row 2) (synth)"
+ },
+ {
+  "t": 195.053,
+  "frame": 5852,
+  "name": "tally mark (row 3) (synth)"
+ },
+ {
+  "t": 195.213,
+  "frame": 5856,
+  "name": "tally mark (row 4) (synth)"
+ },
+ {
+  "t": 195.533,
+  "frame": 5866,
+  "name": "tally mark (row 6) (synth)"
+ },
+ {
+  "t": 195.693,
+  "frame": 5871,
+  "name": "tally mark (row 7) (synth)"
+ },
+ {
+  "t": 195.853,
+  "frame": 5876,
+  "name": "tally mark (row 8) (synth)"
+ },
+ {
+  "t": 196.013,
+  "frame": 5880,
+  "name": "tally mark (row 9) (synth)"
+ },
+ {
+  "t": 196.173,
+  "frame": 5885,
+  "name": "tally mark (row 10) (synth)"
+ },
+ {
+  "t": 197.297,
+  "frame": 5919,
+  "name": "no credit for IDK (synth)"
+ },
+ {
+  "t": 200.073,
+  "frame": 6002,
+  "name": "leaderboard lands [EL tap]",
+  "sync_frame": 6004
+ },
+ {
+  "t": 202.513,
+  "frame": 6075,
+  "name": "guessing pays [EL tock]",
+  "sync_frame": 6076
+ },
+ {
+  "t": 207.273,
+  "frame": 6218,
+  "name": "wipe into S8 [EL whoosh]",
+  "sync_frame": 6232
+ },
+ {
+  "t": 209.553,
+  "frame": 6287,
+  "name": "retrieval cart rolls in and stops [EL cart]",
+  "sync_frame": 6319
+ },
+ {
+  "t": 210.247,
+  "frame": 6307,
+  "name": "booth shutter opens [EL drawer]",
+  "sync_frame": 6323
+ },
+ {
+  "t": 213.467,
+  "frame": 6404,
+  "name": "reasoning bubble pops (synth)"
+ },
+ {
+  "t": 215.4,
+  "frame": 6462,
+  "name": "dial click (synth)"
+ },
+ {
+  "t": 215.567,
+  "frame": 6467,
+  "name": "dial click (synth)"
+ },
+ {
+  "t": 215.733,
+  "frame": 6472,
+  "name": "dial click (synth)"
+ },
+ {
+  "t": 215.9,
+  "frame": 6477,
+  "name": "dial click (synth)"
+ },
+ {
+  "t": 216.067,
+  "frame": 6482,
+  "name": "dial click (synth)"
+ },
+ {
+  "t": 216.233,
+  "frame": 6487,
+  "name": "dial click (synth)"
+ },
+ {
+  "t": 217.34,
+  "frame": 6520,
+  "name": "identical slip 1 lands [EL tap]",
+  "sync_frame": 6522
+ },
+ {
+  "t": 217.54,
+  "frame": 6526,
+  "name": "identical slip 2 lands [EL tap]",
+  "sync_frame": 6528
+ },
+ {
+  "t": 217.745,
+  "frame": 6532,
+  "name": "identical slip 3 lands [EL tap]",
+  "sync_frame": 6534
+ },
+ {
+  "t": 218.867,
+  "frame": 6566,
+  "name": "WRONG on identical slip 2 [EL stamp]",
+  "sync_frame": 6575
+ },
+ {
+  "t": 218.883,
+  "frame": 6566,
+  "name": "WRONG on identical slip 1 [EL stamp]",
+  "sync_frame": 6571
+ },
+ {
+  "t": 219.01,
+  "frame": 6570,
+  "name": "WRONG on identical slip 3 [EL stamp]",
+  "sync_frame": 6579
+ },
+ {
+  "t": 220.17,
+  "frame": 6605,
+  "name": "NO GUARANTEE stamp [EL stamp]",
+  "sync_frame": 6615
+ },
+ {
+  "t": 221.522,
+  "frame": 6646,
+  "name": "wipe into S9 [EL whoosh]",
+  "sync_frame": 6659
+ },
+ {
+  "t": 224.607,
+  "frame": 6738,
+  "name": "CHECK sign lands [EL tap]",
+  "sync_frame": 6740
+ },
+ {
+  "t": 225.74,
+  "frame": 6772,
+  "name": "question card 1 [EL tap]",
+  "sync_frame": 6774
+ },
+ {
+  "t": 229.14,
+  "frame": 6874,
+  "name": "question card 2 [EL tap]",
+  "sync_frame": 6876
+ },
+ {
+  "t": 229.327,
+  "frame": 6880,
+  "name": "the ChatGPT slip is pinned [EL slide]",
+  "sync_frame": 6917
+ },
+ {
+  "t": 232.158,
+  "frame": 6965,
+  "name": "thesis title page pinned [EL paper]",
+  "sync_frame": 6982
+ },
+ {
+  "t": 235.297,
+  "frame": 7059,
+  "name": "source exists (synth)"
+ },
+ {
+  "t": 236.24,
+  "frame": 7087,
+  "name": "mark the real title [EL marker]",
+  "sync_frame": 7089
+ },
+ {
+  "t": 236.273,
+  "frame": 7088,
+  "name": "mark the claimed title [EL marker]",
+  "sync_frame": 7090
+ },
+ {
+  "t": 236.745,
+  "frame": 7102,
+  "name": "mark the claimed year [EL marker]",
+  "sync_frame": 7104
+ },
+ {
+  "t": 239.997,
+  "frame": 7200,
+  "name": "does not say this (synth)"
+ },
+ {
+  "t": 242.807,
+  "frame": 7284,
+  "name": "mark the real year [EL marker]",
+  "sync_frame": 7286
+ },
+ {
+  "t": 244.533,
+  "frame": 7336,
+  "name": "source exists tag (synth)"
+ },
+ {
+  "t": 245.663,
+  "frame": 7370,
+  "name": "claim fails tag (synth)"
+ },
+ {
+  "t": 246.85,
+  "frame": 7406,
+  "name": "CLAIM FAILS stamp [EL stamp]",
+  "sync_frame": 7410
+ },
+ {
+  "t": 247.393,
+  "frame": 7422,
+  "name": "wipe into S10 [EL whoosh]",
+  "sync_frame": 7435
+ },
+ {
+  "t": 251.273,
+  "frame": 7538,
+  "name": "column: sounding right [EL tap]",
+  "sync_frame": 7540
+ },
+ {
+  "t": 254.573,
+  "frame": 7637,
+  "name": "column: being right [EL tap]",
+  "sync_frame": 7639
+ },
+ {
+  "t": 259.502,
+  "frame": 7785,
+  "name": "the old question card [EL tap]",
+  "sync_frame": 7787
+ },
+ {
+  "t": 259.64,
+  "frame": 7789,
+  "name": "strike: does it sound right [EL marker]",
+  "sync_frame": 7791
+ },
+ {
+  "t": 259.873,
+  "frame": 7796,
+  "name": "question card 1 [EL tap]",
+  "sync_frame": 7798
+ },
+ {
+  "t": 263.24,
+  "frame": 7897,
+  "name": "question card 2 [EL tap]",
+  "sync_frame": 7899
+ },
+ {
+  "t": 265.96,
+  "frame": 7979,
+  "name": "the person's slip [EL slide]",
+  "sync_frame": 8016
+ },
+ {
+  "t": 267.55,
+  "frame": 8026,
+  "name": "SOURCE? stamp [EL stamp]",
+  "sync_frame": 8031
+ },
+ {
+  "t": 268.373,
+  "frame": 8051,
+  "name": "end card in [EL whoosh]",
+  "sync_frame": 8065
+ },
+ {
+  "t": 274.445,
+  "frame": 8233,
+  "name": "twice a week chip [EL tap]",
+  "sync_frame": 8235
+ },
+ {
+  "t": 275.867,
+  "frame": 8276,
+  "name": "subscribe chip (synth)"
+ }
+]

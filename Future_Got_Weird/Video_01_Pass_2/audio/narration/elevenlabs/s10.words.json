@@ -1,0 +1,129 @@
+{
+"words": [
+{
+"word": "At",
+"start": 0.215,
+"end": 0.295
+},
+{
+"word": "every",
+"start": 0.375,
+"end": 0.615
+},
+{
+"word": "step,",
+"start": 0.695,
+"end": 1.175
+},
+{
+"word": "the",
+"start": 1.255,
+"end": 1.295
+},
+{
+"word": "model",
+"start": 1.335,
+"end": 1.575
+},
+{
+"word": "scores",
+"start": 1.655,
+"end": 2.055
+},
+{
+"word": "all",
+"start": 2.135,
+"end": 2.215
+},
+{
+"word": "the",
+"start": 2.295,
+"end": 2.375
+},
+{
+"word": "possible",
+"start": 2.455,
+"end": 2.775
+},
+{
+"word": "next",
+"start": 2.855,
+"end": 3.095
+},
+{
+"word": "chunks",
+"start": 3.175,
+"end": 3.495
+},
+{
+"word": "and",
+"start": 3.575,
+"end": 3.655
+},
+{
+"word": "picks",
+"start": 3.735,
+"end": 3.975
+},
+{
+"word": "one.",
+"start": 4.095,
+"end": 4.455
+},
+{
+"word": "Then",
+"start": 4.695,
+"end": 4.775
+},
+{
+"word": "it",
+"start": 4.815,
+"end": 4.855
+},
+{
+"word": "goes",
+"start": 4.895,
+"end": 5.015
+},
+{
+"word": "again.",
+"start": 5.095,
+"end": 5.495
+},
+{
+"word": "Token",
+"start": 5.975,
+"end": 6.295
+},
+{
+"word": "after",
+"start": 6.375,
+"end": 6.615
+},
+{
+"word": "token,",
+"start": 6.695,
+"end": 7.175
+},
+{
+"word": "an",
+"start": 7.215,
+"end": 7.255
+},
+{
+"word": "answer",
+"start": 7.415,
+"end": 7.655
+},
+{
+"word": "rolls",
+"start": 7.735,
+"end": 7.975
+},
+{
+"word": "out.",
+"start": 8.055,
+"end": 8.295
+}
+]
+}

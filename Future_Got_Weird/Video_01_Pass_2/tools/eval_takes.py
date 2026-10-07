@@ -24,7 +24,7 @@ import numpy as np
 import parselmouth
 from parselmouth.praat import call
 
-SCRATCH = os.environ.get("ASR_SCRATCH", "/tmp/claude-0/-home-user-Youtube-videos/0d05c75a-c434-5530-a179-1c9596620713/scratchpad/tts")
+SCRATCH = os.environ.get("ASR_SCRATCH", "/tmp/claude-0/-home-user-Youtube-videos/942fed74-9746-5c11-9bde-e8a953092ef0/scratchpad/tts")
 
 
 def load(path, sr=44100):

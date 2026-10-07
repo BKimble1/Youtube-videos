@@ -1,0 +1,49 @@
+{
+"words": [
+{
+"word": "One",
+"start": 0.085,
+"end": 0.245
+},
+{
+"word": "lucky",
+"start": 0.325,
+"end": 0.565
+},
+{
+"word": "guess.",
+"start": 0.765,
+"end": 1.285
+},
+{
+"word": "Three",
+"start": 1.405,
+"end": 1.525
+},
+{
+"word": "wrong",
+"start": 1.605,
+"end": 1.765
+},
+{
+"word": "answers.",
+"start": 1.845,
+"end": 2.645
+},
+{
+"word": "Somehow,",
+"start": 2.725,
+"end": 3.365
+},
+{
+"word": "a",
+"start": 3.405,
+"end": 3.445
+},
+{
+"word": "trophy.",
+"start": 3.525,
+"end": 4.245
+}
+]
+}

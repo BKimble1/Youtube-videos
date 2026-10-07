@@ -1,0 +1,94 @@
+{
+"words": [
+{
+"word": "The",
+"start": 0.37,
+"end": 0.45
+},
+{
+"word": "sound",
+"start": 0.53,
+"end": 0.77
+},
+{
+"word": "of",
+"start": 0.81,
+"end": 0.85
+},
+{
+"word": "a",
+"start": 0.89,
+"end": 0.93
+},
+{
+"word": "dissertation",
+"start": 0.97,
+"end": 1.49
+},
+{
+"word": "title",
+"start": 1.57,
+"end": 1.89
+},
+{
+"word": "is",
+"start": 1.97,
+"end": 2.13
+},
+{
+"word": "everywhere.",
+"start": 2.29,
+"end": 2.93
+},
+{
+"word": "“Methods.”",
+"start": 3.41,
+"end": 4.01
+},
+{
+"word": "“Algorithms.”",
+"start": 4.05,
+"end": 5.09
+},
+{
+"word": "“Machine",
+"start": 5.25,
+"end": 5.65
+},
+{
+"word": "Learning.”",
+"start": 5.73,
+"end": 6.13
+},
+{
+"word": "Shelf",
+"start": 6.61,
+"end": 6.93
+},
+{
+"word": "after",
+"start": 7.01,
+"end": 7.33
+},
+{
+"word": "shelf,",
+"start": 7.41,
+"end": 7.89
+},
+{
+"word": "the",
+"start": 7.97,
+"end": 8.05
+},
+{
+"word": "same",
+"start": 8.13,
+"end": 8.45
+},
+{
+"word": "shape.",
+"start": 8.53,
+"end": 8.93
+}
+]
+}

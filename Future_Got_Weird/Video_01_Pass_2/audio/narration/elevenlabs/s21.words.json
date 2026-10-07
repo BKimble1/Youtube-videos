@@ -1,0 +1,84 @@
+{
+"words": [
+{
+"word": "Picture",
+"start": 0.14,
+"end": 0.3
+},
+{
+"word": "a",
+"start": 0.38,
+"end": 0.46
+},
+{
+"word": "ten-question",
+"start": 0.58,
+"end": 1.1
+},
+{
+"word": "quiz.",
+"start": 1.18,
+"end": 1.98
+},
+{
+"word": "Right",
+"start": 2.06,
+"end": 2.14
+},
+{
+"word": "answer:",
+"start": 2.22,
+"end": 2.86
+},
+{
+"word": "one",
+"start": 2.94,
+"end": 3.02
+},
+{
+"word": "point.",
+"start": 3.1,
+"end": 3.74
+},
+{
+"word": "Wrong",
+"start": 3.86,
+"end": 3.98
+},
+{
+"word": "answer:",
+"start": 4.06,
+"end": 4.7
+},
+{
+"word": "zero.",
+"start": 4.78,
+"end": 5.58
+},
+{
+"word": "“I",
+"start": 5.66,
+"end": 5.74
+},
+{
+"word": "don't",
+"start": 5.78,
+"end": 5.9
+},
+{
+"word": "know”:",
+"start": 5.98,
+"end": 6.7
+},
+{
+"word": "also",
+"start": 6.86,
+"end": 7.02
+},
+{
+"word": "zero.",
+"start": 7.1,
+"end": 7.9
+}
+]
+}

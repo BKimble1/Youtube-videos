@@ -1,0 +1,64 @@
+{
+"words": [
+{
+"word": "Two",
+"start": 0.175,
+"end": 0.335
+},
+{
+"word": "questions.",
+"start": 0.415,
+"end": 0.975
+},
+{
+"word": "Does",
+"start": 1.375,
+"end": 1.535
+},
+{
+"word": "the",
+"start": 1.575,
+"end": 1.615
+},
+{
+"word": "source",
+"start": 1.695,
+"end": 1.935
+},
+{
+"word": "exist?",
+"start": 2.215,
+"end": 2.655
+},
+{
+"word": "And",
+"start": 2.815,
+"end": 3.055
+},
+{
+"word": "does",
+"start": 3.295,
+"end": 3.375
+},
+{
+"word": "it",
+"start": 3.455,
+"end": 3.495
+},
+{
+"word": "actually",
+"start": 3.535,
+"end": 3.935
+},
+{
+"word": "say",
+"start": 4.095,
+"end": 4.255
+},
+{
+"word": "this?",
+"start": 4.335,
+"end": 4.655
+}
+]
+}

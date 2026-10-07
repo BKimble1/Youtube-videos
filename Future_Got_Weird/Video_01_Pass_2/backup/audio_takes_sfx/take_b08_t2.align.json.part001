@@ -1,0 +1,217 @@
+{
+"words": [
+{
+"text": "So",
+"type": "word",
+"start": 0,
+"end": 0.16
+},
+{
+"text": "what",
+"type": "word",
+"start": 0.24,
+"end": 0.32
+},
+{
+"text": "helps?",
+"type": "word",
+"start": 0.4,
+"end": 0.88
+},
+{
+"text": "Search",
+"type": "word",
+"start": 1.36,
+"end": 1.6
+},
+{
+"text": "and",
+"type": "word",
+"start": 1.64,
+"end": 1.68
+},
+{
+"text": "retrieval,",
+"type": "word",
+"start": 1.76,
+"end": 2.64
+},
+{
+"text": "when",
+"type": "word",
+"start": 2.68,
+"end": 2.72
+},
+{
+"text": "they",
+"type": "word",
+"start": 2.8,
+"end": 2.88
+},
+{
+"text": "bring",
+"type": "word",
+"start": 2.96,
+"end": 3.12
+},
+{
+"text": "the",
+"type": "word",
+"start": 3.16,
+"end": 3.2
+},
+{
+"text": "real",
+"type": "word",
+"start": 3.36,
+"end": 3.52
+},
+{
+"text": "record",
+"type": "word",
+"start": 3.6,
+"end": 3.92
+},
+{
+"text": "into",
+"type": "word",
+"start": 4.04,
+"end": 4.16
+},
+{
+"text": "the",
+"type": "word",
+"start": 4.2,
+"end": 4.24
+},
+{
+"text": "room.",
+"type": "word",
+"start": 4.32,
+"end": 4.64
+},
+{
+"text": "Reasoning,",
+"type": "word",
+"start": 5.12,
+"end": 5.92
+},
+{
+"text": "sometimes.",
+"type": "word",
+"start": 6,
+"end": 6.88
+},
+{
+"text": "Turning",
+"type": "word",
+"start": 7.12,
+"end": 7.36
+},
+{
+"text": "down",
+"type": "word",
+"start": 7.44,
+"end": 7.52
+},
+{
+"text": "the",
+"type": "word",
+"start": 7.6,
+"end": 7.68
+},
+{
+"text": "randomness",
+"type": "word",
+"start": 7.76,
+"end": 8.32
+},
+{
+"text": "makes",
+"type": "word",
+"start": 8.44,
+"end": 8.56
+},
+{
+"text": "answers",
+"type": "word",
+"start": 8.76,
+"end": 8.96
+},
+{
+"text": "more",
+"type": "word",
+"start": 9.04,
+"end": 9.12
+},
+{
+"text": "consistent,",
+"type": "word",
+"start": 9.2,
+"end": 10.16
+},
+{
+"text": "not",
+"type": "word",
+"start": 10.24,
+"end": 10.32
+},
+{
+"text": "necessarily",
+"type": "word",
+"start": 10.4,
+"end": 10.96
+},
+{
+"text": "more",
+"type": "word",
+"start": 11.04,
+"end": 11.12
+},
+{
+"text": "correct.",
+"type": "word",
+"start": 11.2,
+"end": 11.76
+},
+{
+"text": "None",
+"type": "word",
+"start": 12.24,
+"end": 12.4
+},
+{
+"text": "of",
+"type": "word",
+"start": 12.48,
+"end": 12.52
+},
+{
+"text": "it",
+"type": "word",
+"start": 12.56,
+"end": 12.64
+},
+{
+"text": "is",
+"type": "word",
+"start": 12.72,
+"end": 12.8
+},
+{
+"text": "a",
+"type": "word",
+"start": 12.84,
+"end": 12.88
+},
+{
+"text": "guarantee.",
+"type": "word",
+"start": 12.96,
+"end": 13.84
+}
+],
+"text": "So what helps? Search and retrieval, when they bring the real record into the room. Reasoning, sometimes. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
+"generation_id": "L9rmEFo9eKtTClrTIPs8",
+"source_generation": "QeG5p4aZ292FAjjyAAWl"
+}

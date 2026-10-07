@@ -1,0 +1,18 @@
+{
+ "flow_id": "7OHHQbb2Ccn1FOZ3VOI4",
+ "blocks": {
+  "b02": {"node_id": "dxSJRuIEqSNlMqAMWmJT", "sessions": ["PT6fobqLHvHvkTtcEe74", "lpNisceEvv26SkuvDzYR", "cZ3WiMeSHbcqMevbpCK5", "3ZGnuEg54VLEf4YsJyoO"]},
+  "b04": {"node_id": "q9twZtroMuJJI3gbOloZ", "sessions": ["8ImtKzvcrLf4tSxuFECu", "QGcLMywA5dPm6xhWgDZb", "NexhJnHV5PwZwo8A1mw6", "1QArgYOmzRu5zTM3Og5v"]},
+  "b06": {"node_id": "Vi9ulTF9dbzgMDt6qF2S", "sessions": ["BCwUAgbTxNRgSTSjSeCF", "uJ4uYQNR7kbaTqdnuPZi", "NCHIMVlo1gvDyl8sf64F", "rkguZG0hCtCYYzdwwrgd"]},
+  "b07": {"node_id": "ZeBybBSzsctQEgTZpN9q", "sessions": ["1D9LGjYa76XvTOgBPRZ4", "nx9aXK2JIStsVXVhSkKW", "khx6O6qcFzmAN74XhRxo", "NFLbL1VxPQbevuorMRn3"]},
+  "b08": {"node_id": "j2uBFT26W9fH2ymnRwba", "sessions": ["riZpFKeywCFipSN0aeyc", "rGUrE1PfmV0vE3j8lRjP", "3XJqmRYWPhj2ODTXVHDL", "lAK7w9uKENMJrYaWia5i"]},
+  "b09": {"node_id": "J69oR9v3DiKeZ2Er9DWG", "sessions": ["TvqtNoVehaWTRrlPOzbL", "A43SojFMANJwfyXC7Rf6", "7vTjcIJNEPxtcFoNLdpq", "S5cxrSErX0kITcD2RPG5"]},
+  "b10": {"node_id": "TIRCLf7S7uqjXzG9yxeb", "sessions": ["8zxctCYISwpHRQRwm764", "wap9ljMAy5DZGMoJVhXF", "VuK4arUU65gCDYFWYD42", "RvNIbbvyq7F2E93VWq2O"]}
+ },
+ "audition": {
+  "b01": {"node_id": "gq41pDomLqJAw7Zwdluf"},
+  "b03": {"node_id": "dlIRdSqrN2faVXq9O2vr"},
+  "b05": {"node_id": "eCXqqz7ajym3nNPGbVHz"}
+ },
+ "pinned": {"b01_t1": "4SpRPO9GhT8Blw52CN0Z"}
+}

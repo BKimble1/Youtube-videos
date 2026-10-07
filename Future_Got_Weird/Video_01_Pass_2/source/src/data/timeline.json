@@ -1,0 +1,3897 @@
+{
+ "fps": 30,
+ "engine": "elevenlabs",
+ "voice": {
+  "engine": "elevenlabs",
+  "model": "eleven_v4",
+  "voice_name": "Marcus K",
+  "voice_id": "3H55HGnNE1XjYxigHSAS"
+ },
+ "durationInFrames": 8425,
+ "durationSeconds": 280.825,
+ "scenes": [
+  {
+   "id": "S1",
+   "from": 0,
+   "to": 820
+  },
+  {
+   "id": "S2",
+   "from": 820,
+   "to": 1331
+  },
+  {
+   "id": "S3",
+   "from": 1331,
+   "to": 2563
+  },
+  {
+   "id": "S4",
+   "from": 2563,
+   "to": 3612
+  },
+  {
+   "id": "S5",
+   "from": 3612,
+   "to": 4295
+  },
+  {
+   "id": "S6",
+   "from": 4295,
+   "to": 5698
+  },
+  {
+   "id": "S7",
+   "from": 5698,
+   "to": 6232
+  },
+  {
+   "id": "S8",
+   "from": 6232,
+   "to": 6659
+  },
+  {
+   "id": "S9",
+   "from": 6659,
+   "to": 7435
+  },
+  {
+   "id": "S10",
+   "from": 7435,
+   "to": 8425
+  }
+ ],
+ "segments": [
+  {
+   "id": "s01",
+   "scene": "S1",
+   "from": 15,
+   "to": 193,
+   "text": "Three popular AI models were asked one question: what was the title of Adam Kalai's dissertation?",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Three",
+     "from": 14,
+     "to": 21
+    },
+    {
+     "w": "popular",
+     "from": 23,
+     "to": 35
+    },
+    {
+     "w": "AI",
+     "from": 38,
+     "to": 45
+    },
+    {
+     "w": "models",
+     "from": 47,
+     "to": 57
+    },
+    {
+     "w": "were",
+     "from": 59,
+     "to": 62
+    },
+    {
+     "w": "asked",
+     "from": 64,
+     "to": 71
+    },
+    {
+     "w": "one",
+     "from": 76,
+     "to": 81
+    },
+    {
+     "w": "question:",
+     "from": 83,
+     "to": 114
+    },
+    {
+     "w": "what",
+     "from": 117,
+     "to": 119
+    },
+    {
+     "w": "was",
+     "from": 122,
+     "to": 124
+    },
+    {
+     "w": "the",
+     "from": 126,
+     "to": 129
+    },
+    {
+     "w": "title",
+     "from": 134,
+     "to": 138
+    },
+    {
+     "w": "of",
+     "from": 141,
+     "to": 146
+    },
+    {
+     "w": "Adam",
+     "from": 148,
+     "to": 155
+    },
+    {
+     "w": "Kalai's",
+     "from": 158,
+     "to": 170
+    },
+    {
+     "w": "dissertation?",
+     "from": 171,
+     "to": 194
+    }
+   ]
+  },
+  {
+   "id": "s02",
+   "scene": "S1",
+   "from": 208,
+   "to": 427,
+   "text": "ChatGPT handed over a full title, a university, and a year. DeepSeek gave a different title. Llama gave a third.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "ChatGPT",
+     "from": 208,
+     "to": 230
+    },
+    {
+     "w": "handed",
+     "from": 231,
+     "to": 239
+    },
+    {
+     "w": "over",
+     "from": 243,
+     "to": 246
+    },
+    {
+     "w": "a",
+     "from": 248,
+     "to": 249
+    },
+    {
+     "w": "full",
+     "from": 253,
+     "to": 256
+    },
+    {
+     "w": "title,",
+     "from": 258,
+     "to": 275
+    },
+    {
+     "w": "a",
+     "from": 276,
+     "to": 278
+    },
+    {
+     "w": "university,",
+     "from": 280,
+     "to": 302
+    },
+    {
+     "w": "and",
+     "from": 303,
+     "to": 304
+    },
+    {
+     "w": "a",
+     "from": 306,
+     "to": 308
+    },
+    {
+     "w": "year.",
+     "from": 309,
+     "to": 321
+    },
+    {
+     "w": "DeepSeek",
+     "from": 335,
+     "to": 352
+    },
+    {
+     "w": "gave",
+     "from": 353,
+     "to": 357
+    },
+    {
+     "w": "a",
+     "from": 358,
+     "to": 359
+    },
+    {
+     "w": "different",
+     "from": 362,
+     "to": 369
+    },
+    {
+     "w": "title.",
+     "from": 374,
+     "to": 381
+    },
+    {
+     "w": "Llama",
+     "from": 393,
+     "to": 405
+    },
+    {
+     "w": "gave",
+     "from": 407,
+     "to": 410
+    },
+    {
+     "w": "a",
+     "from": 412,
+     "to": 414
+    },
+    {
+     "w": "third.",
+     "from": 417,
+     "to": 429
+    }
+   ]
+  },
+  {
+   "id": "s03",
+   "scene": "S1",
+   "from": 445,
+   "to": 585,
+   "text": "Three polished answers. All wrong. Not one even had the right year.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Three",
+     "from": 443,
+     "to": 453
+    },
+    {
+     "w": "polished",
+     "from": 460,
+     "to": 472
+    },
+    {
+     "w": "answers.",
+     "from": 474,
+     "to": 491
+    },
+    {
+     "w": "All",
+     "from": 503,
+     "to": 508
+    },
+    {
+     "w": "wrong.",
+     "from": 510,
+     "to": 525
+    },
+    {
+     "w": "Not",
+     "from": 537,
+     "to": 542
+    },
+    {
+     "w": "one",
+     "from": 546,
+     "to": 551
+    },
+    {
+     "w": "even",
+     "from": 554,
+     "to": 558
+    },
+    {
+     "w": "had",
+     "from": 561,
+     "to": 563
+    },
+    {
+     "w": "the",
+     "from": 564,
+     "to": 566
+    },
+    {
+     "w": "right",
+     "from": 569,
+     "to": 573
+    },
+    {
+     "w": "year.",
+     "from": 575,
+     "to": 587
+    }
+   ]
+  },
+  {
+   "id": "s04",
+   "scene": "S1",
+   "from": 601,
+   "to": 719,
+   "text": "And Adam Kalai? He's the lead author of the paper that reported this test.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "And",
+     "from": 599,
+     "to": 604
+    },
+    {
+     "w": "Adam",
+     "from": 608,
+     "to": 611
+    },
+    {
+     "w": "Kalai?",
+     "from": 614,
+     "to": 628
+    },
+    {
+     "w": "He's",
+     "from": 640,
+     "to": 645
+    },
+    {
+     "w": "the",
+     "from": 647,
+     "to": 650
+    },
+    {
+     "w": "lead",
+     "from": 652,
+     "to": 657
+    },
+    {
+     "w": "author",
+     "from": 659,
+     "to": 666
+    },
+    {
+     "w": "of",
+     "from": 668,
+     "to": 669
+    },
+    {
+     "w": "the",
+     "from": 671,
+     "to": 674
+    },
+    {
+     "w": "paper",
+     "from": 677,
+     "to": 681
+    },
+    {
+     "w": "that",
+     "from": 683,
+     "to": 686
+    },
+    {
+     "w": "reported",
+     "from": 688,
+     "to": 700
+    },
+    {
+     "w": "this",
+     "from": 702,
+     "to": 705
+    },
+    {
+     "w": "test.",
+     "from": 707,
+     "to": 719
+    }
+   ]
+  },
+  {
+   "id": "s05",
+   "scene": "S1",
+   "from": 734,
+   "to": 804,
+   "text": "Very professional. Very fictional.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Very",
+     "from": 737,
+     "to": 744
+    },
+    {
+     "w": "professional.",
+     "from": 746,
+     "to": 763
+    },
+    {
+     "w": "Very",
+     "from": 778,
+     "to": 785
+    },
+    {
+     "w": "fictional.",
+     "from": 790,
+     "to": 811
+    }
+   ]
+  },
+  {
+   "id": "s06",
+   "scene": "S2",
+   "from": 831,
+   "to": 959,
+   "text": "So how can a wrong answer sound that sure? Here's the short version.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "So",
+     "from": 831,
+     "to": 835
+    },
+    {
+     "w": "how",
+     "from": 843,
+     "to": 847
+    },
+    {
+     "w": "can",
+     "from": 850,
+     "to": 852
+    },
+    {
+     "w": "a",
+     "from": 853,
+     "to": 855
+    },
+    {
+     "w": "wrong",
+     "from": 859,
+     "to": 867
+    },
+    {
+     "w": "answer",
+     "from": 869,
+     "to": 879
+    },
+    {
+     "w": "sound",
+     "from": 881,
+     "to": 888
+    },
+    {
+     "w": "that",
+     "from": 893,
+     "to": 900
+    },
+    {
+     "w": "sure?",
+     "from": 903,
+     "to": 923
+    },
+    {
+     "w": "Here's",
+     "from": 931,
+     "to": 936
+    },
+    {
+     "w": "the",
+     "from": 937,
+     "to": 939
+    },
+    {
+     "w": "short",
+     "from": 941,
+     "to": 946
+    },
+    {
+     "w": "version.",
+     "from": 948,
+     "to": 960
+    }
+   ]
+  },
+  {
+   "id": "s07",
+   "scene": "S2",
+   "from": 975,
+   "to": 1270,
+   "text": "A chatbot is built to write what's likely to come next. Checking whether it's true is a different job. And some of the tests used to grade these systems quietly reward guessing.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "A",
+     "from": 972,
+     "to": 977
+    },
+    {
+     "w": "chatbot",
+     "from": 982,
+     "to": 991
+    },
+    {
+     "w": "is",
+     "from": 994,
+     "to": 996
+    },
+    {
+     "w": "built",
+     "from": 999,
+     "to": 1003
+    },
+    {
+     "w": "to",
+     "from": 1006,
+     "to": 1008
+    },
+    {
+     "w": "write",
+     "from": 1012,
+     "to": 1015
+    },
+    {
+     "w": "what's",
+     "from": 1018,
+     "to": 1023
+    },
+    {
+     "w": "likely",
+     "from": 1025,
+     "to": 1035
+    },
+    {
+     "w": "to",
+     "from": 1036,
+     "to": 1037
+    },
+    {
+     "w": "come",
+     "from": 1039,
+     "to": 1044
+    },
+    {
+     "w": "next.",
+     "from": 1047,
+     "to": 1066
+    },
+    {
+     "w": "Checking",
+     "from": 1073,
+     "to": 1083
+    },
+    {
+     "w": "whether",
+     "from": 1086,
+     "to": 1090
+    },
+    {
+     "w": "it's",
+     "from": 1091,
+     "to": 1097
+    },
+    {
+     "w": "true",
+     "from": 1103,
+     "to": 1109
+    },
+    {
+     "w": "is",
+     "from": 1111,
+     "to": 1114
+    },
+    {
+     "w": "a",
+     "from": 1116,
+     "to": 1119
+    },
+    {
+     "w": "different",
+     "from": 1123,
+     "to": 1128
+    },
+    {
+     "w": "job.",
+     "from": 1131,
+     "to": 1146
+    },
+    {
+     "w": "And",
+     "from": 1152,
+     "to": 1155
+    },
+    {
+     "w": "some",
+     "from": 1157,
+     "to": 1159
+    },
+    {
+     "w": "of",
+     "from": 1162,
+     "to": 1163
+    },
+    {
+     "w": "the",
+     "from": 1164,
+     "to": 1167
+    },
+    {
+     "w": "tests",
+     "from": 1173,
+     "to": 1179
+    },
+    {
+     "w": "used",
+     "from": 1181,
+     "to": 1186
+    },
+    {
+     "w": "to",
+     "from": 1188,
+     "to": 1191
+    },
+    {
+     "w": "grade",
+     "from": 1194,
+     "to": 1198
+    },
+    {
+     "w": "these",
+     "from": 1200,
+     "to": 1205
+    },
+    {
+     "w": "systems",
+     "from": 1213,
+     "to": 1222
+    },
+    {
+     "w": "quietly",
+     "from": 1224,
+     "to": 1239
+    },
+    {
+     "w": "reward",
+     "from": 1246,
+     "to": 1253
+    },
+    {
+     "w": "guessing.",
+     "from": 1258,
+     "to": 1277
+    }
+   ]
+  },
+  {
+   "id": "s08",
+   "scene": "S3",
+   "from": 1342,
+   "to": 1406,
+   "text": "Let's take ChatGPT's answer apart.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Let's",
+     "from": 1340,
+     "to": 1347
+    },
+    {
+     "w": "take",
+     "from": 1350,
+     "to": 1352
+    },
+    {
+     "w": "ChatGPT's",
+     "from": 1355,
+     "to": 1379
+    },
+    {
+     "w": "answer",
+     "from": 1381,
+     "to": 1388
+    },
+    {
+     "w": "apart.",
+     "from": 1391,
+     "to": 1405
+    }
+   ]
+  },
+  {
+   "id": "s09",
+   "scene": "S3",
+   "from": 1420,
+   "to": 1764,
+   "text": "A language model builds text out of tokens: chunks that are sometimes whole words, sometimes fragments. In GPT-4o's tokenizer, \u201cKalai\u201d comes out as \u201cKal\u201d and \u201cai.\u201d",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "A",
+     "from": 1419,
+     "to": 1422
+    },
+    {
+     "w": "language",
+     "from": 1427,
+     "to": 1431
+    },
+    {
+     "w": "model",
+     "from": 1434,
+     "to": 1443
+    },
+    {
+     "w": "builds",
+     "from": 1446,
+     "to": 1454
+    },
+    {
+     "w": "text",
+     "from": 1455,
+     "to": 1465
+    },
+    {
+     "w": "out",
+     "from": 1467,
+     "to": 1470
+    },
+    {
+     "w": "of",
+     "from": 1471,
+     "to": 1472
+    },
+    {
+     "w": "tokens:",
+     "from": 1475,
+     "to": 1506
+    },
+    {
+     "w": "chunks",
+     "from": 1508,
+     "to": 1518
+    },
+    {
+     "w": "that",
+     "from": 1519,
+     "to": 1520
+    },
+    {
+     "w": "are",
+     "from": 1523,
+     "to": 1525
+    },
+    {
+     "w": "sometimes",
+     "from": 1532,
+     "to": 1539
+    },
+    {
+     "w": "whole",
+     "from": 1543,
+     "to": 1547
+    },
+    {
+     "w": "words,",
+     "from": 1549,
+     "to": 1566
+    },
+    {
+     "w": "sometimes",
+     "from": 1572,
+     "to": 1578
+    },
+    {
+     "w": "fragments.",
+     "from": 1581,
+     "to": 1597
+    },
+    {
+     "w": "In",
+     "from": 1611,
+     "to": 1614
+    },
+    {
+     "w": "GPT-4o's",
+     "from": 1616,
+     "to": 1640
+    },
+    {
+     "w": "tokenizer,",
+     "from": 1650,
+     "to": 1671
+    },
+    {
+     "w": "\u201cKalai\u201d",
+     "from": 1672,
+     "to": 1693
+    },
+    {
+     "w": "comes",
+     "from": 1695,
+     "to": 1700
+    },
+    {
+     "w": "out",
+     "from": 1703,
+     "to": 1707
+    },
+    {
+     "w": "as",
+     "from": 1710,
+     "to": 1715
+    },
+    {
+     "w": "\u201cKal\u201d",
+     "from": 1719,
+     "to": 1739
+    },
+    {
+     "w": "and",
+     "from": 1742,
+     "to": 1746
+    },
+    {
+     "w": "\u201cai.\u201d",
+     "from": 1753,
+     "to": 1767
+    }
+   ]
+  },
+  {
+   "id": "s10",
+   "scene": "S3",
+   "from": 1784,
+   "to": 2025,
+   "text": "At every step, the model scores all the possible next chunks and picks one. Then it goes again. Token after token, an answer rolls out.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "At",
+     "from": 1784,
+     "to": 1787
+    },
+    {
+     "w": "every",
+     "from": 1789,
+     "to": 1796
+    },
+    {
+     "w": "step,",
+     "from": 1799,
+     "to": 1813
+    },
+    {
+     "w": "the",
+     "from": 1815,
+     "to": 1817
+    },
+    {
+     "w": "model",
+     "from": 1818,
+     "to": 1825
+    },
+    {
+     "w": "scores",
+     "from": 1827,
+     "to": 1839
+    },
+    {
+     "w": "all",
+     "from": 1842,
+     "to": 1844
+    },
+    {
+     "w": "the",
+     "from": 1847,
+     "to": 1849
+    },
+    {
+     "w": "possible",
+     "from": 1851,
+     "to": 1861
+    },
+    {
+     "w": "next",
+     "from": 1863,
+     "to": 1871
+    },
+    {
+     "w": "chunks",
+     "from": 1873,
+     "to": 1883
+    },
+    {
+     "w": "and",
+     "from": 1885,
+     "to": 1887
+    },
+    {
+     "w": "picks",
+     "from": 1890,
+     "to": 1897
+    },
+    {
+     "w": "one.",
+     "from": 1901,
+     "to": 1911
+    },
+    {
+     "w": "Then",
+     "from": 1919,
+     "to": 1921
+    },
+    {
+     "w": "it",
+     "from": 1922,
+     "to": 1923
+    },
+    {
+     "w": "goes",
+     "from": 1925,
+     "to": 1928
+    },
+    {
+     "w": "again.",
+     "from": 1931,
+     "to": 1943
+    },
+    {
+     "w": "Token",
+     "from": 1957,
+     "to": 1967
+    },
+    {
+     "w": "after",
+     "from": 1969,
+     "to": 1976
+    },
+    {
+     "w": "token,",
+     "from": 1979,
+     "to": 1993
+    },
+    {
+     "w": "an",
+     "from": 1994,
+     "to": 1995
+    },
+    {
+     "w": "answer",
+     "from": 2000,
+     "to": 2007
+    },
+    {
+     "w": "rolls",
+     "from": 2010,
+     "to": 2017
+    },
+    {
+     "w": "out.",
+     "from": 2019,
+     "to": 2027
+    }
+   ]
+  },
+  {
+   "id": "s11",
+   "scene": "S3",
+   "from": 2041,
+   "to": 2251,
+   "text": "Here, it's choosing the last digit of the year. Those scores say which chunk is likely. They do not say which one is true.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Here,",
+     "from": 2041,
+     "to": 2051
+    },
+    {
+     "w": "it's",
+     "from": 2053,
+     "to": 2058
+    },
+    {
+     "w": "choosing",
+     "from": 2060,
+     "to": 2067
+    },
+    {
+     "w": "the",
+     "from": 2070,
+     "to": 2071
+    },
+    {
+     "w": "last",
+     "from": 2072,
+     "to": 2079
+    },
+    {
+     "w": "digit",
+     "from": 2082,
+     "to": 2089
+    },
+    {
+     "w": "of",
+     "from": 2090,
+     "to": 2091
+    },
+    {
+     "w": "the",
+     "from": 2094,
+     "to": 2095
+    },
+    {
+     "w": "year.",
+     "from": 2096,
+     "to": 2108
+    },
+    {
+     "w": "Those",
+     "from": 2125,
+     "to": 2130
+    },
+    {
+     "w": "scores",
+     "from": 2132,
+     "to": 2144
+    },
+    {
+     "w": "say",
+     "from": 2147,
+     "to": 2149
+    },
+    {
+     "w": "which",
+     "from": 2151,
+     "to": 2156
+    },
+    {
+     "w": "chunk",
+     "from": 2159,
+     "to": 2166
+    },
+    {
+     "w": "is",
+     "from": 2168,
+     "to": 2171
+    },
+    {
+     "w": "likely.",
+     "from": 2173,
+     "to": 2187
+    },
+    {
+     "w": "They",
+     "from": 2197,
+     "to": 2199
+    },
+    {
+     "w": "do",
+     "from": 2202,
+     "to": 2204
+    },
+    {
+     "w": "not",
+     "from": 2207,
+     "to": 2214
+    },
+    {
+     "w": "say",
+     "from": 2216,
+     "to": 2221
+    },
+    {
+     "w": "which",
+     "from": 2223,
+     "to": 2228
+    },
+    {
+     "w": "one",
+     "from": 2231,
+     "to": 2233
+    },
+    {
+     "w": "is",
+     "from": 2235,
+     "to": 2238
+    },
+    {
+     "w": "true.",
+     "from": 2240,
+     "to": 2252
+    }
+   ]
+  },
+  {
+   "id": "s12",
+   "scene": "S3",
+   "from": 2269,
+   "to": 2550,
+   "text": "Modern chatbots add more on top: instruction training, step-by-step reasoning, sometimes web search. But the words still come out this way, one piece at a time.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Modern",
+     "from": 2270,
+     "to": 2277
+    },
+    {
+     "w": "chatbots",
+     "from": 2279,
+     "to": 2294
+    },
+    {
+     "w": "add",
+     "from": 2296,
+     "to": 2298
+    },
+    {
+     "w": "more",
+     "from": 2301,
+     "to": 2306
+    },
+    {
+     "w": "on",
+     "from": 2308,
+     "to": 2310
+    },
+    {
+     "w": "top:",
+     "from": 2313,
+     "to": 2332
+    },
+    {
+     "w": "instruction",
+     "from": 2340,
+     "to": 2349
+    },
+    {
+     "w": "training,",
+     "from": 2356,
+     "to": 2368
+    },
+    {
+     "w": "step-by-step",
+     "from": 2372,
+     "to": 2387
+    },
+    {
+     "w": "reasoning,",
+     "from": 2390,
+     "to": 2411
+    },
+    {
+     "w": "sometimes",
+     "from": 2414,
+     "to": 2423
+    },
+    {
+     "w": "web",
+     "from": 2426,
+     "to": 2430
+    },
+    {
+     "w": "search.",
+     "from": 2433,
+     "to": 2450
+    },
+    {
+     "w": "But",
+     "from": 2457,
+     "to": 2459
+    },
+    {
+     "w": "the",
+     "from": 2460,
+     "to": 2462
+    },
+    {
+     "w": "words",
+     "from": 2464,
+     "to": 2474
+    },
+    {
+     "w": "still",
+     "from": 2477,
+     "to": 2481
+    },
+    {
+     "w": "come",
+     "from": 2483,
+     "to": 2486
+    },
+    {
+     "w": "out",
+     "from": 2488,
+     "to": 2493
+    },
+    {
+     "w": "this",
+     "from": 2495,
+     "to": 2498
+    },
+    {
+     "w": "way,",
+     "from": 2500,
+     "to": 2517
+    },
+    {
+     "w": "one",
+     "from": 2519,
+     "to": 2524
+    },
+    {
+     "w": "piece",
+     "from": 2526,
+     "to": 2534
+    },
+    {
+     "w": "at",
+     "from": 2535,
+     "to": 2536
+    },
+    {
+     "w": "a",
+     "from": 2538,
+     "to": 2540
+    },
+    {
+     "w": "time.",
+     "from": 2541,
+     "to": 2558
+    }
+   ]
+  },
+  {
+   "id": "s13",
+   "scene": "S4",
+   "from": 2574,
+   "to": 2709,
+   "text": "So why would the likely answer be wrong? Think about what the model learned from.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "So",
+     "from": 2573,
+     "to": 2578
+    },
+    {
+     "w": "why",
+     "from": 2585,
+     "to": 2590
+    },
+    {
+     "w": "would",
+     "from": 2592,
+     "to": 2595
+    },
+    {
+     "w": "the",
+     "from": 2596,
+     "to": 2597
+    },
+    {
+     "w": "likely",
+     "from": 2602,
+     "to": 2614
+    },
+    {
+     "w": "answer",
+     "from": 2619,
+     "to": 2624
+    },
+    {
+     "w": "be",
+     "from": 2626,
+     "to": 2628
+    },
+    {
+     "w": "wrong?",
+     "from": 2631,
+     "to": 2643
+    },
+    {
+     "w": "Think",
+     "from": 2660,
+     "to": 2664
+    },
+    {
+     "w": "about",
+     "from": 2668,
+     "to": 2672
+    },
+    {
+     "w": "what",
+     "from": 2674,
+     "to": 2676
+    },
+    {
+     "w": "the",
+     "from": 2678,
+     "to": 2679
+    },
+    {
+     "w": "model",
+     "from": 2681,
+     "to": 2688
+    },
+    {
+     "w": "learned",
+     "from": 2691,
+     "to": 2698
+    },
+    {
+     "w": "from.",
+     "from": 2700,
+     "to": 2710
+    }
+   ]
+  },
+  {
+   "id": "s14",
+   "scene": "S4",
+   "from": 2724,
+   "to": 2979,
+   "text": "The sound of a dissertation title is everywhere. \u201cMethods.\u201d \u201cAlgorithms.\u201d \u201cMachine Learning.\u201d Shelf after shelf, the same shape.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "The",
+     "from": 2724,
+     "to": 2727
+    },
+    {
+     "w": "sound",
+     "from": 2729,
+     "to": 2736
+    },
+    {
+     "w": "of",
+     "from": 2738,
+     "to": 2739
+    },
+    {
+     "w": "a",
+     "from": 2740,
+     "to": 2741
+    },
+    {
+     "w": "dissertation",
+     "from": 2742,
+     "to": 2758
+    },
+    {
+     "w": "title",
+     "from": 2760,
+     "to": 2770
+    },
+    {
+     "w": "is",
+     "from": 2772,
+     "to": 2777
+    },
+    {
+     "w": "everywhere.",
+     "from": 2782,
+     "to": 2801
+    },
+    {
+     "w": "\u201cMethods.\u201d",
+     "from": 2816,
+     "to": 2834
+    },
+    {
+     "w": "\u201cAlgorithms.\u201d",
+     "from": 2835,
+     "to": 2866
+    },
+    {
+     "w": "\u201cMachine",
+     "from": 2871,
+     "to": 2883
+    },
+    {
+     "w": "Learning.\u201d",
+     "from": 2885,
+     "to": 2897
+    },
+    {
+     "w": "Shelf",
+     "from": 2912,
+     "to": 2921
+    },
+    {
+     "w": "after",
+     "from": 2924,
+     "to": 2933
+    },
+    {
+     "w": "shelf,",
+     "from": 2936,
+     "to": 2950
+    },
+    {
+     "w": "the",
+     "from": 2952,
+     "to": 2955
+    },
+    {
+     "w": "same",
+     "from": 2957,
+     "to": 2967
+    },
+    {
+     "w": "shape.",
+     "from": 2969,
+     "to": 2981
+    }
+   ]
+  },
+  {
+   "id": "s15",
+   "scene": "S4",
+   "from": 2997,
+   "to": 3225,
+   "text": "But one specific researcher's title? That might show up rarely, or not at all. And like a birthday, there's no pattern to work it out from.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "But",
+     "from": 2996,
+     "to": 3000
+    },
+    {
+     "w": "one",
+     "from": 3003,
+     "to": 3008
+    },
+    {
+     "w": "specific",
+     "from": 3016,
+     "to": 3024
+    },
+    {
+     "w": "researcher's",
+     "from": 3027,
+     "to": 3041
+    },
+    {
+     "w": "title?",
+     "from": 3046,
+     "to": 3053
+    },
+    {
+     "w": "That",
+     "from": 3065,
+     "to": 3068
+    },
+    {
+     "w": "might",
+     "from": 3070,
+     "to": 3072
+    },
+    {
+     "w": "show",
+     "from": 3075,
+     "to": 3080
+    },
+    {
+     "w": "up",
+     "from": 3082,
+     "to": 3084
+    },
+    {
+     "w": "rarely,",
+     "from": 3087,
+     "to": 3106
+    },
+    {
+     "w": "or",
+     "from": 3108,
+     "to": 3111
+    },
+    {
+     "w": "not",
+     "from": 3113,
+     "to": 3116
+    },
+    {
+     "w": "at",
+     "from": 3118,
+     "to": 3120
+    },
+    {
+     "w": "all.",
+     "from": 3124,
+     "to": 3130
+    },
+    {
+     "w": "And",
+     "from": 3144,
+     "to": 3147
+    },
+    {
+     "w": "like",
+     "from": 3149,
+     "to": 3152
+    },
+    {
+     "w": "a",
+     "from": 3152,
+     "to": 3153
+    },
+    {
+     "w": "birthday,",
+     "from": 3154,
+     "to": 3176
+    },
+    {
+     "w": "there's",
+     "from": 3177,
+     "to": 3180
+    },
+    {
+     "w": "no",
+     "from": 3183,
+     "to": 3185
+    },
+    {
+     "w": "pattern",
+     "from": 3188,
+     "to": 3197
+    },
+    {
+     "w": "to",
+     "from": 3200,
+     "to": 3202
+    },
+    {
+     "w": "work",
+     "from": 3204,
+     "to": 3207
+    },
+    {
+     "w": "it",
+     "from": 3208,
+     "to": 3209
+    },
+    {
+     "w": "out",
+     "from": 3212,
+     "to": 3216
+    },
+    {
+     "w": "from.",
+     "from": 3220,
+     "to": 3231
+    }
+   ]
+  },
+  {
+   "id": "s16",
+   "scene": "S4",
+   "from": 3238,
+   "to": 3602,
+   "text": "So the model does what it was built to do. It fills the gap with a title-shaped answer. And the confidence comes with it, because that's part of the pattern too. \u201cIs entitled.\u201d No \u201cI think.\u201d No \u201cmaybe.\u201d",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "So",
+     "from": 3239,
+     "to": 3242
+    },
+    {
+     "w": "the",
+     "from": 3243,
+     "to": 3244
+    },
+    {
+     "w": "model",
+     "from": 3247,
+     "to": 3254
+    },
+    {
+     "w": "does",
+     "from": 3256,
+     "to": 3263
+    },
+    {
+     "w": "what",
+     "from": 3265,
+     "to": 3266
+    },
+    {
+     "w": "it",
+     "from": 3268,
+     "to": 3269
+    },
+    {
+     "w": "was",
+     "from": 3271,
+     "to": 3273
+    },
+    {
+     "w": "built",
+     "from": 3275,
+     "to": 3280
+    },
+    {
+     "w": "to",
+     "from": 3283,
+     "to": 3285
+    },
+    {
+     "w": "do.",
+     "from": 3287,
+     "to": 3301
+    },
+    {
+     "w": "It",
+     "from": 3307,
+     "to": 3309
+    },
+    {
+     "w": "fills",
+     "from": 3311,
+     "to": 3319
+    },
+    {
+     "w": "the",
+     "from": 3321,
+     "to": 3323
+    },
+    {
+     "w": "gap",
+     "from": 3327,
+     "to": 3331
+    },
+    {
+     "w": "with",
+     "from": 3333,
+     "to": 3335
+    },
+    {
+     "w": "a",
+     "from": 3338,
+     "to": 3340
+    },
+    {
+     "w": "title-shaped",
+     "from": 3345,
+     "to": 3359
+    },
+    {
+     "w": "answer.",
+     "from": 3362,
+     "to": 3374
+    },
+    {
+     "w": "And",
+     "from": 3386,
+     "to": 3387
+    },
+    {
+     "w": "the",
+     "from": 3388,
+     "to": 3391
+    },
+    {
+     "w": "confidence",
+     "from": 3398,
+     "to": 3405
+    },
+    {
+     "w": "comes",
+     "from": 3409,
+     "to": 3412
+    },
+    {
+     "w": "with",
+     "from": 3415,
+     "to": 3417
+    },
+    {
+     "w": "it,",
+     "from": 3419,
+     "to": 3427
+    },
+    {
+     "w": "because",
+     "from": 3430,
+     "to": 3434
+    },
+    {
+     "w": "that's",
+     "from": 3436,
+     "to": 3443
+    },
+    {
+     "w": "part",
+     "from": 3446,
+     "to": 3448
+    },
+    {
+     "w": "of",
+     "from": 3449,
+     "to": 3451
+    },
+    {
+     "w": "the",
+     "from": 3452,
+     "to": 3453
+    },
+    {
+     "w": "pattern",
+     "from": 3455,
+     "to": 3463
+    },
+    {
+     "w": "too.",
+     "from": 3465,
+     "to": 3475
+    },
+    {
+     "w": "\u201cIs",
+     "from": 3487,
+     "to": 3494
+    },
+    {
+     "w": "entitled.\u201d",
+     "from": 3496,
+     "to": 3518
+    },
+    {
+     "w": "No",
+     "from": 3530,
+     "to": 3535
+    },
+    {
+     "w": "\u201cI",
+     "from": 3539,
+     "to": 3542
+    },
+    {
+     "w": "think.\u201d",
+     "from": 3547,
+     "to": 3559
+    },
+    {
+     "w": "No",
+     "from": 3568,
+     "to": 3573
+    },
+    {
+     "w": "\u201cmaybe.\u201d",
+     "from": 3580,
+     "to": 3604
+    }
+   ]
+  },
+  {
+   "id": "s17",
+   "scene": "S5",
+   "from": 3623,
+   "to": 3888,
+   "text": "Here's the actual record. Kalai's thesis: \u201cProbabilistic and On-line Methods in Machine Learning.\u201d Carnegie Mellon, May 2001.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Here's",
+     "from": 3621,
+     "to": 3629
+    },
+    {
+     "w": "the",
+     "from": 3630,
+     "to": 3631
+    },
+    {
+     "w": "actual",
+     "from": 3636,
+     "to": 3645
+    },
+    {
+     "w": "record.",
+     "from": 3648,
+     "to": 3668
+    },
+    {
+     "w": "Kalai's",
+     "from": 3677,
+     "to": 3689
+    },
+    {
+     "w": "thesis:",
+     "from": 3691,
+     "to": 3708
+    },
+    {
+     "w": "\u201cProbabilistic",
+     "from": 3720,
+     "to": 3744
+    },
+    {
+     "w": "and",
+     "from": 3746,
+     "to": 3749
+    },
+    {
+     "w": "On-line",
+     "from": 3753,
+     "to": 3763
+    },
+    {
+     "w": "Methods",
+     "from": 3765,
+     "to": 3777
+    },
+    {
+     "w": "in",
+     "from": 3780,
+     "to": 3781
+    },
+    {
+     "w": "Machine",
+     "from": 3782,
+     "to": 3792
+    },
+    {
+     "w": "Learning.\u201d",
+     "from": 3794,
+     "to": 3809
+    },
+    {
+     "w": "Carnegie",
+     "from": 3821,
+     "to": 3830
+    },
+    {
+     "w": "Mellon,",
+     "from": 3833,
+     "to": 3849
+    },
+    {
+     "w": "May",
+     "from": 3852,
+     "to": 3859
+    },
+    {
+     "w": "2001.",
+     "from": 3861,
+     "to": 3894
+    }
+   ]
+  },
+  {
+   "id": "s18",
+   "scene": "S5",
+   "from": 3903,
+   "to": 4188,
+   "text": "ChatGPT got the university right. The year was off by one. The title was invented. And every detail came out looking exactly as solid as the true one.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "ChatGPT",
+     "from": 3903,
+     "to": 3924
+    },
+    {
+     "w": "got",
+     "from": 3927,
+     "to": 3929
+    },
+    {
+     "w": "the",
+     "from": 3932,
+     "to": 3934
+    },
+    {
+     "w": "university",
+     "from": 3936,
+     "to": 3951
+    },
+    {
+     "w": "right.",
+     "from": 3953,
+     "to": 3963
+    },
+    {
+     "w": "The",
+     "from": 3975,
+     "to": 3977
+    },
+    {
+     "w": "year",
+     "from": 3980,
+     "to": 3984
+    },
+    {
+     "w": "was",
+     "from": 3987,
+     "to": 3989
+    },
+    {
+     "w": "off",
+     "from": 3992,
+     "to": 3996
+    },
+    {
+     "w": "by",
+     "from": 3999,
+     "to": 4001
+    },
+    {
+     "w": "one.",
+     "from": 4006,
+     "to": 4016
+    },
+    {
+     "w": "The",
+     "from": 4025,
+     "to": 4028
+    },
+    {
+     "w": "title",
+     "from": 4030,
+     "to": 4040
+    },
+    {
+     "w": "was",
+     "from": 4042,
+     "to": 4047
+    },
+    {
+     "w": "invented.",
+     "from": 4049,
+     "to": 4066
+    },
+    {
+     "w": "And",
+     "from": 4076,
+     "to": 4080
+    },
+    {
+     "w": "every",
+     "from": 4085,
+     "to": 4092
+    },
+    {
+     "w": "detail",
+     "from": 4095,
+     "to": 4104
+    },
+    {
+     "w": "came",
+     "from": 4107,
+     "to": 4112
+    },
+    {
+     "w": "out",
+     "from": 4114,
+     "to": 4116
+    },
+    {
+     "w": "looking",
+     "from": 4121,
+     "to": 4126
+    },
+    {
+     "w": "exactly",
+     "from": 4128,
+     "to": 4148
+    },
+    {
+     "w": "as",
+     "from": 4150,
+     "to": 4152
+    },
+    {
+     "w": "solid",
+     "from": 4158,
+     "to": 4164
+    },
+    {
+     "w": "as",
+     "from": 4167,
+     "to": 4169
+    },
+    {
+     "w": "the",
+     "from": 4170,
+     "to": 4172
+    },
+    {
+     "w": "true",
+     "from": 4174,
+     "to": 4179
+    },
+    {
+     "w": "one.",
+     "from": 4181,
+     "to": 4188
+    }
+   ]
+  },
+  {
+   "id": "s19",
+   "scene": "S5",
+   "from": 4204,
+   "to": 4278,
+   "text": "A confident font is still just a font.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "A",
+     "from": 4203,
+     "to": 4205
+    },
+    {
+     "w": "confident",
+     "from": 4208,
+     "to": 4220
+    },
+    {
+     "w": "font",
+     "from": 4222,
+     "to": 4232
+    },
+    {
+     "w": "is",
+     "from": 4239,
+     "to": 4244
+    },
+    {
+     "w": "still",
+     "from": 4248,
+     "to": 4253
+    },
+    {
+     "w": "just",
+     "from": 4258,
+     "to": 4263
+    },
+    {
+     "w": "a",
+     "from": 4264,
+     "to": 4265
+    },
+    {
+     "w": "font.",
+     "from": 4268,
+     "to": 4287
+    }
+   ]
+  },
+  {
+   "id": "s20",
+   "scene": "S6",
+   "from": 4305,
+   "to": 4531,
+   "text": "Now, why guess at all? Why not just say \u201cI don't know\u201d? The researchers argue that part of the answer is how models get graded.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Now,",
+     "from": 4304,
+     "to": 4319
+    },
+    {
+     "w": "why",
+     "from": 4321,
+     "to": 4326
+    },
+    {
+     "w": "guess",
+     "from": 4328,
+     "to": 4333
+    },
+    {
+     "w": "at",
+     "from": 4335,
+     "to": 4338
+    },
+    {
+     "w": "all?",
+     "from": 4341,
+     "to": 4357
+    },
+    {
+     "w": "Why",
+     "from": 4359,
+     "to": 4362
+    },
+    {
+     "w": "not",
+     "from": 4364,
+     "to": 4367
+    },
+    {
+     "w": "just",
+     "from": 4369,
+     "to": 4371
+    },
+    {
+     "w": "say",
+     "from": 4374,
+     "to": 4381
+    },
+    {
+     "w": "\u201cI",
+     "from": 4388,
+     "to": 4391
+    },
+    {
+     "w": "don't",
+     "from": 4393,
+     "to": 4395
+    },
+    {
+     "w": "know\u201d?",
+     "from": 4398,
+     "to": 4419
+    },
+    {
+     "w": "The",
+     "from": 4421,
+     "to": 4422
+    },
+    {
+     "w": "researchers",
+     "from": 4428,
+     "to": 4439
+    },
+    {
+     "w": "argue",
+     "from": 4441,
+     "to": 4448
+    },
+    {
+     "w": "that",
+     "from": 4451,
+     "to": 4455
+    },
+    {
+     "w": "part",
+     "from": 4458,
+     "to": 4463
+    },
+    {
+     "w": "of",
+     "from": 4464,
+     "to": 4465
+    },
+    {
+     "w": "the",
+     "from": 4467,
+     "to": 4470
+    },
+    {
+     "w": "answer",
+     "from": 4472,
+     "to": 4482
+    },
+    {
+     "w": "is",
+     "from": 4484,
+     "to": 4487
+    },
+    {
+     "w": "how",
+     "from": 4490,
+     "to": 4494
+    },
+    {
+     "w": "models",
+     "from": 4499,
+     "to": 4503
+    },
+    {
+     "w": "get",
+     "from": 4506,
+     "to": 4511
+    },
+    {
+     "w": "graded.",
+     "from": 4517,
+     "to": 4537
+    }
+   ]
+  },
+  {
+   "id": "s21",
+   "scene": "S6",
+   "from": 4543,
+   "to": 4772,
+   "text": "Picture a ten-question quiz. Right answer: one point. Wrong answer: zero. \u201cI don't know\u201d: also zero.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Picture",
+     "from": 4545,
+     "to": 4550
+    },
+    {
+     "w": "a",
+     "from": 4553,
+     "to": 4555
+    },
+    {
+     "w": "ten-question",
+     "from": 4559,
+     "to": 4574
+    },
+    {
+     "w": "quiz.",
+     "from": 4577,
+     "to": 4601
+    },
+    {
+     "w": "Right",
+     "from": 4603,
+     "to": 4605
+    },
+    {
+     "w": "answer:",
+     "from": 4608,
+     "to": 4627
+    },
+    {
+     "w": "one",
+     "from": 4629,
+     "to": 4632
+    },
+    {
+     "w": "point.",
+     "from": 4634,
+     "to": 4653
+    },
+    {
+     "w": "Wrong",
+     "from": 4657,
+     "to": 4661
+    },
+    {
+     "w": "answer:",
+     "from": 4663,
+     "to": 4682
+    },
+    {
+     "w": "zero.",
+     "from": 4685,
+     "to": 4709
+    },
+    {
+     "w": "\u201cI",
+     "from": 4711,
+     "to": 4713
+    },
+    {
+     "w": "don't",
+     "from": 4715,
+     "to": 4718
+    },
+    {
+     "w": "know\u201d:",
+     "from": 4721,
+     "to": 4742
+    },
+    {
+     "w": "also",
+     "from": 4747,
+     "to": 4752
+    },
+    {
+     "w": "zero.",
+     "from": 4754,
+     "to": 4778
+    }
+   ]
+  },
+  {
+   "id": "s22",
+   "scene": "S6",
+   "from": 4783,
+   "to": 4968,
+   "text": "Two contestants. Both know six answers. The honest one leaves the other four blank. Six points.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Two",
+     "from": 4784,
+     "to": 4787
+    },
+    {
+     "w": "contestants.",
+     "from": 4789,
+     "to": 4818
+    },
+    {
+     "w": "Both",
+     "from": 4821,
+     "to": 4825
+    },
+    {
+     "w": "know",
+     "from": 4827,
+     "to": 4835
+    },
+    {
+     "w": "six",
+     "from": 4838,
+     "to": 4842
+    },
+    {
+     "w": "answers.",
+     "from": 4849,
+     "to": 4871
+    },
+    {
+     "w": "The",
+     "from": 4873,
+     "to": 4875
+    },
+    {
+     "w": "honest",
+     "from": 4878,
+     "to": 4885
+    },
+    {
+     "w": "one",
+     "from": 4887,
+     "to": 4892
+    },
+    {
+     "w": "leaves",
+     "from": 4895,
+     "to": 4899
+    },
+    {
+     "w": "the",
+     "from": 4902,
+     "to": 4904
+    },
+    {
+     "w": "other",
+     "from": 4908,
+     "to": 4911
+    },
+    {
+     "w": "four",
+     "from": 4914,
+     "to": 4916
+    },
+    {
+     "w": "blank.",
+     "from": 4919,
+     "to": 4940
+    },
+    {
+     "w": "Six",
+     "from": 4943,
+     "to": 4947
+    },
+    {
+     "w": "points.",
+     "from": 4950,
+     "to": 4974
+    }
+   ]
+  },
+  {
+   "id": "s23",
+   "scene": "S6",
+   "from": 4979,
+   "to": 5173,
+   "text": "The guesser takes a shot at all four. Four options each, so on average, one lands. Seven points.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "The",
+     "from": 4979,
+     "to": 4980
+    },
+    {
+     "w": "guesser",
+     "from": 4982,
+     "to": 4994
+    },
+    {
+     "w": "takes",
+     "from": 4997,
+     "to": 4999
+    },
+    {
+     "w": "a",
+     "from": 5001,
+     "to": 5003
+    },
+    {
+     "w": "shot",
+     "from": 5004,
+     "to": 5011
+    },
+    {
+     "w": "at",
+     "from": 5013,
+     "to": 5016
+    },
+    {
+     "w": "all",
+     "from": 5018,
+     "to": 5023
+    },
+    {
+     "w": "four.",
+     "from": 5025,
+     "to": 5047
+    },
+    {
+     "w": "Four",
+     "from": 5049,
+     "to": 5052
+    },
+    {
+     "w": "options",
+     "from": 5054,
+     "to": 5064
+    },
+    {
+     "w": "each,",
+     "from": 5066,
+     "to": 5073
+    },
+    {
+     "w": "so",
+     "from": 5076,
+     "to": 5083
+    },
+    {
+     "w": "on",
+     "from": 5085,
+     "to": 5090
+    },
+    {
+     "w": "average,",
+     "from": 5093,
+     "to": 5109
+    },
+    {
+     "w": "one",
+     "from": 5112,
+     "to": 5114
+    },
+    {
+     "w": "lands.",
+     "from": 5117,
+     "to": 5141
+    },
+    {
+     "w": "Seven",
+     "from": 5144,
+     "to": 5148
+    },
+    {
+     "w": "points.",
+     "from": 5150,
+     "to": 5174
+    }
+   ]
+  },
+  {
+   "id": "s24",
+   "scene": "S6",
+   "from": 5185,
+   "to": 5305,
+   "text": "One lucky guess. Three wrong answers. Somehow, a trophy.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "One",
+     "from": 5189,
+     "to": 5193
+    },
+    {
+     "w": "lucky",
+     "from": 5196,
+     "to": 5203
+    },
+    {
+     "w": "guess.",
+     "from": 5209,
+     "to": 5225
+    },
+    {
+     "w": "Three",
+     "from": 5228,
+     "to": 5232
+    },
+    {
+     "w": "wrong",
+     "from": 5234,
+     "to": 5239
+    },
+    {
+     "w": "answers.",
+     "from": 5241,
+     "to": 5265
+    },
+    {
+     "w": "Somehow,",
+     "from": 5268,
+     "to": 5287
+    },
+    {
+     "w": "a",
+     "from": 5288,
+     "to": 5289
+    },
+    {
+     "w": "trophy.",
+     "from": 5292,
+     "to": 5313
+    }
+   ]
+  },
+  {
+   "id": "s25",
+   "scene": "S6",
+   "from": 5329,
+   "to": 5685,
+   "text": "Now change one rule. A wrong answer costs a point. The honest one: still six. The guesser: six, plus one, minus three. Four. The trophy walks back.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Now",
+     "from": 5328,
+     "to": 5335
+    },
+    {
+     "w": "change",
+     "from": 5338,
+     "to": 5347
+    },
+    {
+     "w": "one",
+     "from": 5350,
+     "to": 5355
+    },
+    {
+     "w": "rule.",
+     "from": 5357,
+     "to": 5367
+    },
+    {
+     "w": "A",
+     "from": 5379,
+     "to": 5381
+    },
+    {
+     "w": "wrong",
+     "from": 5383,
+     "to": 5391
+    },
+    {
+     "w": "answer",
+     "from": 5393,
+     "to": 5403
+    },
+    {
+     "w": "costs",
+     "from": 5407,
+     "to": 5417
+    },
+    {
+     "w": "a",
+     "from": 5418,
+     "to": 5419
+    },
+    {
+     "w": "point.",
+     "from": 5424,
+     "to": 5434
+    },
+    {
+     "w": "The",
+     "from": 5448,
+     "to": 5451
+    },
+    {
+     "w": "honest",
+     "from": 5453,
+     "to": 5460
+    },
+    {
+     "w": "one:",
+     "from": 5463,
+     "to": 5479
+    },
+    {
+     "w": "still",
+     "from": 5483,
+     "to": 5487
+    },
+    {
+     "w": "six.",
+     "from": 5489,
+     "to": 5503
+    },
+    {
+     "w": "The",
+     "from": 5515,
+     "to": 5517
+    },
+    {
+     "w": "guesser:",
+     "from": 5518,
+     "to": 5544
+    },
+    {
+     "w": "six,",
+     "from": 5547,
+     "to": 5562
+    },
+    {
+     "w": "plus",
+     "from": 5566,
+     "to": 5571
+    },
+    {
+     "w": "one,",
+     "from": 5575,
+     "to": 5590
+    },
+    {
+     "w": "minus",
+     "from": 5593,
+     "to": 5597
+    },
+    {
+     "w": "three.",
+     "from": 5602,
+     "to": 5623
+    },
+    {
+     "w": "Four.",
+     "from": 5628,
+     "to": 5635
+    },
+    {
+     "w": "The",
+     "from": 5650,
+     "to": 5651
+    },
+    {
+     "w": "trophy",
+     "from": 5652,
+     "to": 5662
+    },
+    {
+     "w": "walks",
+     "from": 5664,
+     "to": 5674
+    },
+    {
+     "w": "back.",
+     "from": 5676,
+     "to": 5686
+    }
+   ]
+  },
+  {
+   "id": "s26",
+   "scene": "S7",
+   "from": 5709,
+   "to": 5973,
+   "text": "The researchers checked ten widely used benchmarks in mid-2025. Nine graded strictly right or wrong, with no credit at all for \u201cI don't know.\u201d",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "The",
+     "from": 5709,
+     "to": 5710
+    },
+    {
+     "w": "researchers",
+     "from": 5711,
+     "to": 5728
+    },
+    {
+     "w": "checked",
+     "from": 5733,
+     "to": 5738
+    },
+    {
+     "w": "ten",
+     "from": 5740,
+     "to": 5750
+    },
+    {
+     "w": "widely",
+     "from": 5752,
+     "to": 5762
+    },
+    {
+     "w": "used",
+     "from": 5764,
+     "to": 5771
+    },
+    {
+     "w": "benchmarks",
+     "from": 5774,
+     "to": 5788
+    },
+    {
+     "w": "in",
+     "from": 5790,
+     "to": 5793
+    },
+    {
+     "w": "mid-2025.",
+     "from": 5795,
+     "to": 5843
+    },
+    {
+     "w": "Nine",
+     "from": 5846,
+     "to": 5855
+    },
+    {
+     "w": "graded",
+     "from": 5858,
+     "to": 5867
+    },
+    {
+     "w": "strictly",
+     "from": 5870,
+     "to": 5882
+    },
+    {
+     "w": "right",
+     "from": 5886,
+     "to": 5891
+    },
+    {
+     "w": "or",
+     "from": 5894,
+     "to": 5896
+    },
+    {
+     "w": "wrong,",
+     "from": 5898,
+     "to": 5910
+    },
+    {
+     "w": "with",
+     "from": 5913,
+     "to": 5915
+    },
+    {
+     "w": "no",
+     "from": 5918,
+     "to": 5922
+    },
+    {
+     "w": "credit",
+     "from": 5925,
+     "to": 5932
+    },
+    {
+     "w": "at",
+     "from": 5934,
+     "to": 5937
+    },
+    {
+     "w": "all",
+     "from": 5939,
+     "to": 5944
+    },
+    {
+     "w": "for",
+     "from": 5946,
+     "to": 5951
+    },
+    {
+     "w": "\u201cI",
+     "from": 5956,
+     "to": 5958
+    },
+    {
+     "w": "don't",
+     "from": 5961,
+     "to": 5964
+    },
+    {
+     "w": "know.\u201d",
+     "from": 5966,
+     "to": 5975
+    }
+   ]
+  },
+  {
+   "id": "s27",
+   "scene": "S7",
+   "from": 5992,
+   "to": 6219,
+   "text": "Train and rank models on tests like that, and guessing pays. It's one explanation, not the whole story. But it is a simple one.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Train",
+     "from": 5992,
+     "to": 5999
+    },
+    {
+     "w": "and",
+     "from": 6002,
+     "to": 6004
+    },
+    {
+     "w": "rank",
+     "from": 6008,
+     "to": 6011
+    },
+    {
+     "w": "models",
+     "from": 6014,
+     "to": 6021
+    },
+    {
+     "w": "on",
+     "from": 6023,
+     "to": 6026
+    },
+    {
+     "w": "tests",
+     "from": 6030,
+     "to": 6035
+    },
+    {
+     "w": "like",
+     "from": 6038,
+     "to": 6040
+    },
+    {
+     "w": "that,",
+     "from": 6042,
+     "to": 6054
+    },
+    {
+     "w": "and",
+     "from": 6057,
+     "to": 6059
+    },
+    {
+     "w": "guessing",
+     "from": 6062,
+     "to": 6074
+    },
+    {
+     "w": "pays.",
+     "from": 6075,
+     "to": 6090
+    },
+    {
+     "w": "It's",
+     "from": 6105,
+     "to": 6110
+    },
+    {
+     "w": "one",
+     "from": 6112,
+     "to": 6114
+    },
+    {
+     "w": "explanation,",
+     "from": 6117,
+     "to": 6141
+    },
+    {
+     "w": "not",
+     "from": 6143,
+     "to": 6146
+    },
+    {
+     "w": "the",
+     "from": 6148,
+     "to": 6149
+    },
+    {
+     "w": "whole",
+     "from": 6150,
+     "to": 6153
+    },
+    {
+     "w": "story.",
+     "from": 6155,
+     "to": 6170
+    },
+    {
+     "w": "But",
+     "from": 6182,
+     "to": 6189
+    },
+    {
+     "w": "it",
+     "from": 6191,
+     "to": 6194
+    },
+    {
+     "w": "is",
+     "from": 6196,
+     "to": 6198
+    },
+    {
+     "w": "a",
+     "from": 6200,
+     "to": 6201
+    },
+    {
+     "w": "simple",
+     "from": 6206,
+     "to": 6210
+    },
+    {
+     "w": "one.",
+     "from": 6214,
+     "to": 6227
+    }
+   ]
+  },
+  {
+   "id": "s28",
+   "scene": "S8",
+   "from": 6243,
+   "to": 6649,
+   "text": "So what helps? Search and retrieval, when they bring the real record into the room. Reasoning, sometimes. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "So",
+     "from": 6242,
+     "to": 6247
+    },
+    {
+     "w": "what",
+     "from": 6249,
+     "to": 6252
+    },
+    {
+     "w": "helps?",
+     "from": 6254,
+     "to": 6268
+    },
+    {
+     "w": "Search",
+     "from": 6283,
+     "to": 6290
+    },
+    {
+     "w": "and",
+     "from": 6291,
+     "to": 6292
+    },
+    {
+     "w": "retrieval,",
+     "from": 6295,
+     "to": 6321
+    },
+    {
+     "w": "when",
+     "from": 6322,
+     "to": 6324
+    },
+    {
+     "w": "they",
+     "from": 6326,
+     "to": 6328
+    },
+    {
+     "w": "bring",
+     "from": 6331,
+     "to": 6336
+    },
+    {
+     "w": "the",
+     "from": 6337,
+     "to": 6338
+    },
+    {
+     "w": "real",
+     "from": 6343,
+     "to": 6348
+    },
+    {
+     "w": "record",
+     "from": 6350,
+     "to": 6360
+    },
+    {
+     "w": "into",
+     "from": 6363,
+     "to": 6367
+    },
+    {
+     "w": "the",
+     "from": 6368,
+     "to": 6369
+    },
+    {
+     "w": "room.",
+     "from": 6372,
+     "to": 6381
+    },
+    {
+     "w": "Reasoning,",
+     "from": 6396,
+     "to": 6420
+    },
+    {
+     "w": "sometimes.",
+     "from": 6422,
+     "to": 6448
+    },
+    {
+     "w": "Turning",
+     "from": 6456,
+     "to": 6463
+    },
+    {
+     "w": "down",
+     "from": 6465,
+     "to": 6468
+    },
+    {
+     "w": "the",
+     "from": 6470,
+     "to": 6472
+    },
+    {
+     "w": "randomness",
+     "from": 6475,
+     "to": 6492
+    },
+    {
+     "w": "makes",
+     "from": 6495,
+     "to": 6499
+    },
+    {
+     "w": "answers",
+     "from": 6505,
+     "to": 6511
+    },
+    {
+     "w": "more",
+     "from": 6513,
+     "to": 6516
+    },
+    {
+     "w": "consistent,",
+     "from": 6518,
+     "to": 6547
+    },
+    {
+     "w": "not",
+     "from": 6549,
+     "to": 6552
+    },
+    {
+     "w": "necessarily",
+     "from": 6554,
+     "to": 6571
+    },
+    {
+     "w": "more",
+     "from": 6573,
+     "to": 6576
+    },
+    {
+     "w": "correct.",
+     "from": 6578,
+     "to": 6595
+    },
+    {
+     "w": "None",
+     "from": 6609,
+     "to": 6614
+    },
+    {
+     "w": "of",
+     "from": 6616,
+     "to": 6618
+    },
+    {
+     "w": "it",
+     "from": 6619,
+     "to": 6621
+    },
+    {
+     "w": "is",
+     "from": 6624,
+     "to": 6626
+    },
+    {
+     "w": "a",
+     "from": 6627,
+     "to": 6628
+    },
+    {
+     "w": "guarantee.",
+     "from": 6631,
+     "to": 6657
+    }
+   ]
+  },
+  {
+   "id": "s29",
+   "scene": "S9",
+   "from": 6670,
+   "to": 6747,
+   "text": "Which leaves the unglamorous move: check.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Which",
+     "from": 6669,
+     "to": 6674
+    },
+    {
+     "w": "leaves",
+     "from": 6676,
+     "to": 6683
+    },
+    {
+     "w": "the",
+     "from": 6684,
+     "to": 6686
+    },
+    {
+     "w": "unglamorous",
+     "from": 6690,
+     "to": 6710
+    },
+    {
+     "w": "move:",
+     "from": 6712,
+     "to": 6734
+    },
+    {
+     "w": "check.",
+     "from": 6736,
+     "to": 6753
+    }
+   ]
+  },
+  {
+   "id": "s30",
+   "scene": "S9",
+   "from": 6761,
+   "to": 6893,
+   "text": "Two questions. Does the source exist? And does it actually say this?",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Two",
+     "from": 6760,
+     "to": 6765
+    },
+    {
+     "w": "questions.",
+     "from": 6767,
+     "to": 6784
+    },
+    {
+     "w": "Does",
+     "from": 6796,
+     "to": 6801
+    },
+    {
+     "w": "the",
+     "from": 6802,
+     "to": 6803
+    },
+    {
+     "w": "source",
+     "from": 6806,
+     "to": 6813
+    },
+    {
+     "w": "exist?",
+     "from": 6821,
+     "to": 6834
+    },
+    {
+     "w": "And",
+     "from": 6839,
+     "to": 6846
+    },
+    {
+     "w": "does",
+     "from": 6854,
+     "to": 6856
+    },
+    {
+     "w": "it",
+     "from": 6858,
+     "to": 6860
+    },
+    {
+     "w": "actually",
+     "from": 6861,
+     "to": 6873
+    },
+    {
+     "w": "say",
+     "from": 6878,
+     "to": 6882
+    },
+    {
+     "w": "this?",
+     "from": 6885,
+     "to": 6894
+    }
+   ]
+  },
+  {
+   "id": "s31",
+   "scene": "S9",
+   "from": 6911,
+   "to": 7323,
+   "text": "Take the ChatGPT slip. Is there a thesis by Adam Kalai at Carnegie Mellon? Yes. Does it say \u201cBoosting, Online Algorithms,\u201d 2002? No. It says \u201cProbabilistic and On-line Methods,\u201d 2001.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Take",
+     "from": 6911,
+     "to": 6914
+    },
+    {
+     "w": "the",
+     "from": 6916,
+     "to": 6918
+    },
+    {
+     "w": "ChatGPT",
+     "from": 6922,
+     "to": 6940
+    },
+    {
+     "w": "slip.",
+     "from": 6942,
+     "to": 6952
+    },
+    {
+     "w": "Is",
+     "from": 6966,
+     "to": 6969
+    },
+    {
+     "w": "there",
+     "from": 6971,
+     "to": 6974
+    },
+    {
+     "w": "a",
+     "from": 6976,
+     "to": 6977
+    },
+    {
+     "w": "thesis",
+     "from": 6978,
+     "to": 6990
+    },
+    {
+     "w": "by",
+     "from": 6993,
+     "to": 6995
+    },
+    {
+     "w": "Adam",
+     "from": 6998,
+     "to": 7005
+    },
+    {
+     "w": "Kalai",
+     "from": 7007,
+     "to": 7017
+    },
+    {
+     "w": "at",
+     "from": 7019,
+     "to": 7022
+    },
+    {
+     "w": "Carnegie",
+     "from": 7023,
+     "to": 7031
+    },
+    {
+     "w": "Mellon?",
+     "from": 7034,
+     "to": 7046
+    },
+    {
+     "w": "Yes.",
+     "from": 7058,
+     "to": 7070
+    },
+    {
+     "w": "Does",
+     "from": 7084,
+     "to": 7086
+    },
+    {
+     "w": "it",
+     "from": 7089,
+     "to": 7091
+    },
+    {
+     "w": "say",
+     "from": 7094,
+     "to": 7101
+    },
+    {
+     "w": "\u201cBoosting,",
+     "from": 7108,
+     "to": 7125
+    },
+    {
+     "w": "Online",
+     "from": 7127,
+     "to": 7137
+    },
+    {
+     "w": "Algorithms,\u201d",
+     "from": 7139,
+     "to": 7158
+    },
+    {
+     "w": "2002?",
+     "from": 7160,
+     "to": 7197
+    },
+    {
+     "w": "No.",
+     "from": 7199,
+     "to": 7212
+    },
+    {
+     "w": "It",
+     "from": 7218,
+     "to": 7221
+    },
+    {
+     "w": "says",
+     "from": 7224,
+     "to": 7228
+    },
+    {
+     "w": "\u201cProbabilistic",
+     "from": 7233,
+     "to": 7257
+    },
+    {
+     "w": "and",
+     "from": 7258,
+     "to": 7259
+    },
+    {
+     "w": "On-line",
+     "from": 7264,
+     "to": 7274
+    },
+    {
+     "w": "Methods,\u201d",
+     "from": 7276,
+     "to": 7290
+    },
+    {
+     "w": "2001.",
+     "from": 7292,
+     "to": 7329
+    }
+   ]
+  },
+  {
+   "id": "s32",
+   "scene": "S9",
+   "from": 7335,
+   "to": 7419,
+   "text": "Source exists. Claim fails. Stamp it.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Source",
+     "from": 7336,
+     "to": 7343
+    },
+    {
+     "w": "exists.",
+     "from": 7351,
+     "to": 7365
+    },
+    {
+     "w": "Claim",
+     "from": 7369,
+     "to": 7377
+    },
+    {
+     "w": "fails.",
+     "from": 7381,
+     "to": 7396
+    },
+    {
+     "w": "Stamp",
+     "from": 7405,
+     "to": 7415
+    },
+    {
+     "w": "it.",
+     "from": 7417,
+     "to": 7427
+    }
+   ]
+  },
+  {
+   "id": "s33",
+   "scene": "S10",
+   "from": 7446,
+   "to": 7715,
+   "text": "So why is AI so confidently wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "So",
+     "from": 7445,
+     "to": 7450
+    },
+    {
+     "w": "why",
+     "from": 7452,
+     "to": 7457
+    },
+    {
+     "w": "is",
+     "from": 7459,
+     "to": 7462
+    },
+    {
+     "w": "AI",
+     "from": 7464,
+     "to": 7476
+    },
+    {
+     "w": "so",
+     "from": 7480,
+     "to": 7483
+    },
+    {
+     "w": "confidently",
+     "from": 7486,
+     "to": 7502
+    },
+    {
+     "w": "wrong?",
+     "from": 7505,
+     "to": 7524
+    },
+    {
+     "w": "Because",
+     "from": 7531,
+     "to": 7538
+    },
+    {
+     "w": "sounding",
+     "from": 7541,
+     "to": 7550
+    },
+    {
+     "w": "right",
+     "from": 7553,
+     "to": 7562
+    },
+    {
+     "w": "comes",
+     "from": 7566,
+     "to": 7570
+    },
+    {
+     "w": "from",
+     "from": 7572,
+     "to": 7574
+    },
+    {
+     "w": "patterns",
+     "from": 7577,
+     "to": 7589
+    },
+    {
+     "w": "in",
+     "from": 7590,
+     "to": 7591
+    },
+    {
+     "w": "language,",
+     "from": 7594,
+     "to": 7618
+    },
+    {
+     "w": "and",
+     "from": 7621,
+     "to": 7625
+    },
+    {
+     "w": "being",
+     "from": 7630,
+     "to": 7634
+    },
+    {
+     "w": "right",
+     "from": 7637,
+     "to": 7644
+    },
+    {
+     "w": "takes",
+     "from": 7646,
+     "to": 7654
+    },
+    {
+     "w": "evidence",
+     "from": 7656,
+     "to": 7668
+    },
+    {
+     "w": "the",
+     "from": 7669,
+     "to": 7670
+    },
+    {
+     "w": "model",
+     "from": 7673,
+     "to": 7680
+    },
+    {
+     "w": "doesn't",
+     "from": 7682,
+     "to": 7687
+    },
+    {
+     "w": "always",
+     "from": 7690,
+     "to": 7697
+    },
+    {
+     "w": "have.",
+     "from": 7699,
+     "to": 7721
+    }
+   ]
+  },
+  {
+   "id": "s34",
+   "scene": "S10",
+   "from": 7733,
+   "to": 7928,
+   "text": "So when an answer matters, don't ask whether it sounds right. Ask what the evidence is, and whether it actually says this.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "So",
+     "from": 7734,
+     "to": 7735
+    },
+    {
+     "w": "when",
+     "from": 7737,
+     "to": 7740
+    },
+    {
+     "w": "an",
+     "from": 7742,
+     "to": 7745
+    },
+    {
+     "w": "answer",
+     "from": 7747,
+     "to": 7754
+    },
+    {
+     "w": "matters,",
+     "from": 7756,
+     "to": 7778
+    },
+    {
+     "w": "don't",
+     "from": 7781,
+     "to": 7785
+    },
+    {
+     "w": "ask",
+     "from": 7789,
+     "to": 7792
+    },
+    {
+     "w": "whether",
+     "from": 7796,
+     "to": 7800
+    },
+    {
+     "w": "it",
+     "from": 7802,
+     "to": 7805
+    },
+    {
+     "w": "sounds",
+     "from": 7807,
+     "to": 7816
+    },
+    {
+     "w": "right.",
+     "from": 7820,
+     "to": 7836
+    },
+    {
+     "w": "Ask",
+     "from": 7839,
+     "to": 7843
+    },
+    {
+     "w": "what",
+     "from": 7844,
+     "to": 7845
+    },
+    {
+     "w": "the",
+     "from": 7848,
+     "to": 7850
+    },
+    {
+     "w": "evidence",
+     "from": 7852,
+     "to": 7865
+    },
+    {
+     "w": "is,",
+     "from": 7867,
+     "to": 7876
+    },
+    {
+     "w": "and",
+     "from": 7879,
+     "to": 7881
+    },
+    {
+     "w": "whether",
+     "from": 7885,
+     "to": 7889
+    },
+    {
+     "w": "it",
+     "from": 7891,
+     "to": 7893
+    },
+    {
+     "w": "actually",
+     "from": 7896,
+     "to": 7910
+    },
+    {
+     "w": "says",
+     "from": 7914,
+     "to": 7917
+    },
+    {
+     "w": "this.",
+     "from": 7920,
+     "to": 7934
+    }
+   ]
+  },
+  {
+   "id": "s35",
+   "scene": "S10",
+   "from": 7943,
+   "to": 8036,
+   "text": "Works on chatbots. Works pretty well on people, too.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Works",
+     "from": 7943,
+     "to": 7950
+    },
+    {
+     "w": "on",
+     "from": 7951,
+     "to": 7953
+    },
+    {
+     "w": "chatbots.",
+     "from": 7955,
+     "to": 7981
+    },
+    {
+     "w": "Works",
+     "from": 7985,
+     "to": 7989
+    },
+    {
+     "w": "pretty",
+     "from": 7991,
+     "to": 7996
+    },
+    {
+     "w": "well",
+     "from": 7998,
+     "to": 8001
+    },
+    {
+     "w": "on",
+     "from": 8003,
+     "to": 8005
+    },
+    {
+     "w": "people,",
+     "from": 8010,
+     "to": 8017
+    },
+    {
+     "w": "too.",
+     "from": 8021,
+     "to": 8041
+    }
+   ]
+  },
+  {
+   "id": "s36",
+   "scene": "S10",
+   "from": 8063,
+   "to": 8282,
+   "text": "This is Future Got Weird. AI moves fast; we make it make sense. New episodes twice a week, if you'd like to subscribe.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "This",
+     "from": 8064,
+     "to": 8073
+    },
+    {
+     "w": "is",
+     "from": 8076,
+     "to": 8078
+    },
+    {
+     "w": "Future",
+     "from": 8080,
+     "to": 8088
+    },
+    {
+     "w": "Got",
+     "from": 8090,
+     "to": 8095
+    },
+    {
+     "w": "Weird.",
+     "from": 8097,
+     "to": 8119
+    },
+    {
+     "w": "AI",
+     "from": 8121,
+     "to": 8128
+    },
+    {
+     "w": "moves",
+     "from": 8132,
+     "to": 8136
+    },
+    {
+     "w": "fast;",
+     "from": 8138,
+     "to": 8160
+    },
+    {
+     "w": "we",
+     "from": 8164,
+     "to": 8169
+    },
+    {
+     "w": "make",
+     "from": 8172,
+     "to": 8174
+    },
+    {
+     "w": "it",
+     "from": 8176,
+     "to": 8179
+    },
+    {
+     "w": "make",
+     "from": 8181,
+     "to": 8184
+    },
+    {
+     "w": "sense.",
+     "from": 8186,
+     "to": 8208
+    },
+    {
+     "w": "New",
+     "from": 8210,
+     "to": 8212
+    },
+    {
+     "w": "episodes",
+     "from": 8215,
+     "to": 8227
+    },
+    {
+     "w": "twice",
+     "from": 8229,
+     "to": 8236
+    },
+    {
+     "w": "a",
+     "from": 8238,
+     "to": 8239
+    },
+    {
+     "w": "week,",
+     "from": 8242,
+     "to": 8251
+    },
+    {
+     "w": "if",
+     "from": 8252,
+     "to": 8253
+    },
+    {
+     "w": "you'd",
+     "from": 8256,
+     "to": 8258
+    },
+    {
+     "w": "like",
+     "from": 8260,
+     "to": 8263
+    },
+    {
+     "w": "to",
+     "from": 8264,
+     "to": 8265
+    },
+    {
+     "w": "subscribe.",
+     "from": 8274,
+     "to": 8289
+    }
+   ]
+  }
+ ],
+ "cues": {}
+}

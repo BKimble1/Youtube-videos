@@ -1,0 +1,124 @@
+{
+"words": [
+{
+"word": "Train",
+"start": 0.155,
+"end": 0.395
+},
+{
+"word": "and",
+"start": 0.475,
+"end": 0.555
+},
+{
+"word": "rank",
+"start": 0.675,
+"end": 0.795
+},
+{
+"word": "models",
+"start": 0.875,
+"end": 1.115
+},
+{
+"word": "on",
+"start": 1.195,
+"end": 1.275
+},
+{
+"word": "tests",
+"start": 1.435,
+"end": 1.595
+},
+{
+"word": "like",
+"start": 1.675,
+"end": 1.755
+},
+{
+"word": "that,",
+"start": 1.835,
+"end": 2.235
+},
+{
+"word": "and",
+"start": 2.315,
+"end": 2.395
+},
+{
+"word": "guessing",
+"start": 2.475,
+"end": 2.875
+},
+{
+"word": "pays.",
+"start": 2.915,
+"end": 3.435
+},
+{
+"word": "It's",
+"start": 3.915,
+"end": 4.075
+},
+{
+"word": "one",
+"start": 4.155,
+"end": 4.235
+},
+{
+"word": "explanation,",
+"start": 4.315,
+"end": 5.115
+},
+{
+"word": "not",
+"start": 5.195,
+"end": 5.275
+},
+{
+"word": "the",
+"start": 5.355,
+"end": 5.395
+},
+{
+"word": "whole",
+"start": 5.435,
+"end": 5.515
+},
+{
+"word": "story.",
+"start": 5.595,
+"end": 6.075
+},
+{
+"word": "But",
+"start": 6.475,
+"end": 6.715
+},
+{
+"word": "it",
+"start": 6.795,
+"end": 6.875
+},
+{
+"word": "is",
+"start": 6.955,
+"end": 7.035
+},
+{
+"word": "a",
+"start": 7.075,
+"end": 7.115
+},
+{
+"word": "simple",
+"start": 7.275,
+"end": 7.435
+},
+{
+"word": "one.",
+"start": 7.555,
+"end": 7.995
+}
+]
+}

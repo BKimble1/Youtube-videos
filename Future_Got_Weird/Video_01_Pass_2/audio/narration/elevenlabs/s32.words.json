@@ -1,0 +1,34 @@
+{
+"words": [
+{
+"word": "Source",
+"start": 0.09,
+"end": 0.33
+},
+{
+"word": "exists.",
+"start": 0.61,
+"end": 1.05
+},
+{
+"word": "Claim",
+"start": 1.21,
+"end": 1.45
+},
+{
+"word": "fails.",
+"start": 1.61,
+"end": 2.09
+},
+{
+"word": "Stamp",
+"start": 2.41,
+"end": 2.73
+},
+{
+"word": "it.",
+"start": 2.81,
+"end": 3.13
+}
+]
+}
