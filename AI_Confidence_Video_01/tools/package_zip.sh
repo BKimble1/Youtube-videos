@@ -11,7 +11,7 @@ zip -q -r "$out" AI_Confidence_Video_01 \
   -x 'AI_Confidence_Video_01/**/node_modules/*' \
   -x 'AI_Confidence_Video_01/previews/*' \
   -x 'AI_Confidence_Video_01/exports/*' \
-  -x 'AI_Confidence_Video_01/qa/review_v*/frames/*' \
+  -x 'AI_Confidence_Video_01/qa/review_v*/*' \
   -x 'AI_Confidence_Video_01/audio/music/stems/*' \
   -x 'AI_Confidence_Video_01/audio/mix/stem_*' \
   -x 'AI_Confidence_Video_01/audio/narration/placeholder/*' \

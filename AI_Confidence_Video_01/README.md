@@ -61,11 +61,13 @@ python3 tools/mix.py
 
 # 4. Render (1080p30 H.264 + AAC) and finalize (fast-start, measurements)
 cd source
-npx remotion render src/index.ts Main ../exports/render_1080p.mp4 --crf=16 --x264-preset=slow --concurrency=4
+npx remotion render src/index.ts Main ../exports/render_1080p.mp4 --crf=16 --x264-preset=slow \
+    --color-space=bt709 --audio-bitrate=320k --concurrency=4
 cd .. && bash tools/finalize.sh exports/render_1080p.mp4 exports/Video_01_AI_Confidence_Final_1080p.mp4
 
 # 5. Optional 4K master (renders the same vector scene graph at 2x; ~4x render time)
-cd source && npx remotion render src/index.ts Main ../exports/render_4k.mp4 --scale=2 --crf=16 --concurrency=4
+cd source && npx remotion render src/index.ts Main ../exports/render_4k.mp4 --scale=2 --crf=16 --x264-preset=medium \
+    --color-space=bt709 --audio-bitrate=320k --concurrency=4     # ~2 h on 4 vCPUs
 cd .. && bash tools/finalize.sh exports/render_4k.mp4 exports/Video_01_AI_Confidence_Master_4K.mp4
 
 # 6. Thumbnails, script export
