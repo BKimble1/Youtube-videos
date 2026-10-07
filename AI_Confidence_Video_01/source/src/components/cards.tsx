@@ -1,7 +1,7 @@
 import React from 'react';
 import {C, F} from '../theme';
 
-export type Span = {text: string; mark?: 'coral' | 'teal' | 'strike' | 'dim'; markT?: number; key?: string};
+export type Span = {text: string; mark?: 'coral' | 'teal' | 'strike' | 'dim' | 'warm'; markT?: number; key?: string};
 
 /** Inline text with animated highlight marks. markT ∈ [0,1] sweeps the highlight in. */
 export const MarkedText: React.FC<{spans: Span[]; style?: React.CSSProperties; dark?: boolean}> = ({spans, style, dark = true}) => (
@@ -17,8 +17,8 @@ export const MarkedText: React.FC<{spans: Span[]; style?: React.CSSProperties; d
             <span style={{position: 'absolute', left: 0, top: '54%', height: 4, width: `${t * 100}%`, background: C.coral, borderRadius: 2}} />
           </span>
         );
-      const col = s.mark === 'coral' ? C.coral : C.teal;
-      const bg = s.mark === 'coral' ? 'rgba(255,111,94,0.22)' : 'rgba(60,201,180,0.20)';
+      const col = s.mark === 'coral' ? C.coral : s.mark === 'warm' ? 'rgba(243,238,228,0.75)' : C.teal;
+      const bg = s.mark === 'coral' ? 'rgba(255,111,94,0.22)' : s.mark === 'warm' ? 'rgba(243,238,228,0.10)' : 'rgba(60,201,180,0.20)';
       return (
         <span
           key={i}

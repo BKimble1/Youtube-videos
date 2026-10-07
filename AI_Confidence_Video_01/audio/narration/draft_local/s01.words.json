@@ -17,26 +17,26 @@
  {
   "word": "popular",
   "start": 1.52,
-  "end": 1.92
+  "end": 1.945
  },
  {
   "word": "chatbots",
-  "start": 1.97,
-  "end": 2.47
+  "start": 1.995,
+  "end": 2.495
  },
  {
   "word": "one",
-  "start": 2.545,
-  "end": 2.745
+  "start": 2.57,
+  "end": 2.795
  },
  {
   "word": "simple",
-  "start": 2.82,
-  "end": 3.07
+  "start": 2.87,
+  "end": 3.12
  },
  {
   "word": "question:",
-  "start": 3.12,
+  "start": 3.17,
   "end": 3.995
  },
  {
@@ -57,31 +57,26 @@
  {
   "word": "title",
   "start": 4.545,
-  "end": 4.895
+  "end": 4.845
  },
  {
   "word": "of",
-  "start": 4.945,
-  "end": 5.02
+  "start": 4.895,
+  "end": 4.97
  },
  {
   "word": "Adam",
-  "start": 5.095,
-  "end": 5.37
+  "start": 5.045,
+  "end": 5.32
  },
  {
   "word": "Kalai's",
-  "start": 5.42,
-  "end": 5.97
- },
- {
-  "word": "PhD",
-  "start": 6.07,
-  "end": 6.745
+  "start": 5.37,
+  "end": 5.795
  },
  {
   "word": "dissertation?",
-  "start": 6.795,
-  "end": 7.48
+  "start": 5.845,
+  "end": 6.5
  }
 ]

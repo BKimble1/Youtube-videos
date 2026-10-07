@@ -12,11 +12,11 @@
     {
       "id": "s01",
       "file": "s01.wav",
-      "duration_s": 7.48,
+      "duration_s": 6.5,
       "words_file": "s01.words.json",
       "pause_after_ms": 350,
-      "text": "Researchers asked three popular chatbots one simple question: What was the title of Adam Kalai's PhD dissertation?",
-      "tts_text": "Researchers asked three popular chatbots one simple question: What was the title of Adam [Kalai's](/kəlˈIz/) PhD dissertation?"
+      "text": "Researchers asked three popular chatbots one simple question: What was the title of Adam Kalai's dissertation?",
+      "tts_text": "Researchers asked three popular chatbots one simple question: What was the title of Adam [Kalai's](/kəlˈIz/) dissertation?"
     },
     {
       "id": "s02",

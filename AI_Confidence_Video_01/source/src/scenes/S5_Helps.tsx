@@ -59,6 +59,9 @@ export const S5Helps: React.FC = () => {
   const cAnthropic = at('s33', 'Anthropic');
   const cDefault = at('s33', 'default');
   const cRecog = at('s33', 'Recognizing');
+  const cFor = at('s33', 'for');
+  const cFamiliarName = at('s33', 'familiar');
+  const cSwitches = at('s33', 'switches');
   const cOff = at('s33', 'off.');
   const cMisfire = at('s34', 'misfires,');
   const cFamiliar = at('s34', 'familiar');
@@ -86,11 +89,11 @@ export const S5Helps: React.FC = () => {
   const thesisOut = ramp(g, cResearchers - 6, 14);
   // Phase C: Anthropic finding
   const anthIn = ramp(g, cResearchers, 16);
-  const headerT = ramp(g, cResearchers, 12) * (1 - ramp(g, cDefault + 4, 12));
-  const figT = ramp(g, cDefault - 2, 14) * (1 - ramp(g, cRecog - 2, 12));
-  const diagIn = ramp(g, cRecog - 6, 16);
-  const famOn = ramp(g, cRecog, 12);
-  const inhibit = ramp(g, cOff - 8, 14, easeInOut);
+  const headerT = ramp(g, cResearchers, 12) * (1 - ramp(g, cAnthropic + 6, 10));
+  const figT = ramp(g, cAnthropic + 6, 12) * (1 - ramp(g, cFor + 2, 10));
+  const diagIn = ramp(g, cFor + 2, 14);
+  const famOn = ramp(g, cFamiliarName, 12);
+  const inhibit = ramp(g, cSwitches, 16, easeInOut);
   const misT = ramp(g, cMisfire - 4, 12);
   const factsEmpty = ramp(g, cFacts, 12);
   const guessOn = ramp(g, cGuess - 6, 14);
@@ -115,6 +118,9 @@ export const S5Helps: React.FC = () => {
       <AbsoluteFill style={{opacity: photoT}}>
         <Photo src="img/photo_library_stacks_1912.jpg" t={ramp(g, c0 - 8, 150, (x) => x)} zoomFrom={1.03} zoomTo={1.12} originX={60} originY={45} darken={0.5} />
         <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
+          <div style={{fontFamily: F.sans, fontSize: 44, fontWeight: 650, color: C.textDim, marginBottom: 26, opacity: ramp(g, c0 - 2, 14), textShadow: '0 4px 30px rgba(0,0,0,0.7)'}}>
+            So what actually helps?
+          </div>
           <Headline size={120} style={{textAlign: 'center', opacity: headT, textShadow: '0 4px 30px rgba(0,0,0,0.6)', transform: `translateY(${(1 - headT) * 16}px)`}}>
             Check the record.
           </Headline>

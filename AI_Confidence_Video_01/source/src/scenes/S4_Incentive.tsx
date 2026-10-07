@@ -43,6 +43,14 @@ const Cell: React.FC<{state: CellState; t: number; g: number; i: number; penalty
       >
         {s.glyph}
       </div>
+      {state === 'lucky' && penalty > 0 && (
+        <div style={{position: 'absolute', left: 0, right: 0, top: -44 - 10 * penalty, textAlign: 'center', fontFamily: F.mono, fontSize: 30, fontWeight: 700, color: C.teal, opacity: penalty}}>
+          +1
+        </div>
+      )}
+      {state === 'lucky' && (
+        <div style={{position: 'absolute', inset: 6, borderRadius: 10, border: `2px dashed rgba(60,201,180,${0.8 * t})`}} />
+      )}
       {state === 'wrong' && penalty > 0 && (
         <div style={{position: 'absolute', left: 0, right: 0, top: -44 - 10 * penalty, textAlign: 'center', fontFamily: F.mono, fontSize: 30, fontWeight: 700, color: C.coral, opacity: penalty}}>
           −1
@@ -89,7 +97,8 @@ export const S4Incentive: React.FC = () => {
   const cTwo = at('s24', 'Two');
   const cSix = at('s24', 'six');
   const cRest = at('s24', 'rest.');
-  const cSixPts = at('s24', 'Six');
+  const cSixPts = at('s24', 'Six', 2);
+  const cSays = at('s24', 'says');
   const cShot = at('s25', 'shot');
   const cLands = at('s25', 'lands.');
   const cSeven = at('s25', 'Seven');
@@ -112,7 +121,7 @@ export const S4Incentive: React.FC = () => {
   const photoT = ramp(g, c0 - 10, 20) * (1 - ramp(g, cPicture - 6, 14));
   const argueT = ramp(g, cArgue, 12);
   const quizIn = ramp(g, cPicture - 4, 16);
-  const quizOut = ramp(g, cChecked - 6, 14);
+  const quizOut = ramp(g, cChecked - 10, 8);
 
   const rightT = ramp(g, cRight, 12);
   const wrongT = ramp(g, cWrong, 12);
@@ -120,9 +129,9 @@ export const S4Incentive: React.FC = () => {
   const flip = ramp(g, cCosts, 18, easeInOut);
   const rulePulse = ramp(g, cChange, 10) * (1 - ramp(g, cStill, 10));
 
-  const rowsIn = ramp(g, cTwo, 16);
+  const rowsIn = ramp(g, cPicture + 4, 16);
   const knownT = (k: number) => ramp(g, cSix + k * 2, 10);
-  const idkCells = (k: number) => ramp(g, cRest + k * 2, 10);
+  const idkCells = (k: number) => ramp(g, cSays + k * 3, 10);
   const honestScore = g >= cSixPts ? 6 : null;
 
   const guessPhase = g >= cShot && g < cLands;
@@ -130,10 +139,11 @@ export const S4Incentive: React.FC = () => {
   const guesserScore = g >= cFour ? 4 : g >= cSeven ? 7 : g >= cSixPts ? null : null;
   const penaltyT = (k: number) => ramp(g, cMinus + k * 4, 10);
   const wrongPulse = ramp(g, cThree, 8) * (1 - ramp(g, cThree + 24, 12));
-  const winBadge = g >= cWins && g < cLoses ? 'guesser' : g >= cLoses ? 'honest' : null;
-  const eqT = ramp(g, cPlus - 6, 12);
+  const winBadge = g >= cWins && g < cChange ? 'guesser' : g >= cFour ? 'honest' : null;
+  const guesserDim = ramp(g, cChange, 12) * (1 - ramp(g, cFour, 6));
+  const eqT = ramp(g, at('s27', 'guesser:') , 10);
 
-  const tableIn = ramp(g, cChecked, 18);
+  const tableIn = ramp(g, cChecked - 1, 12);
   const colBin = ramp(g, cNine, 16);
   const colIdk = ramp(g, cZero, 16);
   const tableOut = ramp(g, cFix - 6, 14);
@@ -145,7 +155,7 @@ export const S4Incentive: React.FC = () => {
     const cells: {state: CellState; t: number}[] = [];
     for (let k = 0; k < 10; k++) {
       if (k < 6) cells.push({state: 'known', t: knownT(k)});
-      else if (who === 'honest') cells.push({state: g >= cRest ? 'idk' : 'empty', t: g >= cRest ? idkCells(k - 6) : 1});
+      else if (who === 'honest') cells.push({state: g >= cSays ? 'idk' : 'empty', t: g >= cSays ? idkCells(k - 6) : 1});
       else if (guessResolved) cells.push({state: k === 6 ? 'lucky' : 'wrong', t: ramp(g, cLands + (k - 6) * 3, 10)});
       else if (guessPhase) cells.push({state: 'guessing', t: 1});
       else cells.push({state: 'empty', t: 1});
@@ -160,11 +170,11 @@ export const S4Incentive: React.FC = () => {
         </div>
         <div style={{display: 'flex', gap: 14}}>
           {cells.map((c, k) => (
-            <Cell key={k} state={c.state} t={c.t} g={g} i={k} penalty={who === 'guesser' && k > 6 ? penaltyT(k - 7) : 0} pulse={who === 'guesser' ? wrongPulse : 0} />
+            <Cell key={k} state={c.state} t={c.t} g={g} i={k} penalty={who === 'guesser' && k > 6 ? penaltyT(k - 7) : who === 'guesser' && k === 6 ? ramp(g, cPlus, 10) : 0} pulse={who === 'guesser' ? wrongPulse : 0} />
           ))}
         </div>
         <div style={{width: 330, marginLeft: 40, display: 'flex', alignItems: 'center', gap: 22}}>
-          <div style={{fontFamily: F.mono, fontSize: 84, fontWeight: 700, color: C.text, width: 110, textAlign: 'right'}}>{score ?? ''}</div>
+          <div style={{fontFamily: F.mono, fontSize: 84, fontWeight: 700, color: C.text, width: 110, height: 100, lineHeight: '100px', textAlign: 'right', opacity: score === null ? 0 : who === 'guesser' ? 1 - 0.6 * guesserDim : 1}}>{score ?? '0'}</div>
           <div style={{opacity: winner ? 1 : 0}}>
             <Tag tone="slate" size={20} style={{color: C.text, borderColor: C.text}}>
               ▲ Higher score
@@ -194,7 +204,7 @@ export const S4Incentive: React.FC = () => {
             transform: `rotate(${lerp(-1.2, -2.2, ramp(g, c0, 160, (x) => x))}deg) scale(${lerp(0.98, 1.03, ramp(g, c0, 160, (x) => x))})`,
           }}
         >
-          <Img src={staticFile('img/photo_test_booklet_1929_title.jpg')} style={{width: 768, height: 768 * (2199 / 3840), objectFit: 'cover', display: 'block', filter: 'sepia(0.15)'}} />
+          <Img src={staticFile('img/photo_test_booklet_1929_title.jpg')} style={{width: 768, height: 768 * (2093 / 3394), objectFit: 'cover', display: 'block', filter: 'sepia(0.15)'}} />
           <div style={{fontFamily: F.sans, fontSize: 18, color: C.inkDim, marginTop: 10}}>1929 test workbook (cover, cropped)</div>
         </div>
         <div style={{position: 'absolute', left: 120, top: 330, width: 820}}>
@@ -227,8 +237,11 @@ export const S4Incentive: React.FC = () => {
         </div>
         {row('honest', 390)}
         {row('guesser', 600)}
-        <div style={{position: 'absolute', left: 1440, top: 712, fontFamily: F.mono, fontSize: 30, color: C.textDim, opacity: eqT}}>
-          6 + 1 − 3 = 4
+        <div style={{position: 'absolute', left: 1440, top: 712, fontFamily: F.mono, fontSize: 30, color: C.textDim, opacity: eqT, whiteSpace: 'pre'}}>
+          <span>6</span>
+          <span style={{opacity: ramp(g, cPlus, 8)}}> + 1</span>
+          <span style={{opacity: ramp(g, cMinus, 8)}}> − 3</span>
+          <span style={{opacity: ramp(g, cFour, 6), color: C.text}}> = 4</span>
         </div>
         <div
           style={{
@@ -247,7 +260,7 @@ export const S4Incentive: React.FC = () => {
           {g >= cLoses ? 'Change the scoring, and bluffing stops paying.' : 'Higher score, with three confident wrong answers.'}
         </div>
         <div style={{position: 'absolute', left: 0, right: 0, top: 890, textAlign: 'center', fontFamily: F.sans, fontSize: 24, color: C.muted, opacity: ramp(g, cLands, 12)}}>
-          On average, 1 of 4 blind guesses lands (each has a 1-in-4 chance).
+          On average, 1 of 4 blind guesses lands (each has a 1-in-4 chance). Dashed check = the lucky guess.
         </div>
       </AbsoluteFill>
 
@@ -259,15 +272,16 @@ export const S4Incentive: React.FC = () => {
             width={1080}
             aspect={1125 / 1967}
             boxes={[
-              {x: 0.63, y: 0.22, w: 0.19, h: 0.6, t: colBin, tone: 'teal'},
-              {x: 0.835, y: 0.22, w: 0.14, h: 0.6, t: colIdk, tone: 'teal'},
+              {x: 0.633, y: 0.235, w: 0.187, h: 0.555, t: colBin, tone: 'teal'},
+              {x: 0.84, y: 0.235, w: 0.128, h: 0.555, t: colIdk, tone: 'teal'},
             ]}
           />
           <div style={{width: 520}}>
             <div style={{fontFamily: F.mono, fontSize: 110, fontWeight: 700, color: C.text, opacity: colBin}}>9 / 10</div>
             <div style={{fontFamily: F.sans, fontSize: 32, fontWeight: 600, color: C.textDim, opacity: colBin, lineHeight: 1.3}}>
-              popular benchmarks graded strictly right-or-wrong
+              of the popular benchmarks the authors checked were graded strictly right-or-wrong
             </div>
+            <div style={{fontFamily: F.sans, fontSize: 22, color: C.muted, opacity: colBin, marginTop: 8}}>a mid-2025 snapshot</div>
             <div style={{marginTop: 34, fontFamily: F.sans, fontSize: 32, fontWeight: 600, color: C.textDim, opacity: colIdk, lineHeight: 1.3}}>
               …and those nine give <span style={{color: C.text, fontWeight: 750}}>no credit</span> for “I don’t know”
             </div>
@@ -279,8 +293,11 @@ export const S4Incentive: React.FC = () => {
       {/* The proposal */}
       <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: instrIn}}>
         <div style={{fontFamily: F.sans, fontSize: 26, fontWeight: 700, letterSpacing: '0.12em', color: C.muted, marginBottom: 30}}>THE AUTHORS’ PROPOSAL: SAY THE PENALTY UP FRONT</div>
-        <Doc src="img/paper_p13_instruction.png" width={1500} aspect={171 / 1850} boxes={[{x: 0.415, y: 0.05, w: 0.395, h: 0.42, t: ramp(g, cFix + 12, 16), tone: 'teal'}]} />
-        <div style={{marginTop: 54, display: 'flex', gap: 24, opacity: oneT}}>
+        <Doc src="img/paper_p13_instruction.png" width={1500} aspect={171 / 1850} boxes={[{x: 0.432, y: 0.19, w: 0.471, h: 0.32, t: ramp(g, cFix + 12, 16), tone: 'teal'}]} />
+        <div style={{marginTop: 44, fontFamily: F.sans, fontSize: 32, fontWeight: 600, color: C.textDim, opacity: ramp(g, at('s29', 'uncertainty'), 14)}}>
+          Our quiz used t = ½: a wrong answer costs 1 point → Honest 6, Guesser 4.
+        </div>
+        <div style={{marginTop: 40, display: 'flex', gap: 24, opacity: oneT}}>
           <Tag tone="slate">One explanation · not the whole story</Tag>
         </div>
         <SourceLine opacity={instrIn}>Kalai et al. (2025), Section 4.2 (p. 13) · CC BY 4.0</SourceLine>

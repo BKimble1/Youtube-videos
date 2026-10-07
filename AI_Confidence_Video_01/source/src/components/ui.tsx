@@ -8,7 +8,8 @@ export const Tag: React.FC<{
   dashed?: boolean;
   size?: number;
   style?: React.CSSProperties;
-}> = ({children, tone = 'slate', dashed, size = 22, style}) => {
+  caps?: boolean;
+}> = ({children, tone = 'slate', dashed, size = 22, style, caps = true}) => {
   const col = tone === 'teal' ? C.teal : tone === 'coral' ? C.coral : tone === 'paper' ? C.inkDim : C.muted;
   const bg = tone === 'teal' ? C.tealDim : tone === 'coral' ? C.coralDim : 'rgba(133,146,168,0.10)';
   return (
@@ -25,8 +26,8 @@ export const Tag: React.FC<{
         fontFamily: F.sans,
         fontWeight: 650,
         fontSize: size,
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
+        letterSpacing: caps ? '0.08em' : '0.01em',
+        textTransform: caps ? 'uppercase' : 'none',
         whiteSpace: 'nowrap',
         ...style,
       }}

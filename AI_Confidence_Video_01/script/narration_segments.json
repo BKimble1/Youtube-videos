@@ -1,14 +1,14 @@
 {
  "title": "Why AI Sounds Right When It's Wrong",
- "version": "v1.1 (2026-10-07, fact-check fixes)",
+ "version": "v1.2 (2026-10-07, review fixes)",
  "notes": "text = display/subtitle text. tts_text (optional) = pronunciation respelling sent to TTS. pause_after_ms = silence after the segment.",
  "segments": [
   {
    "id": "s01",
    "scene": "S1",
-   "text": "Researchers asked three popular chatbots one simple question: What was the title of Adam Kalai's PhD dissertation?",
+   "text": "Researchers asked three popular chatbots one simple question: What was the title of Adam Kalai's dissertation?",
    "pause_after_ms": 350,
-   "tts_text": "Researchers asked three popular chatbots one simple question: What was the title of Adam [Kalai's](/kəlˈIz/) PhD dissertation?"
+   "tts_text": "Researchers asked three popular chatbots one simple question: What was the title of Adam [Kalai's](/kəlˈIz/) dissertation?"
   },
   {
    "id": "s02",

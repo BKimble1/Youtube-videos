@@ -11,7 +11,7 @@ import tok from '../data/tokens_gpt4o_sentence.json';
 
 const TOKENS = tok.tokens as {id: number; text: string}[];
 const PREFIX = 15; // tokens up to and including "200" (index 14)
-const ROW1 = 11; // first row: "Adam" … " ("
+const ROW1 = 10; // first row: "Adam" … " dissertation"
 
 // Illustrative next-token scores after "… completed in 200". NOT measured from GPT-4o.
 const CANDS = [
@@ -62,16 +62,16 @@ const TokenTile: React.FC<{
               position: 'absolute',
               left: pad * 0.32,
               top: '50%',
-              width: size * 0.09,
-              height: size * 0.09,
-              marginTop: -size * 0.045,
+              width: size * 0.13,
+              height: size * 0.13,
+              marginTop: -size * 0.065,
               borderRadius: '50%',
-              background: C.muted,
+              background: C.textDim,
               opacity: split,
             }}
           />
         )}
-        {split < 0.05 && hasLeadingSpace(text) ? text : visibleText(text)}
+        {split < 0.05 ? text : visibleText(text)}
       </div>
       <div
         style={{
@@ -108,12 +108,12 @@ export const S2Inside: React.FC = () => {
   const cEnd = segEnd('s11') + 8;
 
   // ---- phase values ----
-  const cardIn = ramp(g, cStart - 6, 16);
+  const cardIn = ramp(g, cStart - 12, 10);
   const dimRest = ramp(g, cBegan, 14);
   const split = ramp(g, cTokens, 22, easeInOut);
-  const cardFade = 1 - ramp(g, cTokens - 4, 14);
+  const cardFade = 1 - ramp(g, cTokens - 10, 8);
   const fragT = ramp(g, cFrag, 12) * (1 - ramp(g, cKalai, 10));
-  const tealT = ramp(g, cKalai, 12) * (1 - ramp(g, cTurns, 12));
+  const tealT = ramp(g, cKalai, 12) * (1 - ramp(g, cNumber - 6, 8));
   const idT = ramp(g, cNumber, 14);
   const toContext = ramp(g, cTurns, 26, easeInOut); // tokens move up, suffix fades
   const ctxIn = ramp(g, cTurns + 10, 22);
@@ -200,7 +200,7 @@ export const S2Inside: React.FC = () => {
       </AbsoluteFill>
 
       {/* Token strip: the same sentence, split by the real tokenizer */}
-      <div style={{position: 'absolute', left: 0, right: 0, top: rowsY, opacity: ramp(g, cTokens - 6, 10)}}>
+      <div style={{position: 'absolute', left: 0, right: 0, top: rowsY, opacity: ramp(g, cTokens - 3, 8)}}>
         {toContext < 0.5 ? (
           <>
             {renderRow(0, ROW1)}
@@ -217,9 +217,9 @@ export const S2Inside: React.FC = () => {
 
       {/* Labels for the split */}
       <div style={{position: 'absolute', left: 0, right: 0, top: 735, display: 'flex', justifyContent: 'center', gap: 22, opacity: ramp(g, cTokens + 14, 14) * (1 - toContext)}}>
-        <Tag tone="slate">Real split · GPT-4o’s tokenizer (o200k_base)</Tag>
-        <Tag tone="slate" dashed>
-          <span style={{display: 'inline-block', width: 10, height: 10, borderRadius: 5, background: C.muted}} /> = leading space
+        <Tag tone="slate" caps={false}>Real split · GPT-4o’s tokenizer (o200k_base)</Tag>
+        <Tag tone="slate" dashed caps={false}>
+          <span style={{display: 'inline-block', width: 10, height: 10, borderRadius: 5, background: C.textDim}} /> = starts with a space · ␣ = a space on its own
         </Tag>
       </div>
       <div
@@ -285,7 +285,7 @@ export const S2Inside: React.FC = () => {
       {/* Arrow from context to scores */}
       <svg style={{position: 'absolute', left: 0, top: 0}} width={1920} height={1080}>
         <path
-          d={`M ${ctxX + PREFIX * (cell + 6) + 30} 640 L 1010 640`}
+          d={`M ${Math.min(990, ctxX + cols * (cell + 6) + 24)} 640 L 1010 640`}
           stroke={C.lineStrong}
           strokeWidth={3}
           fill="none"
@@ -294,30 +294,36 @@ export const S2Inside: React.FC = () => {
         />
         <path d="M 996 628 L 1012 640 L 996 652" stroke={C.lineStrong} strokeWidth={3} fill="none" opacity={scoresIn} />
         {/* loop arrow: output back to input */}
+        <defs>
+          <marker id="loopArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill={C.textDim} />
+          </marker>
+        </defs>
         <path
           d={`M 1640 470 C 1760 470, 1800 330, ${Math.min(1840, slotX + 40)} 250`}
           stroke={C.textDim}
           strokeWidth={3}
           fill="none"
+          markerEnd={loopT > 0.95 ? 'url(#loopArr)' : undefined}
           strokeDasharray={520}
           strokeDashoffset={520 * (1 - loopT)}
           opacity={loopT * (1 - ramp(g, cEnd - 30, 14))}
         />
-        <text x={1700} y={380} fill={C.textDim} fontFamily="Inter Variable" fontSize={24} fontWeight={650} opacity={loopT * (1 - ramp(g, cEnd - 30, 14))}>
+        <text x={1690} y={545} fill={C.textDim} fontFamily="Inter Variable" fontSize={24} fontWeight={650} opacity={loopT * (1 - ramp(g, cEnd - 30, 14))}>
           repeat
         </text>
       </svg>
 
       {/* Next-token scores (illustrative) */}
       <div style={{position: 'absolute', left: 1040, top: ctxY - 80, width: 720, opacity: scoresIn}}>
-        <div style={{fontFamily: F.sans, fontSize: 24, fontWeight: 700, letterSpacing: '0.1em', color: C.textDim, marginBottom: 18}}>
+        <div style={{fontFamily: F.sans, fontSize: 24, fontWeight: 700, letterSpacing: '0.1em', color: C.textDim, marginBottom: 18, opacity: flyT > 0 && flyT < 1 ? 0.15 : 1}}>
           SCORES FOR THE NEXT TOKEN
         </div>
         {CANDS.map((c, i) => {
           const loopJitter = g > cLoop + 6 ? 0.35 + 0.6 * rand(Math.floor((g - cLoop) / loopStep) * 31 + i * 7) : 1;
           const w = c.p * 1500 * ramp(g, cScores + i * 3, 16) * (g > cLoop + 6 && appended < TOKENS.length - PREFIX - 1 ? loopJitter : 1);
           const hi = (pickT > 0 && !settled && sweepPos === i) || (settled && i === 0);
-          const label = g > cLoop + 6 ? '·' : c.t;
+          const label = g > cLoop + 6 ? '?' : c.t;
           return (
             <div key={i} style={{display: 'flex', alignItems: 'center', height: 58}}>
               <div
@@ -350,7 +356,7 @@ export const S2Inside: React.FC = () => {
           … and every other token in the vocabulary
         </div>
         <div style={{marginTop: 22}}>
-          <Tag tone="slate" dashed size={19}>Illustrative numbers · not GPT-4o’s actual scores</Tag>
+          <Tag tone="slate" dashed size={19} caps={false}>Illustrative numbers · not GPT-4o’s actual scores</Tag>
         </div>
       </div>
 
@@ -373,7 +379,7 @@ export const S2Inside: React.FC = () => {
       </div>
 
       <SourceLine opacity={ramp(g, cStart, 12)}>
-        Sentence: GPT-4o’s answer as excerpted in Kalai et al. (2025), Table 1 · Token split computed with js-tiktoken (o200k_base)
+        Sentence: ChatGPT (GPT-4o) answer as excerpted in Kalai et al. (2025), Table 1 (accessed May&nbsp;9,&nbsp;2025, no web search) · Token split computed with js-tiktoken (o200k_base)
       </SourceLine>
     </AbsoluteFill>
   );

@@ -1,210 +1,210 @@
 [
  {
-  "t": 43.937,
+  "t": 42.97,
   "name": "title impact"
  },
  {
-  "t": 26.75,
+  "t": 25.75,
   "name": "mark titles"
  },
  {
-  "t": 27.983,
+  "t": 27.017,
   "name": "mark years"
  },
  {
-  "t": 56.375,
+  "t": 55.375,
   "name": "token split"
  },
  {
-  "t": 56.4,
+  "t": 55.4,
   "name": "token split"
  },
  {
-  "t": 56.427,
+  "t": 55.427,
   "name": "token split"
  },
  {
-  "t": 56.452,
+  "t": 55.452,
   "name": "token split"
  },
  {
-  "t": 56.488,
+  "t": 55.488,
   "name": "token split"
  },
  {
-  "t": 56.532,
+  "t": 55.532,
   "name": "token split"
  },
  {
-  "t": 56.558,
+  "t": 55.558,
   "name": "token split"
  },
  {
-  "t": 56.589,
+  "t": 55.589,
   "name": "token split"
  },
  {
-  "t": 56.625,
+  "t": 55.625,
   "name": "token split"
  },
  {
-  "t": 56.658,
+  "t": 55.658,
   "name": "token split"
  },
  {
-  "t": 56.685,
+  "t": 55.685,
   "name": "token split"
  },
  {
-  "t": 56.704,
+  "t": 55.704,
   "name": "token split"
  },
  {
-  "t": 56.74,
+  "t": 55.74,
   "name": "token split"
  },
  {
-  "t": 56.764,
+  "t": 55.764,
   "name": "token split"
  },
  {
-  "t": 56.799,
+  "t": 55.799,
   "name": "token split"
  },
  {
-  "t": 56.843,
+  "t": 55.843,
   "name": "token split"
  },
  {
-  "t": 56.874,
+  "t": 55.874,
   "name": "token split"
  },
  {
-  "t": 56.905,
+  "t": 55.905,
   "name": "token split"
  },
  {
-  "t": 56.934,
+  "t": 55.934,
   "name": "token split"
  },
  {
-  "t": 56.969,
+  "t": 55.969,
   "name": "token split"
  },
  {
-  "t": 56.984,
+  "t": 55.984,
   "name": "token split"
  },
  {
-  "t": 57.032,
+  "t": 56.032,
   "name": "token split"
  },
  {
-  "t": 57.054,
+  "t": 56.054,
   "name": "token split"
  },
  {
-  "t": 77.267,
+  "t": 76.267,
   "name": "pick sweep"
  },
  {
-  "t": 77.42,
+  "t": 76.42,
   "name": "pick sweep"
  },
  {
-  "t": 77.555,
+  "t": 76.555,
   "name": "pick sweep"
  },
  {
-  "t": 77.672,
+  "t": 76.672,
   "name": "pick sweep"
  },
  {
-  "t": 77.771,
+  "t": 76.771,
   "name": "pick sweep"
  },
  {
-  "t": 77.852,
+  "t": 76.852,
   "name": "pick sweep"
  },
  {
-  "t": 77.916,
+  "t": 76.916,
   "name": "pick sweep"
  },
  {
-  "t": 77.961,
+  "t": 76.961,
   "name": "pick sweep"
  },
  {
-  "t": 77.988,
+  "t": 76.988,
   "name": "pick sweep"
  },
  {
-  "t": 78.017,
+  "t": 77.017,
   "name": "pick settle"
  },
  {
-  "t": 78.383,
+  "t": 77.383,
   "name": "token lands"
  },
  {
-  "t": 79.4,
+  "t": 78.433,
   "name": "token append"
  },
  {
-  "t": 79.633,
+  "t": 78.667,
   "name": "token append"
  },
  {
-  "t": 79.867,
+  "t": 78.9,
   "name": "token append"
  },
  {
-  "t": 80.1,
+  "t": 79.133,
   "name": "token append"
  },
  {
-  "t": 80.333,
+  "t": 79.367,
   "name": "token append"
  },
  {
-  "t": 80.567,
+  "t": 79.6,
   "name": "token append"
  },
  {
-  "t": 80.8,
+  "t": 79.833,
   "name": "token append"
  },
  {
-  "t": 156.383,
+  "t": 155.417,
   "name": "reveal year"
  },
  {
-  "t": 159.017,
+  "t": 158.05,
   "name": "reveal title"
  },
  {
-  "t": 195.713,
+  "t": 194.747,
   "name": "rule flip"
  },
  {
-  "t": 200.3,
+  "t": 199.3,
   "name": "penalty"
  },
  {
-  "t": 200.433,
+  "t": 199.433,
   "name": "penalty"
  },
  {
-  "t": 200.567,
+  "t": 199.567,
   "name": "penalty"
  },
  {
-  "t": 242.35,
+  "t": 241.35,
   "name": "check: exists"
  },
  {
-  "t": 243.883,
+  "t": 242.917,
   "name": "cross: does not say this"
  }
 ]

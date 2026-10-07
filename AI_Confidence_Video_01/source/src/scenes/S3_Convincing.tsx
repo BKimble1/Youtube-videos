@@ -9,23 +9,31 @@ import {easeInOut, lerp, ramp, rand} from '../lib/anim';
 import {C, F} from '../theme';
 
 const PATTERN_WORDS = ['Methods', 'Algorithms', 'Machine Learning', 'Learning', 'Theory', 'Analysis', 'Online', 'Models', 'Topics in', 'Approaches to', 'Efficient', 'Probabilistic', 'Interactive', 'Games', 'Boosting', 'Optimization'];
-const GPT_TITLE = ['Boosting,', 'Online', 'Algorithms,', 'and', 'Other', 'Topics', 'in', 'Machine', 'Learning.'];
+const GPT_TITLE = ['“Boosting,', 'Online', 'Algorithms,', 'and', 'Other', 'Topics', 'in', 'Machine', 'Learning.”'];
 
-const Field: React.FC<{label: string; value: string; state: number; tone: 'coral' | 'teal' | 'none'; tag?: string; serif?: boolean}> = ({label, value, state, tone, tag, serif}) => {
+const Field: React.FC<{label: string; value: string; state: number; tone: 'coral' | 'teal' | 'none'; tag?: string; serif?: boolean; rowH: number}> = ({
+  label,
+  value,
+  state,
+  tone,
+  tag,
+  serif,
+  rowH,
+}) => {
   const col = tone === 'coral' ? C.coral : tone === 'teal' ? C.teal : C.lineStrong;
+  const bg = tone === 'coral' ? 'rgba(255,111,94,0.22)' : 'rgba(60,201,180,0.2)';
   return (
-    <div style={{display: 'flex', alignItems: 'flex-start', gap: 22, padding: '18px 0', borderTop: `1px solid ${C.line}`}}>
-      <div style={{width: 150, flexShrink: 0, fontFamily: F.sans, fontSize: 22, fontWeight: 700, letterSpacing: '0.1em', color: C.muted, paddingTop: 8}}>{label}</div>
+    <div style={{display: 'flex', alignItems: 'flex-start', gap: 20, padding: '16px 0', borderTop: `1px solid ${C.line}`, height: rowH, boxSizing: 'border-box'}}>
+      <div style={{width: 96, flexShrink: 0, fontFamily: F.sans, fontSize: 20, fontWeight: 700, letterSpacing: '0.1em', color: C.muted, paddingTop: 8}}>{label}</div>
       <div style={{flex: 1}}>
-        <div
+        <span
           style={{
-            display: 'inline',
             fontFamily: serif ? F.serif : F.sans,
-            fontSize: serif ? 36 : 34,
+            fontSize: serif ? 31 : 31,
             lineHeight: 1.3,
             fontWeight: serif ? 450 : 600,
             color: C.text,
-            backgroundImage: tone !== 'none' ? `linear-gradient(${tone === 'coral' ? 'rgba(255,111,94,0.22)' : 'rgba(60,201,180,0.2)'}, ${tone === 'coral' ? 'rgba(255,111,94,0.22)' : 'rgba(60,201,180,0.2)'})` : undefined,
+            backgroundImage: tone !== 'none' ? `linear-gradient(${bg}, ${bg})` : undefined,
             backgroundRepeat: 'no-repeat',
             backgroundSize: `${state * 100}% 100%`,
             boxShadow: state > 0.98 && tone !== 'none' ? `inset 0 -4px 0 ${col}` : undefined,
@@ -33,13 +41,13 @@ const Field: React.FC<{label: string; value: string; state: number; tone: 'coral
           }}
         >
           {value}
-        </div>
+        </span>
+      </div>
+      <div style={{width: tag ? 140 : 0, flexShrink: 0, display: 'flex', justifyContent: 'flex-end', paddingTop: 6, opacity: tag ? state : 0}}>
         {tag && (
-          <div style={{marginTop: 12, opacity: state}}>
-            <Tag tone={tone === 'coral' ? 'coral' : 'teal'} size={18}>
-              {tag}
-            </Tag>
-          </div>
+          <Tag tone={tone === 'coral' ? 'coral' : 'teal'} size={16}>
+            {tag}
+          </Tag>
         )}
       </div>
     </div>
@@ -70,32 +78,37 @@ export const S3Convincing: React.FC = () => {
   const cEnd = segEnd('s21');
 
   // Phase A: headline + pattern field
+  const cLook = at('s15', 'Look');
   const headIn = ramp(g, c0, 14) * (1 - ramp(g, cEverywhere - 8, 12));
-  const fieldIn = ramp(g, cEverywhere - 6, 24);
+  const headUp = ramp(g, cLook, 30);
+  const fieldIn = Math.max(0.35 * ramp(g, cLook, 40), ramp(g, cEverywhere - 6, 24));
   const fieldOut = ramp(g, cFamous - 6, 14);
   // Phase B: Einstein vs one researcher
   const einIn = ramp(g, cFamous, 16);
   const einPaper = ramp(g, cPaper, 16);
   const oneIn = ramp(g, cBut, 16);
+  const rarelyT = ramp(g, at('s18', 'rarely'), 10);
   const onceT = ramp(g, cOnce, 10);
   const neverT = ramp(g, cNever, 10);
-  const bOut = ramp(g, cBirthday - 4, 14);
-  const figIn = ramp(g, cBirthday, 16);
-  const figBox = ramp(g, cBirthday + 10, 16);
+  const bOut = ramp(g, cBirthday - 2, 10);
+  const figIn = ramp(g, cBirthday + 8, 12);
+  const figBox = ramp(g, cBirthday + 18, 16);
   const figOut = ramp(g, cFills - 4, 14);
   // Phase C: assembling a title-shaped answer, then tone
   const asmT = ramp(g, cFills, 34, easeInOut);
   const entT = ramp(g, cEntitled, 12);
   const hedgeT = ramp(g, cThink - 6, 14);
-  const readT = ramp(g, cReadout, 14);
-  const cOut = ramp(g, cHere - 6, 14);
+  const readT = ramp(g, at('s19', 'That') - 4, 12);
+  const cOut = ramp(g, cHere - 10, 8);
   // Phase D: side by side
-  const sbsIn = ramp(g, cHere, 18);
+  const sbsIn = ramp(g, cHere - 1, 12);
   const spotT = ramp(g, cSpot, 12);
   const sameT = ramp(g, cSame, 14);
   const yearT = ramp(g, cYear, 14);
   const titleT = ramp(g, cTitle, 16);
-  const evidT = ramp(g, cInvented - 4, 18);
+  const evidT = ramp(g, cYear, 16);
+  const evidBox = ramp(g, cYear + 14, 14);
+  const solidT = ramp(g, cInvented - 4, 16);
   const sceneOut = 1 - ramp(g, cEnd + 18, 10);
 
   return (
@@ -103,19 +116,21 @@ export const S3Convincing: React.FC = () => {
       <Backdrop glow={{x: 960, y: 540, color: 'rgba(60,140,200,0.35)', size: 1400, opacity: 0.1}} />
 
       {/* Headline */}
-      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: headIn}}>
-        <Headline size={78} style={{textAlign: 'center'}}>
+      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: headIn, transform: `translateY(${-60 * headUp}px)`, zIndex: 2}}>
+        <Headline size={78} style={{textAlign: 'center', textShadow: '0 6px 40px rgba(8,16,30,0.9)'}}>
           So why would the <span style={{color: C.textDim}}>likely</span> answer be wrong?
         </Headline>
       </AbsoluteFill>
 
       {/* Pattern field: the style of a dissertation title is everywhere (illustration) */}
       <AbsoluteFill style={{opacity: fieldIn * (1 - fieldOut)}}>
-        {Array.from({length: 64}).map((_, i) => {
+        {Array.from({length: 40}).map((_, i) => {
           const w = PATTERN_WORDS[i % PATTERN_WORDS.length];
-          const x = rand(i * 5 + 1) * 1700 + 60;
-          const y = rand(i * 9 + 3) * 760 + 120;
-          const appear = ramp(g, cEverywhere - 6 + rand(i * 3) * 50, 14);
+          const col = i % 5;
+          const row = Math.floor(i / 5);
+          const x = 90 + col * 360 + (rand(i * 5 + 1) - 0.5) * 120 + (row % 2) * 120;
+          const y = 120 + row * 92 + (rand(i * 9 + 3) - 0.5) * 30;
+          const appear = ramp(g, cLook + rand(i * 3) * (cEverywhere + 40 - cLook), 14);
           const drift = (g - cEverywhere) * (0.25 + rand(i * 17) * 0.4);
           const isKey = w === 'Methods' || w === 'Algorithms' || w === 'Machine Learning';
           const keyT = isKey ? ramp(g, cMethods, 14) : 0;
@@ -127,7 +142,7 @@ export const S3Convincing: React.FC = () => {
                 left: x - drift,
                 top: y,
                 fontFamily: F.serif,
-                fontSize: 26 + rand(i * 7) * 24,
+                fontSize: isKey ? 40 : 26 + rand(i * 7) * 14,
                 color: isKey ? `rgba(243,238,228,${0.25 + 0.65 * keyT})` : 'rgba(185,193,207,0.22)',
                 opacity: appear,
                 whiteSpace: 'nowrap',
@@ -157,17 +172,19 @@ export const S3Convincing: React.FC = () => {
                   width: 600,
                   padding: '26px 30px',
                   borderRadius: 16,
-                  background: C.surfaceHi,
                   border: `1.5px solid ${C.lineStrong}`,
-                  opacity: ramp(g, cFamous + k * 3, 10) * (k === 6 ? 1 : 0.55),
+                  opacity: ramp(g, cFamous + k * 3, 10),
+                  background: k === 6 ? C.surfaceHi : `rgb(${22 + k * 2},${34 + k * 3},${58 + k * 4})`,
                   fontFamily: F.serif,
                   fontSize: 30,
                   color: C.text,
                   boxShadow: '0 12px 30px rgba(0,0,0,0.3)',
                 }}
               >
-                <div style={{fontFamily: F.sans, fontSize: 20, color: C.muted, marginBottom: 8}}>Einstein’s dissertation (1905)</div>
-                “A New Determination of Molecular Dimensions”
+                <div style={{opacity: k === 6 ? 1 : 0}}>
+                  <div style={{fontFamily: F.sans, fontSize: 20, color: C.muted, marginBottom: 8}}>Einstein’s dissertation (1905)</div>
+                  “A New Determination of Molecular Dimensions”
+                </div>
               </div>
             ))}
           </div>
@@ -187,12 +204,15 @@ export const S3Convincing: React.FC = () => {
               color: C.textDim,
             }}
           >
-            <div style={{fontFamily: F.sans, fontSize: 20, color: C.muted, marginBottom: 8}}>Kalai’s dissertation (2001)</div>
+            <div style={{fontFamily: F.sans, fontSize: 20, color: C.muted, marginBottom: 8}}>Kalai’s dissertation</div>
             “ ? ”
           </div>
           <div style={{marginTop: 40, display: 'flex', gap: 18}}>
+            <div style={{opacity: rarelyT}}>
+              <Tag tone="slate">seen rarely?</Tag>
+            </div>
             <div style={{opacity: onceT}}>
-              <Tag tone="slate">seen once?</Tag>
+              <Tag tone="slate">once?</Tag>
             </div>
             <div style={{opacity: neverT}}>
               <Tag tone="slate">never?</Tag>
@@ -200,7 +220,15 @@ export const S3Convincing: React.FC = () => {
           </div>
         </div>
         <div style={{position: 'absolute', left: 150, right: 150, bottom: 150, opacity: einPaper * (1 - oneIn)}}>
-          <Doc src="img/paper_p10_einstein.png" width={1300} aspect={174 / 2000} boxes={[{x: 0.36, y: 0.33, w: 0.64, h: 0.36, t: ramp(g, cPaper + 8, 14), tone: 'teal'}]} />
+          <Doc
+            src="img/paper_p10_einstein.png"
+            width={1300}
+            aspect={349 / 4000}
+            boxes={[
+              {x: 0.338, y: 0.37, w: 0.652, h: 0.27, t: ramp(g, cPaper + 8, 14), tone: 'teal'},
+              {x: 0.012, y: 0.7, w: 0.2, h: 0.27, t: ramp(g, cPaper + 18, 14), tone: 'teal'},
+            ]}
+          />
         </div>
         <SourceLine opacity={einPaper}>Kalai et al. (2025), p. 10 · Einstein’s 1905 dissertation shown for illustration</SourceLine>
       </AbsoluteFill>
@@ -223,7 +251,7 @@ export const S3Convincing: React.FC = () => {
       <AbsoluteFill style={{opacity: asmT > 0 ? 1 - cOut : 0}}>
         <div style={{position: 'absolute', left: 160, right: 160, top: 260, textAlign: 'center'}}>
           <div style={{fontFamily: F.sans, fontSize: 24, fontWeight: 700, letterSpacing: '0.12em', color: C.muted, opacity: asmT}}>
-            WHAT A TITLE USUALLY LOOKS LIKE
+            WHAT A TITLE USUALLY LOOKS LIKE · CHATGPT’S ANSWER
           </div>
           <div style={{marginTop: 30, fontFamily: F.serif, fontSize: 64, lineHeight: 1.25, color: C.text}}>
             <span style={{opacity: ramp(g, cFills + 4, 14), backgroundColor: entT > 0 ? `rgba(243,238,228,${0.14 * entT})` : undefined, borderRadius: 6, padding: '0 6px', boxShadow: entT > 0.9 ? `inset 0 -4px 0 ${C.text}` : undefined}}>
@@ -262,7 +290,7 @@ export const S3Convincing: React.FC = () => {
           </div>
         </div>
         <div style={{position: 'absolute', left: 0, right: 0, bottom: 110, display: 'flex', justifyContent: 'center', opacity: asmT}}>
-          <Tag tone="slate" dashed>Illustration · the words are ChatGPT’s published title</Tag>
+          <Tag tone="slate" caps={false}>ChatGPT’s actual words (GPT-4o), as excerpted in Kalai et al. (2025), Table 1</Tag>
         </div>
       </AbsoluteFill>
 
@@ -286,7 +314,7 @@ export const S3Convincing: React.FC = () => {
                 background: `linear-gradient(180deg, ${C.surfaceHi} 0%, ${C.surface} 100%)`,
                 border: `1.5px solid ${C.lineStrong}`,
                 boxShadow: '0 30px 80px rgba(0,0,0,0.45)',
-                padding: '30px 40px 20px',
+                padding: '28px 34px 18px',
                 transform: `translateY(${(1 - ramp(g, cHere + side * 5, 18)) * 40}px)`,
                 opacity: ramp(g, cHere + side * 5, 18),
               }}
@@ -301,22 +329,24 @@ export const S3Convincing: React.FC = () => {
                 value={isRecord ? '“Probabilistic and On-line Methods in Machine Learning”' : '“Boosting, Online Algorithms, and Other Topics in Machine Learning”'}
                 state={titleT}
                 tone={isRecord ? 'teal' : 'coral'}
-                tag={isRecord ? undefined : 'Not in the record'}
+                tag={isRecord ? undefined : 'Different title'}
+                rowH={172}
               />
-              <Field label="SCHOOL" value={isRecord ? 'Carnegie Mellon University' : 'CMU'} state={sameT} tone="teal" tag={isRecord ? undefined : 'Matches'} />
-              <Field label="YEAR" value={isRecord ? '2001' : '2002'} state={yearT} tone={isRecord ? 'teal' : 'coral'} tag={isRecord ? undefined : 'Not in the record'} />
+              <Field label="SCHOOL" value={isRecord ? 'Carnegie Mellon University' : 'CMU'} state={sameT} tone="teal" tag={isRecord ? undefined : 'Matches'} rowH={78} />
+              <Field label="YEAR" value={isRecord ? '2001' : '2002'} state={yearT} tone={isRecord ? 'teal' : 'coral'} tag={isRecord ? undefined : 'Wrong year'} rowH={78} />
             </div>
           );
         })}
-        <div style={{position: 'absolute', left: 1080, top: 600, opacity: evidT, transform: `translateY(${(1 - evidT) * 30}px)`}}>
-          <Doc src="img/thesis_title_block.png" width={660} aspect={693 / 1632} pad={18} />
-          <div style={{marginTop: 10, fontFamily: F.sans, fontSize: 20, color: C.muted}}>Evidence: the thesis title page itself</div>
+        <div style={{position: 'absolute', left: 1040, top: 625, opacity: evidT, transform: `translateY(${(1 - evidT) * 30}px)`}}>
+          <Doc src="img/thesis_title_block.png" width={740} aspect={1386 / 3264} pad={18} boxes={[{x: 0.415, y: 0.745, w: 0.17, h: 0.075, t: evidBox, tone: 'teal'}]} />
         </div>
-        <div style={{position: 'absolute', left: 90, top: 820, width: 840, fontFamily: F.sans, fontSize: 34, fontWeight: 650, color: C.text, lineHeight: 1.3, opacity: evidT}}>
-          The invented details are formatted just as neatly as the true one.
+        <div style={{position: 'absolute', left: 90, top: 800, width: 840, fontFamily: F.sans, fontSize: 34, fontWeight: 650, color: C.text, lineHeight: 1.3, opacity: solidT}}>
+          The invented details look exactly as solid as the true one.
         </div>
         <SourceLine opacity={sbsIn}>
-          Left: GPT-4o’s answer as excerpted in Kalai et al. (2025), Table 1 · Right: thesis title page, A. Kalai, “Probabilistic and On-line Methods in Machine Learning,” Carnegie Mellon University, May 16, 2001 (CMU-CS-01-132)
+          Left: ChatGPT (GPT-4o) as excerpted in Kalai et al. (2025), Table 1, accessed May&nbsp;9,&nbsp;2025, no web search
+          <br />
+          Right: thesis title page, A. Kalai, Carnegie Mellon University, May&nbsp;16,&nbsp;2001 (CMU-CS-01-132)
         </SourceLine>
       </AbsoluteFill>
     </AbsoluteFill>

@@ -25,15 +25,26 @@ export const ANSWERS = [
 
 const PROMPT = 'What was the title of Adam Kalai’s dissertation?';
 
-const RowCard: React.FC<{i: number; t: number; markTitle: number; markYear: number; y: number; scale?: number; read?: number}> = ({i, t, markTitle, markYear, y, scale = 1, read = 1}) => {
+const RowCard: React.FC<{i: number; t: number; markTitle: number; markYear: number; y: number; scale?: number; read?: number; readTitle?: number; readYear?: number; glow?: number}> = ({
+  i,
+  t,
+  markTitle,
+  markYear,
+  y,
+  scale = 1,
+  read = 1,
+  readTitle = 0,
+  readYear = 0,
+  glow = 0,
+}) => {
   const a = ANSWERS[i];
   const spans =
     i === 0
       ? [
           {text: a.pre},
-          {text: a.year, mark: 'coral' as const, markT: markYear},
+          markYear > 0 ? {text: a.year, mark: 'coral' as const, markT: markYear} : {text: a.year, mark: 'warm' as const, markT: readYear},
           {text: a.mid},
-          {text: a.title, mark: 'coral' as const, markT: markTitle},
+          markTitle > 0 ? {text: a.title, mark: 'coral' as const, markT: markTitle} : {text: a.title, mark: 'warm' as const, markT: readTitle},
         ]
       : [
           {text: a.title, mark: 'coral' as const, markT: markTitle},
@@ -55,7 +66,7 @@ const RowCard: React.FC<{i: number; t: number; markTitle: number; markYear: numb
         borderRadius: 20,
         background: `linear-gradient(180deg, ${C.surfaceHi} 0%, ${C.surface} 100%)`,
         border: `1.5px solid ${C.lineStrong}`,
-        boxShadow: '0 24px 60px rgba(0,0,0,0.4)',
+        boxShadow: `0 24px 60px rgba(0,0,0,0.4), 0 0 ${40 * glow}px rgba(243,238,228,${0.12 * glow})`,
         padding: '26px 34px',
         gap: 34,
       }}
@@ -98,8 +109,9 @@ export const S1Hook: React.FC = () => {
   const cSure = at('s07', 'sure');
   const cWrong = at('s07', 'wrong');
   const cShort = at('s07b', 'Short');
-  const cLikely = at('s07b', 'likely,');
-  const cIsnt = at('s07b', "isn't");
+  const cLikely = at('s07b', 'chatbot');
+  const cIsnt = at('s07b', 'likely', 2);
+  const cApart = at('s07b', 'take');
   const cEnd = segEnd('s07b');
 
   // ---- Prompt card with a type-on synced to the narration ----
@@ -107,23 +119,28 @@ export const S1Hook: React.FC = () => {
   const chipsT = ramp(g, cChatbots - 6, 12) * (1 - ramp(g, cGPT - 14, 10));
   const kickerT = ramp(g, 0, 10) * (1 - ramp(g, cGPT - 14, 10));
   const readTitle = ramp(g, at('s02', 'Boosting,'), 40, (x) => x);
+  const readTitleMark = ramp(g, at('s02', 'Boosting,'), 70, (x) => x);
+  const readYearMark = ramp(g, at('s02', '2002.'), 10);
+  const polished = ramp(g, at('s04', 'polished'), 10) * (1 - ramp(g, at('s04', 'Not') + 4, 16));
   const typed = Math.round(PROMPT.length * ramp(g, cWhat - 4, Math.max(10, cQEnd - cWhat), (x) => x));
   const promptUp = ramp(g, cGPT - 10, 18, easeInOut);
   const promptY = lerp(430, 92, promptUp);
   const promptScale = lerp(1, 0.62, promptUp);
 
   const cardsOut = ramp(g, cKalai - 4, 16, easeInOut);
-  const paperIn = ramp(g, cKalai + 2, 18);
+  const paperIn = ramp(g, cKalai + 10, 16);
   const paperBox = ramp(g, cResearchers, 16);
-  const paperOut = ramp(g, cDiff - 6, 14);
+  const c06 = at('s06');
+  const paperOut = ramp(g, c06 - 10, 12);
 
-  const splitIn = ramp(g, cDiff - 2, 18);
+  const splitIn = ramp(g, c06 - 2, 16);
   const goldT = ramp(g, cGold, 16);
   const splitOut = ramp(g, cSo - 4, 14);
 
   const titleIn = ramp(g, cSo + 4, 18);
-  const sureT = ramp(g, cSure, 12);
-  const wrongT = ramp(g, cWrong, 12);
+  const sureT = ramp(g, cSure - 6, 10);
+  const wrongT = ramp(g, cWrong - 6, 10);
+  const handoff = ramp(g, cApart, 30, easeInOut);
   const shortT = ramp(g, cShort, 14);
   const likelyT = ramp(g, cLikely - 4, 12);
   const isntT = ramp(g, cIsnt - 2, 12);
@@ -157,8 +174,7 @@ export const S1Hook: React.FC = () => {
           </div>
           <div style={{fontFamily: F.serif, fontSize: 72, color: C.text, fontWeight: 450, whiteSpace: 'pre'}}>
             {PROMPT.slice(0, typed)}
-            <span style={{opacity: typed < PROMPT.length && Math.floor(g / 8) % 2 === 0 ? 1 : 0, color: C.teal}}>|</span>
-            <span style={{opacity: 0}}>{PROMPT.slice(typed)}</span>
+            <span style={{opacity: 0.16}}>{PROMPT.slice(typed)}</span>
           </div>
         </div>
 
@@ -188,12 +204,14 @@ export const S1Hook: React.FC = () => {
           ))}
         </div>
 
-        <RowCard i={0} t={ramp(g, cGPT, 16)} markTitle={marksTitle} markYear={marksYear} y={262} read={readTitle} />
-        <RowCard i={1} t={ramp(g, cDS, 16)} markTitle={ramp(g, cTitle + 5, 16)} markYear={ramp(g, cYear + 5, 16)} y={512} />
-        <RowCard i={2} t={ramp(g, cLL, 16)} markTitle={ramp(g, cTitle + 10, 16)} markYear={ramp(g, cYear + 10, 16)} y={692} />
+        <RowCard i={0} t={ramp(g, cGPT, 16)} markTitle={marksTitle} markYear={marksYear} y={262} read={readTitle} readTitle={readTitleMark} readYear={readYearMark} glow={polished} />
+        <RowCard i={1} t={ramp(g, cDS, 16)} markTitle={ramp(g, cTitle + 5, 16)} markYear={ramp(g, cYear + 5, 16)} y={512} glow={polished} />
+        <RowCard i={2} t={ramp(g, cLL, 16)} markTitle={ramp(g, cTitle + 10, 16)} markYear={ramp(g, cYear + 10, 16)} y={692} glow={polished} />
 
         <SourceLine opacity={ramp(g, cGPT, 12)}>
-          Excerpts as published in Kalai, Nachum, Vempala &amp; Zhang (2025), “Why Language Models Hallucinate,” Table 1 · models accessed May 9, 2025 · none searched the web
+          Excerpts as published in Kalai, Nachum, Vempala &amp; Zhang (2025), “Why Language Models Hallucinate,” Table 1
+          <br />
+          Models accessed May&nbsp;9,&nbsp;2025 · none searched the web
         </SourceLine>
       </AbsoluteFill>
 
@@ -219,7 +237,7 @@ export const S1Hook: React.FC = () => {
           </div>
           <div style={{display: 'flex', gap: 18, marginTop: 44}}>
             {[0, 1, 2, 3, 4, 5].map((p) => {
-              const on = p < 5 ? ramp(g, cDiff + 8 + p * 4, 10) : 0;
+              const on = p < 5 ? ramp(g, c06 + 10 + p * 4, 10) : 0;
               return (
                 <div
                   key={p}
@@ -244,15 +262,17 @@ export const S1Hook: React.FC = () => {
             })}
           </div>
           <div style={{marginTop: 40, fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.text, opacity: goldT}}>
-            35 / 42 · gold-medal standard
+            Reported: 35 / 42 · gold-medal standard
           </div>
           <div style={{marginTop: 16, fontFamily: F.sans, fontSize: 26, color: C.textDim, opacity: goldT, lineHeight: 1.4}}>
-            Gemini Deep Think (advanced version), Google DeepMind · July 2025
+            Gemini Deep Think (advanced version) · Google DeepMind
+            <br />
+            July 2025
           </div>
         </div>
 
         <div style={{position: 'absolute', left: 1040, top: 170, width: 760}}>
-          <Tag tone="coral">Fabrication</Tag>
+          <Tag tone="coral">Invented titles</Tag>
           <div style={{marginTop: 30, fontFamily: F.sans, fontWeight: 750, fontSize: 52, color: C.text, lineHeight: 1.1}}>A dissertation title</div>
           <div style={{marginTop: 44, display: 'flex', flexDirection: 'column', gap: 14}}>
             {ANSWERS.map((a, i) => (
@@ -266,7 +286,7 @@ export const S1Hook: React.FC = () => {
                   fontFamily: F.serif,
                   fontSize: 26,
                   color: C.text,
-                  opacity: ramp(g, cDiff + 6 + i * 4, 12),
+                  opacity: ramp(g, c06 + 8 + i * 4, 12),
                 }}
               >
                 <span style={{fontFamily: F.sans, fontWeight: 700, fontSize: 22, color: C.muted, marginRight: 14}}>{a.model}</span>
@@ -275,20 +295,22 @@ export const S1Hook: React.FC = () => {
             ))}
           </div>
           <div style={{marginTop: 26, fontFamily: F.sans, fontSize: 26, color: C.textDim, lineHeight: 1.4}}>
-            GPT-4o · DeepSeek-R1 · Llama-4-Scout · May 2025 · no web search
+            GPT-4o · DeepSeek-R1 · Llama-4-Scout
+            <br />
+            May 9, 2025 · no web search
           </div>
         </div>
         <div style={{position: 'absolute', left: 960, top: 190, bottom: 210, width: 2, background: C.line}} />
-        <div style={{position: 'absolute', left: 0, right: 0, bottom: 120, textAlign: 'center', fontFamily: F.sans, fontSize: 30, fontWeight: 600, color: C.textDim, opacity: goldT}}>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 850, textAlign: 'center', fontFamily: F.sans, fontSize: 30, fontWeight: 600, color: C.textDim, opacity: goldT}}>
           Different systems, different tests, same basic technology: language models.
         </div>
         <SourceLine opacity={splitIn}>
-          IMO 2025: Google DeepMind announcement, Jul 21 2025, and its published solutions (storage.googleapis.com/deepmind-media/gemini/IMO_2025.pdf) · Right: Kalai et al. (2025), Table 1
+          IMO 2025: reported by Google DeepMind, Jul 21, 2025; published solutions: storage.googleapis.com/deepmind-media/gemini/IMO_2025.pdf · Right: Kalai et al. (2025), Table 1
         </SourceLine>
       </AbsoluteFill>
 
       {/* --- The question of the video --- */}
-      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: titleIn}}>
+      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: titleIn * (1 - 0.85 * handoff), transform: `scale(${1 + 0.08 * handoff})`}}>
         <div style={{textAlign: 'center', transform: `translateY(${(1 - titleIn) * 20 - 70 * shortT}px)`}}>
           <Headline size={124} style={{fontWeight: 780}}>
             Why AI sounds <span style={{color: C.text, opacity: 0.35 + 0.65 * sureT}}>right</span>
