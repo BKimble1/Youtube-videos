@@ -119,3 +119,18 @@ Not changed, and why:
 - The "−" signs in the equation are already true minus signs (U+2212).
 
 Each fix was checked on full-resolution stills at the exact narration cue (`source/stills.mjs`). `tools/check_cues.py` and `tsc` pass. The audio did not change: no SFX or music cue depends on the moved visuals.
+
+## Final regression check of v4, and v5
+
+Two reviewers re-checked the v4 render at every v4 fix time. They used the v4 sheets (`qa/review_v4/`) and full-resolution frames.
+
+**Confirmed:** all 18 v4 fixes landed, with timings measured against the narration words. Both reviewers found no new problems introduced by v4.
+
+They raised two low-severity carry-overs from earlier versions. Both were fixed in v5, the delivered cut:
+
+| Time | Finding | v5 fix |
+|---|---|---|
+| 1:28.9–1:30.2 | An 82-character caption was fully visible for only about 1.2 s before the cut | Shortened to "Real date: autumn (per the paper)". The teal boxes in the excerpt carry the rest |
+| 2:16.6–2:20.6 | The assembled ChatGPT title held nearly static for about 4.0 s. Only the slow push was moving; the strict freeze detector did not fire | On "usually looks like", a muted underline sweeps across the title words that also filled the earlier pattern field (Boosting, Online, Algorithms, Topics in, Machine Learning) |
+
+Both were checked on full-resolution stills at the narration cue.
