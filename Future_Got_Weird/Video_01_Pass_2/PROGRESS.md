@@ -18,8 +18,8 @@ manifest, stems, backups and documentation are in place. Nobody has watched or l
    camera, paper wipes, tape-pinned evidence with drawing highlight boxes. Checked by contact sheet, scene by scene.
 5. **Sound.** Original score (108 BPM, pizzicato, marimba, clarinet, brass) rendered with FluidSynth; six new
    ElevenLabs sound effects plus six reused; 193 cues placed at the frames props move; mix at −16.0 LUFS, −1.3 dBTP.
-6. **Render and QA.** Two full 1080p renders. The first found five layout faults and one 5.2 s static hold
-   (`qa/CORRECTIONS.md`); all fixed before the second. Determinism confirmed by rendering three frames twice in
+6. **Render and QA.** Three full 1080p renders. The first found five layout faults and one 5.2 s static hold,
+   the second one cosmetic fault (`qa/CORRECTIONS.md`); all fixed before the third, whose detectors are clean. Determinism confirmed by rendering three frames twice in
    separate processes (byte-identical).
 7. **Packaging.** SRT, chapters, three thumbnails, title options, paste-ready description, claim ledger, asset
    manifest, rebuild README, split-part backups with checksums.

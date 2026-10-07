@@ -1,0 +1,72 @@
+{
+ "S1": {
+  "seconds": 27,
+  "mean_luma": 169.3,
+  "min_luma": 156.9,
+  "mean_diff_1fps": 11.57,
+  "static_pairs_below_0.5": 8
+ },
+ "S2": {
+  "seconds": 17,
+  "mean_luma": 225.2,
+  "min_luma": 167.0,
+  "mean_diff_1fps": 6.85,
+  "static_pairs_below_0.5": 7
+ },
+ "S3": {
+  "seconds": 41,
+  "mean_luma": 211.3,
+  "min_luma": 207.0,
+  "mean_diff_1fps": 6.11,
+  "static_pairs_below_0.5": 15
+ },
+ "S4": {
+  "seconds": 35,
+  "mean_luma": 161.3,
+  "min_luma": 157.0,
+  "mean_diff_1fps": 13.17,
+  "static_pairs_below_0.5": 11
+ },
+ "S5": {
+  "seconds": 23,
+  "mean_luma": 203.6,
+  "min_luma": 190.9,
+  "mean_diff_1fps": 8.92,
+  "static_pairs_below_0.5": 11
+ },
+ "S6": {
+  "seconds": 47,
+  "mean_luma": 157.7,
+  "min_luma": 149.0,
+  "mean_diff_1fps": 5.63,
+  "static_pairs_below_0.5": 19
+ },
+ "S7": {
+  "seconds": 18,
+  "mean_luma": 225.9,
+  "min_luma": 219.1,
+  "mean_diff_1fps": 2.58,
+  "static_pairs_below_0.5": 7
+ },
+ "S8": {
+  "seconds": 14,
+  "mean_luma": 203.4,
+  "min_luma": 200.3,
+  "mean_diff_1fps": 13.63,
+  "static_pairs_below_0.5": 2
+ },
+ "S9": {
+  "seconds": 26,
+  "mean_luma": 179.7,
+  "min_luma": 171.5,
+  "mean_diff_1fps": 3.41,
+  "static_pairs_below_0.5": 12
+ },
+ "S10": {
+  "seconds": 33,
+  "mean_luma": 169.2,
+  "min_luma": 165.3,
+  "mean_diff_1fps": 6.76,
+  "static_pairs_below_0.5": 16
+ }
+}
