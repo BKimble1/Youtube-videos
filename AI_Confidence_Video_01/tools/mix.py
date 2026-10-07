@@ -99,6 +99,7 @@ def main():
     ap.add_argument("--duck-db", type=float, default=8.0, help="music reduction under speech (dB)")
     ap.add_argument("--sfx-db", type=float, default=0.0)
     ap.add_argument("--target-lufs", type=float, default=-16.0)
+    ap.add_argument("--no-public", action="store_true", help="don't overwrite source/public/audio/mix.wav (e.g. while a render is reading it)")
     args = ap.parse_args()
 
     nar, sr = sf.read(os.path.join(ROOT, "source/public/audio/narration.wav"), always_2d=True)
@@ -126,6 +127,12 @@ def main():
     e = envelope(v, 30)
     e_db = 20 * np.log10(e + 1e-9)
     speech = np.clip((e_db + 48) / 12, 0, 1)  # 0 below -48 dBFS, 1 above -36 dBFS
+    # look ahead 120 ms (the music is already down when a phrase starts) and hold 300 ms (no swell
+    # in the short pauses between phrases); the attack/release smoothing below shapes the moves
+    from scipy.ndimage import maximum_filter1d
+    la, hold = int(0.12 * SR), int(0.30 * SR)
+    speech_raw = speech
+    speech = maximum_filter1d(speech, size=la + hold + 1, origin=(hold - la) // 2, mode="nearest")
     duck_db = -args.duck_db * speech
     g = 10 ** (duck_db / 20)
     g = smooth_ar(g, 60, 450)
@@ -146,17 +153,18 @@ def main():
 
     out_dir = os.path.join(ROOT, "audio/mix")
     os.makedirs(out_dir, exist_ok=True)
-    sf.write(os.path.join(ROOT, "source/public/audio/mix.wav"), mix.astype(np.float32), SR, subtype="PCM_24")
+    if not args.no_public:
+        sf.write(os.path.join(ROOT, "source/public/audio/mix.wav"), mix.astype(np.float32), SR, subtype="PCM_24")
     sf.write(os.path.join(out_dir, "final_mix.wav"), mix.astype(np.float32), SR, subtype="PCM_24")
     sf.write(os.path.join(out_dir, "stem_narration.wav"), V.astype(np.float32), SR, subtype="PCM_24")
     sf.write(os.path.join(out_dir, "stem_music_ducked.wav"), M.astype(np.float32), SR, subtype="PCM_24")
     sf.write(os.path.join(out_dir, "stem_sfx.wav"), S.astype(np.float32), SR, subtype="PCM_24")
 
     # speech-to-music ratio while speaking
-    sp = speech > 0.9
+    sp = speech_raw > 0.9
     vr = np.sqrt(np.mean(V[sp] ** 2)) if sp.any() else 0
     mr = np.sqrt(np.mean(M[sp] ** 2)) if sp.any() else 0
-    gap = (speech < 0.05)
+    gap = (speech_raw < 0.05)
     mrg = np.sqrt(np.mean(M[gap] ** 2)) if gap.any() else 0
     report = {
         "integrated_lufs_python": round(l2, 2),
