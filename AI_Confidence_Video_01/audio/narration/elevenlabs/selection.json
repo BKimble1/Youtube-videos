@@ -1,0 +1,62 @@
+{
+ "b01": {
+  "take": "b01_t1.mp3",
+  "alignment": "b01_t1.align.json",
+  "generation_id": "HEAfECLXEuA2uUM3w3I5"
+ },
+ "b02": {
+  "take": "b02_t4.mp3",
+  "alignment": "b02_t4.align.json",
+  "generation_id": "9LZgEvQSBqAXZXvlIllD"
+ },
+ "b03": {
+  "take": "b03_t1.mp3",
+  "alignment": "b03_t1.align.json",
+  "generation_id": "5a60kMN0uZevTrIQ2xU4"
+ },
+ "b04": {
+  "take": "b04_t1.mp3",
+  "alignment": "b04_t1.align.json",
+  "generation_id": "2jOMpMIbFH7f5tqBQu8j"
+ },
+ "b05": {
+  "take": "b05_t3.mp3",
+  "alignment": "b05_t3.align.json",
+  "generation_id": "5Zi5dIvkMO7eWYkQkeoI"
+ },
+ "b06": {
+  "take": "b06_t4.mp3",
+  "alignment": "b06_t4.align.json",
+  "generation_id": "YxPpIQeAkPj0L1eRUDmL"
+ },
+ "b07": {
+  "take": "b07_t4.mp3",
+  "alignment": "b07_t4.align.json",
+  "generation_id": "ZkmhwvPQQ8Xu9IBatDj6"
+ },
+ "b08": {
+  "take": "b08_t1.mp3",
+  "alignment": "b08_t1.align.json",
+  "generation_id": "CU56XL4WhnFbkQfJmxwi"
+ },
+ "b09": {
+  "take": "b09_t4.mp3",
+  "alignment": "b09_t4.align.json",
+  "generation_id": "bCszGr0741Q5wYA0M03N"
+ },
+ "b10": {
+  "take": "b10_t3.mp3",
+  "alignment": "b10_t3.align.json",
+  "generation_id": "jtjB0IMQ76nqDQpMsSqo"
+ },
+ "b11": {
+  "take": "b11_t3.mp3",
+  "alignment": "b11_t3.align.json",
+  "generation_id": "tdLJH5nVXtUP1yHPiZEP"
+ },
+ "b12": {
+  "take": "b12_t1.mp3",
+  "alignment": "b12_t1.align.json",
+  "generation_id": "H01E0Q5BRBdQYTtPdQcP"
+ }
+}

@@ -1,0 +1,79 @@
+{
+"words": [
+{
+"word": "Here's",
+"start": 0.275,
+"end": 0.435
+},
+{
+"word": "Kalai's",
+"start": 0.515,
+"end": 0.915
+},
+{
+"word": "actual",
+"start": 1.115,
+"end": 1.315
+},
+{
+"word": "thesis.",
+"start": 1.395,
+"end": 2.115
+},
+{
+"word": "“Probabilistic",
+"start": 2.355,
+"end": 3.235
+},
+{
+"word": "and",
+"start": 3.315,
+"end": 3.395
+},
+{
+"word": "On-line",
+"start": 3.555,
+"end": 3.875
+},
+{
+"word": "Methods",
+"start": 3.955,
+"end": 4.355
+},
+{
+"word": "in",
+"start": 4.435,
+"end": 4.475
+},
+{
+"word": "Machine",
+"start": 4.515,
+"end": 4.835
+},
+{
+"word": "Learning.”",
+"start": 4.915,
+"end": 5.515
+},
+{
+"word": "Carnegie",
+"start": 5.715,
+"end": 6.115
+},
+{
+"word": "Mellon,",
+"start": 6.155,
+"end": 6.675
+},
+{
+"word": "May",
+"start": 6.755,
+"end": 6.995
+},
+{
+"word": "2001.",
+"start": 7.075,
+"end": 8.155
+}
+]
+}

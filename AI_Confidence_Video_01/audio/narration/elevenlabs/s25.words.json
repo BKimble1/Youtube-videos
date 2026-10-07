@@ -1,0 +1,134 @@
+{
+"words": [
+{
+"word": "The",
+"start": 0.215,
+"end": 0.255
+},
+{
+"word": "guesser",
+"start": 0.295,
+"end": 0.695
+},
+{
+"word": "takes",
+"start": 0.775,
+"end": 0.935
+},
+{
+"word": "a",
+"start": 0.975,
+"end": 1.015
+},
+{
+"word": "shot",
+"start": 1.095,
+"end": 1.255
+},
+{
+"word": "at",
+"start": 1.335,
+"end": 1.415
+},
+{
+"word": "all",
+"start": 1.495,
+"end": 1.655
+},
+{
+"word": "four.",
+"start": 1.735,
+"end": 2.135
+},
+{
+"word": "With",
+"start": 2.455,
+"end": 2.535
+},
+{
+"word": "four",
+"start": 2.615,
+"end": 2.775
+},
+{
+"word": "choices",
+"start": 2.855,
+"end": 3.175
+},
+{
+"word": "each,",
+"start": 3.255,
+"end": 3.735
+},
+{
+"word": "on",
+"start": 3.815,
+"end": 3.895
+},
+{
+"word": "average",
+"start": 3.975,
+"end": 4.375
+},
+{
+"word": "one",
+"start": 4.535,
+"end": 4.695
+},
+{
+"word": "lands.",
+"start": 4.775,
+"end": 5.375
+},
+{
+"word": "Seven",
+"start": 5.575,
+"end": 5.735
+},
+{
+"word": "points.",
+"start": 5.815,
+"end": 6.295
+},
+{
+"word": "The",
+"start": 6.695,
+"end": 6.735
+},
+{
+"word": "guesser",
+"start": 6.775,
+"end": 7.095
+},
+{
+"word": "wins,",
+"start": 7.175,
+"end": 7.735
+},
+{
+"word": "with",
+"start": 7.815,
+"end": 7.895
+},
+{
+"word": "three",
+"start": 7.975,
+"end": 8.215
+},
+{
+"word": "confident",
+"start": 8.375,
+"end": 8.855
+},
+{
+"word": "wrong",
+"start": 8.975,
+"end": 9.095
+},
+{
+"word": "answers.",
+"start": 9.175,
+"end": 9.895
+}
+]
+}

@@ -1,0 +1,84 @@
+{
+"words": [
+{
+"word": "Famous",
+"start": 0.01,
+"end": 0.33
+},
+{
+"word": "facts",
+"start": 0.41,
+"end": 0.73
+},
+{
+"word": "repeat,",
+"start": 0.89,
+"end": 1.13
+},
+{
+"word": "too.",
+"start": 1.29,
+"end": 1.53
+},
+{
+"word": "The",
+"start": 1.93,
+"end": 2.01
+},
+{
+"word": "paper",
+"start": 2.09,
+"end": 2.33
+},
+{
+"word": "notes",
+"start": 2.45,
+"end": 2.57
+},
+{
+"word": "that",
+"start": 2.65,
+"end": 2.73
+},
+{
+"word": "models",
+"start": 2.81,
+"end": 3.13
+},
+{
+"word": "rarely",
+"start": 3.21,
+"end": 3.53
+},
+{
+"word": "miss",
+"start": 3.69,
+"end": 3.85
+},
+{
+"word": "something",
+"start": 4.01,
+"end": 4.17
+},
+{
+"word": "like",
+"start": 4.25,
+"end": 4.41
+},
+{
+"word": "Einstein's",
+"start": 4.49,
+"end": 4.97
+},
+{
+"word": "dissertation",
+"start": 5.05,
+"end": 5.61
+},
+{
+"word": "title.",
+"start": 5.69,
+"end": 6.09
+}
+]
+}

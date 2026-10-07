@@ -1,0 +1,149 @@
+{
+"words": [
+{
+"word": "Each",
+"start": 0.53,
+"end": 0.69
+},
+{
+"word": "token",
+"start": 0.77,
+"end": 1.09
+},
+{
+"word": "is",
+"start": 1.17,
+"end": 1.33
+},
+{
+"word": "really",
+"start": 1.41,
+"end": 1.65
+},
+{
+"word": "a",
+"start": 1.69,
+"end": 1.73
+},
+{
+"word": "number.",
+"start": 1.81,
+"end": 2.21
+},
+{
+"word": "At",
+"start": 2.69,
+"end": 2.85
+},
+{
+"word": "every",
+"start": 2.93,
+"end": 3.09
+},
+{
+"word": "step,",
+"start": 3.17,
+"end": 3.65
+},
+{
+"word": "the",
+"start": 3.73,
+"end": 3.77
+},
+{
+"word": "model",
+"start": 3.81,
+"end": 4.05
+},
+{
+"word": "turns",
+"start": 4.13,
+"end": 4.45
+},
+{
+"word": "the",
+"start": 4.49,
+"end": 4.53
+},
+{
+"word": "tokens",
+"start": 4.61,
+"end": 5.01
+},
+{
+"word": "so",
+"start": 5.09,
+"end": 5.25
+},
+{
+"word": "far",
+"start": 5.41,
+"end": 5.65
+},
+{
+"word": "into",
+"start": 5.73,
+"end": 5.89
+},
+{
+"word": "a",
+"start": 5.97,
+"end": 6.01
+},
+{
+"word": "numerical",
+"start": 6.05,
+"end": 6.53
+},
+{
+"word": "picture",
+"start": 6.61,
+"end": 6.93
+},
+{
+"word": "of",
+"start": 6.97,
+"end": 7.01
+},
+{
+"word": "the",
+"start": 7.09,
+"end": 7.13
+},
+{
+"word": "context,",
+"start": 7.17,
+"end": 8.05
+},
+{
+"word": "and",
+"start": 8.09,
+"end": 8.13
+},
+{
+"word": "scores",
+"start": 8.21,
+"end": 8.61
+},
+{
+"word": "every",
+"start": 8.69,
+"end": 8.93
+},
+{
+"word": "possible",
+"start": 9.09,
+"end": 9.49
+},
+{
+"word": "next",
+"start": 9.57,
+"end": 9.81
+},
+{
+"word": "token.",
+"start": 10.01,
+"end": 10.53
+}
+]
+}

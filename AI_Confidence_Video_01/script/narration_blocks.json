@@ -1,0 +1,193 @@
+{
+ "model": "eleven_v4",
+ "voice_name": "Marcus K",
+ "voice_id": "3H55HGnNE1XjYxigHSAS",
+ "blocks": [
+  {
+   "id": "b01",
+   "segments": [
+    "s01",
+    "s02",
+    "s03",
+    "s04"
+   ],
+   "prompt": "Researchers asked three popular chatbots one simple question: What was the title of Adam /kəˈlaɪz/ dissertation?\n\nChatGPT answered, “Boosting, Online Algorithms, and Other Topics in Machine Learning.” Carnegie Mellon, 2002.\n\nDeepSeek gave a different title, at Harvard, in 2005. Llama gave a third, at MIT, in 2007.\n\nThree polished answers. Not one had the right title, or even the right year.",
+   "words_per_segment": [
+    16,
+    14,
+    17,
+    14
+   ],
+   "chars": 393
+  },
+  {
+   "id": "b02",
+   "segments": [
+    "s05",
+    "s06",
+    "s07",
+    "s07b"
+   ],
+   "prompt": "And Adam /kəˈlaɪ/? He's the paper's lead author.\n\nMeanwhile, Google DeepMind published solutions to five of the six problems at the 2025 International Mathematical Olympiad, credited to a different model, Gemini Deep Think.\n\nSo how can the same kind of technology take on olympiad problems, and still sound this sure while being this wrong?\n\nShort answer: a chatbot writes what's likely, and likely isn't always true. To see why, let's take one answer apart.",
+   "words_per_segment": [
+    8,
+    25,
+    21,
+    20
+   ],
+   "chars": 458
+  },
+  {
+   "id": "b03",
+   "segments": [
+    "s08",
+    "s09",
+    "s10"
+   ],
+   "prompt": "Here's part of ChatGPT's answer.\n\nA language model writes in tokens: chunks of text. Some are whole words. Some are fragments. “/kəˈlaɪ/” becomes “/kæl/” and “/aɪ/.”\n\nEach token is really a number. At every step, the model turns the tokens so far into a numerical picture of the context, and scores every possible next token.",
+   "words_per_segment": [
+    5,
+    21,
+    29
+   ],
+   "chars": 325
+  },
+  {
+   "id": "b04",
+   "segments": [
+    "s11",
+    "s12"
+   ],
+   "prompt": "Here, it's choosing the last digit of the year. One option gets picked, added to the end, and the loop runs again, token after token.\n\nBecause there's a pick, the same question can come out differently. Asked for /kəˈlaɪz/ birthday, “only if you know,” one model gave three different dates in three tries.",
+   "words_per_segment": [
+    25,
+    28
+   ],
+   "chars": 305
+  },
+  {
+   "id": "b05",
+   "segments": [
+    "s13",
+    "s14"
+   ],
+   "prompt": "Here's the key part. Those scores measure how likely a piece of text is to come next. Not how likely it is to be true.\n\nModern chatbots add more: instruction training, step-by-step reasoning, sometimes web search. But the answer itself is still written token by token.",
+   "words_per_segment": [
+    25,
+    21
+   ],
+   "chars": 268
+  },
+  {
+   "id": "b06",
+   "segments": [
+    "s15",
+    "s16",
+    "s17",
+    "s18"
+   ],
+   "prompt": "So why would the likely answer be wrong? Look at what the model had to learn.\n\nWhat a dissertation title sounds like is everywhere: “Methods,” “Algorithms,” “Machine Learning,” again and again.\n\nFamous facts repeat, too. The paper notes that models rarely miss something like Einstein's dissertation title.\n\nBut one researcher's thesis title might appear rarely in the training data. Maybe once. Maybe never. Like a birthday, there's no pattern to work it out from.",
+   "words_per_segment": [
+    16,
+    15,
+    16,
+    27
+   ],
+   "chars": 465
+  },
+  {
+   "id": "b07",
+   "segments": [
+    "s19",
+    "s20",
+    "s21"
+   ],
+   "prompt": "So the model fills the gap with what a title usually looks like, and the confidence comes along for free. “Is entitled.” No “I think,” no “maybe.” That tone isn't a readout of what the model knows.\n\nHere's ChatGPT's answer next to the actual record. Spot the difference?\n\nSame university. The wrong year: it was 2001. And a different title. The invented details look exactly as solid as the true one.",
+   "words_per_segment": [
+    37,
+    11,
+    23
+   ],
+   "chars": 400
+  },
+  {
+   "id": "b08",
+   "segments": [
+    "s22",
+    "s23",
+    "s24",
+    "s25"
+   ],
+   "prompt": "So why guess at all? Why not say, “I don't know”? The researchers argue part of the answer is how models get graded.\n\nPicture a ten-question quiz. Right answer: one point. Wrong answer: zero. “I don't know”: also zero.\n\nTwo test-takers each know six answers. The honest one says “I don't know” to the rest. Six points.\n\nThe guesser takes a shot at all four. With four choices each, on average one lands. Seven points. The guesser wins, with three confident wrong answers.",
+   "words_per_segment": [
+    23,
+    16,
+    18,
+    26
+   ],
+   "chars": 471
+  },
+  {
+   "id": "b09",
+   "segments": [
+    "s26",
+    "s27",
+    "s28",
+    "s29"
+   ],
+   "prompt": "Now change one rule. A wrong answer costs a point.\n\nThe honest one: still six. The guesser: six, plus one, minus three. Four. Bluffing loses.\n\nWhen the researchers checked ten popular benchmarks, nine graded strictly right or wrong, with zero credit for “I don't know.” Train and rank models on tests like that, and guessing pays.\n\nTheir fix: state the penalty for wrong answers up front, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one.",
+   "words_per_segment": [
+    10,
+    15,
+    31,
+    27
+   ],
+   "chars": 496
+  },
+  {
+   "id": "b10",
+   "segments": [
+    "s30",
+    "s31",
+    "s32"
+   ],
+   "prompt": "So what actually helps? Start with the unglamorous move: check the record.\n\nHere's /kəˈlaɪz/ actual thesis. “Probabilistic and On-line Methods in Machine Learning.” Carnegie Mellon, May 2001.\n\nAnd checking means more than spotting a citation. Does the source exist, and does it actually say this?",
+   "words_per_segment": [
+    12,
+    15,
+    18
+   ],
+   "chars": 296
+  },
+  {
+   "id": "b11",
+   "segments": [
+    "s33",
+    "s34",
+    "s35"
+   ],
+   "prompt": "Inside one Claude model, Anthropic researchers found a default circuit for “I can't answer.” Recognizing a familiar name switches it off.\n\nWhen that recognition misfires, when a name seems familiar but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts.\n\nSearch, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
+   "words_per_segment": [
+    21,
+    28,
+    32
+   ],
+   "chars": 511
+  },
+  {
+   "id": "b12",
+   "segments": [
+    "s36",
+    "s37",
+    "s38"
+   ],
+   "prompt": "So why does AI sound right when it's wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have.\n\nSo when an answer matters, don't ask whether it sounds right. Ask: what's the evidence, and does it actually say this?\n\nIt works on chatbots. It works pretty well on people, too.",
+   "words_per_segment": [
+    27,
+    21,
+    11
+   ],
+   "chars": 341
+  }
+ ]
+}

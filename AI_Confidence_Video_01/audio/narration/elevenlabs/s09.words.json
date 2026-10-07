@@ -1,0 +1,109 @@
+{
+"words": [
+{
+"word": "A",
+"start": 0.125,
+"end": 0.205
+},
+{
+"word": "language",
+"start": 0.365,
+"end": 0.525
+},
+{
+"word": "model",
+"start": 0.605,
+"end": 0.925
+},
+{
+"word": "writes",
+"start": 1.085,
+"end": 1.245
+},
+{
+"word": "in",
+"start": 1.325,
+"end": 1.405
+},
+{
+"word": "tokens:",
+"start": 1.485,
+"end": 2.365
+},
+{
+"word": "chunks",
+"start": 2.445,
+"end": 2.685
+},
+{
+"word": "of",
+"start": 2.765,
+"end": 2.805
+},
+{
+"word": "text.",
+"start": 2.845,
+"end": 3.605
+},
+{
+"word": "Some",
+"start": 3.885,
+"end": 4.125
+},
+{
+"word": "are",
+"start": 4.205,
+"end": 4.285
+},
+{
+"word": "whole",
+"start": 4.365,
+"end": 4.525
+},
+{
+"word": "words.",
+"start": 4.605,
+"end": 5.085
+},
+{
+"word": "Some",
+"start": 5.405,
+"end": 5.565
+},
+{
+"word": "are",
+"start": 5.645,
+"end": 5.725
+},
+{
+"word": "fragments.",
+"start": 5.805,
+"end": 6.365
+},
+{
+"word": "“Kalai”",
+"start": 6.845,
+"end": 7.565
+},
+{
+"word": "becomes",
+"start": 7.645,
+"end": 8.045
+},
+{
+"word": "“Kal”",
+"start": 8.205,
+"end": 8.685
+},
+{
+"word": "and",
+"start": 9.005,
+"end": 9.165
+},
+{
+"word": "“ai.”",
+"start": 9.405,
+"end": 9.965
+}
+]
+}

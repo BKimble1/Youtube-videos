@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+"""Group narration segments into delivery blocks for ElevenLabs generation.
+
+A block is several consecutive segments read in one take, so intonation flows naturally across
+sentences (one-segment-at-a-time generation sounds clipped). Segment boundaries are recovered later
+from forced-alignment word timings (tools/el_assemble.py), which needs the Eleven v4 prompt of each
+segment to have the same word count as its display text.
+
+Writes script/narration_blocks.json and prints each block's prompt.
+Usage: python3 tools/el_blocks.py
+"""
+import json
+import os
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BLOCKS = [
+    ("b01", ["s01", "s02", "s03", "s04"]),          # hook: the question, three answers, verdict
+    ("b02", ["s05", "s06", "s07", "s07b"]),         # lead-author reveal, IMO contrast, short answer
+    ("b03", ["s08", "s09", "s10"]),                 # tokens
+    ("b04", ["s11", "s12"]),                        # the loop, sampling
+    ("b05", ["s13", "s14"]),                        # likely vs true
+    ("b06", ["s15", "s16", "s17", "s18"]),          # what the model had to learn
+    ("b07", ["s19", "s20", "s21"]),                 # confidence for free, side-by-side
+    ("b08", ["s22", "s23", "s24", "s25"]),          # quiz, rules 1
+    ("b09", ["s26", "s27", "s28", "s29"]),          # quiz, rules 2 + benchmarks
+    ("b10", ["s30", "s31", "s32"]),                 # check the record
+    ("b11", ["s33", "s34", "s35"]),                 # circuits, mitigations
+    ("b12", ["s36", "s37", "s38"]),                 # payoff
+]
+
+
+def main():
+    doc = json.load(open(os.path.join(ROOT, "script/narration_segments.json"), encoding="utf-8"))
+    segs = {s["id"]: s for s in doc["segments"]}
+    order = [s["id"] for s in doc["segments"]]
+    flat = [sid for _, ids in BLOCKS for sid in ids]
+    assert flat == order, "blocks must cover every segment once, in script order"
+    out = []
+    for bid, ids in BLOCKS:
+        parts = [segs[i].get("tts_v4", segs[i]["text"]) for i in ids]
+        for i, p in zip(ids, parts):
+            assert len(p.split()) == len(segs[i]["text"].split()), i
+        prompt = "\n\n".join(parts)
+        out.append({"id": bid, "segments": ids, "prompt": prompt,
+                    "words_per_segment": [len(p.split()) for p in parts], "chars": len(prompt)})
+    with open(os.path.join(ROOT, "script/narration_blocks.json"), "w", encoding="utf-8") as f:
+        json.dump({"model": "eleven_v4", "voice_name": "Marcus K", "voice_id": "3H55HGnNE1XjYxigHSAS",
+                   "blocks": out}, f, ensure_ascii=False, indent=1)
+    for b in out:
+        print(f"== {b['id']} ({b['chars']} chars, {sum(b['words_per_segment'])} words)")
+    print("total chars", sum(b["chars"] for b in out))
+
+
+if __name__ == "__main__":
+    main()

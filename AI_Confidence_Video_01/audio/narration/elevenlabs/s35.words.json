@@ -1,0 +1,164 @@
+{
+"words": [
+{
+"word": "Search,",
+"start": 0.37,
+"end": 0.85
+},
+{
+"word": "retrieval,",
+"start": 0.93,
+"end": 1.49
+},
+{
+"word": "and",
+"start": 1.53,
+"end": 1.57
+},
+{
+"word": "longer",
+"start": 1.65,
+"end": 1.97
+},
+{
+"word": "reasoning",
+"start": 2.05,
+"end": 2.45
+},
+{
+"word": "can",
+"start": 2.53,
+"end": 2.61
+},
+{
+"word": "help",
+"start": 2.69,
+"end": 2.93
+},
+{
+"word": "when",
+"start": 3.01,
+"end": 3.09
+},
+{
+"word": "they",
+"start": 3.13,
+"end": 3.17
+},
+{
+"word": "bring",
+"start": 3.25,
+"end": 3.41
+},
+{
+"word": "in",
+"start": 3.45,
+"end": 3.49
+},
+{
+"word": "the",
+"start": 3.53,
+"end": 3.57
+},
+{
+"word": "right",
+"start": 3.65,
+"end": 3.81
+},
+{
+"word": "evidence.",
+"start": 3.89,
+"end": 4.37
+},
+{
+"word": "Turning",
+"start": 4.93,
+"end": 5.25
+},
+{
+"word": "down",
+"start": 5.33,
+"end": 5.41
+},
+{
+"word": "the",
+"start": 5.45,
+"end": 5.49
+},
+{
+"word": "randomness",
+"start": 5.57,
+"end": 6.13
+},
+{
+"word": "makes",
+"start": 6.25,
+"end": 6.37
+},
+{
+"word": "answers",
+"start": 6.45,
+"end": 6.77
+},
+{
+"word": "more",
+"start": 6.85,
+"end": 6.93
+},
+{
+"word": "consistent,",
+"start": 7.01,
+"end": 7.89
+},
+{
+"word": "not",
+"start": 8.01,
+"end": 8.13
+},
+{
+"word": "necessarily",
+"start": 8.17,
+"end": 8.77
+},
+{
+"word": "more",
+"start": 8.85,
+"end": 8.93
+},
+{
+"word": "correct.",
+"start": 9.01,
+"end": 9.49
+},
+{
+"word": "None",
+"start": 9.97,
+"end": 10.13
+},
+{
+"word": "of",
+"start": 10.17,
+"end": 10.21
+},
+{
+"word": "it",
+"start": 10.29,
+"end": 10.37
+},
+{
+"word": "is",
+"start": 10.45,
+"end": 10.53
+},
+{
+"word": "a",
+"start": 10.57,
+"end": 10.61
+},
+{
+"word": "guarantee.",
+"start": 10.65,
+"end": 11.49
+}
+]
+}

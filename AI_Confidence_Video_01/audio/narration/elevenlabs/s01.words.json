@@ -1,0 +1,84 @@
+{
+"words": [
+{
+"word": "Researchers",
+"start": 0.0,
+"end": 0.56
+},
+{
+"word": "asked",
+"start": 0.64,
+"end": 0.96
+},
+{
+"word": "three",
+"start": 1.04,
+"end": 1.28
+},
+{
+"word": "popular",
+"start": 1.36,
+"end": 1.76
+},
+{
+"word": "chatbots",
+"start": 1.84,
+"end": 2.4
+},
+{
+"word": "one",
+"start": 2.56,
+"end": 2.8
+},
+{
+"word": "simple",
+"start": 2.88,
+"end": 3.12
+},
+{
+"word": "question:",
+"start": 3.2,
+"end": 4.24
+},
+{
+"word": "What",
+"start": 4.32,
+"end": 4.4
+},
+{
+"word": "was",
+"start": 4.48,
+"end": 4.56
+},
+{
+"word": "the",
+"start": 4.64,
+"end": 4.72
+},
+{
+"word": "title",
+"start": 4.88,
+"end": 5.04
+},
+{
+"word": "of",
+"start": 5.12,
+"end": 5.2
+},
+{
+"word": "Adam",
+"start": 5.28,
+"end": 5.52
+},
+{
+"word": "Kalai's",
+"start": 5.6,
+"end": 6.0
+},
+{
+"word": "dissertation?",
+"start": 6.04,
+"end": 7.04
+}
+]
+}

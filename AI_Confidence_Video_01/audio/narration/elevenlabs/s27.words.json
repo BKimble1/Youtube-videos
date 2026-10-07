@@ -1,0 +1,79 @@
+{
+"words": [
+{
+"word": "The",
+"start": 0.07,
+"end": 0.15
+},
+{
+"word": "honest",
+"start": 0.19,
+"end": 0.47
+},
+{
+"word": "one:",
+"start": 0.55,
+"end": 1.11
+},
+{
+"word": "still",
+"start": 1.23,
+"end": 1.35
+},
+{
+"word": "six.",
+"start": 1.43,
+"end": 1.91
+},
+{
+"word": "The",
+"start": 2.31,
+"end": 2.35
+},
+{
+"word": "guesser:",
+"start": 2.39,
+"end": 3.27
+},
+{
+"word": "six,",
+"start": 3.35,
+"end": 3.91
+},
+{
+"word": "plus",
+"start": 4.03,
+"end": 4.15
+},
+{
+"word": "one,",
+"start": 4.31,
+"end": 4.79
+},
+{
+"word": "minus",
+"start": 4.95,
+"end": 5.11
+},
+{
+"word": "three.",
+"start": 5.19,
+"end": 5.91
+},
+{
+"word": "Four.",
+"start": 5.99,
+"end": 6.55
+},
+{
+"word": "Bluffing",
+"start": 6.79,
+"end": 7.19
+},
+{
+"word": "loses.",
+"start": 7.35,
+"end": 7.91
+}
+]
+}

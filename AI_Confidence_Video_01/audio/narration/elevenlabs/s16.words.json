@@ -1,0 +1,79 @@
+{
+"words": [
+{
+"word": "What",
+"start": 0.345,
+"end": 0.425
+},
+{
+"word": "a",
+"start": 0.465,
+"end": 0.505
+},
+{
+"word": "dissertation",
+"start": 0.585,
+"end": 1.145
+},
+{
+"word": "title",
+"start": 1.225,
+"end": 1.465
+},
+{
+"word": "sounds",
+"start": 1.545,
+"end": 1.865
+},
+{
+"word": "like",
+"start": 1.945,
+"end": 2.105
+},
+{
+"word": "is",
+"start": 2.185,
+"end": 2.345
+},
+{
+"word": "everywhere:",
+"start": 2.585,
+"end": 3.625
+},
+{
+"word": "“Methods,”",
+"start": 3.705,
+"end": 4.345
+},
+{
+"word": "“Algorithms,”",
+"start": 4.505,
+"end": 5.305
+},
+{
+"word": "“Machine",
+"start": 5.385,
+"end": 5.785
+},
+{
+"word": "Learning,”",
+"start": 5.865,
+"end": 6.425
+},
+{
+"word": "again",
+"start": 6.665,
+"end": 6.905
+},
+{
+"word": "and",
+"start": 6.985,
+"end": 7.065
+},
+{
+"word": "again.",
+"start": 7.305,
+"end": 7.625
+}
+]
+}

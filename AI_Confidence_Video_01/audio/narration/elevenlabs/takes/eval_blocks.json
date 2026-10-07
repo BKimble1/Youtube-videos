@@ -1,0 +1,3090 @@
+{
+ "b01": [
+  {
+   "file": "b01_t1.mp3",
+   "duration_s": 27.68,
+   "wpm_speaking": 165.2,
+   "wpm_overall": 133.2,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     3.65,
+     0.63
+    ],
+    [
+     6.7,
+     0.66
+    ],
+    [
+     8.54,
+     0.4
+    ],
+    [
+     12.46,
+     0.52
+    ],
+    [
+     14.55,
+     0.6
+    ],
+    [
+     16.6,
+     0.33
+    ],
+    [
+     18.47,
+     0.62
+    ],
+    [
+     20.17,
+     0.2
+    ],
+    [
+     22.14,
+     0.66
+    ],
+    [
+     24.22,
+     0.45
+    ],
+    [
+     26.2,
+     0.26
+    ]
+   ],
+   "f0_median_hz": 93.0,
+   "f0_range_st_10_90": 13.32,
+   "f0_sd_st": 5.67,
+   "intensity_sd_db": 6.12,
+   "hnr_db": 7.5,
+   "noise_floor_dbfs": -61.7,
+   "lufs": -27.5,
+   "true_peak_dbtp": -6.1,
+   "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Collide's dissertation? ChatGPT answered, boosting online algorithms and other topics in machine learning. Carnegie Mellon, 2002. Deep-seek gave a different title, at Harvard, in 2005. Lama gave a third at MIT in 2007. Three polished answers. Not one had the right title, or even the right year.",
+   "wer_whisper_tiny": 0.082
+  },
+  {
+   "file": "b01_t2.mp3",
+   "duration_s": 27.6,
+   "wpm_speaking": 165.0,
+   "wpm_overall": 133.7,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     3.51,
+     0.63
+    ],
+    [
+     6.5,
+     0.59
+    ],
+    [
+     8.32,
+     0.42
+    ],
+    [
+     12.25,
+     0.5
+    ],
+    [
+     14.33,
+     0.59
+    ],
+    [
+     16.38,
+     0.32
+    ],
+    [
+     18.29,
+     0.54
+    ],
+    [
+     19.94,
+     0.24
+    ],
+    [
+     21.98,
+     0.58
+    ],
+    [
+     24.06,
+     0.47
+    ],
+    [
+     26.04,
+     0.32
+    ]
+   ],
+   "f0_median_hz": 92.5,
+   "f0_range_st_10_90": 12.67,
+   "f0_sd_st": 5.61,
+   "intensity_sd_db": 6.22,
+   "hnr_db": 7.2,
+   "noise_floor_dbfs": -59.6,
+   "lufs": -26.8,
+   "true_peak_dbtp": -6.1,
+   "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Colleys' dissertation? ChatGPT answered, boosting online algorithms and other topics in machine learning. Kind of game Ellen, 2002. Deep-seek gave a different title, at Harvard, in 2005. Lama gave a third at MIT in 2007. Three polished answers. Not one had the right title, or even the right year.",
+   "wer_whisper_tiny": 0.148
+  },
+  {
+   "file": "b01_t3.mp3",
+   "duration_s": 28.32,
+   "wpm_speaking": 167.0,
+   "wpm_overall": 130.2,
+   "pauses_over_180ms": 12,
+   "pause_list": [
+    [
+     3.62,
+     0.68
+    ],
+    [
+     6.69,
+     0.69
+    ],
+    [
+     8.54,
+     0.45
+    ],
+    [
+     9.54,
+     0.2
+    ],
+    [
+     12.47,
+     0.54
+    ],
+    [
+     14.6,
+     0.75
+    ],
+    [
+     16.85,
+     0.33
+    ],
+    [
+     18.77,
+     0.72
+    ],
+    [
+     20.57,
+     0.23
+    ],
+    [
+     22.66,
+     0.67
+    ],
+    [
+     24.71,
+     0.56
+    ],
+    [
+     26.74,
+     0.37
+    ]
+   ],
+   "f0_median_hz": 92.3,
+   "f0_range_st_10_90": 12.9,
+   "f0_sd_st": 5.54,
+   "intensity_sd_db": 6.38,
+   "hnr_db": 7.1,
+   "noise_floor_dbfs": -61.0,
+   "lufs": -27.4,
+   "true_peak_dbtp": -6.5,
+   "asr_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Colleys' dissertation? ChatGPT answered, boosting online algorithms and other topics in machine learning, chronic emailing 2002. Deep-Seek gave a different title, at Harvard, in 2005, Lama gave a third, at MIT, in 2007, three polished answers. Not one had the right title, or even the right year.",
+   "wer_whisper_tiny": 0.115
+  },
+  {
+   "file": "b01_t4.mp3",
+   "duration_s": 27.68,
+   "wpm_speaking": 168.3,
+   "wpm_overall": 133.2,
+   "pauses_over_180ms": 12,
+   "pause_list": [
+    [
+     3.53,
+     0.63
+    ],
+    [
+     6.53,
+     0.69
+    ],
+    [
+     8.43,
+     0.42
+    ],
+    [
+     9.44,
+     0.18
+    ],
+    [
+     12.35,
+     0.5
+    ],
+    [
+     14.37,
+     0.71
+    ],
+    [
+     16.52,
+     0.34
+    ],
+    [
+     18.4,
+     0.68
+    ],
+    [
+     20.17,
+     0.18
+    ],
+    [
+     22.14,
+     0.6
+    ],
+    [
+     24.15,
+     0.47
+    ],
+    [
+     26.14,
+     0.32
+    ]
+   ],
+   "f0_median_hz": 92.4,
+   "f0_range_st_10_90": 12.83,
+   "f0_sd_st": 5.32,
+   "intensity_sd_db": 6.24,
+   "hnr_db": 7.8,
+   "noise_floor_dbfs": -62.5,
+   "lufs": -27.5,
+   "true_peak_dbtp": -4.7,
+   "asr_text": "Researchers asked three popular chat bots one simple question. What was the title of Adam Collise dissertation? ChatGPT answered boosting online algorithms and other topics in machine learning, currently given 2000. Deep-seek gave a different title at Harvard in 2005. Lama gave a third at MIT in 2007. Three polished answers. Not one had the right title, or even the right year.",
+   "wer_whisper_tiny": 0.148
+  }
+ ],
+ "b02": [
+  {
+   "file": "b02_t1.mp3",
+   "duration_s": 28.56,
+   "wpm_speaking": 190.6,
+   "wpm_overall": 156.8,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     0.95,
+     0.53
+    ],
+    [
+     2.73,
+     0.62
+    ],
+    [
+     3.84,
+     0.18
+    ],
+    [
+     10.37,
+     0.42
+    ],
+    [
+     12.04,
+     0.43
+    ],
+    [
+     13.59,
+     0.64
+    ],
+    [
+     17.54,
+     0.18
+    ],
+    [
+     20.49,
+     0.6
+    ],
+    [
+     21.71,
+     0.39
+    ],
+    [
+     23.68,
+     0.37
+    ],
+    [
+     25.74,
+     0.65
+    ]
+   ],
+   "f0_median_hz": 101.2,
+   "f0_range_st_10_90": 14.16,
+   "f0_sd_st": 6.09,
+   "intensity_sd_db": 5.97,
+   "hnr_db": 7.4,
+   "noise_floor_dbfs": -60.1,
+   "lufs": -26.8,
+   "true_peak_dbtp": -7.3,
+   "asr_text": "And Adam Coli, he's the paper's lead author. Meanwhile, Google DeepNine published solutions to five of the six problems at the 2025 International Mathematical Olympiad, credited to a different model, Gemini DeepThink. So how can the same kind of technology take on Olympiad problems and still sound this short while being this wrong? Short answer? A chatbot writes what's likely, and likely isn't always true. To see why, let's take one answer apart.",
+   "wer_whisper_tiny": 0.068
+  },
+  {
+   "file": "b02_t2.mp3",
+   "duration_s": 28.64,
+   "wpm_speaking": 188.6,
+   "wpm_overall": 156.2,
+   "pauses_over_180ms": 10,
+   "pause_list": [
+    [
+     0.97,
+     0.5
+    ],
+    [
+     2.73,
+     0.63
+    ],
+    [
+     10.29,
+     0.43
+    ],
+    [
+     12.02,
+     0.35
+    ],
+    [
+     13.47,
+     0.6
+    ],
+    [
+     20.4,
+     0.64
+    ],
+    [
+     21.64,
+     0.41
+    ],
+    [
+     23.66,
+     0.42
+    ],
+    [
+     25.72,
+     0.7
+    ],
+    [
+     27.04,
+     0.2
+    ]
+   ],
+   "f0_median_hz": 99.5,
+   "f0_range_st_10_90": 13.3,
+   "f0_sd_st": 5.76,
+   "intensity_sd_db": 6.19,
+   "hnr_db": 7.9,
+   "noise_floor_dbfs": -60.2,
+   "lufs": -27.0,
+   "true_peak_dbtp": -5.9,
+   "asr_text": "And Adam Collide, he's the paper's lead author. Meanwhile, Google DeepMind published solutions to five of the six problems at the 2025 International Mathematical Olympiad, credited to a different model. Gemini deep think. So how can the same kind of technology take on Olympiad problems and still sound this short while being this wrong? Short answer? A chatbot writes what's likely, and likely isn't always true. To see why, let's take one answer apart.",
+   "wer_whisper_tiny": 0.027
+  },
+  {
+   "file": "b02_t3.mp3",
+   "duration_s": 28.96,
+   "wpm_speaking": 188.8,
+   "wpm_overall": 154.9,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     0.98,
+     0.49
+    ],
+    [
+     2.75,
+     0.6
+    ],
+    [
+     10.37,
+     0.45
+    ],
+    [
+     12.07,
+     0.38
+    ],
+    [
+     13.59,
+     0.65
+    ],
+    [
+     17.63,
+     0.32
+    ],
+    [
+     20.78,
+     0.65
+    ],
+    [
+     22.04,
+     0.4
+    ],
+    [
+     24.0,
+     0.36
+    ],
+    [
+     26.02,
+     0.64
+    ],
+    [
+     27.28,
+     0.2
+    ]
+   ],
+   "f0_median_hz": 98.7,
+   "f0_range_st_10_90": 12.86,
+   "f0_sd_st": 5.84,
+   "intensity_sd_db": 6.09,
+   "hnr_db": 8.2,
+   "noise_floor_dbfs": -60.0,
+   "lufs": -27.3,
+   "true_peak_dbtp": -5.7,
+   "asr_text": "And Adam Collie? He's the paper's lead author. Meanwhile, Google DeepMine published solutions to five of the six problems at the 2025 International Mathematical Olympiad, credited to a different model. Gemini deep think. So how can the same kind of technology take on Olympiad problems and still sound this sure while being this wrong? Short answer? A chatbot writes what's likely and likely isn't always true. To see why, let's take one answer apart.",
+   "wer_whisper_tiny": 0.027
+  },
+  {
+   "file": "b02_t4.mp3",
+   "duration_s": 28.56,
+   "wpm_speaking": 190.5,
+   "wpm_overall": 156.9,
+   "pauses_over_180ms": 10,
+   "pause_list": [
+    [
+     0.9,
+     0.5
+    ],
+    [
+     2.65,
+     0.59
+    ],
+    [
+     10.22,
+     0.41
+    ],
+    [
+     11.89,
+     0.34
+    ],
+    [
+     13.37,
+     0.7
+    ],
+    [
+     20.3,
+     0.74
+    ],
+    [
+     21.64,
+     0.44
+    ],
+    [
+     23.59,
+     0.44
+    ],
+    [
+     25.7,
+     0.64
+    ],
+    [
+     26.98,
+     0.19
+    ]
+   ],
+   "f0_median_hz": 100.9,
+   "f0_range_st_10_90": 13.71,
+   "f0_sd_st": 6.13,
+   "intensity_sd_db": 6.01,
+   "hnr_db": 7.7,
+   "noise_floor_dbfs": -59.4,
+   "lufs": -27.0,
+   "true_peak_dbtp": -7.5,
+   "asr_text": "And Adam Collide, he's the paper's lead author. Meanwhile, Google DeepMine published solutions to five of the six problems at the 2025 International Mathematical Olympiad, credited to a different model. Gemini deep think. So how can the same kind of technology take on Olympiad problems and still sound this sure while being this wrong? Short answer? A chatbot writes what's likely, and likely isn't always true. To see why, let's take one answer apart.",
+   "wer_whisper_tiny": 0.027
+  }
+ ],
+ "b03": [
+  {
+   "file": "b03_t1.mp3",
+   "duration_s": 22.72,
+   "wpm_speaking": 187.5,
+   "wpm_overall": 146.9,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     1.84,
+     0.58
+    ],
+    [
+     4.33,
+     0.38
+    ],
+    [
+     5.58,
+     0.56
+    ],
+    [
+     7.33,
+     0.32
+    ],
+    [
+     8.57,
+     0.6
+    ],
+    [
+     10.95,
+     0.31
+    ],
+    [
+     11.51,
+     0.25
+    ],
+    [
+     12.09,
+     0.69
+    ],
+    [
+     14.41,
+     0.61
+    ],
+    [
+     15.77,
+     0.23
+    ],
+    [
+     20.03,
+     0.33
+    ]
+   ],
+   "f0_median_hz": 93.6,
+   "f0_range_st_10_90": 12.0,
+   "f0_sd_st": 5.08,
+   "intensity_sd_db": 6.8,
+   "hnr_db": 7.3,
+   "noise_floor_dbfs": -61.4,
+   "lufs": -28.0,
+   "true_peak_dbtp": -7.4,
+   "asr_text": "Here's part of chatGPT's answer. A language model writes in tokens. Chunks of text. Some are whole words. Some are fragments. Kalai becomes cal, and I. Each token is really a number. At every step, the model turns the tokens so far into a numerical picture of the context, and scores every possible next token.",
+   "wer_whisper_tiny": 0.036
+  },
+  {
+   "file": "b03_t2.mp3",
+   "duration_s": 22.32,
+   "wpm_speaking": 190.6,
+   "wpm_overall": 149.1,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     1.82,
+     0.67
+    ],
+    [
+     4.34,
+     0.37
+    ],
+    [
+     5.52,
+     0.55
+    ],
+    [
+     7.24,
+     0.32
+    ],
+    [
+     8.5,
+     0.58
+    ],
+    [
+     10.86,
+     0.26
+    ],
+    [
+     11.42,
+     0.22
+    ],
+    [
+     11.94,
+     0.73
+    ],
+    [
+     14.23,
+     0.57
+    ],
+    [
+     15.54,
+     0.23
+    ],
+    [
+     19.79,
+     0.33
+    ]
+   ],
+   "f0_median_hz": 93.0,
+   "f0_range_st_10_90": 12.86,
+   "f0_sd_st": 5.36,
+   "intensity_sd_db": 6.93,
+   "hnr_db": 7.9,
+   "noise_floor_dbfs": -60.5,
+   "lufs": -27.7,
+   "true_peak_dbtp": -6.1,
+   "asr_text": "Here's part of chatGPT's answer. A language model writes in tokens. Chunks of text. Some are whole words. Some are fragments. Coli becomes Cal and I. Each token is really a number. At every step, the model turns the tokens so far into a numerical picture of the context, and scores every possible next token.",
+   "wer_whisper_tiny": 0.055
+  },
+  {
+   "file": "b03_t3.mp3",
+   "duration_s": 22.32,
+   "wpm_speaking": 190.2,
+   "wpm_overall": 149.3,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     1.8,
+     0.62
+    ],
+    [
+     4.25,
+     0.37
+    ],
+    [
+     5.41,
+     0.49
+    ],
+    [
+     7.05,
+     0.3
+    ],
+    [
+     8.32,
+     0.59
+    ],
+    [
+     10.71,
+     0.28
+    ],
+    [
+     11.3,
+     0.26
+    ],
+    [
+     11.87,
+     0.72
+    ],
+    [
+     14.19,
+     0.55
+    ],
+    [
+     15.51,
+     0.24
+    ],
+    [
+     19.77,
+     0.33
+    ]
+   ],
+   "f0_median_hz": 95.1,
+   "f0_range_st_10_90": 13.11,
+   "f0_sd_st": 5.95,
+   "intensity_sd_db": 6.77,
+   "hnr_db": 7.6,
+   "noise_floor_dbfs": -61.2,
+   "lufs": -27.7,
+   "true_peak_dbtp": -6.3,
+   "asr_text": "Here's part of chatGBD's answer. A language model writes in tokens, chunks of text. Some are whole words, some are fragments. Coli becomes Cal, and I. Each token is really a number. At every step, the model turns the tokens so far into a numerical picture of the context, and scores every possible next token.",
+   "wer_whisper_tiny": 0.073
+  },
+  {
+   "file": "b03_t4.mp3",
+   "duration_s": 22.56,
+   "wpm_speaking": 189.2,
+   "wpm_overall": 147.5,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     1.82,
+     0.69
+    ],
+    [
+     4.26,
+     0.35
+    ],
+    [
+     5.44,
+     0.55
+    ],
+    [
+     7.15,
+     0.36
+    ],
+    [
+     8.5,
+     0.64
+    ],
+    [
+     10.82,
+     0.25
+    ],
+    [
+     11.35,
+     0.27
+    ],
+    [
+     11.94,
+     0.67
+    ],
+    [
+     14.32,
+     0.59
+    ],
+    [
+     15.66,
+     0.25
+    ],
+    [
+     20.02,
+     0.32
+    ]
+   ],
+   "f0_median_hz": 93.8,
+   "f0_range_st_10_90": 11.62,
+   "f0_sd_st": 5.02,
+   "intensity_sd_db": 6.89,
+   "hnr_db": 7.6,
+   "noise_floor_dbfs": -60.7,
+   "lufs": -28.1,
+   "true_peak_dbtp": -6.8,
+   "asr_text": "Here's part of ChatGPT's answer. A language model writes in tokens, chunks of text. Some are whole words, some are fragments. Coli becomes Cal, and I. Each token is really a number. At every step, the model turns the tokens so far into a numerical picture of the context, and scores every possible next token.",
+   "wer_whisper_tiny": 0.055
+  }
+ ],
+ "b04": [
+  {
+   "file": "b04_t1.mp3",
+   "duration_s": 18.08,
+   "wpm_speaking": 222.7,
+   "wpm_overall": 178.5,
+   "pauses_over_180ms": 9,
+   "pause_list": [
+    [
+     2.5,
+     0.55
+    ],
+    [
+     4.04,
+     0.3
+    ],
+    [
+     5.13,
+     0.29
+    ],
+    [
+     6.44,
+     0.3
+    ],
+    [
+     7.92,
+     0.55
+    ],
+    [
+     9.45,
+     0.22
+    ],
+    [
+     11.46,
+     0.48
+    ],
+    [
+     13.28,
+     0.38
+    ],
+    [
+     14.54,
+     0.47
+    ]
+   ],
+   "f0_median_hz": 98.2,
+   "f0_range_st_10_90": 12.28,
+   "f0_sd_st": 4.92,
+   "intensity_sd_db": 6.76,
+   "hnr_db": 8.1,
+   "noise_floor_dbfs": -57.8,
+   "lufs": -26.4,
+   "true_peak_dbtp": -6.1,
+   "asr_text": "Here, it's choosing the last digit of the year. One option gets picked, add it to the end, and the loop runs again. Token after token. Because there's a pick, the same question can come out differently. Asked for a collized birthday, only if you know, one model gives three different dates in three tries.",
+   "wer_whisper_tiny": 0.094
+  },
+  {
+   "file": "b04_t2.mp3",
+   "duration_s": 18.0,
+   "wpm_speaking": 227.3,
+   "wpm_overall": 178.9,
+   "pauses_over_180ms": 10,
+   "pause_list": [
+    [
+     0.44,
+     0.2
+    ],
+    [
+     2.52,
+     0.6
+    ],
+    [
+     4.12,
+     0.3
+    ],
+    [
+     5.22,
+     0.21
+    ],
+    [
+     6.45,
+     0.31
+    ],
+    [
+     7.93,
+     0.49
+    ],
+    [
+     9.36,
+     0.23
+    ],
+    [
+     11.39,
+     0.57
+    ],
+    [
+     13.35,
+     0.38
+    ],
+    [
+     14.52,
+     0.5
+    ]
+   ],
+   "f0_median_hz": 97.7,
+   "f0_range_st_10_90": 12.66,
+   "f0_sd_st": 4.69,
+   "intensity_sd_db": 6.45,
+   "hnr_db": 7.5,
+   "noise_floor_dbfs": -58.4,
+   "lufs": -26.7,
+   "true_peak_dbtp": -6.0,
+   "asr_text": "Here, it's choosing the last digit of the year. One option gets picked, add it to the end, and the loop runs again. Token after token. Because there's a pick, the same question cannot be different. Asked for a collized birthday, only if you know, one model gave three different dates in three tries.",
+   "wer_whisper_tiny": 0.151
+  },
+  {
+   "file": "b04_t3.mp3",
+   "duration_s": 18.32,
+   "wpm_speaking": 221.3,
+   "wpm_overall": 175.3,
+   "pauses_over_180ms": 9,
+   "pause_list": [
+    [
+     2.46,
+     0.61
+    ],
+    [
+     4.09,
+     0.34
+    ],
+    [
+     5.23,
+     0.28
+    ],
+    [
+     6.48,
+     0.31
+    ],
+    [
+     7.97,
+     0.52
+    ],
+    [
+     9.44,
+     0.24
+    ],
+    [
+     11.49,
+     0.58
+    ],
+    [
+     13.57,
+     0.42
+    ],
+    [
+     14.87,
+     0.47
+    ]
+   ],
+   "f0_median_hz": 97.8,
+   "f0_range_st_10_90": 12.57,
+   "f0_sd_st": 4.72,
+   "intensity_sd_db": 6.85,
+   "hnr_db": 8.0,
+   "noise_floor_dbfs": -59.1,
+   "lufs": -26.7,
+   "true_peak_dbtp": -6.1,
+   "asr_text": "Here, it's choosing the last digit of the year. One option gets picked, added to the end, and the loop runs again. Token after token. Because there's a pick, the same question cannot differently. Asked for a collized birthday, only if you know, one model gave three different dates in three tries.",
+   "wer_whisper_tiny": 0.094
+  },
+  {
+   "file": "b04_t4.mp3",
+   "duration_s": 18.24,
+   "wpm_speaking": 223.2,
+   "wpm_overall": 176.1,
+   "pauses_over_180ms": 9,
+   "pause_list": [
+    [
+     2.5,
+     0.62
+    ],
+    [
+     4.12,
+     0.31
+    ],
+    [
+     5.24,
+     0.27
+    ],
+    [
+     6.53,
+     0.32
+    ],
+    [
+     8.05,
+     0.54
+    ],
+    [
+     9.61,
+     0.22
+    ],
+    [
+     11.59,
+     0.59
+    ],
+    [
+     13.52,
+     0.47
+    ],
+    [
+     14.88,
+     0.47
+    ]
+   ],
+   "f0_median_hz": 98.3,
+   "f0_range_st_10_90": 13.07,
+   "f0_sd_st": 5.16,
+   "intensity_sd_db": 6.82,
+   "hnr_db": 7.4,
+   "noise_floor_dbfs": -59.3,
+   "lufs": -26.3,
+   "true_peak_dbtp": -6.3,
+   "asr_text": "Here, it's choosing the last digit of the year. One option gets picked, add it to the end, and the loop runs again. Token after token. Because there's a pick, the same question cannot be different. Asked for a collized birthday, only if you know, one model gave three different dates in three tries.",
+   "wer_whisper_tiny": 0.151
+  }
+ ],
+ "b05": [
+  {
+   "file": "b05_t1.mp3",
+   "duration_s": 17.28,
+   "wpm_speaking": 200.3,
+   "wpm_overall": 168.4,
+   "pauses_over_180ms": 5,
+   "pause_list": [
+    [
+     1.01,
+     0.52
+    ],
+    [
+     4.98,
+     0.51
+    ],
+    [
+     7.16,
+     0.67
+    ],
+    [
+     9.28,
+     0.42
+    ],
+    [
+     13.34,
+     0.6
+    ]
+   ],
+   "f0_median_hz": 102.1,
+   "f0_range_st_10_90": 11.81,
+   "f0_sd_st": 4.63,
+   "intensity_sd_db": 6.5,
+   "hnr_db": 8.5,
+   "noise_floor_dbfs": -58.8,
+   "lufs": -26.7,
+   "true_peak_dbtp": -7.7,
+   "asr_text": "Here's the key part. Those scores measure how likely a piece of text is to come next. Not how likely it is to be true. Modern chatbot's ad more. Instruction training, step by step reasoning, sometimes web search, but the answer itself is still written token by token.",
+   "wer_whisper_tiny": 0.042
+  },
+  {
+   "file": "b05_t2.mp3",
+   "duration_s": 16.96,
+   "wpm_speaking": 210.1,
+   "wpm_overall": 172.5,
+   "pauses_over_180ms": 6,
+   "pause_list": [
+    [
+     0.83,
+     0.62
+    ],
+    [
+     4.82,
+     0.52
+    ],
+    [
+     6.92,
+     0.58
+    ],
+    [
+     8.92,
+     0.49
+    ],
+    [
+     11.86,
+     0.18
+    ],
+    [
+     13.05,
+     0.6
+    ]
+   ],
+   "f0_median_hz": 101.5,
+   "f0_range_st_10_90": 13.12,
+   "f0_sd_st": 5.43,
+   "intensity_sd_db": 6.47,
+   "hnr_db": 8.9,
+   "noise_floor_dbfs": -58.5,
+   "lufs": -27.2,
+   "true_peak_dbtp": -6.4,
+   "asr_text": "Here's the key part. Those scores measure how likely a piece of text is to come next. Not how likely it is to be true. Modern chatbot's ad more. Instruction training, step by step reasoning, sometimes web search. But the answer itself is still written token by token.",
+   "wer_whisper_tiny": 0.042
+  },
+  {
+   "file": "b05_t3.mp3",
+   "duration_s": 16.96,
+   "wpm_speaking": 200.1,
+   "wpm_overall": 169.8,
+   "pauses_over_180ms": 5,
+   "pause_list": [
+    [
+     0.94,
+     0.53
+    ],
+    [
+     4.89,
+     0.45
+    ],
+    [
+     7.08,
+     0.59
+    ],
+    [
+     9.08,
+     0.42
+    ],
+    [
+     13.12,
+     0.58
+    ]
+   ],
+   "f0_median_hz": 102.1,
+   "f0_range_st_10_90": 12.22,
+   "f0_sd_st": 5.29,
+   "intensity_sd_db": 6.43,
+   "hnr_db": 8.5,
+   "noise_floor_dbfs": -57.4,
+   "lufs": -26.7,
+   "true_peak_dbtp": -6.2,
+   "asr_text": "Here's the key part. Those scores measure how likely a piece of text is to come next, not how likely it is to be true. Modern chatbot's ad more. Instruction training, step by step reasoning, sometimes web search, but the answer itself is still written token by token.",
+   "wer_whisper_tiny": 0.042
+  },
+  {
+   "file": "b05_t4.mp3",
+   "duration_s": 16.88,
+   "wpm_speaking": 204.3,
+   "wpm_overall": 173.0,
+   "pauses_over_180ms": 5,
+   "pause_list": [
+    [
+     0.94,
+     0.48
+    ],
+    [
+     4.82,
+     0.47
+    ],
+    [
+     6.92,
+     0.62
+    ],
+    [
+     8.97,
+     0.42
+    ],
+    [
+     13.02,
+     0.56
+    ]
+   ],
+   "f0_median_hz": 102.5,
+   "f0_range_st_10_90": 11.84,
+   "f0_sd_st": 4.71,
+   "intensity_sd_db": 6.56,
+   "hnr_db": 8.2,
+   "noise_floor_dbfs": -56.4,
+   "lufs": -26.6,
+   "true_peak_dbtp": -8.5,
+   "asr_text": "Here's the key part. Those scores measure how likely a piece of text is to come next. Not how likely it is to be true. Modern Chatbot's ad more. Instruction training, step by step reasoning, sometimes web search, but the answer itself is still written token by token.",
+   "wer_whisper_tiny": 0.042
+  }
+ ],
+ "b06": [
+  {
+   "file": "b06_t1.mp3",
+   "duration_s": 28.24,
+   "wpm_speaking": 197.1,
+   "wpm_overall": 157.2,
+   "pauses_over_180ms": 12,
+   "pause_list": [
+    [
+     2.26,
+     0.65
+    ],
+    [
+     4.37,
+     0.59
+    ],
+    [
+     7.78,
+     0.53
+    ],
+    [
+     8.93,
+     0.22
+    ],
+    [
+     10.82,
+     0.35
+    ],
+    [
+     12.22,
+     0.62
+    ],
+    [
+     14.17,
+     0.54
+    ],
+    [
+     18.62,
+     0.67
+    ],
+    [
+     22.8,
+     0.43
+    ],
+    [
+     23.89,
+     0.33
+    ],
+    [
+     24.88,
+     0.56
+    ],
+    [
+     26.23,
+     0.22
+    ]
+   ],
+   "f0_median_hz": 99.0,
+   "f0_range_st_10_90": 14.46,
+   "f0_sd_st": 6.13,
+   "intensity_sd_db": 6.22,
+   "hnr_db": 7.8,
+   "noise_floor_dbfs": -61.8,
+   "lufs": -27.2,
+   "true_peak_dbtp": -6.7,
+   "asr_text": "So why would the likely answer be wrong? Look at what the model had to learn. What a dissertation title sounds like is everywhere. Methods, algorithms, machine learning, again and again. Famous facts repeat too. The paper notes that models rarely miss something like Einstein's dissertation title. But one researcher's thesis title might appear rarely in the training data. Maybe once. Maybe never. Like a birthday, there's no pattern to work it out from.",
+   "wer_whisper_tiny": 0.0
+  },
+  {
+   "file": "b06_t2.mp3",
+   "duration_s": 29.12,
+   "wpm_speaking": 197.1,
+   "wpm_overall": 153.8,
+   "pauses_over_180ms": 12,
+   "pause_list": [
+    [
+     2.36,
+     0.71
+    ],
+    [
+     4.55,
+     0.73
+    ],
+    [
+     8.06,
+     0.6
+    ],
+    [
+     9.25,
+     0.28
+    ],
+    [
+     11.26,
+     0.31
+    ],
+    [
+     12.66,
+     0.67
+    ],
+    [
+     14.62,
+     0.65
+    ],
+    [
+     19.26,
+     0.57
+    ],
+    [
+     23.36,
+     0.54
+    ],
+    [
+     24.6,
+     0.4
+    ],
+    [
+     25.58,
+     0.65
+    ],
+    [
+     27.01,
+     0.23
+    ]
+   ],
+   "f0_median_hz": 99.8,
+   "f0_range_st_10_90": 14.04,
+   "f0_sd_st": 5.82,
+   "intensity_sd_db": 6.62,
+   "hnr_db": 7.9,
+   "noise_floor_dbfs": -59.8,
+   "lufs": -26.9,
+   "true_peak_dbtp": -7.1,
+   "asr_text": "So why would the likely answer be wrong? Look at what the model had to learn. What a dissertation title sounds like is everywhere. Methods, algorithms, machine learning, again and again. Famous facts repeat too. The paper notes that models rarely miss something like Einstein's dissertation title. But one researcher's thesis title might appear rarely in the training data. Maybe once. Maybe never. Like a birthday, there's no pattern to work it out from.",
+   "wer_whisper_tiny": 0.0
+  },
+  {
+   "file": "b06_t3.mp3",
+   "duration_s": 28.56,
+   "wpm_speaking": 195.5,
+   "wpm_overall": 156.4,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     2.31,
+     0.69
+    ],
+    [
+     4.47,
+     0.57
+    ],
+    [
+     7.78,
+     0.55
+    ],
+    [
+     10.92,
+     0.33
+    ],
+    [
+     12.3,
+     0.62
+    ],
+    [
+     14.27,
+     0.59
+    ],
+    [
+     18.78,
+     0.59
+    ],
+    [
+     22.87,
+     0.52
+    ],
+    [
+     24.05,
+     0.4
+    ],
+    [
+     25.1,
+     0.6
+    ],
+    [
+     26.48,
+     0.21
+    ]
+   ],
+   "f0_median_hz": 98.1,
+   "f0_range_st_10_90": 12.61,
+   "f0_sd_st": 5.07,
+   "intensity_sd_db": 6.06,
+   "hnr_db": 8.7,
+   "noise_floor_dbfs": -59.5,
+   "lufs": -26.5,
+   "true_peak_dbtp": -5.5,
+   "asr_text": "So why would the likely answer be wrong? Look at what the model had to learn. What a dissertation title sounds like is everywhere. Methods, algorithms, machine learning, again, and again. Famous facts repeat too. The paper notes that models rarely miss something like Einstein's dissertation title. But one research is this title might appear rarely in the training data. Maybe once. Maybe never. Like a birthday, there's no pattern to work it out from.",
+   "wer_whisper_tiny": 0.041
+  },
+  {
+   "file": "b06_t4.mp3",
+   "duration_s": 28.72,
+   "wpm_speaking": 195.6,
+   "wpm_overall": 155.9,
+   "pauses_over_180ms": 13,
+   "pause_list": [
+    [
+     2.36,
+     0.6
+    ],
+    [
+     4.48,
+     0.56
+    ],
+    [
+     7.07,
+     0.19
+    ],
+    [
+     7.86,
+     0.54
+    ],
+    [
+     9.01,
+     0.22
+    ],
+    [
+     10.91,
+     0.24
+    ],
+    [
+     12.26,
+     0.64
+    ],
+    [
+     14.25,
+     0.55
+    ],
+    [
+     18.75,
+     0.71
+    ],
+    [
+     23.14,
+     0.46
+    ],
+    [
+     24.32,
+     0.32
+    ],
+    [
+     25.27,
+     0.57
+    ],
+    [
+     26.65,
+     0.18
+    ]
+   ],
+   "f0_median_hz": 97.7,
+   "f0_range_st_10_90": 14.75,
+   "f0_sd_st": 5.93,
+   "intensity_sd_db": 6.33,
+   "hnr_db": 8.1,
+   "noise_floor_dbfs": -61.5,
+   "lufs": -27.3,
+   "true_peak_dbtp": -6.3,
+   "asr_text": "So why would the likely answer be wrong? Look at what the model had to learn. What a dissertation title sounds like is everywhere. Methods, algorithms, machine learning, again and again. Famous facts repeat too. The paper notes that models rarely miss something like Einstein's dissertation title. But one researcher's thesis title might appear rarely in the training data. Maybe once, maybe never. Like a birthday, there's no pattern to work it out from.",
+   "wer_whisper_tiny": 0.0
+  }
+ ],
+ "b07": [
+  {
+   "file": "b07_t1.mp3",
+   "duration_s": 25.44,
+   "wpm_speaking": 211.4,
+   "wpm_overall": 167.5,
+   "pauses_over_180ms": 12,
+   "pause_list": [
+    [
+     3.21,
+     0.3
+    ],
+    [
+     5.21,
+     0.57
+    ],
+    [
+     6.77,
+     0.41
+    ],
+    [
+     8.09,
+     0.22
+    ],
+    [
+     9.07,
+     0.51
+    ],
+    [
+     11.92,
+     0.51
+    ],
+    [
+     15.05,
+     0.46
+    ],
+    [
+     16.18,
+     0.61
+    ],
+    [
+     17.69,
+     0.41
+    ],
+    [
+     18.82,
+     0.32
+    ],
+    [
+     20.18,
+     0.48
+    ],
+    [
+     21.62,
+     0.49
+    ]
+   ],
+   "f0_median_hz": 99.2,
+   "f0_range_st_10_90": 13.03,
+   "f0_sd_st": 5.45,
+   "intensity_sd_db": 6.58,
+   "hnr_db": 8.8,
+   "noise_floor_dbfs": -59.4,
+   "lufs": -26.2,
+   "true_peak_dbtp": -6.1,
+   "asr_text": "So the model feels the gap with what a title usually looks like, and the confidence comes along for free. Is entitled. No, I think, no, maybe. That tone isn't a readout of what the model knows. Here's chat to you, PTs answer next to the actual record. It's about the difference. Same university, the wrong year. It was 2001, and a different title. The invented details look exactly as solid as the true one.",
+   "wer_whisper_tiny": 0.099
+  },
+  {
+   "file": "b07_t2.mp3",
+   "duration_s": 25.36,
+   "wpm_speaking": 219.0,
+   "wpm_overall": 169.7,
+   "pauses_over_180ms": 12,
+   "pause_list": [
+    [
+     3.08,
+     0.33
+    ],
+    [
+     5.05,
+     0.56
+    ],
+    [
+     6.61,
+     0.46
+    ],
+    [
+     7.98,
+     0.29
+    ],
+    [
+     8.95,
+     0.56
+    ],
+    [
+     11.83,
+     0.52
+    ],
+    [
+     14.94,
+     0.59
+    ],
+    [
+     16.11,
+     0.61
+    ],
+    [
+     17.62,
+     0.41
+    ],
+    [
+     18.77,
+     0.23
+    ],
+    [
+     20.01,
+     0.49
+    ],
+    [
+     21.37,
+     0.6
+    ]
+   ],
+   "f0_median_hz": 99.6,
+   "f0_range_st_10_90": 13.34,
+   "f0_sd_st": 5.61,
+   "intensity_sd_db": 6.81,
+   "hnr_db": 8.8,
+   "noise_floor_dbfs": -60.0,
+   "lufs": -27.1,
+   "true_peak_dbtp": -5.7,
+   "asr_text": "So the model fills the gap with what a title usually looks like, and the confidence comes along for free. Is entitled. No, I think, no, maybe. That tone isn't a readout of what the model knows. Here's chat to you, PTs answer next to the actual record. It's about the difference. Same university. The wrong year, it was 2001, and a different title. The invented details look exactly as solid as the true one.",
+   "wer_whisper_tiny": 0.085
+  },
+  {
+   "file": "b07_t3.mp3",
+   "duration_s": 25.52,
+   "wpm_speaking": 212.8,
+   "wpm_overall": 166.9,
+   "pauses_over_180ms": 12,
+   "pause_list": [
+    [
+     3.17,
+     0.31
+    ],
+    [
+     5.18,
+     0.52
+    ],
+    [
+     6.7,
+     0.41
+    ],
+    [
+     8.14,
+     0.26
+    ],
+    [
+     9.22,
+     0.5
+    ],
+    [
+     12.06,
+     0.55
+    ],
+    [
+     15.26,
+     0.59
+    ],
+    [
+     16.42,
+     0.62
+    ],
+    [
+     17.93,
+     0.38
+    ],
+    [
+     19.0,
+     0.32
+    ],
+    [
+     20.32,
+     0.47
+    ],
+    [
+     21.75,
+     0.57
+    ]
+   ],
+   "f0_median_hz": 99.5,
+   "f0_range_st_10_90": 12.65,
+   "f0_sd_st": 5.09,
+   "intensity_sd_db": 6.52,
+   "hnr_db": 8.8,
+   "noise_floor_dbfs": -61.2,
+   "lufs": -27.0,
+   "true_peak_dbtp": -5.5,
+   "asr_text": "So the model fills the gap with what a title usually looks like, and the confidence comes along for free. Is entitled? No, I think, no, maybe. That tone isn't a readout of what the model knows. Here's chat to you, PTs answer next to the actual record. It's about the difference. Same university, the wrong year. It was 2001, and a different title. The invented details look exactly as solid as the true one.",
+   "wer_whisper_tiny": 0.085
+  },
+  {
+   "file": "b07_t4.mp3",
+   "duration_s": 25.6,
+   "wpm_speaking": 213.5,
+   "wpm_overall": 168.0,
+   "pauses_over_180ms": 12,
+   "pause_list": [
+    [
+     3.2,
+     0.29
+    ],
+    [
+     5.13,
+     0.49
+    ],
+    [
+     6.62,
+     0.46
+    ],
+    [
+     8.06,
+     0.27
+    ],
+    [
+     9.19,
+     0.48
+    ],
+    [
+     12.06,
+     0.53
+    ],
+    [
+     15.22,
+     0.6
+    ],
+    [
+     16.34,
+     0.62
+    ],
+    [
+     17.85,
+     0.4
+    ],
+    [
+     18.98,
+     0.32
+    ],
+    [
+     20.34,
+     0.44
+    ],
+    [
+     21.76,
+     0.5
+    ]
+   ],
+   "f0_median_hz": 102.2,
+   "f0_range_st_10_90": 13.69,
+   "f0_sd_st": 5.56,
+   "intensity_sd_db": 6.63,
+   "hnr_db": 8.2,
+   "noise_floor_dbfs": -59.1,
+   "lufs": -26.6,
+   "true_peak_dbtp": -6.7,
+   "asr_text": "So the model fills the gap with what a title usually looks like, and the confidence comes along for free. Is entitled. No, I think, no, maybe. That tone isn't a readout of what the model knows. Here's the chatGPT's answer next to the actual record. It's about the difference. Same university, the wrong year. It was 2001, and a different title. The invented details look exactly as solid as the true one.",
+   "wer_whisper_tiny": 0.042
+  }
+ ],
+ "b08": [
+  {
+   "file": "b08_t1.mp3",
+   "duration_s": 31.52,
+   "wpm_speaking": 215.5,
+   "wpm_overall": 162.7,
+   "pauses_over_180ms": 17,
+   "pause_list": [
+    [
+     1.1,
+     0.4
+    ],
+    [
+     2.28,
+     0.21
+    ],
+    [
+     3.01,
+     0.59
+    ],
+    [
+     6.88,
+     0.57
+    ],
+    [
+     8.91,
+     0.48
+    ],
+    [
+     9.96,
+     0.28
+    ],
+    [
+     10.67,
+     0.46
+    ],
+    [
+     11.79,
+     0.28
+    ],
+    [
+     12.44,
+     0.66
+    ],
+    [
+     13.7,
+     0.49
+    ],
+    [
+     14.84,
+     0.59
+    ],
+    [
+     17.62,
+     0.47
+    ],
+    [
+     20.45,
+     0.38
+    ],
+    [
+     21.41,
+     0.51
+    ],
+    [
+     23.77,
+     0.41
+    ],
+    [
+     26.86,
+     0.36
+    ],
+    [
+     27.87,
+     0.53
+    ]
+   ],
+   "f0_median_hz": 102.4,
+   "f0_range_st_10_90": 13.83,
+   "f0_sd_st": 5.83,
+   "intensity_sd_db": 7.16,
+   "hnr_db": 7.5,
+   "noise_floor_dbfs": -61.6,
+   "lufs": -26.4,
+   "true_peak_dbtp": -5.6,
+   "asr_text": "So why guess it all? Why not say? I don't know. The researchers argue part of the answer is how models get graded. Picture a 10 question quiz. Right answer? One point. Wrong answer. Zero. I don't know. Also zero. Two test takers each knows six answers. The honest one says, I don't know to the rest. Six points. The guester takes a shot at all four. With four choices each, on average, one lands. Seven points. The guestor wins with three confident wrong answers.",
+   "wer_whisper_tiny": 0.059
+  },
+  {
+   "file": "b08_t2.mp3",
+   "duration_s": 31.6,
+   "wpm_speaking": 211.0,
+   "wpm_overall": 162.7,
+   "pauses_over_180ms": 17,
+   "pause_list": [
+    [
+     1.33,
+     0.42
+    ],
+    [
+     2.48,
+     0.25
+    ],
+    [
+     3.23,
+     0.58
+    ],
+    [
+     7.16,
+     0.52
+    ],
+    [
+     9.22,
+     0.45
+    ],
+    [
+     10.26,
+     0.22
+    ],
+    [
+     10.92,
+     0.49
+    ],
+    [
+     12.08,
+     0.22
+    ],
+    [
+     12.7,
+     0.64
+    ],
+    [
+     14.0,
+     0.43
+    ],
+    [
+     15.11,
+     0.48
+    ],
+    [
+     17.78,
+     0.4
+    ],
+    [
+     20.55,
+     0.36
+    ],
+    [
+     21.53,
+     0.46
+    ],
+    [
+     23.81,
+     0.4
+    ],
+    [
+     26.87,
+     0.34
+    ],
+    [
+     27.91,
+     0.51
+    ]
+   ],
+   "f0_median_hz": 100.1,
+   "f0_range_st_10_90": 12.54,
+   "f0_sd_st": 5.24,
+   "intensity_sd_db": 6.83,
+   "hnr_db": 8.4,
+   "noise_floor_dbfs": -60.7,
+   "lufs": -26.8,
+   "true_peak_dbtp": -5.0,
+   "asr_text": "So why guess it all? Why not say? I don't know. The researchers argue part of the answer is how models get graded. Picture a 10 question quiz. Right answer? One point. Wrong answer? Zero. I don't know. Also zero. Two test takers each knows six answers. The honest one says, I don't know to the rest. Six points. The guesser takes a shot at all four. With four choices each, on average, 1 lands. 7. The guestor wins with 3 confident wrong answers.",
+   "wer_whisper_tiny": 0.094
+  },
+  {
+   "file": "b08_t3.mp3",
+   "duration_s": 32.16,
+   "wpm_speaking": 211.9,
+   "wpm_overall": 159.9,
+   "pauses_over_180ms": 17,
+   "pause_list": [
+    [
+     1.33,
+     0.5
+    ],
+    [
+     2.61,
+     0.28
+    ],
+    [
+     3.39,
+     0.57
+    ],
+    [
+     7.31,
+     0.53
+    ],
+    [
+     9.37,
+     0.46
+    ],
+    [
+     10.41,
+     0.23
+    ],
+    [
+     11.14,
+     0.47
+    ],
+    [
+     12.23,
+     0.25
+    ],
+    [
+     12.87,
+     0.6
+    ],
+    [
+     14.12,
+     0.45
+    ],
+    [
+     15.25,
+     0.56
+    ],
+    [
+     18.02,
+     0.4
+    ],
+    [
+     20.77,
+     0.4
+    ],
+    [
+     21.74,
+     0.65
+    ],
+    [
+     24.16,
+     0.53
+    ],
+    [
+     27.34,
+     0.38
+    ],
+    [
+     28.38,
+     0.57
+    ]
+   ],
+   "f0_median_hz": 101.4,
+   "f0_range_st_10_90": 13.05,
+   "f0_sd_st": 5.63,
+   "intensity_sd_db": 7.2,
+   "hnr_db": 8.0,
+   "noise_floor_dbfs": -60.6,
+   "lufs": -26.7,
+   "true_peak_dbtp": -5.2,
+   "asr_text": "So why guess that all? Why not say, I don't know. The researchers argue part of the answer is how models get graded. Picture a 10 question quiz. Right answer, one point. Wrong answer, zero. I don't know. Also zero. Two test takers each knows six answers. The honest one says, I don't know to the rest. Six points. The guesser takes a shot at all four. With four choices each on average, one lands. 7. The Gessar wins with three confident wrong answers.",
+   "wer_whisper_tiny": 0.071
+  },
+  {
+   "file": "b08_t4.mp3",
+   "duration_s": 32.16,
+   "wpm_speaking": 211.7,
+   "wpm_overall": 159.5,
+   "pauses_over_180ms": 18,
+   "pause_list": [
+    [
+     1.35,
+     0.48
+    ],
+    [
+     2.6,
+     0.22
+    ],
+    [
+     3.31,
+     0.59
+    ],
+    [
+     7.21,
+     0.55
+    ],
+    [
+     9.27,
+     0.52
+    ],
+    [
+     10.37,
+     0.25
+    ],
+    [
+     11.17,
+     0.48
+    ],
+    [
+     12.28,
+     0.3
+    ],
+    [
+     12.94,
+     0.66
+    ],
+    [
+     14.27,
+     0.48
+    ],
+    [
+     15.42,
+     0.56
+    ],
+    [
+     18.14,
+     0.51
+    ],
+    [
+     21.03,
+     0.36
+    ],
+    [
+     22.05,
+     0.43
+    ],
+    [
+     24.29,
+     0.51
+    ],
+    [
+     27.42,
+     0.35
+    ],
+    [
+     28.5,
+     0.46
+    ],
+    [
+     29.86,
+     0.18
+    ]
+   ],
+   "f0_median_hz": 100.8,
+   "f0_range_st_10_90": 13.05,
+   "f0_sd_st": 5.56,
+   "intensity_sd_db": 7.21,
+   "hnr_db": 8.2,
+   "noise_floor_dbfs": -61.5,
+   "lufs": -25.9,
+   "true_peak_dbtp": -4.1,
+   "asr_text": "So why guess that all? Why not say, I don't know. The researchers argue part of the answer is how models get graded. Picture a 10 question quiz. Right answer, one point. Wrong answer, zero. I don't know. Also zero. Two test takers each knows six answers. The honest one says, I don't know to the rest. Six points. The guesser takes a shot at all four. With 4 choices each, on average, one lands. 7. The Gessar wins with 3 confident wrong answers.",
+   "wer_whisper_tiny": 0.094
+  }
+ ],
+ "b09": [
+  {
+   "file": "b09_t1.mp3",
+   "duration_s": 33.2,
+   "wpm_speaking": 197.6,
+   "wpm_overall": 150.8,
+   "pauses_over_180ms": 18,
+   "pause_list": [
+    [
+     1.21,
+     0.45
+    ],
+    [
+     3.19,
+     0.67
+    ],
+    [
+     4.46,
+     0.45
+    ],
+    [
+     5.58,
+     0.57
+    ],
+    [
+     6.61,
+     0.54
+    ],
+    [
+     7.63,
+     0.2
+    ],
+    [
+     9.34,
+     0.56
+    ],
+    [
+     10.14,
+     0.59
+    ],
+    [
+     11.69,
+     0.57
+    ],
+    [
+     18.96,
+     0.6
+    ],
+    [
+     21.5,
+     0.2
+    ],
+    [
+     22.78,
+     0.52
+    ],
+    [
+     23.85,
+     0.5
+    ],
+    [
+     26.12,
+     0.2
+    ],
+    [
+     26.56,
+     0.23
+    ],
+    [
+     28.56,
+     0.55
+    ],
+    [
+     30.15,
+     0.19
+    ],
+    [
+     31.25,
+     0.23
+    ]
+   ],
+   "f0_median_hz": 97.4,
+   "f0_range_st_10_90": 11.73,
+   "f0_sd_st": 5.1,
+   "intensity_sd_db": 7.26,
+   "hnr_db": 7.6,
+   "noise_floor_dbfs": -60.2,
+   "lufs": -26.8,
+   "true_peak_dbtp": -6.4,
+   "asr_text": "Now change one rule. A wrong answer costs a point. The honest one. Still 6. The guesser. 6. Plus 1. -3. 4. Bluffing loses. When the researchers checked 10 popular benchmarks, 9 graded strictly right or wrong, with zero credit for, I don't know. Training rank models on tests like that, and guessing pays. They're fixed. State the penalty for wrong answers upfront, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one.",
+   "wer_whisper_tiny": 0.169
+  },
+  {
+   "file": "b09_t2.mp3",
+   "duration_s": 32.72,
+   "wpm_speaking": 199.2,
+   "wpm_overall": 153.4,
+   "pauses_over_180ms": 16,
+   "pause_list": [
+    [
+     1.17,
+     0.53
+    ],
+    [
+     3.35,
+     0.59
+    ],
+    [
+     4.54,
+     0.45
+    ],
+    [
+     5.65,
+     0.51
+    ],
+    [
+     6.65,
+     0.49
+    ],
+    [
+     9.18,
+     0.62
+    ],
+    [
+     10.02,
+     0.54
+    ],
+    [
+     11.59,
+     0.58
+    ],
+    [
+     14.59,
+     0.24
+    ],
+    [
+     18.8,
+     0.54
+    ],
+    [
+     21.18,
+     0.3
+    ],
+    [
+     22.5,
+     0.54
+    ],
+    [
+     23.57,
+     0.52
+    ],
+    [
+     26.31,
+     0.21
+    ],
+    [
+     28.22,
+     0.53
+    ],
+    [
+     30.84,
+     0.27
+    ]
+   ],
+   "f0_median_hz": 97.4,
+   "f0_range_st_10_90": 11.28,
+   "f0_sd_st": 4.78,
+   "intensity_sd_db": 7.21,
+   "hnr_db": 7.7,
+   "noise_floor_dbfs": -60.4,
+   "lufs": -26.7,
+   "true_peak_dbtp": -5.6,
+   "asr_text": "Now change one rule. A wrong answer costs a point. The honest one, still six. The guesser. Six plus one minus three. Four. Bluffing loses. When the researchers checked 10 popular benchmarks, nine graded strictly right or wrong with zero credit for, I don't know, training right models on tests like that and guessing pays. They're fixed. State the penalty for wrong answers upfront, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one.",
+   "wer_whisper_tiny": 0.096
+  },
+  {
+   "file": "b09_t3.mp3",
+   "duration_s": 33.2,
+   "wpm_speaking": 200.0,
+   "wpm_overall": 150.0,
+   "pauses_over_180ms": 19,
+   "pause_list": [
+    [
+     1.28,
+     0.5
+    ],
+    [
+     3.31,
+     0.71
+    ],
+    [
+     4.63,
+     0.5
+    ],
+    [
+     5.81,
+     0.55
+    ],
+    [
+     6.83,
+     0.57
+    ],
+    [
+     7.81,
+     0.24
+    ],
+    [
+     9.51,
+     0.56
+    ],
+    [
+     10.32,
+     0.58
+    ],
+    [
+     11.93,
+     0.55
+    ],
+    [
+     14.93,
+     0.22
+    ],
+    [
+     19.29,
+     0.63
+    ],
+    [
+     21.73,
+     0.21
+    ],
+    [
+     23.02,
+     0.57
+    ],
+    [
+     24.15,
+     0.47
+    ],
+    [
+     26.34,
+     0.2
+    ],
+    [
+     26.79,
+     0.21
+    ],
+    [
+     28.74,
+     0.54
+    ],
+    [
+     30.3,
+     0.2
+    ],
+    [
+     31.4,
+     0.29
+    ]
+   ],
+   "f0_median_hz": 96.3,
+   "f0_range_st_10_90": 11.22,
+   "f0_sd_st": 5.29,
+   "intensity_sd_db": 7.44,
+   "hnr_db": 8.5,
+   "noise_floor_dbfs": -59.8,
+   "lufs": -25.8,
+   "true_peak_dbtp": -3.3,
+   "asr_text": "Now change one rule. A wrong answer costs the point. The honest one. Still six. The guesser. Six plus one minus three. Four. Bluffing loses. When the researchers checked 10 popular benchmarks, nine graded strictly right or wrong with zero credit for, I don't know. Training right models on tests like that and guessing pays. They're fixed. State the penalty for wrong answers but front, so admitting uncertainty can win. It's one explanation, not the whole story, but it's surprisingly simple one.",
+   "wer_whisper_tiny": 0.108
+  },
+  {
+   "file": "b09_t4.mp3",
+   "duration_s": 33.2,
+   "wpm_speaking": 197.2,
+   "wpm_overall": 151.1,
+   "pauses_over_180ms": 19,
+   "pause_list": [
+    [
+     1.2,
+     0.45
+    ],
+    [
+     3.19,
+     0.59
+    ],
+    [
+     4.37,
+     0.47
+    ],
+    [
+     5.51,
+     0.49
+    ],
+    [
+     6.46,
+     0.51
+    ],
+    [
+     7.42,
+     0.21
+    ],
+    [
+     9.16,
+     0.55
+    ],
+    [
+     9.96,
+     0.52
+    ],
+    [
+     11.53,
+     0.57
+    ],
+    [
+     14.62,
+     0.2
+    ],
+    [
+     16.89,
+     0.18
+    ],
+    [
+     18.92,
+     0.53
+    ],
+    [
+     21.41,
+     0.23
+    ],
+    [
+     22.72,
+     0.56
+    ],
+    [
+     23.84,
+     0.42
+    ],
+    [
+     26.48,
+     0.26
+    ],
+    [
+     28.5,
+     0.5
+    ],
+    [
+     30.04,
+     0.21
+    ],
+    [
+     31.18,
+     0.25
+    ]
+   ],
+   "f0_median_hz": 98.0,
+   "f0_range_st_10_90": 12.17,
+   "f0_sd_st": 5.56,
+   "intensity_sd_db": 7.22,
+   "hnr_db": 8.0,
+   "noise_floor_dbfs": -58.9,
+   "lufs": -26.7,
+   "true_peak_dbtp": -5.7,
+   "asr_text": "Now change one rule. A wrong answer costs a point. The honest one. Still 6. The guesser. 6 + 1 - 3. 4. Bluffing loses. When the researchers checked 10 popular benchmarks, 9 graded strictly right or wrong with zero credit for, I don't know. Training and rank models on tests like that, and guessing pays. They're fixed. State the penalty for wrong answers upfront, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one.",
+   "wer_whisper_tiny": 0.169
+  }
+ ],
+ "b10": [
+  {
+   "file": "b10_t1.mp3",
+   "duration_s": 19.6,
+   "wpm_speaking": 175.1,
+   "wpm_overall": 142.6,
+   "pauses_over_180ms": 7,
+   "pause_list": [
+    [
+     1.57,
+     0.58
+    ],
+    [
+     3.69,
+     0.54
+    ],
+    [
+     5.06,
+     0.57
+    ],
+    [
+     7.17,
+     0.55
+    ],
+    [
+     10.6,
+     0.41
+    ],
+    [
+     13.09,
+     0.54
+    ],
+    [
+     16.07,
+     0.41
+    ]
+   ],
+   "f0_median_hz": 99.0,
+   "f0_range_st_10_90": 14.2,
+   "f0_sd_st": 5.8,
+   "intensity_sd_db": 6.66,
+   "hnr_db": 8.7,
+   "noise_floor_dbfs": -59.9,
+   "lufs": -26.0,
+   "true_peak_dbtp": -5.0,
+   "asr_text": "So what actually helps start with the unglomerate move. Check the record. Here's Colise Actual thesis. Probabilistic and online methods in machine learning. Carnegie Mellon made 2001. And checking means more than spotting a citation. Does the source exist and does it actually save us?",
+   "wer_whisper_tiny": 0.152
+  },
+  {
+   "file": "b10_t2.mp3",
+   "duration_s": 19.44,
+   "wpm_speaking": 183.3,
+   "wpm_overall": 143.7,
+   "pauses_over_180ms": 9,
+   "pause_list": [
+    [
+     1.53,
+     0.65
+    ],
+    [
+     3.69,
+     0.54
+    ],
+    [
+     5.04,
+     0.61
+    ],
+    [
+     7.21,
+     0.48
+    ],
+    [
+     10.49,
+     0.43
+    ],
+    [
+     11.72,
+     0.18
+    ],
+    [
+     13.06,
+     0.57
+    ],
+    [
+     15.91,
+     0.48
+    ],
+    [
+     17.49,
+     0.21
+    ]
+   ],
+   "f0_median_hz": 99.6,
+   "f0_range_st_10_90": 15.98,
+   "f0_sd_st": 6.52,
+   "intensity_sd_db": 6.7,
+   "hnr_db": 7.9,
+   "noise_floor_dbfs": -60.6,
+   "lufs": -25.6,
+   "true_peak_dbtp": -5.5,
+   "asr_text": "So what actually helps start with the unglomerate move. Check the record. Here's called the actual thesis, probabilistic and online methods in machine learning. Carnegie Mellon made 2001. And checking means more than spotting a citation. Does the source exist and does it actually say this?",
+   "wer_whisper_tiny": 0.13
+  },
+  {
+   "file": "b10_t3.mp3",
+   "duration_s": 19.84,
+   "wpm_speaking": 174.0,
+   "wpm_overall": 140.9,
+   "pauses_over_180ms": 7,
+   "pause_list": [
+    [
+     1.59,
+     0.57
+    ],
+    [
+     3.69,
+     0.54
+    ],
+    [
+     5.08,
+     0.55
+    ],
+    [
+     7.21,
+     0.49
+    ],
+    [
+     10.62,
+     0.45
+    ],
+    [
+     13.18,
+     0.6
+    ],
+    [
+     16.1,
+     0.53
+    ]
+   ],
+   "f0_median_hz": 99.7,
+   "f0_range_st_10_90": 14.44,
+   "f0_sd_st": 5.81,
+   "intensity_sd_db": 6.65,
+   "hnr_db": 8.7,
+   "noise_floor_dbfs": -60.1,
+   "lufs": -26.0,
+   "true_peak_dbtp": -4.7,
+   "asr_text": "So what actually helps start with the unglomerate move. Check the record. Here's Colise actual thesis. Probabilistic and online methods in machine learning. Carnegie Mellon May 2001. And checking means more than spotting a citation. Does the source exist and does it actually save us?",
+   "wer_whisper_tiny": 0.13
+  },
+  {
+   "file": "b10_t4.mp3",
+   "duration_s": 19.92,
+   "wpm_speaking": 179.5,
+   "wpm_overall": 139.9,
+   "pauses_over_180ms": 9,
+   "pause_list": [
+    [
+     1.58,
+     0.63
+    ],
+    [
+     3.69,
+     0.62
+    ],
+    [
+     5.14,
+     0.6
+    ],
+    [
+     7.29,
+     0.5
+    ],
+    [
+     10.65,
+     0.47
+    ],
+    [
+     11.89,
+     0.18
+    ],
+    [
+     13.21,
+     0.58
+    ],
+    [
+     16.14,
+     0.56
+    ],
+    [
+     17.83,
+     0.21
+    ]
+   ],
+   "f0_median_hz": 99.2,
+   "f0_range_st_10_90": 14.66,
+   "f0_sd_st": 5.99,
+   "intensity_sd_db": 6.79,
+   "hnr_db": 8.5,
+   "noise_floor_dbfs": -61.5,
+   "lufs": -25.6,
+   "true_peak_dbtp": -5.8,
+   "asr_text": "So what actually helps start with the unglomerate move. Check the record. Here's called as actual thesis. Probabilistic and online methods in machine learning. Carnegie Mellon made 2001. And checking means more than spotting a citation. Does the source exist and does it actually say this?",
+   "wer_whisper_tiny": 0.13
+  }
+ ],
+ "b11": [
+  {
+   "file": "b11_t1.mp3",
+   "duration_s": 30.0,
+   "wpm_speaking": 195.8,
+   "wpm_overall": 163.4,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     1.47,
+     0.27
+    ],
+    [
+     4.31,
+     0.29
+    ],
+    [
+     5.5,
+     0.61
+    ],
+    [
+     8.35,
+     0.62
+    ],
+    [
+     10.63,
+     0.29
+    ],
+    [
+     13.36,
+     0.5
+    ],
+    [
+     15.73,
+     0.51
+    ],
+    [
+     18.4,
+     0.52
+    ],
+    [
+     22.96,
+     0.47
+    ],
+    [
+     26.17,
+     0.33
+    ],
+    [
+     28.0,
+     0.51
+    ]
+   ],
+   "f0_median_hz": 91.0,
+   "f0_range_st_10_90": 12.6,
+   "f0_sd_st": 5.11,
+   "intensity_sd_db": 5.97,
+   "hnr_db": 7.6,
+   "noise_floor_dbfs": -58.1,
+   "lufs": -27.8,
+   "true_peak_dbtp": -7.9,
+   "asr_text": "Inside one cloud model, and the graphic researchers found a default circuit for \"I can't answer\". Recognizing a familiar name, which is it off. When that recognition misfires, when a name seems familiar, but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts. Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
+   "wer_whisper_tiny": 0.074
+  },
+  {
+   "file": "b11_t2.mp3",
+   "duration_s": 29.92,
+   "wpm_speaking": 194.9,
+   "wpm_overall": 163.4,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     1.43,
+     0.26
+    ],
+    [
+     4.33,
+     0.27
+    ],
+    [
+     5.54,
+     0.57
+    ],
+    [
+     8.36,
+     0.6
+    ],
+    [
+     10.6,
+     0.31
+    ],
+    [
+     13.44,
+     0.44
+    ],
+    [
+     15.74,
+     0.55
+    ],
+    [
+     18.41,
+     0.44
+    ],
+    [
+     22.88,
+     0.6
+    ],
+    [
+     26.19,
+     0.31
+    ],
+    [
+     28.04,
+     0.45
+    ]
+   ],
+   "f0_median_hz": 92.1,
+   "f0_range_st_10_90": 12.72,
+   "f0_sd_st": 5.14,
+   "intensity_sd_db": 6.21,
+   "hnr_db": 7.8,
+   "noise_floor_dbfs": -57.6,
+   "lufs": -27.1,
+   "true_peak_dbtp": -7.7,
+   "asr_text": "Inside one cloud model, anthropic researchers found a default circuit for \"I can't answer\". Recognizing a familiar name, which is it off. When that recognition inspires, when a name seems familiar, but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts. Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent. Not necessarily more correct. None of it is a guarantee.",
+   "wer_whisper_tiny": 0.049
+  },
+  {
+   "file": "b11_t3.mp3",
+   "duration_s": 30.56,
+   "wpm_speaking": 195.2,
+   "wpm_overall": 160.3,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     1.54,
+     0.31
+    ],
+    [
+     4.47,
+     0.28
+    ],
+    [
+     5.68,
+     0.69
+    ],
+    [
+     8.61,
+     0.74
+    ],
+    [
+     11.01,
+     0.26
+    ],
+    [
+     13.81,
+     0.5
+    ],
+    [
+     16.21,
+     0.65
+    ],
+    [
+     18.98,
+     0.51
+    ],
+    [
+     23.45,
+     0.65
+    ],
+    [
+     26.7,
+     0.34
+    ],
+    [
+     28.59,
+     0.48
+    ]
+   ],
+   "f0_median_hz": 93.8,
+   "f0_range_st_10_90": 12.93,
+   "f0_sd_st": 5.7,
+   "intensity_sd_db": 6.01,
+   "hnr_db": 7.4,
+   "noise_floor_dbfs": -58.3,
+   "lufs": -26.8,
+   "true_peak_dbtp": -6.7,
+   "asr_text": "Inside one cloud model, anthropic researchers found a default circuit for \"I can't answer\". Recognizing a familiar name, which is it off. When that recognition misfires, when the name seems familiar, but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts. Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent. Not necessarily more correct. None of it is a guarantee.",
+   "wer_whisper_tiny": 0.049
+  },
+  {
+   "file": "b11_t4.mp3",
+   "duration_s": 30.16,
+   "wpm_speaking": 195.2,
+   "wpm_overall": 162.5,
+   "pauses_over_180ms": 11,
+   "pause_list": [
+    [
+     1.52,
+     0.26
+    ],
+    [
+     4.43,
+     0.27
+    ],
+    [
+     5.64,
+     0.65
+    ],
+    [
+     8.54,
+     0.62
+    ],
+    [
+     10.84,
+     0.23
+    ],
+    [
+     13.58,
+     0.46
+    ],
+    [
+     15.96,
+     0.57
+    ],
+    [
+     18.65,
+     0.51
+    ],
+    [
+     23.14,
+     0.57
+    ],
+    [
+     26.29,
+     0.37
+    ],
+    [
+     28.16,
+     0.5
+    ]
+   ],
+   "f0_median_hz": 91.1,
+   "f0_range_st_10_90": 13.11,
+   "f0_sd_st": 5.07,
+   "intensity_sd_db": 5.95,
+   "hnr_db": 7.8,
+   "noise_floor_dbfs": -59.8,
+   "lufs": -27.4,
+   "true_peak_dbtp": -6.5,
+   "asr_text": "Inside one cloud model, anthropic researchers found a default circuit for \"I can't answer\". Recognizing a familiar name, which is it off. When that recognition misfires, when the name seems familiar, but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts. Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent. Not necessarily more correct. None of it is a guarantee.",
+   "wer_whisper_tiny": 0.049
+  }
+ ],
+ "b12": [
+  {
+   "file": "b12_t1.mp3",
+   "duration_s": 20.4,
+   "wpm_speaking": 208.2,
+   "wpm_overall": 173.5,
+   "pauses_over_180ms": 8,
+   "pause_list": [
+    [
+     2.77,
+     0.51
+    ],
+    [
+     5.87,
+     0.35
+    ],
+    [
+     9.18,
+     0.63
+    ],
+    [
+     11.03,
+     0.3
+    ],
+    [
+     12.89,
+     0.49
+    ],
+    [
+     13.71,
+     0.25
+    ],
+    [
+     16.67,
+     0.55
+    ],
+    [
+     18.36,
+     0.32
+    ]
+   ],
+   "f0_median_hz": 102.0,
+   "f0_range_st_10_90": 15.34,
+   "f0_sd_st": 6.27,
+   "intensity_sd_db": 6.1,
+   "hnr_db": 7.6,
+   "noise_floor_dbfs": -60.4,
+   "lufs": -27.3,
+   "true_peak_dbtp": -6.6,
+   "asr_text": "So why does AI sound right when it's wrong? Because sounding right comes from patterns in language. And being right takes evidence the model doesn't always have. So when an answer matters, don't ask whether it sounds right. Ask what's the evidence and doesn't actually say this. It works on chatbot. It works pretty well on people too.",
+   "wer_whisper_tiny": 0.051
+  },
+  {
+   "file": "b12_t2.mp3",
+   "duration_s": 19.92,
+   "wpm_speaking": 216.8,
+   "wpm_overall": 179.3,
+   "pauses_over_180ms": 9,
+   "pause_list": [
+    [
+     2.63,
+     0.48
+    ],
+    [
+     5.63,
+     0.35
+    ],
+    [
+     9.02,
+     0.52
+    ],
+    [
+     10.8,
+     0.27
+    ],
+    [
+     12.6,
+     0.46
+    ],
+    [
+     13.39,
+     0.25
+    ],
+    [
+     14.58,
+     0.25
+    ],
+    [
+     16.21,
+     0.52
+    ],
+    [
+     17.81,
+     0.31
+    ]
+   ],
+   "f0_median_hz": 105.4,
+   "f0_range_st_10_90": 15.01,
+   "f0_sd_st": 6.06,
+   "intensity_sd_db": 5.93,
+   "hnr_db": 8.4,
+   "noise_floor_dbfs": -60.9,
+   "lufs": -26.7,
+   "true_peak_dbtp": -4.8,
+   "asr_text": "So why does AI sound right when it's wrong? Because sounding right comes from patterns in language. And being right takes evidence the model doesn't always have. So when an answer matters, don't ask whether it sounds right. Ask, what's the evidence? And does it actually say this? It works on chatbox. It works pretty well on people too.",
+   "wer_whisper_tiny": 0.017
+  },
+  {
+   "file": "b12_t3.mp3",
+   "duration_s": 20.0,
+   "wpm_speaking": 217.2,
+   "wpm_overall": 178.6,
+   "pauses_over_180ms": 9,
+   "pause_list": [
+    [
+     2.76,
+     0.52
+    ],
+    [
+     5.94,
+     0.31
+    ],
+    [
+     9.2,
+     0.61
+    ],
+    [
+     11.04,
+     0.26
+    ],
+    [
+     12.77,
+     0.47
+    ],
+    [
+     13.54,
+     0.27
+    ],
+    [
+     14.73,
+     0.22
+    ],
+    [
+     16.33,
+     0.55
+    ],
+    [
+     17.96,
+     0.31
+    ]
+   ],
+   "f0_median_hz": 101.3,
+   "f0_range_st_10_90": 15.74,
+   "f0_sd_st": 6.26,
+   "intensity_sd_db": 6.09,
+   "hnr_db": 7.2,
+   "noise_floor_dbfs": -58.8,
+   "lufs": -26.7,
+   "true_peak_dbtp": -6.9,
+   "asr_text": "So why does AI sound right when it's wrong? Because sounding right comes from patterns in language. And being right takes evidence the model doesn't always have. So when an answer matters, don't ask whether it sounds right. Ask, what's the evidence? And does it actually save this? It works on chatbot's. It works pretty well on people too.",
+   "wer_whisper_tiny": 0.034
+  },
+  {
+   "file": "b12_t4.mp3",
+   "duration_s": 20.0,
+   "wpm_speaking": 216.9,
+   "wpm_overall": 178.9,
+   "pauses_over_180ms": 9,
+   "pause_list": [
+    [
+     2.64,
+     0.5
+    ],
+    [
+     5.81,
+     0.31
+    ],
+    [
+     9.1,
+     0.59
+    ],
+    [
+     10.89,
+     0.26
+    ],
+    [
+     12.67,
+     0.46
+    ],
+    [
+     13.49,
+     0.25
+    ],
+    [
+     14.66,
+     0.23
+    ],
+    [
+     16.27,
+     0.53
+    ],
+    [
+     17.91,
+     0.34
+    ]
+   ],
+   "f0_median_hz": 100.3,
+   "f0_range_st_10_90": 15.58,
+   "f0_sd_st": 6.05,
+   "intensity_sd_db": 6.08,
+   "hnr_db": 7.6,
+   "noise_floor_dbfs": -60.9,
+   "lufs": -27.8,
+   "true_peak_dbtp": -6.1,
+   "asr_text": "So why does AI sound right when it's wrong? Because sounding right comes from patterns in language. And being right takes evidence, the model doesn't always have. So when an answer matters, don't ask whether it sounds right. Ask, what's the evidence? And does it actually save us? It works on chatbutts. It works pretty well on people too.",
+   "wer_whisper_tiny": 0.051
+  }
+ ]
+}

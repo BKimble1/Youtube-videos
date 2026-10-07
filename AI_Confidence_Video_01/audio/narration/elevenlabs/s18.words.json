@@ -1,0 +1,139 @@
+{
+"words": [
+{
+"word": "But",
+"start": 0.575,
+"end": 0.735
+},
+{
+"word": "one",
+"start": 0.815,
+"end": 0.975
+},
+{
+"word": "researcher's",
+"start": 1.175,
+"end": 1.535
+},
+{
+"word": "thesis",
+"start": 1.615,
+"end": 1.855
+},
+{
+"word": "title",
+"start": 1.935,
+"end": 2.255
+},
+{
+"word": "might",
+"start": 2.415,
+"end": 2.575
+},
+{
+"word": "appear",
+"start": 2.655,
+"end": 2.975
+},
+{
+"word": "rarely",
+"start": 3.055,
+"end": 3.375
+},
+{
+"word": "in",
+"start": 3.415,
+"end": 3.455
+},
+{
+"word": "the",
+"start": 3.535,
+"end": 3.575
+},
+{
+"word": "training",
+"start": 3.615,
+"end": 3.935
+},
+{
+"word": "data.",
+"start": 4.015,
+"end": 4.335
+},
+{
+"word": "Maybe",
+"start": 4.735,
+"end": 4.895
+},
+{
+"word": "once.",
+"start": 5.055,
+"end": 5.615
+},
+{
+"word": "Maybe",
+"start": 5.775,
+"end": 5.935
+},
+{
+"word": "never.",
+"start": 6.095,
+"end": 6.495
+},
+{
+"word": "Like",
+"start": 6.975,
+"end": 7.055
+},
+{
+"word": "a",
+"start": 7.095,
+"end": 7.135
+},
+{
+"word": "birthday,",
+"start": 7.215,
+"end": 7.935
+},
+{
+"word": "there's",
+"start": 7.975,
+"end": 8.175
+},
+{
+"word": "no",
+"start": 8.255,
+"end": 8.335
+},
+{
+"word": "pattern",
+"start": 8.415,
+"end": 8.735
+},
+{
+"word": "to",
+"start": 8.815,
+"end": 8.895
+},
+{
+"word": "work",
+"start": 8.975,
+"end": 9.055
+},
+{
+"word": "it",
+"start": 9.095,
+"end": 9.135
+},
+{
+"word": "out",
+"start": 9.215,
+"end": 9.375
+},
+{
+"word": "from.",
+"start": 9.495,
+"end": 9.935
+}
+]
+}

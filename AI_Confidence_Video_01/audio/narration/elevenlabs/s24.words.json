@@ -1,0 +1,94 @@
+{
+"words": [
+{
+"word": "Two",
+"start": 0.09,
+"end": 0.17
+},
+{
+"word": "test-takers",
+"start": 0.25,
+"end": 0.89
+},
+{
+"word": "each",
+"start": 0.97,
+"end": 1.13
+},
+{
+"word": "know",
+"start": 1.21,
+"end": 1.37
+},
+{
+"word": "six",
+"start": 1.53,
+"end": 1.77
+},
+{
+"word": "answers.",
+"start": 2.01,
+"end": 2.33
+},
+{
+"word": "The",
+"start": 2.73,
+"end": 2.81
+},
+{
+"word": "honest",
+"start": 2.89,
+"end": 3.13
+},
+{
+"word": "one",
+"start": 3.21,
+"end": 3.37
+},
+{
+"word": "says",
+"start": 3.45,
+"end": 3.69
+},
+{
+"word": "“I",
+"start": 3.85,
+"end": 3.93
+},
+{
+"word": "don't",
+"start": 4.01,
+"end": 4.17
+},
+{
+"word": "know”",
+"start": 4.25,
+"end": 4.49
+},
+{
+"word": "to",
+"start": 4.53,
+"end": 4.57
+},
+{
+"word": "the",
+"start": 4.65,
+"end": 4.69
+},
+{
+"word": "rest.",
+"start": 4.73,
+"end": 5.33
+},
+{
+"word": "Six",
+"start": 5.53,
+"end": 5.69
+},
+{
+"word": "points.",
+"start": 5.77,
+"end": 6.17
+}
+]
+}

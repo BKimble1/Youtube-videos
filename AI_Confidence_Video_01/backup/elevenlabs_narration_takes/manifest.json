@@ -1,0 +1,17 @@
+{
+ "part_bytes": 25165824,
+ "files": [
+  {
+   "name": "ElevenLabs_narration_takes.zip",
+   "bytes": 19763938,
+   "sha256": "449db4797bf13d020981a1a6d1032536064814d74846eb4db3444efaf80e975e",
+   "parts": [
+    {
+     "name": "ElevenLabs_narration_takes.zip.part001",
+     "bytes": 19763938,
+     "sha256": "449db4797bf13d020981a1a6d1032536064814d74846eb4db3444efaf80e975e"
+    }
+   ]
+  }
+ ]
+}

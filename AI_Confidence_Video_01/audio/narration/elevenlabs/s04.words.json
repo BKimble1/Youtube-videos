@@ -1,0 +1,74 @@
+{
+"words": [
+{
+"word": "Three",
+"start": 0.18,
+"end": 0.42
+},
+{
+"word": "polished",
+"start": 0.66,
+"end": 1.06
+},
+{
+"word": "answers.",
+"start": 1.14,
+"end": 1.86
+},
+{
+"word": "Not",
+"start": 2.1,
+"end": 2.26
+},
+{
+"word": "one",
+"start": 2.42,
+"end": 2.66
+},
+{
+"word": "had",
+"start": 2.74,
+"end": 2.82
+},
+{
+"word": "the",
+"start": 2.9,
+"end": 2.94
+},
+{
+"word": "right",
+"start": 2.98,
+"end": 3.14
+},
+{
+"word": "title,",
+"start": 3.22,
+"end": 3.78
+},
+{
+"word": "or",
+"start": 3.86,
+"end": 3.94
+},
+{
+"word": "even",
+"start": 4.02,
+"end": 4.1
+},
+{
+"word": "the",
+"start": 4.18,
+"end": 4.22
+},
+{
+"word": "right",
+"start": 4.26,
+"end": 4.42
+},
+{
+"word": "year.",
+"start": 4.58,
+"end": 5.14
+}
+]
+}

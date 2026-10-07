@@ -1,0 +1,78 @@
+{
+ "method": "ElevenLabs Scribe v1 on each selected take uploaded as a plain audio asset (blind: no access to the script). Numbers spoken as words and spelling variants are normalised before scoring.",
+ "blocks": [
+  {
+   "block": "b01",
+   "take": "b01_t1.mp3",
+   "scribe_text": "Researchers asked three popular chatbots one simple question: What was the title of Adam Kalai's dissertation? ChatGPT answered, \"Boosting, online algorithms, and other topics in machine learning, Carnegie Mellon, two thousand and two.\" DeepSeek gave a different title at Harvard in two thousand and five. Llama gave a third at MIT in two thousand and seven. Three polished answers. Not one had the right title or even the right year.",
+   "wer": 0.0
+  },
+  {
+   "block": "b02",
+   "take": "b02_t4.mp3",
+   "scribe_text": "And Adam Kalai? He's the paper's lead author. Meanwhile, Google DeepMind published solutions to five of the six problems at the twenty twenty-five International Mathematical Olympiad, credited to a different model, Gemini DeepThink. So how can the same kind of technology take on Olympiad problems and still sound this sure while being this wrong? Short answer, a chatbot writes what's likely, and likely isn't always true. To see why, let's take one answer apart",
+   "wer": 0.0
+  },
+  {
+   "block": "b03",
+   "take": "b03_t1.mp3",
+   "scribe_text": "Here's part of ChatGPT's answer. A language model writes in tokens, chunks of text. Some are whole words, some are fragments. \"Kali\" becomes \"Kal\" and \"i.\" Each token is really a number. At every step, the model turns the token so far into a numerical picture of the context and scores every possible next token",
+   "wer": 0.055
+  },
+  {
+   "block": "b04",
+   "take": "b04_t1.mp3",
+   "scribe_text": "Here, it's choosing the last digit of the year. One option gets picked, added to the end, and the loop runs again, token after token. Because there's a pick, the same question can come out differently. Asked for Kalai's birthday, only if you know, one model gave three different dates in three tries",
+   "wer": 0.0
+  },
+  {
+   "block": "b05",
+   "take": "b05_t3.mp3",
+   "scribe_text": "Here's the key part. Those scores measure how likely a piece of text is to come next, not how likely it is to be true. Modern chatbots add more, instruction training, step-by-step reasoning, sometimes web search, but the answer itself is still written token by token",
+   "wer": 0.0
+  },
+  {
+   "block": "b06",
+   "take": "b06_t4.mp3",
+   "scribe_text": "So why would the likely answer be wrong? Look at what the model had to learn. What a dissertation title sounds like is everywhere. Methods, algorithms, machine learning, again and again. Famous facts repeat too. The paper notes that models rarely miss something like Einstein's dissertation title. But one researcher's thesis title might appear rarely in the training data. Maybe once, maybe never. Like a birthday, there's no pattern to work it out from.",
+   "wer": 0.0
+  },
+  {
+   "block": "b07",
+   "take": "b07_t4.mp3",
+   "scribe_text": "So the model fills the gap with what a title usually looks like, and the confidence comes along for free. Is entitled. No I think, no maybe. That tone isn't a readout of what the model knows. Here's ChatGPT's answer next to the actual record. Spot the difference? Same university, the wrong year, it was two thousand and one, and a different title. The invented details look exactly as solid as the true one.",
+   "wer": 0.0
+  },
+  {
+   "block": "b08",
+   "take": "b08_t1.mp3",
+   "scribe_text": "So why guess at all? Why not say, \"I don't know\"? The researchers argue part of the answer is how models get graded. Picture a ten-question quiz. Right answer, one point. Wrong answer, zero. I don't know, also zero. Two test takers each know six answers. The honest one says, \"I don't know,\" to the rest, six points. The guesser takes a shot at all four. With four choices each, on average, one lands, seven points. The guesser wins with three confident wrong answers.",
+   "wer": 0.0
+  },
+  {
+   "block": "b09",
+   "take": "b09_t4.mp3",
+   "scribe_text": "Now change one rule: a wrong answer costs a point. The honest one, still six. The guesser, six plus one minus three, four. Bluffing loses. When the researchers checked ten popular benchmarks, nine graded strictly right or wrong, with zero credit for I don't know. Train and rank models on tests like that, and guessing pays. Their fix? State the penalty for wrong answers upfront, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one",
+   "wer": 0.0
+  },
+  {
+   "block": "b10",
+   "take": "b10_t3.mp3",
+   "scribe_text": "So what actually helps? Start with the unglamorous move. Check the record. Here's Kalai's actual thesis, Probabilistic and Online Methods in Machine Learning, Carnegie Mellon, May two thousand and one. And checking means more than spotting a citation. Does the source exist, and does it actually say this?",
+   "wer": 0.0
+  },
+  {
+   "block": "b11",
+   "take": "b11_t3.mp3",
+   "scribe_text": "Inside one Claude model, Anthropic researchers found a default circuit for \"I can't answer.\" Recognizing a familiar name switches it off. When that recognition misfires, when a name seems familiar but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts. Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
+   "wer": 0.0
+  },
+  {
+   "block": "b12",
+   "take": "b12_t1.mp3",
+   "scribe_text": "So why does AI sound right when it's wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have. So when an answer matters, don't ask whether it sounds right. Ask, \"What's the evidence?\" And, \"Does it actually say this?\" It works on chatbots. It works pretty well on people, too.",
+   "wer": 0.0
+  }
+ ],
+ "overall_wer": 0.0038
+}

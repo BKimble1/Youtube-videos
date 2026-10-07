@@ -15,6 +15,10 @@ Outputs
 Usage
   python3 tools/build_timeline.py --engine draft_local
   python3 tools/build_timeline.py --engine elevenlabs
+
+pause_after_ms is the target gap between segments. For engines whose manifest gives speech_start_s /
+speech_end_s (ElevenLabs block takes, see tools/el_assemble.py) it counts the voice's own pause
+towards that target instead of adding the full value on top.
 """
 import argparse
 import json
@@ -138,7 +142,8 @@ def main():
     pieces = [np.zeros(int(LEAD_IN_S * SR), dtype=np.float32)]
     t = LEAD_IN_S
     out_segments = []
-    for seg in segs_doc["segments"]:
+    seg_list = segs_doc["segments"]
+    for si, seg in enumerate(seg_list):
         m = by_id.get(seg["id"])
         if m is None:
             sys.exit(f"Segment {seg['id']} missing from {man_path}")
@@ -174,13 +179,22 @@ def main():
         words_abs = [{"word": w["word"], "start": t + w["start"], "end": t + w["end"]} for w in words]
         pieces.append(audio)
         pause = seg.get("pause_after_ms", 250) / 1000.0
+        # Engines that return whole takes (ElevenLabs blocks) keep the voice's own pause inside the
+        # segment WAVs: speech_start_s / speech_end_s mark the speech, and only the part of the
+        # designed pause the voice did not already take is added as silence.
+        s0 = m.get("speech_start_s", 0.0)
+        s1 = m.get("speech_end_s", dur)
+        if "speech_end_s" in m:
+            nxt = by_id.get(seg_list[si + 1]["id"], {}) if si + 1 < len(seg_list) else {}
+            natural = (dur - s1) + nxt.get("speech_start_s", 0.0)
+            pause = max(0.0, pause - natural)
         pieces.append(np.zeros(int(round(pause * SR)), dtype=np.float32))
         out_segments.append({
             "id": seg["id"],
             "scene": seg["scene"],
             "text": seg["text"],
-            "start": t,
-            "end": t + dur,
+            "start": t + s0,
+            "end": t + s1,
             "timing": timing_source,
             "words_abs": words_abs,
         })

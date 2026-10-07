@@ -1,0 +1,84 @@
+{
+"words": [
+{
+"word": "So",
+"start": 0.0,
+"end": 0.24
+},
+{
+"word": "why",
+"start": 0.48,
+"end": 0.64
+},
+{
+"word": "would",
+"start": 0.72,
+"end": 0.8
+},
+{
+"word": "the",
+"start": 0.84,
+"end": 0.88
+},
+{
+"word": "likely",
+"start": 1.04,
+"end": 1.36
+},
+{
+"word": "answer",
+"start": 1.52,
+"end": 1.68
+},
+{
+"word": "be",
+"start": 1.76,
+"end": 1.84
+},
+{
+"word": "wrong?",
+"start": 1.92,
+"end": 2.4
+},
+{
+"word": "Look",
+"start": 2.96,
+"end": 3.04
+},
+{
+"word": "at",
+"start": 3.12,
+"end": 3.16
+},
+{
+"word": "what",
+"start": 3.2,
+"end": 3.28
+},
+{
+"word": "the",
+"start": 3.36,
+"end": 3.4
+},
+{
+"word": "model",
+"start": 3.44,
+"end": 3.68
+},
+{
+"word": "had",
+"start": 3.76,
+"end": 3.92
+},
+{
+"word": "to",
+"start": 3.96,
+"end": 4.0
+},
+{
+"word": "learn.",
+"start": 4.16,
+"end": 4.56
+}
+]
+}

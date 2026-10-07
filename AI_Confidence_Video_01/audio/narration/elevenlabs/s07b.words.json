@@ -1,0 +1,104 @@
+{
+"words": [
+{
+"word": "Short",
+"start": 0.21,
+"end": 0.37
+},
+{
+"word": "answer:",
+"start": 0.45,
+"end": 1.17
+},
+{
+"word": "a",
+"start": 1.25,
+"end": 1.33
+},
+{
+"word": "chatbot",
+"start": 1.45,
+"end": 1.81
+},
+{
+"word": "writes",
+"start": 1.93,
+"end": 2.05
+},
+{
+"word": "what's",
+"start": 2.13,
+"end": 2.37
+},
+{
+"word": "likely,",
+"start": 2.57,
+"end": 3.09
+},
+{
+"word": "and",
+"start": 3.17,
+"end": 3.25
+},
+{
+"word": "likely",
+"start": 3.33,
+"end": 3.73
+},
+{
+"word": "isn't",
+"start": 3.97,
+"end": 4.21
+},
+{
+"word": "always",
+"start": 4.37,
+"end": 4.53
+},
+{
+"word": "true.",
+"start": 4.69,
+"end": 4.93
+},
+{
+"word": "To",
+"start": 5.49,
+"end": 5.57
+},
+{
+"word": "see",
+"start": 5.65,
+"end": 5.81
+},
+{
+"word": "why,",
+"start": 5.93,
+"end": 6.29
+},
+{
+"word": "let's",
+"start": 6.37,
+"end": 6.49
+},
+{
+"word": "take",
+"start": 6.53,
+"end": 6.69
+},
+{
+"word": "one",
+"start": 6.77,
+"end": 6.85
+},
+{
+"word": "answer",
+"start": 6.93,
+"end": 7.17
+},
+{
+"word": "apart.",
+"start": 7.25,
+"end": 7.81
+}
+]
+}

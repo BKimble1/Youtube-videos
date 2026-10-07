@@ -1,0 +1,189 @@
+{
+"words": [
+{
+"word": "So",
+"start": 0.0,
+"end": 0.16
+},
+{
+"word": "the",
+"start": 0.2,
+"end": 0.24
+},
+{
+"word": "model",
+"start": 0.32,
+"end": 0.56
+},
+{
+"word": "fills",
+"start": 0.64,
+"end": 0.88
+},
+{
+"word": "the",
+"start": 0.92,
+"end": 0.96
+},
+{
+"word": "gap",
+"start": 1.04,
+"end": 1.36
+},
+{
+"word": "with",
+"start": 1.44,
+"end": 1.52
+},
+{
+"word": "what",
+"start": 1.56,
+"end": 1.6
+},
+{
+"word": "a",
+"start": 1.68,
+"end": 1.76
+},
+{
+"word": "title",
+"start": 1.92,
+"end": 2.08
+},
+{
+"word": "usually",
+"start": 2.24,
+"end": 2.64
+},
+{
+"word": "looks",
+"start": 2.72,
+"end": 2.88
+},
+{
+"word": "like,",
+"start": 2.96,
+"end": 3.44
+},
+{
+"word": "and",
+"start": 3.48,
+"end": 3.52
+},
+{
+"word": "the",
+"start": 3.56,
+"end": 3.6
+},
+{
+"word": "confidence",
+"start": 3.68,
+"end": 4.16
+},
+{
+"word": "comes",
+"start": 4.24,
+"end": 4.32
+},
+{
+"word": "along",
+"start": 4.4,
+"end": 4.64
+},
+{
+"word": "for",
+"start": 4.68,
+"end": 4.72
+},
+{
+"word": "free.",
+"start": 4.88,
+"end": 5.2
+},
+{
+"word": "“Is",
+"start": 5.6,
+"end": 5.84
+},
+{
+"word": "entitled.”",
+"start": 6.0,
+"end": 6.88
+},
+{
+"word": "No",
+"start": 7.12,
+"end": 7.28
+},
+{
+"word": "“I",
+"start": 7.36,
+"end": 7.52
+},
+{
+"word": "think,”",
+"start": 7.68,
+"end": 8.32
+},
+{
+"word": "no",
+"start": 8.44,
+"end": 8.56
+},
+{
+"word": "“maybe.”",
+"start": 8.72,
+"end": 9.6
+},
+{
+"word": "That",
+"start": 9.68,
+"end": 9.84
+},
+{
+"word": "tone",
+"start": 9.96,
+"end": 10.08
+},
+{
+"word": "isn't",
+"start": 10.24,
+"end": 10.4
+},
+{
+"word": "a",
+"start": 10.48,
+"end": 10.52
+},
+{
+"word": "readout",
+"start": 10.56,
+"end": 10.88
+},
+{
+"word": "of",
+"start": 10.96,
+"end": 11.04
+},
+{
+"word": "what",
+"start": 11.12,
+"end": 11.2
+},
+{
+"word": "the",
+"start": 11.24,
+"end": 11.28
+},
+{
+"word": "model",
+"start": 11.36,
+"end": 11.52
+},
+{
+"word": "knows.",
+"start": 11.68,
+"end": 12.32
+}
+]
+}
