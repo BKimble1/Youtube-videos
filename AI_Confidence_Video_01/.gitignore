@@ -32,3 +32,6 @@ audio/mix/final_mix.wav
 *.m4a
 *.aac
 *.flac
+
+# v3 review sheets are committed as JPEG copies
+qa/review_v3/*.png
