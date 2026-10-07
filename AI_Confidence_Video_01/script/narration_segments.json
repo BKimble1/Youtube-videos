@@ -26,13 +26,13 @@
    "id": "s04",
    "scene": "S1",
    "text": "Three polished answers. Not one had the right title, or even the right year.",
-   "pause_after_ms": 500
+   "pause_after_ms": 400
   },
   {
    "id": "s05",
    "scene": "S1",
    "text": "And Adam Kalai? He's the paper's lead author.",
-   "pause_after_ms": 700,
+   "pause_after_ms": 550,
    "tts_text": "And Adam [Kalai](/kəlˈI/)? He's the paper's lead author."
   },
   {
@@ -45,7 +45,7 @@
    "id": "s07",
    "scene": "S1",
    "text": "So how can AI be that capable, and still sound this sure while being this wrong?",
-   "pause_after_ms": 750
+   "pause_after_ms": 600
   },
   {
    "id": "s07b",
@@ -82,20 +82,20 @@
    "id": "s12",
    "scene": "S2",
    "text": "Because there's a pick, the same question can come out differently. Asked for Kalai's birthday, “only if you know,” one model gave three different dates in three tries.",
-   "pause_after_ms": 500,
+   "pause_after_ms": 420,
    "tts_text": "Because there's a pick, the same question can come out differently. Asked for [Kalai's](/kəlˈIz/) birthday, “only if you know,” one model gave three different dates in three tries."
   },
   {
    "id": "s13",
    "scene": "S2",
    "text": "Here's the key part. Those scores measure how likely a piece of text is to come next. Not how likely it is to be true.",
-   "pause_after_ms": 650
+   "pause_after_ms": 550
   },
   {
    "id": "s14",
    "scene": "S2",
    "text": "Modern chatbots add more: instruction training, step-by-step reasoning, sometimes web search. But the answer itself is still written token by token.",
-   "pause_after_ms": 600
+   "pause_after_ms": 520
   },
   {
    "id": "s15",
@@ -137,7 +137,7 @@
    "id": "s21",
    "scene": "S3",
    "text": "Same university. The wrong year: it was 2001. And a different title. The invented details look exactly as solid as the true one.",
-   "pause_after_ms": 700
+   "pause_after_ms": 620
   },
   {
    "id": "s22",
@@ -161,7 +161,7 @@
    "id": "s25",
    "scene": "S4",
    "text": "The guesser takes a shot at all four. With four choices each, on average one lands. Seven points. The guesser wins, with three confident wrong answers.",
-   "pause_after_ms": 600
+   "pause_after_ms": 500
   },
   {
    "id": "s26",
@@ -173,7 +173,7 @@
    "id": "s27",
    "scene": "S4",
    "text": "The honest one: still six. The guesser: six, plus one, minus three. Four. Bluffing loses.",
-   "pause_after_ms": 600
+   "pause_after_ms": 500
   },
   {
    "id": "s28",
@@ -185,7 +185,7 @@
    "id": "s29",
    "scene": "S4",
    "text": "Their fix: state the penalty for wrong answers up front, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one.",
-   "pause_after_ms": 650
+   "pause_after_ms": 550
   },
   {
    "id": "s30",
@@ -216,13 +216,13 @@
    "id": "s34",
    "scene": "S5",
    "text": "When that recognition misfires, when a name seems familiar but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts.",
-   "pause_after_ms": 450
+   "pause_after_ms": 380
   },
   {
    "id": "s35",
    "scene": "S5",
    "text": "Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
-   "pause_after_ms": 650
+   "pause_after_ms": 550
   },
   {
    "id": "s36",

@@ -2,7 +2,7 @@ import React from 'react';
 import {Img, staticFile} from 'remotion';
 import {C, F} from '../theme';
 
-export type Box = {x: number; y: number; w: number; h: number; t: number; tone?: 'teal' | 'coral' | 'ink'; label?: string; labelSide?: 'top' | 'bottom'};
+export type Box = {x: number; y: number; w: number; h: number; t: number; tone?: 'teal' | 'coral' | 'ink'; label?: string; labelSide?: 'top' | 'bottom'; padY?: number};
 
 /**
  * A real document crop shown on a paper card, with highlight boxes in fractional
@@ -48,7 +48,7 @@ export const Doc: React.FC<{
             const col = b.tone === 'coral' ? C.coral : b.tone === 'ink' ? C.ink : C.teal;
             const fill = b.tone === 'coral' ? 'rgba(255,111,94,0.14)' : b.tone === 'ink' ? 'rgba(27,35,51,0.06)' : 'rgba(60,201,180,0.14)';
             return (
-              <div key={i} style={{position: 'absolute', left: b.x * width - 8, top: b.y * h - 6, width: b.w * width + 16, height: b.h * h + 12, opacity: b.t}}>
+              <div key={i} style={{position: 'absolute', left: b.x * width - 8, top: b.y * h - (b.padY ?? 6), width: b.w * width + 16, height: b.h * h + 2 * (b.padY ?? 6), opacity: b.t}}>
                 <div
                   style={{
                     position: 'absolute',

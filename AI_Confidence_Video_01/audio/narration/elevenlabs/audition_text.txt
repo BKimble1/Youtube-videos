@@ -1,6 +1,6 @@
-Researchers asked three popular chatbots one simple question: What was the title of Adam Kalai's PhD dissertation? ChatGPT answered, “Boosting, Online Algorithms, and Other Topics in Machine Learning.” Carnegie Mellon, 2002. DeepSeek gave a different title, at Harvard, in 2005. Llama gave a third, at MIT, in 2007.
+Researchers asked three popular chatbots one simple question: What was the title of Adam Kalai's dissertation? ChatGPT answered, “Boosting, Online Algorithms, and Other Topics in Machine Learning.” Carnegie Mellon, 2002. DeepSeek gave a different title, at Harvard, in 2005. Llama gave a third, at MIT, in 2007.
 
-Three polished answers. Not one had the right title, or even the right year. And Adam Kalai? He was one of the researchers asking.
+Three polished answers. Not one had the right title, or even the right year. And Adam Kalai? He's the paper's lead author.
 
 So how can AI be that capable, and still sound this sure while being this wrong?
 

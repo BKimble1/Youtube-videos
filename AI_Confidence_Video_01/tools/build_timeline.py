@@ -31,7 +31,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FPS = 30
 SR = 48000
 LEAD_IN_S = 0.45      # silence before the first word
-TAIL_S = 3.6          # time after the last word (end card + music tail)
+TAIL_S = 5.2          # time after the last word (end card + music tail)
 SCENE_LEAD_S = 0.35   # a scene's visuals start this long before its first word
 
 
@@ -86,9 +86,21 @@ def build_srt(segments, max_chars=84, max_dur=5.5):
             strong = re.search(r"[.?!]['\"’”]?$", w["word"]) is not None
             last = i == len(words) - 1
             too_long = len(text) > max_chars - 12 or (cur[-1]["end"] - cur[0]["start"]) > max_dur
+            remaining = len(words) - 1 - i
+            if too_long and not strong and 0 < remaining <= 2:
+                too_long = False  # keep a short tail ("title.") with its phrase instead of a flash cue
             if last or strong or (end_punct and len(text) > 28) or too_long:
                 cues.append((cur[0]["start"], cur[-1]["end"], text))
                 cur = []
+    # merge very short trailing fragments ("title.", "Four.") into the previous cue when it fits
+    merged = []
+    for a, b, t in cues:
+        if merged and len(t.split()) <= 2 and len(merged[-1][2]) + 1 + len(t) <= max_chars and a - merged[-1][1] < 0.6:
+            pa, pb, pt = merged[-1]
+            merged[-1] = (pa, b, pt + " " + t)
+        else:
+            merged.append((a, b, t))
+    cues = merged
     # enforce min duration and no overlap
     fixed = []
     for i, (a, b, t) in enumerate(cues):
@@ -104,7 +116,7 @@ def build_srt(segments, max_chars=84, max_dur=5.5):
             best, best_score = None, 1e9
             for k in range(1, len(words)):
                 l1, l2 = " ".join(words[:k]), " ".join(words[k:])
-                score = abs(len(l1) - len(l2)) + (100 if max(len(l1), len(l2)) > 42 else 0)
+                score = abs(len(l1) - len(l2)) + (100 if max(len(l1), len(l2)) > 44 else 0)
                 if score < best_score:
                     best, best_score = (l1, l2), score
             t = best[0] + "\n" + best[1]

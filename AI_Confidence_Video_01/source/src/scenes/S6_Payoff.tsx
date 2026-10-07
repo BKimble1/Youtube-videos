@@ -15,23 +15,25 @@ export const S6Payoff: React.FC = () => {
   const cBeing = at('s36', 'being');
   const cEvidence = at('s36', 'evidence');
   const cDont = at('s37', "don't");
-  const cAsk = at('s37', 'Ask:');
+  const cAsk = at('s37', 'Ask:', 2);
+  const cRightDot = at('s37', 'right.');
+  const cIt2 = at('s38', 'It', 2);
   const cActually = at('s37', 'actually');
   const cWorks = at('s38', 'It');
   const cPeople = at('s38', 'people,');
   const cEnd = segEnd('s38');
 
   const qT = ramp(g, c0, 14) * (1 - ramp(g, cBecause - 2, 12));
-  const linesIn = ramp(g, cBecause, 14);
-  const l1 = ramp(g, cPatterns - 6, 16);
-  const l2 = ramp(g, cEvidence - 6, 16);
+  const linesIn = ramp(g, cBecause - 3, 10);
+  const l1 = ramp(g, cBecause - 3, 12);
+  const l2 = ramp(g, cBeing - 4, 14);
   const linesOut = ramp(g, cDont - 8, 14);
   const soundsT = ramp(g, cDont - 2, 14);
-  const strikeT = ramp(g, cAsk - 6, 12, easeInOut);
+  const strikeT = ramp(g, cRightDot, 12, easeInOut);
   const askT = ramp(g, cAsk, 16);
   const actuallyT = ramp(g, cActually, 12);
-  const habitOut = ramp(g, cEnd + 18, 18);
-  const endCard = ramp(g, cEnd + 26, 22);
+  const habitOut = ramp(g, cEnd + 30, 10);
+  const endCard = ramp(g, cEnd + 42, 16);
   const fadeAll = 1 - ramp(g, TL.durationInFrames - 26, 24);
 
   return (
@@ -68,8 +70,11 @@ export const S6Payoff: React.FC = () => {
             and does it <span style={{color: C.teal, opacity: 0.4 + 0.6 * actuallyT}}>actually say this?</span>
           </Headline>
         </div>
-        <div style={{marginTop: 60, fontFamily: F.sans, fontSize: 32, color: C.textDim, opacity: ramp(g, cWorks, 14) * (1 - habitOut)}}>
-          Works on chatbots. <span style={{opacity: ramp(g, cPeople - 8, 14)}}>Works pretty well on people, too.</span>
+        <div style={{marginTop: 56, fontFamily: F.sans, fontSize: 34, color: C.textDim, opacity: ramp(g, cWorks - 2, 12) * (1 - habitOut), textAlign: 'center'}}>
+          It works on chatbots.
+        </div>
+        <div style={{marginTop: 10, fontFamily: F.sans, fontSize: 34, color: C.text, opacity: ramp(g, cIt2 - 2, 12) * (1 - habitOut), textAlign: 'center'}}>
+          It works pretty well on people, too.
         </div>
       </AbsoluteFill>
 

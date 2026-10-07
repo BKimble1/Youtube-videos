@@ -76,7 +76,7 @@ export const S5Helps: React.FC = () => {
 
   // Phase A: library photo + headline
   const photoT = ramp(g, c0 - 8, 20) * (1 - ramp(g, cHere - 6, 14));
-  const headT = ramp(g, cCheck, 14);
+  const headT = ramp(g, at('s30', 'unglamorous') - 4, 14);
   // Phase B: thesis title page + checklist
   const thesisIn = ramp(g, cHere, 18);
   const boxTitle = ramp(g, cProb, 16);
@@ -86,12 +86,12 @@ export const S5Helps: React.FC = () => {
   const checkIn = ramp(g, cAnd, 16);
   const q1 = ramp(g, cExist, 12);
   const q2 = ramp(g, cSay, 12);
-  const thesisOut = ramp(g, cResearchers - 6, 14);
+  const thesisOut = ramp(g, at('s33', 'Claude') - 8, 8);
   // Phase C: Anthropic finding
-  const anthIn = ramp(g, cResearchers, 16);
-  const headerT = ramp(g, cResearchers, 12) * (1 - ramp(g, cAnthropic + 6, 10));
-  const figT = ramp(g, cAnthropic + 6, 12) * (1 - ramp(g, cFor + 2, 10));
-  const diagIn = ramp(g, cFor + 2, 14);
+  const anthIn = ramp(g, at('s33', 'Claude'), 10);
+  const headerT = ramp(g, at('s33', 'Claude'), 10) * (1 - ramp(g, cAnthropic + 8, 8));
+  const figT = ramp(g, cAnthropic + 14, 10) * (1 - ramp(g, cFor + 2, 8));
+  const diagIn = ramp(g, cFor + 8, 12);
   const famOn = ramp(g, cFamiliarName, 12);
   const inhibit = ramp(g, cSwitches, 16, easeInOut);
   const misT = ramp(g, cMisfire - 4, 12);
@@ -138,23 +138,23 @@ export const S5Helps: React.FC = () => {
             pad={22}
             boxes={[
               {x: 0.18, y: 0.115, w: 0.64, h: 0.103, t: boxTitle, tone: 'teal', label: 'Title', labelSide: 'top'},
-              {x: 0.42, y: 0.343, w: 0.16, h: 0.053, t: boxDate, tone: 'teal'},
-              {x: 0.373, y: 0.556, w: 0.254, h: 0.026, t: boxCMU, tone: 'teal'},
-              {x: 0.42, y: 0.926, w: 0.158, h: 0.026, t: boxCommittee, tone: 'ink', label: 'later a co-author of the 2025 paper', labelSide: 'bottom'},
+              {x: 0.42, y: 0.343, w: 0.16, h: 0.053, t: boxDate, tone: 'teal', padY: 3},
+              {x: 0.373, y: 0.558, w: 0.254, h: 0.022, t: boxCMU, tone: 'teal', padY: 2},
+              {x: 0.42, y: 0.928, w: 0.158, h: 0.022, t: boxCommittee, tone: 'ink', label: 'Co-author of the 2025 paper', labelSide: 'bottom', padY: 2},
             ]}
           />
         </div>
         <div style={{position: 'absolute', left: 1080, top: 170, width: 740, opacity: checkIn, transform: `translateX(${(1 - checkIn) * 30}px)`}}>
           <div style={{fontFamily: F.sans, fontSize: 26, fontWeight: 700, letterSpacing: '0.12em', color: C.muted}}>CHECKING A CLAIM</div>
           <div style={{marginTop: 30, padding: '24px 28px', borderRadius: 18, background: C.surface, border: `1.5px solid ${C.lineStrong}`}}>
-            <div style={{fontFamily: F.sans, fontSize: 22, color: C.muted}}>Claim (ChatGPT, GPT-4o)</div>
+            <div style={{fontFamily: F.sans, fontSize: 22, color: C.muted}}>Claim (ChatGPT, GPT-4o, May 9, 2025, no web search)</div>
             <div style={{fontFamily: F.serif, fontSize: 30, color: C.text, marginTop: 8, lineHeight: 1.3}}>
               “Boosting, Online Algorithms, and Other Topics in Machine Learning,” completed in 2002 at CMU
             </div>
           </div>
           {[
-            {q: 'Does the source exist?', a: 'Yes: CMU-CS-01-132', t: q1, tone: 'teal' as const},
-            {q: 'Does it actually say this?', a: 'No: different title, 2001', t: q2, tone: 'coral' as const},
+            {q: 'Does the source exist?', a: 'Yes: Kalai’s real CMU thesis, CMU-CS-01-132', t: q1, tone: 'teal' as const},
+            {q: 'Does it actually say this?', a: 'No: a different title, and 2001, not 2002', t: q2, tone: 'coral' as const},
           ].map((r, i) => (
             <div key={i} style={{display: 'flex', alignItems: 'center', gap: 22, marginTop: 30, opacity: 0.35 + 0.65 * r.t}}>
               <div
@@ -207,7 +207,7 @@ export const S5Helps: React.FC = () => {
           </div>
           <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0}}>
             <defs>
-              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
                 <path d="M 0 0 L 10 5 L 0 10 z" fill={C.textDim} />
               </marker>
             </defs>
@@ -216,7 +216,7 @@ export const S5Helps: React.FC = () => {
             <line x1={776} y1={322} x2={806} y2={360} stroke={C.text} strokeWidth={7} opacity={inhibit} />
             <text x={470} y={420} fill={C.text} fontFamily="Inter Variable" fontSize={24} fontWeight={650} opacity={inhibit}>switches off</text>
             {/* familiar -> facts */}
-            <path d="M 560 580 C 680 660, 760 720, 790 740" stroke={misfire ? C.lineStrong : C.textDim} strokeWidth={3} fill="none" markerEnd="url(#arr)" opacity={famOn} />
+            <path d="M 560 580 C 650 640, 720 690, 772 722" stroke={misfire ? C.lineStrong : C.textDim} strokeWidth={3} fill="none" markerEnd="url(#arr)" opacity={famOn} />
             {/* can't answer -> output */}
             <path d="M 1140 330 C 1260 330, 1300 470, 1335 500" stroke={C.textDim} strokeWidth={3} fill="none" markerEnd="url(#arr)" opacity={0.25 + 0.75 * canOn} />
             {/* facts -> output */}
@@ -237,28 +237,32 @@ export const S5Helps: React.FC = () => {
           <div style={{position: 'absolute', left: 0, right: 0, top: 900, textAlign: 'center', fontFamily: F.sans, fontSize: 40, fontWeight: 650, color: C.text, opacity: knowingT}}>
             Knowing a name isn’t knowing the facts.
           </div>
-          <div style={{position: 'absolute', left: 250, top: 650, opacity: misT}}>
+          <div style={{position: 'absolute', left: 250, top: 640, opacity: misT}}>
             <Tag tone="coral">Misfire: name feels familiar</Tag>
           </div>
         </AbsoluteFill>
         <SourceLine opacity={anthIn}>
-          Based on Anthropic, “Tracing the thoughts of a large language model” (Mar 27, 2025) · model studied: Claude 3.5 Haiku · figure shown: Anthropic (2025) · diagram redrawn and simplified
+          {figT > 0.5 || headerT > 0.5 ? 'Article and figure: Anthropic, “Tracing the thoughts of a large language model” (Mar 27, 2025)' : 'Diagram: our simplified redraw, based on Anthropic (Mar 27, 2025)'} · one Claude model (Claude 3.5 Haiku, per Anthropic’s summary)
         </SourceLine>
       </AbsoluteFill>
 
       {/* Tools: help, with conditions */}
       <AbsoluteFill style={{opacity: toolsIn}}>
-        <div style={{position: 'absolute', left: 140, top: 150, display: 'flex', gap: 30}}>
-          {['Search', 'Retrieval', 'Longer reasoning'].map((t, i) => (
-            <div key={t} style={{width: 470, height: 130, borderRadius: 20, background: C.surface, border: `1.5px solid ${C.lineStrong}`, padding: '0 32px', display: 'flex', alignItems: 'center', opacity: ramp(g, cSearch + i * 5, 14)}}>
+        <div style={{position: 'absolute', left: 225, top: 230, display: 'flex', gap: 30}}>
+          {[
+            ['Search', at('s35', 'Search,')],
+            ['Retrieval', at('s35', 'retrieval,')],
+            ['Longer reasoning', at('s35', 'longer')],
+          ].map(([t, f]) => (
+            <div key={t as string} style={{width: 470, height: 130, borderRadius: 20, background: C.surface, border: `1.5px solid ${C.lineStrong}`, padding: '0 32px', display: 'flex', alignItems: 'center', opacity: ramp(g, (f as number) - 3, 12)}}>
               <div style={{fontFamily: F.sans, fontSize: 40, fontWeight: 750, color: C.text}}>{t}</div>
             </div>
           ))}
         </div>
-        <div style={{position: 'absolute', left: 140, top: 300, fontFamily: F.sans, fontSize: 32, fontWeight: 650, color: C.teal, opacity: ramp(g, cSearch + 18, 14)}}>
+        <div style={{position: 'absolute', left: 225, top: 384, fontFamily: F.sans, fontSize: 32, fontWeight: 650, color: C.teal, opacity: ramp(g, at('s35', 'help') - 2, 12)}}>
           …help when they bring in the right evidence.
         </div>
-        <div style={{position: 'absolute', left: 140, top: 420, width: 1470, borderRadius: 20, background: C.surface, border: `1.5px solid ${C.lineStrong}`, padding: 32, opacity: randT}}>
+        <div style={{position: 'absolute', left: 225, top: 480, width: 1470, borderRadius: 20, background: C.surface, border: `1.5px solid ${C.lineStrong}`, padding: 32, opacity: randT}}>
           <div style={{display: 'flex', alignItems: 'center', gap: 40}}>
             <div style={{width: 470}}>
               <div style={{fontFamily: F.sans, fontSize: 40, fontWeight: 750, color: C.text}}>Less randomness</div>
@@ -272,15 +276,15 @@ export const S5Helps: React.FC = () => {
               ))}
             </div>
             <div style={{fontFamily: F.sans, fontSize: 30, fontWeight: 650, color: C.text, opacity: consT, lineHeight: 1.3}}>
-              same answer every time ≠ the right answer
+              more consistent ≠ more correct
             </div>
           </div>
           <div style={{marginTop: 16, opacity: consT}}>
             <Tag tone="slate" dashed size={18}>Illustration</Tag>
           </div>
         </div>
-        <div style={{position: 'absolute', left: 0, right: 0, top: 760, display: 'flex', justifyContent: 'center', opacity: noneT}}>
-          <div style={{fontFamily: F.sans, fontSize: 64, fontWeight: 780, color: C.text, letterSpacing: '-0.02em'}}>No guarantees.</div>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 790, display: 'flex', justifyContent: 'center', opacity: noneT}}>
+          <div style={{fontFamily: F.sans, fontSize: 80, fontWeight: 800, color: C.text, letterSpacing: '-0.02em'}}>No guarantees.</div>
         </div>
         <SourceLine opacity={toolsIn}>Search and reasoning “are not panaceas”: Kalai et al. (2025), Section 5 (p. 15)</SourceLine>
       </AbsoluteFill>

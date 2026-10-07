@@ -36,11 +36,11 @@ This video takes one of those answers apart: how a language model writes token b
 
 Chapters
 0:00 Three chatbots, one simple question
-0:52 Inside one sentence: tokens and next-token scores
-1:48 Why a wrong answer can sound right
-2:43 The test-taking incentive (an analogy)
-3:45 What actually helps
-4:36 The answer, and one habit
+0:51 Inside one sentence: tokens and next-token scores
+1:46 Why a wrong answer can sound right
+2:41 The test-taking incentive (an analogy)
+3:43 What actually helps
+4:34 The answer, and one habit
 
 Main sources
 • Kalai, Nachum, Vempala & Zhang (2025), "Why Language Models Hallucinate," arXiv:2509.04664 — https://arxiv.org/abs/2509.04664 (CC BY 4.0). Table 1: GPT-4o, DeepSeek-R1 and Llama-4-Scout, accessed May 9, 2025, no web search. Birthday example: DeepSeek-V3, May 11, 2025.
