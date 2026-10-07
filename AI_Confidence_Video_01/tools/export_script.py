@@ -15,8 +15,9 @@ ACTS = {
 }
 words = sum(len(s["text"].split()) for s in doc["segments"])
 out = [f"# {doc['title']} — final script ({doc['version']})", "",
-       f"{words} spoken words · measured runtime {tl['durationSeconds']:.1f} s with the {tl['engine']} narration "
-       f"(timings below are from that measured take; they will shift slightly with the premium voice).", "",
+       f"{words} spoken words · measured runtime {tl['durationSeconds']:.1f} s with the {tl['engine']} narration"
+       + (" (ElevenLabs Eleven v4, voice Marcus K; timings below are from the final takes)." if tl["engine"] == "elevenlabs"
+          else " (timings below are from that measured take; they will shift slightly with the premium voice)."), "",
        "Pronunciation: Kalai = “kuh-LIE”. On-screen labels name every model and date; see research/sources.md for each claim.", ""]
 cur = None
 for s in doc["segments"]:

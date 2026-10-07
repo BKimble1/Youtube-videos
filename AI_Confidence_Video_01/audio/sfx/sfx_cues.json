@@ -1,210 +1,336 @@
 [
  {
-  "t": 42.703,
-  "name": "title impact"
+  "t": 8.04,
+  "name": "answer card 1 lands [ElevenLabs tap]",
+  "sync_t": 8.1
  },
  {
-  "t": 25.75,
-  "name": "mark titles"
+  "t": 15.907,
+  "name": "answer card 2 lands [ElevenLabs tap]",
+  "sync_t": 15.967
  },
  {
-  "t": 27.017,
-  "name": "mark years"
+  "t": 19.845,
+  "name": "answer card 3 lands [ElevenLabs tap]",
+  "sync_t": 19.9
  },
  {
-  "t": 54.975,
+  "t": 26.14,
+  "name": "mark titles, row 1 [ElevenLabs marker]",
+  "sync_t": 26.2
+ },
+ {
+  "t": 26.35,
+  "name": "mark titles, rows 2-3 [ElevenLabs marker]",
+  "sync_t": 26.4
+ },
+ {
+  "t": 27.507,
+  "name": "mark years, row 1 [ElevenLabs marker]",
+  "sync_t": 27.567
+ },
+ {
+  "t": 27.717,
+  "name": "mark years, rows 2-3 [ElevenLabs marker]",
+  "sync_t": 27.767
+ },
+ {
+  "t": 29.058,
+  "name": "paper header lands [ElevenLabs paper]",
+  "sync_t": 29.633
+ },
+ {
+  "t": 32.258,
+  "name": "IMO solutions PDF lands [ElevenLabs paper]",
+  "sync_t": 32.833
+ },
+ {
+  "t": 48.203,
+  "name": "title swell (synth)"
+ },
+ {
+  "t": 48.753,
+  "name": "title air (synth)"
+ },
+ {
+  "t": 48.743,
+  "name": "title hit [ElevenLabs impact]",
+  "sync_t": 48.753
+ },
+ {
+  "t": 57.107,
+  "name": "into S2 [ElevenLabs whoosh]",
+  "sync_t": 57.567
+ },
+ {
+  "t": 116.407,
+  "name": "into S3 [ElevenLabs whoosh]",
+  "sync_t": 116.867
+ },
+ {
+  "t": 173.107,
+  "name": "into S4 [ElevenLabs whoosh]",
+  "sync_t": 173.567
+ },
+ {
+  "t": 239.207,
+  "name": "into S5 [ElevenLabs whoosh]",
+  "sync_t": 239.667
+ },
+ {
+  "t": 290.773,
+  "name": "into S6 [ElevenLabs whoosh]",
+  "sync_t": 291.233
+ },
+ {
+  "t": 89.225,
+  "name": "S2: birthday question excerpt, p. 1 [ElevenLabs paper]",
+  "sync_t": 89.8
+ },
+ {
+  "t": 132.058,
+  "name": "S3: Einstein example, p. 10 [ElevenLabs paper]",
+  "sync_t": 132.633
+ },
+ {
+  "t": 143.458,
+  "name": "S3: Figure 1, p. 3 [ElevenLabs paper]",
+  "sync_t": 144.033
+ },
+ {
+  "t": 166.225,
+  "name": "S3: thesis title block (evidence) [ElevenLabs paper]",
+  "sync_t": 166.8
+ },
+ {
+  "t": 218.692,
+  "name": "S4: Table 2, p. 14 [ElevenLabs paper]",
+  "sync_t": 219.267
+ },
+ {
+  "t": 229.725,
+  "name": "S4: proposed instruction, p. 13 [ElevenLabs paper]",
+  "sync_t": 230.3
+ },
+ {
+  "t": 245.958,
+  "name": "S5: thesis title page [ElevenLabs paper]",
+  "sync_t": 246.533
+ },
+ {
+  "t": 194.943,
+  "name": "Honest: 6 [ElevenLabs tock]",
+  "sync_t": 194.963
+ },
+ {
+  "t": 201.343,
+  "name": "Guesser: 7 [ElevenLabs tock]",
+  "sync_t": 201.363
+ },
+ {
+  "t": 215.81,
+  "name": "Guesser: 4 [ElevenLabs tock]",
+  "sync_t": 215.83
+ },
+ {
+  "t": 305.04,
+  "name": "strike: sounds right [ElevenLabs marker]",
+  "sync_t": 305.1
+ },
+ {
+  "t": 61.81,
   "name": "token split"
  },
  {
-  "t": 55.0,
+  "t": 61.826,
   "name": "token split"
  },
  {
-  "t": 55.027,
+  "t": 61.856,
   "name": "token split"
  },
  {
-  "t": 55.052,
+  "t": 61.893,
   "name": "token split"
  },
  {
-  "t": 55.088,
+  "t": 61.931,
   "name": "token split"
  },
  {
-  "t": 55.132,
+  "t": 61.961,
   "name": "token split"
  },
  {
-  "t": 55.158,
+  "t": 61.991,
   "name": "token split"
  },
  {
-  "t": 55.189,
+  "t": 62.017,
   "name": "token split"
  },
  {
-  "t": 55.225,
+  "t": 62.058,
   "name": "token split"
  },
  {
-  "t": 55.258,
+  "t": 62.086,
   "name": "token split"
  },
  {
-  "t": 55.285,
+  "t": 62.114,
   "name": "token split"
  },
  {
-  "t": 55.304,
+  "t": 62.135,
   "name": "token split"
  },
  {
-  "t": 55.34,
+  "t": 62.179,
   "name": "token split"
  },
  {
-  "t": 55.364,
+  "t": 62.207,
   "name": "token split"
  },
  {
-  "t": 55.399,
+  "t": 62.242,
   "name": "token split"
  },
  {
-  "t": 55.443,
+  "t": 62.269,
   "name": "token split"
  },
  {
-  "t": 55.474,
+  "t": 62.304,
   "name": "token split"
  },
  {
-  "t": 55.505,
+  "t": 62.336,
   "name": "token split"
  },
  {
-  "t": 55.534,
+  "t": 62.37,
   "name": "token split"
  },
  {
-  "t": 55.569,
+  "t": 62.385,
   "name": "token split"
  },
  {
-  "t": 55.584,
+  "t": 62.424,
   "name": "token split"
  },
  {
-  "t": 55.632,
+  "t": 62.461,
   "name": "token split"
  },
  {
-  "t": 55.654,
+  "t": 62.493,
   "name": "token split"
  },
  {
-  "t": 75.867,
+  "t": 84.733,
   "name": "pick sweep"
  },
  {
-  "t": 76.02,
+  "t": 84.887,
   "name": "pick sweep"
  },
  {
-  "t": 76.155,
+  "t": 85.022,
   "name": "pick sweep"
  },
  {
-  "t": 76.272,
+  "t": 85.139,
   "name": "pick sweep"
  },
  {
-  "t": 76.371,
+  "t": 85.238,
   "name": "pick sweep"
  },
  {
-  "t": 76.452,
+  "t": 85.319,
   "name": "pick sweep"
  },
  {
-  "t": 76.516,
+  "t": 85.382,
   "name": "pick sweep"
  },
  {
-  "t": 76.561,
+  "t": 85.427,
   "name": "pick sweep"
  },
  {
-  "t": 76.588,
+  "t": 85.454,
   "name": "pick sweep"
  },
  {
-  "t": 76.617,
+  "t": 85.483,
   "name": "pick settle"
  },
  {
-  "t": 76.983,
+  "t": 86.017,
   "name": "token lands"
  },
  {
-  "t": 78.033,
+  "t": 86.833,
   "name": "token append"
  },
  {
-  "t": 78.267,
+  "t": 87.067,
   "name": "token append"
  },
  {
-  "t": 78.5,
+  "t": 87.3,
   "name": "token append"
  },
  {
-  "t": 78.733,
+  "t": 87.533,
   "name": "token append"
  },
  {
-  "t": 78.967,
+  "t": 87.767,
   "name": "token append"
  },
  {
-  "t": 79.2,
+  "t": 88.0,
   "name": "token append"
  },
  {
-  "t": 79.433,
+  "t": 88.233,
   "name": "token append"
  },
  {
-  "t": 154.75,
+  "t": 166.45,
   "name": "reveal year"
  },
  {
-  "t": 157.383,
+  "t": 169.35,
   "name": "reveal title"
  },
  {
-  "t": 193.88,
+  "t": 208.513,
   "name": "rule flip"
  },
  {
-  "t": 198.467,
+  "t": 214.733,
   "name": "penalty"
  },
  {
-  "t": 198.6,
+  "t": 214.867,
   "name": "penalty"
  },
  {
-  "t": 198.733,
+  "t": 215.0,
   "name": "penalty"
  },
  {
-  "t": 240.317,
+  "t": 257.383,
   "name": "check: exists"
  },
  {
-  "t": 241.883,
+  "t": 259.317,
   "name": "cross: does not say this"
  }
 ]

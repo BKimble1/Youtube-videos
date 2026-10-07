@@ -1,15 +1,25 @@
 #!/usr/bin/env python3
-"""Synthesize a sparse, original sound-effects track from the timeline.
+"""Build the sparse sound-effects track from the timeline.
 
-All sounds are generated here with numpy (no third-party samples). Only a few intentional accents:
-token split / generation ticks, the selection "pick", error thunks, the scoring-rule flip, the
-penalties, and the check/cross in the verification beat. The title card gets one soft impact.
+Two sources, each used where it does the job best:
+  - Synthesized here with numpy: the precisely timed interface accents (token split / generation
+    ticks, the selection "pick", error thunks, the scoring-rule flip, the penalties, and the
+    check/cross in the verification beat).
+  - ElevenLabs sound effects (eleven_text_to_sound_v2, generated for this video through the
+    connector; selection and prompts in audio/sfx/elevenlabs/SELECTION.md): the organic sounds a
+    synth does poorly. Every real document lands with the same quiet paper slide, scene changes get
+    a low air swell, the hook's answer cards a card tap, hand-drawn marks a marker stroke, quiz
+    scores a wooden tock, and the title card one restrained low hit.
+
+Each ElevenLabs sound is aligned by its own measured sync point (main transient, stroke onset or
+swell peak) to the frame where the matching motion completes, not by the start of the file.
 
 Output: audio/sfx/sfx_track.wav (48 kHz stereo) + audio/sfx/sfx_cues.json
 """
 import json
 import os
 import re
+import subprocess
 
 import numpy as np
 import soundfile as sf
@@ -111,6 +121,48 @@ def impact(level=-21):
     return x / np.abs(x).max() * db(level), m / SR
 
 
+EL_DIR = os.path.join(ROOT, "audio/sfx/elevenlabs")
+# name: (file, trim start s, trim end s, high-pass Hz, peak dBFS, sync mode)
+#   sync "peak"  = loudest 5 ms (a transient: settle, tap, tock, hit)
+#   sync "onset" = first frame within 20 dB of the peak (the start of a marker stroke)
+#   sync "swell" = maximum of the 60 ms envelope (the middle of a whoosh)
+EL_SFX = {
+    "paper": ("paper_v2.mp3", 0.0, 0.95, 150, -22, "peak"),
+    "whoosh": ("whoosh_v3.mp3", 0.0, 1.25, 40, -25, "swell"),
+    "tap": ("tap_v1.mp3", 0.28, 0.60, 120, -23, "peak"),
+    "marker": ("marker_v3.mp3", 0.03, 0.58, 300, -24, "onset"),
+    "tock": ("tock_v4.mp3", 0.0, 0.30, 150, -20, "peak"),
+    "impact": ("impact_v3.mp3", 0.0, 2.0, 28, -21, "peak"),
+}
+
+
+def el_sound(name, gain_db=0.0, rate=1.0):
+    """Return (mono samples, sync offset in seconds) for a selected ElevenLabs effect."""
+    fn, a, z, hpf, peak_db, mode = EL_SFX[name]
+    ar = int(round(SR / rate))  # resampled to SR/rate, then played at SR: rate > 1 is higher and shorter
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", os.path.join(EL_DIR, fn), "-ac", "1",
+                          "-ar", str(ar), "-af", "aresample=resampler=soxr",
+                          "-f", "f32le", "-"], capture_output=True, check=True).stdout
+    x = np.frombuffer(raw, np.float32).astype(np.float64)
+    x = x[int(a * ar): int(z * ar)]
+    x = signal.sosfilt(signal.butter(2, hpf, "highpass", fs=SR, output="sos"), x)
+    fi, fo = int(0.003 * SR), int(0.03 * SR)
+    x[:fi] *= np.linspace(0, 1, fi)
+    x[-fo:] *= np.linspace(1, 0, fo) ** 2
+    hop = int(0.005 * SR)
+    nfr = len(x) // hop
+    lv = 20 * np.log10(np.sqrt((x[: nfr * hop].reshape(nfr, hop) ** 2).mean(1)) + 1e-10)
+    if mode == "peak":
+        sync = int(lv.argmax()) * hop / SR
+    elif mode == "onset":
+        sync = int(np.argmax(lv > lv.max() - 20)) * hop / SR
+    else:
+        sm = np.convolve(10 ** (lv / 10), np.ones(12) / 12, mode="same")
+        sync = int(sm.argmax()) * hop / SR
+    x = x / (np.abs(x).max() + 1e-12) * db(peak_db + gain_db)
+    return x, sync
+
+
 def load():
     with open(os.path.join(ROOT, "source/src/data/timeline.json"), encoding="utf-8") as f:
         return json.load(f)
@@ -148,27 +200,71 @@ def main():
 
     F = lambda frame: frame / fps
 
-    # Title card impact on "wrong"
+    def place_el(name, t_sync, pan=0.0, label="", gain_db=0.0, rate=1.0):
+        x, sync = el_sound(name, gain_db, rate)
+        place(x, t_sync - sync, pan, f"{label} [ElevenLabs {name}]")
+        cues[-1]["sync_t"] = round(t_sync, 3)
+
+    # --- Hook (S1). Answer cards slide in (16-frame ramps): a card tap as each one lands.
+    for k, (sid, word) in enumerate([("s02", "ChatGPT"), ("s03", "DeepSeek"), ("s03", "Llama")]):
+        place_el("tap", F(at(sid, word) + 9), -0.15 + 0.15 * k, f"answer card {k + 1} lands", -1.5 * k, 1.0 + 0.04 * k)
+    # Coral marks drawn over every title, then every year (rows start 4 frames apart)
+    for word, g_db in (("title", 0.0), ("year", -2.0)):
+        c = at("s04", word)
+        place_el("marker", F(c - 6), -0.2, f"mark {word}s, row 1", g_db)
+        place_el("marker", F(c + 0), 0.2, f"mark {word}s, rows 2-3", g_db - 5, 1.07)
+    # Real documents land: the paper's header, then the published IMO solutions PDF
+    place_el("paper", F(at("s05", "Kalai?") + 11), 0.0, "paper header lands")
+    place_el("paper", F(at("s06") + 12 + 11), -0.25, "IMO solutions PDF lands", -1.0)
+    # Title card: a soft lead-in swell, then one restrained low hit on "wrong"
     imp, lead = impact()
-    place(imp, F(at("s07", "wrong")) - lead + 0.02, 0, "title impact")
-    # Error marks in the hook (title, year)
-    place(thunk(-29), F(at("s04", "title")) + 0.05, -0.1, "mark titles")
-    place(thunk(-31), F(at("s04", "year")) + 0.05, 0.1, "mark years")
+    swell = imp[: int(lead * SR)]
+    air = bandpass(rng.standard_normal(int(0.5 * SR)), 2000, 9000) * env(int(0.5 * SR), 0.002, 0.25, 6)
+    t_hit = F(at("s07", "wrong")) + 0.02
+    place(swell * db(-3), t_hit - lead, 0, "title swell (synth)")
+    place(air / np.abs(air).max() * db(-40), t_hit, 0, "title air (synth)")
+    place_el("impact", t_hit, 0, "title hit")
+
+    # --- Scene changes: a low air swell peaking in the middle of the 10-frame cross-fade
+    for k, sc in enumerate(tl["scenes"][1:]):
+        place_el("whoosh", F(sc["from"] - 5), 0.0, f"into {sc['id']}", -1.0 if k % 2 else 0.0)
+
+    # --- Every other real document arrives with the same paper slide (synced to its settle)
+    docs = [
+        (at("s12", "Because") + 8, "S2: birthday question excerpt, p. 1", 0.0, 0.0),
+        (at("s17", "paper") + 12, "S3: Einstein example, p. 10", 0.1, -1.0),
+        (at("s18", "birthday,") + 8 + 10, "S3: Figure 1, p. 3", 0.0, 0.0),
+        (at("s21", "year:") + 12, "S3: thesis title block (evidence)", 0.3, -3.0),
+        (at("s28", "checked") + 8, "S4: Table 2, p. 14", 0.0, 0.0),
+        (at("s29", "fix:") + 12, "S4: proposed instruction, p. 13", 0.0, -1.0),
+        (at("s31", "Here's") + 12 + 12, "S5: thesis title page", -0.2, 0.0),
+    ]
+    for frame, label, pan, g_db in docs:
+        place_el("paper", F(frame), pan, label, g_db)
+
+    # --- Quiz scores (S4): a wooden tock as each score appears
+    place_el("tock", F(at("s24", "Six", 2)) + 0.03, -0.25, "Honest: 6")
+    place_el("tock", F(at("s25", "Seven")) + 0.03, 0.25, "Guesser: 7", 0.0, 1.06)
+    place_el("tock", F(at("s27", "Four.")) + 0.03, 0.25, "Guesser: 4", -1.0, 0.94)
+
+    # --- Ending (S6): "Does it sound right?" is struck through before the real question
+    place_el("marker", F(at("s37", "right.")) + 0.0, 0.0, "strike: sounds right", -1.0, 0.95)
+
     # Token split: shimmer of ticks across the split animation (22 frames)
     t0 = F(at("s09", "tokens"))
     for k in range(23):
-        place(tick(2400 + 1800 * rng.random(), 0.03, -40), t0 + k * (0.72 / 23) + rng.uniform(-0.01, 0.01), rng.uniform(-0.6, 0.6), "token split")
+        place(tick(2400 + 1800 * rng.random(), 0.03, -32), t0 + k * (0.72 / 23) + rng.uniform(-0.01, 0.01), rng.uniform(-0.6, 0.6), "token split")
     # Selection sweep + settle on "picked"
     tp = F(at("s11", "picked"))
     for k in range(9):
-        place(tick(1700 + 120 * k, 0.025, -38), tp + 0.73 * (1 - (1 - k / 9) ** 2), 0.3, "pick sweep")
+        place(tick(1700 + 120 * k, 0.025, -32), tp + 0.73 * (1 - (1 - k / 9) ** 2), 0.3, "pick sweep")
     place(pluck(784, -31), tp + 0.75, 0.3, "pick settle")
     # Tile lands
     place(pluck(1046.5, -33, 0.3), F(at("s11", "added")) + 0.55, 0.2, "token lands")
     # Generation loop: one tick per appended token (every 7 frames, starting 6 frames after "loop")
     tl0 = F(at("s11", "loop")) + 6 / fps
     for k in range(7):
-        place(tick(2600 + 90 * k, 0.03, -37), tl0 + k * 7 / fps, 0.4, "token append")
+        place(tick(2600 + 90 * k, 0.03, -31), tl0 + k * 7 / fps, 0.4, "token append")
     # Reveal in Act 3: year and title marked as not in the record
     place(thunk(-29), F(at("s21", "year:")) + 0.05, -0.2, "reveal year")
     place(thunk(-30), F(at("s21", "title.")) + 0.05, -0.2, "reveal title")

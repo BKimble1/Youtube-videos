@@ -1,0 +1,17 @@
+{
+ "part_bytes": 25165824,
+ "files": [
+  {
+   "name": "ElevenLabs_sound_effects.zip",
+   "bytes": 656013,
+   "sha256": "220c83b76c71ebc6cdf8b2cb6d5aea69cbfa3f8f1fffcf24896a90ef2fdcd950",
+   "parts": [
+    {
+     "name": "ElevenLabs_sound_effects.zip.part001",
+     "bytes": 656013,
+     "sha256": "220c83b76c71ebc6cdf8b2cb6d5aea69cbfa3f8f1fffcf24896a90ef2fdcd950"
+    }
+   ]
+  }
+ ]
+}
