@@ -1,0 +1,128 @@
+{
+ "rows": [
+  {
+   "win": 0,
+   "t": "0-23s",
+   "words": 47,
+   "voice": 0.106,
+   "mix": 0.149,
+   "mix_text": "Researchers asked three popular chatbot's one simple question. What was the title of Adam Colleys' dissertation? ChatGPT answered, boosting online algorithms and other topics in machine learning, chronic emailing 2002. Deep-sea gave a different title, at Harvard in 2005. Lama gave a third at MIT in 2007."
+  },
+  {
+   "win": 1,
+   "t": "23-49s",
+   "words": 68,
+   "voice": 0.074,
+   "mix": 0.059,
+   "mix_text": "three polished answers. Not one had the right title, or even the right year. And Adam Collide? He's the paper's lead author. Meanwhile, Google DeepMind published solutions to five of the six problems at the 2025 International Mathematical Olympiad, credited to a different model, Gemini DeepThink. So how can the same kind of technology take on Olympiad problems and still sound this short while being this wrong?"
+  },
+  {
+   "win": 2,
+   "t": "50-70s",
+   "words": 46,
+   "voice": 0.065,
+   "mix": 0.065,
+   "mix_text": "Short answer? A chatbot writes what's likely, and likely isn't always true. To see why, let's take one answer apart. Here's part of chatGPT's answer. A language model writes in tokens, chunks of text. Some are whole words, some are fragments. Coli becomes cow and I."
+  },
+  {
+   "win": 3,
+   "t": "71-89s",
+   "words": 54,
+   "voice": 0.0,
+   "mix": 0.0,
+   "mix_text": "Each token is really a number. At every step, the model turns the tokens so far into a numerical picture of the context, and scores every possible next token. Here, it's choosing the last digit of the year. One option gets picked, added to the end, and the loop runs again, token after token."
+  },
+  {
+   "win": 4,
+   "t": "89-107s",
+   "words": 53,
+   "voice": 0.057,
+   "mix": 0.075,
+   "mix_text": "Because there's a pick, the same question can come out differently. Asked for a collized birthday, \"Well, if you know, one model gives three different dates in three tries.\" Here's the key part. Those scores measure how likely a piece of text is to come next. Not how likely it is to be true."
+  },
+  {
+   "win": 5,
+   "t": "107-130s",
+   "words": 54,
+   "voice": 0.037,
+   "mix": 0.037,
+   "mix_text": "Modern chatbot's ad more. Instruction training, step by step reasoning, sometimes web search, but the answer itself is still written token by token. So why would the likely answer be wrong? Look at what the model had to learn. What a dissertation title sounds like is everywhere. Methods, algorithms, machine learning, again and again."
+  },
+  {
+   "win": 6,
+   "t": "130-146s",
+   "words": 43,
+   "voice": 0.047,
+   "mix": 0.047,
+   "mix_text": "Famous facts repeat too. The paper notes that models rarely miss something like Einstein's dissertation title, but one researches this title might appear rarely in the training data. Maybe once. Maybe never. Like a birthday, there's no pattern to work it out from."
+  },
+  {
+   "win": 7,
+   "t": "146-163s",
+   "words": 48,
+   "voice": 0.083,
+   "mix": 0.188,
+   "mix_text": "So the model fills the gap with what a title usually looks like, and the confidence comes along for free. Is entitled. No, I think, no, maybe. That tone isn't a readout of what the model knows. Here's the chat you'd be able to answer next to the actual record."
+  },
+  {
+   "win": 8,
+   "t": "164-189s",
+   "words": 63,
+   "voice": 0.048,
+   "mix": 0.063,
+   "mix_text": "The same university, the wrong year, it was 2001, and the different titles. The invented details look exactly as solid as the true one. So why guess at all? Why not say, I don't know. The researchers argue part of the answer is how models get graded. Picture a 10 question quiz. Right answer? One point. Wrong answer. Zero. I don't know. Also zero."
+  },
+  {
+   "win": 9,
+   "t": "189-210s",
+   "words": 55,
+   "voice": 0.145,
+   "mix": 0.182,
+   "mix_text": "Two test takers each knows 6 answers. The honest one says I don't know to the rest. 6 points. The guester takes a shot at all four. With 4 choices each, on average, 1 lands. 7 points. The guester wins with 3 confident wrong answers. Now change 1 rule. A wrong answer costs a point."
+  },
+  {
+   "win": 10,
+   "t": "210-229s",
+   "words": 46,
+   "voice": 0.217,
+   "mix": 0.217,
+   "mix_text": "The honest one, still 6. The guesser. 6 + 1 - 3. 4. Bluffing loses. When the researchers checked 10 popular benchmarks, 9 graded strictly right or wrong with zero credit for, I don't know. Training and rank models on tests like that, and guessing pays."
+  },
+  {
+   "win": 11,
+   "t": "229-254s",
+   "words": 55,
+   "voice": 0.109,
+   "mix": 0.109,
+   "mix_text": "Their fix, state the penalty for wrong answers upfront, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one. So what actually helps start with the unglomerate move. Check the record. Here's Colise Actual thesis, probabilistic and online methods in machine learning. Carnegie Mellon May 2001."
+  },
+  {
+   "win": 12,
+   "t": "254-280s",
+   "words": 67,
+   "voice": 0.045,
+   "mix": 0.06,
+   "mix_text": "And checking means more than spotting a citation. Does the source exist and does it actually save us? Inside one cloud model, anthropic researchers found a default circuit for \"I can't answer\". Recognizing a familiar name, switches it off. When that recognition misfires, when the name seems familiar, but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts."
+  },
+  {
+   "win": 13,
+   "t": "280-302s",
+   "words": 59,
+   "voice": 0.0,
+   "mix": 0.017,
+   "mix_text": "Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent. Not necessarily more correct. None of it is a guarantee. So why does AI sound right when it's wrong? Because sounding right comes from patterns and language. And being right takes evidence the model doesn't always have."
+  },
+  {
+   "win": 14,
+   "t": "302-313s",
+   "words": 32,
+   "voice": 0.094,
+   "mix": 0.156,
+   "mix_text": "So when it answers matters, don't ask whether it sounds right. Ask what's the evidence and doesn't actually say this? It works on chatbutts, it works pretty well on people too."
+  }
+ ],
+ "overall": {
+  "voice": 0.0722,
+  "mix": 0.0899
+ }
+}
