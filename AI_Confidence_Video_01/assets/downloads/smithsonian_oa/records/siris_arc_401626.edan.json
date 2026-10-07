@@ -1,0 +1,223 @@
+{
+ "id": "ld1-1646149545906-1646150649704-1",
+ "version": "",
+ "unitCode": "SIA",
+ "linkedId": "0",
+ "type": "edanmdm",
+ "content": {
+  "freetext": {
+   "date": [
+    {
+     "label": "Date",
+     "content": "1927"
+    },
+    {
+     "label": "Date",
+     "content": "February 11, 1927"
+    }
+   ],
+   "name": [
+    {
+     "label": "Creator",
+     "content": "Olmsted, Arthur J"
+    },
+    {
+     "label": "Subject",
+     "content": "Smithsonian Institution Building (Washington, D.C.)"
+    },
+    {
+     "label": "Subject",
+     "content": "Smithsonian Institution Libraries"
+    }
+   ],
+   "notes": [
+    {
+     "label": "Notes",
+     "content": "USNM No. 17888A"
+    },
+    {
+     "label": "Summary",
+     "content": "Interior view, library exhibit in the Smithsonian Institution Building, or Castle, featuring book tower comprised of Smithsonian publications."
+    },
+    {
+     "label": "Cite as",
+     "content": "Smithsonian Institution Archives, Record Unit 95, Box 41, Folder 09, Image No. SIA_000095_B41_F09_037"
+    },
+    {
+     "label": "Repository Loc.",
+     "content": "Smithsonian Institution Archives Capital Gallery, Suite 3000, MRC 507; 600 Maryland Avenue, SW; Washington, DC 20024-2520"
+    }
+   ],
+   "topic": [
+    {
+     "label": "Topic",
+     "content": "Exhibitions"
+    },
+    {
+     "label": "Topic",
+     "content": "Congresses and conventions"
+    }
+   ],
+   "dataSource": [
+    {
+     "label": "Data Source",
+     "content": "Smithsonian Institution Archives"
+    }
+   ],
+   "identifier": [
+    {
+     "label": "Local number",
+     "content": "SIA RU000095 [SIA_000095_B41_F09_037]"
+    }
+   ],
+   "objectType": [
+    {
+     "label": "Type",
+     "content": "Black-and-white photographs"
+    }
+   ],
+   "objectRights": [
+    {
+     "label": "Restrictions & Rights",
+     "content": "No access restrictions. Many of SIA's holdings are located off-site, and advance notice is recommended to consult a collection. Please email the SIA Reference Team at osiaref@si.edu"
+    },
+    {
+     "label": "Restrictions & Rights",
+     "content": "No Copyright - United States"
+    }
+   ],
+   "physicalDescription": [
+    {
+     "label": "Physical description",
+     "content": "Gelatin silver prints;"
+    }
+   ]
+  },
+  "indexedStructured": {
+   "date": [
+    "1920s"
+   ],
+   "name": [
+    {
+     "type": "personal_main",
+     "content": "Olmsted, Arthur J"
+    },
+    {
+     "type": "corporate_subj",
+     "content": "Smithsonian Institution Building (Washington, D.C.)"
+    },
+    {
+     "type": "corporate_subj",
+     "content": "Smithsonian Institution"
+    }
+   ],
+   "topic": [
+    "Congresses and conventions",
+    "Exhibitions"
+   ],
+   "object_type": [
+    "Archival materials",
+    "Photographs"
+   ],
+   "online_media_type": [
+    "Images"
+   ]
+  },
+  "descriptiveNonRepeating": {
+   "title": {
+    "label": "Title",
+    "content": "Conference on the Future of the Smithsonian, Smithsonian Library Exhibit"
+   },
+   "record_ID": "siris_arc_401626",
+   "unit_code": "SIA",
+   "title_sort": "CONFERENCE ON THE FUTURE OF THE SMITHSONIAN SMITHSONIAN LIBRARY EXHIBIT",
+   "data_source": "Smithsonian Institution Archives",
+   "record_link": "https://siarchives.si.edu/collections/siris_arc_401626",
+   "online_media": {
+    "media": [
+     {
+      "id": "media:SIA-SIA_000095_B41_F09_037",
+      "type": "Images",
+      "idsId": "SIA-SIA_000095_B41_F09_037",
+      "usage": {
+       "text": "",
+       "access": "CC0"
+      },
+      "content": "http://ids.si.edu/ids/deliveryService?id=SIA-SIA_000095_B41_F09_037&max=1024",
+      "thumbnail": "http://ids.si.edu/ids/deliveryService?id=SIA-SIA_000095_B41_F09_037&max=150",
+      "resources": [
+       {
+        "label": "High-resolution TIFF",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B41_F09_037.tif",
+        "width": 4758,
+        "height": 6000,
+        "dimensions": "4758x6000"
+       },
+       {
+        "label": "High-resolution JPEG",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B41_F09_037.jpg",
+        "width": 4758,
+        "height": 6000,
+        "dimensions": "4758x6000"
+       },
+       {
+        "label": "Screen Image",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B41_F09_037_screen"
+       },
+       {
+        "label": "Thumbnail Image",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B41_F09_037_thumb"
+       }
+      ]
+     },
+     {
+      "id": "media:SIA-SIA_000095_B41_F09_037r01",
+      "type": "Images",
+      "idsId": "SIA-SIA_000095_B41_F09_037r01",
+      "usage": {
+       "text": "",
+       "access": "CC0"
+      },
+      "content": "http://ids.si.edu/ids/deliveryService?id=SIA-SIA_000095_B41_F09_037r01&max=1024",
+      "thumbnail": "http://ids.si.edu/ids/deliveryService?id=SIA-SIA_000095_B41_F09_037r01&max=150",
+      "resources": [
+       {
+        "label": "High-resolution TIFF",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B41_F09_037r01.tif",
+        "width": 4753,
+        "height": 6000,
+        "dimensions": "4753x6000"
+       },
+       {
+        "label": "High-resolution JPEG",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B41_F09_037r01.jpg",
+        "width": 4753,
+        "height": 6000,
+        "dimensions": "4753x6000"
+       },
+       {
+        "label": "Screen Image",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B41_F09_037r01_screen"
+       },
+       {
+        "label": "Thumbnail Image",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B41_F09_037r01_thumb"
+       }
+      ]
+     }
+    ],
+    "mediaCount": 2
+   },
+   "metadata_usage": {
+    "access": "CC0"
+   }
+  }
+ },
+ "url": "edanmdm:siris_arc_401626",
+ "hash": "71c704b47d3b130fb891f9a6b3143022d6edc74c",
+ "docSignature": "6112fea68251098445cb2626764e46ec",
+ "timestamp": 1629880579,
+ "lastTimeUpdated": 1747762555,
+ "title": "Conference on the Future of the Smithsonian, Smithsonian Library Exhibit",
+ "_source_metadata_file": "https://smithsonian-open-access.s3-us-west-2.amazonaws.com/metadata/edan/sia/71.txt"
+}

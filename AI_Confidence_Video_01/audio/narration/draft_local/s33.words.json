@@ -1,0 +1,107 @@
+[
+ {
+  "word": "Inside",
+  "start": 0.095,
+  "end": 0.545
+ },
+ {
+  "word": "one",
+  "start": 0.595,
+  "end": 0.77
+ },
+ {
+  "word": "Claude",
+  "start": 0.845,
+  "end": 1.095
+ },
+ {
+  "word": "model,",
+  "start": 1.145,
+  "end": 1.67
+ },
+ {
+  "word": "Anthropic",
+  "start": 1.82,
+  "end": 2.32
+ },
+ {
+  "word": "researchers",
+  "start": 2.37,
+  "end": 3.02
+ },
+ {
+  "word": "found",
+  "start": 3.07,
+  "end": 3.295
+ },
+ {
+  "word": "a",
+  "start": 3.32,
+  "end": 3.345
+ },
+ {
+  "word": "default",
+  "start": 3.395,
+  "end": 3.82
+ },
+ {
+  "word": "circuit",
+  "start": 3.87,
+  "end": 4.17
+ },
+ {
+  "word": "for",
+  "start": 4.22,
+  "end": 4.345
+ },
+ {
+  "word": "“I",
+  "start": 4.42,
+  "end": 4.52
+ },
+ {
+  "word": "can't",
+  "start": 4.57,
+  "end": 4.77
+ },
+ {
+  "word": "answer.”",
+  "start": 4.82,
+  "end": 5.645
+ },
+ {
+  "word": "Recognizing",
+  "start": 5.92,
+  "end": 6.62
+ },
+ {
+  "word": "a",
+  "start": 6.67,
+  "end": 6.695
+ },
+ {
+  "word": "familiar",
+  "start": 6.745,
+  "end": 7.22
+ },
+ {
+  "word": "name",
+  "start": 7.27,
+  "end": 7.52
+ },
+ {
+  "word": "switches",
+  "start": 7.57,
+  "end": 7.87
+ },
+ {
+  "word": "it",
+  "start": 7.895,
+  "end": 7.945
+ },
+ {
+  "word": "off.",
+  "start": 7.995,
+  "end": 8.31
+ }
+]

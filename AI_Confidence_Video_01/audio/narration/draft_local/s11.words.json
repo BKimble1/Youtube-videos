@@ -1,0 +1,127 @@
+[
+ {
+  "word": "Here,",
+  "start": 0.11,
+  "end": 0.41
+ },
+ {
+  "word": "it's",
+  "start": 0.485,
+  "end": 0.635
+ },
+ {
+  "word": "choosing",
+  "start": 0.71,
+  "end": 1.06
+ },
+ {
+  "word": "the",
+  "start": 1.085,
+  "end": 1.135
+ },
+ {
+  "word": "last",
+  "start": 1.185,
+  "end": 1.485
+ },
+ {
+  "word": "digit",
+  "start": 1.535,
+  "end": 1.76
+ },
+ {
+  "word": "of",
+  "start": 1.785,
+  "end": 1.835
+ },
+ {
+  "word": "the",
+  "start": 1.86,
+  "end": 1.91
+ },
+ {
+  "word": "year.",
+  "start": 1.96,
+  "end": 2.685
+ },
+ {
+  "word": "One",
+  "start": 2.91,
+  "end": 3.11
+ },
+ {
+  "word": "option",
+  "start": 3.16,
+  "end": 3.535
+ },
+ {
+  "word": "gets",
+  "start": 3.585,
+  "end": 3.785
+ },
+ {
+  "word": "picked,",
+  "start": 3.86,
+  "end": 4.285
+ },
+ {
+  "word": "added",
+  "start": 4.435,
+  "end": 4.685
+ },
+ {
+  "word": "to",
+  "start": 4.735,
+  "end": 4.785
+ },
+ {
+  "word": "the",
+  "start": 4.81,
+  "end": 4.91
+ },
+ {
+  "word": "end,",
+  "start": 4.96,
+  "end": 5.46
+ },
+ {
+  "word": "and",
+  "start": 5.585,
+  "end": 5.66
+ },
+ {
+  "word": "the",
+  "start": 5.685,
+  "end": 5.735
+ },
+ {
+  "word": "loop",
+  "start": 5.81,
+  "end": 6.01
+ },
+ {
+  "word": "runs",
+  "start": 6.06,
+  "end": 6.26
+ },
+ {
+  "word": "again,",
+  "start": 6.285,
+  "end": 6.71
+ },
+ {
+  "word": "token",
+  "start": 6.835,
+  "end": 7.135
+ },
+ {
+  "word": "after",
+  "start": 7.185,
+  "end": 7.41
+ },
+ {
+  "word": "token.",
+  "start": 7.46,
+  "end": 7.89
+ }
+]

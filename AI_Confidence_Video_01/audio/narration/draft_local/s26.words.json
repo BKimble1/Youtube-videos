@@ -1,0 +1,52 @@
+[
+ {
+  "word": "Now",
+  "start": 0.095,
+  "end": 0.245
+ },
+ {
+  "word": "change",
+  "start": 0.32,
+  "end": 0.595
+ },
+ {
+  "word": "one",
+  "start": 0.645,
+  "end": 0.82
+ },
+ {
+  "word": "rule.",
+  "start": 0.87,
+  "end": 1.37
+ },
+ {
+  "word": "A",
+  "start": 1.545,
+  "end": 1.595
+ },
+ {
+  "word": "wrong",
+  "start": 1.67,
+  "end": 1.92
+ },
+ {
+  "word": "answer",
+  "start": 1.97,
+  "end": 2.295
+ },
+ {
+  "word": "costs",
+  "start": 2.345,
+  "end": 2.62
+ },
+ {
+  "word": "a",
+  "start": 2.645,
+  "end": 2.67
+ },
+ {
+  "word": "point.",
+  "start": 2.72,
+  "end": 3.1
+ }
+]

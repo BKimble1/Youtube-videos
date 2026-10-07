@@ -1,0 +1,72 @@
+[
+ {
+  "word": "ChatGPT",
+  "start": 0.1,
+  "end": 0.9
+ },
+ {
+  "word": "answered,",
+  "start": 0.975,
+  "end": 1.6
+ },
+ {
+  "word": "“Boosting,",
+  "start": 1.775,
+  "end": 2.325
+ },
+ {
+  "word": "Online",
+  "start": 2.45,
+  "end": 2.875
+ },
+ {
+  "word": "Algorithms,",
+  "start": 2.925,
+  "end": 3.55
+ },
+ {
+  "word": "and",
+  "start": 3.625,
+  "end": 3.7
+ },
+ {
+  "word": "Other",
+  "start": 3.75,
+  "end": 3.95
+ },
+ {
+  "word": "Topics",
+  "start": 4.0,
+  "end": 4.425
+ },
+ {
+  "word": "in",
+  "start": 4.475,
+  "end": 4.525
+ },
+ {
+  "word": "Machine",
+  "start": 4.55,
+  "end": 4.875
+ },
+ {
+  "word": "Learning.”",
+  "start": 4.925,
+  "end": 5.725
+ },
+ {
+  "word": "Carnegie",
+  "start": 5.95,
+  "end": 6.35
+ },
+ {
+  "word": "Mellon,",
+  "start": 6.4,
+  "end": 6.8
+ },
+ {
+  "word": "2002.",
+  "start": 6.95,
+  "end": 7.8
+ }
+]

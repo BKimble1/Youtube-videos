@@ -1,0 +1,57 @@
+[
+ {
+  "word": "Here's",
+  "start": 0.09,
+  "end": 0.365
+ },
+ {
+  "word": "ChatGPT's",
+  "start": 0.44,
+  "end": 1.24
+ },
+ {
+  "word": "answer",
+  "start": 1.315,
+  "end": 1.74
+ },
+ {
+  "word": "next",
+  "start": 1.84,
+  "end": 2.065
+ },
+ {
+  "word": "to",
+  "start": 2.09,
+  "end": 2.14
+ },
+ {
+  "word": "the",
+  "start": 2.165,
+  "end": 2.24
+ },
+ {
+  "word": "actual",
+  "start": 2.29,
+  "end": 2.615
+ },
+ {
+  "word": "record.",
+  "start": 2.665,
+  "end": 3.29
+ },
+ {
+  "word": "Spot",
+  "start": 3.49,
+  "end": 3.765
+ },
+ {
+  "word": "the",
+  "start": 3.79,
+  "end": 3.84
+ },
+ {
+  "word": "difference?",
+  "start": 3.89,
+  "end": 4.36
+ }
+]

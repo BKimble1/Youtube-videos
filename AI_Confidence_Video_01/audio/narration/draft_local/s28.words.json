@@ -1,0 +1,157 @@
+[
+ {
+  "word": "When",
+  "start": 0.055,
+  "end": 0.155
+ },
+ {
+  "word": "the",
+  "start": 0.18,
+  "end": 0.23
+ },
+ {
+  "word": "researchers",
+  "start": 0.28,
+  "end": 0.855
+ },
+ {
+  "word": "checked",
+  "start": 0.93,
+  "end": 1.18
+ },
+ {
+  "word": "ten",
+  "start": 1.255,
+  "end": 1.455
+ },
+ {
+  "word": "popular",
+  "start": 1.505,
+  "end": 1.905
+ },
+ {
+  "word": "benchmarks,",
+  "start": 1.955,
+  "end": 2.755
+ },
+ {
+  "word": "nine",
+  "start": 2.905,
+  "end": 3.155
+ },
+ {
+  "word": "graded",
+  "start": 3.205,
+  "end": 3.53
+ },
+ {
+  "word": "strictly",
+  "start": 3.605,
+  "end": 4.03
+ },
+ {
+  "word": "right",
+  "start": 4.08,
+  "end": 4.355
+ },
+ {
+  "word": "or",
+  "start": 4.405,
+  "end": 4.505
+ },
+ {
+  "word": "wrong,",
+  "start": 4.555,
+  "end": 5.105
+ },
+ {
+  "word": "with",
+  "start": 5.23,
+  "end": 5.38
+ },
+ {
+  "word": "zero",
+  "start": 5.455,
+  "end": 5.755
+ },
+ {
+  "word": "credit",
+  "start": 5.805,
+  "end": 6.105
+ },
+ {
+  "word": "for",
+  "start": 6.155,
+  "end": 6.28
+ },
+ {
+  "word": "“I",
+  "start": 6.38,
+  "end": 6.455
+ },
+ {
+  "word": "don't",
+  "start": 6.505,
+  "end": 6.68
+ },
+ {
+  "word": "know.”",
+  "start": 6.73,
+  "end": 7.48
+ },
+ {
+  "word": "Train",
+  "start": 7.83,
+  "end": 8.23
+ },
+ {
+  "word": "and",
+  "start": 8.28,
+  "end": 8.355
+ },
+ {
+  "word": "rank",
+  "start": 8.405,
+  "end": 8.68
+ },
+ {
+  "word": "models",
+  "start": 8.73,
+  "end": 9.055
+ },
+ {
+  "word": "on",
+  "start": 9.08,
+  "end": 9.23
+ },
+ {
+  "word": "tests",
+  "start": 9.28,
+  "end": 9.58
+ },
+ {
+  "word": "like",
+  "start": 9.605,
+  "end": 9.78
+ },
+ {
+  "word": "that,",
+  "start": 9.83,
+  "end": 10.255
+ },
+ {
+  "word": "and",
+  "start": 10.38,
+  "end": 10.455
+ },
+ {
+  "word": "guessing",
+  "start": 10.505,
+  "end": 10.83
+ },
+ {
+  "word": "pays.",
+  "start": 10.88,
+  "end": 11.3
+ }
+]

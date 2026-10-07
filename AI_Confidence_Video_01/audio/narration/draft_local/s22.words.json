@@ -1,0 +1,117 @@
+[
+ {
+  "word": "So",
+  "start": 0.12,
+  "end": 0.245
+ },
+ {
+  "word": "why",
+  "start": 0.295,
+  "end": 0.42
+ },
+ {
+  "word": "guess",
+  "start": 0.47,
+  "end": 0.645
+ },
+ {
+  "word": "at",
+  "start": 0.67,
+  "end": 0.72
+ },
+ {
+  "word": "all?",
+  "start": 0.77,
+  "end": 1.195
+ },
+ {
+  "word": "Why",
+  "start": 1.345,
+  "end": 1.445
+ },
+ {
+  "word": "not",
+  "start": 1.47,
+  "end": 1.645
+ },
+ {
+  "word": "say,",
+  "start": 1.72,
+  "end": 2.07
+ },
+ {
+  "word": "“I",
+  "start": 2.245,
+  "end": 2.32
+ },
+ {
+  "word": "don't",
+  "start": 2.345,
+  "end": 2.47
+ },
+ {
+  "word": "know”?",
+  "start": 2.52,
+  "end": 2.87
+ },
+ {
+  "word": "The",
+  "start": 3.32,
+  "end": 3.37
+ },
+ {
+  "word": "researchers",
+  "start": 3.42,
+  "end": 3.97
+ },
+ {
+  "word": "argue",
+  "start": 4.02,
+  "end": 4.32
+ },
+ {
+  "word": "part",
+  "start": 4.37,
+  "end": 4.545
+ },
+ {
+  "word": "of",
+  "start": 4.57,
+  "end": 4.62
+ },
+ {
+  "word": "the",
+  "start": 4.645,
+  "end": 4.72
+ },
+ {
+  "word": "answer",
+  "start": 4.77,
+  "end": 5.195
+ },
+ {
+  "word": "is",
+  "start": 5.27,
+  "end": 5.345
+ },
+ {
+  "word": "how",
+  "start": 5.395,
+  "end": 5.545
+ },
+ {
+  "word": "models",
+  "start": 5.595,
+  "end": 5.97
+ },
+ {
+  "word": "get",
+  "start": 6.02,
+  "end": 6.145
+ },
+ {
+  "word": "graded.",
+  "start": 6.195,
+  "end": 6.6
+ }
+]

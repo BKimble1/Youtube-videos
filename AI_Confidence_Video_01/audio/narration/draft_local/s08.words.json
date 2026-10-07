@@ -1,0 +1,27 @@
+[
+ {
+  "word": "Here's",
+  "start": 0.08,
+  "end": 0.38
+ },
+ {
+  "word": "part",
+  "start": 0.43,
+  "end": 0.58
+ },
+ {
+  "word": "of",
+  "start": 0.605,
+  "end": 0.655
+ },
+ {
+  "word": "ChatGPT's",
+  "start": 0.705,
+  "end": 1.505
+ },
+ {
+  "word": "answer.",
+  "start": 1.555,
+  "end": 1.97
+ }
+]

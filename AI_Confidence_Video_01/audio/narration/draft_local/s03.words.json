@@ -1,0 +1,87 @@
+[
+ {
+  "word": "DeepSeek",
+  "start": 0.075,
+  "end": 0.55
+ },
+ {
+  "word": "gave",
+  "start": 0.6,
+  "end": 0.75
+ },
+ {
+  "word": "a",
+  "start": 0.775,
+  "end": 0.8
+ },
+ {
+  "word": "different",
+  "start": 0.85,
+  "end": 1.1
+ },
+ {
+  "word": "title,",
+  "start": 1.15,
+  "end": 1.65
+ },
+ {
+  "word": "at",
+  "start": 1.8,
+  "end": 1.85
+ },
+ {
+  "word": "Harvard,",
+  "start": 1.9,
+  "end": 2.3
+ },
+ {
+  "word": "in",
+  "start": 2.4,
+  "end": 2.5
+ },
+ {
+  "word": "2005.",
+  "start": 2.55,
+  "end": 3.85
+ },
+ {
+  "word": "Llama",
+  "start": 4.1,
+  "end": 4.375
+ },
+ {
+  "word": "gave",
+  "start": 4.425,
+  "end": 4.575
+ },
+ {
+  "word": "a",
+  "start": 4.6,
+  "end": 4.65
+ },
+ {
+  "word": "third,",
+  "start": 4.75,
+  "end": 5.15
+ },
+ {
+  "word": "at",
+  "start": 5.275,
+  "end": 5.375
+ },
+ {
+  "word": "MIT,",
+  "start": 5.45,
+  "end": 6.2
+ },
+ {
+  "word": "in",
+  "start": 6.325,
+  "end": 6.425
+ },
+ {
+  "word": "2007.",
+  "start": 6.475,
+  "end": 7.41
+ }
+]

@@ -1,0 +1,87 @@
+[
+ {
+  "word": "Meanwhile,",
+  "start": 0.085,
+  "end": 0.685
+ },
+ {
+  "word": "Google",
+  "start": 0.835,
+  "end": 1.135
+ },
+ {
+  "word": "DeepMind",
+  "start": 1.185,
+  "end": 1.785
+ },
+ {
+  "word": "reported",
+  "start": 1.835,
+  "end": 2.31
+ },
+ {
+  "word": "that",
+  "start": 2.36,
+  "end": 2.435
+ },
+ {
+  "word": "a",
+  "start": 2.46,
+  "end": 2.51
+ },
+ {
+  "word": "different",
+  "start": 2.585,
+  "end": 2.86
+ },
+ {
+  "word": "language",
+  "start": 2.91,
+  "end": 3.31
+ },
+ {
+  "word": "model",
+  "start": 3.36,
+  "end": 3.935
+ },
+ {
+  "word": "reached",
+  "start": 4.06,
+  "end": 4.435
+ },
+ {
+  "word": "gold-medal",
+  "start": 4.535,
+  "end": 5.21
+ },
+ {
+  "word": "level",
+  "start": 5.26,
+  "end": 5.86
+ },
+ {
+  "word": "at",
+  "start": 5.96,
+  "end": 6.01
+ },
+ {
+  "word": "the",
+  "start": 6.035,
+  "end": 6.135
+ },
+ {
+  "word": "International",
+  "start": 6.185,
+  "end": 6.835
+ },
+ {
+  "word": "Mathematical",
+  "start": 6.885,
+  "end": 7.56
+ },
+ {
+  "word": "Olympiad.",
+  "start": 7.61,
+  "end": 8.26
+ }
+]

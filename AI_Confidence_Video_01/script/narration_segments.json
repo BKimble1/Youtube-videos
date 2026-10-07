@@ -1,0 +1,246 @@
+{
+ "title": "Why AI Sounds Right When It's Wrong",
+ "version": "v1.1 (2026-10-07, fact-check fixes)",
+ "notes": "text = display/subtitle text. tts_text (optional) = pronunciation respelling sent to TTS. pause_after_ms = silence after the segment.",
+ "segments": [
+  {
+   "id": "s01",
+   "scene": "S1",
+   "text": "Researchers asked three popular chatbots one simple question: What was the title of Adam Kalai's PhD dissertation?",
+   "pause_after_ms": 350,
+   "tts_text": "Researchers asked three popular chatbots one simple question: What was the title of Adam [Kalai's](/kəlˈIz/) PhD dissertation?"
+  },
+  {
+   "id": "s02",
+   "scene": "S1",
+   "text": "ChatGPT answered, “Boosting, Online Algorithms, and Other Topics in Machine Learning.” Carnegie Mellon, 2002.",
+   "pause_after_ms": 250
+  },
+  {
+   "id": "s03",
+   "scene": "S1",
+   "text": "DeepSeek gave a different title, at Harvard, in 2005. Llama gave a third, at MIT, in 2007.",
+   "pause_after_ms": 350
+  },
+  {
+   "id": "s04",
+   "scene": "S1",
+   "text": "Three polished answers. Not one had the right title, or even the right year.",
+   "pause_after_ms": 500
+  },
+  {
+   "id": "s05",
+   "scene": "S1",
+   "text": "And Adam Kalai? He's the paper's lead author.",
+   "pause_after_ms": 700,
+   "tts_text": "And Adam [Kalai](/kəlˈI/)? He's the paper's lead author."
+  },
+  {
+   "id": "s06",
+   "scene": "S1",
+   "text": "Meanwhile, Google DeepMind reported that a different language model reached gold-medal level at the International Mathematical Olympiad.",
+   "pause_after_ms": 250
+  },
+  {
+   "id": "s07",
+   "scene": "S1",
+   "text": "So how can AI be that capable, and still sound this sure while being this wrong?",
+   "pause_after_ms": 750
+  },
+  {
+   "id": "s07b",
+   "scene": "S1",
+   "text": "Short answer: a chatbot writes what's likely, and likely isn't always true. To see why, let's take one answer apart.",
+   "pause_after_ms": 450
+  },
+  {
+   "id": "s08",
+   "scene": "S2",
+   "text": "Here's part of ChatGPT's answer.",
+   "pause_after_ms": 350
+  },
+  {
+   "id": "s09",
+   "scene": "S2",
+   "text": "A language model writes in tokens: chunks of text. Some are whole words. Some are fragments. “Kalai” becomes “Kal” and “ai.”",
+   "pause_after_ms": 400,
+   "tts_text": "A language model writes in tokens: chunks of text. Some are whole words. Some are fragments. “[Kalai](/kəlˈI/)” becomes “[Kal](/kˈæl/)” and “[ai](/ˈI/).”"
+  },
+  {
+   "id": "s10",
+   "scene": "S2",
+   "text": "Each token is really a number. At every step, the model turns the tokens so far into a numerical picture of the context, and scores every possible next token.",
+   "pause_after_ms": 250
+  },
+  {
+   "id": "s11",
+   "scene": "S2",
+   "text": "Here, it's choosing the last digit of the year. One option gets picked, added to the end, and the loop runs again, token after token.",
+   "pause_after_ms": 450
+  },
+  {
+   "id": "s12",
+   "scene": "S2",
+   "text": "Because there's a pick, the same question can come out differently. Asked for Kalai's birthday, “only if you know,” one model gave three different dates in three tries.",
+   "pause_after_ms": 500,
+   "tts_text": "Because there's a pick, the same question can come out differently. Asked for [Kalai's](/kəlˈIz/) birthday, “only if you know,” one model gave three different dates in three tries."
+  },
+  {
+   "id": "s13",
+   "scene": "S2",
+   "text": "Here's the key part. Those scores measure how likely a piece of text is to come next. Not how likely it is to be true.",
+   "pause_after_ms": 650
+  },
+  {
+   "id": "s14",
+   "scene": "S2",
+   "text": "Modern chatbots add more: instruction training, step-by-step reasoning, sometimes web search. But the answer itself is still written token by token.",
+   "pause_after_ms": 600
+  },
+  {
+   "id": "s15",
+   "scene": "S3",
+   "text": "So why would the likely answer be wrong? Look at what the model had to learn.",
+   "pause_after_ms": 300
+  },
+  {
+   "id": "s16",
+   "scene": "S3",
+   "text": "What a dissertation title sounds like is everywhere: “Methods,” “Algorithms,” “Machine Learning,” again and again.",
+   "pause_after_ms": 300
+  },
+  {
+   "id": "s17",
+   "scene": "S3",
+   "text": "Famous facts repeat, too. The paper notes that models rarely miss something like Einstein's dissertation title.",
+   "pause_after_ms": 300
+  },
+  {
+   "id": "s18",
+   "scene": "S3",
+   "text": "But one researcher's thesis title might appear rarely in the training data. Maybe once. Maybe never. Like a birthday, there's no pattern to work it out from.",
+   "pause_after_ms": 350
+  },
+  {
+   "id": "s19",
+   "scene": "S3",
+   "text": "So the model fills the gap with what a title usually looks like, and the confidence comes along for free. “Is entitled.” No “I think,” no “maybe.” That tone isn't a readout of what the model knows.",
+   "pause_after_ms": 450
+  },
+  {
+   "id": "s20",
+   "scene": "S3",
+   "text": "Here's ChatGPT's answer next to the actual record. Spot the difference?",
+   "pause_after_ms": 1600
+  },
+  {
+   "id": "s21",
+   "scene": "S3",
+   "text": "Same university. The wrong year: it was 2001. And a different title. The invented details look exactly as solid as the true one.",
+   "pause_after_ms": 700
+  },
+  {
+   "id": "s22",
+   "scene": "S4",
+   "text": "So why guess at all? Why not say, “I don't know”? The researchers argue part of the answer is how models get graded.",
+   "pause_after_ms": 400
+  },
+  {
+   "id": "s23",
+   "scene": "S4",
+   "text": "Picture a ten-question quiz. Right answer: one point. Wrong answer: zero. “I don't know”: also zero.",
+   "pause_after_ms": 300
+  },
+  {
+   "id": "s24",
+   "scene": "S4",
+   "text": "Two test-takers each know six answers. The honest one says “I don't know” to the rest. Six points.",
+   "pause_after_ms": 300
+  },
+  {
+   "id": "s25",
+   "scene": "S4",
+   "text": "The guesser takes a shot at all four. With four choices each, on average one lands. Seven points. The guesser wins, with three confident wrong answers.",
+   "pause_after_ms": 600
+  },
+  {
+   "id": "s26",
+   "scene": "S4",
+   "text": "Now change one rule. A wrong answer costs a point.",
+   "pause_after_ms": 500
+  },
+  {
+   "id": "s27",
+   "scene": "S4",
+   "text": "The honest one: still six. The guesser: six, plus one, minus three. Four. Bluffing loses.",
+   "pause_after_ms": 600
+  },
+  {
+   "id": "s28",
+   "scene": "S4",
+   "text": "When the researchers checked ten popular benchmarks, nine graded strictly right or wrong, with zero credit for “I don't know.” Train and rank models on tests like that, and guessing pays.",
+   "pause_after_ms": 350
+  },
+  {
+   "id": "s29",
+   "scene": "S4",
+   "text": "Their fix: state the penalty for wrong answers up front, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one.",
+   "pause_after_ms": 650
+  },
+  {
+   "id": "s30",
+   "scene": "S5",
+   "text": "So what actually helps? Start with the unglamorous move: check the record.",
+   "pause_after_ms": 350
+  },
+  {
+   "id": "s31",
+   "scene": "S5",
+   "text": "Here's Kalai's actual thesis. “Probabilistic and On-line Methods in Machine Learning.” Carnegie Mellon, May 2001.",
+   "pause_after_ms": 450,
+   "tts_text": "Here's [Kalai's](/kəlˈIz/) actual thesis. “Probabilistic and On-line Methods in Machine Learning.” Carnegie Mellon, May 2001."
+  },
+  {
+   "id": "s32",
+   "scene": "S5",
+   "text": "And checking means more than spotting a citation. Does the source exist, and does it actually say this?",
+   "pause_after_ms": 600
+  },
+  {
+   "id": "s33",
+   "scene": "S5",
+   "text": "Inside one Claude model, Anthropic researchers found a default circuit for “I can't answer.” Recognizing a familiar name switches it off.",
+   "pause_after_ms": 300
+  },
+  {
+   "id": "s34",
+   "scene": "S5",
+   "text": "When that recognition misfires, when a name seems familiar but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts.",
+   "pause_after_ms": 450
+  },
+  {
+   "id": "s35",
+   "scene": "S5",
+   "text": "Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee.",
+   "pause_after_ms": 650
+  },
+  {
+   "id": "s36",
+   "scene": "S6",
+   "text": "So why does AI sound right when it's wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have.",
+   "pause_after_ms": 600
+  },
+  {
+   "id": "s37",
+   "scene": "S6",
+   "text": "So when an answer matters, don't ask whether it sounds right. Ask: what's the evidence, and does it actually say this?",
+   "pause_after_ms": 700
+  },
+  {
+   "id": "s38",
+   "scene": "S6",
+   "text": "It works on chatbots. It works pretty well on people, too.",
+   "pause_after_ms": 0
+  }
+ ]
+}

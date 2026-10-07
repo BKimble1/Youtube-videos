@@ -1,0 +1,99 @@
+{
+ "encoding": "o200k_base",
+ "library": "js-tiktoken@1.0.21",
+ "text": "Adam Tauman Kalai’s Ph.D. dissertation (completed in 2002 at CMU) is entitled:",
+ "tokens": [
+  {
+   "id": 70823,
+   "text": "Adam"
+  },
+  {
+   "id": 13671,
+   "text": " Ta"
+  },
+  {
+   "id": 9276,
+   "text": "uman"
+  },
+  {
+   "id": 22187,
+   "text": " Kal"
+  },
+  {
+   "id": 1361,
+   "text": "ai"
+  },
+  {
+   "id": 802,
+   "text": "’s"
+  },
+  {
+   "id": 3168,
+   "text": " Ph"
+  },
+  {
+   "id": 1696,
+   "text": ".D"
+  },
+  {
+   "id": 13,
+   "text": "."
+  },
+  {
+   "id": 44435,
+   "text": " dissertation"
+  },
+  {
+   "id": 350,
+   "text": " ("
+  },
+  {
+   "id": 70487,
+   "text": "completed"
+  },
+  {
+   "id": 306,
+   "text": " in"
+  },
+  {
+   "id": 220,
+   "text": " "
+  },
+  {
+   "id": 1179,
+   "text": "200"
+  },
+  {
+   "id": 17,
+   "text": "2"
+  },
+  {
+   "id": 540,
+   "text": " at"
+  },
+  {
+   "id": 28289,
+   "text": " CM"
+  },
+  {
+   "id": 52,
+   "text": "U"
+  },
+  {
+   "id": 8,
+   "text": ")"
+  },
+  {
+   "id": 382,
+   "text": " is"
+  },
+  {
+   "id": 31941,
+   "text": " entitled"
+  },
+  {
+   "id": 25,
+   "text": ":"
+  }
+ ]
+}

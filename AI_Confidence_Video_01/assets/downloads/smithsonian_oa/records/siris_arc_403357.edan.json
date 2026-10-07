@@ -1,0 +1,218 @@
+{
+ "id": "ld1-1646149545906-1646150678502-1",
+ "version": "",
+ "unitCode": "SIA",
+ "linkedId": "0",
+ "type": "edanmdm",
+ "content": {
+  "freetext": {
+   "date": [
+    {
+     "label": "Date",
+     "content": "1912"
+    },
+    {
+     "label": "Date",
+     "content": "Circa 1912-1913"
+    }
+   ],
+   "name": [
+    {
+     "label": "Creator",
+     "content": "United States National Museum Photographic Laboratory"
+    },
+    {
+     "label": "Subject",
+     "content": "Smithsonian Institution Building (Washington, D.C.)"
+    },
+    {
+     "label": "Subject",
+     "content": "Smithsonian Institution Libraries"
+    }
+   ],
+   "notes": [
+    {
+     "label": "Notes",
+     "content": "USNM No. 24787"
+    },
+    {
+     "label": "Summary",
+     "content": "Interior view, library stacks in the upper balcony of the Lower Main Hall of the Smithsonian Institution Building, or Castle, with graphic arts exhibits and Audubon prints in view."
+    },
+    {
+     "label": "Cite as",
+     "content": "Smithsonian Institution Archives, Record Unit 95, Box 31, Folder 38, Image No. SIA_000095_B31_F38_002"
+    },
+    {
+     "label": "Repository Loc.",
+     "content": "Smithsonian Institution Archives Capital Gallery, Suite 3000, MRC 507; 600 Maryland Avenue, SW; Washington, DC 20024-2520"
+    }
+   ],
+   "topic": [
+    {
+     "label": "Topic",
+     "content": "Exhibitions"
+    }
+   ],
+   "dataSource": [
+    {
+     "label": "Data Source",
+     "content": "Smithsonian Institution Archives"
+    }
+   ],
+   "identifier": [
+    {
+     "label": "Local number",
+     "content": "SIA RU000095 [SIA_000095_B31_F38_002]"
+    }
+   ],
+   "objectType": [
+    {
+     "label": "Type",
+     "content": "Black-and-white photographs"
+    }
+   ],
+   "objectRights": [
+    {
+     "label": "Restrictions & Rights",
+     "content": "No access restrictions. Many of SIA's holdings are located off-site, and advance notice is recommended to consult a collection. Please email the SIA Reference Team at osiaref@si.edu"
+    },
+    {
+     "label": "Restrictions & Rights",
+     "content": "No Copyright - United States"
+    }
+   ],
+   "physicalDescription": [
+    {
+     "label": "Physical description",
+     "content": "Gelatin silver prints; 8 x 9.5;"
+    }
+   ]
+  },
+  "indexedStructured": {
+   "date": [
+    "1910s"
+   ],
+   "name": [
+    {
+     "type": "corporate_main",
+     "content": "United States National Museum"
+    },
+    {
+     "type": "corporate_subj",
+     "content": "Smithsonian Institution Building (Washington, D.C.)"
+    },
+    {
+     "type": "corporate_subj",
+     "content": "Smithsonian Institution"
+    }
+   ],
+   "topic": [
+    "Exhibitions"
+   ],
+   "object_type": [
+    "Archival materials",
+    "Photographs"
+   ],
+   "online_media_type": [
+    "Images"
+   ]
+  },
+  "descriptiveNonRepeating": {
+   "title": {
+    "label": "Title",
+    "content": "Library Stacks, Lower Main Hall, Smithsonian Institution Building, or Castle"
+   },
+   "record_ID": "siris_arc_403357",
+   "unit_code": "SIA",
+   "title_sort": "LIBRARY STACKS LOWER MAIN HALL SMITHSONIAN INSTITUTION BUILDING OR CASTLE",
+   "data_source": "Smithsonian Institution Archives",
+   "record_link": "https://siarchives.si.edu/collections/siris_arc_403357",
+   "online_media": {
+    "media": [
+     {
+      "id": "media:SIA-SIA_000095_B31_F38_002",
+      "type": "Images",
+      "idsId": "SIA-SIA_000095_B31_F38_002",
+      "usage": {
+       "text": "",
+       "access": "CC0"
+      },
+      "content": "http://ids.si.edu/ids/deliveryService?id=SIA-SIA_000095_B31_F38_002&max=1024",
+      "thumbnail": "http://ids.si.edu/ids/deliveryService?id=SIA-SIA_000095_B31_F38_002&max=150",
+      "resources": [
+       {
+        "label": "High-resolution TIFF",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B31_F38_002.tif",
+        "width": 5774,
+        "height": 4713,
+        "dimensions": "5774x4713"
+       },
+       {
+        "label": "High-resolution JPEG",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B31_F38_002.jpg",
+        "width": 5774,
+        "height": 4713,
+        "dimensions": "5774x4713"
+       },
+       {
+        "label": "Screen Image",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B31_F38_002_screen"
+       },
+       {
+        "label": "Thumbnail Image",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B31_F38_002_thumb"
+       }
+      ]
+     },
+     {
+      "id": "media:SIA-SIA_000095_B31_F38_002r01",
+      "type": "Images",
+      "idsId": "SIA-SIA_000095_B31_F38_002r01",
+      "usage": {
+       "text": "",
+       "access": "CC0"
+      },
+      "content": "http://ids.si.edu/ids/deliveryService?id=SIA-SIA_000095_B31_F38_002r01&max=1024",
+      "thumbnail": "http://ids.si.edu/ids/deliveryService?id=SIA-SIA_000095_B31_F38_002r01&max=150",
+      "resources": [
+       {
+        "label": "High-resolution TIFF",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B31_F38_002r01.tif",
+        "width": 4708,
+        "height": 5768,
+        "dimensions": "4708x5768"
+       },
+       {
+        "label": "High-resolution JPEG",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B31_F38_002r01.jpg",
+        "width": 4708,
+        "height": 5768,
+        "dimensions": "4708x5768"
+       },
+       {
+        "label": "Screen Image",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B31_F38_002r01_screen"
+       },
+       {
+        "label": "Thumbnail Image",
+        "url": "https://ids.si.edu/ids/download?id=SIA-SIA_000095_B31_F38_002r01_thumb"
+       }
+      ]
+     }
+    ],
+    "mediaCount": 2
+   },
+   "metadata_usage": {
+    "access": "CC0"
+   }
+  }
+ },
+ "url": "edanmdm:siris_arc_403357",
+ "hash": "d18282f712c993c810cab45a74ba996fd6542d92",
+ "docSignature": "fd1e41f7d8640f03bf219ece59e30a12",
+ "timestamp": 1629880580,
+ "lastTimeUpdated": 1747762574,
+ "title": "Library Stacks, Lower Main Hall, Smithsonian Institution Building, or Castle",
+ "_source_metadata_file": "https://smithsonian-open-access.s3-us-west-2.amazonaws.com/metadata/edan/sia/d1.txt"
+}

@@ -1,0 +1,317 @@
+{
+ "id": "ld1-1643398738600-1643398748734-0",
+ "version": "",
+ "unitCode": "NMAAHC",
+ "linkedId": "",
+ "type": "edanmdm",
+ "content": {
+  "freetext": {
+   "date": [
+    {
+     "label": "Date",
+     "content": "1929"
+    }
+   ],
+   "name": [
+    {
+     "label": "Published by",
+     "content": "Webster Publishing Company, American"
+    },
+    {
+     "label": "Used by",
+     "content": "Emery Crawford"
+    },
+    {
+     "label": "Subject of",
+     "content": "Covert Consolidated School, American"
+    }
+   ],
+   "notes": [
+    {
+     "label": "Description",
+     "content": "A paperbound fifth grade workbook. Cover has a thin, stylized border with foliage about one half inch from the edges. Within the border is the workbook title and student information. Pre-printed text reads: [SHARP'S / LANGUAGE DRILLS / and TESTS / FIFTH GRADE]. The student information is found within a small rectangle just below center. Pre-printed fields are titled: [Name / School / Grade / Term / Date]. Handwritten in the blanks for the student information is text written in pencil by the student Emery Crawford: [Emery Crawford / Covert Conssoldated (sic) / Five / 1929, 1930 / Nov 27, 1929]. The publishing company is along the bottom within the border: [WEBSTER PUBLISHING COMPANY / ST. LOUIS, MISSOURI]. Below the border in the lower left corner is the copyright: [COPYRIGHT 1926 BY WEBSTER PUB. CO.] The workbook is filled in with completed exercises."
+    }
+   ],
+   "place": [
+    {
+     "label": "Place used",
+     "content": "Van Buren County, Michigan, United States, North and Central America"
+    },
+    {
+     "label": "Place made",
+     "content": "Saint Louis, Missouri, United States, North and Central America"
+    }
+   ],
+   "topic": [
+    {
+     "label": "Topic",
+     "content": "African American"
+    },
+    {
+     "label": "Topic",
+     "content": "Children"
+    },
+    {
+     "label": "Topic",
+     "content": "Education"
+    }
+   ],
+   "setName": [
+    {
+     "label": "See more items in",
+     "content": "National Museum of African American History and Culture Collection"
+    },
+    {
+     "label": "Classification",
+     "content": "Books and Published Materials"
+    },
+    {
+     "label": "Exhibition",
+     "content": "Making a Way Out of No Way"
+    },
+    {
+     "label": "On View",
+     "content": "NMAAHC (1400 Constitution Ave NW), National Mall Location, Community/Third Floor, 3 050"
+    }
+   ],
+   "creditLine": [
+    {
+     "label": "Credit Line",
+     "content": "Collection of the Smithsonian National Museum of African American History and Culture, Gift of Covert Historical Museum"
+    }
+   ],
+   "dataSource": [
+    {
+     "label": "Data Source",
+     "content": "National Museum of African American History and Culture"
+    }
+   ],
+   "identifier": [
+    {
+     "label": "Object number",
+     "content": "2014.17.3"
+    }
+   ],
+   "objectType": [
+    {
+     "label": "Type",
+     "content": "workbooks"
+    }
+   ],
+   "objectRights": [
+    {
+     "label": "Restrictions & Rights",
+     "content": "Public domain"
+    },
+    {
+     "label": "Restrictions & Rights",
+     "content": "Proper usage is the responsibility of the user."
+    }
+   ],
+   "physicalDescription": [
+    {
+     "label": "Medium",
+     "content": "ink and graphite on paper"
+    },
+    {
+     "label": "Dimensions",
+     "content": "H x W x D: 9 5/16 × 6 × 1/4 in. (23.7 × 15.2 × 0.6 cm)"
+    }
+   ]
+  },
+  "indexedStructured": {
+   "date": [
+    "1920s"
+   ],
+   "name": [
+    "Covert Consolidated School",
+    "Webster Publishing Company",
+    "Crawford, Emery"
+   ],
+   "place": [
+    "Saint Louis",
+    "United States",
+    "North and Central America",
+    "Van Buren County",
+    "Missouri",
+    "Michigan"
+   ],
+   "topic": [
+    "Education",
+    "Children"
+   ],
+   "culture": [
+    "African Americans"
+   ],
+   "exhibition": [
+    {
+     "building": "NMAAHC",
+     "exhibitionTitle": "Making a Way Out of No Way"
+    }
+   ],
+   "geoLocation": [
+    {
+     "L4": {
+      "type": "County",
+      "content": "Van Buren County"
+     }
+    },
+    {
+     "L3": {
+      "type": "State",
+      "content": "Michigan"
+     }
+    },
+    {
+     "L2": {
+      "type": "Country",
+      "content": "United States"
+     }
+    },
+    {
+     "L1": {
+      "type": "Continent",
+      "content": "North and Central America"
+     }
+    },
+    {
+     "L5": {
+      "type": "City",
+      "content": "Saint Louis"
+     }
+    },
+    {
+     "L3": {
+      "type": "State",
+      "content": "Missouri"
+     }
+    },
+    {
+     "L2": {
+      "type": "Country",
+      "content": "United States"
+     }
+    },
+    {
+     "L1": {
+      "type": "Continent",
+      "content": "North and Central America"
+     }
+    }
+   ],
+   "object_type": [
+    "Workbooks"
+   ],
+   "onPhysicalExhibit": [
+    "Yes"
+   ],
+   "online_media_type": [
+    "Images"
+   ],
+   "online_media_rights": [
+    "No Known Copyright Restrictions"
+   ]
+  },
+  "descriptiveNonRepeating": {
+   "guid": "http://n2t.net/ark:/65665/fd56010e4f4-18a9-4b1a-958e-100e813254c9",
+   "title": {
+    "label": "Title",
+    "content": "<I>Sharp's Language Drills and Test: Fifth Grade</I>"
+   },
+   "record_ID": "nmaahc_2014.17.3",
+   "unit_code": "NMAAHC",
+   "title_sort": "<I>SHARP'S LANGUAGE DRILLS AND TEST: FIFTH GRADE</I>",
+   "data_source": "National Museum of African American History and Culture",
+   "record_link": "https://nmaahc.si.edu/object/nmaahc_2014.17.3",
+   "online_media": {
+    "media": [
+     {
+      "id": "media:NMAAHC-2014_17_3_3001-000001",
+      "guid": "http://n2t.net/ark:/65665/az9d60ced33-ca56-4852-9c27-afd0d857c83d",
+      "type": "Images",
+      "idsId": "NMAAHC-2014_17_3_3001-000001",
+      "usage": {
+       "access": "CC0"
+      },
+      "content": "https://ids.si.edu/ids/deliveryService?id=NMAAHC-2014_17_3_3001-000001",
+      "thumbnail": "https://ids.si.edu/ids/deliveryService?id=NMAAHC-2014_17_3_3001-000001",
+      "altTextAccessibility": "",
+      "extDescrAccessibility": "A paperbound fifth grade workbook. Cover has a thin, stylized border with foliage about one half inch from the edges. Within the border is the workbook title and student information. Pre-printed text reads: [SHARP'S / LANGUAGE DRILLS / and TESTS / FIFTH GRADE]. The student information is found within a small rectangle just below center. Pre-printed fields are titled: [Name / School / Grade / Term / Date]. Handwritten in the blanks for the student information is text written in pencil by the student Emery Crawford: [Emery Crawford / Covert Conssoldated (sic) / Five / 1929, 1930 / Nov 27, 1929]. The publishing company is along the bottom within the border: [WEBSTER PUBLISHING COMPANY / ST. LOUIS, MISSOURI]. Below the border in the lower left corner is the copyright: [COPYRIGHT 1926 BY WEBSTER PUB. CO.] The workbook is filled in with completed exercises. H x W x D: 9 5/16 × 6 × 1/4 in. (23.7 × 15.2 × 0.6 cm)",
+      "resources": [
+       {
+        "label": "High-resolution TIFF",
+        "url": "https://ids.si.edu/ids/download?id=NMAAHC-2014_17_3_3001-000001.tif",
+        "width": 3857,
+        "height": 5812,
+        "dimensions": "3857x5812"
+       },
+       {
+        "label": "High-resolution JPEG",
+        "url": "https://ids.si.edu/ids/download?id=NMAAHC-2014_17_3_3001-000001.jpg",
+        "width": 3857,
+        "height": 5812,
+        "dimensions": "3857x5812"
+       },
+       {
+        "label": "Screen Image",
+        "url": "https://ids.si.edu/ids/download?id=NMAAHC-2014_17_3_3001-000001_screen"
+       },
+       {
+        "label": "Thumbnail Image",
+        "url": "https://ids.si.edu/ids/download?id=NMAAHC-2014_17_3_3001-000001_thumb"
+       }
+      ]
+     },
+     {
+      "id": "media:NMAAHC-2014_17_3_3002-000001",
+      "guid": "http://n2t.net/ark:/65665/az9eb098a60-27e4-4d9c-8152-742869f05c1b",
+      "type": "Images",
+      "idsId": "NMAAHC-2014_17_3_3002-000001",
+      "usage": {
+       "access": "CC0"
+      },
+      "content": "https://ids.si.edu/ids/deliveryService?id=NMAAHC-2014_17_3_3002-000001",
+      "thumbnail": "https://ids.si.edu/ids/deliveryService?id=NMAAHC-2014_17_3_3002-000001",
+      "altTextAccessibility": "",
+      "extDescrAccessibility": "A paperbound fifth grade workbook. Cover has a thin, stylized border with foliage about one half inch from the edges. Within the border is the workbook title and student information. Pre-printed text reads: [SHARP'S / LANGUAGE DRILLS / and TESTS / FIFTH GRADE]. The student information is found within a small rectangle just below center. Pre-printed fields are titled: [Name / School / Grade / Term / Date]. Handwritten in the blanks for the student information is text written in pencil by the student Emery Crawford: [Emery Crawford / Covert Conssoldated (sic) / Five / 1929, 1930 / Nov 27, 1929]. The publishing company is along the bottom within the border: [WEBSTER PUBLISHING COMPANY / ST. LOUIS, MISSOURI]. Below the border in the lower left corner is the copyright: [COPYRIGHT 1926 BY WEBSTER PUB. CO.] The workbook is filled in with completed exercises. H x W x D: 9 5/16 × 6 × 1/4 in. (23.7 × 15.2 × 0.6 cm)",
+      "resources": [
+       {
+        "label": "High-resolution TIFF",
+        "url": "https://ids.si.edu/ids/download?id=NMAAHC-2014_17_3_3002-000001.tif",
+        "width": 3857,
+        "height": 5812,
+        "dimensions": "3857x5812"
+       },
+       {
+        "label": "High-resolution JPEG",
+        "url": "https://ids.si.edu/ids/download?id=NMAAHC-2014_17_3_3002-000001.jpg",
+        "width": 3857,
+        "height": 5812,
+        "dimensions": "3857x5812"
+       },
+       {
+        "label": "Screen Image",
+        "url": "https://ids.si.edu/ids/download?id=NMAAHC-2014_17_3_3002-000001_screen"
+       },
+       {
+        "label": "Thumbnail Image",
+        "url": "https://ids.si.edu/ids/download?id=NMAAHC-2014_17_3_3002-000001_thumb"
+       }
+      ]
+     }
+    ],
+    "mediaCount": 2
+   },
+   "metadata_usage": {
+    "access": "CC0"
+   }
+  }
+ },
+ "url": "edanmdm:nmaahc_2014.17.3",
+ "hash": "087025003be0f24945a9c04e37391723753c87cc",
+ "docSignature": "1cb71ea940156f3ff6e9ddd43204c91f",
+ "timestamp": 1663781623,
+ "lastTimeUpdated": 1769609945,
+ "title": "<I>Sharp's Language Drills and Test: Fifth Grade</I>",
+ "_source_metadata_file": "https://smithsonian-open-access.s3-us-west-2.amazonaws.com/metadata/edan/nmaahc/08.txt"
+}

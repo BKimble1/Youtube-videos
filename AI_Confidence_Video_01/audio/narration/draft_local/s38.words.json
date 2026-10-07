@@ -1,0 +1,57 @@
+[
+ {
+  "word": "It",
+  "start": 0.055,
+  "end": 0.155
+ },
+ {
+  "word": "works",
+  "start": 0.205,
+  "end": 0.405
+ },
+ {
+  "word": "on",
+  "start": 0.43,
+  "end": 0.555
+ },
+ {
+  "word": "chatbots.",
+  "start": 0.605,
+  "end": 1.38
+ },
+ {
+  "word": "It",
+  "start": 1.505,
+  "end": 1.605
+ },
+ {
+  "word": "works",
+  "start": 1.63,
+  "end": 1.855
+ },
+ {
+  "word": "pretty",
+  "start": 1.905,
+  "end": 2.13
+ },
+ {
+  "word": "well",
+  "start": 2.18,
+  "end": 2.33
+ },
+ {
+  "word": "on",
+  "start": 2.355,
+  "end": 2.455
+ },
+ {
+  "word": "people,",
+  "start": 2.505,
+  "end": 2.83
+ },
+ {
+  "word": "too.",
+  "start": 2.93,
+  "end": 3.22
+ }
+]

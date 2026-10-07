@@ -1,0 +1,210 @@
+[
+ {
+  "t": 43.937,
+  "name": "title impact"
+ },
+ {
+  "t": 26.75,
+  "name": "mark titles"
+ },
+ {
+  "t": 27.983,
+  "name": "mark years"
+ },
+ {
+  "t": 56.375,
+  "name": "token split"
+ },
+ {
+  "t": 56.4,
+  "name": "token split"
+ },
+ {
+  "t": 56.427,
+  "name": "token split"
+ },
+ {
+  "t": 56.452,
+  "name": "token split"
+ },
+ {
+  "t": 56.488,
+  "name": "token split"
+ },
+ {
+  "t": 56.532,
+  "name": "token split"
+ },
+ {
+  "t": 56.558,
+  "name": "token split"
+ },
+ {
+  "t": 56.589,
+  "name": "token split"
+ },
+ {
+  "t": 56.625,
+  "name": "token split"
+ },
+ {
+  "t": 56.658,
+  "name": "token split"
+ },
+ {
+  "t": 56.685,
+  "name": "token split"
+ },
+ {
+  "t": 56.704,
+  "name": "token split"
+ },
+ {
+  "t": 56.74,
+  "name": "token split"
+ },
+ {
+  "t": 56.764,
+  "name": "token split"
+ },
+ {
+  "t": 56.799,
+  "name": "token split"
+ },
+ {
+  "t": 56.843,
+  "name": "token split"
+ },
+ {
+  "t": 56.874,
+  "name": "token split"
+ },
+ {
+  "t": 56.905,
+  "name": "token split"
+ },
+ {
+  "t": 56.934,
+  "name": "token split"
+ },
+ {
+  "t": 56.969,
+  "name": "token split"
+ },
+ {
+  "t": 56.984,
+  "name": "token split"
+ },
+ {
+  "t": 57.032,
+  "name": "token split"
+ },
+ {
+  "t": 57.054,
+  "name": "token split"
+ },
+ {
+  "t": 77.267,
+  "name": "pick sweep"
+ },
+ {
+  "t": 77.42,
+  "name": "pick sweep"
+ },
+ {
+  "t": 77.555,
+  "name": "pick sweep"
+ },
+ {
+  "t": 77.672,
+  "name": "pick sweep"
+ },
+ {
+  "t": 77.771,
+  "name": "pick sweep"
+ },
+ {
+  "t": 77.852,
+  "name": "pick sweep"
+ },
+ {
+  "t": 77.916,
+  "name": "pick sweep"
+ },
+ {
+  "t": 77.961,
+  "name": "pick sweep"
+ },
+ {
+  "t": 77.988,
+  "name": "pick sweep"
+ },
+ {
+  "t": 78.017,
+  "name": "pick settle"
+ },
+ {
+  "t": 78.383,
+  "name": "token lands"
+ },
+ {
+  "t": 79.4,
+  "name": "token append"
+ },
+ {
+  "t": 79.633,
+  "name": "token append"
+ },
+ {
+  "t": 79.867,
+  "name": "token append"
+ },
+ {
+  "t": 80.1,
+  "name": "token append"
+ },
+ {
+  "t": 80.333,
+  "name": "token append"
+ },
+ {
+  "t": 80.567,
+  "name": "token append"
+ },
+ {
+  "t": 80.8,
+  "name": "token append"
+ },
+ {
+  "t": 156.383,
+  "name": "reveal year"
+ },
+ {
+  "t": 159.017,
+  "name": "reveal title"
+ },
+ {
+  "t": 195.713,
+  "name": "rule flip"
+ },
+ {
+  "t": 200.3,
+  "name": "penalty"
+ },
+ {
+  "t": 200.433,
+  "name": "penalty"
+ },
+ {
+  "t": 200.567,
+  "name": "penalty"
+ },
+ {
+  "t": 242.35,
+  "name": "check: exists"
+ },
+ {
+  "t": 243.883,
+  "name": "cross: does not say this"
+ }
+]

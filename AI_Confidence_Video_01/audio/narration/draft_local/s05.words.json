@@ -1,0 +1,42 @@
+[
+ {
+  "word": "And",
+  "start": 0.06,
+  "end": 0.185
+ },
+ {
+  "word": "Adam",
+  "start": 0.26,
+  "end": 0.535
+ },
+ {
+  "word": "Kalai?",
+  "start": 0.585,
+  "end": 1.085
+ },
+ {
+  "word": "He's",
+  "start": 1.26,
+  "end": 1.46
+ },
+ {
+  "word": "the",
+  "start": 1.485,
+  "end": 1.535
+ },
+ {
+  "word": "paper's",
+  "start": 1.585,
+  "end": 2.01
+ },
+ {
+  "word": "lead",
+  "start": 2.06,
+  "end": 2.21
+ },
+ {
+  "word": "author.",
+  "start": 2.26,
+  "end": 2.63
+ }
+]

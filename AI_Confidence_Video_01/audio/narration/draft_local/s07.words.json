@@ -1,0 +1,82 @@
+[
+ {
+  "word": "So",
+  "start": 0.11,
+  "end": 0.26
+ },
+ {
+  "word": "how",
+  "start": 0.31,
+  "end": 0.435
+ },
+ {
+  "word": "can",
+  "start": 0.485,
+  "end": 0.635
+ },
+ {
+  "word": "AI",
+  "start": 0.71,
+  "end": 1.01
+ },
+ {
+  "word": "be",
+  "start": 1.06,
+  "end": 1.16
+ },
+ {
+  "word": "that",
+  "start": 1.21,
+  "end": 1.36
+ },
+ {
+  "word": "capable,",
+  "start": 1.41,
+  "end": 2.085
+ },
+ {
+  "word": "and",
+  "start": 2.21,
+  "end": 2.285
+ },
+ {
+  "word": "still",
+  "start": 2.335,
+  "end": 2.56
+ },
+ {
+  "word": "sound",
+  "start": 2.635,
+  "end": 2.885
+ },
+ {
+  "word": "this",
+  "start": 2.935,
+  "end": 3.035
+ },
+ {
+  "word": "sure",
+  "start": 3.11,
+  "end": 3.31
+ },
+ {
+  "word": "while",
+  "start": 3.335,
+  "end": 3.435
+ },
+ {
+  "word": "being",
+  "start": 3.485,
+  "end": 3.71
+ },
+ {
+  "word": "this",
+  "start": 3.735,
+  "end": 3.86
+ },
+ {
+  "word": "wrong?",
+  "start": 3.91,
+  "end": 4.18
+ }
+]

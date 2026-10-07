@@ -1,0 +1,166 @@
+import React from 'react';
+import {AbsoluteFill} from 'remotion';
+import {Backdrop} from '../components/Backdrop';
+import {Doc} from '../components/Doc';
+import {SourceLine, Tag} from '../components/ui';
+import {useG} from '../lib/SceneFrame';
+import {at, segEnd} from '../lib/timeline';
+import {easeInOut, ramp, rand} from '../lib/anim';
+import {C, F} from '../theme';
+import {S2Inside} from './S2_Inside';
+
+const DATES = ['03-07', '15-06', '01-01'];
+
+export const S2Rest: React.FC = () => {
+  const g = useG();
+  const cBecause = at('s12', 'Because');
+  const cAsked = at('s12', 'Asked');
+  const cThree = at('s12', 'three', 1);
+  const cKey = at('s13', "Here's");
+  const cScores = at('s13', 'scores');
+  const cNot = at('s13', 'Not');
+  const cTrue = at('s13', 'true.');
+  const cModern = at('s14', 'Modern');
+  const cInstr = at('s14', 'instruction');
+  const cReason = at('s14', 'step-by-step');
+  const cSearch = at('s14', 'search.');
+  const cStill = at('s14', 'still');
+  const cEnd = segEnd('s14');
+
+  const bIn = ramp(g, cBecause - 4, 16);
+  const promptT = ramp(g, cAsked - 4, 14);
+  const bOut = ramp(g, cKey - 6, 14);
+  const mIn = ramp(g, cKey - 2, 16);
+  const m1 = ramp(g, cScores, 22, easeInOut);
+  const m2 = ramp(g, cNot, 14);
+  const trueT = ramp(g, cTrue, 12);
+  const mOut = ramp(g, cModern - 6, 14);
+  const stIn = ramp(g, cModern, 16);
+  const ring1 = ramp(g, cInstr, 16);
+  const ring2 = ramp(g, cReason, 16);
+  const ring3 = ramp(g, cSearch - 4, 16);
+  const streamT = ramp(g, cStill, 20);
+  const out = 1 - ramp(g, cEnd + 22, 10);
+
+  return (
+    <AbsoluteFill style={{opacity: out}}>
+      {/* Same question, three tries */}
+      <AbsoluteFill style={{opacity: bIn * (1 - bOut)}}>
+        <Backdrop />
+        <div style={{position: 'absolute', left: 0, right: 0, top: 150, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: promptT}}>
+          <div style={{fontFamily: F.sans, fontSize: 24, fontWeight: 700, letterSpacing: '0.12em', color: C.muted, marginBottom: 18}}>SAME PAPER, ANOTHER PROMPT</div>
+          <Doc
+            src="img/paper_p01_birthday.png"
+            width={1300}
+            aspect={299 / 2000}
+            pad={22}
+            boxes={[
+              {x: 0.08, y: 0.6, w: 0.315, h: 0.2, t: ramp(g, cThree, 14), tone: 'coral'},
+              {x: 0.012, y: 0.795, w: 0.268, h: 0.2, t: ramp(g, cThree + 24, 14), tone: 'teal'},
+            ]}
+          />
+        </div>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 470, display: 'flex', justifyContent: 'center', gap: 40}}>
+          {DATES.map((d, i) => {
+            const t = ramp(g, cThree + i * 7, 12);
+            return (
+              <div
+                key={d}
+                style={{
+                  width: 380,
+                  padding: '28px 30px',
+                  borderRadius: 20,
+                  background: `linear-gradient(180deg, ${C.surfaceHi} 0%, ${C.surface} 100%)`,
+                  border: `1.5px solid ${C.lineStrong}`,
+                  opacity: t,
+                  transform: `translateY(${(1 - t) * 30}px) rotate(${(rand(i + 3) - 0.5) * 3}deg)`,
+                }}
+              >
+                <div style={{fontFamily: F.sans, fontSize: 22, color: C.muted}}>Attempt {i + 1}</div>
+                <div style={{fontFamily: F.mono, fontSize: 78, fontWeight: 700, color: C.text, marginTop: 6}}>{d}</div>
+                <div style={{marginTop: 12}}>
+                  <Tag tone="coral" size={17}>✕ Incorrect</Tag>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 790, textAlign: 'center', fontFamily: F.sans, fontSize: 30, color: C.textDim, opacity: ramp(g, cThree + 24, 14)}}>
+          The real date is in autumn, the paper notes. A response was requested only if known.
+        </div>
+        <SourceLine opacity={bIn}>DeepSeek-V3 via the DeepSeek app, May 11, 2025 · three separate attempts · Kalai et al. (2025), p. 1</SourceLine>
+      </AbsoluteFill>
+
+      {/* Likely vs true */}
+      <AbsoluteFill style={{opacity: mIn * (1 - mOut)}}>
+        <Backdrop />
+        <div style={{position: 'absolute', left: 170, top: 230, width: 1580}}>
+          <div style={{fontFamily: F.sans, fontSize: 26, fontWeight: 700, letterSpacing: '0.12em', color: C.muted}}>WHAT THE SCORE MEASURES</div>
+          <div style={{marginTop: 40, display: 'flex', alignItems: 'center', gap: 40}}>
+            <div style={{width: 700, fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.text}}>How likely as the next text</div>
+            <div style={{flex: 1, height: 48, borderRadius: 24, background: 'rgba(243,238,228,0.08)', border: `1.5px solid ${C.lineStrong}`, overflow: 'hidden'}}>
+              <div style={{width: `${m1 * 72}%`, height: '100%', background: C.text, borderRadius: 24}} />
+            </div>
+          </div>
+          <div style={{marginTop: 70, display: 'flex', alignItems: 'center', gap: 40, opacity: 0.3 + 0.7 * m2}}>
+            <div style={{width: 700, fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.text}}>How likely to be true</div>
+            <div style={{flex: 1, height: 48, borderRadius: 24, border: `2px dashed ${C.lineStrong}`, display: 'flex', alignItems: 'center', paddingLeft: 26}}>
+              <span style={{fontFamily: F.sans, fontSize: 26, color: C.muted, opacity: m2}}>not what this score measures</span>
+            </div>
+          </div>
+          <div style={{marginTop: 110, textAlign: 'center', fontFamily: F.sans, fontSize: 80, fontWeight: 780, color: C.text, letterSpacing: '-0.02em', opacity: trueT}}>
+            likely <span style={{color: C.coral}}>≠</span> true
+          </div>
+        </div>
+      </AbsoluteFill>
+
+      {/* Modern assistants: layers on top, token-by-token underneath */}
+      <AbsoluteFill style={{opacity: stIn}}>
+        <Backdrop />
+        <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0}}>
+          {[
+            {r: 330, t: ring3, label: 'sometimes: web search & tools'},
+            {r: 255, t: ring2, label: 'step-by-step reasoning'},
+            {r: 180, t: ring1, label: 'instruction training'},
+          ].map((ring, i) => (
+            <g key={i} opacity={ring.t}>
+              <circle cx={760} cy={540} r={ring.r} fill="none" stroke={C.lineStrong} strokeWidth={2} strokeDasharray={`${2 * Math.PI * ring.r * ring.t} 9999`} transform="rotate(-90 760 540)" />
+              <text x={760} y={540 - ring.r + 32} textAnchor="middle" fill={C.textDim} fontFamily="Inter Variable" fontSize={23} fontWeight={600}>
+                {ring.label}
+              </text>
+            </g>
+          ))}
+          <circle cx={760} cy={540} r={105} fill="rgba(27,41,71,0.95)" stroke={C.text} strokeWidth={2.5} />
+          <text x={760} y={530} textAnchor="middle" fill={C.text} fontFamily="Inter Variable" fontSize={26} fontWeight={750}>
+            next-token
+          </text>
+          <text x={760} y={564} textAnchor="middle" fill={C.text} fontFamily="Inter Variable" fontSize={26} fontWeight={750}>
+            generator
+          </text>
+        </svg>
+        {/* token stream */}
+        <div style={{position: 'absolute', left: 1130, top: 500, display: 'flex', gap: 10, opacity: streamT}}>
+          {['Adam', 'Ta', 'uman', 'Kal', 'ai', '’s', 'Ph', '.D', '…'].map((t, i) => {
+            const tt = ramp(g, cStill + i * 3, 8);
+            return (
+              <div key={i} style={{padding: '10px 14px', borderRadius: 10, background: 'rgba(27,41,71,0.95)', border: `1.5px solid ${C.lineStrong}`, fontFamily: F.serif, fontSize: 32, color: C.text, opacity: tt, transform: `translateX(${(1 - tt) * -40}px)`}}>
+                {t}
+              </div>
+            );
+          })}
+        </div>
+        <div style={{position: 'absolute', left: 1130, top: 600, width: 700, fontFamily: F.sans, fontSize: 32, fontWeight: 650, color: C.text, opacity: streamT}}>
+          The answer is still written token by token.
+        </div>
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
+export const S2Scene: React.FC = () => (
+  <AbsoluteFill>
+    <S2Inside />
+    <S2Rest />
+  </AbsoluteFill>
+);
+

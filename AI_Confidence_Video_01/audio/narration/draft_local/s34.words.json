@@ -1,0 +1,142 @@
+[
+ {
+  "word": "When",
+  "start": 0.055,
+  "end": 0.155
+ },
+ {
+  "word": "that",
+  "start": 0.205,
+  "end": 0.355
+ },
+ {
+  "word": "recognition",
+  "start": 0.405,
+  "end": 1.005
+ },
+ {
+  "word": "misfires,",
+  "start": 1.055,
+  "end": 1.93
+ },
+ {
+  "word": "when",
+  "start": 2.055,
+  "end": 2.155
+ },
+ {
+  "word": "a",
+  "start": 2.18,
+  "end": 2.23
+ },
+ {
+  "word": "name",
+  "start": 2.28,
+  "end": 2.58
+ },
+ {
+  "word": "seems",
+  "start": 2.655,
+  "end": 2.955
+ },
+ {
+  "word": "familiar",
+  "start": 3.005,
+  "end": 3.505
+ },
+ {
+  "word": "but",
+  "start": 3.555,
+  "end": 3.655
+ },
+ {
+  "word": "the",
+  "start": 3.68,
+  "end": 3.73
+ },
+ {
+  "word": "facts",
+  "start": 3.805,
+  "end": 4.105
+ },
+ {
+  "word": "aren't",
+  "start": 4.155,
+  "end": 4.305
+ },
+ {
+  "word": "there,",
+  "start": 4.355,
+  "end": 4.805
+ },
+ {
+  "word": "the",
+  "start": 4.93,
+  "end": 5.005
+ },
+ {
+  "word": "model",
+  "start": 5.055,
+  "end": 5.38
+ },
+ {
+  "word": "can",
+  "start": 5.43,
+  "end": 5.505
+ },
+ {
+  "word": "produce",
+  "start": 5.555,
+  "end": 5.88
+ },
+ {
+  "word": "a",
+  "start": 5.93,
+  "end": 5.98
+ },
+ {
+  "word": "plausible",
+  "start": 6.055,
+  "end": 6.555
+ },
+ {
+  "word": "guess.",
+  "start": 6.605,
+  "end": 7.405
+ },
+ {
+  "word": "Knowing",
+  "start": 7.655,
+  "end": 7.98
+ },
+ {
+  "word": "a",
+  "start": 8.03,
+  "end": 8.08
+ },
+ {
+  "word": "name",
+  "start": 8.13,
+  "end": 8.48
+ },
+ {
+  "word": "isn't",
+  "start": 8.53,
+  "end": 8.73
+ },
+ {
+  "word": "knowing",
+  "start": 8.78,
+  "end": 9.03
+ },
+ {
+  "word": "the",
+  "start": 9.055,
+  "end": 9.105
+ },
+ {
+  "word": "facts.",
+  "start": 9.155,
+  "end": 9.61
+ }
+]

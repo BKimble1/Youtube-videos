@@ -1,0 +1,195 @@
+{
+ "id": "ld1-1646149545906-1646150745849-0",
+ "version": "",
+ "unitCode": "SIA",
+ "linkedId": "0",
+ "type": "edanmdm",
+ "content": {
+  "freetext": {
+   "date": [
+    {
+     "label": "Date",
+     "content": "1880"
+    },
+    {
+     "label": "Date",
+     "content": "1880s"
+    }
+   ],
+   "name": [
+    {
+     "label": "Creator",
+     "content": "United States National Museum Photographic Laboratory"
+    },
+    {
+     "label": "Subject",
+     "content": "Murdoch, John 1852-1925"
+    },
+    {
+     "label": "Subject",
+     "content": "United States National Museum"
+    },
+    {
+     "label": "Subject",
+     "content": "Arts and Industries Building (Washington, D.C.)"
+    }
+   ],
+   "notes": [
+    {
+     "label": "Notes",
+     "content": "Also known as 3666."
+    },
+    {
+     "label": "Notes",
+     "content": "See also Record Unit 95, Box 32, Folder 18."
+    },
+    {
+     "label": "Summary",
+     "content": "Library, later known as the Jewett Room, in the Northwest Pavilion of the United States National Museum, now known as the Arts and Industries Building, with librarian John Murdoch seated at desk."
+    },
+    {
+     "label": "Cite as",
+     "content": "Smithsonian Institution Archives, Acc. 11-006, Box 009, Image No. MAH-3666"
+    },
+    {
+     "label": "Repository Loc.",
+     "content": "Smithsonian Institution Archives Capital Gallery, Suite 3000, MRC 507; 600 Maryland Avenue, SW; Washington, DC 20024-2520"
+    }
+   ],
+   "topic": [
+    {
+     "label": "Topic",
+     "content": "Libraries"
+    }
+   ],
+   "dataSource": [
+    {
+     "label": "Data Source",
+     "content": "Smithsonian Institution Archives"
+    }
+   ],
+   "identifier": [
+    {
+     "label": "Local number",
+     "content": "SIA Acc. 11-006 [MAH-3666]"
+    }
+   ],
+   "objectType": [
+    {
+     "label": "Type",
+     "content": "Glass negatives"
+    }
+   ],
+   "objectRights": [
+    {
+     "label": "Restrictions & Rights",
+     "content": "No access restrictions Many of SIA's holdings are located off-site, and advance notice is recommended to consult a collection. Please email the SIA Reference Team at osiaref@si.edu"
+    },
+    {
+     "label": "Restrictions & Rights",
+     "content": "No Copyright - United States"
+    }
+   ],
+   "physicalDescription": [
+    {
+     "label": "Physical description",
+     "content": "8 x 10;"
+    }
+   ]
+  },
+  "indexedStructured": {
+   "date": [
+    "1880s"
+   ],
+   "name": [
+    {
+     "type": "personal_subj",
+     "content": "Murdoch, John"
+    },
+    {
+     "type": "corporate_main",
+     "content": "United States National Museum"
+    },
+    {
+     "type": "corporate_subj",
+     "content": "United States National Museum"
+    },
+    {
+     "type": "corporate_subj",
+     "content": "Arts and Industries Building (Washington, D.C.)"
+    }
+   ],
+   "topic": [
+    "Libraries"
+   ],
+   "object_type": [
+    "Archival materials",
+    "Photographs"
+   ],
+   "online_media_type": [
+    "Images"
+   ]
+  },
+  "descriptiveNonRepeating": {
+   "title": {
+    "label": "Title",
+    "content": "United States National Museum Library"
+   },
+   "record_ID": "siris_arc_389215",
+   "unit_code": "SIA",
+   "title_sort": "UNITED STATES NATIONAL MUSEUM LIBRARY",
+   "data_source": "Smithsonian Institution Archives",
+   "record_link": "https://siarchives.si.edu/collections/siris_arc_389215",
+   "online_media": {
+    "media": [
+     {
+      "id": "media:SIA-MAH-3666-000002",
+      "type": "Images",
+      "idsId": "SIA-MAH-3666-000002",
+      "usage": {
+       "text": "",
+       "access": "CC0"
+      },
+      "content": "https://ids.si.edu/ids/deliveryService?id=SIA-MAH-3666-000002&max=1024",
+      "thumbnail": "https://ids.si.edu/ids/deliveryService?id=SIA-MAH-3666-000002&max=150",
+      "resources": [
+       {
+        "label": "High-resolution TIFF",
+        "url": "https://ids.si.edu/ids/download?id=SIA-MAH-3666-000002.tif",
+        "width": 6687,
+        "height": 5425,
+        "dimensions": "6687x5425"
+       },
+       {
+        "label": "High-resolution JPEG",
+        "url": "https://ids.si.edu/ids/download?id=SIA-MAH-3666-000002.jpg",
+        "width": 6687,
+        "height": 5425,
+        "dimensions": "6687x5425"
+       },
+       {
+        "label": "Screen Image",
+        "url": "https://ids.si.edu/ids/download?id=SIA-MAH-3666-000002_screen"
+       },
+       {
+        "label": "Thumbnail Image",
+        "url": "https://ids.si.edu/ids/download?id=SIA-MAH-3666-000002_thumb"
+       }
+      ]
+     }
+    ],
+    "mediaCount": 1
+   },
+   "metadata_usage": {
+    "access": "CC0"
+   }
+  }
+ },
+ "url": "edanmdm:siris_arc_389215",
+ "hash": "b4f09459dd397a0f630f31ce680c053414fe5cf1",
+ "docSignature": "2826de41d202c875190267b83accab59",
+ "timestamp": 1629880581,
+ "lastTimeUpdated": 1747762463,
+ "title": "United States National Museum Library",
+ "_source_metadata_file": "https://smithsonian-open-access.s3-us-west-2.amazonaws.com/metadata/edan/sia/b4.txt"
+}

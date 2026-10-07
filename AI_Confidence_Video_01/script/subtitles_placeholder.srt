@@ -1,0 +1,517 @@
+1
+00:00:00,549 --> 00:00:03,856
+Researchers asked three popular
+chatbots one simple question:
+
+2
+00:00:03,950 --> 00:00:06,837
+What was the title of Adam
+Kalai's PhD dissertation?
+
+3
+00:00:07,507 --> 00:00:09,679
+ChatGPT answered, “Boosting,
+Online Algorithms,
+
+4
+00:00:09,768 --> 00:00:11,512
+and Other Topics in Machine Learning.”
+
+5
+00:00:11,600 --> 00:00:12,778
+Carnegie Mellon, 2002.
+
+6
+00:00:13,274 --> 00:00:15,282
+DeepSeek gave a different title,
+
+7
+00:00:15,361 --> 00:00:16,887
+at Harvard, in 2005.
+
+8
+00:00:16,974 --> 00:00:19,613
+Llama gave a third, at MIT, in 2007.
+
+9
+00:00:20,232 --> 00:00:21,792
+Three polished answers.
+
+10
+00:00:21,907 --> 00:00:25,478
+Not one had the right title,
+or even the right year.
+
+11
+00:00:26,210 --> 00:00:27,355
+And Adam Kalai?
+
+12
+00:00:27,455 --> 00:00:29,981
+He was one of the researchers asking.
+
+13
+00:00:30,932 --> 00:00:34,395
+Meanwhile, a different language model
+has reached gold-medal level at the
+
+14
+00:00:34,424 --> 00:00:36,173
+International Mathematical Olympiad.
+
+15
+00:00:36,694 --> 00:00:38,913
+So how can AI be that capable,
+
+16
+00:00:39,023 --> 00:00:42,646
+and still sound this sure
+while being this wrong?
+
+17
+00:00:43,804 --> 00:00:45,537
+Let's take one answer apart.
+
+18
+00:00:45,629 --> 00:00:47,229
+Here's how ChatGPT's began.
+
+19
+00:00:47,847 --> 00:00:49,900
+A language model writes in tokens:
+
+20
+00:00:49,984 --> 00:00:51,049
+chunks of text.
+
+21
+00:00:51,133 --> 00:00:52,537
+Some are whole words.
+
+22
+00:00:52,629 --> 00:00:53,867
+Some are fragments.
+
+23
+00:00:53,992 --> 00:00:55,660
+“Kalai” becomes “Kal” and “ai.”
+
+24
+00:00:56,417 --> 00:00:58,518
+Each token is really a number.
+
+25
+00:00:58,627 --> 00:01:03,382
+At every step, the model turns the
+tokens so far into a numerical picture
+
+26
+00:01:03,456 --> 00:01:07,108
+of the context, and scores
+every possible next token.
+
+27
+00:01:07,769 --> 00:01:11,002
+Here, it's choosing the
+last digit of the year.
+
+28
+00:01:11,093 --> 00:01:13,919
+One option gets picked, added to the end,
+
+29
+00:01:13,984 --> 00:01:17,006
+and the loop runs again,
+token after token.
+
+30
+00:01:17,861 --> 00:01:22,025
+Because there's a pick, the same
+question can come out differently.
+
+31
+00:01:22,169 --> 00:01:24,868
+Asked for Kalai's birthday,
+“only if you know,”
+
+32
+00:01:24,914 --> 00:01:28,194
+one model gave three different
+dates in three tries.
+
+33
+00:01:29,094 --> 00:01:30,695
+Here's the key part.
+
+34
+00:01:30,798 --> 00:01:35,641
+Those scores measure how likely
+a piece of text is to come next.
+
+35
+00:01:35,744 --> 00:01:38,327
+Not how likely it is to be true.
+
+36
+00:01:39,347 --> 00:01:41,788
+Modern chatbots add more:
+instruction training,
+
+37
+00:01:41,874 --> 00:01:44,201
+step-by-step reasoning,
+sometimes web search.
+
+38
+00:01:44,287 --> 00:01:47,149
+But the answer itself is
+still written token by token.
+
+39
+00:01:48,144 --> 00:01:51,193
+So why would the likely answer be wrong?
+
+40
+00:01:51,304 --> 00:01:54,095
+Look at what the model had to learn.
+
+41
+00:01:54,688 --> 00:01:57,398
+What a dissertation title
+sounds like is everywhere:
+
+42
+00:01:57,502 --> 00:01:59,246
+“Methods,” “Algorithms,”
+“Machine Learning,”
+
+43
+00:01:59,314 --> 00:02:00,305
+again and again.
+
+44
+00:02:00,869 --> 00:02:02,400
+Famous facts repeat, too.
+
+45
+00:02:02,467 --> 00:02:06,296
+The paper notes that models rarely miss
+something like Einstein's dissertation
+
+46
+00:02:06,391 --> 00:02:07,291
+title.
+
+47
+00:02:07,481 --> 00:02:11,958
+But one researcher's thesis title might
+appear rarely in the training data.
+
+48
+00:02:12,043 --> 00:02:12,935
+Maybe once.
+
+49
+00:02:12,955 --> 00:02:13,855
+Maybe never.
+
+50
+00:02:13,921 --> 00:02:17,460
+Like a birthday, there's no
+pattern to work it out from.
+
+51
+00:02:18,262 --> 00:02:22,631
+So the model fills the gap with
+what a title usually looks like,
+
+52
+00:02:22,708 --> 00:02:25,547
+and the confidence comes along for free.
+
+53
+00:02:25,642 --> 00:02:26,599
+“Is entitled.”
+
+54
+00:02:26,731 --> 00:02:28,290
+No “I think,” no “maybe.”
+
+55
+00:02:28,394 --> 00:02:31,859
+That tone isn't a readout
+of what the model knows.
+
+56
+00:02:32,691 --> 00:02:35,492
+Here's ChatGPT's answer
+next to the actual record.
+
+57
+00:02:35,588 --> 00:02:36,809
+Spot the difference?
+
+58
+00:02:38,739 --> 00:02:39,769
+Same university.
+
+59
+00:02:39,900 --> 00:02:41,822
+The wrong year: it was 2001.
+
+60
+00:02:41,906 --> 00:02:43,952
+And a completely different title.
+
+61
+00:02:44,043 --> 00:02:47,636
+The invented details look
+exactly as solid as the true one.
+
+62
+00:02:48,783 --> 00:02:50,392
+So why guess at all?
+
+63
+00:02:50,480 --> 00:02:52,543
+Why not say, “I don't know”?
+
+64
+00:02:52,640 --> 00:02:57,276
+The researchers argue part of the
+answer is how models get graded.
+
+65
+00:02:58,019 --> 00:02:59,567
+Picture a ten-question quiz.
+
+66
+00:02:59,642 --> 00:03:01,135
+Right answer: one point.
+
+67
+00:03:01,217 --> 00:03:02,455
+Wrong answer: zero.
+
+68
+00:03:02,530 --> 00:03:04,006
+“I don't know”: also zero.
+
+69
+00:03:04,580 --> 00:03:07,096
+Two test-takers each know six answers.
+
+70
+00:03:07,214 --> 00:03:10,283
+The honest one says “I
+don't know” to the rest.
+
+71
+00:03:10,375 --> 00:03:11,275
+Six points.
+
+72
+00:03:11,925 --> 00:03:14,254
+The guesser takes a shot at all four.
+
+73
+00:03:14,337 --> 00:03:17,183
+With four choices each,
+on average one lands.
+
+74
+00:03:17,273 --> 00:03:18,173
+Seven points.
+
+75
+00:03:18,269 --> 00:03:21,519
+The guesser wins, with three
+confident wrong answers.
+
+76
+00:03:22,435 --> 00:03:23,976
+Now change one rule.
+
+77
+00:03:24,072 --> 00:03:26,210
+A wrong answer costs a point.
+
+78
+00:03:26,963 --> 00:03:28,561
+The honest one: still six.
+
+79
+00:03:28,628 --> 00:03:31,104
+The guesser: six, plus one, minus three.
+
+80
+00:03:31,184 --> 00:03:31,657
+Four.
+
+81
+00:03:31,677 --> 00:03:32,581
+Bluffing loses.
+
+82
+00:03:33,534 --> 00:03:36,795
+When the researchers checked
+ten popular AI benchmarks,
+
+83
+00:03:36,913 --> 00:03:39,125
+nine graded strictly right or wrong,
+
+84
+00:03:39,202 --> 00:03:41,379
+with zero credit for “I don't know.”
+
+85
+00:03:41,465 --> 00:03:44,011
+Train and rank models on tests like that,
+
+86
+00:03:44,081 --> 00:03:45,330
+and guessing pays.
+
+87
+00:03:46,106 --> 00:03:49,464
+Their fix: state the penalty
+for wrong answers up front,
+
+88
+00:03:49,538 --> 00:03:51,570
+so admitting uncertainty can win.
+
+89
+00:03:51,645 --> 00:03:54,145
+It's one explanation, not the whole story,
+
+90
+00:03:54,219 --> 00:03:56,095
+but a surprisingly simple one.
+
+91
+00:03:57,196 --> 00:03:58,628
+So what actually helps?
+
+92
+00:03:58,715 --> 00:04:00,549
+Start with the unglamorous move:
+
+93
+00:04:00,614 --> 00:04:01,709
+check the record.
+
+94
+00:04:02,313 --> 00:04:03,716
+Here's Kalai's actual thesis.
+
+95
+00:04:03,798 --> 00:04:06,388
+“Probabilistic and On-line
+Methods in Machine Learning.”
+
+96
+00:04:06,483 --> 00:04:07,943
+Carnegie Mellon, May 2001.
+
+97
+00:04:08,655 --> 00:04:11,737
+And checking means more
+than spotting a citation.
+
+98
+00:04:11,857 --> 00:04:15,358
+Does the source exist, and
+does it actually say this?
+
+99
+00:04:16,334 --> 00:04:20,546
+Researchers are also finding where
+“I don't know” lives inside a model.
+
+100
+00:04:20,640 --> 00:04:25,252
+In one Claude model, Anthropic found a
+default circuit for “I can't answer.”
+
+101
+00:04:25,355 --> 00:04:28,139
+Recognizing a familiar
+name switches it off.
+
+102
+00:04:28,861 --> 00:04:30,715
+When that recognition misfires,
+
+103
+00:04:30,816 --> 00:04:34,052
+when a name seems familiar
+but the facts aren't there,
+
+104
+00:04:34,129 --> 00:04:36,670
+the model can produce a plausible guess.
+
+105
+00:04:36,763 --> 00:04:39,195
+Knowing a name isn't knowing the facts.
+
+106
+00:04:40,078 --> 00:04:44,549
+Search, retrieval, and longer reasoning
+can help when they bring in the right
+
+107
+00:04:44,599 --> 00:04:45,319
+evidence.
+
+108
+00:04:45,339 --> 00:04:48,549
+Turning down the randomness
+makes answers more consistent,
+
+109
+00:04:48,660 --> 00:04:49,757
+not more correct.
+
+110
+00:04:49,860 --> 00:04:51,478
+None of it is a guarantee.
+
+111
+00:04:52,731 --> 00:04:55,460
+So why does AI sound
+right when it's wrong?
+
+112
+00:04:55,555 --> 00:04:58,853
+Because sounding right comes
+from patterns in language,
+
+113
+00:04:58,955 --> 00:05:02,708
+and being right takes evidence
+the model doesn't always have.
+
+114
+00:05:03,672 --> 00:05:07,614
+So when an answer matters, don't
+ask whether it sounds right.
+
+115
+00:05:07,710 --> 00:05:11,465
+Ask: what's the evidence, and
+does it actually say this?
+
+116
+00:05:12,441 --> 00:05:13,912
+It works on chatbots.
+
+117
+00:05:14,036 --> 00:05:16,054
+It works pretty well on people,
+
+118
+00:05:16,143 --> 00:05:17,043
+too.

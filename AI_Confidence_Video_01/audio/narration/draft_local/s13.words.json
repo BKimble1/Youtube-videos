@@ -1,0 +1,127 @@
+[
+ {
+  "word": "Here's",
+  "start": 0.09,
+  "end": 0.34
+ },
+ {
+  "word": "the",
+  "start": 0.39,
+  "end": 0.44
+ },
+ {
+  "word": "key",
+  "start": 0.49,
+  "end": 0.64
+ },
+ {
+  "word": "part.",
+  "start": 0.69,
+  "end": 1.24
+ },
+ {
+  "word": "Those",
+  "start": 1.415,
+  "end": 1.565
+ },
+ {
+  "word": "scores",
+  "start": 1.615,
+  "end": 1.965
+ },
+ {
+  "word": "measure",
+  "start": 2.015,
+  "end": 2.29
+ },
+ {
+  "word": "how",
+  "start": 2.365,
+  "end": 2.515
+ },
+ {
+  "word": "likely",
+  "start": 2.565,
+  "end": 2.865
+ },
+ {
+  "word": "a",
+  "start": 2.89,
+  "end": 2.915
+ },
+ {
+  "word": "piece",
+  "start": 2.965,
+  "end": 3.19
+ },
+ {
+  "word": "of",
+  "start": 3.215,
+  "end": 3.29
+ },
+ {
+  "word": "text",
+  "start": 3.365,
+  "end": 3.74
+ },
+ {
+  "word": "is",
+  "start": 3.79,
+  "end": 3.89
+ },
+ {
+  "word": "to",
+  "start": 3.94,
+  "end": 3.99
+ },
+ {
+  "word": "come",
+  "start": 4.04,
+  "end": 4.19
+ },
+ {
+  "word": "next.",
+  "start": 4.24,
+  "end": 4.915
+ },
+ {
+  "word": "Not",
+  "start": 5.09,
+  "end": 5.265
+ },
+ {
+  "word": "how",
+  "start": 5.315,
+  "end": 5.465
+ },
+ {
+  "word": "likely",
+  "start": 5.515,
+  "end": 5.84
+ },
+ {
+  "word": "it",
+  "start": 5.89,
+  "end": 5.94
+ },
+ {
+  "word": "is",
+  "start": 5.99,
+  "end": 6.09
+ },
+ {
+  "word": "to",
+  "start": 6.14,
+  "end": 6.19
+ },
+ {
+  "word": "be",
+  "start": 6.215,
+  "end": 6.315
+ },
+ {
+  "word": "true.",
+  "start": 6.39,
+  "end": 6.72
+ }
+]

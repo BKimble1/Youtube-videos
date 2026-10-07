@@ -1,0 +1,92 @@
+[
+ {
+  "word": "And",
+  "start": 0.06,
+  "end": 0.185
+ },
+ {
+  "word": "checking",
+  "start": 0.26,
+  "end": 0.66
+ },
+ {
+  "word": "means",
+  "start": 0.71,
+  "end": 0.985
+ },
+ {
+  "word": "more",
+  "start": 1.06,
+  "end": 1.235
+ },
+ {
+  "word": "than",
+  "start": 1.285,
+  "end": 1.41
+ },
+ {
+  "word": "spotting",
+  "start": 1.485,
+  "end": 1.885
+ },
+ {
+  "word": "a",
+  "start": 1.91,
+  "end": 1.935
+ },
+ {
+  "word": "citation.",
+  "start": 1.985,
+  "end": 3.01
+ },
+ {
+  "word": "Does",
+  "start": 3.185,
+  "end": 3.335
+ },
+ {
+  "word": "the",
+  "start": 3.36,
+  "end": 3.41
+ },
+ {
+  "word": "source",
+  "start": 3.485,
+  "end": 3.76
+ },
+ {
+  "word": "exist,",
+  "start": 3.81,
+  "end": 4.46
+ },
+ {
+  "word": "and",
+  "start": 4.585,
+  "end": 4.66
+ },
+ {
+  "word": "does",
+  "start": 4.685,
+  "end": 4.785
+ },
+ {
+  "word": "it",
+  "start": 4.81,
+  "end": 4.86
+ },
+ {
+  "word": "actually",
+  "start": 4.91,
+  "end": 5.285
+ },
+ {
+  "word": "say",
+  "start": 5.36,
+  "end": 5.535
+ },
+ {
+  "word": "this?",
+  "start": 5.585,
+  "end": 5.86
+ }
+]

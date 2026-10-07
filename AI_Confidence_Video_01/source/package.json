@@ -1,0 +1,33 @@
+{
+  "name": "ai-confidence-video-01",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Why AI Sounds Right When It's Wrong — Remotion source project",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render:1080": "remotion render src/index.ts Main ../exports/Video_01_AI_Confidence_Final_1080p.mp4",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "5.3.0",
+    "@fontsource-variable/source-serif-4": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@remotion/bundler": "4.0.533",
+    "@remotion/cli": "4.0.533",
+    "@remotion/media-utils": "4.0.533",
+    "@remotion/noise": "4.0.533",
+    "@remotion/paths": "4.0.533",
+    "@remotion/renderer": "4.0.533",
+    "@remotion/shapes": "4.0.533",
+    "@remotion/transitions": "4.0.533",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.533",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.0",
+    "js-tiktoken": "1.0.21",
+    "typescript": "5.8.3"
+  }
+}

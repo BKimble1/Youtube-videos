@@ -1,0 +1,107 @@
+[
+ {
+  "word": "Modern",
+  "start": 0.12,
+  "end": 0.495
+ },
+ {
+  "word": "chatbots",
+  "start": 0.57,
+  "end": 1.07
+ },
+ {
+  "word": "add",
+  "start": 1.12,
+  "end": 1.295
+ },
+ {
+  "word": "more:",
+  "start": 1.345,
+  "end": 1.87
+ },
+ {
+  "word": "instruction",
+  "start": 2.045,
+  "end": 2.62
+ },
+ {
+  "word": "training,",
+  "start": 2.67,
+  "end": 3.22
+ },
+ {
+  "word": "step-by-step",
+  "start": 3.37,
+  "end": 4.045
+ },
+ {
+  "word": "reasoning,",
+  "start": 4.095,
+  "end": 4.67
+ },
+ {
+  "word": "sometimes",
+  "start": 4.82,
+  "end": 5.345
+ },
+ {
+  "word": "web",
+  "start": 5.395,
+  "end": 5.57
+ },
+ {
+  "word": "search.",
+  "start": 5.62,
+  "end": 6.32
+ },
+ {
+  "word": "But",
+  "start": 6.445,
+  "end": 6.545
+ },
+ {
+  "word": "the",
+  "start": 6.57,
+  "end": 6.67
+ },
+ {
+  "word": "answer",
+  "start": 6.745,
+  "end": 7.07
+ },
+ {
+  "word": "itself",
+  "start": 7.12,
+  "end": 7.57
+ },
+ {
+  "word": "is",
+  "start": 7.62,
+  "end": 7.695
+ },
+ {
+  "word": "still",
+  "start": 7.77,
+  "end": 7.995
+ },
+ {
+  "word": "written",
+  "start": 8.045,
+  "end": 8.27
+ },
+ {
+  "word": "token",
+  "start": 8.32,
+  "end": 8.62
+ },
+ {
+  "word": "by",
+  "start": 8.67,
+  "end": 8.795
+ },
+ {
+  "word": "token.",
+  "start": 8.845,
+  "end": 9.27
+ }
+]

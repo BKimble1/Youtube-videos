@@ -1,0 +1,330 @@
+{
+  "engine": "kokoro-82m-v1.0 (onnx fp32, onnxruntime)",
+  "voice": "af_heart",
+  "speed": 1.0,
+  "g2p": "misaki",
+  "status": "DRAFT - local TTS placeholder, not final narration",
+  "license": "Kokoro-82M v1.0 weights and voice packs: Apache-2.0 (hexgrad/Kokoro-82M). misaki G2P: Apache-2.0. kokoro-onnx: MIT. onnxruntime: MIT. espeak-ng (fallback G2P): GPL-3.0 (tool only; generated audio is not a derivative work).",
+  "sample_rate": 48000,
+  "bit_depth": 24,
+  "pad_ms": 40.0,
+  "segments": [
+    {
+      "id": "s01",
+      "file": "s01.wav",
+      "duration_s": 7.48,
+      "words_file": "s01.words.json",
+      "pause_after_ms": 350,
+      "text": "Researchers asked three popular chatbots one simple question: What was the title of Adam Kalai's PhD dissertation?",
+      "tts_text": "Researchers asked three popular chatbots one simple question: What was the title of Adam [Kalai's](/kəlˈIz/) PhD dissertation?"
+    },
+    {
+      "id": "s02",
+      "file": "s02.wav",
+      "duration_s": 7.8,
+      "words_file": "s02.words.json",
+      "pause_after_ms": 250,
+      "text": "ChatGPT answered, “Boosting, Online Algorithms, and Other Topics in Machine Learning.” Carnegie Mellon, 2002."
+    },
+    {
+      "id": "s03",
+      "file": "s03.wav",
+      "duration_s": 7.41,
+      "words_file": "s03.words.json",
+      "pause_after_ms": 350,
+      "text": "DeepSeek gave a different title, at Harvard, in 2005. Llama gave a third, at MIT, in 2007."
+    },
+    {
+      "id": "s04",
+      "file": "s04.wav",
+      "duration_s": 4.13,
+      "words_file": "s04.words.json",
+      "pause_after_ms": 500,
+      "text": "Three polished answers. Not one had the right title, or even the right year."
+    },
+    {
+      "id": "s05",
+      "file": "s05.wav",
+      "duration_s": 2.63,
+      "words_file": "s05.words.json",
+      "pause_after_ms": 700,
+      "text": "And Adam Kalai? He's the paper's lead author.",
+      "tts_text": "And Adam [Kalai](/kəlˈI/)? He's the paper's lead author."
+    },
+    {
+      "id": "s06",
+      "file": "s06.wav",
+      "duration_s": 8.26,
+      "words_file": "s06.words.json",
+      "pause_after_ms": 250,
+      "text": "Meanwhile, Google DeepMind reported that a different language model reached gold-medal level at the International Mathematical Olympiad."
+    },
+    {
+      "id": "s07",
+      "file": "s07.wav",
+      "duration_s": 4.18,
+      "words_file": "s07.words.json",
+      "pause_after_ms": 900,
+      "text": "So how can AI be that capable, and still sound this sure while being this wrong?"
+    },
+    {
+      "id": "s07b",
+      "file": "s07b.wav",
+      "duration_s": 6.78,
+      "words_file": "s07b.words.json",
+      "pause_after_ms": 450,
+      "text": "Short answer: a chatbot writes what's likely, and likely isn't always true. To see why, let's take one answer apart."
+    },
+    {
+      "id": "s08",
+      "file": "s08.wav",
+      "duration_s": 1.97,
+      "words_file": "s08.words.json",
+      "pause_after_ms": 350,
+      "text": "Here's part of ChatGPT's answer."
+    },
+    {
+      "id": "s09",
+      "file": "s09.wav",
+      "duration_s": 7.63,
+      "words_file": "s09.words.json",
+      "pause_after_ms": 400,
+      "text": "A language model writes in tokens: chunks of text. Some are whole words. Some are fragments. “Kalai” becomes “Kal” and “ai.”",
+      "tts_text": "A language model writes in tokens: chunks of text. Some are whole words. Some are fragments. “[Kalai](/kəlˈI/)” becomes “[Kal](/kˈæl/)” and “[ai](/ˈI/).”"
+    },
+    {
+      "id": "s10",
+      "file": "s10.wav",
+      "duration_s": 10.07,
+      "words_file": "s10.words.json",
+      "pause_after_ms": 250,
+      "text": "Each token is really a number. At every step, the model turns the tokens so far into a numerical picture of the context, and scores every possible next token."
+    },
+    {
+      "id": "s11",
+      "file": "s11.wav",
+      "duration_s": 7.89,
+      "words_file": "s11.words.json",
+      "pause_after_ms": 450,
+      "text": "Here, it's choosing the last digit of the year. One option gets picked, added to the end, and the loop runs again, token after token."
+    },
+    {
+      "id": "s12",
+      "file": "s12.wav",
+      "duration_s": 9.48,
+      "words_file": "s12.words.json",
+      "pause_after_ms": 500,
+      "text": "Because there's a pick, the same question can come out differently. Asked for Kalai's birthday, “only if you know,” one model gave three different dates in three tries.",
+      "tts_text": "Because there's a pick, the same question can come out differently. Asked for [Kalai's](/kəlˈIz/) birthday, “only if you know,” one model gave three different dates in three tries."
+    },
+    {
+      "id": "s13",
+      "file": "s13.wav",
+      "duration_s": 6.72,
+      "words_file": "s13.words.json",
+      "pause_after_ms": 650,
+      "text": "Here's the key part. Those scores measure how likely a piece of text is to come next. Not how likely it is to be true."
+    },
+    {
+      "id": "s14",
+      "file": "s14.wav",
+      "duration_s": 9.27,
+      "words_file": "s14.words.json",
+      "pause_after_ms": 700,
+      "text": "Modern chatbots add more: instruction training, step-by-step reasoning, sometimes web search. But the answer itself is still written token by token."
+    },
+    {
+      "id": "s15",
+      "file": "s15.wav",
+      "duration_s": 3.79,
+      "words_file": "s15.words.json",
+      "pause_after_ms": 300,
+      "text": "So why would the likely answer be wrong? Look at what the model had to learn."
+    },
+    {
+      "id": "s16",
+      "file": "s16.wav",
+      "duration_s": 6.74,
+      "words_file": "s16.words.json",
+      "pause_after_ms": 300,
+      "text": "What a dissertation title sounds like is everywhere: “Methods,” “Algorithms,” “Machine Learning,” again and again."
+    },
+    {
+      "id": "s17",
+      "file": "s17.wav",
+      "duration_s": 6.61,
+      "words_file": "s17.words.json",
+      "pause_after_ms": 300,
+      "text": "Famous facts repeat, too. The paper notes that models rarely miss something like Einstein's dissertation title."
+    },
+    {
+      "id": "s18",
+      "file": "s18.wav",
+      "duration_s": 8.87,
+      "words_file": "s18.words.json",
+      "pause_after_ms": 350,
+      "text": "But one researcher's thesis title might appear rarely in the training data. Maybe once. Maybe never. Like a birthday, there's no pattern to work it out from."
+    },
+    {
+      "id": "s19",
+      "file": "s19.wav",
+      "duration_s": 11.69,
+      "words_file": "s19.words.json",
+      "pause_after_ms": 450,
+      "text": "So the model fills the gap with what a title usually looks like, and the confidence comes along for free. “Is entitled.” No “I think,” no “maybe.” That tone isn't a readout of what the model knows."
+    },
+    {
+      "id": "s20",
+      "file": "s20.wav",
+      "duration_s": 4.36,
+      "words_file": "s20.words.json",
+      "pause_after_ms": 1600,
+      "text": "Here's ChatGPT's answer next to the actual record. Spot the difference?"
+    },
+    {
+      "id": "s21",
+      "file": "s21.wav",
+      "duration_s": 8.9,
+      "words_file": "s21.words.json",
+      "pause_after_ms": 800,
+      "text": "Same university. The wrong year: it was 2001. And a different title. The invented details look exactly as solid as the true one."
+    },
+    {
+      "id": "s22",
+      "file": "s22.wav",
+      "duration_s": 6.6,
+      "words_file": "s22.words.json",
+      "pause_after_ms": 400,
+      "text": "So why guess at all? Why not say, “I don't know”? The researchers argue part of the answer is how models get graded."
+    },
+    {
+      "id": "s23",
+      "file": "s23.wav",
+      "duration_s": 6.32,
+      "words_file": "s23.words.json",
+      "pause_after_ms": 300,
+      "text": "Picture a ten-question quiz. Right answer: one point. Wrong answer: zero. “I don't know”: also zero."
+    },
+    {
+      "id": "s24",
+      "file": "s24.wav",
+      "duration_s": 5.76,
+      "words_file": "s24.words.json",
+      "pause_after_ms": 300,
+      "text": "Two test-takers each know six answers. The honest one says “I don't know” to the rest. Six points."
+    },
+    {
+      "id": "s25",
+      "file": "s25.wav",
+      "duration_s": 9.2,
+      "words_file": "s25.words.json",
+      "pause_after_ms": 600,
+      "text": "The guesser takes a shot at all four. With four choices each, on average one lands. Seven points. The guesser wins, with three confident wrong answers."
+    },
+    {
+      "id": "s26",
+      "file": "s26.wav",
+      "duration_s": 3.1,
+      "words_file": "s26.words.json",
+      "pause_after_ms": 500,
+      "text": "Now change one rule. A wrong answer costs a point."
+    },
+    {
+      "id": "s27",
+      "file": "s27.wav",
+      "duration_s": 5.76,
+      "words_file": "s27.words.json",
+      "pause_after_ms": 600,
+      "text": "The honest one: still six. The guesser: six, plus one, minus three. Four. Bluffing loses."
+    },
+    {
+      "id": "s28",
+      "file": "s28.wav",
+      "duration_s": 11.3,
+      "words_file": "s28.words.json",
+      "pause_after_ms": 350,
+      "text": "When the researchers checked ten popular benchmarks, nine graded strictly right or wrong, with zero credit for “I don't know.” Train and rank models on tests like that, and guessing pays."
+    },
+    {
+      "id": "s29",
+      "file": "s29.wav",
+      "duration_s": 10.19,
+      "words_file": "s29.words.json",
+      "pause_after_ms": 800,
+      "text": "Their fix: state the penalty for wrong answers up front, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one."
+    },
+    {
+      "id": "s30",
+      "file": "s30.wav",
+      "duration_s": 4.18,
+      "words_file": "s30.words.json",
+      "pause_after_ms": 350,
+      "text": "So what actually helps? Start with the unglamorous move: check the record."
+    },
+    {
+      "id": "s31",
+      "file": "s31.wav",
+      "duration_s": 7.66,
+      "words_file": "s31.words.json",
+      "pause_after_ms": 450,
+      "text": "Here's Kalai's actual thesis. “Probabilistic and On-line Methods in Machine Learning.” Carnegie Mellon, May 2001.",
+      "tts_text": "Here's [Kalai's](/kəlˈIz/) actual thesis. “Probabilistic and On-line Methods in Machine Learning.” Carnegie Mellon, May 2001."
+    },
+    {
+      "id": "s32",
+      "file": "s32.wav",
+      "duration_s": 5.86,
+      "words_file": "s32.words.json",
+      "pause_after_ms": 600,
+      "text": "And checking means more than spotting a citation. Does the source exist, and does it actually say this?"
+    },
+    {
+      "id": "s33",
+      "file": "s33.wav",
+      "duration_s": 8.31,
+      "words_file": "s33.words.json",
+      "pause_after_ms": 300,
+      "text": "Inside one Claude model, Anthropic researchers found a default circuit for “I can't answer.” Recognizing a familiar name switches it off."
+    },
+    {
+      "id": "s34",
+      "file": "s34.wav",
+      "duration_s": 9.61,
+      "words_file": "s34.words.json",
+      "pause_after_ms": 450,
+      "text": "When that recognition misfires, when a name seems familiar but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts."
+    },
+    {
+      "id": "s35",
+      "file": "s35.wav",
+      "duration_s": 12.29,
+      "words_file": "s35.words.json",
+      "pause_after_ms": 800,
+      "text": "Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee."
+    },
+    {
+      "id": "s36",
+      "file": "s36.wav",
+      "duration_s": 9.03,
+      "words_file": "s36.words.json",
+      "pause_after_ms": 600,
+      "text": "So why does AI sound right when it's wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have."
+    },
+    {
+      "id": "s37",
+      "file": "s37.wav",
+      "duration_s": 6.39,
+      "words_file": "s37.words.json",
+      "pause_after_ms": 700,
+      "text": "So when an answer matters, don't ask whether it sounds right. Ask: what's the evidence, and does it actually say this?"
+    },
+    {
+      "id": "s38",
+      "file": "s38.wav",
+      "duration_s": 3.22,
+      "words_file": "s38.words.json",
+      "pause_after_ms": 0,
+      "text": "It works on chatbots. It works pretty well on people, too."
+    }
+  ]
+}
