@@ -45,3 +45,12 @@ Durable notes so work can resume if the session is interrupted. Newest entries a
 - 3-agent verification of v3: 52 earlier fixes confirmed. 3 medium and about 14 low items found (static birthday beat, word-field overlap, the temperature hedge, carry-overs in the Anthropic diagram). All fixed and checked on full-res stills. Details in qa/QA_REPORT.md.
 - IMO panel: the search-only "35 / 42" score was removed. It now shows only what the opened solutions PDF supports, plus the attributed "reported gold-medal standard".
 - Next: finalize v4, then the 4K master, then a final regression look at the v4 sheets, then the zip and handoff.
+
+## 10:50Z — delivered
+- v4 final regression check: all 18 v4 fixes confirmed. 2 low carry-overs fixed in v5 (short birthday caption; pattern-word underline sweep).
+- Resolution audit: no real asset is drawn above its source resolution in either output. The Fig. 7 card is now 780 px; the 1912 photo pans instead of zooming.
+- v5 1080p: exports/Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4 (104.1 MB, 4:59.5, -16.0 LUFS, -1.3 dBTP, faststart).
+- 4K master: exports/Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4 (262.3 MB, same checks pass).
+- 720p review copy for sending: exports/Video_01_PREVIEW_720p_DRAFT-NARRATION.mp4 (27 MiB).
+- Project zip: exports/AI_Confidence_Video_01_project.zip (100 MB, 281 files, no node_modules, caches or credentials; credential grep passed).
+- Remaining for a final, non-draft cut: ElevenLabs narration (needs the API key and api.elevenlabs.io allowed), then README steps 1–5.

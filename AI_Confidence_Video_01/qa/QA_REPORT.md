@@ -151,3 +151,19 @@ For every real image, the largest drawn width (CSS width × every push and zoom 
 Before this audit, the 4K master would have drawn Fig. 7 at about 1.27× and the library photo at up to about 1.14×. Both were fixed in v5. The 1080p cut was native throughout.
 
 **v5 delivered file check:** frames pulled from the finalized MP4 at 1:29.6, 2:17.8, 3:45.5 and 4:05.0 show all four v5 changes: the short caption, the pattern-word underline sweep, the library pan at native scale, and the 780 px Anthropic card. The technical checks match v4: -16.0 LUFS, -1.3 dBTP, faststart, no freezes; the only black is the 0.33 s end fade.
+
+## 4K master (v5): technical verification (`exports/Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4`)
+
+The master is the same composition rendered at `--scale=2` (vector text and graphics redrawn at 2×), encoded with x264 medium at CRF 16.
+
+| Check | Result |
+|---|---|
+| Container, codecs | MP4, H.264 High@5.1, yuv420p, BT.709, 3840×2160, 30/1 fps · AAC-LC 48 kHz stereo, 317 kb/s · 262.3 MB |
+| Duration | 299.52 s (identical to the 1080p) |
+| Fast start | `ftyp, moov, free, mdat` ✓ |
+| Loudness | -16.0 LUFS integrated, LRA 1.8 LU, true peak -1.3 dBTP (same audio as the 1080p) |
+| Black / frozen | Black only at 299.10–299.47 s (the end fade); no frozen video ≥ 4 s |
+| Decode | Full decode with no errors |
+| Visual spot-check | Native-pixel crops of the token strip, the Anthropic card and the 1929 booklet are sharp. No asset is drawn above its source resolution (see the resolution audit) |
+
+Details: `qa/tech_Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.md`.

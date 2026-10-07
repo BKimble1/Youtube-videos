@@ -3,7 +3,7 @@
 | Deliverable | File |
 |---|---|
 | Main video, 1080p30 (**draft narration**) | `exports/Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4` |
-| 4K master (if rendered) | `exports/Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4` |
+| 4K master (3840×2160, rendered and verified) | `exports/Video_01_AI_Confidence_Master_4K_DRAFT-NARRATION.mp4` |
 | Small review copy (720p, ~27 MiB; for quick viewing only, not for upload) | `exports/Video_01_PREVIEW_720p_DRAFT-NARRATION.mp4` |
 | Thumbnails 1280×720 (A recommended) | `thumbnails/Video_01_thumbnail_A.jpg`, `_B.jpg`, `_C.jpg` |
 | Final script with timings | `script/FINAL_SCRIPT.md` (source of truth: `script/narration_segments.json`) |
