@@ -68,3 +68,18 @@ Diagram logic: the Anthropic redraw now passes through a coherent default state 
 Ending: the end card now has a 5.2 s tail, held about 3 s at full opacity. The runtime stays under 5:00 (4:59.5) because long pauses were trimmed.
 
 Subtitles: two sub-1-second flash cues were merged. The file now has 112 phrase cues, each ≤ ~45 characters per line and ≥ 0.9 s.
+
+## v3 render: technical verification (measured on `exports/Video_01_AI_Confidence_Final_1080p_DRAFT-NARRATION.mp4`)
+
+| Check | Tool | Result |
+|---|---|---|
+| Container, codecs | ffprobe | MP4, H.264 High, yuv420p, BT.709 tagged, 1920×1080, 30/1 fps (constant) · AAC-LC 48 kHz stereo, 317 kb/s |
+| Duration | ffprobe | 299.52 s (4:59.5). The audio mix is 299.50 s, so A/V lengths match to within 1 frame |
+| Fast start | top-level atom scan | `ftyp, moov, free, mdat`, so moov comes before mdat ✓ |
+| Loudness | ffmpeg ebur128 (true peak) | **-16.0 LUFS integrated**, LRA 1.8 LU, **true peak -1.3 dBTP** ✓ |
+| Black frames | blackdetect (≥0.25 s) | Only 299.13–299.47 s, the intended final fade to black |
+| Frozen video | freezedetect (≥4 s, n=0.0005) | None |
+| Decode integrity | full ffmpeg decode | No errors |
+| Narration stem | ebur128 | Re-exported with headroom: -20.7 LUFS, -1.5 dBTP (mono, 24-bit). The first export clipped (+0.2 dBFS) and was caught and fixed |
+| Subtitles | custom checker | 112 cues, built from the engine's word timings for this exact audio. None shorter than 0.9 s; lines ≤ ~45 characters |
+| Animation cues | tools/check_cues.py | Every `at(segment, word)` cue resolves |

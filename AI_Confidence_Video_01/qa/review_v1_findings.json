@@ -1,0 +1,691 @@
+[
+ {
+  "act": "S1",
+  "issues": [
+   {
+    "time": "0:37.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "\"35 / 42 \u00b7 gold-medal standard\", with five checked boxes for P1\u2013P5, is shown as plain fact. It has no 'reported' qualifier. sources.md lists the 35/42 score and the grading as SEARCH-ONLY, and 'Things we must not claim' #27 says not to show '35/42' unless the DeepMind or IMO page has been opened directly. Addendum A3 allows the line only because the narration attributes it ('reported') and only if it is re-checked before publishing. The on-screen text carries no such attribution, so a viewer watching without sound reads it as verified. It stays on screen until about 0:40.5."
+   },
+   {
+    "time": "0:29.5",
+    "severity": "medium",
+    "category": "other",
+    "description": "Messy cross-dissolve (about 0:29.3\u20130:29.7). The paper title card fades in at partial opacity over the three answer cards, which are still fully visible. 'Algebraic Methods in Interactive Machine Learning', 'Harvard University in 2005', the DeepSeek/Llama labels and the coral TITLE/YEAR pills show through the grey card and run into the author names. Both source lines also show at once, stacked bottom-left: 'Excerpts as published\u2026' with 'Kalai et al. (2025), arXiv:2509.04664, p. 1 \u00b7 CC BY 4.0' under it."
+   },
+   {
+    "time": "0:32.5",
+    "severity": "medium",
+    "category": "sync",
+    "description": "The paper title card with 'LEAD AUTHOR' stays up from 0:32.5 to 0:34.5. During that time the narration has moved on (s06 at 0:32.0: 'Meanwhile, Google DeepMind reported that a different language model\u2026'). The IMO / dissertation split screen only appears around 0:35.0, about 3 s late. The key line 'a different language model' plays over a page from the hallucination paper, which goes against the rule of keeping the two systems visibly separate."
+   },
+   {
+    "time": "0:09.5",
+    "severity": "medium",
+    "category": "pacing",
+    "description": "Visually static from 0:09.5 to 0:15.5. After the ChatGPT excerpt brightens at about 0:10, nothing moves for around 6 s while the narration reads the title and then 'Carnegie Mellon, 2002'. The lower two thirds of the frame is empty navy. The details being spoken (title, CMU, 2002) get no emphasis."
+   },
+   {
+    "time": "0:37.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "The centred caption 'Different systems, different tests, same basic technology: language models.' sits only about 20 px above the two-line source line ('IMO 2025: Google DeepMind announcement\u2026'). At full 1080p the two read as one cramped block in the bottom margin, so the caption looks like part of the citation. The caption stays there through 0:40.5."
+   },
+   {
+    "time": "0:37.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "Two lines on the split screen wrap and leave one word stranded. On the left, 'Gemini Deep Think (advanced version), Google DeepMind \u00b7 July' wraps with '2025' alone on the next line. On the right, 'GPT-4o \u00b7 DeepSeek-R1 \u00b7 Llama-4-Scout \u00b7 May 2025 \u00b7 no web' wraps with 'search' alone. Splitting a date across lines also weakens the system/company/date label."
+   },
+   {
+    "time": "0:08.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The source line 'Excerpts as published in Kalai, Nachum, Vempala & Zhang (2025), \"Why Language Models Hallucinate,\" Table 1 \u00b7 models accessed May 9, 2025 \u00b7 none searched the web' breaks between 'May 9,' and '2025'. The date is split across two lines from 0:08.5 to 0:28.5."
+   },
+   {
+    "time": "0:35.5",
+    "severity": "low",
+    "category": "consistency",
+    "description": "The source line date is written 'Jul 21 2025' (abbreviated month, no comma). The earlier source line uses 'May 9, 2025' and the panel uses 'July 2025'. The style is inconsistent within the same act."
+   },
+   {
+    "time": "0:35.5",
+    "severity": "low",
+    "category": "accuracy",
+    "description": "The coral pill over the Table 1 answers reads 'FABRICATION'. In everyday use the word suggests deliberate invention. sources.md ('Things we must not claim' #15) asks us to avoid suggesting intent in either direction, and the rest of the video says 'wrong' or 'hallucination'."
+   },
+   {
+    "time": "0:46.5",
+    "severity": "low",
+    "category": "sync",
+    "description": "From 0:46.5 to 0:47.5 the 'SHORT ANSWER' label sits alone, off-centre at the left (x\u2248300), because it is placed for the finished line. 'It writes what's likely.' only appears at about 0:48.3, after the narrator has already said 'a chatbot writes what's likely' (about 0:46.4\u20130:47.8). 'Likely isn't always true.' also lands about 1 s after it is spoken."
+   },
+   {
+    "time": "0:44.5",
+    "severity": "low",
+    "category": "sync",
+    "description": "On the title card, 'right' and 'wrong' stay dimmed from 0:41.5 to 0:44.0. 'right' lights at about 0:44.5 and 'wrong' turns coral at about 0:45.5, roughly 1 s after 'sound this sure' / 'this wrong' are spoken (s07 ends about 0:44.8). The emphasis lands at the start of the next line."
+   },
+   {
+    "time": "0:49.5",
+    "severity": "low",
+    "category": "pacing",
+    "description": "From 0:49.5 to 0:52.4 the title card is static while the narration says 'To see why, let's take one answer apart.' Nothing on screen points toward the next scene."
+   },
+   {
+    "time": "0:21.5",
+    "severity": "low",
+    "category": "pacing",
+    "description": "After the Llama card settles (about 0:21.5), all three cards stay static until the coral marks start (about 0:26.8). That is about 5 s with no change, covering 'in 2007' and 'Three polished answers.'"
+   },
+   {
+    "time": "0:03.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The question is typed from a fixed left edge (x\u2248140) chosen so that the finished line ends up centred. While it types (0:03.5\u20130:07.5), short fragments such as 'Wh' and 'What was the' hang at the far left. Everything else on the frame (pill, label, chips) is centred, so the frame looks lopsided for about 4 s."
+   },
+   {
+    "time": "0:04.5",
+    "severity": "low",
+    "category": "consistency",
+    "description": "The on-screen label says 'THE QUESTION, AS ASKED' and correctly gives the paper's wording: 'What was the title of Adam Kalai's dissertation?'. The narration (s01) says 'Adam Kalai's PhD dissertation', so the audio does not match the verbatim quote the viewer is reading."
+   }
+  ]
+ },
+ {
+  "act": "S2",
+  "issues": [
+   {
+    "time": "1:21.5",
+    "severity": "high",
+    "category": "empty-or-frozen",
+    "description": "About 4 seconds of empty navy screen, from roughly 1:21.4 to 1:25.5 (sheet cells 1:21.5, 1:22.5, 1:23.5, 1:24.5). The only thing visible is the source line 'DeepSeek-V3 via the DeepSeek app, May 11, 2025 ...', which fades in at about 1:22.5 and so cites a blank frame. Meanwhile the narration says 'Because there's a pick, the same question can come out differently.' This is the bridge from the sampling loop to the birthday example, and nothing on screen supports it. The prompt card does not fade in until 1:25.5."
+   },
+   {
+    "time": "1:05.5",
+    "severity": "high",
+    "category": "sync",
+    "description": "Transition bug in the caption: the teal 'one word, two tokens: \"Kal\" + \"ai\"' and the grey 'To the model, each token is a number.' sit on top of each other at the same position and both at full opacity for about 2.5 s (about 1:04.4 to 1:06.9). The result is unreadable text (see 1:04.5, 1:05.5 and 1:06.5). The old caption only finishes fading around 1:07.0, and by 1:07.0 to 1:07.6 the new caption is already fading out. So 'To the model, each token is a number.' is never readable on its own while the narration says 'Each token is really a number.'"
+   },
+   {
+    "time": "1:19.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "In the loop phase (about 1:19.2 to 1:21.3), the 'repeat' label sits directly on the curved arc, and the arc stroke cuts through the 'a/t' of 'repeat'. The arc also has no arrowhead, so it is unclear which way the loop runs (pick, then append to the sentence). Separately, as the CONTEXT grid widens at 1:20.5 to 1:21, it grows under the arrow, so the arrow line now starts on top of grid cells."
+   },
+   {
+    "time": "1:31.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "On the paper excerpt, the highlight boxes are misregistered. The coral box around '\"03-07\", \"15-06\", and \"01-01\",' has a right edge that runs through the 'e' of 'even', and its top edge cuts through the descenders of the line above ('separate attempts, a state-of-the-art'). The teal box around 'correct date is in Autumn.' overlaps the bottom of the coral box. Two coloured outlines crossing on a real document look sloppy, right where the document matters most. Visible from 1:30.5."
+   },
+   {
+    "time": "0:57.5",
+    "severity": "low",
+    "category": "readability",
+    "description": "The legend says '\u2022 = LEADING SPACE', but the leading-space dots inside the chips (before 'Ta', 'Kal', 'Ph', 'dissertation', and others) are about 3 to 4 px and dim grey. They are barely visible even at 1080p and will vanish on a phone. A standalone space token is also shown with a different glyph, '\u2423' (id 220), which the legend does not explain."
+   },
+   {
+    "time": "1:11.5",
+    "severity": "low",
+    "category": "consistency",
+    "description": "Small-caps badges change the model and encoding names to all caps: 'REAL SPLIT \u00b7 GPT-4O'S TOKENIZER (O200K_BASE)' and 'ILLUSTRATIVE NUMBERS \u00b7 NOT GPT-4O'S ACTUAL SCORES'. The official names are 'GPT-4o' and 'o200k_base', which the source line spells correctly. 'GPT-4O' can read as 'GPT-40', and an all-caps identifier is not the real name. Visible from 0:57.5 to 1:21."
+   },
+   {
+    "time": "1:38.5",
+    "severity": "low",
+    "category": "accuracy",
+    "description": "The takeaway 'likely \u2260 true' is on screen for only about 1 s (from about 1:38.2 to 1:39.2) before the scene fades. Without a qualifier it can also read as 'likely means false'. The sources Addendum (A4) warns that the wording must be 'isn't always true', not 'never', and 'Things we must not claim' #14 rules out implying that likelihood is unrelated to truth. The \u2260 is also coral, which the design rules reserve for the mistaken detail."
+   },
+   {
+    "time": "1:25.5",
+    "severity": "low",
+    "category": "accuracy",
+    "description": "The birthday card is headed 'SAME PAPER, ANOTHER PROMPT', and the only sign that this is a different model from Act 1's DeepSeek (R1, 9 May) is the small source line 'DeepSeek-V3 via the DeepSeek app, May 11, 2025'. The excerpt itself says only 'a state-of-the-art open-source language model\u00b9'. Viewers may assume it is the same DeepSeek as Table 1, which 'Things we must not claim' #6 forbids implying."
+   },
+   {
+    "time": "1:32.5",
+    "severity": "low",
+    "category": "readability",
+    "description": "The row label 'How likely as the next text' is awkward English and does not match the narration ('how likely a piece of text is to come next'). It is visible from 1:32.5 to 1:38.5."
+   },
+   {
+    "time": "0:53.5",
+    "severity": "low",
+    "category": "consistency",
+    "description": "The ChatGPT card is labelled 'ChatGPT GPT-4o \u00b7 excerpt as published in Table 1', and the source line names only Kalai et al. (2025), Table 1. Neither gives the access date (9 May 2025) or 'no web search'. The script header promises that 'On-screen labels name every model and date', and sources.md suggests including both in the source line. The same source line stays up through 1:21."
+   },
+   {
+    "time": "0:56.5",
+    "severity": "low",
+    "category": "sync",
+    "description": "In the card-to-sentence transition, the old ChatGPT card is still ghosted underneath the new large sentence, about 80 px lower and misaligned, so the same text shows twice. The intermediate sentence also breaks oddly, with 'dissertation (' / 'completed in\u24232002 ...' leaving the open parenthesis dangling at the end of line 1."
+   },
+   {
+    "time": "1:47.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "Several small overlaps. The ring outlines run through the ends of the ring labels ('so\u2026ls' of 'sometimes: web search & tools', the ends of 'step-by-step reasoning' and 'instruction training'). By 1:48.5 the token-chip row has grown to the right edge of the frame: the '\u2026' chip ends about 10 px from the edge, well outside title-safe."
+   },
+   {
+    "time": "1:17.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "When the sampled '2' chip flies from the score list to the token row (about 1:18.0), it passes over the 'SCORES FOR THE NEXT TOKEN' header and briefly hides 'SCORES FOR'. In the loop phase that follows (1:19.5 to 1:21), each candidate chip contains only a '\u00b7'. That looks like missing text, not deliberately unknown candidates."
+   }
+  ]
+ },
+ {
+  "act": "S3",
+  "issues": [
+   {
+    "time": "2:17.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "The chip under ChatGPT's excerpt (2:17.5 to 2:27.5) reads 'ILLUSTRATION \u00b7 THE WORDS ARE CHATGPT'S PUBLISHED TITLE'. 'Published title' sounds like 'Boosting, Online Algorithms, and Other Topics in Machine Learning' is a real, published title, and this comes 10 seconds before the video shows that title is wrong. The text is also a verbatim excerpt from Table 1, not an illustration, yet it has no source line bottom-left. The quotation marks around the title are missing here, though the excerpt has them and so does the next card."
+   },
+   {
+    "time": "2:03.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "The teal highlight on the p.10 excerpt starts in the middle of 'seldom', leaving 'se' outside the box. It covers '...frequently referenced facts, e.g., Einstein's birthday' but stops before 'or dissertation title.', which is the exact phrase the narration quotes ('Einstein's dissertation title'). It stays like this from 2:03.5 to 2:06.5."
+   },
+   {
+    "time": "2:28.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "Transition glitch: the ChatGPT comparison card fades in on top of the fading '...is entitled' layer. The '2002' value sits on the same line as the ghosted 'Confident wording isn't a readout of what the model knows.', and the big ghost title shows through the card. Two source/label lines also overlap at the bottom. It looks double-exposed."
+   },
+   {
+    "time": "2:13.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "Transition glitch: Figure 1 fades in washed-out grey over the half-faded 'A FAMOUS FACT / ONE RESEARCHER'S THESIS' layer. Its source line 'Kalai et al. (2025), Figure 1 (p. 3) \u00b7 CC BY 4.0' prints over the outgoing '...Einstein's 1905 dissertation shown for illustration' line in the bottom-left."
+   },
+   {
+    "time": "2:00.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "As the Einstein card stack deals in, three copies of 'Einstein's dissertation (1905)' and the quoted title are half-transparent and stacked a few pixels apart, so the text is triple-exposed and unreadable. After it settles (2:01.5 to 2:12.5), the back cards still show text fragments ('Einstein's dissertation (1905)' repeated, stray 'D' and quote glyphs) peeking out on the left and top. The stack looks dirty instead of reading as 'many copies'."
+   },
+   {
+    "time": "1:56.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "The word cloud has many words printed on top of each other. Examples: 'Interactive / Approaches to / Games' piled up in the centre, 'Efficient' over 'Optimization', 'Games' over 'Learning' and 'Theory', 'Learning' over 'Boosting', 'Online' over 'Models'. 'Approaches to / Interactive' at the bottom touches the 'ILLUSTRATION' chip. It reads as a rendering bug rather than a deliberate cloud (1:55.5 to 1:59.5)."
+   },
+   {
+    "time": "2:29.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "The two comparison cards have different heights and their rows don't line up. On the ChatGPT card TITLE, SCHOOL and YEAR sit much lower than the same rows on 'The record' card, with big empty gaps left for chips that haven't appeared yet. For a 'Spot the difference?' beat, the rows should read straight across, but the eye has to zig-zag (2:29.5 to 2:42.5)."
+   },
+   {
+    "time": "1:52.5",
+    "severity": "medium",
+    "category": "pacing",
+    "description": "The plain question card 'So why would the likely answer be wrong?' stays completely static from 1:49.0 to about 1:55.0. Nothing changes during 'Look at what the model had to learn.' or the start of s16."
+   },
+   {
+    "time": "2:27.5",
+    "severity": "low",
+    "category": "sync",
+    "description": "The takeaway caption 'Confident wording isn't a readout of what the model knows.' fades in at about 2:26.6, about 1 s after the narration starts that line (2:25.6). It is fully visible for only about 1.5 s before the crossfade to the comparison, which is too short for a 10-word sentence."
+   },
+   {
+    "time": "2:36.5",
+    "severity": "low",
+    "category": "consistency",
+    "description": "The coral labels on ChatGPT's year and title say 'NOT IN THE RECORD'. The narration says 'The wrong year: it was 2001' and 'a different title'. The record doesn't merely omit 2002, it contradicts it, so the label understates the error and doesn't match what is being said."
+   },
+   {
+    "time": "2:07.5",
+    "severity": "low",
+    "category": "pacing",
+    "description": "The 'ONE RESEARCHER'S THESIS' card is labelled 'Kalai's dissertation (2001)', which gives away the correct year about 29 s before 'Spot the difference?' and s21's reveal 'it was 2001'."
+   },
+   {
+    "time": "2:12.5",
+    "severity": "low",
+    "category": "pacing",
+    "description": "The hedged 'SEEN ONCE?' and 'NEVER?' chips arrive on 'Maybe once / Maybe never' (about 2:11.8 and 2:12.4), but Figure 1 replaces the scene at about 2:13.3. 'NEVER?' is on screen for under 1 s and barely registers."
+   },
+   {
+    "time": "2:03.5",
+    "severity": "low",
+    "category": "readability",
+    "description": "The p.10 paper crop starts mid-sentence with a lowercase 'birthdays like Einstein's appear...', because 'Notable' from the line above was cut off. It looks clipped."
+   },
+   {
+    "time": "2:40.5",
+    "severity": "low",
+    "category": "readability",
+    "description": "On the thesis title-page evidence, the line that proves the year ('May 16, 2001 / CMU-CS-01-132') is small (about 16 px glyphs) and not highlighted, even though the narration just said 'it was 2001'. The grey 'Evidence: the thesis title page itself' caption is squeezed between the image and the two-line source line. The page also only appears after the year beat (2:35.9 to 2:38.3) has finished."
+   },
+   {
+    "time": "2:40.5",
+    "severity": "low",
+    "category": "consistency",
+    "description": "The on-screen line 'The invented details are formatted just as neatly as the true one.' doesn't match the narration ('look exactly as solid as the true one'). 'Formatted' is also odd here, because the video itself typeset both cards identically."
+   },
+   {
+    "time": "2:29.5",
+    "severity": "low",
+    "category": "accuracy",
+    "description": "The comparison's source line credits Table 1 and the card says 'GPT-4o \u00b7 May 2025', but nothing on this evidence shot says the answer was given without web search. sources.md's suggested source line includes 'Models accessed 9 May 2025, no web search' to avoid implying that today's or search-enabled ChatGPT answers this way."
+   }
+  ]
+ },
+ {
+  "act": "S4",
+  "issues": [
+   {
+    "time": "3:21.5",
+    "severity": "high",
+    "category": "accuracy",
+    "description": "Wrong label at the punchline. From about 3:21.2 to 3:22.2 the Guesser's score has already dropped to 4, but the '\u25b2 HIGHER SCORE' badge is still attached to it, while Honest shows 6. The narrator is saying 'Four. Bluffing loses.' at that moment, so the screen calls the losing score the higher one. The badge only moves to Honest at about 3:22.3. Checked at 5 fps against the full-res video."
+   },
+   {
+    "time": "3:36.5",
+    "severity": "high",
+    "category": "layout",
+    "description": "On the proposal card, the teal highlight box is misaligned with the quote. Its left edge starts on the final 't' of 'confident' (it reads 'confiden|t,'). Its right edge runs through the italic 't' in '(1 \u2212 t)', so the closing ')' and 'points' sit outside the box. The box also sits too high: its bottom border cuts through the baseline and descenders. It stays like this, centred on screen, for about 9 s (3:36.5 to 3:45)."
+   },
+   {
+    "time": "3:20.5",
+    "severity": "medium",
+    "category": "sync",
+    "description": "The equation '6 + 1 - 3 = 4' appears complete, answer included, at about 3:19.7. At that point the narrator is still saying 'six, plus one, minus three', no '-1' tags are on the X boxes yet (they come in at 3:20.3 to 3:20.7), and the score next to it still reads '7 \u25b2 HIGHER SCORE'. For about 1.5 s the frame shows '7 HIGHER SCORE' right above '= 4', and the reveal comes before the narrator's 'Four.' at about 3:21.2."
+   },
+   {
+    "time": "2:58.5",
+    "severity": "medium",
+    "category": "sync",
+    "description": "Honest's final score '6' appears at about 2:58.8, next to a completely empty row: no checks yet, no '?'. That is roughly 3.5 s before the narrator says 'Six points.' (about 3:02.5). The '?' marks for 'says I don't know to the rest' only arrive at 3:01.9 to 3:02.1, right as that phrase ends. So the result comes before the explanation, and the '?' marks are a beat late."
+   },
+   {
+    "time": "3:26.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "On the Table 2 evidence shot, the teal column highlights run below the table's bottom rule. Their bottom borders strike through the first footnote line ('\u2026incorrect bluffs may occasionally be scored as correct.'), which looks like a strikethrough on the paper's own text. The IDK-credit box also extends past the table's right margin. Visible from 3:26.5 to 3:35."
+   },
+   {
+    "time": "3:24.3",
+    "severity": "medium",
+    "category": "other",
+    "description": "Messy crossfade from the quiz to Table 2. For about 0.4 s a semi-transparent Table 2 card sits over the half-faded quiz. Checkmarks, '?' boxes, 'Honest'/'Guesser', the '-1' tags, '6 \u25b2 HIGHER SCORE', '4' and 'Change the scoring, and bluffing stops paying.' all show through and around the paper crop."
+   },
+   {
+    "time": "2:51.5",
+    "severity": "medium",
+    "category": "empty-or-frozen",
+    "description": "From about 2:51.2 to 2:53.0 the frame is empty navy except for the 'ANALOGY \u00b7 TOY NUMBERS' badge, while the narrator says 'Picture a ten-question quiz.' Then, until 2:58.5, only one to three small rule chips sit along the top edge, and the lower ~75% of the frame stays empty. The ten questions themselves don't appear until 2:58.5."
+   },
+   {
+    "time": "3:26.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "The stat card '9 / 10 popular benchmarks graded strictly right-or-wrong' leaves out the qualifiers sources.md requires (row 25 and must-not-claim #18): these are the 10 benchmarks the authors audited, drawn from specific leaderboards, as a mid-2025 snapshot. On its own, the card reads like a general '90% of popular benchmarks' statistic. The narration supplies 'when the researchers checked ten\u2026', but the screen is what people screenshot."
+   },
+   {
+    "time": "3:36.5",
+    "severity": "medium",
+    "category": "pacing",
+    "description": "Static stretch of about 9 s (3:36.5 to 3:45.5) on a single quote card. The only change is a small 'ONE EXPLANATION \u00b7 NOT THE WHOLE STORY' chip at 3:41.5. Nothing shows 'so admitting uncertainty can win', the top 35% and bottom 40% of the frame are empty, and the abstract 't/(1 \u2212 t)' isn't tied back to the quiz the viewer just watched. A table hold from 3:30.5 to 3:35 just before it (narration: 'Train and rank models on tests like that, and guessing pays') makes this about 14 s of near-static evidence cards."
+   },
+   {
+    "time": "2:59.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "Layout jump. Each scoreboard row drops 8 px when its score number mounts: the Honest row between 2:58.7 and 2:59.5 (when '6' appears), and the Guesser row between 3:08.5 and 3:08.7 (when '7' appears). The labels and all ten boxes visibly shift."
+   },
+   {
+    "time": "3:14.5",
+    "severity": "low",
+    "category": "consistency",
+    "description": "After 'Now change one rule' and the Wrong chip changing to -1 (about 3:16), the Guesser keeps showing '7 \u25b2 HIGHER SCORE' from the old rule for about 5 s. For that time the screen displays the new scoring alongside the old verdict."
+   },
+   {
+    "time": "3:08.5",
+    "severity": "low",
+    "category": "other",
+    "description": "The one lucky guess (box 7) becomes the same teal check as the six known answers, so nothing shows that it was a 1-in-4 guess. That makes the later '6 + 1 - 3' harder to map onto the row."
+   },
+   {
+    "time": "3:16.5",
+    "severity": "low",
+    "category": "other",
+    "description": "Typography: the minus signs are ASCII hyphens in a monospace font ('Wrong -1', the '-1' tags, '6 + 1 - 3 = 4'). The hyphen sits short and low next to the '+' sign."
+   },
+   {
+    "time": "2:44.5",
+    "severity": "low",
+    "category": "other",
+    "description": "The workbook photo crop still includes the scan background and book edge: there are grey or white vertical bands inside the photo frame on the left and right of the cover. This happens even though the caption says '(cover, cropped)'. Visible from 2:44 to 2:51."
+   }
+  ]
+ },
+ {
+  "act": "S6",
+  "issues": [
+   {
+    "time": "4:40.5",
+    "severity": "medium",
+    "category": "empty-or-frozen",
+    "description": "The question fades out at about 4:39.4. Nothing but the navy background is on screen until about 4:40.8. During that 1.3 s the narrator says \"Because sounding right comes from\u2026\" (the rendered audio has \"Because\" at about 4:39.5). The answer row \"Sounding right \u2190 patterns in language\" does not appear until about 4:40.9, so the start of the payoff explanation plays over an empty screen."
+   },
+   {
+    "time": "4:48.5",
+    "severity": "medium",
+    "category": "sync",
+    "description": "Between 4:47.7 and 4:48.0 the strikethrough on \"Does it sound right?\" draws and the full headline \"What's the evidence, and does it actually say this?\" fades in at the same moment. The narrator is still saying \"don't ask whether it sounds right\" (\"right.\" lands at about 4:48.8), and \"Ask: what's the evidence\" is not spoken until about 4:49.7\u20134:50.8. Viewers read the answer about 2 s before they hear it, and the strike lands before the phrase it crosses out is finished."
+   },
+   {
+    "time": "4:54.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "From 4:53.4 to 4:55.5 the caption \"Works on chatbots.\" starts at x\u2248555, where the full two-sentence line will eventually start. It sits clearly left of centre under the centred headline for about 2 s, until \"Works pretty well on people, too.\" types in and the line looks centred."
+   },
+   {
+    "time": "4:57.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "The handoff to the end card is a direct crossfade, and the payoff headline grows as it fades. For a few frames around 4:57.4\u20134:57.5 the end-card title \"Why AI Sounds Right When It's Wrong\" sits on top of a half-faded, enlarged ghost of \"What's the evidence, / and does it actually say this?\". Two text layers collide at the very end of the video and look messy."
+   },
+   {
+    "time": "4:58.5",
+    "severity": "medium",
+    "category": "pacing",
+    "description": "The ending is rushed. The punchline \"Works pretty well on people, too.\" is on screen only about 1.5 s (4:55.6\u20134:57.1), and the cut comes about 0.6 s after \"too.\" ends (about 4:56.5), with no beat for the joke to land. The end card is fully legible only from about 4:57.7 to 4:59.2 before it fades, and the video ends at 5:00.1. That is too short to read \"Sources, credits, and the full paper links are in the description.\", which is the line that points viewers to the sources."
+   },
+   {
+    "time": "4:56.5",
+    "severity": "low",
+    "category": "sync",
+    "description": "The second caption sentence \"Works pretty well on people, too.\" appears at about 4:55.6. That is about 0.8 s after the narrator starts \"It works pretty well\u2026\" (about 4:54.8), so the text trails the spoken punchline."
+   }
+  ]
+ },
+ {
+  "act": "S5",
+  "issues": [
+   {
+    "time": "4:02.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "In the 'CHECKING A CLAIM' panel, a green check and 'Yes: CMU-CS-01-132' sit directly under ChatGPT's quoted made-up title 'Boosting, Online Algorithms, and Other Topics in Machine Learning'. A viewer can easily take this to mean the 'Boosting\u2026' thesis exists. What actually exists is Kalai's real 2001 thesis. The coral verdict at 4:04.5, 'No: different title, 2001', is also too terse: '2001' has no context, so it doesn't say the year 2002 is wrong."
+   },
+   {
+    "time": "4:04.5",
+    "severity": "medium",
+    "category": "pacing",
+    "description": "The coral \u2717 verdict and the white bibliography card ('Adam Kalai. 2001. Probabilistic and on-line methods\u2026 / Also listed in the paper's own references (p. 19)') appear around 4:03.9\u20134:04.2. The crossfade to the Anthropic card starts around 4:04.8, so the payoff of the whole check is on screen for less than 1 s. The bibliography card's small serif text can't be read in that time."
+   },
+   {
+    "time": "4:08.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "Messy transition. The Anthropic hallucination figure fades in over the 'Tracing the thoughts of a large language model' header card while that card is still visible. The card's large title text shows through the middle of the figure, and grey card edges stick out on both sides of it."
+   },
+   {
+    "time": "4:11.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "In the first state of the redrawn diagram (4:11.5\u20134:12.8), 'Familiar name?' already reads 'yes', but the output is still the teal 'I don't know / declines'. An arrow also runs from 'Facts about them' into 'I don't know'. This contradicts the mechanism: a familiar name is exactly what switches the default off. The default state is internally inconsistent."
+   },
+   {
+    "time": "4:05.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "From 4:05 to 4:23 the source line reads 'model studied: Claude 3.5 Haiku' as a flat fact. sources.md (row 30, Must-not #21, verification log) deliberately hedges this: the blog's hallucination section says only 'Claude', and Haiku is inferred from the intro. The safe wording it gives is '(Claude 3.5 Haiku, per Anthropic's summary)'. The same line ('figure shown: Anthropic (2025) \u00b7 diagram redrawn and simplified') also stays unchanged across three different visuals: the page header, the original figure and our own redrawn diagram."
+   },
+   {
+    "time": "4:24.5",
+    "severity": "medium",
+    "category": "empty-or-frozen",
+    "description": "From 4:24.5 to 4:29.7 the frame barely changes for about 5 s. Three label-only boxes ('Search', 'Retrieval', 'Longer reasoning') and one teal line sit in the top quarter of the frame, with roughly 70% of it empty navy. All three boxes appear at once, although the narrator lists them one after another."
+   },
+   {
+    "time": "4:13.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The arrowhead where the 'Familiar name?' \u2192 'Facts about them' arrow ends points straight up instead of along the line (down-right), and it sits on the Facts box's left border. It is visible through the whole diagram, from 4:11.5 to 4:23.5. The arrowheads into the output box are oriented correctly."
+   },
+   {
+    "time": "4:15.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The coral 'MISFIRE: NAME FEELS FAMILIAR' pill sits on the path of the 'Familiar name?' \u2192 'Facts' arrow, so the line passes through the pill's top-right corner. This lasts from 4:15 to 4:23."
+   },
+   {
+    "time": "4:32.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "'same answer every time \u2260 the right answer' wraps with a lone 'answer' on the second line. The whole block is also off-centre: the cards run from x\u2248124 to x\u22481622, leaving a 298 px right margin against a 124 px left one. At 4:35.5, 'No guarantees.' is centred on the frame, not on the cards, so it looks misaligned with the column above it."
+   },
+   {
+    "time": "4:04.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The crossfade out of the checklist (around 4:05.0) brings the Anthropic header card up semi-transparent over the still-visible checklist. 'Does the source exist?', 'Does it actually say this?' and the coral verdict show through the card for several frames."
+   },
+   {
+    "time": "3:59.5",
+    "severity": "low",
+    "category": "accuracy",
+    "description": "The claim card is labelled only 'Claim (ChatGPT, GPT-4o)', in the present tense, with no snapshot context. The source line on this shot covers only the thesis page and Kalai p. 19, not Table 1. Must-not #2 requires making clear this was a May 2025 answer with no web search."
+   },
+   {
+    "time": "3:58.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The dark 'LATER A CO-AUTHOR OF THE 2025 PAPER' tag hangs about 20 px past the right edge of the thesis page (visible to 4:04.5). The narration never mentions it, and it pops in as the narration moves on to s32 and the checklist slides in, so it competes for attention."
+   },
+   {
+    "time": "3:56.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The teal highlight boxes on the thesis page are too tight vertically. The 'Carnegie Mellon University' box's top edge cuts through the descenders of 'Computer Science Department' above it, so that line looks underlined. The 'Santosh Vempala' box at 3:58.5 does the same to 'Danny Sleator'."
+   },
+   {
+    "time": "3:49.5",
+    "severity": "low",
+    "category": "pacing",
+    "description": "'Check the record.' is the act's key instruction, but it is on screen for only about 1 s (around 3:49.3\u20133:50.3) before the cut to the thesis. The library photo before it (3:46\u20133:49) runs about 3 s with no text."
+   }
+  ]
+ },
+ {
+  "act": "story+pacing",
+  "issues": [
+   {
+    "time": "1:21.5",
+    "severity": "high",
+    "category": "empty-or-frozen",
+    "description": "About 4 s of empty navy (1:21.2\u20131:25.2). 1:21.5 is fully blank, and 1:22.5\u20131:24.5 show only the bottom-left source line. Meanwhile s12 is playing ('Because there's a pick, the same question can come out differently. Asked for Kalai's birthday\u2026'). The birthday card does not arrive until 1:25.5."
+   },
+   {
+    "time": "1:05.5",
+    "severity": "high",
+    "category": "readability",
+    "description": "The teal caption \"one word, two tokens: 'Kal' + 'ai'\" and the next caption 'To the model, each token is a number.' cross-dissolve in the same spot for about 2 s (1:04.8\u20131:06.5+). The result is garbled text. The second caption is never shown cleanly: by 1:07.5 it is already fading out at low contrast. This is the key line for s10 ('Each token is really a number')."
+   },
+   {
+    "time": "0:00.5",
+    "severity": "medium",
+    "category": "pacing",
+    "description": "The hook is slow. For the first ~3 s the frame is nearly empty (a tiny 'A PUBLISHED TEST \u00b7 2025' pill, then a small label, then the chips), and the question only starts typing at 0:03.5. The title's promise (confident but wrong) is not visualized until the \u00d7 TITLE / \u00d7 YEAR marks at 0:27.5. Within the first 10 s the viewer sees a confident answer but nothing tells them it is wrong."
+   },
+   {
+    "time": "0:09.5",
+    "severity": "medium",
+    "category": "pacing",
+    "description": "The opening reads as static text cards. 0:09.5\u20130:15.5 holds one unchanged ChatGPT card while its title, 'Carnegie Mellon' and '2002' are narrated. 0:21.5\u20130:26.5 holds the three cards unchanged during s04 'Three polished answers. Not one had the right title\u2026', and the \u00d7 TITLE marks arrive at 0:27.5, about 1.5 s after 'right title' is said."
+   },
+   {
+    "time": "0:29.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "Messy transition. The semi-transparent white paper header ('Why Language Models Hallucinate', author line) sits over the still-visible Table 1 cards, so both sets of text are readable and colliding. Two source lines are also stacked at bottom-left."
+   },
+   {
+    "time": "0:32.5",
+    "severity": "medium",
+    "category": "sync",
+    "description": "s06 ('Meanwhile, Google DeepMind reported\u2026') starts at 0:32.0, but the paper's author header (LEAD AUTHOR) stays on screen until 0:34.5. The IMO/capability split only appears at 0:35.5, about 3.5 s after the narration moves on."
+   },
+   {
+    "time": "0:37.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "'35 / 42 \u00b7 gold-medal standard' is shown. 'Things we must not claim' #27 bars showing '35/42' unless the DeepMind or IMO page is opened directly. Addendum A3 says the DeepMind announcement is still search-only and must be re-checked before publishing."
+   },
+   {
+    "time": "0:41.5",
+    "severity": "low",
+    "category": "pacing",
+    "description": "The title card holds for about 10 s (0:41.5\u20130:51.5) with little change. The film's core answer ('It writes what's likely. Likely isn't always true.') is set as a small secondary line under the large title. A blank frame follows at 0:52.5."
+   },
+   {
+    "time": "0:03.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The prompt types from a fixed left edge (x\u2248140 px), while the 'THE QUESTION, AS ASKED' header and the model chips are centered. The line looks off-balance as it types, ending around x\u22481180 (0:03.5\u20130:07.5), then jumps to a centered layout at 0:08.5."
+   },
+   {
+    "time": "1:48.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The 'Adam Ta uman \u2026 .D \u2026' token row next to 'The answer is still written token by token.' runs to the right frame edge: the final '\u2026' chip ends at about x\u22481912 of 1920, with no margin."
+   },
+   {
+    "time": "1:19.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The 'repeat' label is struck through by its own loop arc (the 't' is crossed). During the loop the six candidate boxes show only '\u00b7' placeholders, which looks unfinished next to the labelled 2/1/0/5/3/4 just before."
+   },
+   {
+    "time": "1:49.5",
+    "severity": "medium",
+    "category": "pacing",
+    "description": "'So why would the likely answer be wrong?' holds for 6 s (1:49.5\u20131:54.5). s16 ('What a dissertation title sounds like is everywhere\u2026') starts at 1:53.0, but the word cloud only appears at 1:55.5, about 2.5 s late."
+   },
+   {
+    "time": "1:55.5",
+    "severity": "low",
+    "category": "readability",
+    "description": "In the title-word cloud, many words collide and overprint ('Interactive' over 'Approaches to' and 'Games', 'Machine Learning' over 'Analysis', 'Online' under 'Algorithms', 'Approaches to/Interactive' just above the ILLUSTRATION pill). It reads as noise rather than repetition."
+   },
+   {
+    "time": "2:03.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "Highlight boxes on real-document excerpts are offset from the text. On the p.10 Einstein excerpt the box starts inside 'seldom' ('s|eldom') and overshoots past the text end. On the Section 4.2 proposal (3:36.5) the box starts inside 'confident' ('confiden|t') and ends inside the final 't' of 't/(1 \u2212 t)'."
+   },
+   {
+    "time": "2:17.5",
+    "severity": "low",
+    "category": "readability",
+    "description": "The pill 'ILLUSTRATION \u00b7 THE WORDS ARE CHATGPT'S PUBLISHED TITLE' is confusing to an ordinary viewer: it reads as if ChatGPT published a title. The struck-through 'I think / maybe / I'm not sure' chips at 2:24.5 are small and low-contrast."
+   },
+   {
+    "time": "2:28.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "Several cross-dissolves leave two text layers half-visible at once. At 2:28.5 the ChatGPT comparison card fades in over 'Boosting, Online Algorithms\u2026' and 'Confident wording isn't a readout\u2026'. Similar overlaps occur at 2:13.5 (Figure 1 over the Einstein/Kalai labels), 4:08.5 (Anthropic figure over the blog header), and 4:57.5 (end card over 'What's the evidence\u2026')."
+   },
+   {
+    "time": "2:29.5",
+    "severity": "medium",
+    "category": "layout",
+    "description": "In the 'spot the difference' cards, the rows don't line up. On the left SCHOOL and YEAR sit at y\u2248510 and 640 (a 3-line title plus a big gap); on the right they sit at y\u2248415 and 497. The ChatGPT card is much taller with empty space. The viewer has to scan diagonally to compare CMU\u2194Carnegie Mellon and 2002\u21942001, which weakens the payoff of s20\u2013s21."
+   },
+   {
+    "time": "2:39.5",
+    "severity": "low",
+    "category": "accuracy",
+    "description": "The whole ChatGPT title is underlined coral and tagged 'NOT IN THE RECORD', as are all three titles struck through at 0:35.5. This passes up the strongest visual proof of Act 3's thesis: the fake title shares 'Online/On-line \u2026 in Machine Learning' with the real one. It also edges toward the 'completely different title' framing that must-not-claim #9 forbids."
+   },
+   {
+    "time": "2:51.5",
+    "severity": "medium",
+    "category": "sync",
+    "description": "About 2 s of near-empty frame (2:51.0\u20132:52.8; only the ANALOGY pill) as s23 begins 'Picture a ten-question quiz.' The ten answer boxes do not appear until 2:58.5, about 7 s after the quiz is introduced."
+   },
+   {
+    "time": "3:21.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "Stale label. As the guesser's score drops to 4, the '\u25b2 HIGHER SCORE' badge stays next to it for about 0.5\u20131 s (3:21.5) before moving to Honest's 6 at 3:22.5. Just before that (3:20.5), '6 + 1 \u2212 3 = 4' is on screen while the score still reads 7."
+   },
+   {
+    "time": "3:24.5",
+    "severity": "medium",
+    "category": "pacing",
+    "description": "About 20 s of two near-static document stills: Table 2 from 3:24.5 to 3:34.5 (only one text line added at 3:29.5), then the Section 4.2 quote from 3:35.5 to 3:44.5 (only the 'ONE EXPLANATION \u00b7 NOT THE WHOLE STORY' pill added). This is the flattest stretch in the film, right after its liveliest sequence."
+   },
+   {
+    "time": "3:26.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "'9 / 10 popular benchmarks graded strictly right-or-wrong' reads as a general rate ('9 in 10 benchmarks'). Must-not-claim #18 requires this to be 9 of the 10 the authors audited, as of mid-2025. The qualifier appears only in the narration ('When the researchers checked ten\u2026')."
+   },
+   {
+    "time": "3:36.5",
+    "severity": "low",
+    "category": "other",
+    "description": "The highlighted proposal 't/(1 \u2212 t)' is never explained on screen, so for an ordinary viewer it is an opaque formula, even though the narration says only 'state the penalty\u2026 up front'."
+   },
+   {
+    "time": "4:02.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "The 'CHECKING A CLAIM' checklist asks 'Does the source exist? \u2713 Yes: CMU-CS-01-132' about ChatGPT's claim. ChatGPT cited no source; the thesis is the record the checker found. A careful viewer will think ChatGPT cited the CMU report, which blurs s32's actual point (a citation can exist without supporting the claim)."
+   },
+   {
+    "time": "4:05.5",
+    "severity": "medium",
+    "category": "other",
+    "description": "Story structure: Act 5 opens as 'So what actually helps?', but its middle 18 s (4:04.9\u20134:23.6, the Anthropic 'can't answer' circuit) explain another cause rather than a remedy. With no on-screen signpost, the viewer expecting fixes may lose the thread before 'Search / Retrieval / Longer reasoning'."
+   },
+   {
+    "time": "4:11.5",
+    "severity": "medium",
+    "category": "accuracy",
+    "description": "The first state of the redrawn circuit diagram is self-contradictory. 'Familiar name?' is subtitled 'yes' and flows into 'Facts about them', yet every arrow converges on the highlighted '\"I don't know\" \u2014 declines'. That is the opposite of what a familiar name does in the mechanism, which the next state (4:13.5: switches off \u2192 Answer) then shows."
+   },
+   {
+    "time": "4:24.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The remedies screen is visually thin: three plain text boxes (Search / Retrieval / Longer reasoning) packed into the top-left, with the lower half of the frame empty. It is static for 6 s until 'Less randomness' appears at 4:30.5."
+   },
+   {
+    "time": "4:36.5",
+    "severity": "low",
+    "category": "pacing",
+    "description": "The payoff answers the opening question clearly but is text-only with blank beats: 4:36.5 is empty, and 4:39.5\u20134:40.5 fade to empty while s36 continues. It never calls back to the Kalai example that drove the film."
+   },
+   {
+    "time": "4:58.5",
+    "severity": "medium",
+    "category": "pacing",
+    "description": "The end card ('Blake Kimble / Why AI Sounds Right When It's Wrong / Sources, credits\u2026 in the description') is fully visible for only about 1 s. It fades in over the previous text (4:57.5) and is fading out by 4:59.5. That is too short to read and leaves no room for a YouTube end screen, which needs at least 5 s."
+   },
+   {
+    "time": "4:58.5",
+    "severity": "low",
+    "category": "consistency",
+    "description": "The title is styled inconsistently: sentence case on the title drop at 0:45.5 ('Why AI sounds right when it's wrong', with 'wrong' in coral) versus title case on the end card ('Why AI Sounds Right When It's Wrong')."
+   },
+   {
+    "time": "4:53.5",
+    "severity": "low",
+    "category": "layout",
+    "description": "The closing caption 'Works on chatbots.' sits off-center (left-anchored where the full line will later be centered) for about 3 s until 'Works pretty well on people, too.' appears at 4:56.5. The punchline is set very small."
+   }
+  ]
+ }
+]
