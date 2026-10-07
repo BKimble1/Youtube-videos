@@ -1,3 +1,31 @@
+# ElevenLabs: what was actually used (final, 2026-10-07)
+
+**The final narration and the ElevenLabs sound effects were produced through the connected ElevenLabs
+connector (MCP, "Flows"), not through the REST API.** No API key was needed or stored. The API runbook further
+down is kept as reference for the direct-API path (`tools/elevenlabs_narration.py`), which was never run against
+the live API.
+
+| Capability (connector tool) | Tested | Result | Used for |
+|---|---|---|---|
+| Text to speech, `eleven_v4` (`creative_generate_speech` / Flows TTS node, 4 variations per run) | yes | Works. IPA between slashes is honoured (`/kəˈlaɪz/`). There are no stability or speed controls on v4. This workspace charged 0 credits for TTS. | 3-voice audition (12 takes) and the final narration (12 blocks × 4 takes) |
+| Speech to text, Scribe (`creative_transcribe_audio`) | yes | On a pinned TTS generation it returns the *prompt* text with word times, which is forced alignment, not recognition. On an audio file attached by URL (`creative_attach_reference_file`) it is a blind transcription, at about 100–180 credits per block. | Word timings for cutting segments (alignment). Blind intelligibility check of the final takes: **0.4 % WER** |
+| Sound effects, `eleven_text_to_sound_v2` (Flows SFX node) | yes | Works. About 1.7–8.3 credits per variation, depending on length. | 6 effects × 4 variations; see `audio/sfx/elevenlabs/SELECTION.md` |
+| Voice design (`creative_design_voice`) | listed | Available. Not needed, since the library voices were sufficient. | — |
+| **Music generation** | yes | **Not available.** The connector is the *restricted* ElevenLabs connector, which refuses music, image and video nodes. | — |
+| Image and video generation | yes | **Not available** (same restriction). Not wanted anyway: the visuals use real documents and constructed diagrams. | — |
+
+**Blocker, music:** ElevenLabs music needs the full ElevenLabs connector. You can add it as a custom
+connector at `https://api.elevenlabs.io/v1/mcp` (Settings → Connectors → Add custom connector). Without it,
+the video keeps its original score (composed in `tools/make_music.py`, rendered with FluidSynth and the
+MuseScore General SoundFont). That score was regenerated from the final timeline, so its sections,
+drop-outs and title hit follow the new narration. Swapping in an ElevenLabs music bed later only means
+replacing `audio/music/music_bed.wav` and re-running `tools/mix.py`, which ducks it under the voice the same way.
+
+Generated files are listed in `audio/narration/elevenlabs/selection.json` and
+`takes/registry.tsv` (flow session and generation IDs). Backups of every take are in `backup/elevenlabs_*`.
+
+---
+
 # ElevenLabs premium narration: API notes and runbook
 
 Researched 2026-10-07 from a session that could not reach ElevenLabs: `api.elevenlabs.io` and

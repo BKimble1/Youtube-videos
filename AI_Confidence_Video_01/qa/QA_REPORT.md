@@ -1,6 +1,6 @@
 # QA report: Video 01, "Why AI Sounds Right When It's Wrong"
 
-Status: **v5 delivered (draft narration).** The sections below record only checks that were actually performed.
+Status: **v6 final (ElevenLabs narration).** The v6 section directly below is the current one. Older sections document the v1–v5 draft cuts; their fixes carry into v6. Every section records only checks that were actually performed.
 
 ## Limits of this inspection (read first)
 
@@ -10,6 +10,36 @@ Status: **v5 delivered (draft narration).** The sections below record only check
   an offline speech-recognition pass and signal measurements, not by ear.
 - A human should still watch the whole film at normal speed with sound, on headphones and on a small speaker,
   before publishing.
+
+## v6 final (ElevenLabs narration): checks performed
+
+### What changed from v5
+
+| Area | Change |
+|---|---|
+| Narration | The Kokoro draft is replaced by ElevenLabs Eleven v4, voice "Marcus K", chosen from a 3-voice audition (see `audio/narration/elevenlabs/auditions/AUDITION_REPORT.md`). It was generated in 12 blocks × 4 takes. Each take was scored (pace, pauses, F0 range, HNR, noise floor, loudness, Whisper WER) and the best per block was picked. The takes were cut into 39 segments at the quietest point inside each pause, using Scribe forced alignment. |
+| Script | Two lines changed, both to resolve the DeepMind claim (s06, s07). Every other line is word-for-word the v5 script. |
+| Timing | Rebuilt per segment from the real voice. Each segment's designed pause is kept unless the voice's own pause is already longer, so there is no uniform stretch. The runtime is **5:18.5** (v5: 4:59.5). Three scenes were re-laid to centre against the new timing: S2 score panel, S3 comparison columns, and the s28 "Guessing pays." hold. |
+| Visuals | The S1 contrast panel is rebuilt around a 300 dpi crop of the real DeepMind solutions PDF (P1–P5 marked "SOLUTION", P6 "NOT INCLUDED"). The draft watermark disappears automatically with the ElevenLabs engine. |
+| Sound | Six ElevenLabs sound effects are added (26 placements, each synced to its motion). The token ticks are raised 6–8 dB. The music bed is regenerated from the new timeline. |
+| Files | Final names, with no "DRAFT" in them. |
+
+### Results
+
+| Area | Check | Result |
+|---|---|---|
+| Narration accuracy | ElevenLabs Scribe, **blind** (each selected take uploaded as a plain audio file, with no access to the script) | **0.4 % WER** overall (`audio/narration/elevenlabs/scribe_blind_final.json`). "Kalai" and "Kalai's" are recognised correctly. |
+| Narration alignment | Forced-alignment words vs prompt words, checked 1:1 in `tools/el_assemble.py` | All 12 blocks match. Every segment cut lies inside a pause (8 ms fades), so no word is clipped. |
+| Narration consistency | Per-take metrics of the 12 selected takes (`takes/eval_blocks.json`) | F0 range 12.0–15.3 st, HNR 7.3–8.7 dB, pause floor −57 to −62 dBFS. Loudness spread 2 dB before gain-matching; every block is matched to −24 LUFS. |
+| Pace | `tools/build_timeline.py` | 785 words in 318.5 s: **148 wpm overall, 163 wpm while speaking** (v5: 772 words in 299.5 s, 155 wpm overall) |
+| Cues | `tools/check_cues.py`, `npx tsc --noEmit` | OK, OK |
+| Facts | DeepMind claim (s06) | **Resolved by revision.** Primary pages were still unreachable, so gold, score and grading are removed. The narration states only what the opened PDF shows. See `research/sources.md` row A3-final. |
+| Facts | Changed lines re-checked against sources | s06 matches the PDF (title "Gemini Deep Think for International Mathematical Olympiad 2025"; Problems 1–5 present, no Problem 6). s07 "take on olympiad problems" makes no claim of correctness. |
+| Image resolution | New asset `imo2025_solutions_p01.png` | 1790×1300 source, drawn 720 px wide at 1080p and 1440 px at 4K. That is downscaled in both, so nothing is upscaled. The rest are unchanged from the v5 audit below. |
+| Mix | `tools/mix.py` + ffmpeg ebur128 on `audio/mix/final_mix.wav` | **−16.0 LUFS integrated, −1.3 dBTP, LRA 2.9 LU.** Voice is 17.0 dB over the music during speech. Music in speech gaps is −31 dBFS RMS. The limiter acts on 15 brief voice peaks (20–110 ms each, max 3.4 dB). |
+| SFX levels | 50 ms RMS around each cue, from the stems (`qa/sfx_levels.json`) | Under speech, effects sit 17–28 dB below the voice. The title hit (sub-bass) is about 6 dB below the voice on "wrong". The whooshes all fall in narration gaps. |
+| Subtitles | `script/subtitles_elevenlabs.srt` (copied to `exports/Video_01_AI_Confidence.en.srt`) | 114 cues, ≤2 lines, ≤45 characters per line, no overlaps, mean 15.2 characters/s. Two cues reach 22 characters/s where the next phrase follows within 0.1 s. Cues now linger up to 0.6 s into pauses. |
+| Frames | 16 key stills plus the S1→S2 hand-off (opening, every scene cross-fade, title, ending, last frame) at 1/3 scale | No layout problems found. The S1→S2 hand-off has a deliberate dip to the background of about 5 frames (under the whoosh). The first frame shows the layout, with the question typed on as it is read. |
 
 ## Checks performed so far
 

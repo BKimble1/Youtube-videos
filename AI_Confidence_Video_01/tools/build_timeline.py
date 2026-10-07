@@ -105,12 +105,13 @@ def build_srt(segments, max_chars=84, max_dur=5.5):
         else:
             merged.append((a, b, t))
     cues = merged
-    # enforce min duration and no overlap
+    # enforce min duration, then let each cue linger into the following pause (up to 0.6 s, and
+    # long enough for about 17 characters per second where the pause allows); never overlap
     fixed = []
     for i, (a, b, t) in enumerate(cues):
-        b = max(b, a + 0.9)
+        b = max(b + min(0.6, max(0.3, len(t) / 17.0 - (b - a))), a + 0.9)
         if i + 1 < len(cues):
-            b = min(b, cues[i + 1][0] - 0.02)
+            b = min(b, cues[i + 1][0] - 0.08)
         fixed.append((a, b, t))
     lines = []
     for i, (a, b, t) in enumerate(fixed, 1):
@@ -131,6 +132,7 @@ def build_srt(segments, max_chars=84, max_dur=5.5):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--engine", default="draft_local", help="folder under audio/narration/")
+    ap.add_argument("--srt-only", action="store_true", help="rewrite only script/subtitles_<engine>.srt")
     args = ap.parse_args()
 
     segs_doc = load_json(os.path.join(ROOT, "script/narration_segments.json"))
@@ -269,6 +271,11 @@ def main():
         "cues": cue_frames,
     }
 
+    if args.srt_only:
+        with open(os.path.join(ROOT, f"script/subtitles_{args.engine}.srt"), "w", encoding="utf-8") as fh:
+            fh.write(build_srt(out_segments))
+        print(f"wrote script/subtitles_{args.engine}.srt only")
+        return
     pub_audio = os.path.join(ROOT, "source/public/audio")
     os.makedirs(pub_audio, exist_ok=True)
     sf.write(os.path.join(pub_audio, "narration.wav"), narration, SR, subtype="PCM_24")

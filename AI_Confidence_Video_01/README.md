@@ -4,10 +4,10 @@ A self-contained, editable production project for a ~5-minute faceless explainer
 local data: research and sources, the script, narration tooling, an original score, synthesized sound
 effects, the mix, and the Remotion (React/TypeScript) motion-graphics source.
 
-> **Narration status:** the current cut uses a **temporary local AI voice** (Kokoro-82M, labelled
-> "DRAFT · TEMPORARY VOICE" on screen). The intended ElevenLabs narration could not be generated in the
-> production session: no API key, and `api.elevenlabs.io` was blocked by the network policy. Follow
-> "Premium narration" below, and the on-screen draft label disappears automatically.
+> **Narration:** final narration by **ElevenLabs Eleven v4** (voice "Marcus K"). It was generated through the
+> ElevenLabs connector (Flows) rather than with an API key: 12 blocks × 4 takes, scored, picked, and cut into
+> segments with Scribe forced alignment. Sound effects combine numpy-synthesized interface accents with six
+> ElevenLabs sound effects. The earlier Kokoro draft is kept in `backup/draft_v5/` for comparison.
 
 ## Folder map
 
@@ -39,13 +39,15 @@ cd source && npm ci          # exact versions from package-lock.json
 Run from the project root (`AI_Confidence_Video_01/`):
 
 ```bash
-# 1. Narration (choose ONE engine)
-#    a) premium (needs ELEVENLABS_API_KEY in the environment and access to api.elevenlabs.io):
-python3 tools/elevenlabs_narration.py list-voices
-python3 tools/elevenlabs_narration.py audition --models eleven_v4,eleven_multilingual_v2 \
-        --voices <ID1>,<ID2>,<ID3> --text-file audio/narration/elevenlabs/audition_text.txt
-python3 tools/elevenlabs_narration.py narrate --model eleven_v4 --voice <CHOSEN_ID> --seed 1234
+# 1. Narration
+#    a) final (ElevenLabs, as delivered). The takes were generated through the ElevenLabs connector (Flows);
+#       their MP3s and Scribe alignments live in audio/narration/elevenlabs/takes/ (restore them from
+#       backup/elevenlabs_narration_takes/ if needed). To regenerate: python3 tools/el_blocks.py writes the
+#       block prompts, generate each block on eleven_v4 in an ElevenLabs Flow, fetch with tools/el_fetch.py,
+#       score with tools/eval_blocks.py, pick in selection.json, align with Scribe, then:
+python3 tools/el_assemble.py           # cut the picked takes into per-segment WAVs + manifest
 ENGINE=elevenlabs
+#    (tools/elevenlabs_narration.py is the equivalent direct-API path if ELEVENLABS_API_KEY is set.)
 #    b) draft (offline, Kokoro-82M; see audio/narration/auditions_local/AUDITIONS.md for one-time setup):
 #       python tools/draft_tts.py --setup && python tools/draft_tts.py --voice af_heart --speed 1.0
 #       ENGINE=draft_local
@@ -56,7 +58,7 @@ python3 tools/check_cues.py            # every animation cue must match a spoken
 
 # 3. Music, SFX, mix (≈ -16 LUFS integrated, ≤ -1 dBTP)
 python3 tools/make_music.py
-python3 tools/make_sfx.py
+python3 tools/make_sfx.py              # needs audio/sfx/elevenlabs/*.mp3 (backup/elevenlabs_sfx/)
 python3 tools/mix.py
 
 # 4. Render (1080p30 H.264 + AAC) and finalize (fast-start, measurements)
@@ -92,6 +94,9 @@ Preview anything interactively with `cd source && npm run studio`.
 ## Licences and credits
 
 See `assets/asset_manifest.csv` and `package/UPLOAD_PACKAGE.md`. Kalai et al. (2025) material is CC BY 4.0.
-Smithsonian photos are CC0. The Anthropic header and figure are shown briefly for commentary. Music and
-SFX are original; the score is rendered with the MuseScore General SoundFont (MIT). Fonts are SIL OFL.
+Smithsonian photos are CC0. The Anthropic header and figure are shown briefly for commentary. The Google
+DeepMind IMO 2025 solutions page is quoted briefly for commentary. The music is original, rendered with the
+MuseScore General SoundFont (MIT). The SFX are original synthesized accents plus ElevenLabs sound effects
+generated for this video. The narration is ElevenLabs TTS. Use of both follows the account's ElevenLabs plan
+terms. Fonts are SIL OFL.
 Remotion is free for individuals and small teams; check https://www.remotion.dev/license if that changes.
