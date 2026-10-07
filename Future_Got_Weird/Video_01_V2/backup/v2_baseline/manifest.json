@@ -1,0 +1,113 @@
+{
+ "part_bytes": 25165824,
+ "files": [
+  {
+   "name": "v2_audio_rendered.tar",
+   "bytes": 268185600,
+   "sha256": "f42535c51b191fa5f0c8aaed04284617f5ec96de0a8d8f8092195606f9a23fd8",
+   "parts": [
+    {
+     "name": "v2_audio_rendered.tar.part001",
+     "bytes": 25165824,
+     "sha256": "08fd2a14db9076d57072d1fc95d56a47856a95616357684b45c043485a319ff9"
+    },
+    {
+     "name": "v2_audio_rendered.tar.part002",
+     "bytes": 25165824,
+     "sha256": "07c61139ae4f7968cf6bd7d68306db9e8018ccb4663d07517f835e4f6681f9f6"
+    },
+    {
+     "name": "v2_audio_rendered.tar.part003",
+     "bytes": 25165824,
+     "sha256": "91816e5e4f0381efc21e830780f9b40e51aacab3d3a3c513b2d692ca63d13cd4"
+    },
+    {
+     "name": "v2_audio_rendered.tar.part004",
+     "bytes": 25165824,
+     "sha256": "9c5657d284aa4699ffc5a968cbe727c149d1e1648ac8810c6934c957ac58cc86"
+    },
+    {
+     "name": "v2_audio_rendered.tar.part005",
+     "bytes": 25165824,
+     "sha256": "3618cd52f89cc78c45e9ef83cd081410e913bd8686d5c86db59ac55d8eb12209"
+    },
+    {
+     "name": "v2_audio_rendered.tar.part006",
+     "bytes": 25165824,
+     "sha256": "316102b01afa4023f4d73b12fb084155de398787cf5e72b6cb2d622eb71cb398"
+    },
+    {
+     "name": "v2_audio_rendered.tar.part007",
+     "bytes": 25165824,
+     "sha256": "e3c8d37b731e1ea47c5c50d04083bfb5659cbb941fddffb4e482a18fde1bd358"
+    },
+    {
+     "name": "v2_audio_rendered.tar.part008",
+     "bytes": 25165824,
+     "sha256": "3a0a7bc6fdc1ab43ddd67463b426466937fc510a83037957cc330ff5952252ab"
+    },
+    {
+     "name": "v2_audio_rendered.tar.part009",
+     "bytes": 25165824,
+     "sha256": "47ea64861cad5a46abac1f345becd245643f64232cb2f358f840b8ede9a55df1"
+    },
+    {
+     "name": "v2_audio_rendered.tar.part010",
+     "bytes": 25165824,
+     "sha256": "4f2b9be55981eb5f3e5f93799ef9096cb8aebc9aca2bd73cd5c936e7941cf693"
+    },
+    {
+     "name": "v2_audio_rendered.tar.part011",
+     "bytes": 16527360,
+     "sha256": "ba2f21525d2422c69b800812efec5ed5f8a345d0b38c2a0f4d03034d016c3645"
+    }
+   ]
+  },
+  {
+   "name": "v2_audio_sources.tar",
+   "bytes": 26562560,
+   "sha256": "58d11e06d7005061852d7f0542db6ee6d5ffcc6addbc3f85b38cc43d38472a9a",
+   "parts": [
+    {
+     "name": "v2_audio_sources.tar.part001",
+     "bytes": 25165824,
+     "sha256": "1183132a894700763a6586290ecefa16f42c23afc54bcf350e7317c10d234790"
+    },
+    {
+     "name": "v2_audio_sources.tar.part002",
+     "bytes": 1396736,
+     "sha256": "053484c02e72b1c50d7d60300eb82fb66240b66d7b61daa1901c4ef6ac6bed4c"
+    }
+   ]
+  },
+  {
+   "name": "v2_qa_v1_review.tar",
+   "bytes": 20807680,
+   "sha256": "3af63bcdac318b758bd81d5bf9672ca5ca91e3ae14cc20d4feaf3035e84b4c1c",
+   "parts": [
+    {
+     "name": "v2_qa_v1_review.tar.part001",
+     "bytes": 20807680,
+     "sha256": "3af63bcdac318b758bd81d5bf9672ca5ca91e3ae14cc20d4feaf3035e84b4c1c"
+    }
+   ]
+  },
+  {
+   "name": "v2_wip_scenes.tar",
+   "bytes": 45209600,
+   "sha256": "24db4cd37434c179644ccd17edc94988cb1f63b54f1578a4be92d3d62d20f857",
+   "parts": [
+    {
+     "name": "v2_wip_scenes.tar.part001",
+     "bytes": 25165824,
+     "sha256": "e0c8ee4a54cb884fa7439bb87dbf8327f95ffb56baffc67b519db26e51c986f1"
+    },
+    {
+     "name": "v2_wip_scenes.tar.part002",
+     "bytes": 20043776,
+     "sha256": "70948d65f5e0590aeb77c2d927314f0a3d01eedae23157889692a35f0434ea7b"
+    }
+   ]
+  }
+ ]
+}
