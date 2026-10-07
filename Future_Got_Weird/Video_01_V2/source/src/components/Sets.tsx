@@ -40,7 +40,8 @@ export const CounterSet: React.FC<{signText?: string; windows?: number; children
       {Array.from({length: windows}).map((_, i) => {
         const cx = 200 + 480 + i * 480; // wall space is offset by 200 from world space
         return (
-          <div key={i} style={{position: 'absolute', left: cx - 210, top: 200 + 150, width: 420, height: 440, background: C.paper, border: `${OUTLINE}px solid ${C.ink}`, borderRadius: '210px 210px 18px 18px'}}>
+          // the window openings run down behind the counter, so the clerks stand inside them (no strip of wall below a sill)
+          <div key={i} style={{position: 'absolute', left: cx - 210, top: 200 + 150, width: 420, height: 900, background: C.paper, border: `${OUTLINE}px solid ${C.ink}`, borderRadius: '210px 210px 18px 18px'}}>
             <div style={{position: 'absolute', left: 14, right: 14, top: 14, bottom: 14, border: `3px solid ${C.paperLine}`, borderRadius: '196px 196px 10px 10px'}} />
           </div>
         );
