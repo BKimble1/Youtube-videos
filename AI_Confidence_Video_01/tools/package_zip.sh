@@ -16,6 +16,11 @@ zip -q -r "$out" AI_Confidence_Video_01 \
   -x 'AI_Confidence_Video_01/audio/mix/stem_*' \
   -x 'AI_Confidence_Video_01/audio/narration/placeholder/*' \
   -x 'AI_Confidence_Video_01/audio/narration/draft_local/draft_full.wav' \
+  -x 'AI_Confidence_Video_01/audio/narration/narration_*.wav' \
+  -x 'AI_Confidence_Video_01/audio/music/music_bed.wav' \
+  -x 'AI_Confidence_Video_01/audio/sfx/sfx_track.wav' \
+  -x 'AI_Confidence_Video_01/audio/mix/final_mix.wav' \
+  -x 'AI_Confidence_Video_01/research/screens/paper600/*' \
   -x 'AI_Confidence_Video_01/source/public/audio/*' \
   -x 'AI_Confidence_Video_01/assets/downloads/*.jpg' \
   -x 'AI_Confidence_Video_01/assets/downloads/**/*.jpg' \

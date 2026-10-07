@@ -9,6 +9,17 @@ SCR = os.path.join(ROOT, "research/screens/paper")
 AS = os.path.join(ROOT, "assets/screenshots")
 K = 600 / 72  # pts -> px at 600 dpi (vector PDFs re-rendered so the 4K master stays native)
 P600 = os.path.join(ROOT, "research/screens/paper600")
+# Re-render the 600-dpi page images from the source PDFs if they are missing (they are not shipped in the zip).
+import subprocess
+os.makedirs(P600, exist_ok=True)
+_paper = os.path.join(ROOT, "research/sources_raw/kalai2025_why_lms_hallucinate_v1.pdf")
+_thesis = os.path.join(ROOT, "research/sources_raw/kalai2001_thesis/kalai2001_thesis_msr.pdf")
+for _n in (1, 2, 3, 10, 13, 14, 19):
+    _out = os.path.join(P600, f"p{_n:02d}")
+    if not os.path.exists(_out + ".png"):
+        subprocess.run(["pdftoppm", "-r", "600", "-hide-annotations", "-f", str(_n), "-l", str(_n), "-png", "-singlefile", _paper, _out], check=True)
+if not os.path.exists(os.path.join(P600, "thesis_p01.png")):
+    subprocess.run(["pdftoppm", "-r", "600", "-f", "1", "-l", "1", "-png", "-singlefile", _thesis, os.path.join(P600, "thesis_p01")], check=True)
 
 def crop_pts(src, name, x0, y0, x1, y1):
     im = Image.open(src).convert("RGB")
