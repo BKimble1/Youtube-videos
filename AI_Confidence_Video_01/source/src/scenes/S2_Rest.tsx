@@ -100,7 +100,7 @@ export const S2Rest: React.FC = () => {
           })}
         </div>
         <div style={{position: 'absolute', left: 0, right: 0, top: 870, textAlign: 'center', fontFamily: F.sans, fontSize: 30, color: C.textDim, opacity: ramp(g, cThree + 24, 14)}}>
-          The real date is in autumn, the paper notes. A response was requested only if known.
+          Real date: autumn (per the paper)
         </div>
         <SourceLine opacity={bIn}>DeepSeek-V3 via the DeepSeek app, May 11, 2025 · three separate attempts · Kalai et al. (2025), p. 1</SourceLine>
       </AbsoluteFill>

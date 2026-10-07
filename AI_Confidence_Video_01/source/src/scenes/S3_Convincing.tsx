@@ -10,6 +10,8 @@ import {C, F} from '../theme';
 
 const PATTERN_WORDS = ['Methods', 'Algorithms', 'Machine Learning', 'Learning', 'Theory', 'Analysis', 'Online', 'Models', 'Topics in', 'Approaches to', 'Efficient', 'Probabilistic', 'Interactive', 'Games', 'Boosting', 'Optimization'];
 const GPT_TITLE = ['“Boosting,', 'Online', 'Algorithms,', 'and', 'Other', 'Topics', 'in', 'Machine', 'Learning.”'];
+// GPT_TITLE words that also appear in the pattern field (Boosting, Online, Algorithms, Topics in, Machine Learning)
+const PATTERN_IDX = [0, 1, 2, 5, 6, 7, 8];
 
 const isKeyWord = (w: string) => w === 'Methods' || w === 'Algorithms' || w === 'Machine Learning';
 
@@ -316,8 +318,11 @@ export const S3Convincing: React.FC = () => {
             </span>{' '}
             {GPT_TITLE.map((w, i) => {
               const t = ramp(g, cFills + 6 + i * 3, 14);
+              // on "usually looks like": underline the words that also filled the pattern field earlier
+              const k = PATTERN_IDX.indexOf(i);
+              const u = k < 0 ? 0 : ramp(g, at('s19', 'usually') + k * 4, 8);
               return (
-                <span key={i} style={{display: 'inline-block', opacity: t, transform: `translateY(${(1 - t) * (rand(i) * 120 - 60)}px)`, marginRight: 16}}>
+                <span key={i} style={{display: 'inline-block', opacity: t, transform: `translateY(${(1 - t) * (rand(i) * 120 - 60)}px)`, marginRight: 16, boxShadow: u > 0 ? `inset 0 -3px 0 rgba(133,146,168,${0.9 * u})` : undefined}}>
                   {w}
                 </span>
               );
