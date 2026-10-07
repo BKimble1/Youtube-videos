@@ -47,7 +47,7 @@ Main sources
 • OpenAI, "Why language models hallucinate" — https://openai.com/index/why-language-models-hallucinate/
 • Adam Kalai (2001), "Probabilistic and On-line Methods in Machine Learning," PhD thesis, Carnegie Mellon University, CMU-CS-01-132 — https://www.microsoft.com/en-us/research/wp-content/uploads/2016/11/pre-2003-thesis.pdf
 • Anthropic (Mar 27, 2025), "Tracing the thoughts of a large language model" (model studied: Claude 3.5 Haiku) — https://www.anthropic.com/research/tracing-thoughts-language-model
-• Google DeepMind (Jul 21, 2025), "Advanced version of Gemini with Deep Think officially achieves gold-medal standard at the International Mathematical Olympiad" (deepmind.google blog) · published solutions: https://storage.googleapis.com/deepmind-media/gemini/IMO_2025.pdf
+• Google DeepMind (Jul 21, 2025), IMO 2025 announcement on the deepmind.google blog [paste URL after checking] · published solutions: https://storage.googleapis.com/deepmind-media/gemini/IMO_2025.pdf
 • Token split: OpenAI's o200k_base encoding (tiktoken) — https://github.com/openai/tiktoken
 
 Notes: the token split shown is real; the next-token percentages and the quiz scores are illustrations, not measured model data. The Table 1 answers are a May 2025 snapshot of three models without web search, not a failure rate for today's chatbots.
@@ -80,6 +80,6 @@ Optional. A few are enough: AI hallucination, large language models, ChatGPT, ho
 
 - [ ] The premium narration is generated and the "DRAFT · TEMPORARY VOICE" label is gone (it disappears automatically when `ENGINE=elevenlabs`).
 - [ ] Open https://arxiv.org/abs/2509.04664 and check whether a v2 exists. Page numbers and the "penalty 2" misprint we avoided could change.
-- [ ] Open the DeepMind IMO post, confirm the wording "gold-medal standard" and 35/42, and paste its URL into the description. The deepmind.google host was blocked in the production session, so this was confirmed only through search results.
+- [ ] Open the DeepMind IMO post and confirm the "gold-medal standard" wording, then paste its URL into the description. The deepmind.google host was blocked in the production session, so this was confirmed only through search results. The video attributes the result ("reported") and shows no score; only the solutions PDF, which was opened directly, is cited by URL.
 - [ ] Listen to the whole video on headphones and on a phone speaker.
 - [ ] Upload `subtitles_elevenlabs.srt` (regenerated with the final voice), not the draft subtitles.

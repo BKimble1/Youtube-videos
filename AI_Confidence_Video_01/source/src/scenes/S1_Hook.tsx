@@ -237,7 +237,11 @@ export const S1Hook: React.FC = () => {
           <div style={{marginTop: 30, fontFamily: F.sans, fontWeight: 750, fontSize: 52, color: C.text, lineHeight: 1.1}}>
             International Mathematical Olympiad 2025
           </div>
-          <div style={{display: 'flex', gap: 18, marginTop: 44}}>
+          {/* Only what the opened PDF shows: written solutions for P1-P5 (no score, no grading). */}
+          <div style={{marginTop: 34, fontFamily: F.sans, fontSize: 22, fontWeight: 600, color: C.muted, letterSpacing: '0.04em', opacity: ramp(g, cSplit + 8, 12)}}>
+            Written solutions published (PDF)
+          </div>
+          <div style={{display: 'flex', gap: 18, marginTop: 14}}>
             {[0, 1, 2, 3, 4, 5].map((p) => {
               const on = p < 5 ? ramp(g, cSplit + 10 + p * 4, 10) : 0;
               return (
@@ -257,18 +261,18 @@ export const S1Hook: React.FC = () => {
                     color: p < 5 ? C.text : C.muted,
                   }}
                 >
-                  <div style={{fontSize: 22, fontWeight: 600, color: C.muted}}>P{p + 1}</div>
-                  <div style={{fontSize: 40, fontWeight: 700, color: C.teal, opacity: on}}>✓</div>
+                  <div style={{fontSize: 30, fontWeight: 700, color: p < 5 ? C.text : C.muted}}>P{p + 1}</div>
+                  <div style={{fontSize: 18, fontWeight: 600, color: p < 5 ? C.teal : C.muted, opacity: p < 5 ? on : 1, marginTop: 4}}>{p < 5 ? 'solution' : '—'}</div>
                 </div>
               );
             })}
           </div>
           <div style={{marginTop: 40, fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.text, opacity: reportedT, lineHeight: 1.2}}>
-            Reported: 35 / 42
+            Reported by Google DeepMind:
           </div>
           <div style={{fontFamily: F.sans, fontSize: 44, fontWeight: 700, color: C.teal, opacity: goldT, lineHeight: 1.2}}>gold-medal standard</div>
           <div style={{marginTop: 16, fontFamily: F.sans, fontSize: 26, color: C.textDim, opacity: goldT, lineHeight: 1.4}}>
-            Gemini Deep Think (advanced version) · Google DeepMind
+            Gemini Deep Think · Google DeepMind
             <br />
             July 2025
           </div>
