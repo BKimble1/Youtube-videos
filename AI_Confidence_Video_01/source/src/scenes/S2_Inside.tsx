@@ -94,7 +94,7 @@ export const S2Inside: React.FC = () => {
   const g = useG();
   // ---- cue frames (global) ----
   const cStart = at('s08');
-  const cBegan = at('s08', 'began');
+  const cBegan = at('s08', 'answer.');
   const cTokens = at('s09', 'tokens');
   const cFrag = at('s09', 'fragments');
   const cKalai = at('s09', 'Kalai');

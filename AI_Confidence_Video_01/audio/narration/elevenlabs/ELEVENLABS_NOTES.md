@@ -405,3 +405,14 @@ real creator.** Skip Voice Library voices whose name or description references a
   `manifest.json` under `notes`.
 - **Not verified:** the character limits for v3 (5,000 vs 10,000), promo prices, concurrency per
   plan, the default-voice expiry, and whether context text is billed.
+
+## Pronunciation fields (added after integration)
+
+`script/narration_segments.json` segments can carry:
+- `tts_text`: used by the local Kokoro draft. It may contain misaki inline phonemes such as `[Kalai](/kəlˈI/)`.
+- `tts_text_elevenlabs`: optional ElevenLabs-only spoken text, for example a respelling like `Adam Kuh-lie's`.
+
+`tools/elevenlabs_narration.py` uses `tts_text_elevenlabs` when it is present. It never sends Kokoro markup:
+if `tts_text` contains `[word](/phonemes/)`, it falls back to the plain `text`. Square brackets are audio
+tags in Eleven v3/v4, so markup would be misread. After auditioning, if a voice mispronounces "Kalai" (kuh-LIE),
+add `tts_text_elevenlabs` for s01, s05, s09, s12 and s31, or use an ElevenLabs pronunciation dictionary.

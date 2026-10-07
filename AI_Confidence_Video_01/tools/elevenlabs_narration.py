@@ -527,6 +527,7 @@ class ElevenLabsClient:
 # segments input
 # ---------------------------------------------------------------------------------------------------------
 SEG_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
+KOKORO_MARKUP_RE = re.compile(r"\[[^\]]+\]\(/[^)]*/\)")
 
 
 class Segment:
@@ -569,7 +570,14 @@ def load_segments(path: Path) -> list[Segment]:
         text = item.get("text")
         if not isinstance(text, str) or not text.strip():
             raise InputError(f"{path}: segment {sid} has empty or missing 'text'")
-        tts = item.get("tts_text")
+        # ElevenLabs-specific spoken text wins. The shared `tts_text` field may hold Kokoro/misaki
+        # inline phoneme markup like "[Kalai](/kəlˈI/)", which ElevenLabs v3/v4 would misread as an
+        # audio tag, so such markup is never sent; the plain display text is used instead.
+        tts = item.get("tts_text_elevenlabs")
+        if tts is None:
+            tts = item.get("tts_text")
+            if isinstance(tts, str) and KOKORO_MARKUP_RE.search(tts):
+                tts = None
         if tts is not None and not isinstance(tts, str):
             raise InputError(f"{path}: segment {sid} 'tts_text' must be a string")
         pause = item.get("pause_after_ms", 0)

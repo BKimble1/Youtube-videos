@@ -91,7 +91,7 @@ export const S1Hook: React.FC = () => {
   const cTitle = at('s04', 'title');
   const cYear = at('s04', 'year');
   const cKalai = at('s05', 'Kalai?');
-  const cResearchers = at('s05', 'researchers');
+  const cResearchers = at('s05', 'lead');
   const cDiff = at('s06', 'different');
   const cGold = at('s06', 'gold-medal');
   const cSo = at('s07', 'So');

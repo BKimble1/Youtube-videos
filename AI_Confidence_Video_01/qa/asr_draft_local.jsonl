@@ -1,0 +1,39 @@
+{"file":"s01.wav","text":"Researchers asked three popular chatbot's one simple question. What was the title of Adam Collise, PHD dissertation?"}
+{"file":"s02.wav","text":"ChatGPT answered, boosting online algorithms and other topics in machine learning. Carnegie Mellon, 2002."}
+{"file":"s03.wav","text":"Deep-seek gave a different title at Harvard in 2005."}
+{"file":"s04.wav","text":"3. Not one had the right title, or even the right year."}
+{"file":"s05.wav","text":"And Adam Collie, he's the paper's lead author."}
+{"file":"s06.wav","text":"Meanwhile, Google DeepMind reported that a different language model reached gold medal level at the International Mathematical Olympiad."}
+{"file":"s07.wav","text":"So how can AI be that capable? And still sound this sure while being this wrong."}
+{"file":"s07b.wav","text":"Short answer. A chatbot writes what's likely and likely isn't always true. To see why, let's take one answer apart."}
+{"file":"s08.wav","text":"Here's part of ChatGPT's answer."}
+{"file":"s09.wav","text":"A language model writes in tokens, chunks of text. Some are whole words, some are fragments."}
+{"file":"s10.wav","text":"Each token is really a number. At every step, the model turns the tokens so far into a numerical picture of the context, and scores every possible next token."}
+{"file":"s11.wav","text":"Here, it's choosing the last digit of the year. One option gets picked, added to the end, and the loop runs again, token after token."}
+{"file":"s12.wav","text":"Because there's a pick, the same question can come out differently. Asked for Colise Birthday, only if you know, one model gave three different dates in three tries."}
+{"file":"s13.wav","text":"Here's the key part. Those scores measure how likely a piece of text is to come next. Not how likely it is to be true."}
+{"file":"s14.wav","text":"Modern chat bots add more. Instruction training, step-by-step reasoning, sometimes web search. But the answer itself is still written token by token."}
+{"file":"s15.wav","text":"So why would the likely answer be wrong? Look at what the model had to learn."}
+{"file":"s16.wav","text":"what a dissertation title sounds like is everywhere. Methods, algorithms, machine learning, again, and again."}
+{"file":"s17.wav","text":"Famous facts repeat, too. The paper notes that models rarely miss something like Einstein's dissertation title."}
+{"file":"s18.wav","text":"But one researcher's thesis title might appear rarely in the training data. Maybe once, maybe never. Like a birthday, there's no pattern to work it out from."}
+{"file":"s19.wav","text":"So the model fills the gap with what a title usually looks like, and the confidence comes along for free. Is entitled? No, I think. No, maybe. That tone isn't a readout of what the model knows."}
+{"file":"s20.wav","text":"Here's ChatGPT's answer next to the actual record. Spot the difference."}
+{"file":"s21.wav","text":"The same university. The wrong year, it was 2001, and a different title. The invented details look exactly as solid as the true one."}
+{"file":"s22.wav","text":"So why guess it all? Why not say, I don't know. The researchers argue part of the answer is how models get graded."}
+{"file":"s23.wav","text":"Picture a 10-question quiz. Right answer, one point. Wrong answer zero. I don't know. Also zero."}
+{"file":"s24.wav","text":"Two test takers each know six answers. The honest one says, \"I don't know to the rest.\" Six points."}
+{"file":"s25.wav","text":"The guests are taken shot at all four. With four choices each on average one lands, seven points. The guests are wins with three confident wrong answers."}
+{"file":"s26.wav","text":"Now change one rule."}
+{"file":"s27.wav","text":"The honest one still sticks. The guesser 6 plus 1 minus 3, 4, bluffing loses."}
+{"file":"s28.wav","text":"When the researchers checked 10 popular benchmarks, nine graded strictly right or wrong, with zero credit for I don't know. Train and rank models on tests like that, and guessing pays."}
+{"file":"s29.wav","text":"Their fix stayed the penalty for wrong answers upfront, so admitting uncertainty can win. It's one explanation, not the whole story, but a surprisingly simple one."}
+{"file":"s30.wav","text":"So what actually helps start with the unglomerous move. Check the record."}
+{"file":"s31.wav","text":"Here's Colleys' actual thesis, probabilistic and online methods in machine learning. Carnegie Mellon May 2001."}
+{"file":"s32.wav","text":"and checking means more than spotting a citation. Does the source exist? And does it actually say this?"}
+{"file":"s33.wav","text":"Inside one cloud model, and the three-parties found a default circuit for I can't answer. Recognizing a familiar name, which is it off."}
+{"file":"s34.wav","text":"When that recognition misfires, when a name seems familiar, but the facts aren't there, the model can produce a plausible guess. Knowing a name isn't knowing the facts."}
+{"file":"s35.wav","text":"Search, retrieval, and longer reasoning can help when they bring in the right evidence. Turning down the randomness makes answers more consistent, not necessarily more correct. None of it is a guarantee."}
+{"file":"s36.wav","text":"So why does AI sound right when it's wrong? Because sounding right comes from patterns in language, and being right takes evidence the model doesn't always have."}
+{"file":"s37.wav","text":"So when an answer matters, don't ask whether it sounds right. Ask, what the evidence and does it actually say this?"}
+{"file":"s38.wav","text":"It works on chat bots. It works pretty well on people too."}

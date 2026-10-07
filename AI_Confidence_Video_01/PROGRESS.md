@@ -24,3 +24,11 @@ Durable notes so work can resume if the session is interrupted. Newest entries a
 - Remotion scenes S1–S6 written (source/src/scenes). Stills reviewed; layout fixes applied.
 - Real assets: paper crops (CC BY 4.0), thesis title page (MSR-hosted PDF), Anthropic header + Fig. 7 (commentary use), 3 Smithsonian CC0 photos (2 used).
 - Next: music + SFX + mix, full 1080p preview render, QA.
+
+## 06:25Z — audio done, full 1080p review render in progress
+- Fact-check fixes applied (s05 lead author, s06 "Google DeepMind reported", s08 "part of", s21 "a different title", s35 "not necessarily").
+- Music (tools/make_music.py, original, FluidSynth + MuseScore General SF), SFX (tools/make_sfx.py, synthesized), mix (tools/mix.py): -16.0 LUFS integrated, -1.3 dBTP, voice 16.7 dB over music during speech.
+- 30 s test render OK; static-hold and empty-opening issues fixed (kicker + chips, read-along, slow push).
+- Thumbnails A/B/C rendered (thumbnails/). README, package/UPLOAD_PACKAGE.md, tools/finalize.sh, tools/check_cues.py written.
+- Git: code/docs pushed. LFS host (lfs.github.com) is blocked by network policy → audio/video kept local (.gitignore) — must be pushed from a machine with LFS access or after allowing the host.
+- ASR (whisper-tiny) check: ~7.8% WER, misses are recognizer weaknesses (phonemes verified with misaki).
