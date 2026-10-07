@@ -12,8 +12,11 @@ Selected: title **"Why AI Is So Confidently Wrong"**, thumbnail **A ("SO SURE. S
 | `thumbnails/thumbnail_A.jpg` (alternates `_B.jpg`, `_C.jpg`) | 1920×1080 JPEGs under 2 MB; PNG originals alongside. |
 | `package/UPLOAD_PACKAGE.md` | Title options, paste-ready description with chapters, sources and credits, tags, pre-publish checklist. |
 
-A clearly labelled smaller copy for review: `exports/Future_Got_Weird_Video_01_Pass_2_PREVIEW_720p.mp4` (1280×720,
-CRF 23, same audio). Do not upload it.
+Clearly labelled smaller copies for review, not for upload:
+
+- `exports/Future_Got_Weird_Video_01_Pass_2_1080p_REVIEW.mp4`: 1920×1080, CRF 23, 23.6 MiB (fits the chat's 30 MiB
+  upload limit; same picture and mix as the master).
+- `exports/Future_Got_Weird_Video_01_Pass_2_PREVIEW_720p.mp4`: 1280×720, CRF 23, same audio.
 
 ## Keep with the project
 
