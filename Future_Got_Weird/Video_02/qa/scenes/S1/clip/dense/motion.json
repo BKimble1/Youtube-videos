@@ -1,0 +1,30 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S1": {
+   "seconds": 60.9,
+   "mean_energy": 0.736,
+   "still_seconds": 2.1,
+   "still_share": 0.035,
+   "longest_still_s": 1.2
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S1",
+   "from": 696,
+   "to": 731,
+   "seconds": 1.2,
+   "t": "0:23.2",
+   "spoken": "corners. The light doesn't go through the"
+  },
+  {
+   "scene": "S1",
+   "from": 1654,
+   "to": 1681,
+   "seconds": 0.93,
+   "t": "0:55.1",
+   "spoken": "billionth of a second. So"
+  }
+ ]
+}
