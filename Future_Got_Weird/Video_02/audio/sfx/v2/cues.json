@@ -1769,7 +1769,7 @@
    "gain": -2
   },
   {
-   "f": 11631,
+   "f": 11630,
    "kind": "footstep_wood",
    "gain": -7,
    "pitch": 0.5
@@ -1782,7 +1782,7 @@
    "note": "stopped at the partition"
   },
   {
-   "f": 11638,
+   "f": 11636,
    "kind": "footstep_wood",
    "gain": -7,
    "pitch": -0.5
@@ -1792,6 +1792,12 @@
    "kind": "bounce_tick",
    "pitch": 2,
    "gain": -4
+  },
+  {
+   "f": 11641,
+   "kind": "footstep_wood",
+   "gain": -7,
+   "pitch": 0.5
   },
   {
    "f": 11645,

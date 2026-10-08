@@ -5,16 +5,17 @@ import type {Sfx} from '../lib/sfx';
 import {useG} from '../lib/SceneFrame';
 import {at, scene, seg, segEnd} from '../lib/timeline';
 import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
-import {E, SNAP, SOFT, camPath, drop, hop, impact, sp, tw} from '../lib/motion';
-import {CAM_RAISED, RAISED_TILT} from '../lib/shots';
-import {LAYOUT, PTS, projectWith, rigAt, viewAt, type PlanPt} from '../lib/room';
+import {E, SNAP, camPath, drop, hop, impact, sp, tw} from '../lib/motion';
+import {RAISED_TILT} from '../lib/shots';
+import {LAYOUT, PTS, assertAroundTheEnd, hiddenByPartition, partitionHides, projectWith, rigAt, viewAt, visibleSpans, type HiddenTest, type PlanPt} from '../lib/room';
 import {LAYOUT as OLAYOUT, assertPath, scatterDirections, type P2} from '../lib/optics';
 import {rand} from '../lib/anim';
 import {CAST} from '../components/cast';
 import {RoomSet, type RoomItem} from '../components/v02/RoomSet';
 import {LightPath, PulseDot, ScatterFan, mixHex, type ToPx} from '../components/v02/Optics';
-import {ARMS, CROUCH, Character2, EXPR, HANDS_ON_HIPS, IDLE2, handsOnKnees, mixPose2, settlePose, withPose, type Pose2} from '../components/v02/Cast2';
-import {SensorStand} from '../components/v02/S2_SensorStand';
+import {ARMS, CROUCH, Character2, EXPR, HANDS_ON_HIPS, IDLE2, eyesWorld, figuresHide, mixPose2, mouthWorld, reach2, rigCovers, rimFlash, settlePose, withPose, type Pose2, type RigPlace} from '../components/v02/Cast2';
+import {S2Reflection} from '../components/v02/S2_BackHead';
+import {SensorStand, standGeometry} from '../components/v02/S2_SensorStand';
 import {BENCH, BenchTable, MattePanel, MirrorPanel, Torch} from '../components/v02/S2_Bench';
 import {SectionBackdrop, grainTipNear} from '../components/v02/S2_Section';
 import {CARD, EYE_PIECE, PostcardBody, ShredCard, lastLanding, type CardPlace} from '../components/v02/S2_Postcard';
@@ -28,12 +29,17 @@ import {CARD, EYE_PIECE, PostcardBody, ShredCard, lastLanding, type CardPlace} f
  *                 ray that bounces off the mirror; the normal and two equal angle arcs draw: "in = out". On "so the
  *                 picture" the guesser's postcard replaces the torch: three rays (hair, face, shirt colours) bounce as
  *                 a parallel bundle and the picture reappears whole (mirror image) on the far side ("whole").
- *  S2.2 s10b      cut to the raised room (RAISED_TILT, CAM_RAISED raised to show the wall above their heads). On
- *                 "here" a framed mirror panel slides down onto the relay wall at x 1.9–2.6 m; the camera pushes in
- *                 past the checker to the mirror; his mirror image is in the glass, placed where the sensor sees him:
- *                 the specular point of S -> H on the wall, computed below from layout.json (x = 2.139 m). A slowed
- *                 pulse runs S -> mirror -> H. "Friend": busted. "Visible" (J2): he ducks fast (squash, hold); his
- *                 reflection ducks too.
+ *  S2.2 s10b      cut to the raised room (RAISED_TILT 0.10, CAM_A: bare wall above them). On "here" a framed mirror
+ *                 (0.8 x 1.4 m, x 1.95-2.75 m) drops onto the relay wall; the camera pushes past the checker's shoulder
+ *                 to the glass and him (CAM_B). In the glass is his virtual image (H reflected through the wall, at his
+ *                 own scale, clipped to the glass, the partition and people painting over it); he faces the room, so the
+ *                 glass shows his BACK (S2_BackHead: back of the head, striped back, arms behind; lead override). A
+ *                 slowed pulse runs S -> mirror -> H at the 0.95 m light plane, hidden exactly behind the partition and
+ *                 both people: it goes into the slot and vanishes behind the far end (the specular point x = 2.139 m is
+ *                 under the far end's ink outline at this tilt); a glint "tings" on the visible glass just left of the far
+ *                 edge as it bounces, and his wall-side outline rim-flashes when it reaches him. "Friend": busted.
+ *                 "Visible" (J2): the A02 #4 duck: both mitts clamp on his crown (elbows out), deep squat, squash; his
+ *                 reflection ducks in sync (hands over the back hair).
  *  S2.3 s11       the mirror slides off ("A painted wall"), he stands up, relieved; a magnifier lands on the bare wall
  *                 where the mirror hung (handle into empty wall, clear of him and the partition)
  *                 and irises open ("rough up close") into a magnified cross-section of the paint. "throws light": one
@@ -42,12 +48,14 @@ import {CARD, EYE_PIECE, PostcardBody, ShredCard, lastLanding, type CardPlace} f
  *                 like a tiny lamp": every lit spot sends out waves along all its rays (spoken, not captioned).
  *  S2.4 s12       flat graphic: the postcard drops in ("picture"), "metaphor" chip, postmarked on "postcard",
  *                 shreds into confetti ("shredded") that flutters into a pile ("waiting to be sorted"). On "worse"
- *                 cut to the raised room: an inset keeps the pile, and on "bits" one piece still shows his eye. Three
- *                 valid paths (head, shoulder, feet -> three wall spots -> sensor, all through the gap) draw on; on
- *                 "Everything coming back" coloured pulses run them and merge into one plain blip at the sensor
- *                 ("blend"); on "What survives" the blip is tossed over the checker's head into a row of empty time
- *                 slots and fills the one it arrived in: "what survives: timing". Small markers show where each path
- *                 leaves him (head, shoulder, foot); the confetti inset stays until the slots card takes over.
+ *                 cut to the room at TILT 0 (no head path obeys the light-path rule at the raised 0.10; S3 opens at
+ *                 tilt 0 too): an inset keeps the pile, and on "bits" one piece still shows his eye. Three valid paths
+ *                 (head, shoulder, feet -> three wall spots -> sensor) draw on, each round the partition's far end
+ *                 through the gap and hidden exactly where the partition or a person covers it; on "Everything coming
+ *                 back" coloured pulses run them and merge into one plain blip at the sensor ("blend"); on "What
+ *                 survives" the blip is tossed over the checker's head into a row of empty time slots and fills the
+ *                 one it arrived in: "what survives: timing". Small markers show where each path leaves him (head,
+ *                 shoulder, foot); the confetti inset stays until the slots card takes over.
  *  Every slowed pulse (bench ray, mirror pulse, blend pulses) carries S1's saffron "slowed down" chip, top right.
  *
  * Every beat is cued from narration words (K); action lengths are clamped against the gaps so the scene survives
@@ -115,9 +123,14 @@ const f2 = (n: number) => Math.round(n * 100) / 100;
 
 /* ================================================================== geometry (layout.json) */
 
-const SH = LAYOUT.sensor.h;
+/** The light-path plane (layout sensor.h = hidden.h = 0.95 m, the chibi rig's chest). */
+const LIGHT_H = LAYOUT.sensor.h;
+const SH = LIGHT_H;
 const S2D: P2 = {x: PTS.S.x, z: PTS.S.z};
 const H2D: P2 = {x: PTS.H.x, z: PTS.H.z};
+const S3D: Required<PlanPt> = {x: S2D.x, z: S2D.z, h: LIGHT_H};
+const H3D: Required<PlanPt> = {x: H2D.x, z: H2D.z, h: LIGHT_H};
+const dist3 = (a: Required<PlanPt>, b: Required<PlanPt>) => Math.hypot(a.x - b.x, a.z - b.z, a.h - b.h);
 
 /**
  * The mirror's specular point for sensor -> hider: reflect H across the wall line (z = 0) and intersect the straight
@@ -129,8 +142,10 @@ const SPEC: P2 = (() => {
   const u = S2D.z / (S2D.z - Hm.z);
   return {x: S2D.x + u * (Hm.x - S2D.x), z: 0};
 })();
-/** The framed mirror panel on the relay wall (plan metres; h = height on the wall). */
-const MIR = {x0: 1.9, x1: 2.6, h0: 0.85, h1: 1.95};
+const SPEC3D: Required<PlanPt> = {x: SPEC.x, z: 0, h: LIGHT_H};
+/** The framed mirror panel on the relay wall (plan metres; h = height on the wall): big enough that the camera sees
+ *  his whole head in it above the 2 m partition (PATH_LEGIBILITY_PLAN §4 S2.2). */
+const MIR = {x0: 1.95, x1: 2.75, h0: 0.9, h1: 2.3};
 {
   const aIn = Math.atan2(S2D.x - SPEC.x, S2D.z);
   const aOut = Math.atan2(H2D.x - SPEC.x, H2D.z);
@@ -145,17 +160,21 @@ const roomToPx: ToPx = (p) => {
   const q = PX(p.x, p.z);
   return {x: q.x, y: q.y};
 };
-const SPX = PX(S2D.x, S2D.z);
-const MPX = PX(SPEC.x, SPEC.z);
 
-/** Raised room framings. A: CAM_RAISED raised to show the wall above their heads (the mirror lands there). B: the push
- *  past the checker to the mirror and him. D: the room on the right, a column for the cards on the left (as S1 ends). */
-const CAM_A: Cam = {...CAM_RAISED, cy: 395};
-const CAM_B: Cam = {cx: 950, cy: 240, zoom: 1.7};
-const CAM_D: Cam = {cx: 640, cy: 392, zoom: 1.25};
+/** S2.2 framings at RAISED_TILT (world px at tilt 0.10: the glass top at y -87, her feet at 772, her left edge 518,
+ *  his elbow 1261). A: the raised room with the bare wall above them, where the mirror lands. B: the push past the
+ *  checker's shoulder onto the glass and him (zoom kept so the 0.8 x 1.4 m glass, his reflection's hair and his duck
+ *  all stay in frame). */
+const CAM_A: Cam = {cx: 900, cy: 345, zoom: 1.2};
+const CAM_B: Cam = {cx: 985, cy: 268, zoom: 1.4};
 
 const OP = rigAt(LAYOUT.operator.x, LAYOUT.operator.z, RAISED_TILT);
 const GU = rigAt(H2D.x, H2D.z, RAISED_TILT);
+/** His virtual image in the wall mirror: H reflected through the wall z = 0, at his own scale (exact for a planar
+ *  mirror under this parallel projection). He faces the room, so the image faces away: the glass shows his BACK
+ *  (S2_BackHead). Replaces the old "chin at the specular point" placement (REF, REF_SCALE 0.94). */
+const RF = rigAt(H2D.x, -H2D.z, RAISED_TILT);
+if (Math.abs(RF.scale - GU.scale) > 1e-9) throw new Error('S2: the reflection must be drawn at his own scale');
 
 /** The mirror's glass rectangle on screen (world px, before its slide offset). The relay wall faces the camera, so a
  *  rectangle on it stays a rectangle. */
@@ -165,102 +184,184 @@ const GLASS = (() => {
   return {x0: a.x, y0: a.y, x1: b.x, y1: b.y};
 })();
 const FRAME_PX = 15;
-/** His mirror image: the same rig, mirrored, its chin at the specular point (where the sensor sees him). */
-const REF_SCALE = GU.scale * 0.94;
-const REF = {x: MPX.x + 18, y: MPX.y + 313 * REF_SCALE};
 
-/* ---- partition silhouette on screen at RAISED_TILT (for the path clearance check) */
-const OCC = LAYOUT.occluder;
-const ARCH = 0.09;
-const FOOT_H = 0.07;
-const topH = (z: number) => {
-  const Lp = (OCC.z1 - OCC.z0) / 3;
-  const v = (z - OCC.z0) / Lp;
-  const u = clamp01(v - Math.floor(Math.min(2.9999, v)));
-  return OCC.height - ARCH * (1 - Math.sin(Math.PI * u));
-};
-const FACE_X = OCC.x - OCC.thickness / 2;
-const FACE_POLY = (() => {
-  const pts: {x: number; y: number}[] = [];
-  for (let k = 0; k <= 40; k++) {
-    const z = OCC.z0 + ((OCC.z1 - OCC.z0) * k) / 40;
-    pts.push(PX(FACE_X, z, topH(z)));
+/** The light-path rule at the two S2.2 zooms (the pulse runs after the push, at CAM_B; checked at both). The pulse
+ *  goes S -> SPEC behind the partition's FAR end (through the slot) and SPEC -> H comes out by the near end where his
+ *  body covers it; SPEC itself sits under the far end's ink outline at tilt 0.10. */
+const MIRROR_PATH: Required<PlanPt>[] = [S3D, SPEC3D, H3D];
+for (const cam of [CAM_A, CAM_B]) assertAroundTheEnd('S2.2 mirror pulse', [MIRROR_PATH], VS, {zoom: cam.zoom});
+
+/** The "ting" glint: on the visible glass just left of the far edge (the true bounce point is under the far end's ink
+ *  outline). The plan's x 1.99 falls on the mirror's wooden frame (the glass starts 15 px in), so it sits at 2.03. */
+const GLINT3D: Required<PlanPt> = {x: 2.03, z: 0, h: LIGHT_H + 0.12};
+const GLINT = PX(GLINT3D.x, GLINT3D.z, GLINT3D.h);
+if (hiddenByPartition(GLINT3D, VS, {padPx: 12})) throw new Error('S2: the mirror glint is behind the partition');
+if (GLINT.x < GLASS.x0 + FRAME_PX || GLINT.y > GLASS.y1 - FRAME_PX - 12) throw new Error('S2: the mirror glint is not on the glass');
+
+/** How much of his reflection the camera sees in the glass (the partition paints over the glass's lower right). Rig
+ *  zones in rig px (rule_check.ts §2), mapped to the virtual image (x and h kept, z = -H.z, 1.7/440 m per rig px). */
+const REFLECTION_VIS = (() => {
+  const mpp = 1.7 / 440;
+  const zones: Record<string, [number, number, number, number]> = {head: [-80, 80, -470, -300], chest: [-80, 80, -300, -200], belly: [-80, 80, -200, -140]};
+  const gx0 = GLASS.x0 + FRAME_PX;
+  const gx1 = GLASS.x1 - FRAME_PX;
+  const gy0 = GLASS.y0 + FRAME_PX;
+  const gy1 = GLASS.y1 - FRAME_PX;
+  const out: Record<string, number> = {};
+  for (const [name, [x0, x1, y0, y1]] of Object.entries(zones)) {
+    let n = 0;
+    let v = 0;
+    for (let lx = x0; lx <= x1; lx += 8)
+      for (let ly = y0; ly <= y1; ly += 8) {
+        n++;
+        const p = {x: H2D.x + lx * mpp, z: -H2D.z, h: -ly * mpp};
+        const q = projectWith(VS, p);
+        if (q.x >= gx0 && q.x <= gx1 && q.y >= gy0 && q.y <= gy1 && !hiddenByPartition(p, VS)) v++;
+      }
+    out[name] = v / n;
   }
-  pts.push(PX(FACE_X, OCC.z1, FOOT_H), PX(FACE_X, OCC.z0, FOOT_H));
-  return pts;
+  return out;
 })();
-const inPoly = (poly: {x: number; y: number}[], q: {x: number; y: number}) => {
-  let c = false;
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const a = poly[i];
-    const b = poly[j];
-    if (a.y > q.y !== b.y > q.y && q.x < ((b.x - a.x) * (q.y - a.y)) / (b.y - a.y) + a.x) c = !c;
-  }
-  return c;
+if (REFLECTION_VIS.head < 0.9) throw new Error(`S2: only ${(100 * REFLECTION_VIS.head).toFixed(0)} % of his reflected head is visible in the glass (needs 90 %)`);
+
+/** The sensor box hides light on its wall side (S is on its far face, the readout faces the camera). */
+const sensorBoxHides = (s: typeof VS, tilt: number): HiddenTest => {
+  const b = standGeometry(tilt).box;
+  return (p) => {
+    if (p.z > S2D.z + 0.02) return false;
+    const q = projectWith(s, {x: p.x, z: p.z, h: p.h ?? LIGHT_H});
+    return q.x > b.x0 - 2 && q.x < b.x1 + 2 && q.y > b.y0 - 2 && q.y < b.y1 + 2;
+  };
 };
-const segDist = (q: {x: number; y: number}, a: {x: number; y: number}, b: {x: number; y: number}) => {
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const l2 = dx * dx + dy * dy || 1;
-  const u = clamp01(((q.x - a.x) * dx + (q.y - a.y) * dy) / l2);
-  return Math.hypot(q.x - a.x - u * dx, q.y - a.y - u * dy);
-};
-const screenClearance = (a: Required<PlanPt>, b: Required<PlanPt>) => {
-  let m = Infinity;
-  for (let i = 0; i <= 200; i++) {
-    const u = i / 200;
-    const q = PX(lerp(a.x, b.x, u), lerp(a.z, b.z, u), lerp(a.h, b.h, u));
-    if (inPoly(FACE_POLY, q)) return -1;
-    for (let k = 0; k < FACE_POLY.length; k++) m = Math.min(m, segDist(q, FACE_POLY[k], FACE_POLY[(k + 1) % FACE_POLY.length]));
-  }
-  return m;
-};
-const dist3 = (a: Required<PlanPt>, b: Required<PlanPt>) => Math.hypot(a.x - b.x, a.z - b.z, a.h - b.h);
+
+/** Overlay light at RAISED_TILT is hidden behind the partition AS DRAWN, behind both people and behind the sensor box. */
+const HIDE_A: HiddenTest = (() => {
+  const ph = partitionHides(VS, LIGHT_H);
+  const fh = figuresHide(VS, LIGHT_H, [
+    {z: LAYOUT.operator.z, place: OP},
+    {z: H2D.z, place: GU},
+  ]);
+  const sb = sensorBoxHides(VS, RAISED_TILT);
+  return (p) => ph(p) || fh(p) || sb(p);
+})();
 
 /**
- * S2.4: three paths from the hider to the sensor via three different wall spots. Each starts at a point of the drawn
- * rig (head centre, left shoulder, left foot); the rig is drawn at full height while the raised view compresses
- * heights, so the drawn start is the rig point's "effective" 3D point (same plan position, the height that projects
- * onto the drawn body part). Checked here: (1) in plan every path is valid (assertPath: no leg crosses the
- * partition; each crosses from his side to the sensor's side through the gap at the wall); (2) on screen every leg
- * stays at least MIN_CLEAR px outside the partition's drawn silhouette; (3) with his real body heights (head 1.45 m,
- * shoulder 1.13 m, feet 0.04 m) the three path lengths agree within one 250 ps bin (7.5 cm of path), so the three
- * returns really are one blip at the sensor.
+ * S2.4: three paths from the hider to the sensor via three different wall spots, in the room at TILT 0 (at the
+ * raised 0.10 no head path both obeys the light-path rule and has a visible wall spot: his head is above the near
+ * panels' tops on screen and wall spots right of the screen are behind him; PATH_LEGIBILITY_PLAN §4 S2.4). Each path
+ * starts at a point of the drawn rig (head centre, left shoulder, left foot). Rigs are on the set's height scale
+ * (rigScale), so the drawn body points ARE the true heights (head 1.45, shoulder 1.13, feet 0.04 m; asserted within
+ * 2 cm). Checked here, all as throws: (1) in plan every path is valid (assertPath: no leg crosses the partition; each
+ * crosses from his side to the sensor's side through the gap at the wall); (2) on screen every leg obeys the light-path
+ * rule (assertAroundTheEnd at the shot's zoom: behind the partition only by its ends, 24 px below the corner; S -> W
+ * legs 18 px clear); (3) every wall spot is visible, clear of both people, and the spots are 0.3 m apart; (4) the three
+ * path lengths agree within one 250 ps bin (7.5 cm of path), so the three returns really are one blip at the sensor.
+ * Wall spots picked with the rule_check.ts §3 search at tilt 0 (30 px corner margin, 24 px front clearance), scored
+ * for legibility by the length of each path the camera really sees (partition and both people hidden), each leg one
+ * unbroken visible run reaching its spot: the head's spot low by the gap, the feet's at mid height by the far end,
+ * the shoulder's high on the bare wall between her head and the partition; no spot behind the sensor or its tripod.
+ * Director review (pathfix rev): the shoulder spot moved from x 1.78 to 1.86 and the feet spot from 1.92 to 1.98, so
+ * the sensor-bound legs fan into the sensor from above and upper right instead of grazing her pencil and ear (the
+ * shoulder leg passed 8 world px from the pencil tip; now >= 20, asserted below). The three lengths agree within 55 mm.
  */
-const MIN_CLEAR = 14;
+const TILT4 = 0;
+const V4 = viewAt(TILT4);
+const OP4 = rigAt(LAYOUT.operator.x, LAYOUT.operator.z, TILT4);
+const GU4 = rigAt(H2D.x, H2D.z, TILT4);
+/** S2.4 framing: the tilt-0 room on the right, a column on the left (x 92..792) for the confetti inset and the bars
+ *  card (as S1 ends). The room spans screen x ~840..1790; his feet stand just above the caption band. */
+const CAM_D: Cam = {cx: 585, cy: 470, zoom: 1.2};
+/** `local`: the rig point (rig px, feet at 0,0) each path starts from. The shoulder is the top of his left shoulder
+ *  (the arm root at x -66 stands right on the partition's near edge at tilt 0, so its marker would sit on the screen).
+ *  `mark`: where the origin marker sits if not on that point (rig px): the head path leaves his head on the
+ *  partition's side (his left cheek and ear stand behind its near end at tilt 0), so the head's marker sits on his
+ *  hair at the up-left of the head, the head's side the camera sees, not as a red dot on his face; the shoulder's sits
+ *  a little in from the shoulder's edge, so the marker and its departure ring stay clear of the partition. */
 const PARTS = [
-  {id: 'head', local: {x: 0, y: -372}, trueH: 1.45, wall: {x: 1.7, h: 1.9}, color: '#C0392B'},
-  {id: 'shoulder', local: {x: -66, y: -292}, trueH: 1.13, wall: {x: 2.25, h: 1.9}, color: C.saffronDeep},
-  {id: 'feet', local: {x: -33, y: -8}, trueH: 0.04, wall: {x: 2.1, h: 1.2}, color: C.blue},
+  {id: 'head', local: {x: 0, y: -372}, trueH: 1.45, wall: {x: 1.98, h: 0.43}, mark: {x: -34, y: -414}, color: '#C0392B'},
+  {id: 'shoulder', local: {x: -44, y: -294}, trueH: 1.13, wall: {x: 1.86, h: 1.84}, mark: {x: -30, y: -290}, color: C.saffronDeep},
+  {id: 'feet', local: {x: -33, y: -8}, trueH: 0.04, wall: {x: 1.98, h: 1.19}, mark: null, color: C.blue},
 ];
-const S3D: Required<PlanPt> = {x: S2D.x, z: S2D.z, h: SH};
+/** S2.4 drawing sizes (world px at CAM_D zoom 1.2), sized for a phone (40 %): route and trail strokes, wall-spot rings,
+ *  origin markers on him, pulses. */
+const R4 = {route: 7, dash: '15 11', trail: 9, spot: 12, mark: 18, markDot: 10, pulse: 15};
+/** Overlay light at tilt 0: the partition as drawn, both people (figuresHide), and his outline grown by 10 px (the
+ *  shared silhouette leaves a notch between his shoulder and head where a path leaving his shoulder for the wall would
+ *  otherwise be drawn across his shirt). */
+const HIDE4: HiddenTest = (() => {
+  const ph = partitionHides(V4, LIGHT_H);
+  const fh = figuresHide(V4, LIGHT_H, [
+    {z: LAYOUT.operator.z, place: OP4},
+    {z: H2D.z, place: GU4},
+  ]);
+  const him = (p: PlanPt) => p.z < H2D.z + 0.05 && rigCovers(GU4, projectWith(V4, {x: p.x, z: p.z, h: p.h ?? LIGHT_H}), 10);
+  const sb = sensorBoxHides(V4, TILT4);
+  return (p) => ph(p) || fh(p) || him(p) || sb(p);
+})();
+/** Is a world-px point on the sensor stand at tilt 0 (the box, the column, the tripod legs; 20 px margin)? */
+const behindStand = (q: {x: number; y: number}) => {
+  const s0 = projectWith(V4, S3D);
+  const hub = projectWith(V4, {x: S3D.x, z: S3D.z, h: 0.49});
+  if (Math.abs(q.x - s0.x) < 70 && Math.abs(q.y - s0.y) < 60) return true;
+  if (q.y > s0.y && q.y < hub.y && Math.abs(q.x - s0.x) < 28) return true;
+  if (q.y < hub.y - 10) return false;
+  const f1 = projectWith(V4, {x: S3D.x - 0.16, z: S3D.z + 0.1, h: 0});
+  const f2 = projectWith(V4, {x: S3D.x + 0.17, z: S3D.z + 0.08, h: 0});
+  const u = (q.y - hub.y) / (f1.y - hub.y);
+  return q.x > hub.x + (f1.x - hub.x) * u - 22 && q.x < hub.x + (f2.x - hub.x) * u + 22;
+};
+const P4 = (p: Required<PlanPt>) => {
+  const q = projectWith(V4, p);
+  return {x: q.x, y: q.y};
+};
 const BLEND = PARTS.map((p) => {
-  const eff: Required<PlanPt> = {x: H2D.x + (p.local.x * GU.scale) / VS.ppm, z: H2D.z, h: (-p.local.y * GU.scale) / (VS.ppm * VS.height)};
+  const eff: Required<PlanPt> = {x: H2D.x + (p.local.x * GU4.scale) / V4.ppm, z: H2D.z, h: (-p.local.y * GU4.scale) / (V4.ppm * V4.height)};
+  if (Math.abs(eff.h - p.trueH) >= 0.02) throw new Error(`S2: blend path ${p.id}: the drawn rig point is at h ${eff.h.toFixed(3)} m, not its true ${p.trueH} m`);
   const W: Required<PlanPt> = {x: p.wall.x, z: 0, h: p.wall.h};
   assertPath([{x: eff.x, z: eff.z}, {x: W.x, z: 0}, S2D], OLAYOUT);
-  const c1 = screenClearance(eff, W);
-  const c2 = screenClearance(W, S3D);
-  if (Math.min(c1, c2) < MIN_CLEAR) throw new Error(`S2: blend path ${p.id} is only ${Math.min(c1, c2).toFixed(1)} px from the partition on screen`);
+  assertAroundTheEnd(`S2.4 blend ${p.id}`, [[eff, W, S3D]], V4, {zoom: CAM_D.zoom});
+  const wq = projectWith(V4, W);
+  if (hiddenByPartition(W, V4, {padPx: 12}) || rigCovers(GU4, wq, 12) || rigCovers(OP4, wq, 12) || behindStand(wq)) throw new Error(`S2: blend path ${p.id}: its wall spot is not clear on screen`);
   const real = {...eff, h: p.trueH};
   const L1 = dist3(real, W);
   const L2 = dist3(W, S3D);
-  const px = [PX(eff.x, eff.z, eff.h), PX(W.x, W.z, W.h), SPX].map((q) => ({x: q.x, y: q.y}));
-  return {...p, eff, W, L1, L2, L: L1 + L2, px};
+  const px = [P4(eff), P4(W), P4(S3D)];
+  // the visible pieces of each leg (u ranges along the leg): the partition as drawn and both people hide the rest
+  const vis = [visibleSpans(eff, W, TILT4, {noOccluder: true, hidden: HIDE4, steps: 96}), visibleSpans(W, S3D, TILT4, {noOccluder: true, hidden: HIDE4, steps: 96})];
+  return {...p, eff, W, L1, L2, L: L1 + L2, px, vis};
 });
 {
   const Ls = BLEND.map((b) => b.L);
   if (Math.max(...Ls) - Math.min(...Ls) > 0.075) throw new Error(`S2: blend paths differ by more than one 250 ps bin (${Ls.map((l) => l.toFixed(3)).join(', ')})`);
+  for (let i = 0; i < BLEND.length; i++)
+    for (let j = i + 1; j < BLEND.length; j++)
+      if (Math.hypot(BLEND[i].W.x - BLEND[j].W.x, BLEND[i].W.h - BLEND[j].W.h) < 0.3) throw new Error(`S2: blend wall spots ${BLEND[i].id} and ${BLEND[j].id} are closer than 0.3 m`);
 }
 const L_MAX = Math.max(...BLEND.map((b) => b.L));
-/** Where each path visibly leaves his body (world px): the head path from the edge of his head along leg 1, the
- *  shoulder and foot paths from the drawn point. A small marker sits there so "head, shoulder, feet" reads. */
+/** Where each path's origin marker sits (world px): on the drawn start point (shoulder, foot), or on `mark` (the
+ *  head's, on his hair). Asserted: every marker centre is on him, and the whole marker (its ring plus the departure
+ *  burst ring, R4.mark * 1.35 + 4 px plus its stroke) is clear of the partition as drawn. */
+const atHisDepth = (q: {x: number; y: number}): Required<PlanPt> => {
+  const x = V4.pivot.x + (q.x - V4.ax) / V4.ppm - V4.shear * (H2D.z - V4.pivot.z);
+  const h = V4.pivot.h + (V4.floor * (H2D.z - V4.pivot.z) - (q.y - V4.ay) / V4.ppm) / V4.height;
+  return {x, z: H2D.z, h};
+};
 const ORIGIN_PX = BLEND.map((b) => {
-  const out = b.id === 'head' ? 62 * GU.scale : 0;
-  const dx = b.px[1].x - b.px[0].x;
-  const dy = b.px[1].y - b.px[0].y;
-  const l = Math.hypot(dx, dy) || 1;
-  return {x: b.px[0].x + (dx / l) * out, y: b.px[0].y + (dy / l) * out};
+  const q = b.mark ? {x: GU4.x + b.mark.x * GU4.scale, y: GU4.y + b.mark.y * GU4.scale} : b.px[0];
+  if (!rigCovers(GU4, q)) throw new Error(`S2: the ${b.id} marker is not on his body`);
+  const rr = R4.mark * 1.35 + 8;
+  for (let i = 0; i < 16; i++) {
+    const a = (i / 16) * 2 * Math.PI;
+    if (hiddenByPartition(atHisDepth({x: q.x + rr * Math.cos(a), y: q.y + rr * Math.sin(a)}), V4, {padPx: 3})) throw new Error(`S2: the ${b.id} marker overlaps the partition`);
+  }
+  return q;
 });
+/** The sensor-bound legs keep clear of her head, hair and pencil (rigCovers grown by 10 px) above her shoulders. */
+for (const b of BLEND)
+  for (let u = 0; u <= 0.9; u += 0.02) {
+    const q = P4({x: b.W.x + (S3D.x - b.W.x) * u, z: b.W.z + (S3D.z - b.W.z) * u, h: b.W.h + (S3D.h - b.W.h) * u});
+    if (q.y < OP4.y - 300 * OP4.scale && rigCovers(OP4, q, 10)) throw new Error(`S2: blend path ${b.id}: the leg to the sensor grazes her head`);
+  }
 
 /* ================================================================== beats derived from the cues */
 
@@ -294,10 +395,13 @@ const RAY2_DUR = clamp(K.visible - 5 - RAY2_0, 12, 24);
 const SPEC_LEN = Math.hypot(SPEC.x - S2D.x, SPEC.z - S2D.z);
 const RAY2_LEN = SPEC_LEN + Math.hypot(H2D.x - SPEC.x, H2D.z - SPEC.z);
 const RAY2_M = RAY2_0 + (RAY2_DUR * SPEC_LEN) / RAY2_LEN; // the pulse meets the mirror
+const RAY2_HIT = RAY2_0 + RAY2_DUR; // the pulse reaches him (hidden behind his body): rim flash
 const BUSTED = Math.max(K.friend + 2, Math.round(RAY2_M) + 2);
 const DUCK = Math.max(BUSTED + 8, K.visible + 1);
-const DUCK_DOWN = 4; // frames: a fast duck
+const DUCK_DOWN = 4; // frames: a fast duck (A02 #4: both mitts clamp on the crown, deep squat)
 const DUCK_HIT = DUCK + DUCK_DOWN;
+const HANDS_UP0 = DUCK - 2; // the hands lead the squat by two frames
+const HANDS_UP_DUR = 4;
 
 // S2.3 mirror off, magnifier, iris, the rough wall
 const MIRROR_OFF0 = Math.max(DUCK_HIT + 14, K.s11 + 2);
@@ -342,6 +446,13 @@ const DROP0 = Math.max(BARS_IN + 14, K.what);
 const DROP_DUR = clamp(K.survives + 10 - DROP0, 10, 18);
 const DROP_HIT = DROP0 + DROP_DUR;
 const LABEL_T = DROP_HIT + 3;
+/** The takeaway takes over the frame: once the label has been up a beat, the timing card grows to the middle of the
+ *  frame over a paper ground, so S2 ends on a graphic and the cut to S3's room (reframed for its plan card, which is
+ *  in at 2884 in the column where he stands at CAM_D) is a clean graphic-to-room cut, as at "worse" (CUT4), not a
+ *  sideways jump of the same room at the same zoom. Held >= 4 frames before the cut. */
+const TAKEOVER0 = Math.min(Math.max(LABEL_T + 12, K.end - 26), K.end - 14);
+/** 0 (no takeover; the plain cut) if the final narration leaves the label too little time on screen first. */
+const TAKEOVER_DUR = TAKEOVER0 >= LABEL_T + 8 ? Math.min(16, K.end - 4 - TAKEOVER0) : 0;
 
 /** Postcard place (screen px) and the pile's floor. */
 const CARD_PLACE: CardPlace = {x: 960, y: 486, scale: 1.05, rot: -3};
@@ -630,29 +741,81 @@ const BenchShot: React.FC<{g: number}> = ({g}) => {
 const GUESSER_SEED = 22;
 const CHECKER_SEED = 3;
 
+type GuesserState = {pose: Pose2; squash: [number, number]; life: number; handsUp: number; rim: number};
+
 /** S1 ends with him arms crossed, glancing at the wall, uneasy: S2.2 picks him up there. */
 const UNEASY: Pose2 = {...IDLE2, ...ARMS.armsCrossed, armsFront: 'both', lid: 0.12, eyes: 1.12, brows: 0.6, browAsym: 0, mouth: 'hmm', lookX: -0.7, lookY: -0.85, tilt: -5, hunch: 0.04, sweat: 0.8};
 const AT_MIRROR = {lookX: -0.92, lookY: -0.35};
-const crouchBase: Pose2 = {...IDLE2, ...CROUCH, hunch: 0.17, ...EXPR.busted, mouth: 'flat', lookX: -0.85, lookY: -0.55, tilt: 4} as Pose2;
-const DUCKED: Pose2 = {...crouchBase, ...handsOnKnees(crouchBase)};
+/** J2's duck after A02 #4: a deep squat (knees out), shoulders hunched, both mitts clamped on his crown (the arms are
+ *  solved per frame with reach2 on the crown of the current body, so the hands stay on his hair as he drops),
+ *  worried brows, eyes up and to the side. The mouth is 'o' as he drops, then a frown. */
+const DUCK_BODY: Pose2 = {...IDLE2, ...CROUCH, sink: 98, hunch: 0.15, tilt: 4, lean: 0, lid: 0, eyes: 1.14, pupil: 0.72, brows: 1, browAsym: 0, mouth: 'frown', sweat: 1, lookX: -0.8, lookY: -0.6, armsFront: 'both'} as Pose2;
 const RELIEVED: Pose2 = withPose(HANDS_ON_HIPS, {lid: 0.5, eyes: 1, pupil: 1, brows: 0.15, browAsym: 0.2, mouth: 'smile', lookX: -0.55, lookY: -0.35, tilt: 3, sweat: 0});
 
-const guesserMirror = (g: number) => {
+/** Both arms with the mitts on his crown for the body pose `body` (world-exact via the rig's head transform). */
+const crownArms = (place: RigPlace, body: Pose2) => {
+  const e = eyesWorld(place, body);
+  const m = mouthWorld(place, body);
+  const k = 1 / 40; // eyes -> mouth = 40 rig px
+  const d = {x: (m.x - e.x) * k, y: (m.y - e.y) * k}; // one rig px "down the head", world px
+  const r = {x: d.y, y: -d.x}; // one rig px to screen-right of the head
+  const at = (lx: number, ly: number) => ({x: e.x + r.x * lx + d.x * ly, y: e.y + r.y * lx + d.y * ly});
+  // mitt centres on the hair, just under the crown spikes (eyes are 52 rig px below the head top)
+  const L = at(-30, -58);
+  const R = at(30, -58);
+  // elbow 1 here puts the elbows up and out to the sides (A02 #4): the forearms frame his face, never cross it
+  return {armL: reach2(place, body, -1, L.x, L.y, 1), armR: reach2(place, body, 1, R.x, R.y, 1)};
+};
+
+/** Blend two arms so the upper arm swings OUT round the side (through the branch where the elbow is outside the
+ *  body) and the forearm turns the short way: hands go from crossed-on-chest to the crown, and from the crown to the
+ *  hips, beside his face, never across it (a plain angle lerp sweeps both forearms over his face). */
+const armOut = (p: Pose2['armL'], q: Pose2['armL'], t: number): Pose2['armL'] => {
+  if (t <= 0) return p;
+  if (t >= 1) return q;
+  let a1 = q.a;
+  let best = Infinity;
+  for (const k of [-2, -1, 0, 1, 2]) {
+    const cand = q.a + 360 * k;
+    if (Math.sin((((p.a + cand) / 2) * Math.PI) / 180) > 0.2 && Math.abs(cand - p.a) < best) {
+      best = Math.abs(cand - p.a);
+      a1 = cand;
+    }
+  }
+  const c0 = p.a + p.b;
+  let c1 = q.a + q.b;
+  while (c1 - c0 > 180) c1 -= 360;
+  while (c1 - c0 < -180) c1 += 360;
+  const a = p.a + (a1 - p.a) * t;
+  return {a, b: c0 + (c1 - c0) * t - a};
+};
+
+const guesserMirror = (g: number): GuesserState => {
   let pose: Pose2 = UNEASY;
   pose = mixPose2(pose, {...pose, ...AT_MIRROR, eyes: 1.06, sweat: 0.6}, tw(g, NOTICE, 8, E.inOut));
   const bust = sp(g, BUSTED, SNAP);
   if (bust > 0) pose = mixPose2(pose, {...pose, ...EXPR.busted, ...AT_MIRROR, tilt: -2}, Math.min(1.05, bust));
   if (g >= BUSTED) pose = {...pose, bob: hop(g, BUSTED, 9, 7)};
-  // J2: the duck. Down in DUCK_DOWN frames (accelerating), squash at the bottom, hold.
+  // J2: the duck. Hands snap up to the crown (leading by 2 frames), the body drops in DUCK_DOWN frames
+  // (accelerating), squash at the bottom, hold.
+  const handsUp = tw(g, HANDS_UP0, HANDS_UP_DUR, E.out);
   const duck = tw(g, DUCK, DUCK_DOWN, E.in);
-  if (duck > 0) pose = mixPose2(pose, DUCKED, duck);
-  if (g >= DUCK_HIT) pose = {...pose, lookY: -0.55 + 0.1 * Math.sin(Math.min(1, (g - DUCK_HIT) / 20) * Math.PI)};
-  // the mirror leaves: he stands back up, relieved
+  const life = g >= HANDS_UP0 && g < RISE0 + 10 ? 0.12 : 0.5;
+  if (handsUp > 0) {
+    const pre = pose;
+    const body = duck > 0 ? mixPose2(pre, {...DUCK_BODY, bob: 0, mouth: g < DUCK_HIT + 8 ? 'o' : 'frown'}, duck) : {...pre, brows: pre.brows + (1 - pre.brows) * handsUp};
+    const place: RigPlace = {x: GU.x, y: GU.y, scale: GU.scale, frame: g, seed: GUESSER_SEED, life};
+    const arms = crownArms(place, body);
+    pose = {...body, armL: armOut(pre.armL, arms.armL, handsUp), armR: armOut(pre.armR, arms.armR, handsUp), armsFront: 'both'};
+  }
+  if (g >= DUCK_HIT) pose = {...pose, lookY: -0.6 + 0.1 * Math.sin(Math.min(1, (g - DUCK_HIT) / 20) * Math.PI)};
+  // the mirror leaves: he stands back up, relieved (hands come down to his hips)
   const rise = tw(g, RISE0, 14, E.inOut);
-  if (rise > 0) pose = mixPose2(pose, RELIEVED, rise);
+  if (rise > 0) pose = {...mixPose2(pose, RELIEVED, rise), armL: armOut(pose.armL, RELIEVED.armL, rise), armR: armOut(pose.armR, RELIEVED.armR, rise)};
   const squash = impact(g, DUCK_HIT, 0.14, 10);
-  const life = g >= DUCK && g < RISE0 + 10 ? 0.12 : 0.5;
-  return {pose, squash, life};
+  // the pulse reaches him from behind (its last stretch is hidden by the partition and his body): rim flash
+  const rim = tw(g, RAY2_HIT - 1, 3) * (1 - tw(g, RAY2_HIT + 6, 10));
+  return {pose, squash, life, handsUp: rise > 0.5 ? 0 : handsUp, rim};
 };
 
 const checkerLook = (g: number, keys: [number, {lookX: number; lookY: number; tilt: number}][]) => {
@@ -665,6 +828,9 @@ const checkerLook = (g: number, keys: [number, {lookX: number; lookY: number; ti
   return l;
 };
 
+/** The checker stands with her arms crossed (CRITIC_cast-props: never a forearm over the sensor's readout). */
+const CHECKER_BASE: Pose2 = {...IDLE2, ...ARMS.armsCrossed, armsFront: 'both'};
+
 const checkerMirror = (g: number): Pose2 => {
   const look = checkerLook(g, [
     [NOTICE + 6, {lookX: 0.95, lookY: -0.5, tilt: -2}],
@@ -672,49 +838,56 @@ const checkerMirror = (g: number): Pose2 => {
     [RISE0 + 6, {lookX: 0.62, lookY: 0.32, tilt: 3}],
   ]);
   const brow = tw(g, DUCK + 10, 8) * (1 - tw(g, RISE0 + 6, 10));
-  return withPose({...IDLE2, armsFront: 'R'}, {...EXPR.deadpan, ...look, brows: -0.05 + 0.3 * brow, browAsym: 0.5 * brow});
+  return withPose(CHECKER_BASE, {...EXPR.deadpan, ...look, brows: -0.05 + 0.3 * brow, browAsym: 0.5 * brow});
 };
 
-/** Items standing in the raised room: the checker, the sensor on its stand, the guesser (optionally squashed). */
-const roomItems = (g: number, checker: Pose2, guesser: {pose: Pose2; squash: [number, number]; life: number}, sensor: React.ComponentProps<typeof SensorStand>['sensor']): RoomItem[] => [
-  {
-    key: 'checker',
-    x: LAYOUT.operator.x,
-    z: LAYOUT.operator.z,
-    w: 0.3,
-    node: <Character2 look={CAST.checker} pose={checker} frame={g} seed={CHECKER_SEED} x={OP.x} y={OP.y} scale={OP.scale} life={0.35} />,
-  },
-  {
-    key: 'stand',
-    x: PTS.S.x,
-    z: LAYOUT.operator.z + 0.04,
-    w: 0.17,
-    height: 1.4,
-    node: <SensorStand tilt={RAISED_TILT} sensor={sensor} />,
-  },
-  {
-    key: 'guesser',
-    x: H2D.x,
-    z: H2D.z,
-    w: 0.3,
-    node: (
-      <Character2
-        look={CAST.guesser}
-        pose={guesser.pose}
-        frame={g}
-        seed={GUESSER_SEED}
-        x={GU.x}
-        y={GU.y}
-        scale={GU.scale}
-        life={guesser.life}
-        style={guesser.squash[0] !== 1 ? {transform: `scale(${f2(guesser.squash[0])}, ${f2(guesser.squash[1])})`, transformOrigin: `${f2(200 * GU.scale)}px ${f2(500 * GU.scale)}px`} : undefined}
-      />
-    ),
-  },
-];
+/** Items standing in the room at a tilt: the checker, the sensor on its stand, the guesser (optionally squashed and
+ *  rim-lit). */
+const roomItems = (g: number, tilt: number, checker: Pose2, guesser: GuesserState, sensor: React.ComponentProps<typeof SensorStand>['sensor']): RoomItem[] => {
+  const op = rigAt(LAYOUT.operator.x, LAYOUT.operator.z, tilt);
+  const gu = rigAt(H2D.x, H2D.z, tilt);
+  const squashed = guesser.squash[0] !== 1;
+  const filter = rimFlash(guesser.rim, gu.scale);
+  return [
+    {
+      key: 'checker',
+      x: LAYOUT.operator.x,
+      z: LAYOUT.operator.z,
+      w: 0.3,
+      node: <Character2 look={CAST.checker} pose={checker} frame={g} seed={CHECKER_SEED} x={op.x} y={op.y} scale={op.scale} life={0.35} />,
+    },
+    {
+      key: 'stand',
+      x: PTS.S.x,
+      z: LAYOUT.operator.z + 0.04,
+      w: 0.17,
+      height: LIGHT_H + 0.15,
+      node: <SensorStand tilt={tilt} sensor={sensor} />,
+    },
+    {
+      key: 'guesser',
+      x: H2D.x,
+      z: H2D.z,
+      w: 0.3,
+      node: (
+        <Character2
+          look={CAST.guesser}
+          pose={guesser.pose}
+          frame={g}
+          seed={GUESSER_SEED}
+          x={gu.x}
+          y={gu.y}
+          scale={gu.scale}
+          life={guesser.life}
+          style={squashed || filter ? {transform: squashed ? `scale(${f2(guesser.squash[0])}, ${f2(guesser.squash[1])})` : undefined, transformOrigin: `${f2(200 * gu.scale)}px ${f2(500 * gu.scale)}px`, filter} : undefined}
+        />
+      ),
+    },
+  ];
+};
 
-/** The framed mirror on the wall, with his mirror image clipped to the glass (world px). */
-const WallMirror: React.FC<{g: number; dy: number; guesser: {pose: Pose2; squash: [number, number]; life: number}}> = ({g, dy, guesser}) => {
+/** The framed mirror on the wall, with his reflection (his back) clipped to the glass (world px). */
+const WallMirror: React.FC<{g: number; dy: number; guesser: GuesserState; glint: number}> = ({g, dy, guesser, glint}) => {
   const x0 = GLASS.x0;
   const x1 = GLASS.x1;
   const y0 = GLASS.y0 + dy;
@@ -722,6 +895,7 @@ const WallMirror: React.FC<{g: number; dy: number; guesser: {pose: Pose2; squash
   const fr = FRAME_PX;
   const clip = `polygon(${f2(x0 + fr)}px ${f2(y0 + fr)}px, ${f2(x1 - fr)}px ${f2(y0 + fr)}px, ${f2(x1 - fr)}px ${f2(y1 - fr)}px, ${f2(x0 + fr)}px ${f2(y1 - fr)}px)`;
   const svg = {position: 'absolute' as const, left: 0, top: 0, overflow: 'visible' as const};
+  const gl = {x: GLINT.x, y: GLINT.y + dy};
   return (
     <>
       <svg width={1920} height={1080} style={svg}>
@@ -729,27 +903,33 @@ const WallMirror: React.FC<{g: number; dy: number; guesser: {pose: Pose2; squash
         <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} rx={10} fill={C.wood} stroke={C.ink} strokeWidth={4} />
         <rect x={x0 + fr} y={y0 + fr} width={x1 - x0 - 2 * fr} height={y1 - y0 - 2 * fr} rx={4} fill={C.blueLight} />
       </svg>
-      <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, clipPath: clip}}>
-        <Character2
-          look={CAST.guesser}
-          pose={guesser.pose}
-          frame={g}
-          seed={GUESSER_SEED}
-          x={REF.x}
-          y={REF.y}
-          scale={REF_SCALE}
-          flip
-          shadow={false}
-          life={guesser.life}
-          style={guesser.squash[0] !== 1 ? {transform: `scale(${f2(guesser.squash[0])}, ${f2(guesser.squash[1])})`, transformOrigin: `${f2(200 * REF_SCALE)}px ${f2(500 * REF_SCALE)}px`} : undefined}
-        />
-      </div>
+      {/* his virtual image stays put in the world (a planar mirror sliding in its own plane does not move the image):
+          the moving glass only reveals it */}
+      <S2Reflection
+        look={CAST.guesser}
+        pose={guesser.pose}
+        frame={g}
+        seed={GUESSER_SEED}
+        life={guesser.life}
+        place={{x: RF.x, y: RF.y, scale: RF.scale}}
+        armsOverHead={guesser.handsUp > 0.5}
+        squash={guesser.squash}
+        clipPath={clip}
+        id="s2ref"
+      />
       <svg width={1920} height={1080} style={svg}>
-        <rect x={x0 + fr} y={y0 + fr} width={x1 - x0 - 2 * fr} height={y1 - y0 - 2 * fr} fill={C.blueLight} opacity={0.3} />
+        <rect x={x0 + fr} y={y0 + fr} width={x1 - x0 - 2 * fr} height={y1 - y0 - 2 * fr} fill={C.blueLight} opacity={0.14} />
         {/* two flat sheen strokes in the top-right corner (static on the glass) */}
         <path d={`M ${f2(x1 - fr - 64)} ${f2(y0 + fr + 4)} L ${f2(x1 - fr - 4)} ${f2(y0 + fr + 64)}`} stroke={C.white} strokeWidth={13} strokeLinecap="round" opacity={0.75} />
         <path d={`M ${f2(x1 - fr - 26)} ${f2(y0 + fr + 4)} L ${f2(x1 - fr - 4)} ${f2(y0 + fr + 26)}`} stroke={C.white} strokeWidth={7} strokeLinecap="round" opacity={0.75} />
         <rect x={x0 + fr} y={y0 + fr} width={x1 - x0 - 2 * fr} height={y1 - y0 - 2 * fr} rx={4} fill="none" stroke={C.ink} strokeWidth={3} />
+        {/* the "ting": a four-point glint on the visible glass just left of the far edge as the pulse bounces */}
+        {glint > 0 && glint < 1 && (
+          <g transform={`translate(${f2(gl.x)} ${f2(gl.y)}) scale(${f2(Math.sin(glint * Math.PI) * 1.15)}) rotate(${f2(20 * glint)})`}>
+            <path d="M 0 -34 Q 4 -4 34 0 Q 4 4 0 34 Q -4 4 -34 0 Q -4 -4 0 -34 Z" fill={C.saffronLight} stroke={C.ink} strokeWidth={3.5} strokeLinejoin="round" />
+            <circle r={7} fill={C.white} />
+          </g>
+        )}
       </svg>
     </>
   );
@@ -758,6 +938,7 @@ const WallMirror: React.FC<{g: number; dy: number; guesser: {pose: Pose2; squash
 /* ---- the magnifier iris (S2.2 -> S2.3) */
 const SEC_C = grainTipNear(960);
 const LENS_R = 124;
+const HANDLE = {x: 0.94, y: 0.34}; // unit vector from the handle's tip toward the lens centre
 
 const Iris: React.FC<{g: number; from: {x: number; y: number}}> = ({g, from}) => {
   if (g < LENS_POP) return null;
@@ -776,9 +957,9 @@ const Iris: React.FC<{g: number; from: {x: number; y: number}}> = ({g, from}) =>
       </defs>
       {handle > 0 && (
         <g opacity={handle}>
-          {/* handle up and to the left, into bare wall (down-right would cross his head) */}
-          <line x1={f2(c.x - r * 0.7)} y1={f2(c.y - r * 0.7)} x2={f2(c.x - r * 0.7 - 110 * pop)} y2={f2(c.y - r * 0.7 - 110 * pop)} stroke={C.ink} strokeWidth={34} strokeLinecap="round" />
-          <line x1={f2(c.x - r * 0.7)} y1={f2(c.y - r * 0.7)} x2={f2(c.x - r * 0.7 - 110 * pop)} y2={f2(c.y - r * 0.7 - 110 * pop)} stroke={C.woodDeep} strokeWidth={22} strokeLinecap="round" />
+          {/* handle to the left and a little up, into bare wall above her head (down-right would cross his head) */}
+          <line x1={f2(c.x - r * HANDLE.x)} y1={f2(c.y - r * HANDLE.y)} x2={f2(c.x - (r + 110 * pop) * HANDLE.x)} y2={f2(c.y - (r + 110 * pop) * HANDLE.y)} stroke={C.ink} strokeWidth={34} strokeLinecap="round" />
+          <line x1={f2(c.x - r * HANDLE.x)} y1={f2(c.y - r * HANDLE.y)} x2={f2(c.x - (r + 110 * pop) * HANDLE.x)} y2={f2(c.y - (r + 110 * pop) * HANDLE.y)} stroke={C.woodDeep} strokeWidth={22} strokeLinecap="round" />
         </g>
       )}
       <g clipPath="url(#s2iris)">
@@ -792,35 +973,48 @@ const Iris: React.FC<{g: number; from: {x: number; y: number}}> = ({g, from}) =>
   );
 };
 
+/** S2.3: the magnifier lands on bare wall where the mirror hung (upper glass area), clear of the 2 m partition's far
+ *  top and of his hair at CAM_B: checked at module load on a ring 24 world px outside the lens. */
+const LENS_W = PX(2.27, 0, 2.0);
+{
+  const R = LENS_R / CAM_B.zoom + 24;
+  const dz = 0 - VS.pivot.z;
+  for (let i = 0; i < 72; i++) {
+    const a = (i / 72) * 2 * Math.PI;
+    const q = {x: LENS_W.x + R * Math.cos(a), y: LENS_W.y + R * Math.sin(a)};
+    const wall = {x: VS.pivot.x + (q.x - VS.ax) / VS.ppm - VS.shear * dz, z: 0, h: VS.pivot.h + (VS.floor * dz - (q.y - VS.ay) / VS.ppm) / VS.height};
+    if (hiddenByPartition(wall, VS) || rigCovers(GU, q) || rigCovers(OP, q)) throw new Error(`S2: the magnifier does not land on bare wall (ring point ${q.x.toFixed(0)}, ${q.y.toFixed(0)})`);
+  }
+}
+
 const RoomMirrorShot: React.FC<{g: number}> = ({g}) => {
   const cam = camPath(g, CAM_A, [{at: PUSH2_0, dur: PUSH2_DUR, to: CAM_B}]);
   const gu = guesserMirror(g);
   const ch = checkerMirror(g);
-  const mirrorDy = g < MIRROR_OFF0 ? drop(g, DROP_LAND, 420, 10) : -E.in(tw(g, MIRROR_OFF0, 12, E.linear)) * 460;
+  // the mirror drops in from above the frame and later slides out of it upward
+  const mirrorDy = g < MIRROR_OFF0 ? drop(g, DROP_LAND, 600, 10) : -E.in(tw(g, MIRROR_OFF0, 12, E.linear)) * 620;
   const mirrorOn = g >= DROP_LAND - 10;
-  // the specular ray (fades as he ducks out of it)
+  // the specular pulse S -> mirror -> him (fades as he ducks out of it); hidden behind the partition as drawn and
+  // behind both people, so it goes into the slot, vanishes at the far end, and the glint and his rim flash take over
   const rayT = clamp01((g - RAY2_0) / RAY2_DUR);
   const rayOp = 1 - tw(g, DUCK, 10);
-  const backdrop = (
-    <>
-      {mirrorOn && <WallMirror g={g} dy={mirrorDy} guesser={gu} />}
-      {g >= RAY2_0 && rayOp > 0 && (
-        <LightPath points={[S2D, SPEC, H2D]} toPx={roomToPx} t={rayT} pulses={3} pulseGap={0.09} intensityFalloff={0.92} layout={OLAYOUT} arrive="hide" opacity={rayOp} />
-      )}
-    </>
-  );
-  const items = roomItems(g, ch, gu, {led: 1, reveal: 1});
-  // the magnifier lands on the bare wall where the mirror hung (the glass centre), clear of the partition and of him
-  const lensScr = worldToScreen(cam, (GLASS.x0 + GLASS.x1) / 2, (GLASS.y0 + GLASS.y1) / 2);
+  const glint = (g - (Math.round(RAY2_M) - 1)) / 12;
+  const backdrop = <>{mirrorOn && <WallMirror g={g} dy={mirrorDy} guesser={gu} glint={glint} />}</>;
+  const items = roomItems(g, RAISED_TILT, ch, gu, {led: 1, reveal: 1});
+  const lensScr = worldToScreen(cam, LENS_W.x, LENS_W.y);
   return (
     <AbsoluteFill style={{background: C.paper}}>
       <Camera cam={cam}>
         <Layer depth={1}>
-          <RoomSet tilt={RAISED_TILT} items={items} backdrop={backdrop} />
+          <RoomSet tilt={RAISED_TILT} items={items} backdrop={backdrop}>
+            {g >= RAY2_0 && rayOp > 0 && (
+              <LightPath points={[S2D, SPEC, H2D]} toPx={roomToPx} t={rayT} pulses={3} pulseGap={0.09} intensityFalloff={0.92} layout={OLAYOUT} clearPx={0} hidden={HIDE_A} arrive="hide" opacity={rayOp} />
+            )}
+          </RoomSet>
         </Layer>
       </Camera>
       <SlowedChip t={tw(g, RAY2_0 - 2, 8) * (1 - tw(g, DUCK + 6, 8))} />
-      <Iris g={g} from={{x: lensScr.x - 30, y: lensScr.y}} />
+      <Iris g={g} from={{x: lensScr.x, y: lensScr.y}} />
     </AbsoluteFill>
   );
 };
@@ -953,6 +1147,16 @@ const INSET = {x0: 92, y0: 92, x1: 792, y1: 470};
 const INSET_K = 0.72;
 const BARS = {x0: 92, y0: 540, x1: 792, y1: 912, n: 12, slot: 7, base: 846, x: 152, w: 40, gap: 10, hMax: 150};
 const SLOT_C = {x: BARS.x + BARS.slot * (BARS.w + BARS.gap) + BARS.w / 2, y: BARS.base - 24};
+/** The takeover (TAKEOVER0): the bars card's centre moves to TAKE_C and it grows to 1440 px wide (x 240..1680, y
+ *  138..903: inside the 5 % margins and above the caption band; the label becomes 107 px, "time ->" 70 px). */
+const BARS_C = {x: (BARS.x0 + BARS.x1) / 2, y: (BARS.y0 + BARS.y1) / 2};
+const TAKE_C = {x: 960, y: 520};
+const TAKE_K = 1440 / (BARS.x1 - BARS.x0);
+{
+  const y0 = TAKE_C.y - ((BARS.y1 - BARS.y0) / 2) * TAKE_K;
+  const y1 = TAKE_C.y + ((BARS.y1 - BARS.y0 + 14) / 2) * TAKE_K;
+  if (y0 < 1080 * 0.05 || y1 > 1080 * 0.88 || TAKE_C.x - 720 < 1920 * 0.05) throw new Error('S2: the takeover card leaves the safe area');
+}
 
 const guesserBlend = (g: number): Pose2 => {
   let pose: Pose2 = withPose(HANDS_ON_HIPS, {...EXPR.smug, lookX: -0.35, ...settlePose(1, -1)});
@@ -969,88 +1173,98 @@ const checkerBlend = (g: number): Pose2 => {
     [DROP0, {lookX: -0.85, lookY: 0.3, tilt: -2}],
   ]);
   const brow = tw(g, LABEL_T + 2, 8);
-  return withPose({...IDLE2, armsFront: 'R'}, {...EXPR.deadpan, ...look, brows: -0.05 + 0.3 * brow, browAsym: 0.5 * brow});
+  return withPose(CHECKER_BASE, {...EXPR.deadpan, ...look, brows: -0.05 + 0.3 * brow, browAsym: 0.5 * brow});
 };
 
-/** A point along a drawn polyline, by fraction of each leg's REAL length (constant light speed). */
-const pathPoint = (b: (typeof BLEND)[number], d: number) => {
-  if (d <= b.L1) {
-    const u = clamp01(d / b.L1);
-    return {x: lerp(b.px[0].x, b.px[1].x, u), y: lerp(b.px[0].y, b.px[1].y, u), leg: 0};
-  }
-  const u = clamp01((d - b.L1) / b.L2);
-  return {x: lerp(b.px[1].x, b.px[2].x, u), y: lerp(b.px[1].y, b.px[2].y, u), leg: 1};
+type Blend = (typeof BLEND)[number];
+const legEnds = (b: Blend, leg: number): [Required<PlanPt>, Required<PlanPt>] => (leg === 0 ? [b.eff, b.W] : [b.W, S3D]);
+const legAt = (b: Blend, leg: number, u: number): Required<PlanPt> => {
+  const [p, q] = legEnds(b, leg);
+  return {x: p.x + (q.x - p.x) * u, z: p.z + (q.z - p.z) * u, h: p.h + (q.h - p.h) * u};
 };
+/** SVG path data for the visible pieces of a leg between u0 and u1 (the leg is straight on screen: affine map). */
+const legRuns = (b: Blend, leg: number, u0: number, u1: number) =>
+  b.vis[leg]
+    .map(([a, c]) => [Math.max(a, u0), Math.min(c, u1)])
+    .filter(([a, c]) => c > a + 1e-4)
+    .map(([a, c]) => {
+      const p = P4(legAt(b, leg, a));
+      const q = P4(legAt(b, leg, c));
+      return `M ${f2(p.x)} ${f2(p.y)} L ${f2(q.x)} ${f2(q.y)}`;
+    })
+    .join(' ');
+const SPX4 = P4(S3D);
 
 const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
   const cam = CAM_D;
-  const gu = {pose: guesserBlend(g), squash: [1, 1] as [number, number], life: 0.5};
+  const gu: GuesserState = {pose: guesserBlend(g), squash: [1, 1], life: 0.5, handsUp: 0, rim: 0};
   const ch = checkerBlend(g);
   const v = L_MAX / Math.max(1, ARRIVE - PULSE0);
   const travelled = (g - PULSE0) * v;
   const arrivedFrac = BLEND.filter((b) => travelled >= b.L).length / BLEND.length;
   const flash = sp(g, ARRIVE, SNAP) * (1 - tw(g, ARRIVE + 30, 20));
-  const backdrop = (
-    <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-      {BLEND.map((b, k) => {
-        const r = tw(g, ROUTES0 + k * ROUTE_STAGGER, ROUTE_DUR, E.inOut);
-        if (r <= 0) return null;
-        // draw-on of the dashed route by drawn length
-        const l1 = Math.hypot(b.px[1].x - b.px[0].x, b.px[1].y - b.px[0].y);
-        const l2 = Math.hypot(b.px[2].x - b.px[1].x, b.px[2].y - b.px[1].y);
-        const head = r * (l1 + l2);
-        const pts = [b.px[0]];
-        if (head <= l1) pts.push({x: lerp(b.px[0].x, b.px[1].x, head / l1), y: lerp(b.px[0].y, b.px[1].y, head / l1)});
-        else pts.push(b.px[1], {x: lerp(b.px[1].x, b.px[2].x, (head - l1) / l2), y: lerp(b.px[1].y, b.px[2].y, (head - l1) / l2)});
-        const routeD = pts.map((q, i) => `${i ? 'L' : 'M'} ${f2(q.x)} ${f2(q.y)}`).join(' ');
-        // the pulse and its trail
-        const on = g >= PULSE0 && travelled < b.L;
-        const pp = on ? pathPoint(b, travelled) : null;
-        const trail = g >= PULSE0 ? (travelled >= b.L ? [b.px[0], b.px[1], b.px[2]] : pp!.leg === 0 ? [b.px[0], pp!] : [b.px[0], b.px[1], pp!]) : null;
-        const trailOp = 1 - tw(g, DROP0, 14);
-        return (
-          <g key={b.id}>
-            <path d={routeD} fill="none" stroke={mixHex(b.color, C.paper, 0.35)} strokeWidth={5} strokeDasharray="12 11" strokeLinecap="round" strokeLinejoin="round" />
-            {r > 0.45 && <circle cx={f2(b.px[1].x)} cy={f2(b.px[1].y)} r={f2(9 * E.back(clamp01((r - 0.45) / 0.2)))} fill={C.cream} stroke={C.ink} strokeWidth={3.5} />}
-            {trail && trailOp > 0 && (
-              <path d={trail.map((q, i) => `${i ? 'L' : 'M'} ${f2(q.x)} ${f2(q.y)}`).join(' ')} fill="none" stroke={b.color} strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" opacity={0.85 * trailOp} />
-            )}
-            {pp && <PulseDot x={pp.x} y={pp.y} r={13} color={b.color} />}
-          </g>
-        );
-      })}
-    </svg>
-  );
+  const trailOp = 1 - tw(g, DROP0, 14);
+  const routes = BLEND.map((b, k) => {
+    const r = tw(g, ROUTES0 + k * ROUTE_STAGGER, ROUTE_DUR, E.inOut);
+    if (r <= 0) return null;
+    // draw-on of the dashed route by drawn length; only the stretches the camera sees (partition, people) are drawn
+    const l1 = Math.hypot(b.px[1].x - b.px[0].x, b.px[1].y - b.px[0].y);
+    const l2 = Math.hypot(b.px[2].x - b.px[1].x, b.px[2].y - b.px[1].y);
+    const head = r * (l1 + l2);
+    const routeD = [legRuns(b, 0, 0, clamp01(head / l1)), legRuns(b, 1, 0, clamp01((head - l1) / l2))].join(' ').trim();
+    // the pulse (constant real speed along the true path lengths) and its trail
+    const on = g >= PULSE0 && travelled < b.L;
+    const leg = travelled <= b.L1 ? 0 : 1;
+    const u = leg === 0 ? clamp01(travelled / b.L1) : clamp01((travelled - b.L1) / b.L2);
+    const p3 = on ? legAt(b, leg, u) : null;
+    const pp = p3 && !HIDE4(p3) ? P4(p3) : null;
+    const trailD = g < PULSE0 ? '' : [legRuns(b, 0, 0, leg === 0 && on ? u : 1), on && leg === 0 ? '' : legRuns(b, 1, 0, on ? u : 1)].join(' ').trim();
+    return (
+      <g key={b.id}>
+        {routeD && <path d={routeD} fill="none" stroke={mixHex(b.color, C.paper, 0.22)} strokeWidth={R4.route} strokeDasharray={R4.dash} strokeLinecap="round" strokeLinejoin="round" />}
+        {r > 0.45 && <circle cx={f2(b.px[1].x)} cy={f2(b.px[1].y)} r={f2(R4.spot * E.back(clamp01((r - 0.45) / 0.2)))} fill={C.cream} stroke={C.ink} strokeWidth={4} />}
+        {trailD && trailOp > 0 && <path d={trailD} fill="none" stroke={b.color} strokeWidth={R4.trail} strokeLinecap="round" strokeLinejoin="round" opacity={0.9 * trailOp} />}
+        {pp && <PulseDot x={pp.x} y={pp.y} r={R4.pulse} color={b.color} />}
+      </g>
+    );
+  });
   // the merged blip sits on the sensor's far face until it drops
   const blipOn = g >= PULSE0 && arrivedFrac > 0 && g < DROP0;
   const throb = pulse01(g, K.many, 14);
   const markerOp = 1 - tw(g, DROP0, 14);
   const overlay = (
     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+      {routes}
       {/* where each path leaves him: head, shoulder, foot (in front of him, so the origins read) */}
       {markerOp > 0 &&
         BLEND.map((b, k) => {
           const m = E.back(clamp01((g - ROUTES0 - k * ROUTE_STAGGER) / 8));
           if (m <= 0) return null;
           const o = ORIGIN_PX[k];
+          // the light leaves him: each marker throbs and sends out one ring in its path's colour as the pulses depart
+          const burst = clamp01((g - PULSE0) / 12);
+          const throb = 1 + 0.35 * pulse01(g, PULSE0 - 2, 12);
           return (
-            <g key={b.id} opacity={f2(markerOp)} transform={`translate(${f2(o.x)} ${f2(o.y)}) scale(${f2(m)})`}>
-              <circle r={14} fill={C.cream} stroke={C.ink} strokeWidth={3.5} />
-              <circle r={7.5} fill={b.color} />
+            <g key={b.id} opacity={f2(markerOp)} transform={`translate(${f2(o.x)} ${f2(o.y)})`}>
+              {burst > 0 && burst < 1 && <circle r={f2(R4.mark * (1 + 0.35 * E.out(burst)) + 4)} fill="none" stroke={b.color} strokeWidth={f2(5 * (1 - burst) + 1)} opacity={f2(1 - burst)} />}
+              <g transform={`scale(${f2(m * throb)})`}>
+                <circle r={R4.mark} fill={C.cream} stroke={C.ink} strokeWidth={4} />
+                <circle r={R4.markDot} fill={b.color} />
+              </g>
             </g>
           );
         })}
       {blipOn && (
         <>
-          <circle cx={SPX.x} cy={SPX.y} r={f2(14 + 40 * E.out(clamp01((g - ARRIVE) / 14)))} fill="none" stroke={C.saffronDeep} strokeWidth={5} opacity={f2(1 - clamp01((g - ARRIVE) / 14))} />
-          <PulseDot x={SPX.x} y={SPX.y} r={10 + 5 * arrivedFrac + 3 * throb} color={C.saffron} />
+          <circle cx={SPX4.x} cy={SPX4.y} r={f2(14 + 40 * E.out(clamp01((g - ARRIVE) / 14)))} fill="none" stroke={C.saffronDeep} strokeWidth={5} opacity={f2(1 - clamp01((g - ARRIVE) / 14))} />
+          <PulseDot x={SPX4.x} y={SPX4.y} r={10 + 5 * arrivedFrac + 3 * throb} color={C.saffron} />
         </>
       )}
     </svg>
   );
-  const items = roomItems(g, ch, gu, {led: 1, reveal: 1, bumpHighlight: flash});
+  const items = roomItems(g, TILT4, ch, gu, {led: 1, reveal: 1, bumpHighlight: flash});
   // screen-space: the inset, the bars card, the dropping blip
-  const sScr = worldToScreen(cam, SPX.x, SPX.y);
+  const sScr = worldToScreen(cam, SPX4.x, SPX4.y);
   const insetIn = 1 - tw(g, INSET_OUT, 10, E.in);
   const lift = tw(g, BITS, 10, E.out);
   const barsIn = tw(g, BARS_IN, 12, E.out);
@@ -1061,11 +1275,12 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
   const blipScr = g >= DROP0 && g < DROP_HIT ? {x: bz(sScr.x, lobC.x, SLOT_C.x, dropU), y: bz(sScr.y, lobC.y, SLOT_C.y, dropU)} : null;
   const barRise = sp(g, DROP_HIT, SNAP);
   const lab = g >= LABEL_T ? E.back(clamp01((g - LABEL_T) / 9)) : 0;
+  const take = TAKEOVER_DUR > 0 ? E.inOut(tw(g, TAKEOVER0, TAKEOVER_DUR, E.linear)) : 0;
   return (
     <AbsoluteFill style={{background: C.paper}}>
       <Camera cam={cam}>
         <Layer depth={1}>
-          <RoomSet tilt={RAISED_TILT} items={items} backdrop={backdrop}>
+          <RoomSet tilt={TILT4} items={items}>
             {overlay}
           </RoomSet>
         </Layer>
@@ -1084,6 +1299,9 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
           </div>
         </div>
       )}
+      {/* the takeaway takes over: a paper ground rises over the room while the card grows to the middle */}
+      {take > 0 && <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, background: C.paper, opacity: f2(Math.min(1, take * 1.25))}} />}
+      <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, ...(take > 0 ? {transform: `translate(${f2((TAKE_C.x - BARS_C.x) * take)}px, ${f2((TAKE_C.y - BARS_C.y) * take)}px) scale(${f2(1 + (TAKE_K - 1) * take)})`, transformOrigin: `${BARS_C.x}px ${BARS_C.y}px`} : {})}}>
       {/* the row of timing bars */}
       {barsIn > 0 && (
         <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: barsIn, transform: `translateX(${f2(-40 * (1 - barsIn))}px)`}}>
@@ -1115,6 +1333,7 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
           what survives: timing
         </div>
       )}
+      </div>
       {blipScr && (
         <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
           <PulseDot x={blipScr.x} y={blipScr.y} r={f2(lerp(18 * cam.zoom, 20, dropU))} color={C.saffron} />
@@ -1135,3 +1354,4 @@ export const S2Mirror: React.FC = () => {
   if (g < CUT4) return <PostcardShot g={g} />;
   return <RoomBlendShot g={g} />;
 };
+

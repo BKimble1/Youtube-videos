@@ -1,6 +1,58 @@
 # S9: builder and director-review reports
 
-## Builder
+## Director review after the light-path fix
+
+Merged into `source/` on 2026-10-08 (not committed). Sheets in this folder are the review's final sheets from `qa/pathfix_rev/S9/clip_r3/dense/`: `S9_sheet01.jpg`, `S9_sheet02.jpg`, `S9_sheet03.jpg`, `motion.json`, `motion_S9.png`, `S9_phone40_final.jpg`.
+
+I reviewed S9 in the isolated copy at `/home/user/Youtube-videos/Future_Got_Weird/Video_02/work/rev_S9`. I found and fixed four defects over three fix-and-check rounds. Each round I rendered the half-res clip, read the dense sheets and checked full-res stills, including at 40% size. `npx tsc --noEmit -p .` passes, every assert is still a throw, and every cue still comes from `at()`. S9's sound cues did not change.
+
+### Defects found and fixed (all in `src/scenes/S9_Payoff.tsx`)
+
+1. **The push still read as dragging (lead override 2).**
+   - **Cause:** the back-view staging was right, but his left hand target sat almost on his left shoulder, so the arm was folded shut (hand about 15 px from the shoulder). The arm solver then swung that upper arm from −15° to +95° with every step. Mid-push he looked like he was reaching after the screen.
+   - **Hands:** I moved them to 0.62 m (left, at the hip) and 0.92 m (right, reaching across at chest height). The upper arm now stays between −44° and −34° and only the elbow flexes.
+   - **Body:** during the push he is now placed on his body point instead of his rear foot (new `pushWalkAt`). Planted feet stay on their footprints (I tracked the shoes frame by frame: no sliding).
+   - **Posture:** a deeper crouch (`PUSH_SINK` 14) and more hunch.
+   - **Result:** with the sound off he now reads as walking the screen back to the wall. He has his back to us during the push and faces us again for the dust-off, the smug beat and J4.
+2. **A new 0.93 s freeze (frames 11423–11450) on "careful timing and math".** Nothing moved except the small blob. This wasn't in the baseline: the smaller set-scaled figures no longer give enough idle motion. I added a planned reaction (`GULP`): he gulps and peeks out past the screen toward her sensor until the clue lights. The motion report now flags only the end-card holds, as in the baseline.
+3. **The scene failed to load if the narration runs 20% faster.** At 0.8× timing the "PlanCard in before the first pulse" assert threw (the card was 4 frames late). The card's entry is now `CARD_IN = min(RISE_END − 8, P3_0 − 14)`. With word timings scaled to 0.8× and 1.2×, the module loads with every assert passing.
+4. **The "paths now stop at the partition" beat was weak at phone size.** The crosses on the partition were 20 px and faded out just as the readout went blank. They are now 26 px (`CROSS_S`) and stay up until 6 frames after the readout goes blank, so the blocked light and the blank screen are on screen together.
+
+### Checks that passed
+
+- **Light paths:** no light on or above the partition's top band. The W3 leg goes behind the far end about 250 px below its top corner. The plan card is in sync with the room, readable, and clear of both characters and all labels; it is never shown during S9.3 or R4. The 2 m partition is clearly taller than both of them.
+- **R4 (11570–11621):** the camera is locked, there are no overlays, and the first 4 and last 4 frames are static. Renders made in the same call are bit-identical. The renderer itself sometimes varies (up to 7/255 on about 300 floor pixels at the bottom); I confirmed this by rendering the same frame three times.
+- **Text and frame:** "slowed down" is 32 px and "likely location" is 36 px. Nothing but feet falls in the bottom 12%, and nothing is clipped.
+- **Cuts and J4:** the cut in from S8 and the end-card wipe are unchanged. J4 reads.
+- **Against the pre-fix sheets in `qa/scene_review/S9`:** nothing regressed.
+
+### Remaining limitations
+
+- In the room view only about 50–70 px of each wall-to-him leg is visible, entering the gap. "Around the end" relies on the plan card and his saffron rim flash; this is the risk the plan itself names.
+- The `CAM_W` framing is tight: his shoes at the start of the push and the pushed screen's top are each about 12 px from the frame edge. Neither is clipped.
+- At 0.8× timing the plan card starts leaving about 2 frames before the last echo lands, and only about 17 frames separate the busted beat from the end-card wipe.
+- J4 is a lean past the near end. From this front-left camera the partition can't stand between them (same as the baseline).
+- The readout inset pops out with an overshoot at frame 11497. That is its designed exit and matches the baseline.
+
+### SFX cues
+
+They did not change. `rcues_S9.json` matches the merged `audio/sfx/v2/cues.json` for all nine scenes; S9 has 43 cues. The sound pass already pending from the merge's footstep change still needs to run.
+
+### Files changed
+
+- `/home/user/Youtube-videos/Future_Got_Weird/Video_02/work/rev_S9/src/scenes/S9_Payoff.tsx` (only this file; no `S9_*.tsx` component changed)
+
+### Final sheets
+
+- `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/pathfix_rev/S9/clip_r3/dense/S9_sheet01.jpg`, `S9_sheet02.jpg`, `S9_sheet03.jpg`, `motion.json`
+- Phone-size (40%) key frames: `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/pathfix_rev/S9/S9_phone40_final.jpg`
+- Full-res final stills: `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/pathfix_rev/S9/full3/`
+- Before my fixes: `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/pathfix_rev/S9/clip/dense/` and `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/pathfix_rev/S9/full0/`
+- Cue export: `/tmp/claude-0/-home-user-Youtube-videos/30d53758-3f65-58ef-8706-5dc1f2b4b0af/scratchpad/rcues_S9.json`
+
+## Before the light-path fix
+
+### Builder
 
 S9 Payoff is built in `work/S9/source`, and `npx tsc --noEmit -p .` passes. I did six still rounds and three full scene-clip renders. The only still runs the motion report flags are the end-card holds (11785 onward), and those are the intended end-screen hold.
 
@@ -46,7 +98,7 @@ S9 Payoff is built in `work/S9/source`, and `npx tsc --noEmit -p .` passes. I di
 - dense strips `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/scenes/S9/clip/seq_walk_push.png` and `seq_j4.png` (from the second clip render; the later changes to the blocked pulse and her stride are checked in r6full)
 - full-resolution stills in `qa/scenes/S9/r5full` and `qa/scenes/S9/r6full`
 
-## Director review
+### Director review
 
 I reviewed S9 and fixed 10 defects, all in `src/scenes/S9_Payoff.tsx`. `npx tsc --noEmit -p .` passes. I ran three render rounds (half-res clip, dense sheets and full-res stills each time). The motion report now shows only the intended end-card holds (11785 onward).
 

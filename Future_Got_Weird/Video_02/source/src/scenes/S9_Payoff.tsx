@@ -6,8 +6,8 @@ import {useG} from '../lib/SceneFrame';
 import {at, scene, seg, segEnd} from '../lib/timeline';
 import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
 import {E, SNAP, SOFT, camPath, hop, ring, sp, tw} from '../lib/motion';
-import {CAM_ROOM, RAISED_TILT} from '../lib/shots';
-import {LAYOUT, PTS, projectWith, rigAt, tiltAt, viewAt, type Layout, type ViewState} from '../lib/room';
+import {CAM_ROOM, PLAN_CARD_RECT, RAISED_TILT} from '../lib/shots';
+import {LAYOUT, PTS, assertAroundTheEnd, partitionHides, partitionTopH, projectWith, rigAt, tiltAt, viewAt, type Layout, type PlanPt, type ViewState} from '../lib/room';
 import {
   LAYOUT as OLAYOUT,
   assertPath,
@@ -24,7 +24,7 @@ import {
   type ScalarField,
 } from '../lib/optics';
 import {CAST} from '../components/cast';
-import {RoomSet, type RoomItem} from '../components/v02/RoomSet';
+import {GapMarker, RoomSet, type RoomItem} from '../components/v02/RoomSet';
 import {Partition} from '../components/v02/Partition';
 import {LightPath, ScatterFan, type ToPx} from '../components/v02/Optics';
 import {
@@ -32,14 +32,14 @@ import {
   Character2,
   EXPR,
   HANDS_ON_HIPS,
+  figuresHide,
+  handWorld2,
+  rimFlash,
   IDLE2,
   mixPose2,
-  planTrip,
   reach2,
-  tripContacts,
-  tripDistance,
-  tripPose,
   withPose,
+  type Foot,
   type Pose2,
   type RigPlace,
 } from '../components/v02/Cast2';
@@ -47,22 +47,30 @@ import {reachLocal} from '../components/Character';
 import {S9SensorStand, behindBox, boxOf, movedLayout, planWalk, standGeometry, walkAt, walkContacts, walkDistance, type WalkState} from '../components/v02/S9_Room';
 import {MiniReadout, ReadoutInset} from '../components/v02/S9_Readout';
 import {EndCard} from '../components/v02/S9_EndCard';
+import {BackHead} from '../components/v02/S9_BackHead';
+import {PlanCard, PlanSpot} from '../components/v02/PlanCard';
 
 /**
  * S9 · Payoff (s45–s48). Storyboard shots S8.1–S8.4 (now scene S9).
  *
  *  S9.1 s45  room view (tilt 0, CAM_ROOM): the guesser still hiding at H behind the partition, nervous (paws up, sweat,
  *            eyes darting to the checker); on "friend" he notices us: a sheepish grin and a tiny wave. She side-eyes him.
- *  S9.2 s46  the camera rises to RAISED_TILT and widens (one move, "Being out of sight"); two slowed pulses replay the
- *            round trips S -> W3 -> H -> W3 -> S and S -> W4 -> H -> W4 -> S, threading through the gap round the
- *            partition's far end (both chosen because every leg stays clear of the partition's silhouette on screen);
- *            he flinches when the light reaches him ("away"); the echoes come home; the sensor's readout, magnified
- *            in an inset, grows the likely-location blob (the S4.7 field) and the clue lights on "clues".
- *  S9.3 s47 + the 4.5 s hold: he gets the idea ("hide"), walks round to the partition's near end, takes it in both hands
- *            and pushes it back along z until its far end meets the wall (RUNWAY R4: hands on -> gap closed, locked
- *            camera; the partition and the optics use the moved layout). A new pulse: the paths now stop at the
- *            partition; the readout goes blank. He steps clear, dusts his hands, smug, eyes shut... the checker strolls
- *            to the near end, leans round it and looks at him, deadpan (J4). He opens his eyes. A beat.
+ *  S9.2 s46  the camera rises to RAISED_TILT and widens (one move, "Being out of sight"); the "seen from above" PlanCard
+ *            comes in top right and the gap at the wall is marked on the floor (GapMarker); two slowed pulses replay the
+ *            round trips S -> W3 -> H -> W3 -> S and S -> W4 -> H -> W4 -> S, in the room and on the card on the same
+ *            schedules. In the room each W -> H leg goes behind the partition's FAR END (by the wall) and is hidden until
+ *            his outline (W4's spot itself is behind the far edge); never across the 2 m screen's top
+ *            (assertAroundTheEnd); on the card both visibly thread the gap. He flinches with a saffron rim flash when
+ *            each pulse reaches him ("away"); the echoes come home; the card leaves, and the sensor's readout,
+ *            magnified in an inset, grows the likely-location blob (the S4.7 field) and the clue lights on "clues".
+ *  S9.3 s47 + the 4.5 s hold: he gets the idea ("hide"), walks round to just behind the partition's near end (the
+ *            camera side), turns his back to us on the last step (S9_BackHead: the back of his head, after the A01 back
+ *            view), puts both hands on the near end's edge and pushes it back along z until its far end meets the wall
+ *            (RUNWAY R4: hands on -> gap closed, locked camera, 4 static frames at each end; the partition, the gap
+ *            marker and the optics use the moved layout). A new pulse: the paths now stop on the partition's face; the
+ *            readout goes blank. He steps back round the near end to the hidden side, turns to face us, dusts his hands,
+ *            smug, eyes shut... the checker strolls to the near end, leans round it and looks at him, deadpan (J4). He
+ *            opens his eyes. A beat.
  *  S9.4 s48  end card on warm yellow: FUTURE GOT WEIRD + "The strange future, explained.", top third only (end-screen
  *            space below), held to the end of the timeline.
  *
@@ -114,16 +122,20 @@ const pulseAt = (g: number, t0: number, dur: number) => (g < t0 || g > t0 + dur 
 
 /* ================================================================== geometry */
 
-const SENSOR_H = LAYOUT.sensor.h;
+/** the light-path plane (sensor S, wall spots W, his point H: layout sensor.h = hidden.h = 0.95 m, his chest) */
+const LIGHT_H = LAYOUT.sensor.h;
 const {S, H, W} = layoutPoints(OLAYOUT);
 const OCC = LAYOUT.occluder;
 const W3 = W.find((p) => p.id === 'W3')!;
 const W4 = W.find((p) => p.id === 'W4')!;
 /** the gap between the partition's far end and the wall: the push closes it */
 const GAP = OCC.z0;
+const at3D = (pl: P2[]): PlanPt[] => pl.map((p) => ({x: p.x, z: p.z, h: LIGHT_H}));
 
-// S9.2: the two round trips. W3 and W4 are the wall spots whose legs stay clear of the partition's drawn silhouette at
-// RAISED_TILT (W1 -> H and W2 -> H graze its far top corner on screen); both are checked against the layout here.
+// S9.2: the two round trips, unchanged (so the bounce and echo cues are unchanged). At RAISED_TILT each W -> H leg goes
+// behind the partition's far end by the wall and comes out from behind its near end (where his body covers it); W4's
+// spot itself lies behind the far edge, so in the room its pulse goes into the slot and is hidden; the PlanCard shows
+// both trips. (Not W2: at 0.95 m it is behind her head.) Checked against the layout and, below, the light-path rule.
 const PATH3 = confocalPath(S, W3, H);
 const PATH4 = confocalPath(S, W4, H);
 assertPath(PATH3, OLAYOUT);
@@ -138,10 +150,17 @@ const FIELD: ScalarField = possibleCloud({x0: 2.2, x1: 3.0, z0: 0.5, z1: 1.2, st
 
 /* ================================================================== cameras */
 
-/** The raised framing of S9.2-S9.3 (close to the shared CAM_RAISED, a little lower and wider): the wall spots, the
- *  gap at the wall, the whole partition in both positions, both characters, and his walk to the near end (his feet at
- *  the near end still in frame). One move from CAM_ROOM; locked afterwards (R4 needs a locked camera). */
-const CAM_W: Cam = {cx: 950, cy: 520, zoom: 1.22};
+/** The raised framing of S9.2-S9.3 (the shared CAM_RAISED family, lower and wider): the wall spots, the gap at the
+ *  wall, the whole 2 m partition in both positions (pushed to the wall its far top corner is the highest thing in the
+ *  room), both characters, and his push from behind the near end with his shoes in frame. One move from CAM_ROOM; locked
+ *  from RISE_END to the end of the scene (R4 needs a locked camera). Zoom 1.11, not the plan's 1.12: the push from
+ *  behind puts his feet 0.20 m nearer the camera than the frontal push did. Checked below (CAM_W fit). */
+const CAM_W: Cam = {cx: 955, cy: 508, zoom: 1.11};
+
+/** The tilts light is drawn at (the rise; the paths themselves start after it, at RAISED_TILT) and the camera zoom
+ *  the rule is measured at: CAM_W is the widest framing light is drawn in, so its margins are the smallest. */
+const RISE_TILTS = [0, 0.25, 0.5, 0.75, 1].map((f) => f * RAISED_TILT);
+for (const t of RISE_TILTS) assertAroundTheEnd('S9.2 round trips via W3 and W4', [at3D(PATH3), at3D(PATH4)], viewAt(t), {zoom: CAM_W.zoom});
 
 /* ================================================================== beats */
 
@@ -170,16 +189,35 @@ const INSET0 = Math.max(ECHO_END + 4, K.careful - 2);
 const BLOB0 = Math.max(INSET0 + 10, K.math - 4);
 const LIT = Math.max(BLOB0 + 16, K.clues);
 const DEFLATE = LIT + 2;
+/** "math": as the blob starts to grow he gulps and peeks toward her sensor (a designed development, not a still hold) */
+const GULP = BLOB0 + 2;
 const INSET_OUT = Math.max(LIT + 20, K.s47 - 2);
+/** the arrival cue (lib Cast2 rimFlash) when each pulse reaches him: his chest is the W -> H legs' end (vertex 2) */
+const HITS = [FLINCH, Math.round(VF4[2])];
 
-// S9.3: the idea, the walk to the near end, the push (R4)
+// S9.2 "seen from above": the PlanCard comes in as the camera settles (fully in before the first pulse leaves) and runs
+// the same two round trips on the same schedules; it is fully out before the magnified readout comes in (never two
+// plan views at once), and never in S9.3 / R4 (asserted below, with HANDS).
+const CARD_IN_DUR = 14;
+// as the rise settles; earlier when the narration is quicker and the first pulse follows the rise at once (at 0.8x
+// timing RISE_END - 8 was 4 frames too late and the assert below threw at module load)
+const CARD_IN = Math.min(RISE_END - 8, P3_0 - CARD_IN_DUR);
+const CARD_OUT = INSET0 - 6;
+const CARD_OUT_DUR = 6;
+const CARD = PLAN_CARD_RECT;
+
+// S9.3: the idea, the walk round to the near end, the push from behind (R4)
 const IDEA = K.hide + 2;
-const PUSH_X = 2.38; // he stands at the right of the near end, his left side just behind it
-const PUSH_Z = OCC.z1 - 0.06;
+/** Where he pushes from (lead override 2, after the critic's A01 note): BEHIND the partition's near end, on the camera
+ *  side and a little to its right, his back to us, both hands on the near end's edge beside his left side. From here the
+ *  push reads as pushing the screen back toward the wall; the frontal grab from beside the end (hands at 0.98 / 0.84 m,
+ *  round 1) still read as hugging or dragging it. PUSH_Z keeps his shoes inside CAM_W (CAM_W_FITS below). */
+const PUSH_X = 2.4;
+const PUSH_Z = OCC.z1 + 0.14;
 const WALK_PLAN = planWalk({x: H.x, z: H.z}, {x: PUSH_X, z: PUSH_Z}, {stepM: 0.34});
 const WALK0 = Math.max(IDEA + 12, K.hed);
 const WALK_FPS = clamp(Math.floor((K.too - 4 - WALK0) / WALK_PLAN.steps), 7, 9);
-const ARRIVE = WALK0 + WALK_PLAN.steps * WALK_FPS;
+const ARRIVE = WALK0 + WALK_PLAN.steps * WALK_FPS; // the last step's weight-down frame: he turns his back to us
 const HANDS = ARRIVE + 8; // both hands meet the near end
 const STATIC = 4; // R4 start and end poses are held still this long
 const SQUAT0 = HANDS + STATIC;
@@ -191,43 +229,82 @@ const THUNK = PUSH0 + PUSH_DUR; // the far end meets the wall
 /** Runway insert R4 (global frames): from both hands on the partition to the gap closed (static ends, locked camera). */
 export const R4 = {from: HANDS, to: THUNK + 10 + STATIC};
 const RT = R4.to;
+if (!(CARD_IN + CARD_IN_DUR <= P3_0)) throw new Error(`S9: the PlanCard must be in (${CARD_IN + CARD_IN_DUR}) before the first pulse leaves (${P3_0})`);
+if (!(CARD_OUT < INSET0 && CARD_OUT < HANDS && CARD_OUT + CARD_OUT_DUR <= INSET0)) throw new Error(`S9: the PlanCard must be gone (${CARD_OUT + CARD_OUT_DUR}) before the readout inset (${INSET0}) and R4 (${HANDS})`);
 
-// S9.3 after the push: blank readout, smug, the lean (J4). Offsets shrink if the hold gets shorter.
+// S9.3 after the push: blank readout, he steps back round the near end and turns to face us, smug; the lean (J4).
+// Offsets shrink if the hold gets shorter.
 const CARD0 = K.future - 10; // the end card wipes in; the wordmark lands on "Future"
 const KK = clamp((CARD0 - RT) / 105, 0.6, 1);
 const o = (n: number) => RT + Math.round(n * KK);
 const PULSE2 = o(3); // the sensor fires once R4 has ended (its emitter lights 3 frames before)
+// the light tests use the partition at rest: its post-thunk wobble (gone at THUNK + 10) must have settled before the
+// emitter lights for the blocked pulse
+if (!(THUNK + 10 <= PULSE2 - 3)) throw new Error(`S9: the partition still wobbles (until ${THUNK + 10}) when the blocked pulse fires (${PULSE2})`);
 const INSET2 = o(1);
 const STEP0 = o(4);
-const DUST0 = o(23);
-const DUST1 = o(38);
-const SMUG0 = o(38);
+/** he steps back round the near end to the hidden side (behind the closed partition, as seen from the sensor), his
+ *  back still to us, and turns to face us on the last step's weight-down frame; it leaves room for her lean */
+const HIDE = {x: 2.84, z: 1.42};
+const STEP_PLAN = planWalk({x: PUSH_X, z: PUSH_Z - GAP}, HIDE, {stepM: 0.26, lift: 14});
+const STEP_FPS = clamp(Math.floor((o(23) - 3 - STEP0) / STEP_PLAN.steps), 5, 8);
+const TURN_FRONT = STEP0 + STEP_PLAN.steps * STEP_FPS;
+const DUST0 = Math.max(o(23), TURN_FRONT + 3);
+const DUST1 = Math.max(o(38), DUST0 + 15);
+const SMUG0 = DUST1;
 const C_LOOK = o(10);
 const C_FPS = Math.max(5, Math.round(7 * KK));
 /** where she ends up: just left of and in front of the near end; once she leans, her head clears both the near end and
  *  the sensor on its stand (a stop further left puts the sensor right beside her ear) */
 const C_SPOT = {x: 1.73, z: 1.62};
-/** he steps clear of the near end to here (plan x), leaving room for her lean */
-const STEP_PLAN_X = {a: PUSH_X, b: 2.76};
+if (!(HIDE.z < OCC.z1 - GAP && HIDE.x > OCC.x + 0.4)) throw new Error('S9: after the push he must end up behind the closed partition, clear of its near end');
+// The PlanCard (screen space, top right) stays clear of him while it is up (S9.2, at H): his drawn rig with the arms out
+// (the flinch, the paws) is at most ~150 rig px right of his feet
+{
+  const pl = rigAt(H.x, H.z, RAISED_TILT);
+  const right = (pl.x + 150 * pl.scale - CAM_W.cx) * CAM_W.zoom + 960;
+  if (right > CARD.x - 20) throw new Error(`S9: the PlanCard (x ${CARD.x}) would touch him (right edge ${right.toFixed(0)})`);
+}
+// CAM_W fit: the pushed partition's far top corner (the highest thing drawn) and his shoes at the push start (the lowest)
+// stay inside the frame
+{
+  const sv = viewAt(RAISED_TILT);
+  const scr = (p: PlanPt) => (projectWith(sv, p).y - CAM_W.cy) * CAM_W.zoom + 540;
+  const top = scr({x: OCC.x - OCC.thickness / 2, z: 0, h: partitionTopH(0, movedLayout(GAP))}) - 3;
+  const shoes = scr({x: PUSH_X, z: PUSH_Z, h: 0}) + 8 * rigAt(PUSH_X, PUSH_Z, RAISED_TILT).scale * CAM_W.zoom;
+  if (top < 6 || shoes > 1074) throw new Error(`S9: CAM_W cuts the pushed partition's top (${top.toFixed(0)}) or his shoes (${shoes.toFixed(0)})`);
+}
 
 // after the push (gap closed), the same two wall spots as S9.2: the light still reaches W3, but what scatters toward him
 // stops at the partition; the way to W4 (now behind the partition) is blocked outright. Same slowed speed as S9.2.
 const LAY_CLOSED = movedLayout(GAP);
-const GUESS_END = {x: STEP_PLAN_X.b, z: PUSH_Z - GAP};
+const GUESS_END = HIDE;
 const stopOn = (a: P2, b: P2) => lerpP(a, b, firstOccluderHit(a, b, LAY_CLOSED, 0.03));
+/** where the ray a -> (beyond b) meets the closed partition's camera-side face */
+const onFace = (a: P2, b: P2): P2 => {
+  const fx = LAY_CLOSED.occluder.x - LAY_CLOSED.occluder.thickness / 2;
+  const u = (fx - a.x) / (b.x - a.x);
+  return {x: fx, z: a.z + (b.z - a.z) * u};
+};
 const BLOCKED = [
   {w: W3 as P2 | null, path: [S, W3, stopOn(W3, GUESS_END)] as P2[]},
   {w: null as P2 | null, path: [S, stopOn(S, W4)] as P2[]},
 ].map((b) => {
   assertPath(b.path, LAY_CLOSED);
-  return {...b, stop: b.path[b.path.length - 1]};
+  // the pulse stops 3 cm short of the face; the cross marks where the ray meets the face itself
+  const n = b.path.length;
+  return {...b, stop: b.path[n - 1], face: onFace(b.path[n - 2], b.path[n - 1])};
 });
+// these are front legs: they stop on the partition's camera-side face (allowFront), but may still never go behind it
+// across its top, nor show light over it
+assertAroundTheEnd('S9.3 blocked pulses', BLOCKED.map((b) => at3D(b.path)), viewAt(RAISED_TILT), {zoom: CAM_W.zoom, layout: LAY_CLOSED, allowFront: true});
 const PULSE_SPEED = LEN3 / RT_DUR; // metres per frame, as in S9.2
 const SCHED2 = BLOCKED.map((b) => pathSchedule(b.path, {start: PULSE2, dur: Math.round(pathLength(b.path) / PULSE_SPEED)}));
 const STOP_END = Math.round(Math.max(...SCHED2.map((sc) => sc.end)));
 // the reading blinks off once the light has failed to come back, and the blank screen is held long enough to read
 const BLANK = Math.max(o(22), STOP_END + 6);
-const PATHS2_OUT = Math.max(o(24), STOP_END + 8);
+// the stopped pulses and their crosses stay up until the readout has gone blank (cause and consequence on screen together)
+const PATHS2_OUT = Math.max(o(24), STOP_END + 8, BLANK + 6);
 const INSET2_OUT = BLANK + Math.round(16 * KK);
 const C_WALK0 = Math.max(o(32), BLANK); // she sets off once her screen has gone blank
 const C_WALK_PLAN = planWalk({x: LAYOUT.operator.x, z: LAYOUT.operator.z}, C_SPOT, {stepM: 0.27, lift: 14});
@@ -240,13 +317,8 @@ const BUSTED = OPEN + 3;
 const GUESSER_STEPS = walkContacts(WALK0, WALK_PLAN, WALK_FPS);
 const PUSH_STEPS = walkContacts(PUSH0, PUSH_PLAN, PUSH_FPS).filter((f) => f < THUNK - 2); // the last one is under the thunk
 const CHECKER_STEPS = walkContacts(C_WALK0, C_WALK_PLAN, C_FPS);
-// his step clear of the near end after the push (same trip as guesserAt's post-push branch, at the raised tilt)
-const STEP_CLEAR = (() => {
-  const zc = PUSH_Z - GAP;
-  const a = rigAt(STEP_PLAN_X.a, zc, RAISED_TILT);
-  const b = rigAt(STEP_PLAN_X.b, zc, RAISED_TILT);
-  return tripContacts(STEP0, planTrip(b.x - a.x, a.scale, 'walk'), 13);
-})();
+// his steps back round the near end after the push (guesserAt's post-push walk)
+const STEP_CLEAR = walkContacts(STEP0, STEP_PLAN, STEP_FPS);
 
 const SFX_CUES: Sfx[] = [
   {f: K.start, kind: 'amb_room', dur: (CARD0 - K.start) / 30, gain: -2, note: 'room tone until the end card'},
@@ -291,7 +363,7 @@ export const SFX: Sfx[] = [...SFX_CUES].sort((a, b) => a.f - b.f);
 /* ================================================================== helpers */
 
 const roomToPx = (s: ViewState): ToPx => (p) => {
-  const q = projectWith(s, {x: p.x, z: p.z, h: SENSOR_H});
+  const q = projectWith(s, {x: p.x, z: p.z, h: LIGHT_H});
   return {x: q.x, y: q.y};
 };
 
@@ -307,50 +379,18 @@ const pushTravel = (g: number) => {
   return GAP * Math.pow(u, 1.55);
 };
 
-// arched top of the partition (components/v02/Partition), for the face polygon used to hide overlay paths
-const ARCH = 0.09;
-const FOOT_H = 0.07;
-const facePoly = (s: ViewState, layout: Layout) => {
-  const oc = layout.occluder;
-  const Lp = (oc.z1 - oc.z0) / 3;
-  const topH = (z: number) => {
-    const v = (z - oc.z0) / Lp;
-    const u = clamp01(v - Math.floor(Math.min(2.9999, v)));
-    return oc.height - ARCH * (1 - Math.sin(Math.PI * u));
-  };
-  const fx = oc.x - oc.thickness / 2;
-  const pts: {x: number; y: number}[] = [];
-  for (let k = 0; k <= 40; k++) {
-    const z = oc.z0 + ((oc.z1 - oc.z0) * k) / 40;
-    pts.push(projectWith(s, {x: fx, z, h: topH(z)}));
-  }
-  pts.push(projectWith(s, {x: fx, z: oc.z1, h: FOOT_H}), projectWith(s, {x: fx, z: oc.z0, h: FOOT_H}));
-  return {pts, fx};
-};
-const inPoly = (poly: {x: number; y: number}[], q: {x: number; y: number}) => {
-  let c = false;
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const a = poly[i];
-    const b = poly[j];
-    if (a.y > q.y !== b.y > q.y && q.x < ((b.x - a.x) * (q.y - a.y)) / (b.y - a.y) + a.x) c = !c;
-  }
-  return c;
-};
-/** A rough frontal-rig silhouette test (head, torso, legs) for fan rays passing behind a person near the wall. */
-const rigHides = (pl: {x: number; y: number; scale: number}, q: {x: number; y: number}) => {
-  const lx = (q.x - pl.x) / pl.scale;
-  const ly = (q.y - pl.y) / pl.scale;
-  if ((lx / 92) ** 2 + ((ly + 388) / 100) ** 2 < 1) return true;
-  if (Math.abs(lx) < 82 && ly > -300 && ly < -140) return true;
-  return Math.abs(lx) < 60 && ly >= -140 && ly < 0;
-};
-
 /* ================================================================== the cast */
 
 const GUESSER_SEED = 22;
 const CHECKER_SEED = 3;
 
-type GuesserState = {plan: {x: number; z: number}; place: RigPlace; pose: Pose2; life: number; walk: WalkState | null; pushing: boolean};
+/** `view`: 'back' = his back to us (the rig with its arms behind the torso plus the S9_BackHead overlay). `turn`: the
+ *  horizontal squash (scaleX) that sells a front/back swap on a weight-down frame. `inFront`: he is on the camera side
+ *  of the partition's near end (drawn over it). */
+type GuesserState = {plan: {x: number; z: number}; place: RigPlace; pose: Pose2; life: number; walk: WalkState | null; view: 'front' | 'back'; turn: number; inFront: boolean};
+
+/** scaleX of a turn that swaps the view on frame `t` (the swap frame and the one before are narrowest) */
+const turnSquash = (g: number, t: number) => 1 - 0.12 * clamp01(1 - Math.abs(g - (t - 0.5)) / 2.5);
 
 const nervousFace: Partial<Pose2> = {lid: 0.08, eyes: 1.06, brows: 0.45, browAsym: 0.2, mouth: 'hmm', lookX: -0.75, lookY: 0.05, tilt: -2, sweat: 0.7};
 
@@ -382,6 +422,12 @@ const guesserAt = (g: number, tilt: number, cam: Cam): GuesserState => {
       const watch = tw(g, FLINCH + 14, 12, E.inOut);
       if (watch > 0) pose = withPose(pose, {lookX: -0.85, lookY: 0.1, mouth: 'hmm', eyes: 1.08, brows: 0.6}, watch);
     }
+    // "careful timing and math": the blob grows on her readout; he gulps (sweat up, a little shrink) and peeks out past
+    // his side of the screen toward her sensor, until the clue lights
+    const worry = Math.min(tw(g, GULP, 10, E.inOut), 1 - tw(g, DEFLATE - 2, 10, E.inOut));
+    if (worry > 0) pose = withPose(pose, {peek: -0.38, lookX: -1, lookY: 0.12, tilt: -6, eyes: 1.12, pupil: 0.85, brows: 0.75, browAsym: 0.1, sweat: 1, mouth: 'hmm'}, worry);
+    const gulp = pulseAt(g, GULP + 3, 8);
+    if (gulp > 0) pose = {...pose, hunch: (pose.hunch ?? 0) + 0.06 * gulp, sink: (pose.sink ?? 0) + 5 * gulp};
     // the clue lights: he deflates
     const defl = tw(g, DEFLATE, 10, E.inOut);
     if (defl > 0) pose = withPose(pose, {...EXPR.busted, hunch: 0.1, lookX: -0.7, lookY: 0.05, tilt: -4}, defl * 0.85);
@@ -395,81 +441,82 @@ const guesserAt = (g: number, tilt: number, cam: Cam): GuesserState => {
       const down = tw(g, WALK0 - 6, 6, E.inOut);
       if (down > 0) pose = mixPose2(pose, {...pose, armL: IDLE2.armL, armR: IDLE2.armR, armsFront: 'none'}, down);
     }
-    return {plan: {x: H.x, z: H.z}, place, pose, life: 0.45, walk: null, pushing: false};
+    return {plan: {x: H.x, z: H.z}, place, pose, life: 0.45, walk: null, view: 'front', turn: 1, inFront: false};
   }
-  // ---- S9.3: the walk to the near end
+  // ---- S9.3: the walk round to the near end (facing us); on the last step's weight-down frame he turns his back to us
   const grin: Partial<Pose2> = {mouth: 'grin', lid: 0.3, brows: 0.2, browAsym: 0.7, lookX: -0.45, lookY: 0.4, tilt: 3, sweat: 0};
   if (g < PUSH0) {
     const d = walkDistance(g, WALK0, WALK_PLAN, WALK_FPS);
     const wk = walkAt(WALK_PLAN, d, tilt);
     const place: RigPlace = {x: wk.x, y: wk.y, scale: wk.scale, frame: gr, seed: GUESSER_SEED, life: 0.3};
-    let pose: Pose2 = withPose({...IDLE2, ...wk.pose, armsFront: 'none'}, grin);
-    // hands onto the near end (contact at HANDS), elbows out; then the anticipation squat
-    const reachIn = tw(g, ARRIVE, HANDS - ARRIVE, E.inOut);
-    if (reachIn > 0) {
-      const lay = movedLayout(0);
-      const tgt = handTargets(s, lay);
-      const effort: Pose2 = {...pose, lean: -8 * reachIn, lookX: -0.7, lookY: 0.2, mouth: 'flat', brows: -0.35, browAsym: 0, lid: 0.3, armsFront: 'both', frontTop: 'R'};
-      const sq = tw(g, SQUAT0, PUSH0 - SQUAT0, E.inOut);
-      const prePush: Pose2 = {...effort, sink: (effort.sink ?? 0) + 12 * sq, hunch: 0.05 * sq};
-      const armL = reach2(place, prePush, -1, tgt.L.x, tgt.L.y, ELBOW_L);
-      const armR = reach2(place, prePush, 1, tgt.R.x, tgt.R.y, ELBOW_R);
-      pose = mixPose2(pose, {...prePush, armL, armR}, reachIn);
-      // exact contact once the reach is done
-      if (reachIn >= 1) pose = {...prePush, armL, armR};
+    const turn = turnSquash(g, ARRIVE);
+    if (g < ARRIVE) {
+      const pose: Pose2 = withPose({...IDLE2, ...wk.pose, armsFront: 'none'}, grin);
+      return {plan: wk.plan, place, pose, life: 0.3, walk: wk, view: 'front', turn, inFront: wk.plan.z > OCC.z1};
     }
-    if (inStatic(g)) pose = {...pose, blink: 1};
-    return {plan: wk.plan, place, pose, life: 0.3, walk: wk, pushing: g >= ARRIVE};
+    // his back to us: both hands onto the near end's edge (contact at HANDS), elbows down; then the anticipation squat
+    const reachIn = tw(g, ARRIVE, HANDS - ARRIVE, E.inOut);
+    const sq = tw(g, SQUAT0, PUSH0 - SQUAT0, E.inOut);
+    const base: Pose2 = {...IDLE2, ...wk.pose, ...BACK_FACE, armsFront: 'none'};
+    // he leans and shifts his weight toward the edge (the hand reaching across behind his body needs it), then squats
+    const prePush: Pose2 = {...base, lean: -5 * reachIn - sq, shift: PUSH_SHIFT * reachIn, sink: (base.sink ?? 0) + PUSH_SINK * sq, hunch: 0.03 * reachIn + 0.05 * sq};
+    // each hand travels in a straight line from where it hangs to its contact point on the edge (no wide arm sweep)
+    const tgt = handTargets(s, movedLayout(0));
+    const restL = handWorld2(place, prePush, -1);
+    const restR = handWorld2(place, prePush, 1);
+    const armL = reach2(place, prePush, -1, lerp(restL.x, tgt.L.x, reachIn), lerp(restL.y, tgt.L.y, reachIn), ELBOW_L);
+    const armR = reach2(place, prePush, 1, lerp(restR.x, tgt.R.x, reachIn), lerp(restR.y, tgt.R.y, reachIn), ELBOW_R);
+    const pose: Pose2 = {...prePush, armL, armR};
+    return {plan: wk.plan, place, pose, life: 0.3, walk: wk, view: 'back', turn, inFront: true};
   }
-  // ---- the push (R4): he walks it back with both hands on the near end
+  // ---- the push (R4): from behind, he walks the near end back to the wall with both hands on its edge
   if (g < RT + 1) {
     g = gr; // R4's static end window: everything holds still
     const d = pushTravel(g);
-    const wk = walkAt(PUSH_PLAN, d, tilt, undefined, 0.2);
+    const wk = pushWalkAt(d, tilt);
     const place: RigPlace = {x: wk.x, y: wk.y, scale: wk.scale, frame: gr, seed: GUESSER_SEED, life: 0.3};
     const jolt = g >= THUNK ? ring(g, THUNK, 0.9, 0.35) : 0;
+    const surge = Math.sin(clamp01((g - PUSH0) / PUSH_DUR) * Math.PI);
+    const ease = tw(g, THUNK + 2, 8, E.inOut);
     let pose: Pose2 = {
       ...IDLE2,
       ...wk.pose,
-      sink: wk.pose.sink + 12 * (1 - tw(g, THUNK + 2, 8, E.inOut)),
-      hunch: 0.05 * (1 - tw(g, THUNK + 2, 8)),
-      lean: -8 - 2 * Math.sin(clamp01((g - PUSH0) / PUSH_DUR) * Math.PI) + 2.5 * jolt,
-      lookX: -0.7,
-      lookY: 0.2,
-      mouth: g < THUNK + 3 ? 'flat' : 'o',
-      brows: g < THUNK ? -0.45 : 0.6,
-      browAsym: 0,
-      lid: g < THUNK ? 0.38 : 0,
-      eyes: g < THUNK ? 1 : 1.12,
-      tilt: -2,
-      armsFront: 'both',
-      frontTop: 'R',
+      ...BACK_FACE,
+      // the shoulders stay where they were when his hands met the edge (a bigger lean throws the outer elbow out past it)
+      sink: wk.pose.sink + PUSH_SINK * (1 - ease) + 3 * ease,
+      hunch: 0.08 * (1 - ease) + 0.02 * surge,
+      shift: PUSH_SHIFT,
+      lean: -6 - 1.5 * surge + 3 * jolt + ease,
+      tilt: -3 + 2 * ease,
+      armsFront: 'none',
     };
     const tgt = handTargets(s, movedLayout(d));
     pose = {...pose, armL: reach2(place, pose, -1, tgt.L.x, tgt.L.y, ELBOW_L), armR: reach2(place, pose, 1, tgt.R.x, tgt.R.y, ELBOW_R)};
-    if (inStatic(g)) pose = {...pose, blink: 1};
-    return {plan: wk.plan, place, pose, life: 0.3, walk: wk, pushing: true};
+    return {plan: wk.plan, place, pose, life: 0.3, walk: wk, view: 'back', turn: 1, inFront: true};
   }
-  // ---- after the push: hands off, a step clear, dust off, smug; then she is there
-  const z = PUSH_Z - GAP;
-  const p0 = rigAt(STEP_PLAN_X.a, z, tilt);
-  const p1 = rigAt(STEP_PLAN_X.b, z, tilt);
-  const plan = planTrip(p1.x - p0.x, p0.scale, 'walk');
-  const dd = tripDistance(g, STEP0, plan, 13);
-  const x = p0.x + dd;
-  const place: RigPlace = {x, y: p0.y, scale: p0.scale, frame: gr, seed: GUESSER_SEED, life: 0.35};
+  // ---- after the push: hands off, back round the near end to the hidden side (his back still to us)
+  if (g < TURN_FRONT) {
+    const d = walkDistance(g, STEP0, STEP_PLAN, STEP_FPS);
+    const wk = walkAt(STEP_PLAN, d, tilt);
+    const place: RigPlace = {x: wk.x, y: wk.y, scale: wk.scale, frame: gr, seed: GUESSER_SEED, life: 0.3};
+    let pose: Pose2 = {...IDLE2, ...wk.pose, ...BACK_FACE, tilt: 2, armsFront: 'none'};
+    // hands come off the partition (from the push pose) over the first frames
+    const off = tw(g, RT, 8, E.inOut);
+    if (off < 1) {
+      const last = guesserAt(RT, tilt, cam).pose;
+      pose = mixPose2({...last, feet: pose.feet, sink: pose.sink}, pose, off);
+    }
+    return {plan: wk.plan, place, pose, life: 0.3, walk: wk, view: 'back', turn: turnSquash(g, TURN_FRONT), inFront: wk.plan.z > OCC.z1 - GAP};
+  }
+  // ---- turned to face us, behind the closed partition: dust off, smug; then she is there
+  const p0 = rigAt(HIDE.x, HIDE.z, tilt);
+  const place: RigPlace = {x: p0.x, y: p0.y, scale: p0.scale, frame: gr, seed: GUESSER_SEED, life: 0.35};
   const pleased: Partial<Pose2> = {mouth: 'grin', lid: 0.35, brows: 0.1, browAsym: 0.5, lookX: -0.55, lookY: 0.1, tilt: 3, eyes: 1};
-  let pose: Pose2 = tripPose(dd, plan, {dir: 1, base: withPose(IDLE2, pleased)});
-  // hands come off the partition (from the push pose) over the first frames
-  const off = tw(g, RT, 8, E.inOut);
-  if (off < 1) {
-    const last = guesserAt(RT, tilt, cam).pose;
-    pose = mixPose2({...last, feet: pose.feet}, pose, off);
-  }
+  let pose: Pose2 = withPose(IDLE2, pleased);
   // looks at the readout going blank, then dusts his hands (job done)
   const dust = Math.min(tw(g, DUST0, 5, E.out), 1 - tw(g, DUST1 - 2, 6, E.inOut));
   if (dust > 0) {
-    const cx = x;
+    const cx = p0.x;
     const cy = p0.y - 236 * p0.scale;
     const ph = (g - DUST0) * 0.7;
     const L = {x: cx - 10 * p0.scale + 16 * Math.sin(ph) * p0.scale, y: cy + 4 * Math.cos(ph) * p0.scale};
@@ -494,20 +541,58 @@ const guesserAt = (g: number, tilt: number, cam: Cam): GuesserState => {
     pose = {...pose, bob: hop(g, BUSTED, 8, 7), blink: 1};
   }
   const life = g >= BUSTED ? 0.12 : 0.35;
-  return {plan: {x: STEP_PLAN_X.a + (dd / Math.max(1, p1.x - p0.x)) * (STEP_PLAN_X.b - STEP_PLAN_X.a), z}, place: {...place, life}, pose, life, walk: null, pushing: false};
+  return {plan: {x: HIDE.x, z: HIDE.z}, place: {...place, life}, pose, life, walk: null, view: 'front', turn: turnSquash(g, TURN_FRONT), inFront: false};
 };
 
-/** Elbow branches for the push (reachLocal): both elbows out and down. */
-const ELBOW_L: 1 | -1 = -1;
+/** The push walk (R4) with the rig's ground line on his body's plan point, not on his nearest planted foot. walkAt pins
+ *  the rig to the rear foot (nearer the camera), so mid-step his body dropped back behind the moving edge and his arm
+ *  swung out after it: he read as being dragged by the screen. On the body point his shoulders keep a constant offset
+ *  from his hands on the edge (he drives it). The rear foot stays exactly on its footprint by reaching below that line
+ *  (negative lift; Cast2 drops the hips as far as that leg needs, so each step dips him into the push). */
+const pushWalkAt = (d: number, tilt: number): WalkState => {
+  const wk = walkAt(PUSH_PLAN, d, tilt, undefined, 0);
+  const y = projectWith(viewAt(tilt), {x: wk.plan.x, z: wk.plan.z, h: 0}).y;
+  const dl = (y - wk.y) / wk.scale;
+  const ft = (f: Foot): Foot => ({...f, lift: (f.lift ?? 0) + dl});
+  return {...wk, y, pose: {...wk.pose, feet: {L: ft(wk.pose.feet.L), R: ft(wk.pose.feet.R)}}};
+};
+
+/** Seen from behind the face is covered (S9_BackHead): keep the rig's face quiet and drop the temple sweat drop. */
+const BACK_FACE: Partial<Pose2> = {mouth: 'flat', lid: 0, brows: 0, browAsym: 0, lookX: 0, lookY: 0, sweat: 0, eyes: 1, pupil: 1};
+
+/** Weight shift (rig px) toward the edge while his hands are on it. */
+const PUSH_SHIFT = -24;
+/** The push crouch (rig px of hip drop): knees bent, his weight into the screen. */
+const PUSH_SINK = 14;
+/** Elbow branches for the push (reachLocal): the outer arm's elbow down, the arm reaching across (behind his body) out
+ *  and down. */
+const ELBOW_L: 1 | -1 = 1;
 const ELBOW_R: 1 | -1 = -1;
 
-/** Where his hands press on the partition's near end (world px): left hand higher, right hand lower (crossing). */
+/** Where his hands press on the partition's near end (world px): on its end face (z1), the outer (left) hand low at his
+ *  hip, the other (reaching across in front of his chest, hidden by his back) at chest height; on the set's height scale
+ *  like the rig. The left shoulder sits right at the edge, so a left hand at shoulder height folded the arm shut and the
+ *  IK flailed its elbow out sideways with every step of the push (upper arm -15..95 deg: "reaching after the screen");
+ *  at the hip the arm stays bent at a working angle (upper arm -44..-34 deg) and flexes as he drives it. */
 const handTargets = (s: ViewState, layout: Layout) => {
   const oc = layout.occluder;
-  const L = projectWith(s, {x: oc.x + 0.005, z: oc.z1, h: 1.22});
-  const R = projectWith(s, {x: oc.x + 0.005, z: oc.z1, h: 1.06});
-  return {L: {x: L.x - 4, y: L.y}, R: {x: R.x - 2, y: R.y}};
+  const L = projectWith(s, {x: oc.x, z: oc.z1, h: HAND_H.L});
+  const R = projectWith(s, {x: oc.x + 0.01, z: oc.z1, h: HAND_H.R});
+  return {L: {x: L.x, y: L.y}, R: {x: R.x, y: R.y}};
 };
+const HAND_H = {L: 0.62, R: 0.92};
+
+// Hands on props: over the whole push (R4, HANDS..RT) both hands stay on the near end's edge (reach2 contact error)
+{
+  const sv = viewAt(RAISED_TILT);
+  for (let f = HANDS; f <= RT; f++) {
+    const gu = guesserAt(f, RAISED_TILT, CAM_W);
+    const tgt = handTargets(sv, movedLayout(rigFrame(f) < PUSH0 ? 0 : pushTravel(rigFrame(f))));
+    const eL = Math.hypot(handWorld2(gu.place, gu.pose, -1).x - tgt.L.x, handWorld2(gu.place, gu.pose, -1).y - tgt.L.y);
+    const eR = Math.hypot(handWorld2(gu.place, gu.pose, 1).x - tgt.R.x, handWorld2(gu.place, gu.pose, 1).y - tgt.R.y);
+    if (eL > 1 || eR > 1) throw new Error(`S9: at frame ${f} his hands miss the partition's edge by ${eL.toFixed(1)} / ${eR.toFixed(1)} px`);
+  }
+}
 
 type CheckerState = {plan: {x: number; z: number}; place: RigPlace; pose: Pose2; walk: WalkState | null};
 
@@ -579,23 +664,27 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
     ? {screen: <MiniReadout w={52} h={34} blob={blobT * (1 - blinkOff)} blank={blankT} occZ0={lay.occluder.z0} />, led: g >= BLANK ? 0.15 : 1, firing}
     : {reveal: 1, led: 1, firing, bumpHighlight: Math.max(pulseAt(g, SCHED3.end, 14), pulseAt(g, SCHED4.end, 14) * 0.7)};
 
-  /* ---- hidden tests for overlay paths */
-  const face = facePoly(s, lay);
+  /* ---- hidden tests for overlay light: the partition AS DRAWN (in its pushed position; light is only drawn while it is
+          at rest), both people (a W -> H leg ends at his outline), and the sensor box (a path starts inside it) */
   const sb = geo.box;
+  const behindPartition = partitionHides(s, LIGHT_H, {layout: lay});
+  const behindFigures = figuresHide(s, LIGHT_H, [
+    {z: ch.plan.z, place: ch.place},
+    {z: gu.plan.z, place: gu.place},
+  ]);
   const hidden = (p: P2) => {
-    const q = projectWith(s, {x: p.x, z: p.z, h: SENSOR_H});
-    if (p.x > face.fx && inPoly(face.pts, q)) return true;
+    if (behindPartition(p) || behindFigures(p)) return true;
+    const q = projectWith(s, {x: p.x, z: p.z, h: LIGHT_H});
     return Math.hypot(p.x - S.x, p.z - S.z) < 0.25 && q.x > sb.x0 - 2 && q.x < sb.x1 + 2 && q.y > sb.y0 - 2 && q.y < sb.y1 + 2;
   };
-  const hiddenFan = (p: P2) => {
-    if (hidden(p)) return true;
-    const q = projectWith(s, {x: p.x, z: p.z, h: SENSOR_H});
-    return (p.z < ch.plan.z && rigHides(ch.place, q)) || (p.z < gu.plan.z + 0.05 && rigHides(gu.place, q));
-  };
+  // the arrival cue: a saffron rim on his wall-side outline as each pulse reaches his chest (plus the flinch)
+  const rimT = Math.max(...HITS.map((hf) => tw(g, hf - 1, 3) * (1 - tw(g, hf + 6, 10))));
 
-  /* ---- the cast and the partition (one item: his body, the partition and his arms are layered by hand while he
-          pushes, so his hands sit on the near end and the end strip passes in front of his left side) */
-  const guesserRig = (pass: 'all' | 'body' | 'frontArm') => (
+  /* ---- the cast and the partition (one item, layered by hand): behind the partition while he hides at H and on the
+          hidden side; in front of it once he is on the camera side of its near end (the push from behind, his hands
+          on its end face). Seen from behind he is the rig (arms behind the torso) plus the S9_BackHead overlay. */
+  const back = gu.view === 'back';
+  const guesserRig = (
     <Character2
       look={CAST.guesser}
       pose={gu.pose}
@@ -605,10 +694,16 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
       y={gu.place.y}
       scale={gu.place.scale}
       life={gu.place.life}
-      pass={pass}
       shadow={!gu.walk}
       eyeDarts={g < IDEA}
+      style={rimT > 0.01 ? {filter: rimFlash(rimT, gu.place.scale)} : undefined}
     />
+  );
+  const guesser = (
+    <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, transform: gu.turn < 1 ? `scale(${f2(gu.turn * 1000) / 1000}, 1)` : undefined, transformOrigin: `${f2(gu.place.x)}px ${f2(gu.place.y)}px`}}>
+      {guesserRig}
+      {back && <BackHead look={CAST.guesser} place={gu.place} pose={gu.pose} />}
+    </div>
   );
   const walkShadow = (w: WalkState | null) =>
     w ? (
@@ -617,28 +712,21 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
       </svg>
     ) : null;
   const partition = <Partition tilt={tilt} wobble={wobble} layout={lay} />;
-  // on the walk to the near end he is on the partition's far (right) side, so whatever of him overlaps it on screen (his
-  // swinging left arm) goes behind it; the body test alone misses the arm swing
-  const walking = g >= WALK0 && g < ARRIVE;
-  const behind = gu.pushing || walking || behindBox(gu.plan.x, gu.plan.z, box, tilt);
-  const group = gu.pushing ? (
+  // while he walks round to the near end the drawn rig (wider than his 0.22 m body) overlaps the end strip on screen;
+  // as a billboard it is behind the end until it passes the end's plane (z1), then in front (no flip mid-walk)
+  const walkingIn = g >= WALK0 && g < ARRIVE;
+  const behind = !gu.inFront && (walkingIn || behindBox(gu.plan.x, gu.plan.z, box, tilt));
+  const group = behind ? (
     <>
       {walkShadow(gu.walk)}
-      {guesserRig('body')}
-      {partition}
-      {guesserRig('frontArm')}
-    </>
-  ) : behind ? (
-    <>
-      {walkShadow(gu.walk)}
-      {guesserRig('all')}
+      {guesser}
       {partition}
     </>
   ) : (
     <>
       {partition}
       {walkShadow(gu.walk)}
-      {guesserRig('all')}
+      {guesser}
     </>
   );
 
@@ -666,52 +754,44 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
     },
   ];
 
-  /* ---- S9.2 backdrop: the opening between the partition's far end and the wall, marked as in S1.4 (dashed, paper
-          white) while the round trips replay. On screen the W -> H legs pass close to the partition's far top corner,
-          which alone reads as "over the top"; the marked opening makes the gap the thing they go through. It is a
-          backdrop, so the stand, the people and the partition paint over it. */
-  const gapT = tw(g, RISE_END, 10, E.out) * (1 - tw(g, PATHS_OUT, 14));
-  const gapH = OCC.height - ARCH - 0.02;
-  const gapPts = [
-    projectWith(s, {x: OCC.x, z: 0.015, h: FOOT_H}),
-    projectWith(s, {x: OCC.x, z: OCC.z0 - 0.015, h: FOOT_H}),
-    projectWith(s, {x: OCC.x, z: OCC.z0 - 0.015, h: gapH}),
-    projectWith(s, {x: OCC.x, z: 0.015, h: gapH}),
-  ];
-  const backdrop =
-    gapT > 0 && g < PUSH0 ? (
+  /* ---- backdrop (the stand, the people and the partition paint over it): the gap at the wall marked on the floor in
+          ink (GapMarker) while the round trips replay, and again from his walk to the near end until the push closes it
+          (it shrinks with the moved layout); the lit wall spots (W4's is behind the partition's far edge, so the
+          partition covers it exactly) */
+  const gapT = Math.max(tw(g, RISE_END, 10, E.out) * (1 - tw(g, PATHS_OUT, 14)), g >= WALK0 - 4 ? tw(g, WALK0 - 4, 12) : 0);
+  const pathsOp = 1 - tw(g, PATHS_OUT, 14);
+  const after = g >= RT;
+  const out2 = 1 - tw(g, PATHS2_OUT, 8);
+  const backdrop = (
+    <>
+      <GapMarker tilt={tilt} t={gapT} layout={lay} />
       <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-        <path
-          d={`M ${gapPts.map((q) => `${f2(q.x)} ${f2(q.y)}`).join(' L ')} Z`}
-          fill={C.white}
-          fillOpacity={0.8}
-          stroke={C.inkMuted}
-          strokeWidth={3.5}
-          strokeDasharray="11 8"
-          strokeLinejoin="round"
-          opacity={f2(gapT)}
-        />
+        {g >= P3_0 && pathsOp > 0 && (
+          <g opacity={pathsOp}>
+            <WallSpot p={toPx(W3)} t={tw(g, VF3[1] - 2, 8)} hidden={behindPartition(W3)} />
+            <WallSpot p={toPx(W4)} t={tw(g, VF4[1] - 2, 8)} hidden={behindPartition(W4)} />
+          </g>
+        )}
+        {after && out2 > 0 && (
+          <g opacity={out2}>
+            {BLOCKED.map((b, i) => (b.w ? <WallSpot key={i} p={toPx(b.w)} t={tw(g, SCHED2[i].vertexFrames[1] - 2, 8)} hidden={behindPartition(b.w)} /> : null))}
+          </g>
+        )}
       </svg>
-    ) : null;
+    </>
+  );
 
   /* ---- overlays: S9.2 round trips, S9.3 the blocked pulse */
-  const pathsOp = 1 - tw(g, PATHS_OUT, 14);
-  const dirsW = scatterDirections({x: 0, z: 1}, 9, 4);
-  const dirsH3 = scatterDirections(sub(W3, H), 6, 9);
-  const after = g >= RT;
   const blocked = BLOCKED;
   const sched2 = SCHED2;
-  const out2 = 1 - tw(g, PATHS2_OUT, 8);
 
   const overlay = (
     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
       {g >= P3_0 && pathsOp > 0 && (
         <g opacity={pathsOp}>
-          <WallSpot p={toPx(W3)} t={tw(g, VF3[1] - 2, 8)} />
-          <WallSpot p={toPx(W4)} t={tw(g, VF4[1] - 2, 8)} />
-          <ScatterFan asGroup origin={W3} dirs={dirsW} length={0.55} toPx={toPx} t={tw(g, VF3[1], 12)} release={tw(g, VF3[1] + 14, 16)} layout={OLAYOUT} hidden={hiddenFan} seed={5} />
-          <ScatterFan asGroup origin={W4} dirs={dirsW} length={0.5} toPx={toPx} t={tw(g, VF4[1], 12)} release={tw(g, VF4[1] + 14, 16)} layout={OLAYOUT} hidden={hiddenFan} seed={7} width={4} />
-          <ScatterFan asGroup origin={H} dirs={dirsH3} length={0.55} toPx={toPx} t={tw(g, VF3[2], 10)} release={tw(g, VF3[2] + 12, 14)} layout={OLAYOUT} hidden={hiddenFan} seed={8} width={3.5} color={C.saffron} />
+          <ScatterFan asGroup origin={W3} dirs={DIRS_W} length={0.55} toPx={toPx} t={tw(g, VF3[1], 12)} release={tw(g, VF3[1] + 14, 16)} layout={OLAYOUT} hidden={hidden} seed={5} />
+          <ScatterFan asGroup origin={W4} dirs={DIRS_W} length={0.5} toPx={toPx} t={tw(g, VF4[1], 12)} release={tw(g, VF4[1] + 14, 16)} layout={OLAYOUT} hidden={hidden} seed={7} width={4} />
+          <ScatterFan asGroup origin={H} dirs={DIRS_H3} length={0.55} toPx={toPx} t={tw(g, VF3[2], 10)} release={tw(g, VF3[2] + 12, 14)} layout={OLAYOUT} hidden={hidden} seed={8} width={3.5} color={C.saffron} />
           <LightPath asGroup points={PATH3} toPx={toPx} t={SCHED3.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} hidden={hidden} />
           <LightPath asGroup points={PATH4} toPx={toPx} t={SCHED4.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} hidden={hidden} />
         </g>
@@ -723,13 +803,14 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
             const vf = sc.vertexFrames;
             const vEnd = vf[vf.length - 1];
             const crossT = g >= vEnd ? E.back(clamp01((g - vEnd) / 6)) : 0;
-            const sp2 = toPx(b.stop);
+            const sp2 = toPx(b.face);
             return (
               <g key={i}>
-                {b.w && <WallSpot p={toPx(b.w)} t={tw(g, vf[1] - 2, 8)} />}
-                {b.w && <ScatterFan asGroup origin={b.w} dirs={dirsW} length={0.5} toPx={toPx} t={tw(g, vf[1], 10)} release={tw(g, vf[1] + 14, 14)} layout={lay} hidden={hiddenFan} seed={11 + i} width={4} />}
+                {b.w && <ScatterFan asGroup origin={b.w} dirs={DIRS_W} length={0.5} toPx={toPx} t={tw(g, vf[1], 10)} release={tw(g, vf[1] + 14, 14)} layout={lay} hidden={hidden} seed={11 + i} width={4} />}
                 <LightPath asGroup points={b.path} toPx={toPx} t={sc.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={lay} hidden={hidden} arrive="hide" />
-                {crossT > 0.02 && <Cross x={sp2.x - 8} y={sp2.y} s={13 * crossT} />}
+                {/* on the face: the cross's left end is where the ray meets the face, so all of it sits on the face; 13 px
+                    arms (26 px across) so "stopped here" still reads at phone size */}
+                {crossT > 0.02 && <Cross x={sp2.x + 2 + CROSS_S * crossT} y={sp2.y} s={CROSS_S * crossT} />}
               </g>
             );
           })}
@@ -748,6 +829,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   const chipT = Math.max(tw(g, P3_0 - 4, 8) * (1 - tw(g, ECHO_END + 8, 10)), g >= RT ? tw(g, PULSE2 - 2, 6) * (1 - tw(g, sched2[0].end + 10, 8)) : 0);
   const blobShown = g < RT ? blobT : 1;
   const insetLit = g < RT ? clamp01((g - LIT) / 18) : 0;
+  const cardT = tw(g, CARD_IN, CARD_IN_DUR, E.out) * (1 - tw(g, CARD_OUT, CARD_OUT_DUR, E.inOut));
   const insetBlank = g < RT ? 0 : blankT;
 
   return (
@@ -763,6 +845,37 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
         <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
           <circle cx={f2(sensorScr.x)} cy={f2(sensorScr.y)} r={f2(Math.max(0, 50 * cam.zoom * E.back(clamp01(ringT))))} fill="none" stroke={C.teal} strokeWidth={5} />
         </svg>
+      )}
+      {cardT > 0 && (
+        <PlanCard
+          x={CARD.x}
+          y={CARD.y}
+          t={cardT}
+          layout={lay}
+          checker={{...ch.plan, facing: 85}}
+          guesser={{...gu.plan, facing: -90}}
+          sensor={{firing}}
+          gap={gapT}
+          light={(tp) =>
+            g >= P3_0 && (
+              <>
+                <ScatterFan asGroup origin={W3} dirs={DIRS_W} length={0.55} toPx={tp} t={tw(g, VF3[1], 12)} release={tw(g, VF3[1] + 14, 16)} layout={OLAYOUT} seed={5} width={3.5} />
+                <ScatterFan asGroup origin={W4} dirs={DIRS_W} length={0.5} toPx={tp} t={tw(g, VF4[1], 12)} release={tw(g, VF4[1] + 14, 16)} layout={OLAYOUT} seed={7} width={3} />
+                <ScatterFan asGroup origin={H} dirs={DIRS_H3} length={0.55} toPx={tp} t={tw(g, VF3[2], 10)} release={tw(g, VF3[2] + 12, 14)} layout={OLAYOUT} seed={8} width={3} color={C.saffron} />
+                <LightPath asGroup points={PATH3} toPx={tp} t={SCHED3.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} width={6} pulseRadius={11} lane={11} ringRadius={34} />
+                <LightPath asGroup points={PATH4} toPx={tp} t={SCHED4.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} width={6} pulseRadius={11} lane={11} ringRadius={34} />
+              </>
+            )
+          }
+          marks={(tp) =>
+            g >= P3_0 && (
+              <>
+                <PlanSpot {...tp(W3)} t={tw(g, VF3[1] - 2, 8)} />
+                <PlanSpot {...tp(W4)} t={tw(g, VF4[1] - 2, 8)} />
+              </>
+            )
+          }
+        />
       )}
       <ReadoutInset x={INSET.x} y={INSET.y} w={INSET.w} h={INSET.h} t={insetT} field={FIELD} blob={blobShown * (1 - blinkOff)} lit={insetLit} blank={insetBlank} led={g >= BLANK && g >= RT ? 0 : 1} occZ0={lay.occluder.z0} />
       {labelT > 0 && (
@@ -781,21 +894,27 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   );
 };
 
+const DIRS_W = scatterDirections({x: 0, z: 1}, 9, 4);
+const DIRS_H3 = scatterDirections(sub(W3, H), 6, 9);
+
 /** The magnified readout's place (screen px): upper left, over the plant and the left wall; its top edge sits above
  *  the plant's highest leaf tips (y ≈ 38), so no leaf pokes out over the bezel. */
 const INSET = {x: 96, y: 28, w: 420, h: 386};
 
 /* ================================================================== small drawing helpers */
 
+const CROSS_S = 13;
 const Cross: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => (
   <g transform={`translate(${f2(x)} ${f2(y)})`}>
-    <path d={`M ${-s} ${-s} L ${s} ${s} M ${s} ${-s} L ${-s} ${s}`} stroke={C.ink} strokeWidth={11} strokeLinecap="round" />
-    <path d={`M ${-s} ${-s} L ${s} ${s} M ${s} ${-s} L ${-s} ${s}`} stroke={C.coral} strokeWidth={5.5} strokeLinecap="round" />
+    <path d={`M ${-s} ${-s} L ${s} ${s} M ${s} ${-s} L ${-s} ${s}`} stroke={C.ink} strokeWidth={12} strokeLinecap="round" />
+    <path d={`M ${-s} ${-s} L ${s} ${s} M ${s} ${-s} L ${-s} ${s}`} stroke={C.coral} strokeWidth={6} strokeLinecap="round" />
   </g>
 );
 
-const WallSpot: React.FC<{p: {x: number; y: number}; t: number}> = ({p, t}) => {
-  if (t <= 0) return null;
+/** A lit wall spot (saffron diamond), in the backdrop so the partition and the people paint over it; not drawn at all
+ *  when its centre is behind the partition (W4 from this camera: the PlanCard shows it), so no sliver pokes out. */
+const WallSpot: React.FC<{p: {x: number; y: number}; t: number; hidden?: boolean}> = ({p, t, hidden}) => {
+  if (t <= 0 || hidden) return null;
   const r = 13 * E.back(clamp01(t));
   return <path d={`M ${f2(p.x)} ${f2(p.y - r)} L ${f2(p.x + r)} ${f2(p.y)} L ${f2(p.x)} ${f2(p.y + r)} L ${f2(p.x - r)} ${f2(p.y)} Z`} fill={C.saffron} stroke={C.ink} strokeWidth={3.5} strokeLinejoin="round" />;
 };

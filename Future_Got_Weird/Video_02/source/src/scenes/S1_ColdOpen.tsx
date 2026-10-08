@@ -6,23 +6,45 @@ import {useG} from '../lib/SceneFrame';
 import {at, scene, seg, segEnd} from '../lib/timeline';
 import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
 import {E, SOFT, SNAP, camPath, hop, ring, sp, tw} from '../lib/motion';
-import {CAM_RAISED, CAM_ROOM, RAISED_TILT} from '../lib/shots';
-import {LAYOUT, PTS, depthSort, projectWith, rigAt, rigStyle, tiltAt, viewAt, type ViewState} from '../lib/room';
-import {LAYOUT as OLAYOUT, assertPath, confocalPath, layoutPoints, pathLength, pathSchedule, scatterDirections, sub, timeNs, type P2} from '../lib/optics';
+import {CAM_PATH, CAM_PATH_SIDE, CAM_ROOM, PLAN_CARD_RECT, RAISED_TILT} from '../lib/shots';
+import {
+  LAYOUT,
+  PTS,
+  assertAroundTheEnd,
+  depthSort,
+  hiddenByPartition,
+  partitionCrossings,
+  partitionHides,
+  partitionTopH,
+  projectWith,
+  rigAt,
+  rigStyle,
+  tiltAt,
+  viewAt,
+  type PlanPt,
+  type ViewState,
+} from '../lib/room';
+import {LAYOUT as OLAYOUT, assertPath, confocalPath, firstOccluderHit, layoutPoints, lerpP, pathLength, pathSchedule, scatterDirections, sub, timeNs, type P2, type ScatterDir} from '../lib/optics';
+import {rand} from '../lib/anim';
 import {CAST} from '../components/cast';
-import {RoomSet, type RoomItem} from '../components/v02/RoomSet';
+import {GapMarker, RoomSet, type RoomItem} from '../components/v02/RoomSet';
 import {LightPath, ScatterFan, type ToPx} from '../components/v02/Optics';
 import {
   ARMS,
   Character2,
+  handWorld2,
   EXPR,
   HANDS_ON_HIPS,
   IDLE2,
   SNEAK_ARMS,
   eyesWorld,
+  mouthWorld,
+  figuresHide,
   mixPose2,
   planTrip,
   reach2,
+  rigCovers,
+  rimFlash,
   settleAt,
   settlePose,
   tripContacts,
@@ -37,7 +59,9 @@ import {HandheldSensor, SENSOR} from '../components/v02/HandheldSensor';
 import {SensorStand, standGeometry} from '../components/v02/S1_SensorStand';
 import {BOARD_FRAMES, BoardCard, CARD, PLOT_CENTRE, TrackingBoard, type BoardT} from '../components/v02/S1_TrackingBoard';
 import {ArrivalRace, MiniTrackScreen, NSS, RulerCard, SpinningQuestion, Stopwatch, Webcam} from '../components/v02/S1_Props';
-import {reachLocal} from '../components/Character';
+import {handPos, reachLocal} from '../components/Character';
+import {PlanCard, PlanCross, PlanRoute, PlanSpot, planCardSize} from '../components/v02/PlanCard';
+import {PlanTapeLanes, TapeKey} from '../components/v02/S1_PlanTape';
 
 /**
  * S1 · Cold open: the impossible view (s01–s08). Storyboard shots S1.1–S1.7.
@@ -49,16 +73,27 @@ import {reachLocal} from '../components/Character';
  *  S1.3 s03  the readout swings up into the full-screen evidence board ("And yet"): the authors' released tracking
  *            data, mirrored to match our room, the estimated position stepping through the 475 frames; cut back:
  *            the guesser freezes mid-smirk.
- *  S1.4 s04  the camera rises to RAISED_TILT / CAM_RAISED; a ghost straight line from the sensor stops at the
- *            partition ("blocked"); the opening between the partition's far end and the wall is marked ("gap") and the
- *            route round the end of the partition, via the wall, draws on through it.
- *  S1.5 s05  a slowed pulse travels S -> W -> H -> W -> S (one wall sample, chosen and asserted below), scatter fans
- *            at the wall and at him, later legs thinner and paler.
- *  S1.6 s06-07 pan to make room; two pulses race: the quick wall echo lands first on a mini arrival timeline, the
- *            roundabout one ~7 ns later (illustrative). A webcam tries to time it and shrugs; the sensor close-up
- *            replaces it: "time-of-flight sensor: times its own light's round trip".
- *  S1.7 s08  a light ruler: 1 nanosecond ≈ 30 cm ≈ 1 ft; the extra delay becomes an extra distance: the detour
- *            wall spot -> him -> wall spot, ticked every nanosecond of path; he glances at the wall, uneasy.
+ *  S1.4 s04  the camera rises (tilt 0 -> RAISED_TILT 0.10, CAM_ROOM -> CAM_PATH) and the "seen from above" PlanCard
+ *            comes in top right before anything is drawn; a ghost straight line from the sensor stops at the
+ *            partition ("blocked"); the opening between the partition's far end and the wall is marked on the floor
+ *            (GapMarker, "gap" on the wall above it) and the route round the end, via the wall, draws on: in the room
+ *            it goes behind the partition's FAR END by the wall and ends at his outline; the card shows it thread
+ *            the opening, on the same schedule.
+ *  S1.5 s05  a slowed pulse travels S -> W -> H -> W -> S (W3, asserted below), scatter fans at the wall and at him,
+ *            later legs thinner and paler; the lit wall spot is an ellipse on the wall plane, lit while light is at the
+ *            wall; when the (hidden) pulse reaches him his wall-side outline flashes saffron (rimFlash) and he flinches
+ *            (as in S3 and S9). The card runs the same pulse in plan.
+ *  S1.6 s06-07 the card leaves, pan to CAM_PATH_SIDE to make room; two pulses race: the quick wall echo lands first
+ *            on a mini arrival timeline, the roundabout one ~7 ns later (illustrative). A webcam tries to time it and
+ *            shrugs; the sensor close-up replaces it: "time-of-flight sensor: times its own light's round trip".
+ *  S1.7 s08  a light ruler: 1 nanosecond ≈ 30 cm ≈ 1 ft; then the PlanCard takes the ruler's slot with the detour
+ *            wall spot -> him -> wall spot as a tape ticked every nanosecond of path (~7 ns, key "1 ns / 30 cm");
+ *            in the room the wall spot glows while the tape runs and his rim flashes when it reaches him (the ~70 px
+ *            visible stub of the detour is not drawn: it ran on from her pencil). He glances at the wall, uneasy.
+ *
+ * Light-path rule (STORYBOARD continuity): every room light leg is checked at module load with assertAroundTheEnd
+ * over every tilt of the rise and both camera zooms it is seen at; overlay light is hidden by the partition AS DRAWN
+ * (partitionHides) and by the people (figuresHide), plus the sensor box. The partition is never faded.
  *
  * Every beat is cued from narration words (K below); gaps are clamped so the scene survives ±20 % timing changes.
  */
@@ -148,82 +183,95 @@ const f2 = (n: number) => Math.round(n * 100) / 100;
 
 /* ================================================================== geometry */
 
-const SENSOR_H = LAYOUT.sensor.h;
+/** The light-path plane: the 2D model's horizontal slice at the sensor's height (layout sensor.h = 0.95 m, the drawn
+ *  chibis' chest). Sensor, wall spots and his point H share it, so drawn 3D lengths equal the plan lengths. */
+const LIGHT_H = LAYOUT.sensor.h;
+const SENSOR_H = LIGHT_H;
 const {S, H, W} = layoutPoints(OLAYOUT);
 const OCC = LAYOUT.occluder;
-
-// Partition side face (the camera-facing long face, with the arched panel tops of components/v02/Partition), world px.
-const ARCH = 0.09;
-const FOOT_H = 0.07;
-const topH = (z: number) => {
-  const Lp = (OCC.z1 - OCC.z0) / 3;
-  const v = (z - OCC.z0) / Lp;
-  const u = clamp01(v - Math.floor(Math.min(2.9999, v)));
-  return OCC.height - ARCH * (1 - Math.sin(Math.PI * u));
-};
+/** The partition's camera-side (sensor-side) long face. */
 const faceX = OCC.x - OCC.thickness / 2;
-const facePoly = (s: ViewState) => {
-  const pts: {x: number; y: number}[] = [];
-  for (let k = 0; k <= 40; k++) {
-    const z = OCC.z0 + ((OCC.z1 - OCC.z0) * k) / 40;
-    pts.push(projectWith(s, {x: faceX, z, h: topH(z)}));
+const at3 = (p: P2): PlanPt => ({x: p.x, z: p.z, h: LIGHT_H});
+const RAISED_VIEW = viewAt(RAISED_TILT);
+/** The tilts of the S1.4 rise: the light rule is asserted at each (light itself is drawn only once it has settled). */
+const LIGHT_TILTS = [0, 0.25, 0.5, 0.75, 1].map((f) => f * RAISED_TILT);
+/** The camera zooms room light is seen at: CAM_PATH (S1.4-S1.5) and CAM_PATH_SIDE (S1.6-S1.7). Screen margins scale
+ *  with zoom, so the smaller one is the binding case (the S1.6 pan glides between the two). */
+const LIGHT_ZOOMS = [CAM_PATH.zoom, CAM_PATH_SIDE.zoom];
+const ZOOM_MIN = Math.min(...LIGHT_ZOOMS);
+
+/** Largest `grow` (world px) for which test(grow) stays false (bisection; test is monotone in grow). */
+const clearance = (test: (grow: number) => boolean, hi = 400) => {
+  if (test(0)) return -1;
+  let lo = 0;
+  for (let i = 0; i < 28; i++) {
+    const m = (lo + hi) / 2;
+    if (test(m)) hi = m;
+    else lo = m;
   }
-  pts.push(projectWith(s, {x: faceX, z: OCC.z1, h: FOOT_H}), projectWith(s, {x: faceX, z: OCC.z0, h: FOOT_H}));
-  return pts;
-};
-const inPoly = (poly: {x: number; y: number}[], q: {x: number; y: number}) => {
-  let c = false;
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const a = poly[i];
-    const b = poly[j];
-    if (a.y > q.y !== b.y > q.y && q.x < ((b.x - a.x) * (q.y - a.y)) / (b.y - a.y) + a.x) c = !c;
-  }
-  return c;
-};
-const segDist = (q: {x: number; y: number}, a: {x: number; y: number}, b: {x: number; y: number}) => {
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const l2 = dx * dx + dy * dy || 1;
-  const u = clamp01(((q.x - a.x) * dx + (q.y - a.y) * dy) / l2);
-  return Math.hypot(q.x - a.x - u * dx, q.y - a.y - u * dy);
+  return lo;
 };
 
 /**
- * The wall sample whose round trip reads cleanly in the raised room view: in plan the legs must clear the partition
- * (assertPath), and on screen at RAISED_TILT / CAM_RAISED every point of S -> W and W -> H must stay outside the
- * partition's drawn silhouette by at least MIN_CLEAR_PX (so the W -> H leg is seen passing the partition's far end at
- * the gap by the wall, never through or over the screen). W3 is tried first: its echo delay is the ~7 ns the
- * storyboard labels. Throws if neither W3 nor W4 qualifies (a layout or framing change broke the shot).
+ * The wall sample of S1.4-S1.7: W3, whose echo delay is the ~7 ns the storyboard labels. There is no fallback by
+ * design: at the 0.95 m light plane W1 and W2 sit behind her head and W4 behind the partition's far edge. Asserted
+ * (throws): the path clears the partition in plan (assertPath); every leg obeys the room light rule at every tilt of the
+ * rise and at both zooms (assertAroundTheEnd: behind the far / near END >= 24 px below the corner, never over the top;
+ * S -> W legs >= 18 px in front); the spot is not behind the partition as drawn and is >= SPOT_CLEAR_PX screen px from
+ * her head, hair and pencil at the settled raised view.
  */
-const MIN_CLEAR_PX = 18;
-/** CAM_RAISED tilted down a little: at RAISED_TILT the rigs are still drawn at full height (lib/room figureMix), so
- *  the shared framing crops the hider's hair; same zoom (so the same 5 px outlines and clearances), centre 47 px up. */
-const CAM_UP: Cam = {...CAM_RAISED, cy: CAM_RAISED.cy - 47};
+const SPOT_CLEAR_PX = 40;
 const pickWall = () => {
-  const s = viewAt(RAISED_TILT);
-  const poly = facePoly(s);
-  const report: string[] = [];
-  for (const id of ['W3', 'W4']) {
-    const w = W.find((p) => p.id === id)!;
-    const path = confocalPath(S, w, H);
-    assertPath(path, OLAYOUT);
-    let minPx = Infinity;
-    for (const [a, b] of [[S, w], [w, H]] as [P2, P2][]) {
-      for (let i = 0; i <= 200; i++) {
-        const u = i / 200;
-        const q = projectWith(s, {x: a.x + (b.x - a.x) * u, z: a.z + (b.z - a.z) * u, h: SENSOR_H});
-        if (inPoly(poly, q)) minPx = -1;
-        else for (let k = 0; k < poly.length; k++) minPx = Math.min(minPx, segDist(q, poly[k], poly[(k + 1) % poly.length]) * CAM_RAISED.zoom);
-      }
+  const w = W.find((p) => p.id === 'W3')!;
+  const path = confocalPath(S, w, H);
+  assertPath(path, OLAYOUT);
+  let minBelowCornerPx = Infinity;
+  let minFrontPx = Infinity;
+  for (const tilt of LIGHT_TILTS) {
+    const s = viewAt(tilt);
+    for (const zoom of LIGHT_ZOOMS) {
+      assertAroundTheEnd('S1 W3 round trip', [path.map(at3)], s, {zoom});
+      path.slice(0, -1).forEach((a, i) => {
+        const r = partitionCrossings(at3(a), at3(path[i + 1]), s, {zoom});
+        for (const c of r.crossings) minBelowCornerPx = Math.min(minBelowCornerPx, c.belowCornerPx);
+        if (!r.crossings.length) minFrontPx = Math.min(minFrontPx, r.frontClearPx);
+      });
     }
-    report.push(`${id}: ${minPx.toFixed(1)} px`);
-    if (minPx >= MIN_CLEAR_PX) return {w, path, clearPx: minPx};
   }
-  throw new Error(`S1: no wall sample with a clear raised-view path (${report.join(', ')})`);
+  const spot = at3(w);
+  if (hiddenByPartition(spot, RAISED_VIEW)) throw new Error('S1: the W3 wall spot is behind the partition at RAISED_TILT');
+  const her = rigAt(LAYOUT.operator.x, LAYOUT.operator.z, RAISED_TILT);
+  const q = projectWith(RAISED_VIEW, spot);
+  const spotClearPx = clearance((g) => rigCovers(her, q, g)) * ZOOM_MIN;
+  if (spotClearPx < SPOT_CLEAR_PX) throw new Error(`S1: the W3 wall spot is ${spotClearPx.toFixed(0)} screen px from her head (needs ${SPOT_CLEAR_PX})`);
+  return {w, path, minBelowCornerPx, minFrontPx, spotClearPx};
 };
 const PICK = pickWall();
 const WP = PICK.w; // the wall spot of S1.4-S1.7
 const PATH = PICK.path; // S, W, H, W, S
+/** Scatter fans: at the wall spot (S1.5, the race) and at him (S1.5). */
+const dirsW = scatterDirections({x: 0, z: 1}, 9, 4);
+const dirsH = scatterDirections(sub(WP, H), 6, 9);
+/** The rays a ScatterFan draws (components/v02/Optics: the same lengths, seeds and stop at the partition in plan). */
+const fanRays = (origin: P2, dirs: ScatterDir[], length: number, seed: number) =>
+  dirs.map((d, i) => {
+    const L = length * (0.3 + 0.7 * d.w) * (0.85 + 0.3 * rand(seed * 53 + i * 7));
+    const end = {x: origin.x + d.x * L, z: origin.z + d.z * L};
+    return [at3(origin), at3(lerpP(origin, end, firstOccluderHit(origin, end, OLAYOUT, 0.05)))];
+  });
+/** Where the blocked straight line from the sensor toward him meets the partition's camera-side face (S1.4). */
+const GHOST_HIT: P2 = {x: faceX, z: S.z + (H.z - S.z) * ((faceX - S.x) / (H.x - S.x))};
+// every other room light leg obeys the rule too, at every tilt of the rise and both zooms: the fan rays (at the wall
+// spot S1.5 and the race, at him S1.5) and the blocked line, a front leg that stops on the camera-side face
+(() => {
+  const fans = [...fanRays(WP, dirsW, 0.62, 5), ...fanRays(H, dirsH, 0.6, 8), ...fanRays(WP, dirsW, 0.5, 6)];
+  for (const tilt of LIGHT_TILTS) {
+    for (const zoom of LIGHT_ZOOMS) {
+      assertAroundTheEnd('S1 scatter fans', fans, viewAt(tilt), {zoom});
+      assertAroundTheEnd('S1 blocked line', [[at3(S), at3(GHOST_HIT)]], viewAt(tilt), {zoom, allowFront: true});
+    }
+  }
+})();
 const QUICK = [S, WP, S];
 const LEN_LONG = pathLength(PATH);
 const LEN_QUICK = pathLength(QUICK);
@@ -256,6 +304,8 @@ const EXHALE = Math.max(SIGHT0 + SIGHT_DUR + 4, K.pleased);
 const SIGHT_OUT = K.s02 + 4;
 
 // S1.2 — push, tap, readout on, field of view on the wall
+/** The S1.2 push: 8 % in toward the sensor and the lit wall patch (tilt 0; the far panel's top stays in frame). */
+const CAM_PUSH: Cam = {cx: 852, cy: 498, zoom: CAM_ROOM.zoom * 1.08};
 const PUSH0 = K.s02;
 const PUSH_DUR = clamp(K.pointed - K.s02 - 6, 24, 50);
 const TAP = K.sensor2 + 3; // her hand meets the sensor
@@ -274,10 +324,12 @@ const CUT = Math.max(K.directly + 14, K.s03End - 2); // hard cut back to the roo
 // he buffs his nails long enough to read (~0.45 s), then freezes mid-smirk well before s04 starts
 const FREEZE = CUT + clamp(K.s04 - CUT - 14, 7, 14);
 
-// S1.4 — rise, blocked line, route round the end
+// S1.4 — rise (tilt 0 -> RAISED_TILT, CAM_ROOM -> CAM_PATH), the plan card, blocked line, route round the end
 const RISE0 = K.s04 + 2;
 const RISE_DUR = clamp(K.corners - RISE0 - 2, 34, 56);
-const LINE0 = K.light4;
+const RISE_END = RISE0 + RISE_DUR;
+// no light is drawn before the camera has settled at RAISED_TILT (so the spot and label checks below hold)
+const LINE0 = Math.max(K.light4, RISE_END + 2);
 const CONTACT = Math.max(LINE0 + 12, K.through + 4);
 const RELIEF = CONTACT + 8;
 const ROUTE0 = K.around;
@@ -292,10 +344,22 @@ const SCHED = pathSchedule(PATH, {start: PULSE0, dur: PULSE1 - PULSE0});
 const VF = SCHED.vertexFrames; // S, W, H, W, S
 const TRAIL_OUT = K.s06 + 4;
 
-// S1.6 — pan, race, timeline
-const CAM_SIDE: Cam = {cx: CAM_UP.cx - 280, cy: CAM_UP.cy, zoom: CAM_UP.zoom};
-const PAN0 = K.s06;
-const PAN_DUR = 28;
+// S1.4-S1.5 "seen from above": the PlanCard is fully in before the blocked line draws, runs the same blocked line,
+// route and pulse on the same schedules, and is gone before the S1.6 pan moves the room under it.
+const CARD_IN = RISE_END - 10;
+const CARD_IN_DUR = 14;
+const CARD_OUT_DUR = 10;
+const CARD_SIZE = planCardSize();
+const CARD_POS = {x: PLAN_CARD_RECT.x, y: PLAN_CARD_RECT.y};
+
+// S1.6 — pan (CAM_PATH -> CAM_PATH_SIDE: the cards' column opens on the left), race, timeline. The pan is ~465
+// world px (it was 280): it starts a little before s06, once the S1.5 echo is home and the card and chips have left,
+// and ends where the shorter pan ended (K.s06 + 28), so the race and its cues keep their frames.
+const PAN_END = K.s06 + 28;
+const PAN0 = Math.min(PAN_END - 28, Math.max(K.s06 - 6, PULSE1 + 14));
+const PAN_DUR = PAN_END - PAN0;
+const CARD_OUT = PAN0 - CARD_OUT_DUR; // the S1.4-S1.5 card is gone before the pan moves the room under it
+const CHIPS_OUT = PAN0 - 10; // the S1.5 chips too (at CAM_PATH_SIDE they would sit on his legs)
 const RACE_CARD0 = PAN0 + PAN_DUR - 4; // after the pan has made room
 const RACE0 = Math.max(PAN0 + PAN_DUR + 2, K.trip6 + 4);
 const RACE_LONG_END = Math.max(RACE0 + 70, K.later6);
@@ -303,6 +367,9 @@ const RACE_SCHED = pathSchedule(PATH, {start: RACE0, dur: RACE_LONG_END - RACE0}
 const QUICK_SCHED = pathSchedule(QUICK, {start: RACE0, dur: (RACE_LONG_END - RACE0) * (LEN_QUICK / LEN_LONG)});
 const BRACKET0 = K.billionths;
 const RACE_FADE = K.s07 + 6;
+/** The race's "slowed down" chip (left column, under the arrival card): out before the webcam inset grows there. */
+const RACE_CHIP_IN = RACE_CARD0 + 6;
+const RACE_CHIP_POS = {x: 96, y: 60 + 318 + 18};
 
 // S1.6 (s07) — webcam, then the sensor close-up
 const CAMI0 = K.webcam - 6;
@@ -321,6 +388,56 @@ const TAPE0 = K.timing;
 const TAPE1 = Math.max(TAPE0 + 24, K.distance + 8);
 const EXTRA0 = K.extra;
 const UNEASY = K.where + 2;
+// the ruler card leaves and the PlanCard takes its slot (left column) for the tape; "1 ns ≈ 30 cm" becomes its key
+const RULER_OUT = TAPE0 - 18;
+const CARD2_IN = TAPE0 - 10;
+const CARD2_POS = {x: 96, y: 420};
+/** The tape key's piece (card px): top left of the plan area, on the floor between the wall and her token. */
+const TAPE_KEY = {x: 44, y: 164};
+const CHIP_SIZE = 38;
+const CHIP_POS = {x: CARD2_POS.x, y: CARD2_POS.y + planCardSize().h + 18};
+/** The detour wall spot -> him -> wall spot (the extra path, 2|WH| = c x the extra delay). */
+const DETOUR = [WP, H, WP];
+const DETOUR_M = pathLength(DETOUR);
+
+/* ---- shared progress curves (room and card read the same ones, so they stay in sync frame for frame) */
+const routeAt = (g: number) => tw(g, ROUTE0, ROUTE1 - ROUTE0, E.inOut);
+/** The wall spot (diamond, wall ellipse, card spot) pops as the route reaches the wall. */
+const SPOT0 = ROUTE0 + (ROUTE1 - ROUTE0) * (pathLength([S, WP]) / pathLength([S, WP, H])) - 2;
+const route0Spot = (g: number) => (g >= ROUTE0 ? tw(g, SPOT0, 10) : 0);
+const tapeAt = (g: number) => tw(g, TAPE0, TAPE1 - TAPE0, E.inOut);
+/** When the card's tape (the detour wall spot -> him -> wall spot) reaches him: his rim flashes in the room, in sync. */
+const TAPE_TURN = (() => {
+  const half = pathLength([WP, H]);
+  for (let f = TAPE0; f <= TAPE1; f++) if (tapeAt(f) * DETOUR_M >= half) return f;
+  return TAPE1;
+})();
+/**
+ * The lit wall spot's glow (an ellipse on the wall at W3) is light, so it shows only while light is on the wall: it pops
+ * with the diamond when the S1.4 route reaches the wall and stays through the S1.5 pulse; it fades once that echo is
+ * home (with the S1.5 trails); it lights again when the S1.6 race's pulses reach the wall and fades with the race's
+ * trails; and it is on while the S1.7 detour tape runs from it. The diamond marker stays (the card's spot mirrors it). Returns the pop
+ * (size, E.back) and the opacity.
+ */
+const glowAt = (g: number) => {
+  const r = RACE_SCHED.vertexFrames;
+  const s15 = 1 - tw(g, TRAIL_OUT, 10);
+  const race = tw(g, r[1] - 3, 4) * (1 - tw(g, RACE_FADE, 12)); // with the race's own trails
+  const tapeOn = tw(g, TAPE0 - 4, 6);
+  return {pop: route0Spot(g), op: Math.max(s15, race, tapeOn)};
+};
+const gapLabelT = (g: number) => (g >= ROUTE0 - 4 ? E.back(clamp01((g - ROUTE0 + 4) / 10)) * (1 - tw(g, VF[2] + 8, 14)) : 0);
+
+/* ---- the "gap" label (screen px at CAM_PATH, where the camera holds from RISE_END to PAN0): on the wall above the
+ *      slot between her head and the partition's far end, its leader ending in the opening at the light plane,
+ *      (OCC.x, OCC.z0 / 2, LIGHT_H). Clearances asserted at module load (end of file). */
+const GAP_LABEL_SIZE = 36;
+/** Conservative box of the ScreenLabel "gap" at 36 px (Nunito 800 ~63 px of text, 16 px padding, 3 px border). */
+const GAP_LABEL = {x: 690, y: 207, w: 110, h: 58};
+const camToWorld = (cam: Cam, p: {x: number; y: number}) => ({x: cam.cx + (p.x - 960) / cam.zoom, y: cam.cy + (p.y - 540) / cam.zoom});
+const GAP_PT = projectWith(RAISED_VIEW, {x: OCC.x, z: OCC.z0 / 2, h: LIGHT_H});
+/** World px (drawn in the backdrop, under the people, the partition and the light). */
+const GAP_LEADER = {from: camToWorld(CAM_PATH, {x: GAP_LABEL.x + GAP_LABEL.w - 6, y: GAP_LABEL.y + GAP_LABEL.h + 2}), to: {x: GAP_PT.x, y: GAP_PT.y}};
 
 /* ================================================================== sound cue sheet */
 
@@ -377,7 +494,12 @@ const RACE_BUMP = Math.floor((NS_LONG / (NS_LONG * 1.12)) * 12) - 1;
 const GUESSER_SEED = 22;
 const CHECKER_SEED = 3;
 
-/** Sort depth of the sensor stand: in front of the checker at every tilt the scene uses (asserted below). */
+/**
+ * Sort depth of the sensor stand: painted over the checker at every tilt the scene uses (asserted below). The sensor
+ * sits at her chest (the 0.95 m light plane), right by her hanging right arm: painted under her, her sleeve would
+ * cover ~39 % of the readout at tilt 0 and her frontal cutout half the sensor that fires the pulse in the raised view.
+ * Her tap (S1.2) presses the box's top from behind it (TAP_TARGET).
+ */
 const STAND_SORT_Z = LAYOUT.operator.z + 0.2;
 (() => {
   for (const tilt of [0, RAISED_TILT * 0.25, RAISED_TILT * 0.5, RAISED_TILT * 0.75, RAISED_TILT]) {
@@ -425,6 +547,12 @@ const guesserState = (g: number, tilt: number) => {
     const frozen: Pose2 = {...buff, eyes: 1.22, pupil: 0.62, brows: 0.9, browAsym: 0, lid: 0, lookX: -0.55, lookY: -0.1, sweat: 1, mouth: 'smirk', tilt: 2};
     pose = g < FREEZE ? buff : mixPose2(buff, frozen, Math.min(1.05, kf));
     if (g >= FREEZE) pose = {...pose, bob: hop(g, FREEZE, 7, 6)};
+    // still frozen, his eyes follow the ghost straight line as it creeps from the sensor toward him ("doesn't go
+    // through") and he braces (shoulders up and in) until it thunks into the partition, so the 1.2 s hold before the
+    // thunk is his to play; the relief below takes both back
+    const watchLine = tw(g, LINE0 - 2, 10, E.inOut);
+    const brace = tw(g, LINE0 + 2, Math.max(6, CONTACT - LINE0 - 2), E.inOut);
+    if (watchLine > 0) pose = {...pose, lookX: lerp(pose.lookX, -0.85, watchLine), lookY: lerp(pose.lookY, 0.35, watchLine), hunch: (pose.hunch ?? 0) + 0.08 * brace};
     // s04: relief when the straight line is blocked; worry when the light goes round the end, via the wall
     const relief = tw(g, RELIEF, 14, E.inOut);
     if (relief > 0) {
@@ -442,6 +570,16 @@ const guesserState = (g: number, tilt: number) => {
       const crossed: Pose2 = {...IDLE2, ...ARMS.armsCrossed, armsFront: 'both', lid: 0.2, eyes: 1, brows: 0.2, browAsym: 0.3, mouth: 'flat', lookX: -0.85, lookY: -0.45, tilt: -2};
       pose = mixPose2(pose, crossed, cross);
     }
+    // the light reaches him (with the rim flash): a flinch (blink, wide eyes, small hop), then wary again, as in S3
+    // and S9; full on "person" (S1.5), smaller in the S1.6 race (arms crossed)
+    for (const [hitF, amt] of [[VF[2], 1], [RACE_SCHED.vertexFrames[2], 0.6]] as const) {
+      const fl = pulseAt(g, hitF - 1, 16) * amt;
+      if (fl > 0) {
+        pose = mixPose2(pose, {...pose, eyes: 1.2, pupil: 0.7, brows: 0.95, browAsym: 0, mouth: 'o', lid: 0, tilt: pose.tilt - 6, hunch: (pose.hunch ?? 0) + 0.05}, fl);
+        pose = {...pose, bob: (pose.bob ?? 0) + hop(g, hitF, 6 * amt, 8)};
+      }
+      if (g >= hitF - 1 && g < hitF + 2) pose = {...pose, blink: 0.1};
+    }
     // s08: "where he is": a glance at the wall, uneasy
     const un = tw(g, UNEASY, 10, E.inOut);
     if (un > 0) {
@@ -458,14 +596,24 @@ const guesserState = (g: number, tilt: number) => {
   return {pose, planX, place, life, frame: gr};
 };
 
+/** S1.2 tap: where her hand (the mitt's centre) goes, in sensor-local px (HandheldSensor: box x -46..40, top face
+ *  y -108..-120), and which IK solution (1 = elbow below the shoulder-hand line). */
+const TAP_TARGET = {x: 20, y: -130};
+const TAP_ELBOW: 1 | -1 = 1;
+/** Her head roll (deg) in the raised room (S1.4-S1.7): a little away from the lit wall spot (see checkerState). */
+const HEAD_TILT_RAISED = -4;
+
 const checkerState = (g: number, tilt: number) => {
   const gr = roomFrame(g);
   const op = rigAt(LAYOUT.operator.x, LAYOUT.operator.z, tilt);
   const lifeIn = tw(g, R1.to, 16, E.inOut);
   const place: RigPlace = {x: op.x, y: op.y, scale: op.scale, frame: gr, seed: CHECKER_SEED, life: 0.35 * lifeIn};
-  // where she looks: the readout (default), the guesser (after R1), the webcam, the sensor, the guesser again
-  const atReadout = {lookX: 0.62, lookY: 0.32, tilt: 3};
-  const atHim = {lookX: 0.95, lookY: -0.05, tilt: -1};
+  // where she looks: the readout (default), the guesser (after R1), the webcam, the sensor, the guesser again. From
+  // the cut back on (the raised room, where the lit wall spot W3 sits just right of her head) her head rolls a few
+  // degrees away from it, so the saffron pencil behind her ear never touches the spot's glow (asserted below).
+  const raised = g >= CUT;
+  const atReadout = {lookX: 0.62, lookY: 0.32, tilt: raised ? HEAD_TILT_RAISED : 3};
+  const atHim = {lookX: 0.95, lookY: -0.05, tilt: raised ? HEAD_TILT_RAISED + 1 : -1};
   const glance = Math.min(tw(g, GLANCE, 8, E.inOut), 1 - tw(g, K.s02 - 2, 10, E.inOut));
   const atCam = Math.min(tw(g, CAMI0 + 6, 8, E.inOut), 1 - tw(g, CAMI_SWAP, 8, E.inOut));
   const knowing = tw(g, K.clue, 10, E.inOut);
@@ -483,12 +631,11 @@ const checkerState = (g: number, tilt: number) => {
   const reachOut = tw(g, TAP + 6, 12, E.inOut);
   const k = reachIn * (1 - reachOut);
   if (k > 0) {
-    // her fingertips on the readout's buttons (right of the screen); the sensor sits right by her shoulder, so the arm
-    // folds: take the IK solution with the elbow lower (the other one swings the elbow up across her face)
-    const tgt = geo.at(SENSOR.screen.x0 + SENSOR.screen.w + 10, SENSOR.screen.y0 + SENSOR.screen.h * 0.62);
-    const arms = ([1, -1] as const).map((e) => reach2(place, pose, 1, tgt.x, tgt.y, e));
-    const armR = Math.cos((arms[0].a * Math.PI) / 180) >= Math.cos((arms[1].a * Math.PI) / 180) ? arms[0] : arms[1];
-    pose = mixPose2(pose, {...pose, armR}, k);
+    // her palm on the top of the sensor box, over the LED and button column: the box sits by her shoulder at her
+    // chest, so the arm folds; the IK solution with the elbow lower keeps the upper arm hanging and brings the
+    // forearm up behind the box (the stand paints over her), so the readout stays in full view as it lights
+    const tgt = geo.at(TAP_TARGET.x, TAP_TARGET.y);
+    pose = mixPose2(pose, {...pose, armR: reach2(place, pose, 1, tgt.x, tgt.y, TAP_ELBOW)}, k);
   }
   if (g < R1.to && (g < SNEAK_GO + 1 || g >= R1_FREEZE - 1)) pose = {...pose, blink: 1};
   return {pose, place};
@@ -496,17 +643,21 @@ const checkerState = (g: number, tilt: number) => {
 
 /* ================================================================== the room shot */
 
+/** The room's tilt and camera at a frame (the module-load checks read the same ones). */
+const roomTilt = (g: number) => (g < CUT ? 0 : RAISED_TILT * tiltAt(g, RISE0, RISE_DUR));
+const roomCam = (g: number): Cam =>
+  g < CUT
+    ? camPath(g, CAM_ROOM, [{at: PUSH0, dur: PUSH_DUR, to: CAM_PUSH}])
+    : camPath(g, CAM_ROOM, [
+        {at: RISE0, dur: RISE_DUR, to: CAM_PATH},
+        {at: PAN0, dur: PAN_DUR, to: CAM_PATH_SIDE},
+      ]);
+
 const RoomShot: React.FC<{g: number}> = ({g}) => {
-  const tilt = g < CUT ? 0 : RAISED_TILT * tiltAt(g, RISE0, RISE_DUR);
+  const tilt = roomTilt(g);
   const s = viewAt(tilt);
   const toPx = roomToPx(s);
-  const cam: Cam =
-    g < CUT
-      ? camPath(g, CAM_ROOM, [{at: PUSH0, dur: PUSH_DUR, to: {cx: 852, cy: 498, zoom: CAM_ROOM.zoom * 1.08}}])
-      : camPath(g, CAM_ROOM, [
-          {at: RISE0, dur: RISE_DUR, to: CAM_UP},
-          {at: PAN0, dur: PAN_DUR, to: CAM_SIDE},
-        ]);
+  const cam = roomCam(g);
   const wobble = 0.35 * ring(g, CONTACT, 0.75, 0.16);
 
   /* ---- people and the stand */
@@ -530,29 +681,25 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   const firing = Math.max(charge * (g < PULSE0 + 2 ? 1 : 1 - tw(g, PULSE0 + 1, 4)), pulseAt(g, RACE0 - 3, 8), pulseAt(g, RT0, 8) * 0.6);
   const led = g < TAP ? 0.15 : 1;
 
-  /* ---- light paths (S1.4-S1.6), drawn over the set; the partition hides what passes behind it */
-  const poly = facePoly(s);
+  /* ---- light paths (S1.4-S1.7), drawn over the set. Hidden exactly where the camera cannot see them: behind the
+   *      partition as drawn (both faces, the arched top band, the end faces, the outline), behind either person
+   *      (so the W -> H leg ends at his outline) and inside the sensor box (the pulse leaves its far face). */
   const box = geo.box;
+  const behindPartition = partitionHides(s, LIGHT_H);
+  const behindPeople = figuresHide(s, LIGHT_H, [
+    {z: LAYOUT.operator.z, place: ch.place},
+    {z: H.z, place: gu.place},
+  ]);
   const hidden = (p: P2) => {
-    const q = projectWith(s, {x: p.x, z: p.z, h: SENSOR_H});
-    if (p.x > faceX && inPoly(poly, q)) return true;
-    if (Math.hypot(p.x - S.x, p.z - S.z) < 0.25 && q.x > box.x0 - 2 && q.x < box.x1 + 2 && q.y > box.y0 - 2 && q.y < box.y1 + 2) return true;
-    return false;
+    if (behindPartition(p) || behindPeople(p)) return true;
+    if (Math.hypot(p.x - S.x, p.z - S.z) >= 0.25) return false;
+    const q = projectWith(s, at3(p));
+    return q.x > box.x0 - 2 && q.x < box.x1 + 2 && q.y > box.y0 - 2 && q.y < box.y1 + 2;
   };
-
-  // fan rays near the wall pass behind the two people: hide them inside each figure's (approximate) silhouette
-  const rigHides = (pl: {x: number; y: number; scale: number}, q: {x: number; y: number}) => {
-    const lx = (q.x - pl.x) / pl.scale;
-    const ly = (q.y - pl.y) / pl.scale;
-    if (((lx / 92) ** 2 + ((ly + 388) / 100) ** 2) < 1) return true; // head and hair
-    if (Math.abs(lx) < 82 && ly > -300 && ly < -140) return true; // torso
-    return Math.abs(lx) < 60 && ly >= -140 && ly < 0; // legs
-  };
-  const hiddenFan = (p: P2) => {
-    if (hidden(p)) return true;
-    const q = projectWith(s, {x: p.x, z: p.z, h: SENSOR_H});
-    return (p.z < LAYOUT.operator.z && rigHides(ch.place, q)) || (p.z < H.z + 0.05 && rigHides(gu.place, q));
-  };
+  // arrival: the (hidden) pulse reaches him from behind; his wall-side outline flashes (S1.5 and the S1.6 race), and
+  // again when the S1.7 card's detour tape reaches him
+  const hit = (f: number) => tw(g, f - 1, 3) * (1 - tw(g, f + 6, 10));
+  const rim = Math.max(hit(VF[2]), hit(RACE_SCHED.vertexFrames[2]), hit(TAPE_TURN));
 
   const items: RoomItem[] = [
     {
@@ -565,11 +712,8 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
     {
       key: 'stand',
       x: PTS.S.x,
-      // Sort depth only (the stand is always drawn at S). Before the cut back from the board (tilt 0) the checker
-      // paints over the stand, so her tapping hand lies on the readout; from the cut on (the switch is hidden by the
-      // hard cut) the stand paints over her at every tilt: in the raised view her frontal cutout, wider than her body,
-      // otherwise covered half the sensor that fires the pulse and is ringed in S1.6. (Asserted at module load.)
-      z: g < CUT ? LAYOUT.operator.z + 0.04 : STAND_SORT_Z,
+      // Sort depth only (the stand is always drawn at S): it paints over her at every tilt (STAND_SORT_Z, asserted)
+      z: STAND_SORT_Z,
       w: 0.17,
       height: 1.4,
       node: <SensorStand tilt={tilt} sensor={{...readout, led, firing}} />,
@@ -579,7 +723,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
       x: gu.planX,
       z: H.z,
       w: 0.3,
-      node: <Character2 look={CAST.guesser} pose={gu.pose} frame={gu.frame} seed={GUESSER_SEED} x={gu.place.x} y={gu.place.y} scale={gu.place.scale} life={gu.life} eyeDarts={g >= R1.to} style={rigStyle(tilt, gu.place.scale)} />,
+      node: <Character2 look={CAST.guesser} pose={gu.pose} frame={gu.frame} seed={GUESSER_SEED} x={gu.place.x} y={gu.place.y} scale={gu.place.scale} life={gu.life} eyeDarts={g >= R1.to} style={{...rigStyle(tilt, gu.place.scale), filter: rimFlash(rim, gu.place.scale)}} />,
     },
   ];
 
@@ -593,38 +737,41 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   const ph1 = SENSOR_H + 0.37;
   const P = (x: number, z: number, h: number) => projectWith(s, {x, z, h});
   const patchPts = [P(pz0, 0, ph0), P(pz1, 0, ph0), P(pz1, 0, ph1), P(pz0, 0, ph1)];
-  // S1.4/S1.5: the opening between the partition's far end and the wall, marked while the route is drawn round the
-  // end and the pulse goes through it. In the raised view the W -> H leg crosses this opening near the wall, but on
-  // screen it also passes close above the partition's far top corner, which alone reads as "over the top"; the marked
-  // opening makes the gap the thing the light goes through. Backdrop layer: the stand, the people and the partition
-  // paint over it, as they would over anything standing in the gap.
-  const gapT = tw(g, ROUTE0 - 8, 12, E.out) * (1 - tw(g, VF[2] + 8, 14));
-  const gapH = topH(OCC.z0) - 0.02;
-  const gapPts = [P(OCC.x, 0.015, FOOT_H), P(OCC.x, OCC.z0 - 0.015, FOOT_H), P(OCC.x, OCC.z0 - 0.015, gapH), P(OCC.x, 0.015, gapH)];
-  const backdrop = fov > 0 || patch > 0 || gapT > 0 ? (
-    <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+  // S1.4/S1.5: the opening between the partition's far end and the wall, marked in ink on the floor (GapMarker) while
+  // the route is drawn round the end and the pulse goes through it; its label's leader points into the slot.
+  const gapIn = tw(g, ROUTE0 - 8, 12, E.out);
+  const gapOut = 1 - tw(g, VF[2] + 8, 14);
+  const gapT = gapIn * gapOut;
+  // the lit wall spot: an ellipse ON the wall plane (real light, so saffron), popping with the diamond marker; it is
+  // lit only while light is at the wall (glowAt), the diamond marker stays
+  const spotT = route0Spot(g);
+  const glow = glowAt(g);
+  const backdrop = (
+    <>
       {gapT > 0 && (
-        <path
-          d={`M ${gapPts.map((q) => `${f2(q.x)} ${f2(q.y)}`).join(' L ')} Z`}
-          fill={C.white}
-          fillOpacity={0.8}
-          stroke={C.inkMuted}
-          strokeWidth={3.5}
-          strokeDasharray="11 8"
-          strokeLinejoin="round"
-          opacity={gapT}
-        />
+        <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: gapOut}}>
+          <GapMarker tilt={tilt} t={gapIn} />
+          <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+            <path d={`M ${f2(GAP_LEADER.from.x)} ${f2(GAP_LEADER.from.y)} L ${f2(GAP_LEADER.to.x)} ${f2(GAP_LEADER.to.y)}`} stroke={C.inkMuted} strokeWidth={4} strokeLinecap="round" opacity={clamp01(gapLabelT(g))} />
+            <circle cx={f2(GAP_LEADER.to.x)} cy={f2(GAP_LEADER.to.y)} r={5} fill={C.inkMuted} opacity={clamp01(gapLabelT(g))} />
+          </svg>
+        </div>
       )}
-      {fov > 0 && (
-        <path
-          d={`M ${f2(geo.S.x)} ${f2(geo.S.y)} L ${f2(patchPts[0].x)} ${f2(patchPts[0].y)} L ${f2(patchPts[3].x)} ${f2(patchPts[3].y)} L ${f2(patchPts[2].x)} ${f2(patchPts[2].y)} L ${f2(patchPts[1].x)} ${f2(patchPts[1].y)} Z`}
-          fill={C.saffronLight}
-          opacity={0.7 * fov}
-        />
+      {(fov > 0 || patch > 0 || (glow.pop > 0 && glow.op > 0.01)) && (
+        <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+          {fov > 0 && (
+            <path
+              d={`M ${f2(geo.S.x)} ${f2(geo.S.y)} L ${f2(patchPts[0].x)} ${f2(patchPts[0].y)} L ${f2(patchPts[3].x)} ${f2(patchPts[3].y)} L ${f2(patchPts[2].x)} ${f2(patchPts[2].y)} L ${f2(patchPts[1].x)} ${f2(patchPts[1].y)} Z`}
+              fill={C.saffronLight}
+              opacity={0.7 * fov}
+            />
+          )}
+          {(fov > 0 || patch > 0) && <path d={`M ${patchPts.map((q) => `${f2(q.x)} ${f2(q.y)}`).join(' L ')} Z`} fill={C.saffronLight} stroke={C.saffronDeep} strokeWidth={3} strokeDasharray="10 8" opacity={Math.max(fov * 0.6, patch)} />}
+          {glow.pop > 0 && glow.op > 0.01 && <WallGlow s={s} t={glow.pop} opacity={glow.op} />}
+        </svg>
       )}
-      <path d={`M ${patchPts.map((q) => `${f2(q.x)} ${f2(q.y)}`).join(' L ')} Z`} fill={C.saffronLight} stroke={C.saffronDeep} strokeWidth={3} strokeDasharray="10 8" opacity={Math.max(fov * 0.6, patch)} />
-    </svg>
-  ) : null;
+    </>
+  );
 
   /* ---- overlays in world px */
   const eyes = eyesWorld({...ch.place}, ch.pose);
@@ -639,12 +786,9 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   }
   // the ghost straight line from the sensor toward him, stopped by the partition ("blocked")
   const ghost = g >= K.fires + 12 ? 0 : tw(g, LINE0, CONTACT - LINE0, E.in);
-  const ghostHit = (() => {
-    const u = (faceX - S.x) / (H.x - S.x);
-    return {x: faceX, z: S.z + (H.z - S.z) * u};
-  })();
+  const ghostHit = GHOST_HIT;
   // the route round the end, via the wall (static preview), then faint while the pulse runs
-  const route = tw(g, ROUTE0, ROUTE1 - ROUTE0, E.inOut);
+  const route = routeAt(g);
   const routeOp = (1 - 0.75 * tw(g, K.fires, 10)) * (1 - tw(g, TRAIL_OUT, 10));
   const routeHead = route * pathLength([S, WP, H]);
   // the pulse (S1.5)
@@ -654,13 +798,12 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   const fanWOut = tw(g, VF[1] + 16, 18);
   const fanH = tw(g, VF[2], 10);
   const fanHOut = tw(g, VF[2] + 12, 14);
-  const dirsW = scatterDirections({x: 0, z: 1}, 9, 4);
-  const dirsH = scatterDirections(sub(WP, H), 6, 9);
   // the race (S1.6)
   const raceOp = tw(g, RACE0 - 2, 3) * (1 - tw(g, RACE_FADE, 12));
   const raceFanW = tw(g, RACE_SCHED.vertexFrames[1], 10) * (1 - tw(g, RACE_SCHED.vertexFrames[1] + 14, 14));
-  // the light tape from the wall spot to him and back (S1.7)
-  const tape = tw(g, TAPE0, TAPE1 - TAPE0, E.inOut);
+  // the light tape from the wall spot to him and back (S1.7): drawn on the card (the room follows with the glow and
+  // his rim flash at TAPE_TURN)
+  const tape = tapeAt(g);
 
   const overlay = (
     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
@@ -702,38 +845,42 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
         <Route points={[S, WP, H]} head={routeHead} toPx={toPx} hidden={hidden} opacity={routeOp} />
       )}
       {/* wall spot marker */}
-      {route > 0 && <WallSpot p={toPx(WP)} t={tw(g, ROUTE0 + (ROUTE1 - ROUTE0) * (pathLength([S, WP]) / pathLength([S, WP, H])) - 2, 10)} />}
+      {route > 0 && <WallSpot p={toPx(WP)} t={spotT} />}
       {/* the slowed pulse S -> W -> H -> W -> S */}
       {g >= PULSE0 && pulseOp > 0 && (
         <>
-          <ScatterFan asGroup origin={WP} dirs={dirsW} length={0.62} toPx={toPx} t={fanW} release={fanWOut} layout={OLAYOUT} hidden={hiddenFan} seed={5} />
-          <ScatterFan asGroup origin={H} dirs={dirsH} length={0.6} toPx={toPx} t={fanH} release={fanHOut} layout={OLAYOUT} hidden={hiddenFan} seed={8} width={3.5} color={C.saffron} />
+          <ScatterFan asGroup origin={WP} dirs={dirsW} length={0.62} toPx={toPx} t={fanW} release={fanWOut} layout={OLAYOUT} hidden={hidden} seed={5} />
+          <ScatterFan asGroup origin={H} dirs={dirsH} length={0.6} toPx={toPx} t={fanH} release={fanHOut} layout={OLAYOUT} hidden={hidden} seed={8} width={3.5} color={C.saffron} />
           <LightPath asGroup points={PATH} toPx={toPx} t={pulseT} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} hidden={hidden} opacity={pulseOp} />
         </>
       )}
       {/* the race: one flash; the quick echo comes straight back (teal), the rest goes on round him (saffron) */}
       {raceOp > 0 && (
         <g opacity={raceOp}>
-          <ScatterFan asGroup origin={WP} dirs={dirsW} length={0.5} toPx={toPx} t={raceFanW > 0 ? 1 : 0} release={1 - raceFanW} layout={OLAYOUT} hidden={hiddenFan} seed={6} />
+          <ScatterFan asGroup origin={WP} dirs={dirsW} length={0.5} toPx={toPx} t={raceFanW > 0 ? 1 : 0} release={1 - raceFanW} layout={OLAYOUT} hidden={hidden} seed={6} />
           <LightPath asGroup points={QUICK} toPx={toPx} t={QUICK_SCHED.progress(g)} pulses={3} pulseGap={0.09} color={C.tealDeep} pulseColor={C.teal} intensityFalloff={0.75} layout={OLAYOUT} hidden={hidden} />
           <LightPath asGroup points={PATH} toPx={toPx} t={RACE_SCHED.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} hidden={hidden} />
         </g>
       )}
-      {/* light tape: the extra delay as an extra distance from the wall spot */}
-      {tape > 0 && <LightTape toPx={toPx} t={tape} />}
+      {/* S1.7: the detour is drawn on the card only. In the room its visible stubs (wall spot -> the slot, ~70 px)
+          ran on from her saffron pencil in the same direction and read as a beam from her head at phone size; the
+          room follows the tape instead with the wall spot's glow (on while the tape runs) and his rim flash when
+          the tape reaches him (TAPE_TURN) */}
     </svg>
   );
 
   /* ---- screen-space labels */
   const scr = (p: {x: number; y: number}) => worldToScreen(cam, p.x, p.y);
-  // the gap's label hangs off the opening's top, beside the partition's far end
-  const gapLabelT = g >= ROUTE0 - 4 ? E.back(clamp01((g - ROUTE0 + 4) / 10)) * (1 - tw(g, VF[2] + 8, 14)) : 0;
-  const gapTop = scr(projectWith(s, {x: OCC.x, z: OCC.z0 * 0.45, h: topH(OCC.z0) - 0.1}));
+  const gapLT = gapLabelT(g);
   const blockedT = g >= CONTACT + 2 ? E.back(clamp01((g - CONTACT - 2) / 8)) * (1 - tw(g, K.fires, 10)) : 0;
   const hitScr = scr(toPx(ghostHit));
-  // "slowed down" stays while any pulse runs (S1.5 and the race); the flash note goes with the S1.5 pulse
-  const chipsT = tw(g, CHIPS0, 10) * (1 - tw(g, RACE_FADE, 10));
-  const flashT = 1 - tw(g, TRAIL_OUT, 10);
+  // "slowed down" whenever a pulse runs: S1.5 at the bottom right (with the flash note), gone before the S1.6 pan
+  // moves him under it; the race's own chip sits in the left column under the arrival card (SideCards)
+  const chipsT = tw(g, CHIPS0, 10) * (1 - tw(g, CHIPS_OUT, 10));
+  // "seen from above": S1.4-S1.5 top right; S1.7 in the left column (the ruler card's slot)
+  const cardT = g >= CUT ? tw(g, CARD_IN, CARD_IN_DUR, E.out) * (1 - tw(g, CARD_OUT, CARD_OUT_DUR, E.inOut)) : 0;
+  const card2T = tw(g, CARD2_IN, 14, E.out);
+  const tokens = {checker: {x: LAYOUT.operator.x, z: LAYOUT.operator.z}, guesser: {x: gu.planX, z: H.z}};
 
   return (
     <AbsoluteFill style={{background: C.paper}}>
@@ -750,27 +897,75 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
           blocked
         </ScreenLabel>
       )}
-      {/* S1.4 the gap the route goes through */}
-      {gapLabelT > 0 && (
-        <>
-          <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-            <path d={`M ${f2(gapTop.x + 10)} ${f2(gapTop.y + 26)} L ${f2(gapTop.x + 52)} ${f2(gapTop.y - 4)}`} stroke={C.inkMuted} strokeWidth={4} strokeLinecap="round" opacity={gapLabelT} />
-          </svg>
-          <ScreenLabel x={gapTop.x + 50} y={gapTop.y - 10} anchor="start" t={gapLabelT} size={36} color={C.inkSoft}>
-            gap
-          </ScreenLabel>
-        </>
+      {/* S1.4 the gap the route goes through: on the wall above the slot (its leader is in the backdrop) */}
+      {gapLT > 0 && (
+        <ScreenLabel x={GAP_LABEL.x + GAP_LABEL.w / 2} y={GAP_LABEL.y + GAP_LABEL.h / 2} anchor="middle" t={gapLT} size={GAP_LABEL_SIZE} color={C.inkSoft}>
+          gap
+        </ScreenLabel>
       )}
       {/* S1.5 guard-rail chips */}
       {chipsT > 0 && (
         <div style={{position: 'absolute', right: 96, top: 790, display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-end', opacity: chipsT, transform: `translateY(${f2((1 - E.out(chipsT)) * -10)}px)`}}>
           <Pill tone="saffron">slowed down</Pill>
-          {flashT > 0 && (
-            <div style={{opacity: flashT}}>
-              <Pill tone="paper">invisible flash (shown for clarity)</Pill>
-            </div>
-          )}
+          <Pill tone="paper">invisible flash (shown for clarity)</Pill>
         </div>
+      )}
+      {/* S1.4-S1.5 seen from above: the same blocked line, route and pulse, on the same schedules, in plan */}
+      {cardT > 0 && (
+        <PlanCard
+          x={CARD_POS.x}
+          y={CARD_POS.y}
+          t={cardT}
+          {...tokens}
+          sensor={{firing}}
+          gap={gapT}
+          light={(tp) => (
+            <>
+              {ghost > 0 && (
+                <path
+                  d={`M ${f2(tp(S).x)} ${f2(tp(S).y)} L ${f2(lerp(tp(S).x, tp(ghostHit).x, ghost))} ${f2(lerp(tp(S).y, tp(ghostHit).y, ghost))}`}
+                  stroke={C.saffronDeep}
+                  strokeWidth={5}
+                  strokeDasharray="4 10"
+                  strokeLinecap="round"
+                  fill="none"
+                  opacity={0.85 * (1 - tw(g, K.fires, 12))}
+                />
+              )}
+              {route > 0 && routeOp > 0 && <PlanRoute points={[S, WP, H]} head={routeHead} toPx={tp} opacity={routeOp} width={6} dash="12 9" />}
+              {g >= PULSE0 && pulseOp > 0 && (
+                <>
+                  <ScatterFan asGroup origin={WP} dirs={dirsW} length={0.62} toPx={tp} t={fanW} release={fanWOut} layout={OLAYOUT} seed={5} width={3.5} />
+                  <ScatterFan asGroup origin={H} dirs={dirsH} length={0.6} toPx={tp} t={fanH} release={fanHOut} layout={OLAYOUT} seed={8} width={3} color={C.saffron} />
+                  <LightPath asGroup points={PATH} toPx={tp} t={pulseT} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} width={6} pulseRadius={11} lane={11} ringRadius={34} opacity={pulseOp} />
+                </>
+              )}
+            </>
+          )}
+          marks={(tp) => (
+            <>
+              {ghost > 0 && g >= CONTACT && <PlanCross x={tp(ghostHit).x - 14} y={tp(ghostHit).y} s={9 * E.back(clamp01((g - CONTACT) / 6)) * (1 - tw(g, K.fires, 12))} />}
+              {route > 0 && <PlanSpot {...tp(WP)} t={spotT} />}
+            </>
+          )}
+        />
+      )}
+      {/* S1.7 the detour as a tape ticked every nanosecond of path, in the ruler card's slot */}
+      {card2T > 0 && (
+        <PlanCard
+          x={CARD2_POS.x}
+          y={CARD2_POS.y}
+          t={card2T}
+          {...tokens}
+          sensor={{}}
+          marks={(tp, ppm) => (
+            <>
+              <PlanSpot {...tp(WP)} t={1} />
+              <PlanTapeLanes points={DETOUR} head={tape * DETOUR_M} toPx={tp} />
+              <TapeKey x={TAPE_KEY.x} y={TAPE_KEY.y} ppm={ppm} t={tw(g, CARD2_IN + 6, 10)} />
+            </>
+          )}
+        />
       )}
       {/* S1.6 the race timeline, the webcam, the sensor close-up; S1.7 the ruler */}
       <SideCards g={g} cam={cam} sensorWorld={geo.S} />
@@ -826,62 +1021,21 @@ const WallSpot: React.FC<{p: {x: number; y: number}; t: number}> = ({p, t}) => {
   return <path d={`M ${f2(p.x)} ${f2(p.y - r)} L ${f2(p.x + r)} ${f2(p.y)} L ${f2(p.x)} ${f2(p.y + r)} L ${f2(p.x - r)} ${f2(p.y)} Z`} fill={C.saffron} stroke={C.ink} strokeWidth={3.5} strokeLinejoin="round" />;
 };
 
-/**
- * The extra delay as an extra distance: the detour wall spot -> him -> wall spot drawn as a measured light path (the
- * route's own saffron line, out and back in two lanes like LightPath) with an ink tick every 30 cm of path, i.e. every
- * nanosecond of light travel, the unit of the S1.7 ruler card (its first piece is named "1 ns" here too). The detour is
- * 2|WH| = c x (extra delay), so the ticks cut it into the same ~7 nanoseconds as the timeline's "≈ 7 ns later". Both
- * lanes run on the side away from the partition's far corner.
- */
-const LANE_GAP = 15;
-const LightTape: React.FC<{toPx: ToPx; t: number}> = ({toPx, t}) => {
-  const a = toPx(WP);
-  const b = toPx(H);
-  const L = Math.hypot(b.x - a.x, b.y - a.y) || 1;
-  // unit normal pointing away from the partition (up-right of the down-right W -> H leg)
-  const n = {x: (b.y - a.y) / L, y: -(b.x - a.x) / L};
-  const lanes = [
-    {from: a, to: b, off: 4},
-    {from: b, to: a, off: 4 + LANE_GAP},
-  ];
-  const legM = Math.hypot(H.x - WP.x, H.z - WP.z); // metres per lane
-  const total = 2 * legM;
-  const step = OLAYOUT.c_m_per_ns; // metres of light per nanosecond
-  const head = E.inOut(clamp01(t)) * total;
-  const lines: React.ReactNode[] = [];
-  const ticks: React.ReactNode[] = [];
-  const seg = (key: string, p0: {x: number; y: number}, p1: {x: number; y: number}) =>
-    lines.push(<path key={key} d={`M ${f2(p0.x)} ${f2(p0.y)} L ${f2(p1.x)} ${f2(p1.y)}`} stroke={C.saffronDeep} strokeWidth={6} strokeLinecap="round" />);
-  lanes.forEach((ln, i) => {
-    const d0 = i * legM;
-    const len = clamp(head - d0, 0, legM);
-    if (len <= 0) return;
-    const at = (u: number) => ({x: lerp(ln.from.x, ln.to.x, u) + n.x * ln.off, y: lerp(ln.from.y, ln.to.y, u) + n.y * ln.off});
-    seg(`l${i}`, at(0), at(len / legM));
-    // an ink tick at every whole nanosecond of path inside this lane
-    for (let k = 1; k * step < total; k++) {
-      const d = k * step - d0;
-      if (d <= 0 || d >= len) continue;
-      const c = at(d / legM);
-      ticks.push(<path key={`t${k}`} d={`M ${f2(c.x - n.x * 11)} ${f2(c.y - n.y * 11)} L ${f2(c.x + n.x * 11)} ${f2(c.y + n.y * 11)}`} stroke={C.ink} strokeWidth={4} strokeLinecap="round" />);
-    }
-  });
-  // the turn at him joins the two lanes
-  if (head >= legM) seg('turn', {x: b.x + n.x * lanes[0].off, y: b.y + n.y * lanes[0].off}, {x: b.x + n.x * lanes[1].off, y: b.y + n.y * lanes[1].off});
-  // "1 ns" names the first piece, as on the ruler card
-  const nameT = clamp01((head - step) / (step * 0.8));
-  const mid = {x: lerp(a.x, b.x, (step * 0.6) / legM) + n.x * 60, y: lerp(a.y, b.y, (step * 0.6) / legM) + n.y * 60};
-  return (
-    <g>
-      {lines}
-      {ticks}
-      {nameT > 0 && (
-        <text x={f2(mid.x)} y={f2(mid.y + 11)} textAnchor="middle" fontFamily={F.mono} fontWeight={700} fontSize={32} fill={C.saffronDeep} stroke={C.cream} strokeWidth={7} strokeLinejoin="round" paintOrder="stroke" opacity={nameT}>
-          1 ns
-        </text>
-      )}
-    </g>
-  );
+/** The lit wall spot on the wall plane (z = 0) at WP, centred on the light plane: WALL_GLOW_M wide and high, saffron
+ *  (it is real light), dashed rim; pops with the diamond marker. Drawn in the backdrop, so the people and the
+ *  partition paint over it. */
+/** 0.18 x 0.12 m (the plan's 0.24 x 0.16 m put its rim ~12 px from her head and on her pencil tip at the raised view;
+ *  clearances asserted at module load). */
+const WALL_GLOW_M = {w: 0.18, h: 0.12};
+const wallGlowRect = (s: ViewState, k = 1) => {
+  const c = projectWith(s, at3(WP));
+  return {cx: c.x, cy: c.y, rx: (WALL_GLOW_M.w / 2) * s.ppm * k, ry: (WALL_GLOW_M.h / 2) * s.ppm * s.height * k};
+};
+const WallGlow: React.FC<{s: ViewState; t: number; opacity?: number}> = ({s, t, opacity = 1}) => {
+  const k = E.back(clamp01(t));
+  if (k <= 0.01) return null;
+  const e = wallGlowRect(s, k);
+  return <ellipse cx={f2(e.cx)} cy={f2(e.cy)} rx={f2(e.rx)} ry={f2(e.ry)} fill={C.saffronLight} stroke={C.saffronDeep} strokeWidth={3} strokeDasharray="9 7" opacity={f2(clamp01(opacity))} />;
 };
 
 const Pill: React.FC<{tone: 'saffron' | 'paper'; children: React.ReactNode; size?: number}> = ({tone, children, size = 32}) => (
@@ -960,14 +1114,16 @@ const SideCards: React.FC<{g: number; cam: Cam; sensorWorld: {x: number; y: numb
   const shrug = Math.min(sp(g, SHRUG, SOFT), 1 - tw(g, SHRUG + 18, 10));
   const sad = tw(g, SHRUG, 6);
   const labelT = tw(g, TOF_LABEL, 12, E.out) * (1 - insetOut);
-  const C0 = {x: 330, y: 620};
-  const R = 200;
+  const C0 = INSET_C0;
+  const R = INSET_R;
   const sensorScr = worldToScreen(cam, sensorWorld.x, sensorWorld.y);
   const leader = tw(g, CAMI_SWAP + 6, 10, E.out) * (1 - insetOut);
   const rt = g < RT0 ? 0 : (g - RT0) / 26; // close-up round trip (0..1 travel, then the trail fades)
 
-  // ruler card (s08)
-  const rulerIn = tw(g, RULER0, 14, E.out);
+  // ruler card (s08): out just before the PlanCard takes its slot for the tape
+  const rulerIn = tw(g, RULER0, 14, E.out) * (1 - tw(g, RULER_OUT, 8, E.inOut));
+  // the race's "slowed down" chip
+  const raceChip = tw(g, RACE_CHIP_IN, 10) * (1 - tw(g, CAMI0 - 12, 10));
   const rulerPulse = (g - RULER_PULSE0) / (RULER_PULSE1 - RULER_PULSE0);
   const first = tw(g, K.nanosecond - 4, 10);
   const head = tw(g, RULER0 + 8, 10);
@@ -979,6 +1135,11 @@ const SideCards: React.FC<{g: number; cam: Cam; sensorWorld: {x: number; y: numb
       {raceT > 0 && (
         <div style={{position: 'absolute', left: 96, top: 60, opacity: clamp01(raceT * 2), transform: `translateX(${f2((1 - raceT) * -60)}px)`}}>
           <ArrivalRace tQuick={NS_QUICK} tLong={NS_LONG} quick={quick} long={long} bracket={bracket} glow={glow} width={780} />
+        </div>
+      )}
+      {raceChip > 0 && (
+        <div style={{position: 'absolute', left: RACE_CHIP_POS.x, top: RACE_CHIP_POS.y, opacity: raceChip, transform: `translateY(${f2((1 - E.out(raceChip)) * -10)}px)`}}>
+          <Pill tone="saffron">slowed down</Pill>
         </div>
       )}
       {inset > 0 && (
@@ -1016,7 +1177,8 @@ const SideCards: React.FC<{g: number; cam: Cam; sensorWorld: {x: number; y: numb
         </svg>
       )}
       {labelT > 0 && (
-        <div style={{position: 'absolute', left: 96, top: C0.y + R + 18, opacity: labelT, transform: `translateY(${f2((1 - labelT) * 10)}px)`, fontFamily: F.body, fontWeight: 800, fontSize: 36, lineHeight: 1.18, color: C.ink}}>
+        // on a cream backing: after the pan the room's floor edge runs under the end of the second line
+        <div style={{position: 'absolute', left: TOF_BOX.x, top: TOF_BOX.y, opacity: labelT, transform: `translateY(${f2((1 - labelT) * 10)}px)`, fontFamily: F.body, fontWeight: 800, fontSize: TOF_BOX.size, lineHeight: TOF_BOX.lineH, color: C.ink, background: C.cream, border: `3px solid ${C.inkMuted}`, borderRadius: 16, padding: `${TOF_BOX.pad}px 18px`}}>
           <div style={{color: C.tealDeep}}>time-of-flight sensor:</div>
           <div>{"times its own light's round trip"}</div>
         </div>
@@ -1024,13 +1186,14 @@ const SideCards: React.FC<{g: number; cam: Cam; sensorWorld: {x: number; y: numb
       {rulerIn > 0 && (
         <div style={{position: 'absolute', left: 96, top: 420, opacity: clamp01(rulerIn * 2), transform: `translateX(${f2((1 - rulerIn) * -60)}px)`}}>
           <RulerCard t={rulerIn} pulse={rulerPulse} first={first} head={head} width={780} />
-          {extraT > 0 && (
-            <div style={{marginTop: 18, opacity: extraT, transform: `translateY(${f2((1 - extraT) * 10)}px)`}}>
-              <Pill tone="saffron" size={38}>
-                extra delay → extra distance
-              </Pill>
-            </div>
-          )}
+        </div>
+      )}
+      {/* below the S1.7 PlanCard */}
+      {extraT > 0 && (
+        <div style={{position: 'absolute', left: CHIP_POS.x, top: CHIP_POS.y, opacity: extraT, transform: `translateY(${f2((1 - extraT) * 10)}px)`}}>
+          <Pill tone="saffron" size={CHIP_SIZE}>
+            extra delay → extra distance
+          </Pill>
         </div>
       )}
     </>
@@ -1039,6 +1202,13 @@ const SideCards: React.FC<{g: number; cam: Cam; sensorWorld: {x: number; y: numb
 
 /** Scale of the sensor close-up in the inset (outlines stay 4 px: NSS). */
 const CLOSE_K = 2.3;
+/** The webcam / sensor close-up inset (screen px): centre and radius. */
+const INSET_C0 = {x: 330, y: 620};
+const INSET_R = 200;
+/** The close-up's label box: its text keeps the left margin (x 96) and starts 18 px under the inset; a cream backing
+ *  (3 px border, `pad` px top and bottom) so the room's floor edge never runs through the text after the pan. Two
+ *  36 px lines at line-height 1.18; its bottom is asserted above the caption band. */
+const TOF_BOX = {x: 96 - 18 - 3, y: INSET_C0.y + INSET_R + 18 - 6 - 3, pad: 6, lines: 2, size: 36, lineH: 1.18};
 
 /** The close-up's round trip (inset px, sensor box centred on 0,0): emitter -> a wall above -> detector. */
 const RoundTrip: React.FC<{t: number}> = ({t}) => {
@@ -1068,7 +1238,7 @@ const RoundTrip: React.FC<{t: number}> = ({t}) => {
 
 const BoardShot: React.FC<{g: number}> = ({g}) => {
   // the swing: from the sensor's readout (in the pushed S1.2 framing) up to the full card
-  const cam = camPath(SWING0, CAM_ROOM, [{at: PUSH0, dur: PUSH_DUR, to: {cx: 852, cy: 498, zoom: CAM_ROOM.zoom * 1.08}}]);
+  const cam = camPath(SWING0, CAM_ROOM, [{at: PUSH0, dur: PUSH_DUR, to: CAM_PUSH}]);
   const geo = standGeometry(0);
   const r0 = worldToScreen(cam, geo.screen.x, geo.screen.y);
   const r1 = worldToScreen(cam, geo.screen.x + geo.screen.w, geo.screen.y + geo.screen.h);
@@ -1123,3 +1293,215 @@ export const S1ColdOpen: React.FC = () => {
   if (g >= SWING0 && g < CUT) return <BoardShot g={g} />;
   return <RoomShot g={g} />;
 };
+
+/* ================================================================== module-load checks (they throw; never downgraded) */
+
+type Pt = {x: number; y: number};
+type Box = {x: number; y: number; w: number; h: number};
+
+/** Clearances of the lit wall spot's glow (screen px). */
+const GLOW_HEAD_PX = 18;
+const GLOW_PENCIL_PX = 24;
+/** Her pencil's tip (world px). Cast2 draws the pencil at head-local (HEAD_R - 6, HEAD_Y - 20) rotated -70 deg, 60 rig px
+ *  long plus a 10 px point, so its tip is 89.6 rig px right of her eyes' point along the head's own horizontal axis
+ *  (HEAD_R 58). The head's axes come from eyesWorld and mouthWorld, 40 rig px apart on its vertical axis, so the tip
+ *  follows the head's roll, lean, bob and idle drift. */
+const PENCIL_TIP_RIG = 89.6;
+const pencilTip = (place: RigPlace, pose: Pose2): Pt => {
+  const e = eyesWorld(place, pose);
+  const m = mouthWorld(place, pose);
+  const up = {x: (e.x - m.x) / 40, y: (e.y - m.y) / 40};
+  const right = {x: -up.y, y: up.x};
+  return {x: e.x + right.x * PENCIL_TIP_RIG, y: e.y + right.y * PENCIL_TIP_RIG};
+};
+
+/** The wall-plane point (z = 0) under a world-px point at a view (projectWith inverted on the plane z = 0). */
+const wallPointAt = (s: ViewState, q: Pt): PlanPt => ({
+  x: s.pivot.x + (q.x - s.ax) / s.ppm + s.shear * s.pivot.z,
+  z: 0,
+  h: s.pivot.h + (s.ay - s.ppm * s.floor * s.pivot.z - q.y) / (s.ppm * Math.max(1e-6, s.height)),
+});
+/** Is world-px point q within `d` world px of the partition as drawn (its silhouette incl. the ink outline)? Tested on
+ *  the wall plane behind it: a wall point is hidden exactly where the drawn partition covers it on screen. */
+const nearPartition = (s: ViewState, q: Pt, d: number) => {
+  if (hiddenByPartition(wallPointAt(s, q), s)) return true;
+  for (let k = 0; k < 24 && d > 0; k++) {
+    const a = (k / 24) * Math.PI * 2;
+    if (hiddenByPartition(wallPointAt(s, {x: q.x + d * Math.cos(a), y: q.y + d * Math.sin(a)}), s)) return true;
+  }
+  return false;
+};
+/** Screen points covering a screen box (border and interior, every 4 px), mapped to world px through `cam`. */
+const boxSamples = (b: Box, cam: Cam): Pt[] => {
+  const out: Pt[] = [];
+  const nx = Math.ceil(b.w / 4);
+  const ny = Math.ceil(b.h / 4);
+  for (let i = 0; i <= nx; i++) for (let j = 0; j <= ny; j++) out.push(camToWorld(cam, {x: b.x + (b.w * i) / nx, y: b.y + (b.h * j) / ny}));
+  return out;
+};
+const boxGap = (a: Box, b: Box) => {
+  const dx = Math.max(b.x - (a.x + a.w), a.x - (b.x + b.w), 0);
+  const dy = Math.max(b.y - (a.y + a.h), a.y - (b.y + b.h), 0);
+  return dx > 0 || dy > 0 ? Math.hypot(dx, dy) : -Math.min(a.x + a.w - b.x, b.x + b.w - a.x, a.y + a.h - b.y, b.y + b.h - a.y);
+};
+const toScreenBox = (cam: Cam, x0: number, y0: number, x1: number, y1: number): Box => {
+  const a = worldToScreen(cam, x0, y0);
+  const b = worldToScreen(cam, x1, y1);
+  return {x: a.x, y: a.y, w: b.x - a.x, h: b.y - a.y};
+};
+/** The tripod stand as drawn (sensor box with its lens rims, column, legs and feet), world px. */
+const standBox = (tilt: number) => {
+  const geo = standGeometry(tilt);
+  const feet = [
+    {x: PTS.S.x - 0.16, z: PTS.S.z + 0.1},
+    {x: PTS.S.x + 0.17, z: PTS.S.z + 0.08},
+    {x: PTS.S.x + 0.01, z: PTS.S.z - 0.17},
+  ].map((f) => projectWith(viewAt(tilt), {...f, h: 0}));
+  const xs = [geo.box.x0, geo.box.x1, ...feet.map((f) => f.x - 9), ...feet.map((f) => f.x + 9)];
+  const ys = [geo.box.y0 - 12 * geo.k, geo.box.y1, ...feet.map((f) => f.y + 5)];
+  return {x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys)};
+};
+/** Screen box of the guesser's figure at a view and camera, with his arms akimbo (HANDS_ON_HIPS elbows). */
+const guesserBox = (tilt: number, cam: Cam) => {
+  const pl = rigAt(H.x, H.z, tilt);
+  const elbow = handPos(HANDS_ON_HIPS.armR!, 1).ex + 15 + 4; // half the 30 px sleeve plus the outline
+  const ext = Math.max(92, 82, elbow);
+  return toScreenBox(cam, pl.x - ext * pl.scale, pl.y - 488 * pl.scale, pl.x + ext * pl.scale, pl.y);
+};
+/** Approximate screen box of a ScreenLabel centred at (cx, cy). */
+const labelBox = (cx: number, cy: number, text: string, size: number, display: boolean): Box => {
+  const w = text.length * size * (display ? 0.56 : 0.58) + 32 + 6;
+  const h = size + 15 + 6;
+  return {x: cx - w / 2, y: cy - h / 2, w, h};
+};
+
+export const S1_MARGINS = (() => {
+  const fail = (msg: string) => {
+    throw new Error(`S1: ${msg}`);
+  };
+  const s = RAISED_VIEW;
+  const zoom = CAM_PATH.zoom;
+  // --- timing: light only on the settled raised view; the card in before the blocked line and out before the pan
+  if (LINE0 < RISE_END) fail('light would be drawn during the rise');
+  if (CARD_IN + CARD_IN_DUR > LINE0) fail(`the plan card is not in before the blocked line (${CARD_IN + CARD_IN_DUR} > ${LINE0})`);
+  if (PULSE1 > CARD_OUT) fail('the plan card leaves before its pulse is back at the sensor');
+  if (CARD_OUT + CARD_OUT_DUR > PAN0) fail('the plan card is still in when the S1.6 pan starts');
+  if (ROUTE0 - 4 < RISE_END || VF[2] + 22 > PAN0) fail('the gap label must show only while the camera holds CAM_PATH');
+  if (CARD2_IN < INSET_OUT + 10) fail('the S1.7 card would overlap the webcam inset');
+  if (CHIPS_OUT + 10 > PAN0) fail('the S1.5 chips are still in when the pan moves him under them');
+  if (CAMI0 - 2 < RACE_CHIP_IN + 10 || RACE_SCHED.end > CAMI0 - 12) fail('the race chip must be in while the race runs and out before the webcam inset');
+  if (RULER_OUT + 8 > CARD2_IN) fail('the ruler card must be out before the S1.7 plan card comes in');
+  // --- the "gap" label: >= 12 px from the partition as drawn, her head, the wall-spot ellipse and the tripod
+  const pts = boxSamples(GAP_LABEL, CAM_PATH);
+  const her = rigAt(LAYOUT.operator.x, LAYOUT.operator.z, RAISED_TILT);
+  const glow = wallGlowRect(s, 1.1); // E.back overshoot
+  const gapPartition = clearance((d) => pts.some((q) => nearPartition(s, q, d)), 60) * zoom;
+  const gapHead = clearance((gr) => pts.some((q) => rigCovers(her, q, gr))) * zoom;
+  const gapGlow = clearance((gr) => pts.some((q) => ((q.x - glow.cx) / (glow.rx + gr)) ** 2 + ((q.y - glow.cy) / (glow.ry + gr)) ** 2 < 1)) * zoom;
+  const sb = standBox(RAISED_TILT);
+  const gapTripod = boxGap(GAP_LABEL, toScreenBox(CAM_PATH, sb.x0, sb.y0, sb.x1, sb.y1));
+  for (const [what, v] of [['partition', gapPartition], ['her head', gapHead], ['wall spot', gapGlow], ['tripod', gapTripod]] as const) {
+    if (v < 12) fail(`the "gap" label is ${v.toFixed(0)} px from the ${what} (needs 12)`);
+  }
+  // the leader: clear of her head, and of the partition as drawn
+  const lead = Array.from({length: 41}, (_, i) => ({x: lerp(GAP_LEADER.from.x, GAP_LEADER.to.x, i / 40), y: lerp(GAP_LEADER.from.y, GAP_LEADER.to.y, i / 40)}));
+  if (lead.some((q) => rigCovers(her, q, 4) || nearPartition(s, q, 4))) fail('the gap leader touches her head or the partition');
+  // --- the plan card (S1.4-S1.5): clear of him, the gap and blocked labels and the S1.5 chips
+  const card: Box = {...CARD_POS, ...CARD_SIZE};
+  const cardHim = boxGap(card, guesserBox(RAISED_TILT, CAM_PATH));
+  if (cardHim < 24) fail(`the plan card is ${cardHim.toFixed(0)} px from him (needs 24)`);
+  const hitW = projectWith(s, at3(GHOST_HIT));
+  const hit = worldToScreen(CAM_PATH, hitW.x, hitW.y);
+  const blocked = labelBox(hit.x + 34, hit.y + 112, 'blocked', 46, true);
+  const chips: Box = {x: 1920 - 96 - 640, y: 790, w: 640, h: 128};
+  const labelGaps = {cardBlocked: boxGap(card, blocked), cardGapLabel: boxGap(card, GAP_LABEL), cardChips: boxGap(card, chips), gapBlocked: boxGap(GAP_LABEL, blocked)};
+  for (const [k, v] of Object.entries(labelGaps)) if (v < 20) fail(`${k} only ${v.toFixed(0)} px apart (needs 20)`);
+  // --- the S1.7 card in the left column: below the arrival card, clear of her, the chip above the caption band
+  const card2: Box = {...CARD2_POS, ...CARD_SIZE};
+  const race: Box = {x: 96, y: 60, w: 780, h: 318};
+  const herSide = rigAt(LAYOUT.operator.x, LAYOUT.operator.z, RAISED_TILT);
+  const herBox = toScreenBox(CAM_PATH_SIDE, herSide.x - 92 * herSide.scale, herSide.y - 488 * herSide.scale, herSide.x + 92 * herSide.scale, herSide.y);
+  const chipBottom = CHIP_POS.y + CHIP_SIZE * 1.05 + 2 * 0.26 * CHIP_SIZE + 6;
+  const card2Gaps = {raceCard: boxGap(card2, race), her: boxGap(card2, herBox)};
+  for (const [k, v] of Object.entries(card2Gaps)) if (v < 20) fail(`the S1.7 card is ${v.toFixed(0)} px from the ${k} (needs 20)`);
+  if (chipBottom > 1080 * 0.88) fail(`the S1.7 chip reaches into the caption band (bottom ${chipBottom.toFixed(0)})`);
+  // --- the S1.2 tap (tilt 0): her palm on the box top, contact error <= 1 px while it is held
+  let tapErr = 0;
+  for (let g = TAP; g <= TAP + 6; g++) {
+    const c = checkerState(g, 0);
+    const tgt = standGeometry(0).at(TAP_TARGET.x, TAP_TARGET.y);
+    const hand = handWorld2(c.place, c.pose, 1);
+    tapErr = Math.max(tapErr, Math.hypot(hand.x - tgt.x, hand.y - tgt.y));
+  }
+  if (tapErr > 1) fail(`the tap misses the sensor by ${tapErr.toFixed(1)} px`);
+  // --- tilt 0 framing: the partition's top in frame through the push and the rise (far panel middle and far corner)
+  let topMin = Infinity;
+  for (const [tilt, cam] of [[0, CAM_ROOM], [0, CAM_PUSH], ...LIGHT_TILTS.map((t, i) => [t, camPath(RISE0 + (RISE_DUR * i) / 4, CAM_ROOM, [{at: RISE0, dur: RISE_DUR, to: CAM_PATH}])] as const), [RAISED_TILT, CAM_PATH_SIDE]] as [number, Cam][]) {
+    const sv = viewAt(tilt);
+    for (const z of [OCC.z0, OCC.z0 + (OCC.z1 - OCC.z0) / 6]) {
+      const q = projectWith(sv, {x: OCC.x, z, h: partitionTopH(z)});
+      topMin = Math.min(topMin, worldToScreen(cam, q.x, q.y).y);
+    }
+  }
+  if (topMin < 12) fail(`the partition's top is ${topMin.toFixed(0)} px from the frame top`);
+  // --- S1.2: the lit wall patch shows >= 0.30 m (to the centimetre) of bare wall between her and the partition at
+  //     every height it spans (h 0.58-1.32 m); the narrowest is beside her shoulder, ~1.18 m
+  const s0 = viewAt(0);
+  const her0 = rigAt(LAYOUT.operator.x, LAYOUT.operator.z, 0);
+  const zone = (LAYOUT as unknown as {frames: {A: {zoneEdgesX: number[]}}}).frames.A.zoneEdgesX;
+  let patchMin = Infinity;
+  for (let h = LIGHT_H - 0.37; h <= LIGHT_H + 0.37 + 1e-9; h += 0.02) {
+    let run = 0;
+    let best = 0;
+    for (let x = zone[0]; x <= zone[zone.length - 1] + 1e-9; x += 0.0025) {
+      const p = {x, z: 0, h};
+      const vis = !hiddenByPartition(p, s0) && !rigCovers(her0, projectWith(s0, p));
+      run = vis ? run + 0.0025 : 0;
+      best = Math.max(best, run);
+    }
+    patchMin = Math.min(patchMin, best);
+  }
+  if (patchMin < 0.295) fail(`the S1.2 wall patch shows only ${patchMin.toFixed(3)} m of bare wall`);
+  // --- the lit wall spot's glow reads ON THE WALL, not off her head: on every frame it shows (glowAt), at that frame's
+  //     pop size and camera zoom, its rim keeps >= GLOW_HEAD_PX from her head (rigCovers) and >= GLOW_PENCIL_PX from her
+  //     pencil's tip, which points at it from behind her ear
+  let glowHead = Infinity;
+  let glowPencil = Infinity;
+  for (let g = ROUTE0; g < K.end; g++) {
+    const gl = glowAt(g);
+    if (gl.pop <= 0 || gl.op <= 0.01) continue;
+    if (roomTilt(g) !== RAISED_TILT) fail(`the wall glow shows before the camera has settled (frame ${g})`);
+    const zoom = roomCam(g).zoom;
+    const e = wallGlowRect(s, E.back(clamp01(gl.pop)));
+    const ring = Array.from({length: 96}, (_, i) => ({x: e.cx + e.rx * Math.cos((i / 96) * Math.PI * 2), y: e.cy + e.ry * Math.sin((i / 96) * Math.PI * 2)}));
+    const ch = checkerState(g, RAISED_TILT);
+    glowHead = Math.min(glowHead, clearance((gr) => ring.some((q) => rigCovers(ch.place, q, gr)), 100) * zoom);
+    const tip = pencilTip(ch.place, ch.pose);
+    const inside = ((tip.x - e.cx) / e.rx) ** 2 + ((tip.y - e.cy) / e.ry) ** 2 < 1;
+    glowPencil = Math.min(glowPencil, inside ? -1 : Math.min(...ring.map((q) => Math.hypot(q.x - tip.x, q.y - tip.y))) * zoom);
+  }
+  if (glowHead < GLOW_HEAD_PX) fail(`the wall-spot glow is ${glowHead.toFixed(0)} px from her head (needs ${GLOW_HEAD_PX})`);
+  if (glowPencil < GLOW_PENCIL_PX) fail(`the wall-spot glow is ${glowPencil.toFixed(0)} px from her pencil's tip (needs ${GLOW_PENCIL_PX})`);
+  // --- the close-up's label box above the caption band
+  const tofBottom = TOF_BOX.y + 2 * 3 + 2 * TOF_BOX.pad + TOF_BOX.lines * TOF_BOX.size * TOF_BOX.lineH;
+  if (tofBottom > 1080 * 0.88) fail(`the time-of-flight label reaches into the caption band (bottom ${tofBottom.toFixed(0)})`);
+  // --- the S1.7 room follows the card's tape: his rim flashes when the tape reaches him, while the card is in
+  if (TAPE_TURN <= CARD2_IN + 6 || TAPE_TURN >= TAPE1) fail('the S1.7 tape must reach him after the card is in and before it is home');
+  return {
+    glowHeadPx: glowHead,
+    glowPencilPx: glowPencil,
+    tofBottom,
+    tapeTurn: TAPE_TURN,
+    pathMinBelowCornerPx: PICK.minBelowCornerPx,
+    pathMinFrontPx: PICK.minFrontPx,
+    spotClearPx: PICK.spotClearPx,
+    gapLabel: {partition: gapPartition, herHead: gapHead, wallSpot: gapGlow, tripod: gapTripod},
+    cardHim,
+    labelGaps,
+    card2Gaps,
+    chipBottom,
+    tapErr,
+    partitionTopMinPx: topMin,
+    patchMinM: patchMin,
+  };
+})();

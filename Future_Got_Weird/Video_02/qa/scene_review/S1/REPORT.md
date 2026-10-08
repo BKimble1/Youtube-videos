@@ -1,6 +1,53 @@
 # S1: builder and director-review reports
 
-## Builder
+## Director review after the light-path fix
+
+Merged into `source/` on 2026-10-08 (not committed). Sheets in this folder are the review's final sheets from `qa/pathfix_rev/S1/clip_r2/dense/`: `S1_sheet01.jpg`, `S1_sheet02.jpg`, `S1_sheet03.jpg`, `S1_sheet04.jpg`, `S1_sheet05.jpg`, `S1_sheet06.jpg`, `motion.json`, `motion_S1.png`.
+
+I reviewed the whole of S1 and fixed six defects over two fix-and-verify rounds. Every module-load check still throws on failure, S1's sound cues are unchanged, and the final half-res clip has no still runs. I only edited `work/rev_S1/src/scenes/S1_ColdOpen.tsx`; `source/` is untouched.
+
+**What already passed (no regression from the pre-fix sheets in `qa/scene_review/S1/`):**
+- **Light path:** the light never goes over or through the partition. The wall-to-him leg slips behind the partition's far end beside the wall, at least 48 px below the corner. His outline ends it, with the saffron rim flash.
+- **Plan card:** it shows the same blocked line, route and pulse frame for frame, and is in before the blocked line draws. It stays 90 px clear of him and 342–600 px from every label.
+- **Partition height:** it is clearly taller than both people (2.0 m against 1.7 m).
+- **Unchanged parts:** the tap (hand on the box, under 1 px error), the board, the cut out to S2 and the R1 window all match the baseline. In R1 the static frames differ by at most 7/255 on 64 pixels, the same renderer noise as before.
+
+**Defects found and fixed:**
+1. **The lit wall spot sat on her pencil.** The glow's edge was 12 px from her head and touched her saffron pencil tip from S1.4 to the end of the scene. On a phone it read as light coming off her head.
+   - The glow is now 0.18 × 0.12 m instead of the plan's 0.24 × 0.16 m.
+   - From the cut back onward her head tilts 4° away from it, which is invisible because it happens at a hard cut.
+   - A new check runs on every frame the glow shows: it must stay at least 18 px from her head and 24 px from the pencil tip. It measures 23 px and 33 px.
+2. **The glow stayed lit with no light for about 25 s.** It now shows only while light is drawn at the wall: with the S1.5 trails, during the S1.6 race, and while the S1.7 tape runs. The small diamond marker stays throughout.
+3. **The S1.7 room stubs looked like a beam from her pencil.** These are the short visible pieces of the detour, about 70 px long. They were a double saffron line running straight on from the pencil, and stayed on screen for 3 s.
+   - I removed them. This departs from the plan's "stubs glow in sync".
+   - The room now follows the card's tape instead: the wall spot glows while the tape runs, and his rim flashes when the tape reaches him (frame 1713, checked at load).
+4. **No reaction when the light reaches him.** S3 and S9 both have a flinch at that moment; S1 did not. He now flinches (blink, wide eyes, small hop) on "person" at frame 1007, and gives a smaller one during the race at frame 1200.
+5. **Dead 1.2 s hold at frames 696–731** ("The light doesn't go through"). His eyes now follow the creeping ghost line and he braces until the thunk. The motion report now lists no still runs at all.
+6. **The S1.6 label touched the room's floor edge.** "time-of-flight sensor: times its own light's round trip" now sits on a cream box. Its bottom is at y 932, checked against the 950 caption band.
+
+I also factored the room's tilt and camera into `roomTilt` and `roomCam` so the checks read the same values the render uses.
+
+**Remaining limitations:**
+- In the room view the wall-to-him leg is mostly hidden, which is honest. "Around the end" depends on the visible stub into the slot, the "gap" label, the rim flash and the plan card.
+- The S1.6 pan shows paper beyond the room, and the cards cover the plant pot. Both were accepted before.
+- At tilt 0 the near panels sit lower on screen than his hair, because nearer things sit lower in this view. The far panel at his depth is clearly above both heads.
+- The tripod overlaps her right hand.
+- There is an empty slot for about 8 frames when the ruler card swaps for the plan card.
+- The plan card (shared position) sits 40 px from the top-right frame edge, inside the 5% margin. That margin rule applies to critical text; the card is a diagram.
+- The wall spot is still physically close to her head; the spot's position is fixed by the light geometry.
+
+**SFX:** S1 is unchanged, still 29 cues, identical to the pre-review copy and to `audio/sfx/v2/cues.json`. All nine scenes load with their checks passing, and `tsc` passes. Output: `/tmp/claude-0/-home-user-Youtube-videos/30d53758-3f65-58ef-8706-5dc1f2b4b0af/scratchpad/rcues_S1.json`
+
+**File changed:** `/home/user/Youtube-videos/Future_Got_Weird/Video_02/work/rev_S1/src/scenes/S1_ColdOpen.tsx`. The pre-review copy is backed up at `/tmp/claude-0/-home-user-Youtube-videos/30d53758-3f65-58ef-8706-5dc1f2b4b0af/scratchpad/rev_S1/S1_ColdOpen.orig.tsx`.
+
+**Final sheets:**
+- `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/pathfix_rev/S1/clip_r2/dense/S1_sheet01.jpg` to `S1_sheet06.jpg`, with `motion.json` alongside
+- Full-res final stills: `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/pathfix_rev/S1/full_r2/`
+- Earlier rounds: `qa/pathfix_rev/S1/clip/` and `full_r0/` (merged state before my fixes), `clip_r1/` and `full_r1/` (round 1)
+
+## Before the light-path fix
+
+### Builder
 
 I built S1 (s01–s08) shot by shot, cued from the narration words. `npx tsc --noEmit -p .` passes in my copy. I did four render-inspect-fix rounds (stills in `r1`–`r4full`) and two full clip renders.
 
@@ -52,7 +99,7 @@ Files are in `/home/user/Youtube-videos/Future_Got_Weird/Video_02/work/S1/source
 
 Contact sheets I inspected: `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/scenes/S1/clip/dense/S1_sheet01.jpg` to `S1_sheet06.jpg`, plus `motion.json`. Final full-resolution stills: `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/scenes/S1/r4full/`.
 
-## Director review
+### Director review
 
 I reviewed S1 and fixed six defects over three render and check rounds. `npx tsc --noEmit -p .` passes. The final half-res clip shows the same two short holds the builder reported (1.2 s at "corners. The light doesn't go through", 0.9 s at "billionth of a second. So"), and nothing pops or resets. The biggest open problem is unchanged: in the raised view the wall→him light path still passes just above the partition's top corner. I marked the gap, which helps, but the geometry still puts the line above the corner.
 

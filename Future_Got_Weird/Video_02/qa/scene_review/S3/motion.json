@@ -3,7 +3,7 @@
  "scenes": {
   "S3": {
    "seconds": 36.0,
-   "mean_energy": 1.071,
+   "mean_energy": 1.275,
    "still_seconds": 12.5,
    "still_share": 0.347,
    "longest_still_s": 2.33

@@ -3,7 +3,7 @@
  "scenes": {
   "S4": {
    "seconds": 57.9,
-   "mean_energy": 0.91,
+   "mean_energy": 0.9,
    "still_seconds": 12.5,
    "still_share": 0.216,
    "longest_still_s": 1.73

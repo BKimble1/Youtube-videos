@@ -8,24 +8,25 @@ import {at, scene, seg, segEnd} from '../lib/timeline';
 import {E, SNAP, SOFT, camPath, hop, kf, sp, tw} from '../lib/motion';
 import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
 import {CAM_PLAN_ACT, CAM_ROOM, HANDOFF} from '../lib/shots';
-import {figureMix, projectWith, rigAt, rigStyle, tiltAt, tokenAt, viewAt} from '../lib/room';
+import {depthSort, figureMix, projectWith, rigAt, rigStyle, tiltAt, tokenAt, viewAt} from '../lib/room';
 import {LAYOUT, dist, pathSchedule, possibleCloud, sampleArc, type P2, type ScalarField} from '../lib/optics';
 import {RoomSet, type RoomItem} from '../components/v02/RoomSet';
-import {Character2, EXPR, HANDS_ON_HIPS, IDLE2, settlePose, withPose, type Pose2} from '../components/v02/Cast2';
+import {Character2, EXPR, HANDS_ON_HIPS, IDLE2, handWorld2, reach2, settlePose, withPose, type Pose2} from '../components/v02/Cast2';
 import {CheckerToken, GuesserToken} from '../components/v02/Tokens';
 import {Band, LightPath, PossibleCloud, polyD} from '../components/v02/Optics';
 import {facingOf} from '../components/v02/HandheldSensor';
 import {Chip} from '../components/Text';
 import {CAST} from '../components/cast';
 import {rand} from '../lib/anim';
-import {SensorStand} from '../components/v02/S4_Stand';
+import {SensorStand, s4ColumnAt} from '../components/v02/S4_Stand';
 import {FaceInset} from '../components/v02/S4_Inset';
 import {AssumptionCard, CheckMark, CrossMark, EchoCard, PhotoFrame, Pill, Ruler} from '../components/v02/S4_Parts';
 
 /**
  * S4 · Timing becomes geometry (s17–s24). The film's central explanation, in the plan view of the one room.
  *
- *  S4.1 s17  room view (CAM_ROOM) → the signature fold to the plan (tilt 0→1, camera CAM_ROOM→CAM_PLAN_ACT);
+ *  S4.1 s17  room view (CAM_OPEN: CAM_ROOM with headroom over the 2 m screen) → the signature fold to the plan (tilt 0→1,
+ *            camera CAM_OPEN→CAM_PLAN_ACT);
  *            people and the sensor stand become tokens; chip "simplified picture (2D)"; the sensor flashes and listens
  *            at one wall spot (W1).
  *  S4.2 s18–19  a ruler swings out from W1 to |W1 H| and sweeps the candidate arc; ghost tokens along it; face inset:
@@ -151,11 +152,19 @@ const FOLD_DUR = Math.max(36, Math.min(60, K.with_ - FOLD0));
 const FOLD_END = FOLD0 + FOLD_DUR;
 const FOLD_EASE = Easing.bezier(0.37, 0, 0.63, 1);
 const LOOKUP = Math.min(K.map, FOLD0) - 2; // the guesser glances up as the camera starts to move
+/**
+ * The opening room view: CAM_ROOM lowered by 30 world px (36 screen px). With the 2 m screen at tilt 0 the far panel's
+ * top sat 12-23 px under the frame edge at CAM_ROOM (nearly cut off); here it has ~5 % headroom, both people keep
+ * their CAM_ROOM size, and the screen's near foot stays in frame. The fold starts from it.
+ */
+const CAM_OPEN: Cam = {cx: CAM_ROOM.cx, cy: CAM_ROOM.cy - 30, zoom: CAM_ROOM.zoom};
 const CHIP_2D = Math.max(FOLD_END + 2, K.simpl);
 const CHIP_2D_OFF = K.s22end + 4; // "simplified picture (2D)" held through s22
 // one spot: the sensor flashes and listens at W1 (the shared, visibly slowed pulse speed)
 const W1_POP = Math.max(FOLD_END + 4, K.sensor);
-const SCH1 = pathSchedule([Sp, W1, Sp], {start: K.flashes});
+// light is drawn only in the flat plan (tilt 1, after the fold): S4 never draws a path in the room view, so the
+// around-the-end rule (assertAroundTheEnd) has nothing to check here; asserted below for every pulse
+const SCH1 = pathSchedule([Sp, W1, Sp], {start: Math.max(K.flashes, FOLD_END + 4)});
 const SCH1B = pathSchedule([Sp, W1, Sp], {start: Math.max(SCH1.end + 10, K.spot17 - 6)}); // and again: one spot
 const FLASH_LBL = Math.max(SCH1.vertexFrames[1], K.listens);
 const DELAY_LBL = Math.max(FLASH_LBL + 20, K.measure); // "measure the extra delay"
@@ -276,6 +285,32 @@ const CROSS_DUR = 7;
 const PHOTO_OUT = Math.max(CROSS0 + CROSS_DUR + 3, CLEAR_E0 - 5);
 const PHOTO_OUT_DUR = 12;
 
+[SCH1, SCH1B, SCH4, ...MANY_SCH].forEach((q, i) => {
+  if (q.start <= FOLD_END) throw new Error(`S4: pulse ${i} starts at ${q.start}, before the fold lands (${FOLD_END}): light would be drawn in the room view`);
+});
+
+/* ------------------------------------------------------------------ the sensor stand's paint order */
+
+/**
+ * Sort depth of the sensor stand (as in S1): painted over the checker at every tilt the rigs are visible (0..0.75). The
+ * sensor sits at her chest (the 0.95 m light plane), right by her stand-side arm: painted under her, her sleeve covered
+ * the left third of the readout. Over her, the readout is in full view and her hand on the column reads as holding it.
+ */
+const STAND_SORT_Z = OPp.z + 0.2;
+(() => {
+  for (let i = 0; i <= 15; i++) {
+    const tilt = (0.75 * i) / 15;
+    const order = depthSort(
+      [
+        {key: 'stand', x: Sp.x, z: STAND_SORT_Z, w: 0.17, height: L.sensor.h + 0.2},
+        {key: 'checker', x: OPp.x, z: OPp.z, w: 0.3},
+      ],
+      tilt,
+    ).map((it) => it.key);
+    if (order[0] !== 'checker') throw new Error(`S4: the sensor stand would be painted behind the checker at tilt ${tilt.toFixed(2)}`);
+  }
+})();
+
 /* ------------------------------------------------------------------ candidates (seeded) */
 
 type Dot = {p: P2; err: number; delay: number; keep: boolean; target: P2; id: number};
@@ -327,13 +362,14 @@ const arcPts = (c: P2, r: number, a0: number, a1: number) => sampleArc(c, r, a0,
 const polar = (c: P2, r: number, a: number): P2 => ({x: c.x + r * Math.cos(a), z: c.z + r * Math.sin(a)});
 
 /**
- * The camera during the fold: it pans with the rising room over the first 80 % of the tilt and zooms in over the last
- * 65 %, so the upright people (full height until they fade) stay in frame; it lands exactly on CAM_PLAN_ACT.
+ * The camera during the fold: from CAM_OPEN it pans with the rising room over the first 80 % of the tilt and zooms in
+ * over the last 65 %, so the upright people (set-scaled: they shrink with the set's height scale) stay in frame; it
+ * lands exactly on CAM_PLAN_ACT.
  */
 const foldCam = (g: number): Cam => {
   const pp = E.inOut(tw(g, FOLD0, FOLD_DUR * 0.8, E.linear));
   const pz = E.inOut(tw(g, FOLD0 + FOLD_DUR * 0.35, FOLD_DUR * 0.65, E.linear));
-  return {cx: lerp(CAM_ROOM.cx, CAM_PLAN_ACT.cx, pp), cy: lerp(CAM_ROOM.cy, CAM_PLAN_ACT.cy, pp), zoom: lerp(CAM_ROOM.zoom, CAM_PLAN_ACT.zoom, pz)};
+  return {cx: lerp(CAM_OPEN.cx, CAM_PLAN_ACT.cx, pp), cy: lerp(CAM_OPEN.cy, CAM_PLAN_ACT.cy, pp), zoom: lerp(CAM_OPEN.zoom, CAM_PLAN_ACT.zoom, pz)};
 };
 
 /** One spot's ruler + arc state at a frame: ruler angle and length (m), arc drawn from 0 to `arc` (rad). */
@@ -440,7 +476,15 @@ export const S4Geometry: React.FC = () => {
   /* ---- people (room view) */
   const op = rigAt(OPp.x, OPp.z, tilt);
   const gu = rigAt(Hp.x, Hp.z, tilt);
-  const chkPose: Pose2 = withPose({...IDLE2}, {...EXPR.deadpan, lookX: 0.6, lookY: 0.32, tilt: 3});
+  let chkPose: Pose2 = withPose({...IDLE2}, {...EXPR.deadpan, lookX: 0.6, lookY: 0.32, tilt: 3});
+  {
+    // her stand-side hand rests on the tripod's centre column (at tilt 0 it hangs there anyway, 2 px off); held there
+    // with reach2 every frame, so it does not slide off the stand while the set-scaled rig and the stand shrink in the fold
+    const chk = {x: op.x, y: op.y, scale: op.scale, frame: g, seed: 3, life: 0.35};
+    const hand = handWorld2(chk, chkPose, 1);
+    const col = s4ColumnAt(tilt, hand.y);
+    chkPose = {...chkPose, armR: reach2(chk, chkPose, 1, col.x, col.y, 1)};
+  }
   let guPose: Pose2 = withPose(withPose(HANDS_ON_HIPS, EXPR.smug), settlePose(1, 1));
   guPose = withPose(guPose, {lookY: -0.8, lookX: -0.15, brows: 0.45, browAsym: 0.15, lid: 0.12, mouth: 'flat', tilt: 2}, tw(g, LOOKUP, 10, E.inOut));
 
@@ -526,7 +570,8 @@ export const S4Geometry: React.FC = () => {
       w: 0.3,
       node: mix.rig > 0.001 ? <Character2 look={CAST.guesser} pose={guPose} frame={g} seed={5} x={gu.x} y={gu.y} scale={gu.scale} life={0.5} style={rigStyle(tilt, gu.scale)} /> : null,
     },
-    {key: 'stand', x: Sp.x, z: Sp.z, w: 0.24, height: 1.35, node: <SensorStand tilt={tilt} aim={AIM} firing={firing} />},
+    // sort depth only (the stand is always drawn at S): it paints over her at every tilt (STAND_SORT_Z, asserted)
+    {key: 'stand', x: Sp.x, z: STAND_SORT_Z, w: 0.17, height: L.sensor.h + 0.2, node: <SensorStand tilt={tilt} aim={AIM} firing={firing} />},
   ];
 
   /* ---- floor drawings (under the standing things): tokens, then the diagram over them */
@@ -633,9 +678,11 @@ export const S4Geometry: React.FC = () => {
       <g opacity={endClear}>
         {WALL.map((w, i) => {
           // while a lit spot slides off (or back onto) W1/W4, the home marker shows only once the lit one has cleared
-          // it, so the two never sit half-overlapped as a doubled diamond
+          // it, so the two never sit half-overlapped as a doubled diamond. Two diamonds touch below ~40 screen px
+          // apart (half-diagonals 16 and ~19 px plus outlines); the old 14..30 px ramp showed a half-overlapped grey
+          // twin for a few frames at each slide (e.g. 5032, 5158)
           const near = slide && (i === 0 || i === 3) ? Math.abs((i === 0 ? ax : bx) - w.x) * ppm * cam.zoom : 1e9;
-          const op = clamp01((near - 14) / 16);
+          const op = clamp01((near - 42) / 14);
           return op > 0.001 ? (
             <g key={`w${i}`} opacity={op}>
               {diamond(w, markerPop[i], markerLit[i], `wd${i}`)}

@@ -3,7 +3,7 @@
  "scenes": {
   "S9": {
    "seconds": 30.6,
-   "mean_energy": 0.918,
+   "mean_energy": 0.787,
    "still_seconds": 10.1,
    "still_share": 0.329,
    "longest_still_s": 5.33

@@ -1,6 +1,51 @@
 # S2: builder and director-review reports
 
-## Builder
+## Director review after the light-path fix
+
+Merged into `source/` on 2026-10-08 (not committed). Sheets in this folder are the review's final sheets from `qa/pathfix_rev/S2/clip_r2/dense/`: `S2_sheet01.jpg`, `S2_sheet02.jpg`, `S2_sheet03.jpg`, `motion.json`, `motion_S2.png`, `compare_prefix_merged_final.jpg`.
+- **Lead decision still open (item 4):** the merged S3 now opens on S2's `CAM_D` framing with S2's final poses (S3 review, item 1) and brings its plan card in only at 2903, which removes the obstacle this review found. A scratch render with `TAKEOVER_DUR = 0` gives a one-room match cut at 2873→2874 in which only S2's graphics disappear. The merged tree keeps the takeover (card-to-room cut), as reviewed; `qa/cuts/r2` shows it.
+
+I reviewed the whole of S2 and fixed four defects over two rounds. All of the fixes are in S2.4 and its cut out to S3. S2.1, S2.2 and S2.3 had no defects and were not changed: S2.4 frames up to 2606 are pixel-identical to the merged version. The review copy compiles (`tsc` passes), every assert is still a throw, and `collect_sfx` loads all nine scenes. One fix changes how S2 ends and needs your sign-off (item 4 below).
+
+**What I checked and found correct (sound off, and at 40% size)**
+- **S2.2 mirror:** the glass shows his back (red hair, zig-zag nape, ears, the back of the striped shirt), drawn from `S2_BackHead`. It ducks in sync, with the mitts over the back of the hair.
+- **The duck:** it reads as a 4-frame drop with both mitts on his crown and a frown. His face stays above the caption band.
+- **The pulse:** it leaves the sensor, goes into the gap and vanishes behind the far end. The glint then appears on the visible glass, he looks busted, and his outline flashes.
+- **The partition:** it is clearly taller than both people.
+- **Cut in from S1:** clean, as a cut to the bench close-up.
+- **Text:** every label meets the size rules and nothing sits in the bottom 12%. The motion report shows no still runs.
+- **S2.4 paths:** no light crosses the top of the partition. Every leg from him goes behind the partition and comes out at its far end, 90 px or more below the corner.
+
+**Defects found and fixed**
+1. **The paths in S2.4 were too faint at phone size.** I thickened the dashed routes (5 → 7 px) and the solid trails (6 → 9 px). I also enlarged the wall-spot rings (9 → 12), the markers on his head, shoulder and foot (14 → 18) and the pulses (13 → 15). The routes are now less washed out.
+2. **Nothing showed the light leaving him.** Each body marker now throbs and sends out one ring in its path's colour when the pulses set off. A new check confirms each marker and its ring stay clear of the partition.
+3. **The shoulder path's leg to the sensor ran 8 px from her pencil tip.** I re-picked two wall spots: shoulder (1.78, 1.81) → (1.86, 1.84), and feet (1.92, 1.21) → (1.98, 1.19). The legs now fan into the sensor from above and upper right, at least 20 px from her pencil. The three path lengths are within 5.5 cm of each other (the limit is 7.5 cm). A new throw checks the clearance from her head.
+4. **The cut to S3 jumped sideways.** It was the same room at the same zoom, shifted about 480 px. I tested having S3 open on S2's final framing in a scratch copy, and it can't: S3's plan card comes in at 2884 in the column where he is standing, and S3's own check throws. Matching their poses made it worse, because the shift then looks like a dropped frame. Instead, about 12 frames after "what survives: timing" lands (around 2848), the timing card grows to fill the middle of the frame over a plain paper background, and holds until the cut. It stays inside the 5% margins and above the caption band, and the label grows to 107 px.
+   - **Decision for you:** the cut becomes card-to-room, the same way S2 already cuts on "worse". But frames 2870–2873 now show the card, not the room, so the plan's "S2→S3 pair reads as one room" check needs your sign-off. The label also moves after it has settled, which the brief normally forbids; I treated the grow as a push into the card.
+   - The card grow switches itself off if final narration timing leaves the label less than 8 frames on screen first; setting `TAKEOVER_DUR` to 0 brings back the old cut. Either way, the r1 cut sheet frames from 2870 onward need re-rendering.
+
+**Remaining limitations**
+- **The squat itself is off-frame** in the push-in: the tall mirror and his squat can't both fit, so the duck reads from his head, hands and face.
+- **The mirror shows only him,** not the partition or the room reflected behind him. That is a cartoon simplification.
+- **The head path is short** (a low spot by the tripod). That is the only kind of head path that passes the "around the end" rule at tilt 0.
+- **At tilt 0 his hair sits slightly above the nearest panel on screen,** though the far panels clearly tower over both people.
+- **The pulse goes from his head behind the screen and only reappears at the far end.** That is correct, but the link back to him relies on the colour-coded markers and the ring burst.
+
+**Sound cues:** S2 is unchanged at 24 cues, identical to the committed `cues.json`. The other eight scenes are also unchanged. No sound pass is needed for S2. Output: `/tmp/claude-0/-home-user-Youtube-videos/30d53758-3f65-58ef-8706-5dc1f2b4b0af/scratchpad/rcues_S2.json`
+
+**Files changed:** only `/home/user/Youtube-videos/Future_Got_Weird/Video_02/work/rev_S2/src/scenes/S2_Mirror.tsx`. `S2_BackHead.tsx` and the other `S2_*` components are byte-identical to `source/`. Nothing in `source/` was edited.
+
+Everything below is in `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa/pathfix_rev/S2/`:
+- **Final sheets:** `clip_r2/dense/S2_sheet01.jpg`, `S2_sheet02.jpg`, `S2_sheet03.jpg` and `motion.json`
+- **Clip:** `clip_r2/S2_clip.mp4`
+- **Merged version before my fixes:** `clip/dense/` (sheets) and `r0full/` (stills)
+- **Full-res stills of the key moments:** `final_full/`
+- **Plan check frames:** `final/` (half-res)
+- **Pre-fix / merged / final comparison:** `compare_prefix_merged_final.jpg`
+
+## Before the light-path fix
+
+### Builder
 
 S2 (s09–s12) is built: four shots in `S2Mirror`, all cued from narration words. `npx tsc --noEmit -p .` passes. I did four render-inspect-fix rounds; the last motion pass reports no still runs over 0.8 s.
 
@@ -65,7 +110,7 @@ Final contact sheets, in `/home/user/Youtube-videos/Future_Got_Weird/Video_02/qa
 
 Stills from the rounds are in `qa/scenes/S2/r1`, `r1b`, `r2`, `r3` and `r3full` under the same Video_02 folder.
 
-## Director review
+### Director review
 
 I reviewed S2 against the storyboard, the direction and the brief, and fixed 8 defects in two rounds of changes, each checked with a new render. The fixes are all in `src/scenes/S2_Mirror.tsx`; no shared files were touched. `npx tsc --noEmit -p .` passes, and the motion report shows no still runs.
 

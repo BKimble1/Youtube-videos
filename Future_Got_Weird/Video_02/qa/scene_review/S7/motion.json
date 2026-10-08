@@ -3,7 +3,7 @@
  "scenes": {
   "S7": {
    "seconds": 45.0,
-   "mean_energy": 1.539,
+   "mean_energy": 1.47,
    "still_seconds": 2.4,
    "still_share": 0.053,
    "longest_still_s": 1.2

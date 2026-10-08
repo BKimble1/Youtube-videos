@@ -12,9 +12,12 @@ import {E, drop, impact} from '../../lib/motion';
 
 export type BlockDrop = {slot: number; land: number; tone: 'teal' | 'saffron'};
 
-export const BLOCK_CARD = {x0: 96, y0: 56, w: 790, h: 664}; // top above the plant's leaves (no leaf tips peeking over)
+/** Screen rect at CAM_PATH_SIDE: the card covers the whole potted plant in the back-left corner (top above its leaves,
+ *  right edge past its rightmost leaf tip, bottom below the pot and its shadow; with the set-scaled plant the pot used to
+ *  stick out under the card and a leaf tip at its right edge), and stays clear of her hand. */
+export const BLOCK_CARD = {x0: 96, y0: 56, w: 808, h: 778};
 const SLOTS = 16;
-const IN = {x0: 64, x1: 750, base: 548}; // card-local: slot area and baseline
+const IN = {x0: 64, x1: 750, base: 650}; // card-local: slot area and baseline (the extra height goes above the stack)
 const SLOT_W = (IN.x1 - IN.x0) / SLOTS;
 const BLOCK = 40;
 const PITCH = 43; // vertical pitch of stacked blocks

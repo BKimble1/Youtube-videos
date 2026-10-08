@@ -68,8 +68,22 @@ export const ReflectiveStrip: React.FC<{w: number; h: number; rotate?: number; x
 
 /* ------------------------------------------------------------------ TargetBoard */
 
-/** Board on a pole stand. `center` = board centre (px), `floor` = the stand's floor point (px), board w × h px. */
-export const TargetBoard: React.FC<{center: Pt; floor: Pt; w: number; h: number; wobble?: number; children?: React.ReactNode}> = ({center, floor, w, h, wobble = 0, children}) => {
+/**
+ * Board on a pole stand. `center` = board centre (px), `floor` = the stand's floor point (px), board w × h px.
+ * `rim` 0..1: the arrival cue when a pulse reaches the board from the wall side (behind it): a crisp saffron rim on its
+ * up-left (wall-side) outline, offset (-6, -5) × `rimScale` px like Cast2 rimFlash, so a person and the board light the
+ * same way.
+ */
+export const TargetBoard: React.FC<{center: Pt; floor: Pt; w: number; h: number; wobble?: number; rim?: number; rimScale?: number; children?: React.ReactNode}> = ({
+  center,
+  floor,
+  w,
+  h,
+  wobble = 0,
+  rim = 0,
+  rimScale = 1,
+  children,
+}) => {
   const bottom = center.y + h / 2;
   return (
     <g>
@@ -79,6 +93,7 @@ export const TargetBoard: React.FC<{center: Pt; floor: Pt; w: number; h: number;
       {/* pole */}
       <rect x={floor.x - 6} y={bottom - 6} width={12} height={floor.y - bottom} rx={5} fill={C.wood} stroke={C.ink} strokeWidth={3} />
       <g transform={`rotate(${f2(wobble)} ${f2(floor.x)} ${f2(floor.y)})`}>
+        {rim > 0.01 && <rect x={f2(center.x - w / 2 - 6 * rimScale - OUTLINE / 2)} y={f2(center.y - h / 2 - 5 * rimScale - OUTLINE / 2)} width={f2(w + OUTLINE)} height={f2(h + OUTLINE)} rx={12} fill={C.saffron} opacity={Math.min(1, rim)} />}
         <rect x={center.x - w / 2} y={center.y - h / 2} width={w} height={h} rx={10} fill={C.blueLight} stroke={C.ink} strokeWidth={OUTLINE} />
         <rect x={center.x - w / 2 + 9} y={center.y - h / 2 + 9} width={w - 18} height={h - 18} rx={6} fill="none" stroke={C.blue} strokeWidth={3} opacity={0.55} />
         {children}
@@ -105,10 +120,13 @@ export type FilmFramesProps = {
  * at its position for that frame (a walk behind the partition). The newest frame enters at the right; the strip
  * slides left by one cell per tick. One sprocket hole per cell edge (wide spacing: no shimmer while it slides).
  */
+/** Height (px) of a FilmFrames strip with cells `cell` px wide. */
+export const filmStripHeight = (cell: number) => Math.round(cell * 0.62) + 60;
+
 export const FilmFrames: React.FC<FilmFramesProps> = ({width, cell = 210, pos, count = 999}) => {
   const ch = Math.round(cell * 0.62);
   const band = 30;
-  const H = ch + band * 2;
+  const H = filmStripHeight(cell);
   const pitch = cell + 14;
   const first = Math.floor(pos) - Math.ceil(width / pitch) - 1;
   const cells: React.ReactNode[] = [];
