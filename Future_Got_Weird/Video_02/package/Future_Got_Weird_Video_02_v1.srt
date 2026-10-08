@@ -536,115 +536,114 @@ Our clip's files don't say
 if the walker wore any.
 
 123
-00:05:22,630 --> 00:05:26,405
+00:05:22,630 --> 00:05:26,445
 And the kit needs a flat wall and
 a few seconds of empty room first.
 
 124
-00:05:26,485 --> 00:05:30,085
-But the authors do report tracking
-a person in ordinary clothes,
+00:05:26,525 --> 00:05:31,045
+But in a separate test, the authors report
+tracking a person in ordinary clothes,
 
 125
-00:05:30,165 --> 00:05:32,965
-with the sensor capturing
-thirty frames a second.
+00:05:31,125 --> 00:05:33,245
+capturing thirty frames a second.
 
 126
-00:05:33,045 --> 00:05:36,525
+00:05:33,325 --> 00:05:36,725
 The code is public, though we've found
 no other team reporting results on
 
 127
-00:05:36,605 --> 00:05:38,225
+00:05:36,805 --> 00:05:38,425
 its own hardware yet.
 
 128
-00:05:38,645 --> 00:05:40,405
+00:05:38,825 --> 00:05:40,585
 What might this be good for?
 
 129
-00:05:40,485 --> 00:05:43,845
+00:05:40,665 --> 00:05:44,025
 Picture a delivery robot nearing
 a blind warehouse corner.
 
 130
-00:05:43,925 --> 00:05:45,685
+00:05:44,105 --> 00:05:45,865
 With a suitable wall at the junction,
 
 131
-00:05:45,765 --> 00:05:49,605
+00:05:45,945 --> 00:05:49,785
 a sensor like this might give it an
 early hint of movement out of sight.
 
 132
-00:05:49,685 --> 00:05:53,125
+00:05:49,865 --> 00:05:53,305
 Just a fuzzy blob:
 enough to say slow down,
 
 133
-00:05:53,205 --> 00:05:54,695
+00:05:53,385 --> 00:05:54,875
 not enough to say who's there.
 
 134
-00:05:54,775 --> 00:05:57,895
+00:05:54,955 --> 00:05:58,075
 And plenty is still hard: short range,
 
 135
-00:05:57,975 --> 00:06:00,855
+00:05:58,155 --> 00:06:01,035
 dark or shiny walls, bright sunlight,
 
 136
-00:06:00,935 --> 00:06:03,175
+00:06:01,115 --> 00:06:03,355
 and fast math on small hardware.
 
 137
-00:06:03,255 --> 00:06:06,295
+00:06:03,435 --> 00:06:06,475
 The researchers call it
 an early-stage prototype.
 
 138
-00:06:06,375 --> 00:06:08,655
+00:06:06,555 --> 00:06:08,835
 No one has shown that
 it prevents collisions.
 
 139
-00:06:08,735 --> 00:06:10,775
+00:06:08,915 --> 00:06:10,955
 For now, it's a promising clue,
 
 140
-00:06:10,855 --> 00:06:12,435
+00:06:11,035 --> 00:06:12,615
 not a safety system.
 
 141
-00:06:12,960 --> 00:06:15,165
+00:06:13,140 --> 00:06:15,345
 Which brings us back to our friend.
 
 142
-00:06:15,245 --> 00:06:18,352
+00:06:15,425 --> 00:06:18,532
 Being out of sight isn't the
 same as giving nothing away.
 
 143
-00:06:18,432 --> 00:06:19,872
+00:06:18,612 --> 00:06:20,052
 The light found a way around,
 
 144
-00:06:19,952 --> 00:06:23,035
+00:06:20,132 --> 00:06:23,215
 and careful timing and math
 can read some of its clues.
 
 145
-00:06:23,115 --> 00:06:26,375
+00:06:23,295 --> 00:06:26,555
 To really hide, he'd have
 to block the bounces too.
 
 146
-00:06:30,650 --> 00:06:35,050
+00:06:31,630 --> 00:06:36,030
 This is Future Got Weird: the
 strange future, explained.
 
 147
-00:06:35,130 --> 00:06:38,210
+00:06:36,110 --> 00:06:39,190
 Subscribe for more, and we'll
 see you around the corner.

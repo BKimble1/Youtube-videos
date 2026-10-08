@@ -52,7 +52,7 @@
    "S1",
    "Cold open: the impossible view (s01\u2013s08) \u00b7 room view"
   ],
-  "qac": "Q: through the partition? A: camera rises (tilt \u2248 0.4) until the gap at the wall shows; a ghost straight line from the sensor hits the partition and stops (\"blocked\"); then a path appears around the end of the partition via the wall",
+  "qac": "Q: through the partition? A: camera rises (RAISED_TILT 0.10) and the \"seen from above\" plan card comes in beside the room, showing the gap at the wall; a ghost straight line from the sensor hits the partition and stops (\"blocked\"); then a path appears around the end of the partition via the wall",
   "picture": "raised room view",
   "text": "\"blocked\"",
   "camera_sound": "partition thunk. C04",
@@ -507,7 +507,7 @@
   "text": "\"reflective material: far more light back\"; \"clip: clothing not recorded\"; \"flat wall + empty-room scan\"",
   "camera_sound": "strip rip; shoo. C34, C36, C02",
   "from": 9379,
-  "to": 10157
+  "to": 10163
  },
  {
   "shot": "S7.1",
@@ -521,8 +521,8 @@
   "picture": "`WarehouseSet` front",
   "text": "\"illustration\"",
   "camera_sound": "motor whirr. **R3**",
-  "from": 10157,
-  "to": 10318
+  "from": 10163,
+  "to": 10323
  },
  {
   "shot": "S7.2",
@@ -536,8 +536,8 @@
   "picture": "plan",
   "text": "\"potential use\"",
   "camera_sound": "pulse motif. C39",
-  "from": 10318,
-  "to": 10490
+  "from": 10323,
+  "to": 10496
  },
  {
   "shot": "S7.3",
@@ -551,8 +551,8 @@
   "picture": "front",
   "text": "\"slow down \u00b7 not who\"",
   "camera_sound": "brake. C19, C39",
-  "from": 10490,
-  "to": 10645
+  "from": 10496,
+  "to": 10650
  },
  {
   "shot": "S7.4",
@@ -566,8 +566,8 @@
   "picture": "2\u00d72 vignette",
   "text": "\"short range\" \u00b7 \"dark or shiny walls\" \u00b7 \"bright sunlight\" \u00b7 \"fast math on small hardware\"; \"early-stage prototype (authors)\"",
   "camera_sound": "C40",
-  "from": 10645,
-  "to": 10989
+  "from": 10650,
+  "to": 10994
  },
  {
   "shot": "S7.5",
@@ -581,8 +581,8 @@
   "picture": "front",
   "text": "\"not a safety system\"",
   "camera_sound": "C41",
-  "from": 10989,
-  "to": 11184
+  "from": 10994,
+  "to": 11189
  },
  {
   "shot": "S8.1",
@@ -596,8 +596,8 @@
   "picture": "room view",
   "text": "",
   "camera_sound": "",
-  "from": 11184,
-  "to": 11253
+  "from": 11189,
+  "to": 11259
  },
  {
   "shot": "S8.2",
@@ -611,8 +611,8 @@
   "picture": "raised room view",
   "text": "",
   "camera_sound": "soft motif. C04, C19",
-  "from": 11253,
-  "to": 11493
+  "from": 11259,
+  "to": 11498
  },
  {
   "shot": "S8.3",
@@ -626,8 +626,8 @@
   "picture": "room view",
   "text": "",
   "camera_sound": "partition scrape; readout blip-off; deadpan beat. **R4**",
-  "from": 11493,
-  "to": 11717
+  "from": 11498,
+  "to": 11747
  },
  {
   "shot": "S8.4",
@@ -641,7 +641,7 @@
   "picture": "brand card",
   "text": "\"Future Got Weird \u00b7 the strange future, explained\"",
   "camera_sound": "logo hit, music out",
-  "from": 11717,
-  "to": 12091
+  "from": 11747,
+  "to": 12120
  }
 ]

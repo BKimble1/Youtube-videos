@@ -1,6 +1,6 @@
 # V2 narration: per-line measurements
 
-Median line level -14.4 dB (90th pct of 5 ms frames), median F0 158 Hz.
+Median line level -14.4 dB (90th pct of 5 ms frames), median F0 157 Hz.
 
 ## s01 — Our friend here is hiding behind a partition, and he is very pleased about it.
 _Direction: J1: warm, amused, quick; the joke is his smugness, leave a beat_
@@ -8,19 +8,19 @@ _Direction: J1: warm, amused, quick; the joke is his smugness, leave a beat_
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
 | x01_t3 ✔ | 8.94 | 4.125 | 218.2 | 11.61 | 5.26 | -16.38 |  | partition, 0.12 |  |
-| x01_t1 | 8.73 | 4.185 | 215.1 | 13.84 | 5.52 | -15.72 |  | partition, 0.14 |  |
-| x01_t4 | 7.61 | 4.04 | 222.8 | 10.85 | 4.47 | -16.24 |  | partition, 0.125 |  |
-| x01_t2 | 7.41 | 4.05 | 222.2 | 14.84 | 5.34 | -16.54 |  | partition, 0.12 |  |
+| x01_t1 | 8.78 | 4.185 | 215.1 | 13.84 | 5.52 | -15.72 |  | partition, 0.14 |  |
+| x01_t4 | 7.66 | 4.04 | 222.8 | 10.85 | 4.47 | -16.24 |  | partition, 0.125 |  |
+| x01_t2 | 7.46 | 4.05 | 222.2 | 14.84 | 5.34 | -16.54 |  | partition, 0.12 |  |
 
 ## s02 — That sensor can't see him. It's pointed at a plain, blank wall.
 _Direction: matter-of-fact setup_
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x01_t3 ✔ | 8.12 | 3.57 | 225.7 | 13.25 | 4.97 | -16.89 |  | him. 0.38 |  |
-| x01_t2 | 6.14 | 3.455 | 228.9 | 11.98 | 4.29 | -17.92 |  | him. 0.31 |  |
-| x01_t4 | 6.09 | 3.565 | 227.1 | 11.9 | 4.39 | -18.29 |  | him. 0.395 |  |
-| x01_t1 | 5.98 | 3.38 | 235.7 | 10.93 | 4.11 | -17.83 |  | him. 0.325 |  |
+| x01_t3 ✔ | 8.07 | 3.57 | 225.7 | 13.25 | 4.97 | -16.89 |  | him. 0.38 |  |
+| x01_t2 | 6.09 | 3.455 | 228.9 | 11.98 | 4.29 | -17.92 |  | him. 0.31 |  |
+| x01_t4 | 6.04 | 3.565 | 227.1 | 11.9 | 4.39 | -18.29 |  | him. 0.395 |  |
+| x01_t1 | 5.93 | 3.38 | 235.7 | 10.93 | 4.11 | -17.83 |  | him. 0.325 |  |
 
 ## s03 — And yet this is real data, from a study published in 2026: seen from above, a small sensor aimed at a wall, tracking someone it never saw directly.
 _Direction: the reveal: beat after 'And yet', then clear and confident; let 'never saw directly' land_
@@ -37,10 +37,10 @@ _Direction: friendly explainer; light stress on 'through' and 'around the end'_
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x02_t4 ✔ | 6.45 | 6.6 | 247.8 | 13.43 | 5.21 | -14.02 |  | corners. 0.4; partition. 0.39; end, 0.205 |  |
-| x02_t2 | 6.39 | 6.49 | 249.6 | 11.77 | 4.81 | -13.84 |  | corners. 0.4; partition. 0.32; end, 0.155 |  |
-| x02_t3 | 6.14 | 6.45 | 248.9 | 13.78 | 5.11 | -14.06 |  | corners. 0.375; partition. 0.29; end, 0.155 |  |
-| x02_t1 | 6.11 | 6.485 | 250.4 | 13.45 | 4.94 | -13.66 |  | corners. 0.385; partition. 0.35; end, 0.17 |  |
+| x02_t4 ✔ | 6.4 | 6.6 | 247.8 | 13.43 | 5.21 | -14.02 |  | corners. 0.4; partition. 0.39; end, 0.205 |  |
+| x02_t2 | 6.34 | 6.49 | 249.6 | 11.77 | 4.81 | -13.84 |  | corners. 0.4; partition. 0.32; end, 0.155 |  |
+| x02_t3 | 6.09 | 6.45 | 248.9 | 13.78 | 5.11 | -14.06 |  | corners. 0.375; partition. 0.29; end, 0.155 |  |
+| x02_t1 | 6.06 | 6.485 | 250.4 | 13.45 | 4.94 | -13.66 |  | corners. 0.385; partition. 0.35; end, 0.17 |  |
 
 ## s05 — The sensor fires a short, invisible flash. The wall scatters it, part reaches the hidden person, and a tiny bit bounces back: wall, then sensor.
 _Direction: follow the light like a story_
@@ -57,10 +57,10 @@ _Direction: set up, then a dry undercut on the size of 'a little'_
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x03_t3 ✔ | 6.17 | 6.635 | 241.6 | 13.19 | 5.48 | -14.3 |  | wall, 0.255; later. 0.42; few 0.125 |  |
-| x03_t2 | 5.82 | 6.42 | 239.8 | 13.5 | 5.44 | -14.64 |  | wall, 0.195; later. 0.415 |  |
-| x03_t4 | 5.53 | 6.395 | 240.4 | 13.45 | 5.31 | -14.23 |  | wall, 0.205; later. 0.405 |  |
-| x03_t1 | 5.1 | 6.445 | 238.8 | 13.33 | 5.11 | -14.76 |  | wall, 0.195; later. 0.415; few 0.12 |  |
+| x03_t3 ✔ | 6.22 | 6.635 | 241.6 | 13.19 | 5.48 | -14.3 |  | wall, 0.255; later. 0.42; few 0.125 |  |
+| x03_t2 | 5.87 | 6.42 | 239.8 | 13.5 | 5.44 | -14.64 |  | wall, 0.195; later. 0.415 |  |
+| x03_t4 | 5.58 | 6.395 | 240.4 | 13.45 | 5.31 | -14.23 |  | wall, 0.205; later. 0.405 |  |
+| x03_t1 | 5.15 | 6.445 | 238.8 | 13.33 | 5.11 | -14.76 |  | wall, 0.195; later. 0.415; few 0.12 |  |
 
 ## s07 — Your webcam can't time that. This takes a time-of-flight sensor, a camera that clocks its own light's round trip.
 _Direction: define the sensor plainly, beside the object_
@@ -88,9 +88,9 @@ _Direction: new chapter: curious question_
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
 | x04_t4 | 5.68 | 3.36 | 259.0 | 14.55 | 5.42 | -15.43 |  | all? 0.58 |  |
-| x04_t1 ✔ | 4.39 | 3.27 | 270.7 | 16.04 | 5.94 | -15.13 |  | all? 0.61 |  |
-| x04_t3 | 4.33 | 3.225 | 264.7 | 14.37 | 5.26 | -15.29 |  | all? 0.505 |  |
-| x04_t2 | 3.58 | 3.285 | 267.7 | 14.81 | 5.73 | -14.43 |  | all? 0.595 |  |
+| x04_t1 ✔ | 4.34 | 3.27 | 270.7 | 16.04 | 5.94 | -15.13 |  | all? 0.61 |  |
+| x04_t3 | 4.28 | 3.225 | 264.7 | 14.37 | 5.26 | -15.29 |  | all? 0.505 |  |
+| x04_t2 | 3.53 | 3.285 | 267.7 | 14.81 | 5.73 | -14.43 |  | all? 0.595 |  |
 
 ## s10 — Light leaves a mirror at the same angle it arrived, so the picture stays whole. Put a mirror here, and our friend is simply visible.
 _Direction: J2 lands on 'visible' (he ducks)_
@@ -140,7 +140,7 @@ _Direction: plain; 'tiny' small_
 | x06_t1 ✔ | 10.0 | 6.515 | 181.2 | 12.97 | 5.41 | -14.62 |  | once, 0.215; wall. 0.555; times, 0.165 |  |
 | x06_t2 | 10.0 | 6.68 | 176.0 | 13.59 | 5.44 | -14.7 |  | once, 0.215; wall. 0.545; times, 0.145 |  |
 | x06_t3 | 10.0 | 6.565 | 179.1 | 11.86 | 4.94 | -14.3 |  | once, 0.23; wall. 0.535; times, 0.155 |  |
-| x06_t4 | 9.96 | 6.45 | 181.7 | 13.49 | 5.05 | -14.61 |  | once, 0.19; wall. 0.505; times, 0.16 |  |
+| x06_t4 | 9.91 | 6.45 | 181.7 | 13.49 | 5.05 | -14.61 |  | once, 0.19; wall. 0.505; times, 0.16 |  |
 
 ## s15 — This is real data from the same team, with a different sensor and hidden object: the wall's big echo, then, a few nanoseconds later, a bump you have to zoom in to see. In this capture, hundreds of times weaker.
 _Direction: evidence voice: careful and specific_
@@ -157,10 +157,10 @@ _Direction: short, confident; end of act 2_
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x07_t1 | 8.69 | 4.415 | 217.6 | 10.83 | 4.32 | -16.17 |  | clue. 0.555 |  |
-| x07_t2 ✔ | 8.62 | 4.29 | 221.1 | 9.79 | 4.63 | -15.69 |  | clue. 0.49 |  |
-| x07_t4 | 7.4 | 4.135 | 229.2 | 10.46 | 4.04 | -15.77 |  | clue. 0.47 |  |
-| x07_t3 | 6.29 | 3.92 | 243.8 | 9.88 | 4.48 | -15.4 |  | clue. 0.475 |  |
+| x07_t1 | 8.74 | 4.415 | 217.6 | 10.83 | 4.32 | -16.17 |  | clue. 0.555 |  |
+| x07_t2 ✔ | 8.67 | 4.29 | 221.1 | 9.79 | 4.63 | -15.69 |  | clue. 0.49 |  |
+| x07_t4 | 7.45 | 4.135 | 229.2 | 10.46 | 4.04 | -15.77 |  | clue. 0.47 |  |
+| x07_t3 | 6.34 | 3.92 | 243.8 | 9.88 | 4.48 | -15.4 |  | clue. 0.475 |  |
 
 ## s17 — Let's turn timing into a map: the room from above, flattened, with one more simplification. The sensor flashes and listens at one spot on the wall.
 _Direction: central sequence starts; the simplification said openly_
@@ -180,7 +180,7 @@ _Direction: precise; small beat before 'Just how far'_
 | x08_t2 | 9.62 | 5.885 | 234.8 | 14.21 | 5.5 | -13.95 | direction…0.325 | delay, 0.17; spot. 0.45; direction… 0.325 |  |
 | x08_t4 | 9.58 | 5.995 | 235.3 | 14.91 | 5.68 | -13.71 | direction…0.4 | delay, 0.2; spot. 0.495; direction… 0.4 |  |
 | x08_t3 | 9.39 | 5.8 | 237.6 | 15.62 | 6.02 | -13.9 | direction…0.35 | delay, 0.22; spot. 0.4; direction… 0.35 |  |
-| x08_t1 ✔ | 9.38 | 5.975 | 234.8 | 14.62 | 5.43 | -13.83 | direction…0.36 | delay, 0.21; spot. 0.505; direction… 0.36 |  |
+| x08_t1 ✔ | 9.33 | 5.975 | 234.8 | 14.62 | 5.43 | -13.83 | direction…0.36 | delay, 0.21; spot. 0.505; direction… 0.36 |  |
 
 ## s19 — He could be anywhere on this arc, all the same distance from that spot.
 _Direction: J3 setup: he relaxes; leave space_
@@ -199,7 +199,7 @@ _Direction: J3 payoff: his smile fades on 'one place'_
 |---|---|---|---|---|---|---|---|---|---|
 | x09_t1 ✔ | 11.93 | 7.67 | 205.9 | 12.41 | 4.72 | -13.75 | just…0.335 | spot. 0.475; delay, 0.185; arc. 0.45; just… 0.335 |  |
 | x09_t3 | 11.64 | 7.585 | 209.5 | 12.48 | 5.07 | -13.63 | just…0.35 | spot. 0.455; delay, 0.17; arc. 0.48; just… 0.35 |  |
-| x09_t4 | 11.43 | 7.53 | 211.4 | 13.24 | 5.14 | -13.58 | just…0.35 | spot. 0.435; delay, 0.125; arc. 0.5; just… 0.35 |  |
+| x09_t4 | 11.38 | 7.53 | 211.4 | 13.24 | 5.14 | -13.58 | just…0.35 | spot. 0.435; delay, 0.125; arc. 0.5; just… 0.35 |  |
 | x09_t2 | 7.85 | 7.285 | 206.9 | 12.78 | 5.16 | -13.87 | just…0.19 | spot. 0.41; delay, 0.14; arc. 0.495; just… 0.19 |  |
 
 ## s21 — Measured timings are a bit fuzzy, so each arc is really a band, and the bands overlap in a small patch.
@@ -287,10 +287,10 @@ _Direction: the turn that sets up 2026; the cheap-sensor precedent stated plainl
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x12_t4 ✔ | 9.17 | 6.28 | 206.3 | 13.11 | 4.99 | -14.75 |  | Impressive. 0.565; equipment. 0.48 |  |
+| x12_t4 ✔ | 9.12 | 6.28 | 206.3 | 13.11 | 4.99 | -14.75 |  | Impressive. 0.565; equipment. 0.48 |  |
 | x12_t2 | 9.09 | 5.97 | 216.4 | 13.24 | 4.99 | -15.0 |  | Impressive. 0.47; equipment. 0.51 |  |
-| x12_t3 | 8.83 | 6.11 | 211.4 | 14.33 | 5.26 | -14.73 |  | Impressive. 0.525; equipment. 0.475 |  |
-| x12_t1 | 8.61 | 6.22 | 210.1 | 14.31 | 5.34 | -14.73 |  | Impressive. 0.575; equipment. 0.505 |  |
+| x12_t3 | 8.79 | 6.11 | 211.4 | 14.33 | 5.26 | -14.73 |  | Impressive. 0.525; equipment. 0.475 |  |
+| x12_t1 | 8.56 | 6.22 | 210.1 | 14.31 | 5.34 | -14.73 |  | Impressive. 0.575; equipment. 0.505 |  |
 
 ## s30 — Then, in a study published in 2026, a team from MIT and Dartmouth tried the small time-of-flight sensors, often called LiDAR, found in phones and gadgets.
 _Direction: the news beat; confident, not breathless_
@@ -320,7 +320,7 @@ _Direction: problems as a quick rhythm; small smile on 'jiggles'_
 | x13_t2 | 10.0 | 12.225 | 188.7 | 13.33 | 5.36 | -14.37 |  | customers. 0.44; echoes. 0.555; pixels: 0.31; spots. 0.425; hand, 0.23 |  |
 | x13_t3 | 10.0 | 12.535 | 192.6 | 13.24 | 5.17 | -14.61 |  | customers. 0.435; echoes. 0.61; pixels: 0.36; spots. 0.535; hand, 0.315 |  |
 | x13_t4 ✔ | 10.0 | 12.31 | 191.7 | 12.55 | 4.92 | -14.38 |  | customers. 0.425; echoes. 0.52; pixels: 0.35; spots. 0.42; hand, 0.265 |  |
-| x13_t1 | 9.79 | 12.135 | 195.1 | 12.09 | 5.05 | -14.06 |  | customers. 0.385; echoes. 0.555; pixels: 0.365; spots. 0.415; hand, 0.265 |  |
+| x13_t1 | 9.74 | 12.135 | 195.1 | 12.09 | 5.05 | -14.06 |  | customers. 0.385; echoes. 0.555; pixels: 0.365; spots. 0.415; hand, 0.265 |  |
 
 ## s33 — Their fix borrows night mode's trick from phone cameras: stack many quick, dim frames into one better estimate.
 _Direction: clear_
@@ -382,15 +382,15 @@ _Direction: conditions as useful understanding, not a disclaimer_
 | x16_t1 | 7.72 | 13.605 | 233.5 | 13.24 | 5.5 | -14.25 |  | help: 0.56; target, 0.35; back. 0.595; any. 0.535; wall, 0.185 |  |
 | x16_t2 | 7.67 | 13.4 | 234.1 | 13.97 | 5.6 | -13.68 |  | help: 0.48; target, 0.29; back. 0.535; any. 0.56; wall, 0.195 |  |
 
-## s39 — But the authors do report tracking a person in ordinary clothes, with the sensor capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.
+## s39 — But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.
 _Direction: fair and plain; end of act 4_
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x17_t1 ✔ | 9.54 | 11.135 | 210.7 | 14.36 | 5.37 | -14.13 |  | clothes, 0.335; second. 0.55; public, 0.235 |  |
-| x17_t3 | 9.0 | 11.13 | 217.5 | 14.31 | 5.48 | -14.17 |  | clothes, 0.34; second. 0.55; public, 0.31 |  |
-| x17_t4 | 8.98 | 10.995 | 217.7 | 13.62 | 5.25 | -14.35 |  | clothes, 0.285; second. 0.53; public, 0.26 |  |
-| x17_t2 | 8.86 | 10.965 | 219.3 | 13.91 | 5.39 | -13.91 |  | clothes, 0.29; second. 0.545; public, 0.28 |  |
+| x17_t2 ✔ | 9.9 | 11.315 | 206.3 | 14.32 | 5.51 | -14.24 |  | test, 0.21; clothes, 0.215; second. 0.545; public, 0.3 |  |
+| x17_t3 | 9.76 | 11.23 | 208.0 | 13.35 | 5.27 | -13.62 |  | test, 0.21; clothes, 0.23; second. 0.545; public, 0.3 |  |
+| x17_t1 | 9.44 | 11.245 | 212.0 | 13.27 | 4.99 | -14.11 |  | test, 0.235; clothes, 0.255; second. 0.54; public, 0.26 |  |
+| x17_t4 | 9.03 | 11.275 | 217.1 | 14.0 | 5.41 | -14.09 |  | test, 0.265; clothes, 0.265; second. 0.535; public, 0.26 |  |
 
 ## s40 — What might this be good for? Picture a delivery robot nearing a blind warehouse corner.
 _Direction: new chapter, curious_
@@ -400,7 +400,7 @@ _Direction: new chapter, curious_
 | x18_t1 | 10.0 | 4.93 | 205.0 | 17.82 | 6.4 | -15.33 |  | for? 0.54 |  |
 | x18_t4 | 10.0 | 4.975 | 204.1 | 18.29 | 6.28 | -15.1 |  | for? 0.565 |  |
 | x18_t3 ✔ | 9.89 | 4.87 | 206.4 | 17.92 | 6.4 | -15.17 |  | for? 0.51 |  |
-| x18_t2 | 9.35 | 4.825 | 208.6 | 17.74 | 6.24 | -15.32 |  | for? 0.51 |  |
+| x18_t2 | 9.4 | 4.825 | 208.6 | 17.74 | 6.24 | -15.32 |  | for? 0.51 |  |
 
 ## s41 — With a suitable wall at the junction, a sensor like this might give it an early hint of movement out of sight.
 _Direction: 'might' carries the hedge without sounding legal_
@@ -450,7 +450,7 @@ _Direction: callback, warm_
 | x20_t3 | 8.81 | 1.91 | 219.9 | 14.24 | 5.88 | -15.79 |  |  |  |
 | x20_t4 | 7.52 | 1.78 | 236.0 | 14.82 | 6.07 | -15.11 |  |  |  |
 | x20_t2 | 7.42 | 1.77 | 237.3 | 12.84 | 4.93 | -14.96 |  |  |  |
-| x20_t1 ✔ | 6.3 | 1.83 | 229.5 | 12.88 | 4.64 | -16.02 |  |  |  |
+| x20_t1 ✔ | 6.25 | 1.83 | 229.5 | 12.88 | 4.64 | -16.02 |  |  |  |
 
 ## s46 — Being out of sight isn't the same as giving nothing away. The light found a way around, and careful timing and math can read some of its clues.
 _Direction: the episode's takeaway; clear and calm_
@@ -463,21 +463,21 @@ _Direction: the episode's takeaway; clear and calm_
 | x20_t2 | 6.52 | 7.225 | 248.5 | 15.44 | 6.03 | -15.4 |  | away. 0.465; around, 0.18 |  |
 
 ## s47 — To really hide, he'd have to block the bounces too.
-_Direction: J4: he takes the hint; a long silent beat for the visual_
+_Direction: J4: he takes the hint; a long silent beat for the visual (lengthened 0.8 s in review D43 so the busted reaction settles before s48)_
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x20_t1 ✔ | 9.97 | 2.975 | 201.7 | 14.43 | 5.66 | -13.6 |  | hide, 0.25 |  |
+| x20_t1 ✔ | 9.92 | 2.975 | 201.7 | 14.43 | 5.66 | -13.6 |  | hide, 0.25 |  |
 | x20_t4 | 7.9 | 2.595 | 231.2 | 16.84 | 5.91 | -14.82 |  | hide, 0.25 |  |
 | x20_t3 | 5.89 | 2.6 | 256.4 | 17.46 | 6.54 | -13.99 |  | hide, 0.26 |  |
-| x20_t2 | 5.58 | 2.62 | 254.8 | 13.85 | 5.52 | -13.05 |  | hide, 0.265 |  |
+| x20_t2 | 5.53 | 2.62 | 254.8 | 13.85 | 5.52 | -13.05 |  | hide, 0.265 |  |
 
 ## s48 — This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner.
 _Direction: one brief invitation; warm, a small smile on the last line_
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x21_t4 ✔ | 8.66 | 6.795 | 191.3 | 13.84 | 5.48 | -12.86 |  | Weird: 0.36; future, 0.245; explained. 0.475; more, 0.14 |  |
-| x21_t2 | 8.14 | 6.74 | 191.3 | 14.74 | 5.86 | -13.27 |  | Weird: 0.35; future, 0.18; explained. 0.43; more, 0.215 |  |
-| x21_t3 | 7.99 | 6.78 | 188.4 | 14.03 | 5.77 | -13.23 |  | Weird: 0.33; future, 0.19; explained. 0.4; more, 0.195 |  |
-| x21_t1 | 7.92 | 6.84 | 188.7 | 14.2 | 5.68 | -13.51 |  | Weird: 0.345; future, 0.245; explained. 0.455; more, 0.195 |  |
+| x21_t4 ✔ | 8.61 | 6.795 | 191.3 | 13.84 | 5.48 | -12.86 |  | Weird: 0.36; future, 0.245; explained. 0.475; more, 0.14 |  |
+| x21_t2 | 8.09 | 6.74 | 191.3 | 14.74 | 5.86 | -13.27 |  | Weird: 0.35; future, 0.18; explained. 0.43; more, 0.215 |  |
+| x21_t3 | 7.94 | 6.78 | 188.4 | 14.03 | 5.77 | -13.23 |  | Weird: 0.33; future, 0.19; explained. 0.4; more, 0.195 |  |
+| x21_t1 | 7.87 | 6.84 | 188.7 | 14.2 | 5.68 | -13.51 |  | Weird: 0.345; future, 0.245; explained. 0.455; more, 0.195 |  |

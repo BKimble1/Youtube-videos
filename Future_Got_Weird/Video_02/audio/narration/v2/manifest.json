@@ -428,11 +428,11 @@
    "file": "s39.wav",
    "words_file": "s39.words.json",
    "section": "x17",
-   "take": "x17_t1",
-   "duration_s": 11.36,
-   "speech_start_s": 0.06,
-   "speech_end_s": 11.195,
-   "natural_gap_after_s": 0.165
+   "take": "x17_t2",
+   "duration_s": 11.52,
+   "speech_start_s": 0.02,
+   "speech_end_s": 11.335,
+   "natural_gap_after_s": 0.185
   },
   {
    "id": "s40",
