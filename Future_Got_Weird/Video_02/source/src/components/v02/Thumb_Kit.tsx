@@ -4,6 +4,29 @@ import {CAST} from '../cast';
 import {handPos, reachLocal, type Arm, type Look} from '../Character';
 import {segmentHitsRect, type P2, type Rect} from '../../lib/optics';
 import {HandheldSensor} from './HandheldSensor';
+import {Camera, Layer, worldToScreen, type Cam as KitCam} from '../../lib/camera';
+import {
+  LAYOUT as ROOM_LAYOUT,
+  PTS,
+  assertAroundTheEnd,
+  crossesOccluder,
+  hiddenByPartition,
+  occluderSilhouette,
+  partitionCrossings,
+  partitionHides,
+  partitionTopH,
+  projectWith,
+  rigAt,
+  viewAt,
+  visibleSpans,
+  type PlanPt,
+  type ViewState,
+} from '../../lib/room';
+import {LAYOUT as OPTICS_LAYOUT, assertPath} from '../../lib/optics';
+import {GapMarker, RoomSet, type RoomItem} from './RoomSet';
+import {ARMS_CROSSED as KIT_ARMS_CROSSED, Character2, EXPR, IDLE2, figuresHide, rigCovers, rimFlash, withPose, type Pose2, type RigPlace} from './Cast2';
+import {SensorStand} from './S1_SensorStand';
+import {PLAN_VIEW, PlanCard, PlanCross, PlanSpot, planCardSize, viewForArea, type PlanArea} from './PlanCard';
 
 /**
  * Thumbnail kit (Video 02 thumbnails only). Everything is drawn into one full-frame <svg> in screen px.
@@ -16,6 +39,10 @@ import {HandheldSensor} from './HandheldSensor';
  *  - `checkRoute`: the light route must be physical: in plan, S->W and W->H clear the coral wall's footprint (so the
  *    light goes round its end via the gap at the wall), S->H is blocked; on screen, no leg may touch the coral
  *    silhouette. A violation throws, so a bad composition cannot render.
+ *
+ * The section above is thumbnail C's own set (a coral block, its own LAYOUT; C draws no light in the room). Thumbnails
+ * A and B (review r1 D11) are built from the FILM'S kit instead: see "film-kit room thumbnails" at the end of this file
+ * (kitThumbGeometry, KitRoomThumb, KitPlanInset, assertScreenClear).
  */
 
 export const INK = C.ink;
@@ -558,5 +585,517 @@ export const BigSensor: React.FC<{x: number; y: number; w: number; outline?: num
       <circle cx={x0 + w * 0.89 - w * 0.014} cy={y0 + h * 0.24 - w * 0.014} r={w * 0.012} fill={C.cream} />
       <rect x={x0 + w * 0.845} y={y0 + h * 0.42} width={w * 0.09} height={h * 0.1} rx={h * 0.03} fill={C.tealLight} {...ink} strokeWidth={outline * 0.8} />
     </g>
+  );
+};
+
+/* ================================================================== film-kit room thumbnails (A and B) */
+
+/**
+ * Thumbnails A and B (review r1 D11): the FILM'S room, not a thumbnail-only set.
+ *
+ *  - Projection: lib/room's one projection (DEFAULT_VIEW) at a film tilt (RAISED_TILT or 0), framed by the film's
+ *    Camera/Layer; the set is RoomSet (relay wall, floor planks, skirting, the 2 m coral Partition) with its GapMarker
+ *    on the floor of the opening between the partition's far end and the wall.
+ *  - Geometry: layout.json only. Partition x 2.0, z 0.65..2.15, 2.0 m tall; sensor S (1.65, 0.9) at h 0.95 on S1's
+ *    SensorStand; wall spot W3 (1.9451, 0); him at H (2.6, 0.85); her at the operator spot. The light is the route
+ *    S -> W3 -> H in the 0.95 m light plane: nothing is moved or re-scaled for the picture.
+ *  - Cast: Character2 rigs (CAST.checker, CAST.guesser) at rigAt, i.e. on the set's height scale (rigScale).
+ *  - Light: an ink-cased saffron band (a pale glow under it, comet pulses on it) drawn only where the camera sees it
+ *    (lib/room partitionHides + Cast2 figuresHide): S -> W3 whole, W3 -> H up to the partition's FAR end, where it
+ *    goes behind it through the opening at the wall; it is painted in RoomSet's BACKDROP, so the partition as drawn
+ *    also covers the band's cap at that edge. Arrival: a rim flash on his wall-side (up-left) outline, hips up (Cast2
+ *    rimFlash at thumbnail weight), and a spark where the leg meets his body cylinder at the light plane (his
+ *    wall-side torso). The wall spot is the film's lit-patch ellipse (S1 WALL_GLOW_M) with a spark on it.
+ *  - "Seen from above" (KitPlanInset): the film's PlanCard with the same route, the blocked straight line and the gap.
+ *  - `kitThumbGeometry` THROWS at module load unless: the route clears the partition in plan (optics assertPath) and
+ *    the direct lines from the sensor and from her to him are blocked; every leg obeys assertAroundTheEnd at the
+ *    thumbnail's tilt and zoom, with the drawn light's half-width (band + casing, its glow, the comets) added to both
+ *    margins; it goes behind the partition by its FAR end; no visible light pixel (centre line +- that half-width,
+ *    visibility from partitionHides + figuresHide) lies above the partition's top edge within its screen x-span; the
+ *    W3 -> H leg is visible only up to the far end (nothing between the partition and him) and its run-on under the
+ *    edge is hidden by the partition as drawn; the arrival point is on his body and not behind the partition; the
+ *    wall glow and the spot's mark clear her by KIT_HER_CLEAR_PX; no saffron mark reaches above the partition's top;
+ *    the floor gap, the sensor, the wall spot, the stub and his spark are in frame. `assertScreenClear` checks the
+ *    screen-space title and inset against the people, the partition, the light and the frame.
+ */
+
+export type KitThumbSpec = {
+  label: string;
+  /** a film tilt: RAISED_TILT or 0 */
+  tilt: number;
+  /** world framing (lib/camera Cam, world px of the 1920x1080 room space) */
+  cam: KitCam;
+  /** light band width and its ink casing, world px */
+  band?: number;
+  casing?: number;
+  /** wall glow on the wall plane round W3, metres (w x h) */
+  glowM?: {w: number; h: number};
+  /** RoomSet extendLeft (m): continue wall and floor past the room's left end */
+  extendLeft?: number;
+  /** pose fragments laid over the defaults */
+  him?: Partial<Pose2>;
+  her?: Partial<Pose2>;
+  /** rim flash weight: multiplies the rig scale passed to rimFlash */
+  rimK?: number;
+  /** chest spark radius, world px */
+  sparkR?: number;
+  /** bounce burst core radius at W3, world px (rays reach 2.45 x) */
+  burstR?: number;
+  /** the mark at the wall spot, over the lit-patch ellipse: a saffron spark (default) or a ray burst */
+  wallMark?: 'spark' | 'burst';
+  /** a pale saffron glow under the light band (default true), so it reads as light rather than a rod */
+  beam?: boolean;
+  /** her pencil (CAST.checker accessory; default false: at thumbnail size it points at the wall spot and reads as a
+   *  beam from her head, the S1.7 problem) */
+  herPencil?: boolean;
+  /** frame margin (screen px) the floor gap and the route marks must keep */
+  frameMargin?: number;
+};
+
+const KIT_LIGHT_H = ROOM_LAYOUT.sensor.h;
+const KIT_STAND_SORT_Z = ROOM_LAYOUT.operator.z + 0.2; // as S1: the stand paints over her
+export const KIT_SEED = {checker: 3, guesser: 22};
+/** Screen px the wall glow's rim and the bounce burst's ray tips keep from her (head, hair and pencil). */
+export const KIT_HER_CLEAR_PX = 20;
+
+/** Her default thumbnail pose: the film's deadpan, eyes on the readout, one brow up (she knows). */
+export const KIT_HER: Pose2 = withPose({...IDLE2, armsFront: 'R'}, {...EXPR.deadpan, lookX: 0.62, lookY: 0.32, tilt: -4, brows: 0.1, browAsym: 0.55});
+/** His default thumbnail pose: arms crossed, smug (EXPR.smug), eyes slid toward her side of the partition. */
+export const KIT_HIM: Pose2 = withPose(KIT_ARMS_CROSSED, {...EXPR.smug, lookX: -0.85, lookY: 0.12, lid: 0.52, browAsym: 0.8, brows: -0.25, tilt: 6});
+
+type XY = {x: number; y: number};
+
+/** Screen y of the drawn partition's top edge (silhouette) at world x, or null outside its x-span. */
+const partitionTopAt = (s: ViewState, x: number) => {
+  const o = ROOM_LAYOUT.occluder;
+  let best: number | null = null;
+  for (const dx of [-o.thickness / 2, o.thickness / 2]) {
+    const n = 120;
+    let prev: XY | null = null;
+    for (let k = 0; k <= n; k++) {
+      const z = o.z0 + ((o.z1 - o.z0) * k) / n;
+      const q = projectWith(s, {x: o.x + dx, z, h: partitionTopH(z)});
+      if (prev && ((prev.x <= x && x <= q.x) || (q.x <= x && x <= prev.x))) {
+        const u = q.x === prev.x ? 0 : (x - prev.x) / (q.x - prev.x);
+        const y = prev.y + (q.y - prev.y) * u;
+        best = best === null ? y : Math.min(best, y);
+      }
+      prev = q;
+    }
+  }
+  return best;
+};
+
+/** Everything a film-kit thumbnail draws, in world px, checked (throws). Call at module load. */
+export const kitThumbGeometry = (spec: KitThumbSpec) => {
+  const {label, tilt, cam} = spec;
+  const band = spec.band ?? 14;
+  const casing = spec.casing ?? 4;
+  const glowM = spec.glowM ?? {w: 0.18, h: 0.12}; // the film's WALL_GLOW_M (S1)
+  const margin = spec.frameMargin ?? 24;
+  const s = viewAt(tilt);
+  const zoom = cam.zoom;
+  const L = ROOM_LAYOUT;
+  const S: PlanPt = {...PTS.S, h: KIT_LIGHT_H};
+  const W: PlanPt = {...PTS.W.W3, h: KIT_LIGHT_H};
+  const H: PlanPt = {...PTS.H, h: KIT_LIGHT_H};
+  const route = [S, W, H];
+  const P = (p: PlanPt) => projectWith(s, p);
+  const scr = (p: XY) => worldToScreen(cam, p.x, p.y);
+
+  // --- plan: the route clears the partition; he is hidden from the sensor and from her
+  assertPath(route.map((p) => ({x: p.x, z: p.z})), OPTICS_LAYOUT);
+  if (!crossesOccluder(S, H)) throw new Error(`${label}: the partition does not block the sensor -> him line`);
+  if (!crossesOccluder({x: L.operator.x, z: L.operator.z}, H)) throw new Error(`${label}: the partition does not block her -> him line`);
+
+  // --- the room light rule at this tilt and zoom, with the drawn light's half-width (band + casing, the glow round it,
+  //     the comets) added to both margins
+  const beam = spec.beam ?? true;
+  const lightR = Math.max(band / 2 + casing, beam ? band * 1.2 : 0, band * 0.95 + casing / 2);
+  const bandHalfPx = lightR * zoom;
+  assertAroundTheEnd(label, [route], s, {zoom, minBelowCornerPx: 24 + bandHalfPx, minFrontClearPx: 18 + bandHalfPx});
+
+  // --- the people (rig places) and the stand
+  const her = rigAt(L.operator.x, L.operator.z, tilt);
+  const him = rigAt(H.x, H.z, tilt);
+  const herPlace: RigPlace = {x: her.x, y: her.y, scale: her.scale};
+  const himPlace: RigPlace = {x: him.x, y: him.y, scale: him.scale};
+  const hide = (p: PlanPt) =>
+    partitionHides(s, KIT_LIGHT_H)(p) ||
+    figuresHide(s, KIT_LIGHT_H, [
+      {z: L.operator.z, place: herPlace},
+      {z: H.z, place: himPlace},
+    ])(p);
+
+  // --- visibility of each leg: S -> W3 fully in front; W3 -> H visible only up to the far end, then hidden all the way
+  //     to (and into) him: no light between the partition and his outline
+  const spansSW = visibleSpans(S, W, tilt, {noOccluder: true, hidden: hide, steps: 200});
+  const spansWH = visibleSpans(W, H, tilt, {noOccluder: true, hidden: hide, steps: 400});
+  if (spansSW.length !== 1 || spansSW[0][0] > 1e-6 || spansSW[0][1] < 1 - 1e-6) throw new Error(`${label}: the sensor -> wall leg is not fully visible (${JSON.stringify(spansSW)})`);
+  if (spansWH.length !== 1 || spansWH[0][0] > 1e-6 || spansWH[0][1] > 0.5) throw new Error(`${label}: the wall -> him leg must show only from the wall spot to the partition's far end (${JSON.stringify(spansWH)})`);
+  const cross = partitionCrossings(W, H, s, {zoom});
+  const goIn = cross.crossings.find((c) => c.dir === 'in');
+  if (!goIn || goIn.edge !== 'far') throw new Error(`${label}: the wall -> him leg must go behind the partition's FAR end`);
+
+  // --- no visible band pixel above the partition's top edge within its x-span (band edges sampled, not just the
+  //     centre line)
+  const o = L.occluder;
+  const xs = [o.z0, o.z1].flatMap((z) => [-1, 1].map((sg) => P({x: o.x + (sg * o.thickness) / 2, z, h: partitionTopH(z)}).x));
+  const spanX0 = Math.min(...xs) - 3;
+  const spanX1 = Math.max(...xs) + 3;
+  let minAbovePx = Infinity;
+  const legs: [PlanPt, PlanPt, [number, number][]][] = [
+    [S, W, spansSW],
+    [W, H, spansWH],
+  ];
+  for (const [a, b, spans] of legs) {
+    const qa = P(a);
+    const qb = P(b);
+    const len = Math.hypot(qb.x - qa.x, qb.y - qa.y) || 1;
+    const nx = -(qb.y - qa.y) / len;
+    const ny = (qb.x - qa.x) / len;
+    const r = lightR;
+    for (const [u0, u1] of spans) {
+      for (let k = 0; k <= 200; k++) {
+        const u = u0 + ((u1 - u0) * k) / 200;
+        const c = {x: qa.x + (qb.x - qa.x) * u, y: qa.y + (qb.y - qa.y) * u};
+        for (const sg of [-1, 0, 1]) {
+          const q = {x: c.x + sg * nx * r, y: c.y + sg * ny * r};
+          if (q.x < spanX0 || q.x > spanX1) continue;
+          const top = partitionTopAt(s, Math.max(spanX0 + 3, Math.min(spanX1 - 3, q.x)));
+          if (top === null) continue;
+          const d = (q.y - top) * zoom;
+          minAbovePx = Math.min(minAbovePx, d);
+          if (d <= 0) throw new Error(`${label}: a visible light pixel (${q.x.toFixed(0)}, ${q.y.toFixed(0)}) lies above the partition's top edge (y ${top.toFixed(0)})`);
+        }
+      }
+    }
+  }
+
+  // --- the marks: the wall glow (ellipse on the wall plane), the bounce burst, the pulse dots, his spark
+  const qS = P(S);
+  const qW = P(W);
+  const qH = P(H);
+  const uIn = spansWH[0][1];
+  const edgeIn = {x: qW.x + (qH.x - qW.x) * uIn, y: qW.y + (qH.y - qW.y) * uIn};
+  // the drawn stub runs on under the partition's far edge by the light's half-width, so the band meets the edge at
+  // full width (no round cap curling before it); that extra bit is painted in the backdrop and must be hidden by the
+  // partition as drawn
+  const legPx = Math.hypot(qH.x - qW.x, qH.y - qW.y);
+  const uEnd = Math.min(1, uIn + (lightR + 2) / legPx);
+  const pEnd: PlanPt = {x: W.x + (H.x - W.x) * uEnd, z: W.z + (H.z - W.z) * uEnd, h: KIT_LIGHT_H};
+  if (!hiddenByPartition(pEnd, s)) throw new Error(`${label}: the stub's run-on under the far edge would show`);
+  const stubEnd = {x: qW.x + (qH.x - qW.x) * uEnd, y: qW.y + (qH.y - qW.y) * uEnd};
+  const glow = {cx: qW.x, cy: qW.y, rx: (glowM.w / 2) * s.ppm, ry: (glowM.h / 2) * s.ppm * s.height};
+  const burstR = spec.burstR ?? 10;
+  const burstReach = burstR * 2.45 + 7 / 2 + casing;
+  // where the W3 -> H leg meets his body cylinder (layout bodyRadius) at the light plane: his wall-side torso
+  const br = (L.hidden as {bodyRadius?: number}).bodyRadius ?? 0.22;
+  const toW = {x: W.x - H.x, z: W.z - H.z};
+  const tl = Math.hypot(toW.x, toW.z);
+  const hitPlan: PlanPt = {x: H.x + (toW.x / tl) * br, z: H.z + (toW.z / tl) * br, h: KIT_LIGHT_H};
+  const hit = P(hitPlan);
+  if (!rigCovers(himPlace, hit)) throw new Error(`${label}: the arrival point is not on his body`);
+  if (hiddenByPartition(hitPlan, s)) throw new Error(`${label}: the arrival point on his torso is behind the partition`);
+  const sparkR = spec.sparkR ?? band * 1.8;
+  // glow and burst clear her (head, hair, pencil: rigCovers) by >= KIT_HER_CLEAR_PX screen px
+  const clearOf = (q: XY, rWorld: number) => {
+    if (rigCovers(herPlace, q, rWorld)) return -1;
+    let lo = 0;
+    let hi = 400;
+    for (let i = 0; i < 28; i++) {
+      const m = (lo + hi) / 2;
+      if (rigCovers(herPlace, q, rWorld + m)) hi = m;
+      else lo = m;
+    }
+    return lo * zoom;
+  };
+  const glowPts = Array.from({length: 48}, (_, i) => ({x: glow.cx + Math.cos((i / 48) * 2 * Math.PI) * glow.rx, y: glow.cy + Math.sin((i / 48) * 2 * Math.PI) * glow.ry}));
+  const glowClearPx = Math.min(...glowPts.map((q) => clearOf(q, 0)));
+  const burstClearPx = clearOf(qW, burstReach);
+  if (glowClearPx < KIT_HER_CLEAR_PX) throw new Error(`${label}: the wall glow comes ${glowClearPx.toFixed(0)} px from her (needs ${KIT_HER_CLEAR_PX})`);
+  if (burstClearPx < KIT_HER_CLEAR_PX) throw new Error(`${label}: the bounce burst comes ${burstClearPx.toFixed(0)} px from her (needs ${KIT_HER_CLEAR_PX})`);
+  // every saffron mark sits below the partition's top edge where it overlaps the partition's x-span
+  const marks: [string, XY, number][] = [
+    ['glow', {x: glow.cx, y: glow.cy - glow.ry}, 0],
+    ['burst', qW, burstReach],
+    ['spark', hit, sparkR],
+  ];
+  for (const [n, q, rr] of marks) {
+    for (const dx of [-rr, 0, rr]) {
+      const x = q.x + dx;
+      if (x < spanX0 || x > spanX1) continue;
+      const top = partitionTopAt(s, Math.max(spanX0 + 3, Math.min(spanX1 - 3, x)));
+      if (top !== null && q.y - rr <= top) throw new Error(`${label}: the ${n} reaches above the partition's top edge`);
+    }
+  }
+
+  // --- in frame: the floor gap (wall base -> the far foot, with the patch), the route's marks, his spark
+  const gapPts = [P({x: o.x - 0.12, z: 0.02}), P({x: o.x + 0.12, z: 0.02}), P({x: o.x + 0.12, z: o.z0 - 0.02}), P({x: o.x - 0.12, z: o.z0 - 0.02})];
+  const inFrame = (p: XY, what: string) => {
+    const q = scr(p);
+    if (q.x < margin || q.x > 1920 - margin || q.y < margin || q.y > 1080 - margin) throw new Error(`${label}: ${what} is out of frame (${q.x.toFixed(0)}, ${q.y.toFixed(0)})`);
+  };
+  gapPts.forEach((p, i) => inFrame(p, `the floor gap corner ${i}`));
+  inFrame(qS, 'the sensor');
+  inFrame({x: qW.x, y: qW.y - burstReach}, 'the bounce burst');
+  inFrame(edgeIn, "the leg's entry behind the far end");
+  inFrame({x: hit.x, y: hit.y}, 'his spark');
+
+  return {
+    label,
+    tilt,
+    s,
+    cam,
+    band,
+    casing,
+    route,
+    qS,
+    qW,
+    qH,
+    edgeIn,
+    stubEnd,
+    uIn,
+    glow,
+    burstR,
+    hit,
+    hitPlan,
+    sparkR,
+    herPlace,
+    himPlace,
+    rimK: spec.rimK ?? 1.15,
+    wallMark: spec.wallMark ?? 'spark',
+    beam,
+    lightR,
+    herLook: spec.herPencil ? CAST.checker : {...CAST.checker, accessories: (CAST.checker.accessories ?? []).filter((a) => a !== 'pencil')},
+    extendLeft: spec.extendLeft ?? 0,
+    herPose: spec.her ? withPose(KIT_HER, spec.her) : KIT_HER,
+    himPose: spec.him ? withPose(KIT_HIM, spec.him) : KIT_HIM,
+    /** measured margins (screen px), for the report */
+    measured: {
+      inBelowCornerPx: goIn.belowCornerPx,
+      minAboveTopPx: minAbovePx,
+      frontClearPx: partitionCrossings(S, W, s, {zoom}).frontClearPx,
+      stubPx: Math.hypot(edgeIn.x - qW.x, edgeIn.y - qW.y) * zoom,
+      glowClearPx,
+      burstClearPx,
+      upPx: Math.hypot(qW.x - qS.x, qW.y - qS.y) * zoom,
+    },
+  };
+};
+
+export type KitThumbGeometry = ReturnType<typeof kitThumbGeometry>;
+
+/** A screen-space element of a thumbnail (title line, inset card), screen px. */
+export type ScreenRect = {name: string; x: number; y: number; w: number; h: number};
+
+/**
+ * Throws unless every screen element (title lines, the inset card) stays `minFrame` px inside the frame, keeps `clearPx`
+ * screen px from both people (rigCovers), from the partition's silhouette and from the drawn light (route, wall spot,
+ * his spark), and the elements do not overlap each other. Sampled on a 6 px grid.
+ */
+export const assertScreenClear = (geo: KitThumbGeometry, rects: ScreenRect[], opts: {clearPx?: number; minFrame?: number} = {}) => {
+  const clearPx = opts.clearPx ?? 16;
+  const minFrame = opts.minFrame ?? 40;
+  const {cam} = geo;
+  const toWorld = (x: number, y: number) => ({x: cam.cx + (x - 960) / cam.zoom, y: cam.cy + (y - 540) / cam.zoom});
+  const g = clearPx / cam.zoom;
+  const sil = occluderSilhouette(geo.tilt);
+  const inSil = (p: XY) => {
+    for (const [dx, dy] of [[0, 0], [g, 0], [-g, 0], [0, g], [0, -g]]) {
+      const q = {x: p.x + dx, y: p.y + dy};
+      let c = false;
+      for (let i = 0, j = sil.length - 1; i < sil.length; j = i++) {
+        const a = sil[i];
+        const b = sil[j];
+        if (a.y > q.y !== b.y > q.y && q.x < ((b.x - a.x) * (q.y - a.y)) / (b.y - a.y) + a.x) c = !c;
+      }
+      if (c) return true;
+    }
+    return false;
+  };
+  const segD = (p: XY, a: XY, b: XY) => {
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const L = dx * dx + dy * dy || 1;
+    const u = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / L));
+    return Math.hypot(p.x - a.x - u * dx, p.y - a.y - u * dy);
+  };
+  const lightNear = (p: XY) =>
+    segD(p, geo.qS, geo.qW) < geo.lightR + g ||
+    segD(p, geo.qW, geo.edgeIn) < geo.lightR + g ||
+    Math.hypot(p.x - geo.glow.cx, p.y - geo.glow.cy) < Math.max(geo.glow.rx, geo.burstR * 2.2) + g ||
+    Math.hypot(p.x - geo.hit.x, p.y - geo.hit.y) < geo.sparkR + g;
+  rects.forEach((r, i) => {
+    if (r.x < minFrame || r.y < minFrame || r.x + r.w > 1920 - minFrame || r.y + r.h > 1080 - minFrame) throw new Error(`${geo.label}: ${r.name} is within ${minFrame} px of the frame edge`);
+    rects.slice(i + 1).forEach((o) => {
+      if (r.x < o.x + o.w + clearPx && o.x < r.x + r.w + clearPx && r.y < o.y + o.h + clearPx && o.y < r.y + r.h + clearPx) throw new Error(`${geo.label}: ${r.name} and ${o.name} overlap`);
+    });
+    for (let y = r.y; y <= r.y + r.h; y += 6) {
+      for (let x = r.x; x <= r.x + r.w; x += 6) {
+        const w = toWorld(x, y);
+        if (rigCovers(geo.herPlace, w, g)) throw new Error(`${geo.label}: ${r.name} comes within ${clearPx} px of her (${x}, ${y})`);
+        if (rigCovers(geo.himPlace, w, g)) throw new Error(`${geo.label}: ${r.name} comes within ${clearPx} px of him (${x}, ${y})`);
+        if (inSil(w)) throw new Error(`${geo.label}: ${r.name} comes within ${clearPx} px of the partition (${x}, ${y})`);
+        if (lightNear(w)) throw new Error(`${geo.label}: ${r.name} comes within ${clearPx} px of the light (${x}, ${y})`);
+      }
+    }
+  });
+};
+
+/**
+ * Ink box of a two-line Fredoka 700 title (Thumbnails `Title`, lineGap 0.86): measured on the render, "SEES" is 2.224 em
+ * wide and "ME?" 1.82 em; caps reach 0.70 em above the baseline. Padded 6 px.
+ */
+export const titleRects = (x: number, y: number, size: number, anchor: 'start' | 'end'): ScreenRect[] => {
+  const lines = [
+    {name: 'title SEES', w: 2.224 * size, base: y},
+    {name: 'title ME?', w: 1.82 * size, base: y + 0.86 * size},
+  ];
+  return lines.map((l) => ({name: l.name, x: (anchor === 'start' ? x : x - l.w) - 6, y: l.base - 0.7 * size - 6, w: l.w + 12, h: 0.712 * size + 12}));
+};
+
+/** A light pulse with a tapering tail from `a` (tail tip) to `b` (head centre): reads as moving toward b. */
+export const Comet: React.FC<{a: Pt; b: Pt; r: number; outline?: number}> = ({a, b, r, outline = 4}) => {
+  const u = unit(a, b);
+  const n = {x: -u.y, y: u.x};
+  const d = `M ${a.x.toFixed(2)} ${a.y.toFixed(2)} L ${(b.x + n.x * r).toFixed(2)} ${(b.y + n.y * r).toFixed(2)} A ${r} ${r} 0 1 0 ${(b.x - n.x * r).toFixed(2)} ${(b.y - n.y * r).toFixed(2)} Z`;
+  return (
+    <g>
+      <path d={d} fill={LIGHT} stroke={INK} strokeWidth={outline} strokeLinejoin="round" />
+      <circle cx={b.x - u.x * r * 0.15 - n.x * r * 0.3} cy={b.y - u.y * r * 0.15 - n.y * r * 0.3} r={r * 0.36} fill={C.cream} />
+    </g>
+  );
+};
+
+/** The film's room with the checked route, under the film's camera (one full-frame layer). */
+export const KitRoomThumb: React.FC<{geo: KitThumbGeometry; children?: React.ReactNode}> = ({geo, children}) => {
+  const {tilt, cam, band, casing, qS, qW, edgeIn, stubEnd, glow, burstR, hit, sparkR, herPlace, himPlace} = geo;
+  // his rim flash on the upper body only (hips up): a copy with the filter under the plain rig, clipped
+  const hipY = himPlace.y - 150 * himPlace.scale;
+  const f = (n: number) => n.toFixed(2);
+  // only the visible spans are drawn (partitionHides + figuresHide, checked in kitThumbGeometry): S -> W3 whole, W3 -> H
+  // up to where it goes behind the partition's far end (plus the band's half-width, under the edge). They are painted
+  // in the backdrop, so the partition as drawn covers the band's end and the comet's head at that edge.
+  const pts = `${f(qS.x)},${f(qS.y)} ${f(qW.x)},${f(qW.y)} ${f(stubEnd.x)},${f(stubEnd.y)}`;
+  const items: RoomItem[] = [
+    {
+      key: 'checker',
+      x: ROOM_LAYOUT.operator.x,
+      z: ROOM_LAYOUT.operator.z,
+      w: 0.3,
+      node: <Character2 look={geo.herLook} pose={geo.herPose} frame={0} seed={KIT_SEED.checker} x={herPlace.x} y={herPlace.y} scale={herPlace.scale} life={0} eyeDarts={false} />,
+    },
+    {
+      key: 'stand',
+      x: PTS.S.x,
+      z: KIT_STAND_SORT_Z,
+      w: 0.17,
+      height: 1.4,
+      node: <SensorStand tilt={tilt} sensor={{reveal: 1, bumpHighlight: 1, led: 1, firing: 1, burst: 0.9}} />,
+    },
+    {
+      key: 'guesser',
+      x: ROOM_LAYOUT.hidden.x,
+      z: ROOM_LAYOUT.hidden.z,
+      w: 0.3,
+      node: (
+        <>
+          <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, clipPath: `polygon(-2000px -2000px, 4000px -2000px, 4000px ${hipY.toFixed(1)}px, -2000px ${hipY.toFixed(1)}px)`}}>
+            <Character2 look={CAST.guesser} pose={geo.himPose} frame={0} seed={KIT_SEED.guesser} x={himPlace.x} y={himPlace.y} scale={himPlace.scale} life={0} eyeDarts={false} style={{filter: rimFlash(1, himPlace.scale * geo.rimK)}} />
+          </div>
+          <Character2 look={CAST.guesser} pose={geo.himPose} frame={0} seed={KIT_SEED.guesser} x={himPlace.x} y={himPlace.y} scale={himPlace.scale} life={0} eyeDarts={false} />
+          <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+            <HitSpark p={hit} r={sparkR} outline={casing} dir={-Math.PI / 2} />
+          </svg>
+        </>
+      ),
+    },
+  ];
+  const backdrop = (
+    <>
+      <GapMarker tilt={tilt} t={1} patchOpacity={0.8} outline />
+      <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+        {/* the lit patch of wall round W3 (an ellipse on the wall plane): real light, so saffron */}
+        <ellipse cx={f(glow.cx)} cy={f(glow.cy)} rx={f(glow.rx)} ry={f(glow.ry)} fill={C.saffronLight} stroke={C.saffronDeep} strokeWidth={3} strokeDasharray="9 7" />
+        {/* the route S -> W3 -> H in the light plane (glow, ink casing, saffron core); the partition, the stand and the
+            people paint over it */}
+        {geo.beam && <polyline points={pts} fill="none" stroke={C.saffronLight} strokeWidth={band * 2.4} strokeLinejoin="round" strokeLinecap="round" opacity={0.9} />}
+        <polyline points={pts} fill="none" stroke={INK} strokeWidth={band + casing * 2} strokeLinejoin="round" strokeLinecap="round" />
+        <polyline points={pts} fill="none" stroke={LIGHT} strokeWidth={band} strokeLinejoin="round" strokeLinecap="round" />
+        {/* pulses as comets (direction of travel): one on its way to the wall, one slipping behind the far end (the
+            partition covers its head) */}
+        <Comet a={lerp(qS, qW, 0.12)} b={lerp(qS, qW, 0.72)} r={band * 0.95} outline={casing} />
+        <Comet a={lerp(qW, edgeIn, 0.25)} b={edgeIn} r={band * 0.95} outline={casing} />
+        {geo.wallMark === 'burst' ? (
+          <BounceBurst p={qW} r={burstR} outline={casing} rays={10} rot={Math.PI / 10} />
+        ) : (
+          <HitSpark p={qW} r={burstR * 2.2} outline={casing} dir={-Math.PI / 2} />
+        )}
+      </svg>
+    </>
+  );
+  return (
+    <Camera cam={cam}>
+      <Layer depth={1}>
+        <RoomSet tilt={tilt} items={items} backdrop={backdrop} plant={false} door extendLeft={geo.extendLeft} />
+      </Layer>
+      {children}
+    </Camera>
+  );
+};
+
+/**
+ * "Seen from above" for a film-kit thumbnail: the film's PlanCard (S1.4-S1.5, S3.1, S9.2) with the same route
+ * S -> W3 -> H drawn as the room's ink-cased saffron band, the lit wall spot, the gap at the partition's far end and
+ * the three tokens. From above nothing hides the route, so it visibly threads the opening between the partition's far
+ * end and the wall (PLAN_VIEW: the partition runs off the card's bottom, so the only end in view is the one the light
+ * goes round). Screen px.
+ */
+export const kitPlanCardSize = (area: PlanArea) => planCardSize(area);
+export const KitPlanInset: React.FC<{x: number; y: number; area: PlanArea; zTop?: number; band?: number; casing?: number; label?: string; blocked?: boolean}> = ({x, y, area, zTop = -0.1, band = 13, casing = 4, label, blocked = true}) => {
+  const route: P2[] = [
+    {x: PTS.S.x, z: PTS.S.z},
+    {x: PTS.W.W3.x, z: PTS.W.W3.z},
+    {x: PTS.H.x, z: PTS.H.z},
+  ];
+  assertPath(route, OPTICS_LAYOUT);
+  // the straight line from the sensor toward him, stopped on the partition's sensor-side face (S1.4's blocked line)
+  const o = ROOM_LAYOUT.occluder;
+  const faceX = o.x - o.thickness / 2;
+  const ghost = {x: faceX, z: route[0].z + (route[2].z - route[0].z) * ((faceX - route[0].x) / (route[2].x - route[0].x))};
+  if (ghost.z < o.z0 || ghost.z > o.z1) throw new Error('KitPlanInset: the straight sensor -> him line misses the partition');
+  return (
+    <PlanCard
+      x={x}
+      y={y}
+      t={1}
+      area={area}
+      view={{...viewForArea(PLAN_VIEW, area), zTop}}
+      checker={{x: ROOM_LAYOUT.operator.x, z: ROOM_LAYOUT.operator.z}}
+      guesser={{x: ROOM_LAYOUT.hidden.x, z: ROOM_LAYOUT.hidden.z}}
+      sensor={{firing: 1, burst: 0.8}}
+      gap={1}
+      label={label}
+      light={(tp) => {
+        const pts = route.map((p) => tp(p));
+        const d = pts.map((q, i) => `${i ? 'L' : 'M'} ${q.x.toFixed(2)} ${q.y.toFixed(2)}`).join(' ');
+        const g0 = tp(route[0]);
+        const g1 = tp(ghost);
+        return (
+          <g>
+            {blocked && <path d={`M ${g0.x.toFixed(2)} ${g0.y.toFixed(2)} L ${g1.x.toFixed(2)} ${g1.y.toFixed(2)}`} stroke={C.saffronDeep} strokeWidth={5} strokeDasharray="4 10" strokeLinecap="round" fill="none" opacity={0.85} />}
+            <path d={d} fill="none" stroke={INK} strokeWidth={band + casing * 2} strokeLinejoin="round" strokeLinecap="round" />
+            <path d={d} fill="none" stroke={LIGHT} strokeWidth={band} strokeLinejoin="round" strokeLinecap="round" />
+          </g>
+        );
+      }}
+      marks={(tp) => (
+        <g>
+          {blocked && <PlanCross x={tp(ghost).x - 14} y={tp(ghost).y} s={10} />}
+          <PlanSpot {...tp(route[1])} t={1} r={16} />
+        </g>
+      )}
+    />
   );
 };

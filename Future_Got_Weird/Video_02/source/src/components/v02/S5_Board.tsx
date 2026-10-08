@@ -10,11 +10,14 @@ import {RoomSet, type RoomItem} from './RoomSet';
 import {CheckerToken, GuesserToken} from './Tokens';
 import {PossibleCloud} from './Optics';
 import {SensorTop, facingOf} from './HandheldSensor';
+import {LIKELY_CLOUD, LIKELY_DIM, LIKELY_RING, LikelyRing} from './S4_Parts';
 
 /**
  * S5 only: the plan board exactly as S4 leaves it (HANDOFF.S4S5): RoomSet at tilt 1 framed by CAM_PLAN_ACT, the two
  * overhead tokens, the sensor glyph at S and the teal likely-location blob from the same four ±3.75 cm bands S4 uses
  * (layout.json frame A, confocal circles). Labels and wall spots are already cleared at the hand-off.
+ * Review r1 D28: the blob, its marker ring and his dimmed token use S4_Parts' LIKELY_* values, the same ones S4 draws
+ * with, so S4's last frame and S5's first stay pixel-identical (the S4 builder owns this file).
  *
  * Plus the paper scroll the board rolls up into (`ScrollRoll`), drawn in world px.
  */
@@ -59,8 +62,9 @@ export const PlanBoard: React.FC = () => {
   ];
   const backdrop = (
     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-      <GuesserToken asGroup x={tokH.x} y={tokH.y} size={2 * tokH.r} scale={tokH.scale} opacity={tokH.opacity} facing={200} />
-      <PossibleCloud asGroup toPx={toW} field={FINAL_FIELD} t={1} tone="teal" />
+      <GuesserToken asGroup x={tokH.x} y={tokH.y} size={2 * tokH.r} scale={tokH.scale} opacity={tokH.opacity * LIKELY_DIM} facing={200} />
+      <PossibleCloud asGroup toPx={toW} field={FINAL_FIELD} t={1} tone="teal" {...LIKELY_CLOUD} />
+      <LikelyRing cx={toW(Hp).x} cy={toW(Hp).y} r={LIKELY_RING.rM * st.ppm} t={1} k={1 / HANDOFF.S4S5.cam.zoom} />
     </svg>
   );
   const top = (

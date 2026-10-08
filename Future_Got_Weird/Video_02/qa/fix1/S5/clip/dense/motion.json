@@ -1,0 +1,102 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S5": {
+   "seconds": 47.1,
+   "mean_energy": 1.723,
+   "still_seconds": 13.5,
+   "still_share": 0.287,
+   "longest_still_s": 1.8
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S5",
+   "from": 5810,
+   "to": 5846,
+   "seconds": 1.23,
+   "t": "3:13.7",
+   "spoken": "MIT team reported recovering the"
+  },
+  {
+   "scene": "S5",
+   "from": 5901,
+   "to": 5933,
+   "seconds": 1.1,
+   "t": "3:16.7",
+   "spoken": "small mannequin around a corner."
+  },
+  {
+   "scene": "S5",
+   "from": 5973,
+   "to": 6006,
+   "seconds": 1.13,
+   "t": "3:19.1",
+   "spoken": "ultrafast laser and a high-speed"
+  },
+  {
+   "scene": "S5",
+   "from": 6016,
+   "to": 6069,
+   "seconds": 1.8,
+   "t": "3:20.5",
+   "spoken": "high-speed camera: lab equipment that filled a"
+  },
+  {
+   "scene": "S5",
+   "from": 6152,
+   "to": 6178,
+   "seconds": 0.9,
+   "t": "3:25.1",
+   "spoken": "study, Stanford researchers swept"
+  },
+  {
+   "scene": "S5",
+   "from": 6392,
+   "to": 6433,
+   "seconds": 1.4,
+   "t": "3:33.1",
+   "spoken": "sign, rebuilding the scene took about a second"
+  },
+  {
+   "scene": "S5",
+   "from": 6446,
+   "to": 6481,
+   "seconds": 1.2,
+   "t": "3:34.9",
+   "spoken": "second on a laptop. Measuring"
+  },
+  {
+   "scene": "S5",
+   "from": 6544,
+   "to": 6567,
+   "seconds": 0.8,
+   "t": "3:38.1",
+   "spoken": "minutes. By 2021,"
+  },
+  {
+   "scene": "S5",
+   "from": 6635,
+   "to": 6671,
+   "seconds": 1.23,
+   "t": "3:41.2",
+   "spoken": "Wisconsin and Milan had sped up measuring"
+  },
+  {
+   "scene": "S5",
+   "from": 6685,
+   "to": 6711,
+   "seconds": 0.9,
+   "t": "3:42.8",
+   "spoken": "measuring too: live"
+  },
+  {
+   "scene": "S5",
+   "from": 7050,
+   "to": 7103,
+   "seconds": 1.8,
+   "t": "3:55.0",
+   "spoken": "hidden objects with a cheap sensor."
+  }
+ ]
+}

@@ -53,12 +53,13 @@ import {isPlate} from '../lib/plate';
  *            later legs thinner and paler, "slowed down"); the direct line is blocked by the racking ("out of sight");
  *            when the echo is back, a faint blob appears round the person ("potential use").
  *  S8.3 s42  tilt back to the front view: the robot eases off its waiting spot; "something moving" pins on the blob;
- *            the robot squints (anticipation) and brakes at the stop line on "say slow down" ("slow down · not who");
- *            the person, never in the robot's direct view, stops at the brake; on "who's" a "?" pops in a thought
- *            bubble over the robot (it only has the blob) while the person turns toward the corner, listening.
- *  S8.4 s43  a paper board slides down over the warehouse: a 2×2 strip, one tile per spoken beat ("short range",
- *            "dark or shiny walls", "bright sunlight", "fast math on small hardware"), then "early-stage prototype
- *            (authors)" lands across it on "early-stage".
+ *            the robot squints (anticipation) and brakes at the stop line on "say slow down" ("slow down"; "not who"
+ *            follows on "not"); the person, never in the robot's direct view, stops at the brake; on "who's" a "?" pops
+ *            in a thought bubble over the robot (it only has the blob) while the person turns toward the corner,
+ *            listening. Both hold until the board comes down on "plenty" (after "there." has ended).
+ *  S8.4 s43  a paper board slides down over the warehouse on "plenty": a 2×2 strip, one tile per spoken beat
+ *            ("short range", "dark or shiny walls", "bright sunlight", "fast math on small hardware"), then
+ *            "early-stage prototype (authors)" lands across it on "early-stage".
  *  S8.5 s44  the board lifts (time has passed; the person has gone): the robot creeps on carefully; a carton sits in
  *            its path and its bumper does the stopping (contact just after "collisions"); on "clue" it pings once
  *            more, and "not a safety system" pins to its sensor head.
@@ -102,7 +103,9 @@ const K = {
   enough: at('s42', 'enough'),
   say: at('s42', 'say'),
   slow: at('s42', 'slow'),
+  notS42: at('s42', 'not'),
   whos: at('s42', "who's"),
+  thereEnd: at('s42', 'there', 1, 'end'),
   s42End: segEnd('s42'),
   // s43
   and43: at('s43', 'and'),
@@ -239,6 +242,9 @@ const DRIVE2: BotDrivePlan = {v0: 0, keys: [{at: CREEP - CREEP0, dur: ACC2, to: 
 const drive2 = (g: number) => botDrive(g - CREEP0, DRIVE2);
 const CHIP_MOVING = Math.max(K.blob, TILT2 + TILT2_DUR - 2);
 const CHIP_SLOW = Math.max(K.slow, BRAKE2 + 4);
+/** "not who" pops on "not" ("…not enough to say who's there"), once "slow down" has settled: it is the point of S8.3
+ *  and needs its own reading time (D39), so it no longer waits for the robot's "?" on "who's". */
+const NOT_WHO = Math.max(K.notS42, CHIP_SLOW + 18);
 const WHO = K.whos;
 const UPD = 26; // blob updates (one ping each) after the first echo
 const PEER = Math.max(BRAKE2 + DEC2 + 8, K.whos - 8); // the robot peers at the corner: it still cannot see round it
@@ -246,8 +252,22 @@ const REACT = Math.max(WALK_END + 6, K.whos - 10); // the person (who heard the 
 
 /* ================================================================== S8.4: the board */
 
-const BOARD_DOWN = Math.max(K.s42End + 4, K.plenty - 14);
+/** The board drops on "plenty", never before "there." has finished (+10 f), and early enough that its four tiles have
+ *  set up (BOARD_DOWN_END - 8 + 3 × 6 + 12) before "short". (D39: it used to start under "there.", 0.7 s after "not
+ *  who" and the "?" landed.) */
+const BOARD_DOWN = clamp(Math.max(K.thereEnd + 10, K.plenty), K.s42End + 4, K.short - 44);
 const BOARD_DOWN_END = BOARD_DOWN + 16;
+const TILES_SET = BOARD_DOWN_END + 22; // VignetteBoard: setup = BOARD_DOWN_END - 8, tile i pops at setup + 6 i over 12 f
+/** The robot keeps pinging (one ping per blob update) until the board starts down; the blob never updates without one. */
+const N_PINGS = Math.max(1, Math.ceil((BOARD_DOWN - 2 - (ECHO + UPD - 10)) / UPD));
+// dev guards (D39): the S8.3 payoff reads before the board covers it, and the board does not cut into the sentence.
+// The minimums hold with S8's narration anywhere from 0.8x to 1.2x (at 1.0x: 56 f, 35 f, 33 f; the old staging gave 21 f).
+if (BOARD_DOWN < K.thereEnd) throw new Error(`S8: the board starts (${BOARD_DOWN}) before "there." ends (${K.thereEnd})`);
+if (TILES_SET > K.short) throw new Error(`S8: the board's tiles finish setting up (${TILES_SET}) after "short" (${K.short})`);
+if (BOARD_DOWN - NOT_WHO < 36) throw new Error(`S8: "not who" is up only ${BOARD_DOWN - NOT_WHO} f before the board (needs >= 36)`);
+if (BOARD_DOWN - WHO < 24) throw new Error(`S8: the robot's "?" is up only ${BOARD_DOWN - WHO} f before the board (needs >= 24)`);
+if (BOARD_DOWN - (REACT + 12) < 20) throw new Error(`S8: the person's listening turn settles only ${BOARD_DOWN - (REACT + 12)} f before the board (needs >= 20)`);
+if (NOT_WHO >= WHO) throw new Error(`S8: "not who" (${NOT_WHO}) must land before the robot's "?" (${WHO})`);
 const BOARD_UP = Math.max(K.s43End + 2, K.early43 + 30);
 const BOARD_UP_END = BOARD_UP + 14;
 const TAG = K.early43;
@@ -307,7 +327,7 @@ const robotAt = (g: number): BotState => {
     const eyes = mixEyes('neutral', 'cautious', sq);
     const look = 0.25 + 0.25 * tw(g, PEER, 10, E.inOut);
     const blink = g >= PEER - 6 && g < PEER - 2 ? 0.15 : 1;
-    const pings = Array.from({length: 6}, (_, k) => ECHO + (k + 1) * UPD - 10);
+    const pings = Array.from({length: N_PINGS}, (_, k) => ECHO + (k + 1) * UPD - 10);
     return {x: d.x, travelled: D1_END.travelled + d.travelled, speed: d.speed, brake: d.brake, eyes, look, blink, pulse: pulseWin(g, pings, 16)};
   }
   // S8.5: creep on carefully; the bumper stops it
@@ -322,7 +342,7 @@ const robotAt = (g: number): BotState => {
 const BLOB_R = 0.52;
 const blobAt = (g: number) => {
   if (g < ECHO) return null;
-  const k = Math.floor((g - ECHO) / UPD);
+  const k = Math.min(N_PINGS, Math.floor((g - ECHO) / UPD));
   const u = E.inOut(clamp01((g - (ECHO + k * UPD)) / 10));
   const zNow = personZ(ECHO + k * UPD - 12);
   const zPrev = k > 0 ? personZ(ECHO + (k - 1) * UPD - 12) : zNow;
@@ -451,7 +471,8 @@ export const S8Warehouse: React.FC = () => {
   const blobS = blobC ? worldToScreen(cam, blobC.x, blobC.y) : null;
   const movingT = after ? 0 : tw(g, CHIP_MOVING, 10, E.linear);
   const slowT = after ? 0 : tw(g, CHIP_SLOW, 10, E.linear);
-  const whoT = after ? 0 : tw(g, WHO, 8, E.linear);
+  const notWhoT = after ? 0 : tw(g, NOT_WHO, 8, E.linear);
+  const bubbleT = after ? 0 : tw(g, WHO, 8, E.linear);
   const towardChip = blobS ? {x: blobS.x + blobRx * cam.zoom * 0.9, y: blobS.y + blobRx * s.floor * cam.zoom * 0.15} : {x: 0, y: 0};
 
   return (
@@ -556,13 +577,13 @@ export const S8Warehouse: React.FC = () => {
             <S8Pill t={slowT} text="slow down" size={CHIP_SIZE} />
           </S8PillRow>
           <S8PillRow x={CHIP3.x} y={CHIP3.y} size={CHIP_SIZE}>
-            <S8Pill t={whoT} text="not who" size={CHIP_SIZE} tone="coral" />
+            <S8Pill t={notWhoT} text="not who" size={CHIP_SIZE} tone="coral" />
           </S8PillRow>
         </>
       )}
-      {!after && whoT > 0.001 && (
+      {!after && bubbleT > 0.001 && (
         <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-          <S8ThinkBubble x={HEAD_MED.x} y={HEAD_MED.y} t={whoT} />
+          <S8ThinkBubble x={HEAD_MED.x} y={HEAD_MED.y} t={bubbleT} />
         </svg>
       )}
 
@@ -679,6 +700,7 @@ export const SFX: Sfx[] = [
   {f: CREEP, kind: 'robot_motor', dur: (BRAKE2 + DEC2 - CREEP) / 30, gain: -5, note: 'eases off'},
   {f: SQUINT, kind: 'robot_beep', gain: -4, note: 'cautious squint'},
   {f: BRAKE2, kind: 'robot_brake', note: 'brakes at the stop line'},
+  {f: NOT_WHO, kind: 'pop_tick', gain: -10, pitch: -3, note: '"not who" pill'},
   {f: WHO, kind: 'pop_tick', gain: -8, note: 'the robot\'s "?" bubble'},
   ...footsteps.filter((f) => f >= TILT2 + TILT2_DUR - 6 && f < BOARD_DOWN).map((f, i): Sfx => ({f, kind: 'footstep_wood', gain: -12, pitch: i % 2 ? -1 : 0, note: 'the person (hard floor, quiet)'})),
   {f: BOARD_DOWN_END - 3, kind: 'paper_slap', gain: -4, note: 'the board lands'},

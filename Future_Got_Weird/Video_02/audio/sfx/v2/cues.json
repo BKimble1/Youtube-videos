@@ -56,7 +56,7 @@
    "gain": -8
   },
   {
-   "f": 300,
+   "f": 295,
    "kind": "paper_slap"
   },
   {
@@ -98,13 +98,13 @@
    "kind": "echo_return"
   },
   {
-   "f": 1158,
+   "f": 1162,
    "kind": "sensor_pulse",
    "gain": -3,
    "pitch": 1
   },
   {
-   "f": 1197,
+   "f": 1200,
    "kind": "block_drop"
   },
   {
@@ -316,7 +316,7 @@
    "gain": -6
   },
   {
-   "f": 3205,
+   "f": 3191,
    "kind": "paper_slide",
    "gain": -4
   },
@@ -349,7 +349,7 @@
    "gain": -3
   },
   {
-   "f": 3405,
+   "f": 3401,
    "kind": "paper_slap"
   },
   {
@@ -423,15 +423,24 @@
    "note": "ruler out to |W1 H|"
   },
   {
-   "f": 4383,
+   "f": 4397,
    "kind": "relief_sigh",
-   "note": "J3a: not which direction"
+   "gain": -3,
+   "dur": 0.6,
+   "note": "J3a: not which direction (in the pause after the word, with the eyes-shut exhale)"
   },
   {
    "f": 4426,
    "kind": "arc_draw",
    "dur": 2.1,
    "note": "arc 1 sweep"
+  },
+  {
+   "f": 4451,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 3,
+   "note": "the sweeping tip passes him: his token pulses"
   },
   {
    "f": 4512,
@@ -481,9 +490,9 @@
    "note": "ruler out to |W4 H|"
   },
   {
-   "f": 4683,
+   "f": 4675,
    "kind": "arc_draw",
-   "dur": 0.7333333333333333,
+   "dur": 1,
    "pitch": 2,
    "note": "arc 2 sweep"
   },
@@ -494,9 +503,9 @@
    "note": "behind the wall: crossed out"
   },
   {
-   "f": 4798,
+   "f": 4812,
    "kind": "uh_oh",
-   "note": "J3b: one place"
+   "note": "J3b: one place (after the word, inside the music stop)"
   },
   {
    "f": 4934,
@@ -546,10 +555,10 @@
    "note": "the assumed object outlined"
   },
   {
-   "f": 5342,
+   "f": 5337,
    "kind": "indicator_no",
    "gain": -4,
-   "note": "candidate mismatch"
+   "note": "candidate mismatch (the ✗ pops)"
   },
   {
    "f": 5377,
@@ -585,20 +594,20 @@
    "note": "assumption card"
   },
   {
-   "f": 5646,
+   "f": 5636,
    "kind": "card_flick",
    "pitch": -2,
    "gain": -3,
    "note": "photo frame lands"
   },
   {
-   "f": 5650,
+   "f": 5651,
    "kind": "stamp_light",
    "gain": -3,
    "note": "crossed out"
   },
   {
-   "f": 5670,
+   "f": 5679,
    "kind": "paper_swish",
    "gain": -6,
    "note": "frame drops away"
@@ -608,8 +617,8 @@
   {
    "f": 5692,
    "kind": "amb_museum",
-   "dur": 47.06666666666667,
-   "note": "museum hall tone, whole scene"
+   "dur": 47.666666666666664,
+   "note": "museum hall tone, whole scene (runs 0.6 s into S6)"
   },
   {
    "f": 5694,
@@ -716,6 +725,13 @@
    "gain": -3,
    "dur": 1.8,
    "note": "the wall clock runs to ~7 minutes"
+  },
+  {
+   "f": 6526,
+   "kind": "chip_pop",
+   "gain": -7,
+   "pitch": -2,
+   "note": "clock readout settles: ≈ 7 min to measure"
   },
   {
    "f": 6626,
@@ -996,19 +1012,33 @@
    "note": "B1 arcs draw"
   },
   {
-   "f": 8746,
+   "f": 8726,
    "kind": "footstep_wood",
-   "gain": -10,
+   "gain": -14,
    "pitch": 1,
-   "note": "he steps; the cloud follows"
+   "note": "he steps to H_B; the cloud follows"
+  },
+  {
+   "f": 8741,
+   "kind": "footstep_wood",
+   "gain": -14,
+   "pitch": -1,
+   "note": "he steps to H_C; the cloud follows"
+  },
+  {
+   "f": 8755,
+   "kind": "footstep_wood",
+   "gain": -14,
+   "pitch": 2,
+   "note": "he steps to H_D; the cloud follows"
   }
  ],
  "S7": [
   {
    "f": 8798,
    "kind": "amb_room",
-   "dur": 39.766666666666666,
-   "note": "S7 board + room"
+   "dur": 40.06666666666667,
+   "note": "S7 boards + room + the authors' card"
   },
   {
    "f": 8908,
@@ -1157,6 +1187,19 @@
    "gain": -8
   },
   {
+   "f": 9497,
+   "kind": "card_flick",
+   "gain": -8,
+   "note": "board turned: the strip faces the wall"
+  },
+  {
+   "f": 9537,
+   "kind": "glint",
+   "gain": -10,
+   "pitch": 3,
+   "note": "the fat return leaves the strip"
+  },
+  {
    "f": 9593,
    "kind": "paper_slide",
    "gain": -3
@@ -1200,7 +1243,7 @@
    "pitch": 0
   },
   {
-   "f": 9703,
+   "f": 9713,
    "kind": "chip_pop",
    "gain": -5
   },
@@ -1246,367 +1289,350 @@
    "pitch": 1
   },
   {
-   "f": 9832,
+   "f": 9853,
    "kind": "paper_slide",
    "gain": -4,
    "note": "film strip drops in"
   },
   {
-   "f": 9844,
+   "f": 9865,
    "kind": "film_tick",
    "gain": -9,
    "pitch": -1
   },
   {
-   "f": 9859,
+   "f": 9880,
    "kind": "film_tick",
    "gain": -9,
    "pitch": 0
   },
   {
-   "f": 9874,
+   "f": 9895,
    "kind": "film_tick",
    "gain": -9,
    "pitch": 1
   },
   {
-   "f": 9889,
+   "f": 9910,
    "kind": "film_tick",
    "gain": -9,
    "pitch": -1
+  },
+  {
+   "f": 9925,
+   "kind": "film_tick",
+   "gain": -9,
+   "pitch": 0
+  },
+  {
+   "f": 9940,
+   "kind": "film_tick",
+   "gain": -9,
+   "pitch": 1
+  },
+  {
+   "f": 9955,
+   "kind": "film_tick",
+   "gain": -9,
+   "pitch": -1
+  },
+  {
+   "f": 9970,
+   "kind": "film_tick",
+   "gain": -9,
+   "pitch": 0
+  },
+  {
+   "f": 9985,
+   "kind": "film_tick",
+   "gain": -9,
+   "pitch": 1
+  },
+  {
+   "f": 9875,
+   "kind": "footstep_wood",
+   "gain": -7,
+   "pitch": 0
+  },
+  {
+   "f": 9884,
+   "kind": "footstep_wood",
+   "gain": -7,
+   "pitch": 1
+  },
+  {
+   "f": 9892,
+   "kind": "footstep_wood",
+   "gain": -7,
+   "pitch": 0
+  },
+  {
+   "f": 9920,
+   "kind": "footstep_wood",
+   "gain": -7,
+   "pitch": 1
+  },
+  {
+   "f": 9926,
+   "kind": "footstep_wood",
+   "gain": -7,
+   "pitch": 0
+  },
+  {
+   "f": 9954,
+   "kind": "footstep_wood",
+   "gain": -7,
+   "pitch": 1
+  },
+  {
+   "f": 9960,
+   "kind": "footstep_wood",
+   "gain": -7,
+   "pitch": 0
   },
   {
    "f": 9904,
-   "kind": "film_tick",
-   "gain": -9,
-   "pitch": 0
-  },
-  {
-   "f": 9919,
-   "kind": "film_tick",
-   "gain": -9,
-   "pitch": 1
-  },
-  {
-   "f": 9934,
-   "kind": "film_tick",
-   "gain": -9,
-   "pitch": -1
-  },
-  {
-   "f": 9949,
-   "kind": "film_tick",
-   "gain": -9,
-   "pitch": 0
-  },
-  {
-   "f": 9964,
-   "kind": "film_tick",
-   "gain": -9,
-   "pitch": 1
-  },
-  {
-   "f": 9979,
-   "kind": "film_tick",
-   "gain": -9,
-   "pitch": -1
-  },
-  {
-   "f": 9840,
-   "kind": "footstep_wood",
-   "gain": -7,
-   "pitch": 0
-  },
-  {
-   "f": 9850,
-   "kind": "footstep_wood",
-   "gain": -7,
-   "pitch": 1
-  },
-  {
-   "f": 9861,
-   "kind": "footstep_wood",
-   "gain": -7,
-   "pitch": 0
-  },
-  {
-   "f": 9869,
-   "kind": "footstep_wood",
-   "gain": -7,
-   "pitch": 1
-  },
-  {
-   "f": 9888,
-   "kind": "footstep_wood",
-   "gain": -7,
-   "pitch": 0
-  },
-  {
-   "f": 9897,
-   "kind": "footstep_wood",
-   "gain": -7,
-   "pitch": 1
-  },
-  {
-   "f": 9905,
-   "kind": "footstep_wood",
-   "gain": -7,
-   "pitch": 0
-  },
-  {
-   "f": 9924,
-   "kind": "footstep_wood",
-   "gain": -7,
-   "pitch": 1
-  },
-  {
-   "f": 9933,
-   "kind": "footstep_wood",
-   "gain": -7,
-   "pitch": 0
-  },
-  {
-   "f": 9941,
-   "kind": "footstep_wood",
-   "gain": -7,
-   "pitch": 1
-  },
-  {
-   "f": 9867,
    "kind": "chip_pop",
    "gain": -3
   },
   {
-   "f": 9991,
+   "f": 10000,
    "kind": "amb_museum",
-   "dur": 5.4
+   "dur": 5.266666666666667
   },
   {
-   "f": 9993,
+   "f": 10002,
    "kind": "shelf_creak",
    "gain": -6
   },
   {
-   "f": 10006,
+   "f": 10014,
    "kind": "thud_soft",
    "gain": -3
   },
   {
-   "f": 10051,
+   "f": 10055,
    "kind": "thud_soft",
    "pitch": -2
   },
   {
-   "f": 10109,
+   "f": 10063,
    "kind": "chip_pop",
    "gain": -2
   }
  ],
  "S8": [
   {
-   "f": 10141,
+   "f": 10146,
    "kind": "amb_warehouse",
    "dur": 34.6,
    "note": "warehouse room tone"
   },
   {
-   "f": 10161,
+   "f": 10166,
    "kind": "sensor_pulse",
    "gain": -8,
    "note": "idle ping before the roll"
   },
   {
-   "f": 10187,
+   "f": 10192,
    "kind": "sensor_pulse",
    "gain": -9,
    "pitch": 1,
    "note": "second idle ping"
   },
   {
-   "f": 10215,
+   "f": 10220,
    "kind": "robot_motor",
    "dur": 2.6333333333333333,
    "note": "R3 roll toward the corner"
   },
   {
-   "f": 10276,
+   "f": 10281,
    "kind": "robot_brake",
    "gain": -5,
    "note": "R3 slows to a stop"
   },
   {
-   "f": 10375,
+   "f": 10381,
    "kind": "sensor_pulse",
    "gain": -3,
    "note": "ping 1 (plan)"
   },
   {
-   "f": 10396,
+   "f": 10402,
    "kind": "bounce_tick",
    "gain": -4,
    "note": "pulses reach the junction wall"
   },
   {
-   "f": 10406,
+   "f": 10412,
    "kind": "sensor_pulse",
    "gain": -3,
    "pitch": 1,
    "note": "ping 2 (plan)"
   },
   {
-   "f": 10428,
+   "f": 10434,
    "kind": "bounce_tick",
    "gain": -4,
    "pitch": 2,
    "note": "wall"
   },
   {
-   "f": 10444,
+   "f": 10450,
    "kind": "bounce_tick",
    "gain": -6,
    "pitch": -2,
    "note": "person"
   },
   {
-   "f": 10460,
+   "f": 10466,
    "kind": "bounce_tick",
    "gain": -9,
    "pitch": 4,
    "note": "wall, return"
   },
   {
-   "f": 10482,
+   "f": 10488,
    "kind": "echo_return",
    "gain": -2,
    "note": "echo back: the blob appears"
   },
   {
-   "f": 10506,
+   "f": 10512,
    "kind": "robot_motor",
    "dur": 1.9333333333333333,
    "gain": -5,
    "note": "eases off"
   },
   {
-   "f": 10547,
+   "f": 10553,
    "kind": "robot_beep",
    "gain": -4,
    "note": "cautious squint"
   },
   {
-   "f": 10555,
+   "f": 10561,
    "kind": "robot_brake",
    "note": "brakes at the stop line"
   },
   {
-   "f": 10618,
+   "f": 10602,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": -3,
+   "note": "\"not who\" pill"
+  },
+  {
+   "f": 10623,
    "kind": "pop_tick",
    "gain": -8,
    "note": "the robot's \"?\" bubble"
   },
   {
-   "f": 10548,
+   "f": 10554,
    "kind": "footstep_wood",
    "gain": -12,
    "pitch": 0,
    "note": "the person (hard floor, quiet)"
   },
   {
-   "f": 10570,
+   "f": 10576,
    "kind": "footstep_wood",
    "gain": -12,
    "pitch": -1,
    "note": "the person (hard floor, quiet)"
   },
   {
-   "f": 10652,
+   "f": 10671,
    "kind": "paper_slap",
    "gain": -4,
    "note": "the board lands"
   },
   {
-   "f": 10706,
+   "f": 10711,
    "kind": "sensor_pulse",
    "gain": -7,
    "note": "tile 1 pulses"
   },
   {
-   "f": 10771,
+   "f": 10777,
    "kind": "bounce_tick",
    "gain": -4,
    "pitch": 3,
    "note": "tile 2 shiny bounce"
   },
   {
-   "f": 10802,
+   "f": 10807,
    "kind": "sun_glare",
    "gain": -4,
    "note": "tile 3 sun floods the sensor"
   },
   {
-   "f": 10835,
+   "f": 10840,
    "kind": "prob_tick",
    "gain": -6,
    "note": "tile 4 numbers pour in"
   },
   {
-   "f": 10847,
+   "f": 10852,
    "kind": "prob_tick",
    "gain": -6,
    "pitch": 2
   },
   {
-   "f": 10861,
+   "f": 10867,
    "kind": "prob_tick",
    "gain": -6,
    "pitch": 4
   },
   {
-   "f": 10941,
+   "f": 10947,
    "kind": "stamp_light",
    "gain": -2,
    "note": "early-stage prototype tag"
   },
   {
-   "f": 10977,
+   "f": 10982,
    "kind": "paper_lift",
    "gain": -5,
    "note": "the board lifts"
   },
   {
-   "f": 10993,
+   "f": 10999,
    "kind": "robot_motor",
-   "dur": 1.7,
+   "dur": 1.6666666666666667,
    "gain": -6,
    "note": "creeps on"
   },
   {
-   "f": 11044,
+   "f": 11049,
    "kind": "thud_soft",
    "gain": -2,
    "note": "bumper meets the carton"
   },
   {
-   "f": 11045,
+   "f": 11050,
    "kind": "robot_brake",
    "gain": -6
   },
   {
-   "f": 11056,
+   "f": 11061,
    "kind": "robot_beep",
    "gain": -8,
    "pitch": -2,
    "note": "small oops"
   },
   {
-   "f": 11058,
+   "f": 11063,
    "kind": "robot_motor",
    "dur": 0.5,
    "gain": -10,
    "note": "backs off the carton"
   },
   {
-   "f": 11106,
+   "f": 11112,
    "kind": "sensor_pulse",
    "gain": -7,
    "note": "one more ping on \"clue\""
@@ -1614,241 +1640,241 @@
  ],
  "S9": [
   {
-   "f": 11173,
+   "f": 11178,
    "kind": "amb_room",
-   "dur": 18.433333333333334,
+   "dur": 19.266666666666666,
    "gain": -2,
    "note": "room tone until the end card"
   },
   {
-   "f": 11233,
+   "f": 11239,
    "kind": "cloth_rustle",
    "gain": -8
   },
   {
-   "f": 11307,
+   "f": 11312,
    "kind": "sensor_hum",
    "dur": 2.7,
    "gain": -9
   },
   {
-   "f": 11309,
+   "f": 11314,
    "kind": "sensor_pulse"
   },
   {
-   "f": 11321,
+   "f": 11326,
    "kind": "sensor_pulse",
    "gain": -3,
    "pitch": 1
   },
   {
-   "f": 11324,
+   "f": 11329,
    "kind": "bounce_tick",
    "pitch": 2
   },
   {
-   "f": 11337,
+   "f": 11342,
    "kind": "bounce_tick",
    "pitch": 3,
    "gain": -2
   },
   {
-   "f": 11341,
+   "f": 11346,
    "kind": "bounce_tick",
    "pitch": -2,
    "gain": -3
   },
   {
-   "f": 11342,
+   "f": 11347,
    "kind": "cloth_rustle",
    "gain": -7
   },
   {
-   "f": 11353,
+   "f": 11358,
    "kind": "bounce_tick",
    "pitch": -1,
    "gain": -5
   },
   {
-   "f": 11373,
+   "f": 11378,
    "kind": "echo_return"
   },
   {
-   "f": 11384,
+   "f": 11389,
    "kind": "echo_return",
    "gain": -3,
    "pitch": 1
   },
   {
-   "f": 11404,
+   "f": 11409,
    "kind": "pop_tick",
    "gain": -6
   },
   {
-   "f": 11463,
+   "f": 11468,
    "kind": "readout_beep"
   },
   {
-   "f": 11512,
+   "f": 11518,
    "kind": "cloth_rustle",
    "gain": -6
   },
   {
-   "f": 11531,
+   "f": 11537,
    "kind": "footstep_wood",
    "gain": -5,
    "pitch": 0
   },
   {
-   "f": 11539,
+   "f": 11545,
    "kind": "footstep_wood",
    "gain": -6,
    "pitch": -1
   },
   {
-   "f": 11548,
+   "f": 11554,
    "kind": "footstep_wood",
    "gain": -5,
    "pitch": 0.5
   },
   {
-   "f": 11556,
+   "f": 11562,
    "kind": "footstep_wood",
    "gain": -6,
    "pitch": -0.5
   },
   {
-   "f": 11562,
+   "f": 11568,
    "kind": "footstep_wood",
    "gain": -5,
    "pitch": 0
   },
   {
-   "f": 11570,
+   "f": 11576,
    "kind": "partition_thunk",
    "gain": -9,
    "note": "hands on the screen"
   },
   {
-   "f": 11580,
+   "f": 11586,
    "kind": "partition_scrape",
    "dur": 0.9
   },
   {
-   "f": 11585,
+   "f": 11591,
    "kind": "footstep_wood",
    "gain": -8,
    "pitch": -1
   },
   {
-   "f": 11593,
+   "f": 11599,
    "kind": "footstep_wood",
    "gain": -8,
    "pitch": 0
   },
   {
-   "f": 11601,
+   "f": 11607,
    "kind": "footstep_wood",
    "gain": -8,
    "pitch": -1
   },
   {
-   "f": 11607,
+   "f": 11613,
    "kind": "partition_thunk",
    "gain": 3,
    "note": "far end meets the wall"
   },
   {
-   "f": 11609,
+   "f": 11615,
    "kind": "partition_wobble",
    "gain": -6
   },
   {
-   "f": 11624,
+   "f": 11630,
    "kind": "sensor_pulse",
    "gain": -2
   },
   {
-   "f": 11630,
+   "f": 11636,
    "kind": "footstep_wood",
    "gain": -7,
    "pitch": 0.5
   },
   {
-   "f": 11634,
+   "f": 11640,
    "kind": "bounce_tick",
    "pitch": -4,
    "gain": -6,
    "note": "stopped at the partition"
   },
   {
-   "f": 11636,
+   "f": 11642,
    "kind": "footstep_wood",
    "gain": -7,
    "pitch": -0.5
   },
   {
-   "f": 11639,
+   "f": 11645,
    "kind": "bounce_tick",
    "pitch": 2,
    "gain": -4
   },
   {
-   "f": 11641,
+   "f": 11647,
    "kind": "footstep_wood",
    "gain": -7,
    "pitch": 0.5
   },
   {
-   "f": 11645,
+   "f": 11651,
    "kind": "readout_off"
   },
   {
-   "f": 11646,
+   "f": 11652,
    "kind": "cloth_rustle",
    "gain": -5
   },
   {
-   "f": 11657,
+   "f": 11658,
    "kind": "footstep_wood",
    "gain": -9,
    "pitch": 1
   },
   {
-   "f": 11663,
-   "kind": "smug_exhale"
-  },
-  {
-   "f": 11663,
+   "f": 11666,
    "kind": "footstep_wood",
    "gain": -9,
    "pitch": 1.5
   },
   {
-   "f": 11670,
-   "kind": "footstep_wood",
-   "gain": -9,
-   "pitch": 1
+   "f": 11669,
+   "kind": "smug_exhale"
   },
   {
    "f": 11674,
    "kind": "footstep_wood",
    "gain": -9,
+   "pitch": 1
+  },
+  {
+   "f": 11680,
+   "kind": "footstep_wood",
+   "gain": -9,
    "pitch": 1.5
   },
   {
-   "f": 11679,
+   "f": 11685,
    "kind": "cloth_rustle",
    "gain": -9
   },
   {
-   "f": 11693,
+   "f": 11699,
    "kind": "uh_oh",
    "gain": -2,
    "note": "J4: he opens his eyes and she is right there"
   },
   {
-   "f": 11736,
+   "f": 11766,
    "kind": "logo_hit"
   }
  ]

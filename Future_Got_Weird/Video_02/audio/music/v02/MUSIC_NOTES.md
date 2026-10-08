@@ -2,7 +2,7 @@
 
 Original score composed in code (`tools/make_music_v02.py`, adapted from Video 01's `make_music_v2.py`), rendered with FluidSynth 2.3.4 and the MuseScore General SoundFont (MIT). Instrumental; no existing themes; no Video 01 material reused. 100 BPM throughout (bar = 2.4 s). Cues come from the measured timeline (`source/src/data/timeline.json`), so re-running the tool after a timeline change moves every section, drop and stop with the words.
 
-Files: `music_bed.wav` (48 kHz stereo 24-bit, unducked, 403.033 s = timeline), `stems/*.wav` (post-dynamics; they sum to the bed), `plan.json` (cues, segments, windows), `measure.json`.
+Files: `music_bed.wav` (48 kHz stereo 24-bit, unducked, 404.000 s = timeline), `stems/*.wav` (post-dynamics; they sum to the bed), `plan.json` (cues, segments, windows), `measure.json`.
 
 ## Structure
 
@@ -20,17 +20,17 @@ Files: `music_bed.wav` (48 kHz stereo 24-bit, unducked, 403.033 s = timeline), `
 | clock | 2:11.80–3:04.20 | S4 | clockwork marimba, one layer per arc | -3.0 | -3.0 |
 | resolve | 3:04.20–3:09.73 | S4 | resolution chords (Cmaj7 -> Gadd9) | -4.0 | -4.0 |
 | museum | 3:09.73–3:50.07 | S5 | walking pizzicato, slow strings, a clarinet line answered by bassoon | -2.5 | -2.5 |
-| turn | 3:50.07–3:56.80 | S5 | thins to a held string chord | -6.0 | -6.1 |
+| turn | 3:50.07–3:56.80 | S5 | thins to a held string chord (F7sus, then Asus held through the S6 cut; D pickup on the cut) | -6.0 | -6.1 |
 | nimble | 3:56.80–4:41.13 | S6 | nimble marimba 16ths, pizzicato, shaker, soft kick | -1.5 | -1.5 |
 | lift | 4:41.13–4:53.27 | S6 | lift: up a step to E, strings + vibes | -0.5 | -0.5 |
-| evidence | 4:53.27–5:38.23 | S7 | sparse vibes and guitar | -7.5 | -7.5 |
-| groove | 5:38.23–6:06.30 | S8 | mechanical pizzicato 8ths, hats, marimba clicks | -3.0 | -3.0 |
-| groove_out | 6:06.30–6:12.43 | S8 | groove thins, strings | -5.5 | -5.5 |
-| callback | 6:12.43–6:15.10 | S9 | quiet callback of the tiptoe figure | -6.0 | -6.0 |
-| build | 6:15.10–6:23.10 | S9 | gentle build, one layer per bar | -2.0 | -2.0 |
-| hold | 6:23.10–6:26.07 | S9 | held A7sus question under s47 | -6.0 | -5.9 |
-| gag | 6:26.07–6:30.57 | S9 | STOP: silent gag | — | — |
-| end | 6:30.57–6:43.03 | S9 | warm D-major resolution, fades to zero at the end | -3.0 | -3.0 |
+| evidence | 4:53.27–5:38.40 | S7 | sparse vibes and guitar | -7.5 | -7.5 |
+| groove | 5:38.40–6:06.47 | S8 | mechanical pizzicato 8ths, hats, marimba clicks | -3.0 | -3.0 |
+| groove_out | 6:06.47–6:12.60 | S8 | groove thins, strings | -5.5 | -5.5 |
+| callback | 6:12.60–6:15.30 | S9 | quiet callback of the tiptoe figure | -6.0 | -6.0 |
+| build | 6:15.30–6:23.27 | S9 | gentle build, one layer per bar | -2.0 | -2.0 |
+| hold | 6:23.27–6:26.27 | S9 | held A7sus question under s47 | -6.0 | -6.0 |
+| gag | 6:26.27–6:31.57 | S9 | STOP: silent gag | — | — |
+| end | 6:31.57–6:44.00 | S9 | warm D-major resolution, fades to zero at the end | -3.0 | -3.0 |
 
 LU = relative to the reference level (-20.0 LUFS in the delivered bed), measured outside the drop/stop/dip windows. The mix (`mix_v2.py` pattern) normalises the bed to -27 LUFS integrated and ducks it a further 9 dB under speech, so these are the relative moves the viewer hears.
 
@@ -41,10 +41,25 @@ LU = relative to the reference level (-20.0 LUFS in the delivered bed), measured
 | reveal: s03 "And yet... this is real data" (re-enters softly on s04) | drop | 0:09.27–0:20.90 | 11.63 s | -106.0 dBFS | -27.0 dBFS |
 | J2: s10 "simply visible" (resumes on s11) | stop | 1:12.05–1:13.33 | 1.28 s | digital silence | -23.0 dBFS |
 | J3: s20 "one place" (sound effect only, resumes on s21) | stop | 2:39.45–2:41.23 | 1.78 s | digital silence | -26.1 dBFS |
-| s42 "slow down" (the groove brakes, resumes on s43) | dip | 5:51.97–5:54.83 | 2.87 s | -37.3 dBFS | -24.2 dBFS |
-| J4: silent gag after s47 (complete stop until s48) | stop | 6:26.07–6:30.47 | 4.40 s | digital silence | -26.0 dBFS |
+| s42 "slow down" (the groove brakes, resumes on s43) | dip | 5:52.13–5:55.00 | 2.87 s | -38.9 dBFS | -24.5 dBFS |
+| J4: silent gag after s47 (complete stop until s48) | stop | 6:26.27–6:31.47 | 5.20 s | digital silence | -25.9 dBFS |
 
 drop = no new notes and -24 dB (near-silence; measured after a 0.6 s tail), then a soft re-entry on s04 (-9 dB easing to 0 over 3 s, with the first bars played softer); stop = notes released, the bed muted with an 80 ms ramp (complete silence); dip = the groove stops, one held chord at -8 dB.
+
+## Act turn (S5 -> S6) and scene cuts
+
+The turn (s29) thins to a held F7sus from 3:50.40, which moves to Asus (V of D; Eb->D, Bb->A) in the bar the S6 cut falls in (3:55.20) and is held through the cut. The S6 pickup lands on the cut (3:56.80, frame 7104): pizzicato and bass D, then a marimba run of 16ths on D, F#, A, D with a soft shaker into the first nimble downbeat (3:57.60, on the bar grid). First onset +0.000 s from the cut; the quietest 100 ms of the bed is -35.0 dBFS from the cut bar to the cut and -31.0 dBFS from 0.8 s before the cut to the downbeat (checked against -40 dBFS on every run; the ambience across the cut is the scenes' job).
+
+| Cut | Time | Quietest 100 ms within 0.8 s |
+|---|---|---|
+| S1->S2 | 1:00.87 | -34.3 dBFS at 1:01.12 |
+| S2->S3 | 1:35.80 | -58.2 dBFS at 1:35.90 |
+| S3->S4 | 2:11.80 | -38.4 dBFS at 2:12.50 |
+| S4->S5 | 3:09.73 | -31.3 dBFS at 3:10.43 |
+| S5->S6 | 3:56.80 | -31.0 dBFS at 3:56.30 |
+| S6->S7 | 4:53.27 | -36.5 dBFS at 4:53.97 |
+| S7->S8 | 5:38.40 | -49.0 dBFS at 5:38.30 |
+| S8->S9 | 6:12.60 | -36.8 dBFS at 6:11.90 |
 
 ## Motifs and cues
 
@@ -63,18 +78,18 @@ Melodic notes stay at or below B5 (MIDI 83 max); ticks sit at 108, 110 (above 4 
 
 ## Measured
 
-Integrated -22.96 LUFS (unducked, before the mix); sample peak -6.81 dBFS; true peak -6.81 dBTP (4x); 0 clipped samples; 19345600 samples = timeline 19345600 (match).
+Integrated -22.97 LUFS (unducked, before the mix); sample peak -6.81 dBFS; true peak -6.81 dBTP (4x); 0 clipped samples; 19392000 samples = timeline 19392000 (match).
 
 | Scene | Time | LUFS | Rel. LU | After mix normalisation (-27) |
 |---|---|---|---|---|
-| S1 | 0:00.00–1:00.87 | -23.1 | -0.2 | -27.2 |
+| S1 | 0:00.00–1:00.87 | -23.1 | -0.1 | -27.1 |
 | S2 | 1:00.87–1:35.80 | -21.8 | +1.1 | -25.9 |
 | S3 | 1:35.80–2:11.80 | -29.9 | -6.9 | -33.9 |
 | S4 | 2:11.80–3:09.73 | -23.1 | -0.1 | -27.1 |
-| S5 | 3:09.73–3:56.80 | -22.7 | +0.2 | -26.8 |
+| S5 | 3:09.73–3:56.80 | -22.8 | +0.1 | -26.9 |
 | S6 | 3:56.80–4:53.27 | -21.3 | +1.7 | -25.3 |
-| S7 | 4:53.27–5:38.23 | -27.5 | -4.5 | -31.6 |
-| S8 | 5:38.23–6:12.43 | -23.4 | -0.5 | -27.5 |
-| S9 | 6:12.43–6:43.03 | -23.0 | -0.1 | -27.1 |
+| S7 | 4:53.27–5:38.40 | -27.5 | -4.5 | -31.5 |
+| S8 | 5:38.40–6:12.60 | -23.4 | -0.5 | -27.5 |
+| S9 | 6:12.60–6:44.00 | -23.1 | -0.1 | -27.1 |
 
 Re-run: `python3 tools/make_music_v02.py` (deterministic; about three minutes).

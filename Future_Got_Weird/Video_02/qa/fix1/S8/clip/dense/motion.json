@@ -1,0 +1,54 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S8": {
+   "seconds": 34.2,
+   "mean_energy": 1.401,
+   "still_seconds": 5.6,
+   "still_share": 0.165,
+   "longest_still_s": 1.4
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S8",
+   "from": 10180,
+   "to": 10220,
+   "seconds": 1.37,
+   "t": "5:39.3",
+   "spoken": "might this be good for? Picture"
+  },
+  {
+   "scene": "S8",
+   "from": 10306,
+   "to": 10329,
+   "seconds": 0.8,
+   "t": "5:43.5",
+   "spoken": "warehouse corner. With a suitable"
+  },
+  {
+   "scene": "S8",
+   "from": 10901,
+   "to": 10942,
+   "seconds": 1.4,
+   "t": "6:03.4",
+   "spoken": "hardware. The researchers call it an early-stage"
+  },
+  {
+   "scene": "S8",
+   "from": 10949,
+   "to": 10982,
+   "seconds": 1.13,
+   "t": "6:05.0",
+   "spoken": "early-stage prototype."
+  },
+  {
+   "scene": "S8",
+   "from": 11145,
+   "to": 11172,
+   "seconds": 0.93,
+   "t": "6:11.5",
+   "spoken": "not a safety system."
+  }
+ ]
+}

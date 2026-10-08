@@ -35,6 +35,14 @@ def blocked(p, q):
 assert blocked(SA, HA) and blocked(OP, HA), "the operator and the sensor must not see the hidden person"
 for w in R["wall_points"]["frame_A"]:
     assert not blocked(SA, w) and not blocked(w, HA), f"path via {w} touches the partition"
+# S6.6's illustrative frame-to-frame track (review r1 D08, lead L12): H_A -> H_B -> H_C -> H_D, checked by geometry_check
+TR = R["hidden_track_illustrative_S6"]
+assert TR["all_pass"], "geometry_check's checks for the illustrative S6.6 track (H_C, H_D) failed"
+for name in ("H_C", "H_D"):
+    H = TR[name]
+    assert blocked(SA, H) and blocked(OP, H), f"the operator or the sensor would see the hidden person at {name}"
+    for w in R["wall_points"]["frame_A"]:
+        assert not blocked(w, H), f"path via {w} to {name} touches the partition"
 
 out = {
     "note": "Synced from research/geometry/layout.json by tools/sync_layout.py. ILLUSTRATIVE room (metres): physically "
@@ -54,6 +62,14 @@ out = {
         "B1": {"sensor": SB, "aimX": sen["frame_B1_moved"]["aim_x"], "zoneEdgesX": sen["frame_B1_moved"]["edge_x"], "wallX": sen["frame_B1_moved"]["centre_x"]},
     },
     "hiddenB": {"x": HB[0], "z": HB[1], "dt_s": hp["dt_A_to_B2_s"]},
+    "hiddenTrack": {
+        "note": "ILLUSTRATIVE S6.6 frame-to-frame track for the still-sensor panel (film review r1 D08): hidden (H_A) -> "
+                "hiddenB (H_B) -> H_C -> H_D, one position per step, bending toward the wall. Not measured, not from the "
+                "paper; checked in research/geometry/geometry_check.py (hidden from the sensor, every wall leg clears the "
+                "partition).",
+        "H_C": {"x": TR["H_C"][0], "z": TR["H_C"][1]},
+        "H_D": {"x": TR["H_D"][0], "z": TR["H_D"][1]},
+    },
     "bandHalfWidth": {"oneBin": R["band_half_width_m"]["default_1_bin"], "twoBins": R["band_half_width_m"]["alt_2_bins"]},
     "confocalA": R["confocal"]["frame_A_H_A"],
 }

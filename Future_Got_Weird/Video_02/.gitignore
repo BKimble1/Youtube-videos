@@ -38,3 +38,6 @@ research/*/evidence/*.html
 qa/scenes/
 qa/cuts/*/
 qa/pathfix_*/
+# fix-round working renders (stills, clips); the contact sheets are kept
+qa/fix1/**/*.png
+qa/fix1/**/*.mp4

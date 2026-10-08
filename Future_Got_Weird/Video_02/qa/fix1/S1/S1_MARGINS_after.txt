@@ -1,0 +1,46 @@
+{
+ "glowHeadPx": 27.65741081908345,
+ "glowPencilPx": 36.8045676324783,
+ "glowShown": 0.9548611111111112,
+ "fanHeadPx": 24.256651669740677,
+ "fanPencilPx": 45.910856785520615,
+ "leadTripodPx": 55.70898803684436,
+ "emerge": {
+  "s15": 8,
+  "race": 4
+ },
+ "boardHit": 295,
+ "card": {
+  "x": 1120,
+  "y": 74,
+  "w": 704,
+  "h": 573
+ },
+ "tofBottom": 931.96,
+ "tapeTurn": 1713,
+ "pathMinBelowCornerPx": 48.886371263952256,
+ "pathMinFrontPx": 81.19331779215327,
+ "spotClearPx": 56.85581259429454,
+ "gapLabel": {
+  "partition": 13.349683675915003,
+  "herHead": 30.216043815016747,
+  "wallSpot": 96.950463950634,
+  "tripod": 255.8768596421046
+ },
+ "cardHim": 29.815528727971014,
+ "labelGaps": {
+  "cardBlocked": 352.4695448105306,
+  "cardGapLabel": 540,
+  "cardChips": 143,
+  "gapBlocked": 368.05264059344836
+ },
+ "card2Gaps": {
+  "raceCard": 42,
+  "her": 408.2565523016674
+ },
+ "chipBottom": 911.66,
+ "tapErr": 1.1368683772161603e-13,
+ "partitionTopMinPx": 54.32000000000005,
+ "patchMinM": 0.2975000000000002
+}
+[{"f":0,"kind":"amb_room","dur":60.86666666666667,"gain":-2},{"f":12,"kind":"tiptoe_step","pitch":0,"gain":-1},{"f":24,"kind":"tiptoe_step","pitch":-1,"gain":-2},{"f":36,"kind":"tiptoe_step","pitch":1,"gain":-1},{"f":48,"kind":"tiptoe_step","pitch":-0.5,"gain":-2},{"f":54,"kind":"tiptoe_step","pitch":0.5,"gain":-4},{"f":56,"kind":"cloth_rustle","gain":-6},{"f":125,"kind":"smug_exhale"},{"f":171,"kind":"readout_beep"},{"f":173,"kind":"sensor_hum","dur":3.2,"gain":-8},{"f":295,"kind":"paper_slap"},{"f":615,"kind":"uh_oh"},{"f":731,"kind":"partition_thunk"},{"f":734,"kind":"partition_wobble","gain":-8},{"f":907,"kind":"sensor_pulse"},{"f":954,"kind":"bounce_tick","pitch":2},{"f":1008,"kind":"bounce_tick","pitch":-2,"gain":-3},{"f":1061,"kind":"bounce_tick","pitch":3,"gain":-7},{"f":1108,"kind":"echo_return"},{"f":1162,"kind":"sensor_pulse","gain":-3,"pitch":1},{"f":1200,"kind":"block_drop"},{"f":1242,"kind":"block_drop","pitch":-3,"gain":-5},{"f":1347,"kind":"pop_tick","gain":-4},{"f":1374,"kind":"indicator_no"},{"f":1397,"kind":"card_flick","gain":-4},{"f":1525,"kind":"readout_beep","pitch":2,"gain":-3},{"f":1545,"kind":"ruler_extend","dur":0.8,"gain":-4},{"f":1700,"kind":"ruler_extend","dur":0.8333333333333334,"gain":-3,"pitch":-2},{"f":1793,"kind":"cloth_rustle","gain":-8}]

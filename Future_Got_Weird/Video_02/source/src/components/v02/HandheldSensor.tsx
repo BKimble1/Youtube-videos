@@ -15,6 +15,13 @@ import {handWorld2, reach2, type Pose2, type RigPlace} from './Cast2';
  * that points along `facing`.
  *
  * Both are pure functions of their props: animate `reveal`, `led`, `firing` and `bars` from the frame.
+ *
+ * Opt-in `burst` / `burstRing` (both default off, so nothing changes unless a scene passes them): a visible flash AT the
+ * lens the moment a pulse is fired, before the pulse itself clears the box (review r1 D15: the sensor_pulse sound is on
+ * the fire frame, while the pulse head is hidden inside the box for a few frames). `burst` 0..1 is a flat saffron halo
+ * behind the lens rim (it shows over the box's top edge, i.e. from the far, working face); `burstRing` 0..1 is the phase
+ * of a thin ring expanding from that lens and fading as it goes (animate it 0 -> 1 over ~6-10 frames from the fire
+ * frame). Hold `burst` at 1 until the pulse is out of the box, then fade it over a few frames.
  */
 
 /* ------------------------------------------------------------------ geometry (character-local px, hand at 0,0) */
@@ -192,6 +199,13 @@ export type HandheldSensorProps = {
   ledColor?: string;
   /** 0..1: the emitter rim over the top edge brightens (a pulse leaving the far face). */
   firing?: number;
+  /** Opt-in 0..1 (default 0 = none): a saffron flash halo behind a lens rim, rx 13 + 16 * burst, opacity 0.7 * burst. */
+  burst?: number;
+  /** Opt-in 0..1 phase (default none): a thin saffron ring expanding from that lens (r 13 -> 47) and fading out. */
+  burstRing?: number;
+  /** Which lens rim flashes: 'right' (default; the dark rim, where the pulses come out over the box in the room
+   *  views) or 'left' (the coral rim that `firing` tints). */
+  burstLens?: 'right' | 'left';
   /** Skin of the holding hand: draws fingers wrapped round the grip in front of it. Omit for a free-standing prop. */
   skin?: string;
   scale?: number;
@@ -202,7 +216,7 @@ export type HandheldSensorProps = {
 };
 
 /** The held sensor (character-local, hand at 0,0). See the file header. */
-export const HandheldSensor: React.FC<HandheldSensorProps> = ({bars, bumpFrom, reveal = 1, bumpHighlight = 0, screen, led = 1, ledColor = C.saffron, firing = 0, skin, scale = 1, rotate = 0, mirrored = false}) => {
+export const HandheldSensor: React.FC<HandheldSensorProps> = ({bars, bumpFrom, reveal = 1, bumpHighlight = 0, screen, led = 1, ledColor = C.saffron, firing = 0, burst = 0, burstRing, burstLens = 'right', skin, scale = 1, rotate = 0, mirrored = false}) => {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const b = SENSOR.box;
   const d = SENSOR.depth;
@@ -214,14 +228,22 @@ export const HandheldSensor: React.FC<HandheldSensorProps> = ({bars, bumpFrom, r
   // top and side faces of the box (slightly oversized under the rounded front face)
   const top = `M ${b.x0 + 2} ${b.y0 + 4} L ${b.x0 + 2 + d.dx} ${b.y0 + d.dy} L ${b.x1 + d.dx} ${b.y0 + d.dy} L ${b.x1 - 2} ${b.y0 + 4} Z`;
   const side = `M ${b.x1 - 4} ${b.y0 + 2} L ${b.x1 + d.dx} ${b.y0 + d.dy} L ${b.x1 + d.dx} ${b.y1 + d.dy - 2} L ${b.x1 - 4} ${b.y1 - 2} Z`;
+  // opt-in burst at a lens rim (centre of the rim ellipse below)
+  const bu = clamp01(burst);
+  const lens = {x: b.x0 + (burstLens === 'left' ? 24 : 56) + d.dx, y: b.y0 + d.dy - 1};
+  const ring = burstRing === undefined ? -1 : clamp01(burstRing);
   return (
     <g transform={`rotate(${f2(rotate)}) scale(${f2(scale)})`}>
       {/* grip (runs from the fist up into the box), with a coral trigger */}
       <rect x={g.x0} y={g.y0} width={g.x1 - g.x0} height={g.y1 - g.y0} rx={g.r} fill={C.tealDeep} {...ink} />
       <rect x={-6} y={-40} width={12} height={14} rx={4} fill={C.coral} stroke={C.ink} strokeWidth={3} />
+      {/* opt-in burst: a flat saffron halo behind the lens rim (the box hides its lower half: light from the far face) */}
+      {bu > 0.001 && <ellipse cx={lens.x} cy={lens.y} rx={f2(13 + 16 * bu)} ry={f2((13 + 16 * bu) * 0.72)} fill={C.saffron} opacity={f2(0.7 * bu)} />}
       {/* lens rims of the far face peeking over the top edge: emitter (coral), detector (ink) */}
       <ellipse cx={b.x0 + 24 + d.dx} cy={b.y0 + d.dy - 1} rx={13} ry={8} fill={mix(C.coral, C.saffronLight, fire * 0.7)} {...ink} strokeWidth={3} />
       <ellipse cx={b.x0 + 56 + d.dx} cy={b.y0 + d.dy - 1} rx={9} ry={6.5} fill={C.inkSoft} {...ink} strokeWidth={3} />
+      {/* opt-in burst ring: expands from the lens and fades (behind the box, like the halo) */}
+      {ring > 0 && ring < 1 && <ellipse cx={lens.x} cy={lens.y} rx={f2(13 + 34 * ring)} ry={f2((13 + 34 * ring) * 0.72)} fill="none" stroke={C.saffronDeep} strokeWidth={3} opacity={f2(0.9 * (1 - ring))} />}
       {/* box: side, top, front */}
       <path d={side} fill={C.tealDeep} {...ink} />
       <path d={top} fill={TOP} {...ink} />
@@ -276,6 +298,10 @@ export type SensorTopProps = {
   facing?: number;
   /** 0..1: the emitter window lights up. */
   firing?: number;
+  /** Opt-in 0..1 (default 0 = none): a saffron flash halo out of the emitter notch (opacity 0.7 * burst). */
+  burst?: number;
+  /** Opt-in 0..1 phase (default none): a thin saffron ring expanding from the emitter window and fading out. */
+  burstRing?: number;
   opacity?: number;
   /** Extra uniform scale (pop-in). */
   scale?: number;
@@ -287,7 +313,7 @@ export type SensorTopProps = {
 export const facingOf = (dx: number, dy: number) => (Math.atan2(dx, -dy) * 180) / Math.PI;
 
 /** The sensor seen from above: teal box, emitter notch (coral window) on the face that points along `facing`. */
-export const SensorTop: React.FC<SensorTopProps> = ({x, y, size = 56, facing = 0, firing = 0, opacity = 1, scale = 1, asGroup}) => {
+export const SensorTop: React.FC<SensorTopProps> = ({x, y, size = 56, facing = 0, firing = 0, burst = 0, burstRing, opacity = 1, scale = 1, asGroup}) => {
   const w = size;
   const h = size * 0.5;
   const k = size / 56;
@@ -313,10 +339,17 @@ export const SensorTop: React.FC<SensorTopProps> = ({x, y, size = 56, facing = 0
     'Z',
   ].join(' ');
   const fire = clamp01(firing);
+  const bu = clamp01(burst);
+  const ring = burstRing === undefined ? -1 : clamp01(burstRing);
+  const winY = -h / 2 + nd - 2.5 * k; // centre of the emitter window
   const g = (
     <g transform={`translate(${f2(x)} ${f2(y)}) rotate(${f2(facing)}) scale(${f2(scale)})`} opacity={opacity}>
       {/* shadow */}
       <rect x={-w / 2 + 3 * k} y={-h / 2 + 5 * k} width={w} height={h} rx={r} fill={C.shadow} />
+      {/* opt-in burst: a saffron halo under the body, showing through the notch and past the front face */}
+      {bu > 0.001 && <ellipse cx={0} cy={f2(winY - 2 * k)} rx={f2((9 + 11 * bu) * k)} ry={f2((9 + 11 * bu) * k * 0.8)} fill={C.saffron} opacity={f2(0.7 * bu)} />}
+      {/* opt-in burst ring, expanding from the emitter window (under the body too: it shows ahead of the front face) */}
+      {ring > 0 && ring < 1 && <circle cx={0} cy={f2(winY)} r={f2((6 + 26 * ring) * k)} fill="none" stroke={C.saffronDeep} strokeWidth={f2(Math.max(2, 2.5 * k))} opacity={f2(0.9 * (1 - ring))} />}
       {/* grip stub showing at the back */}
       <rect x={-w * 0.13} y={h / 2 - 4 * k} width={w * 0.26} height={h * 0.42} rx={w * 0.08} fill={C.tealDeep} stroke={C.ink} strokeWidth={sw} />
       <path d={body} fill={C.teal} stroke={C.ink} strokeWidth={sw} strokeLinejoin="round" />

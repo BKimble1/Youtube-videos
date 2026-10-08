@@ -509,7 +509,54 @@ export const WallClock: React.FC<{x: number; y: number; r: number; minutes: numb
   );
 };
 
+/**
+ * The wall clock's readout (world px): a museum label card beside the clock with a short leader to its rim. While the
+ * hand sweeps it counts the minutes (JetBrains Mono digit; "≈" and "to measure" wait at low opacity), then it settles
+ * to the result, "≈ 7 min to measure", with a small swell. The text is laid out in its final form from the first frame
+ * and the digit is monospaced, so nothing in the card shifts while it counts or settles.
+ *  `t` 0..1 pop (as WLabel); `minutes` the clock hand's minutes; `settle` 0..1 progress of the settle (linear).
+ */
+export const ClockLabel: React.FC<{x: number; y: number; w: number; h: number; size: number; t: number; minutes: number; settle: number; final: number; to?: Pt; from?: Pt}> = ({x, y, w, h, size, t, minutes, settle, final, to, from}) => {
+  if (t <= 0.001) return null;
+  const st = clamp01(settle);
+  const swell = 1 + 0.06 * Math.sin(Math.PI * st);
+  const s = (0.9 + 0.1 * Math.min(1.08, t)) * swell;
+  const cx = x + w / 2;
+  const cy = y + h / 2;
+  const a = from ?? {x, y: cy};
+  const digit = st > 0 ? final : Math.max(0, Math.min(final - 1, Math.floor(minutes)));
+  const rest = lerp(0.28, 1, Math.min(1, st * 2));
+  return (
+    <g opacity={Math.min(1, t * 1.8)}>
+      {to && (
+        <g>
+          <path d={`M ${f2(a.x)} ${f2(a.y)} L ${f2(to.x)} ${f2(to.y)}`} stroke={C.ink} strokeWidth={3} strokeLinecap="round" />
+          <circle cx={to.x} cy={to.y} r={5.5} fill={C.cream} stroke={C.ink} strokeWidth={2.5} />
+        </g>
+      )}
+      <g transform={`translate(${f2(cx)} ${f2(cy)}) scale(${f2(s * 1000) / 1000}) translate(${f2(-cx)} ${f2(-cy)})`}>
+        <rect x={x + 6} y={y + 7} width={w} height={h} rx={12} fill={C.shadow} />
+        <rect x={x} y={y} width={w} height={h} rx={12} fill={C.cream} {...ink()} />
+        <text x={cx} y={cy + 1} textAnchor="middle" dominantBaseline="central" fontFamily={F.body} fontWeight={800} fontSize={size} fill={C.ink}>
+          <tspan opacity={rest}>≈ </tspan>
+          <tspan fontFamily={F.mono} fontWeight={700}>
+            {digit}
+          </tspan>
+          <tspan> min</tspan>
+          <tspan opacity={rest}> to measure</tspan>
+        </text>
+      </g>
+    </g>
+  );
+};
+
 /* ------------------------------------------------------------------ 2021 */
+
+/** The 2021 shot fact as a card on the exhibit, stacked above the "5 frames/s" readout (plinth-local px; 26 world px
+ *  text = 36 px on screen in the 1.4× close-up). Drawn only when Exhibit2021's opt-in `live` is above 0. */
+export const LIVE_CARD = {x: -370, y: -402, w: 300, h: 50, size: 26, text: 'live · ordinary objects'};
+/** The "5 frames/s" readout card (plinth-local px). */
+export const COUNTER_CARD = {x: -345, y: -340, w: 250, h: 86};
 
 export const E21 = {
   port: {x: -42, y: -51},
@@ -536,6 +583,8 @@ export type Exhibit2021Props = {
   /** the counter readout: 0..1 visible, `ticks` boxes filled (0..5) */
   counter?: number;
   ticks?: number;
+  /** opt-in: the "live · ordinary objects" card above the counter (LIVE_CARD), 0..1 pop; default 0 (not drawn) */
+  live?: number;
 };
 
 const jit = (i: number, k: number) => {
@@ -543,7 +592,7 @@ const jit = (i: number, k: number) => {
   return (s - Math.floor(s)) * 2 - 1;
 };
 
-export const Exhibit2021: React.FC<Exhibit2021Props> = ({x, y, beam = 0, view = 0, cells = 0, monitor = 0, ballX, frameBallX, frameIdx, counter = 0, ticks = 0}) => {
+export const Exhibit2021: React.FC<Exhibit2021Props> = ({x, y, beam = 0, view = 0, cells = 0, monitor = 0, ballX, frameBallX, frameIdx, counter = 0, ticks = 0, live = 0}) => {
   const mapX = (bx: number) => -284 + (bx - 186) * 1.3;
   const n = frameIdx;
   const ballRot = ((ballX - E21.ballRange[0]) / 16) * (180 / Math.PI);
@@ -590,10 +639,21 @@ export const Exhibit2021: React.FC<Exhibit2021Props> = ({x, y, beam = 0, view = 
           <ellipse cx={f2(mapX(frameBallX) + jit(n, 11))} cy={f2(-153 + jit(n, 12))} rx={13} ry={11} fill={C.teal} />
         </g>
       )}
+      {/* the shot fact above the counter (opt-in): pops as a card, scaled about its centre */}
+      {live > 0.001 && (
+        <g opacity={Math.min(1, live * 1.8)}>
+          <g transform={`translate(${LIVE_CARD.x + LIVE_CARD.w / 2} ${LIVE_CARD.y + LIVE_CARD.h / 2}) scale(${f2((0.9 + 0.1 * Math.min(1.08, live)) * 1000) / 1000}) translate(${-(LIVE_CARD.x + LIVE_CARD.w / 2)} ${-(LIVE_CARD.y + LIVE_CARD.h / 2)})`}>
+            <rect x={LIVE_CARD.x} y={LIVE_CARD.y} width={LIVE_CARD.w} height={LIVE_CARD.h} rx={10} fill={C.cream} {...ink()} />
+            <text x={LIVE_CARD.x + LIVE_CARD.w / 2} y={LIVE_CARD.y + LIVE_CARD.h / 2 + 1} textAnchor="middle" dominantBaseline="central" fontFamily={F.body} fontWeight={800} fontSize={LIVE_CARD.size} fill={C.ink}>
+              {LIVE_CARD.text}
+            </text>
+          </g>
+        </g>
+      )}
       {/* the counter readout above the monitor */}
       {counter > 0.001 && (
         <g opacity={Math.min(1, counter * 1.8)}>
-          <rect x={-345} y={-340} width={250} height={86} rx={10} fill={C.cream} {...ink()} />
+          <rect x={COUNTER_CARD.x} y={COUNTER_CARD.y} width={COUNTER_CARD.w} height={COUNTER_CARD.h} rx={10} fill={C.cream} {...ink()} />
           <text x={-220} y={-311} textAnchor="middle" dominantBaseline="central" fontFamily={F.mono} fontWeight={700} fontSize={32} fill={C.ink}>
             5 frames/s
           </text>

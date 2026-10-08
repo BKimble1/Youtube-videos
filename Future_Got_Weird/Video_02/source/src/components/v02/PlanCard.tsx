@@ -6,6 +6,7 @@ import {pathCumulative, lerpP, type P2} from '../../lib/optics';
 import {polyD, type ToPx} from './Optics';
 import {CheckerToken, GuesserToken, tokenSize} from './Tokens';
 import {SensorTop, facingOf} from './HandheldSensor';
+import {PLAN_CARD_AREA, PLAN_CARD_RECT} from '../../lib/shots';
 
 /**
  * "Seen from above": a top-down plan card (screen space) shown beside the raised room view while a light path runs
@@ -17,7 +18,9 @@ import {SensorTop, facingOf} from './HandheldSensor';
  * Drawn from layout.json like every other plan in the episode (S4's plan board look: cream floor, ink relay wall,
  * coral partition bar, the overhead tokens and the sensor top), framed by a PlanView (default PLAN_VIEW).
  * The card styling follows the house cards (S1.3 evidence board: white card, 4 px ink outline, tape, hard shadow).
- * Default size 480 x 408 px (lib/shots PLAN_CARD_RECT): a quarter of the frame width, so it still reads on a phone.
+ * Default size 480 x 408 px (PLAN_AREA). Beside a raised path shot the card sits in lib/shots PLAN_CARD_RECT, 432 x 372
+ * (PLAN_CARD_AREA, inside the 5 % safe margin): pass area={PLAN_CARD_AREA} and view={viewForArea(view, PLAN_CARD_AREA)}.
+ * The strip of tape sits inside the card's right edge (`tape`, default 'inside'), so nothing pokes past the card.
  *
  * Scenes pass render callbacks that receive the card's plan -> px map:
  *  - `light`: drawn over the floor and UNDER the partition and the people (seen from above, the 2 m partition and the
@@ -51,6 +54,18 @@ export type PlanArea = {w: number; h: number};
 /** Card size (screen px) for a plan area. */
 export const planCardSize = (area: PlanArea = PLAN_AREA) => ({w: area.w + 2 * PAD, h: HEAD + area.h + PAD});
 
+/** lib/shots PLAN_CARD_RECT is the card of PLAN_CARD_AREA, inside the 5 % safe margin (x 96..1824, y >= 54). */
+{
+  const sz = planCardSize(PLAN_CARD_AREA);
+  const r = PLAN_CARD_RECT;
+  const bad: string[] = [];
+  if (sz.w !== r.w || sz.h !== r.h) bad.push(`PLAN_CARD_RECT is ${r.w} x ${r.h} but planCardSize(PLAN_CARD_AREA) is ${sz.w} x ${sz.h}`);
+  if (r.x + r.w > 1920 * 0.95) bad.push(`its right edge ${r.x + r.w} is past the 5 % margin (${1920 * 0.95})`);
+  if (r.y < 1080 * 0.05) bad.push(`its top ${r.y} is above the 5 % margin (${1080 * 0.05})`);
+  if (r.x < 1920 * 0.05) bad.push(`its left edge ${r.x} is past the 5 % margin`);
+  if (bad.length) throw new Error(`lib/shots PLAN_CARD_RECT: ${bad.join('; ')}`);
+}
+
 /** Plan -> card-local px. */
 export const planCardToPx = (v: PlanView = PLAN_VIEW, area: PlanArea = PLAN_AREA): ToPx => (p) => ({x: PAD + area.w / 2 + (p.x - v.cx) * v.ppm, y: HEAD + (p.z - v.zTop) * v.ppm});
 
@@ -72,14 +87,20 @@ export type PlanCardProps = {
   y: number;
   /** 0..1 in (slides in from the right and fades up); pass in * (1 - out) */
   t: number;
+  /**
+   * The strip of tape at the top right: 'inside' (default) keeps it inside the card's right edge (it still overlaps
+   * the top edge by ~18 px); 'overhang' is the old look, poking ~26 px past the right edge; 'none' draws no tape.
+   */
+  tape?: 'inside' | 'overhang' | 'none';
   layout?: Layout;
   view?: PlanView;
   /** plan area size (px); default PLAN_AREA */
   area?: PlanArea;
   checker?: PlanFigure | null;
   guesser?: PlanFigure | null;
-  /** the sensor top at S (faces the aim point on the wall unless `facing` is given) */
-  sensor?: {firing?: number; facing?: number} | null;
+  /** the sensor top at S (faces the aim point on the wall unless `facing` is given); `burst` / `burstRing` are
+   *  SensorTop's opt-in flash (default off) */
+  sensor?: {firing?: number; facing?: number; burst?: number; burstRing?: number} | null;
   /** 0..1 the opening between the partition's far end and the wall, marked like the room view's gap marker */
   gap?: number;
   label?: string;
@@ -87,7 +108,7 @@ export type PlanCardProps = {
   marks?: (toPx: ToPx, ppm: number) => React.ReactNode;
 };
 
-export const PlanCard: React.FC<PlanCardProps> = ({x, y, t, layout = LAYOUT, view = PLAN_VIEW, area = PLAN_AREA, checker, guesser, sensor, gap = 0, label = 'seen from above', light, marks}) => {
+export const PlanCard: React.FC<PlanCardProps> = ({x, y, t, tape = 'inside', layout = LAYOUT, view = PLAN_VIEW, area = PLAN_AREA, checker, guesser, sensor, gap = 0, label = 'seen from above', light, marks}) => {
   if (t <= 0) return null;
   const {w, h} = planCardSize(area);
   const toPx = planCardToPx(view, area);
@@ -151,12 +172,14 @@ export const PlanCard: React.FC<PlanCardProps> = ({x, y, t, layout = LAYOUT, vie
           {/* people and the sensor */}
           {fig(checker, 'checker')}
           {fig(guesser, 'guesser')}
-          {sensor && <SensorTop asGroup x={S.x} y={S.y} size={0.26 * ppm} facing={sensor.facing ?? facingOf(aim.x - S.x, aim.y - S.y)} firing={sensor.firing ?? 0} />}
+          {sensor && <SensorTop asGroup x={S.x} y={S.y} size={0.26 * ppm} facing={sensor.facing ?? facingOf(aim.x - S.x, aim.y - S.y)} firing={sensor.firing ?? 0} burst={sensor.burst ?? 0} burstRing={sensor.burstRing} />}
           {marks && marks(toPx, ppm)}
         </g>
         <rect x={ax0} y={ay0} width={aw} height={ah} rx={10} fill="none" stroke={C.inkMuted} strokeWidth={2.5} />
-        {/* tape */}
-        <rect x={w - 70} y={-12} width={96} height={28} fill="rgba(255,233,168,0.92)" stroke="rgba(22,42,50,0.25)" strokeWidth={2} transform={`rotate(8 ${w - 22} 2)`} />
+        {/* tape: inside the right edge (its rotated corners end ~6 px inside it), or the old overhang */}
+        {tape !== 'none' && (
+          <rect x={tape === 'overhang' ? w - 70 : w - 104} y={-12} width={96} height={28} fill="rgba(255,233,168,0.92)" stroke="rgba(22,42,50,0.25)" strokeWidth={2} transform={`rotate(8 ${tape === 'overhang' ? w - 22 : w - 56} 2)`} />
+        )}
       </g>
     </svg>
   );

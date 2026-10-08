@@ -601,12 +601,24 @@ export type PossibleCloudProps = {
   blur?: number;
   /** A crisp thin line on the innermost level. */
   outline?: boolean;
+  /**
+   * Opt-in (default false): a crisp line on the OUTERMOST level too (true = 3 px in the tone's deep colour; a number =
+   * that width), so the whole region reads as an area, not a stroke, over a busy background (hair, a shirt).
+   */
+  outerOutline?: boolean | number;
+  /** Opt-in: fill opacity of the outermost level (default unchanged: 0.55 with several levels, 0.75 with one). */
+  outerFillOpacity?: number;
+  /**
+   * Opt-in (px, default 0): a paper cut-out edge, a white backing under the region that shows as a `rim`-px white
+   * border round the outer level, so the translucent fills sit on paper instead of turning muddy over what is behind.
+   */
+  rim?: number;
   asGroup?: boolean;
 };
 
 /** The "possible locations" region: nested flat fills (pale outer level, denser inner level, crisp inner line), computed
- *  from the same bands. */
-export const PossibleCloud: React.FC<PossibleCloudProps> = ({toPx, contours, field, levels = [0.25, 0.6], t, tone = 'teal', blur = 0, outline = true, asGroup}) => {
+ *  from the same bands. The opt-in outerOutline / outerFillOpacity / rim leave the default drawing unchanged. */
+export const PossibleCloud: React.FC<PossibleCloudProps> = ({toPx, contours, field, levels = [0.25, 0.6], t, tone = 'teal', blur = 0, outline = true, outerOutline = false, outerFillOpacity, rim = 0, asGroup}) => {
   const filterId = useSafeId('cloudblur');
   if (t <= 0) return null;
   const col = TONES[tone];
@@ -634,6 +646,7 @@ export const PossibleCloud: React.FC<PossibleCloudProps> = ({toPx, contours, fie
   const s = 0.55 + 0.45 * k;
   const pad = blur * 4;
   const nLv = pxSets.length;
+  const outerW = outerOutline === true ? 3 : outerOutline === false ? 0 : Math.max(0, outerOutline);
   return (
     <Out asGroup={asGroup} opacity={Math.min(1, clamp01(t) * 1.4)}>
       {blur > 0 && (
@@ -644,11 +657,13 @@ export const PossibleCloud: React.FC<PossibleCloudProps> = ({toPx, contours, fie
         </defs>
       )}
       <g transform={`translate(${f2(cx)} ${f2(cy)}) scale(${s.toFixed(4)}) translate(${f2(-cx)} ${f2(-cy)})`}>
+        {rim > 0 && <path d={pxSets[0].map((l) => polyD(l, true)).join(' ')} fill={C.white} stroke={C.white} strokeWidth={rim * 2} strokeLinejoin="round" fillRule="evenodd" />}
         <g filter={blur > 0 ? `url(#${filterId})` : undefined}>
           {pxSets.map((loops, i) => (
-            <path key={i} d={loops.map((l) => polyD(l, true)).join(' ')} fill={i === nLv - 1 && nLv > 1 ? col.main : mixHex(col.light, col.main, 0.35)} fillOpacity={nLv > 1 ? 0.55 + 0.35 * (i / (nLv - 1)) : 0.75} fillRule="evenodd" />
+            <path key={i} d={loops.map((l) => polyD(l, true)).join(' ')} fill={i === nLv - 1 && nLv > 1 ? col.main : mixHex(col.light, col.main, 0.35)} fillOpacity={i === 0 && outerFillOpacity !== undefined ? outerFillOpacity : nLv > 1 ? 0.55 + 0.35 * (i / (nLv - 1)) : 0.75} fillRule="evenodd" />
           ))}
         </g>
+        {outerW > 0 && (nLv > 1 || !outline) && <path d={pxSets[0].map((l) => polyD(l, true)).join(' ')} fill="none" stroke={col.deep} strokeWidth={outerW} strokeOpacity={0.85} strokeLinejoin="round" />}
         {outline && <path d={pxSets[nLv - 1].map((l) => polyD(l, true)).join(' ')} fill="none" stroke={col.deep} strokeWidth={3} strokeOpacity={0.85} strokeLinejoin="round" />}
       </g>
     </Out>

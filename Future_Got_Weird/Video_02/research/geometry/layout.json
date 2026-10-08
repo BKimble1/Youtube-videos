@@ -125,6 +125,149 @@
   "speed_m_per_s": 1.12,
   "body_radius_m": 0.22
  },
+ "hidden_track_illustrative_S6": {
+  "_status": "ILLUSTRATIVE: S6.6 frame-to-frame track for the still-sensor panel (film review r1 D08, lead L12); not measured, not from the paper; H_C/H_D feed no region, band or timing number",
+  "order": [
+   "H_A",
+   "H_B",
+   "H_C",
+   "H_D"
+  ],
+  "H_C": [
+   2.76,
+   0.78
+  ],
+  "H_D": [
+   2.79,
+   0.64
+  ],
+  "step_m": [
+   0.112,
+   0.134,
+   0.143
+  ],
+  "path_m": 0.389,
+  "net_H_A_to_H_D_m": 0.283,
+  "WH_m_frame_A": {
+   "H_A": [
+    1.327,
+    1.196,
+    1.073,
+    0.958
+   ],
+   "H_B": [
+    1.436,
+    1.302,
+    1.175,
+    1.051
+   ],
+   "H_C": [
+    1.413,
+    1.269,
+    1.128,
+    0.986
+   ],
+   "H_D": [
+    1.367,
+    1.214,
+    1.06,
+    0.9
+   ]
+  },
+  "checks": [
+   {
+    "check": "occluder blocks straight S_A->H_C",
+    "pass": true,
+    "detail": "must be True"
+   },
+   {
+    "check": "no part of the person's body disc (r=0.22 m) at H_C is visible from S_A",
+    "pass": true,
+    "detail": "0 visible outline samples"
+   },
+   {
+    "check": "3D: sight line S_A->top of head at H_C meets the partition below its 2.0 m top",
+    "pass": true,
+    "detail": "height at partition 1.20 m"
+   },
+   {
+    "check": "H_C is at least body radius + 0.05 m from the occluder",
+    "pass": true,
+    "detail": "0.760 m"
+   },
+   {
+    "check": "H_C inside room",
+    "pass": true,
+    "detail": "(2.76, 0.78)"
+   },
+   {
+    "check": "segment W_A1->H_C clears occluder by >= 0.1 m",
+    "pass": true,
+    "detail": "clearance 0.291 m"
+   },
+   {
+    "check": "segment W_A2->H_C clears occluder by >= 0.1 m",
+    "pass": true,
+    "detail": "clearance 0.345 m"
+   },
+   {
+    "check": "segment W_A3->H_C clears occluder by >= 0.1 m",
+    "pass": true,
+    "detail": "clearance 0.412 m"
+   },
+   {
+    "check": "segment W_A4->H_C clears occluder by >= 0.1 m",
+    "pass": true,
+    "detail": "clearance 0.502 m"
+   },
+   {
+    "check": "occluder blocks straight S_A->H_D",
+    "pass": true,
+    "detail": "must be True"
+   },
+   {
+    "check": "no part of the person's body disc (r=0.22 m) at H_D is visible from S_A",
+    "pass": true,
+    "detail": "0 visible outline samples"
+   },
+   {
+    "check": "3D: sight line S_A->top of head at H_D meets the partition below its 2.0 m top",
+    "pass": true,
+    "detail": "height at partition 1.20 m"
+   },
+   {
+    "check": "H_D is at least body radius + 0.05 m from the occluder",
+    "pass": true,
+    "detail": "0.790 m"
+   },
+   {
+    "check": "H_D inside room",
+    "pass": true,
+    "detail": "(2.79, 0.64)"
+   },
+   {
+    "check": "segment W_A1->H_D clears occluder by >= 0.1 m",
+    "pass": true,
+    "detail": "clearance 0.359 m"
+   },
+   {
+    "check": "segment W_A2->H_D clears occluder by >= 0.1 m",
+    "pass": true,
+    "detail": "clearance 0.405 m"
+   },
+   {
+    "check": "segment W_A3->H_D clears occluder by >= 0.1 m",
+    "pass": true,
+    "detail": "clearance 0.465 m"
+   },
+   {
+    "check": "segment W_A4->H_D clears occluder by >= 0.1 m",
+    "pass": true,
+    "detail": "clearance 0.549 m"
+   }
+  ],
+  "all_pass": true
+ },
  "wall_points": {
   "frame_A": [
    [

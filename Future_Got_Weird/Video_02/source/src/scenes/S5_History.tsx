@@ -5,12 +5,12 @@ import type {Sfx} from '../lib/sfx';
 import {useG} from '../lib/SceneFrame';
 import {at, scene, seg, segEnd} from '../lib/timeline';
 import {E, camPath, drop, hop, impact, ring, tw} from '../lib/motion';
-import {Camera, Layer, type Cam} from '../lib/camera';
+import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
 import {PLINTH} from '../lib/shots';
 import {Chip} from '../components/Text';
 import {PlanBoard, ScrollRoll} from '../components/v02/S5_Board';
 import {Ledge, MU, MuseumHall, Plinth, RopePost, RopeSign, RopeSpan, SensorStool, SideCard, ropePoint} from '../components/v02/S5_Museum';
-import {E12, E18, E21, Exhibit2012, Exhibit2018, Exhibit2021, RASTER, WLabel, WallClock} from '../components/v02/S5_Exhibits';
+import {COUNTER_CARD, ClockLabel, E12, E18, E21, Exhibit2012, Exhibit2018, Exhibit2021, LIVE_CARD, RASTER, WLabel, WallClock} from '../components/v02/S5_Exhibits';
 
 /**
  * S5 · What came before (s25–s29) · the history shelf.
@@ -25,12 +25,15 @@ import {E12, E18, E21, Exhibit2012, Exhibit2018, Exhibit2021, RASTER, WLabel, Wa
  *  S5.2 s27     Truck to "2018 · Stanford": a compact laser + detector unit; on "swept one spot" the spot glyph
  *               (S4's wall spot) hops across a small board in a raster; "reflective" glints on a small exit sign
  *               behind a screen; the laptop rebuilds it in one second and shows "1 s"; on "Measuring" a wall clock's
- *               hand sweeps to ~7 minutes while the raster runs again. Chip "reflective exit sign: ≈ 1 s to rebuild ·
- *               ≈ 7 min to measure".
+ *               hand sweeps to ~7 minutes while the raster runs again; a readout card beside the clock counts the
+ *               minutes with the hand and settles on "seven" to "≈ 7 min to measure" (world label, 41 px). Fact chip
+ *               (36 px) "reflective exit sign: ≈ 1 s to rebuild". The shot holds through the pause and moves on with
+ *               "By 2021".
  *  S5.3 s28     Truck to "2021 · Wisconsin + Milan": a big laser fires at a small wall, the strip detector lights,
  *               the monitor plays a blobby live picture of the ball rolling behind the screen, redrawn five times a
  *               second (the counter "5 frames/s" fills one box per frame). Labels "powerful laser", "custom
- *               detectors"; chip "live · ordinary objects". The ball rolls to rest as the camera pulls back.
+ *               detectors"; the card "live · ordinary objects" (36 px) sits on the exhibit above the counter. The ball
+ *               rolls to rest as the camera pulls back.
  *  S5.4 s29     Pull back to the shelf; a velvet rope clips across it post by post and a small sign "research
  *               equipment" drops onto it; on "One team" the camera trucks on past the empty fourth plinth to the end
  *               of the shelf, where a fingertip-sized sensor board stands on a little stool (outside the rope) with its
@@ -147,12 +150,20 @@ const ONE_S = Math.max(REBUILD0 + REBUILD_DUR, K.second);
 const MEAS0 = K.measuring + 2;
 const MEAS_DUR = Math.max(24, Math.min(54, K.minutes + 8 - MEAS0));
 const MEAS_EVERY = MEAS_DUR / RASTER.length;
+/** the clock's readout card pops as the hand starts and counts the minutes with it */
+const CLOCK_LBL = MEAS0 + 2;
+/** ... and settles to "≈ 7 min to measure" on "seven" (chip_pop) */
 const CHIP2B = Math.min(K.seven, MEAS0 + MEAS_DUR - 6);
 // S5.3 2021
-const TRUCK3 = Math.max(MEAS0 + MEAS_DUR + 4, K.s28 - 10);
+// the 2018 shot holds through the pause after "minutes." and moves on with "By 2021" (the readout gets its settled read)
+const TRUCK3 = Math.max(MEAS0 + MEAS_DUR + 4, K.s28);
 const TRUCK3_DUR = Math.max(26, Math.min(48, K.wisconsin - TRUCK3));
 const ARRIVE3 = TRUCK3 + TRUCK3_DUR;
-const LEAVE2 = TRUCK3 - 4;
+/** the clock readout leaves with its exhibit: it rides the first (slow) frames of the eased truck while it fades; the
+ *  2018 corner chips fade with it, so nothing world-side trucks across them */
+const CLOCK_OUT = TRUCK3 + 6;
+const CLOCK_OUT_DUR = 8;
+const CHIPS2_OUT = TRUCK3 + 6;
 const WARM3 = Math.max(ARRIVE3 + 4, K.wisconsin);
 const FIRE3 = Math.max(WARM3 + 18, K.sped);
 const LIVE = Math.max(FIRE3 + 14, K.live);
@@ -189,6 +200,48 @@ const CAM_WA: Cam = {cx: P2, cy: 520, zoom: 0.68};
 /** the hand-off framing: the roped-off empty fourth plinth (left of centre) and, past the rope's end, the stool with the
  *  cheap sensor and its card (outside every S6 framing, so nothing vanishes at the cut to S6's plinth close-up) */
 const CAM_WB: Cam = {cx: 4620, cy: 440, zoom: 0.8};
+
+/* ------------------------------------------------------------------ shot facts placed on the objects (world px) */
+
+/** the 2018 wall clock, and its readout card to the right of it, above the board (41 px text at CU2) */
+const CLOCK = {x: P2 + 60, y: MU.slabTop - 400, r: 56};
+const CLOCK_BOX = {x: P2 + 150, y: MU.slabTop - 432, w: 384, h: 58, size: 32};
+/** the 2021 labels that share the top of the close-up with the "live · ordinary objects" card */
+const CD_BOX = {x: P3 - 10, y: MU.slabTop - 372, w: 292, h: 52};
+const LIVE_BOX = {x: P3 + LIVE_CARD.x, y: MU.slabTop + LIVE_CARD.y, w: LIVE_CARD.w, h: LIVE_CARD.h};
+const COUNTER_BOX = {x: P3 + COUNTER_CARD.x, y: MU.slabTop + COUNTER_CARD.y, w: COUNTER_CARD.w, h: COUNTER_CARD.h};
+
+type Box = {x: number; y: number; w: number; h: number};
+const onScreen = (cam: Cam, b: Box) => {
+  const a = worldToScreen(cam, b.x, b.y);
+  const z = worldToScreen(cam, b.x + b.w, b.y + b.h);
+  return {x0: a.x, y0: a.y, x1: z.x, y1: z.y};
+};
+const gapPx = (cam: Cam, a: Box, b: Box) => {
+  const p = onScreen(cam, a);
+  const q = onScreen(cam, b);
+  return Math.max(q.x0 - p.x1, p.x0 - q.x1, q.y0 - p.y1, p.y0 - q.y1);
+};
+/** module-load checks (throw): the shot facts stay inside the 5 % margin and above the caption band at their
+ *  close-ups, are body size (≥ 34 px), clear the clock, the counter and the "custom detectors" label, and get a read */
+{
+  const SAFE = {x0: 96, y0: 54, x1: 1824, y1: 1080 * 0.88};
+  const inSafe = (cam: Cam, b: Box) => {
+    const s = onScreen(cam, b);
+    return s.x0 >= SAFE.x0 && s.x1 <= SAFE.x1 && s.y0 >= SAFE.y0 && s.y1 <= SAFE.y1;
+  };
+  if (!inSafe(CU2, CLOCK_BOX)) throw new Error(`S5: clock readout leaves the safe area at CU2: ${JSON.stringify(onScreen(CU2, CLOCK_BOX))}`);
+  if (CLOCK_BOX.size * CU2.zoom < 34) throw new Error(`S5: clock readout text ${CLOCK_BOX.size * CU2.zoom} px < 34 px`);
+  if (CLOCK_BOX.x - (CLOCK.x + CLOCK.r + 6) < 20) throw new Error('S5: clock readout touches the clock');
+  if (!inSafe(CU(P3), LIVE_BOX)) throw new Error(`S5: "live · ordinary objects" leaves the safe area: ${JSON.stringify(onScreen(CU(P3), LIVE_BOX))}`);
+  if (LIVE_CARD.size * CU(P3).zoom < 34) throw new Error(`S5: "live · ordinary objects" ${LIVE_CARD.size * CU(P3).zoom} px < 34 px`);
+  if (gapPx(CU(P3), LIVE_BOX, CD_BOX) < 40) throw new Error(`S5: "live · ordinary objects" crowds "custom detectors" (${gapPx(CU(P3), LIVE_BOX, CD_BOX)} px)`);
+  if (gapPx(CU(P3), LIVE_BOX, COUNTER_BOX) < 10) throw new Error('S5: "live · ordinary objects" overlaps the 5 frames/s readout');
+  if (!(CLOCK_LBL < CHIP2B && CHIP2B + 30 <= CLOCK_OUT)) throw new Error(`S5: "≈ 7 min to measure" settled read too short (${CLOCK_OUT - CHIP2B} frames)`);
+  // the clock (and its readout) truck left across the corner chips: both must be gone while the truck is still slow
+  if (!(CLOCK_OUT + CLOCK_OUT_DUR <= TRUCK3 + 16 && CHIPS2_OUT + 8 <= TRUCK3 + 16)) throw new Error('S5: 2018 readout or corner chips still up as the clock trucks across the corner');
+  if (!(LIVE + 4 < FIVE && FIVE + 30 <= LEAVE3)) throw new Error('S5: 2021 shot facts get no read');
+}
 
 /* ------------------------------------------------------------------ the roll (screen px under CAM_F0, zoom 1) */
 
@@ -361,11 +414,17 @@ export const S5History: React.FC = () => {
 
   /* ---- chips (screen) */
   const chip1 = fadeIn(g, ARRIVE1 + 4, 8) * (1 - tw(g, TRUCK2 + 6, 8));
-  const ill2 = fadeIn(g, ARRIVE2 + 4, 8) * (1 - tw(g, TRUCK3 + 16, 8));
+  // the 2018 corner chips leave as the truck starts (as 2012's chip does at TRUCK2 + 6), with the clock readout, before
+  // the clock trucks across the corner
+  const ill2 = fadeIn(g, ARRIVE2 + 4, 8) * (1 - tw(g, CHIPS2_OUT, 8));
   const ill3 = fadeIn(g, ARRIVE3 + 4, 8) * (1 - tw(g, PULL + 6, 8));
-  const chip2a = fadeIn(g, ONE_S + 4, 8) * (1 - tw(g, TRUCK3 + 16, 8));
-  const chip2b = fadeIn(g, CHIP2B, 8) * (1 - tw(g, TRUCK3 + 16, 8));
-  const chip3 = fadeIn(g, LIVE + 4, 8) * (1 - tw(g, PULL + 6, 8));
+  const chip2a = fadeIn(g, ONE_S + 4, 8) * (1 - tw(g, CHIPS2_OUT, 8));
+  /* ---- shot facts on the objects (world) */
+  // "≈ 7 min to measure": counts with the clock hand from "Measuring", settles on "seven", leaves with the exhibit
+  const clockLbl = pop(g, CLOCK_LBL) * (1 - tw(g, CLOCK_OUT, CLOCK_OUT_DUR, E.inOut));
+  const clockSettle = g < CHIP2B ? 0 : tw(g, CHIP2B, 10, E.linear);
+  // "live · ordinary objects": a card above the 5 frames/s readout, out with the 2021 labels before the pull-back
+  const live3 = pop(g, LIVE + 4) * (1 - tw(g, LEAVE3, 8));
 
   const sv = {position: 'absolute' as const, left: 0, top: 0, overflow: 'visible' as const};
 
@@ -401,7 +460,16 @@ export const S5History: React.FC = () => {
 
             {/* 2018 · Stanford */}
             <Exhibit2018 x={P2} y={MU.slabTop} spot={spot} spotT={spotT} beam={beam2} laptop={laptop} rebuild={rebuild} oneS={oneS} glint={glint} math={math} retro={retro} signPop={tw(g, SIGN_POP, SIGN_POP_DUR, E.linear)} />
-            <WallClock x={P2 + 60} y={MU.slabTop - 400} r={56} minutes={minutes} wedge={wedge} />
+            <WallClock x={CLOCK.x} y={CLOCK.y} r={CLOCK.r} minutes={minutes} wedge={wedge} />
+            <ClockLabel
+              {...CLOCK_BOX}
+              t={clockLbl}
+              minutes={minutes}
+              settle={clockSettle}
+              final={7}
+              to={{x: CLOCK.x + CLOCK.r, y: CLOCK.y}}
+              from={{x: CLOCK_BOX.x, y: CLOCK_BOX.y + CLOCK_BOX.h / 2}}
+            />
 
             {/* 2021 · Wisconsin + Milan */}
             <Exhibit2021
@@ -416,9 +484,10 @@ export const S5History: React.FC = () => {
               frameIdx={frameIdx}
               counter={counter}
               ticks={ticks}
+              live={live3}
             />
             <WLabel x={P3 - 610} y={MU.slabTop - 100} w={248} text="powerful laser" t={lblT(LBL_PL, 1 - tw(g, LEAVE3, 8))} to={W(P3, E21.laserLeft)} from={{x: P3 - 362, y: MU.slabTop - 74}} />
-            <WLabel x={P3 - 10} y={MU.slabTop - 372} w={292} text="custom detectors" t={lblT(LBL_CD, 1 - tw(g, LEAVE3, 8))} to={W(P3, E21.strip)} from={{x: P3 + 40, y: MU.slabTop - 320}} />
+            <WLabel x={CD_BOX.x} y={CD_BOX.y} w={CD_BOX.w} h={CD_BOX.h} text="custom detectors" t={lblT(LBL_CD, 1 - tw(g, LEAVE3, 8))} to={W(P3, E21.strip)} from={{x: P3 + 40, y: MU.slabTop - 320}} />
 
             {/* the end of the shelf: a cheap sensor on a little stool */}
             <SideCard t={card} lines={['2021', 'hidden objects tracked', 'with a cheap sensor', 'Callenberg et al. · illustration']} />
@@ -455,7 +524,8 @@ export const S5History: React.FC = () => {
         </Camera>
       )}
 
-      {/* guard-rail chips (screen px; settled chips do not move) */}
+      {/* corner chips (screen px; settled chips do not move): the 30 px guard-rail chips, and the 2018 rebuild fact as a
+          36 px ink fact chip (the clock's and 2021's facts sit on their objects, in the world) */}
       <div style={{position: 'absolute', left: 96, top: 54, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 10}}>
         {chip1 > 0.001 && (
           <div style={{opacity: chip1}}>
@@ -469,22 +539,14 @@ export const S5History: React.FC = () => {
         )}
         {chip2a > 0.001 && (
           <div style={{opacity: chip2a}}>
-            <Chip tone="paper" size={30}>reflective exit sign: ≈ 1 s to rebuild</Chip>
-          </div>
-        )}
-        {chip2b > 0.001 && (
-          <div style={{opacity: chip2b}}>
-            <Chip tone="paper" size={30}>≈ 7 min to measure</Chip>
+            <Chip tone="paper" size={36} style={{color: C.ink, border: `3px solid ${C.ink}`}}>
+              reflective exit sign: ≈ 1 s to rebuild
+            </Chip>
           </div>
         )}
         {ill3 > 0.001 && (
           <div style={{opacity: ill3}}>
             <Chip tone="paper" size={30}>illustration</Chip>
-          </div>
-        )}
-        {chip3 > 0.001 && (
-          <div style={{opacity: chip3}}>
-            <Chip tone="paper" size={30}>live · ordinary objects</Chip>
           </div>
         )}
       </div>
@@ -497,7 +559,9 @@ export const S5History: React.FC = () => {
 const VIDEO_TICKS = [0, 1, 2, 3, 4].map((i) => VIDEO0 + Math.ceil((FIVE - VIDEO0) / 6) * 6 + i * 6);
 
 export const SFX: Sfx[] = [
-  {f: K.start, kind: 'amb_museum', dur: (K.end - K.start) / 30, note: 'museum hall tone, whole scene'},
+  // overlaps S6's museum tone by 0.6 s (S6 starts its own amb_museum at the cut with a 0.4 s fade-in), so the hall tone
+  // runs on through the cut instead of dipping in a V (same continuous museum; cf. S7's K.end + 6)
+  {f: K.start, kind: 'amb_museum', dur: (K.end + 18 - K.start) / 30, note: 'museum hall tone, whole scene (runs 0.6 s into S6)'},
   {f: ROLL0, kind: 'paper_lift', gain: -2, note: 'the plan board starts to roll up'},
   {f: LAND, kind: 'thud_soft', gain: -3, note: 'the scroll lands on the ledge'},
   {f: LAND + 2, kind: 'shelf_creak', note: 'the ledge takes the weight'},
@@ -515,6 +579,7 @@ export const SFX: Sfx[] = [
   {f: REBUILD0 + REBUILD_DUR, kind: 'readout_beep', gain: -5, note: 'laptop: rebuilt in a second'},
   {f: ONE_S, kind: 'chip_pop', gain: -6, note: '1 s'},
   {f: MEAS0, kind: 'clock_tick', gain: -3, dur: MEAS_DUR / 30, note: 'the wall clock runs to ~7 minutes'},
+  {f: CHIP2B, kind: 'chip_pop', gain: -7, pitch: -2, note: 'clock readout settles: ≈ 7 min to measure'},
   {f: WARM3, kind: 'prob_tick', gain: -10, note: '2021: the strip detector arms'},
   {f: FIRE3, kind: 'machine_hum', gain: -10, dur: (PULL - FIRE3) / 30, note: '2021: the powerful laser running'},
   ...VIDEO_TICKS.map((f, i) => ({f, kind: 'film_tick' as const, gain: -6 - i, pitch: i % 2, note: `video frame ${i + 1} (5 per second)`})),

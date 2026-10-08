@@ -3,6 +3,7 @@ import {AbsoluteFill} from 'remotion';
 import {C, F} from './theme';
 import {SensorTop} from './components/v02/HandheldSensor';
 import {segmentHitsRect} from './lib/optics';
+import {RAISED_TILT} from './lib/shots';
 import {
   BigSensor,
   BounceBurst,
@@ -12,6 +13,12 @@ import {
   FLOOR,
   HitSpark,
   INK,
+  KitPlanInset,
+  KitRoomThumb,
+  assertScreenClear,
+  kitPlanCardSize,
+  titleRects,
+  type KitThumbGeometry,
   LightLeg,
   PulseDot,
   ReturnTrail,
@@ -24,6 +31,7 @@ import {
   blockSilhouette,
   checkRoute,
   guesserHead,
+  kitThumbGeometry,
   lerp,
   polyD,
   proj,
@@ -38,7 +46,12 @@ import {
 /**
  * Video 02 thumbnails (1920x1080 stills): "SEES ME?".
  *
- * One physical set-up, drawn three ways. Plan (metres; x along the relay wall, z toward the camera, the wall at z = 0):
+ * A and B (redrawn for review r1 D11) are the film's own room, cast and geometry (layout.json), built with the film-kit
+ * section of Thumb_Kit: see "A and B" below. Every light leg is checked at module load at the thumbnail's own tilt and
+ * zoom (assertAroundTheEnd, partition-as-drawn occlusion, no visible light above the partition's top), so a picture of
+ * light going over the partition cannot render.
+ *
+ * C (unchanged) uses this file's own simplified set, described here. Plan (metres; x along the relay wall, z toward the camera, the wall at z = 0):
  * a plain light relay wall; a free-standing coral wall perpendicular to it that stops short of it (a gap at its far
  * end); the time-of-flight sensor on its little tripod on one side; the guesser pressed against the other side. The
  * light route is sensor -> one spot on the wall -> round the coral wall's far end -> his head (a faint return comes
@@ -188,35 +201,63 @@ const Frame: React.FC<{children: React.ReactNode; bg?: string}> = ({children, bg
   </AbsoluteFill>
 );
 
-/* ------------------------------------------------------------------ A: wide; him large at right, sensor small at left */
+/* ------------------------------------------------------------------ A and B: the film's room (review r1 D11) */
 
-export const ThumbA: React.FC = () => (
-  <Frame>
-    <Room
-      label="ThumbA"
-      cam={camAt(425, 0.4, 0.93, 0.1, LAYOUT.H.x, LAYOUT.H.z, 1560, 1300)}
-      legWidth={24}
-      backdrop={<Title lines={[{text: 'SEES', color: INK}, {text: 'ME?', color: C.coral}]} x={66} y={238} size={250} />}
-    />
-  </Frame>
+/**
+ * A and B are drawn with the film's own kit (Thumb_Kit `kitThumbGeometry` / `KitRoomThumb`): the episode's room at
+ * RAISED_TILT, the layout's partition, sensor, wall spot W3 and his spot H, the cast rigs on the set's height scale.
+ * The light goes from the sensor to the wall and round the partition's FAR end through the opening at the wall (the
+ * gap is marked on the floor); behind the partition it is hidden, and it arrives at his wall-side torso (rim flash and
+ * spark). Never over the top: each thumbnail's route is checked at module load at its own tilt and zoom (throws).
+ */
+
+/** A: the whole room story, title left: she reads the sensor, the light bounces off the wall and slips round the far
+ *  end, he is smug behind the partition; "seen from above" (the film's PlanCard) under the title. The partition's top
+ *  and the floor gap are both in frame. */
+const GEO_A = kitThumbGeometry({
+  label: 'ThumbA',
+  tilt: RAISED_TILT,
+  cam: {cx: 624, cy: 425, zoom: 1.5},
+  extendLeft: 3,
+});
+const TITLE_A = {x: 66, y: 238, size: 250, anchor: 'start' as const};
+const INSET_A = {x: 66, y: 516, area: {w: 520, h: 352}};
+
+/** B: tighter on the faces and the far end (the partition runs out of the top of the frame), title and "seen from
+ *  above" on the right. */
+const GEO_B = kitThumbGeometry({
+  label: 'ThumbB',
+  tilt: RAISED_TILT,
+  cam: {cx: 1110, cy: 462, zoom: 1.85},
+  band: 13,
+  extendLeft: 3,
+});
+const TITLE_B = {x: 1640, y: 232, size: 205, anchor: 'end' as const};
+const INSET_B = {x: 1196, y: 486, area: {w: 452, h: 306}};
+
+// screen layout (throws): the title lines and the inset keep clear of the people, the partition, the light and the
+// frame edge, and of each other
+for (const [geo, ti, ins] of [
+  [GEO_A, TITLE_A, INSET_A],
+  [GEO_B, TITLE_B, INSET_B],
+] as const) {
+  const sz = kitPlanCardSize(ins.area);
+  assertScreenClear(geo, [...titleRects(ti.x, ti.y, ti.size, ti.anchor), {name: 'inset', x: ins.x, y: ins.y - 20, w: sz.w + 11, h: sz.h + 31}]);
+}
+
+const KitThumb: React.FC<{geo: KitThumbGeometry; title: typeof TITLE_A | typeof TITLE_B; inset: typeof INSET_A}> = ({geo, title, inset}) => (
+  <AbsoluteFill style={{background: C.paper}}>
+    <KitRoomThumb geo={geo} />
+    <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}>
+      <Title lines={[{text: 'SEES', color: INK}, {text: 'ME?', color: C.coral}]} x={title.x} y={title.y} size={title.size} anchor={title.anchor} />
+    </svg>
+    <KitPlanInset x={inset.x} y={inset.y} area={inset.area} />
+  </AbsoluteFill>
 );
 
-/* ------------------------------------------------------------------ B: tight on his smug face, the light landing on his head */
+export const ThumbA: React.FC = () => <KitThumb geo={GEO_A} title={TITLE_A} inset={INSET_A} />;
 
-export const ThumbB: React.FC = () => (
-  <Frame>
-    <Room
-      label="ThumbB"
-      cam={camAt(640, 0.4, 0.95, 0.1, LAYOUT.H.x, LAYOUT.H.z, 1000, 1740)}
-      block={{...LAYOUT.block, h: 2.2}}
-      W={{x: 0.72, h: 2.03}}
-      sensorScale={1.4}
-      legWidth={28}
-      guesserOutline={6}
-      backdrop={<Title lines={[{text: 'SEES', color: INK}, {text: 'ME?', color: C.coral}]} x={1872} y={250} size={265} anchor="end" />}
-    />
-  </Frame>
-);
+export const ThumbB: React.FC = () => <KitThumb geo={GEO_B} title={TITLE_B} inset={INSET_B} />;
 
 /* ------------------------------------------------------------------ C: what the readout shows vs where he hides */
 

@@ -1,0 +1,86 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S3": {
+   "seconds": 36.0,
+   "mean_energy": 1.298,
+   "still_seconds": 12.0,
+   "still_share": 0.332,
+   "longest_still_s": 2.33
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S3",
+   "from": 3452,
+   "to": 3475,
+   "seconds": 0.8,
+   "t": "1:55.1",
+   "spoken": "team, with a different sensor"
+  },
+  {
+   "scene": "S3",
+   "from": 3484,
+   "to": 3508,
+   "seconds": 0.83,
+   "t": "1:56.1",
+   "spoken": "different sensor and hidden object:"
+  },
+  {
+   "scene": "S3",
+   "from": 3511,
+   "to": 3537,
+   "seconds": 0.9,
+   "t": "1:57.0",
+   "spoken": "hidden object: the wall's"
+  },
+  {
+   "scene": "S3",
+   "from": 3567,
+   "to": 3615,
+   "seconds": 1.63,
+   "t": "1:58.9",
+   "spoken": "big echo, then, a few nanoseconds"
+  },
+  {
+   "scene": "S3",
+   "from": 3617,
+   "to": 3652,
+   "seconds": 1.2,
+   "t": "2:00.6",
+   "spoken": "few nanoseconds later, a bump"
+  },
+  {
+   "scene": "S3",
+   "from": 3708,
+   "to": 3751,
+   "seconds": 1.47,
+   "t": "2:03.6",
+   "spoken": "see. In this capture, hundreds"
+  },
+  {
+   "scene": "S3",
+   "from": 3755,
+   "to": 3824,
+   "seconds": 2.33,
+   "t": "2:05.2",
+   "spoken": "capture, hundreds of times weaker. That bump is"
+  },
+  {
+   "scene": "S3",
+   "from": 3829,
+   "to": 3865,
+   "seconds": 1.23,
+   "t": "2:07.6",
+   "spoken": "bump is the clue. Its"
+  },
+  {
+   "scene": "S3",
+   "from": 3904,
+   "to": 3950,
+   "seconds": 1.57,
+   "t": "2:10.1",
+   "spoken": "much farther the light travelled."
+  }
+ ]
+}

@@ -12,8 +12,10 @@ new material, new keys, a new tempo, and cues from the Video 02 timeline (wt()/s
   echo     S3  pulled back, sparse vibes with their own faint echoes; almost nothing under the real-data board (s15-s16)
   clock    S4  clockwork marimba that gains one layer per arc (s17 map, s18 arc 1, s20 arc 2, s21 bands, s23 many
                spots); full stop for "one place" (J3, the sound effect carries it), resumes; resolves on s24
-  museum   S5  warm, a little stately: walking pizzicato, slow strings, a clarinet line answered by bassoon
-  nimble   S6  optimistic, nimble, light percussion; lifts a step (D -> E) on s35
+  museum   S5  warm, a little stately: walking pizzicato, slow strings, a clarinet line answered by bassoon; it thins
+               to a held F7sus under s29 that turns to Asus and is held through the S6 cut (no gap at the act turn)
+  nimble   S6  optimistic, nimble, light percussion; its pickup lands on the S6 cut (pizzicato and bass D, a marimba
+               run into the first downbeat); lifts a step (D -> E) on s35
   evidence S7  pulled back under the results, sparse
   groove   S8  light mechanical groove, cautious; it brakes (dip) on "slow down" (s42)
   payoff   S9  a quiet callback, a gentle build under the takeaway (s46), a held question under s47, a complete stop
@@ -51,6 +53,7 @@ TPB = 480
 SEED = 20261102
 MAX_MELODIC = 83          # B5 (988 Hz): melodic fundamentals stay below the speech band
 TICK, TICK_ECHO = 110, 108  # glockenspiel D8 (4.7 kHz) and C8 (4.2 kHz): the flash motif sits above it
+TURN_FLOOR_DBFS = -40.0     # D31: quietest 100 ms of the bed allowed from the cut bar to the S6 cut and on into the groove
 
 # chord name -> (bass root, upper voicing); voicings sit in MIDI 50-66
 CH = {
@@ -97,7 +100,7 @@ SEGMENTS = {
     'clock': ('S4', 'clockwork marimba, one layer per arc', -3.0),
     'resolve': ('S4', 'resolution chords (Cmaj7 -> Gadd9)', -4.0),
     'museum': ('S5', 'walking pizzicato, slow strings, a clarinet line answered by bassoon', -2.5),
-    'turn': ('S5', 'thins to a held string chord', -6.0),
+    'turn': ('S5', 'thins to a held string chord (F7sus, then Asus held through the S6 cut; D pickup on the cut)', -6.0),
     'nimble': ('S6', 'nimble marimba 16ths, pizzicato, shaker, soft kick', -1.5),
     'lift': ('S6', 'lift: up a step to E, strings + vibes', -0.5),
     'evidence': ('S7', 'sparse vibes and guitar', -7.5),
@@ -228,8 +231,23 @@ def plan(tl):
             if a <= t < z:
                 sec = name
         bars.append(sec)
+    # S5 -> S6 act turn (D31): the turn holds through the S6 cut, so no bar that starts inside S5 may be a nimble bar
+    # (a bar is named by its centre, which can fall after the cut); the groove's first downbeat is the next bar line
+    cut = sc['S6'][0]
+    for b, sec in enumerate(bars):
+        if sec == 'nimble' and b * BAR < cut - 1e-6:
+            bars[b] = 'turn'
+    turn_bars = [b for b, sec in enumerate(bars) if sec == 'turn']
+    nimble_bars = [b for b, sec in enumerate(bars) if sec == 'nimble']
+    if not turn_bars or not nimble_bars:
+        raise AssertionError(f'act turn: no turn or nimble bars (turn {turn_bars}, nimble {nimble_bars[:1]})')
+    cut_bar, nb = turn_bars[-1] * BAR, nimble_bars[0] * BAR
+    if not (cut_bar < cut <= cut_bar + BAR + 1e-6 and nimble_bars[0] == turn_bars[-1] + 1 and cut - 1e-6 <= nb < cut + BAR):
+        raise AssertionError(f'act turn: S6 cut {cut:.3f}s must fall in the last turn bar ({cut_bar:.2f}s) and the first '
+                             f'nimble downbeat ({nb:.2f}s) must follow it')
+    turn = {'cut': cut, 'cut_bar': cut_bar, 'downbeat': nb, 'run_from': max(snap8(cut), nb - BEAT)}
     return {'total': total, 'frames': tl['durationInFrames'], 'fps': fps, 'scenes': sc, 'cue': cue,
-            'segments': seg_bounds, 'windows': windows, 'layers': layers, 'bars': bars}
+            'segments': seg_bounds, 'windows': windows, 'layers': layers, 'bars': bars, 'turn': turn}
 
 
 def compose(P):
@@ -403,12 +421,32 @@ def compose(P):
                 inst, low, vel = ('clarinet', 0, 40) if idx <= 8 else ('bassoon', 12, 46)
                 for beat, n, d in mel[(idx - 1) % 8]:
                     add(inst, t0 + beat * BEAT, d * BEAT * 0.95, n - low, vel)
-        elif sec == 'turn':
+        elif sec == 'turn':  # D31: the act turn holds through the S6 cut; the S6 pickup lands on the cut
+            T = P['turn']
             if idx == 0:
-                r, u = CH['F7sus']
-                add('strings', t0, 2 * BAR * 0.95, u[0], 26)
-                add('strings', t0, 2 * BAR * 0.95, u[2], 24)
-                add('pizz', t0, 0.5 * BEAT, r + 12, 34)
+                add('pizz', t0, 0.5 * BEAT, CH['F7sus'][0] + 12, 34)
+            if t0 < T['cut_bar']:
+                if idx == 0:  # one held F7sus across the turn bars before the cut bar, legato into the Asus
+                    u = CH['F7sus'][1]
+                    d = T['cut_bar'] - t0 + 0.1
+                    add('strings', t0, d, u[0], 26)
+                    add('strings', t0, d, u[2], 24)
+            else:  # the cut bar: Asus (V of D; Eb->D, Bb->A), held through the cut into the nimble groove
+                u = CH['Asus'][1]
+                d = T['cut'] - t0 + 0.3
+                add('strings', t0, d, u[0], 24)
+                add('strings', t0, d, u[2], 22)
+                cut, nb, rf = T['cut'], T['downbeat'], T['run_from']
+                if nb - cut > 0.1:  # the pickup: pizzicato and bass D on the cut, a marimba run into the downbeat
+                    r, u = CH['D']
+                    add('pizz', cut, min(0.5 * BEAT, 0.9 * (nb - cut)), r + 12, 38, True)
+                    add('bass', cut, 0.95 * (nb - cut), r, 36, True)
+                    q = BEAT / 4
+                    k0 = max(0, 4 - int(round((nb - rf) / q)))
+                    for k in range(k0, 4):
+                        ts = nb - (4 - k) * q
+                        add('marimba', ts, 0.2 * BEAT, u[k] + 12, 26 + 2 * k, True)
+                        add('drums', ts, 0.04, 82, 10 + 2 * k, True)
         elif sec in ('nimble', 'lift'):
             for pos, j in ((0, 0), (3, 2), (6, 1), (8, 3), (10, 2), (13, 1), (14, 3)):
                 add('marimba', t0 + pos * 0.25 * BEAT, 0.22 * BEAT, up[j] + 12, 30 + (6 if pos % 4 == 0 else 0) + rnd.randint(-3, 3))
@@ -543,6 +581,12 @@ def compose(P):
     add('vibes', e3 + 0.1, to_end - e3, 74, 24, True)
     add('bass', e3, to_end - e3, r, 38, True)
     tick(e3 + 1.2, 36)                           # last flash-and-echo, then it rings out
+
+    # D31: the S6 pickup must sound on the cut (within 0.2 s), not on the next bar line
+    T = P['turn']
+    near = [e[0] for k in ev for e in ev[k] if abs(e[0] - T['cut']) <= 0.2]
+    if not near and T['downbeat'] - T['cut'] > 0.2:
+        raise AssertionError(f"act turn: no note onset within 0.2 s of the S6 cut ({T['cut']:.3f}s)")
 
     # complete stops: notes that would sound into a stop are released just before it
     stops = [w for w in P['windows'] if w['kind'] == 'stop']
@@ -680,6 +724,14 @@ def rms_db(x):
     return float(20 * np.log10(np.sqrt(np.mean(np.square(x))) + 1e-12)) if len(x) else -240.0
 
 
+def floor_db(x, a, b, win=0.1, hop=0.05):
+    """Quietest 100 ms window of x (RMS dBFS, both channels) between a and b seconds, and where it starts."""
+    ia, ib, w, h = int(a * SR), int(b * SR), int(win * SR), int(hop * SR)
+    lv = [(rms_db(x[i:i + w]), i / SR) for i in range(ia, max(ia + 1, ib - w + 1), h)]
+    db, at = min(lv)
+    return round(db, 1), round(at, 2)
+
+
 def band_share(x, lo=1000, hi=4000):
     m = x.mean(axis=1)
     if np.max(np.abs(m)) < 1e-7:
@@ -728,6 +780,23 @@ def measure(P, bed, meter, ev, scale_db):
                              'rms_dbfs_after_settle': round(rms_db(bed[a + settle:b]), 1),
                              'peak_dbfs': round(20 * np.log10(np.max(np.abs(bed[a:b])) + 1e-12), 1),
                              'rms_dbfs_4s_before': round(rms_db(pre), 1)})
+    # scene cuts: the quietest 100 ms of the bed within 0.8 s of each cut (the act turn is D31's)
+    m['cut_floors'] = {}
+    ids = list(P['scenes'])
+    for pa, sid in zip(ids, ids[1:]):
+        c = P['scenes'][sid][0]
+        db, at = floor_db(bed, c - 0.8, c + 0.8)
+        m['cut_floors'][f'{pa}->{sid}'] = {'cut': round(c, 2), 'floor_dbfs': db, 'at': at}
+    T = P['turn']
+    fb, fa = floor_db(bed, T['cut_bar'], T['cut'])
+    xb, xa = floor_db(bed, T['cut'] - 0.8, T['downbeat'])
+    m['act_turn_S5_S6'] = {
+        'cut': round(T['cut'], 3), 'cut_bar': round(T['cut_bar'], 2), 'nimble_downbeat': round(T['downbeat'], 2),
+        'first_onset_from_cut_s': round(min(e[0] for v in ev.values() for e in v if e[0] >= T['cut'] - 0.2) - T['cut'], 3),
+        'floor_dbfs_cut_bar_to_cut': fb, 'floor_at': fa, 'floor_dbfs_cut-0.8_to_downbeat': xb, 'floor2_at': xa,
+        'rms_dbfs_cut_bar_to_cut': round(rms_db(bed[int(T['cut_bar'] * SR):int(T['cut'] * SR)]), 1),
+        'rms_dbfs_cut_to_downbeat': round(rms_db(bed[int(T['cut'] * SR):int(T['downbeat'] * SR)]), 1),
+        'rms_dbfs_first_nimble_bar': round(rms_db(bed[int(T['downbeat'] * SR):int((T['downbeat'] + BAR) * SR)]), 1)}
     m['notes'] = {'events': {k: len(v) for k, v in ev.items() if v},
                   'max_melodic_note': max(e[2] for k, v in ev.items() if k not in ('glock', 'drums') for e in v),
                   'glock_notes': sorted({e[2] for e in ev['glock']})}
@@ -762,8 +831,21 @@ def write_notes(P, m):
                  f"{w['rms_dbfs_4s_before']:.1f} dBFS |")
     L += ['', 'drop = no new notes and -24 dB (near-silence; measured after a 0.6 s tail), then a soft re-entry on s04 '
           '(-9 dB easing to 0 over 3 s, with the first bars played softer); stop = notes released, the bed muted with an '
-          '80 ms ramp (complete silence); dip = the groove stops, one held chord at -8 dB.',
-          '', '## Motifs and cues', '',
+          '80 ms ramp (complete silence); dip = the groove stops, one held chord at -8 dB.', '']
+    a = m['act_turn_S5_S6']
+    L += ['## Act turn (S5 -> S6) and scene cuts', '',
+          f"The turn (s29) thins to a held F7sus from {f(a['cut_bar'] - BAR * (P['bars'].count('turn') - 1))}, which "
+          f"moves to Asus (V of D; Eb->D, Bb->A) in the bar the S6 cut falls in ({f(a['cut_bar'])}) and is held through the "
+          f"cut. The S6 pickup lands on the cut ({f(a['cut'])}, frame {round(a['cut'] * P['fps'])}): pizzicato and bass D, "
+          f"then a marimba run of 16ths on D, F#, A, D with a soft shaker into the first nimble downbeat "
+          f"({f(a['nimble_downbeat'])}, on the bar grid). First onset {a['first_onset_from_cut_s']:+.3f} s from the cut; the "
+          f"quietest 100 ms of the bed is {a['floor_dbfs_cut_bar_to_cut']} dBFS from the cut bar to the cut and "
+          f"{a['floor_dbfs_cut-0.8_to_downbeat']} dBFS from 0.8 s before the cut to the downbeat (checked against "
+          f"{TURN_FLOOR_DBFS:.0f} dBFS on every run; the ambience across the cut is the scenes' job).", '',
+          '| Cut | Time | Quietest 100 ms within 0.8 s |', '|---|---|---|']
+    for k, v in m['cut_floors'].items():
+        L.append(f"| {k} | {f(v['cut'])} | {v['floor_dbfs']} dBFS at {f(v['at'])} |")
+    L += ['', '## Motifs and cues', '',
           '- **Flash and echo** (the sensor\'s pulse, as music): a glockenspiel tick on D8 (4.7 kHz) and a fainter echo on '
           'C8 0.45 s later. On s02 "sensor", s05 "flash" (strongest), every other bar from s05 to s07, s08 "clue", s12 '
           '"timing", s17 "flashes", s41 "sensor", in the s46 build and after the last word.',
@@ -854,6 +936,17 @@ def main():
     for w in m['windows']:
         print(f"  {w['kind']:4s} {w['from']:7.2f}-{w['to']:7.2f} rms {w['rms_dbfs']:6.1f} (after settle {w['rms_dbfs_after_settle']:6.1f}) "
               f"vs before {w['rms_dbfs_4s_before']:6.1f} dBFS  {w['label']}")
+    a = m['act_turn_S5_S6']
+    print(f"  act turn S5->S6 (cut {a['cut']:.2f}s): first onset {a['first_onset_from_cut_s']:+.3f}s from the cut; floor "
+          f"{a['floor_dbfs_cut_bar_to_cut']} dBFS over {a['cut_bar']:.2f}-{a['cut']:.2f}s, {a['floor_dbfs_cut-0.8_to_downbeat']} "
+          f"dBFS over {a['cut'] - 0.8:.2f}-{a['nimble_downbeat']:.2f}s")
+    print('  cut floors (quietest 100 ms within 0.8 s): ' +
+          ', '.join(f"{k} {v['floor_dbfs']}" for k, v in m['cut_floors'].items()))
+    # D31 acceptance (checked after the files are written, so measure.json shows what failed): no hole at the act turn
+    if a['floor_dbfs_cut_bar_to_cut'] < TURN_FLOOR_DBFS or a['floor_dbfs_cut-0.8_to_downbeat'] < TURN_FLOOR_DBFS:
+        raise AssertionError(f"act turn: the bed falls below {TURN_FLOOR_DBFS} dBFS at the S5->S6 cut ({a})")
+    if not m['duration']['matches_timeline']:
+        raise AssertionError(f"music bed length {m['duration']['samples']} != timeline {m['duration']['timeline_samples']} samples")
 
 
 if __name__ == '__main__':

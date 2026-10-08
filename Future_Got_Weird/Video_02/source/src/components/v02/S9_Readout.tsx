@@ -12,7 +12,9 @@ import {SensorTop, facingOf} from './HandheldSensor';
  * the likely-location blob (the same field as S4.7: all four wall spots, one-bin bands). Screen-space component.
  *
  * `blob` grows the blob in, `lit` flashes a ring round it (the clue lights), `blank` empties the screen (no echo came
- * back: the reading is gone), `t` pops the whole inset (scale about its centre).
+ * back: the reading is gone), `t` pops the whole inset in (scale about its centre, with a small overshoot). With
+ * `exiting`, `t` going 1 -> 0 is a calm exit instead (review r1 D40): it shrinks to 94 % and fades out, rather than
+ * running the pop backwards (a swell, then a snap).
  *
  * MiniReadout is the same reading at the size of the real sensor's screen (sensor-local px), so the prop in the room
  * shows what the inset magnifies.
@@ -89,14 +91,17 @@ export type ReadoutInsetProps = Omit<ReadoutMapProps, 'w' | 'h'> & {
   t: number;
   /** status LED 0..1 */
   led?: number;
+  /** `t` is the exit (1 -> 0): scale 0.94 + 0.06 t, opacity t */
+  exiting?: boolean;
 };
 
 export const READOUT_BEZEL = {side: 22, top: 22, bottom: 44};
 
 /** The magnified readout (screen-space <svg>). */
-export const ReadoutInset: React.FC<ReadoutInsetProps> = ({x, y, w, h, t, led = 1, ...map}) => {
+export const ReadoutInset: React.FC<ReadoutInsetProps> = ({x, y, w, h, t, led = 1, exiting = false, ...map}) => {
   if (t <= 0) return null;
-  const s = t >= 1 ? 1 : E.back(clamp01(t));
+  const s = t >= 1 ? 1 : exiting ? 0.94 + 0.06 * clamp01(t) : E.back(clamp01(t));
+  const op = exiting ? clamp01(t) : Math.min(1, t * 2);
   const cx = x + w / 2;
   const cy = y + h / 2;
   const b = READOUT_BEZEL;
@@ -105,7 +110,7 @@ export const ReadoutInset: React.FC<ReadoutInsetProps> = ({x, y, w, h, t, led = 
   const id = 's9readout';
   return (
     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-      <g transform={`translate(${f2(cx)} ${f2(cy)}) scale(${s.toFixed(4)}) translate(${f2(-cx)} ${f2(-cy)})`} opacity={Math.min(1, t * 2)}>
+      <g transform={`translate(${f2(cx)} ${f2(cy)}) scale(${s.toFixed(4)}) translate(${f2(-cx)} ${f2(-cy)})`} opacity={op}>
         {/* soft drop shadow */}
         <rect x={x + 8} y={y + 12} width={w} height={h} rx={28} fill={C.shadow} />
         <defs>

@@ -1,11 +1,11 @@
 {
  "integrated_lufs_python": -15.52,
  "true_peak_dbtp_python_4x": -1.3,
- "voice_to_music_db_during_speech": 19.0,
- "music_rms_in_gaps_dbfs": -36.2,
+ "voice_to_music_db_during_speech": 18.9,
+ "music_rms_in_gaps_dbfs": -36.0,
  "music_lufs_before_ducking": -27.0,
  "duck_db": 9.0,
  "amb_lufs": -46.0,
  "sfx_db": 0.0,
- "duration_s": 403.03
+ "duration_s": 404.01
 }

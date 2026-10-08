@@ -6,7 +6,7 @@ import {useG} from '../lib/SceneFrame';
 import {at, scene, seg, segEnd} from '../lib/timeline';
 import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
 import {E, SNAP, SOFT, camPath, hop, ring, sp, tw} from '../lib/motion';
-import {CAM_ROOM, PLAN_CARD_RECT, RAISED_TILT} from '../lib/shots';
+import {CAM_ROOM, PLAN_CARD_AREA, PLAN_CARD_RECT, RAISED_TILT} from '../lib/shots';
 import {LAYOUT, PTS, assertAroundTheEnd, partitionHides, partitionTopH, projectWith, rigAt, tiltAt, viewAt, type Layout, type PlanPt, type ViewState} from '../lib/room';
 import {
   LAYOUT as OLAYOUT,
@@ -14,6 +14,7 @@ import {
   confocalPath,
   firstOccluderHit,
   layoutPoints,
+  segmentBlocked,
   lerpP,
   pathLength,
   pathSchedule,
@@ -32,6 +33,7 @@ import {
   Character2,
   EXPR,
   HANDS_ON_HIPS,
+  eyesWorld,
   figuresHide,
   handWorld2,
   rimFlash,
@@ -48,7 +50,7 @@ import {S9SensorStand, behindBox, boxOf, movedLayout, planWalk, standGeometry, w
 import {MiniReadout, ReadoutInset} from '../components/v02/S9_Readout';
 import {EndCard} from '../components/v02/S9_EndCard';
 import {BackHead} from '../components/v02/S9_BackHead';
-import {PlanCard, PlanSpot} from '../components/v02/PlanCard';
+import {PLAN_VIEW, PlanCard, PlanSpot, viewForArea} from '../components/v02/PlanCard';
 
 /**
  * S9 · Payoff (s45–s48). Storyboard shots S8.1–S8.4 (now scene S9).
@@ -191,7 +193,14 @@ const LIT = Math.max(BLOB0 + 16, K.clues);
 const DEFLATE = LIT + 2;
 /** "math": as the blob starts to grow he gulps and peeks toward her sensor (a designed development, not a still hold) */
 const GULP = BLOB0 + 2;
-const INSET_OUT = Math.max(LIT + 20, K.s47 - 2);
+/** The readout (and its "likely location" label) holds well past the clue (review r1 D40: it left ~0.8 s after it lit,
+ *  on the end of the sentence) and clears just before he sets off on "he'd": the takeaway image gets its settle. */
+const INSET_OUT = Math.max(LIT + 40, K.hed - 10);
+/** the label's exit (8 frames, a calm shrink-and-fade) starts this long before the inset's */
+const LABEL_LEAD = 6;
+const LABEL_OUT_DUR = 8;
+/** the inset's exit (a calm shrink-and-fade, S9_Readout `exiting`) */
+const INSET_OUT_DUR = 10;
 /** the arrival cue (lib Cast2 rimFlash) when each pulse reaches him: his chest is the W -> H legs' end (vertex 2) */
 const HITS = [FLINCH, Math.round(VF4[2])];
 
@@ -231,11 +240,19 @@ export const R4 = {from: HANDS, to: THUNK + 10 + STATIC};
 const RT = R4.to;
 if (!(CARD_IN + CARD_IN_DUR <= P3_0)) throw new Error(`S9: the PlanCard must be in (${CARD_IN + CARD_IN_DUR}) before the first pulse leaves (${P3_0})`);
 if (!(CARD_OUT < INSET0 && CARD_OUT < HANDS && CARD_OUT + CARD_OUT_DUR <= INSET0)) throw new Error(`S9: the PlanCard must be gone (${CARD_OUT + CARD_OUT_DUR}) before the readout inset (${INSET0}) and R4 (${HANDS})`);
+// D40: the readout settles on the lit clue (>= 40 frames, label up throughout), and it and its ring are gone well before
+// his hands meet the partition (R4 has no overlays)
+if (!(INSET_OUT - LABEL_LEAD - LIT >= 34 && INSET_OUT + INSET_OUT_DUR <= HANDS - 8)) throw new Error(`S9: the readout must hold the lit clue (${LIT}..${INSET_OUT}) and be gone (${INSET_OUT + INSET_OUT_DUR}) 8 frames before R4 (${HANDS})`);
 
 // S9.3 after the push: blank readout, he steps back round the near end and turns to face us, smug; the lean (J4).
 // Offsets shrink if the hold gets shorter.
 const CARD0 = K.future - 10; // the end card wipes in; the wordmark lands on "Future"
-const KK = clamp((CARD0 - RT) / 105, 0.6, 1);
+/** The post-push chain at full length (frames from R4's end to the wipe): the blocked pulse, the blank readout, his step
+ *  clear, the dust-off and the smug beat, her stroll and lean, the take (~72 frames, as before), then the reaction and
+ *  its settle (review r1 D43, lead L11: the s47 pause grew 0.8 s for it, so 105 + 24). On the measured timeline KK = 1;
+ *  a quicker narration compresses the settle along with everything else instead of eating it alone. */
+const HOLD_NOM = 105 + 24;
+const KK = clamp((CARD0 - RT) / HOLD_NOM, 0.6, 1);
 const o = (n: number) => RT + Math.round(n * KK);
 const PULSE2 = o(3); // the sensor fires once R4 has ended (its emitter lights 3 frames before)
 // the light tests use the partition at rest: its post-thunk wobble (gone at THUNK + 10) must have settled before the
@@ -253,7 +270,10 @@ const DUST0 = Math.max(o(23), TURN_FRONT + 3);
 const DUST1 = Math.max(o(38), DUST0 + 15);
 const SMUG0 = DUST1;
 const C_LOOK = o(10);
-const C_FPS = Math.max(5, Math.round(7 * KK));
+/** her deadpan stroll (review r1 D41: 4 footfalls in 21 frames, one every ~5, read as a scurry): the same three short
+ *  steps (the chibi rig's legs can't take 0.42 m strides without dropping into a lunge), a footfall every 8 frames and
+ *  a 6-frame closing half-step; she sets off as her screen goes blank (KK = 1) */
+const C_FPS = Math.max(6, Math.round(9 * KK));
 /** where she ends up: just left of and in front of the near end; once she leans, her head clears both the near end and
  *  the sensor on its stand (a stop further left puts the sensor right beside her ear) */
 const C_SPOT = {x: 1.73, z: 1.62};
@@ -306,17 +326,52 @@ const BLANK = Math.max(o(22), STOP_END + 6);
 // the stopped pulses and their crosses stay up until the readout has gone blank (cause and consequence on screen together)
 const PATHS2_OUT = Math.max(o(24), STOP_END + 8, BLANK + 6);
 const INSET2_OUT = BLANK + Math.round(16 * KK);
-const C_WALK0 = Math.max(o(32), BLANK); // she sets off once her screen has gone blank
-const C_WALK_PLAN = planWalk({x: LAYOUT.operator.x, z: LAYOUT.operator.z}, C_SPOT, {stepM: 0.27, lift: 14});
+const C_WALK0 = Math.max(o(26), BLANK + Math.round(2 * KK)); // she sets off as her screen goes blank
+/** Her steps cross the screen to the right (and a little toward us): with the shoes facing the camera the frontal
+ *  rig's legs crossed into an X whenever a foot landed ahead of the other; she walks in profile (S9_Room planWalk
+ *  `profile`: shoes 3/4 to the right, knees that way, the near leg on top), Cast2's sideways-walk convention. */
+const C_WALK_PLAN = planWalk({x: LAYOUT.operator.x, z: LAYOUT.operator.z}, C_SPOT, {stepM: 0.27, lift: 14, profile: 1});
 const LEAN0 = C_WALK0 + C_WALK_PLAN.steps * C_FPS + 1;
 const OPEN = LEAN0 + Math.round(15 * KK);
 const BUSTED = OPEN + 3;
+// D42: her line of sight, drawn on as she leans round the near end, reaches his face as he opens his eyes (no cross:
+// nothing is in the way now; S1.1's stopped on the partition); held through the take, then it fades before his reaction
+const SIGHT0 = LEAN0 + 2;
+const SIGHT_OUT = Math.min(BUSTED + Math.round(14 * KK), CARD0 - 8);
+const SIGHT_OUT_DUR = 8;
+// D43: the take, then the reaction and a settle before the narrator and the wipe (offsets shrink with a quicker take
+// window): a guilty grin, a tiny paw wave at her (S9.1's sheepish wave), the paw back down; she does one slow blink
+const KR = clamp((CARD0 - BUSTED) / 52, 0.5, 1);
+const rk = (n: number) => Math.round(n * KR);
+const GRIN0 = BUSTED + rk(16);
+const PAW0 = BUSTED + rk(18);
+const PAW_UP = Math.max(4, rk(6));
+const WAG0 = PAW0 + PAW_UP;
+const PAW1 = WAG0 + rk(11);
+const PAW_DN = Math.max(5, rk(8));
+const SETTLE0 = PAW1 + PAW_DN; // the paw is back on his hip: he holds the guilty grin to the wipe
+const C_BLINK0 = BUSTED + rk(25);
+const C_BLINK_DUR = 14; // 5 closing, 3 shut, 6 opening
+// D43: the take gets a reaction and a settle: >= 45 frames from the take to the wipe and >= 40 before the narrator's s48
+// (57 and 48 on the measured timeline; a quicker narration scales both with KK), the paw is back down >= 6 frames
+// before the wipe, her blink is over, and the sight line has faded before the wipe and after the take has landed
+if (!(CARD0 - BUSTED >= Math.floor(45 * KK) && K.s48 >= BUSTED + Math.floor(40 * KK))) throw new Error(`S9: the take (${BUSTED}) needs ${Math.floor(45 * KK)} frames before the wipe (${CARD0}) and ${Math.floor(40 * KK)} before s48 (${K.s48})`);
+if (!(SETTLE0 + 6 <= CARD0 && C_BLINK0 + C_BLINK_DUR <= CARD0 && SIGHT_OUT >= BUSTED + 8 && SIGHT_OUT + SIGHT_OUT_DUR <= CARD0)) throw new Error(`S9: the reaction (settle ${SETTLE0}, blink ${C_BLINK0}, sight line out ${SIGHT_OUT}) must be over before the wipe (${CARD0})`);
 
 /* ================================================================== sound */
 
 const GUESSER_STEPS = walkContacts(WALK0, WALK_PLAN, WALK_FPS);
 const PUSH_STEPS = walkContacts(PUSH0, PUSH_PLAN, PUSH_FPS).filter((f) => f < THUNK - 2); // the last one is under the thunk
 const CHECKER_STEPS = walkContacts(C_WALK0, C_WALK_PLAN, C_FPS);
+// D41: an unhurried stroll: on the measured timeline (KK = 1) her full steps land >= 7 frames apart (8, 8) and the
+// closing half-step >= 6 (a quicker narration compresses it with the rest of the chain); the last lands by the lean
+{
+  const gaps = CHECKER_STEPS.slice(1).map((f, i) => f - CHECKER_STEPS[i]);
+  const full = gaps.slice(0, -1);
+  const minFull = Math.round(7 * KK);
+  const minClose = Math.round(6 * KK);
+  if (Math.min(...full) < minFull || gaps[gaps.length - 1] < minClose || CHECKER_STEPS[CHECKER_STEPS.length - 1] > LEAN0) throw new Error(`S9: her stroll's footfalls (${CHECKER_STEPS.join(', ')}) must be >= ${minFull} frames apart (closing half-step >= ${minClose}) and land by the lean (${LEAN0})`);
+}
 // his steps back round the near end after the push (guesserAt's post-push walk)
 const STEP_CLEAR = walkContacts(STEP0, STEP_PLAN, STEP_FPS);
 
@@ -540,7 +595,16 @@ const guesserAt = (g: number, tilt: number, cam: Cam): GuesserState => {
     pose = withPose(pose, {...EXPR.busted, lookX: -0.95, lookY: 0.05, tilt: -2}, Math.min(1, bust));
     pose = {...pose, bob: hop(g, BUSTED, 8, 7), blink: 1};
   }
-  const life = g >= BUSTED ? 0.12 : 0.35;
+  // the reaction, then the settle (review r1 D43): the take holds, then a guilty grin at her (still caught: brows up,
+  // the sweat drop) and a tiny paw wave (S9.1's sheepish wave, his far hand), the paw back on his hip; he holds the grin
+  const guilty = tw(g, GRIN0, 6, E.inOut);
+  if (guilty > 0) pose = withPose(pose, {mouth: 'grin', eyes: 1.1, pupil: 0.92, brows: 0.75, browAsym: 0.25, lid: 0.14, tilt: 4, lookX: -0.92, lookY: 0.12}, guilty);
+  const paw = Math.min(tw(g, PAW0, PAW_UP, E.out), 1 - tw(g, PAW1, PAW_DN, E.inOut));
+  if (paw > 0) {
+    const wag = g >= WAG0 && g < PAW1 ? Math.sin((g - WAG0) * 0.75) * Math.min(1, (PAW1 - g) / 3) : 0;
+    pose = mixPose2(pose, {...pose, armR: reachLocal(112 + 9 * wag, -346, 1, 1)}, paw);
+  }
+  const life = g < BUSTED ? 0.35 : 0.12 + 0.18 * tw(g, GRIN0, 12, E.inOut);
   return {plan: {x: HIDE.x, z: HIDE.z}, place: {...place, life}, pose, life, walk: null, view: 'front', turn: turnSquash(g, TURN_FRONT), inFront: false};
 };
 
@@ -631,8 +695,74 @@ const checkerAt = (g: number, tilt: number): CheckerState => {
   let pose: Pose2 = {...withPose(base, face(1)), feet: wk.pose.feet, sink: wk.pose.sink, lookX: 0.9, lookY: 0.15};
   const lean = sp(g, LEAN0, SOFT);
   if (g >= LEAN0) pose = withPose(pose, {peek: 0.85, lean: 3, lookX: 1, lookY: 0.05, tilt: 2, lid: 0.4}, Math.min(1.04, lean));
+  // his wave gets one slow, deadpan blink (review r1 D43); no idle blink near it
+  if (g >= C_BLINK0 - 14 && g < C_BLINK0 + C_BLINK_DUR + 14) {
+    const u = g - C_BLINK0;
+    const open = u < 0 ? 1 : u < 5 ? 1 - E.inOut(u / 5) : u < 8 ? 0 : u < C_BLINK_DUR ? E.inOut((u - 8) / (C_BLINK_DUR - 8)) : 1;
+    pose = {...pose, blink: open};
+  }
   return {plan: wk.plan, place, pose, walk: wk};
 };
+
+/* ================================================================== J4: her line of sight (review r1 D42) */
+
+/** The sight line runs from her eyes toward his and is drawn UNDER her rig (her head, hair and the pencil behind her
+ *  ear cover its start, so it comes out of her silhouette and never crosses her face), over the partition and him, and
+ *  stops just short of his head (outside his ear: it reaches his face, never crosses it). SIGHT_FROM: rig px from her
+ *  eyes beyond which it is surely clear of her head (the load-time tests check the line from there); SIGHT_TO: rig px
+ *  short of his eyes where it stops. S1.1's line stopped on the partition with a cross; this one meets nothing. */
+const SIGHT_FROM = 92;
+const SIGHT_TO = 80;
+
+/** J4's sight line at frame g (world px): her eyes, his eyes, and the drawn part a -> b (fractions ua..ub of e0 -> e1). */
+const sightLine = (ch: CheckerState, gu: GuesserState) => {
+  const e0 = eyesWorld(ch.place, ch.pose);
+  const e1 = eyesWorld(gu.place, gu.pose);
+  const d = Math.hypot(e1.x - e0.x, e1.y - e0.y) || 1;
+  const ua = (SIGHT_FROM * ch.place.scale) / d;
+  const ub = 1 - (SIGHT_TO * gu.place.scale) / d;
+  const at = (u: number) => ({x: lerp(e0.x, e1.x, u), y: lerp(e0.y, e1.y, u)});
+  return {e0, e1, d, ua, ub, a: at(ua), b: at(ub)};
+};
+
+/** A world-px point on an upright figure's billboard (plan depth z) back to plan metres and height (lib/room's
+ *  projection inverted at that depth). */
+const billboardToPlan = (sv: ViewState, X: number, Y: number, z: number): PlanPt => {
+  const dz = z - sv.pivot.z;
+  return {x: sv.pivot.x + (X - sv.ax) / sv.ppm - sv.shear * dz, z, h: sv.pivot.h + (sv.floor * dz - (Y - sv.ay) / sv.ppm) / Math.max(1e-6, sv.height)};
+};
+
+// D42 hidden tests (module load). The J4 line is honest: (1) from where she stood by the sensor, the line from her eyes
+// to his at HIDE is blocked by the closed partition (why she has to walk round); (2) from her lean, the 3D line from her
+// eyes to his clears the closed partition in plan, no point of it is hidden by the partition as drawn (partitionHides,
+// LAY_CLOSED), and the drawn part is behind neither figure (figuresHide), through the take to the fade.
+{
+  const sv = viewAt(RAISED_TILT);
+  const ch0 = checkerAt(C_LOOK, RAISED_TILT);
+  const gu0 = guesserAt(SMUG0 + 2, RAISED_TILT, CAM_W);
+  const a0 = billboardToPlan(sv, eyesWorld(ch0.place, ch0.pose).x, eyesWorld(ch0.place, ch0.pose).y, ch0.plan.z);
+  const b0 = billboardToPlan(sv, eyesWorld(gu0.place, gu0.pose).x, eyesWorld(gu0.place, gu0.pose).y, gu0.plan.z);
+  if (!segmentBlocked(a0, b0, LAY_CLOSED)) throw new Error('S9: J4 needs the closed partition between her (by the sensor) and him at HIDE');
+  for (const f of [OPEN, BUSTED, SIGHT_OUT + SIGHT_OUT_DUR - 1]) {
+    const ch = checkerAt(f, RAISED_TILT);
+    const gu = guesserAt(f, RAISED_TILT, CAM_W);
+    const L = sightLine(ch, gu);
+    const A = billboardToPlan(sv, L.e0.x, L.e0.y, ch.plan.z);
+    const B = billboardToPlan(sv, L.e1.x, L.e1.y, gu.plan.z);
+    if (segmentBlocked(A, B, LAY_CLOSED, 0.05)) throw new Error(`S9: at ${f} her line of sight to him meets the closed partition (plan)`);
+    if (!(L.ua < L.ub - 0.15)) throw new Error(`S9: at ${f} the drawn sight line is too short (${(L.d * (L.ub - L.ua)).toFixed(0)} px)`);
+    const figs = figuresHide(sv, LIGHT_H, [
+      {z: ch.plan.z, place: ch.place},
+      {z: gu.plan.z, place: gu.place},
+    ]);
+    for (let i = 0; i <= 24; i++) {
+      const u = L.ua + ((L.ub - L.ua) * i) / 24;
+      const p: PlanPt = {x: lerp(A.x, B.x, u), z: lerp(A.z, B.z, u), h: lerp(A.h!, B.h!, u)};
+      if (partitionHides(sv, p.h!, {layout: LAY_CLOSED})(p)) throw new Error(`S9: at ${f} the sight line is drawn where the closed partition hides it (u ${u.toFixed(2)})`);
+      if (figs(p)) throw new Error(`S9: at ${f} the drawn sight line passes behind a figure (u ${u.toFixed(2)})`);
+    }
+  }
+}
 
 /* ================================================================== the room shot */
 
@@ -652,6 +782,10 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   const gu = guesserAt(g, tilt, cam);
   const ch = checkerAt(g, tilt);
   const geo = standGeometry(tilt);
+  // J4: her line of sight draws on as she leans and reaches his face as he opens his eyes; it fades after the take
+  const sightT = g >= SIGHT0 ? tw(g, SIGHT0, OPEN - SIGHT0, E.out) : 0;
+  const sightOp = 1 - tw(g, SIGHT_OUT, SIGHT_OUT_DUR, E.inOut);
+  const sight = sightT > 0 && sightOp > 0 ? sightLine(ch, gu) : null;
 
   /* ---- the sensor's readout on the stand */
   const blobT = tw(g, BLOB0, 18, E.out);
@@ -730,6 +864,21 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
     </>
   );
 
+  // J4: her line of sight past the near end to his face (S1.1's dashed coral line), under her rig (see SIGHT_FROM)
+  const sightPath = sight ? (
+    <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+      <path
+        d={`M ${f2(sight.e0.x)} ${f2(sight.e0.y)} L ${f2(lerp(sight.e0.x, sight.b.x, sightT))} ${f2(lerp(sight.e0.y, sight.b.y, sightT))}`}
+        stroke={C.coral}
+        strokeWidth={5}
+        strokeDasharray="14 11"
+        strokeLinecap="round"
+        fill="none"
+        opacity={f2(sightOp)}
+      />
+    </svg>
+  ) : null;
+
   const items: RoomItem[] = [
     {key: 'pg', z: (box.z0 + box.z1) / 2, box, node: group},
     {
@@ -740,6 +889,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
       node: (
         <>
           {walkShadow(ch.walk)}
+          {sightPath}
           <Character2 look={CAST.checker} pose={ch.pose} frame={ch.place.frame!} seed={CHECKER_SEED} x={ch.place.x} y={ch.place.y} scale={ch.place.scale} life={ch.place.life} shadow={!ch.walk} />
         </>
       ),
@@ -820,16 +970,27 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   );
 
   /* ---- screen space: the magnified readout, the real sensor ringed, chips */
-  const insetT = g < RT ? tw(g, INSET0, 12, E.out) * (1 - tw(g, INSET_OUT, 10, E.inOut)) : tw(g, INSET2, 8, E.out) * (1 - tw(g, INSET2_OUT, 8, E.inOut));
+  // in: the inset pops in as before (S9_Readout's E.back); out (review r1 D40): a calm shrink-and-fade (`exiting`),
+  // not E.back run backwards (a swell, then a snap)
+  const insetExiting = g >= (g < RT ? INSET_OUT : INSET2_OUT);
+  const insetT = g < RT ? tw(g, INSET0, 12, E.out) * (1 - tw(g, INSET_OUT, INSET_OUT_DUR, E.inOut)) : tw(g, INSET2, 8, E.out) * (1 - tw(g, INSET2_OUT, 8, E.inOut));
   const scr = (p: {x: number; y: number}) => worldToScreen(cam, p.x, p.y);
   const sensorScr = scr({x: (sb.x0 + sb.x1) / 2, y: (sb.y0 + sb.y1) / 2});
-  // the ring links the inset to the real sensor; after the push it goes before she walks past the stand
-  const ringT = g < RT ? insetT : insetT * (1 - tw(g, Math.min(INSET2_OUT, C_WALK0) - 6, 6, E.inOut));
-  const labelT = g < RT ? tw(g, LIT, 10, E.out) * (1 - tw(g, INSET_OUT - 6, 8)) : 0;
+  // the ring links the inset to the real sensor; after the push it goes before she walks past the stand; it pops in
+  // with the inset and leaves with a fade (like the inset's exit)
+  const ringOut = g < RT ? tw(g, INSET_OUT, INSET_OUT_DUR, E.inOut) : tw(g, Math.min(INSET2_OUT, C_WALK0) - 6, 6, E.inOut);
+  const ringIn = g < RT ? tw(g, INSET0, 12, E.out) : tw(g, INSET2, 8, E.out);
+  const ringT = ringIn * (1 - ringOut);
+  // the "likely location" label: in on the clue (the pop as before), out just before the inset (8 frames, a 6 % shrink
+  // and a fade)
+  const labelIn = g < RT ? tw(g, LIT, 10, E.out) : 0;
+  const labelOut = tw(g, INSET_OUT - LABEL_LEAD, LABEL_OUT_DUR, E.inOut);
+  const labelT = labelIn * (1 - labelOut);
   const chipT = Math.max(tw(g, P3_0 - 4, 8) * (1 - tw(g, ECHO_END + 8, 10)), g >= RT ? tw(g, PULSE2 - 2, 6) * (1 - tw(g, sched2[0].end + 10, 8)) : 0);
   const blobShown = g < RT ? blobT : 1;
   const insetLit = g < RT ? clamp01((g - LIT) / 18) : 0;
-  const cardT = tw(g, CARD_IN, CARD_IN_DUR, E.out) * (1 - tw(g, CARD_OUT, CARD_OUT_DUR, E.inOut));
+  // linear in: PlanCard applies the only ease to its slide and fade (review r1 D16: E.out here made it a near-pop)
+  const cardT = tw(g, CARD_IN, CARD_IN_DUR, E.linear) * (1 - tw(g, CARD_OUT, CARD_OUT_DUR, E.inOut));
   const insetBlank = g < RT ? 0 : blankT;
 
   return (
@@ -843,7 +1004,15 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
       </Camera>
       {ringT > 0 && (
         <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-          <circle cx={f2(sensorScr.x)} cy={f2(sensorScr.y)} r={f2(Math.max(0, 50 * cam.zoom * E.back(clamp01(ringT))))} fill="none" stroke={C.teal} strokeWidth={5} />
+          <circle
+            cx={f2(sensorScr.x)}
+            cy={f2(sensorScr.y)}
+            r={f2(Math.max(0, 50 * cam.zoom * (ringOut > 0 ? 0.94 + 0.06 * (1 - ringOut) : E.back(clamp01(ringIn)))))}
+            fill="none"
+            stroke={C.teal}
+            strokeWidth={5}
+            opacity={ringOut > 0 ? f2(1 - ringOut) : 1}
+          />
         </svg>
       )}
       {cardT > 0 && (
@@ -851,6 +1020,8 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
           x={CARD.x}
           y={CARD.y}
           t={cardT}
+          area={PLAN_CARD_AREA}
+          view={CARD_VIEW}
           layout={lay}
           checker={{...ch.plan, facing: 85}}
           guesser={{...gu.plan, facing: -90}}
@@ -877,10 +1048,19 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
           }
         />
       )}
-      <ReadoutInset x={INSET.x} y={INSET.y} w={INSET.w} h={INSET.h} t={insetT} field={FIELD} blob={blobShown * (1 - blinkOff)} lit={insetLit} blank={insetBlank} led={g >= BLANK && g >= RT ? 0 : 1} occZ0={lay.occluder.z0} />
+      <ReadoutInset x={INSET.x} y={INSET.y} w={INSET.w} h={INSET.h} t={insetT} exiting={insetExiting} field={FIELD} blob={blobShown * (1 - blinkOff)} lit={insetLit} blank={insetBlank} led={g >= BLANK && g >= RT ? 0 : 1} occZ0={lay.occluder.z0} />
       {labelT > 0 && (
-        <div style={{position: 'absolute', left: INSET.x + INSET.w / 2, top: INSET.y + INSET.h + 22, transform: `translateX(-50%) scale(${f2(E.back(clamp01(labelT)))})`, transformOrigin: '50% 0'}}>
-          <Pill tone="teal" size={36}>
+        <div
+          style={{
+            position: 'absolute',
+            left: INSET.x + INSET.w / 2,
+            top: INSET.y + INSET.h + LABEL_GAP,
+            transform: `translateX(-50%) scale(${f2(labelOut > 0 ? 1 - 0.06 * labelOut : E.back(clamp01(labelIn)))})`,
+            transformOrigin: '50% 0',
+            opacity: labelOut > 0 ? f2(1 - labelOut) : 1,
+          }}
+        >
+          <Pill tone="teal" size={44}>
             likely location
           </Pill>
         </div>
@@ -897,9 +1077,15 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
 const DIRS_W = scatterDirections({x: 0, z: 1}, 9, 4);
 const DIRS_H3 = scatterDirections(sub(W3, H), 6, 9);
 
-/** The magnified readout's place (screen px): upper left, over the plant and the left wall; its top edge sits above
- *  the plant's highest leaf tips (y ≈ 38), so no leaf pokes out over the bezel. */
-const INSET = {x: 96, y: 28, w: 420, h: 386};
+/** The magnified readout's place (screen px): upper left, over the plant and the left wall, inside the 5 % safe margin
+ *  (review r1 D44: it was {96, 28, 420, 386}, its bezel 26 px above the y 54 line). At CAM_W, the only framing it is
+ *  shown in, the plant's highest leaf tip is at y ~286, well under the bezel's top (the old note's "y ≈ 38" was
+ *  stale), so no leaf pokes out over it. Its bottom edge (y 414) is unchanged. */
+const INSET = {x: 100, y: 56, w: 416, h: 358};
+/** gap between the inset's bottom edge and the "likely location" label */
+const LABEL_GAP = 22;
+/** the "seen from above" card's plan framing in PLAN_CARD_AREA (the default PLAN_VIEW, scaled to the smaller area) */
+const CARD_VIEW = viewForArea(PLAN_VIEW, PLAN_CARD_AREA);
 
 /* ================================================================== small drawing helpers */
 

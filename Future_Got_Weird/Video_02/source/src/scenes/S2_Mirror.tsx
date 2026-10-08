@@ -1,13 +1,13 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {C, F} from '../theme';
+import {C, F, OUTLINE} from '../theme';
 import type {Sfx} from '../lib/sfx';
 import {useG} from '../lib/SceneFrame';
 import {at, scene, seg, segEnd} from '../lib/timeline';
 import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
 import {E, SNAP, camPath, drop, hop, impact, sp, tw} from '../lib/motion';
-import {RAISED_TILT} from '../lib/shots';
-import {LAYOUT, PTS, assertAroundTheEnd, hiddenByPartition, partitionHides, projectWith, rigAt, viewAt, visibleSpans, type HiddenTest, type PlanPt} from '../lib/room';
+import {HANDOFF_S2S3, HANDOFF_S2S3_EXTEND, RAISED_TILT} from '../lib/shots';
+import {LAYOUT, PTS, SLAB_T, WALL_T, assertAroundTheEnd, hiddenByPartition, partitionCrossings, partitionHides, projectWith, rigAt, roomBounds, viewAt, visibleSpans, type HiddenTest, type PlanPt} from '../lib/room';
 import {LAYOUT as OLAYOUT, assertPath, scatterDirections, type P2} from '../lib/optics';
 import {rand} from '../lib/anim';
 import {CAST} from '../components/cast';
@@ -50,12 +50,17 @@ import {CARD, EYE_PIECE, PostcardBody, ShredCard, lastLanding, type CardPlace} f
  *                 shreds into confetti ("shredded") that flutters into a pile ("waiting to be sorted"). On "worse"
  *                 cut to the room at TILT 0 (no head path obeys the light-path rule at the raised 0.10; S3 opens at
  *                 tilt 0 too): an inset keeps the pile, and on "bits" one piece still shows his eye. Three valid paths
- *                 (head, shoulder, feet -> three wall spots -> sensor) draw on, each round the partition's far end
- *                 through the gap and hidden exactly where the partition or a person covers it; on "Everything coming
- *                 back" coloured pulses run them and merge into one plain blip at the sensor ("blend"); on "What
- *                 survives" the blip is tossed over the checker's head into a row of empty time slots and fills the
- *                 one it arrived in: "what survives: timing". Small markers show where each path leaves him (head,
- *                 shoulder, foot); the confetti inset stays until the slots card takes over.
+ *                 (head, shoulder, feet -> three wall spots -> sensor) draw on ONE AT A TIME (review r1 D17), each round
+ *                 the partition's far end through the gap and hidden exactly where the partition or a person covers it:
+ *                 a small marker pops where the path leaves him (head, shoulder, foot), its route draws body-first,
+ *                 and on the frame its stub comes out from behind the partition's far end
+ *                 the marker throbs again and sends one ring in the path's colour; its wall spot pops when the route
+ *                 reaches it. On "Everything coming back" coloured pulses run them and merge into one plain blip at the
+ *                 sensor ("blend"); the confetti inset slides out left, solid, as the slots card slides in (no
+ *                 see-through swap, D18); on "What survives" the blip is tossed over the checker's head into a row of
+ *                 empty time slots and fills the one it arrived in, while the routes, spots and markers clear: "what
+ *                 survives: timing". The card then stays put (settled labels do not move) and the room stays opaque
+ *                 to the last frame: S3 opens on the same camera (HANDOFF_S2S3) in the same poses, a one-room cut (D03).
  *  Every slowed pulse (bench ray, mirror pulse, blend pulses) carries S1's saffron "slowed down" chip, top right.
  *
  * Every beat is cued from narration words (K); action lengths are clamped against the gaps so the scene survives
@@ -269,8 +274,33 @@ const V4 = viewAt(TILT4);
 const OP4 = rigAt(LAYOUT.operator.x, LAYOUT.operator.z, TILT4);
 const GU4 = rigAt(H2D.x, H2D.z, TILT4);
 /** S2.4 framing: the tilt-0 room on the right, a column on the left (x 92..792) for the confetti inset and the bars
- *  card (as S1 ends). The room spans screen x ~840..1790; his feet stand just above the caption band. */
-const CAM_D: Cam = {cx: 585, cy: 470, zoom: 1.2};
+ *  card (as S1 ends), over the wall and floor continued past the room's open left end (HANDOFF_S2S3_EXTEND). The room spans screen x ~840..1790; his feet stand just above the caption band. It is the shared
+ *  S2 -> S3 hand-off camera (lib/shots HANDOFF_S2S3, review r1 D03, lead L1 option a): S3 opens on this camera at tilt 0
+ *  in S2's last poses, so the cut at the scene boundary is one room (asserted below). */
+const CAM_D: Cam = HANDOFF_S2S3;
+if (CAM_D.cx !== 585 || CAM_D.cy !== 470 || CAM_D.zoom !== 1.2)
+  throw new Error(`S2: HANDOFF_S2S3 moved (${CAM_D.cx}, ${CAM_D.cy}, ${CAM_D.zoom}); S2.4's column, inset, bars card and marker clearances were laid out for {585, 470, 1.2}`);
+/** Merge r3 (S2 -> S3 hand-off): S2.4's room is drawn with the wall and floor continued HANDOFF_S2S3_EXTEND m past its
+ *  open left end (RoomSet extendLeft), so the left column behind the inset and the bars card is wall and floor, not
+ *  bare paper, and S3 opens on the same set. The shot starts on a hard cut (CUT4), so no frame shows it switch on. The
+ *  extended end (wall end, slab end and drop shadow, with the outline) must be out of frame at CAM_D. */
+{
+  const s = viewAt(TILT4);
+  const {z0, z1, wallHeight: HW} = LAYOUT.room;
+  const xe = LAYOUT.room.x0 - HANDOFF_S2S3_EXTEND;
+  let mx = -Infinity;
+  for (let k = 0; k <= 60; k++) {
+    const z = z0 - WALL_T + (z1 - z0 + WALL_T) * (k / 60);
+    for (const p of [{x: xe, z, h: -SLAB_T}, {x: xe, z, h: 0}, {x: xe, z: z0 - WALL_T, h: (HW * k) / 60}, {x: xe, z: z0, h: (HW * k) / 60}]) {
+      const q = projectWith(s, p);
+      for (const [dx, dy] of [[0, 0], [10, 14]]) {
+        const sc = worldToScreen(CAM_D, q.x + dx, q.y + dy);
+        if (sc.y >= -OUTLINE && sc.y <= 1080 + OUTLINE) mx = Math.max(mx, sc.x + OUTLINE);
+      }
+    }
+  }
+  if (!(HANDOFF_S2S3_EXTEND > 0) || mx >= 0) throw new Error(`S2: the S2.4 set's extended left end is in frame (to ${mx.toFixed(0)} px): the left column would show bare paper`);
+}
 /** `local`: the rig point (rig px, feet at 0,0) each path starts from. The shoulder is the top of his left shoulder
  *  (the arm root at x -66 stands right on the partition's near edge at tilt 0, so its marker would sit on the screen).
  *  `mark`: where the origin marker sits if not on that point (rig px): the head path leaves his head on the
@@ -435,10 +465,48 @@ const CUT4 = Math.max(SHRED + 50, K.worse);
 const PUSH4_0 = Math.max(SHRED + 30, K.waiting - 4);
 const PUSH4_DUR = clamp(CUT4 - PUSH4_0 - 6, 16, 40);
 const ROUTES0 = CUT4 + 10;
-const ROUTE_STAGGER = 10;
-const ROUTE_DUR = 22;
+/** The three paths draw one at a time (review r1 D17): path k's marker pops at ROUTES0 + k * ROUTE_STAGGER and its route
+ *  draws body-first over ROUTE_DUR, so each stub comes out from behind the partition right after its own marker (and
+ *  its second throb, ROUTE_EMERGE below) and the previous path has finished drawing before the next marker pops. All
+ *  three must be drawn before the pulses leave on "Everything". */
+const ROUTE_STAGGER = 26;
+const ROUTE_DUR = 20;
+if (ROUTE_DUR > ROUTE_STAGGER - 4) throw new Error('S2: the S2.4 routes must draw one at a time (ROUTE_DUR <= ROUTE_STAGGER - 4)');
+if (ROUTES0 + 2 * ROUTE_STAGGER + ROUTE_DUR > K.everything + 2)
+  throw new Error(`S2: the three S2.4 routes (one at a time from ${ROUTES0}) are not drawn by "Everything" (${K.everything}): ${ROUTES0 + 2 * ROUTE_STAGGER + ROUTE_DUR}`);
 const BITS = Math.max(CUT4 + 16, K.bits);
 const PULSE0 = Math.max(ROUTES0 + 2 * ROUTE_STAGGER + ROUTE_DUR, K.everything + 2);
+/** Route k's draw-on (0..1 of its drawn length, body first), exactly as RoomBlendShot draws it. */
+const routeAt = (g: number, k: number) => tw(g, ROUTES0 + k * ROUTE_STAGGER, ROUTE_DUR, E.inOut);
+/** Drawn (world px) lengths of each route's two legs (him -> wall spot, wall spot -> sensor). */
+const ROUTE_PX = BLEND.map((b) => ({l1: Math.hypot(b.px[1].x - b.px[0].x, b.px[1].y - b.px[0].y), l2: Math.hypot(b.px[2].x - b.px[1].x, b.px[2].y - b.px[1].y)}));
+/** First frame of route k's draw-on at which its drawn head is past `frac` of the route's drawn length. */
+const routeFrame = (k: number, frac: number, what: string) => {
+  for (let g = ROUTES0 + k * ROUTE_STAGGER; g <= ROUTES0 + k * ROUTE_STAGGER + ROUTE_DUR; g++) if (routeAt(g, k) > frac) return g;
+  throw new Error(`S2: route ${BLEND[k].id} never reaches its ${what}`);
+};
+/** The frame each route's stub comes out from behind the partition's FAR end (review r1 D17): the leg him -> wall spot
+ *  is hidden from his body (behind the partition's near end) until its last "out" crossing at the far edge; that is
+ *  also where its first visible run starts (asserted), so the stub really appears on this frame. The origin marker
+ *  throbs again and sends one ring in the path's colour on it. */
+const ROUTE_EMERGE = BLEND.map((b, k) => {
+  const cr = partitionCrossings(b.eff, b.W, V4, {zoom: CAM_D.zoom}).crossings;
+  const out = cr[cr.length - 1];
+  if (!out || out.dir !== 'out' || out.edge !== 'far') throw new Error(`S2: blend path ${b.id}: the leg to the wall does not come out at the partition's far end`);
+  const run0 = b.vis[0][0];
+  if (!run0 || Math.abs(run0[0] - out.u) > 0.01) throw new Error(`S2: blend path ${b.id}: its first visible stretch starts at u ${run0?.[0]}, not at the far-end exit ${out.u.toFixed(3)}`);
+  const {l1, l2} = ROUTE_PX[k];
+  return routeFrame(k, ((run0[0] + 1e-4) * l1) / (l1 + l2), 'far-end exit');
+});
+/** The frame each route's drawn head reaches its wall spot: the spot pops then (it used to pop at 45 % of the draw,
+ *  before the head stub had even come out from behind the partition). */
+const SPOT_HIT = BLEND.map((_, k) => routeFrame(k, ROUTE_PX[k].l1 / (ROUTE_PX[k].l1 + ROUTE_PX[k].l2) - 1e-6, 'wall spot'));
+for (let k = 0; k < BLEND.length; k++) {
+  const pop = ROUTES0 + k * ROUTE_STAGGER;
+  // each stub comes out after its own marker has popped (8 frames) and before the next marker pops
+  if (ROUTE_EMERGE[k] < pop + 6 || SPOT_HIT[k] < ROUTE_EMERGE[k] || (k + 1 < BLEND.length && SPOT_HIT[k] + 4 > ROUTES0 + (k + 1) * ROUTE_STAGGER))
+    throw new Error(`S2: blend path ${BLEND[k].id}: marker ${pop}, stub out ${ROUTE_EMERGE[k]}, spot ${SPOT_HIT[k]} are not one path at a time`);
+}
 const ARRIVE = Math.max(PULSE0 + 30, K.blend + 4);
 const BARS_IN = Math.max(ARRIVE + 6, K.many - 4);
 const INSET_OUT = Math.max(BITS + 16, BARS_IN - 6); // the inset hands over to the bars card (no empty left third)
@@ -446,13 +514,22 @@ const DROP0 = Math.max(BARS_IN + 14, K.what);
 const DROP_DUR = clamp(K.survives + 10 - DROP0, 10, 18);
 const DROP_HIT = DROP0 + DROP_DUR;
 const LABEL_T = DROP_HIT + 3;
-/** The takeaway takes over the frame: once the label has been up a beat, the timing card grows to the middle of the
- *  frame over a paper ground, so S2 ends on a graphic and the cut to S3's room (reframed for its plan card, which is
- *  in at 2884 in the column where he stands at CAM_D) is a clean graphic-to-room cut, as at "worse" (CUT4), not a
- *  sideways jump of the same room at the same zoom. Held >= 4 frames before the cut. */
+/** The routes, wall spots and origin markers clear with the trails as the blip is tossed ("what survives": the paths
+ *  do not), so S2's last frames hold only the room, both people and the settled card: S3 opens on exactly that. */
+const ROUTES_OUT = DROP0;
+const ROUTES_OUT_DUR = 14;
+/** Review r1 D03, lead L1 option a: NO takeover. The "what survives: timing" card stays at its settled size and place
+ *  (settled labels do not move) and the room stays opaque to S2's last frame; S3 opens on the same camera
+ *  (HANDOFF_S2S3, at tilt 0, both people in S2's last poses) and carries the same card out left during its push, so
+ *  the scene cut is one room (PATH_LEGIBILITY_PLAN: "the S2->S3 pair must read as one room at tilt 0"). The old
+ *  takeover (the card grew 2.06x over a dissolving room, held 0.3 s, then a hard cut to a reframed room) is kept only
+ *  as the lead's option b and is off: TAKEOVER_DUR = 0. */
 const TAKEOVER0 = Math.min(Math.max(LABEL_T + 12, K.end - 26), K.end - 14);
-/** 0 (no takeover; the plain cut) if the final narration leaves the label too little time on screen first. */
-const TAKEOVER_DUR = TAKEOVER0 >= LABEL_T + 8 ? Math.min(16, K.end - 4 - TAKEOVER0) : 0;
+const TAKEOVER_DUR = 0;
+/** One room to the cut: everything S2.4 adds over the room has cleared, and the label has settled, a beat before the
+ *  last frame (so S3's first frame, which draws none of it, is the same picture). */
+if (ROUTES_OUT + ROUTES_OUT_DUR > K.end - 8) throw new Error(`S2: the S2.4 routes are still clearing at the cut (${ROUTES_OUT + ROUTES_OUT_DUR} > ${K.end - 8})`);
+if (LABEL_T + 9 > K.end - 8) throw new Error(`S2: "what survives: timing" has not settled a beat before the cut (${LABEL_T + 9} > ${K.end - 8})`);
 
 /** Postcard place (screen px) and the pile's floor. */
 const CARD_PLACE: CardPlace = {x: 960, y: 486, scale: 1.05, rot: -3};
@@ -1147,6 +1224,36 @@ const INSET = {x0: 92, y0: 92, x1: 792, y1: 470};
 const INSET_K = 0.72;
 const BARS = {x0: 92, y0: 540, x1: 792, y1: 912, n: 12, slot: 7, base: 846, x: 152, w: 40, gap: 10, hMax: 150};
 const SLOT_C = {x: BARS.x + BARS.slot * (BARS.w + BARS.gap) + BARS.w / 2, y: BARS.base - 24};
+/** The inset -> slots card hand-over (review r1 D18): the inset slides out left (by its right edge plus its shadow, so
+ *  it ends past the frame edge) and only fades in its last frame, when it is already clear of the room; the slots
+ *  card slides in 60 px, opaque from its first frame (the log's barsIn * 2.5 left one 86 % frame with the plant and
+ *  pot showing through). Neither card ever stands see-through over the room, and the two are never see-through on the
+ *  same frame (asserted). */
+const INSET_SLIDE = INSET.x1 + 20;
+const BARS_SLIDE = 60;
+/** The inset's exit: a steady ease-in (quadratic) slide, so it accelerates out without E.in's last-frame jump. */
+const insetInAt = (g: number) => {
+  const u = tw(g, INSET_OUT, 10, E.linear);
+  return 1 - u * u;
+};
+const barsInAt = (g: number) => tw(g, BARS_IN, 12, E.out);
+const barsOpAt = (g: number) => (barsInAt(g) > 0 ? 1 : 0);
+{
+  const rb = roomBounds(TILT4);
+  const roomLeft = worldToScreen(CAM_D, rb.x0, rb.y0).x;
+  let barsSeeThrough = 0;
+  for (let g = Math.min(INSET_OUT, BARS_IN) - 1; g <= Math.max(INSET_OUT + 10, BARS_IN + 12) + 1; g++) {
+    const ii = insetInAt(g);
+    const io = clamp01(ii * 3);
+    const bo = barsOpAt(g);
+    const insetGhost = io > 0 && io < 1;
+    const barsGhost = bo > 0 && bo < 1;
+    if (insetGhost && INSET.x1 + 10 - INSET_SLIDE * (1 - ii) > roomLeft) throw new Error(`S2: frame ${g}: the confetti inset is see-through over the room`);
+    if (insetGhost && barsGhost) throw new Error(`S2: frame ${g}: the inset and the slots card are both see-through`);
+    if (barsGhost) barsSeeThrough++;
+  }
+  if (barsSeeThrough > 0) throw new Error(`S2: the slots card is see-through for ${barsSeeThrough} frames`);
+}
 /** The takeover (TAKEOVER0): the bars card's centre moves to TAKE_C and it grows to 1440 px wide (x 240..1680, y
  *  138..903: inside the 5 % margins and above the caption band; the label becomes 107 px, "time ->" 70 px). */
 const BARS_C = {x: (BARS.x0 + BARS.x1) / 2, y: (BARS.y0 + BARS.y1) / 2};
@@ -1204,12 +1311,13 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
   const arrivedFrac = BLEND.filter((b) => travelled >= b.L).length / BLEND.length;
   const flash = sp(g, ARRIVE, SNAP) * (1 - tw(g, ARRIVE + 30, 20));
   const trailOp = 1 - tw(g, DROP0, 14);
+  // the dashed routes and their wall spots clear with the trails (gone well before the one-room cut to S3)
+  const routeOp = 1 - tw(g, ROUTES_OUT, ROUTES_OUT_DUR);
   const routes = BLEND.map((b, k) => {
-    const r = tw(g, ROUTES0 + k * ROUTE_STAGGER, ROUTE_DUR, E.inOut);
+    const r = routeAt(g, k);
     if (r <= 0) return null;
     // draw-on of the dashed route by drawn length; only the stretches the camera sees (partition, people) are drawn
-    const l1 = Math.hypot(b.px[1].x - b.px[0].x, b.px[1].y - b.px[0].y);
-    const l2 = Math.hypot(b.px[2].x - b.px[1].x, b.px[2].y - b.px[1].y);
+    const {l1, l2} = ROUTE_PX[k];
     const head = r * (l1 + l2);
     const routeD = [legRuns(b, 0, 0, clamp01(head / l1)), legRuns(b, 1, 0, clamp01((head - l1) / l2))].join(' ').trim();
     // the pulse (constant real speed along the true path lengths) and its trail
@@ -1219,10 +1327,11 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
     const p3 = on ? legAt(b, leg, u) : null;
     const pp = p3 && !HIDE4(p3) ? P4(p3) : null;
     const trailD = g < PULSE0 ? '' : [legRuns(b, 0, 0, leg === 0 && on ? u : 1), on && leg === 0 ? '' : legRuns(b, 1, 0, on ? u : 1)].join(' ').trim();
+    const spot = g >= SPOT_HIT[k] ? E.back(clamp01((g - SPOT_HIT[k] + 1) / 6)) : 0;
     return (
       <g key={b.id}>
-        {routeD && <path d={routeD} fill="none" stroke={mixHex(b.color, C.paper, 0.22)} strokeWidth={R4.route} strokeDasharray={R4.dash} strokeLinecap="round" strokeLinejoin="round" />}
-        {r > 0.45 && <circle cx={f2(b.px[1].x)} cy={f2(b.px[1].y)} r={f2(R4.spot * E.back(clamp01((r - 0.45) / 0.2)))} fill={C.cream} stroke={C.ink} strokeWidth={4} />}
+        {routeD && routeOp > 0 && <path d={routeD} fill="none" stroke={mixHex(b.color, C.paper, 0.22)} strokeWidth={R4.route} strokeDasharray={R4.dash} strokeLinecap="round" strokeLinejoin="round" opacity={f2(routeOp)} />}
+        {spot > 0 && routeOp > 0 && <circle cx={f2(b.px[1].x)} cy={f2(b.px[1].y)} r={f2(R4.spot * spot)} fill={C.cream} stroke={C.ink} strokeWidth={4} opacity={f2(routeOp)} />}
         {trailD && trailOp > 0 && <path d={trailD} fill="none" stroke={b.color} strokeWidth={R4.trail} strokeLinecap="round" strokeLinejoin="round" opacity={0.9 * trailOp} />}
         {pp && <PulseDot x={pp.x} y={pp.y} r={R4.pulse} color={b.color} />}
       </g>
@@ -1231,7 +1340,7 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
   // the merged blip sits on the sensor's far face until it drops
   const blipOn = g >= PULSE0 && arrivedFrac > 0 && g < DROP0;
   const throb = pulse01(g, K.many, 14);
-  const markerOp = 1 - tw(g, DROP0, 14);
+  const markerOp = 1 - tw(g, ROUTES_OUT, ROUTES_OUT_DUR);
   const overlay = (
     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
       {routes}
@@ -1241,12 +1350,17 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
           const m = E.back(clamp01((g - ROUTES0 - k * ROUTE_STAGGER) / 8));
           if (m <= 0) return null;
           const o = ORIGIN_PX[k];
-          // the light leaves him: each marker throbs and sends out one ring in its path's colour as the pulses depart
-          const burst = clamp01((g - PULSE0) / 12);
-          const throb = 1 + 0.35 * pulse01(g, PULSE0 - 2, 12);
+          // the light leaves him: each marker throbs and sends out one ring in its path's colour, first on the frame
+          // its own stub comes out from behind the partition's far end (ROUTE_EMERGE), again as the pulses depart
+          const ring = (t0: number) => {
+            const u = clamp01((g - t0) / 12);
+            return u > 0 && u < 1 ? <circle r={f2(R4.mark * (1 + 0.35 * E.out(u)) + 4)} fill="none" stroke={b.color} strokeWidth={f2(5 * (1 - u) + 1)} opacity={f2(1 - u)} /> : null;
+          };
+          const throb = 1 + 0.35 * (pulse01(g, ROUTE_EMERGE[k] - 2, 12) + pulse01(g, PULSE0 - 2, 12));
           return (
             <g key={b.id} opacity={f2(markerOp)} transform={`translate(${f2(o.x)} ${f2(o.y)})`}>
-              {burst > 0 && burst < 1 && <circle r={f2(R4.mark * (1 + 0.35 * E.out(burst)) + 4)} fill="none" stroke={b.color} strokeWidth={f2(5 * (1 - burst) + 1)} opacity={f2(1 - burst)} />}
+              {ring(ROUTE_EMERGE[k])}
+              {ring(PULSE0)}
               <g transform={`scale(${f2(m * throb)})`}>
                 <circle r={R4.mark} fill={C.cream} stroke={C.ink} strokeWidth={4} />
                 <circle r={R4.markDot} fill={b.color} />
@@ -1265,9 +1379,9 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
   const items = roomItems(g, TILT4, ch, gu, {led: 1, reveal: 1, bumpHighlight: flash});
   // screen-space: the inset, the bars card, the dropping blip
   const sScr = worldToScreen(cam, SPX4.x, SPX4.y);
-  const insetIn = 1 - tw(g, INSET_OUT, 10, E.in);
+  const insetIn = insetInAt(g);
   const lift = tw(g, BITS, 10, E.out);
-  const barsIn = tw(g, BARS_IN, 12, E.out);
+  const barsIn = barsInAt(g);
   const dropU = clamp01((g - DROP0) / DROP_DUR);
   // the blip is tossed up and over the checker's head (not across her body) and drops into its time slot
   const lobC = {x: sScr.x + 60, y: sScr.y - 900};
@@ -1280,14 +1394,15 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
     <AbsoluteFill style={{background: C.paper}}>
       <Camera cam={cam}>
         <Layer depth={1}>
-          <RoomSet tilt={TILT4} items={items}>
+          <RoomSet tilt={TILT4} items={items} extendLeft={HANDOFF_S2S3_EXTEND}>
             {overlay}
           </RoomSet>
         </Layer>
       </Camera>
       {/* the metaphor, kept in an inset: confetti still holds bits of the picture */}
+      {/* review r1 D18: it leaves solid, sliding out left past the frame edge (no see-through card over the room) */}
       {insetIn > 0 && (
-        <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: insetIn, transform: `scale(${f2(0.9 + 0.1 * insetIn)})`, transformOrigin: `${INSET.x0}px ${INSET.y0}px`}}>
+        <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: f2(clamp01(insetIn * 3)), transform: `translateX(${f2(-INSET_SLIDE * (1 - insetIn))}px)`}}>
           <div style={{position: 'absolute', left: INSET.x0 + 10, top: INSET.y0 + 14, width: INSET.x1 - INSET.x0, height: INSET.y1 - INSET.y0, borderRadius: 22, background: C.shadow}} />
           <div style={{position: 'absolute', left: INSET.x0, top: INSET.y0, width: INSET.x1 - INSET.x0, height: INSET.y1 - INSET.y0, borderRadius: 22, background: C.cream, border: `4px solid ${C.ink}`, overflow: 'hidden'}}>
             <div style={{position: 'absolute', left: -INSET.x0, top: -INSET.y0, width: 1920, height: 1080, transform: `translate(${f2((INSET.x0 + INSET.x1) / 2 - 960 * INSET_K)}px, ${f2(INSET.y1 - 16 - (PILE_FLOOR + 104) * INSET_K)}px) scale(${INSET_K})`, transformOrigin: '0 0'}}>
@@ -1303,8 +1418,9 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
       {take > 0 && <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, background: C.paper, opacity: f2(Math.min(1, take * 1.25))}} />}
       <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, ...(take > 0 ? {transform: `translate(${f2((TAKE_C.x - BARS_C.x) * take)}px, ${f2((TAKE_C.y - BARS_C.y) * take)}px) scale(${f2(1 + (TAKE_K - 1) * take)})`, transformOrigin: `${BARS_C.x}px ${BARS_C.y}px`} : {})}}>
       {/* the row of timing bars */}
+      {/* review r1 D18: it arrives solid from its first frame, sliding in from the left and settling */}
       {barsIn > 0 && (
-        <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: barsIn, transform: `translateX(${f2(-40 * (1 - barsIn))}px)`}}>
+        <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: f2(barsOpAt(g)), transform: `translateX(${f2(-BARS_SLIDE * (1 - barsIn))}px)`}}>
           <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
             <rect x={BARS.x0 + 10} y={BARS.y0 + 14} width={BARS.x1 - BARS.x0} height={BARS.y1 - BARS.y0} rx={22} fill={C.shadow} />
             <rect x={BARS.x0} y={BARS.y0} width={BARS.x1 - BARS.x0} height={BARS.y1 - BARS.y0} rx={22} fill={C.cream} stroke={C.ink} strokeWidth={4} />

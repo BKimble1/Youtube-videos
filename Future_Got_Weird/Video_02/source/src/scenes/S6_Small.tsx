@@ -6,7 +6,7 @@ import {useG} from '../lib/SceneFrame';
 import {at, scene, seg, segEnd} from '../lib/timeline';
 import {E, FIRM, SNAP, SOFT, camKick, drop, impact, ring, sp, tw, kf} from '../lib/motion';
 import {rand} from '../lib/anim';
-import {Camera, Layer, type Cam} from '../lib/camera';
+import {Camera, Layer, camLerp, type Cam} from '../lib/camera';
 import {CAM_PLAN_ACT} from '../lib/shots';
 import {TOKEN_R} from '../lib/room';
 import layoutJson from '../data/layout.json';
@@ -28,7 +28,7 @@ import {Character2, EXPR, IDLE2, reach2, withPose, type Pose2} from '../componen
 import {HandheldSensor, SensorTop, facingOf, sensorPoint} from '../components/v02/HandheldSensor';
 import {CheckerToken, GuesserToken} from '../components/v02/Tokens';
 import {Band, CandidateArc, PulseDot, SensorGlyph, WallMarker, polyD} from '../components/v02/Optics';
-import {GadgetIcons, GripFingers, MuseumLabel, MuseumSet, ReachArm, SENSOR_SPOT, VelvetRope} from '../components/v02/S6_Plinth';
+import {GadgetIcons, GripFingers, MuseumLabel, MuseumSet, ReachArm, S5_SET_SW, S5_SHIFT, SENSOR_SPOT, VelvetRope} from '../components/v02/S6_Plinth';
 import {GenericPhone, PHONE, PHONE_SCREEN, Padlock} from '../components/v02/S6_Phone';
 import {ResearchModule} from '../components/v02/S6_ResearchModule';
 import {SensorStand} from '../components/v02/S6_Stand';
@@ -37,16 +37,22 @@ import {LongExposurePhoto} from '../components/v02/S6_Photo';
 
 /**
  * S6 · Small sensors, published 2026 (s30–s35).
- *  S6.1 s30  close-up of the empty fourth plinth; the checker's arm (coral sleeve) sets her small sensor on it; plate
- *            "published 2026 / MIT + Dartmouth"; label "time-of-flight sensors (LiDAR)"; the readout wakes on "found".
+ *  S6.1 s30  opens on S5's last framing (CAM_S5_END: the roped-off empty fourth plinth, the cheap-sensor stool and its
+ *            2021 card at the right) and eases in to the empty plinth, the stool and card sliding out at the right; the
+ *            checker's arm (coral sleeve) sets her small sensor on it (grip foot on the slab, her fist above it), lets go
+ *            and leaves, then the sensor rocks once; plate "published 2026 / MIT + Dartmouth"; label "time-of-flight
+ *            sensors (LiDAR)"; the readout wakes on "found".
  *  S6.2 s31  a generic phone slides in showing its raw data; a padlock drops and snaps shut on "private".
- *  S6.3 s32  the problems as three cards: a dim beam and a fainter echo; the team's own 10 × 10 research module; the
- *            checker lifts her sensor off its stand and it jiggles.
+ *  S6.3 s32  the problems as three cards: a dim beam and a fainter echo; the team's own research module (a dot grid
+ *            illustrating about 100 pixels; no grid size printed on it); the checker lifts her sensor off its stand and
+ *            it jiggles.
  *  S6.4 s33  a burst of dim, noisy plan "frames" (night-mode analogy) stacks into one clearer estimate.
  *  S6.5 s34  that estimate card grows into the plan (CAM_PLAN_ACT): the sensor jiggles, he steps from H_A to hiddenB,
  *            and plainly averaging the two frames' bands smears the estimate; a long-exposure photo gag.
  *  S6.6 s35  the plan splits: left, the sensor moves A → B1 on known positions, B1's wall points add bands and the patch
- *            shrinks; right, the sensor stays still and the predicted cloud follows him from H_A to hiddenB.
+ *            shrinks; right, the sensor stays still and he takes three steps along layout.json's illustrative track
+ *            (H_A → hiddenB → H_C → H_D); the bands and the possible-locations cloud are recomputed at each position and
+ *            catch up a few frames behind him, leaving a breadcrumb (dot + dashed outline of the old cloud) at each spot.
  * Every beat is cued from narration words (K); geometry, bands and clouds come from layout.json via lib/optics.
  */
 
@@ -115,7 +121,12 @@ const K = {
   listen35: at('s35', 'listening'),
   spread: at('s35', 'spread'),
   keep35: at('s35', 'Keep'),
+  each: at('s35', 'each'),
   step: at('s35', 'step'),
+  becomes: at('s35', 'becomes'),
+  position: at('s35', 'position'),
+  // S5's last cue still running at the cut: the cheap-sensor board's LED blink (S5_History LED = at('s29', 'cheap'))
+  s5Led: at('s29', 'cheap'),
 };
 
 /** Shot boundaries (cuts and the two plan transitions). */
@@ -131,15 +142,22 @@ const SPLIT_DUR = Math.max(14, Math.min(34, K.one - 6 - SPLIT0));
 /* ------------------------------------------------------------------ S6.1 timing */
 const S1K = 1.5; // sensor and hand scale in the close-up
 const CONTACT = K.y2026; // the sensor's grip foot touches the plinth on "2026"
-const ARM_IN = Math.max(K.start + 10, CONTACT - 30);
+/** The hand-off from S5 (review r1 D30): S6 opens on S5's last framing (S5 CAM_WB {4620, 440, 0.8} in S6 world px) and
+ *  eases to the plinth close-up, done before the arm comes in. */
+const OPEN_DUR = Math.max(16, Math.min(24, CONTACT - 36 - K.start));
+const OPEN_END = K.start + OPEN_DUR;
+const ARM_IN = Math.max(OPEN_END + 6, CONTACT - 30);
 const HOVER = CONTACT - 11;
 const RELEASE = CONTACT + 5;
 const RELEASE_END = RELEASE + 7;
 const ARM_GONE = RELEASE_END + 24;
+if (!(HOVER - ARM_IN >= 8)) throw new Error(`S6.1: the arm needs >= 8 frames to come in after the opening move (ARM_IN ${ARM_IN}, HOVER ${HOVER})`);
 /** one push toward the sensor and its label as the narration names it (ends before the label lands) */
 const PUSH0 = Math.max(ARM_GONE + 4, K.mit + 12);
 const PUSH_DUR = Math.max(16, Math.min(44, K.tof - 2 - PUSH0));
 const CAM_PLINTH_CLOSE: Cam = {cx: 1060, cy: 470, zoom: 1.12};
+/** S5's end framing (S5_History CAM_WB {4620, 440, 0.8}) in S6 world px (S5 x − S5_SHIFT). */
+const CAM_S5_END: Cam = {cx: 4620 - S5_SHIFT, cy: 440, zoom: 0.8};
 /* ------------------------------------------------------------------ S6.2 timing */
 /** the phone is already rising into view on the cut frame (starting it after the cut left 3 empty paper frames) */
 const PHONE_IN = CUT2 - 5;
@@ -177,8 +195,17 @@ const SLIDE0 = K.move + 2;
 const SLIDE_DUR = Math.max(16, K.known - SLIDE0);
 const ARCS0 = K.listen35 + 2;
 const TIGHT0 = K.spread - 6;
-const STEP0 = K.step - 2;
-const STEP_DUR = 18;
+/** Right panel (review r1 D08): three steps along the illustrative track at an even cadence, from "and each" to the
+ *  last one landing on "new position", 8..10 frames each; the bands and the cloud follow CLOUD_LAG frames behind him.
+ *  The last settle (cloud included) is >= 1 s before S7's wipe starts covering the panel (Main.tsx: S7 wipes in over
+ *  12 frames centred on the scene boundary, i.e. from K.end − 6). */
+const CLOUD_LAG = 4;
+const S7_WIPE_IN = K.end - 6;
+const STEP_FIRST = K.each - 6;
+const STEP_LAST = Math.min(K.position - 10, S7_WIPE_IN - 30 - CLOUD_LAG - 10);
+const STEP_DUR = Math.max(8, Math.min(10, Math.floor((STEP_LAST - STEP_FIRST) / 2) - 5));
+const STEP_T = [STEP_FIRST, Math.round((STEP_FIRST + STEP_LAST) / 2), STEP_LAST];
+if (!(STEP_T[1] - STEP_T[0] >= STEP_DUR + 3 && STEP_T[2] - STEP_T[1] >= STEP_DUR + 3)) throw new Error(`S6.6: the three steps overlap (${STEP_T.join(', ')}, ${STEP_DUR} f each)`);
 
 /* ================================================================== geometry (layout.json, verified paths) */
 
@@ -196,6 +223,13 @@ const HB = P(LJ.hiddenB.x, LJ.hiddenB.z, 'H_B');
 const OPER = P(LJ.operator.x, LJ.operator.z);
 const HW1 = LJ.bandHalfWidth.oneBin;
 const HW2 = LJ.bandHalfWidth.twoBins;
+/** S6.6 right panel: layout.json's illustrative frame-to-frame track (hiddenTrack: H_A → hiddenB → H_C → H_D, checked in
+ *  research/geometry/geometry_check.py; drawn under the panel's "illustrative" chip). */
+type HiddenTrack = {hiddenTrack: {H_C: {x: number; z: number}; H_D: {x: number; z: number}}};
+const LT = layoutJson as unknown as HiddenTrack;
+const HC = P(LT.hiddenTrack.H_C.x, LT.hiddenTrack.H_C.z, 'H_C');
+const HD = P(LT.hiddenTrack.H_D.x, LT.hiddenTrack.H_D.z, 'H_D');
+const TRACK: P2[] = [HA, HB, HC, HD];
 /** S6.5: frame 2's jiggle moves the sampled wall points this far along the wall (illustrative). */
 const JIG_SHIFT = 0.03;
 const WA_JIG = WA.map((w, i) => P(w.x + JIG_SHIFT, 0, `A'.W${i + 1}`));
@@ -206,12 +240,14 @@ for (const w of WA) {
   assertPath([SA, w, HB, w, SA], LAYOUT);
 }
 for (const w of WA_JIG) assertPath([SA, w, HB, w, SA], LAYOUT);
+for (const H of [HC, HD]) for (const w of WA) assertPath([SA, w, H, w, SA], LAYOUT);
 for (const w of WB) assertPath([SB, w, HA, w, SB], LAYOUT);
 
 const GRID_H: GridSpec = {x0: 2.1, x1: 3.3, z0: 0.25, z1: 1.45, step: 0.008};
 const GRID_S: GridSpec = {x0: 2.0, x1: 3.45, z0: 0.05, z1: 1.5, step: 0.008};
 const GRID_L: GridSpec = {x0: 2.15, x1: 3.05, z0: 0.4, z1: 1.3, step: 0.008};
-const GRID_R: GridSpec = {x0: 2.2, x1: 3.15, z0: 0.4, z1: 1.35, step: 0.008};
+/** right panel: z0 0.3 (was 0.4) so H_D's cloud (outer level reaches z ≈ 0.38) is not cut by the grid edge */
+const GRID_R: GridSpec = {x0: 2.2, x1: 3.15, z0: 0.3, z1: 1.35, step: 0.008};
 
 /** Frame A's bands on H_A and their possible-locations cloud (the crisp estimate). */
 const BANDS_A = bandsFor(WA, HA, HW1);
@@ -223,6 +259,16 @@ const DIM_CLOUDS: ScalarField[] = DIM_BANDS.map((bs) => possibleCloud(GRID_H, bs
 /** S6.5: frame 2 = sensor jiggled (wall points shifted) + person at hiddenB; plain averaging keeps the assumed points. */
 const BANDS_F2_DRAWN = bandsFor(WA_JIG, HB, HW1);
 const SMEAR = averagedCloud(GRID_S, [BANDS_A, bandsFor(WA, HB, HW1, WA_JIG)]);
+/** S6.6 right: the cloud (and its outer edge, for the breadcrumbs) computed at each track position. */
+const CLOUD_TRACK = TRACK.map((H) => possibleCloud(GRID_R, bandsFor(WA, H, HW1)));
+const LOOPS_TRACK = CLOUD_TRACK.map((f) => extractContours(f, 0.25));
+// the grid must hold every position's whole outer region (a cloud cut by the grid edge would draw a straight side)
+CLOUD_TRACK.forEach((f, k) => {
+  let edge = 0;
+  for (let j = 0; j < f.nz; j++)
+    for (let i = 0; i < f.nx; i++) if (i === 0 || j === 0 || i === f.nx - 1 || j === f.nz - 1) edge = Math.max(edge, f.values[j * f.nx + i]);
+  if (edge >= 0.25) throw new Error(`S6.6: GRID_R clips the cloud at ${TRACK[k].id} (edge value ${edge.toFixed(3)})`);
+});
 /** S6.6 left: B1's bands on H_A (the person holds still), at their final width. */
 const BANDS_B = bandsFor(WB, HA, HW1);
 /** B1's markers are drawn as a second row just inside the wall edge: A and B1 sample nearly the same spots at x ≈ 1.55/1.58
@@ -264,56 +310,76 @@ const Label: React.FC<{x: number; y: number; t: number; size?: number; color?: s
 /** The arm comes down from above the frame (shoulder off-screen up-right, ~38° from vertical at contact), so only a
  *  forearm-and-sleeve length of arm is on screen; a long arm from the side edge read as a pole. */
 const S1_SHOULDER = {x: 1630, y: -380};
-const C_POS = {x: SENSOR_SPOT.x, y: SENSOR_SPOT.y - 14 * S1K}; // hand (grip centre) when the grip foot touches the slab
+/** Her fist grips the grip this far (sensor px) above its usual hold point, so the grip foot shows below the fist and is
+ *  what touches the slab (review r1 D32: with the fist at the hold point it hid the foot and stood in for it). The fist
+ *  then sits just under the box (fingers span sensor y −HOLD ± 15; the box's bottom edge is at −50). */
+const HOLD = 30;
+/** The sensor's origin (its grip hold point) when the grip foot stands on the slab: the label leader and teeter pivot. */
+const C_SENSOR = {x: SENSOR_SPOT.x, y: SENSOR_SPOT.y - 14 * S1K};
+/** Her hand when the grip foot touches the slab. */
+const C_HAND = {x: SENSOR_SPOT.x, y: SENSOR_SPOT.y - (14 + HOLD) * S1K};
 const H_OUT = {x: 1250, y: -150};
-const H_HOVER = {x: C_POS.x + 30, y: C_POS.y - 92};
-const H_REL = {x: C_POS.x + 46, y: C_POS.y - 14};
+const H_HOVER = {x: C_HAND.x + 30, y: C_HAND.y - 92};
+/** letting go: straight right, clear of the box and its depth (+76 px) plus the mitt's half-width, then up and out */
+const H_REL = {x: C_HAND.x + 110, y: C_HAND.y};
 const H_GONE = {x: 1290, y: -170};
 /** the opening framing: the empty plinth a little right of centre, the 2021 neighbour's plaque readable at the left */
 const CAM_PLINTH_WIDE: Cam = {cx: 880, cy: 540, zoom: 1};
 
 const handAt = (g: number) => ({
-  x: kf(g, [[ARM_IN, H_OUT.x], [HOVER, H_HOVER.x, E.out], [CONTACT, C_POS.x, E.inOut], [RELEASE, C_POS.x], [RELEASE_END, H_REL.x, E.inOut], [ARM_GONE, H_GONE.x, E.in]]),
-  y: kf(g, [[ARM_IN, H_OUT.y], [HOVER, H_HOVER.y, E.out], [CONTACT, C_POS.y, E.inOut], [RELEASE, C_POS.y], [RELEASE_END, H_REL.y, E.inOut], [ARM_GONE, H_GONE.y, E.in]]),
+  x: kf(g, [[ARM_IN, H_OUT.x], [HOVER, H_HOVER.x, E.out], [CONTACT, C_HAND.x, E.inOut], [RELEASE, C_HAND.x], [RELEASE_END, H_REL.x, E.inOut], [ARM_GONE, H_GONE.x, E.in]]),
+  y: kf(g, [[ARM_IN, H_OUT.y], [HOVER, H_HOVER.y, E.out], [CONTACT, C_HAND.y, E.inOut], [RELEASE, C_HAND.y], [RELEASE_END, H_REL.y, E.inOut], [ARM_GONE, H_GONE.y, E.in]]),
 });
 
 const ShotPlinth: React.FC<{g: number}> = ({g}) => {
   const hand = handAt(g);
   const held = g < CONTACT;
-  const sp0 = held ? hand : C_POS;
-  // let go → a small teeter about the grip foot → settle
-  const teeter = 4.5 * ring(g, RELEASE + 1, 0.8, 0.2);
+  // carried: the sensor hangs HOLD below her fist; set down: it stands on its grip foot (her fist still on it to RELEASE)
+  const sp0 = held ? {x: hand.x, y: hand.y + HOLD * S1K} : C_SENSOR;
+  const gripping = g < RELEASE;
+  // she lets go and her hand clears it; only then does it rock once about the grip foot and settle (about ±4°)
+  const teeter = 5.5 * ring(g, RELEASE_END, 0.8, 0.2);
   const foot = 14 * S1K;
+  // the opening move from S5's last framing; the rope layer's parallax depth eases in with it (S5 draws it at depth 1)
+  const open = tw(g, K.start, OPEN_DUR, E.inOut);
+  const setSw = lerp(S5_SET_SW, OUTLINE, open);
+  const s5Led = g >= K.s5Led && g < K.s5Led + 40 ? (Math.floor((g - K.s5Led) / 5) % 2 === 0 ? 1 : 0) : 0;
   const reveal = tw(g, K.found + 2, 24, E.inOut);
   const led = tw(g, K.found, 5);
   const tickT = g >= CONTACT && g < CONTACT + 7 ? 1 - (g - CONTACT) / 7 : 0;
   const armVisible = g >= ARM_IN && g <= ARM_GONE;
   const push = tw(g, PUSH0, PUSH_DUR, E.inOut);
-  const cam: Cam = {cx: lerp(CAM_PLINTH_WIDE.cx, CAM_PLINTH_CLOSE.cx, push), cy: lerp(CAM_PLINTH_WIDE.cy, CAM_PLINTH_CLOSE.cy, push), zoom: lerp(CAM_PLINTH_WIDE.zoom, CAM_PLINTH_CLOSE.zoom, push) * camKick(g, [CONTACT], 0.01)};
+  const c0 = camLerp(camLerp(CAM_S5_END, CAM_PLINTH_WIDE, open), CAM_PLINTH_CLOSE, push);
+  const cam: Cam = {...c0, zoom: c0.zoom * camKick(g, [CONTACT], 0.01)};
   const boxRight = sensorPoint('boxRight', S1K);
   return (
     <AbsoluteFill style={{background: C.paper}}>
       <Camera cam={cam}>
         <Layer>
-          <MuseumSet plate1={sp(g, CONTACT + 4, SOFT)} plate2={sp(g, K.mit, SOFT)} />
+          <MuseumSet plate1={sp(g, CONTACT + 4, SOFT)} plate2={sp(g, K.mit, SOFT)} sw={setSw} stoolLed={s5Led} />
           <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
             {armVisible && <ReachArm hand={hand} shoulder={S1_SHOULDER} k={S1K} skin={CAST.checker.skin} sleeve={CAST.checker.overlayColor ?? C.coral} />}
-            <g transform={`translate(${sp0.x} ${sp0.y}) rotate(${teeter.toFixed(3)} 0 ${foot})`}>
-              <HandheldSensor scale={S1K} reveal={reveal} led={led} />
-            </g>
-            {armVisible && <GripFingers x={hand.x} y={hand.y} k={S1K} skin={CAST.checker.skin} />}
+            {/* she carries it in (parked above the frame until then: S5's end framing sees higher than the plinth shots) */}
+            {g >= ARM_IN && (
+              <g transform={`translate(${sp0.x} ${sp0.y}) rotate(${teeter.toFixed(3)} 0 ${foot})`}>
+                <HandheldSensor scale={S1K} reveal={reveal} led={led} />
+              </g>
+            )}
+            {/* her fingers round the grip while she holds it; on RELEASE they open and the mitt slides out from behind */}
+            {armVisible && gripping && <GripFingers x={hand.x} y={hand.y} k={S1K} skin={CAST.checker.skin} />}
+            {/* contact marks at the grip foot, on the slab line */}
             {tickT > 0 && (
               <g stroke={C.ink} strokeWidth={4} strokeLinecap="round" opacity={tickT}>
-                <path d={`M ${C_POS.x - 34} ${SENSOR_SPOT.y - 6} L ${C_POS.x - 54} ${SENSOR_SPOT.y - 16}`} />
-                <path d={`M ${C_POS.x + 34} ${SENSOR_SPOT.y - 6} L ${C_POS.x + 54} ${SENSOR_SPOT.y - 16}`} />
+                <path d={`M ${C_SENSOR.x - 24} ${SENSOR_SPOT.y - 4} L ${C_SENSOR.x - 44} ${SENSOR_SPOT.y - 14}`} />
+                <path d={`M ${C_SENSOR.x + 24} ${SENSOR_SPOT.y - 4} L ${C_SENSOR.x + 44} ${SENSOR_SPOT.y - 14}`} />
               </g>
             )}
           </svg>
           <GadgetIcons tPhone={sp(g, K.phones, SNAP)} tGadget={sp(g, K.gadgets, SNAP)} />
-          <MuseumLabel x={1214} y={232} w={600} line1="time-of-flight sensors" line2="(LiDAR)" t={sp(g, K.tof, SOFT)} t2={tw(g, K.lidar, 8)} leaderTo={{x: C_POS.x + boxRight.x + 4, y: C_POS.y + boxRight.y}} />
+          <MuseumLabel x={1214} y={232} w={600} line1="time-of-flight sensors" line2="(LiDAR)" t={sp(g, K.tof, SOFT)} t2={tw(g, K.lidar, 8)} leaderTo={{x: C_SENSOR.x + boxRight.x + 4, y: C_SENSOR.y + boxRight.y}} />
         </Layer>
-        <Layer depth={1.06}>
-          <VelvetRope />
+        <Layer depth={lerp(1, 1.06, open)}>
+          <VelvetRope sw={setSw} />
         </Layer>
       </Camera>
     </AbsoluteFill>
@@ -409,7 +475,7 @@ const CardBeam: React.FC<{g: number}> = ({g}) => {
 
 const CardModule: React.FC<{g: number}> = ({g}) => (
   <svg width={CARD.w} height={CARD.art} style={{position: 'absolute', left: 0, top: 0}}>
-    <ResearchModule x={CARD.w / 2} y={278} dots={tw(g, K.hundred, 16, E.linear)} listen={tw(g, K.listening, 22, E.linear)} counter={tw(g, K.hundred + 10, 8)} />
+    <ResearchModule x={CARD.w / 2} y={278} dots={tw(g, K.hundred, 16, E.linear)} listen={tw(g, K.listening, 22, E.linear)} />
   </svg>
 );
 
@@ -532,8 +598,10 @@ type PlanState = {
   clouds: {field: ScalarField; t: number; tone: 'teal' | 'coral'}[];
   ghostLoops?: number;
   rail?: number;
-  /** dotted trail from the previous position to the current one (right panel) */
-  trail?: {from: P2; to: P2; t: number};
+  /** right panel: dashed outlines of the clouds computed at the positions he has left */
+  ghosts?: {loops: P2[][]; t: number}[];
+  /** right panel: breadcrumbs: a dotted line through the positions he has left to where he is, and a dot at each */
+  crumbs?: {path: P2[]; dots: {p: P2; t: number}[]; t: number};
 };
 
 const rotDir = (d: P2, deg: number): P2 => {
@@ -589,17 +657,43 @@ const planLayers = (s: PlanState) => {
       ))}
       {s.markersB &&
         WB.map((w, i) => (s.markersB![i] > 0 ? <WallMarker key={`b${i}`} asGroup p={P(w.x, B_ROW_Z)} toPx={toPx} t={s.markersB![i]} active={1} tone="teal" size={9} /> : null))}
+      {/* right panel breadcrumbs UNDER his token: the dashed outlines of the clouds computed at the positions he has left
+          and the dotted line through them to where he stands (over the token they cut across his hair and shirt) */}
+      {s.ghosts?.map((gh, k) =>
+        gh.t > 0.001 ? (
+          <g key={`gh${k}`} opacity={gh.t} fill="none" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="5 6">
+            <path d={gh.loops.map((l) => polyD(l.map(toPx), true)).join(' ')} stroke={C.cream} strokeWidth={5.5} />
+            <path d={gh.loops.map((l) => polyD(l.map(toPx), true)).join(' ')} stroke={C.ink} strokeWidth={2.5} />
+          </g>
+        ) : null,
+      )}
+      {s.crumbs && s.crumbs.t > 0.001 && s.crumbs.path.length > 1 && (
+        <g opacity={s.crumbs.t} fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <path d={polyD(s.crumbs.path.map(toPx), false)} stroke={C.cream} strokeWidth={7} />
+          <path d={polyD(s.crumbs.path.map(toPx), false)} stroke={C.ink} strokeWidth={3} strokeDasharray="1 6" />
+        </g>
+      )}
       {s.guesser && (s.guesserOpacity ?? 1) > 0.001 && <GuesserToken asGroup x={planPx(s.guesser).x} y={planPx(s.guesser).y} size={TOKEN_PX} facing={-90} opacity={s.guesserOpacity ?? 1} />}
       {s.clouds.map((c, i) => (c.t > 0 ? <CloudShape key={i} toPx={toPx} field={c.field} t={c.t} tone={c.tone} /> : null))}
       {/* the previous patch as a dashed ghost, and the followed position (on top, so the token never hides them) */}
       {s.ghostLoops && s.ghostLoops > 0 && (
         <path d={CLOUD_A_LOOPS.map((l) => polyD(l.map(toPx), true)).join(' ')} fill="none" stroke={C.ink} strokeWidth={2.5} strokeDasharray="5 6" strokeLinecap="round" opacity={s.ghostLoops} />
       )}
-      {s.trail && s.trail.t > 0 && (
-        <g opacity={s.trail.t}>
-          <path d={`M ${planPx(s.trail.from).x} ${planPx(s.trail.from).y} L ${planPx(s.trail.to).x} ${planPx(s.trail.to).y}`} stroke={C.ink} strokeWidth={3} strokeDasharray="1 6" strokeLinecap="round" />
-          <circle cx={planPx(s.trail.from).x} cy={planPx(s.trail.from).y} r={5} fill={C.cream} stroke={C.ink} strokeWidth={2.5} />
-          <circle cx={planPx(s.trail.to).x} cy={planPx(s.trail.to).y} r={6} fill={C.saffron} stroke={C.ink} strokeWidth={2.5} />
+      {/* right panel breadcrumbs: the saffron dots at the positions he has left, over the token and the cloud with a
+          cream halo (the latest one sits on his shoulder once he has moved on) */}
+      {s.crumbs && s.crumbs.t > 0.001 && (
+        <g opacity={s.crumbs.t}>
+          {s.crumbs.dots.map((d, k) => {
+            if (d.t <= 0.001) return null;
+            const q = planPx(d.p);
+            const r = 6 * Math.min(1, 0.6 + 0.4 * d.t);
+            return (
+              <g key={`dot${k}`} opacity={Math.min(1, d.t * 1.5)}>
+                <circle cx={q.x} cy={q.y} r={r + 3} fill={C.cream} />
+                <circle cx={q.x} cy={q.y} r={r} fill={C.saffron} stroke={C.ink} strokeWidth={2.5} />
+              </g>
+            );
+          })}
         </g>
       )}
       {s.checker > 0.001 && (() => {
@@ -758,12 +852,26 @@ const ShotBurst: React.FC<{g: number}> = ({g}) => {
 /* ================================================================== S6.5 / S6.6 · the motion problem and the fix */
 
 const CAM_L = camOnPlan(1.95, 0.51, 2);
-const CAM_R = camOnPlan(2.1, 0.51, 2);
+/** panned 0.06 m right of centre on the left panel's framing (review r1 D08): H_D, the track's last position, keeps his
+ *  token inside the 5 % margin (asserted below); the still sensor and the checker stay in the panel */
+const CAM_R = camOnPlan(2.16, 0.51, 2);
 const GEO_L0: PanelGeo = {x: 0, y: 0, w: 960, h: 1080, tx: 0, ty: 0, s: 1, radius: 0, border: 0};
 const GEO_R0: PanelGeo = {x: 960, y: 0, w: 960, h: 1080, tx: 0, ty: 0, s: 1, radius: 0, border: 0};
 const GEO_L1: PanelGeo = {x: 24, y: 200, w: 924, h: 730, tx: -474, ty: 25, s: 1, radius: 22, border: 1};
 const GEO_R1: PanelGeo = {x: 972, y: 200, w: 924, h: 730, tx: 474, ty: 25, s: 1, radius: 22, border: 1};
-const camLerp = (a: Cam, b: Cam, t: number): Cam => ({cx: lerp(a.cx, b.cx, t), cy: lerp(a.cy, b.cy, t), zoom: lerp(a.zoom, b.zoom, t)});
+/** 5 % safe margin (screen px) */
+const SAFE_X1 = 1920 - 96;
+// the right panel's track stays inside the panel and the 5 % margin: his token (facing −90, so its back edge, crown
+// plus shadow, is about 0.34 of the token width right of its centre) and every position's cloud (outer level)
+{
+  const half = 0.34 * TOKEN_PX * CAM_R.zoom * GEO_R1.s;
+  TRACK.forEach((H, k) => {
+    const q = planToScreen(GEO_R1, CAM_R, H);
+    if (q.x + half > SAFE_X1 || q.x - half < GEO_R1.x || q.y - half < GEO_R1.y || q.y + half > GEO_R1.y + GEO_R1.h) throw new Error(`S6.6: ${H.id}'s token leaves the right panel or the safe margin (${q.x.toFixed(0)}, ${q.y.toFixed(0)})`);
+    const xs = LOOPS_TRACK[k].flat().map((p) => planToScreen(GEO_R1, CAM_R, p).x);
+    if (Math.max(...xs) > SAFE_X1) throw new Error(`S6.6: the cloud at ${H.id} crosses the safe margin (x ${Math.max(...xs).toFixed(0)})`);
+  });
+}
 
 /** Shared S6.5 → S6.6 state at frame g (the full plan, and both panels until they diverge). */
 const motionState = (g: number): PlanState => {
@@ -834,33 +942,64 @@ const leftState = (g: number): PlanState => {
   };
 };
 
+/** Progress along the track at frame g: 0 at H_A … 3 at H_D (step k eases from k to k + 1). */
+const trackU = (g: number) => STEP_T.reduce((u, t0) => u + tw(g, t0, STEP_DUR, E.inOut), 0);
+const trackAt = (u: number): P2 => {
+  const k = Math.min(TRACK.length - 2, Math.floor(u));
+  return lerpP(TRACK[k], TRACK[k + 1], clamp01(u - k));
+};
+
+/** S6.6 right: the sensor and the checker stay still; he steps H_A → H_B → H_C → H_D; the bands and the cloud are
+ *  recomputed at each position, CLOUD_LAG frames behind him (the estimate visibly catches up after each step); each
+ *  position he leaves keeps a saffron dot and a dashed outline of the cloud computed there, joined by a dotted line. */
 const rightState = (g: number): PlanState => {
   const base = motionState(g);
-  const st = tw(g, STEP0, STEP_DUR, E.inOut);
-  if (st <= 0) return base;
-  const pos = lerpP(HA, HB, st);
-  const bands = bandsFor(WA, pos, HW1);
+  if (g < STEP_T[0]) return base;
+  const u = trackU(g);
+  const uc = trackU(g - CLOUD_LAG);
+  const pos = trackAt(u);
+  const est = trackAt(uc);
+  const bands = bandsFor(WA, est, HW1);
+  const settled = Math.abs(uc - Math.round(uc)) < 1e-6;
+  const left = STEP_T.filter((t0) => g >= t0).length; // positions he has left (0..3)
   return {
     ...base,
     guesser: pos,
     bands: [{specs: bands, opacity: 1}],
-    clouds: [{field: possibleCloud(GRID_R, bands), t: 1, tone: 'teal'}],
-    ghostLoops: 0.85 * tw(g, STEP0 + 2, 8),
-    trail: {from: HA, to: pos, t: tw(g, STEP0 + 4, 6)},
+    clouds: [{field: settled ? CLOUD_TRACK[Math.round(uc)] : possibleCloud(GRID_R, bands), t: 1, tone: 'teal'}],
+    ghosts: STEP_T.map((t0, k) => ({loops: LOOPS_TRACK[k], t: 0.5 * tw(g, t0 + CLOUD_LAG + 2, 8)})),
+    crumbs: {
+      path: [...TRACK.slice(0, left), pos],
+      dots: STEP_T.map((t0, k) => ({p: TRACK[k], t: tw(g, t0 + 3, 6)})),
+      t: tw(g, STEP_T[0] + 2, 6),
+    },
   };
 };
 
-const GuardChips: React.FC<{t: number; tRight?: number}> = ({t, tRight = t}) => (
+/** A paper backing behind a chip that knocks out the plan's wall ruler ticks under it (review r1 D27: in S6.5 the ticks
+ *  ran through the chips). Inside the chip's opacity wrapper, so it fades with the chip and the ticks come back with it. */
+const Knock: React.FC<{knock: number; children: React.ReactNode}> = ({knock, children}) => (
+  <div style={{position: 'relative'}}>
+    {knock > 0.001 && <div style={{position: 'absolute', left: -6, right: -6, top: -10, bottom: -16, background: C.paper, opacity: Math.min(1, knock)}} />}
+    <div style={{position: 'relative'}}>{children}</div>
+  </div>
+);
+
+const GuardChips: React.FC<{t: number; tRight?: number; knock?: number}> = ({t, tRight = t, knock = 0}) => (
     <>
       <div style={{position: 'absolute', left: 96, top: 46, opacity: t}}>
-        <Chip tone="paper" size={30}>
-          simplified picture (2D)
-        </Chip>
+        <Knock knock={knock}>
+          <Chip tone="paper" size={30}>
+            simplified picture (2D)
+          </Chip>
+        </Knock>
       </div>
       <div style={{position: 'absolute', right: 96, top: 46, opacity: tRight}}>
-        <Chip tone="paper" size={30}>
-          illustrative
-        </Chip>
+        <Knock knock={knock}>
+          <Chip tone="paper" size={30}>
+            illustrative
+          </Chip>
+        </Knock>
       </div>
     </>
   );
@@ -895,7 +1034,8 @@ const ShotPlan: React.FC<{g: number}> = ({g}) => {
           />
         </>
       )}
-      <GuardChips t={ui} tRight={1} />
+      {/* the full plan's wall ruler runs under the chips until the split drops the panels below them */}
+      <GuardChips t={ui} tRight={1} knock={1 - split} />
       {frameChip > 0 && (
         <div style={{position: 'absolute', left: 96, top: 846, opacity: frameChip}}>
           <Chip tone="ink" size={34} style={{fontFamily: F.mono, fontWeight: 700}}>
@@ -970,5 +1110,5 @@ export const SFX: Sfx[] = [
   {f: K.one, kind: 'chip_pop', gain: -8, note: 'one unknown at a time'},
   {f: SLIDE0, kind: 'book_slide', gain: -10, pitch: 4, dur: SLIDE_DUR / 30, note: 'sensor slides along the rail'},
   {f: ARCS0, kind: 'arc_draw', gain: -8, dur: 0.8, note: 'B1 arcs draw'},
-  {f: STEP0 + STEP_DUR - 3, kind: 'footstep_wood', gain: -10, pitch: 1, note: 'he steps; the cloud follows'},
+  ...STEP_T.map((t0, i): Sfx => ({f: t0 + STEP_DUR - 2, kind: 'footstep_wood', gain: -14, pitch: [1, -1, 2][i], note: `he steps to ${TRACK[i + 1].id}; the cloud follows`})),
 ];

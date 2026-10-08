@@ -1,0 +1,22 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S1": {
+   "seconds": 60.9,
+   "mean_energy": 1.021,
+   "still_seconds": 0.8,
+   "still_share": 0.013,
+   "longest_still_s": 0.8
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S1",
+   "from": 1658,
+   "to": 1681,
+   "seconds": 0.8,
+   "t": "0:55.3",
+   "spoken": "billionth of a second. So"
+  }
+ ]
+}

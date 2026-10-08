@@ -1,0 +1,26 @@
+--- source/src/components/v02/S1_TrackingBoard.tsx	2026-10-08 08:12:30.005871165 +0000
++++ work/fix1_S1/src/components/v02/S1_TrackingBoard.tsx	2026-10-08 18:24:20.951509959 +0000
+@@ -11,9 +11,11 @@
+  *  - x is mirrored for display (display x = -x) so the sensor is on the left and the person on the right, as in our
+  *    room; the source chip says so.
+  *  - wall points: the 16 measured (calibrated) wall points; sensor and partition: the authors' plot constants.
+- *  - the moving marker is the estimated position (ours_xz: the authors' unmodified code run by us), one data frame at a
+- *    time (nearest frame, no interpolation), with a short fading trail of the previous frames. Frames are counted,
+- *    never converted to seconds: the capture's frame rate is not recorded.
++ *  - the moving marker is the estimated position (ours_xz: the authors' unmodified code and settings, run by us; a
++ *    stochastic particle filter, so it differs from the authors' stored estimate by a few cm, median ~8 cm), one data
++ *    frame at a time (nearest frame, no interpolation), with a short fading trail of the previous frames. Frames are
++ *    counted, never converted to seconds: the capture's frame rate is not recorded. The conditions box says so:
++ *    "authors' code, run by us" (review r1 D13; OPENING_EVIDENCE §4, the wording S7 uses for the same track).
+  *
+  * Pure function of its props; the scene drives every `t` from its cue constants.
+  */
+@@ -213,7 +215,7 @@
+         </g>
+         <g opacity={clamp01(t.conditions * 2)} transform={`translate(0 ${f2((1 - E.out(clamp01(t.conditions))) * 14)})`}>
+           <rect x={RX + 32} y={478} width={700} height={176} rx={22} fill={C.cream} stroke={C.inkMuted} strokeWidth={3} />
+-          {["authors' released data", 'evaluation-kit sensor, held still', "processed with the authors' code"].map((s, i) => (
++          {["authors' released data", 'evaluation-kit sensor, held still', "authors' code, run by us"].map((s, i) => (
+             <Txt key={i} x={RX + 62} y={528 + i * 50} size={34} color={C.inkSoft}>
+               {s}
+             </Txt>

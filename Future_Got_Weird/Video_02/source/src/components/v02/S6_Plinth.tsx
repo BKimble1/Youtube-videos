@@ -1,6 +1,7 @@
 import React from 'react';
 import {C, F, OUTLINE} from '../../theme';
 import {PLINTH} from '../../lib/shots';
+import {MU, SensorStool, SideCard} from './S5_Museum';
 
 /**
  * S6.1 set: a close-up of the history shelf's EMPTY fourth plinth, matched to S5's gallery (work/S5 S5_Museum: the same
@@ -9,9 +10,21 @@ import {PLINTH} from '../../lib/shots';
  * x 960 here); slab top 512, floor 930 as in S5. Wrap in one camera Layer (the rope may sit on a nearer layer for a
  * hint of parallax).
  *
+ * The S5 -> S6 hand-off (review r1 D30): S6 opens on S5's last framing and eases into the close-up, so MuseumSet also
+ * draws what S5's end framing shows beyond the two plinths: the lamp track with its spot lamps (S5 MuseumHall), and,
+ * past the rope's last post, the cheap-sensor stool and its 2021 side card (S5_Museum SensorStool / SideCard, imported
+ * read-only and drawn at S5's own coordinates under translate(-3020 0)), so they visibly slide out at the right instead
+ * of vanishing at the cut. `sw` is the set's outline width: S5 draws its set at 3.5 world px, S6 at OUTLINE; the scene
+ * eases it from 3.5 to OUTLINE during the opening move so the first frame matches S5's last.
+ *
  * Also the cut-in arm: the checker's arm in her coral cardigan sleeve, reaching in from off-screen, drawn with the
  * Video 01 rig's mitt (ellipse palm + thumb) and the HandheldSensor's curled fingers, at a close-up scale.
  */
+
+/** S6 world px = S5 world px − S5_SHIFT. */
+export const S5_SHIFT = 3020;
+/** S5's set outline width (S5_Museum SW), for the first frame of the hand-off. */
+export const S5_SET_SW = 3.5;
 
 /** Geometry of the set (world px; S5's MU constants shifted by −3020). */
 export const PG = {
@@ -34,16 +47,42 @@ export const PG = {
   pool: {dy: -212, rx: 470, ry: 330},
 };
 
+// The S5 -> S6 hand-off draws S5's end framing with S6's set: it only matches while S6's set IS S5's shifted by
+// S5_SHIFT. Fail at load if either gallery moves.
+{
+  const pairs: [string, number, number][] = [
+    ['P3', PG.P3, MU.P[2] - S5_SHIFT],
+    ['P4', PG.P4, MU.P[3] - S5_SHIFT],
+    ...PG.posts.map((x, i): [string, number, number] => [`post${i}`, x, MU.posts[i + 2] - S5_SHIFT]),
+    ['floorY', PG.floorY, MU.floorY],
+    ['skirtH', PG.skirtH, MU.skirtH],
+    ['slabTop', PG.slabTop, MU.slabTop],
+    ['slabH', PG.slabH, MU.slabH],
+    ['slabW', PG.slabW, MU.slabW],
+    ['bodyW', PG.bodyW, MU.bodyW],
+    ['plaque.y0', PG.plaque.y0, MU.plaque.y0],
+    ['plaque.w', PG.plaque.w, MU.plaque.w],
+    ['ropeY', PG.ropeY, MU.ropeY],
+    ['sag', PG.sag, MU.sag],
+    ['postFoot', PG.postFoot, MU.postFoot],
+    ['pool.rx', PG.pool.rx, MU.pool.rx],
+  ];
+  const bad = pairs.filter(([, a, b]) => Math.abs(a - b) > 1e-9);
+  if (bad.length) throw new Error(`S6_Plinth: S6 set no longer matches S5's gallery − ${S5_SHIFT}: ${bad.map(([n, a, b]) => `${n} ${a} vs ${b}`).join(', ')}`);
+}
+
 /** Where the sensor's grip foot stands on the plinth (top of the slab). */
 export const SENSOR_SPOT = {x: 952, y: PG.slabTop};
 
-const ink = {stroke: C.ink, strokeWidth: OUTLINE, strokeLinejoin: 'round' as const};
+const inkW = (w: number) => ({stroke: C.ink, strokeWidth: w, strokeLinejoin: 'round' as const});
+const ink = inkW(OUTLINE);
 const ink3 = (w = 3) => ({stroke: C.ink, strokeWidth: w, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const});
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 const f2 = (n: number) => Math.round(n * 100) / 100;
 
 /** One plinth as S5 draws it (shadow, body, wood slab, saffron plaque with two screws); text drawn by the caller. */
-const Plinth: React.FC<{x: number; children?: React.ReactNode}> = ({x, children}) => {
+const Plinth: React.FC<{x: number; sw?: number; children?: React.ReactNode}> = ({x, sw = OUTLINE, children}) => {
+  const ink = inkW(sw);
   const fy = PG.floorY;
   const top = PG.slabTop;
   const pq = PG.plaque;
@@ -110,8 +149,32 @@ const Exhibit2021Still: React.FC<{x: number; y: number}> = ({x, y}) => {
   );
 };
 
-/** The museum wall, floor, the 2021 neighbour and the empty fourth plinth (plaque text animates in via props). */
-export const MuseumSet: React.FC<{plate1?: number; plate2?: number}> = ({plate1 = 0, plate2 = 0}) => {
+/** S5's lamp track and one spot lamp over each plinth (copy of S5_Museum MuseumHall's lamps; S6 world px). Above every
+ *  settled S6 framing (rail at y −200): seen only during the opening move from S5's end framing. */
+const LampTrack: React.FC<{sw: number}> = ({sw}) => {
+  const k = {stroke: C.ink, strokeWidth: sw, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const};
+  const k3 = {...k, strokeWidth: 3};
+  return (
+    <g>
+      <rect x={-2000} y={MU.railY - 9} width={6000} height={18} fill={C.inkMuted} {...k} />
+      {MU.P.map((x) => x - S5_SHIFT).map((x) => (
+        <g key={`lamp${x}`} transform={`translate(${x} ${MU.railY + 9})`}>
+          <rect x={-6} y={0} width={12} height={34} fill={C.inkSoft} {...k3} />
+          <g transform="translate(0 40) rotate(0)">
+            <path d="M -30 -10 L 30 -10 L 40 46 L -40 46 Z" fill={C.cream} {...k} />
+            <rect x={-42} y={42} width={84} height={12} rx={5} fill={C.saffronLight} {...k3} />
+          </g>
+        </g>
+      ))}
+    </g>
+  );
+};
+
+/** The museum wall, floor, the 2021 neighbour and the empty fourth plinth (plaque text animates in via props), plus S5's
+ *  lamp track and the end of the shelf (the stool with the cheap sensor board and its 2021 side card; `stoolLed` is the
+ *  board's LED as S5 leaves it blinking). `sw`: set outline width (see the file header). */
+export const MuseumSet: React.FC<{plate1?: number; plate2?: number; sw?: number; stoolLed?: number}> = ({plate1 = 0, plate2 = 0, sw = OUTLINE, stoolLed = 0}) => {
+  const ink = inkW(sw);
   const fy = PG.floorY;
   const pq = PG.plaque;
   const t1 = clamp01(plate1);
@@ -123,12 +186,13 @@ export const MuseumSet: React.FC<{plate1?: number; plate2?: number}> = ({plate1 
       {[PG.P3, PG.P4].map((x) => (
         <ellipse key={x} cx={x} cy={PG.slabTop + PG.pool.dy} rx={PG.pool.rx} ry={PG.pool.ry} fill={C.cream} opacity={0.55} />
       ))}
+      <LampTrack sw={sw} />
       {/* skirting + floor */}
       <rect x={-2000} y={fy - PG.skirtH} width={6000} height={PG.skirtH} fill={C.cream} {...ink} />
       <rect x={-2000} y={fy} width={6000} height={1200} fill={C.paperDeep} {...ink} />
 
       {/* the third plinth (2021) and its exhibit, as S5 leaves them */}
-      <Plinth x={PG.P3}>
+      <Plinth x={PG.P3} sw={sw}>
         <text x={PG.P3} y={pq.y0 + 56} textAnchor="middle" dominantBaseline="central" fontFamily={F.display} fontWeight={600} fontSize={66} fill={C.ink}>
           2021
         </text>
@@ -139,7 +203,7 @@ export const MuseumSet: React.FC<{plate1?: number; plate2?: number}> = ({plate1 
       <Exhibit2021Still x={PG.P3} y={PG.slabTop} />
 
       {/* the fourth plinth: empty (blank plaque) until the checker sets her sensor on it */}
-      <Plinth x={PG.P4}>
+      <Plinth x={PG.P4} sw={sw}>
         {t1 > 0 && (
           <g opacity={Math.min(1, t1 * 1.6)} transform={`translate(${PG.P4} ${pq.y0 + 56}) scale(${0.92 + 0.08 * t1})`}>
             <text x={0} y={0} textAnchor="middle" dominantBaseline="central" fontFamily={F.display} fontWeight={600} fontSize={60} fill={C.ink}>
@@ -155,13 +219,20 @@ export const MuseumSet: React.FC<{plate1?: number; plate2?: number}> = ({plate1 
           </g>
         )}
       </Plinth>
+
+      {/* the end of the shelf as S5 leaves it (S5 world px): the 2021 cheap-sensor card and the stool with its board */}
+      <g transform={`translate(${-S5_SHIFT} 0)`}>
+        <SideCard t={1} lines={['2021', 'hidden objects tracked', 'with a cheap sensor', 'Callenberg et al. · illustration']} />
+        <SensorStool x={MU.stool.x} led={stoolLed} />
+      </g>
     </svg>
   );
 };
 
 /** The velvet rope as S5 hangs it: brass-topped posts in the gaps between plinths and a sagging span post to post
  *  (the span in front of the fourth plinth and the one to its left; S5 has no rope right of the last post). */
-export const VelvetRope: React.FC = () => {
+export const VelvetRope: React.FC<{sw?: number}> = ({sw = OUTLINE}) => {
+  const ink = inkW(sw);
   const y = PG.ropeY;
   const foot = PG.postFoot;
   const span = (x0: number, x1: number) => {

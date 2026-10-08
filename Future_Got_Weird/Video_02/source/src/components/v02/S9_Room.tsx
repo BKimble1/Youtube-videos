@@ -126,15 +126,20 @@ export const S9SensorStand: React.FC<S9SensorStandProps> = ({tilt, view = DEFAUL
 const WALK_DUTY = 0.58; // fraction of a cycle each foot is planted (Cast2's walk)
 const HIP_X = 33; // Cast2 ankle x when standing, rig px
 
-export type PlanWalk = {a: {x: number; z: number}; b: {x: number; z: number}; dist: number; steps: number; stepM: number; heightM: number; lift: number};
+export type PlanWalk = {a: {x: number; z: number}; b: {x: number; z: number}; dist: number; steps: number; stepM: number; heightM: number; lift: number; profile: number};
 
-/** Plan a walk from a to b in steps of about `stepM` metres (a whole number of them). `lift`: swing-foot lift, rig px. */
-export const planWalk = (a: {x: number; z: number}, b: {x: number; z: number}, opts: {stepM?: number; heightM?: number; lift?: number} = {}): PlanWalk => {
+/** Plan a walk from a to b in steps of about `stepM` metres (a whole number of them). `lift`: swing-foot lift, rig px.
+ *  `profile` (opt-in, 0..1, default 0 = the shoes face the camera, for a walk mostly in depth): for a walk that crosses
+ *  the screen sideways, the shoes turn 3/4 toward the way she goes (Cast2's sideways gait convention, gaitPose:
+ *  turn = dir) and both knees lean a little that way, with the near-side leg drawn on top, so a foot landing ahead of
+ *  the other reads as a side-on stride instead of the frontal rig's legs crossing into an X (outward knees over
+ *  converging feet). Footprints and timing unchanged. */
+export const planWalk = (a: {x: number; z: number}, b: {x: number; z: number}, opts: {stepM?: number; heightM?: number; lift?: number; profile?: number} = {}): PlanWalk => {
   const heightM = opts.heightM ?? 1.7;
   const dist = Math.hypot(b.x - a.x, b.z - a.z);
   const base = opts.stepM ?? 0.34;
   const steps = Math.max(1, Math.round(dist / base));
-  return {a, b, dist, steps, stepM: dist / steps, heightM, lift: opts.lift ?? 20};
+  return {a, b, dist, steps, stepM: dist / steps, heightM, lift: opts.lift ?? 20, profile: opts.profile ?? 0};
 };
 
 /** Metres walked at frame g (first step accelerates from rest, the last decelerates into the stop). */
@@ -236,15 +241,23 @@ export const walkAt = (plan: PlanWalk, travelled: number, tilt: number, view: Vi
   const yRef = Math.max(body.y + ahead, fL.y, fR.y);
   const k = rigScale(s, plan.heightM); // the set's height scale, as lib/room rigAt
   const towardCam = uz >= 0;
-  // the nearer leg is drawn last (Character2 orders legs by the shoes' turn)
+  // the nearer leg is drawn last (Character2 orders legs by the shoes' turn); in profile the shoes point the way the
+  // walk crosses the screen (that fixes the order: the near-side leg on top)
   const nearL = towardCam ? trail.p > lead.p : trail.p < lead.p;
-  const turn = nearL ? 0.06 : -0.06;
+  const pr = plan.profile ?? 0;
+  const dir = projectWith(s, at(end)).x >= projectWith(s, at(0)).x ? 1 : -1;
+  // (the turn eases in over the first half-step and out over the last, so she starts and stops on the standing pose)
+  const frontTurn = nearL ? 0.06 : -0.06;
+  const pRamp = pr > 0 ? E.inOut(clamp01(Math.min(c, end - c) / (0.5 * step))) : 0;
+  const turn = frontTurn + (dir * pr - frontTurn) * pRamp;
   const foot = (fp: {x: number; y: number}, lift: number, side: -1 | 1): Foot => ({
     x: side * HIP_X + (fp.x - body.x) / k,
     lift: plan.lift * lift + (yRef - fp.y) / k,
     pitch: 0,
     turn,
-    knee: side * 0.2,
+    // both knees lean a little the way she goes (not Cast2's full sideways knee: the depth walk's lifted rear foot
+    // would then show as a deep bend, a crouching waddle); outward knees on converging feet made the X
+    knee: side * 0.2 + (dir * 0.3 * pr - side * 0.2) * pRamp,
   });
   // arm swing: +1 when the R foot leads by a full step
   const sw = Math.max(-1, Math.min(1, (lead.p - trail.p) / step)) * ramp;

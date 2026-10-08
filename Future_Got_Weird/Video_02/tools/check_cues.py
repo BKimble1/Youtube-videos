@@ -11,7 +11,7 @@ for dp, _, fs in os.walk(os.path.join(ROOT, "source/src")):
         if not f.endswith(".tsx"):
             continue
         txt = open(os.path.join(dp, f), encoding="utf-8").read()
-        for m in re.finditer(r"""at\(\s*'(s\d+b?)'\s*(?:,\s*(['"])(.*?)\2\s*(?:,\s*(\d+))?)?\s*\)""", txt):
+        for m in re.finditer(r"""at\(\s*'(s\d+b?)'\s*(?:,\s*(['"])([^'"]*?)\2\s*(?:,\s*(\d+)\s*(?:,\s*'(?:start|end)'\s*)?)?)?\s*\)""", txt):
             sid, word, occ = m.group(1), m.group(3), int(m.group(4) or 1)
             if sid not in segs:
                 print(f"{f}: unknown segment {sid}"); bad += 1; continue

@@ -65,6 +65,14 @@ export type RoomSetProps = {
   plant?: boolean | {x: number; z: number; heightM?: number};
   view?: ViewConfig;
   layout?: Layout;
+  /**
+   * Opt-in (metres, default 0): continue the relay wall, its skirting and wall top, the floor, the slab's front face and
+   * the drop shadow this far LEFT of the room's left end (x0 - extendLeft), and drop the left cut ends (the slab's side
+   * face and the wall's end cap), so a framing that looks past the open left end sees wall and floor running on out of
+   * frame. The room's layout (x0) and the existing planks are unchanged; the extension gets its own planks (own seeds).
+   * Turn it on only once the left end is out of frame (a cut-away end that pops to a continued wall would show).
+   */
+  extendLeft?: number;
 };
 
 /* palette for the set (light, warm, flat) */
@@ -99,10 +107,13 @@ export const PLANT = {x: 0.4, z: 0.32, heightM: 1.3};
 
 type P3 = [number, number, number];
 
-export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, children, partition = true, wobble = 0, door = true, plant = true, view = DEFAULT_VIEW, layout = LAYOUT}) => {
+export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, children, partition = true, wobble = 0, door = true, plant = true, view = DEFAULT_VIEW, layout = LAYOUT, extendLeft = 0}) => {
   const s = viewAt(tilt, view);
   const {x0, x1, z0, z1, wallHeight: HW} = layout.room;
   const T = WALL_T;
+  // extendLeft: the shell (wall, skirting, wall top, floor, slab front, shadow) starts at xL; x0 stays the room's end
+  const ext = Math.max(0, extendLeft);
+  const xL = x0 - ext;
   const d = (pts: P3[], closed = true) =>
     pts.map(([x, z, h], i) => {
       const q = projectWith(s, {x, z, h});
@@ -139,6 +150,22 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
         plankLines.push(<line key={`pj${k}-${j}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} />);
       });
     }
+    // extendLeft: planks of the same width continuing left from x0 (the room's left end becomes a plank seam), with
+    // their own joint seeds; the last one is cut at xL
+    for (let k = 0; ext > 0 && x0 - k * pw > xL + 1e-6; k++) {
+      const xr = x0 - k * pw;
+      const xl = Math.max(xL, xr - pw);
+      const a = P(xr, z0);
+      const b = P(xr, z1);
+      plankLines.push(<line key={`xl${k}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} />);
+      if (xr - xl < 0.1) continue;
+      const joints = [0.35 + rand(1000 + k * 7 + 3) * 1.1, 1.9 + rand(1000 + k * 13 + 5) * 1.2];
+      joints.forEach((zj, j) => {
+        const pa = P(xl + (xl > xL ? 0.02 : 0), z0 + zj);
+        const pb = P(xr - 0.02, z0 + zj);
+        plankLines.push(<line key={`xj${k}-${j}`} x1={pa.x} y1={pa.y} x2={pb.x} y2={pb.y} />);
+      });
+    }
   }
 
   // skirting runs (side wall interrupted by the door)
@@ -155,7 +182,7 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
   }
 
   // diorama drop shadow: slab footprint, pushed down-right a touch
-  const shadow = d([[x0, z0 - T, -SLAB_T], [x1 + T, z0 - T, -SLAB_T], [x1 + T, z1, -SLAB_T], [x0, z1, -SLAB_T]]);
+  const shadow = d([[xL, z0 - T, -SLAB_T], [x1 + T, z0 - T, -SLAB_T], [x1 + T, z1, -SLAB_T], [xL, z1, -SLAB_T]]);
 
   // the standing things: user items + partition + plant
   const occ = occluderBox(layout);
@@ -175,10 +202,10 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
         <path d={shadow} fill={C.shadow} transform="translate(10 14)" />
 
         {/* floor slab edges (front, left) */}
-        {faces && <path d={d([[x0, z1, 0], [x1 + T, z1, 0], [x1 + T, z1, -SLAB_T], [x0, z1, -SLAB_T]])} fill={ROOM_COLORS.slabFront} {...ink} />}
-        {faces && <path d={d([[x0, z0 - T, 0], [x0, z1, 0], [x0, z1, -SLAB_T], [x0, z0 - T, -SLAB_T]])} fill={ROOM_COLORS.slabSide} {...ink} />}
+        {faces && <path d={d([[xL, z1, 0], [x1 + T, z1, 0], [x1 + T, z1, -SLAB_T], [xL, z1, -SLAB_T]])} fill={ROOM_COLORS.slabFront} {...ink} />}
+        {faces && ext === 0 && <path d={d([[x0, z0 - T, 0], [x0, z1, 0], [x0, z1, -SLAB_T], [x0, z0 - T, -SLAB_T]])} fill={ROOM_COLORS.slabSide} {...ink} />}
         {/* floor */}
-        <path d={d([[x0, z0 - T, 0], [x1 + T, z0 - T, 0], [x1 + T, z1, 0], [x0, z1, 0]])} fill={floorColor} {...ink} />
+        <path d={d([[xL, z0 - T, 0], [x1 + T, z0 - T, 0], [x1 + T, z1, 0], [xL, z1, 0]])} fill={floorColor} {...ink} />
         <g stroke={ROOM_COLORS.plank} strokeWidth={3} strokeLinecap="round" opacity={plankOp}>
           {plankLines}
         </g>
@@ -186,11 +213,11 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
         {faces && (
           <g>
             {/* relay wall: plain matte face */}
-            <path d={d([[x0, z0, 0], [x1, z0, 0], [x1, z0, HW], [x0, z0, HW]])} fill={ROOM_COLORS.relayWall} {...ink} />
+            <path d={d([[xL, z0, 0], [x1, z0, 0], [x1, z0, HW], [xL, z0, HW]])} fill={ROOM_COLORS.relayWall} {...ink} />
             {/* right side wall, inner face */}
             <path d={d([[x1, z0, 0], [x1, z1, 0], [x1, z1, HW], [x1, z0, HW]])} fill={ROOM_COLORS.sideWall} {...ink} />
             {/* skirting boards */}
-            <path d={d([[x0, z0 + 0.012, 0], [x1, z0 + 0.012, 0], [x1, z0 + 0.012, SKIRT_H], [x0, z0 + 0.012, SKIRT_H]])} fill={ROOM_COLORS.skirting} {...ink} strokeWidth={3} />
+            <path d={d([[xL, z0 + 0.012, 0], [x1, z0 + 0.012, 0], [x1, z0 + 0.012, SKIRT_H], [xL, z0 + 0.012, SKIRT_H]])} fill={ROOM_COLORS.skirting} {...ink} strokeWidth={3} />
             {/* side-wall skirting fades with the door: on an edge-on wall its ends would read as notches in the wall line */}
             {doorOp > 0.001 && (
               <g opacity={doorOp}>
@@ -207,12 +234,12 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
               </g>
             )}
             {/* cut ends of the walls: the same colour as the wall tops, so they merge into the plan's ink wall lines */}
-            <path d={d([[x0, z0 - T, 0], [x0, z0, 0], [x0, z0, HW], [x0, z0 - T, HW]])} fill={topColor} {...ink} />
+            {ext === 0 && <path d={d([[x0, z0 - T, 0], [x0, z0, 0], [x0, z0, HW], [x0, z0 - T, HW]])} fill={topColor} {...ink} />}
             <path d={d([[x1, z1, 0], [x1 + T, z1, 0], [x1 + T, z1, HW], [x1, z1, HW]])} fill={topColor} {...ink} />
           </g>
         )}
         {/* wall tops: cream cut edges in the room view, the ink wall lines of the plan */}
-        <path d={d([[x0, z0 - T, HW], [x1 + T, z0 - T, HW], [x1 + T, z1, HW], [x1, z1, HW], [x1, z0, HW], [x0, z0, HW]])} fill={topColor} {...ink} />
+        <path d={d([[xL, z0 - T, HW], [x1 + T, z0 - T, HW], [x1 + T, z1, HW], [x1, z1, HW], [x1, z0, HW], [xL, z0, HW]])} fill={topColor} {...ink} />
         {/* plan: the door as a gap in the side wall line, with the closed door leaf in it */}
         {door && planT > 0.001 && (
           <g opacity={smoothstep(0.75, 1, tilt)}>
@@ -351,8 +378,10 @@ export type {PlanPt};
  * never the light's saffron): the partition's line continued to the wall as a dashed threshold over a pale floor patch.
  * Put it in RoomSet's `backdrop` (the stand, the people and the partition paint over it). `t` 0..1 draws it on from the
  * wall; with a moved layout (S9's push) it shrinks with the gap and vanishes when the far end meets the wall.
+ * Opt-in (defaults unchanged): `patchOpacity` (default 0.55) for a brighter patch; `outline` adds a 3 px inkMuted dashed
+ * edge round the patch (ink and white only, PATH_LEGIBILITY_PLAN).
  */
-export const GapMarker: React.FC<{tilt: number; t: number; layout?: Layout; view?: ViewConfig; halfW?: number}> = ({tilt, t, layout = LAYOUT, view = DEFAULT_VIEW, halfW = 0.12}) => {
+export const GapMarker: React.FC<{tilt: number; t: number; layout?: Layout; view?: ViewConfig; halfW?: number; patchOpacity?: number; outline?: boolean}> = ({tilt, t, layout = LAYOUT, view = DEFAULT_VIEW, halfW = 0.12, patchOpacity = 0.55, outline = false}) => {
   const o = layout.occluder;
   const zEnd = o.z0 - 0.02;
   if (t <= 0 || zEnd < 0.04) return null;
@@ -361,9 +390,11 @@ export const GapMarker: React.FC<{tilt: number; t: number; layout?: Layout; view
   const d = (pts: {x: number; y: number}[]) => pts.map((q, i) => `${i ? 'L' : 'M'} ${q.x.toFixed(2)} ${q.y.toFixed(2)}`).join(' ') + ' Z';
   const a = P(o.x, 0.01);
   const b = P(o.x, 0.01 + (zEnd - 0.01) * Math.min(1, t));
+  const patch = d([P(o.x - halfW, 0.02), P(o.x + halfW, 0.02), P(o.x + halfW, zEnd), P(o.x - halfW, zEnd)]);
   return (
     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-      <path d={d([P(o.x - halfW, 0.02), P(o.x + halfW, 0.02), P(o.x + halfW, zEnd), P(o.x - halfW, zEnd)])} fill={C.white} opacity={0.55 * Math.min(1, t)} />
+      <path d={patch} fill={C.white} opacity={patchOpacity * Math.min(1, t)} />
+      {outline && <path d={patch} fill="none" stroke={C.inkMuted} strokeWidth={3} strokeDasharray="10 8" strokeLinejoin="round" opacity={Math.min(1, t)} />}
       <path d={`M ${a.x.toFixed(2)} ${a.y.toFixed(2)} L ${b.x.toFixed(2)} ${b.y.toFixed(2)}`} stroke={C.inkMuted} strokeWidth={4} strokeDasharray="12 9" strokeLinecap="round" fill="none" />
     </svg>
   );

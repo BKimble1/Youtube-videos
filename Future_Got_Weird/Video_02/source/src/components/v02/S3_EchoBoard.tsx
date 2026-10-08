@@ -126,8 +126,12 @@ export type EchoBoardT = {
   boxCentre: number;
   /** curve drawn up to this time (ns after the wall echo); below PLOT.t0 = nothing */
   drawNs: number;
+  /** 0..1 opacity of the pen-head dot at the curve's drawn end (default 1; the scene fades it while the curve waits) */
+  pen?: number;
   /** 0..1 "wall's echo" label */
   spikeLabel: number;
+  /** 0..1 phase of a one-shot pulse on the spike's peak (dot 1 -> 1.5 -> 1 and a ring; default none) */
+  spikePulse?: number;
   /** 0..1 magnifier appears; lensSlide 0..1 from beside the spike to over the tail */
   lens: number;
   lensSlide: number;
@@ -194,6 +198,8 @@ export const EchoBoard: React.FC<{t: EchoBoardT}> = ({t}) => {
   const xTicks = [-2, 0, 2, 4, 6, 8];
   const lensH = PLOT.base - LENS.top;
   const showCurve = t.drawNs > PLOT.t0;
+  const pen = clamp01(t.pen ?? 1);
+  const pulse = clamp01(t.spikePulse ?? 0);
   // the ratio callout's leader touches the hump's right flank (inside the ring once it is drawn)
   const leadA = {x: X(T[BUMP_BIN + 4]) + 12, y: Y(CNT[BUMP_BIN + 4], zf)};
   const dimY = Y(ECHO.bump, ZOOM) - 58; // above the bump (and its ring), below the lens top
@@ -256,7 +262,8 @@ export const EchoBoard: React.FC<{t: EchoBoardT}> = ({t}) => {
                 </Txt>
               </g>
             ))}
-            <text x={0} y={0} transform={`translate(${PLOT.x0 - 136} ${f2((PLOT.y0 + PLOT.base) / 2)}) rotate(-90)`} textAnchor="middle" fontFamily={F.body} fontWeight={700} fontSize={32} fill={C.inkSoft}>
+            {/* 34 px, body text (review r1 D21: it was 32): glyphs ~x 99..131, inside the 96 px margin, ~12 px clear of the ticks */}
+            <text x={0} y={0} transform={`translate(${PLOT.x0 - 136} ${f2((PLOT.y0 + PLOT.base) / 2)}) rotate(-90)`} textAnchor="middle" fontFamily={F.body} fontWeight={700} fontSize={34} fill={C.inkSoft}>
               counts (linear scale)
             </text>
             {xTicks.map((v) => (
@@ -277,16 +284,17 @@ export const EchoBoard: React.FC<{t: EchoBoardT}> = ({t}) => {
         {showCurve && (
           <g clipPath="url(#s3plot)">
             <path d={curveD(t.drawNs)} fill="none" stroke={C.tealDeep} strokeWidth={5} strokeLinejoin="round" strokeLinecap="round" />
-            {t.drawNs < T[N - 1] - 0.01 && (() => {
+            {t.drawNs < T[N - 1] - 0.01 && pen > 0.001 && (() => {
               const k = Math.max(1, T.findIndex((v) => v > t.drawNs));
               const u = clamp01((t.drawNs - T[k - 1]) / (T[k] - T[k - 1]));
-              return <circle cx={f2(X(t.drawNs))} cy={f2(Y(lerp(CNT[k - 1], CNT[k], u)))} r={8} fill={C.teal} stroke={C.ink} strokeWidth={3} />;
+              return <circle cx={f2(X(t.drawNs))} cy={f2(Y(lerp(CNT[k - 1], CNT[k], u)))} r={8} fill={C.teal} stroke={C.ink} strokeWidth={3} opacity={f2(pen)} />;
             })()}
           </g>
         )}
+        {pulse > 0 && pulse < 1 && <circle cx={f2(peakX)} cy={f2(peakY)} r={f2(12 + 40 * E.out(pulse))} fill="none" stroke={C.tealDeep} strokeWidth={f2(5 * (1 - pulse) + 1)} opacity={f2(0.9 * (1 - pulse))} />}
         {t.spikeLabel > 0 && (
           <g opacity={clamp01(t.spikeLabel * 2)} transform={`translate(${f2((1 - E.out(clamp01(t.spikeLabel))) * -10)} 0)`}>
-            <circle cx={f2(peakX)} cy={f2(peakY)} r={9} fill={C.teal} stroke={C.ink} strokeWidth={3} />
+            <circle cx={f2(peakX)} cy={f2(peakY)} r={f2(9 * (1 + 0.5 * Math.sin(Math.PI * pulse)))} fill={C.teal} stroke={C.ink} strokeWidth={3} />
             <Txt x={peakX + 24} y={peakY + 12} size={38}>
               wall's echo
             </Txt>

@@ -88,7 +88,7 @@ export const TrackPlot: React.FC<TrackPlotProps> = ({width, idx, fromIdx = 0, tr
       const b = i0 + Math.floor((n * (c + 1)) / parts);
       if (b <= a) continue;
       const d = T.ours_xz.slice(a, b + 1).map(([x, z], j) => `${j ? 'L' : 'M'} ${P(x, z).x.toFixed(1)} ${P(x, z).y.toFixed(1)}`).join(' ');
-      chunks.push(<path key={c} d={d} fill="none" stroke={C.teal} strokeWidth={small ? 4 : 6} strokeLinecap="round" strokeLinejoin="round" opacity={(0.18 + 0.6 * ((c + 1) / parts)) * marker} />);
+      chunks.push(<path key={c} d={d} fill="none" stroke={C.tealDeep} strokeWidth={small ? 4 : 6} strokeLinecap="round" strokeLinejoin="round" opacity={(0.18 + 0.6 * ((c + 1) / parts)) * marker} />);
     }
   }
   const whole = wholeRun ? T.ours_xz.slice(6).map(([x, z], j) => `${j ? 'L' : 'M'} ${P(x, z).x.toFixed(1)} ${P(x, z).y.toFixed(1)}`).join(' ') : '';
@@ -121,15 +121,15 @@ export const TrackPlot: React.FC<TrackPlotProps> = ({width, idx, fromIdx = 0, tr
         </text>
       )}
       {/* run so far */}
-      {wholeRun && <path d={whole} fill="none" stroke={C.teal} strokeWidth={3.5} strokeLinecap="round" strokeLinejoin="round" opacity={0.75} />}
+      {wholeRun && <path d={whole} fill="none" stroke={C.tealDeep} strokeWidth={3.5} strokeLinecap="round" strokeLinejoin="round" opacity={0.75} />}
       {chunks}
-      {/* the 16 measured wall points */}
+      {/* the 16 measured wall points: saffron, as on the opening's board (S1.3) and the plan's wall spots */}
       {T.wall_points_xz.map(([x, z], j) => {
         const p = P(x, z);
         const col = Math.floor(j % 4);
         const pk = Math.max(0, Math.min(1, wallPulse * 1.6 - col * 0.2));
         const r = (small ? 4 : 7.5) * (1 + 0.45 * Math.sin(Math.PI * pk));
-        return <circle key={j} cx={p.x} cy={p.y} r={r} fill={C.teal} stroke={C.ink} strokeWidth={small ? 2 : 2.5} />;
+        return <circle key={j} cx={p.x} cy={p.y} r={r} fill={C.saffron} stroke={C.ink} strokeWidth={small ? 2 : 2.5} />;
       })}
       {/* "×4" under each wall-point column (the 4 rows of the 4×4 grid overlap when seen from above) */}
       {stackTag > 0 &&
@@ -141,16 +141,17 @@ export const TrackPlot: React.FC<TrackPlotProps> = ({width, idx, fromIdx = 0, tr
           if (t <= 0) return null;
           const k = 0.7 + 0.3 * Math.min(1, t * 1.2);
           return (
-            <text key={`x${col}`} x={p.x} y={p.y + 30 + fs * 0.62} textAnchor="middle" fontFamily={F.mono} fontWeight={600} fontSize={30} fill={C.tealDeep} opacity={Math.min(1, t * 1.5)} transform={`translate(${f2(p.x * (1 - k))} ${f2((p.y + 30) * (1 - k))}) scale(${f2(k)})`}>
+            <text key={`x${col}`} x={p.x} y={p.y + 30 + fs * 0.62} textAnchor="middle" fontFamily={F.mono} fontWeight={600} fontSize={30} fill={C.inkSoft} opacity={Math.min(1, t * 1.5)} transform={`translate(${f2(p.x * (1 - k))} ${f2((p.y + 30) * (1 - k))}) scale(${f2(k)})`}>
               ×4
             </text>
           );
         })}
-      {/* the estimated position: the stored frame nearest the clock, no interpolation */}
+      {/* the estimated position: the stored frame nearest the clock, no interpolation; teal with a cream highlight, as on
+          the opening's board (S1.3), so the callback keeps the colour code (wall points saffron, estimate teal) */}
       {marker > 0 && !wholeRun && (
         <g opacity={marker}>
-          <circle cx={m.x} cy={m.y} r={small ? 9 : 17} fill={C.saffron} stroke={C.ink} strokeWidth={ink} />
-          <circle cx={m.x - 4} cy={m.y - 4} r={small ? 2.5 : 4.5} fill={C.cream} />
+          <circle cx={m.x} cy={m.y} r={small ? 9 : 17} fill={C.teal} stroke={C.ink} strokeWidth={ink} />
+          <circle cx={m.x - (small ? 3 : 5)} cy={m.y - (small ? 3 : 5)} r={small ? 2.5 : 5} fill={C.cream} opacity={0.85} />
         </g>
       )}
       {/* scale bar: 50 cm */}

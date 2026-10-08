@@ -1,12 +1,12 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {C, F} from '../theme';
+import {C, F, OUTLINE} from '../theme';
 import type {Sfx} from '../lib/sfx';
 import {useG} from '../lib/SceneFrame';
 import {at, scene, seg, segEnd} from '../lib/timeline';
 import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
 import {E, SNAP, camPath, hop, kf, sp, tw} from '../lib/motion';
-import {CAM_PATH_SIDE, CAM_ROOM, PLAN_CARD_RECT, RAISED_TILT} from '../lib/shots';
+import {CAM_PATH_SIDE, HANDOFF_S2S3, HANDOFF_S2S3_EXTEND, PLAN_CARD_AREA, PLAN_CARD_RECT, RAISED_TILT} from '../lib/shots';
 import {
   LAYOUT,
   assertAroundTheEnd,
@@ -15,6 +15,8 @@ import {
   partitionHides,
   partitionTopH,
   projectWith,
+  SLAB_T,
+  WALL_T,
   rigAt,
   rigStyle,
   viewAt,
@@ -48,24 +50,27 @@ import {ARMS_CROSSED, Character2, EXPR, HANDS_ON_HIPS, eyesWorld, figuresHide, m
 import {SensorStand, standGeometry} from '../components/v02/S3_SensorStand';
 import {BlockCard, type BlockDrop} from '../components/v02/S3_BlockCard';
 import {EchoBoard, EchoCard} from '../components/v02/S3_EchoBoard';
-import {PlanCard, PlanRoute, planCardSize} from '../components/v02/PlanCard';
+import {PLAN_VIEW, PlanCard, PlanRoute, planCardSize, viewForArea} from '../components/v02/PlanCard';
+import {TimingCard, TIMING_CARD} from '../components/v02/S3_TimingCard';
 
 /**
  * S3 · The faint echo (s13–s16). Storyboard shots S3.1–S3.3.
  *
- *  S3.1 s13  S2 ends on the room at tilt 0; S3 opens on S2's last frame exactly (tilt 0, S2.4's framing, both people
- *            in S2's last poses: no jump cut, no pop) and, in one move on "follow the path that matters", rises to
+ *  S3.1 s13  S2 ends on the room at tilt 0; S3 opens on S2's last frame exactly (tilt 0, S2.4's framing HANDOFF_S2S3,
+ *            both people in S2's last poses and S2's settled "what survives: timing" card, which slides out left as the
+ *            move starts: one room across the cut, no pop) and, in one move on "follow the path that matters", rises to
  *            RAISED_TILT (0.10) and pushes to CAM_TRIP, carrying the room clear of the plan card's column. The "seen from
  *            above" PlanCard comes in as soon as that column is clear and is in before the route preview draws (on
  *            "path"); the gap at the wall is marked on the floor in ink (GapMarker, as in S1.4) while the light goes
- *            through it and back. A cluster of 24 light dots leaves the sensor on "sensor" and reaches each stop on its word
+ *            through it and back. The sensor's far lens flashes on "sensor" (the sound's frame) and a cluster of 24 light
+ *            dots leaves it, out over its box a few frames later, and reaches each stop on its word
  *            (wall, person, wall, sensor) at one constant, slowed speed. At each bounce most of the dots scatter away
  *            and fade; 8, then 3, then 1 carry on (seeded). In the room the wall -> person leg is seen crossing the slot
  *            between the partition's far end and the wall, then goes behind the far end (lib/room assertAroundTheEnd)
  *            and ends at his outline (the partition as drawn and the people hide light: partitionHides, figuresHide);
  *            on "person" his wall-side outline flashes (rimFlash) (the stop rings never cross a person). The card runs the
  *            same dots (dotAt), stop rings and fans on the same frames, so "round the end, by way of the wall" reads
- *            from above. A tally of the 24 greys out as they are lost. "Each bounce spreads the light": scatter fans at
+ *            from above. A tally of the 24 greys out as they are lost ("not to scale"). "Each bounce spreads the light": scatter fans at
  *            the wall spot and at him; "most of it is lost": they leave. Chip "slowed down · illustrative".
  *  S3.2 s14  pan to CAM_PATH_SIDE to make room; an illustrative arrival card slides in: blocks drop into time slots, a
  *            tall stack "1 bounce · wall", then one small late block "3 bounces · him" ("tiny": he looks smug).
@@ -112,6 +117,8 @@ const K = {
   s14End: segEnd('s14'),
   // s15
   this15: at('s15', 'this'),
+  real: at('s15', 'real'),
+  data: at('s15', 'data'),
   same: at('s15', 'same'),
   sensor15: at('s15', 'sensor'),
   object: at('s15', 'object'),
@@ -153,6 +160,22 @@ const P3 = (p: P2, h = LIGHT_H): PlanPt => ({x: p.x, z: p.z, h});
 const PUSH0 = Math.max(K.start + 2, K.follow - 6);
 const PUSH_DUR = clamp(K.sensorA - 24 - PUSH0, 30, 44);
 const PUSH_END = PUSH0 + PUSH_DUR;
+/** S2's "what survives: timing" card, carried across the cut where S2 left it (S3_TimingCard), holds a few frames and
+ *  slides out left, accelerating (quadratic: no last-frame jump), as the push starts (review r1 D03); fully off the
+ *  frame after TCARD_OUT_DUR. */
+const TCARD_OUT = PUSH0 + 1;
+const TCARD_OUT_DUR = 16;
+const accel = (x: number) => x * x;
+const TCARD_TRAVEL = TIMING_CARD.x1 + TIMING_CARD.shadow.dx + 12;
+/**
+ * The S3.2 pan shows the room's open left end around the arrivals card (review r1 D20): the set's shell (wall,
+ * skirting, wall top, floor, slab front, shadow) runs EXT_M further left (RoomSet extendLeft). Merge r3: S2.4 now
+ * draws its room with the same extension (lib/shots HANDOFF_S2S3_EXTEND), so S3 opens with it (EXT_ON = K.start) and
+ * the S2 -> S3 match cut, the carried card's exit and the push show wall and floor left of the room, never bare paper.
+ * The extended end stays out of frame from the cut until the board covers the room (asserted below).
+ */
+const EXT_M = HANDOFF_S2S3_EXTEND;
+const EXT_ON = K.start;
 // S3.2 — pan, card, blocks
 const PAN0 = K.s13End - 4;
 const PAN_DUR = 30;
@@ -171,10 +194,13 @@ const GAP_PX = 20;
 /** The caption band: no critical text below this line (bottom 12 %); text stays inside a 5 % margin. */
 const CAPTION_Y = 1080 * 0.88;
 const SAFE = {x0: 1920 * 0.05, y0: 1080 * 0.05, x1: 1920 * 0.95};
-/** "slowed down · illustrative" chip, top right, left-aligned with the plan card (measured on renders: 447 x 58). */
-const CHIP_BOX: Rect = {x0: PLAN_CARD_RECT.x, y0: 60, x1: PLAN_CARD_RECT.x + 447, y1: 118};
-/** The plan card (lib/shots PLAN_CARD_RECT's column and size, 480 x 408), under the chip; its box includes the shadow. */
-const CARD_SIZE = planCardSize();
+/** "slowed down · illustrative" chip, top right, its right edge on the 5 % margin (measured on renders: 447 x 58; review
+ *  r1 D44: it used to start at the card's left edge and reach x 1847). */
+const CHIP_BOX: Rect = {x0: SAFE.x1 - 447, y0: 60, x1: SAFE.x1, y1: 118};
+/** The plan card (lib/shots PLAN_CARD_RECT's column and size, 432 x 372 = PLAN_CARD_AREA inside the 5 % margin, review
+ *  r1 D44), under the chip; its box includes the 9 / 11 px hard shadow. */
+const CARD_SIZE = planCardSize(PLAN_CARD_AREA);
+const CARD_VIEW = viewForArea(PLAN_VIEW, PLAN_CARD_AREA);
 const CARD_POS = {x: PLAN_CARD_RECT.x, y: CHIP_BOX.y1 + 24};
 const CARD_BOX: Rect = {x0: CARD_POS.x, y0: CARD_POS.y, x1: CARD_POS.x + CARD_SIZE.w + 9, y1: CARD_POS.y + CARD_SIZE.h + 11};
 /** The tally (top left; measured on renders: 456 x 133; its text starts 23 px in, at the 5 % margin). */
@@ -206,12 +232,14 @@ const toScreenRect = (cam: Cam, r: Rect): Rect => {
 const rectGap = (a: Rect, b: Rect) => Math.max(a.x0 - b.x1, b.x0 - a.x1, a.y0 - b.y1, b.y0 - a.y1);
 
 /**
- * S3 opens on the standard room framing (CAM_ROOM, as S1 and S4 open): S2 now ends on its full-frame "what survives:
- * timing" card, so the cut at 2874 is card -> room and needs no match; S2.4's CAM_D framing showed bare paper beyond the
- * room's left wall in the left ~22 % of the frame. The push to CAM_TRIP then carries the room left, clear of the card
- * column (CAM_PATH's room-right-of-card layout, closer).
+ * S2 -> S3 is a one-room match cut (review r1 D03, lead L1 option a): S2.4 ends on the room at tilt 0 framed by
+ * lib/shots HANDOFF_S2S3 (S2's CAM_D) with its "what survives: timing" card settled in the left column, and S3 opens on
+ * the same camera, at tilt 0, with both people in S2's final poses and that card where S2 left it (S3_TimingCard), so
+ * only S2's light routes go at the cut. The card slides out left as the push starts, over the wall and floor both scenes
+ * continue past the room's left end (HANDOFF_S2S3_EXTEND, merge r3: no bare paper in this framing); the push to
+ * CAM_TRIP then carries the room left, clear of the plan card's column (CAM_PATH's room-right-of-card layout, closer).
  */
-const CAM_OPEN: Cam = CAM_ROOM;
+const CAM_OPEN: Cam = HANDOFF_S2S3;
 /**
  * S3.1 at RAISED_TILT, framed from the projected subjects: both characters head to feet, the wall spot W3 and the
  * partition's far top corner (the light goes round that end), in screen x 40 .. the card column (PLAN_CARD_RECT.x -
@@ -323,8 +351,26 @@ const SMUG = TINY;
 const BOARD0 = Math.max(SMUG + 14, K.this15 - 2);
 const BOARD_DUR = 14;
 const LAND = BOARD0 + BOARD_DUR;
-const DRAW_A0 = Math.max(LAND + 16, K.walls - 4);
-const DRAW_A1 = Math.max(DRAW_A0 + 14, K.echo15);
+/** The board's slide (E.out) has no overshoot, so its tail is a crawl of a few px: it reads as landed once less than
+ *  1 % of its travel is left. The paper_slap goes there, not on LAND (review r1 D14, checked for S3). */
+const BOARD_TRAVEL = 1960;
+const boardOffset = (g: number) => (1 - tw(g, BOARD0, BOARD_DUR, E.out)) * BOARD_TRAVEL;
+const BOARD_HIT = (() => {
+  for (let g = BOARD0; g <= LAND; g++) if (boardOffset(g) <= 0.01 * BOARD_TRAVEL) return g;
+  return LAND;
+})();
+/** The wall's echo is plotted on "real data" (review r1 D05: the board sat empty under "Real measurements" for ~4 s);
+ *  the conditions chip, the source chip, the 3×3 box and "plotted: the centre zone" then build over a plotted curve,
+ *  "wall's echo" is labelled on "the wall's" and the peak pulses on "big echo" (two beats, so the board does not sit
+ *  still from the label to "then"). */
+const DRAW_A0 = Math.max(LAND + 10, K.real);
+const DRAW_A1 = Math.max(DRAW_A0 + 16, K.data + 10);
+const SPIKE_LABEL = Math.max(DRAW_A1 + 2, K.walls - 2);
+const SPIKE_PULSE = Math.max(SPIKE_LABEL + 10, K.echo15 - 2);
+const SPIKE_PULSE_DUR = 14;
+/** The pen-head dot leaves the curve's foot while the board waits for "then" (back on the curve for the tail). */
+const PEN_OUT = DRAW_A1 + 2;
+const PEN_OUT_DUR = 6;
 const DRAW_B0 = Math.max(DRAW_A1 + 6, K.then);
 const DRAW_B1 = Math.max(DRAW_B0 + 24, K.later + 8);
 const LENS0 = Math.max(DRAW_B1 + 2, K.bump15 - 6);
@@ -415,15 +461,6 @@ const dotAt = (i: number, g: number): DotState | null => {
   const fade = 1 - E.in(clamp01(s / sc.max));
   return {p: {x: V.x + sc.x * s, z: V.z + sc.z * s}, leg: lostAt - 1, op: fade, r: DOT_R * (0.75 + 0.25 * I) * (1 - 0.35 * clamp01(s / sc.max)), I, across: 0, scattering: true};
 };
-/** How many dots are still travelling the path (not lost) after frame g. */
-const onPath = (g: number) => {
-  let n = 0;
-  for (let i = 0; i < NDOTS; i++) {
-    const d = SPEED * (g - LAUNCH) - LAG[i];
-    if (d < CUM[LOST_AT[i]] || LOST_AT[i] === 4) n++;
-  }
-  return n;
-};
 /** Frame at which dot i leaves the path (its bounce), or Infinity for the one that comes home. */
 const lostFrame = (i: number) => (LOST_AT[i] === 4 ? Infinity : LAUNCH + (CUM[LOST_AT[i]] + LAG[i]) / SPEED);
 /** Last frame any dot is drawn (the last scattered dot fades out). */
@@ -444,6 +481,36 @@ const legNormals = (s: ViewState) =>
  * and h to screen y), so the kit's occlusion tests apply to what is drawn exactly.
  */
 const lift = (p: P2, ox: number, oy: number, s: ViewState): PlanPt => ({x: p.x + ox / s.ppm, z: p.z, h: LIGHT_H - oy / (s.ppm * Math.max(s.height, 1e-6))});
+
+/**
+ * The flash on "sensor" (review r1 D15): the sensor_pulse sound is on LAUNCH, but the dots leave from the sensor's far
+ * face, behind its box, and only come out over its top edge a few frames later. So the far face's lens flashes on
+ * LAUNCH (HandheldSensor / SensorTop opt-in `burst`, a saffron halo, plus one expanding ring): the halo holds until
+ * the first dot is out of the box (EMERGE: its centre past the box's drawn outline, at the drawn lane offset), then
+ * fades over BURST_FADE frames.
+ */
+const BURST_FADE = 4;
+const BURST_RING = 9;
+const EMERGE = (() => {
+  for (let g = LAUNCH; g <= LAUNCH + 20; g++) {
+    const tilt = tiltOf(g);
+    const s = viewAt(tilt);
+    const nrm = legNormals(s);
+    const box = standGeometry(tilt).box;
+    for (let i = 0; i < NDOTS; i++) {
+      const d = dotAt(i, g);
+      if (!d || d.scattering) continue;
+      const off = LANE_PX + d.across;
+      const q = projectWith(s, lift(d.p, nrm[d.leg].x * off, nrm[d.leg].y * off, s));
+      const pad = 2; // half the box's ink outline
+      if (q.x < box.x0 - pad || q.x > box.x1 + pad || q.y < box.y0 - pad || q.y > box.y1 + pad) return g;
+    }
+  }
+  throw new Error('S3: no light dot comes out of the sensor box within 20 frames of the launch');
+})();
+if (EMERGE - LAUNCH > 10) throw new Error(`S3: the first dot leaves the sensor box ${EMERGE - LAUNCH} frames after the flash (the burst would hang)`);
+const burstAt = (g: number) => (g < LAUNCH ? 0 : 1 - tw(g, EMERGE, BURST_FADE, E.inOut));
+const burstRingAt = (g: number) => (g < LAUNCH || g > LAUNCH + BURST_RING ? undefined : (g - LAUNCH) / BURST_RING);
 
 /* ================================================================== fans (S3.1 recap) */
 
@@ -614,6 +681,62 @@ const MIN_SPOT_CLEAR_PX = 40;
   if (fails.length) throw new Error(`S3 path-legibility checks: ${fails.join('; ')}`);
 })();
 
+/**
+ * Largest screen x (camera `cam`, tilt) of the room set's cross-section at plan x `xe` (the wall's end, the slab's end
+ * and its drop shadow, drawn 10, 14 world px down-right), over the samples inside the frame's height: < 0 means that
+ * cross-section is out of frame to the left.
+ */
+const setSliceMaxX = (cam: Cam, tilt: number, xe: number) => {
+  const s = viewAt(tilt);
+  const {z0, z1, wallHeight: HW} = LAYOUT.room;
+  const pts: PlanPt[] = [];
+  for (let k = 0; k <= 60; k++) {
+    const z = z0 - WALL_T + (z1 - z0 + WALL_T) * (k / 60);
+    pts.push({x: xe, z, h: -SLAB_T}, {x: xe, z, h: 0});
+    pts.push({x: xe, z: z0 - WALL_T, h: (HW * k) / 60}, {x: xe, z: z0, h: (HW * k) / 60});
+  }
+  let mx = -Infinity;
+  for (const p of pts) {
+    const q = projectWith(s, p);
+    for (const [dx, dy] of [[0, 0], [10, 14]]) {
+      const sc = worldToScreen(cam, q.x + dx, q.y + dy);
+      if (sc.y >= -OUTLINE && sc.y <= 1080 + OUTLINE) mx = Math.max(mx, sc.x + OUTLINE);
+    }
+  }
+  return mx;
+};
+
+/** Module-load checks of the review r1 fixes (D03 hand-off, D20 set extension, D05 board beats); any failure throws. */
+(() => {
+  const fails: string[] = [];
+  // D03: S3 opens on S2's last framing at tilt 0; the carried card holds a few frames, then has left the frame
+  // before the plan card comes in (one card moves at a time)
+  const c0 = camOf(K.start);
+  if (tiltOf(K.start) !== 0 || c0.cx !== HANDOFF_S2S3.cx || c0.cy !== HANDOFF_S2S3.cy || c0.zoom !== HANDOFF_S2S3.zoom) fails.push('S3 does not open on HANDOFF_S2S3 at tilt 0');
+  if (TCARD_OUT - K.start < 3) fails.push(`the carried timing card holds only ${TCARD_OUT - K.start} frames after the cut`);
+  if (TCARD_OUT + TCARD_OUT_DUR > CARD_IN) fails.push(`the carried timing card is still leaving (to ${TCARD_OUT + TCARD_OUT_DUR}) when the plan card comes in (${CARD_IN})`);
+  if (TIMING_CARD.x1 + TIMING_CARD.shadow.dx - TCARD_TRAVEL >= -OUTLINE) fails.push('the carried timing card does not leave the frame');
+  // D20 (+ merge r3): the set extension is on from S3's first frame with the same length S2.4 ends with (so the cut
+  // is one set and no frame of S3 switches it on), and from the cut until the board covers the room the extended
+  // set's left end stays out of frame (the wall and floor run past the frame's left edge through the push, the carried
+  // card's exit and around the arrivals card)
+  if (EXT_ON !== K.start || EXT_M !== HANDOFF_S2S3_EXTEND || !(EXT_M > 0)) fails.push(`S3 does not open on S2.4's extended set (EXT_ON ${EXT_ON}, EXT_M ${EXT_M})`);
+  const x0 = LAYOUT.room.x0;
+  for (let g = EXT_ON; g <= LAND; g++) {
+    const mx = setSliceMaxX(camOf(g), tiltOf(g), x0 - EXT_M);
+    if (mx >= 0) fails.push(`the extended set's left end is in frame (to ${mx.toFixed(0)} px) @${g}`);
+  }
+  // D05 (+ D14): the spike is plotted on "real data", once the board has landed and its axes are in, and before
+  // "the wall's big echo" labels it; the pen-head dot is gone before the tail draws on "then"; the slap is on the landing
+  if (DRAW_A0 < LAND + 10) fails.push('the curve starts before the axes are in');
+  if (DRAW_A1 > K.walls - 2) fails.push(`the spike is still drawing (to ${DRAW_A1}) on "the wall's" (${K.walls})`);
+  if (SPIKE_LABEL < DRAW_A1 + 2) fails.push("the spike's label comes before the spike");
+  if (SPIKE_PULSE + SPIKE_PULSE_DUR > DRAW_B0) fails.push("the peak's pulse is still running when the tail starts");
+  if (PEN_OUT + PEN_OUT_DUR > DRAW_B0 - 4) fails.push('the pen-head dot is still fading out when the tail starts');
+  if (BOARD_HIT < BOARD0 + 6 || BOARD_HIT > LAND) fails.push(`paper_slap frame ${BOARD_HIT} is not on the board's landing (${BOARD0}..${LAND})`);
+  if (fails.length) throw new Error(`S3 review-fix checks: ${fails.join('; ')}`);
+})();
+
 /* ================================================================== S3.2 drops (illustrative slots from the room's geometry) */
 
 const SLOT_NS = 1; // one slot per nanosecond on the card
@@ -633,13 +756,14 @@ export const SFX: Sfx[] = [
   {f: Math.round(VF[2]), kind: 'bounce_tick', pitch: -1, gain: -4},
   {f: Math.round(VF[3]), kind: 'bounce_tick', pitch: 3, gain: -7},
   {f: Math.round(VF[4]), kind: 'echo_return', gain: -6},
-  {f: CARD0 + CARD_DUR - 2, kind: 'paper_slide', gain: -4},
+  // the sample swells from its onset: on the start of the card's slide (review r1 D04)
+  {f: CARD0, kind: 'paper_slide', gain: -4},
   {f: DROPS[0].land, kind: 'block_drop', gain: -2},
   {f: DROPS[5].land, kind: 'block_drop', pitch: 2, gain: -6},
   {f: DROPS[WALL_N - 1].land, kind: 'block_drop', pitch: 4, gain: -5},
   {f: HIM_LAND, kind: 'block_drop', pitch: -5, gain: -9},
   {f: SMUG + 4, kind: 'smug_exhale', gain: -3},
-  {f: LAND, kind: 'paper_slap'},
+  {f: BOARD_HIT, kind: 'paper_slap'},
   {f: SLIDE0, kind: 'magnifier_slide', gain: -3},
   {f: RING0, kind: 'marker_circle'},
 ];
@@ -670,7 +794,8 @@ const settleIn = (g: number) => tw(g, K.start + 2, 12, E.inOut);
 
 const guesserState = (g: number, tilt: number, cluster: {x: number; y: number} | null) => {
   const place0 = rigAt(H.x, H.z, tilt);
-  const place: RigPlace = {x: place0.x, y: place0.y, scale: place0.scale, frame: g, seed: GUESSER_SEED, life: 0.45};
+  // idle life: S2.4's 0.5 at the cut (so his outline matches S2's last frame), easing to S3's 0.45 with the settle
+  const place: RigPlace = {x: place0.x, y: place0.y, scale: place0.scale, frame: g, seed: GUESSER_SEED, life: lerp(0.5, 0.45, settleIn(g))};
   // wary at the start (S2 left him uneasy, sweating), hands on hips; the sweat goes when he relaxes on "lost"
   const wary: Pose2 = withPose(withPose(HANDS_ON_HIPS, {lid: 0.12, eyes: 1.06, brows: 0.4, browAsym: 0.2, mouth: 'hmm', sweat: 0.8, lookX: -0.6, lookY: -0.4, tilt: -3}), settlePose(1, -1));
   let pose: Pose2 = mixPose2(S2_END_GUESSER, wary, settleIn(g));
@@ -816,6 +941,9 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   /* ---- readout: bars; the late bump lights when the one dot comes home */
   const homeHl = sp(g, ARRIVE, SNAP) * (1 - tw(g, ARRIVE + 50, 20));
   const firing = pulseAt(g, LAUNCH - 3, 9);
+  // the flash on "sensor": the far face's lens bursts on the launch frame (the sound's frame), until the dots are out
+  const burst = burstAt(g);
+  const burstRing = burstRingAt(g);
 
   const items: RoomItem[] = [
     {
@@ -831,7 +959,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
       z: LAYOUT.operator.z + 0.04,
       w: 0.17,
       height: LIGHT_H + 0.2,
-      node: <SensorStand tilt={tilt} sensor={{reveal: 1, bumpHighlight: homeHl, led: 1, firing}} />,
+      node: <SensorStand tilt={tilt} sensor={{reveal: 1, bumpHighlight: homeHl, led: 1, firing, burst, burstRing}} />,
     },
     {
       key: 'guesser',
@@ -911,7 +1039,11 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   const tagOut = 1 - tw(g, TAGS_OUT, 10);
   const chipT = tw(g, LAUNCH - 8, 10) * (1 - tw(g, PAN0 + 4, 10));
   const tallyT = tw(g, LAUNCH - 4, 10) * (1 - tw(g, PAN0, 10));
-  const cardT = tw(g, CARD_IN, CARD_IN_DUR, E.out) * (1 - tw(g, CARD_OUT, CARD_OUT_DUR, E.inOut));
+  // linear in: PlanCard applies the one ease (E.out) to its slide and opacity (review r1 D16: E.out here as well made
+  // the entry a near-pop, the slide spent in one frame)
+  const cardT = tw(g, CARD_IN, CARD_IN_DUR, E.linear) * (1 - tw(g, CARD_OUT, CARD_OUT_DUR, E.inOut));
+  // S2's timing card, carried across the cut, leaves to the left as the push starts
+  const tcardDx = -TCARD_TRAVEL * tw(g, TCARD_OUT, TCARD_OUT_DUR, accel);
 
   return (
     <AbsoluteFill style={{background: C.paper}}>
@@ -920,6 +1052,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
           <RoomSet
             tilt={tilt}
             items={items}
+            extendLeft={g >= EXT_ON ? EXT_M : 0}
             backdrop={
               <>
                 {gapMark}
@@ -932,6 +1065,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
           </RoomSet>
         </Layer>
       </Camera>
+      {g < TCARD_OUT + TCARD_OUT_DUR && <TimingCard dx={tcardDx} />}
       {tagOut > 0 &&
         TAGS.map((tg) => {
           const k = sp(g, tg.at - 2, SNAP);
@@ -978,10 +1112,12 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
           x={CARD_POS.x}
           y={CARD_POS.y}
           t={cardT}
+          area={PLAN_CARD_AREA}
+          view={CARD_VIEW}
           gap={1}
           checker={{x: LAYOUT.operator.x, z: LAYOUT.operator.z}}
           guesser={{x: H.x, z: H.z}}
-          sensor={{firing}}
+          sensor={{firing, burst, burstRing}}
           light={(tp) => {
             const cn = PATH.slice(0, -1).map((a, k) => {
               const pa = tp(a);
@@ -1012,7 +1148,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
           }}
         />
       )}
-      <BlockCard g={g} drops={DROPS} t={{enter: tw(g, CARD0, CARD_DUR), wallLabel: tw(g, WALL_LABEL, 10), himLabel: tw(g, HIM_LABEL, 10), tiny: tw(g, TINY, 10)}} />
+      <BlockCard g={g} drops={DROPS} t={{enter: tw(g, CARD0, CARD_DUR, E.linear), wallLabel: tw(g, WALL_LABEL, 10), himLabel: tw(g, HIM_LABEL, 10), tiny: tw(g, TINY, 10)}} />
     </AbsoluteFill>
   );
 };
@@ -1051,27 +1187,30 @@ const StopRing: React.FC<{center: P2; g: number; at: number; toPx: ToPx; I: numb
   );
 };
 
-/** The 24 dots of one flash: each greys out when its dot leaves the path. */
+/**
+ * The 24 dots of one flash: each greys out when its dot leaves the path. No count (review r1 D19: a bare "24 -> 1"
+ * numeral read as "1 in 24 comes back", while the real echo is hundreds to thousands of times weaker); a guard-rail line
+ * says the tally is not to scale. Same 456 x 133 box as before (TALLY_BOX: a taller tally would push CAM_TRIP out), so
+ * the dots run in one row.
+ */
+const TALLY_DOT = {pitch: 17, r: 6.5};
 const Tally: React.FC<{g: number; t: number}> = ({g, t}) => {
-  const n = onPath(g);
   const order = Array.from({length: NDOTS}, (_, i) => i).sort((a, b) => RANK[a] - RANK[b]); // survivors first
+  const P = TALLY_DOT.pitch;
   return (
     <div style={{position: 'absolute', left: TALLY_POS.x, top: TALLY_POS.y, opacity: t, transform: `translateY(${f2((1 - E.out(t)) * -10)}px)`}}>
-      <div style={{padding: '12px 20px 12px', borderRadius: 20, background: C.cream, border: `3px solid ${C.ink}`, boxShadow: `6px 7px 0 ${C.shadow}`}}>
-        <div style={{display: 'flex', alignItems: 'baseline', gap: 14, fontFamily: F.body, fontWeight: 800, fontSize: 34, color: C.inkSoft, lineHeight: 1}}>
-          <span>light still on the path</span>
-          <span style={{fontFamily: F.mono, fontWeight: 700, fontSize: 40, color: C.ink, minWidth: 54, textAlign: 'right'}}>{n}</span>
-        </div>
-        <svg width={12 * 25} height={2 * 25 + 4} style={{display: 'block', marginTop: 10}}>
+      <div style={{boxSizing: 'border-box', width: TALLY_BOX.x1 - TALLY_BOX.x0, height: TALLY_BOX.y1 - TALLY_BOX.y0, padding: '12px 20px 12px', borderRadius: 20, background: C.cream, border: `3px solid ${C.ink}`, boxShadow: `6px 7px 0 ${C.shadow}`}}>
+        <div style={{fontFamily: F.body, fontWeight: 800, fontSize: 34, color: C.inkSoft, lineHeight: 1, whiteSpace: 'nowrap'}}>light still on the path</div>
+        <svg width={NDOTS * P} height={P + 4} style={{display: 'block', marginTop: 8}}>
           {order.map((dot, k) => {
             const lf = lostFrame(dot);
             const gone = clamp01((g - lf) / 8);
-            const cx = 12.5 + (k % 12) * 25;
-            const cy = 12.5 + Math.floor(k / 12) * 25;
-            const r = 9 * (1 - 0.25 * gone);
-            return <circle key={dot} cx={cx} cy={cy + 4 * E.out(gone)} r={f2(r)} fill={mixHex(C.saffron, C.paperLine, gone)} stroke={gone > 0.5 ? C.inkMuted : C.ink} strokeWidth={2.5} />;
+            const cx = P / 2 + k * P;
+            const r = TALLY_DOT.r * (1 - 0.25 * gone);
+            return <circle key={dot} cx={cx} cy={P / 2 + 3 * E.out(gone)} r={f2(r)} fill={mixHex(C.saffron, C.paperLine, gone)} stroke={gone > 0.5 ? C.inkMuted : C.ink} strokeWidth={2} />;
           })}
         </svg>
+        <div style={{marginTop: 7, fontFamily: F.body, fontWeight: 700, fontSize: 30, color: C.inkSoft, lineHeight: 1, whiteSpace: 'nowrap'}}>not to scale · far more is lost</div>
       </div>
     </div>
   );
@@ -1118,7 +1257,7 @@ const Route: React.FC<{points: P2[]; head: number; toPx: ToPx; hidden: (p: P2) =
 /* ================================================================== the evidence board (S3.3) */
 
 const BoardShot: React.FC<{g: number}> = ({g}) => {
-  const slide = tw(g, BOARD0, BOARD_DUR, E.out);
+  const off = boardOffset(g);
   const drawNs = g < DRAW_A0 ? -99 : kf(g, [
     [DRAW_A0, -2.7],
     [DRAW_A1, 0.35, E.inOut],
@@ -1126,7 +1265,7 @@ const BoardShot: React.FC<{g: number}> = ({g}) => {
     [DRAW_B1, 8.6, E.inOut],
   ]);
   return (
-    <AbsoluteFill style={{transform: `translateX(${f2((1 - slide) * -1960)}px)`}}>
+    <AbsoluteFill style={{transform: `translateX(${f2(-off)}px)`}}>
       <EchoCard>
         <EchoBoard
           t={{
@@ -1137,7 +1276,9 @@ const BoardShot: React.FC<{g: number}> = ({g}) => {
             box: tw(g, K.sensor15 - 4, 14),
             boxCentre: tw(g, Math.max(K.object, K.sensor15 + 10), 12),
             drawNs,
-            spikeLabel: tw(g, DRAW_A1 + 2, 10),
+            pen: Math.max(1 - tw(g, PEN_OUT, PEN_OUT_DUR), tw(g, DRAW_B0 - 4, 4)),
+            spikeLabel: tw(g, SPIKE_LABEL, 10),
+            spikePulse: tw(g, SPIKE_PULSE, SPIKE_PULSE_DUR, E.inOut),
             lens: tw(g, LENS0, 10),
             lensSlide: tw(g, SLIDE0, SLIDE1 - SLIDE0, E.linear),
             zoom: tw(g, ZOOM0, ZOOM1 - ZOOM0, E.inOut),

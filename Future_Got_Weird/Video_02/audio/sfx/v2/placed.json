@@ -81,8 +81,8 @@
 },
 {
 "scene": "S1",
-"f": 300,
-"t": 10.0,
+"f": 295,
+"t": 9.833,
 "kind": "paper_slap",
 "gain": 0,
 "note": ""
@@ -153,16 +153,16 @@
 },
 {
 "scene": "S1",
-"f": 1158,
-"t": 38.6,
+"f": 1162,
+"t": 38.733,
 "kind": "sensor_pulse",
 "gain": -3,
 "note": ""
 },
 {
 "scene": "S1",
-"f": 1197,
-"t": 39.9,
+"f": 1200,
+"t": 40.0,
 "kind": "block_drop",
 "gain": 0,
 "note": ""
@@ -473,8 +473,8 @@
 },
 {
 "scene": "S3",
-"f": 3205,
-"t": 106.833,
+"f": 3191,
+"t": 106.367,
 "kind": "paper_slide",
 "gain": -4,
 "note": ""
@@ -521,8 +521,8 @@
 },
 {
 "scene": "S3",
-"f": 3405,
-"t": 113.5,
+"f": 3401,
+"t": 113.367,
 "kind": "paper_slap",
 "gain": 0,
 "note": ""
@@ -625,11 +625,11 @@
 },
 {
 "scene": "S4",
-"f": 4383,
-"t": 146.1,
+"f": 4397,
+"t": 146.567,
 "kind": "relief_sigh",
-"gain": 0,
-"note": "J3a: not which direction"
+"gain": -3,
+"note": "J3a: not which direction (in the pause after the word, with the eyes-shut exhale)"
 },
 {
 "scene": "S4",
@@ -638,6 +638,14 @@
 "kind": "arc_draw",
 "gain": 0,
 "note": "arc 1 sweep"
+},
+{
+"scene": "S4",
+"f": 4451,
+"t": 148.367,
+"kind": "pop_tick",
+"gain": -9,
+"note": "the sweeping tip passes him: his token pulses"
 },
 {
 "scene": "S4",
@@ -697,8 +705,8 @@
 },
 {
 "scene": "S4",
-"f": 4683,
-"t": 156.1,
+"f": 4675,
+"t": 155.833,
 "kind": "arc_draw",
 "gain": 0,
 "note": "arc 2 sweep"
@@ -713,11 +721,11 @@
 },
 {
 "scene": "S4",
-"f": 4798,
-"t": 159.933,
+"f": 4812,
+"t": 160.4,
 "kind": "uh_oh",
 "gain": 0,
-"note": "J3b: one place"
+"note": "J3b: one place (after the word, inside the music stop)"
 },
 {
 "scene": "S4",
@@ -777,11 +785,11 @@
 },
 {
 "scene": "S4",
-"f": 5342,
-"t": 178.067,
+"f": 5337,
+"t": 177.9,
 "kind": "indicator_no",
 "gain": -4,
-"note": "candidate mismatch"
+"note": "candidate mismatch (the \u2717 pops)"
 },
 {
 "scene": "S4",
@@ -825,24 +833,24 @@
 },
 {
 "scene": "S4",
-"f": 5646,
-"t": 188.2,
+"f": 5636,
+"t": 187.867,
 "kind": "card_flick",
 "gain": -3,
 "note": "photo frame lands"
 },
 {
 "scene": "S4",
-"f": 5650,
-"t": 188.333,
+"f": 5651,
+"t": 188.367,
 "kind": "stamp_light",
 "gain": -3,
 "note": "crossed out"
 },
 {
 "scene": "S4",
-"f": 5670,
-"t": 189.0,
+"f": 5679,
+"t": 189.3,
 "kind": "paper_swish",
 "gain": -6,
 "note": "frame drops away"
@@ -853,7 +861,7 @@
 "t": 189.733,
 "kind": "amb_museum",
 "gain": 0,
-"note": "museum hall tone, whole scene"
+"note": "museum hall tone, whole scene (runs 0.6 s into S6)"
 },
 {
 "scene": "S5",
@@ -990,6 +998,14 @@
 "kind": "clock_tick",
 "gain": -3,
 "note": "the wall clock runs to ~7 minutes"
+},
+{
+"scene": "S5",
+"f": 6526,
+"t": 217.533,
+"kind": "chip_pop",
+"gain": -7,
+"note": "clock readout settles: \u2248 7 min to measure"
 },
 {
 "scene": "S5",
@@ -1329,11 +1345,27 @@
 },
 {
 "scene": "S6",
-"f": 8746,
-"t": 291.533,
+"f": 8726,
+"t": 290.867,
 "kind": "footstep_wood",
-"gain": -10,
-"note": "he steps; the cloud follows"
+"gain": -14,
+"note": "he steps to H_B; the cloud follows"
+},
+{
+"scene": "S6",
+"f": 8741,
+"t": 291.367,
+"kind": "footstep_wood",
+"gain": -14,
+"note": "he steps to H_C; the cloud follows"
+},
+{
+"scene": "S6",
+"f": 8755,
+"t": 291.833,
+"kind": "footstep_wood",
+"gain": -14,
+"note": "he steps to H_D; the cloud follows"
 },
 {
 "scene": "S7",
@@ -1341,7 +1373,7 @@
 "t": 293.267,
 "kind": "amb_room",
 "gain": 0,
-"note": "S7 board + room"
+"note": "S7 boards + room + the authors' card"
 },
 {
 "scene": "S7",
@@ -1545,6 +1577,22 @@
 },
 {
 "scene": "S7",
+"f": 9497,
+"t": 316.567,
+"kind": "card_flick",
+"gain": -8,
+"note": "board turned: the strip faces the wall"
+},
+{
+"scene": "S7",
+"f": 9537,
+"t": 317.9,
+"kind": "glint",
+"gain": -10,
+"note": "the fat return leaves the strip"
+},
+{
+"scene": "S7",
 "f": 9593,
 "t": 319.767,
 "kind": "paper_slide",
@@ -1609,8 +1657,8 @@
 },
 {
 "scene": "S7",
-"f": 9703,
-"t": 323.433,
+"f": 9713,
+"t": 323.767,
 "kind": "chip_pop",
 "gain": -5,
 "note": ""
@@ -1673,634 +1721,602 @@
 },
 {
 "scene": "S7",
-"f": 9832,
-"t": 327.733,
+"f": 9853,
+"t": 328.433,
 "kind": "paper_slide",
 "gain": -4,
 "note": "film strip drops in"
 },
 {
 "scene": "S7",
-"f": 9844,
-"t": 328.133,
+"f": 9865,
+"t": 328.833,
 "kind": "film_tick",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "S7",
-"f": 9859,
-"t": 328.633,
+"f": 9880,
+"t": 329.333,
 "kind": "film_tick",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "S7",
-"f": 9874,
-"t": 329.133,
+"f": 9895,
+"t": 329.833,
 "kind": "film_tick",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "S7",
-"f": 9889,
-"t": 329.633,
+"f": 9910,
+"t": 330.333,
 "kind": "film_tick",
 "gain": -9,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9925,
+"t": 330.833,
+"kind": "film_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9940,
+"t": 331.333,
+"kind": "film_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9955,
+"t": 331.833,
+"kind": "film_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9970,
+"t": 332.333,
+"kind": "film_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9985,
+"t": 332.833,
+"kind": "film_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9875,
+"t": 329.167,
+"kind": "footstep_wood",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9884,
+"t": 329.467,
+"kind": "footstep_wood",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9892,
+"t": 329.733,
+"kind": "footstep_wood",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9920,
+"t": 330.667,
+"kind": "footstep_wood",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9926,
+"t": 330.867,
+"kind": "footstep_wood",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9954,
+"t": 331.8,
+"kind": "footstep_wood",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 9960,
+"t": 332.0,
+"kind": "footstep_wood",
+"gain": -7,
 "note": ""
 },
 {
 "scene": "S7",
 "f": 9904,
 "t": 330.133,
-"kind": "film_tick",
-"gain": -9,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9919,
-"t": 330.633,
-"kind": "film_tick",
-"gain": -9,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9934,
-"t": 331.133,
-"kind": "film_tick",
-"gain": -9,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9949,
-"t": 331.633,
-"kind": "film_tick",
-"gain": -9,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9964,
-"t": 332.133,
-"kind": "film_tick",
-"gain": -9,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9979,
-"t": 332.633,
-"kind": "film_tick",
-"gain": -9,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9840,
-"t": 328.0,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9850,
-"t": 328.333,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9861,
-"t": 328.7,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9869,
-"t": 328.967,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9888,
-"t": 329.6,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9897,
-"t": 329.9,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9905,
-"t": 330.167,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9924,
-"t": 330.8,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9933,
-"t": 331.1,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9941,
-"t": 331.367,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S7",
-"f": 9867,
-"t": 328.9,
 "kind": "chip_pop",
 "gain": -3,
 "note": ""
 },
 {
 "scene": "S7",
-"f": 9991,
-"t": 333.033,
+"f": 10000,
+"t": 333.333,
 "kind": "amb_museum",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "S7",
-"f": 9993,
-"t": 333.1,
+"f": 10002,
+"t": 333.4,
 "kind": "shelf_creak",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "S7",
-"f": 10006,
-"t": 333.533,
+"f": 10014,
+"t": 333.8,
 "kind": "thud_soft",
 "gain": -3,
 "note": ""
 },
 {
 "scene": "S7",
-"f": 10051,
-"t": 335.033,
+"f": 10055,
+"t": 335.167,
 "kind": "thud_soft",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "S7",
-"f": 10109,
-"t": 336.967,
+"f": 10063,
+"t": 335.433,
 "kind": "chip_pop",
 "gain": -2,
 "note": ""
 },
 {
 "scene": "S8",
-"f": 10141,
-"t": 338.033,
+"f": 10146,
+"t": 338.2,
 "kind": "amb_warehouse",
 "gain": 0,
 "note": "warehouse room tone"
 },
 {
 "scene": "S8",
-"f": 10161,
-"t": 338.7,
+"f": 10166,
+"t": 338.867,
 "kind": "sensor_pulse",
 "gain": -8,
 "note": "idle ping before the roll"
 },
 {
 "scene": "S8",
-"f": 10187,
-"t": 339.567,
+"f": 10192,
+"t": 339.733,
 "kind": "sensor_pulse",
 "gain": -9,
 "note": "second idle ping"
 },
 {
 "scene": "S8",
-"f": 10215,
-"t": 340.5,
+"f": 10220,
+"t": 340.667,
 "kind": "robot_motor",
 "gain": 0,
 "note": "R3 roll toward the corner"
 },
 {
 "scene": "S8",
-"f": 10276,
-"t": 342.533,
+"f": 10281,
+"t": 342.7,
 "kind": "robot_brake",
 "gain": -5,
 "note": "R3 slows to a stop"
 },
 {
 "scene": "S8",
-"f": 10375,
-"t": 345.833,
+"f": 10381,
+"t": 346.033,
 "kind": "sensor_pulse",
 "gain": -3,
 "note": "ping 1 (plan)"
 },
 {
 "scene": "S8",
-"f": 10396,
-"t": 346.533,
+"f": 10402,
+"t": 346.733,
 "kind": "bounce_tick",
 "gain": -4,
 "note": "pulses reach the junction wall"
 },
 {
 "scene": "S8",
-"f": 10406,
-"t": 346.867,
+"f": 10412,
+"t": 347.067,
 "kind": "sensor_pulse",
 "gain": -3,
 "note": "ping 2 (plan)"
 },
 {
 "scene": "S8",
-"f": 10428,
-"t": 347.6,
+"f": 10434,
+"t": 347.8,
 "kind": "bounce_tick",
 "gain": -4,
 "note": "wall"
 },
 {
 "scene": "S8",
-"f": 10444,
-"t": 348.133,
+"f": 10450,
+"t": 348.333,
 "kind": "bounce_tick",
 "gain": -6,
 "note": "person"
 },
 {
 "scene": "S8",
-"f": 10460,
-"t": 348.667,
+"f": 10466,
+"t": 348.867,
 "kind": "bounce_tick",
 "gain": -9,
 "note": "wall, return"
 },
 {
 "scene": "S8",
-"f": 10482,
-"t": 349.4,
+"f": 10488,
+"t": 349.6,
 "kind": "echo_return",
 "gain": -2,
 "note": "echo back: the blob appears"
 },
 {
 "scene": "S8",
-"f": 10506,
-"t": 350.2,
+"f": 10512,
+"t": 350.4,
 "kind": "robot_motor",
 "gain": -5,
 "note": "eases off"
 },
 {
 "scene": "S8",
-"f": 10547,
-"t": 351.567,
+"f": 10553,
+"t": 351.767,
 "kind": "robot_beep",
 "gain": -4,
 "note": "cautious squint"
 },
 {
 "scene": "S8",
-"f": 10555,
-"t": 351.833,
+"f": 10561,
+"t": 352.033,
 "kind": "robot_brake",
 "gain": 0,
 "note": "brakes at the stop line"
 },
 {
 "scene": "S8",
-"f": 10618,
-"t": 353.933,
+"f": 10602,
+"t": 353.4,
+"kind": "pop_tick",
+"gain": -10,
+"note": "\"not who\" pill"
+},
+{
+"scene": "S8",
+"f": 10623,
+"t": 354.1,
 "kind": "pop_tick",
 "gain": -8,
 "note": "the robot's \"?\" bubble"
 },
 {
 "scene": "S8",
-"f": 10548,
-"t": 351.6,
+"f": 10554,
+"t": 351.8,
 "kind": "footstep_wood",
 "gain": -12,
 "note": "the person (hard floor, quiet)"
 },
 {
 "scene": "S8",
-"f": 10570,
-"t": 352.333,
+"f": 10576,
+"t": 352.533,
 "kind": "footstep_wood",
 "gain": -12,
 "note": "the person (hard floor, quiet)"
 },
 {
 "scene": "S8",
-"f": 10652,
-"t": 355.067,
+"f": 10671,
+"t": 355.7,
 "kind": "paper_slap",
 "gain": -4,
 "note": "the board lands"
 },
 {
 "scene": "S8",
-"f": 10706,
-"t": 356.867,
+"f": 10711,
+"t": 357.033,
 "kind": "sensor_pulse",
 "gain": -7,
 "note": "tile 1 pulses"
 },
 {
 "scene": "S8",
-"f": 10771,
-"t": 359.033,
+"f": 10777,
+"t": 359.233,
 "kind": "bounce_tick",
 "gain": -4,
 "note": "tile 2 shiny bounce"
 },
 {
 "scene": "S8",
-"f": 10802,
-"t": 360.067,
+"f": 10807,
+"t": 360.233,
 "kind": "sun_glare",
 "gain": -4,
 "note": "tile 3 sun floods the sensor"
 },
 {
 "scene": "S8",
-"f": 10835,
-"t": 361.167,
+"f": 10840,
+"t": 361.333,
 "kind": "prob_tick",
 "gain": -6,
 "note": "tile 4 numbers pour in"
 },
 {
 "scene": "S8",
-"f": 10847,
-"t": 361.567,
+"f": 10852,
+"t": 361.733,
 "kind": "prob_tick",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "S8",
-"f": 10861,
-"t": 362.033,
+"f": 10867,
+"t": 362.233,
 "kind": "prob_tick",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "S8",
-"f": 10941,
-"t": 364.7,
+"f": 10947,
+"t": 364.9,
 "kind": "stamp_light",
 "gain": -2,
 "note": "early-stage prototype tag"
 },
 {
 "scene": "S8",
-"f": 10977,
-"t": 365.9,
+"f": 10982,
+"t": 366.067,
 "kind": "paper_lift",
 "gain": -5,
 "note": "the board lifts"
 },
 {
 "scene": "S8",
-"f": 10993,
-"t": 366.433,
+"f": 10999,
+"t": 366.633,
 "kind": "robot_motor",
 "gain": -6,
 "note": "creeps on"
 },
 {
 "scene": "S8",
-"f": 11044,
-"t": 368.133,
+"f": 11049,
+"t": 368.3,
 "kind": "thud_soft",
 "gain": -2,
 "note": "bumper meets the carton"
 },
 {
 "scene": "S8",
-"f": 11045,
-"t": 368.167,
+"f": 11050,
+"t": 368.333,
 "kind": "robot_brake",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "S8",
-"f": 11056,
-"t": 368.533,
+"f": 11061,
+"t": 368.7,
 "kind": "robot_beep",
 "gain": -8,
 "note": "small oops"
 },
 {
 "scene": "S8",
-"f": 11058,
-"t": 368.6,
+"f": 11063,
+"t": 368.767,
 "kind": "robot_motor",
 "gain": -10,
 "note": "backs off the carton"
 },
 {
 "scene": "S8",
-"f": 11106,
-"t": 370.2,
+"f": 11112,
+"t": 370.4,
 "kind": "sensor_pulse",
 "gain": -7,
 "note": "one more ping on \"clue\""
 },
 {
 "scene": "S9",
-"f": 11173,
-"t": 372.433,
+"f": 11178,
+"t": 372.6,
 "kind": "amb_room",
 "gain": -2,
 "note": "room tone until the end card"
 },
 {
 "scene": "S9",
-"f": 11233,
-"t": 374.433,
+"f": 11239,
+"t": 374.633,
 "kind": "cloth_rustle",
 "gain": -8,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11307,
-"t": 376.9,
+"f": 11312,
+"t": 377.067,
 "kind": "sensor_hum",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11309,
-"t": 376.967,
+"f": 11314,
+"t": 377.133,
 "kind": "sensor_pulse",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11321,
-"t": 377.367,
+"f": 11326,
+"t": 377.533,
 "kind": "sensor_pulse",
 "gain": -3,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11324,
-"t": 377.467,
+"f": 11329,
+"t": 377.633,
 "kind": "bounce_tick",
 "gain": 0,
-"note": ""
-},
-{
-"scene": "S9",
-"f": 11337,
-"t": 377.9,
-"kind": "bounce_tick",
-"gain": -2,
-"note": ""
-},
-{
-"scene": "S9",
-"f": 11341,
-"t": 378.033,
-"kind": "bounce_tick",
-"gain": -3,
 "note": ""
 },
 {
 "scene": "S9",
 "f": 11342,
 "t": 378.067,
+"kind": "bounce_tick",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 11346,
+"t": 378.2,
+"kind": "bounce_tick",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 11347,
+"t": 378.233,
 "kind": "cloth_rustle",
 "gain": -7,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11353,
-"t": 378.433,
+"f": 11358,
+"t": 378.6,
 "kind": "bounce_tick",
 "gain": -5,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11373,
-"t": 379.1,
+"f": 11378,
+"t": 379.267,
 "kind": "echo_return",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11384,
-"t": 379.467,
+"f": 11389,
+"t": 379.633,
 "kind": "echo_return",
 "gain": -3,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11404,
-"t": 380.133,
+"f": 11409,
+"t": 380.3,
 "kind": "pop_tick",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11463,
-"t": 382.1,
+"f": 11468,
+"t": 382.267,
 "kind": "readout_beep",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11512,
-"t": 383.733,
+"f": 11518,
+"t": 383.933,
 "kind": "cloth_rustle",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11531,
-"t": 384.367,
+"f": 11537,
+"t": 384.567,
 "kind": "footstep_wood",
 "gain": -5,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11539,
-"t": 384.633,
+"f": 11545,
+"t": 384.833,
 "kind": "footstep_wood",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11548,
-"t": 384.933,
+"f": 11554,
+"t": 385.133,
 "kind": "footstep_wood",
 "gain": -5,
-"note": ""
-},
-{
-"scene": "S9",
-"f": 11556,
-"t": 385.2,
-"kind": "footstep_wood",
-"gain": -6,
 "note": ""
 },
 {
@@ -2308,45 +2324,45 @@
 "f": 11562,
 "t": 385.4,
 "kind": "footstep_wood",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 11568,
+"t": 385.6,
+"kind": "footstep_wood",
 "gain": -5,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11570,
-"t": 385.667,
+"f": 11576,
+"t": 385.867,
 "kind": "partition_thunk",
 "gain": -9,
 "note": "hands on the screen"
 },
 {
 "scene": "S9",
-"f": 11580,
-"t": 386.0,
+"f": 11586,
+"t": 386.2,
 "kind": "partition_scrape",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11585,
-"t": 386.167,
+"f": 11591,
+"t": 386.367,
 "kind": "footstep_wood",
 "gain": -8,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11593,
-"t": 386.433,
-"kind": "footstep_wood",
-"gain": -8,
-"note": ""
-},
-{
-"scene": "S9",
-"f": 11601,
-"t": 386.7,
+"f": 11599,
+"t": 386.633,
 "kind": "footstep_wood",
 "gain": -8,
 "note": ""
@@ -2355,41 +2371,33 @@
 "scene": "S9",
 "f": 11607,
 "t": 386.9,
+"kind": "footstep_wood",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 11613,
+"t": 387.1,
 "kind": "partition_thunk",
 "gain": 3,
 "note": "far end meets the wall"
 },
 {
 "scene": "S9",
-"f": 11609,
-"t": 386.967,
+"f": 11615,
+"t": 387.167,
 "kind": "partition_wobble",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11624,
-"t": 387.467,
+"f": 11630,
+"t": 387.667,
 "kind": "sensor_pulse",
 "gain": -2,
 "note": ""
-},
-{
-"scene": "S9",
-"f": 11630,
-"t": 387.667,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "S9",
-"f": 11634,
-"t": 387.8,
-"kind": "bounce_tick",
-"gain": -6,
-"note": "stopped at the partition"
 },
 {
 "scene": "S9",
@@ -2401,16 +2409,16 @@
 },
 {
 "scene": "S9",
-"f": 11639,
-"t": 387.967,
+"f": 11640,
+"t": 388.0,
 "kind": "bounce_tick",
-"gain": -4,
-"note": ""
+"gain": -6,
+"note": "stopped at the partition"
 },
 {
 "scene": "S9",
-"f": 11641,
-"t": 388.033,
+"f": 11642,
+"t": 388.067,
 "kind": "footstep_wood",
 "gain": -7,
 "note": ""
@@ -2419,48 +2427,56 @@
 "scene": "S9",
 "f": 11645,
 "t": 388.167,
+"kind": "bounce_tick",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 11647,
+"t": 388.233,
+"kind": "footstep_wood",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 11651,
+"t": 388.367,
 "kind": "readout_off",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11646,
-"t": 388.2,
+"f": 11652,
+"t": 388.4,
 "kind": "cloth_rustle",
 "gain": -5,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11657,
-"t": 388.567,
+"f": 11658,
+"t": 388.6,
 "kind": "footstep_wood",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11663,
-"t": 388.767,
+"f": 11666,
+"t": 388.867,
+"kind": "footstep_wood",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 11669,
+"t": 388.967,
 "kind": "smug_exhale",
 "gain": 0,
-"note": ""
-},
-{
-"scene": "S9",
-"f": 11663,
-"t": 388.767,
-"kind": "footstep_wood",
-"gain": -9,
-"note": ""
-},
-{
-"scene": "S9",
-"f": 11670,
-"t": 389.0,
-"kind": "footstep_wood",
-"gain": -9,
 "note": ""
 },
 {
@@ -2473,24 +2489,32 @@
 },
 {
 "scene": "S9",
-"f": 11679,
-"t": 389.3,
+"f": 11680,
+"t": 389.333,
+"kind": "footstep_wood",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 11685,
+"t": 389.5,
 "kind": "cloth_rustle",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11693,
-"t": 389.767,
+"f": 11699,
+"t": 389.967,
 "kind": "uh_oh",
 "gain": -2,
 "note": "J4: he opens his eyes and she is right there"
 },
 {
 "scene": "S9",
-"f": 11736,
-"t": 391.2,
+"f": 11766,
+"t": 392.2,
 "kind": "logo_hit",
 "gain": 0,
 "note": ""

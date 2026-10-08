@@ -102,6 +102,17 @@
   "z": 0.9,
   "dt_s": 0.1
  },
+ "hiddenTrack": {
+  "note": "ILLUSTRATIVE S6.6 frame-to-frame track for the still-sensor panel (film review r1 D08): hidden (H_A) -> hiddenB (H_B) -> H_C -> H_D, one position per step, bending toward the wall. Not measured, not from the paper; checked in research/geometry/geometry_check.py (hidden from the sensor, every wall leg clears the partition).",
+  "H_C": {
+   "x": 2.76,
+   "z": 0.78
+  },
+  "H_D": {
+   "x": 2.79,
+   "z": 0.64
+  }
+ },
  "bandHalfWidth": {
   "oneBin": 0.0375,
   "twoBins": 0.0749

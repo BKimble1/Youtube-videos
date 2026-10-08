@@ -68,6 +68,12 @@ AIM_B = 1.45
 H_A = (2.60, 0.85)          # hidden person's torso centre (plan), frame A
 H_B = (2.70, 0.90)          # the person a moment later (frame B2): moved (0.10, 0.05) m
 DT_B2_S = 0.10              # assumed time between frame A and frame B2 (3 frames at 30 Hz)
+# S6.6 "each step becomes a new position to follow" (film review r1 D08, lead decision L12): an ILLUSTRATIVE
+# frame-to-frame track H_A -> H_B -> H_C -> H_D that bends toward the wall, one position per step, for the still-sensor
+# panel only. Not measured and not from the paper; H_C and H_D feed no region, band or timing number above (those use
+# H_A and H_B); they are checked like H_A/H_B (hidden from S_A, every drawn W -> H leg clears the partition).
+H_C = (2.76, 0.78)
+H_D = (2.79, 0.64)
 BODY_RADIUS = 0.22          # torso half-width for the "is the person visible from S?" check
 SENSOR_HEIGHT = 0.95        # declared heights (the plan is a horizontal slice at ~0.95 m: the sensor on a 0.95 m tripod;
 TORSO_HEIGHT = 0.95         # the path meets the hider at the drawn figures' chest (the cast are chibi-proportioned))
@@ -500,6 +506,46 @@ def main():
               f"{point_segment_distance(H, *occ):.3f} m")
         check(f"{nm} inside room", ROOM["x_min"] < H[0] < ROOM["x_max"] and 0 < H[1] < ROOM["z_max"], str(H))
 
+    # ---- illustrative S6.6 track (H_C, H_D): own checks, kept out of the 71 above --------------------
+    track_checks = []
+
+    def tcheck(name, ok, detail):
+        track_checks.append({"check": name, "pass": bool(ok), "detail": detail})
+
+    track = [("H_A", H_A), ("H_B", H_B), ("H_C", H_C), ("H_D", H_D)]
+    for Hn, H in (("H_C", H_C), ("H_D", H_D)):
+        tcheck(f"occluder blocks straight S_A->{Hn}", segments_intersect(S_A, H, *occ), "must be True")
+        vis = [a for a in np.linspace(0, 2 * math.pi, 181)
+               if not segments_intersect(S_A, (H[0] + BODY_RADIUS * math.cos(a), H[1] + BODY_RADIUS * math.sin(a)), *occ)]
+        tcheck(f"no part of the person's body disc (r={BODY_RADIUS} m) at {Hn} is visible from S_A", len(vis) == 0,
+               f"{len(vis)} visible outline samples")
+        t3 = (OCCLUDER[0][0] - S_A[0]) / (H[0] - S_A[0])
+        h_at = SENSOR_HEIGHT + t3 * (HIDER_HEAD_TOP - SENSOR_HEIGHT)
+        tcheck(f"3D: sight line S_A->top of head at {Hn} meets the partition below its {OCCLUDER_HEIGHT} m top",
+               h_at < OCCLUDER_HEIGHT - 0.1, f"height at partition {h_at:.2f} m")
+        tcheck(f"{Hn} is at least body radius + 0.05 m from the occluder",
+               point_segment_distance(H, *occ) >= BODY_RADIUS + 0.05, f"{point_segment_distance(H, *occ):.3f} m")
+        tcheck(f"{Hn} inside room", ROOM["x_min"] < H[0] < ROOM["x_max"] and 0 < H[1] < ROOM["z_max"], str(H))
+        for i, W in enumerate(WA):
+            inter = segments_intersect(W, H, *occ)
+            clr = segment_segment_distance(W, H, *occ) - OCCLUDER_THICKNESS / 2
+            tcheck(f"segment W_A{i+1}->{Hn} clears occluder by >= {MIN_CLEARANCE_M} m",
+                   (not inter) and clr >= MIN_CLEARANCE_M, f"clearance {clr:.3f} m")
+    steps = [round(dist(track[i][1], track[i + 1][1]), 3) for i in range(len(track) - 1)]
+    hidden_track = {
+        "_status": "ILLUSTRATIVE: S6.6 frame-to-frame track for the still-sensor panel (film review r1 D08, lead L12); "
+                   "not measured, not from the paper; H_C/H_D feed no region, band or timing number",
+        "order": [n for n, _ in track],
+        "H_C": list(H_C),
+        "H_D": list(H_D),
+        "step_m": steps,
+        "path_m": round(sum(steps), 3),
+        "net_H_A_to_H_D_m": round(dist(H_A, H_D), 3),
+        "WH_m_frame_A": {n: [round(dist(W, H), 3) for W in WA] for n, H in track},
+        "checks": track_checks,
+        "all_pass": all(c["pass"] for c in track_checks),
+    }
+
     # ---- confocal numbers ------------------------------------------------------------------
     conf_A = [confocal_entry(S_A, W, H_A) for W in WA]
     conf_A_HB = [confocal_entry(S_A, W, H_B) for W in WA]
@@ -707,6 +753,7 @@ def main():
         },
         "hidden_person": {"H_A": list(H_A), "H_B_moved": list(H_B), "dt_A_to_B2_s": DT_B2_S,
                           "speed_m_per_s": round(dist(H_A, H_B) / DT_B2_S, 2), "body_radius_m": BODY_RADIUS},
+        "hidden_track_illustrative_S6": hidden_track,
         "wall_points": {"frame_A": [[round(w[0], 4), 0.0] for w in WA], "frame_B1": [[round(w[0], 4), 0.0] for w in WB]},
         "band_half_width_m": {"default_1_bin": round(BAND_HALF_M, 4), "alt_2_bins": round(BAND_HALF_ALT_M, 4),
                               "label": "illustrative: one 250 ps bin of one-way distance; not a measured precision"},
@@ -721,7 +768,7 @@ def main():
         "units": units,
         "segments": seg_report,
         "checks": checks,
-        "all_checks_pass": all(c["pass"] for c in checks),
+        "all_checks_pass": all(c["pass"] for c in checks) and hidden_track["all_pass"],
     }
     out = HERE / "layout.json"
     with open(out, "w") as f:
@@ -729,6 +776,12 @@ def main():
     n_fail = sum(not c["pass"] for c in checks)
     print(f"wrote {out}  ({len(checks)} checks, {n_fail} failed)")
     for c in checks:
+        if not c["pass"]:
+            print("  FAIL:", c["check"], c["detail"])
+    n_tfail = sum(not c["pass"] for c in track_checks)
+    print(f"  illustrative S6.6 track H_C {H_C}, H_D {H_D}: {len(track_checks)} checks, {n_tfail} failed; "
+          f"steps {steps} m")
+    for c in track_checks:
         if not c["pass"]:
             print("  FAIL:", c["check"], c["detail"])
 

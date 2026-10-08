@@ -242,3 +242,30 @@ export const PhotoFrame: React.FC<{x: number; y: number; rot: number; scale?: nu
     </g>
   );
 };
+
+/* ------------------------------------------------------------------ the likely location (S4.7; shared with S5_Board) */
+
+/**
+ * S4.7's likely-location look (review r1 D28), used by S4 and by S5_Board's copy of the board so the S4 -> S5 cut stays
+ * pixel-identical. The region is the same four ±3.75 cm bands (FINAL_FIELD); `levels` [0.08, 0.5] are the levels
+ * S9_Readout already uses (~0.44 x 0.07 m: honest, the bands' product, not an invented halo). The opt-in PossibleCloud
+ * props give the outer level a crisp edge and a white cut-out rim so it reads as an area over his red hair, not a
+ * stroke across it. The ring (0.3 m, the S4.4 marker-ring size) marks the place; his token dims under it.
+ */
+export const LIKELY_CLOUD: {levels: number[]; outerOutline: boolean | number; rim: number} = {levels: [0.08, 0.5], outerOutline: true, rim: 3};
+/** the marker ring round the likely location: radius (m) and on-screen stroke width (px) */
+export const LIKELY_RING = {rM: 0.3, widthPx: 5};
+/** his token's opacity under the likely-location region at the end of S4 (and in S5's first frames) */
+export const LIKELY_DIM = 0.45;
+
+/**
+ * The marker ring (world space, inside an <svg>), drawn in clockwise from the upper left as `t` goes 0 -> 1 (the S4.4
+ * ring's style). (cx, cy) world px; r world px; k = world px per screen px.
+ */
+export const LikelyRing: React.FC<{cx: number; cy: number; r: number; t: number; k: number}> = ({cx, cy, r, t, k}) => {
+  if (t <= 0.001) return null;
+  const circ = 2 * Math.PI * r;
+  return (
+    <circle cx={cx} cy={cy} r={r} fill="none" stroke={C.tealDeep} strokeWidth={LIKELY_RING.widthPx * k} strokeLinecap="round" strokeDasharray={`${circ * clamp01(t)} ${circ}`} transform={`rotate(-120 ${cx} ${cy})`} />
+  );
+};
