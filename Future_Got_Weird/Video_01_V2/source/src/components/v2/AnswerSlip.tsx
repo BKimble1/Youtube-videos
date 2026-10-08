@@ -54,7 +54,7 @@ export const AnswerSlipArt: React.FC<{i: number; marks?: SlipMarks; stamps?: Sli
           border: `${OUTLINE}px solid ${C.ink}`,
           borderRadius: 10,
           boxShadow: `7px 9px 0 ${C.shadow}`,
-          padding: '16px 22px',
+          padding: i === 0 ? '12px 22px' : '16px 22px',
           boxSizing: 'border-box',
           overflow: 'hidden',
         }}
@@ -64,8 +64,8 @@ export const AnswerSlipArt: React.FC<{i: number; marks?: SlipMarks; stamps?: Sli
           <div style={{position: 'absolute', left: -120 + glint * (SLIP_W + 200), top: -40, width: 46, height: SLIP_H + 80, background: 'linear-gradient(90deg, rgba(255,255,255,0), rgba(255,240,190,0.95), rgba(255,255,255,0))', transform: 'rotate(18deg)'}} />
         )}
         <div style={{position: 'relative', fontFamily: F.display, fontWeight: 600, fontSize: 27, color: C.ink, lineHeight: 1}}>{s.model}</div>
-        <div style={{position: 'relative', fontFamily: F.body, fontWeight: 800, fontSize: 18, color: C.inkMuted, marginTop: 4, marginBottom: 6}}>{s.detail}</div>
-        <div style={{position: 'relative', fontFamily: F.serif, fontSize: fs, lineHeight: 1.26, color: C.ink}}>
+        <div style={{position: 'relative', fontFamily: F.body, fontWeight: 800, fontSize: 18, color: C.inkMuted, marginTop: 4, marginBottom: i === 0 ? 3 : 6}}>{s.detail}</div>
+        <div style={{position: 'relative', fontFamily: F.serif, fontSize: fs, lineHeight: i === 0 ? 1.2 : 1.26, color: C.ink}}>
           <Marked spans={spans} />
         </div>
       </div>

@@ -1,0 +1,13 @@
+image                        use    scn  frames         range   max on-screen (1080p) w x h  @frame       tc src/4Kpx <1.0 frames <1.0 ranges
+paper_p01_header.png         main   S1       88    638-725        1989.5 x   439.6 (vis 869x575)     725  0:24.17    1.005           0 
+paper_p01_header.png         main   S6        3   5840-5842       1713.5 x   377.5 (vis 1716x303)    5842  3:14.73    1.167           0 
+paper_p01_header.png         main   S7       60   5843-5902       2103.3 x   463.4 (vis 1920x361)    5892  3:16.40    0.951          31 5868-5898
+paper_p14_table2.png         main   S6        3   5840-5842       1597.3 x   913.4 (vis 1598x747)    5842  3:14.73    1.231           0 
+paper_p14_table2.png         main   S7      570   5843-6412       2077.2 x  1187.8 (vis 764x971)    6004  3:20.13    0.947         193 5972-6164
+paper_p14_table2.png         main   S8        5   6413-6417       1070.3 x   612.0 (vis 1070x501)    6413  3:33.77    1.837           0 
+thesis_title_block.png       main   S8       58   6482-6539        589.8 x   250.8 (vis 13x251)    6539  3:37.97    2.767           0 
+thesis_title_block.png       main   S10      79   7832-7910        351.0 x   149.1 (vis 364x181)    7832  4:21.07    4.650           0 
+thesis_titlepage_top.png     main   S4        6   3690-3695       1517.8 x  1448.3 (vis 375x825)    3690  2:03.00    1.344           0 
+thesis_titlepage_top.png     main   S5      602   3696-4297       2974.3 x  2838.2 (vis 1920x1043)    3960  2:12.00    0.686         189 3794-3976, 4292-4297
+thesis_titlepage_top.png     digit  S5        8   4076-4083       2409.4 x  2299.2 (vis 34x51)    4078  2:15.93    0.847           6 4076-4081
+thesis_titlepage_top.png     main   S9      330   7132-7595       2798.4 x  2673.0 (vis 1848x1046)    7380  4:06.00    0.729         112 7231-7231, 7366-7476

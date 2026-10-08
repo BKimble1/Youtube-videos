@@ -14,7 +14,7 @@ export const GOLD = '#FFB703';
 
 /* ------------------------------------------------------------------ rules board (hangs from the flies) */
 export const BOARD = {x: 275, y: 32, w: 1370, h: 248};
-export const CARD = {y: 138, h: 120, xs: [297, 675, 1053], ws: [360, 360, 570]};
+export const CARD = {y: 138, h: 120, xs: [297, 675, 1073], ws: [360, 380, 550]}; // Wrong has room between its label and value
 /** World centre of a rule card (board at rest). */
 export const cardCentre = (i: number) => ({x: CARD.xs[i] + CARD.ws[i] / 2, y: CARD.y + CARD.h / 2});
 export const VALUE = {w: 104, h: 90, pad: 15};

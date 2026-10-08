@@ -110,7 +110,7 @@ const CMU_BOX = K.carnegie + 10; // waits for the camera to land (TO_REC + 16)
 const DATE_BOX = K.may;
 const U2001 = K.y2001 + 3;
 // s18: back to the wide, the checker brings the slip, the three verdicts, the marks come off, the shared polish
-const PULL = K.y2001 + 20;
+const PULL = K.y2001 + 26; // the fully marked close-up settles before the pull-out
 const WALK = {from: K.chatgpt - 6, to: K.chatgpt + 14, x0: -720};
 const SLAP = K.got;
 const RELEASE = SLAP + 7;
@@ -161,7 +161,7 @@ export const SFX: Sfx[] = [
   {f: SLAP + 1, kind: 'tape_rip', gain: -10, pitch: 1},
   {f: SLAP + 3, kind: 'glint', gain: -12, note: 'gold edge'},
   {f: UNI_RING, kind: 'marker_circle', gain: -4, pitch: 1},
-  {f: TICK, kind: 'indicator_yes', gain: -6, note: 'university right'},
+  {f: CHIP_LAND[0], kind: 'indicator_yes', gain: -8, note: 'university right (with the chip)'},
   {f: CHIP_LAND[0] - 1, kind: 'chip_pop', gain: -4},
   {f: YEAR_RING, kind: 'marker_circle', gain: -3, pitch: -2},
   {f: DIGITS, kind: 'pop_tick', gain: -7, pitch: 1, note: 'off by one: the slip\'s final "2" flashes coral'},
@@ -205,6 +205,7 @@ const lensTarget = () => {
   return slipToWorld({...SLIP_REST, sx: 1, sy: 1, lift: 0}, S5_SLIP_BODY_LEFT + q + b * 0.5, S5_SLIP_BODY_TOP + S5_SLIP_LH * 3.5);
 };
 const ZC = 2.08; // the s19 close-up; the lens's glass is H56.r on screen
+export const S5_LENS_ZOOM = ZC; // Main's iris draws the lens rim at this scale as it opens into S6
 const LENS_R = H56.r / ZC;
 const MAG = 1.8;
 
@@ -229,7 +230,7 @@ const camAt = (g: number, lens: {x: number; y: number}): Cam => {
     {at: K.thesis + 24, dur: TO_REC - K.thesis - 24, to: SHOTS.titleDrift},
     {at: TO_REC, dur: 16, to: SHOTS.rec},
     {at: TO_REC + 18, dur: PULL - TO_REC - 18, to: SHOTS.recDrift},
-    {at: PULL, dur: 28, to: SHOTS.wide},
+    {at: PULL, dur: 24, to: SHOTS.wide},
     {at: TO_CMP, dur: 16, to: SHOTS.cmp},
     {at: TO_CMP + 18, dur: RETRACT - TO_CMP - 18, to: SHOTS.cmpDrift},
     {at: RETRACT, dur: 24, to: SHOTS.wide},
@@ -324,7 +325,7 @@ const slipMarks = (g: number): S5SlipMarks => {
   const p = slipPose(g);
   return {
     uni: tw(g, UNI_RING, 10, E.inOut) * off,
-    tick: tw(g, TICK, 7, E.out) * off,
+    tick: 0, // the teal ring on CMU and the "university · right" chip carry the verdict; a tick would sit on the line above
     year: tw(g, YEAR_RING, 10, E.inOut) * off,
     digit: {bump: bell(g, DIGITS, 10), on: tw(g, DIGITS + 3, 2) * off},
     strike,
@@ -360,7 +361,7 @@ const magState = (g: number, target: {x: number; y: number}) => {
   const y = kf(g, [[GRIP, under.y], [GRIP + 7, peek.y, E.out], [RAISE, ready.y, E.inOut], [AT_SLIP, over.y, E.inOut], [GLIDE[0], over.y - 1, E.inOut], [GLIDE[1], target.y, E.inOut]]);
   // the handle points up from the lens while it hangs, then the lens swings round to the right and up
   const angle = kf(g, [[GRIP + 5, -90], [RAISE, -232, E.inOut], [AT_SLIP, -248, E.inOut]]);
-  return {x, y, angle, held: g >= GRIP - 1, glint: tw(g, RAISE - 2, 12, E.inOut), view: tw(g, AT_SLIP - 8, 8, E.inOut)};
+  return {x, y, angle, held: g >= GRIP - 1, glint: tw(g, RAISE - 2, 12, E.inOut), view: tw(g, AT_SLIP - 3, 3, E.inOut)};
 };
 
 type CheckerState = {x: number; pose: Pose; life: number; handY: number; on: boolean};
@@ -526,7 +527,7 @@ export const S5Record: React.FC = () => {
           cmu: tw(g, CMU_BOX, 20, E.inOut) * off,
           date: tw(g, DATE_BOX, 10, E.inOut) * off,
           h2001: tw(g, U2001, 7, E.inOut) * off,
-          digit: {bump: bell(g, DIGITS + 2, 10)},
+          digit: {under: tw(g, DIGITS + 2, 5, E.out) * off},
           pulse: {
             title: bell(g, TITLE_BOX + 12, 12) * 0.7 + bell(g, K.title + 4, 22) * off,
             cmu: bell(g, CMU_BOX + 20, 10) * 0.5 + (bell(g, UNI_RING, 16) + bell(g, TICK, 12)) * off,

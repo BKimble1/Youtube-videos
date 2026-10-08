@@ -124,11 +124,11 @@ export type TokBox = {x: number; y: number; w: number; h: number};
 /** The same box model as AnswerSlipArt (i = 0), with each word in its own span. Text is transparent unless lit. */
 const SlipReplica: React.FC<{lit?: (k: number) => number; coral?: number; wash?: number; measure?: boolean}> = ({lit, coral = 0, wash = 0, measure}) => (
   <div style={{position: 'relative', width: SLIP_W, height: SLIP_H, pointerEvents: 'none'}}>
-    <div style={{position: 'absolute', inset: 0, border: `${OUTLINE}px solid transparent`, borderRadius: 10, padding: '16px 22px', boxSizing: 'border-box', overflow: measure ? 'visible' : 'hidden'}}>
+    <div style={{position: 'absolute', inset: 0, border: `${OUTLINE}px solid transparent`, borderRadius: 10, padding: '12px 22px', boxSizing: 'border-box', overflow: measure ? 'visible' : 'hidden'}}>
       {wash > 0 && <div style={{position: 'absolute', inset: 0, background: `rgba(255,251,240,${0.66 * wash})`}} />}
       <div style={{position: 'relative', fontFamily: F.display, fontWeight: 600, fontSize: 27, color: 'transparent', lineHeight: 1}}>{S.model}</div>
-      <div style={{position: 'relative', fontFamily: F.body, fontWeight: 800, fontSize: 18, color: 'transparent', marginTop: 4, marginBottom: 6}}>{S.detail}</div>
-      <div style={{position: 'relative', fontFamily: F.serif, fontSize: 23, lineHeight: 1.26, color: 'transparent'}}>
+      <div style={{position: 'relative', fontFamily: F.body, fontWeight: 800, fontSize: 18, color: 'transparent', marginTop: 4, marginBottom: 3}}>{S.detail}</div>
+      <div style={{position: 'relative', fontFamily: F.serif, fontSize: 23, lineHeight: 1.2, color: 'transparent'}}>
         <span>
           {SLIP_TOKENS.map((t, k) => {
             const v = lit ? lit(k) : 0;

@@ -51,8 +51,8 @@ export type PageMarks = {
   cmu?: number; // DrawBox round "Carnegie Mellon University"
   date?: number; // DrawBox round "May 16, 2001"
   h2001?: number; // saffron highlight swept over 2001 (0..1)
-  /** the comparison: the final digit "1" of 2001 bumps (bump 0..1, an envelope) */
-  digit?: {bump: number};
+  /** the comparison: a small teal outline closes round the final digit "1" of 2001 (under 0..1) */
+  digit?: {under: number};
   pulse?: {title?: number; cmu?: number; date?: number};
   /** spotlight: cream veil over the page except inside the rects (TP); ops = how clear each hole is (0..1) */
   dim?: {a: number; rects: Rect[]; ops?: number[]};
@@ -160,14 +160,10 @@ export const PageCard: React.FC<{
           </>
         )}
         {(marks.h2001 ?? 0) > 0 && <div style={{position: 'absolute', left: r01.x - 5, top: r01.y - 4, width: (r01.w + 10) * Math.min(1, marks.h2001 ?? 0), height: r01.h + 8, borderRadius: 5, background: C.saffron, opacity: 0.75, mixBlendMode: 'multiply'}} />}
-        {/* off by one: the record's final "1" bumps (a zoomed copy of the real crop, multiplied over it) as the
-            slip's final "2" bumps and turns coral */}
-        {digit && digit.bump > 0 && (
-          <div style={{position: 'absolute', left: d01.x, top: d01.y, width: d01.w, height: d01.h, transform: `scale(${1 + 0.55 * digit.bump})`, transformOrigin: '50% 60%', mixBlendMode: 'multiply'}}>
-            <div style={{position: 'absolute', left: -4, top: -4, width: d01.w + 8, height: d01.h + 8, overflow: 'hidden', background: C.white}}>
-              <Img src={staticFile('img/thesis_titlepage_top.png')} style={{position: 'absolute', left: -(TP.d2001[0] - 4 / k) * k, top: -(TP.d2001[1] - 4 / k) * k, width: TP_IMG.w * k, height: TP_IMG.h * k, display: 'block', maxWidth: 'none'}} />
-            </div>
-          </div>
+        {/* off by one: as the slip's final "2" bumps and turns coral, a small teal outline marks the record's final "1"
+            (a mark around the genuine glyph, which is never scaled or copied) and stays until the marks come off */}
+        {digit && digit.under > 0 && (
+          <div style={{position: 'absolute', left: d01.x - 4, top: d01.y - 3, width: d01.w + 8, height: d01.h + 6, boxSizing: 'border-box', border: `2.5px solid ${C.teal}`, borderRadius: 5, opacity: Math.min(1, digit.under * 1.5), transform: `scale(${1.35 - 0.35 * digit.under})`, transformOrigin: '50% 50%'}} />
         )}
         {/* the spotlight veil goes over the marks too, so marks outside the current focus recede with their text */}
         {dim && dim.a > 0 && (

@@ -207,7 +207,7 @@ export const SFX: Sfx[] = [
   {f: K.search - 2, kind: 'conveyor_run', dur: (DOCK - K.search + 2) / 30, gain: -8, pitch: 3, note: 'cart rolling in (starts off-frame)'},
   ...RAIL_BUMPS.map((f, i) => ({f, kind: 'pop_tick' as const, gain: -13, pitch: -6 + i, note: 'rail joint'})),
   ...LAMP_BLINK.map((f, i) => ({f, kind: 'indicator_yes' as const, gain: -12, pitch: i * 2, note: 'booth lamp blinks teal'})),
-  {f: DOCK, kind: 'machine_clunk', note: 'cart bumps the dock'},
+  {f: DOCK, kind: 'machine_clunk', gain: -4, note: 'cart bumps the dock'},
   {f: DOCK + 1, kind: 'paper_flap', gain: -9, note: 'the record rattles'},
   ...SHUT.map((f, i) => ({f, kind: 'conveyor_clunk' as const, gain: -6, pitch: 2 + i * 2, note: 'shutter ratchet'})),
   {f: SHUT_TOP, kind: 'machine_clunk', gain: -5, pitch: 3, note: 'shutter clacks home'},
@@ -241,7 +241,7 @@ export const SFX: Sfx[] = [
   {f: STAMPS[1], kind: 'stamp_light', pitch: -1},
   {f: STAMPS[2], kind: 'stamp_heavy', gain: -3},
   ...ACKS.map((f, i) => ({f, kind: 'glint' as const, gain: -10, pitch: i * 2, note: 'the three helps answer'})),
-  {f: NO_HIT, kind: 'stamp_heavy', gain: 2, note: 'NO GUARANTEE'},
+  {f: NO_HIT, kind: 'stamp_heavy', gain: 0, note: 'NO GUARANTEE'}, // V3: level with the other heavy stamps
   {f: NO_HIT + 1, kind: 'machine_clunk', gain: -8, pitch: -3, note: 'the room rattles'},
   {f: NO_HIT + 2, kind: 'paper_flap', gain: -10, note: 'slips flutter'},
   {f: PUSH + 2, kind: 'whoosh_soft', gain: -14, note: 'push toward the booth, into the wipe'},

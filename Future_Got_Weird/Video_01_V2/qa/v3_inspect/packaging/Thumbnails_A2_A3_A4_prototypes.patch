@@ -1,0 +1,151 @@
+--- a/source/src/Thumbnails.tsx	2026-10-07 17:16:27.000000000 +0000
++++ b/source/src/Thumbnails.tsx	2026-10-08 03:30:49.024166688 +0000
+@@ -3,9 +3,10 @@
+ import {C, F} from './theme';
+ import {CAST} from './components/cast';
+ import {Character, IDLE} from './components/Character';
+-import {Slip} from './components/Props';
++import {Slip, StampMark} from './components/Props';
+ import {Magnifier} from './components/Props2';
+ import {SLIPS} from './scenes/S1_Counter';
++import {AnswerSlipArt, SLIP_A_FINAL} from './components/v2/AnswerSlip';
+ 
+ /**
+  * Thumbnails (1920×1080 stills). One focal point each, type that stays readable at phone size (the smallest
+@@ -20,19 +21,44 @@
+   </div>
+ );
+ 
+-const SlipText: React.FC<{i: number; hi?: 'title' | 'year' | 'all'}> = ({i, hi = 'title'}) => {
++const SlipText: React.FC<{i: number; hi?: 'title' | 'year' | 'all'; film?: boolean}> = ({i, hi = 'title', film = false}) => {
+   const s = SLIPS[i];
+-  const mark = (on: boolean, text: string) => (
+-    <span style={on ? {background: C.coral, color: C.white, borderRadius: 8, padding: '0 10px'} : undefined}>{text}</span>
++  // film = the cold open's marking: yellow highlighter on the invented title, coral ring on the wrong year
++  const mark = (on: boolean, text: string, kind: 'title' | 'year' = 'title') => (
++    <span
++      style={
++        !on
++          ? undefined
++          : !film
++            ? {background: C.coral, color: C.white, borderRadius: 8, padding: '0 10px'}
++            : kind === 'title'
++              ? {background: C.saffronLight, color: C.ink, borderRadius: 6, padding: '0 6px', boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone'}
++              : {color: C.coralDeep, border: `4px solid ${C.coral}`, borderRadius: 999, padding: '0 10px', fontWeight: 600}
++      }
++    >
++      {text}
++    </span>
+   );
+-  return (
++  // same order as the published excerpts (and AnswerSlipArt): slip 0 runs pre-year-mid-uni-mid2-title,
++  // slips 1 and 2 run title-mid-year-post
++  return i === 0 ? (
+     <span>
+       {s.pre}
+-      {mark(hi === 'year' || hi === 'all', s.year)}
++      {mark(hi === 'year' || hi === 'all', s.year, 'year')}
+       {s.mid}
++      {s.uni}
++      {s.mid2}
+       {mark(hi === 'title' || hi === 'all', s.title)}
+       {s.post}
+     </span>
++  ) : (
++    <span>
++      {s.pre}
++      {mark(hi === 'title' || hi === 'all', s.title)}
++      {s.mid}
++      {mark(hi === 'year' || hi === 'all', s.year, 'year')}
++      {s.post}
++    </span>
+   );
+ };
+ 
+@@ -100,3 +126,65 @@
+     ))}
+   </Paper>
+ );
++
++/** A2 (proposal): A with the year marked too and one large WRONG stamp across the answer, so the correction reads
++ *  at 320 px wide. Same clerk, slip and words as A. */
++export const ThumbA2: React.FC = () => (
++  <Paper blob={{x: 1480, y: 600, r: 640, color: C.saffron}}>
++    <div style={{position: 'absolute', left: 90, top: 150}}>
++      <Line size={230}>SO SURE.</Line>
++    </div>
++    <div style={{position: 'absolute', left: 90, top: 420}}>
++      <Line size={230} color={C.coral}>SO WRONG.</Line>
++    </div>
++    <Character look={CAST.clerkA} pose={{...IDLE, armR: {a: 30, b: 70}, mouth: 'grin', brows: 0.7, lookX: -0.4, lookY: 0.3}} frame={0} seed={3} x={1560} y={1260} scale={2.3} />
++    <div style={{position: 'absolute', left: 930, top: 610}}>
++      <Slip model={SLIPS[0].model} detail={SLIPS[0].detail} width={860} fontSize={42} rotate={-5}>
++        <SlipText i={0} hi="all" />
++      </Slip>
++    </div>
++    <div style={{position: 'absolute', left: 1190, top: 735}}>
++      <StampMark text="Wrong" tone="coral" t={1} size={108} rotate={-12} />
++    </div>
++  </Paper>
++);
++
++/** A3 (proposal): A's headline and clerk, holding the film's own ChatGPT slip art exactly as it appears in the
++ *  cold open and under the title (yellow highlight on the invented title, coral ring on 2002, saffron ring on CMU,
++ *  WRONG stamp), scaled up. Thumbnail and opening then show the same object. */
++export const ThumbA3: React.FC = () => (
++  <Paper blob={{x: 1480, y: 600, r: 640, color: C.saffron}}>
++    <div style={{position: 'absolute', left: 90, top: 150}}>
++      <Line size={230}>SO SURE.</Line>
++    </div>
++    <div style={{position: 'absolute', left: 90, top: 420}}>
++      <Line size={230} color={C.coral}>SO WRONG.</Line>
++    </div>
++    <Character look={CAST.clerkA} pose={{...IDLE, armR: {a: 30, b: 70}, mouth: 'grin', brows: 0.7, lookX: -0.4, lookY: 0.3}} frame={0} seed={3} x={1560} y={1260} scale={2.3} />
++    <div style={{position: 'absolute', left: 1130, top: 612, transform: 'rotate(-5deg) scale(1.62)', transformOrigin: '0 0'}}>
++      <AnswerSlipArt i={0} marks={SLIP_A_FINAL.marks} stamps={[{text: 'Wrong', size: 58}]} />
++    </div>
++  </Paper>
++);
++
++/** A4 (proposal): A's layout and wide slip, marked the way the film marks it (yellow highlighter on the invented
++ *  title, coral ring on 2002) and one large coral WRONG stamp across the title. */
++export const ThumbA4: React.FC = () => (
++  <Paper blob={{x: 1480, y: 600, r: 640, color: C.saffron}}>
++    <div style={{position: 'absolute', left: 90, top: 150}}>
++      <Line size={230}>SO SURE.</Line>
++    </div>
++    <div style={{position: 'absolute', left: 90, top: 420}}>
++      <Line size={230} color={C.coral}>SO WRONG.</Line>
++    </div>
++    <Character look={CAST.clerkA} pose={{...IDLE, armR: {a: 30, b: 70}, mouth: 'grin', brows: 0.7, lookX: -0.4, lookY: 0.3}} frame={0} seed={3} x={1560} y={1260} scale={2.3} />
++    <div style={{position: 'absolute', left: 930, top: 610}}>
++      <Slip model={SLIPS[0].model} detail={SLIPS[0].detail} width={860} fontSize={42} rotate={-5}>
++        <SlipText i={0} hi="all" film />
++      </Slip>
++    </div>
++    <div style={{position: 'absolute', left: 1190, top: 735}}>
++      <StampMark text="Wrong" tone="coral" t={1} size={108} rotate={-12} />
++    </div>
++  </Paper>
++);
+--- a/source/src/Root.tsx	2026-10-07 19:07:39.352755993 +0000
++++ b/source/src/Root.tsx	2026-10-08 03:30:49.024590826 +0000
+@@ -4,7 +4,7 @@
+ import {CastTest} from './CastTest';
+ import {Kit} from './dev/Kit';
+ import {Kit2} from './dev/Kit2';
+-import {ThumbA, ThumbB, ThumbC} from './Thumbnails';
++import {ThumbA, ThumbA2, ThumbA3, ThumbA4, ThumbB, ThumbC} from './Thumbnails';
+ import {Main} from './Main';
+ import {TL} from './lib/timeline';
+ 
+@@ -16,6 +16,9 @@
+     <Composition id="Kit2" component={Kit2} durationInFrames={90} fps={30} width={1920} height={1080} />
+     <Still id="CastTest" component={CastTest} width={1920} height={1080} />
+     <Still id="ThumbA" component={ThumbA} width={1920} height={1080} />
++    <Still id="ThumbA2" component={ThumbA2} width={1920} height={1080} />
++    <Still id="ThumbA3" component={ThumbA3} width={1920} height={1080} />
++    <Still id="ThumbA4" component={ThumbA4} width={1920} height={1080} />
+     <Still id="ThumbB" component={ThumbB} width={1920} height={1080} />
+     <Still id="ThumbC" component={ThumbC} width={1920} height={1080} />
+   </>

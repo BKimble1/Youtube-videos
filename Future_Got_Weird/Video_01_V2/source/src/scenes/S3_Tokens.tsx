@@ -144,7 +144,7 @@ const KA = {
   kalSep: K.kal + 1,
   kalId: K.kal + 5,
   aiSep: K.ai,
-  aiId: K.ai + 4,
+  aiId: K.ai + 1,
   backKal: K.aiEnd - 7,
   backAi: K.aiEnd - 4,
   signOut: K.aiEnd - 4,
@@ -502,7 +502,7 @@ export const SFX: Sfx[] = [
   {f: CARDS_IN, kind: 'card_slide', gain: -7, pitch: 2},
   ...BRACKETS.map((f, i) => ({f, kind: 'machine_clunk' as const, gain: -9, pitch: i * 2})),
   ...MOD_LAND.flatMap((f, i) => [
-    {f, kind: 'machine_clunk' as const, pitch: -i},
+    {f, kind: 'machine_clunk' as const, gain: i === 2 ? -4 : 0, pitch: -i}, // V3: the third lands on 'search'
     {f: f + 3, kind: 'glint' as const, gain: -10},
     {f: f + 6, kind: 'indicator_yes' as const, gain: -12, pitch: i * 2},
   ]),
@@ -1044,10 +1044,11 @@ export const S3Tokens: React.FC = () => {
               })()}
               {/* token ids (real o200k_base ids) */}
               {[
-                {h: kal[0], f: KA.kalId, label: `id ${TOK[KAL[0]].id}`},
-                {h: kal[1], f: KA.aiId, label: `id ${TOK[KAL[1]].id}`},
-              ].map(({h, f, label}) => {
-                const u = g >= f ? Math.min(1.1, sp(g, f, SNAP)) * (1 - tw(g, KA.backKal - 2, 5, E.in)) : 0;
+                {h: kal[0], f: KA.kalId, back: KA.backKal, label: `id ${TOK[KAL[0]].id}`},
+                {h: kal[1], f: KA.aiId, back: KA.backAi, label: `id ${TOK[KAL[1]].id}`},
+              ].map(({h, f, back, label}) => {
+                // each label leaves with its own tile
+                const u = g >= f ? Math.min(1.1, sp(g, f, SNAP)) * (1 - tw(g, back - 1, 4, E.in)) : 0;
                 if (u <= 0) return null;
                 const cx = h.x + h.originX + (h.w / 2 - h.originX) * h.s;
                 return (

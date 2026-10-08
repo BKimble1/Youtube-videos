@@ -3,7 +3,7 @@ import {AbsoluteFill} from 'remotion';
 import {C, F} from './theme';
 import {CAST} from './components/cast';
 import {Character, IDLE} from './components/Character';
-import {Slip} from './components/Props';
+import {Slip, StampMark} from './components/Props';
 import {Magnifier} from './components/Props2';
 import {SLIPS} from './scenes/S1_Counter';
 
@@ -20,17 +20,42 @@ const Line: React.FC<{children: React.ReactNode; size: number; color?: string; b
   </div>
 );
 
-const SlipText: React.FC<{i: number; hi?: 'title' | 'year' | 'all'}> = ({i, hi = 'title'}) => {
+const SlipText: React.FC<{i: number; hi?: 'title' | 'year' | 'all'; film?: boolean}> = ({i, hi = 'title', film = false}) => {
   const s = SLIPS[i];
-  const mark = (on: boolean, text: string) => (
-    <span style={on ? {background: C.coral, color: C.white, borderRadius: 8, padding: '0 10px'} : undefined}>{text}</span>
+  // film = the cold open's marking: yellow highlighter on the invented title, coral ring on the wrong year
+  const mark = (on: boolean, text: string, kind: 'title' | 'year' = 'title') => (
+    <span
+      style={
+        !on
+          ? undefined
+          : !film
+            ? {background: C.coral, color: C.white, borderRadius: 8, padding: '0 10px'}
+            : kind === 'title'
+              ? {background: C.saffronLight, color: C.ink, borderRadius: 6, padding: '0 6px', boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone'}
+              : {color: C.coralDeep, border: `4px solid ${C.coral}`, borderRadius: 999, padding: '0 10px', fontWeight: 600}
+      }
+    >
+      {text}
+    </span>
   );
-  return (
+  // same order as the published excerpts (and AnswerSlipArt): slip 0 runs pre-year-mid-uni-mid2-title,
+  // slips 1 and 2 run title-mid-year-post
+  return i === 0 ? (
     <span>
       {s.pre}
-      {mark(hi === 'year' || hi === 'all', s.year)}
+      {mark(hi === 'year' || hi === 'all', s.year, 'year')}
       {s.mid}
+      {s.uni}
+      {s.mid2}
       {mark(hi === 'title' || hi === 'all', s.title)}
+      {s.post}
+    </span>
+  ) : (
+    <span>
+      {s.pre}
+      {mark(hi === 'title' || hi === 'all', s.title)}
+      {s.mid}
+      {mark(hi === 'year' || hi === 'all', s.year, 'year')}
       {s.post}
     </span>
   );
@@ -43,7 +68,8 @@ const Paper: React.FC<{children: React.ReactNode; blob?: {x: number; y: number; 
   </AbsoluteFill>
 );
 
-/** A: "SO SURE. SO WRONG." with the ChatGPT slip stamped WRONG and the clerk who handed it over. */
+/** A (V3): "SO SURE. SO WRONG." A's layout and wide slip, marked the way the film marks it (yellow highlighter on the invented
+ *  title, coral ring on 2002) and one large coral WRONG stamp across the title. */
 export const ThumbA: React.FC = () => (
   <Paper blob={{x: 1480, y: 600, r: 640, color: C.saffron}}>
     <div style={{position: 'absolute', left: 90, top: 150}}>
@@ -54,9 +80,12 @@ export const ThumbA: React.FC = () => (
     </div>
     <Character look={CAST.clerkA} pose={{...IDLE, armR: {a: 30, b: 70}, mouth: 'grin', brows: 0.7, lookX: -0.4, lookY: 0.3}} frame={0} seed={3} x={1560} y={1260} scale={2.3} />
     <div style={{position: 'absolute', left: 930, top: 610}}>
-      <Slip model={SLIPS[0].model} detail={SLIPS[0].detail} width={860} fontSize={42} rotate={-5} stamp={{text: 'Wrong', tone: 'coral', t: 1}}>
-        <SlipText i={0} hi="title" />
+      <Slip model={SLIPS[0].model} detail={SLIPS[0].detail} width={860} fontSize={42} rotate={-5}>
+        <SlipText i={0} hi="all" film />
       </Slip>
+    </div>
+    <div style={{position: 'absolute', left: 1190, top: 735}}>
+      <StampMark text="Wrong" tone="coral" t={1} size={108} rotate={-12} />
     </div>
   </Paper>
 );

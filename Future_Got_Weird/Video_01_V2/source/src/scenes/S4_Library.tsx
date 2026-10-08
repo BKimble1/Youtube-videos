@@ -147,7 +147,7 @@ const BUMP = K.built + 3; // hip meets the drawer
 const FLY0 = K.fills - 3;
 const FLY_DT = 6;
 const FLY_DUR = 13;
-const FLIP = K.shaped + 4; // card edge-on at FLIP + 6
+const FLIP = K.answer - 4; // the finished title holds a beat; card edge-on at FLIP + 6, on "answer"
 const SEAL_HIT = K.confidence + 4;
 const GLINTS = K.part - 2;
 const SWEEP = K.is + 3;
@@ -403,9 +403,9 @@ const handB = (ch: Body, arm: Arm, side: -1 | 1) => {
   return {x: ch.x + x * ch.scale, y: ch.y + (y + ch.bob) * ch.scale};
 };
 
-/** both hands grip the held object from behind (thumbs over the edges) from the moment the card clears the drawer
- *  (so the forearms never cross its face on the way up to the chest) until the exit */
-const behindMode = (g: number) => g >= LIFT + 3 && g < RELEASE + 14;
+/** both hands grip the held object from behind (thumbs over the edges) from the moment the fingers take the card,
+ *  while it is still inside the drawer (so the forearms never cross its face on the way up to the chest), until the exit */
+const behindMode = (g: number) => g >= PLUCK && g < RELEASE + 14;
 
 const clerkPose = (g: number, cam: Cam, held: Held): {pose: Pose; life: number; body: Body; grip: {L: number; R: number}} => {
   const x = clerkX(g);
@@ -580,14 +580,14 @@ const clerkPose = (g: number, cam: Cam, held: Held): {pose: Pose; life: number; 
   if (held.kind !== 'none' && g < RELEASE) {
     const into = tw(g, PLUCK - 3, 3);
     const gp = held.kind === 'card' ? GRIP.card : GRIP.slip;
-    const top = heldToWorld(held, (held.kind === 'card' ? CARD_W : SLIP_W) / 2, 6);
+    const top = heldToWorld(held, (held.kind === 'card' ? CARD_W : SLIP_W) / 2, -10); // knuckles on the top edge, clear of the header
     const gl = heldToWorld(held, gp.L.x, gp.L.y);
     const toEdge = tw(g, LIFT, 10, E.inOut);
     armL = mixArm(armL, reachB(ch, -1, lerp(top.x, gl.x, toEdge), lerp(top.y, gl.y, toEdge)), into);
     const gr = heldToWorld(held, gp.R.x, gp.R.y);
     const join = tw(g, LIFT + 6, 6); // once the card's right edge has come round to his right side
     armR = mixArm(armR, reachB(ch, 1, gr.x, gr.y), join);
-    grip.L = toEdge;
+    grip.L = clamp((toEdge - 0.8) / 0.2, 0, 1); // the thumb shows only once the hand is at the edge
     grip.R = join;
   }
   // flicks: L flicks "I think" off the left edge, R flicks "maybe" off the right
@@ -984,8 +984,12 @@ export const S4Library: React.FC = () => {
         </div>
       )}
       {foot2 > 0.001 && (
-        <div style={{position: 'absolute', left: 0, right: 0, bottom: 40, display: 'flex', justifyContent: 'center', transform: `translateY(${(1 - foot2) * 140}px)`}}>
-          <div style={{background: C.cream, border: `4px solid ${C.ink}`, borderRadius: 14, padding: '8px 28px', boxShadow: `6px 7px 0 ${C.shadow}`, fontFamily: F.body, fontWeight: 800, fontSize: 32, color: C.inkSoft, whiteSpace: 'nowrap'}}>a title-shaped answer · simplified illustration</div>
+        <div style={{position: 'absolute', left: 0, right: 0, bottom: 40, display: 'flex', justifyContent: 'center', transform: `translateY(${(1 - foot2) * 180}px)`}}>
+          <div style={{background: C.cream, border: `4px solid ${C.ink}`, borderRadius: 14, padding: '8px 28px', boxShadow: `6px 7px 0 ${C.shadow}`, fontFamily: F.body, fontWeight: 800, fontSize: 32, lineHeight: 1.22, color: C.inkSoft, textAlign: 'center', whiteSpace: 'nowrap'}}>
+            a title-shaped answer · simplified illustration
+            <br />
+            confident wording, not a measured confidence
+          </div>
         </div>
       )}
     </AbsoluteFill>

@@ -124,7 +124,7 @@ const Title: React.FC<{g: number}> = ({g}) => {
   const c = sp(g, K.sure - 1, {damping: 11, stiffness: 230, mass: 0.9});
   const [cx, cy] = impact(g, K.sure + 5, 0.1, 9);
   const nudge = 9 * Math.exp(-Math.max(0, g - (K.sure + 5)) * 0.3) * (g >= K.sure + 5 ? 1 : 0);
-  const out = tw(g, K.heres - 2, 12, E.in);
+  const out = tw(g, K.heres - 6, 12, E.in);
   const y = 112 - out * 330;
   const word = (text: string, x: number, t: number, col: string, extra = '') => (
     <div style={{position: 'absolute', left: x, top: y - (1 - t) * 26, font: TITLE_FONT, lineHeight: 1.1, color: col, opacity: t > 0.02 ? 1 : 0, transform: `scale(${lerp(0.94, 1, Math.min(1, t))}) ${extra}`, transformOrigin: '50% 100%', whiteSpace: 'nowrap'}}>
@@ -160,14 +160,14 @@ const Card1: React.FC<{g: number}> = ({g}) => {
   const base = [0.46, 0.38, 0.3];
   const final = [0.88, 0.22, 0.1];
   const bars = base.map((b, i) => lerp(b + jost * 0.22 * Math.sin(g * 0.42 + i * 2.1), final[i], Math.min(1, win)));
-  const fly = tw(g, K.come + 1, 9, E.inOut);
+  const fly = tw(g, K.come + 1, K.next - K.come, E.inOut); // lands exactly as the tile is handed to the sentence
   const lifted = bell(g, K.come - 3, 6) * -10;
   const landed = g >= K.next + 1;
   const strip = 'Adam Tauman Kal';
   const sFont = `400 42px "Source Serif 4 Variable"`;
   const sw = textWidth(strip, sFont);
   const tileX = (i: number) => 50 + i * 160;
-  const wx = lerp(tileX(0), 52 + sw - 6, fly);
+  const wx = lerp(tileX(0), sw + 6, fly);
   const wy = lerp(226, 88, fly) - Math.sin(fly * Math.PI) * 50 + lifted;
   const [bx, by] = impact(g, K.next + 1, 0.12, 8);
   return (
@@ -203,7 +203,7 @@ const Card1: React.FC<{g: number}> = ({g}) => {
       ))}
       <div style={{position: 'absolute', left: 0, right: 0, top: 376, textAlign: 'center', fontFamily: F.body, fontWeight: 800, fontSize: 32, color: C.blueDeep}}>scores: how likely each piece is</div>
       <div style={{position: 'absolute', right: 22, bottom: 18}}>
-        <Chip tone="paper" size={26}>illustrative</Chip>
+        <Chip tone="paper" size={30}>illustrative</Chip>
       </div>
     </div>
   );
@@ -346,7 +346,9 @@ export const S2ShortVersion: React.FC = () => {
   // the brand card
   const cardY = drop(g, STING, 1150, 12) - tw(g, LIFT, 13, E.in) * 1200;
   const covered = g >= STING + 2;
-  const rev: [number, number, number] = [sp(g, STING + 2, SNAP), sp(g, STING + 6, SNAP), sp(g, STING + 10, SNAP)];
+  // capped so the words' overshoot never runs FUTURE / GOT / WEIRD into each other
+  const pop = (f: number) => Math.min(1.05, sp(g, f, SNAP));
+  const rev: [number, number, number] = [pop(STING + 2), pop(STING + 6), pop(STING + 10)];
   const push = tw(g, STING - 6, 8) * 0.03;
   return (
     <AbsoluteFill style={{background: g >= LIFT - 2 ? 'transparent' : C.paper}}>
@@ -355,7 +357,11 @@ export const S2ShortVersion: React.FC = () => {
           <Camera cam={cam}>
             <Layer depth={1}>
               <Title g={g} />
-              {away < 1 && <SlipOnScreen i={0} cx={slip.cx} cy={slip.cy} scale={slip.scale} rot={slip.rot} marks={{...SLIP_A_FINAL.marks, glint}} stamps={[{text: 'Wrong', sx: ax, sy: ay}]} lift={g < K.start + 4 ? 1 - (g - K.start) / 4 : 0} />}
+              {away < 1 && <SlipOnScreen i={0} cx={slip.cx} cy={slip.cy} scale={slip.scale} rot={slip.rot} marks={{...SLIP_A_FINAL.marks, glint}} stamps={[{text: 'Wrong', sx: ax, sy: ay}]} />}
+              {[0, 1, 2].map((i) => (
+                <ClaimCard key={i} g={g} i={i} active={active} />
+              ))}
+              {/* drawn after the cards so card 2 drops and bounces behind the label */}
               {chipT > 0 && (
                 <div style={{position: 'absolute', left: 0, right: 0, top: 54 + (1 - Math.min(1, chipT)) * -60, textAlign: 'center'}}>
                   <Chip tone="ink" size={42}>
@@ -363,9 +369,6 @@ export const S2ShortVersion: React.FC = () => {
                   </Chip>
                 </div>
               )}
-              {[0, 1, 2].map((i) => (
-                <ClaimCard key={i} g={g} i={i} active={active} />
-              ))}
               {citeT > 0 && (
                 <div style={{position: 'absolute', left: 0, right: 0, top: 884 + (1 - Math.min(1, citeT)) * 30, textAlign: 'center', opacity: Math.min(1, citeT * 2)}}>
                   <Chip tone="paper" size={30}>

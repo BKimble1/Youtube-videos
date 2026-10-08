@@ -1,0 +1,30 @@
+--- a/source/src/Thumbnails.tsx	2026-10-08 03:31:25.220451701 +0000
++++ b/source/src/Thumbnails.tsx	2026-10-08 03:31:25.234899489 +0000
+@@ -25,14 +25,26 @@
+   const mark = (on: boolean, text: string) => (
+     <span style={on ? {background: C.coral, color: C.white, borderRadius: 8, padding: '0 10px'} : undefined}>{text}</span>
+   );
+-  return (
++  // same order as the published excerpts (and AnswerSlipArt): slip 0 runs pre-year-mid-uni-mid2-title,
++  // slips 1 and 2 run title-mid-year-post
++  return i === 0 ? (
+     <span>
+       {s.pre}
+       {mark(hi === 'year' || hi === 'all', s.year)}
+       {s.mid}
++      {s.uni}
++      {s.mid2}
+       {mark(hi === 'title' || hi === 'all', s.title)}
+       {s.post}
+     </span>
++  ) : (
++    <span>
++      {s.pre}
++      {mark(hi === 'title' || hi === 'all', s.title)}
++      {s.mid}
++      {mark(hi === 'year' || hi === 'all', s.year)}
++      {s.post}
++    </span>
+   );
+ };
+ 

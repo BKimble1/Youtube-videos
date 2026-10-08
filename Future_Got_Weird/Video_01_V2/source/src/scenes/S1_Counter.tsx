@@ -31,8 +31,8 @@ const CLERK_S = 0.98;
 const CHECKER = {x: 120, y: 790, scale: 0.92};
 const SLIP_TOP = 598;
 const SLIP_ROT = [-1.5, 0.8, 1.6];
-const STAMP_LX = SLIP_STAMP_AT.x; // WRONG mark centre in slip-local px
-const STAMP_LY = SLIP_STAMP_AT.y;
+// WRONG mark centre in slip-local px, per slip: B's text runs a line lower, so its stamp sits below the year line
+const STAMP_AT = [SLIP_STAMP_AT, {x: 232, y: 246}, SLIP_STAMP_AT];
 const COUNTER_TOP = 690;
 
 const TICKET_TOP = 176;
@@ -51,7 +51,7 @@ const PAPER_X = 960 - PAPER_W / 2;
 const PAPER_Y = 488;
 const imgX = (fx: number) => PAPER_X + OUTLINE + PAPER_PAD + fx * PAPER_IMG_W;
 const imgY = (fy: number) => PAPER_Y + OUTLINE + PAPER_PAD + fy * PAPER_IMG_H;
-const AUTHOR = {x: imgX(0.052), y: imgY(0.43), w: imgX(0.3) - imgX(0.052), h: imgY(0.585) - imgY(0.43)};
+const AUTHOR = {x: imgX(0.052), y: imgY(0.43), w: imgX(0.3) - imgX(0.052), h: imgY(0.72) - imgY(0.43)};
 
 /* ------------------------------------------------------------------ cues (global frames) */
 const K = {
@@ -129,7 +129,7 @@ export const SFX: Sfx[] = [
   ...POP.map((f, i) => ({f, kind: 'pop_tick' as const, pitch: i * 2, gain: -6})),
   {f: K.asked - 1, kind: 'stamp_light', gain: -12, note: 'guard-rail label stamped on the ticket'},
   ...QTYPE.slice(0, 8).map((f) => ({f: f - 1, kind: 'typewriter_tick' as const, gain: -5})),
-  {f: QTYPE[8] - 1, kind: 'bell_ding'},
+  {f: QTYPE[8] - 1, kind: 'bell_ding', gain: -4}, // V3: clear of the end of 'dissertation'
   {f: K.chat - 8, kind: 'paper_swish', gain: -12, note: 'ticket pulled up on its strings'},
   ...HAND.flatMap((h, i) => [
     {f: h.rise, kind: 'paper_lift' as const, pitch: -2 * i, gain: -8},
@@ -181,7 +181,7 @@ const SHOTS = {
   ticket: {cx: 1000, cy: 300, zoom: 1.22},
   paper: {cx: 950, cy: 650, zoom: 1.28},
   joke: {cx: 570, cy: 560, zoom: 1.57},
-  cu: {cx: 300, cy: 468, zoom: 2.3},
+  cu: {cx: 300, cy: 452, zoom: 2.3},
 };
 const camAt = (g: number): Cam => {
   const c = camPath(g, SHOTS.wide0, [
@@ -264,7 +264,7 @@ const AnswerSlip: React.FC<{i: number; g: number; pose: SlipPose}> = ({i, g, pos
           pulse: bell(g, PULSE[i], 12),
           glint: Math.max(glintA, glintB),
         }}
-        stamps={g >= hit ? [{text: 'Wrong', scale: inkPop, sx: ix, sy: iy}] : []}
+        stamps={g >= hit ? [{text: 'Wrong', x: STAMP_AT[i].x, y: STAMP_AT[i].y, size: i === 1 ? 44 : 48, rotate: i === 1 ? -5 : -11, scale: inkPop, sx: ix, sy: iy}] : []}
       />
     </div>
   );
@@ -484,6 +484,8 @@ const clerkPose = (i: number, g: number, slip: SlipPose): {pose: Pose; life: num
     // let go before the stamp comes down, and stay clear until the end
     const off = tw(g, HITS[i] - 8, 6);
     armR = mixArm(armR, restR, off);
+    // A: a small proud hand-to-chest just before the lift, so nothing of the clerk rests on the slip when it leaves
+    if (i === 0) armR = mixArm(armR, reach({...ch, bob: p.bob}, 1, ch.x + 34, CLERK_Y - 0.98 * 290), tw(g, S1_END_LIFT - 8, 6));
   }
   p = {...p, armR};
   const life = g >= h.rise - 6 && g < HITS[i] - 2 ? 0.25 : 1;
@@ -536,7 +538,7 @@ export const S1Counter: React.FC = () => {
 
   // stamp arm, screen space
   const stampPt = (i: number) => {
-    const w = slipToWorld({...slips[i], rot: SLIP_ROT[i], top: SLIP_TOP, cx: WIN_X[i], s: 1}, STAMP_LX, STAMP_LY);
+    const w = slipToWorld({...slips[i], rot: SLIP_ROT[i], top: SLIP_TOP, cx: WIN_X[i], s: 1}, STAMP_AT[i].x, STAMP_AT[i].y);
     return worldToScreen(cam, w.x, w.y, 1.08);
   };
   const pts = [0, 1, 2].map(stampPt);
@@ -568,7 +570,7 @@ export const S1Counter: React.FC = () => {
   const cap1 = sp(g, K.very - 1, SNAP);
   const cap2 = g >= K.fictional - 1 ? sp(g, K.fictional - 1, SNAP) : 0;
   const capOut = tw(g, K.s05End + 6, 8, E.in);
-  const spread = tw(g, K.fictional - 1, 6, E.out);
+  const spread = tw(g, K.fictional - 4, 4, E.out);
   const boxW = w1 + (gap + w2) * spread + 72;
   const [cx2, cy2] = impact(g, K.fictional + 2, 0.12, 8);
   const jolt = 3 * ring(g, K.fictional + 2, 1.4, 0.4);
@@ -607,8 +609,8 @@ export const S1Counter: React.FC = () => {
                 </div>
                 {chipT > 0 && (
                   <div style={{position: 'absolute', left: 0, width: 1920, top: 902 + chipY, textAlign: 'center'}}>
-                    <Chip tone="coral" size={40}>
-                      Three different years · none of them right
+                    <Chip tone="coral" size={44}>
+                      2002 · 2005 · 2007 — none of them right
                     </Chip>
                   </div>
                 )}
@@ -695,7 +697,7 @@ export const S1Counter: React.FC = () => {
             Very professional.
           </Headline>
           {cap2 > 0 && (
-            <Headline size={64} align="left" color={C.coral} style={{position: 'absolute', left: 36 + w1 + gap, top: 16, whiteSpace: 'nowrap', transform: `scale(${lerp(1.3, 1, cap2)})`, transformOrigin: '50% 60%'}}>
+            <Headline size={64} align="left" color={C.coral} style={{position: 'absolute', left: 36 + w1 + gap, top: 16, whiteSpace: 'nowrap', transform: `scale(${lerp(1.16, 1, cap2)})`, transformOrigin: '50% 60%'}}>
               Very fictional.
             </Headline>
           )}

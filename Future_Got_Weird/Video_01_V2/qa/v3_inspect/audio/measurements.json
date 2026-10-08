@@ -1,0 +1,990 @@
+{
+ "note": "Measured audio audit of the approved V2 mix (no listening was possible in this environment). Scripts: qa/v3_inspect/audio/scripts/ (read-only on project files; they write intermediates to a temp dir).",
+ "inputs_sha256": {
+  "source/public/audio/mix.wav": "9032caa3948bef5d80ae8873e8b03f946a3add60449c4063da736f837e86739e",
+  "audio/mix/v2/final_mix.wav": "9032caa3948bef5d80ae8873e8b03f946a3add60449c4063da736f837e86739e",
+  "audio/mix/v2/stem_narration.wav": "49ddbf0a705c20622c07f745f8c35ea06503991fdd5eede8d376586895d99d94",
+  "audio/mix/v2/stem_music_ducked.wav": "ad7ac2c84245e107950425b1776ed2863acd7136cfb30eb2e0325cc7ab3afc03",
+  "audio/mix/v2/stem_sfx.wav": "2f615e77d11b5e2f1adc45a41fce5e8810c9a5195f34cd02e8f5462b539acd11",
+  "source/public/audio/narration.wav": "b9e485e1cbf329d9de60957cf650de400d5dce9ad863471a06688a26111f105a"
+ },
+ "mix_equals_public_mix": true,
+ "narration_wav_is_bit_exact_concat_of_v2_segments": true,
+ "loudness": {
+  "integrated_lufs_pyloudnorm": -16.01,
+  "integrated_lufs_ffmpeg_ebur128": -16.0,
+  "true_peak_dbtp_4x_resample_poly": -1.3,
+  "true_peak_time": "4:24.47",
+  "true_peak_ffmpeg": -1.3,
+  "sample_peak_dbfs": -1.31,
+  "lra_lu": 2.4,
+  "momentary_max_lufs": [
+   -11.8,
+   "3:23.30 (voice only)"
+  ],
+  "short_term_max_lufs": [
+   -14.6,
+   "4:24.90"
+  ],
+  "dc_offset": -9.1e-05
+ },
+ "clicks": {
+  "second_difference_impulses_ratio_gt_14_above_-66dBFS": {
+   "narration": 0,
+   "stem_narration": 0,
+   "music": 0,
+   "sfx": 0,
+   "final_mix": 0
+  },
+  "hf_frame_jump_glitches": 0,
+  "largest_sample_step": "0.56 at 4:12.107 = /s/ of \"Stamp\" (sibilant, spectral centroid 7.1 kHz), not a click",
+  "segment_edges": "every segment WAV starts and ends at exact 0 (8 ms fade-in, 35 ms squared fade-out); take pause floor -88..-96 dBFS; inserted silence is digital zero; room tone -72 dBFS in the stem covers both"
+ },
+ "joins": [
+  {
+   "join": "s01->s02",
+   "takes": "x01_t4->x01_t4",
+   "same_take": true,
+   "speech_end": "0:06.16",
+   "cut": "0:06.56",
+   "next_seg_start": "0:06.56",
+   "next_speech": "0:06.63",
+   "speech_gap_s": 0.47,
+   "inserted_silence_s": 0.0,
+   "design_pause_ms": 350,
+   "prefade_tail_db_rel_line": -74.3,
+   "next_head_8_30ms_db_rel_line": -73.3
+  },
+  {
+   "join": "s02->s03",
+   "takes": "x01_t4->x02_t1",
+   "same_take": false,
+   "speech_end": "0:13.89",
+   "cut": "0:14.05",
+   "next_seg_start": "0:14.31",
+   "next_speech": "0:14.34",
+   "speech_gap_s": 0.45,
+   "inserted_silence_s": 0.265,
+   "design_pause_ms": 450,
+   "prefade_tail_db_rel_line": -64.8,
+   "next_head_8_30ms_db_rel_line": -34.2
+  },
+  {
+   "join": "s03->s04",
+   "takes": "x02_t1->x02_t1",
+   "same_take": true,
+   "speech_end": "0:19.22",
+   "cut": "0:19.62",
+   "next_seg_start": "0:19.65",
+   "next_speech": "0:19.72",
+   "speech_gap_s": 0.5,
+   "inserted_silence_s": 0.025,
+   "design_pause_ms": 500,
+   "prefade_tail_db_rel_line": -76.1,
+   "next_head_8_30ms_db_rel_line": -74.3
+  },
+  {
+   "join": "s04->s05",
+   "takes": "x02_t1->x02_t1",
+   "same_take": true,
+   "speech_end": "0:23.71",
+   "cut": "0:24.05",
+   "next_seg_start": "0:24.08",
+   "next_speech": "0:24.16",
+   "speech_gap_s": 0.45,
+   "inserted_silence_s": 0.035,
+   "design_pause_ms": 450,
+   "prefade_tail_db_rel_line": -73.9,
+   "next_head_8_30ms_db_rel_line": -74.0
+  },
+  {
+   "join": "s05->s06",
+   "takes": "x02_t1->x03_t4",
+   "same_take": false,
+   "speech_end": "0:26.68",
+   "cut": "0:26.86",
+   "next_seg_start": "0:27.50",
+   "next_speech": "0:27.59",
+   "speech_gap_s": 0.9,
+   "inserted_silence_s": 0.64,
+   "design_pause_ms": 900,
+   "prefade_tail_db_rel_line": -71.7,
+   "next_head_8_30ms_db_rel_line": -71.3
+  },
+  {
+   "join": "s06->s07",
+   "takes": "x03_t4->x03_t4",
+   "same_take": true,
+   "speech_end": "0:31.87",
+   "cut": "0:32.29",
+   "next_seg_start": "0:32.29",
+   "next_speech": "0:32.34",
+   "speech_gap_s": 0.47,
+   "inserted_silence_s": 0.0,
+   "design_pause_ms": 350,
+   "prefade_tail_db_rel_line": -73.6,
+   "next_head_8_30ms_db_rel_line": -76.2
+  },
+  {
+   "join": "s07->s08",
+   "takes": "x03_t4->x04_t1",
+   "same_take": false,
+   "speech_end": "0:42.12",
+   "cut": "0:42.28",
+   "next_seg_start": "0:44.29",
+   "next_speech": "0:44.32",
+   "speech_gap_s": 2.2,
+   "inserted_silence_s": 2.01,
+   "design_pause_ms": 2200,
+   "prefade_tail_db_rel_line": -73.7,
+   "next_head_8_30ms_db_rel_line": -63.3
+  },
+  {
+   "join": "s08->s09",
+   "takes": "x04_t1->x04_t1",
+   "same_take": true,
+   "speech_end": "0:46.31",
+   "cut": "0:46.67",
+   "next_seg_start": "0:46.67",
+   "next_speech": "0:46.76",
+   "speech_gap_s": 0.445,
+   "inserted_silence_s": 0.0,
+   "design_pause_ms": 350,
+   "prefade_tail_db_rel_line": -74.3,
+   "next_head_8_30ms_db_rel_line": -75.5
+  },
+  {
+   "join": "s09->s10",
+   "takes": "x04_t1->x05_t2",
+   "same_take": false,
+   "speech_end": "0:57.97",
+   "cut": "0:58.21",
+   "next_seg_start": "0:58.31",
+   "next_speech": "0:58.37",
+   "speech_gap_s": 0.4,
+   "inserted_silence_s": 0.105,
+   "design_pause_ms": 400,
+   "prefade_tail_db_rel_line": -75.7,
+   "next_head_8_30ms_db_rel_line": -72.4
+  },
+  {
+   "join": "s10->s11",
+   "takes": "x05_t2->x05_t2",
+   "same_take": true,
+   "speech_end": "1:07.14",
+   "cut": "1:07.58",
+   "next_seg_start": "1:07.58",
+   "next_speech": "1:07.64",
+   "speech_gap_s": 0.505,
+   "inserted_silence_s": 0.0,
+   "design_pause_ms": 400,
+   "prefade_tail_db_rel_line": -75.3,
+   "next_head_8_30ms_db_rel_line": -72.5
+  },
+  {
+   "join": "s11->s12",
+   "takes": "x05_t2->x06_t1",
+   "same_take": false,
+   "speech_end": "1:15.60",
+   "cut": "1:15.83",
+   "next_seg_start": "1:16.17",
+   "next_speech": "1:16.20",
+   "speech_gap_s": 0.6,
+   "inserted_silence_s": 0.335,
+   "design_pause_ms": 600,
+   "prefade_tail_db_rel_line": -73.0,
+   "next_head_8_30ms_db_rel_line": -51.7
+  },
+  {
+   "join": "s12->s13",
+   "takes": "x06_t1->x06_t1",
+   "same_take": true,
+   "speech_end": "1:26.09",
+   "cut": "1:26.52",
+   "next_seg_start": "1:26.71",
+   "next_speech": "1:26.79",
+   "speech_gap_s": 0.7,
+   "inserted_silence_s": 0.19,
+   "design_pause_ms": 700,
+   "prefade_tail_db_rel_line": -74.6,
+   "next_head_8_30ms_db_rel_line": -72.6
+  },
+  {
+   "join": "s13->s14",
+   "takes": "x06_t1->x07_t3",
+   "same_take": false,
+   "speech_end": "1:31.31",
+   "cut": "1:31.48",
+   "next_seg_start": "1:31.58",
+   "next_speech": "1:31.66",
+   "speech_gap_s": 0.35,
+   "inserted_silence_s": 0.105,
+   "design_pause_ms": 350,
+   "prefade_tail_db_rel_line": -75.0,
+   "next_head_8_30ms_db_rel_line": -71.2
+  },
+  {
+   "join": "s14->s15",
+   "takes": "x07_t3->x07_t3",
+   "same_take": true,
+   "speech_end": "1:40.41",
+   "cut": "1:40.83",
+   "next_seg_start": "1:40.83",
+   "next_speech": "1:40.89",
+   "speech_gap_s": 0.48,
+   "inserted_silence_s": 0.0,
+   "design_pause_ms": 400,
+   "prefade_tail_db_rel_line": -73.5,
+   "next_head_8_30ms_db_rel_line": -78.0
+  },
+  {
+   "join": "s15->s16",
+   "takes": "x07_t3->x08_t3",
+   "same_take": false,
+   "speech_end": "1:49.11",
+   "cut": "1:49.27",
+   "next_seg_start": "1:49.53",
+   "next_speech": "1:49.56",
+   "speech_gap_s": 0.45,
+   "inserted_silence_s": 0.27,
+   "design_pause_ms": 450,
+   "prefade_tail_db_rel_line": -75.8,
+   "next_head_8_30ms_db_rel_line": -38.4
+  },
+  {
+   "join": "s16->s17",
+   "takes": "x08_t3->x09_t4",
+   "same_take": false,
+   "speech_end": "2:02.84",
+   "cut": "2:02.97",
+   "next_seg_start": "2:03.45",
+   "next_speech": "2:03.55",
+   "speech_gap_s": 0.7,
+   "inserted_silence_s": 0.48,
+   "design_pause_ms": 700,
+   "prefade_tail_db_rel_line": -60.8,
+   "next_head_8_30ms_db_rel_line": -73.7
+  },
+  {
+   "join": "s17->s18",
+   "takes": "x09_t4->x09_t3",
+   "same_take": false,
+   "speech_end": "2:12.20",
+   "cut": "2:12.50",
+   "next_seg_start": "2:12.61",
+   "next_speech": "2:12.70",
+   "speech_gap_s": 0.5,
+   "inserted_silence_s": 0.11,
+   "design_pause_ms": 500,
+   "prefade_tail_db_rel_line": -74.7,
+   "next_head_8_30ms_db_rel_line": -74.7
+  },
+  {
+   "join": "s18->s19",
+   "takes": "x09_t3->x09_t3",
+   "same_take": true,
+   "speech_end": "2:21.96",
+   "cut": "2:22.35",
+   "next_seg_start": "2:22.78",
+   "next_speech": "2:22.85",
+   "speech_gap_s": 0.9,
+   "inserted_silence_s": 0.43,
+   "design_pause_ms": 900,
+   "prefade_tail_db_rel_line": -75.0,
+   "next_head_8_30ms_db_rel_line": -69.6
+  },
+  {
+   "join": "s19->s20",
+   "takes": "x09_t3->x10_t1",
+   "same_take": false,
+   "speech_end": "2:25.87",
+   "cut": "2:26.04",
+   "next_seg_start": "2:26.78",
+   "next_speech": "2:26.87",
+   "speech_gap_s": 1.0,
+   "inserted_silence_s": 0.73,
+   "design_pause_ms": 1000,
+   "prefade_tail_db_rel_line": -67.9,
+   "next_head_8_30ms_db_rel_line": -71.0
+  },
+  {
+   "join": "s20->s21",
+   "takes": "x10_t1->x10_t1",
+   "same_take": true,
+   "speech_end": "2:34.40",
+   "cut": "2:34.51",
+   "next_seg_start": "2:34.51",
+   "next_speech": "2:34.84",
+   "speech_gap_s": 0.45,
+   "inserted_silence_s": 0.0,
+   "design_pause_ms": 400,
+   "prefade_tail_db_rel_line": -58.9,
+   "next_head_8_30ms_db_rel_line": -75.2
+  },
+  {
+   "join": "s21->s22",
+   "takes": "x10_t1->x11_t3",
+   "same_take": false,
+   "speech_end": "2:42.47",
+   "cut": "2:42.68",
+   "next_seg_start": "2:42.78",
+   "next_speech": "2:42.82",
+   "speech_gap_s": 0.35,
+   "inserted_silence_s": 0.1,
+   "design_pause_ms": 350,
+   "prefade_tail_db_rel_line": -75.3,
+   "next_head_8_30ms_db_rel_line": -70.6
+  },
+  {
+   "join": "s22->s23",
+   "takes": "x11_t3->x11_t3",
+   "same_take": true,
+   "speech_end": "2:49.09",
+   "cut": "2:49.46",
+   "next_seg_start": "2:49.46",
+   "next_speech": "2:49.52",
+   "speech_gap_s": 0.435,
+   "inserted_silence_s": 0.0,
+   "design_pause_ms": 350,
+   "prefade_tail_db_rel_line": -75.0,
+   "next_head_8_30ms_db_rel_line": -75.9
+  },
+  {
+   "join": "s23->s24",
+   "takes": "x11_t3->x11_t3",
+   "same_take": true,
+   "speech_end": "2:56.13",
+   "cut": "2:56.21",
+   "next_seg_start": "2:56.38",
+   "next_speech": "2:56.63",
+   "speech_gap_s": 0.5,
+   "inserted_silence_s": 0.165,
+   "design_pause_ms": 500,
+   "prefade_tail_db_rel_line": -43.6,
+   "next_head_8_30ms_db_rel_line": -75.6
+  },
+  {
+   "join": "s24->s25",
+   "takes": "x11_t3->x12_t1",
+   "same_take": false,
+   "speech_end": "3:01.09",
+   "cut": "3:01.34",
+   "next_seg_start": "3:01.96",
+   "next_speech": "3:02.00",
+   "speech_gap_s": 0.9,
+   "inserted_silence_s": 0.62,
+   "design_pause_ms": 900,
+   "prefade_tail_db_rel_line": -73.9,
+   "next_head_8_30ms_db_rel_line": -66.7
+  },
+  {
+   "join": "s25->s26",
+   "takes": "x12_t1->x13_t1",
+   "same_take": false,
+   "speech_end": "3:14.32",
+   "cut": "3:14.44",
+   "next_seg_start": "3:15.03",
+   "next_speech": "3:15.12",
+   "speech_gap_s": 0.8,
+   "inserted_silence_s": 0.595,
+   "design_pause_ms": 800,
+   "prefade_tail_db_rel_line": -63.2,
+   "next_head_8_30ms_db_rel_line": -73.6
+  },
+  {
+   "join": "s26->s27",
+   "takes": "x13_t1->x13_t1",
+   "same_take": true,
+   "speech_end": "3:24.61",
+   "cut": "3:25.14",
+   "next_seg_start": "3:25.14",
+   "next_speech": "3:25.21",
+   "speech_gap_s": 0.595,
+   "inserted_silence_s": 0.0,
+   "design_pause_ms": 400,
+   "prefade_tail_db_rel_line": -75.8,
+   "next_head_8_30ms_db_rel_line": -73.0
+  },
+  {
+   "join": "s27->s28",
+   "takes": "x13_t1->x14_t4",
+   "same_take": false,
+   "speech_end": "3:33.32",
+   "cut": "3:33.51",
+   "next_seg_start": "3:34.03",
+   "next_speech": "3:34.12",
+   "speech_gap_s": 0.8,
+   "inserted_silence_s": 0.52,
+   "design_pause_ms": 800,
+   "prefade_tail_db_rel_line": -75.0,
+   "next_head_8_30ms_db_rel_line": -71.9
+  },
+  {
+   "join": "s28->s29",
+   "takes": "x14_t4->x14_t4",
+   "same_take": true,
+   "speech_end": "3:47.31",
+   "cut": "3:47.66",
+   "next_seg_start": "3:47.84",
+   "next_speech": "3:47.91",
+   "speech_gap_s": 0.6,
+   "inserted_silence_s": 0.185,
+   "design_pause_ms": 600,
+   "prefade_tail_db_rel_line": -73.0,
+   "next_head_8_30ms_db_rel_line": -75.0
+  },
+  {
+   "join": "s29->s30",
+   "takes": "x14_t4->x14_t4",
+   "same_take": true,
+   "speech_end": "3:49.94",
+   "cut": "3:50.16",
+   "next_seg_start": "3:50.18",
+   "next_speech": "3:50.38",
+   "speech_gap_s": 0.45,
+   "inserted_silence_s": 0.025,
+   "design_pause_ms": 450,
+   "prefade_tail_db_rel_line": -74.9,
+   "next_head_8_30ms_db_rel_line": -73.2
+  },
+  {
+   "join": "s30->s31",
+   "takes": "x14_t4->x15_t1",
+   "same_take": false,
+   "speech_end": "3:54.64",
+   "cut": "3:54.80",
+   "next_seg_start": "3:55.03",
+   "next_speech": "3:55.09",
+   "speech_gap_s": 0.45,
+   "inserted_silence_s": 0.225,
+   "design_pause_ms": 450,
+   "prefade_tail_db_rel_line": -70.8,
+   "next_head_8_30ms_db_rel_line": -71.4
+  },
+  {
+   "join": "s31->s32",
+   "takes": "x15_t1->x15_t1",
+   "same_take": true,
+   "speech_end": "4:08.95",
+   "cut": "4:09.29",
+   "next_seg_start": "4:09.34",
+   "next_speech": "4:09.40",
+   "speech_gap_s": 0.45,
+   "inserted_silence_s": 0.05,
+   "design_pause_ms": 450,
+   "prefade_tail_db_rel_line": -74.6,
+   "next_head_8_30ms_db_rel_line": -74.0
+  },
+  {
+   "join": "s32->s33",
+   "takes": "x15_t1->x16_t2",
+   "same_take": false,
+   "speech_end": "4:12.66",
+   "cut": "4:12.84",
+   "next_seg_start": "4:13.47",
+   "next_speech": "4:13.56",
+   "speech_gap_s": 0.9,
+   "inserted_silence_s": 0.64,
+   "design_pause_ms": 900,
+   "prefade_tail_db_rel_line": -69.2,
+   "next_head_8_30ms_db_rel_line": -71.1
+  },
+  {
+   "join": "s33->s34",
+   "takes": "x16_t2->x16_t2",
+   "same_take": true,
+   "speech_end": "4:22.67",
+   "cut": "4:23.03",
+   "next_seg_start": "4:23.23",
+   "next_speech": "4:23.37",
+   "speech_gap_s": 0.7,
+   "inserted_silence_s": 0.2,
+   "design_pause_ms": 700,
+   "prefade_tail_db_rel_line": -73.8,
+   "next_head_8_30ms_db_rel_line": -75.1
+  },
+  {
+   "join": "s34->s35",
+   "takes": "x16_t2->x17_t1",
+   "same_take": false,
+   "speech_end": "4:30.31",
+   "cut": "4:30.48",
+   "next_seg_start": "4:30.95",
+   "next_speech": "4:31.00",
+   "speech_gap_s": 0.7,
+   "inserted_silence_s": 0.48,
+   "design_pause_ms": 700,
+   "prefade_tail_db_rel_line": -72.6,
+   "next_head_8_30ms_db_rel_line": -50.2
+  },
+  {
+   "join": "s35->s36",
+   "takes": "x17_t1->x17_t1",
+   "same_take": true,
+   "speech_end": "4:34.15",
+   "cut": "4:34.58",
+   "next_seg_start": "4:35.00",
+   "next_speech": "4:35.06",
+   "speech_gap_s": 0.9,
+   "inserted_silence_s": 0.415,
+   "design_pause_ms": 900,
+   "prefade_tail_db_rel_line": -73.6,
+   "next_head_8_30ms_db_rel_line": -73.8
+  }
+ ],
+ "masking": {
+  "method": "20 ms frames, 10 ms hop, 1-4 kHz band; speech-core frames = voice band within 12 dB of its 300 ms local max and > -40 dBFS",
+  "speech_core_seconds": 102.4,
+  "effects_within_6dB_fraction": 0.0051,
+  "music_within_6dB_fraction": 0.0004,
+  "effect_events": [
+   "0:05.90 bell_ding f177 g0 on \"dissertation?\" worst -5.1 dB (30 ms)",
+   "1:22.13 machine_clunk f2456 g0 on \"search.\" worst -2.7 dB (40 ms)",
+   "2:45.50 buzzer slaps/dings on \"answers.\" worst -0.5 dB (20 ms)",
+   "2:53.06-2:54.45 buzzer_wrong f5190/f5201/f5212 g-1 + ding_right f5231 g+2 on \"so on average, one lands.\" worst +0.1..+4.1 dB (5 events, 20-70 ms)",
+   "3:37.41 machine_clunk f6515 g0 / conveyor_clunk f6521 on \"real record\" worst +0.2 dB (20 ms)",
+   "4:24.78 paper_slide f7920 g-4 on \"matters,\" worst +3.3 dB (50 ms)",
+   "4:34.04 stamp_heavy + gavel f8221 on \"too.\" worst +3.0 dB (30 ms)"
+  ],
+  "music_events": [
+   "2:37.39 \"answer:\" +5.0 dB (20 ms)"
+  ],
+  "alignment_caveat": "aligned word starts lag the energy onset by +59 ms median (max +230 ms) at line starts and last-word ends run 260 ms (median) into pauses, so word-span masking checks over-flag; the frame-based core check above is the reliable one"
+ },
+ "loudest_effects_final_mix_domain_rms20": [
+  {
+   "t": "0:42.87",
+   "f": 1286,
+   "scene": "S2",
+   "kind": "logo_hit",
+   "gain": 0,
+   "rms20_dbfs": -14.7,
+   "peak_dbfs": -11.5,
+   "note": ""
+  },
+  {
+   "t": "4:10.73",
+   "f": 7522,
+   "scene": "S9",
+   "kind": "claim_fails",
+   "gain": 0,
+   "rms20_dbfs": -15.2,
+   "peak_dbfs": -13.6,
+   "note": ""
+  },
+  {
+   "t": "3:46.80",
+   "f": 6804,
+   "scene": "S8",
+   "kind": "stamp_heavy",
+   "gain": 2,
+   "rms20_dbfs": -15.6,
+   "peak_dbfs": -8.6,
+   "note": "NO GUARANTEE"
+  },
+  {
+   "t": "3:04.37",
+   "f": 5531,
+   "scene": "S6",
+   "kind": "stamp_heavy",
+   "gain": 0,
+   "rms20_dbfs": -17.7,
+   "peak_dbfs": -10.5,
+   "note": "−1 slaps onto the Wrong card"
+  },
+  {
+   "t": "4:36.40",
+   "f": 8292,
+   "scene": "S10",
+   "kind": "logo_hit",
+   "gain": 0,
+   "rms20_dbfs": -17.7,
+   "peak_dbfs": -14.5,
+   "note": "wordmark lands"
+  },
+  {
+   "t": "4:34.03",
+   "f": 8221,
+   "scene": "S10",
+   "kind": "stamp_heavy",
+   "gain": 0,
+   "rms20_dbfs": -17.7,
+   "peak_dbfs": -10.7,
+   "note": "SOURCE?"
+  },
+  {
+   "t": "4:12.50",
+   "f": 7575,
+   "scene": "S9",
+   "kind": "stamp_heavy",
+   "gain": 0,
+   "rms20_dbfs": -17.7,
+   "peak_dbfs": -10.7,
+   "note": ""
+  },
+  {
+   "t": "1:55.27",
+   "f": 3458,
+   "scene": "S4",
+   "kind": "stamp_heavy",
+   "gain": 0,
+   "rms20_dbfs": -17.8,
+   "peak_dbfs": -10.7,
+   "note": "seal slams onto the slip"
+  },
+  {
+   "t": "0:16.93",
+   "f": 508,
+   "scene": "S1",
+   "kind": "stamp_heavy",
+   "gain": 0,
+   "rms20_dbfs": -18.3,
+   "peak_dbfs": -11.3,
+   "note": ""
+  },
+  {
+   "t": "3:45.60",
+   "f": 6768,
+   "scene": "S8",
+   "kind": "stamp_heavy",
+   "gain": -3,
+   "rms20_dbfs": -21.6,
+   "peak_dbfs": -14.5,
+   "note": ""
+  },
+  {
+   "t": "0:41.73",
+   "f": 1252,
+   "scene": "S2",
+   "kind": "stamp_heavy",
+   "gain": -4,
+   "rms20_dbfs": -22.2,
+   "peak_dbfs": -15.2,
+   "note": "GUESSING PAYS"
+  },
+  {
+   "t": "2:54.37",
+   "f": 5231,
+   "scene": "S6",
+   "kind": "ding_right",
+   "gain": 2,
+   "rms20_dbfs": -22.7,
+   "peak_dbfs": -15.4,
+   "note": "Q10 lands: the lucky one"
+  },
+  {
+   "t": "1:42.13",
+   "f": 3064,
+   "scene": "S4",
+   "kind": "drawer_open",
+   "gain": 0,
+   "rms20_dbfs": -23.3,
+   "peak_dbfs": -16.4,
+   "note": ""
+  },
+  {
+   "t": "1:51.27",
+   "f": 3338,
+   "scene": "S4",
+   "kind": "drawer_close",
+   "gain": 0,
+   "rms20_dbfs": -23.9,
+   "peak_dbfs": -17.8,
+   "note": "hip-bumped shut"
+  },
+  {
+   "t": "3:00.63",
+   "f": 5419,
+   "scene": "S6",
+   "kind": "trophy_clink",
+   "gain": 2,
+   "rms20_dbfs": -24.5,
+   "peak_dbfs": -15.8,
+   "note": "trophy lands on the guesser podium"
+  }
+ ],
+ "kweighted_effect_vs_voice": {
+  "4:10.70 claim_fails": "sfx -19.2 LUFS vs voice -13.4..-15.8 (4-6 LU below voice; other stamps sit >=10 LU below)",
+  "3:46.80 NO GUARANTEE stamp": "sfx -26.5 vs voice -16.5",
+  "3:04.20 -1 stamp": "sfx -26.6 vs voice -15.3",
+  "0:42.60 S2 brand sting (pause)": "mix -18.3 LUFS momentary (music -20.3, sfx -22.7)"
+ },
+ "music_per_scene_lufs": {
+  "S1": {
+   "music_lufs": -35.42080288492171,
+   "music_gap": -37.4611555761624,
+   "music_speech": -36.04409849311666,
+   "music_mmax": -30.14794574485006,
+   "voice_lufs": -16.025326975404873
+  },
+  "S2": {
+   "music_lufs": -32.200412979896825,
+   "music_gap": -24.941373769174472,
+   "music_speech": -35.78519990273558,
+   "music_mmax": -20.120187299043586,
+   "voice_lufs": -15.91660675381129
+  },
+  "S3": {
+   "music_lufs": -36.256699820631624,
+   "music_gap": -33.56419854873084,
+   "music_speech": -36.58080826643228,
+   "music_mmax": -29.409815387394826,
+   "voice_lufs": -16.036131308161565
+  },
+  "S4": {
+   "music_lufs": -41.03344800463582,
+   "music_gap": -39.23252734294779,
+   "music_speech": -41.057948323143385,
+   "music_mmax": -34.37012609158249,
+   "voice_lufs": -16.12112848795834
+  },
+  "S5": {
+   "music_lufs": -42.325043148874656,
+   "music_gap": -42.08151530264972,
+   "music_speech": -44.53357399247301,
+   "music_mmax": -37.366217985116585,
+   "voice_lufs": -15.797873549553549
+  },
+  "S6": {
+   "music_lufs": -31.551789971850578,
+   "music_gap": -31.491185218287193,
+   "music_speech": -31.6850168968778,
+   "music_mmax": -27.091940486394254,
+   "voice_lufs": -16.174588531517188
+  },
+  "S7": {
+   "music_lufs": -39.73839538126962,
+   "music_gap": -34.43731775818148,
+   "music_speech": -41.57185061945967,
+   "music_mmax": -27.86824990079841,
+   "voice_lufs": -16.007479719981337
+  },
+  "S8": {
+   "music_lufs": -39.836649740385845,
+   "music_gap": -43.525755500296704,
+   "music_speech": -40.33884016056183,
+   "music_mmax": -34.632505019915435,
+   "voice_lufs": -15.913127070115964
+  },
+  "S9": {
+   "music_lufs": -45.62388259348045,
+   "music_gap": -43.93599743766775,
+   "music_speech": -46.356319067253835,
+   "music_mmax": -37.47614373209913,
+   "voice_lufs": -15.995060098338033
+  },
+  "S10": {
+   "music_lufs": -33.02153884794489,
+   "music_gap": -37.636895318661516,
+   "music_speech": -34.03660864246135,
+   "music_mmax": -27.42611309951078,
+   "voice_lufs": -15.9841457570487
+  }
+ },
+ "exposed_cues_no_voice": [
+  {
+   "t": "0:42.47",
+   "f": 1274,
+   "scene": "S2",
+   "kind": "thud_soft",
+   "gain": 0,
+   "note": "",
+   "sfx_peak_dbfs": -26.8
+  },
+  {
+   "t": "0:42.53",
+   "f": 1276,
+   "scene": "S2",
+   "kind": "pop_tick",
+   "gain": -8,
+   "note": "",
+   "sfx_peak_dbfs": -15.0
+  },
+  {
+   "t": "0:42.67",
+   "f": 1280,
+   "scene": "S2",
+   "kind": "pop_tick",
+   "gain": -8,
+   "note": "",
+   "sfx_peak_dbfs": -15.0
+  },
+  {
+   "t": "0:42.80",
+   "f": 1284,
+   "scene": "S2",
+   "kind": "pop_tick",
+   "gain": -8,
+   "note": "",
+   "sfx_peak_dbfs": -15.0
+  },
+  {
+   "t": "0:42.87",
+   "f": 1286,
+   "scene": "S2",
+   "kind": "logo_hit",
+   "gain": 0,
+   "note": "",
+   "sfx_peak_dbfs": -15.0
+  },
+  {
+   "t": "0:43.50",
+   "f": 1305,
+   "scene": "S2",
+   "kind": "whoosh_soft",
+   "gain": -10,
+   "note": "brand card lifts away",
+   "sfx_peak_dbfs": -30.5
+  },
+  {
+   "t": "0:43.50",
+   "f": 1305,
+   "scene": "S3",
+   "kind": "conveyor_run",
+   "gain": -12,
+   "note": "idle belt crawl under the reveal",
+   "sfx_peak_dbfs": -30.5
+  },
+  {
+   "t": "2:22.47",
+   "f": 4274,
+   "scene": "S5",
+   "kind": "glint",
+   "gain": -10,
+   "note": "the lens catches the light as it swings up",
+   "sfx_peak_dbfs": -43.9
+  },
+  {
+   "t": "3:28.80",
+   "f": 6264,
+   "scene": "S7",
+   "kind": "glint",
+   "gain": -10,
+   "note": "",
+   "sfx_peak_dbfs": -44.0
+  },
+  {
+   "t": "3:33.63",
+   "f": 6409,
+   "scene": "S7",
+   "kind": "paper_swish",
+   "gain": -12,
+   "note": "short paper wipe to S8",
+   "sfx_peak_dbfs": -39.3
+  },
+  {
+   "t": "3:33.60",
+   "f": 6408,
+   "scene": "S8",
+   "kind": "machine_hum",
+   "gain": -12,
+   "note": "ASSEMBLY hums at HIGH until the turn-down",
+   "sfx_peak_dbfs": -39.3
+  },
+  {
+   "t": "4:34.43",
+   "f": 8233,
+   "scene": "S10",
+   "kind": "paper_flap",
+   "gain": -12,
+   "note": "",
+   "sfx_peak_dbfs": -38.8
+  },
+  {
+   "t": "4:34.40",
+   "f": 8232,
+   "scene": "S10",
+   "kind": "whoosh_soft",
+   "gain": -16,
+   "note": "the hand swings away",
+   "sfx_peak_dbfs": -38.8
+  },
+  {
+   "t": "4:43.13",
+   "f": 8494,
+   "scene": "S10",
+   "kind": "thud_soft",
+   "gain": -15,
+   "note": "",
+   "sfx_peak_dbfs": -39.2
+  },
+  {
+   "t": "4:43.40",
+   "f": 8502,
+   "scene": "S10",
+   "kind": "thud_soft",
+   "gain": -15,
+   "note": "",
+   "sfx_peak_dbfs": -38.5
+  },
+  {
+   "t": "4:43.67",
+   "f": 8510,
+   "scene": "S10",
+   "kind": "thud_soft",
+   "gain": -15,
+   "note": "",
+   "sfx_peak_dbfs": -35.8
+  },
+  {
+   "t": "4:44.00",
+   "f": 8520,
+   "scene": "S10",
+   "kind": "pencil_tap",
+   "gain": -6,
+   "note": "",
+   "sfx_peak_dbfs": -34.2
+  },
+  {
+   "t": "4:44.23",
+   "f": 8527,
+   "scene": "S10",
+   "kind": "pencil_tap",
+   "gain": -8,
+   "note": "",
+   "sfx_peak_dbfs": -34.2
+  },
+  {
+   "t": "4:44.23",
+   "f": 8527,
+   "scene": "S10",
+   "kind": "marker_sweep",
+   "gain": -5,
+   "note": "",
+   "sfx_peak_dbfs": -34.2
+  },
+  {
+   "t": "4:45.70",
+   "f": 8571,
+   "scene": "S10",
+   "kind": "chip_pop",
+   "gain": -10,
+   "note": "",
+   "sfx_peak_dbfs": -37.9
+  },
+  {
+   "t": "4:46.63",
+   "f": 8599,
+   "scene": "S10",
+   "kind": "pop_tick",
+   "gain": -12,
+   "note": "GOT wobbles",
+   "sfx_peak_dbfs": -43.3
+  }
+ ],
+ "cue_outside_scene_window": [
+  "S5 paper_slide f3688 (2:02.93) is 2 frames before S5 mounts (f3690, wipe f3690-3702)"
+ ],
+ "opening": "first sample -81 dBFS; music bed 0.5 s squared fade-in, amb_counter 0.4 s fade-in, hanger_click pre-roll from 0:00.09, first speech 0:00.52 (\"Three\" aligned 0:00.61); momentary -37 LUFS (0-0.4 s) -> -32 -> voice-led by 0:00.7; no click or step",
+ "tail": "end-card chord struck 4:35.32 (end_card+0.25 s) decays below -80 dBFS by 4:41.06; no music for the last 7.2 s; last word ends 4:42.57-4:42.8; after that only room tone (-72 dBFS) and 8 soft end-card effects (-38..-56 dBFS); nothing above -50 dBFS after 4:46.66; final samples ~-70 dBFS room noise (no fade, inaudible step). make_music_v2.py has no branch for \"end\" bars and its 2.5 s fade-out (4:45.73-4:48.23) acts on silence.",
+ "voice": {
+  "records": "narration_segments.json, narration_sections.json, audio/narration/v2/manifest.json, source/src/data/timeline.json all: Test Voice, kk5XaSLo2XAw0sKM98zU, eleven_v4",
+  "acoustic_check": "median F0 160 Hz (V2 stem and narration.wav) vs 97 Hz for the pass-2 Marcus K narration",
+  "stale_marcus_refs": [
+   "package/UPLOAD_PACKAGE.md:61 (public credit line)",
+   "script/FINAL_SCRIPT.md:3",
+   "script/narration_blocks.json (V1 blocks file)",
+   "tools/el_blocks.py, tools/export_script.py (V1 tools)"
+  ]
+ }
+}

@@ -405,10 +405,10 @@ const SheetMarks: React.FC<{g: number; argDim: number}> = ({g, argDim}) => {
       {Array.from({length: ROWS}).map((_, r) => (r === WB ? null : pill(NONE.x0, NONE.x1, r, tw(g, CORAL[r], 3, E.out), C.coralLight, C.coral, coralOp, colPulse)))}
       {/* the exception: WildBench's "No" and "Partial" ringed in ink */}
       <div style={{position: 'absolute', left: NO_WB.x0 - 2, top: rowY(WB) - 12, width: NO_WB.x1 - NO_WB.x0 + 4, height: 24}}>
-        <RingMark t={tw(g, WB_RING, 9, E.inOut)} tone="ink" padX={13} padY={5} width={4} />
+        <RingMark t={tw(g, WB_RING, 9, E.inOut)} tone="ink" padX={13} padY={5} width={3} />
       </div>
       <div style={{position: 'absolute', left: PARTIAL.x0 - 2, top: rowY(WB) - 13, width: PARTIAL.x1 - PARTIAL.x0 + 4, height: 26}}>
-        <RingMark t={tw(g, CORAL[WB], 9, E.inOut)} tone="ink" padX={11} padY={4} width={4} />
+        <RingMark t={tw(g, CORAL[WB], 9, E.inOut)} tone="ink" padX={11} padY={4} width={3} />
       </div>
     </>
   );
@@ -466,7 +466,8 @@ const WildTag: React.FC<{g: number}> = ({g}) => {
   const clipX = RAIL.x + RAIL.w;
   const w = 300;
   return (
-    <div style={{position: 'absolute', left: clipX, top: WTAG.y - 6, width: 620, height: 100, overflow: 'hidden'}}>
+    // the exception steps back once the no-credit column lights, so the rule stays the loudest mark
+    <div style={{position: 'absolute', left: clipX, top: WTAG.y - 6, width: 620, height: 100, overflow: 'hidden', opacity: 1 - 0.45 * tw(g, CORAL[0], 10)}}>
       <div style={{position: 'absolute', left: ZONE.x - clipX + lerp(-(w + 40), 0, t), top: 6, width: w, padding: '7px 0 8px', textAlign: 'center', borderRadius: 16, background: C.cream, border: `3px dashed ${C.inkSoft}`, fontFamily: F.body, fontWeight: 800, fontSize: 32, lineHeight: 1.1, color: C.ink, boxShadow: `4px 5px 0 rgba(22,42,50,0.12)`}}>
         <div>WildBench:</div>
         <div style={{color: C.inkSoft}}>partial credit</div>

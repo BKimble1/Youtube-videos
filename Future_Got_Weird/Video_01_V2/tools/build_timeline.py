@@ -77,8 +77,13 @@ def srt_time(s):
     return f"{h:02d}:{m:02d}:{sec:02d},{ms:03d}"
 
 
-def build_srt(segments, max_chars=84, max_dur=5.5):
-    """Phrase-level cues from word timings, splitting at punctuation / length limits."""
+def build_srt(segments, max_chars=84, max_dur=5.5, max_line=42, max_cps=20.0, lead_max=0.25, lead_all=0.2):
+    """Phrase-level cues from word timings, splitting at punctuation / length limits.
+
+    V3 rules: a cue never mixes two narration segments; it starts at or before its first word (up to lead_all
+    earlier, lead_max for a cue that would read faster than max_cps) and ends at or after its last word; cues never
+    overlap (the previous cue gives back lingering time, never speech time); at most two lines of max_line
+    characters."""
     cues = []
     for seg in segments:
         words = seg["words_abs"]
@@ -94,34 +99,51 @@ def build_srt(segments, max_chars=84, max_dur=5.5):
             if too_long and not strong and 0 < remaining <= 2:
                 too_long = False  # keep a short tail ("title.") with its phrase instead of a flash cue
             if last or strong or (end_punct and len(text) > 28) or too_long:
-                cues.append((cur[0]["start"], cur[-1]["end"], text))
+                cues.append((cur[0]["start"], cur[-1]["end"], text, seg["id"]))
                 cur = []
-    # merge very short trailing fragments ("title.", "Four.") into the previous cue when it fits
+    # merge very short fragments ("title.", "Four.") into the previous cue of the SAME segment when it fits
     merged = []
-    for a, b, t in cues:
-        if merged and len(t.split()) <= 2 and len(merged[-1][2]) + 1 + len(t) <= max_chars and a - merged[-1][1] < 0.6:
-            pa, pb, pt = merged[-1]
-            merged[-1] = (pa, b, pt + " " + t)
+    for a, b, t, sid in cues:
+        if (merged and merged[-1][3] == sid and len(t.split()) <= 2 and len(merged[-1][2]) + 1 + len(t) <= max_chars
+                and a - merged[-1][1] < 0.6):
+            pa, pb, pt, _ = merged[-1]
+            merged[-1] = (pa, b, pt + " " + t, sid)
         else:
-            merged.append((a, b, t))
-    cues = merged
-    # enforce min duration, then let each cue linger into the following pause (up to 0.6 s, and
-    # long enough for about 17 characters per second where the pause allows); never overlap
+            merged.append((a, b, t, sid))
+    spans = [(a, b) for a, b, _, _ in merged]  # first-word start / last-word end of each cue
+    # linger into the following pause (up to 0.6 s, about 17 cps where the pause allows), min 0.9 s;
+    # never overlap the next cue, never end before the cue's own last word
     fixed = []
-    for i, (a, b, t) in enumerate(cues):
-        b = max(b + min(0.6, max(0.3, len(t) / 17.0 - (b - a))), a + 0.9)
-        if i + 1 < len(cues):
-            b = min(b, cues[i + 1][0] - 0.08)
-        fixed.append((a, b, t))
+    for i, (a, b, t, sid) in enumerate(merged):
+        e = max(b + min(0.6, max(0.3, len(t) / 17.0 - (b - a))), a + 0.9)
+        if i + 1 < len(merged):
+            nxt = spans[i + 1][0]
+            e = min(e, nxt - 0.08)
+            e = max(e, min(b, nxt))
+        fixed.append([a, e, t])
+    # every cue starts up to lead_all before its aligned first word (forced-alignment word starts lag the audible
+    # onset by about 60 ms, up to 0.4 s); fast cues may lead by up to lead_max. Bounded by the previous cue's last word.
+    for i, c in enumerate(fixed):
+        a, e, t = c
+        lead = lead_max if len(t) / (e - a) > max_cps else lead_all
+        floor = a - lead
+        if i > 0:
+            pa, _, pt = fixed[i - 1]
+            # never into the previous cue's speech, and never so far that the previous cue reads faster than max_cps
+            floor = max(floor, spans[i - 1][1] + 0.04, pa + len(pt) / max_cps + 0.04)
+        na = floor if lead == lead_all else max(floor, a - max(lead_all, len(t) / max_cps - (e - a)))
+        if na < a:
+            c[0] = na
+            if i > 0 and fixed[i - 1][1] > na - 0.04:
+                fixed[i - 1][1] = max(spans[i - 1][1], na - 0.04)
     lines = []
     for i, (a, b, t) in enumerate(fixed, 1):
-        # wrap to two lines of <= 42 chars where possible
-        if len(t) > 42:
+        if len(t) > max_line:  # two balanced lines of <= max_line characters
             words = t.split()
             best, best_score = None, 1e9
             for k in range(1, len(words)):
                 l1, l2 = " ".join(words[:k]), " ".join(words[k:])
-                score = abs(len(l1) - len(l2)) + (100 if max(len(l1), len(l2)) > 44 else 0)
+                score = abs(len(l1) - len(l2)) + (100 if max(len(l1), len(l2)) > max_line else 0)
                 if score < best_score:
                     best, best_score = (l1, l2), score
             t = best[0] + "\n" + best[1]

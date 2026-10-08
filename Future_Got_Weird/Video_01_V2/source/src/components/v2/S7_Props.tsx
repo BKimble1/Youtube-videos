@@ -167,8 +167,8 @@ export const CounterPanel: React.FC<{
           </div>
         )}
       </div>
-      {/* the count: rolling drum + "/ 10" */}
-      <div style={{position: 'absolute', left: 0, right: 0, top: 58, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16}}>
+      {/* the count: rolling drum + "/ 10" (its box ends just above the bulb row) */}
+      <div style={{position: 'absolute', left: 0, right: 0, top: 52, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16}}>
         <div style={{border: `3px solid ${C.ink}`, borderRadius: 16, lineHeight: 0}}>
           <RollingNumber from={0} to={1} t={value} size={80} color={C.cream} bg={NAVY_DEEP} />
         </div>

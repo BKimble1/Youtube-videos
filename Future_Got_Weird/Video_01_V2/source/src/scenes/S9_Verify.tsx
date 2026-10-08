@@ -203,7 +203,7 @@ export const SFX: Sfx[] = [
   {f: Y2001, kind: 'marker_sweep', pitch: 4, note: '2001 highlighted'},
   {f: WIN_SRC, kind: 'machine_clunk', gain: -8, pitch: 4, note: 'verdict window flips: Source exists'},
   {f: WIN_SRC + 4, kind: 'indicator_yes', gain: -8},
-  {f: WIN_CLAIM, kind: 'claim_fails'},
+  {f: WIN_CLAIM, kind: 'claim_fails', gain: -5}, // V3: was the loudest effect under speech
   {f: ARM_IN + 4, kind: 'whoosh_soft', gain: -14, note: 'the checking hand rises into frame'},
   {f: HIT, kind: 'stamp_heavy'},
   {f: LIFT, kind: 'paper_lift', gain: -2, note: 'the stamped slip lifts toward camera (into S10)'},

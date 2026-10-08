@@ -177,9 +177,9 @@ const FAN = {open: K.picture + 6, close: K.quiz + 13};
 const FLIP = [K.right, K.wrong, K.idk2];
 const VAL = [K.onePt + 3, K.zero1 + 1, K.zero2 + 1];
 const ZEROS = K.zero2 + 6;
-const FLY_OUT = K.zero2 + 13;
+const FLY_OUT = K.zero2 + 19; // the complete +1 / 0 / 0 board holds a beat before it flies
 // the game
-const ROLL = [K.two - 14, K.two - 10];
+const ROLL = [K.two - 10, K.two - 6];
 const ROLL_DUR = 24;
 const PANEL_LAND = [K.picture + 10, K.picture + 13];
 const LABEL_ON = K.two + 22; // the apron marquee (guard rail) lights as the game starts
@@ -251,7 +251,7 @@ const camAt = (g: number): Cam => {
   const c = camPath(g, SHOTS.open, [
     {at: K.why - 2, dur: 20, to: SHOTS.host},
     {at: K.researchers - 2, dur: 26, to: SHOTS.rules},
-    {at: K.zero2 + 9, dur: 24, to: SHOTS.game},
+    {at: K.zero2 + 15, dur: 24, to: SHOTS.game},
     {at: K.honest - 4, dur: 20, to: SHOTS.honest},
     {at: K.guesser - 9, dur: 20, to: SHOTS.guesser}, // settles 2 f before the first slam
     {at: K.seven + 14, dur: 22, to: SHOTS.wide},
@@ -435,7 +435,7 @@ const trophyState = (g: number) => {
     x = lerp(TROPHY_G.x - 6, WALK_X[0], u);
     y = lerp(TROPHY_G.y, WALK_Y, u * u) - 70 * Math.sin(u * Math.PI) * (1 - u * 0.4);
     rot = -10 * u;
-    zone = u < 0.45 ? 'lidG' : 'floor';
+    zone = 'floor'; // jumps toward camera: in front of the Guesser's arms from the moment it leaves
   } else if (g < TW.up) {
     const u = (g - TW.floor) / (TW.up - TW.floor);
     x = lerp(WALK_X[0], WALK_X[1], u);
@@ -446,7 +446,7 @@ const trophyState = (g: number) => {
   } else if (g < TW.land) {
     const u = (g - TW.up) / (TW.land - TW.up);
     x = lerp(WALK_X[1], TROPHY_H.x, u);
-    y = lerp(WALK_Y, TROPHY_H.y, Math.sqrt(u)) - 90 * Math.sin(u * Math.PI);
+    y = lerp(WALK_Y, TROPHY_H.y, u) - 140 * Math.sin(u * Math.PI);
     rot = -12 * Math.sin(u * Math.PI);
     [sx, sy] = g < TW.up + 3 ? [1.08, 0.88] : [0.94, 1.08];
     zone = u < 0.6 ? 'floor' : 'lidH';
@@ -703,7 +703,7 @@ const honestState = (g: number): ContState => {
   // the trophy comes to him: eyes track it, then a grin with both arms up; then a hand on it
   const tx = tr ? tr.x : TROPHY_G.x;
   p = mixPose(p, P({...p, lookX: clamp((tx - x) / 300, -1, 1), lookY: 0.6, mouth: 'o', brows: 0.9}), win(g, TW.off - 2, TW.land, 5, 3));
-  const cheer = win(g, TW.land, TW.land + 22, 3, 8);
+  const cheer = win(g, TW.up - 4, TW.land + 22, 6, 8); // arms go up as it comes, clearing the landing spot
   armL = mixArm(armL, reach(ch, -1, x - 140, HON.y - 0.95 * 560), cheer);
   armR = mixArm(armR, reach(ch, 1, x + 140, HON.y - 0.95 * 560), cheer);
   p = mixPose(p, P({...p, lookX: 0.1, lookY: -0.2, mouth: 'grin', brows: 1}), tw(g, TW.land, 4));
@@ -816,7 +816,7 @@ const guesserState = (g: number): ContState => {
   p = mixPose(p, P({...p, lookX: -0.15, lookY: 0.85, mouth: 'o', brows: 1, tilt: 2 * Math.sin(g * 2.3)}), dread);
   p = mixPose(p, P({...p, mouth: 'frown', brows: -0.3, lookX: -0.2, lookY: 0.6, tilt: 9, lean: 5}), defl);
   // the trophy leaves: a hand reaches after it
-  const after = win(g, TW.off, TW.land + 6, 4, 10);
+  const after = win(g, TW.off + 4, TW.land + 6, 4, 10); // once the trophy has dropped below the lid
   const tt = tr ?? {x: TROPHY_G.x, y: TROPHY_G.y};
   const shX = x - 66 * GUE.scale;
   const shY = GUE.y + (bob - 292) * GUE.scale;
@@ -898,11 +898,11 @@ export const SFX: Sfx[] = [
   ...LAND.slice(0, 3).flatMap((f, j) => [
     {f: f - 4, kind: 'prob_tick' as const, gain: -9},
     {f: f - 1, kind: 'prob_tick' as const, gain: -7},
-    {f: JUDGE[j], kind: 'buzzer_wrong' as const, gain: -1, pitch: -j, note: `Q${7 + j} wrong`},
+    {f: JUDGE[j], kind: 'buzzer_wrong' as const, gain: -5, pitch: -j, note: `Q${7 + j} wrong`}, // V3: under 'so on average, one lands'
     {f: JUDGE[j] + 3, kind: 'score_flip' as const, gain: -14, note: 'score twitches, no point'},
   ]),
   ...crawlTicks.map((f, i) => ({f, kind: 'prob_tick' as const, gain: Math.min(-3, -9 + i), pitch: -Math.round(i / 3), note: 'last reel crawls'})),
-  {f: DING, kind: 'ding_right', gain: 2, note: 'Q10 lands: the lucky one'},
+  {f: DING, kind: 'ding_right', gain: -2, note: 'Q10 lands: the lucky one'},
   {f: DING + 2, kind: 'fanfare_small', note: 'excessive celebration'},
   {f: DING + 2, kind: 'pop_tick', gain: 0, pitch: -4, note: 'confetti popper'},
   {f: DING + 4, kind: 'pop_tick', gain: -2, pitch: -6},

@@ -289,7 +289,7 @@ export const SFX: Sfx[] = [
   {f: VERDICT, kind: 'marker_sweep', gain: -1, pitch: -2, note: 'teal verdict line under BEING RIGHT'},
   {f: SINK[0] + 2, kind: 'paper_swish', gain: -13},
   {f: SINK[1] + 2, kind: 'paper_swish', gain: -14, pitch: -2},
-  {f: PUSH_SLIP, kind: 'paper_slide', gain: -4, note: 'A pushes his slip forward: an answer'},
+  {f: PUSH_SLIP, kind: 'paper_slide', gain: -8, note: 'A pushes his slip forward: an answer'}, // V3: under 'matters'
   {f: SR_RISE + 6, kind: 'card_flick', gain: -3},
   {f: STRIKE, kind: 'marker_sweep', gain: 2, note: 'the old question struck through'},
   {f: K.ask2, kind: 'card_flick', pitch: 2, note: 'the card flips to ① What’s the evidence?'},
@@ -310,8 +310,8 @@ export const SFX: Sfx[] = [
   {f: P_SLIDE, kind: 'paper_slide', gain: -4},
   {f: P_LAND + 1, kind: 'paper_slap', gain: -3, note: 'the person slaps their slip down'},
   {f: ARM_IN + 1, kind: 'whoosh_soft', gain: -12, note: 'the checking hand rises into frame'},
-  {f: HIT, kind: 'stamp_heavy', note: 'SOURCE?'},
-  {f: HIT, kind: 'gavel', gain: -6, note: 'the verdict (layered under the stamp)'},
+  {f: HIT, kind: 'stamp_heavy', gain: -3, note: 'SOURCE?'}, // V3: -3 dB, it lands inside 'too'
+  {f: HIT, kind: 'gavel', gain: -9, note: 'the verdict (layered under the stamp)'},
   {f: HIT + 12, kind: 'paper_flap', gain: -12},
   {f: ARM_OUT + 2, kind: 'whoosh_soft', gain: -16, note: 'the hand swings away'},
   {f: STRIKE_SET + 2, kind: 'whoosh_soft', gain: -12, note: 'the counter set sinks away'},
