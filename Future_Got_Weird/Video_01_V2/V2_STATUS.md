@@ -1,5 +1,9 @@
 # Video 01 · V2 — baseline status
 
+> **Superseded (historical record).** This file describes the frozen work-in-progress baseline `29aa09f`. All of
+> the "not finished" items below were completed in commit `5bd35c1`, the film the owner reviewed and approved
+> (`APPROVED_V2.md`). The final polish and 4K delivery are V3: see `V3_CHANGELOG.md` and `DELIVERABLES.md`.
+
 This records exactly what the V2 production pass contains at the moment it was frozen as the baseline, and what is
 not finished. The baseline is one fixed commit on branch `claude/new-session-96c7w8`; its hash is recorded in
 `BASELINE.md` next to this file (added in the commit right after it). Check it out with

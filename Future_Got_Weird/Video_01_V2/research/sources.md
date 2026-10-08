@@ -1,5 +1,9 @@
 # Sources: claim-to-source ledger for pass 2
 
+> **Superseded for V2/V3.** This is the pass-2 ledger. The current claim-to-source ledger is
+> `research/CLAIM_LEDGER_V3.md` (V3 audit, 2026-10-08), and the published Sources block is in
+> `package/DESCRIPTION_V3.txt`.
+
 **Video:** "Why AI Is So Confidently Wrong" (Future Got Weird, Video 01, pass 2; anonymous channel)
 **Compiled:** 2026-10-07 (UTC)
 **Cross-checked against:** `script/narration_segments.json`, pass-2 v1.0 (36 segments, s01–s36). Tags such as **[s17]**

@@ -270,8 +270,9 @@ def compose(P):
         ev['guitar'].append((ec, 4.0, n, 50))
     for n, v in ((72, 44), (79, 38)):
         ev['vibes'].append((ec + 0.05, 4.0, n, v))
-    for n in (60, 64, 67):
-        ev['strings'].append((ec, 5.0, n, 34))
+    for n in (60, 64, 67):  # V3: the pad rings on under the last sentence and the end card into the final fade
+        ev['strings'].append((ec, P['total'] - ec, n, 34))  # (it used to stop after 5 s, leaving the end card silent)
+    ev['vibes'].append((P['final'] + 0.25, 4.0, 72, 34))  # V3: one soft re-strike after the last word
     return ev
 
 
@@ -375,9 +376,17 @@ def main():
     bed *= section_gain(P, n)[:, None]
     fi = int(0.5 * SR)
     bed[:fi] *= np.linspace(0, 1, fi)[:, None] ** 2
-    fo_start = int((P['total'] - 2.5) * SR)
-    if n - fo_start > 0:
-        bed[fo_start:] *= np.linspace(1, 0, n - fo_start)[:, None] ** 1.6
+    # V3: once the last word is done the end-card pad is no longer ducked, so it sits 5 dB lower from there
+    h0, h1 = int((P['final'] + 0.3) * SR), int((P['final'] + 1.3) * SR)
+    hold = np.ones(n)
+    hold[h0:h1] = np.linspace(1, 10 ** (-5 / 20), h1 - h0)
+    hold[h1:] = 10 ** (-5 / 20)
+    bed *= hold[:, None]
+    # the fade reaches silence on the film's last frame (it used to run 0.5 s past the end)
+    fo_start, fo_end = int((P['total'] - 2.5) * SR), int(P['total'] * SR)
+    if fo_end - fo_start > 0:
+        bed[fo_start:fo_end] *= np.linspace(1, 0, fo_end - fo_start)[:, None] ** 1.6
+        bed[fo_end:] = 0
     peak = np.max(np.abs(bed))
     if peak > 0.89:
         bed *= 0.89 / peak

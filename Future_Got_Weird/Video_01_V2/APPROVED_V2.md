@@ -12,4 +12,4 @@ SHA-256 `426e6906ae6e1a789d6b61bdada9c3ab6ae14271ddef8566749bdd4b04e91655`), and
 - **Earlier states:** the frozen production baseline is named in `BASELINE.md` (commit `29aa09f`, before S3–S10 were
   merged); the V1 / pass-2 film is in `../Video_01_Pass_2/`.
 
-The final polish and 4K delivery (V3) are commits after this one; see `V3_CHANGELOG.md` once it exists.
+The final polish and 4K delivery (V3) are commits after this one; see `V3_CHANGELOG.md` and `DELIVERABLES.md`.

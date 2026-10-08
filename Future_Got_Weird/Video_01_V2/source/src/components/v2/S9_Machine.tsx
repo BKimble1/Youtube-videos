@@ -249,8 +249,9 @@ export const Beam: React.FC<{hx: number; tx0: number; ty0: number; tx1: number; 
           <stop offset="1" stopColor={`rgb(${col})`} stopOpacity={0.3 * on} />
         </linearGradient>
       </defs>
-      <polygon points={`${hx - 18},${LENS_Y} ${hx + 18},${LENS_Y} ${tx1 + 8},${ty1 + 6} ${tx0 - 8},${ty1 + 6}`} fill={`url(#${id})`} />
-      <line x1={tx0 - 8} y1={ty1 + 6} x2={tx1 + 8} y2={ty1 + 6} stroke={`rgb(${col})`} strokeOpacity={0.8 * on} strokeWidth={4} strokeLinecap="round" />
+      {/* the base sits in the target line's own descender zone, clear of the next line of text */}
+      <polygon points={`${hx - 18},${LENS_Y} ${hx + 18},${LENS_Y} ${tx1 + 8},${ty1 + 1} ${tx0 - 8},${ty1 + 1}`} fill={`url(#${id})`} />
+      <line x1={tx0 - 8} y1={ty1 - 1} x2={tx1 + 8} y2={ty1 - 1} stroke={`rgb(${col})`} strokeOpacity={0.8 * on} strokeWidth={3} strokeLinecap="round" />
     </svg>
   );
 };
@@ -379,8 +380,8 @@ export const VerdictWindow: React.FC<{cx: number; y: number; w: number; h: numbe
 
 /** A painted outline on a booth's back panel showing where a document stands (covered once the document is there). */
 export const SlotOutline: React.FC<{x0: number; y0: number; x1: number; y1: number; label: string}> = ({x0, y0, x1, y1, label}) => (
-  <div style={{...box(x0, y0, x1 - x0, y1 - y0), border: `4px dashed rgba(111,133,144,0.45)`, borderRadius: 12}}>
-    <div style={{position: 'absolute', left: 0, right: 0, top: 18, textAlign: 'center', fontFamily: F.display, fontWeight: 600, fontSize: 44, letterSpacing: '0.12em', color: 'rgba(111,133,144,0.5)', lineHeight: 1}}>{label}</div>
+  <div style={{...box(x0, y0, x1 - x0, y1 - y0), border: `4px dashed rgba(63,85,96,0.55)`, borderRadius: 12}}>
+    <div style={{position: 'absolute', left: 0, right: 0, top: 18, textAlign: 'center', fontFamily: F.display, fontWeight: 800, fontSize: 44, letterSpacing: '0.12em', color: C.inkMuted, lineHeight: 1}}>{label}</div>
   </div>
 );
 

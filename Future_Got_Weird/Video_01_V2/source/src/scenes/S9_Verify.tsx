@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill} from 'remotion';
+import {AbsoluteFill, Easing} from 'remotion';
 import {Camera, Cam, Layer, worldToScreen} from '../lib/camera';
 import {useG} from '../lib/SceneFrame';
 import {at, scene, segEnd} from '../lib/timeline';
@@ -239,17 +239,18 @@ const SHOTS = {
   g2r: {cx: RX2, cy: 667, zoom: 3.3},
   g2m: {cx: (B2.x0 + B2.x1) / 2, cy: 790, zoom: 1.14},
 };
+const SINE = Easing.bezier(0.37, 0, 0.63, 1); // a gentler peak speed for the longer moves (no whip pans)
 const camAt = (g: number): Cam => {
   const c = camPath(g, SHOTS.m29a, [
     {at: START, dur: PULL - START, to: SHOTS.m29b, ease: E.inOut}, // a slow push while the checker gets ready
     {at: POWER + 12, dur: 26, to: SHOTS.w30}, // the power runs down the line: pull back to reveal both gates
     {at: POWER + 38, dur: 100, to: SHOTS.w30b}, // a slow drift while the questions drop
-    {at: TAKE_DOWN - 12, dur: 21, to: SHOTS.t31}, // back to the checker: "Take the ChatGPT slip" (settled as the slip rises)
+    {at: TAKE_DOWN - 12, dur: 21, to: SHOTS.t31, ease: SINE}, // back to the checker: "Take the ChatGPT slip" (settled as the slip rises)
     {at: CARRY1, dur: 26, to: SHOTS.g1m}, // follow the slip into gate ①
     {at: REC_LAND + 2, dur: 14, to: SHOTS.g1r}, // push into the record: name, university (settled before the first box)
-    {at: CARRY2, dur: 34, to: SHOTS.g2s}, // follow the belt to gate ②: the slip's claim
-    {at: NO + 13, dur: 22, to: SHOTS.g2r}, // across to the record: what it actually says
-    {at: Y2001 + 17, dur: 22, to: SHOTS.g2m}, // back to see both, and the verdict
+    {at: CARRY2, dur: 34, to: SHOTS.g2s, ease: SINE}, // follow the belt to gate ②: the slip's claim
+    {at: NO + 13, dur: 22, to: SHOTS.g2r, ease: SINE}, // across to the record: what it actually says
+    {at: Y2001 + 21, dur: 19, to: SHOTS.g2m, ease: SINE}, // back to see both, and the verdict (2001 settles first)
   ]);
   return {...c, zoom: c.zoom * camKick(g, [POWER, NO, WIN_CLAIM, HIT], 0.012)};
 };
@@ -461,20 +462,21 @@ export const S9Verify: React.FC = () => {
     cmu: tw(g, CMU_BOX, 12, E.inOut),
     sweep,
     y2001: tw(g, Y2001, 9, E.out),
-    dim: g < CARRY2 ? tw(g, NAME_BOX - 2, 8) * (1 - tw(g, YES + 6, 10)) : tw(g, SCAN_B + 2, 8) * (1 - tw(g, Y2001 + 13, 10)),
+    dim: g < CARRY2 ? tw(g, NAME_BOX - 2, 8) * (1 - tw(g, YES + 6, 10)) : tw(g, SCAN_B + 2, 8) * (1 - tw(g, Y2001 + 20, 10)),
     holes: (g < CARRY2
       ? [{k: 'name', a: 1}, {k: 'cmu', a: tw(g, CMU_BOX - 4, 6)}]
       : [{k: 'title1', a: 1}, {k: 'y2001', a: tw(g, Y2001 - 4, 6)}]) as {k: 'name' | 'cmu' | 'title1' | 'y2001'; a: number}[],
-    pulse: bell(g, YES, 18),
+    pulse: bell(g, YES, 18) + bell(g, WIN_SRC, 18), // the existence evidence glows again as 'Source exists' flips
   };
   const [rsx, rsy] = impact(g, REC_LAND, 0.05, 8);
 
   // the stamp: the viewer's hand, aimed at the slip's stamp point
-  const stampWorld = {x: SX2 - SLIP_W / 2 + SLIP_STAMP_AT.x, y: SLIP_TOP0 + SLIP_STAMP_AT.y};
+  const stampWorld = {x: SX2 - SLIP_W / 2 + (H910.stamp.x ?? SLIP_STAMP_AT.x), y: SLIP_TOP0 + SLIP_STAMP_AT.y};
   const stampPt = worldToScreen(cam, stampWorld.x, stampWorld.y, 1);
   const [ix, iy] = impact(g, HIT, 0.12, 8);
-  const inkPop = g >= HIT ? lerp(1.15, 1, tw(g, HIT, 6, E.out)) : 1;
-  const stamps: SlipStamp[] = g >= HIT ? [{...H910.stamp, scale: inkPop, sx: ix, sy: iy}] : [];
+  // the impression shows as the pad starts to lift (the pad covers it while it presses)
+  const inkPop = g >= HIT + 3 ? lerp(1.15, 1, tw(g, HIT + 3, 6, E.out)) : 1;
+  const stamps: SlipStamp[] = g >= HIT + 3 ? [{...H910.stamp, scale: inkPop, sx: ix, sy: iy}] : [];
 
   // lift into S10 (H910); the stamping hand is pulled away first
   const lifted = g >= LIFT;
@@ -534,7 +536,7 @@ export const S9Verify: React.FC = () => {
             {/* light from the scan heads */}
             <Beam id="s9b1" hx={head1X} tx0={b1.x0} ty0={b1.y0} tx1={b1.x1} ty1={b1.y1} on={head1On * (g >= READ1 + 1 ? 1 : 0)} />
             <Beam id="s9b2" hx={head2X} tx0={g < ARRIVE2 ? head2X - 90 : b2.x0} ty0={g < ARRIVE2 ? BELT_Y - 20 : b2.y0} tx1={g < ARRIVE2 ? head2X + 90 : b2.x1} ty1={g < ARRIVE2 ? BELT_Y - 6 : b2.y1} on={head2On} tone={coral} />
-            <Beam id="s9b3" hx={head3X} tx0={g < ARRIVE2 ? head3X - 110 : recTarget.x0} ty0={g < ARRIVE2 ? BELT_Y - 20 : recTarget.y0} tx1={g < ARRIVE2 ? head3X + 110 : recTarget.x1} ty1={g < ARRIVE2 ? BELT_Y - 6 : recTarget.y1} on={head3On * (g < ARRIVE2 ? 1 : 1 - inRecord)} />
+            <Beam id="s9b3" hx={head3X} tx0={g < ARRIVE2 ? head3X - 110 : recTarget.x0} ty0={g < ARRIVE2 ? BELT_Y - 20 : recTarget.y0} tx1={g < ARRIVE2 ? head3X + 110 : recTarget.x1} ty1={g < ARRIVE2 ? BELT_Y - 6 : recTarget.y1} on={head3On * (g < ARRIVE2 ? 1 : 1 - inRecord) * (1 - tw(g, WIN_CLAIM - 2, 6))} />
             {/* belt, front panel, power lamps; the console's name plate; the verdict windows */}
             <MachineFront
               pos={beltPos}
@@ -576,7 +578,7 @@ export const S9Verify: React.FC = () => {
           arcHeight={40}
           enter={ARM_IN}
           exit={END + 40}
-          targets={[{at: ARM_IN + 14, x: stampPt.x, y: stampPt.y + 0.45 * 37 * stampPt.scale}]} // the pad covers the print on contact; the lift reveals it
+          targets={[{at: ARM_IN + 14, x: stampPt.x, y: stampPt.y + 55 * stampPt.scale}]} // the pad body is centred on the print on contact; the lift reveals it
           hits={[HIT]}
           shapes={[{lift: 6, down: 3, hold: 3, up: 5, wind: 0.9}]}
         />

@@ -17,4 +17,4 @@ export const H56 = {x: 960, y: 540, r: 130};
 
 /** S9 → S10 (cut). S9's last frame: the ChatGPT slip (components/v2/AnswerSlip SlipOnScreen, i = 0) at this pose
  *  carrying a coral "Claim fails" stamp; S10 opens on exactly that and carries it back to the counter. */
-export const H910 = {cx: 960, cy: 500, scale: 1.5, rot: -2, stamp: {text: 'Claim fails', tone: 'coral' as const, size: 40, rotate: -9}};
+export const H910 = {cx: 960, cy: 500, scale: 1.5, rot: -2, stamp: {text: 'Claim fails', tone: 'coral' as const, size: 36, rotate: -9, x: 184}}; // V3: the print stays on the paper

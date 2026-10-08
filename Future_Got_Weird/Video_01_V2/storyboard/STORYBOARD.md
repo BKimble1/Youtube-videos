@@ -1,5 +1,9 @@
 # Storyboard: Video 01, pass 2 — "Why AI Is So Confidently Wrong"
 
+> **Historical (pass 2 / V1).** The V2/V3 film runs 4:48.23 (8,647 frames) with per-boundary cut / reveal / wipe /
+> iris transitions (`source/src/Main.tsx`). Each V2 scene file (`source/src/scenes/S*.tsx`) opens with its own
+> word-keyed beat list, which is the current storyboard.
+
 Runtime 4:40.8 (8,425 frames at 30 fps). Ten scenes, each a cutout-paper set with original characters and props.
 Every scene is driven by the measured word timings in `source/src/data/timeline.json`; the cue words quoted below
 are the ones the scene code uses, so a line edit that changes a cue word fails `tools/check_cues.py` instead of

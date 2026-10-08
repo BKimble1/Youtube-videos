@@ -659,7 +659,7 @@ const HabitCard1: React.FC<{g: number}> = ({g}) => {
 
 const HabitCard2: React.FC<{g: number}> = ({g}) => {
   const a = cardWordX(CARD_TEXT[2], 'actually');
-  const th = cardWordX(CARD_TEXT[2], 'this');
+  const th = cardWordX(CARD_TEXT[2], 'this?'); // the ring takes the question mark in, so it cuts neither 'y' nor '?'
   const aT = tw(g, ACT, 10, E.inOut);
   const rT = tw(g, THIS_T, 9, E.inOut);
   return (
@@ -670,7 +670,7 @@ const HabitCard2: React.FC<{g: number}> = ({g}) => {
         {aT > 0 && <div style={{position: 'absolute', left: a.x - OUTLINE - 4, top: CARD_H / 2 + 24, width: (a.w + 8) * aT, height: 8, borderRadius: 4, background: C.coral}} />}
         {rT > 0 && (
           <div style={{position: 'absolute', left: th.x - OUTLINE, top: CARD_H / 2 - 30, width: th.w, height: 60}}>
-            <RingMark t={rT} tone="coral" padX={16} padY={10} width={6} />
+            <RingMark t={rT} tone="coral" padX={8} padY={10} width={6} />
           </div>
         )}
       </CardFace>
@@ -865,9 +865,9 @@ const TAG_FONT = `800 ${TAG_PX}px "Nunito Variable"`;
 const TAG_TOP = 294;
 const CHIP_PX = 42;
 const CHIP_TOP = 390;
-const HON_PX = 32;
+const HON_PX = 36; // the film's pointer to its sources: readable on a phone, above the control-bar band
 const HON_X = 300;
-const HON_TOP = 952;
+const HON_TOP = 940;
 const HON_TEXT = 'Sources, excerpts and credits are in the description.';
 const chipW = (text: string) => textWidth(text, `800 ${CHIP_PX}px "Nunito Variable"`) + text.length * CHIP_PX * 0.02 + CHIP_PX * 1.6 + 6;
 const END_CHECKER = {x: 192, y: 1040, scale: 0.7};

@@ -8,7 +8,7 @@ decisions for every later episode. Change them deliberately, not per video.
 
 A lively, carefully sourced, fully animated briefing on what AI can now do, what actually changed, and what the
 claims leave out. Two releases a week when the stories support it: one on the week's strongest verified change,
-one on a surprising capability or an enduring mechanism. Episodes run about 5–8 minutes; Video 01 runs 4:41.
+one on a surprising capability or an enduring mechanism. Episodes run about 5–8 minutes; Video 01 runs 4:48 (V3 final).
 
 The audience follows technology but does not want a lecture or a stream of launch announcements. Wonder is
 earned by evidence. Humour comes from visual incongruity, dry observations and callbacks, never from sneering.
@@ -46,15 +46,15 @@ and reproducible source. Reuse production components; give each story its own sc
 | Stage | Tooling (as of Video 01 pass 2) |
 |---|---|
 | Script | `script/narration_segments.json` is the single source of narration text; blocks group segments for performance |
-| Narration | ElevenLabs connector (Flows), Eleven v4, voice **Marcus K** (`3H55HGnNE1XjYxigHSAS`); forced alignment with Scribe on the pinned generation (0 credits in this workspace); takes cut into segments by `tools/el_assemble.py` |
+| Narration | ElevenLabs connector (Flows), Eleven v4. Pass 2 used voice **Marcus K** (`3H55HGnNE1XjYxigHSAS`); Video 01 V2/V3 uses the voice recorded as "Test Voice" (`kk5XaSLo2XAw0sKM98zU`) by the owner's decision; forced alignment with Scribe on the pinned generation (0 credits in this workspace); takes cut into segments by `tools/el_assemble.py` |
 | Timing | `tools/build_timeline.py` writes `source/src/data/timeline.json`: scene, segment and word frames; every animation cue is `at('segment', 'word')` |
 | Animation | Remotion 4 / React / TypeScript; original SVG cutout cast and prop library (`source/src/components`) |
 | Sound | Six ElevenLabs effects from pass 1 plus new prop sounds (stamp, token click, drawer, fanfare, cart, paper slide); original FluidSynth score; `tools/mix.py` to about −16 LUFS / −1.3 dBTP |
 | Render | 1080p30 H.264 (CRF 16, x264 slow), BT.709, AAC 320k, fast start; optional native 4K at `--scale=2` |
-| QA | Check frames at cues, determinism repeats, scene-boundary bursts, motion clips, phone-size crops, loudness and intelligibility metrics; the human watch-through list in `qa/QA_REPORT.md` |
+| QA | Check frames at cues, determinism repeats, scene-boundary bursts, motion clips, phone-size crops, loudness and intelligibility metrics; the human watch-through list in each episode's QA notes (Video 01: `Video_01_V2/qa/V3_QA_NOTES.md`) |
 
 The restricted ElevenLabs connector has no music, image or video generation. Music stays original (FluidSynth)
-unless the full connector is added. Voice stays Marcus K unless an audition exposes a limitation.
+unless the full connector is added. Video 01 V2/V3 uses "Test Voice" (owner's decision); keep one voice per episode.
 
 ## Voice and tone of the narration
 

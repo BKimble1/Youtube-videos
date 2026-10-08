@@ -124,7 +124,7 @@
 "f": 177,
 "t": 5.9,
 "kind": "bell_ding",
-"gain": 0,
+"gain": -4,
 "note": ""
 },
 {
@@ -1788,7 +1788,7 @@
 "f": 2456,
 "t": 81.867,
 "kind": "machine_clunk",
-"gain": 0,
+"gain": -4,
 "note": ""
 },
 {
@@ -2345,16 +2345,16 @@
 },
 {
 "scene": "S4",
-"f": 3414,
-"t": 113.8,
+"f": 3422,
+"t": 114.067,
 "kind": "card_flick",
 "gain": 0,
 "note": "card flips into the polished slip"
 },
 {
 "scene": "S4",
-"f": 3421,
-"t": 114.033,
+"f": 3429,
+"t": 114.3,
 "kind": "glint",
 "gain": -8,
 "note": ""
@@ -2625,11 +2625,11 @@
 },
 {
 "scene": "S5",
-"f": 4040,
-"t": 134.667,
+"f": 4045,
+"t": 134.833,
 "kind": "indicator_yes",
-"gain": -6,
-"note": "university right"
+"gain": -8,
+"note": "university right (with the chip)"
 },
 {
 "scene": "S5",
@@ -3057,27 +3057,19 @@
 },
 {
 "scene": "S6",
-"f": 4876,
-"t": 162.533,
+"f": 4882,
+"t": 162.733,
 "kind": "hanger_click",
 "gain": -9,
 "note": "the board flies out"
 },
 {
 "scene": "S6",
-"f": 4869,
-"t": 162.3,
+"f": 4873,
+"t": 162.433,
 "kind": "conveyor_run",
 "gain": -12,
 "note": "podium casters"
-},
-{
-"scene": "S6",
-"f": 4887,
-"t": 162.9,
-"kind": "machine_clunk",
-"gain": -4,
-"note": "honest podium stops"
 },
 {
 "scene": "S6",
@@ -3085,12 +3077,20 @@
 "t": 163.033,
 "kind": "machine_clunk",
 "gain": -4,
-"note": "guesser podium stops"
+"note": "honest podium stops"
 },
 {
 "scene": "S6",
 "f": 4895,
 "t": 163.167,
+"kind": "machine_clunk",
+"gain": -4,
+"note": "guesser podium stops"
+},
+{
+"scene": "S6",
+"f": 4899,
+"t": 163.3,
 "kind": "machine_clunk",
 "gain": -14,
 "note": "spotlights swing on"
@@ -3193,8 +3193,8 @@
 },
 {
 "scene": "S6",
-"f": 4905,
-"t": 163.5,
+"f": 4909,
+"t": 163.633,
 "kind": "pop_tick",
 "gain": -8,
 "note": "finger-gun"
@@ -3540,7 +3540,7 @@
 "f": 5190,
 "t": 173.0,
 "kind": "buzzer_wrong",
-"gain": -1,
+"gain": -5,
 "note": "Q7 wrong"
 },
 {
@@ -3572,7 +3572,7 @@
 "f": 5201,
 "t": 173.367,
 "kind": "buzzer_wrong",
-"gain": -1,
+"gain": -5,
 "note": "Q8 wrong"
 },
 {
@@ -3604,7 +3604,7 @@
 "f": 5212,
 "t": 173.733,
 "kind": "buzzer_wrong",
-"gain": -1,
+"gain": -5,
 "note": "Q9 wrong"
 },
 {
@@ -3644,7 +3644,7 @@
 "f": 5231,
 "t": 174.367,
 "kind": "ding_right",
-"gain": 2,
+"gain": -2,
 "note": "Q10 lands: the lucky one"
 },
 {
@@ -4780,7 +4780,7 @@
 "f": 6515,
 "t": 217.167,
 "kind": "machine_clunk",
-"gain": 0,
+"gain": -4,
 "note": "cart bumps the dock"
 },
 {
@@ -5156,7 +5156,7 @@
 "f": 6804,
 "t": 226.8,
 "kind": "stamp_heavy",
-"gain": 2,
+"gain": 0,
 "note": "NO GUARANTEE"
 },
 {
@@ -5524,7 +5524,7 @@
 "f": 7522,
 "t": 250.733,
 "kind": "claim_fails",
-"gain": 0,
+"gain": -5,
 "note": ""
 },
 {
@@ -5756,7 +5756,7 @@
 "f": 7920,
 "t": 264.0,
 "kind": "paper_slide",
-"gain": -4,
+"gain": -8,
 "note": "A pushes his slip forward: an answer"
 },
 {
@@ -5956,7 +5956,7 @@
 "f": 8221,
 "t": 274.033,
 "kind": "stamp_heavy",
-"gain": 0,
+"gain": -3,
 "note": "SOURCE?"
 },
 {
@@ -5964,7 +5964,7 @@
 "f": 8221,
 "t": 274.033,
 "kind": "gavel",
-"gain": -6,
+"gain": -9,
 "note": "the verdict (layered under the stamp)"
 },
 {

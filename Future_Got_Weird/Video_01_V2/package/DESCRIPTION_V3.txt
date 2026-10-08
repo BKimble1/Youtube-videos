@@ -1,0 +1,41 @@
+Three popular AI models were asked for the title of one researcher's PhD thesis. All three answered with a title, a year and a university. None of them got the title or the year right. So why does AI sound so sure when it's wrong?
+
+This episode takes one of those answers apart: how a language model writes one token at a time, why the most likely next words are not the same as the true ones, how the way AI gets graded can reward a confident guess over "I don't know", and the two questions that help catch a made-up answer.
+
+Chapters
+0:00 Three AI models, one question
+0:27 The short version
+0:44 One token at a time
+1:26 What the model learned from
+2:03 The actual record
+2:26 Why guessing wins (an example quiz)
+3:15 Nine of ten benchmarks
+3:34 What helps, and what it doesn't guarantee
+3:47 Two questions to check
+4:13 Sounding right vs. being right
+
+Sources
+• Original paper. This is the source of the dissertation example and the benchmark table: Adam Tauman Kalai, Ofir Nachum, Santosh S. Vempala & Edwin Zhang, "Why Language Models Hallucinate," arXiv:2509.04664v1, 4 September 2025 (CC BY 4.0). https://arxiv.org/html/2509.04664v1
+ – The three answers: Section 1, Table 1 and footnote 3. The models were GPT-4o (chatgpt.com), DeepSeek-R1 (DeepSeek app) and Llama-4-Scout-17B-16E-Instruct (huggingface.co). They were accessed on 9 May 2025, and none of them searched the web.
+ – The grading argument: Sections 1.2 and 4.1. The −1 rule in our quiz matches the paper's "t = 0.5 (penalty 1)" example in Section 4.2. The 10-question quiz itself is our illustration.
+ – The benchmark check: Table 2 and Appendix F. The authors looked at ten benchmarks from leaderboards they examined in June 2025. Nine use strict right/wrong grading and give no credit for "I don't know". WildBench gives partial credit.
+• Later publication by the same authors: A. T. Kalai, O. Nachum, S. S. Vempala & E. Zhang, "Evaluating large language models for accuracy incentivizes hallucinations," Nature (2026). https://www.nature.com/articles/s41586-026-10549-w (The 2025 example and Table 2 shown in this video are quoted from the preprint above.)
+• The actual thesis: Adam Kalai, "Probabilistic and On-line Methods in Machine Learning," PhD thesis, School of Computer Science, Carnegie Mellon University, technical report CMU-CS-01-132, May 16, 2001. https://www.csd.cmu.edu/sites/default/files/phd-thesis/CMU-CS-01-132.pdf
+• Token split: OpenAI's tiktoken library maps GPT-4o to its o200k_base encoding. We applied that encoding (js-tiktoken 1.0.21) to the published ChatGPT excerpt. https://github.com/openai/tiktoken
+• Background for "what helps":
+ – Lewis et al. (2020), "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks": https://arxiv.org/abs/2005.11401
+ – Holtzman et al. (2020), "The Curious Case of Neural Text Degeneration," Section 3.3 (temperature): https://arxiv.org/abs/1904.09751
+ – Renze & Guven (2024), "The Effect of Sampling Temperature on Problem Solving in Large Language Models": https://arxiv.org/abs/2402.05201
+• Background for confident wording vs actual certainty: Yona, Aharoni & Geva (2024), "Can Large Language Models Faithfully Express Their Intrinsic Uncertainty in Words?": https://arxiv.org/abs/2405.16908
+
+Notes: the token split is real. The next-token percentages, the quiz scores, the leaderboard and the low-randomness "re-run" are illustrations, not measured model data. The three answers come from three specific models tested once on 9 May 2025 without web search. They are not a failure rate for those models or for today's chatbots. "Nine of ten" refers only to the ten benchmarks the authors sampled in mid-2025. A confident tone ("is entitled", no "I think") is wording. It is not a measurement of how likely the answer is to be right.
+
+Credits
+• Paper header, answer excerpts and Table 2: Kalai, Nachum, Vempala & Zhang (2025), arXiv:2509.04664, CC BY 4.0. Thesis title page: Kalai (2001), shown for verification.
+• Narration: AI-generated voice made with ElevenLabs (Eleven v4).
+• Sound effects: generated for this video with ElevenLabs, plus a synthesized tick.
+• Music: original score generated for this video, rendered with the MuseScore General SoundFont (MIT licence).
+• Type: Fredoka, Nunito, Source Serif 4 and JetBrains Mono (SIL Open Font License).
+• Characters, props and sets: original cutout-style illustrations made for this channel.
+
+Future Got Weird: AI moves fast. We make it make sense. New episodes twice a week.

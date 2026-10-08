@@ -16,3 +16,7 @@ cd ../fgw-v2-baseline/Future_Got_Weird/Video_01_V2/backup/v2_baseline && sh reco
 
 What the baseline contains, what is unfinished, and how to rebuild it: `V2_STATUS.md` (in that commit).
 The media restore is described in `backup/v2_baseline/RESTORE.md`.
+
+**This is not the approved film.** The baseline predates the merge of the rebuilt scenes S3–S10. The film the owner
+approved is commit `5bd35c1` (`APPROVED_V2.md`); the final polished film and 4K master are V3 (`V3_CHANGELOG.md`,
+`DELIVERABLES.md`).
