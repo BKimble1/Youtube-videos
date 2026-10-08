@@ -438,8 +438,8 @@
   {
    "id": "s39",
    "scene": "S7",
-   "text": "But the authors do report tracking a person in ordinary clothes, with the sensor capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.",
-   "tts": "But the authors do report tracking a person in ordinary clothes, with the sensor capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.",
+   "text": "But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.",
+   "tts": "But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.",
    "pause_after_ms": 900,
    "claims": [
     "C37",
@@ -529,11 +529,11 @@
    "scene": "S9",
    "text": "To really hide, he'd have to block the bounces too.",
    "tts": "To really hide, he'd have to block the bounces too.",
-   "pause_after_ms": 4500,
+   "pause_after_ms": 5300,
    "claims": [
     "C04"
    ],
-   "direction": "J4: he takes the hint; a long silent beat for the visual"
+   "direction": "J4: he takes the hint; a long silent beat for the visual (lengthened 0.8 s in review D43 so the busted reaction settles before s48)"
   },
   {
    "id": "s48",

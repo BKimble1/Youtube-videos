@@ -138,7 +138,7 @@ ROWS = [
      f"{ARX}; {GH} reconstruction.py", "manuscript E1/E2 (gantry, known pose); ams raster", "2026", "not unrestricted handheld scanning", "reported_by_authors", "search_summary; code_or_data", "supported", "S6"),
     ("C36", "The open kit needs a flat wall to calibrate against and a few seconds of empty-room background first.",
      f"{GH} README sections 5-6; calibrate.py; track.py", "~2 s background (background_seconds=2.0)", GHC, "ST demo", "experimentally_supported", "direct", "high", "S6"),
-    ("C37", "The authors report tracking a hidden person in ordinary clothes (no special retroreflective materials), with the sensor capturing 30 frames a second.",
+    ("C37", "In a separate test (not the open-kit clip), the authors report tracking a hidden person in ordinary clothes (no special retroreflective materials), capturing 30 frames a second.",
      NAT, "Supplementary Video 1 caption ('Real-time diffuse tracking ... without any special retroreflective materials at 30 Hz capture')", "2026",
      "device, distances, accuracy and processing latency unresolved; capture rate is not latency", "reported_by_authors", "search_summary (4+ searches)", "caption high; video not viewed", "S6"),
     ("C38", "The code is public; as of 8 October 2026 we found no independent group reporting a reproduction with its own hardware.",

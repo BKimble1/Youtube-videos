@@ -25,7 +25,7 @@ audio/         narration/v2 (ElevenLabs Test Voice takes, forced alignments, eva
 source/        Remotion 4 project (src/scenes S1-S9, src/components/v02 kit, src/lib room projection, optics, motion,
                timeline; src/data timeline.json, layout.json, evidence/*.json, inserts.json)
 runway/        RUNWAY_PLAN.md, RUNWAY_LOG.md, runway_log.json, per-shot inputs and accepted clips
-thumbnails/    thumb_A (recommended), B, C (code-drawn; source in source/src/Thumbnails.tsx)
+thumbnails/    thumb_A, B, C (code-drawn; source in source/src/Thumbnails.tsx); the recommended one is named in package/UPLOAD_PACKAGE.md
 package/       UPLOAD_PACKAGE.md, description.txt, chapters.txt, titles.txt (from tools/make_package.py)
 qa/            scene_review/ (final contact sheets and director reports per scene), cuts/ (hand-off sheets),
                PATH_LEGIBILITY_PLAN.md, render review and defect log

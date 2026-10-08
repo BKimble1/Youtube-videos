@@ -228,11 +228,11 @@
    "segments": [
     "s39"
    ],
-   "prompt": "But the authors do report tracking a person in ordinary clothes, with the sensor capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.",
+   "prompt": "But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.",
    "words_per_segment": [
     36
    ],
-   "chars": 210
+   "chars": 211
   },
   {
    "id": "x18",

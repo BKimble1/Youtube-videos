@@ -1,6 +1,6 @@
 # How Cameras See Around Corners — spoken script (v2 (2026-10-08, after four-lens review))
 
-1111 spoken words in 48 lines, 21 generation sections (6362 prompt characters). Claim IDs refer to `research/claims.csv`.
+1111 spoken words in 48 lines, 21 generation sections (6363 prompt characters). Claim IDs refer to `research/claims.csv`.
 
 
 ## S1
@@ -99,7 +99,7 @@
 
 **s38** Many of these tests had help: safety-vest style reflective material on the target, which sends far more light straight back. Our clip's files don't say if the walker wore any. And the kit needs a flat wall and a few seconds of empty room first.  `C34, C36, C02`
 
-**s39** But the authors do report tracking a person in ordinary clothes, with the sensor capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.  `C37, C38`
+**s39** But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.  `C37, C38`
 
 
 ## S8

@@ -8,14 +8,14 @@ Publishing is the owner's action.
 - Alternatives: How a Blank Wall Reveals Hidden Objects · The Light That Lets Cameras See Around Corners
 
 ## Thumbnail
-See `thumbnails/` (text: SEES ME?).
+`thumbnails/thumb_C_1280.jpg` (1280x720, text: SEES ME?). Alternatives and sources: `thumbnails/`.
 
 ## Description (paste as is)
 
 ```
 A plain wall can give away someone hiding behind a partition. Light from a small time-of-flight sensor bounces off the wall, reaches the hidden person and returns a few billionths of a second late, and that delay is a clue to where they are. We explain how the timing becomes a map, what earlier laboratory systems achieved, and what a study published in 2026 managed with the kind of small sensors found in consumer gadgets, including what it still can't do.
 
-The real measurements shown are the researchers' own released data, plotted by us and processed with their published code. Room diagrams, numbers in them and the history scenes are illustrations.
+The real measurements shown are the researchers' own released data, plotted by us. The tracked positions and the U-shaped reconstruction were computed with their published code, run by us; the echo plot shows raw sensor counts. Room diagrams, numbers in them and the history scenes are illustrations.
 
 CHAPTERS
 0:00 The impossible view
@@ -40,8 +40,9 @@ History and context
 - Callenberg, C., Shi, Z., Heide, F. & Hullin, M. B. "Low-cost SPAD sensing for non-line-of-sight tracking, material classification and depth imaging." ACM Transactions on Graphics 40(4), 61 (2021).
 
 NOTES
-- The tracking clip comes from the authors' open evaluation kit with the sensor held still; the released files do not record whether the walker wore reflective material. 30 frames per second is the sensor's capture rate as the authors report it, not the processing time.
-- The U-shaped reconstruction used a sensor moved through known positions, with the object held still.
+- Tracking plot (opening and "What the real data shows"): the authors' released measurements from a low-cost STMicroelectronics VL53L8-series evaluation-kit sensor (16 zones), held still and aimed at a wall while a hidden person moved behind a screen. Position estimates were computed with the authors' published code and settings, run and plotted by us, and mirrored to match our room. The data were processed with the code's retroreflective-target setting; what the person wore is not documented. Capture date and frame rate are not stated in the release. These data come from the evaluation kit, not from the smartphone-grade device used for the paper's main results, whose data were not released.
+- The person-in-ordinary-clothes result at 30 frames per second is what the authors report for a separate test, not this kit clip. 30 frames per second is the capture rate, not the processing time.
+- The U-shaped reconstruction used a different sensor (3x3 zones) moved through 36 known positions, with the object held still.
 - The authors call the work an early-stage research prototype. No phone app does this today, and no study has shown it prevents collisions.
 - "Night mode" is our analogy for the authors' burst-photography idea.
 
@@ -50,8 +51,9 @@ Data: Somasundaram et al. (2026), released at github.com/sidsoma/consumer-nlos. 
 ```
 
 ## Owner checklist before upload
-- Upload `Future_Got_Weird_Video_02_v1_UPLOAD_1080p.mp4` or the 4K master (`..._MASTER_4K.mp4`), not the review preview.
-- Captions: upload `Future_Got_Weird_Video_02_v1.srt` (English).
+- Upload `exports/Future_Got_Weird_Video_02_v1_MASTER_4K.mp4` (preferred) or `exports/Future_Got_Weird_Video_02_v1_UPLOAD_1080p.mp4`, not the review preview (`..._PREVIEW_720p.mp4`).
+- Captions: upload `package/Future_Got_Weird_Video_02_v1.srt` (English; built from the final narration timing).
+- Thumbnail: upload `thumbnails/thumb_C_1280.jpg`.
 - YouTube's altered or synthetic content setting: the film is animated and depicts no real person or real event
   realistically; the narration is a designed synthetic voice. Decide whether to disclose; the description already says so.
 - Audience: not made for kids (general audience explainer).
