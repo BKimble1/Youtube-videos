@@ -49,3 +49,8 @@ work/
 backup/**/*.tar
 backup/**/*.tar.tmp
 work_snapshot/
+
+# V3 inspection: dense frames and extracted stills are regenerated from the render (tools/qa_dense.py)
+qa/v3_inspect/**/*.jpg
+qa/v3_inspect/**/*.png
+qa/v3_inspect/**/*.mp4

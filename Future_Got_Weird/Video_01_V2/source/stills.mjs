@@ -31,3 +31,7 @@ for (const spec of specs) {
   await renderStill({composition, serveUrl, output, frame, inputProps: {audio: 'none'}, browserExecutable, scale: Number(process.env.SCALE ?? 0.5)});
   console.log('wrote', output);
 }
+// remove this run's webpack bundle (each one is ~145 MB in the system temp dir)
+try {
+  if (serveUrl.startsWith('/') && fs.existsSync(serveUrl)) fs.rmSync(serveUrl, {recursive: true, force: true});
+} catch {}
