@@ -1,0 +1,71 @@
+{
+ "file": "exports/Future_Got_Weird_Video_01_V3_1080p_REVIEW.mp4",
+ "format": {
+  "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+  "duration": "288.235000",
+  "size": "121961898",
+  "bit_rate": "3385068"
+ },
+ "format_tags": {
+  "major_brand": "isom",
+  "minor_version": "512",
+  "compatible_brands": "isomiso2avc1mp41",
+  "encoder": "Lavf61.7.100",
+  "comment": "Made with Remotion 4.0.533"
+ },
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "level": 40,
+  "width": 1920,
+  "height": 1080,
+  "pix_fmt": "yuv420p",
+  "color_range": "tv",
+  "color_space": "bt709",
+  "color_transfer": "bt709",
+  "color_primaries": "bt709",
+  "field_order": "progressive",
+  "r_frame_rate": "30/1",
+  "avg_frame_rate": "30/1",
+  "nb_frames": "8647",
+  "duration": "288.233333",
+  "bit_rate": "3059104"
+ },
+ "video_tags": {
+  "language": "und",
+  "handler_name": "VideoHandler",
+  "vendor_id": "[0][0][0][0]"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "profile": "LC",
+  "sample_rate": "48000",
+  "channels": 2,
+  "channel_layout": "stereo",
+  "duration": "288.235000",
+  "bit_rate": "317374"
+ },
+ "audio_tags": {
+  "language": "und",
+  "handler_name": "SoundHandler",
+  "vendor_id": "[0][0][0][0]"
+ },
+ "faststart_moov_before_mdat": true,
+ "full_decode": {
+  "returncode": 0,
+  "error_lines": []
+ },
+ "decoded_video_frames": 8647,
+ "loudness": {
+  "integrated_lufs": -16.0,
+  "lra_lu": 2.5,
+  "true_peak_dbfs": -1.3
+ },
+ "sync_vs_mix": {
+  "lag_samples": 0,
+  "lag_ms": 0.0,
+  "correlation": 0.9999,
+  "encoded_audio_s": 288.235,
+  "mix_s": 288.23
+ }
+}

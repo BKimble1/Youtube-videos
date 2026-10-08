@@ -54,3 +54,7 @@ work_snapshot/
 qa/v3_inspect/**/*.jpg
 qa/v3_inspect/**/*.png
 qa/v3_inspect/**/*.mp4
+
+# V3 final dense review sheets (regenerable with tools/qa_dense.py)
+qa/v3_final_dense/*.jpg
+qa/v3_final_dense/*.png

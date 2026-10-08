@@ -1,0 +1,85 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S1": {
+   "seconds": 27.2,
+   "mean_energy": 4.791,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "S2": {
+   "seconds": 16.7,
+   "mean_energy": 2.016,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "S3": {
+   "seconds": 42.5,
+   "mean_energy": 2.943,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "S4": {
+   "seconds": 36.8,
+   "mean_energy": 5.882,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "S5": {
+   "seconds": 23.3,
+   "mean_energy": 3.33,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "S6": {
+   "seconds": 48.3,
+   "mean_energy": 2.113,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "S7": {
+   "seconds": 19.0,
+   "mean_energy": 3.258,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "S8": {
+   "seconds": 13.8,
+   "mean_energy": 8.042,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "S9": {
+   "seconds": 25.6,
+   "mean_energy": 5.448,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "S10": {
+   "seconds": 35.0,
+   "mean_energy": 2.025,
+   "still_seconds": 0.8,
+   "still_share": 0.023,
+   "longest_still_s": 0.8
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S10",
+   "from": 8438,
+   "to": 8461,
+   "seconds": 0.8,
+   "t": "4:41.3",
+   "spoken": "twice a week, if you'd like to subscribe."
+  }
+ ]
+}
