@@ -497,3 +497,66 @@ export const ReturnTrail: React.FC<{pts: Pt[]; lane: number; width?: number; das
 };
 
 export {lerp, unit};
+
+/* ------------------------------------------------------------------ big readout (thumbnail C) */
+
+/**
+ * The kit sensor seen from behind at close range (thumbnail C): the same teal box with its top and side faces, the
+ * two lens rims peeking over the top (coral emitter, dark detector), the coral band, the status LED and the grip with
+ * its coral trigger, drawn with a screen-px ink line. The readout is enlarged a little for the close-up. `children`
+ * draw inside the screen in screen-local px (0..sw x 0..sh, see `bigSensorScreen`).
+ */
+export const bigSensorScreen = (w: number) => {
+  const h = w * 0.64;
+  return {x: w * 0.065, y: h * 0.1, w: w * 0.72, h: h * 0.66};
+};
+
+export const BigSensor: React.FC<{x: number; y: number; w: number; outline?: number; children?: React.ReactNode; led?: string}> = ({x, y, w, outline = 6, children, led = C.saffron}) => {
+  const h = w * 0.64;
+  const x0 = x - w / 2;
+  const y0 = y - h / 2;
+  const dx = w * 0.11;
+  const dy = -w * 0.12;
+  const ink = {stroke: INK, strokeWidth: outline, strokeLinejoin: 'round' as const};
+  const s = bigSensorScreen(w);
+  const r = h * 0.16;
+  const gx = x0 + w * 0.535;
+  const gw = w * 0.28;
+  const id = `bs${Math.round(x)}${Math.round(y)}`;
+  return (
+    <g>
+      {/* grip (into the tripod head below) */}
+      <rect x={gx - gw / 2} y={y0 + h - r} width={gw} height={h * 0.95} rx={gw * 0.3} fill={C.tealDeep} {...ink} />
+      <rect x={gx - gw * 0.22} y={y0 + h + h * 0.12} width={gw * 0.44} height={h * 0.2} rx={gw * 0.12} fill={C.coral} {...ink} />
+      {/* lens rims of the working face (it looks away from us, at the wall) */}
+      <ellipse cx={x0 + w * 0.28 + dx} cy={y0 + dy - 2} rx={w * 0.15} ry={w * 0.085} fill={C.coral} {...ink} />
+      <ellipse cx={x0 + w * 0.65 + dx} cy={y0 + dy - 2} rx={w * 0.105} ry={w * 0.07} fill={C.inkSoft} {...ink} />
+      {/* side, top, front */}
+      <path d={`M ${x0 + w - 6} ${y0 + 4} L ${x0 + w + dx} ${y0 + dy} L ${x0 + w + dx} ${y0 + h + dy - 4} L ${x0 + w - 6} ${y0 + h - 4} Z`} fill={C.tealDeep} {...ink} />
+      <path d={`M ${x0 + 4} ${y0 + 6} L ${x0 + 4 + dx} ${y0 + dy} L ${x0 + w + dx} ${y0 + dy} L ${x0 + w - 4} ${y0 + 6} Z`} fill="#7FCFC9" {...ink} />
+      <rect x={x0} y={y0} width={w} height={h} rx={r} fill={C.teal} {...ink} />
+      <defs>
+        <clipPath id={`${id}face`}>
+          <rect x={x0} y={y0} width={w} height={h} rx={r} />
+        </clipPath>
+        <clipPath id={`${id}scr`}>
+          <rect x={x0 + s.x} y={y0 + s.y} width={s.w} height={s.h} rx={s.h * 0.08} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${id}face)`}>
+        <rect x={x0 - 4} y={y0 + h - h * 0.15} width={w + 8} height={h * 0.2} fill={C.coral} />
+        <line x1={x0} y1={y0 + h - h * 0.15} x2={x0 + w} y2={y0 + h - h * 0.15} stroke={INK} strokeWidth={outline * 0.8} />
+      </g>
+      <rect x={x0} y={y0} width={w} height={h} rx={r} fill="none" {...ink} />
+      {/* readout */}
+      <rect x={x0 + s.x} y={y0 + s.y} width={s.w} height={s.h} rx={s.h * 0.08} fill={C.cream} {...ink} />
+      <g clipPath={`url(#${id}scr)`}>
+        <g transform={`translate(${x0 + s.x} ${y0 + s.y})`}>{children}</g>
+      </g>
+      {/* LED and button */}
+      <circle cx={x0 + w * 0.89} cy={y0 + h * 0.24} r={w * 0.045} fill={led} {...ink} />
+      <circle cx={x0 + w * 0.89 - w * 0.014} cy={y0 + h * 0.24 - w * 0.014} r={w * 0.012} fill={C.cream} />
+      <rect x={x0 + w * 0.845} y={y0 + h * 0.42} width={w * 0.09} height={h * 0.1} rx={h * 0.03} fill={C.tealLight} {...ink} strokeWidth={outline * 0.8} />
+    </g>
+  );
+};
