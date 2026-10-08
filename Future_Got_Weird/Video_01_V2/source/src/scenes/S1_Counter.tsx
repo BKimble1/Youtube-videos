@@ -485,7 +485,7 @@ const clerkPose = (i: number, g: number, slip: SlipPose): {pose: Pose; life: num
     const off = tw(g, HITS[i] - 8, 6);
     armR = mixArm(armR, restR, off);
     // A: a small proud hand-to-chest just before the lift, so nothing of the clerk rests on the slip when it leaves
-    if (i === 0) armR = mixArm(armR, reach({...ch, bob: p.bob}, 1, ch.x + 34, CLERK_Y - 0.98 * 290), tw(g, S1_END_LIFT - 8, 6));
+    if (i === 0) armR = mixArm(armR, reach({...ch, bob: p.bob}, 1, ch.x + 34, CLERK_Y - 0.98 * 290, -1), tw(g, S1_END_LIFT - 8, 6)); // elbow down, clear of the face
   }
   p = {...p, armR};
   const life = g >= h.rise - 6 && g < HITS[i] - 2 ? 0.25 : 1;
