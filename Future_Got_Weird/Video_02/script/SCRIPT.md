@@ -1,6 +1,6 @@
 # How Cameras See Around Corners — spoken script (v2 (2026-10-08, after four-lens review))
 
-1102 spoken words in 48 lines, 21 generation sections (6304 prompt characters). Claim IDs refer to `research/claims.csv`.
+1111 spoken words in 48 lines, 21 generation sections (6362 prompt characters). Claim IDs refer to `research/claims.csv`.
 
 
 ## S1
@@ -73,7 +73,7 @@
 
 **s28** By 2021, researchers in Wisconsin and Milan had sped up measuring too: live video of ordinary objects, five frames a second, with a powerful laser and custom detectors.  `C24`
 
-**s29** Impressive. But all of it ran on research equipment.  `C25`
+**s29** Impressive. But those ran on research equipment. One team had even tracked hidden objects with a cheap sensor.  `C25, C45`
 
 
 ## S6

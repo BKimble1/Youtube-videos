@@ -161,13 +161,13 @@
     "s28",
     "s29"
    ],
-   "prompt": "In a 2018 study, Stanford researchers swept one spot across the wall, like our simplified picture. The math got simpler: for a reflective exit sign, rebuilding the scene took about a second on a laptop. [dryly] Measuring still took almost seven minutes.\n\nBy 2021, researchers in Wisconsin and Milan had sped up measuring too: live video of ordinary objects, five frames a second, with a powerful laser and custom detectors.\n\nImpressive. But all of it ran on research equipment.",
+   "prompt": "In a 2018 study, Stanford researchers swept one spot across the wall, like our simplified picture. The math got simpler: for a reflective exit sign, rebuilding the scene took about a second on a laptop. [dryly] Measuring still took almost seven minutes.\n\nBy 2021, researchers in Wisconsin and Milan had sped up measuring too: live video of ordinary objects, five frames a second, with a powerful laser and custom detectors.\n\nImpressive. But those ran on research equipment. One team had even tracked hidden objects with a cheap sensor.",
    "words_per_segment": [
     41,
     28,
-    9
+    18
    ],
-   "chars": 477
+   "chars": 535
   },
   {
    "id": "x13",

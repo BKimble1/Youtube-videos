@@ -69,7 +69,7 @@ she simply leans round.
 | S5.1 | s25–s26 | Q: who did this first? A: the plan sheet rolls up and lands on a museum shelf; truck to "2012 · MIT": a lab table with a boxy laser, mirrors and a big streak-camera box aimed at a small wall; a tiny wooden mannequin behind a screen; a sketchy 3D outline of the mannequin rises | illustrated exhibit | plate "2012 · MIT"; labels "ultrafast laser", "streak camera"; "illustration based on Velten et al. 2012" | shelf creak. C20, C21 |
 | S5.2 | s27 | Q: what changed? A: "2018 · Stanford": one spot (the same glyph as our W1) hops across a wall in a raster; a laptop shows "1 s" while a wall clock ticks to about 7 minutes | illustrated exhibit | "reflective exit sign: ≈ 1 s to rebuild · ≈ 7 min to measure" | clock ticks. C22, C23 |
 | S5.3 | s28 | Q: and then? A: "2021 · Wisconsin + Milan": a strip detector and a powerful laser; a monitor plays a live, blobby video of ordinary objects; a "5 frames/s" counter ticks | illustrated exhibit | "live · ordinary objects · 5 frames/s" | C24 |
-| S5.4 | s29 | Q: so? A: a velvet rope clips across the shelf | sign "research equipment" | | rope clip. C25 |
+| S5.4 | s29 | Q: so? A: a velvet rope clips across the three exhibits; on "cheap sensor", a small side card at the end of the shelf: a fingertip-sized sensor board on a little stool | sign "research equipment"; side card "2021 · hidden objects tracked with a cheap sensor (Callenberg et al.) · illustration" | | rope clip. C25, C45 |
 
 ## S6 · Small sensors, published 2026 (s30–s35) · and S7 · Real results (s36–s39)
 

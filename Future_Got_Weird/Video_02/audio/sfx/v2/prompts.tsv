@@ -1,0 +1,73 @@
+kind	class	prompt
+tiptoe_step	hit	One sneaky cartoon tiptoe footstep: a soft rubber sole set down carefully on a wooden floorboard, a tiny muffled tap with a faint board creak, light cartoon foley, close-miked, dry room, no reverb, no music, no voice
+footstep_wood	hit	One ordinary footstep of a leather shoe on a wooden floor, a single clean heel-and-toe step, indoors, light cartoon foley, close-miked, dry, no reverb, no music, no voice
+cloth_rustle	stroke	A short clothing rustle as a person shifts and settles, a cotton jacket brushing against itself, one gesture under a second, light cartoon foley, close-miked, dry, no music, no voice
+smug_exhale	stroke	A small self-satisfied nasal exhale by a man, one short smug breath out through the nose, non-verbal character sound, no words, close-miked, dry, no reverb, no music
+sensor_hum	loop	A tiny electronic sensor idling on a desk: a faint, soft, steady high electrical hum with a very light whine, even and continuous, no changes, no beeps, close-miked, dry, no music
+sensor_pulse	hit	One short, soft, high tick with a faint pitched tone, like a tiny felt mallet tapping a small glass bell once, gentle and small, very short, clean, dry, close-miked, no reverb, not a laser, not sci-fi, no music
+bounce_tick	hit	One tiny glassy tick, a fingernail flicking a small crystal glass once, very short and delicate with a faint pitched ring, clean, dry, close-miked, no reverb, not a laser, not sci-fi, no music
+echo_return	hit	One soft low rounded blip, like a muted wooden marimba bar tapped gently once, short and faint, clean, dry, close-miked, no reverb, not a laser, not sci-fi, no music
+readout_beep	hit	A small friendly electronic beep from a little handheld device display, one short soft single-tone beep, clean, dry, close-miked, no music, no voice
+readout_off	stroke	A small electronic display switching off: one short soft descending blip, two quick falling tones, clean, dry, close-miked, no music, no voice
+partition_thunk	hit	A light wooden folding room-divider screen bumped once: one hollow wooden thunk with a faint panel rattle, indoors, light cartoon foley, close-miked, dry, no music, no voice
+partition_scrape	loop	A light wooden folding screen pushed slowly across a wooden floor: a steady, low, continuous wooden scrape, even and continuous, close-miked, dry, no music, no voice
+partition_wobble	stroke	A wooden folding screen wobbling on its hinges after a bump: a few quick soft wooden rattles and small hinge creaks dying away, light cartoon foley, close-miked, dry, no music
+mirror_slide	stop	A framed mirror panel slid along a wall into place: a short smooth sliding swish ending in a soft wooden click, light cartoon foley, close-miked, dry, no music
+mirror_ting	hit	One bright glassy ting, a small mirror pane tapped lightly, a clear shimmering ring that decays quickly, clean, close-miked, dry, no music
+paper_shred	stroke	A postcard torn quickly into many small pieces: a short burst of crisp card ripping and tearing, about one second, light cartoon foley, close-miked, dry, no music, no voice
+confetti_settle	stroke	Small paper confetti pieces fluttering down and settling onto a wooden table: light papery patter and soft rustles, gentle, about one and a half seconds, close-miked, dry, no music
+block_drop	hit	A small wooden block dropped into a wooden slot: one short hollow wooden clack with a tiny settle, close-miked, dry, no reverb, no music
+magnifier_slide	stroke	A magnifying glass with a plastic rim slid across a sheet of paper on a desk: one smooth short papery slide, close-miked, dry, no music
+ruler_extend	stroke	A small metal tape measure blade pulled out: a quick ratcheting metallic zip as the blade extends, about half a second, close-miked, dry, no music
+arc_draw	loop	A felt-tip pen drawing a long smooth curve on paper: a steady continuous soft squeaky scratching stroke, even and continuous, close-miked, dry, no music
+uh_oh	stroke	A tiny comic uh-oh sting: two short descending notes on a soft muted xylophone, playful, about one second, dry, no voice
+relief_sigh	stroke	A small relieved sigh by a man, one soft long exhale of relief, non-verbal character sound, no words, close-miked, dry, no reverb, no music
+shelf_creak	stroke	A wooden museum display shelf gently creaking under a small weight, one short soft wooden creak, indoors, close-miked, dry, no music
+clock_tick	loop	A wall clock ticking steadily, an even mechanical tick once per second, continuous, close-miked, quiet dry room, no music
+rope_clip	hit	A brass snap hook on a velvet queue rope clipping onto a brass post: one bright small metallic clack, close-miked, dry, no music
+tiny_clink	hit	A tiny electronic module, a small plastic and metal box, set down on a stone plinth: one small light clink, close-miked, dry, no music
+lock_click	hit	A small padlock snapping shut: one crisp metallic click, close-miked, dry, no reverb, no music
+shutter_click	hit	One camera shutter click, a single crisp mechanical shutter snap of a small camera, close-miked, dry, no music
+strip_rip	stroke	A strip of shiny reflective tape torn off a roll and pressed onto a surface: a quick crisp rip then a soft press, close-miked, dry, no music
+shoo	stroke	A very short soft whoosh of a hand waving someone away, one quick light air swipe, gentle, under half a second, close, dry, no voice, no music
+film_tick	hit	A film strip clicking forward one frame in a small projector gate: one short crisp mechanical tick, close-miked, dry, no music
+robot_motor	loop	A small wheeled delivery robot rolling: a soft steady electric motor whir with a faint rubber wheel rumble, even and continuous, no changes, close-miked, dry, no music
+robot_brake	stroke	A small wheeled robot braking: a short soft rubber wheel squeak and a gentle mechanical settle, close-miked, dry, no music
+robot_beep	hit	A small friendly robot giving one cautious beep, a short soft two-tone electronic beep, clean, dry, close-miked, no music, no voice
+sun_glare	stroke	A bright shimmering swell, like sunlight glittering: a soft airy rising shimmer that brightens over about one and a half seconds and fades, gentle, no melody, no voice
+amb_room	loop	Quiet indoor room tone in a small furnished room: very soft air and a faint distant hush, even and continuous, no events, no voices, no music
+amb_museum	loop	Quiet empty museum hall room tone: soft spacious air with a very faint ventilation hush, even and continuous, no footsteps, no voices, no music
+amb_warehouse	loop	Large empty warehouse room tone: soft spacious air with a faint distant low ventilation hum, even and continuous, no events, no voices, no music
+paper_slap	hit	A thick sheet of paper set down firmly on a wooden desk, one crisp flat slap, close-miked, dry, no reverb, no music
+paper_slide	stroke	A sheet of paper slid across a wooden desk, one clean smooth papery swish that settles, close-miked, dry, no reverb, no music
+paper_lift	stroke	A sheet of paper lifted off a wooden desk, a soft peel and a short rustle, close-miked, dry, no reverb, no music
+paper_swish	stroke	A sheet of paper whisked quickly off a table, one fast papery swish, close-miked, dry, no reverb, no music
+paper_flap	stroke	A single stiff paper card flapping once in the air and settling, a light papery flutter, close-miked, dry, no reverb, no music
+card_flick	hit	A small stiff card flicked over and set down on a table with a light snap, close-miked, dry, no reverb, no music
+tape_rip	stroke	A short strip of sticky tape torn off a roll and pressed onto paper, close-miked, dry, no reverb, no music
+marker_circle	stroke	A felt-tip marker drawing one quick circle on paper, a short squeaky looping stroke, close-miked, dry, no reverb, no music
+marker_sweep	stroke	A highlighter pen swept once across printed text on paper, one smooth soft felt-tip stroke, close-miked, dry, no reverb, no music
+pencil_tap	hit	A wooden pencil tapped once on a wooden desk, a small dry tick, close-miked, no reverb, no music
+pop_tick	hit	A tiny soft wooden tock as a small piece snaps into place, very short, close-miked, dry, no reverb, no music
+chip_pop	hit	A small soft cartoon pop, like a tiny cork, very short, playful, close-miked, dry, no music
+thud_soft	hit	A small soft object landing on a felt-covered table, one gentle muted thud, close-miked, dry, no reverb, no music
+whoosh_soft	stroke	A short soft low air whoosh, one gentle quick movement of air, under one second, clean, dry, no music, no voice
+glint	stroke	A tiny bright sparkle, one short soft high twinkle on a polished surface, subtle, clean, dry, no music
+stamp_light	hit	A rubber stamp pressed onto paper on a wooden counter, one light thud with a small wooden knock, close-miked, dry, no reverb, no music
+page_turn	stroke	A single page of a thick book turning over, one crisp paper swoosh, close-miked, dry, no reverb, no music
+indicator_yes	stroke	A soft friendly positive electronic chime, two short rising notes, clean, dry, no voice
+indicator_no	stroke	A soft negative electronic blip, two short low descending notes, gentle, not harsh, clean, dry, no voice
+machine_hum	loop	A low steady electrical machine hum with a faint soft mechanical whir, even and continuous, no changes, close-miked, dry, no music
+logo_hit	hit	A restrained low soft impact for a title card landing: one warm muffled low thump with a short airy tail, clean, dry, no melody, no voice
+typewriter_tick	hit	A single typewriter key strike, one crisp mechanical clack, close-miked, dry, no reverb, no music
+hanger_click	hit	A small hanging cardboard sign catching on its strings, a light creak and a soft wooden click, close-miked, dry, no music
+card_slide	stroke	A small index card sliding out of a tight wooden drawer, one short smooth scrape, close-miked, dry, no reverb, no music
+stamp_heavy	hit	A heavy rubber stamp slammed onto paper on a wooden counter, one deep thud with a wooden knock, close-miked, dry, no reverb, no music
+gavel	hit	A single wooden gavel strike on a sound block, one sharp resonant wooden knock, close-miked, dry, no music
+bell_ding	hit	A single tap on a small silver service counter bell, one bright clear ding with a short ring, close-miked, dry, no music
+drawer_open	stop	A small wooden card catalogue drawer pulled open, a short wooden slide ending in a soft stop, close-miked, dry, no music
+drawer_close	stop	A small wooden card catalogue drawer pushed shut, a short wooden slide ending in a soft thump, close-miked, dry, no music
+book_slide	stop	A hardback book slid along a wooden shelf and stopping, one short dry scrape, close-miked, no reverb, no music
+machine_clunk	hit	A cartoon machine lever engaging with one solid metallic clunk and a tiny spring rattle, close-miked, dry, no music
+scanner_sweep	stroke	A document scanner light bar sweeping across paper, a smooth gentle electronic whir that stops cleanly, close-miked, dry, no music
+printer_feed	stroke	A small desktop printer feeding one sheet of paper out, a short mechanical whir and a paper slide, close-miked, dry, no music

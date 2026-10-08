@@ -319,13 +319,14 @@
   {
    "id": "s29",
    "scene": "S5",
-   "text": "Impressive. But all of it ran on research equipment.",
-   "tts": "Impressive. But all of it ran on research equipment.",
+   "text": "Impressive. But those ran on research equipment. One team had even tracked hidden objects with a cheap sensor.",
+   "tts": "Impressive. But those ran on research equipment. One team had even tracked hidden objects with a cheap sensor.",
    "pause_after_ms": 800,
    "claims": [
-    "C25"
+    "C25",
+    "C45"
    ],
-   "direction": "the turn that sets up 2026"
+   "direction": "the turn that sets up 2026; the cheap-sensor precedent stated plainly, not as a twist"
   },
   {
    "id": "s30",

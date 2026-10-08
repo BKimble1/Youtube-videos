@@ -1,0 +1,34 @@
+A plain wall can give away someone hiding behind a partition. Light from a small time-of-flight sensor bounces off the wall, reaches the hidden person and returns a few billionths of a second late, and that delay is a clue to where they are. We explain how the timing becomes a map, what earlier laboratory systems achieved, and what a study published in 2026 managed with the kind of small sensors found in consumer gadgets, including what it still can't do.
+
+The real measurements shown are the researchers' own released data, plotted by us and processed with their published code. Room diagrams, numbers in them and the history scenes are illustrations.
+
+CHAPTERS
+0:00 The impossible view
+1:00 Why a plain wall works
+1:35 The faint echo
+2:11 Timing becomes a map
+3:09 What came before
+3:53 Small sensors (2026)
+4:50 What the real data shows
+5:35 What it might be good for
+6:09 Back to our friend
+
+SOURCES
+Main study
+- Somasundaram, S., Young, A., Dave, A., Pediredla, A. & Raskar, R. "Imaging hidden objects with consumer LiDAR via motion-induced sampling." Nature 653, 693-699 (published 20 May 2026). https://doi.org/10.1038/s41586-026-10502-x
+- Project page: https://cornar.media.mit.edu/
+- Code and released data (MIT License): https://github.com/sidsoma/consumer-nlos (commit 15314de)
+History and context
+- Velten, A. et al. "Recovering three-dimensional shape around a corner using ultrafast time-of-flight imaging." Nature Communications 3, 745 (2012). https://doi.org/10.1038/ncomms1747
+- O'Toole, M., Lindell, D. B. & Wetzstein, G. "Confocal non-line-of-sight imaging based on the light-cone transform." Nature 555, 338-341 (2018). https://doi.org/10.1038/nature25489
+- Nam, J. H. et al. "Low-latency time-of-flight non-line-of-sight imaging at 5 frames per second." Nature Communications 12, 6526 (2021). https://doi.org/10.1038/s41467-021-26721-x
+- Callenberg, C., Shi, Z., Heide, F. & Hullin, M. B. "Low-cost SPAD sensing for non-line-of-sight tracking, material classification and depth imaging." ACM Transactions on Graphics 40(4), 61 (2021).
+
+NOTES
+- The tracking clip comes from the authors' open evaluation kit with the sensor held still; the released files do not record whether the walker wore reflective material. 30 frames per second is the sensor's capture rate as the authors report it, not the processing time.
+- The U-shaped reconstruction used a sensor moved through known positions, with the object held still.
+- The authors call the work an early-stage research prototype. No phone app does this today, and no study has shown it prevents collisions.
+- "Night mode" is our analogy for the authors' burst-photography idea.
+
+CREDITS
+Data: Somasundaram et al. (2026), released at github.com/sidsoma/consumer-nlos. Narration: synthetic voice. Music: original score. Illustration and animation: Future Got Weird.
