@@ -22,7 +22,7 @@ transitions, looked at after the fix; the final renders were then checked again 
 | S1-3 | 0:17.6–0:20 | false years never shown large | the coral chip reads "2002 · 2005 · 2007 — none of them right" (44 px) | f566, 592 |
 | S1-4 | 0:21.7–0:23.7 | "Lead author" box/chip cut through "OpenAI" on the real paper | box encloses name + affiliation; chip on blank paper | f655–700 |
 | S1-5 | 0:26.2 | punchline caption spilled past its box for 2 frames | box widens earlier, smaller slam | f784–790 |
-| S1-6 | 0:26.7 | clerk A's hand vanished under the lifting slip | small hand-to-chest just before the lift | f794–805 |
+| S1-6 | 0:26.7 | clerk A's hand vanished under the lifting slip | small hand-to-chest just before the lift, elbow down (the first version raised the elbow across his face; caught by the regression review and fixed) | f794–805 |
 | S1-7 | 0:26.3–0:26.7 | close-up cut a slip text line at the frame bottom | close-up 16 px higher | f788–801 |
 | S2-1 | 0:31.2 | "The short version" chip hidden behind card 2 | chip drawn above the cards | f937–948 |
 | S2-2 | 0:42.8 | FUTURE/GOT/WEIRD ran together while popping in | overshoot capped at 5 % | f1278–1296 |
