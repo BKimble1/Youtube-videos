@@ -1,0 +1,28 @@
+node_modules/
+**/node_modules/
+.cache/
+__pycache__/
+*.pyc
+.env
+*.key
+# Media types are Git LFS types in this repo (.gitattributes); the LFS host is not reachable from the
+# production session, so media stays local and is backed up as committed split parts under backup/.
+*.wav
+*.mp4
+*.mp3
+*.m4a
+*.flac
+*.mov
+*.webm
+!backup/**/*.part*
+backup/_stage/
+backup/**/*.tar
+backup/**/*.tar.tmp
+exports/*.zip
+# regenerated QA material (dense frames, clips); summaries and contact sheets are kept
+qa/frames/
+qa/clips/
+qa/render/
+qa/dense/
+work/
+source/public/audio/

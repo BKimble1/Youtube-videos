@@ -1,0 +1,32 @@
+{
+  "name": "future-got-weird-video-02",
+  "version": "1.0.0",
+  "private": true,
+  "description": "How Cameras See Around Corners — Future Got Weird, Video 02 Remotion source",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render:1080": "remotion render src/index.ts Main ../exports/Future_Got_Weird_Video_02_REVIEW_1080p.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k --concurrency=3",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/fredoka": "5.3.0",
+    "@fontsource-variable/nunito": "5.3.0",
+    "@fontsource-variable/source-serif-4": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@remotion/bundler": "4.0.533",
+    "@remotion/cli": "4.0.533",
+    "@remotion/media-utils": "4.0.533",
+    "@remotion/paths": "4.0.533",
+    "@remotion/renderer": "4.0.533",
+    "@remotion/shapes": "4.0.533",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.533",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.0",
+    "js-tiktoken": "1.0.21",
+    "typescript": "5.8.3"
+  }
+}
