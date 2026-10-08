@@ -49,9 +49,9 @@ import {
 
 /** The shared layout (metres). */
 const LAYOUT = {
-  block: {x0: 0, x1: 0.46, z0: 1.2, z1: 2.35, h: 2.15} as Block,
+  block: {x0: 0, x1: 0.46, z0: 1.35, z1: 1.8, h: 2.4} as Block,
   S: {x: -2.05, z: 1.3, h: 1.35},
-  W: {x: 0.74, h: 2.0},
+  W: {x: 0.74, h: 2.3},
   H: {x: 0.8, z: 1.62},
 };
 
@@ -194,7 +194,8 @@ export const ThumbA: React.FC = () => (
   <Frame>
     <Room
       label="ThumbA"
-      cam={camAt(460, 0.5, 0.93, 0.1, LAYOUT.H.x, LAYOUT.H.z, 1560, 1355)}
+      cam={camAt(425, 0.4, 0.93, 0.1, LAYOUT.H.x, LAYOUT.H.z, 1560, 1300)}
+      legWidth={24}
       backdrop={<Title lines={[{text: 'SEES', color: INK}, {text: 'ME?', color: C.coral}]} x={66} y={238} size={250} />}
     />
   </Frame>
@@ -206,94 +207,102 @@ export const ThumbB: React.FC = () => (
   <Frame>
     <Room
       label="ThumbB"
-      cam={camAt(640, 0.3, 0.97, 0.1, LAYOUT.H.x, LAYOUT.H.z, 1290, 1600)}
+      cam={camAt(640, 0.4, 0.95, 0.1, LAYOUT.H.x, LAYOUT.H.z, 1000, 1740)}
+      block={{...LAYOUT.block, h: 2.2}}
+      W={{x: 0.72, h: 2.03}}
       sensorScale={1.4}
-      legWidth={22}
+      legWidth={28}
       guesserOutline={6}
-      backdrop={<Title lines={[{text: 'SEES', color: INK}, {text: 'ME?', color: C.coral}]} x={1880} y={215} size={215} anchor="end" />}
+      backdrop={<Title lines={[{text: 'SEES', color: INK}, {text: 'ME?', color: C.coral}]} x={1872} y={250} size={265} anchor="end" />}
     />
   </Frame>
 );
 
 /* ------------------------------------------------------------------ C: what the readout shows vs where he hides */
 
-/** Plan map for the readout: wall line at the top, coral wall, sensor, the route round the wall's end, a blob. */
+/**
+ * Plan map for the sensor's readout (the film's plan view in miniature): the relay wall line at the top, the coral
+ * wall, the sensor, the route round the coral wall's far end, and a teal "likely location" blob where he stands. It is
+ * a region, not a picture of him.
+ */
 const ReadoutMap: React.FC<{w: number; h: number}> = ({w, h}) => {
   const {block, S, W, H} = LAYOUT;
-  // plan window (m): x -2.5..1.5, z 0..2.55 (the wall line sits a little below the screen top)
-  const x0 = -2.45;
-  const x1 = 1.45;
-  const top = h * 0.16;
-  const ppm = (w * 0.94) / (x1 - x0);
-  const toS = (x: number, z: number): Pt => ({x: w * 0.03 + (x - x0) * ppm, y: top + z * ppm});
+  const xa = -2.2;
+  const xb = 1.5;
+  const zb = 2.0;
+  const top = h * 0.13;
+  const ppm = Math.min((w * 0.92) / (xb - xa), (h - top - h * 0.04) / zb);
+  const left = (w - (xb - xa) * ppm) / 2;
+  const toS = (x: number, z: number): Pt => ({x: left + (x - xa) * ppm, y: top + z * ppm});
   const s = toS(S.x, S.z);
   const wp = toS(W.x, 0);
   const hp = toS(H.x, H.z);
-  // plan-only physics check for the map's route
+  // the map's route obeys the same plan rule as the room views
   const rect = {x0: block.x0 - 0.03, x1: block.x1 + 0.03, z0: block.z0 - 0.03, z1: block.z1 + 0.03};
-  if (segmentHitsRect({x: S.x, z: S.z}, {x: W.x, z: 0}, rect) || segmentHitsRect({x: W.x, z: 0}, {x: H.x, z: H.z}, rect)) throw new Error('ThumbC map: route crosses the wall');
+  if (segmentHitsRect({x: S.x, z: S.z}, {x: W.x, z: 0}, rect) || segmentHitsRect({x: W.x, z: 0}, {x: H.x, z: H.z}, rect)) throw new Error('ThumbC map: route crosses the coral wall');
+  if (!segmentHitsRect({x: S.x, z: S.z}, {x: H.x, z: H.z}, rect)) throw new Error('ThumbC map: he would be in plain view');
   const b0 = toS(block.x0, block.z0);
   const b1 = toS(block.x1, block.z1);
-  const lw = w * 0.022;
-  const ol = 4;
-  const ticks = Array.from({length: 9}).map((_, i) => toS(x0 + 0.2 + i * 0.45, 0).x);
-  const blob = (k: number) => {
-    // a soft, lumpy "likely location" region (no picture of him): a few overlapping lobes
-    const lobes = [
-      [0, 0, 1],
-      [-0.55, -0.22, 0.72],
-      [0.5, 0.25, 0.7],
-      [0.15, -0.48, 0.55],
-    ];
-    return lobes.map(([dx, dy, rr], i) => <ellipse key={i} cx={hp.x + dx * w * 0.05 * k} cy={hp.y + dy * w * 0.05 * k} rx={w * 0.075 * k * rr} ry={w * 0.06 * k * rr} />);
-  };
+  const lw = 15;
+  const ol = 4.5;
+  const R = 0.25 * ppm;
+  // lobes (dx, dy, r) in units of R; nothing reaches further toward the wall than the main lobe
+  const lobes: [number, number, number][] = [
+    [0, 0, 1],
+    [0.45, 0.32, 0.72],
+    [0.18, -0.55, 0.62],
+    [0.05, 0.6, 0.6],
+    [0.6, -0.22, 0.6],
+  ];
+  if (H.x - 1.3 * (R / ppm) <= block.x1) throw new Error('ThumbC map: the likely-location blob would spill past the wall');
+  const blob = (k: number) => lobes.map(([dx, dy, rr], i) => <ellipse key={i} cx={hp.x + dx * R * k} cy={hp.y + dy * R * k} rx={R * k * rr} ry={R * k * rr * 0.86} />);
   return (
     <g>
       <rect x={0} y={0} width={w} height={h} fill={C.cream} />
-      {/* relay wall */}
-      <rect x={-10} y={top - h * 0.12} width={w + 20} height={h * 0.12} fill={'#EFE2C4'} />
-      <line x1={-10} y1={top} x2={w + 10} y2={top} stroke={INK} strokeWidth={ol * 2} />
-      {ticks.map((tx, i) => (
-        <line key={i} x1={tx} y1={top} x2={tx} y2={top + h * 0.035} stroke={C.inkMuted} strokeWidth={3} />
-      ))}
-      {/* likely-location blob (teal), drawn under the route */}
-      <g fill={C.tealLight} opacity={0.95}>{blob(1.35)}</g>
+      <rect x={-10} y={-10} width={w + 20} height={top + 10} fill="#EFE2C4" />
+      <line x1={-10} y1={top} x2={w + 10} y2={top} stroke={INK} strokeWidth={8} />
+      {Array.from({length: 9}).map((_, i) => {
+        const tx = toS(xa + 0.2 + i * 0.45, 0).x;
+        return <line key={i} x1={tx} y1={top} x2={tx} y2={top + 11} stroke={C.inkMuted} strokeWidth={3} />;
+      })}
+      {/* likely location: soft halo, then the blob */}
+      <g fill={C.tealLight}>{blob(1.3)}</g>
       <g fill={C.teal} stroke={INK} strokeWidth={ol}>
-        {blob(0.78)}
+        {blob(1)}
       </g>
-      <g fill={C.teal}>{blob(0.78)}</g>
-      {/* coral wall (plan) */}
+      <g fill={C.teal}>{blob(1)}</g>
+      {/* coral wall */}
       <rect x={b0.x} y={b0.y} width={b1.x - b0.x} height={b1.y - b0.y} rx={4} fill={C.coral} stroke={INK} strokeWidth={ol} />
-      {/* route: S -> W -> round the end -> H, with the faint return */}
+      {/* faint return, then the route */}
+      <ReturnTrail pts={[hp, wp, s]} lane={-(lw + 6)} width={4} dash="1 10" opacity={0.9} />
       <polyline points={`${s.x},${s.y} ${wp.x},${wp.y} ${hp.x},${hp.y}`} fill="none" stroke={INK} strokeWidth={lw + ol * 2} strokeLinejoin="round" strokeLinecap="round" />
       <polyline points={`${s.x},${s.y} ${wp.x},${wp.y} ${hp.x},${hp.y}`} fill="none" stroke={C.saffron} strokeWidth={lw} strokeLinejoin="round" strokeLinecap="round" />
-      <circle cx={wp.x} cy={wp.y} r={lw * 1.1} fill={C.saffron} stroke={INK} strokeWidth={ol} />
-      <SensorTop x={s.x} y={s.y + lw * 0.6} size={w * 0.085} facing={(Math.atan2(wp.x - s.x, -(wp.y - s.y)) * 180) / Math.PI} asGroup />
-      {/* centre mark of the estimate */}
-      <circle cx={hp.x} cy={hp.y} r={lw * 0.75} fill={C.cream} stroke={INK} strokeWidth={ol} />
+      <BounceBurst p={wp} r={lw * 0.85} outline={ol} rays={8} />
+      <SensorTop x={s.x} y={s.y + 10} size={46} facing={(Math.atan2(wp.x - s.x, -(wp.y - s.y)) * 180) / Math.PI} asGroup />
+      <circle cx={hp.x} cy={hp.y} r={lw * 0.7} fill={C.cream} stroke={INK} strokeWidth={ol} />
     </g>
   );
 };
 
 export const ThumbC: React.FC = () => {
-  const dev = {x: 440, y: 600, w: 740};
+  const dev = {x: 470, y: 712, w: 850};
   const scr = bigSensorScreen(dev.w);
-  const panel = {x: 905, y: 300, w: 980, h: 750, r: 36};
+  const panel = {x: 1010, y: 292, w: 872, h: 752, r: 36};
   return (
     <Frame bg={C.paper}>
-      <TitleLine x={960} y={236} size={232} anchor="middle" />
-      {/* the sensor, close up from behind: its readout */}
+      <TitleLine x={960} y={222} size={226} anchor="middle" />
+      {/* left: the sensor seen from behind, close up; its readout has found a blob round the corner */}
       <BigSensor x={dev.x} y={dev.y} w={dev.w} outline={6}>
         <ReadoutMap w={scr.w} h={scr.h} />
       </BigSensor>
-      {/* where he actually is */}
+      {/* right: where he actually is, smug and sure he is hidden */}
       <defs>
         <clipPath id="thumbCpanel">
           <rect x={panel.x} y={panel.y} width={panel.w} height={panel.h} rx={panel.r} />
         </clipPath>
       </defs>
       <g clipPath="url(#thumbCpanel)">
-        <Room label="ThumbC" cam={camAt(560, 0.42, 0.95, 0.1, LAYOUT.H.x, LAYOUT.H.z, 1600, 1540)} route="none" />
+        <Room label="ThumbC" cam={camAt(600, 0.3, 0.96, 0.1, LAYOUT.H.x, LAYOUT.H.z, 1560, 1520)} route="none" />
       </g>
       <rect x={panel.x} y={panel.y} width={panel.w} height={panel.h} rx={panel.r} fill="none" stroke={INK} strokeWidth={7} />
     </Frame>

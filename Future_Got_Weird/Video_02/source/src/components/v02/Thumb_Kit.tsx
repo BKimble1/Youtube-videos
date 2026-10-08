@@ -515,8 +515,8 @@ export const BigSensor: React.FC<{x: number; y: number; w: number; outline?: num
   const h = w * 0.64;
   const x0 = x - w / 2;
   const y0 = y - h / 2;
-  const dx = w * 0.11;
-  const dy = -w * 0.12;
+  const dx = w * 0.07;
+  const dy = -w * 0.075;
   const ink = {stroke: INK, strokeWidth: outline, strokeLinejoin: 'round' as const};
   const s = bigSensorScreen(w);
   const r = h * 0.16;
@@ -529,8 +529,8 @@ export const BigSensor: React.FC<{x: number; y: number; w: number; outline?: num
       <rect x={gx - gw / 2} y={y0 + h - r} width={gw} height={h * 0.95} rx={gw * 0.3} fill={C.tealDeep} {...ink} />
       <rect x={gx - gw * 0.22} y={y0 + h + h * 0.12} width={gw * 0.44} height={h * 0.2} rx={gw * 0.12} fill={C.coral} {...ink} />
       {/* lens rims of the working face (it looks away from us, at the wall) */}
-      <ellipse cx={x0 + w * 0.28 + dx} cy={y0 + dy - 2} rx={w * 0.15} ry={w * 0.085} fill={C.coral} {...ink} />
-      <ellipse cx={x0 + w * 0.65 + dx} cy={y0 + dy - 2} rx={w * 0.105} ry={w * 0.07} fill={C.inkSoft} {...ink} />
+      <ellipse cx={x0 + w * 0.28 + dx} cy={y0 + dy - 2} rx={w * 0.11} ry={w * 0.055} fill={C.coral} {...ink} />
+      <ellipse cx={x0 + w * 0.62 + dx} cy={y0 + dy - 2} rx={w * 0.08} ry={w * 0.045} fill={C.inkSoft} {...ink} />
       {/* side, top, front */}
       <path d={`M ${x0 + w - 6} ${y0 + 4} L ${x0 + w + dx} ${y0 + dy} L ${x0 + w + dx} ${y0 + h + dy - 4} L ${x0 + w - 6} ${y0 + h - 4} Z`} fill={C.tealDeep} {...ink} />
       <path d={`M ${x0 + 4} ${y0 + 6} L ${x0 + 4 + dx} ${y0 + dy} L ${x0 + w + dx} ${y0 + dy} L ${x0 + w - 4} ${y0 + 6} Z`} fill="#7FCFC9" {...ink} />
