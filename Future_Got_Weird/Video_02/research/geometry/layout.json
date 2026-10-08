@@ -31,15 +31,15 @@
    2.15
   ],
   "thickness": 0.04,
-  "height": 1.7,
+  "height": 2.0,
   "gap_to_wall_m": 0.65,
   "description": "free-standing folding screen perpendicular to the wall; light passes through the gap"
  },
  "heights": {
-  "sensor_h": 1.2,
-  "torso_h": 1.2,
+  "sensor_h": 0.95,
+  "torso_h": 0.95,
   "hider_head_top_h": 1.75,
-  "note": "plan is a horizontal slice at ~1.2 m; in 3D, circles become hemispheres in front of the wall"
+  "note": "plan is a horizontal slice at ~0.95 m; in 3D, circles become hemispheres in front of the wall"
  },
  "sensor": {
   "frame_A": {
@@ -2215,24 +2215,24 @@
    "detail": "0 visible outline samples"
   },
   {
-   "check": "3D: sight line S_A->top of head at H_A meets the partition below its 1.7 m top",
+   "check": "3D: sight line S_A->top of head at H_A meets the partition below its 2.0 m top",
    "pass": true,
-   "detail": "height at partition 1.40 m"
+   "detail": "height at partition 1.24 m"
   },
   {
-   "check": "3D: sight line S_A->top of head at H_B meets the partition below its 1.7 m top",
+   "check": "3D: sight line S_A->top of head at H_B meets the partition below its 2.0 m top",
    "pass": true,
-   "detail": "height at partition 1.38 m"
+   "detail": "height at partition 1.22 m"
   },
   {
-   "check": "3D: sight line S_B->top of head at H_A meets the partition below its 1.7 m top",
+   "check": "3D: sight line S_B->top of head at H_A meets the partition below its 2.0 m top",
    "pass": true,
-   "detail": "height at partition 1.51 m"
+   "detail": "height at partition 1.39 m"
   },
   {
-   "check": "3D: sight line S_B->top of head at H_B meets the partition below its 1.7 m top",
+   "check": "3D: sight line S_B->top of head at H_B meets the partition below its 2.0 m top",
    "pass": true,
-   "detail": "height at partition 1.48 m"
+   "detail": "height at partition 1.36 m"
   },
   {
    "check": "H_A is at least body radius + 0.05 m from the occluder",

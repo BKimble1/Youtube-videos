@@ -1,7 +1,7 @@
 import React from 'react';
 import {C, OUTLINE} from '../../theme';
 import {E} from '../../lib/motion';
-import {DEFAULT_VIEW, LAYOUT, PTS, type Box, type Layout, type PlanPt, type ViewConfig, hiddenByBox, project, projectWith, rigAt, viewAt} from '../../lib/room';
+import {DEFAULT_VIEW, LAYOUT, PTS, type Box, type Layout, type PlanPt, type ViewConfig, hiddenByBox, project, projectWith, rigAt, rigScale, viewAt} from '../../lib/room';
 import type {Arm} from '../Character';
 import type {Foot} from './Cast2';
 import {HandheldSensor, SENSOR, sensorPoint, type HandheldSensorProps} from './HandheldSensor';
@@ -125,7 +125,6 @@ export const S9SensorStand: React.FC<S9SensorStandProps> = ({tilt, view = DEFAUL
 
 const WALK_DUTY = 0.58; // fraction of a cycle each foot is planted (Cast2's walk)
 const HIP_X = 33; // Cast2 ankle x when standing, rig px
-const RIG_PX = 440;
 
 export type PlanWalk = {a: {x: number; z: number}; b: {x: number; z: number}; dist: number; steps: number; stepM: number; heightM: number; lift: number};
 
@@ -235,7 +234,7 @@ export const walkAt = (plan: PlanWalk, travelled: number, tilt: number, view: Vi
   // constant lead of the ground line toward the camera (smaller aheadK: the body bobs onto the nearer foot instead)
   const ahead = Math.abs(dyPerM) * aheadK * step * ramp;
   const yRef = Math.max(body.y + ahead, fL.y, fR.y);
-  const k = (plan.heightM * s.ppm) / RIG_PX;
+  const k = rigScale(s, plan.heightM); // the set's height scale, as lib/room rigAt
   const towardCam = uz >= 0;
   // the nearer leg is drawn last (Character2 orders legs by the shoes' turn)
   const nearL = towardCam ? trail.p > lead.p : trail.p < lead.p;

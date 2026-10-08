@@ -5,16 +5,32 @@ import type {Cam} from './camera';
  * for <Camera cam={...}> around a RoomSet drawn with DEFAULT_VIEW. Derived from layout.json projections
  * (operator, hider, partition, wall samples, gap at the wall): see tools/sync_layout.py and lib/room.ts.
  *  - ROOM: tilt 0, both characters, the partition and the lit wall patch, headroom for the hair.
- *  - RAISED: tilt RAISED_TILT, the gap between the partition's far end and the wall is visible; use whenever light paths
- *    are drawn in the room (S1.4-S1.7, S2.2, S2.4, S3.1, S8.2-S8.3).
+ *  - RAISED: tilt RAISED_TILT. Light paths in the room are drawn at RAISED_TILT or at tilt 0 (S2.4), and every leg that
+ *    passes the partition goes behind its END, never across its top (lib/room assertAroundTheEnd, at module load for
+ *    every tilt the shot draws light at). RAISED is a LOW rise on purpose: from the front-left camera the opening at
+ *    the wall lies behind the partition's far end, and the higher the camera, the higher the far-side legs climb on
+ *    screen; above about 0.12, W4 and then W3 come out across the near panels' top band (0.12: W4 16 px below the near
+ *    corner, fails; 0.15: every leg over the top). At 0.10 the W3 -> him leg goes behind the far end 313 px below its
+ *    corner and comes out at the near end 53 px below it (W4: 39 px), screen px at zoom 1.25; rigs on the set's height
+ *    scale (rigScale 1.20) stand clearly below the 2 m screen. The "seen from above" PlanCard carries the top-down read.
+ *    Framings derived at tilt 0.10 from the projected subjects (world px): her left edge 483, his elbow 1308, the
+ *    partition's far top 133, her feet 772. At CAM_PATH the partition top lands at screen y 138 and her feet at 936,
+ *    and his elbow is 50 px left of the card.
  *  - PLAN_ACT: tilt 1, the arcs' working area (wall samples, hider, arcs up to |WH| = 1.33 m) for act 3.
  *  - PLAN_FULL: tilt 1, the whole room board.
  * Scenes may move between these with camPath, and may add their own close-ups, but a cut between scenes lands on
  * one of these framings unless a hand-off says otherwise.
  */
-export const RAISED_TILT = 0.4;
+export const RAISED_TILT = 0.1;
 export const CAM_ROOM: Cam = {cx: 880, cy: 565, zoom: 1.2};
-export const CAM_RAISED: Cam = {cx: 905, cy: 535, zoom: 1.25};
+/** RAISED, the room centred: both characters head to feet, the partition's far top, the wall spot W3. */
+export const CAM_RAISED: Cam = {cx: 895, cy: 455, zoom: 1.25};
+/** RAISED with the "seen from above" PlanCard in PLAN_CARD_RECT (top right): the room in screen x ~320..1350. */
+export const CAM_PATH: Cam = {cx: 996, cy: 455, zoom: 1.25};
+/** RAISED with a column of cards on the left (S1.6-S1.7, S3.2): the room in screen x ~905..1855. */
+export const CAM_PATH_SIDE: Cam = {cx: 531, cy: 455, zoom: 1.15};
+/** Screen rect of the PlanCard beside a raised path shot (480 px = a quarter of the frame width). */
+export const PLAN_CARD_RECT = {x: 1400, y: 40, w: 480, h: 408};
 export const CAM_PLAN_ACT: Cam = {cx: 984, cy: 372, zoom: 2.0};
 export const CAM_PLAN_FULL: Cam = {cx: 960, cy: 540, zoom: 1.0};
 

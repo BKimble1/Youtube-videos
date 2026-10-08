@@ -3,6 +3,7 @@ import {C, OUTLINE} from '../../theme';
 import {blink as blinkFn, rand} from '../../lib/anim';
 import {E, SOFT, drift, sp} from '../../lib/motion';
 import {handPos, reachLocal, type Arm, type Hair, type Look, type Mouth, type Pose} from '../Character';
+import {projectWith, type HiddenTest, type ViewState} from '../../lib/room';
 
 /**
  * Cast2: the Video 01 cutout rig (components/Character.tsx) extended for Video 02, with the SAME identities: heads,
@@ -1033,4 +1034,38 @@ export const Character2: React.FC<Character2Props> = ({look, pose: pose0, frame,
       </g>
     </svg>
   );
+};
+
+/**
+ * Does the frontal rig drawn at `place` (feet x, y in world px, scale) cover the screen point q? A pose-independent
+ * approximation of the Character2 silhouette (head and hair, torso with the arms, legs) in rig px; `growPx` (world px)
+ * widens it for clearance checks. One copy for every scene (S1, S3, S9 had private `rigHides`).
+ */
+export const rigCovers = (place: {x: number; y: number; scale: number}, q: {x: number; y: number}, growPx = 0) => {
+  const lx = (q.x - place.x) / place.scale;
+  const ly = (q.y - place.y) / place.scale;
+  const gr = growPx / place.scale;
+  if ((lx / (92 + gr)) ** 2 + ((ly + 388) / (100 + gr)) ** 2 < 1) return true; // head and hair
+  if (Math.abs(lx) < 82 + gr && ly > -300 - gr && ly < -140) return true; // torso and arms
+  return Math.abs(lx) < 60 + gr && ly >= -140 && ly < 0; // legs
+};
+
+/**
+ * Overlay-light HiddenTest for the people: a light-plane point that lies behind a figure (plan z less than the figure's
+ * z + 5 cm) is hidden where it falls inside that figure's drawn silhouette, so a W -> H leg ends at his outline instead
+ * of crossing his chest, and fans and dots pass behind both people. OR it with lib/room partitionHides.
+ */
+export const figuresHide = (s: ViewState, h: number, figs: {z: number; place: {x: number; y: number; scale: number}}[]): HiddenTest => (p) => {
+  const q = projectWith(s, {x: p.x, z: p.z, h: p.h ?? h});
+  return figs.some((f) => p.z < f.z + 0.05 && rigCovers(f.place, q));
+};
+
+/** Hit cue when light reaches a figure from behind (the leg itself is hidden by the partition and his body): a crisp
+ *  saffron rim on the wall-side (up-left) outline, as a CSS filter for <Character2 style={{...rigStyle(..), filter}}>.
+ *  `t` 0..1 (e.g. tw(g, hit - 1, 3) * (1 - tw(g, hit + 6, 10))). */
+export const rimFlash = (t: number, scale: number, color = C.saffron): string | undefined => {
+  if (t <= 0.01) return undefined;
+  const n = parseInt(color.slice(1), 16);
+  const rgba = `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${Math.min(1, t).toFixed(3)})`;
+  return `drop-shadow(${(-6 * scale).toFixed(1)}px ${(-5 * scale).toFixed(1)}px 0 ${rgba})`;
 };

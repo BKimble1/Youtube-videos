@@ -273,7 +273,8 @@ export const PottedPlant: React.FC<{x: number; z: number; tilt: number; view?: V
   const s = viewAt(tilt, view);
   const m = figureMix(tilt);
   const foot = projectWith(s, {x, z, h: 0});
-  const k = (s.ppm * heightM) / 1.45; // px per metre for the cutout
+  // px per metre for the cutout: on the set's height scale like the rigs (lib/room rigScale), uniformly
+  const k = Math.max(1e-3, (s.ppm * s.height * heightM) / 1.45);
   const sw = OUTLINE / k;
   const top = projectWith(s, {x, z, h: 0.75 * (heightM / 1.45)});
   const r = s.ppm; // px per metre, plan rosette
@@ -344,3 +345,26 @@ export const PottedPlant: React.FC<{x: number; z: number; tilt: number; view?: V
 
 /** Re-exported for scenes that build their own item lists. */
 export type {PlanPt};
+
+/**
+ * The opening between the partition's far end and the relay wall, marked in INK on the floor (a construction aid:
+ * never the light's saffron): the partition's line continued to the wall as a dashed threshold over a pale floor patch.
+ * Put it in RoomSet's `backdrop` (the stand, the people and the partition paint over it). `t` 0..1 draws it on from the
+ * wall; with a moved layout (S9's push) it shrinks with the gap and vanishes when the far end meets the wall.
+ */
+export const GapMarker: React.FC<{tilt: number; t: number; layout?: Layout; view?: ViewConfig; halfW?: number}> = ({tilt, t, layout = LAYOUT, view = DEFAULT_VIEW, halfW = 0.12}) => {
+  const o = layout.occluder;
+  const zEnd = o.z0 - 0.02;
+  if (t <= 0 || zEnd < 0.04) return null;
+  const s = viewAt(tilt, view);
+  const P = (x: number, z: number) => projectWith(s, {x, z, h: 0});
+  const d = (pts: {x: number; y: number}[]) => pts.map((q, i) => `${i ? 'L' : 'M'} ${q.x.toFixed(2)} ${q.y.toFixed(2)}`).join(' ') + ' Z';
+  const a = P(o.x, 0.01);
+  const b = P(o.x, 0.01 + (zEnd - 0.01) * Math.min(1, t));
+  return (
+    <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+      <path d={d([P(o.x - halfW, 0.02), P(o.x + halfW, 0.02), P(o.x + halfW, zEnd), P(o.x - halfW, zEnd)])} fill={C.white} opacity={0.55 * Math.min(1, t)} />
+      <path d={`M ${a.x.toFixed(2)} ${a.y.toFixed(2)} L ${b.x.toFixed(2)} ${b.y.toFixed(2)}`} stroke={C.inkMuted} strokeWidth={4} strokeDasharray="12 9" strokeLinecap="round" fill="none" />
+    </svg>
+  );
+};

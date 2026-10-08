@@ -15,7 +15,7 @@ import {HandheldSensor, SensorTop, facingOf} from './HandheldSensor';
  *  - SensorTop (the overhead glyph) fades in at the projected sensor point S with the tokens (figureMix().token),
  *    facing `aim` (a plan point on the wall).
  *
- * Geometry: S from layout.json (h = 1.2 m). The column top is placed so that, in the room view, the sensor's working
+ * Geometry: S from layout.json (h = layout sensor.h (0.95 m)). The column top is placed so that, in the room view, the sensor's working
  * face sits at S: the HandheldSensor far face is 91 + 14 = 105 model px above the grip's bottom; at the room-view
  * rig scale × 0.6 (a ~0.2 m box) that is 0.243 m.
  */

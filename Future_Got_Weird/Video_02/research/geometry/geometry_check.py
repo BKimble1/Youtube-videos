@@ -60,7 +60,7 @@ ROOM = {"x_min": 0.0, "x_max": 4.0, "z_min": 0.0, "z_max": 3.0, "wall_height": 2
 RELAY_WALL = ((0.0, 0.0), (4.0, 0.0))                 # the back wall, matte and light-coloured
 OCCLUDER = ((2.0, 0.65), (2.0, 2.15))                 # free-standing partition, 1.5 m long, perpendicular
 OCCLUDER_THICKNESS = 0.04                             # to the wall, leaving a 0.65 m gap at the wall
-OCCLUDER_HEIGHT = 1.7
+OCCLUDER_HEIGHT = 2.0
 S_A = (1.65, 0.90)          # sensor, frame A (held at chest height)
 AIM_A = 1.85                # x of the wall point the sensor's optical axis hits, frame A
 S_B = (1.25, 0.90)          # sensor moved 0.40 m left, re-aimed (frame B1, "motion-induced sampling")
@@ -69,8 +69,8 @@ H_A = (2.60, 0.85)          # hidden person's torso centre (plan), frame A
 H_B = (2.70, 0.90)          # the person a moment later (frame B2): moved (0.10, 0.05) m
 DT_B2_S = 0.10              # assumed time between frame A and frame B2 (3 frames at 30 Hz)
 BODY_RADIUS = 0.22          # torso half-width for the "is the person visible from S?" check
-SENSOR_HEIGHT = 1.20        # declared heights (the plan is a horizontal slice at ~1.2 m)
-TORSO_HEIGHT = 1.20
+SENSOR_HEIGHT = 0.95        # declared heights (the plan is a horizontal slice at ~0.95 m: the sensor on a 0.95 m tripod;
+TORSO_HEIGHT = 0.95         # the path meets the hider at the drawn figures' chest (the cast are chibi-proportioned))
 HIDER_HEAD_TOP = 1.75       # top of the hider's head, for the 3D "can S see over the partition?" check
 
 # Noise / timing band: half-width in one-way distance. One 250 ps bin = 3.75 cm one-way.
@@ -697,7 +697,7 @@ def main():
                      "height": OCCLUDER_HEIGHT, "gap_to_wall_m": OCCLUDER[0][1],
                      "description": "free-standing folding screen perpendicular to the wall; light passes through the gap"},
         "heights": {"sensor_h": SENSOR_HEIGHT, "torso_h": TORSO_HEIGHT, "hider_head_top_h": HIDER_HEAD_TOP,
-                    "note": "plan is a horizontal slice at ~1.2 m; in 3D, circles become hemispheres in front of the wall"},
+                    "note": "plan is a horizontal slice at ~0.95 m; in 3D, circles become hemispheres in front of the wall"},
         "sensor": {
             "frame_A": {"S": list(S_A), "aim_x": AIM_A, **{k: [round(x, 4) for x in val] if isinstance(val, list) else round(val, 3)
                                                           for k, val in zA.items()}},

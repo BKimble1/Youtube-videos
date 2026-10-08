@@ -51,9 +51,12 @@ never put anything about the channel owner on screen). Remotion 4.0.533, React 1
   touch what they move (`reach2` / `holdSensor`). Feet do not slide (gait helpers). One camera move per idea, eased
   (`camPath`), never while something important lands. No perpetual zooms or bobbing. Designed holds are fine.
 - Light paths: straight segments between reflections, from layout.json points, never through the partition (use
-  `assertPath` / the kit's `layout` props); slowed pulses labelled "slowed down"; later bounces thinner and paler. When
-  paths are drawn in the room view, raise the camera (`RAISED_TILT`, `CAM_RAISED`) so the gap between the partition's
-  far end and the wall is visible and every wall→person segment visibly passes through it.
+  `assertPath` / the kit's `layout` props); slowed pulses labelled "slowed down"; later bounces thinner and paler. Light
+  paths in the room are drawn at RAISED_TILT 0.10, or at tilt 0. Every leg that passes the partition goes behind its
+  END (far or near vertical edge, ≥ 24 px below the corner), never across its top (`assertAroundTheEnd`, run at module
+  load for every tilt the shot draws light at). Light behind the screen or behind a person is hidden exactly
+  (`partitionHides`, `figuresHide`). The 'seen from above' PlanCard runs the same paths on the same schedule, so
+  'round the end, by way of the wall' reads in plan.
 - Text: Fredoka headlines, Nunito labels, JetBrains Mono numbers. On-screen size after camera zoom: critical ≥ 44 px,
   body ≥ 34 px, guard-rail labels ("illustrative", "simplified picture (2D)", source chips) ≥ 30 px. Labels name things;
   they do not narrate. Settled labels do not move. Keep critical text out of the bottom 12 % (captions) and inside a

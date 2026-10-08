@@ -37,12 +37,14 @@ viewer (the wall is z = 0), and `h` is height.
 |---|---|---|
 | Room | x 0–4 m, z 0–3 m, wall height 2.5 m | "A room ~4 m × 3 m, wall on one side" |
 | Relay wall | z = 0, x 0–4 m; matte and light-coloured | The README says "A matte, light-colored relay wall is ideal" (`direct`). |
-| Partition (occluder) | Free-standing folding screen at **x = 2.00, from z = 0.65 to 2.15** (1.5 m long). Thickness 0.04 m, height 1.7 m. Leaves a **0.65 m gap** at the wall. | Blocks S→H. Light passes through the gap. |
-| Sensor, frame A | **S_A = (1.65, 0.90)**, h = 1.2 m. Optical axis hits the wall at x = 1.85 (12.5° off the wall normal). | README: "SPAD ↔ relay wall: < 1 m" (`direct`) |
+| Partition (occluder) | Free-standing folding screen at **x = 2.00, from z = 0.65 to 2.15** (1.5 m long). Thickness 0.04 m, height **2.0 m**. Leaves a **0.65 m gap** at the wall. | Blocks S→H. Light passes through the gap. |
+| Sensor, frame A | **S_A = (1.65, 0.90)**, h = **0.95 m** (on its tripod stand). Optical axis hits the wall at x = 1.85 (12.5° off the wall normal). | README: "SPAD ↔ relay wall: < 1 m" (`direct`) |
 | Sensor, frame B1 (moved) | **S_B = (1.25, 0.90)**, aim x = 1.45 | Used for motion-induced sampling (§8) |
-| Hidden person, frame A | **H_A = (2.60, 0.85)**, torso centre, body radius 0.22 m, head top 1.75 m | README: "Relay wall ↔ hidden object: ~1–1.5 m" (`direct`) |
+| Hidden person, frame A | **H_A = (2.60, 0.85)**, light-plane point at his chest, h 0.95 m (body radius 0.22 m, head top 1.75 m) | README: "Relay wall ↔ hidden object: ~1–1.5 m" (`direct`) |
 | Hidden person, frame B2 | **H_B = (2.70, 0.90)**, 0.10 s later (1.12 m/s walk) | Used for object motion (§8) |
 | Sensor model | One row of a 4 × 4-zone, 45° flood sensor (VL53L8-like). The 4 zone-centre wall hits are the sampled wall points. | `spad_driver.py` defaults `height=4, width=4, fovx=fovy=45.0`; `sensor.py` builds 4×4 (`code_or_data`) |
+
+**Heights changed for drawing legibility (path-legibility pass).** The partition was raised from 1.7 to 2.0 m and the light-path plane (sensor, wall points, the point on the hider) lowered from 1.2 to 0.95 m, so the drawn room reads "around the end" and the screen is visibly taller than both people. 0.95 m is the chest of the drawn, chibi-proportioned figures, lower than a real 1.7 m adult's chest. The plan geometry (every x and z), every distance, delay, arc and band, and every claim are unchanged; the plan is a horizontal slice at ~0.95 m.
 
 **Sampled wall points** (zone centres; all have z = 0):
 
@@ -54,7 +56,7 @@ viewer (the wall is z = 0), and `h` is height.
 - The partition blocks the straight lines S_A→H_A, S_A→H_B, S_B→H_A and S_B→H_B.
 - No point on the hider's 0.22 m body outline is visible from either sensor position.
 - From S_A, the only hidden-side points visible through the gap at x = 2.6 are those within z < 0.22 m of the wall. The person's nearest edge is at z = 0.63.
-- 3D check: the sight line from the sensor (h = 1.2) to the top of the hider's head (1.75 m) meets the partition at a height of 1.38–1.51 m, below its 1.7 m top. Nothing pokes over.
+- 3D check: the sight line from the sensor (h = 0.95) to the top of the hider's head (1.75 m) meets the partition at a height of 1.22–1.39 m, below its 2.0 m top. Nothing pokes over.
 - Every drawn segment misses the partition by **at least 0.10 m** (smallest: 0.117 m, W_B1→H_A). This covers S→W, W→H for both H positions, and the field-of-view edge rays. Every clearance is listed in `layout.json` → `segments`.
 - |SW| ≤ 1.1 m for every sampled point: 0.90–1.03 m.
 - |WH| is in 0.9–1.5 m for frame A: 0.96–1.33 m.

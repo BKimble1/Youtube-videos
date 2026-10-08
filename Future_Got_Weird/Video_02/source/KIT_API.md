@@ -104,7 +104,7 @@ The other deliberate change: in the room view the camera stands front-left, not 
 ## API: `lib/room.ts`
 **Layout and points**
 - Types `Layout` (the same schema as layout.json), `PlanPt {x, z, h?}`, `ScreenPt {x, y, depth}`.
-- `LAYOUT`, plus `PTS {S, H, operator, W: Record<id, PlanPt>}`. Wall samples sit at z=0 with h = sensor.h (1.2).
+- `LAYOUT`, plus `PTS {S, H, operator, W: Record<id, PlanPt>}`. Wall samples sit at z=0 with h = sensor.h (0.95, the light-path plane: the drawn chibi's chest).
 
 **Views**
 - `ViewConfig`, with presets `DEFAULT_VIEW` and `WIDE_VIEW`.
@@ -129,22 +129,25 @@ The other deliberate change: in the room view the camera stands front-left, not 
 **Occlusion and depth order**
 - `Box`, `occluderBox(layout?)`, `hiddenByBox(p, box, tilt, view?)`, `isHiddenByOccluder(p, tilt, view?, layout?)`, `occluderSilhouette(tilt, view?, layout?)`.
 - `crossesOccluder(a, b, layout?)` is a plan-view segment test.
+- The partition AS DRAWN (use these for overlay light; see "Path-legibility kit" below): `PARTITION_ARCH`, `PARTITION_FOOT_H`, `partitionTopH(z)`, `hiddenByPartition(p, s, {layout?, padPx?})`, `partitionHides(s, h, opts?)`, `partitionCrossings(a, b, s, {zoom})`, `assertAroundTheEnd(label, polylines, s, {zoom, ...})`.
 - `DepthItem {z, x?, h?, w?, height?, box?}` and `depthSort(items, tilt, view?)`. Only items that overlap on screen constrain each other; an upright item is drawn before the partition when the partition hides part of it, after it otherwise.
 - `depthOf(p, tilt, view?)`.
 
 **Characters**
 - Constants `RIG_PX = 440`, `PERSON_M = 1.7`.
-- `rigAt(x, z, tilt, {heightM?, view?}) → {x, y, scale, depth}`: feet on the projected floor point. A 1.7 m person comes out at scale 1.31, about 578 px tall.
+- `rigScale(s, heightM = 1.7)`: the rig scale on the SET's height scale (`heightM · ppm · heightScale / 440`), uniform, never squashed, so a 1.7 m person is exactly 1.7 m of wall or partition at every tilt.
+- `rigAt(x, z, tilt, {heightM?, view?}) → {x, y, scale, depth}`: feet on the projected floor point, scale `rigScale`. A 1.7 m person comes out at scale 1.31 at tilt 0; 1.20 at RAISED_TILT (0.10); 0.66 at tilt 0.45 where `figureMix` starts the fade. At tilt 0 that is about 578 px tall. The rig's chest (~0.95 m) is the light-path plane.
 - `figureMix(tilt) → {rig, token, rigScaleX, rigScaleY, tokenScale}`: the rig fades out over tilt 0.45–0.75 with a mild settle (94% wide, 84% tall at most, anchored at the feet), and the token fades in over 0.5–0.8 while growing from 70% to 100%.
 - `rigStyle(tilt, scale)` returns CSS ready to pass as the Character's `style`.
-- `tokenAt(x, z, tilt, {radiusM?, h?, view?}) → {x, y, r, opacity, scale}`, with constants `TOKEN_H = 1.2` and `TOKEN_R = 0.26`.
+- `tokenAt(x, z, tilt, {radiusM?, h?, view?}) → {x, y, r, opacity, scale}`, with constants `TOKEN_H = LAYOUT.sensor.h` (0.95 m, the rig's chest) and `TOKEN_R = 0.26`.
 
 ## API: `RoomSet.tsx` and `Partition.tsx`
 - **`<RoomSet>`** props: `tilt`, `items?: RoomItem[]`, `backdrop?`, `children?`, `partition?` (default true), `wobble?`, `door?`, `plant?`, `view?`, `layout?`.
   - `RoomItem` is `DepthItem & {key?, node}`. Items are depth-sorted together with the built-in partition and plant.
   - `backdrop` draws on the room shell (wall spots, light paths), behind everything standing; `children` draws on top.
   - Everything is in world px, so wrap the set and all projected overlays in one camera `<Layer>`.
-  - Also exported: `ROOM_COLORS`, `WALL_T`, `DOOR`, `PLANT`, and `<PottedPlant x z tilt view? heightM?>` (upright in the room view, top-down in the plan).
+  - Also exported: `ROOM_COLORS`, `WALL_T`, `DOOR`, `PLANT`, and `<PottedPlant x z tilt view? heightM?>` (upright in the room view on the set's height scale like the rigs, top-down in the plan).
+  - `<GapMarker tilt t layout? view? halfW?>`: the opening between the partition's far end and the wall, in INK (dashed threshold over a pale floor patch). Put it in `backdrop`. With a moved layout it shrinks with the gap.
 - **`<Partition tilt wobble? view? layout? opacity? style?>`**: a coral 3-panel screen with arched panel tops, inset outlines, hinge lines with small plates, stubby feet and a floor shadow. It is opaque and 2 m tall. `wobble` (about ±1) leans it up to 6° about its base, and only a quarter of that in the plan view. At tilt 1 it becomes a coral bar with an ink outline, at least 18 px wide.
 
 ## Design decisions
@@ -154,7 +157,7 @@ The other deliberate change: in the room view the camera stands front-left, not 
 - In the dev comp, the light path and wall samples sit in `backdrop`. In the room view the S→W3 leg passes correctly behind the operator's head, and W3→H passes behind the partition's far end and H.
 
 ## Known limitations
-- The rig placement keeps full height during the tilt; tokens sit at the true chest-height projection, so at tilt about 0.7 a token sits near the fading rig's hips.
+- (Superseded by the path-legibility pass: rigs now follow the set's height scale, `rigScale`, so the token at `TOKEN_H` lands on the fading rig's chest.) The rig placement kept full height during the tilt; tokens sat at the true chest-height projection, so at tilt about 0.7 a token sat near the fading rig's hips.
 - For about 6 frames around tilt 0.85 the wall tops go through a grey phase on their way from cream to ink.
 - `depthSort` treats people as upright billboards and only knows box-shaped solids.
 - The light-path splitting in the dev comp is local code there, not a kit export.
@@ -585,3 +588,48 @@ Copies of the originals are in `/tmp/claude-0/-home-user-Youtube-videos/30d53758
 - `review2/`: frames 0, 30, 36, 40, 48, 60, 80, 100, 120, 126, 150, 160, 170, 178, 186, 200, 239, plus `walk_sheet.png`
 - `review3/`: frames 0, 40, 80, 120, 160, 200, 239; full resolution in `review3/full/`: 90, 104, 172, 239
 - `review4/` (final): frames 0, 40, 60, 80, 120, 160, 200, 239
+
+=========
+
+## Path-legibility kit (qa/PATH_LEGIBILITY_PLAN.md §3)
+
+Fixes three room-view defects: light legs that read as going OVER the partition, the gap at the wall foreshortened to a
+sliver, and characters towering over the partition because rigs did not scale with the set. Heights changed in research
+(`research/geometry/geometry_check.py`, 71 checks pass) and were synced: partition **2.0 m**, light-path plane (sensor S,
+wall spots W, his point H) **0.95 m**. Plan x and z, every distance, delay, arc and `pathSchedule` are unchanged.
+
+**The rule.** Light paths in the room are drawn at `RAISED_TILT` (0.10) or at tilt 0. Every leg that passes the
+partition goes behind its END (the far or near vertical edge, at least 24 screen px below that end's top corner), never
+across its top band. Assert it at module load with `assertAroundTheEnd` for every tilt the shot draws light at and at the
+camera's settled zoom. Light behind the screen or a person is hidden exactly (`partitionHides`, `figuresHide`). Never
+fade the partition to show light behind it; the "seen from above" `PlanCard` carries the top-down read.
+
+**`lib/room.ts`**
+- `rigScale(s: ViewState, heightM = PERSON_M)`: `heightM · s.ppm · s.height / RIG_PX`. 1.314 at tilt 0, 1.202 at 0.10, 0.66 at 0.45. `rigAt` uses it; `depthSort` billboards match (upright width `w · ppm · max(height, 0.3)`, height `height · ppm · heightScale`).
+- `PARTITION_ARCH = 0.09`, `PARTITION_FOOT_H = 0.07` (Partition.tsx imports these, so the drawing and the tests cannot drift), `partitionTopH(z, layout?)`: the drawn arched top's height at plan z.
+- `hiddenByPartition(p: PlanPt, s: ViewState, {layout?, padPx = 3}) → boolean`: a camera-ray test against the partition as drawn (both faces, the arched top band, the end faces, plus `padPx` world px of ink outline). Points on the camera's side are never hidden. The partition at rest: do not draw light while it wobbles; pass a moved layout for S9's push.
+- `partitionHides(s, h, opts?) → HiddenTest`: the same at the light-path plane `h` (plan points in), for `LightPath`, `ScatterFan` and dots `hidden`. OR it with `figuresHide`.
+- `partitionCrossings(a, b, s, {zoom, layout?, steps?}) → {spans, crossings, overPx, frontClearPx}`: the visible spans `[u0, u1][]` of a→b; each place it goes `in` behind or comes `out` from behind the partition, by which edge (`far` by the wall, `near`, or `top`) and `belowCornerPx` (screen px at `zoom` below that end's top corner); `overPx` (visible far-side light above the top edge, must be 0); `frontClearPx` (screen clearance of a camera-side leg).
+- `assertAroundTheEnd(label, polylines: PlanPt[][], s, {zoom, minBelowCornerPx = 24, minFrontClearPx = 18, allowFront?, layout?})`: throws with a per-leg report if any leg crosses the top band, goes in or out less than `minBelowCornerPx` below a corner, shows light above the top, or (legs with no crossing, S→W) comes within `minFrontClearPx` of the partition on the camera side. `allowFront` for front legs that stop on the face (the blocked ghost line, S9's blocked pulses). Never downgrade it to a warning.
+- `TOKEN_H = LAYOUT.sensor.h`.
+
+**`components/v02/Cast2.tsx`**
+- `rigCovers(place: {x, y, scale}, q: {x, y}, growPx = 0) → boolean`: the shared pose-independent Character2 silhouette approximation (head and hair ellipse, torso with arms, legs) for clearance checks (replaces the scenes' private `rigHides`).
+- `figuresHide(s, h, figs: {z, place}[]) → HiddenTest`: a light-plane point behind a figure (`p.z < fig.z + 0.05`) is hidden inside its silhouette, so a W→H leg ends at his outline and fans and dots pass behind both people.
+- `rimFlash(t, scale, color = C.saffron) → string | undefined`: the arrival cue, a crisp saffron rim on the wall-side (up-left) outline as a CSS `drop-shadow`; pass as `style={{...rigStyle(tilt, scale), filter: rimFlash(t, place.scale)}}`, e.g. `t = tw(g, hit - 1, 3) * (1 - tw(g, hit + 6, 10))`.
+
+**`components/v02/RoomSet.tsx`**: `PottedPlant` on the set's height scale; `<GapMarker tilt t layout? view? halfW = 0.12>` (ink, no saffron construction aids; gone when the gap closes).
+
+**`components/v02/S9_Room.tsx`**: `walkAt` scales the rig with `rigScale` (the local `RIG_PX` is gone).
+
+**`components/v02/PlanCard.tsx`** (new, screen space, outside the room camera)
+- `<PlanCard x y t layout? view? area? checker? guesser? sensor? gap? label = "seen from above" light? marks?>`: a 480 × 408 card (`PLAN_AREA` 448 × 330 plus title and margin; `planCardSize(area)`). `t` 0..1 slides it in; pass `in · (1 − out)`. `light(toPx, ppm)` draws over the floor and under the partition and tokens; `marks(toPx, ppm)` on top. Plan coordinates are the layout's metres, so pass the scene's own paths and schedules. Strokes inside the card: path 6, pulse radius 11, lane 11, ring 34.
+- Views: `PlanView {cx, zTop, ppm}`, `PLAN_VIEW` (218 px/m: the gap 142 px, a token 109 px; the partition runs off the bottom), `PLAN_VIEW_FULL`, `planCardToPx(view?, area?)`, `viewForArea`, `mixPlanView`.
+- Pieces: `PlanRoute` (dashed route drawn to `head`), `PlanCross`, `PlanSpot`, `facingFromMotion`, `PlanTape({points, head, toPx, stepM = 0.29979, width?, label = "1 ns"})` (ticks every 1 ns of path, the label on the first complete piece in 30 px mono).
+- Where: S1.4–S1.5, the S1.7 tape, S3.1, S9.2. Never in S9.3, R4, or beside the readout inset (never two plan views at once).
+
+**`lib/shots.ts`**
+- `RAISED_TILT = 0.1` (a low rise on purpose: above about 0.12 W4, then W3, come out across the near panels' top band).
+- `CAM_RAISED {cx 895, cy 455, zoom 1.25}` (room centred), `CAM_PATH {996, 455, 1.25}` (room in screen x ~320..1350, PlanCard top right), `CAM_PATH_SIDE {531, 455, 1.15}` (room in screen x ~905..1855, cards on the left), `PLAN_CARD_RECT {x 1400, y 40, w 480, h 408}`. `CAM_ROOM` unchanged.
+
+**Check numbers**: `qa/path_legibility/rule_check.ts` (command in its header) prints the per-tilt table in the plan's §6.

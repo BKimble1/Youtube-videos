@@ -17,10 +17,13 @@
  *   <LightPath points={path} toPx={toPx} t={sched.progress(g)} layout={LAYOUT} />   // layout: throws on a bad leg
  *   <ScatterFan origin={W} ... t={tw(g, sched.vertexFrames[1], 10)} />             // fans cue on the bounces
  *   <TimingRuler ... marker={sched.nsAt(g)} />
- * Room view: toPx = (p) => project({...p, h: LAYOUT.sensor.h}, tilt), and pass
- *   hidden = (p) => isHiddenByOccluder({...p, h: LAYOUT.sensor.h}, tilt)
- * to LightPath / ScatterFan / CandidateArc so the stretches behind the partition are not drawn (Band and
- * PossibleCloud have no `hidden`: layer them below the partition instead).
+ * Room view: toPx = (p) => project({...p, h: LAYOUT.sensor.h}, tilt), s = viewAt(tilt), and pass
+ *   const ph = partitionHides(s, LAYOUT.sensor.h);                        // lib/room: the partition AS DRAWN
+ *   const fh = figuresHide(s, LAYOUT.sensor.h, [{z, place: her}, {z, place: him}]);   // Cast2: the people
+ *   hidden = (p) => ph(p) || fh(p)
+ * to LightPath / ScatterFan / CandidateArc so the stretches behind the partition and the people are not drawn (Band
+ * and PossibleCloud have no `hidden`: layer them below the partition instead). Every room leg also goes through
+ * assertAroundTheEnd at module load (round the partition's END, never over its top).
  */
 import React, {useId} from 'react';
 import {C, F, OUTLINE} from '../../theme';
@@ -206,8 +209,9 @@ export type LightPathProps = {
   /** With `layout`: minimum px gap between a stroke's edge and the occluder footprint (0 = never nudge). */
   clearPx?: number;
   /**
-   * Room view: true for plan points the camera cannot see (e.g. p => isHiddenByOccluder({...p, h: 1.2}, tilt) from
-   * lib/room). Those stretches of the trail, the pulse marks and the bounce rings are not drawn.
+   * Room view: true for plan points the camera cannot see (e.g. partitionHides(viewAt(tilt), LAYOUT.sensor.h) from
+   * lib/room, OR figuresHide(...) from Cast2). Those stretches of the trail, the pulse marks and the bounce rings are
+   * not drawn.
    */
   hidden?: (p: P2) => boolean;
   opacity?: number;

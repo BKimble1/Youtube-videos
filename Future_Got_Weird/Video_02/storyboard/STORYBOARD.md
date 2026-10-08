@@ -14,9 +14,11 @@ version is also the fallback.
 
 **Continuity rules from the review.** The kit sensor stands on a small tripod stand for acts 1–3 (the opening data was
 captured with the sensor held still); the checker stands beside it, reading its back readout; she lifts it at s32.
-Whenever light paths are drawn in the room, the camera is raised (tilt ≈ 0.35–0.5) so the gap between the partition's
-far end and the wall is plainly visible and every W→H segment passes through that gap, clear of the screen's
-silhouette. The first full fold to plan view is saved for s17.
+Light paths in the room are drawn at RAISED_TILT 0.10, or at tilt 0. Every leg that passes the partition goes behind
+its END (far or near vertical edge, ≥ 24 px below the corner), never across its top (`assertAroundTheEnd`, run at
+module load for every tilt the shot draws light at). Light behind the screen or behind a person is hidden exactly
+(`partitionHides`, `figuresHide`). The 'seen from above' PlanCard runs the same paths on the same schedule, so 'round
+the end, by way of the wall' reads in plan. The first full fold to plan view is saved for s17.
 
 Jokes: J1 s01 smug hider · J2 s10 the mirror · J3 s19→s20 one arc relief, two arcs dismay · J4 s47 he closes the gap,
 she simply leans round.
@@ -28,7 +30,7 @@ she simply leans round.
 | S1.1 | s01 | Q: who is hiding from what? A: the guesser tiptoes in from the right and settles into his spot behind the coral partition, hands on hips, smug. C: the checker's dashed sight line stops at the partition. **J1** | room view (tilt 0): checker at left beside the sensor on its stand | none | locked wide; tiptoe steps; a smug exhale. **R1** |
 | S1.2 | s02 | Q: what is the sensor looking at? A: the readout blinks on "sensor"; a pale fan lights a patch of blank wall. C: nothing of him in its view | push 8% toward the sensor and patch | none | soft sensor hum (motif) |
 | S1.3 | s03 | Q: so how could it know? A: the readout swings up and becomes a full-screen evidence board: the authors' released layout seen from above (wall top, sensor left, partition, person right; x mirrored to match our room), and the estimated position moving along its measured path. C: cut-back: the guesser freezes mid-smirk | evidence board (taped card) drawn from `evidence/tracking_topdown.json` | headline "Real measurements · published 2026"; marker label "estimated position"; conditions chip "authors' released data · evaluation-kit sensor, held still · processed with the authors' code"; source chip "Somasundaram et al., Nature 2026 · plot mirrored to match our room" | push in; paper slap; tiny "busted" sting. C02, C03 |
-| S1.4 | s04 | Q: through the partition? A: camera rises (tilt ≈ 0.4) until the gap at the wall shows; a ghost straight line from the sensor hits the partition and stops ("blocked"); then a path appears around the end of the partition via the wall | raised room view | "blocked" | partition thunk. C04 |
+| S1.4 | s04 | Q: through the partition? A: camera rises (RAISED_TILT 0.10) and the "seen from above" plan card comes in beside the room, showing the gap at the wall; a ghost straight line from the sensor hits the partition and stops ("blocked"); then a path appears around the end of the partition via the wall | raised room view | "blocked" | partition thunk. C04 |
 | S1.5 | s05 | Q: what path? A: a slowed pulse leaves the sensor, hits the wall (scatter fan), part reaches him, a tiny bit returns via the wall; later segments thinner and paler | raised room view | "slowed down" · "invisible flash (shown for clarity)" | pulse tick at each bounce. C04, C05, C43 |
 | S1.6 | s06–s07 | Q: later than what? A: two pulses race on a mini arrival timeline: the quick wall bounce lands first, the roundabout one later; a webcam prop tries to time it (question mark spins, it shrugs) and is replaced by the sensor close-up: two windows, a stopwatch glyph on the readout | inset timeline; sensor close-up | "≈ 7 ns later · illustrative"; label "time-of-flight sensor: times its own light's round trip" | webcam's sad blip. C06, C07 |
 | S1.7 | s08 | Q: why does timing matter? A: a ruler of light across the room: 1 ns = 30 cm; the extra delay stretches into an extra distance from the wall spot | ruler | "1 nanosecond ≈ 30 cm ≈ 1 ft"; "extra delay → extra distance" | settle; he glances at the wall, uneasy. C06 |

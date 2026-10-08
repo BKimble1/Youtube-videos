@@ -1,7 +1,7 @@
 import React from 'react';
 import {interpolateColors} from 'remotion';
 import {C, OUTLINE} from '../../theme';
-import {DEFAULT_VIEW, LAYOUT, Layout, PlanPt, ViewConfig, ViewState, hull, projectWith, smoothstep, viewAt} from '../../lib/room';
+import {DEFAULT_VIEW, LAYOUT, Layout, PARTITION_ARCH, PARTITION_FOOT_H, PlanPt, ViewConfig, ViewState, hull, projectWith, smoothstep, viewAt} from '../../lib/room';
 
 /**
  * The partition: a coral three-panel folding screen on stubby feet, standing on the floor along the z axis at
@@ -27,8 +27,8 @@ export type PartitionProps = {
   style?: React.CSSProperties;
 };
 
-const FOOT_H = 0.07; // panels stand this high on their feet
-const ARCH = 0.09; // panel tops: corners are this much lower than the middle
+const FOOT_H = PARTITION_FOOT_H; // panels stand this high on their feet (shared with lib/room's occlusion tests)
+const ARCH = PARTITION_ARCH; // panel tops: corners are this much lower than the middle
 const LEAN_MAX = 6; // degrees at wobble = 1
 const CORAL_TOP = '#F7A08F';
 

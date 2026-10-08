@@ -37,3 +37,4 @@ research/*/evidence/*.html
 # sheets are added explicitly (git add -f) when the scene is merged
 qa/scenes/
 qa/cuts/*/
+qa/pathfix_*/

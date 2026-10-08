@@ -21,10 +21,11 @@ import {CheckerToken, GuesserToken} from '../components/v02/Tokens';
  * No path splitting is needed for that (visibleRuns is for overlays painted above the set).
  */
 
-// Sensor hold in the room view. With layout.json's S (1.2 m up, 0.25 m in front of the operator toward the wall) and a
-// 1.7 m chibi rig, S projects just right of the operator's mouth corner (her chin is at ~1.21 m), so the box can only be
-// held up at chin height. At 0.6 of the prop's model size (~0.2 m wide, a realistic handheld) and upright, it clears
-// the mouth. The far face (emitter + detector) is placed exactly on S, so the light path starts on the prop.
+// Sensor hold in the room view. With layout.json's S (0.95 m up, the light-path plane, 0.25 m in front of the operator
+// toward the wall) and a 1.7 m chibi rig on the set's height scale (rigScale), S projects at the operator's chest (her
+// chest is at ~0.95 m, her chin at ~1.21 m) at every tilt, so the box is held at chest height. At 0.6 of the prop's
+// model size (~0.2 m wide, a realistic handheld) and upright, it sits below her face. The far face (emitter + detector)
+// is placed exactly on S, so the light path starts on the prop.
 const SENSOR_K = 0.6;
 const SENSOR_ROT = 0; // deg
 
