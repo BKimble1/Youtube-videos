@@ -125,30 +125,38 @@ const Wheel: React.FC<{cx: number; cy: number; r: number; deg: number; far?: boo
   </g>
 );
 
-/** One dot eye with squint lid and pleased arc. `side` -1 = rear (near) eye, +1 = front (far) eye. */
+/** One dot eye with squint lid and pleased arc. `side` -1 = rear (near) eye, +1 = front (far) eye.
+ *  Cautious (after the A09 reference): each eye has its own short lid; at squint 1 the lid passes through the dot's
+ *  centre and the dot is clipped below it (a half-disc), inner ends a touch higher (wary, not angry). */
 const Eye: React.FC<{cx: number; cy: number; k: number; e: EyeShape; side: -1 | 1}> = ({cx, cy, k, e, side}) => {
-  const open = Math.max(0, Math.min(1, e.blink)) * (1 - 0.58 * e.squint) * (1 - e.joy);
-  const rx = 7.2 * k * (1 + 0.12 * e.squint);
+  const uid = React.useId().replace(/[^a-zA-Z0-9_-]/g, '');
+  const open = Math.max(0, Math.min(1, e.blink)) * (1 - e.joy);
+  const rx = 7.2 * k;
   const ry = 8.4 * k * open;
-  const dy = 2.2 * k * e.squint;
-  const lidY = cy + dy - ry - 2.5 * k;
-  // cautious lids: lowered and nearly flat, inner ends a touch higher (wary, not angry)
-  const tiltL = side * 1.4 * k * e.squint;
+  const lidY = cy - ry + ry * e.squint;
+  const t = -side * 0.9 * k * e.squint;
+  const chord = rx + 0.6 * k;
+  const showLid = e.squint > 0.02 && e.joy < 0.5;
+  const clip = `bot-eye-${uid}`;
   return (
     <g>
-      {ry > 1.1 ? <ellipse cx={cx} cy={cy + dy} rx={rx} ry={ry} fill={C.ink} /> : e.joy < 0.5 && <line x1={cx - rx} y1={cy + dy} x2={cx + rx} y2={cy + dy} stroke={C.ink} strokeWidth={4} strokeLinecap="round" />}
-      {e.squint > 0.02 && e.joy < 0.5 && (
-        <line x1={cx - rx - 2.5 * k} y1={lidY + tiltL} x2={cx + rx + 2.5 * k} y2={lidY - tiltL} stroke={C.ink} strokeWidth={4} strokeLinecap="round" opacity={Math.min(1, e.squint * 1.6)} />
+      {showLid && (
+        <defs>
+          <clipPath id={clip}>
+            <path d={`M ${cx - rx - 4} ${lidY + t * ((rx + 4) / rx)} L ${cx + rx + 4} ${lidY - t * ((rx + 4) / rx)} L ${cx + rx + 4} ${cy + ry + 4} L ${cx - rx - 4} ${cy + ry + 4} Z`} />
+          </clipPath>
+        </defs>
+      )}
+      {ry > 1.1 ? (
+        <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={C.ink} clipPath={showLid ? `url(#${clip})` : undefined} />
+      ) : (
+        e.joy < 0.5 && <line x1={cx - rx} y1={cy} x2={cx + rx} y2={cy} stroke={C.ink} strokeWidth={4} strokeLinecap="round" />
+      )}
+      {showLid && (
+        <line x1={cx - chord} y1={lidY + t * (chord / rx)} x2={cx + chord} y2={lidY - t * (chord / rx)} stroke={C.ink} strokeWidth={4} strokeLinecap="round" opacity={Math.min(1, e.squint * 1.6)} />
       )}
       {e.joy > 0.02 && (
-        <path
-          d={`M ${cx - 8 * k} ${cy + 3 * k} Q ${cx} ${cy + 3 * k - 13 * k * e.joy} ${cx + 8 * k} ${cy + 3 * k}`}
-          fill="none"
-          stroke={C.ink}
-          strokeWidth={4.5}
-          strokeLinecap="round"
-          opacity={Math.min(1, e.joy * 1.8)}
-        />
+        <path d={`M ${cx - 6 * k} ${cy + 1.5 * k} Q ${cx} ${cy + 1.5 * k - 11 * k * e.joy} ${cx + 6 * k} ${cy + 1.5 * k}`} fill="none" stroke={C.ink} strokeWidth={4.5} strokeLinecap="round" opacity={Math.min(1, e.joy * 1.8)} />
       )}
     </g>
   );
