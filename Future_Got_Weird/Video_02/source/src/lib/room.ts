@@ -12,8 +12,9 @@ import {E, Ease, tw} from './motion';
  *    receding axis leans to the upper left (shear): near things sit a little to the right of far things, as if the
  *    camera stood front-LEFT and slightly above. That is what lets the right side wall and the sensor-side face of the
  *    partition show, and it keeps the partition from hiding the wall samples: on screen the partition only covers
- *    wall to its right (x ~ 2.6-2.9 m at h = 1.2), while W1..W4 lie at x <= 2.2 m. Light paths from S to the wall are
- *    never hidden; the W -> H legs dip behind the partition's far end (use isHiddenByOccluder to split them).
+ *    wall to its right (x ~ 2.6-2.9 m at h = 1.2), while W1..W4 lie at x <= 2.2 m. The W -> H legs dip behind the
+ *    partition's far end and the S -> W legs pass behind the operator's head: paint light paths in RoomSet's `backdrop`
+ *    and the standing things cover them exactly; for overlays above the set, split them with visibleRuns().
  *  - tilt 1, the PLAN VIEW: straight down, wall at the top, the same scale in x and z (circles stay circles), the room
  *    centred in frame.
  *  - between: the camera's elevation angle phi rises from asin(0.35) to 90 deg, so floor foreshortening = sin(phi)
@@ -560,8 +561,14 @@ export const PERSON_M = 1.7;
 
 /**
  * Where to draw a frontal rig standing at (x, z): feet at the projected floor point, scale such that a person of
- * `heightM` metres is that tall in the room view. Pass {x, y, scale} straight to <Character>. The scale does not
- * shrink with the height scale as the camera tilts (that would squash the rig); use `figureMix`/`rigStyle` to fade it.
+ * `heightM` metres is that tall in the room view. Pass {x, y, scale} straight to <Character>/<Character2>. The scale
+ * does not shrink with the height scale as the camera tilts (that would squash the rig); use `figureMix`/`rigStyle` to
+ * fade it.
+ *
+ * Staging note: the rig is a chibi (big head). At 1.7 m its shoulders are at ~1.13 m and its chin at ~1.21 m, so a
+ * prop held at the layout's sensor height (1.2 m) sits at chin level in the room view, and as the camera tilts the
+ * projected point slides down the (unsquashed) rig toward the chest. Place hands with reach/reach2 on the projected
+ * point every frame (see dev/KitRoom) rather than on a fixed pose.
  */
 export const rigAt = (x: number, z: number, tilt: number, opts: {heightM?: number; view?: ViewConfig} = {}) => {
   const s = viewAt(tilt, opts.view ?? DEFAULT_VIEW);

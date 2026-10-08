@@ -1,5 +1,5 @@
 import React from 'react';
-import {C, OUTLINE} from '../../theme';
+import {C, FPS, OUTLINE} from '../../theme';
 
 /**
  * DeliveryBot: an original small wheeled delivery robot for act 5 (illustrative application, never a product).
@@ -15,16 +15,27 @@ import {C, OUTLINE} from '../../theme';
  *
  * Motion inputs are plain numbers so a scene drives them from the frame:
  *  - `travelled` (m): distance rolled; the wheels turn travelled / r and the body has a faint road buzz.
+ *  - `speed` (m/s, optional; botDrive().speed): above ~1.5 m/s at 30 fps the spokes would strobe backwards, so they
+ *    fade to the hub.
  *  - `brake`: body pitch about the front axle; 1 = full nose-down braking dip (6 deg), negative = rock back on the
  *    rear axle (use for the settle overshoot or a wind-up).
  *  - `eyes`: 'neutral' | 'cautious' | 'pleased', or a blended EyeShape (mixEyes()).
  *  - `pulse` (0..1): one sensor pulse: the emitter lens flashes and three small arcs leave the window (0 = idle).
+ *
+ * Timing helpers (pure functions of the frame, no magic numbers in scenes):
+ *  - botDrive(f, plan): position, distance rolled, speed and the spring-damped `brake` pitch for a drive described as
+ *    speed keys (roll in at a speed, brake to a stop at an exact x, creep away...).
+ *  - botPulseAt(f, start, every): the `pulse` phase of a repeating sensor ping.
  *
  * <BotTop/> is the plan-view glyph of the same robot (top-down, same colours, outlines in screen px).
  */
 
 /** Design units per metre at scale 1. */
 export const BOT_UNITS_PER_M = 250;
+
+/** <DeliveryBot/>'s svg box: the ground point sits at (x, y) design units from the box's top-left corner (use it as
+ *  the CSS transform-origin, times the scale, when the rig is squashed or faded; see whBotStyle). */
+export const BOT_ORIGIN = {x: 130, y: 280, w: 260, h: 300};
 
 /** Physical size (metres). */
 export const BOT = {
@@ -70,6 +81,8 @@ export type DeliveryBotProps = {
   scale?: number;
   /** metres rolled (drives wheel rotation) */
   travelled?: number;
+  /** current speed, m/s (botDrive().speed); fades the spokes when they would strobe */
+  speed?: number;
   /** body pitch: 1 = full nose-down braking dip, negative = rock back */
   brake?: number;
   eyes?: BotEyes | Partial<EyeShape>;
@@ -92,18 +105,20 @@ const AX_REAR = -60;
 const AX_FRONT = 2;
 const AX_Y = -R;
 
-/** A spoked wheel at (cx, cy) turned by `deg`. */
-const Wheel: React.FC<{cx: number; cy: number; r: number; deg: number; far?: boolean}> = ({cx, cy, r, deg, far}) => (
+/** A spoked wheel at (cx, cy) turned by `deg`; `spokes` 0..1 fades the spokes (fast roll: no backward strobing). */
+const Wheel: React.FC<{cx: number; cy: number; r: number; deg: number; far?: boolean; spokes?: number}> = ({cx, cy, r, deg, far, spokes = 1}) => (
   <g transform={`translate(${cx} ${cy})`}>
     <circle r={r} fill={far ? C.ink : TYRE} stroke={C.ink} strokeWidth={OUTLINE} />
     {!far && (
       <g>
         <circle r={r * 0.58} fill={C.cream} stroke={C.ink} strokeWidth={3} />
-        <g transform={`rotate(${deg})`} stroke={C.ink} strokeWidth={3} strokeLinecap="round">
-          {[0, 72, 144, 216, 288].map((a) => (
-            <line key={a} x1={0} y1={0} x2={Math.cos((a * Math.PI) / 180) * r * 0.5} y2={Math.sin((a * Math.PI) / 180) * r * 0.5} />
-          ))}
-        </g>
+        {spokes > 0.01 && (
+          <g transform={`rotate(${deg})`} stroke={C.ink} strokeWidth={3} strokeLinecap="round" opacity={spokes}>
+            {[0, 72, 144, 216, 288].map((a) => (
+              <line key={a} x1={0} y1={0} x2={Math.cos((a * Math.PI) / 180) * r * 0.5} y2={Math.sin((a * Math.PI) / 180) * r * 0.5} />
+            ))}
+          </g>
+        )}
         <circle r={r * 0.17} fill={C.teal} stroke={C.ink} strokeWidth={2.5} />
       </g>
     )}
@@ -164,10 +179,12 @@ const NOSE_X1 = 86;
 const ny = (x: number, y: number) => y - SLOPE * (x - NOSE_X0);
 
 /** The robot as an SVG group (ground point at 0,0, facing +x, design units). */
-export const DeliveryBotG: React.FC<Omit<DeliveryBotProps, 'x' | 'y' | 'scale' | 'style'>> = ({travelled = 0, brake = 0, eyes = 'neutral', look = 0, blink = 1, pulse = 0, flip = false, shadow = true}) => {
+export const DeliveryBotG: React.FC<Omit<DeliveryBotProps, 'x' | 'y' | 'scale' | 'style'>> = ({travelled = 0, speed = 0, brake = 0, eyes = 'neutral', look = 0, blink = 1, pulse = 0, flip = false, shadow = true}) => {
   const e0 = toShape(eyes);
   const e: EyeShape = {...e0, look: Math.max(-1, Math.min(1, e0.look + look)), blink: e0.blink * blink};
   const wheelDeg = ((travelled / BOT.wheelR) * 180) / Math.PI;
+  // 5 spokes repeat every 72 deg: past ~29 deg per frame (0.05 m/frame) they start to read as turning backwards
+  const spokes = 1 - smooth01((Math.abs(speed) / FPS - 0.05) / 0.025);
   const buzz = Math.sin((travelled * Math.PI * 2) / 0.31) * 0.7;
   const pitch = Math.max(-1.5, Math.min(1.5, brake)) * 6;
   const pivot = pitch >= 0 ? AX_FRONT : AX_REAR;
@@ -237,8 +254,8 @@ export const DeliveryBotG: React.FC<Omit<DeliveryBotProps, 'x' | 'y' | 'scale' |
         <rect x={-56} y={-134} width={34} height={7} rx={3.5} fill={C.tealDeep} />
       </g>
       {/* near wheels */}
-      <Wheel cx={AX_REAR} cy={AX_Y} r={R} deg={wheelDeg} />
-      <Wheel cx={AX_FRONT} cy={AX_Y} r={R} deg={wheelDeg} />
+      <Wheel cx={AX_REAR} cy={AX_Y} r={R} deg={wheelDeg} spokes={spokes} />
+      <Wheel cx={AX_FRONT} cy={AX_Y} r={R} deg={wheelDeg + 17} spokes={spokes} />
     </g>
   );
 };
@@ -246,14 +263,129 @@ export const DeliveryBotG: React.FC<Omit<DeliveryBotProps, 'x' | 'y' | 'scale' |
 /** The robot side rig as an absolutely positioned SVG (ground point at x, y in px). */
 export const DeliveryBot: React.FC<DeliveryBotProps> = ({x, y, scale = 1, style, ...rest}) => (
   <svg
-    viewBox="-130 -280 260 300"
-    width={260 * scale}
-    height={300 * scale}
-    style={{position: 'absolute', left: x - 130 * scale, top: y - 280 * scale, overflow: 'visible', ...style}}
+    viewBox={`${-BOT_ORIGIN.x} ${-BOT_ORIGIN.y} ${BOT_ORIGIN.w} ${BOT_ORIGIN.h}`}
+    width={BOT_ORIGIN.w * scale}
+    height={BOT_ORIGIN.h * scale}
+    style={{position: 'absolute', left: x - BOT_ORIGIN.x * scale, top: y - BOT_ORIGIN.y * scale, overflow: 'visible', ...style}}
   >
     <DeliveryBotG {...rest} />
   </svg>
 );
+
+/* ------------------------------------------------------------------ driving: pure functions of the frame */
+
+const smooth01 = (u: number) => {
+  const v = Math.max(0, Math.min(1, u));
+  return v * v * (3 - 2 * v);
+};
+
+/** A speed change: over frames [at, at + dur] the speed ramps linearly (constant acceleration) to `to` m/s. */
+export type BotSpeedKey = {at: number; dur: number; to: number};
+
+/**
+ * A drive along one axis, described by its speed: `v0` m/s from frame 0, then the keys in time order. Give either
+ * `x0` (position at frame 0) or `endX` (position when the last key ends, e.g. the stop pose: the roll-in is then
+ * solved backwards so the robot stops exactly there).
+ *
+ *   roll in at 1.35 m/s and brake to a stop at x = 2.5 over 14 frames starting at frame 80:
+ *     botDrive(f, {v0: 1.35, keys: [{at: 80, dur: 14, to: 0}], endX: 2.5})
+ *   then creep on carefully from frame 150:  keys: [..., {at: 150, dur: 24, to: 0.3}]  (give x0 or endX accordingly)
+ */
+export type BotDrivePlan = {
+  /** speed before the first key, m/s */
+  v0: number;
+  keys: BotSpeedKey[];
+  /** x (m) at frame 0 (default 0 unless endX is given) */
+  x0?: number;
+  /** x (m) reached at the end of the last key; overrides x0 */
+  endX?: number;
+  /** +1 drives toward +x (default), -1 toward -x */
+  dir?: 1 | -1;
+  /** frames per second (default 30) */
+  fps?: number;
+  /** deceleration (m/s²) that gives the full braking dip, brake = 1 (default 2.9, i.e. 1.35 m/s to rest in 14 frames) */
+  fullBrake?: number;
+};
+
+export type BotDriveState = {
+  /** position along the axis, m */
+  x: number;
+  /** distance rolled since frame 0, m (feed to `travelled`) */
+  travelled: number;
+  /** current speed, m/s (feed it to the rig's `speed`) and m per frame */
+  speed: number;
+  speedPerFrame: number;
+  /** acceleration, m/s² (negative while braking) */
+  accel: number;
+  /** body pitch for the rig's `brake` prop: a damped spring chasing the deceleration (dips, rocks back, settles) */
+  brake: number;
+};
+
+/** Speed (m/s) and acceleration (m/s²) at frame t (keys sorted by `at`). */
+const speedAt = (t: number, v0: number, keys: BotSpeedKey[], fps: number) => {
+  let v = v0;
+  for (const k of keys) {
+    if (t < k.at) return {v, a: 0};
+    const d = Math.max(1e-6, k.dur);
+    if (t < k.at + d) {
+      const u = (t - k.at) / d;
+      return {v: v + (k.to - v) * u, a: ((k.to - v) * fps) / d};
+    }
+    v = k.to;
+  }
+  return {v, a: 0};
+};
+
+/** Distance (m) rolled from frame 0 to frame t (exact integral of the piecewise-linear speed). */
+const distTo = (t: number, v0: number, keys: BotSpeedKey[], fps: number) => {
+  let v = v0;
+  let s = 0;
+  let from = 0;
+  for (const k of keys) {
+    const d = Math.max(1e-6, k.dur);
+    if (t <= k.at) return s + (v * (t - from)) / fps;
+    s += (v * (k.at - from)) / fps;
+    if (t <= k.at + d) {
+      const u = t - k.at;
+      return s + (v * u + ((k.to - v) * u * u) / (2 * d)) / fps;
+    }
+    s += (((v + k.to) / 2) * d) / fps;
+    v = k.to;
+    from = k.at + d;
+  }
+  return s + (v * (t - from)) / fps;
+};
+
+/**
+ * The robot's drive at frame f (deterministic: the brake spring is integrated from frame 0 every call). The spring
+ * dips the nose under braking (brake ≈ 1.1 peak for a full stop), rocks back past level and settles in ~20 frames;
+ * accelerating rocks it back a little.
+ */
+export const botDrive = (f: number, plan: BotDrivePlan): BotDriveState => {
+  const fps = plan.fps ?? 30;
+  const dir = plan.dir ?? 1;
+  const keys = [...plan.keys].sort((a, b) => a.at - b.at);
+  const last = keys.length ? keys[keys.length - 1] : undefined;
+  const x0 = plan.endX !== undefined ? plan.endX - dir * distTo(last ? last.at + Math.max(1e-6, last.dur) : 0, plan.v0, keys, fps) : plan.x0 ?? 0;
+  const travelled = distTo(f, plan.v0, keys, fps);
+  const {v, a} = speedAt(f, plan.v0, keys, fps);
+  const full = plan.fullBrake ?? 2.9;
+  let th = 0;
+  let w = 0;
+  for (let i = 0; i < Math.floor(f); i++) {
+    const target = 0.78 * Math.max(-1.5, Math.min(1.5, -speedAt(i, plan.v0, keys, fps).a / full));
+    w += 0.1 * (target - th) - 0.3 * w;
+    th += w;
+  }
+  return {x: x0 + dir * travelled, travelled, speed: v, speedPerFrame: v / fps, accel: a, brake: th * 1.15};
+};
+
+/** Sensor ping phase for the rig's `pulse` prop: one `len`-frame pulse every `every` frames from `start`, until `end`. */
+export const botPulseAt = (f: number, start: number, every: number, len = 18, end = Infinity) => {
+  if (f < start || f >= end) return 0;
+  const p = (f - start) % every;
+  return p < len ? p / len : 0;
+};
 
 /* ------------------------------------------------------------------ plan glyph */
 

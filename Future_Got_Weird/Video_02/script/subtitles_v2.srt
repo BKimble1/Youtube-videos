@@ -1,0 +1,645 @@
+1
+00:00:00,530 --> 00:00:02,930
+Our friend here is hiding
+behind a partition,
+
+2
+00:00:03,010 --> 00:00:05,275
+and he is very pleased about it.
+
+3
+00:00:05,355 --> 00:00:06,835
+That sensor can't see him.
+
+4
+00:00:06,915 --> 00:00:09,395
+It's pointed at a plain, blank wall.
+
+5
+00:00:09,475 --> 00:00:14,835
+And yet this is real data,
+from a study published in 2026:
+
+6
+00:00:14,915 --> 00:00:17,875
+seen from above, a small
+sensor aimed at a wall,
+
+7
+00:00:17,955 --> 00:00:20,455
+tracking someone it never saw directly.
+
+8
+00:00:21,035 --> 00:00:23,315
+Here's the trick for
+seeing around corners.
+
+9
+00:00:23,395 --> 00:00:25,568
+The light doesn't go
+through the partition.
+
+10
+00:00:25,648 --> 00:00:28,075
+It goes around the end,
+by way of the wall.
+
+11
+00:00:28,155 --> 00:00:30,982
+The sensor fires a short, invisible flash.
+
+12
+00:00:31,062 --> 00:00:33,808
+The wall scatters it, part
+reaches the hidden person,
+
+13
+00:00:33,888 --> 00:00:37,475
+and a tiny bit bounces
+back: wall, then sensor.
+
+14
+00:00:37,555 --> 00:00:40,275
+That trip is longer than a
+quick bounce off the wall,
+
+15
+00:00:40,355 --> 00:00:42,168
+so it arrives a little later.
+
+16
+00:00:42,248 --> 00:00:44,595
+A few billionths of a second later.
+
+17
+00:00:44,675 --> 00:00:46,435
+Your webcam can't time that.
+
+18
+00:00:46,515 --> 00:00:48,515
+This takes a time-of-flight sensor,
+
+19
+00:00:48,595 --> 00:00:51,355
+a camera that clocks its
+own light's round trip.
+
+20
+00:00:51,435 --> 00:00:54,355
+Light travels about thirty
+centimetres in a nanosecond,
+
+21
+00:00:54,435 --> 00:00:56,195
+one billionth of a second.
+
+22
+00:00:56,275 --> 00:01:00,895
+So timing is distance, and the extra
+delay is a clue to where he is.
+
+23
+00:01:01,310 --> 00:01:03,630
+Why does a plain wall work at all?
+
+24
+00:01:03,710 --> 00:01:04,990
+Start with a mirror.
+
+25
+00:01:05,070 --> 00:01:07,550
+Light leaves a mirror at
+the same angle it arrived,
+
+26
+00:01:07,630 --> 00:01:09,363
+so the picture stays whole.
+
+27
+00:01:09,443 --> 00:01:13,210
+Put a mirror here, and our
+friend is simply visible.
+
+28
+00:01:13,350 --> 00:01:15,830
+A painted wall is rough up close.
+
+29
+00:01:15,910 --> 00:01:17,790
+It throws light every which way,
+
+30
+00:01:17,870 --> 00:01:20,070
+so each spot acts less like a mirror,
+
+31
+00:01:20,150 --> 00:01:21,750
+more like a tiny lamp.
+
+32
+00:01:21,830 --> 00:01:25,190
+You might picture his image as a
+postcard shredded into confetti,
+
+33
+00:01:25,270 --> 00:01:26,550
+waiting to be sorted.
+
+34
+00:01:26,630 --> 00:01:27,990
+It's worse than that.
+
+35
+00:01:28,070 --> 00:01:30,310
+Confetti still holds bits of picture.
+
+36
+00:01:30,390 --> 00:01:33,590
+Everything coming back
+is a blend of many paths.
+
+37
+00:01:33,670 --> 00:01:35,970
+What survives is timing.
+
+38
+00:01:36,115 --> 00:01:38,035
+Follow the path that matters:
+
+39
+00:01:38,115 --> 00:01:42,915
+sensor, wall, person, wall, sensor.
+
+40
+00:01:42,995 --> 00:01:44,675
+Each bounce spreads the light,
+
+41
+00:01:44,755 --> 00:01:46,195
+and most of it is lost.
+
+42
+00:01:46,275 --> 00:01:48,755
+Nearly everything coming
+back bounced once,
+
+43
+00:01:48,835 --> 00:01:49,875
+off the wall.
+
+44
+00:01:49,955 --> 00:01:52,035
+Our friend's echo bounced three times,
+
+45
+00:01:52,115 --> 00:01:53,005
+so it's tiny.
+
+46
+00:01:53,085 --> 00:01:55,285
+This is real data from the same team,
+
+47
+00:01:55,365 --> 00:01:57,805
+with a different sensor and hidden object:
+
+48
+00:01:57,885 --> 00:02:01,645
+the wall's big echo, then,
+a few nanoseconds later,
+
+49
+00:02:01,725 --> 00:02:03,858
+a bump you have to zoom in to see.
+
+50
+00:02:03,938 --> 00:02:06,925
+In this capture, hundreds of times weaker.
+
+51
+00:02:07,005 --> 00:02:08,805
+That bump is the clue.
+
+52
+00:02:08,885 --> 00:02:12,003
+Its timing says how much
+farther the light travelled.
+
+53
+00:02:12,115 --> 00:02:14,275
+Let's turn timing into a map:
+
+54
+00:02:14,355 --> 00:02:16,395
+the room from above, flattened,
+
+55
+00:02:16,475 --> 00:02:18,355
+with one more simplification.
+
+56
+00:02:18,435 --> 00:02:21,715
+The sensor flashes and listens
+at one spot on the wall.
+
+57
+00:02:21,795 --> 00:02:25,555
+Measure the extra delay, and you
+know how far he is from that spot.
+
+58
+00:02:25,635 --> 00:02:26,915
+Not which direction.
+
+59
+00:02:26,995 --> 00:02:28,195
+Just how far.
+
+60
+00:02:28,275 --> 00:02:30,075
+He could be anywhere on this arc,
+
+61
+00:02:30,155 --> 00:02:32,335
+all the same distance from that spot.
+
+62
+00:02:32,645 --> 00:02:34,485
+Now listen at a second spot.
+
+63
+00:02:34,565 --> 00:02:36,785
+Another delay, another arc.
+
+64
+00:02:36,885 --> 00:02:40,865
+On this side of the wall,
+they cross in just one place.
+
+65
+00:02:41,335 --> 00:02:43,255
+Measured timings are a bit fuzzy,
+
+66
+00:02:43,335 --> 00:02:45,215
+so each arc is really a band,
+
+67
+00:02:45,295 --> 00:02:47,575
+and the bands overlap in a small patch.
+
+68
+00:02:47,655 --> 00:02:51,175
+These two spots are close, so
+the patch is long and blurry.
+
+69
+00:02:51,255 --> 00:02:52,995
+Spread them out, and it shrinks.
+
+70
+00:02:53,075 --> 00:02:56,435
+In practice, a computer
+weighs many spots at once,
+
+71
+00:02:56,515 --> 00:03:00,115
+trying positions and keeping those
+whose predicted echoes match.
+
+72
+00:03:00,195 --> 00:03:01,875
+It also leans on assumptions,
+
+73
+00:03:01,955 --> 00:03:04,115
+like what kind of object it's after.
+
+74
+00:03:04,195 --> 00:03:06,888
+That's why the answer
+is a likely location,
+
+75
+00:03:06,968 --> 00:03:08,195
+or a rough shape.
+
+76
+00:03:08,275 --> 00:03:09,615
+Not a photograph.
+
+77
+00:03:10,055 --> 00:03:11,815
+None of this is brand new.
+
+78
+00:03:11,895 --> 00:03:16,975
+In 2012, an MIT team reported recovering
+the 3D shape of a small mannequin
+
+79
+00:03:17,055 --> 00:03:18,135
+around a corner.
+
+80
+00:03:18,215 --> 00:03:21,415
+It took an ultrafast laser
+and a high-speed camera:
+
+81
+00:03:21,495 --> 00:03:23,315
+lab equipment that filled a table.
+
+82
+00:03:23,395 --> 00:03:28,035
+In a 2018 study, Stanford researchers
+swept one spot across the wall,
+
+83
+00:03:28,115 --> 00:03:29,715
+like our simplified picture.
+
+84
+00:03:29,795 --> 00:03:33,075
+The math got simpler: for
+a reflective exit sign,
+
+85
+00:03:33,155 --> 00:03:35,955
+rebuilding the scene took
+about a second on a laptop.
+
+86
+00:03:36,035 --> 00:03:38,835
+Measuring still took almost seven minutes.
+
+87
+00:03:38,915 --> 00:03:43,795
+By 2021, researchers in Wisconsin
+and Milan had sped up measuring too:
+
+88
+00:03:43,875 --> 00:03:46,035
+live video of ordinary objects,
+
+89
+00:03:46,115 --> 00:03:51,155
+five frames a second, with a powerful
+laser and custom detectors. Impressive.
+
+90
+00:03:51,235 --> 00:03:53,775
+But all of it ran on research equipment.
+
+91
+00:03:53,950 --> 00:03:56,910
+Then, in a study published in 2026,
+
+92
+00:03:56,990 --> 00:04:01,070
+a team from MIT and Dartmouth tried
+the small time-of-flight sensors,
+
+93
+00:04:01,150 --> 00:04:04,430
+often called LiDAR, found
+in phones and gadgets.
+
+94
+00:04:04,510 --> 00:04:06,430
+Don't expect your phone to do this yet:
+
+95
+00:04:06,510 --> 00:04:09,350
+phone makers often keep
+the raw data private.
+
+96
+00:04:09,430 --> 00:04:11,470
+These sensors are tough customers.
+
+97
+00:04:11,550 --> 00:04:13,950
+Weak lasers mean fainter echoes.
+
+98
+00:04:14,030 --> 00:04:17,310
+The team's smartphone-grade
+device had about a hundred pixels:
+
+99
+00:04:17,390 --> 00:04:19,150
+a hundred listening spots.
+
+100
+00:04:19,230 --> 00:04:21,950
+And if you hold one in
+your hand, it jiggles.
+
+101
+00:04:22,030 --> 00:04:25,230
+Their fix borrows night mode's
+trick from phone cameras:
+
+102
+00:04:25,310 --> 00:04:29,070
+stack many quick, dim frames
+into one better estimate.
+
+103
+00:04:29,150 --> 00:04:33,470
+The catch: between frames, the
+sensor jiggles and the person moves.
+
+104
+00:04:33,550 --> 00:04:35,710
+Plain averaging would smear everything,
+
+105
+00:04:35,790 --> 00:04:37,825
+like a long exposure of someone walking.
+
+106
+00:04:37,905 --> 00:04:39,985
+Their method puts the motion to work,
+
+107
+00:04:40,065 --> 00:04:41,905
+one unknown at a time.
+
+108
+00:04:41,985 --> 00:04:43,945
+Move the sensor through known positions,
+
+109
+00:04:44,025 --> 00:04:45,985
+and the listening spots spread out.
+
+110
+00:04:46,065 --> 00:04:50,305
+Keep the sensor still, and each step
+becomes a new position to follow.
+
+111
+00:04:50,385 --> 00:04:52,865
+Our opening clip came
+from a different sensor:
+
+112
+00:04:52,945 --> 00:04:56,305
+an off-the-shelf kit the authors
+put at under a hundred dollars,
+
+113
+00:04:56,385 --> 00:04:58,185
+with sixteen listening spots,
+
+114
+00:04:58,265 --> 00:05:01,025
+held still while a person
+walked behind a partition.
+
+115
+00:05:01,105 --> 00:05:02,765
+We ran it through their own code.
+
+116
+00:05:02,845 --> 00:05:04,605
+Moved through known positions,
+
+117
+00:05:04,685 --> 00:05:09,145
+the sensor behind that faint bump
+rebuilt the rough outline of a hidden U.
+
+118
+00:05:09,450 --> 00:05:11,290
+Many of these tests had help:
+
+119
+00:05:11,370 --> 00:05:14,090
+safety-vest style reflective
+material on the target,
+
+120
+00:05:14,170 --> 00:05:16,490
+which sends far more light straight back.
+
+121
+00:05:16,570 --> 00:05:19,370
+Our clip's files don't say
+if the walker wore any.
+
+122
+00:05:19,450 --> 00:05:23,225
+And the kit needs a flat wall and
+a few seconds of empty room first.
+
+123
+00:05:23,305 --> 00:05:26,905
+But the authors do report tracking
+a person in ordinary clothes,
+
+124
+00:05:26,985 --> 00:05:29,785
+with the sensor capturing
+thirty frames a second.
+
+125
+00:05:29,865 --> 00:05:33,345
+The code is public, though we've found
+no other team reporting results on
+
+126
+00:05:33,425 --> 00:05:35,045
+its own hardware yet.
+
+127
+00:05:35,465 --> 00:05:37,225
+What might this be good for?
+
+128
+00:05:37,305 --> 00:05:40,665
+Picture a delivery robot nearing
+a blind warehouse corner.
+
+129
+00:05:40,745 --> 00:05:42,505
+With a suitable wall at the junction,
+
+130
+00:05:42,585 --> 00:05:46,425
+a sensor like this might give it an
+early hint of movement out of sight.
+
+131
+00:05:46,505 --> 00:05:49,945
+Just a fuzzy blob:
+enough to say slow down,
+
+132
+00:05:50,025 --> 00:05:51,515
+not enough to say who's there.
+
+133
+00:05:51,595 --> 00:05:54,715
+And plenty is still hard: short range,
+
+134
+00:05:54,795 --> 00:05:57,675
+dark or shiny walls, bright sunlight,
+
+135
+00:05:57,755 --> 00:05:59,995
+and fast math on small hardware.
+
+136
+00:06:00,075 --> 00:06:03,115
+The researchers call it
+an early-stage prototype.
+
+137
+00:06:03,195 --> 00:06:05,475
+No one has shown that
+it prevents collisions.
+
+138
+00:06:05,555 --> 00:06:07,595
+For now, it's a promising clue,
+
+139
+00:06:07,675 --> 00:06:09,255
+not a safety system.
+
+140
+00:06:09,780 --> 00:06:11,985
+Which brings us back to our friend.
+
+141
+00:06:12,065 --> 00:06:15,172
+Being out of sight isn't the
+same as giving nothing away.
+
+142
+00:06:15,252 --> 00:06:16,692
+The light found a way around,
+
+143
+00:06:16,772 --> 00:06:19,855
+and careful timing and math
+can read some of its clues.
+
+144
+00:06:19,935 --> 00:06:23,195
+To really hide, he'd have
+to block the bounces too.
+
+145
+00:06:27,470 --> 00:06:31,870
+This is Future Got Weird: the
+strange future, explained.
+
+146
+00:06:31,950 --> 00:06:35,030
+Subscribe for more, and we'll
+see you around the corner.

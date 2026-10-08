@@ -29,7 +29,12 @@ import {Partition} from './Partition';
  * cream skirting board, the right side wall (the oblique camera stands front-left, so we see its inner face) with a
  * door near the front, a wood floor with a few wide planks, the coral partition, a potted plant in the back-left
  * corner for scale. The left side and the front are open so nothing ever blocks the view; walls and floor are slabs
- * with cream cut edges. Door and plant are > 0.6 m from every S -> W -> H path of the layout.
+ * with cream cut edges. Door and plant are > 0.6 m from every S -> W -> H path of the layout, and the plant's leaves
+ * stay clear of the wall samples (and their labels) at every tilt.
+ *
+ * During the tilt: planks fade (0.4..0.8), the floor turns to the cream board (0.55..0.95), the side-wall door and
+ * skirting fade while that wall is still broad (gone by ~0.75), wall tops and cut ends go cream -> ink (0.78..0.97),
+ * the plan door gap and the 0.5 m ticks fade in (0.75..1 / 0.78..1).
  *
  * tilt 1 = the PlanBoard: a cream board on the paper, ink wall lines (relay wall and right wall, with the door as a
  * gap), faint 0.5 m ticks along the relay wall only, the partition as a thick coral bar. No grid.
@@ -38,7 +43,8 @@ import {Partition} from './Partition';
  *
  * Slots, all in world px (the same 1920x1080 space the projection maps to; wrap the whole set and every projected
  * overlay in one camera <Layer>):
- *  - `backdrop`: drawn on the room shell (wall/floor decals: light spots, floor marks), behind everything standing.
+ *  - `backdrop`: drawn on the room shell (wall/floor decals: light spots, floor marks, light paths), behind everything
+ *    standing: people, the partition and the plant then hide exactly the stretches they stand in front of.
  *  - `items`: things standing in the room, painted far -> near with depthSort (partition and plant included).
  *  - `children`: overlays on top of everything (light paths, labels).
  */
@@ -55,8 +61,8 @@ export type RoomSetProps = {
   wobble?: number;
   /** door on the right side wall, near the front (default true) */
   door?: boolean;
-  /** potted plant in the back-left corner (default true) */
-  plant?: boolean;
+  /** potted plant: true = the default spot in the back-left corner (PLANT), false = none, or a custom spot */
+  plant?: boolean | {x: number; z: number; heightM?: number};
   view?: ViewConfig;
   layout?: Layout;
 };
@@ -88,8 +94,8 @@ const SKIRT_H = 0.1;
 const PLANK_W = 0.55; // 8 wide planks across 4.4 m
 /** Door on the right side wall (x = room.x1): z range and height (m). Far from every light path. */
 export const DOOR = {z0: 2.35, z1: 3.2, h: 2.0};
-/** Plant in the back-left corner (plan position, m). */
-export const PLANT = {x: 0.42, z: 0.4};
+/** Plant in the back-left corner (plan position and height, m). Its leaves stay left of W1's label at every tilt. */
+export const PLANT = {x: 0.4, z: 0.32, heightM: 1.3};
 
 type P3 = [number, number, number];
 
@@ -109,6 +115,8 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
   const inkT = smoothstep(0.78, 0.97, tilt); // cream wall tops -> ink wall lines (late and quick: no long grey phase)
   const plankOp = 1 - smoothstep(0.4, 0.8, tilt);
   const tickOp = smoothstep(0.78, 1, tilt);
+  // side-wall door: gone by tilt ~0.75 (height scale 0.32), before the side wall turns into a thin sliver
+  const doorOp = smoothstep(0.32, 0.55, s.height);
   const floorColor = interpolateColors(planT, [0, 1], [ROOM_COLORS.floor, ROOM_COLORS.board]);
   const topColor = interpolateColors(inkT, [0, 1], [ROOM_COLORS.cut, C.ink]);
   const ink = {stroke: C.ink, strokeWidth: OUTLINE, strokeLinejoin: 'round' as const};
@@ -153,7 +161,10 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
   const occ = occluderBox(layout);
   const all: RoomItem[] = [...items];
   if (partition) all.push({key: '__partition', z: (occ.z0 + occ.z1) / 2, box: occ as Box, node: <Partition tilt={tilt} wobble={wobble} view={view} layout={layout} />});
-  if (plant) all.push({key: '__plant', x: PLANT.x, z: PLANT.z, w: 0.3, height: 1.45, node: <PottedPlant x={PLANT.x} z={PLANT.z} tilt={tilt} view={view} />});
+  if (plant) {
+    const pl = plant === true ? PLANT : {x: plant.x, z: plant.z, heightM: plant.heightM ?? PLANT.heightM};
+    all.push({key: '__plant', x: pl.x, z: pl.z, w: 0.45 * (pl.heightM / 1.45), height: pl.heightM, node: <PottedPlant x={pl.x} z={pl.z} tilt={tilt} view={view} heightM={pl.heightM} />});
+  }
   const sorted = depthSort(all, tilt, view);
 
   return (
@@ -180,18 +191,24 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
             <path d={d([[x1, z0, 0], [x1, z1, 0], [x1, z1, HW], [x1, z0, HW]])} fill={ROOM_COLORS.sideWall} {...ink} />
             {/* skirting boards */}
             <path d={d([[x0, z0 + 0.012, 0], [x1, z0 + 0.012, 0], [x1, z0 + 0.012, SKIRT_H], [x0, z0 + 0.012, SKIRT_H]])} fill={ROOM_COLORS.skirting} {...ink} strokeWidth={3} />
-            {sideSkirt.map(([a, b], i) => (
-              <path key={`ss${i}`} d={d([[x1 - 0.012, a, 0], [x1 - 0.012, b, 0], [x1 - 0.012, b, SKIRT_H], [x1 - 0.012, a, SKIRT_H]])} fill={ROOM_COLORS.skirting} {...ink} strokeWidth={3} />
-            ))}
+            {/* side-wall skirting fades with the door: on an edge-on wall its ends would read as notches in the wall line */}
+            {doorOp > 0.001 && (
+              <g opacity={doorOp}>
+                {sideSkirt.map(([a, b], i) => (
+                  <path key={`ss${i}`} d={d([[x1 - 0.012, a, 0], [x1 - 0.012, b, 0], [x1 - 0.012, b, SKIRT_H], [x1 - 0.012, a, SKIRT_H]])} fill={ROOM_COLORS.skirting} {...ink} strokeWidth={3} />
+                ))}
+              </g>
+            )}
             {/* door on the side wall */}
-            {door && s.height > 0.06 && (
-              <g opacity={smoothstep(0.06, 0.25, s.height)}>
+            {/* (fades while the side wall is still broad: an edge-on door would only read as a stray sliver) */}
+            {door && doorOp > 0.001 && (
+              <g opacity={doorOp}>
                 <DoorOnSideWall s={s} x={x1 - 0.006} />
               </g>
             )}
-            {/* cut ends of the walls */}
-            <path d={d([[x0, z0 - T, 0], [x0, z0, 0], [x0, z0, HW], [x0, z0 - T, HW]])} fill={ROOM_COLORS.cut} {...ink} />
-            <path d={d([[x1, z1, 0], [x1 + T, z1, 0], [x1 + T, z1, HW], [x1, z1, HW]])} fill={ROOM_COLORS.cut} {...ink} />
+            {/* cut ends of the walls: the same colour as the wall tops, so they merge into the plan's ink wall lines */}
+            <path d={d([[x0, z0 - T, 0], [x0, z0, 0], [x0, z0, HW], [x0, z0 - T, HW]])} fill={topColor} {...ink} />
+            <path d={d([[x1, z1, 0], [x1 + T, z1, 0], [x1 + T, z1, HW], [x1, z1, HW]])} fill={topColor} {...ink} />
           </g>
         )}
         {/* wall tops: cream cut edges in the room view, the ink wall lines of the plan */}
@@ -233,15 +250,17 @@ const DoorOnSideWall: React.FC<{s: ViewState; x: number}> = ({s, x}) => {
     }).join(' ') + ' Z';
   const rect = (za: number, zb: number, ha: number, hb: number): [number, number][] => [[za, ha], [zb, ha], [zb, hb], [za, hb]];
   const {z0, z1, h} = DOOR;
-  const knob = projectWith(s, {x, z: z1 - 0.13, h: 1.0});
   const ink = {stroke: C.ink, strokeWidth: OUTLINE, strokeLinejoin: 'round' as const};
+  // the knob is a disc ON the wall plane (foreshortens with it): wall-plane (z, h) metres -> world px
+  const o = projectWith(s, {x, z: 0, h: 0});
+  const knobM = `matrix(${s.ppm * s.shear} ${s.ppm * s.floor} 0 ${-s.ppm * s.height} ${o.x} ${o.y})`;
   return (
     <g>
       <path d={d(rect(z0 - 0.08, z1 + 0.08, 0, h + 0.08))} fill={ROOM_COLORS.cut} {...ink} />
       <path d={d(rect(z0, z1, 0, h))} fill={ROOM_COLORS.door} {...ink} />
       <path d={d(rect(z0 + 0.12, z1 - 0.12, 1.12, h - 0.14))} fill="none" stroke={ROOM_COLORS.doorPanel} strokeWidth={3} strokeLinejoin="round" />
       <path d={d(rect(z0 + 0.12, z1 - 0.12, 0.16, 0.88))} fill="none" stroke={ROOM_COLORS.doorPanel} strokeWidth={3} strokeLinejoin="round" />
-      <ellipse cx={knob.x} cy={knob.y} rx={6} ry={8} fill={C.saffron} stroke={C.ink} strokeWidth={3} />
+      <circle transform={knobM} cx={z1 - 0.13} cy={1.0} r={0.035} fill={C.saffron} stroke={C.ink} strokeWidth={3} vectorEffect="non-scaling-stroke" />
     </g>
   );
 };
@@ -250,22 +269,23 @@ const DoorOnSideWall: React.FC<{s: ViewState; x: number}> = ({s, x}) => {
  * A potted plant for scale. Upright cutout in the room view (uniform scale, never squashed), a top-down rosette in the
  * plan view, crossfading with the same timing as the characters (figureMix).
  */
-export const PottedPlant: React.FC<{x: number; z: number; tilt: number; view?: ViewConfig; heightM?: number}> = ({x, z, tilt, view = DEFAULT_VIEW, heightM = 1.45}) => {
+export const PottedPlant: React.FC<{x: number; z: number; tilt: number; view?: ViewConfig; heightM?: number}> = ({x, z, tilt, view = DEFAULT_VIEW, heightM = PLANT.heightM}) => {
   const s = viewAt(tilt, view);
   const m = figureMix(tilt);
   const foot = projectWith(s, {x, z, h: 0});
   const k = (s.ppm * heightM) / 1.45; // px per metre for the cutout
   const sw = OUTLINE / k;
-  const top = projectWith(s, {x, z, h: 0.75});
+  const top = projectWith(s, {x, z, h: 0.75 * (heightM / 1.45)});
   const r = s.ppm; // px per metre, plan rosette
-  // leaves: angle from vertical (deg), stem length, leaf length, leaf half-width (m)
+  // leaves (drawn at a 1.45 m design height, then scaled): angle from vertical (deg), stem length, leaf length, leaf
+  // half-width (m). Upright habit: the half-span is ~0.48 m at design height (~0.43 m at the default 1.3 m).
   const leaves: [number, number, number, number][] = [
-    [-62, 0.2, 0.4, 0.12],
-    [60, 0.22, 0.4, 0.12],
-    [-34, 0.42, 0.44, 0.14],
-    [32, 0.44, 0.44, 0.14],
-    [-12, 0.62, 0.42, 0.14],
-    [14, 0.58, 0.42, 0.13],
+    [-48, 0.2, 0.38, 0.12],
+    [46, 0.22, 0.38, 0.12],
+    [-28, 0.42, 0.42, 0.14],
+    [26, 0.44, 0.42, 0.14],
+    [-9, 0.62, 0.42, 0.14],
+    [11, 0.58, 0.42, 0.13],
   ];
   const leafPath = (L: number, w: number) => `M 0 0 Q ${w * 1.25} ${-L * 0.45} 0 ${-L} Q ${-w * 1.25} ${-L * 0.45} 0 0 Z`;
   const base = -0.42;

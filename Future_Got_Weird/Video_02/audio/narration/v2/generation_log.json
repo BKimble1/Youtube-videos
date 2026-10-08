@@ -1,0 +1,884 @@
+[
+ {
+  "id": "x01",
+  "tts_node_id": "6Fn9ebyuegC4XRGoGAar",
+  "tts_session_ids": [
+   "e4W6hyIbiexykJI9HS3w",
+   "b1J7rsKdmegJ1hw59MUe",
+   "pHbCmynrIl1sev7CgMv0",
+   "e0yaWN7bETAOiil6u43k"
+  ],
+  "generation_ids": [
+   "1TOQGt5j1pfbOYbNt96S",
+   "ePG80Ugzk8CNJL0YGqIN",
+   "kgDMFkcTPIksGgQHMXhZ",
+   "yeV0kDUbNlhofFma0agu"
+  ],
+  "durations_s": [
+   18.8,
+   18.8,
+   19.52,
+   19.04
+  ],
+  "asset_node_ids": [
+   "mk2JesJ9vzJh3luW1qZV",
+   "tMUwKK8KI2iNeB5ZjhcW",
+   "phW4q87avbEcvwNJhgxH",
+   "6Fn9ebyuegC4XRGoGAar"
+  ],
+  "stt_session_ids": [
+   "M40CUH6b5IixCYk1mLVr",
+   "Wng2XpfJy2QP6xzIUS0w",
+   "JArEp2dCwfRW9Stok88p",
+   "CQql8QfHrtfHzfyhXLZp"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: 0 credits each (price_cents 0 USD) for all 4 generations; STT: 0 credits each for all 4 transcriptions",
+  "errors": ""
+ },
+ {
+  "id": "x02",
+  "tts_node_id": "WMN2ZMnD5uO2Jx5vFlPc",
+  "tts_session_ids": [
+   "wnCF62EdWpCa8fOBUELG",
+   "t3g0HGe8v7GQHIL30qK9",
+   "9pdHP5GqAmKAXfvKOh1e",
+   "Uhin9cZZGs8J4vnV9scv"
+  ],
+  "generation_ids": [
+   "IVDX4LvgQUGc3VuO7Vsf",
+   "DwEo0K532WYedagELYuo",
+   "ARwGhLH8c4A2VpHU1CrO",
+   "WFX58ZSb5J3KEEpSfoEd"
+  ],
+  "durations_s": [
+   16.4,
+   16.08,
+   16.16,
+   16.48
+  ],
+  "asset_node_ids": [
+   "GMYfvEEWzdCydhSQqCg0",
+   "ZIXG6aQX3vE0iXBMfQLJ",
+   "fZRamSQpm7YWVL0nLdOw",
+   "WMN2ZMnD5uO2Jx5vFlPc"
+  ],
+  "stt_session_ids": [
+   "X6oa66JqJLjzSxIqnsI1",
+   "kQliS83gVBFd7B0dBcq8",
+   "pmJETyjbWw6wrQ8TTx72",
+   "rhDdj87yDTolCEgeZaNY"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: 0 credits each (price_cents 0 USD) for all 4 generations; STT: 0 credits each for all 4 transcriptions",
+  "errors": ""
+ },
+ {
+  "id": "x03",
+  "tts_node_id": "QFPutuqqtrFgpftdsM2f",
+  "tts_session_ids": [
+   "cJlDsaRcK2gfgWuiVpIH",
+   "83uA02sysmI97CKomNt1",
+   "ftwPsStbPdFA1ibs6zw0",
+   "y2nAiQyxHisDklPz5l2u"
+  ],
+  "generation_ids": [
+   "6k27F1rFlpn5VZLGHCz3",
+   "myt79H6N3CQIuwJz2d9y",
+   "CC9N755xcDEEiOBZnwDe",
+   "9myy1xwDtwDm8FI12V8X"
+  ],
+  "durations_s": [
+   22.96,
+   22.8,
+   22.96,
+   22.88
+  ],
+  "asset_node_ids": [
+   "b1XXzNLwR5M5YpzCTNbC",
+   "euTW5WOR9CjsaPPB7a24",
+   "zqNDM12egG61DgjsBhzs",
+   "QFPutuqqtrFgpftdsM2f"
+  ],
+  "stt_session_ids": [
+   "6zLkMdo1aSSfGJ7bxo49",
+   "HoFxOa096gnYSxgj5mFz",
+   "BLzKI3hFSUExH0W87BDG",
+   "IulgnPdhtkdGBBDegu1D"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: 0 credits each (price_cents 0 USD) for all 4 generations; STT: 0 credits each for all 4 transcriptions",
+  "errors": ""
+ },
+ {
+  "id": "x04",
+  "tts_node_id": "uuNXorPsHAHfIowHNgbE",
+  "tts_session_ids": [
+   "PgPGIEFVzpfiZqRAGlqF",
+   "1LcXX0ra6RUuj3HDexek",
+   "QcSm0J0yM5WcuY9cRvyw",
+   "r68IJJnwbgMlFASN7CTe"
+  ],
+  "generation_ids": [
+   "eSTBmM5TMzOYVbexAtoT",
+   "usgIFnkqBPfis2GDK3bm",
+   "MgFSiE6skI0XvgoC6s6i",
+   "bEBxDfxRhonZy3uuxTHf"
+  ],
+  "durations_s": [
+   11.68,
+   11.68,
+   11.52,
+   12.08
+  ],
+  "asset_node_ids": [
+   "4ist5vwuxXFuSiaNJYBz",
+   "G60W2RN6WuQ3XlQ1Y97R",
+   "exOR0mVE4EWJSq9ioZQX",
+   "uuNXorPsHAHfIowHNgbE"
+  ],
+  "stt_session_ids": [
+   "z7e4YuYUHpTZU38PQURq",
+   "qCkT1fpV9CeE7IJsDawm",
+   "0zG1Rm0NheAfBfrDZLgU",
+   "Yxi1Qm2WzwRNmMK0ou56"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: 0 credits each (price_cents 0 USD) for all 4 generations; STT: 0 credits each for all 4 transcriptions",
+  "errors": ""
+ },
+ {
+  "id": "x05",
+  "tts_node_id": "2Q5IewmoTrVZPZJeQL9B",
+  "tts_session_ids": [
+   "aIW1xRTxyt0V2nIkuyVY",
+   "6GToozK0j0ZuLfUBxhk4",
+   "LcCUIg95cK5waQ0HyqLs",
+   "JOzkVzK2qUURENMhAWQI"
+  ],
+  "generation_ids": [
+   "WUrzyKcDArg9clyEvOwi",
+   "Z2WW6toEOjM0g0zFWSwe",
+   "VVavI8j0gTt9ZDlujFaS",
+   "nyaIOMJyC0PVStFCNqpc"
+  ],
+  "durations_s": [
+   21.84,
+   22.08,
+   22,
+   22.24
+  ],
+  "asset_node_ids": [
+   "XGR6EgEpOHI6ZojSJGEe",
+   "s3HcnQSIO50x09kDOaAZ",
+   "PnDVRnGIAP0wy6bQfOWp",
+   "2Q5IewmoTrVZPZJeQL9B"
+  ],
+  "stt_session_ids": [
+   "iUQGyi6jg2zYGT3tBetN",
+   "4rzFHqoazMA5ibUWgsqU",
+   "wUoOVjUvamo8oONDHSZx",
+   "5maLHx4UXaqilcgDkOqH"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "Every TTS generation and transcription reported credits 0, price_cents 0 (USD). credit_costs: 0 for each.",
+  "errors": "No errors. On the first poll, t2 to t4 were 'pending' with 'Encountered a concurrency limit. Automatically retrying generation later.' The service retried them and all completed, so nothing was regenerated. For t4, add_flow_asset_node returned the original TTS node 2Q5IewmoTrVZPZJeQL9B ('This generation is active on its original node') instead of creating a new node, so t4 was transcribed from that node. The transcript source URL confirms it was nyaIOMJyC0PVStFCNqpc. STT transcript generation ids: NWbgnT6D8z7lQBQ67WJB, Wcq3oLaXSpSQzw9Fdrjw, SNhOfQwgNUVGpiXbSaUS, ONrdiAzxF6MmcbKolxDp. STT node ids: KZG3mug13Vnu74oaVmfp, uyuLCmW72XXZEQ0kl9qe, Wqbwtwoljf4HNkUdpgyt, 1Vv1fk08hjvjMnHTC0Ar. spoken_duration_secs: 21.92, 22.16, 22.08, 22.32."
+ },
+ {
+  "id": "x06",
+  "tts_node_id": "OSd2F7VkxffqRjIq8A9V",
+  "tts_session_ids": [
+   "27GoAmsYXM3uOHREuLn7",
+   "2lgSgLSPB2iqeLZiwO7v",
+   "Yo4UiBSjjzwtfqjujfNF",
+   "RNaFDQu7e3NrOhgNtzLg"
+  ],
+  "generation_ids": [
+   "nASb6goJiYeMU7VvytkY",
+   "s6VQvdUiPrmbh9ZVMvHw",
+   "f0GcuXYh3nPsR21O9Y6C",
+   "P8GvnhvqACbzyw4KrM3Q"
+  ],
+  "durations_s": [
+   16.88,
+   16.48,
+   16.8,
+   16.8
+  ],
+  "asset_node_ids": [
+   "3nUQgeqmqaoKSAkdPrSG",
+   "4tX87I2TWPiqg7D37ZlW",
+   "I2X928EaIZ2rUI7xVNrN",
+   "OSd2F7VkxffqRjIq8A9V"
+  ],
+  "stt_session_ids": [
+   "VYu48eVysRTyl8RQEC3g",
+   "YtEf1jyxqkStYnS1QKYm",
+   "44cK5kyfPwbaGNxQbCR2",
+   "RVlSREYfXUc5B3AUnitI"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "Every TTS generation and transcription reported credits 0, price_cents 0 (USD). credit_costs: 0 for each.",
+  "errors": "No errors. For t4, add_flow_asset_node returned the original TTS node OSd2F7VkxffqRjIq8A9V (active generation) instead of a new node. The transcript source URL confirms it was P8GvnhvqACbzyw4KrM3Q. STT transcript generation ids: wDHw9xzrIi95h7AdAnYs, lN7S5tPqPZMUT1ASDTL7, BJSibpMVlownYsjnBjwL, y9dK1VJK5Sg3LjQGkdYW. STT node ids: TUJAc4dVQ4JOdLaMj3Fl, C9yPDCOlQWawQCfRgprx, huFAQuu9pusAPdpaNe6l, JP1x5VMHKVSoZOQ1E7Nj. spoken_duration_secs: 16.96, 16.56, 16.88, 16.88."
+ },
+ {
+  "id": "x07",
+  "tts_node_id": "6f92xtKnlG3AklzBlvpw",
+  "tts_session_ids": [
+   "Z6Ch6nQJ2nyEJPMPDp8G",
+   "tPBA4Uqk2gSnrqw2E5Is",
+   "Poc2GKP0c4BdW0NyDQVz",
+   "hNY0qW4hra2xYF0hVw0s"
+  ],
+  "generation_ids": [
+   "KL2iE0BYOI8acaTrTUTu",
+   "xw9w8LJdbEEHg9Qqt4cA",
+   "zPvbD1edVxPn81S48vdu",
+   "PecgT9IDkvh24qghTh00"
+  ],
+  "durations_s": [
+   18.24,
+   18.4,
+   17.92,
+   17.76
+  ],
+  "asset_node_ids": [
+   "HoeqfQ7KUJH3AGISFU01",
+   "0fFwrCzRVTn6nkqQjkiw",
+   "l6Z1nTppJI4R9xHVo23O",
+   "6f92xtKnlG3AklzBlvpw"
+  ],
+  "stt_session_ids": [
+   "SPOya1gaIvOnTBgexaWk",
+   "SOTvbmMklMEQRWZ8jQOw",
+   "IubsZfzOVo6ElsAVByMG",
+   "eDg3ItM2UNWM3JcAbpkv"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "Every TTS generation and transcription reported credits 0, price_cents 0 (USD). credit_costs: 0 for each.",
+  "errors": "No errors. For t4, add_flow_asset_node returned the original TTS node 6f92xtKnlG3AklzBlvpw (active generation). The transcript source URL confirms it was PecgT9IDkvh24qghTh00. Note: every transcript repeats the prompt exactly and includes the '[softly]' tag as a word with a short duration (about 0.06-0.1 s, around 10.3-10.7 s). This suggests the transcript is aligned to the prompt text, not transcribed independently. Leave that token out when building captions. STT transcript generation ids: 8Jp0PsL1cltHmlkhbevL, kmPM0N3gXzJzHLX2SpQr, nsHlEBy5iSMMCSzKhSbS, T8TY6oAVYStBXdstcPa9. STT node ids: 54AyHbYiRoVEVqn2tFOL, m98YTttm60GhXIKWq9yx, MzHlp3Lx2ThO3URlWoPK, sE2XrgVNaRQvoY54bGVw. spoken_duration_secs: 18.32, 18.48, 18, 17.84."
+ },
+ {
+  "id": "x08",
+  "tts_node_id": "xnztY3onVcNmKAALu3XH",
+  "tts_session_ids": [
+   "ayoEY3ez4IdBWaQRfgrC",
+   "SVbej3CQZ1lKScKd1tT0",
+   "tOMj4obXNHOjHS1rYstH",
+   "BbH05xAtNTd4lu2s8Lbo"
+  ],
+  "generation_ids": [
+   "yuS9REfdoYfinjvvtqnz",
+   "OlihkgKviOJzF84KCOXx",
+   "sxmftGNz7iHeeBGE3sXx",
+   "kEhYFjB9IKcT95bNig0Q"
+  ],
+  "durations_s": [
+   19.84,
+   19.52,
+   19.28,
+   19.44
+  ],
+  "asset_node_ids": [
+   "y1ETwB7oLYxk6bRR9XWk",
+   "XtE7BREsApXPE83cdvv6",
+   "XdRfsqjP0CmiQ7YjmaBR",
+   "xnztY3onVcNmKAALu3XH"
+  ],
+  "stt_session_ids": [
+   "Bw7PCMOyGJVAQTR8FekV",
+   "TdgNSggDoPW9KaatJL7i",
+   "TpNCJN8epIx4cL0PxUkw",
+   "Jq26yPEZSxIKhbxZaQAv"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "Every TTS generation and transcription reported credits 0, price_cents 0 (USD). credit_costs: 0 for each.",
+  "errors": "No errors. For t4, add_flow_asset_node returned the original TTS node xnztY3onVcNmKAALu3XH (active generation). The transcript source URL confirms it was kEhYFjB9IKcT95bNig0Q. STT transcript generation ids: WmNydPjFocLEbu8gLJvc, 1fvvtHzQ2UAwLf2DfDro, GFxGLgYPU6hg6muluIsM, 35nOJugWB1RjBFqMlF49. STT node ids: U0jR7TU2dz3vmvr30d12, Fg3FowkLlOVbGY9Vqaty, OYqQdxnWDscO6ufCl9k5, R0jEELV5gfebUAS40jkS. spoken_duration_secs: 19.92, 19.6, 19.36, 19.52. A local log of the ids is at /tmp/claude-0/-home-user-Youtube-videos/30d53758-3f65-58ef-8706-5dc1f2b4b0af/scratchpad/batch_x05_x08.log."
+ },
+ {
+  "id": "x09",
+  "tts_node_id": "057LomdFmndKP7jP2PTd",
+  "tts_session_ids": [
+   "w2V2mE3SSNTWDrW30MIU",
+   "KtXY5FK5Rf0YWejuSkvY",
+   "Lm2ZiHI2TO1xxDNyG5Yc",
+   "dCMZGPQD8kc72gtm8tgf"
+  ],
+  "generation_ids": [
+   "5vp5W47Sf0y6oBEkYOQs",
+   "kYIF8xaQHatw66eW7WFQ",
+   "i0dFlhWfeo4Vo1kqeltG",
+   "18Nr0iPlT19EerumBgb7"
+  ],
+  "durations_s": [
+   19.84,
+   19.36,
+   20,
+   19.6
+  ],
+  "asset_node_ids": [
+   "mpw2woOXA47TwWTq2Cnr",
+   "IW9QaueLrWPXvx4hblp2",
+   "nfWiePizN15Dqu3NJRVb",
+   "057LomdFmndKP7jP2PTd"
+  ],
+  "stt_session_ids": [
+   "8DZM1ogTKxuglAsvs5t0",
+   "ddJ0RlBgBbILGcbo4VZc",
+   "xiklbibNmzQRpQvxxw5F",
+   "bybHi670hI6HQFGo3Wrm"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: credits 0, price_cents 0 for each of the 4 generations; STT: credit_costs 0 for each of the 4 transcriptions",
+  "errors": "none. Note: add_flow_asset_node for t4 returned no new node ('This generation is active on its original node'); it returned the TTS node 057LomdFmndKP7jP2PTd, and that id was used as connect_from for x09_t4."
+ },
+ {
+  "id": "x10",
+  "tts_node_id": "1BHEf6UvsjwwRP3RSeoQ",
+  "tts_session_ids": [
+   "JPpOSutFJ1XURhDp3rNu",
+   "F7wcVWE91lFZBYKVkd9r",
+   "6xWjwH746qJ8cxPCVfy9",
+   "jeqzvsciTET7PQJgS3be"
+  ],
+  "generation_ids": [
+   "hb4S0jebpOpbVy0TF5y6",
+   "0vKM3s6Mw4FOYD7GwxBY",
+   "n3hanLJWStB90ytbGQF0",
+   "rJqsKcMYT2IsONcd3x17"
+  ],
+  "durations_s": [
+   16.16,
+   16.4,
+   16.16,
+   16.32
+  ],
+  "asset_node_ids": [
+   "E8psfox4CBkQOjgNoaXt",
+   "I3BuCrJlBccdg70qdDsB",
+   "z4VXKF5756MKVEcnpaR4",
+   "1BHEf6UvsjwwRP3RSeoQ"
+  ],
+  "stt_session_ids": [
+   "63JXVz8UGJq33zOntQjP",
+   "m3u9cXn2Gv9ayinDVJEY",
+   "TCpQ6rVGTQo3rbTEbFRV",
+   "ROKGvCe8fMU1gaUYpGyg"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: credits 0, price_cents 0 for each of the 4 generations; STT: credit_costs 0 for each of the 4 transcriptions",
+  "errors": "none. Note: add_flow_asset_node for t4 returned no new node; it returned the TTS node 1BHEf6UvsjwwRP3RSeoQ, and that id was used as connect_from for x10_t4."
+ },
+ {
+  "id": "x11",
+  "tts_node_id": "rtrUa7IBoq1CxFuEWFNt",
+  "tts_session_ids": [
+   "5ZrSnYtcefYA5mfOVRCT",
+   "vD9RifRoZrfVaM3APnz8",
+   "9D4mjxX151IjF8QrJNZj",
+   "NnNYfZgxt34BAdRws2GR"
+  ],
+  "generation_ids": [
+   "5Z0tPSwOobmpNZr5tGRg",
+   "nxJg4cdEypQ1azY3wc8s",
+   "x5cpItxVKBhWi77ics0X",
+   "NxDSTuQGizK9F2e4Lmzu"
+  ],
+  "durations_s": [
+   13.12,
+   13.12,
+   12.96,
+   13.2
+  ],
+  "asset_node_ids": [
+   "PetNA7IoGbEIpkmK4Kp6",
+   "TdX2mciyiOfEeMGaPwa1",
+   "6k5jtmtV79UQxYUeWfPq",
+   "rtrUa7IBoq1CxFuEWFNt"
+  ],
+  "stt_session_ids": [
+   "ma8HTfGE174y0TinjDwQ",
+   "IgmFQM0oQEuzVSuMZ12p",
+   "UeHOEUQMujSu36Itw0aZ",
+   "dKPnAigPgkwgLBt4aJZV"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: credits 0, price_cents 0 for each of the 4 generations; STT: credit_costs 0 for each of the 4 transcriptions",
+  "errors": "none. Note: add_flow_asset_node for t4 returned no new node; it returned the TTS node rtrUa7IBoq1CxFuEWFNt, and that id was used as connect_from for x11_t4."
+ },
+ {
+  "id": "x12",
+  "tts_node_id": "j6LutzneY0UD9oLWNefS",
+  "tts_session_ids": [
+   "1gob49MxaX7biklLQpb5",
+   "pzB6xj7sCyhk2ZB30yYK",
+   "QmquJSxuEPi6Az9Ia15n",
+   "g3QwRQfGugjgeHxXnpw6"
+  ],
+  "generation_ids": [
+   "LPvmB6AvBMFnlFqhrwwQ",
+   "EUFcLTID4ijySwzgyenb",
+   "XPlyL0zyF1FmhV9EvWjb",
+   "8MhVEwOHhMGmgQ9rclWY"
+  ],
+  "durations_s": [
+   29.6,
+   30,
+   29.76,
+   29.92
+  ],
+  "asset_node_ids": [
+   "lUxOhWIiSAs5eKicVkJf",
+   "4gCzWtohbSXaPNtYxyi6",
+   "6GsWmDP6ztOjAojyQrft",
+   "j6LutzneY0UD9oLWNefS"
+  ],
+  "stt_session_ids": [
+   "rLusCs9xvr5LG9prtFxG",
+   "FwMbdjbbPeTEpvvcKdlh",
+   "LdgudKFv7GNHmYmOL4tu",
+   "Q6a6sqgC743R3gxoYChn"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: credits 0, price_cents 0 for each of the 4 generations; STT: credit_costs 0 for each of the 4 transcriptions",
+  "errors": "none. Note: add_flow_asset_node for t4 returned no new node; it returned the TTS node j6LutzneY0UD9oLWNefS, and that id was used as connect_from for x12_t4. In all 4 x12 transcripts the word list includes a '[dryly]' token of about 0.064s just before 'Measuring', so the transcripts appear to be aligned to the prompt text rather than heard from the audio. Drop that token when building captions."
+ },
+ {
+  "id": "x13",
+  "tts_node_id": "PbRWydCuDDSmk1fVBFxc",
+  "tts_session_ids": [
+   "aujERVb6gXjUlkJQJtwe",
+   "4hSp4YHd8X2fBdZMvxao",
+   "oBZzees8Z5QLmW7Phs9f",
+   "kGbfW3L7QlWGdXOEgWuL"
+  ],
+  "generation_ids": [
+   "Uiferuj0VPH5EJ4Hy1XL",
+   "yttbCjKu8LCc4czvyCEi",
+   "aLy1c9puMRGGEQMdZVrP",
+   "yE8Ix0raU8824OJudgTW"
+  ],
+  "durations_s": [
+   27.68,
+   27.44,
+   28.08,
+   27.84
+  ],
+  "asset_node_ids": [
+   "t0shlHQolqauUfwKpq8l",
+   "E88W0jlZEijiB5XXeZ50",
+   "oEFPgyKWM5bjqw0MLBPH",
+   "PbRWydCuDDSmk1fVBFxc"
+  ],
+  "stt_session_ids": [
+   "N8q7k6NU6OqbO4G6LPxS",
+   "RWZ8rioy8t3cTtZAdMDX",
+   "Zvv7wS3eEhbnr7kYxJvR",
+   "UwnFhK3HGZdIaYSDyDYC"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: 0 credits / 0 price_cents per generation (4x0). STT: 0 credits each (generation ids DN21TPqX6yPSzsGfBu2R, JK29wDiYtX3Hy00NkFgt, AlhvkKTRgJSL7A3b9AgA, MsRCyLx9vQH5zbahai4S).",
+  "errors": "None. Note: add_flow_asset_node for t4 (yE8Ix0raU8824OJudgTW) returned no new node; it said the generation is active on its original TTS node and returned PbRWydCuDDSmk1fVBFxc, which was used as connect_from. The t4 transcript source URL matches yE8Ix0raU8824OJudgTW. STT nodes: XDFRVrU5EU2AICMNmP89, 853WftD5GR1C44Nb2toY, etzZgVbfVXH75gZuXOMG, QGM5y2dKtCWg0OcOd6tm."
+ },
+ {
+  "id": "x14",
+  "tts_node_id": "XLqGCQ0qWskFgRzX6mfP",
+  "tts_session_ids": [
+   "crqW2PiopbdT9TZTLsnW",
+   "zcPLZYPSuyqbnvs6OHbj",
+   "3PEbDpKz8FvxyGafPtHL",
+   "pPVFh1S1M0EwZRBo1ysJ"
+  ],
+  "generation_ids": [
+   "clUzBcm9P8yVuyUD3QBF",
+   "Q2VrkIXfG461wpeNyxRv",
+   "EJYjekpgJYHEx7UzKC4N",
+   "E8c3wl3PHLtZBTpkVJ5u"
+  ],
+  "durations_s": [
+   15.84,
+   16.16,
+   16.24,
+   16.08
+  ],
+  "asset_node_ids": [
+   "3OtOJOgkEQ19cgU9NOpc",
+   "d5itIy8U0FYo4GrcjSq1",
+   "JgMeDwaEZ8c81Aas7JdV",
+   "XLqGCQ0qWskFgRzX6mfP"
+  ],
+  "stt_session_ids": [
+   "oXPyjJG1G3ddY7EIz0V1",
+   "SImhljqzsKAsUuAbGNuB",
+   "3ACXJuc7nphcuzfpvJNy",
+   "WWg3RMRBo5rBWxRDNesd"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: 0 credits / 0 price_cents per generation (4x0). STT: 0 credits each (generation ids 6rx7KARgkpzFfa3PviY4, GFjhXGcvnaa87Byabhcm, rLUysrl95WKWfGkA9jfT, RRiidIO9eCQuyjrva7fJ).",
+  "errors": "None final. On the first poll, t2-t4 were pending with 'Encountered a concurrency limit. Automatically retrying generation later.' The server retried them and all completed; no extra generate call was made. t4 asset node: the server returned the original TTS node XLqGCQ0qWskFgRzX6mfP (generation active there), and the t4 transcript source matches E8c3wl3PHLtZBTpkVJ5u. STT nodes: X1s9M0vWFatG4H28Z8j3, ND5DaosjIUjtdBJOLi1e, uhV6wM4KOtgDRgULUa9v, BhT87efS0RiRsAlx2Qqo."
+ },
+ {
+  "id": "x15",
+  "tts_node_id": "s5hIZcB2C2dcsXcUvJ4r",
+  "tts_session_ids": [
+   "gHutHm2f9mHwaeTghyGb",
+   "e5yoyANux28s3oVssKvY",
+   "ZieZHtNQ88UO6xbnzjUa",
+   "m5NhC9ViSgtfk5OsC3EY"
+  ],
+  "generation_ids": [
+   "KzLp8WKWyHv98itTjThQ",
+   "B2mmGlW9nUirtdbNafG1",
+   "rauJ0kbpsWRBVEKTYjbe",
+   "TJ9QlwPnUbMtQz4hbdz6"
+  ],
+  "durations_s": [
+   24.56,
+   25.12,
+   24.72,
+   24.72
+  ],
+  "asset_node_ids": [
+   "Ikc604sa8IplINHH0Po5",
+   "mlpTQx08j7N4ExZ7EdRf",
+   "4gufaN4IXBHB7ouEHZrl",
+   "s5hIZcB2C2dcsXcUvJ4r"
+  ],
+  "stt_session_ids": [
+   "9CPBj29aYBz9C25AbtaL",
+   "GDS5tBvBLgZ3uxJd0ebh",
+   "mM2Mcam2ZQXOzT6nAq8n",
+   "SSqPNxlaO6zD2Wl3L2vH"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: 0 credits / 0 price_cents per generation (4x0). STT: 0 credits each (generation ids 7PN9A2xUAcEX0QHoiOpM, 1412KLVcBmfpvm0wmcJy, sixWEs6Gr2kMCc5BQGaS, NVILU6ynECQ7McNlXxpk).",
+  "errors": "None. t4 asset node: the server returned the original TTS node s5hIZcB2C2dcsXcUvJ4r (generation active there), and the t4 transcript source matches TJ9QlwPnUbMtQz4hbdz6. STT nodes: GGPl1zIIUTK202kpxEZQ, nhKaYwo0PLFfHVFubOCL, k4KsyyfEHZv0I5ncaPIe, 3zRL62qQf34hshfL7zua."
+ },
+ {
+  "id": "x16",
+  "tts_node_id": "T1qZv5dIQejjD8YGEl2S",
+  "tts_session_ids": [
+   "r36Uu5vAz0KQXcVwo9xv",
+   "ro1j9Cc0ZvjpyeCHKcJD",
+   "XVzH9RJTVvMmF0jBBSw2",
+   "ohgBxjdibmi51RRJxIAn"
+  ],
+  "generation_ids": [
+   "IqpJNvjXwULH6cVj4QK2",
+   "h1QKM8ACCTSYgGvKDseG",
+   "LlseTtpnDohdbgF3YT5b",
+   "KHHNJIR54do72YNA96rY"
+  ],
+  "durations_s": [
+   20.08,
+   19.84,
+   20.08,
+   20
+  ],
+  "asset_node_ids": [
+   "msYbGMtwCtOXcnvzXTY1",
+   "wGwpGW8PEGZ9YGBzZX40",
+   "8yje8GvedgARY7BO99pp",
+   "T1qZv5dIQejjD8YGEl2S"
+  ],
+  "stt_session_ids": [
+   "0ipKbT0LVMiqSogxdfJT",
+   "x10ZH06hmSJqguzqgeQM",
+   "2EEy5Pzjpk3lzgPk4Qd3",
+   "CsEuGhr1h4u7AOcziuDF"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: 0 credits / 0 price_cents per generation (4x0). STT: 0 credits each (generation ids y2RLNY55WwI8UCtJbljW, a9sj9kbOv2mHqO1SPW8X, 44Z1Tq6dxbix14YviUEr, KeXo7lqKfQRnKVvUDrBm).",
+  "errors": "None. t4 asset node: the server returned the original TTS node T1qZv5dIQejjD8YGEl2S (generation active there), and the t4 transcript source matches KHHNJIR54do72YNA96rY. STT nodes: Q6MFS8AgdbqwX2AiMtwL, 6EIBE6b9hEBLoPHtApg0, fbx34qjVatKbPOf7KTxv, ZADPjTDckYEJla6TLmxL."
+ },
+ {
+  "id": "x17",
+  "tts_node_id": "IKTYkRyzkp9jby1omlOX",
+  "tts_session_ids": [
+   "uohUqxscAsO7XpmZwdaC",
+   "jxlAXdUsB82qRhVzxuyp",
+   "Ng0VvzW2lsuGvFJT8RZQ",
+   "ge6Kua6Q1aOTw2Tz4tVh"
+  ],
+  "generation_ids": [
+   "em9mqnEIOh1HjH3ZDWUJ",
+   "l3lZS0SGIQeqPHd5aFeX",
+   "91arrIIkn74dr8fJeCQg",
+   "ZyFGd38ZoFskGqxXWH6o"
+  ],
+  "durations_s": [
+   11.36,
+   11.2,
+   11.36,
+   11.28
+  ],
+  "asset_node_ids": [
+   "q9mV7vhtziZD3q1xQqCy",
+   "5wO33xobAIWhFr3lM4f3",
+   "GctWDIwaLjrNH3Z0yo5E",
+   "IKTYkRyzkp9jby1omlOX"
+  ],
+  "stt_session_ids": [
+   "oaCZFi7bvCPxz55jYaVR",
+   "3DzWEvLD4Nq31E1LrCbU",
+   "TACoBCB3BcaGVPyJN4Mg",
+   "FDucvvQunAtdRELu9RSu"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: 0 credits / 0 price_cents per generation (4x0). STT: 0 credits each (generation ids T7gmdUJrffIkOWJoyuD9, G58pllCQN39ugIPAaBrm, 6QSjMIwS9xpkQPTMMJyn, iFTbAKx5I3ayd0fXa1tj).",
+  "errors": "None. t4 asset node: the server returned the original TTS node IKTYkRyzkp9jby1omlOX (generation active there), and the t4 transcript source matches ZyFGd38ZoFskGqxXWH6o. STT nodes: EtKF58dF9ghGv8l81fXj, ssnDwWRObHDQPaQm5jWa, 1E6mKZlvsNynvPIteXlY, WG1EZFbb4cdw8I7MTvsM."
+ },
+ {
+  "id": "x18",
+  "tts_node_id": "NdYGw0haxbuhYqo59aOn",
+  "tts_session_ids": [
+   "hgehnKww8HMlM0qChJaF",
+   "YB2KcLin7irpRVH5tUQv",
+   "xuy6BlL9Y34F4PGUiwKv",
+   "T640ht4YkkIAukL4Xvqw"
+  ],
+  "generation_ids": [
+   "uWl7IMtuIadCGtXDCixT",
+   "mFPUwfagcjd2AoKVF8BC",
+   "h8pjMKJa0LRqcf3PnAnd",
+   "G4q1IIF9GtLa3kDkBZkL"
+  ],
+  "durations_s": [
+   16,
+   15.84,
+   16.16,
+   16.08
+  ],
+  "asset_node_ids": [
+   "ThzMZ8NN6pHDnoqUROKl",
+   "Rx9FIRZvyodaZXBauJWj",
+   "19Le2sfUl4F3Enf1gHc6",
+   "NdYGw0haxbuhYqo59aOn"
+  ],
+  "stt_session_ids": [
+   "eiF4zSDOW1EASqMCYtrt",
+   "Bm40rJJHNjlHdiGokbky",
+   "fhKZC4NrKWtA8Nlwnfh9",
+   "gXuZmmm7p0SNR9ei2TkC"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: credits 0, price_cents 0 (usd) for each of the 4 generations; STT credit_costs 0 for each transcription",
+  "errors": "No errors. Note: add_flow_asset_node for t4 (G4q1IIF9GtLa3kDkBZkL) created no new static node; it returned the existing TTS node NdYGw0haxbuhYqo59aOn because that generation is active on it. The t4 transcription used that node, and its source was confirmed as G4q1IIF9GtLa3kDkBZkL. STT generation ids: uLpxdRy7X99Ji4LIqUZP, qsceZthovB0AQSMG6CDs, ki3pFpF6VpXxAtKGYn0i, Dd9quFcLBdtfvcxrLbdl."
+ },
+ {
+  "id": "x19",
+  "tts_node_id": "MNxpXusWXkCBy8qPgfdg",
+  "tts_session_ids": [
+   "t31ODW03jUXKOqdi4x0F",
+   "fSkLgjLzC68IZXkNmiPE",
+   "lvfmFMHybPmOKDyENUza",
+   "8nzXqpPFlEm1EIH9kHsz"
+  ],
+  "generation_ids": [
+   "d4ltNZigJkSrCWT0tCz0",
+   "2UmhVKyzkuUYs9C6FrYq",
+   "CM0ZMUCmxvXEaeIanpjT",
+   "Y4Qi63NfjjBqOpksPysE"
+  ],
+  "durations_s": [
+   17.28,
+   17.44,
+   17.52,
+   17.36
+  ],
+  "asset_node_ids": [
+   "j6BMOLZvHXjJJ6QT1pVs",
+   "NULSjfw9k3lhMovJvZnV",
+   "q8fpZOpwCFYHM6quQ0fZ",
+   "MNxpXusWXkCBy8qPgfdg"
+  ],
+  "stt_session_ids": [
+   "rtTMU41E5duwIUAYMaX4",
+   "QmqxRzu0pi0A3oB7K9ai",
+   "aVWZCZrDKozxdSFwJihJ",
+   "C7RiaseT3wyRVO2B1Qpb"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: credits 0, price_cents 0 (usd) for each of the 4 generations; STT credit_costs 0 for each transcription",
+  "errors": "No errors. Note: add_flow_asset_node for t4 (Y4Qi63NfjjBqOpksPysE) created no new static node; it returned the existing TTS node MNxpXusWXkCBy8qPgfdg because that generation is active on it. The t4 transcription used that node, and its source was confirmed as Y4Qi63NfjjBqOpksPysE. STT generation ids: cdSfEvocRAaDNQwRZCLn, JNALCApiwR7WcTNlmOAN, cMOTrH9NnPlfhgfZryPG, 0yQbNjfmLuWHSBKw4qdQ."
+ },
+ {
+  "id": "x20",
+  "tts_node_id": "qDFe50aR1VDzL9UX4vW0",
+  "tts_session_ids": [
+   "cdN3KdmdUrfjpAIhcspm",
+   "7f9b5FxAHN002XrYCVea",
+   "1cHepLbS9Fkzqvs81P91",
+   "YByI9bVxjYkaU7OJXhxY"
+  ],
+  "generation_ids": [
+   "M0bSOsD6gIqmjfIL4UR5",
+   "Wufg8AOZMkK8eh683FJf",
+   "LV8aZoCgoWw7HiF5ipkx",
+   "eBxbrguIysWB7agxQocM"
+  ],
+  "durations_s": [
+   13.2,
+   12.72,
+   13.12,
+   12.88
+  ],
+  "asset_node_ids": [
+   "ly2IS5tqIg9QYpyBiITU",
+   "1VXbNrKxcOtsHyB9VSIu",
+   "NrHtGVbzZEX1enFyCfjA",
+   "qDFe50aR1VDzL9UX4vW0"
+  ],
+  "stt_session_ids": [
+   "05wIOWquyB1NVGrEVTgo",
+   "rYoIhRDc9tunW95Zr1Nk",
+   "RdSGz0pr7x66dTmSSzHX",
+   "gTwHwam9uaw0drirn3Zl"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: credits 0, price_cents 0 (usd) for each of the 4 generations; STT credit_costs 0 for each transcription",
+  "errors": "No errors. Note: add_flow_asset_node for t4 (eBxbrguIysWB7agxQocM) created no new static node; it returned the existing TTS node qDFe50aR1VDzL9UX4vW0 because that generation is active on it. The t4 transcription used that node, and its source was confirmed as eBxbrguIysWB7agxQocM. STT generation ids: paivkXj8xMcjsWDXYy7X, oVkk0zEyA0Dz3fa7i9Un, KVsV6pHHZZzmNCbrtcZ3, XfZI84v8pqLh0yeEUbiK."
+ },
+ {
+  "id": "x21",
+  "tts_node_id": "EQUu1CUcwrCOe510AgcM",
+  "tts_session_ids": [
+   "X6O6IgopiWGB0PHihfOr",
+   "OQ7eIUcts1fRJmo6MGup",
+   "rS0xxUrp0LpRWRSq08CV",
+   "bRpXboiqSe4PjhStQOdI"
+  ],
+  "generation_ids": [
+   "Mq0Vi1pEpCHWgzNLQzI6",
+   "pTHr3XXBG6t0IMG59RAm",
+   "GxfePpPCU0vuRGVqmsiR",
+   "bHYjHwIpwi1FtQLRozia"
+  ],
+  "durations_s": [
+   7.04,
+   7.12,
+   7.2,
+   7.04
+  ],
+  "asset_node_ids": [
+   "Q0qeRQYZcwycX7LGk6GF",
+   "Bw62GzmXlsjPx19CsLjX",
+   "IfLQYDtInpRF7dRBYWcB",
+   "EQUu1CUcwrCOe510AgcM"
+  ],
+  "stt_session_ids": [
+   "MTTQ1o89kFKIp3LnbJS6",
+   "PK1YAXCPnHc4aj7UxgBU",
+   "ZMUmT9i6JrxZbFEnew2C",
+   "D6WvRdK691CqcCfKVQph"
+  ],
+  "stt_completed": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "credits_reported": "TTS: credits 0, price_cents 0 (usd) for each of the 4 generations; STT credit_costs 0 for each transcription",
+  "errors": "No errors. Note: add_flow_asset_node for t4 (bHYjHwIpwi1FtQLRozia) created no new static node; it returned the existing TTS node EQUu1CUcwrCOe510AgcM because that generation is active on it. The t4 transcription used that node, and its source was confirmed as bHYjHwIpwi1FtQLRozia. STT generation ids: pUITmkABMpkhnBl7raAN, cWe41MhtdnwQdoD0dUtB, UTb6hnUhpie1pnz7ydxu, ubOOnVFyC8KuezEU9eRJ."
+ }
+]

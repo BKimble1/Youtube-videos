@@ -15,31 +15,35 @@ import {
   HANDS_ON_HIPS,
   IDLE2,
   SNEAK_ARMS,
-  handWorld2,
+  handsOnKnees,
   mixPose2,
   mouthWorld,
   planTrip,
   reach2,
   settleAt,
   settlePose,
+  tripContacts,
   tripDistance,
+  tripDuration,
   tripPose,
   walkPose,
   withPose,
   type Pose2,
   type RigPlace,
 } from '../components/v02/Cast2';
-import {HandheldSensor, SensorTop, facingOf, sensorPoint} from '../components/v02/HandheldSensor';
+import {HandheldSensor, SensorTop, facingOf, holdSensor} from '../components/v02/HandheldSensor';
 import {CheckerToken, GuesserToken, tokenSize} from '../components/v02/Tokens';
 
 /**
  * Dev composition for the Video 02 cast kit (240 f): the guesser tiptoes from x = 300 to x = 1200 behind a coral
  * stand-in partition (feet locked to the floor: phase from distance), settles into a smug hands-on-hips pose, then is
- * busted; the checker holds the HandheldSensor at chest height (right hand on the grip, left hand steadying the box,
- * both placed with reach2/handWorld2), deadpan, while its readout fills in. Then a cut to the plan view with both
- * overhead tokens and the SensorTop glyph at their layout.json positions.
+ * busted (hop: the shadow stays on the floor); the checker holds the HandheldSensor at chest height via holdSensor()
+ * (right hand on the grip, left palm cradling the box from below, exact even with idle life), deadpan, while its readout
+ * fills in. Then a cut to the plan view with both overhead tokens and the SensorTop at their layout.json positions; the
+ * operator token's hand reaches the sensor.
  *
- * inputProps {sheet: 1 | 2} renders a static model sheet instead (QA only).
+ * inputProps {sheet: 1 | 2 | 3 | 4} renders a static QA sheet instead: 1 guesser poses and gaits, 2 checker poses (sensor
+ * hold, hands on knees, flipped holder with a mirrored readout) and tokens, 3/4 the Video 01 rig vs Character2 at rest.
  */
 
 const WALL = '#F4ECD8';
@@ -47,17 +51,17 @@ const FLOOR_Y = 800;
 
 // staging
 const GUE = {x0: 300, x1: 1200, y: 930, scale: 1};
-const CHK: RigPlace = {x: 98, y: 868, scale: 0.88};
+const CHK: RigPlace = {x: 98, y: 868, scale: 0.88, seed: 9, life: 0.6};
 const PART = {x0: 792, x1: 908, top: 404, base: 958};
-
-// where the checker's right hand holds the grip (character-local): chest height, in front of the right hip
-const GRIP = {x: 40, y: -176};
 
 // guesser beats
 const PLAN = planTrip(GUE.x1 - GUE.x0, GUE.scale, 'tiptoe');
 const T0 = 16; // starts tiptoeing
 const FPS_STEP = 9;
-const T1 = T0 + PLAN.steps * FPS_STEP; // arrives
+const PULSE = 0.55; // sneak stop-go rhythm
+const T1 = T0 + tripDuration(PLAN, FPS_STEP); // arrives
+/** Footstep cue frames for the sound sheet (each foot landing). */
+export const KITCAST_FOOTSTEPS = tripContacts(T0, PLAN, FPS_STEP, PULSE);
 const TB = 186; // busted
 // checker / sensor beats
 const SWEEP0 = 112;
@@ -69,14 +73,14 @@ const PLAN_IN = 204;
 const sneakFace: Partial<Pose2> = {lid: 0.22, brows: -0.4, browAsym: 0.2, mouth: 'hmm', lookX: -0.8, lookY: 0.05, tilt: -4};
 
 const guesserAt = (g: number): {x: number; pose: Pose2} => {
-  const dist = tripDistance(g, T0, PLAN, FPS_STEP, 0.55);
+  const dist = tripDistance(g, T0, PLAN, FPS_STEP, PULSE);
   const walking = tripPose(dist, PLAN, {dir: 1, base: {...SNEAK_ARMS, ...sneakFace}});
   // scheming: hands together in front of the belly, rubbing, a sidelong look back at the checker
   const rub = Math.sin(g * 0.9) * 4 * (1 - tw(g, 4, 8));
   const start: Pose2 = {...IDLE2, armL: reachLocal(-12 + rub, -194, -1, -1), armR: reachLocal(12 + rub, -198, 1, -1), armsFront: 'both', mouth: 'smirk', lid: 0.3, lookX: -0.6, brows: -0.25, browAsym: 0.3};
-  // anticipation: rise slightly, then sink into the sneak
+  // anticipation: draw up a little (the torso stretches; feet stay planted), then sink into the sneak
   let pose = g < T0 ? mixPose2(start, walking, E.inOut(tw(g, 2, T0 - 2))) : walking;
-  if (g < T0) pose = {...pose, bob: -4 * Math.sin(Math.PI * tw(g, 0, 8, E.inOut))};
+  if (g < T0) pose = {...pose, hunch: (pose.hunch ?? 0) - 0.035 * Math.sin(Math.PI * tw(g, 0, 8, E.inOut))};
   // arrival: off the toes, hands to hips, smug; then the weight settles onto the right leg
   const smug: Pose2 = withPose(withPose(HANDS_ON_HIPS, EXPR.smug), settleAt(g, T1 + 8, 1));
   const arrive = tw(g, T1 - 3, 16, E.inOut);
@@ -97,14 +101,9 @@ const checkerAt = (g: number) => {
   const base: Pose2 = withPose({...IDLE2, armsFront: 'both'}, {...EXPR.deadpan, lookX: 0.55 * glance, lookY: 0.75 * glance, tilt: 3 * glance});
   const brow = sp(g, BUMP + 10, SNAP) * (1 - tw(g, BUMP + 40, 14));
   const pose0: Pose2 = {...base, brows: base.brows + 0.35 * brow, browAsym: 0.4 * brow};
-  // right hand on the grip at chest height (world point), left hand under the box's bottom-left corner
-  const grip = {x: CHK.x + GRIP.x * CHK.scale, y: CHK.y + GRIP.y * CHK.scale};
-  const armR = reach2(CHK, pose0, 1, grip.x, grip.y, -1);
-  const withR = {...pose0, armR};
-  const hand = handWorld2(CHK, withR, 1);
-  const bl = sensorPoint('boxBottomLeft', CHK.scale);
-  const armL = reach2(CHK, withR, -1, hand.x + bl.x, hand.y + bl.y + 6 * CHK.scale, -1);
-  return {pose: {...withR, armL}, hand};
+  // right hand on the grip at chest height, left palm cradling the box from below (exact: the place carries the frame)
+  const held = holdSensor({...CHK, frame: g}, pose0);
+  return {pose: held.pose, hand: held.hand};
 };
 
 const sensorState = (g: number) => {
@@ -128,9 +127,9 @@ const Stage: React.FC<{g: number}> = ({g}) => {
       <div style={{position: 'absolute', left: 0, right: 0, top: FLOOR_Y, bottom: 0, background: C.woodLight, borderTop: `${OUTLINE}px solid ${C.ink}`}} />
       <div style={{position: 'absolute', left: 0, right: 0, top: FLOOR_Y - 26, height: 26, background: C.paperDeep, borderTop: `${OUTLINE}px solid ${C.ink}`}} />
       {/* checker (upstage) */}
-      <Character2 look={CAST.checker} pose={ch.pose} frame={g} seed={9} x={CHK.x} y={CHK.y} scale={CHK.scale} life={0.6} holdR={sensor} />
-      {/* guesser */}
-      <Character2 look={CAST.guesser} pose={gu.pose} frame={g} seed={22} x={gu.x} y={GUE.y} scale={GUE.scale} life={g < T1 ? 0.25 : 0.8} eyeDarts={false} />
+      <Character2 look={CAST.checker} pose={ch.pose} frame={g} seed={CHK.seed} x={CHK.x} y={CHK.y} scale={CHK.scale} life={CHK.life} holdR={sensor} />
+      {/* guesser (idle life eases up after the sneak: a step change would pop the head and lean) */}
+      <Character2 look={CAST.guesser} pose={gu.pose} frame={g} seed={22} x={gu.x} y={GUE.y} scale={GUE.scale} life={0.25 + 0.55 * tw(g, T1, 16, E.inOut)} eyeDarts={false} />
       {/* stand-in partition (downstage of the guesser) */}
       <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0}}>
         <ellipse cx={(PART.x0 + PART.x1) / 2} cy={PART.base + 4} rx={70} ry={10} fill={C.shadow} />
@@ -174,11 +173,10 @@ const PlanView: React.FC<{g: number}> = ({g}) => {
         {/* partition */}
         <rect x={occ.a.x - 10} y={occ.a.y} width={20} height={occ.b.y - occ.a.y} rx={6} fill={C.coral} stroke={C.ink} strokeWidth={OUTLINE} />
         {/* tokens + sensor glyph at their layout positions */}
+        {/* the operator's hand reaches the sensor she holds (the sensor is drawn over the hand) */}
         <g opacity={op(0)}>
-          <CheckerToken x={opP.x} y={opP.y} size={S} facing={face} scale={pop(0)} asGroup />
-        </g>
-        <g opacity={op(4)}>
-          <SensorTop x={sP.x} y={sP.y} size={S * 0.5} facing={face} scale={pop(4)} asGroup />
+          <CheckerToken x={opP.x} y={opP.y} size={S} facing={face} scale={pop(0)} reach={sP} asGroup />
+          <SensorTop x={sP.x} y={sP.y} size={S * 0.5} facing={face} scale={pop(0)} asGroup />
         </g>
         <g opacity={op(8)}>
           <GuesserToken x={hP.x} y={hP.y} size={S} facing={200} scale={pop(8)} asGroup />
@@ -256,18 +254,20 @@ const Sheet: React.FC<{which: number; g: number}> = ({which, g}) => {
   }
   // checker sheet: deadpan holding the sensor big, arms crossed, crouch, peek; tokens at several facings
   const big: RigPlace = {x: 330, y: 1000, scale: 1.45};
-  const p0 = withPose({...IDLE2, armsFront: 'both'}, EXPR.deadpan);
-  const armR = reach2(big, p0, 1, big.x + GRIP.x * big.scale, big.y + GRIP.y * big.scale, -1);
-  const hand = handWorld2(big, {...p0, armR}, 1);
-  const bl = sensorPoint('boxBottomLeft', big.scale);
-  const armL = reach2(big, {...p0, armR}, -1, hand.x + bl.x, hand.y + bl.y + 6 * big.scale, -1);
-  const others = [withPose(ARMS_CROSSED, EXPR.deadpan), withPose(withPose(IDLE2, CROUCH), EXPR.deadpan), withPose(IDLE2, {peek: -1, ...EXPR.deadpan, lookX: -1})];
+  const p0 = withPose(IDLE2, EXPR.deadpan);
+  const held = holdSensor(big, p0);
+  const crouch = withPose(withPose(IDLE2, CROUCH), EXPR.deadpan);
+  const others = [withPose(ARMS_CROSSED, EXPR.deadpan), withPose(crouch, handsOnKnees(crouch)), withPose(IDLE2, {peek: -1, ...EXPR.deadpan, lookX: -1})];
+  // a flipped holder: the readout must still run left to right (mirrored), and the hands must still meet the box
+  const flipPlace: RigPlace = {x: 1450, y: 560, scale: 0.6, flip: true};
+  const flipHeld = holdSensor(flipPlace, p0);
   return (
     <AbsoluteFill style={{background: WALL}}>
-      <Character2 look={CAST.checker} pose={{...p0, armR, armL}} frame={g} seed={9} x={big.x} y={big.y} scale={big.scale} life={0} holdR={<HandheldSensor reveal={0.8} led={1} skin={CAST.checker.skin} />} />
+      <Character2 look={CAST.checker} pose={held.pose} frame={g} seed={9} x={big.x} y={big.y} scale={big.scale} life={0} holdR={<HandheldSensor reveal={0.8} led={1} skin={CAST.checker.skin} />} />
       {others.map((p, i) => (
         <Character2 key={i} look={CAST.checker} pose={p} frame={g} seed={9} x={760 + i * 230} y={560} scale={0.6} life={0} />
       ))}
+      <Character2 look={CAST.checker} pose={flipHeld.pose} frame={g} seed={9} x={flipPlace.x} y={flipPlace.y} scale={flipPlace.scale} flip life={0} holdR={<HandheldSensor reveal={1} led={1} skin={CAST.checker.skin} mirrored />} />
       <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0}}>
         {[0, 90, 200, 300].map((f, i) => (
           <g key={i}>
@@ -276,10 +276,13 @@ const Sheet: React.FC<{which: number; g: number}> = ({which, g}) => {
           </g>
         ))}
         {[0, 120].map((f, i) => (
-          <SensorTop key={i} x={1720 + i * 0} y={300 + i * 200} size={90} facing={f} asGroup />
+          <SensorTop key={i} x={1760} y={300 + i * 200} size={90} facing={f} asGroup />
         ))}
-        <CheckerToken x={1720} y={760} size={60} facing={30} asGroup />
+        <CheckerToken x={1700} y={760} size={60} facing={30} asGroup />
         <GuesserToken x={1820} y={760} size={60} facing={-30} asGroup />
+        {/* a token holding the sensor: the hand reaches it, the sensor sits over the hand */}
+        <CheckerToken x={1740} y={960} size={130} facing={20} reach={{x: 1790, y: 880}} asGroup />
+        <SensorTop x={1790} y={880} size={65} facing={20} asGroup />
       </svg>
     </AbsoluteFill>
   );

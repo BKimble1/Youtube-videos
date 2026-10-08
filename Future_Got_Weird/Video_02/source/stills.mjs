@@ -23,12 +23,14 @@ const resolve = (spec) => {
 };
 const browserExecutable = process.env.REMOTION_BROWSER_EXECUTABLE ?? '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 const serveUrl = await bundle({entryPoint: path.resolve('src/index.ts')});
-const composition = await selectComposition({serveUrl, id: process.env.COMP ?? 'Preview', inputProps: {audio: 'none'}, browserExecutable});
+const only = process.env.ONLY ? process.env.ONLY.split(',') : undefined;
+const inputProps = {audio: 'none', ...(only ? {only} : {}), ...(process.env.NO_INSERTS ? {inserts: false} : {})};
+const composition = await selectComposition({serveUrl, id: process.env.COMP ?? 'Preview', inputProps, browserExecutable});
 fs.mkdirSync(outDir, {recursive: true});
 for (const spec of specs) {
   const frame = Math.min(composition.durationInFrames - 1, resolve(spec));
   const output = path.join(outDir, `${String(frame).padStart(5, '0')}_${spec.replace(/[^a-zA-Z0-9+-]/g, '_')}.png`);
-  await renderStill({composition, serveUrl, output, frame, inputProps: {audio: 'none'}, browserExecutable, scale: Number(process.env.SCALE ?? 0.5)});
+  await renderStill({composition, serveUrl, output, frame, inputProps, browserExecutable, scale: Number(process.env.SCALE ?? 0.5)});
   console.log('wrote', output);
 }
 // remove this run's webpack bundle (each one is ~145 MB in the system temp dir)

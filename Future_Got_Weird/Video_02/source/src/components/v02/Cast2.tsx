@@ -17,7 +17,11 @@ import {handPos, reachLocal, type Arm, type Hair, type Look, type Mouth, type Po
  *  - Face options: `lid` (upper eyelids: half-lidded smug / deadpan), `eyes` (eye size: wide = busted), `pupil`
  *    (pupil size), `sweat` (a single sweat drop).
  *  - Pose presets (HANDS_ON_HIPS, ARMS_CROSSED, HAND_OVER_MOUTH, SNEAK_ARMS, HANDS_UP) in the existing Arm convention,
- *    expression presets (EXPR.smug / busted / deadpan), CROUCH and SETTLE.
+ *    expression presets (EXPR.smug / busted / deadpan), CROUCH, SETTLE / settleAt, handsOnKnees(pose).
+ *  - World helpers that follow the body transform: handWorld2, reach2, reachGround, kneeWorld, mouthWorld, eyesWorld.
+ *    Give the RigPlace the rig's frame/seed/life and they include the idle drift too (exact contacts).
+ *  - Trip helpers: planTrip → tripDistance (timing) → tripPose (feet), tripDuration, tripContacts (footstep cue frames).
+ *  - `bob` lifts the body (hops); the floor shadow stays on the floor. `frontTop` picks which front arm is on top.
  *
  * <Character2> accepts every prop of <Character> (look, pose, frame, seed, x, y, scale, flip, front, pass, holdL,
  * holdR, shadow, style, life, eyeDarts) and a plain Pose renders identically (legs straight, same geometry), so it is
@@ -66,6 +70,9 @@ export type Pose2 = Pose & {
   sweat?: number;
   /** Arms drawn in front of the torso when the `front` prop is not given (a preset can carry it). */
   armsFront?: 'L' | 'R' | 'both' | 'none';
+  /** With both arms in front: which one is drawn on top (default 'L'). A prop held in the other hand then sits over
+   *  that hand (e.g. the sensor box resting on the supporting palm: frontTop 'R'). */
+  frontTop?: 'L' | 'R';
 };
 
 /* ------------------------------------------------------------------ geometry (identical to Character.tsx) */
@@ -101,14 +108,18 @@ const f2 = (n: number) => Math.round(n * 100) / 100;
 /** Standing feet. */
 export const STAND_FEET: {L: Foot; R: Foot} = {L: {x: -HIP_X}, R: {x: HIP_X}};
 
+/** Knee direction used when a Foot leaves `knee` unset: slightly outward (side × 0.35), mostly toward the camera. */
+export const KNEE_DEFAULT = 0.35;
+
 /* ------------------------------------------------------------------ pose mixing */
 
-const mixFoot = (a: Foot, b: Foot, t: number): Foot => ({
+// an unset knee means the side's default (not 0), so blending a set knee against an unset one never jumps
+const mixFoot = (a: Foot, b: Foot, t: number, side: -1 | 1): Foot => ({
   x: lerp(a.x, b.x, t),
   lift: lerp(a.lift ?? 0, b.lift ?? 0, t),
   pitch: lerp(a.pitch ?? 0, b.pitch ?? 0, t),
   turn: lerp(a.turn ?? 0, b.turn ?? 0, t),
-  knee: a.knee === undefined && b.knee === undefined ? undefined : lerp(a.knee ?? 0, b.knee ?? 0, t),
+  knee: a.knee === undefined && b.knee === undefined ? undefined : lerp(a.knee ?? side * KNEE_DEFAULT, b.knee ?? side * KNEE_DEFAULT, t),
 });
 
 /** Interpolate two Pose2s (arms, face, legs, feet). Mouth, armsFront and FK legs switch at t = 0.5.
@@ -132,7 +143,7 @@ export const mixPose2 = (p: Pose2, q: Pose2, t: number): Pose2 => {
     sink: m(p.sink, q.sink),
     hunch: m(p.hunch, q.hunch),
     shift: m(p.shift, q.shift),
-    feet: p.feet || q.feet ? {L: mixFoot(fp.L, fq.L, t), R: mixFoot(fp.R, fq.R, t)} : undefined,
+    feet: p.feet || q.feet ? {L: mixFoot(fp.L, fq.L, t, -1), R: mixFoot(fp.R, fq.R, t, 1)} : undefined,
     legL: t < 0.5 ? p.legL : q.legL,
     legR: t < 0.5 ? p.legR : q.legR,
     peek: m(p.peek, q.peek),
@@ -141,6 +152,7 @@ export const mixPose2 = (p: Pose2, q: Pose2, t: number): Pose2 => {
     pupil: m(p.pupil, q.pupil, 1),
     sweat: m(p.sweat, q.sweat),
     armsFront: t < 0.5 ? p.armsFront : q.armsFront,
+    frontTop: t < 0.5 ? p.frontTop : q.frontTop,
   };
 };
 
@@ -190,11 +202,14 @@ export const CROUCH: Partial<Pose2> = {sink: 86, hunch: 0.12, lookY: 0.15, feet:
 /** SETTLE: weight shifted onto the right leg (contrapposto); mirror with side -1 via settlePose. */
 export const SETTLE: Partial<Pose2> = settlePose(1, 1);
 
-/** A weight shift onto `side`'s leg, scaled by `amount` (0..1, may overshoot). The free knee relaxes inward. */
+/** A weight shift onto `side`'s leg, scaled by `amount` (0..1, may overshoot). The free knee relaxes inward; at
+ *  amount 0 the result equals the plain standing pose (so settleAt() can sit in a pose before its cue). */
 export function settlePose(amount: number, side: -1 | 1 = 1): Partial<Pose2> {
   const k = amount;
-  const free = side === 1 ? 'L' : 'R';
-  const feet = {L: {x: -HIP_X, knee: free === 'L' ? 0.55 : undefined}, R: {x: HIP_X, knee: free === 'R' ? -0.55 : undefined}};
+  const kk = clamp(k, 0, 1);
+  // the free leg's knee turns from its default (outward) to inward as the weight leaves it
+  const freeKnee = (s: -1 | 1) => lerp(s * KNEE_DEFAULT, -s * 0.55, kk);
+  const feet = {L: {x: -HIP_X, knee: side === 1 ? freeKnee(-1) : undefined}, R: {x: HIP_X, knee: side === -1 ? freeKnee(1) : undefined}};
   return {shift: side * 13 * k, lean: -side * 1.6 * k, tilt: side * 2 * k, feet};
 }
 
@@ -410,9 +425,70 @@ export const tripDistance = (g: number, start: number, plan: TripPlan, framesPer
   return (k + e) * plan.stepPx;
 };
 
+/** Frames a planned trip takes at `framesPerStep` (the rig arrives at start + tripDuration). */
+export const tripDuration = (plan: TripPlan, framesPerStep: number) => plan.steps * framesPerStep;
+
+/**
+ * Frames (rounded) at which a foot lands during a trip driven by tripDistance with the same arguments: the footstep
+ * cues for the sound sheet. Pure function; samples the gait at quarter frames.
+ */
+export const tripContacts = (start: number, plan: TripPlan, framesPerStep: number, pulse = 0): number[] => {
+  const g = GAITS[plan.style];
+  const end = plan.steps * plan.step;
+  const out: number[] = [];
+  let prev = [0, 0];
+  const last = start + tripDuration(plan, framesPerStep) + 1;
+  for (let i = 0; start + i * 0.25 <= last; i++) {
+    const f = start + i * 0.25;
+    const c = tripDistance(f, start, plan, framesPerStep, pulse) / plan.scale;
+    const s = [footAt(c, HIP_X, 0, g, plan.step, end).swing, footAt(c, -HIP_X, 0.5, g, plan.step, end).swing];
+    s.forEach((v, j) => {
+      if (prev[j] === 1 && v === 0) out.push(Math.round(f));
+    });
+    prev = s;
+  }
+  return out;
+};
+
 /* ------------------------------------------------------------------ world helpers (reach / handWorld for Character2) */
 
-export type RigPlace = {x: number; y: number; scale: number; flip?: boolean};
+/**
+ * Where a rig is drawn (the same x, y, scale, flip given to <Character2>). Optionally also the rig's `frame`, `seed`
+ * and `life`: then the world helpers below include the idle drift the rig adds (lean and breathing sink, ±1-2 px), so a
+ * hand placed with reach2 stays exactly on a world-fixed target. Without `frame` they use the pose as given.
+ */
+export type RigPlace = {x: number; y: number; scale: number; flip?: boolean; frame?: number; seed?: number; life?: number};
+
+/**
+ * The pose <Character2> actually draws: the scene's pose plus the seeded idle life (head tilt, lean and breathing
+ * drift, eye darts). Pure function of its arguments.
+ */
+export const livePose = (pose0: Pose2, frame: number, seed = 1, life = 1, eyeDarts = true): Pose2 => {
+  const saccade = (() => {
+    if (!eyeDarts || life <= 0) return {x: 0, y: 0};
+    const period = 70 + Math.floor(rand(seed * 11) * 50);
+    const k = Math.floor((frame + seed * 13) / period);
+    const p = (frame + seed * 13) % period;
+    const tx = (rand(seed * 101 + k) - 0.5) * 0.36;
+    const ty = (rand(seed * 211 + k) - 0.5) * 0.22;
+    const px = (rand(seed * 101 + k - 1) - 0.5) * 0.36;
+    const py = (rand(seed * 211 + k - 1) - 0.5) * 0.22;
+    const u = Math.min(1, p / 4);
+    return {x: (px + (tx - px) * u) * life, y: (py + (ty - py) * u) * life};
+  })();
+  return {
+    ...pose0,
+    tilt: pose0.tilt + drift(frame, seed, 170) * 1.3 * life,
+    lean: pose0.lean + drift(frame, seed + 7, 210) * 0.7 * life,
+    // idle drift moves the upper body only (feet stay planted), as a tiny breathing sink
+    sink: (pose0.sink ?? 0) + (drift(frame, seed + 3, 96) * 1.4 + 1.4) * life * 0.5,
+    lookX: clamp(pose0.lookX + saccade.x, -1, 1),
+    lookY: clamp(pose0.lookY + saccade.y, -1, 1),
+  };
+};
+
+/** The pose the helpers should measure: with the rig's idle drift when the place carries its frame. */
+const placedPose = (ch: RigPlace, pose: Pose2) => (ch.frame === undefined ? pose : livePose(pose, ch.frame, ch.seed ?? 1, ch.life ?? 1, false));
 
 /** The upper-body transform of a pose (shared by drawing and the hand helpers). */
 const bodyXf = (pose: Pose2, sinkEff: number) => {
@@ -464,32 +540,49 @@ const neededSink = (pose: Pose2) => {
 /** Total hip drop: what the foot targets need plus the pose's own extra bend. */
 const effectiveSink = (pose: Pose2) => (pose.sink ?? 0) + neededSink(pose);
 
-/** Local (unflipped, pre-scale) → world, for a point drawn inside the upper body's arm frame. */
-const armFrameToWorld = (ch: RigPlace, pose: Pose2, p: P): P => {
-  const sink = effectiveSink(pose);
-  const xf = bodyXf(pose, sink);
-  let q = {x: p.x, y: p.y + xf.hd};
-  q = rot(q, xf.lean, {x: 0, y: PIVOT_Y});
-  q = {x: q.x + xf.tx, y: q.y + xf.ty + (pose.bob ?? 0)};
-  const sx = ch.flip ? -q.x : q.x;
-  return {x: ch.x + sx * ch.scale, y: ch.y + q.y * ch.scale};
+/** Arm frame (where ArmShape draws, before the hunch drop) → ground frame (character-local, before bob). */
+const armToGround = (pose: Pose2, p: P): P => {
+  const xf = bodyXf(pose, effectiveSink(pose));
+  const q = rot({x: p.x, y: p.y + xf.hd}, xf.lean, {x: 0, y: PIVOT_Y});
+  return {x: q.x + xf.tx, y: q.y + xf.ty};
 };
 
-/** Where the hand of `pose`'s arm on `side` lands in world space (accounts for sink, hunch, shift, lean, flip). */
+/** Ground frame → arm frame (inverse of armToGround). */
+const groundToArm = (pose: Pose2, p: P): P => {
+  const xf = bodyXf(pose, effectiveSink(pose));
+  const q = rot({x: p.x - xf.tx, y: p.y - xf.ty}, -xf.lean, {x: 0, y: PIVOT_Y});
+  return {x: q.x, y: q.y - xf.hd};
+};
+
+/** Ground frame → world. */
+const groundToWorld = (ch: RigPlace, pose: Pose2, q: P): P => {
+  const sx = ch.flip ? -q.x : q.x;
+  return {x: ch.x + sx * ch.scale, y: ch.y + (q.y + (pose.bob ?? 0)) * ch.scale};
+};
+
+/** Local (unflipped, pre-scale) → world, for a point drawn inside the upper body's arm frame. */
+const armFrameToWorld = (ch: RigPlace, pose: Pose2, p: P): P => groundToWorld(ch, pose, armToGround(pose, p));
+
+/** Where the hand of `pose`'s arm on `side` lands in world space (accounts for sink, hunch, shift, lean, flip, bob,
+ *  and the idle drift when `ch` carries the rig's frame). */
 export const handWorld2 = (ch: RigPlace, pose: Pose2, side: -1 | 1) => {
-  const h = handPos(side === -1 ? pose.armL : pose.armR, side);
-  return armFrameToWorld(ch, pose, {x: h.hx, y: h.hy});
+  const lp = placedPose(ch, pose);
+  const h = handPos(side === -1 ? lp.armL : lp.armR, side);
+  return armFrameToWorld(ch, lp, {x: h.hx, y: h.hy});
 };
 
 /** Arm that puts the hand on a world point (two-bone IK through the pose's body transform). */
 export const reach2 = (ch: RigPlace, pose: Pose2, side: -1 | 1, wx: number, wy: number, elbow: 1 | -1 = 1): Arm => {
-  const sink = effectiveSink(pose);
-  const xf = bodyXf(pose, sink);
-  let q = {x: (wx - ch.x) / ch.scale, y: (wy - ch.y) / ch.scale};
-  if (ch.flip) q.x = -q.x;
-  q = {x: q.x - xf.tx, y: q.y - xf.ty - (pose.bob ?? 0)};
-  q = rot(q, -xf.lean, {x: 0, y: PIVOT_Y});
-  return reachLocal(q.x, q.y - xf.hd, side, elbow);
+  const lp = placedPose(ch, pose);
+  const q = {x: ((wx - ch.x) / ch.scale) * (ch.flip ? -1 : 1), y: (wy - ch.y) / ch.scale - (lp.bob ?? 0)};
+  const a = groundToArm(lp, q);
+  return reachLocal(a.x, a.y, side, elbow);
+};
+
+/** Arm that puts the hand on a character-local ground-frame point (feet at 0,0, before bob; e.g. a knee). */
+export const reachGround = (pose: Pose2, side: -1 | 1, gx: number, gy: number, elbow: 1 | -1 = 1): Arm => {
+  const a = groundToArm(pose, {x: gx, y: gy});
+  return reachLocal(a.x, a.y, side, elbow);
 };
 
 /** Head transform of a pose: offset and rotation about the neck pivot (character-local, arm frame). */
@@ -500,16 +593,70 @@ const headXf = (pose: Pose2) => {
 
 /** The mouth centre in world space (for a hand-over-mouth reach that follows a tilted / peeking head). */
 export const mouthWorld = (ch: RigPlace, pose: Pose2) => {
-  const h = headXf(pose);
+  const lp = placedPose(ch, pose);
+  const h = headXf(lp);
   const m = rot({x: 0, y: HEAD_Y + 34}, h.rot, {x: 0, y: HEAD_Y + 50});
-  return armFrameToWorld(ch, pose, {x: m.x + h.dx, y: m.y + h.dy});
+  return armFrameToWorld(ch, lp, {x: m.x + h.dx, y: m.y + h.dy});
 };
 
 /** Where a world-px rig of `scale` has its eyes (centre between them), e.g. to aim a look or a sight line. */
 export const eyesWorld = (ch: RigPlace, pose: Pose2) => {
-  const h = headXf(pose);
+  const lp = placedPose(ch, pose);
+  const h = headXf(lp);
   const m = rot({x: 0, y: HEAD_Y - 6}, h.rot, {x: 0, y: HEAD_Y + 50});
-  return armFrameToWorld(ch, pose, {x: m.x + h.dx, y: m.y + h.dy});
+  return armFrameToWorld(ch, lp, {x: m.x + h.dx, y: m.y + h.dy});
+};
+
+/* ------------------------------------------------------------------ legs (pure geometry, shared by drawing and helpers) */
+
+type LegGeo = {hip: P; knee: P; ankle: P; turn: number; pitch: number; side: -1 | 1};
+
+/** Both legs of a pose in the ground frame (character-local, before bob): hips, knees, ankles. */
+const legsOf = (pose: Pose2): {L: LegGeo; R: LegGeo} => {
+  const hips = hipJoints(pose, effectiveSink(pose));
+  const feet = pose.feet ?? STAND_FEET;
+  const one = (k: 'L' | 'R', side: -1 | 1): LegGeo => {
+    const hip = hips[k];
+    const fk = k === 'L' ? pose.legL : pose.legR;
+    const f = feet[k];
+    if (fk) {
+      const {knee, ankle} = fkLeg(hip, fk);
+      return {hip, knee, ankle, turn: f.turn ?? 0, pitch: f.pitch ?? 0, side};
+    }
+    const tgt = {x: f.x, y: ANKLE_Y - (f.lift ?? 0)};
+    const kd = f.knee ?? side * KNEE_DEFAULT;
+    let sol = solveLeg(hip, tgt, kd);
+    if (sol.knee.y > KNEE_FLOOR) {
+      // a sideways knee would poke through the floor (deep sink + lifted foot): turn it toward the camera just enough
+      let lo = 0;
+      let hi = 1;
+      for (let i = 0; i < 8; i++) {
+        const mid = (lo + hi) / 2;
+        if (solveLeg(hip, tgt, kd * mid).knee.y > KNEE_FLOOR) hi = mid;
+        else lo = mid;
+      }
+      sol = solveLeg(hip, tgt, kd * lo);
+    }
+    return {hip, knee: sol.knee, ankle: sol.ankle, turn: f.turn ?? 0, pitch: f.pitch ?? 0, side};
+  };
+  return {L: one('L', -1), R: one('R', 1)};
+};
+
+/** A knee in world space (side -1 = the screen-left leg). */
+export const kneeWorld = (ch: RigPlace, pose: Pose2, side: -1 | 1) => {
+  const lp = placedPose(ch, pose);
+  return groundToWorld(ch, lp, legsOf(lp)[side === -1 ? 'L' : 'R'].knee);
+};
+
+/**
+ * Arms with both hands resting on the knees of `pose` (use on a crouch: withPose(crouch, handsOnKnees(crouch))).
+ * Draws both arms in front of the legs. Compute it from the final leg pose (same feet, sink and lean).
+ */
+export const handsOnKnees = (pose: Pose2): Pick<Pose2, 'armL' | 'armR' | 'armsFront'> => {
+  const legs = legsOf(pose);
+  // the mitt centre sits just above and outside the knee cap, so the palm covers the top of the knee
+  const on = (k: LegGeo) => reachGround(pose, k.side, k.knee.x + k.side * 3, k.knee.y - 20, 1);
+  return {armL: on(legs.L), armR: on(legs.R), armsFront: 'both'};
 };
 
 /* ------------------------------------------------------------------ drawing pieces (copied from Character.tsx) */
@@ -648,32 +795,15 @@ export type Character2Props = {
   /** idle life: 0 = frozen, 1 = default */
   life?: number;
   eyeDarts?: boolean;
+  /** With both arms in front, which is drawn on top. Defaults to pose.frontTop, then 'L'. */
+  frontTop?: 'L' | 'R';
 };
 
 /** The Video 02 rig: Video 01's Character with moving legs, crouch, weight shift, peek and new face options. */
-export const Character2: React.FC<Character2Props> = ({look, pose: pose0, frame, seed = 1, x = 0, y = 0, scale = 1, flip = false, front, pass = 'all', holdL, holdR, shadow = true, style, life = 1, eyeDarts = true}) => {
+export const Character2: React.FC<Character2Props> = ({look, pose: pose0, frame, seed = 1, x = 0, y = 0, scale = 1, flip = false, front, pass = 'all', holdL, holdR, shadow = true, style, life = 1, eyeDarts = true, frontTop}) => {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '');
-  const saccade = (() => {
-    if (!eyeDarts || life <= 0) return {x: 0, y: 0};
-    const period = 70 + Math.floor(rand(seed * 11) * 50);
-    const k = Math.floor((frame + seed * 13) / period);
-    const p = (frame + seed * 13) % period;
-    const tx = (rand(seed * 101 + k) - 0.5) * 0.36;
-    const ty = (rand(seed * 211 + k) - 0.5) * 0.22;
-    const px = (rand(seed * 101 + k - 1) - 0.5) * 0.36;
-    const py = (rand(seed * 211 + k - 1) - 0.5) * 0.22;
-    const u = Math.min(1, p / 4);
-    return {x: (px + (tx - px) * u) * life, y: (py + (ty - py) * u) * life};
-  })();
-  const pose: Pose2 = {
-    ...pose0,
-    tilt: pose0.tilt + drift(frame, seed, 170) * 1.3 * life,
-    lean: pose0.lean + drift(frame, seed + 7, 210) * 0.7 * life,
-    // idle drift moves the upper body only (feet stay planted), as a tiny breathing sink
-    sink: (pose0.sink ?? 0) + (drift(frame, seed + 3, 96) * 1.4 + 1.4) * life * 0.5,
-    lookX: clamp(pose0.lookX + saccade.x, -1, 1),
-    lookY: clamp(pose0.lookY + saccade.y, -1, 1),
-  };
+  // idle life is layered on top of the scene's pose, never replacing it (livePose is exported for the helpers)
+  const pose = livePose(pose0, frame, seed, life, eyeDarts);
   const bl = pose.blink ?? blinkFn(frame, seed);
   const bob = pose.bob ?? 0;
   const breathe = Math.sin((frame / 48 + seed) * Math.PI * 2) * 1.2;
@@ -683,43 +813,19 @@ export const Character2: React.FC<Character2Props> = ({look, pose: pose0, frame,
   const drawFrontArm = pass !== 'body';
   const frontL = fr === 'L' || fr === 'both';
   const frontR = fr === 'R' || fr === 'both';
+  const topR = (frontTop ?? pose.frontTop ?? 'L') === 'R';
   const sleeve = look.overlay ? look.overlayColor ?? look.shirt : look.shirt;
 
   // legs and the upper-body transform
   const sink = effectiveSink(pose);
   const xf = bodyXf(pose, sink);
-  const hips = hipJoints(pose, sink);
   const feet = pose.feet ?? STAND_FEET;
-  const legGeo = (k: 'L' | 'R', side: -1 | 1) => {
-    const hip = hips[k];
-    const fk = k === 'L' ? pose.legL : pose.legR;
-    const f = feet[k];
-    if (fk) {
-      const {knee, ankle} = fkLeg(hip, fk);
-      return {hip, knee, ankle, turn: f.turn ?? 0, pitch: f.pitch ?? 0, side};
-    }
-    const tgt = {x: f.x, y: ANKLE_Y - (f.lift ?? 0)};
-    const kd = f.knee ?? side * 0.35;
-    let sol = solveLeg(hip, tgt, kd);
-    if (sol.knee.y > KNEE_FLOOR) {
-      // a sideways knee would poke through the floor (deep sink + lifted foot): turn it toward the camera just enough
-      let lo = 0;
-      let hi = 1;
-      for (let i = 0; i < 8; i++) {
-        const mid = (lo + hi) / 2;
-        if (solveLeg(hip, tgt, kd * mid).knee.y > KNEE_FLOOR) hi = mid;
-        else lo = mid;
-      }
-      sol = solveLeg(hip, tgt, kd * lo);
-    }
-    return {hip, knee: sol.knee, ankle: sol.ankle, turn: f.turn ?? 0, pitch: f.pitch ?? 0, side};
-  };
-  const legL = legGeo('L', -1);
-  const legR = legGeo('R', 1);
+  const {L: legL, R: legR} = legsOf(pose);
   // the leg nearer the camera is drawn last: when walking (shoes turned), the leg on the trailing side of the turn
   const turnAvg = ((feet.L.turn ?? 0) + (feet.R.turn ?? 0)) / 2;
   const legOrder = turnAvg < -0.05 ? [legL, legR] : turnAvg > 0.05 ? [legR, legL] : [legL, legR];
   const shadowX = (legL.ankle.x + legR.ankle.x) / 2;
+  const shadowK = 1 - clamp(-bob / 160, 0, 0.3);
 
   const head = headXf(pose);
   const neckPiv = {x: 0, y: HEAD_Y + 50};
@@ -756,8 +862,13 @@ export const Character2: React.FC<Character2Props> = ({look, pose: pose0, frame,
       height={520 * scale}
       style={{position: 'absolute', left: x - 200 * scale, top: y - 500 * scale, overflow: 'visible', ...style}}
     >
+      {/* the floor shadow stays on the floor when the body hops (bob < 0) and shrinks a little with the height */}
+      {shadow && drawBody && (
+        <g transform={flip ? 'scale(-1,1)' : undefined}>
+          <ellipse cx={f2(shadowX)} cy={2} rx={f2(92 * shadowK)} ry={f2(14 * shadowK)} fill={C.shadow} />
+        </g>
+      )}
       <g transform={`${flip ? 'scale(-1,1)' : ''} translate(0, ${f2(bob)})`}>
-        {shadow && drawBody && <ellipse cx={f2(shadowX)} cy={2} rx={92} ry={14} fill={C.shadow} />}
         {/* back arm(s), behind the legs as in Video 01 */}
         {drawBody && (
           <g transform={upperXf}>
@@ -912,9 +1023,10 @@ export const Character2: React.FC<Character2Props> = ({look, pose: pose0, frame,
           {/* front arm pass */}
           {drawFrontArm && (frontL || frontR) && (
             <g transform={`translate(0 ${f2(xf.hd)})`}>
-              {frontR && fr === 'both' && RArm}
+              {/* with both arms in front, the frontTop arm (and anything it holds) is drawn last */}
+              {frontR && !topR && RArm}
               {frontL && LArm}
-              {frontR && fr !== 'both' && RArm}
+              {frontR && topR && RArm}
             </g>
           )}
         </g>

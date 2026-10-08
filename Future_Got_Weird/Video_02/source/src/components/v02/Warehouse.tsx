@@ -2,7 +2,10 @@ import React from 'react';
 import {interpolateColors} from 'remotion';
 import {C, OUTLINE} from '../../theme';
 import {rand} from '../../lib/anim';
-import {BOT, BOT_UNITS_PER_M} from './DeliveryBot';
+import {E} from '../../lib/motion';
+import type {Arm} from '../Character';
+import type {Foot} from './Cast2';
+import {BOT, BOT_ORIGIN, BOT_UNITS_PER_M} from './DeliveryBot';
 
 /**
  * WarehouseSet: the act-5 illustrative application. A warehouse corner seen as a cut-away diorama, drawn from one
@@ -38,7 +41,17 @@ import {BOT, BOT_UNITS_PER_M} from './DeliveryBot';
  *
  * Rendering: one world-px stage (1920x1080, overflow visible). Put it inside a camera <Layer> if the shot moves.
  * Slots: `backdrop` is painted on the shell (floor and walls) before anything standing; `items` are standing things
- * (robot, people, carts) interleaved with the shelving by occlusion; `children` are overlays on top.
+ * (robot, people, carts) interleaved with the shelving by occlusion; `children` are overlays on top. An item's `w` is
+ * half its DRAWN width (arms included): WH_RIG_HALF_W for a Character rig (default), WH_BOT_HALF_W for the robot.
+ *
+ * Helpers for scenes (all pure functions of their inputs):
+ *  - figures: whRigAt + whRigStyle (Character rigs), whBotAt + whBotStyle (DeliveryBot), whBotTopAt / whTokenAt (plan
+ *    glyphs), whFigureMix (the shared rig -> glyph crossfade timing);
+ *  - walking toward the camera with planted feet: whPlanWalk -> whWalkDistance (frame -> metres) -> whWalkAt (rig
+ *    place, Pose2 feet/sink/arms, floor shadow) for <Character2/>;
+ *  - sight lines: whSightBlocked, whFirstHit (where a blocked line stops), whViewEdge (the grazing line past the
+ *    corner, on the relay wall), whVisibleFromZ, whCheck (declared-geometry self-test);
+ *  - projection: whViewAt / whProjectWith / whPathWith / whScreenToFloor.
  */
 
 /* ------------------------------------------------------------------ geometry (plan, metres) */
@@ -115,29 +128,50 @@ export const WH_BLOCKERS: {id: 'S0' | 'S3' | 'S2' | 'S1'; box: WhBox}[] = [
   {id: 'S1', box: WAREHOUSE.shelves.S1},
 ];
 
-/** Plan test: does the straight segment a -> b cross any shelving footprint (Liang-Barsky in x, z)? */
-export const whSightBlocked = (a: WhPt, b: WhPt, boxes: WhBox[] = WH_BLOCKERS.map((q) => q.box)) =>
-  boxes.some((box) => {
-    let t0 = 0;
-    let t1 = 1;
-    const d = [b.x - a.x, b.z - a.z];
-    const o = [a.x, a.z];
-    const lo = [box.x0, box.z0];
-    const hi = [box.x1, box.z1];
-    for (let i = 0; i < 2; i++) {
-      if (Math.abs(d[i]) < 1e-12) {
-        if (o[i] <= lo[i] || o[i] >= hi[i]) return false;
-        continue;
-      }
-      let u = (lo[i] - o[i]) / d[i];
-      let v = (hi[i] - o[i]) / d[i];
-      if (u > v) [u, v] = [v, u];
-      t0 = Math.max(t0, u);
-      t1 = Math.min(t1, v);
-      if (t0 >= t1) return false;
+/** Plan segment a -> b against one footprint (Liang-Barsky in x, z): the entry parameter t in [0, 1), or null when
+ *  the segment misses it or only grazes an edge. */
+const segEntry = (a: WhPt, b: WhPt, box: WhBox): number | null => {
+  let t0 = 0;
+  let t1 = 1;
+  const d = [b.x - a.x, b.z - a.z];
+  const o = [a.x, a.z];
+  const lo = [box.x0, box.z0];
+  const hi = [box.x1, box.z1];
+  for (let i = 0; i < 2; i++) {
+    if (Math.abs(d[i]) < 1e-12) {
+      if (o[i] <= lo[i] || o[i] >= hi[i]) return null;
+      continue;
     }
-    return true;
-  });
+    let u = (lo[i] - o[i]) / d[i];
+    let v = (hi[i] - o[i]) / d[i];
+    if (u > v) [u, v] = [v, u];
+    t0 = Math.max(t0, u);
+    t1 = Math.min(t1, v);
+    if (t0 >= t1) return null;
+  }
+  return t0;
+};
+
+const BLOCKER_BOXES = WH_BLOCKERS.map((q) => q.box);
+
+/** Plan test: does the straight segment a -> b cross any shelving footprint? */
+export const whSightBlocked = (a: WhPt, b: WhPt, boxes: WhBox[] = BLOCKER_BOXES) => boxes.some((box) => segEntry(a, b, box) !== null);
+
+/**
+ * Where the straight segment a -> b first enters the shelving (plan point, `h` interpolated), or null when it is
+ * clear. Use it to stop a "blocked" sight line exactly at the rack it runs into.
+ */
+export const whFirstHit = (a: WhPt, b: WhPt, boxes: WhBox[] = BLOCKER_BOXES): WhPt | null => {
+  let t = Infinity;
+  for (const box of boxes) {
+    const e = segEntry(a, b, box);
+    if (e !== null && e < t) t = e;
+  }
+  if (!Number.isFinite(t)) return null;
+  const ha = a.h ?? 0;
+  const hb = b.h ?? ha;
+  return {x: a.x + (b.x - a.x) * t, z: a.z + (b.z - a.z) * t, h: ha + (hb - ha) * t};
+};
 
 /** Named plan points (metres) for optics: the sensor at the stop pose, the relay samples, the corner. */
 export const WH_PTS = {
@@ -157,6 +191,15 @@ export const whVisibleFromZ = (sensor: WhPt = WH_PTS.sensorAtStop) => {
   const c = WAREHOUSE.corner;
   const slope = (c.z - sensor.z) / (c.x - sensor.x);
   return sensor.z + slope * (WAREHOUSE.personLaneX - sensor.x);
+};
+
+/**
+ * The edge of the robot's direct view: the line from the sensor grazing the blind corner, extended to the relay wall
+ * face. Returns that wall point (everything on the person's side of this line is out of direct view).
+ */
+export const whViewEdge = (sensor: WhPt = WH_PTS.sensorAtStop, wallX: number = WAREHOUSE.relaySection.x): WhPt => {
+  const c = WAREHOUSE.corner;
+  return {x: wallX, z: sensor.z + ((c.z - sensor.z) / (c.x - sensor.x)) * (wallX - sensor.x), h: sensor.h};
 };
 
 /** Furthest z on the person lane (centre) for which a whole person (radius 0.26 m) stays hidden from the stop pose. */
@@ -323,6 +366,17 @@ export const whBotAt = (x: number, z: number, tilt: number, view: WhViewConfig =
   return {x: q.x, y: q.y, scale: s.ppm / BOT_UNITS_PER_M, depth: q.depth};
 };
 
+/** CSS for the <DeliveryBot/> side rig at a tilt (fade + ground-anchored settle, same timing as whRigStyle). */
+export const whBotStyle = (tilt: number, scale: number): React.CSSProperties => {
+  const m = whFigureMix(tilt);
+  return {
+    opacity: m.rig,
+    transform: m.rig < 1 ? `scale(${m.rigScaleX}, ${m.rigScaleY})` : undefined,
+    transformOrigin: `${BOT_ORIGIN.x * scale}px ${BOT_ORIGIN.y * scale}px`,
+    visibility: m.rig <= 0.001 ? 'hidden' : undefined,
+  };
+};
+
 /**
  * Where to draw the plan glyph <BotTop/> for a robot at (x, z): during the tilt the glyph sits at body height
  * (h = 0.35 m), so it appears inside the fading side rig; at tilt 1 it is exactly over the footprint.
@@ -341,6 +395,139 @@ export const whTokenAt = (x: number, z: number, tilt: number, radiusM = 0.26, vi
   const q = whProjectWith(s, {x, z, h: 1.2 * (1 - whSmooth(0.6, 1, tilt))});
   const m = whFigureMix(tilt);
   return {x: q.x, y: q.y, r: radiusM * s.ppm, opacity: m.token, scale: m.tokenScale};
+};
+
+/* ------------------------------------------------------------------ walking toward the camera (Character2 legs) */
+
+/**
+ * A straight walk along the lane x = `x`, from z0 to z1, in a whole number of steps (`stepM` adjusted to fit). Made
+ * for the frontal rig walking TOWARD the camera (z1 > z0, e.g. down aisle B toward the junction); the rig always
+ * faces the camera, so a walk away from it would need a back view.
+ */
+export type WhWalkPlan = {x: number; z0: number; z1: number; steps: number; stepM: number; heightM: number};
+
+const WALK_DUTY = 0.58; // fraction of a cycle each foot is planted (Cast2's walk)
+const WALK_LIFT = 20; // swing-foot lift at mid-swing, rig px
+const WALK_HIP_X = 33; // Cast2 ankle x when standing, rig px
+const RIG_PX = 440; // frontal rig height at scale 1
+
+/** Plan a walk: steps of about `stepM` (default 0.34 m for a 1.7 m person), a whole number of them. */
+export const whPlanWalk = (x: number, z0: number, z1: number, opts: {heightM?: number; stepM?: number} = {}): WhWalkPlan => {
+  const heightM = opts.heightM ?? 1.7;
+  const base = opts.stepM ?? (0.34 * heightM) / 1.7;
+  const dist = Math.abs(z1 - z0);
+  const steps = Math.max(1, Math.round(dist / base));
+  return {x, z0, z1, steps, stepM: dist / steps, heightM};
+};
+
+/**
+ * Distance walked (m) at frame g: starts at `start`, `framesPerStep` frames per step; the first step accelerates
+ * from rest and the last one decelerates into the stop (C1 at the joins, so the body never starts or stops dead).
+ */
+export const whWalkDistance = (g: number, start: number, plan: WhWalkPlan, framesPerStep: number) => {
+  const t = (g - start) / framesPerStep;
+  if (t <= 0) return 0;
+  if (t >= plan.steps) return plan.steps * plan.stepM;
+  const k = Math.floor(t);
+  const f = t - k;
+  const accel = (u: number) => 2 * u * u - u * u * u;
+  const e = plan.steps === 1 ? E.inOut(f) : k === 0 ? accel(f) : k === plan.steps - 1 ? 1 - accel(1 - f) : f;
+  return (k + e) * plan.stepM;
+};
+
+/** One foot along the walk (m from the start) and its swing lift (rig px); `o` = 0 lead foot, 0.5 trail foot. */
+const walkFoot = (c: number, o: number, step: number, end: number) => {
+  const L = step * 2;
+  const D = WALK_DUTY;
+  if (c <= 0) return {p: 0, lift: 0};
+  if (c >= end) return {p: end, lift: 0};
+  const q = c / L - o + D / 2;
+  const k = Math.floor(q);
+  const r = q - k;
+  const F = (j: number) => (j + o) * L;
+  if (r < D) return {p: Math.max(0, Math.min(end, F(k))), lift: 0};
+  let cs = (k + o + D / 2) * L;
+  let ce = (k + 1 + o - D / 2) * L;
+  let x0 = F(k);
+  let x1 = F(k + 1);
+  if (cs < 0) {
+    cs = 0;
+    x0 = 0;
+  }
+  if (ce > end) {
+    ce = end;
+    x1 = end;
+  }
+  const u = clamp01((c - cs) / Math.max(1e-6, ce - cs));
+  const ease = (1 - Math.cos(Math.PI * u)) / 2;
+  return {p: x0 + (x1 - x0) * ease, lift: WALK_LIFT * Math.pow(Math.sin(Math.PI * u), 0.85) * Math.min(1, (x1 - x0) / step)};
+};
+
+/** Result of whWalkAt: where to draw the rig, the pose parts to merge into its Pose2, and its floor shadow. */
+export type WhWalkState = {
+  /** rig ground point (px) and scale for <Character2 x y scale/> */
+  x: number;
+  y: number;
+  scale: number;
+  /** the body's plan z (use it as the WhItem z) and its depth */
+  z: number;
+  depth: number;
+  /** merge into the rig's pose: {...base, ...walk.pose} */
+  pose: {feet: {L: Foot; R: Foot}; sink: number; armL: Arm; armR: Arm};
+  /** the floor shadow under the body (draw it yourself and pass shadow={false} to the rig) */
+  shadow: {cx: number; cy: number; rx: number; ry: number};
+  /** true between the first lift and the last plant */
+  moving: boolean;
+};
+
+/**
+ * A frontal Character2 rig walking along a WhWalkPlan, `travelled` metres in (whWalkDistance), at a tilt. Planted
+ * feet stay exactly on their footprints on the floor (projected through the set's view, so the far foot sits higher
+ * on screen and the near foot lower), the swing foot lifts and passes, the body bobs a little at double support, and
+ * the arm opposite the leading leg swings forward (a small elbow lift). The rig is drawn over its leading foot (its
+ * legs only reach down), so its own shadow would sit ahead of the feet: draw `shadow` instead (rig shadow={false}).
+ */
+export const whWalkAt = (plan: WhWalkPlan, travelled: number, tilt: number, view: WhViewConfig = WH_VIEW): WhWalkState => {
+  const s = whViewAt(tilt, view);
+  const step = plan.stepM;
+  const end = plan.steps * step;
+  const c = Math.max(0, Math.min(end, travelled));
+  const dir = plan.z1 >= plan.z0 ? 1 : -1;
+  const lead = walkFoot(c, 0, step, end);
+  const trail = walkFoot(c, 0.5, step, end);
+  const ramp = E.inOut(clamp01(Math.min(c, end - c) / step));
+  const zBody = plan.z0 + dir * c;
+  const zR = plan.z0 + dir * lead.p;
+  const zL = plan.z0 + dir * trail.p;
+  // the rig's ground line is the camera-nearest foot (or where it will land): every foot is then at or above it
+  const zRef = Math.max(zBody + WALK_DUTY * step * ramp, zL, zR);
+  const g = whProjectWith(s, {x: plan.x, z: zRef, h: 0});
+  const body = whProjectWith(s, {x: plan.x, z: zBody, h: 0});
+  const k = (plan.heightM * s.ppm) / RIG_PX;
+  const nearL = zL > zR;
+  const turn = nearL ? 0.06 : -0.06; // Character2 draws the leg on the turn's trailing side last: the nearer one
+  const foot = (z: number, lift: number, side: -1 | 1): Foot => {
+    const dz = z - zRef;
+    return {x: side * WALK_HIP_X + (s.ppm * s.shear * dz) / k, lift: lift - (s.ppm * s.floor * dz) / k, pitch: 0, turn, knee: side * 0.2};
+  };
+  // arm swing: +1 when the R foot leads by a full step
+  const sw = Math.max(-1, Math.min(1, ((zR - zL) * dir) / step)) * ramp;
+  const arm = (fwd: number): Arm => ({a: 8 + 3 * Math.max(0, fwd), b: 10 + 16 * Math.max(0, fwd)});
+  return {
+    x: g.x,
+    y: g.y,
+    scale: k,
+    z: zBody,
+    depth: body.depth,
+    pose: {
+      feet: {L: foot(zL, trail.lift, -1), R: foot(zR, lead.lift, 1)},
+      sink: 3 * ramp + 5 * ramp * (1 - Math.cos((2 * Math.PI * c) / step)) * 0.5,
+      armL: arm(sw),
+      armR: arm(-sw),
+    },
+    shadow: {cx: body.x, cy: body.y + 2 * k, rx: 92 * k, ry: 14 * k},
+    moving: c > 0 && c < end,
+  };
 };
 
 /* ------------------------------------------------------------------ palette */
@@ -492,14 +679,16 @@ const ShelfUnit: React.FC<{spec: ShelfSpec; s: WhViewState}> = ({spec, s}) => {
   const faces: Face[] = (['-z', '+x', '-x', '+z'] as Face[]).filter((f) => faceVisible(s, f));
   const P = (pts: WhPt[]) => whPathWith(s, pts);
   const planT = whSmooth(0.55, 0.95, s.tilt);
-  const tall = s.height * s.ppm; // px per metre of height: details vanish when faces are thin
-  const detail = tall > 30;
+  const tall = s.height * s.ppm; // px per metre of height: details fade out as the faces flatten in the tilt
+  // (a hard cut-off would pop; dense thin beams would also flicker, so they are gone before faces get that thin)
+  const detailOp = whSmooth(30, 80, tall);
+  const detail = detailOp > 0.001;
   const nodes: React.ReactNode[] = [];
 
   for (const f of faces) {
     const L = faceLen(b, f);
-    const H = b.h1 - b.h0;
     const key = `${spec.id}${f}`;
+    const det: React.ReactNode[] = [];
     if (spec.open.includes(f)) {
       // recessed bay back, then stock, then the frame (beams per bay, full-height uprights)
       nodes.push(<path key={`${key}bg`} d={P(faceRect(b, f, 0, L, b.h0, b.h1))} fill={WH_COLORS.bayBack} {...ink()} />);
@@ -507,40 +696,47 @@ const ShelfUnit: React.FC<{spec: ShelfSpec; s: WhViewState}> = ({spec, s}) => {
         const ups = uprightsFor(L, spec.bay, spec.from);
         for (const [i, bx] of stockCached(spec, f).entries()) {
           const fill = bx.kind === 'card' ? WH_COLORS.box : bx.kind === 'tote' ? WH_COLORS.tote : WH_COLORS.carton;
-          nodes.push(<path key={`${key}b${i}`} d={P(faceRect(b, f, bx.u0, bx.u1, bx.v0, bx.v1, 0.002))} fill={fill} {...ink(3)} />);
+          det.push(<path key={`${key}b${i}`} d={P(faceRect(b, f, bx.u0, bx.u1, bx.v0, bx.v1, 0.002))} fill={fill} {...ink(3)} />);
           const cu = (bx.u0 + bx.u1) / 2;
           if (bx.kind === 'card') {
             // packing tape: a short band down from the top edge
-            nodes.push(<path key={`${key}t${i}`} d={P(faceRect(b, f, cu - 0.03, cu + 0.03, bx.v1 - Math.min(0.12, (bx.v1 - bx.v0) * 0.4), bx.v1, 0.003))} fill={WH_COLORS.boxTape} />);
+            det.push(<path key={`${key}t${i}`} d={P(faceRect(b, f, cu - 0.03, cu + 0.03, bx.v1 - Math.min(0.12, (bx.v1 - bx.v0) * 0.4), bx.v1, 0.003))} fill={WH_COLORS.boxTape} />);
           }
           if (bx.kind === 'tote') {
-            nodes.push(<path key={`${key}h${i}`} d={P(faceRect(b, f, cu - 0.07, cu + 0.07, bx.v1 - 0.1, bx.v1 - 0.05, 0.003))} fill={WH_COLORS.toteDeep} />);
+            det.push(<path key={`${key}h${i}`} d={P(faceRect(b, f, cu - 0.07, cu + 0.07, bx.v1 - 0.1, bx.v1 - 0.05, 0.003))} fill={WH_COLORS.toteDeep} />);
           }
           if (bx.label) {
             const lu = bx.u0 + 0.05;
-            nodes.push(<path key={`${key}l${i}`} d={P(faceRect(b, f, lu, lu + 0.11, bx.v0 + 0.05, bx.v0 + 0.12, 0.003))} fill={WH_COLORS.label} {...ink(2.5)} />);
+            det.push(<path key={`${key}l${i}`} d={P(faceRect(b, f, lu, lu + 0.11, bx.v0 + 0.05, bx.v0 + 0.12, 0.003))} fill={WH_COLORS.label} {...ink(2.5)} />);
           }
         }
         for (let k = 0; k < ups.length - 1; k++) {
           for (const bv of spec.beams) {
             const v0 = Math.max(b.h0, bv - BEAM_H / 2);
             const v1 = Math.min(b.h1, bv + BEAM_H / 2);
-            nodes.push(<path key={`${key}bm${k}-${bv}`} d={P(faceRect(b, f, ups[k] + UPRIGHT_W / 2, ups[k + 1] - UPRIGHT_W / 2, v0, v1, 0.004))} fill={WH_COLORS.beam} {...ink(3)} />);
+            det.push(<path key={`${key}bm${k}-${bv}`} d={P(faceRect(b, f, ups[k] + UPRIGHT_W / 2, ups[k + 1] - UPRIGHT_W / 2, v0, v1, 0.004))} fill={WH_COLORS.beam} {...ink(3)} />);
           }
         }
         for (const [k, uu] of ups.entries()) {
           const u0 = Math.max(0, uu - UPRIGHT_W / 2);
           const u1 = Math.min(L, uu + UPRIGHT_W / 2);
-          nodes.push(<path key={`${key}u${k}`} d={P(faceRect(b, f, u0, u1, b.h0, b.h1, 0.005))} fill={WH_COLORS.upright} {...ink(3)} />);
+          det.push(<path key={`${key}u${k}`} d={P(faceRect(b, f, u0, u1, b.h0, b.h1, 0.005))} fill={WH_COLORS.upright} {...ink(3)} />);
         }
       }
     } else {
       // closed end frame
       nodes.push(<path key={`${key}end`} d={P(faceRect(b, f, 0, L, b.h0, b.h1))} fill={WH_COLORS.endPanel} {...ink()} />);
       if (detail) {
-        nodes.push(<path key={`${key}e0`} d={P(faceRect(b, f, 0, UPRIGHT_W, b.h0, b.h1, 0.004))} fill={WH_COLORS.upright} {...ink(3)} />);
-        nodes.push(<path key={`${key}e1`} d={P(faceRect(b, f, L - UPRIGHT_W, L, b.h0, b.h1, 0.004))} fill={WH_COLORS.upright} {...ink(3)} />);
+        det.push(<path key={`${key}e0`} d={P(faceRect(b, f, 0, UPRIGHT_W, b.h0, b.h1, 0.004))} fill={WH_COLORS.upright} {...ink(3)} />);
+        det.push(<path key={`${key}e1`} d={P(faceRect(b, f, L - UPRIGHT_W, L, b.h0, b.h1, 0.004))} fill={WH_COLORS.upright} {...ink(3)} />);
       }
+    }
+    if (det.length) {
+      nodes.push(
+        <g key={`${key}det`} opacity={detailOp < 0.999 ? detailOp : undefined}>
+          {det}
+        </g>,
+      );
     }
   }
 
@@ -600,8 +796,17 @@ const CornerGuard: React.FC<{s: WhViewState}> = ({s}) => {
 
 /* ------------------------------------------------------------------ occlusion of items by the shelving */
 
-/** A standing thing in the set: footprint centre (x, z), half-width w (m) and height (m). */
+/**
+ * A standing thing in the set: footprint centre (x, z), half-width `w` (m) and `height` (m). `w` is half the width of
+ * what is DRAWN, arms and props included (it decides which racks can cover part of it): a Character rig with its
+ * arms down is about WH_RIG_HALF_W (the default), the DeliveryBot side rig WH_BOT_HALF_W.
+ */
 export type WhItem = {key?: string; x: number; z: number; w?: number; height?: number; node: React.ReactNode};
+
+/** Half the drawn width of a 1.7 m frontal Character rig with its arms down (hands included), metres. */
+export const WH_RIG_HALF_W = 0.42;
+/** Half the drawn length of the DeliveryBot side rig (tail light to bumper, pulse arcs excluded), metres. */
+export const WH_BOT_HALF_W = 0.4;
 
 const rayHitsBox = (o: [number, number, number], d: [number, number, number], box: WhBox) => {
   const lo = [box.x0, box.z0, box.h0];
@@ -623,13 +828,16 @@ const rayHitsBox = (o: [number, number, number], d: [number, number, number], bo
   return true;
 };
 
-/** Is any part of the item hidden behind the box from the camera? */
+const COLS = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1];
+const ROWS = [0.03, 0.25, 0.5, 0.75, 0.97];
+
+/** Is any part of the item (a billboard w either side of its centre, 0..height tall) hidden behind the box? */
 const itemBehind = (s: WhViewState, it: WhItem, box: WhBox) => {
-  const w = it.w ?? 0.3;
+  const w = it.w ?? WH_RIG_HALF_W;
   const ht = it.height ?? 1.7;
-  for (const dx of [-w, -w / 2, 0, w / 2, w]) {
-    for (const fh of [0.05, 0.5, 0.95]) {
-      const o: [number, number, number] = [it.x + dx, it.z, fh * ht];
+  for (const cx of COLS) {
+    for (const fh of ROWS) {
+      const o: [number, number, number] = [it.x + cx * w, it.z, fh * ht];
       if (rayHitsBox(o, s.toCam, box)) return true;
     }
   }
@@ -799,7 +1007,8 @@ const arrow = (cx: number, cz: number, dx: number, dz: number, L: number, Wd: nu
   return [p(-L / 2, -shaft / 2), p(L / 2 - headL, -shaft / 2), p(L / 2 - headL, -Wd / 2), p(L / 2, 0), p(L / 2 - headL, Wd / 2), p(L / 2 - headL, shaft / 2), p(-L / 2, shaft / 2)];
 };
 
-/** Swing doors with round windows, in the back wall at the end of aisle B. */
+/** Swing doors with tall vision panels (not round portholes: a white disc floats like a halo over a passing head), in
+ *  the back wall at the end of aisle B. */
 const BackDoor: React.FC<{s: WhViewState}> = ({s}) => {
   const {x0, x1, height: Hd} = WAREHOUSE.door;
   const z = 0.006;
@@ -807,8 +1016,10 @@ const BackDoor: React.FC<{s: WhViewState}> = ({s}) => {
   const r = (a: number, b: number, h0: number, h1: number): [number, number][] => [[a, h0], [b, h0], [b, h1], [a, h1]];
   const mid = (x0 + x1) / 2;
   const win = (cx: number) => {
-    const q = whProjectWith(s, {x: cx, z, h: 1.5});
-    return <ellipse key={cx} cx={q.x} cy={q.y} rx={0.12 * s.ppm} ry={0.12 * s.ppm * s.height} fill={WH_COLORS.window} {...ink(3)} />;
+    // the back wall is a +z face: frontal in this projection, so a screen-space rounded rect is exact
+    const a = whProjectWith(s, {x: cx - 0.075, z, h: 1.78});
+    const b = whProjectWith(s, {x: cx + 0.075, z, h: 1.18});
+    return <rect key={cx} x={a.x} y={a.y} width={b.x - a.x} height={Math.max(0, b.y - a.y)} rx={Math.min(0.05 * s.ppm, (b.y - a.y) / 2)} fill={WH_COLORS.window} {...ink(3)} />;
   };
   return (
     <g>
@@ -816,7 +1027,7 @@ const BackDoor: React.FC<{s: WhViewState}> = ({s}) => {
       <path d={P(r(x0, mid - 0.01, 0, Hd))} fill={WH_COLORS.door} {...ink()} />
       <path d={P(r(mid + 0.01, x1, 0, Hd))} fill={WH_COLORS.door} {...ink()} />
       <path d={P(r(x0 + 0.06, x1 - 0.06, 0.06, 0.28))} fill={C.blue} opacity={0.35} />
-      {s.height > 0.25 && [win((x0 + mid) / 2), win((mid + x1) / 2)]}
+      {s.height > 0.2 && <g opacity={whSmooth(0.2, 0.4, s.height)}>{[win((x0 + mid) / 2), win((mid + x1) / 2)]}</g>}
     </g>
   );
 };

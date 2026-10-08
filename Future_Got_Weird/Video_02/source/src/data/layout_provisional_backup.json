@@ -1,0 +1,12 @@
+{
+  "note": "PROVISIONAL director layout (metres). Plan coords: x to the right, z = distance from the relay wall toward the camera (wall at z = 0), h = height. Replaced/confirmed by research/geometry after verification; keep the schema.",
+  "units": "m",
+  "room": {"x0": 0.0, "x1": 4.4, "z0": 0.0, "z1": 3.6, "wallHeight": 2.6},
+  "relayWall": {"x0": 0.0, "x1": 4.4, "z": 0.0},
+  "occluder": {"x": 2.3, "z0": 0.9, "z1": 2.7, "thickness": 0.06, "height": 2.0},
+  "sensor": {"x": 1.1, "z": 2.4, "h": 1.2},
+  "operator": {"x": 0.85, "z": 2.65},
+  "hidden": {"x": 3.3, "z": 1.5, "h": 1.2},
+  "wallSamples": [{"id": "W1", "x": 1.0}, {"id": "W2", "x": 1.45}, {"id": "W3", "x": 1.9}, {"id": "W4", "x": 2.2}],
+  "c_m_per_ns": 0.2998
+}

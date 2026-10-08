@@ -15,6 +15,7 @@ identifies the channel owner; evidence on screen is genuine; illustrations and t
 |---|---|---|
 | **The hider** | `guesser` (red spiky hair, white/saffron stripes, cheeks) | the confident one from Video 01; believes "out of sight" means "out of reach" |
 | **The sensor operator** | `checker` (grey bob, round glasses, coral cardigan, pencil) | calm, deadpan, the one who checks |
+| The warehouse walker (act 5) | `person` (blue top, auburn bob; Video 01's "works on people too" character) | the someone around the robot's blind corner |
 | Delivery robot (act 5) | new prop rig `DeliveryBot` | illustrative application, not a demonstration |
 
 The rig is frontal. Turns, walks and crouches get purpose-built variants (`components/v02/`), never a twisted frontal
@@ -66,8 +67,11 @@ Walls and floors extend well past the frame so camera moves never find an edge.
 
 ## 4. Props
 
-`HandheldSensor` (a small boxy time-of-flight sensor module with a grip, an emitter window and a detector window on the
-far face and a small readout on the back that faces us; never a phone), `PulseDot`, `ScatterFan`, `ArrivalHistogram`
+`HandheldSensor` (the open kit sensor: a small boxy time-of-flight module with a grip, two windows on the far face and a
+small readout on the back that faces us; never a phone; it stands on a small tripod stand for acts 1-3 because the
+opening data was captured with the sensor held still), `ResearchModule` (the team's separate smartphone-grade device:
+phone-sized, a 10x10 dot grid, labelled as theirs), `ZoneBox3x3` (the small 3x3-zone sensor behind the raw-echo plot and
+the U reconstruction; the same box in both shots), `PulseDot`, `ScatterFan`, `ArrivalHistogram`
 (bins, a tall first-bounce peak, a small late bump), `TimingRuler`, `CandidateArc`/`Band`, `PossibleCloud` (a soft
 region computed on a grid from the same bands), `Stopwatch` (only as a metaphor chip), `Postcard` (for the scrambled
 postcard metaphor and its limit), `DeliveryBot`.

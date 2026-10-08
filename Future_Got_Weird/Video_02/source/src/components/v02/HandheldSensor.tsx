@@ -1,5 +1,6 @@
 import React, {useId} from 'react';
 import {C, OUTLINE} from '../../theme';
+import {handWorld2, reach2, type Pose2, type RigPlace} from './Cast2';
 
 /**
  * The handheld time-of-flight sensor (Video 02 prop): a small teal box on a short grip, held in a rig hand.
@@ -27,13 +28,16 @@ export const SENSOR = {
   led: {x: 27, y: -91, r: 5.5},
 } as const;
 
-export type SensorPointName = 'boxLeft' | 'boxRight' | 'boxBottomLeft' | 'boxTop' | 'screen' | 'farFace' | 'grip';
+export type SensorPointName = 'boxLeft' | 'boxRight' | 'boxBottomLeft' | 'boxTop' | 'screen' | 'farFace' | 'grip' | 'cradle';
 
 /**
- * A named point of the held sensor, character-local relative to the holding hand (multiply by the sensor's `scale`,
- * then add the hand's position: e.g. reach the other hand to `boxLeft` to steady the box).
+ * A named point of the held sensor relative to the holding hand, in the same units as the hand's offset: pass the
+ * product of the rig's scale and the sensor's own `scale` as `scale`, the sensor's `rotate`, and `flip` when the rig
+ * is flipped; then add the hand's world position (handWorld2). `cradle` is where a supporting palm goes (under the
+ * box, left of the grip; draw that hand under the box, see holdSensor); `farFace` is the centre of the working face
+ * (emitter + detector) for starting light paths.
  */
-export const sensorPoint = (name: SensorPointName, scale = 1): {x: number; y: number} => {
+export const sensorPoint = (name: SensorPointName, scale = 1, rotate = 0, flip = false): {x: number; y: number} => {
   const b = SENSOR.box;
   const p = (() => {
     switch (name) {
@@ -49,12 +53,66 @@ export const sensorPoint = (name: SensorPointName, scale = 1): {x: number; y: nu
         return {x: SENSOR.screen.x0 + SENSOR.screen.w / 2, y: SENSOR.screen.y0 + SENSOR.screen.h / 2};
       case 'farFace':
         return {x: (b.x0 + b.x1) / 2 + SENSOR.depth.dx, y: (b.y0 + b.y1) / 2 + SENSOR.depth.dy};
+      case 'cradle':
+        return {x: b.x0 + CRADLE.dx, y: b.y1 + CRADLE.dy};
       case 'grip':
       default:
         return {x: 0, y: 0};
     }
   })();
-  return {x: p.x * scale, y: p.y * scale};
+  const r = (rotate * Math.PI) / 180;
+  const x = (p.x * Math.cos(r) - p.y * Math.sin(r)) * scale;
+  const y = (p.x * Math.sin(r) + p.y * Math.cos(r)) * scale;
+  return {x: flip ? -x : x, y};
+};
+
+// the supporting palm: its centre this far right of the box's left edge and below its bottom edge (sensor px)
+const CRADLE = {dx: 13, dy: 0};
+
+/* ------------------------------------------------------------------ holding it (rig helper) */
+
+export type SensorHoldOptions = {
+  /** Grip-hand position, character-local ground frame (feet at 0,0): default chest height, in front of the right hip.
+   *  Ignored when `gripWorld` or `farFaceAt` is given. */
+  grip?: {x: number; y: number};
+  /** Grip-hand position in world px. */
+  gripWorld?: {x: number; y: number};
+  /** Put the sensor's working (far) face on this world point instead, e.g. the projected layout sensor S. */
+  farFaceAt?: {x: number; y: number};
+  /** The other hand cradles the box from below (default true); false leaves `pose.armL` as it is. */
+  support?: boolean;
+  /** The <HandheldSensor> scale and rotate you will draw (default 1, 0). */
+  sensorScale?: number;
+  rotate?: number;
+};
+
+/** Default grip-hand position (character-local): chest height, just right of centre. */
+export const SENSOR_GRIP = {x: 40, y: -176};
+
+/**
+ * Pose a <Character2> holding the sensor: the right hand (screen right, `holdR`) on the grip, the left hand cradling
+ * the box from below (drawn under the box: armsFront 'both', frontTop 'R'). Returns the pose plus world points for the
+ * grip hand, the box's screen and its far face (where pulses leave). Pass the same `ch` (with frame/seed/life for
+ * exact contact) you draw the rig with, then render
+ *   <Character2 {...ch} pose={held.pose} holdR={<HandheldSensor skin={look.skin} mirrored={ch.flip} .../>} />.
+ */
+export const holdSensor = (ch: RigPlace, pose: Pose2, opts: SensorHoldOptions = {}) => {
+  const k = ch.scale * (opts.sensorScale ?? 1);
+  const rotate = opts.rotate ?? 0;
+  const flip = !!ch.flip;
+  const sp = (n: SensorPointName) => sensorPoint(n, k, rotate, flip);
+  const g0 = opts.grip ?? SENSOR_GRIP;
+  const target = opts.farFaceAt
+    ? {x: opts.farFaceAt.x - sp('farFace').x, y: opts.farFaceAt.y - sp('farFace').y}
+    : opts.gripWorld ?? {x: ch.x + (flip ? -g0.x : g0.x) * ch.scale, y: ch.y + g0.y * ch.scale};
+  const p0: Pose2 = {...pose, armsFront: opts.support === false ? 'R' : 'both', frontTop: 'R'};
+  const armR = reach2(ch, p0, 1, target.x, target.y, -1);
+  const withR: Pose2 = {...p0, armR};
+  const hand = handWorld2(ch, withR, 1);
+  const at = (n: SensorPointName) => ({x: hand.x + sp(n).x, y: hand.y + sp(n).y});
+  const cradle = at('cradle');
+  const out: Pose2 = opts.support === false ? withR : {...withR, armL: reach2(ch, withR, -1, cradle.x, cradle.y, -1)};
+  return {pose: out, hand, screen: at('screen'), farFace: at('farFace'), cradle};
 };
 
 /** Default readout: arrival-time histogram with a tall first-bounce bar and a small late bump (illustrative). */
@@ -139,10 +197,12 @@ export type HandheldSensorProps = {
   scale?: number;
   /** Rotation about the hand (deg). */
   rotate?: number;
+  /** Set when the holding rig is drawn flipped: the readout is mirrored back so time still runs left to right. */
+  mirrored?: boolean;
 };
 
 /** The held sensor (character-local, hand at 0,0). See the file header. */
-export const HandheldSensor: React.FC<HandheldSensorProps> = ({bars, bumpFrom, reveal = 1, bumpHighlight = 0, screen, led = 1, ledColor = C.saffron, firing = 0, skin, scale = 1, rotate = 0}) => {
+export const HandheldSensor: React.FC<HandheldSensorProps> = ({bars, bumpFrom, reveal = 1, bumpHighlight = 0, screen, led = 1, ledColor = C.saffron, firing = 0, skin, scale = 1, rotate = 0, mirrored = false}) => {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const b = SENSOR.box;
   const d = SENSOR.depth;
@@ -185,7 +245,7 @@ export const HandheldSensor: React.FC<HandheldSensorProps> = ({bars, bumpFrom, r
         </clipPath>
       </defs>
       <g clipPath={`url(#scr${uid})`}>
-        <g transform={`translate(${s.x0} ${s.y0})`}>{screen ?? <SensorReadout bars={bars} bumpFrom={bumpFrom} reveal={reveal} bumpHighlight={bumpHighlight} width={s.w} height={s.h} />}</g>
+        <g transform={mirrored ? `translate(${s.x0 + s.w} ${s.y0}) scale(-1 1)` : `translate(${s.x0} ${s.y0})`}>{screen ??<SensorReadout bars={bars} bumpFrom={bumpFrom} reveal={reveal} bumpHighlight={bumpHighlight} width={s.w} height={s.h} />}</g>
       </g>
       {/* status LED and a small button */}
       <circle cx={SENSOR.led.x} cy={SENSOR.led.y} r={SENSOR.led.r} fill={mix(mix(C.tealDeep, C.inkSoft, 0.4), ledColor, ledOn)} stroke={C.ink} strokeWidth={3} />

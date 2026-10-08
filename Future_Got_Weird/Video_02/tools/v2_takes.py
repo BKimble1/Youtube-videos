@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""V2 narration: measure every line in every take, pick takes per line, and cut the chosen lines.
+"""Video 02 narration (from the Video 01 V2 tool): measure every line in every take, pick takes per line, and cut the chosen lines.
 
   python3 tools/v2_takes.py eval       -> audio/narration/v2/eval.json + eval_report.md + proposed selection
   python3 tools/v2_takes.py assemble   -> audio/narration/v2/<seg>.wav, <seg>.words.json, manifest.json
@@ -37,10 +37,8 @@ SR = 48000
 MEDIAN_LINE_DB = None
 HOP = int(0.005 * SR)
 PUNCT_ONLY = re.compile(r"^[^\wʊəɪæʃʒθðŋɑɔɛʌ]+$")
-DESIGNED_BEATS = {  # segment -> words after which the direction asks for an audible beat
-    "s03": ["answers…"], "s05": ["professional…"], "s11": ["likely."], "s12": ["way…"],
-    "s15": ["rarely…"], "s19": ["font…"], "s24": ["answers…"], "s25": ["three…"],
-    "s33": ["language…"], "s34": ["is…"],
+DESIGNED_BEATS = {  # segment -> words after which the direction asks for an audible beat (Video 02 script v2)
+    "s03": ["yet…"], "s10": ["here…"], "s12": ["paths…"], "s18": ["direction…"], "s20": ["just…"],
 }
 
 

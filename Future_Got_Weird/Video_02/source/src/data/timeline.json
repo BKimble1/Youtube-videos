@@ -1,1 +1,6052 @@
-{"fps": 30, "engine": "placeholder", "voice": {}, "durationInFrames": 300, "durationSeconds": 10, "scenes": [], "segments": [], "cues": {}}
+{
+ "fps": 30,
+ "engine": "v2",
+ "voice": {
+  "engine": "v2",
+  "model": "eleven_v4",
+  "voice_name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU"
+ },
+ "durationInFrames": 11996,
+ "durationSeconds": 399.85,
+ "scenes": [
+  {
+   "id": "S1",
+   "from": 0,
+   "to": 1826
+  },
+  {
+   "id": "S2",
+   "from": 1826,
+   "to": 2874
+  },
+  {
+   "id": "S3",
+   "from": 2874,
+   "to": 3954
+  },
+  {
+   "id": "S4",
+   "from": 3954,
+   "to": 5692
+  },
+  {
+   "id": "S5",
+   "from": 5692,
+   "to": 7009
+  },
+  {
+   "id": "S6",
+   "from": 7009,
+   "to": 8702
+  },
+  {
+   "id": "S7",
+   "from": 8702,
+   "to": 10052
+  },
+  {
+   "id": "S8",
+   "from": 10052,
+   "to": 11078
+  },
+  {
+   "id": "S9",
+   "from": 11078,
+   "to": 11996
+  }
+ ],
+ "segments": [
+  {
+   "id": "s01",
+   "scene": "S1",
+   "from": 16,
+   "to": 139,
+   "text": "Our friend here is hiding behind a partition, and he is very pleased about it.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Our",
+     "from": 16,
+     "to": 23
+    },
+    {
+     "w": "friend",
+     "from": 27,
+     "to": 30
+    },
+    {
+     "w": "here",
+     "from": 33,
+     "to": 38
+    },
+    {
+     "w": "is",
+     "from": 40,
+     "to": 42
+    },
+    {
+     "w": "hiding",
+     "from": 45,
+     "to": 52
+    },
+    {
+     "w": "behind",
+     "from": 54,
+     "to": 59
+    },
+    {
+     "w": "a",
+     "from": 60,
+     "to": 62
+    },
+    {
+     "w": "partition,",
+     "from": 64,
+     "to": 88
+    },
+    {
+     "w": "and",
+     "from": 90,
+     "to": 93
+    },
+    {
+     "w": "he",
+     "from": 95,
+     "to": 98
+    },
+    {
+     "w": "is",
+     "from": 100,
+     "to": 107
+    },
+    {
+     "w": "very",
+     "from": 110,
+     "to": 119
+    },
+    {
+     "w": "pleased",
+     "from": 122,
+     "to": 129
+    },
+    {
+     "w": "about",
+     "from": 132,
+     "to": 136
+    },
+    {
+     "w": "it.",
+     "from": 138,
+     "to": 155
+    }
+   ]
+  },
+  {
+   "id": "s02",
+   "scene": "S1",
+   "from": 159,
+   "to": 266,
+   "text": "That sensor can't see him. It's pointed at a plain, blank wall.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "That",
+     "from": 161,
+     "to": 163
+    },
+    {
+     "w": "sensor",
+     "from": 168,
+     "to": 173
+    },
+    {
+     "w": "can't",
+     "from": 175,
+     "to": 182
+    },
+    {
+     "w": "see",
+     "from": 185,
+     "to": 187
+    },
+    {
+     "w": "him.",
+     "from": 189,
+     "to": 206
+    },
+    {
+     "w": "It's",
+     "from": 207,
+     "to": 211
+    },
+    {
+     "w": "pointed",
+     "from": 215,
+     "to": 221
+    },
+    {
+     "w": "at",
+     "from": 222,
+     "to": 223
+    },
+    {
+     "w": "a",
+     "from": 228,
+     "to": 232
+    },
+    {
+     "w": "plain,",
+     "from": 236,
+     "to": 242
+    },
+    {
+     "w": "blank",
+     "from": 245,
+     "to": 254
+    },
+    {
+     "w": "wall.",
+     "from": 257,
+     "to": 281
+    }
+   ]
+  },
+  {
+   "id": "s03",
+   "scene": "S1",
+   "from": 282,
+   "to": 597,
+   "text": "And yet this is real data, from a study published in 2026: seen from above, a small sensor aimed at a wall, tracking someone it never saw directly.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "And",
+     "from": 284,
+     "to": 288
+    },
+    {
+     "w": "yet",
+     "from": 294,
+     "to": 319
+    },
+    {
+     "w": "this",
+     "from": 321,
+     "to": 331
+    },
+    {
+     "w": "is",
+     "from": 333,
+     "to": 341
+    },
+    {
+     "w": "real",
+     "from": 344,
+     "to": 348
+    },
+    {
+     "w": "data,",
+     "from": 350,
+     "to": 365
+    },
+    {
+     "w": "from",
+     "from": 367,
+     "to": 369
+    },
+    {
+     "w": "a",
+     "from": 371,
+     "to": 372
+    },
+    {
+     "w": "study",
+     "from": 377,
+     "to": 381
+    },
+    {
+     "w": "published",
+     "from": 387,
+     "to": 393
+    },
+    {
+     "w": "in",
+     "from": 396,
+     "to": 398
+    },
+    {
+     "w": "2026:",
+     "from": 403,
+     "to": 444
+    },
+    {
+     "w": "seen",
+     "from": 447,
+     "to": 451
+    },
+    {
+     "w": "from",
+     "from": 453,
+     "to": 456
+    },
+    {
+     "w": "above,",
+     "from": 462,
+     "to": 475
+    },
+    {
+     "w": "a",
+     "from": 477,
+     "to": 480
+    },
+    {
+     "w": "small",
+     "from": 483,
+     "to": 487
+    },
+    {
+     "w": "sensor",
+     "from": 489,
+     "to": 501
+    },
+    {
+     "w": "aimed",
+     "from": 504,
+     "to": 509
+    },
+    {
+     "w": "at",
+     "from": 510,
+     "to": 511
+    },
+    {
+     "w": "a",
+     "from": 512,
+     "to": 513
+    },
+    {
+     "w": "wall,",
+     "from": 516,
+     "to": 533
+    },
+    {
+     "w": "tracking",
+     "from": 539,
+     "to": 545
+    },
+    {
+     "w": "someone",
+     "from": 549,
+     "to": 554
+    },
+    {
+     "w": "it",
+     "from": 557,
+     "to": 564
+    },
+    {
+     "w": "never",
+     "from": 566,
+     "to": 573
+    },
+    {
+     "w": "saw",
+     "from": 576,
+     "to": 581
+    },
+    {
+     "w": "directly.",
+     "from": 587,
+     "to": 605
+    }
+   ]
+  },
+  {
+   "id": "s04",
+   "scene": "S1",
+   "from": 630,
+   "to": 828,
+   "text": "Here's the trick for seeing around corners. The light doesn't go through the partition. It goes around the end, by way of the wall.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Here's",
+     "from": 631,
+     "to": 638
+    },
+    {
+     "w": "the",
+     "from": 641,
+     "to": 643
+    },
+    {
+     "w": "trick",
+     "from": 644,
+     "to": 650
+    },
+    {
+     "w": "for",
+     "from": 651,
+     "to": 653
+    },
+    {
+     "w": "seeing",
+     "from": 657,
+     "to": 662
+    },
+    {
+     "w": "around",
+     "from": 665,
+     "to": 672
+    },
+    {
+     "w": "corners.",
+     "from": 674,
+     "to": 701
+    },
+    {
+     "w": "The",
+     "from": 702,
+     "to": 703
+    },
+    {
+     "w": "light",
+     "from": 705,
+     "to": 713
+    },
+    {
+     "w": "doesn't",
+     "from": 715,
+     "to": 720
+    },
+    {
+     "w": "go",
+     "from": 721,
+     "to": 722
+    },
+    {
+     "w": "through",
+     "from": 727,
+     "to": 734
+    },
+    {
+     "w": "the",
+     "from": 737,
+     "to": 739
+    },
+    {
+     "w": "partition.",
+     "from": 753,
+     "to": 769
+    },
+    {
+     "w": "It",
+     "from": 769,
+     "to": 770
+    },
+    {
+     "w": "goes",
+     "from": 773,
+     "to": 777
+    },
+    {
+     "w": "around",
+     "from": 781,
+     "to": 785
+    },
+    {
+     "w": "the",
+     "from": 787,
+     "to": 789
+    },
+    {
+     "w": "end,",
+     "from": 792,
+     "to": 805
+    },
+    {
+     "w": "by",
+     "from": 807,
+     "to": 809
+    },
+    {
+     "w": "way",
+     "from": 810,
+     "to": 811
+    },
+    {
+     "w": "of",
+     "from": 813,
+     "to": 816
+    },
+    {
+     "w": "the",
+     "from": 817,
+     "to": 818
+    },
+    {
+     "w": "wall.",
+     "from": 821,
+     "to": 842
+    }
+   ]
+  },
+  {
+   "id": "s05",
+   "scene": "S1",
+   "from": 845,
+   "to": 1118,
+   "text": "The sensor fires a short, invisible flash. The wall scatters it, part reaches the hidden person, and a tiny bit bounces back: wall, then sensor.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "The",
+     "from": 845,
+     "to": 847
+    },
+    {
+     "w": "sensor",
+     "from": 853,
+     "to": 859
+    },
+    {
+     "w": "fires",
+     "from": 864,
+     "to": 869
+    },
+    {
+     "w": "a",
+     "from": 871,
+     "to": 873
+    },
+    {
+     "w": "short,",
+     "from": 876,
+     "to": 884
+    },
+    {
+     "w": "invisible",
+     "from": 885,
+     "to": 902
+    },
+    {
+     "w": "flash.",
+     "from": 905,
+     "to": 930
+    },
+    {
+     "w": "The",
+     "from": 932,
+     "to": 933
+    },
+    {
+     "w": "wall",
+     "from": 937,
+     "to": 941
+    },
+    {
+     "w": "scatters",
+     "from": 942,
+     "to": 953
+    },
+    {
+     "w": "it,",
+     "from": 955,
+     "to": 967
+    },
+    {
+     "w": "part",
+     "from": 969,
+     "to": 974
+    },
+    {
+     "w": "reaches",
+     "from": 975,
+     "to": 984
+    },
+    {
+     "w": "the",
+     "from": 986,
+     "to": 989
+    },
+    {
+     "w": "hidden",
+     "from": 992,
+     "to": 996
+    },
+    {
+     "w": "person,",
+     "from": 1005,
+     "to": 1016
+    },
+    {
+     "w": "and",
+     "from": 1017,
+     "to": 1017
+    },
+    {
+     "w": "a",
+     "from": 1022,
+     "to": 1023
+    },
+    {
+     "w": "tiny",
+     "from": 1025,
+     "to": 1034
+    },
+    {
+     "w": "bit",
+     "from": 1038,
+     "to": 1041
+    },
+    {
+     "w": "bounces",
+     "from": 1043,
+     "to": 1053
+    },
+    {
+     "w": "back:",
+     "from": 1057,
+     "to": 1075
+    },
+    {
+     "w": "wall,",
+     "from": 1077,
+     "to": 1097
+    },
+    {
+     "w": "then",
+     "from": 1100,
+     "to": 1104
+    },
+    {
+     "w": "sensor.",
+     "from": 1106,
+     "to": 1125
+    }
+   ]
+  },
+  {
+   "id": "s06",
+   "scene": "S1",
+   "from": 1128,
+   "to": 1327,
+   "text": "That trip is longer than a quick bounce off the wall, so it arrives a little later. A few billionths of a second later.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "That",
+     "from": 1127,
+     "to": 1134
+    },
+    {
+     "w": "trip",
+     "from": 1137,
+     "to": 1141
+    },
+    {
+     "w": "is",
+     "from": 1143,
+     "to": 1146
+    },
+    {
+     "w": "longer",
+     "from": 1148,
+     "to": 1158
+    },
+    {
+     "w": "than",
+     "from": 1159,
+     "to": 1160
+    },
+    {
+     "w": "a",
+     "from": 1163,
+     "to": 1165
+    },
+    {
+     "w": "quick",
+     "from": 1167,
+     "to": 1172
+    },
+    {
+     "w": "bounce",
+     "from": 1175,
+     "to": 1182
+    },
+    {
+     "w": "off",
+     "from": 1184,
+     "to": 1187
+    },
+    {
+     "w": "the",
+     "from": 1188,
+     "to": 1189
+    },
+    {
+     "w": "wall,",
+     "from": 1191,
+     "to": 1208
+    },
+    {
+     "w": "so",
+     "from": 1211,
+     "to": 1218
+    },
+    {
+     "w": "it",
+     "from": 1219,
+     "to": 1220
+    },
+    {
+     "w": "arrives",
+     "from": 1223,
+     "to": 1232
+    },
+    {
+     "w": "a",
+     "from": 1233,
+     "to": 1235
+    },
+    {
+     "w": "little",
+     "from": 1237,
+     "to": 1239
+    },
+    {
+     "w": "later.",
+     "from": 1242,
+     "to": 1257
+    },
+    {
+     "w": "A",
+     "from": 1267,
+     "to": 1268
+    },
+    {
+     "w": "few",
+     "from": 1271,
+     "to": 1275
+    },
+    {
+     "w": "billionths",
+     "from": 1283,
+     "to": 1297
+    },
+    {
+     "w": "of",
+     "from": 1299,
+     "to": 1302
+    },
+    {
+     "w": "a",
+     "from": 1303,
+     "to": 1305
+    },
+    {
+     "w": "second",
+     "from": 1307,
+     "to": 1314
+    },
+    {
+     "w": "later.",
+     "from": 1316,
+     "to": 1333
+    }
+   ]
+  },
+  {
+   "id": "s07",
+   "scene": "S1",
+   "from": 1340,
+   "to": 1524,
+   "text": "Your webcam can't time that. This takes a time-of-flight sensor, a camera that clocks its own light's round trip.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Your",
+     "from": 1340,
+     "to": 1345
+    },
+    {
+     "w": "webcam",
+     "from": 1349,
+     "to": 1357
+    },
+    {
+     "w": "can't",
+     "from": 1359,
+     "to": 1364
+    },
+    {
+     "w": "time",
+     "from": 1367,
+     "to": 1371
+    },
+    {
+     "w": "that.",
+     "from": 1374,
+     "to": 1388
+    },
+    {
+     "w": "This",
+     "from": 1395,
+     "to": 1400
+    },
+    {
+     "w": "takes",
+     "from": 1403,
+     "to": 1407
+    },
+    {
+     "w": "a",
+     "from": 1410,
+     "to": 1412
+    },
+    {
+     "w": "time-of-flight",
+     "from": 1416,
+     "to": 1434
+    },
+    {
+     "w": "sensor,",
+     "from": 1440,
+     "to": 1455
+    },
+    {
+     "w": "a",
+     "from": 1458,
+     "to": 1460
+    },
+    {
+     "w": "camera",
+     "from": 1465,
+     "to": 1470
+    },
+    {
+     "w": "that",
+     "from": 1472,
+     "to": 1475
+    },
+    {
+     "w": "clocks",
+     "from": 1478,
+     "to": 1484
+    },
+    {
+     "w": "its",
+     "from": 1488,
+     "to": 1491
+    },
+    {
+     "w": "own",
+     "from": 1494,
+     "to": 1496
+    },
+    {
+     "w": "light's",
+     "from": 1499,
+     "to": 1508
+    },
+    {
+     "w": "round",
+     "from": 1511,
+     "to": 1513
+    },
+    {
+     "w": "trip.",
+     "from": 1515,
+     "to": 1539
+    }
+   ]
+  },
+  {
+   "id": "s08",
+   "scene": "S1",
+   "from": 1541,
+   "to": 1810,
+   "text": "Light travels about thirty centimetres in a nanosecond, one billionth of a second. So timing is distance, and the extra delay is a clue to where he is.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Light",
+     "from": 1543,
+     "to": 1547
+    },
+    {
+     "w": "travels",
+     "from": 1549,
+     "to": 1556
+    },
+    {
+     "w": "about",
+     "from": 1559,
+     "to": 1568
+    },
+    {
+     "w": "thirty",
+     "from": 1569,
+     "to": 1575
+    },
+    {
+     "w": "centimetres",
+     "from": 1578,
+     "to": 1595
+    },
+    {
+     "w": "in",
+     "from": 1596,
+     "to": 1597
+    },
+    {
+     "w": "a",
+     "from": 1599,
+     "to": 1602
+    },
+    {
+     "w": "nanosecond,",
+     "from": 1604,
+     "to": 1631
+    },
+    {
+     "w": "one",
+     "from": 1633,
+     "to": 1635
+    },
+    {
+     "w": "billionth",
+     "from": 1643,
+     "to": 1655
+    },
+    {
+     "w": "of",
+     "from": 1656,
+     "to": 1657
+    },
+    {
+     "w": "a",
+     "from": 1658,
+     "to": 1659
+    },
+    {
+     "w": "second.",
+     "from": 1662,
+     "to": 1686
+    },
+    {
+     "w": "So",
+     "from": 1688,
+     "to": 1693
+    },
+    {
+     "w": "timing",
+     "from": 1700,
+     "to": 1710
+    },
+    {
+     "w": "is",
+     "from": 1712,
+     "to": 1715
+    },
+    {
+     "w": "distance,",
+     "from": 1717,
+     "to": 1739
+    },
+    {
+     "w": "and",
+     "from": 1741,
+     "to": 1742
+    },
+    {
+     "w": "the",
+     "from": 1743,
+     "to": 1746
+    },
+    {
+     "w": "extra",
+     "from": 1748,
+     "to": 1755
+    },
+    {
+     "w": "delay",
+     "from": 1758,
+     "to": 1767
+    },
+    {
+     "w": "is",
+     "from": 1769,
+     "to": 1770
+    },
+    {
+     "w": "a",
+     "from": 1772,
+     "to": 1775
+    },
+    {
+     "w": "clue",
+     "from": 1777,
+     "to": 1784
+    },
+    {
+     "w": "to",
+     "from": 1787,
+     "to": 1789
+    },
+    {
+     "w": "where",
+     "from": 1791,
+     "to": 1794
+    },
+    {
+     "w": "he",
+     "from": 1796,
+     "to": 1799
+    },
+    {
+     "w": "is.",
+     "from": 1801,
+     "to": 1818
+    }
+   ]
+  },
+  {
+   "id": "s09",
+   "scene": "S2",
+   "from": 1837,
+   "to": 1935,
+   "text": "Why does a plain wall work at all? Start with a mirror.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Why",
+     "from": 1839,
+     "to": 1842
+    },
+    {
+     "w": "does",
+     "from": 1844,
+     "to": 1849
+    },
+    {
+     "w": "a",
+     "from": 1850,
+     "to": 1852
+    },
+    {
+     "w": "plain",
+     "from": 1854,
+     "to": 1861
+    },
+    {
+     "w": "wall",
+     "from": 1863,
+     "to": 1871
+    },
+    {
+     "w": "work",
+     "from": 1873,
+     "to": 1878
+    },
+    {
+     "w": "at",
+     "from": 1880,
+     "to": 1883
+    },
+    {
+     "w": "all?",
+     "from": 1887,
+     "to": 1902
+    },
+    {
+     "w": "Start",
+     "from": 1911,
+     "to": 1916
+    },
+    {
+     "w": "with",
+     "from": 1919,
+     "to": 1921
+    },
+    {
+     "w": "a",
+     "from": 1922,
+     "to": 1923
+    },
+    {
+     "w": "mirror.",
+     "from": 1926,
+     "to": 1944
+    }
+   ]
+  },
+  {
+   "id": "s10",
+   "scene": "S2",
+   "from": 1951,
+   "to": 2179,
+   "text": "Light leaves a mirror at the same angle it arrived, so the picture stays whole. Put a mirror here, and our friend is simply visible.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Light",
+     "from": 1952,
+     "to": 1957
+    },
+    {
+     "w": "leaves",
+     "from": 1959,
+     "to": 1964
+    },
+    {
+     "w": "a",
+     "from": 1965,
+     "to": 1967
+    },
+    {
+     "w": "mirror",
+     "from": 1969,
+     "to": 1976
+    },
+    {
+     "w": "at",
+     "from": 1979,
+     "to": 1981
+    },
+    {
+     "w": "the",
+     "from": 1983,
+     "to": 1986
+    },
+    {
+     "w": "same",
+     "from": 1988,
+     "to": 1993
+    },
+    {
+     "w": "angle",
+     "from": 1995,
+     "to": 2003
+    },
+    {
+     "w": "it",
+     "from": 2004,
+     "to": 2005
+    },
+    {
+     "w": "arrived,",
+     "from": 2007,
+     "to": 2027
+    },
+    {
+     "w": "so",
+     "from": 2029,
+     "to": 2034
+    },
+    {
+     "w": "the",
+     "from": 2036,
+     "to": 2039
+    },
+    {
+     "w": "picture",
+     "from": 2041,
+     "to": 2048
+    },
+    {
+     "w": "stays",
+     "from": 2049,
+     "to": 2055
+    },
+    {
+     "w": "whole.",
+     "from": 2058,
+     "to": 2072
+    },
+    {
+     "w": "Put",
+     "from": 2083,
+     "to": 2084
+    },
+    {
+     "w": "a",
+     "from": 2085,
+     "to": 2087
+    },
+    {
+     "w": "mirror",
+     "from": 2089,
+     "to": 2096
+    },
+    {
+     "w": "here,",
+     "from": 2099,
+     "to": 2125
+    },
+    {
+     "w": "and",
+     "from": 2129,
+     "to": 2132
+    },
+    {
+     "w": "our",
+     "from": 2135,
+     "to": 2139
+    },
+    {
+     "w": "friend",
+     "from": 2144,
+     "to": 2149
+    },
+    {
+     "w": "is",
+     "from": 2151,
+     "to": 2154
+    },
+    {
+     "w": "simply",
+     "from": 2157,
+     "to": 2163
+    },
+    {
+     "w": "visible.",
+     "from": 2166,
+     "to": 2187
+    }
+   ]
+  },
+  {
+   "id": "s11",
+   "scene": "S2",
+   "from": 2203,
+   "to": 2438,
+   "text": "A painted wall is rough up close. It throws light every which way, so each spot acts less like a mirror, more like a tiny lamp.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "A",
+     "from": 2201,
+     "to": 2205
+    },
+    {
+     "w": "painted",
+     "from": 2207,
+     "to": 2215
+    },
+    {
+     "w": "wall",
+     "from": 2217,
+     "to": 2227
+    },
+    {
+     "w": "is",
+     "from": 2229,
+     "to": 2232
+    },
+    {
+     "w": "rough",
+     "from": 2237,
+     "to": 2244
+    },
+    {
+     "w": "up",
+     "from": 2246,
+     "to": 2249
+    },
+    {
+     "w": "close.",
+     "from": 2251,
+     "to": 2275
+    },
+    {
+     "w": "It",
+     "from": 2277,
+     "to": 2280
+    },
+    {
+     "w": "throws",
+     "from": 2283,
+     "to": 2287
+    },
+    {
+     "w": "light",
+     "from": 2289,
+     "to": 2297
+    },
+    {
+     "w": "every",
+     "from": 2299,
+     "to": 2306
+    },
+    {
+     "w": "which",
+     "from": 2309,
+     "to": 2313
+    },
+    {
+     "w": "way,",
+     "from": 2316,
+     "to": 2333
+    },
+    {
+     "w": "so",
+     "from": 2336,
+     "to": 2340
+    },
+    {
+     "w": "each",
+     "from": 2342,
+     "to": 2345
+    },
+    {
+     "w": "spot",
+     "from": 2347,
+     "to": 2357
+    },
+    {
+     "w": "acts",
+     "from": 2359,
+     "to": 2366
+    },
+    {
+     "w": "less",
+     "from": 2369,
+     "to": 2373
+    },
+    {
+     "w": "like",
+     "from": 2376,
+     "to": 2378
+    },
+    {
+     "w": "a",
+     "from": 2379,
+     "to": 2381
+    },
+    {
+     "w": "mirror,",
+     "from": 2385,
+     "to": 2402
+    },
+    {
+     "w": "more",
+     "from": 2405,
+     "to": 2407
+    },
+    {
+     "w": "like",
+     "from": 2409,
+     "to": 2412
+    },
+    {
+     "w": "a",
+     "from": 2413,
+     "to": 2414
+    },
+    {
+     "w": "tiny",
+     "from": 2417,
+     "to": 2426
+    },
+    {
+     "w": "lamp.",
+     "from": 2429,
+     "to": 2453
+    }
+   ]
+  },
+  {
+   "id": "s12",
+   "scene": "S2",
+   "from": 2455,
+   "to": 2861,
+   "text": "You might picture his image as a postcard shredded into confetti, waiting to be sorted. It's worse than that. Confetti still holds bits of picture. Everything coming back is a blend of many paths. What survives is timing.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "You",
+     "from": 2455,
+     "to": 2457
+    },
+    {
+     "w": "might",
+     "from": 2460,
+     "to": 2462
+    },
+    {
+     "w": "picture",
+     "from": 2465,
+     "to": 2472
+    },
+    {
+     "w": "his",
+     "from": 2474,
+     "to": 2477
+    },
+    {
+     "w": "image",
+     "from": 2479,
+     "to": 2486
+    },
+    {
+     "w": "as",
+     "from": 2487,
+     "to": 2489
+    },
+    {
+     "w": "a",
+     "from": 2493,
+     "to": 2497
+    },
+    {
+     "w": "postcard",
+     "from": 2500,
+     "to": 2513
+    },
+    {
+     "w": "shredded",
+     "from": 2515,
+     "to": 2525
+    },
+    {
+     "w": "into",
+     "from": 2527,
+     "to": 2529
+    },
+    {
+     "w": "confetti,",
+     "from": 2532,
+     "to": 2553
+    },
+    {
+     "w": "waiting",
+     "from": 2558,
+     "to": 2563
+    },
+    {
+     "w": "to",
+     "from": 2564,
+     "to": 2565
+    },
+    {
+     "w": "be",
+     "from": 2568,
+     "to": 2570
+    },
+    {
+     "w": "sorted.",
+     "from": 2573,
+     "to": 2597
+    },
+    {
+     "w": "It's",
+     "from": 2599,
+     "to": 2606
+    },
+    {
+     "w": "worse",
+     "from": 2607,
+     "to": 2613
+    },
+    {
+     "w": "than",
+     "from": 2616,
+     "to": 2618
+    },
+    {
+     "w": "that.",
+     "from": 2621,
+     "to": 2637
+    },
+    {
+     "w": "Confetti",
+     "from": 2642,
+     "to": 2654
+    },
+    {
+     "w": "still",
+     "from": 2659,
+     "to": 2664
+    },
+    {
+     "w": "holds",
+     "from": 2667,
+     "to": 2671
+    },
+    {
+     "w": "bits",
+     "from": 2673,
+     "to": 2678
+    },
+    {
+     "w": "of",
+     "from": 2681,
+     "to": 2683
+    },
+    {
+     "w": "picture.",
+     "from": 2689,
+     "to": 2709
+    },
+    {
+     "w": "Everything",
+     "from": 2712,
+     "to": 2724
+    },
+    {
+     "w": "coming",
+     "from": 2729,
+     "to": 2733
+    },
+    {
+     "w": "back",
+     "from": 2737,
+     "to": 2741
+    },
+    {
+     "w": "is",
+     "from": 2743,
+     "to": 2745
+    },
+    {
+     "w": "a",
+     "from": 2747,
+     "to": 2748
+    },
+    {
+     "w": "blend",
+     "from": 2750,
+     "to": 2757
+    },
+    {
+     "w": "of",
+     "from": 2760,
+     "to": 2765
+    },
+    {
+     "w": "many",
+     "from": 2767,
+     "to": 2774
+    },
+    {
+     "w": "paths.",
+     "from": 2783,
+     "to": 2808
+    },
+    {
+     "w": "What",
+     "from": 2810,
+     "to": 2813
+    },
+    {
+     "w": "survives",
+     "from": 2815,
+     "to": 2839
+    },
+    {
+     "w": "is",
+     "from": 2841,
+     "to": 2846
+    },
+    {
+     "w": "timing.",
+     "from": 2853,
+     "to": 2870
+    }
+   ]
+  },
+  {
+   "id": "s13",
+   "scene": "S3",
+   "from": 2885,
+   "to": 3175,
+   "text": "Follow the path that matters: sensor, wall, person, wall, sensor. Each bounce spreads the light, and most of it is lost.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Follow",
+     "from": 2883,
+     "to": 2893
+    },
+    {
+     "w": "the",
+     "from": 2894,
+     "to": 2895
+    },
+    {
+     "w": "path",
+     "from": 2898,
+     "to": 2905
+    },
+    {
+     "w": "that",
+     "from": 2907,
+     "to": 2910
+    },
+    {
+     "w": "matters:",
+     "from": 2912,
+     "to": 2941
+    },
+    {
+     "w": "sensor,",
+     "from": 2943,
+     "to": 2966
+    },
+    {
+     "w": "wall,",
+     "from": 2975,
+     "to": 2994
+    },
+    {
+     "w": "person,",
+     "from": 3001,
+     "to": 3024
+    },
+    {
+     "w": "wall,",
+     "from": 3032,
+     "to": 3051
+    },
+    {
+     "w": "sensor.",
+     "from": 3059,
+     "to": 3081
+    },
+    {
+     "w": "Each",
+     "from": 3090,
+     "to": 3095
+    },
+    {
+     "w": "bounce",
+     "from": 3097,
+     "to": 3107
+    },
+    {
+     "w": "spreads",
+     "from": 3109,
+     "to": 3121
+    },
+    {
+     "w": "the",
+     "from": 3122,
+     "to": 3123
+    },
+    {
+     "w": "light,",
+     "from": 3126,
+     "to": 3140
+    },
+    {
+     "w": "and",
+     "from": 3143,
+     "to": 3145
+    },
+    {
+     "w": "most",
+     "from": 3149,
+     "to": 3152
+    },
+    {
+     "w": "of",
+     "from": 3153,
+     "to": 3155
+    },
+    {
+     "w": "it",
+     "from": 3156,
+     "to": 3157
+    },
+    {
+     "w": "is",
+     "from": 3159,
+     "to": 3162
+    },
+    {
+     "w": "lost.",
+     "from": 3168,
+     "to": 3186
+    }
+   ]
+  },
+  {
+   "id": "s14",
+   "scene": "S3",
+   "from": 3188,
+   "to": 3383,
+   "text": "Nearly everything coming back bounced once, off the wall. Our friend's echo bounced three times, so it's tiny.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Nearly",
+     "from": 3188,
+     "to": 3198
+    },
+    {
+     "w": "everything",
+     "from": 3200,
+     "to": 3212
+    },
+    {
+     "w": "coming",
+     "from": 3215,
+     "to": 3222
+    },
+    {
+     "w": "back",
+     "from": 3224,
+     "to": 3231
+    },
+    {
+     "w": "bounced",
+     "from": 3235,
+     "to": 3241
+    },
+    {
+     "w": "once,",
+     "from": 3246,
+     "to": 3263
+    },
+    {
+     "w": "off",
+     "from": 3265,
+     "to": 3267
+    },
+    {
+     "w": "the",
+     "from": 3270,
+     "to": 3272
+    },
+    {
+     "w": "wall.",
+     "from": 3277,
+     "to": 3296
+    },
+    {
+     "w": "Our",
+     "from": 3299,
+     "to": 3301
+    },
+    {
+     "w": "friend's",
+     "from": 3303,
+     "to": 3311
+    },
+    {
+     "w": "echo",
+     "from": 3313,
+     "to": 3320
+    },
+    {
+     "w": "bounced",
+     "from": 3323,
+     "to": 3332
+    },
+    {
+     "w": "three",
+     "from": 3335,
+     "to": 3342
+    },
+    {
+     "w": "times,",
+     "from": 3349,
+     "to": 3361
+    },
+    {
+     "w": "so",
+     "from": 3363,
+     "to": 3366
+    },
+    {
+     "w": "it's",
+     "from": 3367,
+     "to": 3371
+    },
+    {
+     "w": "tiny.",
+     "from": 3377,
+     "to": 3392
+    }
+   ]
+  },
+  {
+   "id": "s15",
+   "scene": "S3",
+   "from": 3394,
+   "to": 3794,
+   "text": "This is real data from the same team, with a different sensor and hidden object: the wall's big echo, then, a few nanoseconds later, a bump you have to zoom in to see. In this capture, hundreds of times weaker.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "This",
+     "from": 3393,
+     "to": 3397
+    },
+    {
+     "w": "is",
+     "from": 3400,
+     "to": 3405
+    },
+    {
+     "w": "real",
+     "from": 3408,
+     "to": 3412
+    },
+    {
+     "w": "data",
+     "from": 3414,
+     "to": 3421
+    },
+    {
+     "w": "from",
+     "from": 3424,
+     "to": 3429
+    },
+    {
+     "w": "the",
+     "from": 3431,
+     "to": 3433
+    },
+    {
+     "w": "same",
+     "from": 3437,
+     "to": 3441
+    },
+    {
+     "w": "team,",
+     "from": 3443,
+     "to": 3460
+    },
+    {
+     "w": "with",
+     "from": 3461,
+     "to": 3462
+    },
+    {
+     "w": "a",
+     "from": 3465,
+     "to": 3467
+    },
+    {
+     "w": "different",
+     "from": 3472,
+     "to": 3477
+    },
+    {
+     "w": "sensor",
+     "from": 3479,
+     "to": 3491
+    },
+    {
+     "w": "and",
+     "from": 3493,
+     "to": 3496
+    },
+    {
+     "w": "hidden",
+     "from": 3498,
+     "to": 3505
+    },
+    {
+     "w": "object:",
+     "from": 3508,
+     "to": 3534
+    },
+    {
+     "w": "the",
+     "from": 3537,
+     "to": 3538
+    },
+    {
+     "w": "wall's",
+     "from": 3539,
+     "to": 3551
+    },
+    {
+     "w": "big",
+     "from": 3553,
+     "to": 3558
+    },
+    {
+     "w": "echo,",
+     "from": 3561,
+     "to": 3585
+    },
+    {
+     "w": "then,",
+     "from": 3587,
+     "to": 3601
+    },
+    {
+     "w": "a",
+     "from": 3604,
+     "to": 3606
+    },
+    {
+     "w": "few",
+     "from": 3609,
+     "to": 3611
+    },
+    {
+     "w": "nanoseconds",
+     "from": 3613,
+     "to": 3630
+    },
+    {
+     "w": "later,",
+     "from": 3633,
+     "to": 3649
+    },
+    {
+     "w": "a",
+     "from": 3652,
+     "to": 3657
+    },
+    {
+     "w": "bump",
+     "from": 3658,
+     "to": 3664
+    },
+    {
+     "w": "you",
+     "from": 3666,
+     "to": 3669
+    },
+    {
+     "w": "have",
+     "from": 3670,
+     "to": 3671
+    },
+    {
+     "w": "to",
+     "from": 3673,
+     "to": 3676
+    },
+    {
+     "w": "zoom",
+     "from": 3678,
+     "to": 3683
+    },
+    {
+     "w": "in",
+     "from": 3685,
+     "to": 3688
+    },
+    {
+     "w": "to",
+     "from": 3690,
+     "to": 3693
+    },
+    {
+     "w": "see.",
+     "from": 3695,
+     "to": 3708
+    },
+    {
+     "w": "In",
+     "from": 3718,
+     "to": 3719
+    },
+    {
+     "w": "this",
+     "from": 3721,
+     "to": 3724
+    },
+    {
+     "w": "capture,",
+     "from": 3726,
+     "to": 3750
+    },
+    {
+     "w": "hundreds",
+     "from": 3755,
+     "to": 3767
+    },
+    {
+     "w": "of",
+     "from": 3769,
+     "to": 3771
+    },
+    {
+     "w": "times",
+     "from": 3772,
+     "to": 3781
+    },
+    {
+     "w": "weaker.",
+     "from": 3784,
+     "to": 3802
+    }
+   ]
+  },
+  {
+   "id": "s16",
+   "scene": "S3",
+   "from": 3809,
+   "to": 3938,
+   "text": "That bump is the clue. Its timing says how much farther the light travelled.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "That",
+     "from": 3810,
+     "to": 3815
+    },
+    {
+     "w": "bump",
+     "from": 3820,
+     "to": 3829
+    },
+    {
+     "w": "is",
+     "from": 3832,
+     "to": 3834
+    },
+    {
+     "w": "the",
+     "from": 3837,
+     "to": 3839
+    },
+    {
+     "w": "clue.",
+     "from": 3841,
+     "to": 3863
+    },
+    {
+     "w": "Its",
+     "from": 3867,
+     "to": 3870
+    },
+    {
+     "w": "timing",
+     "from": 3876,
+     "to": 3882
+    },
+    {
+     "w": "says",
+     "from": 3886,
+     "to": 3889
+    },
+    {
+     "w": "how",
+     "from": 3892,
+     "to": 3894
+    },
+    {
+     "w": "much",
+     "from": 3897,
+     "to": 3899
+    },
+    {
+     "w": "farther",
+     "from": 3904,
+     "to": 3913
+    },
+    {
+     "w": "the",
+     "from": 3915,
+     "to": 3916
+    },
+    {
+     "w": "light",
+     "from": 3918,
+     "to": 3923
+    },
+    {
+     "w": "travelled.",
+     "from": 3925,
+     "to": 3947
+    }
+   ]
+  },
+  {
+   "id": "s17",
+   "scene": "S4",
+   "from": 3965,
+   "to": 4239,
+   "text": "Let's turn timing into a map: the room from above, flattened, with one more simplification. The sensor flashes and listens at one spot on the wall.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Let's",
+     "from": 3963,
+     "to": 3971
+    },
+    {
+     "w": "turn",
+     "from": 3974,
+     "to": 3978
+    },
+    {
+     "w": "timing",
+     "from": 3985,
+     "to": 3992
+    },
+    {
+     "w": "into",
+     "from": 3995,
+     "to": 3999
+    },
+    {
+     "w": "a",
+     "from": 4002,
+     "to": 4004
+    },
+    {
+     "w": "map:",
+     "from": 4007,
+     "to": 4028
+    },
+    {
+     "w": "the",
+     "from": 4031,
+     "to": 4032
+    },
+    {
+     "w": "room",
+     "from": 4033,
+     "to": 4040
+    },
+    {
+     "w": "from",
+     "from": 4043,
+     "to": 4045
+    },
+    {
+     "w": "above,",
+     "from": 4052,
+     "to": 4067
+    },
+    {
+     "w": "flattened,",
+     "from": 4069,
+     "to": 4091
+    },
+    {
+     "w": "with",
+     "from": 4094,
+     "to": 4098
+    },
+    {
+     "w": "one",
+     "from": 4100,
+     "to": 4103
+    },
+    {
+     "w": "more",
+     "from": 4107,
+     "to": 4112
+    },
+    {
+     "w": "simplification.",
+     "from": 4115,
+     "to": 4151
+    },
+    {
+     "w": "The",
+     "from": 4153,
+     "to": 4155
+    },
+    {
+     "w": "sensor",
+     "from": 4160,
+     "to": 4165
+    },
+    {
+     "w": "flashes",
+     "from": 4167,
+     "to": 4182
+    },
+    {
+     "w": "and",
+     "from": 4184,
+     "to": 4187
+    },
+    {
+     "w": "listens",
+     "from": 4189,
+     "to": 4199
+    },
+    {
+     "w": "at",
+     "from": 4202,
+     "to": 4206
+    },
+    {
+     "w": "one",
+     "from": 4208,
+     "to": 4211
+    },
+    {
+     "w": "spot",
+     "from": 4213,
+     "to": 4223
+    },
+    {
+     "w": "on",
+     "from": 4224,
+     "to": 4225
+    },
+    {
+     "w": "the",
+     "from": 4227,
+     "to": 4230
+    },
+    {
+     "w": "wall.",
+     "from": 4233,
+     "to": 4251
+    }
+   ]
+  },
+  {
+   "id": "s18",
+   "scene": "S4",
+   "from": 4253,
+   "to": 4433,
+   "text": "Measure the extra delay, and you know how far he is from that spot. Not which direction. Just how far.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Measure",
+     "from": 4254,
+     "to": 4261
+    },
+    {
+     "w": "the",
+     "from": 4263,
+     "to": 4266
+    },
+    {
+     "w": "extra",
+     "from": 4268,
+     "to": 4275
+    },
+    {
+     "w": "delay,",
+     "from": 4285,
+     "to": 4296
+    },
+    {
+     "w": "and",
+     "from": 4298,
+     "to": 4299
+    },
+    {
+     "w": "you",
+     "from": 4302,
+     "to": 4304
+    },
+    {
+     "w": "know",
+     "from": 4307,
+     "to": 4309
+    },
+    {
+     "w": "how",
+     "from": 4311,
+     "to": 4316
+    },
+    {
+     "w": "far",
+     "from": 4319,
+     "to": 4321
+    },
+    {
+     "w": "he",
+     "from": 4323,
+     "to": 4326
+    },
+    {
+     "w": "is",
+     "from": 4328,
+     "to": 4331
+    },
+    {
+     "w": "from",
+     "from": 4333,
+     "to": 4338
+    },
+    {
+     "w": "that",
+     "from": 4340,
+     "to": 4343
+    },
+    {
+     "w": "spot.",
+     "from": 4349,
+     "to": 4367
+    },
+    {
+     "w": "Not",
+     "from": 4369,
+     "to": 4374
+    },
+    {
+     "w": "which",
+     "from": 4376,
+     "to": 4379
+    },
+    {
+     "w": "direction.",
+     "from": 4381,
+     "to": 4409
+    },
+    {
+     "w": "Just",
+     "from": 4410,
+     "to": 4415
+    },
+    {
+     "w": "how",
+     "from": 4418,
+     "to": 4422
+    },
+    {
+     "w": "far.",
+     "from": 4427,
+     "to": 4446
+    }
+   ]
+  },
+  {
+   "id": "s19",
+   "scene": "S4",
+   "from": 4448,
+   "to": 4553,
+   "text": "He could be anywhere on this arc, all the same distance from that spot.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "He",
+     "from": 4448,
+     "to": 4451
+    },
+    {
+     "w": "could",
+     "from": 4453,
+     "to": 4455
+    },
+    {
+     "w": "be",
+     "from": 4459,
+     "to": 4463
+    },
+    {
+     "w": "anywhere",
+     "from": 4465,
+     "to": 4475
+    },
+    {
+     "w": "on",
+     "from": 4477,
+     "to": 4479
+    },
+    {
+     "w": "this",
+     "from": 4482,
+     "to": 4484
+    },
+    {
+     "w": "arc,",
+     "from": 4489,
+     "to": 4501
+    },
+    {
+     "w": "all",
+     "from": 4505,
+     "to": 4508
+    },
+    {
+     "w": "the",
+     "from": 4511,
+     "to": 4513
+    },
+    {
+     "w": "same",
+     "from": 4515,
+     "to": 4518
+    },
+    {
+     "w": "distance",
+     "from": 4520,
+     "to": 4532
+    },
+    {
+     "w": "from",
+     "from": 4535,
+     "to": 4537
+    },
+    {
+     "w": "that",
+     "from": 4539,
+     "to": 4542
+    },
+    {
+     "w": "spot.",
+     "from": 4544,
+     "to": 4561
+    }
+   ]
+  },
+  {
+   "id": "s20",
+   "scene": "S4",
+   "from": 4580,
+   "to": 4810,
+   "text": "Now listen at a second spot. Another delay, another arc. On this side of the wall, they cross in just one place.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Now",
+     "from": 4579,
+     "to": 4587
+    },
+    {
+     "w": "listen",
+     "from": 4589,
+     "to": 4596
+    },
+    {
+     "w": "at",
+     "from": 4599,
+     "to": 4601
+    },
+    {
+     "w": "a",
+     "from": 4602,
+     "to": 4603
+    },
+    {
+     "w": "second",
+     "from": 4606,
+     "to": 4613
+    },
+    {
+     "w": "spot.",
+     "from": 4615,
+     "to": 4632
+    },
+    {
+     "w": "Another",
+     "from": 4637,
+     "to": 4647
+    },
+    {
+     "w": "delay,",
+     "from": 4654,
+     "to": 4671
+    },
+    {
+     "w": "another",
+     "from": 4675,
+     "to": 4680
+    },
+    {
+     "w": "arc.",
+     "from": 4683,
+     "to": 4695
+    },
+    {
+     "w": "On",
+     "from": 4707,
+     "to": 4711
+    },
+    {
+     "w": "this",
+     "from": 4714,
+     "to": 4716
+    },
+    {
+     "w": "side",
+     "from": 4719,
+     "to": 4721
+    },
+    {
+     "w": "of",
+     "from": 4723,
+     "to": 4725
+    },
+    {
+     "w": "the",
+     "from": 4726,
+     "to": 4727
+    },
+    {
+     "w": "wall,",
+     "from": 4728,
+     "to": 4740
+    },
+    {
+     "w": "they",
+     "from": 4743,
+     "to": 4745
+    },
+    {
+     "w": "cross",
+     "from": 4750,
+     "to": 4755
+    },
+    {
+     "w": "in",
+     "from": 4757,
+     "to": 4759
+    },
+    {
+     "w": "just",
+     "from": 4764,
+     "to": 4788
+    },
+    {
+     "w": "one",
+     "from": 4791,
+     "to": 4795
+    },
+    {
+     "w": "place.",
+     "from": 4798,
+     "to": 4817
+    }
+   ]
+  },
+  {
+   "id": "s21",
+   "scene": "S4",
+   "from": 4840,
+   "to": 5017,
+   "text": "Measured timings are a bit fuzzy, so each arc is really a band, and the bands overlap in a small patch.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Measured",
+     "from": 4840,
+     "to": 4850
+    },
+    {
+     "w": "timings",
+     "from": 4853,
+     "to": 4862
+    },
+    {
+     "w": "are",
+     "from": 4864,
+     "to": 4866
+    },
+    {
+     "w": "a",
+     "from": 4868,
+     "to": 4869
+    },
+    {
+     "w": "bit",
+     "from": 4874,
+     "to": 4878
+    },
+    {
+     "w": "fuzzy,",
+     "from": 4881,
+     "to": 4898
+    },
+    {
+     "w": "so",
+     "from": 4900,
+     "to": 4905
+    },
+    {
+     "w": "each",
+     "from": 4907,
+     "to": 4912
+    },
+    {
+     "w": "arc",
+     "from": 4914,
+     "to": 4919
+    },
+    {
+     "w": "is",
+     "from": 4922,
+     "to": 4924
+    },
+    {
+     "w": "really",
+     "from": 4926,
+     "to": 4934
+    },
+    {
+     "w": "a",
+     "from": 4935,
+     "to": 4936
+    },
+    {
+     "w": "band,",
+     "from": 4938,
+     "to": 4958
+    },
+    {
+     "w": "and",
+     "from": 4959,
+     "to": 4960
+    },
+    {
+     "w": "the",
+     "from": 4961,
+     "to": 4962
+    },
+    {
+     "w": "bands",
+     "from": 4965,
+     "to": 4972
+    },
+    {
+     "w": "overlap",
+     "from": 4974,
+     "to": 4989
+    },
+    {
+     "w": "in",
+     "from": 4990,
+     "to": 4991
+    },
+    {
+     "w": "a",
+     "from": 4992,
+     "to": 4994
+    },
+    {
+     "w": "small",
+     "from": 4996,
+     "to": 5001
+    },
+    {
+     "w": "patch.",
+     "from": 5003,
+     "to": 5022
+    }
+   ]
+  },
+  {
+   "id": "s22",
+   "scene": "S4",
+   "from": 5030,
+   "to": 5184,
+   "text": "These two spots are close, so the patch is long and blurry. Spread them out, and it shrinks.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "These",
+     "from": 5030,
+     "to": 5037
+    },
+    {
+     "w": "two",
+     "from": 5038,
+     "to": 5039
+    },
+    {
+     "w": "spots",
+     "from": 5042,
+     "to": 5051
+    },
+    {
+     "w": "are",
+     "from": 5052,
+     "to": 5054
+    },
+    {
+     "w": "close,",
+     "from": 5056,
+     "to": 5073
+    },
+    {
+     "w": "so",
+     "from": 5075,
+     "to": 5078
+    },
+    {
+     "w": "the",
+     "from": 5079,
+     "to": 5080
+    },
+    {
+     "w": "patch",
+     "from": 5082,
+     "to": 5087
+    },
+    {
+     "w": "is",
+     "from": 5090,
+     "to": 5092
+    },
+    {
+     "w": "long",
+     "from": 5097,
+     "to": 5106
+    },
+    {
+     "w": "and",
+     "from": 5108,
+     "to": 5109
+    },
+    {
+     "w": "blurry.",
+     "from": 5111,
+     "to": 5130
+    },
+    {
+     "w": "Spread",
+     "from": 5138,
+     "to": 5145
+    },
+    {
+     "w": "them",
+     "from": 5147,
+     "to": 5150
+    },
+    {
+     "w": "out,",
+     "from": 5153,
+     "to": 5162
+    },
+    {
+     "w": "and",
+     "from": 5163,
+     "to": 5164
+    },
+    {
+     "w": "it",
+     "from": 5165,
+     "to": 5166
+    },
+    {
+     "w": "shrinks.",
+     "from": 5169,
+     "to": 5193
+    }
+   ]
+  },
+  {
+   "id": "s23",
+   "scene": "S4",
+   "from": 5194,
+   "to": 5508,
+   "text": "In practice, a computer weighs many spots at once, trying positions and keeping those whose predicted echoes match. It also leans on assumptions, like what kind of object it's after.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "In",
+     "from": 5192,
+     "to": 5197
+    },
+    {
+     "w": "practice,",
+     "from": 5199,
+     "to": 5221
+    },
+    {
+     "w": "a",
+     "from": 5223,
+     "to": 5225
+    },
+    {
+     "w": "computer",
+     "from": 5226,
+     "to": 5235
+    },
+    {
+     "w": "weighs",
+     "from": 5238,
+     "to": 5247
+    },
+    {
+     "w": "many",
+     "from": 5251,
+     "to": 5255
+    },
+    {
+     "w": "spots",
+     "from": 5257,
+     "to": 5267
+    },
+    {
+     "w": "at",
+     "from": 5269,
+     "to": 5271
+    },
+    {
+     "w": "once,",
+     "from": 5276,
+     "to": 5291
+    },
+    {
+     "w": "trying",
+     "from": 5295,
+     "to": 5300
+    },
+    {
+     "w": "positions",
+     "from": 5310,
+     "to": 5319
+    },
+    {
+     "w": "and",
+     "from": 5322,
+     "to": 5324
+    },
+    {
+     "w": "keeping",
+     "from": 5329,
+     "to": 5334
+    },
+    {
+     "w": "those",
+     "from": 5336,
+     "to": 5341
+    },
+    {
+     "w": "whose",
+     "from": 5343,
+     "to": 5348
+    },
+    {
+     "w": "predicted",
+     "from": 5351,
+     "to": 5363
+    },
+    {
+     "w": "echoes",
+     "from": 5365,
+     "to": 5375
+    },
+    {
+     "w": "match.",
+     "from": 5377,
+     "to": 5403
+    },
+    {
+     "w": "It",
+     "from": 5406,
+     "to": 5408
+    },
+    {
+     "w": "also",
+     "from": 5411,
+     "to": 5418
+    },
+    {
+     "w": "leans",
+     "from": 5420,
+     "to": 5425
+    },
+    {
+     "w": "on",
+     "from": 5427,
+     "to": 5430
+    },
+    {
+     "w": "assumptions,",
+     "from": 5433,
+     "to": 5456
+    },
+    {
+     "w": "like",
+     "from": 5459,
+     "to": 5466
+    },
+    {
+     "w": "what",
+     "from": 5468,
+     "to": 5471
+    },
+    {
+     "w": "kind",
+     "from": 5473,
+     "to": 5475
+    },
+    {
+     "w": "of",
+     "from": 5478,
+     "to": 5480
+    },
+    {
+     "w": "object",
+     "from": 5483,
+     "to": 5492
+    },
+    {
+     "w": "it's",
+     "from": 5493,
+     "to": 5497
+    },
+    {
+     "w": "after.",
+     "from": 5502,
+     "to": 5523
+    }
+   ]
+  },
+  {
+   "id": "s24",
+   "scene": "S4",
+   "from": 5526,
+   "to": 5673,
+   "text": "That's why the answer is a likely location, or a rough shape. Not a photograph.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "That's",
+     "from": 5526,
+     "to": 5531
+    },
+    {
+     "w": "why",
+     "from": 5533,
+     "to": 5535
+    },
+    {
+     "w": "the",
+     "from": 5538,
+     "to": 5540
+    },
+    {
+     "w": "answer",
+     "from": 5545,
+     "to": 5550
+    },
+    {
+     "w": "is",
+     "from": 5552,
+     "to": 5559
+    },
+    {
+     "w": "a",
+     "from": 5562,
+     "to": 5567
+    },
+    {
+     "w": "likely",
+     "from": 5571,
+     "to": 5576
+    },
+    {
+     "w": "location,",
+     "from": 5589,
+     "to": 5606
+    },
+    {
+     "w": "or",
+     "from": 5609,
+     "to": 5612
+    },
+    {
+     "w": "a",
+     "from": 5614,
+     "to": 5615
+    },
+    {
+     "w": "rough",
+     "from": 5617,
+     "to": 5622
+    },
+    {
+     "w": "shape.",
+     "from": 5624,
+     "to": 5646
+    },
+    {
+     "w": "Not",
+     "from": 5648,
+     "to": 5651
+    },
+    {
+     "w": "a",
+     "from": 5653,
+     "to": 5654
+    },
+    {
+     "w": "photograph.",
+     "from": 5655,
+     "to": 5679
+    }
+   ]
+  },
+  {
+   "id": "s25",
+   "scene": "S5",
+   "from": 5703,
+   "to": 5930,
+   "text": "None of this is brand new. In 2012, an MIT team reported recovering the 3D shape of a small mannequin around a corner.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "None",
+     "from": 5702,
+     "to": 5709
+    },
+    {
+     "w": "of",
+     "from": 5710,
+     "to": 5711
+    },
+    {
+     "w": "this",
+     "from": 5714,
+     "to": 5716
+    },
+    {
+     "w": "is",
+     "from": 5718,
+     "to": 5721
+    },
+    {
+     "w": "brand",
+     "from": 5723,
+     "to": 5730
+    },
+    {
+     "w": "new.",
+     "from": 5733,
+     "to": 5754
+    },
+    {
+     "w": "In",
+     "from": 5757,
+     "to": 5759
+    },
+    {
+     "w": "2012,",
+     "from": 5762,
+     "to": 5788
+    },
+    {
+     "w": "an",
+     "from": 5790,
+     "to": 5793
+    },
+    {
+     "w": "MIT",
+     "from": 5795,
+     "to": 5810
+    },
+    {
+     "w": "team",
+     "from": 5813,
+     "to": 5817
+    },
+    {
+     "w": "reported",
+     "from": 5819,
+     "to": 5831
+    },
+    {
+     "w": "recovering",
+     "from": 5837,
+     "to": 5846
+    },
+    {
+     "w": "the",
+     "from": 5848,
+     "to": 5853
+    },
+    {
+     "w": "3D",
+     "from": 5856,
+     "to": 5865
+    },
+    {
+     "w": "shape",
+     "from": 5870,
+     "to": 5877
+    },
+    {
+     "w": "of",
+     "from": 5879,
+     "to": 5880
+    },
+    {
+     "w": "a",
+     "from": 5882,
+     "to": 5884
+    },
+    {
+     "w": "small",
+     "from": 5886,
+     "to": 5894
+    },
+    {
+     "w": "mannequin",
+     "from": 5896,
+     "to": 5908
+    },
+    {
+     "w": "around",
+     "from": 5912,
+     "to": 5915
+    },
+    {
+     "w": "a",
+     "from": 5916,
+     "to": 5918
+    },
+    {
+     "w": "corner.",
+     "from": 5920,
+     "to": 5944
+    }
+   ]
+  },
+  {
+   "id": "s26",
+   "scene": "S5",
+   "from": 5946,
+   "to": 6093,
+   "text": "It took an ultrafast laser and a high-speed camera: lab equipment that filled a table.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "It",
+     "from": 5946,
+     "to": 5949
+    },
+    {
+     "w": "took",
+     "from": 5951,
+     "to": 5954
+    },
+    {
+     "w": "an",
+     "from": 5956,
+     "to": 5958
+    },
+    {
+     "w": "ultrafast",
+     "from": 5961,
+     "to": 5980
+    },
+    {
+     "w": "laser",
+     "from": 5982,
+     "to": 5994
+    },
+    {
+     "w": "and",
+     "from": 5996,
+     "to": 5997
+    },
+    {
+     "w": "a",
+     "from": 5999,
+     "to": 6002
+    },
+    {
+     "w": "high-speed",
+     "from": 6004,
+     "to": 6016
+    },
+    {
+     "w": "camera:",
+     "from": 6018,
+     "to": 6042
+    },
+    {
+     "w": "lab",
+     "from": 6045,
+     "to": 6052
+    },
+    {
+     "w": "equipment",
+     "from": 6058,
+     "to": 6064
+    },
+    {
+     "w": "that",
+     "from": 6066,
+     "to": 6069
+    },
+    {
+     "w": "filled",
+     "from": 6071,
+     "to": 6076
+    },
+    {
+     "w": "a",
+     "from": 6077,
+     "to": 6078
+    },
+    {
+     "w": "table.",
+     "from": 6081,
+     "to": 6100
+    }
+   ]
+  },
+  {
+   "id": "s27",
+   "scene": "S5",
+   "from": 6103,
+   "to": 6551,
+   "text": "In a 2018 study, Stanford researchers swept one spot across the wall, like our simplified picture. The math got simpler: for a reflective exit sign, rebuilding the scene took about a second on a laptop. Measuring still took almost seven minutes.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "In",
+     "from": 6102,
+     "to": 6104
+    },
+    {
+     "w": "a",
+     "from": 6107,
+     "to": 6109
+    },
+    {
+     "w": "2018",
+     "from": 6113,
+     "to": 6116
+    },
+    {
+     "w": "study,",
+     "from": 6119,
+     "to": 6150
+    },
+    {
+     "w": "Stanford",
+     "from": 6152,
+     "to": 6164
+    },
+    {
+     "w": "researchers",
+     "from": 6170,
+     "to": 6181
+    },
+    {
+     "w": "swept",
+     "from": 6182,
+     "to": 6193
+    },
+    {
+     "w": "one",
+     "from": 6195,
+     "to": 6200
+    },
+    {
+     "w": "spot",
+     "from": 6203,
+     "to": 6210
+    },
+    {
+     "w": "across",
+     "from": 6212,
+     "to": 6222
+    },
+    {
+     "w": "the",
+     "from": 6223,
+     "to": 6224
+    },
+    {
+     "w": "wall,",
+     "from": 6227,
+     "to": 6241
+    },
+    {
+     "w": "like",
+     "from": 6243,
+     "to": 6246
+    },
+    {
+     "w": "our",
+     "from": 6247,
+     "to": 6248
+    },
+    {
+     "w": "simplified",
+     "from": 6251,
+     "to": 6265
+    },
+    {
+     "w": "picture.",
+     "from": 6271,
+     "to": 6285
+    },
+    {
+     "w": "The",
+     "from": 6294,
+     "to": 6296
+    },
+    {
+     "w": "math",
+     "from": 6299,
+     "to": 6306
+    },
+    {
+     "w": "got",
+     "from": 6308,
+     "to": 6311
+    },
+    {
+     "w": "simpler:",
+     "from": 6313,
+     "to": 6339
+    },
+    {
+     "w": "for",
+     "from": 6342,
+     "to": 6344
+    },
+    {
+     "w": "a",
+     "from": 6345,
+     "to": 6347
+    },
+    {
+     "w": "reflective",
+     "from": 6349,
+     "to": 6363
+    },
+    {
+     "w": "exit",
+     "from": 6368,
+     "to": 6373
+    },
+    {
+     "w": "sign,",
+     "from": 6375,
+     "to": 6392
+    },
+    {
+     "w": "rebuilding",
+     "from": 6395,
+     "to": 6407
+    },
+    {
+     "w": "the",
+     "from": 6408,
+     "to": 6409
+    },
+    {
+     "w": "scene",
+     "from": 6411,
+     "to": 6419
+    },
+    {
+     "w": "took",
+     "from": 6421,
+     "to": 6423
+    },
+    {
+     "w": "about",
+     "from": 6426,
+     "to": 6431
+    },
+    {
+     "w": "a",
+     "from": 6433,
+     "to": 6435
+    },
+    {
+     "w": "second",
+     "from": 6440,
+     "to": 6445
+    },
+    {
+     "w": "on",
+     "from": 6447,
+     "to": 6450
+    },
+    {
+     "w": "a",
+     "from": 6451,
+     "to": 6451
+    },
+    {
+     "w": "laptop.",
+     "from": 6452,
+     "to": 6473
+    },
+    {
+     "w": "Measuring",
+     "from": 6481,
+     "to": 6493
+    },
+    {
+     "w": "still",
+     "from": 6498,
+     "to": 6505
+    },
+    {
+     "w": "took",
+     "from": 6507,
+     "to": 6512
+    },
+    {
+     "w": "almost",
+     "from": 6515,
+     "to": 6524
+    },
+    {
+     "w": "seven",
+     "from": 6527,
+     "to": 6534
+    },
+    {
+     "w": "minutes.",
+     "from": 6536,
+     "to": 6559
+    }
+   ]
+  },
+  {
+   "id": "s28",
+   "scene": "S5",
+   "from": 6569,
+   "to": 6890,
+   "text": "By 2021, researchers in Wisconsin and Milan had sped up measuring too: live video of ordinary objects, five frames a second, with a powerful laser and custom detectors.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "By",
+     "from": 6567,
+     "to": 6572
+    },
+    {
+     "w": "2021,",
+     "from": 6575,
+     "to": 6606
+    },
+    {
+     "w": "researchers",
+     "from": 6608,
+     "to": 6623
+    },
+    {
+     "w": "in",
+     "from": 6624,
+     "to": 6625
+    },
+    {
+     "w": "Wisconsin",
+     "from": 6627,
+     "to": 6642
+    },
+    {
+     "w": "and",
+     "from": 6644,
+     "to": 6645
+    },
+    {
+     "w": "Milan",
+     "from": 6647,
+     "to": 6659
+    },
+    {
+     "w": "had",
+     "from": 6661,
+     "to": 6663
+    },
+    {
+     "w": "sped",
+     "from": 6666,
+     "to": 6671
+    },
+    {
+     "w": "up",
+     "from": 6673,
+     "to": 6675
+    },
+    {
+     "w": "measuring",
+     "from": 6677,
+     "to": 6687
+    },
+    {
+     "w": "too:",
+     "from": 6690,
+     "to": 6714
+    },
+    {
+     "w": "live",
+     "from": 6716,
+     "to": 6723
+    },
+    {
+     "w": "video",
+     "from": 6726,
+     "to": 6735
+    },
+    {
+     "w": "of",
+     "from": 6738,
+     "to": 6740
+    },
+    {
+     "w": "ordinary",
+     "from": 6743,
+     "to": 6755
+    },
+    {
+     "w": "objects,",
+     "from": 6759,
+     "to": 6781
+    },
+    {
+     "w": "five",
+     "from": 6783,
+     "to": 6788
+    },
+    {
+     "w": "frames",
+     "from": 6791,
+     "to": 6798
+    },
+    {
+     "w": "a",
+     "from": 6799,
+     "to": 6800
+    },
+    {
+     "w": "second,",
+     "from": 6803,
+     "to": 6819
+    },
+    {
+     "w": "with",
+     "from": 6822,
+     "to": 6824
+    },
+    {
+     "w": "a",
+     "from": 6826,
+     "to": 6827
+    },
+    {
+     "w": "powerful",
+     "from": 6829,
+     "to": 6841
+    },
+    {
+     "w": "laser",
+     "from": 6843,
+     "to": 6855
+    },
+    {
+     "w": "and",
+     "from": 6857,
+     "to": 6858
+    },
+    {
+     "w": "custom",
+     "from": 6863,
+     "to": 6870
+    },
+    {
+     "w": "detectors.",
+     "from": 6872,
+     "to": 6895
+    }
+   ]
+  },
+  {
+   "id": "s29",
+   "scene": "S5",
+   "from": 6900,
+   "to": 6995,
+   "text": "Impressive. But all of it ran on research equipment.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Impressive.",
+     "from": 6901,
+     "to": 6930
+    },
+    {
+     "w": "But",
+     "from": 6937,
+     "to": 6942
+    },
+    {
+     "w": "all",
+     "from": 6944,
+     "to": 6949
+    },
+    {
+     "w": "of",
+     "from": 6951,
+     "to": 6953
+    },
+    {
+     "w": "it",
+     "from": 6954,
+     "to": 6956
+    },
+    {
+     "w": "ran",
+     "from": 6959,
+     "to": 6963
+    },
+    {
+     "w": "on",
+     "from": 6966,
+     "to": 6968
+    },
+    {
+     "w": "research",
+     "from": 6974,
+     "to": 6980
+    },
+    {
+     "w": "equipment.",
+     "from": 6983,
+     "to": 7004
+    }
+   ]
+  },
+  {
+   "id": "s30",
+   "scene": "S6",
+   "from": 7019,
+   "to": 7318,
+   "text": "Then, in a study published in 2026, a team from MIT and Dartmouth tried the small time-of-flight sensors, often called LiDAR, found in phones and gadgets.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Then,",
+     "from": 7019,
+     "to": 7035
+    },
+    {
+     "w": "in",
+     "from": 7038,
+     "to": 7040
+    },
+    {
+     "w": "a",
+     "from": 7041,
+     "to": 7043
+    },
+    {
+     "w": "study",
+     "from": 7047,
+     "to": 7052
+    },
+    {
+     "w": "published",
+     "from": 7058,
+     "to": 7064
+    },
+    {
+     "w": "in",
+     "from": 7067,
+     "to": 7069
+    },
+    {
+     "w": "2026,",
+     "from": 7071,
+     "to": 7107
+    },
+    {
+     "w": "a",
+     "from": 7110,
+     "to": 7112
+    },
+    {
+     "w": "team",
+     "from": 7116,
+     "to": 7119
+    },
+    {
+     "w": "from",
+     "from": 7122,
+     "to": 7124
+    },
+    {
+     "w": "MIT",
+     "from": 7127,
+     "to": 7143
+    },
+    {
+     "w": "and",
+     "from": 7146,
+     "to": 7148
+    },
+    {
+     "w": "Dartmouth",
+     "from": 7151,
+     "to": 7165
+    },
+    {
+     "w": "tried",
+     "from": 7166,
+     "to": 7172
+    },
+    {
+     "w": "the",
+     "from": 7175,
+     "to": 7177
+    },
+    {
+     "w": "small",
+     "from": 7182,
+     "to": 7187
+    },
+    {
+     "w": "time-of-flight",
+     "from": 7189,
+     "to": 7208
+    },
+    {
+     "w": "sensors,",
+     "from": 7211,
+     "to": 7232
+    },
+    {
+     "w": "often",
+     "from": 7235,
+     "to": 7242
+    },
+    {
+     "w": "called",
+     "from": 7245,
+     "to": 7249
+    },
+    {
+     "w": "LiDAR,",
+     "from": 7251,
+     "to": 7275
+    },
+    {
+     "w": "found",
+     "from": 7279,
+     "to": 7283
+    },
+    {
+     "w": "in",
+     "from": 7285,
+     "to": 7287
+    },
+    {
+     "w": "phones",
+     "from": 7292,
+     "to": 7297
+    },
+    {
+     "w": "and",
+     "from": 7299,
+     "to": 7302
+    },
+    {
+     "w": "gadgets.",
+     "from": 7304,
+     "to": 7333
+    }
+   ]
+  },
+  {
+   "id": "s31",
+   "scene": "S6",
+   "from": 7334,
+   "to": 7464,
+   "text": "Don't expect your phone to do this yet: phone makers often keep the raw data private.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Don't",
+     "from": 7335,
+     "to": 7340
+    },
+    {
+     "w": "expect",
+     "from": 7345,
+     "to": 7350
+    },
+    {
+     "w": "your",
+     "from": 7352,
+     "to": 7355
+    },
+    {
+     "w": "phone",
+     "from": 7357,
+     "to": 7359
+    },
+    {
+     "w": "to",
+     "from": 7362,
+     "to": 7364
+    },
+    {
+     "w": "do",
+     "from": 7365,
+     "to": 7367
+    },
+    {
+     "w": "this",
+     "from": 7369,
+     "to": 7374
+    },
+    {
+     "w": "yet:",
+     "from": 7377,
+     "to": 7393
+    },
+    {
+     "w": "phone",
+     "from": 7395,
+     "to": 7400
+    },
+    {
+     "w": "makers",
+     "from": 7403,
+     "to": 7412
+    },
+    {
+     "w": "often",
+     "from": 7415,
+     "to": 7424
+    },
+    {
+     "w": "keep",
+     "from": 7427,
+     "to": 7429
+    },
+    {
+     "w": "the",
+     "from": 7431,
+     "to": 7434
+    },
+    {
+     "w": "raw",
+     "from": 7436,
+     "to": 7441
+    },
+    {
+     "w": "data",
+     "from": 7443,
+     "to": 7451
+    },
+    {
+     "w": "private.",
+     "from": 7458,
+     "to": 7479
+    }
+   ]
+  },
+  {
+   "id": "s32",
+   "scene": "S6",
+   "from": 7481,
+   "to": 7851,
+   "text": "These sensors are tough customers. Weak lasers mean fainter echoes. The team's smartphone-grade device had about a hundred pixels: a hundred listening spots. And if you hold one in your hand, it jiggles.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "These",
+     "from": 7483,
+     "to": 7487
+    },
+    {
+     "w": "sensors",
+     "from": 7488,
+     "to": 7499
+    },
+    {
+     "w": "are",
+     "from": 7502,
+     "to": 7506
+    },
+    {
+     "w": "tough",
+     "from": 7507,
+     "to": 7515
+    },
+    {
+     "w": "customers.",
+     "from": 7524,
+     "to": 7544
+    },
+    {
+     "w": "Weak",
+     "from": 7547,
+     "to": 7551
+    },
+    {
+     "w": "lasers",
+     "from": 7554,
+     "to": 7568
+    },
+    {
+     "w": "mean",
+     "from": 7572,
+     "to": 7575
+    },
+    {
+     "w": "fainter",
+     "from": 7580,
+     "to": 7590
+    },
+    {
+     "w": "echoes.",
+     "from": 7592,
+     "to": 7619
+    },
+    {
+     "w": "The",
+     "from": 7621,
+     "to": 7623
+    },
+    {
+     "w": "team's",
+     "from": 7627,
+     "to": 7633
+    },
+    {
+     "w": "smartphone-grade",
+     "from": 7638,
+     "to": 7655
+    },
+    {
+     "w": "device",
+     "from": 7661,
+     "to": 7667
+    },
+    {
+     "w": "had",
+     "from": 7669,
+     "to": 7671
+    },
+    {
+     "w": "about",
+     "from": 7674,
+     "to": 7679
+    },
+    {
+     "w": "a",
+     "from": 7681,
+     "to": 7683
+    },
+    {
+     "w": "hundred",
+     "from": 7685,
+     "to": 7691
+    },
+    {
+     "w": "pixels:",
+     "from": 7695,
+     "to": 7719
+    },
+    {
+     "w": "a",
+     "from": 7722,
+     "to": 7724
+    },
+    {
+     "w": "hundred",
+     "from": 7727,
+     "to": 7736
+    },
+    {
+     "w": "listening",
+     "from": 7739,
+     "to": 7748
+    },
+    {
+     "w": "spots.",
+     "from": 7751,
+     "to": 7769
+    },
+    {
+     "w": "And",
+     "from": 7777,
+     "to": 7779
+    },
+    {
+     "w": "if",
+     "from": 7782,
+     "to": 7784
+    },
+    {
+     "w": "you",
+     "from": 7787,
+     "to": 7789
+    },
+    {
+     "w": "hold",
+     "from": 7793,
+     "to": 7796
+    },
+    {
+     "w": "one",
+     "from": 7797,
+     "to": 7799
+    },
+    {
+     "w": "in",
+     "from": 7801,
+     "to": 7803
+    },
+    {
+     "w": "your",
+     "from": 7806,
+     "to": 7808
+    },
+    {
+     "w": "hand,",
+     "from": 7811,
+     "to": 7825
+    },
+    {
+     "w": "it",
+     "from": 7827,
+     "to": 7832
+    },
+    {
+     "w": "jiggles.",
+     "from": 7835,
+     "to": 7856
+    }
+   ]
+  },
+  {
+   "id": "s33",
+   "scene": "S6",
+   "from": 7863,
+   "to": 8060,
+   "text": "Their fix borrows night mode's trick from phone cameras: stack many quick, dim frames into one better estimate.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Their",
+     "from": 7861,
+     "to": 7868
+    },
+    {
+     "w": "fix",
+     "from": 7871,
+     "to": 7878
+    },
+    {
+     "w": "borrows",
+     "from": 7880,
+     "to": 7890
+    },
+    {
+     "w": "night",
+     "from": 7892,
+     "to": 7897
+    },
+    {
+     "w": "mode's",
+     "from": 7899,
+     "to": 7907
+    },
+    {
+     "w": "trick",
+     "from": 7908,
+     "to": 7914
+    },
+    {
+     "w": "from",
+     "from": 7916,
+     "to": 7919
+    },
+    {
+     "w": "phone",
+     "from": 7921,
+     "to": 7928
+    },
+    {
+     "w": "cameras:",
+     "from": 7931,
+     "to": 7957
+    },
+    {
+     "w": "stack",
+     "from": 7959,
+     "to": 7967
+    },
+    {
+     "w": "many",
+     "from": 7971,
+     "to": 7979
+    },
+    {
+     "w": "quick,",
+     "from": 7983,
+     "to": 7995
+    },
+    {
+     "w": "dim",
+     "from": 7999,
+     "to": 8003
+    },
+    {
+     "w": "frames",
+     "from": 8005,
+     "to": 8017
+    },
+    {
+     "w": "into",
+     "from": 8019,
+     "to": 8027
+    },
+    {
+     "w": "one",
+     "from": 8029,
+     "to": 8034
+    },
+    {
+     "w": "better",
+     "from": 8039,
+     "to": 8043
+    },
+    {
+     "w": "estimate.",
+     "from": 8046,
+     "to": 8067
+    }
+   ]
+  },
+  {
+   "id": "s34",
+   "scene": "S6",
+   "from": 8075,
+   "to": 8329,
+   "text": "The catch: between frames, the sensor jiggles and the person moves. Plain averaging would smear everything, like a long exposure of someone walking.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "The",
+     "from": 8075,
+     "to": 8077
+    },
+    {
+     "w": "catch:",
+     "from": 8083,
+     "to": 8101
+    },
+    {
+     "w": "between",
+     "from": 8106,
+     "to": 8111
+    },
+    {
+     "w": "frames,",
+     "from": 8115,
+     "to": 8132
+    },
+    {
+     "w": "the",
+     "from": 8133,
+     "to": 8135
+    },
+    {
+     "w": "sensor",
+     "from": 8139,
+     "to": 8144
+    },
+    {
+     "w": "jiggles",
+     "from": 8149,
+     "to": 8161
+    },
+    {
+     "w": "and",
+     "from": 8163,
+     "to": 8166
+    },
+    {
+     "w": "the",
+     "from": 8167,
+     "to": 8168
+    },
+    {
+     "w": "person",
+     "from": 8171,
+     "to": 8178
+    },
+    {
+     "w": "moves.",
+     "from": 8180,
+     "to": 8201
+    },
+    {
+     "w": "Plain",
+     "from": 8207,
+     "to": 8214
+    },
+    {
+     "w": "averaging",
+     "from": 8216,
+     "to": 8228
+    },
+    {
+     "w": "would",
+     "from": 8231,
+     "to": 8233
+    },
+    {
+     "w": "smear",
+     "from": 8235,
+     "to": 8243
+    },
+    {
+     "w": "everything,",
+     "from": 8247,
+     "to": 8271
+    },
+    {
+     "w": "like",
+     "from": 8274,
+     "to": 8276
+    },
+    {
+     "w": "a",
+     "from": 8278,
+     "to": 8279
+    },
+    {
+     "w": "long",
+     "from": 8281,
+     "to": 8286
+    },
+    {
+     "w": "exposure",
+     "from": 8288,
+     "to": 8303
+    },
+    {
+     "w": "of",
+     "from": 8304,
+     "to": 8305
+    },
+    {
+     "w": "someone",
+     "from": 8307,
+     "to": 8315
+    },
+    {
+     "w": "walking.",
+     "from": 8317,
+     "to": 8339
+    }
+   ]
+  },
+  {
+   "id": "s35",
+   "scene": "S6",
+   "from": 8338,
+   "to": 8693,
+   "text": "Their method puts the motion to work, one unknown at a time. Move the sensor through known positions, and the listening spots spread out. Keep the sensor still, and each step becomes a new position to follow.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Their",
+     "from": 8337,
+     "to": 8344
+    },
+    {
+     "w": "method",
+     "from": 8344,
+     "to": 8353
+    },
+    {
+     "w": "puts",
+     "from": 8354,
+     "to": 8360
+    },
+    {
+     "w": "the",
+     "from": 8361,
+     "to": 8364
+    },
+    {
+     "w": "motion",
+     "from": 8365,
+     "to": 8376
+    },
+    {
+     "w": "to",
+     "from": 8377,
+     "to": 8378
+    },
+    {
+     "w": "work,",
+     "from": 8380,
+     "to": 8400
+    },
+    {
+     "w": "one",
+     "from": 8402,
+     "to": 8407
+    },
+    {
+     "w": "unknown",
+     "from": 8412,
+     "to": 8424
+    },
+    {
+     "w": "at",
+     "from": 8426,
+     "to": 8428
+    },
+    {
+     "w": "a",
+     "from": 8429,
+     "to": 8430
+    },
+    {
+     "w": "time.",
+     "from": 8431,
+     "to": 8451
+    },
+    {
+     "w": "Move",
+     "from": 8460,
+     "to": 8464
+    },
+    {
+     "w": "the",
+     "from": 8467,
+     "to": 8468
+    },
+    {
+     "w": "sensor",
+     "from": 8469,
+     "to": 8479
+    },
+    {
+     "w": "through",
+     "from": 8481,
+     "to": 8486
+    },
+    {
+     "w": "known",
+     "from": 8488,
+     "to": 8493
+    },
+    {
+     "w": "positions,",
+     "from": 8496,
+     "to": 8520
+    },
+    {
+     "w": "and",
+     "from": 8521,
+     "to": 8522
+    },
+    {
+     "w": "the",
+     "from": 8523,
+     "to": 8524
+    },
+    {
+     "w": "listening",
+     "from": 8527,
+     "to": 8536
+    },
+    {
+     "w": "spots",
+     "from": 8539,
+     "to": 8548
+    },
+    {
+     "w": "spread",
+     "from": 8553,
+     "to": 8558
+    },
+    {
+     "w": "out.",
+     "from": 8560,
+     "to": 8575
+    },
+    {
+     "w": "Keep",
+     "from": 8582,
+     "to": 8587
+    },
+    {
+     "w": "the",
+     "from": 8588,
+     "to": 8589
+    },
+    {
+     "w": "sensor",
+     "from": 8592,
+     "to": 8599
+    },
+    {
+     "w": "still,",
+     "from": 8601,
+     "to": 8620
+    },
+    {
+     "w": "and",
+     "from": 8624,
+     "to": 8628
+    },
+    {
+     "w": "each",
+     "from": 8630,
+     "to": 8635
+    },
+    {
+     "w": "step",
+     "from": 8637,
+     "to": 8644
+    },
+    {
+     "w": "becomes",
+     "from": 8647,
+     "to": 8654
+    },
+    {
+     "w": "a",
+     "from": 8655,
+     "to": 8656
+    },
+    {
+     "w": "new",
+     "from": 8661,
+     "to": 8664
+    },
+    {
+     "w": "position",
+     "from": 8666,
+     "to": 8676
+    },
+    {
+     "w": "to",
+     "from": 8678,
+     "to": 8680
+    },
+    {
+     "w": "follow.",
+     "from": 8683,
+     "to": 8702
+    }
+   ]
+  },
+  {
+   "id": "s36",
+   "scene": "S7",
+   "from": 8713,
+   "to": 9076,
+   "text": "Our opening clip came from a different sensor: an off-the-shelf kit the authors put at under a hundred dollars, with sixteen listening spots, held still while a person walked behind a partition. We ran it through their own code.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Our",
+     "from": 8712,
+     "to": 8716
+    },
+    {
+     "w": "opening",
+     "from": 8719,
+     "to": 8726
+    },
+    {
+     "w": "clip",
+     "from": 8728,
+     "to": 8736
+    },
+    {
+     "w": "came",
+     "from": 8738,
+     "to": 8743
+    },
+    {
+     "w": "from",
+     "from": 8745,
+     "to": 8748
+    },
+    {
+     "w": "a",
+     "from": 8750,
+     "to": 8752
+    },
+    {
+     "w": "different",
+     "from": 8757,
+     "to": 8762
+    },
+    {
+     "w": "sensor:",
+     "from": 8768,
+     "to": 8786
+    },
+    {
+     "w": "an",
+     "from": 8788,
+     "to": 8791
+    },
+    {
+     "w": "off-the-shelf",
+     "from": 8793,
+     "to": 8810
+    },
+    {
+     "w": "kit",
+     "from": 8812,
+     "to": 8817
+    },
+    {
+     "w": "the",
+     "from": 8820,
+     "to": 8822
+    },
+    {
+     "w": "authors",
+     "from": 8828,
+     "to": 8834
+    },
+    {
+     "w": "put",
+     "from": 8836,
+     "to": 8839
+    },
+    {
+     "w": "at",
+     "from": 8841,
+     "to": 8844
+    },
+    {
+     "w": "under",
+     "from": 8846,
+     "to": 8853
+    },
+    {
+     "w": "a",
+     "from": 8856,
+     "to": 8858
+    },
+    {
+     "w": "hundred",
+     "from": 8859,
+     "to": 8865
+    },
+    {
+     "w": "dollars,",
+     "from": 8870,
+     "to": 8889
+    },
+    {
+     "w": "with",
+     "from": 8892,
+     "to": 8894
+    },
+    {
+     "w": "sixteen",
+     "from": 8896,
+     "to": 8911
+    },
+    {
+     "w": "listening",
+     "from": 8916,
+     "to": 8920
+    },
+    {
+     "w": "spots,",
+     "from": 8923,
+     "to": 8944
+    },
+    {
+     "w": "held",
+     "from": 8948,
+     "to": 8952
+    },
+    {
+     "w": "still",
+     "from": 8954,
+     "to": 8964
+    },
+    {
+     "w": "while",
+     "from": 8966,
+     "to": 8968
+    },
+    {
+     "w": "a",
+     "from": 8970,
+     "to": 8971
+    },
+    {
+     "w": "person",
+     "from": 8973,
+     "to": 8980
+    },
+    {
+     "w": "walked",
+     "from": 8985,
+     "to": 8992
+    },
+    {
+     "w": "behind",
+     "from": 8995,
+     "to": 9000
+    },
+    {
+     "w": "a",
+     "from": 9001,
+     "to": 9002
+    },
+    {
+     "w": "partition.",
+     "from": 9004,
+     "to": 9026
+    },
+    {
+     "w": "We",
+     "from": 9033,
+     "to": 9036
+    },
+    {
+     "w": "ran",
+     "from": 9038,
+     "to": 9043
+    },
+    {
+     "w": "it",
+     "from": 9044,
+     "to": 9045
+    },
+    {
+     "w": "through",
+     "from": 9048,
+     "to": 9052
+    },
+    {
+     "w": "their",
+     "from": 9055,
+     "to": 9057
+    },
+    {
+     "w": "own",
+     "from": 9060,
+     "to": 9064
+    },
+    {
+     "w": "code.",
+     "from": 9067,
+     "to": 9086
+    }
+   ]
+  },
+  {
+   "id": "s37",
+   "scene": "S7",
+   "from": 9086,
+   "to": 9257,
+   "text": "Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Moved",
+     "from": 9085,
+     "to": 9095
+    },
+    {
+     "w": "through",
+     "from": 9099,
+     "to": 9102
+    },
+    {
+     "w": "known",
+     "from": 9106,
+     "to": 9109
+    },
+    {
+     "w": "positions,",
+     "from": 9119,
+     "to": 9138
+    },
+    {
+     "w": "the",
+     "from": 9141,
+     "to": 9143
+    },
+    {
+     "w": "sensor",
+     "from": 9148,
+     "to": 9153
+    },
+    {
+     "w": "behind",
+     "from": 9155,
+     "to": 9162
+    },
+    {
+     "w": "that",
+     "from": 9165,
+     "to": 9167
+    },
+    {
+     "w": "faint",
+     "from": 9172,
+     "to": 9179
+    },
+    {
+     "w": "bump",
+     "from": 9181,
+     "to": 9191
+    },
+    {
+     "w": "rebuilt",
+     "from": 9193,
+     "to": 9205
+    },
+    {
+     "w": "the",
+     "from": 9208,
+     "to": 9210
+    },
+    {
+     "w": "rough",
+     "from": 9214,
+     "to": 9217
+    },
+    {
+     "w": "outline",
+     "from": 9220,
+     "to": 9232
+    },
+    {
+     "w": "of",
+     "from": 9233,
+     "to": 9234
+    },
+    {
+     "w": "a",
+     "from": 9235,
+     "to": 9237
+    },
+    {
+     "w": "hidden",
+     "from": 9239,
+     "to": 9246
+    },
+    {
+     "w": "U.",
+     "from": 9249,
+     "to": 9265
+    }
+   ]
+  },
+  {
+   "id": "s38",
+   "scene": "S7",
+   "from": 9284,
+   "to": 9692,
+   "text": "Many of these tests had help: safety-vest style reflective material on the target, which sends far more light straight back. Our clip's files don't say if the walker wore any. And the kit needs a flat wall and a few seconds of empty room first.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Many",
+     "from": 9284,
+     "to": 9288
+    },
+    {
+     "w": "of",
+     "from": 9291,
+     "to": 9292
+    },
+    {
+     "w": "these",
+     "from": 9293,
+     "to": 9298
+    },
+    {
+     "w": "tests",
+     "from": 9304,
+     "to": 9310
+    },
+    {
+     "w": "had",
+     "from": 9312,
+     "to": 9315
+    },
+    {
+     "w": "help:",
+     "from": 9317,
+     "to": 9339
+    },
+    {
+     "w": "safety-vest",
+     "from": 9341,
+     "to": 9358
+    },
+    {
+     "w": "style",
+     "from": 9363,
+     "to": 9368
+    },
+    {
+     "w": "reflective",
+     "from": 9374,
+     "to": 9382
+    },
+    {
+     "w": "material",
+     "from": 9384,
+     "to": 9396
+    },
+    {
+     "w": "on",
+     "from": 9399,
+     "to": 9401
+    },
+    {
+     "w": "the",
+     "from": 9403,
+     "to": 9404
+    },
+    {
+     "w": "target,",
+     "from": 9406,
+     "to": 9423
+    },
+    {
+     "w": "which",
+     "from": 9425,
+     "to": 9428
+    },
+    {
+     "w": "sends",
+     "from": 9430,
+     "to": 9437
+    },
+    {
+     "w": "far",
+     "from": 9442,
+     "to": 9447
+    },
+    {
+     "w": "more",
+     "from": 9449,
+     "to": 9452
+    },
+    {
+     "w": "light",
+     "from": 9454,
+     "to": 9461
+    },
+    {
+     "w": "straight",
+     "from": 9464,
+     "to": 9471
+    },
+    {
+     "w": "back.",
+     "from": 9473,
+     "to": 9490
+    },
+    {
+     "w": "Our",
+     "from": 9497,
+     "to": 9502
+    },
+    {
+     "w": "clip's",
+     "from": 9504,
+     "to": 9512
+    },
+    {
+     "w": "files",
+     "from": 9516,
+     "to": 9521
+    },
+    {
+     "w": "don't",
+     "from": 9524,
+     "to": 9528
+    },
+    {
+     "w": "say",
+     "from": 9531,
+     "to": 9533
+    },
+    {
+     "w": "if",
+     "from": 9536,
+     "to": 9538
+    },
+    {
+     "w": "the",
+     "from": 9539,
+     "to": 9540
+    },
+    {
+     "w": "walker",
+     "from": 9543,
+     "to": 9550
+    },
+    {
+     "w": "wore",
+     "from": 9552,
+     "to": 9560
+    },
+    {
+     "w": "any.",
+     "from": 9563,
+     "to": 9575
+    },
+    {
+     "w": "And",
+     "from": 9584,
+     "to": 9586
+    },
+    {
+     "w": "the",
+     "from": 9587,
+     "to": 9588
+    },
+    {
+     "w": "kit",
+     "from": 9591,
+     "to": 9596
+    },
+    {
+     "w": "needs",
+     "from": 9598,
+     "to": 9600
+    },
+    {
+     "w": "a",
+     "from": 9603,
+     "to": 9605
+    },
+    {
+     "w": "flat",
+     "from": 9608,
+     "to": 9615
+    },
+    {
+     "w": "wall",
+     "from": 9617,
+     "to": 9632
+    },
+    {
+     "w": "and",
+     "from": 9635,
+     "to": 9639
+    },
+    {
+     "w": "a",
+     "from": 9640,
+     "to": 9641
+    },
+    {
+     "w": "few",
+     "from": 9644,
+     "to": 9646
+    },
+    {
+     "w": "seconds",
+     "from": 9648,
+     "to": 9658
+    },
+    {
+     "w": "of",
+     "from": 9659,
+     "to": 9660
+    },
+    {
+     "w": "empty",
+     "from": 9663,
+     "to": 9670
+    },
+    {
+     "w": "room",
+     "from": 9674,
+     "to": 9677
+    },
+    {
+     "w": "first.",
+     "from": 9680,
+     "to": 9699
+    }
+   ]
+  },
+  {
+   "id": "s39",
+   "scene": "S7",
+   "from": 9701,
+   "to": 10035,
+   "text": "But the authors do report tracking a person in ordinary clothes, with the sensor capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "But",
+     "from": 9699,
+     "to": 9704
+    },
+    {
+     "w": "the",
+     "from": 9705,
+     "to": 9706
+    },
+    {
+     "w": "authors",
+     "from": 9709,
+     "to": 9721
+    },
+    {
+     "w": "do",
+     "from": 9723,
+     "to": 9726
+    },
+    {
+     "w": "report",
+     "from": 9728,
+     "to": 9738
+    },
+    {
+     "w": "tracking",
+     "from": 9740,
+     "to": 9750
+    },
+    {
+     "w": "a",
+     "from": 9752,
+     "to": 9753
+    },
+    {
+     "w": "person",
+     "from": 9754,
+     "to": 9764
+    },
+    {
+     "w": "in",
+     "from": 9766,
+     "to": 9769
+    },
+    {
+     "w": "ordinary",
+     "from": 9771,
+     "to": 9783
+    },
+    {
+     "w": "clothes,",
+     "from": 9786,
+     "to": 9807
+    },
+    {
+     "w": "with",
+     "from": 9810,
+     "to": 9812
+    },
+    {
+     "w": "the",
+     "from": 9813,
+     "to": 9814
+    },
+    {
+     "w": "sensor",
+     "from": 9817,
+     "to": 9826
+    },
+    {
+     "w": "capturing",
+     "from": 9830,
+     "to": 9843
+    },
+    {
+     "w": "thirty",
+     "from": 9846,
+     "to": 9850
+    },
+    {
+     "w": "frames",
+     "from": 9855,
+     "to": 9862
+    },
+    {
+     "w": "a",
+     "from": 9865,
+     "to": 9867
+    },
+    {
+     "w": "second.",
+     "from": 9873,
+     "to": 9894
+    },
+    {
+     "w": "The",
+     "from": 9896,
+     "to": 9898
+    },
+    {
+     "w": "code",
+     "from": 9901,
+     "to": 9903
+    },
+    {
+     "w": "is",
+     "from": 9906,
+     "to": 9908
+    },
+    {
+     "w": "public,",
+     "from": 9910,
+     "to": 9930
+    },
+    {
+     "w": "though",
+     "from": 9933,
+     "to": 9937
+    },
+    {
+     "w": "we've",
+     "from": 9938,
+     "to": 9944
+    },
+    {
+     "w": "found",
+     "from": 9949,
+     "to": 9954
+    },
+    {
+     "w": "no",
+     "from": 9956,
+     "to": 9958
+    },
+    {
+     "w": "other",
+     "from": 9961,
+     "to": 9963
+    },
+    {
+     "w": "team",
+     "from": 9966,
+     "to": 9973
+    },
+    {
+     "w": "reporting",
+     "from": 9978,
+     "to": 9985
+    },
+    {
+     "w": "results",
+     "from": 9991,
+     "to": 9997
+    },
+    {
+     "w": "on",
+     "from": 9998,
+     "to": 9999
+    },
+    {
+     "w": "its",
+     "from": 10003,
+     "to": 10006
+    },
+    {
+     "w": "own",
+     "from": 10009,
+     "to": 10011
+    },
+    {
+     "w": "hardware",
+     "from": 10014,
+     "to": 10026
+    },
+    {
+     "w": "yet.",
+     "from": 10030,
+     "to": 10042
+    }
+   ]
+  },
+  {
+   "id": "s40",
+   "scene": "S8",
+   "from": 10062,
+   "to": 10208,
+   "text": "What might this be good for? Picture a delivery robot nearing a blind warehouse corner.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "What",
+     "from": 10064,
+     "to": 10069
+    },
+    {
+     "w": "might",
+     "from": 10071,
+     "to": 10076
+    },
+    {
+     "w": "this",
+     "from": 10078,
+     "to": 10081
+    },
+    {
+     "w": "be",
+     "from": 10083,
+     "to": 10086
+    },
+    {
+     "w": "good",
+     "from": 10088,
+     "to": 10093
+    },
+    {
+     "w": "for?",
+     "from": 10095,
+     "to": 10111
+    },
+    {
+     "w": "Picture",
+     "from": 10119,
+     "to": 10129
+    },
+    {
+     "w": "a",
+     "from": 10130,
+     "to": 10131
+    },
+    {
+     "w": "delivery",
+     "from": 10138,
+     "to": 10146
+    },
+    {
+     "w": "robot",
+     "from": 10148,
+     "to": 10158
+    },
+    {
+     "w": "nearing",
+     "from": 10160,
+     "to": 10167
+    },
+    {
+     "w": "a",
+     "from": 10168,
+     "to": 10170
+    },
+    {
+     "w": "blind",
+     "from": 10172,
+     "to": 10182
+    },
+    {
+     "w": "warehouse",
+     "from": 10184,
+     "to": 10196
+    },
+    {
+     "w": "corner.",
+     "from": 10198,
+     "to": 10220
+    }
+   ]
+  },
+  {
+   "id": "s41",
+   "scene": "S8",
+   "from": 10223,
+   "to": 10378,
+   "text": "With a suitable wall at the junction, a sensor like this might give it an early hint of movement out of sight.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "With",
+     "from": 10222,
+     "to": 10225
+    },
+    {
+     "w": "a",
+     "from": 10226,
+     "to": 10227
+    },
+    {
+     "w": "suitable",
+     "from": 10230,
+     "to": 10239
+    },
+    {
+     "w": "wall",
+     "from": 10242,
+     "to": 10246
+    },
+    {
+     "w": "at",
+     "from": 10248,
+     "to": 10249
+    },
+    {
+     "w": "the",
+     "from": 10251,
+     "to": 10254
+    },
+    {
+     "w": "junction,",
+     "from": 10260,
+     "to": 10275
+    },
+    {
+     "w": "a",
+     "from": 10278,
+     "to": 10279
+    },
+    {
+     "w": "sensor",
+     "from": 10280,
+     "to": 10290
+    },
+    {
+     "w": "like",
+     "from": 10293,
+     "to": 10297
+    },
+    {
+     "w": "this",
+     "from": 10299,
+     "to": 10306
+    },
+    {
+     "w": "might",
+     "from": 10309,
+     "to": 10314
+    },
+    {
+     "w": "give",
+     "from": 10316,
+     "to": 10318
+    },
+    {
+     "w": "it",
+     "from": 10320,
+     "to": 10321
+    },
+    {
+     "w": "an",
+     "from": 10323,
+     "to": 10326
+    },
+    {
+     "w": "early",
+     "from": 10328,
+     "to": 10335
+    },
+    {
+     "w": "hint",
+     "from": 10338,
+     "to": 10342
+    },
+    {
+     "w": "of",
+     "from": 10345,
+     "to": 10347
+    },
+    {
+     "w": "movement",
+     "from": 10350,
+     "to": 10359
+    },
+    {
+     "w": "out",
+     "from": 10362,
+     "to": 10364
+    },
+    {
+     "w": "of",
+     "from": 10365,
+     "to": 10366
+    },
+    {
+     "w": "sight.",
+     "from": 10369,
+     "to": 10393
+    }
+   ]
+  },
+  {
+   "id": "s42",
+   "scene": "S8",
+   "from": 10395,
+   "to": 10539,
+   "text": "Just a fuzzy blob: enough to say slow down, not enough to say who's there.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Just",
+     "from": 10395,
+     "to": 10400
+    },
+    {
+     "w": "a",
+     "from": 10402,
+     "to": 10407
+    },
+    {
+     "w": "fuzzy",
+     "from": 10408,
+     "to": 10414
+    },
+    {
+     "w": "blob:",
+     "from": 10419,
+     "to": 10443
+    },
+    {
+     "w": "enough",
+     "from": 10446,
+     "to": 10450
+    },
+    {
+     "w": "to",
+     "from": 10453,
+     "to": 10455
+    },
+    {
+     "w": "say",
+     "from": 10459,
+     "to": 10462
+    },
+    {
+     "w": "slow",
+     "from": 10470,
+     "to": 10477
+    },
+    {
+     "w": "down,",
+     "from": 10479,
+     "to": 10498
+    },
+    {
+     "w": "not",
+     "from": 10501,
+     "to": 10506
+    },
+    {
+     "w": "enough",
+     "from": 10507,
+     "to": 10513
+    },
+    {
+     "w": "to",
+     "from": 10514,
+     "to": 10515
+    },
+    {
+     "w": "say",
+     "from": 10518,
+     "to": 10520
+    },
+    {
+     "w": "who's",
+     "from": 10522,
+     "to": 10530
+    },
+    {
+     "w": "there.",
+     "from": 10534,
+     "to": 10546
+    }
+   ]
+  },
+  {
+   "id": "s43",
+   "scene": "S8",
+   "from": 10550,
+   "to": 10879,
+   "text": "And plenty is still hard: short range, dark or shiny walls, bright sunlight, and fast math on small hardware. The researchers call it an early-stage prototype.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "And",
+     "from": 10548,
+     "to": 10555
+    },
+    {
+     "w": "plenty",
+     "from": 10557,
+     "to": 10569
+    },
+    {
+     "w": "is",
+     "from": 10572,
+     "to": 10574
+    },
+    {
+     "w": "still",
+     "from": 10579,
+     "to": 10584
+    },
+    {
+     "w": "hard:",
+     "from": 10586,
+     "to": 10608
+    },
+    {
+     "w": "short",
+     "from": 10610,
+     "to": 10617
+    },
+    {
+     "w": "range,",
+     "from": 10620,
+     "to": 10638
+    },
+    {
+     "w": "dark",
+     "from": 10644,
+     "to": 10653
+    },
+    {
+     "w": "or",
+     "from": 10656,
+     "to": 10658
+    },
+    {
+     "w": "shiny",
+     "from": 10663,
+     "to": 10670
+    },
+    {
+     "w": "walls,",
+     "from": 10673,
+     "to": 10692
+    },
+    {
+     "w": "bright",
+     "from": 10697,
+     "to": 10704
+    },
+    {
+     "w": "sunlight,",
+     "from": 10706,
+     "to": 10730
+    },
+    {
+     "w": "and",
+     "from": 10733,
+     "to": 10735
+    },
+    {
+     "w": "fast",
+     "from": 10737,
+     "to": 10747
+    },
+    {
+     "w": "math",
+     "from": 10749,
+     "to": 10757
+    },
+    {
+     "w": "on",
+     "from": 10759,
+     "to": 10761
+    },
+    {
+     "w": "small",
+     "from": 10764,
+     "to": 10771
+    },
+    {
+     "w": "hardware.",
+     "from": 10778,
+     "to": 10794
+    },
+    {
+     "w": "The",
+     "from": 10802,
+     "to": 10803
+    },
+    {
+     "w": "researchers",
+     "from": 10805,
+     "to": 10821
+    },
+    {
+     "w": "call",
+     "from": 10824,
+     "to": 10826
+    },
+    {
+     "w": "it",
+     "from": 10829,
+     "to": 10831
+    },
+    {
+     "w": "an",
+     "from": 10833,
+     "to": 10838
+    },
+    {
+     "w": "early-stage",
+     "from": 10843,
+     "to": 10860
+    },
+    {
+     "w": "prototype.",
+     "from": 10862,
+     "to": 10893
+    }
+   ]
+  },
+  {
+   "id": "s44",
+   "scene": "S8",
+   "from": 10893,
+   "to": 11061,
+   "text": "No one has shown that it prevents collisions. For now, it's a promising clue, not a safety system.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "No",
+     "from": 10896,
+     "to": 10898
+    },
+    {
+     "w": "one",
+     "from": 10901,
+     "to": 10903
+    },
+    {
+     "w": "has",
+     "from": 10905,
+     "to": 10908
+    },
+    {
+     "w": "shown",
+     "from": 10910,
+     "to": 10917
+    },
+    {
+     "w": "that",
+     "from": 10919,
+     "to": 10920
+    },
+    {
+     "w": "it",
+     "from": 10921,
+     "to": 10922
+    },
+    {
+     "w": "prevents",
+     "from": 10925,
+     "to": 10934
+    },
+    {
+     "w": "collisions.",
+     "from": 10937,
+     "to": 10965
+    },
+    {
+     "w": "For",
+     "from": 10967,
+     "to": 10968
+    },
+    {
+     "w": "now,",
+     "from": 10970,
+     "to": 10985
+    },
+    {
+     "w": "it's",
+     "from": 10986,
+     "to": 10989
+    },
+    {
+     "w": "a",
+     "from": 10991,
+     "to": 10992
+    },
+    {
+     "w": "promising",
+     "from": 10994,
+     "to": 11009
+    },
+    {
+     "w": "clue,",
+     "from": 11011,
+     "to": 11028
+    },
+    {
+     "w": "not",
+     "from": 11030,
+     "to": 11035
+    },
+    {
+     "w": "a",
+     "from": 11037,
+     "to": 11038
+    },
+    {
+     "w": "safety",
+     "from": 11040,
+     "to": 11047
+    },
+    {
+     "w": "system.",
+     "from": 11049,
+     "to": 11069
+    }
+   ]
+  },
+  {
+   "id": "s45",
+   "scene": "S9",
+   "from": 11088,
+   "to": 11143,
+   "text": "Which brings us back to our friend.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Which",
+     "from": 11093,
+     "to": 11101
+    },
+    {
+     "w": "brings",
+     "from": 11103,
+     "to": 11108
+    },
+    {
+     "w": "us",
+     "from": 11110,
+     "to": 11115
+    },
+    {
+     "w": "back",
+     "from": 11119,
+     "to": 11122
+    },
+    {
+     "w": "to",
+     "from": 11123,
+     "to": 11125
+    },
+    {
+     "w": "our",
+     "from": 11127,
+     "to": 11129
+    },
+    {
+     "w": "friend.",
+     "from": 11132,
+     "to": 11158
+    }
+   ]
+  },
+  {
+   "id": "s46",
+   "scene": "S9",
+   "from": 11158,
+   "to": 11380,
+   "text": "Being out of sight isn't the same as giving nothing away. The light found a way around, and careful timing and math can read some of its clues.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "Being",
+     "from": 11162,
+     "to": 11166
+    },
+    {
+     "w": "out",
+     "from": 11167,
+     "to": 11168
+    },
+    {
+     "w": "of",
+     "from": 11170,
+     "to": 11175
+    },
+    {
+     "w": "sight",
+     "from": 11176,
+     "to": 11185
+    },
+    {
+     "w": "isn't",
+     "from": 11187,
+     "to": 11192
+    },
+    {
+     "w": "the",
+     "from": 11194,
+     "to": 11199
+    },
+    {
+     "w": "same",
+     "from": 11203,
+     "to": 11206
+    },
+    {
+     "w": "as",
+     "from": 11209,
+     "to": 11211
+    },
+    {
+     "w": "giving",
+     "from": 11214,
+     "to": 11221
+    },
+    {
+     "w": "nothing",
+     "from": 11226,
+     "to": 11230
+    },
+    {
+     "w": "away.",
+     "from": 11242,
+     "to": 11256
+    },
+    {
+     "w": "The",
+     "from": 11258,
+     "to": 11259
+    },
+    {
+     "w": "light",
+     "from": 11263,
+     "to": 11266
+    },
+    {
+     "w": "found",
+     "from": 11269,
+     "to": 11274
+    },
+    {
+     "w": "a",
+     "from": 11276,
+     "to": 11278
+    },
+    {
+     "w": "way",
+     "from": 11279,
+     "to": 11281
+    },
+    {
+     "w": "around,",
+     "from": 11283,
+     "to": 11302
+    },
+    {
+     "w": "and",
+     "from": 11303,
+     "to": 11305
+    },
+    {
+     "w": "careful",
+     "from": 11308,
+     "to": 11317
+    },
+    {
+     "w": "timing",
+     "from": 11322,
+     "to": 11326
+    },
+    {
+     "w": "and",
+     "from": 11329,
+     "to": 11331
+    },
+    {
+     "w": "math",
+     "from": 11336,
+     "to": 11341
+    },
+    {
+     "w": "can",
+     "from": 11343,
+     "to": 11346
+    },
+    {
+     "w": "read",
+     "from": 11349,
+     "to": 11353
+    },
+    {
+     "w": "some",
+     "from": 11355,
+     "to": 11358
+    },
+    {
+     "w": "of",
+     "from": 11359,
+     "to": 11360
+    },
+    {
+     "w": "its",
+     "from": 11362,
+     "to": 11365
+    },
+    {
+     "w": "clues.",
+     "from": 11367,
+     "to": 11392
+    }
+   ]
+  },
+  {
+   "id": "s47",
+   "scene": "S9",
+   "from": 11398,
+   "to": 11487,
+   "text": "To really hide, he'd have to block the bounces too.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "To",
+     "from": 11398,
+     "to": 11403
+    },
+    {
+     "w": "really",
+     "from": 11405,
+     "to": 11412
+    },
+    {
+     "w": "hide,",
+     "from": 11415,
+     "to": 11430
+    },
+    {
+     "w": "he'd",
+     "from": 11431,
+     "to": 11434
+    },
+    {
+     "w": "have",
+     "from": 11436,
+     "to": 11439
+    },
+    {
+     "w": "to",
+     "from": 11441,
+     "to": 11444
+    },
+    {
+     "w": "block",
+     "from": 11447,
+     "to": 11451
+    },
+    {
+     "w": "the",
+     "from": 11453,
+     "to": 11456
+    },
+    {
+     "w": "bounces",
+     "from": 11457,
+     "to": 11470
+    },
+    {
+     "w": "too.",
+     "from": 11474,
+     "to": 11487
+    }
+   ]
+  },
+  {
+   "id": "s48",
+   "scene": "S9",
+   "from": 11622,
+   "to": 11826,
+   "text": "This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner.",
+   "timing": "engine",
+   "words": [
+    {
+     "w": "This",
+     "from": 11624,
+     "to": 11629
+    },
+    {
+     "w": "is",
+     "from": 11631,
+     "to": 11636
+    },
+    {
+     "w": "Future",
+     "from": 11641,
+     "to": 11651
+    },
+    {
+     "w": "Got",
+     "from": 11653,
+     "to": 11660
+    },
+    {
+     "w": "Weird:",
+     "from": 11663,
+     "to": 11684
+    },
+    {
+     "w": "the",
+     "from": 11685,
+     "to": 11687
+    },
+    {
+     "w": "strange",
+     "from": 11689,
+     "to": 11701
+    },
+    {
+     "w": "future,",
+     "from": 11707,
+     "to": 11720
+    },
+    {
+     "w": "explained.",
+     "from": 11730,
+     "to": 11751
+    },
+    {
+     "w": "Subscribe",
+     "from": 11759,
+     "to": 11766
+    },
+    {
+     "w": "for",
+     "from": 11768,
+     "to": 11771
+    },
+    {
+     "w": "more,",
+     "from": 11773,
+     "to": 11785
+    },
+    {
+     "w": "and",
+     "from": 11787,
+     "to": 11790
+    },
+    {
+     "w": "we'll",
+     "from": 11791,
+     "to": 11795
+    },
+    {
+     "w": "see",
+     "from": 11797,
+     "to": 11799
+    },
+    {
+     "w": "you",
+     "from": 11801,
+     "to": 11802
+    },
+    {
+     "w": "around",
+     "from": 11804,
+     "to": 11811
+    },
+    {
+     "w": "the",
+     "from": 11813,
+     "to": 11814
+    },
+    {
+     "w": "corner.",
+     "from": 11819,
+     "to": 11833
+    }
+   ]
+  }
+ ],
+ "cues": {}
+}
