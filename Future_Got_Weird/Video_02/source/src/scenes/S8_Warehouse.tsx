@@ -38,6 +38,8 @@ import {pathSchedule, scatterDirections, type P2} from '../lib/optics';
 import {S8PersonTokenG} from '../components/v02/S8_PersonToken';
 import {S8Blob, S8Carton, S8ImpactMarks, S8Label, S8Pill, S8PillRow, S8ThinkBubble, type CartonBox} from '../components/v02/S8_Props';
 import {VignetteBoard} from '../components/v02/S8_Vignettes';
+import {RunwayInsert} from '../components/v02/RunwayInsert';
+import {isPlate} from '../lib/plate';
 
 /**
  * S8 · Usefulness and limits (s40–s44), the warehouse. Storyboard shots S7.1–S7.5 (numbered S8.1–S8.5 here).
@@ -536,9 +538,12 @@ export const S8Warehouse: React.FC = () => {
         </Camera>
       )}
 
-      {/* guard-rail labels (screen space; under the board) */}
-      <S8Label x={100} y={92} text="illustration" t={tw(g, K.what + 4, 10, E.linear)} size={34} />
-      <S8Label x={350} y={92} text="potential use" t={potentialT} size={34} tone="teal" />
+      {/* Runway R3 (when accepted): the generated roll replaces the camera picture, under the labels */}
+      <RunwayInsert id="R3" />
+
+      {/* guard-rail labels (screen space; under the board); hidden when rendering Runway plates */}
+      {!isPlate() && <S8Label x={100} y={92} text="illustration" t={tw(g, K.what + 4, 10, E.linear)} size={34} />}
+      {!isPlate() && <S8Label x={350} y={92} text="potential use" t={potentialT} size={34} tone="teal" />}
       {slowedT > 0.001 && <S8Label x={SLOWED_X} y={92} text="slowed down" t={slowedT} size={34} tone="saffron" />}
 
       {/* S8.3 labels on the blob */}

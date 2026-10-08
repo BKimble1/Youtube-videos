@@ -1,0 +1,34 @@
+{
+ "cap_credits": 500,
+ "attempts": [
+  {
+   "shot": "R3",
+   "attempt": 1,
+   "task_id": "d63c06fe-a196-4d47-a17d-c49758e2e897",
+   "model": "kling-3-pro",
+   "prompt": "Flat 2D cartoon animation with clean ink outlines and flat colours, exactly matching the start and end frames. Locked camera, no camera movement, no zoom. The small yellow delivery robot rolls smoothly to the right along the warehouse floor, wheels turning, then gently slows and stops short of the corner, settling with a tiny forward bob. Everything else stays perfectly still: shelves, boxes, lane markings, walls and the bollard do not move or change. No new objects, no people, no text.",
+   "start_frame": "runway/R3/R3_start.png",
+   "start_sha256": "f7de5b4160557d184cde38f5ee415f8281388685913557f1a7006d3eb6e72bd5",
+   "end_frame": "runway/R3/R3_end.png",
+   "end_sha256": "b3260415ed3cd97d812ca50144016cde553db119eb25cbe83d9da55c40f9bd4e",
+   "ratio": "16:9",
+   "duration_requested_s": 5.0,
+   "resolution_requested": "1080p",
+   "settings": {
+    "generateAudio": false,
+    "model_label": "Kling 3.0 Pro"
+   },
+   "seed": null,
+   "expected_use": "S8.1 (scene S8) frames 10209-10322: robot rolls toward the blind corner and slows; start/end frames rendered from the Remotion shot with the overlay labels hidden",
+   "balance_before": 2250.0,
+   "balance_after": 2190.0,
+   "cost_credits": 60.0,
+   "raw_output": null,
+   "measured": null,
+   "status": "pending",
+   "reason": "",
+   "selected_range": null
+  }
+ ],
+ "spent_credits": 60.0
+}

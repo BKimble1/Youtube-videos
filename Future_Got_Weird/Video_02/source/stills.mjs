@@ -1,4 +1,5 @@
 // Render specific frames as PNG stills for inspection: node stills.mjs out_dir frame1 frame2 ...
+// PLATE=1 renders Runway start/end plates (scene labels hidden, no inserts). NO_INSERTS=1 renders without inserts.
 // Frames may be numbers or "seg:s05" / "seg:s05+12" / "word:s05:Kalai?" (+offset) resolved from timeline.json.
 import {bundle} from '@remotion/bundler';
 import {renderStill, selectComposition} from '@remotion/renderer';
@@ -24,7 +25,7 @@ const resolve = (spec) => {
 const browserExecutable = process.env.REMOTION_BROWSER_EXECUTABLE ?? '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 const serveUrl = await bundle({entryPoint: path.resolve('src/index.ts')});
 const only = process.env.ONLY ? process.env.ONLY.split(',') : undefined;
-const inputProps = {audio: 'none', ...(only ? {only} : {}), ...(process.env.NO_INSERTS ? {inserts: false} : {})};
+const inputProps = {audio: 'none', ...(only ? {only} : {}), ...(process.env.NO_INSERTS ? {inserts: false} : {}), ...(process.env.PLATE ? {plate: true} : {})};
 const composition = await selectComposition({serveUrl, id: process.env.COMP ?? 'Preview', inputProps, browserExecutable});
 fs.mkdirSync(outDir, {recursive: true});
 for (const spec of specs) {

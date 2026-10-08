@@ -87,18 +87,19 @@ const Arrive: React.FC<{t?: Transition; children: React.ReactNode}> = ({t, child
 /**
  * Accepted Runway inserts (data/inserts.json): an opaque generated clip replaces the picture for [from, to) global
  * frames. Each insert's start and end frames were rendered from the Remotion shot it replaces, so it begins and ends on
- * the rig. Frames are drawn nearest-frame (no interpolation) at 30 fps from a 24 fps source.
+ * the rig. Frames are drawn nearest-frame (no interpolation) at 30 fps from a 24 fps source. Inserts flagged `inScene`
+ * are drawn by their scene (components/v02/RunwayInsert) beneath its labels, not here.
  */
-type Insert = {id: string; file: string; from: number; to: number; trimStartFrames?: number; scale?: number};
+type Insert = {id: string; file: string; from: number; to: number; trimStartFrames?: number; scale?: number; inScene?: boolean; playbackRate?: number};
 const InsertLayer: React.FC<{only?: string[]}> = ({only}) => (
   <>
-    {(inserts as Insert[]).map((ins) => {
+    {(inserts as Insert[]).filter((ins) => !ins.inScene).map((ins) => {
       const sc = TL.scenes.find((s) => ins.from >= s.from && ins.from < s.to);
       if (only && only.length && sc && !only.includes(sc.id)) return null;
       return (
         <Sequence key={ins.id} from={ins.from} durationInFrames={ins.to - ins.from} name={`insert ${ins.id}`} style={{zIndex: 200}}>
           <AbsoluteFill style={{backgroundColor: C.paper}}>
-            <OffthreadVideo src={staticFile(ins.file)} muted startFrom={ins.trimStartFrames ?? 0} style={{width: '100%', height: '100%', objectFit: 'cover', transform: ins.scale ? `scale(${ins.scale})` : undefined}} />
+            <OffthreadVideo src={staticFile(ins.file)} muted startFrom={ins.trimStartFrames ?? 0} playbackRate={ins.playbackRate ?? 1} style={{width: '100%', height: '100%', objectFit: 'cover', transform: ins.scale ? `scale(${ins.scale})` : undefined}} />
           </AbsoluteFill>
         </Sequence>
       );
