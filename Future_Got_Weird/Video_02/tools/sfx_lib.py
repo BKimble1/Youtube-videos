@@ -10,12 +10,13 @@ Copied from Video 01 V2; the pass-2 reuse table is gone (there is no pass-2 fold
 Selection is measured, not listened to (same method as Video 01): every candidate is decoded to 48 kHz mono and
 described by its 10 ms peak envelope (main transient, onset, number of separate events, decay) and, for sustained
 sounds, how steady its level is. Each kind belongs to a class that says what a good take looks like:
-  hit    one dominant transient, few extra events, quick decay; synced on the transient
+  hit    one dominant transient, few extra events, quick decay; synced on the transient; cut to that one event
   stroke a clean onset and one gesture of about the kind's target length; synced on the onset (first frame within 20 dB
          of the peak)
   stop   a movement that ends in a stop (mirror panel, drawer, book); synced on the stop (last frame within 20 dB of
          the peak)
-  loop   steady level (low variation over 100 ms windows), longer takes preferred; looped with crossfades to any length
+  loop   steady level (low variation over 100 ms windows), longer takes preferred; looped with crossfades to any length.
+         Takes under 4 s are lengthened with forward/reversed copies; ticking loops are cut to whole tick periods.
 """
 import glob
 import json
@@ -55,6 +56,12 @@ NOT_BUILT = ['conveyor_run', 'conveyor_clunk', 'token_select', 'token_lock', 'cl
              'score_flip', 'crowd_cheer', 'crowd_aww', 'fanfare_small', 'trophy_clink', 'trophy_steps',
              'amb_counter', 'amb_conveyor', 'amb_library', 'amb_gameshow', 'amb_machine']
 
+# loops shorter than this are lengthened with forward/reversed copies (not clock ticks: a reversed tick sounds wrong)
+LOOP_MIN_S = 4.0
+NO_REVERSE = {'clock_tick'}
+# ticking loops are cut to a whole number of tick periods, starting and ending mid-gap, so they loop in time
+PERIODIC = {'clock_tick'}
+
 # strokes: length of the one gesture a good take has (s, onset to last frame within 20 dB of the peak); default 0.5
 STROKE_LEN = {
     'cloth_rustle': 0.6, 'smug_exhale': 0.5, 'readout_off': 0.35, 'partition_wobble': 0.8, 'paper_shred': 0.9,
@@ -67,14 +74,14 @@ STROKE_LEN = {
 GAIN = {
     # the room and the characters
     'tiptoe_step': -10, 'footstep_wood': -8, 'cloth_rustle': -12, 'smug_exhale': -8, 'relief_sigh': -8,
-    'partition_thunk': -5, 'partition_scrape': 6, 'partition_wobble': -8, 'mirror_slide': -8, 'mirror_ting': -10,
+    'partition_thunk': -5, 'partition_scrape': -2, 'partition_wobble': -8, 'mirror_slide': -8, 'mirror_ting': -10,
     # the sensor motif (small, never louder than a paper sound)
     'sensor_hum': -20, 'sensor_pulse': -10, 'bounce_tick': -13, 'echo_return': -12, 'readout_beep': -11, 'readout_off': -10,
     # graphics made physical
-    'paper_shred': -7, 'confetti_settle': -10, 'block_drop': -8, 'magnifier_slide': -10, 'ruler_extend': -9, 'arc_draw': 2,
+    'paper_shred': -7, 'confetti_settle': -10, 'block_drop': -8, 'magnifier_slide': -10, 'ruler_extend': -9, 'arc_draw': -4,
     'uh_oh': -7,
     # history shelf, small sensors, results
-    'shelf_creak': -9, 'clock_tick': 2, 'rope_clip': -8, 'tiny_clink': -9, 'lock_click': -8, 'shutter_click': -9,
+    'shelf_creak': -9, 'clock_tick': -10, 'rope_clip': -8, 'tiny_clink': -9, 'lock_click': -8, 'shutter_click': -9,
     'strip_rip': -9, 'shoo': -12, 'film_tick': -11,
     # warehouse
     'robot_motor': 0, 'robot_brake': -8, 'robot_beep': -9, 'sun_glare': -9,
@@ -109,10 +116,11 @@ def measure(x):
     onset = int(above[0]) if len(above) else 0
     last = int(above[-1]) if len(above) else len(e) - 1
     # separate events: rises to within 12 dB of the peak after a dip of 10 dB
-    events, armed = 0, True
-    for v in edb:
+    events, armed, times = 0, True, []
+    for i, v in enumerate(edb):
         if armed and v > -12:
             events += 1
+            times.append(i * 0.01)
             armed = False
         elif v < -22:
             armed = True
@@ -123,13 +131,13 @@ def measure(x):
     rms = np.array([np.sqrt(np.mean(seg[i:i + win] ** 2)) for i in range(0, max(1, len(seg) - win), win)]) + 1e-9
     steady = float(np.std(20 * np.log10(rms))) if len(rms) > 2 else 99.0
     return {'peak_s': peak_i * 0.01, 'onset_s': onset * 0.01, 'last_s': last * 0.01, 'events': events, 'decay_s': decay,
-            'steady_db': steady, 'peak_dbfs': float(20 * np.log10(np.abs(x).max() + 1e-9)), 'dur_s': len(x) / SR,
+            'steady_db': steady, 'event_s': times, 'peak_dbfs': float(20 * np.log10(np.abs(x).max() + 1e-9)), 'dur_s': len(x) / SR,
             'crest_db': float(20 * np.log10(np.abs(x).max() / (np.sqrt(np.mean(x ** 2)) + 1e-12)))}
 
 
 def score(kind, m):
     c = KIND_CLASS[kind]
-    if m['peak_dbfs'] < -40:
+    if m['peak_dbfs'] < (-60 if c == 'loop' else -40):   # room tones are quiet by nature
         return -99
     if c == 'hit':
         return m['crest_db'] - 4 * max(0, m['events'] - 2) - 3 * max(0, m['decay_s'] - 0.6)
@@ -137,26 +145,66 @@ def score(kind, m):
         return -3 * max(0, m['events'] - 3) - 2 * abs(m['last_s'] - m['onset_s'] - STROKE_LEN.get(kind, 0.5)) + 0.2 * m['crest_db']
     if c == 'stop':
         return -2 * max(0, m['events'] - 3) + (2 if m['last_s'] - m['onset_s'] > 0.25 else 0)
+    if kind in PERIODIC:   # ticking loops: many evenly spaced ticks
+        iv = np.diff(m['event_s'])
+        return len(iv) - 20 * float(np.std(iv)) if len(iv) >= 2 else -50
     return -m['steady_db'] + 0.5 * min(m['dur_s'], 6.0)   # steady first; a longer loop repeats less audibly
+
+
+def palindrome(y, seconds):
+    """Lengthen a short steady take by alternating forward and reversed copies. The joins are sample-continuous
+    (each copy starts on the sample the previous one ended on) and an even number of copies makes the result loop
+    seamlessly too. Used for room tones and hums, whose generated takes are often only 0.5 to 2 s long."""
+    segs, k = [], 0
+    while sum(len(s) for s in segs) < seconds * SR or k % 2:
+        segs.append(y if k % 2 == 0 else y[::-1])
+        k += 1
+    return np.concatenate(segs)
 
 
 def trim(kind, x, m):
     c = KIND_CLASS[kind]
-    if c == 'loop':
-        y = x[int(0.15 * SR): len(x) - int(0.15 * SR)]
+    if c == 'loop' and kind in PERIODIC and len(m['event_s']) >= 3:
+        period = float(np.median(np.diff(m['event_s'])))
+        a = max(0.0, m['event_s'][0] - period / 2)
+        n = int((len(x) / SR - a) // period)
+        y = x[int(a * SR): int((a + n * period) * SR)]
+        sync = 0.0
+    elif c == 'loop':
+        cut = int(min(0.15, 0.1 * len(x) / SR) * SR)
+        y = x[cut: len(x) - cut]
+        if len(y) < LOOP_MIN_S * SR and kind not in NO_REVERSE:
+            y = palindrome(y, LOOP_MIN_S)
         sync = 0.0
     else:
         a = max(0, int((m['onset_s'] - 0.03) * SR))
         e = envelope(x)
         edb = 20 * np.log10(e / e.max())
-        below = np.where(edb[int(m['peak_s'] / 0.01):] < -48)[0]
-        end_i = (int(m['peak_s'] / 0.01) + int(below[0])) if len(below) else len(e)
+        p = int(m['peak_s'] / 0.01)
+        if c == 'stop':   # the stop is the sync point: keep up to 1.5 s of movement before it and its decay after it
+            p = int(m['last_s'] / 0.01)
+            a = max(a, int((m['last_s'] - 1.5) * SR))
+        below = np.where(edb[p:] < -48)[0]
+        end_i = (p + int(below[0])) if len(below) else len(e)
+        if c == 'hit':
+            # a hit is one event: start after the last quiet gap before the main transient and stop before the next
+            # separate event (a dip below -22 dB followed by a rise above -12 dB), so a cue never fires two taps
+            quiet = np.where(edb[:p] < -30)[0]
+            a = max(0, int(((quiet[-1] + 1) if len(quiet) else 0) * 0.01 * SR) - int(0.01 * SR), int((m['peak_s'] - 0.3) * SR))
+            dip = np.where(edb[p:] < -22)[0]
+            if len(dip):
+                q = p + int(dip[0])
+                rise = np.where(edb[q:] > -12)[0]
+                if len(rise):
+                    end_i = min(end_i, q + int(rise[0]) - 2)
         b = min(len(x), int((end_i * 0.01 + 0.06) * SR), a + int(2.6 * SR))
+        if c == 'stroke':   # one gesture: at most 2.5 times its target length (later rustles are not part of it)
+            b = min(b, a + int(max(1.0, 2.5 * STROKE_LEN.get(kind, 0.5)) * SR))
         y = x[a:b]
         ref = {'hit': m['peak_s'], 'stroke': m['onset_s'], 'stop': m['last_s']}[c]
         sync = max(0.0, ref - a / SR)
     n_in = min(len(y) // 4, int(0.004 * SR))
-    n_out = min(len(y) // 3, int(0.03 * SR))
+    n_out = min(len(y) // 3, int((0.06 if c == 'stroke' else 0.03) * SR))
     if n_in:
         y[:n_in] *= np.linspace(0, 1, n_in)
     if n_out:
@@ -164,6 +212,7 @@ def trim(kind, x, m):
     # reference level: hits/strokes/stops peak at -6 dBFS; loops at -30 dBFS RMS
     if c == 'loop':
         y = y / (np.sqrt(np.mean(y ** 2)) + 1e-12) * 10 ** (-30 / 20)
+        y = y * min(1.0, 10 ** (-6 / 20) / (np.abs(y).max() + 1e-12))   # sparse ticks: peaks no higher than the hits
     else:
         y = y / (np.abs(y).max() + 1e-12) * 10 ** (-6 / 20)
     return y, sync
@@ -209,6 +258,8 @@ def main():
             report.append((kind, 'MISSING'))
             continue
         y, sync = trim(kind, best[2].copy(), best[3])
+        if KIND_CLASS[kind] == 'loop' and len(y) / SR > best[3]['dur_s']:
+            src_note += f"; take is {best[3]['dur_s']:.2f} s, lengthened to {len(y) / SR:.2f} s with forward/reversed copies"
         sf.write(os.path.join(LIB, f'{kind}.wav'), y.astype(np.float32), SR)
         lib[kind] = {'file': f'{kind}.wav', 'sync_s': round(sync, 3), 'class': KIND_CLASS[kind], 'gain_db': GAIN.get(kind, -8),
                      'dur_s': round(len(y) / SR, 3), 'source': os.path.relpath(best[1], ROOT)}

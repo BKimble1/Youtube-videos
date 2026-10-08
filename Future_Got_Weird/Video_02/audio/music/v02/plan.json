@@ -1,0 +1,457 @@
+{
+ "total": 403.03333333333336,
+ "frames": 12091,
+ "fps": 30,
+ "scenes": {
+  "S1": [
+   0.0,
+   60.86666666666667
+  ],
+  "S2": [
+   60.86666666666667,
+   95.8
+  ],
+  "S3": [
+   95.8,
+   131.8
+  ],
+  "S4": [
+   131.8,
+   189.73333333333332
+  ],
+  "S5": [
+   189.73333333333332,
+   236.8
+  ],
+  "S6": [
+   236.8,
+   293.26666666666665
+  ],
+  "S7": [
+   293.26666666666665,
+   338.23333333333335
+  ],
+  "S8": [
+   338.23333333333335,
+   372.43333333333334
+  ],
+  "S9": [
+   372.43333333333334,
+   403.03333333333336
+  ]
+ },
+ "cue": {
+  "sensor": 5.6,
+  "reveal": 9.466666666666667,
+  "reenter": 21.0,
+  "flash": 30.166666666666668,
+  "settle": 51.36666666666667,
+  "clue": 59.233333333333334,
+  "visible": 72.2,
+  "s11": 73.43333333333334,
+  "lighter": 81.83333333333333,
+  "timing": 95.1,
+  "board": 113.13333333333334,
+  "map": 132.16666666666666,
+  "flashes": 138.9,
+  "arc1": 141.76666666666668,
+  "arc2": 155.83333333333334,
+  "one_place": 159.7,
+  "bands": 161.33333333333334,
+  "many": 175.03333333333333,
+  "resolve": 184.2,
+  "shape": 187.46666666666667,
+  "turn": 230.06666666666666,
+  "lift": 281.1333333333333,
+  "ping": 345.8333333333333,
+  "slow": 352.1666666666667,
+  "slow_end": 354.73333333333335,
+  "settle8": 366.3,
+  "takeaway": 375.1,
+  "hint": 383.1,
+  "too": 386.06666666666666,
+  "end_card": 390.56666666666666,
+  "explained": 394.9,
+  "corner": 397.1333333333333
+ },
+ "segments": [
+  [
+   "sneak",
+   0.0,
+   5.199999999999999
+  ],
+  [
+   "sensor",
+   5.199999999999999,
+   9.266666666666667
+  ],
+  [
+   "reveal",
+   9.266666666666667,
+   21.0
+  ],
+  [
+   "curious",
+   21.0,
+   51.36666666666667
+  ],
+  [
+   "settle",
+   51.36666666666667,
+   60.86666666666667
+  ],
+  [
+   "playful",
+   60.86666666666667,
+   81.83333333333333
+  ],
+  [
+   "light",
+   81.83333333333333,
+   95.8
+  ],
+  [
+   "echo",
+   95.8,
+   113.13333333333334
+  ],
+  [
+   "board",
+   113.13333333333334,
+   131.8
+  ],
+  [
+   "clock",
+   131.8,
+   184.2
+  ],
+  [
+   "resolve",
+   184.2,
+   189.73333333333332
+  ],
+  [
+   "museum",
+   189.73333333333332,
+   230.06666666666666
+  ],
+  [
+   "turn",
+   230.06666666666666,
+   236.8
+  ],
+  [
+   "nimble",
+   236.8,
+   281.1333333333333
+  ],
+  [
+   "lift",
+   281.1333333333333,
+   293.26666666666665
+  ],
+  [
+   "evidence",
+   293.26666666666665,
+   338.23333333333335
+  ],
+  [
+   "groove",
+   338.23333333333335,
+   366.3
+  ],
+  [
+   "groove_out",
+   366.3,
+   372.43333333333334
+  ],
+  [
+   "callback",
+   372.43333333333334,
+   375.1
+  ],
+  [
+   "build",
+   375.1,
+   383.1
+  ],
+  [
+   "hold",
+   383.1,
+   386.06666666666666
+  ],
+  [
+   "gag",
+   386.06666666666666,
+   390.56666666666666
+  ],
+  [
+   "end",
+   390.56666666666666,
+   403.03333333333336
+  ]
+ ],
+ "windows": [
+  {
+   "label": "reveal: s03 \"And yet... this is real data\" (re-enters softly on s04)",
+   "kind": "drop",
+   "depth_db": -24.0,
+   "a": 9.266666666666667,
+   "b": 20.9,
+   "reentry_db": -9.0,
+   "reentry_s": 3.0
+  },
+  {
+   "label": "J2: s10 \"simply visible\" (resumes on s11)",
+   "kind": "stop",
+   "a": 72.05,
+   "b": 73.33333333333334
+  },
+  {
+   "label": "J3: s20 \"one place\" (sound effect only, resumes on s21)",
+   "kind": "stop",
+   "a": 159.45,
+   "b": 161.23333333333335
+  },
+  {
+   "label": "s42 \"slow down\" (the groove brakes, resumes on s43)",
+   "kind": "dip",
+   "depth_db": -8.0,
+   "a": 351.9666666666667,
+   "b": 354.83333333333337
+  },
+  {
+   "label": "J4: silent gag after s47 (complete stop until s48)",
+   "kind": "stop",
+   "a": 386.06666666666666,
+   "b": 390.46666666666664
+  }
+ ],
+ "layers": [
+  132.0,
+  141.9,
+  156.0,
+  161.4,
+  175.2
+ ],
+ "bpm": 100,
+ "bar_seconds": 2.4,
+ "bars_per_segment": {
+  "sneak": 2,
+  "sensor": 2,
+  "reveal": 5,
+  "curious": 12,
+  "settle": 4,
+  "playful": 9,
+  "light": 6,
+  "echo": 7,
+  "board": 8,
+  "clock": 22,
+  "resolve": 2,
+  "museum": 17,
+  "turn": 3,
+  "nimble": 18,
+  "lift": 5,
+  "evidence": 19,
+  "groove": 12,
+  "groove_out": 2,
+  "callback": 1,
+  "build": 4,
+  "hold": 1,
+  "gag": 2,
+  "end": 6
+ },
+ "progressions": {
+  "sensor": [
+   "Dm7",
+   "G6"
+  ],
+  "curious": [
+   "Dm7",
+   "G6",
+   "Bbmaj7",
+   "A7sus"
+  ],
+  "settle": [
+   "Bbmaj7",
+   "C6",
+   "Dm9",
+   "Dm9"
+  ],
+  "playful": [
+   "F",
+   "Dm7",
+   "Bb",
+   "C7sus"
+  ],
+  "light": [
+   "Bb",
+   "F/A",
+   "Gm7",
+   "C7sus"
+  ],
+  "echo": [
+   "Dm9",
+   "Bbmaj7",
+   "Gm9",
+   "A7sus"
+  ],
+  "clock": [
+   "Em9",
+   "Cmaj7",
+   "G/B",
+   "Dsus"
+  ],
+  "museum": [
+   "Bb",
+   "F/A",
+   "Gm7",
+   "Ebmaj7",
+   "Bb/D",
+   "Eb",
+   "Cm7",
+   "F7sus"
+  ],
+  "nimble": [
+   "D",
+   "Bm7",
+   "Gadd9",
+   "Asus",
+   "D",
+   "Bm7",
+   "Gadd9",
+   "A"
+  ],
+  "lift": [
+   "E",
+   "C#m7",
+   "Aadd9",
+   "Bsus"
+  ],
+  "evidence": [
+   "Em9",
+   "Cmaj7",
+   "Gadd9",
+   "Dsus"
+  ],
+  "groove": [
+   "Am",
+   "Am/G",
+   "Fmaj7",
+   "E7sus",
+   "Am",
+   "Am/G",
+   "Fmaj7",
+   "E7"
+  ],
+  "groove_out": [
+   "Fmaj7",
+   "E7sus",
+   "Am",
+   "E7sus"
+  ],
+  "build": [
+   "Bbmaj7",
+   "C6",
+   "Gm9"
+  ]
+ },
+ "segment_targets_lu": {
+  "sneak": -3.0,
+  "sensor": -5.0,
+  "reveal": null,
+  "curious": -2.5,
+  "settle": -5.0,
+  "playful": -1.0,
+  "light": -4.5,
+  "echo": -7.0,
+  "board": -14.0,
+  "clock": -3.0,
+  "resolve": -4.0,
+  "museum": -2.5,
+  "turn": -6.0,
+  "nimble": -1.5,
+  "lift": -0.5,
+  "evidence": -7.5,
+  "groove": -3.0,
+  "groove_out": -5.5,
+  "callback": -6.0,
+  "build": -2.0,
+  "hold": -6.0,
+  "gag": null,
+  "end": -3.0
+ },
+ "segment_gain_db_applied": {
+  "sneak@0.00": 19.96,
+  "sensor@5.20": 22.45,
+  "reveal@9.27": 23.35,
+  "curious@21.00": 21.92,
+  "settle@51.37": 21.11,
+  "playful@60.87": 20.5,
+  "light@81.83": 22.14,
+  "echo@95.80": 24.41,
+  "board@113.13": 18.96,
+  "clock@131.80": 20.69,
+  "resolve@184.20": 19.75,
+  "museum@189.73": 20.55,
+  "turn@230.07": 24.55,
+  "nimble@236.80": 19.52,
+  "lift@281.13": 20.09,
+  "evidence@293.27": 23.31,
+  "groove@338.23": 19.88,
+  "groove_out@366.30": 18.57,
+  "callback@372.43": 19.95,
+  "build@375.10": 20.22,
+  "hold@383.10": 18.17,
+  "gag@386.07": 23.35,
+  "end@390.57": 19.94
+ },
+ "instruments": {
+  "pizz": {
+   "gm_program": 45,
+   "gain_db": 0
+  },
+  "marimba": {
+   "gm_program": 12,
+   "gain_db": 0
+  },
+  "vibes": {
+   "gm_program": 11,
+   "gain_db": -5
+  },
+  "glock": {
+   "gm_program": 9,
+   "gain_db": -6
+  },
+  "guitar": {
+   "gm_program": 24,
+   "gain_db": -3
+  },
+  "harp": {
+   "gm_program": 46,
+   "gain_db": -4
+  },
+  "bass": {
+   "gm_program": 32,
+   "gain_db": -5
+  },
+  "bassoon": {
+   "gm_program": 70,
+   "gain_db": -7
+  },
+  "clarinet": {
+   "gm_program": 71,
+   "gain_db": -7
+  },
+  "strings": {
+   "gm_program": 49,
+   "gain_db": -8
+  },
+  "drums": {
+   "gm_program": 0,
+   "gain_db": -7
+  }
+ },
+ "final_scale_db": 0.0,
+ "soundfont": "/usr/share/sounds/sf3/MuseScore_General_Full.sf3"
+}

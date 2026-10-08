@@ -1,0 +1,6 @@
+Total spent (sum of per-generation credit costs reported by the ElevenLabs tool responses): 3599.64 credits (~USD 0.65) for 216 generations (72 kinds x 3 variations)
+Model: eleven_text_to_sound_v2 (ElevenLabs Sound Effects v2), node type sfx, flow "FGW Video 02 SFX" (VZ9uHeLPyDzIy5mFpWnB)
+Reported rate: 16.665 credits (0.303 US cents) per variation, flat. creative_generate_in_flow has no duration parameter; the model chose 0.48 to 18 s per take, and the price did not depend on it.
+Pre-run estimate (estimate_only, one kind, 3 variations): 165 credits / 3 US cents, i.e. 55 credits per variation, about 3.3x the reported per-generation price (same ratio as Video 01).
+Remaining credits: not reported by the tools.
+No failures. 11 variations hit the workspace concurrency limit and were retried automatically by the service; no generation call was repeated.

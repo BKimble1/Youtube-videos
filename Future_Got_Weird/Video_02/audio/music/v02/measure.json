@@ -1,0 +1,377 @@
+{
+ "duration": {
+  "samples": 19345600,
+  "seconds": 403.03333333333336,
+  "timeline_seconds": 403.03333333333336,
+  "timeline_samples": 19345600,
+  "matches_timeline": true
+ },
+ "peaks": {
+  "sample_peak_dbfs": -6.81,
+  "true_peak_dbtp_4x": -6.81,
+  "samples_at_or_over_0dBFS": 0
+ },
+ "integrated_lufs": -22.96,
+ "band_1_4k_share_whole": 0.0096,
+ "scenes": {
+  "S1": {
+   "from": 0.0,
+   "to": 60.87,
+   "lufs": -23.11,
+   "rel_lu": -0.16,
+   "lufs_after_mix_norm_-27": -27.16,
+   "band_1_4k_share": 0.0052
+  },
+  "S2": {
+   "from": 60.87,
+   "to": 95.8,
+   "lufs": -21.82,
+   "rel_lu": 1.14,
+   "lufs_after_mix_norm_-27": -25.86,
+   "band_1_4k_share": 0.0026
+  },
+  "S3": {
+   "from": 95.8,
+   "to": 131.8,
+   "lufs": -29.87,
+   "rel_lu": -6.92,
+   "lufs_after_mix_norm_-27": -33.92,
+   "band_1_4k_share": 0.0026
+  },
+  "S4": {
+   "from": 131.8,
+   "to": 189.73,
+   "lufs": -23.1,
+   "rel_lu": -0.14,
+   "lufs_after_mix_norm_-27": -27.14,
+   "band_1_4k_share": 0.0132
+  },
+  "S5": {
+   "from": 189.73,
+   "to": 236.8,
+   "lufs": -22.74,
+   "rel_lu": 0.22,
+   "lufs_after_mix_norm_-27": -26.78,
+   "band_1_4k_share": 0.0294
+  },
+  "S6": {
+   "from": 236.8,
+   "to": 293.27,
+   "lufs": -21.27,
+   "rel_lu": 1.69,
+   "lufs_after_mix_norm_-27": -25.31,
+   "band_1_4k_share": 0.0053
+  },
+  "S7": {
+   "from": 293.27,
+   "to": 338.23,
+   "lufs": -27.5,
+   "rel_lu": -4.55,
+   "lufs_after_mix_norm_-27": -31.55,
+   "band_1_4k_share": 0.0044
+  },
+  "S8": {
+   "from": 338.23,
+   "to": 372.43,
+   "lufs": -23.45,
+   "rel_lu": -0.49,
+   "lufs_after_mix_norm_-27": -27.49,
+   "band_1_4k_share": 0.0022
+  },
+  "S9": {
+   "from": 372.43,
+   "to": 403.03,
+   "lufs": -23.04,
+   "rel_lu": -0.09,
+   "lufs_after_mix_norm_-27": -27.09,
+   "band_1_4k_share": 0.0156
+  }
+ },
+ "segments": [
+  {
+   "segment": "sneak",
+   "from": 0.0,
+   "to": 5.2,
+   "target_lu": -3.0,
+   "level_lu": -2.99,
+   "rel_whole_lu": -0.03,
+   "rms_dbfs": -24.8
+  },
+  {
+   "segment": "sensor",
+   "from": 5.2,
+   "to": 9.27,
+   "target_lu": -5.0,
+   "level_lu": -5.02,
+   "rel_whole_lu": -2.06,
+   "rms_dbfs": -26.9
+  },
+  {
+   "segment": "reveal",
+   "from": 9.27,
+   "to": 21.0,
+   "target_lu": null,
+   "level_lu": null,
+   "rel_whole_lu": null,
+   "rms_dbfs": -77.2
+  },
+  {
+   "segment": "curious",
+   "from": 21.0,
+   "to": 51.37,
+   "target_lu": -2.5,
+   "level_lu": -2.45,
+   "rel_whole_lu": 0.5,
+   "rms_dbfs": -24.5
+  },
+  {
+   "segment": "settle",
+   "from": 51.37,
+   "to": 60.87,
+   "target_lu": -5.0,
+   "level_lu": -5.01,
+   "rel_whole_lu": -2.05,
+   "rms_dbfs": -26.5
+  },
+  {
+   "segment": "playful",
+   "from": 60.87,
+   "to": 81.83,
+   "target_lu": -1.0,
+   "level_lu": -1.0,
+   "rel_whole_lu": 1.96,
+   "rms_dbfs": -23.2
+  },
+  {
+   "segment": "light",
+   "from": 81.83,
+   "to": 95.8,
+   "target_lu": -4.5,
+   "level_lu": -4.59,
+   "rel_whole_lu": -1.63,
+   "rms_dbfs": -27.6
+  },
+  {
+   "segment": "echo",
+   "from": 95.8,
+   "to": 113.13,
+   "target_lu": -7.0,
+   "level_lu": -7.0,
+   "rel_whole_lu": -4.05,
+   "rms_dbfs": -29.5
+  },
+  {
+   "segment": "board",
+   "from": 113.13,
+   "to": 131.8,
+   "target_lu": -14.0,
+   "level_lu": -13.99,
+   "rel_whole_lu": -11.04,
+   "rms_dbfs": -36.2
+  },
+  {
+   "segment": "clock",
+   "from": 131.8,
+   "to": 184.2,
+   "target_lu": -3.0,
+   "level_lu": -3.0,
+   "rel_whole_lu": -0.04,
+   "rms_dbfs": -25.3
+  },
+  {
+   "segment": "resolve",
+   "from": 184.2,
+   "to": 189.73,
+   "target_lu": -4.0,
+   "level_lu": -3.99,
+   "rel_whole_lu": -1.03,
+   "rms_dbfs": -25.7
+  },
+  {
+   "segment": "museum",
+   "from": 189.73,
+   "to": 230.07,
+   "target_lu": -2.5,
+   "level_lu": -2.5,
+   "rel_whole_lu": 0.46,
+   "rms_dbfs": -24.5
+  },
+  {
+   "segment": "turn",
+   "from": 230.07,
+   "to": 236.8,
+   "target_lu": -6.0,
+   "level_lu": -6.07,
+   "rel_whole_lu": -3.11,
+   "rms_dbfs": -29.2
+  },
+  {
+   "segment": "nimble",
+   "from": 236.8,
+   "to": 281.13,
+   "target_lu": -1.5,
+   "level_lu": -1.5,
+   "rel_whole_lu": 1.46,
+   "rms_dbfs": -23.3
+  },
+  {
+   "segment": "lift",
+   "from": 281.13,
+   "to": 293.27,
+   "target_lu": -0.5,
+   "level_lu": -0.5,
+   "rel_whole_lu": 2.46,
+   "rms_dbfs": -22.4
+  },
+  {
+   "segment": "evidence",
+   "from": 293.27,
+   "to": 338.23,
+   "target_lu": -7.5,
+   "level_lu": -7.5,
+   "rel_whole_lu": -4.55,
+   "rms_dbfs": -29.6
+  },
+  {
+   "segment": "groove",
+   "from": 338.23,
+   "to": 366.3,
+   "target_lu": -3.0,
+   "level_lu": -3.0,
+   "rel_whole_lu": -0.05,
+   "rms_dbfs": -25.1
+  },
+  {
+   "segment": "groove_out",
+   "from": 366.3,
+   "to": 372.43,
+   "target_lu": -5.5,
+   "level_lu": -5.49,
+   "rel_whole_lu": -2.53,
+   "rms_dbfs": -27.0
+  },
+  {
+   "segment": "callback",
+   "from": 372.43,
+   "to": 375.1,
+   "target_lu": -6.0,
+   "level_lu": -6.0,
+   "rel_whole_lu": -3.05,
+   "rms_dbfs": -27.7
+  },
+  {
+   "segment": "build",
+   "from": 375.1,
+   "to": 383.1,
+   "target_lu": -2.0,
+   "level_lu": -2.01,
+   "rel_whole_lu": 0.95,
+   "rms_dbfs": -24.0
+  },
+  {
+   "segment": "hold",
+   "from": 383.1,
+   "to": 386.07,
+   "target_lu": -6.0,
+   "level_lu": -5.94,
+   "rel_whole_lu": -2.98,
+   "rms_dbfs": -27.9
+  },
+  {
+   "segment": "gag",
+   "from": 386.07,
+   "to": 390.57,
+   "target_lu": null,
+   "level_lu": null,
+   "rel_whole_lu": null,
+   "rms_dbfs": -240.0
+  },
+  {
+   "segment": "end",
+   "from": 390.57,
+   "to": 403.03,
+   "target_lu": -3.0,
+   "level_lu": -2.96,
+   "rel_whole_lu": -0.0,
+   "rms_dbfs": -25.5
+  }
+ ],
+ "reference_lufs": -20.0,
+ "windows": [
+  {
+   "label": "reveal: s03 \"And yet... this is real data\" (re-enters softly on s04)",
+   "kind": "drop",
+   "from": 9.27,
+   "to": 20.9,
+   "seconds": 11.63,
+   "rms_dbfs": -77.2,
+   "rms_dbfs_after_settle": -106.0,
+   "peak_dbfs": -46.7,
+   "rms_dbfs_4s_before": -27.0
+  },
+  {
+   "label": "J2: s10 \"simply visible\" (resumes on s11)",
+   "kind": "stop",
+   "from": 72.05,
+   "to": 73.33,
+   "seconds": 1.28,
+   "rms_dbfs": -240.0,
+   "rms_dbfs_after_settle": -240.0,
+   "peak_dbfs": -240.0,
+   "rms_dbfs_4s_before": -23.0
+  },
+  {
+   "label": "J3: s20 \"one place\" (sound effect only, resumes on s21)",
+   "kind": "stop",
+   "from": 159.45,
+   "to": 161.23,
+   "seconds": 1.78,
+   "rms_dbfs": -240.0,
+   "rms_dbfs_after_settle": -240.0,
+   "peak_dbfs": -240.0,
+   "rms_dbfs_4s_before": -26.1
+  },
+  {
+   "label": "s42 \"slow down\" (the groove brakes, resumes on s43)",
+   "kind": "dip",
+   "from": 351.97,
+   "to": 354.83,
+   "seconds": 2.87,
+   "rms_dbfs": -37.3,
+   "rms_dbfs_after_settle": -38.5,
+   "peak_dbfs": -19.5,
+   "rms_dbfs_4s_before": -24.2
+  },
+  {
+   "label": "J4: silent gag after s47 (complete stop until s48)",
+   "kind": "stop",
+   "from": 386.07,
+   "to": 390.47,
+   "seconds": 4.4,
+   "rms_dbfs": -240.0,
+   "rms_dbfs_after_settle": -240.0,
+   "peak_dbfs": -240.0,
+   "rms_dbfs_4s_before": -26.0
+  }
+ ],
+ "notes": {
+  "events": {
+   "pizz": 635,
+   "marimba": 582,
+   "vibes": 131,
+   "glock": 26,
+   "guitar": 124,
+   "harp": 18,
+   "bass": 163,
+   "bassoon": 23,
+   "clarinet": 22,
+   "strings": 117,
+   "drums": 809
+  },
+  "max_melodic_note": 83,
+  "glock_notes": [
+   108,
+   110
+  ]
+ }
+}
