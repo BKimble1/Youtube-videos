@@ -36,3 +36,4 @@ research/*/evidence/*.html
 # scene builders' working QA (stills, clips, sheets) changes continuously while scenes are built; the final review
 # sheets are added explicitly (git add -f) when the scene is merged
 qa/scenes/
+qa/cuts/*/
