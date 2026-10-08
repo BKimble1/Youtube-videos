@@ -1,0 +1,11 @@
+{
+ "seed": 0,
+ "torch": "2.14.1+cu130",
+ "numpy": "2.5.3",
+ "python": "3.13.16",
+ "cpu_threads": 4,
+ "phases": {
+  "total_script_s": 1.1219287849999091
+ },
+ "per_frame_s": []
+}

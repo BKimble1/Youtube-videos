@@ -1,0 +1,2414 @@
+{
+ "_title": "Video 02 declared room layout (plan view, metres) and derived timing geometry",
+ "_status": "ILLUSTRATIVE: physically sensible, built from the authors' demo guidance; not a paper experiment",
+ "_generated_by": "research/geometry/geometry_check.py",
+ "coordinates": "x right along relay wall; z = distance from relay wall toward viewer (wall z=0); h = height",
+ "room": {
+  "x_min": 0.0,
+  "x_max": 4.0,
+  "z_min": 0.0,
+  "z_max": 3.0,
+  "wall_height": 2.5
+ },
+ "relay_wall": {
+  "from": [
+   0.0,
+   0.0
+  ],
+  "to": [
+   4.0,
+   0.0
+  ],
+  "surface": "matte, light-coloured (README: ideal relay wall)"
+ },
+ "occluder": {
+  "from": [
+   2.0,
+   0.65
+  ],
+  "to": [
+   2.0,
+   2.15
+  ],
+  "thickness": 0.04,
+  "height": 1.7,
+  "gap_to_wall_m": 0.65,
+  "description": "free-standing folding screen perpendicular to the wall; light passes through the gap"
+ },
+ "heights": {
+  "sensor_h": 1.2,
+  "torso_h": 1.2,
+  "hider_head_top_h": 1.75,
+  "note": "plan is a horizontal slice at ~1.2 m; in 3D, circles become hemispheres in front of the wall"
+ },
+ "sensor": {
+  "frame_A": {
+   "S": [
+    1.65,
+    0.9
+   ],
+   "aim_x": 1.85,
+   "axis_angle_deg": 12.529,
+   "edge_angles_deg": [
+    -9.9712,
+    1.2788,
+    12.5288,
+    23.7788,
+    35.0288
+   ],
+   "centre_angles_deg": [
+    -4.3462,
+    6.9038,
+    18.1538,
+    29.4038
+   ],
+   "edge_x": [
+    1.4918,
+    1.6701,
+    1.85,
+    2.0465,
+    2.2809
+   ],
+   "centre_x": [
+    1.5816,
+    1.759,
+    1.9451,
+    2.1572
+   ]
+  },
+  "frame_B1_moved": {
+   "S": [
+    1.25,
+    0.9
+   ],
+   "aim_x": 1.45,
+   "axis_angle_deg": 12.529,
+   "edge_angles_deg": [
+    -9.9712,
+    1.2788,
+    12.5288,
+    23.7788,
+    35.0288
+   ],
+   "centre_angles_deg": [
+    -4.3462,
+    6.9038,
+    18.1538,
+    29.4038
+   ],
+   "edge_x": [
+    1.0918,
+    1.2701,
+    1.45,
+    1.6465,
+    1.8809
+   ],
+   "centre_x": [
+    1.1816,
+    1.359,
+    1.5451,
+    1.7572
+   ]
+  },
+  "model": "one row of a 4x4-zone, 45-degree flood sensor (VL53L8-like); zone centres = sampled wall points"
+ },
+ "hidden_person": {
+  "H_A": [
+   2.6,
+   0.85
+  ],
+  "H_B_moved": [
+   2.7,
+   0.9
+  ],
+  "dt_A_to_B2_s": 0.1,
+  "speed_m_per_s": 1.12,
+  "body_radius_m": 0.22
+ },
+ "wall_points": {
+  "frame_A": [
+   [
+    1.5816,
+    0.0
+   ],
+   [
+    1.759,
+    0.0
+   ],
+   [
+    1.9451,
+    0.0
+   ],
+   [
+    2.1572,
+    0.0
+   ]
+  ],
+  "frame_B1": [
+   [
+    1.1816,
+    0.0
+   ],
+   [
+    1.359,
+    0.0
+   ],
+   [
+    1.5451,
+    0.0
+   ],
+   [
+    1.7572,
+    0.0
+   ]
+  ]
+ },
+ "band_half_width_m": {
+  "default_1_bin": 0.0375,
+  "alt_2_bins": 0.0749,
+  "label": "illustrative: one 250 ps bin of one-way distance; not a measured precision"
+ },
+ "confocal": {
+  "frame_A_H_A": [
+   {
+    "W": [
+     1.5816,
+     0.0
+    ],
+    "SW_m": 0.9026,
+    "WH_m": 1.3265,
+    "path_L_m": 4.4582,
+    "arrival_t_ns": 14.871,
+    "first_bounce_t_ns": 6.021,
+    "delay_after_first_bounce_ns": 8.85,
+    "delay_after_first_bounce_bins_250ps": 35.4,
+    "arrival_abs_bin_250ps": 59.48,
+    "circle_radius_m": 1.3265,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     180.0
+    ]
+   },
+   {
+    "W": [
+     1.759,
+     0.0
+    ],
+    "SW_m": 0.9066,
+    "WH_m": 1.1958,
+    "path_L_m": 4.2047,
+    "arrival_t_ns": 14.025,
+    "first_bounce_t_ns": 6.048,
+    "delay_after_first_bounce_ns": 7.977,
+    "delay_after_first_bounce_bins_250ps": 31.91,
+    "arrival_abs_bin_250ps": 56.1,
+    "circle_radius_m": 1.1958,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     180.0
+    ]
+   },
+   {
+    "W": [
+     1.9451,
+     0.0
+    ],
+    "SW_m": 0.9471,
+    "WH_m": 1.073,
+    "path_L_m": 4.0404,
+    "arrival_t_ns": 13.477,
+    "first_bounce_t_ns": 6.319,
+    "delay_after_first_bounce_ns": 7.158,
+    "delay_after_first_bounce_bins_250ps": 28.63,
+    "arrival_abs_bin_250ps": 53.91,
+    "circle_radius_m": 1.073,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     180.0
+    ]
+   },
+   {
+    "W": [
+     2.1572,
+     0.0
+    ],
+    "SW_m": 1.0331,
+    "WH_m": 0.9584,
+    "path_L_m": 3.983,
+    "arrival_t_ns": 13.286,
+    "first_bounce_t_ns": 6.892,
+    "delay_after_first_bounce_ns": 6.394,
+    "delay_after_first_bounce_bins_250ps": 25.58,
+    "arrival_abs_bin_250ps": 53.14,
+    "circle_radius_m": 0.9584,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     180.0
+    ]
+   }
+  ],
+  "frame_A_H_B": [
+   {
+    "W": [
+     1.5816,
+     0.0
+    ],
+    "SW_m": 0.9026,
+    "WH_m": 1.4356,
+    "path_L_m": 4.6763,
+    "arrival_t_ns": 15.598,
+    "first_bounce_t_ns": 6.021,
+    "delay_after_first_bounce_ns": 9.577,
+    "delay_after_first_bounce_bins_250ps": 38.31,
+    "arrival_abs_bin_250ps": 62.39,
+    "circle_radius_m": 1.4356,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     180.0
+    ]
+   },
+   {
+    "W": [
+     1.759,
+     0.0
+    ],
+    "SW_m": 0.9066,
+    "WH_m": 1.3021,
+    "path_L_m": 4.4174,
+    "arrival_t_ns": 14.735,
+    "first_bounce_t_ns": 6.048,
+    "delay_after_first_bounce_ns": 8.687,
+    "delay_after_first_bounce_bins_250ps": 34.75,
+    "arrival_abs_bin_250ps": 58.94,
+    "circle_radius_m": 1.3021,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     180.0
+    ]
+   },
+   {
+    "W": [
+     1.9451,
+     0.0
+    ],
+    "SW_m": 0.9471,
+    "WH_m": 1.1747,
+    "path_L_m": 4.2437,
+    "arrival_t_ns": 14.155,
+    "first_bounce_t_ns": 6.319,
+    "delay_after_first_bounce_ns": 7.837,
+    "delay_after_first_bounce_bins_250ps": 31.35,
+    "arrival_abs_bin_250ps": 56.62,
+    "circle_radius_m": 1.1747,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     180.0
+    ]
+   },
+   {
+    "W": [
+     2.1572,
+     0.0
+    ],
+    "SW_m": 1.0331,
+    "WH_m": 1.051,
+    "path_L_m": 4.1682,
+    "arrival_t_ns": 13.904,
+    "first_bounce_t_ns": 6.892,
+    "delay_after_first_bounce_ns": 7.012,
+    "delay_after_first_bounce_bins_250ps": 28.05,
+    "arrival_abs_bin_250ps": 55.61,
+    "circle_radius_m": 1.051,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     180.0
+    ]
+   }
+  ],
+  "frame_B1_H_A": [
+   {
+    "W": [
+     1.1816,
+     0.0
+    ],
+    "SW_m": 0.9026,
+    "WH_m": 1.6536,
+    "path_L_m": 5.1124,
+    "arrival_t_ns": 17.053,
+    "first_bounce_t_ns": 6.021,
+    "delay_after_first_bounce_ns": 11.032,
+    "delay_after_first_bounce_bins_250ps": 44.13,
+    "arrival_abs_bin_250ps": 68.21,
+    "circle_radius_m": 1.6536,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     135.5
+    ]
+   },
+   {
+    "W": [
+     1.359,
+     0.0
+    ],
+    "SW_m": 0.9066,
+    "WH_m": 1.5042,
+    "path_L_m": 4.8216,
+    "arrival_t_ns": 16.083,
+    "first_bounce_t_ns": 6.048,
+    "delay_after_first_bounce_ns": 10.035,
+    "delay_after_first_bounce_bins_250ps": 40.14,
+    "arrival_abs_bin_250ps": 64.33,
+    "circle_radius_m": 1.5042,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     154.5
+    ]
+   },
+   {
+    "W": [
+     1.5451,
+     0.0
+    ],
+    "SW_m": 0.9471,
+    "WH_m": 1.3547,
+    "path_L_m": 4.6038,
+    "arrival_t_ns": 15.357,
+    "first_bounce_t_ns": 6.319,
+    "delay_after_first_bounce_ns": 9.038,
+    "delay_after_first_bounce_bins_250ps": 36.15,
+    "arrival_abs_bin_250ps": 61.43,
+    "circle_radius_m": 1.3547,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     180.0
+    ]
+   },
+   {
+    "W": [
+     1.7572,
+     0.0
+    ],
+    "SW_m": 1.0331,
+    "WH_m": 1.197,
+    "path_L_m": 4.4602,
+    "arrival_t_ns": 14.877,
+    "first_bounce_t_ns": 6.892,
+    "delay_after_first_bounce_ns": 7.986,
+    "delay_after_first_bounce_bins_250ps": 31.94,
+    "arrival_abs_bin_250ps": 59.51,
+    "circle_radius_m": 1.197,
+    "circle_radius_check_equals_WH": true,
+    "arc_angles_deg_in_room": [
+     0.25,
+     180.0
+    ]
+   }
+  ]
+ },
+ "non_confocal_example": {
+  "illumination_point_W1": [
+   1.5815989266960446,
+   0.0
+  ],
+  "detection_point_W2": [
+   2.157202741836057,
+   0.0
+  ],
+  "path_L_m": 4.2206,
+  "arrival_t_ns": 14.078,
+  "focal_sum_m (= c t - |SW1| - |W2S|)": 2.2849,
+  "ellipse_centre": [
+   1.8694,
+   0.0
+  ],
+  "semi_major_a_m (along the wall)": 1.1425,
+  "semi_minor_b_m (perpendicular to the wall)": 1.1056,
+  "half_focal_distance_m": 0.2878,
+  "eccentricity": 0.2519,
+  "H_on_ellipse_check (should be 1)": 1.0,
+  "note": "Only the half with z > 0 is physical. With foci only 0.59 m apart the ellipse is nearly a circle."
+ },
+ "mirror_ambiguity": {
+  "H_A_mirror_behind_wall": [
+   2.6,
+   -0.85
+  ],
+  "note": "circles centred on the wall line cross at H and at its mirror image behind the wall; the wall itself rules the mirror out (in 3D: mirror across the wall plane)"
+ },
+ "visibility_wedge_through_gap": {
+  "S_A": {
+   "line_through_gap_edge": [
+    [
+     1.65,
+     0.9
+    ],
+    [
+     2.0,
+     0.65
+    ]
+   ],
+   "z_limit_at_x_2.4": 0.364,
+   "z_limit_at_H_A_x": 0.221,
+   "meaning": "on the hidden side, S can see only points with z below this value (close to the wall)"
+  },
+  "S_B": {
+   "line_through_gap_edge": [
+    [
+     1.25,
+     0.9
+    ],
+    [
+     2.0,
+     0.65
+    ]
+   ],
+   "z_limit_at_x_2.4": 0.517,
+   "z_limit_at_H_A_x": 0.45,
+   "meaning": "on the hidden side, S can see only points with z below this value (close to the wall)"
+  }
+ },
+ "regions": {
+  "1bin_3.75cm": {
+   "frameA_1_wall_points": {
+    "area_m2": 0.3108,
+    "cells": 3108,
+    "empty": false,
+    "centroid": [
+     1.5825,
+     0.8448
+    ],
+    "bbox_x": [
+     0.225,
+     2.945
+    ],
+    "bbox_z": [
+     0.005,
+     1.355
+    ],
+    "length_along_major_m": 2.72,
+    "width_along_minor_m": 1.351,
+    "major_axis_angle_deg_from_x": 180.0,
+    "truth_inside": true,
+    "centroid_to_truth_m": 1.0175,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1"
+    ],
+    "aperture_span_m": 0.0,
+    "fraction_of_region_hidden_from_S": 0.397
+   },
+   "frameA_2_wall_points": {
+    "area_m2": 0.0664,
+    "cells": 664,
+    "empty": false,
+    "centroid": [
+     2.6519,
+     0.7011
+    ],
+    "bbox_x": [
+     2.095,
+     2.945
+    ],
+    "bbox_z": [
+     0.005,
+     1.185
+    ],
+    "length_along_major_m": 1.453,
+    "width_along_minor_m": 0.278,
+    "major_axis_angle_deg_from_x": 123.7,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1577,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A2"
+    ],
+    "aperture_span_m": 0.1774,
+    "fraction_of_region_hidden_from_S": 1.0
+   },
+   "frameA_3_wall_points": {
+    "area_m2": 0.0267,
+    "cells": 267,
+    "empty": false,
+    "centroid": [
+     2.6123,
+     0.8254
+    ],
+    "bbox_x": [
+     2.365,
+     2.835
+    ],
+    "bbox_z": [
+     0.535,
+     1.025
+    ],
+    "length_along_major_m": 0.679,
+    "width_along_minor_m": 0.087,
+    "major_axis_angle_deg_from_x": 134.2,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0275,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A2",
+     "W_A3"
+    ],
+    "aperture_span_m": 0.3635,
+    "fraction_of_region_hidden_from_S": 1.0
+   },
+   "frameA_4_wall_points": {
+    "area_m2": 0.0145,
+    "cells": 145,
+    "empty": false,
+    "centroid": [
+     2.6039,
+     0.8436
+    ],
+    "bbox_x": [
+     2.465,
+     2.735
+    ],
+    "bbox_z": [
+     0.725,
+     0.945
+    ],
+    "length_along_major_m": 0.348,
+    "width_along_minor_m": 0.07,
+    "major_axis_angle_deg_from_x": 140.5,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0075,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A2",
+     "W_A3",
+     "W_A4"
+    ],
+    "aperture_span_m": 0.5756,
+    "fraction_of_region_hidden_from_S": 1.0
+   },
+   "frameA_outer_pair_only": {
+    "area_m2": 0.0145,
+    "cells": 145,
+    "empty": false,
+    "centroid": [
+     2.6039,
+     0.8436
+    ],
+    "bbox_x": [
+     2.465,
+     2.735
+    ],
+    "bbox_z": [
+     0.725,
+     0.945
+    ],
+    "length_along_major_m": 0.348,
+    "width_along_minor_m": 0.07,
+    "major_axis_angle_deg_from_x": 140.5,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0075,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A4"
+    ],
+    "meaning": "outer pair only: in a pure band-intersection picture the inner points add almost nothing; the spread of the wall points (aperture span), not their count, sets the crossing angle",
+    "crossing_estimate": {
+     "crossing_angle_deg": 22.63,
+     "rhombus_long_diagonal_m": 0.382,
+     "rhombus_short_diagonal_m": 0.076,
+     "formula": "long = 2*delta/sin(alpha); on the bisector sin(alpha) = w/sqrt(w^2+z^2), w = half the wall-point spread, z = distance from the wall"
+    }
+   },
+   "frameB1_sensor_moved_alone": {
+    "area_m2": 0.023,
+    "cells": 230,
+    "empty": false,
+    "centroid": [
+     2.6085,
+     0.8295
+    ],
+    "bbox_x": [
+     2.425,
+     2.775
+    ],
+    "bbox_z": [
+     0.565,
+     1.035
+    ],
+    "length_along_major_m": 0.586,
+    "width_along_minor_m": 0.07,
+    "major_axis_angle_deg_from_x": 126.6,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0222,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_B1",
+     "W_B2",
+     "W_B3",
+     "W_B4"
+    ]
+   },
+   "frameA_plus_B1_sensor_moved_fused": {
+    "area_m2": 0.0106,
+    "cells": 106,
+    "empty": false,
+    "centroid": [
+     2.6012,
+     0.8467
+    ],
+    "bbox_x": [
+     2.515,
+     2.685
+    ],
+    "bbox_z": [
+     0.755,
+     0.925
+    ],
+    "length_along_major_m": 0.24,
+    "width_along_minor_m": 0.071,
+    "major_axis_angle_deg_from_x": 136.2,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0035,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": "W_A1..4 + W_B1..4 (object static, plain intersection is valid)"
+   },
+   "frameB2_object_moved_alone": {
+    "area_m2": 0.0168,
+    "cells": 168,
+    "empty": false,
+    "centroid": [
+     2.7026,
+     0.8936
+    ],
+    "bbox_x": [
+     2.545,
+     2.845
+    ],
+    "bbox_z": [
+     0.745,
+     1.015
+    ],
+    "length_along_major_m": 0.404,
+    "width_along_minor_m": 0.071,
+    "major_axis_angle_deg_from_x": 138.6,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0069,
+    "blobs_after_2cm_merge": 1
+   },
+   "frameA_and_B2_naive_intersection": {
+    "area_m2": 0.0,
+    "cells": 0,
+    "empty": true,
+    "meaning": "plain intersection of frame A and frame B2 bands, wrongly assuming the person stood still"
+   },
+   "frameA_and_B2_plain_stacking_best_cells": {
+    "area_m2": 0.0405,
+    "cells": 405,
+    "empty": false,
+    "centroid": [
+     2.6684,
+     0.849
+    ],
+    "bbox_x": [
+     2.325,
+     2.965
+    ],
+    "bbox_z": [
+     0.495,
+     1.075
+    ],
+    "length_along_major_m": 0.856,
+    "width_along_minor_m": 0.199,
+    "major_axis_angle_deg_from_x": 140.6,
+    "blobs_after_2cm_merge": 1,
+    "max_bands_satisfied_of_8": 4,
+    "meaning": "plain averaging/stacking: best-agreeing cells; spans both positions (smear) when the person moved"
+   },
+   "frameA_then_B2_motion_compensated": {
+    "area_m2": 0.0168,
+    "cells": 168,
+    "empty": false,
+    "centroid": [
+     2.7026,
+     0.8936
+    ],
+    "bbox_x": [
+     2.545,
+     2.845
+    ],
+    "bbox_z": [
+     0.745,
+     1.015
+    ],
+    "length_along_major_m": 0.404,
+    "width_along_minor_m": 0.071,
+    "major_axis_angle_deg_from_x": 138.6,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0069,
+    "blobs_after_2cm_merge": 1,
+    "motion_prior_radius_m": 0.15000000000000002,
+    "meaning": "motion-compensated: move frame-A candidates by any step up to the motion-prior radius, then keep those consistent with frame-B2 bands (what a particle filter's predict+update does)"
+   }
+  },
+  "2bins_7.5cm": {
+   "frameA_1_wall_points": {
+    "area_m2": 0.6251,
+    "cells": 6251,
+    "empty": false,
+    "centroid": [
+     1.5816,
+     0.8454
+    ],
+    "bbox_x": [
+     0.185,
+     2.975
+    ],
+    "bbox_z": [
+     0.005,
+     1.395
+    ],
+    "length_along_major_m": 2.79,
+    "width_along_minor_m": 1.391,
+    "major_axis_angle_deg_from_x": 0.0,
+    "truth_inside": true,
+    "centroid_to_truth_m": 1.0184,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1"
+    ],
+    "aperture_span_m": 0.0,
+    "fraction_of_region_hidden_from_S": 0.394
+   },
+   "frameA_2_wall_points": {
+    "area_m2": 0.2054,
+    "cells": 2054,
+    "empty": false,
+    "centroid": [
+     2.5614,
+     0.749
+    ],
+    "bbox_x": [
+     1.565,
+     2.975
+    ],
+    "bbox_z": [
+     0.005,
+     1.265
+    ],
+    "length_along_major_m": 1.872,
+    "width_along_minor_m": 0.572,
+    "major_axis_angle_deg_from_x": 131.9,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1081,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A2"
+    ],
+    "aperture_span_m": 0.1774,
+    "fraction_of_region_hidden_from_S": 0.922
+   },
+   "frameA_3_wall_points": {
+    "area_m2": 0.1192,
+    "cells": 1192,
+    "empty": false,
+    "centroid": [
+     2.6595,
+     0.7116
+    ],
+    "bbox_x": [
+     2.115,
+     2.975
+    ],
+    "bbox_z": [
+     0.005,
+     1.135
+    ],
+    "length_along_major_m": 1.42,
+    "width_along_minor_m": 0.304,
+    "major_axis_angle_deg_from_x": 125.8,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1506,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A2",
+     "W_A3"
+    ],
+    "aperture_span_m": 0.3635,
+    "fraction_of_region_hidden_from_S": 1.0
+   },
+   "frameA_4_wall_points": {
+    "area_m2": 0.0605,
+    "cells": 605,
+    "empty": false,
+    "centroid": [
+     2.6157,
+     0.8227
+    ],
+    "bbox_x": [
+     2.315,
+     2.885
+    ],
+    "bbox_z": [
+     0.505,
+     1.015
+    ],
+    "length_along_major_m": 0.765,
+    "width_along_minor_m": 0.144,
+    "major_axis_angle_deg_from_x": 138.6,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0315,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A2",
+     "W_A3",
+     "W_A4"
+    ],
+    "aperture_span_m": 0.5756,
+    "fraction_of_region_hidden_from_S": 1.0
+   },
+   "frameA_outer_pair_only": {
+    "area_m2": 0.0605,
+    "cells": 605,
+    "empty": false,
+    "centroid": [
+     2.6157,
+     0.8227
+    ],
+    "bbox_x": [
+     2.315,
+     2.885
+    ],
+    "bbox_z": [
+     0.505,
+     1.015
+    ],
+    "length_along_major_m": 0.765,
+    "width_along_minor_m": 0.144,
+    "major_axis_angle_deg_from_x": 138.6,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0315,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A4"
+    ],
+    "meaning": "outer pair only: in a pure band-intersection picture the inner points add almost nothing; the spread of the wall points (aperture span), not their count, sets the crossing angle",
+    "crossing_estimate": {
+     "crossing_angle_deg": 22.63,
+     "rhombus_long_diagonal_m": 0.764,
+     "rhombus_short_diagonal_m": 0.153,
+     "formula": "long = 2*delta/sin(alpha); on the bisector sin(alpha) = w/sqrt(w^2+z^2), w = half the wall-point spread, z = distance from the wall"
+    }
+   },
+   "frameB1_sensor_moved_alone": {
+    "area_m2": 0.1051,
+    "cells": 1051,
+    "empty": false,
+    "centroid": [
+     2.6511,
+     0.7169
+    ],
+    "bbox_x": [
+     2.255,
+     2.905
+    ],
+    "bbox_z": [
+     0.005,
+     1.165
+    ],
+    "length_along_major_m": 1.33,
+    "width_along_minor_m": 0.238,
+    "major_axis_angle_deg_from_x": 119.1,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1426,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_B1",
+     "W_B2",
+     "W_B3",
+     "W_B4"
+    ]
+   },
+   "frameA_plus_B1_sensor_moved_fused": {
+    "area_m2": 0.0437,
+    "cells": 437,
+    "empty": false,
+    "centroid": [
+     2.6083,
+     0.8364
+    ],
+    "bbox_x": [
+     2.415,
+     2.795
+    ],
+    "bbox_z": [
+     0.615,
+     0.995
+    ],
+    "length_along_major_m": 0.537,
+    "width_along_minor_m": 0.142,
+    "major_axis_angle_deg_from_x": 135.4,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.016,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": "W_A1..4 + W_B1..4 (object static, plain intersection is valid)"
+   },
+   "frameB2_object_moved_alone": {
+    "area_m2": 0.0681,
+    "cells": 681,
+    "empty": false,
+    "centroid": [
+     2.7204,
+     0.863
+    ],
+    "bbox_x": [
+     2.395,
+     3.015
+    ],
+    "bbox_z": [
+     0.475,
+     1.095
+    ],
+    "length_along_major_m": 0.877,
+    "width_along_minor_m": 0.156,
+    "major_axis_angle_deg_from_x": 135.8,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0423,
+    "blobs_after_2cm_merge": 1
+   },
+   "frameA_and_B2_naive_intersection": {
+    "area_m2": 0.0065,
+    "cells": 65,
+    "empty": false,
+    "centroid": [
+     2.6507,
+     0.8733
+    ],
+    "bbox_x": [
+     2.565,
+     2.735
+    ],
+    "bbox_z": [
+     0.795,
+     0.945
+    ],
+    "length_along_major_m": 0.226,
+    "width_along_minor_m": 0.036,
+    "major_axis_angle_deg_from_x": 135.6,
+    "truth_inside": false,
+    "centroid_to_truth_m": 0.0561,
+    "blobs_after_2cm_merge": 1,
+    "meaning": "plain intersection of frame A and frame B2 bands, wrongly assuming the person stood still"
+   },
+   "frameA_and_B2_plain_stacking_best_cells": {
+    "area_m2": 0.0065,
+    "cells": 65,
+    "empty": false,
+    "centroid": [
+     2.6507,
+     0.8733
+    ],
+    "bbox_x": [
+     2.565,
+     2.735
+    ],
+    "bbox_z": [
+     0.795,
+     0.945
+    ],
+    "length_along_major_m": 0.226,
+    "width_along_minor_m": 0.036,
+    "major_axis_angle_deg_from_x": 135.6,
+    "blobs_after_2cm_merge": 1,
+    "max_bands_satisfied_of_8": 8,
+    "meaning": "plain averaging/stacking: best-agreeing cells; spans both positions (smear) when the person moved"
+   },
+   "frameA_then_B2_motion_compensated": {
+    "area_m2": 0.0681,
+    "cells": 681,
+    "empty": false,
+    "centroid": [
+     2.7204,
+     0.863
+    ],
+    "bbox_x": [
+     2.395,
+     3.015
+    ],
+    "bbox_z": [
+     0.475,
+     1.095
+    ],
+    "length_along_major_m": 0.877,
+    "width_along_minor_m": 0.156,
+    "major_axis_angle_deg_from_x": 135.8,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0423,
+    "blobs_after_2cm_merge": 1,
+    "motion_prior_radius_m": 0.15000000000000002,
+    "meaning": "motion-compensated: move frame-A candidates by any step up to the motion-prior radius, then keep those consistent with frame-B2 bands (what a particle filter's predict+update does)"
+   }
+  },
+  "half_pulse_18.7cm": {
+   "frameA_1_wall_points": {
+    "area_m2": 1.5606,
+    "cells": 15606,
+    "empty": false,
+    "centroid": [
+     1.5821,
+     0.8499
+    ],
+    "bbox_x": [
+     0.075,
+     3.095
+    ],
+    "bbox_z": [
+     0.005,
+     1.505
+    ],
+    "length_along_major_m": 3.02,
+    "width_along_minor_m": 1.5,
+    "major_axis_angle_deg_from_x": 180.0,
+    "truth_inside": true,
+    "centroid_to_truth_m": 1.0179,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1"
+    ],
+    "aperture_span_m": 0.0,
+    "fraction_of_region_hidden_from_S": 0.39
+   },
+   "frameA_2_wall_points": {
+    "area_m2": 0.908,
+    "cells": 9080,
+    "empty": false,
+    "centroid": [
+     2.086,
+     0.8346
+    ],
+    "bbox_x": [
+     0.385,
+     3.095
+    ],
+    "bbox_z": [
+     0.005,
+     1.375
+    ],
+    "length_along_major_m": 2.685,
+    "width_along_minor_m": 1.676,
+    "major_axis_angle_deg_from_x": 167.4,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.5142,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A2"
+    ],
+    "aperture_span_m": 0.1774,
+    "fraction_of_region_hidden_from_S": 0.608
+   },
+   "frameA_3_wall_points": {
+    "area_m2": 0.5493,
+    "cells": 5493,
+    "empty": false,
+    "centroid": [
+     2.5395,
+     0.7558
+    ],
+    "bbox_x": [
+     1.385,
+     3.095
+    ],
+    "bbox_z": [
+     0.005,
+     1.255
+    ],
+    "length_along_major_m": 2.018,
+    "width_along_minor_m": 0.803,
+    "major_axis_angle_deg_from_x": 137.5,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1119,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A2",
+     "W_A3"
+    ],
+    "aperture_span_m": 0.3635,
+    "fraction_of_region_hidden_from_S": 0.882
+   },
+   "frameA_4_wall_points": {
+    "area_m2": 0.3954,
+    "cells": 3954,
+    "empty": false,
+    "centroid": [
+     2.6488,
+     0.7098
+    ],
+    "bbox_x": [
+     1.865,
+     3.095
+    ],
+    "bbox_z": [
+     0.005,
+     1.145
+    ],
+    "length_along_major_m": 1.642,
+    "width_along_minor_m": 0.556,
+    "major_axis_angle_deg_from_x": 132.4,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1484,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A2",
+     "W_A3",
+     "W_A4"
+    ],
+    "aperture_span_m": 0.5756,
+    "fraction_of_region_hidden_from_S": 0.987
+   },
+   "frameA_outer_pair_only": {
+    "area_m2": 0.3954,
+    "cells": 3954,
+    "empty": false,
+    "centroid": [
+     2.6488,
+     0.7098
+    ],
+    "bbox_x": [
+     1.865,
+     3.095
+    ],
+    "bbox_z": [
+     0.005,
+     1.145
+    ],
+    "length_along_major_m": 1.642,
+    "width_along_minor_m": 0.556,
+    "major_axis_angle_deg_from_x": 132.4,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1484,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_A1",
+     "W_A4"
+    ],
+    "meaning": "outer pair only: in a pure band-intersection picture the inner points add almost nothing; the spread of the wall points (aperture span), not their count, sets the crossing angle",
+    "crossing_estimate": {
+     "crossing_angle_deg": 22.63,
+     "rhombus_long_diagonal_m": 1.91,
+     "rhombus_short_diagonal_m": 0.382,
+     "formula": "long = 2*delta/sin(alpha); on the bisector sin(alpha) = w/sqrt(w^2+z^2), w = half the wall-point spread, z = distance from the wall"
+    }
+   },
+   "frameB1_sensor_moved_alone": {
+    "area_m2": 0.4948,
+    "cells": 4948,
+    "empty": false,
+    "centroid": [
+     2.5788,
+     0.7532
+    ],
+    "bbox_x": [
+     1.695,
+     3.015
+    ],
+    "bbox_z": [
+     0.005,
+     1.375
+    ],
+    "length_along_major_m": 1.887,
+    "width_along_minor_m": 0.602,
+    "major_axis_angle_deg_from_x": 126.5,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0991,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": [
+     "W_B1",
+     "W_B2",
+     "W_B3",
+     "W_B4"
+    ]
+   },
+   "frameA_plus_B1_sensor_moved_fused": {
+    "area_m2": 0.306,
+    "cells": 3060,
+    "empty": false,
+    "centroid": [
+     2.6584,
+     0.7232
+    ],
+    "bbox_x": [
+     2.115,
+     3.015
+    ],
+    "bbox_z": [
+     0.005,
+     1.145
+    ],
+    "length_along_major_m": 1.452,
+    "width_along_minor_m": 0.42,
+    "major_axis_angle_deg_from_x": 126.4,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1396,
+    "blobs_after_2cm_merge": 1,
+    "wall_points_used": "W_A1..4 + W_B1..4 (object static, plain intersection is valid)"
+   },
+   "frameB2_object_moved_alone": {
+    "area_m2": 0.4334,
+    "cells": 4334,
+    "empty": false,
+    "centroid": [
+     2.7416,
+     0.753
+    ],
+    "bbox_x": [
+     1.915,
+     3.195
+    ],
+    "bbox_z": [
+     0.005,
+     1.235
+    ],
+    "length_along_major_m": 1.747,
+    "width_along_minor_m": 0.576,
+    "major_axis_angle_deg_from_x": 131.2,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1527,
+    "blobs_after_2cm_merge": 1
+   },
+   "frameA_and_B2_naive_intersection": {
+    "area_m2": 0.2365,
+    "cells": 2365,
+    "empty": false,
+    "centroid": [
+     2.7116,
+     0.738
+    ],
+    "bbox_x": [
+     2.105,
+     3.095
+    ],
+    "bbox_z": [
+     0.005,
+     1.145
+    ],
+    "length_along_major_m": 1.503,
+    "width_along_minor_m": 0.394,
+    "major_axis_angle_deg_from_x": 128.8,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1624,
+    "blobs_after_2cm_merge": 1,
+    "meaning": "plain intersection of frame A and frame B2 bands, wrongly assuming the person stood still"
+   },
+   "frameA_and_B2_plain_stacking_best_cells": {
+    "area_m2": 0.2365,
+    "cells": 2365,
+    "empty": false,
+    "centroid": [
+     2.7116,
+     0.738
+    ],
+    "bbox_x": [
+     2.105,
+     3.095
+    ],
+    "bbox_z": [
+     0.005,
+     1.145
+    ],
+    "length_along_major_m": 1.503,
+    "width_along_minor_m": 0.394,
+    "major_axis_angle_deg_from_x": 128.8,
+    "blobs_after_2cm_merge": 1,
+    "max_bands_satisfied_of_8": 8,
+    "meaning": "plain averaging/stacking: best-agreeing cells; spans both positions (smear) when the person moved"
+   },
+   "frameA_then_B2_motion_compensated": {
+    "area_m2": 0.4334,
+    "cells": 4334,
+    "empty": false,
+    "centroid": [
+     2.7416,
+     0.753
+    ],
+    "bbox_x": [
+     1.915,
+     3.195
+    ],
+    "bbox_z": [
+     0.005,
+     1.235
+    ],
+    "length_along_major_m": 1.747,
+    "width_along_minor_m": 0.576,
+    "major_axis_angle_deg_from_x": 131.2,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.1527,
+    "blobs_after_2cm_merge": 1,
+    "motion_prior_radius_m": 0.15000000000000002,
+    "meaning": "motion-compensated: move frame-A candidates by any step up to the motion-prior radius, then keep those consistent with frame-B2 bands (what a particle filter's predict+update does)"
+   }
+  }
+ },
+ "aperture_sweep_1bin_bands": [
+  {
+   "frame": 0,
+   "S": [
+    1.65,
+    0.9
+   ],
+   "aim_x": 1.85,
+   "wall_points_x": [
+    1.5816,
+    1.759,
+    1.9451,
+    2.1572
+   ],
+   "SW_m": [
+    0.903,
+    0.907,
+    0.947,
+    1.033
+   ],
+   "WH_m": [
+    1.327,
+    1.196,
+    1.073,
+    0.958
+   ],
+   "min_clearance_m": 0.123,
+   "cumulative_aperture_span_m": 0.576,
+   "cumulative_region": {
+    "area_m2": 0.0145,
+    "cells": 145,
+    "empty": false,
+    "centroid": [
+     2.6039,
+     0.8436
+    ],
+    "bbox_x": [
+     2.465,
+     2.735
+    ],
+    "bbox_z": [
+     0.725,
+     0.945
+    ],
+    "length_along_major_m": 0.348,
+    "width_along_minor_m": 0.07,
+    "major_axis_angle_deg_from_x": 140.5,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0075,
+    "blobs_after_2cm_merge": 1
+   },
+   "crossing_estimate_outermost_pair": {
+    "crossing_angle_deg": 22.63,
+    "rhombus_long_diagonal_m": 0.382,
+    "rhombus_short_diagonal_m": 0.076,
+    "formula": "long = 2*delta/sin(alpha); on the bisector sin(alpha) = w/sqrt(w^2+z^2), w = half the wall-point spread, z = distance from the wall"
+   }
+  },
+  {
+   "frame": 1,
+   "S": [
+    1.45,
+    0.9
+   ],
+   "aim_x": 1.65,
+   "wall_points_x": [
+    1.3816,
+    1.559,
+    1.7451,
+    1.9572
+   ],
+   "SW_m": [
+    0.903,
+    0.907,
+    0.947,
+    1.033
+   ],
+   "WH_m": [
+    1.486,
+    1.344,
+    1.206,
+    1.066
+   ],
+   "min_clearance_m": 0.159,
+   "cumulative_aperture_span_m": 0.776,
+   "cumulative_region": {
+    "area_m2": 0.0123,
+    "cells": 123,
+    "empty": false,
+    "centroid": [
+     2.6032,
+     0.8447
+    ],
+    "bbox_x": [
+     2.495,
+     2.715
+    ],
+    "bbox_z": [
+     0.735,
+     0.935
+    ],
+    "length_along_major_m": 0.297,
+    "width_along_minor_m": 0.071,
+    "major_axis_angle_deg_from_x": 138.1,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0062,
+    "blobs_after_2cm_merge": 1
+   },
+   "crossing_estimate_outermost_pair": {
+    "crossing_angle_deg": 27.58,
+    "rhombus_long_diagonal_m": 0.314,
+    "rhombus_short_diagonal_m": 0.077,
+    "formula": "long = 2*delta/sin(alpha); on the bisector sin(alpha) = w/sqrt(w^2+z^2), w = half the wall-point spread, z = distance from the wall"
+   }
+  },
+  {
+   "frame": 2,
+   "S": [
+    1.25,
+    0.9
+   ],
+   "aim_x": 1.45,
+   "wall_points_x": [
+    1.1816,
+    1.359,
+    1.5451,
+    1.7572
+   ],
+   "SW_m": [
+    0.903,
+    0.907,
+    0.947,
+    1.033
+   ],
+   "WH_m": [
+    1.654,
+    1.504,
+    1.355,
+    1.197
+   ],
+   "min_clearance_m": 0.117,
+   "cumulative_aperture_span_m": 0.976,
+   "cumulative_region": {
+    "area_m2": 0.0106,
+    "cells": 106,
+    "empty": false,
+    "centroid": [
+     2.6012,
+     0.8467
+    ],
+    "bbox_x": [
+     2.515,
+     2.685
+    ],
+    "bbox_z": [
+     0.755,
+     0.925
+    ],
+    "length_along_major_m": 0.24,
+    "width_along_minor_m": 0.071,
+    "major_axis_angle_deg_from_x": 136.2,
+    "truth_inside": true,
+    "centroid_to_truth_m": 0.0035,
+    "blobs_after_2cm_merge": 1
+   },
+   "crossing_estimate_outermost_pair": {
+    "crossing_angle_deg": 31.55,
+    "rhombus_long_diagonal_m": 0.276,
+    "rhombus_short_diagonal_m": 0.078,
+    "formula": "long = 2*delta/sin(alpha); on the bisector sin(alpha) = w/sqrt(w^2+z^2), w = half the wall-point spread, z = distance from the wall"
+   }
+  }
+ ],
+ "flood_illumination_zone_spreads_frame_A": [
+  {
+   "zone_index": 0,
+   "zone_patch_x": [
+    1.4918,
+    1.6701
+   ],
+   "lit_patch_x": [
+    1.4918,
+    2.2809
+   ],
+   "zone_centre_x": 1.5816,
+   "confocal_model_extra_path_m": 2.6502,
+   "confocal_model_note": "2|SWc| + 2|WcH| minus the zone's first-bounce path; ~= 2|WcH| (what the code models)",
+   "diffuse_point_target": {
+    "median_minus_confocal_model_m": -0.1825,
+    "earliest_minus_confocal_model_m": -0.3069,
+    "extra_path_min_m": 2.3433,
+    "extra_path_max_m": 2.8129,
+    "extra_path_p10_m": 2.3761,
+    "extra_path_p50_m": 2.4677,
+    "extra_path_p90_m": 2.6358,
+    "p10_p90_spread_m": 0.2598,
+    "p10_p90_spread_ns": 0.866,
+    "p10_p90_spread_bins_250ps": 3.47
+   },
+   "ideal_retroreflector_point_target": {
+    "extra_path_p10_m": 2.5329,
+    "extra_path_p50_m": 2.6367,
+    "extra_path_p90_m": 2.771,
+    "p10_p90_spread_m": 0.2382,
+    "median_minus_confocal_model_m": -0.0135,
+    "extra_path_min_m": 2.5121,
+    "extra_path_max_m": 2.8129,
+    "spread_m": 0.3008,
+    "spread_bins_250ps": 4.01
+   }
+  },
+  {
+   "zone_index": 1,
+   "zone_patch_x": [
+    1.6701,
+    1.85
+   ],
+   "lit_patch_x": [
+    1.4918,
+    2.2809
+   ],
+   "zone_centre_x": 1.759,
+   "confocal_model_extra_path_m": 2.3888,
+   "confocal_model_note": "2|SWc| + 2|WcH| minus the zone's first-bounce path; ~= 2|WcH| (what the code models)",
+   "diffuse_point_target": {
+    "median_minus_confocal_model_m": -0.0608,
+    "earliest_minus_confocal_model_m": -0.1579,
+    "extra_path_min_m": 2.2309,
+    "extra_path_max_m": 2.6547,
+    "extra_path_p10_m": 2.2562,
+    "extra_path_p50_m": 2.328,
+    "extra_path_p90_m": 2.501,
+    "p10_p90_spread_m": 0.2448,
+    "p10_p90_spread_ns": 0.817,
+    "p10_p90_spread_bins_250ps": 3.27
+   },
+   "ideal_retroreflector_point_target": {
+    "extra_path_p10_m": 2.3106,
+    "extra_path_p50_m": 2.3836,
+    "extra_path_p90_m": 2.4792,
+    "p10_p90_spread_m": 0.1686,
+    "median_minus_confocal_model_m": -0.0053,
+    "extra_path_min_m": 2.2952,
+    "extra_path_max_m": 2.5043,
+    "spread_m": 0.2091,
+    "spread_bins_250ps": 2.79
+   }
+  },
+  {
+   "zone_index": 2,
+   "zone_patch_x": [
+    1.85,
+    2.0465
+   ],
+   "lit_patch_x": [
+    1.4918,
+    2.2809
+   ],
+   "zone_centre_x": 1.9451,
+   "confocal_model_extra_path_m": 2.145,
+   "confocal_model_note": "2|SWc| + 2|WcH| minus the zone's first-bounce path; ~= 2|WcH| (what the code models)",
+   "diffuse_point_target": {
+    "median_minus_confocal_model_m": 0.0145,
+    "earliest_minus_confocal_model_m": -0.0513,
+    "extra_path_min_m": 2.0936,
+    "extra_path_max_m": 2.4706,
+    "extra_path_p10_m": 2.1086,
+    "extra_path_p50_m": 2.1594,
+    "extra_path_p90_m": 2.3396,
+    "p10_p90_spread_m": 0.2311,
+    "p10_p90_spread_ns": 0.771,
+    "p10_p90_spread_bins_250ps": 3.08
+   },
+   "ideal_retroreflector_point_target": {
+    "extra_path_p10_m": 2.1069,
+    "extra_path_p50_m": 2.1456,
+    "extra_path_p90_m": 2.2011,
+    "p10_p90_spread_m": 0.0942,
+    "median_minus_confocal_model_m": 0.0006,
+    "extra_path_min_m": 2.1002,
+    "extra_path_max_m": 2.2157,
+    "spread_m": 0.1155,
+    "spread_bins_250ps": 1.54
+   }
+  },
+  {
+   "zone_index": 3,
+   "zone_patch_x": [
+    2.0465,
+    2.2809
+   ],
+   "lit_patch_x": [
+    1.4918,
+    2.2809
+   ],
+   "zone_centre_x": 2.1572,
+   "confocal_model_extra_path_m": 1.9199,
+   "confocal_model_note": "2|SWc| + 2|WcH| minus the zone's first-bounce path; ~= 2|WcH| (what the code models)",
+   "diffuse_point_target": {
+    "median_minus_confocal_model_m": 0.0427,
+    "earliest_minus_confocal_model_m": -0.0005,
+    "extra_path_min_m": 1.9193,
+    "extra_path_max_m": 2.2544,
+    "extra_path_p10_m": 1.9236,
+    "extra_path_p50_m": 1.9626,
+    "extra_path_p90_m": 2.1447,
+    "p10_p90_spread_m": 0.2212,
+    "p10_p90_spread_ns": 0.738,
+    "p10_p90_spread_bins_250ps": 2.95
+   },
+   "ideal_retroreflector_point_target": {
+    "extra_path_p10_m": 1.9195,
+    "extra_path_p50_m": 1.9242,
+    "extra_path_p90_m": 1.9394,
+    "p10_p90_spread_m": 0.0199,
+    "median_minus_confocal_model_m": 0.0043,
+    "extra_path_min_m": 1.9193,
+    "extra_path_max_m": 1.9509,
+    "spread_m": 0.0316,
+    "spread_bins_250ps": 0.42
+   }
+  }
+ ],
+ "radiometry": {
+  "label": "ESTIMATE (illustrative radiometry, best-case cosines = 1, point-like patches)",
+  "assumptions": {
+   "wall_albedo": 0.8,
+   "person_albedo_940nm": 0.5,
+   "torso_area_m2": 0.24,
+   "sensor_to_wall_m": 0.9,
+   "wall_to_person_m": 1.2,
+   "fov_deg": 45.0,
+   "lit_patch_side_m": 0.746,
+   "lit_area_m2": 0.5559,
+   "zone_patch_area_m2": 0.0347
+  },
+  "fraction_wall_to_torso": 0.0531,
+  "fraction_torso_to_one_zone_patch": 0.00768,
+  "ratio_3B_to_1B_flood_zone": 0.00261,
+  "ratio_3B_to_1B_flood_zone_one_in": 383,
+  "ratio_3B_to_1B_single_spot_own_path": 0.000163,
+  "ratio_3B_to_1B_single_spot_one_in": 6136,
+  "distance_scaling": {
+   "diffuse_3B_scales_as": "1/d_WH^4",
+   "retroreflective_3B_scales_as": "1/d_WH^2 (ideal)",
+   "diffuse_1.0m_vs_1.5m_factor": 5.06,
+   "retro_1.0m_vs_1.5m_factor": 2.25
+  }
+ },
+ "units": {
+  "c_cm_per_ns": 29.979,
+  "1ns_path_cm": 29.98,
+  "1ns_one_way_confocal_cm": 14.99,
+  "250ps_bin_path_cm": 7.495,
+  "250ps_bin_one_way_cm": 3.747,
+  "firmware_CNH_bin_one_way_mm": 37.5348,
+  "firmware_CNH_bin_ps": 250.41,
+  "demo_window_48_bins_ns": 12.0,
+  "demo_window_48_bins_path_m": 3.598,
+  "demo_window_48_bins_one_way_m": 1.799,
+  "lct_128_bins_ns": 32.0,
+  "lct_128_bins_path_m": 9.593,
+  "ams_88ps_bin_path_cm": 2.638,
+  "ams_88ps_bin_one_way_cm": 1.319,
+  "ams_128_bins_ns": 11.264,
+  "firmware_pulse_width_bins (VL53LMZ_CNH_PULSE_WIDTH_BIN)": 10,
+  "firmware_pulse_width_ns": 2.5,
+  "pf_random_walk_std_per_frame_m": 0.07,
+  "pf_step_equivalent_speed_at_30Hz_m_per_s": 2.1,
+  "frame_period_at_30Hz_ms": 33.33
+ },
+ "segments": [
+  {
+   "segment": "S_A->W_A1",
+   "from": [
+    1.65,
+    0.9
+   ],
+   "to": [
+    1.5816,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.33
+  },
+  {
+   "segment": "W_A1->H_A",
+   "from": [
+    1.5816,
+    0.0
+   ],
+   "to": [
+    2.6,
+    0.85
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.211
+  },
+  {
+   "segment": "W_A1->H_B",
+   "from": [
+    1.5816,
+    0.0
+   ],
+   "to": [
+    2.7,
+    0.9
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.224
+  },
+  {
+   "segment": "S_A->W_A2",
+   "from": [
+    1.65,
+    0.9
+   ],
+   "to": [
+    1.759,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.297
+  },
+  {
+   "segment": "W_A2->H_A",
+   "from": [
+    1.759,
+    0.0
+   ],
+   "to": [
+    2.6,
+    0.85
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.266
+  },
+  {
+   "segment": "W_A2->H_B",
+   "from": [
+    1.759,
+    0.0
+   ],
+   "to": [
+    2.7,
+    0.9
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.283
+  },
+  {
+   "segment": "S_A->W_A3",
+   "from": [
+    1.65,
+    0.9
+   ],
+   "to": [
+    1.9451,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.235
+  },
+  {
+   "segment": "W_A3->H_A",
+   "from": [
+    1.9451,
+    0.0
+   ],
+   "to": [
+    2.6,
+    0.85
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.333
+  },
+  {
+   "segment": "W_A3->H_B",
+   "from": [
+    1.9451,
+    0.0
+   ],
+   "to": [
+    2.7,
+    0.9
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.356
+  },
+  {
+   "segment": "S_A->W_A4",
+   "from": [
+    1.65,
+    0.9
+   ],
+   "to": [
+    2.1572,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.162
+  },
+  {
+   "segment": "W_A4->H_A",
+   "from": [
+    2.1572,
+    0.0
+   ],
+   "to": [
+    2.6,
+    0.85
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.42
+  },
+  {
+   "segment": "W_A4->H_B",
+   "from": [
+    2.1572,
+    0.0
+   ],
+   "to": [
+    2.7,
+    0.9
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.45
+  },
+  {
+   "segment": "S_B1->W_B11",
+   "from": [
+    1.25,
+    0.9
+   ],
+   "to": [
+    1.1816,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.73
+  },
+  {
+   "segment": "W_B11->H_A",
+   "from": [
+    1.1816,
+    0.0
+   ],
+   "to": [
+    2.6,
+    0.85
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.117
+  },
+  {
+   "segment": "S_B1->W_B12",
+   "from": [
+    1.25,
+    0.9
+   ],
+   "to": [
+    1.359,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.695
+  },
+  {
+   "segment": "W_B12->H_A",
+   "from": [
+    1.359,
+    0.0
+   ],
+   "to": [
+    2.6,
+    0.85
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.154
+  },
+  {
+   "segment": "S_B1->W_B13",
+   "from": [
+    1.25,
+    0.9
+   ],
+   "to": [
+    1.5451,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.615
+  },
+  {
+   "segment": "W_B13->H_A",
+   "from": [
+    1.5451,
+    0.0
+   ],
+   "to": [
+    2.6,
+    0.85
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.201
+  },
+  {
+   "segment": "S_B1->W_B14",
+   "from": [
+    1.25,
+    0.9
+   ],
+   "to": [
+    1.7572,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.511
+  },
+  {
+   "segment": "W_B14->H_A",
+   "from": [
+    1.7572,
+    0.0
+   ],
+   "to": [
+    2.6,
+    0.85
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.265
+  },
+  {
+   "segment": "FOV_left_edge_A",
+   "from": [
+    1.65,
+    0.9
+   ],
+   "to": [
+    1.4918,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.33
+  },
+  {
+   "segment": "FOV_right_edge_A",
+   "from": [
+    1.65,
+    0.9
+   ],
+   "to": [
+    2.2809,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.123
+  },
+  {
+   "segment": "FOV_left_edge_B1",
+   "from": [
+    1.25,
+    0.9
+   ],
+   "to": [
+    1.0918,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.73
+  },
+  {
+   "segment": "FOV_right_edge_B1",
+   "from": [
+    1.25,
+    0.9
+   ],
+   "to": [
+    1.8809,
+    0.0
+   ],
+   "crosses_occluder": false,
+   "clearance_m": 0.451
+  }
+ ],
+ "checks": [
+  {
+   "check": "segment S_A->W_A1 clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.330 m"
+  },
+  {
+   "check": "segment W_A1->H_A clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.211 m"
+  },
+  {
+   "check": "segment W_A1->H_B clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.224 m"
+  },
+  {
+   "check": "segment S_A->W_A2 clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.297 m"
+  },
+  {
+   "check": "segment W_A2->H_A clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.266 m"
+  },
+  {
+   "check": "segment W_A2->H_B clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.283 m"
+  },
+  {
+   "check": "segment S_A->W_A3 clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.235 m"
+  },
+  {
+   "check": "segment W_A3->H_A clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.333 m"
+  },
+  {
+   "check": "segment W_A3->H_B clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.356 m"
+  },
+  {
+   "check": "segment S_A->W_A4 clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.162 m"
+  },
+  {
+   "check": "segment W_A4->H_A clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.420 m"
+  },
+  {
+   "check": "segment W_A4->H_B clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.450 m"
+  },
+  {
+   "check": "segment S_B1->W_B11 clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.730 m"
+  },
+  {
+   "check": "segment W_B11->H_A clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.117 m"
+  },
+  {
+   "check": "segment S_B1->W_B12 clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.695 m"
+  },
+  {
+   "check": "segment W_B12->H_A clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.154 m"
+  },
+  {
+   "check": "segment S_B1->W_B13 clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.615 m"
+  },
+  {
+   "check": "segment W_B13->H_A clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.201 m"
+  },
+  {
+   "check": "segment S_B1->W_B14 clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.511 m"
+  },
+  {
+   "check": "segment W_B14->H_A clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.265 m"
+  },
+  {
+   "check": "segment FOV_left_edge_A clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.330 m"
+  },
+  {
+   "check": "segment FOV_right_edge_A clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.123 m"
+  },
+  {
+   "check": "segment FOV_left_edge_B1 clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.730 m"
+  },
+  {
+   "check": "segment FOV_right_edge_B1 clears occluder by >= 0.1 m",
+   "pass": true,
+   "detail": "clearance 0.451 m"
+  },
+  {
+   "check": "occluder blocks straight S_A->H_A",
+   "pass": true,
+   "detail": "must be True"
+  },
+  {
+   "check": "no part of the person's body disc (r=0.22 m) at H_A is visible from S_A",
+   "pass": true,
+   "detail": "0 visible outline samples"
+  },
+  {
+   "check": "occluder blocks straight S_A->H_B",
+   "pass": true,
+   "detail": "must be True"
+  },
+  {
+   "check": "no part of the person's body disc (r=0.22 m) at H_B is visible from S_A",
+   "pass": true,
+   "detail": "0 visible outline samples"
+  },
+  {
+   "check": "occluder blocks straight S_B->H_A",
+   "pass": true,
+   "detail": "must be True"
+  },
+  {
+   "check": "no part of the person's body disc (r=0.22 m) at H_A is visible from S_B",
+   "pass": true,
+   "detail": "0 visible outline samples"
+  },
+  {
+   "check": "occluder blocks straight S_B->H_B",
+   "pass": true,
+   "detail": "must be True"
+  },
+  {
+   "check": "no part of the person's body disc (r=0.22 m) at H_B is visible from S_B",
+   "pass": true,
+   "detail": "0 visible outline samples"
+  },
+  {
+   "check": "3D: sight line S_A->top of head at H_A meets the partition below its 1.7 m top",
+   "pass": true,
+   "detail": "height at partition 1.40 m"
+  },
+  {
+   "check": "3D: sight line S_A->top of head at H_B meets the partition below its 1.7 m top",
+   "pass": true,
+   "detail": "height at partition 1.38 m"
+  },
+  {
+   "check": "3D: sight line S_B->top of head at H_A meets the partition below its 1.7 m top",
+   "pass": true,
+   "detail": "height at partition 1.51 m"
+  },
+  {
+   "check": "3D: sight line S_B->top of head at H_B meets the partition below its 1.7 m top",
+   "pass": true,
+   "detail": "height at partition 1.48 m"
+  },
+  {
+   "check": "H_A is at least body radius + 0.05 m from the occluder",
+   "pass": true,
+   "detail": "0.600 m"
+  },
+  {
+   "check": "H_A inside room",
+   "pass": true,
+   "detail": "(2.6, 0.85)"
+  },
+  {
+   "check": "H_B is at least body radius + 0.05 m from the occluder",
+   "pass": true,
+   "detail": "0.700 m"
+  },
+  {
+   "check": "H_B inside room",
+   "pass": true,
+   "detail": "(2.7, 0.9)"
+  },
+  {
+   "check": "README guidance: |SW| < ~1.1 m for W at x=1.5816",
+   "pass": true,
+   "detail": "0.9026 m"
+  },
+  {
+   "check": "README guidance: |SW| < ~1.1 m for W at x=1.759",
+   "pass": true,
+   "detail": "0.9066 m"
+  },
+  {
+   "check": "README guidance: |SW| < ~1.1 m for W at x=1.9451",
+   "pass": true,
+   "detail": "0.9471 m"
+  },
+  {
+   "check": "README guidance: |SW| < ~1.1 m for W at x=2.1572",
+   "pass": true,
+   "detail": "1.0331 m"
+  },
+  {
+   "check": "README guidance: |SW| < ~1.1 m for W at x=1.1816",
+   "pass": true,
+   "detail": "0.9026 m"
+  },
+  {
+   "check": "README guidance: |SW| < ~1.1 m for W at x=1.359",
+   "pass": true,
+   "detail": "0.9066 m"
+  },
+  {
+   "check": "README guidance: |SW| < ~1.1 m for W at x=1.5451",
+   "pass": true,
+   "detail": "0.9471 m"
+  },
+  {
+   "check": "README guidance: |SW| < ~1.1 m for W at x=1.7572",
+   "pass": true,
+   "detail": "1.0331 m"
+  },
+  {
+   "check": "README guidance: |WH| in ~0.9-1.5 m for W at x=1.5816",
+   "pass": true,
+   "detail": "1.3265 m"
+  },
+  {
+   "check": "README guidance: |WH| in ~0.9-1.5 m for W at x=1.759",
+   "pass": true,
+   "detail": "1.1958 m"
+  },
+  {
+   "check": "README guidance: |WH| in ~0.9-1.5 m for W at x=1.9451",
+   "pass": true,
+   "detail": "1.073 m"
+  },
+  {
+   "check": "README guidance: |WH| in ~0.9-1.5 m for W at x=2.1572",
+   "pass": true,
+   "detail": "0.9584 m"
+  },
+  {
+   "check": "third-bounce delay 35.4 bins lies inside bins 15-53 (where released ST data has signal)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "check": "third-bounce delay 31.91 bins lies inside bins 15-53 (where released ST data has signal)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "check": "third-bounce delay 28.63 bins lies inside bins 15-53 (where released ST data has signal)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "check": "third-bounce delay 25.58 bins lies inside bins 15-53 (where released ST data has signal)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "check": "third-bounce delay 44.13 bins lies inside bins 15-53 (where released ST data has signal)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "check": "third-bounce delay 40.14 bins lies inside bins 15-53 (where released ST data has signal)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "check": "third-bounce delay 36.15 bins lies inside bins 15-53 (where released ST data has signal)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "check": "third-bounce delay 31.94 bins lies inside bins 15-53 (where released ST data has signal)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "check": "H_A lies on the non-confocal ellipse",
+   "pass": true,
+   "detail": "1.000000000"
+  },
+  {
+   "check": "non-confocal path segment S_A->W1 clears occluder",
+   "pass": true,
+   "detail": "0.330 m"
+  },
+  {
+   "check": "non-confocal path segment W1->H_A clears occluder",
+   "pass": true,
+   "detail": "0.211 m"
+  },
+  {
+   "check": "non-confocal path segment H_A->W2 clears occluder",
+   "pass": true,
+   "detail": "0.420 m"
+  },
+  {
+   "check": "non-confocal path segment W2->S_A clears occluder",
+   "pass": true,
+   "detail": "0.162 m"
+  },
+  {
+   "check": "sweep frame 0: all light segments clear the occluder by >= 0.1 m and S->H blocked",
+   "pass": true,
+   "detail": "min clearance 0.123 m"
+  },
+  {
+   "check": "sweep frame 1: all light segments clear the occluder by >= 0.1 m and S->H blocked",
+   "pass": true,
+   "detail": "min clearance 0.159 m"
+  },
+  {
+   "check": "sweep frame 2: all light segments clear the occluder by >= 0.1 m and S->H blocked",
+   "pass": true,
+   "detail": "min clearance 0.117 m"
+  },
+  {
+   "check": "frame A (4 wall points, 1-bin bands) region contains H_A",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "check": "sensor-moved fusion region contains H_A and is smaller than frame A alone",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "check": "motion-compensated region contains H_B",
+   "pass": true,
+   "detail": ""
+  }
+ ],
+ "all_checks_pass": true
+}

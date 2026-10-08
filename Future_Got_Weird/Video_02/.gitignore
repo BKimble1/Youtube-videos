@@ -26,3 +26,10 @@ qa/render/
 qa/dense/
 work/
 source/public/audio/
+# research: regenerable run states and the working copy of the authors' repo (re-clone at the pinned commit)
+research/code_reproduction/work/
+research/code_reproduction/out/**/*.npz
+# third-party figures/frames kept only for verification (rights unclear; provenance + hashes are committed)
+research/*/evidence/*.jpg
+research/*/evidence/*.png
+research/*/evidence/*.html

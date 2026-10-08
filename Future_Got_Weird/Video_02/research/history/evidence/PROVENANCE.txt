@@ -1,0 +1,36 @@
+Provenance of files in this folder and of sources read for history/NOTES.md (compiled 2026-10-08)
+
+Third-party GitHub mirror: https://github.com/chenyuege/C-NLOS-imaging-based-on-LCT  HEAD 3613ea534235accc60c35244ea0d33bdba84a8a6 (last commit 2018-11-04)
+  a6d38ab3279d677b39f1c18042997618f05c3e6ca59c0256225fe66f58b8fd19  nature25489.pdf
+  5cfdab63e7a0fa59b439143c8d47fb68ea4919c3e7609a30019d40b8f45bbc1c  nature25489-s1.pdf
+  d0098f6e81e33cc1aab91bbf93962faeeeca3b2c1ef69f78bba16162e282264f  confocal_nlos_code/data_diffuse_s.mat
+  b916e441fb005d9073f1d181d68611c7bc7203f1f2bce1c535b38d95b5b0189a  confocal_nlos_code/data_dot_chart_40cm.mat
+  1af7d23414fda1e366dc17fdf5f8ac6753b9e71a15c20d31669739278e293f6c  confocal_nlos_code/data_dot_chart_65cm.mat
+  e577393a3b134f017ee8cabba99cd06a303b9680bb5caa7e2031de298a282920  confocal_nlos_code/data_exit_sign.mat
+  6651a954f10c2165555171758ac608c1d7a5ccf9a65d3b4f97f3a7c9f4da9901  confocal_nlos_code/data_mannequin.mat
+  ca5f0271bc24f3c100a6b3f1c15b965ebe166d96a6555eb62c8f576944f6f1a9  confocal_nlos_code/data_mannequin_50_1.00e-04_1.00e-03.mat
+  28bc41704f95ec10cae6e63408f241aa96b5ee08f0c10cbc13561111261b9581  confocal_nlos_code/data_outdoor_s.mat
+  c4c1392150d024b57029632a5f05d85916ab34fbfea5b953876b189f141d6184  confocal_nlos_code/data_resolution_chart_40cm.mat
+  ce94793eb95f91e4aa6b5ccb12967dee70b7983920eca7c0f872b68dc8fc0793  confocal_nlos_code/data_resolution_chart_65cm.mat
+  11a94722540e046ba3d86f7c00108948d1781428939302fd0e829d784a7f8f21  confocal_nlos_code/data_s_u.mat
+  4172f6f7c5ca212139c4a53d2b49828b074be6c868d0efbe02f341e47958bdc8  image/ncomms1747-f1Experimentalset-up.jpg
+  a7a571fc186745751f3ff82cab86fa52f8bef7d91a2f54ac012a9ff98881e9a7  image/ncomms1747-f3.jpg
+
+Second third-party mirror: https://github.com/ritik3041998/Aw_nlos  HEAD dc25dd07e21e6b568a3eb69bc8608874d0ff48ba (2026-09-27)
+  d0098f6e81e33cc1aab91bbf93962faeeeca3b2c1ef69f78bba16162e282264f  data_diffuse_s.mat
+  6651a954f10c2165555171758ac608c1d7a5ccf9a65d3b4f97f3a7c9f4da9901  data_mannequin.mat
+  28bc41704f95ec10cae6e63408f241aa96b5ee08f0c10cbc13561111261b9581  data_outdoor_s.mat
+  ce94793eb95f91e4aa6b5ccb12967dee70b7983920eca7c0f872b68dc8fc0793  data_resolution_chart_65cm.mat
+  -> data_mannequin / data_diffuse_s / data_resolution_chart_65cm are byte-identical to the chenyuege mirror (md5 checked).
+
+Official Stanford repo (f-k migration, 2019, NOT the 2018 Nature data): https://github.com/computational-imaging/nlos-fk  HEAD d34d49fed5a86f4ebddf85d461cff6923de5367d (2022-06-19). LICENSE: Stanford academic/non-commercial.
+
+First author (Nam) personal site: https://github.com/jihyun-nam/jihyun-nam.github.io  HEAD 94eb5d5ab67f0c3f977e5ef95f2cf04312d774ea (2026-04-06)
+  fbd71e32669a4dcca13d29652f1ce959a70df81112640641c1404dca3d6dcbf4  realtimevideo.gif
+  416509ea30f9d55b6f8e057538a78cb06fd4ae34bccc31d80c791ab6229a781c  realtime.gif
+  87ba0180262642b9b2baca29f0c9a69e61faaf6406569ce37280fe3eb2414ad2  main_pipeline_new.PNG
+  realtimevideo.gif: 500x376, 778 frames, 70 ms/frame (~54 s). realtime.gif: 1181x405, 19 frames, 500 ms/frame.
+  Repo LICENSE.md is CC BY 3.0 for the Jekyll theme (Prologue/HTML5 UP); it does NOT license the research images.
+
+All images here are third-party research material kept for verification only. NOT cleared for use in the episode.
+otoole2018_released_data_LCT_recon_montage.png is our own render (lct_port.py, NumPy port of cnlos_reconstruction.m) of the 2018 supplementary data; the data's licence is unstated (see NOTES.md).
