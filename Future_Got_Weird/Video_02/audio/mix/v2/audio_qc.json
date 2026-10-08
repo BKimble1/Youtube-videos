@@ -2,7 +2,7 @@
  "scenes": {
   "S1": {
    "voice_db": -19.0,
-   "music_db": -40.8,
+   "music_db": -40.9,
    "sfx_db_p90": -45.1,
    "voice_minus_music_speaking": 21.1,
    "voice_minus_sfx_p90_speaking": 26.3

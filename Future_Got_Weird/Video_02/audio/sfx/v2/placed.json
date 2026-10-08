@@ -2377,8 +2377,8 @@
 },
 {
 "scene": "S9",
-"f": 11631,
-"t": 387.7,
+"f": 11630,
+"t": 387.667,
 "kind": "footstep_wood",
 "gain": -7,
 "note": ""
@@ -2393,8 +2393,8 @@
 },
 {
 "scene": "S9",
-"f": 11638,
-"t": 387.933,
+"f": 11636,
+"t": 387.867,
 "kind": "footstep_wood",
 "gain": -7,
 "note": ""
@@ -2405,6 +2405,14 @@
 "t": 387.967,
 "kind": "bounce_tick",
 "gain": -4,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 11641,
+"t": 388.033,
+"kind": "footstep_wood",
+"gain": -7,
 "note": ""
 },
 {
