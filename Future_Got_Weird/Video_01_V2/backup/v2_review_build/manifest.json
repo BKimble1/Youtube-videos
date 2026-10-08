@@ -24,6 +24,23 @@
    ]
   },
   {
+   "name": "Future_Got_Weird_Video_01_V2_1080p_REVIEW_chat.mp4",
+   "bytes": 31451486,
+   "sha256": "426e6906ae6e1a789d6b61bdada9c3ab6ae14271ddef8566749bdd4b04e91655",
+   "parts": [
+    {
+     "name": "Future_Got_Weird_Video_01_V2_1080p_REVIEW_chat.mp4.part001",
+     "bytes": 25165824,
+     "sha256": "9c879064ad95890fa51d1b18f9325b0160611fa3d46801e26b5f353bbcfbc2fc"
+    },
+    {
+     "name": "Future_Got_Weird_Video_01_V2_1080p_REVIEW_chat.mp4.part002",
+     "bytes": 6285662,
+     "sha256": "485464bf8a2c1149d289dc99d8460c061136bd0850b46029c5a6f8bb1181950b"
+    }
+   ]
+  },
+  {
    "name": "v2_review_audio.tar",
    "bytes": 194037760,
    "sha256": "13612c3a726b48f0da8c23e2980807866d799745ba27e5fbb921c6016832a319",
