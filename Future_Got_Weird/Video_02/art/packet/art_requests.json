@@ -1,0 +1,169 @@
+{
+  "packet": "Video_02_ChatGPT_Art_Request_Packet",
+  "episode": "Future Got Weird · Video 02 · How Cameras See Around Corners",
+  "prepared": "2026-10-08",
+  "how_to_use": "Bring this packet to the Future Got Weird ChatGPT project. Create every asset below in one batch, matching the references in references/. Return the files with the exact file names given, plus a short manifest (asset ID, file name, size, transparency, notes). Claude imports them into Future_Got_Weird/Video_02/art/incoming/ and rebuilds layered SVG rigs from any flattened character drawings.",
+  "global_rules": {
+    "style": "Original simple flat illustration matching references/style_frame_*.png and references/cast_rig_check.png: rounded contours, a consistent dark-ink outline (about 4 px at 1920x1080), clean flat fills, expressive silhouettes, simple mitten hands with a thumb, round heads with dot eyes and a single brow stroke, no cross-hatching, no painterly shading, no gradients except very soft floor shadows, no paper texture, no striations, no noise, no glow, no dark backgrounds, no grids.",
+    "palette": {"cream": "#FAF3DF", "teal": "#1CA7A0", "coral": "#EF6B55", "yellow": "#FFC744", "ink": "#162A32", "blue (secondary)": "#4F7CC9", "wood": "#C9924F", "relay wall (light warm, matte)": "#F4ECD8"},
+    "text": "No text, letters, numbers, labels, logos, equations, arrows or light rays anywhere in the art. Labels, light paths and data are added in animation.",
+    "people": "Use ONLY the existing cast as drawn in the references (the guesser and the checker). Do not invent new people, change hair, outfits or proportions. No real people, no faces of the channel owner, no presenter.",
+    "framing": "16:9 plates at 3840x2160 if possible (else 1920x1080). Keep the important subject inside the central 80% (crop-safe). Leave the top 12% and bottom 15% free of important detail (labels and captions go there).",
+    "transparency": "Character and prop sheets on a transparent background (PNG with alpha). Environment plates opaque.",
+    "evidence": "Nothing in this packet is evidence. Do not draw real lab photos, real people from papers, figures from papers, data plots, phones with brand marks or any company logo.",
+    "file_naming": "V02_<assetID>_<short_name>.png, exactly as in each record's file_name"
+  },
+  "assets": [
+    {
+      "id": "A01", "file_name": "V02_A01_guesser_turnaround.png", "priority": 1,
+      "shots": ["S1.1", "S4.2", "S4.3", "S8.1", "S8.3"],
+      "teaching_role": "the hider who believes out of sight means out of reach",
+      "composition": "character sheet: the guesser (red spiky hair, white shirt with yellow horizontal stripes, navy trousers, white sneakers, rosy cheeks) in front, three-quarter left, three-quarter right, side and back views, full body, standing, same scale, evenly spaced",
+      "dimensions": "3840x2160", "background": "transparent",
+      "pose_view": "neutral standing in all five views; arms relaxed",
+      "prop_contacts": "none",
+      "crop_safe": "each figure fully inside its cell with 5% margin",
+      "continuity_reference": "references/cast_rig_check.png (guesser); references/style_frame_gameshow.png",
+      "use": "rig_reference", "reference_only": true,
+      "notes": "Claude rebuilds turns as SVG layers; keep line weight and colours identical to the rig."
+    },
+    {
+      "id": "A02", "file_name": "V02_A02_guesser_expressions_actions.png", "priority": 1,
+      "shots": ["S1.1", "S1.3", "S2.1", "S4.2", "S4.3", "S8.3"],
+      "teaching_role": "readable comic reactions that carry jokes J1, J2, J3, J4",
+      "composition": "sheet of 8 poses, full body: (1) tiptoeing, mid-step, arms bent like a cartoon sneak; (2) settled smug, hands on hips, half-lidded eyes; (3) busted: eyes wide, small round mouth, shoulders up; (4) ducking fast (knees bent, hands over head); (5) relieved, leaning one shoulder on a wall edge; (6) smile dropping to worry; (7) pushing a tall panel with both hands (panel not drawn; hands at chest height, body leaning in); (8) smug again, arms crossed",
+      "dimensions": "3840x2160", "background": "transparent",
+      "pose_view": "front or three-quarter as natural for each action; feet on one shared ground line",
+      "prop_contacts": "pose 7 hands at the height of a 1.7 m tall panel edge (chest height)",
+      "crop_safe": "5% margin per cell",
+      "continuity_reference": "references/cast_rig_check.png",
+      "use": "rig_reference", "reference_only": true,
+      "notes": "Keep the face construction: two oval eyes with dot pupils, one stroke brow each, small nose hook."
+    },
+    {
+      "id": "A03", "file_name": "V02_A03_checker_with_sensor.png", "priority": 1,
+      "shots": ["S1.1", "S1.2", "S6.2", "S6.8", "S8.3"],
+      "teaching_role": "the calm operator who measures and checks",
+      "composition": "sheet of 5 poses, full body, the checker (grey bob, round glasses, coral cardigan over cream top, navy trousers, brown shoes, pencil behind the ear): (1) holding the handheld sensor at chest height with both hands, its back readout facing us, aimed past us toward a wall; (2) same, deadpan glance to the side; (3) hand jiggling the sensor slightly (motion implied by pose only, no motion lines); (4) pinning a card to a board (card blank); (5) leaning around a tall panel edge to look behind it, deadpan",
+      "dimensions": "3840x2160", "background": "transparent",
+      "pose_view": "front / three-quarter", "prop_contacts": "both hands on the sensor's grip in poses 1-3; fingertips on the card in pose 4",
+      "crop_safe": "5% margin per cell",
+      "continuity_reference": "references/cast_rig_check.png (checker); references/style_frame_counter.png",
+      "use": "rig_reference", "reference_only": true, "notes": "The sensor must match A04."
+    },
+    {
+      "id": "A04", "file_name": "V02_A04_handheld_sensor_prop.png", "priority": 1,
+      "shots": ["S1.2", "S1.6", "S6.1", "S6.2"],
+      "teaching_role": "makes a timing sensor concrete, clearly not a phone or webcam",
+      "composition": "prop sheet: a small boxy time-of-flight sensor module with a short grip; views: back (a small readout screen, blank, and a status light), front (two small round windows side by side: emitter and detector), side, top; plus the same module as a bare tiny circuit board the size of a fingertip (for the 2026 shelf shot)",
+      "dimensions": "3840x2160", "background": "transparent",
+      "pose_view": "orthographic views", "prop_contacts": "grip fits the rig's mitten hand",
+      "crop_safe": "5% margin", "continuity_reference": "references/kit_handheld_sensor.png (Claude's current version)",
+      "use": "rig_reference", "reference_only": true,
+      "notes": "Teal body, ink outline, coral accent. No brand marks, no text on the screen, not phone-shaped."
+    },
+    {
+      "id": "A05", "file_name": "V02_A05_room_plate.png", "priority": 1,
+      "shots": ["S1.*", "S2.1", "S8.*"],
+      "teaching_role": "the one room every explanation happens in",
+      "composition": "the room in an oblique 'dollhouse' view from the front and a little above, matching references/room_layout_guide.png: back wall = a plain matte light wall (#F4ECD8) spanning the frame with a skirting board; light wood floor with a few wide planks receding upward; a coral three-panel folding screen standing on the floor PERPENDICULAR to the back wall (its long side runs from near the back wall toward the viewer), leaving a clear gap between its far end and the back wall; a door on the right side wall; a potted plant at far left. No people.",
+      "dimensions": "3840x2160", "background": "opaque",
+      "pose_view": "oblique front-above, parallel projection (no strong perspective)",
+      "prop_contacts": "folding screen feet on the floor",
+      "crop_safe": "back wall fully visible; screen inside central 80%",
+      "continuity_reference": "references/room_layout_guide.png; references/kit_room_view.png",
+      "use": "backdrop_upgrade and runway_plate", "reference_only": false,
+      "notes": "Positions matter: the screen sits a little right of centre; the gap at the back wall must stay visible."
+    },
+    {
+      "id": "A06", "file_name": "V02_A06_mirror_room_plate.png", "priority": 2,
+      "shots": ["S2.1"],
+      "teaching_role": "orderly reflection comparison",
+      "composition": "identical to A05, but the left half of the back wall is a large framed mirror panel (pale blue glass with a few diagonal shine strokes, no reflected content drawn)",
+      "dimensions": "3840x2160", "background": "opaque",
+      "pose_view": "as A05", "prop_contacts": "mirror mounted flat on the wall",
+      "crop_safe": "as A05", "continuity_reference": "A05", "use": "backdrop_upgrade", "reference_only": false,
+      "notes": "Reflections of characters are added in animation."
+    },
+    {
+      "id": "A07", "file_name": "V02_A07_wall_surface_closeup.png", "priority": 2,
+      "shots": ["S2.2"],
+      "teaching_role": "a painted wall is rough at a tiny scale",
+      "composition": "magnified cross-section of a painted wall surface: a cream paint layer with gentle irregular bumps over a grey plaster layer, seen side-on, filling the lower 40% of the frame; plain cream background above",
+      "dimensions": "3840x2160", "background": "opaque",
+      "pose_view": "side-on cross-section", "prop_contacts": "none", "crop_safe": "surface spans full width",
+      "continuity_reference": "palette", "use": "backdrop_upgrade", "reference_only": false,
+      "notes": "No rays, no arrows; Claude draws the scattering."
+    },
+    {
+      "id": "A08", "file_name": "V02_A08_warehouse_corner_plate.png", "priority": 1,
+      "shots": ["S7.1", "S7.3", "S7.5"],
+      "teaching_role": "a blind corner where a robot cannot see the other aisle",
+      "composition": "oblique front-above view of two warehouse aisles meeting at an L corner (matching references/kit_warehouse_view.png and references/warehouse_layout_guide.png): tall shelving with simple boxes in teal, coral, yellow and cardboard tones; a plain light wall section across the junction (the relay surface); yellow floor lane markings; no people, no robot",
+      "dimensions": "3840x2160", "background": "opaque",
+      "pose_view": "oblique, parallel projection", "prop_contacts": "none",
+      "crop_safe": "corner junction inside the central 80%", "continuity_reference": "references/kit_warehouse_view.png",
+      "use": "backdrop_upgrade and runway_plate", "reference_only": false,
+      "notes": "No signage text, no logos, no hazard text."
+    },
+    {
+      "id": "A09", "file_name": "V02_A09_delivery_robot_sheet.png", "priority": 2,
+      "shots": ["S7.*"],
+      "teaching_role": "illustrative application vehicle",
+      "composition": "character sheet of the small delivery robot in references/kit_robot.png: squat rounded box body about knee-to-waist height, cargo lid, two spoked wheels, a short mast with a small sensor head, a front panel with two simple dot eyes; views: front, three-quarter, side, back; expressions: neutral, cautious squint, pleased",
+      "dimensions": "3840x2160", "background": "transparent",
+      "pose_view": "orthographic + three-quarter", "prop_contacts": "wheels on the ground line",
+      "crop_safe": "5% margin", "continuity_reference": "references/kit_robot.png",
+      "use": "rig_reference", "reference_only": true,
+      "notes": "Must NOT resemble the channel mascot (no speech-bubble head, no antenna with a disk)."
+    },
+    {
+      "id": "A10", "file_name": "V02_A10_opening_action_plate.png", "priority": 1,
+      "shots": ["S1.1"],
+      "teaching_role": "Runway start plate for the opening sneak (R1)",
+      "composition": "A05's room with the checker standing at left holding the sensor toward the back wall (A03 pose 1), and the guesser at the right edge mid-tiptoe toward the space behind the folding screen (A02 pose 1)",
+      "dimensions": "3840x2160", "background": "opaque",
+      "pose_view": "as A05", "prop_contacts": "checker's hands on the sensor grip",
+      "crop_safe": "both characters fully inside the frame with margin",
+      "continuity_reference": "A01-A05",
+      "use": "runway_plate", "reference_only": false,
+      "intended_motion": "locked camera; the guesser takes two purposeful tiptoe steps to the hiding spot behind the screen and settles into the smug pose (A02 pose 2); nothing else moves except a blink"
+    },
+    {
+      "id": "A11", "file_name": "V02_A11_closing_action_plate.png", "priority": 1,
+      "shots": ["S8.3"],
+      "teaching_role": "Runway start plate for the payoff (R4)",
+      "composition": "A05's room; the guesser at the near end of the folding screen with both hands on it (A02 pose 7), ready to push it so its far end closes the gap at the back wall; the checker at left with the sensor",
+      "dimensions": "3840x2160", "background": "opaque",
+      "pose_view": "as A05", "prop_contacts": "both of the guesser's hands on the screen's edge",
+      "crop_safe": "as A10", "continuity_reference": "A01-A05",
+      "use": "runway_plate", "reference_only": false,
+      "intended_motion": "locked camera; the guesser pushes the screen back until it meets the wall, then dusts his hands, smug"
+    },
+    {
+      "id": "A12", "file_name": "V02_A12_history_shelf.png", "priority": 2,
+      "shots": ["S5.*", "S6.1"],
+      "teaching_role": "what came before, as illustrated museum pieces (not evidence)",
+      "composition": "a long museum shelf with three illustrated exhibits on plinths, left to right: (1) a lab table with a boxy ultrafast laser, mirrors, and a large streak-camera box aimed at a small white wall, with a tiny wooden artist's mannequin behind a little screen; (2) a compact laser and a single detector side by side on a small scanning mount, plus a closed laptop; (3) a slim strip-shaped detector module with two lenses and a small monitor; an empty fourth plinth at right for the 2026 module (A04 bare board). Blank plaques (no text).",
+      "dimensions": "3840x2160", "background": "opaque",
+      "pose_view": "front elevation", "prop_contacts": "objects resting on plinths",
+      "crop_safe": "all four plinths inside the frame",
+      "continuity_reference": "palette; generic lab equipment only",
+      "use": "backdrop_upgrade", "reference_only": false,
+      "notes": "Generic, simplified equipment. Do not copy photographs or figures from the papers; no brand names."
+    },
+    {
+      "id": "A13", "file_name": "V02_A13_thumbnail_art.png", "priority": 1,
+      "shots": ["thumbnail"],
+      "teaching_role": "title/thumbnail promise: a camera can learn about someone around a corner",
+      "composition": "one original scene: a large coral corner wall filling the right third; the guesser (A01) pressed flat behind it, smug, eyes sideways; at left, the handheld sensor (A04) on a small stand aimed at a plain light wall beyond the corner; leave clear empty space top-left for two words of title text; leave a clear path for an added light route that goes sensor → light wall → behind the corner (do not draw it)",
+      "dimensions": "3840x2160", "background": "opaque",
+      "pose_view": "close, slightly low angle, bold silhouettes",
+      "prop_contacts": "guesser's back and palms flat on the wall",
+      "crop_safe": "faces and sensor inside the central 70%; readable at small size",
+      "continuity_reference": "A01, A04",
+      "use": "thumbnail", "reference_only": false,
+      "notes": "Text-free. No beam through the wall, no X-ray, no photo reconstruction."
+    }
+  ]
+}

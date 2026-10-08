@@ -10,6 +10,8 @@
  * `asGroup` to nest inside a parent <svg>. Screen-space components (ArrivalHistogram, TimingRuler, PulseDot) take pixel
  * sizes. Everything is a pure function of the props: drive `t` from the frame.
  *
+ * SensorGlyph is a plan-space wrapper round the on-model <SensorTop/> (components/v02/HandheldSensor.tsx).
+ *
  * Scene recipe (see dev/KitOptics.tsx):
  *   const sched = pathSchedule(path, {start: 30});           // shared PULSE_SPEED: longer paths arrive later
  *   <LightPath points={path} toPx={toPx} t={sched.progress(g)} layout={LAYOUT} />   // layout: throws on a bad leg
@@ -587,15 +589,20 @@ export type PossibleCloudProps = {
   /** Appear 0..1 (grows from its centre and fades in). */
   t: number;
   tone?: Tone;
-  /** Blur radius (px) of the soft edge; feGaussianBlur on this blob only. */
+  /**
+   * Blur radius (px) of a soft edge (feGaussianBlur on the blob only). Default 0: the house style is flat fills with no
+   * glow, so the softness comes from the nested levels (a pale outer level round a denser inner one). A blur reads as
+   * a glow halo along the bands; use it only if a scene explicitly asks for it.
+   */
   blur?: number;
   /** A crisp thin line on the innermost level. */
   outline?: boolean;
   asGroup?: boolean;
 };
 
-/** The "possible locations" region: filled smooth blob(s) with a soft edge, computed from the same bands. */
-export const PossibleCloud: React.FC<PossibleCloudProps> = ({toPx, contours, field, levels = [0.25, 0.6], t, tone = 'teal', blur = 7, outline = true, asGroup}) => {
+/** The "possible locations" region: nested flat fills (pale outer level, denser inner level, crisp inner line), computed
+ *  from the same bands. */
+export const PossibleCloud: React.FC<PossibleCloudProps> = ({toPx, contours, field, levels = [0.25, 0.6], t, tone = 'teal', blur = 0, outline = true, asGroup}) => {
   const filterId = useSafeId('cloudblur');
   if (t <= 0) return null;
   const col = TONES[tone];
@@ -625,13 +632,15 @@ export const PossibleCloud: React.FC<PossibleCloudProps> = ({toPx, contours, fie
   const nLv = pxSets.length;
   return (
     <Out asGroup={asGroup} opacity={Math.min(1, clamp01(t) * 1.4)}>
-      <defs>
-        <filter id={filterId} filterUnits="userSpaceOnUse" x={x0 - pad} y={y0 - pad} width={x1 - x0 + pad * 2} height={y1 - y0 + pad * 2}>
-          <feGaussianBlur stdDeviation={blur} />
-        </filter>
-      </defs>
+      {blur > 0 && (
+        <defs>
+          <filter id={filterId} filterUnits="userSpaceOnUse" x={x0 - pad} y={y0 - pad} width={x1 - x0 + pad * 2} height={y1 - y0 + pad * 2}>
+            <feGaussianBlur stdDeviation={blur} />
+          </filter>
+        </defs>
+      )}
       <g transform={`translate(${f2(cx)} ${f2(cy)}) scale(${s.toFixed(4)}) translate(${f2(-cx)} ${f2(-cy)})`}>
-        <g filter={`url(#${filterId})`}>
+        <g filter={blur > 0 ? `url(#${filterId})` : undefined}>
           {pxSets.map((loops, i) => (
             <path key={i} d={loops.map((l) => polyD(l, true)).join(' ')} fill={i === nLv - 1 && nLv > 1 ? col.main : mixHex(col.light, col.main, 0.35)} fillOpacity={nLv > 1 ? 0.55 + 0.35 * (i / (nLv - 1)) : 0.75} fillRule="evenodd" />
           ))}
@@ -813,9 +822,10 @@ export const ArrivalHistogram: React.FC<ArrivalHistogramProps> = ({
   const n = values.length;
   const t0 = bins[0];
   const t1 = bins[n];
-  const padL = labels.y ? 58 : 18;
+  // paddings scale with the font so a larger fontSize never pushes the y label into the axis or a callout off the top
+  const padL = labels.y ? Math.round(fontSize * 1.95) : 18;
   const padR = 22;
-  const padT = peaks.length || highlight?.label ? 96 : 24;
+  const padT = peaks.length || highlight?.label ? Math.round(fontSize * 1.45 + 52) : 24;
   const padB = fontSize * 1.3 + (labels.x ? fontSize * 1.5 : 0) + 24;
   const plotW = width - padL - padR;
   const plotH = height - padT - padB;
@@ -905,7 +915,7 @@ export const ArrivalHistogram: React.FC<ArrivalHistogramProps> = ({
         </text>
       )}
       {labels.y && (
-        <text x={0} y={0} transform={`translate(${padL - 22} ${padT + plotH / 2}) rotate(-90)`} textAnchor="middle" fontFamily={F.body} fontWeight={700} fontSize={fontSize} fill={C.inkSoft}>
+        <text x={0} y={0} transform={`translate(${f2(padL - fontSize * 0.73)} ${f2(padT + plotH / 2)}) rotate(-90)`} textAnchor="middle" fontFamily={F.body} fontWeight={700} fontSize={fontSize} fill={C.inkSoft}>
           {labels.y}
         </text>
       )}

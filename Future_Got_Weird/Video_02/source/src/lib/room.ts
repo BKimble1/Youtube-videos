@@ -56,6 +56,11 @@ export const PTS = {
   W: Object.fromEntries(LAYOUT.wallSamples.map((w) => [w.id, {x: w.x, z: LAYOUT.relayWall.z, h: LAYOUT.sensor.h} as PlanPt])) as Record<string, PlanPt>,
 };
 
+/** Wall thickness (m). In the plan view the ink wall lines are this thick. */
+export const WALL_T = 0.07;
+/** Floor slab thickness (m) of the dollhouse. */
+export const SLAB_T = 0.14;
+
 /* ------------------------------------------------------------------ view */
 
 export type ViewConfig = {
@@ -204,7 +209,7 @@ export const screenToPlan = (sx: number, sy: number, view: ViewConfig = DEFAULT_
  * World-px bounds of the whole dollhouse at a tilt (walls, floor slab), for framing it with the camera, e.g.
  * frameRect(b.x0, b.y0, b.x1, b.y1) from lib/motion for an establishing shot of the entire room at tilt 0.
  */
-export const roomBounds = (tilt: number, view: ViewConfig = DEFAULT_VIEW, layout: Layout = LAYOUT, wallT = 0.07, slabT = 0.14) => {
+export const roomBounds = (tilt: number, view: ViewConfig = DEFAULT_VIEW, layout: Layout = LAYOUT, wallT = WALL_T, slabT = SLAB_T) => {
   const s = viewAt(tilt, view);
   const {x0, x1, z0, z1, wallHeight} = layout.room;
   const xs: number[] = [];
@@ -345,6 +350,102 @@ export const crossesOccluder = (a: PlanPt, b: PlanPt, layout: Layout = LAYOUT) =
     if (t0 > t1) return false;
   }
   return true;
+};
+
+/** A visibility test for a plan point: true = the camera cannot see it. */
+export type HiddenTest = (p: PlanPt) => boolean;
+
+export type VisibleOpts = {
+  view?: ViewConfig;
+  layout?: Layout;
+  /** Extra things that hide points (e.g. a person's box), OR-ed with the partition. */
+  hidden?: HiddenTest;
+  /** Ignore the partition (only `hidden` counts). */
+  noOccluder?: boolean;
+  /** Coarse samples per segment before the boundaries are refined (default 48). */
+  steps?: number;
+};
+
+const lerpPt = (a: PlanPt, b: PlanPt, u: number): PlanPt => ({x: a.x + (b.x - a.x) * u, z: a.z + (b.z - a.z) * u, h: (a.h ?? 0) + ((b.h ?? 0) - (a.h ?? 0)) * u});
+
+/**
+ * The parts [u0, u1] (0..1 along a -> b) of a straight 3D segment that the camera sees at this tilt (not behind the
+ * partition, not `hidden`). Boundaries are refined by bisection to well under a pixel, so a split light path does not
+ * step frame to frame while the camera tilts.
+ */
+export const visibleSpans = (a: PlanPt, b: PlanPt, tilt: number, opts: VisibleOpts = {}): [number, number][] => {
+  const view = opts.view ?? DEFAULT_VIEW;
+  const box = occluderBox(opts.layout ?? LAYOUT);
+  const hid = (u: number) => {
+    const p = lerpPt(a, b, u);
+    return (!opts.noOccluder && hiddenByBox(p, box, tilt, view)) || (opts.hidden ? opts.hidden(p) : false);
+  };
+  const n = Math.max(2, opts.steps ?? 48);
+  const edge = (u0: number, u1: number, v0: boolean) => {
+    let lo = u0;
+    let hi = u1;
+    for (let i = 0; i < 18; i++) {
+      const m = (lo + hi) / 2;
+      if (hid(m) === v0) lo = m;
+      else hi = m;
+    }
+    return (lo + hi) / 2;
+  };
+  const out: [number, number][] = [];
+  let prev = hid(0);
+  let start: number | null = prev ? null : 0;
+  for (let k = 1; k <= n; k++) {
+    const u = k / n;
+    const cur = hid(u);
+    if (cur !== prev) {
+      const e = edge((k - 1) / n, u, prev);
+      if (cur) {
+        if (start !== null && e > start) out.push([start, e]);
+        start = null;
+      } else start = e;
+    }
+    prev = cur;
+  }
+  if (start !== null && start < 1) out.push([start, 1]);
+  return out;
+};
+
+/**
+ * Visible runs of a 3D polyline (e.g. S -> W -> H) as SVG path data, one string per unbroken run, with the parts the
+ * partition (and `opts.hidden`) hides from the camera removed.
+ *
+ * When to use: for overlays painted ABOVE the set (RoomSet `children`). A light path painted in RoomSet's `backdrop`
+ * needs no splitting: the drawn partition and people cover it exactly, also while the partition wobbles (this test
+ * uses the partition at rest).
+ */
+export const visibleRuns = (pts: PlanPt[], tilt: number, opts: VisibleOpts = {}): string[] => {
+  const s = viewAt(tilt, opts.view ?? DEFAULT_VIEW);
+  const runs: string[] = [];
+  let cur: string[] = [];
+  let open = false; // is the current run still connected to the end of the previous segment?
+  const put = (p: PlanPt) => {
+    const q = projectWith(s, p);
+    cur.push(`${cur.length ? 'L' : 'M'} ${q.x.toFixed(2)} ${q.y.toFixed(2)}`);
+  };
+  const flush = () => {
+    if (cur.length > 1) runs.push(cur.join(' '));
+    cur = [];
+  };
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i];
+    const b = pts[i + 1];
+    const spans = visibleSpans(a, b, tilt, opts);
+    spans.forEach(([u0, u1]) => {
+      if (!(open && u0 === 0)) flush();
+      put(lerpPt(a, b, u0));
+      put(lerpPt(a, b, u1));
+    });
+    const last = spans[spans.length - 1];
+    open = !!last && last[1] === 1;
+    if (!open) flush();
+  }
+  flush();
+  return runs;
 };
 
 /**

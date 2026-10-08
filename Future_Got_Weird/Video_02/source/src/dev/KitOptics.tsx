@@ -156,7 +156,7 @@ export const KitOptics: React.FC = () => {
   const leftUi = 1 - tw(frame, 186, 10);
 
   const room = [P(ROOM.x0, ROOM.z0), P(ROOM.x1, ROOM.z0), P(ROOM.x1, ROOM.z1), P(ROOM.x0, ROOM.z1)];
-  const wallTop = P(ROOM.x0 - 0.0, -0.1);
+  const wallTop = P(ROOM.x0, -0.1); // the relay-wall slab is 0.1 m thick in the plan
   const occ0 = P(OCC.x0, OCC.z0);
   const occ1 = P(OCC.x1, OCC.z1);
   const occCx = (occ0.x + occ1.x) / 2;
@@ -178,18 +178,20 @@ export const KitOptics: React.FC = () => {
         <circle cx={hPx.x} cy={hPx.y} r={0.13 * ppm} fill={C.coralLight} fillOpacity={0.6} />
         {/* bands */}
         {W.map((w, i) => (
-          <Band key={`b${i}`} asGroup center={w} r={report.rows[i].radius} halfWidth={hw} toPx={toPx} t={bandT[i]} clip={ROOM} tone="blue" fillOpacity={0.16} />
+          <Band key={`b${i}`} asGroup center={w} r={report.rows[i].radius} halfWidth={hw} toPx={toPx} t={bandT[i]} clip={ROOM} tone="blue" fillOpacity={0.2} />
         ))}
         {/* candidate arcs */}
         {W.map((w, i) => (
           <CandidateArc key={`a${i}`} asGroup center={w} r={report.rows[i].radius} toPx={toPx} t={arcT[i]} clip={ROOM} tone="blue" width={arcWidth} />
         ))}
         {/* possible-locations cloud */}
-        {field && <PossibleCloud asGroup toPx={toPx} field={field} levels={[0.06, 0.45]} t={cloudT} tone="teal" blur={7} />}
+        {field && <PossibleCloud asGroup toPx={toPx} field={field} t={cloudT} tone="teal" />}
         {/* leader from the "possible locations" label to the cloud */}
         {cloudT > 0 && (
           <path d={`M ${P(3.42, 2.16).x} ${P(3.42, 2.16).y} L ${P(3.27, 1.73).x} ${P(3.27, 1.73).y}`} stroke={C.tealDeep} strokeWidth={3.5} strokeLinecap="round" opacity={tw(frame, 158, 12)} />
         )}
+        {/* the room's ink wall line again, over the floor drawings: arcs, bands and the cloud stop at its inner edge */}
+        <path d={`M ${room.map((p) => `${p.x} ${p.y}`).join(' L ')} Z`} fill="none" stroke={C.ink} strokeWidth={OUTLINE} strokeLinejoin="round" />
         {/* partition (occluder) on top of the drawings on the floor */}
         <rect x={occCx - occW / 2} y={occ0.y} width={occW} height={occ1.y - occ0.y} rx={5} fill={C.coral} stroke={C.ink} strokeWidth={OUTLINE} />
         {[1 / 3, 2 / 3].map((k) => {
@@ -214,12 +216,13 @@ export const KitOptics: React.FC = () => {
         <circle cx={hPx.x} cy={hPx.y} r={0.13 * ppm} fill="none" stroke={C.coralDeep} strokeWidth={3.5} strokeDasharray="9 7" />
         <circle cx={hPx.x} cy={hPx.y} r={5.5} fill={C.coralDeep} stroke={C.cream} strokeWidth={2} />
         {/* sensor */}
-        <SensorGlyph asGroup p={S} dir={aim} toPx={toPx} firing={firing} size={lerp(46, 38, shift)} />
+        {/* sensor: the on-model SensorTop prop (about 0.24 m across), aimed at the wall sample being measured */}
+        <SensorGlyph asGroup p={S} dir={aim} toPx={toPx} firing={firing} size={0.24 * ppm} />
       </svg>
 
       {/* plan labels */}
       <Label x={P(3.55, 0).x} y={P(0, 0).y - 46}>relay wall</Label>
-      <Label x={occ0.x + 2} y={occ1.y + 38} backing>
+      <Label x={occCx} y={occ1.y + 38} backing>
         partition
       </Label>
       <Label x={sPx.x} y={sPx.y + 58} backing>
@@ -257,7 +260,12 @@ export const KitOptics: React.FC = () => {
         <LegendItem
           t={tw(frame, 120, 10)}
           label="timing band"
-          swatch={<path d="M 4 34 Q 28 0 52 34 L 52 22 Q 28 -12 4 22 Z" fill={C.blue} fillOpacity={0.25} stroke={C.blue} strokeOpacity={0.55} strokeWidth={2.5} />}
+          swatch={
+            <>
+              <path d="M 4 38 Q 28 -2 52 38 L 52 22 Q 28 -18 4 22 Z" fill={C.blue} fillOpacity={0.3} />
+              <path d="M 4 30 Q 28 -10 52 30" fill="none" stroke={C.blue} strokeWidth={3.5} strokeLinecap="round" />
+            </>
+          }
         />
         <LegendItem t={tw(frame, 146, 10)} label="possible locations" swatch={<ellipse cx={28} cy={20} rx={24} ry={13} fill={C.teal} fillOpacity={0.6} stroke={C.tealDeep} strokeWidth={3} />} />
       </div>
