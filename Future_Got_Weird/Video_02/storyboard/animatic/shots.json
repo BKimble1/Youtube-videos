@@ -1,0 +1,647 @@
+[
+ {
+  "shot": "S1.1",
+  "lines": "s01",
+  "first_seg": "s01",
+  "scene": [
+   "S1",
+   "Cold open: the impossible view (s01\u2013s08) \u00b7 room view"
+  ],
+  "qac": "Q: who is hiding from what? A: the guesser tiptoes in from the right and settles into his spot behind the coral partition, hands on hips, smug. C: the checker's dashed sight line stops at the partition. **J1**",
+  "picture": "room view (tilt 0): checker at left beside the sensor on its stand",
+  "text": "none",
+  "camera_sound": "locked wide; tiptoe steps; a smug exhale. **R1**",
+  "from": 0,
+  "to": 159
+ },
+ {
+  "shot": "S1.2",
+  "lines": "s02",
+  "first_seg": "s02",
+  "scene": [
+   "S1",
+   "Cold open: the impossible view (s01\u2013s08) \u00b7 room view"
+  ],
+  "qac": "Q: what is the sensor looking at? A: the readout blinks on \"sensor\"; a pale fan lights a patch of blank wall. C: nothing of him in its view",
+  "picture": "push 8% toward the sensor and patch",
+  "text": "none",
+  "camera_sound": "soft sensor hum (motif)",
+  "from": 159,
+  "to": 282
+ },
+ {
+  "shot": "S1.3",
+  "lines": "s03",
+  "first_seg": "s03",
+  "scene": [
+   "S1",
+   "Cold open: the impossible view (s01\u2013s08) \u00b7 room view"
+  ],
+  "qac": "Q: so how could it know? A: the readout swings up and becomes a full-screen evidence board: the authors' released layout seen from above (wall top, sensor left, partition, person right; x mirrored to match our room), and the estimated position moving along its measured path. C: cut-back: the guesser freezes mid-smirk",
+  "picture": "evidence board (taped card) drawn from `evidence/tracking_topdown.json`",
+  "text": "headline \"Real measurements \u00b7 published 2026\"; marker label \"estimated position\"; conditions chip \"authors' released data \u00b7 evaluation-kit sensor, held still \u00b7 processed with the authors' code\"; source chip \"Somasundaram et al., Nature 2026 \u00b7 plot mirrored to match our room\"",
+  "camera_sound": "push in; paper slap; tiny \"busted\" sting. C02, C03",
+  "from": 282,
+  "to": 630
+ },
+ {
+  "shot": "S1.4",
+  "lines": "s04",
+  "first_seg": "s04",
+  "scene": [
+   "S1",
+   "Cold open: the impossible view (s01\u2013s08) \u00b7 room view"
+  ],
+  "qac": "Q: through the partition? A: camera rises (tilt \u2248 0.4) until the gap at the wall shows; a ghost straight line from the sensor hits the partition and stops (\"blocked\"); then a path appears around the end of the partition via the wall",
+  "picture": "raised room view",
+  "text": "\"blocked\"",
+  "camera_sound": "partition thunk. C04",
+  "from": 630,
+  "to": 845
+ },
+ {
+  "shot": "S1.5",
+  "lines": "s05",
+  "first_seg": "s05",
+  "scene": [
+   "S1",
+   "Cold open: the impossible view (s01\u2013s08) \u00b7 room view"
+  ],
+  "qac": "Q: what path? A: a slowed pulse leaves the sensor, hits the wall (scatter fan), part reaches him, a tiny bit returns via the wall; later segments thinner and paler",
+  "picture": "raised room view",
+  "text": "\"slowed down\" \u00b7 \"invisible flash (shown for clarity)\"",
+  "camera_sound": "pulse tick at each bounce. C04, C05, C43",
+  "from": 845,
+  "to": 1128
+ },
+ {
+  "shot": "S1.6",
+  "lines": "s06\u2013s07",
+  "first_seg": "s06",
+  "scene": [
+   "S1",
+   "Cold open: the impossible view (s01\u2013s08) \u00b7 room view"
+  ],
+  "qac": "Q: later than what? A: two pulses race on a mini arrival timeline: the quick wall bounce lands first, the roundabout one later; a webcam prop tries to time it (question mark spins, it shrugs) and is replaced by the sensor close-up: two windows, a stopwatch glyph on the readout",
+  "picture": "inset timeline; sensor close-up",
+  "text": "\"\u2248 7 ns later \u00b7 illustrative\"; label \"time-of-flight sensor: times its own light's round trip\"",
+  "camera_sound": "webcam's sad blip. C06, C07",
+  "from": 1128,
+  "to": 1541
+ },
+ {
+  "shot": "S1.7",
+  "lines": "s08",
+  "first_seg": "s08",
+  "scene": [
+   "S1",
+   "Cold open: the impossible view (s01\u2013s08) \u00b7 room view"
+  ],
+  "qac": "Q: why does timing matter? A: a ruler of light across the room: 1 ns = 30 cm; the extra delay stretches into an extra distance from the wall spot",
+  "picture": "ruler",
+  "text": "\"1 nanosecond \u2248 30 cm \u2248 1 ft\"; \"extra delay \u2192 extra distance\"",
+  "camera_sound": "settle; he glances at the wall, uneasy. C06",
+  "from": 1541,
+  "to": 1837
+ },
+ {
+  "shot": "S2.1",
+  "lines": "s09",
+  "first_seg": "s09",
+  "scene": [
+   "S2",
+   "The wall relays information (s09\u2013s12) \u00b7 room view and close-ups"
+  ],
+  "qac": "Q: why a plain wall? A: a mirror bench: one ray hits a small mirror and leaves at the same angle",
+  "picture": "close-up bench",
+  "text": "\"in = out\" angle marks",
+  "camera_sound": "C08",
+  "from": 1837,
+  "to": 1951
+ },
+ {
+  "shot": "S2.2",
+  "lines": "s10",
+  "first_seg": "s10",
+  "scene": [
+   "S2",
+   "The wall relays information (s09\u2013s12) \u00b7 room view and close-ups"
+  ],
+  "qac": "Q: what would a mirror on our wall do? A: on \"here\", a mirror panel slides onto the wall at x \u2248 1.9\u20132.6 m (the reflection point for sensor \u2192 him is x \u2248 2.14 m); over the checker's shoulder we see his reflection; he ducks fast. **J2**",
+  "picture": "raised room view",
+  "text": "none",
+  "camera_sound": "mirror \"ting\"; duck squash. C08",
+  "from": 1951,
+  "to": 2203
+ },
+ {
+  "shot": "S2.3",
+  "lines": "s11",
+  "first_seg": "s11",
+  "scene": [
+   "S2",
+   "The wall relays information (s09\u2013s12) \u00b7 room view and close-ups"
+  ],
+  "qac": "Q: what does paint do? A: magnified wall cross-section: one ray hits the bumps and sprays out every which way, like a tiny lamp",
+  "picture": "close-up",
+  "text": "\"rough up close\"",
+  "camera_sound": "C09",
+  "from": 2203,
+  "to": 2455
+ },
+ {
+  "shot": "S2.4",
+  "lines": "s12",
+  "first_seg": "s12",
+  "scene": [
+   "S2",
+   "The wall relays information (s09\u2013s12) \u00b7 room view and close-ups"
+  ],
+  "qac": "Q: is his picture hidden in the wall? A: a postcard of him shreds into confetti; \"worse than that\": cut to the room, where paths from his head, shoulder and feet, via different wall spots, merge into one blip at the sensor, which drops into a row of timing bars",
+  "picture": "flat graphic \u2192 room",
+  "text": "\"metaphor\"; \"what survives: timing\"",
+  "camera_sound": "paper shred. C10",
+  "from": 2455,
+  "to": 2885
+ },
+ {
+  "shot": "S3.1",
+  "lines": "s13",
+  "first_seg": "s13",
+  "scene": [
+   "S3",
+   "The faint echo (s13\u2013s16) \u00b7 raised room view, then real data"
+  ],
+  "qac": "Q: what happens on the useful path? A: a cluster of light dots travels the five stops; at each bounce most of the dots scatter away and fade (illustrative)",
+  "picture": "raised room view (no full tilt)",
+  "text": "\"slowed down \u00b7 illustrative\"",
+  "camera_sound": "four soft ticks. C05, C11",
+  "from": 2885,
+  "to": 3188
+ },
+ {
+  "shot": "S3.2",
+  "lines": "s14",
+  "first_seg": "s14",
+  "scene": [
+   "S3",
+   "The faint echo (s13\u2013s16) \u00b7 raised room view, then real data"
+  ],
+  "qac": "Q: so what reaches the sensor? A: an arrival histogram builds as blocks drop into time slots: a tall stack for the one-bounce wall echo, a tiny late one for his three-bounce echo",
+  "picture": "histogram card",
+  "text": "\"1 bounce\" / \"3 bounces\"; \"illustrative\"",
+  "camera_sound": "block drops. C11",
+  "from": 3188,
+  "to": 3394
+ },
+ {
+  "shot": "S3.3",
+  "lines": "s15\u2013s16",
+  "first_seg": "s15",
+  "scene": [
+   "S3",
+   "The faint echo (s13\u2013s16) \u00b7 raised room view, then real data"
+  ],
+  "qac": "Q: is that real? A: the card is replaced by the authors' raw data (centre zone) on a linear axis: one tall spike; a magnifier slides over the tail and stretches it until a small bump appears ~3.7 ns after the wall echo; the bump is ringed, its extra path labelled",
+  "picture": "evidence board from `evidence/ams_wall_vs_echo.json`; a small 3\u00d73 sensor box icon (the same box returns in S6.7)",
+  "text": "headline \"Real measurements\"; conditions \"same team \u00b7 a different sensor (3\u00d73 zones) and hidden object\"; callouts \"hundreds of times weaker (this capture)\", \"\u2248 1.1 m extra path\"",
+  "camera_sound": "marker circle. C12, C06",
+  "from": 3394,
+  "to": 3965
+ },
+ {
+  "shot": "S4.1",
+  "lines": "s17",
+  "first_seg": "s17",
+  "scene": [
+   "S4",
+   "Timing becomes geometry (s17\u2013s24) \u00b7 plan view (layout frame A)"
+  ],
+  "qac": "Q: where can he be? A: the signature fold: the room folds flat into the plan view; characters become tokens; one wall spot (W1) lights",
+  "picture": "`RoomSet` tilt 0\u21921",
+  "text": "chip \"simplified picture (2D)\" held through s22; \"flashes and listens at one spot\"",
+  "camera_sound": "paper settle. C13",
+  "from": 3965,
+  "to": 4253
+ },
+ {
+  "shot": "S4.2",
+  "lines": "s18\u2013s19",
+  "first_seg": "s18",
+  "scene": [
+   "S4",
+   "Timing becomes geometry (s17\u2013s24) \u00b7 plan view (layout frame A)"
+  ],
+  "qac": "Q: what does one delay tell us? A: a ruler swings out from W1 to the measured distance and sweeps an arc on this side of the wall. C: face inset: he relaxes, leans on the partition. **J3a**",
+  "picture": "plan + face inset",
+  "text": "\"distance known \u00b7 direction unknown\"",
+  "camera_sound": "arc draw; relieved sigh. C14",
+  "from": 4253,
+  "to": 4580
+ },
+ {
+  "shot": "S4.3",
+  "lines": "s20",
+  "first_seg": "s20",
+  "scene": [
+   "S4",
+   "Timing becomes geometry (s17\u2013s24) \u00b7 plan view (layout frame A)"
+  ],
+  "qac": "Q: and a second spot? A: W4 lights, a second arc; they cross at his token; faint back halves of both circles cross again behind the wall and grey out. C: inset: his smile drops. **J3b**",
+  "picture": "plan + inset",
+  "text": "\"behind the wall: impossible\"",
+  "camera_sound": "small \"uh-oh\" sting. C15",
+  "from": 4580,
+  "to": 4840
+ },
+ {
+  "shot": "S4.4",
+  "lines": "s21",
+  "first_seg": "s21",
+  "scene": [
+   "S4",
+   "Timing becomes geometry (s17\u2013s24) \u00b7 plan view (layout frame A)"
+  ],
+  "qac": "Q: is it a point? A: arcs thicken into bands; their overlap fills as a small patch",
+  "picture": "`Band`, `PossibleCloud`",
+  "text": "\"illustrative band (\u00b13.75 cm)\"",
+  "camera_sound": "C16",
+  "from": 4840,
+  "to": 5030
+ },
+ {
+  "shot": "S4.5",
+  "lines": "s22",
+  "first_seg": "s22",
+  "scene": [
+   "S4",
+   "Timing becomes geometry (s17\u2013s24) \u00b7 plan view (layout frame A)"
+  ],
+  "qac": "Q: what helps? A: two close spots (W2, W3): the patch is long and blurry; the spots slide apart (W1, W4): it shrinks",
+  "picture": "live region",
+  "text": "\"close \u2192 long and blurry\" \u2192 \"spread out \u2192 smaller\"",
+  "camera_sound": "C17",
+  "from": 5030,
+  "to": 5194
+ },
+ {
+  "shot": "S4.6",
+  "lines": "s23",
+  "first_seg": "s23",
+  "scene": [
+   "S4",
+   "Timing becomes geometry (s17\u2013s24) \u00b7 plan view (layout frame A)"
+  ],
+  "qac": "Q: how does a computer do it? A: hundreds of candidate dots scatter over the hidden side; each predicts echoes; poor matches fade, good ones cluster on him",
+  "picture": "seeded particles",
+  "text": "card \"assumption: one small object\"",
+  "camera_sound": "thinning ticks. C18",
+  "from": 5194,
+  "to": 5526
+ },
+ {
+  "shot": "S4.7",
+  "lines": "s24",
+  "first_seg": "s24",
+  "scene": [
+   "S4",
+   "Timing becomes geometry (s17\u2013s24) \u00b7 plan view (layout frame A)"
+  ],
+  "qac": "Q: so what do we get? A: the cluster settles into a likely-location blob; a photo frame tries to frame him and is crossed out",
+  "picture": "",
+  "text": "\"likely location \u00b7 rough shape \u00b7 not a photograph\"",
+  "camera_sound": "C19",
+  "from": 5526,
+  "to": 5703
+ },
+ {
+  "shot": "S5.1",
+  "lines": "s25\u2013s26",
+  "first_seg": "s25",
+  "scene": [
+   "S5",
+   "What came before (s25\u2013s29) \u00b7 history shelf"
+  ],
+  "qac": "Q: who did this first? A: the plan sheet rolls up and lands on a museum shelf; truck to \"2012 \u00b7 MIT\": a lab table with a boxy laser, mirrors and a big streak-camera box aimed at a small wall; a tiny wooden mannequin behind a screen; a sketchy 3D outline of the mannequin rises",
+  "picture": "illustrated exhibit",
+  "text": "plate \"2012 \u00b7 MIT\"; labels \"ultrafast laser\", \"streak camera\"; \"illustration based on Velten et al. 2012\"",
+  "camera_sound": "shelf creak. C20, C21",
+  "from": 5703,
+  "to": 6103
+ },
+ {
+  "shot": "S5.2",
+  "lines": "s27",
+  "first_seg": "s27",
+  "scene": [
+   "S5",
+   "What came before (s25\u2013s29) \u00b7 history shelf"
+  ],
+  "qac": "Q: what changed? A: \"2018 \u00b7 Stanford\": one spot (the same glyph as our W1) hops across a wall in a raster; a laptop shows \"1 s\" while a wall clock ticks to about 7 minutes",
+  "picture": "illustrated exhibit",
+  "text": "\"reflective exit sign: \u2248 1 s to rebuild \u00b7 \u2248 7 min to measure\"",
+  "camera_sound": "clock ticks. C22, C23",
+  "from": 6103,
+  "to": 6567
+ },
+ {
+  "shot": "S5.3",
+  "lines": "s28",
+  "first_seg": "s28",
+  "scene": [
+   "S5",
+   "What came before (s25\u2013s29) \u00b7 history shelf"
+  ],
+  "qac": "Q: and then? A: \"2021 \u00b7 Wisconsin + Milan\": a strip detector and a powerful laser; a monitor plays a live, blobby video of ordinary objects; a \"5 frames/s\" counter ticks",
+  "picture": "illustrated exhibit",
+  "text": "\"live \u00b7 ordinary objects \u00b7 5 frames/s\"",
+  "camera_sound": "C24",
+  "from": 6567,
+  "to": 6902
+ },
+ {
+  "shot": "S5.4",
+  "lines": "s29",
+  "first_seg": "s29",
+  "scene": [
+   "S5",
+   "What came before (s25\u2013s29) \u00b7 history shelf"
+  ],
+  "qac": "Q: so? A: a velvet rope clips across the three exhibits; on \"cheap sensor\", a small side card at the end of the shelf: a fingertip-sized sensor board on a little stool",
+  "picture": "sign \"research equipment\"; side card \"2021 \u00b7 hidden objects tracked with a cheap sensor (Callenberg et al.) \u00b7 illustration\"",
+  "text": "",
+  "camera_sound": "rope clip. C25, C45",
+  "from": 6902,
+  "to": 7115
+ },
+ {
+  "shot": "S6.1",
+  "lines": "s30",
+  "first_seg": "s30",
+  "scene": [
+   "S6",
+   "Small sensors, published 2026 (s30\u2013s35) \u00b7 and S7 \u00b7 Real results (s36\u2013s39)"
+  ],
+  "qac": "Q: what's new? A: the checker reaches in and sets her small sensor on the empty fourth plinth (comic scale)",
+  "picture": "shelf + checker's arm",
+  "text": "plate \"published 2026 \u00b7 MIT + Dartmouth\"; \"time-of-flight sensors (LiDAR)\"",
+  "camera_sound": "tiny clink. C26, C27",
+  "from": 7115,
+  "to": 7429
+ },
+ {
+  "shot": "S6.2",
+  "lines": "s31",
+  "first_seg": "s31",
+  "scene": [
+   "S6",
+   "Small sensors, published 2026 (s30\u2013s35) \u00b7 and S7 \u00b7 Real results (s36\u2013s39)"
+  ],
+  "qac": "Q: can my phone do it? A: a generic phone slides in, its screen shows a padlock over \"raw data\"",
+  "picture": "",
+  "text": "\"not on your phone (yet): raw data kept private\"",
+  "camera_sound": "lock click. C42",
+  "from": 7429,
+  "to": 7577
+ },
+ {
+  "shot": "S6.3",
+  "lines": "s32",
+  "first_seg": "s32",
+  "scene": [
+   "S6",
+   "Small sensors, published 2026 (s30\u2013s35) \u00b7 and S7 \u00b7 Real results (s36\u2013s39)"
+  ],
+  "qac": "Q: why is that hard? A: a dim beam (fainter echo); a separate phone-shaped research module with a 10\u00d710 dot grid (\"about 100 pixels\"); she lifts her sensor off its stand and it jiggles",
+  "picture": "close-ups",
+  "text": "\"weak laser \u2192 fainter echo\"; \"smartphone-grade device (team's own): \u2248 100 pixels\";",
+  "camera_sound": "jiggle rattle. C28",
+  "from": 7577,
+  "to": 7958
+ },
+ {
+  "shot": "S6.4",
+  "lines": "s33",
+  "first_seg": "s33",
+  "scene": [
+   "S6",
+   "Small sensors, published 2026 (s30\u2013s35) \u00b7 and S7 \u00b7 Real results (s36\u2013s39)"
+  ],
+  "qac": "Q: what's the fix? A: a stack of dim, noisy frames slides together into one clearer estimate",
+  "picture": "burst metaphor",
+  "text": "\"our analogy: night mode\"",
+  "camera_sound": "shutter clicks. C29, C44",
+  "from": 7958,
+  "to": 8171
+ },
+ {
+  "shot": "S6.5",
+  "lines": "s34",
+  "first_seg": "s34",
+  "scene": [
+   "S6",
+   "Small sensors, published 2026 (s30\u2013s35) \u00b7 and S7 \u00b7 Real results (s36\u2013s39)"
+  ],
+  "qac": "Q: what goes wrong? A: a long-exposure photo of the guesser walking: a smear; in plan, two positions blur together when frames are just averaged",
+  "picture": "plan + photo gag",
+  "text": "\"plain averaging \u2192 smear (illustrative)\"",
+  "camera_sound": "C30",
+  "from": 8171,
+  "to": 8434
+ },
+ {
+  "shot": "S6.6",
+  "lines": "s35",
+  "first_seg": "s35",
+  "scene": [
+   "S6",
+   "Small sensors, published 2026 (s30\u2013s35) \u00b7 and S7 \u00b7 Real results (s36\u2013s39)"
+  ],
+  "qac": "Q: how does motion help? A: split plan: left, known sensor positions: each jiggle adds listening spots and the patch shrinks; right, sensor still: the predicted cloud follows each step",
+  "picture": "plan, layout frames A/B1 and H_A\u2192H_B",
+  "text": "\"one unknown at a time\"; \"known sensor positions\" / \"sensor still\"",
+  "camera_sound": "C30, C31, C35",
+  "from": 8434,
+  "to": 8808
+ },
+ {
+  "shot": "S6.7",
+  "lines": "s36",
+  "first_seg": "s36",
+  "scene": [
+   "S6",
+   "Small sensors, published 2026 (s30\u2013s35) \u00b7 and S7 \u00b7 Real results (s36\u2013s39)"
+  ],
+  "qac": "Q: does it work on real data? A: the plan board morphs into the opening's evidence board; the estimated position runs again",
+  "picture": "`evidence/tracking_topdown.json`",
+  "text": "conditions chip as S1.3; \"kit: 16 listening spots \u00b7 under US$100 (authors)\"",
+  "camera_sound": "C02, C32",
+  "from": 8808,
+  "to": 9182
+ },
+ {
+  "shot": "S6.8",
+  "lines": "s37",
+  "first_seg": "s37",
+  "scene": [
+   "S6",
+   "Small sensors, published 2026 (s30\u2013s35) \u00b7 and S7 \u00b7 Real results (s36\u2013s39)"
+  ],
+  "qac": "Q: shapes too? A: the 3\u00d73 box from S3.3 steps through a 6\u00d76 raster of known positions; the U resolves from noise",
+  "picture": "`evidence/ams_U.json`",
+  "text": "\"same 3\u00d73 sensor \u00b7 36 known positions \u00b7 object held still\"",
+  "camera_sound": "hold on the U. C33, C12",
+  "from": 9182,
+  "to": 9379
+ },
+ {
+  "shot": "S6.9",
+  "lines": "s38",
+  "first_seg": "s38",
+  "scene": [
+   "S6",
+   "Small sensors, published 2026 (s30\u2013s35) \u00b7 and S7 \u00b7 Real results (s36\u2013s39)"
+  ],
+  "qac": "Q: was that the whole story? A: acted: a reflective strip is stuck on a target and the returning pulse fattens; \"files don't say\" stamp on the clip's card; empty-room scan: the checker shoos the guesser out, the readout records the empty room, he sidles back",
+  "picture": "room + board",
+  "text": "\"reflective material: far more light back\"; \"clip: clothing not recorded\"; \"flat wall + empty-room scan\"",
+  "camera_sound": "strip rip; shoo. C34, C36, C02",
+  "from": 9379,
+  "to": 10157
+ },
+ {
+  "shot": "S7.1",
+  "lines": "s40",
+  "first_seg": "s40",
+  "scene": [
+   "S8",
+   "Usefulness and limits (s40\u2013s44) \u00b7 warehouse"
+  ],
+  "qac": "Q: what could it do? A: the delivery robot rolls toward a blind aisle corner",
+  "picture": "`WarehouseSet` front",
+  "text": "\"illustration\"",
+  "camera_sound": "motor whirr. **R3**",
+  "from": 10157,
+  "to": 10318
+ },
+ {
+  "shot": "S7.2",
+  "lines": "s41",
+  "first_seg": "s41",
+  "scene": [
+   "S8",
+   "Usefulness and limits (s40\u2013s44) \u00b7 warehouse"
+  ],
+  "qac": "Q: how would it help? A: tilt to plan: the robot's sensor pings the junction wall; a faint blob appears in the other aisle, where a person (the accepted \"person\" cast member) walks",
+  "picture": "plan",
+  "text": "\"potential use\"",
+  "camera_sound": "pulse motif. C39",
+  "from": 10318,
+  "to": 10490
+ },
+ {
+  "shot": "S7.3",
+  "lines": "s42",
+  "first_seg": "s42",
+  "scene": [
+   "S8",
+   "Usefulness and limits (s40\u2013s44) \u00b7 warehouse"
+  ],
+  "qac": "Q: what would it know? A: the blob reads \"something moving\"; the robot brakes with a cautious squint",
+  "picture": "front",
+  "text": "\"slow down \u00b7 not who\"",
+  "camera_sound": "brake. C19, C39",
+  "from": 10490,
+  "to": 10645
+ },
+ {
+  "shot": "S7.4",
+  "lines": "s43",
+  "first_seg": "s43",
+  "scene": [
+   "S8",
+   "Usefulness and limits (s40\u2013s44) \u00b7 warehouse"
+  ],
+  "qac": "Q: what's hard? A: a 2\u00d72 strip, one tile per beat: pulses fade before the far wall; a dark wall swallows light / a shiny one bounces it away; the sun floods the sensor; a tiny chip sweats over numbers",
+  "picture": "2\u00d72 vignette",
+  "text": "\"short range\" \u00b7 \"dark or shiny walls\" \u00b7 \"bright sunlight\" \u00b7 \"fast math on small hardware\"; \"early-stage prototype (authors)\"",
+  "camera_sound": "C40",
+  "from": 10645,
+  "to": 10989
+ },
+ {
+  "shot": "S7.5",
+  "lines": "s44",
+  "first_seg": "s44",
+  "scene": [
+   "S8",
+   "Usefulness and limits (s40\u2013s44) \u00b7 warehouse"
+  ],
+  "qac": "Q: is it a safety system? A: the robot creeps on; its bumper still does the stopping",
+  "picture": "front",
+  "text": "\"not a safety system\"",
+  "camera_sound": "C41",
+  "from": 10989,
+  "to": 11184
+ },
+ {
+  "shot": "S8.1",
+  "lines": "s45",
+  "first_seg": "s45",
+  "scene": [
+   "S9",
+   "Payoff (s45\u2013s48) \u00b7 room view"
+  ],
+  "qac": "back in the room: the guesser, still hiding, nervous",
+  "picture": "room view",
+  "text": "",
+  "camera_sound": "",
+  "from": 11184,
+  "to": 11253
+ },
+ {
+  "shot": "S8.2",
+  "lines": "s46",
+  "first_seg": "s46",
+  "scene": [
+   "S9",
+   "Payoff (s45\u2013s48) \u00b7 room view"
+  ],
+  "qac": "Q: what gave him away? A: raised view: all the paths replay, threading through the gap around the partition's end; then the clue blob lights on the readout",
+  "picture": "raised room view",
+  "text": "",
+  "camera_sound": "soft motif. C04, C19",
+  "from": 11253,
+  "to": 11493
+ },
+ {
+  "shot": "S8.3",
+  "lines": "s47 + 4.5 s hold",
+  "first_seg": "s47",
+  "scene": [
+   "S9",
+   "Payoff (s45\u2013s48) \u00b7 room view"
+  ],
+  "qac": "Q: how would he really hide? A: he pushes the partition back until its far end meets the wall; the paths now stop at it; the readout goes blank; smug again\u2026 and the checker simply leans around the partition and looks at him. **J4**",
+  "picture": "room view",
+  "text": "",
+  "camera_sound": "partition scrape; readout blip-off; deadpan beat. **R4**",
+  "from": 11493,
+  "to": 11717
+ },
+ {
+  "shot": "S8.4",
+  "lines": "s48",
+  "first_seg": "s48",
+  "scene": [
+   "S9",
+   "Payoff (s45\u2013s48) \u00b7 room view"
+  ],
+  "qac": "end card: wordmark and tagline, end-screen space",
+  "picture": "brand card",
+  "text": "\"Future Got Weird \u00b7 the strange future, explained\"",
+  "camera_sound": "logo hit, music out",
+  "from": 11717,
+  "to": 12091
+ }
+]

@@ -2,7 +2,7 @@
 """V2 final audio mix: narration + ducked dynamic music + effects + very low room tones → -16 LUFS, <= -1 dBTP master.
 
 Targets (production choices, not platform rules): about -16 LUFS integrated, <= -1 dBTP.
-Inputs : source/public/audio/narration.wav (from build_timeline.py), audio/music/v2/music_bed.wav (make_music_v2.py),
+Inputs : source/public/audio/narration.wav (from build_timeline.py), audio/music/v02/music_bed.wav (make_music_v02.py; --music to override),
          audio/sfx/v2/sfx_track.wav + amb_track.wav (make_sfx_v2.py)
 Outputs: source/public/audio/mix.wav (used by the Remotion render)
          audio/mix/v2/final_mix.wav, audio/mix/v2/stem_narration.wav, stem_music_ducked.wav, stem_sfx.wav (effects + room tones)
@@ -98,6 +98,7 @@ def main():
     ap.add_argument("--music-lufs", type=float, default=-27.0, help="music bed loudness before ducking (LUFS)")
     ap.add_argument("--duck-db", type=float, default=9.0, help="music reduction under speech (dB)")
     ap.add_argument("--sfx-db", type=float, default=0.0)
+    ap.add_argument("--music", default="audio/music/v02/music_bed.wav", help="music bed, relative to the episode root")
     ap.add_argument("--amb-lufs", type=float, default=-46.0, help="room tones, very low under narration")
     ap.add_argument("--sfx-duck-db", type=float, default=2.5, help="effects reduction under speech (dB)")
     ap.add_argument("--target-lufs", type=float, default=-16.0)
@@ -108,7 +109,7 @@ def main():
     assert sr == SR
     n = len(nar)
     nar = nar.mean(axis=1)
-    mus, sr2 = sf.read(os.path.join(ROOT, "audio/music/v2/music_bed.wav"), always_2d=True)
+    mus, sr2 = sf.read(os.path.join(ROOT, args.music), always_2d=True)
     sfx, sr3 = sf.read(os.path.join(ROOT, "audio/sfx/v2/sfx_track.wav"), always_2d=True)
     amb, sr4 = sf.read(os.path.join(ROOT, "audio/sfx/v2/amb_track.wav"), always_2d=True)
     assert sr2 == SR and sr3 == SR and sr4 == SR
