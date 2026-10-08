@@ -16,7 +16,7 @@
   "surface": 0.34,
   "interface": 0.19
  },
- "verification": "Plate rendered with Lanczos at 2x: the ink-line centre sits on this polyline to 0.17 px RMS / 0.6 px max (4K px), i.e. < 0.1 px at 1080p. Check image: /tmp/claude-0/-home-user-Youtube-videos/30d53758-3f65-58ef-8706-5dc1f2b4b0af/scratchpad/art_assess/backdrops/out/A07_profile_extraction_check.png (red = surface, teal = interface, red ticks = normals every 80 px).",
+ "verification": "Plate rendered with Lanczos at 2x: the ink-line centre sits on this polyline to 0.17 px RMS / 0.6 px max (4K px), i.e. < 0.1 px at 1080p. (check image was a session scratch render, not kept) (red = surface, teal = interface, red ticks = normals every 80 px).",
  "placement": "Draw the plate (if used) at world (0,0) size 1920x1080 inside the camera Layer; the points are then world px. Recommended instead: draw the surface in code from these points (paper above, paint layer between the lines, plaster below, 4 px ink on both lines); that renders crisply at 4K and the drawn surface IS the reflecting surface.",
  "lines": {
   "surface": {
