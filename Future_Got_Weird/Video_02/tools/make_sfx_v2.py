@@ -77,9 +77,12 @@ def main():
             if c.get('dur'):
                 d = float(c['dur'])
                 x = loop_to(x, d) if meta['class'] == 'loop' else x[: int(d * SR)].copy()
-                fi, fo = int(min(0.4, d / 4) * SR), int(min(0.6, d / 3) * SR)
-                x[:fi] *= np.linspace(0, 1, fi)
-                x[-fo:] *= np.linspace(1, 0, fo)
+                dl = len(x) / SR  # a one-shot can be shorter than the requested duration
+                fi, fo = int(min(0.4, dl / 4) * SR), int(min(0.6, dl / 3) * SR)
+                if fi:
+                    x[:fi] *= np.linspace(0, 1, fi)
+                if fo:
+                    x[-fo:] *= np.linspace(1, 0, fo)
                 sync = 0.0
             g = 10 ** ((meta['gain_db'] + c.get('gain', 0) + jitter_g) / 20)
             t0 = c['f'] / FPS - sync

@@ -100,8 +100,8 @@ def main():
     ap.add_argument("--sfx-db", type=float, default=0.0)
     ap.add_argument("--music", default="audio/music/v02/music_bed.wav", help="music bed, relative to the episode root")
     ap.add_argument("--amb-lufs", type=float, default=-46.0, help="room tones, very low under narration")
-    ap.add_argument("--sfx-duck-db", type=float, default=2.5, help="effects reduction under speech (dB)")
-    ap.add_argument("--target-lufs", type=float, default=-16.0)
+    ap.add_argument("--sfx-duck-db", type=float, default=5.0, help="effects reduction under speech (dB)")
+    ap.add_argument("--target-lufs", type=float, default=-15.5)
     ap.add_argument("--no-public", action="store_true", help="don't overwrite source/public/audio/mix.wav (e.g. while a render is reading it)")
     args = ap.parse_args()
 
