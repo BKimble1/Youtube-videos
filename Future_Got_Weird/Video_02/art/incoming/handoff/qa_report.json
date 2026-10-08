@@ -1,0 +1,27 @@
+{
+  "asset_count": 17,
+  "transparent_count": 9,
+  "opaque_count": 8,
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "all_files_readable": true,
+  "reference_only_count": 8,
+  "front_window_counts": {
+    "A14": 100,
+    "A15": 9
+  },
+  "visual_corrections": [
+    "A02 relieved lean",
+    "A12 closed laptop",
+    "A13 mitten hands"
+  ],
+  "not_checked": [
+    "Animated motion",
+    "Actual Remotion registration and masks",
+    "Runway clip quality",
+    "Final video render"
+  ],
+  "native_4k": false
+}
