@@ -276,7 +276,7 @@ const knob = (g: number) => {
 
 /* ------------------------------------------------------------------ the documents */
 const slipX = (g: number) =>
-  kf(g, [[PUSH, SX0], [PUSH + 8, SX0 + 20, E.out], [CARRY1, SX0 + 20], [ARRIVE1, SX1, E.inOut], [CARRY2, SX1], [ARRIVE2, SX2, E.inOut]]);
+  kf(g, [[PUSH, SX0], [PUSH + 8, SX0 + 20, E.out], [CARRY1, SX0 + 20], [ARRIVE1, SX1, E.inOut], [CARRY2, SX1], [ARRIVE2, SX2, SINE]]); // same ease as the camera that follows it
 type DocPose = {x: number; top: number; rot: number; visible: boolean};
 const slipPose = (g: number): DocPose => {
   const visible = g >= TAKE_RISE;
@@ -474,9 +474,9 @@ export const S9Verify: React.FC = () => {
   const stampWorld = {x: SX2 - SLIP_W / 2 + (H910.stamp.x ?? SLIP_STAMP_AT.x), y: SLIP_TOP0 + SLIP_STAMP_AT.y};
   const stampPt = worldToScreen(cam, stampWorld.x, stampWorld.y, 1);
   const [ix, iy] = impact(g, HIT, 0.12, 8);
-  // the impression shows as the pad starts to lift (the pad covers it while it presses)
-  const inkPop = g >= HIT + 3 ? lerp(1.15, 1, tw(g, HIT + 3, 6, E.out)) : 1;
-  const stamps: SlipStamp[] = g >= HIT + 3 ? [{...H910.stamp, scale: inkPop, sx: ix, sy: iy}] : [];
+  // the impression shows as the pad starts to lift (HIT + 4; the pad covers it while it presses)
+  const inkPop = g >= HIT + 4 ? lerp(1.15, 1, tw(g, HIT + 4, 6, E.out)) : 1;
+  const stamps: SlipStamp[] = g >= HIT + 4 ? [{...H910.stamp, scale: inkPop, sx: ix, sy: iy}] : [];
 
   // lift into S10 (H910); the stamping hand is pulled away first
   const lifted = g >= LIFT;
