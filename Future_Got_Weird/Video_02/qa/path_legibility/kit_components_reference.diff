@@ -1,0 +1,158 @@
+--- live/src/components/v02/Cast2.tsx	2026-10-08 05:28:39.569296702 +0000
++++ tc/src/components/v02/Cast2.tsx	2026-10-08 10:17:04.485651427 +0000
+@@ -3,6 +3,7 @@
+ import {blink as blinkFn, rand} from '../../lib/anim';
+ import {E, SOFT, drift, sp} from '../../lib/motion';
+ import {handPos, reachLocal, type Arm, type Hair, type Look, type Mouth, type Pose} from '../Character';
++import {projectWith, type HiddenTest, type ViewState} from '../../lib/room';
+ 
+ /**
+  * Cast2: the Video 01 cutout rig (components/Character.tsx) extended for Video 02, with the SAME identities: heads,
+@@ -1034,3 +1035,37 @@
+     </svg>
+   );
+ };
++
++/**
++ * Does the frontal rig drawn at `place` (feet x, y in world px, scale) cover the screen point q? A pose-independent
++ * approximation of the Character2 silhouette (head and hair, torso with the arms, legs) in rig px; `growPx` (world px)
++ * widens it for clearance checks. One copy for every scene (S1, S3, S9 had private `rigHides`).
++ */
++export const rigCovers = (place: {x: number; y: number; scale: number}, q: {x: number; y: number}, growPx = 0) => {
++  const lx = (q.x - place.x) / place.scale;
++  const ly = (q.y - place.y) / place.scale;
++  const gr = growPx / place.scale;
++  if ((lx / (92 + gr)) ** 2 + ((ly + 388) / (100 + gr)) ** 2 < 1) return true; // head and hair
++  if (Math.abs(lx) < 82 + gr && ly > -300 - gr && ly < -140) return true; // torso and arms
++  return Math.abs(lx) < 60 + gr && ly >= -140 && ly < 0; // legs
++};
++
++/**
++ * Overlay-light HiddenTest for the people: a light-plane point that lies behind a figure (plan z less than the figure's
++ * z + 5 cm) is hidden where it falls inside that figure's drawn silhouette, so a W -> H leg ends at his outline instead
++ * of crossing his chest, and fans and dots pass behind both people. OR it with lib/room partitionHides.
++ */
++export const figuresHide = (s: ViewState, h: number, figs: {z: number; place: {x: number; y: number; scale: number}}[]): HiddenTest => (p) => {
++  const q = projectWith(s, {x: p.x, z: p.z, h: p.h ?? h});
++  return figs.some((f) => p.z < f.z + 0.05 && rigCovers(f.place, q));
++};
++
++/** Hit cue when light reaches a figure from behind (the leg itself is hidden by the partition and his body): a crisp
++ *  saffron rim on the wall-side (up-left) outline, as a CSS filter for <Character2 style={{...rigStyle(..), filter}}>.
++ *  `t` 0..1 (e.g. tw(g, hit - 1, 3) * (1 - tw(g, hit + 6, 10))). */
++export const rimFlash = (t: number, scale: number, color = C.saffron): string | undefined => {
++  if (t <= 0.01) return undefined;
++  const n = parseInt(color.slice(1), 16);
++  const rgba = `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${Math.min(1, t).toFixed(3)})`;
++  return `drop-shadow(${(-6 * scale).toFixed(1)}px ${(-5 * scale).toFixed(1)}px 0 ${rgba})`;
++};
+--- live/src/components/v02/RoomSet.tsx	2026-10-08 05:19:58.421766655 +0000
++++ tc/src/components/v02/RoomSet.tsx	2026-10-08 10:16:43.169452480 +0000
+@@ -273,7 +273,8 @@
+   const s = viewAt(tilt, view);
+   const m = figureMix(tilt);
+   const foot = projectWith(s, {x, z, h: 0});
+-  const k = (s.ppm * heightM) / 1.45; // px per metre for the cutout
++  // px per metre for the cutout: on the set's height scale like the rigs (lib/room rigScale), uniformly
++  const k = Math.max(1e-3, (s.ppm * s.height * heightM) / 1.45);
+   const sw = OUTLINE / k;
+   const top = projectWith(s, {x, z, h: 0.75 * (heightM / 1.45)});
+   const r = s.ppm; // px per metre, plan rosette
+@@ -344,3 +345,26 @@
+ 
+ /** Re-exported for scenes that build their own item lists. */
+ export type {PlanPt};
++
++/**
++ * The opening between the partition's far end and the relay wall, marked in INK on the floor (a construction aid:
++ * never the light's saffron): the partition's line continued to the wall as a dashed threshold over a pale floor patch.
++ * Put it in RoomSet's `backdrop` (the stand, the people and the partition paint over it). `t` 0..1 draws it on from the
++ * wall; with a moved layout (S9's push) it shrinks with the gap and vanishes when the far end meets the wall.
++ */
++export const GapMarker: React.FC<{tilt: number; t: number; layout?: Layout; view?: ViewConfig; halfW?: number}> = ({tilt, t, layout = LAYOUT, view = DEFAULT_VIEW, halfW = 0.12}) => {
++  const o = layout.occluder;
++  const zEnd = o.z0 - 0.02;
++  if (t <= 0 || zEnd < 0.04) return null;
++  const s = viewAt(tilt, view);
++  const P = (x: number, z: number) => projectWith(s, {x, z, h: 0});
++  const d = (pts: {x: number; y: number}[]) => pts.map((q, i) => `${i ? 'L' : 'M'} ${q.x.toFixed(2)} ${q.y.toFixed(2)}`).join(' ') + ' Z';
++  const a = P(o.x, 0.01);
++  const b = P(o.x, 0.01 + (zEnd - 0.01) * Math.min(1, t));
++  return (
++    <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
++      <path d={d([P(o.x - halfW, 0.02), P(o.x + halfW, 0.02), P(o.x + halfW, zEnd), P(o.x - halfW, zEnd)])} fill={C.white} opacity={0.55 * Math.min(1, t)} />
++      <path d={`M ${a.x.toFixed(2)} ${a.y.toFixed(2)} L ${b.x.toFixed(2)} ${b.y.toFixed(2)}`} stroke={C.inkMuted} strokeWidth={4} strokeDasharray="12 9" strokeLinecap="round" fill="none" />
++    </svg>
++  );
++};
+--- live/src/components/v02/Partition.tsx	2026-10-08 04:05:53.378642446 +0000
++++ tc/src/components/v02/Partition.tsx	2026-10-08 10:16:43.169819500 +0000
+@@ -1,7 +1,7 @@
+ import React from 'react';
+ import {interpolateColors} from 'remotion';
+ import {C, OUTLINE} from '../../theme';
+-import {DEFAULT_VIEW, LAYOUT, Layout, PlanPt, ViewConfig, ViewState, hull, projectWith, smoothstep, viewAt} from '../../lib/room';
++import {DEFAULT_VIEW, LAYOUT, Layout, PARTITION_ARCH, PARTITION_FOOT_H, PlanPt, ViewConfig, ViewState, hull, projectWith, smoothstep, viewAt} from '../../lib/room';
+ 
+ /**
+  * The partition: a coral three-panel folding screen on stubby feet, standing on the floor along the z axis at
+@@ -27,8 +27,8 @@
+   style?: React.CSSProperties;
+ };
+ 
+-const FOOT_H = 0.07; // panels stand this high on their feet
+-const ARCH = 0.09; // panel tops: corners are this much lower than the middle
++const FOOT_H = PARTITION_FOOT_H; // panels stand this high on their feet (shared with lib/room's occlusion tests)
++const ARCH = PARTITION_ARCH; // panel tops: corners are this much lower than the middle
+ const LEAN_MAX = 6; // degrees at wobble = 1
+ const CORAL_TOP = '#F7A08F';
+ 
+--- live/src/components/v02/S9_Room.tsx	2026-10-08 08:12:30.026080186 +0000
++++ tc/src/components/v02/S9_Room.tsx	2026-10-08 10:17:04.486289736 +0000
+@@ -1,7 +1,7 @@
+ import React from 'react';
+ import {C, OUTLINE} from '../../theme';
+ import {E} from '../../lib/motion';
+-import {DEFAULT_VIEW, LAYOUT, PTS, type Box, type Layout, type PlanPt, type ViewConfig, hiddenByBox, project, projectWith, rigAt, viewAt} from '../../lib/room';
++import {DEFAULT_VIEW, LAYOUT, PTS, type Box, type Layout, type PlanPt, type ViewConfig, hiddenByBox, project, projectWith, rigAt, rigScale, viewAt} from '../../lib/room';
+ import type {Arm} from '../Character';
+ import type {Foot} from './Cast2';
+ import {HandheldSensor, SENSOR, sensorPoint, type HandheldSensorProps} from './HandheldSensor';
+@@ -125,7 +125,6 @@
+ 
+ const WALK_DUTY = 0.58; // fraction of a cycle each foot is planted (Cast2's walk)
+ const HIP_X = 33; // Cast2 ankle x when standing, rig px
+-const RIG_PX = 440;
+ 
+ export type PlanWalk = {a: {x: number; z: number}; b: {x: number; z: number}; dist: number; steps: number; stepM: number; heightM: number; lift: number};
+ 
+@@ -235,7 +234,7 @@
+   // constant lead of the ground line toward the camera (smaller aheadK: the body bobs onto the nearer foot instead)
+   const ahead = Math.abs(dyPerM) * aheadK * step * ramp;
+   const yRef = Math.max(body.y + ahead, fL.y, fR.y);
+-  const k = (plan.heightM * s.ppm) / RIG_PX;
++  const k = rigScale(s, plan.heightM); // the set's height scale, as lib/room rigAt
+   const towardCam = uz >= 0;
+   // the nearer leg is drawn last (Character2 orders legs by the shoes' turn)
+   const nearL = towardCam ? trail.p > lead.p : trail.p < lead.p;
+--- live/src/lib/shots.ts	2026-10-08 05:49:36.673060464 +0000
++++ tc/src/lib/shots.ts	2026-10-08 10:16:43.170129759 +0000
+@@ -12,9 +12,16 @@
+  * Scenes may move between these with camPath, and may add their own close-ups, but a cut between scenes lands on
+  * one of these framings unless a hand-off says otherwise.
+  */
+-export const RAISED_TILT = 0.4;
++export const RAISED_TILT = 0.1;
+ export const CAM_ROOM: Cam = {cx: 880, cy: 565, zoom: 1.2};
+-export const CAM_RAISED: Cam = {cx: 905, cy: 535, zoom: 1.25};
++/** RAISED, the room centred: both characters head to feet, the partition's far top, the wall spot W3. */
++export const CAM_RAISED: Cam = {cx: 895, cy: 455, zoom: 1.25};
++/** RAISED with the "seen from above" PlanCard in PLAN_CARD_RECT (top right): the room in screen x ~320..1350. */
++export const CAM_PATH: Cam = {cx: 996, cy: 455, zoom: 1.25};
++/** RAISED with a column of cards on the left (S1.6-S1.7, S3.2): the room in screen x ~905..1855. */
++export const CAM_PATH_SIDE: Cam = {cx: 531, cy: 455, zoom: 1.15};
++/** Screen rect of the PlanCard beside a raised path shot (480 px = a quarter of the frame width). */
++export const PLAN_CARD_RECT = {x: 1400, y: 40, w: 480, h: 408};
+ export const CAM_PLAN_ACT: Cam = {cx: 984, cy: 372, zoom: 2.0};
+ export const CAM_PLAN_FULL: Cam = {cx: 960, cy: 540, zoom: 1.0};
+ 

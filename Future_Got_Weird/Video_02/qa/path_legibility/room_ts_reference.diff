@@ -1,0 +1,270 @@
+--- live/src/lib/room.ts	2026-10-08 05:19:44.605167620 +0000
++++ tc/src/lib/room.ts	2026-10-08 10:16:04.236857979 +0000
+@@ -11,10 +11,10 @@
+  *    recedes upward foreshortened to 0.35, heights are drawn at full scale and there is no perspective scaling. The
+  *    receding axis leans to the upper left (shear): near things sit a little to the right of far things, as if the
+  *    camera stood front-LEFT and slightly above. That is what lets the right side wall and the sensor-side face of the
+- *    partition show, and it keeps the partition from hiding the wall samples: on screen the partition only covers
+- *    wall to its right (x ~ 2.6-2.9 m at h = 1.2), while W1..W4 lie at x <= 2.2 m. The W -> H legs dip behind the
+- *    partition's far end and the S -> W legs pass behind the operator's head: paint light paths in RoomSet's `backdrop`
+- *    and the standing things cover them exactly; for overlays above the set, split them with visibleRuns().
++ *    partition show. From any front-left camera the opening between the partition's far end and the wall lies BEHIND
++ *    the far end, so a wall -> person leg is seen going behind the far end's vertical edge; the light-path rule
++ *    (assertAroundTheEnd) keeps it from ever showing across the partition's top. Hide overlay light with
++ *    hiddenByPartition / partitionHides (the partition as drawn), or paint it in RoomSet's `backdrop`.
+  *  - tilt 1, the PLAN VIEW: straight down, wall at the top, the same scale in x and z (circles stay circles), the room
+  *    centred in frame.
+  *  - between: the camera's elevation angle phi rises from asin(0.35) to 90 deg, so floor foreshortening = sin(phi)
+@@ -332,7 +332,8 @@
+ /**
+  * A rough body box for an upright thing standing at (x, z): `w` half-width across x, `d` half-depth along z, `height`
+  * metres tall. Use with hiddenByBox / VisibleOpts.hidden to hide the stretch of an overlay path that passes behind a
+- * person in the room view. (The rig is drawn at its full metric height only at tilt 0; see figureMix.)
++ * person in the room view. (The rig is drawn at its metric height on the set's height scale, rigScale, and fades out
++ * over tilt 0.45..0.75, figureMix.)
+  */
+ export const uprightBox = (x: number, z: number, opts: {w?: number; d?: number; height?: number; h?: number} = {}): Box => ({
+   x0: x - (opts.w ?? 0.26),
+@@ -463,6 +464,178 @@
+   return runs;
+ };
+ 
++/* ------------------------------------------------------------------ the partition AS DRAWN (light-path legibility) */
++
++/** Drawn partition panel tops (components/v02/Partition imports these): one arch per panel; the panel corners and the
++ *  hinges are PARTITION_ARCH lower than the panel middles. The panels stand on stubby feet PARTITION_FOOT_H high. */
++export const PARTITION_ARCH = 0.09;
++export const PARTITION_FOOT_H = 0.07;
++
++/** Height (m) of the drawn partition's top at plan z (clamped to its length). */
++export const partitionTopH = (z: number, layout: Layout = LAYOUT) => {
++  const o = layout.occluder;
++  const Lp = (o.z1 - o.z0) / 3;
++  const v = (Math.max(o.z0, Math.min(o.z1, z)) - o.z0) / Lp;
++  const u = clamp01(v - Math.floor(Math.min(2.9999, v)));
++  return o.height - PARTITION_ARCH * (1 - Math.sin(Math.PI * u));
++};
++
++export type PartitionTestOpts = {
++  layout?: Layout;
++  /** world px of ink outline counted as partition (default 3: half the 4-5 px outline plus 1 px of antialiasing) */
++  padPx?: number;
++};
++
++/** The camera ray through p meets the partition's centre plane (x = occluder.x) at (z, h). */
++const onPartitionPlane = (p: PlanPt, s: ViewState, layout: Layout) => {
++  const t = (layout.occluder.x - p.x) / s.toCam[0];
++  return {z: p.z + s.toCam[1] * t, h: (p.h ?? 0) + s.toCam[2] * t, t};
++};
++
++/**
++ * Is p hidden from the camera by the partition AS DRAWN: both long faces, the arched top band between them, the end
++ * faces, plus `padPx` of ink outline? This is THE test for light drawn over the set (LightPath / ScatterFan / dot
++ * `hidden`): the box test (isHiddenByOccluder) ignores the arches (up to 9 cm too high), and the scenes' old
++ * face-polygon tests ignored the top band, so light was painted on the screen's rim. The partition at rest (no wobble);
++ * pass a moved layout for S9's push. Points on the camera's side of the partition are never hidden by it.
++ */
++export const hiddenByPartition = (p: PlanPt, s: ViewState, opts: PartitionTestOpts = {}) => {
++  const L = opts.layout ?? LAYOUT;
++  const o = L.occluder;
++  const pad = opts.padPx ?? 3;
++  const [dx, dz, dh] = s.toCam;
++  if (dx > -1e-9) return false; // the room's cameras always stand front-left (toCam.x < 0)
++  const x0 = o.x - o.thickness / 2 - pad / s.ppm;
++  const x1 = o.x + o.thickness / 2 + pad / s.ppm;
++  if (p.x <= x0) return false;
++  const padH = pad / (s.ppm * Math.max(s.height, 1e-3));
++  const padZ = pad / (s.ppm * Math.max(s.shear, 1e-3));
++  const h = p.h ?? 0;
++  const tA = Math.max(0, (x1 - p.x) / dx);
++  const tB = (x0 - p.x) / dx;
++  for (let i = 0; i <= 6; i++) {
++    const t = tA + ((tB - tA) * i) / 6;
++    const z = p.z + dz * t;
++    const hh = h + dh * t;
++    if (z >= o.z0 - padZ && z <= o.z1 + padZ && hh >= PARTITION_FOOT_H - padH && hh <= partitionTopH(z, L) + padH) return true;
++  }
++  return false;
++};
++
++/** A HiddenTest at the light-path plane for LightPath / ScatterFan (plan points in, `h` added). */
++export const partitionHides = (s: ViewState, h: number, opts: PartitionTestOpts = {}): HiddenTest => (p) => hiddenByPartition({x: p.x, z: p.z, h: p.h ?? h}, s, opts);
++
++export type PartitionEdge = 'far' | 'near' | 'top';
++/** One place where a segment goes behind ('in') or comes out from behind ('out') the drawn partition, on screen. */
++export type PartitionCrossing = {u: number; dir: 'in' | 'out'; edge: PartitionEdge; belowCornerPx: number};
++export type PartitionReport = {
++  /** visible parts [u0, u1] of a -> b */
++  spans: [number, number][];
++  crossings: PartitionCrossing[];
++  /** screen px (at `zoom`) of visible segment that lies on or above the partition's top edge between its two ends,
++   *  on the far side of it: what reads as "over the top" (must be 0 for a light leg) */
++  overPx: number;
++  /** min screen px (at `zoom`) between the visible segment and the partition's silhouette where the segment is on the
++   *  camera's side of it (S -> W legs); Infinity if it never comes near; negative if it is drawn across the screen */
++  frontClearPx: number;
++};
++
++/**
++ * How a straight 3D segment a -> b meets the drawn partition at a view: its visible spans, and for every place it goes
++ * behind or comes out from behind the partition, by which silhouette edge ('far' = the far end's vertical edge, by the
++ * wall; 'near' = the near end's vertical edge; 'top' = across the arched top band) and how far below that end's top
++ * corner (screen px at `zoom`; negative = above the corner, which is a 'top' crossing). Use assertAroundTheEnd.
++ */
++export const partitionCrossings = (a: PlanPt, b: PlanPt, s: ViewState, opts: PartitionTestOpts & {zoom?: number; steps?: number} = {}): PartitionReport => {
++  const L = opts.layout ?? LAYOUT;
++  const o = L.occluder;
++  const zoom = opts.zoom ?? 1;
++  const n = Math.max(8, opts.steps ?? 400);
++  const pxPerH = s.ppm * s.height * zoom;
++  const pxPerZ = s.ppm * Math.max(s.shear, 1e-3) * zoom;
++  const at = (u: number) => lerpPt(a, b, u);
++  const hid = (u: number) => hiddenByPartition(at(u), s, opts);
++  const spans: [number, number][] = [];
++  const crossings: PartitionCrossing[] = [];
++  let overPx = 0;
++  let frontClearPx = Infinity;
++  const segPx = Math.hypot(projectWith(s, b).x - projectWith(s, a).x, projectWith(s, b).y - projectWith(s, a).y) * zoom / n;
++  let prev = hid(0);
++  let start: number | null = prev ? null : 0;
++  for (let k = 0; k <= n; k++) {
++    const u = k / n;
++    const cur = hid(u);
++    if (k > 0 && cur !== prev) {
++      let lo = (k - 1) / n;
++      let hi = u;
++      for (let i = 0; i < 20; i++) {
++        const m = (lo + hi) / 2;
++        if (hid(m) === prev) lo = m;
++        else hi = m;
++      }
++      const ue = (lo + hi) / 2;
++      const q = onPartitionPlane(at(ue), s, L);
++      const top = partitionTopH(q.z, L);
++      const far = q.z < (o.z0 + o.z1) / 2;
++      const corner = partitionTopH(far ? o.z0 : o.z1, L);
++      const edge: PartitionEdge = q.h >= top - 0.03 ? 'top' : far ? 'far' : 'near';
++      crossings.push({u: ue, dir: cur ? 'in' : 'out', edge, belowCornerPx: (corner - q.h) * pxPerH});
++      if (cur) {
++        if (start !== null && ue > start) spans.push([start, ue]);
++        start = null;
++      } else start = ue;
++    }
++    prev = cur;
++    if (!cur) {
++      const p = at(u);
++      const q = onPartitionPlane(p, s, L);
++      const inStrip = q.z >= o.z0 && q.z <= o.z1;
++      const above = q.h - partitionTopH(q.z, L);
++      if (p.x > o.x + o.thickness / 2 && inStrip && above >= 0) overPx += segPx;
++      if (p.x < o.x - o.thickness / 2) {
++        // distance on screen to the silhouette, from the far side: past an end (z) or above the top (h)
++        const dzOut = q.z < o.z0 ? (o.z0 - q.z) * pxPerZ : q.z > o.z1 ? (q.z - o.z1) * pxPerZ : 0;
++        const dhOut = Math.max(0, above) * pxPerH;
++        const d = Math.hypot(dzOut, dhOut);
++        frontClearPx = Math.min(frontClearPx, d > 0 ? d : -1);
++      }
++    }
++  }
++  if (start !== null && start < 1) spans.push([start, 1]);
++  return {spans, crossings, overPx, frontClearPx};
++};
++
++/**
++ * The light-path rule for the room view (STORYBOARD continuity rules): every leg goes round the partition's END, never
++ * over it. For each segment of each polyline: wherever it goes behind or comes out from behind the drawn partition it
++ * does so by the far or near end's vertical edge at least `minBelowCornerPx` (screen px at `zoom`) below that end's top
++ * corner, never across the top band; no visible part on the far side lies above the top edge between the ends; legs on
++ * the camera's side stay `minFrontClearPx` clear of the silhouette (unless `allowFront`, e.g. the blocked ghost line).
++ * Throws with a per-leg report. Run it at module load for every tilt the shot draws light at (e.g. [0, RAISED_TILT]).
++ */
++export const assertAroundTheEnd = (
++  label: string,
++  polylines: PlanPt[][],
++  s: ViewState,
++  opts: PartitionTestOpts & {zoom: number; minBelowCornerPx?: number; minFrontClearPx?: number; allowFront?: boolean},
++) => {
++  const minC = opts.minBelowCornerPx ?? 24;
++  const minF = opts.minFrontClearPx ?? 18;
++  const bad: string[] = [];
++  polylines.forEach((pl, j) =>
++    pl.slice(0, -1).forEach((a, i) => {
++      const r = partitionCrossings(a, pl[i + 1], s, opts);
++      const tag = `${label} path ${j} leg ${i} @tilt ${s.tilt.toFixed(3)}`;
++      for (const c of r.crossings) if (c.edge === 'top' || c.belowCornerPx < minC) bad.push(`${tag}: goes ${c.dir} across the ${c.edge} (${c.belowCornerPx.toFixed(0)} px below the corner, needs ${minC})`);
++      if (r.overPx > 0.5) bad.push(`${tag}: ${r.overPx.toFixed(0)} px drawn over the partition's top`);
++      // a leg that comes out from behind the far end runs beside it by construction: only legs that never go behind the
++      // partition (S -> W) must keep clear of it
++      if (!opts.allowFront && r.crossings.length === 0 && r.frontClearPx < minF) bad.push(`${tag}: ${r.frontClearPx.toFixed(0)} px from the partition on the camera side (needs ${minF})`);
++    }),
++  );
++  if (bad.length) throw new Error(`assertAroundTheEnd: ${bad.join('; ')}`);
++};
++
+ /**
+  * Something to depth-sort. A point item is an upright thing standing at (x, z) (a figure, a plant, a prop): `w` is
+  * its half-width and `height` its height in metres (used to test occlusion against boxes). A box item (`box`) is an
+@@ -495,9 +668,11 @@
+     return {x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys)};
+   }
+   const q = projectWith(s, {x: it.x ?? view.pivot.x, z: it.z, h: it.h ?? 0});
+-  const w = (it.w ?? 0.3) * s.ppm;
+-  // upright things are drawn at full height (no squash) while visible (figureMix); in the plan they are discs (~w)
+-  const up = s.tilt < 0.75 ? (it.height ?? PERSON_M) * s.ppm : w;
++  // upright things are uniform-scaled billboards on the set's height scale (rigScale) while visible (figureMix); in the
++  // plan they are discs (~w)
++  const upright = s.tilt < 0.75;
++  const w = (it.w ?? 0.3) * s.ppm * (upright ? Math.max(s.height, 0.3) : 1);
++  const up = upright ? (it.height ?? PERSON_M) * s.ppm * s.height : w;
+   return {x0: q.x - w, x1: q.x + w, y0: q.y - up, y1: q.y + w * Math.max(0.35, s.floor)};
+ };
+ 
+@@ -560,20 +735,27 @@
+ export const PERSON_M = 1.7;
+ 
+ /**
+- * Where to draw a frontal rig standing at (x, z): feet at the projected floor point, scale such that a person of
+- * `heightM` metres is that tall in the room view. Pass {x, y, scale} straight to <Character>/<Character2>. The scale
+- * does not shrink with the height scale as the camera tilts (that would squash the rig); use `figureMix`/`rigStyle` to
+- * fade it.
++ * Rig scale for an upright billboard (person, plant) `heightM` metres tall at a resolved view: it follows the SET's
++ * height scale (px per metre of h = ppm * height), uniformly (never squashed), so a 1.7 m person stands exactly as tall
++ * as 1.7 m of wall or partition at every tilt. 1.31 at tilt 0 (unchanged room view), 1.20 at RAISED_TILT 0.10, 0.66
++ * where figureMix starts fading the rig (tilt 0.45).
++ */
++export const rigScale = (s: ViewState, heightM = PERSON_M) => (heightM * s.ppm * s.height) / RIG_PX;
++
++/**
++ * Where to draw a frontal rig standing at (x, z): feet at the projected floor point, scale rigScale (a person of
++ * `heightM` metres is exactly that tall against the set at this tilt). Pass {x, y, scale} straight to
++ * <Character>/<Character2>; use `figureMix`/`rigStyle` to fade it into the token.
+  *
+- * Staging note: the rig is a chibi (big head). At 1.7 m its shoulders are at ~1.13 m and its chin at ~1.21 m, so a
+- * prop held at the layout's sensor height (1.2 m) sits at chin level in the room view, and as the camera tilts the
+- * projected point slides down the (unsquashed) rig toward the chest. Place hands with reach/reach2 on the projected
+- * point every frame (see dev/KitRoom) rather than on a fixed pose.
++ * Staging note: the rig is a chibi (big head). At 1.7 m its shoulders are at ~1.13 m, its chin at ~1.21 m and its chest
++ * at ~0.95 m, the light-path plane (layout sensor.h / hidden.h): a prop or a light point at that height sits on the
++ * chest at every tilt (rig and set share one height scale). Horizontal reaches in rig units change with the tilt (x is
++ * not foreshortened), so place hands with reach/reach2 on the projected point every frame (see dev/KitRoom).
+  */
+ export const rigAt = (x: number, z: number, tilt: number, opts: {heightM?: number; view?: ViewConfig} = {}) => {
+   const s = viewAt(tilt, opts.view ?? DEFAULT_VIEW);
+   const q = projectWith(s, {x, z, h: 0});
+-  return {x: q.x, y: q.y, scale: ((opts.heightM ?? PERSON_M) * s.ppm) / RIG_PX, depth: q.depth};
++  return {x: q.x, y: q.y, scale: rigScale(s, opts.heightM ?? PERSON_M), depth: q.depth};
+ };
+ 
+ /**
+@@ -604,8 +786,9 @@
+   };
+ };
+ 
+-/** Token height (m) used to place an overhead token during the tilt: the chest, so it appears inside the fading rig. */
+-export const TOKEN_H = 1.2;
++/** Token height (m) used to place an overhead token during the tilt: the rig's chest (the light-path plane, 0.95 m), so
++ *  it appears inside the fading rig. */
++export const TOKEN_H = LAYOUT.sensor.h;
+ /** Default token radius (m): a person seen from above, shoulders included. */
+ export const TOKEN_R = 0.26;
+ 

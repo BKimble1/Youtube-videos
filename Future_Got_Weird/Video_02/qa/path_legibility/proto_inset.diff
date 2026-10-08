@@ -1,0 +1,499 @@
+diff -ruN '--exclude=node_modules' '--exclude=audio' /home/user/Youtube-videos/Future_Got_Weird/Video_02/source/src/components/v02/PlanCard.tsx source/src/components/v02/PlanCard.tsx
+--- /home/user/Youtube-videos/Future_Got_Weird/Video_02/source/src/components/v02/PlanCard.tsx	1970-01-01 00:00:00.000000000 +0000
++++ source/src/components/v02/PlanCard.tsx	2026-10-08 08:28:41.731379107 +0000
+@@ -0,0 +1,210 @@
++import React from 'react';
++import {C, F, OUTLINE} from '../../theme';
++import {E} from '../../lib/motion';
++import {LAYOUT, WALL_T, type Layout} from '../../lib/room';
++import {pathCumulative, lerpP, type P2} from '../../lib/optics';
++import {polyD, type ToPx} from './Optics';
++import {CheckerToken, GuesserToken, tokenSize} from './Tokens';
++import {SensorTop, facingOf} from './HandheldSensor';
++
++/**
++ * "Seen from above": a small top-down plan card (screen space) shown beside the raised room view whenever a light path
++ * is drawn there (S1.4-S1.5, S3.1, S9.2-S9.3). In the raised room view the W -> H legs project just above the
++ * partition's far top corner and the gap at the wall is a sliver, so on their own they read as "over the top"; in the
++ * plan the same path, drawn by the same components on the same schedule, visibly threads the opening between the
++ * partition's far end and the relay wall.
++ *
++ * Drawn from layout.json like every other plan in the episode (S4's plan board look: cream floor, ink relay wall,
++ * coral partition bar, the overhead tokens and the sensor top), framed by a PlanView (default PLAN_VIEW).
++ * The card styling follows the house cards (S1.3 evidence board: white card, 4 px ink outline, tape, hard shadow).
++ *
++ * Scenes pass render callbacks that receive the card's plan -> px map:
++ *  - `light`: drawn over the floor and UNDER the partition and the people (seen from above, the 1.7 m partition and the
++ *    people stand over light travelling at the sensor's 1.2 m height), e.g. <LightPath asGroup toPx={toPx} .../>.
++ *  - `marks`: drawn over everything (crosses, spots).
++ * Plan coordinates are the layout's metres, so the paths are exactly the scene's paths (no re-derivation).
++ */
++
++const f2 = (n: number) => Math.round(n * 100) / 100;
++const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
++
++/**
++ * What the card shows: plan x `cx` at the plan area's centre, plan z `zTop` at its top edge (just beyond the relay
++ * wall), `ppm` px per metre. The plan area has a fixed size (PLAN_AREA), so changing ppm zooms the plan in the card.
++ */
++export type PlanView = {cx: number; zTop: number; ppm: number};
++/** Plan area (px): the card is PLAN_AREA plus the title row and a margin. */
++export const PLAN_AREA = {w: 360, h: 290};
++/** Default view: the wall half of the room at 175 px/m: x 0.95..3.0 (both people, the sensor), z -0.14..1.52 (the
++ *  wall, the 0.65 m opening, the partition's far end; the partition runs off the bottom, so the only end in view is
++ *  the one the light goes round). The gap is ~114 px, a person token ~88 px across. */
++export const PLAN_VIEW: PlanView = {cx: 1.975, zTop: -0.14, ppm: 175};
++/** The whole partition in view (S9.3: his walk to its near end and the push), same card size. */
++export const PLAN_VIEW_FULL: PlanView = {cx: 1.975, zTop: -0.14, ppm: PLAN_AREA.h / 2.54};
++const PAD = 16;
++const HEAD = 62;
++
++export type PlanArea = {w: number; h: number};
++
++/** Card size (screen px) for a plan area. */
++export const planCardSize = (area: PlanArea = PLAN_AREA) => ({w: area.w + 2 * PAD, h: HEAD + area.h + PAD});
++
++/** Plan -> card-local px. */
++export const planCardToPx = (v: PlanView = PLAN_VIEW, area: PlanArea = PLAN_AREA): ToPx => (p) => ({x: PAD + area.w / 2 + (p.x - v.cx) * v.ppm, y: HEAD + (p.z - v.zTop) * v.ppm});
++
++/** The same framing as `v` in a different plan area (scaled to the area's width). */
++export const viewForArea = (v: PlanView, area: PlanArea): PlanView => ({...v, ppm: (v.ppm * area.w) / PLAN_AREA.w});
++
++/** A view between a and b (u 0..1; ppm glides geometrically, like the room camera's zoom). */
++export const mixPlanView = (a: PlanView, b: PlanView, u: number): PlanView => ({
++  cx: a.cx + (b.cx - a.cx) * u,
++  zTop: a.zTop + (b.zTop - a.zTop) * u,
++  ppm: a.ppm * Math.pow(b.ppm / a.ppm, u),
++});
++
++export type PlanFigure = {x: number; z: number; facing?: number; opacity?: number};
++
++export type PlanCardProps = {
++  /** top-left corner, screen px */
++  x: number;
++  y: number;
++  /** 0..1 in (slides in from the right and fades up); pass in * (1 - out) */
++  t: number;
++  layout?: Layout;
++  view?: PlanView;
++  /** plan area size (px); default PLAN_AREA */
++  area?: PlanArea;
++  checker?: PlanFigure | null;
++  guesser?: PlanFigure | null;
++  /** the sensor top at S (faces the aim point on the wall unless `facing` is given) */
++  sensor?: {firing?: number; facing?: number} | null;
++  /** 0..1 the opening between the partition's far end and the wall, marked like the room view's gap marker */
++  gap?: number;
++  label?: string;
++  light?: (toPx: ToPx, ppm: number) => React.ReactNode;
++  marks?: (toPx: ToPx, ppm: number) => React.ReactNode;
++};
++
++export const PlanCard: React.FC<PlanCardProps> = ({x, y, t, layout = LAYOUT, view = PLAN_VIEW, area = PLAN_AREA, checker, guesser, sensor, gap = 0, label = 'seen from above', light, marks}) => {
++  if (t <= 0) return null;
++  const {w, h} = planCardSize(area);
++  const toPx = planCardToPx(view, area);
++  const ppm = view.ppm;
++  const k = E.out(clamp01(t));
++  const dx = (1 - k) * 56;
++  const op = clamp01(t * 1.6);
++  const id = `plancard${Math.round(x)}x${Math.round(y)}`;
++  // plan area (card-local)
++  const ax0 = PAD;
++  const ay0 = HEAD;
++  const aw = w - 2 * PAD;
++  const ah = h - HEAD - PAD;
++  // relay wall: an ink band (z in [-WALL_T, 0], at least 7 px) with the wall colour beyond it
++  const wallIn = toPx({x: 0, z: 0}).y;
++  const wallT = Math.max(7, WALL_T * ppm);
++  // partition: a coral bar with an ink outline, at least 13 px wide (the real 4 cm is ~5 px)
++  const oc = layout.occluder;
++  const barW = Math.max(14, oc.thickness * ppm);
++  const p0 = toPx({x: oc.x, z: oc.z0});
++  const p1 = toPx({x: oc.x, z: oc.z1});
++  // the gap: from the wall's face to the partition's far end, on the partition's line
++  const gapT = clamp01(gap);
++  const gapLen = p0.y - wallIn;
++  const tok = tokenSize(ppm);
++  const S = toPx({x: LAYOUT.sensor.x, z: LAYOUT.sensor.z});
++  const aim = toPx({x: (LAYOUT.sensor as {aimX?: number}).aimX ?? LAYOUT.sensor.x, z: 0});
++  const fig = (f: PlanFigure | null | undefined, who: 'checker' | 'guesser') => {
++    if (!f || (f.opacity ?? 1) <= 0.001) return null;
++    const q = toPx(f);
++    const Tok = who === 'checker' ? CheckerToken : GuesserToken;
++    return <Tok asGroup x={q.x} y={q.y} size={tok} facing={f.facing ?? (who === 'checker' ? facingOf(S.x - q.x, S.y - q.y) : -90)} opacity={f.opacity ?? 1} />;
++  };
++  return (
++    <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', pointerEvents: 'none'}}>
++      <g transform={`translate(${f2(x + dx)} ${f2(y)})`} opacity={f2(op)}>
++        {/* card: hard shadow, white body, ink outline, a strip of tape */}
++        <rect x={9} y={11} width={w} height={h} rx={16} fill={C.shadow} />
++        <rect x={0} y={0} width={w} height={h} rx={16} fill={C.white} stroke={C.ink} strokeWidth={OUTLINE} />
++        <text x={PAD + 4} y={44} fontFamily={F.body} fontWeight={800} fontSize={34} fill={C.inkSoft}>
++          {label}
++        </text>
++        <defs>
++          <clipPath id={`${id}-area`}>
++            <rect x={ax0} y={ay0} width={aw} height={ah} rx={10} />
++          </clipPath>
++        </defs>
++        <g clipPath={`url(#${id}-area)`}>
++          {/* floor (the plan board's cream) and the wall beyond the relay wall */}
++          <rect x={ax0} y={ay0} width={aw} height={ah} fill={C.cream} />
++          <rect x={ax0} y={ay0} width={aw} height={f2(wallIn - wallT - ay0)} fill="#F5E4C6" />
++          <rect x={ax0 - 2} y={f2(wallIn - wallT)} width={aw + 4} height={f2(wallT)} fill={C.ink} />
++          {/* the opening between the partition's far end and the wall: white, dashed outline (as in the room view) */}
++          {gapT > 0 && gapLen > 2 && (
++            <rect x={f2(p0.x - barW / 2)} y={f2(wallIn + 2)} width={f2(barW)} height={f2(Math.max(0, gapLen - 4))} rx={3} fill={C.white} stroke={C.inkMuted} strokeWidth={3} strokeDasharray="7 6" opacity={f2(gapT)} />
++          )}
++          {/* light (under the partition and the people) */}
++          {light && light(toPx, ppm)}
++          {/* the partition */}
++          <rect x={f2(p0.x - barW / 2)} y={f2(p0.y)} width={f2(barW)} height={f2(p1.y - p0.y)} rx={4} fill={C.coral} stroke={C.ink} strokeWidth={3.5} />
++          {/* people and the sensor */}
++          {fig(checker, 'checker')}
++          {fig(guesser, 'guesser')}
++          {sensor && <SensorTop asGroup x={S.x} y={S.y} size={0.26 * ppm} facing={sensor.facing ?? facingOf(aim.x - S.x, aim.y - S.y)} firing={sensor.firing ?? 0} />}
++          {marks && marks(toPx, ppm)}
++        </g>
++        <rect x={ax0} y={ay0} width={aw} height={ah} rx={10} fill="none" stroke={C.inkMuted} strokeWidth={2.5} />
++        {/* tape */}
++        <rect x={w - 70} y={-12} width={96} height={28} fill="rgba(255,233,168,0.92)" stroke="rgba(22,42,50,0.25)" strokeWidth={2} transform={`rotate(8 ${w - 22} 2)`} />
++      </g>
++    </svg>
++  );
++};
++
++/** A dashed route along a plan polyline, drawn on up to `head` metres (card px; nothing is hidden from above). */
++export const PlanRoute: React.FC<{points: P2[]; head: number; toPx: ToPx; opacity?: number; width?: number; dash?: string; color?: string}> = ({points, head, toPx, opacity = 1, width = 4.5, dash = '11 9', color = C.saffronDeep}) => {
++  if (head <= 0 || opacity <= 0) return null;
++  const cum = pathCumulative(points);
++  const pts = [toPx(points[0])];
++  for (let i = 0; i < points.length - 1; i++) {
++    if (head >= cum[i + 1]) pts.push(toPx(points[i + 1]));
++    else {
++      pts.push(toPx(lerpP(points[i], points[i + 1], (head - cum[i]) / (cum[i + 1] - cum[i]))));
++      break;
++    }
++  }
++  return <path d={polyD(pts)} fill="none" stroke={color} strokeWidth={width} strokeDasharray={dash} strokeLinecap="round" strokeLinejoin="round" opacity={f2(opacity)} />;
++};
++
++/** A blocked mark (coral cross on ink), card px. */
++export const PlanCross: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) =>
++  s <= 0.3 ? null : (
++    <g transform={`translate(${f2(x)} ${f2(y)})`}>
++      <path d={`M ${-s} ${-s} L ${s} ${s} M ${s} ${-s} L ${-s} ${s}`} stroke={C.ink} strokeWidth={8} strokeLinecap="round" />
++      <path d={`M ${-s} ${-s} L ${s} ${s} M ${s} ${-s} L ${-s} ${s}`} stroke={C.coral} strokeWidth={4} strokeLinecap="round" />
++    </g>
++  );
++
++/** The lit wall spot (saffron diamond), card px; pops with E.back. */
++export const PlanSpot: React.FC<{x: number; y: number; t: number; r?: number}> = ({x, y, t, r = 9}) => {
++  if (t <= 0) return null;
++  const s = r * E.back(clamp01(t));
++  return <path d={`M ${f2(x)} ${f2(y - s)} L ${f2(x + s)} ${f2(y)} L ${f2(x)} ${f2(y + s)} L ${f2(x - s)} ${f2(y)} Z`} fill={C.saffron} stroke={C.ink} strokeWidth={3} strokeLinejoin="round" />;
++};
++
++/**
++ * Facing (deg, clockwise from screen-up) of a token that walks along a plan track: the motion direction while it moves
++ * (centred difference over ±`span` frames), easing back to `rest` when it stands. `at(frame)` gives the plan position.
++ */
++export const facingFromMotion = (at: (f: number) => {x: number; z: number}, g: number, rest: number, span = 4, still = 0.02) => {
++  const a = at(g - span);
++  const b = at(g + span);
++  const vx = b.x - a.x;
++  const vz = b.z - a.z;
++  const v = Math.hypot(vx, vz);
++  const wgt = clamp01(v / still);
++  const r = (rest * Math.PI) / 180;
++  // blend unit vectors (screen: x right, y = z down); facing 0 = up (toward the wall)
++  const ux = Math.sin(r) * (1 - wgt) + (v > 1e-9 ? vx / v : 0) * wgt;
++  const uy = -Math.cos(r) * (1 - wgt) + (v > 1e-9 ? vz / v : 0) * wgt;
++  return facingOf(ux, uy);
++};
+diff -ruN '--exclude=node_modules' '--exclude=audio' /home/user/Youtube-videos/Future_Got_Weird/Video_02/source/src/scenes/S1_ColdOpen.tsx source/src/scenes/S1_ColdOpen.tsx
+--- /home/user/Youtube-videos/Future_Got_Weird/Video_02/source/src/scenes/S1_ColdOpen.tsx	2026-10-08 08:12:30.003643500 +0000
++++ source/src/scenes/S1_ColdOpen.tsx	2026-10-08 08:33:15.302689443 +0000
+@@ -38,6 +38,7 @@
+ import {BOARD_FRAMES, BoardCard, CARD, PLOT_CENTRE, TrackingBoard, type BoardT} from '../components/v02/S1_TrackingBoard';
+ import {ArrivalRace, MiniTrackScreen, NSS, RulerCard, SpinningQuestion, Stopwatch, Webcam} from '../components/v02/S1_Props';
+ import {reachLocal} from '../components/Character';
++import {PlanCard, PlanCross, PlanRoute, PlanSpot, planCardSize} from '../components/v02/PlanCard';
+ 
+ /**
+  * S1 · Cold open: the impossible view (s01–s08). Storyboard shots S1.1–S1.7.
+@@ -292,6 +293,14 @@
+ const VF = SCHED.vertexFrames; // S, W, H, W, S
+ const TRAIL_OUT = K.s06 + 4;
+ 
++// S1.4-S1.5 "seen from above": the plan card slides in as the camera settles (before the blocked line), carries the
++// same blocked line, route and pulse in sync, and leaves before the S1.6 pan brings the room under it.
++const CARD_IN = RISE0 + RISE_DUR - 10;
++const CARD_OUT = K.s06 - 10; // gone before the pan moves him under it
++const CARD_SIZE = planCardSize();
++/** Top right, over the back and side walls (right of his elbow, above the S1.5 chips). */
++const CARD_POS = {x: 1920 - 72 - CARD_SIZE.w, y: 56};
++
+ // S1.6 — pan, race, timeline
+ const CAM_SIDE: Cam = {cx: CAM_UP.cx - 280, cy: CAM_UP.cy, zoom: CAM_UP.zoom};
+ const PAN0 = K.s06;
+@@ -734,6 +743,7 @@
+   // "slowed down" stays while any pulse runs (S1.5 and the race); the flash note goes with the S1.5 pulse
+   const chipsT = tw(g, CHIPS0, 10) * (1 - tw(g, RACE_FADE, 10));
+   const flashT = 1 - tw(g, TRAIL_OUT, 10);
++  const cardT = g >= CUT ? tw(g, CARD_IN, 14, E.out) * (1 - tw(g, CARD_OUT, 10, E.inOut)) : 0;
+ 
+   return (
+     <AbsoluteFill style={{background: C.paper}}>
+@@ -772,6 +782,41 @@
+           )}
+         </div>
+       )}
++      {/* S1.4-S1.5 seen from above: the same blocked line, route and pulse (same schedules), in plan */}
++      {cardT > 0 && (
++        <PlanCard
++          x={CARD_POS.x}
++          y={CARD_POS.y}
++          t={cardT}
++          checker={{x: LAYOUT.operator.x, z: LAYOUT.operator.z}}
++          guesser={{x: gu.planX, z: H.z}}
++          sensor={{firing}}
++          gap={gapT}
++          light={(tp) => (
++            <>
++              {ghost > 0 && (
++                <g opacity={1 - tw(g, K.fires, 12)}>
++                  <path d={`M ${f2(tp(S).x)} ${f2(tp(S).y)} L ${f2(lerp(tp(S).x, tp(ghostHit).x, ghost))} ${f2(lerp(tp(S).y, tp(ghostHit).y, ghost))}`} stroke={C.saffronDeep} strokeWidth={5} strokeDasharray="4 10" strokeLinecap="round" fill="none" />
++                </g>
++              )}
++              {route > 0 && routeOp > 0 && <PlanRoute points={[S, WP, H]} head={routeHead} toPx={tp} opacity={routeOp} width={5} dash="12 9" />}
++              {g >= PULSE0 && pulseOp > 0 && (
++                <>
++                  <ScatterFan asGroup origin={WP} dirs={dirsW} length={0.62} toPx={tp} t={fanW} release={fanWOut} layout={OLAYOUT} seed={5} width={3.5} />
++                  <ScatterFan asGroup origin={H} dirs={dirsH} length={0.6} toPx={tp} t={fanH} release={fanHOut} layout={OLAYOUT} seed={8} width={3} color={C.saffron} />
++                  <LightPath asGroup points={PATH} toPx={tp} t={pulseT} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} width={5.5} pulseRadius={9} lane={9} ringRadius={30} opacity={pulseOp} />
++                </>
++              )}
++            </>
++          )}
++          marks={(tp) => (
++            <>
++              {ghost > 0 && g >= CONTACT && <PlanCross x={tp(ghostHit).x - 14} y={tp(ghostHit).y} s={9 * E.back(clamp01((g - CONTACT) / 6)) * (1 - tw(g, K.fires, 12))} />}
++              {route > 0 && <PlanSpot {...tp(WP)} t={tw(g, ROUTE0 + (ROUTE1 - ROUTE0) * (pathLength([S, WP]) / pathLength([S, WP, H])) - 2, 10)} />}
++            </>
++          )}
++        />
++      )}
+       {/* S1.6 the race timeline, the webcam, the sensor close-up; S1.7 the ruler */}
+       <SideCards g={g} cam={cam} sensorWorld={geo.S} />
+     </AbsoluteFill>
+diff -ruN '--exclude=node_modules' '--exclude=audio' /home/user/Youtube-videos/Future_Got_Weird/Video_02/source/src/scenes/S3_Echo.tsx source/src/scenes/S3_Echo.tsx
+--- /home/user/Youtube-videos/Future_Got_Weird/Video_02/source/src/scenes/S3_Echo.tsx	2026-10-08 08:12:30.009255726 +0000
++++ source/src/scenes/S3_Echo.tsx	2026-10-08 08:33:15.297644113 +0000
+@@ -33,6 +33,7 @@
+ import {SensorStand, standGeometry} from '../components/v02/S3_SensorStand';
+ import {BlockCard, type BlockDrop} from '../components/v02/S3_BlockCard';
+ import {EchoBoard, EchoCard} from '../components/v02/S3_EchoBoard';
++import {PLAN_VIEW, PlanCard, PlanRoute, planCardSize, viewForArea} from '../components/v02/PlanCard';
+ 
+ /**
+  * S3 · The faint echo (s13–s16). Storyboard shots S3.1–S3.3.
+@@ -228,10 +229,20 @@
+ const FANS_OUT = Math.max(FANS0 + 24, K.most);
+ const RELAX = Math.max(FANS_OUT, K.lost - 4); // he relaxes as the light is lost
+ const TAGS_OUT = K.s13End - 6;
++// "seen from above": the plan card comes in with the route preview, carries the same dots, stops and fans, and
++// leaves before the S3.2 pan brings the room under it
++const CARD_IN = Math.max(K.start + 6, ROUTE0 - 14);
++/** a smaller card than S1's (same framing): CAM_TRIP leaves ~380 px right of his elbow */
++const CARD_AREA = {w: 316, h: 256};
++const CARD_VIEW = viewForArea(PLAN_VIEW, CARD_AREA);
++const CARD_SIZE = planCardSize(CARD_AREA);
+ 
+ // S3.2 — pan, card, blocks
+ const PAN0 = K.s13End - 4;
+ const PAN_DUR = 30;
++const CARD_OUT = PAN0 - 9; // gone before the pan moves him under it
++/** Right of him, under the chip and the "person" tag (CAM_TRIP fills the frame; the right edge is back wall). */
++const CARD_POS = {x: 1920 - 40 - CARD_SIZE.w, y: 326};
+ const CARD0 = Math.max(PAN0 + PAN_DUR - 10, K.s14 - 6); // after the camera has made room
+ const CARD_DUR = 16;
+ const WALL_N = 9;
+@@ -599,6 +610,7 @@
+   ];
+   const chipT = tw(g, LAUNCH - 8, 10) * (1 - tw(g, PAN0 + 4, 10));
+   const tallyT = tw(g, LAUNCH - 4, 10) * (1 - tw(g, PAN0, 10));
++  const cardT = tw(g, CARD_IN, 14, E.out) * (1 - tw(g, CARD_OUT, 10, E.inOut));
+ 
+   return (
+     <AbsoluteFill style={{background: C.paper}}>
+@@ -648,6 +660,48 @@
+           </div>
+         </div>
+       )}
++      {/* seen from above: the same route preview, dots (dotAt), stop rings and recap fans, in plan */}
++      {cardT > 0 && (
++        <PlanCard
++          x={CARD_POS.x}
++          y={CARD_POS.y}
++          t={cardT}
++          area={CARD_AREA}
++          view={CARD_VIEW}
++          checker={{x: LAYOUT.operator.x, z: LAYOUT.operator.z}}
++          guesser={{x: H.x, z: H.z}}
++          sensor={{firing}}
++          light={(tp) => {
++            const nrm = PATH.slice(0, -1).map((a, k) => {
++              const pa = tp(a);
++              const pb = tp(PATH[k + 1]);
++              const L = Math.hypot(pb.x - pa.x, pb.y - pa.y) || 1;
++              return {x: -(pb.y - pa.y) / L, y: (pb.x - pa.x) / L};
++            });
++            return (
++              <>
++                {route > 0 && routeOp > 0 && <PlanRoute points={[S, WP, H]} head={route * pathLength([S, WP, H])} toPx={tp} opacity={routeOp} dash="4 11" width={5} />}
++                {fanT > 0 && fanOut < 1 && (
++                  <>
++                    <ScatterFan asGroup origin={WP} dirs={dirsW} length={0.6} toPx={tp} t={fanT} release={fanOut} layout={OLAYOUT} seed={5} width={3.5} />
++                    <ScatterFan asGroup origin={H} dirs={dirsH} length={0.5} toPx={tp} t={tw(g, FANS0 + 5, 14)} release={fanOut} layout={OLAYOUT} seed={8} width={3} color={C.saffron} />
++                  </>
++                )}
++                {[1, 2, 3, 4].map((v) => (
++                  <StopRing key={v} center={PATH[v]} g={g} at={VF[v]} toPx={tp} I={v === 4 ? 0.5 : LEG_I[v - 1]} />
++                ))}
++                {dots.map((d) => {
++                  const q = tp(d.p);
++                  const n = d.scattering ? {x: 0, y: 0} : nrm[d.leg];
++                  const off = d.scattering ? 0 : (lanePx + d.across) * 0.5;
++                  const r = d.r * 0.65;
++                  return <circle key={d.i} cx={f2(q.x + n.x * off)} cy={f2(q.y + n.y * off)} r={f2(r)} fill={mixHex(C.saffron, C.paper, (1 - d.I) * 0.55)} stroke={C.ink} strokeWidth={2} opacity={f2(d.op)} />;
++                })}
++              </>
++            );
++          }}
++        />
++      )}
+       <BlockCard g={g} drops={DROPS} t={{enter: tw(g, CARD0, CARD_DUR), wallLabel: tw(g, WALL_LABEL, 10), himLabel: tw(g, HIM_LABEL, 10), tiny: tw(g, TINY, 10)}} />
+     </AbsoluteFill>
+   );
+diff -ruN '--exclude=node_modules' '--exclude=audio' /home/user/Youtube-videos/Future_Got_Weird/Video_02/source/src/scenes/S9_Payoff.tsx source/src/scenes/S9_Payoff.tsx
+--- /home/user/Youtube-videos/Future_Got_Weird/Video_02/source/src/scenes/S9_Payoff.tsx	2026-10-08 08:12:30.024370369 +0000
++++ source/src/scenes/S9_Payoff.tsx	2026-10-08 08:32:09.041125299 +0000
+@@ -47,6 +47,7 @@
+ import {S9SensorStand, behindBox, boxOf, movedLayout, planWalk, standGeometry, walkAt, walkContacts, walkDistance, type WalkState} from '../components/v02/S9_Room';
+ import {MiniReadout, ReadoutInset} from '../components/v02/S9_Readout';
+ import {EndCard} from '../components/v02/S9_EndCard';
++import {PLAN_VIEW, PLAN_VIEW_FULL, PlanCard, PlanCross, PlanSpot, facingFromMotion, mixPlanView, planCardSize} from '../components/v02/PlanCard';
+ 
+ /**
+  * S9 · Payoff (s45–s48). Storyboard shots S8.1–S8.4 (now scene S9).
+@@ -232,6 +233,24 @@
+ const C_WALK0 = Math.max(o(32), BLANK); // she sets off once her screen has gone blank
+ const C_WALK_PLAN = planWalk({x: LAYOUT.operator.x, z: LAYOUT.operator.z}, C_SPOT, {stepM: 0.27, lift: 14});
+ const LEAN0 = C_WALK0 + C_WALK_PLAN.steps * C_FPS + 1;
++
++// "seen from above": the plan card comes in as the camera settles and carries the same two round trips (S9.2); it
++// hands the corner over to nothing while the magnified readout (another plan) is up, comes back on "hide" for his walk
++// to the near end (zooming out so the whole partition is in view) and the push that closes the gap (S9.3), then the
++// blocked pulse; it leaves once the readout is blank, as she sets off (the closing gag plays in the room alone).
++const CARD_IN = RISE_END - 8;
++const CARD_AWAY = INSET0 - 6;
++const CARD_BACK = Math.max(IDEA - 6, INSET_OUT + 8);
++const CARD_OUT = Math.max(BLANK, Math.min(INSET2_OUT, C_WALK0 - 4));
++const CARD_ZOOM0 = WALK0 - 6;
++const CARD_ZOOM_DUR = 22;
++/** R4 (HANDS..RT) may be replaced by an opaque Runway clip (Main's InsertLayer covers the whole picture, cards too, and
++ *  its start/end frames are rendered from this shot). With an accepted R4 insert set this false: the card then leaves
++ *  before HANDS and comes back at RT, so no insert key frame carries it. */
++const CARD_IN_R4 = true;
++const CARD_SIZE = planCardSize();
++/** Top right, over the back and side walls; clear of the readout inset (top left) and the chip (bottom right). */
++const CARD_POS = {x: 1920 - 72 - CARD_SIZE.w, y: 56};
+ const OPEN = LEAN0 + Math.round(15 * KK);
+ const BUSTED = OPEN + 3;
+ 
+@@ -747,6 +766,11 @@
+   const labelT = g < RT ? tw(g, LIT, 10, E.out) * (1 - tw(g, INSET_OUT - 6, 8)) : 0;
+   const chipT = Math.max(tw(g, P3_0 - 4, 8) * (1 - tw(g, ECHO_END + 8, 10)), g >= RT ? tw(g, PULSE2 - 2, 6) * (1 - tw(g, sched2[0].end + 10, 8)) : 0);
+   const blobShown = g < RT ? blobT : 1;
++  const cardR4 = CARD_IN_R4 ? 1 : 1 - tw(g, HANDS - 10, 8, E.inOut) + tw(g, RT, 8, E.out);
++  const cardT = (tw(g, CARD_IN, 14, E.out) * (1 - tw(g, CARD_AWAY, 10, E.inOut)) + tw(g, CARD_BACK, 14, E.out) * (1 - tw(g, CARD_OUT, 10, E.inOut))) * clamp01(cardR4);
++  const cardView = mixPlanView(PLAN_VIEW, PLAN_VIEW_FULL, tw(g, CARD_ZOOM0, CARD_ZOOM_DUR, E.inOut));
++  // the opening is marked with the room view's marker during S9.2, and again from his walk until the push closes it
++  const cardGap = g < WALK0 - 4 ? gapT : tw(g, WALK0 - 4, 12) * (g < THUNK ? 1 : 0);
+   const insetLit = g < RT ? clamp01((g - LIT) / 18) : 0;
+   const insetBlank = g < RT ? 0 : blankT;
+ 
+@@ -764,6 +788,71 @@
+           <circle cx={f2(sensorScr.x)} cy={f2(sensorScr.y)} r={f2(Math.max(0, 50 * cam.zoom * E.back(clamp01(ringT))))} fill="none" stroke={C.teal} strokeWidth={5} />
+         </svg>
+       )}
++      {cardT > 0 && (
++        <PlanCard
++          x={CARD_POS.x}
++          y={CARD_POS.y}
++          t={cardT}
++          view={cardView}
++          layout={lay}
++          checker={{...ch.plan, facing: facingFromMotion((f) => checkerAt(f, tilt).plan, g, 85)}}
++          guesser={{...gu.plan, facing: facingFromMotion((f) => guesserAt(f, tilt, cam).plan, g, -90 + 90 * (tw(g, ARRIVE - 6, 8, E.inOut) - tw(g, RT + 2, 10, E.inOut)))}}
++          sensor={{firing}}
++          gap={cardGap}
++          light={(tp) => (
++            <>
++              {g >= P3_0 && pathsOp > 0 && (
++                <g opacity={pathsOp}>
++                  <ScatterFan asGroup origin={W3} dirs={dirsW} length={0.55} toPx={tp} t={tw(g, VF3[1], 12)} release={tw(g, VF3[1] + 14, 16)} layout={OLAYOUT} seed={5} width={3.5} />
++                  <ScatterFan asGroup origin={W4} dirs={dirsW} length={0.5} toPx={tp} t={tw(g, VF4[1], 12)} release={tw(g, VF4[1] + 14, 16)} layout={OLAYOUT} seed={7} width={2.8} />
++                  <ScatterFan asGroup origin={H} dirs={dirsH3} length={0.55} toPx={tp} t={tw(g, VF3[2], 10)} release={tw(g, VF3[2] + 12, 14)} layout={OLAYOUT} seed={8} width={3} color={C.saffron} />
++                  <LightPath asGroup points={PATH3} toPx={tp} t={SCHED3.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} width={5.5} pulseRadius={9} lane={9} ringRadius={30} />
++                  <LightPath asGroup points={PATH4} toPx={tp} t={SCHED4.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} width={5.5} pulseRadius={9} lane={9} ringRadius={30} />
++                </g>
++              )}
++              {after && out2 > 0 && (
++                <g opacity={out2}>
++                  {blocked.map((b, i) => {
++                    const sc = sched2[i];
++                    return (
++                      <g key={i}>
++                        {b.w && <ScatterFan asGroup origin={b.w} dirs={dirsW} length={0.5} toPx={tp} t={tw(g, sc.vertexFrames[1], 10)} release={tw(g, sc.vertexFrames[1] + 14, 14)} layout={lay} seed={11 + i} width={2.8} />}
++                        <LightPath asGroup points={b.path} toPx={tp} t={sc.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={lay} width={5.5} pulseRadius={9} lane={9} ringRadius={30} arrive="hide" />
++                      </g>
++                    );
++                  })}
++                </g>
++              )}
++            </>
++          )}
++          marks={(tp) => (
++            <>
++              {g >= P3_0 && pathsOp > 0 && (
++                <g opacity={pathsOp}>
++                  <PlanSpot {...tp(W3)} t={tw(g, VF3[1] - 2, 8)} />
++                  <PlanSpot {...tp(W4)} t={tw(g, VF4[1] - 2, 8)} />
++                </g>
++              )}
++              {after && out2 > 0 && (
++                <g opacity={out2}>
++                  {blocked.map((b, i) => {
++                    const vf = sched2[i].vertexFrames;
++                    const vEnd = vf[vf.length - 1];
++                    const crossT = g >= vEnd ? E.back(clamp01((g - vEnd) / 6)) : 0;
++                    const q = tp(b.stop);
++                    return (
++                      <g key={i}>
++                        {b.w && <PlanSpot {...tp(b.w)} t={tw(g, vf[1] - 2, 8)} />}
++                        <PlanCross x={q.x - 8} y={q.y} s={9 * crossT} />
++                      </g>
++                    );
++                  })}
++                </g>
++              )}
++            </>
++          )}
++        />
++      )}
+       <ReadoutInset x={INSET.x} y={INSET.y} w={INSET.w} h={INSET.h} t={insetT} field={FIELD} blob={blobShown * (1 - blinkOff)} lit={insetLit} blank={insetBlank} led={g >= BLANK && g >= RT ? 0 : 1} occZ0={lay.occluder.z0} />
+       {labelT > 0 && (
+         <div style={{position: 'absolute', left: INSET.x + INSET.w / 2, top: INSET.y + INSET.h + 22, transform: `translateX(-50%) scale(${f2(E.back(clamp01(labelT)))})`, transformOrigin: '50% 0'}}>

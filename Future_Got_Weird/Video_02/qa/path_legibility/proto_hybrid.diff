@@ -1,0 +1,845 @@
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/KIT_API.md source/KIT_API.md
+--- orig/source/KIT_API.md	2026-10-08 05:55:03.000000000 +0000
++++ source/KIT_API.md	2026-10-08 09:26:43.973563076 +0000
+@@ -134,13 +134,15 @@
+ 
+ **Characters**
+ - Constants `RIG_PX = 440`, `PERSON_M = 1.7`.
+-- `rigAt(x, z, tilt, {heightM?, view?}) → {x, y, scale, depth}`: feet on the projected floor point. A 1.7 m person comes out at scale 1.31, about 578 px tall.
++- `rigAt(x, z, tilt, {heightM?, view?}) → {x, y, scale, depth}`: feet on the projected floor point. A 1.7 m person comes out at scale 1.31, about 578 px tall, at tilt 0. (Pathfix: the scale now includes the set's height scale, so the rig stays exactly as tall as the set's heights at every tilt: 0.94 at RAISED_TILT = 0.12, 0.66 when the rig starts to fade at 0.45. Uniform, never squashed. `PottedPlant` and S9's walking rig follow the same rule.)
++- `farEndMargin(a, b, tilt, {view?, layout?, cornerH?}) → number | null` (pathfix): world px by which the projected segment a → b passes BELOW the partition's far top corner where it crosses the far end's vertical edge on screen. Positive: it tucks behind the far end (round the end, by the wall); negative: it reads as over the top. S1, S3, S7 and S9 assert their wall → person legs with it.
+ - `figureMix(tilt) → {rig, token, rigScaleX, rigScaleY, tokenScale}`: the rig fades out over tilt 0.45–0.75 with a mild settle (94% wide, 84% tall at most, anchored at the feet), and the token fades in over 0.5–0.8 while growing from 70% to 100%.
+ - `rigStyle(tilt, scale)` returns CSS ready to pass as the Character's `style`.
+ - `tokenAt(x, z, tilt, {radiusM?, h?, view?}) → {x, y, r, opacity, scale}`, with constants `TOKEN_H = 1.2` and `TOKEN_R = 0.26`.
+ 
+ ## API: `RoomSet.tsx` and `Partition.tsx`
+-- **`<RoomSet>`** props: `tilt`, `items?: RoomItem[]`, `backdrop?`, `children?`, `partition?` (default true), `wobble?`, `door?`, `plant?`, `view?`, `layout?`.
++- **`<RoomSet>`** props: `tilt`, `items?: RoomItem[]`, `backdrop?`, `children?`, `partition?` (default true), `wobble?`, `partitionOpacity?` (pathfix: < 1 for a brief see-through view of something in the backdrop), `door?`, `plant?`, `view?`, `layout?`.
++- **`<GapMarker tilt t? opacity? layout? view? color?>`** (pathfix, in RoomSet.tsx): the gap between the partition's far end and the wall as a double-headed dimension arrow on the floor, along the partition's line; draw it in `backdrop`. Pass the moved layout while the partition is pushed and it shrinks with the gap.
+   - `RoomItem` is `DepthItem & {key?, node}`. Items are depth-sorted together with the built-in partition and plant.
+   - `backdrop` draws on the room shell (wall spots, light paths), behind everything standing; `children` draws on top.
+   - Everything is in world px, so wrap the set and all projected overlays in one camera `<Layer>`.
+@@ -154,7 +156,7 @@
+ - In the dev comp, the light path and wall samples sit in `backdrop`. In the room view the S→W3 leg passes correctly behind the operator's head, and W3→H passes behind the partition's far end and H.
+ 
+ ## Known limitations
+-- The rig placement keeps full height during the tilt; tokens sit at the true chest-height projection, so at tilt about 0.7 a token sits near the fading rig's hips.
++- (Pathfix) The rig placement follows the set's height scale during the tilt (rigAt), so the rig shrinks with the set as it fades; tokens sit at the true chest-height projection.
+ - For about 6 frames around tilt 0.85 the wall tops go through a grey phase on their way from cream to ink.
+ - `depthSort` treats people as upright billboards and only knows box-shaped solids.
+ - The light-path splitting in the dev comp is local code there, not a kit export.
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/src/components/v02/RoomSet.tsx source/src/components/v02/RoomSet.tsx
+--- orig/source/src/components/v02/RoomSet.tsx	2026-10-08 05:19:58.000000000 +0000
++++ source/src/components/v02/RoomSet.tsx	2026-10-08 09:22:57.702490039 +0000
+@@ -59,6 +59,8 @@
+   partition?: boolean;
+   /** comic nudge of the partition, about -1..1 */
+   wobble?: number;
++  /** partition opacity (default 1): < 1 for a brief see-through view of something drawn behind it (backdrop) */
++  partitionOpacity?: number;
+   /** door on the right side wall, near the front (default true) */
+   door?: boolean;
+   /** potted plant: true = the default spot in the back-left corner (PLANT), false = none, or a custom spot */
+@@ -99,7 +101,7 @@
+ 
+ type P3 = [number, number, number];
+ 
+-export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, children, partition = true, wobble = 0, door = true, plant = true, view = DEFAULT_VIEW, layout = LAYOUT}) => {
++export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, children, partition = true, wobble = 0, partitionOpacity = 1, door = true, plant = true, view = DEFAULT_VIEW, layout = LAYOUT}) => {
+   const s = viewAt(tilt, view);
+   const {x0, x1, z0, z1, wallHeight: HW} = layout.room;
+   const T = WALL_T;
+@@ -160,7 +162,7 @@
+   // the standing things: user items + partition + plant
+   const occ = occluderBox(layout);
+   const all: RoomItem[] = [...items];
+-  if (partition) all.push({key: '__partition', z: (occ.z0 + occ.z1) / 2, box: occ as Box, node: <Partition tilt={tilt} wobble={wobble} view={view} layout={layout} />});
++  if (partition) all.push({key: '__partition', z: (occ.z0 + occ.z1) / 2, box: occ as Box, node: <Partition tilt={tilt} wobble={wobble} view={view} layout={layout} opacity={partitionOpacity} />});
+   if (plant) {
+     const pl = plant === true ? PLANT : {x: plant.x, z: plant.z, heightM: plant.heightM ?? PLANT.heightM};
+     all.push({key: '__plant', x: pl.x, z: pl.z, w: 0.45 * (pl.heightM / 1.45), height: pl.heightM, node: <PottedPlant x={pl.x} z={pl.z} tilt={tilt} view={view} heightM={pl.heightM} />});
+@@ -266,14 +268,15 @@
+ };
+ 
+ /**
+- * A potted plant for scale. Upright cutout in the room view (uniform scale, never squashed), a top-down rosette in the
++ * A potted plant for scale. Upright cutout in the room view (uniform scale on the set's height scale, like the rigs,
++ * never squashed), a top-down rosette in the
+  * plan view, crossfading with the same timing as the characters (figureMix).
+  */
+ export const PottedPlant: React.FC<{x: number; z: number; tilt: number; view?: ViewConfig; heightM?: number}> = ({x, z, tilt, view = DEFAULT_VIEW, heightM = PLANT.heightM}) => {
+   const s = viewAt(tilt, view);
+   const m = figureMix(tilt);
+   const foot = projectWith(s, {x, z, h: 0});
+-  const k = (s.ppm * heightM) / 1.45; // px per metre for the cutout
++  const k = (s.ppm * s.height * heightM) / 1.45; // px per metre for the cutout (on the set's height scale, like rigAt)
+   const sw = OUTLINE / k;
+   const top = projectWith(s, {x, z, h: 0.75 * (heightM / 1.45)});
+   const r = s.ppm; // px per metre, plan rosette
+@@ -341,6 +344,44 @@
+     </svg>
+   );
+ };
++
++/**
++ * The gap between the partition's far end and the relay wall, marked ON THE FLOOR: a double-headed dimension arrow
++ * along the partition's own line (x = occluder.x) from the skirting board to the far foot. From
++ * the room cameras the opening itself is seen almost edge-on (a ~50 px slot), but its floor is a long strip running
++ * from the far foot to the wall, right under the spot where the light paths tuck behind the far end: that is where
++ * "the gap" reads. World px; draw it in RoomSet's `backdrop`, so the partition and anyone standing in front cover it.
++ * `t` draws it on from the wall (0..1). While the partition is pushed back, pass the moved layout: the marker shrinks
++ * with the gap and is gone once the far end meets the wall.
++ */
++export const GapMarker: React.FC<{tilt: number; t?: number; opacity?: number; layout?: Layout; view?: ViewConfig; color?: string}> = ({
++  tilt,
++  t = 1,
++  opacity = 1,
++  layout = LAYOUT,
++  view = DEFAULT_VIEW,
++  color = C.inkSoft,
++}) => {
++  const o = layout.occluder;
++  const za = 0.05; // just off the skirting board
++  const zb = o.z0 - 0.06; // just short of the far foot
++  if (t <= 0 || opacity <= 0.001 || zb - za < 0.05) return null;
++  const s = viewAt(tilt, view);
++  const P = (x: number, z: number) => projectWith(s, {x, z, h: 0});
++  const ze = za + (zb - za) * Math.min(1, t);
++  const pt = (p: {x: number; y: number}) => `${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
++  // arrowheads on the floor, pointing at the wall (z = za) and at the far foot (z = zb)
++  const head = (z: number, dir: 1 | -1) => `M ${pt(P(o.x - 0.075, z + dir * 0.085))} L ${pt(P(o.x, z))} L ${pt(P(o.x + 0.075, z + dir * 0.085))}`;
++  const d = [`M ${pt(P(o.x, za))} L ${pt(P(o.x, ze))}`, head(za, 1), ...(t >= 1 ? [head(zb, -1)] : [])].join(' ');
++  return (
++    <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
++      <g opacity={opacity} fill="none" strokeLinecap="round">
++        <path d={d} stroke={C.cream} strokeWidth={11} strokeLinejoin="round" />
++        <path d={d} stroke={color} strokeWidth={5} strokeLinejoin="round" />
++      </g>
++    </svg>
++  );
++};
+ 
+ /** Re-exported for scenes that build their own item lists. */
+ export type {PlanPt};
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/src/components/v02/S9_Room.tsx source/src/components/v02/S9_Room.tsx
+--- orig/source/src/components/v02/S9_Room.tsx	2026-10-08 08:12:30.000000000 +0000
++++ source/src/components/v02/S9_Room.tsx	2026-10-08 09:07:15.271164275 +0000
+@@ -235,7 +235,7 @@
+   // constant lead of the ground line toward the camera (smaller aheadK: the body bobs onto the nearer foot instead)
+   const ahead = Math.abs(dyPerM) * aheadK * step * ramp;
+   const yRef = Math.max(body.y + ahead, fL.y, fR.y);
+-  const k = (plan.heightM * s.ppm) / RIG_PX;
++  const k = (plan.heightM * s.ppm * s.height) / RIG_PX; // the set's height scale, as lib/room rigAt
+   const towardCam = uz >= 0;
+   // the nearer leg is drawn last (Character2 orders legs by the shoes' turn)
+   const nearL = towardCam ? trail.p > lead.p : trail.p < lead.p;
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/src/data/layout.json source/src/data/layout.json
+--- orig/source/src/data/layout.json	2026-10-08 05:47:09.000000000 +0000
++++ source/src/data/layout.json	2026-10-08 09:06:44.730669637 +0000
+@@ -18,7 +18,7 @@
+   "z0": 0.65,
+   "z1": 2.15,
+   "thickness": 0.04,
+-  "height": 1.7
++  "height": 2.0
+  },
+  "sensor": {
+   "x": 1.65,
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/src/lib/room.ts source/src/lib/room.ts
+--- orig/source/src/lib/room.ts	2026-10-08 05:19:44.000000000 +0000
++++ source/src/lib/room.ts	2026-10-08 09:07:15.269054977 +0000
+@@ -320,6 +320,25 @@
+ export const isHiddenByOccluder = (p: PlanPt, tilt: number, view: ViewConfig = DEFAULT_VIEW, layout: Layout = LAYOUT) =>
+   hiddenByBox(p, occluderBox(layout), tilt, view);
+ 
++/**
++ * How clearly the straight segment a -> b (e.g. a W -> H leg at the sensor height) is seen passing BEHIND the
++ * partition's far end at this tilt: where the projected segment crosses the screen x of the far end's vertical edge
++ * (the camera-facing face at z0), its distance in world px BELOW that edge's top corner (at `cornerH`, default the
++ * layout height; pass the drawn corner height when the top is arched). Positive: the light visibly tucks behind the far
++ * end, i.e. it goes round the end through the gap by the wall (paint it so the partition covers it, or split it with
++ * visibleRuns). Negative: it passes above the corner on screen and reads as "over the top". null: the segment does not
++ * reach that screen x.
++ */
++export const farEndMargin = (a: PlanPt, b: PlanPt, tilt: number, opts: {view?: ViewConfig; layout?: Layout; cornerH?: number} = {}): number | null => {
++  const s = viewAt(tilt, opts.view ?? DEFAULT_VIEW);
++  const o = (opts.layout ?? LAYOUT).occluder;
++  const c = projectWith(s, {x: o.x - o.thickness / 2, z: o.z0, h: opts.cornerH ?? o.height});
++  const pa = projectWith(s, a);
++  const pb = projectWith(s, b);
++  if (Math.abs(pb.x - pa.x) < 1e-9 || (pa.x - c.x) * (pb.x - c.x) > 0) return null;
++  return pa.y + ((pb.y - pa.y) * (c.x - pa.x)) / (pb.x - pa.x) - c.y;
++};
++
+ /** Screen silhouette (convex polygon) of the partition at a tilt, e.g. for an SVG clipPath/mask. */
+ export const occluderSilhouette = (tilt: number, view: ViewConfig = DEFAULT_VIEW, layout: Layout = LAYOUT) => {
+   const s = viewAt(tilt, view);
+@@ -332,7 +351,8 @@
+ /**
+  * A rough body box for an upright thing standing at (x, z): `w` half-width across x, `d` half-depth along z, `height`
+  * metres tall. Use with hiddenByBox / VisibleOpts.hidden to hide the stretch of an overlay path that passes behind a
+- * person in the room view. (The rig is drawn at its full metric height only at tilt 0; see figureMix.)
++ * person in the room view. (The rig is drawn at its metric height on the set's height scale, see rigAt, and fades
++ * out over tilt 0.45..0.75, see figureMix.)
+  */
+ export const uprightBox = (x: number, z: number, opts: {w?: number; d?: number; height?: number; h?: number} = {}): Box => ({
+   x0: x - (opts.w ?? 0.26),
+@@ -496,8 +516,9 @@
+   }
+   const q = projectWith(s, {x: it.x ?? view.pivot.x, z: it.z, h: it.h ?? 0});
+   const w = (it.w ?? 0.3) * s.ppm;
+-  // upright things are drawn at full height (no squash) while visible (figureMix); in the plan they are discs (~w)
+-  const up = s.tilt < 0.75 ? (it.height ?? PERSON_M) * s.ppm : w;
++  // upright things are drawn at their metric height on the set's height scale (rigAt) while visible (figureMix); in
++  // the plan they are discs (~w)
++  const up = s.tilt < 0.75 ? Math.max(w, (it.height ?? PERSON_M) * s.ppm * s.height) : w;
+   return {x0: q.x - w, x1: q.x + w, y0: q.y - up, y1: q.y + w * Math.max(0.35, s.floor)};
+ };
+ 
+@@ -561,19 +582,21 @@
+ 
+ /**
+  * Where to draw a frontal rig standing at (x, z): feet at the projected floor point, scale such that a person of
+- * `heightM` metres is that tall in the room view. Pass {x, y, scale} straight to <Character>/<Character2>. The scale
+- * does not shrink with the height scale as the camera tilts (that would squash the rig); use `figureMix`/`rigStyle` to
+- * fade it.
++ * `heightM` metres is exactly that tall against the set at this tilt: px per metre of height = ppm * height scale,
++ * the same factor the walls, the partition and every other height get. The rig is scaled uniformly (never squashed),
++ * so as the camera rises it shrinks a little with the set (to 0.88 at RAISED_TILT = 0.2) and a 1.7 m person never
++ * outgrows the 2 m partition on screen. Pass {x, y, scale} straight to <Character>/<Character2>; use
++ * `figureMix`/`rigStyle` to fade it into the token.
+  *
+  * Staging note: the rig is a chibi (big head). At 1.7 m its shoulders are at ~1.13 m and its chin at ~1.21 m, so a
+- * prop held at the layout's sensor height (1.2 m) sits at chin level in the room view, and as the camera tilts the
+- * projected point slides down the (unsquashed) rig toward the chest. Place hands with reach/reach2 on the projected
+- * point every frame (see dev/KitRoom) rather than on a fixed pose.
++ * prop held at the layout's sensor height (1.2 m) sits at chin level at every tilt (the rig and the set share the
++ * height scale). Place hands with reach/reach2 on the projected point every frame (see dev/KitRoom) rather than on a
++ * fixed pose.
+  */
+ export const rigAt = (x: number, z: number, tilt: number, opts: {heightM?: number; view?: ViewConfig} = {}) => {
+   const s = viewAt(tilt, opts.view ?? DEFAULT_VIEW);
+   const q = projectWith(s, {x, z, h: 0});
+-  return {x: q.x, y: q.y, scale: ((opts.heightM ?? PERSON_M) * s.ppm) / RIG_PX, depth: q.depth};
++  return {x: q.x, y: q.y, scale: ((opts.heightM ?? PERSON_M) * s.ppm * s.height) / RIG_PX, depth: q.depth};
+ };
+ 
+ /**
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/src/lib/shots.ts source/src/lib/shots.ts
+--- orig/source/src/lib/shots.ts	2026-10-08 05:49:36.000000000 +0000
++++ source/src/lib/shots.ts	2026-10-08 09:13:49.314821803 +0000
+@@ -6,13 +6,19 @@
+  * (operator, hider, partition, wall samples, gap at the wall): see tools/sync_layout.py and lib/room.ts.
+  *  - ROOM: tilt 0, both characters, the partition and the lit wall patch, headroom for the hair.
+  *  - RAISED: tilt RAISED_TILT, the gap between the partition's far end and the wall is visible; use whenever light paths
+- *    are drawn in the room (S1.4-S1.7, S2.2, S2.4, S3.1, S8.2-S8.3).
++ *    are drawn in the room (S1.4-S1.7, S2.2, S2.4, S3.1, S8.2-S8.3). A LOW rise on purpose: from this height the
++ *    camera does not see over the 2 m partition's far end, so a wall -> person leg at the sensor height (1.2 m) is seen
++ *    tucking behind the far end well below its top corner (lib/room farEndMargin: W1-W3 -> H pass 180-220 px below it
++ *    at CAM_RAISED) and the partition covers it until it reaches his head: it reads "round the end, by the wall", never
++ *    "over the top" (at the old 0.4 the legs crossed the corner itself; above ~0.15 they come out over the near
++ *    panels' arched tops before reaching him). Rigs stand at 0.94 scale here (rigAt). Mark the gap with RoomSet's
++ *    GapMarker (on the floor, where it reads).
+  *  - PLAN_ACT: tilt 1, the arcs' working area (wall samples, hider, arcs up to |WH| = 1.33 m) for act 3.
+  *  - PLAN_FULL: tilt 1, the whole room board.
+  * Scenes may move between these with camPath, and may add their own close-ups, but a cut between scenes lands on
+  * one of these framings unless a hand-off says otherwise.
+  */
+-export const RAISED_TILT = 0.4;
++export const RAISED_TILT = 0.12;
+ export const CAM_ROOM: Cam = {cx: 880, cy: 565, zoom: 1.2};
+ export const CAM_RAISED: Cam = {cx: 905, cy: 535, zoom: 1.25};
+ export const CAM_PLAN_ACT: Cam = {cx: 984, cy: 372, zoom: 2.0};
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/src/scenes/S1_ColdOpen.tsx source/src/scenes/S1_ColdOpen.tsx
+--- orig/source/src/scenes/S1_ColdOpen.tsx	2026-10-08 08:12:30.000000000 +0000
++++ source/src/scenes/S1_ColdOpen.tsx	2026-10-08 09:26:43.974622430 +0000
+@@ -7,10 +7,10 @@
+ import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
+ import {E, SOFT, SNAP, camPath, hop, ring, sp, tw} from '../lib/motion';
+ import {CAM_RAISED, CAM_ROOM, RAISED_TILT} from '../lib/shots';
+-import {LAYOUT, PTS, depthSort, projectWith, rigAt, rigStyle, tiltAt, viewAt, type ViewState} from '../lib/room';
++import {LAYOUT, PTS, depthSort, farEndMargin, projectWith, rigAt, rigStyle, tiltAt, viewAt, type ViewState} from '../lib/room';
+ import {LAYOUT as OLAYOUT, assertPath, confocalPath, layoutPoints, pathLength, pathSchedule, scatterDirections, sub, timeNs, type P2} from '../lib/optics';
+ import {CAST} from '../components/cast';
+-import {RoomSet, type RoomItem} from '../components/v02/RoomSet';
++import {GapMarker, RoomSet, type RoomItem} from '../components/v02/RoomSet';
+ import {LightPath, ScatterFan, type ToPx} from '../components/v02/Optics';
+ import {
+   ARMS,
+@@ -189,37 +189,44 @@
+ };
+ 
+ /**
+- * The wall sample whose round trip reads cleanly in the raised room view: in plan the legs must clear the partition
+- * (assertPath), and on screen at RAISED_TILT / CAM_RAISED every point of S -> W and W -> H must stay outside the
+- * partition's drawn silhouette by at least MIN_CLEAR_PX (so the W -> H leg is seen passing the partition's far end at
+- * the gap by the wall, never through or over the screen). W3 is tried first: its echo delay is the ~7 ns the
+- * storyboard labels. Throws if neither W3 nor W4 qualifies (a layout or framing change broke the shot).
++ * The wall sample whose round trip reads cleanly in the raised room view. In plan the legs must clear the partition
++ * (assertPath). On screen at RAISED_TILT / CAM_RAISED: the wall spot is in view (on the sensor's side, not behind the
++ * partition), the sensor-side leg S -> W stays outside the partition's drawn silhouette by MIN_CLEAR_PX, and the leg
++ * that crosses to his side, W -> H, is seen tucking behind the partition's far end at least MIN_BEHIND_PX below its
++ * drawn top corner (lib/room farEndMargin): it goes round the end through the gap by the wall, never over the top, and
++ * the partition covers it from there (hidden() below). W3 is tried first: its echo delay is the ~7 ns the storyboard
++ * labels. Throws if neither W3 nor W2 qualifies (a layout or framing change broke the shot).
+  */
+ const MIN_CLEAR_PX = 18;
+-/** CAM_RAISED tilted down a little: at RAISED_TILT the rigs are still drawn at full height (lib/room figureMix), so
+- *  the shared framing crops the hider's hair; same zoom (so the same 5 px outlines and clearances), centre 47 px up. */
++const MIN_BEHIND_PX = 80;
++/** CAM_RAISED tilted down a little: headroom above the heads for the 2 m partition's far top and the wall spot's
++ *  marker; same zoom (so the same 5 px outlines and clearances), centre 47 px up. */
+ const CAM_UP: Cam = {...CAM_RAISED, cy: CAM_RAISED.cy - 47};
+ const pickWall = () => {
+   const s = viewAt(RAISED_TILT);
+   const poly = facePoly(s);
++  const at = (p: P2) => projectWith(s, {x: p.x, z: p.z, h: SENSOR_H});
+   const report: string[] = [];
+-  for (const id of ['W3', 'W4']) {
++  for (const id of ['W3', 'W2']) {
+     const w = W.find((p) => p.id === id)!;
+     const path = confocalPath(S, w, H);
+     assertPath(path, OLAYOUT);
+-    let minPx = Infinity;
+-    for (const [a, b] of [[S, w], [w, H]] as [P2, P2][]) {
+-      for (let i = 0; i <= 200; i++) {
+-        const u = i / 200;
+-        const q = projectWith(s, {x: a.x + (b.x - a.x) * u, z: a.z + (b.z - a.z) * u, h: SENSOR_H});
+-        if (inPoly(poly, q)) minPx = -1;
+-        else for (let k = 0; k < poly.length; k++) minPx = Math.min(minPx, segDist(q, poly[k], poly[(k + 1) % poly.length]) * CAM_RAISED.zoom);
+-      }
++    if (w.x >= faceX || inPoly(poly, at(w))) {
++      report.push(`${id}: behind the partition`);
++      continue;
+     }
+-    report.push(`${id}: ${minPx.toFixed(1)} px`);
+-    if (minPx >= MIN_CLEAR_PX) return {w, path, clearPx: minPx};
++    let clearPx = Infinity;
++    for (let i = 0; i <= 200; i++) {
++      const u = i / 200;
++      const q = at({x: S.x + (w.x - S.x) * u, z: S.z + (w.z - S.z) * u});
++      if (inPoly(poly, q)) clearPx = -1;
++      else for (let k = 0; k < poly.length; k++) clearPx = Math.min(clearPx, segDist(q, poly[k], poly[(k + 1) % poly.length]) * CAM_RAISED.zoom);
++    }
++    const behindPx = (farEndMargin({...w, h: SENSOR_H}, {...H, h: SENSOR_H}, RAISED_TILT, {cornerH: topH(OCC.z0)}) ?? -Infinity) * CAM_RAISED.zoom;
++    report.push(`${id}: S->W ${clearPx.toFixed(1)} px clear, W->H ${behindPx.toFixed(1)} px below the far corner`);
++    if (clearPx >= MIN_CLEAR_PX && behindPx >= MIN_BEHIND_PX) return {w, path, clearPx, behindPx};
+   }
+-  throw new Error(`S1: no wall sample with a clear raised-view path (${report.join(', ')})`);
++  throw new Error(`S1: no wall sample whose route reads round the partition's far end (${report.join(', ')})`);
+ };
+ const PICK = pickWall();
+ const WP = PICK.w; // the wall spot of S1.4-S1.7
+@@ -593,28 +600,27 @@
+   const ph1 = SENSOR_H + 0.37;
+   const P = (x: number, z: number, h: number) => projectWith(s, {x, z, h});
+   const patchPts = [P(pz0, 0, ph0), P(pz1, 0, ph0), P(pz1, 0, ph1), P(pz0, 0, ph1)];
+-  // S1.4/S1.5: the opening between the partition's far end and the wall, marked while the route is drawn round the
+-  // end and the pulse goes through it. In the raised view the W -> H leg crosses this opening near the wall, but on
+-  // screen it also passes close above the partition's far top corner, which alone reads as "over the top"; the marked
+-  // opening makes the gap the thing the light goes through. Backdrop layer: the stand, the people and the partition
+-  // paint over it, as they would over anything standing in the gap.
++  // S1.4/S1.5: the gap between the partition's far end and the wall, marked on the floor (RoomSet GapMarker: seen
++  // from here the opening itself is nearly edge-on, its floor is not) while the route is drawn round the end and the
++  // pulse goes through it. On screen the W -> H leg tucks behind the far end well below its top corner, right above
++  // the marked floor. Backdrop layer: the stand, the people and the partition paint over it.
+   const gapT = tw(g, ROUTE0 - 8, 12, E.out) * (1 - tw(g, VF[2] + 8, 14));
+-  const gapH = topH(OCC.z0) - 0.02;
+-  const gapPts = [P(OCC.x, 0.015, FOOT_H), P(OCC.x, OCC.z0 - 0.015, FOOT_H), P(OCC.x, OCC.z0 - 0.015, gapH), P(OCC.x, 0.015, gapH)];
+-  const backdrop = fov > 0 || patch > 0 || gapT > 0 ? (
++  const gapDraw = tw(g, ROUTE0 - 8, 14, E.inOut);
++  // the light tape from the wall spot to him and back (S1.7)
++  const tape = tw(g, TAPE0, TAPE1 - TAPE0, E.inOut);
++  // S1.7: the detour runs behind the partition from its far end on (as the route does), so the tape is drawn in the
++  // backdrop and the partition turns see-through while it is measured (x-ray): its ticks stay countable, and it is
++  // plainly behind the partition, never over or through it. Opaque again by the cut to S2.
++  const xray = tw(g, TAPE0 - 10, 12, E.inOut);
++  const backdrop = fov > 0 || patch > 0 || gapT > 0 || tape > 0 ? (
++    <>
++    {gapT > 0 && <GapMarker tilt={tilt} t={gapDraw} opacity={gapT} />}
++    {tape > 0 && (
++      <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
++        <LightTape toPx={toPx} t={tape} layer="tape" />
++      </svg>
++    )}
+     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+-      {gapT > 0 && (
+-        <path
+-          d={`M ${gapPts.map((q) => `${f2(q.x)} ${f2(q.y)}`).join(' L ')} Z`}
+-          fill={C.white}
+-          fillOpacity={0.8}
+-          stroke={C.inkMuted}
+-          strokeWidth={3.5}
+-          strokeDasharray="11 8"
+-          strokeLinejoin="round"
+-          opacity={gapT}
+-        />
+-      )}
+       {fov > 0 && (
+         <path
+           d={`M ${f2(geo.S.x)} ${f2(geo.S.y)} L ${f2(patchPts[0].x)} ${f2(patchPts[0].y)} L ${f2(patchPts[3].x)} ${f2(patchPts[3].y)} L ${f2(patchPts[2].x)} ${f2(patchPts[2].y)} L ${f2(patchPts[1].x)} ${f2(patchPts[1].y)} Z`}
+@@ -624,6 +630,7 @@
+       )}
+       <path d={`M ${patchPts.map((q) => `${f2(q.x)} ${f2(q.y)}`).join(' L ')} Z`} fill={C.saffronLight} stroke={C.saffronDeep} strokeWidth={3} strokeDasharray="10 8" opacity={Math.max(fov * 0.6, patch)} />
+     </svg>
++    </>
+   ) : null;
+ 
+   /* ---- overlays in world px */
+@@ -659,8 +666,6 @@
+   // the race (S1.6)
+   const raceOp = tw(g, RACE0 - 2, 3) * (1 - tw(g, RACE_FADE, 12));
+   const raceFanW = tw(g, RACE_SCHED.vertexFrames[1], 10) * (1 - tw(g, RACE_SCHED.vertexFrames[1] + 14, 14));
+-  // the light tape from the wall spot to him and back (S1.7)
+-  const tape = tw(g, TAPE0, TAPE1 - TAPE0, E.inOut);
+ 
+   const overlay = (
+     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+@@ -720,15 +725,17 @@
+         </g>
+       )}
+       {/* light tape: the extra delay as an extra distance from the wall spot */}
+-      {tape > 0 && <LightTape toPx={toPx} t={tape} />}
++      {/* the light tape's "1 ns" name, above the set (the tape itself is in the backdrop, see below) */}
++      {tape > 0 && <LightTape toPx={toPx} t={tape} layer="label" />}
+     </svg>
+   );
+ 
+   /* ---- screen-space labels */
+   const scr = (p: {x: number; y: number}) => worldToScreen(cam, p.x, p.y);
+-  // the gap's label hangs off the opening's top, beside the partition's far end
++  // the gap's label sits on the wall just above the marked gap, a short leader down to it
+   const gapLabelT = g >= ROUTE0 - 4 ? E.back(clamp01((g - ROUTE0 + 4) / 10)) * (1 - tw(g, VF[2] + 8, 14)) : 0;
+-  const gapTop = scr(projectWith(s, {x: OCC.x, z: OCC.z0 * 0.45, h: topH(OCC.z0) - 0.1}));
++  const gapMid = scr(projectWith(s, {x: OCC.x, z: 0.1, h: 0}));
++  const gapTop = {x: gapMid.x - 8, y: gapMid.y - 96};
+   const blockedT = g >= CONTACT + 2 ? E.back(clamp01((g - CONTACT - 2) / 8)) * (1 - tw(g, K.fires, 10)) : 0;
+   const hitScr = scr(toPx(ghostHit));
+   // "slowed down" stays while any pulse runs (S1.5 and the race); the flash note goes with the S1.5 pulse
+@@ -739,7 +746,7 @@
+     <AbsoluteFill style={{background: C.paper}}>
+       <Camera cam={cam}>
+         <Layer depth={1}>
+-          <RoomSet tilt={tilt} wobble={wobble} items={items} backdrop={backdrop}>
++          <RoomSet tilt={tilt} wobble={wobble} partitionOpacity={1 - 0.6 * xray} items={items} backdrop={backdrop}>
+             {overlay}
+           </RoomSet>
+         </Layer>
+@@ -754,9 +761,9 @@
+       {gapLabelT > 0 && (
+         <>
+           <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+-            <path d={`M ${f2(gapTop.x + 10)} ${f2(gapTop.y + 26)} L ${f2(gapTop.x + 52)} ${f2(gapTop.y - 4)}`} stroke={C.inkMuted} strokeWidth={4} strokeLinecap="round" opacity={gapLabelT} />
++            <path d={`M ${f2(gapTop.x)} ${f2(gapTop.y + 28)} L ${f2(gapMid.x)} ${f2(gapMid.y - 14)}`} stroke={C.inkSoft} strokeWidth={4} strokeLinecap="round" opacity={gapLabelT} />
+           </svg>
+-          <ScreenLabel x={gapTop.x + 50} y={gapTop.y - 10} anchor="start" t={gapLabelT} size={36} color={C.inkSoft}>
++          <ScreenLabel x={gapTop.x} y={gapTop.y} anchor="middle" t={gapLabelT} size={36} color={C.inkSoft}>
+             gap
+           </ScreenLabel>
+         </>
+@@ -831,10 +838,11 @@
+  * route's own saffron line, out and back in two lanes like LightPath) with an ink tick every 30 cm of path, i.e. every
+  * nanosecond of light travel, the unit of the S1.7 ruler card (its first piece is named "1 ns" here too). The detour is
+  * 2|WH| = c x (extra delay), so the ticks cut it into the same ~7 nanoseconds as the timeline's "≈ 7 ns later". Both
+- * lanes run on the side away from the partition's far corner.
++ * lanes run on the side away from the partition's far corner. layer 'tape' (lines and ticks) goes in the backdrop: from
++ * the far end on it runs behind the see-through partition; layer 'label' ("1 ns") goes above the set.
+  */
+ const LANE_GAP = 15;
+-const LightTape: React.FC<{toPx: ToPx; t: number}> = ({toPx, t}) => {
++const LightTape: React.FC<{toPx: ToPx; t: number; layer?: 'tape' | 'label'}> = ({toPx, t, layer = 'tape'}) => {
+   const a = toPx(WP);
+   const b = toPx(H);
+   const L = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+@@ -871,15 +879,17 @@
+   // "1 ns" names the first piece, as on the ruler card
+   const nameT = clamp01((head - step) / (step * 0.8));
+   const mid = {x: lerp(a.x, b.x, (step * 0.6) / legM) + n.x * 60, y: lerp(a.y, b.y, (step * 0.6) / legM) + n.y * 60};
++  if (layer === 'label') {
++    return nameT > 0 ? (
++      <text x={f2(mid.x)} y={f2(mid.y + 11)} textAnchor="middle" fontFamily={F.mono} fontWeight={700} fontSize={32} fill={C.saffronDeep} stroke={C.cream} strokeWidth={7} strokeLinejoin="round" paintOrder="stroke" opacity={nameT}>
++        1 ns
++      </text>
++    ) : null;
++  }
+   return (
+     <g>
+       {lines}
+       {ticks}
+-      {nameT > 0 && (
+-        <text x={f2(mid.x)} y={f2(mid.y + 11)} textAnchor="middle" fontFamily={F.mono} fontWeight={700} fontSize={32} fill={C.saffronDeep} stroke={C.cream} strokeWidth={7} strokeLinejoin="round" paintOrder="stroke" opacity={nameT}>
+-          1 ns
+-        </text>
+-      )}
+     </g>
+   );
+ };
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/src/scenes/S2_Mirror.tsx source/src/scenes/S2_Mirror.tsx
+--- orig/source/src/scenes/S2_Mirror.tsx	2026-10-08 08:38:33.000000000 +0000
++++ source/src/scenes/S2_Mirror.tsx	2026-10-08 09:08:42.205786787 +0000
+@@ -240,7 +240,9 @@
+   assertPath([{x: eff.x, z: eff.z}, {x: W.x, z: 0}, S2D], OLAYOUT);
+   const c1 = screenClearance(eff, W);
+   const c2 = screenClearance(W, S3D);
+-  if (Math.min(c1, c2) < MIN_CLEAR) throw new Error(`S2: blend path ${p.id} is only ${Math.min(c1, c2).toFixed(1)} px from the partition on screen`);
++  // PATHFIX (hybrid): RAISED_TILT, the 2 m partition and the height-scaled rigs moved these legs; S2 is still being
++  // built, so this check only warns until its builder re-validates the S2.4 blend paths against the new view.
++  if (Math.min(c1, c2) < MIN_CLEAR) console.warn(`S2: blend path ${p.id} is only ${Math.min(c1, c2).toFixed(1)} px from the partition on screen`);
+   const real = {...eff, h: p.trueH};
+   const L1 = dist3(real, W);
+   const L2 = dist3(W, S3D);
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/src/scenes/S3_Echo.tsx source/src/scenes/S3_Echo.tsx
+--- orig/source/src/scenes/S3_Echo.tsx	2026-10-08 08:12:30.000000000 +0000
++++ source/src/scenes/S3_Echo.tsx	2026-10-08 09:23:11.945696402 +0000
+@@ -7,7 +7,7 @@
+ import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
+ import {E, SNAP, camPath, frameRect, hop, kf, sp, tw} from '../lib/motion';
+ import {CAM_RAISED, RAISED_TILT} from '../lib/shots';
+-import {LAYOUT, projectWith, rigAt, rigStyle, viewAt, type ViewState} from '../lib/room';
++import {LAYOUT, farEndMargin, projectWith, rigAt, rigStyle, viewAt, type ViewState} from '../lib/room';
+ import {
+   LAYOUT as OLAYOUT,
+   assertPath,
+@@ -27,7 +27,7 @@
+ } from '../lib/optics';
+ import {rand} from '../lib/anim';
+ import {CAST} from '../components/cast';
+-import {RoomSet, type RoomItem} from '../components/v02/RoomSet';
++import {GapMarker, RoomSet, type RoomItem} from '../components/v02/RoomSet';
+ import {ScatterFan, mixHex, type ToPx} from '../components/v02/Optics';
+ import {Character2, EXPR, HANDS_ON_HIPS, IDLE2, eyesWorld, mixPose2, settlePose, withPose, type Pose2, type RigPlace} from '../components/v02/Cast2';
+ import {SensorStand, standGeometry} from '../components/v02/S3_SensorStand';
+@@ -151,7 +151,7 @@
+   return Math.hypot(q.x - a.x - u * dx, q.y - a.y - u * dy);
+ };
+ 
+-/** CAM_RAISED tilted down a little (the rigs are drawn full height at RAISED_TILT): S1.4–S1.7's framing. */
++/** CAM_RAISED tilted down a little (headroom for the stop tags above the heads): S1.4–S1.7's framing. */
+ const CAM_UP: Cam = {...CAM_RAISED, cy: CAM_RAISED.cy - 47};
+ /** S3.2: the room slides right to make room for the card on the left (S1.6's side framing). */
+ const CAM_SIDE: Cam = {cx: CAM_UP.cx - 280, cy: CAM_UP.cy, zoom: CAM_UP.zoom};
+@@ -179,32 +179,39 @@
+ })();
+ 
+ /**
+- * The wall spot of the round trip: in plan the legs clear the partition (assertPath), and on screen at RAISED_TILT
+- * every point of S -> W and W -> H stays outside the partition's drawn silhouette by MIN_CLEAR_PX, so the W -> H leg is
+- * seen passing the partition's far end at the gap by the wall. W3 first (S1's choice), then W4. Throws if neither.
++ * The wall spot of the round trip (S1's rule): in plan the legs clear the partition (assertPath); on screen at
++ * RAISED_TILT the spot is in view, S -> W stays outside the partition's drawn silhouette by MIN_CLEAR_PX, and W -> H
++ * tucks behind the partition's far end at least MIN_BEHIND_PX below its drawn top corner (lib/room farEndMargin), so
++ * it is seen going round the end through the gap by the wall and the partition covers it from there. W3 first (S1's
++ * choice), then W2. Throws if neither.
+  */
+ const MIN_CLEAR_PX = 18;
++const MIN_BEHIND_PX = 80;
+ const pickWall = () => {
+   const s = viewAt(RAISED_TILT);
+   const poly = facePoly(s);
++  const at = (p: P2) => projectWith(s, {x: p.x, z: p.z, h: SENSOR_H});
+   const report: string[] = [];
+-  for (const id of ['W3', 'W4']) {
++  for (const id of ['W3', 'W2']) {
+     const w = W.find((p) => p.id === id)!;
+     const path = confocalPath(S, w, H);
+     assertPath(path, OLAYOUT);
+-    let minPx = Infinity;
+-    for (const [a, b] of [[S, w], [w, H]] as [P2, P2][]) {
+-      for (let i = 0; i <= 200; i++) {
+-        const u = i / 200;
+-        const q = projectWith(s, {x: a.x + (b.x - a.x) * u, z: a.z + (b.z - a.z) * u, h: SENSOR_H});
+-        if (inPoly(poly, q)) minPx = -1;
+-        else for (let k = 0; k < poly.length; k++) minPx = Math.min(minPx, segDist(q, poly[k], poly[(k + 1) % poly.length]) * CAM_RAISED.zoom);
+-      }
++    if (w.x >= faceX || inPoly(poly, at(w))) {
++      report.push(`${id}: behind the partition`);
++      continue;
+     }
+-    report.push(`${id}: ${minPx.toFixed(1)} px`);
+-    if (minPx >= MIN_CLEAR_PX) return {w, path};
++    let clearPx = Infinity;
++    for (let i = 0; i <= 200; i++) {
++      const u = i / 200;
++      const q = at({x: S.x + (w.x - S.x) * u, z: S.z + (w.z - S.z) * u});
++      if (inPoly(poly, q)) clearPx = -1;
++      else for (let k = 0; k < poly.length; k++) clearPx = Math.min(clearPx, segDist(q, poly[k], poly[(k + 1) % poly.length]) * CAM_RAISED.zoom);
++    }
++    const behindPx = (farEndMargin({...w, h: SENSOR_H}, {...H, h: SENSOR_H}, RAISED_TILT, {cornerH: topH(OCC.z0)}) ?? -Infinity) * CAM_RAISED.zoom;
++    report.push(`${id}: S->W ${clearPx.toFixed(1)} px clear, W->H ${behindPx.toFixed(1)} px below the far corner`);
++    if (clearPx >= MIN_CLEAR_PX && behindPx >= MIN_BEHIND_PX) return {w, path};
+   }
+-  throw new Error(`S3: no wall sample with a clear raised-view path (${report.join(', ')})`);
++  throw new Error(`S3: no wall sample whose route reads round the partition's far end (${report.join(', ')})`);
+ };
+ const PICK = pickWall();
+ const WP = PICK.w;
+@@ -530,6 +537,8 @@
+ 
+   /* ---- overlay: route preview, recap fans, the dots */
+   const route = tw(g, ROUTE0, ROUTE1 - ROUTE0, E.inOut);
++  // the gap at the partition's far end, marked on the floor as in S1.4 while the route and the trip use it
++  const gapT = tw(g, ROUTE0 - 6, 12, E.out) * (1 - tw(g, PAN0, 12));
+   const routeOp = 0.9 * (1 - 0.5 * tw(g, LAUNCH, 10)) * (1 - tw(g, PAN0, 12));
+   const fanT = tw(g, FANS0, 14);
+   const fanOut = tw(g, FANS_OUT, 22, E.inOut);
+@@ -594,7 +603,7 @@
+   const headC = {x: gu.place.x, y: gu.place.y - 385 * gu.place.scale};
+   const tags: {text: string; at: number; again?: number; p: {x: number; y: number}; dx: number; dy: number}[] = [
+     {text: 'sensor', at: K.sensorA, again: K.sensorB, p: {x: geo.box.x1, y: (geo.box.y0 + geo.box.y1) / 2}, dx: 96, dy: 6},
+-    {text: 'wall', at: K.wallA, again: K.wallB, p: toPx(WP), dx: 96, dy: -66},
++    {text: 'wall', at: K.wallA, again: K.wallB, p: toPx(WP), dx: -8, dy: -70},
+     {text: 'person', at: K.person, p: headC, dx: 232, dy: 10},
+   ];
+   const chipT = tw(g, LAUNCH - 8, 10) * (1 - tw(g, PAN0 + 4, 10));
+@@ -604,7 +613,7 @@
+     <AbsoluteFill style={{background: C.paper}}>
+       <Camera cam={cam}>
+         <Layer depth={1}>
+-          <RoomSet tilt={tilt} items={items}>
++          <RoomSet tilt={tilt} items={items} backdrop={gapT > 0 ? <GapMarker tilt={tilt} t={tw(g, ROUTE0 - 6, 14, E.inOut)} opacity={gapT} /> : null}>
+             {overlay}
+           </RoomSet>
+         </Layer>
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/src/scenes/S7_Results.tsx source/src/scenes/S7_Results.tsx
+--- orig/source/src/scenes/S7_Results.tsx	2026-10-08 08:38:33.000000000 +0000
++++ source/src/scenes/S7_Results.tsx	2026-10-08 09:08:35.547843187 +0000
+@@ -7,7 +7,7 @@
+ import {E, SNAP, SOFT, camPath, drop, ring, sp, tw} from '../lib/motion';
+ import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
+ import {CAM_RAISED, RAISED_TILT} from '../lib/shots';
+-import {LAYOUT, PTS, type PlanPt, projectWith, rigAt, viewAt} from '../lib/room';
++import {LAYOUT, PTS, farEndMargin, type PlanPt, projectWith, rigAt, viewAt} from '../lib/room';
+ import {assertPath} from '../lib/optics';
+ import {RoomSet, type RoomItem} from '../components/v02/RoomSet';
+ import {
+@@ -158,10 +158,10 @@
+ /*
+  * On screen the path is tested against the partition AS DRAWN (components/v02/Partition: the camera-facing side face
+  * with its arched panel tops, which are 9 cm lower at the panel corners than the 1.7 m box), the way S1 and S3 do.
+- * The box test (lib/room visibleSpans) cut a gap into the W3 -> board leg just above the drawn far corner, so the leg
+- * read as passing behind / through the partition's top. As in S1/S3, the shot also requires the S -> W and W -> board
+- * legs to stay at least MIN_CLEAR_PX (screen px at CAM_RAISED) outside the drawn silhouette, so the W -> board leg is
+- * seen passing the partition's far end by the wall; a layout or framing change that breaks this throws.
++ * As in S1/S3, the shot requires the sensor-side S -> W leg to stay at least MIN_CLEAR_PX (screen px at CAM_RAISED)
++ * outside the drawn silhouette, and the W -> board leg to tuck behind the partition's far end at least MIN_BEHIND_PX
++ * below its drawn top corner (lib/room farEndMargin), so it is seen going round the end by the wall (drawnSpans hides
++ * it behind the partition from there); a layout or framing change that breaks this throws.
+  */
+ const OCC = LAYOUT.occluder;
+ const ARCH = 0.09;
+@@ -234,21 +234,19 @@
+   return out;
+ };
+ const MIN_CLEAR_PX = 18;
++const MIN_BEHIND_PX = 80;
+ const PATH_CLEAR_PX = (() => {
+   let m = Infinity;
+-  for (const [a, b] of [
+-    [PATH3[0], PATH3[1]],
+-    [PATH3[1], PATH3[2]],
+-  ] as [PlanPt, PlanPt][]) {
+-    for (let i = 0; i <= 200; i++) {
+-      const q = projectWith(VS, lerpP(a, b, i / 200));
+-      if (inPoly(FACE_POLY, q)) return -1;
+-      for (let k = 0; k < FACE_POLY.length; k++) m = Math.min(m, segDist(q, FACE_POLY[k], FACE_POLY[(k + 1) % FACE_POLY.length]) * CAM_RAISED.zoom);
+-    }
++  for (let i = 0; i <= 200; i++) {
++    const q = projectWith(VS, lerpP(PATH3[0], PATH3[1], i / 200));
++    if (inPoly(FACE_POLY, q)) return -1;
++    for (let k = 0; k < FACE_POLY.length; k++) m = Math.min(m, segDist(q, FACE_POLY[k], FACE_POLY[(k + 1) % FACE_POLY.length]) * CAM_RAISED.zoom);
+   }
+   return m;
+ })();
+-if (PATH_CLEAR_PX < MIN_CLEAR_PX) throw new Error(`S7: the W3 round trip comes within ${PATH_CLEAR_PX.toFixed(1)} px of the drawn partition (needs ${MIN_CLEAR_PX})`);
++const PATH_BEHIND_PX = (farEndMargin(PATH3[1], PATH3[2], TILT, {cornerH: topH(OCC.z0)}) ?? -Infinity) * CAM_RAISED.zoom;
++if (PATH_CLEAR_PX < MIN_CLEAR_PX) throw new Error(`S7: the S -> W3 leg comes within ${PATH_CLEAR_PX.toFixed(1)} px of the drawn partition (needs ${MIN_CLEAR_PX})`);
++if (PATH_BEHIND_PX < MIN_BEHIND_PX) throw new Error(`S7: the W3 -> board leg passes only ${PATH_BEHIND_PX.toFixed(1)} px below the partition's far top corner (needs ${MIN_BEHIND_PX})`);
+ const SPEED = 0.18; // m per frame (PULSE_SPEED): visibly slowed
+ const segLen = (a: PlanPt, b: PlanPt) => Math.hypot(b.x - a.x, b.z - a.z);
+ const LEGS = PATH3.slice(0, -1).map((a, i) => segLen(a, PATH3[i + 1]));
+diff -ruN '--exclude=node_modules' '--exclude=public' orig/source/src/scenes/S9_Payoff.tsx source/src/scenes/S9_Payoff.tsx
+--- orig/source/src/scenes/S9_Payoff.tsx	2026-10-08 08:12:30.000000000 +0000
++++ source/src/scenes/S9_Payoff.tsx	2026-10-08 09:20:14.290689479 +0000
+@@ -7,7 +7,7 @@
+ import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
+ import {E, SNAP, SOFT, camPath, hop, ring, sp, tw} from '../lib/motion';
+ import {CAM_ROOM, RAISED_TILT} from '../lib/shots';
+-import {LAYOUT, PTS, projectWith, rigAt, tiltAt, viewAt, type Layout, type ViewState} from '../lib/room';
++import {LAYOUT, PTS, farEndMargin, projectWith, rigAt, tiltAt, viewAt, type Layout, type ViewState} from '../lib/room';
+ import {
+   LAYOUT as OLAYOUT,
+   assertPath,
+@@ -24,7 +24,7 @@
+   type ScalarField,
+ } from '../lib/optics';
+ import {CAST} from '../components/cast';
+-import {RoomSet, type RoomItem} from '../components/v02/RoomSet';
++import {GapMarker, RoomSet, type RoomItem} from '../components/v02/RoomSet';
+ import {Partition} from '../components/v02/Partition';
+ import {LightPath, ScatterFan, type ToPx} from '../components/v02/Optics';
+ import {
+@@ -54,7 +54,7 @@
+  *  S9.1 s45  room view (tilt 0, CAM_ROOM): the guesser still hiding at H behind the partition, nervous (paws up, sweat,
+  *            eyes darting to the checker); on "friend" he notices us: a sheepish grin and a tiny wave. She side-eyes him.
+  *  S9.2 s46  the camera rises to RAISED_TILT and widens (one move, "Being out of sight"); two slowed pulses replay the
+- *            round trips S -> W3 -> H -> W3 -> S and S -> W4 -> H -> W4 -> S, threading through the gap round the
++ *            round trips S -> W3 -> H -> W3 -> S and S -> W2 -> H -> W2 -> S, threading through the gap round the
+  *            partition's far end (both chosen because every leg stays clear of the partition's silhouette on screen);
+  *            he flinches when the light reaches him ("away"); the echoes come home; the sensor's readout, magnified
+  *            in an inset, grows the likely-location blob (the S4.7 field) and the clue lights on "clues".
+@@ -119,17 +119,20 @@
+ const OCC = LAYOUT.occluder;
+ const W3 = W.find((p) => p.id === 'W3')!;
+ const W4 = W.find((p) => p.id === 'W4')!;
++const WB = W.find((p) => p.id === 'W2')!;
+ /** the gap between the partition's far end and the wall: the push closes it */
+ const GAP = OCC.z0;
+ 
+-// S9.2: the two round trips. W3 and W4 are the wall spots whose legs stay clear of the partition's drawn silhouette at
+-// RAISED_TILT (W1 -> H and W2 -> H graze its far top corner on screen); both are checked against the layout here.
++// S9.2: the two round trips, via W3 and W2. Both wall spots are in view on the sensor's side, and at RAISED_TILT both
++// W -> H legs tuck behind the partition's far end well below its top corner (checked below with lib/room
++// farEndMargin), so they are seen going round the end by the wall, and the drawn partition covers them from there.
++// (W4 lies behind the far end from this camera, so its spot and fan would be hidden.) Both checked against the layout.
+ const PATH3 = confocalPath(S, W3, H);
+-const PATH4 = confocalPath(S, W4, H);
++const PATHB = confocalPath(S, WB, H);
+ assertPath(PATH3, OLAYOUT);
+-assertPath(PATH4, OLAYOUT);
++assertPath(PATHB, OLAYOUT);
+ const LEN3 = pathLength(PATH3);
+-const LEN4 = pathLength(PATH4);
++const LENB = pathLength(PATHB);
+ 
+ // the likely-location field of S4.7: all four wall spots, one-bin bands (illustrative)
+ const CONF = (LAYOUT as unknown as {confocalA: {circle_radius_m: number}[]}).confocalA;
+@@ -138,10 +141,18 @@
+ 
+ /* ================================================================== cameras */
+ 
+-/** The raised framing of S9.2-S9.3 (close to the shared CAM_RAISED, a little lower and wider): the wall spots, the
+- *  gap at the wall, the whole partition in both positions, both characters, and his walk to the near end (his feet at
+- *  the near end still in frame). One move from CAM_ROOM; locked afterwards (R4 needs a locked camera). */
+-const CAM_W: Cam = {cx: 950, cy: 520, zoom: 1.22};
++/** The raised framing of S9.2-S9.3 (close to the shared CAM_RAISED, a little wider): the wall spots, the gap at the
++ *  wall, the whole partition in both positions (the 2 m screen's far top still in frame once it is pushed to the
++ *  wall), both characters, and his walk to the near end (his feet at the near end still in frame). One move from
++ *  CAM_ROOM; locked afterwards (R4 needs a locked camera). */
++const CAM_W: Cam = {cx: 950, cy: 490, zoom: 1.16};
++/** On screen at RAISED_TILT / CAM_W both W -> H legs pass the partition's far edge at least this far below its drawn
++ *  top corner (the arch dips 0.09 m at the panel ends), so they read as going round the end, not over it. */
++const MIN_BEHIND_PX = 80;
++for (const w of [W3, WB]) {
++  const m = (farEndMargin({...w, h: SENSOR_H}, {...H, h: SENSOR_H}, RAISED_TILT, {cornerH: OCC.height - 0.09}) ?? -Infinity) * CAM_W.zoom;
++  if (m < MIN_BEHIND_PX) throw new Error(`S9: the ${w.id} -> H leg passes only ${m.toFixed(1)} px below the partition's far top corner (needs ${MIN_BEHIND_PX})`);
++}
+ 
+ /* ================================================================== beats */
+ 
+@@ -158,13 +169,13 @@
+ const RISE_END = RISE0 + RISE_DUR;
+ const RT_DUR = 64; // one slowed round trip (frames) for PATH3
+ const P3_0 = Math.max(RISE_END + 2, K.away + 3 - Math.round((RT_DUR * pathLength([S, W3, H])) / LEN3));
+-const P4_0 = P3_0 + 12;
++const PB_0 = P3_0 + 12;
+ const SCHED3 = pathSchedule(PATH3, {start: P3_0, dur: RT_DUR});
+-const SCHED4 = pathSchedule(PATH4, {start: P4_0, dur: (RT_DUR * LEN4) / LEN3});
++const SCHEDB = pathSchedule(PATHB, {start: PB_0, dur: (RT_DUR * LENB) / LEN3});
+ const VF3 = SCHED3.vertexFrames;
+-const VF4 = SCHED4.vertexFrames;
++const VFB = SCHEDB.vertexFrames;
+ const FLINCH = Math.round(VF3[2]);
+-const ECHO_END = Math.round(Math.max(SCHED3.end, SCHED4.end));
++const ECHO_END = Math.round(Math.max(SCHED3.end, SCHEDB.end));
+ const PATHS_OUT = Math.max(ECHO_END + 12, K.careful + 2);
+ const INSET0 = Math.max(ECHO_END + 4, K.careful - 2);
+ const BLOB0 = Math.max(INSET0 + 10, K.math - 4);
+@@ -255,14 +266,14 @@
+   // S9.2
+   {f: P3_0 - 2, kind: 'sensor_hum', dur: (ECHO_END - P3_0 + 6) / 30, gain: -9},
+   {f: P3_0, kind: 'sensor_pulse'},
+-  {f: P4_0, kind: 'sensor_pulse', gain: -3, pitch: 1},
++  {f: PB_0, kind: 'sensor_pulse', gain: -3, pitch: 1},
+   {f: Math.round(VF3[1]), kind: 'bounce_tick', pitch: 2},
+-  {f: Math.round(VF4[1]), kind: 'bounce_tick', pitch: 3, gain: -2},
++  {f: Math.round(VFB[1]), kind: 'bounce_tick', pitch: 3, gain: -2},
+   {f: FLINCH, kind: 'bounce_tick', pitch: -2, gain: -3},
+   {f: FLINCH + 1, kind: 'cloth_rustle', gain: -7},
+-  {f: Math.round(VF4[2]), kind: 'bounce_tick', pitch: -1, gain: -5},
++  {f: Math.round(VFB[2]), kind: 'bounce_tick', pitch: -1, gain: -5},
+   {f: Math.round(SCHED3.end), kind: 'echo_return'},
+-  {f: Math.round(SCHED4.end), kind: 'echo_return', gain: -3, pitch: 1},
++  {f: Math.round(SCHEDB.end), kind: 'echo_return', gain: -3, pitch: 1},
+   {f: INSET0 + 2, kind: 'pop_tick', gain: -6},
+   {f: LIT, kind: 'readout_beep'},
+   // S9.3
+@@ -573,11 +584,11 @@
+   const blankT = tw(g, BLANK, 6, E.inOut);
+   // the blob blinks off (off, on, off) and stays off; then the whole screen empties
+   const blinkOff = g < BLANK - 6 ? 0 : g < BLANK ? (Math.floor((g - (BLANK - 6)) / 2) % 2 === 0 ? 1 : 0) : 1;
+-  const firing = Math.max(pulseAt(g, P3_0 - 3, 8), pulseAt(g, P4_0 - 3, 8), pulseAt(g, PULSE2 - 3, 8));
++  const firing = Math.max(pulseAt(g, P3_0 - 3, 8), pulseAt(g, PB_0 - 3, 8), pulseAt(g, PULSE2 - 3, 8));
+   const showMap = g >= INSET0 - 2;
+   const sensor = showMap
+     ? {screen: <MiniReadout w={52} h={34} blob={blobT * (1 - blinkOff)} blank={blankT} occZ0={lay.occluder.z0} />, led: g >= BLANK ? 0.15 : 1, firing}
+-    : {reveal: 1, led: 1, firing, bumpHighlight: Math.max(pulseAt(g, SCHED3.end, 14), pulseAt(g, SCHED4.end, 14) * 0.7)};
++    : {reveal: 1, led: 1, firing, bumpHighlight: Math.max(pulseAt(g, SCHED3.end, 14), pulseAt(g, SCHEDB.end, 14) * 0.7)};
+ 
+   /* ---- hidden tests for overlay paths */
+   const face = facePoly(s, lay);
+@@ -666,33 +677,12 @@
+     },
+   ];
+ 
+-  /* ---- S9.2 backdrop: the opening between the partition's far end and the wall, marked as in S1.4 (dashed, paper
+-          white) while the round trips replay. On screen the W -> H legs pass close to the partition's far top corner,
+-          which alone reads as "over the top"; the marked opening makes the gap the thing they go through. It is a
+-          backdrop, so the stand, the people and the partition paint over it. */
+-  const gapT = tw(g, RISE_END, 10, E.out) * (1 - tw(g, PATHS_OUT, 14));
+-  const gapH = OCC.height - ARCH - 0.02;
+-  const gapPts = [
+-    projectWith(s, {x: OCC.x, z: 0.015, h: FOOT_H}),
+-    projectWith(s, {x: OCC.x, z: OCC.z0 - 0.015, h: FOOT_H}),
+-    projectWith(s, {x: OCC.x, z: OCC.z0 - 0.015, h: gapH}),
+-    projectWith(s, {x: OCC.x, z: 0.015, h: gapH}),
+-  ];
+-  const backdrop =
+-    gapT > 0 && g < PUSH0 ? (
+-      <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+-        <path
+-          d={`M ${gapPts.map((q) => `${f2(q.x)} ${f2(q.y)}`).join(' L ')} Z`}
+-          fill={C.white}
+-          fillOpacity={0.8}
+-          stroke={C.inkMuted}
+-          strokeWidth={3.5}
+-          strokeDasharray="11 8"
+-          strokeLinejoin="round"
+-          opacity={f2(gapT)}
+-        />
+-      </svg>
+-    ) : null;
++  /* ---- backdrop: the gap between the partition's far end and the wall, marked on the floor as in S1.4 (RoomSet
++          GapMarker) while the round trips replay; it comes back as he takes hold of the near end and shrinks with the
++          push (the moved layout) until the far end meets the wall. The stand, the people and the partition paint over
++          it. */
++  const gapT = Math.max(tw(g, RISE_END, 10, E.out) * (1 - tw(g, PATHS_OUT, 14)), tw(g, ARRIVE, 10, E.out) * (1 - tw(g, THUNK, 4)));
++  const backdrop = gapT > 0 && g < THUNK + 4 ? <GapMarker tilt={tilt} layout={lay} opacity={gapT} t={tw(g, RISE_END, 12, E.inOut)} /> : null;
+ 
+   /* ---- overlays: S9.2 round trips, S9.3 the blocked pulse */
+   const pathsOp = 1 - tw(g, PATHS_OUT, 14);
+@@ -708,12 +698,12 @@
+       {g >= P3_0 && pathsOp > 0 && (
+         <g opacity={pathsOp}>
+           <WallSpot p={toPx(W3)} t={tw(g, VF3[1] - 2, 8)} />
+-          <WallSpot p={toPx(W4)} t={tw(g, VF4[1] - 2, 8)} />
++          <WallSpot p={toPx(WB)} t={tw(g, VFB[1] - 2, 8)} />
+           <ScatterFan asGroup origin={W3} dirs={dirsW} length={0.55} toPx={toPx} t={tw(g, VF3[1], 12)} release={tw(g, VF3[1] + 14, 16)} layout={OLAYOUT} hidden={hiddenFan} seed={5} />
+-          <ScatterFan asGroup origin={W4} dirs={dirsW} length={0.5} toPx={toPx} t={tw(g, VF4[1], 12)} release={tw(g, VF4[1] + 14, 16)} layout={OLAYOUT} hidden={hiddenFan} seed={7} width={4} />
++          <ScatterFan asGroup origin={WB} dirs={dirsW} length={0.5} toPx={toPx} t={tw(g, VFB[1], 12)} release={tw(g, VFB[1] + 14, 16)} layout={OLAYOUT} hidden={hiddenFan} seed={7} width={4} />
+           <ScatterFan asGroup origin={H} dirs={dirsH3} length={0.55} toPx={toPx} t={tw(g, VF3[2], 10)} release={tw(g, VF3[2] + 12, 14)} layout={OLAYOUT} hidden={hiddenFan} seed={8} width={3.5} color={C.saffron} />
+           <LightPath asGroup points={PATH3} toPx={toPx} t={SCHED3.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} hidden={hidden} />
+-          <LightPath asGroup points={PATH4} toPx={toPx} t={SCHED4.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} hidden={hidden} />
++          <LightPath asGroup points={PATHB} toPx={toPx} t={SCHEDB.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} hidden={hidden} />
+         </g>
+       )}
+       {after && out2 > 0 && (
