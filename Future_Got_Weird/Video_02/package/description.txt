@@ -17,7 +17,7 @@ SOURCES
 Main study
 - Somasundaram, S., Young, A., Dave, A., Pediredla, A. & Raskar, R. "Imaging hidden objects with consumer LiDAR via motion-induced sampling." Nature 653, 693-699 (published 20 May 2026). https://doi.org/10.1038/s41586-026-10502-x
 - Project page: https://cornar.media.mit.edu/
-- Code and released data (MIT License): https://github.com/sidsoma/consumer-nlos (commit 15314de)
+- Code (MIT License) and released data: https://github.com/sidsoma/consumer-nlos (commit 15314de)
 History and context
 - Velten, A. et al. "Recovering three-dimensional shape around a corner using ultrafast time-of-flight imaging." Nature Communications 3, 745 (2012). https://doi.org/10.1038/ncomms1747
 - O'Toole, M., Lindell, D. B. & Wetzstein, G. "Confocal non-line-of-sight imaging based on the light-cone transform." Nature 555, 338-341 (2018). https://doi.org/10.1038/nature25489

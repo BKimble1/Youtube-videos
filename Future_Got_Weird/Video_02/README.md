@@ -1,6 +1,6 @@
 # Future Got Weird · Video 02 · "How Cameras See Around Corners"
 
-An animated explainer (about 6:43) for the anonymous channel Future Got Weird: how a plain wall can give away someone
+An animated explainer (about 6:44) for the anonymous channel Future Got Weird: how a plain wall can give away someone
 hiding behind a partition, how the timing of a small time-of-flight sensor's light becomes a map, what earlier
 laboratory systems did, and what a study published in 2026 managed with consumer-grade sensors, including its limits.
 1920×1080 composition at 30 fps; the master is rendered at 3840×2160 from the same composition.
@@ -70,11 +70,14 @@ python3 tools/mix_v2.py && python3 tools/audio_qc.py       # mix (-15.5 LUFS, <=
 # 4. picture
 cd source
 SCALE=0.5 node stills.mjs ../qa/stills word:s04:around+12  # spot-check frames (PLATE=1: Runway plates)
-npx remotion render src/index.ts Main ../exports/Future_Got_Weird_Video_02_v1_REVIEW_1080p.mp4 --crf=18
-npx remotion render src/index.ts Main ../exports/Future_Got_Weird_Video_02_v1_MASTER_4K.mp4 --scale=2 \
-    --image-format=png --crf=12 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k
-cd .. && python3 tools/make_package.py         # description, chapters, titles from the final timeline
+npx remotion render src/index.ts Main ../exports/Future_Got_Weird_Video_02_v1_REVIEW_1080p.mp4 --crf=18   # review only
+cd .. && python3 tools/make_package.py         # description, chapters, titles, captions copy from the final timeline
+bash tools/make_deliverables.sh all            # or: master | upload | preview | extras
 ```
+
+`tools/make_deliverables.sh` writes `exports/Future_Got_Weird_Video_02_v1_MASTER_4K.mp4` (3840x2160, CRF 14, PNG frame
+capture), `..._UPLOAD_1080p.mp4` (CRF 16), `..._PREVIEW_720p.mp4` (labelled review copy), `..._v1.srt` and
+`..._thumbnail.png/.jpg` (the recommended thumbnail named in `package/UPLOAD_PACKAGE.md`).
 
 The exact commands used for the delivered files, with their measured output, are in `STATUS.md`.
 

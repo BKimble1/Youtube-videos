@@ -7,7 +7,7 @@
   motion-induced sampling." *Nature* 653, 693–699 (2026). https://doi.org/10.1038/s41586-026-10502-x
 - Earlier manuscript: arXiv:2605.17865. https://arxiv.org/abs/2605.17865
 - Project page: https://cornar.media.mit.edu/
-- Code and released data (MIT License): https://github.com/sidsoma/consumer-nlos
+- Code (MIT License) and released data: https://github.com/sidsoma/consumer-nlos
   - The plots in this video were made by us from the authors' released data and code.
 
 **History**
