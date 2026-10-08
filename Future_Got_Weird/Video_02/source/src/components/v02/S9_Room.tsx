@@ -13,7 +13,7 @@ import {HandheldSensor, SENSOR, sensorPoint, type HandheldSensorProps} from './H
  *    opening): the sensor's working face sits exactly on the projected layout sensor point S at any tilt.
  *  - movedLayout(d): the layout with the partition pushed d metres back along z (toward the relay wall). The physics of
  *    S9.3 (paths stopping at the partition once the gap is closed) and the drawn partition both use it.
- *  - planWalk / walkDistance / walkAt: a frontal Character2 rig walking between two plan points (mostly in depth, toward
+ *  - planWalk / walkDistance / walkFrames / walkContacts / walkAt: a frontal Character2 rig walking between two plan points (mostly in depth, toward
  *    or away from the camera) with its feet planted on plan footprints projected through the room view, so the far foot
  *    sits higher on screen and nothing slides (the room-view counterpart of the warehouse kit's whWalkAt).
  *  - behindBox: is an upright figure partly hidden behind a box (the partition) from the camera (lib/room's rule).
@@ -142,26 +142,52 @@ export const planWalk = (a: {x: number; z: number}, b: {x: number; z: number}, o
   return {a, b, dist, steps, stepM: dist / steps, heightM, lift: opts.lift ?? 20, profile: opts.profile ?? 0};
 };
 
-/** Metres walked at frame g (first step accelerates from rest, the last decelerates into the stop). */
-export const walkDistance = (g: number, start: number, plan: PlanWalk, framesPerStep: number) => {
-  const t = (g - start) / framesPerStep;
-  if (t <= 0) return 0;
-  if (t >= plan.steps) return plan.dist;
-  const k = Math.floor(t);
-  const f = t - k;
+/**
+ * Frames a walk driven by walkDistance takes, start to stop: every step framesPerStep frames, except the last, which
+ * takes `lastStepFrames` (opt-in, default framesPerStep, so the default is plan.steps * framesPerStep exactly). A
+ * one-step walk takes lastStepFrames.
+ */
+export const walkFrames = (plan: PlanWalk, framesPerStep: number, lastStepFrames: number = framesPerStep) =>
+  lastStepFrames === framesPerStep ? plan.steps * framesPerStep : (plan.steps - 1) * framesPerStep + lastStepFrames;
+
+/**
+ * Metres walked at frame g (first step accelerates from rest, the last decelerates into the stop). `lastStepFrames`
+ * (opt-in, default framesPerStep: unchanged) stretches only the last step (its deceleration into the stop) to that many
+ * frames, e.g. a slower closing step for a deadpan stroll; the full steps keep framesPerStep. walkFrames gives the length.
+ */
+export const walkDistance = (g: number, start: number, plan: PlanWalk, framesPerStep: number, lastStepFrames: number = framesPerStep) => {
   const accel = (u: number) => 2 * u * u - u * u * u;
-  const e = plan.steps === 1 ? E.inOut(f) : k === 0 ? accel(f) : k === plan.steps - 1 ? 1 - accel(1 - f) : f;
-  return (k + e) * plan.stepM;
+  const ease = (k: number, f: number) => (plan.steps === 1 ? E.inOut(f) : k === 0 ? accel(f) : k === plan.steps - 1 ? 1 - accel(1 - f) : f);
+  if (lastStepFrames === framesPerStep) {
+    const t = (g - start) / framesPerStep;
+    if (t <= 0) return 0;
+    if (t >= plan.steps) return plan.dist;
+    const k = Math.floor(t);
+    return (k + ease(k, t - k)) * plan.stepM;
+  }
+  if (!(lastStepFrames > 0)) throw new Error(`walkDistance: lastStepFrames must be > 0 (got ${lastStepFrames})`);
+  const t0 = g - start;
+  if (t0 <= 0) return 0;
+  const full = (plan.steps - 1) * framesPerStep; // frames of the steps before the last
+  if (t0 >= full + lastStepFrames) return plan.dist;
+  if (t0 < full) {
+    const t = t0 / framesPerStep;
+    const k = Math.min(plan.steps - 2, Math.floor(t));
+    return (k + ease(k, t - k)) * plan.stepM;
+  }
+  const k = plan.steps - 1;
+  return (k + ease(k, (t0 - full) / lastStepFrames)) * plan.stepM;
 };
 
-/** Frames at which a foot lands (footstep cues) for a walk driven by walkDistance with the same arguments. */
-export const walkContacts = (start: number, plan: PlanWalk, framesPerStep: number): number[] => {
+/** Frames at which a foot lands (footstep cues) for a walk driven by walkDistance with the same arguments (including
+ *  the opt-in lastStepFrames). */
+export const walkContacts = (start: number, plan: PlanWalk, framesPerStep: number, lastStepFrames: number = framesPerStep): number[] => {
   const out: number[] = [];
   let prev = [false, false];
   const end = plan.dist;
-  for (let i = 0; i <= plan.steps * framesPerStep * 4 + 4; i++) {
+  for (let i = 0; i <= walkFrames(plan, framesPerStep, lastStepFrames) * 4 + 4; i++) {
     const f = start + i / 4;
-    const c = walkDistance(f, start, plan, framesPerStep);
+    const c = walkDistance(f, start, plan, framesPerStep, lastStepFrames);
     const sw = [walkFoot(c, 0, plan.stepM, end).lift > 0.01, walkFoot(c, 0.5, plan.stepM, end).lift > 0.01];
     sw.forEach((v, j) => {
       if (prev[j] && !v) out.push(Math.round(f));

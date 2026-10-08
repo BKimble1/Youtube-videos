@@ -1,0 +1,84 @@
+# full-res stills, base = source/ (shared pass), new = work/fix2_S2; whole composition (no ONLY)
+02755_2755.png: identical
+02758_2758.png: identical
+02761_2761.png: identical
+02763_2763.png: identical
+02764_2764.png: DIFF px=247127 max=234 mean=10.419 bbox x0-762 y538-925
+02766_2766.png: DIFF px=220696 max=234 mean=8.269 bbox x0-787 y92-925
+02767_2767.png: DIFF px=133994 max=234 mean=5.538 bbox x0-793 y538-925
+02776_2776.png: DIFF px=8712 max=50 mean=0.027 bbox x89-801 y538-925
+02777_2777.png: identical
+02780_2780.png: identical
+02785_2785.png: identical
+02800_2800.png: identical
+02810_2810.png: identical
+02825_2825.png: identical
+02840_2840.png: identical
+02860_2860.png: identical
+02872_2872.png: identical
+02873_2873.png: identical
+02874_2874.png: identical
+
+# S2 last (2873) vs S3 first (2874), full res
+base 2873 vs 2874: px 7141 mean 0.014 max 112 bbox x 919 1794 y 214 932
+new 2873 vs 2874: px 7141 mean 0.014 max 112 bbox x 919 1794 y 214 932
+
+# card x0 per frame (code): new BARS_SLIDE 812, BARS_DUR 14
+{"K_start":1826,"K_end":2874,"many":2767,"what":2810,"survives":2815,"ARRIVE":2754,"BARS_IN":2763,"INSET_OUT":2757,"DROP0":2810,"DROP_DUR":15,"DROP_HIT":2825,"LABEL_T":2828,"ROUTES_OUT":2810,"BITS":2673,"BARS_SLIDE":812}
+{"g":2755,"inset":1,"insetOp":1,"insetX0":92,"barsIn":0,"barsOp":0,"barsX0":null}
+{"g":2756,"inset":1,"insetOp":1,"insetX0":92,"barsIn":0,"barsOp":0,"barsX0":null}
+{"g":2757,"inset":1,"insetOp":1,"insetX0":92,"barsIn":0,"barsOp":0,"barsX0":null}
+{"g":2758,"inset":0.99,"insetOp":1,"insetX0":83.9,"barsIn":0,"barsOp":0,"barsX0":null}
+{"g":2759,"inset":0.96,"insetOp":1,"insetX0":59.5,"barsIn":0,"barsOp":0,"barsX0":null}
+{"g":2760,"inset":0.91,"insetOp":1,"insetX0":18.9,"barsIn":0,"barsOp":0,"barsX0":null}
+{"g":2761,"inset":0.84,"insetOp":1,"insetX0":-37.9,"barsIn":0,"barsOp":0,"barsX0":null}
+{"g":2762,"inset":0.75,"insetOp":1,"insetX0":-111,"barsIn":0,"barsOp":0,"barsX0":null}
+{"g":2763,"inset":0.64,"insetOp":1,"insetX0":-200.3,"barsIn":0,"barsOp":0,"barsX0":null}
+{"g":2764,"inset":0.51,"insetOp":1,"insetX0":-305.9,"barsIn":0.2987,"barsOp":1,"barsX0":-477.5}
+{"g":2765,"inset":0.36,"insetOp":1,"insetX0":-427.7,"barsIn":0.5342,"barsOp":1,"barsX0":-286.2}
+{"g":2766,"inset":0.19,"insetOp":1,"insetX0":-565.7,"barsIn":0.7027,"barsOp":1,"barsX0":-149.4}
+{"g":2767,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":0.815,"barsOp":1,"barsX0":-58.2}
+{"g":2768,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":0.8873,"barsOp":1,"barsX0":0.5}
+{"g":2769,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":0.9329,"barsOp":1,"barsX0":37.5}
+{"g":2770,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":0.9614,"barsOp":1,"barsX0":60.6}
+{"g":2771,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":0.9788,"barsOp":1,"barsX0":74.8}
+{"g":2772,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":0.9892,"barsOp":1,"barsX0":83.3}
+{"g":2773,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":0.9951,"barsOp":1,"barsX0":88}
+{"g":2774,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":0.9981,"barsOp":1,"barsX0":90.5}
+{"g":2775,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":0.9995,"barsOp":1,"barsX0":91.6}
+{"g":2776,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":0.9999,"barsOp":1,"barsX0":92}
+{"g":2777,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":1,"barsOp":1,"barsX0":92}
+{"g":2778,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":1,"barsOp":1,"barsX0":92}
+{"g":2779,"inset":0,"insetOp":0,"insetX0":-720,"barsIn":1,"barsOp":1,"barsX0":92}
+
+# assert mutation tests (each mutation applied alone at load time)
+none -> loaded 24
+old 60 px slide -> THROWS: S2: the slots card is not off frame at barsIn 0 (its right edge at x 742): it would pop in
+slide just short of off frame -> THROWS: S2: the slots card is not off frame at barsIn 0 (its right edge at x 5): it would pop in
+E.linear over the full 812 px slide (not a pop; allowed) -> loaded 24
+slow 3-frame dur (first frame > 400 px) -> THROWS: S2: frame 2764: the slots card's first frame shows 694 px of it (> 400): a pop
+long dur 60 (drop before settle) -> THROWS: S2: the blip drops (2810) before the slots card has settled (2823)
+inset fade restored -> THROWS: S2: frame 2766: the confetti inset is see-through over the room
+bars fade-in -> THROWS: S2: the slots card is see-through for 1 frames
+
+# measured cream extent of the slots card (full-res px; old = REVIEW2 mp4, new = half-res clip x2); third value = inset right edge
+2760 OLD None 710 | NEW None 712
+2761 OLD None 654 | NEW None 654
+2762 OLD None 582 | NEW None 582
+2763 OLD None 492 | NEW None 492
+2764 OLD (56, 748) 386 | NEW (0, 216) 386
+2765 OLD (72, 762) 264 | NEW (0, 408) 266
+2766 OLD (82, 772) None | NEW (0, 546) 128
+2767 OLD (88, 778) None | NEW (0, 636) None
+2768 OLD (90, 782) None | NEW (4, 696) None
+2769 OLD (94, 784) None | NEW (40, 732) None
+2770 OLD (96, 786) None | NEW (64, 756) None
+2771 OLD (94, 786) None | NEW (78, 770) None
+2772 OLD (96, 786) None | NEW (86, 778) None
+2773 OLD (96, 786) None | NEW (92, 784) None
+2774 OLD (96, 786) None | NEW (94, 786) None
+2775 OLD (96, 786) None | NEW (96, 786) None
+2776 OLD (96, 786) None | NEW (96, 786) None
+2777 OLD (96, 786) None | NEW (96, 786) None
+2778 OLD (96, 786) None | NEW (96, 786) None
+2779 OLD (96, 786) None | NEW (96, 786) None

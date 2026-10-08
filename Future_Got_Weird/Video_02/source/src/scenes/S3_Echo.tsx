@@ -19,6 +19,7 @@ import {
   WALL_T,
   rigAt,
   rigStyle,
+  setSliceMaxX,
   viewAt,
   type HiddenTest,
   type PlanPt,
@@ -681,30 +682,7 @@ const MIN_SPOT_CLEAR_PX = 40;
   if (fails.length) throw new Error(`S3 path-legibility checks: ${fails.join('; ')}`);
 })();
 
-/**
- * Largest screen x (camera `cam`, tilt) of the room set's cross-section at plan x `xe` (the wall's end, the slab's end
- * and its drop shadow, drawn 10, 14 world px down-right), over the samples inside the frame's height: < 0 means that
- * cross-section is out of frame to the left.
- */
-const setSliceMaxX = (cam: Cam, tilt: number, xe: number) => {
-  const s = viewAt(tilt);
-  const {z0, z1, wallHeight: HW} = LAYOUT.room;
-  const pts: PlanPt[] = [];
-  for (let k = 0; k <= 60; k++) {
-    const z = z0 - WALL_T + (z1 - z0 + WALL_T) * (k / 60);
-    pts.push({x: xe, z, h: -SLAB_T}, {x: xe, z, h: 0});
-    pts.push({x: xe, z: z0 - WALL_T, h: (HW * k) / 60}, {x: xe, z: z0, h: (HW * k) / 60});
-  }
-  let mx = -Infinity;
-  for (const p of pts) {
-    const q = projectWith(s, p);
-    for (const [dx, dy] of [[0, 0], [10, 14]]) {
-      const sc = worldToScreen(cam, q.x + dx, q.y + dy);
-      if (sc.y >= -OUTLINE && sc.y <= 1080 + OUTLINE) mx = Math.max(mx, sc.x + OUTLINE);
-    }
-  }
-  return mx;
-};
+// setSliceMaxX (where the set's extended left end lands on screen) is shared: lib/room.
 
 /** Module-load checks of the review r1 fixes (D03 hand-off, D20 set extension, D05 board beats); any failure throws. */
 (() => {

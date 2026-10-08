@@ -41,3 +41,5 @@ qa/pathfix_*/
 # fix-round working renders (stills, clips); the contact sheets are kept
 qa/fix1/**/*.png
 qa/fix1/**/*.mp4
+qa/fix2/**/*.png
+qa/fix2/**/*.mp4

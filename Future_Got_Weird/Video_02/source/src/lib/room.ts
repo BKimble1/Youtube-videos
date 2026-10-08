@@ -1,5 +1,7 @@
 import type {CSSProperties} from 'react';
 import layoutJson from '../data/layout.json';
+import {OUTLINE} from '../theme';
+import {worldToScreen, type Cam} from './camera';
 import {E, Ease, tw} from './motion';
 
 /**
@@ -222,6 +224,50 @@ export const roomBounds = (tilt: number, view: ViewConfig = DEFAULT_VIEW, layout
   }
   return {x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys)};
 };
+
+/**
+ * Screen-x extent (camera `cam`, tilt) of the room set's cross-section at plan x `xe`: the relay wall's end (z0 - WALL_T
+ * .. z0, full wall height), the floor slab's end (z0 - WALL_T .. z1, -SLAB_T .. 0) and its drop shadow (drawn 10, 14
+ * world px down-right), sampled, over the samples inside the frame's height, outlines included (± OUTLINE). This is
+ * where a cut end of RoomSet lands on screen when the shell ends at xe (extendLeft: xe = x0 - extendLeft; extendRight:
+ * xe = x1 + extendRight). min = +Infinity / max = -Infinity when no sample is inside the frame's height.
+ */
+export const setSliceX = (cam: Cam, tilt: number, xe: number, view: ViewConfig = DEFAULT_VIEW, layout: Layout = LAYOUT) => {
+  const s = viewAt(tilt, view);
+  const {z0, z1, wallHeight: HW} = layout.room;
+  const pts: PlanPt[] = [];
+  for (let k = 0; k <= 60; k++) {
+    const z = z0 - WALL_T + (z1 - z0 + WALL_T) * (k / 60);
+    pts.push({x: xe, z, h: -SLAB_T}, {x: xe, z, h: 0});
+    pts.push({x: xe, z: z0 - WALL_T, h: (HW * k) / 60}, {x: xe, z: z0, h: (HW * k) / 60});
+  }
+  let mn = Infinity;
+  let mx = -Infinity;
+  for (const p of pts) {
+    const q = projectWith(s, p);
+    for (const [dx, dy] of [[0, 0], [10, 14]]) {
+      const sc = worldToScreen(cam, q.x + dx, q.y + dy);
+      if (sc.y >= -OUTLINE && sc.y <= 1080 + OUTLINE) {
+        mx = Math.max(mx, sc.x + OUTLINE);
+        mn = Math.min(mn, sc.x - OUTLINE);
+      }
+    }
+  }
+  return {min: mn, max: mx};
+};
+
+/**
+ * Largest screen x (camera `cam`, tilt) of the room set's cross-section at plan x `xe` (the wall's end, the slab's end
+ * and its drop shadow, drawn 10, 14 world px down-right), over the samples inside the frame's height: < 0 means that
+ * cross-section is out of frame to the left (e.g. the extendLeft end, xe = x0 - extendLeft). Moved here from S3_Echo.
+ */
+export const setSliceMaxX = (cam: Cam, tilt: number, xe: number, view: ViewConfig = DEFAULT_VIEW, layout: Layout = LAYOUT) => setSliceX(cam, tilt, xe, view, layout).max;
+
+/**
+ * Smallest screen x of the same cross-section: > 1920 means it is out of frame to the right (e.g. the extendRight end,
+ * xe = x1 + extendRight). For a framing inside a window, compare with the window's right edge instead.
+ */
+export const setSliceMinX = (cam: Cam, tilt: number, xe: number, view: ViewConfig = DEFAULT_VIEW, layout: Layout = LAYOUT) => setSliceX(cam, tilt, xe, view, layout).min;
 
 /* ------------------------------------------------------------------ drawing helpers */
 

@@ -73,6 +73,16 @@ export type RoomSetProps = {
    * Turn it on only once the left end is out of frame (a cut-away end that pops to a continued wall would show).
    */
   extendLeft?: number;
+  /**
+   * Opt-in (metres, default 0): the right-hand counterpart for a framing that looks past the room's RIGHT end. The relay
+   * wall, its skirting, the floor, the slab's front face and the drop shadow run on to xR = x1 + extendRight, the wall
+   * top covers the relay wall's strip only, and the right side wall goes: its inner face, its skirting, the door on it,
+   * the plan's door gap and its front cut-end cap are not drawn. The extension gets planks of the same width with their
+   * own seeds (the existing planks are unchanged). Use it only on a framing that never shows the side wall (it is
+   * removed, not continued) and whose frame never reaches xR (the set's new right end), e.g. a fixed card framing.
+   * With 0 the set is drawn exactly as before.
+   */
+  extendRight?: number;
 };
 
 /* palette for the set (light, warm, flat) */
@@ -107,13 +117,20 @@ export const PLANT = {x: 0.4, z: 0.32, heightM: 1.3};
 
 type P3 = [number, number, number];
 
-export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, children, partition = true, wobble = 0, door = true, plant = true, view = DEFAULT_VIEW, layout = LAYOUT, extendLeft = 0}) => {
+export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, children, partition = true, wobble = 0, door = true, plant = true, view = DEFAULT_VIEW, layout = LAYOUT, extendLeft = 0, extendRight = 0}) => {
   const s = viewAt(tilt, view);
   const {x0, x1, z0, z1, wallHeight: HW} = layout.room;
   const T = WALL_T;
   // extendLeft: the shell (wall, skirting, wall top, floor, slab front, shadow) starts at xL; x0 stays the room's end
   const ext = Math.max(0, extendLeft);
   const xL = x0 - ext;
+  // extendRight: the relay wall's shell runs to xR and the right side wall is not drawn (extR 0: exactly the old set,
+  // whose floor, slab front and shadow end under the side wall at x1 + T and whose relay wall ends at x1)
+  const extR = Math.max(0, extendRight);
+  const xR = x1 + extR;
+  const xFloorR = extR > 0 ? xR : x1 + T;
+  const xWallR = extR > 0 ? xR : x1;
+  const sideWall = extR === 0;
   const d = (pts: P3[], closed = true) =>
     pts.map(([x, z, h], i) => {
       const q = projectWith(s, {x, z, h});
@@ -166,6 +183,22 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
         plankLines.push(<line key={`xj${k}-${j}`} x1={pa.x} y1={pa.y} x2={pb.x} y2={pb.y} />);
       });
     }
+    // extendRight: planks of the same width continuing right from x1 (the room's right end becomes a plank seam), with
+    // their own joint seeds; the last one is cut at xR
+    for (let k = 0; extR > 0 && x1 + k * pw < xR - 1e-6; k++) {
+      const xl = x1 + k * pw;
+      const xr = Math.min(xR, xl + pw);
+      const a = P(xl, z0);
+      const b = P(xl, z1);
+      plankLines.push(<line key={`xr${k}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} />);
+      if (xr - xl < 0.1) continue;
+      const joints = [0.35 + rand(2000 + k * 7 + 3) * 1.1, 1.9 + rand(2000 + k * 13 + 5) * 1.2];
+      joints.forEach((zj, j) => {
+        const pa = P(xl + 0.02, z0 + zj);
+        const pb = P(xr - (xr < xR ? 0.02 : 0), z0 + zj);
+        plankLines.push(<line key={`xk${k}-${j}`} x1={pa.x} y1={pa.y} x2={pb.x} y2={pb.y} />);
+      });
+    }
   }
 
   // skirting runs (side wall interrupted by the door)
@@ -182,7 +215,7 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
   }
 
   // diorama drop shadow: slab footprint, pushed down-right a touch
-  const shadow = d([[xL, z0 - T, -SLAB_T], [x1 + T, z0 - T, -SLAB_T], [x1 + T, z1, -SLAB_T], [xL, z1, -SLAB_T]]);
+  const shadow = d([[xL, z0 - T, -SLAB_T], [xFloorR, z0 - T, -SLAB_T], [xFloorR, z1, -SLAB_T], [xL, z1, -SLAB_T]]);
 
   // the standing things: user items + partition + plant
   const occ = occluderBox(layout);
@@ -202,10 +235,10 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
         <path d={shadow} fill={C.shadow} transform="translate(10 14)" />
 
         {/* floor slab edges (front, left) */}
-        {faces && <path d={d([[xL, z1, 0], [x1 + T, z1, 0], [x1 + T, z1, -SLAB_T], [xL, z1, -SLAB_T]])} fill={ROOM_COLORS.slabFront} {...ink} />}
+        {faces && <path d={d([[xL, z1, 0], [xFloorR, z1, 0], [xFloorR, z1, -SLAB_T], [xL, z1, -SLAB_T]])} fill={ROOM_COLORS.slabFront} {...ink} />}
         {faces && ext === 0 && <path d={d([[x0, z0 - T, 0], [x0, z1, 0], [x0, z1, -SLAB_T], [x0, z0 - T, -SLAB_T]])} fill={ROOM_COLORS.slabSide} {...ink} />}
         {/* floor */}
-        <path d={d([[xL, z0 - T, 0], [x1 + T, z0 - T, 0], [x1 + T, z1, 0], [xL, z1, 0]])} fill={floorColor} {...ink} />
+        <path d={d([[xL, z0 - T, 0], [xFloorR, z0 - T, 0], [xFloorR, z1, 0], [xL, z1, 0]])} fill={floorColor} {...ink} />
         <g stroke={ROOM_COLORS.plank} strokeWidth={3} strokeLinecap="round" opacity={plankOp}>
           {plankLines}
         </g>
@@ -213,13 +246,13 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
         {faces && (
           <g>
             {/* relay wall: plain matte face */}
-            <path d={d([[xL, z0, 0], [x1, z0, 0], [x1, z0, HW], [xL, z0, HW]])} fill={ROOM_COLORS.relayWall} {...ink} />
-            {/* right side wall, inner face */}
-            <path d={d([[x1, z0, 0], [x1, z1, 0], [x1, z1, HW], [x1, z0, HW]])} fill={ROOM_COLORS.sideWall} {...ink} />
+            <path d={d([[xL, z0, 0], [xWallR, z0, 0], [xWallR, z0, HW], [xL, z0, HW]])} fill={ROOM_COLORS.relayWall} {...ink} />
+            {/* right side wall, inner face (not drawn with extendRight) */}
+            {sideWall && <path d={d([[x1, z0, 0], [x1, z1, 0], [x1, z1, HW], [x1, z0, HW]])} fill={ROOM_COLORS.sideWall} {...ink} />}
             {/* skirting boards */}
-            <path d={d([[xL, z0 + 0.012, 0], [x1, z0 + 0.012, 0], [x1, z0 + 0.012, SKIRT_H], [xL, z0 + 0.012, SKIRT_H]])} fill={ROOM_COLORS.skirting} {...ink} strokeWidth={3} />
+            <path d={d([[xL, z0 + 0.012, 0], [xWallR, z0 + 0.012, 0], [xWallR, z0 + 0.012, SKIRT_H], [xL, z0 + 0.012, SKIRT_H]])} fill={ROOM_COLORS.skirting} {...ink} strokeWidth={3} />
             {/* side-wall skirting fades with the door: on an edge-on wall its ends would read as notches in the wall line */}
-            {doorOp > 0.001 && (
+            {sideWall && doorOp > 0.001 && (
               <g opacity={doorOp}>
                 {sideSkirt.map(([a, b], i) => (
                   <path key={`ss${i}`} d={d([[x1 - 0.012, a, 0], [x1 - 0.012, b, 0], [x1 - 0.012, b, SKIRT_H], [x1 - 0.012, a, SKIRT_H]])} fill={ROOM_COLORS.skirting} {...ink} strokeWidth={3} />
@@ -228,20 +261,25 @@ export const RoomSet: React.FC<RoomSetProps> = ({tilt, items = [], backdrop, chi
             )}
             {/* door on the side wall */}
             {/* (fades while the side wall is still broad: an edge-on door would only read as a stray sliver) */}
-            {door && doorOp > 0.001 && (
+            {sideWall && door && doorOp > 0.001 && (
               <g opacity={doorOp}>
                 <DoorOnSideWall s={s} x={x1 - 0.006} />
               </g>
             )}
             {/* cut ends of the walls: the same colour as the wall tops, so they merge into the plan's ink wall lines */}
             {ext === 0 && <path d={d([[x0, z0 - T, 0], [x0, z0, 0], [x0, z0, HW], [x0, z0 - T, HW]])} fill={topColor} {...ink} />}
-            <path d={d([[x1, z1, 0], [x1 + T, z1, 0], [x1 + T, z1, HW], [x1, z1, HW]])} fill={topColor} {...ink} />
+            {sideWall && <path d={d([[x1, z1, 0], [x1 + T, z1, 0], [x1 + T, z1, HW], [x1, z1, HW]])} fill={topColor} {...ink} />}
           </g>
         )}
-        {/* wall tops: cream cut edges in the room view, the ink wall lines of the plan */}
-        <path d={d([[xL, z0 - T, HW], [x1 + T, z0 - T, HW], [x1 + T, z1, HW], [x1, z1, HW], [x1, z0, HW], [xL, z0, HW]])} fill={topColor} {...ink} />
+        {/* wall tops: cream cut edges in the room view, the ink wall lines of the plan (extendRight: the relay wall's
+            strip only) */}
+        {sideWall ? (
+          <path d={d([[xL, z0 - T, HW], [x1 + T, z0 - T, HW], [x1 + T, z1, HW], [x1, z1, HW], [x1, z0, HW], [xL, z0, HW]])} fill={topColor} {...ink} />
+        ) : (
+          <path d={d([[xL, z0 - T, HW], [xR, z0 - T, HW], [xR, z0, HW], [xL, z0, HW]])} fill={topColor} {...ink} />
+        )}
         {/* plan: the door as a gap in the side wall line, with the closed door leaf in it */}
-        {door && planT > 0.001 && (
+        {sideWall && door && planT > 0.001 && (
           <g opacity={smoothstep(0.75, 1, tilt)}>
             <path d={d([[x1 - 0.01, DOOR.z0, HW], [x1 + T + 0.01, DOOR.z0, HW], [x1 + T + 0.01, DOOR.z1, HW], [x1 - 0.01, DOOR.z1, HW]])} fill={ROOM_COLORS.board} />
             <path d={d([[x1 + T * 0.28, DOOR.z0, HW], [x1 + T * 0.72, DOOR.z0, HW], [x1 + T * 0.72, DOOR.z1, HW], [x1 + T * 0.28, DOOR.z1, HW]])} fill={ROOM_COLORS.door} stroke={C.ink} strokeWidth={2.5} />
