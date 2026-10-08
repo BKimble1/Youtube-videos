@@ -596,12 +596,4006 @@
    "note": "brand card lifts away"
   }
  ],
- "S3": null,
- "S4": null,
- "S5": null,
- "S6": null,
- "S7": null,
- "S8": null,
- "S9": null,
- "S10": null
+ "S3": [
+  {
+   "f": 1305,
+   "kind": "amb_conveyor",
+   "dur": 42.93333333333333
+  },
+  {
+   "f": 1305,
+   "kind": "conveyor_run",
+   "dur": 2.933333333333333,
+   "gain": -12,
+   "note": "idle belt crawl under the reveal"
+  },
+  {
+   "f": 1327,
+   "kind": "paper_flap",
+   "gain": -8,
+   "note": "the slip falls in"
+  },
+  {
+   "f": 1333,
+   "kind": "paper_slap",
+   "gain": -3
+  },
+  {
+   "f": 1343,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 7,
+   "note": "standby LED blips twice"
+  },
+  {
+   "f": 1348,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 9
+  },
+  {
+   "f": 1346,
+   "kind": "scanner_sweep",
+   "dur": 1,
+   "gain": -6
+  },
+  {
+   "f": 1382,
+   "kind": "paper_slide",
+   "note": "slip pulled into the intake"
+  },
+  {
+   "f": 1391,
+   "kind": "machine_clunk",
+   "gain": -6
+  },
+  {
+   "f": 1393,
+   "kind": "printer_feed"
+  },
+  {
+   "f": 1393,
+   "kind": "conveyor_run",
+   "dur": 1.5333333333333334,
+   "gain": -4
+  },
+  {
+   "f": 1439,
+   "kind": "conveyor_clunk"
+  },
+  {
+   "f": 1444,
+   "kind": "typewriter_tick",
+   "gain": -11,
+   "pitch": 3,
+   "note": "perforations scored"
+  },
+  {
+   "f": 1449,
+   "kind": "typewriter_tick",
+   "gain": -11,
+   "pitch": 3,
+   "note": "perforations scored"
+  },
+  {
+   "f": 1454,
+   "kind": "typewriter_tick",
+   "gain": -11,
+   "pitch": 3,
+   "note": "perforations scored"
+  },
+  {
+   "f": 1456,
+   "kind": "pop_tick",
+   "gain": -7,
+   "pitch": 0,
+   "note": "strip snaps into tiles"
+  },
+  {
+   "f": 1458,
+   "kind": "pop_tick",
+   "gain": -7,
+   "pitch": 1,
+   "note": "strip snaps into tiles"
+  },
+  {
+   "f": 1460,
+   "kind": "pop_tick",
+   "gain": -7,
+   "pitch": 2,
+   "note": "strip snaps into tiles"
+  },
+  {
+   "f": 1462,
+   "kind": "pop_tick",
+   "gain": -7,
+   "pitch": 3,
+   "note": "strip snaps into tiles"
+  },
+  {
+   "f": 1464,
+   "kind": "pop_tick",
+   "gain": -7,
+   "pitch": 4,
+   "note": "strip snaps into tiles"
+  },
+  {
+   "f": 1466,
+   "kind": "pop_tick",
+   "gain": -7,
+   "pitch": 5,
+   "note": "strip snaps into tiles"
+  },
+  {
+   "f": 1468,
+   "kind": "pop_tick",
+   "gain": -7,
+   "pitch": 6,
+   "note": "strip snaps into tiles"
+  },
+  {
+   "f": 1470,
+   "kind": "pop_tick",
+   "gain": -7,
+   "pitch": 7,
+   "note": "strip snaps into tiles"
+  },
+  {
+   "f": 1516,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": -3
+  },
+  {
+   "f": 1519,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": -2
+  },
+  {
+   "f": 1522,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": -1
+  },
+  {
+   "f": 1525,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 0
+  },
+  {
+   "f": 1524,
+   "kind": "chip_pop",
+   "gain": -4
+  },
+  {
+   "f": 1551,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 5
+  },
+  {
+   "f": 1555,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 6
+  },
+  {
+   "f": 1559,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 7
+  },
+  {
+   "f": 1563,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 8
+  },
+  {
+   "f": 1561,
+   "kind": "chip_pop",
+   "gain": -4,
+   "pitch": 2
+  },
+  {
+   "f": 1626,
+   "kind": "hanger_click",
+   "gain": -4,
+   "note": "tokenizer sign lands on its strings"
+  },
+  {
+   "f": 1649,
+   "kind": "paper_lift",
+   "gain": -6,
+   "note": "Kalai lifts as one block"
+  },
+  {
+   "f": 1694,
+   "kind": "card_flick",
+   "note": "crack: Kal snaps off"
+  },
+  {
+   "f": 1727,
+   "kind": "paper_slide",
+   "gain": -5,
+   "note": "ai slides away"
+  },
+  {
+   "f": 1750,
+   "kind": "token_lock",
+   "gain": -5
+  },
+  {
+   "f": 1753,
+   "kind": "token_lock",
+   "gain": -6,
+   "pitch": 2
+  },
+  {
+   "f": 1776,
+   "kind": "machine_clunk",
+   "note": "scorer powers on"
+  },
+  {
+   "f": 1778,
+   "kind": "pop_tick",
+   "gain": -8,
+   "pitch": 4
+  },
+  {
+   "f": 1781,
+   "kind": "pop_tick",
+   "gain": -8,
+   "pitch": 7
+  },
+  {
+   "f": 1784,
+   "kind": "pop_tick",
+   "gain": -8,
+   "pitch": 10
+  },
+  {
+   "f": 1778,
+   "kind": "machine_hum",
+   "dur": 16.9,
+   "gain": -10
+  },
+  {
+   "f": 1796,
+   "kind": "hanger_click",
+   "gain": -6,
+   "note": "illustrative-numbers tag flips down"
+  },
+  {
+   "f": 1797,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 0
+  },
+  {
+   "f": 1800,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 1
+  },
+  {
+   "f": 1803,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "f": 1806,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 3
+  },
+  {
+   "f": 1809,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 4
+  },
+  {
+   "f": 1812,
+   "kind": "prob_tick",
+   "gain": -6,
+   "pitch": 0
+  },
+  {
+   "f": 1818,
+   "kind": "prob_tick",
+   "gain": -6,
+   "pitch": 1
+  },
+  {
+   "f": 1824,
+   "kind": "prob_tick",
+   "gain": -6,
+   "pitch": 2
+  },
+  {
+   "f": 1830,
+   "kind": "prob_tick",
+   "gain": -6,
+   "pitch": 3
+  },
+  {
+   "f": 1836,
+   "kind": "prob_tick",
+   "gain": -6,
+   "pitch": 4
+  },
+  {
+   "f": 1842,
+   "kind": "prob_tick",
+   "gain": -6,
+   "pitch": 5
+  },
+  {
+   "f": 1850,
+   "kind": "token_select",
+   "gain": -5
+  },
+  {
+   "f": 1862,
+   "kind": "machine_clunk",
+   "gain": -8,
+   "note": "latch"
+  },
+  {
+   "f": 1864,
+   "kind": "card_flick",
+   "gain": -6,
+   "note": "'2' pushed into the chute"
+  },
+  {
+   "f": 1876,
+   "kind": "token_lock"
+  },
+  {
+   "f": 1896,
+   "kind": "conveyor_clunk"
+  },
+  {
+   "f": 1897,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 2
+  },
+  {
+   "f": 1899,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 3
+  },
+  {
+   "f": 1901,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 4
+  },
+  {
+   "f": 1903,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 5
+  },
+  {
+   "f": 1906,
+   "kind": "prob_tick",
+   "gain": -7,
+   "pitch": 2
+  },
+  {
+   "f": 1912,
+   "kind": "token_select",
+   "gain": -6
+  },
+  {
+   "f": 1929,
+   "kind": "token_lock",
+   "pitch": 1
+  },
+  {
+   "f": 1940,
+   "kind": "conveyor_clunk",
+   "gain": -3
+  },
+  {
+   "f": 1950,
+   "kind": "token_lock",
+   "pitch": 2,
+   "gain": -2
+  },
+  {
+   "f": 1962,
+   "kind": "token_lock",
+   "pitch": 3,
+   "gain": -4
+  },
+  {
+   "f": 1974,
+   "kind": "token_lock",
+   "pitch": 4,
+   "gain": -2
+  },
+  {
+   "f": 1985,
+   "kind": "token_lock",
+   "pitch": 5,
+   "gain": -4
+  },
+  {
+   "f": 1995,
+   "kind": "token_lock",
+   "pitch": 6,
+   "gain": -2
+  },
+  {
+   "f": 2004,
+   "kind": "token_lock",
+   "pitch": 7,
+   "gain": -4
+  },
+  {
+   "f": 1970,
+   "kind": "conveyor_clunk",
+   "gain": -9
+  },
+  {
+   "f": 1993,
+   "kind": "conveyor_clunk",
+   "gain": -9
+  },
+  {
+   "f": 2012,
+   "kind": "conveyor_clunk",
+   "gain": -9
+  },
+  {
+   "f": 2036,
+   "kind": "conveyor_run",
+   "dur": 0.7333333333333333,
+   "pitch": 3,
+   "gain": -4,
+   "note": "rewind"
+  },
+  {
+   "f": 2052,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 8,
+   "note": "a token flies back up the chute"
+  },
+  {
+   "f": 2048,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 7,
+   "note": "a token flies back up the chute"
+  },
+  {
+   "f": 2047,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 6,
+   "note": "a token flies back up the chute"
+  },
+  {
+   "f": 2046,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 5,
+   "note": "a token flies back up the chute"
+  },
+  {
+   "f": 2046,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 4,
+   "note": "a token flies back up the chute"
+  },
+  {
+   "f": 2045,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 3,
+   "note": "a token flies back up the chute"
+  },
+  {
+   "f": 2044,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 2,
+   "note": "a token flies back up the chute"
+  },
+  {
+   "f": 2043,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 1,
+   "note": "a token flies back up the chute"
+  },
+  {
+   "f": 2057,
+   "kind": "token_select",
+   "gain": -6,
+   "note": "'2' re-seats in the scorer"
+  },
+  {
+   "f": 2095,
+   "kind": "marker_sweep",
+   "gain": -3
+  },
+  {
+   "f": 2079,
+   "kind": "pop_tick",
+   "gain": -8
+  },
+  {
+   "f": 2124,
+   "kind": "card_slide",
+   "note": "readout card out on its rail"
+  },
+  {
+   "f": 2165,
+   "kind": "marker_sweep",
+   "gain": -5,
+   "pitch": 3
+  },
+  {
+   "f": 2166,
+   "kind": "indicator_yes",
+   "gain": -4
+  },
+  {
+   "f": 2165,
+   "kind": "prob_tick",
+   "gain": -11,
+   "pitch": 6
+  },
+  {
+   "f": 2168,
+   "kind": "prob_tick",
+   "gain": -11,
+   "pitch": 5
+  },
+  {
+   "f": 2171,
+   "kind": "prob_tick",
+   "gain": -11,
+   "pitch": 4
+  },
+  {
+   "f": 2174,
+   "kind": "prob_tick",
+   "gain": -11,
+   "pitch": 3
+  },
+  {
+   "f": 2177,
+   "kind": "prob_tick",
+   "gain": -11,
+   "pitch": 2
+  },
+  {
+   "f": 2203,
+   "kind": "card_slide",
+   "gain": -2,
+   "pitch": -2
+  },
+  {
+   "f": 2226,
+   "kind": "indicator_no",
+   "gain": -8,
+   "note": "truth lamp tries"
+  },
+  {
+   "f": 2236,
+   "kind": "indicator_no",
+   "gain": -3,
+   "pitch": -4,
+   "note": "... and dies"
+  },
+  {
+   "f": 2259,
+   "kind": "stamp_light",
+   "note": "NOT MEASURED"
+  },
+  {
+   "f": 2281,
+   "kind": "card_slide",
+   "gain": -7,
+   "pitch": 2
+  },
+  {
+   "f": 2321,
+   "kind": "machine_clunk",
+   "gain": -9,
+   "pitch": 0
+  },
+  {
+   "f": 2325,
+   "kind": "machine_clunk",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "f": 2329,
+   "kind": "machine_clunk",
+   "gain": -9,
+   "pitch": 4
+  },
+  {
+   "f": 2366,
+   "kind": "machine_clunk",
+   "pitch": 0
+  },
+  {
+   "f": 2369,
+   "kind": "glint",
+   "gain": -10
+  },
+  {
+   "f": 2372,
+   "kind": "indicator_yes",
+   "gain": -12,
+   "pitch": 0
+  },
+  {
+   "f": 2401,
+   "kind": "machine_clunk",
+   "pitch": -1
+  },
+  {
+   "f": 2404,
+   "kind": "glint",
+   "gain": -10
+  },
+  {
+   "f": 2407,
+   "kind": "indicator_yes",
+   "gain": -12,
+   "pitch": 2
+  },
+  {
+   "f": 2456,
+   "kind": "machine_clunk",
+   "pitch": -2
+  },
+  {
+   "f": 2459,
+   "kind": "glint",
+   "gain": -10
+  },
+  {
+   "f": 2462,
+   "kind": "indicator_yes",
+   "gain": -12,
+   "pitch": 4
+  },
+  {
+   "f": 2484,
+   "kind": "indicator_yes",
+   "gain": -9,
+   "pitch": -3,
+   "note": "add-ons glow, feed into the same core"
+  },
+  {
+   "f": 2490,
+   "kind": "conveyor_run",
+   "dur": 0.6666666666666666,
+   "pitch": 3,
+   "gain": -5,
+   "note": "fast-forward back to where it was"
+  },
+  {
+   "f": 2530,
+   "kind": "token_lock",
+   "pitch": 0,
+   "gain": -3
+  },
+  {
+   "f": 2538,
+   "kind": "token_lock",
+   "pitch": 1,
+   "gain": -3
+  },
+  {
+   "f": 2545,
+   "kind": "token_lock",
+   "pitch": 2,
+   "gain": -3
+  },
+  {
+   "f": 2552,
+   "kind": "token_lock",
+   "pitch": 3,
+   "gain": -3
+  },
+  {
+   "f": 2560,
+   "kind": "token_lock",
+   "pitch": 4,
+   "gain": -3
+  },
+  {
+   "f": 2571,
+   "kind": "token_lock",
+   "pitch": 5,
+   "gain": 0
+  },
+  {
+   "f": 2536,
+   "kind": "conveyor_clunk",
+   "gain": -10
+  },
+  {
+   "f": 2543,
+   "kind": "conveyor_clunk",
+   "gain": -10
+  },
+  {
+   "f": 2550,
+   "kind": "conveyor_clunk",
+   "gain": -10
+  },
+  {
+   "f": 2558,
+   "kind": "conveyor_clunk",
+   "gain": -10
+  },
+  {
+   "f": 2568,
+   "kind": "conveyor_clunk",
+   "gain": -10
+  },
+  {
+   "f": 2576,
+   "kind": "whoosh_soft",
+   "gain": -10,
+   "note": "push into \"Algorithms\" → library"
+  }
+ ],
+ "S4": [
+  {
+   "f": 2593,
+   "kind": "amb_library",
+   "dur": 36.96666666666667
+  },
+  {
+   "f": 2603,
+   "kind": "book_slide",
+   "gain": -5,
+   "note": "a hand pushes the Algorithms book flush in its stack (close-up)"
+  },
+  {
+   "f": 2607,
+   "kind": "pop_tick",
+   "gain": -14,
+   "pitch": -3,
+   "note": "the stack settles"
+  },
+  {
+   "f": 2697,
+   "kind": "paper_flap",
+   "gain": -6,
+   "note": "headline card drops in on its strings"
+  },
+  {
+   "f": 2697,
+   "kind": "hanger_click",
+   "gain": -3
+  },
+  {
+   "f": 2722,
+   "kind": "pop_tick",
+   "gain": -15,
+   "pitch": -4,
+   "note": "a ripple through the books"
+  },
+  {
+   "f": 2729,
+   "kind": "pop_tick",
+   "gain": -15,
+   "pitch": -2,
+   "note": "a ripple through the books"
+  },
+  {
+   "f": 2736,
+   "kind": "pop_tick",
+   "gain": -15,
+   "pitch": 0,
+   "note": "a ripple through the books"
+  },
+  {
+   "f": 2746,
+   "kind": "paper_swish",
+   "gain": -14,
+   "note": "headline card pulled up"
+  },
+  {
+   "f": 2813,
+   "kind": "glint",
+   "gain": -9,
+   "note": "title words light up across the shelves"
+  },
+  {
+   "f": 2850,
+   "kind": "book_slide",
+   "pitch": 0,
+   "gain": -4
+  },
+  {
+   "f": 2853,
+   "kind": "chip_pop",
+   "pitch": 0,
+   "gain": -3
+  },
+  {
+   "f": 2875,
+   "kind": "book_slide",
+   "pitch": 2,
+   "gain": -4
+  },
+  {
+   "f": 2878,
+   "kind": "chip_pop",
+   "pitch": 2,
+   "gain": -3
+  },
+  {
+   "f": 2909,
+   "kind": "book_slide",
+   "pitch": 4,
+   "gain": -4
+  },
+  {
+   "f": 2912,
+   "kind": "chip_pop",
+   "pitch": 4,
+   "gain": -3
+  },
+  {
+   "f": 2947,
+   "kind": "pop_tick",
+   "pitch": 3,
+   "gain": -7,
+   "note": "a shelf row lights"
+  },
+  {
+   "f": 2956,
+   "kind": "pop_tick",
+   "pitch": 1,
+   "gain": -7,
+   "note": "a shelf row lights"
+  },
+  {
+   "f": 2966,
+   "kind": "pop_tick",
+   "pitch": -1,
+   "gain": -7,
+   "note": "a shelf row lights"
+  },
+  {
+   "f": 2976,
+   "kind": "pop_tick",
+   "pitch": -3,
+   "gain": -7,
+   "note": "a shelf row lights"
+  },
+  {
+   "f": 2994,
+   "kind": "glint",
+   "gain": -7,
+   "note": "every spine pulses at once: the same shape"
+  },
+  {
+   "f": 3013,
+   "kind": "thud_soft",
+   "gain": -16,
+   "pitch": 1,
+   "note": "footstep"
+  },
+  {
+   "f": 3023,
+   "kind": "thud_soft",
+   "gain": -16,
+   "pitch": -1,
+   "note": "footstep"
+  },
+  {
+   "f": 3033,
+   "kind": "thud_soft",
+   "gain": -16,
+   "pitch": 1,
+   "note": "footstep"
+  },
+  {
+   "f": 3053,
+   "kind": "pencil_tap",
+   "gain": -6,
+   "note": "fingertip on the K label"
+  },
+  {
+   "f": 3064,
+   "kind": "drawer_open"
+  },
+  {
+   "f": 3077,
+   "kind": "thud_soft",
+   "gain": -9,
+   "note": "drawer end-stop"
+  },
+  {
+   "f": 3078,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 5,
+   "note": "cards rattle"
+  },
+  {
+   "f": 3080,
+   "kind": "card_slide",
+   "note": "card drawn up out of the drawer"
+  },
+  {
+   "f": 3089,
+   "kind": "paper_lift",
+   "gain": -10
+  },
+  {
+   "f": 3128,
+   "kind": "paper_flap",
+   "gain": -15,
+   "pitch": 4,
+   "note": "the thin book thins"
+  },
+  {
+   "f": 3160,
+   "kind": "book_slide",
+   "gain": -7,
+   "pitch": -3,
+   "note": "the book slides back into the dark"
+  },
+  {
+   "f": 3168,
+   "kind": "thud_soft",
+   "gain": -14,
+   "note": "hollow knock"
+  },
+  {
+   "f": 3166,
+   "kind": "marker_circle",
+   "note": "dashed outline round the empty place"
+  },
+  {
+   "f": 3136,
+   "kind": "paper_slide",
+   "gain": -12,
+   "note": "guard-rail strip"
+  },
+  {
+   "f": 3203,
+   "kind": "chip_pop",
+   "pitch": -5,
+   "note": "the cake hops into the slot"
+  },
+  {
+   "f": 3203,
+   "kind": "thud_soft",
+   "gain": -6
+  },
+  {
+   "f": 3235,
+   "kind": "glint",
+   "gain": -11
+  },
+  {
+   "f": 3247,
+   "kind": "thud_soft",
+   "gain": -10,
+   "pitch": -3,
+   "note": "the ripple stops dead at the cake"
+  },
+  {
+   "f": 3248,
+   "kind": "hanger_click",
+   "gain": -3,
+   "note": "label flips down"
+  },
+  {
+   "f": 3228,
+   "kind": "paper_swish",
+   "gain": -16
+  },
+  {
+   "f": 3300,
+   "kind": "hanger_click",
+   "gain": -8,
+   "note": "label flips back up"
+  },
+  {
+   "f": 3338,
+   "kind": "drawer_close",
+   "note": "hip-bumped shut"
+  },
+  {
+   "f": 3367,
+   "kind": "paper_lift",
+   "gain": -11,
+   "pitch": 0
+  },
+  {
+   "f": 3380,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 0
+  },
+  {
+   "f": 3373,
+   "kind": "paper_lift",
+   "gain": -11,
+   "pitch": 1
+  },
+  {
+   "f": 3386,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 2
+  },
+  {
+   "f": 3379,
+   "kind": "paper_lift",
+   "gain": -11,
+   "pitch": 2
+  },
+  {
+   "f": 3392,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 4
+  },
+  {
+   "f": 3385,
+   "kind": "paper_lift",
+   "gain": -11,
+   "pitch": 3
+  },
+  {
+   "f": 3398,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 6
+  },
+  {
+   "f": 3391,
+   "kind": "paper_lift",
+   "gain": -11,
+   "pitch": 4
+  },
+  {
+   "f": 3404,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 8
+  },
+  {
+   "f": 3414,
+   "kind": "card_flick",
+   "note": "card flips into the polished slip"
+  },
+  {
+   "f": 3421,
+   "kind": "glint",
+   "gain": -8
+  },
+  {
+   "f": 3424,
+   "kind": "paper_slide",
+   "gain": -14
+  },
+  {
+   "f": 3446,
+   "kind": "paper_lift",
+   "gain": -12,
+   "note": "the gold seal peels off a spine"
+  },
+  {
+   "f": 3458,
+   "kind": "stamp_heavy",
+   "note": "seal slams onto the slip"
+  },
+  {
+   "f": 3514,
+   "kind": "glint",
+   "gain": -12,
+   "pitch": 0,
+   "note": "the same seal glints along the shelves"
+  },
+  {
+   "f": 3522,
+   "kind": "glint",
+   "gain": -12,
+   "pitch": 2,
+   "note": "the same seal glints along the shelves"
+  },
+  {
+   "f": 3530,
+   "kind": "glint",
+   "gain": -12,
+   "pitch": 4,
+   "note": "the same seal glints along the shelves"
+  },
+  {
+   "f": 3560,
+   "kind": "marker_sweep"
+  },
+  {
+   "f": 3610,
+   "kind": "paper_flap",
+   "gain": -10
+  },
+  {
+   "f": 3634,
+   "kind": "marker_sweep",
+   "pitch": 2,
+   "gain": -3
+  },
+  {
+   "f": 3642,
+   "kind": "card_flick"
+  },
+  {
+   "f": 3658,
+   "kind": "paper_flap",
+   "gain": -10,
+   "pitch": 3
+  },
+  {
+   "f": 3671,
+   "kind": "marker_sweep",
+   "pitch": 4,
+   "gain": -3
+  },
+  {
+   "f": 3677,
+   "kind": "card_flick",
+   "pitch": 3
+  },
+  {
+   "f": 3684,
+   "kind": "paper_swish",
+   "note": "the sealed slip slid out to the left (into S5)"
+  }
+ ],
+ "S5": [
+  {
+   "f": 3696,
+   "kind": "amb_library",
+   "dur": 23.3,
+   "gain": -14,
+   "note": "quiet desk-room tone (closest kind) under the evidence; the music pulls back here"
+  },
+  {
+   "f": 3688,
+   "kind": "paper_slide",
+   "gain": -2,
+   "note": "the record slides in from the right under the wipe"
+  },
+  {
+   "f": 3701,
+   "kind": "paper_slap",
+   "gain": -4
+  },
+  {
+   "f": 3705,
+   "kind": "tape_rip",
+   "gain": -8
+  },
+  {
+   "f": 3710,
+   "kind": "tape_rip",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "f": 3732,
+   "kind": "pop_tick",
+   "gain": -6,
+   "note": "\"The actual record\" tab clips on"
+  },
+  {
+   "f": 3740,
+   "kind": "paper_slide",
+   "gain": -12,
+   "note": "source tab slides out"
+  },
+  {
+   "f": 3762,
+   "kind": "marker_sweep",
+   "gain": -8,
+   "pitch": 3,
+   "note": "underline under Adam Kalai"
+  },
+  {
+   "f": 3803,
+   "kind": "marker_sweep",
+   "gain": -5,
+   "note": "title line 1 highlighted as it is read"
+  },
+  {
+   "f": 3863,
+   "kind": "marker_sweep",
+   "gain": -6,
+   "pitch": 2,
+   "note": "title line 2"
+  },
+  {
+   "f": 3882,
+   "kind": "marker_circle",
+   "gain": -3
+  },
+  {
+   "f": 3910,
+   "kind": "marker_circle",
+   "gain": -4,
+   "pitch": 2
+  },
+  {
+   "f": 3933,
+   "kind": "marker_circle",
+   "gain": -4,
+   "pitch": 4
+  },
+  {
+   "f": 3945,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 3,
+   "note": "2001 ticked"
+  },
+  {
+   "f": 3990,
+   "kind": "paper_flap",
+   "gain": -8,
+   "note": "the slip carried in from the left"
+  },
+  {
+   "f": 4008,
+   "kind": "paper_slap",
+   "gain": -1,
+   "pitch": 2,
+   "note": "stiffer, glossier slap than the page"
+  },
+  {
+   "f": 4009,
+   "kind": "tape_rip",
+   "gain": -10,
+   "pitch": 1
+  },
+  {
+   "f": 4011,
+   "kind": "glint",
+   "gain": -12,
+   "note": "gold edge"
+  },
+  {
+   "f": 4029,
+   "kind": "marker_circle",
+   "gain": -4,
+   "pitch": 1
+  },
+  {
+   "f": 4040,
+   "kind": "indicator_yes",
+   "gain": -6,
+   "note": "university right"
+  },
+  {
+   "f": 4044,
+   "kind": "chip_pop",
+   "gain": -4
+  },
+  {
+   "f": 4059,
+   "kind": "marker_circle",
+   "gain": -3,
+   "pitch": -2
+  },
+  {
+   "f": 4071,
+   "kind": "pop_tick",
+   "gain": -7,
+   "pitch": 1,
+   "note": "off by one: the slip's final \"2\" flashes coral"
+  },
+  {
+   "f": 4073,
+   "kind": "pop_tick",
+   "gain": -8,
+   "pitch": 5,
+   "note": "… and the record's final \"1\" answers"
+  },
+  {
+   "f": 4088,
+   "kind": "chip_pop",
+   "gain": -4,
+   "pitch": -2
+  },
+  {
+   "f": 4089,
+   "kind": "indicator_no",
+   "gain": -6,
+   "note": "off by one"
+  },
+  {
+   "f": 4110,
+   "kind": "marker_sweep",
+   "gain": -3,
+   "pitch": -1
+  },
+  {
+   "f": 4121,
+   "kind": "marker_sweep",
+   "gain": -5,
+   "pitch": -3
+  },
+  {
+   "f": 4131,
+   "kind": "chip_pop",
+   "gain": -4,
+   "pitch": -4
+  },
+  {
+   "f": 4132,
+   "kind": "indicator_no",
+   "gain": -5,
+   "pitch": -3,
+   "note": "invented"
+  },
+  {
+   "f": 4153,
+   "kind": "marker_sweep",
+   "gain": -15,
+   "pitch": -5,
+   "note": "the marks come off (soft reverse swish)"
+  },
+  {
+   "f": 4157,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": -2
+  },
+  {
+   "f": 4191,
+   "kind": "paper_lift",
+   "gain": -9,
+   "note": "both documents lift together"
+  },
+  {
+   "f": 4212,
+   "kind": "glint",
+   "gain": -6,
+   "note": "one shine across the slip … (band over the slip ≈ GLINT + 10)"
+  },
+  {
+   "f": 4221,
+   "kind": "glint",
+   "gain": -8,
+   "pitch": -2,
+   "note": "… and on across the record (≈ GLINT + 17)"
+  },
+  {
+   "f": 4231,
+   "kind": "paper_slap",
+   "gain": -12,
+   "note": "both settle back, in sync"
+  },
+  {
+   "f": 4257,
+   "kind": "thud_soft",
+   "gain": -10,
+   "note": "magnifier pulled up from under the desk"
+  },
+  {
+   "f": 4274,
+   "kind": "glint",
+   "gain": -10,
+   "pitch": 3,
+   "note": "the lens catches the light as it swings up"
+  },
+  {
+   "f": 4337,
+   "kind": "chip_pop",
+   "gain": -12,
+   "note": "caption, kept quiet so the line lands"
+  },
+  {
+   "f": 4357,
+   "kind": "pop_tick",
+   "gain": -8,
+   "pitch": -3
+  }
+ ],
+ "S6": [
+  {
+   "f": 4386,
+   "kind": "amb_gameshow",
+   "dur": 48.733333333333334
+  },
+  {
+   "f": 4398,
+   "kind": "paper_flap",
+   "gain": -12,
+   "note": "the curtain bulges (someone behind it)"
+  },
+  {
+   "f": 4404,
+   "kind": "whoosh_soft",
+   "gain": -10,
+   "note": "the host pushes the curtain open"
+  },
+  {
+   "f": 4411,
+   "kind": "thud_soft",
+   "gain": -14,
+   "note": "footstep"
+  },
+  {
+   "f": 4417,
+   "kind": "thud_soft",
+   "gain": -14,
+   "pitch": -1
+  },
+  {
+   "f": 4421,
+   "kind": "thud_soft",
+   "gain": -10,
+   "pitch": -2
+  },
+  {
+   "f": 4414,
+   "kind": "machine_clunk",
+   "gain": -9,
+   "pitch": 0,
+   "note": "stage lights bang on"
+  },
+  {
+   "f": 4419,
+   "kind": "machine_clunk",
+   "gain": -8,
+   "pitch": -2,
+   "note": "stage lights bang on"
+  },
+  {
+   "f": 4424,
+   "kind": "machine_clunk",
+   "gain": -7,
+   "pitch": -4,
+   "note": "stage lights bang on"
+  },
+  {
+   "f": 4534,
+   "kind": "whoosh_soft",
+   "gain": -16,
+   "note": "the board is winched down from the flies"
+  },
+  {
+   "f": 4550,
+   "kind": "hanger_click",
+   "note": "the board bottoms out on its cables"
+  },
+  {
+   "f": 4551,
+   "kind": "thud_soft",
+   "gain": -10
+  },
+  {
+   "f": 4559,
+   "kind": "hanger_click",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "f": 4573,
+   "kind": "hanger_click",
+   "gain": -5,
+   "pitch": 4,
+   "note": "citation tag clips on"
+  },
+  {
+   "f": 4604,
+   "kind": "card_flick",
+   "gain": -12,
+   "note": "cue card"
+  },
+  {
+   "f": 4625,
+   "kind": "pop_tick",
+   "gain": -13,
+   "pitch": 0,
+   "note": "card backs wobble"
+  },
+  {
+   "f": 4629,
+   "kind": "pop_tick",
+   "gain": -13,
+   "pitch": 2,
+   "note": "card backs wobble"
+  },
+  {
+   "f": 4633,
+   "kind": "pop_tick",
+   "gain": -13,
+   "pitch": 4,
+   "note": "card backs wobble"
+  },
+  {
+   "f": 4651,
+   "kind": "card_flick",
+   "gain": -6,
+   "note": "ten cue cards fanned"
+  },
+  {
+   "f": 4655,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "f": 4690,
+   "kind": "hanger_click",
+   "gain": -7,
+   "pitch": 3,
+   "note": "guard-rail tag"
+  },
+  {
+   "f": 4694,
+   "kind": "card_flick",
+   "gain": -10,
+   "pitch": -2
+  },
+  {
+   "f": 4706,
+   "kind": "pop_tick",
+   "gain": -5,
+   "note": "finger snap"
+  },
+  {
+   "f": 4709,
+   "kind": "card_flick",
+   "pitch": 0,
+   "note": "rule card flips"
+  },
+  {
+   "f": 4765,
+   "kind": "pop_tick",
+   "gain": -5,
+   "note": "finger snap"
+  },
+  {
+   "f": 4768,
+   "kind": "card_flick",
+   "pitch": 1,
+   "note": "rule card flips"
+  },
+  {
+   "f": 4822,
+   "kind": "pop_tick",
+   "gain": -5,
+   "note": "finger snap"
+  },
+  {
+   "f": 4825,
+   "kind": "card_flick",
+   "pitch": 2,
+   "note": "rule card flips"
+  },
+  {
+   "f": 4739,
+   "kind": "indicator_yes",
+   "note": "+1"
+  },
+  {
+   "f": 4801,
+   "kind": "indicator_no",
+   "gain": -3,
+   "note": "0"
+  },
+  {
+   "f": 4864,
+   "kind": "indicator_no",
+   "gain": -3,
+   "pitch": -1,
+   "note": "0"
+  },
+  {
+   "f": 4869,
+   "kind": "pop_tick",
+   "gain": -6,
+   "note": "the two zeros bounce together"
+  },
+  {
+   "f": 4871,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 2
+  },
+  {
+   "f": 4876,
+   "kind": "hanger_click",
+   "gain": -9,
+   "pitch": -3,
+   "note": "the board flies out"
+  },
+  {
+   "f": 4869,
+   "kind": "conveyor_run",
+   "gain": -12,
+   "dur": 0.9,
+   "note": "podium casters"
+  },
+  {
+   "f": 4887,
+   "kind": "machine_clunk",
+   "gain": -4,
+   "note": "honest podium stops"
+  },
+  {
+   "f": 4891,
+   "kind": "machine_clunk",
+   "gain": -4,
+   "pitch": -2,
+   "note": "guesser podium stops"
+  },
+  {
+   "f": 4895,
+   "kind": "machine_clunk",
+   "gain": -14,
+   "pitch": 3,
+   "note": "spotlights swing on"
+  },
+  {
+   "f": 4655,
+   "kind": "hanger_click",
+   "gain": -6,
+   "pitch": 0,
+   "note": "answer panel drops in"
+  },
+  {
+   "f": 4658,
+   "kind": "hanger_click",
+   "gain": -6,
+   "pitch": 1,
+   "note": "answer panel drops in"
+  },
+  {
+   "f": 4660,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 0,
+   "note": "question slot lights"
+  },
+  {
+   "f": 4662,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 1,
+   "note": "question slot lights"
+  },
+  {
+   "f": 4664,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 2,
+   "note": "question slot lights"
+  },
+  {
+   "f": 4667,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 3,
+   "note": "question slot lights"
+  },
+  {
+   "f": 4669,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 4,
+   "note": "question slot lights"
+  },
+  {
+   "f": 4671,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 5,
+   "note": "question slot lights"
+  },
+  {
+   "f": 4673,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 6,
+   "note": "question slot lights"
+  },
+  {
+   "f": 4675,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 7,
+   "note": "question slot lights"
+  },
+  {
+   "f": 4678,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 8,
+   "note": "question slot lights"
+  },
+  {
+   "f": 4680,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 9,
+   "note": "question slot lights"
+  },
+  {
+   "f": 4905,
+   "kind": "pop_tick",
+   "gain": -8,
+   "note": "finger-gun"
+  },
+  {
+   "f": 4927,
+   "kind": "thud_soft",
+   "gain": -11,
+   "note": "honest slaps his buzzer"
+  },
+  {
+   "f": 4929,
+   "kind": "thud_soft",
+   "gain": -11,
+   "pitch": 2,
+   "note": "guesser slaps his buzzer"
+  },
+  {
+   "f": 4928,
+   "kind": "ding_right",
+   "gain": -13,
+   "pitch": 0
+  },
+  {
+   "f": 4930,
+   "kind": "score_flip",
+   "gain": -8,
+   "pitch": 0
+  },
+  {
+   "f": 4934,
+   "kind": "thud_soft",
+   "gain": -11,
+   "note": "honest slaps his buzzer"
+  },
+  {
+   "f": 4936,
+   "kind": "thud_soft",
+   "gain": -11,
+   "pitch": 2,
+   "note": "guesser slaps his buzzer"
+  },
+  {
+   "f": 4935,
+   "kind": "ding_right",
+   "gain": -13,
+   "pitch": 1
+  },
+  {
+   "f": 4937,
+   "kind": "score_flip",
+   "gain": -8,
+   "pitch": 1
+  },
+  {
+   "f": 4942,
+   "kind": "thud_soft",
+   "gain": -11,
+   "note": "honest slaps his buzzer"
+  },
+  {
+   "f": 4944,
+   "kind": "thud_soft",
+   "gain": -11,
+   "pitch": 2,
+   "note": "guesser slaps his buzzer"
+  },
+  {
+   "f": 4943,
+   "kind": "ding_right",
+   "gain": -13,
+   "pitch": 2
+  },
+  {
+   "f": 4945,
+   "kind": "score_flip",
+   "gain": -8,
+   "pitch": 1
+  },
+  {
+   "f": 4949,
+   "kind": "thud_soft",
+   "gain": -11,
+   "note": "honest slaps his buzzer"
+  },
+  {
+   "f": 4951,
+   "kind": "thud_soft",
+   "gain": -11,
+   "pitch": 2,
+   "note": "guesser slaps his buzzer"
+  },
+  {
+   "f": 4950,
+   "kind": "ding_right",
+   "gain": -13,
+   "pitch": 3
+  },
+  {
+   "f": 4952,
+   "kind": "score_flip",
+   "gain": -8,
+   "pitch": 2
+  },
+  {
+   "f": 4957,
+   "kind": "thud_soft",
+   "gain": -11,
+   "note": "honest slaps his buzzer"
+  },
+  {
+   "f": 4959,
+   "kind": "thud_soft",
+   "gain": -11,
+   "pitch": 2,
+   "note": "guesser slaps his buzzer"
+  },
+  {
+   "f": 4958,
+   "kind": "ding_right",
+   "gain": -13,
+   "pitch": 4
+  },
+  {
+   "f": 4960,
+   "kind": "score_flip",
+   "gain": -8,
+   "pitch": 2
+  },
+  {
+   "f": 4964,
+   "kind": "thud_soft",
+   "gain": -11,
+   "note": "honest slaps his buzzer"
+  },
+  {
+   "f": 4966,
+   "kind": "thud_soft",
+   "gain": -11,
+   "pitch": 2,
+   "note": "guesser slaps his buzzer"
+  },
+  {
+   "f": 4965,
+   "kind": "ding_right",
+   "gain": -13,
+   "pitch": 5
+  },
+  {
+   "f": 4967,
+   "kind": "score_flip",
+   "gain": -8,
+   "pitch": 3
+  },
+  {
+   "f": 5003,
+   "kind": "thud_soft",
+   "gain": -7,
+   "pitch": -4,
+   "note": "pass: a soft felt \"—\""
+  },
+  {
+   "f": 5012,
+   "kind": "thud_soft",
+   "gain": -7,
+   "pitch": -5,
+   "note": "pass: a soft felt \"—\""
+  },
+  {
+   "f": 5020,
+   "kind": "thud_soft",
+   "gain": -7,
+   "pitch": -4,
+   "note": "pass: a soft felt \"—\""
+  },
+  {
+   "f": 5028,
+   "kind": "thud_soft",
+   "gain": -7,
+   "pitch": -5,
+   "note": "pass: a soft felt \"—\""
+  },
+  {
+   "f": 5004,
+   "kind": "chip_pop",
+   "gain": -6,
+   "note": "\"I don't know.\" bubble"
+  },
+  {
+   "f": 5054,
+   "kind": "score_flip",
+   "gain": -3,
+   "note": "honest score locks at 6"
+  },
+  {
+   "f": 5055,
+   "kind": "indicator_yes",
+   "gain": -4,
+   "pitch": 2
+  },
+  {
+   "f": 5101,
+   "kind": "thud_soft",
+   "gain": 0,
+   "pitch": 0,
+   "note": "guesser slams his buzzer"
+  },
+  {
+   "f": 5102,
+   "kind": "prob_tick",
+   "gain": -6,
+   "pitch": 0,
+   "note": "letter reel starts spinning"
+  },
+  {
+   "f": 5110,
+   "kind": "thud_soft",
+   "gain": 0,
+   "pitch": 1,
+   "note": "guesser slams his buzzer"
+  },
+  {
+   "f": 5111,
+   "kind": "prob_tick",
+   "gain": -6,
+   "pitch": 1,
+   "note": "letter reel starts spinning"
+  },
+  {
+   "f": 5120,
+   "kind": "thud_soft",
+   "gain": 0,
+   "pitch": 2,
+   "note": "guesser slams his buzzer"
+  },
+  {
+   "f": 5121,
+   "kind": "prob_tick",
+   "gain": -6,
+   "pitch": 2,
+   "note": "letter reel starts spinning"
+  },
+  {
+   "f": 5130,
+   "kind": "thud_soft",
+   "gain": 0,
+   "pitch": 3,
+   "note": "guesser slams his buzzer"
+  },
+  {
+   "f": 5131,
+   "kind": "prob_tick",
+   "gain": -6,
+   "pitch": 3,
+   "note": "letter reel starts spinning"
+  },
+  {
+   "f": 5156,
+   "kind": "hanger_click",
+   "gain": -4,
+   "note": "options sign drops in"
+  },
+  {
+   "f": 5184,
+   "kind": "prob_tick",
+   "gain": -9
+  },
+  {
+   "f": 5187,
+   "kind": "prob_tick",
+   "gain": -7
+  },
+  {
+   "f": 5190,
+   "kind": "buzzer_wrong",
+   "gain": -1,
+   "pitch": 0,
+   "note": "Q7 wrong"
+  },
+  {
+   "f": 5193,
+   "kind": "score_flip",
+   "gain": -14,
+   "note": "score twitches, no point"
+  },
+  {
+   "f": 5195,
+   "kind": "prob_tick",
+   "gain": -9
+  },
+  {
+   "f": 5198,
+   "kind": "prob_tick",
+   "gain": -7
+  },
+  {
+   "f": 5201,
+   "kind": "buzzer_wrong",
+   "gain": -1,
+   "pitch": -1,
+   "note": "Q8 wrong"
+  },
+  {
+   "f": 5204,
+   "kind": "score_flip",
+   "gain": -14,
+   "note": "score twitches, no point"
+  },
+  {
+   "f": 5206,
+   "kind": "prob_tick",
+   "gain": -9
+  },
+  {
+   "f": 5209,
+   "kind": "prob_tick",
+   "gain": -7
+  },
+  {
+   "f": 5212,
+   "kind": "buzzer_wrong",
+   "gain": -1,
+   "pitch": -2,
+   "note": "Q9 wrong"
+  },
+  {
+   "f": 5215,
+   "kind": "score_flip",
+   "gain": -14,
+   "note": "score twitches, no point"
+  },
+  {
+   "f": 5214,
+   "kind": "prob_tick",
+   "gain": -9,
+   "pitch": 0,
+   "note": "last reel crawls"
+  },
+  {
+   "f": 5219,
+   "kind": "prob_tick",
+   "gain": -8,
+   "pitch": 0,
+   "note": "last reel crawls"
+  },
+  {
+   "f": 5229,
+   "kind": "prob_tick",
+   "gain": -7,
+   "pitch": -1,
+   "note": "last reel crawls"
+  },
+  {
+   "f": 5231,
+   "kind": "ding_right",
+   "gain": 2,
+   "note": "Q10 lands: the lucky one"
+  },
+  {
+   "f": 5233,
+   "kind": "fanfare_small",
+   "note": "excessive celebration"
+  },
+  {
+   "f": 5233,
+   "kind": "pop_tick",
+   "gain": 0,
+   "pitch": -4,
+   "note": "confetti popper"
+  },
+  {
+   "f": 5235,
+   "kind": "pop_tick",
+   "gain": -2,
+   "pitch": -6
+  },
+  {
+   "f": 5234,
+   "kind": "crowd_cheer",
+   "dur": 2.2,
+   "gain": -4
+  },
+  {
+   "f": 5247,
+   "kind": "thud_soft",
+   "gain": -9,
+   "note": "guesser lands from his leap"
+  },
+  {
+   "f": 5262,
+   "kind": "score_flip",
+   "note": "6 → 7"
+  },
+  {
+   "f": 5274,
+   "kind": "hanger_click",
+   "gain": -10,
+   "pitch": -2,
+   "note": "options sign flies out"
+  },
+  {
+   "f": 5305,
+   "kind": "paper_flap",
+   "gain": -5,
+   "note": "caption scroll drops in"
+  },
+  {
+   "f": 5306,
+   "kind": "hanger_click",
+   "gain": -8
+  },
+  {
+   "f": 5311,
+   "kind": "glint",
+   "gain": -6,
+   "note": "the lucky tile sparkles"
+  },
+  {
+   "f": 5344,
+   "kind": "paper_flap",
+   "gain": -8,
+   "pitch": 2,
+   "note": "scroll unrolls a line"
+  },
+  {
+   "f": 5356,
+   "kind": "buzzer_wrong",
+   "gain": -13,
+   "pitch": -3,
+   "note": "three ✕ shake"
+  },
+  {
+   "f": 5360,
+   "kind": "crowd_aww",
+   "gain": -8
+  },
+  {
+   "f": 5392,
+   "kind": "paper_flap",
+   "gain": -8,
+   "pitch": 4
+  },
+  {
+   "f": 5403,
+   "kind": "glint",
+   "gain": -10,
+   "note": "trophy lowered from the flies"
+  },
+  {
+   "f": 5415,
+   "kind": "hanger_click",
+   "gain": -10,
+   "pitch": 3,
+   "note": "the cable unhooks; the trophy drops the last few px"
+  },
+  {
+   "f": 5419,
+   "kind": "trophy_clink",
+   "gain": 2,
+   "note": "trophy lands on the guesser podium"
+  },
+  {
+   "f": 5420,
+   "kind": "crowd_cheer",
+   "dur": 1,
+   "gain": -10
+  },
+  {
+   "f": 5428,
+   "kind": "glint",
+   "gain": -8
+  },
+  {
+   "f": 5460,
+   "kind": "paper_swish",
+   "gain": -6,
+   "note": "scroll flies out"
+  },
+  {
+   "f": 5488,
+   "kind": "thud_soft",
+   "gain": -7,
+   "note": "board returns"
+  },
+  {
+   "f": 5489,
+   "kind": "hanger_click",
+   "gain": -3
+  },
+  {
+   "f": 5474,
+   "kind": "card_flick",
+   "gain": -5,
+   "note": "host plucks the top cue card"
+  },
+  {
+   "f": 5489,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": 3,
+   "note": "turns it: −1"
+  },
+  {
+   "f": 5519,
+   "kind": "whoosh_soft",
+   "gain": -10,
+   "note": "throw"
+  },
+  {
+   "f": 5531,
+   "kind": "stamp_heavy",
+   "note": "−1 slaps onto the Wrong card"
+  },
+  {
+   "f": 5532,
+   "kind": "indicator_no",
+   "gain": -1,
+   "pitch": -5,
+   "note": "low dun"
+  },
+  {
+   "f": 5537,
+   "kind": "hanger_click",
+   "gain": -8,
+   "pitch": -2,
+   "note": "board chains swing"
+  },
+  {
+   "f": 5548,
+   "kind": "buzzer_wrong",
+   "gain": -12,
+   "pitch": -4,
+   "note": "the three ✕ now cost"
+  },
+  {
+   "f": 5549,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 5,
+   "note": "sweat drop on the trophy"
+  },
+  {
+   "f": 5605,
+   "kind": "pop_tick",
+   "gain": -14,
+   "pitch": 0,
+   "note": "blank shows 0"
+  },
+  {
+   "f": 5609,
+   "kind": "pop_tick",
+   "gain": -14,
+   "pitch": 1,
+   "note": "blank shows 0"
+  },
+  {
+   "f": 5613,
+   "kind": "pop_tick",
+   "gain": -14,
+   "pitch": 2,
+   "note": "blank shows 0"
+  },
+  {
+   "f": 5617,
+   "kind": "pop_tick",
+   "gain": -14,
+   "pitch": 3,
+   "note": "blank shows 0"
+  },
+  {
+   "f": 5615,
+   "kind": "indicator_yes",
+   "gain": -7,
+   "note": "still six"
+  },
+  {
+   "f": 5674,
+   "kind": "hanger_click",
+   "gain": -7,
+   "note": "equation strip drops in"
+  },
+  {
+   "f": 5670,
+   "kind": "glint",
+   "gain": -10,
+   "note": "the guesser's six ✓ glow"
+  },
+  {
+   "f": 5695,
+   "kind": "chip_pop",
+   "gain": -4,
+   "note": "+1 hops from the lucky tile to the strip"
+  },
+  {
+   "f": 5722,
+   "kind": "chip_pop",
+   "gain": -6,
+   "pitch": 0,
+   "note": "−1 leaves a ✕ tile"
+  },
+  {
+   "f": 5729,
+   "kind": "chip_pop",
+   "gain": -6,
+   "pitch": -1,
+   "note": "−1 leaves a ✕ tile"
+  },
+  {
+   "f": 5736,
+   "kind": "chip_pop",
+   "gain": -6,
+   "pitch": -2,
+   "note": "−1 leaves a ✕ tile"
+  },
+  {
+   "f": 5731,
+   "kind": "score_flip",
+   "pitch": -1,
+   "note": "7 → 6"
+  },
+  {
+   "f": 5738,
+   "kind": "score_flip",
+   "pitch": -3,
+   "note": "6 → 5"
+  },
+  {
+   "f": 5756,
+   "kind": "score_flip",
+   "gain": 2,
+   "pitch": -6,
+   "note": "5 → 4 (the hovering chip drops in on \"Four.\")"
+  },
+  {
+   "f": 5756,
+   "kind": "thud_soft",
+   "gain": -2,
+   "pitch": -3
+  },
+  {
+   "f": 5674,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 0,
+   "note": "equation term"
+  },
+  {
+   "f": 5704,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 1,
+   "note": "equation term"
+  },
+  {
+   "f": 5728,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 2,
+   "note": "equation term"
+  },
+  {
+   "f": 5757,
+   "kind": "machine_clunk",
+   "gain": -6,
+   "note": "the score window settles at 4"
+  },
+  {
+   "f": 5760,
+   "kind": "crowd_aww",
+   "gain": -7
+  },
+  {
+   "f": 5760,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 6,
+   "note": "the trophy opens its eyes"
+  },
+  {
+   "f": 5772,
+   "kind": "chip_pop",
+   "gain": -3,
+   "pitch": 4,
+   "note": "feet sprout (boing)"
+  },
+  {
+   "f": 5788,
+   "kind": "trophy_clink",
+   "gain": -8,
+   "pitch": -2,
+   "note": "hops down to the stage"
+  },
+  {
+   "f": 5788,
+   "kind": "trophy_steps",
+   "dur": 0.6666666666666666
+  },
+  {
+   "f": 5816,
+   "kind": "trophy_clink",
+   "gain": 0,
+   "note": "lands on the honest podium"
+  },
+  {
+   "f": 5818,
+   "kind": "ding_right",
+   "gain": -8,
+   "pitch": 3
+  },
+  {
+   "f": 5819,
+   "kind": "crowd_cheer",
+   "dur": 0.9,
+   "gain": -8
+  },
+  {
+   "f": 5826,
+   "kind": "glint",
+   "gain": -8
+  }
+ ],
+ "S7": [
+  {
+   "f": 5874,
+   "kind": "marker_sweep",
+   "gain": -5,
+   "note": "teal underlines under the four authors"
+  },
+  {
+   "f": 5880,
+   "kind": "marker_sweep",
+   "gain": -7,
+   "pitch": 3
+  },
+  {
+   "f": 5889,
+   "kind": "tape_rip",
+   "gain": -8,
+   "note": "the header page is peeled up"
+  },
+  {
+   "f": 5890,
+   "kind": "paper_lift",
+   "gain": -6
+  },
+  {
+   "f": 5893,
+   "kind": "paper_swish",
+   "gain": -5
+  },
+  {
+   "f": 5896,
+   "kind": "paper_slide",
+   "gain": -10,
+   "pitch": 3,
+   "note": "citation tag slides out from under the sheet"
+  },
+  {
+   "f": 5909,
+   "kind": "card_slide",
+   "gain": -5,
+   "note": "the rail slides out from behind the sheet"
+  },
+  {
+   "f": 5911,
+   "kind": "prob_tick",
+   "pitch": 0,
+   "gain": -10,
+   "note": "slots light 1…10 as the scan runs down the rows"
+  },
+  {
+   "f": 5913,
+   "kind": "prob_tick",
+   "pitch": 1,
+   "gain": -10
+  },
+  {
+   "f": 5915,
+   "kind": "prob_tick",
+   "pitch": 2,
+   "gain": -10
+  },
+  {
+   "f": 5917,
+   "kind": "prob_tick",
+   "pitch": 3,
+   "gain": -10
+  },
+  {
+   "f": 5919,
+   "kind": "prob_tick",
+   "pitch": 4,
+   "gain": -10
+  },
+  {
+   "f": 5921,
+   "kind": "prob_tick",
+   "pitch": 5,
+   "gain": -10
+  },
+  {
+   "f": 5923,
+   "kind": "prob_tick",
+   "pitch": 6,
+   "gain": -10
+  },
+  {
+   "f": 5925,
+   "kind": "prob_tick",
+   "pitch": 7,
+   "gain": -10
+  },
+  {
+   "f": 5927,
+   "kind": "prob_tick",
+   "pitch": 8,
+   "gain": -10
+  },
+  {
+   "f": 5929,
+   "kind": "prob_tick",
+   "pitch": 9,
+   "gain": -10
+  },
+  {
+   "f": 5931,
+   "kind": "chip_pop",
+   "gain": -4,
+   "note": "\"10\" badge"
+  },
+  {
+   "f": 5953,
+   "kind": "marker_sweep",
+   "pitch": 2,
+   "gain": -4,
+   "note": "mid-2025 in the citation"
+  },
+  {
+   "f": 5978,
+   "kind": "card_flick",
+   "gain": -5,
+   "note": "date flap flips on the tally panel"
+  },
+  {
+   "f": 5983,
+   "kind": "score_flip",
+   "pitch": 0,
+   "gain": -6
+  },
+  {
+   "f": 5985,
+   "kind": "score_flip",
+   "pitch": 1,
+   "gain": -6
+  },
+  {
+   "f": 5988,
+   "kind": "score_flip",
+   "pitch": 2,
+   "gain": -6
+  },
+  {
+   "f": 5990,
+   "kind": "score_flip",
+   "pitch": 3,
+   "gain": -6
+  },
+  {
+   "f": 5992,
+   "kind": "thud_soft",
+   "gain": -10,
+   "note": "WildBench: dashed slot, the drum holds"
+  },
+  {
+   "f": 5995,
+   "kind": "score_flip",
+   "pitch": 5,
+   "gain": -6
+  },
+  {
+   "f": 5997,
+   "kind": "score_flip",
+   "pitch": 6,
+   "gain": -6
+  },
+  {
+   "f": 5999,
+   "kind": "score_flip",
+   "pitch": 7,
+   "gain": -6
+  },
+  {
+   "f": 6002,
+   "kind": "score_flip",
+   "pitch": 8,
+   "gain": -6
+  },
+  {
+   "f": 6004,
+   "kind": "score_flip",
+   "pitch": 8,
+   "gain": 0,
+   "note": "the ninth tick lands on \"Nine\""
+  },
+  {
+   "f": 6016,
+   "kind": "pop_tick",
+   "gain": -8,
+   "note": "graded strictly"
+  },
+  {
+   "f": 6029,
+   "kind": "marker_sweep",
+   "pitch": 1,
+   "gain": -4,
+   "note": "\"strict correct/incorrect\" in the caption"
+  },
+  {
+   "f": 6044,
+   "kind": "pop_tick",
+   "pitch": 2,
+   "gain": -8,
+   "note": "right or wrong"
+  },
+  {
+   "f": 6058,
+   "kind": "marker_circle",
+   "gain": -4
+  },
+  {
+   "f": 6064,
+   "kind": "paper_slide",
+   "gain": -7,
+   "note": "WildBench tag slides out of the rail"
+  },
+  {
+   "f": 6083,
+   "kind": "prob_tick",
+   "pitch": 0,
+   "gain": -10
+  },
+  {
+   "f": 6086,
+   "kind": "prob_tick",
+   "pitch": -1,
+   "gain": -10
+  },
+  {
+   "f": 6089,
+   "kind": "prob_tick",
+   "pitch": -2,
+   "gain": -10
+  },
+  {
+   "f": 6092,
+   "kind": "prob_tick",
+   "pitch": -3,
+   "gain": -10
+  },
+  {
+   "f": 6095,
+   "kind": "marker_circle",
+   "pitch": -2,
+   "gain": -8,
+   "note": "Partial ringed"
+  },
+  {
+   "f": 6098,
+   "kind": "prob_tick",
+   "pitch": -5,
+   "gain": -10
+  },
+  {
+   "f": 6101,
+   "kind": "prob_tick",
+   "pitch": -6,
+   "gain": -10
+  },
+  {
+   "f": 6104,
+   "kind": "prob_tick",
+   "pitch": -7,
+   "gain": -10
+  },
+  {
+   "f": 6107,
+   "kind": "prob_tick",
+   "pitch": -8,
+   "gain": -10
+  },
+  {
+   "f": 6110,
+   "kind": "prob_tick",
+   "pitch": -9,
+   "gain": -10
+  },
+  {
+   "f": 6122,
+   "kind": "card_flick",
+   "note": "S6 rule card flips to “I don’t know”"
+  },
+  {
+   "f": 6133,
+   "kind": "score_flip",
+   "pitch": -4,
+   "gain": -2,
+   "note": "its 0 drops in"
+  },
+  {
+   "f": 6182,
+   "kind": "thud_soft",
+   "gain": -2,
+   "note": "leaderboard rises into place"
+  },
+  {
+   "f": 6186,
+   "kind": "prob_tick",
+   "pitch": 4,
+   "gain": -7
+  },
+  {
+   "f": 6191,
+   "kind": "prob_tick",
+   "pitch": 6,
+   "gain": -7
+  },
+  {
+   "f": 6196,
+   "kind": "prob_tick",
+   "pitch": 8,
+   "gain": -7
+  },
+  {
+   "f": 6200,
+   "kind": "card_slide",
+   "gain": -6,
+   "note": "rows re-sort into rank order"
+  },
+  {
+   "f": 6209,
+   "kind": "pop_tick",
+   "pitch": 3,
+   "gain": -4,
+   "note": "#1 #2 #3"
+  },
+  {
+   "f": 6211,
+   "kind": "pop_tick",
+   "pitch": 1,
+   "gain": -7
+  },
+  {
+   "f": 6213,
+   "kind": "pop_tick",
+   "pitch": -1,
+   "gain": -7
+  },
+  {
+   "f": 6211,
+   "kind": "marker_sweep",
+   "pitch": -4,
+   "gain": -6,
+   "note": "coral line from the IDK column to #1"
+  },
+  {
+   "f": 6246,
+   "kind": "trophy_clink",
+   "note": "the trophy lands on \"pays.\""
+  },
+  {
+   "f": 6256,
+   "kind": "chip_pop",
+   "gain": -3,
+   "note": "guessing pays"
+  },
+  {
+   "f": 6264,
+   "kind": "glint",
+   "gain": -10
+  },
+  {
+   "f": 6271,
+   "kind": "paper_slide",
+   "gain": -6,
+   "note": "the honest note slides up"
+  },
+  {
+   "f": 6284,
+   "kind": "tape_rip",
+   "gain": -7
+  },
+  {
+   "f": 6288,
+   "kind": "tape_rip",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "f": 6316,
+   "kind": "marker_sweep",
+   "gain": -12,
+   "note": "not the whole story"
+  },
+  {
+   "f": 6358,
+   "kind": "marker_sweep",
+   "pitch": 5,
+   "gain": -11,
+   "note": "one pulse runs the chain"
+  },
+  {
+   "f": 6381,
+   "kind": "glint",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "f": 6383,
+   "kind": "chip_pop",
+   "gain": -4,
+   "note": "But a simple one."
+  },
+  {
+   "f": 6409,
+   "kind": "paper_swish",
+   "gain": -12,
+   "note": "short paper wipe to S8"
+  }
+ ],
+ "S8": [
+  {
+   "f": 6408,
+   "kind": "amb_machine",
+   "dur": 14.133333333333333,
+   "note": "machine-room tone under the whole scene"
+  },
+  {
+   "f": 6408,
+   "kind": "machine_hum",
+   "dur": 8.5,
+   "gain": -12,
+   "note": "ASSEMBLY hums at HIGH until the turn-down"
+  },
+  {
+   "f": 6663,
+   "kind": "machine_hum",
+   "dur": 5.6,
+   "gain": -16,
+   "pitch": -3,
+   "note": "calmer, lower hum after LOW"
+  },
+  {
+   "f": 6441,
+   "kind": "prob_tick",
+   "gain": -16,
+   "pitch": 0,
+   "note": "needle twitch at HIGH"
+  },
+  {
+   "f": 6425,
+   "kind": "hanger_click",
+   "note": "the sign catches on its strings"
+  },
+  {
+   "f": 6426,
+   "kind": "paper_flap",
+   "gain": -8
+  },
+  {
+   "f": 6447,
+   "kind": "indicator_no",
+   "gain": -12,
+   "note": "the shut booth blinks once"
+  },
+  {
+   "f": 6448,
+   "kind": "machine_clunk",
+   "gain": -16,
+   "pitch": 4,
+   "note": "shutter rattle"
+  },
+  {
+   "f": 6458,
+   "kind": "paper_swish",
+   "gain": -10,
+   "note": "the sign is hauled up"
+  },
+  {
+   "f": 6469,
+   "kind": "conveyor_run",
+   "dur": 1.5333333333333334,
+   "gain": -8,
+   "pitch": 3,
+   "note": "cart rolling in (starts off-frame)"
+  },
+  {
+   "f": 6488,
+   "kind": "pop_tick",
+   "gain": -13,
+   "pitch": -6,
+   "note": "rail joint"
+  },
+  {
+   "f": 6495,
+   "kind": "pop_tick",
+   "gain": -13,
+   "pitch": -5,
+   "note": "rail joint"
+  },
+  {
+   "f": 6506,
+   "kind": "pop_tick",
+   "gain": -13,
+   "pitch": -4,
+   "note": "rail joint"
+  },
+  {
+   "f": 6493,
+   "kind": "indicator_yes",
+   "gain": -12,
+   "pitch": 0,
+   "note": "booth lamp blinks teal"
+  },
+  {
+   "f": 6501,
+   "kind": "indicator_yes",
+   "gain": -12,
+   "pitch": 2,
+   "note": "booth lamp blinks teal"
+  },
+  {
+   "f": 6509,
+   "kind": "indicator_yes",
+   "gain": -12,
+   "pitch": 4,
+   "note": "booth lamp blinks teal"
+  },
+  {
+   "f": 6515,
+   "kind": "machine_clunk",
+   "note": "cart bumps the dock"
+  },
+  {
+   "f": 6516,
+   "kind": "paper_flap",
+   "gain": -9,
+   "note": "the record rattles"
+  },
+  {
+   "f": 6521,
+   "kind": "conveyor_clunk",
+   "gain": -6,
+   "pitch": 2,
+   "note": "shutter ratchet"
+  },
+  {
+   "f": 6525,
+   "kind": "conveyor_clunk",
+   "gain": -6,
+   "pitch": 4,
+   "note": "shutter ratchet"
+  },
+  {
+   "f": 6529,
+   "kind": "conveyor_clunk",
+   "gain": -6,
+   "pitch": 6,
+   "note": "shutter ratchet"
+  },
+  {
+   "f": 6532,
+   "kind": "machine_clunk",
+   "gain": -5,
+   "pitch": 3,
+   "note": "shutter clacks home"
+  },
+  {
+   "f": 6534,
+   "kind": "paper_slide"
+  },
+  {
+   "f": 6545,
+   "kind": "thud_soft",
+   "gain": -6
+  },
+  {
+   "f": 6548,
+   "kind": "conveyor_run",
+   "dur": 0.6,
+   "gain": -12,
+   "pitch": 3,
+   "note": "empty cart rolls away"
+  },
+  {
+   "f": 6548,
+   "kind": "chip_pop",
+   "gain": -3
+  },
+  {
+   "f": 6551,
+   "kind": "marker_circle"
+  },
+  {
+   "f": 6589,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 0,
+   "note": "thought puffs"
+  },
+  {
+   "f": 6593,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 3,
+   "note": "thought puffs"
+  },
+  {
+   "f": 6596,
+   "kind": "chip_pop",
+   "gain": -5,
+   "note": "bubble opens"
+  },
+  {
+   "f": 6598,
+   "kind": "pencil_tap",
+   "gain": -8,
+   "pitch": 0,
+   "note": "steps write on"
+  },
+  {
+   "f": 6603,
+   "kind": "pencil_tap",
+   "gain": -8,
+   "pitch": 2,
+   "note": "steps write on"
+  },
+  {
+   "f": 6608,
+   "kind": "pencil_tap",
+   "gain": -8,
+   "pitch": 4,
+   "note": "steps write on"
+  },
+  {
+   "f": 6614,
+   "kind": "card_flick",
+   "note": "\"helps sometimes\" flips in"
+  },
+  {
+   "f": 6620,
+   "kind": "indicator_no",
+   "gain": -11,
+   "pitch": 2,
+   "note": "two-note \"hmm\""
+  },
+  {
+   "f": 6625,
+   "kind": "indicator_no",
+   "gain": -12,
+   "pitch": -1
+  },
+  {
+   "f": 6632,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": -4,
+   "note": "bubble folds into the \"…\""
+  },
+  {
+   "f": 6632,
+   "kind": "prob_tick",
+   "gain": -15,
+   "pitch": 0,
+   "note": "last twitches"
+  },
+  {
+   "f": 6641,
+   "kind": "prob_tick",
+   "gain": -15,
+   "pitch": 1,
+   "note": "last twitches"
+  },
+  {
+   "f": 6648,
+   "kind": "pop_tick",
+   "gain": -8,
+   "note": "knob counter-turn"
+  },
+  {
+   "f": 6651,
+   "kind": "prob_tick",
+   "gain": -4,
+   "pitch": 0,
+   "note": "ratchet click"
+  },
+  {
+   "f": 6655,
+   "kind": "prob_tick",
+   "gain": -4,
+   "pitch": -2,
+   "note": "ratchet click"
+  },
+  {
+   "f": 6659,
+   "kind": "prob_tick",
+   "gain": -4,
+   "pitch": -4,
+   "note": "ratchet click"
+  },
+  {
+   "f": 6663,
+   "kind": "machine_clunk",
+   "gain": -4,
+   "pitch": -2,
+   "note": "final detent at LOW"
+  },
+  {
+   "f": 6669,
+   "kind": "stamp_light",
+   "gain": -8,
+   "note": "\"turned down\""
+  },
+  {
+   "f": 6674,
+   "kind": "indicator_yes",
+   "gain": -10,
+   "note": "tunnel lamp"
+  },
+  {
+   "f": 6678,
+   "kind": "printer_feed",
+   "gain": -3,
+   "note": "identical print (same pitch each time)"
+  },
+  {
+   "f": 6687,
+   "kind": "conveyor_clunk",
+   "gain": -5,
+   "note": "belt indexes"
+  },
+  {
+   "f": 6691,
+   "kind": "printer_feed",
+   "gain": -3,
+   "note": "identical print (same pitch each time)"
+  },
+  {
+   "f": 6700,
+   "kind": "conveyor_clunk",
+   "gain": -5,
+   "note": "belt indexes"
+  },
+  {
+   "f": 6704,
+   "kind": "printer_feed",
+   "gain": -3,
+   "note": "identical print (same pitch each time)"
+  },
+  {
+   "f": 6713,
+   "kind": "conveyor_clunk",
+   "gain": -5,
+   "note": "belt indexes"
+  },
+  {
+   "f": 6715,
+   "kind": "marker_sweep",
+   "note": "one sweep across all three titles"
+  },
+  {
+   "f": 6723,
+   "kind": "marker_sweep",
+   "gain": -6,
+   "pitch": 3,
+   "note": "the same year, three times"
+  },
+  {
+   "f": 6719,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 2,
+   "note": "="
+  },
+  {
+   "f": 6725,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 4,
+   "note": "="
+  },
+  {
+   "f": 6734,
+   "kind": "hanger_click",
+   "gain": -2,
+   "note": "verdict plate flips down"
+  },
+  {
+   "f": 6756,
+   "kind": "stamp_light"
+  },
+  {
+   "f": 6762,
+   "kind": "stamp_light",
+   "pitch": -1
+  },
+  {
+   "f": 6768,
+   "kind": "stamp_heavy",
+   "gain": -3
+  },
+  {
+   "f": 6791,
+   "kind": "glint",
+   "gain": -10,
+   "pitch": 0,
+   "note": "the three helps answer"
+  },
+  {
+   "f": 6794,
+   "kind": "glint",
+   "gain": -10,
+   "pitch": 2,
+   "note": "the three helps answer"
+  },
+  {
+   "f": 6797,
+   "kind": "glint",
+   "gain": -10,
+   "pitch": 4,
+   "note": "the three helps answer"
+  },
+  {
+   "f": 6804,
+   "kind": "stamp_heavy",
+   "gain": 2,
+   "note": "NO GUARANTEE"
+  },
+  {
+   "f": 6805,
+   "kind": "machine_clunk",
+   "gain": -8,
+   "pitch": -3,
+   "note": "the room rattles"
+  },
+  {
+   "f": 6806,
+   "kind": "paper_flap",
+   "gain": -10,
+   "note": "slips flutter"
+  },
+  {
+   "f": 6814,
+   "kind": "whoosh_soft",
+   "gain": -14,
+   "note": "push toward the booth, into the wipe"
+  }
+ ],
+ "S9": [
+  {
+   "f": 6822,
+   "kind": "amb_machine",
+   "dur": 25.8
+  },
+  {
+   "f": 6872,
+   "kind": "hanger_click",
+   "gain": -10,
+   "pitch": -4,
+   "note": "hand closes on the lever knob"
+  },
+  {
+   "f": 6894,
+   "kind": "machine_clunk",
+   "gain": 2,
+   "note": "start lever bottoms out"
+  },
+  {
+   "f": 6895,
+   "kind": "machine_hum",
+   "dur": 23.4,
+   "gain": -12
+  },
+  {
+   "f": 6895,
+   "kind": "pop_tick",
+   "gain": -14,
+   "pitch": 4,
+   "note": "name plate flickers on"
+  },
+  {
+   "f": 6899,
+   "kind": "pop_tick",
+   "gain": -16,
+   "pitch": 2
+  },
+  {
+   "f": 6898,
+   "kind": "conveyor_run",
+   "dur": 5.533333333333333,
+   "gain": -16,
+   "note": "belt idles"
+  },
+  {
+   "f": 6933,
+   "kind": "pop_tick",
+   "gain": -6,
+   "note": "badge ① lights"
+  },
+  {
+   "f": 6939,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 3,
+   "note": "badge ② lights"
+  },
+  {
+   "f": 6947,
+   "kind": "hanger_click",
+   "note": "question ① swings down"
+  },
+  {
+   "f": 6963,
+   "kind": "drawer_open",
+   "gain": -10
+  },
+  {
+   "f": 6975,
+   "kind": "drawer_close",
+   "gain": -12
+  },
+  {
+   "f": 7000,
+   "kind": "hanger_click",
+   "pitch": -2,
+   "note": "question ② swings down"
+  },
+  {
+   "f": 7008,
+   "kind": "marker_sweep",
+   "gain": -8,
+   "pitch": 2,
+   "note": "\"actually\" underlined on the sign"
+  },
+  {
+   "f": 7016,
+   "kind": "scanner_sweep",
+   "dur": 0.7,
+   "gain": -8
+  },
+  {
+   "f": 7054,
+   "kind": "paper_lift",
+   "gain": -4,
+   "note": "the checker lifts the ChatGPT slip"
+  },
+  {
+   "f": 7090,
+   "kind": "paper_slide",
+   "gain": -4,
+   "note": "slid onto the belt"
+  },
+  {
+   "f": 7096,
+   "kind": "conveyor_run",
+   "dur": 0.7,
+   "gain": -6
+  },
+  {
+   "f": 7116,
+   "kind": "conveyor_clunk"
+  },
+  {
+   "f": 7118,
+   "kind": "scanner_sweep",
+   "dur": 0.4,
+   "gain": -6,
+   "note": "gate ① reads the citation"
+  },
+  {
+   "f": 7120,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 2,
+   "note": "searching the archive"
+  },
+  {
+   "f": 7124,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 4,
+   "note": "searching the archive"
+  },
+  {
+   "f": 7128,
+   "kind": "printer_feed",
+   "note": "the real record is fed out of the slot"
+  },
+  {
+   "f": 7141,
+   "kind": "paper_slap",
+   "gain": -2
+  },
+  {
+   "f": 7157,
+   "kind": "marker_circle",
+   "gain": -4
+  },
+  {
+   "f": 7168,
+   "kind": "marker_circle",
+   "gain": -4,
+   "pitch": 2
+  },
+  {
+   "f": 7203,
+   "kind": "indicator_yes"
+  },
+  {
+   "f": 7212,
+   "kind": "conveyor_run",
+   "dur": 1.1,
+   "gain": -4
+  },
+  {
+   "f": 7244,
+   "kind": "conveyor_clunk",
+   "pitch": -1
+  },
+  {
+   "f": 7246,
+   "kind": "scanner_sweep",
+   "dur": 3.3666666666666667,
+   "gain": -10,
+   "note": "gate ② reads the slip"
+  },
+  {
+   "f": 7250,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 0
+  },
+  {
+   "f": 7272,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 2
+  },
+  {
+   "f": 7284,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 4
+  },
+  {
+   "f": 7307,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": 6
+  },
+  {
+   "f": 7345,
+   "kind": "indicator_no"
+  },
+  {
+   "f": 7368,
+   "kind": "scanner_sweep",
+   "dur": 3.1,
+   "gain": -10,
+   "note": "gate ② reads the record"
+  },
+  {
+   "f": 7382,
+   "kind": "marker_sweep",
+   "gain": -6
+  },
+  {
+   "f": 7413,
+   "kind": "marker_sweep",
+   "gain": -8,
+   "pitch": 2
+  },
+  {
+   "f": 7428,
+   "kind": "marker_sweep",
+   "gain": -9,
+   "pitch": 3
+  },
+  {
+   "f": 7449,
+   "kind": "marker_sweep",
+   "pitch": 4,
+   "note": "2001 highlighted"
+  },
+  {
+   "f": 7490,
+   "kind": "machine_clunk",
+   "gain": -8,
+   "pitch": 4,
+   "note": "verdict window flips: Source exists"
+  },
+  {
+   "f": 7494,
+   "kind": "indicator_yes",
+   "gain": -8
+  },
+  {
+   "f": 7522,
+   "kind": "claim_fails"
+  },
+  {
+   "f": 7556,
+   "kind": "whoosh_soft",
+   "gain": -14,
+   "note": "the checking hand rises into frame"
+  },
+  {
+   "f": 7575,
+   "kind": "stamp_heavy"
+  },
+  {
+   "f": 7584,
+   "kind": "paper_lift",
+   "gain": -2,
+   "note": "the stamped slip lifts toward camera (into S10)"
+  }
+ ],
+ "S10": [
+  {
+   "f": 7596,
+   "kind": "amb_counter",
+   "dur": 22.333333333333332,
+   "gain": -4,
+   "note": "low room tone; ends under the set strike"
+  },
+  {
+   "f": 7616,
+   "kind": "paper_slap",
+   "gain": -6,
+   "note": "the failed slip settles back on the counter at window 1"
+  },
+  {
+   "f": 7619,
+   "kind": "paper_flap",
+   "gain": -6,
+   "note": "the question ticket drops"
+  },
+  {
+   "f": 7627,
+   "kind": "hanger_click",
+   "gain": -2
+  },
+  {
+   "f": 7627,
+   "kind": "typewriter_tick",
+   "gain": -7,
+   "pitch": 0
+  },
+  {
+   "f": 7634,
+   "kind": "typewriter_tick",
+   "gain": -7,
+   "pitch": 0
+  },
+  {
+   "f": 7648,
+   "kind": "typewriter_tick",
+   "gain": -7,
+   "pitch": 0
+  },
+  {
+   "f": 7654,
+   "kind": "typewriter_tick",
+   "gain": -7,
+   "pitch": 2
+  },
+  {
+   "f": 7673,
+   "kind": "typewriter_tick",
+   "gain": -7,
+   "pitch": 0
+  },
+  {
+   "f": 7657,
+   "kind": "glint",
+   "gain": -12,
+   "note": "\"confidently\" swells"
+  },
+  {
+   "f": 7680,
+   "kind": "pencil_tap",
+   "gain": -8
+  },
+  {
+   "f": 7693,
+   "kind": "paper_swish",
+   "gain": -12,
+   "note": "ticket hoisted on its strings"
+  },
+  {
+   "f": 7713,
+   "kind": "thud_soft",
+   "gain": -3,
+   "note": "SOUNDING RIGHT board lands"
+  },
+  {
+   "f": 7751,
+   "kind": "marker_sweep",
+   "gain": -8,
+   "note": "patterns in language highlighted"
+  },
+  {
+   "f": 7773,
+   "kind": "token_lock",
+   "gain": -7,
+   "pitch": 0
+  },
+  {
+   "f": 7778,
+   "kind": "token_lock",
+   "gain": -7,
+   "pitch": 1
+  },
+  {
+   "f": 7783,
+   "kind": "token_lock",
+   "gain": -7,
+   "pitch": 2
+  },
+  {
+   "f": 7788,
+   "kind": "token_lock",
+   "gain": -7,
+   "pitch": 3
+  },
+  {
+   "f": 7809,
+   "kind": "thud_soft",
+   "gain": 2,
+   "pitch": -3,
+   "note": "BEING RIGHT board lands, heavier"
+  },
+  {
+   "f": 7827,
+   "kind": "marker_sweep",
+   "gain": -8,
+   "pitch": 2
+  },
+  {
+   "f": 7834,
+   "kind": "paper_slap",
+   "gain": -8,
+   "note": "thesis title page pinned to the board"
+  },
+  {
+   "f": 7839,
+   "kind": "chip_pop",
+   "gain": -6
+  },
+  {
+   "f": 7874,
+   "kind": "marker_sweep",
+   "gain": -1,
+   "pitch": -2,
+   "note": "teal verdict line under BEING RIGHT"
+  },
+  {
+   "f": 7899,
+   "kind": "paper_swish",
+   "gain": -13
+  },
+  {
+   "f": 7903,
+   "kind": "paper_swish",
+   "gain": -14,
+   "pitch": -2
+  },
+  {
+   "f": 7920,
+   "kind": "paper_slide",
+   "gain": -4,
+   "note": "A pushes his slip forward: an answer"
+  },
+  {
+   "f": 7963,
+   "kind": "card_flick",
+   "gain": -3
+  },
+  {
+   "f": 7990,
+   "kind": "marker_sweep",
+   "gain": 2,
+   "note": "the old question struck through"
+  },
+  {
+   "f": 8011,
+   "kind": "card_flick",
+   "pitch": 2,
+   "note": "the card flips to ① What’s the evidence?"
+  },
+  {
+   "f": 8028,
+   "kind": "pop_tick",
+   "gain": -3
+  },
+  {
+   "f": 8068,
+   "kind": "card_flick",
+   "pitch": 4,
+   "gain": -2
+  },
+  {
+   "f": 8077,
+   "kind": "marker_sweep",
+   "gain": -3,
+   "pitch": 3
+  },
+  {
+   "f": 8101,
+   "kind": "marker_circle",
+   "gain": -2
+  },
+  {
+   "f": 8103,
+   "kind": "marker_sweep",
+   "gain": -7,
+   "pitch": -3,
+   "note": "leader to the slip"
+  },
+  {
+   "f": 8111,
+   "kind": "glint",
+   "gain": -10
+  },
+  {
+   "f": 8128,
+   "kind": "paper_swish",
+   "gain": -12
+  },
+  {
+   "f": 8139,
+   "kind": "thud_soft",
+   "gain": -10
+  },
+  {
+   "f": 8156,
+   "kind": "paper_slide",
+   "gain": -5,
+   "note": "A takes his slip back"
+  },
+  {
+   "f": 8171,
+   "kind": "thud_soft",
+   "gain": -14
+  },
+  {
+   "f": 8165,
+   "kind": "pencil_tap",
+   "gain": -7
+  },
+  {
+   "f": 8165,
+   "kind": "thud_soft",
+   "gain": -13,
+   "pitch": -6,
+   "note": "footsteps (no footstep kind)"
+  },
+  {
+   "f": 8172,
+   "kind": "thud_soft",
+   "gain": -12,
+   "pitch": -6
+  },
+  {
+   "f": 8179,
+   "kind": "thud_soft",
+   "gain": -11,
+   "pitch": -6
+  },
+  {
+   "f": 8186,
+   "kind": "thud_soft",
+   "gain": -10,
+   "pitch": -6
+  },
+  {
+   "f": 8174,
+   "kind": "thud_soft",
+   "gain": -16,
+   "pitch": -4
+  },
+  {
+   "f": 8182,
+   "kind": "thud_soft",
+   "gain": -16,
+   "pitch": -4
+  },
+  {
+   "f": 8188,
+   "kind": "paper_lift",
+   "gain": -8
+  },
+  {
+   "f": 8193,
+   "kind": "paper_slide",
+   "gain": -4
+  },
+  {
+   "f": 8198,
+   "kind": "paper_slap",
+   "gain": -3,
+   "note": "the person slaps their slip down"
+  },
+  {
+   "f": 8200,
+   "kind": "whoosh_soft",
+   "gain": -12,
+   "note": "the checking hand rises into frame"
+  },
+  {
+   "f": 8221,
+   "kind": "stamp_heavy",
+   "note": "SOURCE?"
+  },
+  {
+   "f": 8221,
+   "kind": "gavel",
+   "gain": -6,
+   "note": "the verdict (layered under the stamp)"
+  },
+  {
+   "f": 8233,
+   "kind": "paper_flap",
+   "gain": -12
+  },
+  {
+   "f": 8232,
+   "kind": "whoosh_soft",
+   "gain": -16,
+   "note": "the hand swings away"
+  },
+  {
+   "f": 8254,
+   "kind": "whoosh_soft",
+   "gain": -12,
+   "note": "the counter set sinks away"
+  },
+  {
+   "f": 8255,
+   "kind": "hanger_click",
+   "gain": -5,
+   "pitch": -2,
+   "note": "ANSWERS sign hoisted"
+  },
+  {
+   "f": 8271,
+   "kind": "pop_tick",
+   "gain": -4
+  },
+  {
+   "f": 8283,
+   "kind": "pop_tick",
+   "gain": -3,
+   "pitch": 3
+  },
+  {
+   "f": 8292,
+   "kind": "logo_hit",
+   "note": "wordmark lands"
+  },
+  {
+   "f": 8315,
+   "kind": "whoosh_soft",
+   "gain": -10,
+   "note": "\"AI moves fast\" whips in"
+  },
+  {
+   "f": 8364,
+   "kind": "thud_soft",
+   "gain": -10
+  },
+  {
+   "f": 8372,
+   "kind": "marker_sweep",
+   "gain": -5
+  },
+  {
+   "f": 8405,
+   "kind": "chip_pop"
+  },
+  {
+   "f": 8425,
+   "kind": "pop_tick",
+   "gain": -6
+  },
+  {
+   "f": 8431,
+   "kind": "pop_tick",
+   "gain": -6,
+   "pitch": 3
+  },
+  {
+   "f": 8464,
+   "kind": "chip_pop",
+   "gain": 1,
+   "pitch": 3,
+   "note": "Subscribe"
+  },
+  {
+   "f": 8494,
+   "kind": "thud_soft",
+   "gain": -15,
+   "pitch": -2
+  },
+  {
+   "f": 8502,
+   "kind": "thud_soft",
+   "gain": -15,
+   "pitch": -2
+  },
+  {
+   "f": 8510,
+   "kind": "thud_soft",
+   "gain": -15,
+   "pitch": -2
+  },
+  {
+   "f": 8520,
+   "kind": "pencil_tap",
+   "gain": -6
+  },
+  {
+   "f": 8527,
+   "kind": "pencil_tap",
+   "gain": -8
+  },
+  {
+   "f": 8527,
+   "kind": "marker_sweep",
+   "gain": -5
+  },
+  {
+   "f": 8571,
+   "kind": "chip_pop",
+   "gain": -10
+  },
+  {
+   "f": 8599,
+   "kind": "pop_tick",
+   "gain": -12,
+   "pitch": -3,
+   "note": "GOT wobbles"
+  }
+ ]
 }

@@ -2,94 +2,141 @@
  "scenes": {
   "S1": {
    "voice_db": -19.7,
-   "music_db": -39.3,
-   "sfx_db_p90": -29.4,
-   "voice_minus_music_speaking": 19.2,
-   "voice_minus_sfx_p90_speaking": 9.2
+   "music_db": -39.2,
+   "sfx_db_p90": -32.8,
+   "voice_minus_music_speaking": 19.1,
+   "voice_minus_sfx_p90_speaking": 12.5
   },
   "S2": {
    "voice_db": -19.9,
    "music_db": -38.4,
-   "sfx_db_p90": -33.8,
-   "voice_minus_music_speaking": 18.9,
-   "voice_minus_sfx_p90_speaking": 19.0
+   "sfx_db_p90": -36.6,
+   "voice_minus_music_speaking": 18.8,
+   "voice_minus_sfx_p90_speaking": 22.5
   },
   "S3": {
    "voice_db": -19.8,
    "music_db": -39.2,
-   "sfx_db_p90": -180.0,
-   "voice_minus_music_speaking": 19.4,
-   "voice_minus_sfx_p90_speaking": 160.2
+   "sfx_db_p90": -34.4,
+   "voice_minus_music_speaking": 19.3,
+   "voice_minus_sfx_p90_speaking": 15.2
   },
   "S4": {
    "voice_db": -19.3,
-   "music_db": -43.8,
-   "sfx_db_p90": -180.0,
-   "voice_minus_music_speaking": 24.3,
-   "voice_minus_sfx_p90_speaking": 160.7
+   "music_db": -43.6,
+   "sfx_db_p90": -39.7,
+   "voice_minus_music_speaking": 24.2,
+   "voice_minus_sfx_p90_speaking": 20.4
   },
   "S5": {
    "voice_db": -19.7,
-   "music_db": -55.1,
-   "sfx_db_p90": -180.0,
-   "voice_minus_music_speaking": 36.5,
-   "voice_minus_sfx_p90_speaking": 160.3
+   "music_db": -52.1,
+   "sfx_db_p90": -38.2,
+   "voice_minus_music_speaking": 33.4,
+   "voice_minus_sfx_p90_speaking": 20.4
   },
   "S6": {
    "voice_db": -20.1,
    "music_db": -34.8,
-   "sfx_db_p90": -180.0,
+   "sfx_db_p90": -35.3,
    "voice_minus_music_speaking": 14.4,
-   "voice_minus_sfx_p90_speaking": 159.9
+   "voice_minus_sfx_p90_speaking": 14.2
   },
   "S7": {
    "voice_db": -19.8,
-   "music_db": -50.7,
-   "sfx_db_p90": -180.0,
-   "voice_minus_music_speaking": 33.1,
-   "voice_minus_sfx_p90_speaking": 160.2
+   "music_db": -47.7,
+   "sfx_db_p90": -39.7,
+   "voice_minus_music_speaking": 30.0,
+   "voice_minus_sfx_p90_speaking": 19.4
   },
   "S8": {
    "voice_db": -20.0,
-   "music_db": -50.0,
-   "sfx_db_p90": -180.0,
-   "voice_minus_music_speaking": 28.6,
-   "voice_minus_sfx_p90_speaking": 160.0
+   "music_db": -48.3,
+   "sfx_db_p90": -32.2,
+   "voice_minus_music_speaking": 26.8,
+   "voice_minus_sfx_p90_speaking": 12.3
   },
   "S9": {
    "voice_db": -19.7,
-   "music_db": -57.4,
-   "sfx_db_p90": -180.0,
-   "voice_minus_music_speaking": 37.0,
-   "voice_minus_sfx_p90_speaking": 160.3
+   "music_db": -54.9,
+   "sfx_db_p90": -32.2,
+   "voice_minus_music_speaking": 34.4,
+   "voice_minus_sfx_p90_speaking": 12.9
   },
   "S10": {
    "voice_db": -19.5,
-   "music_db": -41.5,
-   "sfx_db_p90": -180.0,
+   "music_db": -41.4,
+   "sfx_db_p90": -37.3,
    "voice_minus_music_speaking": 20.1,
-   "voice_minus_sfx_p90_speaking": 160.5
+   "voice_minus_sfx_p90_speaking": 17.8
   }
  },
  "quiet_runs": [
   {
-   "t": 282.6,
-   "seconds": 5.6
+   "t": 284.5,
+   "seconds": 1.2
+  },
+  {
+   "t": 286.7,
+   "seconds": 1.5
   }
  ],
  "masking": [
   0.5,
-  5.9,
-  6.0,
   9.8,
   11.5,
   12.1,
   13.8,
-  14.3,
   16.9,
-  17.0,
   18.7,
-  23.3,
-  30.3
+  30.3,
+  46.2,
+  57.9,
+  62.5,
+  65.8,
+  67.1,
+  70.0,
+  72.3,
+  82.1,
+  84.5,
+  84.9,
+  86.7,
+  103.2,
+  123.5,
+  123.6,
+  136.3,
+  137.8,
+  147.3,
+  158.0,
+  158.2,
+  173.9,
+  174.4,
+  174.5,
+  174.6,
+  184.3,
+  185.2,
+  192.2,
+  208.1,
+  218.7,
+  225.6,
+  229.8,
+  236.5,
+  237.4,
+  240.2,
+  245.0,
+  250.7,
+  250.8,
+  250.9,
+  251.0,
+  251.2,
+  251.3,
+  251.4,
+  251.8,
+  251.9,
+  252.5,
+  262.6,
+  276.5,
+  276.6,
+  276.7
  ]
 }

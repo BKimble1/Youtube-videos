@@ -886,5 +886,5261 @@
 "kind": "whoosh_soft",
 "gain": -10,
 "note": "brand card lifts away"
+},
+{
+"scene": "S3",
+"f": 1305,
+"t": 43.5,
+"kind": "amb_conveyor",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1305,
+"t": 43.5,
+"kind": "conveyor_run",
+"gain": -12,
+"note": "idle belt crawl under the reveal"
+},
+{
+"scene": "S3",
+"f": 1327,
+"t": 44.233,
+"kind": "paper_flap",
+"gain": -8,
+"note": "the slip falls in"
+},
+{
+"scene": "S3",
+"f": 1333,
+"t": 44.433,
+"kind": "paper_slap",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1343,
+"t": 44.767,
+"kind": "pop_tick",
+"gain": -12,
+"note": "standby LED blips twice"
+},
+{
+"scene": "S3",
+"f": 1348,
+"t": 44.933,
+"kind": "pop_tick",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1346,
+"t": 44.867,
+"kind": "scanner_sweep",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1382,
+"t": 46.067,
+"kind": "paper_slide",
+"gain": 0,
+"note": "slip pulled into the intake"
+},
+{
+"scene": "S3",
+"f": 1391,
+"t": 46.367,
+"kind": "machine_clunk",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1393,
+"t": 46.433,
+"kind": "printer_feed",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1393,
+"t": 46.433,
+"kind": "conveyor_run",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1439,
+"t": 47.967,
+"kind": "conveyor_clunk",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1444,
+"t": 48.133,
+"kind": "typewriter_tick",
+"gain": -11,
+"note": "perforations scored"
+},
+{
+"scene": "S3",
+"f": 1449,
+"t": 48.3,
+"kind": "typewriter_tick",
+"gain": -11,
+"note": "perforations scored"
+},
+{
+"scene": "S3",
+"f": 1454,
+"t": 48.467,
+"kind": "typewriter_tick",
+"gain": -11,
+"note": "perforations scored"
+},
+{
+"scene": "S3",
+"f": 1456,
+"t": 48.533,
+"kind": "pop_tick",
+"gain": -7,
+"note": "strip snaps into tiles"
+},
+{
+"scene": "S3",
+"f": 1458,
+"t": 48.6,
+"kind": "pop_tick",
+"gain": -7,
+"note": "strip snaps into tiles"
+},
+{
+"scene": "S3",
+"f": 1460,
+"t": 48.667,
+"kind": "pop_tick",
+"gain": -7,
+"note": "strip snaps into tiles"
+},
+{
+"scene": "S3",
+"f": 1462,
+"t": 48.733,
+"kind": "pop_tick",
+"gain": -7,
+"note": "strip snaps into tiles"
+},
+{
+"scene": "S3",
+"f": 1464,
+"t": 48.8,
+"kind": "pop_tick",
+"gain": -7,
+"note": "strip snaps into tiles"
+},
+{
+"scene": "S3",
+"f": 1466,
+"t": 48.867,
+"kind": "pop_tick",
+"gain": -7,
+"note": "strip snaps into tiles"
+},
+{
+"scene": "S3",
+"f": 1468,
+"t": 48.933,
+"kind": "pop_tick",
+"gain": -7,
+"note": "strip snaps into tiles"
+},
+{
+"scene": "S3",
+"f": 1470,
+"t": 49.0,
+"kind": "pop_tick",
+"gain": -7,
+"note": "strip snaps into tiles"
+},
+{
+"scene": "S3",
+"f": 1516,
+"t": 50.533,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1519,
+"t": 50.633,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1522,
+"t": 50.733,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1525,
+"t": 50.833,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1524,
+"t": 50.8,
+"kind": "chip_pop",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1551,
+"t": 51.7,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1555,
+"t": 51.833,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1559,
+"t": 51.967,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1563,
+"t": 52.1,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1561,
+"t": 52.033,
+"kind": "chip_pop",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1626,
+"t": 54.2,
+"kind": "hanger_click",
+"gain": -4,
+"note": "tokenizer sign lands on its strings"
+},
+{
+"scene": "S3",
+"f": 1649,
+"t": 54.967,
+"kind": "paper_lift",
+"gain": -6,
+"note": "Kalai lifts as one block"
+},
+{
+"scene": "S3",
+"f": 1694,
+"t": 56.467,
+"kind": "card_flick",
+"gain": 0,
+"note": "crack: Kal snaps off"
+},
+{
+"scene": "S3",
+"f": 1727,
+"t": 57.567,
+"kind": "paper_slide",
+"gain": -5,
+"note": "ai slides away"
+},
+{
+"scene": "S3",
+"f": 1750,
+"t": 58.333,
+"kind": "token_lock",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1753,
+"t": 58.433,
+"kind": "token_lock",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1776,
+"t": 59.2,
+"kind": "machine_clunk",
+"gain": 0,
+"note": "scorer powers on"
+},
+{
+"scene": "S3",
+"f": 1778,
+"t": 59.267,
+"kind": "pop_tick",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1781,
+"t": 59.367,
+"kind": "pop_tick",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1784,
+"t": 59.467,
+"kind": "pop_tick",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1778,
+"t": 59.267,
+"kind": "machine_hum",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1796,
+"t": 59.867,
+"kind": "hanger_click",
+"gain": -6,
+"note": "illustrative-numbers tag flips down"
+},
+{
+"scene": "S3",
+"f": 1797,
+"t": 59.9,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1800,
+"t": 60.0,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1803,
+"t": 60.1,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1806,
+"t": 60.2,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1809,
+"t": 60.3,
+"kind": "pop_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1812,
+"t": 60.4,
+"kind": "prob_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1818,
+"t": 60.6,
+"kind": "prob_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1824,
+"t": 60.8,
+"kind": "prob_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1830,
+"t": 61.0,
+"kind": "prob_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1836,
+"t": 61.2,
+"kind": "prob_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1842,
+"t": 61.4,
+"kind": "prob_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1850,
+"t": 61.667,
+"kind": "token_select",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1862,
+"t": 62.067,
+"kind": "machine_clunk",
+"gain": -8,
+"note": "latch"
+},
+{
+"scene": "S3",
+"f": 1864,
+"t": 62.133,
+"kind": "card_flick",
+"gain": -6,
+"note": "'2' pushed into the chute"
+},
+{
+"scene": "S3",
+"f": 1876,
+"t": 62.533,
+"kind": "token_lock",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1896,
+"t": 63.2,
+"kind": "conveyor_clunk",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1897,
+"t": 63.233,
+"kind": "pop_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1899,
+"t": 63.3,
+"kind": "pop_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1901,
+"t": 63.367,
+"kind": "pop_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1903,
+"t": 63.433,
+"kind": "pop_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1906,
+"t": 63.533,
+"kind": "prob_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1912,
+"t": 63.733,
+"kind": "token_select",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1929,
+"t": 64.3,
+"kind": "token_lock",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1940,
+"t": 64.667,
+"kind": "conveyor_clunk",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1950,
+"t": 65.0,
+"kind": "token_lock",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1962,
+"t": 65.4,
+"kind": "token_lock",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1974,
+"t": 65.8,
+"kind": "token_lock",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1985,
+"t": 66.167,
+"kind": "token_lock",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1995,
+"t": 66.5,
+"kind": "token_lock",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2004,
+"t": 66.8,
+"kind": "token_lock",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1970,
+"t": 65.667,
+"kind": "conveyor_clunk",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 1993,
+"t": 66.433,
+"kind": "conveyor_clunk",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2012,
+"t": 67.067,
+"kind": "conveyor_clunk",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2036,
+"t": 67.867,
+"kind": "conveyor_run",
+"gain": -4,
+"note": "rewind"
+},
+{
+"scene": "S3",
+"f": 2052,
+"t": 68.4,
+"kind": "pop_tick",
+"gain": -12,
+"note": "a token flies back up the chute"
+},
+{
+"scene": "S3",
+"f": 2048,
+"t": 68.267,
+"kind": "pop_tick",
+"gain": -12,
+"note": "a token flies back up the chute"
+},
+{
+"scene": "S3",
+"f": 2047,
+"t": 68.233,
+"kind": "pop_tick",
+"gain": -12,
+"note": "a token flies back up the chute"
+},
+{
+"scene": "S3",
+"f": 2046,
+"t": 68.2,
+"kind": "pop_tick",
+"gain": -12,
+"note": "a token flies back up the chute"
+},
+{
+"scene": "S3",
+"f": 2046,
+"t": 68.2,
+"kind": "pop_tick",
+"gain": -12,
+"note": "a token flies back up the chute"
+},
+{
+"scene": "S3",
+"f": 2045,
+"t": 68.167,
+"kind": "pop_tick",
+"gain": -12,
+"note": "a token flies back up the chute"
+},
+{
+"scene": "S3",
+"f": 2044,
+"t": 68.133,
+"kind": "pop_tick",
+"gain": -12,
+"note": "a token flies back up the chute"
+},
+{
+"scene": "S3",
+"f": 2043,
+"t": 68.1,
+"kind": "pop_tick",
+"gain": -12,
+"note": "a token flies back up the chute"
+},
+{
+"scene": "S3",
+"f": 2057,
+"t": 68.567,
+"kind": "token_select",
+"gain": -6,
+"note": "'2' re-seats in the scorer"
+},
+{
+"scene": "S3",
+"f": 2095,
+"t": 69.833,
+"kind": "marker_sweep",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2079,
+"t": 69.3,
+"kind": "pop_tick",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2124,
+"t": 70.8,
+"kind": "card_slide",
+"gain": 0,
+"note": "readout card out on its rail"
+},
+{
+"scene": "S3",
+"f": 2165,
+"t": 72.167,
+"kind": "marker_sweep",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2166,
+"t": 72.2,
+"kind": "indicator_yes",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2165,
+"t": 72.167,
+"kind": "prob_tick",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2168,
+"t": 72.267,
+"kind": "prob_tick",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2171,
+"t": 72.367,
+"kind": "prob_tick",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2174,
+"t": 72.467,
+"kind": "prob_tick",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2177,
+"t": 72.567,
+"kind": "prob_tick",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2203,
+"t": 73.433,
+"kind": "card_slide",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2226,
+"t": 74.2,
+"kind": "indicator_no",
+"gain": -8,
+"note": "truth lamp tries"
+},
+{
+"scene": "S3",
+"f": 2236,
+"t": 74.533,
+"kind": "indicator_no",
+"gain": -3,
+"note": "... and dies"
+},
+{
+"scene": "S3",
+"f": 2259,
+"t": 75.3,
+"kind": "stamp_light",
+"gain": 0,
+"note": "NOT MEASURED"
+},
+{
+"scene": "S3",
+"f": 2281,
+"t": 76.033,
+"kind": "card_slide",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2321,
+"t": 77.367,
+"kind": "machine_clunk",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2325,
+"t": 77.5,
+"kind": "machine_clunk",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2329,
+"t": 77.633,
+"kind": "machine_clunk",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2366,
+"t": 78.867,
+"kind": "machine_clunk",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2369,
+"t": 78.967,
+"kind": "glint",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2372,
+"t": 79.067,
+"kind": "indicator_yes",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2401,
+"t": 80.033,
+"kind": "machine_clunk",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2404,
+"t": 80.133,
+"kind": "glint",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2407,
+"t": 80.233,
+"kind": "indicator_yes",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2456,
+"t": 81.867,
+"kind": "machine_clunk",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2459,
+"t": 81.967,
+"kind": "glint",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2462,
+"t": 82.067,
+"kind": "indicator_yes",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2484,
+"t": 82.8,
+"kind": "indicator_yes",
+"gain": -9,
+"note": "add-ons glow, feed into the same core"
+},
+{
+"scene": "S3",
+"f": 2490,
+"t": 83.0,
+"kind": "conveyor_run",
+"gain": -5,
+"note": "fast-forward back to where it was"
+},
+{
+"scene": "S3",
+"f": 2530,
+"t": 84.333,
+"kind": "token_lock",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2538,
+"t": 84.6,
+"kind": "token_lock",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2545,
+"t": 84.833,
+"kind": "token_lock",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2552,
+"t": 85.067,
+"kind": "token_lock",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2560,
+"t": 85.333,
+"kind": "token_lock",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2571,
+"t": 85.7,
+"kind": "token_lock",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2536,
+"t": 84.533,
+"kind": "conveyor_clunk",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2543,
+"t": 84.767,
+"kind": "conveyor_clunk",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2550,
+"t": 85.0,
+"kind": "conveyor_clunk",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2558,
+"t": 85.267,
+"kind": "conveyor_clunk",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2568,
+"t": 85.6,
+"kind": "conveyor_clunk",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S3",
+"f": 2576,
+"t": 85.867,
+"kind": "whoosh_soft",
+"gain": -10,
+"note": "push into \"Algorithms\" \u2192 library"
+},
+{
+"scene": "S4",
+"f": 2593,
+"t": 86.433,
+"kind": "amb_library",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 2603,
+"t": 86.767,
+"kind": "book_slide",
+"gain": -5,
+"note": "a hand pushes the Algorithms book flush in its stack (close-up)"
+},
+{
+"scene": "S4",
+"f": 2607,
+"t": 86.9,
+"kind": "pop_tick",
+"gain": -14,
+"note": "the stack settles"
+},
+{
+"scene": "S4",
+"f": 2697,
+"t": 89.9,
+"kind": "paper_flap",
+"gain": -6,
+"note": "headline card drops in on its strings"
+},
+{
+"scene": "S4",
+"f": 2697,
+"t": 89.9,
+"kind": "hanger_click",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 2722,
+"t": 90.733,
+"kind": "pop_tick",
+"gain": -15,
+"note": "a ripple through the books"
+},
+{
+"scene": "S4",
+"f": 2729,
+"t": 90.967,
+"kind": "pop_tick",
+"gain": -15,
+"note": "a ripple through the books"
+},
+{
+"scene": "S4",
+"f": 2736,
+"t": 91.2,
+"kind": "pop_tick",
+"gain": -15,
+"note": "a ripple through the books"
+},
+{
+"scene": "S4",
+"f": 2746,
+"t": 91.533,
+"kind": "paper_swish",
+"gain": -14,
+"note": "headline card pulled up"
+},
+{
+"scene": "S4",
+"f": 2813,
+"t": 93.767,
+"kind": "glint",
+"gain": -9,
+"note": "title words light up across the shelves"
+},
+{
+"scene": "S4",
+"f": 2850,
+"t": 95.0,
+"kind": "book_slide",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 2853,
+"t": 95.1,
+"kind": "chip_pop",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 2875,
+"t": 95.833,
+"kind": "book_slide",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 2878,
+"t": 95.933,
+"kind": "chip_pop",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 2909,
+"t": 96.967,
+"kind": "book_slide",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 2912,
+"t": 97.067,
+"kind": "chip_pop",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 2947,
+"t": 98.233,
+"kind": "pop_tick",
+"gain": -7,
+"note": "a shelf row lights"
+},
+{
+"scene": "S4",
+"f": 2956,
+"t": 98.533,
+"kind": "pop_tick",
+"gain": -7,
+"note": "a shelf row lights"
+},
+{
+"scene": "S4",
+"f": 2966,
+"t": 98.867,
+"kind": "pop_tick",
+"gain": -7,
+"note": "a shelf row lights"
+},
+{
+"scene": "S4",
+"f": 2976,
+"t": 99.2,
+"kind": "pop_tick",
+"gain": -7,
+"note": "a shelf row lights"
+},
+{
+"scene": "S4",
+"f": 2994,
+"t": 99.8,
+"kind": "glint",
+"gain": -7,
+"note": "every spine pulses at once: the same shape"
+},
+{
+"scene": "S4",
+"f": 3013,
+"t": 100.433,
+"kind": "thud_soft",
+"gain": -16,
+"note": "footstep"
+},
+{
+"scene": "S4",
+"f": 3023,
+"t": 100.767,
+"kind": "thud_soft",
+"gain": -16,
+"note": "footstep"
+},
+{
+"scene": "S4",
+"f": 3033,
+"t": 101.1,
+"kind": "thud_soft",
+"gain": -16,
+"note": "footstep"
+},
+{
+"scene": "S4",
+"f": 3053,
+"t": 101.767,
+"kind": "pencil_tap",
+"gain": -6,
+"note": "fingertip on the K label"
+},
+{
+"scene": "S4",
+"f": 3064,
+"t": 102.133,
+"kind": "drawer_open",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3077,
+"t": 102.567,
+"kind": "thud_soft",
+"gain": -9,
+"note": "drawer end-stop"
+},
+{
+"scene": "S4",
+"f": 3078,
+"t": 102.6,
+"kind": "pop_tick",
+"gain": -12,
+"note": "cards rattle"
+},
+{
+"scene": "S4",
+"f": 3080,
+"t": 102.667,
+"kind": "card_slide",
+"gain": 0,
+"note": "card drawn up out of the drawer"
+},
+{
+"scene": "S4",
+"f": 3089,
+"t": 102.967,
+"kind": "paper_lift",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3128,
+"t": 104.267,
+"kind": "paper_flap",
+"gain": -15,
+"note": "the thin book thins"
+},
+{
+"scene": "S4",
+"f": 3160,
+"t": 105.333,
+"kind": "book_slide",
+"gain": -7,
+"note": "the book slides back into the dark"
+},
+{
+"scene": "S4",
+"f": 3168,
+"t": 105.6,
+"kind": "thud_soft",
+"gain": -14,
+"note": "hollow knock"
+},
+{
+"scene": "S4",
+"f": 3166,
+"t": 105.533,
+"kind": "marker_circle",
+"gain": 0,
+"note": "dashed outline round the empty place"
+},
+{
+"scene": "S4",
+"f": 3136,
+"t": 104.533,
+"kind": "paper_slide",
+"gain": -12,
+"note": "guard-rail strip"
+},
+{
+"scene": "S4",
+"f": 3203,
+"t": 106.767,
+"kind": "chip_pop",
+"gain": 0,
+"note": "the cake hops into the slot"
+},
+{
+"scene": "S4",
+"f": 3203,
+"t": 106.767,
+"kind": "thud_soft",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3235,
+"t": 107.833,
+"kind": "glint",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3247,
+"t": 108.233,
+"kind": "thud_soft",
+"gain": -10,
+"note": "the ripple stops dead at the cake"
+},
+{
+"scene": "S4",
+"f": 3248,
+"t": 108.267,
+"kind": "hanger_click",
+"gain": -3,
+"note": "label flips down"
+},
+{
+"scene": "S4",
+"f": 3228,
+"t": 107.6,
+"kind": "paper_swish",
+"gain": -16,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3300,
+"t": 110.0,
+"kind": "hanger_click",
+"gain": -8,
+"note": "label flips back up"
+},
+{
+"scene": "S4",
+"f": 3338,
+"t": 111.267,
+"kind": "drawer_close",
+"gain": 0,
+"note": "hip-bumped shut"
+},
+{
+"scene": "S4",
+"f": 3367,
+"t": 112.233,
+"kind": "paper_lift",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3380,
+"t": 112.667,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3373,
+"t": 112.433,
+"kind": "paper_lift",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3386,
+"t": 112.867,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3379,
+"t": 112.633,
+"kind": "paper_lift",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3392,
+"t": 113.067,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3385,
+"t": 112.833,
+"kind": "paper_lift",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3398,
+"t": 113.267,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3391,
+"t": 113.033,
+"kind": "paper_lift",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3404,
+"t": 113.467,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3414,
+"t": 113.8,
+"kind": "card_flick",
+"gain": 0,
+"note": "card flips into the polished slip"
+},
+{
+"scene": "S4",
+"f": 3421,
+"t": 114.033,
+"kind": "glint",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3424,
+"t": 114.133,
+"kind": "paper_slide",
+"gain": -14,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3446,
+"t": 114.867,
+"kind": "paper_lift",
+"gain": -12,
+"note": "the gold seal peels off a spine"
+},
+{
+"scene": "S4",
+"f": 3458,
+"t": 115.267,
+"kind": "stamp_heavy",
+"gain": 0,
+"note": "seal slams onto the slip"
+},
+{
+"scene": "S4",
+"f": 3514,
+"t": 117.133,
+"kind": "glint",
+"gain": -12,
+"note": "the same seal glints along the shelves"
+},
+{
+"scene": "S4",
+"f": 3522,
+"t": 117.4,
+"kind": "glint",
+"gain": -12,
+"note": "the same seal glints along the shelves"
+},
+{
+"scene": "S4",
+"f": 3530,
+"t": 117.667,
+"kind": "glint",
+"gain": -12,
+"note": "the same seal glints along the shelves"
+},
+{
+"scene": "S4",
+"f": 3560,
+"t": 118.667,
+"kind": "marker_sweep",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3610,
+"t": 120.333,
+"kind": "paper_flap",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3634,
+"t": 121.133,
+"kind": "marker_sweep",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3642,
+"t": 121.4,
+"kind": "card_flick",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3658,
+"t": 121.933,
+"kind": "paper_flap",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3671,
+"t": 122.367,
+"kind": "marker_sweep",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3677,
+"t": 122.567,
+"kind": "card_flick",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S4",
+"f": 3684,
+"t": 122.8,
+"kind": "paper_swish",
+"gain": 0,
+"note": "the sealed slip slid out to the left (into S5)"
+},
+{
+"scene": "S5",
+"f": 3696,
+"t": 123.2,
+"kind": "amb_library",
+"gain": -14,
+"note": "quiet desk-room tone (closest kind) under the evidence; the music pulls back here"
+},
+{
+"scene": "S5",
+"f": 3688,
+"t": 122.933,
+"kind": "paper_slide",
+"gain": -2,
+"note": "the record slides in from the right under the wipe"
+},
+{
+"scene": "S5",
+"f": 3701,
+"t": 123.367,
+"kind": "paper_slap",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 3705,
+"t": 123.5,
+"kind": "tape_rip",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 3710,
+"t": 123.667,
+"kind": "tape_rip",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 3732,
+"t": 124.4,
+"kind": "pop_tick",
+"gain": -6,
+"note": "\"The actual record\" tab clips on"
+},
+{
+"scene": "S5",
+"f": 3740,
+"t": 124.667,
+"kind": "paper_slide",
+"gain": -12,
+"note": "source tab slides out"
+},
+{
+"scene": "S5",
+"f": 3762,
+"t": 125.4,
+"kind": "marker_sweep",
+"gain": -8,
+"note": "underline under Adam Kalai"
+},
+{
+"scene": "S5",
+"f": 3803,
+"t": 126.767,
+"kind": "marker_sweep",
+"gain": -5,
+"note": "title line 1 highlighted as it is read"
+},
+{
+"scene": "S5",
+"f": 3863,
+"t": 128.767,
+"kind": "marker_sweep",
+"gain": -6,
+"note": "title line 2"
+},
+{
+"scene": "S5",
+"f": 3882,
+"t": 129.4,
+"kind": "marker_circle",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 3910,
+"t": 130.333,
+"kind": "marker_circle",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 3933,
+"t": 131.1,
+"kind": "marker_circle",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 3945,
+"t": 131.5,
+"kind": "pop_tick",
+"gain": -6,
+"note": "2001 ticked"
+},
+{
+"scene": "S5",
+"f": 3990,
+"t": 133.0,
+"kind": "paper_flap",
+"gain": -8,
+"note": "the slip carried in from the left"
+},
+{
+"scene": "S5",
+"f": 4008,
+"t": 133.6,
+"kind": "paper_slap",
+"gain": -1,
+"note": "stiffer, glossier slap than the page"
+},
+{
+"scene": "S5",
+"f": 4009,
+"t": 133.633,
+"kind": "tape_rip",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 4011,
+"t": 133.7,
+"kind": "glint",
+"gain": -12,
+"note": "gold edge"
+},
+{
+"scene": "S5",
+"f": 4029,
+"t": 134.3,
+"kind": "marker_circle",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 4040,
+"t": 134.667,
+"kind": "indicator_yes",
+"gain": -6,
+"note": "university right"
+},
+{
+"scene": "S5",
+"f": 4044,
+"t": 134.8,
+"kind": "chip_pop",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 4059,
+"t": 135.3,
+"kind": "marker_circle",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 4071,
+"t": 135.7,
+"kind": "pop_tick",
+"gain": -7,
+"note": "off by one: the slip's final \"2\" flashes coral"
+},
+{
+"scene": "S5",
+"f": 4073,
+"t": 135.767,
+"kind": "pop_tick",
+"gain": -8,
+"note": "\u2026 and the record's final \"1\" answers"
+},
+{
+"scene": "S5",
+"f": 4088,
+"t": 136.267,
+"kind": "chip_pop",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 4089,
+"t": 136.3,
+"kind": "indicator_no",
+"gain": -6,
+"note": "off by one"
+},
+{
+"scene": "S5",
+"f": 4110,
+"t": 137.0,
+"kind": "marker_sweep",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 4121,
+"t": 137.367,
+"kind": "marker_sweep",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 4131,
+"t": 137.7,
+"kind": "chip_pop",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 4132,
+"t": 137.733,
+"kind": "indicator_no",
+"gain": -5,
+"note": "invented"
+},
+{
+"scene": "S5",
+"f": 4153,
+"t": 138.433,
+"kind": "marker_sweep",
+"gain": -15,
+"note": "the marks come off (soft reverse swish)"
+},
+{
+"scene": "S5",
+"f": 4157,
+"t": 138.567,
+"kind": "pop_tick",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S5",
+"f": 4191,
+"t": 139.7,
+"kind": "paper_lift",
+"gain": -9,
+"note": "both documents lift together"
+},
+{
+"scene": "S5",
+"f": 4212,
+"t": 140.4,
+"kind": "glint",
+"gain": -6,
+"note": "one shine across the slip \u2026 (band over the slip \u2248 GLINT + 10)"
+},
+{
+"scene": "S5",
+"f": 4221,
+"t": 140.7,
+"kind": "glint",
+"gain": -8,
+"note": "\u2026 and on across the record (\u2248 GLINT + 17)"
+},
+{
+"scene": "S5",
+"f": 4231,
+"t": 141.033,
+"kind": "paper_slap",
+"gain": -12,
+"note": "both settle back, in sync"
+},
+{
+"scene": "S5",
+"f": 4257,
+"t": 141.9,
+"kind": "thud_soft",
+"gain": -10,
+"note": "magnifier pulled up from under the desk"
+},
+{
+"scene": "S5",
+"f": 4274,
+"t": 142.467,
+"kind": "glint",
+"gain": -10,
+"note": "the lens catches the light as it swings up"
+},
+{
+"scene": "S5",
+"f": 4337,
+"t": 144.567,
+"kind": "chip_pop",
+"gain": -12,
+"note": "caption, kept quiet so the line lands"
+},
+{
+"scene": "S5",
+"f": 4357,
+"t": 145.233,
+"kind": "pop_tick",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4386,
+"t": 146.2,
+"kind": "amb_gameshow",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4398,
+"t": 146.6,
+"kind": "paper_flap",
+"gain": -12,
+"note": "the curtain bulges (someone behind it)"
+},
+{
+"scene": "S6",
+"f": 4404,
+"t": 146.8,
+"kind": "whoosh_soft",
+"gain": -10,
+"note": "the host pushes the curtain open"
+},
+{
+"scene": "S6",
+"f": 4411,
+"t": 147.033,
+"kind": "thud_soft",
+"gain": -14,
+"note": "footstep"
+},
+{
+"scene": "S6",
+"f": 4417,
+"t": 147.233,
+"kind": "thud_soft",
+"gain": -14,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4421,
+"t": 147.367,
+"kind": "thud_soft",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4414,
+"t": 147.133,
+"kind": "machine_clunk",
+"gain": -9,
+"note": "stage lights bang on"
+},
+{
+"scene": "S6",
+"f": 4419,
+"t": 147.3,
+"kind": "machine_clunk",
+"gain": -8,
+"note": "stage lights bang on"
+},
+{
+"scene": "S6",
+"f": 4424,
+"t": 147.467,
+"kind": "machine_clunk",
+"gain": -7,
+"note": "stage lights bang on"
+},
+{
+"scene": "S6",
+"f": 4534,
+"t": 151.133,
+"kind": "whoosh_soft",
+"gain": -16,
+"note": "the board is winched down from the flies"
+},
+{
+"scene": "S6",
+"f": 4550,
+"t": 151.667,
+"kind": "hanger_click",
+"gain": 0,
+"note": "the board bottoms out on its cables"
+},
+{
+"scene": "S6",
+"f": 4551,
+"t": 151.7,
+"kind": "thud_soft",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4559,
+"t": 151.967,
+"kind": "hanger_click",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4573,
+"t": 152.433,
+"kind": "hanger_click",
+"gain": -5,
+"note": "citation tag clips on"
+},
+{
+"scene": "S6",
+"f": 4604,
+"t": 153.467,
+"kind": "card_flick",
+"gain": -12,
+"note": "cue card"
+},
+{
+"scene": "S6",
+"f": 4625,
+"t": 154.167,
+"kind": "pop_tick",
+"gain": -13,
+"note": "card backs wobble"
+},
+{
+"scene": "S6",
+"f": 4629,
+"t": 154.3,
+"kind": "pop_tick",
+"gain": -13,
+"note": "card backs wobble"
+},
+{
+"scene": "S6",
+"f": 4633,
+"t": 154.433,
+"kind": "pop_tick",
+"gain": -13,
+"note": "card backs wobble"
+},
+{
+"scene": "S6",
+"f": 4651,
+"t": 155.033,
+"kind": "card_flick",
+"gain": -6,
+"note": "ten cue cards fanned"
+},
+{
+"scene": "S6",
+"f": 4655,
+"t": 155.167,
+"kind": "card_flick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4690,
+"t": 156.333,
+"kind": "hanger_click",
+"gain": -7,
+"note": "guard-rail tag"
+},
+{
+"scene": "S6",
+"f": 4694,
+"t": 156.467,
+"kind": "card_flick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4706,
+"t": 156.867,
+"kind": "pop_tick",
+"gain": -5,
+"note": "finger snap"
+},
+{
+"scene": "S6",
+"f": 4709,
+"t": 156.967,
+"kind": "card_flick",
+"gain": 0,
+"note": "rule card flips"
+},
+{
+"scene": "S6",
+"f": 4765,
+"t": 158.833,
+"kind": "pop_tick",
+"gain": -5,
+"note": "finger snap"
+},
+{
+"scene": "S6",
+"f": 4768,
+"t": 158.933,
+"kind": "card_flick",
+"gain": 0,
+"note": "rule card flips"
+},
+{
+"scene": "S6",
+"f": 4822,
+"t": 160.733,
+"kind": "pop_tick",
+"gain": -5,
+"note": "finger snap"
+},
+{
+"scene": "S6",
+"f": 4825,
+"t": 160.833,
+"kind": "card_flick",
+"gain": 0,
+"note": "rule card flips"
+},
+{
+"scene": "S6",
+"f": 4739,
+"t": 157.967,
+"kind": "indicator_yes",
+"gain": 0,
+"note": "+1"
+},
+{
+"scene": "S6",
+"f": 4801,
+"t": 160.033,
+"kind": "indicator_no",
+"gain": -3,
+"note": "0"
+},
+{
+"scene": "S6",
+"f": 4864,
+"t": 162.133,
+"kind": "indicator_no",
+"gain": -3,
+"note": "0"
+},
+{
+"scene": "S6",
+"f": 4869,
+"t": 162.3,
+"kind": "pop_tick",
+"gain": -6,
+"note": "the two zeros bounce together"
+},
+{
+"scene": "S6",
+"f": 4871,
+"t": 162.367,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4876,
+"t": 162.533,
+"kind": "hanger_click",
+"gain": -9,
+"note": "the board flies out"
+},
+{
+"scene": "S6",
+"f": 4869,
+"t": 162.3,
+"kind": "conveyor_run",
+"gain": -12,
+"note": "podium casters"
+},
+{
+"scene": "S6",
+"f": 4887,
+"t": 162.9,
+"kind": "machine_clunk",
+"gain": -4,
+"note": "honest podium stops"
+},
+{
+"scene": "S6",
+"f": 4891,
+"t": 163.033,
+"kind": "machine_clunk",
+"gain": -4,
+"note": "guesser podium stops"
+},
+{
+"scene": "S6",
+"f": 4895,
+"t": 163.167,
+"kind": "machine_clunk",
+"gain": -14,
+"note": "spotlights swing on"
+},
+{
+"scene": "S6",
+"f": 4655,
+"t": 155.167,
+"kind": "hanger_click",
+"gain": -6,
+"note": "answer panel drops in"
+},
+{
+"scene": "S6",
+"f": 4658,
+"t": 155.267,
+"kind": "hanger_click",
+"gain": -6,
+"note": "answer panel drops in"
+},
+{
+"scene": "S6",
+"f": 4660,
+"t": 155.333,
+"kind": "pop_tick",
+"gain": -16,
+"note": "question slot lights"
+},
+{
+"scene": "S6",
+"f": 4662,
+"t": 155.4,
+"kind": "pop_tick",
+"gain": -16,
+"note": "question slot lights"
+},
+{
+"scene": "S6",
+"f": 4664,
+"t": 155.467,
+"kind": "pop_tick",
+"gain": -16,
+"note": "question slot lights"
+},
+{
+"scene": "S6",
+"f": 4667,
+"t": 155.567,
+"kind": "pop_tick",
+"gain": -16,
+"note": "question slot lights"
+},
+{
+"scene": "S6",
+"f": 4669,
+"t": 155.633,
+"kind": "pop_tick",
+"gain": -16,
+"note": "question slot lights"
+},
+{
+"scene": "S6",
+"f": 4671,
+"t": 155.7,
+"kind": "pop_tick",
+"gain": -16,
+"note": "question slot lights"
+},
+{
+"scene": "S6",
+"f": 4673,
+"t": 155.767,
+"kind": "pop_tick",
+"gain": -16,
+"note": "question slot lights"
+},
+{
+"scene": "S6",
+"f": 4675,
+"t": 155.833,
+"kind": "pop_tick",
+"gain": -16,
+"note": "question slot lights"
+},
+{
+"scene": "S6",
+"f": 4678,
+"t": 155.933,
+"kind": "pop_tick",
+"gain": -16,
+"note": "question slot lights"
+},
+{
+"scene": "S6",
+"f": 4680,
+"t": 156.0,
+"kind": "pop_tick",
+"gain": -16,
+"note": "question slot lights"
+},
+{
+"scene": "S6",
+"f": 4905,
+"t": 163.5,
+"kind": "pop_tick",
+"gain": -8,
+"note": "finger-gun"
+},
+{
+"scene": "S6",
+"f": 4927,
+"t": 164.233,
+"kind": "thud_soft",
+"gain": -11,
+"note": "honest slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4929,
+"t": 164.3,
+"kind": "thud_soft",
+"gain": -11,
+"note": "guesser slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4928,
+"t": 164.267,
+"kind": "ding_right",
+"gain": -13,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4930,
+"t": 164.333,
+"kind": "score_flip",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4934,
+"t": 164.467,
+"kind": "thud_soft",
+"gain": -11,
+"note": "honest slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4936,
+"t": 164.533,
+"kind": "thud_soft",
+"gain": -11,
+"note": "guesser slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4935,
+"t": 164.5,
+"kind": "ding_right",
+"gain": -13,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4937,
+"t": 164.567,
+"kind": "score_flip",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4942,
+"t": 164.733,
+"kind": "thud_soft",
+"gain": -11,
+"note": "honest slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4944,
+"t": 164.8,
+"kind": "thud_soft",
+"gain": -11,
+"note": "guesser slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4943,
+"t": 164.767,
+"kind": "ding_right",
+"gain": -13,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4945,
+"t": 164.833,
+"kind": "score_flip",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4949,
+"t": 164.967,
+"kind": "thud_soft",
+"gain": -11,
+"note": "honest slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4951,
+"t": 165.033,
+"kind": "thud_soft",
+"gain": -11,
+"note": "guesser slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4950,
+"t": 165.0,
+"kind": "ding_right",
+"gain": -13,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4952,
+"t": 165.067,
+"kind": "score_flip",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4957,
+"t": 165.233,
+"kind": "thud_soft",
+"gain": -11,
+"note": "honest slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4959,
+"t": 165.3,
+"kind": "thud_soft",
+"gain": -11,
+"note": "guesser slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4958,
+"t": 165.267,
+"kind": "ding_right",
+"gain": -13,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4960,
+"t": 165.333,
+"kind": "score_flip",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4964,
+"t": 165.467,
+"kind": "thud_soft",
+"gain": -11,
+"note": "honest slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4966,
+"t": 165.533,
+"kind": "thud_soft",
+"gain": -11,
+"note": "guesser slaps his buzzer"
+},
+{
+"scene": "S6",
+"f": 4965,
+"t": 165.5,
+"kind": "ding_right",
+"gain": -13,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 4967,
+"t": 165.567,
+"kind": "score_flip",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5003,
+"t": 166.767,
+"kind": "thud_soft",
+"gain": -7,
+"note": "pass: a soft felt \"\u2014\""
+},
+{
+"scene": "S6",
+"f": 5012,
+"t": 167.067,
+"kind": "thud_soft",
+"gain": -7,
+"note": "pass: a soft felt \"\u2014\""
+},
+{
+"scene": "S6",
+"f": 5020,
+"t": 167.333,
+"kind": "thud_soft",
+"gain": -7,
+"note": "pass: a soft felt \"\u2014\""
+},
+{
+"scene": "S6",
+"f": 5028,
+"t": 167.6,
+"kind": "thud_soft",
+"gain": -7,
+"note": "pass: a soft felt \"\u2014\""
+},
+{
+"scene": "S6",
+"f": 5004,
+"t": 166.8,
+"kind": "chip_pop",
+"gain": -6,
+"note": "\"I don't know.\" bubble"
+},
+{
+"scene": "S6",
+"f": 5054,
+"t": 168.467,
+"kind": "score_flip",
+"gain": -3,
+"note": "honest score locks at 6"
+},
+{
+"scene": "S6",
+"f": 5055,
+"t": 168.5,
+"kind": "indicator_yes",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5101,
+"t": 170.033,
+"kind": "thud_soft",
+"gain": 0,
+"note": "guesser slams his buzzer"
+},
+{
+"scene": "S6",
+"f": 5102,
+"t": 170.067,
+"kind": "prob_tick",
+"gain": -6,
+"note": "letter reel starts spinning"
+},
+{
+"scene": "S6",
+"f": 5110,
+"t": 170.333,
+"kind": "thud_soft",
+"gain": 0,
+"note": "guesser slams his buzzer"
+},
+{
+"scene": "S6",
+"f": 5111,
+"t": 170.367,
+"kind": "prob_tick",
+"gain": -6,
+"note": "letter reel starts spinning"
+},
+{
+"scene": "S6",
+"f": 5120,
+"t": 170.667,
+"kind": "thud_soft",
+"gain": 0,
+"note": "guesser slams his buzzer"
+},
+{
+"scene": "S6",
+"f": 5121,
+"t": 170.7,
+"kind": "prob_tick",
+"gain": -6,
+"note": "letter reel starts spinning"
+},
+{
+"scene": "S6",
+"f": 5130,
+"t": 171.0,
+"kind": "thud_soft",
+"gain": 0,
+"note": "guesser slams his buzzer"
+},
+{
+"scene": "S6",
+"f": 5131,
+"t": 171.033,
+"kind": "prob_tick",
+"gain": -6,
+"note": "letter reel starts spinning"
+},
+{
+"scene": "S6",
+"f": 5156,
+"t": 171.867,
+"kind": "hanger_click",
+"gain": -4,
+"note": "options sign drops in"
+},
+{
+"scene": "S6",
+"f": 5184,
+"t": 172.8,
+"kind": "prob_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5187,
+"t": 172.9,
+"kind": "prob_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5190,
+"t": 173.0,
+"kind": "buzzer_wrong",
+"gain": -1,
+"note": "Q7 wrong"
+},
+{
+"scene": "S6",
+"f": 5193,
+"t": 173.1,
+"kind": "score_flip",
+"gain": -14,
+"note": "score twitches, no point"
+},
+{
+"scene": "S6",
+"f": 5195,
+"t": 173.167,
+"kind": "prob_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5198,
+"t": 173.267,
+"kind": "prob_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5201,
+"t": 173.367,
+"kind": "buzzer_wrong",
+"gain": -1,
+"note": "Q8 wrong"
+},
+{
+"scene": "S6",
+"f": 5204,
+"t": 173.467,
+"kind": "score_flip",
+"gain": -14,
+"note": "score twitches, no point"
+},
+{
+"scene": "S6",
+"f": 5206,
+"t": 173.533,
+"kind": "prob_tick",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5209,
+"t": 173.633,
+"kind": "prob_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5212,
+"t": 173.733,
+"kind": "buzzer_wrong",
+"gain": -1,
+"note": "Q9 wrong"
+},
+{
+"scene": "S6",
+"f": 5215,
+"t": 173.833,
+"kind": "score_flip",
+"gain": -14,
+"note": "score twitches, no point"
+},
+{
+"scene": "S6",
+"f": 5214,
+"t": 173.8,
+"kind": "prob_tick",
+"gain": -9,
+"note": "last reel crawls"
+},
+{
+"scene": "S6",
+"f": 5219,
+"t": 173.967,
+"kind": "prob_tick",
+"gain": -8,
+"note": "last reel crawls"
+},
+{
+"scene": "S6",
+"f": 5229,
+"t": 174.3,
+"kind": "prob_tick",
+"gain": -7,
+"note": "last reel crawls"
+},
+{
+"scene": "S6",
+"f": 5231,
+"t": 174.367,
+"kind": "ding_right",
+"gain": 2,
+"note": "Q10 lands: the lucky one"
+},
+{
+"scene": "S6",
+"f": 5233,
+"t": 174.433,
+"kind": "fanfare_small",
+"gain": 0,
+"note": "excessive celebration"
+},
+{
+"scene": "S6",
+"f": 5233,
+"t": 174.433,
+"kind": "pop_tick",
+"gain": 0,
+"note": "confetti popper"
+},
+{
+"scene": "S6",
+"f": 5235,
+"t": 174.5,
+"kind": "pop_tick",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5234,
+"t": 174.467,
+"kind": "crowd_cheer",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5247,
+"t": 174.9,
+"kind": "thud_soft",
+"gain": -9,
+"note": "guesser lands from his leap"
+},
+{
+"scene": "S6",
+"f": 5262,
+"t": 175.4,
+"kind": "score_flip",
+"gain": 0,
+"note": "6 \u2192 7"
+},
+{
+"scene": "S6",
+"f": 5274,
+"t": 175.8,
+"kind": "hanger_click",
+"gain": -10,
+"note": "options sign flies out"
+},
+{
+"scene": "S6",
+"f": 5305,
+"t": 176.833,
+"kind": "paper_flap",
+"gain": -5,
+"note": "caption scroll drops in"
+},
+{
+"scene": "S6",
+"f": 5306,
+"t": 176.867,
+"kind": "hanger_click",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5311,
+"t": 177.033,
+"kind": "glint",
+"gain": -6,
+"note": "the lucky tile sparkles"
+},
+{
+"scene": "S6",
+"f": 5344,
+"t": 178.133,
+"kind": "paper_flap",
+"gain": -8,
+"note": "scroll unrolls a line"
+},
+{
+"scene": "S6",
+"f": 5356,
+"t": 178.533,
+"kind": "buzzer_wrong",
+"gain": -13,
+"note": "three \u2715 shake"
+},
+{
+"scene": "S6",
+"f": 5360,
+"t": 178.667,
+"kind": "crowd_aww",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5392,
+"t": 179.733,
+"kind": "paper_flap",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5403,
+"t": 180.1,
+"kind": "glint",
+"gain": -10,
+"note": "trophy lowered from the flies"
+},
+{
+"scene": "S6",
+"f": 5415,
+"t": 180.5,
+"kind": "hanger_click",
+"gain": -10,
+"note": "the cable unhooks; the trophy drops the last few px"
+},
+{
+"scene": "S6",
+"f": 5419,
+"t": 180.633,
+"kind": "trophy_clink",
+"gain": 2,
+"note": "trophy lands on the guesser podium"
+},
+{
+"scene": "S6",
+"f": 5420,
+"t": 180.667,
+"kind": "crowd_cheer",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5428,
+"t": 180.933,
+"kind": "glint",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5460,
+"t": 182.0,
+"kind": "paper_swish",
+"gain": -6,
+"note": "scroll flies out"
+},
+{
+"scene": "S6",
+"f": 5488,
+"t": 182.933,
+"kind": "thud_soft",
+"gain": -7,
+"note": "board returns"
+},
+{
+"scene": "S6",
+"f": 5489,
+"t": 182.967,
+"kind": "hanger_click",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5474,
+"t": 182.467,
+"kind": "card_flick",
+"gain": -5,
+"note": "host plucks the top cue card"
+},
+{
+"scene": "S6",
+"f": 5489,
+"t": 182.967,
+"kind": "card_flick",
+"gain": -9,
+"note": "turns it: \u22121"
+},
+{
+"scene": "S6",
+"f": 5519,
+"t": 183.967,
+"kind": "whoosh_soft",
+"gain": -10,
+"note": "throw"
+},
+{
+"scene": "S6",
+"f": 5531,
+"t": 184.367,
+"kind": "stamp_heavy",
+"gain": 0,
+"note": "\u22121 slaps onto the Wrong card"
+},
+{
+"scene": "S6",
+"f": 5532,
+"t": 184.4,
+"kind": "indicator_no",
+"gain": -1,
+"note": "low dun"
+},
+{
+"scene": "S6",
+"f": 5537,
+"t": 184.567,
+"kind": "hanger_click",
+"gain": -8,
+"note": "board chains swing"
+},
+{
+"scene": "S6",
+"f": 5548,
+"t": 184.933,
+"kind": "buzzer_wrong",
+"gain": -12,
+"note": "the three \u2715 now cost"
+},
+{
+"scene": "S6",
+"f": 5549,
+"t": 184.967,
+"kind": "pop_tick",
+"gain": -12,
+"note": "sweat drop on the trophy"
+},
+{
+"scene": "S6",
+"f": 5605,
+"t": 186.833,
+"kind": "pop_tick",
+"gain": -14,
+"note": "blank shows 0"
+},
+{
+"scene": "S6",
+"f": 5609,
+"t": 186.967,
+"kind": "pop_tick",
+"gain": -14,
+"note": "blank shows 0"
+},
+{
+"scene": "S6",
+"f": 5613,
+"t": 187.1,
+"kind": "pop_tick",
+"gain": -14,
+"note": "blank shows 0"
+},
+{
+"scene": "S6",
+"f": 5617,
+"t": 187.233,
+"kind": "pop_tick",
+"gain": -14,
+"note": "blank shows 0"
+},
+{
+"scene": "S6",
+"f": 5615,
+"t": 187.167,
+"kind": "indicator_yes",
+"gain": -7,
+"note": "still six"
+},
+{
+"scene": "S6",
+"f": 5674,
+"t": 189.133,
+"kind": "hanger_click",
+"gain": -7,
+"note": "equation strip drops in"
+},
+{
+"scene": "S6",
+"f": 5670,
+"t": 189.0,
+"kind": "glint",
+"gain": -10,
+"note": "the guesser's six \u2713 glow"
+},
+{
+"scene": "S6",
+"f": 5695,
+"t": 189.833,
+"kind": "chip_pop",
+"gain": -4,
+"note": "+1 hops from the lucky tile to the strip"
+},
+{
+"scene": "S6",
+"f": 5722,
+"t": 190.733,
+"kind": "chip_pop",
+"gain": -6,
+"note": "\u22121 leaves a \u2715 tile"
+},
+{
+"scene": "S6",
+"f": 5729,
+"t": 190.967,
+"kind": "chip_pop",
+"gain": -6,
+"note": "\u22121 leaves a \u2715 tile"
+},
+{
+"scene": "S6",
+"f": 5736,
+"t": 191.2,
+"kind": "chip_pop",
+"gain": -6,
+"note": "\u22121 leaves a \u2715 tile"
+},
+{
+"scene": "S6",
+"f": 5731,
+"t": 191.033,
+"kind": "score_flip",
+"gain": 0,
+"note": "7 \u2192 6"
+},
+{
+"scene": "S6",
+"f": 5738,
+"t": 191.267,
+"kind": "score_flip",
+"gain": 0,
+"note": "6 \u2192 5"
+},
+{
+"scene": "S6",
+"f": 5756,
+"t": 191.867,
+"kind": "score_flip",
+"gain": 2,
+"note": "5 \u2192 4 (the hovering chip drops in on \"Four.\")"
+},
+{
+"scene": "S6",
+"f": 5756,
+"t": 191.867,
+"kind": "thud_soft",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5674,
+"t": 189.133,
+"kind": "pop_tick",
+"gain": -10,
+"note": "equation term"
+},
+{
+"scene": "S6",
+"f": 5704,
+"t": 190.133,
+"kind": "pop_tick",
+"gain": -10,
+"note": "equation term"
+},
+{
+"scene": "S6",
+"f": 5728,
+"t": 190.933,
+"kind": "pop_tick",
+"gain": -10,
+"note": "equation term"
+},
+{
+"scene": "S6",
+"f": 5757,
+"t": 191.9,
+"kind": "machine_clunk",
+"gain": -6,
+"note": "the score window settles at 4"
+},
+{
+"scene": "S6",
+"f": 5760,
+"t": 192.0,
+"kind": "crowd_aww",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5760,
+"t": 192.0,
+"kind": "pop_tick",
+"gain": -9,
+"note": "the trophy opens its eyes"
+},
+{
+"scene": "S6",
+"f": 5772,
+"t": 192.4,
+"kind": "chip_pop",
+"gain": -3,
+"note": "feet sprout (boing)"
+},
+{
+"scene": "S6",
+"f": 5788,
+"t": 192.933,
+"kind": "trophy_clink",
+"gain": -8,
+"note": "hops down to the stage"
+},
+{
+"scene": "S6",
+"f": 5788,
+"t": 192.933,
+"kind": "trophy_steps",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5816,
+"t": 193.867,
+"kind": "trophy_clink",
+"gain": 0,
+"note": "lands on the honest podium"
+},
+{
+"scene": "S6",
+"f": 5818,
+"t": 193.933,
+"kind": "ding_right",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5819,
+"t": 193.967,
+"kind": "crowd_cheer",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S6",
+"f": 5826,
+"t": 194.2,
+"kind": "glint",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5874,
+"t": 195.8,
+"kind": "marker_sweep",
+"gain": -5,
+"note": "teal underlines under the four authors"
+},
+{
+"scene": "S7",
+"f": 5880,
+"t": 196.0,
+"kind": "marker_sweep",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5889,
+"t": 196.3,
+"kind": "tape_rip",
+"gain": -8,
+"note": "the header page is peeled up"
+},
+{
+"scene": "S7",
+"f": 5890,
+"t": 196.333,
+"kind": "paper_lift",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5893,
+"t": 196.433,
+"kind": "paper_swish",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5896,
+"t": 196.533,
+"kind": "paper_slide",
+"gain": -10,
+"note": "citation tag slides out from under the sheet"
+},
+{
+"scene": "S7",
+"f": 5909,
+"t": 196.967,
+"kind": "card_slide",
+"gain": -5,
+"note": "the rail slides out from behind the sheet"
+},
+{
+"scene": "S7",
+"f": 5911,
+"t": 197.033,
+"kind": "prob_tick",
+"gain": -10,
+"note": "slots light 1\u202610 as the scan runs down the rows"
+},
+{
+"scene": "S7",
+"f": 5913,
+"t": 197.1,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5915,
+"t": 197.167,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5917,
+"t": 197.233,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5919,
+"t": 197.3,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5921,
+"t": 197.367,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5923,
+"t": 197.433,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5925,
+"t": 197.5,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5927,
+"t": 197.567,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5929,
+"t": 197.633,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5931,
+"t": 197.7,
+"kind": "chip_pop",
+"gain": -4,
+"note": "\"10\" badge"
+},
+{
+"scene": "S7",
+"f": 5953,
+"t": 198.433,
+"kind": "marker_sweep",
+"gain": -4,
+"note": "mid-2025 in the citation"
+},
+{
+"scene": "S7",
+"f": 5978,
+"t": 199.267,
+"kind": "card_flick",
+"gain": -5,
+"note": "date flap flips on the tally panel"
+},
+{
+"scene": "S7",
+"f": 5983,
+"t": 199.433,
+"kind": "score_flip",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5985,
+"t": 199.5,
+"kind": "score_flip",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5988,
+"t": 199.6,
+"kind": "score_flip",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5990,
+"t": 199.667,
+"kind": "score_flip",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5992,
+"t": 199.733,
+"kind": "thud_soft",
+"gain": -10,
+"note": "WildBench: dashed slot, the drum holds"
+},
+{
+"scene": "S7",
+"f": 5995,
+"t": 199.833,
+"kind": "score_flip",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5997,
+"t": 199.9,
+"kind": "score_flip",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 5999,
+"t": 199.967,
+"kind": "score_flip",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6002,
+"t": 200.067,
+"kind": "score_flip",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6004,
+"t": 200.133,
+"kind": "score_flip",
+"gain": 0,
+"note": "the ninth tick lands on \"Nine\""
+},
+{
+"scene": "S7",
+"f": 6016,
+"t": 200.533,
+"kind": "pop_tick",
+"gain": -8,
+"note": "graded strictly"
+},
+{
+"scene": "S7",
+"f": 6029,
+"t": 200.967,
+"kind": "marker_sweep",
+"gain": -4,
+"note": "\"strict correct/incorrect\" in the caption"
+},
+{
+"scene": "S7",
+"f": 6044,
+"t": 201.467,
+"kind": "pop_tick",
+"gain": -8,
+"note": "right or wrong"
+},
+{
+"scene": "S7",
+"f": 6058,
+"t": 201.933,
+"kind": "marker_circle",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6064,
+"t": 202.133,
+"kind": "paper_slide",
+"gain": -7,
+"note": "WildBench tag slides out of the rail"
+},
+{
+"scene": "S7",
+"f": 6083,
+"t": 202.767,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6086,
+"t": 202.867,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6089,
+"t": 202.967,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6092,
+"t": 203.067,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6095,
+"t": 203.167,
+"kind": "marker_circle",
+"gain": -8,
+"note": "Partial ringed"
+},
+{
+"scene": "S7",
+"f": 6098,
+"t": 203.267,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6101,
+"t": 203.367,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6104,
+"t": 203.467,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6107,
+"t": 203.567,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6110,
+"t": 203.667,
+"kind": "prob_tick",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6122,
+"t": 204.067,
+"kind": "card_flick",
+"gain": 0,
+"note": "S6 rule card flips to \u201cI don\u2019t know\u201d"
+},
+{
+"scene": "S7",
+"f": 6133,
+"t": 204.433,
+"kind": "score_flip",
+"gain": -2,
+"note": "its 0 drops in"
+},
+{
+"scene": "S7",
+"f": 6182,
+"t": 206.067,
+"kind": "thud_soft",
+"gain": -2,
+"note": "leaderboard rises into place"
+},
+{
+"scene": "S7",
+"f": 6186,
+"t": 206.2,
+"kind": "prob_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6191,
+"t": 206.367,
+"kind": "prob_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6196,
+"t": 206.533,
+"kind": "prob_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6200,
+"t": 206.667,
+"kind": "card_slide",
+"gain": -6,
+"note": "rows re-sort into rank order"
+},
+{
+"scene": "S7",
+"f": 6209,
+"t": 206.967,
+"kind": "pop_tick",
+"gain": -4,
+"note": "#1 #2 #3"
+},
+{
+"scene": "S7",
+"f": 6211,
+"t": 207.033,
+"kind": "pop_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6213,
+"t": 207.1,
+"kind": "pop_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6211,
+"t": 207.033,
+"kind": "marker_sweep",
+"gain": -6,
+"note": "coral line from the IDK column to #1"
+},
+{
+"scene": "S7",
+"f": 6246,
+"t": 208.2,
+"kind": "trophy_clink",
+"gain": 0,
+"note": "the trophy lands on \"pays.\""
+},
+{
+"scene": "S7",
+"f": 6256,
+"t": 208.533,
+"kind": "chip_pop",
+"gain": -3,
+"note": "guessing pays"
+},
+{
+"scene": "S7",
+"f": 6264,
+"t": 208.8,
+"kind": "glint",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6271,
+"t": 209.033,
+"kind": "paper_slide",
+"gain": -6,
+"note": "the honest note slides up"
+},
+{
+"scene": "S7",
+"f": 6284,
+"t": 209.467,
+"kind": "tape_rip",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6288,
+"t": 209.6,
+"kind": "tape_rip",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6316,
+"t": 210.533,
+"kind": "marker_sweep",
+"gain": -12,
+"note": "not the whole story"
+},
+{
+"scene": "S7",
+"f": 6358,
+"t": 211.933,
+"kind": "marker_sweep",
+"gain": -11,
+"note": "one pulse runs the chain"
+},
+{
+"scene": "S7",
+"f": 6381,
+"t": 212.7,
+"kind": "glint",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S7",
+"f": 6383,
+"t": 212.767,
+"kind": "chip_pop",
+"gain": -4,
+"note": "But a simple one."
+},
+{
+"scene": "S7",
+"f": 6409,
+"t": 213.633,
+"kind": "paper_swish",
+"gain": -12,
+"note": "short paper wipe to S8"
+},
+{
+"scene": "S8",
+"f": 6408,
+"t": 213.6,
+"kind": "amb_machine",
+"gain": 0,
+"note": "machine-room tone under the whole scene"
+},
+{
+"scene": "S8",
+"f": 6408,
+"t": 213.6,
+"kind": "machine_hum",
+"gain": -12,
+"note": "ASSEMBLY hums at HIGH until the turn-down"
+},
+{
+"scene": "S8",
+"f": 6663,
+"t": 222.1,
+"kind": "machine_hum",
+"gain": -16,
+"note": "calmer, lower hum after LOW"
+},
+{
+"scene": "S8",
+"f": 6441,
+"t": 214.7,
+"kind": "prob_tick",
+"gain": -16,
+"note": "needle twitch at HIGH"
+},
+{
+"scene": "S8",
+"f": 6425,
+"t": 214.167,
+"kind": "hanger_click",
+"gain": 0,
+"note": "the sign catches on its strings"
+},
+{
+"scene": "S8",
+"f": 6426,
+"t": 214.2,
+"kind": "paper_flap",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S8",
+"f": 6447,
+"t": 214.9,
+"kind": "indicator_no",
+"gain": -12,
+"note": "the shut booth blinks once"
+},
+{
+"scene": "S8",
+"f": 6448,
+"t": 214.933,
+"kind": "machine_clunk",
+"gain": -16,
+"note": "shutter rattle"
+},
+{
+"scene": "S8",
+"f": 6458,
+"t": 215.267,
+"kind": "paper_swish",
+"gain": -10,
+"note": "the sign is hauled up"
+},
+{
+"scene": "S8",
+"f": 6469,
+"t": 215.633,
+"kind": "conveyor_run",
+"gain": -8,
+"note": "cart rolling in (starts off-frame)"
+},
+{
+"scene": "S8",
+"f": 6488,
+"t": 216.267,
+"kind": "pop_tick",
+"gain": -13,
+"note": "rail joint"
+},
+{
+"scene": "S8",
+"f": 6495,
+"t": 216.5,
+"kind": "pop_tick",
+"gain": -13,
+"note": "rail joint"
+},
+{
+"scene": "S8",
+"f": 6506,
+"t": 216.867,
+"kind": "pop_tick",
+"gain": -13,
+"note": "rail joint"
+},
+{
+"scene": "S8",
+"f": 6493,
+"t": 216.433,
+"kind": "indicator_yes",
+"gain": -12,
+"note": "booth lamp blinks teal"
+},
+{
+"scene": "S8",
+"f": 6501,
+"t": 216.7,
+"kind": "indicator_yes",
+"gain": -12,
+"note": "booth lamp blinks teal"
+},
+{
+"scene": "S8",
+"f": 6509,
+"t": 216.967,
+"kind": "indicator_yes",
+"gain": -12,
+"note": "booth lamp blinks teal"
+},
+{
+"scene": "S8",
+"f": 6515,
+"t": 217.167,
+"kind": "machine_clunk",
+"gain": 0,
+"note": "cart bumps the dock"
+},
+{
+"scene": "S8",
+"f": 6516,
+"t": 217.2,
+"kind": "paper_flap",
+"gain": -9,
+"note": "the record rattles"
+},
+{
+"scene": "S8",
+"f": 6521,
+"t": 217.367,
+"kind": "conveyor_clunk",
+"gain": -6,
+"note": "shutter ratchet"
+},
+{
+"scene": "S8",
+"f": 6525,
+"t": 217.5,
+"kind": "conveyor_clunk",
+"gain": -6,
+"note": "shutter ratchet"
+},
+{
+"scene": "S8",
+"f": 6529,
+"t": 217.633,
+"kind": "conveyor_clunk",
+"gain": -6,
+"note": "shutter ratchet"
+},
+{
+"scene": "S8",
+"f": 6532,
+"t": 217.733,
+"kind": "machine_clunk",
+"gain": -5,
+"note": "shutter clacks home"
+},
+{
+"scene": "S8",
+"f": 6534,
+"t": 217.8,
+"kind": "paper_slide",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S8",
+"f": 6545,
+"t": 218.167,
+"kind": "thud_soft",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S8",
+"f": 6548,
+"t": 218.267,
+"kind": "conveyor_run",
+"gain": -12,
+"note": "empty cart rolls away"
+},
+{
+"scene": "S8",
+"f": 6548,
+"t": 218.267,
+"kind": "chip_pop",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S8",
+"f": 6551,
+"t": 218.367,
+"kind": "marker_circle",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S8",
+"f": 6589,
+"t": 219.633,
+"kind": "pop_tick",
+"gain": -9,
+"note": "thought puffs"
+},
+{
+"scene": "S8",
+"f": 6593,
+"t": 219.767,
+"kind": "pop_tick",
+"gain": -9,
+"note": "thought puffs"
+},
+{
+"scene": "S8",
+"f": 6596,
+"t": 219.867,
+"kind": "chip_pop",
+"gain": -5,
+"note": "bubble opens"
+},
+{
+"scene": "S8",
+"f": 6598,
+"t": 219.933,
+"kind": "pencil_tap",
+"gain": -8,
+"note": "steps write on"
+},
+{
+"scene": "S8",
+"f": 6603,
+"t": 220.1,
+"kind": "pencil_tap",
+"gain": -8,
+"note": "steps write on"
+},
+{
+"scene": "S8",
+"f": 6608,
+"t": 220.267,
+"kind": "pencil_tap",
+"gain": -8,
+"note": "steps write on"
+},
+{
+"scene": "S8",
+"f": 6614,
+"t": 220.467,
+"kind": "card_flick",
+"gain": 0,
+"note": "\"helps sometimes\" flips in"
+},
+{
+"scene": "S8",
+"f": 6620,
+"t": 220.667,
+"kind": "indicator_no",
+"gain": -11,
+"note": "two-note \"hmm\""
+},
+{
+"scene": "S8",
+"f": 6625,
+"t": 220.833,
+"kind": "indicator_no",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S8",
+"f": 6632,
+"t": 221.067,
+"kind": "pop_tick",
+"gain": -10,
+"note": "bubble folds into the \"\u2026\""
+},
+{
+"scene": "S8",
+"f": 6632,
+"t": 221.067,
+"kind": "prob_tick",
+"gain": -15,
+"note": "last twitches"
+},
+{
+"scene": "S8",
+"f": 6641,
+"t": 221.367,
+"kind": "prob_tick",
+"gain": -15,
+"note": "last twitches"
+},
+{
+"scene": "S8",
+"f": 6648,
+"t": 221.6,
+"kind": "pop_tick",
+"gain": -8,
+"note": "knob counter-turn"
+},
+{
+"scene": "S8",
+"f": 6651,
+"t": 221.7,
+"kind": "prob_tick",
+"gain": -4,
+"note": "ratchet click"
+},
+{
+"scene": "S8",
+"f": 6655,
+"t": 221.833,
+"kind": "prob_tick",
+"gain": -4,
+"note": "ratchet click"
+},
+{
+"scene": "S8",
+"f": 6659,
+"t": 221.967,
+"kind": "prob_tick",
+"gain": -4,
+"note": "ratchet click"
+},
+{
+"scene": "S8",
+"f": 6663,
+"t": 222.1,
+"kind": "machine_clunk",
+"gain": -4,
+"note": "final detent at LOW"
+},
+{
+"scene": "S8",
+"f": 6669,
+"t": 222.3,
+"kind": "stamp_light",
+"gain": -8,
+"note": "\"turned down\""
+},
+{
+"scene": "S8",
+"f": 6674,
+"t": 222.467,
+"kind": "indicator_yes",
+"gain": -10,
+"note": "tunnel lamp"
+},
+{
+"scene": "S8",
+"f": 6678,
+"t": 222.6,
+"kind": "printer_feed",
+"gain": -3,
+"note": "identical print (same pitch each time)"
+},
+{
+"scene": "S8",
+"f": 6687,
+"t": 222.9,
+"kind": "conveyor_clunk",
+"gain": -5,
+"note": "belt indexes"
+},
+{
+"scene": "S8",
+"f": 6691,
+"t": 223.033,
+"kind": "printer_feed",
+"gain": -3,
+"note": "identical print (same pitch each time)"
+},
+{
+"scene": "S8",
+"f": 6700,
+"t": 223.333,
+"kind": "conveyor_clunk",
+"gain": -5,
+"note": "belt indexes"
+},
+{
+"scene": "S8",
+"f": 6704,
+"t": 223.467,
+"kind": "printer_feed",
+"gain": -3,
+"note": "identical print (same pitch each time)"
+},
+{
+"scene": "S8",
+"f": 6713,
+"t": 223.767,
+"kind": "conveyor_clunk",
+"gain": -5,
+"note": "belt indexes"
+},
+{
+"scene": "S8",
+"f": 6715,
+"t": 223.833,
+"kind": "marker_sweep",
+"gain": 0,
+"note": "one sweep across all three titles"
+},
+{
+"scene": "S8",
+"f": 6723,
+"t": 224.1,
+"kind": "marker_sweep",
+"gain": -6,
+"note": "the same year, three times"
+},
+{
+"scene": "S8",
+"f": 6719,
+"t": 223.967,
+"kind": "pop_tick",
+"gain": -6,
+"note": "="
+},
+{
+"scene": "S8",
+"f": 6725,
+"t": 224.167,
+"kind": "pop_tick",
+"gain": -6,
+"note": "="
+},
+{
+"scene": "S8",
+"f": 6734,
+"t": 224.467,
+"kind": "hanger_click",
+"gain": -2,
+"note": "verdict plate flips down"
+},
+{
+"scene": "S8",
+"f": 6756,
+"t": 225.2,
+"kind": "stamp_light",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S8",
+"f": 6762,
+"t": 225.4,
+"kind": "stamp_light",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S8",
+"f": 6768,
+"t": 225.6,
+"kind": "stamp_heavy",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S8",
+"f": 6791,
+"t": 226.367,
+"kind": "glint",
+"gain": -10,
+"note": "the three helps answer"
+},
+{
+"scene": "S8",
+"f": 6794,
+"t": 226.467,
+"kind": "glint",
+"gain": -10,
+"note": "the three helps answer"
+},
+{
+"scene": "S8",
+"f": 6797,
+"t": 226.567,
+"kind": "glint",
+"gain": -10,
+"note": "the three helps answer"
+},
+{
+"scene": "S8",
+"f": 6804,
+"t": 226.8,
+"kind": "stamp_heavy",
+"gain": 2,
+"note": "NO GUARANTEE"
+},
+{
+"scene": "S8",
+"f": 6805,
+"t": 226.833,
+"kind": "machine_clunk",
+"gain": -8,
+"note": "the room rattles"
+},
+{
+"scene": "S8",
+"f": 6806,
+"t": 226.867,
+"kind": "paper_flap",
+"gain": -10,
+"note": "slips flutter"
+},
+{
+"scene": "S8",
+"f": 6814,
+"t": 227.133,
+"kind": "whoosh_soft",
+"gain": -14,
+"note": "push toward the booth, into the wipe"
+},
+{
+"scene": "S9",
+"f": 6822,
+"t": 227.4,
+"kind": "amb_machine",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 6872,
+"t": 229.067,
+"kind": "hanger_click",
+"gain": -10,
+"note": "hand closes on the lever knob"
+},
+{
+"scene": "S9",
+"f": 6894,
+"t": 229.8,
+"kind": "machine_clunk",
+"gain": 2,
+"note": "start lever bottoms out"
+},
+{
+"scene": "S9",
+"f": 6895,
+"t": 229.833,
+"kind": "machine_hum",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 6895,
+"t": 229.833,
+"kind": "pop_tick",
+"gain": -14,
+"note": "name plate flickers on"
+},
+{
+"scene": "S9",
+"f": 6899,
+"t": 229.967,
+"kind": "pop_tick",
+"gain": -16,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 6898,
+"t": 229.933,
+"kind": "conveyor_run",
+"gain": -16,
+"note": "belt idles"
+},
+{
+"scene": "S9",
+"f": 6933,
+"t": 231.1,
+"kind": "pop_tick",
+"gain": -6,
+"note": "badge \u2460 lights"
+},
+{
+"scene": "S9",
+"f": 6939,
+"t": 231.3,
+"kind": "pop_tick",
+"gain": -6,
+"note": "badge \u2461 lights"
+},
+{
+"scene": "S9",
+"f": 6947,
+"t": 231.567,
+"kind": "hanger_click",
+"gain": 0,
+"note": "question \u2460 swings down"
+},
+{
+"scene": "S9",
+"f": 6963,
+"t": 232.1,
+"kind": "drawer_open",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 6975,
+"t": 232.5,
+"kind": "drawer_close",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7000,
+"t": 233.333,
+"kind": "hanger_click",
+"gain": 0,
+"note": "question \u2461 swings down"
+},
+{
+"scene": "S9",
+"f": 7008,
+"t": 233.6,
+"kind": "marker_sweep",
+"gain": -8,
+"note": "\"actually\" underlined on the sign"
+},
+{
+"scene": "S9",
+"f": 7016,
+"t": 233.867,
+"kind": "scanner_sweep",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7054,
+"t": 235.133,
+"kind": "paper_lift",
+"gain": -4,
+"note": "the checker lifts the ChatGPT slip"
+},
+{
+"scene": "S9",
+"f": 7090,
+"t": 236.333,
+"kind": "paper_slide",
+"gain": -4,
+"note": "slid onto the belt"
+},
+{
+"scene": "S9",
+"f": 7096,
+"t": 236.533,
+"kind": "conveyor_run",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7116,
+"t": 237.2,
+"kind": "conveyor_clunk",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7118,
+"t": 237.267,
+"kind": "scanner_sweep",
+"gain": -6,
+"note": "gate \u2460 reads the citation"
+},
+{
+"scene": "S9",
+"f": 7120,
+"t": 237.333,
+"kind": "pop_tick",
+"gain": -10,
+"note": "searching the archive"
+},
+{
+"scene": "S9",
+"f": 7124,
+"t": 237.467,
+"kind": "pop_tick",
+"gain": -10,
+"note": "searching the archive"
+},
+{
+"scene": "S9",
+"f": 7128,
+"t": 237.6,
+"kind": "printer_feed",
+"gain": 0,
+"note": "the real record is fed out of the slot"
+},
+{
+"scene": "S9",
+"f": 7141,
+"t": 238.033,
+"kind": "paper_slap",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7157,
+"t": 238.567,
+"kind": "marker_circle",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7168,
+"t": 238.933,
+"kind": "marker_circle",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7203,
+"t": 240.1,
+"kind": "indicator_yes",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7212,
+"t": 240.4,
+"kind": "conveyor_run",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7244,
+"t": 241.467,
+"kind": "conveyor_clunk",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7246,
+"t": 241.533,
+"kind": "scanner_sweep",
+"gain": -10,
+"note": "gate \u2461 reads the slip"
+},
+{
+"scene": "S9",
+"f": 7250,
+"t": 241.667,
+"kind": "pop_tick",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7272,
+"t": 242.4,
+"kind": "pop_tick",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7284,
+"t": 242.8,
+"kind": "pop_tick",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7307,
+"t": 243.567,
+"kind": "pop_tick",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7345,
+"t": 244.833,
+"kind": "indicator_no",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7368,
+"t": 245.6,
+"kind": "scanner_sweep",
+"gain": -10,
+"note": "gate \u2461 reads the record"
+},
+{
+"scene": "S9",
+"f": 7382,
+"t": 246.067,
+"kind": "marker_sweep",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7413,
+"t": 247.1,
+"kind": "marker_sweep",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7428,
+"t": 247.6,
+"kind": "marker_sweep",
+"gain": -9,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7449,
+"t": 248.3,
+"kind": "marker_sweep",
+"gain": 0,
+"note": "2001 highlighted"
+},
+{
+"scene": "S9",
+"f": 7490,
+"t": 249.667,
+"kind": "machine_clunk",
+"gain": -8,
+"note": "verdict window flips: Source exists"
+},
+{
+"scene": "S9",
+"f": 7494,
+"t": 249.8,
+"kind": "indicator_yes",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7522,
+"t": 250.733,
+"kind": "claim_fails",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7556,
+"t": 251.867,
+"kind": "whoosh_soft",
+"gain": -14,
+"note": "the checking hand rises into frame"
+},
+{
+"scene": "S9",
+"f": 7575,
+"t": 252.5,
+"kind": "stamp_heavy",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S9",
+"f": 7584,
+"t": 252.8,
+"kind": "paper_lift",
+"gain": -2,
+"note": "the stamped slip lifts toward camera (into S10)"
+},
+{
+"scene": "S10",
+"f": 7596,
+"t": 253.2,
+"kind": "amb_counter",
+"gain": -4,
+"note": "low room tone; ends under the set strike"
+},
+{
+"scene": "S10",
+"f": 7616,
+"t": 253.867,
+"kind": "paper_slap",
+"gain": -6,
+"note": "the failed slip settles back on the counter at window 1"
+},
+{
+"scene": "S10",
+"f": 7619,
+"t": 253.967,
+"kind": "paper_flap",
+"gain": -6,
+"note": "the question ticket drops"
+},
+{
+"scene": "S10",
+"f": 7627,
+"t": 254.233,
+"kind": "hanger_click",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7627,
+"t": 254.233,
+"kind": "typewriter_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7634,
+"t": 254.467,
+"kind": "typewriter_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7648,
+"t": 254.933,
+"kind": "typewriter_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7654,
+"t": 255.133,
+"kind": "typewriter_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7673,
+"t": 255.767,
+"kind": "typewriter_tick",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7657,
+"t": 255.233,
+"kind": "glint",
+"gain": -12,
+"note": "\"confidently\" swells"
+},
+{
+"scene": "S10",
+"f": 7680,
+"t": 256.0,
+"kind": "pencil_tap",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7693,
+"t": 256.433,
+"kind": "paper_swish",
+"gain": -12,
+"note": "ticket hoisted on its strings"
+},
+{
+"scene": "S10",
+"f": 7713,
+"t": 257.1,
+"kind": "thud_soft",
+"gain": -3,
+"note": "SOUNDING RIGHT board lands"
+},
+{
+"scene": "S10",
+"f": 7751,
+"t": 258.367,
+"kind": "marker_sweep",
+"gain": -8,
+"note": "patterns in language highlighted"
+},
+{
+"scene": "S10",
+"f": 7773,
+"t": 259.1,
+"kind": "token_lock",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7778,
+"t": 259.267,
+"kind": "token_lock",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7783,
+"t": 259.433,
+"kind": "token_lock",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7788,
+"t": 259.6,
+"kind": "token_lock",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7809,
+"t": 260.3,
+"kind": "thud_soft",
+"gain": 2,
+"note": "BEING RIGHT board lands, heavier"
+},
+{
+"scene": "S10",
+"f": 7827,
+"t": 260.9,
+"kind": "marker_sweep",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7834,
+"t": 261.133,
+"kind": "paper_slap",
+"gain": -8,
+"note": "thesis title page pinned to the board"
+},
+{
+"scene": "S10",
+"f": 7839,
+"t": 261.3,
+"kind": "chip_pop",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7874,
+"t": 262.467,
+"kind": "marker_sweep",
+"gain": -1,
+"note": "teal verdict line under BEING RIGHT"
+},
+{
+"scene": "S10",
+"f": 7899,
+"t": 263.3,
+"kind": "paper_swish",
+"gain": -13,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7903,
+"t": 263.433,
+"kind": "paper_swish",
+"gain": -14,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7920,
+"t": 264.0,
+"kind": "paper_slide",
+"gain": -4,
+"note": "A pushes his slip forward: an answer"
+},
+{
+"scene": "S10",
+"f": 7963,
+"t": 265.433,
+"kind": "card_flick",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 7990,
+"t": 266.333,
+"kind": "marker_sweep",
+"gain": 2,
+"note": "the old question struck through"
+},
+{
+"scene": "S10",
+"f": 8011,
+"t": 267.033,
+"kind": "card_flick",
+"gain": 0,
+"note": "the card flips to \u2460 What\u2019s the evidence?"
+},
+{
+"scene": "S10",
+"f": 8028,
+"t": 267.6,
+"kind": "pop_tick",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8068,
+"t": 268.933,
+"kind": "card_flick",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8077,
+"t": 269.233,
+"kind": "marker_sweep",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8101,
+"t": 270.033,
+"kind": "marker_circle",
+"gain": -2,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8103,
+"t": 270.1,
+"kind": "marker_sweep",
+"gain": -7,
+"note": "leader to the slip"
+},
+{
+"scene": "S10",
+"f": 8111,
+"t": 270.367,
+"kind": "glint",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8128,
+"t": 270.933,
+"kind": "paper_swish",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8139,
+"t": 271.3,
+"kind": "thud_soft",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8156,
+"t": 271.867,
+"kind": "paper_slide",
+"gain": -5,
+"note": "A takes his slip back"
+},
+{
+"scene": "S10",
+"f": 8171,
+"t": 272.367,
+"kind": "thud_soft",
+"gain": -14,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8165,
+"t": 272.167,
+"kind": "pencil_tap",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8165,
+"t": 272.167,
+"kind": "thud_soft",
+"gain": -13,
+"note": "footsteps (no footstep kind)"
+},
+{
+"scene": "S10",
+"f": 8172,
+"t": 272.4,
+"kind": "thud_soft",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8179,
+"t": 272.633,
+"kind": "thud_soft",
+"gain": -11,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8186,
+"t": 272.867,
+"kind": "thud_soft",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8174,
+"t": 272.467,
+"kind": "thud_soft",
+"gain": -16,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8182,
+"t": 272.733,
+"kind": "thud_soft",
+"gain": -16,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8188,
+"t": 272.933,
+"kind": "paper_lift",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8193,
+"t": 273.1,
+"kind": "paper_slide",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8198,
+"t": 273.267,
+"kind": "paper_slap",
+"gain": -3,
+"note": "the person slaps their slip down"
+},
+{
+"scene": "S10",
+"f": 8200,
+"t": 273.333,
+"kind": "whoosh_soft",
+"gain": -12,
+"note": "the checking hand rises into frame"
+},
+{
+"scene": "S10",
+"f": 8221,
+"t": 274.033,
+"kind": "stamp_heavy",
+"gain": 0,
+"note": "SOURCE?"
+},
+{
+"scene": "S10",
+"f": 8221,
+"t": 274.033,
+"kind": "gavel",
+"gain": -6,
+"note": "the verdict (layered under the stamp)"
+},
+{
+"scene": "S10",
+"f": 8233,
+"t": 274.433,
+"kind": "paper_flap",
+"gain": -12,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8232,
+"t": 274.4,
+"kind": "whoosh_soft",
+"gain": -16,
+"note": "the hand swings away"
+},
+{
+"scene": "S10",
+"f": 8254,
+"t": 275.133,
+"kind": "whoosh_soft",
+"gain": -12,
+"note": "the counter set sinks away"
+},
+{
+"scene": "S10",
+"f": 8255,
+"t": 275.167,
+"kind": "hanger_click",
+"gain": -5,
+"note": "ANSWERS sign hoisted"
+},
+{
+"scene": "S10",
+"f": 8271,
+"t": 275.7,
+"kind": "pop_tick",
+"gain": -4,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8283,
+"t": 276.1,
+"kind": "pop_tick",
+"gain": -3,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8292,
+"t": 276.4,
+"kind": "logo_hit",
+"gain": 0,
+"note": "wordmark lands"
+},
+{
+"scene": "S10",
+"f": 8315,
+"t": 277.167,
+"kind": "whoosh_soft",
+"gain": -10,
+"note": "\"AI moves fast\" whips in"
+},
+{
+"scene": "S10",
+"f": 8364,
+"t": 278.8,
+"kind": "thud_soft",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8372,
+"t": 279.067,
+"kind": "marker_sweep",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8405,
+"t": 280.167,
+"kind": "chip_pop",
+"gain": 0,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8425,
+"t": 280.833,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8431,
+"t": 281.033,
+"kind": "pop_tick",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8464,
+"t": 282.133,
+"kind": "chip_pop",
+"gain": 1,
+"note": "Subscribe"
+},
+{
+"scene": "S10",
+"f": 8494,
+"t": 283.133,
+"kind": "thud_soft",
+"gain": -15,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8502,
+"t": 283.4,
+"kind": "thud_soft",
+"gain": -15,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8510,
+"t": 283.667,
+"kind": "thud_soft",
+"gain": -15,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8520,
+"t": 284.0,
+"kind": "pencil_tap",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8527,
+"t": 284.233,
+"kind": "pencil_tap",
+"gain": -8,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8527,
+"t": 284.233,
+"kind": "marker_sweep",
+"gain": -5,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8571,
+"t": 285.7,
+"kind": "chip_pop",
+"gain": -10,
+"note": ""
+},
+{
+"scene": "S10",
+"f": 8599,
+"t": 286.633,
+"kind": "pop_tick",
+"gain": -12,
+"note": "GOT wobbles"
 }
 ]

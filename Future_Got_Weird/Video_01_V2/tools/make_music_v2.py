@@ -322,8 +322,8 @@ def peaking(x, f0, gain_db, q=1.0):
 
 def section_gain(P, n):
     """Overall level per section (dB), smoothed: explanation and evidence sit lower than the hook, show and payoff."""
-    lvl = {'hook': -1.0, 'title': -3.0, 'apparatus': -5.0, 'library': -5.0, 'evidence': -4.5, 'show': -2.0, 'helps': -4.5,
-           'verify': -3.5, 'payoff': -2.5, 'end': -1.5}
+    lvl = {'hook': -1.0, 'title': -3.0, 'apparatus': -5.0, 'library': -5.0, 'evidence': -1.5, 'show': -2.0, 'helps': -3.0,
+           'verify': -1.0, 'payoff': -2.5, 'end': -1.5}
     g = np.zeros(n)
     for b, sec in enumerate(P['bars']):
         a = int(b * BAR * SR)
