@@ -1,0 +1,101 @@
+{
+ "part_bytes": 25165824,
+ "files": [
+  {
+   "name": "Future_Got_Weird_Video_01_V3_1080p_REVIEW.mp4",
+   "bytes": 121900939,
+   "sha256": "386161f5eac09883ab63c3bada04de30a33a5d13b5831060d1826750fb524ef5",
+   "parts": [
+    {
+     "name": "Future_Got_Weird_Video_01_V3_1080p_REVIEW.mp4.part001",
+     "bytes": 25165824,
+     "sha256": "d4af5ba964dd38e02cd33beabb65a4ae6d2e3bc885855bae0a85fbf0c8ea180b"
+    },
+    {
+     "name": "Future_Got_Weird_Video_01_V3_1080p_REVIEW.mp4.part002",
+     "bytes": 25165824,
+     "sha256": "5a65661f087cdf42e067ec3e9aa4e653e5f4c715d9ab57a68f35233e85447d66"
+    },
+    {
+     "name": "Future_Got_Weird_Video_01_V3_1080p_REVIEW.mp4.part003",
+     "bytes": 25165824,
+     "sha256": "6343ed576bac8a7743eebd3490f42c9d2df4127d637a789542aca913570bb21f"
+    },
+    {
+     "name": "Future_Got_Weird_Video_01_V3_1080p_REVIEW.mp4.part004",
+     "bytes": 25165824,
+     "sha256": "35caa5a69a43e845e5c15fffb573e1f21dfb9ef88f06ae4d45762600bd0661a6"
+    },
+    {
+     "name": "Future_Got_Weird_Video_01_V3_1080p_REVIEW.mp4.part005",
+     "bytes": 21237643,
+     "sha256": "f1e225889ea134517bab305f3a4a03519afa296bd8eaeb62f673e8e36cf62719"
+    }
+   ]
+  },
+  {
+   "name": "Future_Got_Weird_Video_01_V3_1080p_REVIEW_chat.mp4",
+   "bytes": 28681998,
+   "sha256": "c40f92067e667c09411ad3d82d016cd9b5657b269a000b26d3ddd6825948ed41",
+   "parts": [
+    {
+     "name": "Future_Got_Weird_Video_01_V3_1080p_REVIEW_chat.mp4.part001",
+     "bytes": 25165824,
+     "sha256": "b3a55fce3aaef75f41a575f74b5d8ee4bea7ba06a4d99193a1c7b864a1cbcbe1"
+    },
+    {
+     "name": "Future_Got_Weird_Video_01_V3_1080p_REVIEW_chat.mp4.part002",
+     "bytes": 3516174,
+     "sha256": "ac461a81a45c68e9411cbb0b24ca2a7ec20b1f8e0f3457061964839d91e37447"
+    }
+   ]
+  },
+  {
+   "name": "v3_audio.tar",
+   "bytes": 196167680,
+   "sha256": "0c23a2c78f016cca4af18edd2bfcf8a544c7ad2be022bfe235503acbf96f0800",
+   "parts": [
+    {
+     "name": "v3_audio.tar.part001",
+     "bytes": 25165824,
+     "sha256": "f28abc883be3d5cc49f2cb77c9184b1b7be4d447301199feff3fee3643fcae97"
+    },
+    {
+     "name": "v3_audio.tar.part002",
+     "bytes": 25165824,
+     "sha256": "cfe2b0518603e079492bdcca2f098da24defec5ade59b9351b1a96a65e77cd04"
+    },
+    {
+     "name": "v3_audio.tar.part003",
+     "bytes": 25165824,
+     "sha256": "3189a89535ad7dd69ee9bcc7fc95b532b18907aa661e3c9a029146cee77bd74c"
+    },
+    {
+     "name": "v3_audio.tar.part004",
+     "bytes": 25165824,
+     "sha256": "194f923cd2c39e45886b55aa8f585ce3c72c4292f98c5924e2ed6fa8ca02070b"
+    },
+    {
+     "name": "v3_audio.tar.part005",
+     "bytes": 25165824,
+     "sha256": "cf61971332e8a6cc92fc28d7b69ddf4fd9c0ee614fe928b8af8bbb65d5742688"
+    },
+    {
+     "name": "v3_audio.tar.part006",
+     "bytes": 25165824,
+     "sha256": "148e2517bb269aa8a4fb66c621ba5cc3bfe9fb07b940433208036bdc99e41881"
+    },
+    {
+     "name": "v3_audio.tar.part007",
+     "bytes": 25165824,
+     "sha256": "87120206003f39c6d377eea8bf2adba56da0d9a620a03d2eaa3229ddaed0ac69"
+    },
+    {
+     "name": "v3_audio.tar.part008",
+     "bytes": 20006912,
+     "sha256": "2c0db3257811a44404ff82e24c7d6609fc44f3ca6b0453d846717098b980dea8"
+    }
+   ]
+  }
+ ]
+}

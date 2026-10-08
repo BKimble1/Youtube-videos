@@ -3,8 +3,8 @@
  "format": {
   "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
   "duration": "288.235000",
-  "size": "121961898",
-  "bit_rate": "3385068"
+  "size": "121900939",
+  "bit_rate": "3383376"
  },
  "format_tags": {
   "major_brand": "isom",
@@ -29,7 +29,7 @@
   "avg_frame_rate": "30/1",
   "nb_frames": "8647",
   "duration": "288.233333",
-  "bit_rate": "3059104"
+  "bit_rate": "3057412"
  },
  "video_tags": {
   "language": "und",
