@@ -1,0 +1,38 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S9": {
+   "seconds": 30.6,
+   "mean_energy": 0.918,
+   "still_seconds": 10.1,
+   "still_share": 0.329,
+   "longest_still_s": 5.33
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S9",
+   "from": 11785,
+   "to": 11825,
+   "seconds": 1.37,
+   "t": "6:32.8",
+   "spoken": "Weird: the strange future, explained."
+  },
+  {
+   "scene": "S9",
+   "from": 11828,
+   "to": 11987,
+   "seconds": 5.33,
+   "t": "6:34.3",
+   "spoken": "explained. Subscribe for more, and we'll see you around the corner."
+  },
+  {
+   "scene": "S9",
+   "from": 11989,
+   "to": 12089,
+   "seconds": 3.37,
+   "t": "6:39.6",
+   "spoken": ""
+  }
+ ]
+}

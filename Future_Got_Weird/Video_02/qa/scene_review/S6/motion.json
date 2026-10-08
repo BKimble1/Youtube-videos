@@ -1,0 +1,158 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S6": {
+   "seconds": 56.5,
+   "mean_energy": 0.836,
+   "still_seconds": 21.6,
+   "still_share": 0.383,
+   "longest_still_s": 1.63
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S6",
+   "from": 7105,
+   "to": 7138,
+   "seconds": 1.13,
+   "t": "3:56.8",
+   "spoken": "sensor. Then, in a study"
+  },
+  {
+   "scene": "S6",
+   "from": 7297,
+   "to": 7345,
+   "seconds": 1.63,
+   "t": "4:03.2",
+   "spoken": "time-of-flight sensors, often called LiDAR,"
+  },
+  {
+   "scene": "S6",
+   "from": 7350,
+   "to": 7389,
+   "seconds": 1.33,
+   "t": "4:05.0",
+   "spoken": "called LiDAR, found in phones and"
+  },
+  {
+   "scene": "S6",
+   "from": 7484,
+   "to": 7521,
+   "seconds": 1.27,
+   "t": "4:09.5",
+   "spoken": "yet: phone makers often keep the"
+  },
+  {
+   "scene": "S6",
+   "from": 7607,
+   "to": 7638,
+   "seconds": 1.07,
+   "t": "4:13.6",
+   "spoken": "are tough customers. Weak"
+  },
+  {
+   "scene": "S6",
+   "from": 7679,
+   "to": 7716,
+   "seconds": 1.27,
+   "t": "4:16.0",
+   "spoken": "mean fainter echoes. The team's"
+  },
+  {
+   "scene": "S6",
+   "from": 7736,
+   "to": 7780,
+   "seconds": 1.5,
+   "t": "4:17.9",
+   "spoken": "team's smartphone-grade device had about a hundred"
+  },
+  {
+   "scene": "S6",
+   "from": 7793,
+   "to": 7827,
+   "seconds": 1.17,
+   "t": "4:19.8",
+   "spoken": "hundred pixels: a hundred listening"
+  },
+  {
+   "scene": "S6",
+   "from": 7904,
+   "to": 7928,
+   "seconds": 0.83,
+   "t": "4:23.5",
+   "spoken": "in your hand, it jiggles."
+  },
+  {
+   "scene": "S6",
+   "from": 8141,
+   "to": 8170,
+   "seconds": 1.0,
+   "t": "4:31.4",
+   "spoken": "better estimate. The catch:"
+  },
+  {
+   "scene": "S6",
+   "from": 8207,
+   "to": 8241,
+   "seconds": 1.17,
+   "t": "4:33.6",
+   "spoken": "between frames, the sensor jiggles"
+  },
+  {
+   "scene": "S6",
+   "from": 8342,
+   "to": 8374,
+   "seconds": 1.1,
+   "t": "4:38.1",
+   "spoken": "smear everything, like a long"
+  },
+  {
+   "scene": "S6",
+   "from": 8393,
+   "to": 8432,
+   "seconds": 1.33,
+   "t": "4:39.8",
+   "spoken": "exposure of someone walking. Their method"
+  },
+  {
+   "scene": "S6",
+   "from": 8510,
+   "to": 8545,
+   "seconds": 1.2,
+   "t": "4:43.7",
+   "spoken": "one unknown at a time."
+  },
+  {
+   "scene": "S6",
+   "from": 8582,
+   "to": 8622,
+   "seconds": 1.37,
+   "t": "4:46.1",
+   "spoken": "sensor through known positions, and the listening"
+  },
+  {
+   "scene": "S6",
+   "from": 8645,
+   "to": 8671,
+   "seconds": 0.9,
+   "t": "4:48.2",
+   "spoken": "spots spread out. Keep"
+  },
+  {
+   "scene": "S6",
+   "from": 8707,
+   "to": 8732,
+   "seconds": 0.87,
+   "t": "4:50.2",
+   "spoken": "still, and each step"
+  },
+  {
+   "scene": "S6",
+   "from": 8749,
+   "to": 8793,
+   "seconds": 1.5,
+   "t": "4:51.6",
+   "spoken": "step becomes a new position to follow."
+  }
+ ]
+}
