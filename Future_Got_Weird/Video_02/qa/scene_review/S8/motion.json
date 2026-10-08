@@ -1,0 +1,62 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S8": {
+   "seconds": 34.2,
+   "mean_energy": 1.399,
+   "still_seconds": 6.9,
+   "still_share": 0.201,
+   "longest_still_s": 1.4
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S8",
+   "from": 10174,
+   "to": 10215,
+   "seconds": 1.4,
+   "t": "5:39.1",
+   "spoken": "might this be good for? Picture"
+  },
+  {
+   "scene": "S8",
+   "from": 10301,
+   "to": 10324,
+   "seconds": 0.8,
+   "t": "5:43.4",
+   "spoken": "corner. With a suitable"
+  },
+  {
+   "scene": "S8",
+   "from": 10672,
+   "to": 10706,
+   "seconds": 1.17,
+   "t": "5:55.7",
+   "spoken": "plenty is still hard: short range,"
+  },
+  {
+   "scene": "S8",
+   "from": 10895,
+   "to": 10936,
+   "seconds": 1.4,
+   "t": "6:03.2",
+   "spoken": "hardware. The researchers call it an early-stage"
+  },
+  {
+   "scene": "S8",
+   "from": 10943,
+   "to": 10977,
+   "seconds": 1.17,
+   "t": "6:04.8",
+   "spoken": "an early-stage prototype."
+  },
+  {
+   "scene": "S8",
+   "from": 11140,
+   "to": 11167,
+   "seconds": 0.93,
+   "t": "6:11.3",
+   "spoken": "a safety system."
+  }
+ ]
+}
