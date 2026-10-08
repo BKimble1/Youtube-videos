@@ -9,8 +9,10 @@ import {
   LAYOUT,
   Layout,
   PlanPt,
+  SLAB_T,
   ViewConfig,
   ViewState,
+  WALL_T,
   depthSort,
   figureMix,
   occluderBox,
@@ -51,7 +53,7 @@ export type RoomSetProps = {
   partition?: boolean;
   /** comic nudge of the partition, about -1..1 */
   wobble?: number;
-  /** door on the left wall (default true) */
+  /** door on the right side wall, near the front (default true) */
   door?: boolean;
   /** potted plant in the back-left corner (default true) */
   plant?: boolean;
@@ -80,8 +82,8 @@ export const ROOM_COLORS = {
   soil: '#6B4A2E',
 };
 
-export const WALL_T = 0.07; // wall thickness (m): the ink wall line in the plan view is this thick
-const SLAB_T = 0.14; // floor slab thickness (m)
+// wall and slab thickness live in lib/room (roomBounds uses them too); re-exported here for set code
+export {WALL_T};
 const SKIRT_H = 0.1;
 const PLANK_W = 0.55; // 8 wide planks across 4.4 m
 /** Door on the right side wall (x = room.x1): z range and height (m). Far from every light path. */

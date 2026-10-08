@@ -328,6 +328,20 @@ export const occluderSilhouette = (tilt: number, view: ViewConfig = DEFAULT_VIEW
   return hull(pts);
 };
 
+/**
+ * A rough body box for an upright thing standing at (x, z): `w` half-width across x, `d` half-depth along z, `height`
+ * metres tall. Use with hiddenByBox / VisibleOpts.hidden to hide the stretch of an overlay path that passes behind a
+ * person in the room view. (The rig is drawn at its full metric height only at tilt 0; see figureMix.)
+ */
+export const uprightBox = (x: number, z: number, opts: {w?: number; d?: number; height?: number; h?: number} = {}): Box => ({
+  x0: x - (opts.w ?? 0.26),
+  x1: x + (opts.w ?? 0.26),
+  z0: z - (opts.d ?? 0.12),
+  z1: z + (opts.d ?? 0.12),
+  h0: opts.h ?? 0,
+  h1: (opts.h ?? 0) + (opts.height ?? PERSON_M),
+});
+
 /** Plan-view test: does the straight segment a -> b cross the partition footprint? (Liang-Barsky in x, z) */
 export const crossesOccluder = (a: PlanPt, b: PlanPt, layout: Layout = LAYOUT) => {
   const box = occluderBox(layout);
