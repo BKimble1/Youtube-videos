@@ -347,299 +347,304 @@ It took an ultrafast laser
 and a high-speed camera:
 
 81
-00:03:21,495 --> 00:03:23,315
+00:03:21,495 --> 00:03:23,305
 lab equipment that filled a table.
 
 82
-00:03:23,395 --> 00:03:28,035
+00:03:23,385 --> 00:03:27,945
 In a 2018 study, Stanford researchers
 swept one spot across the wall,
 
 83
-00:03:28,115 --> 00:03:29,715
+00:03:28,025 --> 00:03:29,625
 like our simplified picture.
 
 84
-00:03:29,795 --> 00:03:33,075
+00:03:29,705 --> 00:03:32,905
 The math got simpler: for
 a reflective exit sign,
 
 85
-00:03:33,155 --> 00:03:35,955
+00:03:32,985 --> 00:03:35,945
 rebuilding the scene took
 about a second on a laptop.
 
 86
-00:03:36,035 --> 00:03:38,835
+00:03:36,025 --> 00:03:38,825
 Measuring still took almost seven minutes.
 
 87
-00:03:38,915 --> 00:03:43,795
+00:03:38,905 --> 00:03:43,705
 By 2021, researchers in Wisconsin
 and Milan had sped up measuring too:
 
 88
-00:03:43,875 --> 00:03:46,035
+00:03:43,785 --> 00:03:45,945
 live video of ordinary objects,
 
 89
-00:03:46,115 --> 00:03:51,155
+00:03:46,025 --> 00:03:51,145
 five frames a second, with a powerful
 laser and custom detectors. Impressive.
 
 90
-00:03:51,235 --> 00:03:53,775
-But all of it ran on research equipment.
+00:03:51,225 --> 00:03:53,385
+But those ran on research equipment.
 
 91
-00:03:53,950 --> 00:03:56,910
-Then, in a study published in 2026,
+00:03:53,465 --> 00:03:57,050
+One team had even tracked hidden
+objects with a cheap sensor.
 
 92
-00:03:56,990 --> 00:04:01,070
+00:03:57,130 --> 00:04:00,090
+Then, in a study published in 2026,
+
+93
+00:04:00,170 --> 00:04:04,250
 a team from MIT and Dartmouth tried
 the small time-of-flight sensors,
 
-93
-00:04:01,150 --> 00:04:04,430
+94
+00:04:04,330 --> 00:04:07,610
 often called LiDAR, found
 in phones and gadgets.
 
-94
-00:04:04,510 --> 00:04:06,430
+95
+00:04:07,690 --> 00:04:09,610
 Don't expect your phone to do this yet:
 
-95
-00:04:06,510 --> 00:04:09,350
+96
+00:04:09,690 --> 00:04:12,530
 phone makers often keep
 the raw data private.
 
-96
-00:04:09,430 --> 00:04:11,470
+97
+00:04:12,610 --> 00:04:14,650
 These sensors are tough customers.
 
-97
-00:04:11,550 --> 00:04:13,950
+98
+00:04:14,730 --> 00:04:17,130
 Weak lasers mean fainter echoes.
 
-98
-00:04:14,030 --> 00:04:17,310
+99
+00:04:17,210 --> 00:04:20,490
 The team's smartphone-grade
 device had about a hundred pixels:
 
-99
-00:04:17,390 --> 00:04:19,150
+100
+00:04:20,570 --> 00:04:22,330
 a hundred listening spots.
 
-100
-00:04:19,230 --> 00:04:21,950
+101
+00:04:22,410 --> 00:04:25,130
 And if you hold one in
 your hand, it jiggles.
 
-101
-00:04:22,030 --> 00:04:25,230
+102
+00:04:25,210 --> 00:04:28,410
 Their fix borrows night mode's
 trick from phone cameras:
 
-102
-00:04:25,310 --> 00:04:29,070
+103
+00:04:28,490 --> 00:04:32,250
 stack many quick, dim frames
 into one better estimate.
 
-103
-00:04:29,150 --> 00:04:33,470
+104
+00:04:32,330 --> 00:04:36,650
 The catch: between frames, the
 sensor jiggles and the person moves.
 
-104
-00:04:33,550 --> 00:04:35,710
+105
+00:04:36,730 --> 00:04:38,890
 Plain averaging would smear everything,
 
-105
-00:04:35,790 --> 00:04:37,825
+106
+00:04:38,970 --> 00:04:41,005
 like a long exposure of someone walking.
 
-106
-00:04:37,905 --> 00:04:39,985
+107
+00:04:41,085 --> 00:04:43,165
 Their method puts the motion to work,
 
-107
-00:04:40,065 --> 00:04:41,905
+108
+00:04:43,245 --> 00:04:45,085
 one unknown at a time.
 
-108
-00:04:41,985 --> 00:04:43,945
+109
+00:04:45,165 --> 00:04:47,125
 Move the sensor through known positions,
 
-109
-00:04:44,025 --> 00:04:45,985
+110
+00:04:47,205 --> 00:04:49,165
 and the listening spots spread out.
 
-110
-00:04:46,065 --> 00:04:50,305
+111
+00:04:49,245 --> 00:04:53,485
 Keep the sensor still, and each step
 becomes a new position to follow.
 
-111
-00:04:50,385 --> 00:04:52,865
+112
+00:04:53,565 --> 00:04:56,045
 Our opening clip came
 from a different sensor:
 
-112
-00:04:52,945 --> 00:04:56,305
+113
+00:04:56,125 --> 00:04:59,485
 an off-the-shelf kit the authors
 put at under a hundred dollars,
 
-113
-00:04:56,385 --> 00:04:58,185
+114
+00:04:59,565 --> 00:05:01,365
 with sixteen listening spots,
 
-114
-00:04:58,265 --> 00:05:01,025
+115
+00:05:01,445 --> 00:05:04,205
 held still while a person
 walked behind a partition.
 
-115
-00:05:01,105 --> 00:05:02,765
+116
+00:05:04,285 --> 00:05:05,945
 We ran it through their own code.
 
-116
-00:05:02,845 --> 00:05:04,605
+117
+00:05:06,025 --> 00:05:07,785
 Moved through known positions,
 
-117
-00:05:04,685 --> 00:05:09,145
+118
+00:05:07,865 --> 00:05:12,325
 the sensor behind that faint bump
 rebuilt the rough outline of a hidden U.
 
-118
-00:05:09,450 --> 00:05:11,290
+119
+00:05:12,630 --> 00:05:14,470
 Many of these tests had help:
 
-119
-00:05:11,370 --> 00:05:14,090
+120
+00:05:14,550 --> 00:05:17,270
 safety-vest style reflective
 material on the target,
 
-120
-00:05:14,170 --> 00:05:16,490
+121
+00:05:17,350 --> 00:05:19,670
 which sends far more light straight back.
 
-121
-00:05:16,570 --> 00:05:19,370
+122
+00:05:19,750 --> 00:05:22,550
 Our clip's files don't say
 if the walker wore any.
 
-122
-00:05:19,450 --> 00:05:23,225
+123
+00:05:22,630 --> 00:05:26,405
 And the kit needs a flat wall and
 a few seconds of empty room first.
 
-123
-00:05:23,305 --> 00:05:26,905
+124
+00:05:26,485 --> 00:05:30,085
 But the authors do report tracking
 a person in ordinary clothes,
 
-124
-00:05:26,985 --> 00:05:29,785
+125
+00:05:30,165 --> 00:05:32,965
 with the sensor capturing
 thirty frames a second.
 
-125
-00:05:29,865 --> 00:05:33,345
+126
+00:05:33,045 --> 00:05:36,525
 The code is public, though we've found
 no other team reporting results on
 
-126
-00:05:33,425 --> 00:05:35,045
+127
+00:05:36,605 --> 00:05:38,225
 its own hardware yet.
 
-127
-00:05:35,465 --> 00:05:37,225
+128
+00:05:38,645 --> 00:05:40,405
 What might this be good for?
 
-128
-00:05:37,305 --> 00:05:40,665
+129
+00:05:40,485 --> 00:05:43,845
 Picture a delivery robot nearing
 a blind warehouse corner.
 
-129
-00:05:40,745 --> 00:05:42,505
+130
+00:05:43,925 --> 00:05:45,685
 With a suitable wall at the junction,
 
-130
-00:05:42,585 --> 00:05:46,425
+131
+00:05:45,765 --> 00:05:49,605
 a sensor like this might give it an
 early hint of movement out of sight.
 
-131
-00:05:46,505 --> 00:05:49,945
+132
+00:05:49,685 --> 00:05:53,125
 Just a fuzzy blob:
 enough to say slow down,
 
-132
-00:05:50,025 --> 00:05:51,515
+133
+00:05:53,205 --> 00:05:54,695
 not enough to say who's there.
 
-133
-00:05:51,595 --> 00:05:54,715
+134
+00:05:54,775 --> 00:05:57,895
 And plenty is still hard: short range,
 
-134
-00:05:54,795 --> 00:05:57,675
+135
+00:05:57,975 --> 00:06:00,855
 dark or shiny walls, bright sunlight,
 
-135
-00:05:57,755 --> 00:05:59,995
+136
+00:06:00,935 --> 00:06:03,175
 and fast math on small hardware.
 
-136
-00:06:00,075 --> 00:06:03,115
+137
+00:06:03,255 --> 00:06:06,295
 The researchers call it
 an early-stage prototype.
 
-137
-00:06:03,195 --> 00:06:05,475
+138
+00:06:06,375 --> 00:06:08,655
 No one has shown that
 it prevents collisions.
 
-138
-00:06:05,555 --> 00:06:07,595
+139
+00:06:08,735 --> 00:06:10,775
 For now, it's a promising clue,
 
-139
-00:06:07,675 --> 00:06:09,255
+140
+00:06:10,855 --> 00:06:12,435
 not a safety system.
 
-140
-00:06:09,780 --> 00:06:11,985
+141
+00:06:12,960 --> 00:06:15,165
 Which brings us back to our friend.
 
-141
-00:06:12,065 --> 00:06:15,172
+142
+00:06:15,245 --> 00:06:18,352
 Being out of sight isn't the
 same as giving nothing away.
 
-142
-00:06:15,252 --> 00:06:16,692
+143
+00:06:18,432 --> 00:06:19,872
 The light found a way around,
 
-143
-00:06:16,772 --> 00:06:19,855
+144
+00:06:19,952 --> 00:06:23,035
 and careful timing and math
 can read some of its clues.
 
-144
-00:06:19,935 --> 00:06:23,195
+145
+00:06:23,115 --> 00:06:26,375
 To really hide, he'd have
 to block the bounces too.
 
-145
-00:06:27,470 --> 00:06:31,870
+146
+00:06:30,650 --> 00:06:35,050
 This is Future Got Weird: the
 strange future, explained.
 
-146
-00:06:31,950 --> 00:06:35,030
+147
+00:06:35,130 --> 00:06:38,210
 Subscribe for more, and we'll
 see you around the corner.

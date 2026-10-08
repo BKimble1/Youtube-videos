@@ -296,33 +296,33 @@
    "file": "s27.wav",
    "words_file": "s27.words.json",
    "section": "x12",
-   "take": "x12_t2",
-   "duration_s": 15.47,
-   "speech_start_s": 0.04,
-   "speech_end_s": 14.975,
-   "natural_gap_after_s": 0.495
+   "take": "x12_t4",
+   "duration_s": 15.45,
+   "speech_start_s": 0.05,
+   "speech_end_s": 14.965,
+   "natural_gap_after_s": 0.485
   },
   {
    "id": "s28",
    "file": "s28.wav",
    "words_file": "s28.words.json",
    "section": "x12",
-   "take": "x12_t2",
-   "duration_s": 11.08,
-   "speech_start_s": 0.115,
-   "speech_end_s": 10.815,
-   "natural_gap_after_s": 0.265
+   "take": "x12_t4",
+   "duration_s": 11.14,
+   "speech_start_s": 0.05,
+   "speech_end_s": 10.805,
+   "natural_gap_after_s": 0.335
   },
   {
    "id": "s29",
    "file": "s29.wav",
    "words_file": "s29.words.json",
    "section": "x12",
-   "take": "x12_t2",
-   "duration_s": 3.45,
-   "speech_start_s": 0.065,
-   "speech_end_s": 3.235,
-   "natural_gap_after_s": 0.215
+   "take": "x12_t4",
+   "duration_s": 6.61,
+   "speech_start_s": 0.105,
+   "speech_end_s": 6.385,
+   "natural_gap_after_s": 0.225
   },
   {
    "id": "s30",
