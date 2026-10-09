@@ -253,8 +253,7 @@ that drift), so the estimate keeps up.
 ## V12 · Callback · 5:14.6–5:23.6 · n31, s47
 
 **Teaches:** the takeaway (being out of sight still leaks clues), then the one callback gag.
-**Sound:** the soft pulse motif once; the partition scrape; the readout blip-off; a deadpan beat; music starts its
-resolve under the hold.
+**Sound:** the soft pulse motif once; the partition scrape; the readout blip-off; a deadpan beat in complete musical silence under the J4 hold (lead decision after review r1, V2-R1-39: the gag plays dry); the music's resolve starts on the cut to the end screen.
 
 | Shot | Time | Line / cue | Main teaching visual | Labels | Cast (role) | Out | Reuse / new |
 |---|---|---|---|---|---|---|---|
