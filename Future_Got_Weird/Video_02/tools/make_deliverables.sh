@@ -2,22 +2,22 @@
 # Final deliverables from the one locked composition (source/src Main, audio = the final mix).
 #   bash tools/make_deliverables.sh [master|upload|preview|extras|all]   (default: all)
 # Writes into exports/:
-#   Future_Got_Weird_Video_02_v1_MASTER_4K.mp4     3840x2160, 30 fps, H.264 High, CRF 14 slow, PNG frame capture,
+#   Future_Got_Weird_Video_02_v2_MASTER_4K.mp4     3840x2160, 30 fps, H.264 High, CRF 14 slow, PNG frame capture,
 #                                                  BT.709, AAC 320k. Rendered at --scale=2 from the 1920x1080
 #                                                  composition: every shape and line is vector, so this is a true 4K
 #                                                  render of the drawing (any generated insert would be an upscale).
-#   Future_Got_Weird_Video_02_v1_UPLOAD_1080p.mp4  1920x1080, 30 fps, CRF 16 slow, PNG frame capture, AAC 320k
-#   Future_Got_Weird_Video_02_v1_PREVIEW_720p.mp4  1280x720 review copy from the upload file, labelled
+#   Future_Got_Weird_Video_02_v2_UPLOAD_1080p.mp4  1920x1080, 30 fps, CRF 16 slow, PNG frame capture, AAC 320k
+#   Future_Got_Weird_Video_02_v2_PREVIEW_720p.mp4  1280x720 review copy from the upload file, labelled
 #                                                  "REVIEW PREVIEW · not for upload", small enough to share
-#   Future_Got_Weird_Video_02_v1.srt               captions built from the final narration timing
-#   Future_Got_Weird_Video_02_v1_thumbnail.png/.jpg  the recommended thumbnail (package/UPLOAD_PACKAGE.md)
+#   Future_Got_Weird_Video_02_v2.srt               captions built from the final narration timing
+#   Future_Got_Weird_Video_02_v2_thumbnail.png/.jpg  the recommended thumbnail (package/UPLOAD_PACKAGE.md)
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")/.." && pwd)
 OUT="$HERE/exports"
 SRC="$HERE/source"
 mkdir -p "$OUT"
 what=${1:-all}
-PFX="Future_Got_Weird_Video_02_v1"
+PFX="Future_Got_Weird_Video_02_v2"
 
 render() { # name scale crf
   (cd "$SRC" && npx remotion render src/index.ts Main "$OUT/$1" --scale="$2" --image-format=png --crf="$3" \
