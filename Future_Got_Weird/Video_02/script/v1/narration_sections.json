@@ -1,0 +1,292 @@
+{
+ "model": "eleven_v4",
+ "voice_name": "Test Voice",
+ "voice_id": "kk5XaSLo2XAw0sKM98zU",
+ "sections": [
+  {
+   "id": "x01",
+   "segments": [
+    "s01",
+    "s02",
+    "s03"
+   ],
+   "prompt": "[lightly amused] Our friend here is hiding behind a partition, and he is very pleased about it.\n\nThat sensor can't see him. It's pointed at a plain, blank wall.\n\nAnd yet… this is real data, from a study published in 2026: seen from above, a small sensor aimed at a wall, tracking someone it never saw directly.",
+   "words_per_segment": [
+    15,
+    12,
+    28
+   ],
+   "chars": 310
+  },
+  {
+   "id": "x02",
+   "segments": [
+    "s04",
+    "s05"
+   ],
+   "prompt": "[warmly] Here's the trick for seeing around corners. The light doesn't go through the partition. It goes around the end, by way of the wall.\n\nThe sensor fires a short, invisible flash. The wall scatters it, part reaches the hidden person, and a tiny bit bounces back: wall, then sensor.",
+   "words_per_segment": [
+    24,
+    25
+   ],
+   "chars": 286
+  },
+  {
+   "id": "x03",
+   "segments": [
+    "s06",
+    "s07",
+    "s08"
+   ],
+   "prompt": "That trip is longer than a quick bounce off the wall, so it arrives a little later. [dryly] A few billionths of a second later.\n\nYour webcam can't time that. This takes a time-of-flight sensor, a camera that clocks its own light's round trip.\n\nLight travels about thirty centimetres in a nanosecond, one billionth of a second. So timing is distance, and the extra delay is a clue to where he is.",
+   "words_per_segment": [
+    24,
+    19,
+    28
+   ],
+   "chars": 395
+  },
+  {
+   "id": "x04",
+   "segments": [
+    "s09",
+    "s10"
+   ],
+   "prompt": "[curious] Why does a plain wall work at all? Start with a mirror.\n\nLight leaves a mirror at the same angle it arrived, so the picture stays whole. [dryly] Put a mirror here… and our friend is simply visible.",
+   "words_per_segment": [
+    12,
+    25
+   ],
+   "chars": 207
+  },
+  {
+   "id": "x05",
+   "segments": [
+    "s11",
+    "s12"
+   ],
+   "prompt": "A painted wall is rough up close. It throws light every which way, so each spot acts less like a mirror, more like a tiny lamp.\n\nYou might picture his image as a postcard shredded into confetti, waiting to be sorted. It's worse than that. Confetti still holds bits of picture. Everything coming back is a blend of many paths… What survives is timing.",
+   "words_per_segment": [
+    26,
+    38
+   ],
+   "chars": 350
+  },
+  {
+   "id": "x06",
+   "segments": [
+    "s13",
+    "s14"
+   ],
+   "prompt": "Follow the path that matters: sensor. Wall. Person. Wall. Sensor. Each bounce spreads the light, and most of it is lost.\n\nNearly everything coming back bounced once, off the wall. Our friend's echo bounced three times, so it's tiny.",
+   "words_per_segment": [
+    21,
+    18
+   ],
+   "chars": 232
+  },
+  {
+   "id": "x07",
+   "segments": [
+    "s15",
+    "s16"
+   ],
+   "prompt": "This is real data from the same team, with a different sensor and hidden object: the wall's big echo, then, a few nanoseconds later, a bump you have to zoom in to see. [softly] In this capture, hundreds of times weaker.\n\nThat bump is the clue. Its timing says how much farther the light travelled.",
+   "words_per_segment": [
+    40,
+    14
+   ],
+   "chars": 297
+  },
+  {
+   "id": "x08",
+   "segments": [
+    "s17",
+    "s18",
+    "s19"
+   ],
+   "prompt": "Let's turn timing into a map: the room from above, flattened, with one more simplification. The sensor flashes and listens at one spot on the wall.\n\nMeasure the extra delay, and you know how far he is from that spot. Not which direction… Just how far.\n\nHe could be anywhere on this arc, all the same distance from that spot.",
+   "words_per_segment": [
+    26,
+    20,
+    14
+   ],
+   "chars": 324
+  },
+  {
+   "id": "x09",
+   "segments": [
+    "s20",
+    "s21",
+    "s22"
+   ],
+   "prompt": "Now listen at a second spot. Another delay, another arc. On this side of the wall, they cross in just… one place.\n\nMeasured timings are a bit fuzzy, so each arc is really a band, and the bands overlap in a small patch.\n\nThese two spots are close, so the patch is long and blurry. Spread them out, and it shrinks.",
+   "words_per_segment": [
+    22,
+    21,
+    18
+   ],
+   "chars": 312
+  },
+  {
+   "id": "x10",
+   "segments": [
+    "s23",
+    "s24"
+   ],
+   "prompt": "In practice, a computer weighs many spots at once, trying positions and keeping those whose predicted echoes match. It also leans on assumptions, like what kind of object it's after.\n\nThat's why the answer is a likely location, or a rough shape. Not a photograph.",
+   "words_per_segment": [
+    30,
+    15
+   ],
+   "chars": 263
+  },
+  {
+   "id": "x11",
+   "segments": [
+    "s25",
+    "s26"
+   ],
+   "prompt": "None of this is brand new. In 2012, an MIT team reported recovering the 3D shape of a small mannequin around a corner.\n\nIt took an ultrafast laser and a high-speed camera: lab equipment that filled a table.",
+   "words_per_segment": [
+    23,
+    15
+   ],
+   "chars": 206
+  },
+  {
+   "id": "x12",
+   "segments": [
+    "s27",
+    "s28",
+    "s29"
+   ],
+   "prompt": "In a 2018 study, Stanford researchers swept one spot across the wall, like our simplified picture. The math got simpler: for a reflective exit sign, rebuilding the scene took about a second on a laptop. [dryly] Measuring still took almost seven minutes.\n\nBy 2021, researchers in Wisconsin and Milan had sped up measuring too: live video of ordinary objects, five frames a second, with a powerful laser and custom detectors.\n\nImpressive. But those ran on research equipment. One team had even tracked hidden objects with a cheap sensor.",
+   "words_per_segment": [
+    41,
+    28,
+    18
+   ],
+   "chars": 535
+  },
+  {
+   "id": "x13",
+   "segments": [
+    "s30",
+    "s31",
+    "s32"
+   ],
+   "prompt": "Then, in a study published in 2026, a team from MIT and Dartmouth tried the small time-of-flight sensors, often called /ˈlaɪdɑːr/, found in phones and gadgets.\n\nDon't expect your phone to do this yet: phone makers often keep the raw data private.\n\nThese sensors are tough customers. Weak lasers mean fainter echoes. The team's smartphone-grade device had about a hundred pixels: a hundred listening spots. [lightly amused] And if you hold one in your hand, it jiggles.",
+   "words_per_segment": [
+    26,
+    16,
+    33
+   ],
+   "chars": 468
+  },
+  {
+   "id": "x14",
+   "segments": [
+    "s33",
+    "s34"
+   ],
+   "prompt": "Their fix borrows night mode's trick from phone cameras: stack many quick, dim frames into one better estimate.\n\nThe catch: between frames, the sensor jiggles and the person moves. Plain averaging would smear everything, like a long exposure of someone walking.",
+   "words_per_segment": [
+    18,
+    23
+   ],
+   "chars": 261
+  },
+  {
+   "id": "x15",
+   "segments": [
+    "s35",
+    "s36"
+   ],
+   "prompt": "Their method puts the motion to work, one unknown at a time. Move the sensor through known positions, and the listening spots spread out. Keep the sensor still, and each step becomes a new position to follow.\n\nOur opening clip came from a different sensor: an off-the-shelf kit the authors put at under a hundred dollars, with sixteen listening spots, held still while a person walked behind a partition. We ran it through their own code.",
+   "words_per_segment": [
+    37,
+    39
+   ],
+   "chars": 438
+  },
+  {
+   "id": "x16",
+   "segments": [
+    "s37",
+    "s38"
+   ],
+   "prompt": "Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.\n\nMany of these tests had help: safety-vest style reflective material on the target, which sends far more light straight back. Our clip's files don't say if the walker wore any. And the kit needs a flat wall, and a few seconds of empty room first.",
+   "words_per_segment": [
+    18,
+    45
+   ],
+   "chars": 352
+  },
+  {
+   "id": "x17",
+   "segments": [
+    "s39"
+   ],
+   "prompt": "But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.",
+   "words_per_segment": [
+    36
+   ],
+   "chars": 211
+  },
+  {
+   "id": "x18",
+   "segments": [
+    "s40",
+    "s41",
+    "s42"
+   ],
+   "prompt": "[curious] What might this be good for? Picture a delivery robot nearing a blind warehouse corner.\n\nWith a suitable wall at the junction, a sensor like this might give it an early hint of movement out of sight.\n\nJust a fuzzy blob: enough to say slow down, not enough to say who's there.",
+   "words_per_segment": [
+    15,
+    22,
+    15
+   ],
+   "chars": 285
+  },
+  {
+   "id": "x19",
+   "segments": [
+    "s43",
+    "s44"
+   ],
+   "prompt": "And plenty is still hard: short range. Dark or shiny walls. Bright sunlight. And fast math on small hardware. The researchers call it an early-stage prototype.\n\nNo one has shown that it prevents collisions. For now, it's a promising clue, not a safety system.",
+   "words_per_segment": [
+    26,
+    18
+   ],
+   "chars": 259
+  },
+  {
+   "id": "x20",
+   "segments": [
+    "s45",
+    "s46",
+    "s47"
+   ],
+   "prompt": "[lightly amused] Which brings us back to our friend.\n\nBeing out of sight isn't the same as giving nothing away. The light found a way around, and careful timing and math can read some of its clues.\n\nTo really hide, he'd have to block the bounces too.",
+   "words_per_segment": [
+    7,
+    28,
+    10
+   ],
+   "chars": 250
+  },
+  {
+   "id": "x21",
+   "segments": [
+    "s48"
+   ],
+   "prompt": "[warmly] This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner.",
+   "words_per_segment": [
+    19
+   ],
+   "chars": 122
+  }
+ ]
+}

@@ -2,6 +2,7 @@
 """Video 02 narration (from the Video 01 V2 tool): measure every line in every take, pick takes per line, and cut the chosen lines.
 
   python3 tools/v2_takes.py eval       -> audio/narration/v2/eval.json + eval_report.md + proposed selection
+           [--sections y01,y02]  measure only these recording sections   [--fill] add picks only for unselected lines
   python3 tools/v2_takes.py assemble   -> audio/narration/v2/<seg>.wav, <seg>.words.json, manifest.json
 
 Takes: audio/narration/v2/takes/<section>_t<k>.mp3 with <section>_t<k>.align.json (Scribe forced alignment of the
@@ -199,10 +200,12 @@ def glitches(seg):
     return int(np.sum((jump > 18) & (c > np.percentile(db, 90))))
 
 
-def measure():
+def measure(only=None):
     secs, segdoc, order = load_docs()
     rows = {}
     for sec in secs["sections"]:
+        if only and sec["id"] not in only:
+            continue
         for k in range(1, 5):
             take = f"{sec['id']}_t{k}"
             if not os.path.exists(os.path.join(TAKES, f"{take}.align.json")):
@@ -226,7 +229,8 @@ def measure():
                         pauses.append((prev[-1]["text"], round(s1 - s0, 3)))
                 speak = (b - a) - sum(g for _, g in pauses if g > 0.25)
                 f0m, rng, sd = pitch_stats(seg)
-                disp = segdoc[sid]["text"].split()
+                # a carried v1 section can contain lines the current script no longer uses: measure them by their tokens
+                disp = segdoc[sid]["text"].split() if sid in segdoc else [w["text"] for w in ws]
                 short = [d for d, w in zip(disp, ws) if w["end"] - w["start"] < 0.03 and len(re.sub(r"\W", "", d)) >= 5]
                 long = [d for d, w in zip(disp, ws) if w["end"] - w["start"] > 1.6]
                 beats = {}
@@ -263,8 +267,8 @@ def score(r, sid, med_db, med_f0):
     return round(s, 2)
 
 
-def cmd_eval(reselect=False):
-    rows, order, segdoc, secs = measure()
+def cmd_eval(reselect=False, fill=False, only=None):
+    rows, order, segdoc, secs = measure(only)
     all_db = [r["rms_db"] for d in rows.values() for r in d.values() if r["rms_db"] is not None]
     all_f0 = [r["f0_median"] for d in rows.values() for r in d.values() if r["f0_median"]]
     med_db, med_f0 = float(np.median(all_db)), float(np.median(all_f0))
@@ -276,6 +280,8 @@ def cmd_eval(reselect=False):
     # proposal: best take per line, but keep a section's lines in one take when it costs < 1.0 point per line
     sel = {}
     for sec in secs["sections"]:
+        if only and sec["id"] not in only:
+            continue
         ids = sec["segments"]
         takes = sorted({t for sid in ids for t in rows.get(sid, {})})
         best_per = {sid: max(rows[sid], key=lambda t: rows[sid][t]["score"]) for sid in ids}
@@ -284,7 +290,15 @@ def cmd_eval(reselect=False):
         for sid in ids:
             sel[sid] = best_one if loss < 1.0 * len(ids) else best_per[sid]
     sel_path = os.path.join(ROOT, "script/narration_selection.json")
-    if reselect or not os.path.exists(sel_path):
+    if fill and os.path.exists(sel_path):
+        # keep every existing choice; add proposals only for lines in the script that have none yet
+        cur = json.load(open(sel_path))
+        for sid in order:
+            if sid not in cur and sid in sel:
+                cur[sid] = sel[sid]
+        sel = {sid: cur[sid] for sid in order if sid in cur}
+        json.dump(sel, open(sel_path, "w"), indent=1)
+    elif reselect or not os.path.exists(sel_path):
         json.dump(sel, open(sel_path, "w"), indent=1)
     # report
     lines = ["# V2 narration: per-line measurements", "",
@@ -405,7 +419,10 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.exit(__doc__)
     if sys.argv[1] == "eval":
-        cmd_eval(reselect="--reselect" in sys.argv)
+        only = None
+        if "--sections" in sys.argv:
+            only = set(sys.argv[sys.argv.index("--sections") + 1].split(","))
+        cmd_eval(reselect="--reselect" in sys.argv, fill="--fill" in sys.argv, only=only)
     elif sys.argv[1] == "assemble":
         cmd_assemble()
     else:

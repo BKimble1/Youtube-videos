@@ -1,0 +1,548 @@
+{
+ "title": "How Cameras See Around Corners",
+ "channel": "Future Got Weird",
+ "version": "v2 (2026-10-08, after four-lens review)",
+ "voice_name": "Test Voice",
+ "voice_id": "kk5XaSLo2XAw0sKM98zU",
+ "model": "eleven_v4",
+ "notes": "text = display/subtitle text. tts = Eleven v4 prompt with delivery tags in [brackets] and IPA between slashes; with tags removed and IPA mapped back it has the same words as text, so forced-alignment timings map 1:1.",
+ "segments": [
+  {
+   "id": "s01",
+   "scene": "S1",
+   "text": "Our friend here is hiding behind a partition, and he is very pleased about it.",
+   "tts": "[lightly amused] Our friend here is hiding behind a partition, and he is very pleased about it.",
+   "pause_after_ms": 650,
+   "claims": [],
+   "direction": "J1: warm, amused, quick; the joke is his smugness, leave a beat"
+  },
+  {
+   "id": "s02",
+   "scene": "S1",
+   "text": "That sensor can't see him. It's pointed at a plain, blank wall.",
+   "tts": "That sensor can't see him. It's pointed at a plain, blank wall.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C01"
+   ],
+   "direction": "matter-of-fact setup"
+  },
+  {
+   "id": "s03",
+   "scene": "S1",
+   "text": "And yet this is real data, from a study published in 2026: seen from above, a small sensor aimed at a wall, tracking someone it never saw directly.",
+   "tts": "And yet… this is real data, from a study published in 2026: seen from above, a small sensor aimed at a wall, tracking someone it never saw directly.",
+   "pause_after_ms": 1100,
+   "claims": [
+    "C02",
+    "C03"
+   ],
+   "direction": "the reveal: beat after 'And yet', then clear and confident; let 'never saw directly' land"
+  },
+  {
+   "id": "s04",
+   "scene": "S1",
+   "text": "Here's the trick for seeing around corners. The light doesn't go through the partition. It goes around the end, by way of the wall.",
+   "tts": "[warmly] Here's the trick for seeing around corners. The light doesn't go through the partition. It goes around the end, by way of the wall.",
+   "pause_after_ms": 350,
+   "claims": [
+    "C04"
+   ],
+   "direction": "friendly explainer; light stress on 'through' and 'around the end'"
+  },
+  {
+   "id": "s05",
+   "scene": "S1",
+   "text": "The sensor fires a short, invisible flash. The wall scatters it, part reaches the hidden person, and a tiny bit bounces back: wall, then sensor.",
+   "tts": "The sensor fires a short, invisible flash. The wall scatters it, part reaches the hidden person, and a tiny bit bounces back: wall, then sensor.",
+   "pause_after_ms": 350,
+   "claims": [
+    "C04",
+    "C05",
+    "C43"
+   ],
+   "direction": "follow the light like a story"
+  },
+  {
+   "id": "s06",
+   "scene": "S1",
+   "text": "That trip is longer than a quick bounce off the wall, so it arrives a little later. A few billionths of a second later.",
+   "tts": "That trip is longer than a quick bounce off the wall, so it arrives a little later. [dryly] A few billionths of a second later.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C06"
+   ],
+   "direction": "set up, then a dry undercut on the size of 'a little'"
+  },
+  {
+   "id": "s07",
+   "scene": "S1",
+   "text": "Your webcam can't time that. This takes a time-of-flight sensor, a camera that clocks its own light's round trip.",
+   "tts": "Your webcam can't time that. This takes a time-of-flight sensor, a camera that clocks its own light's round trip.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C07"
+   ],
+   "direction": "define the sensor plainly, beside the object"
+  },
+  {
+   "id": "s08",
+   "scene": "S1",
+   "text": "Light travels about thirty centimetres in a nanosecond, one billionth of a second. So timing is distance, and the extra delay is a clue to where he is.",
+   "tts": "Light travels about thirty centimetres in a nanosecond, one billionth of a second. So timing is distance, and the extra delay is a clue to where he is.",
+   "pause_after_ms": 900,
+   "claims": [
+    "C06"
+   ],
+   "direction": "the opening's takeaway; settled cadence before act 2"
+  },
+  {
+   "id": "s09",
+   "scene": "S2",
+   "text": "Why does a plain wall work at all? Start with a mirror.",
+   "tts": "[curious] Why does a plain wall work at all? Start with a mirror.",
+   "pause_after_ms": 300,
+   "claims": [],
+   "direction": "new chapter: curious question"
+  },
+  {
+   "id": "s10",
+   "scene": "S2",
+   "text": "Light leaves a mirror at the same angle it arrived, so the picture stays whole. Put a mirror here, and our friend is simply visible.",
+   "tts": "Light leaves a mirror at the same angle it arrived, so the picture stays whole. [dryly] Put a mirror here… and our friend is simply visible.",
+   "pause_after_ms": 800,
+   "claims": [
+    "C08"
+   ],
+   "direction": "J2 lands on 'visible' (he ducks)"
+  },
+  {
+   "id": "s11",
+   "scene": "S2",
+   "text": "A painted wall is rough up close. It throws light every which way, so each spot acts less like a mirror, more like a tiny lamp.",
+   "tts": "A painted wall is rough up close. It throws light every which way, so each spot acts less like a mirror, more like a tiny lamp.",
+   "pause_after_ms": 400,
+   "claims": [
+    "C09"
+   ],
+   "direction": "explainer"
+  },
+  {
+   "id": "s12",
+   "scene": "S2",
+   "text": "You might picture his image as a postcard shredded into confetti, waiting to be sorted. It's worse than that. Confetti still holds bits of picture. Everything coming back is a blend of many paths. What survives is timing.",
+   "tts": "You might picture his image as a postcard shredded into confetti, waiting to be sorted. It's worse than that. Confetti still holds bits of picture. Everything coming back is a blend of many paths… What survives is timing.",
+   "pause_after_ms": 800,
+   "claims": [
+    "C10"
+   ],
+   "direction": "the metaphor and its limit; 'What survives is timing' is the act's thesis"
+  },
+  {
+   "id": "s13",
+   "scene": "S3",
+   "text": "Follow the path that matters: sensor, wall, person, wall, sensor. Each bounce spreads the light, and most of it is lost.",
+   "tts": "Follow the path that matters: sensor. Wall. Person. Wall. Sensor. Each bounce spreads the light, and most of it is lost.",
+   "pause_after_ms": 350,
+   "claims": [
+    "C05",
+    "C11"
+   ],
+   "direction": "the five stops are a rhythm, unhurried"
+  },
+  {
+   "id": "s14",
+   "scene": "S3",
+   "text": "Nearly everything coming back bounced once, off the wall. Our friend's echo bounced three times, so it's tiny.",
+   "tts": "Nearly everything coming back bounced once, off the wall. Our friend's echo bounced three times, so it's tiny.",
+   "pause_after_ms": 350,
+   "claims": [
+    "C11"
+   ],
+   "direction": "plain; 'tiny' small"
+  },
+  {
+   "id": "s15",
+   "scene": "S3",
+   "text": "This is real data from the same team, with a different sensor and hidden object: the wall's big echo, then, a few nanoseconds later, a bump you have to zoom in to see. In this capture, hundreds of times weaker.",
+   "tts": "This is real data from the same team, with a different sensor and hidden object: the wall's big echo, then, a few nanoseconds later, a bump you have to zoom in to see. [softly] In this capture, hundreds of times weaker.",
+   "pause_after_ms": 400,
+   "claims": [
+    "C12"
+   ],
+   "direction": "evidence voice: careful and specific"
+  },
+  {
+   "id": "s16",
+   "scene": "S3",
+   "text": "That bump is the clue. Its timing says how much farther the light travelled.",
+   "tts": "That bump is the clue. Its timing says how much farther the light travelled.",
+   "pause_after_ms": 900,
+   "claims": [
+    "C06"
+   ],
+   "direction": "short, confident; end of act 2"
+  },
+  {
+   "id": "s17",
+   "scene": "S4",
+   "text": "Let's turn timing into a map: the room from above, flattened, with one more simplification. The sensor flashes and listens at one spot on the wall.",
+   "tts": "Let's turn timing into a map: the room from above, flattened, with one more simplification. The sensor flashes and listens at one spot on the wall.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C13"
+   ],
+   "direction": "central sequence starts; the simplification said openly"
+  },
+  {
+   "id": "s18",
+   "scene": "S4",
+   "text": "Measure the extra delay, and you know how far he is from that spot. Not which direction. Just how far.",
+   "tts": "Measure the extra delay, and you know how far he is from that spot. Not which direction… Just how far.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C14"
+   ],
+   "direction": "precise; small beat before 'Just how far'"
+  },
+  {
+   "id": "s19",
+   "scene": "S4",
+   "text": "He could be anywhere on this arc, all the same distance from that spot.",
+   "tts": "He could be anywhere on this arc, all the same distance from that spot.",
+   "pause_after_ms": 900,
+   "claims": [
+    "C14"
+   ],
+   "direction": "J3 setup: he relaxes; leave space"
+  },
+  {
+   "id": "s20",
+   "scene": "S4",
+   "text": "Now listen at a second spot. Another delay, another arc. On this side of the wall, they cross in just one place.",
+   "tts": "Now listen at a second spot. Another delay, another arc. On this side of the wall, they cross in just… one place.",
+   "pause_after_ms": 1000,
+   "claims": [
+    "C15"
+   ],
+   "direction": "J3 payoff: his smile fades on 'one place'"
+  },
+  {
+   "id": "s21",
+   "scene": "S4",
+   "text": "Measured timings are a bit fuzzy, so each arc is really a band, and the bands overlap in a small patch.",
+   "tts": "Measured timings are a bit fuzzy, so each arc is really a band, and the bands overlap in a small patch.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C16"
+   ],
+   "direction": "honest uncertainty, said as useful understanding"
+  },
+  {
+   "id": "s22",
+   "scene": "S4",
+   "text": "These two spots are close, so the patch is long and blurry. Spread them out, and it shrinks.",
+   "tts": "These two spots are close, so the patch is long and blurry. Spread them out, and it shrinks.",
+   "pause_after_ms": 350,
+   "claims": [
+    "C17"
+   ],
+   "direction": "rule of thumb; ends on the tight patch"
+  },
+  {
+   "id": "s23",
+   "scene": "S4",
+   "text": "In practice, a computer weighs many spots at once, trying positions and keeping those whose predicted echoes match. It also leans on assumptions, like what kind of object it's after.",
+   "tts": "In practice, a computer weighs many spots at once, trying positions and keeping those whose predicted echoes match. It also leans on assumptions, like what kind of object it's after.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C18"
+   ],
+   "direction": "the reconstruction model; clear, unhurried"
+  },
+  {
+   "id": "s24",
+   "scene": "S4",
+   "text": "That's why the answer is a likely location, or a rough shape. Not a photograph.",
+   "tts": "That's why the answer is a likely location, or a rough shape. Not a photograph.",
+   "pause_after_ms": 1000,
+   "claims": [
+    "C19"
+   ],
+   "direction": "settle; end of act 3"
+  },
+  {
+   "id": "s25",
+   "scene": "S5",
+   "text": "None of this is brand new. In 2012, an MIT team reported recovering the 3D shape of a small mannequin around a corner.",
+   "tts": "None of this is brand new. In 2012, an MIT team reported recovering the 3D shape of a small mannequin around a corner.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C20"
+   ],
+   "direction": "storyteller; history in brisk steps"
+  },
+  {
+   "id": "s26",
+   "scene": "S5",
+   "text": "It took an ultrafast laser and a high-speed camera: lab equipment that filled a table.",
+   "tts": "It took an ultrafast laser and a high-speed camera: lab equipment that filled a table.",
+   "pause_after_ms": 350,
+   "claims": [
+    "C21"
+   ],
+   "direction": "light emphasis on 'filled a table'"
+  },
+  {
+   "id": "s27",
+   "scene": "S5",
+   "text": "In a 2018 study, Stanford researchers swept one spot across the wall, like our simplified picture. The math got simpler: for a reflective exit sign, rebuilding the scene took about a second on a laptop. Measuring still took almost seven minutes.",
+   "tts": "In a 2018 study, Stanford researchers swept one spot across the wall, like our simplified picture. The math got simpler: for a reflective exit sign, rebuilding the scene took about a second on a laptop. [dryly] Measuring still took almost seven minutes.",
+   "pause_after_ms": 350,
+   "claims": [
+    "C22",
+    "C23"
+   ],
+   "direction": "the 2018 step; dry on the last sentence"
+  },
+  {
+   "id": "s28",
+   "scene": "S5",
+   "text": "By 2021, researchers in Wisconsin and Milan had sped up measuring too: live video of ordinary objects, five frames a second, with a powerful laser and custom detectors.",
+   "tts": "By 2021, researchers in Wisconsin and Milan had sped up measuring too: live video of ordinary objects, five frames a second, with a powerful laser and custom detectors.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C24"
+   ],
+   "direction": "momentum"
+  },
+  {
+   "id": "s29",
+   "scene": "S5",
+   "text": "Impressive. But those ran on research equipment. One team had even tracked hidden objects with a cheap sensor.",
+   "tts": "Impressive. But those ran on research equipment. One team had even tracked hidden objects with a cheap sensor.",
+   "pause_after_ms": 800,
+   "claims": [
+    "C25",
+    "C45"
+   ],
+   "direction": "the turn that sets up 2026; the cheap-sensor precedent stated plainly, not as a twist"
+  },
+  {
+   "id": "s30",
+   "scene": "S6",
+   "text": "Then, in a study published in 2026, a team from MIT and Dartmouth tried the small time-of-flight sensors, often called LiDAR, found in phones and gadgets.",
+   "tts": "Then, in a study published in 2026, a team from MIT and Dartmouth tried the small time-of-flight sensors, often called /ˈlaɪdɑːr/, found in phones and gadgets.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C26",
+    "C27"
+   ],
+   "direction": "the news beat; confident, not breathless"
+  },
+  {
+   "id": "s31",
+   "scene": "S6",
+   "text": "Don't expect your phone to do this yet: phone makers often keep the raw data private.",
+   "tts": "Don't expect your phone to do this yet: phone makers often keep the raw data private.",
+   "pause_after_ms": 350,
+   "claims": [
+    "C42"
+   ],
+   "direction": "a friendly caveat, not a warning"
+  },
+  {
+   "id": "s32",
+   "scene": "S6",
+   "text": "These sensors are tough customers. Weak lasers mean fainter echoes. The team's smartphone-grade device had about a hundred pixels: a hundred listening spots. And if you hold one in your hand, it jiggles.",
+   "tts": "These sensors are tough customers. Weak lasers mean fainter echoes. The team's smartphone-grade device had about a hundred pixels: a hundred listening spots. [lightly amused] And if you hold one in your hand, it jiggles.",
+   "pause_after_ms": 400,
+   "claims": [
+    "C28"
+   ],
+   "direction": "problems as a quick rhythm; small smile on 'jiggles'"
+  },
+  {
+   "id": "s33",
+   "scene": "S6",
+   "text": "Their fix borrows night mode's trick from phone cameras: stack many quick, dim frames into one better estimate.",
+   "tts": "Their fix borrows night mode's trick from phone cameras: stack many quick, dim frames into one better estimate.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C29",
+    "C44"
+   ],
+   "direction": "clear"
+  },
+  {
+   "id": "s34",
+   "scene": "S6",
+   "text": "The catch: between frames, the sensor jiggles and the person moves. Plain averaging would smear everything, like a long exposure of someone walking.",
+   "tts": "The catch: between frames, the sensor jiggles and the person moves. Plain averaging would smear everything, like a long exposure of someone walking.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C30"
+   ],
+   "direction": "the problem, plainly"
+  },
+  {
+   "id": "s35",
+   "scene": "S6",
+   "text": "Their method puts the motion to work, one unknown at a time. Move the sensor through known positions, and the listening spots spread out. Keep the sensor still, and each step becomes a new position to follow.",
+   "tts": "Their method puts the motion to work, one unknown at a time. Move the sensor through known positions, and the listening spots spread out. Keep the sensor still, and each step becomes a new position to follow.",
+   "pause_after_ms": 500,
+   "claims": [
+    "C30",
+    "C31",
+    "C35"
+   ],
+   "direction": "the idea that makes 2026 different; satisfying parallel"
+  },
+  {
+   "id": "s36",
+   "scene": "S7",
+   "text": "Our opening clip came from a different sensor: an off-the-shelf kit the authors put at under a hundred dollars, with sixteen listening spots, held still while a person walked behind a partition. We ran it through their own code.",
+   "tts": "Our opening clip came from a different sensor: an off-the-shelf kit the authors put at under a hundred dollars, with sixteen listening spots, held still while a person walked behind a partition. We ran it through their own code.",
+   "pause_after_ms": 350,
+   "claims": [
+    "C02",
+    "C32"
+   ],
+   "direction": "evidence voice, specific; callback to the opening"
+  },
+  {
+   "id": "s37",
+   "scene": "S7",
+   "text": "Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.",
+   "tts": "Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.",
+   "pause_after_ms": 900,
+   "claims": [
+    "C33",
+    "C12"
+   ],
+   "direction": "second result; hold on the finished U"
+  },
+  {
+   "id": "s38",
+   "scene": "S7",
+   "text": "Many of these tests had help: safety-vest style reflective material on the target, which sends far more light straight back. Our clip's files don't say if the walker wore any. And the kit needs a flat wall and a few seconds of empty room first.",
+   "tts": "Many of these tests had help: safety-vest style reflective material on the target, which sends far more light straight back. Our clip's files don't say if the walker wore any. And the kit needs a flat wall, and a few seconds of empty room first.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C34",
+    "C36",
+    "C02"
+   ],
+   "direction": "conditions as useful understanding, not a disclaimer"
+  },
+  {
+   "id": "s39",
+   "scene": "S7",
+   "text": "But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.",
+   "tts": "But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second. The code is public, though we've found no other team reporting results on its own hardware yet.",
+   "pause_after_ms": 900,
+   "claims": [
+    "C37",
+    "C38"
+   ],
+   "direction": "fair and plain; end of act 4"
+  },
+  {
+   "id": "s40",
+   "scene": "S8",
+   "text": "What might this be good for? Picture a delivery robot nearing a blind warehouse corner.",
+   "tts": "[curious] What might this be good for? Picture a delivery robot nearing a blind warehouse corner.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C39"
+   ],
+   "direction": "new chapter, curious"
+  },
+  {
+   "id": "s41",
+   "scene": "S8",
+   "text": "With a suitable wall at the junction, a sensor like this might give it an early hint of movement out of sight.",
+   "tts": "With a suitable wall at the junction, a sensor like this might give it an early hint of movement out of sight.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C39"
+   ],
+   "direction": "'might' carries the hedge without sounding legal"
+  },
+  {
+   "id": "s42",
+   "scene": "S8",
+   "text": "Just a fuzzy blob: enough to say slow down, not enough to say who's there.",
+   "tts": "Just a fuzzy blob: enough to say slow down, not enough to say who's there.",
+   "pause_after_ms": 350,
+   "claims": [
+    "C19",
+    "C39"
+   ],
+   "direction": "concrete benefit and its limit"
+  },
+  {
+   "id": "s43",
+   "scene": "S8",
+   "text": "And plenty is still hard: short range, dark or shiny walls, bright sunlight, and fast math on small hardware. The researchers call it an early-stage prototype.",
+   "tts": "And plenty is still hard: short range. Dark or shiny walls. Bright sunlight. And fast math on small hardware. The researchers call it an early-stage prototype.",
+   "pause_after_ms": 300,
+   "claims": [
+    "C40"
+   ],
+   "direction": "four short beats, then a plain attribution"
+  },
+  {
+   "id": "s44",
+   "scene": "S8",
+   "text": "No one has shown that it prevents collisions. For now, it's a promising clue, not a safety system.",
+   "tts": "No one has shown that it prevents collisions. For now, it's a promising clue, not a safety system.",
+   "pause_after_ms": 900,
+   "claims": [
+    "C41"
+   ],
+   "direction": "settled, honest"
+  },
+  {
+   "id": "s45",
+   "scene": "S9",
+   "text": "Which brings us back to our friend.",
+   "tts": "[lightly amused] Which brings us back to our friend.",
+   "pause_after_ms": 500,
+   "claims": [],
+   "direction": "callback, warm"
+  },
+  {
+   "id": "s46",
+   "scene": "S9",
+   "text": "Being out of sight isn't the same as giving nothing away. The light found a way around, and careful timing and math can read some of its clues.",
+   "tts": "Being out of sight isn't the same as giving nothing away. The light found a way around, and careful timing and math can read some of its clues.",
+   "pause_after_ms": 600,
+   "claims": [
+    "C04",
+    "C19"
+   ],
+   "direction": "the episode's takeaway; clear and calm"
+  },
+  {
+   "id": "s47",
+   "scene": "S9",
+   "text": "To really hide, he'd have to block the bounces too.",
+   "tts": "To really hide, he'd have to block the bounces too.",
+   "pause_after_ms": 5300,
+   "claims": [
+    "C04"
+   ],
+   "direction": "J4: he takes the hint; a long silent beat for the visual (lengthened 0.8 s in review D43 so the busted reaction settles before s48)"
+  },
+  {
+   "id": "s48",
+   "scene": "S9",
+   "text": "This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner.",
+   "tts": "[warmly] This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner.",
+   "pause_after_ms": 0,
+   "claims": [],
+   "direction": "one brief invitation; warm, a small smile on the last line"
+  }
+ ]
+}
