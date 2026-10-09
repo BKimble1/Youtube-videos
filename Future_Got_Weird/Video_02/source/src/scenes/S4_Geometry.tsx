@@ -102,6 +102,7 @@ const K = {
   direction: at('s18', 'direction'),
   just18: at('s18', 'just'),
   far18b: at('s18', 'far', 2),
+  he19: at('s19', 'he'),
   anywhere: at('s19', 'anywhere'),
   arc19: at('s19', 'arc'),
   all19: at('s19', 'all'),
@@ -199,7 +200,17 @@ const WAG0 = K.not18;
 const SWING0 = Math.max(WAG0 + 16, K.just18);
 const SWING_DUR = Math.max(10, Math.min(16, K.far18b - SWING0 + 6));
 const SWEEP0 = SWING0 + SWING_DUR;
-const SWEEP1 = Math.max(SWEEP0 + 44, Math.min(SWEEP0 + 96, K.arc19));
+/**
+ * Review r2 N06 (closes r1 D22): the sweep pauses on "He" with the tip on his token. It used to pass him at full speed
+ * (~8°/frame), so "1.33 m each way" blinked by him for ~3 frames. Now three phases: eased up to his bearing
+ * (SWEEP0..HOLD_H0), held there while his token pulses and the length label sits still by him (HOLD_H0..HOLD_H1), then
+ * eased on round to the far end of the wall (HOLD_H1..SWEEP1, closed inside "arc,"). H_BEARING = his bearing from W1.
+ */
+const H_BEARING = Math.atan2(Hp.z - W1.z, Hp.x - W1.x);
+const HOLD_H0 = Math.max(SWEEP0 + 18, K.he19 - 2);
+const HOLD_H1 = HOLD_H0 + 14;
+// (the second leg gets at least 24 frames even when "all" comes early: 140° in 24 on SOFT_EASE peaks at ~10.6°/frame)
+const SWEEP1 = Math.max(HOLD_H1 + 24, Math.min(K.all19 - 6, HOLD_H1 + 40));
 const RETRACT_DUR = 14;
 const GHOST_A = [12, 58, 92, 128, 145].map((d) => (d * Math.PI) / 180);
 // "all the same distance from that spot": the same ruler length taps three of the ghosts in turn (145°, 92°, 58°),
@@ -321,14 +332,24 @@ const DIM_DUR = 12;
 // in the last 8 frames (the blob, the ring and the board stay: the hand-off), the crossed frame falls once the word ends
 const CLEAR_E_DUR = 6;
 const CLEAR_E0 = K.end - CLEAR_E_DUR - 2;
-// the frame flies in on "shape" and lands framing him (the attempt), then slides off him to sit under the labels and is
-// struck out on "Not" there (review r1 D28: struck out over him, its X covered the likely location and crossed HIM out)
-const PHOTO_LAND = Math.min(K.not24 - 12, K.photograph - 19);
-const PHOTO_IN = PHOTO_LAND - 14;
-const SLIDE_DUR = 8;
-const CROSS0 = Math.max(PHOTO_LAND + 6 + SLIDE_DUR + 1, K.not24 + 2);
-const SLIDE0 = CROSS0 - 1 - SLIDE_DUR;
+// the frame flies in on "rough shape" and lands framing him (the attempt), then slides off him to sit under the labels
+// and is struck out on "Not" there (review r1 D28: struck out over him, its X covered the likely location and crossed
+// HIM out). Review r2 N07: the slide used to run on a linear clock and stop dead at full speed (~56 px/frame) one frame
+// before the X. The beat is now built back from the strike: the slide's shared parameter is eased (FOLD_EASE: it starts
+// and lands slowly; the curved path, down first then across, is kept), it settles 2 frames, and the frame holds on him
+// 10 frames before it moves
+const CROSS0 = K.not24 + 2;
+const SLIDE_DUR = 12;
+const SLIDE_SETTLE = 2;
+const SLIDE0 = CROSS0 - SLIDE_SETTLE - SLIDE_DUR;
+const PHOTO_HOLD = 10;
+const PHOTO_LAND = SLIDE0 - PHOTO_HOLD;
+const PHOTO_IN = PHOTO_LAND - 12;
 const CROSS_DUR = 7;
+if (SLIDE0 - PHOTO_LAND < 10) throw new Error(`S4: the photo frame holds on him for only ${SLIDE0 - PHOTO_LAND} frames before it slides (needs 10)`);
+if (CROSS0 - (SLIDE0 + SLIDE_DUR) < 2) throw new Error(`S4: the photo frame is struck out ${CROSS0 - SLIDE0 - SLIDE_DUR} frames after its slide lands (needs 2)`);
+/** the slide's shared parameter (0..1); x follows t², y follows 1-(1-t)² (down first, then across) */
+const slideTAt = (g: number) => tw(g, SLIDE0, SLIDE_DUR, FOLD_EASE);
 const PHOTO_OUT_DUR = 8;
 const PHOTO_OUT = Math.min(Math.max(CROSS0 + CROSS_DUR + 3, K.photoEnd), K.end - PHOTO_OUT_DUR - 2);
 /** where the frame goes when it slides off him (screen px from his token; scale, degrees): below "not a photograph" */
@@ -460,7 +481,10 @@ const ruler1 = (g: number): RulerState => {
   } else if (g >= SWING0 && g < SWEEP0) {
     angle = TH0 * (1 - E.inOut(tw(g, SWING0, SWING_DUR, E.linear)));
   } else if (g >= SWEEP0 && g < SWEEP1) {
-    angle = Math.PI * E.inOut(tw(g, SWEEP0, SWEEP1 - SWEEP0, E.linear));
+    // review r2 N06: up to him, hold on him, on round (both legs on the gentle symmetric ease ruler 2 uses)
+    if (g < HOLD_H0) angle = H_BEARING * SOFT_EASE(tw(g, SWEEP0, HOLD_H0 - SWEEP0, E.linear));
+    else if (g < HOLD_H1) angle = H_BEARING;
+    else angle = lerp(H_BEARING, Math.PI, SOFT_EASE(tw(g, HOLD_H1, SWEEP1 - HOLD_H1, E.linear)));
   } else if (g >= SWEEP1) {
     angle = kf(g, [
       [HOPS[0], Math.PI],
@@ -493,22 +517,36 @@ const ruler4 = (g: number): RulerState => {
   if (worst > (12.5 * Math.PI) / 180) throw new Error(`S4: ruler 2 steps ${((worst * 180) / Math.PI).toFixed(1)}° in one frame (max 12.5°)`);
 })();
 
+// review r2 N06: ruler 1 never steps more than 12.5° in a frame on its sweep (up to him, the hold, on round to the far end)
+(() => {
+  let worst = 0;
+  let at_ = SWEEP0;
+  for (let g = SWEEP0 - 1; g <= SWEEP1; g++) {
+    const d = Math.abs(ruler1(g + 1).angle - ruler1(g).angle);
+    if (d > worst) [worst, at_] = [d, g];
+  }
+  if (worst > (12.5 * Math.PI) / 180) throw new Error(`S4: ruler 1 steps ${((worst * 180) / Math.PI).toFixed(1)}° in one frame at ${at_} on its sweep (max 12.5°)`);
+  // the tip rests exactly on him for the whole hold (R1 = |W1 H|)
+  for (let g = HOLD_H0; g < HOLD_H1; g++) if (Math.abs(ruler1(g).angle - H_BEARING) > 1e-9) throw new Error(`S4: ruler 1 is not held on him at ${g}`);
+})();
+
 /**
- * Review r1 D22: the frame the sweeping ruler's tip passes him (his bearing from W1, ~40°): his token pulses (with a
- * soft pop_tick) and the ruler's "1.33 m each way" length label rides by on the ruler, so the distance is tied to him.
+ * Review r1 D22 / r2 N06: the sweep stops with the tip on him (HOLD_H0): his token pulses (with a soft pop_tick) and the
+ * ruler's "1.33 m each way" length label fades in still beside the ruler, held until the sweep moves on (HOLD_H1).
  */
-const H_BEARING = Math.atan2(Hp.z - W1.z, Hp.x - W1.x);
 /** the first sweep frame at which ruler 1 has reached angle `a` */
 const sweepFrameAt = (a: number) => {
-  for (let g = SWEEP0; g < SWEEP1; g++) if (ruler1(g).angle >= a) return g;
+  for (let g = SWEEP0; g < SWEEP1; g++) if (ruler1(g).angle >= a - 1e-9) return g;
   throw new Error(`S4: the first ruler never sweeps past ${((a * 180) / Math.PI).toFixed(0)}°`);
 };
-const PASS_H = sweepFrameAt(H_BEARING);
-const PULSE_DUR = 8;
-// the delay chain on the left stays up until the tip has reached him (the whole chain 8.9 ns -> 2.65 m -> 1.33 m each
-// way is on screen together from NUM1 to the swing); it is gone before the sweeping ruler gets under it (~125°)
-const DELAY_OFF = Math.min(PASS_H, sweepFrameAt((100 * Math.PI) / 180) - 8);
-if (ruler1(DELAY_OFF + 8).angle > (115 * Math.PI) / 180) throw new Error('S4: the delay labels are still up when the sweeping ruler reaches them');
+const PASS_H = HOLD_H0;
+const PULSE_DUR = 10;
+// the delay chain on the left (the whole chain 8.9 ns -> 2.65 m -> 1.33 m each way) stays up while the tip rests on him
+// and fades out in place (opacity only: it used to shrink-pop out on the fast sweep) as the sweep moves on; it is gone
+// well before the sweeping ruler gets under it (~125°)
+const DELAY_OFF = HOLD_H1;
+const DELAY_OUT_DUR = 10;
+if (ruler1(DELAY_OFF + DELAY_OUT_DUR).angle > (115 * Math.PI) / 180) throw new Error('S4: the delay labels are still up when the sweeping ruler reaches them');
 
 /** The scene camera (the fold, then the plan: rise to see behind the wall, back to the hand-off framing). */
 const camAt = (g: number): Cam =>
@@ -545,15 +583,28 @@ const lenLabelOf = (s: RulerState) => {
 };
 /**
  * Its visibility: on from NUM1 (the ruler fully out) through the wobble; it leaves as the ruler swings down to the wall
- * (it would sit on the wall band), and rides by again on the sweep while the tip passes him (22°..92°: from clear of
- * the wall band to before the box reaches the partition top and the delay labels).
+ * (it would sit on the wall band). Review r2 N06: on the sweep it is driven by time, not by the ruler's angle: it fades
+ * in as the tip settles on him (HOLD_H0 - 3), is held at full for the whole hold, and fades out in place as the sweep
+ * moves on (HOLD_H1, 8 frames). It used to ride the fast sweep (22°..92°) and blinked by him in ~10 frames.
  */
+const NUM1_OUT_DUR = 8;
 const num1Vis = (g: number, s: RulerState) => {
   if (!s.on) return 0;
   if (g < SWEEP0) return tw(g, NUM1, 6) * (1 - tw(g, SWING0 + 1, 7));
-  if (g >= SWEEP1) return 0;
-  return smoothstep(22 * D2R, 34 * D2R, s.angle) * (1 - smoothstep(62 * D2R, 92 * D2R, s.angle));
+  // (it starts 3 frames before the hold, as the ruler settles the last ~2° onto him: one frame earlier the pinned box
+  // came within 16 px of the still-moving ruler's centre line; the module check below asks for 18)
+  return tw(g, HOLD_H0 - 3, 4) * (1 - tw(g, HOLD_H1, NUM1_OUT_DUR, E.inOut));
 };
+/** where it sits: beside the ruler up to the swing; on the sweep pinned where it sits beside the ruler held on him */
+const NUM1_PIN = lenLabelOf(ruler1(HOLD_H0));
+const num1At = (g: number, s: RulerState) => (g >= SWEEP0 ? NUM1_PIN : lenLabelOf(s));
+/**
+ * Each ghost of him on the arc fades in once the ruler's tip has passed its angle (never before "anywhere"). With the
+ * hold on him the tip reaches the far ghosts later than the old stagger, so the fade starts from the passing frame
+ * (a ghost that was passed after its fade had begun would pop in at full strength). None starts before the length label
+ * is half faded: the 12° ghost sits ~30 px right of the pinned "1.33 m each way" and read as part of it.
+ */
+const GHOST_IN = GHOST_A.map((a, i) => Math.max(K.anywhere - 6 + i * 3, sweepFrameAt(a) + 1, HOLD_H1 + NUM1_OUT_DUR / 2));
 // module check: wherever the label shows (NUM1 .. SWEEP1), its box clears the wall band, the partition, the sensor,
 // both tokens, the delay labels while they are up, the "distance known / direction unknown" pills and the 5 % margin
 (() => {
@@ -567,7 +618,7 @@ const num1Vis = (g: number, s: RulerState) => {
   for (let g = NUM1; g < SWEEP1; g++) {
     const s = ruler1(g);
     if (num1Vis(g, s) < 0.05) continue;
-    const q = lenLabelOf(s);
+    const q = num1At(g, s);
     const p = planToScreen(g, q.p);
     const b = {x0: p.x + q.off.x - LBL1.hw, x1: p.x + q.off.x + LBL1.hw, y0: p.y + q.off.y - LBL1.hh, y1: p.y + q.off.y + LBL1.hh};
     const hit = (what: string) => {
@@ -582,8 +633,20 @@ const num1Vis = (g: number, s: RulerState) => {
       if (Math.hypot(dx, dy) < ci.r) hit(ci.what);
     }
     const w1 = planToScreen(g, W1); // the delay labels: right-aligned at w1.x - 44, rows w1.y + 118 .. w1.y + 272
-    if (g < DELAY_OFF + 8 && b.x0 < w1.x - 44 + 8 && b.y1 > w1.y + 90 && b.y0 < w1.y + 300) hit('the delay labels');
+    if (g < DELAY_OFF + DELAY_OUT_DUR && b.x0 < w1.x - 44 + 8 && b.y1 > w1.y + 90 && b.y0 < w1.y + 300) hit('the delay labels');
     if (b.x1 > 1460 && b.y1 > 296 && b.y0 < 424) hit('"distance known / direction unknown"');
+    // review r2 N06: the ruler band itself (12 px half-width, outline, its 5 px shadow): on the sweep the label is pinned
+    // while the ruler settles onto him and moves on, so the box must clear the moving ruler too
+    if (s.len > 0.01) {
+      const o = planToScreen(g, W1);
+      const tip = planToScreen(g, polar(W1, s.len, s.angle));
+      const n = Math.max(1, Math.ceil(Math.hypot(tip.x - o.x, tip.y - o.y) / 4));
+      for (let i = 0; i <= n; i++) {
+        const px = lerp(o.x, tip.x, i / n);
+        const py = lerp(o.y, tip.y, i / n);
+        if (Math.hypot(Math.max(b.x0 - px, 0, px - b.x1), Math.max(b.y0 - py, 0, py - b.y1)) < 18) hit('the ruler');
+      }
+    }
   }
 })();
 // module check (review r1 D28): where the photo frame is struck out it clears the ring round him (so the X covers neither
@@ -619,6 +682,26 @@ const num1Vis = (g: number, s: RulerState) => {
     const right = lerp(sH.x, sH.x + PHOTO_OFF.dx, ex) + w0 * Math.cos(ra) + h0 * Math.sin(ra);
     const topY = lerp(sH.y + 6, sH.y + PHOTO_OFF.dy, ey) - (h0 * Math.cos(ra) + w0 * Math.sin(ra));
     if (right > 1400 && topY < 598 + 30 + 8) throw new Error(`S4: the sliding photo frame passes over the S4.7 labels (t ${t.toFixed(2)}: right ${right.toFixed(0)}, top ${topY.toFixed(0)})`);
+  }
+  // review r2 N07: the slide eases out (no dead stop): frame-to-frame centre steps <= 50 px, the last <= 12 px, the last
+  // three decreasing, then still until the strike
+  {
+    const centre = (g: number) => {
+      const h = planToScreen(g, Hp);
+      const t = slideTAt(g);
+      return {x: lerp(h.x, h.x + PHOTO_OFF.dx, t * t), y: lerp(h.y + 6, h.y + PHOTO_OFF.dy, 1 - (1 - t) * (1 - t))};
+    };
+    const steps: number[] = [];
+    for (let g = SLIDE0; g < SLIDE0 + SLIDE_DUR; g++) steps.push(Math.hypot(centre(g + 1).x - centre(g).x, centre(g + 1).y - centre(g).y));
+    const n = steps.length;
+    const fmt = steps.map((v) => v.toFixed(0)).join(', ');
+    if (Math.max(...steps) > 50) throw new Error(`S4: the photo frame's slide steps up to ${Math.max(...steps).toFixed(0)} px a frame (max 50): ${fmt}`);
+    if (steps[n - 1] > 12) throw new Error(`S4: the photo frame's slide ends on a ${steps[n - 1].toFixed(0)} px step (max 12): ${fmt}`);
+    if (!(steps[n - 3] > steps[n - 2] && steps[n - 2] > steps[n - 1])) throw new Error(`S4: the photo frame's slide does not slow into its stop: ${fmt}`);
+    for (let g = SLIDE0 + SLIDE_DUR; g < CROSS0; g++) {
+      const d = Math.hypot(centre(g + 1).x - centre(g).x, centre(g + 1).y - centre(g).y);
+      if (d > 1e-6) throw new Error(`S4: the photo frame still moves at ${g}, before the strike at ${CROSS0}`);
+    }
   }
 })();
 
@@ -755,10 +838,9 @@ export const S4Geometry: React.FC = () => {
   const tokH = tokenAt(Hp.x, Hp.z, tilt);
   const sW = projectWith(st, {x: Sp.x, z: Sp.z, h: L.sensor.h});
   const opFacing = facingOf(sW.x - tokOp.x, sW.y - tokOp.y);
-  const ghostT = (a: number, i: number) => {
-    // a ghost appears once the ruler tip has passed its angle (and not before "anywhere")
-    const passed = r1.arc >= a ? 1 : 0;
-    return passed * tw(g, K.anywhere - 6 + i * 3, 10) * (1 - tw(g, GHOSTS_OFF, 14));
+  const ghostT = (i: number) => {
+    // a ghost fades in once the ruler tip has passed its angle (and not before "anywhere"): GHOST_IN
+    return tw(g, GHOST_IN[i], 10) * (1 - tw(g, GHOSTS_OFF, 14));
   };
 
   /* ---- items standing in the room */
@@ -812,7 +894,7 @@ export const S4Geometry: React.FC = () => {
       )}
       {/* "anywhere on this arc": faint ghosts of him along the first arc */}
       {GHOST_A.map((a, i) => {
-        const t = ghostT(a, i);
+        const t = ghostT(i);
         if (t <= 0.001) return null;
         const p = toW(polar(W1, R1, a));
         // the ghost the ruler's tip is resting on ("all the same distance") firms up a little
@@ -939,10 +1021,11 @@ export const S4Geometry: React.FC = () => {
   const insetOpen = sp(g, INSET_OPEN, SNAP) * (1 - E.in(tw(g, INSET_CLOSE, 12, E.linear)));
   const lblPop = (t0: number, t1 = 1e7, d = 10) => (g < t0 ? 0 : E.back(clamp01((g - t0) / d)) * (1 - tw(g, t1, 8)));
   const lblOp = (t0: number, t1 = 1e7) => tw(g, t0, 6) * (1 - tw(g, t1, 8));
+  const chainOp = (t0: number) => tw(g, t0, 6) * (1 - tw(g, DELAY_OFF, DELAY_OUT_DUR, E.inOut));
   const w1S = toS(W1);
-  // "1.33 m each way": a length label beside ruler 1 (lenLabelOf / num1Vis, checked at module load)
+  // "1.33 m each way": a length label beside ruler 1 (num1At / num1Vis, checked at module load)
   const num1 = (() => {
-    const q = lenLabelOf(r1);
+    const q = num1At(g, r1);
     const p = toS(q.p);
     return {x: p.x + q.off.x, y: p.y + q.off.y, vis: num1Vis(g, r1)};
   })();
@@ -964,7 +1047,7 @@ export const S4Geometry: React.FC = () => {
   const phCross = E.out(tw(g, CROSS0, CROSS_DUR, E.linear));
   // the photo frame slides off him (to sit under "not a photograph") before it is struck out
   // (down first, then across: on a straight line its corner swept over "rough shape" for a few frames)
-  const slideT = tw(g, SLIDE0, SLIDE_DUR, E.linear);
+  const slideT = slideTAt(g);
   const slideX = slideT * slideT;
   const slideY = 1 - (1 - slideT) * (1 - slideT);
   // the "likely location" leader ends on the ring's edge
@@ -995,17 +1078,18 @@ export const S4Geometry: React.FC = () => {
         <Pill x={w1S.x - 44} y={w1S.y + 170} align="right" size={36} pop={lblPop(FLASH_LBL + 3, DELAY_LBL - 6)} opacity={lblOp(FLASH_LBL + 3, DELAY_LBL - 6)}>
           at one spot
         </Pill>
-        {/* the delay chain (review r1 D23): ≈ 8.9 ns here -> ≈ 2.65 m there and back -> the ruler's 1.33 m each way */}
-        <Pill x={w1S.x - 44} y={w1S.y + 118} align="right" size={36} pop={lblPop(DELAY_LBL, DELAY_OFF)} opacity={lblOp(DELAY_LBL, DELAY_OFF)}>
+        {/* the delay chain (review r1 D23): ≈ 8.9 ns here -> ≈ 2.65 m there and back -> the ruler's 1.33 m each way.
+            Review r2 N06: it pops in, but leaves by fading in place (chainOp), never by shrinking */}
+        <Pill x={w1S.x - 44} y={w1S.y + 118} align="right" size={36} pop={lblPop(DELAY_LBL)} opacity={chainOp(DELAY_LBL)}>
           extra delay here
         </Pill>
-        <Pill x={w1S.x - 44} y={w1S.y + 172} align="right" size={40} mono pop={lblPop(DELAY_LBL + 3, DELAY_OFF)} opacity={lblOp(DELAY_LBL + 3, DELAY_OFF)}>
+        <Pill x={w1S.x - 44} y={w1S.y + 172} align="right" size={40} mono pop={lblPop(DELAY_LBL + 3)} opacity={chainOp(DELAY_LBL + 3)}>
           ≈ {DELAY1_TXT} ns
         </Pill>
-        <Pill x={w1S.x - 44} y={w1S.y + 226} align="right" size={40} mono pop={lblPop(DELAY_LBL + 8, DELAY_OFF)} opacity={lblOp(DELAY_LBL + 8, DELAY_OFF)}>
+        <Pill x={w1S.x - 44} y={w1S.y + 226} align="right" size={40} mono pop={lblPop(DELAY_LBL + 8)} opacity={chainOp(DELAY_LBL + 8)}>
           ≈ {TRIP1_TXT} m
         </Pill>
-        <Pill x={w1S.x - 44} y={w1S.y + 272} align="right" size={36} pop={lblPop(DELAY_LBL + 11, DELAY_OFF)} opacity={lblOp(DELAY_LBL + 11, DELAY_OFF)}>
+        <Pill x={w1S.x - 44} y={w1S.y + 272} align="right" size={36} pop={lblPop(DELAY_LBL + 11)} opacity={chainOp(DELAY_LBL + 11)}>
           there and back
         </Pill>
         {/* S4.2: the ruler's length (review r1 D22) */}
@@ -1122,8 +1206,10 @@ export const SFX: Sfx[] = [
   {f: Math.round(SCH1B.end), kind: 'echo_return', gain: -5, note: 'listens'},
   {f: R1_EXT0, kind: 'ruler_extend', note: 'ruler out to |W1 H|'},
   {f: RELAX + 2, kind: 'relief_sigh', gain: -3, dur: 0.6, note: 'J3a: not which direction (in the pause after the word, with the eyes-shut exhale)'},
-  {f: SWEEP0, kind: 'arc_draw', dur: (SWEEP1 - SWEEP0) / 30, note: 'arc 1 sweep'},
-  {f: PASS_H, kind: 'pop_tick', gain: -9, pitch: 3, note: 'the sweeping tip passes him: his token pulses'},
+  // review r2 N06: the sweep pauses on him (HOLD_H0..HOLD_H1), so the pen sound stops there too
+  {f: SWEEP0, kind: 'arc_draw', dur: (HOLD_H0 - SWEEP0) / 30, note: 'arc 1 sweep, up to him'},
+  {f: HOLD_H1, kind: 'arc_draw', dur: (SWEEP1 - HOLD_H1) / 30, note: 'arc 1 sweep, on round from him'},
+  {f: PASS_H, kind: 'pop_tick', gain: -9, pitch: 3, note: 'the sweeping tip stops on him: his token pulses'},
   ...HOPS.map((h, i) => ({f: h + HOP_DUR - 1, kind: 'pop_tick' as const, gain: -10 - i, pitch: 2 - i, note: 'ruler tip taps a ghost: same distance'})),
   {f: SCH4.start, kind: 'sensor_pulse', pitch: 2, note: 'flash at W4'},
   {f: Math.round(SCH4.vertexFrames[1]), kind: 'bounce_tick', pitch: 3, note: 'W4'},

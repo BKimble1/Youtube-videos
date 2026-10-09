@@ -15,8 +15,6 @@ import {
   partitionHides,
   partitionTopH,
   projectWith,
-  SLAB_T,
-  WALL_T,
   rigAt,
   rigStyle,
   setSliceMaxX,

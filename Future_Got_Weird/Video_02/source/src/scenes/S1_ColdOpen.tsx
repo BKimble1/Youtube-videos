@@ -1,12 +1,12 @@
 import React from 'react';
-import {AbsoluteFill} from 'remotion';
+import {AbsoluteFill, Easing} from 'remotion';
 import {C, F} from '../theme';
 import type {Sfx} from '../lib/sfx';
 import {useG} from '../lib/SceneFrame';
 import {at, scene, seg, segEnd} from '../lib/timeline';
 import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
 import {E, SOFT, SNAP, camPath, hop, ring, sp, tw} from '../lib/motion';
-import {CAM_PATH, CAM_PATH_SIDE, CAM_ROOM, RAISED_TILT} from '../lib/shots';
+import {CAM_PATH, CAM_PATH_SIDE, CAM_ROOM, HANDOFF_S2S3_EXTEND, RAISED_TILT} from '../lib/shots';
 import {
   LAYOUT,
   PTS,
@@ -19,6 +19,7 @@ import {
   projectWith,
   rigAt,
   rigStyle,
+  setSliceMaxX,
   tiltAt,
   viewAt,
   type PlanPt,
@@ -28,7 +29,7 @@ import {LAYOUT as OLAYOUT, assertPath, confocalPath, firstOccluderHit, layoutPoi
 import {rand} from '../lib/anim';
 import {CAST} from '../components/cast';
 import {GapMarker, RoomSet, type RoomItem} from '../components/v02/RoomSet';
-import {LightPath, ScatterFan, type ToPx} from '../components/v02/Optics';
+import {LightPath, ScatterFan, mixHex, type ToPx} from '../components/v02/Optics';
 import {
   ARMS,
   Character2,
@@ -62,6 +63,7 @@ import {ArrivalRace, MiniTrackScreen, NSS, RulerCard, SpinningQuestion, Stopwatc
 import {handPos, reachLocal} from '../components/Character';
 import {PLAN_AREA, PLAN_VIEW, PlanCard, PlanCross, PlanRoute, PlanSpot, planCardSize, viewForArea} from '../components/v02/PlanCard';
 import {PlanTapeLanes, TapeKey} from '../components/v02/S1_PlanTape';
+import {clearanceTo, fadeShapes, healAt, knockout, lightPathShapes, mergeShapes, noShapes, pieceLength, routeShapes, scatterFanShapes, type KPt, type KShapes, type LightPathGeom, type ScatterFanGeom} from '../components/v02/S1_Knockout';
 
 /**
  * S1 · Cold open: the impossible view (s01–s08). Storyboard shots S1.1–S1.7.
@@ -80,15 +82,23 @@ import {PlanTapeLanes, TapeKey} from '../components/v02/S1_PlanTape';
  *            ("blocked"); the opening between the partition's far end and the wall is marked on the floor (GapMarker,
  *            outlined) and the route round the end, via the wall, draws on: in the room it goes behind the
  *            partition's FAR END by the wall and ends at his outline; the card shows it thread the opening, on the
- *            same schedule. As the route turns into the opening, "blocked" hands over to "gap", whose leader drops to
- *            the floor of the opening (review r1 D02).
+ *            same schedule. "blocked" goes as the route reaches the wall; the wall spot appears there as a quiet ink
+ *            outline (it lights only when a pulse is at the wall, review r2 D02 / lead R2-L1). Once the route head has
+ *            gone behind the far end (>= 8 frames after the spot, review r2 N01) "gap" pops on the wall above the slot
+ *            and its leader draws DOWN from the pill's right edge (elbow at x ~586, clear of the spot and the
+ *            partition) to the floor of the opening, where the GapMarker outline pulses once. The leader is in the
+ *            backdrop and knocked out (16 px) wherever light crosses it (lead R2-L5), so the W -> H slot crossing and
+ *            the S1.5 fan stay unbroken.
  *  S1.5 s05  a slowed pulse travels S -> W -> H -> W -> S (W3, asserted below), scatter fans at the wall and at him,
- *            later legs thinner and paler; the lit wall spot is an ellipse on the wall plane, lit while light is at the
- *            wall; when the (hidden) pulse reaches him his wall-side outline flashes saffron (rimFlash) and he flinches
+ *            later legs thinner and paler; the lit wall spot is an ellipse on the wall plane with a saffron diamond, lit
+ *            only within 10 frames of a pulse at the wall (out and back; the race; the S1.7 tape), otherwise an ink
+ *            outline at 0.5; when the (hidden) pulse reaches him his wall-side outline flashes saffron (rimFlash) and he flinches
  *            (as in S3 and S9). The card runs the same pulse in plan. On the fire frame (the sensor_pulse cue) a saffron
  *            burst flashes at the emitting lens and holds until the pulse is out of the box (review r1 D15); the wall
  *            fan and the glow are kept clear of her head and pencil (nearHer, review r1 D02).
- *  S1.6 s06-07 the card leaves, pan (CAM_PATH_S1 -> CAM_PATH_SIDE) to make room; two pulses race: the quick wall echo lands first
+ *  S1.6 s06-07 the card leaves, pan (CAM_PATH_S1 -> CAM_PATH_SIDE, PAN_EASE) to make room; from the pan on the wall and floor run
+ *            on past the room's left end (RoomSet extendLeft = HANDOFF_S2S3_EXTEND, as S2.4 and S3 draw this framing,
+ *            review r2 N03); two pulses race: the quick wall echo lands first
  *            on a mini arrival timeline, the roundabout one ~7 ns later (illustrative). A webcam tries to time it and
  *            shrugs; the sensor close-up replaces it: "time-of-flight sensor: times its own light's round trip".
  *  S1.7 s08  a light ruler: 1 nanosecond ≈ 30 cm ≈ 1 ft; then the PlanCard takes the ruler's slot with the detour
@@ -402,12 +412,25 @@ const CARD_TAPE_RISE = 20;
 const CARD_POS = {x: 1920 * 0.95 - CARD_SIZE.w, y: Math.ceil(1080 * 0.05) + CARD_TAPE_RISE};
 
 // S1.6 — pan (CAM_PATH_S1 -> CAM_PATH_SIDE: the cards' column opens on the left), race, timeline. From CAM_PATH_S1
-// (review r1 D02) the pan is ~640 world px (it was ~465): it starts a little before s06, as soon as the S1.5 echo is
-// home and the card and chips have left, and ends 4 frames later than the shorter pan did (K.s06 + 32), so its peak
-// speed stays near the old pan's (~37 screen px a frame); the race starts 2 frames after it lands.
+// (review r1 D02) the pan is ~640 world px (~760 screen px; it was ~465 world px): it starts a little before s06, as
+// soon as the S1.5 echo is home and the card and chips have left, and lands at K.s06 + 32; the race starts 2 frames
+// after it lands. Review r2 N02: with E.inOut (peak 2.86x its average speed) it peaked at ~53-56 screen px a frame, so
+// it now eases with PAN_EASE (peak 2.0x the average, as S4's SOFT_EASE), same frames and cues; its per-frame screen
+// motion is asserted <= PAN_PEAK_PX at load (S1_MARGINS).
 const PAN_END = K.s06 + 32;
 const PAN0 = Math.min(PAN_END - 28, Math.max(K.s06 - 8, PULSE1 + 12));
 const PAN_DUR = PAN_END - PAN0;
+const PAN_EASE = Easing.bezier(0.5, 0, 0.5, 1);
+const PAN_PEAK_PX = 44;
+/**
+ * Review r2 N03: from the pan on, the room is drawn with its wall, skirting and floor continued EXT_M past its open
+ * left end (RoomSet extendLeft), the same set S2.4 and S3 draw at this framing (lib/shots HANDOFF_S2S3_EXTEND), so the
+ * S1.6 pan never finds the set's edge and the cards sit over wall and floor. It switches on at PAN0, while the camera
+ * still holds CAM_PATH_S1 and the room's left end is out of frame (so the switch shows nothing); the tilt-0 CAM_ROOM
+ * shots before (S1.1-S1.2) keep their dollhouse end. Asserted at load (S1_MARGINS).
+ */
+const EXT_M = HANDOFF_S2S3_EXTEND;
+const EXT_ON = PAN0;
 const CARD_OUT = PAN0 - CARD_OUT_DUR; // the S1.4-S1.5 card is gone before the pan moves the room under it
 const CHIPS_OUT = PAN0 - 10; // the S1.5 chips too (at CAM_PATH_SIDE they would sit on his legs)
 const RACE_CARD0 = PAN0 + PAN_DUR - 4; // after the pan has made room
@@ -504,43 +527,114 @@ const TAPE_TURN = (() => {
   return TAPE1;
 })();
 /**
- * The lit wall spot's glow (an ellipse on the wall at W3) is light, so it shows only while light is on the wall: it pops
- * with the diamond when the S1.4 route reaches the wall and stays through the S1.5 pulse; it fades once that echo is
- * home (with the S1.5 trails); it lights again when the S1.6 race's pulses reach the wall and fades with the race's
- * trails; and it is on while the S1.7 detour tape runs from it. The diamond marker stays (the card's spot mirrors it). Returns the pop
- * (size, E.back) and the opacity.
+ * The wall spot W3 is lit (a saffron diamond plus the glow, an ellipse on the wall) only while a pulse is AT the wall
+ * (review r2 D02 residual, lead R2-L1): from 3 frames before to 10 frames after a pulse reaches or leaves it (the S1.5
+ * pulse out and back, the S1.6 race out and back; the race's quick echo bounces there on the same frame as the long
+ * one) and while the S1.7 detour tape runs from it (the card's tape; the room follows it). Otherwise the in-room marker
+ * is a quiet ink outline at QUIET_OP with no fill and no glow, so in the long S1.4 and S1.6-S1.7 holds nothing bright
+ * sits off her pencil's tip (her mark is shared with S2, S3 and S9 and stays). It appears (quiet) as the S1.4 route
+ * reaches the wall. The card's spot is not changed.
  */
-const glowAt = (g: number) => {
-  const r = RACE_SCHED.vertexFrames;
-  const s15 = 1 - tw(g, TRAIL_OUT, 10);
-  const race = tw(g, r[1] - 3, 4) * (1 - tw(g, RACE_FADE, 12)); // with the race's own trails
-  const tapeOn = tw(g, TAPE0 - 4, 6);
-  return {pop: route0Spot(g), op: Math.max(s15, race, tapeOn)};
+const QUIET_OP = 0.5;
+const LIT_PRE = 3;
+const LIT_POST = 10;
+const LIT_FADE = 6;
+const LIT_EVENTS = [VF[1], VF[3], RACE_SCHED.vertexFrames[1], RACE_SCHED.vertexFrames[3]];
+const litAt = (g: number) => {
+  const win = (a: number, b: number) => tw(g, a - LIT_PRE, LIT_PRE, E.linear) * (1 - tw(g, b + LIT_POST - LIT_FADE, LIT_FADE, E.linear));
+  return Math.max(...LIT_EVENTS.map((e) => win(e, e)), win(TAPE0, TAPE1));
 };
-/** The "gap" label (and its leader to the floor) pops as the route reaches the wall spot and turns into the opening;
- *  "blocked" hands over to it, gone just before (its leader would otherwise run past the "blocked" label). */
-const GAP_LABEL0 = Math.round(SPOT0);
-const BLOCKED_OUT = GAP_LABEL0 - 8;
-const gapLabelT = (g: number) => (g >= GAP_LABEL0 ? E.back(clamp01((g - GAP_LABEL0) / 10)) * (1 - tw(g, VF[2] + 8, 14)) : 0);
+/** The glow's pop (size, E.back, with the diamond's) and opacity (lit). */
+const glowAt = (g: number) => ({pop: route0Spot(g), op: litAt(g)});
 
 /* ---- the "gap" label (screen px at CAM_PATH_S1, where the camera holds from RISE_END to PAN0): on the wall above the
- *      slot between her head and the partition's far end (the review r1 D02 shift: 220 px left with the room), its
- *      leader dropping to the opening itself, ON THE FLOOR in the middle of the slot (OCC.x, OCC.z0 / 2, h 0), where
- *      the GapMarker's dashed threshold and outlined patch are. Clearances asserted at module load (end of file). */
+ *      slot between her head and the partition's far end (the review r1 D02 shift: 220 px left with the room). Review
+ *      r2 N01 (lead R2-L5): it comes in only once the route head has gone behind the partition's far end, i.e. the
+ *      route has turned into the opening (>= 8 frames after the wall spot appears, so the pill never pops with the
+ *      spot), and "blocked" goes 8 frames before the spot. Its leader then draws DOWN, leaving the pill's right edge,
+ *      elbowing at LEADER_X (clear of the glow, the diamond and the partition's far edge) and running straight down to
+ *      the floor of the slot, ending ON the GapMarker's dashed threshold (~0.57 of the way from the wall to the far
+ *      end), inside its outlined patch; its end dot pops and the patch's outline pulses once. It is in the backdrop (under the people, the partition
+ *      and the light) and knocked out LEADER_CLEAR_PX around every stroke, dot and ring of light on screen
+ *      (S1_Knockout: the W -> H slot crossing, the S1.5 fans, the pulse, the blocked line), so the light passes over
+ *      a gap in it. Clearances asserted at module load (end of file). */
+const ROUTE_PTS: P2[] = [S, WP, H];
+const ROUTE_LEN = pathLength(ROUTE_PTS);
+/** The first frame the S1.4 route's head is hidden behind the partition's far end (it has turned into the opening). */
+const ROUTE_TURN = (() => {
+  const behind = partitionHides(RAISED_VIEW, LIGHT_H);
+  const sw = pathLength([S, WP]);
+  for (let f = Math.ceil(SPOT0); f <= ROUTE1; f++) {
+    const m = routeAt(f) * ROUTE_LEN;
+    if (m > sw && behind(pointAlong(ROUTE_PTS, m))) return f;
+  }
+  throw new Error('S1: the S1.4 route never goes behind the partition');
+})();
+/** At least GAP_STAGGER frames after the spot (asserted); +10 unless the route turns later. */
+const GAP_STAGGER = 8;
+const GAP_LABEL0 = Math.max(ROUTE_TURN, Math.round(SPOT0) + 10);
+const BLOCKED_OUT = Math.round(SPOT0) - 8;
+const gapLabelT = (g: number) => (g >= GAP_LABEL0 ? E.back(clamp01((g - GAP_LABEL0) / 10)) * (1 - tw(g, VF[2] + 8, 14)) : 0);
+/** The leader draws down once the pill has mostly popped (E.back is past ~0.9 of its size 3 frames in), over
+ *  LEADER_DUR, easing into the floor; the end dot pops when the draw reaches 0.9; the patch outline pulses as it lands. */
+const LEADER0 = GAP_LABEL0 + 3;
+const LEADER_DUR = 12;
+const LEADER_EASE = Easing.bezier(0.45, 0, 0.25, 1);
+const leaderDrawAt = (g: number) => tw(g, LEADER0, LEADER_DUR, LEADER_EASE);
+const LEADER_DOT = (() => {
+  for (let f = LEADER0; f <= LEADER0 + LEADER_DUR; f++) if (leaderDrawAt(f) >= 0.9) return f;
+  return LEADER0 + LEADER_DUR;
+})();
+const LEADER_LAND = LEADER0 + LEADER_DUR;
+const OUTLINE_PULSE = 12;
 const GAP_LABEL_SIZE = 36;
-/** Conservative box of the ScreenLabel "gap" at 36 px (Nunito 800 ~63 px of text, 16 px padding, 3 px border). */
+/** Conservative box of the ScreenLabel "gap" at 36 px (Nunito 800 ~63 px of text, 16 px padding, 3 px border); the
+ *  drawn pill is x ~474.7-575.3, y ~207.5-264.5 (labelBox). */
 const GAP_LABEL = {x: 470, y: 207, w: 110, h: 58};
 const camToWorld = (cam: Cam, p: {x: number; y: number}) => ({x: cam.cx + (p.x - 960) / cam.zoom, y: cam.cy + (p.y - 540) / cam.zoom});
-const GAP_PT = projectWith(RAISED_VIEW, {x: OCC.x, z: OCC.z0 / 2, h: 0});
 /** The S1.4 GapMarker (RoomSet opt-ins): a wider, near-opaque white patch with a dashed ink edge (ink and white only). */
 const GAP_MARK = {halfW: 0.18, patchOpacity: 0.9, outline: true};
-/** World px (drawn in the backdrop, under the people, the partition and the light): from the label's bottom edge
- *  (clear of its rounded corner) straight down to the floor point. */
-const GAP_LEADER = (() => {
-  const toScr = worldToScreen(CAM_PATH_S1, GAP_PT.x, GAP_PT.y);
-  const x = Math.min(toScr.x, GAP_LABEL.x + GAP_LABEL.w - 18);
-  return {from: camToWorld(CAM_PATH_S1, {x, y: GAP_LABEL.y + GAP_LABEL.h + 2}), to: {x: GAP_PT.x, y: GAP_PT.y}};
+/** The leader's stroke (world px), its end dot, and its clearance from the light (screen px, at CAM_PATH_S1). */
+const LEADER_W = 4;
+const LEADER_DOT_R = 6;
+const LEADER_CLEAR_PX = 16;
+/** Light drawn at >= this opacity knocks the leader out fully; near fainter light (the blocked line, a bounce ring or
+ *  a fan fading out) the leader is drawn at 1 - opacity / LEADER_OP_FULL, so it heals as the light goes, without a pop.
+ *  The route, faded to 0.25 while the pulse runs, still knocks it out fully. */
+const LEADER_OP_FULL = 0.25;
+/** A piece of leader shorter than this (screen px; a speck between two fan rays) is drawn fainter in proportion. */
+const LEADER_SPECK_PX = 14;
+/** The leader's vertical (screen px at CAM_PATH_S1): between the lit glow's rim (its outer stroke edge at ~559) + 20
+ *  and the partition's far edge as drawn (with its ink, ~593.5) - 12; asserted at load. */
+const LEADER_X = 580.5;
+/** The leader (world px): from just inside the pill's right edge (the pill covers its start), right to the elbow at
+ *  LEADER_X, then straight down to the GapMarker's dashed threshold on the floor of the slot (the partition's line,
+ *  plan x OCC.x, at the depth where it crosses LEADER_X: ~0.57 of the way from the wall to the far end). */
+const GAP_LEADER: KPt[] = (() => {
+  const cy = GAP_LABEL.y + GAP_LABEL.h / 2;
+  const sx = (z: number) => {
+    const q = projectWith(RAISED_VIEW, {x: OCC.x, z, h: 0});
+    return worldToScreen(CAM_PATH_S1, q.x, q.y).x;
+  };
+  let lo = 0.01;
+  let hi = OCC.z0 - 0.02;
+  if ((sx(lo) - LEADER_X) * (sx(hi) - LEADER_X) > 0) throw new Error(`S1: the gap leader's vertical (x ${LEADER_X}) misses the slot's threshold`);
+  for (let i = 0; i < 40; i++) {
+    const m = (lo + hi) / 2;
+    if ((sx(lo) - LEADER_X) * (sx(m) - LEADER_X) <= 0) hi = m;
+    else lo = m;
+  }
+  const end = projectWith(RAISED_VIEW, {x: OCC.x, z: (lo + hi) / 2, h: 0});
+  return [camToWorld(CAM_PATH_S1, {x: GAP_LABEL.x + GAP_LABEL.w - 9, y: cy}), camToWorld(CAM_PATH_S1, {x: LEADER_X, y: cy}), {x: end.x, y: end.y}];
 })();
+const LEADER_END = GAP_LEADER[GAP_LEADER.length - 1];
+const GAP_LEADER_LEN = pieceLength(GAP_LEADER);
+/** The patch outline GapMarker draws (outline: true), for the landing pulse. */
+const gapPatchD = (s: ViewState) => {
+  const zEnd = OCC.z0 - 0.02;
+  const P = (x: number, z: number) => projectWith(s, {x, z, h: 0});
+  return `${[P(OCC.x - GAP_MARK.halfW, 0.02), P(OCC.x + GAP_MARK.halfW, 0.02), P(OCC.x + GAP_MARK.halfW, zEnd), P(OCC.x - GAP_MARK.halfW, zEnd)].map((q, i) => `${i ? 'L' : 'M'} ${q.x.toFixed(2)} ${q.y.toFixed(2)}`).join(' ')} Z`;
+};
 
 /* ================================================================== sound cue sheet */
 
@@ -753,8 +847,53 @@ const roomCam = (g: number): Cam =>
     ? camPath(g, CAM_ROOM, [{at: PUSH0, dur: PUSH_DUR, to: CAM_PUSH}])
     : camPath(g, CAM_ROOM, [
         {at: RISE0, dur: RISE_DUR, to: CAM_PATH_S1},
-        {at: PAN0, dur: PAN_DUR, to: CAM_PATH_SIDE},
+        {at: PAN0, dur: PAN_DUR, to: CAM_PATH_SIDE, ease: PAN_EASE},
       ]);
+
+/**
+ * The S1.4-S1.5 room light at frame g, as the props the overlay draws it with (ScatterFan / LightPath / Route get these
+ * very objects), plus its shapes (S1_Knockout) for the "gap" leader's knock-out and the module-load checks: the
+ * blocked line and its cross, the route round the end, the wall and him fans and the slowed pulse. `her`/`him` are the
+ * frame's rig places, `tip` her pencil's tip (the wall fan is clipped near her, nearHer).
+ */
+const s15Light = (g: number, s: ViewState, her: RigPlace, him: RigPlace, tip: Pt) => {
+  const toPx = roomToPx(s);
+  const hidden = roomHides(s, {her, him});
+  const fanHidden = (p: P2) => hidden(p) || (p.z < LAYOUT.operator.z + 0.05 && nearHer(her, tip, projectWith(s, at3(p))));
+  // the ghost straight line from the sensor toward him, stopped by the partition ("blocked")
+  const ghost = g >= K.fires + 12 ? 0 : tw(g, LINE0, CONTACT - LINE0, E.in);
+  const ghostOp = 1 - tw(g, K.fires, 12);
+  const ghostCross = g >= CONTACT ? 15 * E.back(clamp01((g - CONTACT) / 6)) : 0;
+  // the route round the end, via the wall (static preview), then faint while the pulse runs
+  const route = routeAt(g);
+  const routeOp = (1 - 0.75 * tw(g, K.fires, 10)) * (1 - tw(g, TRAIL_OUT, 10));
+  const routeHead = route * ROUTE_LEN;
+  // the pulse (S1.5)
+  const pulseOp = 1 - tw(g, TRAIL_OUT, 12);
+  const pulseOn = g >= PULSE0 && pulseOp > 0;
+  const fanW: ScatterFanGeom = {origin: WP, dirs: dirsW, length: 0.62, toPx, t: tw(g, VF[1], 12), release: tw(g, VF[1] + 16, 18), layout: OLAYOUT, hidden: fanHidden, seed: 5};
+  const fanH: ScatterFanGeom = {origin: H, dirs: dirsH, length: 0.6, toPx, t: tw(g, VF[2], 10), release: tw(g, VF[2] + 12, 14), layout: OLAYOUT, hidden, seed: 8, width: 3.5};
+  const pulse: LightPathGeom = {points: PATH, toPx, t: SCHED.progress(g), pulses: 3, pulseGap: 0.09, intensityFalloff: 0.6, layout: OLAYOUT, hidden};
+  const shapes = (): KShapes => {
+    const parts: KShapes[] = [];
+    if (ghost > 0 && ghostOp > 0) {
+      const a = toPx(S);
+      const b = toPx(GHOST_HIT);
+      parts.push({segs: [{a, b: {x: lerp(a.x, b.x, ghost), y: lerp(a.y, b.y, ghost)}, hw: 2.5, op: 0.85 * ghostOp}], discs: ghostCross > 0.5 ? [{c: {x: b.x - 12, y: b.y}, r: ghostCross * Math.SQRT2 + 5.5, op: ghostOp}] : []});
+    }
+    if (route > 0 && routeOp > 0) parts.push(routeShapes({points: ROUTE_PTS, head: routeHead, toPx, hidden, hw: 3, op: routeOp}));
+    if (pulseOn) parts.push(scatterFanShapes(fanW), scatterFanShapes(fanH), fadeShapes(lightPathShapes(pulse), pulseOp));
+    return parts.length ? mergeShapes(...parts) : noShapes();
+  };
+  return {toPx, hidden, fanHidden, ghost, ghostOp, ghostCross, route, routeOp, routeHead, pulseOp, pulseOn, fanW, fanH, pulse, shapes};
+};
+
+/** The "gap" leader's drawn pieces at frame g (world px): drawn on from the pill, knocked out around the light. */
+const leaderPieces = (g: number, shapes: KShapes) => {
+  const draw = leaderDrawAt(g);
+  if (draw <= 0) return [];
+  return knockout(GAP_LEADER, draw * GAP_LEADER_LEN, shapes, LEADER_CLEAR_PX / CAM_PATH_S1.zoom, LEADER_W / 2, LEADER_OP_FULL, LEADER_SPECK_PX / CAM_PATH_S1.zoom);
+};
 
 const RoomShot: React.FC<{g: number}> = ({g}) => {
   const tilt = roomTilt(g);
@@ -792,11 +931,11 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   /* ---- light paths (S1.4-S1.7), drawn over the set. Hidden exactly where the camera cannot see them: behind the
    *      partition as drawn (both faces, the arched top band, the end faces, the outline), behind either person
    *      (so the W -> H leg ends at his outline) and inside the sensor box (the pulse leaves its far face). */
-  const hidden = roomHides(s, {her: ch.place, him: gu.place});
   // the wall scatter fans (and the wall-spot glow, masked) keep clear of her head and pencil (review r1 D02 / lead L15):
   // light behind her is hidden inside her silhouette grown by HER_CLEAR_W and within PENCIL_CLEAR_W of her pencil's tip
   const tip = pencilTip(ch.place, ch.pose);
-  const fanHidden = (p: P2) => hidden(p) || (p.z < LAYOUT.operator.z + 0.05 && nearHer(ch.place, tip, projectWith(s, at3(p))));
+  const L15 = s15Light(g, s, ch.place, gu.place, tip);
+  const {hidden, fanHidden} = L15;
   const herMask = <HerClearMask id="s1-her-clear" place={ch.place} tip={tip} />;
   // arrival: the (hidden) pulse reaches him from behind; his wall-side outline flashes (S1.5 and the S1.6 race), and
   // again when the S1.7 card's detour tape reaches him
@@ -841,18 +980,27 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   const gapIn = tw(g, ROUTE0 - 8, 12, E.out);
   const gapOut = 1 - tw(g, VF[2] + 8, 14);
   const gapT = gapIn * gapOut;
-  // the lit wall spot: an ellipse ON the wall plane (real light, so saffron), popping with the diamond marker; it is
-  // lit only while light is at the wall (glowAt), the diamond marker stays
+  // the wall spot: a diamond marker from the S1.4 route's arrival, lit (saffron, with the glow, an ellipse ON the wall
+  // plane: real light, so saffron) only while a pulse is at the wall (litAt); otherwise a quiet ink outline
   const spotT = route0Spot(g);
+  const lit = litAt(g);
   const glow = glowAt(g);
+  // the "gap" leader: drawn down from the pill, knocked out around the light on screen (review r2 N01); the patch's
+  // outline pulses once as it lands (ink only)
+  const leader = gapT > 0 && g >= LEADER0 ? leaderPieces(g, L15.shapes()) : [];
+  const dotT = g >= LEADER_DOT ? E.back(clamp01((g - LEADER_DOT) / 5)) : 0;
+  const outlinePulse = g >= LEADER_LAND && g <= LEADER_LAND + OUTLINE_PULSE ? Math.sin((Math.PI * (g - LEADER_LAND)) / OUTLINE_PULSE) : 0;
   const backdrop = (
     <>
       {gapT > 0 && (
         <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: gapOut}}>
           <GapMarker tilt={tilt} t={gapIn} {...GAP_MARK} />
           <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-            <path d={`M ${f2(GAP_LEADER.from.x)} ${f2(GAP_LEADER.from.y)} L ${f2(GAP_LEADER.to.x)} ${f2(GAP_LEADER.to.y)}`} stroke={C.inkMuted} strokeWidth={4} strokeLinecap="round" opacity={clamp01(gapLabelT(g))} />
-            <circle cx={f2(GAP_LEADER.to.x)} cy={f2(GAP_LEADER.to.y)} r={5} fill={C.inkMuted} opacity={clamp01(gapLabelT(g))} />
+            {outlinePulse > 0.01 && <path d={gapPatchD(s)} fill="none" stroke={mixHex(C.inkMuted, C.ink, outlinePulse)} strokeWidth={f2(3 + 2 * outlinePulse)} strokeDasharray="10 8" strokeLinejoin="round" />}
+            {leader.map((pc, i) => (
+              <path key={i} d={pc.pts.map((q, j) => `${j ? 'L' : 'M'} ${f2(q.x)} ${f2(q.y)}`).join(' ')} fill="none" stroke={C.inkMuted} strokeWidth={LEADER_W} strokeLinecap={pc.a >= 1 ? 'round' : 'butt'} strokeLinejoin="round" opacity={pc.a < 1 ? pc.a : undefined} />
+            ))}
+            {dotT > 0 && <circle cx={f2(LEADER_END.x)} cy={f2(LEADER_END.y)} r={f2(LEADER_DOT_R * dotT)} fill={C.inkMuted} />}
           </svg>
         </div>
       )}
@@ -893,20 +1041,14 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
     const u = (faceX - op.x) / (H.x - op.x);
     sightEnd = projectWith(s, {x: faceX, z: op.z + (H.z - op.z) * u, h: eyeH});
   }
-  // the ghost straight line from the sensor toward him, stopped by the partition ("blocked")
-  const ghost = g >= K.fires + 12 ? 0 : tw(g, LINE0, CONTACT - LINE0, E.in);
+  // the blocked line, the route, the pulse and its fans (S1.4-S1.5): s15Light (the leader's knock-out reads the same)
+  const {ghost, route, routeOp, routeHead, pulseOp} = L15;
   const ghostHit = GHOST_HIT;
-  // the route round the end, via the wall (static preview), then faint while the pulse runs
-  const route = routeAt(g);
-  const routeOp = (1 - 0.75 * tw(g, K.fires, 10)) * (1 - tw(g, TRAIL_OUT, 10));
-  const routeHead = route * pathLength([S, WP, H]);
-  // the pulse (S1.5)
-  const pulseT = SCHED.progress(g);
-  const pulseOp = 1 - tw(g, TRAIL_OUT, 12);
-  const fanW = tw(g, VF[1], 12);
-  const fanWOut = tw(g, VF[1] + 16, 18);
-  const fanH = tw(g, VF[2], 10);
-  const fanHOut = tw(g, VF[2] + 12, 14);
+  const pulseT = L15.pulse.t;
+  const fanW = L15.fanW.t;
+  const fanWOut = L15.fanW.release!;
+  const fanH = L15.fanH.t;
+  const fanHOut = L15.fanH.release!;
   // the race (S1.6)
   const raceOp = tw(g, RACE0 - 2, 3) * (1 - tw(g, RACE_FADE, 12));
   const raceFanW = tw(g, RACE_SCHED.vertexFrames[1], 10) * (1 - tw(g, RACE_SCHED.vertexFrames[1] + 14, 14));
@@ -951,16 +1093,16 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
       )}
       {/* the route round the end of the partition, via the wall */}
       {route > 0 && routeOp > 0 && (
-        <Route points={[S, WP, H]} head={routeHead} toPx={toPx} hidden={hidden} opacity={routeOp} />
+        <Route points={ROUTE_PTS} head={routeHead} toPx={toPx} hidden={hidden} opacity={routeOp} />
       )}
       {/* wall spot marker */}
-      {route > 0 && <WallSpot p={toPx(WP)} t={spotT} />}
+      {route > 0 && <WallSpot p={toPx(WP)} t={spotT} lit={lit} />}
       {/* the slowed pulse S -> W -> H -> W -> S */}
       {g >= PULSE0 && pulseOp > 0 && (
         <>
-          <ScatterFan asGroup origin={WP} dirs={dirsW} length={0.62} toPx={toPx} t={fanW} release={fanWOut} layout={OLAYOUT} hidden={fanHidden} seed={5} />
-          <ScatterFan asGroup origin={H} dirs={dirsH} length={0.6} toPx={toPx} t={fanH} release={fanHOut} layout={OLAYOUT} hidden={hidden} seed={8} width={3.5} color={C.saffron} />
-          <LightPath asGroup points={PATH} toPx={toPx} t={pulseT} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} hidden={hidden} opacity={pulseOp} />
+          <ScatterFan asGroup {...L15.fanW} />
+          <ScatterFan asGroup {...L15.fanH} color={C.saffron} />
+          <LightPath asGroup {...L15.pulse} opacity={pulseOp} />
         </>
       )}
       {/* the race: one flash; the quick echo comes straight back (teal), the rest goes on round him (saffron) */}
@@ -996,7 +1138,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
     <AbsoluteFill style={{background: C.paper}}>
       <Camera cam={cam}>
         <Layer depth={1}>
-          <RoomSet tilt={tilt} wobble={wobble} items={items} backdrop={backdrop}>
+          <RoomSet tilt={tilt} wobble={wobble} items={items} backdrop={backdrop} extendLeft={g >= EXT_ON ? EXT_M : 0}>
             {overlay}
           </RoomSet>
         </Layer>
@@ -1126,11 +1268,14 @@ const Route: React.FC<{points: P2[]; head: number; toPx: ToPx; hidden: (p: P2) =
   );
 };
 
-const WallSpot: React.FC<{p: {x: number; y: number}; t: number}> = ({p, t}) => {
+/** The in-room wall-spot marker: a diamond, lit (saffron fill, full ink outline) at lit 1, a quiet ink outline at
+ *  QUIET_OP with no fill at lit 0 (review r2 D02, lead R2-L1). */
+const WallSpot: React.FC<{p: {x: number; y: number}; t: number; lit: number}> = ({p, t, lit}) => {
   if (t <= 0) return null;
   const k = E.back(clamp01(t));
   const r = 13 * k;
-  return <path d={`M ${f2(p.x)} ${f2(p.y - r)} L ${f2(p.x + r)} ${f2(p.y)} L ${f2(p.x)} ${f2(p.y + r)} L ${f2(p.x - r)} ${f2(p.y)} Z`} fill={C.saffron} stroke={C.ink} strokeWidth={3.5} strokeLinejoin="round" />;
+  const l = clamp01(lit);
+  return <path d={`M ${f2(p.x)} ${f2(p.y - r)} L ${f2(p.x + r)} ${f2(p.y)} L ${f2(p.x)} ${f2(p.y + r)} L ${f2(p.x - r)} ${f2(p.y)} Z`} fill={C.saffron} fillOpacity={f2(l)} stroke={C.ink} strokeOpacity={f2(QUIET_OP + (1 - QUIET_OP) * l)} strokeWidth={3.5} strokeLinejoin="round" />;
 };
 
 /** The lit wall spot on the wall plane (z = 0) at WP, centred on the light plane: WALL_GLOW_M wide and high, saffron
@@ -1158,11 +1303,11 @@ const WallGlow: React.FC<{s: ViewState; t: number; opacity?: number; mask?: Reac
 /**
  * Light kept clear of her (review r1 D02, lead L15: the scatter fan and the glow are clipped rather than moving her, so
  * the S1.1-S1.7 continuity holds): her silhouette (Cast2 rigCovers) grown by HER_CLEAR_W world px, plus a disc of
- * PENCIL_CLEAR_W around her pencil's tip, which points at the wall spot from behind her ear. At the S1.4 zoom (1.25)
- * that is 30 px around the silhouette (already ~40 px outside her drawn ear) and 40 px around the tip.
+ * PENCIL_CLEAR_W around her pencil's tip, which points at the wall spot from behind her ear. Review r2 D02 (lead
+ * R2-L1): both 35 world px, so >= 40 screen px at the smallest zoom (1.15; 44 px at 1.25), the plan's original target.
  */
-const HER_CLEAR_W = 24;
-const PENCIL_CLEAR_W = 32;
+const HER_CLEAR_W = 35;
+const PENCIL_CLEAR_W = 35;
 const nearHer = (place: RigPlace, tip: Pt, q: Pt) => rigCovers(place, q, HER_CLEAR_W) || Math.hypot(q.x - tip.x, q.y - tip.y) < PENCIL_CLEAR_W;
 /** The same zone as an SVG mask (white = shown): rigCovers' head ellipse, torso and legs rectangles, grown, and the disc. */
 const HerClearMask: React.FC<{id: string; place: RigPlace; tip: Pt}> = ({id, place, tip}) => {
@@ -1442,12 +1587,20 @@ type Box = {x: number; y: number; w: number; h: number};
 
 /** Clearances of the lit wall spot's glow and the wall scatter fans from her (screen px, at every zoom they are seen
  *  at). The glow is masked and the fans clipped by HER_CLEAR_W / PENCIL_CLEAR_W (nearHer), so these hold by
- *  construction at the smallest zoom (1.15): 24 x 1.15 = 27.6 and 32 x 1.15 = 36.8; a fan ray's tip dot (r ~6.4 world px)
- *  may sit ~7 px nearer than its ray. */
-const GLOW_HEAD_PX = 27;
-const GLOW_PENCIL_PX = 36;
-const FAN_HEAD_PX = 20;
-const FAN_PENCIL_PX = 29;
+ *  construction at the smallest zoom (1.15): review r2 D02 (lead R2-L1) raised both to 35 world px, 35 x 1.15 = 40.25,
+ *  the plan's original 40 px target (it was 24 / 32: 27.6 / 36.8 px); a fan ray's tip dot (r ~6.4 world px) may sit
+ *  ~7 px nearer than its ray: (35 - 6.4) x 1.15 = 32.9. */
+const GLOW_HEAD_PX = 40;
+const GLOW_PENCIL_PX = 40;
+const GLOW_SHOWN_MIN = 0.75;
+/** The "gap" leader's clearances (screen px; review r2 N01): from the partition as drawn, the wall glow's rim, the
+ *  wall-spot diamond's edge, and the length of its top stub from the pill before any knock-out. */
+const LEADER_PART_PX = 12;
+const LEADER_GLOW_PX = 20;
+const LEADER_SPOT_PX = 40;
+const LEADER_STUB_PX = 40;
+const FAN_HEAD_PX = 32;
+const FAN_PENCIL_PX = 32;
 /** The partition's drawn ink top sits ~10 px above the projected partitionTopH point at the S1.1 framing (the 4 px
  *  outline and the panel's top rim), measured on the full-res frame 0 render; the framing check allows for it. */
 const PARTITION_INK_ABOVE_PX = 10;
@@ -1552,6 +1705,10 @@ export const S1_MARGINS = (() => {
   if (GAP_LABEL0 < RISE_END || VF[2] + 22 > PAN0) fail('the gap label must show only while the camera holds CAM_PATH_S1');
   if (BLOCKED_OUT - (CONTACT + 10) < 30) fail(`"blocked" is fully up only ${BLOCKED_OUT - CONTACT - 10} frames (needs 30)`);
   if (BLOCKED_OUT + 8 > GAP_LABEL0) fail('"blocked" must be gone before the gap label and its leader come in');
+  // review r2 N01: the pill comes in >= 8 frames after the wall spot, once the route has turned into the opening
+  if (GAP_LABEL0 - Math.round(SPOT0) < GAP_STAGGER) fail(`the "gap" label pops ${GAP_LABEL0 - Math.round(SPOT0)} frames after the wall spot (needs ${GAP_STAGGER})`);
+  if (GAP_LABEL0 < ROUTE_TURN) fail('the "gap" label comes in before the route has turned into the opening');
+  if (BLOCKED_OUT > Math.round(SPOT0) - 8) fail('"blocked" must be gone 8 frames before the wall spot');
   if (CARD2_IN < INSET_OUT + 10) fail('the S1.7 card would overlap the webcam inset');
   if (CHIPS_OUT + 10 > PAN0) fail('the S1.5 chips are still in when the pan moves him under them');
   if (CAMI0 - 2 < RACE_CHIP_IN + 10 || RACE_SCHED.end > CAMI0 - 12) fail('the race chip must be in while the race runs and out before the webcam inset');
@@ -1568,16 +1725,91 @@ export const S1_MARGINS = (() => {
   for (const [what, v] of [['partition', gapPartition], ['her head', gapHead], ['wall spot', gapGlow], ['tripod', gapTripod]] as const) {
     if (v < 12) fail(`the "gap" label is ${v.toFixed(0)} px from the ${what} (needs 12)`);
   }
-  // the leader: clear of her head, of the partition as drawn and of the tripod's legs (>= 12 px), and it ends on the
-  // floor INSIDE the opening (between the wall and the partition's far end, on the partition's line)
-  const lead = Array.from({length: 81}, (_, i) => ({x: lerp(GAP_LEADER.from.x, GAP_LEADER.to.x, i / 80), y: lerp(GAP_LEADER.from.y, GAP_LEADER.to.y, i / 80)}));
-  if (lead.some((q) => rigCovers(her, q, 4) || nearPartition(s, q, 4))) fail('the gap leader touches her head or the partition');
+  // --- the "gap" leader (review r2 N01, lead R2-L5). Its whole route (every piece ever drawn lies on it): clear of
+  //     her head, >= LEADER_PART_PX screen px from the partition as drawn, >= LEADER_GLOW_PX from the wall glow (at its
+  //     E.back overshoot), >= LEADER_SPOT_PX from the diamond's edge, >= 12 px from the tripod's legs, and it ends on
+  //     the floor INSIDE the opening (between the wall and the partition's far end, on the partition's line)
+  const lead: Pt[] = [];
+  for (let i = 0; i + 1 < GAP_LEADER.length; i++) {
+    const a = GAP_LEADER[i];
+    const b = GAP_LEADER[i + 1];
+    const n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y)));
+    for (let k = 0; k <= n; k++) lead.push({x: lerp(a.x, b.x, k / n), y: lerp(a.y, b.y, k / n)});
+  }
+  if (lead.some((q) => rigCovers(her, q, 4))) fail('the gap leader touches her head');
+  const leadPartition = clearance((d) => lead.some((q) => nearPartition(s, q, d)), 60) * zoom;
+  if (leadPartition < LEADER_PART_PX) fail(`the gap leader is ${leadPartition.toFixed(1)} px from the partition (needs ${LEADER_PART_PX})`);
+  // (the glow and the diamond have finished popping before the leader draws and before the glow first lights, so
+  //  they are measured at full size: the glow's rim to its outer stroke edge, the diamond's vertex with its outline)
+  if (route0Spot(LEADER0) < 1) fail('the wall spot is still popping when the gap leader draws');
+  for (let g = ROUTE0; g < K.end; g++) if (litAt(g) > 0.01 && route0Spot(g) < 1) fail(`the wall glow lights while still popping (frame ${g})`);
+  const glow1 = wallGlowRect(s, 1);
+  const leadGlow = clearance((gr) => lead.some((q) => ((q.x - glow1.cx) / (glow1.rx + 1.5 + gr)) ** 2 + ((q.y - glow1.cy) / (glow1.ry + 1.5 + gr)) ** 2 < 1), 200) * zoom;
+  if (leadGlow < LEADER_GLOW_PX) fail(`the gap leader is ${leadGlow.toFixed(1)} px from the wall glow's rim (needs ${LEADER_GLOW_PX})`);
+  const spotC = projectWith(s, at3(WP));
+  const spotR = 13 + 3.5 / 2;
+  const leadSpot = (Math.min(...lead.map((q) => Math.hypot(q.x - spotC.x, q.y - spotC.y))) - spotR) * zoom;
+  if (leadSpot < LEADER_SPOT_PX) fail(`the gap leader is ${leadSpot.toFixed(1)} px from the wall-spot diamond (needs ${LEADER_SPOT_PX})`);
   const legs = tripodLegs(RAISED_TILT);
   const leadTripod = Math.min(...lead.map((q) => Math.min(...legs.map(([a, b]) => segDistance(q, a, b))))) * zoom - (9 + 4) / 2;
   if (leadTripod < 12) fail(`the gap leader is ${leadTripod.toFixed(0)} px from a tripod leg (needs 12)`);
   const slot0 = projectWith(s, {x: OCC.x, z: 0, h: 0});
   const slot1 = projectWith(s, {x: OCC.x, z: OCC.z0, h: 0});
-  if (GAP_LEADER.to.y <= slot0.y + 10 || GAP_LEADER.to.y >= slot1.y - 10) fail('the gap leader does not end on the floor inside the opening');
+  const leadEnd = LEADER_END;
+  if (leadEnd.y <= slot0.y + 10 || leadEnd.y >= slot1.y - 10) fail('the gap leader does not end on the floor inside the opening');
+  // ... and on every frame it is drawn (the camera holds CAM_PATH_S1 at RAISED_TILT): each drawn piece keeps
+  //     >= LEADER_CLEAR_PX from every stroke, dot and ring of light on screen (the W -> H leg as the route and the
+  //     pulse's trail, the S1.5 fans, the pulse train and its rings, the blocked line), as do the end dot; the top stub
+  //     from the pill is >= LEADER_STUB_PX long, and once drawn the leader still ends at the floor point
+  const pillRight = GAP_LABEL.x + GAP_LABEL.w / 2 + labelBox(0, 0, 'gap', GAP_LABEL_SIZE, false).w / 2;
+  const underPill = pillRight - worldToScreen(CAM_PATH_S1, GAP_LEADER[0].x, GAP_LEADER[0].y).x;
+  let leadLight = Infinity;
+  let leadStub = Infinity;
+  let leadDot = Infinity;
+  let leadBreaks = 0;
+  let leadHeal = -Infinity;
+  for (let g = LEADER0; g <= VF[2] + 22; g++) {
+    const cg = roomCam(g);
+    if (roomTilt(g) !== RAISED_TILT || cg.cx !== CAM_PATH_S1.cx || cg.cy !== CAM_PATH_S1.cy || cg.zoom !== CAM_PATH_S1.zoom) fail(`the gap leader is drawn while the camera moves (frame ${g})`);
+    const ch = checkerState(g, RAISED_TILT);
+    const gu = guesserState(g, RAISED_TILT);
+    const sh = s15Light(g, s, ch.place, gu.place, pencilTip(ch.place, ch.pose)).shapes();
+    const pieces = leaderPieces(g, sh);
+    const drawn = leaderDrawAt(g) * GAP_LEADER_LEN;
+    leadBreaks = Math.max(leadBreaks, pieces.length - 1);
+    for (const pc of pieces) {
+      const p = pc.pts;
+      for (let i = 0; i + 1 < p.length; i++) {
+        const len = Math.hypot(p[i + 1].x - p[i].x, p[i + 1].y - p[i].y);
+        const n = Math.max(1, Math.ceil(len));
+        const e = Math.min(0.02, len / 4) / Math.max(1e-9, len); // a hair inside the piece's ends (cut by bisection)
+        for (let k = 0; k <= n; k++) {
+          const u = e + (1 - 2 * e) * (k / n);
+          const q = {x: lerp(p[i].x, p[i + 1].x, u), y: lerp(p[i].y, p[i + 1].y, u)};
+          // fully knocked out around light at >= LEADER_OP_FULL; drawn no darker than the heal allows near fainter light
+          leadLight = Math.min(leadLight, (clearanceTo(q, sh, LEADER_OP_FULL) - LEADER_W / 2) * zoom);
+          leadHeal = Math.max(leadHeal, pc.a - healAt(q, sh, LEADER_CLEAR_PX / zoom, LEADER_W / 2, LEADER_OP_FULL));
+        }
+      }
+    }
+    if (drawn * zoom - underPill >= LEADER_STUB_PX) {
+      const p0 = pieces[0];
+      const stub = p0 && p0.a >= 1 && Math.hypot(p0.pts[0].x - GAP_LEADER[0].x, p0.pts[0].y - GAP_LEADER[0].y) < 0.5 ? pieceLength(p0.pts) * zoom - underPill : 0;
+      leadStub = Math.min(leadStub, stub);
+    }
+    if (leaderDrawAt(g) >= 1) {
+      const last = pieces[pieces.length - 1];
+      const e = last?.pts[last.pts.length - 1];
+      if (!e || Math.hypot(e.x - leadEnd.x, e.y - leadEnd.y) > 0.5) fail(`the drawn gap leader does not reach the floor point (frame ${g})`);
+    }
+    if (g >= LEADER_DOT) leadDot = Math.min(leadDot, (clearanceTo(leadEnd, sh) - LEADER_DOT_R * 1.07) * zoom);
+  }
+  if (leadLight < LEADER_CLEAR_PX - 0.1) fail(`the gap leader is ${leadLight.toFixed(1)} px from light on screen (needs ${LEADER_CLEAR_PX})`);
+  if (leadHeal > 0.051) fail(`the gap leader is drawn ${leadHeal.toFixed(2)} more opaque than the light beside it allows`);
+  if (leadStub < LEADER_STUB_PX) fail(`the gap leader's top stub is ${leadStub.toFixed(0)} px (needs ${LEADER_STUB_PX})`);
+  if (leadDot < LEADER_CLEAR_PX) fail(`the gap leader's end dot is ${leadDot.toFixed(1)} px from light (needs ${LEADER_CLEAR_PX})`);
+  if (SIGHT_OUT + 8 >= LEADER0 || VF[2] + 22 >= RACE0 - 2) fail('the leader knock-out covers the S1.4-S1.5 light only: the sight line must be gone and the race not yet on');
+  if (LEADER_LAND + OUTLINE_PULSE > VF[2] + 8) fail('the gap outline pulse must finish before the gap marker fades');
   // --- the plan card (S1.4-S1.5, 1.5x): inside the 5 % margin (its tape too), clear of him, the gap and blocked labels
   //     and the S1.5 chips
   const card: Box = {...CARD_POS, ...CARD_SIZE};
@@ -1601,6 +1833,32 @@ export const S1_MARGINS = (() => {
   const card2Gaps = {raceCard: boxGap(card2, race), her: boxGap(card2, herBox)};
   for (const [k, v] of Object.entries(card2Gaps)) if (v < 20) fail(`the S1.7 card is ${v.toFixed(0)} px from the ${k} (needs 20)`);
   if (chipBottom > 1080 * 0.88) fail(`the S1.7 chip reaches into the caption band (bottom ${chipBottom.toFixed(0)})`);
+  // --- review r2 N02: the S1.6 pan's per-frame screen motion (any point of the frame, its zoom change included)
+  //     stays <= PAN_PEAK_PX; its frames and every cue after it are unchanged (PAN0, PAN_END, RACE0)
+  let panPeak = 0;
+  for (let g = PAN0; g < PAN_END; g++) {
+    const c0 = roomCam(g);
+    const c1 = roomCam(g + 1);
+    for (const x of [0, 480, 960, 1440, 1920]) {
+      for (const y of [0, 540, 1080]) {
+        const w = camToWorld(c0, {x, y});
+        panPeak = Math.max(panPeak, Math.abs(worldToScreen(c1, w.x, w.y).x - x));
+      }
+    }
+  }
+  if (panPeak > PAN_PEAK_PX) fail(`the S1.6 pan moves the picture ${panPeak.toFixed(1)} px in one frame (at most ${PAN_PEAK_PX})`);
+  // --- review r2 N03: the set extension is the S2.4/S3 one; it switches on while the room's open left end is out of
+  //     frame (the frame before and the frame of the switch), after the tilt-0 CAM_ROOM shots and the rise, and from
+  //     then to the scene's end the extended set's left end stays out of frame (no bare paper left of the wall)
+  if (EXT_M !== HANDOFF_S2S3_EXTEND || !(EXT_M > 0)) fail(`the set extension (${EXT_M} m) is not S2.4/S3's (${HANDOFF_S2S3_EXTEND} m)`);
+  if (EXT_ON < RISE_END || EXT_ON > PAN0) fail('the set extension must switch on after the rise and no later than the pan');
+  const x0 = LAYOUT.room.x0;
+  let extSwitchMax = -Infinity;
+  for (const g of [EXT_ON - 1, EXT_ON]) extSwitchMax = Math.max(extSwitchMax, setSliceMaxX(roomCam(g), roomTilt(g), x0));
+  if (extSwitchMax >= 0) fail(`the room's open left end is in frame (to ${extSwitchMax.toFixed(0)} px) when the extension switches on`);
+  let extMax = -Infinity;
+  for (let g = EXT_ON; g < K.end; g++) extMax = Math.max(extMax, setSliceMaxX(roomCam(g), roomTilt(g), x0 - EXT_M));
+  if (extMax >= 0) fail(`the extended set's left end comes into frame (to ${extMax.toFixed(0)} px)`);
   // --- the S1.2 tap (tilt 0): her palm on the box top, contact error <= 1 px while it is held
   let tapErr = 0;
   for (let g = TAP; g <= TAP + 6; g++) {
@@ -1685,7 +1943,7 @@ export const S1_MARGINS = (() => {
   }
   if (glowHead < GLOW_HEAD_PX) fail(`the wall-spot glow is ${glowHead.toFixed(0)} px from her head (needs ${GLOW_HEAD_PX})`);
   if (glowPencil < GLOW_PENCIL_PX) fail(`the wall-spot glow is ${glowPencil.toFixed(0)} px from her pencil's tip (needs ${GLOW_PENCIL_PX})`);
-  if (glowShown < 0.8) fail(`the mask hides ${((1 - glowShown) * 100).toFixed(0)} % of the wall-spot glow (at most 20 %)`);
+  if (glowShown < GLOW_SHOWN_MIN) fail(`the mask hides ${((1 - glowShown) * 100).toFixed(0)} % of the wall-spot glow (at most ${((1 - GLOW_SHOWN_MIN) * 100).toFixed(0)} %)`);
   // --- the wall scatter fans (S1.5 and the race) keep clear of her head and pencil too: every visible stretch of every
   //     ray, as ScatterFan draws it with the room's fan hidden test, and every visible tip dot (r ~6.4 world px)
   let fanHead = Infinity;
@@ -1721,6 +1979,9 @@ export const S1_MARGINS = (() => {
   // --- the S1.7 room follows the card's tape: his rim flashes when the tape reaches him, while the card is in
   if (TAPE_TURN <= CARD2_IN + 6 || TAPE_TURN >= TAPE1) fail('the S1.7 tape must reach him after the card is in and before it is home');
   return {
+    leader: {label0: GAP_LABEL0, afterSpot: GAP_LABEL0 - Math.round(SPOT0), routeTurn: ROUTE_TURN, partitionPx: leadPartition, glowPx: leadGlow, spotPx: leadSpot, lightMinPx: leadLight, healExcess: leadHeal, topStubPx: leadStub, dotPx: leadDot, maxBreaks: leadBreaks},
+    panPeakPx: panPeak,
+    ext: {on: EXT_ON, switchEndMaxPx: extSwitchMax, extendedEndMaxPx: extMax},
     glowHeadPx: glowHead,
     glowPencilPx: glowPencil,
     glowShown,

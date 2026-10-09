@@ -7,7 +7,7 @@ import {at, scene, seg, segEnd} from '../lib/timeline';
 import {E, SNAP, SOFT, camPath, ring, sp, tw} from '../lib/motion';
 import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
 import {CAM_RAISED, PLINTH, RAISED_TILT} from '../lib/shots';
-import {LAYOUT, PTS, RIG_PX, type HiddenTest, type PlanPt, assertAroundTheEnd, partitionCrossings, partitionTopH, projectWith, rigAt, viewAt, visibleSpans} from '../lib/room';
+import {LAYOUT, PTS, RIG_PX, type HiddenTest, type PlanPt, assertAroundTheEnd, partitionCrossings, partitionTopH, projectWith, rigAt, setSliceMaxX, setSliceMinX, viewAt, visibleSpans} from '../lib/room';
 import {assertPath} from '../lib/optics';
 import {GapMarker, RoomSet, type RoomItem} from '../components/v02/RoomSet';
 import {PlanCard, PlanSpot, planCardSize, type PlanView} from '../components/v02/PlanCard';
@@ -264,15 +264,54 @@ const FAT_LABEL = Math.round(vertexFrame(PULSE_B1, 2));
  * on its pole (front, strip and all, to the wall), well before the first fat pulse gets there. His left hand rides the
  * board's edge nearest him for the whole turn (asserted with the hands-on-props checks), then goes back to his hip. The
  * plan card turns its board the same way, so at the arrival the strip is on the wall-facing edge there too.
+ * N09: the strip faces the camera for ~22 frames after the press, then the turn takes 18 frames on a sine ease (its
+ * peak speed is pi/2 times the mean; E.inOut's bezier peaked so high that the face's width changed on only ~3 of 10
+ * frames and the strip vanished in a blink), with a lean into the push just before it. Once the back shows, the end of
+ * the strip wrapped round the board's wall-side edge stays in sight as a tab (TargetBoard stripTab).
  */
 const FAT_HIT = vertexFrame(PULSE_B1, 2); // the first fat pulse reaches the board
-const TURN_DUR = 10;
-const TURN0 = Math.min(STRIP_HIT + 18, Math.floor(FAT_HIT) - TURN_DUR - 6);
+const TURN_DUR = 18;
+const TURN0 = Math.min(STRIP_HIT + 22, Math.floor(FAT_HIT) - TURN_DUR - 10);
 const TURN1 = TURN0 + TURN_DUR;
 const SLIDE0 = STRIP_HIT + 4; // the hand leaves the strip for the board's right edge (after the press and its glint)
 const SLIDE1 = TURN0 - 3; // at the edge: a beat, then the turn
-const HIP0 = TURN1 + 2; // the hand goes back to the hip
-const turnAt = (g: number) => tw(g, TURN0, TURN_DUR, E.inOut);
+/** the turn's ease: a half cosine (speed peaks at the middle, pi/2 x the mean; no near-instant middle) */
+const E_TURN = (x: number) => (1 - Math.cos(Math.PI * x)) / 2;
+const turnAt = (g: number) => tw(g, TURN0, TURN_DUR, E_TURN);
+/** his lean into the push (0..1): in over the 5 frames before the turn, held into its start, then let go */
+const pullAt = (g: number) => tw(g, TURN0 - 5, 5, E.inOut) * (1 - tw(g, TURN0 + 3, 8, E.inOut));
+/** the strip's wrapped end (TargetBoard stripTab) shows once the board's back does (the turn's middle) */
+const stripTabAt = (g: number) => tw(g, TURN0 + TURN_DUR / 2, 4);
+/*
+ * N10: back to the hip in two legs (blending the edge-reach arm straight into hands-on-hips swung the forearm out
+ * through the board and its pole: its elbow bends the other way, so the blend had to pass a straight arm pointing at
+ * the board). Leg 1 (HIP0..HIP_MID), planned in hand space: the hand lets go of the edge and moves right, just clear of
+ * the board in 3 frames, as it starts to drop, then on down to where it hangs loose at his side with the arm straight
+ * (ARM_HANG). Leg 2 (HIP_MID..HIP1): from that straight arm to hands-on-hips by arm angles; the elbow's bend changes
+ * sides while the arm is straight, where it does not show. The hang is 4 deg out, not 12: its hand is then right under
+ * where the hand clears the board (~47 px right of the edge), so the drop is straight down (at 12 it lands 21 px right
+ * of the edge and the hand drifts back left and out again on its way to the hip). Leg 1 takes 10 frames, not 7: it is
+ * ~200 px of hand travel (a straight arm's hand is ~170 px below the edge grip), kept to 30 px a frame.
+ * Asserted with the hands-on-props checks: never left of the board's edge, no step over 30 px, no jump at HIP_MID, and
+ * from HIP0 + 3 (it starts on the edge) the mitt 6+ px clear of the board and its pole.
+ */
+const HIP0 = TURN1 + 2; // the hand lets go of the board
+const HIP_X = 3; // frames: the hand's move right, off the edge (just clear of it: HIP_OUT), as the drop starts
+const HIP_OUT = 35; // px right of the board's edge after HIP_X frames (the mitt, 25 px, plus 6 px and a little more)
+const HIP_MID = HIP0 + 10; // the arm hangs straight at his side
+const HIP1 = HIP_MID + 6; // hand on the hip
+const ARM_HANG = {a: 4, b: 0}; // straight, hanging just out from his side: its hand is ~47 px right of the board's edge
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+/** 0..1 over u in [0, 1] with sine ramps over the first and last `r` and constant speed between: peak speed
+ *  1 / (1 - r) times the mean (a plain sine ease peaks at pi/2 times it) */
+const ramp = (u: number, r: number) => {
+  const x = Math.max(0, Math.min(1, u));
+  const v = 1 / (1 - r);
+  const up = (w: number) => v * (w / 2 - (r / (2 * Math.PI)) * Math.sin((Math.PI * w) / r));
+  if (x <= r) return up(x);
+  if (x >= 1 - r) return 1 - up(1 - x);
+  return v * (r / 2 + x - r);
+};
 const EDGE_Y = B_C.y + 0.12 * B_H; // his hand holds the edge just below its middle
 /** The board's silhouette edge nearest him (screen x) at turn u: the right edge, edge-on at the centre, then the other
  *  edge coming round. */
@@ -485,7 +524,7 @@ const AW_MARGIN = 18; // screen px between his hair / soles and the window's edg
 const FILM_CELL = 140;
 const FILM_H = filmStripHeight(FILM_CELL);
 const FILM_W = 4 * (FILM_CELL + 14) + 70; // four whole frames and a half
-const FILM_X = AWIN.x + AWIN.w - 14 - FILM_W; // top right of the window, over the bare wall
+const FILM_X = AWIN.x + AWIN.w - 14 - FILM_W; // top right of the window, over the bare wall (the set runs on past the room's right end: AUTH_EXTEND_R)
 const FILM_Y = AWIN.y + 14;
 const FILM_BOTTOM = FILM_Y + FILM_H + 9; // + its drop shadow
 const SLOW_TOP = FILM_Y + FILM_H + 15; // its "slowed down" chip, under its right end
@@ -509,6 +548,11 @@ const THEIR_TAG_IN = Math.max(S39_CUT + 8, at('s39', 'authors'));
 const THEIR_TAG = {x: DEV_BOX.x - 0.3 * VS.ppm, y: DEV_BOX.y - 0.36 * VS.ppm}; // world px: on the bare wall up and left of the device (the partition's far edge is close on its right)
 const THEIR_TAG_HALF = {w: 132, h: 30}; // the tag's half-size at 34 px (screen px; measured 260 x 60)
 const STRIP_DROP = Math.max(K.report, S39_CUT + 12); // the film strip drops in on "report"
+/** N11: the window looks past the room's right end (its side wall, cut end and the paper beyond took the right ~16 %
+ *  of it, under the film strip and its chip), so the drawing's set runs on 3 m to the right (RoomSet extendRight: no
+ *  side wall; relay wall, skirting and floor continue). It must stay on for this framing (asserted below: neither cut
+ *  end of the set lands inside the window). */
+const AUTH_EXTEND_R = 3;
 {
   const bad: string[] = [];
   const need = (ok: boolean, what: string) => ok || bad.push(what);
@@ -537,6 +581,13 @@ const STRIP_DROP = Math.max(K.report, S39_CUT + 12); // the film strip drops in 
   need(tag.x + THEIR_TAG_HALF.w + 16 <= scr(CAM_AUTH, FAR_TOP).x, 'the "their sensor" tag touches the partition');
   need(tag.x + THEIR_TAG_HALF.w + 16 <= FILM_X || tag.y - THEIR_TAG_HALF.h >= FILM_BOTTOM + 8, 'the "their sensor" tag touches the film strip');
   need(tag.y + THEIR_TAG_HALF.h + 10 <= scr(CAM_AUTH, {x: 0, y: DEV_BOX.y + AUTHORS_BOX.dy * VS.ppm - 0.03 * VS.ppm}).y, 'the "their sensor" tag sits on the device');
+  // the set has no edge in the window (N11): its left cut end (the room's x0) is out past the window's left edge and its
+  // extended right end (x1 + AUTH_EXTEND_R) out past the right edge (setSliceX: wall end, slab end and drop shadow,
+  // outlines included, over the whole frame height, so stricter than the window's)
+  const leftEnd = setSliceMaxX(CAM_AUTH, TILT, LAYOUT.room.x0);
+  const rightEnd = setSliceMinX(CAM_AUTH, TILT, LAYOUT.room.x1 + AUTH_EXTEND_R);
+  need(leftEnd <= AWIN.x - 4, `the set's left cut end shows in the drawing window (x ${leftEnd.toFixed(0)} > ${AWIN.x - 4})`);
+  need(rightEnd >= AWIN.x + AWIN.w + 40, `the set's right end shows in the drawing window (x ${rightEnd.toFixed(0)} < ${AWIN.x + AWIN.w + 40})`);
   // timing: the card is up well before the claim lands; he has stood a moment before he walks
   need(S39_CUT + 30 <= K.ordinary, `the cut to the card (${S39_CUT}) comes too late for "ordinary" (${K.ordinary})`);
   need(WALK1_0 >= S39_CUT + 12, 'he starts walking on the cut');
@@ -915,9 +966,11 @@ const PlanBoard: React.FC<{toPx: ToPx; ppm: number; strip: number; turn: number}
     <g transform={`rotate(${(-180 * clamp01(turn)).toFixed(2)} ${c.x.toFixed(2)} ${c.y.toFixed(2)})`}>
       <rect x={c.x - w / 2} y={c.y - 7} width={w} height={14} rx={5} fill={C.blueLight} stroke={C.ink} strokeWidth={3.5} />
       {strip > 0 && (
+        // 13 px deep and saffron, a thin pale reflective line along it (N09: at 9 px with a 3 px pale centre line it
+        // read as a pale dash at phone size)
         <g opacity={clamp01(strip)}>
-          <rect x={c.x - sw / 2} y={c.y + 3} width={sw} height={9} rx={3} fill={C.saffron} stroke={C.ink} strokeWidth={2} />
-          <line x1={c.x - sw / 2 + 4} y1={c.y + 7.5} x2={c.x + sw / 2 - 4} y2={c.y + 7.5} stroke="#DCE5E8" strokeWidth={3} strokeLinecap="round" />
+          <rect x={c.x - sw / 2} y={c.y + 2} width={sw} height={13} rx={4} fill={C.saffron} stroke={C.ink} strokeWidth={2.5} />
+          <line x1={c.x - sw / 2 + 6} y1={c.y + 8.5} x2={c.x + sw / 2 - 6} y2={c.y + 8.5} stroke="#DCE5E8" strokeWidth={1.5} strokeLinecap="round" />
         </g>
       )}
     </g>
@@ -938,7 +991,6 @@ const guesserAt = (g: number): GState => {
     const ch0 = standAt(G.x0);
     const place: RigPlace = {x: ch0.x, y: ch0.y, scale: s, frame: g, seed: 22, life: 0.35};
     const smugT = tw(g, STRIP_HIT + 6, 14, E.inOut); // his face, once the strip is on
-    const after = tw(g, HIP0, 14, E.inOut); // his left hand back to the hip, once the board is turned
     const impressed = Math.min(sp(g, FAT_LABEL - 2, SOFT), 1 - tw(g, LOOK_AT_HER - 4, 8));
     const caught = sp(g, LOOK_AT_HER, SNAP);
     const sulk = tw(g, EXIT0 - 10, 8, E.inOut);
@@ -972,11 +1024,23 @@ const guesserAt = (g: number): GState => {
       hx = edgeX(turnAt(g));
       hy = EDGE_Y;
     }
-    const lean = -4 * Math.min(tw(g, STRIP_LIFT, 10), 1 - after);
+    // the lean toward the board, plus the lean into the push (N09), eased out as the hand goes back to the hip
+    const lean = -4 * Math.min(tw(g, STRIP_LIFT, 10), 1 - tw(g, HIP0, HIP1 - HIP0, E.inOut)) - 3 * pullAt(g);
     pose = {...pose, lean};
-    const armL = reach2(place, pose, -1, hx, hy, 1);
-    if (after <= 0) pose = {...pose, armL};
-    else pose = mixPose2({...pose, armL}, {...pose, armL: ARMS.handsOnHips.armL, armsFront: 'none'}, after);
+    if (g < HIP0) pose = {...pose, armL: reach2(place, pose, -1, hx, hy, 1)};
+    else if (g < HIP_MID) {
+      // leg 1: off the edge to the right, just clear of it, while the drop starts; then on down, drifting out to where
+      // the hanging hand is (the drop is slow while the hand is still beside the board: a rounded corner)
+      const hang = handWorld2(place, {...pose, armL: ARM_HANG}, -1);
+      const k = g - HIP0;
+      const hx = k < HIP_X ? lerp(edgeX(1), edgeX(1) + HIP_OUT, ramp(k / HIP_X, 0.4)) : lerp(edgeX(1) + HIP_OUT, hang.x, ramp((k - HIP_X) / (HIP_MID - HIP0 - HIP_X), 0.3));
+      const hy = lerp(EDGE_Y, hang.y, ramp(k / (HIP_MID - HIP0), 0.3));
+      pose = {...pose, armL: reach2(place, pose, -1, hx, hy, 1)};
+    } else {
+      // leg 2: the straight arm to hands-on-hips by angles (drawn behind him from halfway, as HANDS_ON_HIPS is)
+      const v = tw(g, HIP_MID, HIP1 - HIP_MID, E.inOut);
+      pose = mixPose2({...pose, armL: ARM_HANG}, {...pose, armL: ARMS.handsOnHips.armL, armsFront: 'none'}, v);
+    }
     // before the walk: hands come off the hips
     const pre = tw(g, EXIT0 - 8, 8, E.inOut);
     if (pre > 0) pose = mixPose2(pose, {...pose, armL: IDLE2.armL, armR: IDLE2.armR, armsFront: 'none'}, pre);
@@ -1105,8 +1169,8 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   const strikeBoard = ring(g, STRIP_HIT, 0.9, 0.25) * 2.2;
   const stripOn = g >= STRIP_HIT;
   const glint = g >= STRIP_HIT ? Math.max(0, Math.sin(clamp01((g - STRIP_HIT - 2) / 12) * Math.PI)) : 0;
-  // the fat returns leave the strip (now facing the wall): a sparkle on the board's up-left (wall-side) corner, over
-  // its rim flash, as each fat pulse arrives
+  // the fat returns leave the strip (now facing the wall): a sparkle on the strip's end wrapped round the board's
+  // wall-side edge (TargetBoard stripTab), by its rim flash, as each fat pulse arrives
   const sparkle = PULSES.filter((p) => p.fat).reduce((m, p) => {
     const hit = vertexFrame(p.start, 2);
     return Math.max(m, g >= hit - 1 ? Math.max(0, Math.sin(clamp01((g - hit + 1) / 12) * Math.PI)) : 0);
@@ -1138,7 +1202,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
       height: LIGHT_H + 0.24, // centre on the light-path plane, 0.44 m tall
       node: (
         <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-          <TargetBoard center={B_C} floor={B_F} w={B_W} h={B_H} wobble={strikeBoard} rim={boardRim} rimScale={RIG_S} sparkle={sparkle} turn={turnAt(g)}>
+          <TargetBoard center={B_C} floor={B_F} w={B_W} h={B_H} wobble={strikeBoard} rim={boardRim} rimScale={RIG_S} sparkle={sparkle} turn={turnAt(g)} stripTab={stripOn ? stripTabAt(g) : 0} stripTabY={STRIP_AT.y}>
             {stripOn && <ReflectiveStrip x={STRIP_AT.x} y={STRIP_AT.y} w={STRIP_W} h={STRIP_H} glint={glint} />}
           </TargetBoard>
         </svg>
@@ -1368,7 +1432,7 @@ const AuthorsTestCard: React.FC<{g: number}> = ({g}) => {
         <div style={{position: 'absolute', left: -AWIN.x, top: -AWIN.y, width: 1920, height: 1080}}>
           <Camera cam={CAM_AUTH}>
             <Layer depth={1}>
-              <RoomSet tilt={TILT} items={items} plant={false} door={false} />
+              <RoomSet tilt={TILT} items={items} plant={false} door={false} extendRight={AUTH_EXTEND_R} />
             </Layer>
           </Camera>
         </div>
@@ -1561,6 +1625,35 @@ const filmTicks = Array.from({length: Math.max(0, Math.floor((CUT_MUSEUM - TICK0
     const hw = handWorld2(pl, guesserAt(f).pose, -1);
     const e = Math.hypot(hw.x - edgeX(turnAt(f)), hw.y - EDGE_Y);
     if (e > 1) bad.push(`his hand misses the board's edge by ${e.toFixed(2)} px at frame ${f} of the turn`);
+  }
+  // ... then lets go of it and goes back to his hip in two legs (N10): never left of the board's right edge, no step
+  // over 30 px (world px; 37.5 on screen at the s38 zoom), no jump where the legs meet (HIP_MID), and from HIP0 + 3
+  // (the hand starts on the edge) the mitt 6+ px clear of the board (turned, full width) and of its pole
+  {
+    const mitt = MITT_R * RIG_S;
+    const boardBox = {x0: B_C.x - B_W / 2 - BOARD_PAD, x1: B_C.x + B_W / 2 + BOARD_PAD, y0: B_C.y - B_H / 2 - BOARD_PAD, y1: B_C.y + B_H / 2 + BOARD_PAD};
+    const poleBox = {x0: B_F.x - 6 - 1.5, x1: B_F.x + 6 + 1.5, y0: B_C.y + B_H / 2 - 6 - 1.5, y1: B_F.y + 1.5}; // TargetBoard's pole, outline included
+    const gap = (p: {x: number; y: number}, r: typeof boardBox) => Math.hypot(Math.max(0, r.x0 - p.x, p.x - r.x1), Math.max(0, r.y0 - p.y, p.y - r.y1));
+    const handAt = (f: number) => handWorld2({...standAt(G.x0), scale: RIG_S, frame: f, seed: 22, life: 0.35}, guesserAt(f).pose, -1);
+    const steps: number[] = [];
+    let prev = handAt(HIP0 - 1);
+    for (let f = HIP0; f <= HIP1 + 1; f++) {
+      const hw = handAt(f);
+      const step = Math.hypot(hw.x - prev.x, hw.y - prev.y);
+      steps[f] = step;
+      prev = hw;
+      if (hw.x < edgeX(1) - 1) bad.push(`his hand goes left of the board's edge at frame ${f} (${hw.x.toFixed(1)} < ${(edgeX(1) - 1).toFixed(1)})`);
+      if (step > 30) bad.push(`his hand jumps ${step.toFixed(1)} px at frame ${f} on its way to the hip`);
+      if (f >= HIP0 + 3) {
+        const gb = gap(hw, boardBox) - mitt;
+        const gp = gap(hw, poleBox) - mitt;
+        if (gb < 6) bad.push(`his hand is ${gb.toFixed(1)} px from the board at frame ${f}`);
+        if (gp < 6) bad.push(`his hand is ${gp.toFixed(1)} px from the board's pole at frame ${f}`);
+      }
+    }
+    // where the legs meet the hand is at its lowest, about to turn back up: its step there is no bigger than either
+    // neighbour's (a jump would be the biggest)
+    if (!(steps[HIP_MID] <= Math.max(steps[HIP_MID - 1], steps[HIP_MID + 1]) + 1)) bad.push(`his hand jumps where its two legs meet (${steps[HIP_MID - 1].toFixed(1)}, ${steps[HIP_MID].toFixed(1)}, ${steps[HIP_MID + 1].toFixed(1)} px)`);
   }
   const her = checkerAt(SCAN_TAP);
   const herPlace: RigPlace = {x: OPR.x, y: OPR.y, scale: RIG_S, frame: SCAN_TAP, seed: 9, life: 0.4};

@@ -1,0 +1,30 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S7": {
+   "seconds": 45.1,
+   "mean_energy": 1.206,
+   "still_seconds": 3.6,
+   "still_share": 0.079,
+   "longest_still_s": 2.37
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S7",
+   "from": 9343,
+   "to": 9378,
+   "seconds": 1.2,
+   "t": "5:11.4",
+   "spoken": "hidden U. Many of"
+  },
+  {
+   "scene": "S7",
+   "from": 10076,
+   "to": 10146,
+   "seconds": 2.37,
+   "t": "5:35.9",
+   "spoken": "other team reporting results on its own hardware yet."
+  }
+ ]
+}

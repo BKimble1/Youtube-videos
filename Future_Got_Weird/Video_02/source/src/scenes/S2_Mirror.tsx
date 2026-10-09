@@ -1224,35 +1224,55 @@ const INSET = {x0: 92, y0: 92, x1: 792, y1: 470};
 const INSET_K = 0.72;
 const BARS = {x0: 92, y0: 540, x1: 792, y1: 912, n: 12, slot: 7, base: 846, x: 152, w: 40, gap: 10, hMax: 150};
 const SLOT_C = {x: BARS.x + BARS.slot * (BARS.w + BARS.gap) + BARS.w / 2, y: BARS.base - 24};
-/** The inset -> slots card hand-over (review r1 D18): the inset slides out left (by its right edge plus its shadow, so
- *  it ends past the frame edge) and only fades in its last frame, when it is already clear of the room; the slots
- *  card slides in 60 px, opaque from its first frame (the log's barsIn * 2.5 left one 86 % frame with the plant and
- *  pot showing through). Neither card ever stands see-through over the room, and the two are never see-through on the
- *  same frame (asserted). */
+/** The inset -> slots card hand-over (review r1 D18, r2 N04): both cards are opaque on every frame they are drawn and
+ *  travel the whole way between off frame and their place, so neither pops, fades or stands see-through.
+ *  - The inset slides out left by its right edge plus its shadow (INSET_SLIDE), so at insetIn 0 it is already past the
+ *    frame edge. (It used to fade over its last third; since merge r3 the set runs on to the frame's left edge
+ *    (extendLeft), so that fade left one see-through frame over the wall, 2766 in REVIEW2.)
+ *  - The slots card comes in from off frame the same way (BARS_SLIDE = its right edge plus its shadow, plus 10) and
+ *    decelerates into its place over BARS_DUR (E.out). It used to slide only 60 px, so its first frame showed the
+ *    whole 700 x 372 card at once (review r2 N04: a pop at 2764). The settled place is unchanged, so S2's last frame
+ *    (and S3's first) are too.
+ *  Asserted: never see-through over the set, never both see-through, the card off frame at barsIn 0, its first drawn
+ *  frame shows at most 400 px of it, and it has settled before the blip drops into its slot. */
 const INSET_SLIDE = INSET.x1 + 20;
-const BARS_SLIDE = 60;
+const BARS_SLIDE = BARS.x1 + 20;
+const BARS_DUR = 14;
 /** The inset's exit: a steady ease-in (quadratic) slide, so it accelerates out without E.in's last-frame jump. */
 const insetInAt = (g: number) => {
   const u = tw(g, INSET_OUT, 10, E.linear);
   return 1 - u * u;
 };
-const barsInAt = (g: number) => tw(g, BARS_IN, 12, E.out);
+const insetOpAt = (g: number) => (insetInAt(g) > 0 ? 1 : 0);
+const barsInAt = (g: number) => tw(g, BARS_IN, BARS_DUR, E.out);
 const barsOpAt = (g: number) => (barsInAt(g) > 0 ? 1 : 0);
 {
+  // the set covers the whole frame width behind both cards (extendLeft, asserted above), so "over the room" is "on screen"
   const rb = roomBounds(TILT4);
-  const roomLeft = worldToScreen(CAM_D, rb.x0, rb.y0).x;
+  const setLeft = Math.min(0, worldToScreen(CAM_D, rb.x0, rb.y0).x);
+  /** right-most screen x of a card (its drop shadow is 10 px right of it) for slide progress u */
+  const insetRight = (u: number) => INSET.x1 + 10 - INSET_SLIDE * (1 - u);
+  const barsRight = (u: number) => BARS.x1 + 10 - BARS_SLIDE * (1 - u);
   let barsSeeThrough = 0;
-  for (let g = Math.min(INSET_OUT, BARS_IN) - 1; g <= Math.max(INSET_OUT + 10, BARS_IN + 12) + 1; g++) {
+  let barsFirst = -1;
+  for (let g = Math.min(INSET_OUT, BARS_IN) - 1; g <= Math.max(INSET_OUT + 10, BARS_IN + BARS_DUR) + 1; g++) {
     const ii = insetInAt(g);
-    const io = clamp01(ii * 3);
+    const io = insetOpAt(g);
     const bo = barsOpAt(g);
     const insetGhost = io > 0 && io < 1;
     const barsGhost = bo > 0 && bo < 1;
-    if (insetGhost && INSET.x1 + 10 - INSET_SLIDE * (1 - ii) > roomLeft) throw new Error(`S2: frame ${g}: the confetti inset is see-through over the room`);
+    if (insetGhost && insetRight(ii) > setLeft) throw new Error(`S2: frame ${g}: the confetti inset is see-through over the room`);
     if (insetGhost && barsGhost) throw new Error(`S2: frame ${g}: the inset and the slots card are both see-through`);
     if (barsGhost) barsSeeThrough++;
+    if (barsFirst < 0 && barsInAt(g) > 0) barsFirst = g;
   }
   if (barsSeeThrough > 0) throw new Error(`S2: the slots card is see-through for ${barsSeeThrough} frames`);
+  if (insetRight(0) > 0) throw new Error(`S2: the confetti inset is still in frame (to x ${insetRight(0)}) when it stops being drawn`);
+  if (barsRight(0) > 0) throw new Error(`S2: the slots card is not off frame at barsIn 0 (its right edge at x ${barsRight(0)}): it would pop in`);
+  if (barsFirst < 0) throw new Error('S2: the slots card never arrives');
+  const shown = barsRight(barsInAt(barsFirst));
+  if (shown > 400) throw new Error(`S2: frame ${barsFirst}: the slots card's first frame shows ${shown.toFixed(0)} px of it (> 400): a pop`);
+  if (DROP0 < BARS_IN + BARS_DUR - 2) throw new Error(`S2: the blip drops (${DROP0}) before the slots card has settled (${BARS_IN + BARS_DUR})`);
 }
 /** The takeover (TAKEOVER0): the bars card's centre moves to TAKE_C and it grows to 1440 px wide (x 240..1680, y
  *  138..903: inside the 5 % margins and above the caption band; the label becomes 107 px, "time ->" 70 px). */
@@ -1402,7 +1422,7 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
       {/* the metaphor, kept in an inset: confetti still holds bits of the picture */}
       {/* review r1 D18: it leaves solid, sliding out left past the frame edge (no see-through card over the room) */}
       {insetIn > 0 && (
-        <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: f2(clamp01(insetIn * 3)), transform: `translateX(${f2(-INSET_SLIDE * (1 - insetIn))}px)`}}>
+        <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: f2(insetOpAt(g)), transform: `translateX(${f2(-INSET_SLIDE * (1 - insetIn))}px)`}}>
           <div style={{position: 'absolute', left: INSET.x0 + 10, top: INSET.y0 + 14, width: INSET.x1 - INSET.x0, height: INSET.y1 - INSET.y0, borderRadius: 22, background: C.shadow}} />
           <div style={{position: 'absolute', left: INSET.x0, top: INSET.y0, width: INSET.x1 - INSET.x0, height: INSET.y1 - INSET.y0, borderRadius: 22, background: C.cream, border: `4px solid ${C.ink}`, overflow: 'hidden'}}>
             <div style={{position: 'absolute', left: -INSET.x0, top: -INSET.y0, width: 1920, height: 1080, transform: `translate(${f2((INSET.x0 + INSET.x1) / 2 - 960 * INSET_K)}px, ${f2(INSET.y1 - 16 - (PILE_FLOOR + 104) * INSET_K)}px) scale(${INSET_K})`, transformOrigin: '0 0'}}>
@@ -1418,7 +1438,7 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
       {take > 0 && <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, background: C.paper, opacity: f2(Math.min(1, take * 1.25))}} />}
       <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, ...(take > 0 ? {transform: `translate(${f2((TAKE_C.x - BARS_C.x) * take)}px, ${f2((TAKE_C.y - BARS_C.y) * take)}px) scale(${f2(1 + (TAKE_K - 1) * take)})`, transformOrigin: `${BARS_C.x}px ${BARS_C.y}px`} : {})}}>
       {/* the row of timing bars */}
-      {/* review r1 D18: it arrives solid from its first frame, sliding in from the left and settling */}
+      {/* review r1 D18, r2 N04: it arrives solid, sliding in from off frame left and settling (no one-frame pop) */}
       {barsIn > 0 && (
         <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: f2(barsOpAt(g)), transform: `translateX(${f2(-BARS_SLIDE * (1 - barsIn))}px)`}}>
           <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>

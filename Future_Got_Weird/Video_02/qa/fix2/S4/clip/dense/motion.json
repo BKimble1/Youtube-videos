@@ -1,0 +1,86 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S4": {
+   "seconds": 57.9,
+   "mean_energy": 0.916,
+   "still_seconds": 10.6,
+   "still_share": 0.183,
+   "longest_still_s": 1.73
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S4",
+   "from": 4088,
+   "to": 4115,
+   "seconds": 0.93,
+   "t": "2:16.3",
+   "spoken": "flattened, with one more simplification."
+  },
+  {
+   "scene": "S4",
+   "from": 4123,
+   "to": 4159,
+   "seconds": 1.23,
+   "t": "2:17.4",
+   "spoken": "simplification. The sensor flashes"
+  },
+  {
+   "scene": "S4",
+   "from": 4806,
+   "to": 4840,
+   "seconds": 1.17,
+   "t": "2:40.2",
+   "spoken": "place. Measured"
+  },
+  {
+   "scene": "S4",
+   "from": 4885,
+   "to": 4917,
+   "seconds": 1.1,
+   "t": "2:42.8",
+   "spoken": "bit fuzzy, so each arc is really"
+  },
+  {
+   "scene": "S4",
+   "from": 4947,
+   "to": 4998,
+   "seconds": 1.73,
+   "t": "2:44.9",
+   "spoken": "band, and the bands overlap in a small patch."
+  },
+  {
+   "scene": "S4",
+   "from": 5068,
+   "to": 5095,
+   "seconds": 0.93,
+   "t": "2:48.9",
+   "spoken": "close, so the patch is long"
+  },
+  {
+   "scene": "S4",
+   "from": 5098,
+   "to": 5139,
+   "seconds": 1.4,
+   "t": "2:49.9",
+   "spoken": "is long and blurry. Spread them"
+  },
+  {
+   "scene": "S4",
+   "from": 5199,
+   "to": 5230,
+   "seconds": 1.07,
+   "t": "2:53.3",
+   "spoken": "shrinks. In practice, a computer weighs"
+  },
+  {
+   "scene": "S4",
+   "from": 5584,
+   "to": 5614,
+   "seconds": 1.03,
+   "t": "3:06.1",
+   "spoken": "likely location, or a rough"
+  }
+ ]
+}

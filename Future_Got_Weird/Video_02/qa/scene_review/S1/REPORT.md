@@ -1,5 +1,40 @@
 # S1: builder and director-review reports
 
+## Review round 2 fixes (D02 residual, N01, N02, N03)
+
+Built in `work/fix2_S1` on 2026-10-08 against the fix-2 shared pass; not merged or committed. Files: `src/scenes/S1_ColdOpen.tsx` and a new `src/components/v02/S1_Knockout.tsx`. Every module-load check still throws on failure, `tsc` passes, all nine scene modules load, and the S1 cue sheet (29 cues) is byte-identical to `audio/sfx/v2/cues.json`: no SFX cue moved.
+
+**D02 residual (lead R2-L1).**
+- The in-room wall-spot diamond is now lit only while a pulse is at the wall: from 3 frames before to 10 frames after the S1.5 pulse reaches or leaves W3 (954, 1061), the race's out and back (1181, 1223), and while the S1.7 detour tape runs (1700–1725). Lit means a saffron fill plus the wall glow.
+- The rest of the time, including the long S1.4 and S1.6–S1.7 holds, it is an ink outline at 0.5 opacity with no fill and no glow. It appears quietly when the S1.4 route reaches the wall. The card's spot is unchanged.
+- The mask around her is raised from 24/32 to 35/35 world px. That gives at least 40 screen px at zoom 1.15. Measured: glow 40.3 px from her head and 47.8 px from her pencil tip, with 84 % of the glow shown (the check needs at least 75 %). The fans measure 40.2 and 53.4 px; their checks are raised from 20/29 to 32 px.
+- Her mark is not moved; it is shared with S2, S3 and S9.
+
+**N01 (lead R2-L5).**
+- **Timing:** "gap" pops 10 frames after the wall spot (810, against 800), once the route has gone behind the far end (805). "blocked" leaves 8 frames before the spot.
+- **Leader path:** the leader leaves the pill's right edge, elbows at x 580.5 and runs straight down, ending on the GapMarker's dashed threshold inside the slot. Measured clearances: 12.8 px from the partition as drawn, 20.9 px from the glow's rim and 41.3 px from the diamond.
+- **Drawing and landing:** it draws down over 12 frames (813–825). Its end dot pops at 821, and the patch outline pulses once (3→5→3 px, ink) as it lands.
+- **Knock-out:** the leader sits in the backdrop and is knocked out 16 px around every stroke, dot and ring of light on screen. That covers the W→H slot crossing (the route and the pulse's trail), the S1.5 fans, the pulse train and its rings, and the blocked line, so the light passes over a gap in the leader.
+- **No pops:** near light that is fading out, the leader is drawn at 1 − opacity/0.25, so it heals instead of popping back. Specks shorter than 14 px are drawn fainter in proportion to their length.
+- **Load checks:** every frame from 813 to 1030 is checked: light ≥ 16 px away (measured 16.0), top stub ≥ 40 px (measured 99), the leader still ends at the floor point, and the end dot is clear of light.
+- **Replica check:** the light geometry the knock-out reads (`S1_Knockout`) was checked against the real `LightPath`/`ScatterFan`/`Route` SVG output over frames 790–1032: strokes within 0.03 px, dots and rings exact, opacities exact.
+
+**N02.** The pan now uses `PAN_EASE = Easing.bezier(0.5, 0, 0.5, 1)`. PAN0, PAN_END, RACE0 and every cue are unchanged. A load check keeps per-frame screen motion at or under 44 px; the modelled worst case is 42.3 px at the frame edge. Phase correlation on the renders gives a peak of 40 px a frame, down from 56 before.
+
+**N03.**
+- From PAN0 (1120) on, the room is drawn with `extendLeft = HANDOFF_S2S3_EXTEND` (3.2 m), the set S2.4 and S3 use at this framing.
+- **Load checks:** the room's open left end is out of frame at 1119 and 1120 (right-most x −97). The extended end stays out of frame to the scene's end (right-most x −460). The extension matches HANDOFF_S2S3_EXTEND.
+- **Pixel check:** frames 1119 and 1120 differ from the source tree only inside the wall-spot box (x 486–559, y 362–412), so the switch-on shows nothing.
+- The tilt-0 CAM_ROOM shots keep their dollhouse end. Frame 0 matches the source except bottom-tile renderer noise (25 px, at most 5/255), and frame 600 is pixel-identical.
+
+**Known limitation (R2-L1):** her pencil still points at the wall spot from about 66–75 px away. Her mark (LAYOUT.operator) and the wall pick W3 are fixed by the shared geometry, and a film-wide pencil swap was declined. While a pulse is at the wall, the lit spot and glow sit about 40 px from her pencil tip. For the rest of S1.4–S1.7 the marker is a faint outline, so the "pencil sparkle" reading is limited to those short light events.
+
+**Evidence (qa/fix2/S1/):**
+- Comparisons: `cmp_N01_before_after.jpg` (821/880/907/962/985), `cmp_D02_0.4.jpg` (960/1300/1760 at 0.4 scale), `cmp_N03_1300_vs_3300.jpg`, `cmp_1825_before_after.jpg`, `r2_phone480.jpg`, `r2_outline_pulse.jpg`.
+- Half-res clip `clip/S1_clip.mp4` with dense sheets `clip/dense/S1_sheet01–06.jpg` and `motion.json` (no still runs).
+- Every-frame sheets of the changed ranges: `dense_changed/n01_every_frame_*.jpg`, `dense_changed/pan_every_frame_1112_1171.jpg`, `dense_changed/s16_s17_every10_1180_1830.jpg`.
+
+
 ## Director review after the light-path fix
 
 Merged into `source/` on 2026-10-08 (not committed). Sheets in this folder are the review's final sheets from `qa/pathfix_rev/S1/clip_r2/dense/`: `S1_sheet01.jpg`, `S1_sheet02.jpg`, `S1_sheet03.jpg`, `S1_sheet04.jpg`, `S1_sheet05.jpg`, `S1_sheet06.jpg`, `motion.json`, `motion_S1.png`.
@@ -29,12 +64,12 @@ I also factored the room's tilt and camera into `roomTilt` and `roomCam` so the 
 
 **Remaining limitations:**
 - In the room view the wall-to-him leg is mostly hidden, which is honest. "Around the end" depends on the visible stub into the slot, the "gap" label, the rim flash and the plan card.
-- The S1.6 pan shows paper beyond the room, and the cards cover the plant pot. Both were accepted before.
+- The cards cover the plant pot (accepted before). The bare paper the S1.6 pan used to show beyond the room is gone since review round 2 (N03, above).
 - At tilt 0 the near panels sit lower on screen than his hair, because nearer things sit lower in this view. The far panel at his depth is clearly above both heads.
 - The tripod overlaps her right hand.
 - There is an empty slot for about 8 frames when the ruler card swaps for the plan card.
 - The plan card (shared position) sits 40 px from the top-right frame edge, inside the 5% margin. That margin rule applies to critical text; the card is a diagram.
-- The wall spot is still physically close to her head; the spot's position is fixed by the light geometry.
+- The wall spot is still physically close to her head; the spot's position is fixed by the light geometry. See the round-2 known limitation above.
 
 **SFX:** S1 is unchanged, still 29 cues, identical to the pre-review copy and to `audio/sfx/v2/cues.json`. All nine scenes load with their checks passing, and `tsc` passes. Output: `/tmp/claude-0/-home-user-Youtube-videos/30d53758-3f65-58ef-8706-5dc1f2b4b0af/scratchpad/rcues_S1.json`
 
@@ -123,7 +158,6 @@ I checked every on-screen claim against `claims.csv` (C02, C03, C06, C07) and fo
 **Remaining limitations**
 - **Light path over the corner:** the geometry is still the cause. The only fix is moving the wall spot lower, which changes the delay numbers and the continuity with S3. S3 copies S1's camera, wall-spot choice and path drawing, so S3 and S8 need the same treatment.
 - **Card covers the plant:** after the pan, the race card covers the plant's leaves and the pot shows underneath. Video 01 lays cards over the scene the same way, so I left it.
-- **Pan shows outside the room:** the pan exposes paper outside the open-sided room set. That is how the room set is built, and the cards sit there.
 - **Smaller ones:** the field-of-view wedge in S1.2 is mostly behind the checker's head, though the lit patch on the wall shows. He crosses his arms during the pan. The stand's tripod now overlaps her right hand.
 
 **Files changed** (the builder's originals are backed up in `/tmp/claude-0/-home-user-Youtube-videos/30d53758-3f65-58ef-8706-5dc1f2b4b0af/scratchpad/orig/`):

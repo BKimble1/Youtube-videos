@@ -432,15 +432,21 @@
   {
    "f": 4426,
    "kind": "arc_draw",
-   "dur": 2.1,
-   "note": "arc 1 sweep"
+   "dur": 0.6666666666666666,
+   "note": "arc 1 sweep, up to him"
   },
   {
-   "f": 4451,
+   "f": 4460,
+   "kind": "arc_draw",
+   "dur": 1.3,
+   "note": "arc 1 sweep, on round from him"
+  },
+  {
+   "f": 4446,
    "kind": "pop_tick",
    "gain": -9,
    "pitch": 3,
-   "note": "the sweeping tip passes him: his token pulses"
+   "note": "the sweeping tip stops on him: his token pulses"
   },
   {
    "f": 4512,
@@ -594,14 +600,14 @@
    "note": "assumption card"
   },
   {
-   "f": 5636,
+   "f": 5626,
    "kind": "card_flick",
    "pitch": -2,
    "gain": -3,
    "note": "photo frame lands"
   },
   {
-   "f": 5651,
+   "f": 5650,
    "kind": "stamp_light",
    "gain": -3,
    "note": "crossed out"
@@ -1012,6 +1018,12 @@
    "note": "B1 arcs draw"
   },
   {
+   "f": 8675,
+   "kind": "tiny_clink",
+   "gain": -10,
+   "note": "right panel: the sensor stands on its tripod, her hand lets go"
+  },
+  {
    "f": 8726,
    "kind": "footstep_wood",
    "gain": -14,
@@ -1187,7 +1199,7 @@
    "gain": -8
   },
   {
-   "f": 9497,
+   "f": 9509,
    "kind": "card_flick",
    "gain": -8,
    "note": "board turned: the strip faces the wall"
@@ -1835,13 +1847,13 @@
    "gain": -5
   },
   {
-   "f": 11658,
+   "f": 11656,
    "kind": "footstep_wood",
    "gain": -9,
    "pitch": 1
   },
   {
-   "f": 11666,
+   "f": 11664,
    "kind": "footstep_wood",
    "gain": -9,
    "pitch": 1.5
@@ -1857,18 +1869,18 @@
    "pitch": 1
   },
   {
-   "f": 11680,
+   "f": 11682,
    "kind": "footstep_wood",
    "gain": -9,
    "pitch": 1.5
   },
   {
-   "f": 11685,
+   "f": 11687,
    "kind": "cloth_rustle",
    "gain": -9
   },
   {
-   "f": 11699,
+   "f": 11701,
    "kind": "uh_oh",
    "gain": -2,
    "note": "J4: he opens his eyes and she is right there"

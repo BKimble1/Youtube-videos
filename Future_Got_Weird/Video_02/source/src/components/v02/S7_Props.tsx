@@ -78,6 +78,16 @@ const Sparkle: React.FC<{x: number; y: number; k: number}> = ({x, y, k}) => (
   </g>
 );
 
+/** The strip's end wrapped round a board edge: a 14 x 28 px saffron tab (the strip's height) centred at (x, y), a thin
+ *  band of the strip's pale reflective stuff across its middle, ink outline; it fades in with `t`. */
+const StripTab: React.FC<{x: number; y: number; t: number}> = ({x, y, t}) => (
+  <g opacity={f2(Math.min(1, t))}>
+    <rect x={f2(x - 7)} y={f2(y - 14)} width={14} height={28} rx={4} fill={C.saffron} />
+    <rect x={f2(x - 6)} y={f2(y - 4)} width={12} height={8} fill="#DCE5E8" />
+    <rect x={f2(x - 7)} y={f2(y - 14)} width={14} height={28} rx={4} fill="none" stroke={C.ink} strokeWidth={3} />
+  </g>
+);
+
 /**
  * Board on a pole stand. `center` = board centre (px), `floor` = the stand's floor point (px), board w × h px.
  * `rim` 0..1: the arrival cue when a pulse reaches the board from the wall side (behind it): a crisp saffron rim on its
@@ -87,8 +97,12 @@ const Sparkle: React.FC<{x: number; y: number; k: number}> = ({x, y, k}) => (
  * outline kept 4 px): its front face (inner frame line and `children`, e.g. the reflective strip) shows while
  * cos >= 0, its plain back (a pole bracket, no frame line) after that, so at turn 1 the front, and the strip on it,
  * face the wall. The rim and the sparkle stay outside the squash (they belong to the arrival, after the turn).
+ * `stripTab` 0..1 (opt-in, default 0): while the back shows, the end of a strip on the front, wrapped round the board's
+ * left (wall-side) edge, as a 14 x 28 px tab (saffron, the strip's pale band across it) straddling that edge at
+ * `stripTabY` (the strip's centre line), so the strip stays in sight once it faces the wall; with the tab up, the
+ * arrival sparkle lands on the tab (the light leaving the strip) instead of on the corner.
  */
-export const TargetBoard: React.FC<{center: Pt; floor: Pt; w: number; h: number; wobble?: number; rim?: number; rimScale?: number; sparkle?: number; turn?: number; children?: React.ReactNode}> = ({
+export const TargetBoard: React.FC<{center: Pt; floor: Pt; w: number; h: number; wobble?: number; rim?: number; rimScale?: number; sparkle?: number; turn?: number; stripTab?: number; stripTabY?: number; children?: React.ReactNode}> = ({
   center,
   floor,
   w,
@@ -98,6 +112,8 @@ export const TargetBoard: React.FC<{center: Pt; floor: Pt; w: number; h: number;
   rimScale = 1,
   sparkle = 0,
   turn = 0,
+  stripTab = 0,
+  stripTabY,
   children,
 }) => {
   const bottom = center.y + h / 2;
@@ -106,6 +122,8 @@ export const TargetBoard: React.FC<{center: Pt; floor: Pt; w: number; h: number;
   // never a zero-width board: edge-on it is a 6 px sliver inside its 4 px outline
   const sx = (back ? -1 : 1) * Math.max(Math.abs(c), 0.05);
   const ns = {vectorEffect: 'non-scaling-stroke' as const};
+  // the strip's wrapped end: centred 1 px outside the silhouette's left edge (that edge is |sx| w / 2 left of centre)
+  const tab = back && stripTab > 0.01 ? {x: center.x - (Math.abs(sx) * w) / 2 - 1, y: stripTabY ?? center.y} : null;
   return (
     <g>
       <ellipse cx={floor.x + 6} cy={floor.y + 3} rx={w * 0.42} ry={8} fill={C.shadow} />
@@ -122,7 +140,8 @@ export const TargetBoard: React.FC<{center: Pt; floor: Pt; w: number; h: number;
           {/* the plain back: the wooden bracket the pole is screwed to */}
           {back && <rect x={center.x - 8} y={center.y - h * 0.18} width={16} height={h * 0.68} rx={5} fill={C.wood} stroke={C.ink} strokeWidth={3} {...ns} />}
         </g>
-        {sparkle > 0.01 && <Sparkle x={center.x - w / 2 - 6 * rimScale} y={center.y - h / 2 - 5 * rimScale} k={1.35 * Math.min(1, sparkle)} />}
+        {tab && <StripTab x={tab.x} y={tab.y} t={stripTab} />}
+        {sparkle > 0.01 && <Sparkle x={tab ? tab.x - 5 : center.x - w / 2 - 6 * rimScale} y={tab ? tab.y - 16 : center.y - h / 2 - 5 * rimScale} k={1.35 * Math.min(1, sparkle)} />}
       </g>
     </g>
   );

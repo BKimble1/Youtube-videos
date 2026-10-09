@@ -6,7 +6,7 @@ import {useG} from '../lib/SceneFrame';
 import {at, scene, seg, segEnd} from '../lib/timeline';
 import {Camera, Layer, worldToScreen, type Cam} from '../lib/camera';
 import {E, SNAP, SOFT, camPath, hop, ring, sp, tw} from '../lib/motion';
-import {CAM_ROOM, PLAN_CARD_AREA, PLAN_CARD_RECT, RAISED_TILT} from '../lib/shots';
+import {CAM_ROOM, RAISED_TILT} from '../lib/shots';
 import {LAYOUT, PTS, assertAroundTheEnd, partitionHides, partitionTopH, projectWith, rigAt, tiltAt, viewAt, type Layout, type PlanPt, type ViewState} from '../lib/room';
 import {
   LAYOUT as OLAYOUT,
@@ -45,12 +45,12 @@ import {
   type Pose2,
   type RigPlace,
 } from '../components/v02/Cast2';
-import {reachLocal} from '../components/Character';
-import {S9SensorStand, behindBox, boxOf, movedLayout, planWalk, standGeometry, walkAt, walkContacts, walkDistance, type WalkState} from '../components/v02/S9_Room';
+import {handPos, reachLocal, type Arm} from '../components/Character';
+import {S9SensorStand, behindBox, boxOf, movedLayout, planWalk, standGeometry, walkAt, walkContacts, walkDistance, walkFrames, type WalkState} from '../components/v02/S9_Room';
 import {MiniReadout, ReadoutInset} from '../components/v02/S9_Readout';
 import {EndCard} from '../components/v02/S9_EndCard';
 import {BackHead} from '../components/v02/S9_BackHead';
-import {PLAN_VIEW, PlanCard, PlanSpot, viewForArea} from '../components/v02/PlanCard';
+import {PLAN_AREA, PLAN_VIEW, PlanCard, PlanSpot, planCardSize, viewForArea} from '../components/v02/PlanCard';
 
 /**
  * S9 · Payoff (s45–s48). Storyboard shots S8.1–S8.4 (now scene S9).
@@ -213,7 +213,20 @@ const CARD_IN_DUR = 14;
 const CARD_IN = Math.min(RISE_END - 8, P3_0 - CARD_IN_DUR);
 const CARD_OUT = INSET0 - 6;
 const CARD_OUT_DUR = 6;
-const CARD = PLAN_CARD_RECT;
+/** Review r2 N12 (lead R2-L3): S9.2 restates the film's core idea, so its card is 1.22x lib/shots PLAN_CARD_AREA
+ *  (520 x 437 instead of 432 x 372; S1.4's is 704 wide), top right inside the 5 % margin (right edge 1824, top 74, the
+ *  tape inside the margin too). CAM_W is locked for R4, so the card grows into the free wall and doorway on the right,
+ *  never over him (his right elbow is drawn at x ~1278, 26 px from the card; the per-frame check below keeps >= 20). */
+const S9_CARD_AREA = {w: 488, h: 359};
+const S9_CARD_SIZE = planCardSize(S9_CARD_AREA);
+const CARD = {x: Math.round(1920 * 0.95) - S9_CARD_SIZE.w, y: Math.ceil(1080 * 0.05) + 20, ...S9_CARD_SIZE};
+/** the card's light strokes (designed for the default PLAN_AREA card) scale with its plan area */
+const S9_CARD_K = S9_CARD_AREA.w / PLAN_AREA.w;
+// linear in: PlanCard applies the only ease to its slide and fade (review r1 D16: E.out here made it a near-pop)
+const cardTAt = (g: number) => tw(g, CARD_IN, CARD_IN_DUR, E.linear) * (1 - tw(g, CARD_OUT, CARD_OUT_DUR, E.inOut));
+/** the card's drawn left edge (screen px) at card t: PlanCard slides it in from 56 px to the right */
+const cardLeftAt = (t: number) => CARD.x + (1 - E.out(clamp01(t))) * 56;
+if (!(CARD.x >= 1920 * 0.05 && CARD.x + CARD.w <= 1920 * 0.95 && CARD.y >= 1080 * 0.05 && CARD.y + CARD.h + 11 <= 1080 * 0.88)) throw new Error(`S9: the PlanCard (${CARD.x}, ${CARD.y}, ${CARD.w} x ${CARD.h}) must sit inside the 5 % margin and above the caption band`);
 
 // S9.3: the idea, the walk round to the near end, the push from behind (R4)
 const IDEA = K.hide + 2;
@@ -271,20 +284,15 @@ const DUST1 = Math.max(o(38), DUST0 + 15);
 const SMUG0 = DUST1;
 const C_LOOK = o(10);
 /** her deadpan stroll (review r1 D41: 4 footfalls in 21 frames, one every ~5, read as a scurry): the same three short
- *  steps (the chibi rig's legs can't take 0.42 m strides without dropping into a lunge), a footfall every 8 frames and
- *  a 6-frame closing half-step; she sets off as her screen goes blank (KK = 1) */
+ *  steps (the chibi rig's legs can't take 0.42 m strides without dropping into a lunge), 9-frame full steps, and (review
+ *  r2 D41) a slower last step into the stop (C_LAST below), so the closing half-step lands >= 7 frames after the third
+ *  footfall on screen (it was 5); she sets off as her screen goes blank (KK = 1) */
 const C_FPS = Math.max(6, Math.round(9 * KK));
 /** where she ends up: just left of and in front of the near end; once she leans, her head clears both the near end and
  *  the sensor on its stand (a stop further left puts the sensor right beside her ear) */
 const C_SPOT = {x: 1.73, z: 1.62};
 if (!(HIDE.z < OCC.z1 - GAP && HIDE.x > OCC.x + 0.4)) throw new Error('S9: after the push he must end up behind the closed partition, clear of its near end');
-// The PlanCard (screen space, top right) stays clear of him while it is up (S9.2, at H): his drawn rig with the arms out
-// (the flinch, the paws) is at most ~150 rig px right of his feet
-{
-  const pl = rigAt(H.x, H.z, RAISED_TILT);
-  const right = (pl.x + 150 * pl.scale - CAM_W.cx) * CAM_W.zoom + 960;
-  if (right > CARD.x - 20) throw new Error(`S9: the PlanCard (x ${CARD.x}) would touch him (right edge ${right.toFixed(0)})`);
-}
+// (the PlanCard stays >= 20 px clear of him while it is up: checked per frame below, after guesserAt)
 // CAM_W fit: the pushed partition's far top corner (the highest thing drawn) and his shoes at the push start (the lowest)
 // stay inside the frame
 {
@@ -326,14 +334,23 @@ const BLANK = Math.max(o(22), STOP_END + 6);
 // the stopped pulses and their crosses stay up until the readout has gone blank (cause and consequence on screen together)
 const PATHS2_OUT = Math.max(o(24), STOP_END + 8, BLANK + 6);
 const INSET2_OUT = BLANK + Math.round(16 * KK);
-const C_WALK0 = Math.max(o(26), BLANK + Math.round(2 * KK)); // she sets off as her screen goes blank
+const C_WALK0 = BLANK; // she sets off as her screen goes blank (review r2 D41: was BLANK + 2, given back to the last step)
 /** Her steps cross the screen to the right (and a little toward us): with the shoes facing the camera the frontal
  *  rig's legs crossed into an X whenever a foot landed ahead of the other; she walks in profile (S9_Room planWalk
  *  `profile`: shoes 3/4 to the right, knees that way, the near leg on top), Cast2's sideways-walk convention. */
 const C_WALK_PLAN = planWalk({x: LAYOUT.operator.x, z: LAYOUT.operator.z}, C_SPOT, {stepM: 0.27, lift: 14, profile: 1});
-const LEAN0 = C_WALK0 + C_WALK_PLAN.steps * C_FPS + 1;
-const OPEN = LEAN0 + Math.round(15 * KK);
-const BUSTED = OPEN + 3;
+/** her lean -> his eyes open -> the take */
+const LEAN_OPEN = Math.round(15 * KK);
+const OPEN_TAKE = 3;
+/** the latest take the reaction and its settle allow (the D43 budget, asserted below) */
+const TAKE_BY = Math.min(CARD0 - Math.floor(45 * KK), K.s48 - Math.floor(40 * KK));
+/** Review r2 D41: her last step (S9_Room's opt-in lastStepFrames) takes 13 frames on the measured timeline (KK = 1;
+ *  footfalls 8, 10, 8 frames apart); with a quicker narration it shrinks with KK and gives up its extra frames to the
+ *  take's budget first (the J4 chain is BLANK -> walk -> lean -> take) */
+const C_LAST = C_FPS + clamp(TAKE_BY - (C_WALK0 + walkFrames(C_WALK_PLAN, C_FPS) + 1 + LEAN_OPEN + OPEN_TAKE), 0, Math.max(0, Math.round(13 * KK) - C_FPS));
+const LEAN0 = C_WALK0 + walkFrames(C_WALK_PLAN, C_FPS, C_LAST) + 1;
+const OPEN = LEAN0 + LEAN_OPEN;
+const BUSTED = OPEN + OPEN_TAKE;
 // D42: her line of sight, drawn on as she leans round the near end, reaches his face as he opens his eyes (no cross:
 // nothing is in the way now; S1.1's stopped on the partition); held through the take, then it fades before his reaction
 const SIGHT0 = LEAN0 + 2;
@@ -345,10 +362,15 @@ const KR = clamp((CARD0 - BUSTED) / 52, 0.5, 1);
 const rk = (n: number) => Math.round(n * KR);
 const GRIN0 = BUSTED + rk(16);
 const PAW0 = BUSTED + rk(18);
-const PAW_UP = Math.max(4, rk(6));
+// review r2 N13: the paw rises and falls by way of his chest (drawn in front of the torso), 9 frames up and 10 down,
+// both E.inOut; the wag is 7 frames (it was 11) so the settle keeps its frames after D41's later lean
+const PAW_UP = Math.max(6, rk(9));
 const WAG0 = PAW0 + PAW_UP;
-const PAW1 = WAG0 + rk(11);
-const PAW_DN = Math.max(5, rk(8));
+const PAW_DN = Math.max(6, rk(10));
+/** the paw is back on his hip by "This" (the narrator's s48) and >= 6 frames before the wipe: a quicker narration
+ *  shortens the wag first, not the settle */
+const SETTLE_BY = Math.min(CARD0 - 6, K.s48);
+const PAW1 = Math.max(WAG0, Math.min(WAG0 + rk(7), SETTLE_BY - PAW_DN));
 const SETTLE0 = PAW1 + PAW_DN; // the paw is back on his hip: he holds the guilty grin to the wipe
 const C_BLINK0 = BUSTED + rk(25);
 const C_BLINK_DUR = 14; // 5 closing, 3 shut, 6 opening
@@ -362,14 +384,15 @@ if (!(SETTLE0 + 6 <= CARD0 && C_BLINK0 + C_BLINK_DUR <= CARD0 && SIGHT_OUT >= BU
 
 const GUESSER_STEPS = walkContacts(WALK0, WALK_PLAN, WALK_FPS);
 const PUSH_STEPS = walkContacts(PUSH0, PUSH_PLAN, PUSH_FPS).filter((f) => f < THUNK - 2); // the last one is under the thunk
-const CHECKER_STEPS = walkContacts(C_WALK0, C_WALK_PLAN, C_FPS);
-// D41: an unhurried stroll: on the measured timeline (KK = 1) her full steps land >= 7 frames apart (8, 8) and the
-// closing half-step >= 6 (a quicker narration compresses it with the rest of the chain); the last lands by the lean
+const CHECKER_STEPS = walkContacts(C_WALK0, C_WALK_PLAN, C_FPS, C_LAST);
+// D41: an unhurried stroll: on the measured timeline (KK = 1) her full steps land >= 8 frames apart and the closing
+// half-step >= 8 computed (walkContacts reads ~1 frame late on the last landing, so >= 7 on screen; review r2 D41); a
+// quicker narration compresses both with the rest of the chain; the last lands by the lean
 {
   const gaps = CHECKER_STEPS.slice(1).map((f, i) => f - CHECKER_STEPS[i]);
   const full = gaps.slice(0, -1);
-  const minFull = Math.round(7 * KK);
-  const minClose = Math.round(6 * KK);
+  const minFull = Math.floor(8 * KK);
+  const minClose = Math.floor(8 * KK);
   if (Math.min(...full) < minFull || gaps[gaps.length - 1] < minClose || CHECKER_STEPS[CHECKER_STEPS.length - 1] > LEAN0) throw new Error(`S9: her stroll's footfalls (${CHECKER_STEPS.join(', ')}) must be >= ${minFull} frames apart (closing half-step >= ${minClose}) and land by the lean (${LEAN0})`);
 }
 // his steps back round the near end after the push (guesserAt's post-push walk)
@@ -599,13 +622,36 @@ const guesserAt = (g: number, tilt: number, cam: Cam): GuesserState => {
   // the sweat drop) and a tiny paw wave (S9.1's sheepish wave, his far hand), the paw back on his hip; he holds the grin
   const guilty = tw(g, GRIN0, 6, E.inOut);
   if (guilty > 0) pose = withPose(pose, {mouth: 'grin', eyes: 1.1, pupil: 0.92, brows: 0.75, browAsym: 0.25, lid: 0.14, tilt: 4, lookX: -0.92, lookY: 0.12}, guilty);
-  const paw = Math.min(tw(g, PAW0, PAW_UP, E.out), 1 - tw(g, PAW1, PAW_DN, E.inOut));
+  const paw = pawAt(g);
   if (paw > 0) {
     const wag = g >= WAG0 && g < PAW1 ? Math.sin((g - WAG0) * 0.75) * Math.min(1, (PAW1 - g) / 3) : 0;
-    pose = mixPose2(pose, {...pose, armR: reachLocal(112 + 9 * wag, -346, 1, 1)}, paw);
+    pose = {...pose, ...pawArm(pose.armR, paw, wag)};
   }
   const life = g < BUSTED ? 0.35 : 0.12 + 0.18 * tw(g, GRIN0, 12, E.inOut);
   return {plan: {x: HIDE.x, z: HIDE.z}, place: {...place, life}, pose, life, walk: null, view: 'front', turn: turnSquash(g, TURN_FRONT), inFront: false};
+};
+
+/** J4's paw wave (review r2 N13), 0 = fist on the hip .. 1 = raised beside his head: 9 frames up, a 7-frame wag, 10 down. */
+const pawAt = (g: number) => Math.min(tw(g, PAW0, PAW_UP, E.inOut), 1 - tw(g, PAW1, PAW_DN, E.inOut));
+/** The paw on his chest, halfway (rig-local, elbow down): S9.1's sneak paw. */
+const PAW_CHEST = reachLocal(46, -262, 1, -1);
+/** The raised paw beside his head (S9.1's sheepish wave), `wag` -1..1. */
+const pawHigh = (wag: number) => reachLocal(112 + 9 * wag, -346, 1, 1);
+const mixArm = (a: Arm, b: Arm, t: number): Arm => ({a: lerp(a.a, b.a, t), b: lerp(a.b, b.b, t)});
+/** Paw-wave right arm (review r2 N13): a straight angle blend from the hip to the raised paw put the hand inside the
+ *  torso outline, drawn behind it, for a frame each way (a sleeve stub with no hand). Two legs instead, hip -> chest ->
+ *  raised, with the arm drawn in front of the torso while the paw is over it, up to where it is out past his shoulder
+ *  (paw 0.75; S9.1's wave also draws the arm in front until it is up), and behind it once raised. */
+const PAW_FRONT = 0.75;
+/** his torso's half-width (rig px, arm frame) at height y, between the shoulders (76) and the waist (66 at y -150) */
+const torsoEdge = (y: number) => (y < -290 ? 76 : 76 - (10 * (y + 290)) / 140);
+const pawArm = (hip: Arm, paw: number, wag: number): Pick<Pose2, 'armR' | 'armsFront'> => {
+  const armR = paw < 0.5 ? mixArm(hip, PAW_CHEST, paw / 0.5) : mixArm(PAW_CHEST, pawHigh(wag), (paw - 0.5) / 0.5);
+  // the layer switch falls on a moving frame: the arm stays behind (as in the hands-on-hips pose) while the fist's centre
+  // is still outside the torso outline at his hip, so the sleeve does not pop over his shoulder before the paw moves
+  const h = handPos(armR, 1);
+  const atHip = h.hy > -230 && h.hx >= torsoEdge(h.hy);
+  return {armR, armsFront: paw < PAW_FRONT && !atHip ? 'R' : 'none'};
 };
 
 /** The push walk (R4) with the rig's ground line on his body's plan point, not on his nearest planted foot. walkAt pins
@@ -658,6 +704,52 @@ const HAND_H = {L: 0.62, R: 0.92};
   }
 }
 
+// The PlanCard (screen space, top right) stays >= 20 px clear of him on every frame it is up (S9.2, at H; review r2
+// N12 made it 1.22x). His drawn right edge per frame, from the posed rig: both fists (hand + 20 px mitt + outline),
+// both elbows (+ half the sleeve + outline), the torso's shoulder (76 + outline) and the head with ears and hair (the
+// ±92 px of lib Cast2 rigCovers), through the camera of that frame; plus 4 px for the idle drift. (It replaced a flat
+// 150-rig-px bound that put him ~46 px further right than he is drawn: his widest is the sneak paw's elbow, ~114 px.)
+{
+  const rightPx = (f: number) => {
+    const tilt = RAISED_TILT * tiltAt(f, RISE0, RISE_DUR);
+    const cam = camPath(f, CAM_ROOM, [{at: RISE0, dur: RISE_DUR, to: CAM_W}]);
+    const gu = guesserAt(f, tilt, cam);
+    const {place, pose} = gu;
+    const k = place.scale;
+    const lean = ((pose.lean + (pose.peek ?? 0) * 6) * Math.PI) / 180;
+    const xs: number[] = [];
+    for (const side of [-1, 1] as const) {
+      const hw = handWorld2(place, pose, side);
+      const hp = handPos(side === -1 ? pose.armL : pose.armR, side);
+      const ox = hp.ex - hp.hx;
+      const oy = hp.ey - hp.hy;
+      xs.push(hw.x + 22 * k, hw.x + (ox * Math.cos(lean) - oy * Math.sin(lean)) * k + 19 * k);
+    }
+    xs.push(place.x + ((pose.shift ?? 0) + 78) * k, eyesWorld(place, pose).x + 92 * k);
+    return worldToScreen(cam, Math.max(...xs), place.y).x + 4;
+  };
+  for (let f = CARD_IN; f <= CARD_OUT + CARD_OUT_DUR; f++) {
+    const t = cardTAt(f);
+    if (t <= 0) continue;
+    const r = rightPx(f);
+    if (r > cardLeftAt(t) - 20) throw new Error(`S9: at ${f} the PlanCard (left edge ${cardLeftAt(t).toFixed(0)}) would come within 20 px of him (his right edge ${r.toFixed(0)})`);
+  }
+}
+
+// Review r2 N13: through J4's reaction his right hand is never drawn behind the torso while inside its outline (the
+// handless sleeve stub): whenever the right arm is not in front, the hand's centre is outside the torso (rig-local:
+// half-width 76 at the shoulders narrowing to 66 at the waist, y -314..-150), so at least half the fist shows; and
+// the paw is back on the hip >= 6 frames before the wipe (and before "This")
+{
+  for (let f = BUSTED; f < CARD0; f++) {
+    const p = guesserAt(f, RAISED_TILT, CAM_W).pose;
+    if (p.armsFront === 'R' || p.armsFront === 'both') continue;
+    const h = handPos(p.armR, 1);
+    if (h.hy > -314 && h.hy < -150 && h.hx < torsoEdge(h.hy)) throw new Error(`S9: at ${f} his paw (${h.hx.toFixed(0)}, ${h.hy.toFixed(0)}) is drawn behind his torso, inside its outline`);
+  }
+  if (!(pawAt(SETTLE0) === 0 && SETTLE0 + 6 <= CARD0 && SETTLE0 <= K.s48)) throw new Error(`S9: the paw must be back on his hip (${SETTLE0}) >= 6 frames before the wipe (${CARD0}) and by "This" (${K.s48})`);
+}
+
 type CheckerState = {plan: {x: number; z: number}; place: RigPlace; pose: Pose2; walk: WalkState | null};
 
 const checkerAt = (g: number, tilt: number): CheckerState => {
@@ -689,7 +781,7 @@ const checkerAt = (g: number, tilt: number): CheckerState => {
     return {plan: {x: LAYOUT.operator.x, z: LAYOUT.operator.z}, place: {x: pl.x, y: pl.y, scale: pl.scale, frame: gr, seed: CHECKER_SEED, life: 0.35}, pose, walk: null};
   }
   // she strolls to the near end, arms still crossed, and leans round it
-  const d = walkDistance(g, C_WALK0, C_WALK_PLAN, C_FPS);
+  const d = walkDistance(g, C_WALK0, C_WALK_PLAN, C_FPS, C_LAST);
   const wk = walkAt(C_WALK_PLAN, d, tilt);
   const place: RigPlace = {x: wk.x, y: wk.y, scale: wk.scale, frame: gr, seed: CHECKER_SEED, life: 0.3};
   let pose: Pose2 = {...withPose(base, face(1)), feet: wk.pose.feet, sink: wk.pose.sink, lookX: 0.9, lookY: 0.15};
@@ -989,8 +1081,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   const chipT = Math.max(tw(g, P3_0 - 4, 8) * (1 - tw(g, ECHO_END + 8, 10)), g >= RT ? tw(g, PULSE2 - 2, 6) * (1 - tw(g, sched2[0].end + 10, 8)) : 0);
   const blobShown = g < RT ? blobT : 1;
   const insetLit = g < RT ? clamp01((g - LIT) / 18) : 0;
-  // linear in: PlanCard applies the only ease to its slide and fade (review r1 D16: E.out here made it a near-pop)
-  const cardT = tw(g, CARD_IN, CARD_IN_DUR, E.linear) * (1 - tw(g, CARD_OUT, CARD_OUT_DUR, E.inOut));
+  const cardT = cardTAt(g);
   const insetBlank = g < RT ? 0 : blankT;
 
   return (
@@ -1020,7 +1111,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
           x={CARD.x}
           y={CARD.y}
           t={cardT}
-          area={PLAN_CARD_AREA}
+          area={S9_CARD_AREA}
           view={CARD_VIEW}
           layout={lay}
           checker={{...ch.plan, facing: 85}}
@@ -1030,19 +1121,19 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
           light={(tp) =>
             g >= P3_0 && (
               <>
-                <ScatterFan asGroup origin={W3} dirs={DIRS_W} length={0.55} toPx={tp} t={tw(g, VF3[1], 12)} release={tw(g, VF3[1] + 14, 16)} layout={OLAYOUT} seed={5} width={3.5} />
-                <ScatterFan asGroup origin={W4} dirs={DIRS_W} length={0.5} toPx={tp} t={tw(g, VF4[1], 12)} release={tw(g, VF4[1] + 14, 16)} layout={OLAYOUT} seed={7} width={3} />
-                <ScatterFan asGroup origin={H} dirs={DIRS_H3} length={0.55} toPx={tp} t={tw(g, VF3[2], 10)} release={tw(g, VF3[2] + 12, 14)} layout={OLAYOUT} seed={8} width={3} color={C.saffron} />
-                <LightPath asGroup points={PATH3} toPx={tp} t={SCHED3.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} width={6} pulseRadius={11} lane={11} ringRadius={34} />
-                <LightPath asGroup points={PATH4} toPx={tp} t={SCHED4.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} width={6} pulseRadius={11} lane={11} ringRadius={34} />
+                <ScatterFan asGroup origin={W3} dirs={DIRS_W} length={0.55} toPx={tp} t={tw(g, VF3[1], 12)} release={tw(g, VF3[1] + 14, 16)} layout={OLAYOUT} seed={5} width={3.5 * S9_CARD_K} />
+                <ScatterFan asGroup origin={W4} dirs={DIRS_W} length={0.5} toPx={tp} t={tw(g, VF4[1], 12)} release={tw(g, VF4[1] + 14, 16)} layout={OLAYOUT} seed={7} width={3 * S9_CARD_K} />
+                <ScatterFan asGroup origin={H} dirs={DIRS_H3} length={0.55} toPx={tp} t={tw(g, VF3[2], 10)} release={tw(g, VF3[2] + 12, 14)} layout={OLAYOUT} seed={8} width={3 * S9_CARD_K} color={C.saffron} />
+                <LightPath asGroup points={PATH3} toPx={tp} t={SCHED3.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} width={CARD_LIGHT_W} pulseRadius={11 * S9_CARD_K} lane={CARD_LANE} ringRadius={34 * S9_CARD_K} />
+                <LightPath asGroup points={PATH4} toPx={tp} t={SCHED4.progress(g)} pulses={3} pulseGap={0.09} intensityFalloff={0.6} layout={OLAYOUT} width={CARD_LIGHT_W} pulseRadius={11 * S9_CARD_K} lane={CARD_LANE} ringRadius={34 * S9_CARD_K} />
               </>
             )
           }
           marks={(tp) =>
             g >= P3_0 && (
               <>
-                <PlanSpot {...tp(W3)} t={tw(g, VF3[1] - 2, 8)} />
-                <PlanSpot {...tp(W4)} t={tw(g, VF4[1] - 2, 8)} />
+                <PlanSpot {...tp(W3)} t={tw(g, VF3[1] - 2, 8)} r={9 * S9_CARD_K} />
+                <PlanSpot {...tp(W4)} t={tw(g, VF4[1] - 2, 8)} r={9 * S9_CARD_K} />
               </>
             )
           }
@@ -1084,8 +1175,12 @@ const DIRS_H3 = scatterDirections(sub(W3, H), 6, 9);
 const INSET = {x: 100, y: 56, w: 416, h: 358};
 /** gap between the inset's bottom edge and the "likely location" label */
 const LABEL_GAP = 22;
-/** the "seen from above" card's plan framing in PLAN_CARD_AREA (the default PLAN_VIEW, scaled to the smaller area) */
-const CARD_VIEW = viewForArea(PLAN_VIEW, PLAN_CARD_AREA);
+/** the "seen from above" card's plan framing in S9_CARD_AREA (the default PLAN_VIEW, scaled to that area) */
+const CARD_VIEW = viewForArea(PLAN_VIEW, S9_CARD_AREA);
+/** the card's main light stroke (px): 6 px at the default card scaled with it (6.5 px) still read thin at phone size
+ *  (0.4 scale), so 8 px, as review r2 N12 allows; the out-and-back lanes open up with it (14 px apart, a 6 px gap) */
+const CARD_LIGHT_W = 8;
+const CARD_LANE = 14;
 
 /* ================================================================== small drawing helpers */
 

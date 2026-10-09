@@ -206,6 +206,16 @@ const STEP_LAST = Math.min(K.position - 10, S7_WIPE_IN - 30 - CLOUD_LAG - 10);
 const STEP_DUR = Math.max(8, Math.min(10, Math.floor((STEP_LAST - STEP_FIRST) / 2) - 5));
 const STEP_T = [STEP_FIRST, Math.round((STEP_FIRST + STEP_LAST) / 2), STEP_LAST];
 if (!(STEP_T[1] - STEP_T[0] >= STEP_DUR + 3 && STEP_T[2] - STEP_T[1] >= STEP_DUR + 3)) throw new Error(`S6.6: the three steps overlap (${STEP_T.join(', ')}, ${STEP_DUR} f each)`);
+/** Right panel (review r2 N08): "keep the sensor still" means a mounted sensor, not one held in her hand (the film's rule
+ *  is hand = jiggle; the real still-sensor runs were on a fixed mount). As the panel lights up for "Keep", a tripod
+ *  unfolds under the sensor (STAND_IN frames from R_LETGO − 2) and her hand lets go (R_LET_DUR frames from R_LETGO);
+ *  the sensor glyph and her token do not move. */
+const R_LETGO = K.keep35 - 8;
+const R_LET_DUR = 8;
+const STAND_IN = 8;
+if (!(R_LETGO - 2 >= SPLIT0 + SPLIT_DUR)) throw new Error(`S6.6: the right-panel stand starts before the split has settled (${R_LETGO - 2} < ${SPLIT0 + SPLIT_DUR})`);
+if (!(R_LETGO + R_LET_DUR <= K.keep35 + 4)) throw new Error(`S6.6: her hand is still on the right-panel sensor at "Keep" + 4 (${R_LETGO + R_LET_DUR} > ${K.keep35 + 4})`);
+if (!(R_LETGO + Math.max(R_LET_DUR, STAND_IN) + 10 <= STEP_T[0])) throw new Error(`S6.6: the right-panel let-go runs into his first step (${R_LETGO + Math.max(R_LET_DUR, STAND_IN)} + 10 > ${STEP_T[0]})`);
 
 /* ================================================================== geometry (layout.json, verified paths) */
 
@@ -598,6 +608,8 @@ type PlanState = {
   clouds: {field: ScalarField; t: number; tone: 'teal' | 'coral'}[];
   ghostLoops?: number;
   rail?: number;
+  /** right panel: the sensor stands on a tripod (top view, under the sensor glyph); 0..1 unfolds it (opt-in, default 0) */
+  stand?: number;
   /** right panel: dashed outlines of the clouds computed at the positions he has left */
   ghosts?: {loops: P2[][]; t: number}[];
   /** right panel: breadcrumbs: a dotted line through the positions he has left to where he is, and a dot at each */
@@ -607,6 +619,45 @@ type PlanState = {
 const rotDir = (d: P2, deg: number): P2 => {
   const r = (deg * Math.PI) / 180;
   return {x: d.x * Math.cos(r) - d.z * Math.sin(r), z: d.x * Math.sin(r) + d.z * Math.cos(r)};
+};
+
+/** The sensor's tripod seen from above (review r2 N08; no plan stand glyph existed to reuse): three legs at 90/210/330°
+ *  (screen angles, y down: one leg away from the wall, two toward it, so her arm from the lower left lands in the
+ *  gap between two legs), STAND_LEG_M long. Drawn like the S6.3 stand (components/v02/S6_Stand: grey legs in an ink
+ *  outline, ink rubber feet) with the sensor glyph's down-right drop shadow, so it reads as the same hardware and not
+ *  as a line diagram. Drawn under the sensor glyph; on `t` the legs unfold from under the box and fade in. */
+const STAND_LEG_M = 0.17;
+const STAND_ANGLES = [90, 210, 330];
+/** leg: STAND_CORE grey inside a STAND_LEG_W ink tube (plan world px; the S6.6 panels show them at zoom 2) */
+const STAND_LEG_W = 9;
+const STAND_CORE = 4.5;
+const STAND_FOOT_R = 6;
+const STAND_SHADOW = {x: 3, y: 5};
+const standFeet = (c: P2, k = 1): P2[] =>
+  STAND_ANGLES.map((a) => P(c.x + Math.cos((a * Math.PI) / 180) * STAND_LEG_M * k, c.z + Math.sin((a * Math.PI) / 180) * STAND_LEG_M * k));
+const PlanStand: React.FC<{at: P2; t: number}> = ({at, t}) => {
+  const c = planPx(at);
+  const feet = standFeet(at, lerp(0.45, 1, clamp01(t))).map(planPx);
+  const leg = (f: {x: number; y: number}, dx = 0, dy = 0) => ({x1: c.x + dx, y1: c.y + dy, x2: f.x + dx, y2: f.y + dy});
+  return (
+    <g opacity={Math.min(1, t * 2.5)} strokeLinecap="round">
+      {feet.map((f, i) => (
+        <g key={`s${i}`}>
+          <line {...leg(f, STAND_SHADOW.x, STAND_SHADOW.y)} stroke={C.shadow} strokeWidth={STAND_LEG_W} />
+          <circle cx={f.x + STAND_SHADOW.x} cy={f.y + STAND_SHADOW.y} r={STAND_FOOT_R} fill={C.shadow} />
+        </g>
+      ))}
+      {feet.map((f, i) => (
+        <line key={`o${i}`} {...leg(f)} stroke={C.ink} strokeWidth={STAND_LEG_W} />
+      ))}
+      {feet.map((f, i) => (
+        <line key={`c${i}`} {...leg(f)} stroke={C.inkSoft} strokeWidth={STAND_CORE} />
+      ))}
+      {feet.map((f, i) => (
+        <circle key={`f${i}`} cx={f.x} cy={f.y} r={STAND_FOOT_R} fill={C.ink} />
+      ))}
+    </g>
+  );
 };
 
 /** RoomSet slots (world px of the plan board) for a plan state. */
@@ -696,6 +747,9 @@ const planLayers = (s: PlanState) => {
           })}
         </g>
       )}
+      {/* the tripod stands on the floor: under her token and her letting-go hand (both at sensor height), and under the
+          sensor glyph drawn last */}
+      {(s.stand ?? 0) > 0.001 && <PlanStand at={s.sensor} t={s.stand ?? 0} />}
       {s.checker > 0.001 && (() => {
         const rt = s.reachT ?? 1;
         // letting go: the hand comes back from the sensor toward her side, then the arm is gone (it is tucked under)
@@ -872,6 +926,35 @@ const SAFE_X1 = 1920 - 96;
     if (Math.max(...xs) > SAFE_X1) throw new Error(`S6.6: the cloud at ${H.id} crosses the safe margin (x ${Math.max(...xs).toFixed(0)})`);
   });
 }
+// review r2 N08: the right panel's tripod. Every leg and foot (and their drop shadows) stay clear of her token (its full
+// width as a disc), clear of the partition, and inside the right panel; and her arm is gone (planLayers draws it only
+// while reachT > 0.05) by "Keep" + 4.
+{
+  const ppm = TOKEN_PX / (2 * TOKEN_R); // the plan board's px per metre
+  const c = planPx(SA);
+  const op = planPx(OPER);
+  const segDist = (p: {x: number; y: number}, a: {x: number; y: number}, b: {x: number; y: number}) => {
+    const L2 = (b.x - a.x) ** 2 + (b.y - a.y) ** 2;
+    const u = L2 > 0 ? clamp01(((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / L2) : 0;
+    return Math.hypot(p.x - (a.x + (b.x - a.x) * u), p.y - (a.y + (b.y - a.y) * u));
+  };
+  const partX = planPx(P(LJ.occluder.x - LJ.occluder.thickness / 2, 0)).x;
+  standFeet(SA).forEach((f, i) => {
+    const q = planPx(f);
+    for (const [dx, dy] of [[0, 0], [STAND_SHADOW.x, STAND_SHADOW.y]]) {
+      const a = {x: c.x + dx, y: c.y + dy};
+      const b = {x: q.x + dx, y: q.y + dy};
+      const clear = Math.min(segDist(op, a, b) - STAND_LEG_W / 2, Math.hypot(op.x - b.x, op.y - b.y) - STAND_FOOT_R) - TOKEN_PX / 2;
+      if (!(clear >= 2)) throw new Error(`S6.6: tripod leg ${i} (or its shadow) touches her token (${clear.toFixed(1)} px)`);
+      const gap = partX - (b.x + STAND_FOOT_R);
+      if (!(gap >= 0.05 * ppm)) throw new Error(`S6.6: tripod foot ${i} is within 5 cm of the partition (${(gap / ppm).toFixed(3)} m)`);
+    }
+    const s = planToScreen(GEO_R1, CAM_R, f);
+    if (s.x < GEO_R1.x + 20 || s.x > Math.min(SAFE_X1, GEO_R1.x + GEO_R1.w - 20) || s.y < GEO_R1.y + 20 || s.y > GEO_R1.y + GEO_R1.h - 20) throw new Error(`S6.6: tripod foot ${i} leaves the right panel (${s.x.toFixed(0)}, ${s.y.toFixed(0)})`);
+  });
+  const rtOff = 1 - tw(K.keep35 + 4, R_LETGO, R_LET_DUR, E.inOut);
+  if (!(rtOff <= 0.05)) throw new Error(`S6.6: her hand is still drawn on the right-panel sensor at "Keep" + 4 (reachT ${rtOff.toFixed(3)})`);
+}
 
 /** Shared S6.5 → S6.6 state at frame g (the full plan, and both panels until they diverge). */
 const motionState = (g: number): PlanState => {
@@ -953,7 +1036,9 @@ const trackAt = (u: number): P2 => {
  *  recomputed at each position, CLOUD_LAG frames behind him (the estimate visibly catches up after each step); each
  *  position he leaves keeps a saffron dot and a dashed outline of the cloud computed there, joined by a dotted line. */
 const rightState = (g: number): PlanState => {
-  const base = motionState(g);
+  // review r2 N08: the sensor goes onto its tripod and her hand lets go as the panel lights up (in `base`, before the
+  // early return, so it holds through his steps); her token stays where it is
+  const base: PlanState = {...motionState(g), reachT: 1 - tw(g, R_LETGO, R_LET_DUR, E.inOut), stand: tw(g, R_LETGO - 2, STAND_IN)};
   if (g < STEP_T[0]) return base;
   const u = trackU(g);
   const uc = trackU(g - CLOUD_LAG);
@@ -1110,5 +1195,6 @@ export const SFX: Sfx[] = [
   {f: K.one, kind: 'chip_pop', gain: -8, note: 'one unknown at a time'},
   {f: SLIDE0, kind: 'book_slide', gain: -10, pitch: 4, dur: SLIDE_DUR / 30, note: 'sensor slides along the rail'},
   {f: ARCS0, kind: 'arc_draw', gain: -8, dur: 0.8, note: 'B1 arcs draw'},
+  {f: R_LETGO + 6, kind: 'tiny_clink', gain: -10, note: 'right panel: the sensor stands on its tripod, her hand lets go'},
   ...STEP_T.map((t0, i): Sfx => ({f: t0 + STEP_DUR - 2, kind: 'footstep_wood', gain: -14, pitch: [1, -1, 2][i], note: `he steps to ${TRACK[i + 1].id}; the cloud follows`})),
 ];
