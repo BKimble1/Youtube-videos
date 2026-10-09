@@ -41,7 +41,7 @@ assert chapters[0][0] == "0:00"
 starts = [int(c[0].split(":")[0]) * 60 + int(c[0].split(":")[1]) for c in chapters] + [int(tl["durationSeconds"])]
 assert all(b - a >= 10 for a, b in zip(starts, starts[1:])), "a chapter is shorter than 10 s"
 
-THUMB = os.environ.get("THUMB", "thumbnails/thumb_C_1280.jpg")  # the selected variant (see UPLOAD_PACKAGE.md)
+THUMB = os.environ.get("THUMB", "thumbnails/thumb_D_1280.jpg")  # the selected variant (see UPLOAD_PACKAGE.md)
 
 TITLE = "How Cameras See Around Corners"
 _n05 = next(s for s in tl["segments"] if s["id"] == "n05")["from"] / fps

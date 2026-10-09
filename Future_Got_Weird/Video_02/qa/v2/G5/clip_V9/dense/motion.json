@@ -1,0 +1,86 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V9": {
+   "seconds": 37.6,
+   "mean_energy": 0.443,
+   "still_seconds": 11.9,
+   "still_share": 0.318,
+   "longest_still_s": 1.97
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V9",
+   "from": 6049,
+   "to": 6090,
+   "seconds": 1.4,
+   "t": "3:21.6",
+   "spoken": "estimate. The catch: things move"
+  },
+  {
+   "scene": "V9",
+   "from": 6161,
+   "to": 6188,
+   "seconds": 0.93,
+   "t": "3:25.4",
+   "spoken": "steps, and his echo shifts"
+  },
+  {
+   "scene": "V9",
+   "from": 6200,
+   "to": 6229,
+   "seconds": 1.0,
+   "t": "3:26.7",
+   "spoken": "shifts in time. The sensor"
+  },
+  {
+   "scene": "V9",
+   "from": 6357,
+   "to": 6415,
+   "seconds": 1.97,
+   "t": "3:31.9",
+   "spoken": "Just add them up, and echoes from different places blur"
+  },
+  {
+   "scene": "V9",
+   "from": 6634,
+   "to": 6690,
+   "seconds": 1.9,
+   "t": "3:41.1",
+   "spoken": "time. To build a shape, hold the object still"
+  },
+  {
+   "scene": "V9",
+   "from": 6751,
+   "to": 6778,
+   "seconds": 0.93,
+   "t": "3:45.0",
+   "spoken": "known positions, spreading"
+  },
+  {
+   "scene": "V9",
+   "from": 6808,
+   "to": 6842,
+   "seconds": 1.17,
+   "t": "3:46.9",
+   "spoken": "listening spots. That's how the U was"
+  },
+  {
+   "scene": "V9",
+   "from": 6848,
+   "to": 6882,
+   "seconds": 1.17,
+   "t": "3:48.3",
+   "spoken": "how the U was made. To follow a person,"
+  },
+  {
+   "scene": "V9",
+   "from": 6888,
+   "to": 6931,
+   "seconds": 1.47,
+   "t": "3:49.6",
+   "spoken": "follow a person, hold the sensor still,"
+  }
+ ]
+}

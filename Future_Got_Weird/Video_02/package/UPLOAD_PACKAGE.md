@@ -9,7 +9,7 @@ Publishing is the owner's action.
 Selected: the working title, kept as the brief recommends. "This Camera Can See Around Corners" was considered and not used: the film names the system (a time-of-flight sensor) only at 0:22, and the title should not imply that an ordinary camera can do this. Neither title has been tested; no claim is made that one performs better.
 
 ## Thumbnail
-`thumbnails/thumb_C_1280.jpg` (1280x720). Checked at 160-200 px wide against the film's first frames; see `v2/QA_V2.md`. Alternatives: `thumbnails/`.
+`thumbnails/thumb_D_1280.jpg` (1280x720). Checked at 160-200 px wide against the film's first frames; see `v2/QA_V2.md`. Alternatives: `thumbnails/`.
 
 ## Description (paste as is)
 
@@ -58,7 +58,7 @@ See `package/END_SCREEN.md` (element positions and times; starts at 5:11.07).
 ## Owner checklist before upload
 - Upload `exports/Future_Got_Weird_Video_02_v2_MASTER_4K.mp4` (preferred) or `exports/Future_Got_Weird_Video_02_v2_UPLOAD_1080p.mp4`, not the review copy.
 - Captions: upload `package/Future_Got_Weird_Video_02_v2.srt` (English; built from the final narration timing).
-- Thumbnail: upload `thumbnails/thumb_C_1280.jpg`.
+- Thumbnail: upload `thumbnails/thumb_D_1280.jpg`.
 - End screen: follow `package/END_SCREEN.md`.
 - YouTube's altered or synthetic content setting: the film is animated and depicts no real person or real event
   realistically; the narration is a designed synthetic voice. Decide whether to disclose; the description already says so.

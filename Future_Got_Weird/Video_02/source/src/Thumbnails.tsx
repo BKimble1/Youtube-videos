@@ -42,6 +42,7 @@ import {
   type GuesserPose,
   type Pt,
 } from './components/v02/Thumb_Kit';
+import {ThumbDScene} from './components/v2s/Thumb_D';
 
 /**
  * Video 02 thumbnails (1920x1080 stills): "SEES ME?".
@@ -258,6 +259,15 @@ const KitThumb: React.FC<{geo: KitThumbGeometry; title: typeof TITLE_A | typeof 
 export const ThumbA: React.FC = () => <KitThumb geo={GEO_A} title={TITLE_A} inset={INSET_A} />;
 
 export const ThumbB: React.FC = () => <KitThumb geo={GEO_B} title={TITLE_B} inset={INSET_B} />;
+
+/* ------------------------------------------------------------------ D: one subject, one partition, one sensor, one path (v2) */
+
+/**
+ * D (v2 re-edit, REVISION_BRIEF thumbnail note): the film's room at RAISED_TILT with only the guesser, the partition and
+ * the tripod sensor, and one light path sensor -> one wall spot -> behind the partition's far end -> his chest. Built
+ * and checked (throws at module load) in components/v2s/Thumb_D.tsx.
+ */
+export const ThumbD: React.FC = () => <ThumbDScene />;
 
 /* ------------------------------------------------------------------ C: what the readout shows vs where he hides */
 

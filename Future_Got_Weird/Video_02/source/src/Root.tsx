@@ -8,7 +8,7 @@ import {KitOptics} from './dev/KitOptics';
 import {KitCast} from './dev/KitCast';
 import {KitWarehouse} from './dev/KitWarehouse';
 import {KitV2} from './dev/KitV2';
-import {ThumbA, ThumbB, ThumbC} from './Thumbnails';
+import {ThumbA, ThumbB, ThumbC, ThumbD} from './Thumbnails';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -22,5 +22,6 @@ export const RemotionRoot: React.FC = () => (
     <Still id="ThumbA" component={ThumbA} width={1920} height={1080} />
     <Still id="ThumbB" component={ThumbB} width={1920} height={1080} />
     <Still id="ThumbC" component={ThumbC} width={1920} height={1080} />
+    <Still id="ThumbD" component={ThumbD} width={1920} height={1080} />
   </>
 );
