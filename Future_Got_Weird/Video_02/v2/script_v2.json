@@ -89,7 +89,7 @@
    "scene": "V1",
    "text": "That dot is their position estimate. Not a photograph.",
    "tts": "That dot is their position estimate. [dryly] Not a photograph.",
-   "pause_ms": 600,
+   "pause_ms": 800,
    "claims": [
     "C02",
     "C19"
@@ -184,7 +184,7 @@
    "scene": "V2",
    "text": "So how do you turn a tiny delay into a location?",
    "tts": "[curious] So how do you turn a tiny delay… into a location?",
-   "pause_ms": 400,
+   "pause_ms": 700,
    "claims": [],
    "direction": "VOICE: a real question, rising, unhurried; the hook ends here. PICTURE: push past the sensor into the plan; W1 glows; a dashed candidate arc starts from W1, stops a third of the way and resolves into a '?'; the camera pushes into W1's paint.",
    "reuse_v1": false,
@@ -336,7 +336,7 @@
    "scene": "V4",
    "text": "That bump is the clue. Its timing says how much farther the light travelled.",
    "tts": "That bump is the clue. Its timing says how much farther the light travelled.",
-   "pause_ms": 400,
+   "pause_ms": 700,
    "claims": [
     "C06",
     "C12",
@@ -575,7 +575,7 @@
    "scene": "V6",
    "text": "Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.",
    "tts": "Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.",
-   "pause_ms": 900,
+   "pause_ms": 1200,
    "claims": [
     "C33",
     "C35",
@@ -692,7 +692,7 @@
    "scene": "V7",
    "text": "Their new idea: a model that keeps track of what moved, so many weak frames can be combined.",
    "tts": "[warmly] Their new idea: a model that keeps track of what moved… so many weak frames can be combined.",
-   "pause_ms": 400,
+   "pause_ms": 600,
    "claims": [
     "C29",
     "C30"
@@ -862,7 +862,7 @@
    "scene": "V9",
    "text": "To follow a person, hold the sensor still, and let each guess drift a little between frames, keeping the ones that still match. The estimate keeps up instead of smearing.",
    "tts": "To follow a person, hold the sensor still, and let each guess drift a little between frames, keeping the ones that still match. [warmly] The estimate keeps up… instead of smearing.",
-   "pause_ms": 500,
+   "pause_ms": 700,
    "claims": [
     "C18",
     "C30",
@@ -1080,7 +1080,7 @@
    "scene": "V11",
    "text": "For now, it's a promising clue, not a safety system.",
    "tts": "[softly] For now, it's a promising clue, not a safety system.",
-   "pause_ms": 500,
+   "pause_ms": 700,
    "claims": [
     "C39",
     "C40"
@@ -1485,7 +1485,8 @@
    "Software check stays on screen (kit-board chip) and in the description; not spoken.",
    "All 31 new lines are recorded new, in blocks with their neighbouring lines as spoken context (only the target lines are kept); v1 fragments remain fallbacks only.",
    "n25 reworded: 'Take our opening clip: ...' replaces 'Our opening clip is that second case: ...', whose referent was separated from it by the n24 question.",
-   "In-line pause caps (s14, s16, s18, s20, s23, s43) are applied by the assembler as inner_pause_cap_ms."
+   "In-line pause caps (s14, s16, s18, s20, s23, s43) are applied by the assembler as inner_pause_cap_ms.",
+   "Section-break breaths after the takes came in faster than planned (timeline 5:15.7): n02 600→800 (board reading), n06 400→700, s16 400→700, s37 900→1200 (U hold), n16 400→600, n23 500→700, n30 500→700."
   ]
  }
 }

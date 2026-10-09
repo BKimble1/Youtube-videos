@@ -344,7 +344,9 @@ def cmd_assemble():
     pause (the voice's own pause stays); other lines get their own natural lead-in and release. No time-stretching."""
     secs, segdoc, order = load_docs()
     sel = json.load(open(os.path.join(ROOT, "script/narration_selection.json")))
-    sec_of = {sid: sec for sec in secs["sections"] for sid in sec["segments"]}
+    sec_by_id = {sec["id"]: sec for sec in secs["sections"]}
+    # a line can appear in more than one recording section (v2 retakes); its section is the one its chosen take is from
+    sec_of = {sid: sec_by_id[take.rsplit("_t", 1)[0]] for sid, take in sel.items()}
     cache = {}
     target = -24.0
     global MEDIAN_LINE_DB
@@ -397,38 +399,31 @@ def cmd_assemble():
         ws = [dict(w) for w in ws]
         icap = segdoc[sid].get("inner_pause_cap_ms")
         if icap:
-            # tighten sentence breaks inside the line: a quiet stretch between two words longer than the cap loses
-            # its middle (crossfaded), and the following word times move up
-            sdb = frame_db(seg)
-            thr = np.percentile(sdb, 95) - 30
+            # tighten sentence breaks inside the line: each pause the take's own energy shows inside the line's speech
+            # (the same silences eval measures) that is longer than the cap loses its middle, with a 10 ms crossfade;
+            # the words after it move up. Done last to first, so earlier positions stay valid.
+            cap_s = icap / 1000.0
             shift_total = 0.0
-            for wi in range(len(ws) - 1):
-                g0 = ws[wi]["end"] - start          # word times already carry the earlier cuts
-                g1 = ws[wi + 1]["start"] - start
-                i0, i1 = int(g0 * SR / HOP), int(g1 * SR / HOP)
-                if i1 - i0 < 3:
-                    continue
-                q = np.where(sdb[i0:i1] < thr)[0]
-                if not len(q):
-                    continue
-                q0, q1 = (i0 + q[0]) * HOP / SR, (i0 + q[-1] + 1) * HOP / SR
-                quiet = q1 - q0
-                if quiet <= icap / 1000.0 + 0.02:
-                    continue
-                cut = quiet - icap / 1000.0
-                c0 = q0 + (quiet - cut) / 2
+            inner = [(s0, s1) for s0, s1 in silences(db, rel=30, min_len=0.06)
+                     if s0 > on + 0.05 and s1 < off - 0.05 and (s1 - s0) > cap_s + 0.02]
+            for s0, s1 in reversed(inner):
+                cut = (s1 - s0) - cap_s
+                c0 = s0 + cap_s / 2 - start
                 a, b = int(round(c0 * SR)), int(round((c0 + cut) * SR))
                 xf = int(0.01 * SR)
                 head, tail = seg[:a], seg[b:]
-                if len(head) > xf and len(tail) > xf:
-                    mix = head[-xf:] * np.linspace(1, 0, xf) + tail[:xf] * np.linspace(0, 1, xf)
-                    seg = np.concatenate([head[:-xf], mix, tail[xf:]])
-                    sdb = frame_db(seg)
-                    shift_total += (b - a + xf) / SR
-                    for w in ws[wi + 1:]:
-                        w["start"] -= (b - a + xf) / SR
-                        w["end"] -= (b - a + xf) / SR
-                    print(f"   {sid}: pause after '{ws[wi]['text']}' {quiet:.2f}s → {icap / 1000:.2f}s")
+                if len(head) <= xf or len(tail) <= xf:
+                    continue
+                mix = head[-xf:] * np.linspace(1, 0, xf) + tail[:xf] * np.linspace(0, 1, xf)
+                seg = np.concatenate([head[:-xf], mix, tail[xf:]])
+                d = (b - a + xf) / SR
+                shift_total += d
+                for w in ws:
+                    if w["start"] >= s1 - 0.02:
+                        w["start"] -= d
+                        w["end"] -= d
+                prev = [w for w in ws if w["start"] < s0]
+                print(f"   {sid}: pause after '{prev[-1]['text'] if prev else '?'}' {s1 - s0:.2f}s → {cap_s:.2f}s")
             off -= shift_total
         # one presenter: lines whose level strays more than 1.5 dB from the median line are pulled most of the way back
         line_db = float(np.percentile(frame_db(x[int(on * SR): int(off * SR)]), 90))

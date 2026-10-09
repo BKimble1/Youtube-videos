@@ -103,6 +103,19 @@ def main():
                          "prompt": prompt, "words_per_segment": [len(words(x["text"])) for x in seq],
                          "chars": len(prompt)})
 
+    # second-pass retakes (v2/retakes.json): one target line between its spoken neighbours; same words, new beats
+    rp = os.path.join(ROOT, "v2/retakes.json")
+    if os.path.exists(rp):
+        textof = {ln["id"]: ln["text"] for ln in lines}
+        for rb in json.load(open(rp, encoding="utf-8"))["blocks"]:
+            tid = rb["target"]
+            if tts_words(rb["tts"]) != [w.lower().strip("'’") for w in words(textof[tid])]:
+                sys.exit(f"retake {rb['id']}: words differ from {tid}")
+            seq = [("ctx:before", rb["context_before"]), (tid, rb["tts"]), ("ctx:after", rb["context_after"])]
+            prompt = "\n\n".join(x[1] for x in seq)
+            sections.append({"id": rb["id"], "segments": [x[0] for x in seq], "prompt": prompt, "retake_of": tid,
+                             "words_per_segment": [len(tts_words(x[1])) for x in seq], "chars": len(prompt)})
+
     meta = {k: v1segs[k] for k in ("title", "channel", "voice_name", "voice_id", "model")}
     meta["version"] = "v2 editorial pass (2026-10-09)"
     meta["notes"] = v1segs["notes"]
@@ -124,9 +137,11 @@ def main():
     old = json.load(open(sel_path)) if os.path.exists(sel_path) else {}
     sel = {}
     for ln in lines:
-        if ln["reuse_v1"]:
+        if ln["id"] in old and old[ln["id"]].startswith("y"):   # a v2 take (incl. a retake of a v1 line) stays chosen
+            sel[ln["id"]] = old[ln["id"]]
+        elif ln["reuse_v1"]:
             sel[ln["id"]] = v1sel[ln["id"]]
-        elif ln["id"] in old and old[ln["id"]].startswith("y"):
+        elif False:
             sel[ln["id"]] = old[ln["id"]]
     json.dump(sel, open(sel_path, "w"), indent=1)
     open(sel_path, "a").write("\n")
@@ -146,7 +161,9 @@ def main():
     print(f"{len(lines)} lines, {nw} words; reused {sum(ln['reuse_v1'] for ln in lines)}; new blocks {len(blocks)}; "
           f"v1 sections carried: {', '.join(used_v1) or 'none'}")
     if "--blocks" in sys.argv:
-        print(json.dumps([{"id": s["id"], "prompt": s["prompt"]} for s in sections if s["id"].startswith("y")], indent=1,
+        only = sys.argv[sys.argv.index("--only") + 1].split(",") if "--only" in sys.argv else None
+        print(json.dumps([{"id": s["id"], "prompt": s["prompt"]} for s in sections
+                          if s["id"].startswith("y") and (not only or s["id"] in only)], indent=1,
                          ensure_ascii=False))
 
 
