@@ -3,13 +3,18 @@
  "files": [
   {
    "name": "v02v2_audio_sources.tar",
-   "bytes": 24678400,
-   "sha256": "431e21f0b112db3cda0d00a5c41e66f051bd290b210083efc4a821269e528c65",
+   "bytes": 31488000,
+   "sha256": "f865bbd3e12d6ac9e703bfa372b5968efe694a392928daa659d2eff419b712c9",
    "parts": [
     {
      "name": "v02v2_audio_sources.tar.part001",
-     "bytes": 24678400,
-     "sha256": "431e21f0b112db3cda0d00a5c41e66f051bd290b210083efc4a821269e528c65"
+     "bytes": 25165824,
+     "sha256": "6ea245d8e47a73069b5665f3f672806e7bdf871759f0e932b2d1e39de9a1cc70"
+    },
+    {
+     "name": "v02v2_audio_sources.tar.part002",
+     "bytes": 6322176,
+     "sha256": "5d5a66ec63e4102d205e8ed5fbff6c1a79c737441060cde4115335eec24bdf22"
     }
    ]
   }

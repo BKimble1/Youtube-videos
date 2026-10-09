@@ -1,16 +1,16 @@
 # V2 narration: per-line measurements
 
-Median line level -14.4 dB (90th pct of 5 ms frames), median F0 160 Hz.
+Median line level -14.3 dB (90th pct of 5 ms frames), median F0 161 Hz.
 
 ## s02 — That sensor can't see him. It's pointed at a plain, blank wall.
 _Direction: VOICE: matter-of-fact setup (v1 take); if the new hook takes (block y01) sound unlike it, regenerate it with y01, same words, under a new id. PICTURE: 1.0 s silent hide first (he tiptoes in, settles smug); sensor-facing room view: the dashed sight line from the sensor stops at the partition with an X on 'can't see him'; then the S1.2 push: the checker taps the sensor, its field-of-view wedge lights bare wall well clear of him; labels 'sensor' 'blocked'._
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x01_t3 ✔ | 8.34 | 3.57 | 225.7 | 13.25 | 4.97 | -16.89 |  | him. 0.38 |  |
-| x01_t2 | 6.46 | 3.455 | 228.9 | 11.98 | 4.29 | -17.92 |  | him. 0.31 |  |
-| x01_t4 | 6.41 | 3.565 | 227.1 | 11.9 | 4.39 | -18.29 |  | him. 0.395 |  |
-| x01_t1 | 6.3 | 3.38 | 235.7 | 10.93 | 4.11 | -17.83 |  | him. 0.325 |  |
+| x01_t3 ✔ | 8.31 | 3.57 | 225.7 | 13.25 | 4.97 | -16.89 |  | him. 0.38 |  |
+| x01_t2 | 6.5 | 3.455 | 228.9 | 11.98 | 4.29 | -17.92 |  | him. 0.31 |  |
+| x01_t4 | 6.45 | 3.565 | 227.1 | 11.9 | 4.39 | -18.29 |  | him. 0.395 |  |
+| x01_t1 | 6.34 | 3.38 | 235.7 | 10.93 | 4.11 | -17.83 |  | him. 0.325 |  |
 
 ## n01 — Yet researchers have used light bouncing off a wall to track someone hidden around a corner.
 _Direction: VOICE: a small beat after 'Yet', then clear and quietly amazed: the discovery, not an announcement. PICTURE: hard cut on 'researchers' to the full-frame real board (kraft, 'Real data'): authors' stored estimate from index 6, every 2nd frame, sped up; labels 'sensor' 'blocked' 'estimated position'; one source line._
@@ -27,10 +27,10 @@ _Direction: VOICE: plain, then a dry drop on 'Not a photograph' (said once in th
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| y01_t4 | 7.91 | 3.3 | 188.2 | 12.07 | 5.53 | -14.4 |  | estimate. 0.43 |  |
-| y01_t3 | 7.68 | 3.235 | 190.8 | 11.75 | 5.28 | -14.99 |  | estimate. 0.405 |  |
-| y01_t1 ✔ | 7.36 | 3.275 | 190.5 | 8.55 | 5.52 | -14.56 |  | estimate. 0.44 |  |
-| y01_t2 | 6.9 | 3.305 | 193.9 | 14.2 | 4.75 | -14.93 |  | estimate. 0.52 |  |
+| y01_t4 | 7.82 | 3.3 | 188.2 | 12.07 | 5.53 | -14.4 |  | estimate. 0.43 |  |
+| y01_t3 | 7.59 | 3.235 | 190.8 | 11.75 | 5.28 | -14.99 |  | estimate. 0.405 |  |
+| y01_t1 ✔ | 7.27 | 3.275 | 190.5 | 8.55 | 5.52 | -14.56 |  | estimate. 0.44 |  |
+| y01_t2 | 6.81 | 3.305 | 193.9 | 14.2 | 4.75 | -14.93 |  | estimate. 0.52 |  |
 
 ## n03 — The trick is timing: light that reaches him takes the long way round, so it comes back later.
 _Direction: VOICE: friendly explainer; light stress on 'long way round'. PICTURE: match cut to our full-frame plan schematic (chip 'illustration'): short teal trip S to W1 and back races the long saffron trip S to W1 to him to W1 to S, around the partition's end; both drop onto one timeline._
@@ -47,10 +47,10 @@ _Direction: VOICE: dry undercut on the size of 'later'. PICTURE: the arrival tim
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| y01_t1 ✔ | 4.39 | 1.785 | 235.3 | 11.79 | 4.16 | -14.25 |  |  |  |
-| y01_t4 | 4.07 | 1.775 | 236.6 | 11.03 | 4.21 | -14.72 |  |  |  |
-| y01_t3 | 3.75 | 1.87 | 224.6 | 7.9 | 2.93 | -14.84 |  |  |  |
-| y01_t2 | 2.22 | 1.9 | 221.1 | 6.43 | 2.74 | -16.57 |  |  |  |
+| y01_t1 ✔ | 4.3 | 1.785 | 235.3 | 11.79 | 4.16 | -14.25 |  |  |  |
+| y01_t4 | 3.97 | 1.775 | 236.6 | 11.03 | 4.21 | -14.72 |  |  |  |
+| y01_t3 | 3.66 | 1.87 | 224.6 | 7.9 | 2.93 | -14.84 |  |  |  |
+| y01_t2 | 2.13 | 1.9 | 221.1 | 6.43 | 2.74 | -16.57 |  |  |  |
 
 ## n05 — This takes a time-of-flight sensor, a camera that clocks its own light's round trip.
 _Direction: VOICE: define the sensor plainly. PICTURE: timeline shrinks into the sensor's display (chart to display match); sensor close-up; label 'time-of-flight sensor'; chip 'invisible flash · shown for clarity'; the checker taps the display._
@@ -67,10 +67,10 @@ _Direction: VOICE: a real question, rising, unhurried; the hook ends here. PICTU
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| y02_t1 ✔ | 10.49 | 3.32 | 220.0 | 16.75 | 5.89 | -15.06 | delay…0.32 | delay… 0.32 |  |
-| y02_t2 | 9.66 | 3.435 | 214.6 | 16.56 | 5.62 | -14.9 | delay…0.36 | delay… 0.36 |  |
-| y02_t4 | 9.02 | 3.275 | 227.6 | 15.08 | 5.33 | -15.1 | delay…0.375 | delay… 0.375 |  |
-| y02_t3 | 6.44 | 3.08 | 214.3 | 12.95 | 4.98 | -15.02 | delay…0.19 | delay… 0.19 |  |
+| y02_t1 ✔ | 10.58 | 3.32 | 220.0 | 16.75 | 5.89 | -15.06 | delay…0.32 | delay… 0.32 |  |
+| y02_t2 | 9.75 | 3.435 | 214.6 | 16.56 | 5.62 | -14.9 | delay…0.36 | delay… 0.36 |  |
+| y02_t4 | 9.11 | 3.275 | 227.6 | 15.08 | 5.33 | -15.1 | delay…0.375 | delay… 0.375 |  |
+| y02_t3 | 6.53 | 3.08 | 214.3 | 12.95 | 4.98 | -15.02 | delay…0.19 | delay… 0.19 |  |
 
 ## n07 — First, a puzzle: why does a plain wall work at all?
 _Direction: VOICE: 'First' marks this as step one of the answer, not a change of subject; curious, a small beat after 'puzzle'. PICTURE: the push into W1's paint pulls back out to the raised room view: bare wall, sensor, him behind the partition; question title 'What survives the bounce?' for this line only._
@@ -78,9 +78,9 @@ _Direction: VOICE: 'First' marks this as step one of the answer, not a change of
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
 | y03_t2 ✔ | 9.81 | 3.325 | 232.4 | 16.45 | 6.44 | -14.14 | puzzle…0.485 | puzzle… 0.485 |  |
-| y03_t3 | 9.38 | 3.36 | 232.4 | 15.35 | 5.27 | -13.92 | puzzle…0.52 | puzzle… 0.52 |  |
-| y03_t4 | 9.15 | 3.345 | 232.4 | 13.98 | 4.79 | -14.08 | puzzle…0.505 | First, 0.195; puzzle… 0.505 |  |
-| y03_t1 | 8.62 | 3.265 | 240.0 | 14.97 | 6.22 | -13.86 | puzzle…0.515 | puzzle… 0.515 |  |
+| y03_t3 | 9.47 | 3.36 | 232.4 | 15.35 | 5.27 | -13.92 | puzzle…0.52 | puzzle… 0.52 |  |
+| y03_t4 | 9.24 | 3.345 | 232.4 | 13.98 | 4.79 | -14.08 | puzzle…0.505 | First, 0.195; puzzle… 0.505 |  |
+| y03_t1 | 8.71 | 3.265 | 240.0 | 14.97 | 6.22 | -13.86 | puzzle…0.515 | puzzle… 0.515 |  |
 
 ## n08 — Put a mirror here, and our friend is simply visible.
 _Direction: VOICE: dry; J2 lands on 'visible'. PICTURE: same raised view; on 'here' the checker slides a mirror panel onto the wall; one pulse runs sensor to mirror to him with 1 s 'in = out' angle marks; the mirror shows his back; J2: he ducks; hold 0.5 s._
@@ -107,10 +107,10 @@ _Direction: VOICE: the section's thesis; small lift on 'timing'. PICTURE: iris o
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| y04_t4 ✔ | 11.29 | 4.9 | 176.9 | 14.16 | 5.66 | -16.06 | paths…0.49 | paths… 0.49 |  |
-| y04_t3 | 11.01 | 5.04 | 182.5 | 15.01 | 6.14 | -16.47 | paths…0.5 | paths… 0.5; survives 0.265 |  |
-| y04_t2 | 10.87 | 4.9 | 174.7 | 11.74 | 5.07 | -16.32 | paths…0.435 | paths… 0.435; survives 0.125 |  |
-| y04_t1 | 10.86 | 5.02 | 172.8 | 11.92 | 5.08 | -16.93 | paths…0.505 | paths… 0.505 |  |
+| y04_t4 ✔ | 11.2 | 4.9 | 176.9 | 14.16 | 5.66 | -16.06 | paths…0.49 | paths… 0.49 |  |
+| y04_t3 | 10.92 | 5.04 | 182.5 | 15.01 | 6.14 | -16.47 | paths…0.5 | paths… 0.5; survives 0.265 |  |
+| y04_t2 | 10.78 | 4.9 | 174.7 | 11.74 | 5.07 | -16.32 | paths…0.435 | paths… 0.435; survives 0.125 |  |
+| y04_t1 | 10.72 | 5.02 | 172.8 | 11.92 | 5.08 | -16.93 | paths…0.505 | paths… 0.505 |  |
 
 ## s14 — Nearly everything coming back bounced once, off the wall. Our friend's echo bounced three times, so it's tiny.
 _Direction: VOICE: plain; 'tiny' small (v1 take; tighten the pause after 'wall.' from 0.54 to 0.35 s). PICTURE: the hook's timeline fills the frame with a five-icon route strip above it (sensor, wall, him, wall, sensor); one pulse thins at each bounce; tall '1 bounce' spike, then the tiny late '3 bounces' bump ringed on 'tiny'; 'not to scale · far weaker'._
@@ -137,10 +137,10 @@ _Direction: VOICE: short, confident (v1 take; tighten the pause after 'clue.' to
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x07_t1 | 8.4 | 4.415 | 217.6 | 10.83 | 4.32 | -16.17 |  | clue. 0.555 |  |
-| x07_t2 ✔ | 8.33 | 4.29 | 221.1 | 9.79 | 4.63 | -15.69 |  | clue. 0.49 |  |
-| x07_t4 | 7.1 | 4.135 | 229.2 | 10.46 | 4.04 | -15.77 |  | clue. 0.47 |  |
-| x07_t3 | 6.0 | 3.92 | 243.8 | 9.88 | 4.48 | -15.4 |  | clue. 0.475 |  |
+| x07_t1 | 8.31 | 4.415 | 217.6 | 10.83 | 4.32 | -16.17 |  | clue. 0.555 |  |
+| x07_t2 ✔ | 8.24 | 4.29 | 221.1 | 9.79 | 4.63 | -15.69 |  | clue. 0.49 |  |
+| x07_t4 | 7.01 | 4.135 | 229.2 | 10.46 | 4.04 | -15.77 |  | clue. 0.47 |  |
+| x07_t3 | 5.91 | 3.92 | 243.8 | 9.88 | 4.48 | -15.4 |  | clue. 0.475 |  |
 
 ## n10 — Farther from where? Simplify it: the sensor flashes and listens at one spot on the wall.
 _Direction: VOICE: the forward question, answered in the same breath. PICTURE: the signature fold: room folds to the full-frame plan, characters become tokens, W1 glows; question title 'How does a delay become a location?'; confocal route out and back on W1; chip 'simplified picture · sends and listens at one spot'._
@@ -177,8 +177,12 @@ _Direction: VOICE: J3 setup (v1 take; measures fast, listen). PICTURE: the arc s
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
+| y21_t2 | 5.66 | 3.61 | 259.3 | 12.96 | 5.48 | -13.14 |  | be 0.135; arc… 0.37 |  |
 | x08_t1 ✔ | 5.4 | 3.495 | 262.5 | 14.06 | 6.11 | -12.84 |  | arc, 0.295 |  |
 | x08_t2 | 5.03 | 3.5 | 267.1 | 14.29 | 6.02 | -13.62 |  | arc, 0.355 |  |
+| y21_t1 | 5.0 | 3.58 | 267.5 | 14.61 | 5.83 | -14.17 |  | arc… 0.44 |  |
+| y21_t3 | 4.93 | 3.55 | 268.4 | 14.41 | 6.03 | -13.1 |  | be 0.13; arc… 0.42 |  |
+| y21_t4 | 4.9 | 3.53 | 268.8 | 14.06 | 5.89 | -14.19 |  | arc… 0.405 |  |
 | x08_t3 | 4.79 | 3.395 | 270.1 | 13.2 | 6.08 | -13.73 |  | arc, 0.285 |  |
 | x08_t4 | 3.85 | 3.31 | 281.9 | 13.64 | 6.15 | -13.88 |  | arc, 0.33 |  |
 
@@ -229,7 +233,7 @@ _Direction: VOICE: settle. PICTURE: the cluster settles into a soft likely-locat
 |---|---|---|---|---|---|---|---|---|---|
 | y06_t1 | 10.0 | 3.615 | 199.2 | 13.16 | 5.62 | -13.86 |  | location, 0.195 |  |
 | y06_t4 | 10.0 | 3.995 | 180.2 | 12.48 | 5.3 | -12.75 |  | is 0.19; location, 0.215; or 0.15 |  |
-| y06_t2 ✔ | 9.54 | 3.57 | 201.7 | 13.26 | 5.34 | -13.62 |  | location, 0.185 |  |
+| y06_t2 ✔ | 9.63 | 3.57 | 201.7 | 13.26 | 5.34 | -13.62 |  | location, 0.185 |  |
 | y06_t3 | 9.18 | 3.345 | 215.2 | 11.54 | 4.52 | -13.52 |  | location, 0.15 |  |
 
 ## n13 — And here's a real one.
@@ -237,10 +241,14 @@ _Direction: VOICE: discovery, warm, short. PICTURE: hard visible switch: new boa
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| y06_t2 ✔ | 5.75 | 1.195 | 251.0 | 11.29 | 4.21 | -13.29 |  |  |  |
-| y06_t4 | 4.87 | 1.19 | 252.1 | 10.12 | 3.68 | -13.09 |  |  |  |
+| y18_t4 | 10.0 | 1.885 | 195.4 | 13.07 | 5.03 | -14.67 |  | here's… 0.35 |  |
+| y18_t3 | 8.81 | 1.775 | 200.7 | 12.96 | 4.97 | -13.74 |  | here's… 0.28 |  |
+| y18_t2 | 6.37 | 1.815 | 200.7 | 16.1 | 6.34 | -14.85 |  | here's… 0.32 |  |
+| y06_t2 ✔ | 5.66 | 1.195 | 251.0 | 11.29 | 4.21 | -13.29 |  |  |  |
+| y06_t4 | 4.78 | 1.19 | 252.1 | 10.12 | 3.68 | -13.09 |  |  |  |
 | y06_t3 | 4.38 | 1.09 | 275.2 | 11.24 | 4.44 | -13.16 |  |  |  |
-| y06_t1 | 3.19 | 1.12 | 267.9 | 12.22 | 4.69 | -12.22 |  |  |  |
+| y18_t1 | 3.77 | 1.69 | 217.4 | 15.83 | 6.18 | -15.89 |  | here's… 0.31 |  |
+| y06_t1 | 3.1 | 1.12 | 267.9 | 12.22 | 4.69 | -12.22 |  |  |  |
 
 ## s37 — Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.
 _Direction: VOICE: second evidence payoff (v1 take, moved from v1 5:06); hold on the finished U. PICTURE: the zone box steps through 36 preset positions; the U builds from the real partial sums (k = 1 to 36, no in-betweens); labels 'same 3x3 sensor · 36 preset positions · object held still' 'rough outline'; not morphed from our arcs._
@@ -287,6 +295,10 @@ _Direction: VOICE: friendly caveat (v1 take; measures fast, listen). PICTURE: ge
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
+| y22_t1 | 8.02 | 4.64 | 229.7 | 14.38 | 6.03 | -14.63 |  | yet… 0.46 |  |
+| y22_t3 | 7.98 | 4.685 | 230.2 | 15.17 | 6.03 | -14.71 |  | yet… 0.515 |  |
+| y22_t4 | 7.06 | 4.435 | 241.8 | 17.36 | 6.27 | -15.38 |  | yet… 0.465 |  |
+| y22_t2 | 7.03 | 4.52 | 242.1 | 17.64 | 6.78 | -14.23 |  | yet… 0.555 |  |
 | x13_t4 ✔ | 6.42 | 4.35 | 249.7 | 15.67 | 6.18 | -13.51 |  | yet: 0.505 |  |
 | x13_t3 | 6.24 | 4.325 | 252.0 | 15.63 | 6.42 | -14.0 |  | yet: 0.515 |  |
 | x13_t1 | 5.78 | 4.25 | 257.7 | 15.78 | 6.4 | -13.79 |  | yet: 0.525 |  |
@@ -309,8 +321,8 @@ _Direction: VOICE: a genuine question; 'that' points back to the new idea, and t
 |---|---|---|---|---|---|---|---|---|---|
 | y09_t2 ✔ | 10.0 | 2.48 | 193.5 | 19.65 | 7.26 | -16.4 |  |  |  |
 | y09_t3 | 10.0 | 2.345 | 204.7 | 20.06 | 7.38 | -15.8 |  |  |  |
-| y09_t1 | 9.87 | 2.36 | 203.4 | 19.97 | 7.52 | -16.41 |  |  |  |
-| y09_t4 | 8.93 | 2.43 | 197.5 | 17.94 | 6.39 | -15.72 |  |  |  |
+| y09_t1 | 9.96 | 2.36 | 203.4 | 19.97 | 7.52 | -16.41 |  |  |  |
+| y09_t4 | 9.02 | 2.43 | 197.5 | 17.94 | 6.39 | -15.72 |  |  |  |
 
 ## n18 — Weak lasers mean fainter echoes. The team's smartphone-grade device had about a hundred pixels: a hundred listening spots. And if you hold one in your hand, it jiggles.
 _Direction: VOICE: three problems as a quick rhythm; small smile on 'jiggles'. PICTURE: three full-frame beats, one at a time: dim beam and an even smaller echo on the hook's timeline; the research module's uncountable dot field, then its spots bunched on a small wall patch give the long blurry patch from C; the checker lifts the sensor off its stand and it jiggles._
@@ -338,9 +350,9 @@ _Direction: VOICE: the problem, plainly; two changes, two sentences. PICTURE: fu
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
 | y10_t3 ✔ | 12.0 | 9.175 | 194.9 | 9.96 | 3.69 | -15.88 | jiggles…0.42 | catch: 0.34; frames. 0.52; steps, 0.13; time. 0.505; jiggles… 0.42 |  |
-| y10_t4 | 11.97 | 9.185 | 193.3 | 9.28 | 3.46 | -16.43 | jiggles…0.375 | catch: 0.345; frames. 0.51; steps, 0.16; time. 0.505; jiggles… 0.375 |  |
-| y10_t2 | 11.71 | 9.095 | 196.5 | 9.9 | 3.83 | -15.84 | jiggles…0.33 | catch: 0.35; frames. 0.525; time. 0.56; jiggles… 0.33 |  |
-| y10_t1 | 11.49 | 9.16 | 192.9 | 10.37 | 4.8 | -16.07 | jiggles…0.32 | catch: 0.355; frames. 0.5; time. 0.52; jiggles… 0.32 |  |
+| y10_t4 | 11.94 | 9.185 | 193.3 | 9.28 | 3.46 | -16.43 | jiggles…0.375 | catch: 0.345; frames. 0.51; steps, 0.16; time. 0.505; jiggles… 0.375 |  |
+| y10_t2 | 11.61 | 9.095 | 196.5 | 9.9 | 3.83 | -15.84 | jiggles…0.33 | catch: 0.35; frames. 0.525; time. 0.56; jiggles… 0.33 |  |
+| y10_t1 | 11.4 | 9.16 | 192.9 | 10.37 | 4.8 | -16.07 | jiggles…0.32 | catch: 0.355; frames. 0.5; time. 0.52; jiggles… 0.32 |  |
 
 ## n20 — Just add them up, and echoes from different places blur into one smear, like a long exposure of someone walking.
 _Direction: VOICE: plain, then amused on the comparison. PICTURE: the two frames stacked as they are: a coral streak covering both positions ('just adding → smear', illustrative); 1 s gag: a streaky long-exposure snapshot of the guesser mid-walk; in the face inset he grins._
@@ -349,16 +361,16 @@ _Direction: VOICE: plain, then amused on the comparison. PICTURE: the two frames
 |---|---|---|---|---|---|---|---|---|---|
 | y10_t3 ✔ | 12.0 | 6.465 | 200.5 | 11.3 | 4.26 | -13.85 | smear…0.48 | up, 0.215; smear… 0.48 |  |
 | y10_t2 | 11.98 | 6.34 | 205.3 | 11.94 | 4.43 | -13.91 | smear…0.495 | up, 0.225; smear… 0.495 |  |
-| y10_t4 | 11.62 | 6.59 | 204.6 | 9.99 | 3.85 | -14.45 | smear…0.47 | up, 0.255; smear… 0.47 |  |
-| y10_t1 | 11.44 | 6.5 | 197.7 | 10.94 | 4.19 | -13.3 | smear…0.43 | up, 0.185; smear… 0.43 |  |
+| y10_t4 | 11.53 | 6.59 | 204.6 | 9.99 | 3.85 | -14.45 | smear…0.47 | up, 0.255; smear… 0.47 |  |
+| y10_t1 | 11.35 | 6.5 | 197.7 | 10.94 | 4.19 | -13.3 | smear…0.43 | up, 0.185; smear… 0.43 |  |
 
 ## n21 — So their model solves for one unknown at a time.
 _Direction: VOICE: the turn to the solution. PICTURE: three large icons 'shape' 'position' 'sensor'; padlocks close on two while the third stays free, two quick cycles; label 'one unknown at a time'._
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
+| y10_t2 | 7.99 | 2.73 | 219.8 | 12.89 | 4.6 | -13.93 |  |  |  |
 | y10_t4 | 7.98 | 2.605 | 230.3 | 12.55 | 5.0 | -13.5 |  |  |  |
-| y10_t2 | 7.9 | 2.73 | 219.8 | 12.89 | 4.6 | -13.93 |  |  |  |
 | y10_t3 ✔ | 7.86 | 2.59 | 231.7 | 12.46 | 5.13 | -12.28 |  |  |  |
 | y10_t1 | 7.54 | 2.545 | 235.8 | 12.06 | 4.6 | -13.23 |  |  |  |
 
@@ -387,10 +399,10 @@ _Direction: VOICE: curious; the last big question. PICTURE: the right-hand panel
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| y12_t1 ✔ | 8.57 | 3.395 | 219.6 | 17.64 | 6.19 | -15.16 | do…0.39 | do… 0.39 |  |
-| y12_t3 | 8.3 | 3.4 | 222.6 | 16.45 | 5.72 | -14.5 | do…0.435 | do… 0.435 |  |
-| y12_t4 | 8.24 | 3.33 | 225.3 | 17.15 | 6.04 | -14.93 | do…0.4 | do… 0.4 |  |
-| y12_t2 | 7.66 | 3.2 | 238.3 | 16.37 | 5.93 | -15.61 | do…0.43 | do… 0.43 |  |
+| y12_t1 ✔ | 8.66 | 3.395 | 219.6 | 17.64 | 6.19 | -15.16 | do…0.39 | do… 0.39 |  |
+| y12_t3 | 8.39 | 3.4 | 222.6 | 16.45 | 5.72 | -14.5 | do…0.435 | do… 0.435 |  |
+| y12_t4 | 8.34 | 3.33 | 225.3 | 17.15 | 6.04 | -14.93 | do…0.4 | do… 0.4 |  |
+| y12_t2 | 7.75 | 3.2 | 238.3 | 16.37 | 5.93 | -15.61 | do…0.43 | do… 0.43 |  |
 
 ## n25 — Take our opening clip: an off-the-shelf kit the authors put at under a hundred dollars, held still while a person walked behind a partition.
 _Direction: VOICE: evidence voice, specific; callback to the opening; 'Take' is plain and brisk, not a question (lead's edit: 'that second case' lost its referent after the n24 question). PICTURE: the kit board gains the provenance the opening left out, one item at a time: 'ST sensor kit · 16 zones · held still · not the phone-grade device' 'under US$100 (authors' figure)' 'setup: flat wall + empty-room scan first'; frame counter 'frame N of 475'; small chip 'our check: their code + their data → matched their saved results · a software check, not a new experiment'._
@@ -417,10 +429,14 @@ _Direction: VOICE: plain. PICTURE: back on the kit board: a small stamp beside t
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| y12_t2 | 5.91 | 2.38 | 252.1 | 15.51 | 6.23 | -13.33 |  |  |  |
-| y12_t3 | 5.65 | 2.36 | 254.2 | 12.03 | 5.71 | -13.48 |  |  |  |
-| y12_t4 | 5.27 | 2.355 | 254.8 | 11.56 | 5.69 | -13.76 |  |  |  |
-| y12_t1 ✔ | 4.94 | 2.325 | 258.1 | 11.3 | 5.29 | -13.06 |  |  |  |
+| y19_t4 | 9.26 | 3.14 | 214.3 | 14.91 | 5.89 | -12.98 |  | files… 0.34 |  |
+| y19_t1 | 9.04 | 3.16 | 217.0 | 14.32 | 5.93 | -12.97 |  | files… 0.395 |  |
+| y19_t3 | 8.66 | 3.16 | 221.8 | 14.52 | 6.01 | -14.0 |  | files… 0.455 |  |
+| y19_t2 | 8.03 | 3.125 | 223.0 | 14.03 | 6.09 | -13.78 |  | files… 0.435 |  |
+| y12_t2 | 5.82 | 2.38 | 252.1 | 15.51 | 6.23 | -13.33 |  |  |  |
+| y12_t3 | 5.55 | 2.36 | 254.2 | 12.03 | 5.71 | -13.48 |  |  |  |
+| y12_t4 | 5.18 | 2.355 | 254.8 | 11.56 | 5.69 | -13.76 |  |  |  |
+| y12_t1 ✔ | 4.85 | 2.325 | 258.1 | 11.3 | 5.29 | -13.06 |  |  |  |
 
 ## n28 — But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second.
 _Direction: VOICE: fair and plain. PICTURE: framed card, plainly a drawing: neutral grey 'their sensor', a generic person in everyday clothes behind a partition; 'Reported by the authors · ordinary clothes · 30 frames/s capture' 'a separate test, not our kit clip · different device · data not released' 'our drawing'._
@@ -440,13 +456,17 @@ _Direction: VOICE: curious (v1 take). PICTURE: match cut: the card's partition b
 | x18_t1 | 10.0 | 4.93 | 205.0 | 17.82 | 6.4 | -15.33 |  | for? 0.54 |  |
 | x18_t4 | 10.0 | 4.975 | 204.1 | 18.29 | 6.28 | -15.1 |  | for? 0.565 |  |
 | x18_t3 ✔ | 9.89 | 4.87 | 206.4 | 17.92 | 6.4 | -15.17 |  | for? 0.51 |  |
-| x18_t2 | 9.06 | 4.825 | 208.6 | 17.74 | 6.24 | -15.32 |  | for? 0.51 |  |
+| x18_t2 | 8.96 | 4.825 | 208.6 | 17.74 | 6.24 | -15.32 |  | for? 0.51 |  |
 
 ## n29 — With a suitable wall at the junction, a sensor like this might give it an early hint of movement out of sight.
 _Direction: VOICE: same words as v1 s41, new take: 'suitable' and 'might' need room (v1 takes were 272 wpm). PICTURE: plan of the junction: the wall spot lights; a pulse runs robot to wall spot to hidden aisle and back around the corner's end, never through shelving; a faint blob appears; no range number._
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
+| y17_t4 | 8.68 | 6.505 | 246.5 | 14.61 | 5.49 | -15.88 | junction…0.34 | junction… 0.34; this… 0.435; movement… 0.375 |  |
+| y17_t1 | 8.3 | 6.355 | 251.2 | 14.92 | 5.36 | -16.17 | junction…0.345 | junction… 0.345; this… 0.39; movement… 0.365 |  |
+| y17_t3 | 8.11 | 6.36 | 253.6 | 15.33 | 5.46 | -14.93 | junction…0.365 | junction… 0.365; this… 0.395; movement… 0.395 |  |
+| y17_t2 | 7.98 | 6.395 | 255.3 | 15.29 | 5.58 | -15.73 | junction…0.355 | junction… 0.355; this… 0.455; movement… 0.415 |  |
 | y14_t1 ✔ | 7.47 | 5.42 | 261.6 | 14.84 | 5.72 | -14.58 | junction…0.375 | junction… 0.375 |  |
 | y14_t4 | 6.96 | 5.35 | 268.0 | 14.45 | 5.51 | -13.77 | junction…0.425 | junction… 0.425 |  |
 | y14_t3 | 6.78 | 5.255 | 270.2 | 14.55 | 5.42 | -14.0 | junction…0.37 | junction… 0.37 |  |
@@ -477,20 +497,24 @@ _Direction: VOICE: settled, honest; the answer to the section's question. PICTUR
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| y15_t2 ✔ | 8.56 | 3.425 | 194.8 | 9.13 | 4.57 | -18.41 |  | now, 0.195; clue, 0.345 |  |
-| y15_t3 | 8.22 | 3.57 | 190.8 | 8.37 | 4.41 | -17.45 |  | now, 0.235; clue, 0.425 |  |
-| y15_t4 | 7.7 | 3.58 | 191.4 | 6.72 | 3.58 | -17.33 |  | now, 0.245; clue, 0.445 |  |
-| y15_t1 | 5.94 | 3.43 | 219.8 | 9.41 | 4.37 | -19.82 |  | now, 0.295; clue, 0.405 |  |
+| y15_t2 ✔ | 8.42 | 3.425 | 194.8 | 9.13 | 4.57 | -18.41 |  | now, 0.195; clue, 0.345 |  |
+| y15_t3 | 8.09 | 3.57 | 190.8 | 8.37 | 4.41 | -17.45 |  | now, 0.235; clue, 0.425 |  |
+| y15_t4 | 7.57 | 3.58 | 191.4 | 6.72 | 3.58 | -17.33 |  | now, 0.245; clue, 0.445 |  |
+| y15_t1 | 5.81 | 3.43 | 219.8 | 9.41 | 4.37 | -19.82 |  | now, 0.295; clue, 0.405 |  |
 
 ## n31 — Being out of sight isn't the same as giving nothing away.
 _Direction: VOICE: the takeaway, calm. PICTURE: hard cut from the warehouse corner to our room, the opening's raised view; one slowed round trip via W3 (no number) around the partition's end; the readout shows a soft blob; the guesser gulps._
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| y16_t4 ✔ | 5.23 | 3.09 | 239.1 | 10.44 | 4.15 | -20.55 | sight…0.33 | sight… 0.33 |  |
-| y16_t3 | 4.78 | 3.12 | 237.8 | 10.33 | 3.79 | -21.37 | sight…0.345 | sight… 0.345 |  |
-| y16_t1 | 4.52 | 3.08 | 242.6 | 10.5 | 3.98 | -20.78 | sight…0.36 | sight… 0.36 |  |
-| y16_t2 | 4.52 | 3.06 | 252.4 | 10.67 | 4.13 | -20.55 | sight…0.445 | sight… 0.445 |  |
+| y20_t3 | 10.36 | 3.885 | 187.5 | 13.72 | 5.1 | -17.51 | sight…0.365 | sight… 0.365; same… 0.24 |  |
+| y20_t1 | 10.02 | 3.905 | 209.2 | 14.41 | 5.81 | -18.41 | sight…0.4 | sight… 0.4; same… 0.35 |  |
+| y20_t4 | 9.74 | 3.97 | 199.4 | 12.96 | 4.91 | -17.92 | sight…0.36 | sight… 0.36; same… 0.3 |  |
+| y20_t2 | 8.87 | 3.88 | 189.4 | 12.29 | 4.72 | -18.83 | sight…0.395 | sight… 0.395; same… 0.225 |  |
+| y16_t4 ✔ | 5.1 | 3.09 | 239.1 | 10.44 | 4.15 | -20.55 | sight…0.33 | sight… 0.33 |  |
+| y16_t3 | 4.64 | 3.12 | 237.8 | 10.33 | 3.79 | -21.37 | sight…0.345 | sight… 0.345 |  |
+| y16_t1 | 4.38 | 3.08 | 242.6 | 10.5 | 3.98 | -20.78 | sight…0.36 | sight… 0.36 |  |
+| y16_t2 | 4.38 | 3.06 | 252.4 | 10.67 | 4.13 | -20.55 | sight…0.445 | sight… 0.445 |  |
 
 ## s47 — To really hide, he'd have to block the bounces too.
 _Direction: VOICE: J4 (v1 take); 3.0 s hold after it (v1 5.3 s). PICTURE: he pushes the partition back until it meets the wall; the paths stop at it; the readout goes blank; smug again; the checker simply leans round the near end and looks (J4); hard cut on the beat._
@@ -498,16 +522,16 @@ _Direction: VOICE: J4 (v1 take); 3.0 s hold after it (v1 5.3 s). PICTURE: he pus
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
 | x20_t1 ✔ | 10.0 | 2.975 | 201.7 | 14.43 | 5.66 | -13.6 |  | hide, 0.25 |  |
-| x20_t4 | 7.77 | 2.595 | 231.2 | 16.84 | 5.91 | -14.82 |  | hide, 0.25 |  |
+| x20_t4 | 7.68 | 2.595 | 231.2 | 16.84 | 5.91 | -14.82 |  | hide, 0.25 |  |
+| x20_t2 | 5.97 | 2.62 | 254.8 | 13.85 | 5.52 | -13.05 |  | hide, 0.265 |  |
 | x20_t3 | 5.89 | 2.6 | 256.4 | 17.46 | 6.54 | -13.99 |  | hide, 0.26 |  |
-| x20_t2 | 5.88 | 2.62 | 254.8 | 13.85 | 5.52 | -13.05 |  | hide, 0.265 |  |
 
 ## s48 — This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner.
 _Direction: VOICE: one brief invitation (v1 take), from 0.2 s into the end screen. PICTURE: end screen: wordmark top-left, empty guides for one video element and the subscribe element, small callback art; see SHOTPLAN_V2 V13._
 
 | take | score | dur s | wpm | F0 range st | F0 SD | level dB | beats | pauses (word: s) | flags |
 |---|---|---|---|---|---|---|---|---|---|
-| x21_t4 ✔ | 8.96 | 6.795 | 191.3 | 13.84 | 5.48 | -12.86 |  | Weird: 0.36; future, 0.245; explained. 0.475; more, 0.14 |  |
-| x21_t2 | 8.43 | 6.74 | 191.3 | 14.74 | 5.86 | -13.27 |  | Weird: 0.35; future, 0.18; explained. 0.43; more, 0.215 |  |
-| x21_t3 | 8.28 | 6.78 | 188.4 | 14.03 | 5.77 | -13.23 |  | Weird: 0.33; future, 0.19; explained. 0.4; more, 0.195 |  |
-| x21_t1 | 8.21 | 6.84 | 188.7 | 14.2 | 5.68 | -13.51 |  | Weird: 0.345; future, 0.245; explained. 0.455; more, 0.195 |  |
+| x21_t4 ✔ | 9.05 | 6.795 | 191.3 | 13.84 | 5.48 | -12.86 |  | Weird: 0.36; future, 0.245; explained. 0.475; more, 0.14 |  |
+| x21_t2 | 8.52 | 6.74 | 191.3 | 14.74 | 5.86 | -13.27 |  | Weird: 0.35; future, 0.18; explained. 0.43; more, 0.215 |  |
+| x21_t3 | 8.37 | 6.78 | 188.4 | 14.03 | 5.77 | -13.23 |  | Weird: 0.33; future, 0.19; explained. 0.4; more, 0.195 |  |
+| x21_t1 | 8.3 | 6.84 | 188.7 | 14.2 | 5.68 | -13.51 |  | Weird: 0.345; future, 0.245; explained. 0.455; more, 0.195 |  |

@@ -253,20 +253,20 @@
    "words_file": "n12.words.json",
    "section": "y06",
    "take": "y06_t2",
-   "duration_s": 3.775,
+   "duration_s": 3.96,
    "speech_start_s": 0.09,
    "speech_end_s": 3.66,
-   "natural_gap_after_s": 0.115
+   "natural_gap_after_s": 0.3
   },
   {
    "id": "n13",
    "file": "n13.wav",
    "words_file": "n13.words.json",
-   "section": "y06",
-   "take": "y06_t2",
-   "duration_s": 1.88,
-   "speech_start_s": 0.385,
-   "speech_end_s": 1.58,
+   "section": "y18",
+   "take": "y18_t4",
+   "duration_s": 2.275,
+   "speech_start_s": 0.09,
+   "speech_end_s": 1.975,
    "natural_gap_after_s": 0.3
   },
   {
@@ -308,20 +308,20 @@
    "words_file": "s30.words.json",
    "section": "x13",
    "take": "x13_t4",
-   "duration_s": 10.265,
+   "duration_s": 10.27,
    "speech_start_s": 0.03,
    "speech_end_s": 9.97,
-   "natural_gap_after_s": 0.295
+   "natural_gap_after_s": 0.3
   },
   {
    "id": "s31",
    "file": "s31.wav",
    "words_file": "s31.words.json",
-   "section": "x13",
-   "take": "x13_t4",
-   "duration_s": 4.885,
-   "speech_start_s": 0.235,
-   "speech_end_s": 4.585,
+   "section": "y22",
+   "take": "y22_t1",
+   "duration_s": 5.03,
+   "speech_start_s": 0.09,
+   "speech_end_s": 4.73,
    "natural_gap_after_s": 0.3
   },
   {
@@ -451,20 +451,20 @@
    "words_file": "n26.words.json",
    "section": "y12",
    "take": "y12_t1",
-   "duration_s": 6.885,
+   "duration_s": 7.11,
    "speech_start_s": 0.1,
    "speech_end_s": 6.81,
-   "natural_gap_after_s": 0.075
+   "natural_gap_after_s": 0.3
   },
   {
    "id": "n27",
    "file": "n27.wav",
    "words_file": "n27.words.json",
-   "section": "y12",
-   "take": "y12_t1",
-   "duration_s": 3.075,
-   "speech_start_s": 0.45,
-   "speech_end_s": 2.775,
+   "section": "y19",
+   "take": "y19_t4",
+   "duration_s": 3.53,
+   "speech_start_s": 0.09,
+   "speech_end_s": 3.23,
    "natural_gap_after_s": 0.3
   },
   {
@@ -493,11 +493,11 @@
    "id": "n29",
    "file": "n29.wav",
    "words_file": "n29.words.json",
-   "section": "y14",
-   "take": "y14_t1",
-   "duration_s": 5.81,
+   "section": "y17",
+   "take": "y17_t4",
+   "duration_s": 6.895,
    "speech_start_s": 0.09,
-   "speech_end_s": 5.51,
+   "speech_end_s": 6.595,
    "natural_gap_after_s": 0.3
   },
   {
@@ -537,11 +537,11 @@
    "id": "n31",
    "file": "n31.wav",
    "words_file": "n31.words.json",
-   "section": "y16",
-   "take": "y16_t4",
-   "duration_s": 3.48,
+   "section": "y20",
+   "take": "y20_t3",
+   "duration_s": 4.275,
    "speech_start_s": 0.09,
-   "speech_end_s": 3.18,
+   "speech_end_s": 3.975,
    "natural_gap_after_s": 0.3
   },
   {
