@@ -46,3 +46,4 @@ qa/fix2/**/*.mp4
 # v2 pass: working stills and clips are regenerable (contact sheets .jpg and reports .md are kept)
 qa/v2/**/*.png
 qa/v2/**/*.mp4
+source/.sfx-*/

@@ -31,7 +31,8 @@ export const textWidth = (text: string, font: string) => {
   const key = font + '|' + text;
   const hit = cache.get(key);
   if (hit !== undefined) return hit;
-  if (!ctx) ctx = document.createElement('canvas').getContext('2d');
+  // outside a browser (tools/collect_sfx.mjs loads the scenes in Node) there is no canvas: estimate
+  if (!ctx && typeof document !== 'undefined') ctx = document.createElement('canvas').getContext('2d');
   if (!ctx) return text.length * 0.5 * parseFloat(font.match(/(\d+(?:\.\d+)?)px/)?.[1] ?? '32');
   ctx.font = font;
   const w = ctx.measureText(text).width;
