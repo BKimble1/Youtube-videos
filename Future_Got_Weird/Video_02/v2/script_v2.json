@@ -575,7 +575,7 @@
    "scene": "V6",
    "text": "Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.",
    "tts": "Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.",
-   "pause_ms": 1200,
+   "pause_ms": 2700,
    "claims": [
     "C33",
     "C35",
@@ -1487,7 +1487,8 @@
    "n25 reworded: 'Take our opening clip: ...' replaces 'Our opening clip is that second case: ...', whose referent was separated from it by the n24 question.",
    "In-line pause caps (s14, s16, s18, s20, s23, s43) are applied by the assembler as inner_pause_cap_ms.",
    "Section-break breaths after the takes came in faster than planned (timeline 5:15.7): n02 600→800 (board reading), n06 400→700, s16 400→700, s37 900→1200 (U hold), n16 400→600, n23 500→700, n30 500→700.",
-   "Second recording pass (v2/retakes.json, y17-y22, 0 credits): chosen by measurement for n29 (y17_t4, 246 vs 262 wpm), n13 (y18_t4, 195 vs 251 wpm), n27 (y19_t4, 214 vs 258 wpm), n31 (y20_t3, 188 vs 239 wpm and 3 dB louder), s31 (y22_t1, 230 vs 250 wpm); s19 keeps its v1 take (the retake was no better). Timeline 5:21.1."
+   "Second recording pass (v2/retakes.json, y17-y22, 0 credits): chosen by measurement for n29 (y17_t4, 246 vs 262 wpm), n13 (y18_t4, 195 vs 251 wpm), n27 (y19_t4, 214 vs 258 wpm), n31 (y20_t3, 188 vs 239 wpm and 3 dB louder), s31 (y22_t1, 230 vs 250 wpm); s19 keeps its v1 take (the retake was no better). Timeline 5:21.1.",
+   "Review r1 (V2-R1-01): the finished real U gets a hold; s37 pause 1200 -> 2700 ms."
   ]
  }
 }

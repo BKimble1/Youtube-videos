@@ -7,8 +7,8 @@
   "voice_name": "Test Voice",
   "voice_id": "kk5XaSLo2XAw0sKM98zU"
  },
- "durationInFrames": 9632,
- "durationSeconds": 321.055,
+ "durationInFrames": 9677,
+ "durationSeconds": 322.555,
  "scenes": [
   {
    "id": "V1",
@@ -38,42 +38,42 @@
   {
    "id": "V6",
    "from": 4115,
-   "to": 4386
+   "to": 4431
   },
   {
    "id": "V7",
-   "from": 4386,
-   "to": 5457
+   "from": 4431,
+   "to": 5502
   },
   {
    "id": "V8",
-   "from": 5457,
-   "to": 6048
+   "from": 5502,
+   "to": 6093
   },
   {
    "id": "V9",
-   "from": 6048,
-   "to": 7176
+   "from": 6093,
+   "to": 7221
   },
   {
    "id": "V10",
-   "from": 7176,
-   "to": 8046
+   "from": 7221,
+   "to": 8091
   },
   {
    "id": "V11",
-   "from": 8046,
-   "to": 9021
+   "from": 8091,
+   "to": 9066
   },
   {
    "id": "V12",
-   "from": 9021,
-   "to": 9332
+   "from": 9066,
+   "to": 9377
   },
   {
    "id": "V13",
-   "from": 9332,
-   "to": 9632
+   "from": 9377,
+   "to": 9677
   }
  ],
  "segments": [
@@ -2450,2635 +2450,2635 @@
   {
    "id": "n14",
    "scene": "V7",
-   "from": 4396,
-   "to": 4653,
+   "from": 4441,
+   "to": 4698,
    "text": "In 2012, an MIT team rebuilt the rough 3D shape of a hidden mannequin. By 2021, others had live video around corners.",
    "timing": "engine",
    "words": [
     {
      "w": "In",
-     "from": 4396,
-     "to": 4398
+     "from": 4441,
+     "to": 4443
     },
     {
      "w": "2012,",
-     "from": 4400,
-     "to": 4427
-    },
-    {
-     "w": "an",
-     "from": 4429,
-     "to": 4432
-    },
-    {
-     "w": "MIT",
-     "from": 4434,
-     "to": 4446
-    },
-    {
-     "w": "team",
-     "from": 4448,
-     "to": 4456
-    },
-    {
-     "w": "rebuilt",
-     "from": 4458,
-     "to": 4470
-    },
-    {
-     "w": "the",
-     "from": 4471,
+     "from": 4445,
      "to": 4472
     },
     {
+     "w": "an",
+     "from": 4474,
+     "to": 4477
+    },
+    {
+     "w": "MIT",
+     "from": 4479,
+     "to": 4491
+    },
+    {
+     "w": "team",
+     "from": 4493,
+     "to": 4501
+    },
+    {
+     "w": "rebuilt",
+     "from": 4503,
+     "to": 4515
+    },
+    {
+     "w": "the",
+     "from": 4516,
+     "to": 4517
+    },
+    {
      "w": "rough",
-     "from": 4475,
-     "to": 4482
+     "from": 4520,
+     "to": 4527
     },
     {
      "w": "3D",
-     "from": 4484,
-     "to": 4494
+     "from": 4529,
+     "to": 4539
     },
     {
      "w": "shape",
-     "from": 4499,
-     "to": 4504
+     "from": 4544,
+     "to": 4549
     },
     {
      "w": "of",
-     "from": 4506,
-     "to": 4508
+     "from": 4551,
+     "to": 4553
     },
     {
      "w": "a",
-     "from": 4510,
-     "to": 4511
+     "from": 4555,
+     "to": 4556
     },
     {
      "w": "hidden",
-     "from": 4513,
-     "to": 4520
+     "from": 4558,
+     "to": 4565
     },
     {
      "w": "mannequin.",
-     "from": 4523,
-     "to": 4543
+     "from": 4568,
+     "to": 4588
     },
     {
      "w": "By",
-     "from": 4552,
-     "to": 4554
+     "from": 4597,
+     "to": 4599
     },
     {
      "w": "2021,",
-     "from": 4556,
-     "to": 4590
+     "from": 4601,
+     "to": 4635
     },
     {
      "w": "others",
-     "from": 4592,
-     "to": 4600
+     "from": 4637,
+     "to": 4645
     },
     {
      "w": "had",
-     "from": 4602,
-     "to": 4604
+     "from": 4647,
+     "to": 4649
     },
     {
      "w": "live",
-     "from": 4609,
-     "to": 4616
+     "from": 4654,
+     "to": 4661
     },
     {
      "w": "video",
-     "from": 4619,
-     "to": 4626
+     "from": 4664,
+     "to": 4671
     },
     {
      "w": "around",
-     "from": 4628,
-     "to": 4636
+     "from": 4673,
+     "to": 4681
     },
     {
      "w": "corners.",
-     "from": 4638,
-     "to": 4660
+     "from": 4683,
+     "to": 4705
     }
    ]
   },
   {
    "id": "n15",
    "scene": "V7",
-   "from": 4662,
-   "to": 4811,
+   "from": 4707,
+   "to": 4856,
    "text": "But those ran on research equipment. One team had even tracked hidden objects with a cheap sensor.",
    "timing": "engine",
    "words": [
     {
      "w": "But",
-     "from": 4659,
-     "to": 4664
+     "from": 4704,
+     "to": 4709
     },
     {
      "w": "those",
-     "from": 4667,
-     "to": 4671
+     "from": 4712,
+     "to": 4716
     },
     {
      "w": "ran",
-     "from": 4674,
-     "to": 4679
+     "from": 4719,
+     "to": 4724
     },
     {
      "w": "on",
-     "from": 4681,
-     "to": 4683
+     "from": 4726,
+     "to": 4728
     },
     {
      "w": "research",
-     "from": 4688,
-     "to": 4693
+     "from": 4733,
+     "to": 4738
     },
     {
      "w": "equipment.",
-     "from": 4695,
-     "to": 4710
+     "from": 4740,
+     "to": 4755
     },
     {
      "w": "One",
-     "from": 4724,
-     "to": 4729
+     "from": 4769,
+     "to": 4774
     },
     {
      "w": "team",
-     "from": 4731,
-     "to": 4736
+     "from": 4776,
+     "to": 4781
     },
     {
      "w": "had",
-     "from": 4739,
-     "to": 4741
+     "from": 4784,
+     "to": 4786
     },
     {
      "w": "even",
-     "from": 4743,
-     "to": 4748
+     "from": 4788,
+     "to": 4793
     },
     {
      "w": "tracked",
-     "from": 4753,
-     "to": 4758
+     "from": 4798,
+     "to": 4803
     },
     {
      "w": "hidden",
-     "from": 4761,
-     "to": 4765
+     "from": 4806,
+     "to": 4810
     },
     {
      "w": "objects",
-     "from": 4770,
-     "to": 4782
+     "from": 4815,
+     "to": 4827
     },
     {
      "w": "with",
-     "from": 4783,
-     "to": 4784
+     "from": 4828,
+     "to": 4829
     },
     {
      "w": "a",
-     "from": 4787,
-     "to": 4788
+     "from": 4832,
+     "to": 4833
     },
     {
      "w": "cheap",
-     "from": 4789,
-     "to": 4796
+     "from": 4834,
+     "to": 4841
     },
     {
      "w": "sensor.",
-     "from": 4799,
-     "to": 4821
+     "from": 4844,
+     "to": 4866
     }
    ]
   },
   {
    "id": "s30",
    "scene": "V7",
-   "from": 4823,
-   "to": 5121,
+   "from": 4868,
+   "to": 5166,
    "text": "Then, in a study published in 2026, a team from MIT and Dartmouth tried the small time-of-flight sensors, often called LiDAR, found in phones and gadgets.",
    "timing": "engine",
    "words": [
     {
      "w": "Then,",
-     "from": 4822,
-     "to": 4839
+     "from": 4867,
+     "to": 4884
     },
     {
      "w": "in",
-     "from": 4841,
-     "to": 4844
+     "from": 4886,
+     "to": 4889
     },
     {
      "w": "a",
-     "from": 4845,
-     "to": 4846
+     "from": 4890,
+     "to": 4891
     },
     {
      "w": "study",
-     "from": 4851,
-     "to": 4856
+     "from": 4896,
+     "to": 4901
     },
     {
      "w": "published",
-     "from": 4862,
-     "to": 4868
+     "from": 4907,
+     "to": 4913
     },
     {
      "w": "in",
-     "from": 4870,
-     "to": 4873
+     "from": 4915,
+     "to": 4918
     },
     {
      "w": "2026,",
-     "from": 4875,
-     "to": 4911
+     "from": 4920,
+     "to": 4956
     },
     {
      "w": "a",
-     "from": 4913,
-     "to": 4916
+     "from": 4958,
+     "to": 4961
     },
     {
      "w": "team",
-     "from": 4919,
-     "to": 4923
+     "from": 4964,
+     "to": 4968
     },
     {
      "w": "from",
-     "from": 4925,
-     "to": 4928
+     "from": 4970,
+     "to": 4973
     },
     {
      "w": "MIT",
-     "from": 4930,
-     "to": 4947
+     "from": 4975,
+     "to": 4992
     },
     {
      "w": "and",
-     "from": 4949,
-     "to": 4952
+     "from": 4994,
+     "to": 4997
     },
     {
      "w": "Dartmouth",
-     "from": 4954,
-     "to": 4969
+     "from": 4999,
+     "to": 5014
     },
     {
      "w": "tried",
-     "from": 4970,
-     "to": 4976
+     "from": 5015,
+     "to": 5021
     },
     {
      "w": "the",
-     "from": 4978,
-     "to": 4981
+     "from": 5023,
+     "to": 5026
     },
     {
      "w": "small",
-     "from": 4985,
-     "to": 4990
+     "from": 5030,
+     "to": 5035
     },
     {
      "w": "time-of-flight",
-     "from": 4993,
-     "to": 5012
+     "from": 5038,
+     "to": 5057
     },
     {
      "w": "sensors,",
-     "from": 5014,
-     "to": 5036
+     "from": 5059,
+     "to": 5081
     },
     {
      "w": "often",
-     "from": 5038,
-     "to": 5045
+     "from": 5083,
+     "to": 5090
     },
     {
      "w": "called",
-     "from": 5049,
-     "to": 5053
+     "from": 5094,
+     "to": 5098
     },
     {
      "w": "LiDAR,",
-     "from": 5055,
-     "to": 5079
+     "from": 5100,
+     "to": 5124
     },
     {
      "w": "found",
-     "from": 5083,
-     "to": 5086
+     "from": 5128,
+     "to": 5131
     },
     {
      "w": "in",
-     "from": 5089,
-     "to": 5091
+     "from": 5134,
+     "to": 5136
     },
     {
      "w": "phones",
-     "from": 5096,
-     "to": 5101
+     "from": 5141,
+     "to": 5146
     },
     {
      "w": "and",
-     "from": 5103,
-     "to": 5105
+     "from": 5148,
+     "to": 5150
     },
     {
      "w": "gadgets.",
-     "from": 5108,
-     "to": 5137
+     "from": 5153,
+     "to": 5182
     }
    ]
   },
   {
    "id": "s31",
    "scene": "V7",
-   "from": 5130,
-   "to": 5270,
+   "from": 5175,
+   "to": 5314,
    "text": "Don't expect your phone to do this yet: phone makers often keep the raw data private.",
    "timing": "engine",
    "words": [
     {
      "w": "Don't",
-     "from": 5136,
-     "to": 5143
+     "from": 5181,
+     "to": 5188
     },
     {
      "w": "expect",
-     "from": 5148,
-     "to": 5153
-    },
-    {
-     "w": "your",
-     "from": 5155,
-     "to": 5157
-    },
-    {
-     "w": "phone",
-     "from": 5160,
-     "to": 5165
-    },
-    {
-     "w": "to",
-     "from": 5166,
-     "to": 5167
-    },
-    {
-     "w": "do",
-     "from": 5169,
-     "to": 5172
-    },
-    {
-     "w": "this",
-     "from": 5174,
-     "to": 5177
-    },
-    {
-     "w": "yet:",
-     "from": 5179,
+     "from": 5193,
      "to": 5198
     },
     {
+     "w": "your",
+     "from": 5200,
+     "to": 5202
+    },
+    {
      "w": "phone",
-     "from": 5201,
-     "to": 5205
+     "from": 5205,
+     "to": 5210
+    },
+    {
+     "w": "to",
+     "from": 5211,
+     "to": 5212
+    },
+    {
+     "w": "do",
+     "from": 5214,
+     "to": 5217
+    },
+    {
+     "w": "this",
+     "from": 5219,
+     "to": 5222
+    },
+    {
+     "w": "yet:",
+     "from": 5224,
+     "to": 5243
+    },
+    {
+     "w": "phone",
+     "from": 5246,
+     "to": 5250
     },
     {
      "w": "makers",
-     "from": 5208,
-     "to": 5220
+     "from": 5253,
+     "to": 5265
     },
     {
      "w": "often",
-     "from": 5222,
-     "to": 5229
+     "from": 5267,
+     "to": 5274
     },
     {
      "w": "keep",
-     "from": 5232,
-     "to": 5237
+     "from": 5277,
+     "to": 5282
     },
     {
      "w": "the",
-     "from": 5238,
-     "to": 5239
+     "from": 5283,
+     "to": 5284
     },
     {
      "w": "raw",
-     "from": 5241,
-     "to": 5246
+     "from": 5286,
+     "to": 5291
     },
     {
      "w": "data",
-     "from": 5249,
-     "to": 5256
+     "from": 5294,
+     "to": 5301
     },
     {
      "w": "private.",
-     "from": 5263,
-     "to": 5285
+     "from": 5308,
+     "to": 5330
     }
    ]
   },
   {
    "id": "n16",
    "scene": "V7",
-   "from": 5280,
-   "to": 5450,
+   "from": 5325,
+   "to": 5495,
    "text": "Their new idea: a model that keeps track of what moved, so many weak frames can be combined.",
    "timing": "engine",
    "words": [
     {
      "w": "Their",
-     "from": 5281,
-     "to": 5286
+     "from": 5326,
+     "to": 5331
     },
     {
      "w": "new",
-     "from": 5289,
-     "to": 5291
+     "from": 5334,
+     "to": 5336
     },
     {
      "w": "idea:",
-     "from": 5293,
-     "to": 5320
-    },
-    {
-     "w": "a",
-     "from": 5322,
-     "to": 5325
-    },
-    {
-     "w": "model",
-     "from": 5328,
-     "to": 5332
-    },
-    {
-     "w": "that",
-     "from": 5334,
-     "to": 5337
-    },
-    {
-     "w": "keeps",
-     "from": 5339,
-     "to": 5346
-    },
-    {
-     "w": "track",
-     "from": 5349,
-     "to": 5356
-    },
-    {
-     "w": "of",
-     "from": 5358,
-     "to": 5361
-    },
-    {
-     "w": "what",
-     "from": 5363,
+     "from": 5338,
      "to": 5365
     },
     {
+     "w": "a",
+     "from": 5367,
+     "to": 5370
+    },
+    {
+     "w": "model",
+     "from": 5373,
+     "to": 5377
+    },
+    {
+     "w": "that",
+     "from": 5379,
+     "to": 5382
+    },
+    {
+     "w": "keeps",
+     "from": 5384,
+     "to": 5391
+    },
+    {
+     "w": "track",
+     "from": 5394,
+     "to": 5401
+    },
+    {
+     "w": "of",
+     "from": 5403,
+     "to": 5406
+    },
+    {
+     "w": "what",
+     "from": 5408,
+     "to": 5410
+    },
+    {
      "w": "moved,",
-     "from": 5368,
-     "to": 5392
+     "from": 5413,
+     "to": 5437
     },
     {
      "w": "so",
-     "from": 5395,
-     "to": 5399
+     "from": 5440,
+     "to": 5444
     },
     {
      "w": "many",
-     "from": 5401,
-     "to": 5404
+     "from": 5446,
+     "to": 5449
     },
     {
      "w": "weak",
-     "from": 5409,
-     "to": 5413
+     "from": 5454,
+     "to": 5458
     },
     {
      "w": "frames",
-     "from": 5416,
-     "to": 5425
+     "from": 5461,
+     "to": 5470
     },
     {
      "w": "can",
-     "from": 5428,
-     "to": 5430
+     "from": 5473,
+     "to": 5475
     },
     {
      "w": "be",
-     "from": 5431,
-     "to": 5433
+     "from": 5476,
+     "to": 5478
     },
     {
      "w": "combined.",
-     "from": 5435,
-     "to": 5464
+     "from": 5480,
+     "to": 5509
     }
    ]
   },
   {
    "id": "n17",
    "scene": "V8",
-   "from": 5468,
-   "to": 5542,
+   "from": 5513,
+   "to": 5587,
    "text": "Why would a smaller, cheaper sensor need that?",
    "timing": "engine",
    "words": [
     {
      "w": "Why",
-     "from": 5472,
-     "to": 5477
+     "from": 5517,
+     "to": 5522
     },
     {
      "w": "would",
-     "from": 5480,
-     "to": 5482
+     "from": 5524,
+     "to": 5527
     },
     {
      "w": "a",
-     "from": 5484,
-     "to": 5487
+     "from": 5529,
+     "to": 5532
     },
     {
      "w": "smaller,",
-     "from": 5489,
-     "to": 5508
+     "from": 5534,
+     "to": 5553
     },
     {
      "w": "cheaper",
-     "from": 5510,
-     "to": 5518
+     "from": 5554,
+     "to": 5563
     },
     {
      "w": "sensor",
-     "from": 5520,
-     "to": 5530
+     "from": 5565,
+     "to": 5575
     },
     {
      "w": "need",
-     "from": 5532,
-     "to": 5535
+     "from": 5577,
+     "to": 5580
     },
     {
      "w": "that?",
-     "from": 5537,
-     "to": 5556
+     "from": 5582,
+     "to": 5601
     }
    ]
   },
   {
    "id": "n18",
    "scene": "V8",
-   "from": 5551,
-   "to": 5840,
+   "from": 5596,
+   "to": 5885,
    "text": "Weak lasers mean fainter echoes. The team's smartphone-grade device had about a hundred pixels: a hundred listening spots. And if you hold one in your hand, it jiggles.",
    "timing": "engine",
    "words": [
     {
      "w": "Weak",
-     "from": 5554,
-     "to": 5558
+     "from": 5600,
+     "to": 5603
     },
     {
      "w": "lasers",
-     "from": 5560,
-     "to": 5572
+     "from": 5606,
+     "to": 5618
     },
     {
      "w": "mean",
-     "from": 5575,
-     "to": 5580
+     "from": 5620,
+     "to": 5625
     },
     {
      "w": "fainter",
-     "from": 5584,
-     "to": 5594
+     "from": 5630,
+     "to": 5639
     },
     {
      "w": "echoes.",
-     "from": 5596,
-     "to": 5623
+     "from": 5642,
+     "to": 5668
     },
     {
      "w": "The",
-     "from": 5625,
-     "to": 5628
+     "from": 5670,
+     "to": 5673
     },
     {
      "w": "team's",
-     "from": 5630,
-     "to": 5637
+     "from": 5675,
+     "to": 5682
     },
     {
      "w": "smartphone-grade",
-     "from": 5642,
-     "to": 5659
+     "from": 5687,
+     "to": 5704
     },
     {
      "w": "device",
-     "from": 5665,
-     "to": 5671
+     "from": 5710,
+     "to": 5716
     },
     {
      "w": "had",
-     "from": 5673,
-     "to": 5676
-    },
-    {
-     "w": "about",
-     "from": 5679,
-     "to": 5683
-    },
-    {
-     "w": "a",
-     "from": 5685,
-     "to": 5688
-    },
-    {
-     "w": "hundred",
-     "from": 5689,
-     "to": 5695
-    },
-    {
-     "w": "pixels:",
-     "from": 5697,
+     "from": 5718,
      "to": 5721
     },
     {
-     "w": "a",
+     "w": "about",
      "from": 5724,
-     "to": 5726
+     "to": 5728
+    },
+    {
+     "w": "a",
+     "from": 5730,
+     "to": 5733
     },
     {
      "w": "hundred",
-     "from": 5729,
-     "to": 5736
+     "from": 5734,
+     "to": 5740
     },
     {
-     "w": "listening",
-     "from": 5738,
-     "to": 5748
+     "w": "pixels:",
+     "from": 5742,
+     "to": 5766
     },
     {
-     "w": "spots.",
-     "from": 5755,
-     "to": 5765
+     "w": "a",
+     "from": 5769,
+     "to": 5771
     },
     {
-     "w": "And",
-     "from": 5776,
-     "to": 5779
-    },
-    {
-     "w": "if",
-     "from": 5780,
+     "w": "hundred",
+     "from": 5774,
      "to": 5781
     },
     {
-     "w": "you",
-     "from": 5784,
-     "to": 5786
+     "w": "listening",
+     "from": 5783,
+     "to": 5793
     },
     {
-     "w": "hold",
-     "from": 5789,
-     "to": 5791
-    },
-    {
-     "w": "one",
-     "from": 5793,
-     "to": 5796
-    },
-    {
-     "w": "in",
-     "from": 5797,
-     "to": 5798
-    },
-    {
-     "w": "your",
+     "w": "spots.",
      "from": 5800,
-     "to": 5803
+     "to": 5810
     },
     {
-     "w": "hand,",
-     "from": 5805,
-     "to": 5820
-    },
-    {
-     "w": "it",
+     "w": "And",
      "from": 5822,
      "to": 5824
     },
     {
+     "w": "if",
+     "from": 5825,
+     "to": 5826
+    },
+    {
+     "w": "you",
+     "from": 5829,
+     "to": 5831
+    },
+    {
+     "w": "hold",
+     "from": 5834,
+     "to": 5836
+    },
+    {
+     "w": "one",
+     "from": 5838,
+     "to": 5841
+    },
+    {
+     "w": "in",
+     "from": 5842,
+     "to": 5843
+    },
+    {
+     "w": "your",
+     "from": 5846,
+     "to": 5848
+    },
+    {
+     "w": "hand,",
+     "from": 5850,
+     "to": 5865
+    },
+    {
+     "w": "it",
+     "from": 5867,
+     "to": 5870
+    },
+    {
      "w": "jiggles.",
-     "from": 5827,
-     "to": 5853
+     "from": 5872,
+     "to": 5898
     }
    ]
   },
   {
    "id": "s33",
    "scene": "V8",
-   "from": 5851,
-   "to": 6048,
+   "from": 5896,
+   "to": 6093,
    "text": "Their fix borrows night mode's trick from phone cameras: stack many quick, dim frames into one better estimate.",
    "timing": "engine",
    "words": [
     {
      "w": "Their",
-     "from": 5849,
-     "to": 5856
+     "from": 5894,
+     "to": 5901
     },
     {
      "w": "fix",
-     "from": 5859,
-     "to": 5866
+     "from": 5904,
+     "to": 5911
     },
     {
      "w": "borrows",
-     "from": 5868,
-     "to": 5878
+     "from": 5913,
+     "to": 5923
     },
     {
      "w": "night",
-     "from": 5880,
-     "to": 5885
+     "from": 5925,
+     "to": 5930
     },
     {
      "w": "mode's",
-     "from": 5888,
-     "to": 5895
+     "from": 5933,
+     "to": 5940
     },
     {
      "w": "trick",
-     "from": 5896,
-     "to": 5902
+     "from": 5941,
+     "to": 5947
     },
     {
      "w": "from",
-     "from": 5904,
-     "to": 5907
+     "from": 5949,
+     "to": 5952
     },
     {
      "w": "phone",
-     "from": 5909,
-     "to": 5916
+     "from": 5954,
+     "to": 5961
     },
     {
      "w": "cameras:",
-     "from": 5919,
-     "to": 5945
+     "from": 5964,
+     "to": 5990
     },
     {
      "w": "stack",
-     "from": 5948,
-     "to": 5955
+     "from": 5993,
+     "to": 6000
     },
     {
      "w": "many",
-     "from": 5960,
-     "to": 5967
+     "from": 6005,
+     "to": 6012
     },
     {
      "w": "quick,",
-     "from": 5972,
-     "to": 5984
+     "from": 6017,
+     "to": 6029
     },
     {
      "w": "dim",
-     "from": 5987,
-     "to": 5991
+     "from": 6032,
+     "to": 6036
     },
     {
      "w": "frames",
-     "from": 5993,
-     "to": 6005
+     "from": 6038,
+     "to": 6050
     },
     {
      "w": "into",
-     "from": 6008,
-     "to": 6015
+     "from": 6053,
+     "to": 6060
     },
     {
      "w": "one",
-     "from": 6017,
-     "to": 6022
+     "from": 6062,
+     "to": 6067
     },
     {
      "w": "better",
-     "from": 6027,
-     "to": 6032
+     "from": 6072,
+     "to": 6077
     },
     {
      "w": "estimate.",
-     "from": 6034,
-     "to": 6056
+     "from": 6079,
+     "to": 6101
     }
    ]
   },
   {
    "id": "n19",
    "scene": "V9",
-   "from": 6058,
-   "to": 6334,
+   "from": 6103,
+   "to": 6379,
    "text": "The catch: things move between frames. He steps, and his echo shifts in time. The sensor jiggles, and its listening spots land somewhere new.",
    "timing": "engine",
    "words": [
     {
      "w": "The",
-     "from": 6060,
-     "to": 6060
+     "from": 6105,
+     "to": 6105
     },
     {
      "w": "catch:",
-     "from": 6062,
-     "to": 6077
+     "from": 6107,
+     "to": 6122
     },
     {
      "w": "things",
-     "from": 6089,
-     "to": 6096
+     "from": 6134,
+     "to": 6141
     },
     {
      "w": "move",
-     "from": 6098,
-     "to": 6103
+     "from": 6143,
+     "to": 6148
     },
     {
      "w": "between",
-     "from": 6106,
-     "to": 6115
+     "from": 6151,
+     "to": 6160
     },
     {
      "w": "frames.",
-     "from": 6118,
-     "to": 6139
+     "from": 6163,
+     "to": 6184
     },
     {
      "w": "He",
-     "from": 6146,
-     "to": 6151
+     "from": 6191,
+     "to": 6196
     },
     {
      "w": "steps,",
-     "from": 6154,
-     "to": 6170
+     "from": 6199,
+     "to": 6215
     },
     {
      "w": "and",
-     "from": 6172,
-     "to": 6173
-    },
-    {
-     "w": "his",
-     "from": 6175,
-     "to": 6178
-    },
-    {
-     "w": "echo",
-     "from": 6180,
-     "to": 6190
-    },
-    {
-     "w": "shifts",
-     "from": 6192,
-     "to": 6200
-    },
-    {
-     "w": "in",
-     "from": 6202,
-     "to": 6204
-    },
-    {
-     "w": "time.",
-     "from": 6206,
+     "from": 6217,
      "to": 6218
     },
     {
-     "w": "The",
-     "from": 6233,
-     "to": 6234
+     "w": "his",
+     "from": 6220,
+     "to": 6223
     },
     {
-     "w": "sensor",
-     "from": 6235,
+     "w": "echo",
+     "from": 6225,
+     "to": 6235
+    },
+    {
+     "w": "shifts",
+     "from": 6237,
      "to": 6245
     },
     {
+     "w": "in",
+     "from": 6247,
+     "to": 6249
+    },
+    {
+     "w": "time.",
+     "from": 6251,
+     "to": 6263
+    },
+    {
+     "w": "The",
+     "from": 6278,
+     "to": 6279
+    },
+    {
+     "w": "sensor",
+     "from": 6280,
+     "to": 6290
+    },
+    {
      "w": "jiggles,",
-     "from": 6250,
-     "to": 6274
+     "from": 6295,
+     "to": 6319
     },
     {
      "w": "and",
-     "from": 6275,
-     "to": 6276
+     "from": 6320,
+     "to": 6321
     },
     {
      "w": "its",
-     "from": 6278,
-     "to": 6281
+     "from": 6323,
+     "to": 6326
     },
     {
      "w": "listening",
-     "from": 6283,
-     "to": 6293
+     "from": 6328,
+     "to": 6338
     },
     {
      "w": "spots",
-     "from": 6295,
-     "to": 6305
+     "from": 6340,
+     "to": 6350
     },
     {
      "w": "land",
-     "from": 6307,
-     "to": 6314
+     "from": 6352,
+     "to": 6359
     },
     {
      "w": "somewhere",
-     "from": 6317,
-     "to": 6324
+     "from": 6362,
+     "to": 6369
     },
     {
      "w": "new.",
-     "from": 6326,
-     "to": 6341
+     "from": 6371,
+     "to": 6386
     }
    ]
   },
   {
    "id": "n20",
    "scene": "V9",
-   "from": 6343,
-   "to": 6537,
+   "from": 6388,
+   "to": 6582,
    "text": "Just add them up, and echoes from different places blur into one smear, like a long exposure of someone walking.",
    "timing": "engine",
    "words": [
     {
      "w": "Just",
-     "from": 6343,
-     "to": 6348
+     "from": 6388,
+     "to": 6393
     },
     {
      "w": "add",
-     "from": 6350,
-     "to": 6352
+     "from": 6395,
+     "to": 6397
     },
     {
      "w": "them",
-     "from": 6355,
-     "to": 6357
+     "from": 6400,
+     "to": 6402
     },
     {
      "w": "up,",
-     "from": 6360,
-     "to": 6369
+     "from": 6405,
+     "to": 6414
     },
     {
      "w": "and",
-     "from": 6370,
-     "to": 6372
+     "from": 6415,
+     "to": 6417
     },
     {
      "w": "echoes",
-     "from": 6376,
-     "to": 6386
+     "from": 6421,
+     "to": 6431
     },
     {
      "w": "from",
-     "from": 6388,
-     "to": 6391
-    },
-    {
-     "w": "different",
-     "from": 6393,
-     "to": 6400
-    },
-    {
-     "w": "places",
-     "from": 6403,
-     "to": 6415
-    },
-    {
-     "w": "blur",
-     "from": 6417,
-     "to": 6427
-    },
-    {
-     "w": "into",
-     "from": 6429,
+     "from": 6433,
      "to": 6436
     },
     {
-     "w": "one",
-     "from": 6439,
-     "to": 6444
+     "w": "different",
+     "from": 6438,
+     "to": 6445
     },
     {
-     "w": "smear,",
+     "w": "places",
      "from": 6448,
+     "to": 6460
+    },
+    {
+     "w": "blur",
+     "from": 6462,
      "to": 6472
     },
     {
+     "w": "into",
+     "from": 6474,
+     "to": 6481
+    },
+    {
+     "w": "one",
+     "from": 6484,
+     "to": 6489
+    },
+    {
+     "w": "smear,",
+     "from": 6493,
+     "to": 6517
+    },
+    {
      "w": "like",
-     "from": 6479,
-     "to": 6480
+     "from": 6524,
+     "to": 6525
     },
     {
      "w": "a",
-     "from": 6481,
-     "to": 6482
+     "from": 6526,
+     "to": 6527
     },
     {
      "w": "long",
-     "from": 6484,
-     "to": 6492
+     "from": 6529,
+     "to": 6537
     },
     {
      "w": "exposure",
-     "from": 6495,
-     "to": 6508
+     "from": 6540,
+     "to": 6553
     },
     {
      "w": "of",
-     "from": 6510,
-     "to": 6511
+     "from": 6555,
+     "to": 6556
     },
     {
      "w": "someone",
-     "from": 6513,
-     "to": 6520
+     "from": 6558,
+     "to": 6565
     },
     {
      "w": "walking.",
-     "from": 6523,
-     "to": 6543
+     "from": 6568,
+     "to": 6588
     }
    ]
   },
   {
    "id": "n21",
    "scene": "V9",
-   "from": 6549,
-   "to": 6626,
+   "from": 6594,
+   "to": 6671,
    "text": "So their model solves for one unknown at a time.",
    "timing": "engine",
    "words": [
     {
      "w": "So",
-     "from": 6550,
-     "to": 6552
+     "from": 6595,
+     "to": 6597
     },
     {
      "w": "their",
-     "from": 6555,
-     "to": 6557
+     "from": 6600,
+     "to": 6602
     },
     {
      "w": "model",
-     "from": 6559,
-     "to": 6567
-    },
-    {
-     "w": "solves",
-     "from": 6569,
-     "to": 6579
-    },
-    {
-     "w": "for",
-     "from": 6581,
-     "to": 6583
-    },
-    {
-     "w": "one",
-     "from": 6591,
-     "to": 6595
-    },
-    {
-     "w": "unknown",
-     "from": 6598,
-     "to": 6610
-    },
-    {
-     "w": "at",
-     "from": 6611,
+     "from": 6604,
      "to": 6612
     },
     {
+     "w": "solves",
+     "from": 6614,
+     "to": 6624
+    },
+    {
+     "w": "for",
+     "from": 6626,
+     "to": 6628
+    },
+    {
+     "w": "one",
+     "from": 6636,
+     "to": 6640
+    },
+    {
+     "w": "unknown",
+     "from": 6643,
+     "to": 6655
+    },
+    {
+     "w": "at",
+     "from": 6656,
+     "to": 6657
+    },
+    {
      "w": "a",
-     "from": 6613,
-     "to": 6615
+     "from": 6658,
+     "to": 6660
     },
     {
      "w": "time.",
-     "from": 6621,
-     "to": 6639
+     "from": 6666,
+     "to": 6684
     }
    ]
   },
   {
    "id": "n22",
    "scene": "V9",
-   "from": 6635,
-   "to": 6863,
+   "from": 6680,
+   "to": 6908,
    "text": "To build a shape, hold the object still and step the sensor through known positions, spreading out its listening spots. That's how the U was made.",
    "timing": "engine",
    "words": [
     {
      "w": "To",
-     "from": 6635,
-     "to": 6637
+     "from": 6680,
+     "to": 6682
     },
     {
      "w": "build",
-     "from": 6639,
-     "to": 6642
-    },
-    {
-     "w": "a",
-     "from": 6644,
-     "to": 6645
-    },
-    {
-     "w": "shape,",
-     "from": 6647,
-     "to": 6666
-    },
-    {
-     "w": "hold",
-     "from": 6669,
-     "to": 6673
-    },
-    {
-     "w": "the",
-     "from": 6674,
-     "to": 6675
-    },
-    {
-     "w": "object",
-     "from": 6678,
+     "from": 6684,
      "to": 6687
     },
     {
+     "w": "a",
+     "from": 6689,
+     "to": 6690
+    },
+    {
+     "w": "shape,",
+     "from": 6692,
+     "to": 6711
+    },
+    {
+     "w": "hold",
+     "from": 6714,
+     "to": 6718
+    },
+    {
+     "w": "the",
+     "from": 6719,
+     "to": 6720
+    },
+    {
+     "w": "object",
+     "from": 6723,
+     "to": 6732
+    },
+    {
      "w": "still",
-     "from": 6690,
-     "to": 6699
+     "from": 6735,
+     "to": 6744
     },
     {
      "w": "and",
-     "from": 6702,
-     "to": 6707
+     "from": 6747,
+     "to": 6752
     },
     {
      "w": "step",
-     "from": 6709,
-     "to": 6716
+     "from": 6754,
+     "to": 6761
     },
     {
      "w": "the",
-     "from": 6717,
-     "to": 6719
+     "from": 6762,
+     "to": 6764
     },
     {
      "w": "sensor",
-     "from": 6721,
-     "to": 6731
+     "from": 6766,
+     "to": 6776
     },
     {
      "w": "through",
-     "from": 6733,
-     "to": 6740
+     "from": 6778,
+     "to": 6785
     },
     {
      "w": "known",
-     "from": 6744,
-     "to": 6747
+     "from": 6789,
+     "to": 6792
     },
     {
      "w": "positions,",
-     "from": 6750,
-     "to": 6774
+     "from": 6795,
+     "to": 6819
     },
     {
      "w": "spreading",
-     "from": 6776,
-     "to": 6786
+     "from": 6821,
+     "to": 6831
     },
     {
      "w": "out",
-     "from": 6788,
-     "to": 6791
+     "from": 6833,
+     "to": 6836
     },
     {
      "w": "its",
-     "from": 6793,
-     "to": 6795
+     "from": 6838,
+     "to": 6840
     },
     {
      "w": "listening",
-     "from": 6800,
-     "to": 6805
+     "from": 6845,
+     "to": 6850
     },
     {
      "w": "spots.",
-     "from": 6807,
-     "to": 6825
+     "from": 6852,
+     "to": 6870
     },
     {
      "w": "That's",
-     "from": 6831,
-     "to": 6838
+     "from": 6876,
+     "to": 6883
     },
     {
      "w": "how",
-     "from": 6839,
-     "to": 6841
+     "from": 6884,
+     "to": 6886
     },
     {
      "w": "the",
-     "from": 6842,
-     "to": 6843
+     "from": 6887,
+     "to": 6888
     },
     {
      "w": "U",
-     "from": 6846,
-     "to": 6848
+     "from": 6891,
+     "to": 6893
     },
     {
      "w": "was",
-     "from": 6851,
-     "to": 6853
+     "from": 6896,
+     "to": 6898
     },
     {
      "w": "made.",
-     "from": 6855,
-     "to": 6870
+     "from": 6900,
+     "to": 6915
     }
    ]
   },
   {
    "id": "n23",
    "scene": "V9",
-   "from": 6873,
-   "to": 7166,
+   "from": 6918,
+   "to": 7211,
    "text": "To follow a person, hold the sensor still, and let each guess drift a little between frames, keeping the ones that still match. The estimate keeps up instead of smearing.",
    "timing": "engine",
    "words": [
     {
      "w": "To",
-     "from": 6871,
-     "to": 6876
+     "from": 6916,
+     "to": 6921
     },
     {
      "w": "follow",
-     "from": 6879,
-     "to": 6883
+     "from": 6924,
+     "to": 6928
     },
     {
      "w": "a",
-     "from": 6884,
-     "to": 6885
+     "from": 6929,
+     "to": 6930
     },
     {
      "w": "person,",
-     "from": 6888,
-     "to": 6907
+     "from": 6933,
+     "to": 6952
     },
     {
      "w": "hold",
-     "from": 6909,
-     "to": 6914
+     "from": 6954,
+     "to": 6959
     },
     {
      "w": "the",
-     "from": 6915,
-     "to": 6917
+     "from": 6960,
+     "to": 6962
     },
     {
      "w": "sensor",
-     "from": 6919,
-     "to": 6926
+     "from": 6964,
+     "to": 6971
     },
     {
      "w": "still,",
-     "from": 6931,
-     "to": 6945
+     "from": 6976,
+     "to": 6990
     },
     {
      "w": "and",
-     "from": 6947,
-     "to": 6948
+     "from": 6992,
+     "to": 6993
     },
     {
      "w": "let",
-     "from": 6950,
-     "to": 6955
+     "from": 6995,
+     "to": 7000
     },
     {
      "w": "each",
-     "from": 6957,
-     "to": 6965
+     "from": 7002,
+     "to": 7010
     },
     {
      "w": "guess",
-     "from": 6967,
-     "to": 6974
+     "from": 7012,
+     "to": 7019
     },
     {
      "w": "drift",
-     "from": 6977,
-     "to": 6984
-    },
-    {
-     "w": "a",
-     "from": 6986,
-     "to": 6989
-    },
-    {
-     "w": "little",
-     "from": 6991,
-     "to": 6996
-    },
-    {
-     "w": "between",
-     "from": 6998,
-     "to": 7008
-    },
-    {
-     "w": "frames,",
-     "from": 7010,
+     "from": 7022,
      "to": 7029
     },
     {
-     "w": "keeping",
-     "from": 7032,
-     "to": 7039
+     "w": "a",
+     "from": 7031,
+     "to": 7034
     },
     {
-     "w": "the",
-     "from": 7040,
+     "w": "little",
+     "from": 7036,
      "to": 7041
     },
     {
-     "w": "ones",
-     "from": 7044,
-     "to": 7049
-    },
-    {
-     "w": "that",
-     "from": 7051,
+     "w": "between",
+     "from": 7043,
      "to": 7053
     },
     {
+     "w": "frames,",
+     "from": 7055,
+     "to": 7074
+    },
+    {
+     "w": "keeping",
+     "from": 7077,
+     "to": 7084
+    },
+    {
+     "w": "the",
+     "from": 7085,
+     "to": 7086
+    },
+    {
+     "w": "ones",
+     "from": 7089,
+     "to": 7094
+    },
+    {
+     "w": "that",
+     "from": 7096,
+     "to": 7098
+    },
+    {
      "w": "still",
-     "from": 7056,
-     "to": 7061
+     "from": 7101,
+     "to": 7106
     },
     {
      "w": "match.",
-     "from": 7063,
-     "to": 7081
+     "from": 7108,
+     "to": 7126
     },
     {
      "w": "The",
-     "from": 7089,
-     "to": 7092
+     "from": 7134,
+     "to": 7137
     },
     {
      "w": "estimate",
-     "from": 7094,
-     "to": 7104
+     "from": 7139,
+     "to": 7149
     },
     {
      "w": "keeps",
-     "from": 7106,
-     "to": 7113
+     "from": 7151,
+     "to": 7158
     },
     {
      "w": "up",
-     "from": 7116,
-     "to": 7133
+     "from": 7161,
+     "to": 7178
     },
     {
      "w": "instead",
-     "from": 7139,
-     "to": 7145
+     "from": 7184,
+     "to": 7190
     },
     {
      "w": "of",
-     "from": 7146,
-     "to": 7147
+     "from": 7191,
+     "to": 7192
     },
     {
      "w": "smearing.",
-     "from": 7149,
-     "to": 7166
+     "from": 7194,
+     "to": 7211
     }
    ]
   },
   {
    "id": "n24",
    "scene": "V10",
-   "from": 7187,
-   "to": 7288,
+   "from": 7232,
+   "to": 7333,
    "text": "So what can it actually do, and where does it fail?",
    "timing": "engine",
    "words": [
     {
      "w": "So",
-     "from": 7194,
-     "to": 7196
+     "from": 7239,
+     "to": 7241
     },
     {
      "w": "what",
-     "from": 7203,
-     "to": 7206
-    },
-    {
-     "w": "can",
-     "from": 7208,
-     "to": 7211
-    },
-    {
-     "w": "it",
-     "from": 7212,
-     "to": 7213
-    },
-    {
-     "w": "actually",
-     "from": 7215,
-     "to": 7227
-    },
-    {
-     "w": "do,",
-     "from": 7230,
+     "from": 7248,
      "to": 7251
     },
     {
-     "w": "and",
-     "from": 7255,
-     "to": 7259
-    },
-    {
-     "w": "where",
-     "from": 7263,
-     "to": 7266
-    },
-    {
-     "w": "does",
-     "from": 7268,
-     "to": 7271
+     "w": "can",
+     "from": 7253,
+     "to": 7256
     },
     {
      "w": "it",
-     "from": 7273,
-     "to": 7275
+     "from": 7257,
+     "to": 7258
+    },
+    {
+     "w": "actually",
+     "from": 7260,
+     "to": 7272
+    },
+    {
+     "w": "do,",
+     "from": 7275,
+     "to": 7296
+    },
+    {
+     "w": "and",
+     "from": 7300,
+     "to": 7304
+    },
+    {
+     "w": "where",
+     "from": 7308,
+     "to": 7311
+    },
+    {
+     "w": "does",
+     "from": 7313,
+     "to": 7316
+    },
+    {
+     "w": "it",
+     "from": 7318,
+     "to": 7320
     },
     {
      "w": "fail?",
-     "from": 7278,
-     "to": 7304
+     "from": 7323,
+     "to": 7349
     }
    ]
   },
   {
    "id": "n25",
    "scene": "V10",
-   "from": 7297,
-   "to": 7530,
+   "from": 7342,
+   "to": 7575,
    "text": "Take our opening clip: an off-the-shelf kit the authors put at under a hundred dollars, held still while a person walked behind a partition.",
    "timing": "engine",
    "words": [
     {
      "w": "Take",
-     "from": 7299,
-     "to": 7303
+     "from": 7344,
+     "to": 7348
     },
     {
      "w": "our",
-     "from": 7305,
-     "to": 7308
+     "from": 7350,
+     "to": 7353
     },
     {
      "w": "opening",
-     "from": 7313,
-     "to": 7317
+     "from": 7358,
+     "to": 7362
     },
     {
      "w": "clip:",
-     "from": 7320,
-     "to": 7341
+     "from": 7365,
+     "to": 7386
     },
     {
      "w": "an",
-     "from": 7344,
-     "to": 7346
+     "from": 7389,
+     "to": 7391
     },
     {
      "w": "off-the-shelf",
-     "from": 7349,
-     "to": 7365
+     "from": 7394,
+     "to": 7410
     },
     {
      "w": "kit",
-     "from": 7368,
-     "to": 7373
+     "from": 7413,
+     "to": 7418
     },
     {
      "w": "the",
-     "from": 7375,
-     "to": 7377
+     "from": 7420,
+     "to": 7422
     },
     {
      "w": "authors",
-     "from": 7383,
-     "to": 7389
+     "from": 7428,
+     "to": 7434
     },
     {
      "w": "put",
-     "from": 7392,
-     "to": 7394
+     "from": 7437,
+     "to": 7439
     },
     {
      "w": "at",
-     "from": 7397,
-     "to": 7401
+     "from": 7442,
+     "to": 7446
     },
     {
      "w": "under",
-     "from": 7405,
-     "to": 7409
+     "from": 7450,
+     "to": 7454
     },
     {
      "w": "a",
-     "from": 7411,
-     "to": 7413
+     "from": 7456,
+     "to": 7458
     },
     {
      "w": "hundred",
-     "from": 7416,
-     "to": 7423
+     "from": 7461,
+     "to": 7468
     },
     {
      "w": "dollars,",
-     "from": 7425,
-     "to": 7452
+     "from": 7470,
+     "to": 7497
     },
     {
      "w": "held",
-     "from": 7457,
-     "to": 7461
+     "from": 7502,
+     "to": 7506
     },
     {
      "w": "still",
-     "from": 7464,
-     "to": 7473
+     "from": 7509,
+     "to": 7518
     },
     {
      "w": "while",
-     "from": 7476,
-     "to": 7478
+     "from": 7521,
+     "to": 7523
     },
     {
      "w": "a",
-     "from": 7479,
-     "to": 7481
+     "from": 7524,
+     "to": 7526
     },
     {
      "w": "person",
-     "from": 7485,
-     "to": 7490
+     "from": 7530,
+     "to": 7535
     },
     {
      "w": "walked",
-     "from": 7495,
-     "to": 7502
+     "from": 7540,
+     "to": 7547
     },
     {
      "w": "behind",
-     "from": 7503,
-     "to": 7509
+     "from": 7548,
+     "to": 7554
     },
     {
      "w": "a",
-     "from": 7511,
-     "to": 7512
+     "from": 7556,
+     "to": 7557
     },
     {
      "w": "partition.",
-     "from": 7514,
-     "to": 7545
+     "from": 7559,
+     "to": 7590
     }
    ]
   },
   {
    "id": "n26",
    "scene": "V10",
-   "from": 7539,
-   "to": 7740,
+   "from": 7584,
+   "to": 7785,
    "text": "Many of their tests had help: safety-vest style reflective material on the target, which sends far more light straight back.",
    "timing": "engine",
    "words": [
     {
      "w": "Many",
-     "from": 7542,
-     "to": 7546
+     "from": 7587,
+     "to": 7591
     },
     {
      "w": "of",
-     "from": 7547,
-     "to": 7548
+     "from": 7592,
+     "to": 7593
     },
     {
      "w": "their",
-     "from": 7550,
-     "to": 7553
+     "from": 7595,
+     "to": 7598
     },
     {
      "w": "tests",
-     "from": 7555,
-     "to": 7565
+     "from": 7600,
+     "to": 7610
     },
     {
      "w": "had",
-     "from": 7567,
-     "to": 7572
+     "from": 7612,
+     "to": 7617
     },
     {
      "w": "help:",
-     "from": 7576,
-     "to": 7594
-    },
-    {
-     "w": "safety-vest",
-     "from": 7596,
-     "to": 7613
-    },
-    {
-     "w": "style",
-     "from": 7615,
-     "to": 7622
-    },
-    {
-     "w": "reflective",
-     "from": 7625,
+     "from": 7621,
      "to": 7639
     },
     {
+     "w": "safety-vest",
+     "from": 7641,
+     "to": 7658
+    },
+    {
+     "w": "style",
+     "from": 7660,
+     "to": 7667
+    },
+    {
+     "w": "reflective",
+     "from": 7670,
+     "to": 7684
+    },
+    {
      "w": "material",
-     "from": 7642,
-     "to": 7654
+     "from": 7687,
+     "to": 7699
     },
     {
      "w": "on",
-     "from": 7656,
-     "to": 7657
+     "from": 7701,
+     "to": 7702
     },
     {
      "w": "the",
-     "from": 7658,
-     "to": 7661
+     "from": 7703,
+     "to": 7706
     },
     {
      "w": "target,",
-     "from": 7667,
-     "to": 7680
+     "from": 7712,
+     "to": 7725
     },
     {
      "w": "which",
-     "from": 7682,
-     "to": 7685
-    },
-    {
-     "w": "sends",
-     "from": 7687,
-     "to": 7694
-    },
-    {
-     "w": "far",
-     "from": 7697,
-     "to": 7704
-    },
-    {
-     "w": "more",
-     "from": 7706,
-     "to": 7709
-    },
-    {
-     "w": "light",
-     "from": 7711,
-     "to": 7718
-    },
-    {
-     "w": "straight",
-     "from": 7721,
+     "from": 7727,
      "to": 7730
     },
     {
-     "w": "back.",
-     "from": 7735,
+     "w": "sends",
+     "from": 7732,
+     "to": 7739
+    },
+    {
+     "w": "far",
+     "from": 7742,
+     "to": 7749
+    },
+    {
+     "w": "more",
+     "from": 7751,
      "to": 7754
+    },
+    {
+     "w": "light",
+     "from": 7756,
+     "to": 7763
+    },
+    {
+     "w": "straight",
+     "from": 7766,
+     "to": 7775
+    },
+    {
+     "w": "back.",
+     "from": 7780,
+     "to": 7799
     }
    ]
   },
   {
    "id": "n27",
    "scene": "V10",
-   "from": 7749,
-   "to": 7843,
+   "from": 7794,
+   "to": 7888,
    "text": "Our clip's files don't say if the walker wore any.",
    "timing": "engine",
    "words": [
     {
      "w": "Our",
-     "from": 7747,
-     "to": 7752
+     "from": 7792,
+     "to": 7797
     },
     {
      "w": "clip's",
-     "from": 7754,
-     "to": 7762
+     "from": 7799,
+     "to": 7807
     },
     {
      "w": "files",
-     "from": 7764,
-     "to": 7795
+     "from": 7809,
+     "to": 7840
     },
     {
      "w": "don't",
-     "from": 7798,
-     "to": 7805
+     "from": 7843,
+     "to": 7850
     },
     {
      "w": "say",
-     "from": 7807,
-     "to": 7810
+     "from": 7852,
+     "to": 7855
     },
     {
      "w": "if",
-     "from": 7811,
-     "to": 7812
+     "from": 7856,
+     "to": 7857
     },
     {
      "w": "the",
-     "from": 7814,
-     "to": 7816
+     "from": 7859,
+     "to": 7861
     },
     {
      "w": "walker",
-     "from": 7817,
-     "to": 7826
+     "from": 7862,
+     "to": 7871
     },
     {
      "w": "wore",
-     "from": 7829,
-     "to": 7834
+     "from": 7874,
+     "to": 7879
     },
     {
      "w": "any.",
-     "from": 7836,
-     "to": 7852
+     "from": 7881,
+     "to": 7897
     }
    ]
   },
   {
    "id": "n28",
    "scene": "V10",
-   "from": 7852,
-   "to": 8042,
+   "from": 7897,
+   "to": 8087,
    "text": "But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second.",
    "timing": "engine",
    "words": [
     {
      "w": "But",
-     "from": 7854,
-     "to": 7859
+     "from": 7899,
+     "to": 7904
     },
     {
      "w": "in",
-     "from": 7861,
-     "to": 7863
+     "from": 7906,
+     "to": 7908
     },
     {
      "w": "a",
-     "from": 7866,
-     "to": 7868
+     "from": 7911,
+     "to": 7913
     },
     {
      "w": "separate",
-     "from": 7871,
-     "to": 7878
-    },
-    {
-     "w": "test,",
-     "from": 7884,
-     "to": 7897
-    },
-    {
-     "w": "the",
-     "from": 7899,
-     "to": 7902
-    },
-    {
-     "w": "authors",
-     "from": 7907,
-     "to": 7911
-    },
-    {
-     "w": "report",
-     "from": 7917,
+     "from": 7916,
      "to": 7923
     },
     {
-     "w": "tracking",
-     "from": 7928,
-     "to": 7933
+     "w": "test,",
+     "from": 7929,
+     "to": 7942
     },
     {
-     "w": "a",
-     "from": 7935,
-     "to": 7938
-    },
-    {
-     "w": "person",
-     "from": 7943,
+     "w": "the",
+     "from": 7944,
      "to": 7947
     },
     {
-     "w": "in",
-     "from": 7950,
-     "to": 7952
+     "w": "authors",
+     "from": 7952,
+     "to": 7956
     },
     {
-     "w": "ordinary",
-     "from": 7959,
-     "to": 7967
+     "w": "report",
+     "from": 7962,
+     "to": 7968
     },
     {
-     "w": "clothes,",
-     "from": 7970,
-     "to": 7988
-    },
-    {
-     "w": "capturing",
-     "from": 7991,
-     "to": 8005
-    },
-    {
-     "w": "thirty",
-     "from": 8007,
-     "to": 8012
-    },
-    {
-     "w": "frames",
-     "from": 8017,
-     "to": 8024
+     "w": "tracking",
+     "from": 7973,
+     "to": 7978
     },
     {
      "w": "a",
-     "from": 8027,
-     "to": 8029
+     "from": 7980,
+     "to": 7983
+    },
+    {
+     "w": "person",
+     "from": 7988,
+     "to": 7992
+    },
+    {
+     "w": "in",
+     "from": 7995,
+     "to": 7997
+    },
+    {
+     "w": "ordinary",
+     "from": 8004,
+     "to": 8012
+    },
+    {
+     "w": "clothes,",
+     "from": 8015,
+     "to": 8033
+    },
+    {
+     "w": "capturing",
+     "from": 8036,
+     "to": 8050
+    },
+    {
+     "w": "thirty",
+     "from": 8052,
+     "to": 8057
+    },
+    {
+     "w": "frames",
+     "from": 8062,
+     "to": 8069
+    },
+    {
+     "w": "a",
+     "from": 8072,
+     "to": 8074
     },
     {
      "w": "second.",
-     "from": 8031,
-     "to": 8048
+     "from": 8076,
+     "to": 8093
     }
    ]
   },
   {
    "id": "s40",
    "scene": "V11",
-   "from": 8057,
-   "to": 8203,
+   "from": 8102,
+   "to": 8248,
    "text": "What might this be good for? Picture a delivery robot nearing a blind warehouse corner.",
    "timing": "engine",
    "words": [
     {
      "w": "What",
-     "from": 8059,
-     "to": 8063
+     "from": 8104,
+     "to": 8108
     },
     {
      "w": "might",
-     "from": 8066,
-     "to": 8071
+     "from": 8111,
+     "to": 8116
     },
     {
      "w": "this",
-     "from": 8073,
-     "to": 8075
+     "from": 8118,
+     "to": 8120
     },
     {
      "w": "be",
-     "from": 8078,
-     "to": 8080
+     "from": 8123,
+     "to": 8125
     },
     {
      "w": "good",
-     "from": 8083,
-     "to": 8087
+     "from": 8128,
+     "to": 8132
     },
     {
      "w": "for?",
-     "from": 8090,
-     "to": 8105
+     "from": 8135,
+     "to": 8150
     },
     {
      "w": "Picture",
-     "from": 8114,
-     "to": 8123
+     "from": 8159,
+     "to": 8168
     },
     {
      "w": "a",
-     "from": 8125,
-     "to": 8126
+     "from": 8170,
+     "to": 8171
     },
     {
      "w": "delivery",
-     "from": 8133,
-     "to": 8140
+     "from": 8178,
+     "to": 8185
     },
     {
      "w": "robot",
-     "from": 8143,
-     "to": 8152
+     "from": 8188,
+     "to": 8197
     },
     {
      "w": "nearing",
-     "from": 8155,
-     "to": 8162
+     "from": 8200,
+     "to": 8207
     },
     {
      "w": "a",
-     "from": 8163,
-     "to": 8164
+     "from": 8208,
+     "to": 8209
     },
     {
      "w": "blind",
-     "from": 8167,
-     "to": 8176
+     "from": 8212,
+     "to": 8221
     },
     {
      "w": "warehouse",
-     "from": 8179,
-     "to": 8191
+     "from": 8224,
+     "to": 8236
     },
     {
      "w": "corner.",
-     "from": 8193,
-     "to": 8215
+     "from": 8238,
+     "to": 8260
     }
    ]
   },
   {
    "id": "n29",
    "scene": "V11",
-   "from": 8212,
-   "to": 8407,
+   "from": 8257,
+   "to": 8452,
    "text": "With a suitable wall at the junction, a sensor like this might give it an early hint of movement out of sight.",
    "timing": "engine",
    "words": [
     {
      "w": "With",
-     "from": 8212,
-     "to": 8215
+     "from": 8257,
+     "to": 8260
     },
     {
      "w": "a",
-     "from": 8217,
-     "to": 8219
+     "from": 8262,
+     "to": 8264
     },
     {
      "w": "suitable",
-     "from": 8222,
-     "to": 8231
+     "from": 8267,
+     "to": 8276
     },
     {
      "w": "wall",
-     "from": 8235,
-     "to": 8239
+     "from": 8280,
+     "to": 8284
     },
     {
      "w": "at",
-     "from": 8240,
-     "to": 8241
+     "from": 8285,
+     "to": 8286
     },
     {
      "w": "the",
-     "from": 8243,
-     "to": 8246
+     "from": 8288,
+     "to": 8291
     },
     {
      "w": "junction,",
-     "from": 8248,
-     "to": 8272
+     "from": 8293,
+     "to": 8317
     },
     {
      "w": "a",
-     "from": 8275,
-     "to": 8277
+     "from": 8320,
+     "to": 8322
     },
     {
      "w": "sensor",
-     "from": 8282,
-     "to": 8287
-    },
-    {
-     "w": "like",
-     "from": 8290,
-     "to": 8294
-    },
-    {
-     "w": "this",
-     "from": 8296,
-     "to": 8320
-    },
-    {
-     "w": "might",
-     "from": 8323,
-     "to": 8330
-    },
-    {
-     "w": "give",
-     "from": 8331,
+     "from": 8327,
      "to": 8332
     },
     {
-     "w": "it",
+     "w": "like",
      "from": 8335,
-     "to": 8336
+     "to": 8339
+    },
+    {
+     "w": "this",
+     "from": 8341,
+     "to": 8365
+    },
+    {
+     "w": "might",
+     "from": 8368,
+     "to": 8375
+    },
+    {
+     "w": "give",
+     "from": 8376,
+     "to": 8377
+    },
+    {
+     "w": "it",
+     "from": 8380,
+     "to": 8381
     },
     {
      "w": "an",
-     "from": 8337,
-     "to": 8342
-    },
-    {
-     "w": "early",
-     "from": 8347,
-     "to": 8351
-    },
-    {
-     "w": "hint",
-     "from": 8354,
-     "to": 8356
-    },
-    {
-     "w": "of",
-     "from": 8359,
-     "to": 8361
-    },
-    {
-     "w": "movement",
-     "from": 8368,
+     "from": 8382,
      "to": 8387
     },
     {
-     "w": "out",
-     "from": 8390,
-     "to": 8392
+     "w": "early",
+     "from": 8392,
+     "to": 8396
+    },
+    {
+     "w": "hint",
+     "from": 8399,
+     "to": 8401
     },
     {
      "w": "of",
-     "from": 8395,
-     "to": 8397
+     "from": 8404,
+     "to": 8406
+    },
+    {
+     "w": "movement",
+     "from": 8413,
+     "to": 8432
+    },
+    {
+     "w": "out",
+     "from": 8435,
+     "to": 8437
+    },
+    {
+     "w": "of",
+     "from": 8440,
+     "to": 8442
     },
     {
      "w": "sight.",
-     "from": 8398,
-     "to": 8421
+     "from": 8443,
+     "to": 8466
     }
    ]
   },
   {
    "id": "s42",
    "scene": "V11",
-   "from": 8416,
-   "to": 8560,
+   "from": 8461,
+   "to": 8605,
    "text": "Just a fuzzy blob: enough to say slow down, not enough to say who's there.",
    "timing": "engine",
    "words": [
     {
      "w": "Just",
-     "from": 8416,
-     "to": 8421
+     "from": 8461,
+     "to": 8466
     },
     {
      "w": "a",
-     "from": 8423,
-     "to": 8428
+     "from": 8468,
+     "to": 8473
     },
     {
      "w": "fuzzy",
-     "from": 8429,
-     "to": 8435
+     "from": 8474,
+     "to": 8480
     },
     {
      "w": "blob:",
-     "from": 8440,
-     "to": 8464
+     "from": 8485,
+     "to": 8509
     },
     {
      "w": "enough",
-     "from": 8467,
-     "to": 8471
+     "from": 8512,
+     "to": 8516
     },
     {
      "w": "to",
-     "from": 8474,
-     "to": 8476
+     "from": 8519,
+     "to": 8521
     },
     {
      "w": "say",
-     "from": 8480,
-     "to": 8483
+     "from": 8525,
+     "to": 8528
     },
     {
      "w": "slow",
-     "from": 8491,
-     "to": 8498
+     "from": 8536,
+     "to": 8543
     },
     {
      "w": "down,",
-     "from": 8500,
-     "to": 8519
+     "from": 8545,
+     "to": 8564
     },
     {
      "w": "not",
-     "from": 8522,
-     "to": 8527
+     "from": 8567,
+     "to": 8572
     },
     {
      "w": "enough",
-     "from": 8528,
-     "to": 8534
+     "from": 8573,
+     "to": 8579
     },
     {
      "w": "to",
-     "from": 8535,
-     "to": 8536
+     "from": 8580,
+     "to": 8581
     },
     {
      "w": "say",
-     "from": 8539,
-     "to": 8541
+     "from": 8584,
+     "to": 8586
     },
     {
      "w": "who's",
-     "from": 8543,
-     "to": 8551
+     "from": 8588,
+     "to": 8596
     },
     {
      "w": "there.",
-     "from": 8555,
-     "to": 8567
+     "from": 8600,
+     "to": 8612
     }
    ]
   },
   {
    "id": "s43",
    "scene": "V11",
-   "from": 8572,
-   "to": 8897,
+   "from": 8617,
+   "to": 8942,
    "text": "And plenty is still hard: short range, dark or shiny walls, bright sunlight, and fast math on small hardware. The researchers call it an early-stage prototype.",
    "timing": "engine",
    "words": [
     {
      "w": "And",
-     "from": 8570,
-     "to": 8578
+     "from": 8615,
+     "to": 8623
     },
     {
      "w": "plenty",
-     "from": 8580,
-     "to": 8592
+     "from": 8625,
+     "to": 8637
     },
     {
      "w": "is",
-     "from": 8594,
-     "to": 8597
+     "from": 8639,
+     "to": 8642
     },
     {
      "w": "still",
-     "from": 8602,
-     "to": 8606
+     "from": 8647,
+     "to": 8651
     },
     {
      "w": "hard:",
-     "from": 8609,
-     "to": 8630
+     "from": 8654,
+     "to": 8675
     },
     {
      "w": "short",
-     "from": 8633,
-     "to": 8640
+     "from": 8678,
+     "to": 8685
     },
     {
      "w": "range,",
-     "from": 8642,
-     "to": 8660
+     "from": 8687,
+     "to": 8705
     },
     {
      "w": "dark",
-     "from": 8666,
-     "to": 8676
+     "from": 8711,
+     "to": 8721
     },
     {
      "w": "or",
-     "from": 8678,
-     "to": 8681
-    },
-    {
-     "w": "shiny",
-     "from": 8686,
-     "to": 8693
-    },
-    {
-     "w": "walls,",
-     "from": 8695,
-     "to": 8714
-    },
-    {
-     "w": "bright",
-     "from": 8719,
+     "from": 8723,
      "to": 8726
     },
     {
+     "w": "shiny",
+     "from": 8731,
+     "to": 8738
+    },
+    {
+     "w": "walls,",
+     "from": 8740,
+     "to": 8759
+    },
+    {
+     "w": "bright",
+     "from": 8764,
+     "to": 8771
+    },
+    {
      "w": "sunlight,",
-     "from": 8729,
-     "to": 8753
+     "from": 8774,
+     "to": 8798
     },
     {
      "w": "and",
-     "from": 8755,
-     "to": 8758
+     "from": 8800,
+     "to": 8803
     },
     {
      "w": "fast",
-     "from": 8760,
-     "to": 8770
+     "from": 8805,
+     "to": 8815
     },
     {
      "w": "math",
-     "from": 8772,
-     "to": 8779
+     "from": 8817,
+     "to": 8824
     },
     {
      "w": "on",
-     "from": 8782,
-     "to": 8784
+     "from": 8827,
+     "to": 8829
     },
     {
      "w": "small",
-     "from": 8786,
-     "to": 8794
-    },
-    {
-     "w": "hardware.",
-     "from": 8801,
-     "to": 8816
-    },
-    {
-     "w": "The",
-     "from": 8820,
-     "to": 8821
-    },
-    {
-     "w": "researchers",
-     "from": 8823,
+     "from": 8831,
      "to": 8839
     },
     {
+     "w": "hardware.",
+     "from": 8846,
+     "to": 8861
+    },
+    {
+     "w": "The",
+     "from": 8865,
+     "to": 8866
+    },
+    {
+     "w": "researchers",
+     "from": 8868,
+     "to": 8884
+    },
+    {
      "w": "call",
-     "from": 8842,
-     "to": 8844
+     "from": 8887,
+     "to": 8889
     },
     {
      "w": "it",
-     "from": 8847,
-     "to": 8849
+     "from": 8892,
+     "to": 8894
     },
     {
      "w": "an",
-     "from": 8851,
-     "to": 8856
+     "from": 8896,
+     "to": 8901
     },
     {
      "w": "early-stage",
-     "from": 8861,
-     "to": 8878
+     "from": 8906,
+     "to": 8923
     },
     {
      "w": "prototype.",
-     "from": 8880,
-     "to": 8911
+     "from": 8925,
+     "to": 8956
     }
    ]
   },
   {
    "id": "n30",
    "scene": "V11",
-   "from": 8908,
-   "to": 9010,
+   "from": 8953,
+   "to": 9055,
    "text": "For now, it's a promising clue, not a safety system.",
    "timing": "engine",
    "words": [
     {
      "w": "For",
-     "from": 8908,
-     "to": 8911
-    },
-    {
-     "w": "now,",
-     "from": 8913,
-     "to": 8932
-    },
-    {
-     "w": "it's",
-     "from": 8933,
-     "to": 8937
-    },
-    {
-     "w": "a",
-     "from": 8938,
-     "to": 8939
-    },
-    {
-     "w": "promising",
-     "from": 8942,
+     "from": 8953,
      "to": 8956
     },
     {
-     "w": "clue,",
-     "from": 8959,
-     "to": 8978
+     "w": "now,",
+     "from": 8958,
+     "to": 8977
     },
     {
-     "w": "not",
-     "from": 8980,
-     "to": 8983
+     "w": "it's",
+     "from": 8978,
+     "to": 8982
     },
     {
      "w": "a",
-     "from": 8985,
-     "to": 8986
+     "from": 8983,
+     "to": 8984
+    },
+    {
+     "w": "promising",
+     "from": 8987,
+     "to": 9001
+    },
+    {
+     "w": "clue,",
+     "from": 9004,
+     "to": 9023
+    },
+    {
+     "w": "not",
+     "from": 9025,
+     "to": 9028
+    },
+    {
+     "w": "a",
+     "from": 9030,
+     "to": 9031
     },
     {
      "w": "safety",
-     "from": 8987,
-     "to": 8997
+     "from": 9032,
+     "to": 9042
     },
     {
      "w": "system.",
-     "from": 8999,
-     "to": 9026
+     "from": 9044,
+     "to": 9071
     }
    ]
   },
   {
    "id": "n31",
    "scene": "V12",
-   "from": 9031,
-   "to": 9148,
+   "from": 9076,
+   "to": 9193,
    "text": "Being out of sight isn't the same as giving nothing away.",
    "timing": "engine",
    "words": [
     {
      "w": "Being",
-     "from": 9037,
-     "to": 9038
+     "from": 9082,
+     "to": 9083
     },
     {
      "w": "out",
-     "from": 9040,
-     "to": 9043
-    },
-    {
-     "w": "of",
-     "from": 9044,
-     "to": 9045
-    },
-    {
-     "w": "sight",
-     "from": 9050,
-     "to": 9074
-    },
-    {
-     "w": "isn't",
-     "from": 9076,
-     "to": 9084
-    },
-    {
-     "w": "the",
-     "from": 9086,
+     "from": 9085,
      "to": 9088
     },
     {
+     "w": "of",
+     "from": 9089,
+     "to": 9090
+    },
+    {
+     "w": "sight",
+     "from": 9095,
+     "to": 9119
+    },
+    {
+     "w": "isn't",
+     "from": 9121,
+     "to": 9129
+    },
+    {
+     "w": "the",
+     "from": 9131,
+     "to": 9133
+    },
+    {
      "w": "same",
-     "from": 9091,
-     "to": 9110
+     "from": 9136,
+     "to": 9155
     },
     {
      "w": "as",
-     "from": 9112,
-     "to": 9115
+     "from": 9157,
+     "to": 9160
     },
     {
      "w": "giving",
-     "from": 9117,
-     "to": 9124
+     "from": 9162,
+     "to": 9169
     },
     {
      "w": "nothing",
-     "from": 9127,
-     "to": 9136
+     "from": 9172,
+     "to": 9181
     },
     {
      "w": "away.",
-     "from": 9141,
-     "to": 9163
+     "from": 9186,
+     "to": 9208
     }
    ]
   },
   {
    "id": "s47",
    "scene": "V12",
-   "from": 9158,
-   "to": 9248,
+   "from": 9203,
+   "to": 9293,
    "text": "To really hide, he'd have to block the bounces too.",
    "timing": "engine",
    "words": [
     {
      "w": "To",
-     "from": 9159,
-     "to": 9164
+     "from": 9204,
+     "to": 9209
     },
     {
      "w": "really",
-     "from": 9166,
-     "to": 9173
+     "from": 9211,
+     "to": 9218
     },
     {
      "w": "hide,",
-     "from": 9176,
-     "to": 9191
+     "from": 9221,
+     "to": 9236
     },
     {
      "w": "he'd",
-     "from": 9192,
-     "to": 9195
+     "from": 9237,
+     "to": 9240
     },
     {
      "w": "have",
-     "from": 9197,
-     "to": 9200
+     "from": 9242,
+     "to": 9245
     },
     {
      "w": "to",
-     "from": 9202,
-     "to": 9204
+     "from": 9247,
+     "to": 9249
     },
     {
      "w": "block",
-     "from": 9208,
-     "to": 9212
+     "from": 9253,
+     "to": 9257
     },
     {
      "w": "the",
-     "from": 9214,
-     "to": 9216
+     "from": 9259,
+     "to": 9261
     },
     {
      "w": "bounces",
-     "from": 9218,
-     "to": 9231
+     "from": 9263,
+     "to": 9276
     },
     {
      "w": "too.",
-     "from": 9234,
-     "to": 9248
+     "from": 9279,
+     "to": 9293
     }
    ]
   },
   {
    "id": "s48",
    "scene": "V13",
-   "from": 9338,
-   "to": 9542,
+   "from": 9383,
+   "to": 9586,
    "text": "This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner.",
    "timing": "engine",
    "words": [
     {
      "w": "This",
-     "from": 9340,
-     "to": 9345
+     "from": 9385,
+     "to": 9390
     },
     {
      "w": "is",
-     "from": 9347,
-     "to": 9352
+     "from": 9392,
+     "to": 9397
     },
     {
      "w": "Future",
-     "from": 9357,
-     "to": 9366
+     "from": 9402,
+     "to": 9411
     },
     {
      "w": "Got",
-     "from": 9369,
-     "to": 9376
+     "from": 9414,
+     "to": 9421
     },
     {
      "w": "Weird:",
-     "from": 9378,
-     "to": 9400
+     "from": 9423,
+     "to": 9445
     },
     {
      "w": "the",
-     "from": 9401,
-     "to": 9402
+     "from": 9446,
+     "to": 9447
     },
     {
      "w": "strange",
-     "from": 9405,
-     "to": 9417
+     "from": 9450,
+     "to": 9462
     },
     {
      "w": "future,",
-     "from": 9423,
-     "to": 9436
+     "from": 9468,
+     "to": 9481
     },
     {
      "w": "explained.",
-     "from": 9446,
-     "to": 9467
+     "from": 9490,
+     "to": 9512
     },
     {
      "w": "Subscribe",
-     "from": 9474,
-     "to": 9482
+     "from": 9519,
+     "to": 9526
     },
     {
      "w": "for",
-     "from": 9484,
-     "to": 9486
+     "from": 9529,
+     "to": 9531
     },
     {
      "w": "more,",
-     "from": 9489,
-     "to": 9501
+     "from": 9534,
+     "to": 9546
     },
     {
      "w": "and",
-     "from": 9503,
-     "to": 9506
+     "from": 9548,
+     "to": 9550
     },
     {
      "w": "we'll",
-     "from": 9507,
-     "to": 9510
+     "from": 9552,
+     "to": 9555
     },
     {
      "w": "see",
-     "from": 9513,
-     "to": 9515
+     "from": 9558,
+     "to": 9560
     },
     {
      "w": "you",
-     "from": 9516,
-     "to": 9518
+     "from": 9561,
+     "to": 9562
     },
     {
      "w": "around",
-     "from": 9520,
-     "to": 9527
+     "from": 9565,
+     "to": 9572
     },
     {
      "w": "the",
-     "from": 9528,
-     "to": 9530
+     "from": 9573,
+     "to": 9575
     },
     {
      "w": "corner.",
-     "from": 9534,
-     "to": 9549
+     "from": 9579,
+     "to": 9594
     }
    ]
   }

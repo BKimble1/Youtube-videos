@@ -32,7 +32,7 @@ ROWS = [
      "README; geometry_check.py visibility checks", f"{GHC}; layout v1",
      "Illustrative room: partition blocks every straight sensor-to-person line (71 checks pass)",
      "illustrative", "direct; derivation", "geometry checks pass", "S1"),
-    ("C02", "The opening/act-4 plot shows the authors' own released measurements, from a study published in 2026: a sensor held still and aimed at a wall while a hidden person moved, processed with the authors' published tracking code; the files do not record whether the walker wore reflective material.",
+    ("C02", "The opening and V10 plot shows the authors' saved position estimates from their released files (how they were produced is not documented beyond the released tracking code), from a study published in 2026: a sensor held still and aimed at a wall while a hidden person moved; the files do not record whether the walker wore reflective material.",
      f"{GH} paper/captured_data/st_spad_person_tracking; paper/tracking.py",
      "475 frames, 4x4 zones x 128 bins, 250 ps; tracking.py run by us (seeds 0-2); stored particle means in the files",
      f"{GHC}; data first committed 2025-10-20 (capture date unresolved); paper published 20 May 2026",
@@ -92,7 +92,7 @@ ROWS = [
     ("C19", "The output is a likely location or a rough shape, not a photograph.",
      f"{PROJ}; {SPEC}", "FAQ ('not photographs'; 'sparse geometric and motion information'); lead author in IEEE Spectrum", "2026",
      "authors' own characterisation", "reported_by_authors", "search_summary", "consistent", "S4, S7"),
-    ("C20", "In 2012 an MIT team reported recovering the 3D shape of a small (about 20 cm) diffuse wooden mannequin around a corner (published 20 March 2012; experiment 2011 or earlier).",
+    ("C20", "In 2012 an MIT team reported recovering the 3D shape of a small (about 20 cm) diffuse mannequin around a corner (published 20 March 2012; experiment 2011 or earlier).",
      V12, "Velten et al., Nat. Commun. 3:745, Fig. 1", "published 20 March 2012",
      "diffuse mannequin; femtosecond laser + streak camera; acquisition time unresolved", "experimentally_supported",
      "search_summary; direct (figure copy via third-party mirror)", "medium-high", "S5"),
@@ -183,6 +183,10 @@ ROWS = [
 ]
 
 
+# claims shown on screen without a narration line citing them (v2 review r1, V2-R1-43)
+ON_SCREEN_ONLY = {"C22": "V7 (plate '2018 · Stanford' only)"}
+
+
 def main():
     segs = json.load(open(os.path.join(ROOT, "script/narration_segments.json")))["segments"]
     used = {}
@@ -201,6 +205,8 @@ def main():
                     "evidence_status", "access_method", "verification", "script_lines", "scene"])
         for r in ROWS:
             scenes = sorted({scene_of[s] for s in used.get(r[0], [])}, key=lambda x: int(x[1:]))
+            if not scenes and r[0] in ON_SCREEN_ONLY:
+                scenes = [ON_SCREEN_ONLY[r[0]]]
             w.writerow([r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], " ".join(used.get(r[0], [])),
                         " ".join(scenes) if scenes else f"not used in v2 (v1: {r[9]})"])
     print(f"wrote {out}: {len(ROWS)} claims; unused by script: {unused or 'none'}")

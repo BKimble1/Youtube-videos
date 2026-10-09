@@ -79,51 +79,94 @@ def srt_time(s):
     return f"{h:02d}:{m:02d}:{sec:02d},{ms:03d}"
 
 
-def build_srt(segments, max_chars=84, max_dur=5.5):
-    """Phrase-level cues from word timings, splitting at punctuation / length limits."""
-    cues = []
-    for seg in segments:
+GLUE = {"a", "an", "the", "of", "from", "to", "through", "under", "at", "on", "in", "with", "and", "or", "about",
+        "only", "farther", "known", "extra", "each", "hundred", "thirty", "fifteen", "its", "his", "their", "our",
+        "this", "that", "few", "many", "one", "two", "how", "what", "by", "for", "like", "into", "than"}
+
+
+def build_srt(segments, max_chars=84, max_dur=5.5, line_max=42):
+    """Phrase-level cues from word timings (v2): a segment is cut into phrases at punctuation, phrases are packed into
+    cues of at most max_chars / max_dur, a sentence end always ends a cue, and a phrase too long for one cue is split
+    at the most balanced point that does not leave a function word or a number word at the end of the first part.
+    Captions come in 2 frames before the aligned word (the aligner's starts trail the audible onset slightly)."""
+    def txt(ws):
+        return " ".join(w["word"] for w in ws)
+
+    def split_long(ws):
+        if len(txt(ws)) <= max_chars - 12 and ws[-1]["end"] - ws[0]["start"] <= max_dur:
+            return [ws]
+        best, score = None, 1e9
+        for k in range(2, len(ws) - 1):
+            if re.sub(r"[^a-z']", "", ws[k - 1]["word"].lower()) in GLUE:
+                continue
+            s = abs(len(txt(ws[:k])) - len(txt(ws[k:])))
+            if s < score:
+                best, score = k, s
+        if best is None:
+            best = len(ws) // 2
+        return split_long(ws[:best]) + split_long(ws[best:])
+
+    cues, seg_of = [], []
+    for si, seg in enumerate(segments):
         words = seg["words_abs"]
-        cur = []
-        for i, w in enumerate(words):
+        phrases, cur = [], []
+        for w in words:
             cur.append(w)
-            text = " ".join(x["word"] for x in cur)
-            end_punct = re.search(r"[.?!:;,]['\"’”]?$", w["word"]) is not None
-            strong = re.search(r"[.?!]['\"’”]?$", w["word"]) is not None
-            last = i == len(words) - 1
-            too_long = len(text) > max_chars - 12 or (cur[-1]["end"] - cur[0]["start"]) > max_dur
-            remaining = len(words) - 1 - i
-            if too_long and not strong and 0 < remaining <= 2:
-                too_long = False  # keep a short tail ("title.") with its phrase instead of a flash cue
-            if last or strong or (end_punct and len(text) > 28) or too_long:
-                cues.append((cur[0]["start"], cur[-1]["end"], text))
+            if re.search(r"[.?!:;,…]['\"’”]?$", w["word"]):
+                phrases.append(cur)
                 cur = []
-    # merge very short trailing fragments ("title.", "Four.") into the previous cue when it fits
+        if cur:
+            phrases.append(cur)
+        pack = []
+        for ph in phrases:
+            for part in split_long(ph):
+                if pack and (len(txt(pack + part)) > max_chars - 12 or part[-1]["end"] - pack[0]["start"] > max_dur):
+                    cues.append(pack)
+                    seg_of.append(si)
+                    pack = []
+                pack = pack + part
+                if re.search(r"[.?!]['\"’”]?$", part[-1]["word"]):
+                    cues.append(pack)
+                    seg_of.append(si)
+                    pack = []
+        if pack:
+            cues.append(pack)
+            seg_of.append(si)
+    cues = [(c[0]["start"], c[-1]["end"], txt(c), s) for c, s in zip(cues, seg_of)]
+    # merge a short cue (a brief sentence, a tail) into the previous one of the same line when they fit together
     merged = []
-    for a, b, t in cues:
-        if merged and len(t.split()) <= 2 and len(merged[-1][2]) + 1 + len(t) <= max_chars and a - merged[-1][1] < 0.6:
-            pa, pb, pt = merged[-1]
-            merged[-1] = (pa, b, pt + " " + t)
+    for a, b, t, s in cues:
+        if merged and merged[-1][3] == s and (len(t.split()) <= 2 or b - a < 1.4) \
+                and len(merged[-1][2]) + 1 + len(t) <= max_chars and a - merged[-1][1] < 0.6 \
+                and b - merged[-1][0] <= max_dur + 1.0:
+            pa, pb, pt, _ = merged[-1]
+            merged[-1] = (pa, b, pt + " " + t, s)
         else:
-            merged.append((a, b, t))
-    cues = merged
-    # enforce min duration, then let each cue linger into the following pause (up to 0.6 s, and
-    # long enough for about 17 characters per second where the pause allows); never overlap
+            merged.append((a, b, t, s))
+    merged = [(a, b, t) for a, b, t, _ in merged]
+    lead = 2 / 30
+    cues = [(max(0.0, a - lead), b, t) for a, b, t in merged]
+    # enforce min duration, then let each cue linger into the following pause (up to 0.9 s, and long enough for
+    # about 17 characters per second where the pause allows); never overlap
     fixed = []
     for i, (a, b, t) in enumerate(cues):
-        b = max(b + min(0.6, max(0.3, len(t) / 17.0 - (b - a))), a + 0.9)
+        b = max(b + min(0.9, max(0.3, len(t) / 17.0 - (b - a))), a + 0.9)
         if i + 1 < len(cues):
             b = min(b, cues[i + 1][0] - 0.08)
+        if fixed:
+            a = max(a, fixed[-1][1] + 0.04)
         fixed.append((a, b, t))
     lines = []
     for i, (a, b, t) in enumerate(fixed, 1):
-        # wrap to two lines of <= 42 chars where possible
-        if len(t) > 42:
+        # wrap to two lines of <= line_max chars, balanced, not leaving a function word at the end of line 1
+        if len(t) > line_max:
             words = t.split()
             best, best_score = None, 1e9
             for k in range(1, len(words)):
                 l1, l2 = " ".join(words[:k]), " ".join(words[k:])
-                score = abs(len(l1) - len(l2)) + (100 if max(len(l1), len(l2)) > 44 else 0)
+                score = abs(len(l1) - len(l2)) + (100 if max(len(l1), len(l2)) > line_max else 0) \
+                    + (15 if re.sub(r"[^a-z']", "", words[k - 1].lower()) in GLUE else 0) \
+                    - (12 if re.search(r"[.?!:;,…]$", words[k - 1]) else 0)
                 if score < best_score:
                     best, best_score = (l1, l2), score
             t = best[0] + "\n" + best[1]

@@ -10,7 +10,7 @@ import {clamp01, f2, fontShorthand} from './util';
  *
  *  - headline  "Real data" (Fredoka 600, 64 px), top-left of the card (baseline y 116)
  *  - icon      optional small icon right of the headline (e.g. the 3×3 zone box), centred on the headline's middle
- *  - tag       optional corner tag top-right (a Chip, 34 px), e.g. "sped up"
+ *  - tag       optional corner tag top-right (a Chip, 40 px), e.g. "sped up"
  *  - source    one source line, 34 px, bottom-left (baseline y 914)
  *  - children  the plot: full-frame screen-space layers, drawn inside EVIDENCE.content
  *
@@ -24,7 +24,7 @@ export const EVIDENCE = {
   headline: {x: 150, baseline: 116, size: 64},
   /** the icon slot's centre when the headline is "Real data" (computed from the measured headline otherwise) */
   iconGap: 56,
-  tag: {x: 1790, y: 92, size: 34},
+  tag: {x: 1790, y: 92, size: 40},  // v2 review r1 (V2-R1-14): integrity tags legible at phone width
   source: {x: 150, baseline: 914, size: 34},
   /** where the plot may draw (inside the card, below the headline row, above the source line) */
   content: {x0: 120, y0: 146, x1: 1800, y1: 870},
@@ -44,7 +44,7 @@ export type EvidenceCardProps = {
   /** one source line (34 px) and its 0..1 progress */
   source?: string;
   sourceT?: number;
-  /** optional corner tag (34 px chip) and its 0..1 progress */
+  /** optional corner tag (40 px chip) and its 0..1 progress */
   tag?: string;
   tagT?: number;
   /** flat paper field behind the card, full frame (default true) */
