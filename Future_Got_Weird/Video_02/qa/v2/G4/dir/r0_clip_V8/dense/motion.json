@@ -1,0 +1,62 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V8": {
+   "seconds": 19.7,
+   "mean_energy": 0.998,
+   "still_seconds": 6.4,
+   "still_share": 0.324,
+   "longest_still_s": 2.13
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "?",
+   "from": 5449,
+   "to": 5472,
+   "seconds": 0.8,
+   "t": "3:01.6",
+   "spoken": "combined. Why would"
+  },
+  {
+   "scene": "V8",
+   "from": 5479,
+   "to": 5542,
+   "seconds": 2.13,
+   "t": "3:02.6",
+   "spoken": "Why would a smaller, cheaper sensor need that?"
+  },
+  {
+   "scene": "V8",
+   "from": 5594,
+   "to": 5626,
+   "seconds": 1.1,
+   "t": "3:06.5",
+   "spoken": "fainter echoes. The team's"
+  },
+  {
+   "scene": "V8",
+   "from": 5649,
+   "to": 5679,
+   "seconds": 1.03,
+   "t": "3:08.3",
+   "spoken": "smartphone-grade device had about a"
+  },
+  {
+   "scene": "V8",
+   "from": 5740,
+   "to": 5773,
+   "seconds": 1.13,
+   "t": "3:11.3",
+   "spoken": "hundred listening spots. And if"
+  },
+  {
+   "scene": "V8",
+   "from": 5975,
+   "to": 6004,
+   "seconds": 1.0,
+   "t": "3:19.2",
+   "spoken": "many quick, dim frames into"
+  }
+ ]
+}

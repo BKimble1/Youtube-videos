@@ -1,0 +1,54 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V10": {
+   "seconds": 29.0,
+   "mean_energy": 0.417,
+   "still_seconds": 6.9,
+   "still_share": 0.237,
+   "longest_still_s": 1.73
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V10",
+   "from": 7450,
+   "to": 7493,
+   "seconds": 1.47,
+   "t": "4:08.3",
+   "spoken": "dollars, held still while a person walked"
+  },
+  {
+   "scene": "V10",
+   "from": 7502,
+   "to": 7538,
+   "seconds": 1.23,
+   "t": "4:10.1",
+   "spoken": "walked behind a partition. Many of"
+  },
+  {
+   "scene": "V10",
+   "from": 7721,
+   "to": 7744,
+   "seconds": 0.8,
+   "t": "4:17.4",
+   "spoken": "light straight back. Our"
+  },
+  {
+   "scene": "V10",
+   "from": 7746,
+   "to": 7794,
+   "seconds": 1.63,
+   "t": "4:18.2",
+   "spoken": "back. Our clip's files don't"
+  },
+  {
+   "scene": "V10",
+   "from": 7799,
+   "to": 7850,
+   "seconds": 1.73,
+   "t": "4:20.0",
+   "spoken": "files don't say if the walker wore any. But"
+  }
+ ]
+}

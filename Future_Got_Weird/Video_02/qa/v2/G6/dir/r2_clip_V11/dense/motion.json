@@ -1,0 +1,38 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V11": {
+   "seconds": 32.5,
+   "mean_energy": 1.16,
+   "still_seconds": 4.1,
+   "still_share": 0.127,
+   "longest_still_s": 2.03
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V11",
+   "from": 8055,
+   "to": 8115,
+   "seconds": 2.03,
+   "t": "4:28.5",
+   "spoken": "second. What might this be good for? Picture"
+  },
+  {
+   "scene": "V11",
+   "from": 8794,
+   "to": 8820,
+   "seconds": 0.9,
+   "t": "4:53.1",
+   "spoken": "small hardware. The researchers"
+  },
+  {
+   "scene": "V11",
+   "from": 8870,
+   "to": 8905,
+   "seconds": 1.2,
+   "t": "4:55.7",
+   "spoken": "early-stage prototype. For now,"
+  }
+ ]
+}

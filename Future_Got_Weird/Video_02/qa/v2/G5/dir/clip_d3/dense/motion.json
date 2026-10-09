@@ -1,0 +1,78 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V9": {
+   "seconds": 37.6,
+   "mean_energy": 0.442,
+   "still_seconds": 9.0,
+   "still_share": 0.239,
+   "longest_still_s": 1.8
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V9",
+   "from": 6200,
+   "to": 6229,
+   "seconds": 1.0,
+   "t": "3:26.7",
+   "spoken": "shifts in time. The sensor"
+  },
+  {
+   "scene": "V9",
+   "from": 6310,
+   "to": 6339,
+   "seconds": 1.0,
+   "t": "3:30.3",
+   "spoken": "spots land somewhere new. Just"
+  },
+  {
+   "scene": "V9",
+   "from": 6365,
+   "to": 6394,
+   "seconds": 1.0,
+   "t": "3:32.2",
+   "spoken": "them up, and echoes from different places"
+  },
+  {
+   "scene": "V9",
+   "from": 6685,
+   "to": 6716,
+   "seconds": 1.07,
+   "t": "3:42.8",
+   "spoken": "object still and step the sensor"
+  },
+  {
+   "scene": "V9",
+   "from": 6751,
+   "to": 6778,
+   "seconds": 0.93,
+   "t": "3:45.0",
+   "spoken": "known positions, spreading"
+  },
+  {
+   "scene": "V9",
+   "from": 6789,
+   "to": 6842,
+   "seconds": 1.8,
+   "t": "3:46.3",
+   "spoken": "spreading out its listening spots. That's how the U was"
+  },
+  {
+   "scene": "V9",
+   "from": 6848,
+   "to": 6882,
+   "seconds": 1.17,
+   "t": "3:48.3",
+   "spoken": "how the U was made. To follow a person,"
+  },
+  {
+   "scene": "V9",
+   "from": 6901,
+   "to": 6931,
+   "seconds": 1.03,
+   "t": "3:50.0",
+   "spoken": "person, hold the sensor still,"
+  }
+ ]
+}

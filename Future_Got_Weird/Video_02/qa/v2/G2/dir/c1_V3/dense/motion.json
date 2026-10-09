@@ -1,0 +1,30 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V3": {
+   "seconds": 20.4,
+   "mean_energy": 1.435,
+   "still_seconds": 2.3,
+   "still_share": 0.113,
+   "longest_still_s": 1.27
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V3",
+   "from": 967,
+   "to": 1004,
+   "seconds": 1.27,
+   "t": "0:32.2",
+   "spoken": "puzzle: why does a plain wall work at"
+  },
+  {
+   "scene": "V3",
+   "from": 1235,
+   "to": 1265,
+   "seconds": 1.03,
+   "t": "0:41.2",
+   "spoken": "every which way, so each spot"
+  }
+ ]
+}

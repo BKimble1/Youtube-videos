@@ -1,0 +1,126 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V5": {
+   "seconds": 61.1,
+   "mean_energy": 0.507,
+   "still_seconds": 19.5,
+   "still_share": 0.32,
+   "longest_still_s": 2.53
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V5",
+   "from": 2344,
+   "to": 2386,
+   "seconds": 1.43,
+   "t": "1:18.1",
+   "spoken": "Simplify it: the sensor flashes"
+  },
+  {
+   "scene": "V5",
+   "from": 2390,
+   "to": 2429,
+   "seconds": 1.33,
+   "t": "1:19.7",
+   "spoken": "sensor flashes and listens at one spot"
+  },
+  {
+   "scene": "V5",
+   "from": 2470,
+   "to": 2493,
+   "seconds": 0.8,
+   "t": "1:22.3",
+   "spoken": "wall. Light covers about thirty"
+  },
+  {
+   "scene": "V5",
+   "from": 2498,
+   "to": 2524,
+   "seconds": 0.9,
+   "t": "1:23.3",
+   "spoken": "about thirty centimetres every nanosecond."
+  },
+  {
+   "scene": "V5",
+   "from": 2719,
+   "to": 2774,
+   "seconds": 1.87,
+   "t": "1:30.6",
+   "spoken": "about fifteen centimetres farther from the wall spot."
+  },
+  {
+   "scene": "V5",
+   "from": 2779,
+   "to": 2813,
+   "seconds": 1.17,
+   "t": "1:32.6",
+   "spoken": "the wall spot. Measure the extra"
+  },
+  {
+   "scene": "V5",
+   "from": 3133,
+   "to": 3159,
+   "seconds": 0.9,
+   "t": "1:44.4",
+   "spoken": "a second spot. Another"
+  },
+  {
+   "scene": "V5",
+   "from": 3168,
+   "to": 3193,
+   "seconds": 0.87,
+   "t": "1:45.6",
+   "spoken": "Another delay, another arc."
+  },
+  {
+   "scene": "V5",
+   "from": 3386,
+   "to": 3419,
+   "seconds": 1.13,
+   "t": "1:52.9",
+   "spoken": "bit fuzzy, so each arc is"
+  },
+  {
+   "scene": "V5",
+   "from": 3443,
+   "to": 3501,
+   "seconds": 1.97,
+   "t": "1:54.8",
+   "spoken": "really a band, and the bands overlap in a small patch."
+  },
+  {
+   "scene": "V5",
+   "from": 3560,
+   "to": 3635,
+   "seconds": 2.53,
+   "t": "1:58.7",
+   "spoken": "are close, so the patch is long and blurry. Spread"
+  },
+  {
+   "scene": "V5",
+   "from": 3672,
+   "to": 3720,
+   "seconds": 1.63,
+   "t": "2:02.4",
+   "spoken": "it shrinks. In practice, a computer"
+  },
+  {
+   "scene": "V5",
+   "from": 3929,
+   "to": 3967,
+   "seconds": 1.3,
+   "t": "2:11.0",
+   "spoken": "on assumptions, like what kind of object"
+  },
+  {
+   "scene": "V5",
+   "from": 4064,
+   "to": 4114,
+   "seconds": 1.7,
+   "t": "2:15.5",
+   "spoken": "likely location, or a rough shape."
+  }
+ ]
+}
