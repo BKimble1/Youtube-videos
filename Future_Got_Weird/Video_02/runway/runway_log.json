@@ -25,8 +25,8 @@
    "cost_credits": 60.0,
    "raw_output": null,
    "measured": null,
-   "status": "pending",
-   "reason": "generated (1920x1080, 5.04 s per Runway metadata); download blocked: the session's network policy denies dnznrvs05pmza.cloudfront.net (Runway outputs). Not inspected yet.",
+   "status": "rejected",
+   "reason": "not used: generated (1920x1080, 5.04 s per Runway metadata) but the session's network policy blocks Runway's output host, so it could not be downloaded or inspected; the Remotion shot is in the film. Retrievable from the owner's Runway library.",
    "selected_range": null
   }
  ],

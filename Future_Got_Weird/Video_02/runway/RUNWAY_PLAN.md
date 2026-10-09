@@ -31,3 +31,13 @@ Worst case for R1, R3, R4: 6 × 60 = 360 credits; with R2: 480 (inside the 500 c
 **Resolution honesty:** if a clip is 1080p (or 720p) at 24 fps, it stays that source quality inside the 30 fps
 composition (frames are shown nearest-frame, never optical-flow interpolated, which deforms line art), and in the
 3840×2160 master it is an upscale, logged as such, never called native 4K.
+
+## Outcome (9 October 2026)
+
+One job was run: R3, attempt 1 (60 credits, measured). Its output is hosted on a CloudFront domain that this
+environment's network policy blocks, so it could not be downloaded or inspected, and no further jobs were run (spending
+credits on clips that cannot be checked would break the brief's inspection rule). **No Runway insert is in v1**; every
+candidate shot (R1, R3, R4) plays as its reviewed Remotion version, which was always the fallback. Total Runway spend:
+**60 credits** of the 500 cap. To add inserts later: allow `dnznrvs05pmza.cloudfront.net` and `d2jqrm6oza8nb6.cloudfront.net`
+in the environment's network settings, fetch R3 (task id in `runway_log.json`), render the R1/R4 plates with
+`PLATE=1 node stills.mjs`, and place accepted clips with `src/data/inserts.json` (`inScene: true`) and `RunwayInsert`.
