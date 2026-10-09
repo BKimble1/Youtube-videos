@@ -4,27 +4,35 @@ import {SceneOffset} from './lib/SceneFrame';
 import {TL} from './lib/timeline';
 import {E, tw} from './lib/motion';
 import {C} from './theme';
-import {S1ColdOpen} from './scenes/S1_ColdOpen';
-import {S2Mirror} from './scenes/S2_Mirror';
-import {S3Echo} from './scenes/S3_Echo';
-import {S4Geometry} from './scenes/S4_Geometry';
-import {S5History} from './scenes/S5_History';
-import {S6Small} from './scenes/S6_Small';
-import {S7Results} from './scenes/S7_Results';
-import {S8Warehouse} from './scenes/S8_Warehouse';
-import {S9Payoff} from './scenes/S9_Payoff';
+import {V1HideTrack} from './scenes/V1_HideTrack';
+import {V2LongWay} from './scenes/V2_LongWay';
+import {V3MirrorPaint} from './scenes/V3_MirrorPaint';
+import {V4LaterWeaker} from './scenes/V4_LaterWeaker';
+import {V5DelayPlace} from './scenes/V5_DelayPlace';
+import {V6RealU} from './scenes/V6_RealU';
+import {V7Museum} from './scenes/V7_Museum';
+import {V8SmallSensor} from './scenes/V8_SmallSensor';
+import {V9Fusion} from './scenes/V9_Fusion';
+import {V10KitClip} from './scenes/V10_KitClip';
+import {V11Warehouse} from './scenes/V11_Warehouse';
+import {V12Callback} from './scenes/V12_Callback';
+import {V13EndScreen} from './scenes/V13_EndScreen';
 import inserts from './data/inserts.json';
 
 export const SCENES: Record<string, React.FC> = {
-  S1: S1ColdOpen,
-  S2: S2Mirror,
-  S3: S3Echo,
-  S4: S4Geometry,
-  S5: S5History,
-  S6: S6Small,
-  S7: S7Results,
-  S8: S8Warehouse,
-  S9: S9Payoff,
+  V1: V1HideTrack,
+  V2: V2LongWay,
+  V3: V3MirrorPaint,
+  V4: V4LaterWeaker,
+  V5: V5DelayPlace,
+  V6: V6RealU,
+  V7: V7Museum,
+  V8: V8SmallSensor,
+  V9: V9Fusion,
+  V10: V10KitClip,
+  V11: V11Warehouse,
+  V12: V12Callback,
+  V13: V13EndScreen,
 };
 
 /**
@@ -35,16 +43,9 @@ export const SCENES: Record<string, React.FC> = {
  */
 export type Transition = {type: 'cut'} | {type: 'reveal'; dur: number} | {type: 'wipe'; dur: number; dir: 'left' | 'right'};
 
-export const TRANSITIONS: Record<string, Transition> = {
-  S2: {type: 'cut'}, // the room → the mirror bench close-up
-  S3: {type: 'cut'}, // postcard / timing bars → raised room view
-  S4: {type: 'wipe', dur: 12, dir: 'right'}, // raw-data board → the room, which folds flat
-  S5: {type: 'cut'}, // matched: the plan board (HANDOFF.S4S5) rolls up onto the history shelf
-  S6: {type: 'cut'}, // the rope clips across the shelf → close-up of the empty fourth plinth
-  S7: {type: 'wipe', dur: 12, dir: 'left'}, // the motion plans → the real-data evidence board
-  S8: {type: 'wipe', dur: 12, dir: 'right'}, // results → the warehouse
-  S9: {type: 'wipe', dur: 12, dir: 'left'}, // warehouse → back in the room
-};
+// v2: every scene boundary is a hard cut; matches are staged inside the scenes so the last and first frames line up
+// (v2/SHOTPLAN_V2.md "Transitions"). The v1 map (wipes into S4, S7, S8, S9) is in git history at 40183b0.
+export const TRANSITIONS: Record<string, Transition> = {};
 
 const earlyOf = (t: Transition | undefined) => (!t || t.type === 'cut' ? 0 : t.type === 'reveal' ? t.dur : Math.ceil(t.dur / 2));
 const lateOf = (t: Transition | undefined) => (!t || t.type === 'cut' || t.type === 'reveal' ? 0 : Math.ceil(t.dur / 2));
