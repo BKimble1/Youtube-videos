@@ -637,15 +637,23 @@
 "t": 147.533,
 "kind": "arc_draw",
 "gain": 0,
-"note": "arc 1 sweep"
+"note": "arc 1 sweep, up to him"
 },
 {
 "scene": "S4",
-"f": 4451,
-"t": 148.367,
+"f": 4460,
+"t": 148.667,
+"kind": "arc_draw",
+"gain": 0,
+"note": "arc 1 sweep, on round from him"
+},
+{
+"scene": "S4",
+"f": 4446,
+"t": 148.2,
 "kind": "pop_tick",
 "gain": -9,
-"note": "the sweeping tip passes him: his token pulses"
+"note": "the sweeping tip stops on him: his token pulses"
 },
 {
 "scene": "S4",
@@ -833,16 +841,16 @@
 },
 {
 "scene": "S4",
-"f": 5636,
-"t": 187.867,
+"f": 5626,
+"t": 187.533,
 "kind": "card_flick",
 "gain": -3,
 "note": "photo frame lands"
 },
 {
 "scene": "S4",
-"f": 5651,
-"t": 188.367,
+"f": 5650,
+"t": 188.333,
 "kind": "stamp_light",
 "gain": -3,
 "note": "crossed out"
@@ -1345,6 +1353,14 @@
 },
 {
 "scene": "S6",
+"f": 8675,
+"t": 289.167,
+"kind": "tiny_clink",
+"gain": -10,
+"note": "right panel: the sensor stands on its tripod, her hand lets go"
+},
+{
+"scene": "S6",
 "f": 8726,
 "t": 290.867,
 "kind": "footstep_wood",
@@ -1577,8 +1593,8 @@
 },
 {
 "scene": "S7",
-"f": 9497,
-"t": 316.567,
+"f": 9509,
+"t": 316.967,
 "kind": "card_flick",
 "gain": -8,
 "note": "board turned: the strip faces the wall"
@@ -2457,16 +2473,16 @@
 },
 {
 "scene": "S9",
-"f": 11658,
-"t": 388.6,
+"f": 11656,
+"t": 388.533,
 "kind": "footstep_wood",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11666,
-"t": 388.867,
+"f": 11664,
+"t": 388.8,
 "kind": "footstep_wood",
 "gain": -9,
 "note": ""
@@ -2489,24 +2505,24 @@
 },
 {
 "scene": "S9",
-"f": 11680,
-"t": 389.333,
+"f": 11682,
+"t": 389.4,
 "kind": "footstep_wood",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11685,
-"t": 389.5,
+"f": 11687,
+"t": 389.567,
 "kind": "cloth_rustle",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "S9",
-"f": 11699,
-"t": 389.967,
+"f": 11701,
+"t": 390.033,
 "kind": "uh_oh",
 "gain": -2,
 "note": "J4: he opens his eyes and she is right there"
