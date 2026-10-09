@@ -72,3 +72,10 @@ No tool in this session can operate the owner's ChatGPT project or its image gen
 other image models, which would spend the same Runway credits; the accepted Video 01 cast is an SVG rig in code, so the
 film's characters are extended directly in code (exact continuity), and the ChatGPT packet is prepared as the planned
 bridge for richer plates and alternate drawings.
+
+## Found later (8 October 2026)
+
+- Runway uploads work (the signed PUT goes to `runway-datasets.s3.us-east-1.amazonaws.com`), but generated outputs and
+  hosted assets are served from `dnznrvs05pmza.cloudfront.net` and `d2jqrm6oza8nb6.cloudfront.net`, which this
+  environment's network policy denies (proxy `connect_rejected`). Generated clips therefore cannot be downloaded here.
+- Measured Runway price: Kling 3.0 Pro image-to-video with start and end frames, 5 s, 1080p, no audio = 60 credits.
