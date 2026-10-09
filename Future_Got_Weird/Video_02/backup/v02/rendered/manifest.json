@@ -1,0 +1,77 @@
+{
+ "part_bytes": 25165824,
+ "files": [
+  {
+   "name": "v02_audio_rendered.tar",
+   "bytes": 324382720,
+   "sha256": "f8ef0fe1b8ab04e64bf996d77a2f6078fa0377595c18c1f80a792ce74e8989bb",
+   "parts": [
+    {
+     "name": "v02_audio_rendered.tar.part001",
+     "bytes": 25165824,
+     "sha256": "44f6e68afa1297d94b80c0d365397f5616199703074124b0b00b5dbec1952f0c"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part002",
+     "bytes": 25165824,
+     "sha256": "61c8658de65fd968a86f069747176b0984c92f4b179640d302566142c788ec6e"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part003",
+     "bytes": 25165824,
+     "sha256": "e8f92782dd93df6158857916227064135e35c687ddf7f662d6cf68b6e6d0e6cf"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part004",
+     "bytes": 25165824,
+     "sha256": "f9d91a6ca78b5b3986211dd6b8e32f5bf6b8de80cf286f16e95117945d48e69b"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part005",
+     "bytes": 25165824,
+     "sha256": "2f9aa5448ac4a88e95fcc9d3e86d9bee188805f17a8b4265f6aba4c29e14c80d"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part006",
+     "bytes": 25165824,
+     "sha256": "791ea0cfebaf5e8579ab0d41e3e423c00272cd26df4d9b4ef9e0eac1e7bc387f"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part007",
+     "bytes": 25165824,
+     "sha256": "273041d2ae733210bef9cccb9c41ae7b087c4afd9db2bde609bed056e6f8500b"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part008",
+     "bytes": 25165824,
+     "sha256": "a537cf765154c1fd08313424d5fb751f18644888aeea6fbb4b7588271a5e86d6"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part009",
+     "bytes": 25165824,
+     "sha256": "5b436eb9b50921102a278115b38bd268eced875bc44407f7de985d85f23fe546"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part010",
+     "bytes": 25165824,
+     "sha256": "672a7ee7759a17a1bf62a326b69d2ccbe60b3ca825a7a1348f71356cdafd71b9"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part011",
+     "bytes": 25165824,
+     "sha256": "fe1ce60433b3c42e7b207b139a7c93bc18d214551d974f2750d163248474a573"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part012",
+     "bytes": 25165824,
+     "sha256": "e2c12ec62b4ffe73348c3456c5a85b4b6b1df19828f560eaaeedaa8b82d27ae9"
+    },
+    {
+     "name": "v02_audio_rendered.tar.part013",
+     "bytes": 22392832,
+     "sha256": "6e4e520c1d8125730127206994b1bab495c9a70d2f9b1b51565091252a861082"
+    }
+   ]
+  }
+ ]
+}

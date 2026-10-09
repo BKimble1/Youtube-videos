@@ -119,12 +119,10 @@ def group_rendered():
     for w in wavs:
         info = sf.info(w)
         if info.subtype not in ('PCM_16', 'PCM_24'):
-            # float WAVs (the effect/ambience tracks): store as 24-bit FLAC would not be exact -> keep the WAV bytes
-            entry = {'wav': rel(w), 'subtype': info.subtype, 'stored': 'raw', 'wav_sha256': sha_file(w), 'wav_bytes': os.path.getsize(w)}
-            raw = os.path.join(flac_dir, rel(w))
-            os.makedirs(os.path.dirname(raw), exist_ok=True)
-            shutil.copy2(w, raw)
-            entry['file'] = rel(w)
+            # float WAVs (the effect and ambience tracks) cannot be stored sample-exact as FLAC; they are regenerated
+            # exactly from audio/sfx/v2/cues.json + the effect library by tools/make_sfx_v2.py (seeded), so record them
+            entry = {'wav': rel(w), 'subtype': info.subtype, 'stored': 'regenerable', 'tool': 'tools/make_sfx_v2.py',
+                     'wav_sha256': sha_file(w), 'wav_bytes': os.path.getsize(w)}
             index.append(entry)
             continue
         data, sr = sf.read(w, dtype='int32', always_2d=True)
@@ -146,14 +144,15 @@ def group_rendered():
         index.append(entry)
     idx = os.path.join(flac_dir, 'wav_index.json')
     json.dump(index, open(idx, 'w'), indent=1)
-    files = sorted({os.path.join(flac_dir, e['file']) for e in index}) + [idx]
+    files = sorted({os.path.join(flac_dir, e['file']) for e in index if 'file' in e}) + [idx]
     b = os.path.join(STAGE, 'v02_audio_rendered.tar')
     tar(b, files, [os.path.relpath(f, flac_dir) for f in files])
     return [b], len(index)
 
 
 def group_films():
-    films = [f for f in walk('exports', {'.mp4'}) if os.path.basename(f).startswith('Future_Got_Weird_Video_02_v1_')]
+    keep = ('_MASTER_4K.mp4', '_UPLOAD_1080p.mp4', '_PREVIEW_720p.mp4')  # the delivered films only (not review renders)
+    films = [f for f in walk('exports', {'.mp4'}) if os.path.basename(f).startswith('Future_Got_Weird_Video_02_v1_') and f.endswith(keep)]
     return films, len(films)
 
 
