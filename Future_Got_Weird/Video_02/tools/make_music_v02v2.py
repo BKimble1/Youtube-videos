@@ -13,7 +13,8 @@ lines of v2/SHOTPLAN_V2.md and the music paragraph of v2/REVISION_BRIEF.md.
   B  V3-V4   the pulse continues, lighter; complete stop for the duck on "visible", resumes on s11; thins under s14;
              a short drop from "tiny" into "This is real data", a modest lift on "zoom in to see", quiet under s16
   C  V5-V6   the quietest bed: clockwork-light, a small tick layer per arc; full stop for "one place" (J3b), resumes on
-             s21; near-silence on the switch ("And here's a real one."), a modest lift as the U resolves (s37 + hold)
+             s21; a near-silent beat (0.6 s) on the V6 switch, then a soft held pad under n13 ("And here's a real
+             one."), and a modest lift as the U resolves (s37 + hold)
   D  V7      a brisker variation of the pulse (Bb major, walking bass, 16th pickups); thins under s31; warm on n16
   E  V8-V9   a quieter bed under the fusion explanation; a small lift on "keeps up instead of smearing"
   F  V10-V11 a modest lift as the real board returns (n24); quiet under the conditions; a light, cautious mechanical
@@ -124,7 +125,9 @@ SEGMENTS = {
     'geometry': ('C', 'QUIETEST: clockwork-light marimba tick-tock, a pizzicato root, long bass; + a soft hat tick layer at '
                       'the first arc, + marimba off-beat pings at the second; FULL STOP for "one place", resumes on s21',
                  -8.0, 'bed'),
-    'hush_c': ('C', 'near-silence on the switch ("And here\'s a real one.")', None, 'drop'),
+    'hush_c': ('C', 'a near-silent beat (0.6 s) on the V6 switch', None, 'drop'),
+    'switch': ('C', 'a soft held Em9 pad under n13 "And here\'s a real one." (strings, one vibes note, low bass), a little '
+                    'under the C bed', -8.25, 'pad'),
     'U': ('C', 'MODEST LIFT as the U resolves: Cmaj7 -> Dsus -> Gadd9 on "U", guitar arpeggios, strings, vibes, tick; held '
                'through the hold into the museum', -5.5, 'lift'),
     'museum': ('D', 'brisker variation of the pulse (Bb major): walking bass, pizzicato 8ths, marimba 16th pickups, shaker '
@@ -148,7 +151,8 @@ SEGMENTS = {
                      'Dadd9), fades to exactly zero at the last sample', -2.5, 'bed'),
 }
 # reveal lifts: (lift, bed it rises from, bed after it or None when the next section starts)
-LIFTS = [('board', 'pulse', 'route'), ('bump', 'data', 'clue'), ('U', 'geometry', None), ('board2', 'keeps', 'conditions')]
+# (the U also rises +2.5 LU over the C bed it follows, reported as 'also over')
+LIFTS = [('board', 'pulse', 'route'), ('bump', 'data', 'clue'), ('U', 'switch', None, 'geometry'), ('board2', 'keeps', 'conditions')]
 LIGHT_LIFTS = [('question', 'route'), ('idea', 'museum_thin'), ('keeps', 'fusion')]
 SECTIONS = {'A': ('V1', 'V2'), 'B': ('V3', 'V4'), 'C': ('V5', 'V6'), 'D': ('V7', 'V7'), 'E': ('V8', 'V9'),
             'F': ('V10', 'V11'), 'G': ('V12', 'V13')}
@@ -263,7 +267,8 @@ def plan(tl):
     for v in sc:
         cue[v] = S(v)
     hb_a = min(max(cue['tiny'], cue['s15'] - 0.8), cue['s15'] - 0.3)   # drop from "tiny" (0.3-0.8 s long)
-    hc_a = min(S('V6'), cue['n13']) - 0.05                             # near-silence from the switch
+    hc_a = S('V6')                                                     # a near-silent beat from the switch...
+    hc_b = min(hc_a + BEAT, cue['s37'] - 0.5)                          # ...then a soft pad under n13 until s37
     dip_a = cue['slow'] - 0.2
     seg_bounds = [
         ('pulse', 0.0, cue['researchers'] - 0.3),
@@ -278,7 +283,8 @@ def plan(tl):
         ('bump', cue['zoom'], cue['s16']),
         ('clue', cue['s16'], S('V5')),
         ('geometry', S('V5'), hc_a),
-        ('hush_c', hc_a, cue['s37']),
+        ('hush_c', hc_a, hc_b),
+        ('switch', hc_b, cue['s37']),
         ('U', cue['s37'], S('V7')),
         ('museum', S('V7'), cue['s31']),
         ('museum_thin', cue['s31'], cue['idea']),
@@ -311,8 +317,9 @@ def plan(tl):
          'cue': 's14 "tiny" -> s15', 'label': 'B: short drop from "tiny" into "This is real data" (s15), soft re-entry'},
         {'id': 'j3b', 'kind': 'stop', 'a': cue['one_place'] - 0.25, 'b': cue['s21'] - 0.1, 'cue': 's20 "one place"',
          'label': 'C: full stop for "one place" (s20, J3b), resumes on s21'},
-        {'id': 'hush_c', 'kind': 'drop', 'a': hc_a, 'b': cue['s37'], 'depth_db': -22.0, 'down_s': 0.25, 'up_s': 0.4,
-         'cue': 'V6 switch / n13', 'label': 'C: near-silence on the switch, "And here\'s a real one." (n13); lift on s37'},
+        {'id': 'hush_c', 'kind': 'drop', 'a': hc_a, 'b': hc_b, 'depth_db': -22.0, 'down_s': 0.1, 'up_s': 0.3,
+         'cue': 'V6 cut (switch)', 'label': 'C: a near-silent beat (0.6 s) on the V6 switch, then a soft held pad under n13 '
+         '"And here\'s a real one."; the U lift starts on s37'},
         {'id': 'brake', 'kind': 'dip', 'a': dip_a, 'b': cue['s43'], 'depth_db': -8.0, 'down_s': 0.3, 'up_s': 0.3,
          'cue': 's42 "slow down"', 'label': 'F: the groove brakes on "slow down" (s42): held Fmaj7 at -8 dB until s43'},
         {'id': 'j4', 'kind': 'stop', 'a': cue['too'], 'b': S('V13') - 0.02, 'cue': 's47 "too." -> V13',
@@ -332,6 +339,7 @@ def plan(tl):
     pts.append((u, 'Gadd9'))
     overrides = {
         'U': pts,
+        'switch': [(hc_b, 'Em9')],
         'brake': [(dip_a, 'Fmaj7')],
         'settle': [(cue['n30'], 'Gm9'), (cue['not_safety'], 'Dm9')],
         'hold': [(cue['s47'], 'A7sus')],
@@ -612,6 +620,11 @@ def compose(P):
         elif name == 'limits':
             add('strings', t0, d + 0.05, up[0], 22)
             add('strings', t0, d + 0.05, up[2], 20)
+        elif name == 'switch':   # n13: a soft held pad between the beat on the cut and the U lift
+            for jj, v in ((0, 24), (2, 22), (3, 22)):
+                add('strings', t0, d + 0.05, up[jj], v)
+            add('vibes', t0 + 0.05, d, up[3] + 12, 16)
+            add('bass', t0, d, root, 24)
 
     # ---- a new segment's chord sounds on its cue: when the cue falls between bar lines, the bass takes the new root there
     # (the grid's own bass waits for the next beat or bar), so the music carries across every cut
@@ -823,7 +836,7 @@ def eq(name, x):
 
 # ------------------------------------------------------------------------------------------------------------ dynamics
 def seg_ramp(prev_db, cur_db, name):
-    if SEGMENTS[name][3] in ('lift', 'light lift') or cur_db > prev_db:
+    if SEGMENTS[name][3] in ('lift', 'light lift', 'pad') or cur_db > prev_db:
         return 0.3
     return 0.8
 
@@ -1029,12 +1042,13 @@ def measure(P, bed, meter, ev, scale_db, seg_db, ramps, stem_info, tl):
                               'gain_db': None if seg_db[idx] is None else round(seg_db[idx] + scale_db, 2),
                               'entry_ramp_s': round(ramps.get(idx, 0.0), 2)})
     m['lifts'] = []
-    for lift, before, after in LIFTS:
+    for lift, before, after, *also in LIFTS:
         d1 = round(lvl[lift] - lvl[before], 2)
         d2 = round(lvl[lift] - lvl[after], 2) if after else None
-        ok = LIFT_LU[0] - 0.05 <= d1 <= LIFT_LU[1] + 0.05 and (d2 is None or LIFT_LU[0] - 0.05 <= d2 <= LIFT_LU[1] + 0.05)
+        d3 = round(lvl[lift] - lvl[also[0]], 2) if also else None
+        ok = all(d is None or LIFT_LU[0] - 0.05 <= d <= LIFT_LU[1] + 0.05 for d in (d1, d2, d3))
         m['lifts'].append({'lift': lift, 'over': before, 'over_lu': d1, 'then': after, 'over_next_lu': d2,
-                           'within_1.5_to_3_LU': ok})
+                           'also_over': also[0] if also else None, 'also_over_lu': d3, 'within_1.5_to_3_LU': ok})
     m['light_lifts'] = [{'lift': lf, 'over': b, 'over_lu': round(lvl[lf] - lvl[b], 2)} for lf, b in LIGHT_LIFTS]
     # every cue: the bed just before and just after (ungated K-weighted, up to 3 s, clear of the ramps)
     cues = []
@@ -1292,8 +1306,13 @@ def write_notes(P, m, plan_out):
           're-entry ramps, relative to the reference. Levels are set by calibration (pyloudnorm, iterated on the gained bed).', '',
           '## Lifts', '', '| Lift | Over the bed before | LU | Over the bed after | LU | 1.5-3 LU |', '|---|---|---|---|---|---|']
     for x in m['lifts']:
-        L.append(f"| {x['lift']} | {x['over']} | {x['over_lu']:+.2f} | {x['then'] or '(next section)'} | "
-                 f"{'—' if x['over_next_lu'] is None else f'{x['over_next_lu']:+.2f}'} | {'yes' if x['within_1.5_to_3_LU'] else 'NO'} |")
+        after_txt = x['then'] or '(next section)'
+        after_lu = '—' if x['over_next_lu'] is None else f"{x['over_next_lu']:+.2f}"
+        if x.get('also_over'):
+            after_txt += f"; also over {x['also_over']}"
+            after_lu += f"; {x['also_over_lu']:+.2f}"
+        L.append(f"| {x['lift']} | {x['over']} | {x['over_lu']:+.2f} | {after_txt} | {after_lu} | "
+                 f"{'yes' if x['within_1.5_to_3_LU'] else 'NO'} |")
     for x in m['light_lifts']:
         L.append(f"| {x['lift']} (light) | {x['over']} | {x['over_lu']:+.2f} | | | |")
     L += ['', '## Drops, stops, dips and every cue', '',
@@ -1312,7 +1331,7 @@ def write_notes(P, m, plan_out):
             L.append(f"| {f(c['at'])} | {c['cue']} | {c['kind']} | {c['before_lkfs']} | | {c['after_lkfs']} | "
                      f"{'—' if c['change_db'] is None else f'{c['change_db']:+.1f}'} |")
     L += ['', 'drop = no new notes, the bed down 20-22 dB with a short down-ramp, then a re-entry ramp (0.12 s for the board '
-          'lift on "researchers", 0.8 s into s15, 0.4 s into the U); stop = notes released, the bed muted with an 80 ms ramp '
+          'lift on "researchers", 0.8 s into s15, 0.3 s into the n13 pad); stop = notes released, the bed muted with an 80 ms ramp '
           '(digital silence), resuming on the cue with the bass and pizzicato root; dip = the groove stops, one held chord '
           'at -8 dB.', '',
           '## Scene cuts', '', 'The pulse runs on one grid and every new segment\'s chord starts on its cue, so the music '
@@ -1336,7 +1355,8 @@ def write_notes(P, m, plan_out):
           's02 "sensor", n01 "researchers" (the real board), n09 "timing", s15 "zoom", s37 "U", the board\'s return (V10) '
           'and after the last word.',
           '- **Clockwork-light** (C): a marimba tick-tock and a pizzicato root; a hat tick from the first arc (s19), marimba '
-          'off-beat pings from the second (s20); Cmaj7 -> Dsus -> Gadd9 as the U resolves.',
+          'off-beat pings from the second (s20); a near-silent beat on the V6 switch, a soft held Em9 pad under n13, then '
+          'Cmaj7 -> Dsus -> Gadd9 as the U resolves.',
           '- **Museum** (D): the pulse as a walk in Bb major with 16th pickups; the v1 clarinet line answered by bassoon.',
           '- **Warehouse** (F): v1\'s cautious A-minor groove; it brakes to a held Fmaj7 on "slow down".',
           '- **Ending** (G): held A7sus under s47, digital silence for the J4 beat, then Dadd9 - Gmaj7/D - Dadd9 with harp.', '',
@@ -1380,7 +1400,7 @@ def segment_cue_names(P):
     c = {
         'pulse': 'frame 1', 'hush_a': 'n01 "researchers" - 0.3 s', 'board': 'n01 "researchers"', 'route': 'V2 cut',
         'question': 'n06 start', 'puzzle': 'V3 cut', 'thin': 'V4 cut', 'hush_b': 's14 "tiny"', 'data': 's15 start',
-        'bump': 's15 "zoom"', 'clue': 's16 start', 'geometry': 'V5 cut', 'hush_c': 'V6 cut (switch)', 'U': 's37 start',
+        'bump': 's15 "zoom"', 'clue': 's16 start', 'geometry': 'V5 cut', 'hush_c': 'V6 cut (switch)', 'switch': 'V6 cut + 0.6 s (under n13)', 'U': 's37 start',
         'museum': 'V7 cut', 'museum_thin': 's31 start', 'idea': 'n16 start', 'small': 'V8 cut', 'fusion': 'V9 cut',
         'keeps': 'n23 "keeps"', 'board2': 'V10 cut (n24)', 'conditions': 'n25 start', 'warehouse': 'V11 cut',
         'brake': 's42 "slow" - 0.2 s', 'limits': 's43 start', 'settle': 'n30 start', 'callback': 'V12 cut',
@@ -1483,7 +1503,9 @@ def main():
     for s in m['segments']:
         print(f"  {s['segment']:12s} {s['from']:7.2f}-{s['to']:7.2f} target {s['target_lu']} measured {s['level_lu']}")
     for x in m['lifts']:
-        print(f"  lift {x['lift']:7s} +{x['over_lu']} over {x['over']}, {x['over_next_lu']} over {x['then']}  ok={x['within_1.5_to_3_LU']}")
+        also = f", {x['also_over_lu']} over {x['also_over']}" if x.get('also_over') else ''
+        print(f"  lift {x['lift']:7s} +{x['over_lu']} over {x['over']}, {x['over_next_lu']} over {x['then']}{also}"
+              f"  ok={x['within_1.5_to_3_LU']}")
     for c in m['cues']:
         print(f"  cue {c['at']:7.2f} {c['kind']:10s} {c['cue']:28s} before {c['before_lkfs']} "
               + (f"inside {c['inside_lkfs']} after {c['after_lkfs']} silence={c['digital_silence']}" if 'to' in c

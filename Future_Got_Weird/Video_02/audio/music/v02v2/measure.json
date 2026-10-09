@@ -38,8 +38,8 @@
    "to": 76.1,
    "lufs": -24.66,
    "lu_vs_reference": -4.66,
-   "rel_whole_lu": 0.11,
-   "lufs_after_mix_norm_-27": -26.89,
+   "rel_whole_lu": 0.12,
+   "lufs_after_mix_norm_-27": -26.88,
    "band_1_4k_share": 0.0022,
    "band_1_4k_share_max_1s": 0.0238,
    "band_1_4k_share_p95_1s": 0.012
@@ -48,11 +48,11 @@
    "scenes": "V5-V6",
    "from": 76.1,
    "to": 146.2,
-   "lufs": -27.47,
-   "lu_vs_reference": -7.47,
-   "rel_whole_lu": -2.7,
-   "lufs_after_mix_norm_-27": -29.7,
-   "band_1_4k_share": 0.0063,
+   "lufs": -27.41,
+   "lu_vs_reference": -7.41,
+   "rel_whole_lu": -2.63,
+   "lufs_after_mix_norm_-27": -29.63,
+   "band_1_4k_share": 0.0061,
    "band_1_4k_share_max_1s": 0.0317,
    "band_1_4k_share_p95_1s": 0.024
   },
@@ -62,8 +62,8 @@
    "to": 181.9,
    "lufs": -23.77,
    "lu_vs_reference": -3.77,
-   "rel_whole_lu": 0.99,
-   "lufs_after_mix_norm_-27": -26.01,
+   "rel_whole_lu": 1.0,
+   "lufs_after_mix_norm_-27": -26.0,
    "band_1_4k_share": 0.0097,
    "band_1_4k_share_max_1s": 0.0367,
    "band_1_4k_share_p95_1s": 0.026
@@ -137,22 +137,22 @@
   "V5": {
    "from": 76.1,
    "to": 137.17,
-   "lufs": -27.73,
-   "rel_whole_lu": -2.96,
+   "lufs": -27.74,
+   "rel_whole_lu": -2.97,
    "band_1_4k_share": 0.0061
   },
   "V6": {
    "from": 137.17,
    "to": 146.2,
-   "lufs": -25.73,
-   "rel_whole_lu": -0.96,
-   "band_1_4k_share": 0.0073
+   "lufs": -25.63,
+   "rel_whole_lu": -0.86,
+   "band_1_4k_share": 0.0063
   },
   "V7": {
    "from": 146.2,
    "to": 181.9,
    "lufs": -23.77,
-   "rel_whole_lu": 0.99,
+   "rel_whole_lu": 1.0,
    "band_1_4k_share": 0.0097
   },
   "V8": {
@@ -173,7 +173,7 @@
    "from": 239.2,
    "to": 268.2,
    "lufs": -25.48,
-   "rel_whole_lu": -0.71,
+   "rel_whole_lu": -0.7,
    "band_1_4k_share": 0.003
   },
   "V11": {
@@ -194,7 +194,7 @@
    "from": 311.07,
    "to": 321.06,
    "lufs": -22.42,
-   "rel_whole_lu": 2.35,
+   "rel_whole_lu": 2.36,
    "band_1_4k_share": 0.0037
   }
  },
@@ -347,26 +347,39 @@
    "section": "C",
    "role": "bed",
    "from": 76.1,
-   "to": 137.12,
+   "to": 137.17,
    "measured_from": 76.9,
-   "measured_to": 137.12,
+   "measured_to": 137.17,
    "target_lu": -8.0,
    "level_lu": -8.0,
-   "gain_db": 22.29,
+   "gain_db": 22.28,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "hush_c",
    "section": "C",
    "role": "drop",
-   "from": 137.12,
-   "to": 139.63,
-   "measured_from": 137.92,
-   "measured_to": 139.63,
+   "from": 137.17,
+   "to": 137.77,
+   "measured_from": 137.17,
+   "measured_to": 137.77,
    "target_lu": null,
    "level_lu": null,
    "gain_db": null,
-   "entry_ramp_s": 0.8
+   "entry_ramp_s": 0.6
+  },
+  {
+   "segment": "switch",
+   "section": "C",
+   "role": "pad",
+   "from": 137.77,
+   "to": 139.63,
+   "measured_from": 138.07,
+   "measured_to": 139.63,
+   "target_lu": -8.25,
+   "level_lu": -8.25,
+   "gain_db": 23.83,
+   "entry_ramp_s": 0.3
   },
   {
    "segment": "U",
@@ -378,7 +391,7 @@
    "measured_to": 146.2,
    "target_lu": -5.5,
    "level_lu": -5.5,
-   "gain_db": 16.73,
+   "gain_db": 16.75,
    "entry_ramp_s": 0.3
   },
   {
@@ -597,6 +610,8 @@
    "over_lu": 2.25,
    "then": "route",
    "over_next_lu": 2.75,
+   "also_over": null,
+   "also_over_lu": null,
    "within_1.5_to_3_LU": true
   },
   {
@@ -605,14 +620,18 @@
    "over_lu": 2.0,
    "then": "clue",
    "over_next_lu": 1.75,
+   "also_over": null,
+   "also_over_lu": null,
    "within_1.5_to_3_LU": true
   },
   {
    "lift": "U",
-   "over": "geometry",
-   "over_lu": 2.5,
+   "over": "switch",
+   "over_lu": 2.75,
    "then": null,
    "over_next_lu": null,
+   "also_over": "geometry",
+   "also_over_lu": 2.5,
    "within_1.5_to_3_LU": true
   },
   {
@@ -621,6 +640,8 @@
    "over_lu": 2.0,
    "then": "conditions",
    "over_next_lu": 2.5,
+   "also_over": null,
+   "also_over_lu": null,
    "within_1.5_to_3_LU": true
   }
  ],
@@ -743,7 +764,7 @@
    "cue": "clue -> geometry",
    "kind": "bed",
    "before_lkfs": -25.9,
-   "after_lkfs": -27.88,
+   "after_lkfs": -27.89,
    "change_db": -2.0
   },
   {
@@ -753,9 +774,9 @@
    "kind": "stop",
    "label": "C: full stop for \"one place\" (s20, J3b), resumes on s21",
    "seconds": 1.38,
-   "before_lkfs": -28.63,
+   "before_lkfs": -28.64,
    "inside_lkfs": -120.0,
-   "after_lkfs": -28.53,
+   "after_lkfs": -28.54,
    "drop_db": -91.4,
    "return_db": 91.5,
    "after_vs_before_db": 0.1,
@@ -763,26 +784,34 @@
    "peak_inside_dbfs": -240.0
   },
   {
-   "at": 137.12,
-   "to": 139.63,
-   "cue": "V6 switch / n13",
+   "at": 137.17,
+   "to": 137.77,
+   "cue": "V6 cut (switch)",
    "kind": "drop",
-   "label": "C: near-silence on the switch, \"And here's a real one.\" (n13); lift on s37",
-   "seconds": 2.52,
+   "label": "C: a near-silent beat (0.6 s) on the V6 switch, then a soft held pad under n13 \"And here's a real one.\"; the U lift starts on s37",
+   "seconds": 0.6,
    "before_lkfs": -26.9,
-   "inside_lkfs": -86.95,
-   "after_lkfs": -25.9,
-   "drop_db": -60.1,
-   "return_db": 61.1,
-   "after_vs_before_db": 1.0,
+   "inside_lkfs": -73.76,
+   "after_lkfs": -28.29,
+   "drop_db": -46.9,
+   "return_db": 45.5,
+   "after_vs_before_db": -1.4,
    "digital_silence": false,
-   "peak_inside_dbfs": -29.3
+   "peak_inside_dbfs": -29.7
+  },
+  {
+   "at": 139.63,
+   "cue": "switch -> U",
+   "kind": "lift",
+   "before_lkfs": -28.64,
+   "after_lkfs": -25.89,
+   "change_db": 2.8
   },
   {
    "at": 146.2,
    "cue": "U -> museum",
    "kind": "bed",
-   "before_lkfs": -25.08,
+   "before_lkfs": -25.05,
    "after_lkfs": -24.54,
    "change_db": 0.5
   },
@@ -942,9 +971,9 @@
   },
   "V5->V6": {
    "cut": 137.17,
-   "floor_dbfs": -87.6,
+   "floor_dbfs": -87.4,
    "floor_at": 137.57,
-   "local_rms_dbfs_4s": -32.7,
+   "local_rms_dbfs_4s": -30.7,
    "designed_window": "hush_c",
    "carried": true
   },
@@ -1033,7 +1062,7 @@
   },
   "vibes": {
    "gm_program": 11,
-   "notes": 106,
+   "notes": 107,
    "rms_dbfs": -45.5,
    "band_1_4k_share": 0.0004
   },
@@ -1046,8 +1075,8 @@
   "guitar": {
    "gm_program": 24,
    "notes": 30,
-   "rms_dbfs": -44.2,
-   "band_1_4k_share": 0.0097
+   "rms_dbfs": -44.0,
+   "band_1_4k_share": 0.0092
   },
   "harp": {
    "gm_program": 46,
@@ -1057,7 +1086,7 @@
   },
   "bass": {
    "gm_program": 32,
-   "notes": 252,
+   "notes": 253,
    "rms_dbfs": -30.7,
    "band_1_4k_share": 0.0
   },
@@ -1075,9 +1104,9 @@
   },
   "strings": {
    "gm_program": 49,
-   "notes": 171,
+   "notes": 174,
    "rms_dbfs": -35.4,
-   "band_1_4k_share": 0.0152
+   "band_1_4k_share": 0.0151
   },
   "drums": {
    "gm_program": 0,
@@ -1090,14 +1119,14 @@
   "events": {
    "pizz": 493,
    "marimba": 277,
-   "vibes": 106,
+   "vibes": 107,
    "glock": 14,
    "guitar": 30,
    "harp": 18,
-   "bass": 252,
+   "bass": 253,
    "bassoon": 23,
    "clarinet": 8,
-   "strings": 171,
+   "strings": 174,
    "drums": 501
   },
   "max_melodic_note": 79,
@@ -1125,9 +1154,9 @@
   "voice_or_choir_programs_used": []
  },
  "stem_sum_max_abs_diff": 1.1920928955078125e-06,
- "sha256_bed": "3a5671ec1b276e69caeabd8930824f6fa53c6e167fed2e415239fe9016adc8e1",
+ "sha256_bed": "406d2ecdaa51a0c272656c32f79eb0e0be26f279934a9f4a664b13db7c4f00f7",
  "calibration_passes_worst_error_lu": [
-  5.771,
+  6.164,
   0.254,
   0.0
  ],

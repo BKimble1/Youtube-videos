@@ -12,7 +12,7 @@ Nobody has listened to this bed: this environment cannot play audio. Everything 
 |---|---|---|---|---|---|
 | A | V1-V2 | 0:00.00–0:30.37 | -21.4 LUFS | -1.4 | 0.2% / 0.7% |
 | B | V3-V4 | 0:30.37–1:16.10 | -24.7 LUFS | -4.7 | 0.2% / 2.4% |
-| C | V5-V6 | 1:16.10–2:26.20 | -27.5 LUFS | -7.5 | 0.6% / 3.2% |
+| C | V5-V6 | 1:16.10–2:26.20 | -27.4 LUFS | -7.4 | 0.6% / 3.2% |
 | D | V7 | 2:26.20–3:01.90 | -23.8 LUFS | -3.8 | 1.0% / 3.7% |
 | E | V8-V9 | 3:01.90–3:59.20 | -26.8 LUFS | -6.8 | 0.1% / 1.0% |
 | F | V10-V11 | 3:59.20–5:00.70 | -25.2 LUFS | -5.2 | 0.3% / 2.6% |
@@ -35,8 +35,9 @@ Reference (0 LU) = -20.0 LUFS in the delivered bed; whole bed -24.77 LUFS. Secti
 | data | B | s15 start | 0:57.73–1:07.27 | soft re-entry under s15: a string drone, one pizzicato per bar | -6.00 | -6.00 |
 | bump | B | s15 "zoom" | 1:07.27–1:11.60 | MODEST LIFT as the bump appears ("zoom in to see"): strings, vibes, rising marimba, flash-and-echo tick | -4.00 | -4.00 |
 | clue | B | s16 start | 1:11.60–1:16.10 | quiet under s16 | -5.75 | -5.75 |
-| geometry | C | V5 cut | 1:16.10–2:17.12 | QUIETEST: clockwork-light marimba tick-tock, a pizzicato root, long bass; + a soft hat tick layer at the first arc, + marimba off-beat pings at the second; FULL STOP for "one place", resumes on s21 | -8.00 | -8.00 |
-| hush_c | C | V6 cut (switch) | 2:17.12–2:19.63 | near-silence on the switch ("And here's a real one.") | — | — |
+| geometry | C | V5 cut | 1:16.10–2:17.17 | QUIETEST: clockwork-light marimba tick-tock, a pizzicato root, long bass; + a soft hat tick layer at the first arc, + marimba off-beat pings at the second; FULL STOP for "one place", resumes on s21 | -8.00 | -8.00 |
+| hush_c | C | V6 cut (switch) | 2:17.17–2:17.77 | a near-silent beat (0.6 s) on the V6 switch | — | — |
+| switch | C | V6 cut + 0.6 s (under n13) | 2:17.77–2:19.63 | a soft held Em9 pad under n13 "And here's a real one." (strings, one vibes note, low bass), a little under the C bed | -8.25 | -8.25 |
 | U | C | s37 start | 2:19.63–2:26.20 | MODEST LIFT as the U resolves: Cmaj7 -> Dsus -> Gadd9 on "U", guitar arpeggios, strings, vibes, tick; held through the hold into the museum | -5.50 | -5.50 |
 | museum | D | V7 cut | 2:26.20–2:51.00 | brisker variation of the pulse (Bb major): walking bass, pizzicato 8ths, marimba 16th pickups, shaker 16ths, stately strings; clarinet line answered by bassoon | -3.50 | -3.50 |
 | museum_thin | D | s31 start | 2:51.00–2:56.00 | thins under s31: pizzicato quarters, strings | -5.50 | -5.50 |
@@ -63,7 +64,7 @@ Measured LU: integrated loudness after the segment's entry ramp, outside drop/st
 |---|---|---|---|---|---|
 | board | pulse | +2.25 | route | +2.75 | yes |
 | bump | data | +2.00 | clue | +1.75 | yes |
-| U | geometry | +2.50 | (next section) | — | yes |
+| U | switch | +2.75 | (next section); also over geometry | —; +2.50 | yes |
 | board2 | keeps | +2.00 | conditions | +2.50 | yes |
 | question (light) | route | +1.25 | | | |
 | idea (light) | museum_thin | +1.50 | | | |
@@ -84,10 +85,11 @@ Short-window levels: ungated K-weighted loudness (LKFS, EBU short-term length) o
 | 0:57.20–0:57.73 (0.53 s) | s14 "tiny" -> s15 | drop | -25.65 | -65.59 | -26.09 | in -39.9, back +39.5 |
 | 1:07.27 | data -> bump | lift | -26.05 | | -24.15 | +1.9 |
 | 1:11.60 | bump -> clue | bed | -23.69 | | -25.11 | -1.4 |
-| 1:16.10 | clue -> geometry | bed | -25.9 | | -27.88 | -2.0 |
-| 1:49.92–1:51.30 (1.38 s) | s20 "one place" | stop | -28.63 | digital silence | -28.53 | after vs before +0.1 |
-| 2:17.12–2:19.63 (2.52 s) | V6 switch / n13 | drop | -26.9 | -86.95 | -25.9 | in -60.1, back +61.1 |
-| 2:26.20 | U -> museum | bed | -25.08 | | -24.54 | +0.5 |
+| 1:16.10 | clue -> geometry | bed | -25.9 | | -27.89 | -2.0 |
+| 1:49.92–1:51.30 (1.38 s) | s20 "one place" | stop | -28.64 | digital silence | -28.54 | after vs before +0.1 |
+| 2:17.17–2:17.77 (0.60 s) | V6 cut (switch) | drop | -26.9 | -73.76 | -28.29 | in -46.9, back +45.5 |
+| 2:19.63 | switch -> U | lift | -28.64 | | -25.89 | +2.8 |
+| 2:26.20 | U -> museum | bed | -25.05 | | -24.54 | +0.5 |
 | 2:51.00 | museum -> museum_thin | bed | -23.6 | | -25.44 | -1.8 |
 | 2:56.00 | museum_thin -> idea | light lift | -25.73 | | -23.72 | +2.0 |
 | 3:01.90 | idea -> small | bed | -24.47 | | -25.48 | -1.0 |
@@ -102,7 +104,7 @@ Short-window levels: ungated K-weighted loudness (LKFS, EBU short-term length) o
 | 5:05.27 | callback -> hold | bed | -25.11 | | -25.63 | -0.5 |
 | 5:08.27–5:11.05 (2.78 s) | s47 "too." -> V13 | stop | -25.53 | digital silence | -23.03 | after vs before +2.5 |
 
-drop = no new notes, the bed down 20-22 dB with a short down-ramp, then a re-entry ramp (0.12 s for the board lift on "researchers", 0.8 s into s15, 0.4 s into the U); stop = notes released, the bed muted with an 80 ms ramp (digital silence), resuming on the cue with the bass and pizzicato root; dip = the groove stops, one held chord at -8 dB.
+drop = no new notes, the bed down 20-22 dB with a short down-ramp, then a re-entry ramp (0.12 s for the board lift on "researchers", 0.8 s into s15, 0.3 s into the n13 pad); stop = notes released, the bed muted with an 80 ms ramp (digital silence), resuming on the cue with the bass and pizzicato root; dip = the groove stops, one held chord at -8 dB.
 
 ## Scene cuts
 
@@ -114,7 +116,7 @@ The pulse runs on one grid and every new segment's chord starts on its cue, so t
 | V2->V3 | 0:30.37 | -28.0 dBFS | -23.8 dBFS |  | yes |
 | V3->V4 | 0:50.77 | -36.7 dBFS | -26.5 dBFS |  | yes |
 | V4->V5 | 1:16.10 | -31.9 dBFS | -27.2 dBFS |  | yes |
-| V5->V6 | 2:17.17 | -87.6 dBFS | -32.7 dBFS | hush_c | yes |
+| V5->V6 | 2:17.17 | -87.4 dBFS | -30.7 dBFS | hush_c | yes |
 | V6->V7 | 2:26.20 | -27.0 dBFS | -26.4 dBFS |  | yes |
 | V7->V8 | 3:01.90 | -29.8 dBFS | -25.7 dBFS |  | yes |
 | V8->V9 | 3:21.60 | -36.6 dBFS | -27.7 dBFS |  | yes |
@@ -131,7 +133,7 @@ The resolve starts on the end-screen cut (V13, 5:11.07), under s48; it fades fro
 
 - **Curious pulse** (A, recalled in B, F and G): pizzicato 8ths on the chord (v1's figure, with a sly chromatic step every fourth chord) over a staccato bass on every beat, soft shaker, a soft kick on 1; a bassoon tiptoe in the first two bars, recalled under n31.
 - **Flash and echo**: a glockenspiel tick on D8 (4.7 kHz) and a fainter echo on C8 0.45 s later, only on cues: s02 "sensor", n01 "researchers" (the real board), n09 "timing", s15 "zoom", s37 "U", the board's return (V10) and after the last word.
-- **Clockwork-light** (C): a marimba tick-tock and a pizzicato root; a hat tick from the first arc (s19), marimba off-beat pings from the second (s20); Cmaj7 -> Dsus -> Gadd9 as the U resolves.
+- **Clockwork-light** (C): a marimba tick-tock and a pizzicato root; a hat tick from the first arc (s19), marimba off-beat pings from the second (s20); a near-silent beat on the V6 switch, a soft held Em9 pad under n13, then Cmaj7 -> Dsus -> Gadd9 as the U resolves.
 - **Museum** (D): the pulse as a walk in Bb major with 16th pickups; the v1 clarinet line answered by bassoon.
 - **Warehouse** (F): v1's cautious A-minor groove; it brakes to a held Fmaj7 on "slow down".
 - **Ending** (G): held A7sus under s47, digital silence for the J4 beat, then Dadd9 - Gmaj7/D - Dadd9 with harp.
@@ -142,10 +144,10 @@ pizzicato strings (45), marimba (12), vibraphone (11), glockenspiel (9, ticks on
 
 ## Speech band
 
-Melodic notes at or below MIDI 79 (B5 = 988 Hz is the ceiling); ticks on 108, 110 (above 4 kHz); per-instrument EQ cuts 2.2-2.5 kHz and low-passes the leads (the sustained strings at 1.1 kHz, 4th order). Energy in 1-4 kHz: 0.4% of the whole bed; per section above; per stem: pizz 0.1%, marimba 1.4%, vibes 0.0%, glock 0.0%, guitar 1.0%, harp 0.1%, bass 0.0%, bassoon 1.3%, clarinet 7.5%, strings 1.5%, drums 0.3%.
+Melodic notes at or below MIDI 79 (B5 = 988 Hz is the ceiling); ticks on 108, 110 (above 4 kHz); per-instrument EQ cuts 2.2-2.5 kHz and low-passes the leads (the sustained strings at 1.1 kHz, 4th order). Energy in 1-4 kHz: 0.4% of the whole bed; per section above; per stem: pizz 0.1%, marimba 1.4%, vibes 0.0%, glock 0.0%, guitar 0.9%, harp 0.1%, bass 0.0%, bassoon 1.3%, clarinet 7.5%, strings 1.5%, drums 0.3%.
 
 ## Measured
 
-Integrated -24.77 LUFS (unducked); sample peak -6.88 dBFS; true peak -6.87 dBTP (4x); 0 clipped samples; 15410640 samples = timeline durationSeconds 321.055 s (match); narration 15410640 samples; the video's 9632 frames are +11.67 ms from the bed (the bed is already at zero there). Stems sum to the bed within 1.19e-06 (24-bit rounding). SHA-256 of the bed: `3a5671ec1b276e69…`.
+Integrated -24.77 LUFS (unducked); sample peak -6.88 dBFS; true peak -6.87 dBTP (4x); 0 clipped samples; 15410640 samples = timeline durationSeconds 321.055 s (match); narration 15410640 samples; the video's 9632 frames are +11.67 ms from the bed (the bed is already at zero there). Stems sum to the bed within 1.19e-06 (24-bit rounding). SHA-256 of the bed: `406d2ecdaa51a0c2…`.
 
 Re-run (one command; reads every cue from the current timeline): `python3 tools/make_music_v02v2.py`. Mix: `python3 tools/mix_v2.py --music audio/music/v02v2/music_bed.wav`.

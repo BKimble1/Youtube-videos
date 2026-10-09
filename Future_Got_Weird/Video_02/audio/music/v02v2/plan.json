@@ -126,6 +126,7 @@
   "clue": "s16 start",
   "geometry": "V5 cut",
   "hush_c": "V6 cut (switch)",
+  "switch": "V6 cut + 0.6 s (under n13)",
   "U": "s37 start",
   "museum": "V7 cut",
   "museum_thin": "s31 start",
@@ -270,23 +271,34 @@
    "segment": "geometry",
    "section": "C",
    "from": 76.1,
-   "to": 137.117,
+   "to": 137.167,
    "role": "bed",
    "music": "QUIETEST: clockwork-light marimba tick-tock, a pizzicato root, long bass; + a soft hat tick layer at the first arc, + marimba off-beat pings at the second; FULL STOP for \"one place\", resumes on s21",
    "target_lu": -8.0,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 22.29
+   "gain_db_applied": 22.28
   },
   {
    "segment": "hush_c",
    "section": "C",
-   "from": 137.117,
-   "to": 139.633,
+   "from": 137.167,
+   "to": 137.767,
    "role": "drop",
-   "music": "near-silence on the switch (\"And here's a real one.\")",
+   "music": "a near-silent beat (0.6 s) on the V6 switch",
    "target_lu": null,
-   "entry_ramp_s": 0.8,
+   "entry_ramp_s": 0.6,
    "gain_db_applied": null
+  },
+  {
+   "segment": "switch",
+   "section": "C",
+   "from": 137.767,
+   "to": 139.633,
+   "role": "pad",
+   "music": "a soft held Em9 pad under n13 \"And here's a real one.\" (strings, one vibes note, low bass), a little under the C bed",
+   "target_lu": -8.25,
+   "entry_ramp_s": 0.3,
+   "gain_db_applied": 23.83
   },
   {
    "segment": "U",
@@ -297,7 +309,7 @@
    "music": "MODEST LIFT as the U resolves: Cmaj7 -> Dsus -> Gadd9 on \"U\", guitar arpeggios, strings, vibes, tick; held through the hold into the museum",
    "target_lu": -5.5,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 16.73
+   "gain_db_applied": 16.75
   },
   {
    "segment": "museum",
@@ -518,13 +530,13 @@
   {
    "id": "hush_c",
    "kind": "drop",
-   "a": 137.117,
-   "b": 139.633,
+   "a": 137.167,
+   "b": 137.767,
    "depth_db": -22.0,
-   "down_s": 0.25,
-   "up_s": 0.4,
-   "cue": "V6 switch / n13",
-   "label": "C: near-silence on the switch, \"And here's a real one.\" (n13); lift on s37"
+   "down_s": 0.1,
+   "up_s": 0.3,
+   "cue": "V6 cut (switch)",
+   "label": "C: a near-silent beat (0.6 s) on the V6 switch, then a soft held pad under n13 \"And here's a real one.\"; the U lift starts on s37"
   },
   {
    "id": "brake",
@@ -887,7 +899,13 @@
    "segment": "geometry",
    "chord": "Em9",
    "from": 134.4,
-   "to": 137.117
+   "to": 137.167
+  },
+  {
+   "segment": "switch",
+   "chord": "Em9",
+   "from": 137.767,
+   "to": 139.633
   },
   {
    "segment": "U",
@@ -1360,8 +1378,9 @@
    ],
    [
     "U",
-    "geometry",
-    null
+    "switch",
+    null,
+    "geometry"
    ],
    [
     "board2",
@@ -1597,7 +1616,7 @@
   "vibes": {
    "gm_program": 11,
    "gain_db": -5,
-   "notes": 106
+   "notes": 107
   },
   "glock": {
    "gm_program": 9,
@@ -1617,7 +1636,7 @@
   "bass": {
    "gm_program": 32,
    "gain_db": -5,
-   "notes": 252
+   "notes": 253
   },
   "bassoon": {
    "gm_program": 70,
@@ -1632,7 +1651,7 @@
   "strings": {
    "gm_program": 49,
    "gain_db": -8,
-   "notes": 171
+   "notes": 174
   },
   "drums": {
    "gm_program": 0,
