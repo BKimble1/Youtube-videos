@@ -1,0 +1,542 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "S1": {
+   "seconds": 60.9,
+   "mean_energy": 1.009,
+   "still_seconds": 5.5,
+   "still_share": 0.091,
+   "longest_still_s": 2.17
+  },
+  "S2": {
+   "seconds": 34.9,
+   "mean_energy": 1.329,
+   "still_seconds": 1.1,
+   "still_share": 0.031,
+   "longest_still_s": 1.07
+  },
+  "S3": {
+   "seconds": 36.0,
+   "mean_energy": 1.258,
+   "still_seconds": 14.0,
+   "still_share": 0.39,
+   "longest_still_s": 2.33
+  },
+  "S4": {
+   "seconds": 57.9,
+   "mean_energy": 0.915,
+   "still_seconds": 11.0,
+   "still_share": 0.19,
+   "longest_still_s": 1.8
+  },
+  "S5": {
+   "seconds": 47.1,
+   "mean_energy": 1.728,
+   "still_seconds": 14.4,
+   "still_share": 0.306,
+   "longest_still_s": 2.57
+  },
+  "S6": {
+   "seconds": 56.5,
+   "mean_energy": 0.925,
+   "still_seconds": 17.9,
+   "still_share": 0.316,
+   "longest_still_s": 1.5
+  },
+  "S7": {
+   "seconds": 45.1,
+   "mean_energy": 1.212,
+   "still_seconds": 3.6,
+   "still_share": 0.079,
+   "longest_still_s": 2.37
+  },
+  "S8": {
+   "seconds": 34.2,
+   "mean_energy": 1.404,
+   "still_seconds": 4.1,
+   "still_share": 0.121,
+   "longest_still_s": 1.37
+  },
+  "S9": {
+   "seconds": 31.4,
+   "mean_energy": 0.766,
+   "still_seconds": 10.9,
+   "still_share": 0.348,
+   "longest_still_s": 8.73
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "S1",
+   "from": 1257,
+   "to": 1288,
+   "seconds": 1.07,
+   "t": "0:41.9",
+   "spoken": "later. A few billionths"
+  },
+  {
+   "scene": "S1",
+   "from": 1294,
+   "to": 1331,
+   "seconds": 1.27,
+   "t": "0:43.1",
+   "spoken": "billionths of a second later. Your"
+  },
+  {
+   "scene": "S1",
+   "from": 1477,
+   "to": 1507,
+   "seconds": 1.03,
+   "t": "0:49.2",
+   "spoken": "camera that clocks its own light's round trip."
+  },
+  {
+   "scene": "S1",
+   "from": 1617,
+   "to": 1681,
+   "seconds": 2.17,
+   "t": "0:53.9",
+   "spoken": "nanosecond, one billionth of a second. So"
+  },
+  {
+   "scene": "S2",
+   "from": 2307,
+   "to": 2338,
+   "seconds": 1.07,
+   "t": "1:16.9",
+   "spoken": "every which way, so each spot"
+  },
+  {
+   "scene": "S3",
+   "from": 3251,
+   "to": 3296,
+   "seconds": 1.53,
+   "t": "1:48.4",
+   "spoken": "once, off the wall. Our friend's"
+  },
+  {
+   "scene": "S3",
+   "from": 3448,
+   "to": 3475,
+   "seconds": 0.93,
+   "t": "1:54.9",
+   "spoken": "same team, with a different sensor"
+  },
+  {
+   "scene": "S3",
+   "from": 3482,
+   "to": 3508,
+   "seconds": 0.9,
+   "t": "1:56.1",
+   "spoken": "different sensor and hidden object:"
+  },
+  {
+   "scene": "S3",
+   "from": 3511,
+   "to": 3537,
+   "seconds": 0.9,
+   "t": "1:57.0",
+   "spoken": "hidden object: the wall's"
+  },
+  {
+   "scene": "S3",
+   "from": 3567,
+   "to": 3606,
+   "seconds": 1.33,
+   "t": "1:58.9",
+   "spoken": "big echo, then, a few nanoseconds"
+  },
+  {
+   "scene": "S3",
+   "from": 3608,
+   "to": 3652,
+   "seconds": 1.5,
+   "t": "2:00.3",
+   "spoken": "then, a few nanoseconds later, a bump"
+  },
+  {
+   "scene": "S3",
+   "from": 3708,
+   "to": 3751,
+   "seconds": 1.47,
+   "t": "2:03.6",
+   "spoken": "see. In this capture, hundreds"
+  },
+  {
+   "scene": "S3",
+   "from": 3755,
+   "to": 3824,
+   "seconds": 2.33,
+   "t": "2:05.2",
+   "spoken": "capture, hundreds of times weaker. That bump is"
+  },
+  {
+   "scene": "S3",
+   "from": 3829,
+   "to": 3875,
+   "seconds": 1.57,
+   "t": "2:07.6",
+   "spoken": "bump is the clue. Its timing"
+  },
+  {
+   "scene": "S3",
+   "from": 3904,
+   "to": 3950,
+   "seconds": 1.57,
+   "t": "2:10.1",
+   "spoken": "much farther the light travelled."
+  },
+  {
+   "scene": "S4",
+   "from": 4088,
+   "to": 4115,
+   "seconds": 0.93,
+   "t": "2:16.3",
+   "spoken": "flattened, with one more simplification."
+  },
+  {
+   "scene": "S4",
+   "from": 4124,
+   "to": 4159,
+   "seconds": 1.2,
+   "t": "2:17.5",
+   "spoken": "simplification. The sensor flashes"
+  },
+  {
+   "scene": "S4",
+   "from": 4806,
+   "to": 4840,
+   "seconds": 1.17,
+   "t": "2:40.2",
+   "spoken": "place. Measured"
+  },
+  {
+   "scene": "S4",
+   "from": 4885,
+   "to": 4916,
+   "seconds": 1.07,
+   "t": "2:42.8",
+   "spoken": "bit fuzzy, so each arc is"
+  },
+  {
+   "scene": "S4",
+   "from": 4945,
+   "to": 4998,
+   "seconds": 1.8,
+   "t": "2:44.8",
+   "spoken": "a band, and the bands overlap in a small patch."
+  },
+  {
+   "scene": "S4",
+   "from": 5068,
+   "to": 5095,
+   "seconds": 0.93,
+   "t": "2:48.9",
+   "spoken": "close, so the patch is long"
+  },
+  {
+   "scene": "S4",
+   "from": 5108,
+   "to": 5139,
+   "seconds": 1.07,
+   "t": "2:50.3",
+   "spoken": "long and blurry. Spread them"
+  },
+  {
+   "scene": "S4",
+   "from": 5201,
+   "to": 5230,
+   "seconds": 1.0,
+   "t": "2:53.4",
+   "spoken": "shrinks. In practice, a computer weighs"
+  },
+  {
+   "scene": "S4",
+   "from": 5446,
+   "to": 5469,
+   "seconds": 0.8,
+   "t": "3:01.5",
+   "spoken": "assumptions, like what kind of"
+  },
+  {
+   "scene": "S4",
+   "from": 5584,
+   "to": 5614,
+   "seconds": 1.03,
+   "t": "3:06.1",
+   "spoken": "likely location, or a rough"
+  },
+  {
+   "scene": "S5",
+   "from": 5810,
+   "to": 5847,
+   "seconds": 1.27,
+   "t": "3:13.7",
+   "spoken": "MIT team reported recovering the 3D"
+  },
+  {
+   "scene": "S5",
+   "from": 5901,
+   "to": 5956,
+   "seconds": 1.87,
+   "t": "3:16.7",
+   "spoken": "small mannequin around a corner. It took an ultrafast"
+  },
+  {
+   "scene": "S5",
+   "from": 5973,
+   "to": 6006,
+   "seconds": 1.13,
+   "t": "3:19.1",
+   "spoken": "ultrafast laser and a high-speed"
+  },
+  {
+   "scene": "S5",
+   "from": 6016,
+   "to": 6056,
+   "seconds": 1.37,
+   "t": "3:20.5",
+   "spoken": "high-speed camera: lab equipment"
+  },
+  {
+   "scene": "S5",
+   "from": 6152,
+   "to": 6178,
+   "seconds": 0.9,
+   "t": "3:25.1",
+   "spoken": "study, Stanford researchers swept"
+  },
+  {
+   "scene": "S5",
+   "from": 6392,
+   "to": 6442,
+   "seconds": 1.7,
+   "t": "3:33.1",
+   "spoken": "sign, rebuilding the scene took about a second on a"
+  },
+  {
+   "scene": "S5",
+   "from": 6447,
+   "to": 6481,
+   "seconds": 1.17,
+   "t": "3:34.9",
+   "spoken": "second on a laptop. Measuring"
+  },
+  {
+   "scene": "S5",
+   "from": 6543,
+   "to": 6567,
+   "seconds": 0.83,
+   "t": "3:38.1",
+   "spoken": "seven minutes. By 2021,"
+  },
+  {
+   "scene": "S5",
+   "from": 6635,
+   "to": 6711,
+   "seconds": 2.57,
+   "t": "3:41.2",
+   "spoken": "Wisconsin and Milan had sped up measuring too: live"
+  },
+  {
+   "scene": "S5",
+   "from": 7050,
+   "to": 7096,
+   "seconds": 1.57,
+   "t": "3:55.0",
+   "spoken": "hidden objects with a cheap sensor."
+  },
+  {
+   "scene": "S6",
+   "from": 7303,
+   "to": 7346,
+   "seconds": 1.47,
+   "t": "4:03.4",
+   "spoken": "time-of-flight sensors, often called LiDAR,"
+  },
+  {
+   "scene": "S6",
+   "from": 7350,
+   "to": 7389,
+   "seconds": 1.33,
+   "t": "4:05.0",
+   "spoken": "called LiDAR, found in phones and"
+  },
+  {
+   "scene": "S6",
+   "from": 7607,
+   "to": 7638,
+   "seconds": 1.07,
+   "t": "4:13.6",
+   "spoken": "are tough customers. Weak"
+  },
+  {
+   "scene": "S6",
+   "from": 7679,
+   "to": 7716,
+   "seconds": 1.27,
+   "t": "4:16.0",
+   "spoken": "mean fainter echoes. The team's"
+  },
+  {
+   "scene": "S6",
+   "from": 7736,
+   "to": 7780,
+   "seconds": 1.5,
+   "t": "4:17.9",
+   "spoken": "team's smartphone-grade device had about a hundred"
+  },
+  {
+   "scene": "S6",
+   "from": 7790,
+   "to": 7826,
+   "seconds": 1.23,
+   "t": "4:19.7",
+   "spoken": "hundred pixels: a hundred listening"
+  },
+  {
+   "scene": "S6",
+   "from": 7904,
+   "to": 7928,
+   "seconds": 0.83,
+   "t": "4:23.5",
+   "spoken": "in your hand, it jiggles."
+  },
+  {
+   "scene": "S6",
+   "from": 8091,
+   "to": 8115,
+   "seconds": 0.83,
+   "t": "4:29.7",
+   "spoken": "quick, dim frames into one"
+  },
+  {
+   "scene": "S6",
+   "from": 8141,
+   "to": 8170,
+   "seconds": 1.0,
+   "t": "4:31.4",
+   "spoken": "better estimate. The catch:"
+  },
+  {
+   "scene": "S6",
+   "from": 8207,
+   "to": 8241,
+   "seconds": 1.17,
+   "t": "4:33.6",
+   "spoken": "between frames, the sensor jiggles"
+  },
+  {
+   "scene": "S6",
+   "from": 8342,
+   "to": 8374,
+   "seconds": 1.1,
+   "t": "4:38.1",
+   "spoken": "smear everything, like a long"
+  },
+  {
+   "scene": "S6",
+   "from": 8397,
+   "to": 8432,
+   "seconds": 1.2,
+   "t": "4:39.9",
+   "spoken": "exposure of someone walking. Their method"
+  },
+  {
+   "scene": "S6",
+   "from": 8503,
+   "to": 8545,
+   "seconds": 1.43,
+   "t": "4:43.4",
+   "spoken": "work, one unknown at a time."
+  },
+  {
+   "scene": "S6",
+   "from": 8582,
+   "to": 8622,
+   "seconds": 1.37,
+   "t": "4:46.1",
+   "spoken": "sensor through known positions, and the listening"
+  },
+  {
+   "scene": "S6",
+   "from": 8762,
+   "to": 8793,
+   "seconds": 1.07,
+   "t": "4:52.1",
+   "spoken": "new position to follow."
+  },
+  {
+   "scene": "S7",
+   "from": 9343,
+   "to": 9378,
+   "seconds": 1.2,
+   "t": "5:11.4",
+   "spoken": "hidden U. Many of"
+  },
+  {
+   "scene": "S7",
+   "from": 10076,
+   "to": 10146,
+   "seconds": 2.37,
+   "t": "5:35.9",
+   "spoken": "other team reporting results on its own hardware yet."
+  },
+  {
+   "scene": "S8",
+   "from": 10180,
+   "to": 10220,
+   "seconds": 1.37,
+   "t": "5:39.3",
+   "spoken": "might this be good for? Picture"
+  },
+  {
+   "scene": "S8",
+   "from": 10305,
+   "to": 10329,
+   "seconds": 0.83,
+   "t": "5:43.5",
+   "spoken": "warehouse corner. With a suitable"
+  },
+  {
+   "scene": "S8",
+   "from": 10949,
+   "to": 10982,
+   "seconds": 1.13,
+   "t": "6:05.0",
+   "spoken": "early-stage prototype."
+  },
+  {
+   "scene": "S8",
+   "from": 11142,
+   "to": 11165,
+   "seconds": 0.8,
+   "t": "6:11.4",
+   "spoken": "not a safety system."
+  },
+  {
+   "scene": "S9",
+   "from": 11487,
+   "to": 11510,
+   "seconds": 0.8,
+   "t": "6:22.9",
+   "spoken": "clues. To really hide,"
+  },
+  {
+   "scene": "S9",
+   "from": 11814,
+   "to": 11855,
+   "seconds": 1.4,
+   "t": "6:33.8",
+   "spoken": "Weird: the strange future, explained."
+  },
+  {
+   "scene": "S9",
+   "from": 11858,
+   "to": 12119,
+   "seconds": 8.73,
+   "t": "6:35.3",
+   "spoken": "explained. Subscribe for more, and we'll see you around the corner."
+  }
+ ]
+}
