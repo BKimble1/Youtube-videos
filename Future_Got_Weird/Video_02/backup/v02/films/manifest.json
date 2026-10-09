@@ -1,0 +1,76 @@
+{
+ "part_bytes": 25165824,
+ "files": [
+  {
+   "name": "Future_Got_Weird_Video_02_v1_MASTER_4K.mp4",
+   "bytes": 132752878,
+   "sha256": "aa867101475046696e990663a1a3fef1e9d27e4b97181d2175eb6b3523706dd4",
+   "parts": [
+    {
+     "name": "Future_Got_Weird_Video_02_v1_MASTER_4K.mp4.part001",
+     "bytes": 25165824,
+     "sha256": "9811b0744e1f10b09579e5e9d2744d426e1bb20eab38cc89b723fadd7389fd0e"
+    },
+    {
+     "name": "Future_Got_Weird_Video_02_v1_MASTER_4K.mp4.part002",
+     "bytes": 25165824,
+     "sha256": "6ecb1f971ceb659ca13033f4423938837b9c0d093b569a6046a6cd52a29b150a"
+    },
+    {
+     "name": "Future_Got_Weird_Video_02_v1_MASTER_4K.mp4.part003",
+     "bytes": 25165824,
+     "sha256": "2e14e66d1d94c0ea655a9cd77a9227a0ba5b3128330848e88d68613668cf88bd"
+    },
+    {
+     "name": "Future_Got_Weird_Video_02_v1_MASTER_4K.mp4.part004",
+     "bytes": 25165824,
+     "sha256": "d27cc03c14d3c8473c31573c86495abebaf525909158ea07f792bd851af20821"
+    },
+    {
+     "name": "Future_Got_Weird_Video_02_v1_MASTER_4K.mp4.part005",
+     "bytes": 25165824,
+     "sha256": "8a7a10ab8ca368ed39e508357ba69ea768f6293feb2fd15de76280d70613d6ff"
+    },
+    {
+     "name": "Future_Got_Weird_Video_02_v1_MASTER_4K.mp4.part006",
+     "bytes": 6923758,
+     "sha256": "569b8a44a46fd22962161e8873125ffc8ffb38c0b3ae6e93b85afb6d07fa1f84"
+    }
+   ]
+  },
+  {
+   "name": "Future_Got_Weird_Video_02_v1_PREVIEW_720p.mp4",
+   "bytes": 18718581,
+   "sha256": "956f109998d6def4497b98733c854844d4c585d550e70b3d90a749dba005bab8",
+   "parts": [
+    {
+     "name": "Future_Got_Weird_Video_02_v1_PREVIEW_720p.mp4.part001",
+     "bytes": 18718581,
+     "sha256": "956f109998d6def4497b98733c854844d4c585d550e70b3d90a749dba005bab8"
+    }
+   ]
+  },
+  {
+   "name": "Future_Got_Weird_Video_02_v1_UPLOAD_1080p.mp4",
+   "bytes": 64776951,
+   "sha256": "c75dba9dc1f9db34246555ff6593e1ee19e70f5cb31002d1826fcc926b4c6b25",
+   "parts": [
+    {
+     "name": "Future_Got_Weird_Video_02_v1_UPLOAD_1080p.mp4.part001",
+     "bytes": 25165824,
+     "sha256": "1327bbb54978d6020b4abbd01bd46c78de632e9167495a37ac2162108430fa51"
+    },
+    {
+     "name": "Future_Got_Weird_Video_02_v1_UPLOAD_1080p.mp4.part002",
+     "bytes": 25165824,
+     "sha256": "21e015e6a38209028e7ead5bfdfe23d68d540626bb5cdc3e258d94a23aceaa8b"
+    },
+    {
+     "name": "Future_Got_Weird_Video_02_v1_UPLOAD_1080p.mp4.part003",
+     "bytes": 14445303,
+     "sha256": "0afa13473f3ba6c61ffb3e1508f1dea8128fc8beca3d9efd3b6b592ae88172a3"
+    }
+   ]
+  }
+ ]
+}
