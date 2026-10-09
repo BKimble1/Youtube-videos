@@ -1,0 +1,17 @@
+{
+ "part_bytes": 25165824,
+ "files": [
+  {
+   "name": "v02v2_code_runs.tar",
+   "bytes": 19988480,
+   "sha256": "6a01585b737f4fe1d3d6f723a383407c9f7e3ed63653e8b2874d28fba3a5319b",
+   "parts": [
+    {
+     "name": "v02v2_code_runs.tar.part001",
+     "bytes": 19988480,
+     "sha256": "6a01585b737f4fe1d3d6f723a383407c9f7e3ed63653e8b2874d28fba3a5319b"
+    }
+   ]
+  }
+ ]
+}

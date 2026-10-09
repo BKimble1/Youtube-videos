@@ -8,16 +8,16 @@ segs = {s["id"]: [norm(w["w"]) for w in s["words"]] for s in tl["segments"]}
 bad = 0
 for dp, _, fs in os.walk(os.path.join(ROOT, "source/src")):
     for f in fs:
-        if not f.endswith(".tsx"):
-            continue
+        if not f.endswith(".tsx") or re.match(r"S\d+_", f) and os.environ.get("CUES_V1") is None:
+            continue  # v2: the v1 scene files stay in the tree unused (CUES_V1=1 checks them against a v1 timeline)
         txt = open(os.path.join(dp, f), encoding="utf-8").read()
-        for m in re.finditer(r"""at\(\s*'(s\d+b?)'\s*(?:,\s*(['"])([^'"]*?)\2\s*(?:,\s*(\d+)\s*(?:,\s*'(?:start|end)'\s*)?)?)?\s*\)""", txt):
+        for m in re.finditer(r"""at\(\s*'([sn]\d+b?)'\s*(?:,\s*(['"])([^'"]*?)\2\s*(?:,\s*(\d+)\s*(?:,\s*'(?:start|end)'\s*)?)?)?\s*\)""", txt):
             sid, word, occ = m.group(1), m.group(3), int(m.group(4) or 1)
             if sid not in segs:
                 print(f"{f}: unknown segment {sid}"); bad += 1; continue
             if word is not None and segs[sid].count(norm(word)) < occ:
                 print(f"{f}: '{word}' (#{occ}) not in {sid}"); bad += 1
-        for m in re.finditer(r"segEnd\('(s\d+b?)'\)", txt):
+        for m in re.finditer(r"segEnd\('([sn]\d+b?)'\)", txt):
             if m.group(1) not in segs:
                 print(f"{f}: unknown segment {m.group(1)}"); bad += 1
 print("cue check:", "OK" if not bad else f"{bad} problem(s)")

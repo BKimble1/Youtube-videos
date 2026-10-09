@@ -160,6 +160,23 @@ ROWS = [
     ("C45", "Before 2026, a different team had already tracked hidden objects (non-line-of-sight) with a cheap ST time-of-flight sensor (VL53L1X).",
      "Callenberg, Shi, Heide, Hullin, ACM Transactions on Graphics 40(4), 61 (SIGGRAPH 2021); https://github.com/ComputationalLightTransport/CheapSPAD",
      "repo README (direct); venue search_summary", "2021", "low-cost ST P-NUCLEO-53L1A1 kit; tracking (with and without a scanning mirror)", "independently_demonstrated", "direct; search_summary", "consistent", "S5"),
+    # v2 editorial pass (9 October 2026): proposed in v2/EVIDENCE_BRIEF_V2.md §12, added before the script locked
+    ("P01", "One unknown at a time: shape-building assumes known sensor positions and a still scene; tracking assumes a fixed sensor and a known (point) shape; locating the sensor assumes a known, still hidden object.",
+     "arXiv 2605.17865 (manuscript); " + NAT, "method overview (search_summary)", "2026", "describes the authors' method, not an accuracy claim",
+     "reported_by_authors", "search_summary", "consistent with the released code's separate scripts (tracking.py, reconstruction.py, cam_localization.py)", "V9"),
+    ("P02", "Adding (filtered backprojection over) frames fails for moving objects because of motion blur.",
+     "arXiv 2605.17865 (manuscript)", "method motivation (search_summary)", "2026", "the smear picture (I1 frame B2, 0.86 m) is our illustration",
+     "reported_by_authors", "search_summary", "illustration labelled", "V9"),
+    ("P03", "The tracking filter predicts, compares and keeps: about 1,000 guesses, a random step of 7 cm per frame in the released code, scored against each new frame and resampled.",
+     GH + " paper/tracking.py; configs", "code (direct)", "commit 15314de422a765a2d1b72ea7037dfafb2f908d7c",
+     "sensor held still; the ST kit tracking data", "experimentally_supported", "code_or_data", "read in the code and run by us (8 Oct 2026)", "V9"),
+    ("P06", "The ams bump at 3.70 ns after the wall echo is 110.8 cm of extra path, about 55 cm each way, consistent with the reconstructed U about 0.54 m from the wall.",
+     "research/evidence (fig1/fig4 JSONs from the authors' released data)", "derivation", "2026-10-08",
+     "ams 3x3 sensor, centre zone; object held still", "derivation", "code_or_data", "bump time x c; U depth from the authors' volume", "V4"),
+    ("P08", "On 8 October 2026 we re-ran the authors' released code (commit 15314de) on their released data: the tracking run matched their saved estimates (median 8 cm apart) and the U reconstruction matched exactly. This checks the released software; it is not a new experiment, an accuracy test, or an independent replication. (Replaces C38 in v2.)",
+     GH + "; research/code_reproduction/NOTES.md", "out/*/timing_*.json, figure JSONs; stdout logs and .npz run states preserved in backup/v02/v2_runs", "2026-10-08",
+     "CPU run of the unmodified scripts; the sensor-locating run is weak (median 27 cm) and not cited", "experimentally_supported", "code_or_data",
+     "comparison metrics in the figure JSONs", "V10"),
     ("C41", "No study has shown that NLOS sensing prevents collisions.",
      "research/context/NOTES.md section 4", "extended search", "as of 2026-10-08", "Doppler-radar NLOS (Scheiner et al. 2020) shows detection/tracking, not crash reduction",
      "inference", "search_summary", "absence of evidence, dated", "S7"),
@@ -169,6 +186,7 @@ ROWS = [
 def main():
     segs = json.load(open(os.path.join(ROOT, "script/narration_segments.json")))["segments"]
     used = {}
+    scene_of = {s["id"]: s["scene"] for s in segs}
     for s in segs:
         for c in s["claims"]:
             used.setdefault(c, []).append(s["id"])
@@ -182,7 +200,9 @@ def main():
         w.writerow(["claim_id", "exact_proposed_assertion", "source_url", "locator", "date_version", "setup_conditions",
                     "evidence_status", "access_method", "verification", "script_lines", "scene"])
         for r in ROWS:
-            w.writerow([r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], " ".join(used.get(r[0], [])), r[9]])
+            scenes = sorted({scene_of[s] for s in used.get(r[0], [])}, key=lambda x: int(x[1:]))
+            w.writerow([r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], " ".join(used.get(r[0], [])),
+                        " ".join(scenes) if scenes else f"not used in v2 (v1: {r[9]})"])
     print(f"wrote {out}: {len(ROWS)} claims; unused by script: {unused or 'none'}")
 
 

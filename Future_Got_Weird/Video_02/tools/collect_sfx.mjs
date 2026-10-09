@@ -12,7 +12,9 @@ const out = path.resolve(process.argv[3] ?? path.join(here, '..', 'audio', 'sfx'
 const require = createRequire(path.join(src, 'package.json'));
 const esbuild = require('esbuild');
 const scenesDir = path.join(src, 'src', 'scenes');
-const files = fs.readdirSync(scenesDir).filter((f) => /^S\d+_.*\.tsx$/.test(f)).sort((a, b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
+// v2 scenes are V1..V13 (the v1 scenes S1..S9 stay in the tree, unused); SCENE_PREFIX=S collects the v1 set
+const PFX = process.env.SCENE_PREFIX ?? 'V';
+const files = fs.readdirSync(scenesDir).filter((f) => new RegExp(`^${PFX}\\d+_.*\\.tsx$`).test(f)).sort((a, b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
 const entry = files.map((f, i) => `import * as m${i} from ${JSON.stringify(path.join(scenesDir, f))};`).join('\n') +
   `\nconst out = {};\n` + files.map((f, i) => `out[${JSON.stringify(f.split('_')[0])}] = m${i}.SFX ?? null;`).join('\n') +
   `\nprocess.stdout.write(JSON.stringify(out));\n`;

@@ -2,7 +2,7 @@
 """Back up everything Video 02 needs that Git does not carry (media is ignored / a Git LFS type in this repository and
 the LFS host is not reachable from the production environment).
 
-  python3 tools/backup_v02.py [--group sources|rendered|films|runway|all]   -> backup/v02/<group>/
+  python3 tools/backup_v02.py --group <group>                              -> backup/v02/<group>/
   python3 tools/backup_v02.py --verify                                     -> rebuild every archive from its parts in a
                                                                               temp dir and check every SHA-256
 
@@ -16,6 +16,14 @@ reconstruct.sh/.py):
                                     per-instrument stems are not stored: tools/make_music_v02.py regenerates them.
   films     the delivered films (already compressed; split as they are)
   runway    accepted Runway clips and their raw downloads (if any)
+
+v2 editorial pass (separate groups; the v1 groups above are left exactly as delivered):
+  v2_sources   source files added since the v1 sources archive (the v2 narration takes and alignments, new effect takes):
+               every file under the v1 source folders whose path and SHA-256 are not already in v02_audio_sources.tar
+  v2_rendered  the v2 rendered audio, as `rendered` (FLAC, sample-exact)
+  v2_films     the delivered v2 films (MASTER_4K, UPLOAD_1080p, PREVIEW_720p)
+  v2_runs      the authors'-code re-run logs and saved run states (research/code_reproduction/out/*: stdout.log, .npz),
+               which git ignores and the v2 kit board's "our check" chip and the description rely on
 
 Restore: backup/v02/RESTORE.md.
 """
@@ -84,6 +92,50 @@ def split(group, files):
     subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'backup_split.py'), dest] + files, check=True)
 
 
+def source_files():
+    return (walk('audio/narration/v2/takes', {'.mp3', '.json', '.tsv'}) + walk('audio/narration/perfcheck', {'.mp3', '.json', '.md'})
+            + walk('audio/sfx/v2/raw', {'.mp3', '.tsv', '.txt', '.json'}))
+
+
+def rebuilt(group, name, td):
+    """Rebuild one archive of a backup group from its parts into td; return its path."""
+    gd = os.path.join(DEST, group)
+    man = json.load(open(os.path.join(gd, 'manifest.json')))
+    f = next(x for x in man['files'] if x['name'] == name)
+    out = os.path.join(td, name)
+    with open(out, 'wb') as o:
+        for prt in f['parts']:
+            with open(os.path.join(gd, prt['name']), 'rb') as fh:
+                shutil.copyfileobj(fh, o)
+    if sha_file(out) != f['sha256']:
+        sys.exit(f'{group}/{name}: rebuilt archive fails its checksum')
+    return out
+
+
+def group_v2_sources():
+    have = {}
+    with tempfile.TemporaryDirectory() as td:
+        with tarfile.open(rebuilt('sources', 'v02_audio_sources.tar', td)) as t:
+            for m in t.getmembers():
+                if m.isfile():
+                    have[m.name] = hashlib.sha256(t.extractfile(m).read()).hexdigest()
+    new = [f for f in source_files() if have.get(rel(f)) != sha_file(f)]
+    if not new:
+        return [], 0
+    a = os.path.join(STAGE, 'v02v2_audio_sources.tar')
+    tar(a, new)
+    return [a], len(new)
+
+
+def group_v2_runs():
+    runs = walk('research/code_reproduction/out', {'.log', '.npz'})
+    if not runs:
+        return [], 0
+    a = os.path.join(STAGE, 'v02v2_code_runs.tar')
+    tar(a, runs)
+    return [a], len(runs)
+
+
 def group_sources():
     src = (walk('audio/narration/v2/takes', {'.mp3', '.json', '.tsv'}) + walk('audio/narration/perfcheck', {'.mp3', '.json', '.md'})
            + walk('audio/sfx/v2/raw', {'.mp3', '.tsv', '.txt', '.json'}))
@@ -102,7 +154,7 @@ RENDERED = [
 ]
 
 
-def group_rendered():
+def group_rendered(archive='v02_audio_rendered.tar'):
     wavs = []
     for sub in RENDERED:
         base = os.path.join(ROOT, sub)
@@ -145,14 +197,14 @@ def group_rendered():
     idx = os.path.join(flac_dir, 'wav_index.json')
     json.dump(index, open(idx, 'w'), indent=1)
     files = sorted({os.path.join(flac_dir, e['file']) for e in index if 'file' in e}) + [idx]
-    b = os.path.join(STAGE, 'v02_audio_rendered.tar')
+    b = os.path.join(STAGE, archive)
     tar(b, files, [os.path.relpath(f, flac_dir) for f in files])
     return [b], len(index)
 
 
-def group_films():
+def group_films(version='v1'):
     keep = ('_MASTER_4K.mp4', '_UPLOAD_1080p.mp4', '_PREVIEW_720p.mp4')  # the delivered films only (not review renders)
-    films = [f for f in walk('exports', {'.mp4'}) if os.path.basename(f).startswith('Future_Got_Weird_Video_02_v1_') and f.endswith(keep)]
+    films = [f for f in walk('exports', {'.mp4'}) if os.path.basename(f).startswith(f'Future_Got_Weird_Video_02_{version}_') and f.endswith(keep)]
     return films, len(films)
 
 
@@ -165,7 +217,10 @@ def group_runway():
     return [r], len(clips)
 
 
-GROUPS = {'sources': group_sources, 'rendered': group_rendered, 'films': group_films, 'runway': group_runway}
+GROUPS = {'sources': group_sources, 'rendered': group_rendered, 'films': group_films, 'runway': group_runway,
+          'v2_sources': group_v2_sources, 'v2_rendered': lambda: group_rendered('v02v2_audio_rendered.tar'),
+          'v2_films': lambda: group_films('v2'), 'v2_runs': group_v2_runs}
+V1_GROUPS = ('sources', 'rendered', 'films', 'runway')
 
 
 def verify():
@@ -202,7 +257,10 @@ def main():
     if a.verify:
         sys.exit(0 if verify() else 1)
     os.makedirs(STAGE, exist_ok=True)
-    for g in (GROUPS if a.group == 'all' else [a.group]):
+    if a.group == 'all':
+        sys.exit('name a group: the v1 groups are frozen as delivered; the v2 pass writes v2_sources, v2_rendered, '
+                 'v2_films and v2_runs')
+    for g in [a.group]:
         files, n = GROUPS[g]()
         if not files:
             print(f'{g}: nothing to back up')
