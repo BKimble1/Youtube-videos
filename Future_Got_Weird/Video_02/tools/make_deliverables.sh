@@ -31,7 +31,7 @@ if [[ $what == upload || $what == all ]]; then render "${PFX}_UPLOAD_1080p.mp4" 
 if [[ $what == preview || $what == all ]]; then
   FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
   ffmpeg -v error -y -i "$OUT/${PFX}_UPLOAD_1080p.mp4" \
-    -vf "scale=1280:720:flags=lanczos,drawbox=x=16:y=16:w=372:h=40:color=black@0.55:t=fill,drawtext=fontfile=$FONT:text='REVIEW PREVIEW · not for upload':x=28:y=26:fontsize=20:fontcolor=white" \
+    -vf "scale=1280:720:flags=lanczos,drawbox=x=16:y=16:w=414:h=40:color=black@0.55:t=fill,drawtext=fontfile=$FONT:text='REVIEW PREVIEW · not for upload':x=28:y=26:fontsize=20:fontcolor=white" \
     -c:v libx264 -preset slow -crf 27 -tune animation -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart \
     "$OUT/${PFX}_PREVIEW_720p.mp4"
   ffprobe -v error -show_entries format=duration,size -of compact "$OUT/${PFX}_PREVIEW_720p.mp4"
