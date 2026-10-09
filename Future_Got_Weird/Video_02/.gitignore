@@ -47,3 +47,5 @@ qa/fix2/**/*.mp4
 qa/v2/**/*.png
 qa/v2/**/*.mp4
 source/.sfx-*/
+qa/v2/**/*.npy
+qa/v2/**/*.wav

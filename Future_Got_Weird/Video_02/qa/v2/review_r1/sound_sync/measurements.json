@@ -1,0 +1,13 @@
+{
+ "render": "exports/Future_Got_Weird_Video_02_v2_REVIEW_r1.mp4",
+ "ebur128_encoded": {"integrated_lufs": -15.5, "true_peak_dbtp": -1.3, "lra_lu": 2.1},
+ "render_vs_final_mix": {"lag_samples": 0, "residual_rms_db": -58.9},
+ "limiter_gain_reduction_max_db": -1.7,
+ "per_scene_render_lufs": {"V1": -15.7, "V2": -15.3, "V3": -15.5, "V4": -15.6, "V5": -15.5, "V6": -15.7, "V7": -15.3, "V8": -15.5, "V9": -15.6, "V10": -15.4, "V11": -15.6, "V12": -16.2, "V13": -15.7},
+ "speech_core_ratios_db": "scene_ratios.json (cols: V core med, V-M med, p10, min, band V-M med, p10, V-S med, p10, band V-S med, p10, music in gaps)",
+ "line_level_LU": {"film V-M": 18.6, "film V-S": 21.4, "n02 V-M": 13.3, "s15 caveat V-M": 14.9, "s40 V-S": 15.4, "n30 V-S": 18.8},
+ "sync_sample_events": 38,
+ "sync_off_events": {"V3 mirror_slide f1041": "mirror moves f1045-1050; slide sound ends f1042", "V3 pencil_tap f1058": "pointer arrives f1054", "V5 pencil_tap f3305": "pointer arrives f3296-3297", "V5 uh_oh f3318": "face drops f3305-3306; on word place. f3312-3331"},
+ "captions": {"cues": 115, "max_line_chars": 42, "max_lines": 2, "min_cue_s": 0.83, "max_cps": 21.0, "median_in_time_vs_speech_onset_s": 0.03, "worst_late_s": 0.26},
+ "scene_cut_discontinuities": "none found (second-difference click scan on all stems, mix and decoded render)"
+}

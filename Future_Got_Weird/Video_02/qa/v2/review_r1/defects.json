@@ -1,0 +1,442 @@
+[
+  {
+    "id": "V2-R1-01",
+    "group": "G3",
+    "scene": "V6",
+    "frames": "4316-4386 (2:23.9-2:26.2)",
+    "severity": "major",
+    "title": "The finished real U gets no hold: the board starts rolling up as 'U.' ends, and the music payoff plays under the roll-up",
+    "fix": "Hold the complete board (36/36, 'rough outline', pointer tap) for at least 2.5 s after 'U.' ends: start the roll-up no earlier than f4435 and slide n14 and all of V7 later by the same amount (about +2.5 s; runtime stays inside 5:15-5:45). Recover part of it by starting the k = 1 to 36 build on 'here's' (about f4135) instead of about f4190. Move the resolve and tick onto the pointer tap (f4334) or the start of the hold so the music lands on the finished U. Tighten the roll-up float (V2-R1-28) in the same pass.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-02",
+    "group": "G1",
+    "scene": "V2/V3",
+    "frames": "895-929 (0:29.8-0:31.0); flat 902-922",
+    "severity": "major",
+    "title": "About 0.9 s of blank, uniform beige frame at 0:30 between the hook question and section B",
+    "fix": "Cap the flat run at the designed 4+4 frames: end the push so the paint first covers the frame at FLAT0, and start V3's pull-back by its 5th frame. Give the in-paint frame visible paint grain or the bump-edge section so it reads as wall paint. Do not fade the V3 title in until the room is visible (from about f930). Coordinate the V3 side with G2. Saves about 0.6 s.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-03",
+    "group": "lead",
+    "scene": "package (description.txt line 26; UPLOAD_PACKAGE.md line 42); affects the R8 boards f182-405 and f7176-7852",
+    "frames": "182-405, 7176-7852",
+    "severity": "major",
+    "title": "Description's tracking-plot note omits that the partition and sensor marker are plot constants, omits the retroreflective setting, and states a replay mapping that disagrees with the on-screen counter",
+    "fix": "Rewrite the note from the §1.6 template: '...mirrored to match our room; the partition and sensor marker are drawn from the authors' plotting code, not measured. The authors' code processes these data with its retroreflective-target setting; what the person wore is not documented.' Replace the mapping with 'Shown sped up: every other recorded frame, frames 7-475 of 475, one plotted position per video frame, no interpolation.' Make the same edit in UPLOAD_PACKAGE.md.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-04",
+    "group": "G6",
+    "scene": "V10.1",
+    "frames": "7176-7297 (3:59.2-4:03.2)",
+    "severity": "minor",
+    "title": "The return to the real kit board has no 'Real data' headline for 4 s; the question title sits in its slot",
+    "fix": "Show the 64 px 'Real data' headline from f7176. Put the question title outside the card, top-left of the frame (shift the card about 70 px down for V10.1 and slide it back for V10.2). Fix the V10.1 row in SHOTPLAN_V2.md to match.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-05",
+    "group": "G3",
+    "scene": "V5.2",
+    "frames": "2814-2884 (1:33.8-1:36.1)",
+    "severity": "minor",
+    "title": "The worked round-trip example flashes '8.9 ns' and '2.65 m there and back' for about 1 s each",
+    "fix": "Build the chain left to right on one line (8.9 ns → 2.65 m there and back → 1.33 m each way) and keep all three until s18 ends (about f2973), or give each step at least 2 s by starting it as n11 ends (f2788).",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-06",
+    "group": "G2",
+    "scene": "V3.4",
+    "frames": "1404-1470 (0:46.8-0:49.0)",
+    "severity": "minor",
+    "title": "The 'blend of many paths' appear out of the partition face, with no visible link to his head, chest and foot markers",
+    "fix": "Pulse each body marker in its path's colour on the frame its path launches, and time the pulse's appearance at the partition edge to the hidden leg's travel. Optionally draw each hidden leg as a faint dotted 'behind' segment for that second. Enlarge the markers to about 48 px.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-07",
+    "group": "G5",
+    "scene": "V9.4",
+    "frames": "6776-6886 (3:45.9-3:49.5)",
+    "severity": "minor",
+    "title": "B1's listening spots float inside the room below the wall and touch frame A's spots",
+    "fix": "Anchor B1's spots on the wall's inner face at the same y as A and tell the sets apart by colour only; where they overlap in x, offset them or drop A to outlines when B1 lands.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-08",
+    "group": "G5",
+    "scene": "V9.4",
+    "frames": "6846-6887 (3:48.2-3:49.6)",
+    "severity": "minor",
+    "title": "The real-U thumbnail is taped over our room plan, beside the rail sensor drawn like the 'off-the-shelf kit', with a shortened source line",
+    "fix": "Give the card its own space off the plan for its 1.5 s (shift or shrink the plan, or place the card in the margin outside the room outline). While it shows, swap the rail token for the 3×3 zone-box icon used on the real boards. Restore the source line to 'authors' released data and code, run by us · object held still'.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-09",
+    "group": "G6",
+    "scene": "V10.2",
+    "frames": "7297-7538 (4:03.2-4:11.3)",
+    "severity": "minor",
+    "title": "The kit board's conditions column builds five small items in 8 s and is hard to read at phone width",
+    "fix": "Keep every item but stage them on their cues at 48 px: the kit line on 'off-the-shelf kit' (cut to 'ST sensor kit · held still · not the phone-grade device' in two lines; '16 zones' can stay in the description), 'under US$100' on 'hundred dollars', the setup line on 'held still'. Give the software-check chip its own 2 s, full column width at 40 px or more, after n25 ends.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-10",
+    "group": "G6",
+    "scene": "V10.2",
+    "frames": "7414-7538 (4:07.1-4:11.3)",
+    "severity": "minor",
+    "title": "The real track stops at frame 475 and the dot sits frozen for 4.1 s while the narration says the person walked",
+    "fix": "Restart the stored-track replay from index 6 at about f7414 with the same every-2nd-frame mapping, no interpolation and an honest counter (V10.4 already does this), or re-time V10.1 so the replay ends on 'partition.' (f7514). Do it together with V2-R1-09.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-11",
+    "group": "G1",
+    "scene": "V1.1",
+    "frames": "29-30 (0:00.97-0:01.00)",
+    "severity": "minor",
+    "title": "The guesser's arrival snaps from tiptoe crouch to upright stance in one frame",
+    "fix": "Route the arrival blend through the leg, sink and foot-angle parameters, or add 4-6 in-betweens: heels drop, knees straighten with a small overshoot, hips settle. Change the face on the settle frame, not on the snap.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-12",
+    "group": "lead",
+    "scene": "V5 (J3 crossing, audio)",
+    "frames": "3296-3331 (1:48.9-1:51.0)",
+    "severity": "minor",
+    "title": "Crossing-beat effects land off picture: the tap sounds 8 frames after the pointer stops, and the uh-oh sting comes 12 frames after his face drops, over the tail of 'place.'",
+    "fix": "Re-cue pencil_tap to f3297, with the music stop, and uh_oh to f3306-3307 at about -6 dB so it lands on his face change and is over before 'place'. Alternatively move the face change to after 'place.' (f3332) and leave uh_oh there.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-13",
+    "group": "lead",
+    "scene": "V13 (audio)",
+    "frames": "9534-9547 (5:17.8-5:18.2)",
+    "severity": "minor",
+    "title": "The end-screen music swell starts on 'corner.' and covers its last syllable",
+    "fix": "Start the swell after 'corner.' ends (about 318.2-318.3 s, f9547-9549), or hold the bed about 6 dB lower until then.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-14",
+    "group": "lead",
+    "scene": "global (V1, V4, V2.3, V9-V10 chips)",
+    "frames": "182-405, 780, 1732-2283, 7176-7852",
+    "severity": "minor",
+    "title": "Integrity chips ('sped up', 'illustration', 'invisible flash · shown for clarity', 'different sensor: 3×3 zones · centre zone') are about 6 px at phone width",
+    "fix": "Raise 'sped up' and 'illustration' to about 40 px. On the V4 waveform board, lift 'different sensor · 3×3 zones' out of the source line into a 40-48 px tag beside the zone icon. Leave citations small.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-15",
+    "group": "lead",
+    "scene": "package (description.txt lines 3, 28, 29)",
+    "frames": "1740-2283 (waveform), 4126-4365 (U)",
+    "severity": "minor",
+    "title": "Description's intro, U and waveform notes leave out required provenance",
+    "fix": "Intro: 'The real data shown come from the researchers' released files, plotted (and, for the U, reconstructed with their code) by us.' U bullet: add 'authors' released data and code, run by us; the build-up frames are our partial sums over the first k positions.' Echo bullet: add 'one of the 36 captures (iter_22); \"hundreds of times weaker\" is our peak-height measure (256-576× across the nine zones); reading the bump as the U's echo is our interpretation, consistent with the reconstructed U about 0.54 m from the wall.'",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-16",
+    "group": "G2",
+    "scene": "V4.2",
+    "frames": "1932-2048 (1:04.4-1:08.3)",
+    "severity": "polish",
+    "title": "The magnifier waits at ×1, and the zoom starts 10 frames after 'zoom', so the bump lift and tick land before the bump appears",
+    "fix": "Start the ×1 to ×250 animation on 'zoom' (f2018) and bring the magnifier in about 1 s before it. Keep the lift on the bump's appearance.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-17",
+    "group": "G1",
+    "scene": "V2.2",
+    "frames": "612-657 (0:20.4-0:21.9)",
+    "severity": "polish",
+    "title": "The full-frame arrival timeline is complete with all labels for only about 1 s before it shrinks into the sensor display",
+    "fix": "Start the shrink on 'This takes' (f665) rather than f657, and reach full frame earlier (from about f600).",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-18",
+    "group": "G1",
+    "scene": "V1.3",
+    "frames": "182-402 (0:06.1-0:13.4)",
+    "severity": "polish",
+    "title": "Nothing on the real tracking board says the top band is the wall the light bounces off",
+    "fix": "Do not add a label. Pulse the 16 measured wall points once on 'wall' (n01, f240) and give the band the room's wall colour so the match from V1.2 reads.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-19",
+    "group": "G1",
+    "scene": "V1.1-V1.2",
+    "frames": "60-181 (0:02.0-0:06.0)",
+    "severity": "polish",
+    "title": "Coral 'blocked' sits on the coral partition and his shirt in the room shots",
+    "fix": "Put the room-shot 'blocked' on bare wall above the X (sensor side), or set it in ink with only the X in coral.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-20",
+    "group": "G1",
+    "scene": "V2.1",
+    "frames": "560-566 (0:18.7-0:18.9)",
+    "severity": "polish",
+    "title": "The timeline card slides up through the caption band on its way in",
+    "fix": "Fade the card in at its settled position, or bring it in from the left.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-21",
+    "group": "G2",
+    "scene": "V3.1-V3.4",
+    "frames": "944-1150, 1384-1480",
+    "severity": "polish",
+    "title": "A sliver of blue door is cut by the right frame edge in the raised room view",
+    "fix": "Reframe about 24 px left, or drop the door from these framings.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-22",
+    "group": "lead",
+    "scene": "V3.2 (audio)",
+    "frames": "1037-1050 (0:34.6-0:35.0)",
+    "severity": "polish",
+    "title": "The mirror-slide sound finishes before the mirror moves",
+    "fix": "Re-cue mirror_slide so the sound covers the visible travel, f1045-1049; keep the ting at f1050.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-23",
+    "group": "G2",
+    "scene": "V4.3",
+    "frames": "2230-2282 (1:14.3-1:16.1)",
+    "severity": "polish",
+    "title": "The zoomed waveform carries four labels plus the route icon at once",
+    "fix": "Fade 'wall echo' when the dimension line draws.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-24",
+    "group": "lead",
+    "scene": "V4 and V1 (audio)",
+    "frames": "2088-2128 (1:09.6-1:10.9); 359-362 (0:12.0)",
+    "severity": "polish",
+    "title": "Real-data lift attacks come level with two soft-spoken evidence lines",
+    "fix": "Duck 3-4 dB deeper, or mute the attacks, across 68.5-71.2 s and 11.8-12.2 s.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-25",
+    "group": "G3",
+    "scene": "V5.8",
+    "frames": "3820-3900 (2:07.3-2:10.0)",
+    "severity": "polish",
+    "title": "The measured-versus-predicted inset is too small to follow at phone width",
+    "fix": "Show the comparison large for about 2 s (two tick rows across the lower third, 48 px labels), or drop it.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-26",
+    "group": "G3",
+    "scene": "V5.5 (face inset)",
+    "frames": "3304-3306 (1:50.1-1:50.2)",
+    "severity": "polish",
+    "title": "In the J3b inset the leaning mitt vanishes in two frames instead of leaving the partition",
+    "fix": "Keep the face snap but lift the mitt off over 3-4 frames, then drop the arm.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-27",
+    "group": "G3",
+    "scene": "V5.9",
+    "frames": "4028-4114 (2:14.3-2:17.1)",
+    "severity": "polish",
+    "title": "'likely location' is a hard-edged sliver, not the planned soft blob",
+    "fix": "Feather the patch's edge (the V5.6 overlap shape, blurred), keeping its size so it never reads as a point.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-28",
+    "group": "G4",
+    "scene": "V6→V7",
+    "frames": "4373-4389 (2:25.8-2:26.3)",
+    "severity": "polish",
+    "title": "The rolled U board floats alone on blank blue for about 0.5 s before the shelf arrives",
+    "fix": "Start the tilt to the shelf while the roll is still closing (overlap about 0.4 s). Do this with V2-R1-01.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-29",
+    "group": "G4",
+    "scene": "V7→V8",
+    "frames": "5431-5440 (3:01.0-3:01.3)",
+    "severity": "polish",
+    "title": "The plinth plate passes through the caption band during the push into the spotlight",
+    "fix": "Finish the plate's fade by about f5428, before the push.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-30",
+    "group": "G4",
+    "scene": "V7.5",
+    "frames": "5363-5409 (2:58.8-3:00.3)",
+    "severity": "polish",
+    "title": "The fanned frame cards hold completely still for about 1.5 s",
+    "fix": "Nudge each card's 'what moved' arrow in turn on 'what moved'.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-31",
+    "group": "G4",
+    "scene": "V8.2",
+    "frames": "5727-5773 (3:10.9-3:12.4)",
+    "severity": "polish",
+    "title": "The 'bunched spots' are a speck at phone width",
+    "fix": "Enlarge the spot markers to 16-20 px with ink outlines for this beat, or bracket the cluster on 'bunched'.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-32",
+    "group": "G5",
+    "scene": "V9.4→V9.5",
+    "frames": "6871-6887 (3:49.0-3:49.6)",
+    "severity": "polish",
+    "title": "The cut to the person plan lags n23 by about half a second",
+    "fix": "Cut at f6869-6871; the U card still gets its 1.4 s from 'the U' (f6846).",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-33",
+    "group": "G5",
+    "scene": "V9.5",
+    "frames": "6935-7060 (3:51.2-3:55.3)",
+    "severity": "polish",
+    "title": "The 'handheld: shown only for locating the sensor itself (reported)' chip is cryptic and about 6 px at phone width",
+    "fix": "Rephrase plainly at 40 px, for example 'handheld use: tested only for locating the sensor itself (reported)', or move it to the description.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-34",
+    "group": "G5",
+    "scene": "V9.1",
+    "frames": "6100-6340 (3:23.3-3:31.3)",
+    "severity": "polish",
+    "title": "The step and the spot shift between frames are small at phone width",
+    "fix": "Push in on the mini timeline for 'he moves → echo shifts' and on the wall spots for 'sensor moves → spots move'.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-35",
+    "group": "G6",
+    "scene": "V11.1",
+    "frames": "8055-8114 (4:28.5-4:30.5)",
+    "severity": "polish",
+    "title": "The warehouse wide holds completely still for 2 s",
+    "fix": "Give the robot a small idle (sensor-head pan or blink) on 'good for?', or start the roll on 'for?'.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-36",
+    "group": "G6",
+    "scene": "V11.4",
+    "frames": "8620-8905 (4:47.3-4:56.8)",
+    "severity": "polish",
+    "title": "The four limit tiles change every 1.2-1.7 s and their visual gags are small",
+    "fix": "Crop each tile in on the part that changes (wall, sunlit sensor, chip), and shorten the summary row.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-37",
+    "group": "lead",
+    "scene": "V11 (audio)",
+    "frames": "8912-9010 (4:57.1-5:00.3)",
+    "severity": "polish",
+    "title": "The robot motor ties the voice on the soft tails of 'now,' and 'system.'",
+    "fix": "Duck robot_motor a further 4-6 dB across n30 (296.9-300.4 s).",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-38",
+    "group": "G7",
+    "scene": "V12.1-V12.2",
+    "frames": "9030-9276 (5:01.0-5:09.2)",
+    "severity": "polish",
+    "title": "The callback's readout inset is small and unlabelled, and its blank-out is the proof beat",
+    "fix": "Label the readout 'sensor readout' and enlarge it to at least 25% of frame width for the blank-out beat; hold the blank 0.5 s before the checker moves, as planned.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-39",
+    "group": "lead",
+    "scene": "V12 (music, documents)",
+    "frames": "9248-9330 (5:08.3-5:11.0)",
+    "severity": "polish",
+    "title": "The J4 hold has a complete music stop, while the shot plan says the resolve starts under the hold",
+    "fix": "Decide which is intended and update the other document; if the plan stands, bring in the first harp note of the resolve on his deflation (about f9318-9320).",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-40",
+    "group": "lead",
+    "scene": "V1 (audio)",
+    "frames": "82-85 (0:02.7-0:02.8)",
+    "severity": "polish",
+    "title": "The readout beep at full gain covers the '-t's' of 'It's'",
+    "fix": "Lower readout_beep by about 8 dB or shorten it to end before 2.75 s; keep the cue on the contact.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-41",
+    "group": "lead",
+    "scene": "captions",
+    "frames": "7186-7194, 9031-9037, 9469-9474 and others",
+    "severity": "polish",
+    "title": "Seven caption in-times trail the speech by 0.18-0.26 s",
+    "fix": "Snap each cue's in-time to the measured speech onset (or the segment's start frame) minus 1-2 frames.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-42",
+    "group": "lead",
+    "scene": "captions",
+    "frames": "2725-2798, 6741-6800, 6766-6771, 7395-7445",
+    "severity": "polish",
+    "title": "Caption breaks split phrases and number-with-unit, and one cue runs at 21 characters per second",
+    "fix": "Re-break 84/85, 92/93 and 36/37 at phrase boundaries, keeping 'a hundred dollars' together; lengthen cue 86 into the following gap.",
+    "verdict": "CONFIRMED"
+  },
+  {
+    "id": "V2-R1-43",
+    "group": "lead",
+    "scene": "research/claims.csv",
+    "frames": "182-405, 4440-4680",
+    "severity": "polish",
+    "title": "Claims ledger rows C02 and C22 no longer describe the film",
+    "fix": "Change C02 to 'the authors' saved position estimates (production not documented)'; set C22's scene to V7 (plate only) or point the plate at C25; drop 'wooden' from C20's wording.",
+    "verdict": "PARTLY"
+  },
+  {
+    "id": "V2-R1-44",
+    "group": "lead",
+    "scene": "package (UPLOAD_PACKAGE.md lines 12, 66)",
+    "frames": "n/a",
+    "severity": "polish",
+    "title": "UPLOAD_PACKAGE.md cites v2/QA_V2.md, which does not exist",
+    "fix": "Write v2/QA_V2.md (thumbnail check, this defect log's outcome and the real listening status) before handover, or remove both references.",
+    "verdict": "CONFIRMED"
+  }
+]

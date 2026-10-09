@@ -1,0 +1,562 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V1": {
+   "seconds": 14.0,
+   "mean_energy": 1.054,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "V2": {
+   "seconds": 16.3,
+   "mean_energy": 1.37,
+   "still_seconds": 3.5,
+   "still_share": 0.212,
+   "longest_still_s": 1.5
+  },
+  "V3": {
+   "seconds": 20.4,
+   "mean_energy": 1.403,
+   "still_seconds": 2.5,
+   "still_share": 0.125,
+   "longest_still_s": 1.47
+  },
+  "V4": {
+   "seconds": 25.3,
+   "mean_energy": 0.187,
+   "still_seconds": 11.9,
+   "still_share": 0.47,
+   "longest_still_s": 2.03
+  },
+  "V5": {
+   "seconds": 61.1,
+   "mean_energy": 0.515,
+   "still_seconds": 21.0,
+   "still_share": 0.344,
+   "longest_still_s": 2.53
+  },
+  "V6": {
+   "seconds": 9.0,
+   "mean_energy": 0.825,
+   "still_seconds": 1.6,
+   "still_share": 0.18,
+   "longest_still_s": 1.63
+  },
+  "V7": {
+   "seconds": 35.7,
+   "mean_energy": 2.51,
+   "still_seconds": 8.3,
+   "still_share": 0.233,
+   "longest_still_s": 1.7
+  },
+  "V8": {
+   "seconds": 19.7,
+   "mean_energy": 1.011,
+   "still_seconds": 4.9,
+   "still_share": 0.25,
+   "longest_still_s": 1.63
+  },
+  "V9": {
+   "seconds": 37.6,
+   "mean_energy": 0.418,
+   "still_seconds": 9.8,
+   "still_share": 0.261,
+   "longest_still_s": 1.73
+  },
+  "V10": {
+   "seconds": 29.0,
+   "mean_energy": 0.447,
+   "still_seconds": 3.7,
+   "still_share": 0.128,
+   "longest_still_s": 1.97
+  },
+  "V11": {
+   "seconds": 32.5,
+   "mean_energy": 1.152,
+   "still_seconds": 4.8,
+   "still_share": 0.149,
+   "longest_still_s": 2.03
+  },
+  "V12": {
+   "seconds": 10.4,
+   "mean_energy": 1.291,
+   "still_seconds": 0,
+   "still_share": 0.0,
+   "longest_still_s": 0
+  },
+  "V13": {
+   "seconds": 10.0,
+   "mean_energy": 0.147,
+   "still_seconds": 9.7,
+   "still_share": 0.97,
+   "longest_still_s": 9.7
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V2",
+   "from": 627,
+   "to": 653,
+   "seconds": 0.9,
+   "t": "0:20.9",
+   "spoken": "billionths of a second later."
+  },
+  {
+   "scene": "V2",
+   "from": 690,
+   "to": 734,
+   "seconds": 1.5,
+   "t": "0:23.0",
+   "spoken": "time-of-flight sensor, a camera that"
+  },
+  {
+   "scene": "V2",
+   "from": 806,
+   "to": 837,
+   "seconds": 1.07,
+   "t": "0:26.9",
+   "spoken": "trip. So how do you turn a tiny"
+  },
+  {
+   "scene": "V3",
+   "from": 961,
+   "to": 1004,
+   "seconds": 1.47,
+   "t": "0:32.0",
+   "spoken": "puzzle: why does a plain wall work at"
+  },
+  {
+   "scene": "V3",
+   "from": 1234,
+   "to": 1265,
+   "seconds": 1.07,
+   "t": "0:41.1",
+   "spoken": "every which way, so each spot"
+  },
+  {
+   "scene": "V4",
+   "from": 1662,
+   "to": 1688,
+   "seconds": 0.9,
+   "t": "0:55.4",
+   "spoken": "echo bounced three times,"
+  },
+  {
+   "scene": "V4",
+   "from": 1733,
+   "to": 1776,
+   "seconds": 1.47,
+   "t": "0:57.8",
+   "spoken": "tiny. This is real data from the same team,"
+  },
+  {
+   "scene": "V4",
+   "from": 1783,
+   "to": 1814,
+   "seconds": 1.07,
+   "t": "0:59.4",
+   "spoken": "same team, with a different sensor"
+  },
+  {
+   "scene": "V4",
+   "from": 1816,
+   "to": 1876,
+   "seconds": 2.03,
+   "t": "1:00.5",
+   "spoken": "different sensor and hidden object: the wall's"
+  },
+  {
+   "scene": "V4",
+   "from": 1901,
+   "to": 1926,
+   "seconds": 0.87,
+   "t": "1:03.4",
+   "spoken": "big echo, then,"
+  },
+  {
+   "scene": "V4",
+   "from": 1997,
+   "to": 2033,
+   "seconds": 1.23,
+   "t": "1:06.6",
+   "spoken": "later, a bump you have to zoom in to see."
+  },
+  {
+   "scene": "V4",
+   "from": 2052,
+   "to": 2092,
+   "seconds": 1.37,
+   "t": "1:08.4",
+   "spoken": "see. In this capture, hundreds"
+  },
+  {
+   "scene": "V4",
+   "from": 2099,
+   "to": 2148,
+   "seconds": 1.67,
+   "t": "1:10.0",
+   "spoken": "hundreds of times weaker. That"
+  },
+  {
+   "scene": "V4",
+   "from": 2244,
+   "to": 2282,
+   "seconds": 1.3,
+   "t": "1:14.8",
+   "spoken": "farther the light travelled."
+  },
+  {
+   "scene": "V5",
+   "from": 2344,
+   "to": 2386,
+   "seconds": 1.43,
+   "t": "1:18.1",
+   "spoken": "Simplify it: the sensor flashes"
+  },
+  {
+   "scene": "V5",
+   "from": 2390,
+   "to": 2429,
+   "seconds": 1.33,
+   "t": "1:19.7",
+   "spoken": "sensor flashes and listens at one spot"
+  },
+  {
+   "scene": "V5",
+   "from": 2470,
+   "to": 2493,
+   "seconds": 0.8,
+   "t": "1:22.3",
+   "spoken": "wall. Light covers about thirty"
+  },
+  {
+   "scene": "V5",
+   "from": 2498,
+   "to": 2532,
+   "seconds": 1.17,
+   "t": "1:23.3",
+   "spoken": "about thirty centimetres every nanosecond."
+  },
+  {
+   "scene": "V5",
+   "from": 2719,
+   "to": 2775,
+   "seconds": 1.9,
+   "t": "1:30.6",
+   "spoken": "about fifteen centimetres farther from the wall spot."
+  },
+  {
+   "scene": "V5",
+   "from": 2779,
+   "to": 2813,
+   "seconds": 1.17,
+   "t": "1:32.6",
+   "spoken": "the wall spot. Measure the extra"
+  },
+  {
+   "scene": "V5",
+   "from": 3132,
+   "to": 3159,
+   "seconds": 0.93,
+   "t": "1:44.4",
+   "spoken": "at a second spot. Another"
+  },
+  {
+   "scene": "V5",
+   "from": 3167,
+   "to": 3193,
+   "seconds": 0.9,
+   "t": "1:45.6",
+   "spoken": "Another delay, another arc."
+  },
+  {
+   "scene": "V5",
+   "from": 3386,
+   "to": 3419,
+   "seconds": 1.13,
+   "t": "1:52.9",
+   "spoken": "bit fuzzy, so each arc is"
+  },
+  {
+   "scene": "V5",
+   "from": 3443,
+   "to": 3501,
+   "seconds": 1.97,
+   "t": "1:54.8",
+   "spoken": "really a band, and the bands overlap in a small patch."
+  },
+  {
+   "scene": "V5",
+   "from": 3560,
+   "to": 3635,
+   "seconds": 2.53,
+   "t": "1:58.7",
+   "spoken": "are close, so the patch is long and blurry. Spread"
+  },
+  {
+   "scene": "V5",
+   "from": 3672,
+   "to": 3720,
+   "seconds": 1.63,
+   "t": "2:02.4",
+   "spoken": "it shrinks. In practice, a computer"
+  },
+  {
+   "scene": "V5",
+   "from": 3770,
+   "to": 3793,
+   "seconds": 0.8,
+   "t": "2:05.7",
+   "spoken": "spots at once, trying"
+  },
+  {
+   "scene": "V5",
+   "from": 3929,
+   "to": 3977,
+   "seconds": 1.63,
+   "t": "2:11.0",
+   "spoken": "on assumptions, like what kind of object it's"
+  },
+  {
+   "scene": "V5",
+   "from": 4064,
+   "to": 4114,
+   "seconds": 1.7,
+   "t": "2:15.5",
+   "spoken": "likely location, or a rough shape."
+  },
+  {
+   "scene": "V6",
+   "from": 4116,
+   "to": 4164,
+   "seconds": 1.63,
+   "t": "2:17.2",
+   "spoken": "shape. And here's a real"
+  },
+  {
+   "scene": "V7",
+   "from": 4565,
+   "to": 4589,
+   "seconds": 0.83,
+   "t": "2:32.2",
+   "spoken": "2021, others"
+  },
+  {
+   "scene": "V7",
+   "from": 4774,
+   "to": 4800,
+   "seconds": 0.9,
+   "t": "2:39.1",
+   "spoken": "hidden objects with a cheap sensor."
+  },
+  {
+   "scene": "V7",
+   "from": 4935,
+   "to": 4964,
+   "seconds": 1.0,
+   "t": "2:44.5",
+   "spoken": "from MIT and Dartmouth tried"
+  },
+  {
+   "scene": "V7",
+   "from": 5083,
+   "to": 5131,
+   "seconds": 1.63,
+   "t": "2:49.4",
+   "spoken": "LiDAR, found in phones and gadgets. Don't"
+  },
+  {
+   "scene": "V7",
+   "from": 5186,
+   "to": 5223,
+   "seconds": 1.27,
+   "t": "2:52.9",
+   "spoken": "this yet: phone makers often keep"
+  },
+  {
+   "scene": "V7",
+   "from": 5296,
+   "to": 5325,
+   "seconds": 1.0,
+   "t": "2:56.5",
+   "spoken": "new idea: a model that"
+  },
+  {
+   "scene": "V7",
+   "from": 5359,
+   "to": 5409,
+   "seconds": 1.7,
+   "t": "2:58.6",
+   "spoken": "track of what moved, so many weak frames"
+  },
+  {
+   "scene": "V8",
+   "from": 5479,
+   "to": 5527,
+   "seconds": 1.63,
+   "t": "3:02.6",
+   "spoken": "Why would a smaller, cheaper sensor need"
+  },
+  {
+   "scene": "V8",
+   "from": 5594,
+   "to": 5626,
+   "seconds": 1.1,
+   "t": "3:06.5",
+   "spoken": "fainter echoes. The team's"
+  },
+  {
+   "scene": "V8",
+   "from": 5648,
+   "to": 5679,
+   "seconds": 1.07,
+   "t": "3:08.3",
+   "spoken": "smartphone-grade device had about a"
+  },
+  {
+   "scene": "V8",
+   "from": 5740,
+   "to": 5773,
+   "seconds": 1.13,
+   "t": "3:11.3",
+   "spoken": "hundred listening spots. And if"
+  },
+  {
+   "scene": "V9",
+   "from": 6165,
+   "to": 6190,
+   "seconds": 0.87,
+   "t": "3:25.5",
+   "spoken": "steps, and his echo shifts"
+  },
+  {
+   "scene": "V9",
+   "from": 6200,
+   "to": 6229,
+   "seconds": 1.0,
+   "t": "3:26.7",
+   "spoken": "shifts in time. The sensor"
+  },
+  {
+   "scene": "V9",
+   "from": 6310,
+   "to": 6339,
+   "seconds": 1.0,
+   "t": "3:30.3",
+   "spoken": "spots land somewhere new. Just"
+  },
+  {
+   "scene": "V9",
+   "from": 6364,
+   "to": 6394,
+   "seconds": 1.03,
+   "t": "3:32.1",
+   "spoken": "them up, and echoes from different places"
+  },
+  {
+   "scene": "V9",
+   "from": 6685,
+   "to": 6716,
+   "seconds": 1.07,
+   "t": "3:42.8",
+   "spoken": "object still and step the sensor"
+  },
+  {
+   "scene": "V9",
+   "from": 6751,
+   "to": 6778,
+   "seconds": 0.93,
+   "t": "3:45.0",
+   "spoken": "known positions, spreading"
+  },
+  {
+   "scene": "V9",
+   "from": 6791,
+   "to": 6842,
+   "seconds": 1.73,
+   "t": "3:46.4",
+   "spoken": "spreading out its listening spots. That's how the U was"
+  },
+  {
+   "scene": "V9",
+   "from": 6848,
+   "to": 6882,
+   "seconds": 1.17,
+   "t": "3:48.3",
+   "spoken": "how the U was made. To follow a person,"
+  },
+  {
+   "scene": "V9",
+   "from": 6901,
+   "to": 6931,
+   "seconds": 1.03,
+   "t": "3:50.0",
+   "spoken": "person, hold the sensor still,"
+  },
+  {
+   "scene": "V10",
+   "from": 7414,
+   "to": 7441,
+   "seconds": 0.93,
+   "t": "4:07.1",
+   "spoken": "under a hundred dollars,"
+  },
+  {
+   "scene": "V10",
+   "from": 7480,
+   "to": 7538,
+   "seconds": 1.97,
+   "t": "4:09.3",
+   "spoken": "still while a person walked behind a partition. Many of"
+  },
+  {
+   "scene": "V10",
+   "from": 7721,
+   "to": 7744,
+   "seconds": 0.8,
+   "t": "4:17.4",
+   "spoken": "light straight back. Our"
+  },
+  {
+   "scene": "V11",
+   "from": 8055,
+   "to": 8115,
+   "seconds": 2.03,
+   "t": "4:28.5",
+   "spoken": "second. What might this be good for? Picture"
+  },
+  {
+   "scene": "V11",
+   "from": 8259,
+   "to": 8282,
+   "seconds": 0.8,
+   "t": "4:35.3",
+   "spoken": "junction, a sensor like"
+  },
+  {
+   "scene": "V11",
+   "from": 8797,
+   "to": 8820,
+   "seconds": 0.8,
+   "t": "4:53.2",
+   "spoken": "small hardware. The researchers"
+  },
+  {
+   "scene": "V11",
+   "from": 8870,
+   "to": 8905,
+   "seconds": 1.2,
+   "t": "4:55.7",
+   "spoken": "early-stage prototype. For now,"
+  },
+  {
+   "scene": "V13",
+   "from": 9341,
+   "to": 9631,
+   "seconds": 9.7,
+   "t": "5:11.4",
+   "spoken": "This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner."
+  }
+ ]
+}
