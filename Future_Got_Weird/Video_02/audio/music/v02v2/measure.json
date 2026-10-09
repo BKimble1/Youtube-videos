@@ -1,0 +1,1138 @@
+{
+ "duration": {
+  "samples": 15410640,
+  "seconds": 321.055,
+  "timeline_durationSeconds": 321.055,
+  "timeline_samples": 15410640,
+  "matches_timeline": true,
+  "video_frames": 9632,
+  "video_samples_frames_x_1600": 15411200,
+  "video_minus_bed_ms": 11.67,
+  "narration_samples": 15410640,
+  "matches_narration": true
+ },
+ "peaks": {
+  "sample_peak_dbfs": -6.88,
+  "true_peak_dbtp_4x": -6.87,
+  "samples_at_or_over_0dBFS": 0
+ },
+ "integrated_lufs": -24.77,
+ "reference_lufs": -20.0,
+ "band_1_4k_share_whole": 0.0038,
+ "sections": {
+  "A": {
+   "scenes": "V1-V2",
+   "from": 0.0,
+   "to": 30.37,
+   "lufs": -21.35,
+   "lu_vs_reference": -1.35,
+   "rel_whole_lu": 3.42,
+   "lufs_after_mix_norm_-27": -23.58,
+   "band_1_4k_share": 0.0025,
+   "band_1_4k_share_max_1s": 0.0065,
+   "band_1_4k_share_p95_1s": 0.006
+  },
+  "B": {
+   "scenes": "V3-V4",
+   "from": 30.37,
+   "to": 76.1,
+   "lufs": -24.66,
+   "lu_vs_reference": -4.66,
+   "rel_whole_lu": 0.11,
+   "lufs_after_mix_norm_-27": -26.89,
+   "band_1_4k_share": 0.0022,
+   "band_1_4k_share_max_1s": 0.0238,
+   "band_1_4k_share_p95_1s": 0.012
+  },
+  "C": {
+   "scenes": "V5-V6",
+   "from": 76.1,
+   "to": 146.2,
+   "lufs": -27.47,
+   "lu_vs_reference": -7.47,
+   "rel_whole_lu": -2.7,
+   "lufs_after_mix_norm_-27": -29.7,
+   "band_1_4k_share": 0.0063,
+   "band_1_4k_share_max_1s": 0.0317,
+   "band_1_4k_share_p95_1s": 0.024
+  },
+  "D": {
+   "scenes": "V7",
+   "from": 146.2,
+   "to": 181.9,
+   "lufs": -23.77,
+   "lu_vs_reference": -3.77,
+   "rel_whole_lu": 0.99,
+   "lufs_after_mix_norm_-27": -26.01,
+   "band_1_4k_share": 0.0097,
+   "band_1_4k_share_max_1s": 0.0367,
+   "band_1_4k_share_p95_1s": 0.026
+  },
+  "E": {
+   "scenes": "V8-V9",
+   "from": 181.9,
+   "to": 239.2,
+   "lufs": -26.82,
+   "lu_vs_reference": -6.82,
+   "rel_whole_lu": -2.05,
+   "lufs_after_mix_norm_-27": -29.05,
+   "band_1_4k_share": 0.001,
+   "band_1_4k_share_max_1s": 0.0104,
+   "band_1_4k_share_p95_1s": 0.0056
+  },
+  "F": {
+   "scenes": "V10-V11",
+   "from": 239.2,
+   "to": 300.7,
+   "lufs": -25.19,
+   "lu_vs_reference": -5.19,
+   "rel_whole_lu": -0.42,
+   "lufs_after_mix_norm_-27": -27.42,
+   "band_1_4k_share": 0.0026,
+   "band_1_4k_share_max_1s": 0.0263,
+   "band_1_4k_share_p95_1s": 0.0101
+  },
+  "G": {
+   "scenes": "V12-V13",
+   "from": 300.7,
+   "to": 321.06,
+   "lufs": -23.52,
+   "lu_vs_reference": -3.52,
+   "rel_whole_lu": 1.25,
+   "lufs_after_mix_norm_-27": -25.75,
+   "band_1_4k_share": 0.0034,
+   "band_1_4k_share_max_1s": 0.0118,
+   "band_1_4k_share_p95_1s": 0.0105
+  }
+ },
+ "scenes": {
+  "V1": {
+   "from": 0.0,
+   "to": 14.03,
+   "lufs": -20.69,
+   "rel_whole_lu": 4.08,
+   "band_1_4k_share": 0.0039
+  },
+  "V2": {
+   "from": 14.03,
+   "to": 30.37,
+   "lufs": -22.09,
+   "rel_whole_lu": 2.68,
+   "band_1_4k_share": 0.001
+  },
+  "V3": {
+   "from": 30.37,
+   "to": 50.77,
+   "lufs": -23.91,
+   "rel_whole_lu": 0.86,
+   "band_1_4k_share": 0.0008
+  },
+  "V4": {
+   "from": 50.77,
+   "to": 76.1,
+   "lufs": -25.39,
+   "rel_whole_lu": -0.62,
+   "band_1_4k_share": 0.004
+  },
+  "V5": {
+   "from": 76.1,
+   "to": 137.17,
+   "lufs": -27.73,
+   "rel_whole_lu": -2.96,
+   "band_1_4k_share": 0.0061
+  },
+  "V6": {
+   "from": 137.17,
+   "to": 146.2,
+   "lufs": -25.73,
+   "rel_whole_lu": -0.96,
+   "band_1_4k_share": 0.0073
+  },
+  "V7": {
+   "from": 146.2,
+   "to": 181.9,
+   "lufs": -23.77,
+   "rel_whole_lu": 0.99,
+   "band_1_4k_share": 0.0097
+  },
+  "V8": {
+   "from": 181.9,
+   "to": 201.6,
+   "lufs": -26.91,
+   "rel_whole_lu": -2.14,
+   "band_1_4k_share": 0.0016
+  },
+  "V9": {
+   "from": 201.6,
+   "to": 239.2,
+   "lufs": -26.82,
+   "rel_whole_lu": -2.05,
+   "band_1_4k_share": 0.0007
+  },
+  "V10": {
+   "from": 239.2,
+   "to": 268.2,
+   "lufs": -25.48,
+   "rel_whole_lu": -0.71,
+   "band_1_4k_share": 0.003
+  },
+  "V11": {
+   "from": 268.2,
+   "to": 300.7,
+   "lufs": -25.02,
+   "rel_whole_lu": -0.25,
+   "band_1_4k_share": 0.0023
+  },
+  "V12": {
+   "from": 300.7,
+   "to": 311.07,
+   "lufs": -25.14,
+   "rel_whole_lu": -0.37,
+   "band_1_4k_share": 0.0026
+  },
+  "V13": {
+   "from": 311.07,
+   "to": 321.06,
+   "lufs": -22.42,
+   "rel_whole_lu": 2.35,
+   "band_1_4k_share": 0.0037
+  }
+ },
+ "segments": [
+  {
+   "segment": "pulse",
+   "section": "A",
+   "role": "bed",
+   "from": 0.0,
+   "to": 5.77,
+   "measured_from": 0.0,
+   "measured_to": 5.77,
+   "target_lu": -2.0,
+   "level_lu": -2.0,
+   "gain_db": 21.38,
+   "entry_ramp_s": 0.0
+  },
+  {
+   "segment": "hush_a",
+   "section": "A",
+   "role": "drop",
+   "from": 5.77,
+   "to": 6.07,
+   "measured_from": 5.77,
+   "measured_to": 6.07,
+   "target_lu": null,
+   "level_lu": null,
+   "gain_db": null,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "board",
+   "section": "A",
+   "role": "lift",
+   "from": 6.07,
+   "to": 14.03,
+   "measured_from": 6.37,
+   "measured_to": 14.03,
+   "target_lu": 0.25,
+   "level_lu": 0.25,
+   "gain_db": 21.5,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "route",
+   "section": "A",
+   "role": "bed",
+   "from": 14.03,
+   "to": 26.7,
+   "measured_from": 14.33,
+   "measured_to": 26.7,
+   "target_lu": -2.5,
+   "level_lu": -2.5,
+   "gain_db": 23.03,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "question",
+   "section": "A",
+   "role": "light lift",
+   "from": 26.7,
+   "to": 30.37,
+   "measured_from": 27.0,
+   "measured_to": 30.37,
+   "target_lu": -1.25,
+   "level_lu": -1.25,
+   "gain_db": 22.75,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "puzzle",
+   "section": "B",
+   "role": "bed",
+   "from": 30.37,
+   "to": 50.77,
+   "measured_from": 31.17,
+   "measured_to": 50.77,
+   "target_lu": -4.0,
+   "level_lu": -4.0,
+   "gain_db": 22.36,
+   "entry_ramp_s": 0.8
+  },
+  {
+   "segment": "thin",
+   "section": "B",
+   "role": "bed",
+   "from": 50.77,
+   "to": 57.2,
+   "measured_from": 51.07,
+   "measured_to": 57.2,
+   "target_lu": -5.5,
+   "level_lu": -5.5,
+   "gain_db": 23.51,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "hush_b",
+   "section": "B",
+   "role": "drop",
+   "from": 57.2,
+   "to": 57.73,
+   "measured_from": 57.2,
+   "measured_to": 57.73,
+   "target_lu": null,
+   "level_lu": null,
+   "gain_db": null,
+   "entry_ramp_s": 0.53
+  },
+  {
+   "segment": "data",
+   "section": "B",
+   "role": "bed",
+   "from": 57.73,
+   "to": 67.27,
+   "measured_from": 58.03,
+   "measured_to": 67.27,
+   "target_lu": -6.0,
+   "level_lu": -6.0,
+   "gain_db": 25.06,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "bump",
+   "section": "B",
+   "role": "lift",
+   "from": 67.27,
+   "to": 71.6,
+   "measured_from": 67.57,
+   "measured_to": 71.6,
+   "target_lu": -4.0,
+   "level_lu": -4.0,
+   "gain_db": 21.26,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "clue",
+   "section": "B",
+   "role": "bed",
+   "from": 71.6,
+   "to": 76.1,
+   "measured_from": 71.9,
+   "measured_to": 76.1,
+   "target_lu": -5.75,
+   "level_lu": -5.75,
+   "gain_db": 22.94,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "geometry",
+   "section": "C",
+   "role": "bed",
+   "from": 76.1,
+   "to": 137.12,
+   "measured_from": 76.9,
+   "measured_to": 137.12,
+   "target_lu": -8.0,
+   "level_lu": -8.0,
+   "gain_db": 22.29,
+   "entry_ramp_s": 0.8
+  },
+  {
+   "segment": "hush_c",
+   "section": "C",
+   "role": "drop",
+   "from": 137.12,
+   "to": 139.63,
+   "measured_from": 137.92,
+   "measured_to": 139.63,
+   "target_lu": null,
+   "level_lu": null,
+   "gain_db": null,
+   "entry_ramp_s": 0.8
+  },
+  {
+   "segment": "U",
+   "section": "C",
+   "role": "lift",
+   "from": 139.63,
+   "to": 146.2,
+   "measured_from": 139.93,
+   "measured_to": 146.2,
+   "target_lu": -5.5,
+   "level_lu": -5.5,
+   "gain_db": 16.73,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "museum",
+   "section": "D",
+   "role": "bed",
+   "from": 146.2,
+   "to": 171.0,
+   "measured_from": 146.5,
+   "measured_to": 171.0,
+   "target_lu": -3.5,
+   "level_lu": -3.5,
+   "gain_db": 18.42,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "museum_thin",
+   "section": "D",
+   "role": "bed",
+   "from": 171.0,
+   "to": 176.0,
+   "measured_from": 171.3,
+   "measured_to": 176.0,
+   "target_lu": -5.5,
+   "level_lu": -5.5,
+   "gain_db": 21.56,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "idea",
+   "section": "D",
+   "role": "light lift",
+   "from": 176.0,
+   "to": 181.9,
+   "measured_from": 176.3,
+   "measured_to": 181.9,
+   "target_lu": -4.0,
+   "level_lu": -4.0,
+   "gain_db": 20.03,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "small",
+   "section": "E",
+   "role": "bed",
+   "from": 181.9,
+   "to": 201.6,
+   "measured_from": 182.2,
+   "measured_to": 201.6,
+   "target_lu": -7.0,
+   "level_lu": -7.0,
+   "gain_db": 24.42,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "fusion",
+   "section": "E",
+   "role": "bed",
+   "from": 201.6,
+   "to": 236.87,
+   "measured_from": 202.4,
+   "measured_to": 236.87,
+   "target_lu": -7.0,
+   "level_lu": -7.0,
+   "gain_db": 21.85,
+   "entry_ramp_s": 0.8
+  },
+  {
+   "segment": "keeps",
+   "section": "E",
+   "role": "light lift",
+   "from": 236.87,
+   "to": 239.2,
+   "measured_from": 237.17,
+   "measured_to": 239.2,
+   "target_lu": -5.5,
+   "level_lu": -5.5,
+   "gain_db": 18.66,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "board2",
+   "section": "F",
+   "role": "lift",
+   "from": 239.2,
+   "to": 243.23,
+   "measured_from": 239.5,
+   "measured_to": 243.23,
+   "target_lu": -3.5,
+   "level_lu": -3.5,
+   "gain_db": 18.2,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "conditions",
+   "section": "F",
+   "role": "bed",
+   "from": 243.23,
+   "to": 268.2,
+   "measured_from": 243.53,
+   "measured_to": 268.2,
+   "target_lu": -6.0,
+   "level_lu": -6.0,
+   "gain_db": 24.4,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "warehouse",
+   "section": "F",
+   "role": "bed",
+   "from": 268.2,
+   "to": 282.83,
+   "measured_from": 269.0,
+   "measured_to": 282.83,
+   "target_lu": -4.0,
+   "level_lu": -4.0,
+   "gain_db": 20.01,
+   "entry_ramp_s": 0.8
+  },
+  {
+   "segment": "brake",
+   "section": "F",
+   "role": "dip",
+   "from": 282.83,
+   "to": 285.67,
+   "measured_from": 283.63,
+   "measured_to": 285.67,
+   "target_lu": null,
+   "level_lu": null,
+   "gain_db": null,
+   "entry_ramp_s": 0.8
+  },
+  {
+   "segment": "limits",
+   "section": "F",
+   "role": "bed",
+   "from": 285.67,
+   "to": 296.93,
+   "measured_from": 285.97,
+   "measured_to": 296.93,
+   "target_lu": -6.5,
+   "level_lu": -6.5,
+   "gain_db": 24.33,
+   "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "settle",
+   "section": "F",
+   "role": "settle",
+   "from": 296.93,
+   "to": 300.7,
+   "measured_from": 297.73,
+   "measured_to": 300.7,
+   "target_lu": -7.0,
+   "level_lu": -7.0,
+   "gain_db": 22.23,
+   "entry_ramp_s": 0.8
+  },
+  {
+   "segment": "callback",
+   "section": "G",
+   "role": "bed",
+   "from": 300.7,
+   "to": 305.27,
+   "measured_from": 301.5,
+   "measured_to": 305.27,
+   "target_lu": -5.0,
+   "level_lu": -5.0,
+   "gain_db": 21.67,
+   "entry_ramp_s": 0.8
+  },
+  {
+   "segment": "hold",
+   "section": "G",
+   "role": "bed",
+   "from": 305.27,
+   "to": 308.27,
+   "measured_from": 306.07,
+   "measured_to": 308.27,
+   "target_lu": -5.5,
+   "level_lu": -5.5,
+   "gain_db": 21.54,
+   "entry_ramp_s": 0.8
+  },
+  {
+   "segment": "j4",
+   "section": "G",
+   "role": "stop",
+   "from": 308.27,
+   "to": 311.07,
+   "measured_from": 309.07,
+   "measured_to": 311.07,
+   "target_lu": null,
+   "level_lu": null,
+   "gain_db": null,
+   "entry_ramp_s": 0.8
+  },
+  {
+   "segment": "resolve",
+   "section": "G",
+   "role": "bed",
+   "from": 311.07,
+   "to": 321.06,
+   "measured_from": 311.87,
+   "measured_to": 318.5,
+   "target_lu": -2.5,
+   "level_lu": -2.5,
+   "gain_db": 21.06,
+   "entry_ramp_s": 0.8
+  }
+ ],
+ "lifts": [
+  {
+   "lift": "board",
+   "over": "pulse",
+   "over_lu": 2.25,
+   "then": "route",
+   "over_next_lu": 2.75,
+   "within_1.5_to_3_LU": true
+  },
+  {
+   "lift": "bump",
+   "over": "data",
+   "over_lu": 2.0,
+   "then": "clue",
+   "over_next_lu": 1.75,
+   "within_1.5_to_3_LU": true
+  },
+  {
+   "lift": "U",
+   "over": "geometry",
+   "over_lu": 2.5,
+   "then": null,
+   "over_next_lu": null,
+   "within_1.5_to_3_LU": true
+  },
+  {
+   "lift": "board2",
+   "over": "keeps",
+   "over_lu": 2.0,
+   "then": "conditions",
+   "over_next_lu": 2.5,
+   "within_1.5_to_3_LU": true
+  }
+ ],
+ "light_lifts": [
+  {
+   "lift": "question",
+   "over": "route",
+   "over_lu": 1.25
+  },
+  {
+   "lift": "idea",
+   "over": "museum_thin",
+   "over_lu": 1.5
+  },
+  {
+   "lift": "keeps",
+   "over": "fusion",
+   "over_lu": 1.5
+  }
+ ],
+ "cues": [
+  {
+   "at": 5.77,
+   "to": 6.07,
+   "cue": "n01 \"researchers\"",
+   "kind": "drop",
+   "label": "A: 0.3 s near-drop just before \"researchers\" (n01); the board lift lands on the word",
+   "seconds": 0.3,
+   "before_lkfs": -22.04,
+   "inside_lkfs": -46.47,
+   "after_lkfs": -19.83,
+   "drop_db": -24.4,
+   "return_db": 26.6,
+   "after_vs_before_db": 2.2,
+   "digital_silence": false,
+   "peak_inside_dbfs": -15.1
+  },
+  {
+   "at": 14.03,
+   "cue": "board -> route",
+   "kind": "bed",
+   "before_lkfs": -19.7,
+   "after_lkfs": -21.8,
+   "change_db": -2.1
+  },
+  {
+   "at": 26.7,
+   "cue": "route -> question",
+   "kind": "light lift",
+   "before_lkfs": -21.8,
+   "after_lkfs": -21.14,
+   "change_db": 0.7
+  },
+  {
+   "at": 30.37,
+   "cue": "question -> puzzle",
+   "kind": "bed",
+   "before_lkfs": -21.36,
+   "after_lkfs": -23.42,
+   "change_db": -2.1
+  },
+  {
+   "at": 36.62,
+   "to": 37.52,
+   "cue": "n08 \"visible\"",
+   "kind": "stop",
+   "label": "B: stop for the duck on \"visible\" (n08), resumes on s11",
+   "seconds": 0.9,
+   "before_lkfs": -24.18,
+   "inside_lkfs": -120.0,
+   "after_lkfs": -24.32,
+   "drop_db": -95.8,
+   "return_db": 95.7,
+   "after_vs_before_db": -0.1,
+   "digital_silence": true,
+   "peak_inside_dbfs": -240.0
+  },
+  {
+   "at": 50.77,
+   "cue": "puzzle -> thin",
+   "kind": "bed",
+   "before_lkfs": -24.35,
+   "after_lkfs": -25.98,
+   "change_db": -1.6
+  },
+  {
+   "at": 57.2,
+   "to": 57.73,
+   "cue": "s14 \"tiny\" -> s15",
+   "kind": "drop",
+   "label": "B: short drop from \"tiny\" into \"This is real data\" (s15), soft re-entry",
+   "seconds": 0.53,
+   "before_lkfs": -25.65,
+   "inside_lkfs": -65.59,
+   "after_lkfs": -26.09,
+   "drop_db": -39.9,
+   "return_db": 39.5,
+   "after_vs_before_db": -0.4,
+   "digital_silence": false,
+   "peak_inside_dbfs": -29.3
+  },
+  {
+   "at": 67.27,
+   "cue": "data -> bump",
+   "kind": "lift",
+   "before_lkfs": -26.05,
+   "after_lkfs": -24.15,
+   "change_db": 1.9
+  },
+  {
+   "at": 71.6,
+   "cue": "bump -> clue",
+   "kind": "bed",
+   "before_lkfs": -23.69,
+   "after_lkfs": -25.11,
+   "change_db": -1.4
+  },
+  {
+   "at": 76.1,
+   "cue": "clue -> geometry",
+   "kind": "bed",
+   "before_lkfs": -25.9,
+   "after_lkfs": -27.88,
+   "change_db": -2.0
+  },
+  {
+   "at": 109.92,
+   "to": 111.3,
+   "cue": "s20 \"one place\"",
+   "kind": "stop",
+   "label": "C: full stop for \"one place\" (s20, J3b), resumes on s21",
+   "seconds": 1.38,
+   "before_lkfs": -28.63,
+   "inside_lkfs": -120.0,
+   "after_lkfs": -28.53,
+   "drop_db": -91.4,
+   "return_db": 91.5,
+   "after_vs_before_db": 0.1,
+   "digital_silence": true,
+   "peak_inside_dbfs": -240.0
+  },
+  {
+   "at": 137.12,
+   "to": 139.63,
+   "cue": "V6 switch / n13",
+   "kind": "drop",
+   "label": "C: near-silence on the switch, \"And here's a real one.\" (n13); lift on s37",
+   "seconds": 2.52,
+   "before_lkfs": -26.9,
+   "inside_lkfs": -86.95,
+   "after_lkfs": -25.9,
+   "drop_db": -60.1,
+   "return_db": 61.1,
+   "after_vs_before_db": 1.0,
+   "digital_silence": false,
+   "peak_inside_dbfs": -29.3
+  },
+  {
+   "at": 146.2,
+   "cue": "U -> museum",
+   "kind": "bed",
+   "before_lkfs": -25.08,
+   "after_lkfs": -24.54,
+   "change_db": 0.5
+  },
+  {
+   "at": 171.0,
+   "cue": "museum -> museum_thin",
+   "kind": "bed",
+   "before_lkfs": -23.6,
+   "after_lkfs": -25.44,
+   "change_db": -1.8
+  },
+  {
+   "at": 176.0,
+   "cue": "museum_thin -> idea",
+   "kind": "light lift",
+   "before_lkfs": -25.73,
+   "after_lkfs": -23.72,
+   "change_db": 2.0
+  },
+  {
+   "at": 181.9,
+   "cue": "idea -> small",
+   "kind": "bed",
+   "before_lkfs": -24.47,
+   "after_lkfs": -25.48,
+   "change_db": -1.0
+  },
+  {
+   "at": 201.6,
+   "cue": "small -> fusion",
+   "kind": "bed",
+   "before_lkfs": -28.09,
+   "after_lkfs": -26.38,
+   "change_db": 1.7
+  },
+  {
+   "at": 236.87,
+   "cue": "fusion -> keeps",
+   "kind": "light lift",
+   "before_lkfs": -27.35,
+   "after_lkfs": -25.69,
+   "change_db": 1.7
+  },
+  {
+   "at": 239.2,
+   "cue": "keeps -> board2",
+   "kind": "lift",
+   "before_lkfs": -25.37,
+   "after_lkfs": -23.36,
+   "change_db": 2.0
+  },
+  {
+   "at": 243.23,
+   "cue": "board2 -> conditions",
+   "kind": "bed",
+   "before_lkfs": -23.56,
+   "after_lkfs": -25.36,
+   "change_db": -1.8
+  },
+  {
+   "at": 268.2,
+   "cue": "conditions -> warehouse",
+   "kind": "bed",
+   "before_lkfs": -25.81,
+   "after_lkfs": -23.64,
+   "change_db": 2.2
+  },
+  {
+   "at": 282.83,
+   "to": 285.67,
+   "cue": "s42 \"slow down\"",
+   "kind": "dip",
+   "label": "F: the groove brakes on \"slow down\" (s42): held Fmaj7 at -8 dB until s43",
+   "seconds": 2.83,
+   "before_lkfs": -24.6,
+   "inside_lkfs": -36.38,
+   "after_lkfs": -26.39,
+   "drop_db": -11.8,
+   "return_db": 10.0,
+   "after_vs_before_db": -1.8,
+   "digital_silence": false,
+   "peak_inside_dbfs": -20.6
+  },
+  {
+   "at": 296.93,
+   "cue": "limits -> settle",
+   "kind": "settle",
+   "before_lkfs": -26.94,
+   "after_lkfs": -27.08,
+   "change_db": -0.1
+  },
+  {
+   "at": 300.7,
+   "cue": "settle -> callback",
+   "kind": "bed",
+   "before_lkfs": -27.12,
+   "after_lkfs": -25.11,
+   "change_db": 2.0
+  },
+  {
+   "at": 305.27,
+   "cue": "callback -> hold",
+   "kind": "bed",
+   "before_lkfs": -25.11,
+   "after_lkfs": -25.63,
+   "change_db": -0.5
+  },
+  {
+   "at": 308.27,
+   "to": 311.05,
+   "cue": "s47 \"too.\" -> V13",
+   "kind": "stop",
+   "label": "G: COMPLETE STOP for the deadpan J4 beat (end of s47 to the end-screen start)",
+   "seconds": 2.78,
+   "before_lkfs": -25.53,
+   "inside_lkfs": -120.0,
+   "after_lkfs": -23.03,
+   "drop_db": -94.5,
+   "return_db": 97.0,
+   "after_vs_before_db": 2.5,
+   "digital_silence": true,
+   "peak_inside_dbfs": -240.0
+  }
+ ],
+ "cuts": {
+  "V1->V2": {
+   "cut": 14.03,
+   "floor_dbfs": -28.8,
+   "floor_at": 13.68,
+   "local_rms_dbfs_4s": -21.8,
+   "designed_window": null,
+   "carried": true
+  },
+  "V2->V3": {
+   "cut": 30.37,
+   "floor_dbfs": -28.0,
+   "floor_at": 30.22,
+   "local_rms_dbfs_4s": -23.8,
+   "designed_window": null,
+   "carried": true
+  },
+  "V3->V4": {
+   "cut": 50.77,
+   "floor_dbfs": -36.7,
+   "floor_at": 50.32,
+   "local_rms_dbfs_4s": -26.5,
+   "designed_window": null,
+   "carried": true
+  },
+  "V4->V5": {
+   "cut": 76.1,
+   "floor_dbfs": -31.9,
+   "floor_at": 75.85,
+   "local_rms_dbfs_4s": -27.2,
+   "designed_window": null,
+   "carried": true
+  },
+  "V5->V6": {
+   "cut": 137.17,
+   "floor_dbfs": -87.6,
+   "floor_at": 137.57,
+   "local_rms_dbfs_4s": -32.7,
+   "designed_window": "hush_c",
+   "carried": true
+  },
+  "V6->V7": {
+   "cut": 146.2,
+   "floor_dbfs": -27.0,
+   "floor_at": 146.3,
+   "local_rms_dbfs_4s": -26.4,
+   "designed_window": null,
+   "carried": true
+  },
+  "V7->V8": {
+   "cut": 181.9,
+   "floor_dbfs": -29.8,
+   "floor_at": 181.7,
+   "local_rms_dbfs_4s": -25.7,
+   "designed_window": null,
+   "carried": true
+  },
+  "V8->V9": {
+   "cut": 201.6,
+   "floor_dbfs": -36.6,
+   "floor_at": 201.4,
+   "local_rms_dbfs_4s": -27.7,
+   "designed_window": null,
+   "carried": true
+  },
+  "V9->V10": {
+   "cut": 239.2,
+   "floor_dbfs": -31.3,
+   "floor_at": 238.7,
+   "local_rms_dbfs_4s": -26.2,
+   "designed_window": null,
+   "carried": true
+  },
+  "V10->V11": {
+   "cut": 268.2,
+   "floor_dbfs": -32.2,
+   "floor_at": 268.1,
+   "local_rms_dbfs_4s": -24.5,
+   "designed_window": null,
+   "carried": true
+  },
+  "V11->V12": {
+   "cut": 300.7,
+   "floor_dbfs": -31.1,
+   "floor_at": 300.55,
+   "local_rms_dbfs_4s": -26.6,
+   "designed_window": null,
+   "carried": true
+  },
+  "V12->V13": {
+   "cut": 311.07,
+   "floor_dbfs": -240.0,
+   "floor_at": 310.57,
+   "local_rms_dbfs_4s": -27.0,
+   "designed_window": "j4",
+   "carried": true
+  }
+ },
+ "end": {
+  "last_sample": [
+   0.0,
+   0.0
+  ],
+  "last_sample_is_zero": true,
+  "fade_start": 318.5,
+  "fade_seconds": 2.555,
+  "rms_dbfs_last_0.5s": -53.8,
+  "rms_dbfs_last_0.1s": -76.7,
+  "rms_dbfs_1s_before_fade": -21.1,
+  "last_sample_above_-80dBFS_ms_before_end": 38.5
+ },
+ "stems": {
+  "pizz": {
+   "gm_program": 45,
+   "notes": 493,
+   "rms_dbfs": -31.8,
+   "band_1_4k_share": 0.0014
+  },
+  "marimba": {
+   "gm_program": 12,
+   "notes": 277,
+   "rms_dbfs": -38.4,
+   "band_1_4k_share": 0.014
+  },
+  "vibes": {
+   "gm_program": 11,
+   "notes": 106,
+   "rms_dbfs": -45.5,
+   "band_1_4k_share": 0.0004
+  },
+  "glock": {
+   "gm_program": 9,
+   "notes": 14,
+   "rms_dbfs": -60.2,
+   "band_1_4k_share": 0.0002
+  },
+  "guitar": {
+   "gm_program": 24,
+   "notes": 30,
+   "rms_dbfs": -44.2,
+   "band_1_4k_share": 0.0097
+  },
+  "harp": {
+   "gm_program": 46,
+   "notes": 18,
+   "rms_dbfs": -45.7,
+   "band_1_4k_share": 0.0008
+  },
+  "bass": {
+   "gm_program": 32,
+   "notes": 252,
+   "rms_dbfs": -30.7,
+   "band_1_4k_share": 0.0
+  },
+  "bassoon": {
+   "gm_program": 70,
+   "notes": 23,
+   "rms_dbfs": -43.8,
+   "band_1_4k_share": 0.0132
+  },
+  "clarinet": {
+   "gm_program": 71,
+   "notes": 8,
+   "rms_dbfs": -51.5,
+   "band_1_4k_share": 0.0753
+  },
+  "strings": {
+   "gm_program": 49,
+   "notes": 171,
+   "rms_dbfs": -35.4,
+   "band_1_4k_share": 0.0152
+  },
+  "drums": {
+   "gm_program": 0,
+   "notes": 501,
+   "rms_dbfs": -52.1,
+   "band_1_4k_share": 0.0032
+  }
+ },
+ "notes": {
+  "events": {
+   "pizz": 493,
+   "marimba": 277,
+   "vibes": 106,
+   "glock": 14,
+   "guitar": 30,
+   "harp": 18,
+   "bass": 252,
+   "bassoon": 23,
+   "clarinet": 8,
+   "strings": 171,
+   "drums": 501
+  },
+  "max_melodic_note": 79,
+  "glock_notes": [
+   108,
+   110
+  ],
+  "drum_notes": [
+   36,
+   42,
+   82
+  ],
+  "gm_programs": {
+   "pizz": 45,
+   "marimba": 12,
+   "vibes": 11,
+   "glock": 9,
+   "guitar": 24,
+   "harp": 46,
+   "bass": 32,
+   "bassoon": 70,
+   "clarinet": 71,
+   "strings": 49
+  },
+  "voice_or_choir_programs_used": []
+ },
+ "stem_sum_max_abs_diff": 1.1920928955078125e-06,
+ "sha256_bed": "3a5671ec1b276e69caeabd8930824f6fa53c6e167fed2e415239fe9016adc8e1",
+ "calibration_passes_worst_error_lu": [
+  5.771,
+  0.254,
+  0.0
+ ],
+ "plots": [
+  "audio/music/v02v2/music_overview.png",
+  "audio/music/v02v2/music_cues.png"
+ ]
+}
