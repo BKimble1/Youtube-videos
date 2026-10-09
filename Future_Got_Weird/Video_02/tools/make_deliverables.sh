@@ -38,7 +38,7 @@ if [[ $what == preview || $what == all ]]; then
 fi
 if [[ $what == extras || $what == all ]]; then
   cp "$HERE/package/${PFX}.srt" "$OUT/${PFX}.srt"
-  THUMB=$(python3 -c "import re;print(re.search(r\"THUMB = '([^']+)'\", open('$HERE/tools/make_package.py').read()).group(1))")
+  THUMB=$(python3 -c "import re;print(re.search(r'THUMB = .*?(thumbnails/[A-Za-z0-9_]+\.jpg)', open('$HERE/tools/make_package.py').read()).group(1))")
   base="${THUMB%_1280.jpg}"
   cp "$HERE/$base.png" "$OUT/${PFX}_thumbnail.png"
   cp "$HERE/$THUMB" "$OUT/${PFX}_thumbnail.jpg"
