@@ -38,8 +38,12 @@ SR = 48000
 MEDIAN_LINE_DB = None
 HOP = int(0.005 * SR)
 PUNCT_ONLY = re.compile(r"^[^\wʊəɪæʃʒθðŋɑɔɛʌ]+$")
-DESIGNED_BEATS = {  # segment -> words after which the direction asks for an audible beat (Video 02 script v2)
-    "s03": ["yet…"], "s10": ["here…"], "s12": ["paths…"], "s18": ["direction…"], "s20": ["just…"],
+DESIGNED_BEATS = {  # segment -> words after which the direction asks for an audible beat (Video 02 script v2 pass)
+    "s18": ["direction…"], "s20": ["just…"],
+    "n01": ["yet…"], "n03": ["round…"], "n05": ["sensor…"], "n06": ["delay…"], "n07": ["puzzle…"],
+    "n08": ["here…"], "n09": ["paths…"], "n11": ["there…"], "n16": ["moved…"], "n19": ["jiggles…"],
+    "n20": ["smear…"], "n23": ["up…"], "n24": ["do…"], "n25": ["dollars…"], "n29": ["junction…"],
+    "n31": ["sight…"],
 }
 
 
@@ -235,7 +239,7 @@ def measure(only=None):
                 long = [d for d, w in zip(disp, ws) if w["end"] - w["start"] > 1.6]
                 beats = {}
                 for bw in DESIGNED_BEATS.get(sid, []):
-                    gs = [g for t, g in pauses if t.endswith(bw) or t == bw]
+                    gs = [g for t, g in pauses if t.lower().endswith(bw) or t.lower() == bw]
                     beats[bw] = max(gs) if gs else 0.0
                 rows.setdefault(sid, {})[take] = {
                     "duration_s": round(b - a, 3), "wpm": round(len(ws) / (speak / 60), 1),
@@ -282,7 +286,7 @@ def cmd_eval(reselect=False, fill=False, only=None):
     for sec in secs["sections"]:
         if only and sec["id"] not in only:
             continue
-        ids = sec["segments"]
+        ids = [s for s in sec["segments"] if not s.startswith("ctx:")]  # context lines are never selected
         takes = sorted({t for sid in ids for t in rows.get(sid, {})})
         best_per = {sid: max(rows[sid], key=lambda t: rows[sid][t]["score"]) for sid in ids}
         best_one = max(takes, key=lambda t: sum(rows[sid].get(t, {"score": -99})["score"] for sid in ids))
@@ -390,6 +394,42 @@ def cmd_assemble():
         else:
             end = min(pa[1] - 0.04 if pa else len(x) / SR, off + 0.3)
         seg = x[int(round(start * SR)): int(round(end * SR))].copy()
+        ws = [dict(w) for w in ws]
+        icap = segdoc[sid].get("inner_pause_cap_ms")
+        if icap:
+            # tighten sentence breaks inside the line: a quiet stretch between two words longer than the cap loses
+            # its middle (crossfaded), and the following word times move up
+            sdb = frame_db(seg)
+            thr = np.percentile(sdb, 95) - 30
+            shift_total = 0.0
+            for wi in range(len(ws) - 1):
+                g0 = ws[wi]["end"] - start          # word times already carry the earlier cuts
+                g1 = ws[wi + 1]["start"] - start
+                i0, i1 = int(g0 * SR / HOP), int(g1 * SR / HOP)
+                if i1 - i0 < 3:
+                    continue
+                q = np.where(sdb[i0:i1] < thr)[0]
+                if not len(q):
+                    continue
+                q0, q1 = (i0 + q[0]) * HOP / SR, (i0 + q[-1] + 1) * HOP / SR
+                quiet = q1 - q0
+                if quiet <= icap / 1000.0 + 0.02:
+                    continue
+                cut = quiet - icap / 1000.0
+                c0 = q0 + (quiet - cut) / 2
+                a, b = int(round(c0 * SR)), int(round((c0 + cut) * SR))
+                xf = int(0.01 * SR)
+                head, tail = seg[:a], seg[b:]
+                if len(head) > xf and len(tail) > xf:
+                    mix = head[-xf:] * np.linspace(1, 0, xf) + tail[:xf] * np.linspace(0, 1, xf)
+                    seg = np.concatenate([head[:-xf], mix, tail[xf:]])
+                    sdb = frame_db(seg)
+                    shift_total += (b - a + xf) / SR
+                    for w in ws[wi + 1:]:
+                        w["start"] -= (b - a + xf) / SR
+                        w["end"] -= (b - a + xf) / SR
+                    print(f"   {sid}: pause after '{ws[wi]['text']}' {quiet:.2f}s → {icap / 1000:.2f}s")
+            off -= shift_total
         # one presenter: lines whose level strays more than 1.5 dB from the median line are pulled most of the way back
         line_db = float(np.percentile(frame_db(x[int(on * SR): int(off * SR)]), 90))
         dev = line_db - MEDIAN_LINE_DB

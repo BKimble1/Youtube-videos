@@ -8,7 +8,8 @@
 Lines kept verbatim from v1 keep their v1 id and their selected v1 take (script/v1/narration_selection.json); their v1
 recording section is carried into narration_sections.json unchanged so the assembler can cut the line out of that take.
 New or changed lines get new ids (n01..) and are grouped into new recording blocks y01.. (consecutive new lines of the
-same story section, at most 4 lines / 420 characters per block, so the voice performs them as one coherent passage).
+same story section, at most 4 lines / 420 characters per block, so the voice performs them as one coherent passage;
+each block is spoken with its neighbouring lines as context, and only its own lines are kept).
 The v1 script files are archived in script/v1/.
 """
 import json
@@ -90,17 +91,29 @@ def main():
     flush()
     for sid in used_v1:
         sections.append(next(s for s in v1secs["sections"] if s["id"] == sid))
+    # each block is performed with the line before it and the line after it as spoken context ("ctx:<id>" segments);
+    # only the block's own lines are ever selected, so no block is read as an isolated announcement
+    pos = {ln["id"]: i for i, ln in enumerate(lines)}
     for k, b in enumerate(blocks, 1):
-        prompt = "\n\n".join(x["tts"] for x in b)
-        sections.append({"id": f"y{k:02d}", "segments": [x["id"] for x in b], "prompt": prompt,
-                         "words_per_segment": [len(words(x["text"])) for x in b], "chars": len(prompt)})
+        i0, i1 = pos[b[0]["id"]], pos[b[-1]["id"]]
+        seq = ([lines[i0 - 1]] if i0 > 0 else []) + b + ([lines[i1 + 1]] if i1 + 1 < len(lines) else [])
+        ctx = {x["id"] for x in seq} - {x["id"] for x in b}
+        prompt = "\n\n".join(x["tts"] for x in seq)
+        sections.append({"id": f"y{k:02d}", "segments": [("ctx:" if x["id"] in ctx else "") + x["id"] for x in seq],
+                         "prompt": prompt, "words_per_segment": [len(words(x["text"])) for x in seq],
+                         "chars": len(prompt)})
 
     meta = {k: v1segs[k] for k in ("title", "channel", "voice_name", "voice_id", "model")}
     meta["version"] = "v2 editorial pass (2026-10-09)"
     meta["notes"] = v1segs["notes"]
+    vt = v2.get("timing", {})
+    meta["timing"] = {"lead_in_ms": vt.get("lead_in_ms", 1000), "end_screen_ms": vt.get("end_screen_ms", 10000),
+                      "end_screen_voice_offset_ms": vt.get("end_screen_voice_offset_ms", 200),
+                      "pauses_are_caps": True}
     segs = [{"id": ln["id"], "scene": ln["scene"], "text": ln["text"], "tts": ln["tts"],
              "pause_after_ms": int(ln.get("pause_ms", 300)), "claims": ln.get("claims", []),
-             "direction": ln.get("direction", ""), "story_section": ln["section"], "reuse_v1": ln["reuse_v1"]}
+             "direction": ln.get("direction", ""), "story_section": ln["section"], "reuse_v1": ln["reuse_v1"],
+             **({"inner_pause_cap_ms": ln["inner_pause_cap_ms"]} if "inner_pause_cap_ms" in ln else {})}
             for ln in lines]
     json.dump({**meta, "segments": segs}, open(os.path.join(ROOT, "script/narration_segments.json"), "w", encoding="utf-8"),
               indent=1, ensure_ascii=False)

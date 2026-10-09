@@ -18,7 +18,9 @@ Usage
 
 pause_after_ms is the target gap between segments. For engines whose manifest gives speech_start_s /
 speech_end_s (ElevenLabs block takes, see tools/el_assemble.py) it counts the voice's own pause
-towards that target instead of adding the full value on top.
+towards that target instead of adding the full value on top. With "timing": {"pauses_are_caps": true} in
+narration_segments.json (Video 02 v2) a longer natural gap is trimmed to the target; "lead_in_ms",
+"end_screen_ms" and "end_screen_voice_offset_ms" set the silent lead-in and the end-screen length and start.
 """
 import argparse
 import json
@@ -141,20 +143,23 @@ def main():
     manifest = load_json(man_path)
     by_id = {s["id"]: s for s in manifest["segments"]}
 
-    pieces = [np.zeros(int(LEAD_IN_S * SR), dtype=np.float32)]
-    t = LEAD_IN_S
-    out_segments = []
+    # v2 script timing (script/narration_segments.json "timing"): silent lead-in, end screen length, and designed
+    # pauses applied as caps (the voice's own longer pause between two lines is trimmed to the designed gap)
+    tim = segs_doc.get("timing", {})
+    lead_in = tim.get("lead_in_ms", LEAD_IN_S * 1000) / 1000.0
+    cap = bool(tim.get("pauses_are_caps", False))
     seg_list = segs_doc["segments"]
-    for si, seg in enumerate(seg_list):
+    loaded = []
+    for seg in seg_list:
         m = by_id.get(seg["id"])
         if m is None:
             sys.exit(f"Segment {seg['id']} missing from {man_path}")
+        m = dict(m)
         wav_path = os.path.join(os.path.dirname(man_path), os.path.basename(m["file"]))
         audio, sr = sf.read(wav_path, dtype="float32", always_2d=True)
         audio = audio.mean(axis=1)
         if sr != SR:
             sys.exit(f"{wav_path}: expected {SR} Hz, got {sr}")
-        dur = len(audio) / SR
         words = None
         wf = m.get("words_file")
         if wf:
@@ -163,6 +168,46 @@ def main():
                 words = load_json(wpath)
                 if isinstance(words, dict):
                     words = words.get("words", [])
+        loaded.append([seg, m, audio, words])
+    trims = []
+    if cap:
+        for i in range(len(loaded) - 1):
+            seg, m, audio, _ = loaded[i]
+            _, mn, an, _ = loaded[i + 1]
+            if "speech_end_s" not in m or "speech_start_s" not in mn:
+                continue
+            target = seg.get("pause_after_ms", 250) / 1000.0
+            tail = len(audio) / SR - m["speech_end_s"]
+            head = mn["speech_start_s"]
+            excess = tail + head - target
+            if excess <= 0.02:
+                continue
+            cut_tail = min(excess, max(0.0, tail - 0.15))
+            cut_head = min(excess - cut_tail, max(0.0, head - 0.06))
+            if cut_tail > 0:
+                n = int(round(cut_tail * SR))
+                a = audio[: len(audio) - n].copy()
+                fo = min(len(a), int(0.03 * SR))
+                a[-fo:] *= np.linspace(1, 0, fo) ** 2
+                loaded[i][2] = a
+            if cut_head > 0:
+                n = int(round(cut_head * SR))
+                a = an[n:].copy()
+                fi = min(len(a), int(0.01 * SR))
+                a[:fi] *= np.linspace(0, 1, fi)
+                loaded[i + 1][2] = a
+                mn["speech_start_s"] -= cut_head
+                mn["speech_end_s"] -= cut_head
+                if loaded[i + 1][3]:
+                    loaded[i + 1][3] = [{**w, "start": w["start"] - cut_head, "end": w["end"] - cut_head}
+                                        for w in loaded[i + 1][3]]
+            if cut_tail + cut_head > 0.02:
+                trims.append((seg["id"], round(tail + head, 2), round(tail + head - cut_tail - cut_head, 2)))
+    pieces = [np.zeros(int(lead_in * SR), dtype=np.float32)]
+    t = lead_in
+    out_segments = []
+    for si, (seg, m, audio, words) in enumerate(loaded):
+        dur = len(audio) / SR
         timing_source = "engine"
         if not words:
             words = estimate_words(seg["text"], dur)
@@ -187,9 +232,11 @@ def main():
         s0 = m.get("speech_start_s", 0.0)
         s1 = m.get("speech_end_s", dur)
         if "speech_end_s" in m:
-            nxt = by_id.get(seg_list[si + 1]["id"], {}) if si + 1 < len(seg_list) else {}
+            nxt = loaded[si + 1][1] if si + 1 < len(loaded) else {}
             natural = (dur - s1) + nxt.get("speech_start_s", 0.0)
             pause = max(0.0, pause - natural)
+        if si + 1 == len(loaded) and "end_screen_ms" in tim:
+            pause = 0.0
         pieces.append(np.zeros(int(round(pause * SR)), dtype=np.float32))
         out_segments.append({
             "id": seg["id"],
@@ -202,8 +249,15 @@ def main():
         })
         t += dur + pause
 
-    total_s = t + TAIL_S
-    pieces.append(np.zeros(int(TAIL_S * SR), dtype=np.float32))
+    if "end_screen_ms" in tim:
+        # the end screen starts end_screen_voice_offset_ms before the last line's first word and lasts end_screen_ms
+        last = out_segments[-1]
+        es_start = last["start"] - tim.get("end_screen_voice_offset_ms", 200) / 1000.0
+        tail = max(0.5, es_start + tim["end_screen_ms"] / 1000.0 - t)
+    else:
+        tail = TAIL_S
+    total_s = t + tail
+    pieces.append(np.zeros(int(round(tail * SR)), dtype=np.float32))
     narration = np.concatenate(pieces)
 
     # Scenes: start SCENE_LEAD_S before the first word of their first segment; first scene starts at 0.
@@ -214,7 +268,10 @@ def main():
     scenes = []
     for i, sid in enumerate(scene_ids):
         first = next(s for s in out_segments if s["scene"] == sid)
-        start = 0.0 if i == 0 else max(0.0, first["start"] - SCENE_LEAD_S)
+        lead = SCENE_LEAD_S
+        if "end_screen_ms" in tim and i == len(scene_ids) - 1:
+            lead = tim.get("end_screen_voice_offset_ms", 200) / 1000.0
+        start = 0.0 if i == 0 else max(0.0, first["start"] - lead)
         scenes.append({"id": sid, "start": start})
     for i, sc in enumerate(scenes):
         sc["end"] = scenes[i + 1]["start"] if i + 1 < len(scenes) else total_s
@@ -293,6 +350,8 @@ def main():
           f"wpm(overall)={words/total_s*60:.0f}")
     for sc in timeline["scenes"]:
         print(f"  scene {sc['id']:<4} {sc['from']/FPS:7.2f}s → {sc['to']/FPS:7.2f}s  ({(sc['to']-sc['from'])/FPS:5.1f}s)")
+    for sid, a, b in trims:
+        print(f"  pause cap: after {sid} the voice's own gap {a:.2f}s → {b:.2f}s")
     est = [s["id"] for s in out_segments if s["timing"] != "engine"]
     if est:
         print(f"  NOTE: word timings estimated/remapped for: {', '.join(est)}")

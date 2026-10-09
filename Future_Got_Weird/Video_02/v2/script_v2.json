@@ -1,390 +1,653 @@
 {
  "title": "How Cameras See Around Corners",
  "channel": "Future Got Weird",
- "voice_name": "Test Voice",
- "voice_id": "kk5XaSLo2XAw0sKM98zU",
- "model": "eleven_v4",
- "version": "v2 editorial pass (2026-10-09)",
- "notes": "text = display/subtitle text. tts = Eleven v4 prompt with delivery tags in [brackets] and IPA between slashes; with tags removed and IPA mapped back it has the same words as text, so forced-alignment timings map 1:1.",
+ "version": "v2 final script (head writer pass), 2026-10-09",
+ "governed_by": "v2/REVISION_BRIEF.md",
+ "voice": {
+  "name": "Test Voice",
+  "id": "kk5XaSLo2XAw0sKM98zU",
+  "model": "eleven_v4",
+  "ipa": {
+   "LiDAR": "/ˈlaɪdɑːr/"
+  },
+  "direction": "curious, conversational, slightly amused; clear contrast between question ([curious]), discovery ([warmly]) and limitation ([softly] / [dryly]); never a promotional announcer"
+ },
  "timing": {
   "lead_in_ms": 1000,
+  "lead_in_note": "silent hide before s02 (v1 s01 is cut; the hide is picture only)",
+  "j4_hold_ms": 3000,
   "end_screen_ms": 10000,
   "end_screen_voice_offset_ms": 200,
-  "pauses_are_caps": true
+  "pause_rule": "pause_ms is the gap to the next line, applied as a cap: trim a take's own longer paragraph pause to it (v1 overshot 16 gaps)",
+  "estimate": {
+   "method": "v1 takes at their measured spans (minus the listed in-line pause tightening); new lines that repeat a v1 sentence at that fragment's measured length; other new lines at 170 wpm (questions 160); plus every pause_ms, the 1.0 s lead-in and a 10.0 s end screen",
+   "total_s": 333.6,
+   "total": "5:33.6",
+   "all_new_at_160wpm": "5:41.6",
+   "all_new_at_182wpm": "5:25.2",
+   "fragments_also_at_wpm_170": "5:39.8",
+   "fragments_also_at_wpm_160": "5:51.1",
+   "end_screen_start": "5:23.6"
+  }
  },
- "segments": [
+ "totals": {
+  "lines": 51,
+  "words": 902,
+  "reused_v1_takes": 20,
+  "reused_v1_words": 398,
+  "new_lines": 31,
+  "new_words": 504,
+  "new_lines_with_v1_fragment_alt": 11,
+  "new_words_with_v1_fragment_alt": 151
+ },
+ "lines": [
   {
    "id": "s02",
+   "section": "A",
    "scene": "V1",
    "text": "That sensor can't see him. It's pointed at a plain, blank wall.",
    "tts": "That sensor can't see him. It's pointed at a plain, blank wall.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C01"
    ],
    "direction": "VOICE: matter-of-fact setup (v1 take); if the new hook takes (block y01) sound unlike it, regenerate it with y01, same words, under a new id. PICTURE: 1.0 s silent hide first (he tiptoes in, settles smug); sensor-facing room view: the dashed sight line from the sensor stops at the partition with an X on 'can't see him'; then the S1.2 push: the checker taps the sensor, its field-of-view wedge lights bare wall well clear of him; labels 'sensor' 'blocked'.",
-   "story_section": "A",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x01_t3",
+    "file": "audio/narration/v2/s02.wav"
+   },
+   "words": 12,
+   "est_start_s": 1.0,
+   "est_dur_s": 3.57
   },
   {
    "id": "n01",
+   "section": "A",
    "scene": "V1",
    "text": "Yet researchers have used light bouncing off a wall to track someone hidden around a corner.",
    "tts": "Yet… researchers have used light bouncing off a wall to track someone hidden around a corner.",
-   "pause_after_ms": 250,
+   "pause_ms": 250,
    "claims": [
     "C02",
     "C04",
     "C03"
    ],
    "direction": "VOICE: a small beat after 'Yet', then clear and quietly amazed: the discovery, not an announcement. PICTURE: hard cut on 'researchers' to the full-frame real board (kraft, 'Real data'): authors' stored estimate from index 6, every 2nd frame, sped up; labels 'sensor' 'blocked' 'estimated position'; one source line.",
-   "story_section": "A",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 16,
+   "est_start_s": 4.9,
+   "est_dur_s": 5.9
   },
   {
    "id": "n02",
+   "section": "A",
    "scene": "V1",
    "text": "That dot is their position estimate. Not a photograph.",
    "tts": "That dot is their position estimate. [dryly] Not a photograph.",
-   "pause_after_ms": 600,
+   "pause_ms": 600,
    "claims": [
     "C02",
     "C19"
    ],
    "direction": "VOICE: plain, then a dry drop on 'Not a photograph' (said once in the film). PICTURE: same board, 5% push to the dot; 0.6 s hold for reading; cut-in of the guesser's smirk freezing (our room, never synced to the track).",
-   "story_section": "A",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 9,
+   "est_start_s": 11.0,
+   "est_dur_s": 3.18
   },
   {
    "id": "n03",
+   "section": "A",
    "scene": "V2",
    "text": "The trick is timing: light that reaches him takes the long way round, so it comes back later.",
    "tts": "[warmly] The trick is timing: light that reaches him takes the long way round… so it comes back later.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C04",
     "C06"
    ],
    "direction": "VOICE: friendly explainer; light stress on 'long way round'. PICTURE: match cut to our full-frame plan schematic (chip 'illustration'): short teal trip S to W1 and back races the long saffron trip S to W1 to him to W1 to S, around the partition's end; both drop onto one timeline.",
-   "story_section": "A",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 18,
+   "est_start_s": 14.8,
+   "est_dur_s": 6.6
   },
   {
    "id": "n04",
+   "section": "A",
    "scene": "V2",
    "text": "A few billionths of a second later.",
    "tts": "[dryly] A few billionths of a second later.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C06"
    ],
    "direction": "VOICE: dry undercut on the size of 'later'. PICTURE: the arrival timeline fills the frame: tall teal wall echo first, small saffron echo later, bracket 'a few nanoseconds'; 'not to scale'; no number.",
-   "story_section": "A",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s06",
+     "take": "x03_t3",
+     "file": "audio/narration/v2/s06.wav",
+     "in_s": 4.61,
+     "out_s": 6.69,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 7,
+   "est_start_s": 21.7,
+   "est_dur_s": 2.08
   },
   {
    "id": "n05",
+   "section": "A",
    "scene": "V2",
    "text": "This takes a time-of-flight sensor, a camera that clocks its own light's round trip.",
    "tts": "This takes a time-of-flight sensor… a camera that clocks its own light's round trip.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C07",
     "C43"
    ],
    "direction": "VOICE: define the sensor plainly. PICTURE: timeline shrinks into the sensor's display (chart to display match); sensor close-up; label 'time-of-flight sensor'; chip 'invisible flash · shown for clarity'; the checker taps the display.",
-   "story_section": "A",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s07",
+     "take": "x03_t3",
+     "file": "audio/narration/v2/s07.wav",
+     "in_s": 1.95,
+     "out_s": 6.23,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 14,
+   "est_start_s": 24.1,
+   "est_dur_s": 4.28
   },
   {
    "id": "n06",
+   "section": "A",
    "scene": "V2",
    "text": "So how do you turn a tiny delay into a location?",
    "tts": "[curious] So how do you turn a tiny delay… into a location?",
-   "pause_after_ms": 400,
+   "pause_ms": 400,
    "claims": [],
    "direction": "VOICE: a real question, rising, unhurried; the hook ends here. PICTURE: push past the sensor into the plan; W1 glows; a dashed candidate arc starts from W1, stops a third of the way and resolves into a '?'; the camera pushes into W1's paint.",
-   "story_section": "A",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 11,
+   "est_start_s": 28.7,
+   "est_dur_s": 4.38
   },
   {
    "id": "n07",
+   "section": "B",
    "scene": "V3",
    "text": "First, a puzzle: why does a plain wall work at all?",
    "tts": "[curious] First, a puzzle… why does a plain wall work at all?",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [],
    "direction": "VOICE: 'First' marks this as step one of the answer, not a change of subject; curious, a small beat after 'puzzle'. PICTURE: the push into W1's paint pulls back out to the raised room view: bare wall, sensor, him behind the partition; question title 'What survives the bounce?' for this line only.",
-   "story_section": "B",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 11,
+   "est_start_s": 33.5,
+   "est_dur_s": 4.38
   },
   {
    "id": "n08",
+   "section": "B",
    "scene": "V3",
    "text": "Put a mirror here, and our friend is simply visible.",
    "tts": "[dryly] Put a mirror here… and our friend is simply visible.",
-   "pause_after_ms": 500,
+   "pause_ms": 500,
    "claims": [
     "C08"
    ],
    "direction": "VOICE: dry; J2 lands on 'visible'. PICTURE: same raised view; on 'here' the checker slides a mirror panel onto the wall; one pulse runs sensor to mirror to him with 1 s 'in = out' angle marks; the mirror shows his back; J2: he ducks; hold 0.5 s.",
-   "story_section": "B",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s10",
+     "take": "x04_t1",
+     "file": "audio/narration/v2/s10.wav",
+     "in_s": 4.55,
+     "out_s": 7.81,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 10,
+   "est_start_s": 38.2,
+   "est_dur_s": 3.26
   },
   {
    "id": "s11",
+   "section": "B",
    "scene": "V3",
    "text": "A painted wall is rough up close. It throws light every which way, so each spot acts less like a mirror, more like a tiny lamp.",
    "tts": "A painted wall is rough up close. It throws light every which way, so each spot acts less like a mirror, more like a tiny lamp.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C09"
    ],
    "direction": "VOICE: explainer (v1 take). PICTURE: the guesser slides the mirror off, relieved; magnifier irises into the paint cross-section; one ray sprays every which way; labels 'rough up close' 'tiny lamp (our analogy)'.",
-   "story_section": "B",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x05_t4",
+    "file": "audio/narration/v2/s11.wav"
+   },
+   "words": 26,
+   "est_start_s": 41.9,
+   "est_dur_s": 7.83
   },
   {
    "id": "n09",
+   "section": "B",
    "scene": "V3",
    "text": "Everything coming back is a blend of many paths. What survives is timing.",
    "tts": "Everything coming back is a blend of many paths… [warmly] What survives is timing.",
-   "pause_after_ms": 400,
+   "pause_ms": 400,
    "claims": [
     "C10"
    ],
    "direction": "VOICE: the section's thesis; small lift on 'timing'. PICTURE: iris out to the room: paths from his head, shoulder and feet via three wall spots merge into one blip at the sensor; the blip lands on the hook's timeline; label 'what survives: timing'.",
-   "story_section": "B",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s12",
+     "take": "x05_t4",
+     "file": "audio/narration/v2/s12.wav",
+     "in_s": 8.98,
+     "out_s": 14.01,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 13,
+   "est_start_s": 50.1,
+   "est_dur_s": 5.03
   },
   {
    "id": "s14",
+   "section": "B",
    "scene": "V4",
    "text": "Nearly everything coming back bounced once, off the wall. Our friend's echo bounced three times, so it's tiny.",
    "tts": "Nearly everything coming back bounced once, off the wall. Our friend's echo bounced three times, so it's tiny.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C11"
    ],
    "direction": "VOICE: plain; 'tiny' small (v1 take; tighten the pause after 'wall.' from 0.54 to 0.35 s). PICTURE: the hook's timeline fills the frame with a five-icon route strip above it (sensor, wall, him, wall, sensor); one pulse thins at each bounce; tall '1 bounce' spike, then the tiny late '3 bounces' bump ringed on 'tiny'; 'not to scale · far weaker'.",
-   "story_section": "B",
    "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x06_t1",
+    "file": "audio/narration/v2/s14.wav"
+   },
+   "words": 18,
+   "est_start_s": 55.5,
+   "est_dur_s": 6.31,
    "inner_pause_cap_ms": 350
   },
   {
    "id": "s15",
+   "section": "B",
    "scene": "V4",
    "text": "This is real data from the same team, with a different sensor and hidden object: the wall's big echo, then, a few nanoseconds later, a bump you have to zoom in to see. In this capture, hundreds of times weaker.",
    "tts": "This is real data from the same team, with a different sensor and hidden object: the wall's big echo, then, a few nanoseconds later, a bump you have to zoom in to see. [softly] In this capture, hundreds of times weaker.",
-   "pause_after_ms": 500,
+   "pause_ms": 500,
    "claims": [
     "C12"
    ],
    "direction": "VOICE: evidence voice, careful (v1 take). PICTURE: short music drop, hard switch to the real waveform board (3x3 zone icon, 'Real data'); trace drawn from frame 1; wall echo named; magnifier stretches the tail x250 until the bump shows.",
-   "story_section": "B",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x07_t2",
+    "file": "audio/narration/v2/s15.wav"
+   },
+   "words": 40,
+   "est_start_s": 62.2,
+   "est_dur_s": 13.33
   },
   {
    "id": "s16",
+   "section": "B",
    "scene": "V4",
    "text": "That bump is the clue. Its timing says how much farther the light travelled.",
    "tts": "That bump is the clue. Its timing says how much farther the light travelled.",
-   "pause_after_ms": 400,
+   "pause_ms": 400,
    "claims": [
     "C06",
     "C12",
     "P06"
    ],
    "direction": "VOICE: short, confident (v1 take; tighten the pause after 'clue.' to 0.35 s). PICTURE: bump ringed; dimension line spike to bump; labels '≈ 3.7 ns later' '≈ 1.1 m extra, there and back'; the checker's pointer taps the ring; ring cuts to a ring round W1.",
-   "story_section": "B",
    "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x07_t2",
+    "file": "audio/narration/v2/s16.wav"
+   },
+   "words": 14,
+   "est_start_s": 76.0,
+   "est_dur_s": 4.18,
    "inner_pause_cap_ms": 350
   },
   {
    "id": "n10",
+   "section": "C",
    "scene": "V5",
    "text": "Farther from where? Simplify it: the sensor flashes and listens at one spot on the wall.",
    "tts": "[curious] Farther from where? Simplify it: the sensor flashes and listens at one spot on the wall.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C13"
    ],
    "direction": "VOICE: the forward question, answered in the same breath. PICTURE: the signature fold: room folds to the full-frame plan, characters become tokens, W1 glows; question title 'How does a delay become a location?'; confocal route out and back on W1; chip 'simplified picture · sends and listens at one spot'.",
-   "story_section": "C",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 16,
+   "est_start_s": 80.6,
+   "est_dur_s": 5.65
   },
   {
    "id": "n11",
+   "section": "C",
    "scene": "V5",
    "text": "Light covers about thirty centimetres every nanosecond. But the detour is there and back, so each extra nanosecond puts him only about fifteen centimetres farther from the wall spot.",
    "tts": "Light covers about thirty centimetres every nanosecond. [lightly amused] But the detour is there… and back, so each extra nanosecond puts him only about fifteen centimetres farther from the wall spot.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C06",
     "C14",
     "C13"
    ],
    "direction": "VOICE: the round-trip turn is the small surprise; amused on 'there… and back'. PICTURE: the W1 to him leg as a ruler; a pulse runs out and back along it; the path meter fills two strokes per stroke of distance; labels '1 ns ≈ 30 cm of travel' 'there and back → ≈ 15 cm farther'.",
-   "story_section": "C",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 29,
+   "est_start_s": 86.5,
+   "est_dur_s": 10.49
   },
   {
    "id": "s18",
+   "section": "C",
    "scene": "V5",
    "text": "Measure the extra delay, and you know how far he is from that spot. Not which direction. Just how far.",
    "tts": "Measure the extra delay, and you know how far he is from that spot. Not which direction… Just how far.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C14"
    ],
    "direction": "VOICE: precise (v1 take; tighten the pause after 'spot.' to 0.35 s). PICTURE: the one worked example, one step at a time: '≈ 8.9 ns later' → '≈ 2.65 m there and back' → '≈ 1.33 m each way' (illustrative, W1); the ruler wavers on 'Not which direction'.",
-   "story_section": "C",
    "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x08_t1",
+    "file": "audio/narration/v2/s18.wav"
+   },
+   "words": 20,
+   "est_start_s": 97.4,
+   "est_dur_s": 5.86,
    "inner_pause_cap_ms": 350
   },
   {
    "id": "s19",
+   "section": "C",
    "scene": "V5",
    "text": "He could be anywhere on this arc, all the same distance from that spot.",
    "tts": "He could be anywhere on this arc, all the same distance from that spot.",
-   "pause_after_ms": 500,
+   "pause_ms": 500,
    "claims": [
     "C14"
    ],
    "direction": "VOICE: J3 setup (v1 take; measures fast, listen). PICTURE: the arc sweeps from W1, dashed (a constraint, not a light path); J3a in the S4 face inset: he relaxes and leans on the partition; 'distance known · direction unknown'.",
-   "story_section": "C",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x08_t1",
+    "file": "audio/narration/v2/s19.wav"
+   },
+   "words": 14,
+   "est_start_s": 103.5,
+   "est_dur_s": 3.5
   },
   {
    "id": "s20",
+   "section": "C",
    "scene": "V5",
    "text": "Now listen at a second spot. Another delay, another arc. On this side of the wall, they cross in just one place.",
    "tts": "Now listen at a second spot. Another delay, another arc. On this side of the wall, they cross in just… one place.",
-   "pause_after_ms": 600,
+   "pause_ms": 600,
    "claims": [
     "C15"
    ],
    "direction": "VOICE: J3 payoff (v1 take; tighten the pause after 'spot.' to 0.35 s). PICTURE: W4 lights, second arc, they cross at his token; the other crossing behind the wall greys out ('behind the wall: impossible'); J3b: his smile drops.",
-   "story_section": "C",
    "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x09_t1",
+    "file": "audio/narration/v2/s20.wav"
+   },
+   "words": 22,
+   "est_start_s": 107.5,
+   "est_dur_s": 7.55,
    "inner_pause_cap_ms": 350
   },
   {
    "id": "s21",
+   "section": "C",
    "scene": "V5",
    "text": "Measured timings are a bit fuzzy, so each arc is really a band, and the bands overlap in a small patch.",
    "tts": "Measured timings are a bit fuzzy, so each arc is really a band, and the bands overlap in a small patch.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C16"
    ],
    "direction": "VOICE: honest uncertainty (v1 take). PICTURE: arcs thicken into bands; the overlap fills as a patch; 'illustrative'.",
-   "story_section": "C",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x09_t1",
+    "file": "audio/narration/v2/s21.wav"
+   },
+   "words": 21,
+   "est_start_s": 115.7,
+   "est_dur_s": 5.9
   },
   {
    "id": "s22",
+   "section": "C",
    "scene": "V5",
    "text": "These two spots are close, so the patch is long and blurry. Spread them out, and it shrinks.",
    "tts": "These two spots are close, so the patch is long and blurry. Spread them out, and it shrinks.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C17"
    ],
    "direction": "VOICE: rule of thumb (v1 take). PICTURE: spots slide together (W2, W3): long blurry patch; apart (W1, W4): it shrinks; 'close → long, blurry' then 'spread out → smaller'.",
-   "story_section": "C",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x09_t1",
+    "file": "audio/narration/v2/s22.wav"
+   },
+   "words": 18,
+   "est_start_s": 121.9,
+   "est_dur_s": 5.13
   },
   {
    "id": "s23",
+   "section": "C",
    "scene": "V5",
    "text": "In practice, a computer weighs many spots at once, trying positions and keeping those whose predicted echoes match. It also leans on assumptions, like what kind of object it's after.",
    "tts": "In practice, a computer weighs many spots at once, trying positions and keeping those whose predicted echoes match. It also leans on assumptions, like what kind of object it's after.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C18"
    ],
    "direction": "VOICE: clear, unhurried (v1 take; tighten the pause after 'match.' to 0.35 s). PICTURE: four spots flash; candidate dots scatter; one candidate's predicted ticks laid against the measured ticks (miss fades, match stays); the rest cluster on him; 'assumption: one small object'.",
-   "story_section": "C",
    "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x10_t1",
+    "file": "audio/narration/v2/s23.wav"
+   },
+   "words": 30,
+   "est_start_s": 127.4,
+   "est_dur_s": 10.27,
    "inner_pause_cap_ms": 350
   },
   {
    "id": "n12",
+   "section": "C",
    "scene": "V5",
    "text": "That's why the answer is a likely location, or a rough shape.",
    "tts": "That's why the answer is a likely location, or a rough shape.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C19"
    ],
    "direction": "VOICE: settle. PICTURE: the cluster settles into a soft likely-location blob, never a dot; 'likely location'.",
-   "story_section": "C",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s24",
+     "take": "x10_t1",
+     "file": "audio/narration/v2/s24.wav",
+     "in_s": 0.06,
+     "out_s": 3.68,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 12,
+   "est_start_s": 138.0,
+   "est_dur_s": 3.62
   },
   {
    "id": "n13",
+   "section": "C",
    "scene": "V6",
    "text": "And here's a real one.",
    "tts": "[warmly] And here's a real one.",
-   "pause_after_ms": 250,
+   "pause_ms": 250,
    "claims": [
     "C33"
    ],
    "direction": "VOICE: discovery, warm, short. PICTURE: hard visible switch: new board, kraft palette, 'Real data', the same 3x3 zone icon as the waveform; 6 x 6 position grid still empty.",
-   "story_section": "C",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 5,
+   "est_start_s": 141.9,
+   "est_dur_s": 1.76
   },
   {
    "id": "s37",
+   "section": "C",
    "scene": "V6",
    "text": "Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.",
    "tts": "Moved through known positions, the sensor behind that faint bump rebuilt the rough outline of a hidden U.",
-   "pause_after_ms": 900,
+   "pause_ms": 900,
    "claims": [
     "C33",
     "C35",
     "C12"
    ],
    "direction": "VOICE: second evidence payoff (v1 take, moved from v1 5:06); hold on the finished U. PICTURE: the zone box steps through 36 preset positions; the U builds from the real partial sums (k = 1 to 36, no in-betweens); labels 'same 3x3 sensor · 36 preset positions · object held still' 'rough outline'; not morphed from our arcs.",
-   "story_section": "C",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x16_t3",
+    "file": "audio/narration/v2/s37.wav"
+   },
+   "words": 18,
+   "est_start_s": 143.9,
+   "est_dur_s": 5.67
   },
   {
    "id": "n14",
+   "section": "D",
    "scene": "V7",
    "text": "In 2012, an MIT team rebuilt the rough 3D shape of a hidden mannequin. By 2021, others had live video around corners.",
    "tts": "In 2012, an MIT team rebuilt the rough 3D shape of a hidden mannequin. By 2021, others had live video around corners.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C20",
     "C21",
     "C24"
    ],
    "direction": "VOICE: brisk storyteller. PICTURE: the U board rolls up like a plan sheet and drops onto a museum shelf (chapter title 'How new is this?'); truck past the 2012 exhibit (table-sized rig, teal mannequin outline), the 2018 plate in passing, the 2021 exhibit (big laser, blobby live monitor); plates name year and team only; 'illustrations based on the papers'.",
-   "story_section": "D",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 22,
+   "est_start_s": 150.5,
+   "est_dur_s": 9.18
   },
   {
    "id": "n15",
+   "section": "D",
    "scene": "V7",
    "text": "But those ran on research equipment. One team had even tracked hidden objects with a cheap sensor.",
    "tts": "But those ran on research equipment. One team had even tracked hidden objects with a cheap sensor.",
-   "pause_after_ms": 400,
+   "pause_ms": 400,
    "claims": [
     "C25",
     "C45"
    ],
    "direction": "VOICE: the precedent stated plainly, not as a twist. PICTURE: velvet rope clips across the exhibits under 'research equipment'; spotlight finds the stool with a fingertip-sized sensor board: '2021 · tracking with a cheap sensor kit (Callenberg et al.)'.",
-   "story_section": "D",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s29",
+     "take": "x12_t4",
+     "file": "audio/narration/v2/s29.wav",
+     "in_s": 1.33,
+     "out_s": 6.41,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 17,
+   "est_start_s": 160.0,
+   "est_dur_s": 5.08
   },
   {
    "id": "s30",
+   "section": "D",
    "scene": "V7",
    "text": "Then, in a study published in 2026, a team from MIT and Dartmouth tried the small time-of-flight sensors, often called LiDAR, found in phones and gadgets.",
    "tts": "Then, in a study published in 2026, a team from MIT and Dartmouth tried the small time-of-flight sensors, often called /ˈlaɪdɑːr/, found in phones and gadgets.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C26",
     "C27",
@@ -392,123 +655,191 @@
     "C32"
    ],
    "direction": "VOICE: the news beat (v1 take; LiDAR from IPA, listen). PICTURE: the checker's arm sets her sensor on the fourth plinth; spotlight isolates it; it matches to two drawn hardware types: 'smartphone-grade research device' and 'off-the-shelf kit'; plate 'published 2026 · MIT + Dartmouth'.",
-   "story_section": "D",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x13_t4",
+    "file": "audio/narration/v2/s30.wav"
+   },
+   "words": 26,
+   "est_start_s": 165.4,
+   "est_dur_s": 9.93
   },
   {
    "id": "s31",
+   "section": "D",
    "scene": "V7",
    "text": "Don't expect your phone to do this yet: phone makers often keep the raw data private.",
    "tts": "Don't expect your phone to do this yet: phone makers often keep the raw data private.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C42"
    ],
    "direction": "VOICE: friendly caveat (v1 take; measures fast, listen). PICTURE: generic phone (no brand) slides in; a padlock closes over 'raw data'; small 'per the lead researcher, in interviews'.",
-   "story_section": "D",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x13_t4",
+    "file": "audio/narration/v2/s31.wav"
+   },
+   "words": 16,
+   "est_start_s": 175.7,
+   "est_dur_s": 4.33
   },
   {
    "id": "n16",
+   "section": "D",
    "scene": "V7",
    "text": "Their new idea: a model that keeps track of what moved, so many weak frames can be combined.",
    "tts": "[warmly] Their new idea: a model that keeps track of what moved… so many weak frames can be combined.",
-   "pause_after_ms": 400,
+   "pause_ms": 400,
    "claims": [
     "C29",
     "C30"
    ],
    "direction": "VOICE: the answer to 'how new': warm, clear, attributed to them. PICTURE: back on the plinth: a stack of faint frames fans out beside the sensor; a small 'what moved' arrow ticks on each; label 'their new idea (2026)'.",
-   "story_section": "D",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 18,
+   "est_start_s": 180.4,
+   "est_dur_s": 6.6
   },
   {
    "id": "n17",
+   "section": "E",
    "scene": "V8",
    "text": "Why would a smaller, cheaper sensor need that?",
    "tts": "[curious] Why would a smaller, cheaper sensor need that?",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [],
    "direction": "VOICE: a genuine question; 'that' points back to the new idea, and the next line answers it. PICTURE: spotlight close on the plinth sensor; question title 'Why is a cheap sensor harder?'.",
-   "story_section": "E",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 8,
+   "est_start_s": 187.4,
+   "est_dur_s": 3.0
   },
   {
    "id": "n18",
+   "section": "E",
    "scene": "V8",
    "text": "Weak lasers mean fainter echoes. The team's smartphone-grade device had about a hundred pixels: a hundred listening spots. And if you hold one in your hand, it jiggles.",
    "tts": "Weak lasers mean fainter echoes. The team's smartphone-grade device had about a hundred pixels: a hundred listening spots. [lightly amused] And if you hold one in your hand, it jiggles.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C28",
     "C17"
    ],
    "direction": "VOICE: three problems as a quick rhythm; small smile on 'jiggles'. PICTURE: three full-frame beats, one at a time: dim beam and an even smaller echo on the hook's timeline; the research module's uncountable dot field, then its spots bunched on a small wall patch give the long blurry patch from C; the checker lifts the sensor off its stand and it jiggles.",
-   "story_section": "E",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s32",
+     "take": "x13_t4",
+     "file": "audio/narration/v2/s32.wav",
+     "in_s": 2.22,
+     "out_s": 12.38,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 28,
+   "est_start_s": 190.7,
+   "est_dur_s": 10.16
   },
   {
    "id": "s33",
+   "section": "E",
    "scene": "V8",
    "text": "Their fix borrows night mode's trick from phone cameras: stack many quick, dim frames into one better estimate.",
    "tts": "Their fix borrows night mode's trick from phone cameras: stack many quick, dim frames into one better estimate.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C29",
     "C44"
    ],
    "direction": "VOICE: clear (v1 take). PICTURE: six dim grainy plan frames slide into a stack and merge into one clearer card; 'our analogy: night mode'.",
-   "story_section": "E",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x14_t1",
+    "file": "audio/narration/v2/s33.wav"
+   },
+   "words": 18,
+   "est_start_s": 201.2,
+   "est_dur_s": 6.57
   },
   {
    "id": "n19",
+   "section": "E",
    "scene": "V9",
    "text": "The catch: things move between frames. He steps, and his echo shifts in time. The sensor jiggles, and its listening spots land somewhere new.",
    "tts": "[dryly] The catch: things move between frames. He steps, and his echo shifts in time. The sensor jiggles… and its listening spots land somewhere new.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C30",
     "C31"
    ],
    "direction": "VOICE: the problem, plainly; two changes, two sentences. PICTURE: full-frame plan (chip 'illustration'); his token starts pacing with a grin (his plan: keep moving); first his step H_A to H_B and his echo tick slides on a mini timeline; then the sensor shifts and its spots slide along the wall.",
-   "story_section": "E",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 24,
+   "est_start_s": 208.1,
+   "est_dur_s": 8.72
   },
   {
    "id": "n20",
+   "section": "E",
    "scene": "V9",
    "text": "Just add them up, and echoes from different places blur into one smear, like a long exposure of someone walking.",
    "tts": "Just add them up, and echoes from different places blur into one smear… [lightly amused] like a long exposure of someone walking.",
-   "pause_after_ms": 400,
+   "pause_ms": 400,
    "claims": [
     "C30",
     "P02"
    ],
    "direction": "VOICE: plain, then amused on the comparison. PICTURE: the two frames stacked as they are: a coral streak covering both positions ('just adding → smear', illustrative); 1 s gag: a streaky long-exposure snapshot of the guesser mid-walk; in the face inset he grins.",
-   "story_section": "E",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 20,
+   "est_start_s": 217.1,
+   "est_dur_s": 7.31
   },
   {
    "id": "n21",
+   "section": "E",
    "scene": "V9",
    "text": "So their model solves for one unknown at a time.",
    "tts": "[warmly] So their model solves for one unknown at a time.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C30",
     "P01"
    ],
    "direction": "VOICE: the turn to the solution. PICTURE: three large icons 'shape' 'position' 'sensor'; padlocks close on two while the third stays free, two quick cycles; label 'one unknown at a time'.",
-   "story_section": "E",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 10,
+   "est_start_s": 224.8,
+   "est_dur_s": 3.53
   },
   {
    "id": "n22",
+   "section": "E",
    "scene": "V9",
    "text": "To build a shape, hold the object still and step the sensor through known positions, spreading out its listening spots. That's how the U was made.",
    "tts": "To build a shape, hold the object still and step the sensor through known positions, spreading out its listening spots. That's how the U was made.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C35",
     "C31",
@@ -517,41 +848,59 @@
     "P01"
    ],
    "direction": "VOICE: explainer; callback lands on 'the U'. PICTURE: full-frame plan: still object, the sensor slides on a rail A to B1 (layout's two frames), new listening spots appear, the long patch shrinks modestly (about 30%, never to a dot); 1.5 s thumbnail of the real U board with its 'Real data' header; labels 'object still' 'sensor on a rail, at known positions'.",
-   "story_section": "E",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 26,
+   "est_start_s": 228.7,
+   "est_dur_s": 9.18
   },
   {
    "id": "n23",
+   "section": "E",
    "scene": "V9",
    "text": "To follow a person, hold the sensor still, and let each guess drift a little between frames, keeping the ones that still match. The estimate keeps up instead of smearing.",
    "tts": "To follow a person, hold the sensor still, and let each guess drift a little between frames, keeping the ones that still match. [warmly] The estimate keeps up… instead of smearing.",
-   "pause_after_ms": 500,
+   "pause_ms": 500,
    "claims": [
     "C18",
     "C30",
     "P03"
    ],
    "direction": "VOICE: explainer, then the visible payoff, warm. PICTURE: sensor on its stand; his token walks H_A to H_D; each frame the candidate cloud drifts a little, poor guesses fade, the rest follow him; then two panels, one at a time: 'just adding → smear' and 'tracking what moved → keeps up'; he deflates in the inset; small label 'handheld: shown only for locating the sensor itself (reported)'.",
-   "story_section": "E",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 30,
+   "est_start_s": 238.2,
+   "est_dur_s": 10.84
   },
   {
    "id": "n24",
+   "section": "F",
    "scene": "V10",
    "text": "So what can it actually do, and where does it fail?",
    "tts": "[curious] So what can it actually do… and where does it fail?",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [],
    "direction": "VOICE: curious; the last big question. PICTURE: the right-hand panel match-cuts to the real kit board (visible switch to 'Real data'); question title 'What can it do? Where does it fail?'; the stored estimate replays, sped up.",
-   "story_section": "F",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 11,
+   "est_start_s": 249.5,
+   "est_dur_s": 4.38
   },
   {
    "id": "n25",
+   "section": "F",
    "scene": "V10",
    "text": "Take our opening clip: an off-the-shelf kit the authors put at under a hundred dollars, held still while a person walked behind a partition.",
    "tts": "Take our opening clip: an off-the-shelf kit the authors put at under a hundred dollars… held still while a person walked behind a partition.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C02",
     "C32",
@@ -559,153 +908,584 @@
     "P08"
    ],
    "direction": "VOICE: evidence voice, specific; callback to the opening; 'Take' is plain and brisk, not a question (lead's edit: 'that second case' lost its referent after the n24 question). PICTURE: the kit board gains the provenance the opening left out, one item at a time: 'ST sensor kit · 16 zones · held still · not the phone-grade device' 'under US$100 (authors' figure)' 'setup: flat wall + empty-room scan first'; frame counter 'frame N of 475'; small chip 'our check: their code + their data → matched their saved results · a software check, not a new experiment'.",
-   "story_section": "F",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 24,
+   "est_start_s": 254.2,
+   "est_dur_s": 9.78
   },
   {
    "id": "n26",
+   "section": "F",
    "scene": "V10",
    "text": "Many of their tests had help: safety-vest style reflective material on the target, which sends far more light straight back.",
    "tts": "Many of their tests had help: safety-vest style reflective material on the target, which sends far more light straight back.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C34"
    ],
    "direction": "VOICE: conditions as useful understanding, not a disclaimer. PICTURE: plan close-up (not the room camera): a reflective strip on a target faces the wall and the incoming light; the returning pulse fattens; 'reflective material: far more light back'.",
-   "story_section": "F",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new"
+   },
+   "words": 20,
+   "est_start_s": 264.3,
+   "est_dur_s": 7.06
   },
   {
    "id": "n27",
+   "section": "F",
    "scene": "V10",
    "text": "Our clip's files don't say if the walker wore any.",
    "tts": "Our clip's files don't say if the walker wore any.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C02"
    ],
    "direction": "VOICE: plain. PICTURE: back on the kit board: a small stamp beside the track, 'clothing: not recorded'.",
-   "story_section": "F",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s38",
+     "take": "x16_t3",
+     "file": "audio/narration/v2/s38.wav",
+     "in_s": 7.24,
+     "out_s": 9.5,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 10,
+   "est_start_s": 271.6,
+   "est_dur_s": 2.26
   },
   {
    "id": "n28",
+   "section": "F",
    "scene": "V10",
    "text": "But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second.",
    "tts": "But in a separate test, the authors report tracking a person in ordinary clothes, capturing thirty frames a second.",
-   "pause_after_ms": 500,
+   "pause_ms": 500,
    "claims": [
     "C37"
    ],
    "direction": "VOICE: fair and plain. PICTURE: framed card, plainly a drawing: neutral grey 'their sensor', a generic person in everyday clothes behind a partition; 'Reported by the authors · ordinary clothes · 30 frames/s capture' 'a separate test, not our kit clip · different device · data not released' 'our drawing'.",
-   "story_section": "F",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s39",
+     "take": "x17_t2",
+     "file": "audio/narration/v2/s39.wav",
+     "in_s": 0.02,
+     "out_s": 6.31,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 19,
+   "est_start_s": 274.2,
+   "est_dur_s": 6.29
   },
   {
    "id": "s40",
+   "section": "F",
    "scene": "V11",
    "text": "What might this be good for? Picture a delivery robot nearing a blind warehouse corner.",
    "tts": "[curious] What might this be good for? Picture a delivery robot nearing a blind warehouse corner.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C39"
    ],
    "direction": "VOICE: curious (v1 take). PICTURE: match cut: the card's partition becomes the warehouse's blind corner; 'potential use' top-left from the cut through n33; the robot rolls toward the corner, no long wait.",
-   "story_section": "F",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x18_t3",
+    "file": "audio/narration/v2/s40.wav"
+   },
+   "words": 15,
+   "est_start_s": 281.0,
+   "est_dur_s": 4.87
   },
   {
    "id": "n29",
+   "section": "F",
    "scene": "V11",
    "text": "With a suitable wall at the junction, a sensor like this might give it an early hint of movement out of sight.",
    "tts": "With a suitable wall at the junction… a sensor like this might give it an early hint of movement out of sight.",
-   "pause_after_ms": 300,
+   "pause_ms": 300,
    "claims": [
     "C39"
    ],
    "direction": "VOICE: same words as v1 s41, new take: 'suitable' and 'might' need room (v1 takes were 272 wpm). PICTURE: plan of the junction: the wall spot lights; a pulse runs robot to wall spot to hidden aisle and back around the corner's end, never through shelving; a faint blob appears; no range number.",
-   "story_section": "F",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "note": "text identical to v1 s41; new take because all four v1 takes are rushed (272 wpm articulated)"
+   },
+   "words": 22,
+   "est_start_s": 286.1,
+   "est_dur_s": 8.01
   },
   {
    "id": "s42",
+   "section": "F",
    "scene": "V11",
    "text": "Just a fuzzy blob: enough to say slow down, not enough to say who's there.",
    "tts": "Just a fuzzy blob: enough to say slow down, not enough to say who's there.",
-   "pause_after_ms": 400,
+   "pause_ms": 400,
    "claims": [
     "C19",
     "C39"
    ],
    "direction": "VOICE: concrete benefit and its limit (v1 take). PICTURE: front view: the blob beyond the corner; the robot squints and brakes; 'slow down' 'not who'.",
-   "story_section": "F",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x18_t3",
+    "file": "audio/narration/v2/s42.wav"
+   },
+   "words": 15,
+   "est_start_s": 294.5,
+   "est_dur_s": 4.8
   },
   {
    "id": "s43",
+   "section": "F",
    "scene": "V11",
    "text": "And plenty is still hard: short range, dark or shiny walls, bright sunlight, and fast math on small hardware. The researchers call it an early-stage prototype.",
    "tts": "And plenty is still hard: short range. Dark or shiny walls. Bright sunlight. And fast math on small hardware. The researchers call it an early-stage prototype.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C40"
    ],
    "direction": "VOICE: four short beats, then a plain attribution (v1 take; tighten the pause after 'hardware.' to 0.40 s). PICTURE: one full-frame tile per beat on the warehouse plan, then the four shrink into a row; 'early-stage prototype (the researchers)'.",
-   "story_section": "F",
    "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x19_t1",
+    "file": "audio/narration/v2/s43.wav"
+   },
+   "words": 26,
+   "est_start_s": 299.7,
+   "est_dur_s": 10.88,
    "inner_pause_cap_ms": 400
   },
   {
    "id": "n30",
+   "section": "F",
    "scene": "V11",
    "text": "For now, it's a promising clue, not a safety system.",
    "tts": "[softly] For now, it's a promising clue, not a safety system.",
-   "pause_after_ms": 500,
+   "pause_ms": 500,
    "claims": [
     "C39",
     "C40"
    ],
    "direction": "VOICE: settled, honest; the answer to the section's question. PICTURE: front view: the robot creeps on round the corner, slowly (the bumper gag is cut: J4 is the film's one closing gag); label 'not a safety system'; 'potential use' leaves with the cut.",
-   "story_section": "F",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s44",
+     "take": "x19_t1",
+     "file": "audio/narration/v2/s44.wav",
+     "in_s": 2.76,
+     "out_s": 5.98,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 10,
+   "est_start_s": 310.9,
+   "est_dur_s": 3.22
   },
   {
    "id": "n31",
+   "section": "G",
    "scene": "V12",
    "text": "Being out of sight isn't the same as giving nothing away.",
    "tts": "Being out of sight… isn't the same as giving nothing away.",
-   "pause_after_ms": 350,
+   "pause_ms": 350,
    "claims": [
     "C04",
     "C19"
    ],
    "direction": "VOICE: the takeaway, calm. PICTURE: hard cut from the warehouse corner to our room, the opening's raised view; one slowed round trip via W3 (no number) around the partition's end; the readout shows a soft blob; the guesser gulps.",
-   "story_section": "G",
-   "reuse_v1": false
+   "reuse_v1": false,
+   "audio": {
+    "source": "new",
+    "v1_fragment_alt": {
+     "line": "s46",
+     "take": "x20_t1",
+     "file": "audio/narration/v2/s46.wav",
+     "in_s": 0.05,
+     "out_s": 2.87,
+     "use": "only if the listening pass prefers it to the new take and it splices cleanly; cut inside the measured silence"
+    }
+   },
+   "words": 11,
+   "est_start_s": 314.6,
+   "est_dur_s": 2.82
   },
   {
    "id": "s47",
+   "section": "G",
    "scene": "V12",
    "text": "To really hide, he'd have to block the bounces too.",
    "tts": "To really hide, he'd have to block the bounces too.",
-   "pause_after_ms": 3000,
+   "pause_ms": 3000,
    "claims": [
     "C04"
    ],
    "direction": "VOICE: J4 (v1 take); 3.0 s hold after it (v1 5.3 s). PICTURE: he pushes the partition back until it meets the wall; the paths stop at it; the readout goes blank; smug again; the checker simply leans round the near end and looks (J4); hard cut on the beat.",
-   "story_section": "G",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x20_t1",
+    "file": "audio/narration/v2/s47.wav"
+   },
+   "words": 10,
+   "est_start_s": 317.8,
+   "est_dur_s": 3.0
   },
   {
    "id": "s48",
+   "section": "G",
    "scene": "V13",
    "text": "This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner.",
    "tts": "[warmly] This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner.",
-   "pause_after_ms": 0,
+   "pause_ms": 0,
    "claims": [],
    "direction": "VOICE: one brief invitation (v1 take), from 0.2 s into the end screen. PICTURE: end screen: wordmark top-left, empty guides for one video element and the subscribe element, small callback art; see SHOTPLAN_V2 V13.",
-   "story_section": "G",
-   "reuse_v1": true
+   "reuse_v1": true,
+   "audio": {
+    "source": "v1_take",
+    "take": "x21_t4",
+    "file": "audio/narration/v2/s48.wav"
+   },
+   "words": 19,
+   "est_start_s": 323.8,
+   "est_dur_s": 6.77
   }
- ]
+ ],
+ "sections": [
+  {
+   "id": "A",
+   "title": "Hook: the impossible result",
+   "question": "How can a sensor find someone it cannot see?",
+   "chapter": "How can it find what it can't see?",
+   "lines": [
+    "s02",
+    "n01",
+    "n02",
+    "n03",
+    "n04",
+    "n05",
+    "n06"
+   ],
+   "est_start_s": 0.0,
+   "est_end_s": 33.5,
+   "words": 87
+  },
+  {
+   "id": "B",
+   "title": "What survives the bounce",
+   "question": "What survives after light scatters off a plain wall?",
+   "chapter": "What survives the bounce?",
+   "lines": [
+    "n07",
+    "n08",
+    "s11",
+    "n09",
+    "s14",
+    "s15",
+    "s16"
+   ],
+   "est_start_s": 33.5,
+   "est_end_s": 80.6,
+   "words": 132
+  },
+  {
+   "id": "C",
+   "title": "From delay to location",
+   "question": "How does a time measurement become a location?",
+   "chapter": "How does a delay become a location?",
+   "lines": [
+    "n10",
+    "n11",
+    "s18",
+    "s19",
+    "s20",
+    "s21",
+    "s22",
+    "s23",
+    "n12",
+    "n13",
+    "s37"
+   ],
+   "est_start_s": 80.6,
+   "est_end_s": 150.5,
+   "words": 205
+  },
+  {
+   "id": "D",
+   "title": "History bridge: what's new",
+   "question": "How new is any of this, and what did 2026 add?",
+   "chapter": "How new is this?",
+   "lines": [
+    "n14",
+    "n15",
+    "s30",
+    "s31",
+    "n16"
+   ],
+   "est_start_s": 150.5,
+   "est_end_s": 187.4,
+   "words": 99
+  },
+  {
+   "id": "E",
+   "title": "Why a cheap sensor is harder",
+   "question": "Why did making the sensor cheaper create a harder problem?",
+   "chapter": "Why is a cheap sensor harder?",
+   "lines": [
+    "n17",
+    "n18",
+    "s33",
+    "n19",
+    "n20",
+    "n21",
+    "n22",
+    "n23"
+   ],
+   "est_start_s": 187.4,
+   "est_end_s": 249.5,
+   "words": 164
+  },
+  {
+   "id": "F",
+   "title": "What it can do, and where it fails",
+   "question": "What can this actually do, and where does it fail?",
+   "chapter": "What can it do, and where does it fail?",
+   "lines": [
+    "n24",
+    "n25",
+    "n26",
+    "n27",
+    "n28",
+    "s40",
+    "n29",
+    "s42",
+    "s43",
+    "n30"
+   ],
+   "est_start_s": 249.5,
+   "est_end_s": 314.6,
+   "words": 175
+  },
+  {
+   "id": "G",
+   "title": "Takeaway, callback, end screen",
+   "question": "(coda) What should the viewer leave with?",
+   "chapter": "Takeaway",
+   "lines": [
+    "n31",
+    "s47",
+    "s48"
+   ],
+   "est_start_s": 314.6,
+   "est_end_s": 333.6,
+   "words": 40
+  }
+ ],
+ "scenes": [
+  {
+   "id": "V1",
+   "title": "Hide and the real track",
+   "section": "A",
+   "lines": [
+    "s02",
+    "n01",
+    "n02"
+   ],
+   "est_start_s": 0.0,
+   "est_end_s": 14.8
+  },
+  {
+   "id": "V2",
+   "title": "The long way round",
+   "section": "A",
+   "lines": [
+    "n03",
+    "n04",
+    "n05",
+    "n06"
+   ],
+   "est_start_s": 14.8,
+   "est_end_s": 33.5
+  },
+  {
+   "id": "V3",
+   "title": "Mirror versus paint",
+   "section": "B",
+   "lines": [
+    "n07",
+    "n08",
+    "s11",
+    "n09"
+   ],
+   "est_start_s": 33.5,
+   "est_end_s": 55.5
+  },
+  {
+   "id": "V4",
+   "title": "Later, weaker, and real",
+   "section": "B",
+   "lines": [
+    "s14",
+    "s15",
+    "s16"
+   ],
+   "est_start_s": 55.5,
+   "est_end_s": 80.6
+  },
+  {
+   "id": "V5",
+   "title": "Delay to distance to place",
+   "section": "C",
+   "lines": [
+    "n10",
+    "n11",
+    "s18",
+    "s19",
+    "s20",
+    "s21",
+    "s22",
+    "s23",
+    "n12"
+   ],
+   "est_start_s": 80.6,
+   "est_end_s": 141.9
+  },
+  {
+   "id": "V6",
+   "title": "The real U",
+   "section": "C",
+   "lines": [
+    "n13",
+    "s37"
+   ],
+   "est_start_s": 141.9,
+   "est_end_s": 150.5
+  },
+  {
+   "id": "V7",
+   "title": "Museum bridge",
+   "section": "D",
+   "lines": [
+    "n14",
+    "n15",
+    "s30",
+    "s31",
+    "n16"
+   ],
+   "est_start_s": 150.5,
+   "est_end_s": 187.4
+  },
+  {
+   "id": "V8",
+   "title": "Small-sensor problems",
+   "section": "E",
+   "lines": [
+    "n17",
+    "n18",
+    "s33"
+   ],
+   "est_start_s": 187.4,
+   "est_end_s": 208.1
+  },
+  {
+   "id": "V9",
+   "title": "Motion-aware fusion",
+   "section": "E",
+   "lines": [
+    "n19",
+    "n20",
+    "n21",
+    "n22",
+    "n23"
+   ],
+   "est_start_s": 208.1,
+   "est_end_s": 249.5
+  },
+  {
+   "id": "V10",
+   "title": "The kit clip and its conditions",
+   "section": "F",
+   "lines": [
+    "n24",
+    "n25",
+    "n26",
+    "n27",
+    "n28"
+   ],
+   "est_start_s": 249.5,
+   "est_end_s": 281.0
+  },
+  {
+   "id": "V11",
+   "title": "Warehouse: potential use and limits",
+   "section": "F",
+   "lines": [
+    "s40",
+    "n29",
+    "s42",
+    "s43",
+    "n30"
+   ],
+   "est_start_s": 281.0,
+   "est_end_s": 314.6
+  },
+  {
+   "id": "V12",
+   "title": "Callback",
+   "section": "G",
+   "lines": [
+    "n31",
+    "s47"
+   ],
+   "est_start_s": 314.6,
+   "est_end_s": 323.6
+  },
+  {
+   "id": "V13",
+   "title": "End screen",
+   "section": "G",
+   "lines": [
+    "s48"
+   ],
+   "est_start_s": 323.6,
+   "est_end_s": 333.6
+  }
+ ],
+ "proposed_claims_to_add_before_lock": {
+  "P01": "One unknown at a time: shape-building assumes known sensor positions and a still scene; tracking assumes a fixed sensor and a known (point) shape; locating the sensor assumes a known, still hidden object (reported by authors).",
+  "P02": "Adding (filtered backprojection over) frames fails for moving objects because of motion blur (reported by authors).",
+  "P03": "The tracking filter predicts, compares and keeps: about 1,000 guesses, a random step of 7 cm per frame in the released code, scored against each new frame and resampled (code_or_data).",
+  "P06": "The ams bump at 3.70 ns is 110.8 cm of extra path, about 55 cm each way, consistent with the reconstructed U about 0.54 m from the wall (derivation).",
+  "P08": "Replaces C38: on 8 October 2026 we re-ran the authors' released code (commit 15314de) on their released data; the tracking run matched their saved estimates (median 8 cm apart) and the U matched exactly; a software check, not a new experiment or a replication."
+ },
+ "lead_review": {
+  "date": "2026-10-09",
+  "decisions": [
+   "Hook question n06 stays inside the first 30 s, as the brief has it.",
+   "Software check stays on screen (kit-board chip) and in the description; not spoken.",
+   "All 31 new lines are recorded new, in blocks with their neighbouring lines as spoken context (only the target lines are kept); v1 fragments remain fallbacks only.",
+   "n25 reworded: 'Take our opening clip: ...' replaces 'Our opening clip is that second case: ...', whose referent was separated from it by the n24 question.",
+   "In-line pause caps (s14, s16, s18, s20, s23, s43) are applied by the assembler as inner_pause_cap_ms."
+  ]
+ }
 }
