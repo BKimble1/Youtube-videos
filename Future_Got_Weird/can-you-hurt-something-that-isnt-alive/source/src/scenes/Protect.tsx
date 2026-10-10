@@ -36,7 +36,7 @@ export const Protect: React.FC = () => {
 
       {/* the company's stated uncertainty, verbatim */}
       <div style={{position: 'absolute', inset: 0, opacity: fade(T('It also says'), 12) * outAt(T("Here's the argument"), 12)}}>
-        <Card x={300} y={300} w={1320} h={280} bg={C.white} style={{padding: 44}}>
+        <Card x={300} y={260} w={1320} h={340} bg={C.white} style={{padding: 44}}>
           <div style={{fontFamily: F.serif, fontSize: 50, lineHeight: 1.32}}>
             “We remain highly uncertain about the potential moral status of Claude and other LLMs, now or in the future.”
           </div>

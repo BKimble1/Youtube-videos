@@ -29,8 +29,8 @@ export const Chatbot: React.FC = () => {
     <Paper>
       {/* 1. the same question, three setups (all labelled illustrative) */}
       <div style={{position: 'absolute', inset: 0, opacity: panels}}>
-        <Card x={560} y={150} w={800} h={110} bg={C.white} style={{padding: 26}}>
-          <div style={{fontFamily: F.body, fontWeight: 700, fontSize: 40}}>“How do you feel when people are rude to you?”</div>
+        <Card x={460} y={150} w={1000} h={110} bg={C.white} style={{padding: 26}}>
+          <div style={{fontFamily: F.body, fontWeight: 700, fontSize: 36}}>“How do you feel when people are rude to you?”</div>
         </Card>
         {[
           {x: 180, setup: 'setup 1: cheerful shop assistant', reply: 'Happy to help, always!', bg: C.saffronLight, d: 0},

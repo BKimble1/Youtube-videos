@@ -68,13 +68,13 @@ export const ColdOpen: React.FC = () => {
 
       {/* the first answer: what the rule says versus what it cannot say */}
       <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: splitIn}}>
-        <Line x={700} y={300} w={1000} size={60} style={{fontFamily: F.display, fontWeight: 700}}>
+        <Line x={560} y={260} w={1300} size={56} style={{fontFamily: F.display, fontWeight: 700}}>
           A rule tells us what a company wants.
         </Line>
-        <Line x={700} y={390} w={1000} size={60} style={{fontFamily: F.display, fontWeight: 700, color: C.coralDeep}}>
+        <Line x={560} y={400} w={1300} size={56} style={{fontFamily: F.display, fontWeight: 700, color: C.coralDeep}}>
           It doesn’t tell us if anything is felt.
         </Line>
-        <Mark ok={false} x={1460} y={440} size={96} opacity={xMark} scale={0.6 + 0.4 * xMark} />
+        <Mark ok={false} x={1500} y={520} size={96} opacity={xMark} scale={0.6 + 0.4 * xMark} />
       </div>
     </Paper>
   );

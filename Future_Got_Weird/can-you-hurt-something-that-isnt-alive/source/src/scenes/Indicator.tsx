@@ -44,8 +44,8 @@ export const Indicator: React.FC = () => {
 
       {/* one indicator, drawn as a spotlight across modules */}
       <div style={{position: 'absolute', inset: 0, opacity: fade(T("Here's one"), 10) * outAt(T('Even this is hard'), 12)}}>
-        <Card x={400} y={190} w={1100} h={680} bg={C.blueLight}>
-          <div style={{position: 'absolute', left: 30, top: 22, fontFamily: F.display, fontWeight: 700, fontSize: 40}}>
+        <Card x={400} y={190} w={1100} h={680} bg={C.blueLight} style={{padding: 0}}>
+          <div style={{position: 'absolute', left: 30, top: 22, width: 1040, fontFamily: F.display, fontWeight: 700, fontSize: 34}}>
             Broadcast? Is information shared widely across the system?
           </div>
           {modules.map((m, i) => (
