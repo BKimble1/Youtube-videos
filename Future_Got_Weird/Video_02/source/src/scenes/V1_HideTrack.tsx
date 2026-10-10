@@ -18,7 +18,9 @@ import {
   GAITS,
   HANDS_ON_HIPS,
   IDLE2,
+  KNEE_DEFAULT,
   SNEAK_ARMS,
+  STAND_FEET,
   handWorld2,
   mixPose2,
   planTrip,
@@ -30,12 +32,14 @@ import {
   tripDuration,
   tripPose,
   withPose,
+  type Foot,
   type Pose2,
   type RigPlace,
 } from '../components/v02/Cast2';
 import {SensorStand, standGeometry} from '../components/v02/S1_SensorStand';
 import {RealTrackBoard, TRACK_GEOM, replayIndex, trackPoint, REPLAY} from '../components/v2k/RealTrackBoard';
 import {Label, labelBox} from '../components/v2k/Labels';
+import {BoardWall} from '../components/v2s/V1_BoardWall';
 
 /**
  * V1 · Hide and the real track (s02, n01, n02). v2/SHOTPLAN_V2.md V1.
@@ -43,14 +47,15 @@ import {Label, labelBox} from '../components/v2k/Labels';
  *  V1.1 0 → "It's"     Sensor-facing room view, locked (tilt 0, the shared CAM_ROOM). Silent hide: the guesser tiptoes in
  *                      two steps from the right (heel contacts), settles behind the partition, hands on hips, smug. On
  *                      "can't see him" a dashed sight line runs from the sensor's window toward him and stops at the
- *                      partition's camera-side face with an X; "blocked" (64) cuts in by ~2 s.
+ *                      partition's camera-side face with a coral X; "blocked" (64, ink) cuts in by ~2 s.
  *  V1.2 "It's" → "researchers"  The S1.2 push (8 %, tilt 0). The checker taps the sensor (contact; readout on; "sensor"
  *                      64). On "pointed" the field-of-view frustum grows out of the sensor and lands as a pale patch of
  *                      bare wall well clear of him, filling on "plain". He glances at the blank wall and gives it a smug
  *                      nod (his belief: a blank wall can't give him away). "Yet": her brow lifts.
  *  V1.3 "researchers" → CUTIN  HARD CUT to the real board (kit RealTrackBoard): stored_xz replayed from data index 6, every
  *                      2nd data frame, one plotted position per video frame, no interpolation, tagged "sped up", starting
- *                      on the cut. "sensor" · "blocked" on the cut, "estimated position" on "track"; on "That dot" the
+ *                      on the cut. "sensor" · "blocked" on the cut, "estimated position" on "track"; the wall band is
+ *                      the room's wall colour and its 16 measured points pulse once on "wall"; on "That dot" the
  *                      label brightens once and a slow 5 % push toward the dot runs to the board's last frame. No cartoon.
  *  V1.4 CUTIN → end    0.6 s room cut-in (tilt 0, close on him): his smirk freezes. Never synced to the track.
  *
@@ -80,6 +85,7 @@ const K = {
   s02End: segEnd('s02'),
   yet: at('n01', 'yet'),
   researchers: at('n01', 'researchers'),
+  wall1: at('n01', 'wall'),
   track: at('n01', 'track'),
   n02: seg('n02').from,
   that2: at('n02', 'that'),
@@ -141,8 +147,27 @@ const SNEAK_GO = K.start + 4;
 const FPS_STEP = clamp(Math.floor((K.that - 8 - SNEAK_GO) / STEPS), 10, 13);
 const PULSE = 0.55;
 const T_ARRIVE = SNEAK_GO + tripDuration(PLAN, FPS_STEP);
-const SETTLE_AT = T_ARRIVE + 3;
 const STEPS_AT = tripContacts(SNEAK_GO, PLAN, FPS_STEP, PULSE);
+// The arrival, staged so nothing snaps (v2 review r1, V2-R1-11: it used to blend the whole tiptoe crouch into the smug
+// stance in ~3 frames, legs, arms and face together). Contact (last tiptoe step) → the heels drop → the knees
+// straighten, still bent toward his travel (sink eases out as (1 − u)², so the visible knee bend, which goes roughly
+// with √sink near full extension, closes at a steady rate over ~10 frames instead of in one) → the feet square up to
+// the camera → the weight settles onto one leg (the SOFT spring overshoots a touch) and, on that settle frame, the
+// face turns smug. The paws drop to his sides first, change layer while they hang clear of the torso, then go to the
+// hips.
+const HEEL0 = T_ARRIVE;
+const HEEL_DUR = 5;
+const KNEE0 = T_ARRIVE + 2;
+const KNEE_DUR = 11;
+const TURN0 = KNEE0 + 7;
+const TURN_DUR = 8;
+const SETTLE_AT = KNEE0 + KNEE_DUR - 3;
+const FACE0 = SETTLE_AT;
+const FACE_DUR = 7;
+const PAWS0 = T_ARRIVE + 1;
+const PAWS_DUR = 7;
+const HIPS0 = PAWS0 + PAWS_DUR;
+const HIPS_DUR = 9;
 
 // "can't see him": the sight line from the sensor's window draws on and stops at the partition's face with an X
 const SIGHT0 = K.cant;
@@ -178,6 +203,9 @@ const BOARD0 = K.researchers;
 const CUTIN = Math.max(K.photograph + 6, K.end - 18);
 const DOT_LBL = K.track;
 const BRIGHTEN = K.dot;
+/** "light bouncing off a wall": the 16 measured wall points pulse once (the band is the room's wall colour) */
+const WALL_PULSE = K.wall1;
+const WALL_PULSE_DUR = 20;
 const BPUSH0 = K.that2;
 const BPUSH_FOCUS = replayIndex(BPUSH0, BOARD0);
 const BOARD_LAST = CUTIN - 1;
@@ -208,7 +236,8 @@ export const SFX: Sfx[] = [
   ...STEPS_AT.map((f, i) => ({f, kind: 'tiptoe_step' as const, pitch: [0, -1, 1][i % 3], gain: i === STEPS_AT.length - 1 ? -4 : -1})),
   {f: SETTLE_AT + 2, kind: 'cloth_rustle', gain: -7},
   {f: SIGHT_HIT, kind: 'partition_thunk', gain: -10, note: 'the sight line stops at the partition (soft)'},
-  {f: TAP, kind: 'readout_beep'},
+  // −8 dB: at full gain it covered the "-t's" of "It's" (v2 review r1, V2-R1-40); the cue stays on the contact
+  {f: TAP, kind: 'readout_beep', gain: -8},
   {f: TAP + 2, kind: 'sensor_hum', dur: (BOARD0 - TAP - 2) / 30, gain: -12},
   {f: NOD + 4, kind: 'smug_exhale', gain: -2},
   {f: FREEZE, kind: 'uh_oh', gain: -4, note: 'V1.4: his smirk freezes'},
@@ -220,13 +249,55 @@ const GUESSER_SEED = 22;
 const CHECKER_SEED = 3;
 const sneakFace: Partial<Pose2> = {lid: 0.22, brows: -0.4, browAsym: 0.2, mouth: 'hmm', lookX: -0.75, lookY: 0.05, tilt: 4};
 
+/** The arrival, from the tiptoe stance (sneak pose at the trip's end) to the smug stance smugBase, in stages. */
+const arrivePose = (g: number, sneak: Pose2, smugBase: Pose2): Pose2 => {
+  if (g < HEEL0) return sneak;
+  const heel = tw(g, HEEL0, HEEL_DUR, E.inOut);
+  const turn = tw(g, TURN0, TURN_DUR, E.inOut);
+  const knee = tw(g, KNEE0, KNEE_DUR, E.linear);
+  const kneeK = 1 - (1 - knee) * (1 - knee);
+  const paws = tw(g, PAWS0, PAWS_DUR, E.inOut);
+  const hips = tw(g, HIPS0, HIPS_DUR, E.softBack);
+  const face = tw(g, FACE0, FACE_DUR, E.inOut);
+  // legs: heel lift and pitch with the heels; the feet's turn and knee direction once the knees are nearly straight
+  // (turning a bent knee toward the camera would read as an instant straightening); sink and hunch with the knees
+  const fa = sneak.feet ?? STAND_FEET;
+  const fb = smugBase.feet ?? STAND_FEET;
+  const L = (a: number, b: number, t: number) => a + (b - a) * t;
+  const foot = (a: Foot, b: Foot, side: -1 | 1): Foot => ({
+    x: L(a.x, b.x, heel),
+    lift: L(a.lift ?? 0, b.lift ?? 0, heel),
+    pitch: L(a.pitch ?? 0, b.pitch ?? 0, heel),
+    turn: L(a.turn ?? 0, b.turn ?? 0, turn),
+    knee: L(a.knee ?? side * KNEE_DEFAULT, b.knee ?? side * KNEE_DEFAULT, turn),
+  });
+  // face and head: the smug look on the settle
+  const faced = mixPose2(sneak, smugBase, face);
+  // arms: sneak paws → hanging at his sides (IDLE2, drawn in front) → fists on hips (drawn behind)
+  const lerpArm = (a: Pose2['armL'], b: Pose2['armL'], t: number) => ({a: a.a + (b.a - a.a) * t, b: a.b + (b.b - a.b) * t});
+  const armL = g < HIPS0 ? lerpArm(sneak.armL, IDLE2.armL, paws) : lerpArm(IDLE2.armL, smugBase.armL, hips);
+  const armR = g < HIPS0 ? lerpArm(sneak.armR, IDLE2.armR, paws) : lerpArm(IDLE2.armR, smugBase.armR, hips);
+  const m = (a: number | undefined, b: number | undefined, t: number) => (a ?? 0) + ((b ?? 0) - (a ?? 0)) * t;
+  return {
+    ...faced,
+    armL,
+    armR,
+    armsFront: g < HIPS0 ? sneak.armsFront : smugBase.armsFront,
+    feet: {L: foot(fa.L, fb.L, -1), R: foot(fa.R, fb.R, 1)},
+    sink: m(sneak.sink, smugBase.sink, kneeK),
+    hunch: m(sneak.hunch, smugBase.hunch, kneeK),
+    lean: m(sneak.lean, smugBase.lean, kneeK),
+    shift: smugBase.shift,
+    tilt: m(sneak.tilt, smugBase.tilt, face),
+  };
+};
+
 const guesserState = (g: number) => {
   const dist = tripDistance(g, SNEAK_GO, PLAN, FPS_STEP, PULSE);
   // anticipation: crouched sneak start pose, held still before the first step
   let pose: Pose2 = tripPose(dist, PLAN, {dir: -1, base: {...SNEAK_ARMS, ...sneakFace}});
   const smugBase: Pose2 = withPose(withPose(HANDS_ON_HIPS, EXPR.smug), {lookX: -0.35, ...settleAt(g, SETTLE_AT, -1)});
-  const arrive = tw(g, T_ARRIVE - 3, 14, E.inOut);
-  if (arrive > 0) pose = mixPose2(pose, smugBase, arrive);
+  pose = arrivePose(g, pose, smugBase);
   const planX = HX0 - (dist / (GU0.x - GU_END.x)) * (HX0 - H.x);
   // "can't see him": a smug eyebrow wiggle
   const wig = pulseAt(g, K.him, 14);
@@ -392,7 +463,7 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
             </Label>
           )}
           {blockedT > 0 && (
-            <Label asGroup x={lab.blocked.x} y={lab.blocked.y} size={BLOCKED_SIZE} anchor="middle" color={C.coralDeep} opacity={blockedT}>
+            <Label asGroup x={lab.blocked.x} y={lab.blocked.y} size={BLOCKED_SIZE} anchor="middle" opacity={blockedT}>
               blocked
             </Label>
           )}
@@ -403,7 +474,8 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
 };
 
 /** Label anchors (world px, mapped through the frame's camera; font sizes never scale): "blocked" sits on the partition
- *  just under the X (the word on the thing that blocks); "sensor" sits under the sensor box, over its tripod column,
+ *  just under the X (the word on the thing that blocks), set in ink with its white halo, so it reads on the coral panels
+ *  and his shirt; only the X is coral (v2 review r1, V2-R1-19); "sensor" sits under the sensor box, over its tripod column,
  *  between her legs and the partition (her arms are crossed by then, so nothing hangs there). */
 const LABEL_WORLD = (() => {
   const geo = standGeometry(0);
@@ -421,18 +493,25 @@ const labelSpots = (cam: Cam) => {
 
 /* ================================================================== the board (V1.3) */
 
-const BoardShot: React.FC<{g: number}> = ({g}) => (
-  <RealTrackBoard
-    idx={replayIndex(g, BOARD0)}
-    sensorLabel={1}
-    blocked={1}
-    blockedLabel={1}
-    dotLabel={tw(g, DOT_LBL, 6, E.linear)}
-    labelBrighten={tw(g, BRIGHTEN, 20, E.linear)}
-    push={tw(g, BPUSH0, BOARD_LAST - BPUSH0, E.linear)}
-    pushFocusIdx={BPUSH_FOCUS}
-  />
-);
+const BoardShot: React.FC<{g: number}> = ({g}) => {
+  const push = tw(g, BPUSH0, BOARD_LAST - BPUSH0, E.linear);
+  return (
+    <AbsoluteFill>
+      <RealTrackBoard
+        idx={replayIndex(g, BOARD0)}
+        sensorLabel={1}
+        blocked={1}
+        blockedLabel={1}
+        dotLabel={tw(g, DOT_LBL, 6, E.linear)}
+        labelBrighten={tw(g, BRIGHTEN, 20, E.linear)}
+        push={push}
+        pushFocusIdx={BPUSH_FOCUS}
+      />
+      {/* the wall band in the room's wall colour; the measured wall points pulse once on "wall" (V2-R1-18) */}
+      <BoardWall push={push} focusIdx={BPUSH_FOCUS} pulse={tw(g, WALL_PULSE, WALL_PULSE_DUR, E.linear)} />
+    </AbsoluteFill>
+  );
+};
 
 /* ================================================================== the scene */
 
@@ -450,10 +529,13 @@ export const V1_CHECKS = (() => {
   };
   if (PLAN.steps !== STEPS) fail(`the sneak plans ${PLAN.steps} steps (needs ${STEPS})`);
   if (T_ARRIVE + 10 > SIGHT0) fail('he must have settled before the sight line draws');
+  if (Math.max(HIPS0 + HIPS_DUR, FACE0 + FACE_DUR, KNEE0 + KNEE_DUR, TURN0 + TURN_DUR) > SIGHT0) fail('the arrival must be complete before the sight line draws');
+  if (FACE0 < KNEE0 + KNEE_DUR - 4) fail('the face must turn on the settle, after the knees have nearly straightened');
   if (BLOCKED_IN > K.start + 66) fail(`"blocked" is up only at frame ${BLOCKED_IN} (needs ~2 s)`);
   if (CUTIN - BOARD0 < 180) fail('the board must hold at least 6 s');
   if (K.end - CUTIN > 20 || K.end - CUTIN < 12) fail(`the cut-in lasts ${K.end - CUTIN} frames (0.4-0.67 s)`);
   if (BPUSH_FOCUS < REPLAY.start) fail('the push focus is before the replay start');
+  if (WALL_PULSE < BOARD0 || WALL_PULSE + WALL_PULSE_DUR > BPUSH0) fail('the wall-point pulse must play on the board, before the push');
   // the room light rule at tilt 0, both zooms: the blocked line stops on the camera-side face; the frustum's corner rays
   // and cross-sections (drawn in the backdrop under her and the partition)
   const fovLegs: PlanPt[][] = FOV_CORNERS.map(([x, h]) => [at3(S), {x, z: 0, h}]);

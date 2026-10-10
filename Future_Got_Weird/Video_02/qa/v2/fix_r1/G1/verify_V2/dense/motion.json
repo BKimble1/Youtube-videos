@@ -1,0 +1,30 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V2": {
+   "seconds": 16.3,
+   "mean_energy": 1.42,
+   "still_seconds": 3.1,
+   "still_share": 0.188,
+   "longest_still_s": 1.57
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V2",
+   "from": 618,
+   "to": 664,
+   "seconds": 1.57,
+   "t": "0:20.6",
+   "spoken": "few billionths of a second later. This takes"
+  },
+  {
+   "scene": "V2",
+   "from": 690,
+   "to": 734,
+   "seconds": 1.5,
+   "t": "0:23.0",
+   "spoken": "time-of-flight sensor, a camera that"
+  }
+ ]
+}

@@ -14,28 +14,37 @@ import {ROOM_COLORS, RoomSet, WALL_T, type RoomItem} from '../components/v02/Roo
 import {Character2, IDLE2, mixPose2, planTrip, tripContacts, tripDistance, tripDuration, tripPose, type Pose2} from '../components/v02/Cast2';
 import {SensorTop, facingOf} from '../components/v02/HandheldSensor';
 import {AUTHORS_BOX, AuthorsSensor} from '../components/v02/S7_Props';
-import {RealTrackBoard, REPLAY, TRACK_COLUMN, replayEndFrame, replayIndex, trackGeom} from '../components/v2k/RealTrackBoard';
-import {EvidenceCard} from '../components/v2k/EvidenceCard';
+import {RealTrackBoard, REPLAY, SOURCE_R8, TRACK_COLUMN, TRACK_FRAMES, replayEndFrame, replayIndex, trackGeom} from '../components/v2k/RealTrackBoard';
+import {EVIDENCE, EvidenceCard} from '../components/v2k/EvidenceCard';
 import {QuestionTitle} from '../components/v2k/QuestionTitle';
 import {Chip, Label, Overlay} from '../components/v2k/Labels';
 import track from '../data/evidence/tracking_topdown.json';
-import {PersonFilmFrames, PulseRun, Ring, Sparkle, StampOn, TargetTop, filmStripHeight, normalOf, planToPx, planViewOf, shiftLeg, type Leg, type PlanMap} from '../components/v2s/V10_Parts';
+import {PersonFilmFrames, ProvenanceColumn, PulseRun, Ring, Sparkle, StampOn, TargetTop, V10_COLUMN, filmStripHeight, normalOf, planToPx, planViewOf, shiftLeg, type Leg, type PlanMap} from '../components/v2s/V10_Parts';
 import {V11_CORNER_WIDE} from '../components/v2s/V11_Match';
 
 /**
  * V10 · The kit clip and its conditions (n24–n28). v2/SHOTPLAN_V2.md V10.
  *
  *  V10.1 n24   HARD CUT in from V9 (its "keeps up" panel, laid out on TRACK_GEOM: the style visibly changes to the real
- *              board): the opening's real board, full frame (kit RealTrackBoard, column 0, no push). The stored estimate
+ *              board): the opening's real board, full frame (kit RealTrackBoard, column 0, no push), with its 64 px
+ *              "Real data" headline, "sped up" tag and the V1 source line from the first frame. The stored estimate
  *              replays from data index 6, every 2nd data frame, one plotted position per video frame, no interpolation,
- *              starting on the cut (the V1.3 mapping; it reaches index 474 at replayEndFrame and holds). Question title
- *              "What can it do? Where does it fail?" (64) for the spoken question only; the board's "Real data" headline
- *              sits in that slot and comes in when the title has gone. "sped up" and the V1 source line throughout.
- *  V10.2 n25   continuous: on "Take" the provenance column comes in (the plot shrinks left), then one item at a time:
- *              the counter "frame N of 475" on "clip" (frame numbers only; it counts with the running replay up to 475),
- *              "ST sensor kit · 16 zones · held still · not the phone-grade device" (on "off-the-shelf"), "under US$100
- *              (authors' figure)" (on "under"), "setup: flat wall + empty-room scan first", and the chip "our check:
- *              their code + their data → matched their saved results · a software check, not a new experiment".
+ *              starting on the cut (the V1.3 mapping). Review r1 (V2-R1-04): after the match has read (8 frames), the
+ *              whole board steps back (scale 0.86 about its bottom centre, so nothing enters the caption band) and the
+ *              question title "What can it do? Where does it fail?" (64) sits on the paper field top left, outside the
+ *              card, for the spoken question only; headline, tag and source keep their full sizes, their anchors follow
+ *              the card. On "Take" the board returns to full size together with the column.
+ *  V10.2 n25   continuous: on "Take" the provenance column comes in (the plot shrinks left). Review r1 (V2-R1-09): the
+ *              column is drawn here (V10_Parts ProvenanceColumn), one item at a time on its cue, items at 48 px: the
+ *              counter "frame N of 475" (40 px mono) on "clip" (frame numbers only; it counts with the running replay),
+ *              "ST sensor kit · held still / not the phone-grade device" on "off-the-shelf kit" ("16 zones" stays in the
+ *              description), "under US$100 / (authors' figure)" on "hundred dollars", "setup: flat wall + / empty-room
+ *              scan first" on "held still", then the chip "our check: their code + their data → matched their saved
+ *              results · a software check, not a new experiment" (40 px, full column width) on "while", alone for its
+ *              last ~2 s before the cut. Review r1 (V2-R1-10): the replay no longer stops at frame 475 and sits frozen
+ *              under "held still while a person walked": after a short hold on 475 it restarts from index 6 on "dollars"
+ *              (same mapping, no interpolation; the counter restarts honestly at "frame 7 of 475") and is still running
+ *              at the cut.
  *  V10.3 n26   HARD CUT (to our picture: plan style, chip "illustration"): a plan close-up of our room's hidden side, not
  *              the room camera. A generic target (a bullseye post, never the guesser) stands at H. On "Many" a pulse
  *              runs sensor → W3 → target: the plain target sprays it every which way and only a thin, pale echo comes
@@ -71,8 +80,10 @@ const K = {
   clip: at('n25', 'clip'),
   shelf: at('n25', 'off-the-shelf'),
   under: at('n25', 'under'),
+  hundred: at('n25', 'hundred'),
   dollars: at('n25', 'dollars'),
   held: at('n25', 'held'),
+  while25: at('n25', 'while'),
   person25: at('n25', 'person'),
   n25End: segEnd('n25'),
   // n26
@@ -115,33 +126,50 @@ const CUT_CARD = K.n28 - 1; // V10.4 → V10.5
 /* ================================================================== V10.1 / V10.2: the kit board */
 
 const BOARD0 = K.start; // the replay starts on the cut
-const TITLE_FROM = K.n24;
+// V2-R1-04: the board steps back so the question title sits outside the card (the match holds for 8 frames first)
+const RECEDE0 = Math.max(K.start + 8, K.n24 - 6);
+const RECEDE_DUR = 14;
+const RECEDE_S = 0.86; // card top 944 − 914·0.86 = 158 (its tape ≈ 141): clear of the title's ink (baseline 118)
+const PIVOT = {x: 960, y: EVIDENCE.card.y1}; // bottom centre: the card's bottom edge and source line stay out of the caption band
+const TITLE_FROM = RECEDE0 + RECEDE_DUR - 4; // the title fades in as the card clears the top-left corner
 const TITLE_TO = K.n24End + 6; // the last word's aligned end overruns the segment; the segment end is the spoken end
-const HEADLINE_IN = TITLE_TO; // "Real data" fills the title's slot once the title has gone
 const COL0 = K.take;
+const COL_DUR = 20;
+/** Board scale: 1 on the cut, steps back for the question, returns with the column on "Take" (same 20 frames and easing). */
+const boardScale = (g: number) =>
+  g < COL0 ? lerp(1, RECEDE_S, E.inOut(tw(g, RECEDE0, RECEDE_DUR, E.linear))) : lerp(RECEDE_S, 1, E.inOut(tw(g, COL0, COL_DUR, E.linear)));
 // Director r1: the counter comes in first, on "clip" ("Take our opening clip"), while the replay is still running, so it
-// visibly counts frames (frame numbers, never seconds) up to "frame 475 of 475" instead of arriving already finished.
-// It keeps its kit slot under the three items, which then fill in above it one at a time.
-const COUNTER = Math.max(COL0 + 20, K.clip);
-const ITEM1 = Math.max(COUNTER + 24, K.shelf);
-const ITEM2 = Math.max(ITEM1 + 30, K.under);
-const ITEM3 = Math.max(ITEM2 + 30, K.dollars + 16);
-const CHIP = ITEM3 + 30;
+// visibly counts frames (frame numbers, never seconds). It keeps its slot under the three items, which then fill in
+// above it one at a time. Review r1 (V2-R1-09): each item on its own cue words, the chip alone for its last ~2 s.
+const COUNTER = Math.max(COL0 + COL_DUR, K.clip);
+const ITEM1 = Math.max(COUNTER + 24, K.shelf); // "off-the-shelf kit"
+const ITEM2 = Math.max(ITEM1 + 45, K.hundred); // "hundred dollars"
+const ITEM3 = Math.max(ITEM2 + 30, K.held); // "held still"
+const CHIP = Math.max(ITEM3 + 15, K.while25); // "while a person walked behind a partition."
 const ITEMS = [
-  {text: 'ST sensor kit · 16 zones · held still · not the phone-grade device', at: ITEM1},
-  {text: "under US$100 (authors' figure)", at: ITEM2},
-  {text: 'setup: flat wall + empty-room scan first', at: ITEM3},
+  {lines: ['ST sensor kit · held still', 'not the phone-grade device'], at: ITEM1},
+  {lines: ['under US$100', "(authors' figure)"], at: ITEM2},
+  {lines: ['setup: flat wall +', 'empty-room scan first'], at: ITEM3},
 ];
 const CHIP_TEXT = 'our check: their code + their data → matched their saved results · a software check, not a new experiment';
+const BOARD_END = replayEndFrame(BOARD0);
+// V2-R1-10: a short hold on the last plotted frame (475 of 475), then the replay restarts from index 6 on "dollars"
+const REPLAY2 = Math.max(BOARD_END + 12, K.dollars + 6);
+const boardIdx = (g: number) => (g < REPLAY2 ? replayIndex(g, BOARD0) : replayIndex(g, REPLAY2));
 {
   const bad: string[] = [];
+  if (RECEDE0 + RECEDE_DUR > TITLE_FROM + 4) bad.push('the title comes in before the board has stepped back');
+  if (TITLE_FROM > K.n24 + 14) bad.push(`the question title (from ${TITLE_FROM}) trails the spoken question (${K.n24})`);
   if (TITLE_TO > COL0) bad.push(`the question title (to ${TITLE_TO}) is still up when the column comes in (${COL0})`);
-  if (CHIP + 30 > CUT_PLAN) bad.push(`the chip (${CHIP}) has under 1 s before the cut to the plan (${CUT_PLAN})`);
-  if (COUNTER < COL0 + 20) bad.push('the counter before the column has opened');
+  if (EVIDENCE.card.y1 - (EVIDENCE.card.y1 - EVIDENCE.card.y0) * RECEDE_S - 20 * RECEDE_S < 136) bad.push('the stepped-back card (with its tape) reaches the question title');
+  if (CUT_PLAN - CHIP < 60) bad.push(`the chip (${CHIP}) has under 2 s alone before the cut to the plan (${CUT_PLAN})`);
+  if (ITEM2 < ITEM1 + 30 || ITEM3 < ITEM2 + 30 || CHIP < ITEM3 + 15) bad.push('column items crowd each other');
+  if (COUNTER < COL0 + COL_DUR) bad.push('the counter before the column has opened');
   if (replayIndex(COUNTER, K.start) >= REPLAY.end) bad.push('the counter arrives after the replay has ended (it would never count)');
+  if (REPLAY2 - BOARD_END > 30) bad.push(`the dot holds on frame 475 for ${REPLAY2 - BOARD_END} frames before the restart`);
+  if (replayEndFrame(REPLAY2) < CUT_PLAN) bad.push('the restarted replay ends (and freezes) before the cut to the plan');
   if (bad.length) throw new Error(`V10 board: ${bad.join('; ')}`);
 }
-const BOARD_END = replayEndFrame(BOARD0);
 
 /* ================================================================== V10.4: the stamp beside the track */
 
@@ -344,19 +372,54 @@ const KitBoard: React.FC<{g: number}> = ({g}) => {
   // V10.4 (director r1): back on the board for "Our clip's files … the walker", the clip replays from its first plotted
   // frame on the cut (the same V1.3 mapping, started on this cut), so the walker the line names is moving while the
   // stamp lands, and the counter counts again; no dead hold before and after the stamp.
-  const idx = g >= CUT_BOARD2 ? replayIndex(g, CUT_BOARD2) : replayIndex(g, BOARD0);
-  const stampT = g >= CUT_BOARD2 ? tw(g, STAMP_T0, 10, E.linear) : 0;
+  const v4 = g >= CUT_BOARD2;
+  const idx = v4 ? replayIndex(g, CUT_BOARD2) : boardIdx(g);
+  const stampT = v4 ? tw(g, STAMP_T0, 10, E.linear) : 0;
+  const colT = tw(g, COL0, COL_DUR, E.linear);
+  const s = v4 ? 1 : boardScale(g);
+  // while the board is stepped back, its headline, tag and source line are drawn here at their full sizes, on anchors
+  // that follow the card (the kit's own slots are used whenever the board is at full size)
+  const own = s < 0.9999;
+  const T = (p: {x: number; y: number}) => ({x: PIVOT.x + (p.x - PIVOT.x) * s, y: PIVOT.y + (p.y - PIVOT.y) * s});
+  const H = T({x: EVIDENCE.headline.x, y: EVIDENCE.headline.baseline});
+  const Sx = T({x: EVIDENCE.source.x, y: EVIDENCE.source.baseline});
+  const Tg = T({x: EVIDENCE.tag.x, y: EVIDENCE.tag.y});
   return (
     <AbsoluteFill style={{background: C.paper}}>
-      <RealTrackBoard
-        idx={idx}
-        sensorLabel={0}
-        blockedLabel={0}
-        dotLabel={0}
-        headline={tw(g, HEADLINE_IN, 8, E.linear)}
-        column={tw(g, COL0, 20, E.linear)}
-        columnItems={ITEMS.map((it) => ({text: it.text, t: tw(g, it.at, 8, E.linear)}))}
-        counter={tw(g, COUNTER, 8, E.linear)}
+      <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, transform: own ? `scale(${f2(s * 10000) / 10000})` : undefined, transformOrigin: `${PIVOT.x}px ${PIVOT.y}px`}}>
+        <RealTrackBoard
+          idx={idx}
+          background={false}
+          sensorLabel={0}
+          blockedLabel={0}
+          dotLabel={0}
+          headline={own ? 0 : 1}
+          spedUp={own ? 0 : 1}
+          source={own ? 0 : 1}
+          column={colT}
+          columnItems={[]}
+          counter={0}
+        />
+      </div>
+      {own && (
+        <>
+          <Overlay>
+            <text x={f2(H.x)} y={f2(H.y)} fontFamily={F.display} fontWeight={600} fontSize={EVIDENCE.headline.size} fill={C.ink}>
+              Real data
+            </text>
+            <text x={f2(Sx.x)} y={f2(Sx.y)} fontFamily={F.body} fontWeight={800} fontSize={EVIDENCE.source.size} fill={C.inkSoft}>
+              {SOURCE_R8}
+            </text>
+          </Overlay>
+          <Chip x={Tg.x} y={Tg.y} anchor="end" valign="middle" size={EVIDENCE.tag.size}>
+            sped up
+          </Chip>
+        </>
+      )}
+      <ProvenanceColumn
+        gate={clamp01((colT - 0.5) * 2)}
+        items={ITEMS.map((it) => ({lines: it.lines, t: tw(g, it.at, 8, E.linear)}))}
+        counter={{text: `frame ${Math.max(0, idx) + 1} of ${TRACK_FRAMES}`, t: tw(g, COUNTER, 8, E.linear)}}
         chip={{text: CHIP_TEXT, t: tw(g, CHIP, 8, E.linear)}}
       />
       <QuestionTitle text="What can it do? Where does it fail?" from={TITLE_FROM} to={TITLE_TO} frame={g} />
@@ -445,7 +508,8 @@ const ReflectPlan: React.FC<{g: number}> = ({g}) => {
           </Label>
         )}
       </Overlay>
-      <Chip x={120} y={62} size={30}>
+      {/* review r1 (V2-R1-14): 40 px; under the wall band, top left (the paper strip above the wall is only 70 px tall) */}
+      <Chip x={120} y={f2(WALL_LINE_Y + 22)} size={40}>
         illustration
       </Chip>
     </AbsoluteFill>
@@ -583,5 +647,5 @@ export const SFX: Sfx[] = [
   ...filmTicks.map((f, i): Sfx => ({f, kind: 'shutter_click', gain: -13, pitch: (i % 3) - 1, note: 'film strip: one capture'})),
 ];
 
-/** Exported for the report: the replay mapping's last frame and the V10.5 card camera. */
-export const V10_REPORT = {boardEnd: BOARD_END, camCard: CAM_CARD, column: TRACK_COLUMN, fpsWalk: FPS_WALK, walk: WALK_LEGS.map((l) => ({x0: l.x0, x1: l.x1, steps: l.plan.steps, start: l.start, end: l.end}))};
+/** Exported for the report: the replay mapping's end and restart, the V10.1 step-back, the column cues, the V10.5 card camera. */
+export const V10_REPORT = {boardEnd: BOARD_END, camCard: CAM_CARD, replay2: REPLAY2, recede: {from: RECEDE0, dur: RECEDE_DUR, scale: RECEDE_S, title: [TITLE_FROM, TITLE_TO]}, cues: {counter: COUNTER, items: [ITEM1, ITEM2, ITEM3], chip: CHIP, cutPlan: CUT_PLAN}, column: V10_COLUMN, kitColumn: TRACK_COLUMN, fpsWalk: FPS_WALK, walk: WALK_LEGS.map((l) => ({x0: l.x0, x1: l.x1, steps: l.plan.steps, start: l.start, end: l.end}))};

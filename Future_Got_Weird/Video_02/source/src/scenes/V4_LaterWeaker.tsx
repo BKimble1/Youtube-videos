@@ -1,14 +1,14 @@
 import React from 'react';
-import {AbsoluteFill} from 'remotion';
+import {AbsoluteFill, Easing} from 'remotion';
 import {C, F} from '../theme';
 import type {Sfx} from '../lib/sfx';
 import {useG} from '../lib/SceneFrame';
 import {at, scene, seg} from '../lib/timeline';
 import {E, tw} from '../lib/motion';
 import {ArrivalTimeline, TL_GEOM} from '../components/v2k/ArrivalTimeline';
-import {EVIDENCE, EvidenceCard} from '../components/v2k/EvidenceCard';
+import {EVIDENCE, EvidenceCard, evidenceIconSlot} from '../components/v2k/EvidenceCard';
 import {fontShorthand} from '../components/v2k/util';
-import {textWidth, useFontsReady} from '../lib/measure';
+import {textWidth} from '../lib/measure';
 import {SubLabel, TeachLabel} from '../components/v2k/Labels';
 import {ZoneBox} from '../components/v02/S3_ZoneBox';
 import {SURVIVES} from '../components/v2s/V3_Parts';
@@ -26,14 +26,18 @@ import {ROUTE_ICON, RouteIcon, ScreenPointer, TapRing, pointerAt} from '../compo
  *            "not to scale · far weaker" (34); the bump is ringed on "tiny". No dot tally, no counts.
  *  V4.2 s15  Hard switch on "This is real data": the kit EvidenceCard (headline "Real data", the 3×3 zone icon) with the
  *            authors' raw counts, centre zone (V4_EchoBoard) drawn complete on the first frame; the source line on "same
- *            team" (34): "authors' released raw counts · different sensor: 3×3 zones · centre zone"; the icon's centre
- *            zone marks on "sensor". "wall echo" (48) on "the wall's", a pulse on its peak on "big echo". On "then, a few
- *            nanoseconds later" a bar magnifier travels along the tail; on "zoom in to see" its factor animates ×1 →
- *            ×250 until the bump stands up ≈ 3.7 ns after the spike; "hundreds of times weaker (this capture)" (48). No
- *            printed ratio; the blip before the spike is not annotated.
+ *            team" (34): "authors' released raw counts · centre zone"; on "different sensor" the tag "different sensor:
+ *            3×3 zones" (48) cuts in beside the zone icon (where V6 later puts "same 3×3 sensor") and brightens once while
+ *            the icon's nine zones light (v2 review r1, V2-R1-14: the condition was a 34 px clause of the source line);
+ *            the icon's centre zone marks on "sensor". "wall echo" (48) on "the wall's", a pulse on its peak on "big
+ *            echo". On "later" a bar magnifier appears beside the spike and travels along the tail, arriving as "zoom" is
+ *            said; on "zoom" its factor animates ×1 → ×250, fast at first, so the bump stands up within about 5 frames of
+ *            the word (V2-R1-16: it used to wait at ×1 for 1.5 s and start 10 frames late); "hundreds of times weaker
+ *            (this capture)" (48). No printed ratio; the blip before the spike is not annotated.
  *  V4.3 s16  Push toward the bump (the plot scales inside the card; headline, icon and source stay): the bump lands
  *            ringed (ink ring, r 90, 6 px) centred on (960, 520); the checker's arm comes in from the right and her
- *            pointer taps the ring; on "timing" a dimension line spike → bump, "≈ 3.7 ns later" (48); on "farther" a
+ *            pointer taps the ring; on "timing" a dimension line spike → bump, "≈ 3.7 ns later" (48), and "wall echo"
+ *            fades as it draws (its peak dot stays; V2-R1-23: four labels and the icon at once); on "farther" a
  *            small generic route icon (sensor → wall → hidden object → wall → sensor) and "≈ 1.1 m extra, there and back"
  *            (48). The last frame: the ring at (960, 520), the V4 → V5 graphic match.
  */
@@ -61,6 +65,7 @@ const K = {
   walls: at('s15', "wall's"),
   big: at('s15', 'big'),
   then: at('s15', 'then'),
+  later: at('s15', 'later'),
   bump15: at('s15', 'bump'),
   zoom: at('s15', 'zoom'),
   seeEnd: at('s15', 'see', 1, 'end'),
@@ -111,12 +116,19 @@ const ZONE_T = K.sensor15 - 2;
 const ZONE_LISTEN = (g: number) => 0.15 + 0.85 * tw(g, K.different - 2, 8, E.inOut) * (1 - 0.8 * tw(g, K.walls - 12, 12, E.inOut));
 const SPIKE_LAB = K.walls - 2;
 const SPIKE_PULSE = Math.max(SPIKE_LAB + 10, K.big);
-const LENS_IN = Math.max(K.then, SPIKE_PULSE + 16);
+/** V2-R1-16: the ×1 → ×250 animation starts ON "zoom" (where the music's lift lands); the magnifier comes in on "later"
+ *  (about 1.5 s before) and slides along the tail without stopping until just before it, so there is no wait at ×1. */
+const ZOOM0 = K.zoom;
+const LENS_IN = Math.max(K.later, SPIKE_PULSE + 16);
 const LENS_SLIDE0 = LENS_IN + 8;
-const LENS_SLIDE1 = Math.max(LENS_SLIDE0 + 30, K.bump15 + 4);
-const ZOOM0 = Math.max(LENS_SLIDE1 + 2, K.zoom);
-const ZOOM1 = Math.max(ZOOM0 + 24, K.seeEnd + 4);
+const LENS_SLIDE1 = ZOOM0 - 2;
+const ZOOM1 = ZOOM0 + 22;
+/** The factor's curve (log-space progress): quick at first, so the bump is up about 5 frames after "zoom", then it settles
+ *  on ×250 well inside "zoom in to see". */
+const ZOOM_EASE = Easing.bezier(0.2, 0.7, 0.4, 1);
 const RATIO_T = Math.max(ZOOM1 + 6, K.hundreds - 2);
+if (LENS_SLIDE1 - LENS_SLIDE0 < 20) throw new Error('V4: the magnifier has no time to travel before "zoom"');
+if (ZOOM1 > K.seeEnd) throw new Error('V4: the zoom must reach ×250 inside "zoom in to see"');
 
 // V4.3 the push, the ring, the tap, the measure
 const PUSH0 = Math.max(RATIO_T + 40, K.s16);
@@ -290,20 +302,23 @@ const BoardShot: React.FC<{g: number}> = ({g}) => {
         source={SOURCE}
         sourceT={tw(g, SOURCE_T, 6, E.linear)}
       >
-        <SourceHighlight t={tw(g, K.different - 2, 44, E.linear)} />
         <EchoPlot
           t={{
             spikeLabel: tw(g, SPIKE_LAB, 6, E.linear),
+            spikeText: tw(g, SPIKE_LAB, 6, E.linear) * (1 - tw(g, DIM0, 8, E.linear)),
             spikePulse: tw(g, SPIKE_PULSE, 14, E.inOut),
             lens: tw(g, LENS_IN, 10),
             lensSlide: tw(g, LENS_SLIDE0, LENS_SLIDE1 - LENS_SLIDE0, E.linear),
-            zoom: tw(g, ZOOM0, ZOOM1 - ZOOM0, E.inOut),
+            zoom: tw(g, ZOOM0, ZOOM1 - ZOOM0, ZOOM_EASE),
             ratio,
             axisTitle: 1 - tw(g, PUSH0, 10, E.linear),
             push,
           }}
         />
       </EvidenceCard>
+      <SubLabel x={SENSOR_TAG.x} y={SENSOR_TAG.y} opacity={tw(g, SENSOR_TAG_T, 6, E.linear)} highlight={Math.sin(Math.PI * tw(g, SENSOR_TAG_T, 44, E.linear))}>
+        {SENSOR_TAG.text}
+      </SubLabel>
       <InkRing t={tw(g, RING0, RING_DUR, E.inOut)} />
       <Dimension t={tw(g, DIM0, DIM_DUR, E.linear)} label={tw(g, DIM_LABEL, 6, E.linear)} />
       <RouteIcon x={ICON_X} y={ICON_Y} t={extra} k={ICON_K} />
@@ -318,23 +333,22 @@ const BoardShot: React.FC<{g: number}> = ({g}) => {
   );
 };
 
-/** "brighten once" behind the source line's sensor clause on "different sensor" (under the card's text). */
-const SOURCE_PREFIX = "authors' released raw counts · ";
-const SOURCE_CLAUSE = 'different sensor: 3×3 zones · centre zone';
-const SOURCE = SOURCE_PREFIX + SOURCE_CLAUSE;
-const SourceHighlight: React.FC<{t: number}> = ({t}) => {
-  useFontsReady();
-  if (t <= 0 || t >= 1) return null;
-  const S = EVIDENCE.source;
-  const font = fontShorthand(F.body, 800, S.size);
-  const x0 = S.x + textWidth(SOURCE_PREFIX, font);
-  const w = textWidth(SOURCE_CLAUSE, font);
-  return (
-    <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', pointerEvents: 'none'}}>
-      <rect x={f2(x0 - 12)} y={f2(S.baseline - S.size * 0.8 - 8)} width={f2(w + 24)} height={f2(S.size + 18)} rx={12} fill={C.saffronLight} opacity={f2(Math.sin(Math.PI * t))} />
-    </svg>
-  );
-};
+/** The source line (34, the citation, small) and the sensor condition lifted out of it into a 48 px tag beside the zone
+ *  icon (v2 review r1, V2-R1-14; evidence brief §4.1 / §10: "different sensor: 3×3 zones · centre zone" beside the
+ *  result). Placed as V6's "same 3×3 sensor" (icon slot + 74, headline baseline − 4), so the two boards rhyme. */
+const SOURCE = "authors' released raw counts · centre zone";
+const ICON_SLOT = evidenceIconSlot('Real data');
+const SENSOR_TAG = {text: 'different sensor: 3×3 zones', x: ICON_SLOT.x + 74, y: EVIDENCE.headline.baseline - 4, size: 48};
+const SENSOR_TAG_T = K.different - 2;
+{
+  // the tag stays inside the card's top row, clear of the V4.3 route icon below it (measured in the browser only)
+  if (typeof document !== 'undefined') {
+    const w = textWidth(SENSOR_TAG.text, fontShorthand(F.body, 800, SENSOR_TAG.size));
+    if (SENSOR_TAG.x + w > EVIDENCE.card.x1 - 40) throw new Error(`V4: the sensor tag runs off the card (${(SENSOR_TAG.x + w).toFixed(0)})`);
+    const iconTop = ICON_Y - 40 * ICON_K;
+    if (SENSOR_TAG.x + w > ICON_X - 40 && SENSOR_TAG.y + 14 > iconTop - 12) throw new Error('V4: the sensor tag runs into the route icon');
+  }
+}
 
 /* ================================================================== the scene */
 

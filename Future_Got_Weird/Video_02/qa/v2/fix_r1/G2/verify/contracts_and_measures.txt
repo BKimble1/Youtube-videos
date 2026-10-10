@@ -1,0 +1,15 @@
+G2 verifier measurements (full-res stills rendered from F2 + G1's F1 V1/V2 files, V12 load-throw downgraded to a warning for rendering only)
+V2->V3 hand-off: f907..f914 pixel-identical (max diff 0, frame std 19.8 = paint + grain); f914->f915 max 80 / mean 0.89 (pull-back moves on V3's 5th frame).
+  V3 f911/914/915/920/925/929/1400/1409 identical with and without G1's V2_Plan merged (max diff 0).
+  Grain visible to ~f922; room (partition top) enters f925; title fade starts f929, readable f932.
+V3->V4: f1522 vs f1523 max diff 1; both identical to the pre-fix render (max 0).
+V4->V5: ring fit (ink on 360/360 samples) centre (958-960, 520) r 90 on f2282 and f2283.
+V2-R1-21: bluish pixels in x 1880-1919 on f944/1085/1150/1384/1480 = 0.
+V2-R1-16: zoom tab x1 f2016-2018, x5 f2020, x16 f2022, x39 f2024 (bump visible), x73 f2026, x113 f2028, x216 f2034, x250 f2040. Lens in f1972, slides f1980-2016.
+V2-R1-23: 'wall echo' full f2207-2209, fading f2213, gone f2217; peak dot stays.
+V2-R1-22 (mirror_slide lib sync 1.5 s, dur 1.6 s; raw-sample per-frame RMS dB at the new cues):
+  drop cue f1049: 1045 -49.6, 1046 -48.7, 1047 -43.2, 1048 -30.7, 1049 -24.6 (stop), 1050 -64.2 (ting alone); mirror visible f1046, lands f1050.
+  slide-off cue f1142: 1138 -49.6 .. 1142 -24.6; mirror moves f1132-1144 (fast part f1136-1143), gone f1144.
+  note: the sample has an early transient 17 frames before its stop (raw -39.9 dB, 15 dB under the stop): now at f1032-1033 (about -51 dBFS after gains, under 'Put a') and f1125-1126 (about -55 dBFS).
+SFX counts: V3 19, V4 9 (collect_sfx); changed cues only mirror_slide 1041->1049, 1132->1142, magnifier_slide 1926->1972.
+Chips: V3 'slowed down' (V3.2, V3.4) and 'illustration' (V3.3) raised 30 -> 40 px by the verifier (same corner slot and size as G1's V2 'illustration' chip); 'mirror' label ends x~1390, chip starts x~1470.

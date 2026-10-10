@@ -27,10 +27,13 @@ import {SensorTop, facingOf} from '../v02/HandheldSensor';
 const f2 = (n: number) => Math.round(n * 100) / 100;
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
-/** The plan window the readout shows (metres): x from MAP_X0 over MAP_W, z from MAP_Z0 down. */
-const MAP_X0 = 1.4;
-const MAP_W = 1.6;
-const MAP_Z0 = -0.1;
+/** The plan window the readout shows (metres): x from MAP_X0 over MAP_W, z from MAP_Z0 down. Fix r1 (V2-R1-38, the
+ *  reading reads small at phone size): the window is trimmed to its content (x 1.48-2.97: the sensor glyph's left edge
+ *  is at 1.52, the blob and its lit ring end by 2.95; z from -0.06: a thinner wall band; it was x 1.4 + 1.6, z from
+ *  -0.1). With the thinner bezel below, V12's inset draws the reading 15 % larger. */
+const MAP_X0 = 1.48;
+const MAP_W = 1.49;
+const MAP_Z0 = -0.06;
 
 /** where the sensor is aimed on the wall (layout.json sensor.aimX): its glyph faces that way */
 const SPOT_AIM: P2 = {x: layoutJson.sensor.aimX, z: 0};
@@ -119,7 +122,9 @@ export type V12ReadoutInsetProps = Omit<ReadoutMapProps, 'w' | 'h'> & {
   exiting?: boolean;
 };
 
-export const V12_READOUT_BEZEL = {side: 22, top: 22, bottom: 44};
+/** Fix r1 (V2-R1-38): a thinner bezel (was 22 / 22 / 44, corner radius 28, a 22 px coral band) gives the screen more
+ *  of the inset's width; the device look (teal body, coral band, status LED) stays. */
+export const V12_READOUT_BEZEL = {side: 14, top: 14, bottom: 36, r: 26, screenR: 13, band: 17};
 
 /** The magnified readout (screen-space <svg>). */
 export const V12ReadoutInset: React.FC<V12ReadoutInsetProps> = ({x, y, w, h, t, led = 1, exiting = false, ...map}) => {
@@ -136,31 +141,31 @@ export const V12ReadoutInset: React.FC<V12ReadoutInsetProps> = ({x, y, w, h, t, 
     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
       <g transform={`translate(${f2(cx)} ${f2(cy)}) scale(${s.toFixed(4)}) translate(${f2(-cx)} ${f2(-cy)})`} opacity={op}>
         {/* soft drop shadow */}
-        <rect x={x + 8} y={y + 12} width={w} height={h} rx={28} fill={C.shadow} />
+        <rect x={x + 8} y={y + 12} width={w} height={h} rx={b.r} fill={C.shadow} />
         <defs>
           <clipPath id={`${id}-body`}>
-            <rect x={x} y={y} width={w} height={h} rx={28} />
+            <rect x={x} y={y} width={w} height={h} rx={b.r} />
           </clipPath>
           <clipPath id={`${id}-screen`}>
-            <rect x={x + b.side} y={y + b.top} width={sw} height={sh} rx={14} />
+            <rect x={x + b.side} y={y + b.top} width={sw} height={sh} rx={b.screenR} />
           </clipPath>
         </defs>
-        <rect x={x} y={y} width={w} height={h} rx={28} fill={C.teal} />
+        <rect x={x} y={y} width={w} height={h} rx={b.r} fill={C.teal} />
         <g clipPath={`url(#${id}-body)`}>
-          <rect x={x - 2} y={y + h - 22} width={w + 4} height={24} fill={C.coral} />
-          <line x1={x} y1={y + h - 22} x2={x + w} y2={y + h - 22} stroke={C.ink} strokeWidth={3} />
+          <rect x={x - 2} y={y + h - b.band} width={w + 4} height={b.band + 2} fill={C.coral} />
+          <line x1={x} y1={y + h - b.band} x2={x + w} y2={y + h - b.band} stroke={C.ink} strokeWidth={3} />
         </g>
-        <rect x={x} y={y} width={w} height={h} rx={28} fill="none" stroke={C.ink} strokeWidth={OUTLINE} />
+        <rect x={x} y={y} width={w} height={h} rx={b.r} fill="none" stroke={C.ink} strokeWidth={OUTLINE} />
         {/* screen */}
-        <rect x={x + b.side} y={y + b.top} width={sw} height={sh} rx={14} fill={C.cream} />
+        <rect x={x + b.side} y={y + b.top} width={sw} height={sh} rx={b.screenR} fill={C.cream} />
         <g clipPath={`url(#${id}-screen)`}>
           <g transform={`translate(${x + b.side} ${y + b.top})`}>
             <ReadoutMap {...map} w={sw} h={sh} />
           </g>
         </g>
-        <rect x={x + b.side} y={y + b.top} width={sw} height={sh} rx={14} fill="none" stroke={C.ink} strokeWidth={3.5} />
-        {/* status LED in the bezel's corner */}
-        <circle cx={x + w - 34} cy={y + h - 33} r={8} fill={led > 0.5 ? C.saffron : C.inkMuted} stroke={C.ink} strokeWidth={3} opacity={1} />
+        <rect x={x + b.side} y={y + b.top} width={sw} height={sh} rx={b.screenR} fill="none" stroke={C.ink} strokeWidth={3.5} />
+        {/* status LED in the bezel's corner, between the screen and the coral band */}
+        <circle cx={x + w - 28} cy={f2(y + h - (b.bottom + b.band) / 2)} r={6} fill={led > 0.5 ? C.saffron : C.inkMuted} stroke={C.ink} strokeWidth={3} opacity={1} />
       </g>
     </svg>
   );

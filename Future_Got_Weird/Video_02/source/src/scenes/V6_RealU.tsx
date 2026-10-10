@@ -3,7 +3,7 @@ import {AbsoluteFill} from 'remotion';
 import {C, F} from '../theme';
 import type {Sfx} from '../lib/sfx';
 import {useG} from '../lib/SceneFrame';
-import {at, scene, seg} from '../lib/timeline';
+import {at, scene, seg, segEnd} from '../lib/timeline';
 import {E, tw} from '../lib/motion';
 import {PLINTH} from '../lib/shots';
 import {EVIDENCE, EvidenceCard, evidenceIconSlot} from '../components/v2k/EvidenceCard';
@@ -25,10 +25,13 @@ import {Pointer, TapRing, pointerAt} from '../components/v2s/V5_Parts';
  *             "authors' released data and code, run by us". No characters, no plan, no person token.
  *  V6.2 s37   The zone box steps through the 36 preset positions (the authors' 6×6 back-and-forth raster, hard-coded in
  *             their script) while the front view shows the real partial sums: one image per position, k = 1 → 36, no
- *             in-between frames (each image holds 5 → 2 frames, never fewer than 2), ending on the authors' full result
+ *             in-between frames (each image holds about 7 → 2 frames, never fewer than 2), from "here's" (n13) to
+ *             "rebuilt" (s37), ending on the authors' full result
  *             (our k = 36 equals their volume exactly). Display as the authors' plot: per-image scaling, gamma 3, x
- *             inverted (UFront). "36 preset positions · object held still" (48); "rough outline" (48) under the U. In
- *             the hold the checker's pointer (her arm and prop only) taps the U's base.
+ *             inverted (UFront). "36 preset positions · object held still" (48); "rough outline" (48) under the U. The
+ *             finished board holds from "rebuilt" to the roll-up at the very end of V6; the checker's pointer (her arm
+ *             and prop only) taps the U's base as the hold after "U." begins (with the music's resolve), and is gone
+ *             before the roll-up.
  *  Out        The board rolls up from the bottom into a paper scroll while the paper behind it turns to the museum
  *             wall's colour; the last 6 frames hold ScrollRoll at cx 960, cy 430, len 560, r 46 (spin 0, sw 4, sx = sy = 1,
  *             screen px) on PLINTH.wall: V7 opens on the identical scroll and drops it onto the first ledge.
@@ -41,12 +44,13 @@ import {Pointer, TapRing, pointerAt} from '../components/v2s/V5_Parts';
 const K = {
   start: scene('V6').from,
   end: scene('V6').to,
+  heres: at('n13', "here's"),
   real: at('n13', 'real'),
   s37: seg('s37').from,
-  moved: at('s37', 'moved'),
+  s37End: segEnd('s37'), // "U." has ended (the narration is silent from here to n14)
+  rebuilt: at('s37', 'rebuilt'),
   positions: at('s37', 'positions'),
   rough: at('s37', 'rough'),
-  hidden: at('s37', 'hidden'),
   uEnd: at('s37', 'u', 1, 'end'),
 };
 
@@ -55,8 +59,13 @@ export const V6_SCROLL = {cx: 960, cy: 430, len: 560, r: 46, spin: 0, sw: 4, hol
 
 /* ------------------------------------------------------------------ the build-up (one image per preset position) */
 
-const BUILD0 = K.moved + 2;
-const BUILD1 = Math.max(BUILD0 + 90, K.rough - 4); // k = 36 from here on
+/**
+ * Review V2-R1-01: the build starts on "here's" (the empty grid reads for the first 0.6 s after the cut, then the real
+ * data starts arriving) and the U is complete on "rebuilt", so the finished board (36/36, then "rough outline", then the
+ * pointer's tap) holds from "rebuilt" to the roll-up at the very end of V6.
+ */
+const BUILD0 = K.heres;
+const BUILD1 = Math.max(BUILD0 + 90, K.rebuilt); // k = 36 from here on
 /** start frame of image k (1..36): durations fall linearly from D0 to D1 frames (the first positions read longest) */
 const KSTART: number[] = (() => {
   const n = N_POS - 1; // intervals k = 1..35
@@ -87,12 +96,19 @@ const LBL_SENSOR = K.real - 2;
 const LBL_PRESET = Math.max(BUILD0 + 6, K.positions - 6);
 const LBL_ROUGH = K.rough;
 
-// the hold: the checker's pointer taps the U's base
+// the hold (s37's pause): the checker's pointer taps the U's base as the hold begins, on the end of the word "U." (the
+// frame the music's Gadd9 resolve and its tick land on: tools/make_music_v02v2.py cue U_end = at('s37','u',1,'end')),
+// so tap, resolve and tick are one event; it is gone well before the board rolls up at the very end of V6
 const ROLL_DUR = 20;
 const ROLL_END = K.end - V6_SCROLL.holdFrames; // the scroll is complete and still from here to the cut
 const ROLL0 = ROLL_END - ROLL_DUR;
-const TAP_U = Math.min(Math.max(BUILD1 + 18, K.hidden - 8), ROLL0 - 24);
+const PTR = {inDur: 16, hold: 10, outDur: 12};
+const TAP_U = K.uEnd;
+if (TAP_U < K.s37End) throw new Error('V6: the pointer taps the U before "U." has been said');
+const PTR_GONE = TAP_U + PTR.hold + PTR.outDur;
 if (TAP_U < BUILD1 + 12) throw new Error(`V6: the pointer taps ${TAP_U - BUILD1} frames after the U completes (needs 12)`);
+if (PTR_GONE + 12 > ROLL0) throw new Error(`V6: the pointer leaves ${ROLL0 - PTR_GONE} frames before the roll-up (needs 12)`);
+if (ROLL0 - K.s37End < 40) throw new Error(`V6: the finished board holds only ${ROLL0 - K.s37End} frames after "U." (needs 40)`);
 
 /* ------------------------------------------------------------------ layout (screen px, inside EVIDENCE.content) */
 
@@ -187,7 +203,7 @@ export const V6RealU: React.FC = () => {
   // the paper round the board turns to the museum wall's colour as the roll starts
   const wallT = tw(g, ROLL0, 8, E.linear);
   const bg = lerpHex(C.paper, PLINTH.wall, wallT);
-  const ptr = pointerAt(g, {target: U_BASE, dir: POINTER_DIR, hit: TAP_U, travel: 900, inDur: 16, hold: 10, outDur: 12});
+  const ptr = pointerAt(g, {target: U_BASE, dir: POINTER_DIR, hit: TAP_U, travel: 900, ...PTR});
 
   if (done) {
     // the hand-off frames: the finished scroll, still, on the museum wall's colour (V7's first frame matches)
@@ -237,6 +253,6 @@ export const SFX: Sfx[] = [
   // a beat of near-silence on the switch, and no activity sound under the build: the music carries the lift (shot
   // plan V6 sound); a very low room tone from the line on
   {f: K.s37, kind: 'amb_room', gain: -9, dur: (K.end - K.s37) / 30, note: 'very low tone under the real-data board'},
-  {f: TAP_U, kind: 'pencil_tap', gain: -3, note: "the checker's pointer taps the U's base"},
+  {f: TAP_U, kind: 'pencil_tap', gain: -3, note: "the checker's pointer taps the U's base at the start of the hold, with the music's resolve and tick (end of \"U.\")"},
   {f: ROLL0, kind: 'paper_lift', gain: -3, note: 'the board rolls up into a scroll'},
 ];

@@ -46,9 +46,11 @@ import {CHIP_FRAME, FadingPulse, Glare, Sun, TinyChip, WhPill, polyLen} from '..
  *
  *  V11.1 s40   MATCH CUT in from V10.5: the card's partition becomes the warehouse's blind corner (V11_Match: the corner
  *              edge on the drawing's near-end edge, x, floor and top). Front view, locked wide (CAM_V11_WIDE). The
- *              delivery robot (cautious face) sets off on "Picture" and rolls toward the blind corner, stopping short of
- *              it on "corner". "potential use" (48, top left) comes in on the cut and stays until the cut to V12, with
- *              the chip "illustration" (30) beside it.
+ *              delivery robot (cautious face) is already easing along the aisle when the shot opens (review r1,
+ *              V2-R1-35: no still frame under "What might this be good for?"; it pings on "What" and "good"), speeds up
+ *              on "Picture" and rolls toward the blind corner, stopping short of it on "corner". "potential use" (48,
+ *              top left) comes in on the cut and stays until the cut to V12, with the chip "illustration" (40; review r1
+ *              V2-R1-14) beside it.
  *  V11.2 n29   One move: tilt to the plan of the junction. On "junction" the plain wall across the junction lights and a
  *              wall spot on it marks where the light will bounce; "suitable wall" (48). The cast "person" comes through
  *              the doors into the hidden aisle. On "sensor" one slowed pulse runs robot → wall spot → hidden aisle →
@@ -60,14 +62,16 @@ import {CHIP_FRAME, FadingPulse, Glare, Sun, TinyChip, WhPill, polyLen} from '..
  *              on "slow", "not who" (48) on "not"; on "who's" a "?" in a thought bubble over the robot (it has only the
  *              blob), while the person, never in its direct view, stops at the brake and turns toward the corner.
  *  V11.4 s43   HARD CUT on "plenty": one full-frame tile per beat, each on the warehouse plan, each beat's words (48) on
- *              its word: "short range" (pulses fade out before they reach the far end of the hidden aisle), "dark or
+ *              its word; review r1 (V2-R1-36): each tile is framed on what changes (tile 1 on the whole short trip,
+ *              robot → wall spot → the far end of the hidden aisle; tiles 2–4 cropped in on the junction: the wall, the
+ *              sunlit sensor, the robot and its chip), with bolder pulses: "short range" (pulses fade out before they reach the far end of the hidden aisle), "dark or
  *              shiny walls" (a dark wall swallows a pulse on "dark"; on "shiny" the wall turns glossy and bounces the next
  *              one away, angle in = angle out, past the robot), "bright sunlight" (the sun comes up outside on "bright";
  *              on "sunlight" the patch under a roof light over the relay wall lights up, the sunlit wall floods the
  *              sensor pointed at it, and the returning echo is lost in the glare; no ray crosses a wall), "fast math on small
  *              hardware" (a callout from the robot: a heap of numbers pours onto a tiny chip, which sweats on "small").
- *              On "The researchers" the four shrink into a row (captions 34), then "early-stage prototype (the
- *              researchers)" (48) on "early-stage".
+ *              Just before "call it" the four shrink into a row (later and shorter than in r1, so the chip tile gets
+ *              its time; captions at 40 px, each tile's beat words), then "early-stage prototype (the researchers)" (48) on "early-stage".
  *  V11.5 n30   HARD CUT: front view, locked: the robot creeps on round the corner, slowly; "not a safety system" (48) on
  *              "not", where the robot taps its brake once (the soft settle) and creeps on more slowly still. No carton, no bumper. HARD CUT to V12: on the last frame the blind corner's vertical edge stands on
  *              V12_PARTITION_FAR_X, the screen x of the partition's far-end edge in S9.2's raised framing (asserted ±15 px).
@@ -117,6 +121,7 @@ const K = {
   math: at('s43', 'math'),
   small: at('s43', 'small'),
   the43: at('s43', 'the'),
+  call: at('s43', 'call'),
   early: at('s43', 'early-stage'),
   s43End: segEnd('s43'),
   // n30
@@ -141,8 +146,20 @@ const pulseWin = (g: number, starts: number[], len = 18) => {
 const CAM_PLAN: Cam = {cx: 1120, cy: 548, zoom: 0.92};
 /** V11.3: medium front view: the robot at the stop line, the corner and aisle B, the blob over the racks. */
 const CAM_MED: Cam = {cx: 900, cy: 600, zoom: 1.08};
-/** V11.4 tiles: the same plan framing as V11.2. */
+/** V11.4 tiles: the V11.2 plan framing is the reference (the tile geometry is in its world px). */
 const CAM_TILE: Cam = CAM_PLAN;
+/**
+ * Review r1 (V2-R1-36): each tile framed on what changes. World px of the plan stage (200 px per metre): robot
+ * (880, 810), relay wall x 1580 from y 510 to 970, roof light x 1390–1580 / y 560–780, outer wall ≈ 1607, the person
+ * at the hidden aisle's far end (1280, 160).
+ *  - tile 1 (short range) needs the whole trip, robot → wall spot → the far end of the hidden aisle (where the person
+ *    is never reached): re-centred, a little closer;
+ *  - tiles 2–4 (the wall, the sunlit sensor, the chip) crop in on the junction (robot, relay wall, roof light) at 1.38,
+ *    1.5× the V11.2 plan, with room right of the outer wall for the sun.
+ */
+const CAM_T1: Cam = {cx: 1180, cy: 458, zoom: 0.97};
+const CAM_JCT: Cam = {cx: 1114, cy: 704, zoom: 1.38};
+const TILE_CAMS: Cam[] = [CAM_T1, CAM_JCT, CAM_JCT, CAM_JCT];
 /** V11.5: front view, locked; the blind corner's edge on the V12 contract x (V12_PARTITION_FAR_X). */
 const END_ZOOM = 1.12;
 const CORNER_W = {x: whProjectWith(whViewAt(0), {x: WAREHOUSE.corner.x, z: WAREHOUSE.corner.z, h: 0}).x};
@@ -168,10 +185,33 @@ const DEC1 = 18;
 const STOP1 = Math.max(GO + ACC1 + DEC1 + 24, Math.min(K.corner + 4, K.with - 20));
 const X_FAR = 0.35;
 const V1 = clamp(((X_E - X_FAR) * 30) / (ACC1 / 2 + (STOP1 - GO - ACC1 - DEC1) + DEC1 / 2), 0.5, 1.45);
-const DRIVE1: BotDrivePlan = {v0: 0, keys: [{at: GO - K.start, dur: ACC1, to: V1}, {at: STOP1 - DEC1 - K.start, dur: DEC1, to: 0}], endX: X_E};
+// review r1 (V2-R1-35): the wide held completely still for 2 s under "What might this be good for?". Now the robot is
+// already easing along the aisle (a cautious creep) from just after the cut, pinging as it goes; on "Picture" it speeds
+// up and rolls toward the corner (the shot plan's "rolls toward the blind aisle corner on Picture", no wait).
+const CREEP_GO = K.start + 4;
+const ACC0 = 16;
+const V_CREEP = 0.18; // m/s (about 1.2 px per frame in the wide; the wheels turn about 3° per frame)
+const DRIVE1: BotDrivePlan = {
+  v0: 0,
+  keys: [
+    {at: CREEP_GO - K.start, dur: ACC0, to: V_CREEP},
+    {at: GO - K.start, dur: ACC1, to: V1},
+    {at: STOP1 - DEC1 - K.start, dur: DEC1, to: 0},
+  ],
+  endX: X_E,
+};
 const drive1 = (g: number) => botDrive(clamp(g, K.start, STOP1 + 40) - K.start, DRIVE1);
 const D1_END = drive1(STOP1 + 40);
-const IDLE_PINGS = [K.what + 2, K.good + 4]; // the robot idles at the far end of the aisle, pinging, until "Picture"
+const IDLE_PINGS = [K.what + 2, K.good + 4]; // the robot pings as it creeps along the aisle, until "Picture"
+{
+  // the creep starts the robot further back: its tail (rear wheel and tail light, 104 rig units behind the footprint
+  // centre) must stay inside the safe area in the locked wide
+  const x0 = drive1(K.start).x;
+  const b = whBotAt(x0, LANE_Z, 0);
+  const tail = worldToScreen(CAM_V11_WIDE, b.x - 104 * b.scale, b.y).x;
+  if (tail < 100) throw new Error(`V11.1: the creeping robot's tail starts at screen x ${tail.toFixed(0)} (safe area from 96)`);
+  if (CREEP_GO + ACC0 > GO - 10) throw new Error('V11.1: the creep is not under way before "Picture"');
+}
 
 /* ================================================================== V11.2: tilt to plan, the wall spot, the pulse, the blob */
 
@@ -322,7 +362,7 @@ const PILL_Y2 = PILL_Y1 + 90;
 const robotScreen = (g: number, cam: Cam, h: number, ahead = 0) => toScreen(cam, S0, {x: robotAt(g).x + ahead, z: LANE_Z, h});
 const HEAD_MED = robotScreen(Math.max(WHO, BRAKE2 + DEC2 + 1), CAM_MED, BOT.totalM + 0.02, BOT.sensorAhead * 0.3);
 const W2_Z = WAREHOUSE.relaySamples[1].z;
-/** "potential use" (48) and the "illustration" chip: top left, from the first frame to the last. */
+/** "potential use" (48) and the "illustration" chip (40): top left, from the first frame to the last. */
 const TOP = {x: 96, y: 96};
 const POT_W = 372; // the pill's width at 48 px (measured in r1: 357 px)
 /** "suitable wall": right of the lit wall section, level with its wall spot. */
@@ -341,7 +381,7 @@ const SAFETY_AT = (() => {
 /* ================================================================== V11.4 tiles */
 
 const TILE_SPEED = 0.24; // m per frame on the tiles (a pulse is a schematic, slowed far below light speed)
-const tilePx = (p: P2) => planScreen(CAM_TILE, p);
+const tilePx = (p: P2, cam: Cam = CAM_TILE) => planScreen(cam, p);
 const ROBOT_T = {x: X_STOP, z: LANE_Z};
 const SENS_T: P2 = {x: X_STOP + BOT.sensorAhead, z: LANE_Z};
 const T1_PERSON: P2 = {x: WAREHOUSE.personLaneX, z: 0.55};
@@ -379,8 +419,10 @@ for (const z of [SKY.z0, SKY.z1]) {
   if (whSightBlocked({x: SKY.x1, z}, SENS_T)) throw new Error(`V11.4 tile 3: the glow from the sunlit wall at z ${z} crosses the racking`);
 }
 if (W2.z < SKY.z0 || W2.z > SKY.z1) throw new Error('V11.4 tile 3: the wall spot is not under the roof light');
-/** Tile 4's callout (screen px): right of the junction, over aisle B and the outside, its tail to the robot. */
-const T4_CALL = {x: 1330, y: 430, r: 290};
+/** Tile 4's callout (screen px, in CAM_JCT): above and right of the robot, over the junction, its tail to the robot. */
+const T4_CALL = {x: 1200, y: 480, r: 375};
+/** Tile 3's sun (screen px, in CAM_JCT): outside, right of the outer wall, above the roof light. */
+const T3_SUN = {x: 1740, y: 300, r: 46};
 for (const [a, b] of [
   [SENS_T, T1_W],
   [T1_W, T1_PERSON],
@@ -396,22 +438,31 @@ for (const [a, b] of [
   if (zAtRobot - LANE_Z < BOT.widthM / 2 + 0.4) throw new Error('V11.4: the shiny bounce would come back to the robot');
   if (whSightBlocked(T2_SHINY_W, {x: ROBOT_T.x, z: zAtRobot})) throw new Error('V11.4: the shiny bounce crosses the racking');
 }
+// review r1 (V2-R1-36): the row comes later (just before "call it", not on "The researchers") and shorter, so the
+// chip tile holds about 2.4 s; captions at 40 px (the chip tile's in two lines)
+const ROW0 = Math.max(K.the43 + 8, K.call - 10);
 /** The four tile cuts and their beat words. */
 const TILES = [
   {from: TILE0, to: K.dark, label: 'short range', at: K.short},
   {from: K.dark, to: K.bright, label: 'dark or shiny walls', at: K.dark},
   {from: K.bright, to: K.fast, label: 'bright sunlight', at: K.bright},
-  {from: K.fast, to: K.the43, label: 'fast math on small hardware', at: K.fast},
+  {from: K.fast, to: ROW0, label: 'fast math on small hardware', at: K.fast},
 ];
-const ROW0 = K.the43;
-const ROW_DUR = 20;
+const ROW_DUR = 16;
 const ROW = {x0: 96, w: 396, gap: 48, y0: 290}; // director r1: 250 → 290, the row, captions and tag sit centred in y 54–950
-/** Each mini tile shows this crop of its full-frame tile (screen px): the junction, the robot and the tile's action. */
-const CROP = {x: 470, y: 90, w: 1300, h: 900};
-const ROW_S = ROW.w / CROP.w;
-const ROW_H = Math.round(CROP.h * ROW_S);
+/** Each mini tile shows a crop of its (already framed) full-frame tile, screen px, centred on its action (tile 1: the
+ *  robot, the wall spot and the far end of the aisle; tiles 2–4: the robot, the relay wall, the sun or the callout).
+ *  One size for all four, so the row reads at one scale. */
+const CROP_W = 1317;
+const CROP_H = 790;
+const CROPS = [{x: 322, y: 160}, {x: 520, y: 160}, {x: 520, y: 160}, {x: 520, y: 160}];
+const ROW_S = ROW.w / CROP_W;
+const ROW_H = Math.round(CROP_H * ROW_S);
 const rowSlot = (i: number) => ({x: ROW.x0 + i * (ROW.w + ROW.gap), y: ROW.y0});
-const CAPTIONS = ['short range', 'dark or shiny walls', 'bright sunlight', 'fast math on small hardware'];
+/** The row's captions repeat each tile's beat words (40 px; verify r1: the chip tile keeps "fast math on small hardware"
+ *  in two lines rather than a one-line "small hardware", which dropped the limit itself, the fast math). */
+const CAPTIONS: string[][] = [['short range'], ['dark or shiny walls'], ['bright sunlight'], ['fast math on', 'small hardware']];
+const CAPTION_SIZE = 40;
 const TAG = Math.max(K.early, ROW0 + ROW_DUR + 10);
 {
   const bad: string[] = [];
@@ -419,6 +470,28 @@ const TAG = Math.max(K.early, ROW0 + ROW_DUR + 10);
     if (t.to - t.from < 30) bad.push(`tile ${i + 1} is up only ${t.to - t.from} f`);
   });
   if (ROW.x0 + 4 * ROW.w + 3 * ROW.gap > 1824) bad.push('the row is wider than the safe area');
+  if (TILES[3].to - TILES[3].from < 60) bad.push('the chip tile is up under 2 s');
+  {
+    // the row's captions (up to two lines) stay clear of the prototype tag (48 px pill centred ROW_H + 200 below the row top)
+    const capBottom = ROW_H + 18 + Math.max(...CAPTIONS.map((l) => l.length)) * CAPTION_SIZE * 1.15;
+    if (capBottom + 16 > ROW_H + 200 - 0.75 * 48) bad.push(`the row's captions (to ${(ROW.y0 + capBottom).toFixed(0)}) reach the prototype tag`);
+  }
+  {
+    // the tiles' framing keeps their action inside the safe area and out of the caption band
+    const rob = planScreen(CAM_JCT, SENS_T);
+    const wall0 = planScreen(CAM_JCT, {x: WAREHOUSE.relaySection.x, z: WAREHOUSE.relaySection.z0});
+    const wall1 = planScreen(CAM_JCT, {x: WAREHOUSE.relaySection.x, z: WAREHOUSE.relaySection.z1});
+    if (wall1.y > 935 || wall0.y < 240 || wall0.x > 1700) bad.push(`tiles 2–4: the relay wall (${wall0.x.toFixed(0)}, ${wall0.y.toFixed(0)}..${wall1.y.toFixed(0)}) is not framed`);
+    const half = (cam: Cam) => (BOT.widthM / 2) * PLAN1.ppm * cam.zoom + 8; // the robot's footprint half-width on screen
+    if (rob.y + half(CAM_JCT) > 945 || rob.x < 300) bad.push(`tiles 2–4: the robot (${rob.x.toFixed(0)}, ${rob.y.toFixed(0)}) is not framed`);
+    const outer = planScreen(CAM_JCT, {x: WAREHOUSE.floor.x1, z: 3});
+    if (T3_SUN.x - T3_SUN.r - 38 < outer.x + 10) bad.push(`tile 3: the sun (${T3_SUN.x}) is not outside the outer wall (${outer.x.toFixed(0)})`);
+    const r1 = planScreen(CAM_T1, SENS_T);
+    const per = planScreen(CAM_T1, T1_PERSON);
+    if (r1.y + half(CAM_T1) > 945 || per.y < 240) bad.push(`tile 1: the trip (robot y ${r1.y.toFixed(0)}, person y ${per.y.toFixed(0)}) is not framed`);
+    if (T3_SUN.x + T3_SUN.r + 38 > 1824) bad.push('tile 3: the sun leaves the safe area');
+    if (T4_CALL.y - T4_CALL.r < 54 || T4_CALL.y + T4_CALL.r > 940 || T4_CALL.x + T4_CALL.r > 1824) bad.push('tile 4: the callout leaves the safe area');
+  }
   if (TAG + 30 > CUT_END) bad.push('the prototype tag has under 1 s before the cut');
   if (T2_SHINY0 + 10 > K.bright) bad.push('the shiny pulse leaves too late');
   if (bad.length) throw new Error(`V11.4: ${bad.join('; ')}`);
@@ -433,9 +506,9 @@ export const V11Warehouse: React.FC = () => {
       {g < TILE0 && <WarehouseShot g={g} />}
       {g >= TILE0 && g < CUT_END && <Tiles g={g} />}
       {g >= CUT_END && <EndShot g={g} />}
-      {/* the guard rail: "potential use" (48) and "illustration" (30), top left, the whole scene */}
+      {/* the guard rail: "potential use" (48) and "illustration" (40; review r1 V2-R1-14), top left, the whole scene */}
       <WhPill x={TOP.x} y={TOP.y} text="potential use" t={tw(g, K.start + 2, 6, E.linear)} size={48} tone="teal" />
-      <Chip x={TOP.x + POT_W + 20} y={TOP.y} valign="middle" size={30} opacity={tw(g, K.start + 2, 6, E.linear)}>
+      <Chip x={TOP.x + POT_W + 20} y={TOP.y} valign="middle" size={40} opacity={tw(g, K.start + 2, 6, E.linear)}>
         illustration
       </Chip>
     </AbsoluteFill>
@@ -612,9 +685,11 @@ const WarehouseShot: React.FC<{g: number}> = ({g}) => {
 /** One tile, full frame: the warehouse plan and its beat's overlay at frame g (frozen at `freeze` if given). */
 const Tile: React.FC<{i: number; g: number; label?: number}> = ({i, g, label = 1}) => {
   const s = PLAN1;
+  const cam = TILE_CAMS[i];
+  const zk = cam.zoom / CAM_TILE.zoom; // screen-space overlays grow with the tile's crop
   const toW = (p: P2) => whProjectWith(s, {x: p.x, z: p.z, h: SH});
   const botTop = whBotTopAt(ROBOT_T.x, ROBOT_T.z, 1);
-  const robotScr = tilePx(SENS_T);
+  const robotScr = tilePx(SENS_T, cam);
   let world: React.ReactNode = null;
   let screen: React.ReactNode = null;
   let pulse = 0;
@@ -631,9 +706,9 @@ const Tile: React.FC<{i: number; g: number; label?: number}> = ({i, g, label = 1
     world = (
       <g>
         {/* the far end the light cannot reach: a faint dotted continuation */}
-        <line x1={f2(legs[1].x + (legs[2].x - legs[1].x) * 0.5)} y1={f2(legs[1].y + (legs[2].y - legs[1].y) * 0.5)} x2={f2(legs[2].x)} y2={f2(legs[2].y)} stroke={C.inkMuted} strokeWidth={3} strokeDasharray="2 12" strokeLinecap="round" opacity={0.6 * tw(g, T1_PULSES[0] + Math.round(reach / pxPerFrame), 10, E.linear)} />
+        <line x1={f2(legs[1].x + (legs[2].x - legs[1].x) * 0.5)} y1={f2(legs[1].y + (legs[2].y - legs[1].y) * 0.5)} x2={f2(legs[2].x)} y2={f2(legs[2].y)} stroke={C.inkMuted} strokeWidth={5} strokeDasharray="3 14" strokeLinecap="round" opacity={0.75 * tw(g, T1_PULSES[0] + Math.round(reach / pxPerFrame), 10, E.linear)} />
         {T1_PULSES.map((p0, k) => (
-          <FadingPulse key={k} pts={legs} d={(g - p0) * pxPerFrame} I={I} width={11} r={18} trailFade={tw(g, p0 + Math.round(reach / pxPerFrame) + 6, 16, E.linear) * (k === 0 ? 0.6 : 0)} />
+          <FadingPulse key={k} pts={legs} d={(g - p0) * pxPerFrame} I={I} width={16} r={24} trailFade={tw(g, p0 + Math.round(reach / pxPerFrame) + 6, 16, E.linear) * (k === 0 ? 0.6 : 0)} />
         ))}
         <S8PersonTokenG x={toW(T1_PERSON).x} y={toW(T1_PERSON).y} size={0.52 * s.ppm} look={CAST.person} facing={180} />
       </g>
@@ -654,9 +729,9 @@ const Tile: React.FC<{i: number; g: number; label?: number}> = ({i, g, label = 1
     const sL1 = Math.hypot(sLeg[1].x - sLeg[0].x, sLeg[1].y - sLeg[0].y);
     world = (
       <g>
-        {dd > 0 && <FadingPulse pts={dLeg} d={Math.min(dd, dL)} I={() => (dd >= dL ? 1 - swallow : 1)} width={9} r={17} trailFade={tw(g, T2_SHINY_SWITCH - 2, 8, E.linear) * 0.75} />}
+        {dd > 0 && <FadingPulse pts={dLeg} d={Math.min(dd, dL)} I={() => (dd >= dL ? 1 - swallow : 1)} width={12} r={19} trailFade={tw(g, T2_SHINY_SWITCH - 2, 8, E.linear) * 0.75} />}
         {dd >= dL && swallow < 1 && <circle cx={dLeg[1].x} cy={dLeg[1].y} r={f2(14 + 30 * E.out(swallow))} fill="none" stroke={C.ink} strokeWidth={f2(5 * (1 - swallow))} opacity={f2(0.6 * (1 - swallow))} />}
-        {sd > 0 && <FadingPulse pts={sLeg} d={sd} I={() => 1} width={9} r={17} />}
+        {sd > 0 && <FadingPulse pts={sLeg} d={sd} I={() => 1} width={12} r={19} />}
         {sd > sL1 && sd < sL1 + pxPerFrame * 12 && <circle cx={sLeg[1].x} cy={sLeg[1].y} r={f2(12 + 34 * E.out((sd - sL1) / (pxPerFrame * 12)))} fill="none" stroke={C.saffronDeep} strokeWidth={5} opacity={f2(1 - (sd - sL1) / (pxPerFrame * 12))} />}
       </g>
     );
@@ -698,15 +773,14 @@ const Tile: React.FC<{i: number; g: number; label?: number}> = ({i, g, label = 1
           const a = toW({x: SKY.x0 + (SKY.x1 - SKY.x0) * (u - 0.1), z: SKY.z0 + (SKY.z1 - SKY.z0) * (u + 0.12)});
           return <line key={k} x1={f2(a.x - 22)} y1={f2(a.y + 30)} x2={f2(a.x + 22)} y2={f2(a.y - 30)} stroke={C.white} strokeWidth={7} strokeLinecap="round" opacity={0.9} />;
         })}
-        <FadingPulse pts={legs} d={Math.min(d, L)} I={I} width={7} r={14} trailFade={tw(g, T3_PING + Math.round(L / pxPerFrame) + 2, 10, E.linear)} />
+        <FadingPulse pts={legs} d={Math.min(d, L)} I={I} width={9} r={16} trailFade={tw(g, T3_PING + Math.round(L / pxPerFrame) + 2, 10, E.linear)} />
       </g>
     );
-    const sunAt = {x: 1660, y: 250};
     const rise = tw(g, K.bright, 14, E.out);
     screen = (
       <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-        <Sun x={sunAt.x} y={sunAt.y + 60 * (1 - rise)} t={rise} />
-        <Glare x={robotScr.x} y={robotScr.y} t={tw(g, T3_GLARE, 10, E.linear)} r={120} />
+        <Sun x={T3_SUN.x} y={T3_SUN.y + 60 * (1 - rise)} r={T3_SUN.r} t={rise} />
+        <Glare x={robotScr.x} y={robotScr.y} t={tw(g, T3_GLARE, 10, E.linear)} r={f2(120 * zk)} />
       </svg>
     );
     pulse = pulseWin(g, [T3_PING]);
@@ -744,7 +818,7 @@ const Tile: React.FC<{i: number; g: number; label?: number}> = ({i, g, label = 1
   const t = TILES[i];
   return (
     <AbsoluteFill style={{background: C.paper}}>
-      <Camera cam={CAM_TILE}>
+      <Camera cam={cam}>
         <Layer depth={1}>
           <WarehouseSet tilt={1} items={[]}>
             <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
@@ -771,7 +845,7 @@ const Tiles: React.FC<{g: number}> = ({g}) => {
     const i = TILES.findIndex((t) => g >= t.from && g < t.to);
     return <Tile i={Math.max(0, i)} g={g} />;
   }
-  // the four shrink into a row: tile 4 shrinks from full frame into its slot (and crops to the junction, CROP);
+  // the four shrink into a row: tile 4 shrinks from full frame into its slot (and crops to its action, CROPS);
   // tiles 1-3 (frozen on their last frames, labels off) fade in at theirs
   const k = tw(g, ROW0, ROW_DUR, E.inOut);
   return (
@@ -782,8 +856,8 @@ const Tiles: React.FC<{g: number}> = ({g}) => {
         const u = last ? k : 1;
         const box = {x: lerp(0, slot.x, u), y: lerp(0, slot.y, u), w: lerp(1920, ROW.w, u), h: lerp(1080, ROW_H, u)};
         const sc = lerp(1, ROW_S, u);
-        const ox = lerp(0, -CROP.x * ROW_S, u);
-        const oy = lerp(0, -CROP.y * ROW_S, u);
+        const ox = lerp(0, -CROPS[i].x * ROW_S, u);
+        const oy = lerp(0, -CROPS[i].y * ROW_S, u);
         const op = last ? 1 : tw(g, ROW0 + 6 + i * 3, 8, E.linear);
         return (
           <div key={i} style={{position: 'absolute', left: f2(box.x), top: f2(box.y), width: f2(box.w), height: f2(box.h), overflow: 'hidden', opacity: op, borderRadius: f2(14 * u), boxShadow: u > 0.5 ? `6px 7px 0 ${C.shadow}` : undefined}}>
@@ -794,11 +868,13 @@ const Tiles: React.FC<{g: number}> = ({g}) => {
           </div>
         );
       })}
-      {CAPTIONS.map((c, i) => {
+      {CAPTIONS.map((lines, i) => {
         const slot = rowSlot(i);
         return (
-          <div key={c} style={{position: 'absolute', left: slot.x, top: slot.y + ROW_H + 18, width: ROW.w, textAlign: 'center', fontFamily: F.body, fontWeight: 800, fontSize: 34, lineHeight: 1.15, color: C.ink, opacity: tw(g, ROW0 + ROW_DUR - 2, 8, E.linear)}}>
-            {c}
+          <div key={i} style={{position: 'absolute', left: slot.x, top: slot.y + ROW_H + 18, width: ROW.w, textAlign: 'center', whiteSpace: 'nowrap', fontFamily: F.body, fontWeight: 800, fontSize: CAPTION_SIZE, lineHeight: 1.15, color: C.ink, opacity: tw(g, ROW0 + ROW_DUR - 2, 8, E.linear)}}>
+            {lines.map((l) => (
+              <div key={l}>{l}</div>
+            ))}
           </div>
         );
       })}
@@ -852,8 +928,10 @@ const footsteps = (() => {
 export const SFX: Sfx[] = [
   {f: K.start, kind: 'amb_warehouse', dur: (K.end - K.start) / 30, note: 'warehouse room tone (V11, all shots)'},
   // V11.1
-  ...IDLE_PINGS.map((f, i): Sfx => ({f, kind: 'sensor_pulse', gain: -10 - i, pitch: i, note: 'idle ping'})),
-  {f: GO, kind: 'robot_motor', dur: (STOP1 - GO) / 30, note: 'rolls toward the corner'},
+  // review r1 (V2-R1-35): the robot creeps along the aisle from the cut (quiet motor under s40's question)
+  {f: CREEP_GO, kind: 'robot_motor', dur: (GO - CREEP_GO) / 30, gain: -12, note: 'creeps along the aisle'},
+  ...IDLE_PINGS.map((f, i): Sfx => ({f, kind: 'sensor_pulse', gain: -10 - i, pitch: i, note: 'ping as it creeps'})),
+  {f: GO, kind: 'robot_motor', dur: (STOP1 - GO) / 30, note: 'speeds up and rolls toward the corner'},
   {f: STOP1 - DEC1, kind: 'robot_brake', gain: -6, note: 'stops short of the corner'},
   // V11.2
   {f: PING, kind: 'sensor_pulse', gain: -3, note: 'the pulse (plan)'},
@@ -876,7 +954,8 @@ export const SFX: Sfx[] = [
   {f: T3_PING, kind: 'sensor_pulse', gain: -9, note: 'tile 3: the ping into the sunlit wall'},
   {f: T3_FLOOD, kind: 'sun_glare', gain: -9, note: 'tile 3: the sunlit wall floods the sensor'},
   // V11.5
-  {f: CREEP3, kind: 'robot_motor', dur: (K.end - CREEP3) / 30, gain: -6, note: 'creeps on round the corner'},
+  // review r1 (V2-R1-37): ducked a further 5 dB (−6 → −11) across n30, whose soft tails ("now,", "system.") it tied
+  {f: CREEP3, kind: 'robot_motor', dur: (K.end - CREEP3) / 30, gain: -11, note: 'creeps on round the corner (under n30)'},
   {f: TAP3, kind: 'robot_brake', gain: -11, pitch: 2, note: 'the soft settle on "not a safety system": one light brake tap'},
   {f: CLUE_PING, kind: 'sensor_pulse', gain: -9, note: 'one ping on "clue"'},
 ];

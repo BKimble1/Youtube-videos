@@ -96,16 +96,26 @@ export const Ledge7: React.FC = () => {
   );
 };
 
-/** One plinth (shadow, body, wood slab, saffron plaque with two screws) and up to two plaque lines, each fading in. */
-export const Plinth7: React.FC<{x: number; line1?: string; line2?: string; t1?: number; t2?: number; size1?: number; size2?: number}> = ({x, line1, line2, t1 = 1, t2 = 1, size1 = 66, size2 = 44}) => {
+/** One plinth (shadow, body, wood slab, saffron plaque with two screws) and up to two plaque lines, each fading in.
+ *  `plate` 0..1 fades the whole plaque (plate, screws and lines) off the plinth body. */
+export const Plinth7: React.FC<{x: number; line1?: string; line2?: string; t1?: number; t2?: number; size1?: number; size2?: number; plate?: number}> = ({x, line1, line2, t1 = 1, t2 = 1, size1 = 66, size2 = 44, plate = 1}) => {
   const fy = MU7.floorY;
   const top = MU7.slabTop;
-  const pq = MU7.plaque;
+  const po = clamp01(plate);
   return (
     <g>
       <ellipse cx={x + 24} cy={fy + 6} rx={MU7.bodyW / 2 + 50} ry={18} fill={C.shadow} />
       <rect x={x - MU7.bodyW / 2} y={top + MU7.slabH - 4} width={MU7.bodyW} height={fy - top - MU7.slabH + 4} fill={PLINTH.body} {...ink()} />
       <rect x={x - MU7.slabW / 2} y={top} width={MU7.slabW} height={MU7.slabH} rx={10} fill={PLINTH.top} {...ink()} />
+      {po > 0.001 && <PlaqueFace x={x} line1={line1} line2={line2} t1={t1} t2={t2} size1={size1} size2={size2} opacity={po} />}
+    </g>
+  );
+};
+
+const PlaqueFace: React.FC<{x: number; line1?: string; line2?: string; t1: number; t2: number; size1: number; size2: number; opacity: number}> = ({x, line1, line2, t1, t2, size1, size2, opacity}) => {
+  const pq = MU7.plaque;
+  return (
+    <g opacity={opacity >= 0.999 ? undefined : f2(opacity)}>
       <rect x={x - pq.w / 2} y={pq.y0} width={pq.w} height={pq.h} rx={14} fill={PLINTH.plaque} {...ink()} />
       {[x - pq.w / 2 + 18, x + pq.w / 2 - 18].map((sx) => (
         <circle key={sx} cx={sx} cy={pq.y0 + 18} r={4.5} fill={C.saffronDeep} stroke={C.ink} strokeWidth={2.5} />

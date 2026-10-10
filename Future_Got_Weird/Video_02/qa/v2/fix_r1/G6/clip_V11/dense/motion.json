@@ -1,0 +1,22 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V11": {
+   "seconds": 32.5,
+   "mean_energy": 1.217,
+   "still_seconds": 1.2,
+   "still_share": 0.037,
+   "longest_still_s": 1.2
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V11",
+   "from": 8915,
+   "to": 8950,
+   "seconds": 1.2,
+   "t": "4:57.2",
+   "spoken": "early-stage prototype. For now,"
+  }
+ ]
+}

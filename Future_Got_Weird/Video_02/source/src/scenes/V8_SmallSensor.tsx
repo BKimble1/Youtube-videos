@@ -329,6 +329,9 @@ const NightLabel: React.FC<{t: number}> = ({t}) =>
     </div>
   );
 
+/** a card window's rectangle (screen px) shrunk by `d` on every side */
+const insetRect = (geo: PanelGeo, d: number) => ({x: geo.x + d, y: geo.y + d, w: geo.w - 2 * d, h: geo.h - 2 * d});
+
 const ShotNight: React.FC<{g: number}> = ({g}) => {
   const grow = tw(g, GROW0, GROW_DUR, E.inOut);
   const frames = Array.from({length: N_FRAMES}, (_, k) => {
@@ -373,7 +376,9 @@ const ShotNight: React.FC<{g: number}> = ({g}) => {
     <AbsoluteFill style={{background: C.paper}}>
       {frames}
       {clear > 0.001 && <V8PlanStage geo={geo} cam={CAM_PLAN_ACT} state={{cloud: {field: CLOUD_A, t: cloudT}, guesser: lerp(1, LIKELY_DIM, cloudT), ring: cloudT * tw(g, CLEAR0 + 6, 8, E.linear), zoom: CAM_PLAN_ACT.zoom}} opacity={clear} shadow={1 - grow} />}
-      <HandoffChip t={tw(g, SHOT_T[0], 8, E.linear)} />
+      {/* while the card grows past the chip, its backing stays inside the card (inset by the ink border and the corner
+          rounding), so it never cuts the card's border or corner; full backing again once the card fills the frame */}
+      <HandoffChip t={tw(g, SHOT_T[0], 8, E.linear)} inside={grow > 0 && grow < 1 ? insetRect(geo, OUTLINE + geo.radius * 0.3 + 1) : undefined} />
       <NightLabel t={tw(g, K.night, 6, E.linear) * (1 - tw(g, GROW0, 8, E.linear))} />
     </AbsoluteFill>
   );

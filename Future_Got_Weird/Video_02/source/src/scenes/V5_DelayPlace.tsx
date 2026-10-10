@@ -17,11 +17,11 @@ import {facingOf} from '../components/v02/HandheldSensor';
 import {CAST} from '../components/cast';
 import {rand} from '../lib/anim';
 import {SensorStand, s4ColumnAt} from '../components/v02/S4_Stand';
-import {FaceInset} from '../components/v02/S4_Inset';
-import {CheckMark, CrossMark, EchoCard, LIKELY_CLOUD, LIKELY_DIM, LIKELY_RING, LikelyRing, Ruler} from '../components/v02/S4_Parts';
+import {FaceInset, INSET_RIG} from '../components/v02/S4_Inset';
+import {CrossMark, LIKELY_DIM, LIKELY_RING, LikelyRing, Ruler} from '../components/v02/S4_Parts';
 import {QuestionTitle} from '../components/v2k/QuestionTitle';
 import {Chip, Label, SubLabel, TeachLabel, labelBox, leaderEnds} from '../components/v2k/Labels';
-import {Chip40, Pointer, TapRing, pointerAt} from '../components/v2s/V5_Parts';
+import {Chip40, EchoStrip, Pointer, TapRing, pointerAt} from '../components/v2s/V5_Parts';
 import {Tape, tapeEdges, tapeLanePoint} from '../components/v2s/V5_Tape';
 
 /**
@@ -43,7 +43,8 @@ import {Tape, tapeEdges, tapeLanePoint} from '../components/v2s/V5_Tape';
  *             of distance. Then it folds in half at his token. "1 ns ≈ 30 cm of travel" (64), then
  *             "there and back → ≈ 15 cm farther" (64); the stroke that straddles his token (15 cm out, 15 cm back:
  *             one extra nanosecond) turns coral. His token is half-dimmed while the tape lies over it.
- *  V5.3 s18   The worked example, one step replacing the last: "≈ 8.9 ns later" (the whole tape flashes) →
+ *  V5.3 s18   The worked example, one step replacing the last, each held at least 2 s (the first from the end of n11):
+ *             "≈ 8.9 ns later" (the whole tape flashes) →
  *             "≈ 2.65 m there and back" → "≈ 1.33 m each way" (the folded tape becomes one ruler, W1 → him) +
  *             "illustrative · our room" (30). On "Not which direction" the ruler wavers; "distance known · direction
  *             unknown" (48) comes with the arc (V5.4). J3a opens in the face inset (lower right): nervous, relieved, he
@@ -54,16 +55,18 @@ import {Tape, tapeEdges, tapeLanePoint} from '../components/v2s/V5_Tape';
  *  V5.5 s20   W4 lights (one flash); a second ruler from W4 sweeps a second dashed arc; "second spot" (48). The two
  *             circles continue behind the wall and cross again there: that crossing greys out, "behind the wall:
  *             impossible" (40). The checker's pointer (her sleeve and mitt from the frame edge) taps the crossing at his
- *             token on "one place"; J3b: his smile drops.
+ *             token in the pause before "one place", on the music's full stop; J3b on "one": his smile drops and his
+ *             mitt comes off the partition, then his arm drops.
  *  V5.6 s21   The camera pushes in once to CAM_NEAR (the spots, the crossing and the hidden side) and holds to the cut.
  *             Each arc thickens into a band (one 250 ps bin, ±3.75 cm); their overlap fills as a small patch.
  *             "fuzzy timing → band" (48) + "illustrative" (30).
  *  V5.7 s22   The two spots slide together (W2, W3): long, blurry patch; apart (W1, W4): small. Bands and patch are
  *             recomputed every frame. "close → long, blurry", then "spread out → smaller" (48).
  *  V5.8 s23   Four spots flash; candidate dots scatter over the hidden side; one candidate's predicted echo ticks are
- *             laid against the measured ticks (a miss: ✗, it fades; a match: ✓, it stays); poor matches fade, the
- *             rest cluster on him. "candidate positions" (48); card "assumption: one small object" (40).
- *  V5.9 n12   The cluster settles into the soft likely-location blob inside a teal ring (never a dot); "likely
+ *             laid against the measured ticks on a large strip across the lower third (48 px row labels; a miss: ✗, it
+ *             fades; a match: ✓, it stays); poor matches fade, the rest cluster on him. "candidate positions" (48);
+ *             card "assumption: one small object" (40).
+ *  V5.9 n12   The cluster settles into the soft (feathered) likely-location blob inside a teal ring (never a dot); "likely
  *             location" (48). No photo frame. Hard cut to V6 (the real U board) at the scene end.
  *
  * Light is drawn only in the flat plan (tilt 1): every pulse starts after the fold lands (asserted), so no room-view
@@ -159,6 +162,7 @@ const K = {
   fifteen: at('n11', 'fifteen'),
   wall11: at('n11', 'wall'),
   spotEnd11: at('n11', 'spot', 1, 'end'),
+  n11End: segEnd('n11'),
   // s18
   s18: seg('s18').from,
   extra18: at('s18', 'extra'),
@@ -335,16 +339,26 @@ const STRADDLE = Math.max(LBL_15 + 4, K.nanosecond2);
 const RUN0 = Math.max(STRADDLE + 8, K.puts);
 const RUN1 = Math.max(RUN0 + 18, K.fifteen);
 const SPOT_PING = K.wall11;
-// V5.3: the chain, one step replacing the last
-const STEP1 = K.extra18;
-const STEP2 = Math.max(STEP1 + 26, K.know);
-const STEP3 = Math.max(STEP2 + 24, K.that18 - 6);
+// V5.3: the chain, one step replacing the last. None of the numbers is spoken (s18 talks over them), so each step
+// holds at least 2 s (review V2-R1-05): the first one cuts in as n11 ends, the last holds to the end of V5.4.
+const STEP_MIN = 60;
+const STEP1 = K.n11End;
+const STEP2 = STEP1 + STEP_MIN;
+const STEP3 = STEP2 + STEP_MIN;
 const TAPE_TO_RULER = STEP3; // the folded tape becomes one ruler W1 → him (1.33 m each way)
 const RULER_IN_DUR = 12;
-const WAG0 = K.not18;
+// the ruler wavers on "Not which direction", once it has fully taken over from the tape
+const WAG0 = Math.max(K.not18, TAPE_TO_RULER + RULER_IN_DUR + 2);
 const WAG1 = Math.max(WAG0 + 30, K.just18 - 2);
 const ILLUS_CHIP = STEP1; // the first I1 number and its "illustrative" chip arrive together
 const CHAIN_OUT = K.s20 - 8;
+{
+  // every 64 px label of V5.2–V5.3 stays up at least 2 s; the tape's last action ends before the chain starts
+  const holds = [STEP1 - LBL_15, STEP2 - STEP1, STEP3 - STEP2, CHAIN_OUT - STEP3];
+  if (Math.min(...holds) < STEP_MIN) throw new Error(`V5: a slot-A label holds only ${Math.min(...holds)} frames (needs ${STEP_MIN})`);
+  if (RUN1 + 10 > STEP1) throw new Error('V5: the light on the folded tape is still running when "8.9 ns later" cuts in');
+  if (WAG1 + 2 > K.he19) throw new Error('V5: the ruler is still wavering when s19 starts');
+}
 // the face inset (J3a, J3b)
 const INSET_OPEN = K.how18 - 12;
 const INSET_CLOSE = K.s21;
@@ -404,8 +418,20 @@ const BH_DUR = Math.max(16, Math.min(28, K.cross20 - BH0 - 2));
 const BH_END = BH0 + BH_DUR;
 const IMPOSSIBLE = Math.max(BH_END + 2, K.cross20 - 2);
 const CROSS_RING = K.cross20 - 2;
-const TAP = K.one20; // the pointer's tip meets the crossing
-const UHOH = Math.max(K.place20 + 6, Math.min(K.place20 + 14, K.s21 - 28));
+/**
+ * J3b (review V2-R1-12). "...they cross in just [pause] one place": the narration pauses between "just" and "one", and
+ * the music makes its full stop 0.25 s before "one" (tools/make_music_v02v2.py, cue j3b). The pointer's tip meets the
+ * crossing there, so its tap, its stop and the music's stop are one event. His smile snaps on "one" (BUSTED0, a SNAP
+ * spring: the face has visibly changed by FACE_DROP); the uh-oh sting follows 2 frames later, quieter.
+ */
+const TAP = K.one20 - 8;
+const BUSTED0 = K.one20 - 2;
+const FACE_DROP = K.one20;
+const UHOH = FACE_DROP + 2;
+/** V2-R1-26: his mitt lifts off the partition over LIFT_DUR frames as the face snaps, then the arm drops */
+const LIFT_DUR = 4;
+const DROP_DUR = 8;
+if (TAP + 4 > BUSTED0) throw new Error('V5: J3b reacts before the pointer has tapped the crossing');
 const BH_OUT = K.s21;
 /**
  * The circles continued behind the wall: from each arc's right end at the wall, round past their second crossing
@@ -555,6 +581,12 @@ const KEEP_ERR = 0.15;
 const HIDDEN_BOX = {x0: L.occluder.x + 0.1, x1: ROOM.x1 - 0.12, z0: 0.08, z1: 1.6};
 /** the final likely-location field: all four spots, one-bin bands */
 const FINAL_FIELD: ScalarField = possibleCloud({x0: 2.2, x1: 3.0, z0: 0.5, z1: 1.2, step: 0.008}, WALL.map((w, i) => ({W: w, r: RADII[i], halfWidth: HW})));
+/**
+ * The likely location's look (review V2-R1-27): the same four-band region (size kept, so it never reads as a point),
+ * feathered: nested levels with no outlines and no paper rim, under a blur of 3.5 world px (about 5 screen px at
+ * CAM_NEAR), the outer level filled denser so the soft patch still reads at phone size.
+ */
+const LIKELY_SOFT = {levels: [0.02, 0.2, 0.5], blur: 3.5, outline: false, outerOutline: false, rim: 0, outerFillOpacity: 0.85};
 const fieldAt = (f: ScalarField, p: P2) => {
   const i = Math.round((p.x - f.spec.x0) / f.spec.step);
   const j = Math.round((p.z - f.spec.z0) / f.spec.step);
@@ -588,10 +620,24 @@ const DOTS: Dot[] = (() => {
 const SURVIVORS = DOTS.filter((d) => d.keep);
 const CHILDREN = SURVIVORS.flatMap((d, i) => [0, 1].map((c) => ({from: d, target: TARGETS[(SURVIVORS.length + i * 2 + c) % TARGETS.length], delay: rand(7001 + i * 5 + c)})));
 const MEASURED = WALL.map((w) => arrivalNs(w, Hp));
+/**
+ * V5.8's measured-versus-predicted comparison, large (review V2-R1-25): two tick rows across the lower third, 48 px
+ * labels, x 480–1776 (right of her token and the sensor), y 770–938 (clear of the caption band). The axis range spans
+ * the measured times and both examples' predictions with a margin, so the ticks spread across the strip.
+ */
+const ECHO_STRIP = {x: 480, y: 770, w: 1296, h: 168};
+const ECHO_RANGE: [number, number] = (() => {
+  const all = [...MEASURED, ...WALL.map((w) => arrivalNs(w, BAD_EX)), ...WALL.map((w) => arrivalNs(w, GOOD_EX))];
+  return [Math.min(...all) - 0.45, Math.max(...all) + 0.45];
+})();
+if (ECHO_STRIP.y + ECHO_STRIP.h + 10 > 950) throw new Error('V5: the comparison strip reaches the caption band');
 
 /* ------------------------------------------------------------------ the guesser's face (inset, J3a / J3b) */
 
-const guesserFace = (g: number): {pose: Pose2; lean: number} => {
+const INSET = {cx: 1662, cy: 700, r: 160};
+
+/** his face and body in the inset, before his left arm is placed */
+const guesserBody = (g: number): {p: Pose2; lean: number} => {
   let p: Pose2 = withPose(IDLE2, {...EXPR.smug, lookX: -0.2});
   // "you know how far he is": nervous, eyes toward the wall
   const nerv = tw(g, K.how18 - 4, 10) * (1 - tw(g, RELAX, 8));
@@ -607,14 +653,42 @@ const guesserFace = (g: number): {pose: Pose2; lean: number} => {
   const flat = tw(g, K.another2, 10);
   p = withPose(p, {mouth: 'flat', lean: -4, eyes: 1.06}, flat);
   // "one place": busted (J3b), straightens up off the partition
-  const busted = sp(g, K.one20 - 2, SNAP);
+  const busted = sp(g, BUSTED0, SNAP);
   p = withPose(p, {...EXPR.busted, lean: 0, tilt: -3, lookX: -0.4, lookY: 0}, Math.min(1.05, busted));
-  p = {...p, bob: hop(g, K.one20 - 2, 10, 8)};
+  p = {...p, bob: hop(g, BUSTED0, 10, 8)};
   if (g >= RELAX && g < RELAX + 15) p = {...p, blink: 1 - tw(g, RELAX + 1, 2, E.linear) * (1 - tw(g, RELAX + 11, 3, E.linear))};
-  const handOn = clamp01(lean) * (1 - clamp01(busted * 1.4));
-  return {pose: p, lean: handOn};
+  return {p, lean: clamp01(lean)};
 };
-const INSET = {cx: 1662, cy: 700, r: 160};
+/** FaceInset's own rig placement (S4_Inset) and the partition edge his left mitt leans on */
+const insetRig = (g: number) => ({x: INSET.r + INSET_RIG.dx * INSET.r, y: INSET.r + INSET_RIG.headY * INSET_RIG.scale, scale: INSET_RIG.scale, frame: g, seed: 5, life: 0.5});
+const LEAN_EDGE = {x: 0.36 * INSET.r + 2, y: insetRig(0).y - 318 * INSET_RIG.scale};
+/** his left arm on the partition edge the frame before the snap: the J3b lift-off starts from it */
+const LEAN_ARM0 = reach2(insetRig(BUSTED0 - 1), guesserBody(BUSTED0 - 1).p, -1, LEAN_EDGE.x, LEAN_EDGE.y, 1);
+/** wrap an angle (deg) to within 180 of a reference, so a blend takes the short way round */
+const near180 = (d: number, ref: number) => d - 360 * Math.round((d - ref) / 360);
+
+/**
+ * J3a/J3b in the inset. His left mitt is reached onto the partition edge with the lean (J3a, as built in S4_Inset).
+ * On the snap (review V2-R1-26) it comes off the edge over LIFT_DUR frames, drawn in toward his chest (the shoulder
+ * swings in 25°, the elbow closes 45°), then the arm drops to its hanging pose over DROP_DUR frames, the shoulder
+ * leading and the elbow following, so the mitt visibly leaves the partition instead of vanishing in two frames.
+ */
+const guesserFace = (g: number): {pose: Pose2; lean: number} => {
+  const {p, lean} = guesserBody(g);
+  if (lean <= 0.001) return {pose: p, lean: 0};
+  if (g < BUSTED0) {
+    const arm = reach2(insetRig(g), p, -1, LEAN_EDGE.x, LEAN_EDGE.y, 1);
+    return {pose: {...p, armL: {a: lerp(p.armL.a, arm.a, lean), b: lerp(p.armL.b, arm.b, lean)}, armsFront: 'L'}, lean: 0};
+  }
+  const u = tw(g, BUSTED0 + LIFT_DUR, DROP_DUR, E.linear);
+  if (u >= 1) return {pose: p, lean: 0};
+  const lift = E.inOut(tw(g, BUSTED0, LIFT_DUR, E.linear));
+  const a1 = LEAN_ARM0.a - 25 * lift;
+  const b1 = near180(LEAN_ARM0.b + 45 * lift, p.armL.b);
+  const ua = E.inOut(u);
+  const ub = E.inOut(clamp01((u - 0.35) / 0.65));
+  return {pose: {...p, armL: {a: lerp(a1, p.armL.a, ua), b: lerp(b1, p.armL.b, ub)}, armsFront: 'L'}, lean: 0};
+};
 
 /* ------------------------------------------------------------------ screen layout (labels) */
 
@@ -858,7 +932,7 @@ export const V5DelayPlace: React.FC = () => {
         </g>
       )}
       {/* the likely location (n12) */}
-      {blobT > 0 && <PossibleCloud asGroup toPx={toW} field={FINAL_FIELD} t={blobT} tone="teal" {...LIKELY_CLOUD} />}
+      {blobT > 0 && <PossibleCloud asGroup toPx={toW} field={FINAL_FIELD} t={blobT} tone="teal" {...LIKELY_SOFT} />}
       <LikelyRing cx={toW(Hp).x} cy={toW(Hp).y} r={LIKELY_RING.rM * ppm} t={tw(g, RING_IN, RING_DUR, E.inOut)} k={k} />
       {/* light: the confocal route (drawn once, then faint), the second spot, the four spots */}
       {routeOp > 0.001 && routeProg > 0 && <LightPath asGroup points={ROUTE} toPx={toW} t={routeProg} layout={LAYOUT} opacity={routeOp} width={7 * k} pulseRadius={13 * k} ringRadius={52 * k} lane={12 * k} clearPx={0} arrive="hide" />}
@@ -938,10 +1012,14 @@ export const V5DelayPlace: React.FC = () => {
     {text: `≈ ${TRIP1_TXT} m there and back`, t0: STEP2, t1: STEP3},
     {text: `≈ ${EACH1_TXT} m each way`, t0: STEP3, t1: CHAIN_OUT},
   ];
-  const cut = (t0: number, t1: number) => (g >= t0 && g < t1 ? tw(g, t0, 4, E.linear) * (t1 >= CHAIN_OUT ? 1 - tw(g, t1 - 8, 8) : 1) : 0);
-  const chainLbl = slotA.find((s) => g >= s.t0 && g < s.t1);
-  const chainBox = chainLbl ? labelBox(chainLbl.text, SLOT_A.x, SLOT_A.y, 64, 'middle') : null;
-  const illusChipOp = lblOp(ILLUS_CHIP, CHAIN_OUT - 8);
+  // a label that replaces the previous one in the slot cuts straight in (no blank frame between the two); the first one
+  // fades in over 4 frames, the last one fades out before s20
+  const replaces = (t0: number) => slotA.some((p) => p.t1 === t0);
+  const cut = (t0: number, t1: number) => (g >= t0 && g < t1 ? (replaces(t0) ? 1 : tw(g, t0, 4, E.linear)) * (t1 >= CHAIN_OUT ? 1 - tw(g, t1 - 8, 8) : 1) : 0);
+  // the worked example's "illustrative · our room" chip stays put for the whole chain (settled labels do not move): it
+  // sits right of the widest step, so it never jumps when a shorter step replaces a longer one
+  const chainChipX = Math.max(...slotA.filter((s) => s.t0 >= STEP1).map((s) => labelBox(s.text, SLOT_A.x, SLOT_A.y, 64, 'middle').x1)) + 26;
+  const illusChipOp = g >= STEP1 && g < CHAIN_OUT ? lblOp(ILLUS_CHIP, CHAIN_OUT - 8) : 0;
   // V5.8: the comparison card
   const ex = g < EX2 ? DOTS[DOTS.length - 2] : DOTS[DOTS.length - 1];
   const exPos = ex.keep ? {x: lerp(ex.p.x, ex.target.x, clusterT(ex)), z: lerp(ex.p.z, ex.target.z, clusterT(ex))} : ex.p;
@@ -951,7 +1029,8 @@ export const V5DelayPlace: React.FC = () => {
   const verdict: -1 | 1 = g < EX2 ? -1 : 1;
   const vt = g < EX2 ? xVt(g) : tw(g, CHECK, 8);
   const exRing = cardOp * (g < EX2 ? tw(g, EX1, 6) * (1 - tw(g, X_OUT, 5)) : tw(g, EX2, 6));
-  const CARD = {x: 1236, y: 62, w: 560};
+  // the comparison, large, across the lower third (right of her token and the sensor, above the caption band)
+  const STRIP = ECHO_STRIP;
   // the inset and the pointer
   const face = guesserFace(g);
   const insetOpen = sp(g, INSET_OPEN, SNAP) * (1 - E.in(tw(g, INSET_CLOSE, 12, E.linear)));
@@ -982,7 +1061,7 @@ export const V5DelayPlace: React.FC = () => {
         {/* V5.8 example ring and leader */}
         {exRing > 0.001 && (
           <g opacity={exRing}>
-            <path d={`M ${CARD.x + 60} ${CARD.y + 168} L ${exS.x} ${exS.y - 24}`} stroke={C.ink} strokeWidth={4} strokeLinecap="round" />
+            <path d={`M ${Math.max(STRIP.x + 380, Math.min(STRIP.x + STRIP.w - 200, exS.x))} ${STRIP.y} L ${exS.x} ${exS.y + 24}`} stroke={C.ink} strokeWidth={5} strokeLinecap="round" />
             <circle cx={exS.x} cy={exS.y} r={22} fill="none" stroke={C.saffronDeep} strokeWidth={6} />
           </g>
         )}
@@ -1011,7 +1090,7 @@ export const V5DelayPlace: React.FC = () => {
           </TeachLabel>
         ) : null;
       })}
-      {chainBox && illusChipOp > 0 && <Chip x={chainBox.x1 + 26} y={SLOT_A.y - 22} valign="middle" size={30} opacity={illusChipOp}>illustrative · our room</Chip>}
+      {illusChipOp > 0 && <Chip x={chainChipX} y={SLOT_A.y - 22} valign="middle" size={30} opacity={illusChipOp}>illustrative · our room</Chip>}
       {/* slot B (48 px) */}
       <SubLabel x={SLOT_B.x} y={SLOT_B.y} anchor="middle" opacity={lblOp(LBL_DIR, LBL_KNOWN_OUT)}>
         distance known · direction unknown
@@ -1041,7 +1120,7 @@ export const V5DelayPlace: React.FC = () => {
 
       {/* the comparison card and the assumption card */}
       <div style={{position: 'absolute', inset: 0}}>
-        <EchoCard x={CARD.x} y={CARD.y} w={CARD.w} measured={MEASURED} predicted={WALL.map((w) => arrivalNs(w, ex.p))} range={[12.5, 19]} reveal={reveal} verdict={verdict} vt={vt} opacity={cardOp} pop={1} />
+        <EchoStrip box={STRIP} measured={MEASURED} predicted={WALL.map((w) => arrivalNs(w, ex.p))} range={ECHO_RANGE} reveal={reveal} verdict={verdict} vt={vt} opacity={cardOp} />
         <AssumptionCard40 x={1200} y={150} opacity={tw(g, ASSUME, 6) * (1 - tw(g, BLOB0 + 4, 12))} />
       </div>
 
@@ -1118,7 +1197,7 @@ export const SFX: Sfx[] = [
   {f: SCH4.start, kind: 'sensor_pulse', pitch: 2, gain: -2, note: 'flash at W4'},
   {f: Math.round(SCH4.end), kind: 'echo_return', gain: -4, pitch: 1, note: 'listens'},
   {f: SWEEP4_0, kind: 'arc_draw', dur: (SWEEP4_1 - SWEEP4_0) / 30, pitch: 2, note: 'arc 2 sweep'},
-  {f: TAP, kind: 'pencil_tap', gain: -2, note: "the checker's pointer taps the crossing (one place)"},
-  {f: UHOH, kind: 'uh_oh', note: 'J3b: his smile drops (after "place.")'},
+  {f: TAP, kind: 'pencil_tap', gain: -2, note: "the checker's pointer taps the crossing: contact on the music's full stop, in the pause before \"one place\""},
+  {f: UHOH, kind: 'uh_oh', gain: -6, note: 'J3b: 2 frames after his face drops (on "one"), at -6 dB: its 0.65 s ring runs under "one place." about 7-19 dB below the voice\'s core (speech band), level with the tail of "place."'},
   ...MANY_SCH.map((q, i) => ({f: q.start, kind: 'sensor_pulse' as const, gain: -6 - i, pitch: i, note: `flash at W${i + 1} (many spots)`})),
 ];

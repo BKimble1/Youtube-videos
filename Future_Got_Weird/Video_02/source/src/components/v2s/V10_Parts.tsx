@@ -7,7 +7,8 @@ import {CAST} from '../cast';
 
 /**
  * V10 parts (scene-local drawing for V10_KitClip): the plan close-up map and its pulses (V10.3), the generic target
- * with its reflective strip seen from above (V10.3), the "clothing: not recorded" stamp (V10.4), and the film strip of
+ * with its reflective strip seen from above (V10.3), the kit board's provenance column (V10.2, V10.4), the "clothing:
+ * not recorded" stamp (V10.4), and the film strip of
  * our drawing of the authors' separate test with the generic cast "person" in its frames (V10.5; v1 FilmFrames used the
  * guesser's token, which never appears on R1 material). Everything is screen space and a pure function of its props.
  */
@@ -162,6 +163,58 @@ export const StampOn: React.FC<{x: number; y: number; text: string; t: number; s
       }}
     >
       {text}
+    </div>
+  );
+};
+
+/* ------------------------------------------------------------------ the provenance column (V10.2, V10.4) */
+
+/**
+ * The kit board's right-hand provenance column, drawn here instead of by the kit (v2 review r1, V2-R1-09: the kit's
+ * 40 px items and 30 px counter and chip were 6–8 px at phone width). Fixed slots, top to bottom, each fading in with its
+ * own t (nothing moves when a later item arrives): the three condition items at 48 px (explicit line breaks, one
+ * idea per line), the counter "frame N of 475" at 40 px mono, and the software-check chip at 40 px, wrapped to the full
+ * column width. Screen px; the column sits right of the kit's plot panel at column = 1 (panel x1 1104).
+ */
+export const V10_COLUMN = {x0: 1140, x1: 1800, y0: 166, gap: 20, size: 48, lineHeight: 1.12, counterSize: 40, chipSize: 40} as const;
+
+export type ColumnItem = {lines: string[]; t: number};
+
+export const ProvenanceColumn: React.FC<{items: ColumnItem[]; counter: {text: string; t: number}; chip: {text: string; t: number}; gate: number}> = ({items, counter, chip, gate}) => {
+  const k = clamp01(gate);
+  if (k <= 0) return null;
+  const Q = V10_COLUMN;
+  return (
+    <div style={{position: 'absolute', left: Q.x0, top: Q.y0, width: Q.x1 - Q.x0, display: 'flex', flexDirection: 'column', gap: Q.gap}}>
+      {items.map((it, j) => (
+        <div key={j} style={{fontFamily: F.body, fontWeight: 800, fontSize: Q.size, lineHeight: Q.lineHeight, color: C.ink, opacity: f2(clamp01(it.t) * k)}}>
+          {it.lines.map((l, i) => (
+            <div key={i} style={{whiteSpace: 'nowrap'}}>
+              {l}
+            </div>
+          ))}
+        </div>
+      ))}
+      <div style={{fontFamily: F.mono, fontWeight: 700, fontSize: Q.counterSize, lineHeight: 1.2, color: C.inkSoft, whiteSpace: 'nowrap', opacity: f2(clamp01(counter.t) * k)}}>{counter.text}</div>
+      <div
+        style={{
+          boxSizing: 'border-box',
+          width: Q.x1 - Q.x0,
+          padding: `${f2(Q.chipSize * 0.42)}px ${f2(Q.chipSize * 0.66)}px`,
+          borderRadius: Math.round(Q.chipSize * 0.66),
+          background: C.cream,
+          color: C.ink,
+          border: `3px solid ${C.ink}`,
+          fontFamily: F.body,
+          fontWeight: 800,
+          fontSize: Q.chipSize,
+          lineHeight: 1.22,
+          letterSpacing: '0.01em',
+          opacity: f2(clamp01(chip.t) * k),
+        }}
+      >
+        {chip.text}
+      </div>
     </div>
   );
 };

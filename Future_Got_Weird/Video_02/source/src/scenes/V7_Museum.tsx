@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill} from 'remotion';
+import {AbsoluteFill, Easing} from 'remotion';
 import {C, F} from '../theme';
 import type {Sfx} from '../lib/sfx';
 import {useG} from '../lib/SceneFrame';
@@ -17,7 +17,7 @@ import {HandheldSensor} from '../components/v02/HandheldSensor';
 import {QuestionTitle} from '../components/v2k/QuestionTitle';
 import {Chip, Overlay, SubLabel, leaderEnds} from '../components/v2k/Labels';
 import {MU7, SPOT_DIM, lerpSpot, type Spot} from '../components/v2s/V7_Set';
-import {DotModule, FrameFan, FAN, fanPose} from '../components/v2s/V7_Props';
+import {DotModule, FrameFan, FAN, FAN_NUDGE_MAX, fanPose} from '../components/v2s/V7_Props';
 import {BOX_CENTRE, CAM_TIGHT, MuseumShot, P4, SENSOR_ORIGIN, SENSOR_SPOT, SETTLED_SPANS, S_K, TIGHT_SPOT, TIGHT_STATE, TightShot, type MuseumState, type RopeSpanState} from '../components/v2s/V7_Plinth';
 
 /**
@@ -50,9 +50,10 @@ import {BOX_CENTRE, CAM_TIGHT, MuseumShot, P4, SENSOR_ORIGIN, SENSOR_SPOT, SETTL
  *  V7.4  s31 Cut: a generic phone slides in showing raw data; a padlock drops onto it and snaps shut on "private".
  *        "not on your phone (yet)" (48), "per the lead researcher, in interviews" (30).
  *  V7.5  n16 Cut back to the plinth, wide: on "a model that keeps track" a stack of faint frames fans out from the
- *        sensor like cards; on "what moved" each gets a small arrow from where the figure was to where it is; on
- *        "combined" they fold back into the sensor. "their new idea (2026)" (48). The spotlight tightens on the
- *        sensor (CAM_TIGHT / TIGHT_SPOT): V7's last frames are V8.1's first (TightShot).
+ *        sensor like cards; on "what moved", card after card, the figure slides from where it was to where it is
+ *        while a small arrow draws, and the card is nudged the way it moved; on "weak frames" they fold back into the
+ *        sensor. "their new idea (2026)" (48). The plinth plates fade off, then the spotlight tightens on the sensor
+ *        (CAM_TIGHT / TIGHT_SPOT): V7's last frames are V8.1's first (TightShot).
  */
 
 /* ================================================================== cues (narration words; nothing absolute) */
@@ -110,12 +111,17 @@ const K = {
 
 /* ================================================================== beats (derived from the cues) */
 
-// V7.1 · the drop, the truck
-const FALL0 = K.start + 2;
+// V7.1 · the drop, the truck. The first frame is V6's last (the still scroll on bare wall); the tilt down to the ledge
+// and the drop both start on the very next frame, so the ledge is in shot within a few frames of the cut and the
+// rolled board never hangs alone on blank wall on this side of the cut (v2 review r1, V2-R1-28).
+const FALL0 = K.start;
 const FALL_DUR = 14;
 const LAND = FALL0 + FALL_DUR;
-const MOVE_L = K.start + 2;
+const MOVE_L = K.start;
 const MOVE_L_DUR = 22;
+/** the tilt's ease: an even ~28 px a frame from the first frame after the cut (no jolt out of the still match frame),
+ *  the ledge's top in shot from that frame on, then a long settle */
+const TILT_IN: Ease = Easing.bezier(0.3, 0.55, 0.3, 1);
 const TRUCK1 = Math.max(LAND + 10, MOVE_L + MOVE_L_DUR + 2);
 const TRUCK1_DUR = Math.max(22, Math.min(30, K.mit + 6 - TRUCK1));
 const ARRIVE1 = TRUCK1 + TRUCK1_DUR;
@@ -186,13 +192,25 @@ const IDEA_LBL = K.idea - 4;
 const FAN0 = K.model - 4;
 const FAN_DUR = Math.max(16, Math.min(30, K.what - 4 - FAN0));
 const ARROWS0 = K.what - 4;
-const ARROW_STEP = 3; // the "what moved" arrows draw one card after another, on "what moved"
-// the frames fold back into the sensor on "weak frames", after the full fan has held with all its arrows
-const FOLD0 = Math.max(ARROWS0 + ARROW_STEP * 5 + 12 + 15, K.many + 8);
+// on "what moved", card after card (left to right): its figure slides from where it was to where it is as its arrow
+// draws, and the card is nudged the way the figure moved (v2 review r1, V2-R1-30: the fan no longer sits still under
+// "keeps track of what moved, so many weak frames")
+const ARROW_STEP = 6;
+const ARROW_DUR = 10;
+const NUDGE = 10; // card-local px (≈ 13 px on screen), <= FAN_NUDGE_MAX
+const NUDGE_DUR = 12;
+const arrowAt = (k: number) => ARROWS0 + ARROW_STEP * k;
+// the frames fold back into the sensor on "weak frames", after the full fan has held briefly with all its arrows
+const FOLD0 = Math.max(arrowAt(FAN.n - 1) + ARROW_DUR + 8, K.many + 8);
 const FOLD_DUR = 14;
 const TIGHT0 = Math.max(FOLD0 + 12, K.combined - 18);
 const TIGHT_DUR = Math.max(18, Math.min(30, K.end - 6 - TIGHT0));
 const TIGHT_DONE = TIGHT0 + TIGHT_DUR;
+// the plinth plates fade off before the push into the tight spotlight (none passes through the caption band;
+// v2 review r1, V2-R1-29)
+const PLATE_FADE = 10;
+const PLATE_OUT0 = TIGHT0 - PLATE_FADE;
+const platesAt = (g: number) => 1 - tw(g, PLATE_OUT0, PLATE_FADE, E.linear);
 
 // beats in order, inside the scene, with the reads the shot plan asks for
 {
@@ -208,6 +226,9 @@ const TIGHT_DONE = TIGHT0 + TIGHT_DUR;
   if (!(CUT_PHONE - MOD_LBL >= 45)) throw new Error(`V7.3: the hardware-type labels get ${CUT_PHONE - MOD_LBL} frames (< 1.5 s)`);
   if (!(K.end - TIGHT_DONE >= 3)) throw new Error('V7.5: the tight spotlight must hold at least 3 frames before V8');
   if (!(FOLD0 + FAN.n - 1 + FOLD_DUR <= TIGHT0 + 8)) throw new Error('V7.5: the frames are still folding well into the tight push');
+  if (!(NUDGE <= FAN_NUDGE_MAX)) throw new Error('V7.5: the card nudge is larger than the fan allows');
+  if (!(arrowAt(FAN.n - 1) + 4 + NUDGE_DUR <= FOLD0)) throw new Error('V7.5: the last card is still being nudged when the fan folds');
+  if (!(PLATE_OUT0 >= FOLD0)) throw new Error('V7.5: the plates fade before the fold has started (keep the wide shot intact under "what moved")');
 }
 
 /* ================================================================== framings (world px) */
@@ -238,17 +259,31 @@ const SLOW_PASS: Ease = (t) => {
   return s + (0.7 * Math.sin(2 * Math.PI * s)) / (2 * Math.PI);
 };
 
+/** V7.1's truck to the 2012 exhibit: its height and zoom lead its sideways travel. The rise starts RISE_LEAD frames
+ *  before the truck, out of the tilt's settle (it accelerates from rest, no jolt), and is mostly done by the time the
+ *  plate's text slides in from the right, so the "2012 · MIT" plate is already at exhibit height and its text never
+ *  passes through the caption band (with one ease for both it rose through y 950–1060 at about 4466–4472). */
+const RISE_LEAD = 6;
+const RISE0 = TRUCK1 - RISE_LEAD;
+const TRUCK1_RISE: Ease = Easing.bezier(0.3, 0, 0.15, 1);
+
 const camAt = (g: number): Cam => {
   if (g >= CUT_FAN) return camPath(g, CAM_FAN, [{at: TIGHT0, dur: TIGHT_DUR, to: CAM_TIGHT, ease: E.inOut}]);
-  return camPath(g, CAM0, [
-    {at: MOVE_L, dur: MOVE_L_DUR, to: CAM_L, ease: E.out},
-    {at: TRUCK1, dur: TRUCK1_DUR, to: CU1, ease: E.inOut},
-    {at: TRUCK2, dur: TRUCK2_DUR, to: CU3, ease: SLOW_PASS},
-    {at: PULL, dur: PULL_DUR, to: WIDE, ease: E.inOut},
-    {at: TRUCK_S, dur: TRUCK_S_DUR, to: CAM_STOOL, ease: E.inOut},
-    {at: SWING0, dur: SWING_DUR, to: CAM_P4, ease: E.inOut},
-    {at: PUSH0, dur: PUSH_DUR, to: CAM_P4_CLOSE, ease: E.inOut},
-  ]);
+  const path = (truck1: {at: number; dur: number; ease: Ease}) =>
+    camPath(g, CAM0, [
+      {at: MOVE_L, dur: MOVE_L_DUR, to: CAM_L, ease: TILT_IN},
+      {...truck1, to: CU1},
+      {at: TRUCK2, dur: TRUCK2_DUR, to: CU3, ease: SLOW_PASS},
+      {at: PULL, dur: PULL_DUR, to: WIDE, ease: E.inOut},
+      {at: TRUCK_S, dur: TRUCK_S_DUR, to: CAM_STOOL, ease: E.inOut},
+      {at: SWING0, dur: SWING_DUR, to: CAM_P4, ease: E.inOut},
+      {at: PUSH0, dur: PUSH_DUR, to: CAM_P4_CLOSE, ease: E.inOut},
+    ]);
+  const c = path({at: TRUCK1, dur: TRUCK1_DUR, ease: E.inOut});
+  if (g <= RISE0 || g >= ARRIVE1) return c;
+  // sideways from the truck, height and zoom from the rise (both end on CU1 at ARRIVE1)
+  const v = path({at: RISE0, dur: ARRIVE1 - RISE0, ease: TRUCK1_RISE});
+  return {cx: c.cx, cy: v.cy, zoom: v.zoom};
 };
 
 // the stool's card is outside every framing of the fourth plinth (SHOTPLAN V7.2; v1 S5 review defect 1)
@@ -264,15 +299,38 @@ const camAt = (g: number): Cam => {
   const y0 = CAM0.cy - 540 / CAM0.zoom;
   const y1 = CAM0.cy + 540 / CAM0.zoom;
   if (!(y1 < MU7.ledge.y - 3 && y0 > MU7.railY + 12 && x1 < P1 - MU7.pool.rx && x0 > -3000)) throw new Error(`V7: the first framing (${x0}..${x1}, ${y0}..${y1}) is not bare wall`);
-  // the open fan stays inside the safe area under CAM_FAN (every card corner)
+  // the open fan stays inside the safe area under CAM_FAN (every card corner, at rest and at the peak of its nudge)
   for (let k = 0; k < FAN.n; k++) {
     const p = fanPose(k, 1);
     const r = (p.rot * Math.PI) / 180;
-    for (const [lx, ly] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
-      const cx = (lx * FAN.cardW * p.s) / 2;
-      const cy = (ly * FAN.cardH * p.s) / 2;
-      const c = worldToScreen(CAM_FAN, BOX_CENTRE.x + p.x + cx * Math.cos(r) - cy * Math.sin(r), BOX_CENTRE.y + p.y + cx * Math.sin(r) + cy * Math.cos(r));
-      if (!(c.y >= 54 && c.x >= 96 && c.x <= 1824)) throw new Error(`V7.5: fan card ${k} leaves the safe area (corner at ${c.x.toFixed(0)}, ${c.y.toFixed(0)})`);
+    for (const nx of [0, NUDGE]) {
+      for (const [lx, ly] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+        const cx = ((lx * FAN.cardW) / 2 + nx) * p.s;
+        const cy = (ly * FAN.cardH * p.s) / 2;
+        const c = worldToScreen(CAM_FAN, BOX_CENTRE.x + p.x + cx * Math.cos(r) - cy * Math.sin(r), BOX_CENTRE.y + p.y + cx * Math.sin(r) + cy * Math.cos(r));
+        if (!(c.y >= 54 && c.x >= 96 && c.x <= 1824)) throw new Error(`V7.5: fan card ${k} leaves the safe area (corner at ${c.x.toFixed(0)}, ${c.y.toFixed(0)})`);
+      }
+    }
+  }
+  // V7.1: the "2012 · MIT" plate's text (its two lines lie within x ± 80, y0 + 30 .. y0 + 131 world px) is never on
+  // screen inside the caption band while it slides in on the truck
+  if (!(TRUCK2 >= ARRIVE1)) throw new Error('V7.1: the truck to the 2012 exhibit overlaps the next truck');
+  if (!(RISE0 >= LAND + 3)) throw new Error('V7.1: the camera starts rising before the scroll has landed');
+  for (let g = RISE0; g <= ARRIVE1; g++) {
+    const cam = camAt(g);
+    const a = worldToScreen(cam, P1 - 80, MU7.plaque.y0 + 30);
+    const b = worldToScreen(cam, P1 + 80, MU7.plaque.y0 + 131);
+    if (b.x > 0 && a.x < 1920 && b.y > 950) throw new Error(`V7.1: at ${g} the 2012 plate's text reaches y ${b.y.toFixed(0)} (caption band)`);
+  }
+  // V7.5 → V8: no plinth plate is on screen inside the caption band (y >= 950) at any frame of the wide shot or the push
+  for (let g = CUT_FAN; g < TIGHT_DONE; g++) {
+    if (platesAt(g) <= 0.001) continue;
+    const cam = camAt(g);
+    for (const x of MU7.P) {
+      const a = worldToScreen(cam, x - MU7.plaque.w / 2, MU7.plaque.y0);
+      const b = worldToScreen(cam, x + MU7.plaque.w / 2, MU7.plaque.y0 + MU7.plaque.h);
+      const onScreen = b.x > 0 && a.x < 1920 && a.y < 1080;
+      if (onScreen && b.y > 950) throw new Error(`V7.5: at ${g} the plate on plinth ${x} reaches y ${b.y.toFixed(0)} (caption band) while still visible (${platesAt(g).toFixed(2)})`);
     }
   }
 }
@@ -549,8 +607,9 @@ const FanPart: React.FC<{g: number}> = ({g}) => {
   const n = FAN.n;
   const open = Array.from({length: n}, (_, k) => tw(g, FAN0 + 2 * k, FAN_DUR, E.out) * (1 - tw(g, FOLD0 + (n - 1 - k), FOLD_DUR, E.inOut)));
   const opacity = open.map((o) => clamp01(o * 3)); // opaque once out: overlapping cards never show through each other
-  const arrow = Array.from({length: n}, (_, k) => tw(g, ARROWS0 + ARROW_STEP * k, 12, E.inOut));
-  const fan = <FrameFan x={BOX_CENTRE.x} y={BOX_CENTRE.y} open={open} arrow={arrow} opacity={opacity} />;
+  const arrow = Array.from({length: n}, (_, k) => tw(g, arrowAt(k), ARROW_DUR, E.inOut));
+  const nudge = Array.from({length: n}, (_, k) => NUDGE * Math.sin(Math.PI * tw(g, arrowAt(k) + 4, NUDGE_DUR, E.linear)));
+  const fan = <FrameFan x={BOX_CENTRE.x} y={BOX_CENTRE.y} open={open} arrow={arrow} move={arrow} nudge={nudge} opacity={opacity} />;
   const lbl = tw(g, IDEA_LBL, 6, E.linear) * (1 - tw(g, TIGHT0, 8, E.linear));
   const screen = (
     // below the rail lamps (the lamp over the 2021 exhibit hangs at x 130-215, y 10-110 in this framing), clear of the fan
@@ -558,7 +617,7 @@ const FanPart: React.FC<{g: number}> = ({g}) => {
       their new idea (2026)
     </SubLabel>
   );
-  return <MuseumShot cam={cam} spot={spot} state={TIGHT_STATE} under={fan} screen={screen} />;
+  return <MuseumShot cam={cam} spot={spot} state={{...TIGHT_STATE, plates: platesAt(g)}} under={fan} screen={screen} />;
 };
 
 /* ================================================================== the scene */
@@ -592,4 +651,4 @@ export const SFX: Sfx[] = [
 ];
 
 /** Beat frames (global), for review and the lead's merge notes. */
-export const V7_BEATS = {K, FALL0, LAND, TRUCK1, ARRIVE1, TITLE0, TITLE1, BEAM1, SCATTER1, SKETCH0, SKETCH_DUR, TRUCK2, TRUCK2_DUR, ARRIVE3, FIRE3, VIDEO0, PULL, PULL_DUR, CLIP, SIGN_LAND, DIM0, TRUCK_S, ARRIVE_S, CARD, LED, PING, SWING0, ARM_IN, CONTACT, RELEASE_END, ARM_GONE, PUSH0, PUSH_DUR, IRIS0, MATCH, KIT_LBL, MOD0, MOD_LBL, CUT_PHONE, PHONE_LAND, LOCK_LAND, CUT_FAN, FAN0, FAN_DUR, ARROWS0, FOLD0, TIGHT0, TIGHT_DONE};
+export const V7_BEATS = {K, FALL0, LAND, RISE0, TRUCK1, ARRIVE1, TITLE0, TITLE1, BEAM1, SCATTER1, SKETCH0, SKETCH_DUR, TRUCK2, TRUCK2_DUR, ARRIVE3, FIRE3, VIDEO0, PULL, PULL_DUR, CLIP, SIGN_LAND, DIM0, TRUCK_S, ARRIVE_S, CARD, LED, PING, SWING0, ARM_IN, CONTACT, RELEASE_END, ARM_GONE, PUSH0, PUSH_DUR, IRIS0, MATCH, KIT_LBL, MOD0, MOD_LBL, CUT_PHONE, PHONE_LAND, LOCK_LAND, CUT_FAN, FAN0, FAN_DUR, ARROWS0, ARROW_STEP, ARROW_DUR, FOLD0, PLATE_OUT0, TIGHT0, TIGHT_DONE};

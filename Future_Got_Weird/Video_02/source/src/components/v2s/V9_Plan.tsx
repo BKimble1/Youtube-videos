@@ -388,8 +388,10 @@ export type PlanState = {
   carriage?: boolean;
   /** a dashed ghost of the sensor at a previous position */
   sensorGhost?: {at: P2; aim: P2; t: number};
-  /** wall spots: each with its own pop-in, highlight and position */
-  spots?: {p: P2; t: number; active?: number; tone?: 'saffron' | 'teal'}[];
+  /** 0..1 the sensor glyph (default 1); V9.4 fades it while the scene draws the 3×3 zone box in its place */
+  sensorOpacity?: number;
+  /** wall spots: each with its own pop-in, highlight and position (and, optionally, its own marker size) */
+  spots?: {p: P2; t: number; active?: number; tone?: 'saffron' | 'teal'; size?: number}[];
   /** wall-spot marker size (plan board px, default 9); V9.1/V9.2 draw them larger so the slide reads at phone size */
   spotSize?: number;
   ghostSpots?: {p: P2; t: number}[];
@@ -501,7 +503,7 @@ const planLayers = (s: PlanState) => {
         <GhostSpot key={`gs${i}`} p={g.p} t={g.t} size={s.spotSize ?? 9} />
       ))}
       {(s.spots ?? []).map((w, i) => (
-        <WallMarker key={`w${i}`} asGroup p={w.p} toPx={toPx} t={w.t} active={w.active ?? 0.75} tone={w.tone ?? 'saffron'} size={s.spotSize ?? 9} />
+        <WallMarker key={`w${i}`} asGroup p={w.p} toPx={toPx} t={w.t} active={w.active ?? 0.75} tone={w.tone ?? 'saffron'} size={w.size ?? s.spotSize ?? 9} />
       ))}
       {(s.spotArrows ?? []).map((ar, i) => {
         if (ar.t <= 0.001) return null;
@@ -581,7 +583,7 @@ const planLayers = (s: PlanState) => {
         const w = SENSOR_PX;
         return <rect x={-w / 2} y={-w / 4} width={w} height={w / 2} rx={6} transform={`translate(${c.x} ${c.y}) rotate(${deg})`} fill="none" stroke={C.ink} strokeWidth={2.5} strokeDasharray="5 5" opacity={s.sensorGhost.t} />;
       })()}
-      <SensorGlyph asGroup p={s.sensor} dir={sub(s.aim, s.sensor)} toPx={toPx} size={SENSOR_PX} firing={s.firing ?? 0} />
+      {(s.sensorOpacity ?? 1) > 0.001 && <SensorGlyph asGroup p={s.sensor} dir={sub(s.aim, s.sensor)} toPx={toPx} size={SENSOR_PX} firing={s.firing ?? 0} opacity={s.sensorOpacity ?? 1} />}
     </PlanSvg>
   );
   return {backdrop, children};

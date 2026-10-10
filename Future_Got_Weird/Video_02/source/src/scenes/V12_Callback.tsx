@@ -34,12 +34,14 @@ import {V12MiniReadout, V12ReadoutInset} from '../components/v2s/V12_Readout';
 import {PLAN_AREA, PLAN_VIEW, PlanCard, PlanSpot, planCardSize, viewForArea} from '../components/v02/PlanCard';
 import {BackHead} from '../components/v02/S9_BackHead';
 import {Cross, V12_CAM, V12_FAR_EDGE_X, V12_TILT, WallSpot, farEdgeScreenX} from '../components/v2s/V12_Parts';
+import {Label} from '../components/v2k/Labels';
 
 /**
  * V12 · Callback (n31, s47 + the J4 hold). v2/SHOTPLAN_V2.md V12; adapted from v1 S9.2-S9.3 (src/scenes/S9_Payoff.tsx,
  * read and copied, never imported). One locked raised room view for the whole scene: v1 S9.2's CAM_W at RAISED_TILT
- * (V12_Parts), the opening's room and orientation. No labels (shot plan); the only text on screen is the PlanCard's own
- * "seen from above" title during the trip.
+ * (V12_Parts), the opening's room and orientation. No teaching labels (shot plan); the text on screen is the PlanCard's
+ * own "seen from above" title during the trip and, fix r1 (V2-R1-38), "sensor readout" (48) under the magnified readout
+ * whenever it is up.
  *
  *  V12.1 n31 "Being out of sight isn't the same as giving nothing away."
  *        Hard cut in from the warehouse corner: the partition's far-end edge stands where V11.5 left the blind corner
@@ -229,13 +231,19 @@ const C_SPOT = {x: 1.77, z: 1.62};
 const C_WALK_PLAN = planWalk({x: LAYOUT.operator.x, z: LAYOUT.operator.z}, C_SPOT, {stepM: 0.29, lift: 14, profile: 1});
 const C_FPS = 9;
 const C_LAST = 11;
+/** her glance to the near end (fix r1, V2-R1-38): from the blank hold's last frame, as her walk starts from rest */
+const GLANCE0 = C_WALK0;
+const GLANCE_DUR = 7;
 const LEAN0 = C_WALK0 + walkFrames(C_WALK_PLAN, C_FPS, C_LAST) + 1;
 const SIGHT0 = LEAN0 + 2;
 const OPEN = LEAN0 + 6;
 const BUSTED = OPEN + 2;
 const DEFLATE0 = BUSTED + 5;
 const DEFLATE_DUR = 8;
-const SIGHT_OUT = BUSTED + 9;
+/** Fix r1 (module load): her sight line fades as he deflates (it began 4 frames later, at BUSTED + 9; after the s37
+ *  pause moved V12 by +45 frames the idle sway put his deflated head 0.002 inside the drawn-length check on the line's
+ *  last, nearly faded frame, so the scene threw at load) */
+const SIGHT_OUT = DEFLATE0;
 const SIGHT_OUT_DUR = 6;
 
 // the timing chain (module load): each beat after the one it answers, the blank alone for 0.5 s, the deflate settled
@@ -544,29 +552,47 @@ const checkerAt = (g: number): CheckerState => {
   // where she looks: the readout; him (a knowing glance as the blob lights, watching his push); the readout at the blank
   const know = Math.min(tw(g, LIT + 6, 8, E.inOut), 1 - tw(g, LIT + 34, 10, E.inOut));
   const watch = Math.min(tw(g, IDEA + 6, 8, E.inOut), 1 - tw(g, PULSE2, 8, E.inOut));
-  const brow = Math.max(0.8 * know, 0.5 * Math.min(tw(g, THUNK, 6), 1 - tw(g, BLANK, 8)));
+  // (fix r1, V2-R1-38: her brow settles as the screen empties, by BLANK_FULL, so nothing moves in the blank hold)
+  const brow = Math.max(0.8 * know, 0.5 * Math.min(tw(g, THUNK, 6), 1 - tw(g, BLANK, BLANK_FULL - BLANK)));
+  // the blank has read (0.5 s held, nothing moving): her eyes go from the readout to the partition's near end as she sets
+  // off (fix r1, V2-R1-38: this glance began 8 frames into the hold, at BLANK_FULL + 8; it now starts at C_WALK0, the
+  // hold's last frame, and eases from the readout look so the head never snaps; director r2)
+  const toEnd = tw(g, GLANCE0, GLANCE_DUR, E.inOut);
+  const endLook: Partial<Pose2> = {lookX: 0.9, lookY: 0.15, tilt: atHim.tilt};
   const lookK = Math.max(know, watch);
   const base: Pose2 = {...IDLE2, ...ARMS.armsCrossed, armsFront: 'both'};
   if (g < C_WALK0) {
     const pl = rigAt(LAYOUT.operator.x, LAYOUT.operator.z, tilt);
     let pose = withPose(base, face(lookK, brow));
-    // the blank has read: her eyes go from the readout to the partition's near end
-    // (director r2: it eases to the walk's opening head pose, tilt included: the head no longer snaps 4 deg at C_WALK0)
-    const toEnd = tw(g, BLANK_FULL + 8, Math.max(1, C_WALK0 - (BLANK_FULL + 8)), E.inOut);
-    if (toEnd > 0) pose = withPose(pose, {lookX: 0.9, lookY: 0.15, tilt: atHim.tilt}, toEnd);
+    if (toEnd > 0) pose = withPose(pose, endLook, toEnd);
     return {plan: {x: LAYOUT.operator.x, z: LAYOUT.operator.z}, place: {x: pl.x, y: pl.y, scale: pl.scale, frame: g, seed: CHECKER_SEED, life: 0.35}, pose, walk: null};
   }
   // she strolls to the near end, arms still crossed, and leans round it
   const d = walkDistance(g, C_WALK0, C_WALK_PLAN, C_FPS, C_LAST);
   const wk = walkAt(C_WALK_PLAN, d, tilt);
   const place: RigPlace = {x: wk.x, y: wk.y, scale: wk.scale, frame: g, seed: CHECKER_SEED, life: 0.3};
-  let pose: Pose2 = {...withPose(base, face(1)), feet: plantedShoes(wk.pose.feet), sink: wk.pose.sink, lookX: 0.9, lookY: 0.15};
+  let pose: Pose2 = {...withPose(withPose(base, face(lookK, brow)), endLook, toEnd), feet: plantedShoes(wk.pose.feet), sink: wk.pose.sink};
   const lean = sp(g, LEAN0, SOFT);
   if (g >= LEAN0) pose = withPose(pose, {peek: 0.85, lean: 3, lookX: 1, lookY: 0.05, tilt: 2, lid: 0.4}, Math.min(1.04, lean));
   // no idle blink across the lean and the take: she just looks
   if (g >= LEAN0 - 4) pose = {...pose, blink: 1};
   return {plan: wk.plan, place, pose, walk: wk};
 };
+
+// Fix r1 (V2-R1-38): the blank reads first: from BLANK_FULL the readout holds blank for 0.5 s (to HOLD_END) and neither
+// figure's pose, place or turn changes until then (only the rigs' own idle life); her glance and walk start on the hold's
+// last frame (C_WALK0, where her walk has not yet moved her) and her head does not jump there
+{
+  if (!(HOLD_END - BLANK_FULL >= 15)) throw new Error(`V12: the blank must hold >= 0.5 s (${BLANK_FULL}..${HOLD_END})`);
+  const still = (st: {place: RigPlace; pose: Pose2; turn?: number}) => JSON.stringify({...st.place, frame: 0, pose: st.pose, turn: st.turn ?? 1});
+  const head = (p: Pose2) => [p.lookX, p.lookY, p.tilt, p.brows, p.browAsym, p.lid].map((v) => f2(v ?? 0)).join(',');
+  const c0 = still(checkerAt(BLANK_FULL));
+  const g0 = still(guesserAt(BLANK_FULL));
+  for (let f = BLANK_FULL + 1; f < HOLD_END; f++) {
+    if (still(guesserAt(f)) !== g0) throw new Error(`V12: he moves at ${f}, inside the blank hold (${BLANK_FULL}..${HOLD_END - 1})`);
+    if (f < C_WALK0 ? still(checkerAt(f)) !== c0 : head(checkerAt(f).pose) !== head(checkerAt(BLANK_FULL).pose)) throw new Error(`V12: she moves at ${f}, inside the blank hold (${BLANK_FULL}..${HOLD_END - 1})`);
+  }
+}
 
 /* ================================================================== J4: her line of sight */
 
@@ -625,7 +651,14 @@ const billboardToPlan = (sv: ViewState, X: number, Y: number, z: number): PlanPt
 const DIRS_W = scatterDirections({x: 0, z: 1}, 9, 4);
 const DIRS_H3 = scatterDirections(sub(W3, H), 6, 9);
 /** The magnified readout (screen px): upper left over the plant and the left wall, inside the safe area (S9's, D44). */
-const INSET = {x: 100, y: 56, w: 416, h: 358};
+/** Fix r1 (V2-R1-38): as wide as the corner allows (was x 100, y 56, 416 x 358). On every frame the inset is up, her
+ *  head's left edge is at x 539-550 for y 300-370 (idle sway) and her shoulder at x 521-536 from y about 425, so the
+ *  inset (and its +8 / +12 shadow) ends at x 523 (531) and y 401 (413), >= 8 px clear of her (measured on the renders);
+ *  25 % of the frame width (480 px) would cover the left of her head. The thinner bezel and the trimmed map window
+ *  (V12_Readout) draw the reading itself 15 % larger (232.5 -> 268 px per metre). */
+const INSET = {x: 96, y: 54, w: 427, h: 347};
+/** its name, under it (48 px, secondary), fading with it; it never moves */
+const INSET_LABEL = {x: INSET.x + 4, base: INSET.y + INSET.h + 50, size: 48};
 /** the stopped-here cross: 17 px arms (S9's 13 was lost next to her pencil at phone size) */
 const CROSS_V12 = 17;
 
@@ -845,6 +878,11 @@ export const V12Callback: React.FC = () => {
       )}
       {/* `exiting` makes both the entry and the exit a calm grow/shrink-and-fade (no spring) */}
       <V12ReadoutInset x={INSET.x} y={INSET.y} w={INSET.w} h={INSET.h} t={insetT} exiting field={FIELD} blob={blobT * (1 - blinkOff)} lit={insetLit} blank={g < INSET2 ? 0 : blankT} led={g >= BLANK ? 0 : 1} occZ0={lay.occluder.z0} />
+      {insetT > 0 && (
+        <Label x={INSET_LABEL.x} y={INSET_LABEL.base} size={INSET_LABEL.size} opacity={f2(insetT)}>
+          sensor readout
+        </Label>
+      )}
     </AbsoluteFill>
   );
 };

@@ -43,12 +43,28 @@ const WX: Record<string, number> = Object.fromEntries(L.wallSamples.map((w) => [
 export const W2 = P(WX.W2, 0, 'W2');
 export const W3 = P(WX.W3, 0, 'W3');
 
-/** V8.2 callback: listening spots bunched on the small wall patch W2..W3 (a seeded, uneven cluster: not countable).
- *  Seven, drawn large enough to read as separate spots in the close framing (they just touch). */
-export const BUNCH: P2[] = Array.from({length: 7}, (_, i) => {
-  const u = i / 6;
-  return P(W2.x + (W3.x - W2.x) * u + (rand(i * 17 + 3) - 0.5) * 0.006, 0.018 + 0.03 * rand(i * 29 + 5));
-});
+/** V8.2 callback: listening spots bunched on the small wall patch W2..W3 (a seeded, slightly uneven cluster).
+ *  Seven discs in two staggered rows (4 + 3) against the wall, each BUNCH_R plan px (≈ 19 px across on screen in the
+ *  V5.7 close framing, zoom 1.5) with an ink outline, so the separate spots still read as a tight bunch at phone width
+ *  (v2 review r1, V2-R1-31: they were 8 px specks). */
+const PPM = planPx(P(1, 0)).x - planPx(P(0, 0)).x; // plan px per metre
+export const BUNCH_R = 6.4; // plan px
+export const BUNCH_OUTLINE = 2; // plan px
+const BUNCH_D = 2 * BUNCH_R + 0.8; // centre spacing (they just do not touch)
+const BUNCH_ROW_H = BUNCH_D * 0.866;
+const BUNCH_MID = (W2.x + W3.x) / 2;
+const BUNCH_Z0 = (BUNCH_R + BUNCH_OUTLINE + 2) / PPM; // first row: clear of the wall face
+export const BUNCH: P2[] = [
+  ...[-1.5, -0.5, 0.5, 1.5].map((u) => [u, 0] as const),
+  ...[-1, 0, 1].map((u) => [u, 1] as const),
+].map(([u, row], i) => P(BUNCH_MID + (u * BUNCH_D + (rand(i * 17 + 3) - 0.5) * 0.6) / PPM, BUNCH_Z0 + (row * BUNCH_ROW_H + (rand(i * 29 + 5) - 0.5) * 0.6) / PPM));
+{
+  for (const [i, p] of BUNCH.entries()) {
+    if (!(p.z - (BUNCH_R + BUNCH_OUTLINE) / PPM > 0)) throw new Error(`V8_Plan: bunched spot ${i} crosses the wall face`);
+    if (!(p.x - BUNCH_R / PPM >= W2.x - 0.02 && p.x + BUNCH_R / PPM <= W3.x + 0.02)) throw new Error(`V8_Plan: bunched spot ${i} leaves the W2..W3 patch`);
+    for (const q of BUNCH.slice(i + 1)) if (Math.hypot(q.x - p.x, q.z - p.z) * PPM < 2 * BUNCH_R) throw new Error('V8_Plan: two bunched spots overlap');
+  }
+}
 /** the bands the patch is made of (one bin each): the bunched patch's two ends, W2 and W3, exactly V5.7's "close" pair */
 export const BUNCH_BANDS: BandSpec[] = bandsFor([W2, W3], HA, HW1);
 const GRID_BUNCH: GridSpec = {x0: 1.85, x1: 3.45, z0: 0.0, z1: 1.75, step: 0.012};
@@ -164,8 +180,7 @@ const planLayers = (s: V8PlanState) => {
           if (t <= 0.001) return null;
           return (
             <g key={`b${i}`} opacity={Math.min(1, t * 1.5)}>
-              <circle cx={q.x} cy={q.y} r={4.6 * t + 0.6} fill={C.cream} />
-              <circle cx={q.x} cy={q.y} r={3.6 * t} fill={C.tealDeep} />
+              <circle cx={q.x} cy={q.y} r={BUNCH_R * t} fill={C.teal} stroke={C.ink} strokeWidth={BUNCH_OUTLINE * Math.min(1, t * 2)} />
             </g>
           );
         })}
@@ -185,13 +200,27 @@ export const V8PlanStage: React.FC<{geo: PanelGeo; cam: Cam; state: V8PlanState;
   );
 };
 
-/** The "illustration" chip, top-left, over a paper backing that hides the plan's wall ruler tick under it (as V9). */
-export const HandoffChip: React.FC<{t?: number}> = ({t = 1}) =>
-  t <= 0.001 ? null : (
+/** The "illustration" chip, top-left, over a paper backing that hides the plan's wall ruler tick under it (as V9).
+ *  40 px so it reads at phone width (v2 review r1, V2-R1-14), with a slimmer vertical padding (5 px) so that at
+ *  x 96, y 54 (safe-area corner) it still clears the plan's wall line (top at y ≈ 118) in the V8 → V9 hand-off frame:
+ *  chip box x 96–371, y 54–110; backing x 90–380, y 38–116. */
+export const HANDOFF_CHIP = {x: 96, y: 54, size: 40, padding: '5px 28px', backing: {left: 90, top: 38, width: 290, height: 78}};
+/** `inside` (screen px, optional): the backing covers only what lies inside this rectangle. V8.3 passes the growing
+ *  card's interior, so the backing hides the ruler tick under the chip but never cuts the card's ink border or corner
+ *  as the card grows past the chip; with the full frame (or none) it is the whole backing, as in the hand-off frame. */
+export const HandoffChip: React.FC<{t?: number; inside?: {x: number; y: number; w: number; h: number}}> = ({t = 1, inside}) => {
+  if (t <= 0.001) return null;
+  const bk = HANDOFF_CHIP.backing;
+  const x0 = inside ? Math.max(bk.left, inside.x) : bk.left;
+  const y0 = inside ? Math.max(bk.top, inside.y) : bk.top;
+  const x1 = inside ? Math.min(bk.left + bk.width, inside.x + inside.w) : bk.left + bk.width;
+  const y1 = inside ? Math.min(bk.top + bk.height, inside.y + inside.h) : bk.top + bk.height;
+  return (
     <>
-      <div style={{position: 'absolute', left: 90, top: 38, width: 236, height: 76, background: C.paper, opacity: t}} />
-      <Chip x={96} y={54} size={30} opacity={t}>
+      {x1 - x0 > 0.01 && y1 - y0 > 0.01 && <div style={{position: 'absolute', left: x0, top: y0, width: x1 - x0, height: y1 - y0, background: C.paper, opacity: t}} />}
+      <Chip x={HANDOFF_CHIP.x} y={HANDOFF_CHIP.y} size={HANDOFF_CHIP.size} opacity={t} style={{padding: HANDOFF_CHIP.padding}}>
         illustration
       </Chip>
     </>
   );
+};

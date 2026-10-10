@@ -11,7 +11,7 @@ import {LAYOUT, PTS, assertAroundTheEnd, hiddenByPartition, partitionCrossings, 
 import {LAYOUT as OLAYOUT, assertPath, scatterDirections, type P2} from '../lib/optics';
 import {rand} from '../lib/anim';
 import {CAST} from '../components/cast';
-import {ROOM_COLORS, RoomSet, type RoomItem} from '../components/v02/RoomSet';
+import {RoomSet, type RoomItem} from '../components/v02/RoomSet';
 import {LightPath, PulseDot, ScatterFan, mixHex, type ToPx} from '../components/v02/Optics';
 import {ARMS, CROUCH, Character2, EXPR, HANDS_ON_HIPS, IDLE2, eyesWorld, figuresHide, handWorld2, mixPose2, mouthWorld, reach2, rigCovers, rimFlash, withPose, type Pose2, type RigPlace} from '../components/v02/Cast2';
 import {S2Reflection} from '../components/v02/S2_BackHead';
@@ -19,16 +19,20 @@ import {SensorStand, standGeometry} from '../components/v02/S2_SensorStand';
 import {SectionBackdrop, grainTipNear} from '../components/v02/S2_Section';
 import {QuestionTitle} from '../components/v2k/QuestionTitle';
 import {Chip, Label, SubLabel, TeachLabel} from '../components/v2k/Labels';
-import {PointerStick, TICK_TOP, TimelineHandoff} from '../components/v2s/V3_Parts';
+import {PAINT, PaintGrain, PointerStick, TICK_TOP, TimelineHandoff, WallGrain} from '../components/v2s/V3_Parts';
 
 /**
  * V3 · Mirror versus paint (n07, n08, s11, n09). v2/SHOTPLAN_V2.md V3.1–V3.4.
  *
- *  V3.1 n07  Hand-off from V2 (push into W1's paint): the first 4 frames are the relay wall's paint, flat
- *            (ROOM_COLORS.relayWall). Then the camera pulls back out of a patch of bare wall paint (no wall-spot marker:
- *            W1 is never drawn in the raised view) to the raised room view, S2.2's CAM_A at RAISED_TILT. The guesser leans
- *            on the partition (weight on it, shoulder against its edge) and looks at the bare wall, untroubled; a small
- *            smug nod on "work at all". Question title "What survives the bounce?" for the length of n07 only.
+ *  V3.1 n07  Hand-off from V2 (push into W1's paint): the first 4 frames are the relay wall's paint
+ *            (ROOM_COLORS.relayWall) with its static paint grain, exactly V2's last frame (V3_Parts PaintGrain = G1's
+ *            V2_Plan PAINT_GRAIN; v2 review r1, V2-R1-02). The pull-back starts on the 5th frame and moves visibly from its
+ *            first frame (the grain shrinks with the zoom, then fades before it could read as texture): out of a patch of
+ *            bare wall paint (no wall-spot marker: W1 is never drawn in the raised view) to the raised room view, S2.2's
+ *            CAM_A at RAISED_TILT. The guesser leans on the partition (weight on it, shoulder against its edge) and looks
+ *            at the bare wall, untroubled; a small smug nod on "work at all". Question title "What survives the bounce?"
+ *            from n07, but only once the room is in view (ROOM_VIS), to the end of n07. The side wall's door is left out
+ *            of the room framings (V2-R1-21: only a sliver of it reached the frame's right edge).
  *  V3.2 n08  On "here" a framed mirror (x 1.9–2.72 m) slides down onto the wall; "mirror" (64). The checker's right
  *            arm comes up, her telescopic pointer extends and taps the glass (contact), retracts. One slowed pulse runs
  *            sensor → mirror → him → mirror → sensor (specular point x 2.139 m: under the partition's far-end outline at
@@ -44,7 +48,10 @@ import {PointerStick, TICK_TOP, TimelineHandoff} from '../components/v2s/V3_Part
  *  V3.4 n09  Iris out onto the room at TILT 0 (S2.4's tilt, re-centred on the room and zoom 1.15 because the postcard /
  *            confetti column is cut). Three pulses leave his head, shoulder and foot, run by three different wall spots
  *            (round the partition's far end, hidden exactly where it or a person covers them) and merge into ONE blip at
- *            the sensor ("blend"); he glances at the wall, uneasy. On "What survives" the kit ArrivalTimeline rises from
+ *            the sensor ("blend"); he glances at the wall, uneasy. v2 review r1, V2-R1-06: the three origin markers are
+ *            48 px; on the launch frame each one pops and flashes a ring in its path's colour, and it stays lit in that
+ *            colour while its pulse is hidden behind the partition, going out on the frame the pulse comes out at the
+ *            partition's far edge (that frame is the hidden leg's length at the pulse speed), where the pulse pops in. On "What survives" the kit ArrivalTimeline rises from
  *            below on its paper sheet to fill the frame while the blip is tossed up and drops onto the axis as ONE tick at
  *            one time; "what survives: timing" (64). The last frames are V3_Parts TimelineHandoff, V4's first frame.
  *
@@ -247,6 +254,12 @@ const Z0 = 12;
 /** P0's screen position at CAM_A (where the pull-back delivers it). */
 const P0_END = worldToScreen(CAM_A, P0.x, P0.y);
 
+/** The relay wall's face at RAISED_TILT (world px), above the skirting and inside its ink outline: the paint grain's clip. */
+const WALL_FACE = (() => {
+  const {x0, x1, wallHeight} = LAYOUT.room;
+  return [PX(x0 + 0.01, 0, wallHeight - 0.012), PX(x1 - 0.01, 0, wallHeight - 0.012), PX(x1 - 0.01, 0, 0.14), PX(x0 + 0.01, 0, 0.14)].map((q) => ({x: q.x, y: q.y}));
+})();
+
 /* ================================================================== geometry, the room at tilt 0 (V3.4) */
 
 const T0 = 0;
@@ -266,10 +279,10 @@ const CAM_D: Cam = {cx: CAM_ROOM.cx, cy: 482, zoom: 1.15};
 const PARTS = [
   {id: 'head', local: {x: 0, y: -372}, trueH: 1.45, wall: {x: 1.98, h: 0.43}, mark: {x: -34, y: -414}, color: '#C0392B'},
   {id: 'shoulder', local: {x: -44, y: -294}, trueH: 1.13, wall: {x: 1.86, h: 1.84}, mark: {x: -30, y: -290}, color: C.saffronDeep},
-  {id: 'feet', local: {x: -33, y: -8}, trueH: 0.04, wall: {x: 1.98, h: 1.19}, mark: null, color: C.blue},
+  {id: 'feet', local: {x: -33, y: -8}, trueH: 0.04, wall: {x: 1.98, h: 1.19}, mark: {x: -26, y: -10}, color: C.blue},
 ];
 /** Drawing sizes (world px at zoom 1.2), sized for a phone. */
-const R4 = {trail: 15, spot: 13, mark: 18, markDot: 10, pulse: 18}; // trail 12 → 15: director fix for the phone check
+const R4 = {trail: 15, spot: 13, mark: 21, markDot: 12, pulse: 18}; // trail 12 → 15: director fix for the phone check; mark 18 → 21 (48 px on screen at zoom 1.15): V2-R1-06
 const HIDE0: HiddenTest = (() => {
   const ph = partitionHides(VT0, LIGHT_H);
   const fh = figuresHide(VT0, LIGHT_H, [
@@ -365,12 +378,12 @@ if (hiddenByPartition(IRIS_OUT_3D, VT0, {padPx: 20}) || rigCovers(OP0, IRIS_OUT_
 
 /* ================================================================== beats derived from the cues */
 
-// V3.1: flat paint, the pull back, the title
-const FLAT_END = K.start + 4; // 911..914: the paint, flat (V2 → V3 hand-off)
-const PULL0 = FLAT_END;
+// V3.1: the hand-off paint (4 frames), the pull back (from the 5th frame), the title once the room is in view
+const FLAT_END = K.start + 4; // 911..914: the paint and its grain, still (V2 → V3 hand-off)
+/** The pull-back's (virtual) start is the last still frame, so the scene's 5th frame (FLAT_END) is already moving. */
+const PULL0 = FLAT_END - 1;
 const PULL_DUR = clamp(K.puzzle + 16 - PULL0, 36, 60);
 const PULL_END = PULL0 + PULL_DUR;
-const TITLE_FROM = K.n07;
 const TITLE_TO = K.all7End + 4;
 const NOD = Math.max(PULL_END + 8, K.work7);
 
@@ -443,6 +456,38 @@ const TICK_HIT = Math.max(SHEET0 + SHEET_DUR + 2, K.survives + 14);
 const TICK_SETTLE = 8;
 const LABEL_T = Math.max(TICK_HIT + 4, K.survivesEnd - 4);
 const CHIP_T = SHEET0 + SHEET_DUR;
+/** The pulses' speed (m of path per frame): the longest path takes PULSE0 → ARRIVE. */
+const V_PULSE = L_MAX / Math.max(1, ARRIVE - PULSE0);
+/** The frame each pulse comes out from behind the partition (its leg to the wall is hidden from his body to the
+ *  partition's far edge): the hidden length at the pulse speed. Its origin marker stays lit until then. */
+const EMERGE = BLEND.map((b) => {
+  const u = b.vis[0].length ? b.vis[0][0][0] : 1;
+  return PULSE0 + (u * b.L1) / V_PULSE;
+});
+if (EMERGE.some((f) => f > ARRIVE - 8)) throw new Error('V3: a blend pulse comes out from behind the partition too late');
+/** Where each pulse comes out (world px): its leg to the wall at the first visible point. While hidden, a ghost of the
+ *  pulse (a dashed ring, the "behind" convention) travels from its marker to this point at the pulse speed, so the
+ *  marker, the hidden travel and the pulse that comes out read as one path (V2-R1-06). */
+const EMERGE_PT = BLEND.map((b) => {
+  const u = b.vis[0].length ? b.vis[0][0][0] : 1;
+  return P4({x: b.eff.x + (b.W.x - b.eff.x) * u, z: b.eff.z + (b.W.z - b.eff.z) * u, h: b.eff.h + (b.W.h - b.eff.h) * u});
+});
+/** The launch ring round each marker grows only as far as it stays off the partition and out of the caption band. */
+const BURST_R = ORIGIN_PX.map((q) => {
+  const wallAt = (p: {x: number; y: number}) => ({x: VT0.pivot.x + (p.x - VT0.ax) / VT0.ppm - VT0.shear * (0 - VT0.pivot.z), z: 0, h: VT0.pivot.h + (VT0.floor * (0 - VT0.pivot.z) - (p.y - VT0.ay) / VT0.ppm) / VT0.height});
+  const s = worldToScreen(CAM_D, q.x, q.y);
+  let r = R4.mark * 1.35 + 8;
+  for (let rr = r; rr <= R4.mark * 2.2; rr += 1) {
+    let ok = s.y + (rr + 5) * CAM_D.zoom <= 948;
+    for (let i = 0; ok && i < 32; i++) {
+      const a = (i / 32) * 2 * Math.PI;
+      if (hiddenByPartition(wallAt({x: q.x + (rr + 5) * Math.cos(a), y: q.y + (rr + 5) * Math.sin(a)}), VT0, {padPx: 2})) ok = false;
+    }
+    if (!ok) break;
+    r = rr;
+  }
+  return r;
+});
 if (LABEL_T + 6 > K.end - 2) throw new Error(`V3: "what survives: timing" is not in a beat before the cut (${LABEL_T + 6} > ${K.end - 2})`);
 if (TICK_HIT + TICK_SETTLE > K.end - 2) throw new Error('V3: the tick has not settled before the cut');
 
@@ -451,7 +496,10 @@ if (TICK_HIT + TICK_SETTLE > K.end - 2) throw new Error('V3: the tick has not se
 export const SFX: Sfx[] = [
   {f: K.start, kind: 'amb_room', dur: (K.end - K.start) / 30, gain: -4},
   // V3.2
-  {f: DROP_LAND - 9, kind: 'mirror_slide', gain: -3, note: 'wall mirror slides down'},
+  // mirror_slide is synced on its stop (the sample's last loud frame, sfx_lib 'stop' class, 1.5 s in): its rising slide
+  // fills the 5 frames before the stop, so the stop one frame before the contact covers the visible drop (DROP_LAND − 5 to
+  // − 1) and leaves the contact frame to the ting (V2-R1-22: cued 9 frames early it was over before the mirror moved)
+  {f: DROP_LAND - 1, kind: 'mirror_slide', gain: -3, note: 'wall mirror slides down (covers the visible drop)'},
   {f: DROP_LAND, kind: 'mirror_ting', gain: -2},
   {f: TAP, kind: 'pencil_tap', gain: -3, pitch: 4, note: 'pointer taps the glass'},
   {f: FIRE, kind: 'sensor_pulse', gain: -4},
@@ -462,7 +510,7 @@ export const SFX: Sfx[] = [
   {f: DUCK, kind: 'cloth_rustle', gain: -2},
   {f: DUCK_HIT, kind: 'thud_soft', gain: -6, note: 'duck squash'},
   // V3.3
-  {f: MIRROR_OFF0, kind: 'mirror_slide', gain: -7, pitch: 1},
+  {f: MIRROR_OFF0 + 10, kind: 'mirror_slide', gain: -7, pitch: 1, note: 'slides off: the stop lands as it leaves the frame'},
   {f: RISE0 + 8, kind: 'relief_sigh', gain: -4},
   {f: LENS_POP, kind: 'magnifier_slide', gain: -4},
   {f: HIT3, kind: 'bounce_tick', pitch: -1, gain: -3},
@@ -735,7 +783,10 @@ const InOutCard: React.FC<{t: number; glint: {x: number; y: number}}> = ({t, gli
   );
 };
 
-const SlowedChip: React.FC<{t: number}> = ({t}) => (t > 0 ? <Chip x={1790} y={92} anchor="end" valign="middle" size={30} opacity={t} tone="saffron">slowed down</Chip> : null);
+/** Integrity chips ("slowed down", "illustration") at 40 px, legible at phone width and the size of V2's "illustration" chip
+ *  in the same corner one scene earlier (v2 review r1, V2-R1-14: 30 px chips were about 6 px at 390 px). */
+const CHIP_PX = 40;
+const SlowedChip: React.FC<{t: number}> = ({t}) => (t > 0 ? <Chip x={1790} y={92} anchor="end" valign="middle" size={CHIP_PX} opacity={t} tone="saffron">slowed down</Chip> : null);
 
 /* ---- the magnifier iris (V3.2 room → V3.3 section) */
 const SEC_C = grainTipNear(960);
@@ -789,8 +840,10 @@ const IrisIn: React.FC<{g: number; from: {x: number; y: number}}> = ({g, from}) 
   );
 };
 
-/** V3.1–V3.3's room camera: the pull back from inside the paint (log-space zoom, P0 glides to its CAM_A place). */
-const PULL_EASE = Easing.bezier(0.3, 0, 0.18, 1);
+/** V3.1–V3.3's room camera: the pull back from inside the paint (log-space zoom, P0 glides to its CAM_A place). The ease
+ *  starts with speed (v2 review r1, V2-R1-02: the old ease-in held the first ~14 pulled frames visually still, so the
+ *  in-paint run read as a blank frame): the zoom drops about 4 % on the scene's 5th frame, the first pulled one. */
+const PULL_EASE = Easing.bezier(0.2, 0.12, 0.2, 1);
 const camRoomA = (g: number): Cam => {
   const u = PULL_EASE(clamp01((g - PULL0) / PULL_DUR));
   if (u >= 1) return CAM_A;
@@ -799,6 +852,41 @@ const camRoomA = (g: number): Cam => {
   const sy = lerp(540, P0_END.y, u);
   return {cx: P0.x - (sx - 960) / z, cy: P0.y - (sy - 540) / z, zoom: z};
 };
+/** The paint grain's layer opacity on the pull-back: full while a grain bump is still at least 45 % of its hand-off size,
+ *  gone by 20 % (it never stays on as a texture over the room). */
+const grainLayer = (zoom: number) => clamp01((zoom / Z0 - 0.2) / 0.25);
+/** Is the camera window at frame g all wall paint (nothing of the room but the wall face)? */
+const allPaint = (g: number) => {
+  const c = camRoomA(g);
+  const hw = 960 / c.zoom;
+  const hh = 540 / c.zoom;
+  const dz = 0 - VS.pivot.z;
+  for (let i = 0; i <= 24; i++)
+    for (let j = 0; j <= 14; j++) {
+      const q = {x: c.cx - hw + (2 * hw * i) / 24, y: c.cy - hh + (2 * hh * j) / 14};
+      const wall = {x: VS.pivot.x + (q.x - VS.ax) / VS.ppm - VS.shear * dz, z: 0, h: VS.pivot.h + (VS.floor * dz - (q.y - VS.ay) / VS.ppm) / VS.height};
+      if (wall.h > LAYOUT.room.wallHeight - 0.005 || hiddenByPartition(wall, VS) || rigCovers(GU, q) || rigCovers(OP, q)) return false;
+    }
+  return true;
+};
+/** The first pulled frame whose window shows more than wall paint (the wall top, the partition or a person). */
+const ROOM_VIS = (() => {
+  for (let g = FLAT_END; g <= PULL_END; g++) if (!allPaint(g)) return g;
+  return PULL_END;
+})();
+/** The question title fades in only once the room is in view (V2-R1-02): from n07, and from 4 frames after the first
+ *  non-paint frame (the wall top and the people are then entering the frame). */
+const TITLE_FROM = Math.max(K.n07, ROOM_VIS + 4);
+{
+  // the hand-off: at most 4 still frames; the pull-back moves on the scene's 5th frame and the grain is visible there
+  if (FLAT_END > K.start + 4) throw new Error('V3: more than 4 still paint frames at the hand-off');
+  const z1 = camRoomA(FLAT_END).zoom;
+  if (!(Z0 / z1 > 1.025)) throw new Error(`V3: the 5th frame barely moves (zoom ${Z0} → ${z1.toFixed(3)})`);
+  if (grainLayer(z1) < 1) throw new Error('V3: the paint grain must be fully visible as the pull-back starts');
+  if (ROOM_VIS <= FLAT_END + 2) throw new Error('V3: the room must not be in view on the first pulled frames (we are inside the paint)');
+  if (grainLayer(CAM_A.zoom) > 0 || grainLayer(camRoomA(TITLE_FROM).zoom) > 0.5) throw new Error('V3: the paint grain must be fading by the title and gone at CAM_A');
+  if (TITLE_FROM + 6 > TITLE_TO - 8) throw new Error('V3: the question title has no time on screen');
+}
 
 const RoomMirrorShot: React.FC<{g: number}> = ({g}) => {
   const cam = camRoomA(g);
@@ -813,7 +901,13 @@ const RoomMirrorShot: React.FC<{g: number}> = ({g}) => {
   const gl1 = (g - (Math.round(M1) - 1)) / 12;
   const gl2 = (g - (Math.round(M2) - 1)) / 12;
   const glint = gl1 > 0 && gl1 < 1 ? gl1 : gl2 > 0 && gl2 < 1 ? gl2 : 0;
-  const backdrop = <>{mirrorOn && <WallMirror g={g} dy={mirrorDy} guesser={gu} glint={glint} />}</>;
+  const grain = g < PULL_END ? grainLayer(cam.zoom) : 0;
+  const backdrop = (
+    <>
+      {grain > 0 && <WallGrain anchor={P0} z0={Z0} zoom={cam.zoom} clip={WALL_FACE} view={{x0: cam.cx - 960 / cam.zoom, y0: cam.cy - 540 / cam.zoom, x1: cam.cx + 960 / cam.zoom, y1: cam.cy + 540 / cam.zoom}} opacity={grain} id="v3grain" />}
+      {mirrorOn && <WallMirror g={g} dy={mirrorDy} guesser={gu} glint={glint} />}
+    </>
+  );
   const fireK = pulse01(g, FIRE - 1, 8);
   const items = roomItems(g, RAISED_TILT, ch.pose, gu, {led: 1, reveal: 1, burst: fireK, burstRing: g >= FIRE && g < FIRE + 12 ? (g - FIRE) / 12 : undefined, bumpHighlight: tw(g, Math.round(RET), 4) * (1 - tw(g, Math.round(RET) + 16, 10))});
   const lensScr = worldToScreen(cam, LENS_W.x, LENS_W.y);
@@ -825,7 +919,7 @@ const RoomMirrorShot: React.FC<{g: number}> = ({g}) => {
     <AbsoluteFill style={{background: C.paper}}>
       <Camera cam={cam}>
         <Layer depth={1}>
-          <RoomSet tilt={RAISED_TILT} items={items} backdrop={backdrop}>
+          <RoomSet tilt={RAISED_TILT} items={items} backdrop={backdrop} door={false}>
             {g >= FIRE && rayOp > 0 && (
               <LightPath points={[S2D, SPEC, H2D, SPEC, S2D]} toPx={roomToPx} t={rayT} pulses={3} pulseGap={0.09} intensityFalloff={0.92} lane={12} layout={OLAYOUT} clearPx={0} hidden={HIDE_A} arrive="hide" opacity={rayOp} />
             )}
@@ -927,7 +1021,7 @@ const SectionLabels: React.FC<{g: number}> = ({g}) => (
     <SubLabel x={1780} y={890} anchor="end" opacity={tw(g, LAMP_LABEL, 6, E.linear) * (1 - tw(g, LABELS_OUT, 6, E.linear))}>
       tiny lamp (our analogy)
     </SubLabel>
-    <Chip x={1790} y={92} anchor="end" valign="middle" size={30} opacity={tw(g, IRIS_END, 6, E.linear) * (1 - tw(g, LABELS_OUT, 6, E.linear))}>
+    <Chip x={1790} y={92} anchor="end" valign="middle" size={CHIP_PX} opacity={tw(g, IRIS_END, 6, E.linear) * (1 - tw(g, LABELS_OUT, 6, E.linear))}>
       illustration
     </Chip>
   </>
@@ -993,7 +1087,7 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
   const cam = CAM_D;
   const gu: GuesserState = {pose: guesserBlend(g), squash: [1, 1], life: 0.5, handsUp: 0, rim: 0};
   const ch = checkerBlend(g);
-  const v = L_MAX / Math.max(1, ARRIVE - PULSE0);
+  const v = V_PULSE;
   const travelled = (g - PULSE0) * v;
   const arrivedFrac = BLEND.filter((b) => travelled >= b.L).length / BLEND.length;
   const flash = sp(g, ARRIVE, SNAP) * (1 - tw(g, ARRIVE + 30, 20));
@@ -1005,12 +1099,21 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
     const pp = p3 && !HIDE0(p3) ? P4(p3) : null;
     const trailD = g < PULSE0 ? '' : [legRuns(b, 0, 0, leg === 0 && on ? u : 1), on && leg === 0 ? '' : legRuns(b, 1, 0, on ? u : 1)].join(' ').trim();
     const spotHit = PULSE0 + b.L1 / v;
+    // the hidden stretch: a ghost ring from the marker to where the pulse comes out
+    const ghU = (g - PULSE0) / Math.max(1, EMERGE[k] - PULSE0);
+    const ghost = ghU >= 0 && ghU < 1 ? {x: lerp(ORIGIN_PX[k].x, EMERGE_PT[k].x, ghU), y: lerp(ORIGIN_PX[k].y, EMERGE_PT[k].y, ghU)} : null;
     const spot = g >= spotHit ? E.out(clamp01((g - spotHit + 1) / 5)) : 0;
     return (
       <g key={b.id}>
         {trailD && <path d={trailD} fill="none" stroke={b.color} strokeWidth={R4.trail} strokeLinecap="round" strokeLinejoin="round" opacity={0.9} />}
         {spot > 0 && <circle cx={f2(b.px[1].x)} cy={f2(b.px[1].y)} r={f2(R4.spot * (0.6 + 0.4 * spot))} fill={C.cream} stroke={C.ink} strokeWidth={4} opacity={f2(spot)} />}
-        {pp && <PulseDot x={pp.x} y={pp.y} r={R4.pulse} color={b.color} />}
+        {ghost && !pp && (
+          <g opacity={f2(Math.min(1, (g - PULSE0 + 1) / 3))}>
+            <circle cx={f2(ghost.x)} cy={f2(ghost.y)} r={R4.pulse} fill={C.white} fillOpacity={0.35} stroke={C.white} strokeWidth={10} strokeOpacity={0.75} />
+            <circle cx={f2(ghost.x)} cy={f2(ghost.y)} r={R4.pulse} fill={b.color} fillOpacity={0.4} stroke={b.color} strokeWidth={5} strokeDasharray="8 6" />
+          </g>
+        )}
+        {pp && <PulseDot x={pp.x} y={pp.y} r={f2(R4.pulse * (1 + 0.4 * Math.sin(Math.PI * clamp01((g - EMERGE[k]) / 7))))} color={b.color} />}
       </g>
     );
   });
@@ -1023,13 +1126,18 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
         const m = E.out(clamp01((g - MARKS0 - k * 2) / 6));
         if (m <= 0) return null;
         const o = ORIGIN_PX[k];
-        const ringU = clamp01((g - PULSE0) / 12);
+        // launch (V2-R1-06): a pop and a ring in the path's colour; the marker stays lit while its pulse is hidden
+        const launch = g - PULSE0;
+        const pop = launch >= 0 && launch <= 8 ? 1 + 0.28 * Math.sin((Math.PI * launch) / 8) : 1;
+        const lit = tw(g, PULSE0 - 1, 3, E.linear) * (1 - tw(g, EMERGE[k], 6, E.inOut));
+        const bu = launch / 16;
+        const r0 = R4.mark * 1.1;
         return (
           <g key={b.id} transform={`translate(${f2(o.x)} ${f2(o.y)})`}>
-            {ringU > 0 && ringU < 1 && <circle r={f2(R4.mark * (1 + 0.35 * E.out(ringU)) + 4)} fill="none" stroke={b.color} strokeWidth={f2(5 * (1 - ringU) + 1)} opacity={f2(1 - ringU)} />}
-            <g transform={`scale(${f2(m)})`} opacity={f2(m)}>
+            {bu > 0 && bu < 1 && <circle r={f2(r0 + (BURST_R[k] - r0) * E.out(bu))} fill="none" stroke={b.color} strokeWidth={f2(8 * (1 - bu) + 2)} opacity={f2(1 - bu * bu)} />}
+            <g transform={`scale(${f2(m * pop)})`} opacity={f2(m)}>
               <circle r={R4.mark} fill={C.cream} stroke={C.ink} strokeWidth={4} />
-              <circle r={R4.markDot} fill={b.color} />
+              <circle r={f2(lerp(R4.markDot, R4.mark - 4, lit))} fill={b.color} />
             </g>
           </g>
         );
@@ -1054,7 +1162,7 @@ const RoomBlendShot: React.FC<{g: number}> = ({g}) => {
       {!full && (
         <Camera cam={cam}>
           <Layer depth={1}>
-            <RoomSet tilt={T0} items={items}>
+            <RoomSet tilt={T0} items={items} door={false}>
               {overlay}
             </RoomSet>
           </Layer>
@@ -1102,7 +1210,12 @@ const IrisOut: React.FC<{g: number; to: {x: number; y: number}}> = ({g, to}) => 
 
 export const V3MirrorPaint: React.FC = () => {
   const g = useG();
-  if (g < FLAT_END) return <AbsoluteFill style={{background: ROOM_COLORS.relayWall}} />;
+  if (g < FLAT_END)
+    return (
+      <AbsoluteFill style={{background: PAINT}}>
+        <PaintGrain />
+      </AbsoluteFill>
+    );
   if (g < IRIS_END) return <RoomMirrorShot g={g} />;
   if (g < IRIS_OUT0) return <SectionShot g={g} />;
   return <RoomBlendShot g={g} />;

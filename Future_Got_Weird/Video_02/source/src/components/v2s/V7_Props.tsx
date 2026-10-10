@@ -123,19 +123,22 @@ export const FRAME_CARD = {
 
 /** One faint frame: a tiny plan (wall along the top, the partition, the sensor, the figure on the hidden side) and its
  *  "what moved" arrow, from where the figure was (dashed) to where it is now. Card-local px, centred. `arrow` 0..1
- *  draws the arrow. */
-const FrameCard: React.FC<{k: number; arrow: number}> = ({k, arrow}) => {
+ *  draws the arrow; `move` 0..1 slides the figure from where it was (0) to where it is now (1), so the card acts out
+ *  "what moved" as its arrow draws (v2 review r1, V2-R1-30). */
+const FrameCard: React.FC<{k: number; arrow: number; move?: number}> = ({k, arrow, move = 1}) => {
   const {cardW: w, cardH: h} = FAN;
   const fc = FRAME_CARD;
-  const fx = fc.figX(k);
-  const fy = fc.figY(k);
-  const px = fx - fc.step;
+  const px = fc.figX(k) - fc.step;
   const py = fc.figY(k - 1);
+  const m = clamp01(move);
+  const fx = px + (fc.figX(k) - px) * m;
+  const fy = py + (fc.figY(k) - py) * m;
   const a = clamp01(arrow);
-  // the arrow runs above the two positions, from the old one's left edge to past the new one
-  const ay = Math.min(fy, py) - fc.figR - 12;
+  // the arrow runs above the two positions, from the old one's left edge to past the new one (fixed: it does not ride
+  // on the sliding figure)
+  const ay = Math.min(fc.figY(k), py) - fc.figR - 12;
   const ax0 = px - 6;
-  const ax1 = fx + 10;
+  const ax1 = fc.figX(k) + 10;
   const tipX = ax0 + (ax1 - ax0) * a;
   return (
     <g>
@@ -160,11 +163,16 @@ const FrameCard: React.FC<{k: number; arrow: number}> = ({k, arrow}) => {
   );
 };
 
+/** Largest card nudge (card-local px along the card's own x axis) a caller may pass. */
+export const FAN_NUDGE_MAX = 12;
+
 /**
  * The fan, pivoting on (x, y) (the sensor box's centre, parent px) at `scale`. `open` per card 0..1 (staggered by the
- * caller), `arrow` per card 0..1, `opacity` per card. Cards are drawn back to front (the outer ones first).
+ * caller), `arrow` per card 0..1, `opacity` per card; optional `move` per card 0..1 (the figure slides from where it
+ * was to where it is) and `nudge` per card (card-local px along the card's x axis, |nudge| <= FAN_NUDGE_MAX: the card
+ * is pushed a little the way its figure moved). Cards are drawn back to front (the outer ones first).
  */
-export const FrameFan: React.FC<{x: number; y: number; scale?: number; open: number[]; arrow: number[]; opacity: number[]}> = ({x, y, scale = 1, open, arrow, opacity}) => {
+export const FrameFan: React.FC<{x: number; y: number; scale?: number; open: number[]; arrow: number[]; opacity: number[]; move?: number[]; nudge?: number[]}> = ({x, y, scale = 1, open, arrow, opacity, move, nudge}) => {
   const order = Array.from({length: FAN.n}, (_, k) => k).sort((a, b) => Math.abs(b - (FAN.n - 1) / 2) - Math.abs(a - (FAN.n - 1) / 2));
   return (
     <g transform={`translate(${f2(x)} ${f2(y)}) scale(${f2(scale * 1000) / 1000})`}>
@@ -172,9 +180,10 @@ export const FrameFan: React.FC<{x: number; y: number; scale?: number; open: num
         const op = clamp01(opacity[k] ?? 0);
         if (op <= 0.001) return null;
         const p = fanPose(k, clamp01(open[k] ?? 0));
+        const nx = Math.max(-FAN_NUDGE_MAX, Math.min(FAN_NUDGE_MAX, nudge?.[k] ?? 0));
         return (
-          <g key={k} transform={`translate(${f2(p.x)} ${f2(p.y)}) rotate(${f2(p.rot)}) scale(${f2(p.s * 1000) / 1000})`} opacity={f2(op)}>
-            <FrameCard k={k} arrow={arrow[k] ?? 0} />
+          <g key={k} transform={`translate(${f2(p.x)} ${f2(p.y)}) rotate(${f2(p.rot)}) scale(${f2(p.s * 1000) / 1000}) translate(${f2(nx)} 0)`} opacity={f2(op)}>
+            <FrameCard k={k} arrow={arrow[k] ?? 0} move={move?.[k] ?? 1} />
           </g>
         );
       })}

@@ -45,6 +45,9 @@ export type MuseumState = {
   sign: {x: number; y: number; rot: number} | null;
   /** fourth plinth plaque lines 0..1 */
   p4: {t1: number; t2: number};
+  /** all four plinth plaques (plate, screws, lines) 0..1; default 1. V7.5 fades them before the push into the tight
+   *  spotlight, so no plate passes through the caption band (v2 review r1, V2-R1-29). */
+  plates?: number;
   stool: {led: number; ping: number; hop: number; card: number};
   /** the kit sensor standing on the fourth plinth (null: not placed); world origin, teeter (deg about its foot) */
   sensor: {x: number; y: number; teeter: number; led: number; reveal: number} | null;
@@ -81,10 +84,10 @@ export const MuseumShot: React.FC<{cam: Cam; spot: Spot; state: MuseumState; und
           <svg width={1920} height={1080} style={sv}>
             <Hall7 pools={1 - spot.dim / SPOT_DIM} />
             <Ledge7 />
-            <Plinth7 x={P1} line1="2012" line2="MIT" />
-            <Plinth7 x={P2} line1="2018" line2="Stanford" />
-            <Plinth7 x={P3} line1="2021" line2="Wisconsin + Milan" />
-            <Plinth7 x={P4} line1="published 2026" line2="MIT + Dartmouth" size1={60} t1={state.p4.t1} t2={state.p4.t2} />
+            <Plinth7 x={P1} line1="2012" line2="MIT" plate={state.plates} />
+            <Plinth7 x={P2} line1="2018" line2="Stanford" plate={state.plates} />
+            <Plinth7 x={P3} line1="2021" line2="Wisconsin + Milan" plate={state.plates} />
+            <Plinth7 x={P4} line1="published 2026" line2="MIT + Dartmouth" size1={60} t1={state.p4.t1} t2={state.p4.t2} plate={state.plates} />
             <SpotPool spot={spot} />
             <Exhibit2012 x={P1} y={MU7.slabTop} beam={state.e12.beam} scatter={state.e12.scatter} view={state.e12.view} flash={state.e12.flash} sketch={state.e12.sketch} />
             <Exhibit2018 x={P2} y={MU7.slabTop} />

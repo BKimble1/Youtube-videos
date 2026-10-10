@@ -226,13 +226,15 @@ export const TinyChip: React.FC<{ff: number; fm: number; fsm: number}> = ({ff, f
   const strain = clamp01(fsm / 10);
   const lookL = clamp01(ff / 8);
   const alarm = clamp01(fm / 6);
-  const sweat = (delay: number) => {
-    const a = fsm - delay;
-    if (a < 0) return null;
-    return {y: 18 * E.inOut(clamp01(a / 22))};
-  };
-  const s1 = sweat(2);
-  const s2 = sweat(12);
+  // review r1 (V2-R1-36): the chip tile now holds longer, so the chip keeps sweating: a drop beads on its corner every
+  // 13 frames after "small", runs down its side and falls away (each drop alternates sides), and it trembles with the
+  // strain; no frame of the tile is still
+  const drops = Array.from({length: 6}, (_, k) => {
+    const a = fsm - (2 + 13 * k);
+    if (a < 0 || a > 28) return null;
+    return {k, y: 34 * E.in(clamp01(a / 22)), op: 1 - clamp01((a - 20) / 8)};
+  });
+  const tremble = fsm > 10 ? 2.4 * strain * Math.sin(fsm * 2.3) : 0;
   const squash = 1 - 0.05 * strain;
   return (
     <g>
@@ -259,7 +261,7 @@ export const TinyChip: React.FC<{ff: number; fm: number; fsm: number}> = ({ff, f
           </text>
         );
       })}
-      <g transform={`translate(${chip.x} ${chip.y + chip.h / 2}) scale(${1 + 0.04 * strain} ${squash}) translate(${-chip.x} ${-(chip.y + chip.h / 2)})`}>
+      <g transform={`translate(${f2(chip.x + tremble)} ${chip.y + chip.h / 2}) scale(${1 + 0.04 * strain} ${squash}) translate(${-chip.x} ${-(chip.y + chip.h / 2)})`}>
         {[0, 1, 2, 3].map((i) => {
           const y = chip.y - chip.h / 2 + 14 + i * 16;
           return (
@@ -283,8 +285,17 @@ export const TinyChip: React.FC<{ff: number; fm: number; fsm: number}> = ({ff, f
         ))}
         <path d={`M ${chip.x - 16} ${chip.y + 20} Q ${chip.x - 8} ${chip.y + 14 + 6 * strain} ${chip.x} ${chip.y + 20} Q ${chip.x + 8} ${chip.y + 26 - 6 * strain} ${chip.x + 16} ${chip.y + 20}`} fill="none" {...ink(3.5)} />
       </g>
-      {[s1, s2].map((s, i) =>
-        s ? <path key={i} d="M 0 -13 Q 9 0 0 8 Q -9 0 0 -13 Z" transform={`translate(${chip.x + chip.w / 2 + 6 - i * 16} ${chip.y - chip.h / 2 - 10 + s.y + i * 8}) scale(1.6)`} fill={C.tealLight} {...ink(2)} /> : null,
+      {drops.map((d) =>
+        d ? (
+          <path
+            key={d.k}
+            d="M 0 -13 Q 9 0 0 8 Q -9 0 0 -13 Z"
+            transform={`translate(${f2(chip.x + (d.k % 2 ? -1 : 1) * (chip.w / 2 + 6) + tremble)} ${f2(chip.y - chip.h / 2 - 10 + d.y)}) scale(1.6)`}
+            fill={C.tealLight}
+            opacity={f2(d.op)}
+            {...ink(2)}
+          />
+        ) : null,
       )}
     </g>
   );

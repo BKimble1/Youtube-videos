@@ -115,53 +115,72 @@ export const UnknownIcons: React.FC<{states: UnknownState[]}> = ({states}) => (
 
 /* ================================================================== V9.4 · the real U, as a framed thumbnail card */
 
-/** Card placement (screen px): top-right, inside the safe area (tape and shadow included). */
-export const UCARD = {x: 1172, y: 66, w: 640, h: 410};
+/**
+ * Card placement (screen px). v2 review r1 (V2-R1-08): the card no longer sits over our plan. It stands in the margin
+ * OUTSIDE the room, right of the plan's right wall (the scene asserts at load that its left edge, minus a gap, clears
+ * the wall's outer face and drop shadow in the V9.4 framing, and that card + shadow stay inside x 1824 / y 950), so it
+ * reads as a card beside our room, not a thing in it. Portrait, because that margin is under 290 px wide.
+ */
+export const UCARD = {x: 1544, y: 92, w: 270, h: 728};
+export const UCARD_SHADOW = {dx: 10, dy: 12};
 
 /**
- * A thumbnail of the real-data U board (V6): white evidence card (ink outline, hard shadow, tape) laid out as the V6
- * board is, in miniature, so it reads as that board coming back: header "Real data" + the 3×3 zone icon + "same 3×3
- * sensor"; the authors' 36 preset positions (6×6 raster) on the left with "36 preset positions" under them; the
- * finished U (UFront, k = 36) on the right; the source line at the bottom. A card over our plan, never drawn in our
- * room's coordinates.
+ * A thumbnail of the real-data U board (V6): white evidence card (ink outline, hard shadow, tape), so it reads as that
+ * board coming back. Top to bottom: the header as the V6 board's, "Real data" + the 3×3 zone icon, then "same 3×3
+ * sensor"; the finished U (UFront, k = 36, the hero); the authors' 36 preset positions (6×6 raster) with "36 preset
+ * positions" under them; the source line "authors' released data and code, run by us · object held still" (the V6
+ * board's source plus the condition the shot plan keeps beside the U). Never drawn in our room's coordinates.
  */
 export const UCard: React.FC<{t: number; dy?: number}> = ({t, dy = 0}) => {
   if (t <= 0.001) return null;
   const {x, y, w, h} = UCARD;
-  const cell = 6.5; // 40 × 6.5 = 260 px front view
+  const pad = 14;
+  const cell = 5.8; // 40 × 5.8 = 232 px front view
+  const uSize = 40 * cell;
+  const rasterW = 214;
   const tape = (left: number, rot: number) => (
-    <div style={{position: 'absolute', left, top: -12, width: 92, height: 28, background: 'rgba(255,233,168,0.92)', border: '2px solid rgba(22,42,50,0.25)', transform: `rotate(${rot}deg)`}} />
+    <div style={{position: 'absolute', left, top: -12, width: 74, height: 26, background: 'rgba(255,233,168,0.92)', border: '2px solid rgba(22,42,50,0.25)', transform: `rotate(${rot}deg)`}} />
   );
+  const text = (size: number, color: string): React.CSSProperties => ({fontFamily: F.body, fontWeight: 800, fontSize: size, lineHeight: 1.12, color});
   return (
     <div style={{position: 'absolute', left: x, top: y + dy, width: w, height: h, opacity: clamp01(t)}}>
-      <div style={{position: 'absolute', left: 12, top: 14, width: w, height: h, borderRadius: 12, background: C.shadow}} />
+      <div style={{position: 'absolute', left: UCARD_SHADOW.dx, top: UCARD_SHADOW.dy, width: w, height: h, borderRadius: 12, background: C.shadow}} />
       <div style={{position: 'absolute', left: 0, top: 0, width: w, height: h, borderRadius: 12, background: C.white, border: `${OUTLINE}px solid ${C.ink}`, boxSizing: 'border-box'}} />
-      {tape(-14, -9)}
-      {tape(w - 86, 8)}
-      {/* header, as the V6 board's: "Real data", the zone icon right after it, "same 3×3 sensor" */}
-      <svg width={w} height={80} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-        <text x={24} y={56} fontFamily={F.display} fontWeight={600} fontSize={44} fill={C.ink}>
+      {tape(-12, -9)}
+      {/* the right strip ends at x 1824 (rotated), inside the safe area */}
+      {tape(w - 70, 8)}
+      {/* header, as the V6 board's: "Real data" with the zone icon after it, then "same 3×3 sensor" */}
+      <svg width={w} height={110} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+        <text x={pad} y={58} fontFamily={F.display} fontWeight={600} fontSize={40} fill={C.ink}>
           Real data
         </text>
-        <ZoneBox asGroup x={272} y={40} size={50} listening={0.15} />
-        <text x={318} y={54} fontFamily={F.body} fontWeight={800} fontSize={32} fill={C.ink}>
+        <ZoneBox asGroup x={w - pad - 26} y={44} size={44} listening={0.15} />
+        <text x={pad} y={100} fontFamily={F.body} fontWeight={800} fontSize={30} fill={C.ink}>
           same 3×3 sensor
         </text>
       </svg>
-      {/* left: the 36 preset positions, all used */}
-      <div style={{position: 'absolute', left: 20, top: 112}}>
-        <RasterPanel width={262} pos={36} done={36} t={0} boxSize={36} />
-      </div>
-      <div style={{position: 'absolute', left: 24, top: 286, fontFamily: F.body, fontWeight: 800, fontSize: 30, lineHeight: 1.1, color: C.ink, whiteSpace: 'nowrap'}}>
-        36 preset positions
-      </div>
-      {/* right: the finished U (front view) */}
-      <div style={{position: 'absolute', left: w - 24 - 40 * cell, top: 86, width: 40 * cell, height: 40 * cell, border: `2px solid ${C.inkMuted}`, boxSizing: 'content-box'}}>
+      {/* the finished U (front view) */}
+      <div style={{position: 'absolute', left: (w - uSize) / 2 - 2, top: 120, width: uSize, height: uSize, border: `2px solid ${C.inkMuted}`, boxSizing: 'content-box'}}>
         <UFront cell={cell} k={36} />
       </div>
-      {/* the one-line source */}
-      <div style={{position: 'absolute', left: 24, top: h - 52, fontFamily: F.body, fontWeight: 800, fontSize: 30, color: C.inkSoft, whiteSpace: 'nowrap'}}>
-        authors' released data
+      {/* the 36 preset positions, all used */}
+      <div style={{position: 'absolute', left: (w - rasterW) / 2, top: 120 + uSize + 18}}>
+        <RasterPanel width={rasterW} pos={36} done={36} t={0} boxSize={30} />
+      </div>
+      <div style={{position: 'absolute', left: pad, width: w - 2 * pad, top: 120 + uSize + 18 + 124, textAlign: 'center', ...text(30, C.ink)}}>
+        36 preset
+        <br />
+        positions
+      </div>
+      {/* the source, with the condition kept beside the U (set line by line: the card is 270 px wide) */}
+      <div style={{position: 'absolute', left: 10, top: 120 + uSize + 18 + 124 + 84, whiteSpace: 'nowrap', ...text(30, C.inkSoft)}}>
+        authors' released
+        <br />
+        data and code,
+        <br />
+        run by us ·
+        <br />
+        object held still
       </div>
     </div>
   );

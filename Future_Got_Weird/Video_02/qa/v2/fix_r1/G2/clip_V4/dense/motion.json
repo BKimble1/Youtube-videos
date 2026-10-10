@@ -1,0 +1,86 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V4": {
+   "seconds": 25.3,
+   "mean_energy": 0.187,
+   "still_seconds": 13.2,
+   "still_share": 0.523,
+   "longest_still_s": 2.4
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V4",
+   "from": 1632,
+   "to": 1655,
+   "seconds": 0.8,
+   "t": "0:54.4",
+   "spoken": "wall. Our friend's echo bounced"
+  },
+  {
+   "scene": "V4",
+   "from": 1662,
+   "to": 1688,
+   "seconds": 0.9,
+   "t": "0:55.4",
+   "spoken": "echo bounced three times,"
+  },
+  {
+   "scene": "V4",
+   "from": 1733,
+   "to": 1776,
+   "seconds": 1.47,
+   "t": "0:57.8",
+   "spoken": "tiny. This is real data from the same team,"
+  },
+  {
+   "scene": "V4",
+   "from": 1783,
+   "to": 1809,
+   "seconds": 0.9,
+   "t": "0:59.4",
+   "spoken": "same team, with a different sensor"
+  },
+  {
+   "scene": "V4",
+   "from": 1816,
+   "to": 1876,
+   "seconds": 2.03,
+   "t": "1:00.5",
+   "spoken": "different sensor and hidden object: the wall's"
+  },
+  {
+   "scene": "V4",
+   "from": 1901,
+   "to": 1972,
+   "seconds": 2.4,
+   "t": "1:03.4",
+   "spoken": "big echo, then, a few nanoseconds later,"
+  },
+  {
+   "scene": "V4",
+   "from": 2040,
+   "to": 2092,
+   "seconds": 1.77,
+   "t": "1:08.0",
+   "spoken": "to see. In this capture, hundreds"
+  },
+  {
+   "scene": "V4",
+   "from": 2099,
+   "to": 2148,
+   "seconds": 1.67,
+   "t": "1:10.0",
+   "spoken": "hundreds of times weaker. That"
+  },
+  {
+   "scene": "V4",
+   "from": 2244,
+   "to": 2282,
+   "seconds": 1.3,
+   "t": "1:14.8",
+   "spoken": "farther the light travelled."
+  }
+ ]
+}

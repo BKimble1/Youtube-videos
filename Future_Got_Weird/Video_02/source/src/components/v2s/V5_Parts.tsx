@@ -12,6 +12,7 @@ import {CAST} from '../cast';
  *  - Chip40:   the guard-rail chip set at 40 px (the shot plan asks for "simplified picture · sends and listens at one
  *              spot" at 40; the kit Chip warns outside 30–34 px). Same look as the kit Chip: ink on cream, 3 px outline.
  *  - TapRing:  the small contact ring where a pointer tip touches.
+ *  - EchoStrip: V5.8's measured-versus-predicted echo ticks, large (two tick rows across the lower third, 48 px labels).
  *
  * All pure functions of their props.
  */
@@ -127,6 +128,68 @@ export const TapRing: React.FC<{x: number; y: number; t: number; r?: number; col
   return (
     <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', pointerEvents: 'none'}}>
       <circle cx={f2(x)} cy={f2(y)} r={f2(8 + r * (1 - Math.pow(1 - t, 2)))} fill="none" stroke={color} strokeWidth={f2(5 * (1 - 0.6 * t))} opacity={f2(1 - t)} />
+    </svg>
+  );
+};
+
+/* ------------------------------------------------------------------ measured versus predicted, large (V5.8) */
+
+/**
+ * V5.8's comparison at phone-readable size (review V2-R1-25): a wide card across the lower third with two tick rows on
+ * one time axis, the measured echo times (ink) over one candidate's predicted times (teal, drawn in one by one), 48 px
+ * row labels and a large check or cross. Screen px; `box` is the card (no part of it below y 950).
+ */
+export const EchoStrip: React.FC<{
+  box: {x: number; y: number; w: number; h: number};
+  measured: number[];
+  predicted: number[];
+  range: [number, number];
+  /** 0..1 how far the predicted ticks have drawn in */
+  reveal: number;
+  /** 1 match, -1 mismatch; vt 0..1 the mark's pop */
+  verdict: -1 | 1;
+  vt: number;
+  opacity: number;
+}> = ({box, measured, predicted, range, reveal, verdict, vt, opacity}) => {
+  if (opacity <= 0.001) return null;
+  const {x, y, w, h} = box;
+  const ax0 = x + 330;
+  const ax1 = x + w - 150;
+  const X = (ns: number) => ax0 + ((ns - range[0]) / (range[1] - range[0])) * (ax1 - ax0);
+  const row1 = y + Math.round(h * 0.33);
+  const row2 = y + Math.round(h * 0.73);
+  const half = 27;
+  const mark = {x: x + w - 74, y: (row1 + row2) / 2, r: 46};
+  const s = 0.6 + 0.4 * clamp01(vt);
+  const tick = (ns: number, yy: number, col: string, key: string, op = 1) => {
+    const xx = Math.max(ax0, Math.min(ax1, X(ns)));
+    return op > 0.001 ? <line key={key} x1={f2(xx)} y1={yy - half} x2={f2(xx)} y2={yy + half} stroke={col} strokeWidth={12} strokeLinecap="round" opacity={f2(op)} /> : null;
+  };
+  const label = (text: string, yy: number, col: string) => (
+    <text x={x + 34} y={yy} dominantBaseline="central" fontFamily={F.body} fontWeight={800} fontSize={48} fill={col}>
+      {text}
+    </text>
+  );
+  return (
+    <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', pointerEvents: 'none'}} opacity={f2(clamp01(opacity))}>
+      <rect x={x + 8} y={y + 10} width={w} height={h} rx={24} fill={C.shadow} />
+      <rect x={x} y={y} width={w} height={h} rx={24} fill={C.cream} stroke={C.ink} strokeWidth={OUTLINE} />
+      <line x1={ax0} y1={row1} x2={ax1} y2={row1} stroke={C.paperLine} strokeWidth={5} strokeLinecap="round" />
+      <line x1={ax0} y1={row2} x2={ax1} y2={row2} stroke={C.paperLine} strokeWidth={5} strokeLinecap="round" />
+      {label('measured', row1, C.ink)}
+      {label('predicted', row2, C.tealDeep)}
+      {measured.map((ns, i) => tick(ns, row1, C.ink, `m${i}`))}
+      {predicted.map((ns, i) => tick(ns, row2, C.tealDeep, `p${i}`, clamp01(reveal * predicted.length - i)))}
+      {vt > 0 && (
+        <g transform={`translate(${f2(mark.x)} ${f2(mark.y)}) scale(${f2(s)})`} opacity={f2(Math.min(1, vt * 1.6))}>
+          <circle r={mark.r} fill={verdict === 1 ? C.teal : C.coral} stroke={C.ink} strokeWidth={OUTLINE} />
+          {verdict === 1 ? (
+            <path d={`M ${-mark.r * 0.45} ${mark.r * 0.02} L ${-mark.r * 0.1} ${mark.r * 0.36} L ${mark.r * 0.48} ${-mark.r * 0.32}`} fill="none" stroke={C.white} strokeWidth={mark.r * 0.22} strokeLinecap="round" strokeLinejoin="round" />
+          ) : (
+            <path d={`M ${-mark.r * 0.36} ${-mark.r * 0.36} L ${mark.r * 0.36} ${mark.r * 0.36} M ${mark.r * 0.36} ${-mark.r * 0.36} L ${-mark.r * 0.36} ${mark.r * 0.36}`} fill="none" stroke={C.white} strokeWidth={mark.r * 0.22} strokeLinecap="round" />
+          )}
+        </g>
+      )}
     </svg>
   );
 };

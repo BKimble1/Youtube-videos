@@ -8,10 +8,12 @@ import {E, SNAP, drop, hop, impact, kf, ring, sp, tw} from '../lib/motion';
 import type {Cam} from '../lib/camera';
 import {CAM_PLAN_ACT} from '../lib/shots';
 import {LAYOUT, lerpP, possibleCloud, type P2} from '../lib/optics';
+import {WALL_T} from '../lib/room';
 import {EXPR, IDLE2, withPose, type Pose2} from '../components/v02/Cast2';
 import {FULL_GEO, bandsFor, lerpGeo, planToScreen, type PanelGeo} from '../components/v02/S6_PlanView';
 import {LongExposurePhoto} from '../components/v02/S6_Photo';
 import {Chip, SubLabel, TeachLabel} from '../components/v2k/Labels';
+import {ZoneBox} from '../components/v02/S3_ZoneBox';
 import {TRACK_GEOM} from '../components/v2k/RealTrackBoard';
 import {
   AIM_A,
@@ -47,7 +49,7 @@ import {
   spotsTurned,
   type PlanState,
 } from '../components/v2s/V9_Plan';
-import {MiniTimeline, UCard, UnknownIcons, type UnknownState} from '../components/v2s/V9_Icons';
+import {MINI, MiniTimeline, UCARD, UCARD_SHADOW, UCard, UnknownIcons, type UnknownState} from '../components/v2s/V9_Icons';
 import {V9Inset} from '../components/v2s/V9_Inset';
 
 /**
@@ -59,7 +61,8 @@ import {V9Inset} from '../components/v2s/V9_Inset';
  *            wall echo, his saffron echo). "He steps": the token steps H_A → H_B; on "shifts" his tick slides later,
  *            a dashed ghost where it was; "he moves → echo shifts" (48). Then the sensor head jiggles on its stand and
  *            settles turned 5°: its four spots slide to new wall places (dashed ghosts at the old ones); "sensor moves →
- *            spots move" (48).
+ *            spots move" (48). Each change is framed up for its label (r1 V2-R1-34): the mini timeline card comes
+ *            forward 1.5× before the tick slides, and the camera pushes in 2.5× on the wall spots after the jiggle.
  *  V9.2 n20  "Just add them up": frame 1's bands (round the old spots, through H_A, ghost token) and frame 2's (round
  *            the new spots, through H_B) stack; on "blur" they become one coral streak covering both (plain stacking of
  *            the 8 bands, ≈ 0.86 m long, measured at load); "just adding → smear" (48) · "illustrative" (30). On "long
@@ -69,15 +72,16 @@ import {V9Inset} from '../components/v2s/V9_Inset';
  *  V9.4 n22  Cut: one full-frame plan, framed on CAM_F (V9.5's framing, so the cut on "person" keeps the room in place).
  *            A still object (a box) behind the partition, the long patch from frame A's
  *            bunched spots. The sensor rides a rail from frame A to frame B1 (no hand; a dashed ghost stays at A);
- *            "object still", "sensor on a rail, at known positions" (48). B1's spots appear and the patch shrinks
- *            about 30% (measured at load; a dashed outline of the old patch stays). On "the U": a framed thumbnail
- *            card of the real U board, header "Real data · same 3×3 sensor", top-right, 1.5 s.
- *  V9.5 n23  Cut on "person" (same framing), sensor on its stand. Frame 1 fires; its region (dashed) shows round him
- *            and the guesses (teal dots) are seeded inside it; he
- *            walks H_A → H_B → H_C → H_D; each frame the guesses drift, the misses fade, the survivors are copied, and
- *            the cloud follows him. "sensor still · person moves" (48); chip "handheld: shown only for locating the
- *            sensor itself (reported)" (30). Then two panels, one at a time: left alone 1 s "just adding → smear" (the
- *            four frames stacked), then right "tracking what moved → keeps up" (the guesses round his new position).
+ *            "object still", "sensor on a rail, at known positions" (48). B1's spots appear on the wall line and the
+ *            patch shrinks about 30% (measured at load; a dashed outline of the old patch stays). On "That's (how the
+ *            U was made)": a framed portrait thumbnail card of the real U board, header "Real data · same 3×3 sensor",
+ *            in the margin right of the room (off our plan), about 1.3 s; the rail sensor turns into the 3×3 zone box.
+ *  V9.5 n23  Cut on "To (follow a person)" (same framing), sensor on its stand. On "person" frame 1 fires; its region
+ *            (dashed) shows round him and the guesses (teal dots) are seeded inside it; he walks H_A → H_B → H_C → H_D;
+ *            each frame the guesses drift, the misses fade, the survivors are copied, and the cloud follows him.
+ *            "sensor still · person moves" (48); chip "handheld use: shown only for finding the sensor's own position
+ *            (reported)" (40). Then two panels, one at a time: left alone 1 s "just adding → smear" (the four frames
+ *            stacked), then right "tracking what moved → keeps up" (the guesses round his new position).
  *            Inset: he grins at the smear, deflates on "keeps up". The right panel grows to full frame, landing on
  *            CAM_F, where the sensor marker, wall line and partition sit where the kit's RealTrackBoard puts them in
  *            V10.1 (asserted at load, ±10 px): the match cut to the real data.
@@ -127,9 +131,11 @@ const K = {
   spreading: at('n22', 'spreading'),
   listening22: at('n22', 'listening'),
   the22: at('n22', 'the', 3),
+  thats: at('n22', "That's"),
   U: at('n22', 'U'),
   n22end: segEnd('n22'),
   // n23
+  to23: at('n23', 'To'),
   person: at('n23', 'person'),
   hold23: at('n23', 'hold'),
   still23: at('n23', 'still'),
@@ -143,9 +149,12 @@ const K = {
 /* ---------------------------------------------------------------- shot boundaries */
 const CUT_ICONS = K.so - 2; // V9.2 → V9.3
 const CUT_RAIL = K.to22 - 2; // V9.3 → V9.4
-/** the U card: in on "the U", 1.5 s, and V9.5 cuts in as it ends (on "person") */
-const CARD_IN = K.the22;
-const CUT_WALK = Math.max(K.n22end + 6, Math.min(CARD_IN + 45, K.person));
+/** the U card: in on "That's (how the U was made)", so it gets about 1.3 s before V9.5 cuts in on n23's first word
+ *  ("To follow a person"; v2 review r1 V2-R1-32: the cut used to lag that word by about half a second). On "the" it
+ *  would get only 0.9 s. */
+const CARD_IN = K.thats;
+const CUT_WALK = K.to23 - 1;
+if (!(CUT_WALK - CARD_IN >= 36)) throw new Error(`V9.4: the U card gets only ${CUT_WALK - CARD_IN} frames before the cut`);
 /** V9.5's comparison: left panel alone for 1 s, then the right one, then the right grows to full frame */
 const PANELS = K.match + 6;
 const RIGHT_IN = Math.min(PANELS + 30, K.keeps - 4);
@@ -164,9 +173,27 @@ const FRAME2 = K.echo - 4; // frame 2 fires as he lands
 const SLIDE_TICK = K.shifts - 4;
 const ECHO_OUT = K.sensor19 - 6; // the echo demo fades as the sensor demo starts
 const JIG0 = K.jiggles;
-const SPOTS_LBL = K.spots19;
 const FRAME3 = K.land - 2; // the spots fire where they landed
+/**
+ * v2 review r1 (V2-R1-34): both changes were a few pixels at phone width, so each gets framed up for its label, one at
+ * a time, after the change itself has played in the full view (the 11 cm step and the 5° jiggle stay true to scale).
+ *  - Echo: once he has stepped, the mini timeline card comes forward (scales 1.5× about its lower-left corner, so it
+ *    stays above the caption band and clear of his token) before his tick slides; the plan does not move.
+ *  - Spots: once the jiggle has settled, the camera pushes in 2.5× on the wall spots (their dashed ghosts, the new
+ *    places and the arrows between them) for "its listening spots land somewhere new", then pulls back to the
+ *    hand-off framing before "Just add them up".
+ */
+const TL_K = 1.5;
+const TL_GROW0 = STEP0 + STEP_DUR + 6;
+const TL_GROW_DUR = Math.min(14, SLIDE_TICK - 4 - TL_GROW0);
+const PUSH_K = 2.5;
+const PUSH0 = JIG0 + 22; // the wobble has decayed below 0.5°
+const PUSH_DUR = 18;
+const PULL0 = K.just - 16;
+const PULL_DUR = 14;
+const SPOTS_LBL = PUSH0 + PUSH_DUR + 2;
 if (!(STEP0 + STEP_DUR + 4 <= FRAME2 + 4 && SLIDE_TICK + 12 < ECHO_OUT && ECHO_OUT + 8 <= JIG0)) throw new Error('V9.1: beats overlap');
+if (!(TL_GROW_DUR >= 10 && PUSH0 + PUSH_DUR + 24 <= PULL0 - 6 && PULL0 + PULL_DUR <= K.just)) throw new Error(`V9.1: framing moves do not fit (${[TL_GROW0, TL_GROW_DUR, PUSH0, PULL0, K.just].join(', ')})`);
 
 /* ---------------------------------------------------------------- V9.2 timing */
 const F1_IN = K.just;
@@ -250,18 +277,82 @@ const GEO_R = panelGeo(984);
 
 /* ================================================================== helpers */
 
+/** The camera that shows `cam`'s picture zoomed k× about the screen point F (a push in on F). */
+const pushCam = (cam: Cam, k: number, F: {x: number; y: number}): Cam => ({
+  cx: cam.cx + ((960 - F.x) * (1 - k)) / (k * cam.zoom),
+  cy: cam.cy + ((540 - F.y) * (1 - k)) / (k * cam.zoom),
+  zoom: cam.zoom * k,
+});
+const pushPt = (p: {x: number; y: number}, k: number, F: {x: number; y: number}) => ({x: F.x + k * (p.x - F.x), y: F.y + k * (p.y - F.y)});
+
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 /** a 0 → 1 → 0 flash for a sensor firing at f0 */
 const flash = (g: number, f0: number, dur = 10) => (g < f0 || g > f0 + dur ? 0 : Math.sin(((g - f0) / dur) * Math.PI));
 const tokenScreenR = (cam: Cam, s = 1) => (TOKEN_PX / 2) * cam.zoom * s;
 
+/* ---------------------------------------------------------------- V9.1 framings (v2 review r1, V2-R1-34) */
+
+/** the face inset of V9.1–V9.2 */
+const INS1 = {cx: 1650, cy: 310, r: 140};
+/** The mini timeline card comes forward TL_K× about its lower-left corner (screen), staying above the caption band,
+ *  inside x 1824 and clear of his token at H_B; its label sits above the grown card. */
+const TL_ANCHOR = {x: MINI.x, y: 933};
+const TL_BIG = {
+  x0: TL_ANCHOR.x + TL_K * (MINI.x - TL_ANCHOR.x),
+  y0: TL_ANCHOR.y + TL_K * (MINI.y - TL_ANCHOR.y),
+  x1: TL_ANCHOR.x + TL_K * (MINI.x + MINI.w - TL_ANCHOR.x),
+  y1: TL_ANCHOR.y + TL_K * (MINI.y + MINI.h - TL_ANCHOR.y),
+};
+const ECHO_LBL = {x: 110, y: Math.round(TL_BIG.y0 - 24)};
+{
+  const tok = planToScreen(FULL_GEO, CAM_PLAN_ACT, HB);
+  const R = tokenScreenR(CAM_PLAN_ACT);
+  const shadowBottom = TL_ANCHOR.y + TL_K * (MINI.y + MINI.h + 12 - TL_ANCHOR.y);
+  if (shadowBottom > 950 || TL_BIG.x1 + 10 * TL_K > 1824) throw new Error(`V9.1: the grown mini timeline leaves the safe area (${TL_BIG.x1.toFixed(0)}, ${shadowBottom.toFixed(0)})`);
+  if (!(TL_BIG.y0 >= tok.y + R + 4)) throw new Error(`V9.1: the grown mini timeline (top ${TL_BIG.y0.toFixed(0)}) runs into his token at H_B (bottom ${(tok.y + R).toFixed(0)})`);
+}
+/** The push on the wall spots: CAM_PLAN_ACT zoomed PUSH_K× about PUSH_F, which puts the centre of the spots (the
+ *  jiggled ones to frame A's last) at SPOTS_AT. At y 344 the partition's top end and his token are pushed off the
+ *  bottom of the frame instead of sitting in the caption band for 2 s (G5 verify; asserted below). */
+const SPOTS_AT = {x: 900, y: 344};
+const SPOTS_SRC = (() => {
+  const a = planToScreen(FULL_GEO, CAM_PLAN_ACT, WJ[0]);
+  const b = planToScreen(FULL_GEO, CAM_PLAN_ACT, WA[3]);
+  return {x: (a.x + b.x) / 2, y: (a.y + b.y) / 2};
+})();
+const PUSH_F = {x: (SPOTS_AT.x - PUSH_K * SPOTS_SRC.x) / (1 - PUSH_K), y: (SPOTS_AT.y - PUSH_K * SPOTS_SRC.y) / (1 - PUSH_K)};
+const CAM_SPOTS = pushCam(CAM_PLAN_ACT, PUSH_K, PUSH_F);
+/** "sensor moves → spots move" in the pushed framing: bottom-right, right of the field-of-view wedge, under the inset */
+const SPOTS_LBL_AT = {x: 1790, y: 640};
+{
+  // every spot (old and new) inside the safe area and left of the face inset, in the pushed framing; the camera
+  // formula agrees with the screen-space push
+  for (const w of [...WA, ...WJ]) {
+    const q = planToScreen(FULL_GEO, CAM_SPOTS, w);
+    if (q.x < 140 || q.x > INS1.cx - INS1.r - 60 || q.y < 120 || q.y > 950) throw new Error(`V9.1: spot ${w.id} lands at (${q.x.toFixed(0)}, ${q.y.toFixed(0)}) in the push`);
+    const r = pushPt(planToScreen(FULL_GEO, CAM_PLAN_ACT, w), PUSH_K, PUSH_F);
+    if (Math.hypot(r.x - q.x, r.y - q.y) > 0.5) throw new Error('V9.1: pushCam disagrees with the screen-space push');
+  }
+  // nothing of the room's floor plan below the spots shows in the caption band: the partition's top end (outline
+  // included) and his token at H_B (drawn half-extent with shadow ≈ 0.51 TOKEN_PX, measured) are below the frame
+  const partTop = planToScreen(FULL_GEO, CAM_SPOTS, P(LAYOUT.occluder.x, LAYOUT.occluder.z0)).y - 6 * CAM_SPOTS.zoom;
+  if (partTop < 1080) throw new Error(`V9.1: the partition's top end shows at y ${partTop.toFixed(0)} in the push`);
+  const tokB = planToScreen(FULL_GEO, CAM_SPOTS, HB);
+  const tokR = 0.53 * TOKEN_PX * CAM_SPOTS.zoom;
+  if (tokB.y - tokR < 1080 && tokB.x - tokR < 1920) throw new Error(`V9.1: his token shows in the push (${tokB.x.toFixed(0)}, ${tokB.y.toFixed(0)})`);
+}
+
 /** The illustration chip, top-left (the V8 hand-off frame has it in the same place); a paper backing hides the plan's
- *  wall ruler tick under it (v1 D27). */
-const IllustrationChip: React.FC<{t?: number}> = ({t = 1}) =>
+ *  wall ruler tick under it (v1 D27). 40 px (v2 review r1, V2-R1-14: 30 px chips were about 6 px at phone width), with
+ *  a slimmer vertical padding so the chip box ends at y 110 and its backing at y 116, above the top wall's outer face in
+ *  the hand-off framing (y ≈ 118 at CAM_PLAN_ACT); the backing fades while the camera is pushed in on the wall (V9.1).
+ *  Box, padding and backing are V8's HANDOFF_CHIP (V8_Plan, G4 fix round), so nothing changes at the V8 → V9 cut. */
+const ILLU_CHIP = {x: 96, y: 54, size: 40, padding: '5px 28px', backing: {left: 90, top: 38, width: 290, height: 78}};
+const IllustrationChip: React.FC<{t?: number; backing?: number}> = ({t = 1, backing = 1}) =>
   t <= 0.001 ? null : (
     <>
-      <div style={{position: 'absolute', left: 90, top: 38, width: 236, height: 76, background: C.paper, opacity: t}} />
-      <Chip x={96} y={54} size={30} opacity={t}>
+      {backing > 0.001 && <div style={{position: 'absolute', ...ILLU_CHIP.backing, background: C.paper, opacity: t * backing}} />}
+      <Chip x={ILLU_CHIP.x} y={ILLU_CHIP.y} size={ILLU_CHIP.size} opacity={t} style={{padding: ILLU_CHIP.padding}}>
         illustration
       </Chip>
     </>
@@ -335,28 +426,35 @@ const stateMotion = (g: number): PlanState => {
 
 const ShotMotion: React.FC<{g: number}> = ({g}) => {
   const st = stateMotion(g);
-  // inset (V9.1 → V9.2)
-  const INS = {cx: 1650, cy: 310, r: 140};
+  // the push in on the wall spots (zoom eased in log scale, so it reads as an even push), and back out
+  const push = tw(g, PUSH0, PUSH_DUR, E.inOut) * (1 - tw(g, PULL0, PULL_DUR, E.inOut));
+  const cam = push > 0.0005 ? pushCam(CAM_PLAN_ACT, Math.pow(PUSH_K, push), PUSH_F) : CAM_PLAN_ACT;
+  // inset (V9.1 → V9.2); its tail fades while the push takes his token out of frame
+  const INS = INS1;
   const open = sp(g, INSET1, SNAP);
   const f = face1(g);
-  const tok = planToScreen(FULL_GEO, CAM_PLAN_ACT, st.guesser ?? HA);
-  // mini timeline
+  const tok = planToScreen(FULL_GEO, cam, st.guesser ?? HA);
+  const tailT = 1 - Math.min(1, push * 4);
+  // mini timeline: comes forward once he has stepped, before his tick slides
   const tlT = tw(g, TL_IN, 8) * (1 - tw(g, ECHO_OUT, 8));
+  const tlS = 1 + (TL_K - 1) * tw(g, TL_GROW0, TL_GROW_DUR, E.inOut);
   const echoLbl = tw(g, K.shifts, 6, E.linear) * (1 - tw(g, ECHO_OUT, 8));
-  const spotsLbl = tw(g, SPOTS_LBL, 6, E.linear) * (1 - tw(g, F1_IN - 4, 8));
+  const spotsLbl = tw(g, SPOTS_LBL, 6, E.linear) * (1 - tw(g, PULL0 - 6, 6, E.linear));
   const smearLbl = tw(g, K.smear, 6, E.linear);
   // the photo gag
   const photoIn = sp(g, PHOTO0, SNAP);
   const photoOut = tw(g, PHOTO_OUT, 8, E.in);
   return (
     <AbsoluteFill style={{background: C.paper}}>
-      <PlanStage geo={FULL_GEO} cam={CAM_PLAN_ACT} state={st} />
-      <IllustrationChip />
-      <MiniTimeline t={tlT} wall={tw(g, TL_IN + 8, 8)} his={tw(g, TL_IN + 14, 6)} tick={tw(g, SLIDE_TICK, 12, E.inOut)} ghost={tw(g, SLIDE_TICK + 2, 6)} />
-      <SubLabel x={110} y={766} opacity={echoLbl}>
+      <PlanStage geo={FULL_GEO} cam={cam} state={st} />
+      <IllustrationChip backing={1 - push} />
+      <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, transform: `scale(${tlS.toFixed(4)})`, transformOrigin: `${TL_ANCHOR.x}px ${TL_ANCHOR.y}px`}}>
+        <MiniTimeline t={tlT} wall={tw(g, TL_IN + 8, 8)} his={tw(g, TL_IN + 14, 6)} tick={tw(g, SLIDE_TICK, 12, E.inOut)} ghost={tw(g, SLIDE_TICK + 2, 6)} />
+      </div>
+      <SubLabel x={ECHO_LBL.x} y={ECHO_LBL.y} opacity={echoLbl}>
         he moves → echo shifts
       </SubLabel>
-      <SubLabel x={110} y={790} opacity={spotsLbl}>
+      <SubLabel x={SPOTS_LBL_AT.x} y={SPOTS_LBL_AT.y} anchor="end" opacity={spotsLbl}>
         sensor moves → spots move
       </SubLabel>
       <SubLabel x={980} y={772} opacity={smearLbl}>
@@ -365,7 +463,7 @@ const ShotMotion: React.FC<{g: number}> = ({g}) => {
       <Chip x={980} y={798} size={30} opacity={tw(g, K.smear + 4, 6, E.linear)}>
         illustrative
       </Chip>
-      <V9Inset cx={INS.cx} cy={INS.cy} r={INS.r} open={open} frame={g} pose={f.pose} lean={f.lean} tail={{x: tok.x, y: tok.y, r: tokenScreenR(CAM_PLAN_ACT)}} />
+      <V9Inset cx={INS.cx} cy={INS.cy} r={INS.r} open={open} frame={g} pose={f.pose} lean={f.lean} tail={tailT > 0.001 ? {x: tok.x, y: tok.y, r: tokenScreenR(cam)} : undefined} tailOpacity={tailT} />
       {photoIn > 0 && photoOut < 1 && (
         <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, transform: `translateY(${photoOut * 120}px)`, opacity: 1 - photoOut}}>
           <LongExposurePhoto x={420} y={640} rot={-4} t={photoIn} frame={g} />
@@ -412,7 +510,37 @@ const ShotIcons: React.FC<{g: number}> = ({g}) => {
 
 /* ================================================================== V9.4 · build a shape: object still, sensor on a rail */
 
-const B_ROW_Z = 0.1; // B1's diamonds sit a row below the wall line: A and B1 share spots at x ≈ 1.55–1.58 and 1.76 m
+/**
+ * v2 review r1 (V2-R1-07): B1's spots sit ON the wall's inner face, at the same y as frame A's, and the two sets differ
+ * by colour only (A pale saffron, B1 teal). They share wall places: B1.W4 lands on A.W2 (both x ≈ 1.76 m) and B1.W3 is
+ * 3.7 cm from A.W1, so the markers of each such pair are drawn nudged apart along the wall, symmetrically, to SPOT_SEP
+ * (43 px in this framing, so the two diamonds of a pair stand apart with paper between them, not overlapping or
+ * touching: G5 verify). The
+ * nudge is a drawing offset of at most 5 cm on 18 cm zones (asserted); the bands stay centred on the true layout
+ * spots. A's markers are nudged from frame A on, so nothing moves when B1's land.
+ */
+const SPOT_SEP = 0.095;
+const [MARK_A, MARK_B] = (() => {
+  const a = WA.map((p) => p.x);
+  const b = WB.map((p) => p.x);
+  b.forEach((bx, i) =>
+    a.forEach((ax, j) => {
+      if (Math.abs(bx - ax) >= SPOT_SEP) return;
+      const mid = (bx + ax) / 2;
+      const side = Math.sign(ax - bx) || 1;
+      b[i] = mid - (side * SPOT_SEP) / 2;
+      a[j] = mid + (side * SPOT_SEP) / 2;
+    }),
+  );
+  const xs = [...a, ...b].sort((u, v) => u - v);
+  xs.slice(1).forEach((x, i) => {
+    if (x - xs[i] < SPOT_SEP - 1e-6) throw new Error(`V9.4: wall spot markers ${xs[i].toFixed(3)} and ${x.toFixed(3)} m overlap`);
+  });
+  [...a.map((x, i) => x - WA[i].x), ...b.map((x, i) => x - WB[i].x)].forEach((d) => {
+    if (Math.abs(d) > 0.05) throw new Error(`V9.4: a wall spot marker is nudged ${(d * 100).toFixed(1)} cm (max 5)`);
+  });
+  return [a.map((x, i) => P(x, 0, WA[i].id)), b.map((x, i) => P(x, 0, WB[i].id))];
+})();
 
 const stateRail = (g: number): PlanState => {
   const slide = tw(g, SLIDE0, SLIDE_DUR, E.inOut);
@@ -433,10 +561,12 @@ const stateRail = (g: number): PlanState => {
     sensorGhost: {at: SA, aim: AIM_A, t: 0.8 * tw(g, SLIDE0 + 6, 8)},
     spotSize: 10,
     spots: [
-      ...WA.map((p) => ({p, t: 1, active: Math.max(0.35, flash(g, FRAME_A + 2, 12))})),
-      ...WB.map((p, i) => ({p: P(p.x, B_ROW_Z), t: tw(g, SPOTS_B + 3 * i, 8), active: 1, tone: 'teal' as const})),
+      ...MARK_A.map((p) => ({p, t: 1, active: Math.max(0.35, flash(g, FRAME_A + 2, 12))})),
+      ...MARK_B.map((p, i) => ({p, t: tw(g, SPOTS_B + 3 * i, 8), active: 1, tone: 'teal' as const})),
     ],
     box: 1,
+    // while the U card shows, the 3×3 zone box stands in for the rail sensor (drawn by ShotRail)
+    sensorOpacity: 1 - tw(g, CARD_IN, 5, E.linear),
     bands: [
       {specs: bandsFor(WA, HA, HW1), opacity: 0.7 * aIn, fill: 0.2, around: HA, half: 0.5},
       {specs: bandsB, opacity: tw(g, SPOTS_B + 6, 12), fill: 0.2, tone: 'teal', around: HA, half: 0.5},
@@ -452,11 +582,31 @@ const BOX_PX = planToScreen(FULL_GEO, CAM_F, HA);
 /** above the rail, under the wall spots, and above the partition's top end (y 496), which the second line would
  *  otherwise crowd: the room left of the partition is only 470 px wide in this framing */
 const RAIL_LBL = {x: 110, y0: 402, dy: 58};
+/**
+ * v2 review r1 (V2-R1-08): the U card stands in the margin outside the room (right of the plan's right wall), and while
+ * it shows, the rail's sensor token becomes the 3×3 zone box of the real boards (the U's sensor), so the real U never
+ * sits beside the drawing of the off-the-shelf kit. Checked at load: the card clears the right wall's outer face and
+ * its drop shadow, and card + shadow stay inside the safe area.
+ */
+const RAIL_ZONEBOX = 92;
+{
+  const wallOuter = planToScreen(FULL_GEO, CAM_F, P(LAYOUT.room.x1 + WALL_T, 0)).x;
+  const wallShadow = 10 * CAM_F.zoom; // the room set's drop shadow, 10 world px right of the wall
+  if (UCARD.x < wallOuter + wallShadow + 6) throw new Error(`V9.4: the U card (x ${UCARD.x}) is not clear of the room's right wall (${(wallOuter + wallShadow).toFixed(0)})`);
+  if (UCARD.x + UCARD.w + UCARD_SHADOW.dx > 1824 || UCARD.y < 54 || UCARD.y + UCARD.h + UCARD_SHADOW.dy > 950) throw new Error('V9.4: the U card leaves the safe area');
+}
 const ShotRail: React.FC<{g: number}> = ({g}) => {
   const railLbl = tw(g, K.known, 6, E.linear);
+  const swap = tw(g, CARD_IN, 5, E.linear);
+  const sens = planToScreen(FULL_GEO, CAM_F, lerpP(SA, SB, tw(g, SLIDE0, SLIDE_DUR, E.inOut)));
   return (
     <AbsoluteFill style={{background: C.paper}}>
       <PlanStage geo={FULL_GEO} cam={CAM_F} state={stateRail(g)} />
+      {swap > 0.001 && (
+        <svg width={1920} height={1080} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+          <ZoneBox asGroup x={sens.x} y={sens.y - 4} size={RAIL_ZONEBOX} listening={0.15} opacity={swap} />
+        </svg>
+      )}
       <IllustrationChip />
       <SubLabel x={BOX_PX.x + 84} y={BOX_PX.y + 18} opacity={tw(g, K.object22, 6, E.linear)}>
         object still
@@ -534,16 +684,19 @@ const stateKeepsUp = (): PlanState => ({
   dots: PF_FINAL.map((p) => ({p, t: 1})),
 });
 
+/** baseline of "sensor still · person moves" (raised from 812 so the 40 px chip under it clears the caption band) */
+const WALK_LBL_Y = 790;
 const ShotWalk: React.FC<{g: number}> = ({g}) => (
   <AbsoluteFill style={{background: C.paper}}>
     <PlanStage geo={FULL_GEO} cam={CAM_F} state={stateWalk(g)} />
     <IllustrationChip />
-    <SubLabel x={640} y={812} opacity={tw(g, LBL5, 6, E.linear)}>
+    <SubLabel x={640} y={WALK_LBL_Y} opacity={tw(g, LBL5, 6, E.linear)}>
       sensor still · person moves
     </SubLabel>
-    {/* two lines, under the label and inside the room (one line would run across the room's right wall) */}
-    <Chip x={640} y={836} valign="top" size={30} maxWidth={600} opacity={tw(g, LBL5 + 10, 6, E.linear)}>
-      handheld: shown only for locating the sensor itself (reported)
+    {/* v2 review r1 (V2-R1-33): plain wording at 40 px (it backs claim P05: handheld use was shown only for locating
+        the sensor, with a reflective patch); two lines under the label, inside the room and above the caption band */}
+    <Chip x={640} y={WALK_LBL_Y + 14} valign="top" size={40} maxWidth={820} opacity={tw(g, LBL5 + 10, 6, E.linear)}>
+      handheld use: shown only for finding the sensor's own position (reported)
     </Chip>
   </AbsoluteFill>
 );

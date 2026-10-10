@@ -1,0 +1,62 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V9": {
+   "seconds": 37.6,
+   "mean_energy": 0.664,
+   "still_seconds": 6.6,
+   "still_share": 0.174,
+   "longest_still_s": 1.43
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V9",
+   "from": 6245,
+   "to": 6274,
+   "seconds": 1.0,
+   "t": "3:28.2",
+   "spoken": "shifts in time. The sensor"
+  },
+  {
+   "scene": "V9",
+   "from": 6730,
+   "to": 6761,
+   "seconds": 1.07,
+   "t": "3:44.3",
+   "spoken": "object still and step the sensor"
+  },
+  {
+   "scene": "V9",
+   "from": 6796,
+   "to": 6823,
+   "seconds": 0.93,
+   "t": "3:46.5",
+   "spoken": "known positions, spreading"
+  },
+  {
+   "scene": "V9",
+   "from": 6834,
+   "to": 6876,
+   "seconds": 1.43,
+   "t": "3:47.8",
+   "spoken": "spreading out its listening spots. That's how"
+  },
+  {
+   "scene": "V9",
+   "from": 6882,
+   "to": 6914,
+   "seconds": 1.1,
+   "t": "3:49.4",
+   "spoken": "That's how the U was made. To"
+  },
+  {
+   "scene": "V9",
+   "from": 6946,
+   "to": 6976,
+   "seconds": 1.03,
+   "t": "3:51.5",
+   "spoken": "person, hold the sensor still,"
+  }
+ ]
+}

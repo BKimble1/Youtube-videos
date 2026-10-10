@@ -1,0 +1,70 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V7": {
+   "seconds": 35.7,
+   "mean_energy": 2.512,
+   "still_seconds": 8.2,
+   "still_share": 0.231,
+   "longest_still_s": 1.73
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V7",
+   "from": 4610,
+   "to": 4634,
+   "seconds": 0.83,
+   "t": "2:33.7",
+   "spoken": "2021, others"
+  },
+  {
+   "scene": "V7",
+   "from": 4819,
+   "to": 4846,
+   "seconds": 0.93,
+   "t": "2:40.6",
+   "spoken": "hidden objects with a cheap sensor."
+  },
+  {
+   "scene": "V7",
+   "from": 4981,
+   "to": 5009,
+   "seconds": 0.97,
+   "t": "2:46.0",
+   "spoken": "from MIT and Dartmouth tried"
+  },
+  {
+   "scene": "V7",
+   "from": 5128,
+   "to": 5172,
+   "seconds": 1.5,
+   "t": "2:50.9",
+   "spoken": "LiDAR, found in phones and gadgets. Don't"
+  },
+  {
+   "scene": "V7",
+   "from": 5231,
+   "to": 5268,
+   "seconds": 1.27,
+   "t": "2:54.4",
+   "spoken": "this yet: phone makers often keep"
+  },
+  {
+   "scene": "V7",
+   "from": 5341,
+   "to": 5370,
+   "seconds": 1.0,
+   "t": "2:58.0",
+   "spoken": "new idea: a model that"
+  },
+  {
+   "scene": "V7",
+   "from": 5403,
+   "to": 5454,
+   "seconds": 1.73,
+   "t": "3:00.1",
+   "spoken": "track of what moved, so many weak frames"
+  }
+ ]
+}

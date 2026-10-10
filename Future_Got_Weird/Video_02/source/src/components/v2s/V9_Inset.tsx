@@ -21,6 +21,8 @@ export type V9InsetProps = {
   pose: Pose2;
   lean?: number;
   tail?: {x: number; y: number; r: number};
+  /** 0..1 the tail's opacity (default 1), so it can fade while his token leaves the frame */
+  tailOpacity?: number;
   seed?: number;
   life?: number;
 };
@@ -29,7 +31,7 @@ export type V9InsetProps = {
 const REF_R = 165;
 const REF = {scale: 1.3, dx: 0.17, headY: 352};
 
-export const V9Inset: React.FC<V9InsetProps> = ({cx, cy, r, open, frame, pose, lean = 0, tail, seed = 5, life = 0.5}) => {
+export const V9Inset: React.FC<V9InsetProps> = ({cx, cy, r, open, frame, pose, lean = 0, tail, tailOpacity = 1, seed = 5, life = 0.5}) => {
   if (open <= 0.001) return null;
   const size = 2 * r;
   const s = REF.scale * (r / REF_R);
@@ -60,7 +62,7 @@ export const V9Inset: React.FC<V9InsetProps> = ({cx, cy, r, open, frame, pose, l
   return (
     <div style={{position: 'absolute', left: cx - r, top: cy - r, width: size, height: size, transform: `scale(${k.toFixed(4)})`, transformOrigin: '50% 50%'}}>
       {tailD && (
-        <svg width={size} height={size} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+        <svg width={size} height={size} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', opacity: Math.max(0, Math.min(1, tailOpacity))}}>
           <path d={tailD} fill={C.cream} stroke={C.ink} strokeWidth={OUTLINE} strokeLinejoin="round" />
         </svg>
       )}

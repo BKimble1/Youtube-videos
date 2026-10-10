@@ -144,8 +144,10 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const pop = (t: number) => (t <= 0 ? 0 : t >= 1 ? 1 : E.back(t));
 
 export type EchoPlotT = {
-  /** 0..1 "wall echo" label (fades) */
+  /** 0..1 "wall echo" label and the peak dot (fade in) */
   spikeLabel: number;
+  /** 0..1 the words "wall echo" alone (default spikeLabel): V4.3 fades them when the dimension line draws (V2-R1-23) */
+  spikeText?: number;
   /** 0..1 phase of a one-shot pulse ring on the spike's peak */
   spikePulse?: number;
   /** 0..1 magnifier appears; lensSlide 0..1 from beside the spike to over the tail */
@@ -246,9 +248,11 @@ export const EchoPlot: React.FC<{t: EchoPlotT}> = ({t}) => {
           {t.spikeLabel > 0 && (
             <g opacity={f2(clamp01(t.spikeLabel))}>
               <circle cx={f2(SPIKE.x)} cy={f2(SPIKE.y)} r={f2(9 * (1 + 0.5 * Math.sin(Math.PI * pulse)))} fill={C.teal} stroke={C.ink} strokeWidth={3} />
-              <Label asGroup x={SPIKE.x + 26} y={SPIKE.y + 16} size={48}>
-                wall echo
-              </Label>
+              {(t.spikeText ?? 1) > 0 && (
+                <Label asGroup x={SPIKE.x + 26} y={SPIKE.y + 16} size={48} opacity={clamp01((t.spikeText ?? t.spikeLabel) / Math.max(1e-6, t.spikeLabel))}>
+                  wall echo
+                </Label>
+              )}
             </g>
           )}
 

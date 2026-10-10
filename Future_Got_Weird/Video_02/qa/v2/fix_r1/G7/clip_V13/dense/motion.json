@@ -1,0 +1,30 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V13": {
+   "seconds": 10.0,
+   "mean_energy": 0.147,
+   "still_seconds": 9.6,
+   "still_share": 0.963,
+   "longest_still_s": 7.73
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "V13",
+   "from": 9387,
+   "to": 9618,
+   "seconds": 7.73,
+   "t": "5:12.9",
+   "spoken": "This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner."
+  },
+  {
+   "scene": "V13",
+   "from": 9620,
+   "to": 9675,
+   "seconds": 1.87,
+   "t": "5:20.7",
+   "spoken": ""
+  }
+ ]
+}

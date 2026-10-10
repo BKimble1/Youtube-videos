@@ -12,7 +12,7 @@ import {GuesserToken} from '../components/v02/Tokens';
 import {SensorTop, facingOf} from '../components/v02/HandheldSensor';
 import {ArrivalTimeline, BASELINE_Y, BUMP_X, SPIKE_X, TL_GEOM, fitTimeline, timelinePoint, type TimelinePlacement} from '../components/v2k/ArrivalTimeline';
 import {Chip, Label, SubLabel, TeachLabel, labelBox} from '../components/v2k/Labels';
-import {BounceRing, DashedLeg, PAINT, PlanStage, Pulse, WallSpot, blendMaps, laneLeg, mapAt, planToPx, screenNormal, type PlanMap} from '../components/v2s/V2_Plan';
+import {BounceRing, DashedLeg, PAINT, PaintGrain, PlanStage, Pulse, WallSpot, blendMaps, laneLeg, mapAt, planToPx, screenNormal, type PlanGrain, type PlanMap} from '../components/v2s/V2_Plan';
 import {CLOSE, DISPLAY_H, LENS, SensorClose} from '../components/v2s/V2_SensorClose';
 import {V1_BOARD_END} from './V1_HideTrack';
 
@@ -26,17 +26,21 @@ import {V1_BOARD_END} from './V1_HideTrack';
  *       (same speed, so arrival order is honest): the short teal trip S → W1 → S, the long saffron trip S → W1 → him → W1
  *       → S through the opening at the partition's wall end. Straight dashed legs, returns thinner, every leg asserted
  *       clear of the partition. The teal pulse is home (parked at the sensor) while the saffron one is still out. On
- *       "comes back later" a small arrival timeline slides in at the bottom and both drop onto it: teal first (the
- *       wall echo spike), saffron later (his echo). Labels "short trip" · "long way round" (64).
- *  V2.2 n04  The timeline rises to fill the frame (kit ArrivalTimeline): "wall echo" / "his echo" (48), bracket
- *       "a few nanoseconds" (64) on "billionths", "not to scale". No number. Then it shrinks into the sensor's display.
+ *       "comes back later" a small arrival timeline fades in at its place at the bottom (clear of the caption band) and
+ *       both drop onto it: teal first (the wall echo spike), saffron later (his echo). Labels "short trip" · "long way
+ *       round" (64).
+ *  V2.2 n04  As soon as both echoes have landed the timeline rises to fill the frame (kit ArrivalTimeline): "wall echo" /
+ *       "his echo" (48), bracket "a few nanoseconds" (64) on "few", "not to scale". No number. It holds complete until
+ *       "This takes", then shrinks into the sensor's display.
  *  V2.3 n05  The sensor close-up (full frame): the timeline is now its display, a stopwatch glyph beside it. On "clocks"
  *       the checker's mitt taps the display; the emitter fires a faint flash out, it returns into the receiver and the
  *       stopwatch stops. "time-of-flight sensor" (64), "times its own light's round trip" (40), chip "invisible flash ·
  *       shown for clarity" (30). Out: the camera pushes into the emitter lens and comes out in the plan.
  *  V2.4 n06  The same plan: W1 glows, the long trip's W1 → him leg flashes once, a dashed candidate arc (centred on the
  *       wall spot, radius |W1 H|) sweeps a third of the way round and resolves into a "?" (72). The camera pushes into
- *       W1's paint; the last 4 frames are the wall paint, flat (V2 → V3 hand-off).
+ *       W1's paint: the wall strip grows, its paint grain resolves, and its edges are still in frame on the last moving
+ *       frame; the paint first fills the frame on the first of V2's last 4 frames, which are that paint with its static
+ *       grain (PAINT_GRAIN, V2 → V3 hand-off; V3 opens on the same frame).
  */
 
 /* ================================================================== cues */
@@ -58,6 +62,7 @@ const K = {
   billionths: at('n04', 'billionths'),
   later4: at('n04', 'later'),
   n05: seg('n05').from,
+  this5: at('n05', 'this'),
   tof: at('n05', 'time-of-flight'),
   clocks: at('n05', 'clocks'),
   round5: at('n05', 'round'),
@@ -97,9 +102,11 @@ const MAP_M: PlanMap = mapAt(KM, S, V1_BOARD_END.sensor);
 /** The teaching framing (V2.1, V2.4): 520 px/m, W1 at x 600, the wall line at y 190. */
 const KT = 520;
 const MAP_T: PlanMap = mapAt(KT, S, {x: 600 + (S.x - W1.x) * KT, y: 190 + S.z * KT});
-/** The end of the push: the wall's paint strip fills the frame with margin (its outline is off screen). */
-const K_END = (1.25 * 1080) / WALL_T;
+/** The end of the push (the hand-off framing): the wall's paint strip just covers the frame, 6 px beyond each edge (its
+ *  4 px outline is then off screen); the paint grain is defined at this framing (V2_Plan PAINT_GRAIN). */
+const K_END = (1080 + 2 * 6) / WALL_T;
 const MAP_END: PlanMap = mapAt(K_END, PAINT_PT, {x: 960, y: 540});
+const GRAIN: PlanGrain = {anchor: PAINT_PT, kEnd: K_END};
 
 /** The match residuals (screen px): sensor and wall exact; partition x and its wall-end top differ by these. */
 export const V2_MATCH = (() => {
@@ -133,7 +140,7 @@ const F_W1B = frameAtM(LEN_SW + 2 * LEN_WH);
 const raceM = (g: number) => clamp01((g - RACE0) / RACE_D) * LEN_L;
 const SHORT_LBL = Math.round(F_W1) + 6;
 const LONG_LBL = Math.max(K.long, Math.round(F_W1) + 14);
-// the mini timeline slides in on "so it comes back", the pulses drop onto it
+// the mini timeline fades in at its place on "so it comes back" (never through the caption band), the pulses drop onto it
 const TL_IN = K.comes - 12;
 const TL_IN_DUR = 12;
 const DROP_DUR = 10;
@@ -142,19 +149,20 @@ const SAFF_DROP = Math.max(LONG_END + 1, TEAL_DROP + 6);
 const TEAL_LAND = TEAL_DROP + DROP_DUR;
 const SAFF_LAND = SAFF_DROP + DROP_DUR;
 
-// V2.2 rise to full frame; labels; bracket; then the shrink into the display
-const RISE0 = K.a4;
+// V2.2 rise to full frame as soon as both echoes have landed; labels; bracket on "few"; it holds complete until
+// "This takes", then the shrink into the display (v2 review r1, V2-R1-17: full frame earlier, complete for longer)
+const RISE0 = SAFF_LAND + 2;
 const RISE_DUR = 14;
 const LBL_WALL = RISE0 + RISE_DUR - 6;
 const LBL_HIS = LBL_WALL + 4;
-const BRACKET0 = K.billionths;
-const NTS = K.billionths + 4;
-const SHRINK0 = K.later4 + 6;
+const BRACKET0 = Math.max(K.few, LBL_HIS + 2);
+const NTS = BRACKET0 + 4;
+const SHRINK0 = K.this5;
 const SHRINK_DUR = 14;
 const CLOSE0 = SHRINK0; // the close-up is drawn behind the shrinking card from here
-/** the display's miniature drops its text after landing, before "time-of-flight sensor" cuts in */
-const DISP_BARE0 = SHRINK0 + SHRINK_DUR + 2;
-const DISP_BARE_DUR = 8;
+/** the display's miniature drops its text as it lands, before "time-of-flight sensor" cuts in */
+const DISP_BARE0 = SHRINK0 + SHRINK_DUR;
+const DISP_BARE_DUR = Math.min(6, K.tof - DISP_BARE0);
 
 // V2.3 the close-up: labels, the tap, the flash out and back, the stopwatch
 const TOF_LBL = K.tof;
@@ -186,10 +194,20 @@ const Q0 = ARC1 + 1;
 const ARM_FADE = [0.55, 0.85];
 /** compass-arm fade-in (plan angle, rad): it appears once it has swung off the wall line */
 const ARM_IN = [0.07, 0.2];
-const PUSH_DUR = 22;
-const FLAT0 = K.end - 4; // the last 4 frames: the paint, flat
-const PUSH1 = FLAT0 - 1;
+const FLAT0 = K.end - 4; // the last 4 frames: the paint and its grain, still (the V2 → V3 hand-off)
+/** The push lands on the hand-off framing ON the first flat frame: the paint first fills the frame there, not before
+ *  (v2 review r1, V2-R1-02: it used to fill the frame 6 frames early, so V2 ended on 9 blank frames). */
+const PUSH1 = FLAT0;
+const PUSH_DUR = 23;
 const PUSH0 = PUSH1 - PUSH_DUR;
+/** End slope of the push's log-scale curve (cubic Hermite, start slope 0): a soft landing that keeps the strip's edges
+ *  moving through the last moving frame (0 would ease to a stop with the edges creeping along the frame border). */
+const PUSH_END_SLOPE = 0.3;
+const pushCurve = (u: number) => 3 * u * u - 2 * u * u * u + PUSH_END_SLOPE * (u * u * u - u * u);
+/** W1's marker and glow fade as the camera enters the paint (a screen-size marker would otherwise ride the wall's inner
+ *  line to the frame's bottom edge on the last moving frames). */
+const SPOT_OUT0 = PUSH0 + 6;
+const SPOT_OUT_DUR = 10;
 
 /* ================================================================== sound cue sheet */
 
@@ -216,12 +234,12 @@ export const SFX: Sfx[] = [
 /** The plan map at frame g. */
 const planMapAt = (g: number): PlanMap => {
   if (g >= PUSH0) {
-    // the push into W1's paint: the paint point glides to the frame centre early (E.out) while the scale climbs at an
-    // eased constant rate in log space (E.inOut), so the last pushed frames are already nearly all paint
+    // the push into W1's paint: the paint point glides to the frame centre early (E.out) while the scale climbs in log
+    // space along pushCurve, landing on MAP_END exactly on PUSH1 (= FLAT0) with the strip's edges in frame until then
     const u = tw(g, PUSH0, PUSH1 - PUSH0, E.linear);
     const a0 = planToPx(MAP_T)(PAINT_PT);
     const ea = E.out(u);
-    return mapAt(KT * Math.pow(K_END / KT, E.inOut(u)), PAINT_PT, {x: lerp(a0.x, MAP_END.anchor.x, ea), y: lerp(a0.y, MAP_END.anchor.y, ea)});
+    return mapAt(KT * Math.pow(K_END / KT, pushCurve(u)), PAINT_PT, {x: lerp(a0.x, MAP_END.anchor.x, ea), y: lerp(a0.y, MAP_END.anchor.y, ea)});
   }
   if (g >= CLOSE0) return MAP_T;
   return blendMaps(MAP_M, MAP_T, tw(g, RF0, RF_DUR, E.inOut));
@@ -276,7 +294,7 @@ const BUMP_MINI = timelinePoint({x: BUMP_X, y: BASELINE_Y}, TL_MINI);
 
 /** Timeline placement at frame g (V2.1 slide-in → V2.2 rise → shrink into the display). */
 const tlPlaceAt = (g: number): Required<TimelinePlacement> => {
-  if (g < RISE0) return {...TL_MINI, y: TL_MINI.y + 360 * (1 - E.out(tw(g, TL_IN, TL_IN_DUR, E.linear)))};
+  if (g < RISE0) return TL_MINI;
   if (g < SHRINK0) return lerpPlace(TL_MINI, TL_FULL, E.inOut(tw(g, RISE0, RISE_DUR, E.linear)));
   return lerpPlace(TL_FULL, TL_DISP, E.inOut(tw(g, SHRINK0, SHRINK_DUR, E.linear)));
 };
@@ -353,10 +371,11 @@ const PlanShot: React.FC<{g: number; v24: boolean}> = ({g, v24}) => {
   // W1: the diamond pops just before the pulses reach it, lit at each bounce; V2.4: glows, and stays lit through the
   // push into its paint (it is the push's target: it rides the wall's inner line off the bottom of the frame as the
   // paint fills it; asserted off screen on the last pushed frame)
+  const spotOut = v24 ? 1 - tw(g, SPOT_OUT0, SPOT_OUT_DUR, E.inOut) : 1;
   const spotPop = v24 ? tw(g, GLOW0 - 6, 8, E.back) : g >= F_W1 - 6 ? E.back(clamp01((g - (F_W1 - 6)) / 8)) * trailOp : 0;
   const litWin = (f: number) => tw(g, f - 2, 2, E.linear) * (1 - tw(g, f + 8, 6, E.linear));
   const spotLit = v24 ? tw(g, GLOW0, 10, E.linear) : Math.max(litWin(F_W1), litWin(F_W1B));
-  const spotGlow = v24 ? tw(g, GLOW0, 10, E.linear) : 0;
+  const spotGlow = v24 ? tw(g, GLOW0, 10, E.linear) * spotOut : 0;
 
   // V2.4: the long trip's W1 → him leg flashes once; the candidate arc; the "?"
   const legDraw = v24 ? tw(g, LEG0, LEG_DRAW, E.out) : 0;
@@ -402,7 +421,11 @@ const PlanShot: React.FC<{g: number; v24: boolean}> = ({g, v24}) => {
       <GuesserToken asGroup x={tokH.x} y={tokH.y} size={0.52 * m.k} facing={200} />
       <BounceRing p={tokH} t={hitRing} color={C.saffronDeep} r0={0.3 * m.k} r1={0.3 * m.k + 50} />
       <SensorTop asGroup x={sTop.x} y={sTop.y} size={0.22 * m.k} facing={facing} firing={race ? tw(g, RACE0 - 2, 2, E.linear) * (1 - tw(g, RACE0 + 3, 6, E.linear)) : 0} />
-      <WallSpot p={P(W1)} pop={spotPop} lit={spotLit} glow={spotGlow} size={17} />
+      {spotOut > 0 && (
+        <g opacity={spotOut < 1 ? f2(spotOut) : undefined}>
+          <WallSpot p={P(W1)} pop={spotPop} lit={spotLit} glow={spotGlow} size={17} />
+        </g>
+      )}
       {race && (
         <>
           <BounceRing p={P(W1)} t={homeRing(F_W1)} color={C.saffronDeep} />
@@ -420,7 +443,7 @@ const PlanShot: React.FC<{g: number; v24: boolean}> = ({g, v24}) => {
   const LBL = labelSpots();
   return (
     <AbsoluteFill style={{background: C.paper}}>
-      <PlanStage m={m} floor={floor} over={over} />
+      <PlanStage m={m} floor={floor} over={over} grain={v24 && g >= PUSH0 ? GRAIN : undefined} />
       {shortT > 0 && (
         <TeachLabel x={LBL.short.x} y={LBL.short.y} anchor="end" opacity={shortT} color={C.tealDeep}>
           short trip
@@ -442,10 +465,14 @@ const PlanShot: React.FC<{g: number; v24: boolean}> = ({g, v24}) => {
           </Label>
         </>
       )}
-      {chipOp > 0 && <Chip x={1790} y={92} anchor="end" valign="middle" size={30} opacity={chipOp}>illustration</Chip>}
+      {chipOp > 0 && <Chip x={1790} y={92} anchor="end" valign="middle" size={CHIP_PX} opacity={chipOp}>illustration</Chip>}
     </AbsoluteFill>
   );
 };
+
+/** Integrity chips ("illustration", "invisible flash · shown for clarity"): 40 px so they read at phone width (v2 review
+ *  r1, V2-R1-14; the kit's evidence-card tag is 40 px too, and "illustration" sits in that tag's slot). */
+const CHIP_PX = 40;
 
 /** The "?" marker's disc radius (px): it sits on the arc's stopped tip. */
 const Q_R = 48;
@@ -462,7 +489,9 @@ const labelSpots = () => {
 const TimelineShot: React.FC<{g: number}> = ({g}) => {
   const pl = tlPlaceAt(g);
   const full = g >= RISE0 + RISE_DUR && g < SHRINK0;
-  return <ArrivalTimeline {...pl} {...tlProps(g)} bg={full ? true : 'card'} />;
+  // V2.1: the small card fades in at its settled place (it used to slide up through the caption band; V2-R1-20)
+  const fadeIn = g < RISE0 ? tw(g, TL_IN, TL_IN_DUR, E.linear) : 1;
+  return <ArrivalTimeline {...pl} {...tlProps(g)} bg={full ? true : 'card'} opacity={fadeIn < 1 ? fadeIn : undefined} />;
 };
 
 const CloseShot: React.FC<{g: number}> = ({g}) => {
@@ -514,7 +543,7 @@ const CloseShot: React.FC<{g: number}> = ({g}) => {
           {"times its own light's round trip"}
         </SubLabel>
       )}
-      {chipT > 0 && <Chip x={LENS.emitter.x - 40} y={140} anchor="end" valign="middle" size={30} opacity={chipT}>invisible flash · shown for clarity</Chip>}
+      {chipT > 0 && <Chip x={LENS.emitter.x - 40} y={140} anchor="end" valign="middle" size={CHIP_PX} opacity={chipT}>invisible flash · shown for clarity</Chip>}
     </AbsoluteFill>
   );
 };
@@ -524,7 +553,12 @@ const TOF = {y: 470};
 
 export const V2LongWay: React.FC = () => {
   const g = useG();
-  if (g >= FLAT0) return <AbsoluteFill style={{background: PAINT}} />;
+  if (g >= FLAT0)
+    return (
+      <AbsoluteFill style={{background: PAINT}}>
+        <PaintGrain />
+      </AbsoluteFill>
+    );
   if (g >= LENS1) return <PlanShot g={g} v24 />;
   if (g >= LENS0) {
     // push through the emitter lens: the close-up zooms about the lens, the plan opens inside it
@@ -587,18 +621,35 @@ export const V2_CHECKS = (() => {
   if (LENS0 < RETURN_END + 2) fail('the push through the lens starts before the flash is home');
   if (PUSH0 < Q0 + 10) fail('the "?" must hold before the push');
   if (FLAT0 !== K.end - 4) fail('the flat paint must be the last 4 frames');
-  // the push ends with the paint strip covering the frame: its edges are off screen on the last pushed frame
-  const mEnd = planMapAt(PUSH1);
-  const top = planToPx(mEnd)({x: W1.x, z: -WALL_T}).y;
-  const bot = planToPx(mEnd)({x: W1.x, z: 0}).y;
-  if (top > -4 || bot < 1084) fail(`the paint does not fill the frame on the last pushed frame (${top.toFixed(0)}..${bot.toFixed(0)})`);
-  // the push flies the plan's content off the frame: on the last pushed frame nothing but paint is on screen (the W1
-  // spot + glow ride the wall's inner line; the "?" disc, the arc, the token, the sensor glyph, the partition's end)
+  if (DISP_BARE_DUR < 3) fail('the display has no time to shed its words before "time-of-flight sensor"');
+  // V2-R1-02: the paint first fills the frame ON FLAT0 (4 frames before the cut), not before: on the last moving frame
+  // the strip's edges are still in frame (a band of at least 8 px of non-paint), on FLAT0 they are off screen
+  const strip = (g: number) => {
+    const P = planToPx(planMapAt(g));
+    return {top: P({x: W1.x, z: -WALL_T}).y, bot: P({x: W1.x, z: 0}).y};
+  };
+  const sLast = strip(FLAT0 - 1);
+  const sEnd = strip(FLAT0);
+  if (!(sLast.top > 8 || sLast.bot < 1072)) fail(`the paint already fills the frame before FLAT0 (${sLast.top.toFixed(0)}..${sLast.bot.toFixed(0)})`);
+  if (sEnd.top > -4 || sEnd.bot < 1084) fail(`the paint does not fill the frame on FLAT0 (${sEnd.top.toFixed(0)}..${sEnd.bot.toFixed(0)})`);
+  for (let g = PUSH0; g < FLAT0; g++) {
+    const st = strip(g);
+    if (!(st.top > 0 || st.bot < 1080)) fail(`the paint fills the frame at ${g}, before FLAT0`);
+  }
+  // the push lands on the hand-off framing exactly (so FLAT0's PaintGrain frame continues the push's last frame)
+  {
+    const m = planMapAt(FLAT0);
+    if (Math.abs(m.k - K_END) > 1e-6 || Math.hypot(planToPx(m)(PAINT_PT).x - 960, planToPx(m)(PAINT_PT).y - 540) > 0.01) fail('the push does not land on the hand-off framing');
+  }
+  if (SPOT_OUT0 + SPOT_OUT_DUR > FLAT0 - 2) fail('W1\'s marker must be gone before the last moving frame');
+  // the push flies the plan's content off the frame: on the last moving frame nothing but the wall strip (paint, grain,
+  // its ink edges) and the floor beyond it is on screen (the "?" disc, the arc, the token, the sensor glyph, the
+  // partition's end; W1's marker and glow have faded)
+  const mEnd = planMapAt(FLAT0 - 1);
   {
     const P = planToPx(mEnd);
     const off = (p: {x: number; y: number}, r: number) => p.x + r < 0 || p.x - r > 1920 || p.y + r < 0 || p.y - r > 1080;
     const items: [string, P2, number][] = [
-      ['W1 glow', W1, 90],
       ['"?" marker', polar(W1, R1, ARC_A1), Q_R + 4],
       ['token', H, 0.4 * mEnd.k],
       ['sensor glyph', S, 0.2 * mEnd.k],
@@ -643,6 +694,9 @@ export const V2_CHECKS = (() => {
     lens: [LENS0, LENS1],
     push: [PUSH0, PUSH1],
     flat: [FLAT0, K.end - 1],
+    stripLastMoving: sLast,
+    stripFlat0: sEnd,
+    timeline: {tlIn: TL_IN, rise: [RISE0, RISE0 + RISE_DUR], bracket: BRACKET0, shrink: [SHRINK0, SHRINK0 + SHRINK_DUR], bare: [DISP_BARE0, DISP_BARE0 + DISP_BARE_DUR]},
     spikeMini: SPIKE_MINI,
     bumpMini: BUMP_MINI,
     displayH: DISPLAY_H,
