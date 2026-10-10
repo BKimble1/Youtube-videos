@@ -51,7 +51,7 @@ export const Indicator: React.FC = () => {
           {modules.map((m, i) => (
             <div key={i} style={{position: 'absolute', left: m.x - 400 + 40, top: m.y - 190 + 70, width: 220, height: 160, background: C.white, border: `4px solid ${C.ink}`, borderRadius: 16}} />
           ))}
-          <div style={{position: 'absolute', left: 0, top: 0, width: 1100, height: 680, clipPath: `polygon(0 0, ${spot * 1100}px 0, ${spot * 1100 + 260}px 680px, ${spot * 1100 - 40}px 680px)`, background: `linear-gradient(180deg, rgba(255,199,68,0.75), rgba(255,199,68,0.18))`}} />
+          <div style={{position: 'absolute', left: 0, top: 90, width: 1100, height: 590, clipPath: `polygon(0 0, ${spot * 1100}px 0, ${spot * 1100 + 260}px 590px, ${spot * 1100 - 40}px 590px)`, background: `linear-gradient(180deg, rgba(255,199,68,0.75), rgba(255,199,68,0.18))`}} />
         </Card>
         <Tag x={560} y={920} bg={C.saffron} size={34}>a checkable design feature, one of several</Tag>
       </div>
@@ -73,14 +73,14 @@ export const Indicator: React.FC = () => {
 
       {/* what the 2023 analysis said, and its limits */}
       <div style={{position: 'absolute', inset: 0, opacity: fade(T('Their 2023 analysis'), 12) * outAt(T('Anthropic gives a reason'), 12)}}>
-        <Card x={300} y={260} w={1320} h={260} bg={C.white} style={{padding: 40}}>
+        <Card x={300} y={240} w={1320} h={340} bg={C.white} style={{padding: 40}}>
           <div style={{fontFamily: F.body, fontWeight: 700, fontSize: 48, lineHeight: 1.35}}>
             Their 2023 analysis <Sweep p={suggested}>suggested</Sweep> the systems they considered weren’t conscious.
           </div>
           <div style={{marginTop: 20, fontFamily: F.body, fontSize: 40, color: C.inkSoft}}>They saw no obvious technical barrier to building systems with these indicators.</div>
         </Card>
-        <Tag x={300} y={580} bg={C.tealLight} size={36} opacity={fade(T('They also saw'), 10)}>arXiv:2308.08708 · Butlin, Long et al. · 2023</Tag>
-        <Tag x={300} y={680} bg={C.saffron} size={36} opacity={fade(T("That was an assessment"), 10)}>2023 systems, not a verdict on today’s models</Tag>
+        <Tag x={300} y={650} bg={C.tealLight} size={36} opacity={fade(T('They also saw'), 10)}>arXiv:2308.08708 · Butlin, Long et al. · 2023</Tag>
+        <Tag x={300} y={740} bg={C.saffron} size={36} opacity={fade(T("That was an assessment"), 10)}>2023 systems, not a verdict on today’s models</Tag>
       </div>
     </Paper>
   );

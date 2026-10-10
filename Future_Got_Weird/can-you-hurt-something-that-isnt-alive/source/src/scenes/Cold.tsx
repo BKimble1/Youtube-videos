@@ -44,7 +44,7 @@ export const ColdOpen: React.FC = () => {
       <Character look={CAST.checker} pose={reach} frame={f} x={470} y={900} scale={1.05} seed={3} />
 
       {/* the policy excerpt: verbatim from the company page, one highlight at a time */}
-      <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: policyIn}}>
+      <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: policyIn * (1 - splitIn)}}>
         <Card x={700} y={170} w={1060} h={400} bg={C.white} style={{padding: 36}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: F.mono, fontSize: 26, color: C.inkSoft}}>
             <span>anthropic.com · Usage Policy update</span>
@@ -58,7 +58,7 @@ export const ColdOpen: React.FC = () => {
       </div>
 
       {/* scope: the exclusions, which narrow the claim */}
-      <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: scopeIn * (1 - splitIn * 0.4)}}>
+      <div style={{position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, opacity: scopeIn * (1 - splitIn)}}>
         <Card x={700} y={650} w={1060} h={220} bg={C.cream} style={{padding: 30}}>
           <div style={{fontFamily: F.serif, fontSize: 36, lineHeight: 1.3}}>
             “It does not apply to common versions of user <Sweep p={sweep2} color={C.tealLight}>frustration, pushback, dark creative themes, or model testing and research.</Sweep>”

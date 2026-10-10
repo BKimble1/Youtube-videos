@@ -58,7 +58,7 @@ export const Chatbot: React.FC = () => {
       </div>
 
       {/* 3. the printer joke (illustrative) */}
-      <div style={{position: 'absolute', inset: 0, opacity: printerIn}}>
+      <div style={{position: 'absolute', inset: 0, opacity: printerIn * outAt(T("And here's"))}}>
         <div style={{position: 'absolute', left: 1400, top: 540, width: 300, height: 230, background: C.cream, border: '5px solid ' + C.ink, borderRadius: 18, boxShadow: `10px 12px 0 ${C.shadow}`}}>
           <div style={{position: 'absolute', left: 60, top: -70, width: 180, height: 90, background: C.white, border: '5px solid ' + C.ink, borderRadius: 6}} />
           <div style={{position: 'absolute', left: 80, top: 170, width: 90, height: 16, background: C.blue, borderRadius: 8}} />
