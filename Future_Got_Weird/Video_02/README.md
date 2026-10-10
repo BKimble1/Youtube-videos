@@ -1,9 +1,12 @@
 # Future Got Weird · Video 02 · "How Cameras See Around Corners"
 
-An animated explainer (about 6:44) for the anonymous channel Future Got Weird: how a plain wall can give away someone
-hiding behind a partition, how the timing of a small time-of-flight sensor's light becomes a map, what earlier
-laboratory systems did, and what a study published in 2026 managed with consumer-grade sensors, including its limits.
+An animated explainer for the anonymous channel Future Got Weird: how a plain wall can give away someone hiding behind a
+partition, how the timing of a small time-of-flight sensor's light becomes a map, what earlier laboratory systems did,
+and what a study published in 2026 managed with consumer-grade sensors, including its limits.
 1920×1080 composition at 30 fps; the master is rendered at 3840×2160 from the same composition.
+
+**Current version: v2 (5:23.9), the owner's editorial pass** (`v2/REVISION_BRIEF.md`; what changed: `v2/CHANGE_LOG.md`;
+QA: `v2/QA_V2.md`). v1 (6:44) is preserved: `v2/V1_BASELINE.md` says how to restore it exactly.
 
 **Read first:** `STATUS.md` (what is finished, what was reviewed, open checks), then `DIRECTION.md` (episode rules).
 Publishing is the owner's action; the upload kit is `package/UPLOAD_PACKAGE.md`.
@@ -52,6 +55,27 @@ npx remotion studio src/index.ts   # interactive preview
 ```
 
 ## Rebuild, step by step
+
+### v2 (current)
+
+```bash
+python3 tools/make_claims.py                       # research/claims.csv (v2 lines cite it)
+python3 tools/v02v2_build.py                       # v2/script_v2.json -> script/narration_*.json, SCRIPT.md
+python3 tools/v2_takes.py eval --fill && python3 tools/v2_takes.py assemble   # takes in audio/narration/v2/takes
+python3 tools/build_timeline.py --engine v2        # timeline (scenes V1-V13), narration.wav, captions
+node tools/collect_sfx.mjs && python3 tools/make_sfx_v2.py   # cue sheets of scenes V1-V13 -> effects/ambience tracks
+python3 tools/make_music_v02v2.py                  # the v2 score (reads every cue from the timeline)
+python3 tools/mix_v2.py --music audio/music/v02v2/music_bed.wav && python3 tools/audio_qc.py
+python3 tools/make_package.py                      # description, chapters, title, end screen, captions copy
+bash tools/make_deliverables.sh all                # _v2_ MASTER_4K, UPLOAD_1080p, PREVIEW_720p, srt, thumbnail
+```
+
+Scenes are `source/src/scenes/V1_*.tsx` … `V13_*.tsx` (the v1 scenes `S1`-`S9` stay in the tree, unused); the shared
+v2 kit is `source/src/components/v2k/` (`KIT_V2.md`); scene parts are `source/src/components/v2s/`. Workflows used for
+the pass: `tools/wf_narration.js`, `tools/wf_v2_scenes.js`, `tools/wf_v2_review.js`, `tools/wf_v2_fix.js`,
+`tools/wf_v2_release_check.js`.
+
+### v1 (as delivered; restore with `git checkout 40183b0 -- Future_Got_Weird/Video_02` first)
 
 ```bash
 # 1. research geometry -> source layout (asserts the blocked and clear paths)
