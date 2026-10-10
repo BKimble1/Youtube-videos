@@ -49,3 +49,5 @@ qa/v2/**/*.mp4
 source/.sfx-*/
 qa/v2/**/*.npy
 qa/v2/**/*.wav
+# chat-delivery split of the 4K master (the master itself is preserved under backup/v02/v2_films)
+exports/**/*.part

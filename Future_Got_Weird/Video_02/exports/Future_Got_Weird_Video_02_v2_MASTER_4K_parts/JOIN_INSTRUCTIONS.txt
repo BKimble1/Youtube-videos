@@ -1,0 +1,23 @@
+Future Got Weird · Video 02 v2 · 4K master (3840x2160, 30 fps, 5:24.4, H.264 + AAC 320k)
+
+The master is split into 3 exact byte parts so it fits in chat. Put all three .part files in one folder, then join them
+into the single file to upload. Do not upload the parts themselves.
+
+Mac or Linux (Terminal, in that folder):
+  cat Future_Got_Weird_Video_02_v2_MASTER_4K.mp4.0.part Future_Got_Weird_Video_02_v2_MASTER_4K.mp4.1.part Future_Got_Weird_Video_02_v2_MASTER_4K.mp4.2.part > Future_Got_Weird_Video_02_v2_MASTER_4K.mp4
+
+Windows (Command Prompt, in that folder):
+  copy /b Future_Got_Weird_Video_02_v2_MASTER_4K.mp4.0.part + Future_Got_Weird_Video_02_v2_MASTER_4K.mp4.1.part + Future_Got_Weird_Video_02_v2_MASTER_4K.mp4.2.part Future_Got_Weird_Video_02_v2_MASTER_4K.mp4
+
+Check the joined file (optional). Its SHA-256 must be:
+  827bf28c8e1877e628eac5d660d01d36e2d12240c724ef6f78b9bbfac75e61a2
+  Mac/Linux: shasum -a 256 Future_Got_Weird_Video_02_v2_MASTER_4K.mp4
+  Windows:   certutil -hashfile Future_Got_Weird_Video_02_v2_MASTER_4K.mp4 SHA256
+Expected size: 85,099,864 bytes.
+
+Upload Future_Got_Weird_Video_02_v2_MASTER_4K.mp4 to YouTube, then add the captions (Future_Got_Weird_Video_02_v2.srt),
+the thumbnail (thumb_D_1280.jpg), the description and chapters (description.txt) and the end screen (END_SCREEN.md:
+both elements from 5:14.37 to the end).
+c3112c018598ecf957ea61ff53100c8364896def08c08cf0f720a3d04d2d6530  Future_Got_Weird_Video_02_v2_MASTER_4K.mp4.0.part
+56bab4b362869e6e66e9136a88dffefc81e96d95f0b1ea298471dbffd27d9d8f  Future_Got_Weird_Video_02_v2_MASTER_4K.mp4.1.part
+05bb1b7acb64767f79735fe80d55310526749b1cf7057e8536ee7f05bf09c363  Future_Got_Weird_Video_02_v2_MASTER_4K.mp4.2.part
