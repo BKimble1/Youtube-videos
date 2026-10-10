@@ -3,6 +3,7 @@ import {AbsoluteFill, Composition, Still} from 'remotion';
 import {C, F, H, W} from './theme';
 import {Hand, ikDigit, defOf, toLocal, HandPose} from './hand/Hand';
 import {Film} from './Film';
+import {Cover} from './Cover';
 import {TOTAL_FRAMES, FPS} from './cues';
 
 const PoseLab: React.FC = () => {
@@ -42,6 +43,7 @@ const PoseLab: React.FC = () => {
 export const Root: React.FC = () => (
   <>
     <Still id="PoseLab" component={PoseLab} width={W} height={H} />
+    <Still id="Cover" component={Cover} width={W} height={H} />
     <Composition id="Short" component={Film} width={W} height={H} fps={FPS} durationInFrames={TOTAL_FRAMES} defaultProps={{captions: false, audio: true}} />
     <Composition id="ShortCaptioned" component={Film} width={W} height={H} fps={FPS} durationInFrames={TOTAL_FRAMES} defaultProps={{captions: true, audio: true}} />
   </>

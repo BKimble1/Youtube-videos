@@ -166,14 +166,20 @@ export const Headline: React.FC<{x?: number; y: number; text: string; size?: num
   </g>
 );
 
-/** Source / reconstruction chip: always visible, >= 40 px, inside the safe area above the caption lane. */
-export const Chip: React.FC<{tag: string; opacity?: number; dx?: number}> = ({tag, opacity = 1, dx = 0}) => {
-  const w = Math.max(capW(tag, 40, 0.69), 23 * 40 * 0.56) + 48;
+/** Source / reconstruction chip: always visible, >= 40 px, inside the safe area above the caption lane. The plate stays put; only the tag text cross-fades. */
+export const Chip: React.FC<{tag: string; prev?: string; k?: number; dx?: number}> = ({tag, prev, k = 1, dx = 0}) => {
+  const wOf = (t: string) => Math.max(capW(t, 40, 0.69), 23 * 40 * 0.56) + 48;
+  const w = prev ? wOf(prev) + (wOf(tag) - wOf(prev)) * k : wOf(tag);
   return (
-    <g transform={`translate(${100 + dx} 1208)`} opacity={opacity}>
+    <g transform={`translate(${100 + dx} 1208)`}>
       <rect x={4} y={6} width={w} height={112} rx={20} fill={C.ink} opacity={0.25} />
       <rect x={0} y={0} width={w} height={112} rx={20} fill={C.cream} stroke={C.ink} strokeWidth={OUTLINE} />
-      <text x={24} y={46} fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.coralDeep} letterSpacing={0.5}>
+      {prev && k < 1 && (
+        <text x={24} y={46} fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.coralDeep} letterSpacing={0.5} opacity={1 - k}>
+          {prev}
+        </text>
+      )}
+      <text x={24} y={46} fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.coralDeep} letterSpacing={0.5} opacity={prev ? k : 1}>
         {tag}
       </text>
       <text x={24} y={94} fontFamily={F.body} fontWeight={700} fontSize={40} fill={C.ink}>

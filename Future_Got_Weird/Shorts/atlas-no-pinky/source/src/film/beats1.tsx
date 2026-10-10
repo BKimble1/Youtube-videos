@@ -26,7 +26,7 @@ export const poseB01 = (g: number): HandPose => {
   return frontPose([c, c, c, c], 0.2 + Math.max(0, o - 1) * 2.2, sw);
 };
 
-const GAP = {x: RH.x + 120 * RH.s, y: RH.y - 104 * RH.s};
+const GAP = {x: RH.x + 140 * RH.s, y: RH.y - 106 * RH.s};
 
 /* ------------------------------------------------------------------ B01 */
 
@@ -67,15 +67,17 @@ export const B01Hud: React.FC<{g: number}> = ({g}) => {
 export const HH: Place = {x: 560, y: 850, scale: 1.25};
 const tapeT = (g: number) => tw(g, EV['B02.tape.contact'], 8);
 
+const wig = (g: number, a: number) => (g < a || g > a + 14 ? 0 : Math.sin(((g - a) / 14) * Math.PI));
 const humanFront = (g: number): HandPose => {
   const t = tapeT(g);
   const w = drift(g, 3, 70);
+  const fl = (a: number): [number, number, number] => [26 * wig(g, a), 22 * wig(g, a), 14 * wig(g, a)];
   return {
-    thumb: {ang: [-150 + w * 2, -146, -140]},
-    index: {ang: [-98 + w, -96, -94]},
-    middle: {ang: [-92, -92, -92]},
-    ring: {ang: [lerp(-82, -80, t), lerp(-82, -80, t), lerp(-84, -82, t)]},
-    pinky: {ang: [lerp(-66, -80, t), lerp(-66, -80, t), lerp(-66, -80, t)]},
+    thumb: {ang: [-150 + w * 2, -146, -140], flex: [10 * wig(g, 112), 8 * wig(g, 112), 0]},
+    index: {ang: [-98 + w, -96, -94], flex: fl(118)},
+    middle: {ang: [-92, -92, -92], flex: fl(124)},
+    ring: {ang: [lerp(-82, -80, t), lerp(-82, -80, t), lerp(-84, -82, t)], flex: fl(130)},
+    pinky: {ang: [lerp(-66, -80, t), lerp(-66, -80, t), lerp(-66, -80, t)], flex: fl(136)},
   };
 };
 
@@ -154,7 +156,7 @@ export const B02World: React.FC<{g: number}> = ({g}) => {
       <Dial x={820} y={500} angle={30 * E.back(tw(g, EV['B02.day.dial'], 7))} kick={7 * ring(g, EV['B02.day.dial'], 1.1, 0.25)} />
       {/* front-view human hand (tape experiment), then it drops behind the bench as the side-view hand takes over */}
       {frontOut < 1 && (
-        <g transform={`translate(0 ${frontOut * 460})`}>
+        <g transform={`translate(0 ${frontOut * 460}) translate(0 ${SURF}) scale(1 ${0.25 + 0.75 * sp(g, 100, SOFT)}) translate(0 ${-SURF})`}>
           <Hand kind="human" x={HH.x} y={HH.y} scale={HH.scale} pose={hand2} forearm={{stand: SURF}}
             front={wrapT > 0.3 ? <TapeBand cx={fb.cx} cy={fb.cy} len={fb.len} h={50} rot={fb.rot} /> : null} />
           {stripT > 0 && tear < 1 && (

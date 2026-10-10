@@ -103,10 +103,10 @@ export const B06Card: React.FC<{g: number}> = ({g}) => {
         <text x={CARD6.x - CARD6.w / 2 + 28} y={CARD6.y - CARD6.h / 2 + 58} fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.coralDeep}>DESIGN OPTION</text>
         {/* hand icon with the optional fifth digit sketched in */}
         <g transform="translate(0 6)">
-          <Hand x={235} y={CARD6.y + 60} scale={0.62} pose={OPEN_POSE} ghostPinky={0.55 + 0.45 * ghost} />
-          <g transform={`translate(${338} ${CARD6.y - 14}) scale(${ghost})`}>
-            <circle r={26} fill={C.coral} stroke={C.ink} strokeWidth={4} />
-            <path d="M -12 0 H 12 M 0 -12 V 12" stroke={C.ink} strokeWidth={7} strokeLinecap="round" />
+          <Hand x={262} y={CARD6.y + 58} scale={0.52} pose={OPEN_POSE} ghostPinky={0.55 + 0.45 * ghost} />
+          <g transform={`translate(${340} ${CARD6.y - 40}) scale(${ghost})`}>
+            <circle r={24} fill={C.coral} stroke={C.ink} strokeWidth={4} />
+            <path d="M -11 0 H 11 M 0 -11 V 11" stroke={C.ink} strokeWidth={7} strokeLinecap="round" />
           </g>
         </g>
         {SLOTS.map((sx, i) => (
@@ -138,18 +138,18 @@ export const B06Plates: React.FC<{g: number}> = ({g}) => {
             <rect x={-385} y={-56} width={770} height={112} rx={22} fill={p.fill} stroke={C.ink} strokeWidth={OUTLINE} />
             <g transform="translate(-318 0)">
               {i === 0 && (
-                <g>
+                <g transform={`scale(${Math.cos((g - t) * 0.22)} 1)`}>
                   <circle r={34} fill={C.saffronLight} stroke={C.ink} strokeWidth={5} />
                   <circle r={21} fill="none" stroke={C.ink} strokeWidth={4} />
                 </g>
               )}
               {i === 1 && (
                 <g stroke={C.ink} strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" fill="none">
-                  <path d="M -34 -22 V 22 M 34 -22 V 22" />
+                  <path d={`M ${-34 - 5 * Math.sin((g - t) * 0.3)} -22 V 22 M ${34 + 5 * Math.sin((g - t) * 0.3)} -22 V 22`} />
                   <path d="M -22 0 H 22 M -10 -12 L -22 0 L -10 12 M 10 -12 L 22 0 L 10 12" />
                 </g>
               )}
-              {i === 2 && <Wrench x={0} y={0} rot={-35} s={0.62} />}
+              {i === 2 && <Wrench x={0} y={0} rot={-35 + 14 * Math.sin((g - t) * 0.28)} s={0.62} />}
             </g>
             <text x={-250} y={0} dy="0.36em" fontFamily={F.display} fontWeight={700} fontSize={80} fill={C.ink}>{p.text}</text>
           </g>
@@ -210,7 +210,7 @@ export const b07 = (g: number) => {
   const finalY = DOCK_Y + 8 - HANDLE_BOTTOM * P7.scale;
   const hover = finalY - 150;
   let y = lerp(lerp(finalY - 380, hover, enter), finalY, lower);
-  let x = lerp(P7.x - 330, P7.x, enter);
+  let x = lerp(P7.x - 900, P7.x, enter);
   // let go: a small step back while the fingers open, then the hand returns and re-grips (B08)
   const regrip = E.inOut(tw(g, 880, 14));
   const away = E.out(tw(g, dockT + 5, 9)) * (1 - regrip);
@@ -220,7 +220,7 @@ export const b07 = (g: number) => {
   const rel = E.out(tw(g, dockT + 4, 8)) * (1 - regrip); // 1 = fingers open
   const press = kf(g, [[913, 0, E.inOut], [EV['B08.trigger.click'], 1, E.in], [960, 1, E.linear]]);
   const squash = impact(g, dockT, 0.04, 7);
-  return {x, y, finalY, rel, press, squash, dockT, seated: g < 897};
+  return {x, y, finalY, rel, press, squash, dockT, seated: g >= dockT + 2 && g < 897};
 };
 
 export const B07Tool: React.FC<{g: number}> = ({g}) => {
@@ -234,7 +234,7 @@ export const B07Tool: React.FC<{g: number}> = ({g}) => {
       <g transform={`translate(${tp.x} ${tp.y}) scale(${P.scale}) scale(${b.squash[0]} ${b.squash[1]})`}>
         <Tool press={b.press} />
       </g>
-      <DockFace dock={1} bump={trayBump(g)} />
+      <DockFace dock={tw(g, 792, 8)} bump={trayBump(g)} />
       <Hand view="side" x={b.x} y={b.y} scale={P.scale} pose={pose} forearm={{to: {x: -100, y: b.y + 640}}} />
       <Burst x={TRAY.x} y={SURF - 100} t={(g - b.dockT) / 10} r0={60} r1={120} n={8} color={C.ink} w={5} />
       <Burst x={b.x + (TOOL.trigX + 14) * P.scale} y={b.y + (TOOL.trigY + 8) * P.scale} t={(g - click) / 10} r0={46} r1={92} n={8} color={C.coral} w={6} />

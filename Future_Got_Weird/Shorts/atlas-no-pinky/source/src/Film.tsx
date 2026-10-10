@@ -49,13 +49,13 @@ const Captions: React.FC<{g: number}> = ({g}) => {
   if (!c) return null;
   const lines = c.text.split('\n');
   const a = Math.min(1, (g - c.from + 1) / 3) * Math.min(1, (c.to - g) / 3);
-  const w = Math.min(900, Math.max(...lines.map((l) => l.length)) * 28.5 + 64);
-  const h = lines.length * 66 + 30;
+  const w = Math.min(900, Math.max(...lines.map((l) => l.length)) * 27.5 + 64);
+  const h = lines.length * 62 + 30;
   return (
     <g transform={`translate(540 ${1405})`} opacity={a}>
       <rect x={-w / 2} y={-h / 2} width={w} height={h} rx={26} fill={C.ink} opacity={0.88} />
       {lines.map((l, i) => (
-        <text key={i} x={0} y={(i - (lines.length - 1) / 2) * 66} dy="0.36em" textAnchor="middle" fontFamily={F.body} fontWeight={800} fontSize={54} fill={C.cream}>
+        <text key={i} x={0} y={(i - (lines.length - 1) / 2) * 62} dy="0.36em" textAnchor="middle" fontFamily={F.body} fontWeight={800} fontSize={52} fill={C.cream}>
           {l}
         </text>
       ))}
@@ -69,7 +69,7 @@ export const Film: React.FC<{captions?: boolean; audio?: boolean}> = ({captions 
   // camera: B01 punch-in toward the gap (released into the tape wipe); B04 gentle push-in at the number reveal
   const k1 = kf(g, [[0, 0, E.linear], [EV['B01.punch_in'], 0, E.inOut], [EV['B01.punch_in'] + 14, 1, E.inOut], [WIPE.from + 4, 1, E.inOut], [WIPE.to, 0, E.inOut]]);
   const k4 = tw(g, EV['B04.count.thirteen'] - 4, 16, E.inOut) * (1 - tw(g, 489, 10, E.inOut));
-  const cam = {cx: 540 + 60 * k1 + 30 * k4, cy: 960, zoom: 1 + 0.08 * k1 + 0.045 * k4};
+  const cam = {cx: 540 + 40 * k1 + 30 * k4, cy: 960, zoom: 1 + 0.07 * k1 + 0.045 * k4};
   const wiping = g >= WIPE.from && g < WIPE.to + 1;
   const leftPoly = `-20,0 ${tapeLead(g, WIPE.from, WIPE.to, 0)},0 ${tapeLead(g, WIPE.from, WIPE.to, H)},${H} -20,${H}`;
   const rightPoly = tapePoly(g, WIPE.from, WIPE.to);
@@ -81,8 +81,10 @@ export const Film: React.FC<{captions?: boolean; audio?: boolean}> = ({captions 
   const r09 = iris(g, IR.b09.from, IR.b09.to);
   const sA = shotA(g);
   const sB = shotB(g);
-  const tag = [...TAGS].reverse().find(([f]) => g >= f)!;
-  const tagK = Math.min(1, (g - tag[0] + 1) / 4);
+  const ti = TAGS.map(([f]) => f).filter((f) => g >= f).length - 1;
+  const tag = TAGS[ti];
+  const prevTag = ti > 0 ? TAGS[ti - 1][1] : undefined;
+  const tagK = Math.min(1, (g - tag[0] + 1) / 7);
   const dock = tw(g, 792, 8);
 
   return (
@@ -135,7 +137,7 @@ export const Film: React.FC<{captions?: boolean; audio?: boolean}> = ({captions 
         {g >= 520 && g < 609 && <B05Hud g={g} />}
         {g >= 609 && g < 710 && <B06Hud g={g} />}
         {g >= 800 && g < 892 && <B07Hud g={g} />}
-        <Chip tag={tag[1]} opacity={tagK} />
+        <Chip tag={tag[1]} prev={prevTag} k={tagK} />
         {captions && <Captions g={g} />}
         {wiping && (
           <polygon points={`${lead(0)},0 ${lead(0) + TAPE_BW},0 ${lead(H) + TAPE_BW},${H} ${lead(H)},${H}`} fill={C.blue} stroke={C.ink} strokeWidth={5} opacity={0.96} />

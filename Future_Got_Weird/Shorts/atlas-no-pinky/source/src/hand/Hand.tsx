@@ -135,7 +135,7 @@ export const capsulePath = (pts: V[], w: number): string => {
   const right = pts.map((p, i) => ({x: p.x - norm(i).x * r, y: p.y - norm(i).y * r}));
   const L = left.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`);
   const R = right.reverse().map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`);
-  return `M ${L[0]} L ${L.slice(1).join(' L ')} A ${r} ${r} 0 0 1 ${R[0]} L ${R.slice(1).join(' L ')} Z`;
+  return `M ${L[0]} L ${L.slice(1).join(' L ')} A ${r} ${r} 0 0 0 ${R[0]} L ${R.slice(1).join(' L ')} Z`;
 };
 
 const polyStr = (pts: V[]) => pts.map((p) => `${p.x},${p.y}`).join(' ');
@@ -196,7 +196,7 @@ export type HandProps = {
   front?: React.ReactNode; // drawn above the digits
 };
 
-export const GHOST_PINKY: DigitDef = {bx: 100, by: -50, len: [46, 34, 30], w: 44};
+export const GHOST_PINKY: DigitDef = {bx: 108, by: -44, len: [48, 36, 32], w: 44};
 
 export const Hand: React.FC<HandProps> = ({kind = 'robot', view = 'front', x, y, scale = 1, rot = 0, flip = false, pose = {}, highlight = {}, forearm = null, ghostPinky = 0, pulse = 0, children, front}) => {
   const lay = LAYOUTS[`${kind}-${view}`];
@@ -233,7 +233,7 @@ export const Hand: React.FC<HandProps> = ({kind = 'robot', view = 'front', x, y,
       {/* ghost pinky: dashed outline of the digit a human hand would have; not hardware */}
       {kind === 'robot' && view === 'front' && ghostPinky > 0 && (
         <g opacity={ghostPinky}>
-          <path d={capsulePath(digitPts(GHOST_PINKY, rest(-70, -66, -64)), GHOST_PINKY.w)} fill={C.white} fillOpacity={0.55} stroke={C.ink} strokeWidth={5} strokeDasharray="14 10" strokeLinecap="round" strokeLinejoin="round" />
+          <path d={capsulePath(digitPts(GHOST_PINKY, rest(-60, -56, -54)), GHOST_PINKY.w)} fill={C.white} fillOpacity={0.55} stroke={C.ink} strokeWidth={5} strokeDasharray="14 10" strokeLinecap="round" strokeLinejoin="round" />
         </g>
       )}
       {/* cuff */}
