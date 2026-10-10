@@ -18,7 +18,7 @@
    "scene": "V1",
    "text": "That sensor can't see him. It's pointed at a plain, blank wall.",
    "tts": "That sensor can't see him. It's pointed at a plain, blank wall.",
-   "pause_after_ms": 300,
+   "pause_after_ms": 600,
    "claims": [
     "C01"
    ],

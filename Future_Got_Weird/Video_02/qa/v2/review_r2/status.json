@@ -1,0 +1,37 @@
+{
+  "render": "exports/Future_Got_Weird_Video_02_v2_UPLOAD_1080p.mp4",
+  "render_facts": {"width": 1920, "height": 1080, "fps": 30, "frames": 9716, "video_s": 323.867, "audio_s": 323.883},
+  "closed": 37,
+  "partly": 6,
+  "open": 1,
+  "regressed": 0,
+  "ids": {
+    "closed": ["V2-R1-01", "V2-R1-02", "V2-R1-03", "V2-R1-05", "V2-R1-06", "V2-R1-07", "V2-R1-08", "V2-R1-09", "V2-R1-10", "V2-R1-11", "V2-R1-13", "V2-R1-14", "V2-R1-15", "V2-R1-16", "V2-R1-17", "V2-R1-18", "V2-R1-19", "V2-R1-20", "V2-R1-21", "V2-R1-22", "V2-R1-23", "V2-R1-24", "V2-R1-25", "V2-R1-26", "V2-R1-27", "V2-R1-29", "V2-R1-30", "V2-R1-31", "V2-R1-32", "V2-R1-33", "V2-R1-34", "V2-R1-35", "V2-R1-36", "V2-R1-37", "V2-R1-39", "V2-R1-40", "V2-R1-43"],
+    "partly": ["V2-R1-04", "V2-R1-12", "V2-R1-28", "V2-R1-38", "V2-R1-41", "V2-R1-42"],
+    "open": ["V2-R1-44"],
+    "regressed": []
+  },
+  "remaining": [
+    {"id": "V2-R1-04", "status": "partly", "severity": "polish", "scene": "V10.1 (document)", "frames": "7260-7381", "fix": "Edit the V10.1 row of v2/SHOTPLAN_V2.md (line 234) to match the film: 'Real data' headline (64) from the cut; question title top-left outside the card, card shifted about 70 px down, slid back for V10.2. Document only, no render."},
+    {"id": "V2-R1-12", "status": "partly", "severity": "polish", "scene": "V5 J3 crossing (audio)", "frames": "3296-3326", "fix": "Optional: fade the uh_oh sting out by about 110.40 s (f3312) so it no longer runs under the tail of 'place.'. Kept by design in the fix round; the word's core is 10-20 dB clear in 300-4000 Hz and its /s/ about 50 dB clear in 4-12 kHz."},
+    {"id": "V2-R1-28", "status": "partly", "severity": "polish", "scene": "V6->V7", "frames": "4444-4471", "fix": "Start V7's tilt to the shelf about 10-12 frames earlier so it overlaps the roll closing (f4459-4470), as r1 asked, or cut to V7 on f4464 and drop the 7 frozen frames f4464-4470 (shifts later timing)."},
+    {"id": "V2-R1-38", "status": "partly", "severity": "polish", "scene": "V12.1-V12.2", "frames": "9319-9365", "fix": "Scale the readout inset to at least 480 px wide (25% of 1920) for the blob and blank-out beat (it is 423 px inside the teal border, 431 px outside the outline); keep the 0.5 s blank and the label."},
+    {"id": "V2-R1-41", "status": "partly", "severity": "polish", "scene": "captions", "frames": "cues 7 (f555), 17 (f1378), 59 (f5477), 60 (f5554), 71 (f6561), 80 (f7276), 101 (f9119), 104 (f9556); cue 56 (f5218) optional", "fix": "SRT only. Set in-times to the measured audible onset minus 2 frames: cue 7 f549, 17 f1372, 59 f5471, 60 f5549, 71 f6556, 80 f7268, 101 f9113, 104 f9550 (56 f5211 optional); end each previous cue 2 frames before the new in-time (cues 6, 16, 58, 59, 70, 100, 103; 55)."},
+    {"id": "V2-R1-42", "status": "partly", "severity": "polish", "scene": "captions", "frames": "cues 3/4 (f149-309) and line breaks in cues 5, 11, 12, 20, 22, 26, 29, 45, 49, 50, 52, 62, 64, 65, 85, 98, 102, 104", "fix": "SRT only. Re-cut n01 as 'Yet researchers have used light / bouncing off a wall' (f149-245) | 'to track someone hidden around a corner.' (f247-309); re-break the listed two-line cues at phrase boundaries (all proposals fit 42 characters; list in REVIEW_V2_R2.md), e.g. 'Light covers about / thirty centimetres every nanosecond.', 'That's why the answer / is a likely location, or a rough shape.', 'bright sunlight, / and fast math on small hardware.'. Leave cue 69 (no break fits 42 characters)."},
+    {"id": "V2-R1-44", "status": "open", "severity": "polish", "scene": "package", "frames": "n/a", "fix": "Write v2/QA_V2.md (thumbnail check at 160-200 px, this log's outcome, the real listening status), or remove the four references to it: package/UPLOAD_PACKAGE.md lines 12 and 66, v2/CHANGE_LOG.md line 7, README.md line 9."}
+  ],
+  "new_issues": [
+    {"id": "V2-R2-01", "severity": "polish", "scene": "V12.2 (J4 'he turns smug')", "frames": "9339-9340 (5:11.30-5:11.33)", "evidence": "skeptic/bursts/NEW_J4turn_f9326-9345_crop.jpg; skeptic/bursts/NEW_J4turn_r1_f9250-9261_crop.jpg; seams/bursts/V12_J4_turn_crop_f9326-9343.jpg", "fix": "Add 2-3 in-between frames before f9340: a three-quarter head with a small shoulder turn, then the smug face and a one-frame settle. Present unchanged in r1 (f9255-9256), so not a regression."},
+    {"id": "V2-R2-02", "severity": "polish", "scene": "V6 roll-up into V7 (music)", "frames": "4444-4470 (148.13-149.00 s)", "evidence": "skeptic/audio/U_hold_rollup.txt; skeptic/audio/NEW03_roll_levels.txt; audio/music/v02v2/plan.json segments 15 (U, gain_db_applied 16.32) and 16 (roll, 19.32); sound_captions/audio_checks.txt", "fix": "Measured only, not listened to: the held strings rise about 4-5 dB under the roll-up (music stem -34.0 dBFS at 148.0 s to -30.3 at 148.6 s) where MUSIC_NOTES says the resolve 'settles'. Give the 'roll' segment the U segment's gain or a 1-2 dB down-ramp in tools/make_music_v02v2.py and re-mix, if a listening pass confirms it reads as a swell."}
+  ],
+  "findings_not_kept": [
+    {"from": "seams NEW-01", "scene": "V5.7", "frames": "3560-3635", "reason": "Rejected as a defect: a 2.53 s still under narration that describes exactly what is on screen ('close -> long, blurry'), under the 2.6 s still-run yardstick used in r1, and unchanged since r1. An optional W2/W3 highlight on 'long and blurry' (f3595-3610) is noted, not required."},
+    {"from": "sound_captions NEW-01", "reason": "Merged into V2-R1-42 (same defect class: caption breaks inside phrases)."},
+    {"from": "sound_captions NEW-02", "reason": "Merged into V2-R1-42 (the cue 3/4 split is that defect's leftover)."},
+    {"from": "sound_captions NEW-03", "reason": "Kept as V2-R2-02."},
+    {"from": "seams NEW-02", "reason": "Kept as V2-R2-01."}
+  ],
+  "loudness": {"integrated_lufs": -15.5, "true_peak_dbtp": -1.3, "lra_lu": 2.2, "lra_low_lufs": -17.1, "lra_high_lufs": -14.9, "tool": "ffmpeg ebur128 peak=true on the MP4"},
+  "blocker_or_major_remaining": false,
+  "listening": "none: nobody could listen in this environment; every audio statement is a measurement"
+}

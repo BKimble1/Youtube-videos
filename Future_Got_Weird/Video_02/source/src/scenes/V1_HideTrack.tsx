@@ -131,6 +131,15 @@ const FOV_GHOSTS = [0.35, 0.7];
 
 /** V1.2 push: 8 % in toward the sensor and the lit wall patch (the v1 S1.2 push, tilt 0). */
 const CAM_PUSH: Cam = {cx: 852, cy: 498, zoom: CAM_ROOM.zoom * 1.08};
+/** "Yet…" (owner's note on the release candidate: the turn into "Yet" was sudden): through the "Yet…" beat the camera
+ *  moves on toward the lit patch of bare wall the sensor is aimed at, gathering speed into the hard cut on
+ *  "researchers", so the cut lands on a move toward the wall the light bounces off (the board opens on the authors'
+ *  measured wall points along its top). The style still changes visibly on the cut (evidence brief: no morph). */
+const PATCH_W = (() => {
+  const q = fovSection(1).map((p) => projectWith(VIEW0, p));
+  return {x: q.reduce((s, p) => s + p.x, 0) / q.length, y: q.reduce((s, p) => s + p.y, 0) / q.length};
+})();
+const CAM_YET: Cam = {cx: lerp(CAM_PUSH.cx, PATCH_W.x, 0.55), cy: lerp(CAM_PUSH.cy, PATCH_W.y, 0.55), zoom: CAM_PUSH.zoom * 1.2};
 /** V1.4 cut-in: close on him behind the partition's end (head, chest and the partition's edge). */
 const GU_END = rigAt(H.x, H.z, 0);
 const CAM_CUTIN: Cam = {cx: GU_END.x + 118, cy: GU_END.y - 430, zoom: 2.4};
@@ -197,8 +206,13 @@ const LEAN_DUR = 12;
 const PATCH_LOOK1 = K.yet - 4;
 const LEAN_PEEK = -0.75;
 
-// V1.3 — the board (hard cut on "researchers")
+// "Yet…": the move toward the lit wall patch (CAM_YET); the room labels fade as it starts
+const YET_PUSH0 = K.yet + 2;
+const YET_PUSH_DUR = Math.max(10, K.researchers - YET_PUSH0);
+const YET_FADE = 8;
+// V1.3 — the board (hard cut on "researchers"); it settles in from 3.5 % large over its first 9 frames
 const BOARD0 = K.researchers;
+const BOARD_SETTLE = 9;
 /** The cut-in starts 0.6 s before the scene's end (as "photograph" lands), never before n02's last word. */
 const CUTIN = Math.max(K.photograph + 6, K.end - 18);
 const DOT_LBL = K.track;
@@ -364,7 +378,13 @@ const STAND_SORT_Z = LAYOUT.operator.z + 0.2;
 
 /* ================================================================== the room shot (V1.1, V1.2, V1.4) */
 
-const roomCam = (g: number): Cam => (g >= CUTIN ? CAM_CUTIN : camPath(g, CAM_ROOM, [{at: PUSH0, dur: PUSH_DUR, to: CAM_PUSH}]));
+const roomCam = (g: number): Cam =>
+  g >= CUTIN
+    ? CAM_CUTIN
+    : camPath(g, CAM_ROOM, [
+        {at: PUSH0, dur: PUSH_DUR, to: CAM_PUSH},
+        {at: YET_PUSH0, dur: YET_PUSH_DUR, to: CAM_YET, ease: E.in},
+      ]);
 
 /** The sight line's ends (screen px at a camera): from the sensor's emitter rim (its window) to the face hit HIT3. */
 const sightWorld = () => {
@@ -442,8 +462,9 @@ const RoomShot: React.FC<{g: number}> = ({g}) => {
   const {a, b} = sightEnds(cam);
   const head = {x: lerp(a.x, b.x, sight), y: lerp(a.y, b.y, sight)};
   const xk = g >= SIGHT_HIT ? E.back(clamp01((g - SIGHT_HIT) / 6)) : 0;
-  const blockedT = room ? tw(g, BLOCKED_IN, 3, E.linear) : 0;
-  const sensorT = room ? tw(g, SENSOR_LBL, 5, E.linear) : 0;
+  const yetFade = 1 - tw(g, YET_PUSH0, YET_FADE, E.linear);
+  const blockedT = room ? tw(g, BLOCKED_IN, 3, E.linear) * yetFade : 0;
+  const sensorT = room ? tw(g, SENSOR_LBL, 5, E.linear) * yetFade : 0;
   const lab = labelSpots(cam);
 
   return (
@@ -495,8 +516,9 @@ const labelSpots = (cam: Cam) => {
 
 const BoardShot: React.FC<{g: number}> = ({g}) => {
   const push = tw(g, BPUSH0, BOARD_LAST - BPUSH0, E.linear);
+  const settle = 1 + 0.035 * (1 - tw(g, BOARD0, BOARD_SETTLE, E.out));
   return (
-    <AbsoluteFill>
+    <AbsoluteFill style={settle > 1 ? {transform: `scale(${settle})`, transformOrigin: '50% 50%'} : undefined}>
       <RealTrackBoard
         idx={replayIndex(g, BOARD0)}
         sensorLabel={1}
@@ -543,7 +565,9 @@ export const V1_CHECKS = (() => {
     const sec = fovSection(u);
     for (let i = 0; i < 4; i++) fovLegs.push([sec[i], sec[(i + 1) % 4]]);
   }
-  for (const zoom of [CAM_ROOM.zoom, CAM_PUSH.zoom]) {
+  if (YET_PUSH0 + YET_FADE > BOARD0) fail('the room labels must have faded before the cut to the board');
+  if (BOARD0 + BOARD_SETTLE > WALL_PULSE) fail('the board must have settled before the wall points pulse');
+  for (const zoom of [CAM_ROOM.zoom, CAM_PUSH.zoom, CAM_YET.zoom]) {
     assertAroundTheEnd('V1 blocked line', [[at3(S), HIT3]], VIEW0, {zoom, allowFront: true});
     assertAroundTheEnd('V1 field of view', fovLegs, VIEW0, {zoom, allowFront: true});
   }

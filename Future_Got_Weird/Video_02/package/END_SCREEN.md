@@ -1,6 +1,6 @@
 # End screen: placement instructions (owner)
 
-The film's last 10.0 s (5:13.87 to 5:23.87, frames 9416-9715 at 30 fps) is
+The film's last 10.0 s (5:14.37 to 5:24.37, frames 9431-9730 at 30 fps) is
 the end screen. It is already clear of content where YouTube's elements go; the lighter panel and disc in the picture are
 layout guides only, not clickable elements.
 
@@ -14,5 +14,5 @@ Steps in YouTube Studio (Content -> this video -> Editor -> End screen):
 1. Add element 1, **Video**: choose the channel's other episode (or "Best for viewer"). Drag and resize it to cover the
    panel guide (x 1000-1800, y 290-740). YouTube may enforce its own minimum size; keep the element inside the guide.
 2. Add element 2, **Subscribe**: centre it on the disc guide at (430, 600).
-3. Set both elements to run from **5:13.87** to the end of the video (10.0 s; YouTube allows 5-20 s).
+3. Set both elements to run from **5:14.37** to the end of the video (10.0 s; YouTube allows 5-20 s).
 4. Check the phone preview: the wordmark, the callback art and any caption must not sit under either element.

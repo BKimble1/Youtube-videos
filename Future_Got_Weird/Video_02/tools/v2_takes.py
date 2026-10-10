@@ -95,7 +95,9 @@ def take_lines(section, take):
     x = decode(os.path.join(TAKES, f"{take}.mp3"))
     out, i = [], 0
     for sid, n in zip(section["segments"], section["words_per_segment"]):
-        out.append((sid, words[i:i + n]))
+        # a context line ("ctx:s02") is the same line spoken inside this take; it answers to its own id, so a reused
+        # line can take its rendition from the take its neighbour comes from (one continuous performance)
+        out.append((sid[4:] if sid.startswith("ctx:") else sid, words[i:i + n]))
         i += n
     return out, x
 

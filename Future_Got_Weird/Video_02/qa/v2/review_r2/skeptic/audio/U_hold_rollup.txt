@@ -1,0 +1,66 @@
+U hold and roll-up: 100 ms windows, full band dBFS (music stem, sfx stem, narration stem, render)
+144.80s f 4344.0  mus  -40.8  sfx  -53.9  nar  -17.3  render  -17.1
+144.90s f 4347.0  mus  -41.3  sfx  -51.9  nar  -18.4  render  -18.4
+145.00s f 4350.0  mus  -42.6  sfx  -51.6  nar  -19.7  render  -19.7
+145.10s f 4353.0  mus  -43.7  sfx  -53.5  nar  -16.5  render  -16.5
+145.20s f 4356.0  mus  -36.2  sfx  -53.3  nar  -27.4  render  -26.8
+145.30s f 4359.0  mus  -38.6  sfx  -52.8  nar  -41.1  render  -36.6
+145.40s f 4362.0  mus  -39.9  sfx  -55.0  nar  -71.3  render  -39.7
+145.50s f 4365.0  mus  -37.4  sfx  -56.6  nar  -71.7  render  -37.3
+145.60s f 4368.0  mus  -33.3  sfx  -40.5  nar  -71.8  render  -32.7
+145.70s f 4371.0  mus  -29.8  sfx  -51.7  nar  -71.8  render  -29.7
+145.80s f 4374.0  mus  -29.7  sfx  -53.8  nar  -71.7  render  -29.7
+145.90s f 4377.0  mus  -32.3  sfx  -50.0  nar  -71.6  render  -32.3
+146.00s f 4380.0  mus  -31.5  sfx  -52.1  nar  -71.4  render  -31.5
+146.10s f 4383.0  mus  -28.4  sfx  -53.8  nar  -71.5  render  -28.4
+146.20s f 4386.0  mus  -28.5  sfx  -53.6  nar  -71.5  render  -28.5
+146.30s f 4389.0  mus  -29.0  sfx  -50.0  nar  -71.7  render  -29.0
+146.40s f 4392.0  mus  -28.0  sfx  -51.9  nar  -71.6  render  -28.0
+146.50s f 4395.0  mus  -28.4  sfx  -49.9  nar  -71.4  render  -28.4
+146.60s f 4398.0  mus  -28.8  sfx  -49.4  nar  -71.5  render  -28.8
+146.70s f 4401.0  mus  -28.7  sfx  -51.3  nar  -71.4  render  -28.7
+146.80s f 4404.0  mus  -29.3  sfx  -51.0  nar  -71.8  render  -29.2
+146.90s f 4407.0  mus  -29.8  sfx  -50.4  nar  -71.8  render  -29.8
+147.00s f 4410.0  mus  -27.5  sfx  -52.5  nar  -71.6  render  -27.5
+147.10s f 4413.0  mus  -27.1  sfx  -54.1  nar  -71.6  render  -27.1
+147.20s f 4416.0  mus  -28.8  sfx  -48.7  nar  -71.6  render  -28.7
+147.30s f 4419.0  mus  -27.7  sfx  -50.0  nar  -71.5  render  -27.7
+147.40s f 4422.0  mus  -29.9  sfx  -51.8  nar  -71.8  render  -29.9
+147.50s f 4425.0  mus  -31.7  sfx  -48.3  nar  -71.6  render  -31.6
+147.60s f 4428.0  mus  -29.1  sfx  -50.6  nar  -71.7  render  -29.1
+147.70s f 4431.0  mus  -29.9  sfx  -52.5  nar  -71.7  render  -29.9
+147.80s f 4434.0  mus  -33.5  sfx  -52.4  nar  -71.6  render  -33.4
+147.90s f 4437.0  mus  -31.5  sfx  -49.0  nar  -72.0  render  -31.4
+148.00s f 4440.0  mus  -34.0  sfx  -51.0  nar  -71.6  render  -33.9
+148.10s f 4443.0  mus  -34.1  sfx  -45.2  nar  -71.8  render  -33.8
+148.20s f 4446.0  mus  -33.1  sfx  -43.5  nar  -71.7  render  -32.8
+148.30s f 4449.0  mus  -32.6  sfx  -46.5  nar  -71.6  render  -32.5
+148.40s f 4452.0  mus  -30.8  sfx  -45.5  nar  -71.6  render  -30.6
+148.50s f 4455.0  mus  -30.5  sfx  -49.6  nar  -71.4  render  -30.5
+148.60s f 4458.0  mus  -30.3  sfx  -45.7  nar  -71.9  render  -30.2
+148.70s f 4461.0  mus  -30.3  sfx  -47.5  nar  -71.8  render  -30.2
+148.80s f 4464.0  mus  -30.8  sfx  -43.3  nar  -71.5  render  -30.6
+148.90s f 4467.0  mus  -31.0  sfx  -46.7  nar  -71.7  render  -30.9
+149.00s f 4470.0  mus  -26.2  sfx  -36.8  nar  -71.5  render  -26.0
+149.10s f 4473.0  mus  -26.8  sfx  -42.4  nar  -71.6  render  -26.7
+149.20s f 4476.0  mus  -31.4  sfx  -42.9  nar  -71.7  render  -31.5
+149.30s f 4479.0  mus  -43.3  sfx  -42.6  nar  -17.3  render  -17.3
+
+Music spectral-flux onsets (10 ms hop), > 4x median:
+  144.591s f 4337.7    7.5x
+  144.891s f 4346.7    5.9x
+  145.201s f 4356.0    7.5x
+  145.491s f 4364.7    5.8x
+  145.631s f 4368.9   22.4x
+  145.791s f 4373.7    8.4x
+  146.081s f 4382.4   16.6x
+  146.191s f 4385.7    4.2x
+  146.391s f 4391.7    9.9x
+  146.691s f 4400.7    9.8x
+  146.991s f 4409.7   12.2x
+  147.291s f 4418.7   11.3x
+  147.591s f 4427.7   11.7x
+  147.891s f 4436.7   11.7x
+  149.131s f 4473.9   27.8x
+  149.281s f 4478.4   18.1x
+  149.431s f 4482.9   22.5x

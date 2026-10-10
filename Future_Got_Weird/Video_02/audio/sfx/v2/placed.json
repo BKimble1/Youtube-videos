@@ -9,1680 +9,1680 @@
 },
 {
 "scene": "V1",
-"f": 10,
-"t": 0.333,
+"f": 9,
+"t": 0.3,
 "kind": "tiptoe_step",
 "gain": -1,
 "note": ""
 },
 {
 "scene": "V1",
-"f": 20,
-"t": 0.667,
+"f": 19,
+"t": 0.633,
 "kind": "tiptoe_step",
 "gain": -1,
 "note": ""
 },
 {
 "scene": "V1",
-"f": 26,
-"t": 0.867,
+"f": 24,
+"t": 0.8,
 "kind": "tiptoe_step",
 "gain": -4,
 "note": ""
 },
 {
 "scene": "V1",
-"f": 38,
-"t": 1.267,
+"f": 36,
+"t": 1.2,
 "kind": "cloth_rustle",
 "gain": -7,
 "note": ""
 },
 {
 "scene": "V1",
-"f": 58,
-"t": 1.933,
+"f": 61,
+"t": 2.033,
 "kind": "partition_thunk",
 "gain": -10,
 "note": "the sight line stops at the partition (soft)"
 },
 {
 "scene": "V1",
-"f": 84,
-"t": 2.8,
+"f": 89,
+"t": 2.967,
 "kind": "readout_beep",
 "gain": -8,
 "note": ""
 },
 {
 "scene": "V1",
-"f": 86,
-"t": 2.867,
+"f": 91,
+"t": 3.033,
 "kind": "sensor_hum",
 "gain": -12,
 "note": ""
 },
 {
 "scene": "V1",
-"f": 124,
-"t": 4.133,
+"f": 134,
+"t": 4.467,
 "kind": "smug_exhale",
 "gain": -2,
 "note": ""
 },
 {
 "scene": "V1",
-"f": 408,
-"t": 13.6,
+"f": 423,
+"t": 14.1,
 "kind": "uh_oh",
 "gain": -4,
 "note": "V1.4: his smirk freezes"
 },
 {
 "scene": "V2",
-"f": 421,
-"t": 14.033,
+"f": 437,
+"t": 14.567,
 "kind": "amb_room",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "V2",
-"f": 481,
-"t": 16.033,
+"f": 496,
+"t": 16.533,
 "kind": "sensor_pulse",
 "gain": -2,
 "note": ""
 },
 {
 "scene": "V2",
-"f": 520,
-"t": 17.333,
+"f": 535,
+"t": 17.833,
 "kind": "echo_return",
 "gain": -3,
 "note": ""
 },
 {
 "scene": "V2",
-"f": 529,
-"t": 17.633,
+"f": 544,
+"t": 18.133,
 "kind": "bounce_tick",
 "gain": -8,
 "note": "the long trip reaches him"
 },
 {
 "scene": "V2",
-"f": 577,
-"t": 19.233,
+"f": 592,
+"t": 19.733,
 "kind": "echo_return",
 "gain": -5,
 "note": ""
 },
 {
 "scene": "V2",
-"f": 744,
-"t": 24.8,
+"f": 759,
+"t": 25.3,
 "kind": "pencil_tap",
 "gain": -3,
 "note": "mitt taps the display"
 },
 {
 "scene": "V2",
-"f": 745,
-"t": 24.833,
+"f": 760,
+"t": 25.333,
 "kind": "readout_beep",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "V2",
-"f": 748,
-"t": 24.933,
+"f": 763,
+"t": 25.433,
 "kind": "sensor_pulse",
 "gain": -5,
 "note": ""
 },
 {
 "scene": "V2",
-"f": 782,
-"t": 26.067,
+"f": 797,
+"t": 26.567,
 "kind": "echo_return",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "V2",
-"f": 849,
-"t": 28.3,
+"f": 865,
+"t": 28.833,
 "kind": "arc_draw",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "V2",
-"f": 872,
-"t": 29.067,
+"f": 888,
+"t": 29.6,
 "kind": "glint",
 "gain": -6,
 "note": "a light lift on the \"?\""
 },
 {
 "scene": "V3",
-"f": 911,
-"t": 30.367,
+"f": 927,
+"t": 30.9,
 "kind": "amb_room",
 "gain": -4,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1049,
-"t": 34.967,
+"f": 1064,
+"t": 35.467,
 "kind": "mirror_slide",
 "gain": -3,
 "note": "wall mirror slides down (covers the visible drop)"
 },
 {
 "scene": "V3",
-"f": 1050,
-"t": 35.0,
+"f": 1065,
+"t": 35.5,
 "kind": "mirror_ting",
 "gain": -2,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1058,
-"t": 35.267,
+"f": 1073,
+"t": 35.767,
 "kind": "pencil_tap",
 "gain": -3,
 "note": "pointer taps the glass"
 },
 {
 "scene": "V3",
-"f": 1071,
-"t": 35.7,
+"f": 1086,
+"t": 36.2,
 "kind": "sensor_pulse",
 "gain": -4,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1077,
-"t": 35.9,
+"f": 1092,
+"t": 36.4,
 "kind": "bounce_tick",
 "gain": -3,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1089,
-"t": 36.3,
+"f": 1104,
+"t": 36.8,
 "kind": "bounce_tick",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1095,
-"t": 36.5,
+"f": 1110,
+"t": 37.0,
 "kind": "echo_return",
 "gain": -4,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1090,
-"t": 36.333,
+"f": 1105,
+"t": 36.833,
 "kind": "footstep_wood",
 "gain": -12,
 "note": "his resting foot plants back at the stance"
 },
 {
 "scene": "V3",
-"f": 1104,
-"t": 36.8,
+"f": 1119,
+"t": 37.3,
 "kind": "cloth_rustle",
 "gain": -2,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1108,
-"t": 36.933,
+"f": 1123,
+"t": 37.433,
 "kind": "thud_soft",
 "gain": -6,
 "note": "duck squash"
 },
 {
 "scene": "V3",
-"f": 1142,
-"t": 38.067,
+"f": 1157,
+"t": 38.567,
 "kind": "mirror_slide",
 "gain": -7,
 "note": "slides off: the stop lands as it leaves the frame"
 },
 {
 "scene": "V3",
-"f": 1144,
-"t": 38.133,
+"f": 1159,
+"t": 38.633,
 "kind": "relief_sigh",
 "gain": -4,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1148,
-"t": 38.267,
+"f": 1164,
+"t": 38.8,
 "kind": "magnifier_slide",
 "gain": -4,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1218,
-"t": 40.6,
+"f": 1234,
+"t": 41.133,
 "kind": "bounce_tick",
 "gain": -3,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1274,
-"t": 42.467,
+"f": 1289,
+"t": 42.967,
 "kind": "bounce_tick",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "V3",
-"f": 1343,
-"t": 44.767,
+"f": 1359,
+"t": 45.3,
 "kind": "indicator_yes",
 "gain": -10,
 "note": "soft glow tone on \"tiny lamp\""
 },
 {
 "scene": "V3",
-"f": 1431,
-"t": 47.7,
+"f": 1446,
+"t": 48.2,
 "kind": "echo_return",
 "gain": -2,
 "note": "three returns blend into one blip"
 },
 {
 "scene": "V3",
-"f": 1491,
-"t": 49.7,
+"f": 1506,
+"t": 50.2,
 "kind": "pop_tick",
 "gain": -4,
 "note": "one tick at one time"
 },
 {
 "scene": "V4",
-"f": 1523,
-"t": 50.767,
+"f": 1539,
+"t": 51.3,
 "kind": "amb_room",
 "gain": -8,
 "note": ""
 },
 {
 "scene": "V4",
-"f": 1570,
-"t": 52.333,
+"f": 1585,
+"t": 52.833,
 "kind": "sensor_pulse",
 "gain": -4,
 "note": ""
 },
 {
 "scene": "V4",
-"f": 1592,
-"t": 53.067,
+"f": 1607,
+"t": 53.567,
 "kind": "bounce_tick",
 "gain": -3,
 "note": ""
 },
 {
 "scene": "V4",
-"f": 1594,
-"t": 53.133,
+"f": 1609,
+"t": 53.633,
 "kind": "echo_return",
 "gain": -3,
 "note": "the wall echo lands (1 bounce)"
 },
 {
 "scene": "V4",
-"f": 1624,
-"t": 54.133,
+"f": 1639,
+"t": 54.633,
 "kind": "bounce_tick",
 "gain": -7,
 "note": ""
 },
 {
 "scene": "V4",
-"f": 1656,
-"t": 55.2,
+"f": 1672,
+"t": 55.733,
 "kind": "bounce_tick",
 "gain": -10,
 "note": ""
 },
 {
 "scene": "V4",
-"f": 1688,
-"t": 56.267,
+"f": 1704,
+"t": 56.8,
 "kind": "echo_return",
 "gain": -12,
 "note": "the 3-bounce echo lands, tiny"
 },
 {
 "scene": "V4",
-"f": 1972,
-"t": 65.733,
+"f": 1987,
+"t": 66.233,
 "kind": "magnifier_slide",
 "gain": -5,
 "note": ""
 },
 {
 "scene": "V4",
-"f": 2192,
-"t": 73.067,
+"f": 2208,
+"t": 73.6,
 "kind": "pencil_tap",
 "gain": -3,
 "note": "pointer taps the ring"
 },
 {
 "scene": "V5",
-"f": 2283,
-"t": 76.1,
+"f": 2299,
+"t": 76.633,
 "kind": "amb_room",
 "gain": -2,
 "note": "room tone under the plan, whole scene (the quietest bed)"
 },
 {
 "scene": "V5",
-"f": 2333,
-"t": 77.767,
+"f": 2349,
+"t": 78.3,
 "kind": "paper_flap",
 "gain": -5,
 "note": "the room settles flat into the plan"
 },
 {
 "scene": "V5",
-"f": 2388,
-"t": 79.6,
+"f": 2403,
+"t": 80.1,
 "kind": "sensor_pulse",
 "gain": -4,
 "note": "the sensor flashes: the field-of-view wedge lights the wall"
 },
 {
 "scene": "V5",
-"f": 2441,
-"t": 81.367,
+"f": 2457,
+"t": 81.9,
 "kind": "sensor_pulse",
 "gain": 0,
 "note": "the confocal route: out to W1"
 },
 {
 "scene": "V5",
-"f": 2446,
-"t": 81.533,
+"f": 2462,
+"t": 82.067,
 "kind": "bounce_tick",
 "gain": 0,
 "note": "W1"
 },
 {
 "scene": "V5",
-"f": 2453,
-"t": 81.767,
+"f": 2469,
+"t": 82.3,
 "kind": "bounce_tick",
 "gain": -3,
 "note": "him"
 },
 {
 "scene": "V5",
-"f": 2466,
-"t": 82.2,
+"f": 2482,
+"t": 82.733,
 "kind": "echo_return",
 "gain": -3,
 "note": "back at the sensor (listens)"
 },
 {
 "scene": "V5",
-"f": 2478,
-"t": 82.6,
+"f": 2493,
+"t": 83.1,
 "kind": "ruler_extend",
 "gain": -3,
 "note": "the path meter starts paying out"
 },
 {
 "scene": "V5",
-"f": 2560,
-"t": 85.333,
+"f": 2576,
+"t": 85.867,
 "kind": "bounce_tick",
 "gain": -4,
 "note": "the pulse turns at his token"
 },
 {
 "scene": "V5",
-"f": 2947,
-"t": 98.233,
+"f": 2963,
+"t": 98.767,
 "kind": "relief_sigh",
 "gain": -3,
 "note": "J3a: not which direction (after the word)"
 },
 {
 "scene": "V5",
-"f": 2990,
-"t": 99.667,
+"f": 3005,
+"t": 100.167,
 "kind": "arc_draw",
 "gain": 0,
 "note": "arc 1 sweep"
 },
 {
 "scene": "V5",
-"f": 3113,
-"t": 103.767,
+"f": 3128,
+"t": 104.267,
 "kind": "sensor_pulse",
 "gain": -2,
 "note": "flash at W4"
 },
 {
 "scene": "V5",
-"f": 3124,
-"t": 104.133,
+"f": 3139,
+"t": 104.633,
 "kind": "echo_return",
 "gain": -4,
 "note": "listens"
 },
 {
 "scene": "V5",
-"f": 3193,
-"t": 106.433,
+"f": 3208,
+"t": 106.933,
 "kind": "arc_draw",
 "gain": 0,
 "note": "arc 2 sweep"
 },
 {
 "scene": "V5",
-"f": 3297,
-"t": 109.9,
+"f": 3312,
+"t": 110.4,
 "kind": "pencil_tap",
 "gain": -2,
 "note": "the checker's pointer taps the crossing: contact on the music's full stop, in the pause before \"one place\""
 },
 {
 "scene": "V5",
-"f": 3307,
-"t": 110.233,
+"f": 3322,
+"t": 110.733,
 "kind": "uh_oh",
 "gain": -6,
 "note": "J3b: 2 frames after his face drops (on \"one\"), at -6 dB: its 0.65 s ring runs under \"one place.\" about 7-19 dB below the voice's core (speech band), level with the tail of \"place.\""
 },
 {
 "scene": "V5",
-"f": 3736,
-"t": 124.533,
+"f": 3751,
+"t": 125.033,
 "kind": "sensor_pulse",
 "gain": -6,
 "note": "flash at W1 (many spots)"
 },
 {
 "scene": "V5",
-"f": 3741,
-"t": 124.7,
+"f": 3756,
+"t": 125.2,
 "kind": "sensor_pulse",
 "gain": -7,
 "note": "flash at W2 (many spots)"
 },
 {
 "scene": "V5",
-"f": 3746,
-"t": 124.867,
+"f": 3761,
+"t": 125.367,
 "kind": "sensor_pulse",
 "gain": -8,
 "note": "flash at W3 (many spots)"
 },
 {
 "scene": "V5",
-"f": 3751,
-"t": 125.033,
+"f": 3766,
+"t": 125.533,
 "kind": "sensor_pulse",
 "gain": -9,
 "note": "flash at W4 (many spots)"
 },
 {
 "scene": "V6",
-"f": 4190,
-"t": 139.667,
+"f": 4205,
+"t": 140.167,
 "kind": "amb_room",
 "gain": -9,
 "note": "very low tone under the real-data board"
 },
 {
 "scene": "V6",
-"f": 4369,
-"t": 145.633,
+"f": 4384,
+"t": 146.133,
 "kind": "pencil_tap",
 "gain": -3,
 "note": "the checker's pointer taps the U's base at the start of the hold, with the music's resolve and tick (end of \"U.\")"
 },
 {
 "scene": "V6",
-"f": 4444,
-"t": 148.133,
+"f": 4459,
+"t": 148.633,
 "kind": "paper_lift",
 "gain": -3,
 "note": "the board rolls up into a scroll"
 },
 {
 "scene": "V7",
-"f": 4470,
-"t": 149.0,
+"f": 4485,
+"t": 149.5,
 "kind": "amb_museum",
 "gain": 0,
 "note": "museum hall tone, whole scene"
 },
 {
 "scene": "V7",
-"f": 4484,
-"t": 149.467,
+"f": 4499,
+"t": 149.967,
 "kind": "thud_soft",
 "gain": -3,
 "note": "the scroll lands on the ledge"
 },
 {
 "scene": "V7",
-"f": 4540,
-"t": 151.333,
+"f": 4555,
+"t": 151.833,
 "kind": "sensor_pulse",
 "gain": -7,
 "note": "2012: the laser lights the wall (brisk pulse)"
 },
 {
 "scene": "V7",
-"f": 4668,
-"t": 155.6,
+"f": 4684,
+"t": 156.133,
 "kind": "sensor_pulse",
 "gain": -7,
 "note": "2021: the big laser fires"
 },
 {
 "scene": "V7",
-"f": 4763,
-"t": 158.767,
+"f": 4779,
+"t": 159.3,
 "kind": "rope_clip",
 "gain": -3,
 "note": "rope hooks onto post 2"
 },
 {
 "scene": "V7",
-"f": 4769,
-"t": 158.967,
+"f": 4785,
+"t": 159.5,
 "kind": "rope_clip",
 "gain": -4,
 "note": "rope hooks onto post 3"
 },
 {
 "scene": "V7",
-"f": 4775,
-"t": 159.167,
+"f": 4791,
+"t": 159.7,
 "kind": "rope_clip",
 "gain": -5,
 "note": "rope hooks onto post 4"
 },
 {
 "scene": "V7",
-"f": 4778,
-"t": 159.267,
+"f": 4794,
+"t": 159.8,
 "kind": "hanger_click",
 "gain": -2,
 "note": "sign: research equipment"
 },
 {
 "scene": "V7",
-"f": 4804,
-"t": 160.133,
+"f": 4820,
+"t": 160.667,
 "kind": "machine_clunk",
 "gain": -14,
 "note": "the hall lights dim, the spotlight swings"
 },
 {
 "scene": "V7",
-"f": 4873,
-"t": 162.433,
+"f": 4889,
+"t": 162.967,
 "kind": "readout_beep",
 "gain": -10,
 "note": "the tiny board hops and blinks (\"cheap\")"
 },
 {
 "scene": "V7",
-"f": 4959,
-"t": 165.3,
+"f": 4974,
+"t": 165.8,
 "kind": "tiny_clink",
 "gain": 0,
 "note": "her sensor set down on the fourth plinth"
 },
 {
 "scene": "V7",
-"f": 5318,
-"t": 177.267,
+"f": 5333,
+"t": 177.767,
 "kind": "thud_soft",
 "gain": -8,
 "note": "the padlock lands on the screen"
 },
 {
 "scene": "V7",
-"f": 5347,
-"t": 178.233,
+"f": 5363,
+"t": 178.767,
 "kind": "lock_click",
 "gain": 0,
 "note": "the padlock snaps shut"
 },
 {
 "scene": "V8",
-"f": 5541,
-"t": 184.7,
+"f": 5557,
+"t": 185.233,
 "kind": "amb_museum",
 "gain": 0,
 "note": "the museum hall tone carries on under the tight spotlight"
 },
 {
 "scene": "V8",
-"f": 5639,
-"t": 187.967,
+"f": 5654,
+"t": 188.467,
 "kind": "sensor_pulse",
 "gain": -12,
 "note": "a weak, dim pulse"
 },
 {
 "scene": "V8",
-"f": 5671,
-"t": 189.033,
+"f": 5686,
+"t": 189.533,
 "kind": "echo_return",
 "gain": -18,
 "note": "an even fainter echo"
 },
 {
 "scene": "V8",
-"f": 5875,
-"t": 195.833,
+"f": 5890,
+"t": 196.333,
 "kind": "tiny_clink",
 "gain": -8,
 "note": "lifted off the stand"
 },
 {
 "scene": "V8",
-"f": 5909,
-"t": 196.967,
+"f": 5924,
+"t": 197.467,
 "kind": "partition_wobble",
 "gain": -8,
 "note": "a small rattle on the jiggle"
 },
 {
 "scene": "V8",
-"f": 5931,
-"t": 197.7,
+"f": 5947,
+"t": 198.233,
 "kind": "shutter_click",
 "gain": -4,
 "note": "night-mode frame 1"
 },
 {
 "scene": "V8",
-"f": 5944,
-"t": 198.133,
+"f": 5960,
+"t": 198.667,
 "kind": "shutter_click",
 "gain": -6,
 "note": "night-mode frame 2"
 },
 {
 "scene": "V8",
-"f": 5959,
-"t": 198.633,
+"f": 5974,
+"t": 199.133,
 "kind": "shutter_click",
 "gain": -4,
 "note": "night-mode frame 3"
 },
 {
 "scene": "V8",
-"f": 5973,
-"t": 199.1,
+"f": 5989,
+"t": 199.633,
 "kind": "shutter_click",
 "gain": -6,
 "note": "night-mode frame 4"
 },
 {
 "scene": "V8",
-"f": 5988,
-"t": 199.6,
+"f": 6003,
+"t": 200.1,
 "kind": "shutter_click",
 "gain": -4,
 "note": "night-mode frame 5"
 },
 {
 "scene": "V8",
-"f": 6003,
-"t": 200.1,
+"f": 6018,
+"t": 200.6,
 "kind": "shutter_click",
 "gain": -6,
 "note": "night-mode frame 6"
 },
 {
 "scene": "V9",
-"f": 6132,
-"t": 204.4,
+"f": 6147,
+"t": 204.9,
 "kind": "amb_room",
 "gain": 0,
 "note": "V9 room tone (our plan)"
 },
 {
 "scene": "V9",
-"f": 6190,
-"t": 206.333,
+"f": 6205,
+"t": 206.833,
 "kind": "sensor_pulse",
 "gain": -8,
 "note": "frame 1: the sensor fires"
 },
 {
 "scene": "V9",
-"f": 6204,
-"t": 206.8,
+"f": 6219,
+"t": 207.3,
 "kind": "echo_return",
 "gain": -10,
 "note": "frame 1: his echo lands on the mini timeline"
 },
 {
 "scene": "V9",
-"f": 6243,
-"t": 208.1,
+"f": 6258,
+"t": 208.6,
 "kind": "footstep_wood",
 "gain": -8,
 "note": "he steps H_A \u2192 H_B"
 },
 {
 "scene": "V9",
-"f": 6260,
-"t": 208.667,
+"f": 6275,
+"t": 209.167,
 "kind": "sensor_pulse",
 "gain": -9,
 "note": "frame 2: the sensor fires"
 },
 {
 "scene": "V9",
-"f": 6282,
-"t": 209.4,
+"f": 6297,
+"t": 209.9,
 "kind": "echo_return",
 "gain": -11,
 "note": "his echo lands later"
 },
 {
 "scene": "V9",
-"f": 6334,
-"t": 211.133,
+"f": 6349,
+"t": 211.633,
 "kind": "partition_wobble",
 "gain": -10,
 "note": "the sensor head jiggles on its stand"
 },
 {
 "scene": "V9",
-"f": 6389,
-"t": 212.967,
+"f": 6405,
+"t": 213.5,
 "kind": "sensor_pulse",
 "gain": -11,
 "note": "the spots fire where they landed"
 },
 {
 "scene": "V9",
-"f": 6499,
-"t": 216.633,
+"f": 6515,
+"t": 217.167,
 "kind": "paper_swish",
 "gain": -9,
 "note": "the smear swish (the only one)"
 },
 {
 "scene": "V9",
-"f": 6566,
-"t": 218.867,
+"f": 6582,
+"t": 219.4,
 "kind": "shutter_click",
 "gain": -6,
 "note": "long-exposure snapshot"
 },
 {
 "scene": "V9",
-"f": 6647,
-"t": 221.567,
+"f": 6663,
+"t": 222.1,
 "kind": "lock_click",
 "gain": -6,
 "note": "padlock on \"position\""
 },
 {
 "scene": "V9",
-"f": 6653,
-"t": 221.767,
+"f": 6668,
+"t": 222.267,
 "kind": "lock_click",
 "gain": -6,
 "note": "padlock on \"sensor\""
 },
 {
 "scene": "V9",
-"f": 6672,
-"t": 222.4,
+"f": 6687,
+"t": 222.9,
 "kind": "lock_click",
 "gain": -12,
 "note": "position unlocks"
 },
 {
 "scene": "V9",
-"f": 6682,
-"t": 222.733,
+"f": 6697,
+"t": 223.233,
 "kind": "lock_click",
 "gain": -6,
 "note": "padlock on \"shape\""
 },
 {
 "scene": "V9",
-"f": 6731,
-"t": 224.367,
+"f": 6746,
+"t": 224.867,
 "kind": "sensor_pulse",
 "gain": -10,
 "note": "frame A: the sensor fires at A"
 },
 {
 "scene": "V9",
-"f": 6795,
-"t": 226.5,
+"f": 6811,
+"t": 227.033,
 "kind": "book_slide",
 "gain": -10,
 "note": "the sensor rides the rail A \u2192 B1"
 },
 {
 "scene": "V9",
-"f": 6828,
-"t": 227.6,
+"f": 6843,
+"t": 228.1,
 "kind": "tiny_clink",
 "gain": -10,
 "note": "the carriage stops at B1"
 },
 {
 "scene": "V9",
-"f": 6860,
-"t": 228.667,
+"f": 6876,
+"t": 229.2,
 "kind": "sensor_pulse",
 "gain": -10,
 "note": "B1's listening spots"
 },
 {
 "scene": "V9",
-"f": 6915,
-"t": 230.5,
+"f": 6931,
+"t": 231.033,
 "kind": "card_flick",
 "gain": -8,
 "note": "the U thumbnail card"
 },
 {
 "scene": "V9",
-"f": 6972,
-"t": 232.4,
+"f": 6987,
+"t": 232.9,
 "kind": "sensor_pulse",
 "gain": -11,
 "note": "frame 1 of the walk: the sensor fires; the guesses fill its region"
 },
 {
 "scene": "V9",
-"f": 7043,
-"t": 234.767,
+"f": 7059,
+"t": 235.3,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "he steps to H_B"
 },
 {
 "scene": "V9",
-"f": 7081,
-"t": 236.033,
+"f": 7097,
+"t": 236.567,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "he steps to H_C"
 },
 {
 "scene": "V9",
-"f": 7120,
-"t": 237.333,
+"f": 7135,
+"t": 237.833,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "he steps to H_D"
 },
 {
 "scene": "V9",
-"f": 7048,
-"t": 234.933,
+"f": 7064,
+"t": 235.467,
 "kind": "sensor_pulse",
 "gain": -12,
 "note": "frame 2: the guesses are checked"
 },
 {
 "scene": "V9",
-"f": 7086,
-"t": 236.2,
+"f": 7102,
+"t": 236.733,
 "kind": "sensor_pulse",
 "gain": -12,
 "note": "frame 3: the guesses are checked"
 },
 {
 "scene": "V9",
-"f": 7125,
-"t": 237.5,
+"f": 7140,
+"t": 238.0,
 "kind": "sensor_pulse",
 "gain": -12,
 "note": "frame 4: the guesses are checked"
 },
 {
 "scene": "V9",
-"f": 7190,
-"t": 239.667,
+"f": 7206,
+"t": 240.2,
 "kind": "uh_oh",
 "gain": -10,
 "note": "he deflates: the estimate keeps up"
 },
 {
 "scene": "V10",
-"f": 7260,
-"t": 242.0,
+"f": 7276,
+"t": 242.533,
 "kind": "amb_room",
 "gain": -4,
 "note": "V10 boards, plan and card (very low)"
 },
 {
 "scene": "V10",
-"f": 7627,
-"t": 254.233,
+"f": 7642,
+"t": 254.733,
 "kind": "sensor_pulse",
 "gain": -4,
 "note": "pulse A leaves"
 },
 {
 "scene": "V10",
-"f": 7644,
-"t": 254.8,
+"f": 7659,
+"t": 255.3,
 "kind": "bounce_tick",
 "gain": -8,
 "note": "wall spot"
 },
 {
 "scene": "V10",
-"f": 7661,
-"t": 255.367,
+"f": 7676,
+"t": 255.867,
 "kind": "bounce_tick",
 "gain": -6,
 "note": "plain target: spray"
 },
 {
 "scene": "V10",
-"f": 7695,
-"t": 256.5,
+"f": 7710,
+"t": 257.0,
 "kind": "echo_return",
 "gain": -12,
 "note": "thin echo home"
 },
 {
 "scene": "V10",
-"f": 7709,
-"t": 256.967,
+"f": 7724,
+"t": 257.467,
 "kind": "strip_rip",
 "gain": -4,
 "note": "strip pressed onto the target (prop contact)"
 },
 {
 "scene": "V10",
-"f": 7737,
-"t": 257.9,
+"f": 7753,
+"t": 258.433,
 "kind": "sensor_pulse",
 "gain": -4,
 "note": "pulse B leaves"
 },
 {
 "scene": "V10",
-"f": 7754,
-"t": 258.467,
+"f": 7770,
+"t": 259.0,
 "kind": "bounce_tick",
 "gain": -8,
 "note": ""
 },
 {
 "scene": "V10",
-"f": 7771,
-"t": 259.033,
+"f": 7787,
+"t": 259.567,
 "kind": "bounce_tick",
 "gain": -2,
 "note": "the strip: the fat return leaves it (pulse motif, brighter)"
 },
 {
 "scene": "V10",
-"f": 7805,
-"t": 260.167,
+"f": 7821,
+"t": 260.7,
 "kind": "echo_return",
 "gain": 1,
 "note": "fat echo home"
 },
 {
 "scene": "V10",
-"f": 7882,
-"t": 262.733,
+"f": 7897,
+"t": 263.233,
 "kind": "stamp_heavy",
 "gain": -2,
 "note": "clothing: not recorded"
 },
 {
 "scene": "V10",
-"f": 7952,
-"t": 265.067,
+"f": 7968,
+"t": 265.6,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "the person (drawing)"
 },
 {
 "scene": "V10",
-"f": 7966,
-"t": 265.533,
+"f": 7982,
+"t": 266.067,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "the person (drawing)"
 },
 {
 "scene": "V10",
-"f": 7977,
-"t": 265.9,
+"f": 7993,
+"t": 266.433,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "the person (drawing)"
 },
 {
 "scene": "V10",
-"f": 8010,
-"t": 267.0,
+"f": 8026,
+"t": 267.533,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "the person (drawing)"
 },
 {
 "scene": "V10",
-"f": 8024,
-"t": 267.467,
+"f": 8040,
+"t": 268.0,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "the person (drawing)"
 },
 {
 "scene": "V10",
-"f": 8035,
-"t": 267.833,
+"f": 8051,
+"t": 268.367,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "the person (drawing)"
 },
 {
 "scene": "V10",
-"f": 8060,
-"t": 268.667,
+"f": 8076,
+"t": 269.2,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "the person (drawing)"
 },
 {
 "scene": "V10",
-"f": 8074,
-"t": 269.133,
+"f": 8090,
+"t": 269.667,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "the person (drawing)"
 },
 {
 "scene": "V10",
-"f": 8085,
-"t": 269.5,
+"f": 8101,
+"t": 270.033,
 "kind": "footstep_wood",
 "gain": -10,
 "note": "the person (drawing)"
 },
 {
 "scene": "V10",
-"f": 8024,
-"t": 267.467,
+"f": 8040,
+"t": 268.0,
 "kind": "shutter_click",
 "gain": -13,
 "note": "film strip: one capture"
 },
 {
 "scene": "V10",
-"f": 8036,
-"t": 267.867,
+"f": 8052,
+"t": 268.4,
 "kind": "shutter_click",
 "gain": -13,
 "note": "film strip: one capture"
 },
 {
 "scene": "V10",
-"f": 8048,
-"t": 268.267,
+"f": 8064,
+"t": 268.8,
 "kind": "shutter_click",
 "gain": -13,
 "note": "film strip: one capture"
 },
 {
 "scene": "V10",
-"f": 8060,
-"t": 268.667,
+"f": 8076,
+"t": 269.2,
 "kind": "shutter_click",
 "gain": -13,
 "note": "film strip: one capture"
 },
 {
 "scene": "V10",
-"f": 8072,
-"t": 269.067,
+"f": 8088,
+"t": 269.6,
 "kind": "shutter_click",
 "gain": -13,
 "note": "film strip: one capture"
 },
 {
 "scene": "V10",
-"f": 8084,
-"t": 269.467,
+"f": 8100,
+"t": 270.0,
 "kind": "shutter_click",
 "gain": -13,
 "note": "film strip: one capture"
 },
 {
 "scene": "V10",
-"f": 8096,
-"t": 269.867,
+"f": 8112,
+"t": 270.4,
 "kind": "shutter_click",
 "gain": -13,
 "note": "film strip: one capture"
 },
 {
 "scene": "V10",
-"f": 8108,
-"t": 270.267,
+"f": 8124,
+"t": 270.8,
 "kind": "shutter_click",
 "gain": -13,
 "note": "film strip: one capture"
 },
 {
 "scene": "V10",
-"f": 8120,
-"t": 270.667,
+"f": 8136,
+"t": 271.2,
 "kind": "shutter_click",
 "gain": -13,
 "note": "film strip: one capture"
 },
 {
 "scene": "V11",
-"f": 8130,
-"t": 271.0,
+"f": 8146,
+"t": 271.533,
 "kind": "amb_warehouse",
 "gain": 0,
 "note": "warehouse room tone (V11, all shots)"
 },
 {
 "scene": "V11",
-"f": 8134,
-"t": 271.133,
+"f": 8150,
+"t": 271.667,
 "kind": "robot_motor",
 "gain": -12,
 "note": "creeps along the aisle"
 },
 {
 "scene": "V11",
-"f": 8145,
-"t": 271.5,
+"f": 8160,
+"t": 272.0,
 "kind": "sensor_pulse",
 "gain": -10,
 "note": "ping as it creeps"
 },
 {
 "scene": "V11",
-"f": 8171,
-"t": 272.367,
+"f": 8186,
+"t": 272.867,
 "kind": "sensor_pulse",
 "gain": -11,
 "note": "ping as it creeps"
 },
 {
 "scene": "V11",
-"f": 8198,
-"t": 273.267,
+"f": 8213,
+"t": 273.767,
 "kind": "robot_motor",
 "gain": 0,
 "note": "speeds up and rolls toward the corner"
 },
 {
 "scene": "V11",
-"f": 8258,
-"t": 275.267,
+"f": 8274,
+"t": 275.8,
 "kind": "robot_brake",
 "gain": -6,
 "note": "stops short of the corner"
 },
 {
 "scene": "V11",
-"f": 8366,
-"t": 278.867,
+"f": 8381,
+"t": 279.367,
 "kind": "sensor_pulse",
 "gain": -3,
 "note": "the pulse (plan)"
 },
 {
 "scene": "V11",
-"f": 8388,
-"t": 279.6,
+"f": 8403,
+"t": 280.1,
 "kind": "bounce_tick",
 "gain": -4,
 "note": "wall spot"
 },
 {
 "scene": "V11",
-"f": 8404,
-"t": 280.133,
+"f": 8419,
+"t": 280.633,
 "kind": "bounce_tick",
 "gain": -6,
 "note": "person"
 },
 {
 "scene": "V11",
-"f": 8419,
-"t": 280.633,
+"f": 8434,
+"t": 281.133,
 "kind": "bounce_tick",
 "gain": -9,
 "note": "wall spot, return"
 },
 {
 "scene": "V11",
-"f": 8441,
-"t": 281.367,
+"f": 8456,
+"t": 281.867,
 "kind": "echo_return",
 "gain": -2,
 "note": "echo home: the blob appears"
 },
 {
 "scene": "V11",
-"f": 8512,
-"t": 283.733,
+"f": 8528,
+"t": 284.267,
 "kind": "robot_motor",
 "gain": -5,
 "note": "eases on"
 },
 {
 "scene": "V11",
-"f": 8557,
-"t": 285.233,
+"f": 8572,
+"t": 285.733,
 "kind": "robot_beep",
 "gain": -5,
 "note": "cautious squint"
 },
 {
 "scene": "V11",
-"f": 8565,
-"t": 285.5,
+"f": 8580,
+"t": 286.0,
 "kind": "robot_brake",
 "gain": 0,
 "note": "brakes at the stop line"
 },
 {
 "scene": "V11",
-"f": 8532,
-"t": 284.4,
+"f": 8548,
+"t": 284.933,
 "kind": "footstep_wood",
 "gain": -12,
 "note": "the person (quiet)"
 },
 {
 "scene": "V11",
-"f": 8560,
-"t": 285.333,
+"f": 8576,
+"t": 285.867,
 "kind": "footstep_wood",
 "gain": -12,
 "note": "the person (quiet)"
 },
 {
 "scene": "V11",
-"f": 8670,
-"t": 289.0,
+"f": 8685,
+"t": 289.5,
 "kind": "sensor_pulse",
 "gain": -7,
 "note": "tile 1: short range"
 },
 {
 "scene": "V11",
-"f": 8696,
-"t": 289.867,
+"f": 8711,
+"t": 290.367,
 "kind": "sensor_pulse",
 "gain": -8,
 "note": "tile 1: short range"
 },
 {
 "scene": "V11",
-"f": 8720,
-"t": 290.667,
+"f": 8735,
+"t": 291.167,
 "kind": "sensor_pulse",
 "gain": -9,
 "note": "tile 1: short range"
 },
 {
 "scene": "V11",
-"f": 8751,
-"t": 291.7,
+"f": 8767,
+"t": 292.233,
 "kind": "sensor_pulse",
 "gain": -8,
 "note": "tile 2: dark"
 },
 {
 "scene": "V11",
-"f": 8774,
-"t": 292.467,
+"f": 8790,
+"t": 293.0,
 "kind": "sensor_pulse",
 "gain": -9,
 "note": "tile 2: shiny"
 },
 {
 "scene": "V11",
-"f": 8787,
-"t": 292.9,
+"f": 8803,
+"t": 293.433,
 "kind": "bounce_tick",
 "gain": -4,
 "note": "shiny bounce"
 },
 {
 "scene": "V11",
-"f": 8804,
-"t": 293.467,
+"f": 8820,
+"t": 294.0,
 "kind": "sensor_pulse",
 "gain": -9,
 "note": "tile 3: the ping into the sunlit wall"
 },
 {
 "scene": "V11",
-"f": 8813,
-"t": 293.767,
+"f": 8828,
+"t": 294.267,
 "kind": "sun_glare",
 "gain": -9,
 "note": "tile 3: the sunlit wall floods the sensor"
 },
 {
 "scene": "V11",
-"f": 8996,
-"t": 299.867,
+"f": 9011,
+"t": 300.367,
 "kind": "robot_motor",
 "gain": -11,
 "note": "creeps on round the corner (under n30)"
 },
 {
 "scene": "V11",
-"f": 9061,
-"t": 302.033,
+"f": 9077,
+"t": 302.567,
 "kind": "robot_brake",
 "gain": -11,
 "note": "the soft settle on \"not a safety system\": one light brake tap"
 },
 {
 "scene": "V11",
-"f": 9043,
-"t": 301.433,
+"f": 9058,
+"t": 301.933,
 "kind": "sensor_pulse",
 "gain": -9,
 "note": "one ping on \"clue\""
 },
 {
 "scene": "V12",
-"f": 9105,
-"t": 303.5,
+"f": 9120,
+"t": 304.0,
 "kind": "amb_room",
 "gain": -2,
 "note": "room tone for the scene"
 },
 {
 "scene": "V12",
-"f": 9124,
-"t": 304.133,
+"f": 9139,
+"t": 304.633,
 "kind": "sensor_pulse",
 "gain": -2,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9160,
-"t": 305.333,
+"f": 9176,
+"t": 305.867,
 "kind": "bounce_tick",
 "gain": -4,
 "note": "the pulse reaches him"
 },
 {
 "scene": "V12",
-"f": 9161,
-"t": 305.367,
+"f": 9177,
+"t": 305.9,
 "kind": "cloth_rustle",
 "gain": -8,
 "note": "his flinch"
 },
 {
 "scene": "V12",
-"f": 9196,
-"t": 306.533,
+"f": 9213,
+"t": 307.1,
 "kind": "echo_return",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9227,
-"t": 307.567,
+"f": 9244,
+"t": 308.133,
 "kind": "readout_beep",
 "gain": -3,
 "note": "the blob on the readout"
 },
 {
 "scene": "V12",
-"f": 9232,
-"t": 307.733,
+"f": 9249,
+"t": 308.3,
 "kind": "cloth_rustle",
 "gain": -9,
 "note": "his gulp (shrink)"
 },
 {
 "scene": "V12",
-"f": 9242,
-"t": 308.067,
+"f": 9259,
+"t": 308.633,
 "kind": "cloth_rustle",
 "gain": -7,
 "note": "the idea"
 },
 {
 "scene": "V12",
-"f": 9256,
-"t": 308.533,
+"f": 9273,
+"t": 309.1,
 "kind": "footstep_wood",
 "gain": -6,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9262,
-"t": 308.733,
+"f": 9279,
+"t": 309.3,
 "kind": "footstep_wood",
 "gain": -7,
-"note": ""
-},
-{
-"scene": "V12",
-"f": 9269,
-"t": 308.967,
-"kind": "footstep_wood",
-"gain": -6,
-"note": ""
-},
-{
-"scene": "V12",
-"f": 9276,
-"t": 309.2,
-"kind": "footstep_wood",
-"gain": -7,
-"note": ""
-},
-{
-"scene": "V12",
-"f": 9280,
-"t": 309.333,
-"kind": "footstep_wood",
-"gain": -6,
 "note": ""
 },
 {
 "scene": "V12",
 "f": 9286,
 "t": 309.533,
+"kind": "footstep_wood",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "V12",
+"f": 9293,
+"t": 309.767,
+"kind": "footstep_wood",
+"gain": -7,
+"note": ""
+},
+{
+"scene": "V12",
+"f": 9297,
+"t": 309.9,
+"kind": "footstep_wood",
+"gain": -6,
+"note": ""
+},
+{
+"scene": "V12",
+"f": 9303,
+"t": 310.1,
 "kind": "partition_thunk",
 "gain": -10,
 "note": "mitts on the screen"
 },
 {
 "scene": "V12",
-"f": 9294,
-"t": 309.8,
+"f": 9311,
+"t": 310.367,
 "kind": "partition_scrape",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9302,
-"t": 310.067,
+"f": 9319,
+"t": 310.633,
 "kind": "footstep_wood",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9309,
-"t": 310.3,
+"f": 9326,
+"t": 310.867,
 "kind": "footstep_wood",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9315,
-"t": 310.5,
+"f": 9332,
+"t": 311.067,
 "kind": "footstep_wood",
 "gain": -9,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9318,
-"t": 310.6,
+"f": 9335,
+"t": 311.167,
 "kind": "partition_thunk",
 "gain": 2,
 "note": "the far end meets the wall"
 },
 {
 "scene": "V12",
-"f": 9322,
-"t": 310.733,
+"f": 9339,
+"t": 311.3,
 "kind": "sensor_pulse",
 "gain": -4,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9330,
-"t": 311.0,
+"f": 9347,
+"t": 311.567,
 "kind": "footstep_wood",
 "gain": -8,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9333,
-"t": 311.1,
+"f": 9351,
+"t": 311.7,
 "kind": "bounce_tick",
 "gain": -6,
 "note": "stopped at the partition"
 },
 {
 "scene": "V12",
-"f": 9336,
-"t": 311.2,
+"f": 9353,
+"t": 311.767,
 "kind": "footstep_wood",
 "gain": -8,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9338,
-"t": 311.267,
+"f": 9356,
+"t": 311.867,
 "kind": "readout_off",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9340,
-"t": 311.333,
+"f": 9357,
+"t": 311.9,
 "kind": "footstep_wood",
 "gain": -8,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9362,
-"t": 312.067,
+"f": 9380,
+"t": 312.667,
 "kind": "footstep_wood",
 "gain": -10,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9364,
-"t": 312.133,
+"f": 9382,
+"t": 312.733,
 "kind": "smug_exhale",
 "gain": 0,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9370,
-"t": 312.333,
+"f": 9388,
+"t": 312.933,
 "kind": "footstep_wood",
 "gain": -10,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9379,
-"t": 312.633,
+"f": 9397,
+"t": 313.233,
 "kind": "footstep_wood",
 "gain": -10,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9386,
-"t": 312.867,
+"f": 9404,
+"t": 313.467,
 "kind": "footstep_wood",
 "gain": -10,
 "note": ""
 },
 {
 "scene": "V12",
-"f": 9395,
-"t": 313.167,
+"f": 9413,
+"t": 313.767,
 "kind": "uh_oh",
 "gain": -2,
 "note": "J4: he opens his eyes and she is right there"
 },
 {
 "scene": "V13",
-"f": 9417,
-"t": 313.9,
+"f": 9432,
+"t": 314.4,
 "kind": "logo_hit",
 "gain": -5,
 "note": "the wordmark lands (end screen)"

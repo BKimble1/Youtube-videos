@@ -47,7 +47,7 @@
    "scene": "V1",
    "text": "That sensor can't see him. It's pointed at a plain, blank wall.",
    "tts": "That sensor can't see him. It's pointed at a plain, blank wall.",
-   "pause_ms": 300,
+   "pause_ms": 600,
    "claims": [
     "C01"
    ],
@@ -1488,7 +1488,8 @@
    "In-line pause caps (s14, s16, s18, s20, s23, s43) are applied by the assembler as inner_pause_cap_ms.",
    "Section-break breaths after the takes came in faster than planned (timeline 5:15.7): n02 600→800 (board reading), n06 400→700, s16 400→700, s37 900→1200 (U hold), n16 400→600, n23 500→700, n30 500→700.",
    "Second recording pass (v2/retakes.json, y17-y22, 0 credits): chosen by measurement for n29 (y17_t4, 246 vs 262 wpm), n13 (y18_t4, 195 vs 251 wpm), n27 (y19_t4, 214 vs 258 wpm), n31 (y20_t3, 188 vs 239 wpm and 3 dB louder), s31 (y22_t1, 230 vs 250 wpm); s19 keeps its v1 take (the retake was no better). Timeline 5:21.1.",
-   "Review r1 (V2-R1-01): the finished real U gets a hold; s37 pause 1200 -> 4000 ms (the complete U holds about 2.5 s after 'U.' before the roll-up)."
+   "Review r1 (V2-R1-01): the finished real U gets a hold; s37 pause 1200 -> 4000 ms (the complete U holds about 2.5 s after 'U.' before the roll-up).",
+   "Owner's note on the release candidate (the turn into 'Yet' was sudden and awkward): s02 now comes from the same recording as n01 (y01_t1, where it was spoken as context), so 'blank wall. Yet…' is one continuous performance; the gap before 'Yet' is 0.6 s (the voice's own 0.45 s plus a short breath); the picture pushes toward the lit wall patch through 'Yet…' and the real board settles in on the cut; the music's 0.3 s near-drop before 'researchers' became a gentle dip."
   ]
  }
 }

@@ -115,7 +115,7 @@ PROG = {
 SEGMENTS = {
     'pulse': ('A', 'curious pulse from frame 1: pizzicato 8ths over a staccato bass on every beat, soft shaker and kick, '
                    'a bassoon tiptoe, marimba answers; flash-and-echo tick on "sensor"', -2.0, 'bed'),
-    'hush_a': ('A', 'near-drop, 0.3 s before "researchers"', None, 'drop'),
+    'hush_a': ('A', 'gentle dip, 0.3 s before "researchers"', None, 'drop'),
     'board': ('A', 'MODEST LIFT on the real board: strings and vibes enter, marimba doubles in 8ths, kick on 1 and 3, '
                    'a flash tick on the cut; no new attacks under "estimate. Not a photograph." (the chord holds)', 0.25, 'lift'),
     'route': ('A', 'settles under n03-n05: the pulse continues softer, bass on 1 and 3, vibes', -2.5, 'bed'),
@@ -289,9 +289,8 @@ def plan(tl):
     roll = roll_up_frames()
     cue['roll_up'] = max(S('V7') - (roll['roll_frames'] + roll['hold_frames']) / fps, cue['U_end'] + 0.6)
     seg_bounds = [
-        ('pulse', 0.0, cue['researchers'] - 0.3),
-        ('hush_a', cue['researchers'] - 0.3, cue['researchers']),
-        ('board', cue['researchers'], S('V2')),
+        ('pulse', 0.0, cue['researchers']),          # owner's note: the pulse plays on through "Yet…" (no silent gap);
+        ('board', cue['researchers'], S('V2')),      # (no drop window before it any more)
         ('route', S('V2'), cue['question']),
         ('question', cue['question'], S('V3')),
         ('puzzle', S('V3'), S('V4')),
@@ -332,9 +331,8 @@ def plan(tl):
     if bad:
         raise AssertionError(f'section plan out of order for this timeline (cue moved past its neighbour?): {bad}')
     W = [
-        {'id': 'hush_a', 'kind': 'drop', 'a': cue['researchers'] - 0.3, 'b': cue['researchers'], 'depth_db': -20.0,
-         'down_s': 0.06, 'up_s': 0.12, 'cue': 'n01 "researchers"',
-         'label': 'A: 0.3 s near-drop just before "researchers" (n01); the board lift lands on the word'},
+        # owner's note on the release candidate (the turn into "Yet" was sudden): v2 r1 had a 0.3 s near-silent drop
+        # here (-20 dB, no new notes); it is gone, so the pulse plays straight on under "Yet…" into the board lift
         {'id': 'soft_n02', 'kind': 'soft', 'a': cue['estimate'], 'b': cue['n02_end'], 'depth_db': -2.5, 'down_s': 0.3,
          'up_s': 0.3, 'cue': 'n02 "estimate. Not a photograph."',
          'label': 'A: under the soft-spoken "estimate. Not a photograph.": the board chord holds, nothing else attacks, the '

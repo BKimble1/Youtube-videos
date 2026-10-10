@@ -1,0 +1,23 @@
+{
+ "check": "sound_captions",
+ "render": "exports/Future_Got_Weird_Video_02_v2_UPLOAD_1080p.mp4",
+ "loudness": {"integrated_lufs": -15.5, "integrated_lufs_pyloudnorm": -15.53, "true_peak_dbtp": -1.3, "true_peak_dbtp_numpy_4x": -1.28, "lra_lu": 2.2, "pass": true},
+ "items": [
+  {"id": "V2-R1-01", "status": "closed", "severity": "major", "note": "sound side: resolve 145.61 s (f4368) after 'U.' stops at f4360, pointer contact f4370, hold to f4443, roll-up f4444-4470 with no note onsets"},
+  {"id": "V2-R1-12", "status": "partly", "severity": "polish", "note": "tap on contact f3297, uh-oh f3307 after face drop f3305-3306; still overlaps 'place.' by design, not masking"},
+  {"id": "V2-R1-13", "status": "closed", "severity": "minor", "note": "last chord 321.13 s, 0.25 s after 'corner.' ends"},
+  {"id": "V2-R1-16", "status": "closed", "severity": "polish", "note": "sound side only: tick f2017, zoom f2018, bump visible f2020-2024"},
+  {"id": "V2-R1-22", "status": "closed", "severity": "polish", "note": "slide through f1045-1049, ting f1050"},
+  {"id": "V2-R1-24", "status": "closed", "severity": "polish", "note": "only pizz onsets in both windows; bed 8-10 dB lower in band than r1"},
+  {"id": "V2-R1-37", "status": "closed", "severity": "polish", "note": "motor -11 dB; word cores 15-25 dB clear"},
+  {"id": "V2-R1-39", "status": "closed", "severity": "polish", "note": "music digital zero f9332.0-f9416.0; shot plan updated"},
+  {"id": "V2-R1-40", "status": "closed", "severity": "polish", "note": "beep -8 dB; /s/ of It's 60 dB clear above 4 kHz"},
+  {"id": "V2-R1-41", "status": "partly", "severity": "polish", "note": "all cues lead word frames by 1.5-2.5 fr; 7 still trail the audible onset by 3.8-6.2 fr (cues 7, 17, 56, 59, 80, 101, 104)"},
+  {"id": "V2-R1-42", "status": "closed", "severity": "polish", "note": "the three r1 splits fixed; max 19.81 cps"},
+  {"id": "NEW-01", "status": "new", "severity": "polish", "note": "20 two-line cues break a line inside a tight phrase"},
+  {"id": "NEW-02", "status": "new", "severity": "polish", "note": "cue 3/4 boundary splits 'bouncing off | a wall'"},
+  {"id": "NEW-03", "status": "new", "severity": "polish", "note": "held Gadd9 rises ~4 dB under the roll-up (roll segment +3 dB gain)"}
+ ],
+ "audio_qc_masking": {"107.0": "arc_draw f3193 under 'arc.': no masking", "110.6": "uh_oh f3307 under 'place.': no masking", "110.8": "same", "240.1": "V9 uh_oh f7190 under 'keeps up': no masking", "240.2": "same", "294.2": "sun_glare f8813 under 'sunlight,': no masking", "310.7": "partition_thunk f9318 + sensor_pulse f9322 + footstep f9315 under 'too.': no masking"},
+ "details": "SOUND_CAPTIONS_R2.md"
+}

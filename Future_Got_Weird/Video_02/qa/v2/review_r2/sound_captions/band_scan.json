@@ -1,0 +1,137 @@
+{
+ "windows_voice_core": 4805,
+ "sfx_within_3dB": [
+  {
+   "t": 4.2,
+   "frame": 126.0,
+   "voice": -34.5,
+   "other": -35.6,
+   "word": "s02 blank"
+  },
+  {
+   "t": 4.28,
+   "frame": 128.4,
+   "voice": -32.7,
+   "other": -32.6,
+   "word": null
+  },
+  {
+   "t": 44.84,
+   "frame": 1345.2,
+   "voice": -35.0,
+   "other": -36.8,
+   "word": "s11 tiny"
+  },
+  {
+   "t": 260.16,
+   "frame": 7804.8,
+   "voice": -30.6,
+   "other": -30.2,
+   "word": null
+  }
+ ],
+ "music_within_3dB": [
+  {
+   "t": 6.4,
+   "frame": 192.0,
+   "voice": -34.6,
+   "other": -36.5,
+   "word": "n01 researchers"
+  },
+  {
+   "t": 6.6,
+   "frame": 198.0,
+   "voice": -34.4,
+   "other": -35.9,
+   "word": null
+  },
+  {
+   "t": 6.68,
+   "frame": 200.4,
+   "voice": -33.6,
+   "other": -34.5,
+   "word": "n01 have"
+  },
+  {
+   "t": 8.4,
+   "frame": 252.0,
+   "voice": -30.3,
+   "other": -33.2,
+   "word": null
+  },
+  {
+   "t": 9.0,
+   "frame": 270.0,
+   "voice": -33.5,
+   "other": -33.3,
+   "word": "n01 someone"
+  },
+  {
+   "t": 9.04,
+   "frame": 271.2,
+   "voice": -33.6,
+   "other": -31.9,
+   "word": null
+  },
+  {
+   "t": 10.84,
+   "frame": 325.2,
+   "voice": -30.6,
+   "other": -31.3,
+   "word": "n02 dot"
+  },
+  {
+   "t": 22.24,
+   "frame": 667.2,
+   "voice": -34.1,
+   "other": -36.3,
+   "word": "n05 This"
+  },
+  {
+   "t": 28.28,
+   "frame": 848.4,
+   "voice": -34.6,
+   "other": -36.9,
+   "word": null
+  },
+  {
+   "t": 96.08,
+   "frame": 2882.4,
+   "voice": -33.6,
+   "other": -34.4,
+   "word": "s18 from"
+  },
+  {
+   "t": 124.84,
+   "frame": 3745.2,
+   "voice": -33.1,
+   "other": -35.4,
+   "word": null
+  },
+  {
+   "t": 167.44,
+   "frame": 5023.2,
+   "voice": -34.2,
+   "other": -36.7,
+   "word": "s30 MIT"
+  },
+  {
+   "t": 314.12,
+   "frame": 9423.6,
+   "voice": -33.9,
+   "other": -35.9,
+   "word": null
+  },
+  {
+   "t": 318.56,
+   "frame": 9556.8,
+   "voice": -32.1,
+   "other": -34.3,
+   "word": null
+  }
+ ],
+ "median_voice_minus_music_band": 25.1,
+ "p5_voice_minus_music_band": 10.2,
+ "median_voice_minus_sfx_band": 43.8,
+ "p5_voice_minus_sfx_band": 19.1
+}

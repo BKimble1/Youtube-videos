@@ -1,9 +1,9 @@
 {
  "timeline": "source/src/data/timeline.json",
- "timeline_durationSeconds": 323.855,
- "samples": 15545040,
+ "timeline_durationSeconds": 324.37,
+ "samples": 15569760,
  "fps": 30,
- "frames": 9716,
+ "frames": 9731,
  "bpm": 100,
  "bar_seconds": 2.4,
  "seed": 20261009,
@@ -11,113 +11,113 @@
  "scenes": {
   "V1": [
    0.0,
-   14.033
+   14.567
   ],
   "V2": [
-   14.033,
-   30.367
+   14.567,
+   30.9
   ],
   "V3": [
-   30.367,
-   50.767
+   30.9,
+   51.3
   ],
   "V4": [
-   50.767,
-   76.1
+   51.3,
+   76.633
   ],
   "V5": [
-   76.1,
-   137.167
+   76.633,
+   137.7
   ],
   "V6": [
-   137.167,
-   149.0
+   137.7,
+   149.5
   ],
   "V7": [
-   149.0,
-   184.7
+   149.5,
+   185.233
   ],
   "V8": [
-   184.7,
-   204.4
+   185.233,
+   204.9
   ],
   "V9": [
-   204.4,
-   242.0
+   204.9,
+   242.533
   ],
   "V10": [
-   242.0,
-   271.0
+   242.533,
+   271.533
   ],
   "V11": [
-   271.0,
-   303.5
+   271.533,
+   304.0
   ],
   "V12": [
-   303.5,
-   313.867
+   304.0,
+   314.367
   ],
   "V13": [
-   313.867,
-   323.867
+   314.367,
+   324.367
   ]
  },
  "cues_seconds": {
-  "sensor": 1.4,
-  "researchers": 6.067,
-  "n03": 14.4,
-  "question": 26.7,
-  "location": 29.433,
-  "visible": 36.767,
-  "s11": 37.567,
-  "timing": 50.7,
-  "tiny": 57.2,
-  "s15": 57.733,
-  "zoom": 67.267,
-  "s16": 71.6,
-  "arc1": 100.767,
-  "arc2": 106.667,
-  "one_place": 110.167,
-  "s21": 111.4,
-  "n13": 137.533,
-  "s37": 139.633,
-  "U": 145.067,
-  "U_end": 145.633,
-  "estimate": 11.667,
-  "n02_end": 13.8,
-  "see_end": 68.267,
-  "s15_end": 71.367,
-  "idea": 178.8,
-  "s31": 173.8,
-  "keeps": 239.667,
-  "n24": 242.367,
-  "n25": 246.033,
-  "slow": 285.833,
-  "s43": 288.467,
-  "n30": 299.733,
-  "not_safety": 302.133,
-  "n31": 303.833,
-  "s47": 308.067,
-  "too": 311.067,
-  "s48": 314.067,
-  "explained": 318.367,
-  "corner": 320.6,
-  "corner_end": 321.1,
+  "sensor": 1.333,
+  "researchers": 6.6,
+  "n03": 14.9,
+  "question": 27.233,
+  "location": 29.933,
+  "visible": 37.267,
+  "s11": 38.1,
+  "timing": 51.2,
+  "tiny": 57.7,
+  "s15": 58.233,
+  "zoom": 67.767,
+  "s16": 72.133,
+  "arc1": 101.267,
+  "arc2": 107.2,
+  "one_place": 110.667,
+  "s21": 111.933,
+  "n13": 138.033,
+  "s37": 140.133,
+  "U": 145.6,
+  "U_end": 146.133,
+  "estimate": 12.2,
+  "n02_end": 14.3,
+  "see_end": 68.767,
+  "s15_end": 71.9,
+  "idea": 179.3,
+  "s31": 174.333,
+  "keeps": 240.2,
+  "n24": 242.867,
+  "n25": 246.567,
+  "slow": 286.333,
+  "s43": 289.0,
+  "n30": 300.233,
+  "not_safety": 302.667,
+  "n31": 304.367,
+  "s47": 308.6,
+  "too": 311.567,
+  "s48": 314.567,
+  "explained": 318.9,
+  "corner": 321.133,
+  "corner_end": 321.6,
   "V1": 0.0,
-  "V2": 14.033,
-  "V3": 30.367,
-  "V4": 50.767,
-  "V5": 76.1,
-  "V6": 137.167,
-  "V7": 149.0,
-  "V8": 184.7,
-  "V9": 204.4,
-  "V10": 242.0,
-  "V11": 271.0,
-  "V12": 303.5,
-  "V13": 313.867,
-  "roll_up": 148.133,
-  "last_chord": 321.15
+  "V2": 14.567,
+  "V3": 30.9,
+  "V4": 51.3,
+  "V5": 76.633,
+  "V6": 137.7,
+  "V7": 149.5,
+  "V8": 185.233,
+  "V9": 204.9,
+  "V10": 242.533,
+  "V11": 271.533,
+  "V12": 304.0,
+  "V13": 314.367,
+  "roll_up": 148.633,
+  "last_chord": 321.65
  },
  "segment_cues": {
   "pulse": "frame 1",
@@ -159,62 +159,51 @@
    "segment": "pulse",
    "section": "A",
    "from": 0.0,
-   "to": 5.767,
+   "to": 6.6,
    "role": "bed",
    "music": "curious pulse from frame 1: pizzicato 8ths over a staccato bass on every beat, soft shaker and kick, a bassoon tiptoe, marimba answers; flash-and-echo tick on \"sensor\"",
    "target_lu": -2.0,
    "entry_ramp_s": 0.0,
-   "gain_db_applied": 21.38
-  },
-  {
-   "segment": "hush_a",
-   "section": "A",
-   "from": 5.767,
-   "to": 6.067,
-   "role": "drop",
-   "music": "near-drop, 0.3 s before \"researchers\"",
-   "target_lu": null,
-   "entry_ramp_s": 0.12,
-   "gain_db_applied": null
+   "gain_db_applied": 21.41
   },
   {
    "segment": "board",
    "section": "A",
-   "from": 6.067,
-   "to": 14.033,
+   "from": 6.6,
+   "to": 14.567,
    "role": "lift",
    "music": "MODEST LIFT on the real board: strings and vibes enter, marimba doubles in 8ths, kick on 1 and 3, a flash tick on the cut; no new attacks under \"estimate. Not a photograph.\" (the chord holds)",
    "target_lu": 0.25,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 21.47
+   "gain_db_applied": 21.46
   },
   {
    "segment": "route",
    "section": "A",
-   "from": 14.033,
-   "to": 26.7,
+   "from": 14.567,
+   "to": 27.233,
    "role": "bed",
    "music": "settles under n03-n05: the pulse continues softer, bass on 1 and 3, vibes",
    "target_lu": -2.5,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 23.12
+   "gain_db_applied": 23.2
   },
   {
    "segment": "question",
    "section": "A",
-   "from": 26.7,
-   "to": 30.367,
+   "from": 27.233,
+   "to": 30.9,
    "role": "light lift",
    "music": "light lift on the question (n06): strings, a vibes question figure, ends on A7sus",
    "target_lu": -1.25,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 22.75
+   "gain_db_applied": 23.01
   },
   {
    "segment": "puzzle",
    "section": "B",
-   "from": 30.367,
-   "to": 50.767,
+   "from": 30.9,
+   "to": 51.3,
    "role": "bed",
    "music": "the pulse continues, lighter; STOP for the duck on \"visible\", resumes on s11; tick on \"timing\"",
    "target_lu": -4.0,
@@ -224,19 +213,19 @@
   {
    "segment": "thin",
    "section": "B",
-   "from": 50.767,
-   "to": 57.2,
+   "from": 51.3,
+   "to": 57.7,
    "role": "bed",
    "music": "thins under s14: pizzicato on beats 1 and 3, vibes, a soft string floor, long bass",
    "target_lu": -5.5,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 23.58
+   "gain_db_applied": 24.01
   },
   {
    "segment": "hush_b",
    "section": "B",
-   "from": 57.2,
-   "to": 57.733,
+   "from": 57.7,
+   "to": 58.233,
    "role": "drop",
    "music": "short drop from \"tiny\" into \"This is real data\"",
    "target_lu": null,
@@ -246,52 +235,52 @@
   {
    "segment": "data",
    "section": "B",
-   "from": 57.733,
-   "to": 67.267,
+   "from": 58.233,
+   "to": 67.767,
    "role": "bed",
    "music": "soft re-entry under s15: a string drone, one pizzicato per bar",
    "target_lu": -6.0,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 25.06
+   "gain_db_applied": 24.74
   },
   {
    "segment": "bump",
    "section": "B",
-   "from": 67.267,
-   "to": 71.6,
+   "from": 67.767,
+   "to": 72.133,
    "role": "lift",
    "music": "MODEST LIFT as the bump appears (\"zoom in to see\"): strings, vibes, rising marimba, flash-and-echo tick; no new attacks under \"In this capture, hundreds of times weaker.\" (the chord holds)",
    "target_lu": -4.0,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 23.05
+   "gain_db_applied": 21.99
   },
   {
    "segment": "clue",
    "section": "B",
-   "from": 71.6,
-   "to": 76.1,
+   "from": 72.133,
+   "to": 76.633,
    "role": "bed",
    "music": "quiet under s16",
    "target_lu": -5.75,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 23.17
+   "gain_db_applied": 23.43
   },
   {
    "segment": "geometry",
    "section": "C",
-   "from": 76.1,
-   "to": 137.167,
+   "from": 76.633,
+   "to": 137.7,
    "role": "bed",
    "music": "QUIETEST: clockwork-light marimba tick-tock, a pizzicato root, long bass; + a soft hat tick layer at the first arc, + marimba off-beat pings at the second; FULL STOP for \"one place\", resumes on s21",
    "target_lu": -8.0,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 22.28
+   "gain_db_applied": 22.3
   },
   {
    "segment": "hush_c",
    "section": "C",
-   "from": 137.167,
-   "to": 137.767,
+   "from": 137.7,
+   "to": 138.3,
    "role": "drop",
    "music": "a near-silent beat (0.6 s) on the V6 switch",
    "target_lu": null,
@@ -301,151 +290,151 @@
   {
    "segment": "switch",
    "section": "C",
-   "from": 137.767,
-   "to": 139.633,
+   "from": 138.3,
+   "to": 140.133,
    "role": "pad",
    "music": "a soft held Em9 pad under n13 \"And here's a real one.\" (strings, one vibes note, low bass), a little under the C bed",
    "target_lu": -8.25,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 23.83
+   "gain_db_applied": 23.8
   },
   {
    "segment": "build",
    "section": "C",
-   "from": 139.633,
-   "to": 145.633,
+   "from": 140.133,
+   "to": 146.133,
    "role": "bed",
    "music": "quiet build under s37 while the U builds: Cmaj7 -> Dsus, soft strings, marimba 8ths, pizzicato",
    "target_lu": -8.0,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 19.5
+   "gain_db_applied": 19.46
   },
   {
    "segment": "U",
    "section": "C",
-   "from": 145.633,
-   "to": 148.133,
+   "from": 146.133,
+   "to": 148.633,
    "role": "lift",
    "music": "MODEST LIFT on the finished U, from the end of \"U.\" over the hold: the Gadd9 resolve (guitar arpeggio, strings, vibes, bass) and the flash-and-echo tick",
    "target_lu": -5.5,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 16.32
+   "gain_db_applied": 16.56
   },
   {
    "segment": "roll",
    "section": "C",
-   "from": 148.133,
-   "to": 149.0,
+   "from": 148.633,
+   "to": 149.5,
    "role": "settle",
    "music": "the resolve rings and settles as the board rolls up (no new notes); the museum starts on the V7 cut",
    "target_lu": -7.0,
    "entry_ramp_s": 0.35,
-   "gain_db_applied": 19.32
+   "gain_db_applied": 19.44
   },
   {
    "segment": "museum",
    "section": "D",
-   "from": 149.0,
-   "to": 173.8,
+   "from": 149.5,
+   "to": 174.333,
    "role": "bed",
    "music": "brisker variation of the pulse (Bb major): walking bass, pizzicato 8ths, marimba 16th pickups, shaker 16ths, stately strings; clarinet line answered by bassoon",
    "target_lu": -3.5,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 18.47
+   "gain_db_applied": 18.5
   },
   {
    "segment": "museum_thin",
    "section": "D",
-   "from": 173.8,
-   "to": 178.8,
+   "from": 174.333,
+   "to": 179.3,
    "role": "bed",
    "music": "thins under s31: pizzicato quarters, strings",
    "target_lu": -5.5,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 21.91
+   "gain_db_applied": 21.47
   },
   {
    "segment": "idea",
    "section": "D",
-   "from": 178.8,
-   "to": 184.7,
+   "from": 179.3,
+   "to": 185.233,
    "role": "light lift",
    "music": "warm on n16: Ebmaj7-F-Gm7-A7sus, strings, guitar arpeggios, vibes",
    "target_lu": -4.0,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 20.12
+   "gain_db_applied": 20.24
   },
   {
    "segment": "small",
    "section": "E",
-   "from": 184.7,
-   "to": 204.4,
+   "from": 185.233,
+   "to": 204.9,
    "role": "bed",
    "music": "quieter bed: sparse vibes with faint echoes over a very soft string floor",
    "target_lu": -7.0,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 24.58
+   "gain_db_applied": 24.39
   },
   {
    "segment": "fusion",
    "section": "E",
-   "from": 204.4,
-   "to": 239.667,
+   "from": 204.9,
+   "to": 240.2,
    "role": "bed",
    "music": "quieter bed under the fusion explanation: soft pizzicato quarters, vibes pad",
    "target_lu": -7.0,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 21.93
+   "gain_db_applied": 21.92
   },
   {
    "segment": "keeps",
    "section": "E",
-   "from": 239.667,
-   "to": 242.0,
+   "from": 240.2,
+   "to": 242.533,
    "role": "light lift",
    "music": "small lift on \"keeps up instead of smearing\" (F major): the pulse, strings, vibes",
    "target_lu": -5.5,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 19.12
+   "gain_db_applied": 19.0
   },
   {
    "segment": "board2",
    "section": "F",
-   "from": 242.0,
-   "to": 246.033,
+   "from": 242.533,
+   "to": 246.567,
    "role": "lift",
    "music": "MODEST LIFT as the real board returns (n24): the opening lift recalled, tick on the cut",
    "target_lu": -3.5,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 18.25
+   "gain_db_applied": 18.04
   },
   {
    "segment": "conditions",
    "section": "F",
-   "from": 246.033,
-   "to": 271.0,
+   "from": 246.567,
+   "to": 271.533,
    "role": "bed",
    "music": "quiet under the conditions (n25-n28)",
    "target_lu": -6.0,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 24.34
+   "gain_db_applied": 24.39
   },
   {
    "segment": "warehouse",
    "section": "F",
-   "from": 271.0,
-   "to": 285.633,
+   "from": 271.533,
+   "to": 286.133,
    "role": "bed",
    "music": "light, cautious mechanical groove (A minor): staccato pizzicato 8ths, hats, soft kick, marimba clicks",
    "target_lu": -4.0,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 20.02
+   "gain_db_applied": 20.06
   },
   {
    "segment": "brake",
    "section": "F",
-   "from": 285.633,
-   "to": 288.467,
+   "from": 286.133,
+   "to": 289.0,
    "role": "dip",
    "music": "DIP on \"slow down\": the groove brakes to a held Fmaj7",
    "target_lu": null,
@@ -455,52 +444,52 @@
   {
    "segment": "limits",
    "section": "F",
-   "from": 288.467,
-   "to": 299.733,
+   "from": 289.0,
+   "to": 300.233,
    "role": "bed",
    "music": "quiet under the limits (s43)",
    "target_lu": -6.5,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 24.34
+   "gain_db_applied": 24.16
   },
   {
    "segment": "settle",
    "section": "F",
-   "from": 299.733,
-   "to": 303.5,
+   "from": 300.233,
+   "to": 304.0,
    "role": "settle",
    "music": "soft settle on \"not a safety system\": Gm9, then Dm9 on \"not\"",
    "target_lu": -7.0,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 22.25
+   "gain_db_applied": 22.24
   },
   {
    "segment": "callback",
    "section": "G",
-   "from": 303.5,
-   "to": 308.067,
+   "from": 304.0,
+   "to": 308.6,
    "role": "bed",
    "music": "soft callback of the opening pulse and the bassoon tiptoe under n31",
    "target_lu": -5.0,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 21.88
+   "gain_db_applied": 21.73
   },
   {
    "segment": "hold",
    "section": "G",
-   "from": 308.067,
-   "to": 311.067,
+   "from": 308.6,
+   "to": 311.567,
    "role": "bed",
    "music": "held A7sus question under s47",
    "target_lu": -5.5,
    "entry_ramp_s": 0.8,
-   "gain_db_applied": 21.54
+   "gain_db_applied": 21.58
   },
   {
    "segment": "j4",
    "section": "G",
-   "from": 311.067,
-   "to": 313.867,
+   "from": 311.567,
+   "to": 314.367,
    "role": "stop",
    "music": "COMPLETE STOP: the deadpan J4 beat",
    "target_lu": null,
@@ -510,32 +499,21 @@
   {
    "segment": "resolve",
    "section": "G",
-   "from": 313.867,
-   "to": 323.855,
+   "from": 314.367,
+   "to": 324.37,
    "role": "bed",
    "music": "clean, warm D-major resolve from the end-screen start (harp, strings, vibes: Dadd9 - Gmaj7/D - Dadd9, the last chord after \"corner.\" ends), fades to exactly zero at the last sample",
    "target_lu": -2.5,
    "entry_ramp_s": 0.3,
-   "gain_db_applied": 21.38
+   "gain_db_applied": 21.36
   }
  ],
  "windows": [
   {
-   "id": "hush_a",
-   "kind": "drop",
-   "a": 5.767,
-   "b": 6.067,
-   "depth_db": -20.0,
-   "down_s": 0.06,
-   "up_s": 0.12,
-   "cue": "n01 \"researchers\"",
-   "label": "A: 0.3 s near-drop just before \"researchers\" (n01); the board lift lands on the word"
-  },
-  {
    "id": "soft_n02",
    "kind": "soft",
-   "a": 11.667,
-   "b": 13.8,
+   "a": 12.2,
+   "b": 14.3,
    "depth_db": -2.5,
    "down_s": 0.3,
    "up_s": 0.3,
@@ -545,16 +523,16 @@
   {
    "id": "j2",
    "kind": "stop",
-   "a": 36.617,
-   "b": 37.517,
+   "a": 37.117,
+   "b": 38.05,
    "cue": "n08 \"visible\"",
    "label": "B: stop for the duck on \"visible\" (n08), resumes on s11"
   },
   {
    "id": "hush_b",
    "kind": "drop",
-   "a": 57.2,
-   "b": 57.733,
+   "a": 57.7,
+   "b": 58.233,
    "depth_db": -20.0,
    "down_s": 0.15,
    "up_s": 0.8,
@@ -564,8 +542,8 @@
   {
    "id": "soft_s15",
    "kind": "soft",
-   "a": 68.267,
-   "b": 71.367,
+   "a": 68.767,
+   "b": 71.9,
    "depth_db": -2.5,
    "down_s": 0.3,
    "up_s": 0.3,
@@ -575,16 +553,16 @@
   {
    "id": "j3b",
    "kind": "stop",
-   "a": 109.917,
-   "b": 111.3,
+   "a": 110.417,
+   "b": 111.833,
    "cue": "s20 \"one place\"",
    "label": "C: full stop for \"one place\" (s20, J3b), resumes on s21"
   },
   {
    "id": "hush_c",
    "kind": "drop",
-   "a": 137.167,
-   "b": 137.767,
+   "a": 137.7,
+   "b": 138.3,
    "depth_db": -22.0,
    "down_s": 0.1,
    "up_s": 0.3,
@@ -594,8 +572,8 @@
   {
    "id": "brake",
    "kind": "dip",
-   "a": 285.633,
-   "b": 288.467,
+   "a": 286.133,
+   "b": 289.0,
    "depth_db": -8.0,
    "down_s": 0.3,
    "up_s": 0.3,
@@ -605,8 +583,8 @@
   {
    "id": "j4",
    "kind": "stop",
-   "a": 311.067,
-   "b": 313.847,
+   "a": 311.567,
+   "b": 314.347,
    "cue": "s47 \"too.\" -> V13",
    "label": "G: COMPLETE STOP for the deadpan J4 beat (end of s47 to the end-screen start)"
   }
@@ -628,24 +606,30 @@
    "segment": "pulse",
    "chord": "Bbmaj7",
    "from": 4.8,
-   "to": 5.767
+   "to": 6.6
   },
   {
    "segment": "board",
    "chord": "Bbmaj7",
-   "from": 6.067,
+   "from": 6.6,
    "to": 9.6
   },
   {
    "segment": "board",
    "chord": "C6",
    "from": 9.6,
-   "to": 14.033
+   "to": 12.0
+  },
+  {
+   "segment": "board",
+   "chord": "Dm9",
+   "from": 12.0,
+   "to": 14.567
   },
   {
    "segment": "route",
    "chord": "Dm9",
-   "from": 14.033,
+   "from": 14.567,
    "to": 16.8
   },
   {
@@ -670,24 +654,30 @@
    "segment": "route",
    "chord": "Dm9",
    "from": 24.0,
-   "to": 26.7
+   "to": 26.4
+  },
+  {
+   "segment": "route",
+   "chord": "Bbmaj7",
+   "from": 26.4,
+   "to": 27.233
   },
   {
    "segment": "question",
    "chord": "Gm9",
-   "from": 26.7,
+   "from": 27.233,
    "to": 28.8
   },
   {
    "segment": "question",
    "chord": "A7sus",
    "from": 28.8,
-   "to": 30.367
+   "to": 30.9
   },
   {
    "segment": "puzzle",
    "chord": "Dm7",
-   "from": 30.367,
+   "from": 30.9,
    "to": 33.6
   },
   {
@@ -730,12 +720,18 @@
    "segment": "puzzle",
    "chord": "A7sus",
    "from": 48.0,
-   "to": 50.767
+   "to": 50.4
+  },
+  {
+   "segment": "puzzle",
+   "chord": "Dm7",
+   "from": 50.4,
+   "to": 51.3
   },
   {
    "segment": "thin",
    "chord": "Dm9",
-   "from": 50.767,
+   "from": 51.3,
    "to": 52.8
   },
   {
@@ -748,12 +744,12 @@
    "segment": "thin",
    "chord": "Dm9",
    "from": 55.2,
-   "to": 57.2
+   "to": 57.7
   },
   {
    "segment": "data",
    "chord": "Gm9",
-   "from": 57.733,
+   "from": 58.233,
    "to": 60.0
   },
   {
@@ -772,30 +768,30 @@
    "segment": "data",
    "chord": "Dm9",
    "from": 64.8,
-   "to": 67.267
+   "to": 67.767
   },
   {
    "segment": "bump",
    "chord": "Bbmaj7",
-   "from": 67.267,
-   "to": 71.6
+   "from": 67.767,
+   "to": 72.133
   },
   {
    "segment": "clue",
    "chord": "Dm9",
-   "from": 71.6,
+   "from": 72.133,
    "to": 74.4
   },
   {
    "segment": "clue",
    "chord": "A7sus",
    "from": 74.4,
-   "to": 76.1
+   "to": 76.633
   },
   {
    "segment": "geometry",
    "chord": "Em9",
-   "from": 76.1,
+   "from": 76.633,
    "to": 79.2
   },
   {
@@ -940,36 +936,42 @@
    "segment": "geometry",
    "chord": "Em9",
    "from": 134.4,
-   "to": 137.167
+   "to": 136.8
+  },
+  {
+   "segment": "geometry",
+   "chord": "Cmaj7",
+   "from": 136.8,
+   "to": 137.7
   },
   {
    "segment": "switch",
    "chord": "Em9",
-   "from": 137.767,
-   "to": 139.633
+   "from": 138.3,
+   "to": 140.133
   },
   {
    "segment": "build",
    "chord": "Cmaj7",
-   "from": 139.633,
-   "to": 141.6
+   "from": 140.133,
+   "to": 144.0
   },
   {
    "segment": "build",
    "chord": "Dsus",
-   "from": 141.6,
-   "to": 145.633
+   "from": 144.0,
+   "to": 146.133
   },
   {
    "segment": "U",
    "chord": "Gadd9",
-   "from": 145.633,
-   "to": 148.133
+   "from": 146.133,
+   "to": 148.633
   },
   {
    "segment": "museum",
    "chord": "Bb",
-   "from": 149.0,
+   "from": 149.5,
    "to": 151.2
   },
   {
@@ -1030,48 +1032,36 @@
    "segment": "museum",
    "chord": "Gm7",
    "from": 172.8,
-   "to": 173.8
+   "to": 174.333
   },
   {
    "segment": "museum_thin",
    "chord": "Ebmaj7",
-   "from": 173.8,
-   "to": 175.2
-  },
-  {
-   "segment": "museum_thin",
-   "chord": "Cm7",
-   "from": 175.2,
+   "from": 174.333,
    "to": 177.6
   },
   {
    "segment": "museum_thin",
-   "chord": "Ebmaj7",
+   "chord": "Cm7",
    "from": 177.6,
-   "to": 178.8
+   "to": 179.3
   },
   {
    "segment": "idea",
    "chord": "Ebmaj7",
-   "from": 178.8,
-   "to": 180.0
-  },
-  {
-   "segment": "idea",
-   "chord": "F",
-   "from": 180.0,
+   "from": 179.3,
    "to": 182.4
   },
   {
    "segment": "idea",
-   "chord": "Gm7",
+   "chord": "F",
    "from": 182.4,
-   "to": 184.7
+   "to": 185.233
   },
   {
    "segment": "small",
    "chord": "Dm9",
-   "from": 184.7,
+   "from": 185.233,
    "to": 187.2
   },
   {
@@ -1114,12 +1104,18 @@
    "segment": "small",
    "chord": "A7sus",
    "from": 201.6,
-   "to": 204.4
+   "to": 204.0
+  },
+  {
+   "segment": "small",
+   "chord": "Dm9",
+   "from": 204.0,
+   "to": 204.9
   },
   {
    "segment": "fusion",
    "chord": "Dm9",
-   "from": 204.4,
+   "from": 204.9,
    "to": 206.4
   },
   {
@@ -1204,30 +1200,30 @@
    "segment": "fusion",
    "chord": "Bbmaj7",
    "from": 237.6,
-   "to": 239.667
+   "to": 240.2
   },
   {
    "segment": "keeps",
    "chord": "F",
-   "from": 239.667,
-   "to": 242.0
+   "from": 240.2,
+   "to": 242.533
   },
   {
    "segment": "board2",
    "chord": "Bbmaj7",
-   "from": 242.0,
+   "from": 242.533,
    "to": 244.8
   },
   {
    "segment": "board2",
    "chord": "C6",
    "from": 244.8,
-   "to": 246.033
+   "to": 246.567
   },
   {
    "segment": "conditions",
    "chord": "Dm9",
-   "from": 246.033,
+   "from": 246.567,
    "to": 249.6
   },
   {
@@ -1282,12 +1278,12 @@
    "segment": "conditions",
    "chord": "Gm9",
    "from": 268.8,
-   "to": 271.0
+   "to": 271.533
   },
   {
    "segment": "warehouse",
    "chord": "Am",
-   "from": 271.0,
+   "from": 271.533,
    "to": 273.6
   },
   {
@@ -1318,18 +1314,18 @@
    "segment": "warehouse",
    "chord": "Am/G",
    "from": 283.2,
-   "to": 285.633
+   "to": 286.133
   },
   {
    "segment": "brake",
    "chord": "Fmaj7",
-   "from": 285.633,
-   "to": 288.467
+   "from": 286.133,
+   "to": 289.0
   },
   {
    "segment": "limits",
    "chord": "Fmaj7",
-   "from": 288.467,
+   "from": 289.0,
    "to": 290.4
   },
   {
@@ -1354,61 +1350,55 @@
    "segment": "limits",
    "chord": "Fmaj7",
    "from": 297.6,
-   "to": 299.733
+   "to": 300.233
   },
   {
    "segment": "settle",
    "chord": "Gm9",
-   "from": 299.733,
-   "to": 302.133
+   "from": 300.233,
+   "to": 302.667
   },
   {
    "segment": "settle",
    "chord": "Dm9",
-   "from": 302.133,
-   "to": 303.5
+   "from": 302.667,
+   "to": 304.0
   },
   {
    "segment": "callback",
    "chord": "Dm7",
-   "from": 303.5,
-   "to": 304.8
-  },
-  {
-   "segment": "callback",
-   "chord": "G6",
-   "from": 304.8,
+   "from": 304.0,
    "to": 307.2
   },
   {
    "segment": "callback",
-   "chord": "Dm7",
+   "chord": "G6",
    "from": 307.2,
-   "to": 308.067
+   "to": 308.6
   },
   {
    "segment": "hold",
    "chord": "A7sus",
-   "from": 308.067,
-   "to": 311.067
+   "from": 308.6,
+   "to": 311.567
   },
   {
    "segment": "resolve",
    "chord": "Dadd9",
-   "from": 313.867,
-   "to": 318.367
+   "from": 314.367,
+   "to": 318.9
   },
   {
    "segment": "resolve",
    "chord": "Gmaj7/D",
-   "from": 318.367,
-   "to": 320.6
+   "from": 318.9,
+   "to": 321.133
   },
   {
    "segment": "resolve",
    "chord": "Dadd9",
-   "from": 320.6,
-   "to": 323.855
+   "from": 321.133,
+   "to": 324.37
   }
  ],
  "lifts": {
@@ -1454,7 +1444,7 @@
    3.0
   ]
  },
- "fade_start": 321.65,
+ "fade_start": 322.15,
  "progressions": {
   "pulse": [
    "Dm7",
@@ -1653,12 +1643,12 @@
   "pizz": {
    "gm_program": 45,
    "gain_db": 0,
-   "notes": 495
+   "notes": 500
   },
   "marimba": {
    "gm_program": 12,
    "gain_db": 0,
-   "notes": 273
+   "notes": 274
   },
   "vibes": {
    "gm_program": 11,
@@ -1673,7 +1663,7 @@
   "guitar": {
    "gm_program": 24,
    "gain_db": -3,
-   "notes": 21
+   "notes": 16
   },
   "harp": {
    "gm_program": 46,
@@ -1683,7 +1673,7 @@
   "bass": {
    "gm_program": 32,
    "gain_db": -5,
-   "notes": 249
+   "notes": 255
   },
   "bassoon": {
    "gm_program": 70,
@@ -1703,7 +1693,7 @@
   "drums": {
    "gm_program": 0,
    "gain_db": -7,
-   "notes": 493
+   "notes": 497
   }
  },
  "final_scale_db": 0.0,

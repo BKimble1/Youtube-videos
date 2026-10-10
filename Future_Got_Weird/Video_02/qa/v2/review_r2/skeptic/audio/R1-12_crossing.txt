@@ -1,0 +1,36 @@
+s20 words [('they', 3257, 3259), ('cross', 3264, 3269), ('in', 3271, 3274), ('just', 3279, 3303), ('one', 3305, 3310), ('place.', 3312, 3331)]
+40 ms windows, 300-4000 Hz dBFS: narration / sfx / music; and 4-12 kHz narration / sfx
+ 109.80s f 3294.0  nar  -62.1  sfx  -67.9  mus  -81.0  | hi nar  -71.6 sfx  -79.3
+ 109.84s f 3295.2  nar  -74.1  sfx  -69.3  mus  -84.1  | hi nar  -75.9 sfx  -78.5
+ 109.88s f 3296.4  nar  -75.0  sfx  -39.2  mus  -93.8  | hi nar  -75.4 sfx  -72.9
+ 109.92s f 3297.6  nar  -74.3  sfx  -58.3  mus -148.0  | hi nar  -75.8 sfx  -77.3
+ 109.96s f 3298.8  nar  -74.3  sfx  -68.3  mus -240.0  | hi nar  -76.5 sfx  -79.0
+ 110.00s f 3300.0  nar  -74.7  sfx  -66.0  mus -240.0  | hi nar  -75.9 sfx  -78.8
+ 110.04s f 3301.2  nar  -74.3  sfx  -67.4  mus -240.0  | hi nar  -75.4 sfx  -79.2
+ 110.08s f 3302.4  nar  -39.2  sfx  -68.4  mus -240.0  | hi nar  -75.0 sfx  -79.7
+ 110.12s f 3303.6  nar  -36.6  sfx  -66.3  mus -240.0  | hi nar  -74.9 sfx  -79.2
+ 110.16s f 3304.8  nar  -28.9  sfx  -67.4  mus -240.0  | hi nar  -67.1 sfx  -79.1
+ 110.20s f 3306.0  nar  -16.9  sfx  -47.8  mus -240.0  | hi nar  -44.2 sfx  -78.1
+ 110.24s f 3307.2  nar  -14.2  sfx  -32.8  mus -240.0  | hi nar  -40.3 sfx  -75.4
+ 110.28s f 3308.4  nar  -21.6  sfx  -30.8  mus -240.0  | hi nar  -43.2 sfx  -79.7
+ 110.32s f 3309.6  nar  -27.3  sfx  -33.3  mus -240.0  | hi nar  -46.8 sfx  -66.0
+ 110.36s f 3310.8  nar  -39.0  sfx  -35.4  mus -240.0  | hi nar  -42.1 sfx  -61.7
+ 110.40s f 3312.0  nar  -41.8  sfx  -36.3  mus -240.0  | hi nar  -39.5 sfx  -74.9
+ 110.44s f 3313.2  nar  -19.4  sfx  -39.1  mus -240.0  | hi nar  -37.3 sfx  -65.0
+ 110.48s f 3314.4  nar  -16.3  sfx  -33.8  mus -240.0  | hi nar  -33.8 sfx  -68.5
+ 110.52s f 3315.6  nar  -23.3  sfx  -33.4  mus -240.0  | hi nar  -41.0 sfx  -75.0
+ 110.56s f 3316.8  nar  -28.3  sfx  -32.1  mus -240.0  | hi nar  -52.4 sfx  -63.4
+ 110.60s f 3318.0  nar  -37.3  sfx  -32.1  mus -240.0  | hi nar  -49.6 sfx  -69.7
+ 110.64s f 3319.2  nar  -40.2  sfx  -32.0  mus -240.0  | hi nar  -26.2 sfx  -78.1
+ 110.68s f 3320.4  nar  -45.4  sfx  -34.5  mus -240.0  | hi nar  -23.8 sfx  -76.4
+ 110.72s f 3321.6  nar  -45.4  sfx  -38.7  mus -240.0  | hi nar  -25.0 sfx  -78.6
+ 110.76s f 3322.8  nar  -44.3  sfx  -39.9  mus -240.0  | hi nar  -27.5 sfx  -79.1
+ 110.80s f 3324.0  nar  -47.4  sfx  -41.6  mus -240.0  | hi nar  -35.6 sfx  -78.7
+ 110.84s f 3325.2  nar  -67.4  sfx  -45.4  mus -240.0  | hi nar  -61.0 sfx  -78.9
+ 110.88s f 3326.4  nar  -74.5  sfx  -49.7  mus -240.0  | hi nar  -75.8 sfx  -79.3
+ 110.92s f 3327.6  nar  -74.3  sfx  -49.4  mus -240.0  | hi nar  -76.1 sfx  -79.1
+ 110.96s f 3328.8  nar  -74.5  sfx  -53.9  mus -240.0  | hi nar  -76.0 sfx  -79.9
+ 111.00s f 3330.0  nar  -74.1  sfx  -56.6  mus -240.0  | hi nar  -76.0 sfx  -79.2
+ 111.04s f 3331.2  nar  -73.7  sfx  -59.5  mus -240.0  | hi nar  -76.1 sfx  -78.8
+ 111.08s f 3332.4  nar  -74.3  sfx  -64.3  mus -240.0  | hi nar  -75.9 sfx  -78.4
+ 111.12s f 3333.6  nar  -74.5  sfx  -65.8  mus -240.0  | hi nar  -75.9 sfx  -79.6

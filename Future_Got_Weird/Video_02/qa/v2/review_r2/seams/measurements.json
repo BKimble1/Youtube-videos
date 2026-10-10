@@ -1,0 +1,33 @@
+{
+  "render": "exports/Future_Got_Weird_Video_02_v2_UPLOAD_1080p.mp4",
+  "frames": 9716,
+  "fps": 30,
+  "scene_seams": {
+    "V1_V2_f421": "hard cut from V1.4 cut-in to the V2 plan; sensor/partition x on the board (~300/400 px) and plan (~270/400 px) roughly held",
+    "V2_V3_f911": "f907-f914 identical (8 flat frames = 4+4), paint grain visible; first change f915; room top enters ~f925; title fade from ~f929",
+    "V3_V4_f1523": "continuous timeline card; 'what survives: timing' fades f1523-f1532, route strip builds from f1535",
+    "V4_V5_f2283": "ring fit f2282 centre (960,518) r 89.5; f2283 centre (958,520) r 89.5",
+    "V5_V6_f4115": "hard switch to Real data U board; 0/36 until f4133 ('here's')",
+    "V6_V7_f4470": "roll f4444-f4458; scroll alone on blank f4459-f4470 (frozen f4464-f4470); V7 shelf enters f4471; r1 equivalent f4375-f4388; scroll position continuous across the cut",
+    "V7_V8_f5541": "continuous spotlight push on the plinth sensor; plate gone before push; title f5559",
+    "V8_V9_f6132": "card-to-plan: f6128-f6137 same framing; estimate ring fades f6126-f6128",
+    "V9_V10_f7260": "right panel grows to full plan f7233-f7257; cut to kit board with 'Real data' headline on f7260; sensor/partition within ~15 px",
+    "V10_V11_f8130": "card partition right edge ~1050 px vs warehouse shelving end ~1050-1060 px",
+    "V11_V12_f9105": "warehouse near aisle end x ~870-1030 vs room partition x ~880-1030",
+    "V12_V13_f9416": "hard cut; guides fully present on f9416"
+  },
+  "still_runs_over_2s_outside_end_screen": [
+    {"scene": "V5", "from": 3560, "to": 3635, "seconds": 2.53, "same_in_r1": true},
+    {"scene": "V4", "from": 1907, "to": 1972, "seconds": 2.2}
+  ],
+  "end_screen": {
+    "frames": [9416, 9715], "seconds": 10.0, "start": "5:13.87",
+    "panel_measured": {"x": [1000, 1799], "y": [290, 739], "interior_max_dev": 6},
+    "disc_measured": {"centre": [430.5, 599.5], "diameter_px": 298, "interior_max_dev": 5},
+    "keep_clear_24px_max_dev": 5,
+    "caption_band_y950_1080": "empty",
+    "callback_art_bbox": [648, 925, 568, 929],
+    "motion": "settle to f9428; look f9637-f9641; blink f9654-f9663"
+  },
+  "loudness": {"integrated_lufs": -15.5, "true_peak_dbtp": -1.3, "lra_lu": 2.2}
+}

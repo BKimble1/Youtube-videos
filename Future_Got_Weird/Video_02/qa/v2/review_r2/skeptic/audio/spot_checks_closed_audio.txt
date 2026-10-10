@@ -1,0 +1,78 @@
+R1-13 end-screen swell vs 'corner.' (s48): (9618, 9633) 100 ms full band: nar / mus
+  320.50s f9615.0 nar  -17.1 mus  -37.1
+  320.60s f9618.0 nar  -20.1 mus  -40.2
+  320.70s f9621.0 nar  -29.9 mus  -38.3
+  320.80s f9624.0 nar  -38.3 mus  -39.1
+  320.90s f9627.0 nar  -69.8 mus  -39.1
+  321.00s f9630.0 nar  -71.4 mus  -40.5
+  321.10s f9633.0 nar  -71.6 mus  -33.7
+  321.20s f9636.0 nar  -71.6 mus  -26.8
+  321.30s f9639.0 nar  -71.6 mus  -24.4
+  321.40s f9642.0 nar  -71.8 mus  -22.6
+  321.50s f9645.0 nar  -71.6 mus  -23.6
+  321.60s f9648.0 nar  -71.8 mus  -24.0
+  321.70s f9651.0 nar  -71.5 mus  -22.3
+  321.80s f9654.0 nar  -71.8 mus  -23.4
+
+R1-39 J4 hold: music stem peak |x| between 311.10 and 313.85 s: 0.0
+  first exact-zero sample 311.067 s (f9332.0), last 313.868 s (f9416.0)
+
+R1-37 n30 robot motor: 40 ms windows 300-4000 Hz nar / sfx around 'now,' and 'system.': (8997, 9016) (9083, 9110)
+  300.10s nar  -24.1 sfx  -44.8
+  300.14s nar  -28.7 sfx  -47.8
+  300.18s nar  -37.2 sfx  -44.9
+  300.22s nar  -35.6 sfx  -45.2
+  300.26s nar  -36.3 sfx  -42.3
+  300.30s nar  -35.6 sfx  -44.6
+  300.34s nar  -38.2 sfx  -47.2
+  300.38s nar  -42.1 sfx  -42.9
+  300.42s nar  -47.0 sfx  -45.6
+  300.46s nar  -49.6 sfx  -45.9
+  302.84s nar  -34.1 sfx  -44.3
+  302.88s nar  -37.8 sfx  -42.2
+  302.92s nar  -39.4 sfx  -42.7
+  302.96s nar  -35.0 sfx  -43.2
+  303.00s nar  -34.4 sfx  -46.7
+  303.04s nar  -39.4 sfx  -43.9
+  303.08s nar  -45.1 sfx  -49.1
+  303.12s nar  -45.4 sfx  -45.6
+
+R1-24 soft lines, music in 300-4000 Hz (100 ms): n02 'estimate.' 11.6-12.3 s and s15 'In this capture ... weaker.' 68.3-71.4 s: max/median
+  11.6-12.3s max -40.6 median -42.9
+  68.3-71.4s max -32.9 median -43.0
+
+R1-24 detail, s15 tail, 100 ms windows 300-4000 Hz: nar / mus ; words: [('In', 2057, 2058), ('this', 2061, 2063), ('capture,', 2066, 2089), ('hundreds', 2094, 2106), ('of', 2109, 2110), ('times', 2111, 2121), ('weaker.', 2123, 2141)]
+   68.20s f2046.0 nar  -74.3 mus  -41.2  see.
+   68.30s f2049.0 nar  -74.6 mus  -41.1  
+   68.40s f2052.0 nar  -48.2 mus  -42.1  
+   68.50s f2055.0 nar  -35.2 mus  -43.4  
+   68.60s f2058.0 nar  -34.5 mus  -43.2  In
+   68.70s f2061.0 nar  -33.9 mus  -43.2  
+   68.80s f2064.0 nar  -22.6 mus  -41.2  this
+   68.90s f2067.0 nar  -25.1 mus  -42.8  capture,
+   69.00s f2070.0 nar  -28.6 mus  -44.7  capture,
+   69.10s f2073.0 nar  -21.3 mus  -44.8  capture,
+   69.20s f2076.0 nar  -30.6 mus  -45.0  capture,
+   69.30s f2079.0 nar  -33.4 mus  -42.1  capture,
+   69.40s f2082.0 nar  -48.8 mus  -43.1  capture,
+   69.50s f2085.0 nar  -73.9 mus  -39.7  capture,
+   69.60s f2088.0 nar  -52.8 mus  -41.3  capture,
+   69.70s f2091.0 nar  -30.4 mus  -43.9  
+   69.80s f2094.0 nar  -26.1 mus  -43.0  
+   69.90s f2097.0 nar  -31.0 mus  -44.8  hundreds
+   70.00s f2100.0 nar  -27.8 mus  -45.0  hundreds
+   70.10s f2103.0 nar  -34.4 mus  -46.6  hundreds
+   70.20s f2106.0 nar  -32.9 mus  -44.9  hundreds
+   70.30s f2109.0 nar  -35.3 mus  -44.9  
+   70.40s f2112.0 nar  -29.3 mus  -42.9  times
+   70.50s f2115.0 nar  -35.5 mus  -41.0  times
+   70.60s f2118.0 nar  -31.0 mus  -43.7  times
+   70.70s f2121.0 nar  -37.2 mus  -43.6  times
+   70.80s f2124.0 nar  -34.3 mus  -42.5  weaker.
+   70.90s f2127.0 nar  -31.4 mus  -41.5  weaker.
+   71.00s f2130.0 nar  -32.6 mus  -42.4  weaker.
+   71.10s f2133.0 nar  -46.3 mus  -42.5  weaker.
+   71.20s f2136.0 nar  -74.3 mus  -42.0  weaker.
+   71.30s f2139.0 nar  -74.3 mus  -41.5  weaker.
+   71.40s f2142.0 nar  -74.1 mus  -32.9  weaker.
+   71.50s f2145.0 nar  -74.9 mus  -36.7  

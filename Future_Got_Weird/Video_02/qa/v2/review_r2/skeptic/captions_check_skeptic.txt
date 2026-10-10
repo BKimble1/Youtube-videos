@@ -1,0 +1,42 @@
+cues 104 srt words 899 timeline words 899 mismatches []
+lead vs word frames: min 1.51 max 2.51
+max cps 19.81 max line 42 min dur 1.08 max lines 2
+overlaps []
+cues whose in-time is after the measured onset (THR -50 dBFS, 10 ms):
+  cue   4  a              seg n01  in f235.4  word f237  onset 7.40s (f222.0)  late by 13.4 fr (connected to previous word: no gap within 0.5 s)
+  cue  48  rebuilt        seg s37  in f4294.9  word f4297  onset 142.84s (f4285.2)  late by 9.7 fr 
+  cue  80  So             seg n24 (seg start)  in f7276.4  word f7278  onset 242.34s (f7270.2)  late by 6.2 fr 
+  cue 104  Subscribe      seg s48  in f9556.3  word f9558  onset 318.40s (f9552.0)  late by 4.3 fr 
+  cue  56  Don't          seg s31 (seg start)  in f5217.8  word f5220  onset 173.79s (f5213.7)  late by 4.1 fr 
+  cue  59  so             seg n16  in f5477.3  word f5479  onset 182.44s (f5473.2)  late by 4.1 fr 
+  cue   7  so             seg n03  in f555.4  word f557  onset 18.38s (f551.4)  late by 4.0 fr 
+  cue  17  Everything     seg n09 (seg start)  in f1378.4  word f1380  onset 45.82s (f1374.6)  late by 3.8 fr 
+  cue 101  Being          seg n31 (seg start)  in f9118.7  word f9121  onset 303.83s (f9114.9)  late by 3.8 fr 
+  cue  71  like           seg n20  in f6560.9  word f6563  onset 218.61s (f6558.3)  late by 2.6 fr 
+  cue  60  Why            seg n17 (seg start)  in f5554.3  word f5556  onset 185.06s (f5551.8)  late by 2.5 fr 
+  cue  30  But            seg n11  in f2565.8  word f2568  onset 85.47s (f2564.1)  late by 1.7 fr 
+  cue  83  held           seg n25  in f7538.6  word f7541  onset 251.23s (f7536.9)  late by 1.7 fr 
+  cue  27  Farther        seg n10 (seg start)  in f2294.5  word f2296  onset 76.43s (f2292.9)  late by 1.6 fr 
+  cue  84  Many           seg n26 (seg start)  in f7624.0  word f7626  onset 254.08s (f7622.4)  late by 1.6 fr 
+  cue   5  That           seg n02 (seg start)  in f311.0  word f313  onset 10.32s (f309.6)  late by 1.4 fr 
+  cue  24  In             seg s15  in f2055.5  word f2057  onset 68.47s (f2054.1)  late by 1.4 fr 
+  cue  46  And            seg n13 (seg start)  in f4127.3  word f4129  onset 137.53s (f4125.9)  late by 1.4 fr 
+  cue  43  trying         seg s23  in f3791.2  word f3793  onset 126.33s (f3789.9)  late by 1.3 fr 
+  cue  61  Weak           seg n18 (seg start)  in f5636.5  word f5639  onset 187.84s (f5635.2)  late by 1.3 fr 
+  cue  18  What           seg n09  in f1469.0  word f1471  onset 48.93s (f1467.9)  late by 1.1 fr 
+  cue  11  So             seg n06 (seg start)  in f801.8  word f804  onset 26.70s (f801.0)  late by 0.8 fr 
+  cue  85  safety-vest    seg n26  in f7678.0  word f7680  onset 255.91s (f7677.3)  late by 0.7 fr 
+  cue  82  an             seg n25  in f7425.8  word f7428  onset 247.51s (f7425.3)  late by 0.5 fr 
+  cue   6  The            seg n03 (seg start)  in f432.2  word f434  onset 14.39s (f431.7)  late by 0.5 fr 
+  cue  64  And            seg n18  in f5858.5  word f5861  onset 195.27s (f5858.1)  late by 0.4 fr 
+  cue  96  not            seg s42  in f8603.8  word f8606  onset 286.78s (f8603.4)  late by 0.4 fr 
+  cue 103  This           seg s48 (seg start)  in f9421.9  word f9424  onset 314.05s (f9421.5)  late by 0.4 fr 
+  cue   3  Yet            seg n01 (seg start)  in f149.0  word f151  onset 4.96s (f148.8)  late by 0.2 fr 
+  cue  37  On             seg s20  in f3222.2  word f3224  onset 107.40s (f3222.0)  late by 0.2 fr 
+  cue  74  hold           seg n22  in f6751.4  word f6753  onset 225.04s (f6751.2)  late by 0.2 fr 
+  cue  75  spreading      seg n22  in f6858.2  word f6860  onset 228.60s (f6858.0)  late by 0.2 fr 
+  cue  81  Take           seg n25 (seg start)  in f7381.4  word f7383  onset 246.04s (f7381.2)  late by 0.2 fr 
+  cue  26  Its            seg s16  in f2199.4  word f2201  onset 73.31s (f2199.3)  late by 0.1 fr 
+  cue  36  Another        seg s20  in f3156.7  word f3159  onset 105.22s (f3156.6)  late by 0.1 fr 
+  cue  91  What           seg s40 (seg start)  in f8140.6  word f8143  onset 271.35s (f8140.5)  late by 0.1 fr 
+  cue  13  Put            seg n08 (seg start)  in f1030.5  word f1033  onset 34.35s (f1030.5)  late by 0.0 fr 
