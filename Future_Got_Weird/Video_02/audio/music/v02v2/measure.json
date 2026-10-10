@@ -1,201 +1,201 @@
 {
  "duration": {
-  "samples": 15410640,
-  "seconds": 321.055,
-  "timeline_durationSeconds": 321.055,
-  "timeline_samples": 15410640,
+  "samples": 15482640,
+  "seconds": 322.555,
+  "timeline_durationSeconds": 322.555,
+  "timeline_samples": 15482640,
   "matches_timeline": true,
-  "video_frames": 9632,
-  "video_samples_frames_x_1600": 15411200,
+  "video_frames": 9677,
+  "video_samples_frames_x_1600": 15483200,
   "video_minus_bed_ms": 11.67,
-  "narration_samples": 15410640,
+  "narration_samples": 15482640,
   "matches_narration": true
  },
  "peaks": {
-  "sample_peak_dbfs": -6.88,
-  "true_peak_dbtp_4x": -6.87,
+  "sample_peak_dbfs": -6.91,
+  "true_peak_dbtp_4x": -6.9,
   "samples_at_or_over_0dBFS": 0
  },
- "integrated_lufs": -24.77,
+ "integrated_lufs": -24.94,
  "reference_lufs": -20.0,
- "band_1_4k_share_whole": 0.0038,
+ "band_1_4k_share_whole": 0.0039,
  "sections": {
   "A": {
    "scenes": "V1-V2",
    "from": 0.0,
    "to": 30.37,
-   "lufs": -21.35,
-   "lu_vs_reference": -1.35,
-   "rel_whole_lu": 3.42,
-   "lufs_after_mix_norm_-27": -23.58,
-   "band_1_4k_share": 0.0025,
-   "band_1_4k_share_max_1s": 0.0065,
-   "band_1_4k_share_p95_1s": 0.006
+   "lufs": -21.76,
+   "lu_vs_reference": -1.76,
+   "rel_whole_lu": 3.18,
+   "lufs_after_mix_norm_-27": -23.82,
+   "band_1_4k_share": 0.0024,
+   "band_1_4k_share_max_1s": 0.0063,
+   "band_1_4k_share_p95_1s": 0.0056
   },
   "B": {
    "scenes": "V3-V4",
    "from": 30.37,
    "to": 76.1,
-   "lufs": -24.66,
-   "lu_vs_reference": -4.66,
-   "rel_whole_lu": 0.12,
-   "lufs_after_mix_norm_-27": -26.88,
-   "band_1_4k_share": 0.0022,
+   "lufs": -24.79,
+   "lu_vs_reference": -4.79,
+   "rel_whole_lu": 0.16,
+   "lufs_after_mix_norm_-27": -26.84,
+   "band_1_4k_share": 0.002,
    "band_1_4k_share_max_1s": 0.0238,
-   "band_1_4k_share_p95_1s": 0.012
+   "band_1_4k_share_p95_1s": 0.0116
   },
   "C": {
    "scenes": "V5-V6",
    "from": 76.1,
-   "to": 146.2,
-   "lufs": -27.41,
-   "lu_vs_reference": -7.41,
-   "rel_whole_lu": -2.63,
-   "lufs_after_mix_norm_-27": -29.63,
-   "band_1_4k_share": 0.0061,
+   "to": 147.7,
+   "lufs": -27.66,
+   "lu_vs_reference": -7.66,
+   "rel_whole_lu": -2.72,
+   "lufs_after_mix_norm_-27": -29.72,
+   "band_1_4k_share": 0.0062,
    "band_1_4k_share_max_1s": 0.0317,
    "band_1_4k_share_p95_1s": 0.024
   },
   "D": {
    "scenes": "V7",
-   "from": 146.2,
-   "to": 181.9,
-   "lufs": -23.77,
-   "lu_vs_reference": -3.77,
-   "rel_whole_lu": 1.0,
-   "lufs_after_mix_norm_-27": -26.0,
-   "band_1_4k_share": 0.0097,
-   "band_1_4k_share_max_1s": 0.0367,
-   "band_1_4k_share_p95_1s": 0.026
+   "from": 147.7,
+   "to": 183.4,
+   "lufs": -23.8,
+   "lu_vs_reference": -3.8,
+   "rel_whole_lu": 1.14,
+   "lufs_after_mix_norm_-27": -25.86,
+   "band_1_4k_share": 0.0102,
+   "band_1_4k_share_max_1s": 0.0326,
+   "band_1_4k_share_p95_1s": 0.0316
   },
   "E": {
    "scenes": "V8-V9",
-   "from": 181.9,
-   "to": 239.2,
+   "from": 183.4,
+   "to": 240.7,
    "lufs": -26.82,
    "lu_vs_reference": -6.82,
-   "rel_whole_lu": -2.05,
-   "lufs_after_mix_norm_-27": -29.05,
+   "rel_whole_lu": -1.88,
+   "lufs_after_mix_norm_-27": -28.88,
    "band_1_4k_share": 0.001,
-   "band_1_4k_share_max_1s": 0.0104,
-   "band_1_4k_share_p95_1s": 0.0056
+   "band_1_4k_share_max_1s": 0.0147,
+   "band_1_4k_share_p95_1s": 0.0049
   },
   "F": {
    "scenes": "V10-V11",
-   "from": 239.2,
-   "to": 300.7,
-   "lufs": -25.19,
-   "lu_vs_reference": -5.19,
-   "rel_whole_lu": -0.42,
-   "lufs_after_mix_norm_-27": -27.42,
-   "band_1_4k_share": 0.0026,
-   "band_1_4k_share_max_1s": 0.0263,
-   "band_1_4k_share_p95_1s": 0.0101
+   "from": 240.7,
+   "to": 302.2,
+   "lufs": -25.37,
+   "lu_vs_reference": -5.37,
+   "rel_whole_lu": -0.43,
+   "lufs_after_mix_norm_-27": -27.43,
+   "band_1_4k_share": 0.0028,
+   "band_1_4k_share_max_1s": 0.0248,
+   "band_1_4k_share_p95_1s": 0.0132
   },
   "G": {
    "scenes": "V12-V13",
-   "from": 300.7,
-   "to": 321.06,
-   "lufs": -23.52,
-   "lu_vs_reference": -3.52,
-   "rel_whole_lu": 1.25,
-   "lufs_after_mix_norm_-27": -25.75,
+   "from": 302.2,
+   "to": 322.56,
+   "lufs": -23.39,
+   "lu_vs_reference": -3.39,
+   "rel_whole_lu": 1.56,
+   "lufs_after_mix_norm_-27": -25.44,
    "band_1_4k_share": 0.0034,
-   "band_1_4k_share_max_1s": 0.0118,
-   "band_1_4k_share_p95_1s": 0.0105
+   "band_1_4k_share_max_1s": 0.0116,
+   "band_1_4k_share_p95_1s": 0.0108
   }
  },
  "scenes": {
   "V1": {
    "from": 0.0,
    "to": 14.03,
-   "lufs": -20.69,
-   "rel_whole_lu": 4.08,
+   "lufs": -21.4,
+   "rel_whole_lu": 3.54,
    "band_1_4k_share": 0.0039
   },
   "V2": {
    "from": 14.03,
    "to": 30.37,
-   "lufs": -22.09,
-   "rel_whole_lu": 2.68,
+   "lufs": -22.07,
+   "rel_whole_lu": 2.87,
    "band_1_4k_share": 0.001
   },
   "V3": {
    "from": 30.37,
    "to": 50.77,
    "lufs": -23.91,
-   "rel_whole_lu": 0.86,
+   "rel_whole_lu": 1.03,
    "band_1_4k_share": 0.0008
   },
   "V4": {
    "from": 50.77,
    "to": 76.1,
-   "lufs": -25.39,
-   "rel_whole_lu": -0.62,
-   "band_1_4k_share": 0.004
+   "lufs": -25.69,
+   "rel_whole_lu": -0.75,
+   "band_1_4k_share": 0.0035
   },
   "V5": {
    "from": 76.1,
    "to": 137.17,
-   "lufs": -27.74,
-   "rel_whole_lu": -2.97,
+   "lufs": -27.73,
+   "rel_whole_lu": -2.79,
    "band_1_4k_share": 0.0061
   },
   "V6": {
    "from": 137.17,
-   "to": 146.2,
-   "lufs": -25.63,
-   "rel_whole_lu": -0.86,
-   "band_1_4k_share": 0.0063
+   "to": 147.7,
+   "lufs": -27.26,
+   "rel_whole_lu": -2.32,
+   "band_1_4k_share": 0.007
   },
   "V7": {
-   "from": 146.2,
-   "to": 181.9,
-   "lufs": -23.77,
-   "rel_whole_lu": 1.0,
-   "band_1_4k_share": 0.0097
+   "from": 147.7,
+   "to": 183.4,
+   "lufs": -23.8,
+   "rel_whole_lu": 1.14,
+   "band_1_4k_share": 0.0102
   },
   "V8": {
-   "from": 181.9,
-   "to": 201.6,
-   "lufs": -26.91,
-   "rel_whole_lu": -2.14,
-   "band_1_4k_share": 0.0016
+   "from": 183.4,
+   "to": 203.1,
+   "lufs": -26.99,
+   "rel_whole_lu": -2.05,
+   "band_1_4k_share": 0.0015
   },
   "V9": {
-   "from": 201.6,
-   "to": 239.2,
-   "lufs": -26.82,
-   "rel_whole_lu": -2.05,
+   "from": 203.1,
+   "to": 240.7,
+   "lufs": -26.77,
+   "rel_whole_lu": -1.83,
    "band_1_4k_share": 0.0007
   },
   "V10": {
-   "from": 239.2,
-   "to": 268.2,
-   "lufs": -25.48,
-   "rel_whole_lu": -0.7,
-   "band_1_4k_share": 0.003
+   "from": 240.7,
+   "to": 269.7,
+   "lufs": -25.59,
+   "rel_whole_lu": -0.65,
+   "band_1_4k_share": 0.0034
   },
   "V11": {
-   "from": 268.2,
-   "to": 300.7,
-   "lufs": -25.02,
-   "rel_whole_lu": -0.25,
-   "band_1_4k_share": 0.0023
+   "from": 269.7,
+   "to": 302.2,
+   "lufs": -25.22,
+   "rel_whole_lu": -0.28,
+   "band_1_4k_share": 0.0022
   },
   "V12": {
-   "from": 300.7,
-   "to": 311.07,
-   "lufs": -25.14,
-   "rel_whole_lu": -0.37,
-   "band_1_4k_share": 0.0026
+   "from": 302.2,
+   "to": 312.57,
+   "lufs": -25.03,
+   "rel_whole_lu": -0.09,
+   "band_1_4k_share": 0.0025
   },
   "V13": {
-   "from": 311.07,
-   "to": 321.06,
-   "lufs": -22.42,
-   "rel_whole_lu": 2.36,
-   "band_1_4k_share": 0.0037
+   "from": 312.57,
+   "to": 322.56,
+   "lufs": -22.34,
+   "rel_whole_lu": 2.6,
+   "band_1_4k_share": 0.0039
   }
  },
  "segments": [
@@ -223,7 +223,7 @@
    "target_lu": null,
    "level_lu": null,
    "gain_db": null,
-   "entry_ramp_s": 0.3
+   "entry_ramp_s": 0.12
   },
   {
    "segment": "board",
@@ -235,7 +235,7 @@
    "measured_to": 14.03,
    "target_lu": 0.25,
    "level_lu": 0.25,
-   "gain_db": 21.5,
+   "gain_db": 21.47,
    "entry_ramp_s": 0.3
   },
   {
@@ -244,12 +244,12 @@
    "role": "bed",
    "from": 14.03,
    "to": 26.7,
-   "measured_from": 14.33,
+   "measured_from": 14.83,
    "measured_to": 26.7,
    "target_lu": -2.5,
    "level_lu": -2.5,
-   "gain_db": 23.03,
-   "entry_ramp_s": 0.3
+   "gain_db": 23.12,
+   "entry_ramp_s": 0.8
   },
   {
    "segment": "question",
@@ -283,12 +283,12 @@
    "role": "bed",
    "from": 50.77,
    "to": 57.2,
-   "measured_from": 51.07,
+   "measured_from": 51.57,
    "measured_to": 57.2,
    "target_lu": -5.5,
    "level_lu": -5.5,
-   "gain_db": 23.51,
-   "entry_ramp_s": 0.3
+   "gain_db": 23.58,
+   "entry_ramp_s": 0.8
   },
   {
    "segment": "hush_b",
@@ -301,7 +301,7 @@
    "target_lu": null,
    "level_lu": null,
    "gain_db": null,
-   "entry_ramp_s": 0.53
+   "entry_ramp_s": 0.21
   },
   {
    "segment": "data",
@@ -309,12 +309,12 @@
    "role": "bed",
    "from": 57.73,
    "to": 67.27,
-   "measured_from": 58.03,
+   "measured_from": 58.53,
    "measured_to": 67.27,
    "target_lu": -6.0,
    "level_lu": -6.0,
    "gain_db": 25.06,
-   "entry_ramp_s": 0.3
+   "entry_ramp_s": 0.8
   },
   {
    "segment": "bump",
@@ -326,7 +326,7 @@
    "measured_to": 71.6,
    "target_lu": -4.0,
    "level_lu": -4.0,
-   "gain_db": 21.26,
+   "gain_db": 23.05,
    "entry_ramp_s": 0.3
   },
   {
@@ -335,12 +335,12 @@
    "role": "bed",
    "from": 71.6,
    "to": 76.1,
-   "measured_from": 71.9,
+   "measured_from": 72.4,
    "measured_to": 76.1,
    "target_lu": -5.75,
    "level_lu": -5.75,
-   "gain_db": 22.94,
-   "entry_ramp_s": 0.3
+   "gain_db": 23.17,
+   "entry_ramp_s": 0.8
   },
   {
    "segment": "geometry",
@@ -366,7 +366,7 @@
    "target_lu": null,
    "level_lu": null,
    "gain_db": null,
-   "entry_ramp_s": 0.6
+   "entry_ramp_s": 0.24
   },
   {
    "segment": "switch",
@@ -382,143 +382,169 @@
    "entry_ramp_s": 0.3
   },
   {
+   "segment": "build",
+   "section": "C",
+   "role": "bed",
+   "from": 139.63,
+   "to": 145.63,
+   "measured_from": 139.93,
+   "measured_to": 145.63,
+   "target_lu": -8.0,
+   "level_lu": -8.0,
+   "gain_db": 19.5,
+   "entry_ramp_s": 0.3
+  },
+  {
    "segment": "U",
    "section": "C",
    "role": "lift",
-   "from": 139.63,
-   "to": 146.2,
-   "measured_from": 139.93,
-   "measured_to": 146.2,
+   "from": 145.63,
+   "to": 146.83,
+   "measured_from": 145.93,
+   "measured_to": 146.83,
    "target_lu": -5.5,
    "level_lu": -5.5,
-   "gain_db": 16.75,
+   "gain_db": 15.35,
    "entry_ramp_s": 0.3
+  },
+  {
+   "segment": "roll",
+   "section": "C",
+   "role": "settle",
+   "from": 146.83,
+   "to": 147.7,
+   "measured_from": 147.18,
+   "measured_to": 147.7,
+   "target_lu": -7.0,
+   "level_lu": -7.0,
+   "gain_db": 17.22,
+   "entry_ramp_s": 0.35
   },
   {
    "segment": "museum",
    "section": "D",
    "role": "bed",
-   "from": 146.2,
-   "to": 171.0,
-   "measured_from": 146.5,
-   "measured_to": 171.0,
+   "from": 147.7,
+   "to": 172.5,
+   "measured_from": 148.0,
+   "measured_to": 172.5,
    "target_lu": -3.5,
    "level_lu": -3.5,
-   "gain_db": 18.42,
+   "gain_db": 18.45,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "museum_thin",
    "section": "D",
    "role": "bed",
-   "from": 171.0,
-   "to": 176.0,
-   "measured_from": 171.3,
-   "measured_to": 176.0,
+   "from": 172.5,
+   "to": 177.5,
+   "measured_from": 173.3,
+   "measured_to": 177.5,
    "target_lu": -5.5,
    "level_lu": -5.5,
-   "gain_db": 21.56,
-   "entry_ramp_s": 0.3
+   "gain_db": 21.79,
+   "entry_ramp_s": 0.8
   },
   {
    "segment": "idea",
    "section": "D",
    "role": "light lift",
-   "from": 176.0,
-   "to": 181.9,
-   "measured_from": 176.3,
-   "measured_to": 181.9,
+   "from": 177.5,
+   "to": 183.4,
+   "measured_from": 177.8,
+   "measured_to": 183.4,
    "target_lu": -4.0,
    "level_lu": -4.0,
-   "gain_db": 20.03,
+   "gain_db": 20.1,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "small",
    "section": "E",
    "role": "bed",
-   "from": 181.9,
-   "to": 201.6,
-   "measured_from": 182.2,
-   "measured_to": 201.6,
+   "from": 183.4,
+   "to": 203.1,
+   "measured_from": 184.2,
+   "measured_to": 203.1,
    "target_lu": -7.0,
    "level_lu": -7.0,
-   "gain_db": 24.42,
-   "entry_ramp_s": 0.3
+   "gain_db": 24.34,
+   "entry_ramp_s": 0.8
   },
   {
    "segment": "fusion",
    "section": "E",
    "role": "bed",
-   "from": 201.6,
-   "to": 236.87,
-   "measured_from": 202.4,
-   "measured_to": 236.87,
+   "from": 203.1,
+   "to": 238.37,
+   "measured_from": 203.9,
+   "measured_to": 238.37,
    "target_lu": -7.0,
    "level_lu": -7.0,
-   "gain_db": 21.85,
+   "gain_db": 21.83,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "keeps",
    "section": "E",
    "role": "light lift",
-   "from": 236.87,
-   "to": 239.2,
-   "measured_from": 237.17,
-   "measured_to": 239.2,
+   "from": 238.37,
+   "to": 240.7,
+   "measured_from": 238.67,
+   "measured_to": 240.7,
    "target_lu": -5.5,
    "level_lu": -5.5,
-   "gain_db": 18.66,
+   "gain_db": 18.96,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "board2",
    "section": "F",
    "role": "lift",
-   "from": 239.2,
-   "to": 243.23,
-   "measured_from": 239.5,
-   "measured_to": 243.23,
+   "from": 240.7,
+   "to": 244.73,
+   "measured_from": 241.0,
+   "measured_to": 244.73,
    "target_lu": -3.5,
    "level_lu": -3.5,
-   "gain_db": 18.2,
+   "gain_db": 18.03,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "conditions",
    "section": "F",
    "role": "bed",
-   "from": 243.23,
-   "to": 268.2,
-   "measured_from": 243.53,
-   "measured_to": 268.2,
+   "from": 244.73,
+   "to": 269.7,
+   "measured_from": 245.53,
+   "measured_to": 269.7,
    "target_lu": -6.0,
    "level_lu": -6.0,
-   "gain_db": 24.4,
-   "entry_ramp_s": 0.3
+   "gain_db": 24.42,
+   "entry_ramp_s": 0.8
   },
   {
    "segment": "warehouse",
    "section": "F",
    "role": "bed",
-   "from": 268.2,
-   "to": 282.83,
-   "measured_from": 269.0,
-   "measured_to": 282.83,
+   "from": 269.7,
+   "to": 284.33,
+   "measured_from": 270.0,
+   "measured_to": 284.33,
    "target_lu": -4.0,
    "level_lu": -4.0,
-   "gain_db": 20.01,
-   "entry_ramp_s": 0.8
+   "gain_db": 20.09,
+   "entry_ramp_s": 0.3
   },
   {
    "segment": "brake",
    "section": "F",
    "role": "dip",
-   "from": 282.83,
-   "to": 285.67,
-   "measured_from": 283.63,
-   "measured_to": 285.67,
+   "from": 284.33,
+   "to": 287.17,
+   "measured_from": 285.13,
+   "measured_to": 287.17,
    "target_lu": null,
    "level_lu": null,
    "gain_db": null,
@@ -528,62 +554,62 @@
    "segment": "limits",
    "section": "F",
    "role": "bed",
-   "from": 285.67,
-   "to": 296.93,
-   "measured_from": 285.97,
-   "measured_to": 296.93,
+   "from": 287.17,
+   "to": 298.43,
+   "measured_from": 287.97,
+   "measured_to": 298.43,
    "target_lu": -6.5,
    "level_lu": -6.5,
-   "gain_db": 24.33,
-   "entry_ramp_s": 0.3
+   "gain_db": 24.04,
+   "entry_ramp_s": 0.8
   },
   {
    "segment": "settle",
    "section": "F",
    "role": "settle",
-   "from": 296.93,
-   "to": 300.7,
-   "measured_from": 297.73,
-   "measured_to": 300.7,
+   "from": 298.43,
+   "to": 302.2,
+   "measured_from": 299.23,
+   "measured_to": 302.2,
    "target_lu": -7.0,
    "level_lu": -7.0,
-   "gain_db": 22.23,
+   "gain_db": 22.26,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "callback",
    "section": "G",
    "role": "bed",
-   "from": 300.7,
-   "to": 305.27,
-   "measured_from": 301.5,
-   "measured_to": 305.27,
+   "from": 302.2,
+   "to": 306.77,
+   "measured_from": 302.5,
+   "measured_to": 306.77,
    "target_lu": -5.0,
    "level_lu": -5.0,
-   "gain_db": 21.67,
-   "entry_ramp_s": 0.8
+   "gain_db": 21.84,
+   "entry_ramp_s": 0.3
   },
   {
    "segment": "hold",
    "section": "G",
    "role": "bed",
-   "from": 305.27,
-   "to": 308.27,
-   "measured_from": 306.07,
-   "measured_to": 308.27,
+   "from": 306.77,
+   "to": 309.77,
+   "measured_from": 307.57,
+   "measured_to": 309.77,
    "target_lu": -5.5,
    "level_lu": -5.5,
-   "gain_db": 21.54,
+   "gain_db": 21.56,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "j4",
    "section": "G",
    "role": "stop",
-   "from": 308.27,
-   "to": 311.07,
-   "measured_from": 309.07,
-   "measured_to": 311.07,
+   "from": 309.77,
+   "to": 312.57,
+   "measured_from": 310.57,
+   "measured_to": 312.57,
    "target_lu": null,
    "level_lu": null,
    "gain_db": null,
@@ -593,14 +619,14 @@
    "segment": "resolve",
    "section": "G",
    "role": "bed",
-   "from": 311.07,
-   "to": 321.06,
-   "measured_from": 311.87,
-   "measured_to": 318.5,
+   "from": 312.57,
+   "to": 322.56,
+   "measured_from": 312.87,
+   "measured_to": 320.35,
    "target_lu": -2.5,
    "level_lu": -2.5,
-   "gain_db": 21.06,
-   "entry_ramp_s": 0.8
+   "gain_db": 21.38,
+   "entry_ramp_s": 0.3
   }
  ],
  "lifts": [
@@ -626,10 +652,10 @@
   },
   {
    "lift": "U",
-   "over": "switch",
-   "over_lu": 2.75,
-   "then": null,
-   "over_next_lu": null,
+   "over": "build",
+   "over_lu": 2.5,
+   "then": "roll",
+   "over_next_lu": 1.5,
    "also_over": "geometry",
    "also_over_lu": 2.5,
    "within_1.5_to_3_LU": true
@@ -672,28 +698,50 @@
    "seconds": 0.3,
    "before_lkfs": -22.04,
    "inside_lkfs": -46.47,
-   "after_lkfs": -19.83,
+   "after_lkfs": -19.85,
    "drop_db": -24.4,
    "return_db": 26.6,
    "after_vs_before_db": 2.2,
    "digital_silence": false,
+   "note_onsets_inside": 0,
+   "note_onsets_inside_by_instrument": {},
    "peak_inside_dbfs": -15.1
+  },
+  {
+   "at": 11.67,
+   "to": 13.8,
+   "cue": "n02 \"estimate. Not a photograph.\"",
+   "kind": "soft",
+   "label": "A: under the soft-spoken \"estimate. Not a photograph.\": the board chord holds, nothing else attacks, the pizzicato pulse softer",
+   "seconds": 2.13,
+   "before_lkfs": -19.69,
+   "inside_lkfs": -26.64,
+   "after_lkfs": -21.59,
+   "drop_db": -6.9,
+   "return_db": 5.1,
+   "after_vs_before_db": -1.9,
+   "digital_silence": false,
+   "note_onsets_inside": 8,
+   "note_onsets_inside_by_instrument": {
+    "pizz": 8
+   },
+   "peak_inside_dbfs": -16.1
   },
   {
    "at": 14.03,
    "cue": "board -> route",
    "kind": "bed",
-   "before_lkfs": -19.7,
-   "after_lkfs": -21.8,
-   "change_db": -2.1
+   "before_lkfs": -23.67,
+   "after_lkfs": -22.2,
+   "change_db": 1.5
   },
   {
    "at": 26.7,
    "cue": "route -> question",
    "kind": "light lift",
-   "before_lkfs": -21.8,
+   "before_lkfs": -21.72,
    "after_lkfs": -21.14,
-   "change_db": 0.7
+   "change_db": 0.6
   },
   {
    "at": 30.37,
@@ -717,6 +765,8 @@
    "return_db": 95.7,
    "after_vs_before_db": -0.1,
    "digital_silence": true,
+   "note_onsets_inside": 0,
+   "note_onsets_inside_by_instrument": {},
    "peak_inside_dbfs": -240.0
   },
   {
@@ -724,7 +774,7 @@
    "cue": "puzzle -> thin",
    "kind": "bed",
    "before_lkfs": -24.35,
-   "after_lkfs": -25.98,
+   "after_lkfs": -25.96,
    "change_db": -1.6
   },
   {
@@ -734,13 +784,15 @@
    "kind": "drop",
    "label": "B: short drop from \"tiny\" into \"This is real data\" (s15), soft re-entry",
    "seconds": 0.53,
-   "before_lkfs": -25.65,
-   "inside_lkfs": -65.59,
+   "before_lkfs": -25.58,
+   "inside_lkfs": -65.52,
    "after_lkfs": -26.09,
    "drop_db": -39.9,
-   "return_db": 39.5,
-   "after_vs_before_db": -0.4,
+   "return_db": 39.4,
+   "after_vs_before_db": -0.5,
    "digital_silence": false,
+   "note_onsets_inside": 0,
+   "note_onsets_inside_by_instrument": {},
    "peak_inside_dbfs": -29.3
   },
   {
@@ -748,24 +800,44 @@
    "cue": "data -> bump",
    "kind": "lift",
    "before_lkfs": -26.05,
-   "after_lkfs": -24.15,
-   "change_db": 1.9
+   "after_lkfs": -24.82,
+   "change_db": 1.2
+  },
+  {
+   "at": 68.27,
+   "to": 71.37,
+   "cue": "s15 \"In this capture... weaker.\"",
+   "kind": "soft",
+   "label": "B: under the soft-spoken \"In this capture, hundreds of times weaker.\": the bump chord holds, nothing else attacks, the pizzicato pulse softer",
+   "seconds": 3.1,
+   "before_lkfs": -23.34,
+   "inside_lkfs": -26.9,
+   "after_lkfs": -24.67,
+   "drop_db": -3.6,
+   "return_db": 2.2,
+   "after_vs_before_db": -1.3,
+   "digital_silence": false,
+   "note_onsets_inside": 3,
+   "note_onsets_inside_by_instrument": {
+    "pizz": 3
+   },
+   "peak_inside_dbfs": -15.8
   },
   {
    "at": 71.6,
    "cue": "bump -> clue",
    "kind": "bed",
-   "before_lkfs": -23.69,
-   "after_lkfs": -25.11,
-   "change_db": -1.4
+   "before_lkfs": -26.43,
+   "after_lkfs": -25.6,
+   "change_db": 0.8
   },
   {
    "at": 76.1,
    "cue": "clue -> geometry",
    "kind": "bed",
-   "before_lkfs": -25.9,
+   "before_lkfs": -25.67,
    "after_lkfs": -27.89,
-   "change_db": -2.0
+   "change_db": -2.2
   },
   {
    "at": 109.92,
@@ -781,6 +853,8 @@
    "return_db": 91.5,
    "after_vs_before_db": 0.1,
    "digital_silence": true,
+   "note_onsets_inside": 0,
+   "note_onsets_inside_by_instrument": {},
    "peak_inside_dbfs": -240.0
   },
   {
@@ -797,152 +871,211 @@
    "return_db": 45.5,
    "after_vs_before_db": -1.4,
    "digital_silence": false,
+   "note_onsets_inside": 0,
+   "note_onsets_inside_by_instrument": {},
    "peak_inside_dbfs": -29.7
   },
   {
    "at": 139.63,
-   "cue": "switch -> U",
+   "cue": "switch -> build",
+   "kind": "bed",
+   "before_lkfs": -28.3,
+   "after_lkfs": -28.22,
+   "change_db": 0.1
+  },
+  {
+   "at": 145.63,
+   "cue": "build -> U",
    "kind": "lift",
-   "before_lkfs": -28.64,
-   "after_lkfs": -25.89,
-   "change_db": 2.8
-  },
-  {
-   "at": 146.2,
-   "cue": "U -> museum",
-   "kind": "bed",
-   "before_lkfs": -25.05,
-   "after_lkfs": -24.54,
-   "change_db": 0.5
-  },
-  {
-   "at": 171.0,
-   "cue": "museum -> museum_thin",
-   "kind": "bed",
-   "before_lkfs": -23.6,
-   "after_lkfs": -25.44,
-   "change_db": -1.8
-  },
-  {
-   "at": 176.0,
-   "cue": "museum_thin -> idea",
-   "kind": "light lift",
-   "before_lkfs": -25.73,
-   "after_lkfs": -23.72,
-   "change_db": 2.0
-  },
-  {
-   "at": 181.9,
-   "cue": "idea -> small",
-   "kind": "bed",
-   "before_lkfs": -24.47,
-   "after_lkfs": -25.48,
-   "change_db": -1.0
-  },
-  {
-   "at": 201.6,
-   "cue": "small -> fusion",
-   "kind": "bed",
-   "before_lkfs": -28.09,
-   "after_lkfs": -26.38,
-   "change_db": 1.7
-  },
-  {
-   "at": 236.87,
-   "cue": "fusion -> keeps",
-   "kind": "light lift",
-   "before_lkfs": -27.35,
-   "after_lkfs": -25.69,
-   "change_db": 1.7
-  },
-  {
-   "at": 239.2,
-   "cue": "keeps -> board2",
-   "kind": "lift",
-   "before_lkfs": -25.37,
-   "after_lkfs": -23.36,
-   "change_db": 2.0
-  },
-  {
-   "at": 243.23,
-   "cue": "board2 -> conditions",
-   "kind": "bed",
-   "before_lkfs": -23.56,
-   "after_lkfs": -25.36,
-   "change_db": -1.8
-  },
-  {
-   "at": 268.2,
-   "cue": "conditions -> warehouse",
-   "kind": "bed",
-   "before_lkfs": -25.81,
-   "after_lkfs": -23.64,
+   "before_lkfs": -27.81,
+   "after_lkfs": -25.62,
    "change_db": 2.2
   },
   {
-   "at": 282.83,
-   "to": 285.67,
+   "at": 146.83,
+   "cue": "U -> roll",
+   "kind": "settle",
+   "before_lkfs": -24.7,
+   "after_lkfs": -27.24,
+   "change_db": -2.5
+  },
+  {
+   "at": 147.7,
+   "cue": "roll -> museum",
+   "kind": "bed",
+   "before_lkfs": -26.74,
+   "after_lkfs": -24.67,
+   "change_db": 2.1
+  },
+  {
+   "at": 172.5,
+   "cue": "museum -> museum_thin",
+   "kind": "bed",
+   "before_lkfs": -23.88,
+   "after_lkfs": -25.65,
+   "change_db": -1.8
+  },
+  {
+   "at": 177.5,
+   "cue": "museum_thin -> idea",
+   "kind": "light lift",
+   "before_lkfs": -25.86,
+   "after_lkfs": -23.66,
+   "change_db": 2.2
+  },
+  {
+   "at": 183.4,
+   "cue": "idea -> small",
+   "kind": "bed",
+   "before_lkfs": -23.94,
+   "after_lkfs": -27.31,
+   "change_db": -3.4
+  },
+  {
+   "at": 203.1,
+   "cue": "small -> fusion",
+   "kind": "bed",
+   "before_lkfs": -26.81,
+   "after_lkfs": -25.91,
+   "change_db": 0.9
+  },
+  {
+   "at": 238.37,
+   "cue": "fusion -> keeps",
+   "kind": "light lift",
+   "before_lkfs": -27.65,
+   "after_lkfs": -25.46,
+   "change_db": 2.2
+  },
+  {
+   "at": 240.7,
+   "cue": "keeps -> board2",
+   "kind": "lift",
+   "before_lkfs": -25.34,
+   "after_lkfs": -23.59,
+   "change_db": 1.8
+  },
+  {
+   "at": 244.73,
+   "cue": "board2 -> conditions",
+   "kind": "bed",
+   "before_lkfs": -23.38,
+   "after_lkfs": -25.72,
+   "change_db": -2.3
+  },
+  {
+   "at": 269.7,
+   "cue": "conditions -> warehouse",
+   "kind": "bed",
+   "before_lkfs": -26.6,
+   "after_lkfs": -23.7,
+   "change_db": 2.9
+  },
+  {
+   "at": 284.33,
+   "to": 287.17,
    "cue": "s42 \"slow down\"",
    "kind": "dip",
    "label": "F: the groove brakes on \"slow down\" (s42): held Fmaj7 at -8 dB until s43",
    "seconds": 2.83,
-   "before_lkfs": -24.6,
-   "inside_lkfs": -36.38,
-   "after_lkfs": -26.39,
-   "drop_db": -11.8,
-   "return_db": 10.0,
-   "after_vs_before_db": -1.8,
+   "before_lkfs": -24.97,
+   "inside_lkfs": -36.31,
+   "after_lkfs": -26.52,
+   "drop_db": -11.3,
+   "return_db": 9.8,
+   "after_vs_before_db": -1.6,
    "digital_silence": false,
+   "note_onsets_inside": 5,
+   "note_onsets_inside_by_instrument": {
+    "vibes": 1,
+    "bass": 1,
+    "strings": 3
+   },
    "peak_inside_dbfs": -20.6
   },
   {
-   "at": 296.93,
+   "at": 298.43,
    "cue": "limits -> settle",
    "kind": "settle",
-   "before_lkfs": -26.94,
+   "before_lkfs": -26.79,
    "after_lkfs": -27.08,
-   "change_db": -0.1
+   "change_db": -0.3
   },
   {
-   "at": 300.7,
+   "at": 302.2,
    "cue": "settle -> callback",
    "kind": "bed",
    "before_lkfs": -27.12,
-   "after_lkfs": -25.11,
-   "change_db": 2.0
+   "after_lkfs": -24.51,
+   "change_db": 2.6
   },
   {
-   "at": 305.27,
+   "at": 306.77,
    "cue": "callback -> hold",
    "kind": "bed",
-   "before_lkfs": -25.11,
-   "after_lkfs": -25.63,
+   "before_lkfs": -25.16,
+   "after_lkfs": -25.62,
    "change_db": -0.5
   },
   {
-   "at": 308.27,
-   "to": 311.05,
+   "at": 309.77,
+   "to": 312.55,
    "cue": "s47 \"too.\" -> V13",
    "kind": "stop",
    "label": "G: COMPLETE STOP for the deadpan J4 beat (end of s47 to the end-screen start)",
    "seconds": 2.78,
-   "before_lkfs": -25.53,
+   "before_lkfs": -25.49,
    "inside_lkfs": -120.0,
-   "after_lkfs": -23.03,
+   "after_lkfs": -22.76,
    "drop_db": -94.5,
-   "return_db": 97.0,
-   "after_vs_before_db": 2.5,
+   "return_db": 97.2,
+   "after_vs_before_db": 2.7,
    "digital_silence": true,
+   "note_onsets_inside": 0,
+   "note_onsets_inside_by_instrument": {},
    "peak_inside_dbfs": -240.0
   }
  ],
+ "u_payoff": {
+  "U_word_end": 145.633,
+  "roll_up_start": 146.833,
+  "v7_cut": 147.7,
+  "hold_seconds": 1.2,
+  "roll_up_source": "source/src/scenes/V6_RealU.tsx (ROLL_DUR, V6_SCROLL.holdFrames)",
+  "resolve_and_tick_at": 145.633,
+  "glock_ticks_in_V6": [
+   145.633
+  ],
+  "onsets_during_roll_up": 0,
+  "first_onsets_on_hold": [
+   145.633,
+   145.743,
+   145.8
+  ],
+  "lkfs_build_last_2s": -27.49,
+  "lkfs_hold": -25.71,
+  "lkfs_roll_up": -26.79
+ },
+ "end_swell": {
+  "corner_word": [
+   319.3,
+   319.8
+  ],
+  "last_chord_at": 319.85,
+  "note_onsets_during_corner": 0,
+  "lkfs_1s_before_corner": -25.26,
+  "lkfs_during_corner": -25.38,
+  "lkfs_0.5s_after_corner": -18.12,
+  "rise_during_corner_db": -0.1,
+  "rise_after_corner_db": 7.3
+ },
  "cuts": {
   "V1->V2": {
    "cut": 14.03,
-   "floor_dbfs": -28.8,
-   "floor_at": 13.68,
-   "local_rms_dbfs_4s": -21.8,
-   "designed_window": null,
+   "floor_dbfs": -30.6,
+   "floor_at": 13.63,
+   "local_rms_dbfs_4s": -24.7,
+   "designed_window": "soft_n02",
    "carried": true
   },
   "V2->V3": {
@@ -957,15 +1090,15 @@
    "cut": 50.77,
    "floor_dbfs": -36.7,
    "floor_at": 50.32,
-   "local_rms_dbfs_4s": -26.5,
+   "local_rms_dbfs_4s": -26.6,
    "designed_window": null,
    "carried": true
   },
   "V4->V5": {
    "cut": 76.1,
-   "floor_dbfs": -31.9,
+   "floor_dbfs": -31.7,
    "floor_at": 75.85,
-   "local_rms_dbfs_4s": -27.2,
+   "local_rms_dbfs_4s": -27.0,
    "designed_window": null,
    "carried": true
   },
@@ -978,58 +1111,58 @@
    "carried": true
   },
   "V6->V7": {
-   "cut": 146.2,
-   "floor_dbfs": -27.0,
-   "floor_at": 146.3,
-   "local_rms_dbfs_4s": -26.4,
+   "cut": 147.7,
+   "floor_dbfs": -36.2,
+   "floor_at": 148.1,
+   "local_rms_dbfs_4s": -27.1,
    "designed_window": null,
    "carried": true
   },
   "V7->V8": {
-   "cut": 181.9,
-   "floor_dbfs": -29.8,
-   "floor_at": 181.7,
-   "local_rms_dbfs_4s": -25.7,
-   "designed_window": null,
-   "carried": true
-  },
-  "V8->V9": {
-   "cut": 201.6,
-   "floor_dbfs": -36.6,
-   "floor_at": 201.4,
-   "local_rms_dbfs_4s": -27.7,
-   "designed_window": null,
-   "carried": true
-  },
-  "V9->V10": {
-   "cut": 239.2,
-   "floor_dbfs": -31.3,
-   "floor_at": 238.7,
-   "local_rms_dbfs_4s": -26.2,
-   "designed_window": null,
-   "carried": true
-  },
-  "V10->V11": {
-   "cut": 268.2,
-   "floor_dbfs": -32.2,
-   "floor_at": 268.1,
-   "local_rms_dbfs_4s": -24.5,
-   "designed_window": null,
-   "carried": true
-  },
-  "V11->V12": {
-   "cut": 300.7,
-   "floor_dbfs": -31.1,
-   "floor_at": 300.55,
+   "cut": 183.4,
+   "floor_dbfs": -27.3,
+   "floor_at": 183.8,
    "local_rms_dbfs_4s": -26.6,
    "designed_window": null,
    "carried": true
   },
+  "V8->V9": {
+   "cut": 203.1,
+   "floor_dbfs": -32.8,
+   "floor_at": 203.0,
+   "local_rms_dbfs_4s": -26.2,
+   "designed_window": null,
+   "carried": true
+  },
+  "V9->V10": {
+   "cut": 240.7,
+   "floor_dbfs": -33.9,
+   "floor_at": 240.5,
+   "local_rms_dbfs_4s": -26.1,
+   "designed_window": null,
+   "carried": true
+  },
+  "V10->V11": {
+   "cut": 269.7,
+   "floor_dbfs": -33.5,
+   "floor_at": 269.4,
+   "local_rms_dbfs_4s": -25.6,
+   "designed_window": null,
+   "carried": true
+  },
+  "V11->V12": {
+   "cut": 302.2,
+   "floor_dbfs": -31.0,
+   "floor_at": 302.05,
+   "local_rms_dbfs_4s": -26.7,
+   "designed_window": null,
+   "carried": true
+  },
   "V12->V13": {
-   "cut": 311.07,
+   "cut": 312.57,
    "floor_dbfs": -240.0,
-   "floor_at": 310.57,
-   "local_rms_dbfs_4s": -27.0,
+   "floor_at": 312.07,
+   "local_rms_dbfs_4s": -26.8,
    "designed_window": "j4",
    "carried": true
   }
@@ -1040,94 +1173,94 @@
    0.0
   ],
   "last_sample_is_zero": true,
-  "fade_start": 318.5,
-  "fade_seconds": 2.555,
-  "rms_dbfs_last_0.5s": -53.8,
-  "rms_dbfs_last_0.1s": -76.7,
-  "rms_dbfs_1s_before_fade": -21.1,
-  "last_sample_above_-80dBFS_ms_before_end": 38.5
+  "fade_start": 320.35,
+  "fade_seconds": 2.205,
+  "rms_dbfs_last_0.5s": -52.1,
+  "rms_dbfs_last_0.1s": -74.6,
+  "rms_dbfs_1s_before_fade": -22.1,
+  "last_sample_above_-80dBFS_ms_before_end": 27.0
  },
  "stems": {
   "pizz": {
    "gm_program": 45,
-   "notes": 493,
-   "rms_dbfs": -31.8,
-   "band_1_4k_share": 0.0014
+   "notes": 494,
+   "rms_dbfs": -32.0,
+   "band_1_4k_share": 0.0015
   },
   "marimba": {
    "gm_program": 12,
-   "notes": 277,
-   "rms_dbfs": -38.4,
-   "band_1_4k_share": 0.014
+   "notes": 270,
+   "rms_dbfs": -38.8,
+   "band_1_4k_share": 0.0143
   },
   "vibes": {
    "gm_program": 11,
-   "notes": 107,
-   "rms_dbfs": -45.5,
+   "notes": 104,
+   "rms_dbfs": -45.6,
    "band_1_4k_share": 0.0004
   },
   "glock": {
    "gm_program": 9,
    "notes": 14,
-   "rms_dbfs": -60.2,
+   "rms_dbfs": -59.9,
    "band_1_4k_share": 0.0002
   },
   "guitar": {
    "gm_program": 24,
-   "notes": 30,
-   "rms_dbfs": -44.0,
-   "band_1_4k_share": 0.0092
+   "notes": 21,
+   "rms_dbfs": -45.9,
+   "band_1_4k_share": 0.0129
   },
   "harp": {
    "gm_program": 46,
    "notes": 18,
-   "rms_dbfs": -45.7,
+   "rms_dbfs": -45.6,
    "band_1_4k_share": 0.0008
   },
   "bass": {
    "gm_program": 32,
-   "notes": 253,
-   "rms_dbfs": -30.7,
+   "notes": 251,
+   "rms_dbfs": -30.8,
    "band_1_4k_share": 0.0
   },
   "bassoon": {
    "gm_program": 70,
    "notes": 23,
-   "rms_dbfs": -43.8,
-   "band_1_4k_share": 0.0132
+   "rms_dbfs": -43.7,
+   "band_1_4k_share": 0.013
   },
   "clarinet": {
    "gm_program": 71,
    "notes": 8,
-   "rms_dbfs": -51.5,
-   "band_1_4k_share": 0.0753
+   "rms_dbfs": -51.4,
+   "band_1_4k_share": 0.0782
   },
   "strings": {
    "gm_program": 49,
-   "notes": 174,
+   "notes": 168,
    "rms_dbfs": -35.4,
-   "band_1_4k_share": 0.0151
+   "band_1_4k_share": 0.0149
   },
   "drums": {
    "gm_program": 0,
-   "notes": 501,
-   "rms_dbfs": -52.1,
-   "band_1_4k_share": 0.0032
+   "notes": 490,
+   "rms_dbfs": -52.6,
+   "band_1_4k_share": 0.0033
   }
  },
  "notes": {
   "events": {
-   "pizz": 493,
-   "marimba": 277,
-   "vibes": 107,
+   "pizz": 494,
+   "marimba": 270,
+   "vibes": 104,
    "glock": 14,
-   "guitar": 30,
+   "guitar": 21,
    "harp": 18,
-   "bass": 253,
+   "bass": 251,
    "bassoon": 23,
    "clarinet": 8,
-   "strings": 174,
-   "drums": 501
+   "strings": 168,
+   "drums": 490
   },
   "max_melodic_note": 79,
   "glock_notes": [
@@ -1154,10 +1287,9 @@
   "voice_or_choir_programs_used": []
  },
  "stem_sum_max_abs_diff": 1.1920928955078125e-06,
- "sha256_bed": "406d2ecdaa51a0c272656c32f79eb0e0be26f279934a9f4a664b13db7c4f00f7",
+ "sha256_bed": "b8230580af7054ded5c486d447346b43e6955827d67d69b4e644d68fe24c705a",
  "calibration_passes_worst_error_lu": [
-  6.164,
-  0.254,
+  5.913,
   0.0
  ],
  "plots": [

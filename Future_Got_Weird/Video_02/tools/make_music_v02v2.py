@@ -9,19 +9,23 @@ groove, the D-major ending), re-planned for the v2 edit: scenes V1-V13, sections
 lines of v2/SHOTPLAN_V2.md and the music paragraph of v2/REVISION_BRIEF.md.
 
   A  V1-V2   an instrumental CURIOUS PULSE from frame 1 (no logo sting); a 0.3 s near-drop just before "researchers",
-             a modest lift on the real board, settles under n03-n05, a light lift on the question (n06)
+             a modest lift on the real board (no new attacks under "estimate. Not a photograph."), settles under
+             n03-n05, a light lift on the question (n06)
   B  V3-V4   the pulse continues, lighter; complete stop for the duck on "visible", resumes on s11; thins under s14;
-             a short drop from "tiny" into "This is real data", a modest lift on "zoom in to see", quiet under s16
+             a short drop from "tiny" into "This is real data", a modest lift on "zoom in to see" (no new attacks under
+             "In this capture, hundreds of times weaker."), quiet under s16
   C  V5-V6   the quietest bed: clockwork-light, a small tick layer per arc; full stop for "one place" (J3b), resumes on
-             s21; a near-silent beat (0.6 s) on the V6 switch, then a soft held pad under n13 ("And here's a real
-             one."), and a modest lift as the U resolves (s37 + hold)
+             s21; a near-silent beat (0.6 s) on the V6 switch, a soft held pad under n13 ("And here's a real one."),
+             a quiet build under s37, then a modest lift and the resolve on the finished U (end of "U.") over the hold,
+             settling as the board rolls up
   D  V7      a brisker variation of the pulse (Bb major, walking bass, 16th pickups); thins under s31; warm on n16
   E  V8-V9   a quieter bed under the fusion explanation; a small lift on "keeps up instead of smearing"
   F  V10-V11 a modest lift as the real board returns (n24); quiet under the conditions; a light, cautious mechanical
              groove for the warehouse that brakes (dip) on "slow down"; quiet under the limits; a soft settle on
              "not a safety system"
   G  V12-V13 a soft callback of the opening pulse under n31; a held question under s47; a COMPLETE STOP for the J4 beat;
-             a clean, warm D-major resolve from the end-screen start that fades to exactly zero at the last sample
+             a clean, warm D-major resolve from the end-screen start (its last chord after "corner." ends) that fades to
+             exactly zero at the last sample
 
 Every boundary is a word or scene cue read from source/src/data/timeline.json at run time (wt()/st(); no hard-coded
 times), so a re-run after narration retakes moves every section, drop, stop and lift with the words. Offsets such as
@@ -54,6 +58,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SF2 = os.environ.get('MUSIC_SOUNDFONT', '/usr/share/sounds/sf3/MuseScore_General.sf3')
 TIMELINE = os.path.join(ROOT, 'source', 'src', 'data', 'timeline.json')
 NARRATION = os.path.join(ROOT, 'source', 'public', 'audio', 'narration.wav')  # read only, for the QA plot
+V6_SCENE = os.path.join(ROOT, 'source', 'src', 'scenes', 'V6_RealU.tsx')     # read only: where the U board rolls up
 OUT = os.path.join(ROOT, 'audio', 'music', 'v02v2')
 SR = 48000
 BPM = 100
@@ -112,15 +117,15 @@ SEGMENTS = {
                    'a bassoon tiptoe, marimba answers; flash-and-echo tick on "sensor"', -2.0, 'bed'),
     'hush_a': ('A', 'near-drop, 0.3 s before "researchers"', None, 'drop'),
     'board': ('A', 'MODEST LIFT on the real board: strings and vibes enter, marimba doubles in 8ths, kick on 1 and 3, '
-                   'a flash tick on the cut', 0.25, 'lift'),
+                   'a flash tick on the cut; no new attacks under "estimate. Not a photograph." (the chord holds)', 0.25, 'lift'),
     'route': ('A', 'settles under n03-n05: the pulse continues softer, bass on 1 and 3, vibes', -2.5, 'bed'),
     'question': ('A', 'light lift on the question (n06): strings, a vibes question figure, ends on A7sus', -1.25, 'light lift'),
     'puzzle': ('B', 'the pulse continues, lighter; STOP for the duck on "visible", resumes on s11; tick on "timing"', -4.0, 'bed'),
     'thin': ('B', 'thins under s14: pizzicato on beats 1 and 3, vibes, a soft string floor, long bass', -5.5, 'bed'),
     'hush_b': ('B', 'short drop from "tiny" into "This is real data"', None, 'drop'),
     'data': ('B', 'soft re-entry under s15: a string drone, one pizzicato per bar', -6.0, 'bed'),
-    'bump': ('B', 'MODEST LIFT as the bump appears ("zoom in to see"): strings, vibes, rising marimba, flash-and-echo tick',
-             -4.0, 'lift'),
+    'bump': ('B', 'MODEST LIFT as the bump appears ("zoom in to see"): strings, vibes, rising marimba, flash-and-echo tick; '
+                  'no new attacks under "In this capture, hundreds of times weaker." (the chord holds)', -4.0, 'lift'),
     'clue': ('B', 'quiet under s16', -5.75, 'bed'),
     'geometry': ('C', 'QUIETEST: clockwork-light marimba tick-tock, a pizzicato root, long bass; + a soft hat tick layer at '
                       'the first arc, + marimba off-beat pings at the second; FULL STOP for "one place", resumes on s21',
@@ -128,8 +133,11 @@ SEGMENTS = {
     'hush_c': ('C', 'a near-silent beat (0.6 s) on the V6 switch', None, 'drop'),
     'switch': ('C', 'a soft held Em9 pad under n13 "And here\'s a real one." (strings, one vibes note, low bass), a little '
                     'under the C bed', -8.25, 'pad'),
-    'U': ('C', 'MODEST LIFT as the U resolves: Cmaj7 -> Dsus -> Gadd9 on "U", guitar arpeggios, strings, vibes, tick; held '
-               'through the hold into the museum', -5.5, 'lift'),
+    'build': ('C', 'quiet build under s37 while the U builds: Cmaj7 -> Dsus, soft strings, marimba 8ths, pizzicato', -8.0, 'bed'),
+    'U': ('C', 'MODEST LIFT on the finished U, from the end of "U." over the hold: the Gadd9 resolve (guitar arpeggio, '
+               'strings, vibes, bass) and the flash-and-echo tick', -5.5, 'lift'),
+    'roll': ('C', 'the resolve rings and settles as the board rolls up (no new notes); the museum starts on the V7 cut',
+             -7.0, 'settle'),
     'museum': ('D', 'brisker variation of the pulse (Bb major): walking bass, pizzicato 8ths, marimba 16th pickups, shaker '
                     '16ths, stately strings; clarinet line answered by bassoon', -3.5, 'bed'),
     'museum_thin': ('D', 'thins under s31: pizzicato quarters, strings', -5.5, 'bed'),
@@ -148,11 +156,11 @@ SEGMENTS = {
     'hold': ('G', 'held A7sus question under s47', -5.5, 'bed'),
     'j4': ('G', 'COMPLETE STOP: the deadpan J4 beat', None, 'stop'),
     'resolve': ('G', 'clean, warm D-major resolve from the end-screen start (harp, strings, vibes: Dadd9 - Gmaj7/D - '
-                     'Dadd9), fades to exactly zero at the last sample', -2.5, 'bed'),
+                     'Dadd9, the last chord after "corner." ends), fades to exactly zero at the last sample', -2.5, 'bed'),
 }
 # reveal lifts: (lift, bed it rises from, bed after it or None when the next section starts)
 # (the U also rises +2.5 LU over the C bed it follows, reported as 'also over')
-LIFTS = [('board', 'pulse', 'route'), ('bump', 'data', 'clue'), ('U', 'switch', None, 'geometry'), ('board2', 'keeps', 'conditions')]
+LIFTS = [('board', 'pulse', 'route'), ('bump', 'data', 'clue'), ('U', 'build', 'roll', 'geometry'), ('board2', 'keeps', 'conditions')]
 LIGHT_LIFTS = [('question', 'route'), ('idea', 'museum_thin'), ('keeps', 'fusion')]
 SECTIONS = {'A': ('V1', 'V2'), 'B': ('V3', 'V4'), 'C': ('V5', 'V6'), 'D': ('V7', 'V7'), 'E': ('V8', 'V9'),
             'F': ('V10', 'V11'), 'G': ('V12', 'V13')}
@@ -160,6 +168,8 @@ INSTR = {'pizz': (45, 0), 'marimba': (12, 1), 'vibes': (11, 2), 'glock': (9, 3),
          'bass': (32, 6), 'bassoon': (70, 7), 'clarinet': (71, 8), 'strings': (49, 10), 'drums': (0, 9)}
 GAINS_DB = {'pizz': 0, 'marimba': 0, 'vibes': -5, 'glock': -6, 'guitar': -3, 'harp': -4, 'bass': -5, 'bassoon': -7,
             'clarinet': -7, 'strings': -8, 'drums': -7}
+SOFT_KEEP = ('pizz',)           # under a soft-spoken evidence line only a soft, low pizzicato pulse goes on
+SOFT_VEL = 0.75                  # ...at three quarters of its velocity (on top of the zone's -2.5 dB)
 FIG = [0, 2, 1, 2, 0, 3, 1, 2]   # the curious pulse: pizzicato 8ths over the chord (v1's "curious" ostinato)
 # the pulse family: pizzicato level, bass rhythm (q = every beat, h = beats 1 and 3), shaker, kick (8th positions), marimba
 PULSE = {
@@ -247,6 +257,11 @@ def plan(tl):
         'n13': st(tl, 'n13'),                           # C: "And here's a real one."
         's37': st(tl, 's37'),
         'U': wt(tl, 's37', 'U'),
+        'U_end': wt(tl, 's37', 'U', edge='to'),         # C: the finished U is named; the resolve lands here
+        'estimate': wt(tl, 'n02', 'estimate'),          # A: soft-spoken evidence line ("...estimate. Not a photograph.")
+        'n02_end': st(tl, 'n02', 'to'),
+        'see_end': wt(tl, 's15', 'see', edge='to'),     # B: soft-spoken evidence line ("In this capture, ... weaker.")
+        's15_end': st(tl, 's15', 'to'),
         'idea': st(tl, 'n16'),                          # D: "Their new idea"
         's31': st(tl, 's31'),
         'keeps': wt(tl, 'n23', 'keeps'),                # E: "keeps up instead of smearing"
@@ -270,6 +285,9 @@ def plan(tl):
     hc_a = S('V6')                                                     # a near-silent beat from the switch...
     hc_b = min(hc_a + BEAT, cue['s37'] - 0.5)                          # ...then a soft pad under n13 until s37
     dip_a = cue['slow'] - 0.2
+    # the V6 board rolls up in the scene's last frames (V6_RealU.tsx: ROLL_DUR + holdFrames before the V7 cut)
+    roll = roll_up_frames()
+    cue['roll_up'] = max(S('V7') - (roll['roll_frames'] + roll['hold_frames']) / fps, cue['U_end'] + 0.6)
     seg_bounds = [
         ('pulse', 0.0, cue['researchers'] - 0.3),
         ('hush_a', cue['researchers'] - 0.3, cue['researchers']),
@@ -285,7 +303,9 @@ def plan(tl):
         ('geometry', S('V5'), hc_a),
         ('hush_c', hc_a, hc_b),
         ('switch', hc_b, cue['s37']),
-        ('U', cue['s37'], S('V7')),
+        ('build', cue['s37'], cue['U_end']),
+        ('U', cue['U_end'], cue['roll_up']),
+        ('roll', cue['roll_up'], S('V7')),
         ('museum', S('V7'), cue['s31']),
         ('museum_thin', cue['s31'], cue['idea']),
         ('idea', cue['idea'], S('V8')),
@@ -303,6 +323,10 @@ def plan(tl):
         ('j4', cue['too'], S('V13')),
         ('resolve', S('V13'), total),
     ]
+    if seg_bounds[[nm for nm, _, _ in seg_bounds].index('roll')][2] - cue['roll_up'] < 0.25:   # no room: U runs to the cut
+        i = [nm for nm, _, _ in seg_bounds].index('roll')
+        seg_bounds[i - 1] = ('U', cue['U_end'], S('V7'))
+        del seg_bounds[i]
     bad = [(nm, round(a, 2), round(z, 2)) for nm, a, z in seg_bounds if z - a < 0.25]
     bad += [(f'{p[0]}->{q[0]}', round(p[2], 2), round(q[1], 2)) for p, q in zip(seg_bounds, seg_bounds[1:]) if abs(p[2] - q[1]) > 1e-9]
     if bad:
@@ -311,10 +335,18 @@ def plan(tl):
         {'id': 'hush_a', 'kind': 'drop', 'a': cue['researchers'] - 0.3, 'b': cue['researchers'], 'depth_db': -20.0,
          'down_s': 0.06, 'up_s': 0.12, 'cue': 'n01 "researchers"',
          'label': 'A: 0.3 s near-drop just before "researchers" (n01); the board lift lands on the word'},
+        {'id': 'soft_n02', 'kind': 'soft', 'a': cue['estimate'], 'b': cue['n02_end'], 'depth_db': -2.5, 'down_s': 0.3,
+         'up_s': 0.3, 'cue': 'n02 "estimate. Not a photograph."',
+         'label': 'A: under the soft-spoken "estimate. Not a photograph.": the board chord holds, nothing else attacks, the '
+                  'pizzicato pulse softer'},
         {'id': 'j2', 'kind': 'stop', 'a': cue['visible'] - 0.15, 'b': cue['s11'] - 0.05, 'cue': 'n08 "visible"',
          'label': 'B: stop for the duck on "visible" (n08), resumes on s11'},
         {'id': 'hush_b', 'kind': 'drop', 'a': hb_a, 'b': cue['s15'], 'depth_db': -20.0, 'down_s': 0.15, 'up_s': 0.8,
          'cue': 's14 "tiny" -> s15', 'label': 'B: short drop from "tiny" into "This is real data" (s15), soft re-entry'},
+        {'id': 'soft_s15', 'kind': 'soft', 'a': cue['see_end'], 'b': cue['s15_end'], 'depth_db': -2.5, 'down_s': 0.3,
+         'up_s': 0.3, 'cue': 's15 "In this capture... weaker."',
+         'label': 'B: under the soft-spoken "In this capture, hundreds of times weaker.": the bump chord holds, nothing else '
+                  'attacks, the pizzicato pulse softer'},
         {'id': 'j3b', 'kind': 'stop', 'a': cue['one_place'] - 0.25, 'b': cue['s21'] - 0.1, 'cue': 's20 "one place"',
          'label': 'C: full stop for "one place" (s20, J3b), resumes on s21'},
         {'id': 'hush_c', 'kind': 'drop', 'a': hc_a, 'b': hc_b, 'depth_db': -22.0, 'down_s': 0.1, 'up_s': 0.3,
@@ -329,31 +361,48 @@ def plan(tl):
         if w['b'] - w['a'] < 0.2:
             raise AssertionError(f"window {w['id']} too short on this timeline: {w['a']:.2f}-{w['b']:.2f}")
     # harmony set on word cues (the rest moves on the bar grid)
-    s37, u = cue['s37'], cue['U']
+    s37, u = cue['s37'], cue['U_end']
     pts = [(s37, 'Cmaj7')]
     if u - s37 >= 3.0:
         mid = round(((s37 + u) / 2) / BAR) * BAR
         if not (s37 + 1.0 < mid < u - 1.0):
             mid = snap8((s37 + u) / 2)
         pts.append((mid, 'Dsus'))
-    pts.append((u, 'Gadd9'))
     overrides = {
-        'U': pts,
+        'build': pts,
+        'U': [(u, 'Gadd9')],
         'switch': [(hc_b, 'Em9')],
         'brake': [(dip_a, 'Fmaj7')],
         'settle': [(cue['n30'], 'Gm9'), (cue['not_safety'], 'Dm9')],
         'hold': [(cue['s47'], 'A7sus')],
         'resolve': [(S('V13'), 'Dadd9'), (cue['explained'], 'Gmaj7/D'), (cue['corner'], 'Dadd9')],
     }
-    H = harmony(seg_bounds, overrides)
-    # the end: a fade over the last seconds after s48's last word, reaching exactly zero at the last sample
-    fade_start = min(max(cue['corner_end'] + 0.2, total - 4.0), total - 1.5)
+    H = harmony(seg_bounds, overrides, [(w['a'], w['b']) for w in W if w['kind'] == 'soft'])
+    # the end: the last chord lands after "corner." ends; a fade after it reaches exactly zero at the last sample
+    cue['last_chord'] = cue['corner_end'] + 0.05
+    fade_start = min(max(cue['last_chord'] + 0.5, total - 4.0), total - 1.5)
     return {'total': total, 'samples': int(round(total * SR)), 'frames': tl['durationInFrames'], 'fps': fps,
             'scenes': sc, 'cue': cue, 'segments': seg_bounds, 'windows': W, 'harmony': H, 'overrides': overrides,
-            'fade_start': fade_start}
+            'fade_start': fade_start, 'roll_up': roll}
 
 
-def harmony(segs, overrides):
+def roll_up_frames():
+    """How many frames before the V7 cut the V6 board starts rolling up, read from the scene (fallback: 20 + 6)."""
+    out = {'roll_frames': 20, 'hold_frames': 6, 'source': 'fallback (V6_RealU.tsx not read)'}
+    try:
+        src = open(V6_SCENE, encoding='utf-8').read()
+        r = re.search(r'const ROLL_DUR = (\d+);', src)
+        h = re.search(r'holdFrames: (\d+)', src)
+        if r and h:
+            out = {'roll_frames': int(r.group(1)), 'hold_frames': int(h.group(1)),
+                   'source': os.path.relpath(V6_SCENE, ROOT) + ' (ROLL_DUR, V6_SCROLL.holdFrames)'}
+    except OSError:
+        pass
+    return out
+
+
+def harmony(segs, overrides, quiet=()):
+    """Chord pieces per segment. No chord changes inside the quiet (soft) zones: the chord before holds through."""
     H = []
     for name, a, z in segs:
         if name in overrides:
@@ -372,6 +421,7 @@ def harmony(segs, overrides):
             lines = lines[1:]
         if lines and z - lines[-1] < BAR / 4:          # no sliver of a chord at the end
             lines = lines[:-1]
+        lines = [L for L in lines if not any(qa - 0.05 <= L <= qb for qa, qb in quiet)]
         b = [a] + lines + [z]
         for ci, (t0, t1) in enumerate(zip(b, b[1:])):
             H.append({'seg': name, 'chord': prog[ci % len(prog)], 't0': t0, 't1': t1, 'ci': ci})
@@ -395,18 +445,22 @@ def compose(P):
         i = bisect.bisect_right(hst, t + 1e-9) - 1
         return i if i >= 0 and t < H[i]['t1'] - 1e-9 else None
 
-    def blocked(ts, one_off):
+    def blocked(ts, one_off, inst):
         for w in wins:
             pad = 0.15 if w['kind'] == 'stop' else 0.05
             if w['a'] - pad <= ts < w['b']:
                 if w['kind'] == 'dip' and one_off:
                     continue
+                if w['kind'] == 'soft' and inst in SOFT_KEEP:   # a soft zone keeps only the low pulse
+                    continue
                 return True
         return False
 
     def add(inst, ts, dur, note, vel, one_off=False):
-        if ts < 0 or ts >= total - 0.05 or dur <= 0.02 or blocked(ts, one_off):
+        if ts < 0 or ts >= total - 0.05 or dur <= 0.02 or blocked(ts, one_off, inst):
             return
+        if any(w['kind'] == 'soft' and w['a'] - 0.05 <= ts < w['b'] for w in wins):
+            vel = vel * SOFT_VEL
         if inst not in ('glock', 'drums'):
             while note > MAX_MELODIC:
                 note -= 12
@@ -487,10 +541,11 @@ def compose(P):
                 add('drums', t, 0.04, 42, 12 + (3 if i == 0 else 0))
             if t >= cue['arc2'] - 1e-6 and i in (3, 7):
                 add('marimba', t, 0.2 * BEAT, up[3] + 24, 16)
-        elif name == 'U':   # the clockwork brightens as the U resolves
-            add('marimba', t, 0.3 * BEAT, up[FIG[i]] + 12, (24 if i % 2 == 0 else 20) + rnd.randint(-1, 1))
+        elif name in ('build', 'U'):   # the clockwork, quiet while the U builds, brighter on the finished U
+            add('marimba', t, 0.3 * BEAT, up[FIG[i]] + 12, (24 if i % 2 == 0 else 20) - (4 if name == 'build' else 0)
+                + rnd.randint(-1, 1))
             if i % 2 == 0:
-                add('pizz', t, 0.35 * BEAT, r3 if i % 4 == 0 else up[1], 28)
+                add('pizz', t, 0.35 * BEAT, r3 if i % 4 == 0 else up[1], 28 - (4 if name == 'build' else 0))
         elif name == 'museum':   # brisker variation of the pulse: the walk
             pm = [r3, up[1], up[2], up[1], r3 + 7, up[2], up[3], up[2]]
             add('pizz', t, 0.3 * BEAT, pm[i], (36 if i % 2 == 0 else 28) + rnd.randint(-2, 2))
@@ -620,6 +675,10 @@ def compose(P):
         elif name == 'limits':
             add('strings', t0, d + 0.05, up[0], 22)
             add('strings', t0, d + 0.05, up[2], 20)
+        elif name == 'build':    # s37: a soft pad while the U builds
+            for jj, v in ((0, 22), (2, 20), (3, 20)):
+                add('strings', t0, d + 0.05, up[jj], v)
+            add('bass', t0, d, root - 12 if root >= 46 else root, 28)
         elif name == 'switch':   # n13: a soft held pad between the beat on the cut and the U lift
             for jj, v in ((0, 24), (2, 22), (3, 22)):
                 add('strings', t0, d + 0.05, up[jj], v)
@@ -665,18 +724,17 @@ def compose(P):
         if r is not None:
             add('bass', w['b'], max(0.2, min(BEAT, h['t1'] - w['b'] - 0.02)), r, 34, True)
             add('pizz', w['b'], 0.4 * BEAT, r + 12 if r < 45 else r, 34, True)
-    for h in [x for x in P['harmony'] if x['seg'] == 'U']:     # s37: the U resolves (Cmaj7 -> Dsus -> Gadd9 on "U")
-        r, u = CH[h['chord']]
-        d = h['t1'] - h['t0'] + (0.15 if h['chord'] == 'Gadd9' else 0.05)
-        for kk, n_ in enumerate([r, r + 7] + u[1:]):
-            add('guitar', h['t0'] + 0.11 * kk, max(0.3, d - 0.11 * kk), n_, 34 if h['chord'] != 'Gadd9' else 36, True)
-        for n_ in u:
-            add('strings', h['t0'], d, n_, 28 if h['chord'] != 'Gadd9' else 30, True)
-        add('vibes', h['t0'], d, u[3] + 12, 24, True)
-        add('bass', h['t0'], d, r - 12 if r >= 46 else r, 36, True)
-        if h['chord'] == 'Gadd9':
-            add('vibes', h['t0'], d, 79, 20, True)
-    tick(cue['U'], 44)
+    ue = cue['U_end']                                          # the finished U is named: the Gadd9 resolve and the tick
+    r, u = CH['Gadd9']                                         # ring over the hold and through the roll-up to the V7 cut
+    d = cue['V7'] - ue + 0.15
+    for kk, n_ in enumerate([r, r + 7] + u):
+        add('guitar', ue + 0.11 * kk, max(0.3, d - 0.11 * kk), n_, 36, True)
+    for n_ in u:
+        add('strings', ue, d, n_, 30, True)
+    add('vibes', ue, d, u[3] + 12, 24, True)
+    add('vibes', ue, d, 79, 20, True)
+    add('bass', ue, d, r, 36, True)
+    tick(ue, 44)
     dip = next(w for w in P['windows'] if w['id'] == 'brake')  # s42: the groove brakes to a held chord
     r, u = CH['Fmaj7']
     for n_ in u[:3]:
@@ -703,7 +761,8 @@ def compose(P):
     add('vibes', cue['s47'] - 0.05, cue['too'] - cue['s47'] + 1.0, 64, 24, True)
     add('vibes', cue['s47'] - 0.05, cue['too'] - cue['s47'] + 1.0, 69, 22, True)
     add('bass', cue['s47'] - 0.05, cue['too'] - cue['s47'] + 1.0, r, 34, True)
-    e1, e2, e3 = cue['V13'], cue['explained'], cue['corner']   # V13 + s48: the warm D-major resolve
+    e1, e2, e3 = cue['V13'], cue['explained'], cue['last_chord']   # V13 + s48: the warm D-major resolve; its last chord
+    #                                                                  after "corner." ends, never under the word
     to_end = total + 1.0
     r, u = CH['Dadd9']
     for kk, n_ in enumerate([r, r + 7] + u):
@@ -729,7 +788,7 @@ def compose(P):
     add('vibes', e3 + 0.1, to_end - e3, 69, 28, True)
     add('vibes', e3 + 0.1, to_end - e3, 74, 24, True)
     add('bass', e3, to_end - e3, r, 38, True)
-    tick(min(cue['corner_end'] + 0.4, total - 1.0), 34)        # the last flash-and-echo, then it rings out
+    tick(min(e3 + 0.5, total - 1.0), 34)                       # the last flash-and-echo, then it rings out
 
     # complete stops: notes that would sound into a stop are released just before it
     stops = [w for w in P['windows'] if w['kind'] == 'stop']
@@ -835,8 +894,9 @@ def eq(name, x):
 
 
 # ------------------------------------------------------------------------------------------------------------ dynamics
-def seg_ramp(prev_db, cur_db, name):
-    if SEGMENTS[name][3] in ('lift', 'light lift', 'pad') or cur_db > prev_db:
+def seg_ramp(prev_tgt, cur_tgt, name):
+    """Entry ramp: short for a rise, longer for a fall; from the designed targets, so calibration cannot flip it."""
+    if SEGMENTS[name][3] in ('lift', 'light lift', 'pad') or (cur_tgt is not None and prev_tgt is not None and cur_tgt > prev_tgt):
         return 0.3
     return 0.8
 
@@ -844,12 +904,15 @@ def seg_ramp(prev_db, cur_db, name):
 def build_env(P, seg_db, n):
     """Gain curve: segment levels with short ramps at their cues, then drops/dips/stops, the fade-in and the fade-out."""
     g = np.empty(n)
-    prev = None
+    prev = prev_tgt = None
     ramps = {}
     for idx, (name, a, z) in enumerate(P['segments']):
         cur = seg_db[idx] if seg_db[idx] is not None else prev
         ia, iz = int(round(a * SR)), min(n, int(round(z * SR)))
-        r = 0 if prev is None else min(iz - ia, int(seg_ramp(prev, cur, name) * SR))
+        # (a short segment gets a short ramp: at most 40% of it, so most of it sits at its own level)
+        r = 0 if prev is None else min(int(0.4 * (iz - ia)), int(seg_ramp(prev_tgt, SEGMENTS[name][2], name) * SR))
+        if SEGMENTS[name][2] is not None:
+            prev_tgt = SEGMENTS[name][2]
         ramps[idx] = r / SR
         if r > 0:
             g[ia:ia + r] = np.linspace(prev, cur, r)
@@ -858,7 +921,7 @@ def build_env(P, seg_db, n):
     lin = 10 ** (g / 20)
     for w in P['windows']:
         a, b = int(round(w['a'] * SR)), int(round(w['b'] * SR))
-        if w['kind'] in ('drop', 'dip'):
+        if w['kind'] in ('drop', 'dip', 'soft'):
             depth = 10 ** (w['depth_db'] / 20)
             dn, upn = int(w['down_s'] * SR), int(w['up_s'] * SR)
             curve = np.ones(b + upn - a)
@@ -885,7 +948,7 @@ def seg_range(P, idx, ramps):
     a2 = a + ramps.get(idx, 0.0)
     if name == 'resolve':
         z = min(z, P['fade_start'])
-    return (a2, z) if z - a2 >= 0.6 else (a, z)
+    return (a2, z) if z - a2 >= 0.4 else (a, z)
 
 
 def seg_loudness(meter, x, a, z, wins, x_offset=0.0):
@@ -897,7 +960,8 @@ def seg_loudness(meter, x, a, z, wins, x_offset=0.0):
     t = np.arange(ia, iz) / SR + x_offset
     keep = np.ones(iz - ia, bool)
     for w in wins:
-        keep &= ~((t >= w['a'] - 0.2) & (t < w['b'] + max(0.2, w.get('up_s', 0.0))))
+        g = 0.05 if w['kind'] == 'soft' else 0.2
+        keep &= ~((t >= w['a'] - g) & (t < w['b'] + max(g, w.get('up_s', 0.0))))
     y = x[ia:iz][keep]
     if len(y) < int(0.5 * SR):
         return float('-inf')
@@ -913,7 +977,7 @@ def calibrate(P, raw, meter):
     pre = REF_LUFS - whole
     seg_db = [pre + SEGMENTS[nm][2] if SEGMENTS[nm][2] is not None else None for nm, _, _ in P['segments']]
     hist = []
-    for it in range(5):
+    for it in range(10):
         env, ramps = build_env(P, seg_db, n)
         worst = 0.0
         for idx, (nm, a, z) in enumerate(P['segments']):
@@ -1058,8 +1122,12 @@ def measure(P, bed, meter, ev, scale_db, seg_db, ramps, stem_info, tl):
             continue
         pa = P['segments'][idx - 1][1]
         r = ramps.get(idx, 0.0)
+        pa = max([pa] + [w['b'] + w.get('up_s', 0.04) for w in wins if w['b'] + w.get('up_s', 0.04) < a - 0.3])
+        z_ = min([z] + [w['a'] for w in wins if w['a'] > a + r + 0.3])
         b0, b1 = max(pa, a - 3.05), a - 0.05
-        a0, a1 = a + r + 0.05, min(z, a + r + 3.05)
+        a0, a1 = a + r + 0.05, min(z_, a + r + 3.05)
+        if a1 - a0 < 0.3:   # a very short segment: measure all of it
+            a0, a1 = a + 0.05, z
         lb, la = K.level(b0, b1), K.level(a0, a1)
         cues.append({'at': round(a, 2), 'cue': f'{P["segments"][idx - 1][0]} -> {name}', 'kind': SEGMENTS[name][3],
                      'before_lkfs': lb, 'after_lkfs': la,
@@ -1080,8 +1148,30 @@ def measure(P, bed, meter, ev, scale_db, seg_db, ramps, stem_info, tl):
                      'return_db': None if inside is None or after is None else round(after - inside, 1),
                      'after_vs_before_db': None if before is None or after is None else round(after - before, 1),
                      'digital_silence': bool(np.max(np.abs(seg_in)) == 0.0) if len(seg_in) else None,
+                     'note_onsets_inside': sum(1 for v in ev.values() for e in v if a <= e[0] < b),
+                     'note_onsets_inside_by_instrument': {k: n_ for k, n_ in ((k, sum(1 for e in v if a <= e[0] < b))
+                                                                              for k, v in ev.items()) if n_},
                      'peak_inside_dbfs': round(20 * np.log10(np.max(np.abs(seg_in)) + 1e-12), 1) if len(seg_in) else None})
     m['cues'] = sorted(cues, key=lambda c: c['at'])
+    # the U payoff (V2-R1-01): the resolve and tick on the finished U, over the hold, before the roll-up
+    ue, ru, v7 = cue['U_end'], cue['roll_up'], cue['V7']
+    on_hold = sorted({round(e[0], 3) for k, v in ev.items() for e in v if ue - 0.01 <= e[0] < ru})
+    m['u_payoff'] = {'U_word_end': round(ue, 3), 'roll_up_start': round(ru, 3), 'v7_cut': round(v7, 3),
+                     'hold_seconds': round(ru - ue, 2), 'roll_up_source': P['roll_up']['source'],
+                     'resolve_and_tick_at': round(ue, 3),
+                     'glock_ticks_in_V6': [round(e[0], 3) for e in ev['glock'] if sc['V6'][0] <= e[0] < v7 and e[2] == TICK],
+                     'onsets_during_roll_up': sum(1 for v in ev.values() for e in v if ru <= e[0] < v7),
+                     'first_onsets_on_hold': on_hold[:3],
+                     'lkfs_build_last_2s': K.level(ue - 2.0, ue), 'lkfs_hold': K.level(ue + 0.3, ru),
+                     'lkfs_roll_up': K.level(ru + 0.1, v7)}
+    # the end-screen swell (V2-R1-13): nothing new under "corner."; the last chord comes in after it
+    c0, c1 = cue['corner'], cue['corner_end']
+    m['end_swell'] = {'corner_word': [round(c0, 3), round(c1, 3)], 'last_chord_at': round(cue['last_chord'], 3),
+                      'note_onsets_during_corner': sum(1 for v in ev.values() for e in v if c0 <= e[0] < c1),
+                      'lkfs_1s_before_corner': K.level(c0 - 1.0, c0), 'lkfs_during_corner': K.level(c0, c1),
+                      'lkfs_0.5s_after_corner': K.level(c1 + 0.1, c1 + 0.6),
+                      'rise_during_corner_db': round(K.level(c0, c1) - K.level(c0 - 1.0, c0), 1),
+                      'rise_after_corner_db': round(K.level(c1 + 0.1, c1 + 0.6) - K.level(c0, c1), 1)}
     # scene cuts: the music carries across (quietest 100 ms within 0.5 s of the cut), except at designed windows
     m['cuts'] = {}
     ids = list(sc)
@@ -1154,7 +1244,7 @@ def plot(P, m, bed, outdir):
                  x=0.05, y=0.985, ha='left', fontsize=15, color=INK)
     handles = []
     kind_style = {'drop': dict(color='#7d7b75', alpha=0.22), 'dip': dict(color='#7d7b75', alpha=0.14),
-                  'stop': dict(color='#e34948', alpha=0.16)}
+                  'stop': dict(color='#e34948', alpha=0.16), 'soft': dict(color='#2a78d6', alpha=0.10)}
     for r in range(rows):
         t0, t1 = r * span - (0.5 if r else 0), min(total, (r + 1) * span + 0.5)
         aw = fig.add_subplot(gs[3 * r])
@@ -1230,7 +1320,7 @@ def plot(P, m, bed, outdir):
     plt.close(fig)
 
     # every drop, stop and lift up close: momentary loudness +-4 s around the cue, with the measured change
-    items = [c for c in m['cues'] if c['kind'] in ('drop', 'stop', 'dip', 'lift', 'light lift', 'settle')]
+    items = [c for c in m['cues'] if c['kind'] in ('drop', 'stop', 'dip', 'soft', 'lift', 'light lift', 'settle')]
     cols = 4
     rr = int(np.ceil(len(items) / cols))
     fig, axs = plt.subplots(rr, cols, figsize=(22, 3.6 * rr), dpi=100, squeeze=False)
@@ -1247,11 +1337,12 @@ def plot(P, m, bed, outdir):
             if a - 4 <= sa <= b + 4:
                 ax.axvline(sa, color=INK, lw=1.4, ls='--')
                 ax.text(sa, -12, sid, fontsize=8, ha='center', va='bottom', color=INK)
-        if c.get('drop_db') is not None:
+        sg = lambda v: '—' if v is None else f'{v:+.1f}'
+        if 'to' in c:
             txt = f"before {c['before_lkfs']} · in {c['inside_lkfs']} · after {c['after_lkfs']}\n" \
-                  f"drop {c['drop_db']:+.1f} dB · return {c['return_db']:+.1f} dB · after vs before {c['after_vs_before_db']:+.1f} dB"
+                  f"drop {sg(c['drop_db'])} dB · return {sg(c['return_db'])} dB · after vs before {sg(c['after_vs_before_db'])} dB"
         else:
-            txt = f"before {c['before_lkfs']} · after {c['after_lkfs']} · change {c['change_db']:+.1f} dB"
+            txt = f"before {c['before_lkfs']} · after {c['after_lkfs']} · change {sg(c['change_db'])} dB"
         ax.set_title(f"{fmt_t(a)}  {c['kind'].upper()}  {c['cue']}", fontsize=9.5, loc='left', color=INK)
         ax.text(0.01, 0.03, txt, transform=ax.transAxes, fontsize=8, color=INK2, va='bottom')
         ax.set_ylim(-75, -10)
@@ -1323,8 +1414,9 @@ def write_notes(P, m, plan_out):
     for c in m['cues']:
         if 'to' in c:
             ins = 'digital silence' if c['digital_silence'] else f"{c['inside_lkfs']}"
-            ch = (f"in {c['drop_db']:+.1f}, back {c['return_db']:+.1f}" if c['drop_db'] is not None and not c['digital_silence']
-                  else f"after vs before {c['after_vs_before_db']:+.1f}")
+            sg = lambda v: '—' if v is None else f'{v:+.1f}'
+            ch = (f"in {sg(c['drop_db'])}, back {sg(c['return_db'])}" if c['drop_db'] is not None and not c['digital_silence']
+                  else f"after vs before {sg(c['after_vs_before_db'])}")
             L.append(f"| {f(c['at'])}–{f(c['to'])} ({c['seconds']:.2f} s) | {c['cue']} | {c['kind']} | {c['before_lkfs']} | "
                      f"{ins} | {c['after_lkfs']} | {ch} |")
         else:
@@ -1333,7 +1425,26 @@ def write_notes(P, m, plan_out):
     L += ['', 'drop = no new notes, the bed down 20-22 dB with a short down-ramp, then a re-entry ramp (0.12 s for the board '
           'lift on "researchers", 0.8 s into s15, 0.3 s into the n13 pad); stop = notes released, the bed muted with an 80 ms ramp '
           '(digital silence), resuming on the cue with the bass and pizzicato root; dip = the groove stops, one held chord '
-          'at -8 dB.', '',
+          'at -8 dB; soft = under a soft-spoken evidence line the chord already sounding holds (no chord change), no '
+          'other attacks (no marimba, glockenspiel, percussion, vibes, guitar or bass plucks), and only the low pizzicato '
+          'pulse goes on, at 3/4 velocity under a -2.5 dB gain.', '',
+          '## Review round 1 (qa/v2/REVIEW_V2_R1.md)', '',
+          f"- **V2-R1-01, U payoff:** the Gadd9 resolve and the flash-and-echo tick land on the end of \"U.\" "
+          f"({f(m['u_payoff']['U_word_end'])}), on the finished U, and play over the hold; a quiet build sits under s37 while the "
+          f"U builds; the resolve settles with no new notes while the board rolls up ({f(m['u_payoff']['roll_up_start'])} to the "
+          f"V7 cut at {f(m['u_payoff']['v7_cut'])}; roll-up read from {m['u_payoff']['roll_up_source']}). Hold "
+          f"{m['u_payoff']['hold_seconds']:.2f} s; levels: build (last 2 s) {m['u_payoff']['lkfs_build_last_2s']}, hold "
+          f"{m['u_payoff']['lkfs_hold']}, roll-up {m['u_payoff']['lkfs_roll_up']} LKFS; note onsets during the roll-up: "
+          f"{m['u_payoff']['onsets_during_roll_up']}.",
+          f"- **V2-R1-13, end-screen swell:** the last chord comes in at {f(m['end_swell']['last_chord_at'])}, after \"corner.\" "
+          f"ends; note onsets under the word: {m['end_swell']['note_onsets_during_corner']}; the bed across the word "
+          f"{m['end_swell']['rise_during_corner_db']:+.1f} dB against the second before it, then "
+          f"{m['end_swell']['rise_after_corner_db']:+.1f} dB once the chord is in.",
+          '- **V2-R1-24, real-data lift attacks:** under "estimate. Not a photograph." (n02) and "In this capture, hundreds '
+          'of times weaker." (s15) the lift\'s chord holds (no chord change), nothing else attacks, and only the low '
+          'pizzicato pulse goes on, softer (rows marked soft above; onsets inside: ' + '; '.join(
+              f"{c['cue']} {c['note_onsets_inside_by_instrument'] or 'none'}" for c in m['cues'] if c['kind'] == 'soft') + ').',
+          '- **V2-R1-39, J4:** unchanged: the complete stop under the J4 hold is intended (the shot plan is updated to match).', '',
           '## Scene cuts', '', 'The pulse runs on one grid and every new segment\'s chord starts on its cue, so the music '
           'carries across cuts. Quietest 100 ms of the bed within 0.5 s of each cut:', '',
           '| Cut | Time | Floor | Local RMS (4 s) | Designed window | Carried |', '|---|---|---|---|---|---|']
@@ -1352,14 +1463,15 @@ def write_notes(P, m, plan_out):
           'step every fourth chord) over a staccato bass on every beat, soft shaker, a soft kick on 1; a bassoon tiptoe in '
           'the first two bars, recalled under n31.',
           '- **Flash and echo**: a glockenspiel tick on D8 (4.7 kHz) and a fainter echo on C8 0.45 s later, only on cues: '
-          's02 "sensor", n01 "researchers" (the real board), n09 "timing", s15 "zoom", s37 "U", the board\'s return (V10) '
-          'and after the last word.',
+          's02 "sensor", n01 "researchers" (the real board), n09 "timing", s15 "zoom", the end of s37 "U." (the finished '
+          'U), the board\'s return (V10) and after the last chord.',
           '- **Clockwork-light** (C): a marimba tick-tock and a pizzicato root; a hat tick from the first arc (s19), marimba '
-          'off-beat pings from the second (s20); a near-silent beat on the V6 switch, a soft held Em9 pad under n13, then '
-          'Cmaj7 -> Dsus -> Gadd9 as the U resolves.',
+          'off-beat pings from the second (s20); a near-silent beat on the V6 switch, a soft held Em9 pad under n13, a quiet '
+          'Cmaj7 -> Dsus build under s37, then the Gadd9 resolve and tick on the finished U, settling under the roll-up.',
           '- **Museum** (D): the pulse as a walk in Bb major with 16th pickups; the v1 clarinet line answered by bassoon.',
           '- **Warehouse** (F): v1\'s cautious A-minor groove; it brakes to a held Fmaj7 on "slow down".',
-          '- **Ending** (G): held A7sus under s47, digital silence for the J4 beat, then Dadd9 - Gmaj7/D - Dadd9 with harp.', '',
+          '- **Ending** (G): held A7sus under s47, digital silence for the J4 beat, then Dadd9 - Gmaj7/D - Dadd9 with harp; '
+          'the last Dadd9 comes in after "corner." ends.', '',
           '## Instruments (General MIDI, MuseScore General)', '',
           'pizzicato strings (45), marimba (12), vibraphone (11), glockenspiel (9, ticks only), nylon guitar (24), harp (46), '
           'acoustic bass (32), bassoon (70), clarinet (71), slow strings (49), percussion (channel 10: '
@@ -1400,7 +1512,8 @@ def segment_cue_names(P):
     c = {
         'pulse': 'frame 1', 'hush_a': 'n01 "researchers" - 0.3 s', 'board': 'n01 "researchers"', 'route': 'V2 cut',
         'question': 'n06 start', 'puzzle': 'V3 cut', 'thin': 'V4 cut', 'hush_b': 's14 "tiny"', 'data': 's15 start',
-        'bump': 's15 "zoom"', 'clue': 's16 start', 'geometry': 'V5 cut', 'hush_c': 'V6 cut (switch)', 'switch': 'V6 cut + 0.6 s (under n13)', 'U': 's37 start',
+        'bump': 's15 "zoom"', 'clue': 's16 start', 'geometry': 'V5 cut', 'hush_c': 'V6 cut (switch)', 'switch': 'V6 cut + 0.6 s (under n13)', 'build': 's37 start',
+        'U': 's37 "U." end (finished U)', 'roll': 'V6 roll-up (from the scene)',
         'museum': 'V7 cut', 'museum_thin': 's31 start', 'idea': 'n16 start', 'small': 'V8 cut', 'fusion': 'V9 cut',
         'keeps': 'n23 "keeps"', 'board2': 'V10 cut (n24)', 'conditions': 'n25 start', 'warehouse': 'V11 cut',
         'brake': 's42 "slow" - 0.2 s', 'limits': 's43 start', 'settle': 'n30 start', 'callback': 'V12 cut',
@@ -1510,6 +1623,8 @@ def main():
         print(f"  cue {c['at']:7.2f} {c['kind']:10s} {c['cue']:28s} before {c['before_lkfs']} "
               + (f"inside {c['inside_lkfs']} after {c['after_lkfs']} silence={c['digital_silence']}" if 'to' in c
                  else f"after {c['after_lkfs']} change {c['change_db']}"))
+    print(f"  U payoff: {m['u_payoff']}")
+    print(f"  end swell: {m['end_swell']}")
     print('  cuts: ' + ', '.join(f"{k} {v['floor_dbfs']}{'' if v['carried'] else ' (GAP)'}" for k, v in m['cuts'].items()))
     print(f"  end: last sample {m['end']['last_sample']} zero={m['end']['last_sample_is_zero']}, last 0.1 s "
           f"{m['end']['rms_dbfs_last_0.1s']} dBFS; stems sum diff {stem_diff:.2e}; sha256 {m['sha256_bed'][:16]}")
@@ -1523,6 +1638,12 @@ def main():
     problems += [f"lift {x['lift']} outside 1.5-3 LU" for x in m['lifts'] if not x['within_1.5_to_3_LU']]
     problems += [f'cut {k} not carried' for k, v in m['cuts'].items() if not v['carried']]
     problems += [f"stop {c['cue']} not silent" for c in m['cues'] if c['kind'] == 'stop' and not c['digital_silence']]
+    problems += [f"soft zone {c['cue']} has bright attacks {c['note_onsets_inside_by_instrument']}" for c in m['cues']
+                 if c['kind'] == 'soft' and set(c['note_onsets_inside_by_instrument']) - set(SOFT_KEEP)]
+    if m['end_swell']['note_onsets_during_corner']:
+        problems.append('note onsets under "corner."')
+    if m['u_payoff']['onsets_during_roll_up']:
+        problems.append('note onsets under the V6 roll-up')
     if problems:
         raise AssertionError('checks failed (files written so measure.json shows them): ' + '; '.join(problems))
 
