@@ -1,0 +1,464 @@
+{
+ "source": "ElevenLabs Scribe (eleven_scribe_v1) word timestamps on selected take; transcript equals locked script, 88/88 words",
+ "audio_file": "narration.mp3",
+ "audio_duration_seconds": 33.724082,
+ "words": [
+  {
+   "text": "This",
+   "start": 0.0,
+   "end": 0.24
+  },
+  {
+   "text": "robot",
+   "start": 0.32,
+   "end": 0.64
+  },
+  {
+   "text": "has",
+   "start": 0.72,
+   "end": 0.96
+  },
+  {
+   "text": "no",
+   "start": 1.04,
+   "end": 1.2
+  },
+  {
+   "text": "pinky.",
+   "start": 1.28,
+   "end": 1.88
+  },
+  {
+   "text": "On",
+   "start": 2.08,
+   "end": 2.16
+  },
+  {
+   "text": "purpose.",
+   "start": 2.32,
+   "end": 3.04
+  },
+  {
+   "text": "Boston",
+   "start": 3.28,
+   "end": 3.6
+  },
+  {
+   "text": "Dynamics",
+   "start": 3.68,
+   "end": 4.16
+  },
+  {
+   "text": "says",
+   "start": 4.28,
+   "end": 4.4
+  },
+  {
+   "text": "its",
+   "start": 4.48,
+   "end": 4.64
+  },
+  {
+   "text": "engineers",
+   "start": 4.8,
+   "end": 5.12
+  },
+  {
+   "text": "taped",
+   "start": 5.2,
+   "end": 5.52
+  },
+  {
+   "text": "their",
+   "start": 5.6,
+   "end": 5.68
+  },
+  {
+   "text": "ring",
+   "start": 5.76,
+   "end": 6.0
+  },
+  {
+   "text": "and",
+   "start": 6.04,
+   "end": 6.08
+  },
+  {
+   "text": "pinky",
+   "start": 6.24,
+   "end": 6.48
+  },
+  {
+   "text": "fingers",
+   "start": 6.56,
+   "end": 6.8
+  },
+  {
+   "text": "together",
+   "start": 6.88,
+   "end": 7.2
+  },
+  {
+   "text": "for",
+   "start": 7.28,
+   "end": 7.36
+  },
+  {
+   "text": "a",
+   "start": 7.44,
+   "end": 7.52
+  },
+  {
+   "text": "day.",
+   "start": 7.6,
+   "end": 8.08
+  },
+  {
+   "text": "The",
+   "start": 8.32,
+   "end": 8.36
+  },
+  {
+   "text": "verdict?",
+   "start": 8.4,
+   "end": 8.88
+  },
+  {
+   "text": "Leave",
+   "start": 9.28,
+   "end": 9.44
+  },
+  {
+   "text": "it",
+   "start": 9.52,
+   "end": 9.56
+  },
+  {
+   "text": "out.",
+   "start": 9.6,
+   "end": 10.12
+  },
+  {
+   "text": "Atlas’s",
+   "start": 10.4,
+   "end": 10.88
+  },
+  {
+   "text": "new",
+   "start": 10.96,
+   "end": 11.04
+  },
+  {
+   "text": "hand",
+   "start": 11.12,
+   "end": 11.36
+  },
+  {
+   "text": "has",
+   "start": 11.44,
+   "end": 11.6
+  },
+  {
+   "text": "four",
+   "start": 11.68,
+   "end": 11.84
+  },
+  {
+   "text": "digits,",
+   "start": 11.92,
+   "end": 12.48
+  },
+  {
+   "text": "but",
+   "start": 12.56,
+   "end": 12.64
+  },
+  {
+   "text": "thirteen",
+   "start": 12.8,
+   "end": 13.12
+  },
+  {
+   "text": "degrees",
+   "start": 13.2,
+   "end": 13.52
+  },
+  {
+   "text": "of",
+   "start": 13.6,
+   "end": 13.68
+  },
+  {
+   "text": "freedom.",
+   "start": 13.76,
+   "end": 14.32
+  },
+  {
+   "text": "Independent",
+   "start": 14.56,
+   "end": 15.12
+  },
+  {
+   "text": "ways",
+   "start": 15.2,
+   "end": 15.36
+  },
+  {
+   "text": "to",
+   "start": 15.44,
+   "end": 15.52
+  },
+  {
+   "text": "move.",
+   "start": 15.6,
+   "end": 16.16
+  },
+  {
+   "text": "The",
+   "start": 16.4,
+   "end": 16.48
+  },
+  {
+   "text": "company",
+   "start": 16.56,
+   "end": 16.8
+  },
+  {
+   "text": "says",
+   "start": 16.88,
+   "end": 17.04
+  },
+  {
+   "text": "it",
+   "start": 17.12,
+   "end": 17.2
+  },
+  {
+   "text": "can",
+   "start": 17.28,
+   "end": 17.36
+  },
+  {
+   "text": "pinch,",
+   "start": 17.44,
+   "end": 18.0
+  },
+  {
+   "text": "turn",
+   "start": 18.12,
+   "end": 18.24
+  },
+  {
+   "text": "objects,",
+   "start": 18.32,
+   "end": 18.88
+  },
+  {
+   "text": "and",
+   "start": 18.92,
+   "end": 18.96
+  },
+  {
+   "text": "press",
+   "start": 19.04,
+   "end": 19.28
+  },
+  {
+   "text": "tool",
+   "start": 19.36,
+   "end": 19.52
+  },
+  {
+   "text": "triggers.",
+   "start": 19.6,
+   "end": 20.2
+  },
+  {
+   "text": "A",
+   "start": 20.4,
+   "end": 20.56
+  },
+  {
+   "text": "fifth",
+   "start": 20.6,
+   "end": 20.8
+  },
+  {
+   "text": "digit",
+   "start": 20.88,
+   "end": 21.12
+  },
+  {
+   "text": "would",
+   "start": 21.2,
+   "end": 21.28
+  },
+  {
+   "text": "mean",
+   "start": 21.36,
+   "end": 21.52
+  },
+  {
+   "text": "three",
+   "start": 21.6,
+   "end": 21.84
+  },
+  {
+   "text": "more",
+   "start": 21.92,
+   "end": 22.08
+  },
+  {
+   "text": "actuators.",
+   "start": 22.16,
+   "end": 23.04
+  },
+  {
+   "text": "More",
+   "start": 23.28,
+   "end": 23.44
+  },
+  {
+   "text": "cost.",
+   "start": 23.52,
+   "end": 24.12
+  },
+  {
+   "text": "More",
+   "start": 24.24,
+   "end": 24.4
+  },
+  {
+   "text": "bulk.",
+   "start": 24.48,
+   "end": 25.12
+  },
+  {
+   "text": "More",
+   "start": 25.2,
+   "end": 25.28
+  },
+  {
+   "text": "things",
+   "start": 25.36,
+   "end": 25.52
+  },
+  {
+   "text": "to",
+   "start": 25.6,
+   "end": 25.64
+  },
+  {
+   "text": "break.",
+   "start": 25.68,
+   "end": 26.08
+  },
+  {
+   "text": "So",
+   "start": 26.64,
+   "end": 26.8
+  },
+  {
+   "text": "the",
+   "start": 26.96,
+   "end": 27.04
+  },
+  {
+   "text": "goal",
+   "start": 27.2,
+   "end": 27.36
+  },
+  {
+   "text": "is",
+   "start": 27.44,
+   "end": 27.52
+  },
+  {
+   "text": "a",
+   "start": 27.56,
+   "end": 27.6
+  },
+  {
+   "text": "useful,",
+   "start": 27.76,
+   "end": 28.24
+  },
+  {
+   "text": "reliable",
+   "start": 28.32,
+   "end": 28.88
+  },
+  {
+   "text": "hand.",
+   "start": 28.96,
+   "end": 29.52
+  },
+  {
+   "text": "Looking",
+   "start": 29.76,
+   "end": 30.0
+  },
+  {
+   "text": "human",
+   "start": 30.08,
+   "end": 30.4
+  },
+  {
+   "text": "is",
+   "start": 30.44,
+   "end": 30.48
+  },
+  {
+   "text": "optional.",
+   "start": 30.56,
+   "end": 31.04
+  },
+  {
+   "text": "Apparently,",
+   "start": 31.44,
+   "end": 32.16
+  },
+  {
+   "text": "even",
+   "start": 32.24,
+   "end": 32.4
+  },
+  {
+   "text": "robots",
+   "start": 32.48,
+   "end": 32.88
+  },
+  {
+   "text": "have",
+   "start": 32.92,
+   "end": 32.96
+  },
+  {
+   "text": "a",
+   "start": 33.04,
+   "end": 33.08
+  },
+  {
+   "text": "budget.",
+   "start": 33.12,
+   "end": 33.76
+  }
+ ],
+ "measured_voice_ends_seconds": {
+  "pinky.": 1.695,
+  "purpose.": 2.834,
+  "day.": 7.884,
+  "verdict?": 8.867,
+  "out.": 9.87,
+  "freedom.": 14.114,
+  "move.": 15.914,
+  "triggers.": 20.027,
+  "actuators.": 22.838,
+  "cost.": 24.004,
+  "bulk.": 24.841,
+  "break.": 26.052,
+  "hand.": 29.303,
+  "optional.": 31.016,
+  "budget.": 33.434
+ }
+}

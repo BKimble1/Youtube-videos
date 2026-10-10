@@ -1,0 +1,18 @@
+cue_id,trigger_event,layer,texture,target_duration_seconds,mix_note
+S01,B01.hand.splay_contact,sfx,small rigid mechanical click,0.10,one opening accent with no heavy bass
+S02,B02.tape.contact,sfx,close paper tape rip,0.45,duck broadband texture under narrator
+S03,B02.cup.contact,sfx,dry cup on wood contact,0.12,quiet contact no repeating whoosh
+S04,B02.knob.detent,sfx,single small knob tick,0.08,do not compete with consonants
+S05,B03.verdict.stamp,sfx,soft rubber stamp impact,0.14,land after tiny verbal pocket
+S06,B04.motion.thumb,sfx,restrained small servo texture,0.65,fade with actual movement avoid continuous whine
+S07,B05.washer.pinch,sfx,tiny metal contact,0.07,quiet and sharp
+S08,B05.object.rotate,sfx,soft short sliding servo texture,0.20,support coherent object motion
+S09,B05.trigger.contact,sfx,mechanical trigger click,0.10,no drill roar through speech
+S10,B06.tray.cost,sfx,part tray contact low,0.10,first of three gentle rhythmic contacts
+S11,B06.tray.space,sfx,part tray contact middle,0.10,vary pitch slightly
+S12,B06.tray.service,sfx,part tray contact high,0.10,no failure alarm
+S13,B07.tool.dock,sfx,satisfying dock clunk,0.16,weight without bass boom
+S14,B09.budget.tag_contact,sfx,restrained register click,0.20,one comic accent in narration gap
+M01,full_story,music,light kinetic 126 BPM bed,36.0,planning duration only follow final audio and use authorized source
+D01,B03.verdict.stamp,mix,brief musical pocket,0.25,editorial direction not an already aligned cue
+D02,B09.receipt.entry,mix,thin music before joke,0.25,retain complete voice and clean ending

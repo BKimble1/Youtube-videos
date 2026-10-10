@@ -1,0 +1,6 @@
+# Short audio is stored as ordinary Git blobs (Git LFS uploads return 403 Forbidden in this environment).
+# Same precedent as Future_Got_Weird/can-you-hurt-something-that-isnt-alive/.gitattributes. Keep real edits visible.
+*.mp3 -filter -diff -merge -text
+*.wav -filter -diff -merge -text
+*.m4a -filter -diff -merge -text
+*.aac -filter -diff -merge -text

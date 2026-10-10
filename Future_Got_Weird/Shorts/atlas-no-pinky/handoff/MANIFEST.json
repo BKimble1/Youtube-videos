@@ -1,0 +1,144 @@
+{
+  "packet": "Future Got Weird \u2014 Atlas Short production handoff",
+  "prepared_date": "2026-10-10",
+  "production_status": "prompt_script_storyboard_only",
+  "script_words": 88,
+  "planned_seconds": 36,
+  "files": [
+    {
+      "path": "00_START_HERE.md",
+      "size_bytes": 2476,
+      "sha256": "6a462c530209b30102397c1dfca15cf310caef7f8720038b5e2c8287044cf73b"
+    },
+    {
+      "path": "01_OPUS_MASTER_PROMPT.md",
+      "size_bytes": 13970,
+      "sha256": "fe0e38c472a4e32a7cade019d4a9a5806aae0bc47ec17f99bf128d6b799e7218"
+    },
+    {
+      "path": "02_SCRIPT.md",
+      "size_bytes": 2443,
+      "sha256": "3fbf84d3599fc4716cf533aa558a5b237ab7718c38e05eac154149f7cc4c639c"
+    },
+    {
+      "path": "03_ANIMATION_AND_SOUND.md",
+      "size_bytes": 10074,
+      "sha256": "9cbac901fc4dd757f93af9dc32d29017e2fdff0325dc5c2966035f3e987daed6"
+    },
+    {
+      "path": "04_RESEARCH_AND_DECISION.md",
+      "size_bytes": 5555,
+      "sha256": "72d01286093b694c8dc64f25c15fc6c4367ac1b2df7ab2e41f7df674bd18cef7"
+    },
+    {
+      "path": "05_CLAIM_LEDGER.md",
+      "size_bytes": 2629,
+      "sha256": "a2ca88e6dc21ad4d5703ffef55f859cc0408e5132f54f25569c1298d16f0e5e6"
+    },
+    {
+      "path": "06_DELIVERY_AND_MEASUREMENT.md",
+      "size_bytes": 6359,
+      "sha256": "e2264bb5fa5e93597ff30a248f6f4b1788389244e467948c66ec3de6be40bc2f"
+    },
+    {
+      "path": "07_ASSET_PROVENANCE.md",
+      "size_bytes": 3624,
+      "sha256": "ffbffcb50610950f6c4a65d92047d6edb2ec5413f06e2d77fcc1852a355f178e"
+    },
+    {
+      "path": "08_PACKAGE_QA.md",
+      "size_bytes": 1921,
+      "sha256": "ebab5800913dfbe276412c07e6b27d0b14296244c89ed812957d8313b13380a7"
+    },
+    {
+      "path": "data/beat_plan.json",
+      "size_bytes": 3790,
+      "sha256": "2582620c57976e0fccf208a9fbf64f6dc92ec9d018efe46ed2a01980e06df856"
+    },
+    {
+      "path": "data/sound_cues.csv",
+      "size_bytes": 1587,
+      "sha256": "413d5b5aec5ec9b8dc18bf4a4ebbd36fce4f5fe29b48e1ba0a2eaa949bef2cc8"
+    },
+    {
+      "path": "references/Future_Got_Weird_Project_Brief.md",
+      "size_bytes": 34816,
+      "sha256": "42d49d5b6e76e451f701366a5fbbb8669afdeb06e646ad5dfd28b1bc91027b41"
+    },
+    {
+      "path": "references/approved_cast/cast_rig_check.png",
+      "size_bytes": 409272,
+      "sha256": "a6fa35854ead9d8850662f93e9a4d0e30d9a32637ea6c2ffb4b20b555a365144"
+    },
+    {
+      "path": "references/approved_cast/style_frame_counter.png",
+      "size_bytes": 246657,
+      "sha256": "43db510be2d702ba49506b7e108d769317871edfeccdb14ae4237d38eeac8331"
+    },
+    {
+      "path": "references/approved_cast/style_frame_gameshow.png",
+      "size_bytes": 583951,
+      "sha256": "a5a9da43e5be59b27aa84d542881788032f18ee2bd2e749e5396b34b9233c15f"
+    },
+    {
+      "path": "references/approved_cast/style_frame_verify.png",
+      "size_bytes": 362185,
+      "sha256": "0bc3d6d60881a07410eccedd23d0cc8f32d031d8bda0b2e8a7a5571cc33e419f"
+    },
+    {
+      "path": "references/repository_reference/package-lock.json",
+      "size_bytes": 144794,
+      "sha256": "9c16c544ad5cd9f8ef4ffbfa55625fd3c7794a94d1b910c7edbf173b856d8c61"
+    },
+    {
+      "path": "references/repository_reference/package.json",
+      "size_bytes": 1097,
+      "sha256": "872e57aeb81d3b26dd813867b16871a9d9a8d6641af3fcbfdc02b6a7021e6f2f"
+    },
+    {
+      "path": "references/repository_reference/src/components/Character.tsx",
+      "size_bytes": 22174,
+      "sha256": "b33949f35ff260958255f25f3a4cefdffc8cea0a3203826cca68a8f24c2ac957"
+    },
+    {
+      "path": "references/repository_reference/src/components/cast.ts",
+      "size_bytes": 1871,
+      "sha256": "041d31afb0ceee860d375f082f2bd5ef9f7e88baccef38004a493313a69e4680"
+    },
+    {
+      "path": "references/repository_reference/src/lib/anim.ts",
+      "size_bytes": 2788,
+      "sha256": "91429cafc03f8518bf64d3d5cf0b9653ff6cea598c4a8c77c2438d41fd1a8753"
+    },
+    {
+      "path": "references/repository_reference/src/lib/camera.tsx",
+      "size_bytes": 2094,
+      "sha256": "24dfcb03f051f3d4581cc6285ef0bb50ca53e4979d901d9027769e4377d599ac"
+    },
+    {
+      "path": "references/repository_reference/src/lib/motion.ts",
+      "size_bytes": 6514,
+      "sha256": "6b2940d39c616dc3f10d9bd59c516c9b9b48de3ab385c9493b62463cef0f839f"
+    },
+    {
+      "path": "references/repository_reference/src/theme.ts",
+      "size_bytes": 1347,
+      "sha256": "2b130146f3a49a3bd5c724c2ef33bc0caf415c3d435fae8ec14d8d8a6bbac60e"
+    },
+    {
+      "path": "tools/build_storyboard.py",
+      "size_bytes": 9523,
+      "sha256": "0fdefb8464d27fc8da5b953c818ddec93a7d3c0a034ac76b9e7cce8e0c56180e"
+    },
+    {
+      "path": "visuals/STORYBOARD.png",
+      "size_bytes": 165730,
+      "sha256": "dc124ca396238cf7acecef8ecf0783cd9419e5da1e9c1713dbb19bf97485cf0c"
+    },
+    {
+      "path": "visuals/STORYBOARD.svg",
+      "size_bytes": 50241,
+      "sha256": "f30e13260458d748270dc5870ba3f83c1b51832a065bef61cc014f4fd69bde6f"
+    }
+  ]
+}

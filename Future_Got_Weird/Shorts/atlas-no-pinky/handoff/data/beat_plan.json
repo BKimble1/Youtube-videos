@@ -1,0 +1,147 @@
+{
+  "schema_version": "1.0",
+  "concept": "Why This Robot Has No Pinky",
+  "prepared_date": "2026-10-10",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "status": "editorial_plan_only",
+  "alignment_status": "no_narration_generated",
+  "estimated_duration_seconds": 36,
+  "final_duration_frames": null,
+  "narration_file": null,
+  "aligned_cues_file": null,
+  "script_file": "02_SCRIPT.md",
+  "beats": [
+    {
+      "id": "B01",
+      "name": "Missing-position hook",
+      "narration_paragraph": 1,
+      "estimated_start_seconds": 0,
+      "estimated_end_seconds": 2.6,
+      "final_start_frame": null,
+      "final_end_frame": null,
+      "event_ids": [
+        "B01.hand.splay_contact",
+        "B01.gap.marker",
+        "B01.label.purpose"
+      ]
+    },
+    {
+      "id": "B02",
+      "name": "Taped-hand reenactment",
+      "narration_paragraph": 2,
+      "estimated_start_seconds": 2.6,
+      "estimated_end_seconds": 8.4,
+      "final_start_frame": null,
+      "final_end_frame": null,
+      "event_ids": [
+        "B02.tape.contact",
+        "B02.cup.contact",
+        "B02.knob.detent",
+        "B02.day.dial"
+      ]
+    },
+    {
+      "id": "B03",
+      "name": "Decision stamp",
+      "narration_paragraph": 3,
+      "estimated_start_seconds": 8.4,
+      "estimated_end_seconds": 10.2,
+      "final_start_frame": null,
+      "final_end_frame": null,
+      "event_ids": [
+        "B03.verdict.stamp"
+      ]
+    },
+    {
+      "id": "B04",
+      "name": "Motion-count explanation",
+      "narration_paragraph": 4,
+      "estimated_start_seconds": 10.2,
+      "estimated_end_seconds": 16.2,
+      "final_start_frame": null,
+      "final_end_frame": null,
+      "event_ids": [
+        "B04.motion.thumb",
+        "B04.motion.splay",
+        "B04.motion.hold"
+      ]
+    },
+    {
+      "id": "B05",
+      "name": "Capability illustrations",
+      "narration_paragraph": 5,
+      "estimated_start_seconds": 16.2,
+      "estimated_end_seconds": 20.8,
+      "final_start_frame": null,
+      "final_end_frame": null,
+      "event_ids": [
+        "B05.washer.pinch",
+        "B05.object.rotate",
+        "B05.trigger.contact"
+      ]
+    },
+    {
+      "id": "B06",
+      "name": "Optional-component tradeoff",
+      "narration_paragraph": 6,
+      "estimated_start_seconds": 20.8,
+      "estimated_end_seconds": 27.3,
+      "final_start_frame": null,
+      "final_end_frame": null,
+      "event_ids": [
+        "B06.option.reveal",
+        "B06.tray.cost",
+        "B06.tray.space",
+        "B06.tray.service"
+      ]
+    },
+    {
+      "id": "B07",
+      "name": "Tool docking payoff",
+      "narration_paragraph": 7,
+      "estimated_start_seconds": 27.3,
+      "estimated_end_seconds": 30.6,
+      "final_start_frame": null,
+      "final_end_frame": null,
+      "event_ids": [
+        "B07.tool.dock",
+        "B07.checker.nod"
+      ]
+    },
+    {
+      "id": "B08",
+      "name": "Cosmetic expectation",
+      "narration_paragraph": 8,
+      "estimated_start_seconds": 30.6,
+      "estimated_end_seconds": 32.3,
+      "final_start_frame": null,
+      "final_end_frame": null,
+      "event_ids": [
+        "B08.reference.card_pass"
+      ]
+    },
+    {
+      "id": "B09",
+      "name": "Budget joke and return pose",
+      "narration_paragraph": 9,
+      "estimated_start_seconds": 32.3,
+      "estimated_end_seconds": 36,
+      "final_start_frame": null,
+      "final_end_frame": null,
+      "event_ids": [
+        "B09.receipt.entry",
+        "B09.budget.tag_contact",
+        "B09.hand.return_pose"
+      ]
+    }
+  ],
+  "notes": [
+    "Estimated times are not subtitles or speech alignment.",
+    "Set exact cues from the final selected audio before production rendering.",
+    "Do not depict a five-digit previous Atlas hand losing a digit."
+  ]
+}
