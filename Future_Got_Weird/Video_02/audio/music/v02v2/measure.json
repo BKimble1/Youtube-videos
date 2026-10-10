@@ -1,14 +1,14 @@
 {
  "duration": {
-  "samples": 15482640,
-  "seconds": 322.555,
-  "timeline_durationSeconds": 322.555,
-  "timeline_samples": 15482640,
+  "samples": 15545040,
+  "seconds": 323.855,
+  "timeline_durationSeconds": 323.855,
+  "timeline_samples": 15545040,
   "matches_timeline": true,
-  "video_frames": 9677,
-  "video_samples_frames_x_1600": 15483200,
+  "video_frames": 9716,
+  "video_samples_frames_x_1600": 15545600,
   "video_minus_bed_ms": 11.67,
-  "narration_samples": 15482640,
+  "narration_samples": 15545040,
   "matches_narration": true
  },
  "peaks": {
@@ -18,7 +18,7 @@
  },
  "integrated_lufs": -24.94,
  "reference_lufs": -20.0,
- "band_1_4k_share_whole": 0.0039,
+ "band_1_4k_share_whole": 0.0038,
  "sections": {
   "A": {
    "scenes": "V1-V2",
@@ -26,8 +26,8 @@
    "to": 30.37,
    "lufs": -21.76,
    "lu_vs_reference": -1.76,
-   "rel_whole_lu": 3.18,
-   "lufs_after_mix_norm_-27": -23.82,
+   "rel_whole_lu": 3.17,
+   "lufs_after_mix_norm_-27": -23.83,
    "band_1_4k_share": 0.0024,
    "band_1_4k_share_max_1s": 0.0063,
    "band_1_4k_share_p95_1s": 0.0056
@@ -38,8 +38,8 @@
    "to": 76.1,
    "lufs": -24.79,
    "lu_vs_reference": -4.79,
-   "rel_whole_lu": 0.16,
-   "lufs_after_mix_norm_-27": -26.84,
+   "rel_whole_lu": 0.15,
+   "lufs_after_mix_norm_-27": -26.85,
    "band_1_4k_share": 0.002,
    "band_1_4k_share_max_1s": 0.0238,
    "band_1_4k_share_p95_1s": 0.0116
@@ -47,62 +47,62 @@
   "C": {
    "scenes": "V5-V6",
    "from": 76.1,
-   "to": 147.7,
-   "lufs": -27.66,
-   "lu_vs_reference": -7.66,
-   "rel_whole_lu": -2.72,
-   "lufs_after_mix_norm_-27": -29.72,
+   "to": 149.0,
+   "lufs": -27.62,
+   "lu_vs_reference": -7.62,
+   "rel_whole_lu": -2.69,
+   "lufs_after_mix_norm_-27": -29.69,
    "band_1_4k_share": 0.0062,
    "band_1_4k_share_max_1s": 0.0317,
    "band_1_4k_share_p95_1s": 0.024
   },
   "D": {
    "scenes": "V7",
-   "from": 147.7,
-   "to": 183.4,
+   "from": 149.0,
+   "to": 184.7,
    "lufs": -23.8,
    "lu_vs_reference": -3.8,
    "rel_whole_lu": 1.14,
    "lufs_after_mix_norm_-27": -25.86,
-   "band_1_4k_share": 0.0102,
-   "band_1_4k_share_max_1s": 0.0326,
-   "band_1_4k_share_p95_1s": 0.0316
+   "band_1_4k_share": 0.0096,
+   "band_1_4k_share_max_1s": 0.0354,
+   "band_1_4k_share_p95_1s": 0.0322
   },
   "E": {
    "scenes": "V8-V9",
-   "from": 183.4,
-   "to": 240.7,
-   "lufs": -26.82,
-   "lu_vs_reference": -6.82,
-   "rel_whole_lu": -1.88,
-   "lufs_after_mix_norm_-27": -28.88,
-   "band_1_4k_share": 0.001,
-   "band_1_4k_share_max_1s": 0.0147,
-   "band_1_4k_share_p95_1s": 0.0049
+   "from": 184.7,
+   "to": 242.0,
+   "lufs": -26.74,
+   "lu_vs_reference": -6.74,
+   "rel_whole_lu": -1.8,
+   "lufs_after_mix_norm_-27": -28.8,
+   "band_1_4k_share": 0.0011,
+   "band_1_4k_share_max_1s": 0.0209,
+   "band_1_4k_share_p95_1s": 0.0064
   },
   "F": {
    "scenes": "V10-V11",
-   "from": 240.7,
-   "to": 302.2,
-   "lufs": -25.37,
-   "lu_vs_reference": -5.37,
+   "from": 242.0,
+   "to": 303.5,
+   "lufs": -25.36,
+   "lu_vs_reference": -5.36,
    "rel_whole_lu": -0.43,
    "lufs_after_mix_norm_-27": -27.43,
    "band_1_4k_share": 0.0028,
-   "band_1_4k_share_max_1s": 0.0248,
-   "band_1_4k_share_p95_1s": 0.0132
+   "band_1_4k_share_max_1s": 0.0362,
+   "band_1_4k_share_p95_1s": 0.01
   },
   "G": {
    "scenes": "V12-V13",
-   "from": 302.2,
-   "to": 322.56,
-   "lufs": -23.39,
-   "lu_vs_reference": -3.39,
-   "rel_whole_lu": 1.56,
-   "lufs_after_mix_norm_-27": -25.44,
-   "band_1_4k_share": 0.0034,
-   "band_1_4k_share_max_1s": 0.0116,
-   "band_1_4k_share_p95_1s": 0.0108
+   "from": 303.5,
+   "to": 323.86,
+   "lufs": -23.42,
+   "lu_vs_reference": -3.42,
+   "rel_whole_lu": 1.52,
+   "lufs_after_mix_norm_-27": -25.48,
+   "band_1_4k_share": 0.0035,
+   "band_1_4k_share_max_1s": 0.0118,
+   "band_1_4k_share_p95_1s": 0.0109
   }
  },
  "scenes": {
@@ -124,77 +124,77 @@
    "from": 30.37,
    "to": 50.77,
    "lufs": -23.91,
-   "rel_whole_lu": 1.03,
+   "rel_whole_lu": 1.02,
    "band_1_4k_share": 0.0008
   },
   "V4": {
    "from": 50.77,
    "to": 76.1,
    "lufs": -25.69,
-   "rel_whole_lu": -0.75,
+   "rel_whole_lu": -0.76,
    "band_1_4k_share": 0.0035
   },
   "V5": {
    "from": 76.1,
    "to": 137.17,
    "lufs": -27.73,
-   "rel_whole_lu": -2.79,
+   "rel_whole_lu": -2.8,
    "band_1_4k_share": 0.0061
   },
   "V6": {
    "from": 137.17,
-   "to": 147.7,
-   "lufs": -27.26,
-   "rel_whole_lu": -2.32,
+   "to": 149.0,
+   "lufs": -27.08,
+   "rel_whole_lu": -2.15,
    "band_1_4k_share": 0.007
   },
   "V7": {
-   "from": 147.7,
-   "to": 183.4,
+   "from": 149.0,
+   "to": 184.7,
    "lufs": -23.8,
    "rel_whole_lu": 1.14,
-   "band_1_4k_share": 0.0102
+   "band_1_4k_share": 0.0096
   },
   "V8": {
-   "from": 183.4,
-   "to": 203.1,
-   "lufs": -26.99,
-   "rel_whole_lu": -2.05,
-   "band_1_4k_share": 0.0015
+   "from": 184.7,
+   "to": 204.4,
+   "lufs": -26.89,
+   "rel_whole_lu": -1.95,
+   "band_1_4k_share": 0.0017
   },
   "V9": {
-   "from": 203.1,
-   "to": 240.7,
-   "lufs": -26.77,
-   "rel_whole_lu": -1.83,
-   "band_1_4k_share": 0.0007
+   "from": 204.4,
+   "to": 242.0,
+   "lufs": -26.72,
+   "rel_whole_lu": -1.78,
+   "band_1_4k_share": 0.0008
   },
   "V10": {
-   "from": 240.7,
-   "to": 269.7,
-   "lufs": -25.59,
-   "rel_whole_lu": -0.65,
+   "from": 242.0,
+   "to": 271.0,
+   "lufs": -25.53,
+   "rel_whole_lu": -0.59,
    "band_1_4k_share": 0.0034
   },
   "V11": {
-   "from": 269.7,
-   "to": 302.2,
-   "lufs": -25.22,
-   "rel_whole_lu": -0.28,
-   "band_1_4k_share": 0.0022
+   "from": 271.0,
+   "to": 303.5,
+   "lufs": -25.23,
+   "rel_whole_lu": -0.3,
+   "band_1_4k_share": 0.0024
   },
   "V12": {
-   "from": 302.2,
-   "to": 312.57,
-   "lufs": -25.03,
-   "rel_whole_lu": -0.09,
-   "band_1_4k_share": 0.0025
+   "from": 303.5,
+   "to": 313.87,
+   "lufs": -25.14,
+   "rel_whole_lu": -0.2,
+   "band_1_4k_share": 0.0026
   },
   "V13": {
-   "from": 312.57,
-   "to": 322.56,
+   "from": 313.87,
+   "to": 323.86,
    "lufs": -22.34,
-   "rel_whole_lu": 2.6,
+   "rel_whole_lu": 2.59,
    "band_1_4k_share": 0.0039
   }
  },
@@ -399,152 +399,152 @@
    "section": "C",
    "role": "lift",
    "from": 145.63,
-   "to": 146.83,
+   "to": 148.13,
    "measured_from": 145.93,
-   "measured_to": 146.83,
+   "measured_to": 148.13,
    "target_lu": -5.5,
    "level_lu": -5.5,
-   "gain_db": 15.35,
+   "gain_db": 16.32,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "roll",
    "section": "C",
    "role": "settle",
-   "from": 146.83,
-   "to": 147.7,
-   "measured_from": 147.18,
-   "measured_to": 147.7,
+   "from": 148.13,
+   "to": 149.0,
+   "measured_from": 148.48,
+   "measured_to": 149.0,
    "target_lu": -7.0,
    "level_lu": -7.0,
-   "gain_db": 17.22,
+   "gain_db": 19.32,
    "entry_ramp_s": 0.35
   },
   {
    "segment": "museum",
    "section": "D",
    "role": "bed",
-   "from": 147.7,
-   "to": 172.5,
-   "measured_from": 148.0,
-   "measured_to": 172.5,
+   "from": 149.0,
+   "to": 173.8,
+   "measured_from": 149.3,
+   "measured_to": 173.8,
    "target_lu": -3.5,
    "level_lu": -3.5,
-   "gain_db": 18.45,
+   "gain_db": 18.47,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "museum_thin",
    "section": "D",
    "role": "bed",
-   "from": 172.5,
-   "to": 177.5,
-   "measured_from": 173.3,
-   "measured_to": 177.5,
+   "from": 173.8,
+   "to": 178.8,
+   "measured_from": 174.6,
+   "measured_to": 178.8,
    "target_lu": -5.5,
    "level_lu": -5.5,
-   "gain_db": 21.79,
+   "gain_db": 21.91,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "idea",
    "section": "D",
    "role": "light lift",
-   "from": 177.5,
-   "to": 183.4,
-   "measured_from": 177.8,
-   "measured_to": 183.4,
+   "from": 178.8,
+   "to": 184.7,
+   "measured_from": 179.1,
+   "measured_to": 184.7,
    "target_lu": -4.0,
    "level_lu": -4.0,
-   "gain_db": 20.1,
+   "gain_db": 20.12,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "small",
    "section": "E",
    "role": "bed",
-   "from": 183.4,
-   "to": 203.1,
-   "measured_from": 184.2,
-   "measured_to": 203.1,
+   "from": 184.7,
+   "to": 204.4,
+   "measured_from": 185.5,
+   "measured_to": 204.4,
    "target_lu": -7.0,
    "level_lu": -7.0,
-   "gain_db": 24.34,
+   "gain_db": 24.58,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "fusion",
    "section": "E",
    "role": "bed",
-   "from": 203.1,
-   "to": 238.37,
-   "measured_from": 203.9,
-   "measured_to": 238.37,
+   "from": 204.4,
+   "to": 239.67,
+   "measured_from": 205.2,
+   "measured_to": 239.67,
    "target_lu": -7.0,
    "level_lu": -7.0,
-   "gain_db": 21.83,
+   "gain_db": 21.93,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "keeps",
    "section": "E",
    "role": "light lift",
-   "from": 238.37,
-   "to": 240.7,
-   "measured_from": 238.67,
-   "measured_to": 240.7,
+   "from": 239.67,
+   "to": 242.0,
+   "measured_from": 239.97,
+   "measured_to": 242.0,
    "target_lu": -5.5,
    "level_lu": -5.5,
-   "gain_db": 18.96,
+   "gain_db": 19.12,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "board2",
    "section": "F",
    "role": "lift",
-   "from": 240.7,
-   "to": 244.73,
-   "measured_from": 241.0,
-   "measured_to": 244.73,
+   "from": 242.0,
+   "to": 246.03,
+   "measured_from": 242.3,
+   "measured_to": 246.03,
    "target_lu": -3.5,
    "level_lu": -3.5,
-   "gain_db": 18.03,
+   "gain_db": 18.25,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "conditions",
    "section": "F",
    "role": "bed",
-   "from": 244.73,
-   "to": 269.7,
-   "measured_from": 245.53,
-   "measured_to": 269.7,
+   "from": 246.03,
+   "to": 271.0,
+   "measured_from": 246.83,
+   "measured_to": 271.0,
    "target_lu": -6.0,
    "level_lu": -6.0,
-   "gain_db": 24.42,
+   "gain_db": 24.34,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "warehouse",
    "section": "F",
    "role": "bed",
-   "from": 269.7,
-   "to": 284.33,
-   "measured_from": 270.0,
-   "measured_to": 284.33,
+   "from": 271.0,
+   "to": 285.63,
+   "measured_from": 271.3,
+   "measured_to": 285.63,
    "target_lu": -4.0,
    "level_lu": -4.0,
-   "gain_db": 20.09,
+   "gain_db": 20.02,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "brake",
    "section": "F",
    "role": "dip",
-   "from": 284.33,
-   "to": 287.17,
-   "measured_from": 285.13,
-   "measured_to": 287.17,
+   "from": 285.63,
+   "to": 288.47,
+   "measured_from": 286.43,
+   "measured_to": 288.47,
    "target_lu": null,
    "level_lu": null,
    "gain_db": null,
@@ -554,62 +554,62 @@
    "segment": "limits",
    "section": "F",
    "role": "bed",
-   "from": 287.17,
-   "to": 298.43,
-   "measured_from": 287.97,
-   "measured_to": 298.43,
+   "from": 288.47,
+   "to": 299.73,
+   "measured_from": 289.27,
+   "measured_to": 299.73,
    "target_lu": -6.5,
    "level_lu": -6.5,
-   "gain_db": 24.04,
+   "gain_db": 24.34,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "settle",
    "section": "F",
    "role": "settle",
-   "from": 298.43,
-   "to": 302.2,
-   "measured_from": 299.23,
-   "measured_to": 302.2,
+   "from": 299.73,
+   "to": 303.5,
+   "measured_from": 300.53,
+   "measured_to": 303.5,
    "target_lu": -7.0,
    "level_lu": -7.0,
-   "gain_db": 22.26,
+   "gain_db": 22.25,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "callback",
    "section": "G",
    "role": "bed",
-   "from": 302.2,
-   "to": 306.77,
-   "measured_from": 302.5,
-   "measured_to": 306.77,
+   "from": 303.5,
+   "to": 308.07,
+   "measured_from": 303.8,
+   "measured_to": 308.07,
    "target_lu": -5.0,
    "level_lu": -5.0,
-   "gain_db": 21.84,
+   "gain_db": 21.88,
    "entry_ramp_s": 0.3
   },
   {
    "segment": "hold",
    "section": "G",
    "role": "bed",
-   "from": 306.77,
-   "to": 309.77,
-   "measured_from": 307.57,
-   "measured_to": 309.77,
+   "from": 308.07,
+   "to": 311.07,
+   "measured_from": 308.87,
+   "measured_to": 311.07,
    "target_lu": -5.5,
    "level_lu": -5.5,
-   "gain_db": 21.56,
+   "gain_db": 21.54,
    "entry_ramp_s": 0.8
   },
   {
    "segment": "j4",
    "section": "G",
    "role": "stop",
-   "from": 309.77,
-   "to": 312.57,
-   "measured_from": 310.57,
-   "measured_to": 312.57,
+   "from": 311.07,
+   "to": 313.87,
+   "measured_from": 311.87,
+   "measured_to": 313.87,
    "target_lu": null,
    "level_lu": null,
    "gain_db": null,
@@ -619,10 +619,10 @@
    "segment": "resolve",
    "section": "G",
    "role": "bed",
-   "from": 312.57,
-   "to": 322.56,
-   "measured_from": 312.87,
-   "measured_to": 320.35,
+   "from": 313.87,
+   "to": 323.86,
+   "measured_from": 314.17,
+   "measured_to": 321.65,
    "target_lu": -2.5,
    "level_lu": -2.5,
    "gain_db": 21.38,
@@ -888,102 +888,102 @@
    "cue": "build -> U",
    "kind": "lift",
    "before_lkfs": -27.81,
-   "after_lkfs": -25.62,
+   "after_lkfs": -25.65,
    "change_db": 2.2
   },
   {
-   "at": 146.83,
+   "at": 148.13,
    "cue": "U -> roll",
    "kind": "settle",
-   "before_lkfs": -24.7,
-   "after_lkfs": -27.24,
-   "change_db": -2.5
+   "before_lkfs": -25.04,
+   "after_lkfs": -27.11,
+   "change_db": -2.1
   },
   {
-   "at": 147.7,
+   "at": 149.0,
    "cue": "roll -> museum",
    "kind": "bed",
-   "before_lkfs": -26.74,
-   "after_lkfs": -24.67,
-   "change_db": 2.1
+   "before_lkfs": -27.68,
+   "after_lkfs": -24.44,
+   "change_db": 3.2
   },
   {
-   "at": 172.5,
+   "at": 173.8,
    "cue": "museum -> museum_thin",
    "kind": "bed",
-   "before_lkfs": -23.88,
-   "after_lkfs": -25.65,
-   "change_db": -1.8
+   "before_lkfs": -24.46,
+   "after_lkfs": -25.7,
+   "change_db": -1.2
   },
   {
-   "at": 177.5,
+   "at": 178.8,
    "cue": "museum_thin -> idea",
    "kind": "light lift",
-   "before_lkfs": -25.86,
-   "after_lkfs": -23.66,
-   "change_db": 2.2
+   "before_lkfs": -25.57,
+   "after_lkfs": -23.71,
+   "change_db": 1.9
   },
   {
-   "at": 183.4,
+   "at": 184.7,
    "cue": "idea -> small",
    "kind": "bed",
-   "before_lkfs": -23.94,
-   "after_lkfs": -27.31,
+   "before_lkfs": -24.42,
+   "after_lkfs": -27.8,
    "change_db": -3.4
   },
   {
-   "at": 203.1,
+   "at": 204.4,
    "cue": "small -> fusion",
    "kind": "bed",
-   "before_lkfs": -26.81,
-   "after_lkfs": -25.91,
-   "change_db": 0.9
+   "before_lkfs": -26.33,
+   "after_lkfs": -26.41,
+   "change_db": -0.1
   },
   {
-   "at": 238.37,
+   "at": 239.67,
    "cue": "fusion -> keeps",
    "kind": "light lift",
-   "before_lkfs": -27.65,
-   "after_lkfs": -25.46,
-   "change_db": 2.2
+   "before_lkfs": -27.46,
+   "after_lkfs": -24.94,
+   "change_db": 2.5
   },
   {
-   "at": 240.7,
+   "at": 242.0,
    "cue": "keeps -> board2",
    "kind": "lift",
-   "before_lkfs": -25.34,
-   "after_lkfs": -23.59,
-   "change_db": 1.8
+   "before_lkfs": -24.85,
+   "after_lkfs": -23.44,
+   "change_db": 1.4
   },
   {
-   "at": 244.73,
+   "at": 246.03,
    "cue": "board2 -> conditions",
    "kind": "bed",
-   "before_lkfs": -23.38,
-   "after_lkfs": -25.72,
-   "change_db": -2.3
+   "before_lkfs": -23.4,
+   "after_lkfs": -24.82,
+   "change_db": -1.4
   },
   {
-   "at": 269.7,
+   "at": 271.0,
    "cue": "conditions -> warehouse",
    "kind": "bed",
-   "before_lkfs": -26.6,
-   "after_lkfs": -23.7,
-   "change_db": 2.9
+   "before_lkfs": -26.61,
+   "after_lkfs": -23.44,
+   "change_db": 3.2
   },
   {
-   "at": 284.33,
-   "to": 287.17,
+   "at": 285.63,
+   "to": 288.47,
    "cue": "s42 \"slow down\"",
    "kind": "dip",
    "label": "F: the groove brakes on \"slow down\" (s42): held Fmaj7 at -8 dB until s43",
    "seconds": 2.83,
-   "before_lkfs": -24.97,
-   "inside_lkfs": -36.31,
-   "after_lkfs": -26.52,
-   "drop_db": -11.3,
-   "return_db": 9.8,
-   "after_vs_before_db": -1.6,
+   "before_lkfs": -24.86,
+   "inside_lkfs": -36.37,
+   "after_lkfs": -26.78,
+   "drop_db": -11.5,
+   "return_db": 9.6,
+   "after_vs_before_db": -1.9,
    "digital_silence": false,
    "note_onsets_inside": 5,
    "note_onsets_inside_by_instrument": {
@@ -991,45 +991,45 @@
     "bass": 1,
     "strings": 3
    },
-   "peak_inside_dbfs": -20.6
+   "peak_inside_dbfs": -21.9
   },
   {
-   "at": 298.43,
+   "at": 299.73,
    "cue": "limits -> settle",
    "kind": "settle",
-   "before_lkfs": -26.79,
+   "before_lkfs": -26.95,
    "after_lkfs": -27.08,
-   "change_db": -0.3
+   "change_db": -0.1
   },
   {
-   "at": 302.2,
+   "at": 303.5,
    "cue": "settle -> callback",
    "kind": "bed",
    "before_lkfs": -27.12,
-   "after_lkfs": -24.51,
-   "change_db": 2.6
+   "after_lkfs": -24.95,
+   "change_db": 2.2
   },
   {
-   "at": 306.77,
+   "at": 308.07,
    "cue": "callback -> hold",
    "kind": "bed",
-   "before_lkfs": -25.16,
+   "before_lkfs": -25.26,
    "after_lkfs": -25.62,
-   "change_db": -0.5
+   "change_db": -0.4
   },
   {
-   "at": 309.77,
-   "to": 312.55,
+   "at": 311.07,
+   "to": 313.85,
    "cue": "s47 \"too.\" -> V13",
    "kind": "stop",
    "label": "G: COMPLETE STOP for the deadpan J4 beat (end of s47 to the end-screen start)",
    "seconds": 2.78,
-   "before_lkfs": -25.49,
+   "before_lkfs": -25.55,
    "inside_lkfs": -120.0,
    "after_lkfs": -22.76,
    "drop_db": -94.5,
    "return_db": 97.2,
-   "after_vs_before_db": 2.7,
+   "after_vs_before_db": 2.8,
    "digital_silence": true,
    "note_onsets_inside": 0,
    "note_onsets_inside_by_instrument": {},
@@ -1038,9 +1038,9 @@
  ],
  "u_payoff": {
   "U_word_end": 145.633,
-  "roll_up_start": 146.833,
-  "v7_cut": 147.7,
-  "hold_seconds": 1.2,
+  "roll_up_start": 148.133,
+  "v7_cut": 149.0,
+  "hold_seconds": 2.5,
   "roll_up_source": "source/src/scenes/V6_RealU.tsx (ROLL_DUR, V6_SCROLL.holdFrames)",
   "resolve_and_tick_at": 145.633,
   "glock_ticks_in_V6": [
@@ -1053,21 +1053,21 @@
    145.8
   ],
   "lkfs_build_last_2s": -27.49,
-  "lkfs_hold": -25.71,
-  "lkfs_roll_up": -26.79
+  "lkfs_hold": -25.67,
+  "lkfs_roll_up": -27.46
  },
  "end_swell": {
   "corner_word": [
-   319.3,
-   319.8
+   320.6,
+   321.1
   ],
-  "last_chord_at": 319.85,
+  "last_chord_at": 321.15,
   "note_onsets_during_corner": 0,
-  "lkfs_1s_before_corner": -25.26,
-  "lkfs_during_corner": -25.38,
-  "lkfs_0.5s_after_corner": -18.12,
+  "lkfs_1s_before_corner": -25.27,
+  "lkfs_during_corner": -25.37,
+  "lkfs_0.5s_after_corner": -18.13,
   "rise_during_corner_db": -0.1,
-  "rise_after_corner_db": 7.3
+  "rise_after_corner_db": 7.2
  },
  "cuts": {
   "V1->V2": {
@@ -1111,57 +1111,57 @@
    "carried": true
   },
   "V6->V7": {
-   "cut": 147.7,
-   "floor_dbfs": -36.2,
-   "floor_at": 148.1,
-   "local_rms_dbfs_4s": -27.1,
+   "cut": 149.0,
+   "floor_dbfs": -34.4,
+   "floor_at": 149.3,
+   "local_rms_dbfs_4s": -28.0,
    "designed_window": null,
    "carried": true
   },
   "V7->V8": {
-   "cut": 183.4,
-   "floor_dbfs": -27.3,
-   "floor_at": 183.8,
-   "local_rms_dbfs_4s": -26.6,
+   "cut": 184.7,
+   "floor_dbfs": -29.4,
+   "floor_at": 184.5,
+   "local_rms_dbfs_4s": -27.3,
    "designed_window": null,
    "carried": true
   },
   "V8->V9": {
-   "cut": 203.1,
-   "floor_dbfs": -32.8,
-   "floor_at": 203.0,
-   "local_rms_dbfs_4s": -26.2,
+   "cut": 204.4,
+   "floor_dbfs": -35.4,
+   "floor_at": 203.9,
+   "local_rms_dbfs_4s": -26.8,
    "designed_window": null,
    "carried": true
   },
   "V9->V10": {
-   "cut": 240.7,
-   "floor_dbfs": -33.9,
-   "floor_at": 240.5,
-   "local_rms_dbfs_4s": -26.1,
+   "cut": 242.0,
+   "floor_dbfs": -34.6,
+   "floor_at": 241.6,
+   "local_rms_dbfs_4s": -25.9,
    "designed_window": null,
    "carried": true
   },
   "V10->V11": {
-   "cut": 269.7,
-   "floor_dbfs": -33.5,
-   "floor_at": 269.4,
-   "local_rms_dbfs_4s": -25.6,
+   "cut": 271.0,
+   "floor_dbfs": -33.2,
+   "floor_at": 270.65,
+   "local_rms_dbfs_4s": -25.8,
    "designed_window": null,
    "carried": true
   },
   "V11->V12": {
-   "cut": 302.2,
+   "cut": 303.5,
    "floor_dbfs": -31.0,
-   "floor_at": 302.05,
-   "local_rms_dbfs_4s": -26.7,
+   "floor_at": 303.35,
+   "local_rms_dbfs_4s": -26.8,
    "designed_window": null,
    "carried": true
   },
   "V12->V13": {
-   "cut": 312.57,
+   "cut": 313.87,
    "floor_dbfs": -240.0,
-   "floor_at": 312.07,
+   "floor_at": 313.37,
    "local_rms_dbfs_4s": -26.8,
    "designed_window": "j4",
    "carried": true
@@ -1173,9 +1173,9 @@
    0.0
   ],
   "last_sample_is_zero": true,
-  "fade_start": 320.35,
+  "fade_start": 321.65,
   "fade_seconds": 2.205,
-  "rms_dbfs_last_0.5s": -52.1,
+  "rms_dbfs_last_0.5s": -52.0,
   "rms_dbfs_last_0.1s": -74.6,
   "rms_dbfs_1s_before_fade": -22.1,
   "last_sample_above_-80dBFS_ms_before_end": 27.0
@@ -1183,21 +1183,21 @@
  "stems": {
   "pizz": {
    "gm_program": 45,
-   "notes": 494,
+   "notes": 495,
    "rms_dbfs": -32.0,
    "band_1_4k_share": 0.0015
   },
   "marimba": {
    "gm_program": 12,
-   "notes": 270,
+   "notes": 273,
    "rms_dbfs": -38.8,
-   "band_1_4k_share": 0.0143
+   "band_1_4k_share": 0.0145
   },
   "vibes": {
    "gm_program": 11,
-   "notes": 104,
-   "rms_dbfs": -45.6,
-   "band_1_4k_share": 0.0004
+   "notes": 105,
+   "rms_dbfs": -45.4,
+   "band_1_4k_share": 0.0005
   },
   "glock": {
    "gm_program": 9,
@@ -1208,8 +1208,8 @@
   "guitar": {
    "gm_program": 24,
    "notes": 21,
-   "rms_dbfs": -45.9,
-   "band_1_4k_share": 0.0129
+   "rms_dbfs": -45.4,
+   "band_1_4k_share": 0.012
   },
   "harp": {
    "gm_program": 46,
@@ -1219,7 +1219,7 @@
   },
   "bass": {
    "gm_program": 32,
-   "notes": 251,
+   "notes": 249,
    "rms_dbfs": -30.8,
    "band_1_4k_share": 0.0
   },
@@ -1237,30 +1237,30 @@
   },
   "strings": {
    "gm_program": 49,
-   "notes": 168,
-   "rms_dbfs": -35.4,
-   "band_1_4k_share": 0.0149
+   "notes": 167,
+   "rms_dbfs": -35.3,
+   "band_1_4k_share": 0.0143
   },
   "drums": {
    "gm_program": 0,
-   "notes": 490,
-   "rms_dbfs": -52.6,
+   "notes": 493,
+   "rms_dbfs": -52.5,
    "band_1_4k_share": 0.0033
   }
  },
  "notes": {
   "events": {
-   "pizz": 494,
-   "marimba": 270,
-   "vibes": 104,
+   "pizz": 495,
+   "marimba": 273,
+   "vibes": 105,
    "glock": 14,
    "guitar": 21,
    "harp": 18,
-   "bass": 251,
+   "bass": 249,
    "bassoon": 23,
    "clarinet": 8,
-   "strings": 168,
-   "drums": 490
+   "strings": 167,
+   "drums": 493
   },
   "max_melodic_note": 79,
   "glock_notes": [
@@ -1287,13 +1287,9 @@
   "voice_or_choir_programs_used": []
  },
  "stem_sum_max_abs_diff": 1.1920928955078125e-06,
- "sha256_bed": "b8230580af7054ded5c486d447346b43e6955827d67d69b4e644d68fe24c705a",
+ "sha256_bed": "745001d678bf56b11c4aeb4041329143278c36d087a85ed288df9dba39ff65c7",
  "calibration_passes_worst_error_lu": [
-  5.913,
+  5.924,
   0.0
- ],
- "plots": [
-  "audio/music/v02v2/music_overview.png",
-  "audio/music/v02v2/music_cues.png"
  ]
 }

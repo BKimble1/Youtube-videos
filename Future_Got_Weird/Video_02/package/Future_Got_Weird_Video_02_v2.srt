@@ -220,260 +220,260 @@ the sensor behind that faint bump
 rebuilt the rough outline of a hidden U.
 
 49
-00:02:27,953 --> 00:02:33,073
+00:02:29,253 --> 00:02:34,373
 In 2012, an MIT team rebuilt the rough
 3D shape of a hidden mannequin.
 
 50
-00:02:33,153 --> 00:02:36,668
+00:02:34,453 --> 00:02:37,968
 By 2021, others had live
 video around corners.
 
 51
-00:02:36,748 --> 00:02:38,828
+00:02:38,048 --> 00:02:40,128
 But those ran on research equipment.
 
 52
-00:02:38,908 --> 00:02:42,093
+00:02:40,208 --> 00:02:43,393
 One team had even tracked hidden
 objects with a cheap sensor.
 
 53
-00:02:42,173 --> 00:02:45,133
+00:02:43,473 --> 00:02:46,433
 Then, in a study published in 2026,
 
 54
-00:02:45,213 --> 00:02:49,293
+00:02:46,513 --> 00:02:50,593
 a team from MIT and Dartmouth tried
 the small time-of-flight sensors,
 
 55
-00:02:49,373 --> 00:02:52,548
+00:02:50,673 --> 00:02:53,848
 often called LiDAR,
 found in phones and gadgets.
 
 56
-00:02:52,628 --> 00:02:54,708
+00:02:53,928 --> 00:02:56,008
 Don't expect your phone to do this yet:
 
 57
-00:02:54,788 --> 00:02:57,398
+00:02:56,088 --> 00:02:58,698
 phone makers often keep
 the raw data private.
 
 58
-00:02:57,478 --> 00:03:01,198
+00:02:58,778 --> 00:03:02,498
 Their new idea: a model
 that keeps track of what moved,
 
 59
-00:03:01,278 --> 00:03:03,763
+00:03:02,578 --> 00:03:05,063
 so many weak frames can be combined.
 
 60
-00:03:03,843 --> 00:03:06,503
+00:03:05,143 --> 00:03:07,803
 Why would a smaller,
 cheaper sensor need that?
 
 61
-00:03:06,583 --> 00:03:08,863
+00:03:07,883 --> 00:03:10,163
 Weak lasers mean fainter echoes.
 
 62
-00:03:08,943 --> 00:03:12,143
+00:03:10,243 --> 00:03:13,443
 The team's smartphone-grade
 device had about a hundred pixels:
 
 63
-00:03:12,223 --> 00:03:13,903
+00:03:13,523 --> 00:03:15,203
 a hundred listening spots.
 
 64
-00:03:13,983 --> 00:03:16,328
+00:03:15,283 --> 00:03:17,628
 And if you hold one in your
 hand, it jiggles.
 
 65
-00:03:16,408 --> 00:03:19,608
+00:03:17,708 --> 00:03:20,908
 Their fix borrows night mode's
 trick from phone cameras:
 
 66
-00:03:19,688 --> 00:03:23,340
+00:03:20,988 --> 00:03:24,640
 stack many quick, dim frames
 into one better estimate.
 
 67
-00:03:23,420 --> 00:03:26,233
+00:03:24,720 --> 00:03:27,533
 The catch: things move between frames.
 
 68
-00:03:26,313 --> 00:03:29,080
+00:03:27,613 --> 00:03:30,380
 He steps, and his echo shifts in time.
 
 69
-00:03:29,193 --> 00:03:32,778
+00:03:30,493 --> 00:03:34,078
 The sensor jiggles, and its listening
 spots land somewhere new.
 
 70
-00:03:32,858 --> 00:03:37,318
+00:03:34,158 --> 00:03:38,618
 Just add them up, and echoes
 from different places blur into one smear,
 
 71
-00:03:37,398 --> 00:03:39,678
+00:03:38,698 --> 00:03:40,978
 like a long exposure of someone walking.
 
 72
-00:03:39,758 --> 00:03:42,508
+00:03:41,058 --> 00:03:43,808
 So their model solves
 for one unknown at a time.
 
 73
-00:03:42,588 --> 00:03:43,668
+00:03:43,888 --> 00:03:44,968
 To build a shape,
 
 74
-00:03:43,748 --> 00:03:47,228
+00:03:45,048 --> 00:03:48,528
 hold the object still and step
 the sensor through known positions,
 
 75
-00:03:47,308 --> 00:03:50,388
+00:03:48,608 --> 00:03:51,688
 spreading out its listening spots.
 That's how the U was made.
 
 76
-00:03:50,468 --> 00:03:52,908
+00:03:51,768 --> 00:03:54,208
 To follow a person, hold the sensor still,
 
 77
-00:03:52,988 --> 00:03:55,748
+00:03:54,288 --> 00:03:57,048
 and let each guess drift
 a little between frames,
 
 78
-00:03:55,828 --> 00:03:57,668
+00:03:57,128 --> 00:03:58,968
 keeping the ones that still match.
 
 79
-00:03:57,748 --> 00:04:00,675
+00:03:59,048 --> 00:04:01,975
 The estimate keeps up instead of smearing.
 
 80
-00:04:01,248 --> 00:04:04,668
+00:04:02,548 --> 00:04:05,968
 So what can it actually do,
 and where does it fail?
 
 81
-00:04:04,748 --> 00:04:06,148
+00:04:06,048 --> 00:04:07,448
 Take our opening clip:
 
 82
-00:04:06,228 --> 00:04:09,908
+00:04:07,528 --> 00:04:11,208
 an off-the-shelf kit the authors
 put at under a hundred dollars,
 
 83
-00:04:09,988 --> 00:04:12,753
+00:04:11,288 --> 00:04:14,053
 held still while a person
 walked behind a partition.
 
 84
-00:04:12,833 --> 00:04:14,553
+00:04:14,133 --> 00:04:15,853
 Many of their tests had help:
 
 85
-00:04:14,633 --> 00:04:17,433
+00:04:15,933 --> 00:04:18,733
 safety-vest style reflective
 material on the target,
 
 86
-00:04:17,513 --> 00:04:19,593
+00:04:18,813 --> 00:04:20,893
 which sends far more light straight back.
 
 87
-00:04:19,673 --> 00:04:23,148
+00:04:20,973 --> 00:04:24,448
 Our clip's files don't say
 if the walker wore any.
 
 88
-00:04:23,228 --> 00:04:24,668
+00:04:24,528 --> 00:04:25,968
 But in a separate test,
 
 89
-00:04:24,748 --> 00:04:27,708
+00:04:26,048 --> 00:04:29,008
 the authors report tracking
 a person in ordinary clothes,
 
 90
-00:04:27,788 --> 00:04:29,973
+00:04:29,088 --> 00:04:31,273
 capturing thirty frames a second.
 
 91
-00:04:30,053 --> 00:04:31,813
+00:04:31,353 --> 00:04:33,113
 What might this be good for?
 
 92
-00:04:31,893 --> 00:04:35,093
+00:04:33,193 --> 00:04:36,393
 Picture a delivery robot nearing
 a blind warehouse corner.
 
 93
-00:04:35,173 --> 00:04:37,173
+00:04:36,473 --> 00:04:38,473
 With a suitable wall at the junction,
 
 94
-00:04:37,253 --> 00:04:41,893
+00:04:38,553 --> 00:04:43,193
 a sensor like this might give it
 an early hint of movement out of sight.
 
 95
-00:04:41,973 --> 00:04:45,413
+00:04:43,273 --> 00:04:46,713
 Just a fuzzy blob:
 enough to say slow down,
 
 96
-00:04:45,493 --> 00:04:47,033
+00:04:46,793 --> 00:04:48,333
 not enough to say who's there.
 
 97
-00:04:47,113 --> 00:04:51,993
+00:04:48,413 --> 00:04:53,293
 And plenty is still hard:
 short range, dark or shiny walls,
 
 98
-00:04:52,073 --> 00:04:55,358
+00:04:53,373 --> 00:04:56,658
 bright sunlight, and fast
 math on small hardware.
 
 99
-00:04:55,438 --> 00:04:58,293
+00:04:56,738 --> 00:04:59,593
 The researchers call it
 an early-stage prototype.
 
 100
-00:04:58,373 --> 00:05:02,578
+00:04:59,673 --> 00:05:03,878
 For now, it's a promising clue,
 not a safety system.
 
 101
-00:05:02,658 --> 00:05:06,648
+00:05:03,958 --> 00:05:07,948
 Being out of sight isn't
 the same as giving nothing away.
 
 102
-00:05:06,728 --> 00:05:10,055
+00:05:08,028 --> 00:05:11,355
 To really hide, he'd have
 to block the bounces too.
 
 103
-00:05:12,763 --> 00:05:17,163
+00:05:14,063 --> 00:05:18,463
 This is Future Got Weird:
 the strange future, explained.
 
 104
-00:05:17,243 --> 00:05:20,537
+00:05:18,543 --> 00:05:21,837
 Subscribe for more, and we'll
 see you around the corner.
