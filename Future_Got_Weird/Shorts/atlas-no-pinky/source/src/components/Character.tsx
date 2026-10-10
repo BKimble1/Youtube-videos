@@ -210,7 +210,7 @@ export const Character: React.FC<{
   scale?: number;
   flip?: boolean; // face the other way
   /** Which arm is drawn in a separate front pass (so a hand can rest on a counter drawn between). */
-  front?: 'L' | 'R' | 'none';
+  front?: 'L' | 'R' | 'none' | 'both';
   pass?: 'all' | 'body' | 'frontArm';
   holdL?: React.ReactNode; // prop attached to the left hand (character-local coords, hand at 0,0)
   holdR?: React.ReactNode;
@@ -248,8 +248,8 @@ export const Character: React.FC<{
   const eyeY = HEAD_Y - 6;
   const drawBody = pass !== 'frontArm';
   const drawFrontArm = pass !== 'body';
-  const frontIsL = front === 'L';
-  const frontIsR = front === 'R';
+  const frontIsL = front === 'L' || front === 'both';
+  const frontIsR = front === 'R' || front === 'both';
   const sleeve = look.overlay ? look.overlayColor ?? look.shirt : look.shirt;
   const LArm = (
     <ArmShape arm={pose.armL} side={-1} skin={look.skin} sleeve={sleeve}>
@@ -325,6 +325,14 @@ export const Character: React.FC<{
               {/* head */}
               <g transform={`rotate(${pose.tilt} 0 ${HEAD_Y + 50})`}>
                 {look.hair === 'bob' && <HairShape hair="bob" color={look.hairColor} />}
+                {/* pencil tucked behind the right ear: drawn behind the head and ear so only the eraser end shows (FGW Atlas Short fix) */}
+                {look.accessories.includes('pencil') && (
+                  <g transform={`translate(${HEAD_R + 5} ${HEAD_Y - 10}) rotate(22)`}>
+                    <rect x={-5} y={-30} width={10} height={58} rx={2} fill={C.saffron} stroke={C.ink} strokeWidth={3} />
+                    <rect x={-5} y={-38} width={10} height={9} rx={2} fill={C.coral} stroke={C.ink} strokeWidth={3} />
+                    <rect x={-5} y={-31} width={10} height={4} fill={C.inkMuted} stroke={C.ink} strokeWidth={2} />
+                  </g>
+                )}
                 <ellipse cx={0} cy={HEAD_Y} rx={HEAD_R} ry={HEAD_R + 4} fill={look.skin} stroke={C.ink} strokeWidth={OUTLINE} />
                 {/* ears */}
                 <ellipse cx={-HEAD_R - 2} cy={HEAD_Y + 6} rx={9} ry={12} fill={look.skin} stroke={C.ink} strokeWidth={OUTLINE} />
@@ -377,12 +385,6 @@ export const Character: React.FC<{
                     <path d={`M ${-HEAD_R - 6} ${HEAD_Y} Q ${-HEAD_R - 6} ${HEAD_Y - HEAD_R - 14} 0 ${HEAD_Y - HEAD_R - 16} Q ${HEAD_R + 6} ${HEAD_Y - HEAD_R - 14} ${HEAD_R + 6} ${HEAD_Y}`} />
                     <rect x={HEAD_R - 2} y={HEAD_Y - 6} width={14} height={22} rx={5} fill={C.ink} />
                     <path d={`M ${HEAD_R + 4} ${HEAD_Y + 16} Q ${HEAD_R + 10} ${HEAD_Y + 46} 22 ${HEAD_Y + 42}`} />
-                  </g>
-                )}
-                {look.accessories.includes('pencil') && (
-                  <g transform={`translate(${HEAD_R - 6} ${HEAD_Y - 20}) rotate(-70)`}>
-                    <rect x={-5} y={-30} width={10} height={60} rx={2} fill={C.saffron} stroke={C.ink} strokeWidth={3} />
-                    <path d="M -5 30 L 0 40 L 5 30 Z" fill={look.skin} stroke={C.ink} strokeWidth={3} />
                   </g>
                 )}
               </g>

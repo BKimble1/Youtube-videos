@@ -1,0 +1,966 @@
+{
+ "fps": 30,
+ "total_seconds": 34.6,
+ "total_frames": 1038,
+ "narration_file": "audio/narration_48k.wav",
+ "narration_seconds": 33.724082,
+ "beats": [
+  {
+   "id": "B01",
+   "name": "Missing-position hook",
+   "start_s": 0.0,
+   "end_s": 3.2,
+   "start_frame": 0,
+   "end_frame": 96
+  },
+  {
+   "id": "B02",
+   "name": "Taped-hand reenactment",
+   "start_s": 3.2,
+   "end_s": 8.1,
+   "start_frame": 96,
+   "end_frame": 243
+  },
+  {
+   "id": "B03",
+   "name": "Decision stamp",
+   "start_s": 8.1,
+   "end_s": 10.3,
+   "start_frame": 243,
+   "end_frame": 309
+  },
+  {
+   "id": "B04",
+   "name": "Motion-count explanation",
+   "start_s": 10.3,
+   "end_s": 16.3,
+   "start_frame": 309,
+   "end_frame": 489
+  },
+  {
+   "id": "B05",
+   "name": "Capability illustrations",
+   "start_s": 16.3,
+   "end_s": 20.3,
+   "start_frame": 489,
+   "end_frame": 609
+  },
+  {
+   "id": "B06",
+   "name": "Optional-component tradeoff",
+   "start_s": 20.3,
+   "end_s": 26.4,
+   "start_frame": 609,
+   "end_frame": 792
+  },
+  {
+   "id": "B07",
+   "name": "Tool docking payoff",
+   "start_s": 26.4,
+   "end_s": 29.65,
+   "start_frame": 792,
+   "end_frame": 890
+  },
+  {
+   "id": "B08",
+   "name": "Cosmetic expectation",
+   "start_s": 29.65,
+   "end_s": 31.3,
+   "start_frame": 890,
+   "end_frame": 939
+  },
+  {
+   "id": "B09",
+   "name": "Budget joke and return pose",
+   "start_s": 31.3,
+   "end_s": 34.6,
+   "start_frame": 939,
+   "end_frame": 1038
+  }
+ ],
+ "events": {
+  "B01.hand.splay_contact": {
+   "t": 0.2,
+   "frame": 6
+  },
+  "B01.gap.marker": {
+   "t": 1.0,
+   "frame": 30
+  },
+  "B01.gap.pulse": {
+   "t": 1.28,
+   "frame": 38
+  },
+  "B01.punch_in": {
+   "t": 0.85,
+   "frame": 26
+  },
+  "B01.label.purpose": {
+   "t": 2.1,
+   "frame": 63
+  },
+  "B01.tape.enter": {
+   "t": 2.834,
+   "frame": 85
+  },
+  "B02.wipe.rip": {
+   "t": 2.9,
+   "frame": 87
+  },
+  "B02.tape.contact": {
+   "t": 5.15,
+   "frame": 154
+  },
+  "B02.cup.grasp": {
+   "t": 5.95,
+   "frame": 178
+  },
+  "B02.cup.contact": {
+   "t": 6.95,
+   "frame": 208
+  },
+  "B02.knob.detent": {
+   "t": 7.45,
+   "frame": 224
+  },
+  "B02.day.dial": {
+   "t": 7.7,
+   "frame": 231
+  },
+  "B02.label.day": {
+   "t": 7.28,
+   "frame": 218
+  },
+  "B03.card.slide": {
+   "t": 8.12,
+   "frame": 244
+  },
+  "B03.verdict.stamp": {
+   "t": 9.28,
+   "frame": 278
+  },
+  "B03.card.drop": {
+   "t": 10.02,
+   "frame": 301
+  },
+  "B04.label.digits": {
+   "t": 11.6,
+   "frame": 348
+  },
+  "B04.hl.thumb": {
+   "t": 11.68,
+   "frame": 350
+  },
+  "B04.hl.index": {
+   "t": 11.88,
+   "frame": 356
+  },
+  "B04.hl.middle": {
+   "t": 12.08,
+   "frame": 362
+  },
+  "B04.hl.ring": {
+   "t": 12.28,
+   "frame": 368
+  },
+  "B04.count.thirteen": {
+   "t": 12.8,
+   "frame": 384
+  },
+  "B04.motion.thumb": {
+   "t": 14.56,
+   "frame": 437
+  },
+  "B04.motion.splay": {
+   "t": 15.32,
+   "frame": 460
+  },
+  "B04.motion.curl": {
+   "t": 15.35,
+   "frame": 460
+  },
+  "B04.motion.hold": {
+   "t": 15.864,
+   "frame": 476
+  },
+  "B05.washer.pinch": {
+   "t": 17.5,
+   "frame": 525
+  },
+  "B05.iris.rotate": {
+   "t": 17.98,
+   "frame": 539
+  },
+  "B05.object.rotate": {
+   "t": 18.16,
+   "frame": 545
+  },
+  "B05.iris.trigger": {
+   "t": 18.92,
+   "frame": 568
+  },
+  "B05.trigger.press": {
+   "t": 19.14,
+   "frame": 574
+  },
+  "B05.trigger.contact": {
+   "t": 19.36,
+   "frame": 581
+  },
+  "B05.card.morph": {
+   "t": 20.02,
+   "frame": 601
+  },
+  "B06.option.reveal": {
+   "t": 20.45,
+   "frame": 614
+  },
+  "B06.actuator.1": {
+   "t": 21.7,
+   "frame": 651
+  },
+  "B06.actuator.2": {
+   "t": 22.1,
+   "frame": 663
+  },
+  "B06.actuator.3": {
+   "t": 22.5,
+   "frame": 675
+  },
+  "B06.tray.cost": {
+   "t": 23.52,
+   "frame": 706
+  },
+  "B06.tray.space": {
+   "t": 24.48,
+   "frame": 734
+  },
+  "B06.tray.service": {
+   "t": 25.65,
+   "frame": 770
+  },
+  "B07.rim.match": {
+   "t": 26.4,
+   "frame": 792
+  },
+  "B07.label.built": {
+   "t": 27.71,
+   "frame": 831
+  },
+  "B07.tool.dock": {
+   "t": 28.3,
+   "frame": 849
+  },
+  "B07.checker.nod": {
+   "t": 28.88,
+   "frame": 866
+  },
+  "B08.reference.card_pass": {
+   "t": 29.76,
+   "frame": 893
+  },
+  "B09.receipt.entry": {
+   "t": 31.44,
+   "frame": 943
+  },
+  "B09.checker.deadpan": {
+   "t": 32.48,
+   "frame": 974
+  },
+  "B09.budget.tag_contact": {
+   "t": 33.554,
+   "frame": 1007
+  },
+  "B09.hand.return_pose": {
+   "t": 33.95,
+   "frame": 1019
+  },
+  "B01.label.tok": {
+   "t": 2.1,
+   "frame": 63
+  },
+  "B03.card.land": {
+   "t": 8.42,
+   "frame": 253
+  },
+  "B03.card.tilt": {
+   "t": 9.45,
+   "frame": 284
+  },
+  "B05.card.pop": {
+   "t": 20.02,
+   "frame": 601
+  },
+  "B07.hand.arrive": {
+   "t": 26.75,
+   "frame": 802
+  },
+  "B07.hand.release": {
+   "t": 28.45,
+   "frame": 854
+  },
+  "B08.pinch.contact": {
+   "t": 29.9,
+   "frame": 897
+  },
+  "B08.turn.start": {
+   "t": 30.3,
+   "frame": 909
+  },
+  "B08.trigger.click": {
+   "t": 30.67,
+   "frame": 920
+  },
+  "B09.hand.open": {
+   "t": 33.45,
+   "frame": 1004
+  }
+ },
+ "pockets": {
+  "D01": {
+   "start_s": 8.52,
+   "end_s": 9.33
+  },
+  "D02": {
+   "start_s": 31.19,
+   "end_s": 33.734
+  }
+ },
+ "captions": [
+  {
+   "start": 0.0,
+   "end": 1.835,
+   "text": "This robot has no pinky."
+  },
+  {
+   "start": 2.08,
+   "end": 2.974,
+   "text": "On purpose."
+  },
+  {
+   "start": 3.28,
+   "end": 4.44,
+   "text": "Boston Dynamics says"
+  },
+  {
+   "start": 4.48,
+   "end": 6.84,
+   "text": "its engineers taped their\nring and pinky fingers"
+  },
+  {
+   "start": 6.88,
+   "end": 8.024,
+   "text": "together for a day."
+  },
+  {
+   "start": 8.32,
+   "end": 9.007,
+   "text": "The verdict?"
+  },
+  {
+   "start": 9.28,
+   "end": 10.01,
+   "text": "Leave it out."
+  },
+  {
+   "start": 10.4,
+   "end": 11.4,
+   "text": "Atlas’s new hand"
+  },
+  {
+   "start": 11.44,
+   "end": 12.52,
+   "text": "has four digits,"
+  },
+  {
+   "start": 12.56,
+   "end": 14.254,
+   "text": "but thirteen\ndegrees of freedom."
+  },
+  {
+   "start": 14.56,
+   "end": 16.054,
+   "text": "Independent ways to move."
+  },
+  {
+   "start": 16.4,
+   "end": 18.08,
+   "text": "The company says it can pinch,"
+  },
+  {
+   "start": 18.12,
+   "end": 20.167,
+   "text": "turn objects, and\npress tool triggers."
+  },
+  {
+   "start": 20.4,
+   "end": 21.56,
+   "text": "A fifth digit would mean"
+  },
+  {
+   "start": 21.6,
+   "end": 22.978,
+   "text": "three more actuators."
+  },
+  {
+   "start": 23.28,
+   "end": 24.144,
+   "text": "More cost."
+  },
+  {
+   "start": 24.24,
+   "end": 24.981,
+   "text": "More bulk."
+  },
+  {
+   "start": 25.2,
+   "end": 26.192,
+   "text": "More things to break."
+  },
+  {
+   "start": 26.64,
+   "end": 29.443,
+   "text": "So the goal is a\nuseful, reliable hand."
+  },
+  {
+   "start": 29.76,
+   "end": 31.156,
+   "text": "Looking human is optional."
+  },
+  {
+   "start": 31.44,
+   "end": 33.574,
+   "text": "Apparently, even\nrobots have a budget."
+  }
+ ],
+ "words": [
+  {
+   "text": "This",
+   "start": 0.0,
+   "end": 0.24,
+   "frame": 0
+  },
+  {
+   "text": "robot",
+   "start": 0.32,
+   "end": 0.64,
+   "frame": 10
+  },
+  {
+   "text": "has",
+   "start": 0.72,
+   "end": 0.96,
+   "frame": 22
+  },
+  {
+   "text": "no",
+   "start": 1.04,
+   "end": 1.2,
+   "frame": 31
+  },
+  {
+   "text": "pinky.",
+   "start": 1.28,
+   "end": 1.88,
+   "frame": 38
+  },
+  {
+   "text": "On",
+   "start": 2.08,
+   "end": 2.16,
+   "frame": 62
+  },
+  {
+   "text": "purpose.",
+   "start": 2.32,
+   "end": 3.04,
+   "frame": 70
+  },
+  {
+   "text": "Boston",
+   "start": 3.28,
+   "end": 3.6,
+   "frame": 98
+  },
+  {
+   "text": "Dynamics",
+   "start": 3.68,
+   "end": 4.16,
+   "frame": 110
+  },
+  {
+   "text": "says",
+   "start": 4.28,
+   "end": 4.4,
+   "frame": 128
+  },
+  {
+   "text": "its",
+   "start": 4.48,
+   "end": 4.64,
+   "frame": 134
+  },
+  {
+   "text": "engineers",
+   "start": 4.8,
+   "end": 5.12,
+   "frame": 144
+  },
+  {
+   "text": "taped",
+   "start": 5.2,
+   "end": 5.52,
+   "frame": 156
+  },
+  {
+   "text": "their",
+   "start": 5.6,
+   "end": 5.68,
+   "frame": 168
+  },
+  {
+   "text": "ring",
+   "start": 5.76,
+   "end": 6.0,
+   "frame": 173
+  },
+  {
+   "text": "and",
+   "start": 6.04,
+   "end": 6.08,
+   "frame": 181
+  },
+  {
+   "text": "pinky",
+   "start": 6.24,
+   "end": 6.48,
+   "frame": 187
+  },
+  {
+   "text": "fingers",
+   "start": 6.56,
+   "end": 6.8,
+   "frame": 197
+  },
+  {
+   "text": "together",
+   "start": 6.88,
+   "end": 7.2,
+   "frame": 206
+  },
+  {
+   "text": "for",
+   "start": 7.28,
+   "end": 7.36,
+   "frame": 218
+  },
+  {
+   "text": "a",
+   "start": 7.44,
+   "end": 7.52,
+   "frame": 223
+  },
+  {
+   "text": "day.",
+   "start": 7.6,
+   "end": 8.08,
+   "frame": 228
+  },
+  {
+   "text": "The",
+   "start": 8.32,
+   "end": 8.36,
+   "frame": 250
+  },
+  {
+   "text": "verdict?",
+   "start": 8.4,
+   "end": 8.88,
+   "frame": 252
+  },
+  {
+   "text": "Leave",
+   "start": 9.28,
+   "end": 9.44,
+   "frame": 278
+  },
+  {
+   "text": "it",
+   "start": 9.52,
+   "end": 9.56,
+   "frame": 286
+  },
+  {
+   "text": "out.",
+   "start": 9.6,
+   "end": 10.12,
+   "frame": 288
+  },
+  {
+   "text": "Atlas’s",
+   "start": 10.4,
+   "end": 10.88,
+   "frame": 312
+  },
+  {
+   "text": "new",
+   "start": 10.96,
+   "end": 11.04,
+   "frame": 329
+  },
+  {
+   "text": "hand",
+   "start": 11.12,
+   "end": 11.36,
+   "frame": 334
+  },
+  {
+   "text": "has",
+   "start": 11.44,
+   "end": 11.6,
+   "frame": 343
+  },
+  {
+   "text": "four",
+   "start": 11.68,
+   "end": 11.84,
+   "frame": 350
+  },
+  {
+   "text": "digits,",
+   "start": 11.92,
+   "end": 12.48,
+   "frame": 358
+  },
+  {
+   "text": "but",
+   "start": 12.56,
+   "end": 12.64,
+   "frame": 377
+  },
+  {
+   "text": "thirteen",
+   "start": 12.8,
+   "end": 13.12,
+   "frame": 384
+  },
+  {
+   "text": "degrees",
+   "start": 13.2,
+   "end": 13.52,
+   "frame": 396
+  },
+  {
+   "text": "of",
+   "start": 13.6,
+   "end": 13.68,
+   "frame": 408
+  },
+  {
+   "text": "freedom.",
+   "start": 13.76,
+   "end": 14.32,
+   "frame": 413
+  },
+  {
+   "text": "Independent",
+   "start": 14.56,
+   "end": 15.12,
+   "frame": 437
+  },
+  {
+   "text": "ways",
+   "start": 15.2,
+   "end": 15.36,
+   "frame": 456
+  },
+  {
+   "text": "to",
+   "start": 15.44,
+   "end": 15.52,
+   "frame": 463
+  },
+  {
+   "text": "move.",
+   "start": 15.6,
+   "end": 16.16,
+   "frame": 468
+  },
+  {
+   "text": "The",
+   "start": 16.4,
+   "end": 16.48,
+   "frame": 492
+  },
+  {
+   "text": "company",
+   "start": 16.56,
+   "end": 16.8,
+   "frame": 497
+  },
+  {
+   "text": "says",
+   "start": 16.88,
+   "end": 17.04,
+   "frame": 506
+  },
+  {
+   "text": "it",
+   "start": 17.12,
+   "end": 17.2,
+   "frame": 514
+  },
+  {
+   "text": "can",
+   "start": 17.28,
+   "end": 17.36,
+   "frame": 518
+  },
+  {
+   "text": "pinch,",
+   "start": 17.44,
+   "end": 18.0,
+   "frame": 523
+  },
+  {
+   "text": "turn",
+   "start": 18.12,
+   "end": 18.24,
+   "frame": 544
+  },
+  {
+   "text": "objects,",
+   "start": 18.32,
+   "end": 18.88,
+   "frame": 550
+  },
+  {
+   "text": "and",
+   "start": 18.92,
+   "end": 18.96,
+   "frame": 568
+  },
+  {
+   "text": "press",
+   "start": 19.04,
+   "end": 19.28,
+   "frame": 571
+  },
+  {
+   "text": "tool",
+   "start": 19.36,
+   "end": 19.52,
+   "frame": 581
+  },
+  {
+   "text": "triggers.",
+   "start": 19.6,
+   "end": 20.2,
+   "frame": 588
+  },
+  {
+   "text": "A",
+   "start": 20.4,
+   "end": 20.56,
+   "frame": 612
+  },
+  {
+   "text": "fifth",
+   "start": 20.6,
+   "end": 20.8,
+   "frame": 618
+  },
+  {
+   "text": "digit",
+   "start": 20.88,
+   "end": 21.12,
+   "frame": 626
+  },
+  {
+   "text": "would",
+   "start": 21.2,
+   "end": 21.28,
+   "frame": 636
+  },
+  {
+   "text": "mean",
+   "start": 21.36,
+   "end": 21.52,
+   "frame": 641
+  },
+  {
+   "text": "three",
+   "start": 21.6,
+   "end": 21.84,
+   "frame": 648
+  },
+  {
+   "text": "more",
+   "start": 21.92,
+   "end": 22.08,
+   "frame": 658
+  },
+  {
+   "text": "actuators.",
+   "start": 22.16,
+   "end": 23.04,
+   "frame": 665
+  },
+  {
+   "text": "More",
+   "start": 23.28,
+   "end": 23.44,
+   "frame": 698
+  },
+  {
+   "text": "cost.",
+   "start": 23.52,
+   "end": 24.12,
+   "frame": 706
+  },
+  {
+   "text": "More",
+   "start": 24.24,
+   "end": 24.4,
+   "frame": 727
+  },
+  {
+   "text": "bulk.",
+   "start": 24.48,
+   "end": 25.12,
+   "frame": 734
+  },
+  {
+   "text": "More",
+   "start": 25.2,
+   "end": 25.28,
+   "frame": 756
+  },
+  {
+   "text": "things",
+   "start": 25.36,
+   "end": 25.52,
+   "frame": 761
+  },
+  {
+   "text": "to",
+   "start": 25.6,
+   "end": 25.64,
+   "frame": 768
+  },
+  {
+   "text": "break.",
+   "start": 25.68,
+   "end": 26.08,
+   "frame": 770
+  },
+  {
+   "text": "So",
+   "start": 26.64,
+   "end": 26.8,
+   "frame": 799
+  },
+  {
+   "text": "the",
+   "start": 26.96,
+   "end": 27.04,
+   "frame": 809
+  },
+  {
+   "text": "goal",
+   "start": 27.2,
+   "end": 27.36,
+   "frame": 816
+  },
+  {
+   "text": "is",
+   "start": 27.44,
+   "end": 27.52,
+   "frame": 823
+  },
+  {
+   "text": "a",
+   "start": 27.56,
+   "end": 27.6,
+   "frame": 827
+  },
+  {
+   "text": "useful,",
+   "start": 27.76,
+   "end": 28.24,
+   "frame": 833
+  },
+  {
+   "text": "reliable",
+   "start": 28.32,
+   "end": 28.88,
+   "frame": 850
+  },
+  {
+   "text": "hand.",
+   "start": 28.96,
+   "end": 29.52,
+   "frame": 869
+  },
+  {
+   "text": "Looking",
+   "start": 29.76,
+   "end": 30.0,
+   "frame": 893
+  },
+  {
+   "text": "human",
+   "start": 30.08,
+   "end": 30.4,
+   "frame": 902
+  },
+  {
+   "text": "is",
+   "start": 30.44,
+   "end": 30.48,
+   "frame": 913
+  },
+  {
+   "text": "optional.",
+   "start": 30.56,
+   "end": 31.04,
+   "frame": 917
+  },
+  {
+   "text": "Apparently,",
+   "start": 31.44,
+   "end": 32.16,
+   "frame": 943
+  },
+  {
+   "text": "even",
+   "start": 32.24,
+   "end": 32.4,
+   "frame": 967
+  },
+  {
+   "text": "robots",
+   "start": 32.48,
+   "end": 32.88,
+   "frame": 974
+  },
+  {
+   "text": "have",
+   "start": 32.92,
+   "end": 32.96,
+   "frame": 988
+  },
+  {
+   "text": "a",
+   "start": 33.04,
+   "end": 33.08,
+   "frame": 991
+  },
+  {
+   "text": "budget.",
+   "start": 33.12,
+   "end": 33.76,
+   "frame": 994
+  }
+ ]
+}

@@ -36,8 +36,8 @@ export const F = {
   mono: '"JetBrains Mono", ui-monospace, monospace',
 };
 
-export const W = 1920;
-export const H = 1080;
+export const W = 1080;
+export const H = 1920;
 export const FPS = 30;
 export const OUTLINE = 4; // ink outline width for cutout shapes at 1080p
 

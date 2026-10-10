@@ -1,0 +1,43 @@
+cue_id,event,time_s,frame,layer,gain_db,pan,description
+S01,B01.hand.splay_contact,0.200,6,sfx,-3,0,opening accent: small rigid click
+,B01.gap.marker,1.000,30,sfx,-15,0.12,dashed circle pops
+,B01.label.tok,2.100,63,sfx,-13,0,ON PURPOSE plate lands
+,B02.wipe.rip,2.860,86,sfx,-13,0,tape strip crosses frame (transition)
+S02,B02.tape.contact,4.950,148,sfx,-9,0.05,tape wraps ring + pinky
+,B02.cup.grasp,5.650,170,sfx,-24,-0.1,human-hand prop glides in
+S03,B02.cup.contact,6.950,208,sfx,-9,0.05,cup set down on bench
+S04,B02.knob.detent,7.450,224,sfx,-10,0.1,knob detent
+,B02.day.dial,7.700,231,sfx,-13,0.18,day dial advances one notch
+,B03.card.land,8.160,245,sfx,-22,-0.1,card slides along bench
+S05,B03.verdict.stamp,9.280,278,sfx,-7,0,soft rubber stamp
+,B03.card.tilt,9.450,284,sfx,-22,0,card tipped up
+,B04.hl.thumb,11.680,350,sfx,-22,-0.1,digit count 1
+,B04.hl.index,11.880,356,sfx,-22,-0.03,digit count 2
+,B04.hl.middle,12.080,362,sfx,-22,0.04000000000000001,digit count 3
+,B04.hl.ring,12.280,368,sfx,-22,0.11000000000000001,digit count 4
+,B04.count.thirteen,12.800,384,sfx,-15,0,big 13 lands
+S06,B04.motion.thumb,14.560,437,sfx,-21,-0.12,thumb sweep
+S06,B04.motion.splay,15.320,460,sfx,-22,0.0,finger splay
+,B04.motion.curl,15.350,460,sfx,-23,0.1,finger curls
+,B04.motion.curl,15.490,465,sfx,-25,0.08,finger curls (2)
+S07,B05.washer.pinch,17.500,525,sfx,-11,0.1,washer pinch contact
+S08,B05.object.rotate,18.160,545,sfx,-20,0,object rotates in hand
+S09,B05.trigger.contact,19.360,581,sfx,-9,-0.1,trigger click
+,B05.card.pop,20.020,601,sfx,-20,0,trigger shape becomes design card
+,B06.actuator.1,21.700,651,sfx,-18,-0.1,actuator 1 lands
+,B06.actuator.2,22.100,663,sfx,-18,0.0,actuator 2 lands
+,B06.actuator.3,22.500,675,sfx,-18,0.1,actuator 3 lands
+S10,B06.tray.cost,23.520,706,sfx,-9,-0.05,tray contact low
+S11,B06.tray.space,24.480,734,sfx,-9,0.0,tray contact middle
+S12,B06.tray.service,25.650,770,sfx,-9,0.05,tray contact high
+,B07.hand.arrive,26.750,802,sfx,-22,-0.1,hand brings tool in
+S13,B07.tool.dock,28.300,849,sfx,-6,0,tool seats in dock
+,B07.hand.release,28.450,854,sfx,-24,0,fingers release
+,B08.reference.card_pass,29.760,893,sfx,-27,0.2,reference card slides past behind
+,B08.pinch.contact,29.900,897,sfx,-17,0.1,hand re-grips the docked tool
+,B08.turn.start,30.300,909,sfx,-22,0,tool lifts out of the dock
+,B08.trigger.click,30.670,920,sfx,-12,-0.1,trigger click: the useful action continues
+,B09.receipt.entry,31.440,943,sfx,-22,-0.2,receipt prints
+,B09.hand.open,33.450,1004,sfx,-24,0,hand returns to open pose
+S14,B09.budget.tag_contact,33.554,1007,sfx,-9,-0.05,restrained register click
+M01,full_story,0.30,9,music,,0,original synth bed 126 BPM; pockets D01/D02 from cues.json
