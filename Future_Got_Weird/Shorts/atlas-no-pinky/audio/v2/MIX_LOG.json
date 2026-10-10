@@ -8,5 +8,5 @@
  "duration_s": 34.6,
  "ducking": "music -7 dB (0.58 depth) under speech, effects -3 dB, voice-envelope follower 30 ms attack / 280 ms release",
  "music_bpm": 126.0,
- "sfx_events": 42
+ "sfx_events": 29
 }

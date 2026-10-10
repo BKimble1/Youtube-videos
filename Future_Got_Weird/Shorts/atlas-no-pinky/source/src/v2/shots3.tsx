@@ -11,9 +11,9 @@ import {pinchPose} from '../film/beats2';
 
 /* ------------------------------------------------------------------ B06: exploded hardware diagram (design option) */
 
-const HP6: Place = {x: 340, y: 735, scale: 1.25};
+const HP6: Place = {x: 340, y: 715, scale: 1.15};
 const MODS = [{x: 235, t: V2['b06.mod1']}, {x: 520, t: V2['b06.mod2']}, {x: 805, t: V2['b06.mod3']}];
-const MOD_Y = 985;
+const MOD_Y = 975;
 const GHOST_C = {x: HP6.x + HP6.scale * 134, y: HP6.y - HP6.scale * 96}; // where the fifth digit would attach (front-view ghost slot)
 
 export const B06World: React.FC<{g: number}> = ({g}) => {
@@ -57,7 +57,7 @@ export const B06World: React.FC<{g: number}> = ({g}) => {
       })}
       {/* COST: a blank price tag tied to module 1 */}
       {g >= costT - 2 && (
-        <g transform={`translate(${MODS[0].x + 40} ${MOD_Y - 120}) rotate(${-10 + 6 * Math.sin((g - costT) * 0.3)}) scale(${sp(g, costT, SNAP)})`}>
+        <g transform={`translate(${MODS[0].x - 30} ${MOD_Y - 108}) rotate(${-10 + 6 * Math.sin((g - costT) * 0.3)}) scale(${sp(g, costT, SNAP)})`}>
           <line x1={0} y1={90} x2={-14} y2={40} stroke={C.ink} strokeWidth={4} />
           <path d="M -64 -34 L 38 -34 L 66 0 L 38 34 L -64 34 Z" fill={C.saffron} stroke={C.ink} strokeWidth={OUTLINE} strokeLinejoin="round" />
           <circle cx={36} cy={0} r={8} fill={C.cream} stroke={C.ink} strokeWidth={3} />
@@ -66,10 +66,10 @@ export const B06World: React.FC<{g: number}> = ({g}) => {
       {/* SPACE: dashed volume box around module 2 and arrows pushing outward */}
       {g >= spaceT - 2 && (() => {
         const k = sp(g, spaceT, SNAP);
-        const e = 18 * k;
+        const e = 10 * k;
         return (
           <g transform={`translate(${MODS[1].x + 30} ${MOD_Y})`} opacity={clamp01(k)} fill="none" stroke={C.coralDeep} strokeWidth={7} strokeLinecap="round" strokeLinejoin="round">
-            <rect x={-130 - e} y={-96 - e} width={260 + 2 * e} height={192 + 2 * e} rx={14} strokeDasharray="16 12" />
+            <rect x={-130 - e} y={-90 - e} width={260 + 2 * e} height={180 + 2 * e} rx={14} strokeDasharray="16 12" />
             <path d={`M ${-130 - e - 38} 0 H ${-130 - e - 6} M ${-130 - e - 22} -14 L ${-130 - e - 6} 0 L ${-130 - e - 22} 14`} />
             <path d={`M ${130 + e + 38} 0 H ${130 + e + 6} M ${130 + e + 22} -14 L ${130 + e + 6} 0 L ${130 + e + 22} 14`} />
           </g>
@@ -104,20 +104,20 @@ export const B06Hud: React.FC<{g: number}> = ({g}) => {
     <g>
       {g >= t0 && (
         <>
-          <Headline x={500} y={262} text="ONE MORE" size={96} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />
-          <Headline x={500} y={360} text="FINGER?" size={96} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />
+          <Headline x={500} y={282} text="ONE MORE" size={88} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />
+          <Headline x={500} y={364} text="FINGER?" size={88} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />
         </>
       )}
       {labels.map((l) => {
         if (g < l.t) return null;
         const k = sp(g, l.t, SNAP);
-        const w = l.text.length * 0.64 * 70 + 44;
-        const cx = Math.min(870 - w / 2, Math.max(120 + w / 2, l.x + 10));
+        const w = l.text.length * 0.62 * 50 + 44;
+        const cx = Math.min(870 - w / 2, Math.max(120 + w / 2, l.x + (l.text === 'SPACE' ? -14 : 10)));
         return (
-          <g key={l.text} transform={`translate(${cx} ${MOD_Y + 140}) scale(${k})`}>
-            <rect x={-w / 2 + 5} y={-37 + 6} width={w} height={74} rx={18} fill={C.ink} opacity={0.25} />
-            <rect x={-w / 2} y={-37} width={w} height={74} rx={18} fill={l.fill} stroke={C.ink} strokeWidth={OUTLINE} />
-            <text x={0} y={0} dy="0.36em" textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={56} fill={C.ink}>{l.text}</text>
+          <g key={l.text} transform={`translate(${cx} ${MOD_Y + 112}) scale(${k})`}>
+            <rect x={-w / 2 + 5} y={-33 + 6} width={w} height={66} rx={18} fill={C.ink} opacity={0.25} />
+            <rect x={-w / 2} y={-33} width={w} height={66} rx={18} fill={l.fill} stroke={C.ink} strokeWidth={OUTLINE} />
+            <text x={0} y={0} dy="0.36em" textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={50} fill={C.ink}>{l.text}</text>
           </g>
         );
       })}
@@ -194,7 +194,6 @@ export const B07World: React.FC<{g: number}> = ({g}) => {
     tilt: g >= nod && g < nod + 12 ? 5 * Math.sin(((g - nod) / 12) * Math.PI) : 0,
   });
   // B08: human reference silhouette slides past behind the working hand
-  const hx = lerp(W + 300, -420, E.inOut(tw(g, V2['b08.human'] - 4, 40)));
   const b0 = work(g, 0), b1 = work(g, 1);
   const h0 = handFor(g, 0), h1 = handFor(g, 1);
   const first = g < PH[1].pick - 24;
@@ -204,7 +203,9 @@ export const B07World: React.FC<{g: number}> = ({g}) => {
       <BgPeg tableY={TABLE_Y} />
       {/* guide watches from behind the table */}
       <GuideAt g={g} x={150} y={TABLE_Y + 120} scale={1.1} pose={pose} />
-      {g >= 889 && <HumanRef x={hx} y={700} />}
+      {g >= 909 && g < 937 && (
+        <g transform={`translate(0 ${-E.in(tw(g, 931, 5)) * 420})`}><HumanRef x={420} y={620} k={sp(g, 909, SNAP)} /></g>
+      )}
       <rect x={0} y={TABLE_Y} width={W} height={H - TABLE_Y} fill={C.woodLight} opacity={0.0} />
       {/* tray + fixture */}
       <rect x={TRAY.x - 110} y={TABLE_Y - 30} width={220} height={34} rx={10} fill={C.blueLight} stroke={C.ink} strokeWidth={OUTLINE} />
@@ -232,11 +233,12 @@ export const B07World: React.FC<{g: number}> = ({g}) => {
   );
 };
 
-const HumanRef: React.FC<{x: number; y: number}> = ({x, y}) => (
-  <g transform={`translate(${x} ${y})`} opacity={0.96}>
-    <Hand kind="human" nails x={0} y={0} scale={1.7} pose={{}} />
-    <rect x={-190} y={250} width={380} height={64} rx={16} fill={C.cream} stroke={C.ink} strokeWidth={4} />
-    <text x={0} y={282} dy="0.36em" textAnchor="middle" fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.ink}>HUMAN HAND</text>
+const HumanRef: React.FC<{x: number; y: number; k: number}> = ({x, y, k}) => (
+  <g transform={`translate(${x} ${y}) scale(${Math.max(0.001, k)})`}>
+    <ellipse cx={10} cy={250} rx={170} ry={22} fill={C.shadow} />
+    <Hand kind="human" nails x={0} y={0} scale={1.4} pose={{}} />
+    <rect x={-180} y={190} width={360} height={64} rx={16} fill={C.cream} stroke={C.ink} strokeWidth={4} />
+    <text x={0} y={222} dy="0.36em" textAnchor="middle" fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.ink}>HUMAN HAND</text>
   </g>
 );
 
@@ -247,8 +249,8 @@ export const B07Hud: React.FC<{g: number}> = ({g}) => {
   if (g < t || g >= 881) return null;
   return (
     <g>
-      <Headline x={110} anchor="start" y={262} text="BUILT" size={104} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />
-      <Headline x={110} anchor="start" y={366} text="TO WORK" size={104} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />
+      <Headline x={120} anchor="start" y={286} text="BUILT" size={104} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />
+      <Headline x={120} anchor="start" y={390} text="TO WORK" size={104} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />
     </g>
   );
 };

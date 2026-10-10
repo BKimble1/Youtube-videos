@@ -12,13 +12,13 @@ export const Attrib: React.FC<{lead?: string; tag?: string; tagK?: number}> = ({
   return (
     <g>
       {tag && (
-        <g transform={`translate(120 1190)`} opacity={tagK}>
+        <g transform={`translate(120 1130)`} opacity={tagK}>
           <rect x={4} y={5} width={w2} height={58} rx={16} fill={C.ink} opacity={0.3} />
           <rect x={0} y={0} width={w2} height={58} rx={16} fill={C.coral} stroke={C.ink} strokeWidth={4} />
           <text x={22} y={30} dy="0.36em" fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.ink} letterSpacing={0.5}>{tag}</text>
         </g>
       )}
-      <g transform="translate(120 1262)">
+      <g transform="translate(120 1202)">
         <rect x={4} y={5} width={w1} height={58} rx={16} fill={C.ink} opacity={0.3} />
         <rect x={0} y={0} width={w1} height={58} rx={16} fill={C.cream} stroke={C.ink} strokeWidth={4} />
         <text x={22} y={30} dy="0.36em" fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.ink}>{lead}</text>
@@ -27,7 +27,7 @@ export const Attrib: React.FC<{lead?: string; tag?: string; tagK?: number}> = ({
   );
 };
 
-/** Stable caption lane: <= 2 lines, 66 px, one emphasised word in saffron. Lane never moves. */
+/** Stable caption lane: <= 2 lines, 64 px, one emphasised word in saffron. Lane never moves. */
 export const CaptionsV2: React.FC<{g: number}> = ({g}) => {
   const c = CAPTIONS_V2.find((k) => g >= k.from && g < k.to);
   if (!c) return null;
@@ -36,17 +36,17 @@ export const CaptionsV2: React.FC<{g: number}> = ({g}) => {
   let n = 0;
   const lineEm = words.map((ws) => ws.map(() => n++));
   const widest = Math.max(...c.lines.map((l) => l.length));
-  const w = Math.min(780, widest * 35 + 72);
+  const w = Math.min(750, widest * 34 + 60);
   const lh = 74;
   const h = c.lines.length * lh + 30;
-  const CY = 1405;
+  const CY = 1366;
   return (
     <g transform={`translate(495 ${CY})`} opacity={a}>
       <rect x={-w / 2} y={-h / 2} width={w} height={h} rx={28} fill={C.ink} opacity={0.95} />
       {words.map((ws, li) => {
         const y = (li - (c.lines.length - 1) / 2) * lh;
         return (
-          <text key={li} x={0} y={y} dy="0.36em" textAnchor="middle" fontFamily={F.body} fontWeight={800} fontSize={66} fill={C.cream}>
+          <text key={li} x={0} y={y} dy="0.36em" textAnchor="middle" fontFamily={F.body} fontWeight={800} fontSize={64} fill={C.cream}>
             {ws.map((word, wi) => (
               <tspan key={wi} fill={lineEm[li][wi] === c.em ? C.saffron : C.cream}>
                 {word}

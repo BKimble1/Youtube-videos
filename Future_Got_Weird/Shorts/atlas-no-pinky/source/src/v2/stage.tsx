@@ -19,14 +19,15 @@ export const Grid: React.FC<{id: string; size?: number; stroke: string; w?: numb
 export const BgMacro: React.FC<{cx?: number; cy?: number}> = ({cx = 560, cy = 980}) => (
   <g>
     <defs>
-      <radialGradient id="macroSpot" cx={cx / W} cy={cy / H} r="0.62">
+      <radialGradient id="macroSpot" gradientUnits="userSpaceOnUse" cx={0} cy={0} r={1} gradientTransform={`translate(${cx} ${cy}) scale(${0.62 * W} ${0.62 * H})`}>
         <stop offset="0" stopColor={C.saffronLight} stopOpacity={0.95} />
         <stop offset="0.55" stopColor={C.saffron} stopOpacity={0.4} />
         <stop offset="1" stopColor={C.saffronDeep} stopOpacity={0.35} />
       </radialGradient>
     </defs>
-    <rect x={0} y={0} width={W} height={H} fill={C.saffron} />
-    <rect x={0} y={0} width={W} height={H} fill="url(#macroSpot)" />
+    {/* oversized so the camera moves of the opener (and the loop pre-roll) never expose an edge */}
+    <rect x={-900} y={-900} width={W + 1800} height={H + 1800} fill={C.saffron} />
+    <rect x={-900} y={-900} width={W + 1800} height={H + 1800} fill="url(#macroSpot)" />
     {[330, 520, 720, 940].map((r, i) => (
       <circle key={r} cx={cx} cy={cy} r={r} fill="none" stroke={C.saffronDeep} strokeWidth={i % 2 ? 3 : 5} opacity={0.32} strokeDasharray={i % 2 ? '10 16' : undefined} />
     ))}

@@ -89,8 +89,8 @@ export const OpenerHud: React.FC<{t: number}> = ({t}) => {
   const inn = sp(t, swap, SNAP);
   return (
     <g>
-      {t < swap && <Headline x={540} y={272} text="NO PINKY?" size={132} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />}
-      {t >= swap && <Plate x={540} y={272} text="ON PURPOSE." size={94} fill={C.coral} sy={Math.max(0.001, inn)} />}
+      {t < swap && <Headline x={540} y={312} text="NO PINKY?" size={132} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />}
+      {t >= swap && <Plate x={540} y={312} text="ON PURPOSE." size={94} fill={C.coral} sy={Math.max(0.001, inn)} />}
     </g>
   );
 };

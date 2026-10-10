@@ -202,7 +202,7 @@ def fx_printer(seed, dur=0.42):
 
 # ------------------------------------------------------------------ SFX schedule: (event or time, fx, gain dB, pan, layer note)
 def sfx_plan():
-    """V2: fewer, contact-driven effects. Count pops / UI ticks from V1 are removed; every entry maps to a visible contact or motion."""
+    """V2: fewer, contact-driven effects (29 events vs 41 in V1). V1 count pops and UI ticks are gone; every entry maps to a visible contact or motion."""
     E = EV
     P = []
     def add(ev, fx, db, pan=0.0, note='', dt=0.0, t=None, cue=''):
@@ -215,15 +215,10 @@ def sfx_plan():
     add('V2.exp.wrap', fx_rip('wrap', 0.42), -9, 0.05, 'tape wraps ring + pinky', dt=-0.18, cue='S02')
     add('V2.exp.mug.set', fx_cup('cup'), -9, 0.05, 'mug set back down', cue='S03')
     add('V2.exp.knob.detent', fx_tick('knob', 1250, True), -11, 0.1, 'knob detent', cue='S04')
-    add('V2.exp.day.done', fx_paper('day', 0.22), -24, 0.18, 'day dial completes its turn (soft sweep)', dt=-0.1)
-    add('V2.slip.in', fx_paper('slip', 0.26), -21, -0.1, 'decision slip slides in', dt=-0.1)
     add('V2.stamp.hit', fx_stamp('stamp'), -7, 0, 'rubber stamp on SKIP IT', cue='S05')
-    add('V2.iris.b04', fx_pop('iris', 220, 520), -21, 0, 'stamp ring opens into the macro (showcase transition 2)')
-    add('V2.b04.count', fx_servo('count', 0.46, 520, 940, 0.4), -21, 0, 'count rolls up to the total')
     add('V2.b04.thumb', fx_servo('th', 0.65, 300, 460), -21, -0.12, 'thumb sweep', cue='S06')
     add('V2.b04.splay', fx_servo('sp', 0.45, 340, 520), -22, 0.0, 'finger splay', cue='S06')
     add('V2.b04.curl1', fx_servo('c1', 0.42, 360, 560), -23, 0.1, 'finger curls')
-    add('V2.b04.curl2', fx_servo('c2', 0.38, 330, 520), -25, 0.08, 'finger curls (2)')
     add('V2.b05.pinch', fx_metal('wash', 3100), -11, 0.1, 'washer pinch contact', cue='S07')
     add('V2.b05.turn', fx_servo('rot', 0.55, 420, 300), -20, 0, 'object turns between the fingertips', cue='S08')
     add('V2.b05.contact', fx_trigger('trig'), -9, -0.1, 'tool contact', cue='S09')
@@ -231,16 +226,12 @@ def sfx_plan():
     add('V2.b06.mod1', fx_tray('a1', 520), -18, -0.1, 'actuator module 1 lands')
     add('V2.b06.mod2', fx_tray('a2', 590), -18, 0.0, 'actuator module 2 lands')
     add('V2.b06.mod3', fx_tray('a3', 660), -18, 0.1, 'actuator module 3 lands')
-    add('V2.b06.cost', fx_paper('tag', 0.18), -21, -0.05, 'price tag swings in')
     add('V2.b06.service', fx_metal('wrench', 2400), -14, 0.08, 'wrench taps the spare module', cue='S12')
-    add('V2.b07.slide', fx_servo('arr', 0.9, 230, 330, 0.5), -23, -0.1, 'hand brings the block in', dt=0.2)
     add('V2.b07.place', fx_dock('dock'), -6, 0, 'block seats in the fixture', cue='S13')
-    add('V2.b07.ok', fx_metal('ok1', 3400), -21, 0.15, 'lamp lights (soft tick)')
-    add('V2.b08.human', fx_paper('ref', 1.2), -27, 0.2, 'human-hand reference slides past', dt=0.0)
     add('V2.b08.pick', fx_metal('regrip', 2700), -17, 0.1, 'hand picks the second block')
     add('V2.b08.place', fx_dock('dock2'), -8, 0, 'second block seats', cue='S13b')
-    for i in range(8):
-        add('V2.b09.print', fx_printer(f'rcpt{i}', 0.2), -24, -0.2, 'receipt line printed', dt=0.283 * i)
+    for i in range(4):
+        add('V2.b09.print', fx_printer(f'rcpt{i}', 0.2), -23, -0.2, 'receipt printing (one burst per two lines)', dt=0.566 * i)
     add('V2.b09.stamp', fx_stamp('stamp2'), -8, -0.05, 'NOT IN BUDGET stamp', cue='S14')
     add('V2.loop.tear', fx_rip('tear', 0.62, 900, 7500), -14, 0, 'receipt torn away into the opener (loop seam)', dt=-0.05)
     return P

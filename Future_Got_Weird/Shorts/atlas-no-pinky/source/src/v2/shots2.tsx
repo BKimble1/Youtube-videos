@@ -103,15 +103,15 @@ export const B04Hud: React.FC<{g: number}> = ({g}) => {
   const num = Math.min(13, Math.max(1, Math.floor((g - t13) / 1.1) + 1));
   return (
     <g>
-      {g >= tD && g < t13 + 2 && <Headline x={540} y={290} text="4 DIGITS" size={124} color={C.saffron} stroke={C.ink} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />}
+      {g >= tD && g < t13 + 2 && <Headline x={540} y={304} text="4 DIGITS" size={124} color={C.saffron} stroke={C.ink} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />}
       {g >= t13 && (
         <g>
-          <g transform={`translate(250 292) scale(${b})`}>
+          <g transform={`translate(250 324) scale(${b})`}>
             <text x={0} y={0} dy="0.36em" textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={230} fill={C.saffron} stroke={C.ink} strokeWidth={14} paintOrder="stroke" strokeLinejoin="round">{num}</text>
           </g>
-          <Headline x={420} y={250} text="WAYS" size={80} anchor="start" color={C.cream} stroke={C.ink} sx={b} sy={b} />
-          <Headline x={420} y={330} text="TO MOVE" size={80} anchor="start" color={C.cream} stroke={C.ink} sx={b} sy={b} />
-          <g transform={`translate(420 410) scale(${b})`}>
+          <Headline x={420} y={282} text="WAYS" size={80} anchor="start" color={C.cream} stroke={C.ink} sx={b} sy={b} />
+          <Headline x={420} y={360} text="TO MOVE" size={80} anchor="start" color={C.cream} stroke={C.ink} sx={b} sy={b} />
+          <g transform={`translate(420 436) scale(${b})`}>
             <rect x={0} y={-30} width={190} height={60} rx={14} fill={C.ink} stroke={C.saffron} strokeWidth={4} />
             <text x={95} y={0} dy="0.36em" textAnchor="middle" fontFamily={F.mono} fontWeight={500} fontSize={42} fill={C.saffron}>13 DOF</text>
           </g>
@@ -272,7 +272,7 @@ export const B05Hud: React.FC<{g: number}> = ({g}) => {
         const k = sp(g, it.t, SNAP);
         const out = tw(g, next - 2, 4, E.in);
         const onInk = i === 1;
-        return <Headline key={i} x={110} anchor="start" y={300} text={it.text} size={132} color={onInk ? C.saffron : C.ink} stroke={onInk ? C.ink : undefined} sx={k * (1 - out) + 0.001} sy={k * (1 - out) + 0.001} />;
+        return <Headline key={i} x={120} anchor="start" y={304} text={it.text} size={132} color={onInk ? C.saffron : C.ink} stroke={onInk ? C.ink : undefined} sx={k * (1 - out) + 0.001} sy={k * (1 - out) + 0.001} />;
       })}
     </g>
   );

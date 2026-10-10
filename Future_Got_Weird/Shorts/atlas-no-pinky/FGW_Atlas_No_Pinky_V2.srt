@@ -1,10 +1,10 @@
 1
-00:00:00,000 --> 00:00:01,835
-This robot
-has no pinky.
+00:00:00,000 --> 00:00:01,000
+This robot has
 
 2
-00:00:02,080 --> 00:00:02,974
+00:00:01,040 --> 00:00:02,974
+no pinky.
 On purpose.
 
 3
@@ -23,84 +23,78 @@ fingers together
 for a day.
 
 6
-00:00:08,320 --> 00:00:09,007
+00:00:08,320 --> 00:00:10,010
 The verdict?
-
-7
-00:00:09,280 --> 00:00:10,010
 Leave it out.
 
-8
+7
 00:00:10,400 --> 00:00:12,520
 Atlas’s new hand
 has four digits,
 
-9
+8
 00:00:12,560 --> 00:00:14,254
 but thirteen
 degrees of freedom.
 
-10
+9
 00:00:14,560 --> 00:00:16,054
 Independent
 ways to move.
 
-11
-00:00:16,400 --> 00:00:18,080
-The company says
-it can pinch,
+10
+00:00:16,400 --> 00:00:17,240
+The company says it
 
-12
-00:00:18,120 --> 00:00:18,880
+11
+00:00:17,280 --> 00:00:18,880
+can pinch,
 turn objects,
 
-13
+12
 00:00:18,920 --> 00:00:20,167
 and press
 tool triggers.
 
-14
+13
 00:00:20,400 --> 00:00:21,560
 A fifth digit
 would mean
 
-15
+14
 00:00:21,600 --> 00:00:22,978
 three more
 actuators.
 
-16
-00:00:23,280 --> 00:00:24,144
+15
+00:00:23,280 --> 00:00:24,981
 More cost.
-
-17
-00:00:24,240 --> 00:00:24,981
 More bulk.
 
-18
+16
 00:00:25,200 --> 00:00:26,192
 More things
 to break.
 
-19
-00:00:26,640 --> 00:00:28,280
-So the goal
-is a useful,
+17
+00:00:26,640 --> 00:00:27,520
+So the goal is
 
-20
-00:00:28,320 --> 00:00:29,443
+18
+00:00:27,560 --> 00:00:29,443
+a useful,
 reliable hand.
 
-21
+19
 00:00:29,760 --> 00:00:31,156
 Looking human
 is optional.
 
-22
+20
 00:00:31,440 --> 00:00:32,880
 Apparently,
 even robots
 
-23
+21
 00:00:32,920 --> 00:00:33,934
 have a budget.

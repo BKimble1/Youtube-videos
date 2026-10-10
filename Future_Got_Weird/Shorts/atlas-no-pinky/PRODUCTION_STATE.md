@@ -1,23 +1,26 @@
 # Production state — Why This Robot Has No Pinky (Atlas Short)
 
-Branch: `claude/pensive-mendel-3j0xsc`. **Not published. Do not publish.**
+Branch: `claude/pensive-mendel-3j0xsc`. **Not published. Not uploaded. Not scheduled. Do not publish.**
 
-## Status: COMPLETE (checkpoint 3: final renders, docs, ZIP). Awaiting human review; not published.
-- [x] Handoff extracted; script/ledger/storyboard/cast read. Copies in `handoff/`.
-- [x] Remotion project `source/` (pinned Remotion 4.0.533 / React 19.1.0 / TS 5.8.3, `npm ci` OK, typecheck clean).
-- [x] Narration (ElevenLabs Test Voice `kk5XaSLo2XAw0sKM98zU`, eleven_v4, take A of two) + Scribe alignment: `audio/narration*.{mp3,wav,json}`. **Do not regenerate.**
-- [x] Cue table `audio/cues.json` -> `source/src/cues.ts`, `FGW_Atlas_No_Pinky.srt` (from real alignment) via `tools/build_cues.py`.
-- [x] Animation: all nine beats (hand rig with IK in `source/src/hand`, scenes in `source/src/film`).
-- [x] Sound: synthesized SFX + original 126 BPM bed + voice-driven ducking via `tools/build_audio.py`; mix -14.4 LUFS, <= -1.5 dBTP; stems in `audio/stems/`.
-- [x] Final renders: clean + captioned MP4 (1080x1920, 30 fps, 34.60 s, H.264/AAC), SRT, cover, QA sheets.
-- [x] `QA_REPORT.md`, `script.md`, `claim_ledger.md`, `credits.md`, `README.md`, `packaging_draft.md`.
+## Status: V2 COMPLETE for production; awaiting human audiovisual review (not performed)
 
-## Remaining (human)
-1. Watch the film with sound on a phone; listen to voice, pronunciation and the synthetic SFX/music.
-2. Verify "three more actuators" (claim C05) against the IEEE Spectrum interview text.
-3. Decide on publishing (not done). Optional alternate opening B and Runway inserts were not produced.
+V1 (baseline) is complete and preserved in `v1/`. V2 (this state) is the substantive visual revision requested by the owner's V2 audit.
+
+- [x] V2 shot-local staging (macro, overhead, mechanism, workstation, receipt); opener with the pinch at frame 0; real replay boundary (opener rendered at negative time under the closing tear).
+- [x] V2 cue table (`audio/cues_v2.json`, `source/src/cues_v2.ts`) and captions (`FGW_Atlas_No_Pinky_V2.srt`, 21 cues) from the existing Scribe alignment. Narration **not** regenerated or edited.
+- [x] V2 sound (`tools/build_audio_v2.py`): 29 contact-driven effects (V1: 41), music bed from t = 0 with no closing chord, 0.3 s seam dip; −14.6 LUFS WAV / −14.7 LUFS, −1.4 dBTP in the MP4.
+- [x] V2 renders: clean + captioned (1080 × 1920, 30 fps, 34.60 s, H.264/AAC), cover from the selected opening.
+- [x] `QA_REPORT.md` (four evidence layers kept separate), `claim_ledger.md` (C05 updated), `script.md`, `credits.md`, `README.md`, `packaging_draft.md`, `qa/v2/`.
+
+## Remaining (human) — none of these has happened
+1. One full phone playback **with sound** (voice, *thirteen*/*actuators*, effects, can each action be followed).
+2. One **muted** phone playback of the captioned MP4 (hook, premise, experiment, tradeoff, conclusion).
+3. **Two repeats back-to-back** (picture exact by construction; audio seam only designed, never heard).
+4. **Current Shorts UI overlay** check of captions and critical details.
+5. Optionally confirm the primary pages first-hand (not re-read in this session; C05 relies on the owner's V2 audit).
+6. The upload decision (not made here).
 
 ## Notes
-- Runway not used (optional). Primary-source pages unreachable from this sandbox (proxy 403); facts corroborated by two searches.
+- No Runway job and no new ElevenLabs generation in V2; V1 narration reused. ElevenLabs upload tools were disconnected, so the V2 mix was not re-transcribed.
+- Primary-source pages unreachable from this sandbox (proxy 403).
 - Audio and MP4 stored as ordinary Git blobs via scoped `.gitattributes` (LFS uploads Forbidden here).
-- Render: `cd source && npx remotion render src/index.ts Short ../exports/clean.mp4 --crf=16 --x264-preset=medium --color-space=bt709 --audio-bitrate=320k --browser-executable=<headless_shell>` (needs `npm ci` first; Chrome headless shell, not full Chrome).

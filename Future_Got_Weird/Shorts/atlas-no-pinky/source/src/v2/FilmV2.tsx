@@ -44,7 +44,7 @@ export const FilmV2: React.FC<{captions?: boolean; audio?: boolean}> = ({caption
   const belowEdge = `0,${H + 20} ${W},${H + 20} ${edge.slice().reverse().join(' ')}`;
 
   const k0 = E.inOut(tw(t, 18, 22));
-  const cam0 = {z: 1 + 0.05 * k0, cx: lerp(540, 640, k0), cy: lerp(960, 900, k0)};
+  const cam0 = {z: 1 + 0.05 * k0, cx: lerp(540, 640, k0), cy: lerp(936, 876, k0)};
   const showOpener = g <= 114 || g >= LOOP;
 
   // attribution state

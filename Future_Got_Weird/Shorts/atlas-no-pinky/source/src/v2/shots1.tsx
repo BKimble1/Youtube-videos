@@ -162,7 +162,7 @@ export const B02Hud: React.FC<{g: number}> = ({g}) => {
   const t = V2['label.day'];
   const a = sp(g, t, SNAP);
   const out = tw(g, 241, 5, E.in);
-  return <g>{g >= t && <Headline x={440} y={280} text="ONE DAY" size={130} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />}</g>;
+  return <g>{g >= t && <Headline x={440} y={300} text="ONE DAY" size={130} sx={a * (1 - out) + 0.001} sy={a * (1 - out) + 0.001} />}</g>;
 };
 
 /* ------------------------------------------------------------------ B03: decision slip */
