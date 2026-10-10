@@ -1,0 +1,105 @@
+cue  start   end    dur  chars cps  lead_f  first_word(seg)  lines
+  1   1.083   2.563  1.48   26  17.6    1.5  That@34(s02)  | That sensor can't see him.
+  2   2.643   4.888  2.25   36  16.0    1.7  It's@81(s02)  | It's pointed at a plain, blank wall.
+  3   4.968   7.768  2.80   44  15.7    2.0  Yet@151(n01)  | Yet researchers have / used light bouncing off
+  4   7.848  10.288  2.44   47  19.3    1.6  a@237(n01)  | a wall to track someone / hidden around a corner.
+  5  10.368  14.095  3.73   54  14.5    2.0  That@313(n02)  | That dot is their position / estimate. Not a photograph.
+  6  14.406  18.433  4.03   69  17.1    1.8  The@434(n03)  | The trick is timing: light that reaches / him takes the long way round,
+  7  18.513  19.853  1.34   23  17.2    1.6  so@557(n03)  | so it comes back later.
+  8  19.933  22.003  2.07   35  16.9    2.0  A@600(n04)  | A few billionths of a second later.
+  9  22.083  24.003  1.92   35  18.2    2.5  This@665(n05)  | This takes a time-of-flight sensor,
+ 10  24.083  26.648  2.57   48  18.7    2.5  a@725(n05)  | a camera that clocks / its own light's round trip.
+ 11  26.728  30.535  3.81   48  12.6    2.2  So@804(n06)  | So how do you turn a tiny / delay into a location?
+ 12  30.678  34.271  3.59   51  14.2    1.7  First,@922(n07)  | First, a puzzle: why does / a plain wall work at all?
+ 13  34.351  37.428  3.08   52  16.9    2.5  Put@1033(n08)  | Put a mirror here, / and our friend is simply visible.
+ 14  37.508  39.988  2.48   33  13.3    1.8  A@1127(s11)  | A painted wall is rough up close.
+ 15  40.068  44.228  4.16   70  16.8    2.0  It@1204(s11)  | It throws light every which way, / so each spot acts less like a mirror,
+ 16  44.308  45.868  1.56   22  14.1    1.8  more@1331(s11)  | more like a tiny lamp.
+ 17  45.948  48.885  2.94   48  16.3    1.6  Everything@1380(n09)  | Everything coming back / is a blend of many paths.
+ 18  48.965  50.988  2.02   24  11.9    2.0  What@1471(n09)  | What survives is timing.
+ 19  51.068  54.453  3.39   57  16.8    2.0  Nearly@1534(s14)  | Nearly everything coming back / bounced once, off the wall.
+ 20  54.533  57.583  3.05   52  17.0    2.0  Our@1638(s14)  | Our friend's echo bounced / three times, so it's tiny.
+ 21  57.663  59.863  2.20   37  16.8    2.1  This@1732(s15)  | This is real data from the same team,
+ 22  59.943  64.623  4.68   69  14.7    1.7  with@1800(s15)  | with a different sensor and hidden / object: the wall's big echo, then,
+ 23  64.703  68.436  3.73   59  15.8    1.9  a@1943(s15)  | a few nanoseconds later, / a bump you have to zoom in to see.
+ 24  68.516  71.503  2.99   42  14.1    1.5  In@2057(s15)  | In this capture, hundreds of times weaker.
+ 25  71.583  73.233  1.65   22  13.3    1.5  That@2149(s16)  | That bump is the clue.
+ 26  73.313  76.403  3.09   53  17.2    1.6  Its@2201(s16)  | Its timing says how much / farther the light travelled.
+ 27  76.483  77.843  1.36   19  14.0    1.5  Farther@2296(n10)  | Farther from where?
+ 28  77.923  82.088  4.16   68  16.3    2.3  Simplify@2340(n10)  | Simplify it: the sensor flashes / and listens at one spot on the wall.
+ 29  82.168  85.448  3.28   55  16.8    2.0  Light@2467(n11)  | Light covers about thirty / centimetres every nanosecond.
+ 30  85.528  89.928  4.40   67  15.2    2.2  But@2568(n11)  | But the detour is there and back, / so each extra nanosecond puts him
+ 31  90.008  93.163  3.16   58  18.4    1.8  only@2702(n11)  | only about fifteen centimetres / farther from the wall spot.
+ 32  93.243  96.838  3.59   67  18.6    1.7  Measure@2799(s18)  | Measure the extra delay, and you / know how far he is from that spot.
+ 33  96.918  99.253  2.33   34  14.6    2.5  Not@2910(s18)  | Not which direction. Just how far.
+ 34  99.333 103.223  3.89   71  18.3    2.0  He@2982(s19)  | He could be anywhere on this arc, / all the same distance from that spot.
+ 35 103.303 105.143  1.84   28  15.2    1.9  Now@3101(s20)  | Now listen at a second spot.
+ 36 105.223 107.328  2.11   27  12.8    2.3  Another@3159(s20)  | Another delay, another arc.
+ 37 107.408 111.268  3.86   55  14.2    1.8  On@3224(s20)  | On this side of the wall, / they cross in just one place.
+ 38 111.348 115.228  3.88   63  16.2    1.6  Measured@3342(s21)  | Measured timings are a bit fuzzy, / so each arc is really a band,
+ 39 115.308 117.433  2.12   39  18.4    1.8  and@3461(s21)  | and the bands overlap in a small patch.
+ 40 117.513 121.033  3.52   59  16.8    1.6  These@3527(s22)  | These two spots are close, / so the patch is long and blurry.
+ 41 121.113 122.853  1.74   32  18.4    1.6  Spread@3635(s22)  | Spread them out, and it shrinks.
+ 42 122.933 126.293  3.36   50  14.9    2.0  In@3690(s23)  | In practice, a computer / weighs many spots at once,
+ 43 126.373 129.743  3.37   64  19.0    1.8  trying@3793(s23)  | trying positions and keeping those / whose predicted echoes match.
+ 44 129.823 133.563  3.74   66  17.6    2.3  It@3897(s23)  | It also leans on assumptions, / like what kind of object it's after.
+ 45 133.643 137.496  3.85   61  15.8    1.7  That's@4011(n12)  | That's why the answer is a likely / location, or a rough shape.
+ 46 137.576 139.483  1.91   22  11.5    1.7  And@4129(n13)  | And here's a real one.
+ 47 139.563 143.083  3.52   64  18.2    2.1  Moved@4189(s37)  | Moved through known positions, / the sensor behind that faint bump
+ 48 143.163 145.930  2.77   40  14.5    2.1  rebuilt@4297(s37)  | rebuilt the rough outline of a hidden U.
+ 49 149.253 154.373  5.12   70  13.7    2.4  In@4480(n14)  | In 2012, an MIT team rebuilt the rough / 3D shape of a hidden mannequin.
+ 50 154.453 157.968  3.51   46  13.1    2.4  By@4636(n14)  | By 2021, others had live / video around corners.
+ 51 158.048 160.128  2.08   36  17.3    1.6  But@4743(n15)  | But those ran on research equipment.
+ 52 160.208 163.393  3.19   61  19.2    1.8  One@4808(n15)  | One team had even tracked hidden / objects with a cheap sensor.
+ 53 163.473 166.433  2.96   35  11.8    1.8  Then,@4906(s30)  | Then, in a study published in 2026,
+ 54 166.513 170.593  4.08   69  16.9    1.6  a@4997(s30)  | a team from MIT and Dartmouth tried / the small time-of-flight sensors,
+ 55 170.673 173.848  3.18   48  15.1    1.8  often@5122(s30)  | often called LiDAR, / found in phones and gadgets.
+ 56 173.928 176.008  2.08   39  18.7    2.2  Don't@5220(s31)  | Don't expect your phone to do this yet:
+ 57 176.088 178.698  2.61   45  17.2    2.4  phone@5285(s31)  | phone makers often keep / the raw data private.
+ 58 178.778 182.498  3.72   55  14.8    1.7  Their@5365(n16)  | Their new idea: a model / that keeps track of what moved,
+ 59 182.578 185.063  2.48   36  14.5    1.7  so@5479(n16)  | so many weak frames can be combined.
+ 60 185.143 187.803  2.66   46  17.3    1.7  Why@5556(n17)  | Why would a smaller, / cheaper sensor need that?
+ 61 187.883 190.163  2.28   32  14.0    2.5  Weak@5639(n18)  | Weak lasers mean fainter echoes.
+ 62 190.243 193.443  3.20   62  19.4    1.7  The@5709(n18)  | The team's smartphone-grade / device had about a hundred pixels:
+ 63 193.523 195.203  1.68   26  15.5    2.3  a@5808(n18)  | a hundred listening spots.
+ 64 195.283 197.628  2.34   45  19.2    2.5  And@5861(n18)  | And if you hold one in your / hand, it jiggles.
+ 65 197.708 200.908  3.20   56  17.5    1.8  Their@5933(s33)  | Their fix borrows night mode's / trick from phone cameras:
+ 66 200.988 204.640  3.65   54  14.8    2.4  stack@6032(s33)  | stack many quick, dim frames / into one better estimate.
+ 67 204.720 207.533  2.81   38  13.5    2.4  The@6144(n19)  | The catch: things move between frames.
+ 68 207.613 210.380  2.77   38  13.7    1.6  He@6230(n19)  | He steps, and his echo shifts in time.
+ 69 210.493 214.078  3.59   63  17.6    2.2  The@6317(n19)  | The sensor jiggles, and its listening / spots land somewhere new.
+ 70 214.158 218.618  4.46   71  15.9    2.3  Just@6427(n20)  | Just add them up, and echoes / from different places blur into one smear,
+ 71 218.698 220.978  2.28   40  17.5    2.1  like@6563(n20)  | like a long exposure of someone walking.
+ 72 221.058 223.808  2.75   48  17.5    2.3  So@6634(n21)  | So their model solves / for one unknown at a time.
+ 73 223.888 224.968  1.08   17  15.7    2.4  To@6719(n22)  | To build a shape,
+ 74 225.048 228.528  3.48   66  19.0    1.6  hold@6753(n22)  | hold the object still and step / the sensor through known positions,
+ 75 228.608 231.688  3.08   61  19.8    1.8  spreading@6860(n22)  | spreading out its listening spots. / That's how the U was made.
+ 76 231.768 234.208  2.44   42  17.2    2.0  To@6955(n23)  | To follow a person, hold the sensor still,
+ 77 234.288 237.048  2.76   49  17.8    2.4  and@7031(n23)  | and let each guess drift / a little between frames,
+ 78 237.128 238.968  1.84   34  18.5    2.2  keeping@7116(n23)  | keeping the ones that still match.
+ 79 239.048 241.975  2.93   42  14.3    1.6  The@7173(n23)  | The estimate keeps up instead of smearing.
+ 80 242.548 245.968  3.42   51  14.9    1.6  So@7278(n24)  | So what can it actually do, / and where does it fail?
+ 81 246.048 247.448  1.40   22  15.7    1.6  Take@7383(n25)  | Take our opening clip:
+ 82 247.528 251.208  3.68   64  17.4    2.2  an@7428(n25)  | an off-the-shelf kit the authors / put at under a hundred dollars,
+ 83 251.288 254.053  2.76   52  18.8    2.4  held@7541(n25)  | held still while a person / walked behind a partition.
+ 84 254.133 255.853  1.72   29  16.9    2.0  Many@7626(n26)  | Many of their tests had help:
+ 85 255.933 258.733  2.80   52  18.6    2.0  safety-vest@7680(n26)  | safety-vest style reflective / material on the target,
+ 86 258.813 260.893  2.08   41  19.7    1.6  which@7766(n26)  | which sends far more light straight back.
+ 87 260.973 264.448  3.47   50  14.4    1.8  Our@7831(n27)  | Our clip's files don't say / if the walker wore any.
+ 88 264.528 265.968  1.44   23  16.0    2.2  But@7938(n28)  | But in a separate test,
+ 89 266.048 269.008  2.96   57  19.3    1.6  the@7983(n28)  | the authors report tracking / a person in ordinary clothes,
+ 90 269.088 271.273  2.19   33  15.1    2.4  capturing@8075(n28)  | capturing thirty frames a second.
+ 91 271.353 273.113  1.76   28  15.9    2.4  What@8143(s40)  | What might this be good for?
+ 92 273.193 276.393  3.20   58  18.1    2.2  Picture@8198(s40)  | Picture a delivery robot nearing / a blind warehouse corner.
+ 93 276.473 278.473  2.00   37  18.5    1.8  With@8296(n29)  | With a suitable wall at the junction,
+ 94 278.553 283.193  4.64   72  15.5    2.4  a@8359(n29)  | a sensor like this might give it / an early hint of movement out of sight.
+ 95 283.273 286.713  3.44   43  12.5    1.8  Just@8500(s42)  | Just a fuzzy blob: / enough to say slow down,
+ 96 286.793 288.333  1.54   30  19.5    2.2  not@8606(s42)  | not enough to say who's there.
+ 97 288.413 293.293  4.88   59  12.1    1.6  And@8654(s43)  | And plenty is still hard: / short range, dark or shiny walls,
+ 98 293.373 296.658  3.29   49  14.9    1.8  bright@8803(s43)  | bright sunlight, and fast / math on small hardware.
+ 99 296.738 299.593  2.86   49  17.2    1.9  The@8904(s43)  | The researchers call it / an early-stage prototype.
+100 299.673 303.878  4.20   52  12.4    1.8  For@8992(n30)  | For now, it's a promising clue, / not a safety system.
+101 303.958 307.948  3.99   57  14.3    2.3  Being@9121(n31)  | Being out of sight isn't / the same as giving nothing away.
+102 308.028 311.355  3.33   51  15.3    2.2  To@9243(s47)  | To really hide, he'd have / to block the bounces too.
+103 314.063 318.463  4.40   56  12.7    2.1  This@9424(s48)  | This is Future Got Weird: / the strange future, explained.
+104 318.543 321.837  3.29   56  17.0    1.7  Subscribe@9558(s48)  | Subscribe for more, and we'll / see you around the corner.

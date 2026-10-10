@@ -1,0 +1,3679 @@
+{
+ "word_for_word": [
+  {
+   "compare": "srt vs script_v2.json (exact tokens, punctuation and case)",
+   "n_a": 899,
+   "n_b": 899,
+   "differences": []
+  },
+  {
+   "compare": "srt vs timeline segment text (exact)",
+   "n_a": 899,
+   "n_b": 899,
+   "differences": []
+  },
+  {
+   "compare": "srt vs timeline aligned words (exact)",
+   "n_a": 899,
+   "n_b": 899,
+   "differences": []
+  }
+ ],
+ "script_ids_vs_timeline": true,
+ "script_text_vs_timeline_text": [],
+ "n_cues": 104,
+ "all_words_mapped": true,
+ "overlaps": [],
+ "cues": [
+  {
+   "n": 1,
+   "start": 1.083,
+   "end": 2.563,
+   "start_frame": 32.49,
+   "dur": 1.48,
+   "text": [
+    "That sensor can't see him."
+   ],
+   "segs": [
+    "s02"
+   ],
+   "first_word": "That",
+   "first_word_frame": 34,
+   "seg_from": 33,
+   "lead_frames": 1.51,
+   "last_word": "him.",
+   "last_word_end_frame": 80,
+   "out_after_last_word_end_frames": -3.11,
+   "max_line": 26,
+   "n_lines": 1,
+   "chars": 26,
+   "cps": 17.57,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 2,
+   "start": 2.643,
+   "end": 4.888,
+   "start_frame": 79.29,
+   "dur": 2.245,
+   "text": [
+    "It's pointed at a plain, blank wall."
+   ],
+   "segs": [
+    "s02"
+   ],
+   "first_word": "It's",
+   "first_word_frame": 81,
+   "seg_from": null,
+   "lead_frames": 1.71,
+   "last_word": "wall.",
+   "last_word_end_frame": 154,
+   "out_after_last_word_end_frames": -7.36,
+   "max_line": 36,
+   "n_lines": 1,
+   "chars": 36,
+   "cps": 16.04,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 3,
+   "start": 4.968,
+   "end": 7.768,
+   "start_frame": 149.04,
+   "dur": 2.8,
+   "text": [
+    "Yet researchers have",
+    "used light bouncing off"
+   ],
+   "segs": [
+    "n01"
+   ],
+   "first_word": "Yet",
+   "first_word_frame": 151,
+   "seg_from": 149,
+   "lead_frames": 1.96,
+   "last_word": "off",
+   "last_word_end_frame": 235,
+   "out_after_last_word_end_frames": -1.96,
+   "max_line": 23,
+   "n_lines": 2,
+   "chars": 44,
+   "cps": 15.71,
+   "ends_punct": false,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 4,
+   "start": 7.848,
+   "end": 10.288,
+   "start_frame": 235.44,
+   "dur": 2.44,
+   "text": [
+    "a wall to track someone",
+    "hidden around a corner."
+   ],
+   "segs": [
+    "n01"
+   ],
+   "first_word": "a",
+   "first_word_frame": 237,
+   "seg_from": null,
+   "lead_frames": 1.56,
+   "last_word": "corner.",
+   "last_word_end_frame": 317,
+   "out_after_last_word_end_frames": -8.36,
+   "max_line": 23,
+   "n_lines": 2,
+   "chars": 47,
+   "cps": 19.26,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 5,
+   "start": 10.368,
+   "end": 14.095,
+   "start_frame": 311.04,
+   "dur": 3.727,
+   "text": [
+    "That dot is their position",
+    "estimate. Not a photograph."
+   ],
+   "segs": [
+    "n02"
+   ],
+   "first_word": "That",
+   "first_word_frame": 313,
+   "seg_from": 310,
+   "lead_frames": 1.96,
+   "last_word": "photograph.",
+   "last_word_end_frame": 414,
+   "out_after_last_word_end_frames": 8.85,
+   "max_line": 27,
+   "n_lines": 2,
+   "chars": 54,
+   "cps": 14.49,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 6,
+   "start": 14.406,
+   "end": 18.433,
+   "start_frame": 432.18,
+   "dur": 4.027,
+   "text": [
+    "The trick is timing: light that reaches",
+    "him takes the long way round,"
+   ],
+   "segs": [
+    "n03"
+   ],
+   "first_word": "The",
+   "first_word_frame": 434,
+   "seg_from": 432,
+   "lead_frames": 1.82,
+   "last_word": "round,",
+   "last_word_end_frame": 553,
+   "out_after_last_word_end_frames": -0.01,
+   "max_line": 39,
+   "n_lines": 2,
+   "chars": 69,
+   "cps": 17.13,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 7,
+   "start": 18.513,
+   "end": 19.853,
+   "start_frame": 555.39,
+   "dur": 1.34,
+   "text": [
+    "so it comes back later."
+   ],
+   "segs": [
+    "n03"
+   ],
+   "first_word": "so",
+   "first_word_frame": 557,
+   "seg_from": null,
+   "lead_frames": 1.61,
+   "last_word": "later.",
+   "last_word_end_frame": 601,
+   "out_after_last_word_end_frames": -5.41,
+   "max_line": 23,
+   "n_lines": 1,
+   "chars": 23,
+   "cps": 17.16,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 8,
+   "start": 19.933,
+   "end": 22.003,
+   "start_frame": 597.99,
+   "dur": 2.07,
+   "text": [
+    "A few billionths of a second later."
+   ],
+   "segs": [
+    "n04"
+   ],
+   "first_word": "A",
+   "first_word_frame": 600,
+   "seg_from": 599,
+   "lead_frames": 2.01,
+   "last_word": "later.",
+   "last_word_end_frame": 667,
+   "out_after_last_word_end_frames": -6.91,
+   "max_line": 35,
+   "n_lines": 1,
+   "chars": 35,
+   "cps": 16.91,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 9,
+   "start": 22.083,
+   "end": 24.003,
+   "start_frame": 662.49,
+   "dur": 1.92,
+   "text": [
+    "This takes a time-of-flight sensor,"
+   ],
+   "segs": [
+    "n05"
+   ],
+   "first_word": "This",
+   "first_word_frame": 665,
+   "seg_from": 663,
+   "lead_frames": 2.51,
+   "last_word": "sensor,",
+   "last_word_end_frame": 722,
+   "out_after_last_word_end_frames": -1.91,
+   "max_line": 35,
+   "n_lines": 1,
+   "chars": 35,
+   "cps": 18.23,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 10,
+   "start": 24.083,
+   "end": 26.648,
+   "start_frame": 722.49,
+   "dur": 2.565,
+   "text": [
+    "a camera that clocks",
+    "its own light's round trip."
+   ],
+   "segs": [
+    "n05"
+   ],
+   "first_word": "a",
+   "first_word_frame": 725,
+   "seg_from": null,
+   "lead_frames": 2.51,
+   "last_word": "trip.",
+   "last_word_end_frame": 799,
+   "out_after_last_word_end_frames": 0.44,
+   "max_line": 27,
+   "n_lines": 2,
+   "chars": 48,
+   "cps": 18.71,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 11,
+   "start": 26.728,
+   "end": 30.535,
+   "start_frame": 801.84,
+   "dur": 3.807,
+   "text": [
+    "So how do you turn a tiny",
+    "delay into a location?"
+   ],
+   "segs": [
+    "n06"
+   ],
+   "first_word": "So",
+   "first_word_frame": 804,
+   "seg_from": 801,
+   "lead_frames": 2.16,
+   "last_word": "location?",
+   "last_word_end_frame": 907,
+   "out_after_last_word_end_frames": 9.05,
+   "max_line": 25,
+   "n_lines": 2,
+   "chars": 48,
+   "cps": 12.61,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 12,
+   "start": 30.678,
+   "end": 34.271,
+   "start_frame": 920.34,
+   "dur": 3.593,
+   "text": [
+    "First, a puzzle: why does",
+    "a plain wall work at all?"
+   ],
+   "segs": [
+    "n07"
+   ],
+   "first_word": "First,",
+   "first_word_frame": 922,
+   "seg_from": 922,
+   "lead_frames": 1.66,
+   "last_word": "all?",
+   "last_word_end_frame": 1028,
+   "out_after_last_word_end_frames": 0.13,
+   "max_line": 25,
+   "n_lines": 2,
+   "chars": 51,
+   "cps": 14.19,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 13,
+   "start": 34.351,
+   "end": 37.428,
+   "start_frame": 1030.53,
+   "dur": 3.077,
+   "text": [
+    "Put a mirror here,",
+    "and our friend is simply visible."
+   ],
+   "segs": [
+    "n08"
+   ],
+   "first_word": "Put",
+   "first_word_frame": 1033,
+   "seg_from": 1031,
+   "lead_frames": 2.47,
+   "last_word": "visible.",
+   "last_word_end_frame": 1129,
+   "out_after_last_word_end_frames": -6.16,
+   "max_line": 33,
+   "n_lines": 2,
+   "chars": 52,
+   "cps": 16.9,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 14,
+   "start": 37.508,
+   "end": 39.988,
+   "start_frame": 1125.24,
+   "dur": 2.48,
+   "text": [
+    "A painted wall is rough up close."
+   ],
+   "segs": [
+    "s11"
+   ],
+   "first_word": "A",
+   "first_word_frame": 1127,
+   "seg_from": 1130,
+   "lead_frames": 1.76,
+   "last_word": "close.",
+   "last_word_end_frame": 1202,
+   "out_after_last_word_end_frames": -2.36,
+   "max_line": 33,
+   "n_lines": 1,
+   "chars": 33,
+   "cps": 13.31,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 15,
+   "start": 40.068,
+   "end": 44.228,
+   "start_frame": 1202.04,
+   "dur": 4.16,
+   "text": [
+    "It throws light every which way,",
+    "so each spot acts less like a mirror,"
+   ],
+   "segs": [
+    "s11"
+   ],
+   "first_word": "It",
+   "first_word_frame": 1204,
+   "seg_from": null,
+   "lead_frames": 1.96,
+   "last_word": "mirror,",
+   "last_word_end_frame": 1329,
+   "out_after_last_word_end_frames": -2.16,
+   "max_line": 37,
+   "n_lines": 2,
+   "chars": 70,
+   "cps": 16.83,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 16,
+   "start": 44.308,
+   "end": 45.868,
+   "start_frame": 1329.24,
+   "dur": 1.56,
+   "text": [
+    "more like a tiny lamp."
+   ],
+   "segs": [
+    "s11"
+   ],
+   "first_word": "more",
+   "first_word_frame": 1331,
+   "seg_from": null,
+   "lead_frames": 1.76,
+   "last_word": "lamp.",
+   "last_word_end_frame": 1379,
+   "out_after_last_word_end_frames": -2.96,
+   "max_line": 22,
+   "n_lines": 1,
+   "chars": 22,
+   "cps": 14.1,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 17,
+   "start": 45.948,
+   "end": 48.885,
+   "start_frame": 1378.44,
+   "dur": 2.937,
+   "text": [
+    "Everything coming back",
+    "is a blend of many paths."
+   ],
+   "segs": [
+    "n09"
+   ],
+   "first_word": "Everything",
+   "first_word_frame": 1380,
+   "seg_from": 1375,
+   "lead_frames": 1.56,
+   "last_word": "paths.",
+   "last_word_end_frame": 1467,
+   "out_after_last_word_end_frames": -0.45,
+   "max_line": 25,
+   "n_lines": 2,
+   "chars": 48,
+   "cps": 16.34,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 18,
+   "start": 48.965,
+   "end": 50.988,
+   "start_frame": 1468.95,
+   "dur": 2.023,
+   "text": [
+    "What survives is timing."
+   ],
+   "segs": [
+    "n09"
+   ],
+   "first_word": "What",
+   "first_word_frame": 1471,
+   "seg_from": null,
+   "lead_frames": 2.05,
+   "last_word": "timing.",
+   "last_word_end_frame": 1538,
+   "out_after_last_word_end_frames": -8.36,
+   "max_line": 24,
+   "n_lines": 1,
+   "chars": 24,
+   "cps": 11.86,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 19,
+   "start": 51.068,
+   "end": 54.453,
+   "start_frame": 1532.04,
+   "dur": 3.385,
+   "text": [
+    "Nearly everything coming back",
+    "bounced once, off the wall."
+   ],
+   "segs": [
+    "s14"
+   ],
+   "first_word": "Nearly",
+   "first_word_frame": 1534,
+   "seg_from": 1534,
+   "lead_frames": 1.96,
+   "last_word": "wall.",
+   "last_word_end_frame": 1642,
+   "out_after_last_word_end_frames": -8.41,
+   "max_line": 29,
+   "n_lines": 2,
+   "chars": 57,
+   "cps": 16.84,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 20,
+   "start": 54.533,
+   "end": 57.583,
+   "start_frame": 1635.99,
+   "dur": 3.05,
+   "text": [
+    "Our friend's echo bounced",
+    "three times, so it's tiny."
+   ],
+   "segs": [
+    "s14"
+   ],
+   "first_word": "Our",
+   "first_word_frame": 1638,
+   "seg_from": null,
+   "lead_frames": 2.01,
+   "last_word": "tiny.",
+   "last_word_end_frame": 1732,
+   "out_after_last_word_end_frames": -4.51,
+   "max_line": 26,
+   "n_lines": 2,
+   "chars": 52,
+   "cps": 17.05,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 21,
+   "start": 57.663,
+   "end": 59.863,
+   "start_frame": 1729.89,
+   "dur": 2.2,
+   "text": [
+    "This is real data from the same team,"
+   ],
+   "segs": [
+    "s15"
+   ],
+   "first_word": "This",
+   "first_word_frame": 1732,
+   "seg_from": 1733,
+   "lead_frames": 2.11,
+   "last_word": "team,",
+   "last_word_end_frame": 1799,
+   "out_after_last_word_end_frames": -3.11,
+   "max_line": 37,
+   "n_lines": 1,
+   "chars": 37,
+   "cps": 16.82,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 22,
+   "start": 59.943,
+   "end": 64.623,
+   "start_frame": 1798.29,
+   "dur": 4.68,
+   "text": [
+    "with a different sensor and hidden",
+    "object: the wall's big echo, then,"
+   ],
+   "segs": [
+    "s15"
+   ],
+   "first_word": "with",
+   "first_word_frame": 1800,
+   "seg_from": null,
+   "lead_frames": 1.71,
+   "last_word": "then,",
+   "last_word_end_frame": 1941,
+   "out_after_last_word_end_frames": -2.31,
+   "max_line": 34,
+   "n_lines": 2,
+   "chars": 69,
+   "cps": 14.74,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 23,
+   "start": 64.703,
+   "end": 68.436,
+   "start_frame": 1941.09,
+   "dur": 3.733,
+   "text": [
+    "a few nanoseconds later,",
+    "a bump you have to zoom in to see."
+   ],
+   "segs": [
+    "s15"
+   ],
+   "first_word": "a",
+   "first_word_frame": 1943,
+   "seg_from": null,
+   "lead_frames": 1.91,
+   "last_word": "see.",
+   "last_word_end_frame": 2048,
+   "out_after_last_word_end_frames": 5.08,
+   "max_line": 34,
+   "n_lines": 2,
+   "chars": 59,
+   "cps": 15.8,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 24,
+   "start": 68.516,
+   "end": 71.503,
+   "start_frame": 2055.48,
+   "dur": 2.987,
+   "text": [
+    "In this capture, hundreds of times weaker."
+   ],
+   "segs": [
+    "s15"
+   ],
+   "first_word": "In",
+   "first_word_frame": 2057,
+   "seg_from": null,
+   "lead_frames": 1.52,
+   "last_word": "weaker.",
+   "last_word_end_frame": 2141,
+   "out_after_last_word_end_frames": 4.09,
+   "max_line": 42,
+   "n_lines": 1,
+   "chars": 42,
+   "cps": 14.06,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 25,
+   "start": 71.583,
+   "end": 73.233,
+   "start_frame": 2147.49,
+   "dur": 1.65,
+   "text": [
+    "That bump is the clue."
+   ],
+   "segs": [
+    "s16"
+   ],
+   "first_word": "That",
+   "first_word_frame": 2149,
+   "seg_from": 2148,
+   "lead_frames": 1.51,
+   "last_word": "clue.",
+   "last_word_end_frame": 2202,
+   "out_after_last_word_end_frames": -5.01,
+   "max_line": 22,
+   "n_lines": 1,
+   "chars": 22,
+   "cps": 13.33,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 26,
+   "start": 73.313,
+   "end": 76.403,
+   "start_frame": 2199.39,
+   "dur": 3.09,
+   "text": [
+    "Its timing says how much",
+    "farther the light travelled."
+   ],
+   "segs": [
+    "s16"
+   ],
+   "first_word": "Its",
+   "first_word_frame": 2201,
+   "seg_from": null,
+   "lead_frames": 1.61,
+   "last_word": "travelled.",
+   "last_word_end_frame": 2282,
+   "out_after_last_word_end_frames": 10.09,
+   "max_line": 28,
+   "n_lines": 2,
+   "chars": 53,
+   "cps": 17.15,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 27,
+   "start": 76.483,
+   "end": 77.843,
+   "start_frame": 2294.49,
+   "dur": 1.36,
+   "text": [
+    "Farther from where?"
+   ],
+   "segs": [
+    "n10"
+   ],
+   "first_word": "Farther",
+   "first_word_frame": 2296,
+   "seg_from": 2294,
+   "lead_frames": 1.51,
+   "last_word": "where?",
+   "last_word_end_frame": 2331,
+   "out_after_last_word_end_frames": 4.29,
+   "max_line": 19,
+   "n_lines": 1,
+   "chars": 19,
+   "cps": 13.97,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 28,
+   "start": 77.923,
+   "end": 82.088,
+   "start_frame": 2337.69,
+   "dur": 4.165,
+   "text": [
+    "Simplify it: the sensor flashes",
+    "and listens at one spot on the wall."
+   ],
+   "segs": [
+    "n10"
+   ],
+   "first_word": "Simplify",
+   "first_word_frame": 2340,
+   "seg_from": null,
+   "lead_frames": 2.31,
+   "last_word": "wall.",
+   "last_word_end_frame": 2472,
+   "out_after_last_word_end_frames": -9.36,
+   "max_line": 36,
+   "n_lines": 2,
+   "chars": 68,
+   "cps": 16.33,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 29,
+   "start": 82.168,
+   "end": 85.448,
+   "start_frame": 2465.04,
+   "dur": 3.28,
+   "text": [
+    "Light covers about thirty",
+    "centimetres every nanosecond."
+   ],
+   "segs": [
+    "n11"
+   ],
+   "first_word": "Light",
+   "first_word_frame": 2467,
+   "seg_from": 2467,
+   "lead_frames": 1.96,
+   "last_word": "nanosecond.",
+   "last_word_end_frame": 2557,
+   "out_after_last_word_end_frames": 6.44,
+   "max_line": 29,
+   "n_lines": 2,
+   "chars": 55,
+   "cps": 16.77,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 30,
+   "start": 85.528,
+   "end": 89.928,
+   "start_frame": 2565.84,
+   "dur": 4.4,
+   "text": [
+    "But the detour is there and back,",
+    "so each extra nanosecond puts him"
+   ],
+   "segs": [
+    "n11"
+   ],
+   "first_word": "But",
+   "first_word_frame": 2568,
+   "seg_from": null,
+   "lead_frames": 2.16,
+   "last_word": "him",
+   "last_word_end_frame": 2700,
+   "out_after_last_word_end_frames": -2.16,
+   "max_line": 33,
+   "n_lines": 2,
+   "chars": 67,
+   "cps": 15.23,
+   "ends_punct": false,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 31,
+   "start": 90.008,
+   "end": 93.163,
+   "start_frame": 2700.24,
+   "dur": 3.155,
+   "text": [
+    "only about fifteen centimetres",
+    "farther from the wall spot."
+   ],
+   "segs": [
+    "n11"
+   ],
+   "first_word": "only",
+   "first_word_frame": 2702,
+   "seg_from": null,
+   "lead_frames": 1.76,
+   "last_word": "spot.",
+   "last_word_end_frame": 2805,
+   "out_after_last_word_end_frames": -10.11,
+   "max_line": 30,
+   "n_lines": 2,
+   "chars": 58,
+   "cps": 18.38,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 32,
+   "start": 93.243,
+   "end": 96.838,
+   "start_frame": 2797.29,
+   "dur": 3.595,
+   "text": [
+    "Measure the extra delay, and you",
+    "know how far he is from that spot."
+   ],
+   "segs": [
+    "s18"
+   ],
+   "first_word": "Measure",
+   "first_word_frame": 2799,
+   "seg_from": 2799,
+   "lead_frames": 1.71,
+   "last_word": "spot.",
+   "last_word_end_frame": 2912,
+   "out_after_last_word_end_frames": -6.86,
+   "max_line": 34,
+   "n_lines": 2,
+   "chars": 67,
+   "cps": 18.64,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 33,
+   "start": 96.918,
+   "end": 99.253,
+   "start_frame": 2907.54,
+   "dur": 2.335,
+   "text": [
+    "Not which direction. Just how far."
+   ],
+   "segs": [
+    "s18"
+   ],
+   "first_word": "Not",
+   "first_word_frame": 2910,
+   "seg_from": null,
+   "lead_frames": 2.46,
+   "last_word": "far.",
+   "last_word_end_frame": 2986,
+   "out_after_last_word_end_frames": -8.41,
+   "max_line": 34,
+   "n_lines": 1,
+   "chars": 34,
+   "cps": 14.56,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 34,
+   "start": 99.333,
+   "end": 103.223,
+   "start_frame": 2979.99,
+   "dur": 3.89,
+   "text": [
+    "He could be anywhere on this arc,",
+    "all the same distance from that spot."
+   ],
+   "segs": [
+    "s19"
+   ],
+   "first_word": "He",
+   "first_word_frame": 2982,
+   "seg_from": 2982,
+   "lead_frames": 2.01,
+   "last_word": "spot.",
+   "last_word_end_frame": 3095,
+   "out_after_last_word_end_frames": 1.69,
+   "max_line": 37,
+   "n_lines": 2,
+   "chars": 71,
+   "cps": 18.25,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 35,
+   "start": 103.303,
+   "end": 105.143,
+   "start_frame": 3099.09,
+   "dur": 1.84,
+   "text": [
+    "Now listen at a second spot."
+   ],
+   "segs": [
+    "s20"
+   ],
+   "first_word": "Now",
+   "first_word_frame": 3101,
+   "seg_from": 3102,
+   "lead_frames": 1.91,
+   "last_word": "spot.",
+   "last_word_end_frame": 3154,
+   "out_after_last_word_end_frames": 0.29,
+   "max_line": 28,
+   "n_lines": 1,
+   "chars": 28,
+   "cps": 15.22,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 36,
+   "start": 105.223,
+   "end": 107.328,
+   "start_frame": 3156.69,
+   "dur": 2.105,
+   "text": [
+    "Another delay, another arc."
+   ],
+   "segs": [
+    "s20"
+   ],
+   "first_word": "Another",
+   "first_word_frame": 3159,
+   "seg_from": null,
+   "lead_frames": 2.31,
+   "last_word": "arc.",
+   "last_word_end_frame": 3212,
+   "out_after_last_word_end_frames": 7.84,
+   "max_line": 27,
+   "n_lines": 1,
+   "chars": 27,
+   "cps": 12.83,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 37,
+   "start": 107.408,
+   "end": 111.268,
+   "start_frame": 3222.24,
+   "dur": 3.86,
+   "text": [
+    "On this side of the wall,",
+    "they cross in just one place."
+   ],
+   "segs": [
+    "s20"
+   ],
+   "first_word": "On",
+   "first_word_frame": 3224,
+   "seg_from": null,
+   "lead_frames": 1.76,
+   "last_word": "place.",
+   "last_word_end_frame": 3331,
+   "out_after_last_word_end_frames": 7.04,
+   "max_line": 29,
+   "n_lines": 2,
+   "chars": 55,
+   "cps": 14.25,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 38,
+   "start": 111.348,
+   "end": 115.228,
+   "start_frame": 3340.44,
+   "dur": 3.88,
+   "text": [
+    "Measured timings are a bit fuzzy,",
+    "so each arc is really a band,"
+   ],
+   "segs": [
+    "s21"
+   ],
+   "first_word": "Measured",
+   "first_word_frame": 3342,
+   "seg_from": 3343,
+   "lead_frames": 1.56,
+   "last_word": "band,",
+   "last_word_end_frame": 3460,
+   "out_after_last_word_end_frames": -3.16,
+   "max_line": 33,
+   "n_lines": 2,
+   "chars": 63,
+   "cps": 16.24,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 39,
+   "start": 115.308,
+   "end": 117.433,
+   "start_frame": 3459.24,
+   "dur": 2.125,
+   "text": [
+    "and the bands overlap in a small patch."
+   ],
+   "segs": [
+    "s21"
+   ],
+   "first_word": "and",
+   "first_word_frame": 3461,
+   "seg_from": null,
+   "lead_frames": 1.76,
+   "last_word": "patch.",
+   "last_word_end_frame": 3525,
+   "out_after_last_word_end_frames": -2.01,
+   "max_line": 39,
+   "n_lines": 1,
+   "chars": 39,
+   "cps": 18.35,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 40,
+   "start": 117.513,
+   "end": 121.033,
+   "start_frame": 3525.39,
+   "dur": 3.52,
+   "text": [
+    "These two spots are close,",
+    "so the patch is long and blurry."
+   ],
+   "segs": [
+    "s22"
+   ],
+   "first_word": "These",
+   "first_word_frame": 3527,
+   "seg_from": 3528,
+   "lead_frames": 1.61,
+   "last_word": "blurry.",
+   "last_word_end_frame": 3628,
+   "out_after_last_word_end_frames": 2.99,
+   "max_line": 32,
+   "n_lines": 2,
+   "chars": 59,
+   "cps": 16.76,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 41,
+   "start": 121.113,
+   "end": 122.853,
+   "start_frame": 3633.39,
+   "dur": 1.74,
+   "text": [
+    "Spread them out, and it shrinks."
+   ],
+   "segs": [
+    "s22"
+   ],
+   "first_word": "Spread",
+   "first_word_frame": 3635,
+   "seg_from": null,
+   "lead_frames": 1.61,
+   "last_word": "shrinks.",
+   "last_word_end_frame": 3691,
+   "out_after_last_word_end_frames": -5.41,
+   "max_line": 32,
+   "n_lines": 1,
+   "chars": 32,
+   "cps": 18.39,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 42,
+   "start": 122.933,
+   "end": 126.293,
+   "start_frame": 3687.99,
+   "dur": 3.36,
+   "text": [
+    "In practice, a computer",
+    "weighs many spots at once,"
+   ],
+   "segs": [
+    "s23"
+   ],
+   "first_word": "In",
+   "first_word_frame": 3690,
+   "seg_from": 3692,
+   "lead_frames": 2.01,
+   "last_word": "once,",
+   "last_word_end_frame": 3788,
+   "out_after_last_word_end_frames": 0.79,
+   "max_line": 26,
+   "n_lines": 2,
+   "chars": 50,
+   "cps": 14.88,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 43,
+   "start": 126.373,
+   "end": 129.743,
+   "start_frame": 3791.19,
+   "dur": 3.37,
+   "text": [
+    "trying positions and keeping those",
+    "whose predicted echoes match."
+   ],
+   "segs": [
+    "s23"
+   ],
+   "first_word": "trying",
+   "first_word_frame": 3793,
+   "seg_from": null,
+   "lead_frames": 1.81,
+   "last_word": "match.",
+   "last_word_end_frame": 3901,
+   "out_after_last_word_end_frames": -8.71,
+   "max_line": 34,
+   "n_lines": 2,
+   "chars": 64,
+   "cps": 18.99,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 44,
+   "start": 129.823,
+   "end": 133.563,
+   "start_frame": 3894.69,
+   "dur": 3.74,
+   "text": [
+    "It also leans on assumptions,",
+    "like what kind of object it's after."
+   ],
+   "segs": [
+    "s23"
+   ],
+   "first_word": "It",
+   "first_word_frame": 3897,
+   "seg_from": null,
+   "lead_frames": 2.31,
+   "last_word": "after.",
+   "last_word_end_frame": 4014,
+   "out_after_last_word_end_frames": -7.11,
+   "max_line": 36,
+   "n_lines": 2,
+   "chars": 66,
+   "cps": 17.65,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 45,
+   "start": 133.643,
+   "end": 137.496,
+   "start_frame": 4009.29,
+   "dur": 3.853,
+   "text": [
+    "That's why the answer is a likely",
+    "location, or a rough shape."
+   ],
+   "segs": [
+    "n12"
+   ],
+   "first_word": "That's",
+   "first_word_frame": 4011,
+   "seg_from": 4010,
+   "lead_frames": 1.71,
+   "last_word": "shape.",
+   "last_word_end_frame": 4130,
+   "out_after_last_word_end_frames": -5.12,
+   "max_line": 33,
+   "n_lines": 2,
+   "chars": 61,
+   "cps": 15.83,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 46,
+   "start": 137.576,
+   "end": 139.483,
+   "start_frame": 4127.28,
+   "dur": 1.907,
+   "text": [
+    "And here's a real one."
+   ],
+   "segs": [
+    "n13"
+   ],
+   "first_word": "And",
+   "first_word_frame": 4129,
+   "seg_from": 4126,
+   "lead_frames": 1.72,
+   "last_word": "one.",
+   "last_word_end_frame": 4183,
+   "out_after_last_word_end_frames": 1.49,
+   "max_line": 22,
+   "n_lines": 1,
+   "chars": 22,
+   "cps": 11.54,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 47,
+   "start": 139.563,
+   "end": 143.083,
+   "start_frame": 4186.89,
+   "dur": 3.52,
+   "text": [
+    "Moved through known positions,",
+    "the sensor behind that faint bump"
+   ],
+   "segs": [
+    "s37"
+   ],
+   "first_word": "Moved",
+   "first_word_frame": 4189,
+   "seg_from": 4190,
+   "lead_frames": 2.11,
+   "last_word": "bump",
+   "last_word_end_frame": 4294,
+   "out_after_last_word_end_frames": -1.51,
+   "max_line": 33,
+   "n_lines": 2,
+   "chars": 64,
+   "cps": 18.18,
+   "ends_punct": false,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 48,
+   "start": 143.163,
+   "end": 145.93,
+   "start_frame": 4294.89,
+   "dur": 2.767,
+   "text": [
+    "rebuilt the rough outline of a hidden U."
+   ],
+   "segs": [
+    "s37"
+   ],
+   "first_word": "rebuilt",
+   "first_word_frame": 4297,
+   "seg_from": null,
+   "lead_frames": 2.11,
+   "last_word": "U.",
+   "last_word_end_frame": 4369,
+   "out_after_last_word_end_frames": 8.9,
+   "max_line": 40,
+   "n_lines": 1,
+   "chars": 40,
+   "cps": 14.46,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 49,
+   "start": 149.253,
+   "end": 154.373,
+   "start_frame": 4477.59,
+   "dur": 5.12,
+   "text": [
+    "In 2012, an MIT team rebuilt the rough",
+    "3D shape of a hidden mannequin."
+   ],
+   "segs": [
+    "n14"
+   ],
+   "first_word": "In",
+   "first_word_frame": 4480,
+   "seg_from": 4480,
+   "lead_frames": 2.41,
+   "last_word": "mannequin.",
+   "last_word_end_frame": 4627,
+   "out_after_last_word_end_frames": 4.19,
+   "max_line": 38,
+   "n_lines": 2,
+   "chars": 70,
+   "cps": 13.67,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 50,
+   "start": 154.453,
+   "end": 157.968,
+   "start_frame": 4633.59,
+   "dur": 3.515,
+   "text": [
+    "By 2021, others had live",
+    "video around corners."
+   ],
+   "segs": [
+    "n14"
+   ],
+   "first_word": "By",
+   "first_word_frame": 4636,
+   "seg_from": null,
+   "lead_frames": 2.41,
+   "last_word": "corners.",
+   "last_word_end_frame": 4744,
+   "out_after_last_word_end_frames": -4.96,
+   "max_line": 24,
+   "n_lines": 2,
+   "chars": 46,
+   "cps": 13.09,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 51,
+   "start": 158.048,
+   "end": 160.128,
+   "start_frame": 4741.44,
+   "dur": 2.08,
+   "text": [
+    "But those ran on research equipment."
+   ],
+   "segs": [
+    "n15"
+   ],
+   "first_word": "But",
+   "first_word_frame": 4743,
+   "seg_from": 4746,
+   "lead_frames": 1.56,
+   "last_word": "equipment.",
+   "last_word_end_frame": 4794,
+   "out_after_last_word_end_frames": 9.84,
+   "max_line": 36,
+   "n_lines": 1,
+   "chars": 36,
+   "cps": 17.31,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 52,
+   "start": 160.208,
+   "end": 163.393,
+   "start_frame": 4806.24,
+   "dur": 3.185,
+   "text": [
+    "One team had even tracked hidden",
+    "objects with a cheap sensor."
+   ],
+   "segs": [
+    "n15"
+   ],
+   "first_word": "One",
+   "first_word_frame": 4808,
+   "seg_from": null,
+   "lead_frames": 1.76,
+   "last_word": "sensor.",
+   "last_word_end_frame": 4905,
+   "out_after_last_word_end_frames": -3.21,
+   "max_line": 32,
+   "n_lines": 2,
+   "chars": 61,
+   "cps": 19.15,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 53,
+   "start": 163.473,
+   "end": 166.433,
+   "start_frame": 4904.19,
+   "dur": 2.96,
+   "text": [
+    "Then, in a study published in 2026,"
+   ],
+   "segs": [
+    "s30"
+   ],
+   "first_word": "Then,",
+   "first_word_frame": 4906,
+   "seg_from": 4907,
+   "lead_frames": 1.81,
+   "last_word": "2026,",
+   "last_word_end_frame": 4995,
+   "out_after_last_word_end_frames": -2.01,
+   "max_line": 35,
+   "n_lines": 1,
+   "chars": 35,
+   "cps": 11.82,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 54,
+   "start": 166.513,
+   "end": 170.593,
+   "start_frame": 4995.39,
+   "dur": 4.08,
+   "text": [
+    "a team from MIT and Dartmouth tried",
+    "the small time-of-flight sensors,"
+   ],
+   "segs": [
+    "s30"
+   ],
+   "first_word": "a",
+   "first_word_frame": 4997,
+   "seg_from": null,
+   "lead_frames": 1.61,
+   "last_word": "sensors,",
+   "last_word_end_frame": 5120,
+   "out_after_last_word_end_frames": -2.21,
+   "max_line": 35,
+   "n_lines": 2,
+   "chars": 69,
+   "cps": 16.91,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 55,
+   "start": 170.673,
+   "end": 173.848,
+   "start_frame": 5120.19,
+   "dur": 3.175,
+   "text": [
+    "often called LiDAR,",
+    "found in phones and gadgets."
+   ],
+   "segs": [
+    "s30"
+   ],
+   "first_word": "often",
+   "first_word_frame": 5122,
+   "seg_from": null,
+   "lead_frames": 1.81,
+   "last_word": "gadgets.",
+   "last_word_end_frame": 5221,
+   "out_after_last_word_end_frames": -5.56,
+   "max_line": 28,
+   "n_lines": 2,
+   "chars": 48,
+   "cps": 15.12,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 56,
+   "start": 173.928,
+   "end": 176.008,
+   "start_frame": 5217.84,
+   "dur": 2.08,
+   "text": [
+    "Don't expect your phone to do this yet:"
+   ],
+   "segs": [
+    "s31"
+   ],
+   "first_word": "Don't",
+   "first_word_frame": 5220,
+   "seg_from": 5214,
+   "lead_frames": 2.16,
+   "last_word": "yet:",
+   "last_word_end_frame": 5282,
+   "out_after_last_word_end_frames": -1.76,
+   "max_line": 39,
+   "n_lines": 1,
+   "chars": 39,
+   "cps": 18.75,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 57,
+   "start": 176.088,
+   "end": 178.698,
+   "start_frame": 5282.64,
+   "dur": 2.61,
+   "text": [
+    "phone makers often keep",
+    "the raw data private."
+   ],
+   "segs": [
+    "s31"
+   ],
+   "first_word": "phone",
+   "first_word_frame": 5285,
+   "seg_from": null,
+   "lead_frames": 2.36,
+   "last_word": "private.",
+   "last_word_end_frame": 5369,
+   "out_after_last_word_end_frames": -8.06,
+   "max_line": 23,
+   "n_lines": 2,
+   "chars": 45,
+   "cps": 17.24,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 58,
+   "start": 178.778,
+   "end": 182.498,
+   "start_frame": 5363.34,
+   "dur": 3.72,
+   "text": [
+    "Their new idea: a model",
+    "that keeps track of what moved,"
+   ],
+   "segs": [
+    "n16"
+   ],
+   "first_word": "Their",
+   "first_word_frame": 5365,
+   "seg_from": 5364,
+   "lead_frames": 1.66,
+   "last_word": "moved,",
+   "last_word_end_frame": 5476,
+   "out_after_last_word_end_frames": -1.06,
+   "max_line": 31,
+   "n_lines": 2,
+   "chars": 55,
+   "cps": 14.78,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 59,
+   "start": 182.578,
+   "end": 185.063,
+   "start_frame": 5477.34,
+   "dur": 2.485,
+   "text": [
+    "so many weak frames can be combined."
+   ],
+   "segs": [
+    "n16"
+   ],
+   "first_word": "so",
+   "first_word_frame": 5479,
+   "seg_from": null,
+   "lead_frames": 1.66,
+   "last_word": "combined.",
+   "last_word_end_frame": 5548,
+   "out_after_last_word_end_frames": 3.89,
+   "max_line": 36,
+   "n_lines": 1,
+   "chars": 36,
+   "cps": 14.49,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 60,
+   "start": 185.143,
+   "end": 187.803,
+   "start_frame": 5554.29,
+   "dur": 2.66,
+   "text": [
+    "Why would a smaller,",
+    "cheaper sensor need that?"
+   ],
+   "segs": [
+    "n17"
+   ],
+   "first_word": "Why",
+   "first_word_frame": 5556,
+   "seg_from": 5552,
+   "lead_frames": 1.71,
+   "last_word": "that?",
+   "last_word_end_frame": 5640,
+   "out_after_last_word_end_frames": -5.91,
+   "max_line": 25,
+   "n_lines": 2,
+   "chars": 46,
+   "cps": 17.29,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 61,
+   "start": 187.883,
+   "end": 190.163,
+   "start_frame": 5636.49,
+   "dur": 2.28,
+   "text": [
+    "Weak lasers mean fainter echoes."
+   ],
+   "segs": [
+    "n18"
+   ],
+   "first_word": "Weak",
+   "first_word_frame": 5639,
+   "seg_from": 5635,
+   "lead_frames": 2.51,
+   "last_word": "echoes.",
+   "last_word_end_frame": 5707,
+   "out_after_last_word_end_frames": -2.11,
+   "max_line": 32,
+   "n_lines": 1,
+   "chars": 32,
+   "cps": 14.04,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 62,
+   "start": 190.243,
+   "end": 193.443,
+   "start_frame": 5707.29,
+   "dur": 3.2,
+   "text": [
+    "The team's smartphone-grade",
+    "device had about a hundred pixels:"
+   ],
+   "segs": [
+    "n18"
+   ],
+   "first_word": "The",
+   "first_word_frame": 5709,
+   "seg_from": null,
+   "lead_frames": 1.71,
+   "last_word": "pixels:",
+   "last_word_end_frame": 5805,
+   "out_after_last_word_end_frames": -1.71,
+   "max_line": 34,
+   "n_lines": 2,
+   "chars": 62,
+   "cps": 19.37,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 63,
+   "start": 193.523,
+   "end": 195.203,
+   "start_frame": 5805.69,
+   "dur": 1.68,
+   "text": [
+    "a hundred listening spots."
+   ],
+   "segs": [
+    "n18"
+   ],
+   "first_word": "a",
+   "first_word_frame": 5808,
+   "seg_from": null,
+   "lead_frames": 2.31,
+   "last_word": "spots.",
+   "last_word_end_frame": 5849,
+   "out_after_last_word_end_frames": 7.09,
+   "max_line": 26,
+   "n_lines": 1,
+   "chars": 26,
+   "cps": 15.48,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 64,
+   "start": 195.283,
+   "end": 197.628,
+   "start_frame": 5858.49,
+   "dur": 2.345,
+   "text": [
+    "And if you hold one in your",
+    "hand, it jiggles."
+   ],
+   "segs": [
+    "n18"
+   ],
+   "first_word": "And",
+   "first_word_frame": 5861,
+   "seg_from": null,
+   "lead_frames": 2.51,
+   "last_word": "jiggles.",
+   "last_word_end_frame": 5937,
+   "out_after_last_word_end_frames": -8.16,
+   "max_line": 27,
+   "n_lines": 2,
+   "chars": 45,
+   "cps": 19.19,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 65,
+   "start": 197.708,
+   "end": 200.908,
+   "start_frame": 5931.24,
+   "dur": 3.2,
+   "text": [
+    "Their fix borrows night mode's",
+    "trick from phone cameras:"
+   ],
+   "segs": [
+    "s33"
+   ],
+   "first_word": "Their",
+   "first_word_frame": 5933,
+   "seg_from": 5935,
+   "lead_frames": 1.76,
+   "last_word": "cameras:",
+   "last_word_end_frame": 6029,
+   "out_after_last_word_end_frames": -1.76,
+   "max_line": 30,
+   "n_lines": 2,
+   "chars": 56,
+   "cps": 17.5,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 66,
+   "start": 200.988,
+   "end": 204.64,
+   "start_frame": 6029.64,
+   "dur": 3.652,
+   "text": [
+    "stack many quick, dim frames",
+    "into one better estimate."
+   ],
+   "segs": [
+    "s33"
+   ],
+   "first_word": "stack",
+   "first_word_frame": 6032,
+   "seg_from": null,
+   "lead_frames": 2.36,
+   "last_word": "estimate.",
+   "last_word_end_frame": 6140,
+   "out_after_last_word_end_frames": -0.8,
+   "max_line": 28,
+   "n_lines": 2,
+   "chars": 54,
+   "cps": 14.79,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 67,
+   "start": 204.72,
+   "end": 207.533,
+   "start_frame": 6141.6,
+   "dur": 2.813,
+   "text": [
+    "The catch: things move between frames."
+   ],
+   "segs": [
+    "n19"
+   ],
+   "first_word": "The",
+   "first_word_frame": 6144,
+   "seg_from": 6142,
+   "lead_frames": 2.4,
+   "last_word": "frames.",
+   "last_word_end_frame": 6223,
+   "out_after_last_word_end_frames": 2.99,
+   "max_line": 38,
+   "n_lines": 1,
+   "chars": 38,
+   "cps": 13.51,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 68,
+   "start": 207.613,
+   "end": 210.38,
+   "start_frame": 6228.39,
+   "dur": 2.767,
+   "text": [
+    "He steps, and his echo shifts in time."
+   ],
+   "segs": [
+    "n19"
+   ],
+   "first_word": "He",
+   "first_word_frame": 6230,
+   "seg_from": null,
+   "lead_frames": 1.61,
+   "last_word": "time.",
+   "last_word_end_frame": 6302,
+   "out_after_last_word_end_frames": 9.4,
+   "max_line": 38,
+   "n_lines": 1,
+   "chars": 38,
+   "cps": 13.73,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 69,
+   "start": 210.493,
+   "end": 214.078,
+   "start_frame": 6314.79,
+   "dur": 3.585,
+   "text": [
+    "The sensor jiggles, and its listening",
+    "spots land somewhere new."
+   ],
+   "segs": [
+    "n19"
+   ],
+   "first_word": "The",
+   "first_word_frame": 6317,
+   "seg_from": null,
+   "lead_frames": 2.21,
+   "last_word": "new.",
+   "last_word_end_frame": 6425,
+   "out_after_last_word_end_frames": -2.66,
+   "max_line": 37,
+   "n_lines": 2,
+   "chars": 63,
+   "cps": 17.57,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 70,
+   "start": 214.158,
+   "end": 218.618,
+   "start_frame": 6424.74,
+   "dur": 4.46,
+   "text": [
+    "Just add them up, and echoes",
+    "from different places blur into one smear,"
+   ],
+   "segs": [
+    "n20"
+   ],
+   "first_word": "Just",
+   "first_word_frame": 6427,
+   "seg_from": 6427,
+   "lead_frames": 2.26,
+   "last_word": "smear,",
+   "last_word_end_frame": 6556,
+   "out_after_last_word_end_frames": 2.54,
+   "max_line": 42,
+   "n_lines": 2,
+   "chars": 71,
+   "cps": 15.92,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 71,
+   "start": 218.698,
+   "end": 220.978,
+   "start_frame": 6560.94,
+   "dur": 2.28,
+   "text": [
+    "like a long exposure of someone walking."
+   ],
+   "segs": [
+    "n20"
+   ],
+   "first_word": "like",
+   "first_word_frame": 6563,
+   "seg_from": null,
+   "lead_frames": 2.06,
+   "last_word": "walking.",
+   "last_word_end_frame": 6627,
+   "out_after_last_word_end_frames": 2.34,
+   "max_line": 40,
+   "n_lines": 1,
+   "chars": 40,
+   "cps": 17.54,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 72,
+   "start": 221.058,
+   "end": 223.808,
+   "start_frame": 6631.74,
+   "dur": 2.75,
+   "text": [
+    "So their model solves",
+    "for one unknown at a time."
+   ],
+   "segs": [
+    "n21"
+   ],
+   "first_word": "So",
+   "first_word_frame": 6634,
+   "seg_from": 6633,
+   "lead_frames": 2.26,
+   "last_word": "time.",
+   "last_word_end_frame": 6723,
+   "out_after_last_word_end_frames": -8.76,
+   "max_line": 26,
+   "n_lines": 2,
+   "chars": 48,
+   "cps": 17.45,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 73,
+   "start": 223.888,
+   "end": 224.968,
+   "start_frame": 6716.64,
+   "dur": 1.08,
+   "text": [
+    "To build a shape,"
+   ],
+   "segs": [
+    "n22"
+   ],
+   "first_word": "To",
+   "first_word_frame": 6719,
+   "seg_from": 6719,
+   "lead_frames": 2.36,
+   "last_word": "shape,",
+   "last_word_end_frame": 6750,
+   "out_after_last_word_end_frames": -0.96,
+   "max_line": 17,
+   "n_lines": 1,
+   "chars": 17,
+   "cps": 15.74,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 74,
+   "start": 225.048,
+   "end": 228.528,
+   "start_frame": 6751.44,
+   "dur": 3.48,
+   "text": [
+    "hold the object still and step",
+    "the sensor through known positions,"
+   ],
+   "segs": [
+    "n22"
+   ],
+   "first_word": "hold",
+   "first_word_frame": 6753,
+   "seg_from": null,
+   "lead_frames": 1.56,
+   "last_word": "positions,",
+   "last_word_end_frame": 6858,
+   "out_after_last_word_end_frames": -2.16,
+   "max_line": 35,
+   "n_lines": 2,
+   "chars": 66,
+   "cps": 18.97,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 75,
+   "start": 228.608,
+   "end": 231.688,
+   "start_frame": 6858.24,
+   "dur": 3.08,
+   "text": [
+    "spreading out its listening spots.",
+    "That's how the U was made."
+   ],
+   "segs": [
+    "n22"
+   ],
+   "first_word": "spreading",
+   "first_word_frame": 6860,
+   "seg_from": null,
+   "lead_frames": 1.76,
+   "last_word": "made.",
+   "last_word_end_frame": 6954,
+   "out_after_last_word_end_frames": -3.36,
+   "max_line": 34,
+   "n_lines": 2,
+   "chars": 61,
+   "cps": 19.81,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 76,
+   "start": 231.768,
+   "end": 234.208,
+   "start_frame": 6953.04,
+   "dur": 2.44,
+   "text": [
+    "To follow a person, hold the sensor still,"
+   ],
+   "segs": [
+    "n23"
+   ],
+   "first_word": "To",
+   "first_word_frame": 6955,
+   "seg_from": 6957,
+   "lead_frames": 1.96,
+   "last_word": "still,",
+   "last_word_end_frame": 7029,
+   "out_after_last_word_end_frames": -2.76,
+   "max_line": 42,
+   "n_lines": 1,
+   "chars": 42,
+   "cps": 17.21,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 77,
+   "start": 234.288,
+   "end": 237.048,
+   "start_frame": 7028.64,
+   "dur": 2.76,
+   "text": [
+    "and let each guess drift",
+    "a little between frames,"
+   ],
+   "segs": [
+    "n23"
+   ],
+   "first_word": "and",
+   "first_word_frame": 7031,
+   "seg_from": null,
+   "lead_frames": 2.36,
+   "last_word": "frames,",
+   "last_word_end_frame": 7113,
+   "out_after_last_word_end_frames": -1.56,
+   "max_line": 24,
+   "n_lines": 2,
+   "chars": 49,
+   "cps": 17.75,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 78,
+   "start": 237.128,
+   "end": 238.968,
+   "start_frame": 7113.84,
+   "dur": 1.84,
+   "text": [
+    "keeping the ones that still match."
+   ],
+   "segs": [
+    "n23"
+   ],
+   "first_word": "keeping",
+   "first_word_frame": 7116,
+   "seg_from": null,
+   "lead_frames": 2.16,
+   "last_word": "match.",
+   "last_word_end_frame": 7165,
+   "out_after_last_word_end_frames": 4.04,
+   "max_line": 34,
+   "n_lines": 1,
+   "chars": 34,
+   "cps": 18.48,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 79,
+   "start": 239.048,
+   "end": 241.975,
+   "start_frame": 7171.44,
+   "dur": 2.927,
+   "text": [
+    "The estimate keeps up instead of smearing."
+   ],
+   "segs": [
+    "n23"
+   ],
+   "first_word": "The",
+   "first_word_frame": 7173,
+   "seg_from": null,
+   "lead_frames": 1.56,
+   "last_word": "smearing.",
+   "last_word_end_frame": 7250,
+   "out_after_last_word_end_frames": 9.25,
+   "max_line": 42,
+   "n_lines": 1,
+   "chars": 42,
+   "cps": 14.35,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 80,
+   "start": 242.548,
+   "end": 245.968,
+   "start_frame": 7276.44,
+   "dur": 3.42,
+   "text": [
+    "So what can it actually do,",
+    "and where does it fail?"
+   ],
+   "segs": [
+    "n24"
+   ],
+   "first_word": "So",
+   "first_word_frame": 7278,
+   "seg_from": 7271,
+   "lead_frames": 1.56,
+   "last_word": "fail?",
+   "last_word_end_frame": 7388,
+   "out_after_last_word_end_frames": -8.96,
+   "max_line": 27,
+   "n_lines": 2,
+   "chars": 51,
+   "cps": 14.91,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 81,
+   "start": 246.048,
+   "end": 247.448,
+   "start_frame": 7381.44,
+   "dur": 1.4,
+   "text": [
+    "Take our opening clip:"
+   ],
+   "segs": [
+    "n25"
+   ],
+   "first_word": "Take",
+   "first_word_frame": 7383,
+   "seg_from": 7381,
+   "lead_frames": 1.56,
+   "last_word": "clip:",
+   "last_word_end_frame": 7425,
+   "out_after_last_word_end_frames": -1.56,
+   "max_line": 22,
+   "n_lines": 1,
+   "chars": 22,
+   "cps": 15.71,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 82,
+   "start": 247.528,
+   "end": 251.208,
+   "start_frame": 7425.84,
+   "dur": 3.68,
+   "text": [
+    "an off-the-shelf kit the authors",
+    "put at under a hundred dollars,"
+   ],
+   "segs": [
+    "n25"
+   ],
+   "first_word": "an",
+   "first_word_frame": 7428,
+   "seg_from": null,
+   "lead_frames": 2.16,
+   "last_word": "dollars,",
+   "last_word_end_frame": 7536,
+   "out_after_last_word_end_frames": 0.24,
+   "max_line": 32,
+   "n_lines": 2,
+   "chars": 64,
+   "cps": 17.39,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 83,
+   "start": 251.288,
+   "end": 254.053,
+   "start_frame": 7538.64,
+   "dur": 2.765,
+   "text": [
+    "held still while a person",
+    "walked behind a partition."
+   ],
+   "segs": [
+    "n25"
+   ],
+   "first_word": "held",
+   "first_word_frame": 7541,
+   "seg_from": null,
+   "lead_frames": 2.36,
+   "last_word": "partition.",
+   "last_word_end_frame": 7629,
+   "out_after_last_word_end_frames": -7.41,
+   "max_line": 26,
+   "n_lines": 2,
+   "chars": 52,
+   "cps": 18.81,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 84,
+   "start": 254.133,
+   "end": 255.853,
+   "start_frame": 7623.99,
+   "dur": 1.72,
+   "text": [
+    "Many of their tests had help:"
+   ],
+   "segs": [
+    "n26"
+   ],
+   "first_word": "Many",
+   "first_word_frame": 7626,
+   "seg_from": 7623,
+   "lead_frames": 2.01,
+   "last_word": "help:",
+   "last_word_end_frame": 7678,
+   "out_after_last_word_end_frames": -2.41,
+   "max_line": 29,
+   "n_lines": 1,
+   "chars": 29,
+   "cps": 16.86,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 85,
+   "start": 255.933,
+   "end": 258.733,
+   "start_frame": 7677.99,
+   "dur": 2.8,
+   "text": [
+    "safety-vest style reflective",
+    "material on the target,"
+   ],
+   "segs": [
+    "n26"
+   ],
+   "first_word": "safety-vest",
+   "first_word_frame": 7680,
+   "seg_from": null,
+   "lead_frames": 2.01,
+   "last_word": "target,",
+   "last_word_end_frame": 7764,
+   "out_after_last_word_end_frames": -2.01,
+   "max_line": 28,
+   "n_lines": 2,
+   "chars": 52,
+   "cps": 18.57,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 86,
+   "start": 258.813,
+   "end": 260.893,
+   "start_frame": 7764.39,
+   "dur": 2.08,
+   "text": [
+    "which sends far more light straight back."
+   ],
+   "segs": [
+    "n26"
+   ],
+   "first_word": "which",
+   "first_word_frame": 7766,
+   "seg_from": null,
+   "lead_frames": 1.61,
+   "last_word": "back.",
+   "last_word_end_frame": 7838,
+   "out_after_last_word_end_frames": -11.21,
+   "max_line": 41,
+   "n_lines": 1,
+   "chars": 41,
+   "cps": 19.71,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 87,
+   "start": 260.973,
+   "end": 264.448,
+   "start_frame": 7829.19,
+   "dur": 3.475,
+   "text": [
+    "Our clip's files don't say",
+    "if the walker wore any."
+   ],
+   "segs": [
+    "n27"
+   ],
+   "first_word": "Our",
+   "first_word_frame": 7831,
+   "seg_from": 7833,
+   "lead_frames": 1.81,
+   "last_word": "any.",
+   "last_word_end_frame": 7936,
+   "out_after_last_word_end_frames": -2.56,
+   "max_line": 26,
+   "n_lines": 2,
+   "chars": 50,
+   "cps": 14.39,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 88,
+   "start": 264.528,
+   "end": 265.968,
+   "start_frame": 7935.84,
+   "dur": 1.44,
+   "text": [
+    "But in a separate test,"
+   ],
+   "segs": [
+    "n28"
+   ],
+   "first_word": "But",
+   "first_word_frame": 7938,
+   "seg_from": 7936,
+   "lead_frames": 2.16,
+   "last_word": "test,",
+   "last_word_end_frame": 7981,
+   "out_after_last_word_end_frames": -1.96,
+   "max_line": 23,
+   "n_lines": 1,
+   "chars": 23,
+   "cps": 15.97,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 89,
+   "start": 266.048,
+   "end": 269.008,
+   "start_frame": 7981.44,
+   "dur": 2.96,
+   "text": [
+    "the authors report tracking",
+    "a person in ordinary clothes,"
+   ],
+   "segs": [
+    "n28"
+   ],
+   "first_word": "the",
+   "first_word_frame": 7983,
+   "seg_from": null,
+   "lead_frames": 1.56,
+   "last_word": "clothes,",
+   "last_word_end_frame": 8072,
+   "out_after_last_word_end_frames": -1.76,
+   "max_line": 29,
+   "n_lines": 2,
+   "chars": 57,
+   "cps": 19.26,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 90,
+   "start": 269.088,
+   "end": 271.273,
+   "start_frame": 8072.64,
+   "dur": 2.185,
+   "text": [
+    "capturing thirty frames a second."
+   ],
+   "segs": [
+    "n28"
+   ],
+   "first_word": "capturing",
+   "first_word_frame": 8075,
+   "seg_from": null,
+   "lead_frames": 2.36,
+   "last_word": "second.",
+   "last_word_end_frame": 8132,
+   "out_after_last_word_end_frames": 6.19,
+   "max_line": 33,
+   "n_lines": 1,
+   "chars": 33,
+   "cps": 15.1,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 91,
+   "start": 271.353,
+   "end": 273.113,
+   "start_frame": 8140.59,
+   "dur": 1.76,
+   "text": [
+    "What might this be good for?"
+   ],
+   "segs": [
+    "s40"
+   ],
+   "first_word": "What",
+   "first_word_frame": 8143,
+   "seg_from": 8141,
+   "lead_frames": 2.41,
+   "last_word": "for?",
+   "last_word_end_frame": 8189,
+   "out_after_last_word_end_frames": 4.39,
+   "max_line": 28,
+   "n_lines": 1,
+   "chars": 28,
+   "cps": 15.91,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 92,
+   "start": 273.193,
+   "end": 276.393,
+   "start_frame": 8195.79,
+   "dur": 3.2,
+   "text": [
+    "Picture a delivery robot nearing",
+    "a blind warehouse corner."
+   ],
+   "segs": [
+    "s40"
+   ],
+   "first_word": "Picture",
+   "first_word_frame": 8198,
+   "seg_from": null,
+   "lead_frames": 2.21,
+   "last_word": "corner.",
+   "last_word_end_frame": 8299,
+   "out_after_last_word_end_frames": -7.21,
+   "max_line": 32,
+   "n_lines": 2,
+   "chars": 58,
+   "cps": 18.13,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 93,
+   "start": 276.473,
+   "end": 278.473,
+   "start_frame": 8294.19,
+   "dur": 2.0,
+   "text": [
+    "With a suitable wall at the junction,"
+   ],
+   "segs": [
+    "n29"
+   ],
+   "first_word": "With",
+   "first_word_frame": 8296,
+   "seg_from": 8296,
+   "lead_frames": 1.81,
+   "last_word": "junction,",
+   "last_word_end_frame": 8356,
+   "out_after_last_word_end_frames": -1.81,
+   "max_line": 37,
+   "n_lines": 1,
+   "chars": 37,
+   "cps": 18.5,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 94,
+   "start": 278.553,
+   "end": 283.193,
+   "start_frame": 8356.59,
+   "dur": 4.64,
+   "text": [
+    "a sensor like this might give it",
+    "an early hint of movement out of sight."
+   ],
+   "segs": [
+    "n29"
+   ],
+   "first_word": "a",
+   "first_word_frame": 8359,
+   "seg_from": null,
+   "lead_frames": 2.41,
+   "last_word": "sight.",
+   "last_word_end_frame": 8505,
+   "out_after_last_word_end_frames": -9.21,
+   "max_line": 39,
+   "n_lines": 2,
+   "chars": 72,
+   "cps": 15.52,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 95,
+   "start": 283.273,
+   "end": 286.713,
+   "start_frame": 8498.19,
+   "dur": 3.44,
+   "text": [
+    "Just a fuzzy blob:",
+    "enough to say slow down,"
+   ],
+   "segs": [
+    "s42"
+   ],
+   "first_word": "Just",
+   "first_word_frame": 8500,
+   "seg_from": 8500,
+   "lead_frames": 1.81,
+   "last_word": "down,",
+   "last_word_end_frame": 8603,
+   "out_after_last_word_end_frames": -1.61,
+   "max_line": 24,
+   "n_lines": 2,
+   "chars": 43,
+   "cps": 12.5,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 96,
+   "start": 286.793,
+   "end": 288.333,
+   "start_frame": 8603.79,
+   "dur": 1.54,
+   "text": [
+    "not enough to say who's there."
+   ],
+   "segs": [
+    "s42"
+   ],
+   "first_word": "not",
+   "first_word_frame": 8606,
+   "seg_from": null,
+   "lead_frames": 2.21,
+   "last_word": "there.",
+   "last_word_end_frame": 8651,
+   "out_after_last_word_end_frames": -1.01,
+   "max_line": 30,
+   "n_lines": 1,
+   "chars": 30,
+   "cps": 19.48,
+   "ends_punct": true,
+   "line1_ends_punct": null
+  },
+  {
+   "n": 97,
+   "start": 288.413,
+   "end": 293.293,
+   "start_frame": 8652.39,
+   "dur": 4.88,
+   "text": [
+    "And plenty is still hard:",
+    "short range, dark or shiny walls,"
+   ],
+   "segs": [
+    "s43"
+   ],
+   "first_word": "And",
+   "first_word_frame": 8654,
+   "seg_from": 8656,
+   "lead_frames": 1.61,
+   "last_word": "walls,",
+   "last_word_end_frame": 8798,
+   "out_after_last_word_end_frames": 0.79,
+   "max_line": 33,
+   "n_lines": 2,
+   "chars": 59,
+   "cps": 12.09,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 98,
+   "start": 293.373,
+   "end": 296.658,
+   "start_frame": 8801.19,
+   "dur": 3.285,
+   "text": [
+    "bright sunlight, and fast",
+    "math on small hardware."
+   ],
+   "segs": [
+    "s43"
+   ],
+   "first_word": "bright",
+   "first_word_frame": 8803,
+   "seg_from": null,
+   "lead_frames": 1.81,
+   "last_word": "hardware.",
+   "last_word_end_frame": 8900,
+   "out_after_last_word_end_frames": -0.26,
+   "max_line": 25,
+   "n_lines": 2,
+   "chars": 49,
+   "cps": 14.92,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 99,
+   "start": 296.738,
+   "end": 299.593,
+   "start_frame": 8902.14,
+   "dur": 2.855,
+   "text": [
+    "The researchers call it",
+    "an early-stage prototype."
+   ],
+   "segs": [
+    "s43"
+   ],
+   "first_word": "The",
+   "first_word_frame": 8904,
+   "seg_from": null,
+   "lead_frames": 1.86,
+   "last_word": "prototype.",
+   "last_word_end_frame": 8995,
+   "out_after_last_word_end_frames": -7.21,
+   "max_line": 25,
+   "n_lines": 2,
+   "chars": 49,
+   "cps": 17.16,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 100,
+   "start": 299.673,
+   "end": 303.878,
+   "start_frame": 8990.19,
+   "dur": 4.205,
+   "text": [
+    "For now, it's a promising clue,",
+    "not a safety system."
+   ],
+   "segs": [
+    "n30"
+   ],
+   "first_word": "For",
+   "first_word_frame": 8992,
+   "seg_from": 8992,
+   "lead_frames": 1.81,
+   "last_word": "system.",
+   "last_word_end_frame": 9110,
+   "out_after_last_word_end_frames": 6.34,
+   "max_line": 31,
+   "n_lines": 2,
+   "chars": 52,
+   "cps": 12.37,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 101,
+   "start": 303.958,
+   "end": 307.948,
+   "start_frame": 9118.74,
+   "dur": 3.99,
+   "text": [
+    "Being out of sight isn't",
+    "the same as giving nothing away."
+   ],
+   "segs": [
+    "n31"
+   ],
+   "first_word": "Being",
+   "first_word_frame": 9121,
+   "seg_from": 9115,
+   "lead_frames": 2.26,
+   "last_word": "away.",
+   "last_word_end_frame": 9247,
+   "out_after_last_word_end_frames": -8.56,
+   "max_line": 32,
+   "n_lines": 2,
+   "chars": 57,
+   "cps": 14.29,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 102,
+   "start": 308.028,
+   "end": 311.355,
+   "start_frame": 9240.84,
+   "dur": 3.327,
+   "text": [
+    "To really hide, he'd have",
+    "to block the bounces too."
+   ],
+   "segs": [
+    "s47"
+   ],
+   "first_word": "To",
+   "first_word_frame": 9243,
+   "seg_from": 9242,
+   "lead_frames": 2.16,
+   "last_word": "too.",
+   "last_word_end_frame": 9332,
+   "out_after_last_word_end_frames": 8.65,
+   "max_line": 25,
+   "n_lines": 2,
+   "chars": 51,
+   "cps": 15.33,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  },
+  {
+   "n": 103,
+   "start": 314.063,
+   "end": 318.463,
+   "start_frame": 9421.89,
+   "dur": 4.4,
+   "text": [
+    "This is Future Got Weird:",
+    "the strange future, explained."
+   ],
+   "segs": [
+    "s48"
+   ],
+   "first_word": "This",
+   "first_word_frame": 9424,
+   "seg_from": 9422,
+   "lead_frames": 2.11,
+   "last_word": "explained.",
+   "last_word_end_frame": 9551,
+   "out_after_last_word_end_frames": 2.89,
+   "max_line": 30,
+   "n_lines": 2,
+   "chars": 56,
+   "cps": 12.73,
+   "ends_punct": true,
+   "line1_ends_punct": true
+  },
+  {
+   "n": 104,
+   "start": 318.543,
+   "end": 321.837,
+   "start_frame": 9556.29,
+   "dur": 3.294,
+   "text": [
+    "Subscribe for more, and we'll",
+    "see you around the corner."
+   ],
+   "segs": [
+    "s48"
+   ],
+   "first_word": "Subscribe",
+   "first_word_frame": 9558,
+   "seg_from": null,
+   "lead_frames": 1.71,
+   "last_word": "corner.",
+   "last_word_end_frame": 9633,
+   "out_after_last_word_end_frames": 22.11,
+   "max_line": 29,
+   "n_lines": 2,
+   "chars": 56,
+   "cps": 17.0,
+   "ends_punct": true,
+   "line1_ends_punct": false
+  }
+ ],
+ "lead_frames_summary": {
+  "min": 1.51,
+  "max": 2.51,
+  "median": 1.935,
+  "outside_1_to_3": []
+ },
+ "line_over_42": [],
+ "over_2_lines": [],
+ "cps_over_20": [],
+ "cps_over_17": [
+  [
+   1,
+   17.57
+  ],
+  [
+   4,
+   19.26
+  ],
+  [
+   6,
+   17.13
+  ],
+  [
+   7,
+   17.16
+  ],
+  [
+   9,
+   18.23
+  ],
+  [
+   10,
+   18.71
+  ],
+  [
+   20,
+   17.05
+  ],
+  [
+   26,
+   17.15
+  ],
+  [
+   31,
+   18.38
+  ],
+  [
+   32,
+   18.64
+  ],
+  [
+   34,
+   18.25
+  ],
+  [
+   39,
+   18.35
+  ],
+  [
+   41,
+   18.39
+  ],
+  [
+   43,
+   18.99
+  ],
+  [
+   44,
+   17.65
+  ],
+  [
+   47,
+   18.18
+  ],
+  [
+   51,
+   17.31
+  ],
+  [
+   52,
+   19.15
+  ],
+  [
+   56,
+   18.75
+  ],
+  [
+   57,
+   17.24
+  ],
+  [
+   60,
+   17.29
+  ],
+  [
+   62,
+   19.37
+  ],
+  [
+   64,
+   19.19
+  ],
+  [
+   65,
+   17.5
+  ],
+  [
+   69,
+   17.57
+  ],
+  [
+   71,
+   17.54
+  ],
+  [
+   72,
+   17.45
+  ],
+  [
+   74,
+   18.97
+  ],
+  [
+   75,
+   19.81
+  ],
+  [
+   76,
+   17.21
+  ],
+  [
+   77,
+   17.75
+  ],
+  [
+   78,
+   18.48
+  ],
+  [
+   82,
+   17.39
+  ],
+  [
+   83,
+   18.81
+  ],
+  [
+   85,
+   18.57
+  ],
+  [
+   86,
+   19.71
+  ],
+  [
+   89,
+   19.26
+  ],
+  [
+   92,
+   18.13
+  ],
+  [
+   93,
+   18.5
+  ],
+  [
+   96,
+   19.48
+  ],
+  [
+   99,
+   17.16
+  ]
+ ],
+ "cues_spanning_segments": [],
+ "cue_ends_without_punct": [
+  [
+   3,
+   [
+    "Yet researchers have",
+    "used light bouncing off"
+   ],
+   [
+    "a wall to track someone",
+    "hidden around a corner."
+   ]
+  ],
+  [
+   30,
+   [
+    "But the detour is there and back,",
+    "so each extra nanosecond puts him"
+   ],
+   [
+    "only about fifteen centimetres",
+    "farther from the wall spot."
+   ]
+  ],
+  [
+   47,
+   [
+    "Moved through known positions,",
+    "the sensor behind that faint bump"
+   ],
+   [
+    "rebuilt the rough outline of a hidden U."
+   ]
+  ]
+ ],
+ "line_breaks_without_punct": [
+  [
+   3,
+   [
+    "Yet researchers have",
+    "used light bouncing off"
+   ]
+  ],
+  [
+   4,
+   [
+    "a wall to track someone",
+    "hidden around a corner."
+   ]
+  ],
+  [
+   5,
+   [
+    "That dot is their position",
+    "estimate. Not a photograph."
+   ]
+  ],
+  [
+   6,
+   [
+    "The trick is timing: light that reaches",
+    "him takes the long way round,"
+   ]
+  ],
+  [
+   10,
+   [
+    "a camera that clocks",
+    "its own light's round trip."
+   ]
+  ],
+  [
+   11,
+   [
+    "So how do you turn a tiny",
+    "delay into a location?"
+   ]
+  ],
+  [
+   12,
+   [
+    "First, a puzzle: why does",
+    "a plain wall work at all?"
+   ]
+  ],
+  [
+   17,
+   [
+    "Everything coming back",
+    "is a blend of many paths."
+   ]
+  ],
+  [
+   19,
+   [
+    "Nearly everything coming back",
+    "bounced once, off the wall."
+   ]
+  ],
+  [
+   20,
+   [
+    "Our friend's echo bounced",
+    "three times, so it's tiny."
+   ]
+  ],
+  [
+   22,
+   [
+    "with a different sensor and hidden",
+    "object: the wall's big echo, then,"
+   ]
+  ],
+  [
+   26,
+   [
+    "Its timing says how much",
+    "farther the light travelled."
+   ]
+  ],
+  [
+   28,
+   [
+    "Simplify it: the sensor flashes",
+    "and listens at one spot on the wall."
+   ]
+  ],
+  [
+   29,
+   [
+    "Light covers about thirty",
+    "centimetres every nanosecond."
+   ]
+  ],
+  [
+   31,
+   [
+    "only about fifteen centimetres",
+    "farther from the wall spot."
+   ]
+  ],
+  [
+   32,
+   [
+    "Measure the extra delay, and you",
+    "know how far he is from that spot."
+   ]
+  ],
+  [
+   42,
+   [
+    "In practice, a computer",
+    "weighs many spots at once,"
+   ]
+  ],
+  [
+   43,
+   [
+    "trying positions and keeping those",
+    "whose predicted echoes match."
+   ]
+  ],
+  [
+   45,
+   [
+    "That's why the answer is a likely",
+    "location, or a rough shape."
+   ]
+  ],
+  [
+   49,
+   [
+    "In 2012, an MIT team rebuilt the rough",
+    "3D shape of a hidden mannequin."
+   ]
+  ],
+  [
+   50,
+   [
+    "By 2021, others had live",
+    "video around corners."
+   ]
+  ],
+  [
+   52,
+   [
+    "One team had even tracked hidden",
+    "objects with a cheap sensor."
+   ]
+  ],
+  [
+   54,
+   [
+    "a team from MIT and Dartmouth tried",
+    "the small time-of-flight sensors,"
+   ]
+  ],
+  [
+   57,
+   [
+    "phone makers often keep",
+    "the raw data private."
+   ]
+  ],
+  [
+   58,
+   [
+    "Their new idea: a model",
+    "that keeps track of what moved,"
+   ]
+  ],
+  [
+   62,
+   [
+    "The team's smartphone-grade",
+    "device had about a hundred pixels:"
+   ]
+  ],
+  [
+   64,
+   [
+    "And if you hold one in your",
+    "hand, it jiggles."
+   ]
+  ],
+  [
+   65,
+   [
+    "Their fix borrows night mode's",
+    "trick from phone cameras:"
+   ]
+  ],
+  [
+   66,
+   [
+    "stack many quick, dim frames",
+    "into one better estimate."
+   ]
+  ],
+  [
+   69,
+   [
+    "The sensor jiggles, and its listening",
+    "spots land somewhere new."
+   ]
+  ],
+  [
+   70,
+   [
+    "Just add them up, and echoes",
+    "from different places blur into one smear,"
+   ]
+  ],
+  [
+   72,
+   [
+    "So their model solves",
+    "for one unknown at a time."
+   ]
+  ],
+  [
+   74,
+   [
+    "hold the object still and step",
+    "the sensor through known positions,"
+   ]
+  ],
+  [
+   77,
+   [
+    "and let each guess drift",
+    "a little between frames,"
+   ]
+  ],
+  [
+   82,
+   [
+    "an off-the-shelf kit the authors",
+    "put at under a hundred dollars,"
+   ]
+  ],
+  [
+   83,
+   [
+    "held still while a person",
+    "walked behind a partition."
+   ]
+  ],
+  [
+   85,
+   [
+    "safety-vest style reflective",
+    "material on the target,"
+   ]
+  ],
+  [
+   87,
+   [
+    "Our clip's files don't say",
+    "if the walker wore any."
+   ]
+  ],
+  [
+   89,
+   [
+    "the authors report tracking",
+    "a person in ordinary clothes,"
+   ]
+  ],
+  [
+   92,
+   [
+    "Picture a delivery robot nearing",
+    "a blind warehouse corner."
+   ]
+  ],
+  [
+   94,
+   [
+    "a sensor like this might give it",
+    "an early hint of movement out of sight."
+   ]
+  ],
+  [
+   98,
+   [
+    "bright sunlight, and fast",
+    "math on small hardware."
+   ]
+  ],
+  [
+   99,
+   [
+    "The researchers call it",
+    "an early-stage prototype."
+   ]
+  ],
+  [
+   101,
+   [
+    "Being out of sight isn't",
+    "the same as giving nothing away."
+   ]
+  ],
+  [
+   102,
+   [
+    "To really hide, he'd have",
+    "to block the bounces too."
+   ]
+  ],
+  [
+   104,
+   [
+    "Subscribe for more, and we'll",
+    "see you around the corner."
+   ]
+  ]
+ ],
+ "short_cues_under_1s": [],
+ "cue_out_before_last_word_end": [
+  [
+   1,
+   -3.11,
+   "him."
+  ],
+  [
+   2,
+   -7.36,
+   "wall."
+  ],
+  [
+   3,
+   -1.96,
+   "off"
+  ],
+  [
+   4,
+   -8.36,
+   "corner."
+  ],
+  [
+   6,
+   -0.01,
+   "round,"
+  ],
+  [
+   7,
+   -5.41,
+   "later."
+  ],
+  [
+   8,
+   -6.91,
+   "later."
+  ],
+  [
+   9,
+   -1.91,
+   "sensor,"
+  ],
+  [
+   13,
+   -6.16,
+   "visible."
+  ],
+  [
+   14,
+   -2.36,
+   "close."
+  ],
+  [
+   15,
+   -2.16,
+   "mirror,"
+  ],
+  [
+   16,
+   -2.96,
+   "lamp."
+  ],
+  [
+   17,
+   -0.45,
+   "paths."
+  ],
+  [
+   18,
+   -8.36,
+   "timing."
+  ],
+  [
+   19,
+   -8.41,
+   "wall."
+  ],
+  [
+   20,
+   -4.51,
+   "tiny."
+  ],
+  [
+   21,
+   -3.11,
+   "team,"
+  ],
+  [
+   22,
+   -2.31,
+   "then,"
+  ],
+  [
+   25,
+   -5.01,
+   "clue."
+  ],
+  [
+   28,
+   -9.36,
+   "wall."
+  ],
+  [
+   30,
+   -2.16,
+   "him"
+  ],
+  [
+   31,
+   -10.11,
+   "spot."
+  ],
+  [
+   32,
+   -6.86,
+   "spot."
+  ],
+  [
+   33,
+   -8.41,
+   "far."
+  ],
+  [
+   38,
+   -3.16,
+   "band,"
+  ],
+  [
+   39,
+   -2.01,
+   "patch."
+  ],
+  [
+   41,
+   -5.41,
+   "shrinks."
+  ],
+  [
+   43,
+   -8.71,
+   "match."
+  ],
+  [
+   44,
+   -7.11,
+   "after."
+  ],
+  [
+   45,
+   -5.12,
+   "shape."
+  ],
+  [
+   47,
+   -1.51,
+   "bump"
+  ],
+  [
+   50,
+   -4.96,
+   "corners."
+  ],
+  [
+   52,
+   -3.21,
+   "sensor."
+  ],
+  [
+   53,
+   -2.01,
+   "2026,"
+  ],
+  [
+   54,
+   -2.21,
+   "sensors,"
+  ],
+  [
+   55,
+   -5.56,
+   "gadgets."
+  ],
+  [
+   56,
+   -1.76,
+   "yet:"
+  ],
+  [
+   57,
+   -8.06,
+   "private."
+  ],
+  [
+   58,
+   -1.06,
+   "moved,"
+  ],
+  [
+   60,
+   -5.91,
+   "that?"
+  ],
+  [
+   61,
+   -2.11,
+   "echoes."
+  ],
+  [
+   62,
+   -1.71,
+   "pixels:"
+  ],
+  [
+   64,
+   -8.16,
+   "jiggles."
+  ],
+  [
+   65,
+   -1.76,
+   "cameras:"
+  ],
+  [
+   66,
+   -0.8,
+   "estimate."
+  ],
+  [
+   69,
+   -2.66,
+   "new."
+  ],
+  [
+   72,
+   -8.76,
+   "time."
+  ],
+  [
+   73,
+   -0.96,
+   "shape,"
+  ],
+  [
+   74,
+   -2.16,
+   "positions,"
+  ],
+  [
+   75,
+   -3.36,
+   "made."
+  ],
+  [
+   76,
+   -2.76,
+   "still,"
+  ],
+  [
+   77,
+   -1.56,
+   "frames,"
+  ],
+  [
+   80,
+   -8.96,
+   "fail?"
+  ],
+  [
+   81,
+   -1.56,
+   "clip:"
+  ],
+  [
+   83,
+   -7.41,
+   "partition."
+  ],
+  [
+   84,
+   -2.41,
+   "help:"
+  ],
+  [
+   85,
+   -2.01,
+   "target,"
+  ],
+  [
+   86,
+   -11.21,
+   "back."
+  ],
+  [
+   87,
+   -2.56,
+   "any."
+  ],
+  [
+   88,
+   -1.96,
+   "test,"
+  ],
+  [
+   89,
+   -1.76,
+   "clothes,"
+  ],
+  [
+   92,
+   -7.21,
+   "corner."
+  ],
+  [
+   93,
+   -1.81,
+   "junction,"
+  ],
+  [
+   94,
+   -9.21,
+   "sight."
+  ],
+  [
+   95,
+   -1.61,
+   "down,"
+  ],
+  [
+   96,
+   -1.01,
+   "there."
+  ],
+  [
+   98,
+   -0.26,
+   "hardware."
+  ],
+  [
+   99,
+   -7.21,
+   "prototype."
+  ],
+  [
+   101,
+   -8.56,
+   "away."
+  ]
+ ]
+}

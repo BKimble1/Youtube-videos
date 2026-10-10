@@ -32,12 +32,13 @@ def word_at(f):
 
 n = args.b - args.a + 1
 W, H = 1920, 1080
-p = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{args.a/30:.6f}", "-i", V, "-frames:v", str(n),
+p = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{args.a/30:.6f}", "-i", V, "-frames:v", str((n + args.step - 1) // args.step),
+                    "-vf", f"select=not(mod(n\\,{args.step}))", "-vsync", "0",
                     "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True)
 buf = np.frombuffer(p.stdout, np.uint8)
 got = len(buf) // (W * H * 3)
 frames = buf[: got * W * H * 3].reshape(got, H, W, 3)
-idx = list(range(0, got, args.step))
+idx = list(range(got))
 if args.crop:
     x, y, w, h = map(int, args.crop.split(","))
 else:
@@ -57,7 +58,7 @@ import os
 if args.save:
     os.makedirs(args.save, exist_ok=True)
 for k, i in enumerate(idx):
-    f = args.a + i
+    f = args.a + i * args.step
     im = Image.fromarray(frames[i][y:y + h, x:x + w])
     if args.save:
         Image.fromarray(frames[i]).save(os.path.join(args.save, f"f{f}.png"))

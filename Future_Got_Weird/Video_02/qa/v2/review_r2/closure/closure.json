@@ -1,0 +1,15 @@
+{
+ "check": "defect closure (all 44 r1 defects) on exports/Future_Got_Weird_Video_02_v2_UPLOAD_1080p.mp4 (9,716 frames, 5:23.9)",
+ "paths": "evidence paths are relative to qa/v2/review_r2/",
+ "summary": {"closed": 37, "partly": 6, "open": 1, "regressed": 0, "new": 0},
+ "not_closed": [
+  {"id": "V2-R1-04", "status": "partly", "why": "picture fixed; SHOTPLAN_V2.md V10.1 row (line 234) not updated to list the 'Real data' headline and the outside-card question title"},
+  {"id": "V2-R1-12", "status": "partly", "why": "by design: uh_oh at f3307, -6 dB, still 3-8 dB above the tail of 'place.' (110.59-110.79 s, speech band)"},
+  {"id": "V2-R1-28", "status": "partly", "why": "by design: closed scroll alone f4460-4470 (11 frames, 0.37 s) before the shelf edge enters f4471"},
+  {"id": "V2-R1-38", "status": "partly", "why": "by design: readout inset 428 px = 22.3% of frame width (not 25%); labelled; blank holds about 0.55 s"},
+  {"id": "V2-R1-40", "status": "partly", "why": "beep cue -8 dB as asked, measured 5-7 dB lower in band, but still 4-5 dB above the '-t's' of 'It's' at 2.78-2.80 s and 11 dB at 2.76 s"},
+  {"id": "V2-R1-42", "status": "partly", "why": "the four named breaks fixed and max 19.8 cps, but the re-break added new splits: cues 3/4 'bouncing off | a wall', cue 45 'a likely / location', cue 98 'and fast / math', cues 30/31 'puts him | only about fifteen centimetres'"},
+  {"id": "V2-R1-44", "status": "open", "why": "v2/QA_V2.md does not exist; still cited at package/UPLOAD_PACKAGE.md lines 12 and 66; the lead writes it at the end"}
+ ],
+ "measurements": "closure/audio/audio_measurements.txt; closure/captions_check.txt; closure/dense/motion.json (V6)"
+}

@@ -1,0 +1,438 @@
+{
+ "threshold": 0.05,
+ "scenes": {
+  "V6": {
+   "seconds": 11.8,
+   "mean_energy": 0.635,
+   "still_seconds": 2.8,
+   "still_share": 0.234,
+   "longest_still_s": 1.8
+  }
+ },
+ "still_runs": [
+  {
+   "scene": "?",
+   "from": 618,
+   "to": 664,
+   "seconds": 1.57,
+   "t": "0:20.6",
+   "spoken": "few billionths of a second later. This takes"
+  },
+  {
+   "scene": "?",
+   "from": 690,
+   "to": 734,
+   "seconds": 1.5,
+   "t": "0:23.0",
+   "spoken": "time-of-flight sensor, a camera that"
+  },
+  {
+   "scene": "?",
+   "from": 806,
+   "to": 837,
+   "seconds": 1.07,
+   "t": "0:26.9",
+   "spoken": "trip. So how do you turn a tiny"
+  },
+  {
+   "scene": "?",
+   "from": 961,
+   "to": 1004,
+   "seconds": 1.47,
+   "t": "0:32.0",
+   "spoken": "puzzle: why does a plain wall work at"
+  },
+  {
+   "scene": "?",
+   "from": 1234,
+   "to": 1265,
+   "seconds": 1.07,
+   "t": "0:41.1",
+   "spoken": "every which way, so each spot"
+  },
+  {
+   "scene": "?",
+   "from": 1662,
+   "to": 1688,
+   "seconds": 0.9,
+   "t": "0:55.4",
+   "spoken": "echo bounced three times,"
+  },
+  {
+   "scene": "?",
+   "from": 1733,
+   "to": 1776,
+   "seconds": 1.47,
+   "t": "0:57.8",
+   "spoken": "tiny. This is real data from the same team,"
+  },
+  {
+   "scene": "?",
+   "from": 1783,
+   "to": 1809,
+   "seconds": 0.9,
+   "t": "0:59.4",
+   "spoken": "same team, with a different sensor"
+  },
+  {
+   "scene": "?",
+   "from": 1816,
+   "to": 1876,
+   "seconds": 2.03,
+   "t": "1:00.5",
+   "spoken": "different sensor and hidden object: the wall's"
+  },
+  {
+   "scene": "?",
+   "from": 1901,
+   "to": 1972,
+   "seconds": 2.4,
+   "t": "1:03.4",
+   "spoken": "big echo, then, a few nanoseconds later,"
+  },
+  {
+   "scene": "?",
+   "from": 2040,
+   "to": 2092,
+   "seconds": 1.77,
+   "t": "1:08.0",
+   "spoken": "to see. In this capture, hundreds"
+  },
+  {
+   "scene": "?",
+   "from": 2099,
+   "to": 2148,
+   "seconds": 1.67,
+   "t": "1:10.0",
+   "spoken": "hundreds of times weaker. That"
+  },
+  {
+   "scene": "?",
+   "from": 2244,
+   "to": 2282,
+   "seconds": 1.3,
+   "t": "1:14.8",
+   "spoken": "farther the light travelled."
+  },
+  {
+   "scene": "?",
+   "from": 2344,
+   "to": 2386,
+   "seconds": 1.43,
+   "t": "1:18.1",
+   "spoken": "Simplify it: the sensor flashes"
+  },
+  {
+   "scene": "?",
+   "from": 2390,
+   "to": 2429,
+   "seconds": 1.33,
+   "t": "1:19.7",
+   "spoken": "sensor flashes and listens at one spot"
+  },
+  {
+   "scene": "?",
+   "from": 2470,
+   "to": 2493,
+   "seconds": 0.8,
+   "t": "1:22.3",
+   "spoken": "wall. Light covers about thirty"
+  },
+  {
+   "scene": "?",
+   "from": 2498,
+   "to": 2532,
+   "seconds": 1.17,
+   "t": "1:23.3",
+   "spoken": "about thirty centimetres every nanosecond."
+  },
+  {
+   "scene": "?",
+   "from": 2671,
+   "to": 2695,
+   "seconds": 0.83,
+   "t": "1:29.0",
+   "spoken": "extra nanosecond puts him only"
+  },
+  {
+   "scene": "?",
+   "from": 2719,
+   "to": 2775,
+   "seconds": 1.9,
+   "t": "1:30.6",
+   "spoken": "about fifteen centimetres farther from the wall spot."
+  },
+  {
+   "scene": "?",
+   "from": 2805,
+   "to": 2846,
+   "seconds": 1.4,
+   "t": "1:33.5",
+   "spoken": "spot. Measure the extra delay, and you know"
+  },
+  {
+   "scene": "?",
+   "from": 2871,
+   "to": 2895,
+   "seconds": 0.83,
+   "t": "1:35.7",
+   "spoken": "how far he is from that spot."
+  },
+  {
+   "scene": "?",
+   "from": 3132,
+   "to": 3159,
+   "seconds": 0.93,
+   "t": "1:44.4",
+   "spoken": "at a second spot. Another"
+  },
+  {
+   "scene": "?",
+   "from": 3167,
+   "to": 3193,
+   "seconds": 0.9,
+   "t": "1:45.6",
+   "spoken": "Another delay, another arc."
+  },
+  {
+   "scene": "?",
+   "from": 3386,
+   "to": 3419,
+   "seconds": 1.13,
+   "t": "1:52.9",
+   "spoken": "bit fuzzy, so each arc is"
+  },
+  {
+   "scene": "?",
+   "from": 3443,
+   "to": 3501,
+   "seconds": 1.97,
+   "t": "1:54.8",
+   "spoken": "really a band, and the bands overlap in a small patch."
+  },
+  {
+   "scene": "?",
+   "from": 3560,
+   "to": 3635,
+   "seconds": 2.53,
+   "t": "1:58.7",
+   "spoken": "are close, so the patch is long and blurry. Spread"
+  },
+  {
+   "scene": "?",
+   "from": 3672,
+   "to": 3720,
+   "seconds": 1.63,
+   "t": "2:02.4",
+   "spoken": "it shrinks. In practice, a computer"
+  },
+  {
+   "scene": "?",
+   "from": 3769,
+   "to": 3793,
+   "seconds": 0.83,
+   "t": "2:05.6",
+   "spoken": "spots at once, trying"
+  },
+  {
+   "scene": "?",
+   "from": 3929,
+   "to": 3967,
+   "seconds": 1.3,
+   "t": "2:11.0",
+   "spoken": "on assumptions, like what kind of object"
+  },
+  {
+   "scene": "?",
+   "from": 4064,
+   "to": 4114,
+   "seconds": 1.7,
+   "t": "2:15.5",
+   "spoken": "likely location, or a rough shape."
+  },
+  {
+   "scene": "V6",
+   "from": 4324,
+   "to": 4352,
+   "seconds": 0.97,
+   "t": "2:24.1",
+   "spoken": "rough outline of a hidden U."
+  },
+  {
+   "scene": "V6",
+   "from": 4390,
+   "to": 4443,
+   "seconds": 1.8,
+   "t": "2:26.3",
+   "spoken": ""
+  },
+  {
+   "scene": "?",
+   "from": 4649,
+   "to": 4673,
+   "seconds": 0.83,
+   "t": "2:35.0",
+   "spoken": "2021, others"
+  },
+  {
+   "scene": "?",
+   "from": 4858,
+   "to": 4884,
+   "seconds": 0.9,
+   "t": "2:41.9",
+   "spoken": "hidden objects with a cheap sensor."
+  },
+  {
+   "scene": "?",
+   "from": 5019,
+   "to": 5048,
+   "seconds": 1.0,
+   "t": "2:47.3",
+   "spoken": "from MIT and Dartmouth tried"
+  },
+  {
+   "scene": "?",
+   "from": 5167,
+   "to": 5215,
+   "seconds": 1.63,
+   "t": "2:52.2",
+   "spoken": "LiDAR, found in phones and gadgets. Don't"
+  },
+  {
+   "scene": "?",
+   "from": 5270,
+   "to": 5307,
+   "seconds": 1.27,
+   "t": "2:55.7",
+   "spoken": "this yet: phone makers often keep"
+  },
+  {
+   "scene": "?",
+   "from": 5380,
+   "to": 5409,
+   "seconds": 1.0,
+   "t": "2:59.3",
+   "spoken": "new idea: a model that"
+  },
+  {
+   "scene": "?",
+   "from": 5563,
+   "to": 5611,
+   "seconds": 1.63,
+   "t": "3:05.4",
+   "spoken": "Why would a smaller, cheaper sensor need"
+  },
+  {
+   "scene": "?",
+   "from": 5679,
+   "to": 5710,
+   "seconds": 1.07,
+   "t": "3:09.3",
+   "spoken": "fainter echoes. The team's"
+  },
+  {
+   "scene": "?",
+   "from": 5732,
+   "to": 5763,
+   "seconds": 1.07,
+   "t": "3:11.1",
+   "spoken": "smartphone-grade device had about a"
+  },
+  {
+   "scene": "?",
+   "from": 5824,
+   "to": 5858,
+   "seconds": 1.17,
+   "t": "3:14.1",
+   "spoken": "hundred listening spots. And if"
+  },
+  {
+   "scene": "?",
+   "from": 6448,
+   "to": 6478,
+   "seconds": 1.03,
+   "t": "3:34.9",
+   "spoken": "them up, and echoes from different places"
+  },
+  {
+   "scene": "?",
+   "from": 6607,
+   "to": 6631,
+   "seconds": 0.83,
+   "t": "3:40.2",
+   "spoken": "someone walking. So their"
+  },
+  {
+   "scene": "?",
+   "from": 6769,
+   "to": 6800,
+   "seconds": 1.07,
+   "t": "3:45.6",
+   "spoken": "object still and step the sensor"
+  },
+  {
+   "scene": "?",
+   "from": 6835,
+   "to": 6862,
+   "seconds": 0.93,
+   "t": "3:47.8",
+   "spoken": "known positions, spreading"
+  },
+  {
+   "scene": "?",
+   "from": 6873,
+   "to": 6915,
+   "seconds": 1.43,
+   "t": "3:49.1",
+   "spoken": "spreading out its listening spots. That's how"
+  },
+  {
+   "scene": "?",
+   "from": 6921,
+   "to": 6953,
+   "seconds": 1.1,
+   "t": "3:50.7",
+   "spoken": "That's how the U was made. To"
+  },
+  {
+   "scene": "?",
+   "from": 6985,
+   "to": 7015,
+   "seconds": 1.03,
+   "t": "3:52.8",
+   "spoken": "person, hold the sensor still,"
+  },
+  {
+   "scene": "?",
+   "from": 7805,
+   "to": 7828,
+   "seconds": 0.8,
+   "t": "4:20.2",
+   "spoken": "light straight back. Our"
+  },
+  {
+   "scene": "?",
+   "from": 8343,
+   "to": 8366,
+   "seconds": 0.8,
+   "t": "4:38.1",
+   "spoken": "junction, a sensor like"
+  },
+  {
+   "scene": "?",
+   "from": 8954,
+   "to": 8989,
+   "seconds": 1.2,
+   "t": "4:58.5",
+   "spoken": "early-stage prototype. For now,"
+  },
+  {
+   "scene": "?",
+   "from": 9425,
+   "to": 9715,
+   "seconds": 9.7,
+   "t": "5:14.2",
+   "spoken": "This is Future Got Weird: the strange future, explained. Subscribe for more, and we'll see you around the corner."
+  }
+ ]
+}

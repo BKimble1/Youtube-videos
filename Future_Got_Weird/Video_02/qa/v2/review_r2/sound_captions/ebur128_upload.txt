@@ -1,0 +1,25 @@
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    comment         : Made with Remotion 4.0.533
+    encoder         : Lavf60.16.100
+  Stream #0:0(und): Audio: pcm_s16le, 48000 Hz, stereo, s16, 1536 kb/s (default)
+    Metadata:
+      handler_name    : SoundHandler
+      vendor_id       : [0][0][0][0]
+      encoder         : Lavc60.31.102 pcm_s16le
+[out#0/null @ 0x55f60e97f4c0] video:0kB audio:60728kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: unknown
+size=N/A time=00:05:23.80 bitrate=N/A speed=71.9x    
+[Parsed_ebur128_0 @ 0x55f60ea838c0] Summary:
+
+  Integrated loudness:
+    I:         -15.5 LUFS
+    Threshold: -25.9 LUFS
+
+  Loudness range:
+    LRA:         2.2 LU
+    Threshold: -35.9 LUFS
+    LRA low:   -17.1 LUFS
+    LRA high:  -14.9 LUFS
+
+  True peak:
+    Peak:       -1.3 dBFS
