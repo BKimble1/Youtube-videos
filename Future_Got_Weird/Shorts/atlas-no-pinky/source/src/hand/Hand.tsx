@@ -140,7 +140,7 @@ export const capsulePath = (pts: V[], w: number): string => {
 
 const polyStr = (pts: V[]) => pts.map((p) => `${p.x},${p.y}`).join(' ');
 
-const Digit: React.FC<{def: DigitDef; pose: DigitPose; kind: Kind; shade?: number; hl?: number}> = ({def, pose, kind, shade = 0, hl = 0}) => {
+const Digit: React.FC<{def: DigitDef; pose: DigitPose; kind: Kind; shade?: number; hl?: number; nails?: boolean}> = ({def, pose, kind, shade = 0, hl = 0, nails = false}) => {
   const L = kind === 'robot' ? ROBOT : HUMAN;
   const pts = digitPts(def, pose);
   const body = shade ? mix(L.body, C.ink, shade) : L.body;
@@ -167,7 +167,9 @@ const Digit: React.FC<{def: DigitDef; pose: DigitPose; kind: Kind; shade?: numbe
           {[pts[1], pts[2]].map((p, i) => (
             <circle key={i} cx={p.x} cy={p.y} r={2.6} fill={L.dot} opacity={0.6} />
           ))}
-          <ellipse cx={pts[3].x} cy={pts[3].y} rx={w * 0.2} ry={w * 0.15} fill="none" />
+          {nails && (
+            <ellipse cx={pts[3].x - (pts[3].x - pts[2].x) * 0.18} cy={pts[3].y - (pts[3].y - pts[2].y) * 0.18} rx={w * 0.3} ry={w * 0.22} fill="#FBE9DC" stroke={C.ink} strokeWidth={2.5} transform={`rotate(${(Math.atan2(pts[3].y - pts[2].y, pts[3].x - pts[2].x) * 180) / Math.PI} ${pts[3].x - (pts[3].x - pts[2].x) * 0.18} ${pts[3].y - (pts[3].y - pts[2].y) * 0.18})`} />
+          )}
         </>
       )}
     </g>
@@ -192,13 +194,18 @@ export type HandProps = {
   ghostPinky?: number;
   /** extra palm tint pulse 0..1 */
   pulse?: number;
+  nails?: boolean; // human hand seen from the back
+  armW?: number; // forearm tube width (hand units)
+  ghostSide?: number; // dashed fourth-finger slot beyond the ring finger (robot side view)
+  ghostAng?: [number, number, number]; // absolute segment angles for that slot (default fans up)
   children?: React.ReactNode; // drawn inside hand-local space, above the palm, below the digits
   front?: React.ReactNode; // drawn above the digits
 };
 
+export const GHOST_SIDE: DigitDef = {bx: 42, by: -46, dx: 42, dy: -45, len: [54, 40, 34], w: 42};
 export const GHOST_PINKY: DigitDef = {bx: 108, by: -44, len: [48, 36, 32], w: 44};
 
-export const Hand: React.FC<HandProps> = ({kind = 'robot', view = 'front', x, y, scale = 1, rot = 0, flip = false, pose = {}, highlight = {}, forearm = null, ghostPinky = 0, pulse = 0, children, front}) => {
+export const Hand: React.FC<HandProps> = ({kind = 'robot', view = 'front', x, y, scale = 1, rot = 0, flip = false, pose = {}, highlight = {}, forearm = null, ghostPinky = 0, pulse = 0, nails = false, armW, ghostSide = 0, ghostAng, children, front}) => {
   const lay = LAYOUTS[`${kind}-${view}`];
   const look = kind === 'robot' ? ROBOT : HUMAN;
   const poseOf = (n: DigitName) => pose[n] ?? lay.rest[n];
@@ -224,8 +231,8 @@ export const Hand: React.FC<HandProps> = ({kind = 'robot', view = 'front', x, y,
         const sx = lp.x, sy = lp.y;
         return (
           <g strokeLinecap="round" fill="none">
-            <line x1={cuff.x - 10} y1={4} x2={sx} y2={sy} stroke={C.ink} strokeWidth={(kind === 'robot' ? 84 : 104) + OUTLINE * 2} />
-            <line x1={cuff.x - 10} y1={4} x2={sx} y2={sy} stroke={kind === 'robot' ? C.inkSoft : C.blue} strokeWidth={kind === 'robot' ? 84 : 104} />
+            <line x1={cuff.x - 10} y1={4} x2={sx} y2={sy} stroke={C.ink} strokeWidth={(armW ?? (kind === 'robot' ? 84 : 104)) + OUTLINE * 2} />
+            <line x1={cuff.x - 10} y1={4} x2={sx} y2={sy} stroke={kind === 'robot' ? C.inkSoft : C.blue} strokeWidth={armW ?? (kind === 'robot' ? 84 : 104)} />
             <line x1={cuff.x - 10} y1={-26} x2={sx} y2={sy - 30} stroke={mix(C.inkSoft, '#FFFFFF', 0.18)} strokeWidth={10} opacity={0.6} />
           </g>
         );
@@ -234,6 +241,11 @@ export const Hand: React.FC<HandProps> = ({kind = 'robot', view = 'front', x, y,
       {kind === 'robot' && view === 'front' && ghostPinky > 0 && (
         <g opacity={ghostPinky}>
           <path d={capsulePath(digitPts(GHOST_PINKY, rest(-60, -56, -54)), GHOST_PINKY.w)} fill={C.white} fillOpacity={0.55} stroke={C.ink} strokeWidth={5} strokeDasharray="14 10" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+      )}
+      {kind === 'robot' && view === 'side' && ghostSide > 0 && (
+        <g opacity={ghostSide}>
+          <path d={capsulePath(digitPts(GHOST_SIDE, {ang: ghostAng ?? [-34, -30, -28]}), GHOST_SIDE.w)} fill={C.white} fillOpacity={0.55} stroke={C.ink} strokeWidth={5} strokeDasharray="14 10" strokeLinecap="round" strokeLinejoin="round" />
         </g>
       )}
       {/* cuff */}
@@ -261,7 +273,7 @@ export const Hand: React.FC<HandProps> = ({kind = 'robot', view = 'front', x, y,
         const d = lay.digits[n];
         if (!d) return null;
         const far = side && n !== 'thumb' ? (n === 'index' ? 0 : n === 'middle' ? (kind === 'robot' ? 0.14 : 0.08) : n === 'ring' ? (kind === 'robot' ? 0.26 : 0.16) : 0.22) : 0;
-        return <Digit key={n} def={d} pose={poseOf(n)} kind={kind} shade={far} hl={highlight[n] ?? 0} />;
+        return <Digit key={n} def={d} pose={poseOf(n)} kind={kind} shade={far} hl={highlight[n] ?? 0} nails={nails} />;
       })}
       {front}
     </g>

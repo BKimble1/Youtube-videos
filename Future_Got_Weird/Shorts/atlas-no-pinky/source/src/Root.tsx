@@ -4,6 +4,9 @@ import {C, F, H, W} from './theme';
 import {Hand, ikDigit, defOf, toLocal, HandPose} from './hand/Hand';
 import {Film} from './Film';
 import {Cover} from './Cover';
+import {Probe} from './Probe';
+import {FilmV2} from './v2/FilmV2';
+import {TOTAL_V2} from './cues_v2';
 import {TOTAL_FRAMES, FPS} from './cues';
 
 const PoseLab: React.FC = () => {
@@ -43,8 +46,11 @@ const PoseLab: React.FC = () => {
 export const Root: React.FC = () => (
   <>
     <Still id="PoseLab" component={PoseLab} width={W} height={H} />
-    <Still id="Cover" component={Cover} width={W} height={H} />
-    <Composition id="Short" component={Film} width={W} height={H} fps={FPS} durationInFrames={TOTAL_FRAMES} defaultProps={{captions: false, audio: true}} />
-    <Composition id="ShortCaptioned" component={Film} width={W} height={H} fps={FPS} durationInFrames={TOTAL_FRAMES} defaultProps={{captions: true, audio: true}} />
+    <Composition id="Short" component={FilmV2} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V2} defaultProps={{captions: false, audio: true}} />
+    <Composition id="ShortCaptioned" component={FilmV2} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V2} defaultProps={{captions: true, audio: true}} />
+    <Composition id="Probe" component={Probe} width={W} height={H} fps={FPS} durationInFrames={200} />
+    <Still id="CoverV1" component={Cover} width={W} height={H} />
+    <Composition id="ShortV1" component={Film} width={W} height={H} fps={FPS} durationInFrames={TOTAL_FRAMES} defaultProps={{captions: false, audio: true}} />
+    <Composition id="ShortCaptionedV1" component={Film} width={W} height={H} fps={FPS} durationInFrames={TOTAL_FRAMES} defaultProps={{captions: true, audio: true}} />
   </>
 );

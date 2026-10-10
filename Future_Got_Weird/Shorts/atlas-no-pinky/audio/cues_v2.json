@@ -1,0 +1,528 @@
+{
+ "fps": 30,
+ "total_seconds": 34.6,
+ "total_frames": 1038,
+ "narration_file": "audio/narration_48k.wav",
+ "beats": [
+  {
+   "id": "B01",
+   "start_s": 0.0,
+   "end_s": 3.2,
+   "start_frame": 0,
+   "end_frame": 96
+  },
+  {
+   "id": "B02",
+   "start_s": 3.2,
+   "end_s": 8.0,
+   "start_frame": 96,
+   "end_frame": 240
+  },
+  {
+   "id": "B03",
+   "start_s": 8.0,
+   "end_s": 10.3,
+   "start_frame": 240,
+   "end_frame": 309
+  },
+  {
+   "id": "B04",
+   "start_s": 10.3,
+   "end_s": 16.3,
+   "start_frame": 309,
+   "end_frame": 489
+  },
+  {
+   "id": "B05",
+   "start_s": 16.3,
+   "end_s": 20.25,
+   "start_frame": 489,
+   "end_frame": 608
+  },
+  {
+   "id": "B06",
+   "start_s": 20.25,
+   "end_s": 26.38,
+   "start_frame": 608,
+   "end_frame": 791
+  },
+  {
+   "id": "B07",
+   "start_s": 26.38,
+   "end_s": 29.65,
+   "start_frame": 791,
+   "end_frame": 890
+  },
+  {
+   "id": "B08",
+   "start_s": 29.65,
+   "end_s": 31.25,
+   "start_frame": 890,
+   "end_frame": 938
+  },
+  {
+   "id": "B09",
+   "start_s": 31.25,
+   "end_s": 34.6,
+   "start_frame": 938,
+   "end_frame": 1038
+  }
+ ],
+ "events": {
+  "V2.open.click": {
+   "t": 0.12,
+   "frame": 4
+  },
+  "V2.open.drop": {
+   "t": 0.5,
+   "frame": 15
+  },
+  "V2.open.reveal": {
+   "t": 0.58,
+   "frame": 17
+  },
+  "V2.gap.pop": {
+   "t": 0.96,
+   "frame": 29
+  },
+  "V2.gap.pulse": {
+   "t": 1.28,
+   "frame": 38
+  },
+  "V2.label.purpose": {
+   "t": 2.1,
+   "frame": 63
+  },
+  "V2.tape.wipe": {
+   "t": 2.8,
+   "frame": 84
+  },
+  "V2.exp.wiggle": {
+   "t": 3.7,
+   "frame": 111
+  },
+  "V2.exp.push": {
+   "t": 4.85,
+   "frame": 146
+  },
+  "V2.exp.wrap": {
+   "t": 5.15,
+   "frame": 154
+  },
+  "V2.exp.mug.grasp": {
+   "t": 5.85,
+   "frame": 176
+  },
+  "V2.exp.mug.set": {
+   "t": 6.9,
+   "frame": 207
+  },
+  "V2.exp.knob.turn": {
+   "t": 7.13,
+   "frame": 214
+  },
+  "V2.exp.knob.detent": {
+   "t": 7.42,
+   "frame": 223
+  },
+  "V2.exp.day.done": {
+   "t": 7.7,
+   "frame": 231
+  },
+  "V2.label.day": {
+   "t": 7.28,
+   "frame": 218
+  },
+  "V2.slip.in": {
+   "t": 8.0,
+   "frame": 240
+  },
+  "V2.stamp.hover": {
+   "t": 8.9,
+   "frame": 267
+  },
+  "V2.stamp.hit": {
+   "t": 9.28,
+   "frame": 278
+  },
+  "V2.iris.b04": {
+   "t": 9.9,
+   "frame": 297
+  },
+  "V2.b04.badge1": {
+   "t": 11.68,
+   "frame": 350
+  },
+  "V2.b04.badge2": {
+   "t": 11.86,
+   "frame": 356
+  },
+  "V2.b04.badge3": {
+   "t": 12.04,
+   "frame": 361
+  },
+  "V2.b04.badge4": {
+   "t": 12.22,
+   "frame": 367
+  },
+  "V2.b04.count": {
+   "t": 12.8,
+   "frame": 384
+  },
+  "V2.b04.thumb": {
+   "t": 12.95,
+   "frame": 388
+  },
+  "V2.b04.splay": {
+   "t": 13.72,
+   "frame": 412
+  },
+  "V2.b04.curl1": {
+   "t": 14.56,
+   "frame": 437
+  },
+  "V2.b04.curl2": {
+   "t": 14.95,
+   "frame": 448
+  },
+  "V2.b04.curl3": {
+   "t": 15.34,
+   "frame": 460
+  },
+  "V2.b05.pinch": {
+   "t": 17.5,
+   "frame": 525
+  },
+  "V2.b05.cut_b": {
+   "t": 17.95,
+   "frame": 538
+  },
+  "V2.b05.turn": {
+   "t": 18.16,
+   "frame": 545
+  },
+  "V2.b05.cut_c": {
+   "t": 18.92,
+   "frame": 568
+  },
+  "V2.b05.press": {
+   "t": 19.14,
+   "frame": 574
+  },
+  "V2.b05.contact": {
+   "t": 19.36,
+   "frame": 581
+  },
+  "V2.b05.drive": {
+   "t": 19.4,
+   "frame": 582
+  },
+  "V2.b05.drive_end": {
+   "t": 20.05,
+   "frame": 602
+  },
+  "V2.b06.slide": {
+   "t": 20.25,
+   "frame": 608
+  },
+  "V2.b06.title": {
+   "t": 20.45,
+   "frame": 614
+  },
+  "V2.b06.ghost": {
+   "t": 20.6,
+   "frame": 618
+  },
+  "V2.b06.mod1": {
+   "t": 21.7,
+   "frame": 651
+  },
+  "V2.b06.mod2": {
+   "t": 22.1,
+   "frame": 663
+  },
+  "V2.b06.mod3": {
+   "t": 22.5,
+   "frame": 675
+  },
+  "V2.b06.cost": {
+   "t": 23.52,
+   "frame": 706
+  },
+  "V2.b06.space": {
+   "t": 24.48,
+   "frame": 734
+  },
+  "V2.b06.service": {
+   "t": 25.65,
+   "frame": 770
+  },
+  "V2.b07.slide": {
+   "t": 26.38,
+   "frame": 791
+  },
+  "V2.b07.label": {
+   "t": 27.71,
+   "frame": 831
+  },
+  "V2.b07.place": {
+   "t": 28.3,
+   "frame": 849
+  },
+  "V2.b07.ok": {
+   "t": 28.42,
+   "frame": 853
+  },
+  "V2.b07.nod": {
+   "t": 28.88,
+   "frame": 866
+  },
+  "V2.b08.human": {
+   "t": 29.76,
+   "frame": 893
+  },
+  "V2.b08.pick": {
+   "t": 29.95,
+   "frame": 898
+  },
+  "V2.b08.place": {
+   "t": 30.62,
+   "frame": 919
+  },
+  "V2.b08.ok": {
+   "t": 30.72,
+   "frame": 922
+  },
+  "V2.b09.drop": {
+   "t": 31.25,
+   "frame": 938
+  },
+  "V2.b09.print": {
+   "t": 31.44,
+   "frame": 943
+  },
+  "V2.b09.stamp": {
+   "t": 33.3,
+   "frame": 999
+  },
+  "V2.b09.click": {
+   "t": 33.554,
+   "frame": 1007
+  },
+  "V2.loop.tear": {
+   "t": 33.88,
+   "frame": 1016
+  }
+ },
+ "captions": [
+  {
+   "start": 0.0,
+   "end": 1.835,
+   "lines": [
+    "This robot",
+    "has no pinky."
+   ],
+   "em": 4
+  },
+  {
+   "start": 2.08,
+   "end": 2.974,
+   "lines": [
+    "On purpose."
+   ],
+   "em": 1
+  },
+  {
+   "start": 3.28,
+   "end": 5.16,
+   "lines": [
+    "Boston Dynamics",
+    "says its engineers"
+   ],
+   "em": null
+  },
+  {
+   "start": 5.2,
+   "end": 6.52,
+   "lines": [
+    "taped their",
+    "ring and pinky"
+   ],
+   "em": 0
+  },
+  {
+   "start": 6.56,
+   "end": 8.024,
+   "lines": [
+    "fingers together",
+    "for a day."
+   ],
+   "em": 4
+  },
+  {
+   "start": 8.32,
+   "end": 9.007,
+   "lines": [
+    "The verdict?"
+   ],
+   "em": 1
+  },
+  {
+   "start": 9.28,
+   "end": 10.01,
+   "lines": [
+    "Leave it out."
+   ],
+   "em": 2
+  },
+  {
+   "start": 10.4,
+   "end": 12.52,
+   "lines": [
+    "Atlas’s new hand",
+    "has four digits,"
+   ],
+   "em": 4
+  },
+  {
+   "start": 12.56,
+   "end": 14.254,
+   "lines": [
+    "but thirteen",
+    "degrees of freedom."
+   ],
+   "em": 1
+  },
+  {
+   "start": 14.56,
+   "end": 16.054,
+   "lines": [
+    "Independent",
+    "ways to move."
+   ],
+   "em": 3
+  },
+  {
+   "start": 16.4,
+   "end": 18.08,
+   "lines": [
+    "The company says",
+    "it can pinch,"
+   ],
+   "em": 5
+  },
+  {
+   "start": 18.12,
+   "end": 18.88,
+   "lines": [
+    "turn objects,"
+   ],
+   "em": 0
+  },
+  {
+   "start": 18.92,
+   "end": 20.167,
+   "lines": [
+    "and press",
+    "tool triggers."
+   ],
+   "em": 1
+  },
+  {
+   "start": 20.4,
+   "end": 21.56,
+   "lines": [
+    "A fifth digit",
+    "would mean"
+   ],
+   "em": 1
+  },
+  {
+   "start": 21.6,
+   "end": 22.978,
+   "lines": [
+    "three more",
+    "actuators."
+   ],
+   "em": 0
+  },
+  {
+   "start": 23.28,
+   "end": 24.144,
+   "lines": [
+    "More cost."
+   ],
+   "em": 1
+  },
+  {
+   "start": 24.24,
+   "end": 24.981,
+   "lines": [
+    "More bulk."
+   ],
+   "em": 1
+  },
+  {
+   "start": 25.2,
+   "end": 26.192,
+   "lines": [
+    "More things",
+    "to break."
+   ],
+   "em": 3
+  },
+  {
+   "start": 26.64,
+   "end": 28.28,
+   "lines": [
+    "So the goal",
+    "is a useful,"
+   ],
+   "em": 5
+  },
+  {
+   "start": 28.32,
+   "end": 29.443,
+   "lines": [
+    "reliable hand."
+   ],
+   "em": 0
+  },
+  {
+   "start": 29.76,
+   "end": 31.156,
+   "lines": [
+    "Looking human",
+    "is optional."
+   ],
+   "em": 3
+  },
+  {
+   "start": 31.44,
+   "end": 32.88,
+   "lines": [
+    "Apparently,",
+    "even robots"
+   ],
+   "em": null
+  },
+  {
+   "start": 32.92,
+   "end": 33.934,
+   "lines": [
+    "have a budget."
+   ],
+   "em": 2
+  }
+ ],
+ "pockets": {
+  "D01": {
+   "start_s": 8.52,
+   "end_s": 9.33
+  },
+  "D02": {
+   "start_s": 31.19,
+   "end_s": 33.734
+  }
+ }
+}

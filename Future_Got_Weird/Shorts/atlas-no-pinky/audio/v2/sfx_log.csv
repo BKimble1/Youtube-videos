@@ -1,0 +1,44 @@
+cue_id,event,time_s,frame,layer,gain_db,pan,description
+S01,V2.open.click,0.120,4,sfx,-4,0,opener: the hand closes on the gear (small rigid click)
+S01b,V2.open.drop,0.500,15,sfx,-17,0.05,opener: gear seated on its post
+,V2.gap.pop,0.960,29,sfx,-19,0.12,dashed circle marks the empty slot
+,V2.label.purpose,2.100,63,sfx,-15,0,ON PURPOSE plate lands
+,V2.tape.wipe,2.760,83,sfx,-13,0,tape strip crosses frame (showcase transition 1)
+S02,V2.exp.wrap,4.970,149,sfx,-9,0.05,tape wraps ring + pinky
+S03,V2.exp.mug.set,6.900,207,sfx,-9,0.05,mug set back down
+S04,V2.exp.knob.detent,7.420,223,sfx,-11,0.1,knob detent
+,V2.exp.day.done,7.600,228,sfx,-24,0.18,day dial completes its turn (soft sweep)
+,V2.slip.in,7.900,237,sfx,-21,-0.1,decision slip slides in
+S05,V2.stamp.hit,9.280,278,sfx,-7,0,rubber stamp on SKIP IT
+,V2.iris.b04,9.900,297,sfx,-21,0,stamp ring opens into the macro (showcase transition 2)
+,V2.b04.count,12.800,384,sfx,-21,0,count rolls up to the total
+S06,V2.b04.thumb,12.950,388,sfx,-21,-0.12,thumb sweep
+S06,V2.b04.splay,13.720,412,sfx,-22,0.0,finger splay
+,V2.b04.curl1,14.560,437,sfx,-23,0.1,finger curls
+,V2.b04.curl2,14.950,448,sfx,-25,0.08,finger curls (2)
+S07,V2.b05.pinch,17.500,525,sfx,-11,0.1,washer pinch contact
+S08,V2.b05.turn,18.160,545,sfx,-20,0,object turns between the fingertips
+S09,V2.b05.contact,19.360,581,sfx,-9,-0.1,tool contact
+,V2.b05.drive,19.400,582,sfx,-19,0.05,screw driven home
+,V2.b06.mod1,21.700,651,sfx,-18,-0.1,actuator module 1 lands
+,V2.b06.mod2,22.100,663,sfx,-18,0.0,actuator module 2 lands
+,V2.b06.mod3,22.500,675,sfx,-18,0.1,actuator module 3 lands
+,V2.b06.cost,23.520,706,sfx,-21,-0.05,price tag swings in
+S12,V2.b06.service,25.650,770,sfx,-14,0.08,wrench taps the spare module
+,V2.b07.slide,26.580,797,sfx,-23,-0.1,hand brings the block in
+S13,V2.b07.place,28.300,849,sfx,-6,0,block seats in the fixture
+,V2.b07.ok,28.420,853,sfx,-21,0.15,lamp lights (soft tick)
+,V2.b08.human,29.760,893,sfx,-27,0.2,human-hand reference slides past
+,V2.b08.pick,29.950,898,sfx,-17,0.1,hand picks the second block
+S13b,V2.b08.place,30.620,919,sfx,-8,0,second block seats
+,V2.b09.print,31.440,943,sfx,-24,-0.2,receipt line printed
+,V2.b09.print,31.723,952,sfx,-24,-0.2,receipt line printed
+,V2.b09.print,32.006,960,sfx,-24,-0.2,receipt line printed
+,V2.b09.print,32.289,969,sfx,-24,-0.2,receipt line printed
+,V2.b09.print,32.572,977,sfx,-24,-0.2,receipt line printed
+,V2.b09.print,32.855,986,sfx,-24,-0.2,receipt line printed
+,V2.b09.print,33.138,994,sfx,-24,-0.2,receipt line printed
+,V2.b09.print,33.421,1003,sfx,-24,-0.2,receipt line printed
+S14,V2.b09.stamp,33.300,999,sfx,-8,-0.05,NOT IN BUDGET stamp
+,V2.loop.tear,33.830,1015,sfx,-14,0,receipt torn away into the opener (loop seam)
+M01,full_story,0.00,0,music,,0,original synth bed 126 BPM; pockets D01/D02 from cues_v2.json; no closing chord (loop)

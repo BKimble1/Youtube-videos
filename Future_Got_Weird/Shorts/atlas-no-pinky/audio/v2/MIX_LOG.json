@@ -1,0 +1,12 @@
+{
+ "target_lufs": -14.6,
+ "measured_integrated_lufs": -14.6,
+ "true_peak_dbfs": -1.5,
+ "pre_limiter_lufs": -15.3,
+ "post_limiter_lufs_before_fade": -14.6,
+ "sample_rate": 48000,
+ "duration_s": 34.6,
+ "ducking": "music -7 dB (0.58 depth) under speech, effects -3 dB, voice-envelope follower 30 ms attack / 280 ms release",
+ "music_bpm": 126.0,
+ "sfx_events": 42
+}
