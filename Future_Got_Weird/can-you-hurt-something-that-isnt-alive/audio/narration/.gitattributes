@@ -1,0 +1,4 @@
+# Narration MP3s are intentionally stored as ordinary Git binary blobs.
+# LFS uploads are unavailable in the production environment.
+# Keep real edits visible; do not use skip-worktree or assume-unchanged.
+*.mp3 -filter -diff -merge -text
