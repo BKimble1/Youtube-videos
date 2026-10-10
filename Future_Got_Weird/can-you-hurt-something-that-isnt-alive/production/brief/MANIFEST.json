@@ -1,0 +1,107 @@
+[
+  {
+    "file": "EVIDENCE_CORRECTIONS.md",
+    "bytes": 2351,
+    "sha256": "c9a1ef0560806352446c5039d8dfef926ceeed5240655f7bd4b27cf667241599"
+  },
+  {
+    "file": "Future_Got_Weird_Project_Brief.md",
+    "bytes": 34816,
+    "sha256": "42d49d5b6e76e451f701366a5fbbb8669afdeb06e646ad5dfd28b1bc91027b41"
+  },
+  {
+    "file": "JUST_CODE_thumbnail.png",
+    "bytes": 1605650,
+    "sha256": "6d415981233b022dc75450ea0bb0d05755cd85758d31dea3e4b8f27a6a95c2fb",
+    "dimensions": [
+      1672,
+      941
+    ]
+  },
+  {
+    "file": "PROVENANCE.md",
+    "bytes": 2277,
+    "sha256": "9fe099976c9e63360d3cf79bde2588d85e935c8e4f660c057ee8a041d4293d6e"
+  },
+  {
+    "file": "START_HERE_Claude_Continuation.md",
+    "bytes": 8671,
+    "sha256": "c5b576690a189be657025bf2ec58430350de41369faf05a285bfc329bc5a1e9c"
+  },
+  {
+    "file": "approved_cast/cast_rig_check.png",
+    "bytes": 409272,
+    "sha256": "a6fa35854ead9d8850662f93e9a4d0e30d9a32637ea6c2ffb4b20b555a365144",
+    "dimensions": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "file": "approved_cast/style_frame_counter.png",
+    "bytes": 246657,
+    "sha256": "43db510be2d702ba49506b7e108d769317871edfeccdb14ae4237d38eeac8331",
+    "dimensions": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "file": "approved_cast/style_frame_gameshow.png",
+    "bytes": 583951,
+    "sha256": "a5a9da43e5be59b27aa84d542881788032f18ee2bd2e749e5396b34b9233c15f",
+    "dimensions": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "file": "approved_cast/style_frame_verify.png",
+    "bytes": 362185,
+    "sha256": "0bc3d6d60881a07410eccedd23d0cc8f32d031d8bda0b2e8a7a5571cc33e419f",
+    "dimensions": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "file": "repository_reference/package-lock.json",
+    "bytes": 144794,
+    "sha256": "9c16c544ad5cd9f8ef4ffbfa55625fd3c7794a94d1b910c7edbf173b856d8c61"
+  },
+  {
+    "file": "repository_reference/package.json",
+    "bytes": 1097,
+    "sha256": "872e57aeb81d3b26dd813867b16871a9d9a8d6641af3fcbfdc02b6a7021e6f2f"
+  },
+  {
+    "file": "repository_reference/src/components/Character.tsx",
+    "bytes": 22174,
+    "sha256": "b33949f35ff260958255f25f3a4cefdffc8cea0a3203826cca68a8f24c2ac957"
+  },
+  {
+    "file": "repository_reference/src/components/cast.ts",
+    "bytes": 1871,
+    "sha256": "041d31afb0ceee860d375f082f2bd5ef9f7e88baccef38004a493313a69e4680"
+  },
+  {
+    "file": "repository_reference/src/lib/anim.ts",
+    "bytes": 2788,
+    "sha256": "91429cafc03f8518bf64d3d5cf0b9653ff6cea598c4a8c77c2438d41fd1a8753"
+  },
+  {
+    "file": "repository_reference/src/lib/camera.tsx",
+    "bytes": 2094,
+    "sha256": "24dfcb03f051f3d4581cc6285ef0bb50ca53e4979d901d9027769e4377d599ac"
+  },
+  {
+    "file": "repository_reference/src/lib/motion.ts",
+    "bytes": 6514,
+    "sha256": "6b2940d39c616dc3f10d9bd59c516c9b9b48de3ab385c9493b62463cef0f839f"
+  },
+  {
+    "file": "repository_reference/src/theme.ts",
+    "bytes": 1347,
+    "sha256": "2b130146f3a49a3bd5c724c2ef33bc0caf415c3d435fae8ec14d8d8a6bbac60e"
+  }
+]
