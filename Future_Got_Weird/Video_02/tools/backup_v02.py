@@ -154,13 +154,13 @@ RENDERED = [
 ]
 
 
-def group_rendered(archive='v02_audio_rendered.tar'):
+def group_rendered(archive='v02_audio_rendered.tar', extra=()):
     wavs = []
-    for sub in RENDERED:
+    for sub in list(RENDERED) + list(extra):
         base = os.path.join(ROOT, sub)
         if not os.path.isdir(base):
             continue
-        if sub in ('audio/sfx/v2', 'audio/music/v02'):  # top level only (raw takes are in sources; stems are regenerable)
+        if sub in ('audio/sfx/v2', 'audio/music/v02', 'audio/music/v02v2'):  # top level only (raw takes are in sources; stems are regenerable)
             wavs += sorted(os.path.join(base, f) for f in os.listdir(base) if f.lower().endswith('.wav'))
         else:
             wavs += walk(sub, {'.wav'})
@@ -218,7 +218,7 @@ def group_runway():
 
 
 GROUPS = {'sources': group_sources, 'rendered': group_rendered, 'films': group_films, 'runway': group_runway,
-          'v2_sources': group_v2_sources, 'v2_rendered': lambda: group_rendered('v02v2_audio_rendered.tar'),
+          'v2_sources': group_v2_sources, 'v2_rendered': lambda: group_rendered('v02v2_audio_rendered.tar', extra=('audio/music/v02v2',)),
           'v2_films': lambda: group_films('v2'), 'v2_runs': group_v2_runs}
 V1_GROUPS = ('sources', 'rendered', 'films', 'runway')
 
