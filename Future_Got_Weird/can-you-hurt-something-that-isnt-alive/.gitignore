@@ -1,0 +1,7 @@
+# Dependencies and Remotion caches are rebuilt from package-lock.json
+source/node_modules/
+source/.remotion/
+source/out/
+# Renders are too large for plain Git blobs; they are kept as checksummed parts under backup/ instead
+exports/*.mp4
+audio/mix/*.wav

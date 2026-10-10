@@ -1,0 +1,4 @@
+# Episode audio is stored as ordinary Git blobs (Git LFS uploads are unavailable in this environment).
+# Same rule as audio/narration/.gitattributes. Keep real edits visible.
+*.mp3 -filter -diff -merge -text
+*.wav -filter -diff -merge -text

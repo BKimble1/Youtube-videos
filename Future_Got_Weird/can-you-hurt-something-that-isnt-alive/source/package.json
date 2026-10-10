@@ -1,0 +1,34 @@
+{
+  "name": "future-got-weird-can-you-hurt-something",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Can You Hurt Something That Isn't Alive? \u2014 Future Got Weird episode source (Remotion)",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "render:1080": "remotion render src/index.ts Main ../exports/FGW_CanYouHurt_v1_UPLOAD_1080p.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k --concurrency=3",
+    "render:4k": "remotion render src/index.ts Main4K ../exports/FGW_CanYouHurt_v1_MASTER_4K.mp4 --scale=2 --crf=14 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k --concurrency=2",
+    "render:preview": "remotion render src/index.ts Preview ../exports/FGW_CanYouHurt_v1_REVIEW_720p.mp4 --scale=0.6667 --crf=24 --x264-preset=veryfast --audio-bitrate=128k --concurrency=3"
+  },
+  "dependencies": {
+    "@fontsource-variable/fredoka": "5.3.0",
+    "@fontsource-variable/nunito": "5.3.0",
+    "@fontsource-variable/source-serif-4": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@remotion/bundler": "4.0.533",
+    "@remotion/cli": "4.0.533",
+    "@remotion/media-utils": "4.0.533",
+    "@remotion/paths": "4.0.533",
+    "@remotion/renderer": "4.0.533",
+    "@remotion/shapes": "4.0.533",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.533",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.0",
+    "js-tiktoken": "1.0.21",
+    "typescript": "5.8.3"
+  }
+}

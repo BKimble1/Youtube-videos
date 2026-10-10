@@ -17,7 +17,7 @@ A chatbot can say, "That hurt." On October 8, Anthropic announced a rule against
 The rule targets sustained and needless abusive or cruel behavior. It does not cover ordinary frustration, pushback, dark creative themes, or model testing and research.
 
 [L03] [Visual: a pencil-tap on the scope card. Hold.]
-So the rule tells us what the company wants its models to be spared from. It doesn't tell us whether anything is felt.
+So the rule tells us what the company wants its models spared from. It doesn't tell us whether anything is felt.
 
 ## Act 2 — A display is not an experience (0:25–1:05)
 

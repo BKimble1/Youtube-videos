@@ -48,3 +48,19 @@ No transcripts, quotes from Claude, or experiments are shown. The episode's dial
 - Uncertainty does not make all possibilities equally supported. Stated in script ("a precaution, not a proof"; "the honest conclusion").
 - No claim that scientists have shown current AI can suffer. None made.
 - No "it just predicts words" dismissal. None used.
+
+## Verbatim excerpts verified on the live pages (10 Oct 2026)
+
+Method: each page's DOM was dumped with headless Chromium and the quoted sentences were located in the text. These are the exact strings typeset on screen. Narration paraphrases them and does not quote them.
+
+| Claim | Exact on-screen text | Page | Date | Status |
+|---|---|---|---|---|
+| P3 | "We’ve added a prohibition on sustained and needless abusive or cruel behavior toward our models." | anthropic.com/news/2026-usage-policy-update | Oct 8, 2026 | Verified, verbatim |
+| P2 | "The updated policy takes effect on November 12." | same | Effective Nov 12 | Verified, verbatim (year from the announcement date) |
+| P4 | "It does not apply to common versions of user frustration, pushback, dark creative themes, or model testing and research." | same | — | Verified, verbatim |
+| P6 | "This ability is intended for use in rare, extreme cases of persistently harmful or abusive user interactions." | anthropic.com/research/end-subset-conversations | Aug 15, 2025 | Verified, verbatim; models Opus 4 and 4.1 |
+| W1 | "We remain highly uncertain about the potential moral status of Claude and other LLMs, now or in the future." | same | Aug 15, 2025 | Verified, verbatim. Typeset as "LLMs"; the narration says "language models" (paraphrase). |
+| W2 | "There’s no scientific consensus on whether current or future AI systems could be conscious, or could have experiences that deserve consideration." | anthropic.com/research/exploring-model-welfare | Apr 24, 2025 | Verified, verbatim. Company framing, not independent science. |
+| S3 | arXiv:2308.08708v3, "suggested" wording | arxiv.org/abs/2308.08708 | 22 Aug 2023 (v3) | Packet-verified, not re-read here (arXiv fetch blocked by DNS and proxy) |
+
+Narration/on-screen differences: "8th" is spoken in the audio for "October 8" (the transcript keeps "8th"; captions follow the audio). Block 1 omitted "to be" in "wants its models spared from"; script v2 was aligned to the audio.
