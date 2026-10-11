@@ -1,0 +1,21 @@
+{
+ "sample_rate": 48000,
+ "duration_s": 21.0,
+ "bpm": 114.286,
+ "bars": 10,
+ "target_lufs": -15.0,
+ "sample_peak_ceiling_dbfs": -1.9,
+ "stem_gain_db": 1.4,
+ "max_limiter_reduction_db": 2.07,
+ "ducking": "up to -12 dB under speech; 20 ms attack / 240 ms release; derived from the narration envelope",
+ "pockets_s": [
+  [
+   5.44,
+   6.6
+  ],
+  [
+   12.62,
+   13.38
+  ]
+ ]
+}

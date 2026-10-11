@@ -1,0 +1,19 @@
+FGW_AI_Fake_Murder_Tip_V2_Captioned_1080x1920.mp4: 630 frames, tolerance 8px beyond x 100-870 / y 220-1440
+  extents of all frames inside the zone: x 92-878  y 213-1443
+  frames 3-3  minx 103 maxx 866 miny 225 maxy 1456
+  frames 32-32  minx 103 maxx 866 miny 225 maxy 1456
+  frames 99-99  minx 103 maxx 866 miny 568 maxy 1456
+  frames 148-155  minx 0 maxx 1079 miny 5 maxy 1900
+  frames 174-174  minx 96 maxx 873 miny 230 maxy 1456
+  frames 226-261  minx 0 maxx 1079 miny 45 maxy 1601
+  frames 264-266  minx 90 maxx 873 miny 296 maxy 1428
+  frames 318-318  minx 95 maxx 873 miny 296 maxy 1456
+  frames 338-343  minx 0 maxx 869 miny 187 maxy 1442
+  frames 352-352  minx 96 maxx 784 miny 276 maxy 1457
+  frames 358-362  minx 92 maxx 1079 miny 276 maxy 1443
+  frames 371-379  minx 96 maxx 1079 miny 276 maxy 1443
+  frames 383-384  minx 96 maxx 890 miny 276 maxy 1443
+  frames 392-392  minx 96 maxx 873 miny 276 maxy 1457
+  frames 447-449  minx 0 maxx 1079 miny 0 maxy 1919
+  frames 456-456  minx 103 maxx 866 miny 443 maxy 1457
+  frames 500-500  minx 103 maxx 866 miny 336 maxy 1456

@@ -1,0 +1,272 @@
+{
+ "fontProof": {
+  "montserrat800": true,
+  "barlow800": true
+ },
+ "captions": [
+  {
+   "i": 0,
+   "from": 3,
+   "to": 32,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "AI sent police",
+     "width": 552.1
+    }
+   ],
+   "maxWidth": 552.1398162841797
+  },
+  {
+   "i": 1,
+   "from": 32,
+   "to": 69,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "a fake murder tip.",
+     "width": 722.8
+    }
+   ],
+   "maxWidth": 722.8357391357422
+  },
+  {
+   "i": 2,
+   "from": 69,
+   "to": 99,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "It claimed it",
+     "width": 484.5
+    },
+    {
+     "text": "remembered",
+     "width": 526.7
+    }
+   ],
+   "maxWidth": 526.6798095703125
+  },
+  {
+   "i": 3,
+   "from": 99,
+   "to": 141,
+   "size": 74,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "someone matching",
+     "width": 764.5
+    },
+    {
+     "text": "a description.",
+     "width": 537.5
+    }
+   ],
+   "maxWidth": 764.4927978515625
+  },
+  {
+   "i": 4,
+   "from": 148,
+   "to": 174,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "Except…",
+     "width": 343.7
+    }
+   ],
+   "maxWidth": 343.671875
+  },
+  {
+   "i": 5,
+   "from": 174,
+   "to": 221,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "the page had",
+     "width": 537.2
+    },
+    {
+     "text": "no description.",
+     "width": 608.3
+    }
+   ],
+   "maxWidth": 608.3038177490234
+  },
+  {
+   "i": 6,
+   "from": 231,
+   "to": 251,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "Claude did this",
+     "width": 607.8
+    }
+   ],
+   "maxWidth": 607.7718353271484
+  },
+  {
+   "i": 7,
+   "from": 251,
+   "to": 293,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "while testing",
+     "width": 531.9
+    },
+    {
+     "text": "websites.",
+     "width": 383.1
+    }
+   ],
+   "maxWidth": 531.9237976074219
+  },
+  {
+   "i": 8,
+   "from": 293,
+   "to": 318,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "It used a real",
+     "width": 522.1
+    }
+   ],
+   "maxWidth": 522.1198272705078
+  },
+  {
+   "i": 9,
+   "from": 318,
+   "to": 352,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "police tip form.",
+     "width": 615.4
+    }
+   ],
+   "maxWidth": 615.4477996826172
+  },
+  {
+   "i": 10,
+   "from": 352,
+   "to": 392,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "The spam",
+     "width": 393.2
+    },
+    {
+     "text": "filter caught it.",
+     "width": 605
+    }
+   ],
+   "maxWidth": 605.0357666015625
+  },
+  {
+   "i": 11,
+   "from": 392,
+   "to": 446,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "Investigators",
+     "width": 531.9
+    },
+    {
+     "text": "never got the tip.",
+     "width": 702.5
+    }
+   ],
+   "maxWidth": 702.4677429199219
+  },
+  {
+   "i": 12,
+   "from": 456,
+   "to": 500,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "AI making",
+     "width": 417
+    },
+    {
+     "text": "things up",
+     "width": 386.8
+    }
+   ],
+   "maxWidth": 417.0118408203125
+  },
+  {
+   "i": 13,
+   "from": 500,
+   "to": 527,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "is one problem.",
+     "width": 625.3
+    }
+   ],
+   "maxWidth": 625.3277587890625
+  },
+  {
+   "i": 14,
+   "from": 533,
+   "to": 571,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "Giving it a",
+     "width": 409.9
+    },
+    {
+     "text": "submit button",
+     "width": 581.1
+    }
+   ],
+   "maxWidth": 581.0957641601562
+  },
+  {
+   "i": 15,
+   "from": 571,
+   "to": 596,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "is another.",
+     "width": 429.9
+    }
+   ],
+   "maxWidth": 429.8558654785156
+  }
+ ],
+ "lane": {
+  "size": 76,
+  "lh": 90,
+  "maxW": 770,
+  "cx": 485,
+  "baseline": 1428,
+  "min": 72
+ }
+}

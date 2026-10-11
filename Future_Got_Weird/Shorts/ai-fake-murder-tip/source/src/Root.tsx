@@ -7,6 +7,9 @@ import {auditCaptions} from './kit';
 import {Character, IDLE} from './components/Character';
 import {CAST} from './components/cast';
 import './fonts';
+import {TOTAL as TOTAL2} from './v2/cues';
+import {Film2} from './v2/Film2';
+import {auditCaptions2} from './v2/kit2';
 
 /** Text-free portrait start plate for a later Runway attempt (native checker rig, medium close-up). */
 const ReactionPlate: React.FC = () => {
@@ -30,6 +33,9 @@ export const Root: React.FC = () => (
     <Composition id="CaptionAudit" component={AuditDummy} width={W} height={H} fps={FPS} durationInFrames={1} defaultProps={{audit: null as unknown}} calculateMetadata={async () => ({props: {audit: await auditCaptions()}})} />
     <Composition id="Short" component={Film} width={W} height={H} fps={FPS} durationInFrames={TOTAL} defaultProps={{captions: false, audio: true}} />
     <Composition id="ShortCaptioned" component={Film} width={W} height={H} fps={FPS} durationInFrames={TOTAL} defaultProps={{captions: true, audio: true}} />
+    <Composition id="CaptionAuditV2" component={AuditDummy} width={W} height={H} fps={FPS} durationInFrames={1} defaultProps={{audit: null as unknown}} calculateMetadata={async () => ({props: {audit: await auditCaptions2()}})} />
+    <Composition id="ShortV2" component={Film2} width={W} height={H} fps={FPS} durationInFrames={TOTAL2} defaultProps={{captions: false, audio: true}} />
+    <Composition id="ShortV2Captioned" component={Film2} width={W} height={H} fps={FPS} durationInFrames={TOTAL2} defaultProps={{captions: true, audio: true}} />
     <Still id="ReactionPlate" component={ReactionPlate} width={W} height={H} />
   </>
 );

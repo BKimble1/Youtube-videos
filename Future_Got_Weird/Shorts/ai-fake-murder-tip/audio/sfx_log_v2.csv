@@ -1,0 +1,13 @@
+event,time_s,frame,gain_db,source,note
+b1.press click,0.415,12,-8,"ElevenLabs eleven_text_to_sound_v2 (V1 generation, reused)","first click of raw_click.mp3; lands on ""sent"", after ""AI"" has begun"
+b1.press low tap,0.444,13,-22,local synthesis,restrained low tap under the click
+b2.line1 keys,2.29,69,-4,"ElevenLabs eleven_text_to_sound_v2 (V1 generation, reused)","raw_keys.mp3 0.00-0.55 s; quote appears on ""It claimed"""
+b3.stamp tick,6.57,197,-9,"ElevenLabs eleven_text_to_sound_v2 (V1 generation, reused)","raw_error.mp3 0.00-0.20 s (the V1 dry knock, shortened); in the pocket"
+b4.hop1 page tick,8.62,259,-27,local synthesis,pointer lands on a webpage card
+b4.hop2 page tick,8.9,267,-27,local synthesis,pointer lands on a webpage card
+b4.hop3 page tick,9.6,288,-26,local synthesis,pointer lands on a webpage card
+b5.fold tick,11.36,341,-27,local synthesis,flap closes
+b5.go send accent,11.695,351,-12,"ElevenLabs eleven_text_to_sound_v2 (V1 generation, reused)",raw_send.mp3 0.00-0.85 s; envelope departs
+b5.land thump,12.776,383,-16,local synthesis,soft folder/paper thump
+b5.latch click,12.866,386,0,"ElevenLabs eleven_text_to_sound_v2 (V1 generation, reused)",raw_spam.mp3 0.80-1.00 s (subdued latch)
+b6.unlock tick,18.74,562,-23,local synthesis,SUBMIT unlocks

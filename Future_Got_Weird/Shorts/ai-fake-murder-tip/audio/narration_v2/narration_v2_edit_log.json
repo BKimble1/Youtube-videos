@@ -1,0 +1,61 @@
+{
+ "source": "narration_v2_take1.mp3",
+ "raw_duration_s": 21.44,
+ "edited_duration_s": 19.758,
+ "cuts": [
+  {
+   "pause_start_s": 2.02,
+   "pause_end_s": 2.52,
+   "from_s": 0.5,
+   "to_s": 0.26
+  },
+  {
+   "pause_start_s": 4.86,
+   "pause_end_s": 5.29,
+   "from_s": 0.43,
+   "to_s": 0.3
+  },
+  {
+   "pause_start_s": 5.95,
+   "pause_end_s": 6.35,
+   "from_s": 0.4,
+   "to_s": 0.22
+  },
+  {
+   "pause_start_s": 7.87,
+   "pause_end_s": 8.48,
+   "from_s": 0.61,
+   "to_s": 0.38
+  },
+  {
+   "pause_start_s": 10.29,
+   "pause_end_s": 10.61,
+   "from_s": 0.32,
+   "to_s": 0.26
+  },
+  {
+   "pause_start_s": 12.34,
+   "pause_end_s": 12.78,
+   "from_s": 0.44,
+   "to_s": 0.28
+  },
+  {
+   "pause_start_s": 13.85,
+   "pause_end_s": 14.39,
+   "from_s": 0.54,
+   "to_s": 0.26
+  },
+  {
+   "pause_start_s": 16.1,
+   "pause_end_s": 16.67,
+   "from_s": 0.57,
+   "to_s": 0.36
+  },
+  {
+   "pause_start_s": 19.03,
+   "pause_end_s": 19.45,
+   "from_s": 0.42,
+   "to_s": 0.3
+  }
+ ]
+}

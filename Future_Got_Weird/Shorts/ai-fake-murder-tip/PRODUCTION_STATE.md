@@ -1,4 +1,40 @@
-# Production state — "AI Invented a Murder Tip. Then Hit Send." (resume checkpoint)
+# Production state — Fake Murder Tip Short (resume checkpoint)
+
+## V2 — "AI Sent Police a Fake Murder Tip" (current)
+
+**As of 11 Oct 2026: V2 is built, rendered from source and QA'd (see `QA_REPORT_V2.md`). Not published, not uploaded, not scheduled.** Next step is the owner's watch-and-listen review of V2 and one correction list.
+
+### Where things are
+- Repo `BKimble1/Youtube-videos`; V2 branch **`claude/ai-fake-murder-tip-short-v2`** (from V1's `claude/ai-fake-murder-tip-short-v1`, commit `8746526`); folder `Future_Got_Weird/Shorts/ai-fake-murder-tip/`. V1 files are untouched; V2 files carry `V2`/`_v2` names. No PR opened (none was asked for).
+- Media is committed as ordinary Git blobs (the folder's `.gitattributes` turns the repo's LFS rule off for mp4/wav/mp3; LFS uploads are unavailable here). `qa/dev/` (scratch frames) is git-ignored.
+- Editable source: `source/src/v2/` (`kit2.tsx` layout + captions, `open.tsx` beats 1–2 + backdrop, `inspect.tsx` beat 3, `flow.tsx` beats 4–5, `close.tsx` beat 6 + loop return, `Film2.tsx`, generated `cues.ts`). Compositions `ShortV2`, `ShortV2Captioned`, `CaptionAuditV2`.
+
+### Paid / generated assets (do not regenerate)
+| Asset | ID / location |
+|---|---|
+| V2 narration (take **1 of 2**; voice `kk5XaSLo2XAw0sKM98zU`, `eleven_v4`, no speed parameter available) | generation `zTuvi1a9TkNymbtaUEb4` in flow https://elevenlabs.io/app/flows/YRJES0rtiDnnRnqvLyEF; `audio/narration_v2/narration_v2_take1.mp3` (raw 21.44 s) → edited `narration_v2_final.mp3` (19.76 s) |
+| V2 alignment (Scribe, on the edited audio, ≈ 108.7 credits) | generation `LqipbBW0W3LYKTfvZdvL`; `audio/narration_v2/narration_v2_alignment*.json` |
+| Effects | **none new**; V1's five reused (see `credits_v2.md`) |
+| Runway | **nothing generated, 0 credits** (output hosts blocked; no existing checker clip). `runway/RUNWAY_V2.md` |
+| Music | original local synthesis, `tools/build_audio_v2.py` |
+
+A second narration take is only worth spending if the owner's list changes the words or the delivery (one targeted hook repair or one more full take remain within the brief's limit).
+
+### Rebuild / change workflow
+See `README.md`. In short: `tools/build_cues_v2.py` → `tools/build_audio_v2.py` → `cd source && npm ci && npm run typecheck` → `tools/render_v2.sh` → `tools/qa_media.sh V2` + `tools/safe_zone_groups_v2.py`. Timing lives only in the cue table.
+
+### Open items (all need the owner or network access)
+1. Listen to the whole mix (phone speaker low/ordinary, headphones), watch at normal speed, loop twice, check the opening muted, check in the real Shorts UI (QA "Not done").
+2. Decide the wording flag: "Claude did this while testing websites." (suggested: "during a website test").
+3. Re-read Source B (6abc/PPD statement) first-hand before publishing; confirm the Philadelphia name and the July 18 date (`claim_ledger_v2.md`).
+4. Optional Runway checker insert: allow `dnznrvs05pmza.cloudfront.net` in the environment's network policy; one controlled attempt plus one retry, ≤ 100 credits; only if face, glasses and pencil hold.
+5. Cover is the opening frame; no alternate cover was generated. Packaging text is a draft (`packaging_v2.md`); the description must say the interfaces are illustrated reconstructions.
+
+The briefs are saved verbatim in `handoff/ROUND_ONE_PROMPT.md` and `handoff/ROUND_TWO_PROMPT.md`.
+
+---
+
+## V1 checkpoint (kept for reference) — "AI Invented a Murder Tip. Then Hit Send."
 
 **As of 11 Oct 2026: Round One V1 is built, rendered and QA'd (see `QA_REPORT.md`). Not published, not uploaded, not scheduled.** Next step is the owner's watch-and-listen and one correction list.
 
