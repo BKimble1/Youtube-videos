@@ -4,6 +4,9 @@ import {CAPS, EV} from './cues';
 
 export {C, W, H, E, tw, sp, kf, SNAP, SOFT, FIRM, lerp, clamp01, mix, measure, fitSize, CAP_FONT, HED_FONT, EV};
 
+/** linear 0..1 ramp over `dur` frames from `start` (apply an easing yourself: tw() eases by default) */
+export const ramp = (g: number, start: number, dur: number) => tw(g, start, dur, (x) => x);
+
 /** V3 palette: ink / cream / coral / teal / saffron. Saffron = the AI and what the AI wrote (the AI word, pointer tag, packet mark, claim highlight); teal = police; coral = fake / spam. */
 export const INK = C.ink;
 export const CREAM = C.paper;          // #FAF3DF scene cream
@@ -18,8 +21,8 @@ export const WIN: Rect = {x: 96, y: 660, w: 780, h: 600};  // the police tip win
 export const HDR_H = 112;
 export const TB1: Rect = {x: 136, y: 824, w: 700, h: 200};  // the message box inside the window
 export const BTN2: Rect = {x: 536, y: 1086, w: 300, h: 116}; // SUBMIT button in the opening state
-export const Q2: Rect = {x: 96, y: 520, w: 780, h: 440};     // the opened tip paper = the quote surface
-export const Q3: Rect = {x: 193, y: 270, w: 585, h: 312};    // the same paper as the "claim" above the comparison (0.75 scale)
+export const Q2: Rect = {x: 96, y: 557, w: 780, h: 366};     // the opened tip paper = the quote surface (780 x 366: see quote.tsx)
+export const Q3: Rect = {x: 182, y: 292, w: 608, h: 285.4};   // the same paper as the "claim" above the comparison (0.78 scale: the smallest quote state)
 export const P_START = {x: 498, y: 1034};                    // AI pointer tip, poised above SUBMIT on frame 0 (and where the loop returns it)
 export const P_PRESS = {x: 800, y: 1166};                    // contact point on SUBMIT
 
@@ -142,12 +145,13 @@ export const capLayout = (ci: number): Laid => {
   return out;
 };
 
-/** 0 = dark scene (cream text), 1 = cream scene (ink text) */
-export const creamness = (g: number) => {
-  const a = E.inOut(tw(g, EV['b3.start'], 10, (x) => x));
-  const b = E.inOut(tw(g, EV['b6.start'], 12, (x) => x));
-  return a * (1 - b);
-};
+/** Background changes (V3.1): one flat colour field cross-fades over 8 frames; the caption contrast flips ONCE, at the middle of each change (both styles carry a halo, so either reads on either field). */
+export const BG_FRAMES = 8;
+export const T_CREAM = EV['b3.start'];            // ink -> cream on "Except…"
+export const T_INK = EV['b6.start'] - 2;          // cream -> ink at the takeaway
+export const bgCream = (g: number) => E.inOut(tw(g, T_CREAM, BG_FRAMES, (x) => x)) * (1 - E.inOut(tw(g, T_INK, BG_FRAMES, (x) => x)));
+/** 0 = dark scene (cream text, ink halo), 1 = cream scene (ink text, cream halo): a hard switch, never a cross-fade */
+export const creamness = (g: number) => (g >= T_CREAM + BG_FRAMES / 2 && g < T_INK + BG_FRAMES / 2 ? 1 : 0);
 
 export const Captions2: React.FC<{g: number}> = ({g}) => {
   const ci = CAPS.findIndex((k) => g >= k.from && g < k.to);

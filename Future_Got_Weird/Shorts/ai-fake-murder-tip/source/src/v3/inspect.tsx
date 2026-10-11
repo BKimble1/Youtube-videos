@@ -1,5 +1,5 @@
 import React from 'react';
-import {C, E, tw, lerp, clamp01, HED_FONT, EV, INK, CREAM, PAPER, GREY, CX, Rect, rectLerp, Shield, DEEP, fitSize} from './kit3';
+import {C, E, tw, lerp, clamp01, HED_FONT, EV, INK, CREAM, PAPER, GREY, CX, Rect, rectLerp, Shield, DEEP, fitSize, ramp} from './kit3';
 import {Character, IDLE, Pose, reach} from '../components/Character';
 import {CAST} from '../components/cast';
 
@@ -11,7 +11,7 @@ const S = 2.6;                                                      // checker s
 const HEAD = {x: 262, y: 806};
 const GROUND = {x: HEAD.x, y: HEAD.y + 372 * S};
 const CH = {x: GROUND.x, y: GROUND.y, scale: S};
-export const DESK: Rect = {x: 96, y: 1170, w: 780, h: 96};
+export const DESK: Rect = {x: -40, y: 1170, w: 1160, h: 70};     // a counter across the frame; everything below it is clipped, so nothing of the character can reach the caption lane (y >= 1262)
 const SLIDE_FROM = 480;                                             // the page enters through a slot at the right edge of the safe column
 
 /** strip scroll: card i is centred when scroll == i. -1 = the source page, 0 = page A, 1 = page B, 2 = the police form */
@@ -22,45 +22,42 @@ export const stripScroll = (g: number) => {
   return -1 + a + b + c;
 };
 
-const pageX = (g: number) => PAGE3.x + (1 - E.out(tw(g, EV['b3.pull'] + 2, 10, (x) => x))) * SLIDE_FROM;
+const pageX = (g: number) => PAGE3.x + (1 - E.out(tw(g, EV['b3.pull'] + 4, 10, (x) => x))) * SLIDE_FROM;
 
-/** where the checker's right hand is aimed in world coordinates */
+/** Checker motion (V3.1): rest on the desk -> ONE short anticipation toward the page -> ONE monotonic scan along the first lines -> a short stop -> the hand leaves as the label lands. No repeated sweeps. */
+const R_HAND = {x: PAGE3.x - 40, y: DESK.y - 6};        // rest: on the desk, left of the page
+const A_HAND = {x: PAGE3.x + 70, y: PAGE3.y + 200};     // anticipation: just inside the page's left margin
+const B_HAND = {x: PAGE3.x + 330, y: PAGE3.y + 262};    // end of the single scan
+const T_ANT = EV['b3.scan0'] - 11;                      // 162
+const T_SCAN0 = EV['b3.scan0'];                         // 173
+const T_SCAN1 = EV['b3.stamp'] - 6;                     // 188
+const T_REL = EV['b3.stamp'] - 3;                       // 191: the hand is already leaving when the label lands (f194), so "no description" is never covered
+const T_REST = T_REL + 8;                               // 199
+const pathK = (g: number, t0: number, t1: number) => E.inOut(ramp(g, t0, t1 - t0));
 const handTarget = (g: number) => {
-  const scan0 = EV['b3.scan0'], stamp = EV['b3.stamp'];
-  const px = pageX(g);
-  const pull = EV['b3.pull'];
-  if (g < scan0 - 6) {
-    // pulling: the hand grips the page's left edge and brings it in; then it settles at the margin
-    const settle = E.inOut(tw(g, pull + 12, 6, (x) => x));
-    return {x: lerp(px + 20, PAGE3.x + 40, settle * 0), y: lerp(PAGE3.y + 330, PAGE3.y + 250, settle)};
-  }
-  const rel = stamp - 3;                  // the hand is already on its way off the page when the label lands, so "no description" is never covered
-  if (g < rel) {
-    const n = clamp01((g - scan0) / (rel - scan0));
-    const idx = Math.min(2, Math.floor(n * 3));
-    const fr = n * 3 - idx;
-    return {x: lerp(PAGE3.x + 90, PAGE3.x + 360, E.inOut(fr)), y: PAGE3.y + 150 + idx * 58};
-  }
-  const rest = E.inOut(tw(g, rel, 7, (x) => x));
-  return {x: lerp(PAGE3.x + 360, PAGE3.x - 60, rest), y: lerp(PAGE3.y + 266, PAGE3.y + 620, rest)};   // lets go and rests on the desk, clear of the label
+  if (g < T_ANT) return R_HAND;
+  if (g < T_SCAN0) { const u = pathK(g, T_ANT, T_SCAN0); return {x: lerp(R_HAND.x, A_HAND.x, u), y: lerp(R_HAND.y, A_HAND.y, u)}; }
+  if (g < T_SCAN1) { const u = pathK(g, T_SCAN0, T_SCAN1); return {x: lerp(A_HAND.x, B_HAND.x, u), y: lerp(A_HAND.y, B_HAND.y, u)}; }
+  if (g < T_REL) return B_HAND;
+  const u = pathK(g, T_REL, T_REST);
+  return {x: lerp(B_HAND.x, R_HAND.x, u), y: lerp(B_HAND.y, R_HAND.y, u)};
 };
+/** where the scan highlight bar sits on the page (page coordinates); follows the single scan */
+const scanBand = (g: number) => (g >= T_SCAN0 && g < EV['b3.stamp'] + 2 ? lerp(150, 266, pathK(g, T_SCAN0, T_SCAN1)) : -1);
 
 export const pose3 = (g: number): Pose => {
-  const scan0 = EV['b3.scan0'], stamp = EV['b3.stamp'], brow = EV['b3.brow'], look = EV['b3.look'], back = EV['b3.back'], blinkT = EV['b3.blink'];
+  const stamp = EV['b3.stamp'], brow = EV['b3.brow'], look = EV['b3.look'], back = EV['b3.back'], blinkT = EV['b3.blink'];
   const ht = handTarget(g);
   const armR = reach(CH, 1, ht.x, ht.y, 1);
-  // gaze: at the page, three reading sweeps, freeze at the label, glance up at the claim, back down
+  // gaze: to the page with the anticipation, along the single scan, rests on the label, glances up at the claim, back down
   let lx = 0.55, ly = 0.15;
-  if (g >= scan0 && g < stamp) {
-    const n = clamp01((g - scan0) / (stamp - scan0));
-    const idx = Math.min(2, Math.floor(n * 3));
-    const fr = n * 3 - idx;
-    lx = lerp(0.35, 0.95, E.inOut(fr)); ly = 0.1 + 0.12 * idx;
-  } else if (g >= stamp) { lx = 0.95; ly = 0.3; }
-  const up = E.inOut(tw(g, look, 5, (x) => x)), dn = E.inOut(tw(g, back, 6, (x) => x));
+  if (g >= T_ANT && g < T_SCAN0) { const u = pathK(g, T_ANT, T_SCAN0); lx = lerp(0.55, 0.35, u); ly = lerp(0.15, 0.1, u); }
+  else if (g >= T_SCAN0 && g < T_SCAN1) { const u = pathK(g, T_SCAN0, T_SCAN1); lx = lerp(0.35, 0.95, u); ly = lerp(0.1, 0.28, u); }
+  else if (g >= T_SCAN1) { lx = 0.95; ly = 0.28; }
+  const up = E.inOut(ramp(g, look, 5)), dn = E.inOut(ramp(g, back, 6));
   if (g >= look) { lx = lerp(lx, -0.1, up); ly = lerp(ly, -0.85, up); }
   if (g >= back) { lx = lerp(-0.1, 0.55, dn); ly = lerp(-0.85, 0.2, dn); }
-  const browUp = E.out(tw(g, brow, 5, (x) => x)) * (1 - 0.45 * E.inOut(tw(g, back + 10, 14, (x) => x)));
+  const browUp = E.out(ramp(g, brow, 5)) * (1 - 0.45 * E.inOut(ramp(g, back + 10, 14)));
   const blinkNow = g >= blinkT && g < blinkT + 3;
   return {
     ...IDLE,
@@ -117,14 +114,14 @@ export const SourcePage3: React.FC<{g: number}> = ({g}) => {
   const endAt = EV['b4.pageA'] + 15;
   if (g < EV['b3.pull'] || g >= endAt) return null;
   const px = pageX(g);
-  const st = EV['b3.stamp'], sc0 = EV['b3.scan0'];
+  const st = EV['b3.stamp'];
   const stampK = g < st ? 0 : E.out(tw(g, st, 4, (x) => x));
-  const toStrip = E.inOut(tw(g, EV['b4.start'], 9, (x) => x));
+  const toStrip = E.inOut(ramp(g, EV['b4.start'], 7));
   const scroll = stripScroll(g);
   let r: Rect = {...PAGE3, x: px};
   r = rectLerp(r, {...STRIP, x: STRIP.x + (-1 - scroll) * STRIP_PITCH}, toStrip);
   const stampOp = stampK * (1 - clamp01(toStrip * 2.4));
-  const band = g >= sc0 && g < st + 2 ? lerp(150, 150 + 2 * 58, clamp01((g - sc0) / (st - sc0))) : -1;
+  const band = scanBand(g);
   return (
     <g>
       <clipPath id="slot3"><rect x={96} y={560} width={780} height={640} /></clipPath>
@@ -135,43 +132,49 @@ export const SourcePage3: React.FC<{g: number}> = ({g}) => {
   );
 };
 
-/** The checker: body behind the page, the pointing arm in front of it, a desk hiding the lower body. Leaves (drops away) as the page joins the strip. */
+/** The checker: body behind the page, the pointing arm in front of it, a counter hiding the lower body. She fades and drifts in/out inside the illustration region (never through the caption lane). */
+const stageIn = (g: number) => E.out(ramp(g, EV['b3.start'] + 5, 7));            // f152-159: she fades in once the field is (almost) cream and the paper is nearly home; her face is readable before the scan starts (f162)
+const stageOut = (g: number) => E.inOut(ramp(g, EV['b4.start'], 7));            // f223-229: gone before the next caption (f231)
+const stageT = (g: number) => {
+  const a = stageIn(g), o = stageOut(g);
+  return {op: a * (1 - o), dx: -(1 - a) * 46 - o * 34};
+};
+
+const StageClip: React.FC = () => <clipPath id="stage3Clip"><rect x={-60} y={0} width={1200} height={DESK.y + DESK.h} /></clipPath>;
+
 export const Stage3: React.FC<{g: number}> = ({g}) => {
-  const t0 = EV['b3.start'];
-  const ex = E.inOut(tw(g, EV['b4.start'], 9, (x) => x));
-  if (g < t0 + 2 || ex >= 1) return null;
-  const en = E.out(tw(g, EV['b3.start'] + 1, 10, (x) => x));
-  const dy = (1 - en) * 620 + ex * 560;
+  if (g < EV['b3.start'] + 2 || stageOut(g) >= 1) return null;
+  const {op, dx} = stageT(g);
   const pose = pose3(g);
   const wrap = `translate(${GROUND.x - 200 * S} ${GROUND.y - 500 * S})`;
-  const px = pageX(g);
   return (
-    <g transform={`translate(0 ${dy})`}>
-      <circle cx={HEAD.x + 20} cy={HEAD.y - 10} r={290} fill={DEEP} opacity={0.5} />
-      <g transform={wrap}>
-        <Character look={CAST.checker} pose={pose} frame={g} seed={5} scale={S} shadow={false} life={0} eyeDarts={false} front="R" pass="body" />
+    <g opacity={op} transform={`translate(${dx} 0)`}>
+      <StageClip />
+      <g clipPath="url(#stage3Clip)">
+        <circle cx={HEAD.x + 20} cy={HEAD.y - 10} r={290} fill={DEEP} opacity={0.5} />
+        <g transform={wrap}>
+          <Character look={CAST.checker} pose={pose} frame={g} seed={5} scale={S} shadow={false} life={0} eyeDarts={false} front="R" pass="body" />
+        </g>
+        {/* the page is drawn by SourcePage3 (above this group); the pointing arm and the counter go in front of it, see Stage3Front */}
+        <rect x={DESK.x + 8} y={DESK.y + 12} width={DESK.w} height={DESK.h} rx={26} fill={INK} opacity={0.2} />
       </g>
-      {/* the page is drawn by SourcePage3 (above this group); the pointing arm and the desk go in front of it, see Stage3Front */}
-      <rect x={DESK.x + 8} y={DESK.y + 12} width={DESK.w} height={DESK.h} rx={26} fill={INK} opacity={0.2} />
     </g>
   );
 };
 
 export const Stage3Front: React.FC<{g: number}> = ({g}) => {
-  const t0 = EV['b3.start'];
-  const ex = E.inOut(tw(g, EV['b4.start'], 9, (x) => x));
-  if (g < t0 + 2 || ex >= 1) return null;
-  const en = E.out(tw(g, EV['b3.start'] + 1, 10, (x) => x));
-  const dy = (1 - en) * 620 + ex * 560;
+  if (g < EV['b3.start'] + 2 || stageOut(g) >= 1) return null;
+  const {op, dx} = stageT(g);
   const pose = pose3(g);
   const wrap = `translate(${GROUND.x - 200 * S} ${GROUND.y - 500 * S})`;
   return (
-    <g transform={`translate(0 ${dy})`}>
-      <g transform={wrap}>
-        <Character look={CAST.checker} pose={pose} frame={g} seed={5} scale={S} shadow={false} life={0} eyeDarts={false} front="R" pass="frontArm" holdR={<Finger />} />
+    <g opacity={op} transform={`translate(${dx} 0)`}>
+      <g clipPath="url(#stage3Clip)">
+        <g transform={wrap}>
+          <Character look={CAST.checker} pose={pose} frame={g} seed={5} scale={S} shadow={false} life={0} eyeDarts={false} front="R" pass="frontArm" holdR={<Finger />} />
+        </g>
+        <rect x={DESK.x} y={DESK.y} width={DESK.w} height={DESK.h} rx={26} fill={DEEP} stroke={INK} strokeWidth={7} />
       </g>
-      <rect x={DESK.x} y={DESK.y} width={DESK.w} height={DESK.h} rx={26} fill={DEEP} stroke={INK} strokeWidth={7} />
-      <rect x={-40} y={DESK.y + DESK.h - 4} width={1160} height={700} fill={CREAM} />
     </g>
   );
 };

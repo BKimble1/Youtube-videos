@@ -13,6 +13,7 @@ import {auditCaptions2} from './v2/kit2';
 import {TOTAL as TOTAL3} from './v3/cues';
 import {Film3} from './v3/Film3';
 import {auditCaptions2 as auditCaptions3} from './v3/kit3';
+import {auditQuote} from './v3/quote';
 
 /** Text-free portrait start plate for a later Runway attempt (native checker rig, medium close-up). */
 const ReactionPlate: React.FC = () => {
@@ -42,6 +43,7 @@ export const Root: React.FC = () => (
     <Composition id="CaptionAuditV3" component={AuditDummy} width={W} height={H} fps={FPS} durationInFrames={1} defaultProps={{audit: null as unknown}} calculateMetadata={async () => ({props: {audit: await auditCaptions3()}})} />
     <Composition id="ShortV3" component={Film3} width={W} height={H} fps={FPS} durationInFrames={TOTAL3} defaultProps={{captions: false, audio: true}} />
     <Composition id="ShortV3Captioned" component={Film3} width={W} height={H} fps={FPS} durationInFrames={TOTAL3} defaultProps={{captions: true, audio: true}} />
+    <Composition id="QuoteAuditV31" component={AuditDummy} width={W} height={H} fps={FPS} durationInFrames={1} defaultProps={{audit: null as unknown}} calculateMetadata={async () => ({props: {audit: await auditQuote()}})} />
     <Still id="ReactionPlate" component={ReactionPlate} width={W} height={H} />
   </>
 );

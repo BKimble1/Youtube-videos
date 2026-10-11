@@ -1,5 +1,5 @@
 import React from 'react';
-import {C, E, tw, sp, SNAP, SOFT, lerp, clamp01, measure, HED_FONT, CAP_FONT, EV, INK, CREAM, PAPER, GREY, CX, WIN, HDR_H, TB1, BTN2, Rect, Card, PoliceHeader, Button2, Cursor2, Shield, DEEP, Env3} from './kit3';
+import {C, E, tw, sp, SNAP, SOFT, lerp, clamp01, measure, HED_FONT, CAP_FONT, EV, INK, CREAM, PAPER, GREY, CX, WIN, HDR_H, TB1, BTN2, Rect, Card, PoliceHeader, Button2, Cursor2, Shield, DEEP, Env3, ramp, T_INK, BG_FRAMES} from './kit3';
 import {STRIP, STRIP_PITCH, stripScroll} from './inspect';
 
 /* ============================================================================================ B4: test context -> the real form. Three large pages pass under the AI pointer. */
@@ -19,8 +19,6 @@ export const FormBody: React.FC = () => (
 );
 
 const growK = (g: number) => E.inOut(tw(g, EV['b4.grow'], 11, (x) => x));
-const foldK = (g: number) => E.inOut(tw(g, EV['b5.fold'], 6, (x) => x));
-const slideK = (g: number) => E.inOut(tw(g, EV['b5.fold'] + 4, 5, (x) => x));
 
 const PageProp: React.FC<{r: Rect; kind: 'a' | 'b'}> = ({r, kind}) => (
   <g>
@@ -50,7 +48,7 @@ const pill = (text: string, size: number, padX = 30) => measure(text, HED_FONT, 
 export const Test4: React.FC<{g: number}> = ({g}) => {
   const t0 = EV['b4.start'];
   if (g < t0 || g >= EV['b5.fold'] + 20) return null;
-  const chipOut = E.inOut(tw(g, EV['b5.fold'], 8, (x) => x));
+  const chipOut = E.inOut(ramp(g, EV['b5.fold'] - 8, 6));        // the old badges retire in an orderly 6-frame exit BEFORE the fold and before the inbox header arrives
   const c1 = E.out(tw(g, EV['b4.chip1'], 8, (x) => x)), c2 = E.out(tw(g, EV['b4.chip2'], 8, (x) => x));
   const w1 = pill('CLAUDE HAIKU 4.5', 44), w2 = pill('WEBSITE TEST', 44);
   const CHY = 300, CHH = 76;
@@ -70,7 +68,7 @@ export const Test4: React.FC<{g: number}> = ({g}) => {
   return (
     <g>
       {/* model + test chips: legible, subordinate */}
-      <g transform={`translate(0 ${-chipOut * 60})`} opacity={1 - chipOut}>
+      <g transform={`translate(0 ${-chipOut * 26})`} opacity={1 - chipOut}>
         <g transform={`translate(${-(1 - c1) * 220} 0)`} opacity={c1}>
           <rect x={96} y={CHY} width={w1} height={CHH} rx={38} fill={C.saffron} stroke={INK} strokeWidth={6} />
           <text x={96 + w1 / 2} y={CHY + CHH / 2 + 2} dy="0.36em" textAnchor="middle" fontFamily={HED_FONT} fontWeight={800} fontSize={44} letterSpacing={2} fill={INK}>CLAUDE HAIKU 4.5</text>
@@ -95,7 +93,7 @@ export const Test4: React.FC<{g: number}> = ({g}) => {
       {rings.map((k, i) => k > 0 && g < EV['b4.grow'] + 2 && (
         <rect key={i} x={STRIP.x - 14 * k} y={STRIP.y - 14 * k} width={STRIP.w + 28 * k} height={STRIP.h + 28 * k} rx={32} fill="none" stroke={C.teal} strokeWidth={7} opacity={(1 - k) * 0.9} />
       ))}
-      {showReal && g < EV['b5.fold'] + 6 && (
+      {showReal && chipOut < 1 && (
         <g opacity={1 - chipOut} transform={`translate(96 ${452}) scale(${lerp(0.7, 1, real)})`}>
           <g opacity={clamp01(real * 3)}>
             <rect x={0} y={-34} width={measure('REAL POLICE FORM', HED_FONT, 46, 800, 2) + 40} height={68} rx={34} fill={DEEP} stroke={INK} strokeWidth={5} />
@@ -160,16 +158,25 @@ const FolderV3: React.FC<{r: Rect; inside: React.ReactNode; label: number; latch
 
 export const Mail5: React.FC<{g: number}> = ({g}) => {
   const t0 = EV['b5.fold'];
-  const iris = E.inOut(tw(g, EV['b6.start'], 12, (x) => x));
-  if (g < t0 - 4 || g >= EV['b6.start'] + 14) return null;
-  const fade = 1 - clamp01(iris * 1.6);
+  const out = E.inOut(ramp(g, T_INK, 6));                         // the whole outcome (inbox, folder, tray, route) leaves as ONE group while the field goes to ink
+  if (g < t0 - 4 || g >= T_INK + 6) return null;
+  const fade = 1 - out;
   const e = envAt(g);
-  const fk = foldK(g), sk = slideK(g);
-  const flap = g < t0 + 9 ? 0 : E.out(tw(g, t0 + 9, 5, (x) => x));
-  const envPop = E.out(tw(g, t0 + 1, 4, (x) => x));
-  const frontOp = E.out(tw(g, t0 + 4, 3, (x) => x));
-  const fsc = lerp(1, 0.44, fk);
+  // fold (V3.1): A f335-341 the form shrinks and rises above the open envelope; B f341-347 it folds (height 1 -> 0.34) and slides in behind the envelope's FRONT panel (a real occluder, no crop); C f346-351 the flap closes
+  const aK = E.inOut(ramp(g, t0, 6)), bK = E.inOut(ramp(g, t0 + 6, 6));
+  const fx = lerp(1, 0.42, aK);
+  const fcy = lerp(lerp(0, -250, aK), -20, bK);
+  const fsx = fx, fsy = fx * lerp(1, 0.34, bK);
+  const flap = g < t0 + 11 ? 0 : E.out(ramp(g, t0 + 11, 5));
+  const envPop = E.out(ramp(g, t0, 4));
+  const frontOp = E.out(ramp(g, t0 + 2, 4));
   const showForm = g < t0 + 16;
+  const formG = (cy: number) => (
+    <g transform={`translate(0 ${cy}) scale(${fsx} ${fsy}) translate(${-(WIN.x + WIN.w / 2)} ${-(WIN.y + WIN.h / 2)})`}>
+      <FormBody />
+    </g>
+  );
+  const slideIn = g >= t0 + 6;
   const folderIn = E.out(tw(g, EV['b5.inbox'] - 8, 8, (x) => x));
   const land = EV['b5.land'];
   const label = sp(g, land, SNAP, 16);
@@ -210,14 +217,10 @@ export const Mail5: React.FC<{g: number}> = ({g}) => {
         {never > 0 && <path d={`M ${ITRAY.x + ITRAY.w / 2} ${FOLDER.y + FOLDER.h + 14} L ${ITRAY.x + ITRAY.w / 2} ${routeEnd}`} stroke={INK} strokeWidth={8} strokeDasharray="6 16" strokeLinecap="round" opacity={0.8} />}
         {!inFolder && (
           <g>
-            <Env3 x={e.x} y={e.y} s={e.s} rot={e.rot} flap={flap} clipId="envClipFold3" op={envPop} front={frontOp}>
-              {showForm && (
-                <g transform={`translate(0 ${-fk * 50 + sk * 214}) scale(${fsc}) translate(${-(WIN.x + WIN.w / 2)} ${-(WIN.y + WIN.h / 2)})`}>
-                  <FormBody />
-                </g>
-              )}
+            <Env3 x={e.x} y={e.y} s={e.s} rot={e.rot} flap={flap} op={envPop} front={frontOp}>
+              {showForm && slideIn && formG(fcy)}
             </Env3>
-            <clipPath id="envClipFold3"><rect x={-700} y={-900} width={1400} height={1040} /></clipPath>
+            {showForm && !slideIn && <g transform={`translate(${e.x} ${e.y}) scale(${e.s})`}>{formG(fcy)}</g>}
           </g>
         )}
         {armOn && (
