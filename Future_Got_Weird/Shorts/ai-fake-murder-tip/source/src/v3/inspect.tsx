@@ -11,7 +11,7 @@ const S = 2.6;                                                      // checker s
 const HEAD = {x: 262, y: 806};
 const GROUND = {x: HEAD.x, y: HEAD.y + 372 * S};
 const CH = {x: GROUND.x, y: GROUND.y, scale: S};
-export const DESK: Rect = {x: -40, y: 1170, w: 1160, h: 70};     // a counter across the frame; everything below it is clipped, so nothing of the character can reach the caption lane (y >= 1262)
+export const DESK: Rect = {x: 96, y: 1170, w: 780, h: 70};       // the counter; a cream cover below it hides the lower body, so nothing of the character can reach the caption lane (y >= 1262)
 const SLIDE_FROM = 480;                                             // the page enters through a slot at the right edge of the safe column
 
 /** strip scroll: card i is centred when scroll == i. -1 = the source page, 0 = page A, 1 = page B, 2 = the police form */
@@ -124,8 +124,8 @@ export const SourcePage3: React.FC<{g: number}> = ({g}) => {
   const band = scanBand(g);
   return (
     <g>
-      <clipPath id="slot3"><rect x={96} y={560} width={780} height={640} /></clipPath>
-      <g clipPath={toStrip > 0 ? undefined : 'url(#slot3)'}>
+      <clipPath id="slot3"><rect x={96} y={440} width={780} height={760} /></clipPath>
+      <g clipPath="url(#slot3)">
         <PageBody r={r} stamp={stampK} stampOp={stampOp} band={toStrip > 0 ? undefined : band} />
       </g>
     </g>
@@ -133,14 +133,14 @@ export const SourcePage3: React.FC<{g: number}> = ({g}) => {
 };
 
 /** The checker: body behind the page, the pointing arm in front of it, a counter hiding the lower body. She fades and drifts in/out inside the illustration region (never through the caption lane). */
+const StageClip: React.FC = () => <clipPath id="stage3Clip"><rect x={-60} y={0} width={1200} height={DESK.y + DESK.h + 4} /></clipPath>;
+
 const stageIn = (g: number) => E.out(ramp(g, EV['b3.start'] + 5, 7));            // f152-159: she fades in once the field is (almost) cream and the paper is nearly home; her face is readable before the scan starts (f162)
 const stageOut = (g: number) => E.inOut(ramp(g, EV['b4.start'], 7));            // f223-229: gone before the next caption (f231)
 const stageT = (g: number) => {
   const a = stageIn(g), o = stageOut(g);
   return {op: a * (1 - o), dx: -(1 - a) * 46 - o * 34};
 };
-
-const StageClip: React.FC = () => <clipPath id="stage3Clip"><rect x={-60} y={0} width={1200} height={DESK.y + DESK.h} /></clipPath>;
 
 export const Stage3: React.FC<{g: number}> = ({g}) => {
   if (g < EV['b3.start'] + 2 || stageOut(g) >= 1) return null;

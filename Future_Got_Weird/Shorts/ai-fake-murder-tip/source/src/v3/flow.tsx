@@ -68,6 +68,8 @@ export const Test4: React.FC<{g: number}> = ({g}) => {
   return (
     <g>
       {/* model + test chips: legible, subordinate */}
+      <clipPath id="chipCol3"><rect x={90} y={0} width={796} height={1920} /></clipPath>
+      <g clipPath="url(#chipCol3)">
       <g transform={`translate(0 ${-chipOut * 26})`} opacity={1 - chipOut}>
         <g transform={`translate(${-(1 - c1) * 220} 0)`} opacity={c1}>
           <rect x={96} y={CHY} width={w1} height={CHH} rx={38} fill={C.saffron} stroke={INK} strokeWidth={6} />
@@ -77,6 +79,7 @@ export const Test4: React.FC<{g: number}> = ({g}) => {
           <rect x={876 - w2} y={CHY} width={w2} height={CHH} rx={38} fill={INK} />
           <text x={876 - w2 / 2} y={CHY + CHH / 2 + 2} dy="0.36em" textAnchor="middle" fontFamily={HED_FONT} fontWeight={800} fontSize={44} letterSpacing={2} fill={CREAM}>WEBSITE TEST</text>
         </g>
+      </g>
       </g>
       {/* the strip: pages pass through a slot the width of the safe column */}
       <clipPath id="strip3"><rect x={96} y={440} width={780} height={720} /></clipPath>
@@ -197,7 +200,7 @@ export const Mail5: React.FC<{g: number}> = ({g}) => {
   const routeEnd = lerp(FOLDER.y + FOLDER.h + 14, ITRAY.y - 30, 0.5 * never);   // the route starts and stops short: it never reaches the tray
   return (
     <g>
-      <clipPath id="b5Col"><rect x={84} y={0} width={800} height={1920} /></clipPath>
+      <clipPath id="b5Col"><rect x={90} y={0} width={796} height={1920} /></clipPath>
       <g opacity={fade} clipPath="url(#b5Col)">
         <g transform={`translate(${-(1 - inboxIn) * 640} 0)`}>
           <rect x={INBOX.x + 8} y={INBOX.y + 14} width={INBOX.w} height={INBOX.h} rx={22} fill={INK} opacity={0.2} />

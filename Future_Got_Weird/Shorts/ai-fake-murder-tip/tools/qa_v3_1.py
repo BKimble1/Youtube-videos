@@ -39,7 +39,7 @@ res = {'lane_intrusion': [], 'safe': [], 'spikes_new': [], 'spikes_old': [], 'qu
 prev = None
 diff_new = []
 first = last = None
-quote_probe = {120: 'Q2 (opening quote surface, 1.0)', 200: 'Q3 (checker scene, 0.78)', 500: 'Q6 (takeaway, 1.0)'}
+quote_probe = {120: ('Q2 (opening quote surface, scale 1.0)', (96, 557, 780, 366)), 200: ('Q3 (checker scene, smallest state, scale 0.78)', (182, 292, 608, 285.4)), 500: ('Q6 (takeaway, largest state, scale 1.0)', (96, 330, 780, 366)), 540: ('Q6 (takeaway, cursor approaching)', (96, 330, 780, 366))}
 SAFFRON = np.array([0xFF, 0xC7, 0x44])
 for n, im in frames(NEW):
     if n == 0: first = im.copy()
@@ -58,15 +58,15 @@ for n, im in frames(NEW):
         if k > 0:
             res['lane_intrusion'].append((n, k))
     if n in quote_probe:
+        label, (qx, qy, qw, qh) = quote_probe[n]
         sm = (np.abs(im.astype(np.int16) - SAFFRON).max(axis=2) < 24)
-        res['quote'][n] = {'state': quote_probe[n], 'saffron_px_total': int(sm.sum())}
-        # saffron pixels in the row bands of the highlights: report the right-most and left-most saffron column inside the paper's y span
-        ys_s, xs_s = np.where(sm)
-        res['quote'][n]['saffron_bbox'] = [int(xs_s.min()), int(ys_s.min()), int(xs_s.max()), int(ys_s.max())] if len(xs_s) else None
-        # the dark border: right-most ink-coloured pixel column in the paper's middle row
-        ink = np.array([0x16, 0x2A, 0x32])
-        im16 = im.astype(np.int16)
-        res['quote'][n]['_im'] = None
+        r0, r1 = int(qy + 0.28 * qh), int(qy + qh)               # rows below the AI corner mark (the mark is saffron too)
+        c0, c1 = int(qx - 20), int(qx + qw + 20)
+        ys_s, xs_s = np.where(sm[r0:r1, c0:c1])
+        xs_s = xs_s + c0
+        inner_l, inner_r = qx + 3.5, qx + qw - 3.5
+        res['quote'][n] = {'state': label, 'saffron_min_x': int(xs_s.min()), 'saffron_max_x': int(xs_s.max()),
+                           'clearance_left_px': round(float(xs_s.min() - inner_l), 1), 'clearance_right_px': round(float(inner_r - xs_s.max()), 1)}
 res['frames'] = len(diff_new) + 1
 res['first_last_mean_abs_diff'] = float(np.abs(first.astype(np.int16) - last.astype(np.int16)).mean())
 res['first_last_pct_over_32'] = float((np.abs(first.astype(np.int16) - last.astype(np.int16)).max(axis=2) > 32).mean() * 100)
@@ -100,4 +100,4 @@ print('largest frame-to-frame changes, V3.1:', [(i + 1, diff_new[i]) for i in to
 top = sorted(range(len(diff_old)), key=lambda i: -diff_old[i])[:10]
 print('largest frame-to-frame changes, V3 :', [(i + 1, diff_old[i]) for i in top])
 for k, v in res['quote'].items():
-    print('quote probe', k, v['state'], 'saffron bbox', v['saffron_bbox'])
+    print('quote probe f%d' % k, v['state'], '| highlight x', v['saffron_min_x'], '-', v['saffron_max_x'], '| clearance to the inside of the border: left', v['clearance_left_px'], 'right', v['clearance_right_px'])
