@@ -1,0 +1,9 @@
+# V4 determinism check (clean retimed MP4 rendered twice from the final source; decoded frames compared with ffmpeg framemd5 / psnr)
+frames compared: 956
+frames hash-identical: 785
+frames that differ: 171 — groups of consecutive frames: [(53, 53), (65, 226), (938, 945)]
+lowest per-frame PSNR between the two renders: 48.0 dB; every other frame is bit-identical
+Remotion stills of five test frames (46, 100, 150, 226, 300) rendered twice earlier in the session were byte-identical (md5), so the picture function itself is deterministic.
+An earlier run on the previous build (before the last two edits) showed 181 differing frames (45..226, PSNR >= 47.3 dB) in one keyframe group while 775 were identical; that pattern is consistent
+with a single encoder-level decision differing between two libx264 runs (inferred, not isolated further) and not with a picture difference. The V3 check (all 1038 frames hash-identical) did not show this.
+Reported as: picture deterministic; the encode is not bit-reproducible run to run.

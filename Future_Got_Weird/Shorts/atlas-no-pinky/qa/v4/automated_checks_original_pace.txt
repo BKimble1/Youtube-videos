@@ -1,0 +1,112 @@
+# V4 automated checks — pace: orig (1038 frames = 34.600 s)
+
+## fonts (browser-side proof, bundled @fontsource faces)
+  montserrat800: document.fonts.check=True; width of the probe string with face 478.3 vs fallback-only 420.1 -> rendering
+  barlow800: document.fonts.check=True; width of the probe string with face 315.2 vs fallback-only 420.1 -> rendering
+  headline extents (x px; safe band 60..930, right rail clear):
+    opener kicker  x  168.. 912 (743 px) ok
+    opener title   x  157.. 923 (766 px) ok
+    ONE DAY        x  120.. 651 (531 px) ok
+    NEW HAND       x  120.. 793 (673 px) ok
+    4 DIGITS       x  120.. 658 (538 px) ok
+    13             x  112.. 334 (222 px) ok
+    TO MOVE        x  354.. 744 (390 px) ok
+    PINCH.         x  120.. 543 (423 px) ok
+    TURN.          x  120.. 505 (385 px) ok
+    PRESS.         x  120.. 563 (443 px) ok
+    ONE MORE       x  120.. 676 (556 px) ok
+    FINGER?        x  120.. 590 (470 px) ok
+    BUILT          x   76.. 345 (269 px) ok
+    TO WORK        x   76.. 513 (437 px) ok
+    NOT IN         x  252.. 828 (576 px) ok
+    BUDGET         x  194.. 886 (693 px) ok
+
+## captions: transcript, timing, coverage, reading time, fit (FGW_Atlas_No_Pinky_V4_OriginalPace.srt + the rendered cue table)
+  transcript equality: SRT words 88 vs narration words 88 -> identical, same order
+  rendered cue table words 88 -> identical
+  cue  start-lag  end-hold  handoff  dur   wps  cps  lines  width  size  text
+    1       +0 ms    +120 ms          2.00   2.5 12.0  2       536.0   76   This robot has no pinky.
+    2      -13 ms     +93 ms          1.07   1.9 10.3  1       493.5   76   On purpose.
+    3      -13 ms     +80 ms  clean   1.93   2.6 17.6  2       726.3   76   Boston Dynamics says its engineers
+    4       +0 ms     +87 ms  clean   1.37   3.7 19.0  2       589.2   76   taped their ring and pinky
+    5       +7 ms    +120 ms          1.63   3.1 16.5  2       663.9   76   fingers together for a day.
+    6      +13 ms    +120 ms          0.67   3.0 18.0  1       502.3   76   The verdict?
+    7      -13 ms    +113 ms          0.97   3.1 13.4  1       497.0   76   Leave it out.
+    8       +0 ms     +87 ms  clean   2.17   2.8 15.2  2       693.5   76   Atlas’s new hand has four digits,
+    9       +7 ms     +80 ms  clean   0.63   3.2 18.9  1       490.2   76   but thirteen
+   10       +0 ms    +113 ms          1.23   2.4 15.4  2       431.3   76   degrees of freedom.
+   11       +7 ms    +107 ms          1.70   2.4 14.7  2       579.7   76   Independent ways to move.
+   12       +0 ms    +133 ms  clean   1.73   3.5 17.3  2       697.6   76   The company says it can pinch,
+   13      +13 ms     +53 ms  clean   0.80   2.5 16.2  1       514.6   76   turn objects,
+   14      +13 ms    +100 ms          1.37   2.9 17.6  2       523.9   76   and press tool triggers.
+   15       +0 ms     +80 ms  clean   1.20   4.2 20.0  2       501.9   76   A fifth digit would mean
+   16       +0 ms     +93 ms          1.53   2.0 13.7  2       452.2   76   three more actuators.
+   17      -13 ms    +113 ms  clean   0.97   2.1 10.3  1       421.0   76   More cost.
+   18       -7 ms     +80 ms  clean   0.97   2.1 10.3  1       430.1   76   More bulk.
+   19       +0 ms    +120 ms          1.00   4.0 21.0  2       486.4   76   More things to break.
+   20       -7 ms     +93 ms  clean   1.70   3.5 14.1  2       455.0   76   So the goal is a useful,
+   21      +13 ms    +113 ms          1.30   1.5 10.8  1       553.4   76   reliable hand.
+   22       +7 ms     +93 ms          1.37   2.9 19.0  2       637.3   76   Looking human is optional.
+   23       -7 ms     +53 ms  clean   1.50   2.0 15.3  2       480.5   76   Apparently, even robots
+   24      +13 ms     +40 ms          0.87   3.5 16.2  1       603.7   76   have a budget.
+  max reading rate 21.0 chars/s; shortest cue 0.63 s; widest line 726.3 px (limit 760); cues rewrapped but never shrunk: True
+  replay boundary: first cue starts at frame 0; last cue ends frame 1014 (33.800 s), closing tear starts frame 1016 -> caption clear before the tear
+  gaps between cues (frames): [2, 4, 0, 0, 4, 8, 5, 0, 0, 4, 4, 0, 0, 3, 0, 4, 0, 0, 13, 0, 4, 9, 0]
+
+## FGW_Atlas_No_Pinky_V4_OriginalPace_1080x1920.mp4
+  video h264 High 1080x1920 30/1 yuv420p bt709 frames=1038 dur=34.600s
+  audio aac 48000 Hz ch=2 317 kb/s dur=34.603s; size 10.4 MB
+  full decode errors: none
+  integrated -14.6 LUFS, LRA 2.5 LU, true peak -1.4 dBTP
+
+## FGW_Atlas_No_Pinky_V4_OriginalPace_Captioned_1080x1920.mp4
+  video h264 High 1080x1920 30/1 yuv420p bt709 frames=1038 dur=34.600s
+  audio aac 48000 Hz ch=2 317 kb/s dur=34.603s; size 11.7 MB
+  full decode errors: none
+  integrated -14.6 LUFS, LRA 2.5 LU, true peak -1.4 dBTP
+
+## audio identical between clean and captioned: True (MD5=3e7b7ebd40508e7eb7559fb67ab2053b)
+
+## scene-change detections on the clean MP4 (threshold 0.25; each should sit inside a planned transition window)
+  frame  941 (31.37s)  B09 edge wipe
+  frame  942 (31.40s)  B09 edge wipe
+  detections: 2; unplanned: 0
+
+## held-grip contact audit (tools/check_contacts.mjs: pad capsule vs object, px; <= 0 touching/pressing; tolerance 8 px)
+  TURN worst |gap| = 3.0 px
+  TURN approach (frames 489-496) pad openings px: 21 21 20 17 9 1 -2 -3
+  PINCH worst |gap| = 4.9 px
+  BLOCK0 worst |gap| = 3.0 px
+  BLOCK1 worst |gap| = 3.0 px
+  DRILL index tip on the trigger lever in 27/27 frames (worst 6.2 px from the lever centre; the lever is about 41 x 92 px)
+  OK: every held grip within 8px
+
+## audio timing: cross-correlation of the delivered MP4 audio with the narration file the cues were built from
+  best lag 3.0 ms (0 = captions and speech share one clock), normalised peak 0.98
+
+## no persistent source / tag bars (static scan of the V4 picture code)
+  none found
+  company name appears on picture only in: source/src/v4/opener.tsx:132:      <text x={540} y={250} dy="0.36em" textAnchor="middle" fontFamily={HED_FONT} fontWeight={800} fontSize={46} letterSpacing={7} fill={C.ink} opacity={0.82}>ATLAS HAND · BOSTON DYNAMICS</text>
+
+## loop seam, picture (PSNR dB between decoded frames; adjacent-frame values inside the opener are the reference)
+  frame 1037 ->    0:  37.4 dB
+  frame 1036 -> 1037:  37.9 dB
+  frame 1035 -> 1036:  37.4 dB
+  frame 1034 -> 1035:  37.3 dB
+  frame    0 ->    1:  38.7 dB
+  frame    1 ->    2:  39.2 dB
+  frame    2 ->    3:  39.6 dB
+  captioned MP4, last -> first:  22.3 dB
+  captioned MP4 last frame vs clean last frame identical? False (no caption on the final frame); first frame carries the caption lane: True
+
+## audio stems (same gain structure as the mix, before limiter)
+  while speaking: voice -16.2 dBFS RMS; music -22.4 dB re voice; effects -20.4 dB re voice
+  in gaps: music -35.1 dBFS RMS
+  mix L/R correlation 1.0000; mix sample peak -1.51 dBFS; samples 1660800 = 34.6000 s (video 34.6000 s)
+  boundary RMS: last 0.5 s -30.7 dBFS, last 0.1 s -37.1 dBFS, first 0.1 s -22.2 dBFS, first 0.5 s -15.8 dBFS
+  music-bed seam step |last sample - first sample| = 0.00043 (typical adjacent-sample step 0.00053)
+  effect events: 32 (30 distinct cue names; V3 had 29, V1 41)
+  effects landing on the first syllable of a phrase: none; music 124.855 BPM = 18 bars over the video length
+  voice ends 33.434 s; last cue ends 33.800 s; closing tear 33.867 s; picture 34.600 s
+
+## summary: ALL AUTOMATED CHECKS PASSED

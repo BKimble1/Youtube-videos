@@ -12,9 +12,10 @@ const frames = list.split(',').map(Number);
 const browserExecutable = process.env.REMOTION_BROWSER || '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 fs.mkdirSync(outDir, {recursive: true});
 const serveUrl = await bundle({entryPoint: path.join(src, 'src/index.ts'), onProgress: () => {}});
-const comp = await selectComposition({serveUrl, id, browserExecutable, inputProps: {}});
+const envVariables = {REMOTION_PACE: process.env.REMOTION_PACE || 'fast'}; // the pace is read at runtime in the browser
+const comp = await selectComposition({serveUrl, id, browserExecutable, inputProps: {}, envVariables});
 for (const f of frames) {
   const output = path.join(outDir, `${id}_${String(f).padStart(4, '0')}.png`);
-  await renderStill({composition: comp, serveUrl, frame: f, output, browserExecutable, scale: Number(scale), imageFormat: 'png'});
+  await renderStill({composition: comp, serveUrl, frame: f, output, browserExecutable, scale: Number(scale), imageFormat: 'png', envVariables});
 }
 console.log('rendered', frames.length, 'frames to', outDir);

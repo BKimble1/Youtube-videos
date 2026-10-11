@@ -1,0 +1,95 @@
+1
+00:00:00,000 --> 00:00:01,900
+This robot has no pinky.
+
+2
+00:00:01,981 --> 00:00:03,010
+On purpose.
+
+3
+00:00:03,010 --> 00:00:04,833
+Boston Dynamics says its engineers
+
+4
+00:00:04,838 --> 00:00:06,133
+taped their ring and pinky
+
+5
+00:00:06,133 --> 00:00:07,633
+fingers together for a day.
+
+6
+00:00:07,695 --> 00:00:08,333
+The verdict?
+
+7
+00:00:08,610 --> 00:00:09,433
+Leave it out.
+
+8
+00:00:09,486 --> 00:00:11,533
+Atlas’s new hand has four digits,
+
+9
+00:00:11,543 --> 00:00:12,167
+but thirteen
+
+10
+00:00:12,152 --> 00:00:13,267
+degrees of freedom.
+
+11
+00:00:13,333 --> 00:00:14,867
+Independent ways to move.
+
+12
+00:00:14,933 --> 00:00:16,567
+The company says it can pinch,
+
+13
+00:00:16,571 --> 00:00:17,333
+turn objects,
+
+14
+00:00:17,333 --> 00:00:18,667
+and press tool triggers.
+
+15
+00:00:18,743 --> 00:00:19,900
+A fifth digit would mean
+
+16
+00:00:19,886 --> 00:00:21,371
+three more actuators.
+
+17
+00:00:21,371 --> 00:00:22,286
+More cost.
+
+18
+00:00:22,286 --> 00:00:23,200
+More bulk.
+
+19
+00:00:23,200 --> 00:00:24,133
+More things to break.
+
+20
+00:00:24,324 --> 00:00:25,933
+So the goal is a useful,
+
+21
+00:00:25,924 --> 00:00:27,181
+reliable hand.
+
+22
+00:00:27,181 --> 00:00:28,500
+Looking human is optional.
+
+23
+00:00:28,781 --> 00:00:30,200
+Apparently, even robots
+
+24
+00:00:30,190 --> 00:00:31,067
+have a budget.

@@ -1,0 +1,1331 @@
+{
+ "pace": "orig",
+ "fps": 30,
+ "total_seconds": 34.6,
+ "total_frames": 1038,
+ "speed": 1.0,
+ "knots": [
+  [
+   0.0,
+   0.0
+  ],
+  [
+   60.0,
+   60.0
+  ]
+ ],
+ "events": {
+  "gap.pop": {
+   "t": 0.96,
+   "frame": 29
+  },
+  "gap.pulse": {
+   "t": 1.28,
+   "frame": 38
+  },
+  "label.purpose": {
+   "t": 2.32,
+   "frame": 70
+  },
+  "tape.wipe": {
+   "t": 2.8,
+   "frame": 84
+  },
+  "exp.wiggle": {
+   "t": 3.7,
+   "frame": 111
+  },
+  "exp.push": {
+   "t": 4.85,
+   "frame": 146
+  },
+  "exp.wrap": {
+   "t": 5.15,
+   "frame": 154
+  },
+  "exp.mug.grasp": {
+   "t": 5.85,
+   "frame": 176
+  },
+  "exp.mug.set": {
+   "t": 6.9,
+   "frame": 207
+  },
+  "exp.knob.turn": {
+   "t": 7.13,
+   "frame": 214
+  },
+  "exp.knob.detent": {
+   "t": 7.42,
+   "frame": 223
+  },
+  "exp.day.done": {
+   "t": 7.7,
+   "frame": 231
+  },
+  "label.day": {
+   "t": 7.28,
+   "frame": 218
+  },
+  "slip.in": {
+   "t": 8.0,
+   "frame": 240
+  },
+  "stamp.hover": {
+   "t": 8.81,
+   "frame": 264
+  },
+  "stamp.hit": {
+   "t": 9.15,
+   "frame": 274
+  },
+  "iris.b04": {
+   "t": 9.9,
+   "frame": 297
+  },
+  "b04.badge1": {
+   "t": 11.68,
+   "frame": 350
+  },
+  "b04.badge2": {
+   "t": 11.86,
+   "frame": 356
+  },
+  "b04.badge3": {
+   "t": 12.04,
+   "frame": 361
+  },
+  "b04.badge4": {
+   "t": 12.22,
+   "frame": 367
+  },
+  "b04.push": {
+   "t": 12.44,
+   "frame": 373
+  },
+  "b04.count": {
+   "t": 12.8,
+   "frame": 384
+  },
+  "b04.thumb": {
+   "t": 12.95,
+   "frame": 388
+  },
+  "b04.thumb2": {
+   "t": 13.55,
+   "frame": 406
+  },
+  "b04.pull": {
+   "t": 14.3,
+   "frame": 429
+  },
+  "b04.curl1": {
+   "t": 14.56,
+   "frame": 437
+  },
+  "b04.curl2": {
+   "t": 14.95,
+   "frame": 448
+  },
+  "b04.curl3": {
+   "t": 15.34,
+   "frame": 460
+  },
+  "b04.open": {
+   "t": 15.72,
+   "frame": 472
+  },
+  "b05.pinch": {
+   "t": 17.33,
+   "frame": 520
+  },
+  "b05.grip": {
+   "t": 18.05,
+   "frame": 542
+  },
+  "b05.cut_b": {
+   "t": 17.85,
+   "frame": 536
+  },
+  "b05.turn": {
+   "t": 18.28,
+   "frame": 548
+  },
+  "b05.cut_c": {
+   "t": 18.98,
+   "frame": 569
+  },
+  "b05.press": {
+   "t": 19.14,
+   "frame": 574
+  },
+  "b05.contact": {
+   "t": 19.36,
+   "frame": 581
+  },
+  "b05.drive": {
+   "t": 19.4,
+   "frame": 582
+  },
+  "b05.drive_end": {
+   "t": 20.05,
+   "frame": 602
+  },
+  "b06.slide": {
+   "t": 20.25,
+   "frame": 608
+  },
+  "b06.title": {
+   "t": 20.45,
+   "frame": 614
+  },
+  "b06.ghost": {
+   "t": 20.6,
+   "frame": 618
+  },
+  "b06.mod1": {
+   "t": 21.7,
+   "frame": 651
+  },
+  "b06.mod2": {
+   "t": 22.1,
+   "frame": 663
+  },
+  "b06.mod3": {
+   "t": 22.5,
+   "frame": 675
+  },
+  "b06.cost": {
+   "t": 23.52,
+   "frame": 706
+  },
+  "b06.space": {
+   "t": 24.48,
+   "frame": 734
+  },
+  "b06.service": {
+   "t": 25.65,
+   "frame": 770
+  },
+  "b07.slide": {
+   "t": 26.38,
+   "frame": 791
+  },
+  "b07.label": {
+   "t": 27.88,
+   "frame": 836
+  },
+  "b07.place": {
+   "t": 28.3,
+   "frame": 849
+  },
+  "b07.ok": {
+   "t": 28.42,
+   "frame": 853
+  },
+  "b07.nod": {
+   "t": 28.88,
+   "frame": 866
+  },
+  "b08.human": {
+   "t": 30.08,
+   "frame": 902
+  },
+  "b08.pick": {
+   "t": 29.38,
+   "frame": 881
+  },
+  "b09.drop": {
+   "t": 31.25,
+   "frame": 938
+  },
+  "b09.print": {
+   "t": 31.44,
+   "frame": 943
+  },
+  "b09.stamp": {
+   "t": 33.05,
+   "frame": 991
+  },
+  "b09.click": {
+   "t": 33.554,
+   "frame": 1007
+  },
+  "open.click": {
+   "t": 0.37,
+   "frame": 11
+  },
+  "open.drop": {
+   "t": 0.67,
+   "frame": 20
+  },
+  "open.reveal": {
+   "t": 0.58,
+   "frame": 17
+  },
+  "b08.place": {
+   "t": 30.0467,
+   "frame": 901
+  },
+  "b08.ok": {
+   "t": 30.1467,
+   "frame": 904
+  },
+  "loop.tear": {
+   "t": 33.88,
+   "frame": 1016
+  }
+ },
+ "words": [
+  {
+   "text": "This",
+   "start": 0.0,
+   "end": 0.24,
+   "voice_end": 0.24,
+   "old_start": 0.0
+  },
+  {
+   "text": "robot",
+   "start": 0.32,
+   "end": 0.64,
+   "voice_end": 0.64,
+   "old_start": 0.32
+  },
+  {
+   "text": "has",
+   "start": 0.72,
+   "end": 0.96,
+   "voice_end": 0.96,
+   "old_start": 0.72
+  },
+  {
+   "text": "no",
+   "start": 1.04,
+   "end": 1.2,
+   "voice_end": 1.2,
+   "old_start": 1.04
+  },
+  {
+   "text": "pinky.",
+   "start": 1.28,
+   "end": 1.88,
+   "voice_end": 1.695,
+   "old_start": 1.28
+  },
+  {
+   "text": "On",
+   "start": 2.08,
+   "end": 2.16,
+   "voice_end": 2.16,
+   "old_start": 2.08
+  },
+  {
+   "text": "purpose.",
+   "start": 2.32,
+   "end": 3.04,
+   "voice_end": 2.834,
+   "old_start": 2.32
+  },
+  {
+   "text": "Boston",
+   "start": 3.28,
+   "end": 3.6,
+   "voice_end": 3.6,
+   "old_start": 3.28
+  },
+  {
+   "text": "Dynamics",
+   "start": 3.68,
+   "end": 4.16,
+   "voice_end": 4.16,
+   "old_start": 3.68
+  },
+  {
+   "text": "says",
+   "start": 4.28,
+   "end": 4.4,
+   "voice_end": 4.4,
+   "old_start": 4.28
+  },
+  {
+   "text": "its",
+   "start": 4.48,
+   "end": 4.64,
+   "voice_end": 4.64,
+   "old_start": 4.48
+  },
+  {
+   "text": "engineers",
+   "start": 4.8,
+   "end": 5.12,
+   "voice_end": 5.12,
+   "old_start": 4.8
+  },
+  {
+   "text": "taped",
+   "start": 5.2,
+   "end": 5.52,
+   "voice_end": 5.52,
+   "old_start": 5.2
+  },
+  {
+   "text": "their",
+   "start": 5.6,
+   "end": 5.68,
+   "voice_end": 5.68,
+   "old_start": 5.6
+  },
+  {
+   "text": "ring",
+   "start": 5.76,
+   "end": 6.0,
+   "voice_end": 6.0,
+   "old_start": 5.76
+  },
+  {
+   "text": "and",
+   "start": 6.04,
+   "end": 6.08,
+   "voice_end": 6.08,
+   "old_start": 6.04
+  },
+  {
+   "text": "pinky",
+   "start": 6.24,
+   "end": 6.48,
+   "voice_end": 6.48,
+   "old_start": 6.24
+  },
+  {
+   "text": "fingers",
+   "start": 6.56,
+   "end": 6.8,
+   "voice_end": 6.8,
+   "old_start": 6.56
+  },
+  {
+   "text": "together",
+   "start": 6.88,
+   "end": 7.2,
+   "voice_end": 7.2,
+   "old_start": 6.88
+  },
+  {
+   "text": "for",
+   "start": 7.28,
+   "end": 7.36,
+   "voice_end": 7.36,
+   "old_start": 7.28
+  },
+  {
+   "text": "a",
+   "start": 7.44,
+   "end": 7.52,
+   "voice_end": 7.52,
+   "old_start": 7.44
+  },
+  {
+   "text": "day.",
+   "start": 7.6,
+   "end": 8.08,
+   "voice_end": 7.884,
+   "old_start": 7.6
+  },
+  {
+   "text": "The",
+   "start": 8.32,
+   "end": 8.36,
+   "voice_end": 8.36,
+   "old_start": 8.32
+  },
+  {
+   "text": "verdict?",
+   "start": 8.4,
+   "end": 8.88,
+   "voice_end": 8.867,
+   "old_start": 8.4
+  },
+  {
+   "text": "Leave",
+   "start": 9.28,
+   "end": 9.44,
+   "voice_end": 9.44,
+   "old_start": 9.28
+  },
+  {
+   "text": "it",
+   "start": 9.52,
+   "end": 9.56,
+   "voice_end": 9.56,
+   "old_start": 9.52
+  },
+  {
+   "text": "out.",
+   "start": 9.6,
+   "end": 10.12,
+   "voice_end": 9.87,
+   "old_start": 9.6
+  },
+  {
+   "text": "Atlas’s",
+   "start": 10.4,
+   "end": 10.88,
+   "voice_end": 10.88,
+   "old_start": 10.4
+  },
+  {
+   "text": "new",
+   "start": 10.96,
+   "end": 11.04,
+   "voice_end": 11.04,
+   "old_start": 10.96
+  },
+  {
+   "text": "hand",
+   "start": 11.12,
+   "end": 11.36,
+   "voice_end": 11.36,
+   "old_start": 11.12
+  },
+  {
+   "text": "has",
+   "start": 11.44,
+   "end": 11.6,
+   "voice_end": 11.6,
+   "old_start": 11.44
+  },
+  {
+   "text": "four",
+   "start": 11.68,
+   "end": 11.84,
+   "voice_end": 11.84,
+   "old_start": 11.68
+  },
+  {
+   "text": "digits,",
+   "start": 11.92,
+   "end": 12.48,
+   "voice_end": 12.48,
+   "old_start": 11.92
+  },
+  {
+   "text": "but",
+   "start": 12.56,
+   "end": 12.64,
+   "voice_end": 12.64,
+   "old_start": 12.56
+  },
+  {
+   "text": "thirteen",
+   "start": 12.8,
+   "end": 13.12,
+   "voice_end": 13.12,
+   "old_start": 12.8
+  },
+  {
+   "text": "degrees",
+   "start": 13.2,
+   "end": 13.52,
+   "voice_end": 13.52,
+   "old_start": 13.2
+  },
+  {
+   "text": "of",
+   "start": 13.6,
+   "end": 13.68,
+   "voice_end": 13.68,
+   "old_start": 13.6
+  },
+  {
+   "text": "freedom.",
+   "start": 13.76,
+   "end": 14.32,
+   "voice_end": 14.114,
+   "old_start": 13.76
+  },
+  {
+   "text": "Independent",
+   "start": 14.56,
+   "end": 15.12,
+   "voice_end": 15.12,
+   "old_start": 14.56
+  },
+  {
+   "text": "ways",
+   "start": 15.2,
+   "end": 15.36,
+   "voice_end": 15.36,
+   "old_start": 15.2
+  },
+  {
+   "text": "to",
+   "start": 15.44,
+   "end": 15.52,
+   "voice_end": 15.52,
+   "old_start": 15.44
+  },
+  {
+   "text": "move.",
+   "start": 15.6,
+   "end": 16.16,
+   "voice_end": 15.914,
+   "old_start": 15.6
+  },
+  {
+   "text": "The",
+   "start": 16.4,
+   "end": 16.48,
+   "voice_end": 16.48,
+   "old_start": 16.4
+  },
+  {
+   "text": "company",
+   "start": 16.56,
+   "end": 16.8,
+   "voice_end": 16.8,
+   "old_start": 16.56
+  },
+  {
+   "text": "says",
+   "start": 16.88,
+   "end": 17.04,
+   "voice_end": 17.04,
+   "old_start": 16.88
+  },
+  {
+   "text": "it",
+   "start": 17.12,
+   "end": 17.2,
+   "voice_end": 17.2,
+   "old_start": 17.12
+  },
+  {
+   "text": "can",
+   "start": 17.28,
+   "end": 17.36,
+   "voice_end": 17.36,
+   "old_start": 17.28
+  },
+  {
+   "text": "pinch,",
+   "start": 17.44,
+   "end": 18.0,
+   "voice_end": 18.0,
+   "old_start": 17.44
+  },
+  {
+   "text": "turn",
+   "start": 18.12,
+   "end": 18.24,
+   "voice_end": 18.24,
+   "old_start": 18.12
+  },
+  {
+   "text": "objects,",
+   "start": 18.32,
+   "end": 18.88,
+   "voice_end": 18.88,
+   "old_start": 18.32
+  },
+  {
+   "text": "and",
+   "start": 18.92,
+   "end": 18.96,
+   "voice_end": 18.96,
+   "old_start": 18.92
+  },
+  {
+   "text": "press",
+   "start": 19.04,
+   "end": 19.28,
+   "voice_end": 19.28,
+   "old_start": 19.04
+  },
+  {
+   "text": "tool",
+   "start": 19.36,
+   "end": 19.52,
+   "voice_end": 19.52,
+   "old_start": 19.36
+  },
+  {
+   "text": "triggers.",
+   "start": 19.6,
+   "end": 20.2,
+   "voice_end": 20.027,
+   "old_start": 19.6
+  },
+  {
+   "text": "A",
+   "start": 20.4,
+   "end": 20.56,
+   "voice_end": 20.56,
+   "old_start": 20.4
+  },
+  {
+   "text": "fifth",
+   "start": 20.6,
+   "end": 20.8,
+   "voice_end": 20.8,
+   "old_start": 20.6
+  },
+  {
+   "text": "digit",
+   "start": 20.88,
+   "end": 21.12,
+   "voice_end": 21.12,
+   "old_start": 20.88
+  },
+  {
+   "text": "would",
+   "start": 21.2,
+   "end": 21.28,
+   "voice_end": 21.28,
+   "old_start": 21.2
+  },
+  {
+   "text": "mean",
+   "start": 21.36,
+   "end": 21.52,
+   "voice_end": 21.52,
+   "old_start": 21.36
+  },
+  {
+   "text": "three",
+   "start": 21.6,
+   "end": 21.84,
+   "voice_end": 21.84,
+   "old_start": 21.6
+  },
+  {
+   "text": "more",
+   "start": 21.92,
+   "end": 22.08,
+   "voice_end": 22.08,
+   "old_start": 21.92
+  },
+  {
+   "text": "actuators.",
+   "start": 22.16,
+   "end": 23.04,
+   "voice_end": 22.838,
+   "old_start": 22.16
+  },
+  {
+   "text": "More",
+   "start": 23.28,
+   "end": 23.44,
+   "voice_end": 23.44,
+   "old_start": 23.28
+  },
+  {
+   "text": "cost.",
+   "start": 23.52,
+   "end": 24.12,
+   "voice_end": 24.004,
+   "old_start": 23.52
+  },
+  {
+   "text": "More",
+   "start": 24.24,
+   "end": 24.4,
+   "voice_end": 24.4,
+   "old_start": 24.24
+  },
+  {
+   "text": "bulk.",
+   "start": 24.48,
+   "end": 25.12,
+   "voice_end": 24.841,
+   "old_start": 24.48
+  },
+  {
+   "text": "More",
+   "start": 25.2,
+   "end": 25.28,
+   "voice_end": 25.28,
+   "old_start": 25.2
+  },
+  {
+   "text": "things",
+   "start": 25.36,
+   "end": 25.52,
+   "voice_end": 25.52,
+   "old_start": 25.36
+  },
+  {
+   "text": "to",
+   "start": 25.6,
+   "end": 25.64,
+   "voice_end": 25.64,
+   "old_start": 25.6
+  },
+  {
+   "text": "break.",
+   "start": 25.68,
+   "end": 26.08,
+   "voice_end": 26.052,
+   "old_start": 25.68
+  },
+  {
+   "text": "So",
+   "start": 26.64,
+   "end": 26.8,
+   "voice_end": 26.8,
+   "old_start": 26.64
+  },
+  {
+   "text": "the",
+   "start": 26.96,
+   "end": 27.04,
+   "voice_end": 27.04,
+   "old_start": 26.96
+  },
+  {
+   "text": "goal",
+   "start": 27.2,
+   "end": 27.36,
+   "voice_end": 27.36,
+   "old_start": 27.2
+  },
+  {
+   "text": "is",
+   "start": 27.44,
+   "end": 27.52,
+   "voice_end": 27.52,
+   "old_start": 27.44
+  },
+  {
+   "text": "a",
+   "start": 27.56,
+   "end": 27.6,
+   "voice_end": 27.6,
+   "old_start": 27.56
+  },
+  {
+   "text": "useful,",
+   "start": 27.76,
+   "end": 28.24,
+   "voice_end": 28.24,
+   "old_start": 27.76
+  },
+  {
+   "text": "reliable",
+   "start": 28.32,
+   "end": 28.88,
+   "voice_end": 28.88,
+   "old_start": 28.32
+  },
+  {
+   "text": "hand.",
+   "start": 28.96,
+   "end": 29.52,
+   "voice_end": 29.303,
+   "old_start": 28.96
+  },
+  {
+   "text": "Looking",
+   "start": 29.76,
+   "end": 30.0,
+   "voice_end": 30.0,
+   "old_start": 29.76
+  },
+  {
+   "text": "human",
+   "start": 30.08,
+   "end": 30.4,
+   "voice_end": 30.4,
+   "old_start": 30.08
+  },
+  {
+   "text": "is",
+   "start": 30.44,
+   "end": 30.48,
+   "voice_end": 30.48,
+   "old_start": 30.44
+  },
+  {
+   "text": "optional.",
+   "start": 30.56,
+   "end": 31.04,
+   "voice_end": 31.016,
+   "old_start": 30.56
+  },
+  {
+   "text": "Apparently,",
+   "start": 31.44,
+   "end": 32.16,
+   "voice_end": 32.16,
+   "old_start": 31.44
+  },
+  {
+   "text": "even",
+   "start": 32.24,
+   "end": 32.4,
+   "voice_end": 32.4,
+   "old_start": 32.24
+  },
+  {
+   "text": "robots",
+   "start": 32.48,
+   "end": 32.88,
+   "voice_end": 32.88,
+   "old_start": 32.48
+  },
+  {
+   "text": "have",
+   "start": 32.92,
+   "end": 32.96,
+   "voice_end": 32.96,
+   "old_start": 32.92
+  },
+  {
+   "text": "a",
+   "start": 33.04,
+   "end": 33.08,
+   "voice_end": 33.08,
+   "old_start": 33.04
+  },
+  {
+   "text": "budget.",
+   "start": 33.12,
+   "end": 33.76,
+   "voice_end": 33.434,
+   "old_start": 33.12
+  }
+ ],
+ "captions": [
+  {
+   "start": 0.0,
+   "end": 2.0,
+   "words": [
+    "This",
+    "robot",
+    "has",
+    "no",
+    "pinky."
+   ],
+   "em": [
+    3,
+    4
+   ],
+   "em_at": [
+    31,
+    38
+   ],
+   "pop": false,
+   "first": 0,
+   "last": 4,
+   "final_word_end": 1.88
+  },
+  {
+   "start": 2.08,
+   "end": 3.1333,
+   "words": [
+    "On",
+    "purpose."
+   ],
+   "em": [
+    1
+   ],
+   "em_at": [
+    70
+   ],
+   "pop": true,
+   "first": 5,
+   "last": 6,
+   "final_word_end": 3.04
+  },
+  {
+   "start": 3.28,
+   "end": 5.2,
+   "words": [
+    "Boston",
+    "Dynamics",
+    "says",
+    "its",
+    "engineers"
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 7,
+   "last": 11,
+   "final_word_end": 5.12
+  },
+  {
+   "start": 5.2,
+   "end": 6.5667,
+   "words": [
+    "taped",
+    "their",
+    "ring",
+    "and",
+    "pinky"
+   ],
+   "em": [
+    2,
+    4
+   ],
+   "em_at": [
+    173,
+    187
+   ],
+   "pop": false,
+   "first": 12,
+   "last": 16,
+   "final_word_end": 6.48
+  },
+  {
+   "start": 6.56,
+   "end": 8.2,
+   "words": [
+    "fingers",
+    "together",
+    "for",
+    "a",
+    "day."
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 17,
+   "last": 21,
+   "final_word_end": 8.08
+  },
+  {
+   "start": 8.32,
+   "end": 9.0,
+   "words": [
+    "The",
+    "verdict?"
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 22,
+   "last": 23,
+   "final_word_end": 8.88
+  },
+  {
+   "start": 9.28,
+   "end": 10.2333,
+   "words": [
+    "Leave",
+    "it",
+    "out."
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 24,
+   "last": 26,
+   "final_word_end": 10.12
+  },
+  {
+   "start": 10.4,
+   "end": 12.5667,
+   "words": [
+    "Atlas’s",
+    "new",
+    "hand",
+    "has",
+    "four",
+    "digits,"
+   ],
+   "em": [
+    4
+   ],
+   "em_at": [
+    350
+   ],
+   "pop": true,
+   "first": 27,
+   "last": 32,
+   "final_word_end": 12.48
+  },
+  {
+   "start": 12.56,
+   "end": 13.2,
+   "words": [
+    "but",
+    "thirteen"
+   ],
+   "em": [
+    1
+   ],
+   "em_at": [
+    384
+   ],
+   "pop": true,
+   "first": 33,
+   "last": 34,
+   "final_word_end": 13.12
+  },
+  {
+   "start": 13.2,
+   "end": 14.4333,
+   "words": [
+    "degrees",
+    "of",
+    "freedom."
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 35,
+   "last": 37,
+   "final_word_end": 14.32
+  },
+  {
+   "start": 14.56,
+   "end": 16.2667,
+   "words": [
+    "Independent",
+    "ways",
+    "to",
+    "move."
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 38,
+   "last": 41,
+   "final_word_end": 16.16
+  },
+  {
+   "start": 16.4,
+   "end": 18.12,
+   "words": [
+    "The",
+    "company",
+    "says",
+    "it",
+    "can",
+    "pinch,"
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 42,
+   "last": 47,
+   "final_word_end": 18.0
+  },
+  {
+   "start": 18.12,
+   "end": 18.9333,
+   "words": [
+    "turn",
+    "objects,"
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 48,
+   "last": 49,
+   "final_word_end": 18.88
+  },
+  {
+   "start": 18.92,
+   "end": 20.3,
+   "words": [
+    "and",
+    "press",
+    "tool",
+    "triggers."
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 50,
+   "last": 53,
+   "final_word_end": 20.2
+  },
+  {
+   "start": 20.4,
+   "end": 21.6,
+   "words": [
+    "A",
+    "fifth",
+    "digit",
+    "would",
+    "mean"
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 54,
+   "last": 58,
+   "final_word_end": 21.52
+  },
+  {
+   "start": 21.6,
+   "end": 23.1333,
+   "words": [
+    "three",
+    "more",
+    "actuators."
+   ],
+   "em": [
+    0,
+    1
+   ],
+   "em_at": [
+    648,
+    658
+   ],
+   "pop": false,
+   "first": 59,
+   "last": 61,
+   "final_word_end": 23.04
+  },
+  {
+   "start": 23.28,
+   "end": 24.2333,
+   "words": [
+    "More",
+    "cost."
+   ],
+   "em": [
+    1
+   ],
+   "em_at": [
+    706
+   ],
+   "pop": true,
+   "first": 62,
+   "last": 63,
+   "final_word_end": 24.12
+  },
+  {
+   "start": 24.24,
+   "end": 25.2,
+   "words": [
+    "More",
+    "bulk."
+   ],
+   "em": [
+    1
+   ],
+   "em_at": [
+    734
+   ],
+   "pop": true,
+   "first": 64,
+   "last": 65,
+   "final_word_end": 25.12
+  },
+  {
+   "start": 25.2,
+   "end": 26.2,
+   "words": [
+    "More",
+    "things",
+    "to",
+    "break."
+   ],
+   "em": [
+    3
+   ],
+   "em_at": [
+    770
+   ],
+   "pop": true,
+   "first": 66,
+   "last": 69,
+   "final_word_end": 26.08
+  },
+  {
+   "start": 26.64,
+   "end": 28.3333,
+   "words": [
+    "So",
+    "the",
+    "goal",
+    "is",
+    "a",
+    "useful,"
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 70,
+   "last": 75,
+   "final_word_end": 28.24
+  },
+  {
+   "start": 28.32,
+   "end": 29.6333,
+   "words": [
+    "reliable",
+    "hand."
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 76,
+   "last": 77,
+   "final_word_end": 29.52
+  },
+  {
+   "start": 29.76,
+   "end": 31.1333,
+   "words": [
+    "Looking",
+    "human",
+    "is",
+    "optional."
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 78,
+   "last": 81,
+   "final_word_end": 31.04
+  },
+  {
+   "start": 31.44,
+   "end": 32.9333,
+   "words": [
+    "Apparently,",
+    "even",
+    "robots"
+   ],
+   "em": [],
+   "em_at": [],
+   "pop": false,
+   "first": 82,
+   "last": 84,
+   "final_word_end": 32.88
+  },
+  {
+   "start": 32.92,
+   "end": 33.8,
+   "words": [
+    "have",
+    "a",
+    "budget."
+   ],
+   "em": [
+    2
+   ],
+   "em_at": [
+    994
+   ],
+   "pop": true,
+   "first": 85,
+   "last": 87,
+   "final_word_end": 33.76
+  }
+ ],
+ "pockets": {
+  "D01": {
+   "start_s": 8.52,
+   "end_s": 9.33
+  },
+  "D02": {
+   "start_s": 31.19,
+   "end_s": 33.733999999999995
+  }
+ }
+}

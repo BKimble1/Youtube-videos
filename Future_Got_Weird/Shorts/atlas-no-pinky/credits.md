@@ -1,26 +1,22 @@
 # Credits and asset provenance
 
 ## Picture
-- All artwork is original layered SVG drawn in code for this Short: the robot hand rig (`source/src/hand`), props, shot-local stages (`source/src/v2`, `source/src/v3`), labels. V2 (this version) replaced V1's single permanent workshop with five shot-local stages; V1 source remains in `source/src/film`.
-- The checker is the channel's approved cast rig (`source/src/components/Character.tsx`, `cast.ts`, from the established Video 01 v2 source). One change: the pencil is now drawn behind the right ear (it previously sat on top of the hair). Identity (gray bob, round glasses, coral cardigan) is unchanged.
-- No third-party footage, photographs or company screenshots. Boston Dynamics material was used only as research reference; attribution appears on screen.
+- All artwork is original layered SVG drawn in code for this Short: the robot hand rig (`source/src/hand`), props, shot-local stages (`source/src/v2`, `v3`, `v4`), labels. V1's source remains in `source/src/film`.
+- The checker is the channel's approved cast rig (`source/src/components/Character.tsx`, `cast.ts`, from the established Video 01 v2 source), pencil behind the right ear. Identity (gray bob, round glasses, coral cardigan) is unchanged.
+- No third-party footage, photographs or company screenshots. Boston Dynamics material was used only as research reference; the company is named once on screen, in the opener kicker.
 
 ## Voice
-- ElevenLabs **Test Voice** (voice_id `kk5XaSLo2XAw0sKM98zU`, owner's generated voice), model `eleven_v4`, via the connected account. Alignment: ElevenLabs Scribe (`eleven_scribe_v1`). Details: `audio/NARRATION_PROVENANCE.md`.
+- ElevenLabs **Test Voice** (voice_id `kk5XaSLo2XAw0sKM98zU`, owner's generated voice), model `eleven_v4`, via the connected account. Alignment: ElevenLabs Scribe (`eleven_scribe_v1`). Details: `audio/NARRATION_PROVENANCE.md`. **V4 reuses the same recording; the default cut is a 1.05× pitch-preserving time compression of it (`tools/retime_v4.py`), the original-pace cut uses it unchanged. No new generation.**
 
 ## Sound
-- Sound effects and the 126 BPM music bed are **original synthesis** from `tools/build_audio.py` (V1), `tools/build_audio_v2.py` (V2) and `tools/build_audio_v3.py` (V3) (numpy; noise and sine primitives). No samples, stock music, or music-generation model were used. Runway was not used.
+- Sound effects and the music bed are **original synthesis** from `tools/build_audio.py` (V1), `build_audio_v2.py`, `build_audio_v3.py` and `build_audio_v4.py` (numpy; noise and sine primitives). No samples, stock music, or music-generation model were used. Runway was not used.
 
 ## Fonts (bundled locally from npm, SIL Open Font License)
-- Fredoka (display), Nunito (body/captions), Source Serif 4 (loaded, unused in this Short), JetBrains Mono (the `13 DOF` tag): `@fontsource*` 5.3.0.
+- V4 picture: **Montserrat** 800 (captions), **Barlow Condensed** 800 (headlines and numbers), **JetBrains Mono** (receipt rows). `@fontsource/*` 5.3.0. Fredoka, Nunito and Source Serif 4 remain bundled for the older versions (V1–V3).
 
 ## Software
-- Remotion 4.0.533 (https://remotion.dev/license — check that the channel's use fits its licence terms), React 19.1.0, TypeScript 5.8.3, FFmpeg 6.1 for audio measurement, Python 3 + numpy for sound.
+- Remotion 4.0.533 (https://remotion.dev/license — check that the channel's use fits its licence terms), React 19.1.0, TypeScript 5.8.3, FFmpeg for retiming and measurement, Python 3 + numpy (+ fontTools for planning caption widths) for sound and cue tables.
 
-## V2 additions
-- No new third-party assets, no new generations. V2 reuses the V1 ElevenLabs narration and Scribe alignment unchanged. Runway was not used.
-- Evidence statements follow the owner's V2 audit; see `claim_ledger.md`.
-
-## V3 additions
-- Still no new third-party assets and no new generations: V3 is a focused repair of V2 (hand/object contact solver `source/src/v3/contacts.ts`, front-view opener, cool-paper stage, shot-owned headlines, simplified receipt, circular music bed). The narration is the unchanged V1 ElevenLabs recording; Runway was not used.
-- The V3 owner reassessment and the prompt used for the pass are saved in `handoff/V3_Reassessment_and_Prompt.md`.
+## Version notes
+- V2/V3: no new third-party assets and no new generations (V3 added the hand/object contact solver, front-view opener and circular music bed).
+- V4: type system (Montserrat / Barlow Condensed), removal of the persistent source/tag bars, enlarged shot compositions, short edge-wipe transitions, retimed narration option, rebuilt caption timing and music bed. The owner's reassessment prompts are saved in `handoff/` (`V3_Reassessment_and_Prompt.md`, `V4_Final_Presentation_and_Pacing_Prompt.md`).

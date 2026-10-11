@@ -1,0 +1,34 @@
+cue_id,event,time_s,frame,layer,gain_db,pan,description
+S01,open.click,0.370,11,sfx,-17,0,opener: pads release the gear (small rigid click, under the voice)
+S01b,open.drop,0.670,20,sfx,-14,0.05,opener: gear seats on its post
+,gap.pop,0.914,27,sfx,-19,0.12,dashed circle marks the empty slot
+,label.purpose,2.209,66,sfx,-18,0.1,the slot outline firms up on "purpose" (reaction, no plate)
+,tape.wipe,2.627,79,sfx,-13,0,tape strip crosses frame (signature transition 1)
+S02,exp.wrap,4.611,138,sfx,-9,0.05,tape wraps ring + pinky
+S03,exp.mug.set,6.457,194,sfx,-9,0.05,mug set back down
+S04,exp.knob.detent,6.952,209,sfx,-11,0.1,knob detent
+S05,stamp.hit,8.486,255,sfx,-7,0,rubber stamp on SKIP IT (lands just before "Leave")
+,b04.push,11.429,343,sfx,-21,0.1,lens opens on the thumb base joint
+S06,b04.thumb,11.914,357,sfx,-21,-0.12,thumb sweep
+S06,b04.open,14.438,433,sfx,-22,0.0,finger splay
+,b04.curl1,13.213,396,sfx,-23,0.1,finger curls
+S07,b05.pinch,15.819,475,sfx,-11,0.1,washer pinch contact
+,b05.grip,16.505,495,sfx,-16,0.1,pads close on the cube (contact before the turn)
+S08,b05.turn,16.724,502,sfx,-20,0,object turns between the fingertips
+S09,b05.contact,17.752,533,sfx,-9,-0.1,tool contact
+,b05.drive,17.791,534,sfx,-19,0.05,screw driven home
+,b06.mod1,19.981,599,sfx,-18,-0.1,actuator module 1 lands
+,b06.mod2,20.362,611,sfx,-18,0.0,actuator module 2 lands
+,b06.mod3,20.743,622,sfx,-18,0.1,actuator module 3 lands
+,b06.cost,21.550,646,sfx,-17,0.1,price tag attaches
+,b06.space,22.464,674,sfx,-19,0.0,footprint box expands
+S12,b06.service,23.629,709,sfx,-14,0.08,wrench taps the lowest module
+S13,b07.place,25.905,777,sfx,-6,0,block seats in the fixture
+,b08.pick,26.933,808,sfx,-17,0.1,hand picks the second block
+S13b,b08.place,27.600,828,sfx,-8,0,second block seats
+,b09.print,28.981,869,sfx,-23,-0.2,receipt printing row 2
+,b09.print,29.314,879,sfx,-23,-0.2,receipt printing row 3
+,b09.print,29.648,889,sfx,-23,-0.2,receipt printing row 4
+S14,b09.stamp,30.314,909,sfx,-8,-0.05,NOT IN BUDGET stamp (leads "budget" by ~70 ms)
+,loop.tear,31.080,932,sfx,-14,0,receipt torn away into the opener (loop seam)
+M01,full_story,0.00,0,music,,0,original synth bed 128.03 BPM (17 bars = the video length); pockets D01/D02 from cues_fast.json; no closing chord (loop)

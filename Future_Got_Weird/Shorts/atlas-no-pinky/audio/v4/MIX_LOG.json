@@ -1,0 +1,17 @@
+{
+ "pace": "fast",
+ "target_lufs": -14.6,
+ "measured_integrated_lufs": -14.6,
+ "true_peak_dbfs": -1.5,
+ "pre_limiter_lufs": -15.2,
+ "post_limiter_lufs": -14.6,
+ "sample_rate": 48000,
+ "duration_s": 31.866666666666667,
+ "samples": 1529600,
+ "ducking": "music -7 dB (0.58 depth) under speech, effects -3 dB, voice-envelope follower 30 ms attack / 280 ms release",
+ "music_bpm": 128.03347280334728,
+ "music_bars": 17,
+ "sfx_events": 32,
+ "sfx_first_syllable_collisions": [],
+ "voice_file": "audio/v4/narration_fast_48k.wav"
+}

@@ -8,7 +8,9 @@ import {FilmV2} from './v2/FilmV2';
 import {TOTAL_V2} from './cues_v2';
 import {FilmV3} from './v3/FilmV3';
 import {TOTAL_V3} from './cues_v3';
-import {Probe3} from './v3/Probe3';
+import {FilmV4} from './v4/FilmV4';
+import {TOTAL_V4} from './v4/cues';
+import {auditCaptions} from './v4/type';
 import {TOTAL_FRAMES, FPS} from './cues';
 
 const PoseLab: React.FC = () => {
@@ -45,12 +47,19 @@ const PoseLab: React.FC = () => {
   );
 };
 
+const AuditDummy: React.FC<{audit: unknown}> = () => null;
+
 export const Root: React.FC = () => (
   <>
+    <Composition id="CaptionAudit" component={AuditDummy} width={W} height={H} fps={FPS} durationInFrames={1} defaultProps={{audit: null as unknown}} calculateMetadata={async () => ({props: {audit: await auditCaptions()}})} />
     <Still id="PoseLab" component={PoseLab} width={W} height={H} />
-    <Composition id="Short" component={FilmV3} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V3} defaultProps={{captions: false, audio: true}} />
-    <Composition id="ShortCaptioned" component={FilmV3} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V3} defaultProps={{captions: true, audio: true}} />
-    <Composition id="ProbeV3" component={Probe3} width={W} height={H} fps={FPS} durationInFrames={260} />
+    {/* V4 (current). Pace (retimed vs original narration) is chosen at bundle time with REMOTION_PACE=orig; default = retimed. */}
+    <Composition id="Short" component={FilmV4} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V4} defaultProps={{captions: false, audio: true}} />
+    <Composition id="ShortCaptioned" component={FilmV4} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V4} defaultProps={{captions: true, audio: true}} />
+    <Composition id="ShortV4" component={FilmV4} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V4} defaultProps={{captions: false, audio: true}} />
+    <Composition id="ShortCaptionedV4" component={FilmV4} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V4} defaultProps={{captions: true, audio: true}} />
+    <Composition id="ShortV3" component={FilmV3} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V3} defaultProps={{captions: false, audio: true}} />
+    <Composition id="ShortCaptionedV3" component={FilmV3} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V3} defaultProps={{captions: true, audio: true}} />
     <Composition id="ShortV2" component={FilmV2} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V2} defaultProps={{captions: false, audio: true}} />
     <Composition id="ShortCaptionedV2" component={FilmV2} width={W} height={H} fps={FPS} durationInFrames={TOTAL_V2} defaultProps={{captions: true, audio: true}} />
     <Still id="CoverV1" component={Cover} width={W} height={H} />
