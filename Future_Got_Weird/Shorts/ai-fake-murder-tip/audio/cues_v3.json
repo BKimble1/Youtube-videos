@@ -1,0 +1,656 @@
+{
+ "fps": 30,
+ "total_frames": 630,
+ "events_sec": {
+  "h.ai": 0.1,
+  "h.sent": 0.44,
+  "h.police": 0.66,
+  "h.a": 1.06,
+  "h.fake": 1.26,
+  "h.murder": 1.58,
+  "h.tip": 1.88,
+  "o.press": 0.4,
+  "o.sent": 0.49,
+  "o.lift": 0.55,
+  "o.fold": 0.72,
+  "o.env": 0.95,
+  "o.travel": 1.25,
+  "o.clear": 1.92,
+  "o.open": 2.04,
+  "b2.paper": 2.15,
+  "b2.line1": 2.28,
+  "b2.group2": 3.26,
+  "b2.hl0": 3.62,
+  "b2.hl1": 4.61,
+  "b3.start": 4.89,
+  "b3.pull": 4.94,
+  "b3.scan0": 5.76,
+  "b3.stamp": 6.46,
+  "b3.brow": 6.72,
+  "b3.look": 6.66,
+  "b3.back": 7.09,
+  "b3.blink": 7.27,
+  "b4.start": 7.42,
+  "b4.pageA": 7.5,
+  "b4.chip1": 7.7,
+  "b4.pageB": 8.38,
+  "b4.chip2": 8.52,
+  "b4.pageC": 9.4,
+  "b4.reach": 9.64,
+  "b4.grow": 9.71,
+  "b4.real": 10.32,
+  "b5.fold": 11.18,
+  "b5.go": 11.7,
+  "b5.inbox": 12.18,
+  "b5.divert": 12.46,
+  "b5.land": 12.78,
+  "b5.latch": 12.91,
+  "b5.tray": 13.02,
+  "b5.never": 13.94,
+  "b6.start": 14.78,
+  "b6.paper": 15.14,
+  "b6.contain": 15.92,
+  "b6.squiggle": 16.239,
+  "b6.tag": 17.74,
+  "b6.btn": 18.18,
+  "b6.arrive": 18.7,
+  "b6.enable": 18.74,
+  "b6.path": 19.04,
+  "loop.build": 19.88,
+  "voice.end": 19.52,
+  "pocket1.in": 4.8,
+  "pocket1.out": 7.39,
+  "pocket2.in": 12.62,
+  "pocket2.out": 13.38
+ },
+ "events": {
+  "h.ai": 3,
+  "h.sent": 13,
+  "h.police": 20,
+  "h.a": 32,
+  "h.fake": 38,
+  "h.murder": 47,
+  "h.tip": 56,
+  "o.press": 12,
+  "o.sent": 15,
+  "o.lift": 16,
+  "o.fold": 22,
+  "o.env": 28,
+  "o.travel": 38,
+  "o.clear": 58,
+  "o.open": 61,
+  "b2.paper": 64,
+  "b2.line1": 68,
+  "b2.group2": 98,
+  "b2.hl0": 109,
+  "b2.hl1": 138,
+  "b3.start": 147,
+  "b3.pull": 148,
+  "b3.scan0": 173,
+  "b3.stamp": 194,
+  "b3.brow": 202,
+  "b3.look": 200,
+  "b3.back": 213,
+  "b3.blink": 218,
+  "b4.start": 223,
+  "b4.pageA": 225,
+  "b4.chip1": 231,
+  "b4.pageB": 251,
+  "b4.chip2": 256,
+  "b4.pageC": 282,
+  "b4.reach": 289,
+  "b4.grow": 291,
+  "b4.real": 310,
+  "b5.fold": 335,
+  "b5.go": 351,
+  "b5.inbox": 365,
+  "b5.divert": 374,
+  "b5.land": 383,
+  "b5.latch": 387,
+  "b5.tray": 391,
+  "b5.never": 418,
+  "b6.start": 443,
+  "b6.paper": 454,
+  "b6.contain": 478,
+  "b6.squiggle": 487,
+  "b6.tag": 532,
+  "b6.btn": 545,
+  "b6.arrive": 561,
+  "b6.enable": 562,
+  "b6.path": 571,
+  "loop.build": 596,
+  "voice.end": 586,
+  "pocket1.in": 144,
+  "pocket1.out": 222,
+  "pocket2.in": 379,
+  "pocket2.out": 401
+ },
+ "captions": [
+  {
+   "start": 0.1,
+   "end": 1.06,
+   "text": "AI sent police",
+   "accent": [
+    "police"
+   ]
+  },
+  {
+   "start": 1.06,
+   "end": 2.3,
+   "text": "a fake murder tip.",
+   "accent": [
+    "fake"
+   ]
+  },
+  {
+   "start": 2.3,
+   "end": 3.3,
+   "text": "It claimed it remembered",
+   "accent": []
+  },
+  {
+   "start": 3.3,
+   "end": 4.7,
+   "text": "someone matching a description.",
+   "accent": [
+    "matching"
+   ]
+  },
+  {
+   "start": 4.94,
+   "end": 5.8,
+   "text": "Except\u2026",
+   "accent": []
+  },
+  {
+   "start": 5.8,
+   "end": 7.38,
+   "text": "the page had no description.",
+   "accent": [
+    "no",
+    "description."
+   ]
+  },
+  {
+   "start": 7.7,
+   "end": 8.36,
+   "text": "Claude did this",
+   "accent": []
+  },
+  {
+   "start": 8.36,
+   "end": 9.76,
+   "text": "while testing websites.",
+   "accent": [
+    "testing"
+   ]
+  },
+  {
+   "start": 9.76,
+   "end": 10.6,
+   "text": "It used a real",
+   "accent": [
+    "real"
+   ]
+  },
+  {
+   "start": 10.6,
+   "end": 11.74,
+   "text": "police tip form.",
+   "accent": [
+    "police"
+   ]
+  },
+  {
+   "start": 11.74,
+   "end": 13.08,
+   "text": "The spam filter caught it.",
+   "accent": [
+    "spam"
+   ]
+  },
+  {
+   "start": 13.08,
+   "end": 14.85,
+   "text": "Investigators never got the tip.",
+   "accent": [
+    "never"
+   ]
+  },
+  {
+   "start": 15.2,
+   "end": 16.66,
+   "text": "AI making things up",
+   "accent": []
+  },
+  {
+   "start": 16.66,
+   "end": 17.56,
+   "text": "is one problem.",
+   "accent": []
+  },
+  {
+   "start": 17.78,
+   "end": 19.04,
+   "text": "Giving it a submit button",
+   "accent": [
+    "submit",
+    "button"
+   ]
+  },
+  {
+   "start": 19.04,
+   "end": 19.88,
+   "text": "is another.",
+   "accent": []
+  }
+ ],
+ "words": [
+  {
+   "i": 0,
+   "text": "AI",
+   "start": 0.1,
+   "end": 0.34,
+   "voice_end": 0.34
+  },
+  {
+   "i": 1,
+   "text": "sent",
+   "start": 0.44,
+   "end": 0.58,
+   "voice_end": 0.58
+  },
+  {
+   "i": 2,
+   "text": "police",
+   "start": 0.66,
+   "end": 1.02,
+   "voice_end": 1.02
+  },
+  {
+   "i": 3,
+   "text": "a",
+   "start": 1.06,
+   "end": 1.22,
+   "voice_end": 1.22
+  },
+  {
+   "i": 4,
+   "text": "fake",
+   "start": 1.26,
+   "end": 1.44,
+   "voice_end": 1.44
+  },
+  {
+   "i": 5,
+   "text": "murder",
+   "start": 1.58,
+   "end": 1.78,
+   "voice_end": 1.78
+  },
+  {
+   "i": 6,
+   "text": "tip.",
+   "start": 1.88,
+   "end": 2.1,
+   "voice_end": 2.02
+  },
+  {
+   "i": 7,
+   "text": "It",
+   "start": 2.3,
+   "end": 2.4,
+   "voice_end": 2.4
+  },
+  {
+   "i": 8,
+   "text": "claimed",
+   "start": 2.46,
+   "end": 2.7,
+   "voice_end": 2.7
+  },
+  {
+   "i": 9,
+   "text": "it",
+   "start": 2.74,
+   "end": 2.82,
+   "voice_end": 2.82
+  },
+  {
+   "i": 10,
+   "text": "remembered",
+   "start": 2.84,
+   "end": 3.26,
+   "voice_end": 3.26
+  },
+  {
+   "i": 11,
+   "text": "someone",
+   "start": 3.3,
+   "end": 3.58,
+   "voice_end": 3.58
+  },
+  {
+   "i": 12,
+   "text": "matching",
+   "start": 3.62,
+   "end": 3.92,
+   "voice_end": 3.92
+  },
+  {
+   "i": 13,
+   "text": "a",
+   "start": 3.96,
+   "end": 4.0,
+   "voice_end": 4.01
+  },
+  {
+   "i": 14,
+   "text": "description.",
+   "start": 4.04,
+   "end": 4.6,
+   "voice_end": 4.61
+  },
+  {
+   "i": 15,
+   "text": "Except\u2026",
+   "start": 4.94,
+   "end": 5.48,
+   "voice_end": 5.56
+  },
+  {
+   "i": 16,
+   "text": "the",
+   "start": 5.8,
+   "end": 5.92,
+   "voice_end": 5.92
+  },
+  {
+   "i": 17,
+   "text": "page",
+   "start": 5.98,
+   "end": 6.24,
+   "voice_end": 6.24
+  },
+  {
+   "i": 18,
+   "text": "had",
+   "start": 6.26,
+   "end": 6.44,
+   "voice_end": 6.44
+  },
+  {
+   "i": 19,
+   "text": "no",
+   "start": 6.52,
+   "end": 6.64,
+   "voice_end": 6.64
+  },
+  {
+   "i": 20,
+   "text": "description.",
+   "start": 6.7,
+   "end": 7.3,
+   "voice_end": 7.29
+  },
+  {
+   "i": 21,
+   "text": "Claude",
+   "start": 7.7,
+   "end": 7.98,
+   "voice_end": 7.98
+  },
+  {
+   "i": 22,
+   "text": "did",
+   "start": 8.0,
+   "end": 8.14,
+   "voice_end": 8.14
+  },
+  {
+   "i": 23,
+   "text": "this",
+   "start": 8.18,
+   "end": 8.34,
+   "voice_end": 8.34
+  },
+  {
+   "i": 24,
+   "text": "while",
+   "start": 8.36,
+   "end": 8.5,
+   "voice_end": 8.5
+  },
+  {
+   "i": 25,
+   "text": "testing",
+   "start": 8.56,
+   "end": 8.88,
+   "voice_end": 8.88
+  },
+  {
+   "i": 26,
+   "text": "websites.",
+   "start": 8.92,
+   "end": 9.44,
+   "voice_end": 9.48
+  },
+  {
+   "i": 27,
+   "text": "It",
+   "start": 9.76,
+   "end": 9.86,
+   "voice_end": 9.86
+  },
+  {
+   "i": 28,
+   "text": "used",
+   "start": 9.94,
+   "end": 10.1,
+   "voice_end": 10.1
+  },
+  {
+   "i": 29,
+   "text": "a",
+   "start": 10.16,
+   "end": 10.3,
+   "voice_end": 10.3
+  },
+  {
+   "i": 30,
+   "text": "real",
+   "start": 10.32,
+   "end": 10.5,
+   "voice_end": 10.5
+  },
+  {
+   "i": 31,
+   "text": "police",
+   "start": 10.6,
+   "end": 10.94,
+   "voice_end": 10.94
+  },
+  {
+   "i": 32,
+   "text": "tip",
+   "start": 10.98,
+   "end": 11.12,
+   "voice_end": 11.12
+  },
+  {
+   "i": 33,
+   "text": "form.",
+   "start": 11.2,
+   "end": 11.46,
+   "voice_end": 11.46
+  },
+  {
+   "i": 34,
+   "text": "The",
+   "start": 11.74,
+   "end": 11.82,
+   "voice_end": 11.82
+  },
+  {
+   "i": 35,
+   "text": "spam",
+   "start": 11.9,
+   "end": 12.1,
+   "voice_end": 12.1
+  },
+  {
+   "i": 36,
+   "text": "filter",
+   "start": 12.18,
+   "end": 12.42,
+   "voice_end": 12.42
+  },
+  {
+   "i": 37,
+   "text": "caught",
+   "start": 12.52,
+   "end": 12.72,
+   "voice_end": 12.72
+  },
+  {
+   "i": 38,
+   "text": "it.",
+   "start": 12.76,
+   "end": 12.86,
+   "voice_end": 12.86
+  },
+  {
+   "i": 39,
+   "text": "Investigators",
+   "start": 13.08,
+   "end": 13.74,
+   "voice_end": 13.74
+  },
+  {
+   "i": 40,
+   "text": "never",
+   "start": 13.94,
+   "end": 14.2,
+   "voice_end": 14.2
+  },
+  {
+   "i": 41,
+   "text": "got",
+   "start": 14.24,
+   "end": 14.4,
+   "voice_end": 14.4
+  },
+  {
+   "i": 42,
+   "text": "the",
+   "start": 14.42,
+   "end": 14.5,
+   "voice_end": 14.5
+  },
+  {
+   "i": 43,
+   "text": "tip.",
+   "start": 14.56,
+   "end": 14.78,
+   "voice_end": 14.76
+  },
+  {
+   "i": 44,
+   "text": "AI",
+   "start": 15.2,
+   "end": 15.56,
+   "voice_end": 15.6
+  },
+  {
+   "i": 45,
+   "text": "making",
+   "start": 15.92,
+   "end": 16.219,
+   "voice_end": 16.219
+  },
+  {
+   "i": 46,
+   "text": "things",
+   "start": 16.239,
+   "end": 16.46,
+   "voice_end": 16.46
+  },
+  {
+   "i": 47,
+   "text": "up",
+   "start": 16.52,
+   "end": 16.62,
+   "voice_end": 16.62
+  },
+  {
+   "i": 48,
+   "text": "is",
+   "start": 16.66,
+   "end": 16.8,
+   "voice_end": 16.8
+  },
+  {
+   "i": 49,
+   "text": "one",
+   "start": 16.9,
+   "end": 16.98,
+   "voice_end": 16.98
+  },
+  {
+   "i": 50,
+   "text": "problem.",
+   "start": 17.06,
+   "end": 17.46,
+   "voice_end": 17.47
+  },
+  {
+   "i": 51,
+   "text": "Giving",
+   "start": 17.78,
+   "end": 17.98,
+   "voice_end": 17.98
+  },
+  {
+   "i": 52,
+   "text": "it",
+   "start": 18.02,
+   "end": 18.08,
+   "voice_end": 18.08
+  },
+  {
+   "i": 53,
+   "text": "a",
+   "start": 18.12,
+   "end": 18.18,
+   "voice_end": 18.18
+  },
+  {
+   "i": 54,
+   "text": "submit",
+   "start": 18.22,
+   "end": 18.54,
+   "voice_end": 18.54
+  },
+  {
+   "i": 55,
+   "text": "button",
+   "start": 18.64,
+   "end": 19.0,
+   "voice_end": 19.0
+  },
+  {
+   "i": 56,
+   "text": "is",
+   "start": 19.04,
+   "end": 19.14,
+   "voice_end": 19.14
+  },
+  {
+   "i": 57,
+   "text": "another.",
+   "start": 19.16,
+   "end": 19.52,
+   "voice_end": 19.52
+  }
+ ]
+}

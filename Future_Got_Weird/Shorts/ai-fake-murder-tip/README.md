@@ -1,8 +1,36 @@
-# Fake Murder Tip Short — Future Got Weird (V1 "AI Invented a Murder Tip. Then Hit Send." · V2 "AI Sent Police a Fake Murder Tip")
+# Fake Murder Tip Short — Future Got Weird (V1 "AI Invented a Murder Tip. Then Hit Send." · V2 / V3 Final "AI Sent Police a Fake Murder Tip")
 
 Original animated YouTube Shorts, 1080×1920 · 30 fps · H.264/AAC. **Nothing here is published, uploaded or scheduled.** Reconstructions of a reported event; every picture is an original illustration (no screenshots, no real people, no police logos).
 
-**Current version: V2** (21.0 s). V1 (28.0 s) is kept untouched for comparison; V2 lives beside it with `V2`/`_v2` names.
+**Current version: V3 Final** (21.0 s; one targeted hook / animation / sound pass on V2). V2 (commit `70a6451`) and V1 are kept untouched for comparison; V3 files carry `V3_Final`/`_v3` names and live in `exports/` (masters, small review copy, mix MP3), `captions/`, `cover/`, `audio/stems_v3_final/` and `qa/v3_final/`.
+
+## V3 Final files (this folder)
+
+| File | What |
+|---|---|
+| `exports/FGW_AI_Fake_Murder_Tip_V3_Final_Captioned_1080x1920.mp4` | Review master, burned-in captions (sentence 1 is the opening headline itself) |
+| `exports/FGW_AI_Fake_Murder_Tip_V3_Final_Clean_1080x1920.mp4` | Same picture and audio without the lane captions (keeps the opening headline) |
+| `exports/FGW_AI_Fake_Murder_Tip_V3_Final_ReviewSmall_NOT_FOR_UPLOAD.mp4` · `…_Mix_review.mp3` | 540×960 phone-review copy · the final mix as an MP3 (for chat/listening) |
+| `captions/FGW_AI_Fake_Murder_Tip_V3_Final.srt` | 15 cues from the same cue table (first sentence = one cue) |
+| `cover/FGW_AI_Fake_Murder_Tip_V3_Final_Cover_1080x1920.png` | The actual new first frame |
+| `audio/stems_v3_final/{narration,music,effects,mix}.wav` | 48 kHz stereo stems; they sum to the mix (max diff 3e-5) |
+| `audio/cues_v3.json` · `audio/sfx_log_v3.csv` · `audio/MIX_LOG_V3.json` | Cue table, effect placements, mix decisions |
+| `script_v3.md` · `claim_ledger_v3.md` · `packaging_v3.md` | Script + shot map, claim ledger, draft description |
+| `qa/v3_final/` | `QA_REPORT.md`, `DECISIONS.md`, probe/decode/loudness, audio checks, safe-zone scans, contact + transition sheets, phone previews, caption audit, `SHA256SUMS.txt` |
+| `source/src/v3/` | Editable Remotion scenes (`kit3`, `open`, `inspect`, `flow`, `close`, `Film3`, generated `cues.ts`); compositions `ShortV3`, `ShortV3Captioned`, `CaptionAuditV3` |
+| `handoff/ROUND_THREE_PROMPT.md` | The V3 brief, verbatim |
+
+### Rebuild V3
+```bash
+cd Future_Got_Weird/Shorts/ai-fake-murder-tip
+python3 tools/build_cues_v3.py          # single clock -> audio/cues_v3.json, source/src/v3/cues.ts, V3 .srt
+python3 tools/build_audio_v3.py         # stems + mix (numpy + ffmpeg ebur128) -> audio/stems_v3_final/*, source/public/audio/final_mix_v3.wav
+(cd source && npm ci && npm run typecheck)
+tools/render_v3.sh                      # both 1080x1920 masters into exports/
+tools/qa_media_v3.sh > qa/v3_final/ffprobe_decode_loudness.txt
+python3 tools/safe_zone_groups_v3.py exports/<master>.mp4   # safe zone x 96-876 / y 240-1450
+python3 tools/audio_checks_v3.py qa/v3_final/audio_checks.json exports/<master>.mp4 ...
+```
 
 ## V2 files (this folder)
 
@@ -44,3 +72,5 @@ Everything on screen and in the mix is driven by the cue table: change the narra
 
 ## Look
 V2 palette: ink `#162A32` (cold open and closing) · cream `#FAF3DF` (evidence scenes) · coral `#EF6B55` · teal `#1CA7A0`; saffron `#FFC744` only on the highlighted claim phrase (and on the approved checker's pencil). Montserrat ExtraBold 800 captions, Barlow Condensed ExtraBold 800 headlines. The only character is the approved checker (gray bob, round glasses, coral cardigan, pencil behind the ear).
+
+V3 Final palette roles: saffron = AI / what the AI wrote (cursor tag, corner mark, the highlighted claim); teal = police; coral = fake / spam; ink and cream scenes as in V2. Opening headline Barlow Condensed ExtraBold 118 px, captions Montserrat ExtraBold 76 px.

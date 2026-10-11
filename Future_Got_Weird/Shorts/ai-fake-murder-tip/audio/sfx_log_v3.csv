@@ -1,0 +1,8 @@
+event,time_s,frame,peak_re_voice_rms_db,source,note
+o.press click,0.375,11,-4.0,"ElevenLabs eleven_text_to_sound_v2 (V1 generation, reused)",first 0.14 s of raw_click; the picture shows contact on the same frame +25 ms
+o.press low tap,0.404,12,-22.0,local synthesis,restrained low tap under the click
+o.fold paper,0.685,21,-13.0,local synthesis,light paper while the copy folds into the envelope
+o.open paper,2.07,62,-12.0,local synthesis,light paper as the packet opens toward camera and becomes the quote surface
+b3.stamp tap,6.46,194,-10.0,local synthesis,"dry tap on the stamp frame, inside the 80 ms gap before ""no""; quiet by design"
+b5.land folder thud,12.776,383,-9.0,local synthesis,"muted thud as the envelope lands in the SPAM folder (low-passed, no latch, no alert)"
+b6.enable tick,18.74,562,-21.0,local synthesis,SUBMIT becomes enabled (never pressed)

@@ -1,0 +1,69 @@
+1
+00:00:00,100 --> 00:00:02,300
+AI sent police
+a fake murder tip.
+
+2
+00:00:02,300 --> 00:00:03,300
+It claimed
+it remembered
+
+3
+00:00:03,300 --> 00:00:04,700
+someone matching
+a description.
+
+4
+00:00:04,940 --> 00:00:05,800
+Except…
+
+5
+00:00:05,800 --> 00:00:07,380
+the page had
+no description.
+
+6
+00:00:07,700 --> 00:00:08,360
+Claude did this
+
+7
+00:00:08,360 --> 00:00:09,760
+while testing websites.
+
+8
+00:00:09,760 --> 00:00:10,600
+It used
+a real
+
+9
+00:00:10,600 --> 00:00:11,740
+police tip form.
+
+10
+00:00:11,740 --> 00:00:13,080
+The spam filter
+caught it.
+
+11
+00:00:13,080 --> 00:00:14,850
+Investigators never got
+the tip.
+
+12
+00:00:15,200 --> 00:00:16,660
+AI making
+things up
+
+13
+00:00:16,660 --> 00:00:17,560
+is one problem.
+
+14
+00:00:17,780 --> 00:00:19,040
+Giving it a
+submit button
+
+15
+00:00:19,040 --> 00:00:19,880
+is another.
+

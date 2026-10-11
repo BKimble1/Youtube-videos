@@ -1,6 +1,24 @@
 # Production state — Fake Murder Tip Short (resume checkpoint)
 
-## V2 — "AI Sent Police a Fake Murder Tip" (current)
+## V3 Final — "AI Sent Police a Fake Murder Tip" (current)
+
+**As of 11 Oct 2026: V3 Final is built, rendered from source and QA'd (see `qa/v3_final/QA_REPORT.md`). Not published, not uploaded, not scheduled.** One targeted hook / animation / sound pass on V2; script, approved narration and alignment unchanged.
+
+### Where things are
+- Repo `BKimble1/Youtube-videos`; V3 branch **`claude/ai-fake-murder-tip-short-v3-final`** (from V2 `claude/ai-fake-murder-tip-short-v2`, baseline commit `70a6451`); folder `Future_Got_Weird/Shorts/ai-fake-murder-tip/`. V1/V2 files untouched. No PR opened (none was asked for).
+- Deliverables: `exports/FGW_AI_Fake_Murder_Tip_V3_Final_{Captioned,Clean}_1080x1920.mp4`, `…_ReviewSmall_NOT_FOR_UPLOAD.mp4`, `…_Mix_review.mp3`; `captions/…V3_Final.srt`; `cover/…V3_Final_Cover_1080x1920.png`; `audio/stems_v3_final/`; `qa/v3_final/` (QA report, decisions, checks, sheets, checksums). Editable scenes: `source/src/v3/`.
+- Voice: **retained** (V2 take, byte-identical). No ElevenLabs operation needed; Runway not used (0 credits). Effects: V1's ElevenLabs click reused, everything else local synthesis. Nothing new was generated or paid for.
+- Rebuild: see `README.md` ("Rebuild V3"). Timing lives only in `tools/build_cues_v3.py` → `audio/cues_v3.json`.
+
+### Open items (all need the owner or a playback/phone environment)
+1. Perceptual review not possible here: listen to the full mix, the voice alone (is the opening sentence acceptable?), on headphones and a phone speaker (low/ordinary), a mono check, the first 2 s muted, and three loops back to back; watch at normal speed; check the real Shorts UI. Full list and what *was* measured: `qa/v3_final/QA_REPORT.md`.
+2. Re-read Source B (6abc/PPD statement) first-hand and confirm the Philadelphia name and July 18 date before publishing (`claim_ledger_v3.md`).
+3. Wording flag unchanged: "Claude did this while testing websites." (suggested: "during a website test").
+4. If the opening sentence reads wrongly when heard, one targeted ElevenLabs repair of that sentence only (≤ 2 candidates) is within the brief; the Clean master keeps the headline unless a headline-free variant is wanted.
+
+---
+
+## V2 — "AI Sent Police a Fake Murder Tip" (previous)
 
 **As of 11 Oct 2026: V2 is built, rendered from source and QA'd (see `QA_REPORT_V2.md`). Not published, not uploaded, not scheduled.** Next step is the owner's watch-and-listen review of V2 and one correction list.
 

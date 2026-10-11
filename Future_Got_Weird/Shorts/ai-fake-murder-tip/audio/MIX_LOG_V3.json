@@ -1,0 +1,53 @@
+{
+ "sample_rate": 48000,
+ "duration_s": 21.0,
+ "bpm": 114.286,
+ "bars": 10,
+ "target_lufs": -15.0,
+ "sample_peak_ceiling_dbfs": -1.9,
+ "stem_gain_db": 1.2,
+ "max_limiter_reduction_db": 1.75,
+ "voice": "approved Test Voice take (narration_v2_final_48k.wav), unchanged; 75 Hz high-pass only; -1 dB trim before the master gain",
+ "voice_speech_rms_dbfs_before_master": -17.71,
+ "ducking": "up to -12 dB under speech; 40 ms look-ahead, 30 ms attack, 320 ms release (V2: no look-ahead, 20 ms / 240 ms); derived from the narration envelope",
+ "duck_curve_max_slope_db_per_s": {
+  "v3": 243.7,
+  "v2_equivalent_attack_20ms": 600.0,
+  "v3_theoretical_attack_30ms": 400.0
+ },
+ "underlay": {
+  "v2_music_vs_voice_db_base_windows": -15.97,
+  "v2_music_vs_voice_db_all_speech": -15.47,
+  "v3_music_vs_voice_db_base_windows": -18.97,
+  "v3_music_vs_voice_db_all_speech": -19.93,
+  "trim_applied_db": -2.8,
+  "target_delta_db": -3.0,
+  "method": "RMS of the music stem divided by RMS of the voice stem over speech-active 10 ms windows that are not inside a pocket or a lowered section; V2 measured from audio/stems_v2"
+ },
+ "pockets_s": [
+  [
+   4.8,
+   7.39,
+   -38
+  ],
+  [
+   12.62,
+   13.38,
+   -12
+  ]
+ ],
+ "extra_bed_reduction_db": {
+  "spam outcome": [
+   12.18,
+   14.84,
+   -3.0
+  ],
+  "final takeaway": [
+   14.78,
+   21.0,
+   -3.0
+  ]
+ },
+ "bed_fade_out": "last 0.6 s",
+ "effects_peak_reference": "dB re the voice RMS over speech-active windows"
+}
