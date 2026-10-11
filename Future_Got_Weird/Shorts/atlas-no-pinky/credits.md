@@ -1,7 +1,7 @@
 # Credits and asset provenance
 
 ## Picture
-- All artwork is original layered SVG drawn in code for this Short: the robot hand rig (`source/src/hand`), props, shot-local stages (`source/src/v2`), labels. V2 (this version) replaced V1's single permanent workshop with five shot-local stages; V1 source remains in `source/src/film`.
+- All artwork is original layered SVG drawn in code for this Short: the robot hand rig (`source/src/hand`), props, shot-local stages (`source/src/v2`, `source/src/v3`), labels. V2 (this version) replaced V1's single permanent workshop with five shot-local stages; V1 source remains in `source/src/film`.
 - The checker is the channel's approved cast rig (`source/src/components/Character.tsx`, `cast.ts`, from the established Video 01 v2 source). One change: the pencil is now drawn behind the right ear (it previously sat on top of the hair). Identity (gray bob, round glasses, coral cardigan) is unchanged.
 - No third-party footage, photographs or company screenshots. Boston Dynamics material was used only as research reference; attribution appears on screen.
 
@@ -9,7 +9,7 @@
 - ElevenLabs **Test Voice** (voice_id `kk5XaSLo2XAw0sKM98zU`, owner's generated voice), model `eleven_v4`, via the connected account. Alignment: ElevenLabs Scribe (`eleven_scribe_v1`). Details: `audio/NARRATION_PROVENANCE.md`.
 
 ## Sound
-- Sound effects and the 126 BPM music bed are **original synthesis** from `tools/build_audio.py` (V1) and `tools/build_audio_v2.py` (V2) (numpy; noise and sine primitives). No samples, stock music, or music-generation model were used. Runway was not used.
+- Sound effects and the 126 BPM music bed are **original synthesis** from `tools/build_audio.py` (V1), `tools/build_audio_v2.py` (V2) and `tools/build_audio_v3.py` (V3) (numpy; noise and sine primitives). No samples, stock music, or music-generation model were used. Runway was not used.
 
 ## Fonts (bundled locally from npm, SIL Open Font License)
 - Fredoka (display), Nunito (body/captions), Source Serif 4 (loaded, unused in this Short), JetBrains Mono (the `13 DOF` tag): `@fontsource*` 5.3.0.
@@ -20,3 +20,7 @@
 ## V2 additions
 - No new third-party assets, no new generations. V2 reuses the V1 ElevenLabs narration and Scribe alignment unchanged. Runway was not used.
 - Evidence statements follow the owner's V2 audit; see `claim_ledger.md`.
+
+## V3 additions
+- Still no new third-party assets and no new generations: V3 is a focused repair of V2 (hand/object contact solver `source/src/v3/contacts.ts`, front-view opener, cool-paper stage, shot-owned headlines, simplified receipt, circular music bed). The narration is the unchanged V1 ElevenLabs recording; Runway was not used.
+- The V3 owner reassessment and the prompt used for the pass are saved in `handoff/V3_Reassessment_and_Prompt.md`.

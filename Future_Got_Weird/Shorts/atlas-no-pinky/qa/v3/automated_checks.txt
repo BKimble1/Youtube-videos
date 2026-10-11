@@ -1,0 +1,55 @@
+## SRT vs word alignment (FGW_Atlas_No_Pinky_V3.srt)
+  cues=23 words_covered=88/88 violations=0
+  last cue ends 33.810s (loop tear starts 33.880s); voice ends 33.434s; picture 34.6s
+  cue durations: min 0.69s max 2.12s
+
+## FGW_Atlas_No_Pinky_V3_1080x1920.mp4
+  video h264 High 1080x1920 30/1 yuv420p bt709 frames=1038 dur=34.600s
+  audio aac 48000 Hz ch=2 317 kb/s dur=34.603s; size 10.4 MB
+  full decode errors: none
+  integrated -14.6 LUFS, LRA 2.5 LU, true peak -1.4 dBTP
+
+## FGW_Atlas_No_Pinky_V3_Captioned_1080x1920.mp4
+  video h264 High 1080x1920 30/1 yuv420p bt709 frames=1038 dur=34.600s
+  audio aac 48000 Hz ch=2 317 kb/s dur=34.603s; size 11.0 MB
+  full decode errors: none
+  integrated -14.6 LUFS, LRA 2.5 LU, true peak -1.4 dBTP
+
+## audio identical between clean and captioned: True (MD5=359d7182a0def904b1f1d52887052cc2)
+
+## scene-change detections on the clean MP4 (threshold 0.25; each should sit inside a planned transition window)
+   16.23s  B05A slide
+   17.90s  B05B slide
+   19.00s  B05C slide
+   31.17s  B09 drop
+  detections: 4; unplanned: 0
+
+## held-grip contact audit (tools/check_contacts.mjs: pad capsule vs object, px; <= 0 touching/pressing; tolerance 8 px)
+  TURN worst |gap| = 3.0 px
+  TURN approach (frames 536-543) pad openings px: 21 21 20 17 9 1 -2 -3
+  PINCH worst |gap| = 4.9 px
+  BLOCK0 worst |gap| = 3.0 px
+  BLOCK1 worst |gap| = 3.0 px
+  OK: every held grip within 8px
+
+## captions vs final audio (cross-correlation of the delivered MP4 audio with the aligned narration file)
+  best lag 3.0 ms (0 = captions and speech share one clock), normalised peak 0.98; voice stem is the same file at offset 0 in the mix
+  last caption ends 33.810s, closing tear starts 33.880s -> caption ends before the tear
+
+## loop seam, picture (PSNR dB between decoded frames of the clean MP4; adjacent-frame values inside the opener are the reference)
+  frame 1037 ->    0:  38.8 dB
+  frame 1036 -> 1037:  39.4 dB
+  frame 1035 -> 1036:  38.9 dB
+  frame 1034 -> 1035:  38.7 dB
+  frame    0 ->    1:  40.4 dB
+  frame    1 ->    2:  41.1 dB
+  frame    2 ->    3:  42.0 dB
+  captioned MP4, frame 1037 -> 0:  38.8 dB
+
+## audio stems (same gain structure as the mix, before limiter)
+  while speaking: voice -16.2 dBFS RMS; music -21.3 dB re voice; effects -18.8 dB re voice
+  in gaps: music -33.9 dBFS RMS
+  mix L/R correlation 1.0000; mix sample peak -1.51 dBFS
+  boundary RMS: last 0.5 s -30.7 dBFS, last 0.1 s -37.1 dBFS, first 0.1 s -22.2 dBFS, first 0.5 s -15.8 dBFS
+  effect events: 29 (27 distinct cue names; V1 had 41)
+  voice-free tail: voice ends 33.43 s, picture 34.60 s; the music bed is exactly periodic over the loop (18 bars at 124.86 BPM, tails wrap), no end fade, no closing chord

@@ -1,0 +1,46 @@
+## SRT vs word alignment (FGW_Atlas_No_Pinky_V2.srt)
+  cues=21 words_covered=88/88 violations=0
+  last cue ends 33.934s; voice ends 33.434s; picture 34.6s
+  cue durations: min 0.84s max 2.12s
+
+## FGW_Atlas_No_Pinky_V2_1080x1920.mp4
+  video h264 High 1080x1920 30/1 yuv420p bt709 frames=1038 dur=34.600s
+  audio aac 48000 Hz ch=2 317 kb/s dur=34.603s; size 11.7 MB
+  full decode errors: none
+  integrated -14.7 LUFS, LRA 2.5 LU, true peak -1.4 dBTP
+
+## FGW_Atlas_No_Pinky_V2_Captioned_1080x1920.mp4
+  video h264 High 1080x1920 30/1 yuv420p bt709 frames=1038 dur=34.600s
+  audio aac 48000 Hz ch=2 317 kb/s dur=34.603s; size 12.2 MB
+  full decode errors: none
+  integrated -14.7 LUFS, LRA 2.5 LU, true peak -1.4 dBTP
+
+## audio identical between clean and captioned: True (MD5=46f7f8e65c6c61ec2986e79997b63f67)
+
+## scene-change detections on the clean MP4 (threshold 0.25; each should sit inside a planned transition window)
+   10.07s  stamp iris
+   16.23s  B05A slide
+   16.27s  B05A slide
+   17.97s  B05B slide
+   18.00s  B05B slide
+   18.93s  B05C slide
+   18.97s  B05C slide
+   31.20s  B09 drop
+  detections: 8; unplanned: 0
+
+## loop seam, picture (PSNR dB between decoded frames of the clean MP4; adjacent-frame values inside the opener are the reference)
+  frame 1037 ->    0:  30.0 dB
+  frame 1036 -> 1037:  30.2 dB
+  frame 1035 -> 1036:  31.4 dB
+  frame 1034 -> 1035:  29.8 dB
+  frame    0 ->    1:  30.8 dB
+  frame    1 ->    2:  31.6 dB
+  frame    2 ->    3:  33.6 dB
+
+## audio stems (same gain structure as the mix, before limiter)
+  while speaking: voice -16.2 dBFS RMS; music -21.1 dB re voice; effects -18.6 dB re voice
+  in gaps: music -34.1 dBFS RMS
+  mix L/R correlation 1.0000; mix sample peak -1.51 dBFS
+  boundary RMS: last 0.5 s -29.9 dBFS, last 0.1 s -62.7 dBFS, first 0.1 s -22.1 dBFS, first 0.5 s -15.8 dBFS
+  effect events: 29 (26 distinct cue names; V1 had 41)
+  voice-free tail: voice ends 33.43 s, picture 34.60 s; music dips to silence over the last 0.30 s, mix ends with a 0.12 s fade; no closing chord

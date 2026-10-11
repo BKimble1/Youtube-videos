@@ -1,102 +1,87 @@
-# QA report — Why This Robot Has No Pinky, **V2** (Atlas Short)
+# QA report — Why This Robot Has No Pinky, **V3** (Atlas Short, final focused polish)
 
-V2 production pass: 10 Oct 2026. **Not published, not uploaded, not scheduled.** The V1 baseline is untouched under `v1/` (`v1/QA_REPORT_V1.md`).
+V3 production pass: 10–11 Oct 2026. **Not published, not uploaded, not scheduled.** V2 and V1 are untouched (`v2/`, `v1/`). The per-defect log is `qa/v3/V3_DEFECT_LOG.md`; the owner's reassessment and the pasted prompt are saved in `handoff/V3_Reassessment_and_Prompt.md`.
 
-Evidence is logged in four separate layers. Nothing in layer 4 has happened.
+Evidence is kept in four separate layers. **Layer 4 has not happened.**
 
 | Layer | What it is | Status |
 | --- | --- | --- |
-| 1. Frame inspection | Stills, bursts and sheets viewed by the producing session (image reads, not playback) | Done — section A |
-| 2. Numerical measurements | Loudness, stem levels, seam PSNR, layout geometry | Done — section B |
-| 3. Automated checks | Specs, decode, SRT-vs-alignment, determinism, scene-change timing, typecheck | Done — section C (`qa/v2/automated_checks.txt`, `tools/qa_v2.py`) |
-| 4. Human audiovisual review | Watching and listening at speed, on a phone | **NOT PERFORMED.** Nobody has played the film. See section D |
+| 1. Source / frame inspection | Stills, bursts and sheets viewed by the producing session (image reads, not playback) | Done — section A |
+| 2. Numerical measurements | Contact gaps, loudness, stem levels, seam PSNR, caption/audio lag, music-seam step | Done — section B |
+| 3. Automated checks | Typecheck, decode, SRT-vs-alignment, determinism, scene-change timing, held-grip contact audit | Done — section C (`qa/v3/automated_checks.txt`, `tools/qa_v3.py`) |
+| 4. Human audiovisual review | Watching and listening at speed, on a phone | **NOT PERFORMED** — section D |
 
-## D. Outstanding human review (do these before anyone decides to publish)
+## D. Outstanding human review (nothing below has been done)
 
-This session cannot play video or audio. Watch/listen is therefore **not** marked complete anywhere. Still open:
+This session cannot play video or audio. Watch/listen is **not** marked complete anywhere. Still open:
 
-1. **One full phone playback with sound** — voice tone, pronunciation (especially *thirteen* and *actuators*), clarity, distracting or thin synthetic effects, and whether each teaching action can be followed at speed.
-2. **One muted phone playback of the actual captioned MP4** (`FGW_Atlas_No_Pinky_V2_Captioned_1080x1920.mp4`) — are the hook, the full premise, the experiment, the tradeoff and the conclusion understandable without sound?
-3. **Two repeats back-to-back** — do picture, text, motion, music and sound at the boundary feel continuous? (Picture is exact by construction; the audio seam is only *designed* to be smooth, never heard.)
-4. **Current Shorts UI overlay** — are captions and critical details still visible under the live interface? Only a conservative mock was checked.
+1. **One full phone playback with sound** — voice tone, pronunciation (especially *thirteen* and *actuators*), clarity, the 29 procedural effects (the new pad-close click, the quieter opener click, receipt printing), the retimed music bed, and whether each teaching action can be followed.
+2. **One muted phone playback of the captioned MP4** (`FGW_Atlas_No_Pinky_V3_Captioned_1080x1920.mp4`) — hook, premise, experiment, tradeoff and conclusion without sound.
+3. **Two repeats back-to-back** — do picture, text, motion, music and sound at the boundary feel continuous? The picture seam is exact by construction; the music bed was made exactly periodic and the mix has no end fade, but whether the reset is audible has never been heard.
+4. **Current Shorts UI overlay** — captions and critical details under the live interface. Only a conservative mock was checked.
 
-Only proxy evidence on the voice: the V1 narration (reused unchanged) was transcribed word-for-word by ElevenLabs Scribe (88/88 words match). That says the words are intelligible to a machine, not that the performance is good. The V2 mix was **not** re-transcribed (the ElevenLabs asset-upload tools were disconnected in this session).
-
-## Deliverables and measured specs (layers 2–3)
+## Deliverables and measured specs
 
 | File | Result |
 | --- | --- |
-| `FGW_Atlas_No_Pinky_V2_1080x1920.mp4` (clean) | H.264 High, yuv420p, BT.709, 1080 × 1920, 30 fps, 1038 frames = **34.60 s**, AAC-LC 48 kHz stereo ~320 kb/s, 11.7 MB; decodes without errors |
-| `FGW_Atlas_No_Pinky_V2_Captioned_1080x1920.mp4` | Same film plus the stable caption lane, 12.2 MB; audio stream bit-identical to the clean file |
-| `FGW_Atlas_No_Pinky_V2.srt` | 21 cues, 3–6 words each, ≤ 2 lines, ≤ 20 characters per line; the 88 narrated words in order; every cue start equals its Scribe word start (0 mismatches); durations 0.84–2.12 s; last cue ends 0.5 s after the last word |
-| `cover/FGW_Atlas_No_Pinky_V2_Cover.png` | 1080 × 1920 still of the selected opening (frame 56 of the film: `NO PINKY?`, gear on its post, dashed fifth-digit slot). No new generation |
-| `audio/v2/` | `FGW_Atlas_No_Pinky_V2_mix.wav`, `stems/{narration,music,effects}.wav`, `sfx_log.csv`, `MIX_LOG.json` (narration files are shared with V1 in `audio/`) |
-| `source/` | Editable Remotion project; V2 is `src/v2/*` + `src/cues_v2.ts`; compositions `Short`, `ShortCaptioned` (V2) and `ShortV1`, `ShortCaptionedV1` (baseline) |
+| `FGW_Atlas_No_Pinky_V3_1080x1920.mp4` (clean) | H.264 High, yuv420p, BT.709, 1080 × 1920, 30 fps, 1038 frames = **34.60 s**, AAC-LC 48 kHz stereo ~320 kb/s, 10.4 MB, decodes without errors |
+| `FGW_Atlas_No_Pinky_V3_Captioned_1080x1920.mp4` | Same film plus the stable caption lane, 11.0 MB; audio stream bit-identical to the clean file |
+| `FGW_Atlas_No_Pinky_V3.srt` | 23 cues, 2–6 words, ≤ 2 lines of ≤ 20 characters, the 88 narrated words in order; every cue start equals its Scribe word start (0 violations); last cue ends 33.81 s, before the closing tear (33.88 s) |
+| `cover/FGW_Atlas_No_Pinky_V3_Cover.png` | 1080 × 1920 still of frame 48 of the improved opener (`NO PINKY?`, open four-digit hand, dashed fifth slot with circle, gear on its post). No new generation |
+| `audio/v3/` | `FGW_Atlas_No_Pinky_V3_mix.wav`, `stems/{narration,music,effects}.wav`, `sfx_log.csv`, `MIX_LOG.json` (narration is the unchanged V1/V2 recording in `audio/`) |
+| `source/` | Editable Remotion project. V3 is `src/v3/*` + `src/cues_v3.ts` (forked from `src/v2/`, which is kept); compositions `Short` / `ShortCaptioned` (V3), `ShortV2` / `ShortCaptionedV2`, `ShortV1` / `ShortCaptionedV1`, dev-only `ProbeV3` |
+| `qa/v3/` | Contact sheets, 360×640 caption sheet, safe-zone overlay, loop-seam frames, opening and TURN frame strips, `automated_checks.txt`, `V3_DEFECT_LOG.md` |
 
 ## A. Frame inspection (layer 1)
 
-Viewed: stills at ~100 frames across the film, bursts around every changed boundary, the 1 fps contact sheets, a 360 × 640 sheet (one frame per caption cue), a safe-zone overlay sheet, and the six frames straddling the loop seam. Sheets: `qa/v2/`.
+Viewed at 1080×1920 where a contact had to be judged (TURN crops, PINCH/BUILT title crops) and at contact-sheet or 360×640 size elsewhere: first second (frames 0–30), taped fingers (B02, unchanged), stamp/verdict (B03, unchanged), movement-control explanation (B04), washer pinch (520–536), the full rotating-cube grip (536–566), drill contact (575, 590), the three capability headline hand-offs (bursts 484–494, 534–546, 566–576), added hardware (634–790), BUILT TO WORK (836–858), human reference (905–937), simplified receipt (938–1005), closing tear (1016–1037), last-to-first (1035–1037 / 0–2), and the neighbours of every modified scene boundary (bursts around 484–494, 534–546, 566–576, 606–616, 787–798, 933–944, tape wipe 98–101, stamp iris 303–310).
 
-- **Opener (0–3 s).** Frame 0 already shows the profile four-digit hand pinching a small bright gear (thumb below, index above, the other two fingers fanned); `NO PINKY?` is on screen from frame 0; the empty fifth position is revealed by a dashed ghost + circle at ~1 s; `ON PURPOSE.` lands on the spoken word; `ATLAS HAND · Boston Dynamics` identifies the subject from frame 0. No guide in the first 3 s; no five-digit hand, no amputation, no counter.
-- **Five shot-local stages, no permanent bench.** Working-hand macro (saffron, B01), overhead experiment (graph-paper desk, B02/B03), mechanism macro on ink-teal blueprint grid (B04, B05b), pegboard workstation (B05c, B07/B08), exploded diagram on blue grid (B06), editorial receipt on ink (B09). Each backdrop fills the whole canvas; nothing carries from one shot to the next except the hand rig and the guide.
-- **B02 taped test.** Large overhead hand; guide's sleeved arm brings the tape and wraps ring + pinky; the hand turns, hooks a mug handle, sets it down, pinches a knob (the other three fingers fold) while a clock completes one turn (`ONE DAY`). Mug/knob are labelled `RECONSTRUCTION` and are illustrations.
-- **B03 decision.** Full-frame slip, `SKIP IT` chosen, round stamp on the guide's mitt lands to the **left** of the words, short recoil, ring-shaped iris into the macro (showcase transition 2).
-- **B04 mechanism.** Four digits resolved with numbered badges (~1 s), then a counter rolls to `13` + `WAYS TO MOVE` + `13 DOF`; thumb sweep, splay and finger curls with dotted tip trails. 13 is shown **only as a total**; no per-finger mapping.
-- **B05 capabilities.** Three different angles: overhead washer pinch; diagonal die turn on the ink grid; side-view drill-press trigger press with the screw driven home. The palm is distinct from the tool in each; the forearm enters from its own edge and stays off the titles.
-- **B06 diagram.** Hand with a dashed fifth slot; **exactly three** actuator modules drop in with dotted leaders; a blank price tag (COST), a dashed volume box with outward arrows (SPACE), a spare module + wrench (REPAIRS). No numbers.
-- **B07/B08 workstation.** Guide behind a table, a side-view hand picks a block and seats it in a fixture; lamps check off; a clean human-hand silhouette with a `HUMAN HAND` label sits **beside** the working robot hand (no overlap) while the second block seats.
-- **B09 receipt + loop.** A large receipt prints (`5TH FINGER (OPTIONAL)` … `BUDGET ... ?`), `NOT IN BUDGET` stamps, the guide reacts; the receipt is then torn upward along a perforated edge, revealing the opener.
-- **Loop seam (picture).** Frames 1035–1037 and 0–2 (`qa/v2/loop_seam_frames_1035-1037_0-2.png`) are visually the same scene: same camera, hand pose, background, headline, props, attribution pill. Details in section B.
-- **Transitions.** Showcase transitions: tape wipe (B01→B02) and stamp-ring iris (B03→B04). All other changes are 6–10-frame slides or the closing tear. No flashes or strobing seen in bursts.
-- **Phone legibility.** At true 360 × 640 (`qa/v2/phone_360x640_captions_sheet.png`) headlines, captions (64 px source), source pills (40 px source, ≈ 13 px at that size) and diagram labels are readable. Safe-zone mock (`qa/v2/safe_zone_overlay_sheet.png`; green = x 120–870, y 240–1450, red = top 240 px and bottom 470 px): all headlines, pills, diagram labels and caption plates sit inside green after the final layout pass.
-
-Problems found and fixed during V2 frame review: overlapping tag/source pills (text overflowed its pill); B02 hand too large and under the pills; finger pop between mug grasp and knob pinch (now a 10-frame blend); folded fingers reaching over the knob; B04 camera push covering the title; B06 diagram too small and its SPACE/REPAIRS labels overlapping; B09 receipt text above y = 240 (receipt moved below a register body); headlines starting above y = 240; caption plates ending at y ≈ 1494 (lane moved up, plates now end ≈ 1455); human reference overlapping the guide and the robot hand.
+- **Opening.** Frame 0 shows the front-view four-digit hand pinching a gear between thumb and index while middle and ring stand clear; `NO PINKY?` and `ATLAS HAND · Boston Dynamics` are present from frame 0 at full size. The pads release at 0.37 s, the gear seats on its post at 0.67 s, the dashed fifth slot appears into empty space at 0.58 s, the circle pops at ~0.96 s and the hand opens so thumb + three fingers are distinct by frame ~24 (0.8 s); `ON PURPOSE.` lands on its word.
+- **TURN.** The cube is held between index and thumb: the pads are within ~21 px as the shot slides on, touch by frame 542, and stay on the cube edges while it turns 90° from frame 548; the arrow stays on the cube (`qa/v3/turn_grip_frames_536-566.png`).
+- **Headlines.** `PINCH.`, `TURN.`, `PRESS.` are drawn inside their own shots and leave with them; no outgoing title appears over the next shot in the burst frames. `PINCH.` and `BUILT TO WORK` are visibly clear of the forearm/palm (crops of 522 and 850).
+- **Lanes.** Headline lane ends by y ≈ 466; action sits between that and y ≈ 1147; the attribution lane is y 1130–1260; captions y 1277–1455. Public tags are only `RECONSTRUCTION`, `COMPANY-REPORTED ABILITY` and `ILLUSTRATION`. In the final frames no pill covers a joint, pad, cuff, held object or trigger; the forearms pass behind the pills at most.
+- **Stages.** B04 and the TURN shot are on the cool-paper stage with ink lettering; the yellow opener and teal workstation are unchanged; the receipt backdrop is plain dark without grid.
+- **Receipt and loop.** Five large rows plus the `NOT IN BUDGET` stamp, no guide; the tear reveals the same opener function, and frames 1035–1037 / 0–2 are visually the same scene.
+- **Safe-zone and phone size.** In `qa/v3/safe_zone_overlay_sheet.png` (green = x 120–870, y 240–1450) all headlines, diagram labels, captions and pills sit inside; the open hand's thumb tip (B01, B04) reaches x ≈ 50–100, left of the green box but on screen and away from the right rail. At true 360×640 (`qa/v3/phone_360x640_captions_sheet.png`) headlines, captions and labels read.
 
 ## B. Numerical measurements (layer 2)
 
-**Loudness (final MP4 audio, ffmpeg ebur128):** integrated **−14.7 LUFS**, LRA 2.5 LU, true peak **−1.4 dBTP** (WAV mix before AAC: −14.6 LUFS, sample peak −1.51 dBFS). Baseline cited in the audit: ≈ −14.6 LUFS / −1.45 dBTP; V1 container was −14.5 / −1.4. This is the same neighbourhood; it is a measurement, not a sound-quality certification.
+**Held-grip contacts** (`tools/check_contacts.mjs`: visible pad capsule vs object polygon/circle per frame; ≤ 0 = touching): TURN frames 544–568 **worst |gap| 3.0 px** (pads pressed 3 px in); the same harness on the V2 geometry measured 18–100 px gaps; washer pinch 520–536 worst 4.9 px; workstation blocks 810–846 and 900–918 worst 3.0 px. Approach frames 536–543 pad openings: 21 21 20 17 9 1 −2 −3 px. Not measured: drill trigger.
 
-**Levels (stems, while the narrator speaks):** voice −16.2 dBFS RMS; music 21.1 dB below the voice (about −34 dBFS RMS in gaps, so the bed breathes back up between phrases); effects 18.6 dB below on average with higher peaks at contacts. L/R correlation 1.0 (mono-safe).
+**Loudness (final MP4 audio, ffmpeg ebur128):** integrated **−14.6 LUFS**, LRA 2.5 LU, true peak **−1.4 dBTP** (WAV mix: −14.6 LUFS, sample peak −1.51 dBFS). The V2 file was measured by the owner at ≈ −14.78 LUFS / −1.44 dBTP; this is the same neighbourhood and not a sound-quality certification.
 
-**Effects budget:** 29 effect events, 26 distinct cues (V1: 41). V1's four count pops, UI ticks and the tonic closing chord are gone; contact events kept: gear/tray, tape, mug, knob, stamp ×2, pinch, trigger, screw, modules ×3, wrench, block seats ×2, receipt printing ×4, loop tear.
+**Levels (stems, while the narrator speaks):** voice −16.2 dBFS RMS; music 21.3 dB below the voice (−33.9 dBFS RMS in gaps); effects 18.8 dB below on average. L/R correlation 1.0 (mono-safe). **Effects:** 29 events, 27 distinct (V1: 41; same budget as V2).
 
-**Loop seam (picture), PSNR between decoded frames of the clean MP4:** 1037 → 0: **30.0 dB**; adjacent frames inside the opener for comparison: 0 → 1 30.8 dB, 1 → 2 31.6 dB, 2 → 3 33.6 dB, 1035 → 1036 31.4 dB, 1036 → 1037 30.2 dB. The step across the boundary is the same size as an ordinary one-frame step of the same motion.
+**Loop seam, picture:** clean 1037 → 0 **38.8 dB PSNR**; neighbouring one-frame steps in the opener 38.7–42.0 dB (the step across the boundary is an ordinary one-frame step). Captioned file 1037 → 0: 38.8 dB.
 
-**Seam (audio), RMS of the mix:** last 0.5 s −29.9 dBFS, last 0.1 s −62.7 dBFS (effectively silent), first 0.1 s −22.1 dBFS, first 0.5 s −15.8 dBFS. Voice ends 33.43 s; the receipt-tear sound (33.83–34.45 s) is the last event; music dips to silence over the final 0.30 s and returns at once at frame 0, and the mix ends with a 0.12 s fade and an 8 ms fade-in. There is **no closing chord**.
+**Loop seam, audio:** the music bed is retimed to 124.855 BPM so 18 bars = 34.6 s and every write wraps circularly; the step between the last and first music sample is 0.0004 (typical sample step 0.0010). Mix RMS last 0.1 s −37.1 dBFS (V2: −62.7), first 0.1 s −22.2 dBFS; no end fade, no closing chord. Whether the downbeat that lands at the seam sounds like a clean restart is a layer-4 question.
 
-**Layout geometry (from code and overlay):** critical region x 120–870, y 240–1450. Headlines start at y ≥ 250 and x ≥ 120; pills at x = 120, y = 1130 (tag) and 1202 (source); caption lane centred (495, 1366), 64 px, ≤ 2 lines, plate ≤ 750 px wide, bottom ≤ 1455.
+**Captions vs final audio:** cross-correlation of the delivered MP4's audio with the aligned narration file: lag **3.0 ms**, normalised peak 0.98, so the SRT/cue clock and the speech share one clock. Last caption ends 33.81 s; the tear starts 33.88 s.
 
 ## C. Automated checks (layer 3)
 
-Full output: `qa/v2/automated_checks.txt` (regenerate with `python3 tools/qa_v2.py`; sheets with `tools/qa_v2_sheets.sh`).
+Full output: `qa/v3/automated_checks.txt` (regenerate with `python3 tools/qa_v3.py`; sheets with `tools/qa_v3_sheets.sh`).
 
-- Typecheck: `npx tsc --noEmit` clean.
-- Both MP4s: H.264 High 1080 × 1920 yuv420p BT.709, 30 fps, 1038 frames, 34.60 s; AAC 48 kHz stereo; full decode with no errors.
-- SRT: 21 cues, 0 violations of the 3–6 word / 2-line / 20-character rules; text equals the aligned narration in order; cue starts equal Scribe word starts.
-- Scene-change detector (threshold 0.25) on the clean MP4: 8 detections, all inside planned transition windows, 0 unplanned (the tape wipe and slides are gradual and do not trip the detector by design).
-- **Determinism:** the clean MP4 was rendered twice from the final source; all 1038 decoded frames are hash-identical (`ffmpeg -f framemd5`). The captioned MP4 was rendered once from the final source (its shared frames derive from the same deterministic code).
-- Audio: identical between the clean and captioned files (md5).
-- Baseline check: six V1 frames re-rendered from the shared rig after the additive `Hand.tsx` edits are within lossy-encode tolerance of the delivered V1 MP4 (PSNR 34.9–37.9 dB); not pixel-diffed, so a subtle V1 drift cannot be excluded. The delivered V1 files are unchanged.
-
-## Loop: exact or only smooth?
-
-- **Picture: exact by construction.** The closing receipt is torn upward and the layer revealed is the opener rendered at negative time `t = frame − 1038`, so frame 1037 is the opener one frame before frame 0. Same camera, hand, background, headline, props and attribution; outgoing receipt, guide and `EDITORIAL JOKE` tag are cleared by the tear.
-- **Captioned file: slightly less exact.** The first caption (`This robot has`) fades in over frames 0–3, so frame 0 shows it at ~33 % opacity while frame 1037 has no caption.
-- **Audio: perceptually smooth by design only.** Spoken closing thought stays complete; the bed has no closing chord and dips for 0.3 s, then the opener's click arrives at 0.12 s. Never heard; the back-to-back test (D3) is open.
+- `npx tsc --noEmit` clean.
+- Both MP4s: H.264 High 1080 × 1920 yuv420p BT.709, 30 fps, 1038 frames, 34.60 s; AAC 48 kHz stereo; full decode with no errors; audio identical between them.
+- SRT: 23 cues, 0 violations of the ≤ 2 lines / ≤ 20 characters / words-in-order / start-equals-Scribe-start rules (the V2 3–6-word rule was dropped on purpose so two-word dramatic cues can stand alone).
+- Contact audit: OK, every held grip within 8 px.
+- **Determinism:** the clean MP4 was rendered twice from the final source and all 1038 decoded frames are hash-identical (`ffmpeg -f framemd5`). The captioned MP4 was rendered once from the same source.
+- Scene-change detector (threshold 0.25): 4 detections, all inside planned windows, 0 unplanned. This only shows the abrupt changes are where planned; it says nothing about visual direction or contact.
+- The V2 and V1 compositions still typecheck and register (`ShortV2`, `ShortV1`); they were not re-rendered in this pass.
 
 ## Known limitations and open issues
 
-- Layer 4 is open (section D). No claim in this report depends on having watched or listened.
-- Voice and sound design unlistened; the 29 effects are procedural and may sound thinner than recorded foley. `thirteen` and `actuators` pronunciation unverified by ear.
-- Primary sources were **not re-read** in this session (the sandbox proxy blocks bostondynamics.com / spectrum.ieee.org). The `three more actuators` support is taken from the owner's V2 audit; see `claim_ledger.md`.
-- `BUILT TO WORK` crosses the robot forearm for part of B07 (title drawn over the arm; still readable).
-- In the captioned file the caption plate covers the lower body of the guide in B09 and the table in B07/B08.
-- In B02 the grasp is a simplified hook grip and the human-hand prop is cartoonish by design.
-- The side-view hand in B05c still reads partly as part of the drill because both are teal/red blocks; contrast was improved, not eliminated.
-- Tag pills are 40 px source text (~13 px at 360 × 640): legible in the mock but small.
-- Runway was not used; no new ElevenLabs generation was made in V2 (V1 narration reused). Optional Runway inserts remain unproduced.
-- Git LFS uploads are Forbidden in this environment, so audio/MP4s are committed as ordinary blobs via the scoped `.gitattributes`.
+- Layer 4 is open (section D). No statement in this report depends on having watched or listened.
+- Voice and sound design unlistened; the new music tempo (124.855 vs 126 BPM), the retimed opener effects and the circular bed are untested by ear. `thirteen` and `actuators` pronunciation unverified. The V2 mix could not be re-transcribed (ElevenLabs upload tools unavailable).
+- Primary sources were not re-read (sandbox proxy blocks bostondynamics.com / spectrum.ieee.org); the `three more actuators` support is taken from the owner's V2 audit, unchanged in `claim_ledger.md`.
+- The gear is partly covered by the pads at frame 0 (it reads as a small bright object between the jaws, not as a clearly drawn gear until it is released). The open hand's thumb is left of the 120 px guide.
+- B04 is now a single large hand with no camera push, so it reads less like a macro than V2 (traded for clear lanes).
+- The TURN arc arrowhead can overlap the index finger late in the turn (decorative; the cube's own arrow is unobstructed).
+- `ON PURPOSE.` appears as a plate and as a caption at the same time (same words, deliberate); no two different explanations are shown together.
+- The drill trigger grip and the human-hand reference were checked by eye only.
+- Runway not used; no new ElevenLabs generation (narration reused unchanged). Git LFS uploads are Forbidden in this environment, so audio/MP4s are committed as ordinary blobs via the scoped `.gitattributes`.
 
 ## Reproduce
 
-See `README.md`: `python3 tools/build_cues_v2.py` → `python3 tools/build_audio_v2.py` → Remotion render → `python3 tools/qa_v2.py`.
+See `README.md`: `python3 tools/build_cues_v3.py` → `python3 tools/build_audio_v3.py` → Remotion render → `node tools/check_contacts.mjs` → `python3 tools/qa_v3.py` → `tools/qa_v3_sheets.sh`.
