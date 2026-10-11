@@ -1,0 +1,14 @@
+{
+  "fps": 30,
+  "total_frames": 75,
+  "note": "Single source of truth for the E-A opening's timed events. Read by choreo.ts (picture) and tools/build_audio_opening.py (sound). Frames at 30 fps.",
+  "events": {
+    "stop": 0,
+    "cup_tick": 2,
+    "rush_in": 3,
+    "flap_in": 8,
+    "launch": 9,
+    "land": 31,
+    "skid_out": 74
+  }
+}

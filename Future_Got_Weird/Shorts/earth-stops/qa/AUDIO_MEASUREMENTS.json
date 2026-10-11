@@ -1,0 +1,48 @@
+{
+ "file": "audio/stems/effects_opening.wav",
+ "samples": 120000,
+ "duration_s": 2.5,
+ "video_duration_s": 2.5,
+ "channels": 2,
+ "channels_identical_mono_safe": true,
+ "wav_sample_peak_dBFS": -2.0,
+ "stem_wav_loudness": {
+  "integrated_LUFS": -18.2,
+  "true_peak_dBFS": -1.7
+ },
+ "muxed_aac_loudness": {
+  "integrated_LUFS": -18.2,
+  "true_peak_dBFS": -2.6
+ },
+ "first_sample_time_s_over_0.01": 0.0001,
+ "first_50ms": {
+  "spectral_centroid_Hz": 1601,
+  "energy_below_200Hz_pct": 56.7,
+  "energy_above_1kHz_pct": 39.0
+ },
+ "onset_lift_dB": {
+  "landing_f31_broadband_30ms_after_vs_before": 15.6,
+  "launch_f9_1to4kHz_30ms_after_vs_before": 5.9,
+  "ceramic_tick_f2_2to6kHz_25ms_after_vs_before": 2.2
+ },
+ "ceramic_tick_note": "the 25 ms before the tick is the stop hit, the loudest part of the opening, so the band-energy lift is modest; the tick is the highest-peak event in the mix (see tick_window_peak vs mix_peak)",
+ "tick_window_peak": 0.794,
+ "mix_peak": 0.794,
+ "rms_dBFS_per_250ms": [
+  -18.3,
+  -21.4,
+  -25.4,
+  -26.8,
+  -17.0,
+  -23.0,
+  -25.5,
+  -25.7,
+  -26.3,
+  -27.0
+ ],
+ "placed_events": 19,
+ "not_done": [
+  "listening (by ear, phone speaker, headphones)",
+  "narration/music/ambience interaction (none exist yet)"
+ ]
+}

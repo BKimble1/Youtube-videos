@@ -1,0 +1,6 @@
+source/node_modules/
+source/out/
+exports/_wip/
+*.log
+FGW_EarthStops_Deliverables.zip
+FGW_EarthStops_Source_Audio_Docs.zip

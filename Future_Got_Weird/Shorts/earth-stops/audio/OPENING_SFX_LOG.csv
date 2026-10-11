@@ -1,0 +1,20 @@
+file,frame,time_s,gain_db,stem,note
+audio/sfx/shoe_scrape_planted.wav,0.0,0.0,0.0,friction,frame 0: stopped shoes skid on rough paving (planted phase; stops dead on frame 9 when the shoes leave the ground)
+audio/sfx/stop_thud.wav,0.0,0.0,-8.0,impacts,frame 0: restrained low weight under the first scrape (has a mid knock so it survives phone speakers)
+audio/sfx/coffee_jet.wav,1.0,0.0333,-5.0,liquid,frames 1-15: coffee thrown forward out of the mug
+audio/sfx/ceramic_rim_tick.wav,2.0,0.0667,1.0,liquid,frame 2: ceramic rim tick as the coffee lurches out
+audio/sfx/air_rush.wav,3.0,0.1,-9.0,air_cloth,"frames 3-90: air past the hero, level follows her speed"
+audio/sfx/jacket_scarf_flutter.wav,8.0,0.2667,-10.0,air_cloth,frames 8-40: cardigan and scarf flutter while she is flung
+audio/sfx/launch_scuff_snap.wav,9.0,0.3,-5.0,impacts,frame 9: shoes leave the pavement
+audio/sfx/coffee_splat_00.wav,15.52,0.5175,-13.0,liquid,droplet k=21 lands at screen x 1073.4
+audio/sfx/coffee_splat_01.wav,15.79,0.5264,-14.0,liquid,droplet k=22 lands at screen x 1059.8
+audio/sfx/coffee_splat_05.wav,15.91,0.5305,-15.0,liquid,droplet k=26 lands at screen x 997.7
+audio/sfx/coffee_splat_04.wav,15.95,0.5318,-14.0,liquid,droplet k=25 lands at screen x 1012.9
+audio/sfx/coffee_splat_02.wav,16.02,0.5341,-15.0,liquid,droplet k=23 lands at screen x 1045.9
+audio/sfx/coffee_splat_03.wav,16.12,0.5372,-13.0,liquid,droplet k=24 lands at screen x 1030.7
+audio/sfx/coffee_splat_06.wav,16.42,0.5474,-13.0,liquid,droplet k=27 lands at screen x 990.2
+audio/sfx/coffee_splat_07.wav,17.29,0.5763,-14.0,liquid,droplet k=28 lands at screen x 987.1
+audio/sfx/coffee_splat_08.wav,18.59,0.6197,-15.0,liquid,droplet k=29 lands at screen x 983.4
+audio/sfx/shoe_scrape_landing_skid.wav,31.0,1.0333,-4.0,friction,frames 31-90: landing slide to the cut; grit and slip rate fall with the speed
+audio/sfx/landing_thump.wav,31.0,1.0333,-2.0,impacts,frame 31: body lands (matches the squash-and-bounce)
+audio/sfx/landing_bounce_thump.wav,39.0,1.3,-11.0,impacts,frame 39: the small second contact after the bounce

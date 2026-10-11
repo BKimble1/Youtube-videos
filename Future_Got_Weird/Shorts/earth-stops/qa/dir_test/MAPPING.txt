@@ -1,0 +1,4 @@
+dir_1.png = DirTest-Brace  (left arm braced forward across body, ghosts on)
+dir_2.png = OpeningEA-NoMarker  (current: left arm back-and-up, ghosts on)
+dir_3.png = DirTest-NoGhost  (left arm back-and-up, ghosts OFF)
+dir_4.png = DirTest-Trail  (left arm trailing low behind, ghosts on)
