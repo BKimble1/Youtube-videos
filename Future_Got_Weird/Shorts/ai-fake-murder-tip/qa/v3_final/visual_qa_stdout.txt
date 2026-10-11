@@ -1,0 +1,55 @@
+qa/v3_final/contact_1_0-10s.png (1400, 1137)
+qa/v3_final/contact_2_10-21s.png (1400, 1137)
+qa/v3_final/first_2s_muted_check.png (1440, 688)
+qa/v3_final/transitions_a.png (1440, 688)
+qa/v3_final/transitions_b.png (1440, 688)
+qa/v3_final/transitions_c.png (1440, 688)
+qa/v3_final/transitions_d.png (1440, 688)
+qa/v3_final/phone_preview_360x640_1.png (2160, 640)
+qa/v3_final/phone_preview_360x640_2.png (2160, 640)
+{
+ "captioned": {
+  "f629_vs_f0 (the loop seam)": {
+   "mean_abs_diff": 0.5,
+   "pct_pixels_over_32": 0.167
+  },
+  "f628_vs_f629": {
+   "mean_abs_diff": 0.003,
+   "pct_pixels_over_32": 0.0
+  },
+  "f0_vs_f1": {
+   "mean_abs_diff": 0.067,
+   "pct_pixels_over_32": 0.053
+  },
+  "f1_vs_f2": {
+   "mean_abs_diff": 0.07,
+   "pct_pixels_over_32": 0.074
+  },
+  "f627_vs_f628": {
+   "mean_abs_diff": 0.0,
+   "pct_pixels_over_32": 0.0
+  }
+ },
+ "clean": {
+  "f629_vs_f0 (the loop seam)": {
+   "mean_abs_diff": 0.502,
+   "pct_pixels_over_32": 0.166
+  },
+  "f628_vs_f629": {
+   "mean_abs_diff": 0.001,
+   "pct_pixels_over_32": 0.0
+  },
+  "f0_vs_f1": {
+   "mean_abs_diff": 0.067,
+   "pct_pixels_over_32": 0.053
+  },
+  "f1_vs_f2": {
+   "mean_abs_diff": 0.07,
+   "pct_pixels_over_32": 0.074
+  },
+  "f627_vs_f628": {
+   "mean_abs_diff": 0.0,
+   "pct_pixels_over_32": 0.0
+  }
+ }
+}

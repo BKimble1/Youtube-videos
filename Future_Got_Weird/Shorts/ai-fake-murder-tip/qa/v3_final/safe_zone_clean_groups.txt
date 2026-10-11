@@ -1,0 +1,6 @@
+exports/FGW_AI_Fake_Murder_Tip_V3_Final_Clean_1080x1920.mp4: 630 frames, tolerance 8px beyond x 96-876 / y 240-1450
+  extents of all frames inside the zone: x 91-884  y 270-1440
+  frames 149-239  minx 0 maxx 1079 miny 0 maxy 1919
+  frames 257-259  minx 93 maxx 989 miny 297 maxy 1083
+  frames 338-343  minx 84 maxx 875 miny 267 maxy 963
+  frames 448-449  minx 0 maxx 1079 miny 0 maxy 1919

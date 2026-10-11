@@ -1,0 +1,78 @@
+=== exports/FGW_AI_Fake_Murder_Tip_V3_Final_Clean_1080x1920.mp4
+codec_name=h264
+profile=High
+width=1080
+height=1920
+pix_fmt=yuv420p
+color_space=bt709
+color_transfer=bt709
+color_primaries=bt709
+r_frame_rate=30/1
+avg_frame_rate=30/1
+duration=21.000000
+bit_rate=1061771
+nb_frames=630
+codec_name=aac
+sample_rate=48000
+channels=2
+duration=21.013000
+bit_rate=317380
+container duration=21.013000 size=3646100 bit_rate=1388131 
+full decode (video+audio) error lines: 0
+loudness of the encoded audio track:
+I:         -15.0 LUFS
+LRA:         2.1 LU
+Peak:       -1.8 dBFS
+
+=== exports/FGW_AI_Fake_Murder_Tip_V3_Final_Captioned_1080x1920.mp4
+codec_name=h264
+profile=High
+width=1080
+height=1920
+pix_fmt=yuv420p
+color_space=bt709
+color_transfer=bt709
+color_primaries=bt709
+r_frame_rate=30/1
+avg_frame_rate=30/1
+duration=21.000000
+bit_rate=1237961
+nb_frames=630
+codec_name=aac
+sample_rate=48000
+channels=2
+duration=21.013000
+bit_rate=317380
+container duration=21.013000 size=4108576 bit_rate=1564203 
+full decode (video+audio) error lines: 0
+loudness of the encoded audio track:
+I:         -15.0 LUFS
+LRA:         2.1 LU
+Peak:       -1.8 dBFS
+
+=== exports/FGW_AI_Fake_Murder_Tip_V3_Final_ReviewSmall_NOT_FOR_UPLOAD.mp4
+codec_name=h264
+profile=High
+width=540
+height=960
+pix_fmt=yuv420p
+color_space=bt709
+color_transfer=bt709
+color_primaries=bt709
+r_frame_rate=30/1
+avg_frame_rate=30/1
+duration=21.000000
+bit_rate=207275
+nb_frames=630
+codec_name=aac
+sample_rate=48000
+channels=2
+duration=21.013000
+bit_rate=130017
+container duration=21.013000 size=909620 bit_rate=346307 
+full decode (video+audio) error lines: 0
+loudness of the encoded audio track:
+I:         -15.1 LUFS
+LRA:         2.1 LU
+Peak:       -1.6 dBFS
+
