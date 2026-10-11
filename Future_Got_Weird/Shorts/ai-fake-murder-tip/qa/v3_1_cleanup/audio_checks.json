@@ -1,0 +1,205 @@
+{
+ "samples": 1008000,
+ "duration_s": 21.0,
+ "stems_sum_to_mix_max_abs_diff": 3.0517578125e-05,
+ "mix_sample_peak_dbfs": -1.9003114090055848,
+ "mix_clipped_samples": 0,
+ "mix_wav_loudness": {
+  "I_lufs": -15.0,
+  "LRA_lu": 2.1,
+  "true_peak_dbtp": -1.8
+ },
+ "loop_seam": {
+  "first_80ms_peak_dbfs": -2.287539238675407,
+  "first_sample": 0.000396728515625,
+  "last_sample": 0.0,
+  "last_300ms_rms_dbfs": -40.96404328886489,
+  "last_100ms_peak_dbfs": -47.26323181153323,
+  "first_word_start_s": 0.1,
+  "voice_end_s": 19.52,
+  "effects_before_first_word": 0.0,
+  "music_before_first_word_dbfs": -31.82836278835414
+ },
+ "voice_file": {
+  "sha256_working_tree": "6000cf2f908d41c5f59f3127992063c3812ff9c71de980df6da2e93713dec658",
+  "sha256_at_v2_commit_70a6451": "6000cf2f908d41c5f59f3127992063c3812ff9c71de980df6da2e93713dec658",
+  "identical_to_v2": true
+ },
+ "effects": [
+  {
+   "event": "o.press click",
+   "time_s": 0.375,
+   "frame": 11,
+   "effect_peak_dbfs": -20.1,
+   "voice_rms_dbfs_pm250ms": -16.4,
+   "music_rms_dbfs_pm250ms": -45.0,
+   "effect_peak_minus_voice_rms_db": -3.7,
+   "words_overlapping_first_120ms": [
+    "sent"
+   ]
+  },
+  {
+   "event": "o.press low tap",
+   "time_s": 0.404,
+   "frame": 12,
+   "effect_peak_dbfs": -20.1,
+   "voice_rms_dbfs_pm250ms": -17.7,
+   "music_rms_dbfs_pm250ms": -45.9,
+   "effect_peak_minus_voice_rms_db": -2.4,
+   "words_overlapping_first_120ms": [
+    "sent"
+   ]
+  },
+  {
+   "event": "o.fold paper",
+   "time_s": 0.685,
+   "frame": 21,
+   "effect_peak_dbfs": -28.8,
+   "voice_rms_dbfs_pm250ms": -17.9,
+   "music_rms_dbfs_pm250ms": -42.1,
+   "effect_peak_minus_voice_rms_db": -10.9,
+   "words_overlapping_first_120ms": [
+    "police"
+   ]
+  },
+  {
+   "event": "o.open paper",
+   "time_s": 2.07,
+   "frame": 62,
+   "effect_peak_dbfs": -27.9,
+   "voice_rms_dbfs_pm250ms": -23.0,
+   "music_rms_dbfs_pm250ms": -37.0,
+   "effect_peak_minus_voice_rms_db": -4.9,
+   "words_overlapping_first_120ms": [
+    "tip."
+   ]
+  },
+  {
+   "event": "b3.stamp tap",
+   "time_s": 6.46,
+   "frame": 194,
+   "effect_peak_dbfs": -27.6,
+   "voice_rms_dbfs_pm250ms": -16.8,
+   "music_rms_dbfs_pm250ms": -43.3,
+   "effect_peak_minus_voice_rms_db": -10.9,
+   "words_overlapping_first_120ms": [
+    "no"
+   ]
+  },
+  {
+   "event": "b5.land folder thud",
+   "time_s": 12.776,
+   "frame": 383,
+   "effect_peak_dbfs": -25.5,
+   "voice_rms_dbfs_pm250ms": -17.9,
+   "music_rms_dbfs_pm250ms": -37.8,
+   "effect_peak_minus_voice_rms_db": -7.7,
+   "words_overlapping_first_120ms": [
+    "it."
+   ]
+  },
+  {
+   "event": "b6.enable tick",
+   "time_s": 18.74,
+   "frame": 562,
+   "effect_peak_dbfs": -39.7,
+   "voice_rms_dbfs_pm250ms": -20.5,
+   "music_rms_dbfs_pm250ms": -35.3,
+   "effect_peak_minus_voice_rms_db": -19.1,
+   "words_overlapping_first_120ms": [
+    "button"
+   ]
+  }
+ ],
+ "effect_count": 7,
+ "speech_active_fraction": 0.7638095238095238,
+ "music_vs_voice_by_section": {
+  "opening 0-2.3 s": {
+   "v2_music_minus_voice_db": -24.24,
+   "v3_music_minus_voice_db": -27.3,
+   "v2_music_rms_dbfs": -38.4,
+   "v3_music_rms_dbfs": -41.3
+  },
+  "quote 2.3-4.8 s": {
+   "v2_music_minus_voice_db": -15.66,
+   "v3_music_minus_voice_db": -18.58,
+   "v2_music_rms_dbfs": -33.3,
+   "v3_music_rms_dbfs": -36.4
+  },
+  "pocket: Except...reveal 4.8-7.4 s": {
+   "v2_music_minus_voice_db": -15.92,
+   "v3_music_minus_voice_db": -24.48,
+   "v2_music_rms_dbfs": -33.7,
+   "v3_music_rms_dbfs": -41.0
+  },
+  "test beat 7.4-11.2 s": {
+   "v2_music_minus_voice_db": -15.22,
+   "v3_music_minus_voice_db": -18.15,
+   "v2_music_rms_dbfs": -30.2,
+   "v3_music_rms_dbfs": -33.6
+  },
+  "spam outcome 12.2-14.8 s": {
+   "v2_music_minus_voice_db": -15.09,
+   "v3_music_minus_voice_db": -20.68,
+   "v2_music_rms_dbfs": -31.7,
+   "v3_music_rms_dbfs": -36.7
+  },
+  "takeaway 14.8-19.5 s": {
+   "v2_music_minus_voice_db": -15.0,
+   "v3_music_minus_voice_db": -20.95,
+   "v2_music_rms_dbfs": -29.7,
+   "v3_music_rms_dbfs": -35.4
+  }
+ },
+ "pocket1": {
+  "v2_music_rms_dbfs": -33.7,
+  "v3_music_rms_dbfs": -41.0,
+  "v3_music_rms_around_no_dbfs": -43.2,
+  "v2_music_rms_around_no_dbfs": -35.4,
+  "except_start_s": 4.94,
+  "pocket_in_s": 4.8,
+  "lead_before_except_s": 0.14
+ },
+ "stereo_correlation": 0.9992127123797192,
+ "mono_vs_stereo_rms_diff_db": -0.0017103854935882623,
+ "mono_loudness": {
+  "I_lufs": -18.0,
+  "LRA_lu": 2.1,
+  "true_peak_dbtp": -1.8
+ },
+ "small_speaker_band_300_4000": {
+  "I_lufs": -16.5,
+  "LRA_lu": 2.7,
+  "true_peak_dbtp": -1.2
+ },
+ "voice_stem_loudness": {
+  "I_lufs": -15.0,
+  "LRA_lu": 2.1,
+  "true_peak_dbtp": -1.6
+ },
+ "speech_band_1_4k_voice_minus_music_sfx_db": 38.9,
+ "encoded": {
+  "FGW_AI_Fake_Murder_Tip_V3_1_Cleanup_Captioned_1080x1920.mp4": {
+   "file": "exports/FGW_AI_Fake_Murder_Tip_V3_1_Cleanup_Captioned_1080x1920.mp4",
+   "I_lufs": -15.0,
+   "LRA_lu": 2.1,
+   "true_peak_dbtp": -1.8,
+   "lag_samples_vs_mix_wav": 0,
+   "corr_coeff": 0.9999562163695126,
+   "decoded_samples": 1008640,
+   "first_80ms_peak_dbfs": -2.3221017355870104,
+   "last_100ms_peak_dbfs": -49.48114499602986
+  },
+  "FGW_AI_Fake_Murder_Tip_V3_1_Cleanup_Clean_1080x1920.mp4": {
+   "file": "exports/FGW_AI_Fake_Murder_Tip_V3_1_Cleanup_Clean_1080x1920.mp4",
+   "I_lufs": -15.0,
+   "LRA_lu": 2.1,
+   "true_peak_dbtp": -1.8,
+   "lag_samples_vs_mix_wav": 0,
+   "corr_coeff": 0.9999562163695126,
+   "decoded_samples": 1008640,
+   "first_80ms_peak_dbfs": -2.3221017355870104,
+   "last_100ms_peak_dbfs": -49.48114499602986
+  }
+ }
+}

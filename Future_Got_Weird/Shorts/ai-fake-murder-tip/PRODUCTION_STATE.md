@@ -1,6 +1,12 @@
 # Production state — Fake Murder Tip Short (resume checkpoint)
 
-## V3 Final — "AI Sent Police a Fake Murder Tip" (current)
+## V3.1 Cleanup (current) — final bounded animation pass on V3 Final
+
+**As of 11 Oct 2026: built, rendered natively and measured (`qa/v3_1_cleanup/QA_REPORT.md`). Not published, not uploaded, not scheduled.** Baseline V3 Final commit `204ad13`; cleanup branch `claude/ai-fake-murder-tip-short-v3-1-cleanup`. Narration, SRT, cue table and audio are unchanged (byte-identical audio stream); no ElevenLabs/Runway/paid tool used.
+- Outputs: `exports/…V3_1_Cleanup_{Captioned,Clean}_1080x1920.mp4`, `…ReviewSmall_NOT_FOR_UPLOAD.mp4`, `captions/…V3_1_Cleanup.srt`, `cover/…V3_1_Cleanup_Cover_1080x1920.png`, `qa/v3_1_cleanup/`.
+- Pending (needs a person/phone): normal-speed watch of the eight handoffs, listening (as in V3), real Shorts UI, Source B re-read.
+
+## V3 Final — "AI Sent Police a Fake Murder Tip" (previous)
 
 **As of 11 Oct 2026: V3 Final is built, rendered from source and QA'd (see `qa/v3_final/QA_REPORT.md`). Not published, not uploaded, not scheduled.** One targeted hook / animation / sound pass on V2; script, approved narration and alignment unchanged.
 

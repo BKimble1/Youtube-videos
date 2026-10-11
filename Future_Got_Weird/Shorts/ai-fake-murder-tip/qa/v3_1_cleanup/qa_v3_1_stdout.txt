@@ -1,0 +1,15 @@
+frames 630 | lane frames checked 494 | frames with scene content in y 1255-1450 while a lane caption is up: 0 []
+first/last frame: mean abs diff 0.453 | % pixels > 32: 0.166
+safe-zone groups outside x 96-876 / y 240-1450 (+8 px):
+  frames 153-227  minx 0 maxx 879 miny 254 maxy 1243
+  frames 257-259  minx 93 maxx 885 miny 297 maxy 1085
+  frames 331-334  minx 92 maxx 885 miny 516 maxy 1133
+  frames 358-362  minx 92 maxx 885 miny 276 maxy 983
+  frames 373-378  minx 92 maxx 885 miny 276 maxy 983
+  frames 383-383  minx 92 maxx 885 miny 276 maxy 1020
+largest frame-to-frame changes, V3.1: [(151, 62.914385288065844), (152, 61.876205150462965), (446, 57.87363522376543), (445, 53.72701774691358), (153, 36.27964088220165), (150, 33.87655172968107), (447, 28.083125321502056), (444, 27.712738554526748), (154, 23.428539255401233), (448, 21.116564750514403)]
+largest frame-to-frame changes, V3 : [(449, 94.08575456532922), (448, 81.80292390046296), (149, 63.077053755144036), (152, 44.24003729423868), (153, 41.27725260416667), (150, 41.0655446244856), (151, 40.260336291152264), (154, 30.87138197659465), (228, 26.491503986625514), (229, 26.00896685313786)]
+quote probe f120 Q2 (opening quote surface, scale 1.0) | highlight x 480 - 835 | clearance to the inside of the border: left 380.5 right 37.5
+quote probe f200 Q3 (checker scene, smallest state, scale 0.78) | highlight x 214 - 757 | clearance to the inside of the border: left 28.5 right 29.5
+quote probe f500 Q6 (takeaway, largest state, scale 1.0) | highlight x 136 - 835 | clearance to the inside of the border: left 36.5 right 37.5
+quote probe f540 Q6 (takeaway, cursor approaching) | highlight x 136 - 835 | clearance to the inside of the border: left 36.5 right 37.5

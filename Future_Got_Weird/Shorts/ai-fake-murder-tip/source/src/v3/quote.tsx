@@ -1,5 +1,5 @@
 import React from 'react';
-import {C, E, tw, measure, CAP_FONT, HED_FONT, INK, CREAM, PAPER, Rect, Card, AIMark} from './kit3';
+import {C, E, tw, measure, CAP_FONT, HED_FONT, INK, CREAM, PAPER, Rect, Card, AIMark, Q3} from './kit3';
 
 /* ============================================================================================ the excerpt paper: ONE reusable layout for the opening quote, the checker scene and the takeaway.
    Canonical size 780 x 366, scaled uniformly by s = r.w / 780 (text, highlight, badge and mark scale; border weight and corner radius do not).
@@ -98,7 +98,7 @@ export const auditQuote = async () => {
   const c = document.createElement('canvas').getContext('2d')!;
   const NS = 'http://www.w3.org/2000/svg';
   const out: Record<string, unknown> = {fontProof: document.fonts.check('800 66px "Montserrat"'), size: g.size, tx: g.tx, padding: quotePadding(), states: []};
-  for (const s of [0.75, 1]) {
+  for (const s of [Q3.w / QW, 1]) {   // checker scene (smallest) and takeaway (largest)
     c.font = `800 ${g.size * s}px ${CAP_FONT}`;
     const svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('width', '1200'); svg.setAttribute('height', '400');

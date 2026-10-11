@@ -1,0 +1,126 @@
+{
+ "fontProof": true,
+ "size": 66,
+ "tx": 49.077056884765625,
+ "padding": {
+  "left": 35.577056884765625,
+  "right": 35.577056884765625,
+  "bottom": 39.5
+ },
+ "states": [
+  {
+   "scale": 0.7794871794871795,
+   "cardW": 608,
+   "cardH": 285.2923076923077,
+   "fontPx": 51.44615384615385,
+   "rows": [
+    {
+     "line": "“I recall seeing",
+     "canvasAdvance": 409.0833740234375,
+     "domAdvance": 409.09375,
+     "domEndX": 447.34869384765625,
+     "inkRight": 445.07482190254404,
+     "inkLeft": 39.25493664863782
+    },
+    {
+     "line": "someone matching",
+     "canvasAdvance": 531.4019775390625,
+     "domAdvance": 531.40625,
+     "domEndX": 569.6611938476562,
+     "inkRight": 567.393425418169,
+     "inkLeft": 38.25493664863782
+    },
+    {
+     "line": "the description…",
+     "canvasAdvance": 463.04144287109375,
+     "domAdvance": 463.046875,
+     "domEndX": 501.30181884765625,
+     "inkRight": 500.1628956330128,
+     "inkLeft": 38.25493664863782
+    }
+   ],
+   "highlights": [
+    {
+     "line": 1,
+     "x0": 298.4430376101763,
+     "x1": 577.539935146234
+    },
+    {
+     "line": 2,
+     "x0": 30.460064853766024,
+     "x1": 465.02721228966345
+    }
+   ],
+   "matchingWord": {
+    "domStart": 306.19244384765625,
+    "domEnd": 569.6611938476562,
+    "highlightStart": 298.4430376101763,
+    "highlightEnd": 577.539935146234,
+    "padLeftOfWord": 7.7494062374799455,
+    "padRightOfWord": 7.878741298577779
+   },
+   "clearanceToBorder": {
+    "left": 26.960064853766024,
+    "right": 26.96006485376597,
+    "bottom": 30.017948717948713
+   }
+  },
+  {
+   "scale": 1,
+   "cardW": 780,
+   "cardH": 366,
+   "fontPx": 66,
+   "rows": [
+    {
+     "line": "“I recall seeing",
+     "canvasAdvance": 524.8978271484375,
+     "domAdvance": 524.90625,
+     "domEndX": 573.9832763671875,
+     "inkRight": 570.4449157714844,
+     "inkLeft": 50.077056884765625
+    },
+    {
+     "line": "someone matching",
+     "canvasAdvance": 681.8458862304688,
+     "domAdvance": 681.859375,
+     "domEndX": 730.9364013671875,
+     "inkRight": 727.3929748535156,
+     "inkLeft": 50.077056884765625
+    },
+    {
+     "line": "the description…",
+     "canvasAdvance": 594.1318969726562,
+     "domAdvance": 594.140625,
+     "domEndX": 643.2176513671875,
+     "inkRight": 641.5809631347656,
+     "inkLeft": 49.077056884765625
+    }
+   ],
+   "highlights": [
+    {
+     "line": 1,
+     "x0": 382.8710021972656,
+     "x1": 740.9229431152344
+    },
+    {
+     "line": 2,
+     "x0": 39.077056884765625,
+     "x1": 596.5809631347656
+    }
+   ],
+   "matchingWord": {
+    "domStart": 392.8583068847656,
+    "domEnd": 730.9364013671875,
+    "highlightStart": 382.8710021972656,
+    "highlightEnd": 740.9229431152344,
+    "padLeftOfWord": 9.9873046875,
+    "padRightOfWord": 9.986541748046875
+   },
+   "clearanceToBorder": {
+    "left": 35.577056884765625,
+    "right": 35.577056884765625,
+    "bottom": 39.5
+   }
+  }
+ ]
+}

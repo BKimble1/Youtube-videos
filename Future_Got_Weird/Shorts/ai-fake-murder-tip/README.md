@@ -2,7 +2,22 @@
 
 Original animated YouTube Shorts, 1080×1920 · 30 fps · H.264/AAC. **Nothing here is published, uploaded or scheduled.** Reconstructions of a reported event; every picture is an original illustration (no screenshots, no real people, no police logos).
 
-**Current version: V3 Final** (21.0 s; one targeted hook / animation / sound pass on V2). V2 (commit `70a6451`) and V1 are kept untouched for comparison; V3 files carry `V3_Final`/`_v3` names and live in `exports/` (masters, small review copy, mix MP3), `captions/`, `cover/`, `audio/stems_v3_final/` and `qa/v3_final/`.
+**Current version: V3.1 Cleanup** (21.0 s) on top of V3 Final (one targeted hook / animation / sound pass on V2). V2 (commit `70a6451`) and V1 are kept untouched for comparison; V3 files carry `V3_Final`/`_v3` names and live in `exports/` (masters, small review copy, mix MP3), `captions/`, `cover/`, `audio/stems_v3_final/` and `qa/v3_final/`.
+
+## V3.1 Cleanup files (this folder) — current
+
+One bounded animation cleanup of V3 Final (baseline commit `204ad13`): shared quote layout, single-owner handoffs, one-scan checker, one caption layer. Script, narration, SRT and mix are unchanged (the audio stream is byte-identical to V3).
+
+| File | What |
+|---|---|
+| `exports/FGW_AI_Fake_Murder_Tip_V3_1_Cleanup_Captioned_1080x1920.mp4` · `…_Clean_…` | Review masters (Clean keeps the opening headline) |
+| `exports/FGW_AI_Fake_Murder_Tip_V3_1_Cleanup_ReviewSmall_NOT_FOR_UPLOAD.mp4` | 540×960 phone-review copy |
+| `captions/FGW_AI_Fake_Murder_Tip_V3_1_Cleanup.srt` · `cover/…V3_1_Cleanup_Cover_1080x1920.png` | Same as V3 (opening and audio unchanged) |
+| `qa/v3_1_cleanup/` | `QA_REPORT.md` (defect table, measurements, limits), before/after sheets, native frames, phone previews, quote-fit and caption audits, safe-zone scans, `SHA256SUMS.txt` |
+| `source/src/v3/quote.tsx` | The reusable excerpt paper (measured layout, shared by the opening, checker and takeaway scenes) |
+| `handoff/ROUND_FOUR_PROMPT.md` | The V3.1 brief |
+
+Render: `tools/render_v3_1.sh`; QA: `tools/qa_media_v3_1.sh`, `python3 tools/qa_v3_1.py`, `python3 tools/safe_zone_groups_v3.py <mp4>`, `python3 tools/audio_checks_v3.py <out.json> <mp4>`.
 
 ## V3 Final files (this folder)
 
