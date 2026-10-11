@@ -1,0 +1,369 @@
+{
+ "source": "ElevenLabs Scribe (eleven_scribe_v1) word timestamps on narration_take1.mp3; transcript equals the locked script, 70/70 words. voice_end = measured end of speech for sentence-final words (ffmpeg silencedetect -38 dB, d>=0.1 s) because Scribe pads those word ends toward the next word.",
+ "audio_file": "narration_take1.mp3",
+ "audio_duration_seconds": 27.245714,
+ "scribe_spoken_duration_seconds": 27.28,
+ "words": [
+  {
+   "text": "An",
+   "start": 0.0,
+   "end": 0.16
+  },
+  {
+   "text": "AI",
+   "start": 0.24,
+   "end": 0.56
+  },
+  {
+   "text": "submitted",
+   "start": 0.76,
+   "end": 0.96
+  },
+  {
+   "text": "a",
+   "start": 1.0,
+   "end": 1.04
+  },
+  {
+   "text": "fake",
+   "start": 1.2,
+   "end": 1.44
+  },
+  {
+   "text": "murder",
+   "start": 1.6,
+   "end": 1.84
+  },
+  {
+   "text": "tip.",
+   "start": 1.92,
+   "end": 2.48,
+   "voice_end": 2.196
+  },
+  {
+   "text": "On",
+   "start": 2.52,
+   "end": 2.56
+  },
+  {
+   "text": "a",
+   "start": 2.64,
+   "end": 2.72
+  },
+  {
+   "text": "real",
+   "start": 2.8,
+   "end": 3.04
+  },
+  {
+   "text": "police",
+   "start": 3.12,
+   "end": 3.44
+  },
+  {
+   "text": "website.",
+   "start": 3.68,
+   "end": 4.4,
+   "voice_end": 3.908
+  },
+  {
+   "text": "During",
+   "start": 4.52,
+   "end": 4.64
+  },
+  {
+   "text": "an",
+   "start": 4.68,
+   "end": 4.72
+  },
+  {
+   "text": "evaluation,",
+   "start": 5.08,
+   "end": 5.68
+  },
+  {
+   "text": "Claude",
+   "start": 5.76,
+   "end": 6.0
+  },
+  {
+   "text": "was",
+   "start": 6.08,
+   "end": 6.16
+  },
+  {
+   "text": "testing",
+   "start": 6.36,
+   "end": 6.56
+  },
+  {
+   "text": "random",
+   "start": 6.64,
+   "end": 6.96
+  },
+  {
+   "text": "webpages.",
+   "start": 7.04,
+   "end": 8.08,
+   "voice_end": 7.708
+  },
+  {
+   "text": "It",
+   "start": 8.16,
+   "end": 8.24
+  },
+  {
+   "text": "claimed",
+   "start": 8.32,
+   "end": 8.56
+  },
+  {
+   "text": "it",
+   "start": 8.6,
+   "end": 8.64
+  },
+  {
+   "text": "remembered",
+   "start": 8.84,
+   "end": 9.12
+  },
+  {
+   "text": "someone",
+   "start": 9.28,
+   "end": 9.44
+  },
+  {
+   "text": "matching",
+   "start": 9.6,
+   "end": 9.76
+  },
+  {
+   "text": "a",
+   "start": 9.84,
+   "end": 10.053
+  },
+  {
+   "text": "description.",
+   "start": 10.267,
+   "end": 10.88,
+   "voice_end": 10.49
+  },
+  {
+   "text": "The",
+   "start": 10.96,
+   "end": 11.04
+  },
+  {
+   "text": "page",
+   "start": 11.2,
+   "end": 11.36
+  },
+  {
+   "text": "didn't",
+   "start": 11.44,
+   "end": 11.56
+  },
+  {
+   "text": "even",
+   "start": 11.6,
+   "end": 11.76
+  },
+  {
+   "text": "describe",
+   "start": 12.0,
+   "end": 12.24
+  },
+  {
+   "text": "the",
+   "start": 12.28,
+   "end": 12.32
+  },
+  {
+   "text": "suspect.",
+   "start": 12.4,
+   "end": 13.36,
+   "voice_end": 12.986
+  },
+  {
+   "text": "Then",
+   "start": 13.44,
+   "end": 13.84
+  },
+  {
+   "text": "it",
+   "start": 13.88,
+   "end": 13.92
+  },
+  {
+   "text": "hit",
+   "start": 14.0,
+   "end": 14.16
+  },
+  {
+   "text": "submit.",
+   "start": 14.24,
+   "end": 15.12,
+   "voice_end": 14.646
+  },
+  {
+   "text": "Luckily,",
+   "start": 15.2,
+   "end": 15.72
+  },
+  {
+   "text": "it",
+   "start": 15.76,
+   "end": 15.8
+  },
+  {
+   "text": "was",
+   "start": 15.84,
+   "end": 15.92
+  },
+  {
+   "text": "flagged",
+   "start": 16.0,
+   "end": 16.32
+  },
+  {
+   "text": "as",
+   "start": 16.4,
+   "end": 16.48
+  },
+  {
+   "text": "spam.",
+   "start": 16.72,
+   "end": 17.28,
+   "voice_end": 16.961
+  },
+  {
+   "text": "Investigators",
+   "start": 17.36,
+   "end": 18.08
+  },
+  {
+   "text": "never",
+   "start": 18.16,
+   "end": 18.4
+  },
+  {
+   "text": "received",
+   "start": 18.6,
+   "end": 18.8
+  },
+  {
+   "text": "it.",
+   "start": 18.88,
+   "end": 19.36,
+   "voice_end": 18.912
+  },
+  {
+   "text": "Anthropic",
+   "start": 19.48,
+   "end": 19.92
+  },
+  {
+   "text": "disclosed",
+   "start": 20.04,
+   "end": 20.4
+  },
+  {
+   "text": "this",
+   "start": 20.48,
+   "end": 20.56
+  },
+  {
+   "text": "in",
+   "start": 20.64,
+   "end": 20.72
+  },
+  {
+   "text": "October.",
+   "start": 21.0,
+   "end": 21.76,
+   "voice_end": 21.274
+  },
+  {
+   "text": "A",
+   "start": 21.84,
+   "end": 21.92
+  },
+  {
+   "text": "chatbot",
+   "start": 22.04,
+   "end": 22.4
+  },
+  {
+   "text": "making",
+   "start": 22.56,
+   "end": 22.72
+  },
+  {
+   "text": "things",
+   "start": 22.84,
+   "end": 22.96
+  },
+  {
+   "text": "up",
+   "start": 23.04,
+   "end": 23.2
+  },
+  {
+   "text": "is",
+   "start": 23.32,
+   "end": 23.44
+  },
+  {
+   "text": "one",
+   "start": 23.52,
+   "end": 23.68
+  },
+  {
+   "text": "problem.",
+   "start": 23.88,
+   "end": 24.48,
+   "voice_end": 24.125
+  },
+  {
+   "text": "Giving",
+   "start": 24.56,
+   "end": 24.72
+  },
+  {
+   "text": "that",
+   "start": 24.8,
+   "end": 24.96
+  },
+  {
+   "text": "chatbot",
+   "start": 25.08,
+   "end": 25.36
+  },
+  {
+   "text": "a",
+   "start": 25.44,
+   "end": 25.52
+  },
+  {
+   "text": "submit",
+   "start": 25.6,
+   "end": 26.0
+  },
+  {
+   "text": "button",
+   "start": 26.2,
+   "end": 26.4
+  },
+  {
+   "text": "is",
+   "start": 26.48,
+   "end": 26.56
+  },
+  {
+   "text": "another.",
+   "start": 26.76,
+   "end": 27.28,
+   "voice_end": 26.996
+  }
+ ]
+}

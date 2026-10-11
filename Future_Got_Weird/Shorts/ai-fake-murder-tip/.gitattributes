@@ -1,0 +1,5 @@
+# Episode media is stored as ordinary Git blobs (Git LFS uploads are unavailable in this environment).
+# Same approach as Future_Got_Weird/can-you-hurt-something-that-isnt-alive/.gitattributes. Keep real edits visible.
+*.mp4 -filter -diff -merge -text
+*.wav -filter -diff -merge -text
+*.mp3 -filter -diff -merge -text

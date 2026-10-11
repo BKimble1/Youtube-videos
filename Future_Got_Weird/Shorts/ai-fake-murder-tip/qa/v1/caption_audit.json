@@ -1,0 +1,311 @@
+{
+ "fontProof": {
+  "montserrat800": {
+   "check": true,
+   "withFace": 478.299560546875,
+   "fallbackOnly": 420.068359375
+  },
+  "barlow800": {
+   "check": true,
+   "withFace": 315.19970703125,
+   "fallbackOnly": 420.068359375
+  }
+ },
+ "captions": [
+  {
+   "i": 0,
+   "from": 0,
+   "to": 30,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "An AI submitted",
+     "width": 660.3
+    }
+   ],
+   "maxWidth": 660.2877502441406
+  },
+  {
+   "i": 1,
+   "from": 30,
+   "to": 69,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "a fake murder tip.",
+     "width": 722.8
+    }
+   ],
+   "maxWidth": 722.8357391357422
+  },
+  {
+   "i": 2,
+   "from": 76,
+   "to": 120,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "On a real",
+     "width": 361.5
+    },
+    {
+     "text": "police website.",
+     "width": 608.8
+    }
+   ],
+   "maxWidth": 608.8358001708984
+  },
+  {
+   "i": 3,
+   "from": 136,
+   "to": 173,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "During an",
+     "width": 402.4
+    },
+    {
+     "text": "evaluation,",
+     "width": 448.2
+    }
+   ],
+   "maxWidth": 448.1718444824219
+  },
+  {
+   "i": 4,
+   "from": 173,
+   "to": 234,
+   "size": 74,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "Claude was testing",
+     "width": 753.5
+    },
+    {
+     "text": "random webpages.",
+     "width": 755.7
+    }
+   ],
+   "maxWidth": 755.6867980957031
+  },
+  {
+   "i": 5,
+   "from": 245,
+   "to": 278,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "It claimed it",
+     "width": 484.5
+    },
+    {
+     "text": "remembered",
+     "width": 526.7
+    }
+   ],
+   "maxWidth": 526.6798095703125
+  },
+  {
+   "i": 6,
+   "from": 278,
+   "to": 317,
+   "size": 72,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "someone matching",
+     "width": 743.8
+    },
+    {
+     "text": "a description.",
+     "width": 522.9
+    }
+   ],
+   "maxWidth": 743.8322296142578
+  },
+  {
+   "i": 7,
+   "from": 329,
+   "to": 360,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "The page",
+     "width": 375.1
+    },
+    {
+     "text": "didn't even",
+     "width": 453
+    }
+   ],
+   "maxWidth": 452.95985412597656
+  },
+  {
+   "i": 8,
+   "from": 360,
+   "to": 392,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "describe",
+     "width": 348.2
+    },
+    {
+     "text": "the suspect.",
+     "width": 498.4
+    }
+   ],
+   "maxWidth": 498.40782165527344
+  },
+  {
+   "i": 9,
+   "from": 403,
+   "to": 442,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "Then it hit submit.",
+     "width": 744.6
+    }
+   ],
+   "maxWidth": 744.5717315673828
+  },
+  {
+   "i": 10,
+   "from": 456,
+   "to": 512,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "Luckily, it was",
+     "width": 572.1
+    },
+    {
+     "text": "flagged as spam.",
+     "width": 687.6
+    }
+   ],
+   "maxWidth": 687.57177734375
+  },
+  {
+   "i": 11,
+   "from": 521,
+   "to": 570,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "Investigators",
+     "width": 531.9
+    },
+    {
+     "text": "never received it.",
+     "width": 701.9
+    }
+   ],
+   "maxWidth": 701.8597564697266
+  },
+  {
+   "i": 12,
+   "from": 584,
+   "to": 641,
+   "size": 70,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "Anthropic disclosed",
+     "width": 745.8
+    },
+    {
+     "text": "this in October.",
+     "width": 574.1
+    }
+   ],
+   "maxWidth": 745.7792205810547
+  },
+  {
+   "i": 13,
+   "from": 655,
+   "to": 700,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "A chatbot",
+     "width": 399.5
+    },
+    {
+     "text": "making things up",
+     "width": 718.3
+    }
+   ],
+   "maxWidth": 718.2757263183594
+  },
+  {
+   "i": 14,
+   "from": 700,
+   "to": 726,
+   "size": 76,
+   "nLines": 1,
+   "lines": [
+    {
+     "text": "is one problem.",
+     "width": 625.3
+    }
+   ],
+   "maxWidth": 625.3277587890625
+  },
+  {
+   "i": 15,
+   "from": 737,
+   "to": 763,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "Giving that",
+     "width": 450.9
+    },
+    {
+     "text": "chatbot",
+     "width": 317.7
+    }
+   ],
+   "maxWidth": 450.9078369140625
+  },
+  {
+   "i": 16,
+   "from": 763,
+   "to": 813,
+   "size": 76,
+   "nLines": 2,
+   "lines": [
+    {
+     "text": "a submit button",
+     "width": 650.9
+    },
+    {
+     "text": "is another.",
+     "width": 429.9
+    }
+   ],
+   "maxWidth": 650.9397430419922
+  }
+ ],
+ "lane": {
+  "cx": 495,
+  "maxW": 760,
+  "size": 76
+ }
+}

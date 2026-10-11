@@ -1,0 +1,74 @@
+1
+00:00:00,000 --> 00:00:01,000
+An AI submitted
+
+2
+00:00:01,000 --> 00:00:02,286
+a fake murder tip.
+
+3
+00:00:02,520 --> 00:00:03,998
+On a real
+police website.
+
+4
+00:00:04,520 --> 00:00:05,760
+During an evaluation,
+
+5
+00:00:05,760 --> 00:00:07,798
+Claude was testing
+random webpages.
+
+6
+00:00:08,160 --> 00:00:09,280
+It claimed it remembered
+
+7
+00:00:09,280 --> 00:00:10,580
+someone matching a description.
+
+8
+00:00:10,960 --> 00:00:12,000
+The page didn't even
+
+9
+00:00:12,000 --> 00:00:13,076
+describe the suspect.
+
+10
+00:00:13,440 --> 00:00:14,736
+Then it hit submit.
+
+11
+00:00:15,200 --> 00:00:17,051
+Luckily, it was
+flagged as spam.
+
+12
+00:00:17,360 --> 00:00:19,002
+Investigators never received it.
+
+13
+00:00:19,480 --> 00:00:21,364
+Anthropic disclosed this
+in October.
+
+14
+00:00:21,840 --> 00:00:23,320
+A chatbot making
+things up
+
+15
+00:00:23,320 --> 00:00:24,215
+is one problem.
+
+16
+00:00:24,560 --> 00:00:25,440
+Giving that chatbot
+
+17
+00:00:25,440 --> 00:00:27,086
+a submit button
+is another.
+

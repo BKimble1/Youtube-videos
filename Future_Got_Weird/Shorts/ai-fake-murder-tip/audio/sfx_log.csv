@@ -1,0 +1,15 @@
+event,time_s,frame,gain_db,source,note
+b1.press click,0.935,28,-7,ElevenLabs eleven_text_to_sound_v2,first click of raw_click.mp3 (file had several; only this one used)
+b2.hop1 marker tick,5.08,152,-26,local synthesis,marker landing on a card
+b2.hop2 marker tick,6.36,191,-26,local synthesis,marker landing on a card
+b2.hop3 marker tick,7.02,211,-25,local synthesis,marker landing on a card
+b3.type keys,8.308,249,-2,ElevenLabs eleven_text_to_sound_v2,raw_keys.mp3 0.00-0.80 s
+b3.tap error,11.596,348,-2,ElevenLabs eleven_text_to_sound_v2,"raw_error.mp3 0.00-0.38 s; single understated knock, no buzzer"
+b4.press click,14.275,428,-7,ElevenLabs eleven_text_to_sound_v2,"same sample, second press"
+b4.send accent,14.515,435,-11,ElevenLabs eleven_text_to_sound_v2,raw_send.mp3 0.00-1.05 s
+b4.arrive inbox tap,15.2,456,-26,local synthesis,envelope reaches the inbox (before the folder responds)
+b4.land thump,16.776,503,-16,local synthesis,soft folder/paper thump; layered under nothing else
+b4.latch click,17.076,512,1,ElevenLabs eleven_text_to_sound_v2,raw_spam.mp3 0.80-1.00 s (the generated subdued latch)
+b5.start card tick,19.41,582,-27,local synthesis,report card
+b5.date2 tick,21.0,630,-27,local synthesis,second date lands
+b6.button tick,26.2,786,-27,local synthesis,button appears

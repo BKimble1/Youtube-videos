@@ -1,0 +1,33 @@
+{
+  "name": "future-got-weird-ai-fake-murder-tip",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Invented a Murder Tip. Then Hit Send. \u2014 Future Got Weird vertical Short (Remotion source), V1 review",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/fredoka": "5.3.0",
+    "@fontsource-variable/nunito": "5.3.0",
+    "@fontsource-variable/source-serif-4": "5.3.0",
+    "@fontsource/barlow-condensed": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@fontsource/montserrat": "5.3.0",
+    "@remotion/bundler": "4.0.533",
+    "@remotion/cli": "4.0.533",
+    "@remotion/media-utils": "4.0.533",
+    "@remotion/paths": "4.0.533",
+    "@remotion/renderer": "4.0.533",
+    "@remotion/shapes": "4.0.533",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.533",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.0",
+    "js-tiktoken": "1.0.21",
+    "typescript": "5.8.3"
+  }
+}

@@ -1,0 +1,15 @@
+FGW_AI_Fake_Murder_Tip_V1_Clean_1080x1920.mp4: 840 frames; ink extents x 0-1017  y 0-1288; zone x 100-870 y 220-1440
+frames with ink outside the zone: 300
+  frame 37 x 108 851 y 216 1271
+  frame 38 x 108 851 y 214 1273
+  frame 39 x 108 851 y 208 1273
+  frame 40 x 108 851 y 206 1275
+  frame 41 x 108 851 y 206 1277
+  frame 42 x 108 851 y 206 1277
+  frame 43 x 108 851 y 208 1279
+  frame 44 x 108 851 y 213 1279
+  frame 45 x 108 851 y 216 1279
+  frame 113 x 108 851 y 218 1279
+  frame 114 x 108 851 y 216 1279
+  frame 115 x 108 851 y 216 1279
+  ... 288 more; first 37 last 830
