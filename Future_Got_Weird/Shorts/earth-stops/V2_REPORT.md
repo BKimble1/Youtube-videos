@@ -58,4 +58,4 @@ Done (measurements and still-frame readings of the final encode; see `QA_NOTES_V
 ElevenLabs: V2 narration (2 variations) ≈ 784 credits, Scribe ≈ 40, Sound Effects (16 clips) ≈ 267 — **estimates by price check, not billing records**. Runway: nothing new (the V1 test spent 180). No Eleven Music, no Runway audio, no AI frame votes, no viewer subagents.
 
 ## 6. Commit record
-V2 work-in-progress commit `6667119` on `claude/fgw-earth-stops-short`, then the final V2 commit (see `git log`; the hash is reported in the hand-off message). V1 baseline `701648d` and its checkpoint branch are untouched.
+V2 work-in-progress commit `6667119`, then the V2 review commit `c947c62`, both on `claude/fgw-earth-stops-short` and pushed (a later documentation-only commit records these hashes). V1 baseline `701648d` and its checkpoint branch are untouched.
