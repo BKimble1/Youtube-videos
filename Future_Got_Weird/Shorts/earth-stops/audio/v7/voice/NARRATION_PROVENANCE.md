@@ -1,0 +1,17 @@
+# Narration provenance — Earth Stops V4
+
+- **Voice:** ElevenLabs **Test Voice**, `voice_id kk5XaSLo2XAw0sKM98zU` (category "generated"), the voice the owner authorised for this episode; the V4 brief authorised a new take through the existing connection. Model `eleven_v4`, account defaults (no stability/style controls in the connector, no audio tags). Pacing comes from punctuation and paragraph breaks in the sent text.
+- **Text sent (64 words, one generation, 2 variations; flow `GPbon82yZJOW3vSIKNrt`):** the V4 brief's script, no wording changes (typographic apostrophes, one em dash):
+  - If Earth stopped, you’d keep moving east—about a thousand miles an hour at the equator.
+  - Loose objects keep going too.
+  - So does the air, driving debris through the streets.
+  - And the ocean keeps moving into the coast.
+  - You don’t feel the spin because you move with Earth.
+  - Closer to the poles, that starting speed is lower.
+  - The stop is imaginary. The motion is real.
+- **One coherent take, no blind variation runs.** Take A (`Wm5bPMFGT8KOxovu8WFb`): 21.76 s; take B (`BiAnYu7uQUvoEH27RMwZ`): 22.16 s (44.1 kHz mono MP3: `v4_takeA.mp3`, `v4_takeB.mp3`; 48 kHz PCM copies alongside). **Take A was selected** because it is 0.40 s shorter and has the same 13 speech groups; that is **not** a judgement that A sounds better — **nobody has listened to either**.
+- **What was done to take A (silence removed, nothing else).** `tools/build_voice_v4.py` finds the 13 speech groups (10 ms energy frames, 30 dB below the loudest, merged below 90 ms), and for each of the 12 gaps between them that is longer than its target keeps `target` seconds of the silence and removes the rest **from the middle of the silence** (6 ms equal-power joins inside the silence). Targets (s): 0.22, 0.24, 0.10, 0.28, 0.26, 0.24, 0.28, **0.45**, 0.32, 0.21, 0.30, 0.30 — short natural breaths, plus one deliberate beat after *coast.* so the wave's aftermath can register. 11 gaps were shortened; 1.44 s was removed in total (21.76 s → 20.254 s of voice; the film is 20.5 s). **No word was cut, stretched, sped up, pitch-shifted, EQ'd or compressed.** Verified by measurement (`qa/v7/AUDIO_MEASUREMENTS_V4.json`): each of the 12 kept pieces equals its take-A slice with a residual of −70 dB or better (1-sample rounding); the voice stem in the mix equals the timeline at one constant gain (−0.0 dB, residual −74 dB).
+- **Scribe transcription** of take A (`v4_takeA_alignment.json`; generation `HrxWBfifOcCPmFJbc2HI`): returned the sent text word-for-word (64 words) with word start/end times; the Scribe token `east—about` is split into two words at the group boundary. Times are shifted by the cumulative removals (`source/src/film4/voice4.json`). Scribe word ends run into the following pause, so speech ends were taken from the energy segmentation. A Scribe pass on the *final mix* was not possible (the restricted connector has no file-upload tool).
+- **Spend (estimates carried from the V3 price check, not billing records):** two-variation narration ≈ 604 credits; one Scribe ≈ 40 credits. No sound-effect generation and no music in V4.
+- **Not auditioned by a person.** Tone, urgency, naturalness, the delivery of "about a thousand" and "imaginary / real", and whether the shortened pauses feel natural or rushed are unverified.
+- **Licence:** whether the owner's ElevenLabs plan covers commercial use of this voice's output is **not verified here**; it must be confirmed before any commercial publication.

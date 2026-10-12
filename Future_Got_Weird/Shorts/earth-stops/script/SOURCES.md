@@ -1,14 +1,14 @@
-# Sources — Earth Stops. You Don't. (V3)
+# Sources — Earth Stops. You Don't. (V4)
 
-V2's table is kept in `history/SOURCES_V2_f6f000b.md`, V1's in `history/SOURCES_V1_701648d.md`. V3 keeps the same rule: **this file says who opened what, and it does not pretend Claude read anything it did not.**
+V3's table is kept in `history/SOURCES_V3_243eb4d.md`, V2's in `history/SOURCES_V2_f6f000b.md`, V1's in `history/SOURCES_V1_701648d.md`. V4 keeps the same rule: **this file says who opened what, and it does not pretend Claude read anything it did not.**
 
 ## Who opened what (read this first)
-- **Claude (author of the V3 cut) opened no source page.** Re-tested on 12 Oct 2026 for V3: `curl` through the session proxy returned HTTP 000 for the NASA Cosmicopia attic page, NASA Glenn's *Beginner's Guide to Aeronautics*, NASA Space Place, the YouTube help pages (`support.google.com/youtube/answer/3376882`, `/2801973`), the ElevenLabs help and terms pages, youtube.com and ladbible.com; `WebFetch` failed on the NASA hosts with `getaddrinfo ENOTFOUND`. The Runway clip host is refused as well. Nothing here is marked "confirmed" on Claude's say-so.
+- **Claude (author of the V4 cut) opened no source page.** Re-tested again on 12 Oct 2026 for V4 (`curl` through the session proxy returned HTTP 000 for the NASA Cosmicopia attic page, NASA Glenn's Newton's-laws page, the JPL physical-parameters page and a YouTube help page). The V3 test, for the record: `curl` through the session proxy returned HTTP 000 for the NASA Cosmicopia attic page, NASA Glenn's *Beginner's Guide to Aeronautics*, NASA Space Place, the YouTube help pages (`support.google.com/youtube/answer/3376882`, `/2801973`), the ElevenLabs help and terms pages, youtube.com and ladbible.com; `WebFetch` failed on the NASA hosts with `getaddrinfo ENOTFOUND`. The Runway clip host is refused as well. Nothing here is marked "confirmed" on Claude's say-so.
 - **R1–R6 were read by the reviewer (ChatGPT)** while writing the V2 and V3 briefs (access notes copied from the reviewer). Treat them as the reviewer's reads, not Claude's. The V3 brief adds references (NASA-hosted archive pages `Srotfram1`, `StarFAQ6#q108`, `StarFAQ10`; NASA magnetosphere page; YouTube policy pages; ElevenLabs commercial-use pages; the Zack D. Films Short; a LADbible secondary report). **Claude opened none of them**; what the brief says about them is carried as the reviewer's account, and the film uses none of their wording, structure or art (see "Originality" below).
 - **U1–U4 are carried over as uninspected** (by anyone in this project).
 
 ## Reviewer-read sources (R)
-| ID | Source | Supports | Verifier | Access note (as reported by the reviewer) | Use in V3 |
+| ID | Source | Supports | Verifier | Access note (as reported by the reviewer) | Use in V4 |
 |---|---|---|---|---|---|
 | **R1** | NASA Cosmicopia, Earth/Moon FAQ — `science.gsfc.nasa.gov/attic/cosmicopia.gsfc.nasa.gov/qa_earth.html` (and the NASA-hosted archive copies named in the V3 brief) | The Earth-stop answer: retained eastward motion, latitude dependence, gravity remaining | Reviewer (ChatGPT) | Opened in the review. **Use the Earth-stop section only; do not copy its broad polar-safety statement** | C00, C01, C03, C04, C06 |
 | **R2** | NGA, *World Geodetic System 1984* — `earth-info.nga.mil/index.php?dir=wgs84&action=wgs84` | Radius (6,378,137 m), flattening (1/298.257223563), angular velocity (7.292115×10⁻⁵ rad/s) → about **1,040.4 mph** at the equator | Reviewer (ChatGPT) | Read earlier in the reviewer's conversation; retries failed in the V1 review; that provenance is retained | C01, C02, C05 (centripetal figure), C06 |
@@ -40,7 +40,7 @@ V2's table is kept in `history/SOURCES_V2_f6f000b.md`, V1's in `history/SOURCES_
 `tools/calc_speeds.py` → `script/speed_table.json`. v = ω·N·cos φ, N = a/√(1 − e² sin² φ). a = 6,378,137 m, 1/f = 298.257223563, ω = 7.292115×10⁻⁵ rad/s → **1,040.40 mph at 0°** (the only number shown). Equatorial centripetal acceleration ω²a = 0.0339 m/s² (0.35 % of g) is used only to qualify "you don't feel the spin".
 
 ## Originality (Zack D. Films)
-The V3 brief names a competing Short as context. **Claude did not view it** (host refused) and did not copy from it; the V3 film's trigger (an oversized coral-and-saffron brake with a rotor ring), hand, characters, narration, shot order and palette are this channel's own. **Nothing in the film or its notes claims that the other Short's results predict this film's results.**
+The V3 brief named a competing Short as context. **Claude did not view it** (host refused) and did not copy from it; the V3 film's trigger (an oversized coral-and-saffron brake with a rotor ring), hand, characters, narration, shot order and palette are this channel's own. **Nothing in the film or its notes claims that the other Short's results predict this film's results.**
 
 ## Request to the owner
 Decide whether R1–R6 (the reviewer's reads) suffice, or have a person open R1, R2 and R4 (they carry the claims). If the blocked hosts are allowed in the environment's network settings, Claude can re-run the checks itself; until then no claim is marked confirmed by Claude.

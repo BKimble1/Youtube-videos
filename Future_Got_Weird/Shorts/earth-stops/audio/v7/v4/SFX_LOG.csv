@@ -79,7 +79,7 @@ audio/v7/v4/sfx/coast_front_rush.wav,336,11.2,-19.0,water,procedural,sea mass: t
 audio/v7/v4/sfx/coast_post_slap_1.wav,336.5,11.217,-10.0,water,procedural,water arrives at post 2: slap and spray at the contact frame (picture burst)
 audio/v7/v4/sfx/boat_hull_knock.wav,338,11.267,-20.0,objects,procedural,the hull is flipped and knocks against the pier
 audio/v7/v4/sfx/coast_planks_gen.wav,342,11.4,-14.0,objects,"elevenlabs-generated (existing V2/V3 clip, reused)",the deck section splinters and flies off the pier (V3 generated clip; picture f342)
-audio/v7/v4/sfx/coast_post_slap_2.wav,349.9,11.663,-16.0,water,procedural,water arrives at post 3: slap and spray at the contact frame (picture burst)
+audio/v7/v4/sfx/coast_post_slap_2.wav,346.6,11.553,-16.0,water,procedural,water arrives at post 3: slap and spray at the contact frame (picture burst)
 audio/v7/v4/sfx/coast_spray_burst.wav,351,11.7,-13.0,water,procedural,spray flung up by the rising water carries the cut into the calm stage
 audio/v7/v4/sfx/coast_flood_rise.wav,352,11.733,-15.0,water,procedural,sea mass: water rises through the frame and over the aftermath (picture f354-362)
 audio/v7/v4/sfx/coast_drain.wav,362,12.067,-18.0,water,procedural,"water drains off the frame in sheets and rivulets, revealing the calm stage (picture f362-384)"

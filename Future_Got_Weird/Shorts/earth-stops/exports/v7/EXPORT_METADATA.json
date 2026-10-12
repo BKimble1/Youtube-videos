@@ -1,8 +1,8 @@
 {
  "FGW_EarthStops_V4_MusicOnly_1080x1920.mp4": {
   "path": "exports/v7/FGW_EarthStops_V4_MusicOnly_1080x1920.mp4",
-  "bytes": 14011410,
-  "sha256": "4317f9710beb4dd0f9341ef95efd4b8be597ccc43b6dbd57880f03246188a23d",
+  "bytes": 14041704,
+  "sha256": "778eb04b7a8290a0fa78fc7bf15228b16455b7187e3b0b839f638bf1f9a4033c",
   "ffprobe": {
    "streams": [
     {
@@ -41,7 +41,7 @@
      "start_time": "0.000000",
      "duration_ts": 1845000,
      "duration": "20.500000",
-     "bit_rate": "5389916",
+     "bit_rate": "5401738",
      "bits_per_raw_sample": "8",
      "nb_frames": "615",
      "extradata_size": 51,
@@ -131,8 +131,8 @@
     "format_long_name": "QuickTime / MOV",
     "start_time": "0.000000",
     "duration": "20.500000",
-    "size": "14011410",
-    "bit_rate": "5467867",
+    "size": "14041704",
+    "bit_rate": "5479689",
     "probe_score": 100,
     "tags": {
      "major_brand": "isom",
@@ -147,8 +147,8 @@
  },
  "FGW_EarthStops_V4_ReviewNoMusic_1080x1920.mp4": {
   "path": "exports/v7/FGW_EarthStops_V4_ReviewNoMusic_1080x1920.mp4",
-  "bytes": 14491475,
-  "sha256": "1855c755570af5a9b6fc83e60105cce496b70158692bd663798489615eae782b",
+  "bytes": 14521942,
+  "sha256": "ad35806c57b5f4f7d129f161e813738eff8b051346b4bde0b341aa608f44d608",
   "ffprobe": {
    "streams": [
     {
@@ -187,7 +187,7 @@
      "start_time": "0.000000",
      "duration_ts": 1845000,
      "duration": "20.500000",
-     "bit_rate": "5389916",
+     "bit_rate": "5401738",
      "bits_per_raw_sample": "8",
      "nb_frames": "615",
      "extradata_size": 51,
@@ -239,7 +239,7 @@
      "start_time": "0.000000",
      "duration_ts": 984000,
      "duration": "20.500000",
-     "bit_rate": "256161",
+     "bit_rate": "256228",
      "nb_frames": "962",
      "extradata_size": 5,
      "disposition": {
@@ -277,8 +277,8 @@
     "format_long_name": "QuickTime / MOV",
     "start_time": "0.000000",
     "duration": "20.500000",
-    "size": "14491475",
-    "bit_rate": "5655209",
+    "size": "14521942",
+    "bit_rate": "5667099",
     "probe_score": 100,
     "tags": {
      "major_brand": "isom",
@@ -293,8 +293,8 @@
  },
  "FGW_EarthStops_V4_Review_1080x1920.mp4": {
   "path": "exports/v7/FGW_EarthStops_V4_Review_1080x1920.mp4",
-  "bytes": 14491125,
-  "sha256": "3d34b4bd20da7c812e2d0064a67667b06d7b290af1a5612b0503b09c53804093",
+  "bytes": 14522224,
+  "sha256": "b263d15eb9f6f1e5838b94ccaf9b246f13c0fb9f8df1866f97337db35b64781f",
   "ffprobe": {
    "streams": [
     {
@@ -333,7 +333,7 @@
      "start_time": "0.000000",
      "duration_ts": 1845000,
      "duration": "20.500000",
-     "bit_rate": "5389916",
+     "bit_rate": "5401738",
      "bits_per_raw_sample": "8",
      "nb_frames": "615",
      "extradata_size": 51,
@@ -385,7 +385,7 @@
      "start_time": "0.000000",
      "duration_ts": 984000,
      "duration": "20.500000",
-     "bit_rate": "256024",
+     "bit_rate": "256338",
      "nb_frames": "962",
      "extradata_size": 5,
      "disposition": {
@@ -423,8 +423,8 @@
     "format_long_name": "QuickTime / MOV",
     "start_time": "0.000000",
     "duration": "20.500000",
-    "size": "14491125",
-    "bit_rate": "5655073",
+    "size": "14522224",
+    "bit_rate": "5667209",
     "probe_score": 100,
     "tags": {
      "major_brand": "isom",
@@ -439,8 +439,8 @@
  },
  "FGW_EarthStops_V4_Review_Preview_540x960_labeled.mp4": {
   "path": "exports/v7/FGW_EarthStops_V4_Review_Preview_540x960_labeled.mp4",
-  "bytes": 2213602,
-  "sha256": "6c526902956b498a53abe0b332dd114cda9bf709132e6f4ff19e06cc3a702740",
+  "bytes": 2220687,
+  "sha256": "f08e986a4e931ad40b1c19343cb488bf4a703244047856b7cddd453032829ad2",
   "ffprobe": {
    "streams": [
     {
@@ -479,7 +479,7 @@
      "start_time": "0.000000",
      "duration_ts": 314880,
      "duration": "20.500000",
-     "bit_rate": "727036",
+     "bit_rate": "730108",
      "bits_per_raw_sample": "8",
      "nb_frames": "615",
      "extradata_size": 50,
@@ -532,7 +532,7 @@
      "start_time": "0.000000",
      "duration_ts": 984048,
      "duration": "20.501000",
-     "bit_rate": "127608",
+     "bit_rate": "127357",
      "nb_frames": "962",
      "extradata_size": 5,
      "disposition": {
@@ -570,8 +570,8 @@
     "format_long_name": "QuickTime / MOV",
     "start_time": "0.000000",
     "duration": "20.501000",
-    "size": "2213602",
-    "bit_rate": "863802",
+    "size": "2220687",
+    "bit_rate": "866567",
     "probe_score": 100,
     "tags": {
      "major_brand": "isom",
@@ -586,8 +586,8 @@
  },
  "FGW_EarthStops_V4_SFXOnly_1080x1920.mp4": {
   "path": "exports/v7/FGW_EarthStops_V4_SFXOnly_1080x1920.mp4",
-  "bytes": 14450697,
-  "sha256": "c1b1da1ec083464bdf04c00d707bb27d882ef8c0119034c1ea27640467e0dbc0",
+  "bytes": 14480417,
+  "sha256": "d109928d25318e51bf151f8854ceb4e4522a90578dd24fdb1efbcdd7b5d4b75c",
   "ffprobe": {
    "streams": [
     {
@@ -626,7 +626,7 @@
      "start_time": "0.000000",
      "duration_ts": 1845000,
      "duration": "20.500000",
-     "bit_rate": "5389916",
+     "bit_rate": "5401738",
      "bits_per_raw_sample": "8",
      "nb_frames": "615",
      "extradata_size": 51,
@@ -678,7 +678,7 @@
      "start_time": "0.000000",
      "duration_ts": 984000,
      "duration": "20.500000",
-     "bit_rate": "240264",
+     "bit_rate": "240040",
      "nb_frames": "962",
      "extradata_size": 5,
      "disposition": {
@@ -716,8 +716,8 @@
     "format_long_name": "QuickTime / MOV",
     "start_time": "0.000000",
     "duration": "20.500000",
-    "size": "14450697",
-    "bit_rate": "5639296",
+    "size": "14480417",
+    "bit_rate": "5650894",
     "probe_score": 100,
     "tags": {
      "major_brand": "isom",
@@ -732,8 +732,8 @@
  },
  "FGW_EarthStops_V4_Silent_1080x1920.mp4": {
   "path": "exports/v7/FGW_EarthStops_V4_Silent_1080x1920.mp4",
-  "bytes": 13818821,
-  "sha256": "3f5a614acebcc43d14404d83d8de059a6d70031055f9b39cd28ac554c76bd0fb",
+  "bytes": 13849115,
+  "sha256": "4b5fef2fb78ef77cfcaeb13758d487230125b254f31d4b41a0f231d76be5b9f4",
   "ffprobe": {
    "streams": [
     {
@@ -772,7 +772,7 @@
      "start_time": "0.000000",
      "duration_ts": 1845000,
      "duration": "20.500000",
-     "bit_rate": "5389916",
+     "bit_rate": "5401738",
      "bits_per_raw_sample": "8",
      "nb_frames": "615",
      "extradata_size": 51,
@@ -811,8 +811,8 @@
     "format_long_name": "QuickTime / MOV",
     "start_time": "0.000000",
     "duration": "20.500000",
-    "size": "13818821",
-    "bit_rate": "5392710",
+    "size": "13849115",
+    "bit_rate": "5404532",
     "probe_score": 100,
     "tags": {
      "major_brand": "isom",
@@ -827,8 +827,8 @@
  },
  "FGW_EarthStops_V4_VoiceOnly_1080x1920.mp4": {
   "path": "exports/v7/FGW_EarthStops_V4_VoiceOnly_1080x1920.mp4",
-  "bytes": 14481285,
-  "sha256": "514989afd7e2fef44cc6bcc59b4f85c28804f254a0f68cc0eb82af3e9a7616e9",
+  "bytes": 14511579,
+  "sha256": "804de6eae8d7720ea705ea44375a6a660bd0735ae297c619a7e7f842a780ebb1",
   "ffprobe": {
    "streams": [
     {
@@ -867,7 +867,7 @@
      "start_time": "0.000000",
      "duration_ts": 1845000,
      "duration": "20.500000",
-     "bit_rate": "5389916",
+     "bit_rate": "5401738",
      "bits_per_raw_sample": "8",
      "nb_frames": "615",
      "extradata_size": 51,
@@ -957,8 +957,8 @@
     "format_long_name": "QuickTime / MOV",
     "start_time": "0.000000",
     "duration": "20.500000",
-    "size": "14481285",
-    "bit_rate": "5651233",
+    "size": "14511579",
+    "bit_rate": "5663055",
     "probe_score": 100,
     "tags": {
      "major_brand": "isom",
@@ -1102,7 +1102,7 @@
  "stems/FGW_EarthStops_mix_v4_48k.wav": {
   "path": "exports/v7/stems/FGW_EarthStops_mix_v4_48k.wav",
   "bytes": 3936044,
-  "sha256": "7865fd5302b82cc0cb1dade49d34726f05e7d26d53480ea0272f4606320a54cc",
+  "sha256": "6b922b61aebb2c518417b6c3f20fdb018290ad61d26092839608b8d571644d0c",
   "ffprobe": {
    "streams": [
     {
@@ -1161,7 +1161,7 @@
  "stems/FGW_EarthStops_mix_v4_nomusic_48k.wav": {
   "path": "exports/v7/stems/FGW_EarthStops_mix_v4_nomusic_48k.wav",
   "bytes": 3936044,
-  "sha256": "d04acd0dee7aa5df1645555efacc564c5307fda440c4615b6e46e4bbad1a4a66",
+  "sha256": "b860cdc6f63e1941eaef87702ba6495c0ee5cce5a50ff63d35ae996b58817bce",
   "ffprobe": {
    "streams": [
     {
@@ -1279,7 +1279,7 @@
  "stems/FGW_EarthStops_sfx_only_v4_48k.wav": {
   "path": "exports/v7/stems/FGW_EarthStops_sfx_only_v4_48k.wav",
   "bytes": 3936044,
-  "sha256": "cdd57b7d05215c892ded1d9c55f4d033b80d90f10af3feca46b427ece3b8d6f1",
+  "sha256": "06cd13562a790bb2fa35343a5c0b4501be376778469768f4833b254ef34058f6",
   "ffprobe": {
    "streams": [
     {

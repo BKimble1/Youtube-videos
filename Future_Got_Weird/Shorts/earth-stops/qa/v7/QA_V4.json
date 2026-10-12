@@ -9,9 +9,9 @@
  "pix_fmt": "yuv420p",
  "duration_s": 20.5,
  "frames_counted": 615,
- "median_step": 3.514,
- "p95_step": 27.706,
- "seam_f614_to_f0": 4.282,
+ "median_step": 3.515,
+ "p95_step": 27.359,
+ "seam_f614_to_f0": 4.284,
  "seam_vs_median": 1.22,
  "near_freeze_pairs_(diff<0.05)": [],
  "frames_with_step_gt_4x_median(first frame of new shot or very fast move)": [
@@ -193,7 +193,7 @@
  ],
  "intentional_holds": {},
  "note": "V4 has no intentional hold: every frame pair should change (the V3 suspended beat is gone); min step over the whole film is reported below",
- "min_step_overall": 0.72,
+ "min_step_overall": 0.724,
  "min_step_f15_to_f48": [
   7.002,
   8.828,

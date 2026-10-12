@@ -21,9 +21,12 @@ export const swellA = T.swellA;
 const mixHex = (a: string, b: string, t: number) => { const tt = Math.max(0, Math.min(1, t)); const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16)); return '#' + pa.map((v, i) => Math.round(v + (pb[i] - v) * tt).toString(16).padStart(2, '0')).join(''); };
 /** position of the crest: a slow, growing swell that picks up speed */
 const X0 = -130; // the swell is already a low hill on the left of the frame when the coast opens (its front ramp spans x -130..210): it is visible, and growing, from the first frames
-export const crestX = (f: number) => { const t = Math.max(0, f - swellA); return f < swellA ? X0 : X0 + 0.7 * t + 0.075 * t * t; };
-/** the frame at which the crest passes world x (inverse of crestX) */
-export const passF = (x: number) => swellA + (-0.7 + Math.sqrt(0.49 + 0.3 * (x - X0))) / 0.15;
+const crestBase = (f: number) => { const t = Math.max(0, f - swellA); return f < swellA ? X0 : X0 + 0.7 * t + 0.075 * t * t; };
+/** after the hit the surge keeps going and speeds up: it runs on toward the seawall and the town while the flood layer takes over the frame */
+const surgeExtra = (f: number) => { const u = Math.max(0, f - T.postBreak); return 3.2 * u + 0.18 * u * u; };
+export const crestX = (f: number) => crestBase(f) + surgeExtra(f);
+/** the frame at which the crest passes world x (inverse of crestX, which only increases) */
+export const passF = (x: number) => { let a = swellA, b = swellA + 200; for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (crestX(m) < x) a = m; else b = m; } return (a + b) / 2; };
 export const crestH = (f: number) => 120 + 640 * E.inOut(cl((f - swellA) / 68));
 const wavePh = (f: number) => f * 0.09;
 /** the sea is agitated as the swell approaches: the chop grows from f266 (the boat, which floats on this surface, heaves with it) */
