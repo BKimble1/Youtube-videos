@@ -27,7 +27,7 @@ G = {k: np.zeros(NS) for k in GROUPS}
 # dB below the voice's voiced RMS for the LOUDEST 100 ms of each event is set per event (rel); these are the ducking depths under speech
 # ducking under speech is split at 280 Hz: the low band (the tactile weight) is ducked lightly (DUCK_LF), the speech band (> 280 Hz) deeply (DUCK_DB)
 DUCK_LF = 2.0
-DUCK_DB = {'impacts': 7.0, 'friction': 9.0, 'liquid': 9.0, 'air_cloth': 10.0, 'air2': 14.0, 'bike': 10.0, 'ui': 8.0, 'steps': 9.0, 'objects': 14.0, 'wind': 16.0, 'water': 18.0, 'whirr': 10.0, 'whoosh': 10.0, 'rush': 8.0, 'globe': 6.0, 'sip': 3.0}
+DUCK_DB = {'impacts': 7.0, 'friction': 9.0, 'liquid': 12.0, 'air_cloth': 10.0, 'air2': 14.0, 'bike': 10.0, 'ui': 8.0, 'steps': 9.0, 'objects': 14.0, 'wind': 16.0, 'water': 18.0, 'whirr': 10.0, 'whoosh': 10.0, 'rush': 8.0, 'globe': 6.0, 'sip': 3.0}
 GEN_PICK = {'sea_wall': 'A', 'sea_surge': 'B', 'bike_roll': 'B', 'chair_tip': 'B', 'box_tumble': 'B', 'wind_palms': 'A', 'ground_stop': 'B', 'sip': 'A'}
 
 
@@ -107,7 +107,7 @@ jd = at(HE['jet_last'] - HE['jet_first'] + 4)
 place('liquid', 'hook_coffee_stream', L.fx_coffee_jet('h1_jet', jd), HE['jet_first'], -12.0, 'coffee thrown from the mug as a tapering stream (the loose thing keeps going)')
 big = [l for l in ch['coffee']['landings'] if l['t'] - D / FPS > 0 and 0 < l['screen_x'] < 1080 and l['r'] > 9]
 for i, l in enumerate(big):
-    place('liquid', f'hook_coffee_splat_{i:02d}', L.fx_splat(f'h1_splat{i}', 1050 + 90 * (i % 5)), (l['t'] - D / FPS) * FPS, -12.0 - (i % 3), 'coffee droplets land on the pavement', end_fade=0.02)
+    place('liquid', f'hook_coffee_splat_{i:02d}', L.fx_splat(f'h1_splat{i}', 1050 + 90 * (i % 5)), (l['t'] - D / FPS) * FPS, -15.0 - (i % 3), 'coffee droplets land on the pavement', end_fade=0.02)
 r0, r1 = max(0, HE['scene0'] + 1), HE['brake_end'] + 3
 rush = L.fx_rush('h1_rush', at(r1 - r0)); tr = tgrid(at(r1 - r0)); cr = hcurve('cam_rel', at(r0), len(tr))
 rush = norm(rush * (cr / max(cr)) ** 1.2, 0.7); rush[-int(0.12 * SR):] *= np.linspace(1, 0, int(0.12 * SR))
@@ -137,9 +137,9 @@ STOP = EV['stop']
 place('impacts', 'b03_surface_stop_body', L.fx_thud('v2_stop2', 190, 60, 0.12, 0.9, 0.5), STOP, -6.0, 'surface stop, mid body: the ground stops (same sound as the hook, so the viewer recognises the cause)')
 place('impacts', 'b03_surface_stop_sub', gen('ground_stop', lp=140), STOP - 3, -12.0, 'surface stop, sub layer', GEN)
 chair = gen('chair_tip', hp=120)
-place('objects', 'b03_chair_scrape', chair[:int(1.35 * SR)], STOP + 3, -17.0, 'loose-object impact: the chair is dragged across stone by the stopped ground', GEN, end_fade=0.05)
-place('objects', 'b03_chair_tip', chair[int(1.30 * SR):], EV['chair_tip'][0] + 4, -14.0, 'loose-object impact: the chair tips over and clatters', GEN)
-place('objects', 'b03_box_tumble', gen('box_tumble', hp=100), STOP + 2, -17.0, 'loose-object impact: the box scuffs and tumbles end over end', GEN)
+place('objects', 'b03_chair_scrape', chair[:int(1.35 * SR)], STOP + 3, -20.0, 'loose-object impact: the chair is dragged across stone by the stopped ground', GEN, end_fade=0.05)
+place('objects', 'b03_chair_tip', chair[int(1.30 * SR):], EV['chair_tip'][0] + 4, -18.0, 'loose-object impact: the chair tips over and clatters', GEN)
+place('objects', 'b03_box_tumble', gen('box_tumble', hp=100), STOP + 2, -20.0, 'loose-object impact: the box scuffs and tumbles end over end', GEN)
 bk0, bk1 = EV['bike_on_screen']
 bkd = at(bk1 - bk0); tbk = tgrid(bkd)
 fwb = L.fx_freewheel('v2_b03_freewheel', bkd, 24.0, 14.0) * np.sin(np.pi * np.clip(tbk / bkd, 0, 1)) ** 0.7
@@ -156,16 +156,16 @@ g1 = L.fx_gust('v2_gust1', 2.6, 90, 1100, 0.0, 0.14, 0.9) * vcurve('wind', at(AI
 place('wind', 'b04_gust_1', g1, AIR - 3, -18.0, 'air/foliage: the air keeps going (wind builds with the wind curve of the picture)')
 place('wind', 'b04_wind_palms', gen('wind_palms', hp=140), AIR + 6, -20.0, 'air/foliage: wind through the palms (generated; high-passed at 140 Hz, no sub rumble)', GEN)
 g2 = L.fx_gust('v2_gust2', 2.4, 90, 1100, 0.0, 0.14, 0.7) * vcurve('wind', at(AIR + 40), int(2.4 * SR)) ** 0.5
-place('wind', 'b04_gust_2', g2, AIR + 40, -18.0, 'air: the wind keeps blowing under the ocean line')
+place('wind', 'b04_gust_2', g2, AIR + 40, -22.0, 'air: the wind keeps blowing under the ocean line')
 place('air2', 'b04_palm_fronds', L.fx_fronds('v2_fronds', 2.4) * vcurve('wind', at(AIR), int(2.4 * SR)), AIR, -21.0, 'air/foliage: palm fronds thrash')
 place('air2', 'b04_flag', L.fx_flap('v2_flag', 3.0, 14.0, 18.0) * vcurve('wind', at(AIR + 2), int(3.0 * SR)), AIR + 2, -25.0, 'air: the flag snaps out')
 for i, j in enumerate([q for q in cv['junk'] if q['kind'] in ('paper', 'cap')][:3]):
     place('air2', f'b04_litter_{i}', L.fx_paper_swish(f'v2_sw{i}', 0.3), j['f0'], -19.0, 'air: loose litter is swept off by the wind')
 bird2 = L.fx_flap('v2_pigeon_blown', 1.2, 8.0, 9.5) * np.minimum(1, tgrid(1.2) / 0.1) * np.linspace(1, 0.4, int(1.2 * SR))
 place('air2', 'b04_pigeon_blown', bird2, AIR + 2, -19.0, 'air: a pigeon is swept past')
-place('water', 'b04_swell', L.fx_surge('v2_swell', 1.8, 1.0, 0.25, 0), SEA - 18, -18.0, 'sea mass: the sea heaves up the pier posts before the front arrives')
-place('water', 'b04_front_gen', gen('sea_surge', hp=60), SEA, -16.0, 'sea mass: the front of the surge enters from the left', GEN)
-place('water', 'b04_front_rush', L.fx_surge('v2_surge', 1.7, 1.0, 0.7, 6), SEA, -16.0, 'sea mass: the surge keeps moving east across the frame (sustained layer under the generated onset)')
+place('water', 'b04_swell', L.fx_surge('v2_swell', 1.8, 1.0, 0.25, 0), SEA - 18, -21.0, 'sea mass: the sea heaves up the pier posts before the front arrives')
+place('water', 'b04_front_gen', gen('sea_surge', hp=60), SEA, -20.0, 'sea mass: the front of the surge enters from the left', GEN)
+place('water', 'b04_front_rush', L.fx_surge('v2_surge', 1.7, 1.0, 0.7, 6), SEA, -20.0, 'sea mass: the surge keeps moving east across the frame (sustained layer under the generated onset)')
 place('water', 'b04_wall_gen', gen('sea_wall', hp=40), WALL, -8.0, 'sea contact: the surge hits the seawall (generated onset: thump + broadband crash)', GEN)
 place('water', 'b04_wall_body', L.fx_wave_slap('v2_wall', 0.9, 1.3, 0.7), WALL, -12.0, 'sea contact: body of the impact (procedural, 120-1500 Hz)')
 place('water', 'b04_flood', L.fx_surge('v2_over', 1.1, 0.3, 1.0, 10), WALL + 2, -15.0, 'sea mass: water pours over the promenade')
@@ -198,7 +198,7 @@ def tension(dur):
     t = tgrid(dur); n = len(t); r = L.rng_for('v2_tension')
     u = np.clip(t / dur, 0, 1)
     env = u ** 1.8
-    drone = (np.sin(2 * np.pi * 55.0 * t + 0.3 * np.sin(2 * np.pi * 0.21 * t)) + 0.55 * np.sin(2 * np.pi * 82.4 * t) + 0.35 * np.sin(2 * np.pi * 110.3 * t) + 0.18 * np.sin(2 * np.pi * 165 * t)) * (0.5 + 0.5 * np.sin(2 * np.pi * 0.35 * t + 1.0))
+    drone = (np.sin(2 * np.pi * 55.0 * t + 0.3 * np.sin(2 * np.pi * 0.21 * t)) + 0.55 * np.sin(2 * np.pi * 82.4 * t) + 0.35 * np.sin(2 * np.pi * 110.3 * t) + 0.3 * np.sin(2 * np.pi * 165 * t) + 0.45 * np.sin(2 * np.pi * 220.0 * t) + 0.3 * np.sin(2 * np.pi * 329.6 * t))  # 220/330 Hz partials so the swell is audible on a phone speaker * (0.5 + 0.5 * np.sin(2 * np.pi * 0.35 * t + 1.0))
     nz = L.fft_filter(r.standard_normal(n), 250, 1400)
     sweep = nz * (0.3 + 0.7 * u) * (0.5 + 0.5 * np.sin(2 * np.pi * (0.8 + 2.0 * u) * t))
     x = (0.8 * drone + 0.5 * sweep) * env
@@ -212,6 +212,16 @@ mus_x = G['whoosh'].copy()  # the tension swell is the only whoosh-group event b
 k_s = int(round(at(s0 - 2) * SR))
 MUSIC = np.zeros(NS); MUSIC[:k_s] = G['whoosh'][:k_s]
 G['whoosh'][:k_s] = 0.0
+
+# ================================================================ mix automation: a few short level dips on background layers where they sit on weak function words of the narration
+# (flagged by tools/audio_ratio_v2.py at 0.6 s, 11.3 s, 16.5 s; a masking PROXY, not a listening result). Each dip has a reason; the voice is never touched.
+DIPS = [('wind', 16.3, 17.5, 8.0, 'the sea takes the foreground on "And so does the ocean": the wind steps back'), ('air2', 16.3, 17.5, 8.0, 'same: fronds and flag step back under the sea'),
+        ('bike', 11.1, 11.9, 8.0, 'the bicycle pass sits under "the ground suddenly"'), ('air_cloth', 0.45, 1.0, 6.0, 'the lunge air rush falls away under "Earth"')]
+for g_, a_, b_, db_, why_ in DIPS:
+    if g_ not in G: continue
+    tt = np.arange(len(G[g_])) / SR
+    m_ = np.minimum(np.clip((tt - a_) / 0.08, 0, 1), np.clip((b_ - tt) / 0.08, 0, 1))
+    G[g_] = G[g_] * (1 - (1 - 10 ** (-db_ / 20)) * m_)
 
 # ================================================================ mix
 att, rel = 0.005, 0.120
@@ -242,6 +252,8 @@ LOG.append({'file': 'audio/v5/v2/stems/foley_rewind.wav', 'frame': round(t_rw0 *
 write_wav(f'{OUT}/stems/voice.wav', voice)
 sfx_sum = sum(stems.values())
 lim = lambda x, c: c * np.tanh(x / c)  # soft limiter on the effects sum: the stop thump and the wall crash would otherwise set the true-peak ceiling and hold the whole mix down
+_sl = L.fft_filter(sfx_sum, None, 130)  # phones cannot reproduce < ~130 Hz: the sub layers (kept for headphones) are shelved down 8 dB so the 150-3400 Hz body of the events is not squashed by the limiter and the mix level is not spent on inaudible bass
+sfx_sum = (sfx_sum - _sl) + _sl * 10 ** (-8.0 / 20)
 sfx_sum = lim(sfx_sum, 0.30)
 mix_music = voice + sfx_sum + MUS
 mix_nomusic = voice + sfx_sum

@@ -44,7 +44,7 @@ export const FilmV2: React.FC<Film2Props> = ({captions = true, graphics = true, 
         </>
       )}
       {f >= T.foamA && f < T.foamC + 2 && <Foam f={f} />}
-      {f < T.wipe1A + 12 && <GlobeH f={0} cx={INSET.cx} cy={INSET.cy} R={INSET.R} id="gins" spin={insetSpin(f)} />}
+      {f < T.wipe1A + 12 && <GlobeH f={0} cx={INSET.cx - 8} cy={INSET.cy - 2} R={INSET.R + 14} id="gins" spin={insetSpin(f)} />}
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
         {marker && <WhatIfTag />}
         {captions && <Captions f={f} />}

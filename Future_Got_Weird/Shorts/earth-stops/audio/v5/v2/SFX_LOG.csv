@@ -7,27 +7,27 @@ audio/v5/v2/sfx/hook_surface_stop_body.wav,3,0.1,-6.0,impacts,procedural,"surfac
 audio/v5/v2/sfx/hook_shoe_skid.wav,3,0.1,-15.0,friction,procedural,shoe contact: her shoes grab the pavement and skid as the ground stops under her
 audio/v5/v2/sfx/hook_scarf_flutter.wav,5,0.167,-24.0,air_cloth,procedural,scarf and cardigan flutter in the lunge
 audio/v5/v2/sfx/hook_shoe_release.wav,6,0.2,-17.0,impacts,procedural,shoe release: her feet leave the pavement
-audio/v5/v2/sfx/hook_coffee_splat_00.wav,21.42,0.714,-12.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_01.wav,23.69,0.79,-13.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_00.wav,21.42,0.714,-15.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_01.wav,23.69,0.79,-16.0,liquid,procedural,coffee droplets land on the pavement
 audio/v5/v2/sfx/hook_body_slide.wav,24,0.8,-17.0,friction,procedural,contact: she is dragged to rest on the pavement
 audio/v5/v2/sfx/hook_landing.wav,24,0.8,-8.0,impacts,procedural,weighted landing after the lunge
-audio/v5/v2/sfx/hook_coffee_splat_02.wav,24.12,0.804,-14.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_03.wav,24.54,0.818,-12.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_04.wav,24.96,0.832,-13.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_05.wav,26.05,0.868,-14.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_06.wav,26.14,0.871,-12.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_07.wav,26.47,0.882,-13.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_08.wav,27.4,0.913,-14.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_09.wav,27.98,0.933,-12.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_10.wav,29.33,0.978,-13.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_02.wav,24.12,0.804,-17.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_03.wav,24.54,0.818,-15.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_04.wav,24.96,0.832,-16.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_05.wav,26.05,0.868,-17.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_06.wav,26.14,0.871,-15.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_07.wav,26.47,0.882,-16.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_08.wav,27.4,0.913,-17.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_09.wav,27.98,0.933,-15.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_10.wav,29.33,0.978,-16.0,liquid,procedural,coffee droplets land on the pavement
 audio/v5/v2/sfx/hook_bike_freewheel.wav,30,1.0,-16.0,bike,procedural,bicycle mechanics: the riderless bicycle keeps rolling past the stopped street
-audio/v5/v2/sfx/hook_coffee_splat_11.wav,31.01,1.034,-14.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_11.wav,31.01,1.034,-17.0,liquid,procedural,coffee droplets land on the pavement
 audio/v5/v2/sfx/hook_landing_bounce.wav,32,1.067,-14.0,impacts,procedural,small second contact (the landing has weight)
-audio/v5/v2/sfx/hook_coffee_splat_12.wav,33.35,1.112,-12.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_13.wav,33.36,1.112,-13.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_14.wav,35.62,1.187,-14.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_15.wav,36.13,1.204,-12.0,liquid,procedural,coffee droplets land on the pavement
-audio/v5/v2/sfx/hook_coffee_splat_16.wav,37.64,1.255,-13.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_12.wav,33.35,1.112,-15.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_13.wav,33.36,1.112,-16.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_14.wav,35.62,1.187,-17.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_15.wav,36.13,1.204,-15.0,liquid,procedural,coffee droplets land on the pavement
+audio/v5/v2/sfx/hook_coffee_splat_16.wav,37.64,1.255,-16.0,liquid,procedural,coffee droplets land on the pavement
 audio/v5/v2/stems/foley_rewind.wav,55.0,1.833,-12.0,rewind,procedural (the hook effects reversed),one clear BEFORE transition: the hook effects reversed at 2.75x
 audio/v5/v2/sfx/hook_step_00.wav,92.5,3.083,-25.0,steps,procedural,a calm footstep: she is walking normally on the moving Earth
 audio/v5/v2/sfx/hook_step_01.wav,107.5,3.583,-27.0,steps,procedural,a calm footstep: she is walking normally on the moving Earth
@@ -41,10 +41,10 @@ audio/v5/v2/sfx/b02_pigeon_flies_in.wav,188,6.267,-17.0,air2,procedural,air: a p
 audio/v5/v2/sfx/b02_pigeon_hover.wav,210,7.0,-25.0,air2,procedural,air: the pigeon hovers (the air is carried along with her)
 audio/v5/v2/sfx/b03_surface_stop_sub.wav,319,10.633,-12.0,impacts,elevenlabs-generated,"surface stop, sub layer"
 audio/v5/v2/sfx/b03_surface_stop_body.wav,322,10.733,-6.0,impacts,procedural,"surface stop, mid body: the ground stops (same sound as the hook, so the viewer recognises the cause)"
-audio/v5/v2/sfx/b03_box_tumble.wav,324,10.8,-17.0,objects,elevenlabs-generated,loose-object impact: the box scuffs and tumbles end over end
+audio/v5/v2/sfx/b03_box_tumble.wav,324,10.8,-20.0,objects,elevenlabs-generated,loose-object impact: the box scuffs and tumbles end over end
 audio/v5/v2/sfx/b03_bike_freewheel.wav,324,10.8,-21.0,bike,procedural,bicycle mechanics: the loose bicycle freewheels across the plaza (swell as it crosses)
-audio/v5/v2/sfx/b03_chair_scrape.wav,325,10.833,-17.0,objects,elevenlabs-generated,loose-object impact: the chair is dragged across stone by the stopped ground
-audio/v5/v2/sfx/b03_chair_tip.wav,331,11.033,-14.0,objects,elevenlabs-generated,loose-object impact: the chair tips over and clatters
+audio/v5/v2/sfx/b03_chair_scrape.wav,325,10.833,-20.0,objects,elevenlabs-generated,loose-object impact: the chair is dragged across stone by the stopped ground
+audio/v5/v2/sfx/b03_chair_tip.wav,331,11.033,-18.0,objects,elevenlabs-generated,loose-object impact: the chair tips over and clatters
 audio/v5/v2/sfx/b03_bike_pass.wav,337.5,11.25,-19.0,bike,elevenlabs-generated,bicycle pass-by: the loose bicycle crosses the middle of the frame
 audio/v5/v2/sfx/music_tension_swell.wav,405,13.5,-27.0,whoosh,procedural (original synthesis),"optional tension: a restrained, melody-free swell under the end of S4, the air and the ocean; cut at the spray (separate stem)"
 audio/v5/v2/sfx/b04_calm_sea.wav,438,14.6,-25.0,water,procedural,the sea laps calmly before anything happens (the calm before the air and the ocean)
@@ -56,16 +56,16 @@ audio/v5/v2/sfx/b04_litter_0.wav,448,14.933,-19.0,air2,procedural,air: loose lit
 audio/v5/v2/sfx/b04_wind_palms.wav,451,15.033,-20.0,wind,elevenlabs-generated,"air/foliage: wind through the palms (generated; high-passed at 140 Hz, no sub rumble)"
 audio/v5/v2/sfx/b04_litter_1.wav,451,15.033,-19.0,air2,procedural,air: loose litter is swept off by the wind
 audio/v5/v2/sfx/b04_litter_2.wav,459,15.3,-19.0,air2,procedural,air: loose litter is swept off by the wind
-audio/v5/v2/sfx/b04_swell.wav,468,15.6,-18.0,water,procedural,sea mass: the sea heaves up the pier posts before the front arrives
-audio/v5/v2/sfx/b04_gust_2.wav,485,16.167,-18.0,wind,procedural,air: the wind keeps blowing under the ocean line
-audio/v5/v2/sfx/b04_front_gen.wav,486,16.2,-16.0,water,elevenlabs-generated,sea mass: the front of the surge enters from the left
-audio/v5/v2/sfx/b04_front_rush.wav,486,16.2,-16.0,water,procedural,sea mass: the surge keeps moving east across the frame (sustained layer under the generated onset)
+audio/v5/v2/sfx/b04_swell.wav,468,15.6,-21.0,water,procedural,sea mass: the sea heaves up the pier posts before the front arrives
+audio/v5/v2/sfx/b04_gust_2.wav,485,16.167,-22.0,wind,procedural,air: the wind keeps blowing under the ocean line
+audio/v5/v2/sfx/b04_front_gen.wav,486,16.2,-20.0,water,elevenlabs-generated,sea mass: the front of the surge enters from the left
+audio/v5/v2/sfx/b04_front_rush.wav,486,16.2,-20.0,water,procedural,sea mass: the surge keeps moving east across the frame (sustained layer under the generated onset)
 audio/v5/v2/sfx/b04_wall_gen.wav,514,17.133,-8.0,water,elevenlabs-generated,sea contact: the surge hits the seawall (generated onset: thump + broadband crash)
 audio/v5/v2/sfx/b04_wall_body.wav,514,17.133,-12.0,water,procedural,"sea contact: body of the impact (procedural, 120-1500 Hz)"
 audio/v5/v2/sfx/b04_flood.wav,516,17.2,-15.0,water,procedural,sea mass: water pours over the promenade
-audio/v5/v2/sfx/b04_spray_burst.wav,541,18.033,-13.0,water,procedural,"sea contact: the front bursts into spray, which carries the cut into the next scene"
-audio/v5/v2/sfx/b05_marker_equator.wav,560,18.667,-27.0,whirr,procedural,speed: the equator marker whirrs fast (fast ground)
-audio/v5/v2/sfx/b05_marker_pole.wav,590,19.667,-28.0,whirr,procedural,speed: near the pole the same whirr is slower (lower ground speed)
+audio/v5/v2/sfx/b04_spray_burst.wav,530,17.667,-13.0,water,procedural,"sea contact: the front bursts into spray, which carries the cut into the next scene"
+audio/v5/v2/sfx/b05_marker_equator.wav,547,18.233,-27.0,whirr,procedural,speed: the equator marker whirrs fast (fast ground)
+audio/v5/v2/sfx/b05_marker_pole.wav,572,19.067,-28.0,whirr,procedural,speed: near the pole the same whirr is slower (lower ground speed)
 audio/v5/v2/sfx/b05_streak_wipe.wav,616,20.533,-18.0,whoosh,procedural,speed lines sweep the frame into the payoff (the only transition whoosh)
 audio/v5/v2/sfx/b06_world_rush.wav,630,21.0,-24.0,rush,procedural,"speed: the world streaks past her, steadily (the motion is real); the level is constant, she is calm"
 audio/v5/v2/sfx/b06_step_00.wav,635.5,21.183,-26.0,steps,procedural,a calm footstep: she walks on at the equator

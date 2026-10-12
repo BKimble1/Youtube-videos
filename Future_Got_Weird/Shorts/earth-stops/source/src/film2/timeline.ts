@@ -30,8 +30,8 @@ export const T = {
   wipe1A: 424, wipe1B: 446, // slanted push wipe east: plaza -> coast
   airF: fs(WORD.air2 - 0.2), // 451
   seaF: 486, // the sea mass enters ("And so does the ocean")
-  foamA: 545, foamB: 556, foamC: 570, // spray occludes the frame (545-556); the latitude scene is revealed under it (556-570)
-  latA: 556, latMove0: 580, latMove1: 606,
+  foamA: 534, foamB: 543, foamC: 556, // spray occludes the frame (534-543); the latitude scene is revealed under it (543-556), so the globe is on screen by the word 'poles' (f554)
+  latA: 543, latMove0: 562, latMove1: 590, // the one camera move, equator path -> small path near the pole, across 'poles ... that starting speed'
   streakA: 616, streakB: 634, // streak wipe into the payoff
   payA: 626,
   sipA: 688, sipUp: 700, sipDown: 716, sipEnd: 730,

@@ -32,7 +32,7 @@ export const Payoff2: React.FC<{f: number; graphics: boolean}> = ({f, graphics})
   const hip = payHip(f), pose = payPose(f), fk = sideFK(pose, hip, CLOSE_SC);
   const sk = speedK(f);
   const streaks = Array.from({length: 26}).map((_, i) => {
-    const y = 120 + rand(i + 5) * 1700, len = 220 + rand(i + 9) * 520, v = 70 + rand(i + 21) * 90, wd = 5 + rand(i + 44) * 9;
+    const y0 = 120 + rand(i + 5) * 1700, y = y0 > 395 && y0 < 610 ? y0 + 230 : y0, len = 220 + rand(i + 9) * 520, v = 70 + rand(i + 21) * 90, wd = 5 + rand(i + 44) * 9;
     const x = W + 400 - (((f - P2.sk0) * v * (0.4 + 0.6 * sk) + rand(i + 60) * (W + 1000)) % (W + 1000));
     return <line key={i} x1={x} y1={y} x2={x + len} y2={y} stroke={i % 3 === 0 ? C.saffronLight : C.cream} strokeWidth={wd} strokeLinecap="round" opacity={0.18 + 0.62 * sk} />;
   });
@@ -49,7 +49,7 @@ export const Payoff2: React.FC<{f: number; graphics: boolean}> = ({f, graphics})
       <CharacterSide pose={pose} hip={hip} sc={CLOSE_SC} scarfWrap scarf={<ScarfHang n={fk.N} z={CLOSE_SC / SC} sway={f * 0.1} />} holdN={<MugSide tilt={payMug(f)} sc={CLOSE_SC} />} />
       {graphics && (
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-          <Chip x={820} y={880} w={470} text="EQUATOR ~1,000 MPH" tone="move" arrow scale={chip} />
+          <Chip x={775} y={965} w={440} text="EQUATOR ~1,000 MPH" tone="move" arrow scale={chip} />
         </svg>
       )}
     </div>

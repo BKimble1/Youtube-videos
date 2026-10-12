@@ -1,28 +1,41 @@
-# Sources — Earth Stops. You Don't.
+# Sources — Earth Stops. You Don't. (V2)
 
-**Read this first: no source page was opened in this session.** The sandbox's network policy refused the primary-source hosts (HTTP 403 on CONNECT from the proxy for `nssdc.gsfc.nasa.gov`, `www.nhc.noaa.gov`, `ntrs.nasa.gov`, `iers-conventions.obspm.fr`, `royalsocietypublishing.org`, `science.nasa.gov`, `www.nasa.gov`, `spaceplace.nasa.gov`, `arxiv.org`, `en.wikisource.org`, `www.gutenberg.org`; the fetch tool failed with ENOTFOUND on the same hosts). I did not route around the policy. What I have for every source below is **a web-search excerpt that quotes or paraphrases it** (12 Oct 2026). That is weaker than reading the page: an excerpt can be mis-summarised, and several came with the search tool's own warning that the primary page was not retrieved. Every source is therefore marked **excerpt only** until someone opens it. To close this gap the owner can allow the hosts above under *Network access → Allowed domains* in the environment settings (`read_documentation environment.network`); then the "Status" column below can be re-run against the real pages.
+V1's blanket "all excerpt only" is **replaced by claim-specific provenance**. The V1 table is kept in `history/SOURCES_V1_701648d.md`.
 
-"Primary" = the originating institution, standard or text. "Secondary" = an explainer that reports it.
+## Who opened what (read this first)
+- **Claude (author of the V2 cut) opened no source page.** Every source host was refused by the session sandbox: `curl` returned HTTP 000 (proxy refusal) for all six URLs below, and the Runway CloudFront host is refused too. Nothing here is marked "confirmed" on Claude's say-so, and this file does **not** pretend Claude read any of it.
+- **R1–R6 were read by the reviewer (ChatGPT)** while writing the V2 brief (reviewed 11 Oct 2026; baseline `BKimble1/Youtube-videos` branch `claude/fgw-earth-stops-short` commit `701648d`). The *Verifier* and *Access note* columns copy what the reviewer reported. Treat R1–R6 as the reviewer's reads, not Claude's.
+- **U1–U4 are carried over from V1 as uninspected** (by anyone in this project): they are historical background or cross-checks. They are not marked confirmed.
 
-| ID | Source | Type | What it is used for | What the excerpt showed | Status |
+## Reviewer-read sources (R)
+| ID | Source | Supports | Verifier | Access note (as reported by the reviewer) | Use in V2 |
 |---|---|---|---|---|---|
-| **S1** | NGA, *World Geodetic System 1984* (WGS 84) defining parameters (NIMA TR8350.2; NGA's WGS 84 page) | Primary (standard) | Earth radius and angular velocity for the speed table: a = 6,378,137.0 m, ω = 7292115 × 10⁻¹¹ rad/s; flattening 1/298.257223563 | The search tool reported the NGA page lists four defining parameters (semi-major axis, flattening, nominal mean angular velocity, GM), with a = 6378137.0 m and ω = 7292115 × 10⁻¹¹ rad/s. The flattening *value* was not in the excerpt; it is from memory and is cross-checked only by the result (equator 465.10 m/s agrees with S2). | Excerpt only; flattening value unconfirmed |
-| **S2** | NASA NSSDC, *Earth Fact Sheet* | Primary | Sidereal rotation period 23.9345 h; equatorial radius 6378.137 km; escape velocity 11.186 km/s (used for "rotation is small against orbital speed") | Search excerpt quoted all three lines. The tool noted the page is about 700 days old. | Excerpt only |
-| **S3** | NASA JPL, *Planetary Physical Parameters* (Earth) | Primary | Cross-check of S2: sidereal rotation 0.99726968 d, equatorial radius 6378.1366 ± 0.0001 km | Search excerpt quoted both. | Excerpt only |
-| **S4** | IERS Conventions (2010), IERS Technical Note 36 (Petit & Luzum eds.), Table 1.1 | Primary (standard) | Cross-check of ω (7.292115 × 10⁻⁵ rad/s) and the equatorial radius (6,378,136.6 m) | ω confirmed through an Observatoire de Paris table that cites the IERS Numerical Standards; **the 6,378,136.6 m radius was *not* confirmed against the 2010 text** (only a secondary poster). | Excerpt only; radius unconfirmed |
-| **S5** | NASA Cosmicopia FAQ (cosmicopia.gsfc.nasa.gov) on "what if the Earth stopped rotating" | Primary (institutional FAQ) | "Loose objects fly east; speed depends on latitude; only the poles are safe; ~1,000 mph is not enough to overcome gravity; an instant stop is not physically possible" | One search excerpt quoted these sentences as NASA Cosmicopia's answer; another said the Cosmicopia page itself was not found and the results relayed it **second-hand**. The attribution to NASA is therefore **unverified**. | Excerpt only; attribution unverified |
-| **S6** | Smithsonian Magazine article and Smithsonian "Ask an Explainer" on a sudden stop of Earth's spin | Secondary (institutional explainer) | "Atmosphere would keep moving, ~1,100 mph at the equator"; "needs more energy than any known process could supply"; "moving rocks and oceans would trigger earthquakes and tsunamis" (not used) | Search excerpt. (Their 1,100 mph is a rounding up of 1,040; ours is the computed value.) | Excerpt only |
-| **S7** | NOAA National Hurricane Center, *Saffir-Simpson Hurricane Wind Scale* | Primary | Category 5 = sustained winds ≥ 157 mph (137 kt, 252 km/h), a 1-minute average at 10 m | Excerpt: "157 mph or higher, 137 kt or higher, 252 kph or higher"; the threshold moved from 156 to 157 mph in the 15 May 2012 revision. **One 2021 NHC PDF snippet still said 156 mph**; the 157 figure is the current one. The search tool said it could not retrieve the NHC page itself. | Excerpt only; 156/157 conflict noted |
-| **S8** | Galileo Galilei, *Dialogue Concerning the Two Chief World Systems* (1632), Second Day, the ship's cabin passage | Primary (historical text) | "Motion shared by everything in the cabin, the air included, produces no observable effect": the basis for "you can't feel it" | Excerpt reproduced the setup (cabin, fish bowl, dripping bottle, insects) and "the motion is common to all the things contained in it, and to the air also". The closing "not the least change" wording was cut off. | Excerpt only |
-| **S9** | Isaac Newton, *Principia* (1687; Motte translation 1729), Law I and Corollary V | Primary (historical text) | Law I: bodies keep their state of motion unless forced to change it (loose things keep going when the ground stops). Corollary V: motions inside a space are the same whether it is at rest or moves uniformly in a straight line **without circular motion** | Excerpts of both; a note that Motte's "unless" differs from the Latin *nisi quatenus* ("except insofar as"). No full Motte transcription of Law I was retrieved. | Excerpt only |
-| **S10** | F. R. Stephenson, L. V. Morrison, C. Y. Hohenkerk, "Measurement of the Earth's rotation: 720 BC to AD 2015", *Proc. R. Soc. A* 472: 20160404 (2016), doi:10.1098/rspa.2016.0404 | Primary (paper) | The day is lengthening by about 1.8 ms per century on average (tidal-friction prediction 2.3 ms/century). **Optional claim C12 only; not in the current cut.** | Excerpt gave +1.8 ms/century, the 2.3 comparison, and a data caveat (2000–800 BC extrapolated). | Excerpt only |
+| **R1** | NASA Cosmicopia, Earth/Moon FAQ — `science.gsfc.nasa.gov/attic/cosmicopia.gsfc.nasa.gov/qa_earth.html` | The Earth-stop answer: retained eastward motion, latitude dependence, gravity remaining | Reviewer (ChatGPT) | Opened in the review. **Use the Earth-stop section only; do not copy its broad polar-safety statement** | C00, C04, C05, C06 |
+| **R2** | NGA, *World Geodetic System 1984* — `earth-info.nga.mil/index.php?dir=wgs84&action=wgs84` | Radius (6,378,137 m), flattening (1/298.257223563), angular velocity (7.292115×10⁻⁵ rad/s) → about **1,040.4 mph** at the equator | Reviewer (ChatGPT) | Read directly earlier in the reviewer's conversation; **retries during the V1 review failed**; that provenance is retained | C01, C02, C03 (centripetal figure), C06 |
+| **R3** | NASA/JPL planetary physical parameters — `ssd.jpl.nasa.gov/planets/phys_par.html` | Equatorial radius and sidereal period (cross-check of R2) | Reviewer (ChatGPT) | Read directly earlier | C01, C02 |
+| **R4** | NASA Glenn, *Beginner's Guide to Aeronautics*, Newton's laws (inertia) — `www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/` | Motion changes when unbalanced forces act | Reviewer (ChatGPT) | Opened in the review | C03, C04, C05, C08 |
+| **R5** | NOAA hurricane explainer — `noaa.gov/education/explainers/hurricane-safety-explained` | Category 5 ≥ 157 mph | Reviewer (ChatGPT) | Opened, **but the comparison is removed from V2: the claim is retired** | none (retired) |
+| **R6** | YouTube Audio Library guidance — `support.google.com/youtube/answer/3376882` | Library music and effects use and attribution | Reviewer (ChatGPT) | Opened in the review. **The licence of the actual chosen track must still be verified** | No library track was used (see `credits.md`) |
 
-## Secondary cross-checks that were *not* relied on
-- Search results on the equator speed gave 1,037 mph / 1,670 km/h (24,901 mi ÷ 23 h 56 m 4 s) and 733 mph at 45°. They round 1,674 km/h down to 1,670; our computed values (1,040.4 and 736.9 mph) differ by 0.3 %, which is rounding.
-- Farmers' Almanac, Fox13, Wikipedia mirrors, ScienceABC and similar pages appeared in results; the search tool itself flagged some as low quality. None is cited.
+## Uninspected carried-over sources (U) — not confirmed
+| ID | Source | Why it is still listed | Status |
+|---|---|---|---|
+| **U1** | Galileo, *Dialogue Concerning the Two Chief World Systems* (1632), the ship's-cabin passage | Historical background for C03 only (not needed for the claim; R4 carries it) | **Uninspected** — nobody has opened it |
+| **U2** | IERS Conventions (2010), TN 36 | Optional cross-check of ω | **Uninspected** |
+| **U3** | NASA NSSDC Earth Fact Sheet | Sidereal period / radius cross-check (R3 now carries this) | **Uninspected** |
+| **U4** | Smithsonian "Ask an Explainer" on a sudden stop | Secondary explainer for C05's principle | **Uninspected**; not relied on |
 
-## How the numbers were produced
-`tools/calc_speeds.py` → `script/speed_table.json`. Speed of the ground east at geodetic latitude φ is v = ω·N·cos φ with N = a / √(1 − e² sin² φ) (distance from the axis for a point on the WGS 84 ellipsoid surface). Inputs: S1 (a, f, ω). Outputs are reproduced by hand in `CLAIM_LEDGER.md`. Cross-check: 2π·6,378.137 km ÷ 23.9345 h (S2) = 1,674.4 km/h = 1,040.4 mph.
+## Verification status by claim (see `CLAIM_LEDGER.md`)
+| Claim | Evidence | Status |
+|---|---|---|
+| C02 ~1,040.4 mph at 0° | R2 inputs + `tools/calc_speeds.py` (reproducible) + R3 cross-check | COMPUTED; inputs reviewer-read |
+| C03/C04/C05 inertia | R4 (+ R1 for the Earth-stop framing) | Reviewer-read |
+| C06 latitude dependence | R2 constants (cos φ) + R1 | COMPUTED; R1 reviewer-read |
+| C01 rotation direction/at the equator | R2/R3 | Reviewer-read |
+| Galileo / IERS / Smithsonian | — | **Uninspected, not confirmed** |
+
+## Numbers (reproducible)
+`tools/calc_speeds.py` → `script/speed_table.json`. v = ω·N·cos φ, N = a/√(1 − e² sin² φ). Reviewer's cross-check for V2: a = 6,378,137 m, 1/f = 298.257223563, ω = 7.292115×10⁻⁵ rad/s → **1,040.40 mph at 0°**, 798.10 at 40°, 181.25 at 80° (the latter two are **not shown** in V2). Equatorial centripetal acceleration ω²a = 0.0339 m/s² (0.35 % of g) is used only to qualify "you don't feel it".
 
 ## Request to the owner
-Allow the blocked hosts (list at the top) or open S1, S2, S5, S7 and S9 yourself; these five carry the claims in the cut. The ledger statuses change from "excerpt only" to "confirmed" only after a page is read.
+Decide whether R1–R6 (the reviewer's reads) suffice, or open the original pages (R1, R2, R4 carry the claims). If the blocked hosts are allowed in the environment's network settings, Claude can re-run the checks itself; until then no claim is marked confirmed by Claude.

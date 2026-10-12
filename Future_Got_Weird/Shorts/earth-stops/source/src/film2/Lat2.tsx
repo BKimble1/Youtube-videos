@@ -14,7 +14,7 @@ const R = 380, CX = 540;
 const rad = (d: number) => (d * Math.PI) / 180;
 const wrap = (d: number) => ((((d + 180) % 360) + 360) % 360) - 180;
 export const tiltAt = (f: number) => lerp(24, 64, E.inOut(cl((f - T.latMove0) / (T.latMove1 - T.latMove0))));
-export const cyAt = (f: number) => lerp(1080, 930, E.inOut(cl((f - T.latMove0) / (T.latMove1 - T.latMove0))));
+export const cyAt = (f: number) => lerp(1100, 995, E.inOut(cl((f - T.latMove0) / (T.latMove1 - T.latMove0))));
 const proj = (lon: number, lat: number, e: number, cy: number, th: number) => {
   const l = rad(wrap(lon - th)), p = rad(lat), te = rad(e);
   const X = Math.cos(p) * Math.sin(l), Y = Math.sin(p), Z = Math.cos(p) * Math.cos(l);

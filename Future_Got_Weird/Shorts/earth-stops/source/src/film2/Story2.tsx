@@ -81,21 +81,21 @@ const B02Graphics: React.FC<{f: number; hv: ReturnType<typeof heroView>; toS: (x
   const head = {x: hv.screen.x + 20, y: hv.screen.y - 640 * 0.86 * (hv.screen.y > 0 ? 1 : 1)};
   void head;
   const fk = hv.fk;
-  const headTop = toS(fk.Hc.x + 20, fk.Hc.y - 62 * SC - 60);
+  const headTop = toS(fk.Hc.x + 20, fk.Hc.y - 62 * SC - 105);
   const mug = toS(fk.Wn.x + 60, fk.Wn.y);
   const pg = pigeonPos(f), pgS = toS(pg.x, pg.y);
-  const gnd = toS(1510, GYW + 78);
+  const gnd = toS(1510, GYW + 78 + 40); // on the road just under the curb, above the bottom Shorts UI band (y < ~1650)
   const A = (fr: number, p: {x: number; y: number}, w = 190) => {
     const sc = popScale(f, fr) * off * pulse;
     return sc > 0.01 ? <g transform={`translate(${p.x} ${p.y}) scale(${sc})`}><ArrowShape x={0} y={0} w={w} /></g> : null;
   };
   const lens = popScale(f, B2.lens) * (1 - ramp(f, B2.lensOff, B2.lensOff + 5, (x) => x));
-  const lc = {x: mug.x + 250, y: mug.y - 120};
+  const lc = {x: mug.x + 250, y: mug.y - 175};
   return (
     <g>
       {A(B2.you, {x: headTop.x + 40, y: headTop.y})}
       {A(B2.ground, gnd)}
-      {A(B2.air, {x: pgS.x + 20, y: pgS.y - 90})}
+      {A(B2.air, {x: pgS.x + 20, y: pgS.y - 140})}
       {lens > 0.01 && (
         <g>
           <Leader from={{x: lc.x - 120 * lens, y: lc.y + 70 * lens}} to={{x: mug.x + 8, y: mug.y - 8}} opacity={lens > 0.5 ? 1 : 0} />
@@ -123,13 +123,13 @@ const B02Graphics: React.FC<{f: number; hv: ReturnType<typeof heroView>; toS: (x
 const B03Graphics: React.FC<{f: number; toS: (x: number, y: number) => {x: number; y: number}; bikeX: number}> = ({f, toS, bikeX}) => {
   if (f < B3.curb - 2 || f > B3.off + 8) return null;
   const o = 1 - ramp(f, B3.off, B3.off + 6, (x) => x);
-  const curbDot = toS(PLAZA.cam + 18, 1150);
+  const curb = toS(PLAZA.cam + 18, GYW + 80);
   const bk = toS(bikeX, BIKE_Y - 190 - 60);
   const gs = popScale(f, B3.curb), ls = popScale(f, B3.loose);
   return (
     <g opacity={o}>
-      <Leader from={{x: curbDot.x, y: curbDot.y - 130}} to={{x: curbDot.x, y: curbDot.y}} opacity={gs > 0.4 ? 1 : 0} />
-      <Chip x={curbDot.x} y={curbDot.y - 160} w={330} text="GROUND 0 MPH" tone="still" scale={gs} />
+      <Leader from={{x: curb.x, y: curb.y + 20}} to={{x: curb.x, y: curb.y + 2}} opacity={gs > 0.4 ? 1 : 0} />
+      <Chip x={curb.x} y={curb.y + 52} w={330} text="GROUND 0 MPH" tone="still" scale={gs} />
       <Chip x={bk.x} y={bk.y - 30} w={250} text="LOOSE" tone="move" arrow scale={ls * (bk.x > -60 && bk.x < W + 60 ? 1 : 0)} />
     </g>
   );

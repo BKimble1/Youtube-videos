@@ -1,22 +1,23 @@
-# Production state — Earth Stops. You Don't. (V1 review cut)
+# Production state — Earth Stops. You Don't. (V2 review cut)
 
-Branch `claude/fgw-earth-stops-short` (from Atlas tip `3634cc5`). **The complete V1 review cut (34.5 s) is built and exported; production is paused for the owner's one consolidated whole-film review. Not published. Not uploaded. Not scheduled. No pull request opened.** No V2 work has been started. Checkpoints (branches; tag pushes are refused by the remote): hook H1 `dea9b81` (`checkpoints/v3/`), prototypes `a885fd5` (`checkpoints/v2/`), v1 `0783b00` (`checkpoints/v1/`).
+Branch `claude/fgw-earth-stops-short` (from Atlas tip `3634cc5`). **The complete V2 review cut (25.33 s) is built and exported; production is paused for the owner's one whole-film review. Not published. Not uploaded. Not scheduled. No pull request opened. No final-ready claim.** Checkpoints (branches; tag pushes are refused by the remote): V1 `701648d` (`claude/fgw-earth-stops-v1-checkpoint-701648d`, `checkpoints/v4/`), hook H1 `dea9b81` (`checkpoints/v3/`), prototypes `a885fd5` (`checkpoints/v2/`), v1 `0783b00` (`checkpoints/v1/`).
 
 ## Done
-- All six scenes (B01–B06) built with purposeful transitions, one consistent cast member and street, a loop back to frame 0: `script/STORYBOARD.md`.
-- Final script (bus removed; air-and-ocean kept; explicit hypothetical; speed qualifications; coffee payoff): `script/SCRIPT.md`; claims: `script/CLAIM_LEDGER.md`.
-- Full Test Voice narration (one generation, take A, unmodified): `audio/v4/voice/NARRATION_PROVENANCE.md`. 23 word-synced caption cues (measured against Scribe word times: `qa/v4/CAPTION_SYNC.json`).
-- Procedural physical sound design (137 placed events, no music, no generated SFX) and the mix (−15.8 LUFS, −1.5 dBTP): `audio/v4/v1/`.
-- Exports (`exports/v4/`): review mp4, silent, voice-only (WAV, MP3, mp4), SFX-only, script, SRT, metadata. QA: `QA_NOTES_V1.md`, `qa/v4/QA_V1.json`, all-frame sheets.
-- Runway: one test (B04 surge, 180 credits); the result could not be downloaded (host blocked), so it is **not** in the film. Zero Runway audio/music. Zero AI frame-voting.
+- V2 per the owner's single V2 brief: action-first opening, shared motion explained once, three loose props, the sea as the main escalation, one latitude move, the coffee ending, no layered dissolves, no end screen: `V2_REPORT.md` (change log with final timecodes), `script/STORYBOARD.md`.
+- Revised script (68 words) with a claim-specific ledger and a source table that records who opened what: `script/SCRIPT.md`, `CLAIM_LEDGER.md`, `SOURCES.md`.
+- Test Voice take B (one coherent generation, unmodified), Scribe word times, 18 caption cues and SRT rebuilt from the final narration: `audio/v5/voice/NARRATION_PROVENANCE.md`, `qa/v5/CAPTION_SYNC.json`.
+- Sound: 107 events with a job each (8 ElevenLabs Sound Effects one-shots, layered with procedural Foley), selective ducking, a restrained optional swell as a separate stem, a no-music mix: `audio/v5/v2/`, `credits.md`.
+- Exports (`exports/v5/`): review, review-no-music, silent, voice-only (wav/mp3/mp4), SFX-only, music-only, stems, script, SRT, metadata. QA: `QA_NOTES_V2.md`, `qa/v5/`.
+- Runway: the V1 clip re-checked (task SUCCEEDED; host still refused); not inspected, not used; no new credits.
 
 ## Needs the owner (nobody has done these)
-1. **Watch** `FGW_EarthStops_V1_Review_1080x1920.mp4` on a phone, muted first (the silent file), then with sound; assess the opening, story, scientific accuracy, visual intensity, character movement, transitions, captions, narration, sound and ending together (`V1_REPORT.md` §5 is a checklist).
-2. **Listen** to the voice-only, SFX-only and the mix (phone speaker and headphones). The mix levels are set by measurement relative to the voice; nothing has been heard.
-3. Check the film against the **live Shorts UI** overlay (caption lane, globe inset, chips, bottom third).
-4. **Allow the blocked source hosts** (`script/SOURCES.md`) or open S1, S2, S5, S7, S9 yourself; the ledger is excerpt-only until then. The Runway clip host (`dnznrvs05pmza.cloudfront.net`) is also blocked.
-5. Say which **Atlas / murder-tip files were uploaded** (analytics and runtime conclusions stay conditional).
-6. Give the **one coordinated V2 brief**.
+1. **Watch** `FGW_EarthStops_V2_Review_1080x1920.mp4` on a phone, muted first (the silent file), then with sound; judge the opening, story, accuracy, intensity, character movement, transitions, captions, narration, sound and ending together.
+2. **Listen** to the voice, the generated one-shots (`audio/v5/sfx_gen/audition_reel_gen.wav`), the swell and the mixes (phone speaker, headphones, mono). Every level is a design target from measurement.
+3. Check the live **Shorts UI** (`qa/v5/UI_OVERLAY_V2.png` is an approximate layout only).
+4. **Sources**: accept the reviewer's reads or open the pages (`script/SOURCES.md`); Claude opened none. Allow the blocked hosts if Claude should re-check; the Runway clip host (`dnznrvs05pmza.cloudfront.net`) is also refused.
+5. Confirm the ElevenLabs plan's licence for the voice and the generated one-shots.
+6. Say which **Atlas / murder-tip files were uploaded** (analytics and runtime conclusions stay conditional).
+7. Give the next revision brief, or approve a path to publication (not authorised yet).
 
 ## Not authorised yet
-V2 changes; publishing; music; generated SFX; Runway beyond the single test already run.
+Publishing, uploading, scheduling; pull requests; licensed music; further Runway spend.

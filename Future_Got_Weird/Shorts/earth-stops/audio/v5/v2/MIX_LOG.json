@@ -3,7 +3,7 @@
  "duck_dB_under_speech": {
   "impacts": 7.0,
   "friction": 9.0,
-  "liquid": 9.0,
+  "liquid": 12.0,
   "air_cloth": 10.0,
   "air2": 14.0,
   "bike": 10.0,
@@ -37,22 +37,22 @@
   "mix_v2": {
    "before": [
     -15.3,
-    -0.7
+    -1.2
    ],
-   "scale_db": -0.8,
+   "scale_db": -0.3,
    "final": [
-    -16.1,
+    -15.6,
     -1.5
    ]
   },
   "mix_v2_nomusic": {
    "before": [
     -15.3,
-    -0.7
+    -1.2
    ],
-   "scale_db": -0.8,
+   "scale_db": -0.3,
    "final": [
-    -16.1,
+    -15.6,
     -1.5
    ]
   }
