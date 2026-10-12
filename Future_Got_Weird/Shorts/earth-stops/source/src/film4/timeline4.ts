@@ -22,8 +22,8 @@ export const GROUPS = V.groups as [number, number][];
 
 /** scene frames */
 export const T = {
-  // 0: the pads close on the turning Earth and lock on "stopped"; the camera dives at the contact point; action cut to the street
-  brakeContact: 14, brakeStop: 15, diveA: 15, cutStreet: 20,
+  // 0: the pads close on the turning Earth and lock inside "stopped" (the stop lands on the /t/ closure, after the /s/); the camera dives at the contact point; action cut to the street
+  brakeContact: 15, brakeStop: 16, diveA: 16, cutStreet: 20,
   // 20-48: she is carried east: stumble, feet leave the ground, fear grows as the pole looms; cut away before contact
   dangerEnd: 48, wideA: 48,
   // 48-182: the street stands still and the loose things go east past it
@@ -31,11 +31,11 @@ export const T = {
   trackA: 182,
   // wind: the camera follows the debris east; the shop awning strains, tears, flies at the lens; the cut to the coast hides behind it
   awnStrain: 196, awnTear: 236, awnFree: 248,
-  // coast: a swell grows from the left (visible from ~285), the boat rides its front face, the crest reaches the boat and the pier's middle post on "coast" (336), the lip breaks (capsize),
+  // coast: a swell grows from the left (visible from ~270), the boat rides its front face, the crest reaches the boat and the pier's middle post on "coast" (336), the lip breaks (capsize),
   // post 2 snaps and takes a deck section (342); the aftermath registers (336-356); a flood rises through the frame (354-362), covers it for a moment, and drains away (362-384)
-  coastA: 259, swellA: 280, hitBoat: 335, surgeHit: 336, postBreak: 338, deckGo: 342, floodA: 354, floodB: 362, drainA: 362, drainB: 384,
+  coastA: 259, swellA: 268, hitBoat: 335, surgeHit: 336, postBreak: 338, deckGo: 342, floodA: 354, floodB: 362, drainA: 362, drainB: 384,
   stageA: 362, stageB: 414, toGlobeA: 414, toGlobeB: 436,
-  latA: 436, latMove0: 448, latMove1: 496, finA: 500, ringA: 524, ringB: 548, caliperA: 548, caliperB: 574, padsA: 575,
+  latA: 436, latMove0: 448, latMove1: 496, finA: 500, ringA: 524, ringB: 548, caliperA: 542, caliperB: 574, padsA: 575,
 };
 
 /** caption cues: [start frame, end frame, lines of [text, emphasised?][]]. Every cue starts within ~100 ms of its first word and ends before the next starts. */

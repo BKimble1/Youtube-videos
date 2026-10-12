@@ -20,12 +20,14 @@ const POST_X = [110, 270, 430];
 export const swellA = T.swellA;
 const mixHex = (a: string, b: string, t: number) => { const tt = Math.max(0, Math.min(1, t)); const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16)); return '#' + pa.map((v, i) => Math.round(v + (pb[i] - v) * tt).toString(16).padStart(2, '0')).join(''); };
 /** position of the crest: a slow, growing swell that picks up speed */
-export const crestX = (f: number) => { const t = Math.max(0, f - swellA); return f < swellA ? -600 : -600 + 12 * t + 0.06 * t * t; };
+const X0 = -130; // the swell is already a low hill on the left of the frame when the coast opens (its front ramp spans x -130..210): it is visible, and growing, from the first frames
+export const crestX = (f: number) => { const t = Math.max(0, f - swellA); return f < swellA ? X0 : X0 + 0.7 * t + 0.075 * t * t; };
 /** the frame at which the crest passes world x (inverse of crestX) */
-export const passF = (x: number) => swellA + (-12 + Math.sqrt(144 + 0.24 * (x + 600))) / 0.12;
+export const passF = (x: number) => swellA + (-0.7 + Math.sqrt(0.49 + 0.3 * (x - X0))) / 0.15;
 export const crestH = (f: number) => 120 + 640 * E.inOut(cl((f - swellA) / 68));
 const wavePh = (f: number) => f * 0.09;
-const ripple = (x: number, f: number) => 7 * Math.sin(x / 58 - wavePh(f)) + 4 * Math.sin(x / 24 - 1.9 * wavePh(f));
+/** the sea is agitated as the swell approaches: the chop grows from f266 (the boat, which floats on this surface, heaves with it) */
+const ripple = (x: number, f: number) => (1 + 1.7 * cl((f - 266) / 40)) * (7 * Math.sin(x / 58 - wavePh(f)) + 4 * Math.sin(x / 24 - 1.9 * wavePh(f)));
 const yBase = (x: number) => (x < WALL_X ? BASE : PROM_Y);
 const LB = 800;
 /** length of the front face: long and gentle while the swell builds (the boat rides up it), short and curling once it breaks */
@@ -36,7 +38,8 @@ const back = (x: number, f: number) => {
   const xc = crestX(f), h = crestH(f), top = yBase(xc) - h;
   if (f < swellA - 6 || x <= xc - LB) return BASE + ripple(x, f);
   const u = Math.min(1, (xc - x) / LB);
-  return BASE - (BASE - top) * Math.pow(1 - u, 2.15) + ripple(x, f) * u * 0.5;
+  const g = Math.pow(Math.cos(u * Math.PI / 2), 2); // rounded crest: zero slope at the top, long convex back
+  return BASE - (BASE - top) * (0.55 * g + 0.45 * Math.pow(1 - u, 2.6)) + ripple(x, f) * u * 0.5;
 };
 type Pt = {x: number; y: number};
 /** the front face of the wave as a polyline, crest to foot (same cubic the drawn path uses) */
@@ -100,16 +103,16 @@ const Promenade: React.FC<{f: number}> = ({f}) => {
 };
 
 /* ------------------------------------------------------------------ the boat: floats on waterY, tilts with the local slope (lagged), is carried east, capsizes as the lip breaks over it */
-export const BOAT = {x0: 185, tFoot: 312, tCap: 335, s: 2.4};
+export const BOAT = {x0: 185, tFoot: 274, tCap: 335, s: 2.4};
 const BOAT_D = 10.5 * BOAT.s; // waterline offset: the keel sits about a third of the hull height below the surface
-const boatX0 = (f: number) => BOAT.x0 + 3.1 * Math.max(0, Math.min(f, BOAT.tCap) - BOAT.tFoot);
+const boatX0 = (f: number) => BOAT.x0 + 1.55 * Math.max(0, Math.min(f, BOAT.tCap) - BOAT.tFoot);
 const slopeAt = (x: number, f: number) => Math.max(-38, Math.min(38, Math.atan((waterY(x + 22, f) - waterY(x - 22, f)) / 44) * 57.3 * 0.9));
 /** after the capsize the hull is thrown over the lip and slides down the front face, upside down, on the same curve the water is drawn with */
 const boatX = (f: number) => (f <= BOAT.tCap ? boatX0(f) : bez(frontCtrl(f), faceT(f)).x);
 const faceT = (f: number) => lerp(0.12, 0.8, E.inOut(cl((f - BOAT.tCap) / 14)));
 export const boatPose = (f: number) => {
   const lag = (g: (ff: number) => number) => 0.5 * g(f) + 0.3 * g(f - 1) + 0.2 * g(f - 2);
-  const bob = f < BOAT.tFoot - 6 ? 5 * Math.sin(f * 0.16) : 0;
+  const bob = 5 * Math.sin(f * 0.16) * cl((292 - f) / 22); // the mooring bob fades out as the swell lifts the boat
   if (f <= BOAT.tCap) { const x = boatX(f); return {x, y: waterY(x, f) + BOAT_D + bob, ang: lag((ff) => slopeAt(boatX(Math.min(ff, BOAT.tCap)), Math.min(ff, BOAT.tCap))), flip: 0, afloat: true}; }
   const k = cl((f - BOAT.tCap) / 12), flip = E.inOut(k);
   const c = frontCtrl(f), p = bez(c, faceT(f)), p2 = bez(c, Math.min(1, faceT(f) + 0.05));
@@ -137,7 +140,7 @@ const SeaBack: React.FC<{f: number}> = ({f}) => (
 );
 const SeaFront: React.FC<{f: number}> = ({f}) => {
   const on = f >= swellA - 6, xc = crestX(f), h = crestH(f), top = yBase(xc) - h, c = frontCtrl(f), foot = c.P3.x;
-  const x0 = -200, xEnd = Math.max(WALL_X, foot);
+  const x0 = -700, xEnd = Math.max(WALL_X, foot); // x0 is left of the crest for every frame the swell is on, so the body path is never empty
   const pts: string[] = [];
   const xs: number[] = [];
   for (let x = x0; x <= Math.min(xc, WALL_X + 2000); x += 22) xs.push(x);

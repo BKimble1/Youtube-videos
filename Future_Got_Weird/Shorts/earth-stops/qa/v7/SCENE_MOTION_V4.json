@@ -1,0 +1,25 @@
+{
+ "scene_mean_step": {
+  "brake": 3.31,
+  "dive": 34.34,
+  "danger": 24.38,
+  "street": 4.68,
+  "wind/camera": 5.57,
+  "tracking+awning": 21.18,
+  "coast calm+swell": 4.39,
+  "boat ride+hit": 4.52,
+  "aftermath": 10.41,
+  "flood/drain": 11.02,
+  "normal day": 1.23,
+  "pull-out": 4.35,
+  "globe": 3.04,
+  "ring": 3.01,
+  "caliper+pads": 2.33
+ },
+ "low_motion_runs_step_lt_1": [
+  [
+   549,
+   556
+  ]
+ ]
+}

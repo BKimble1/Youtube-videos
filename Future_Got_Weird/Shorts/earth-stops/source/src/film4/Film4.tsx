@@ -5,6 +5,8 @@ import {WhatIfTag, Captions} from '../film2/ui';
 import {BrakeScene, DIVE_AT, diveScale, lockShake} from './Brake4';
 import {SpaceBG} from './Globe4';
 import {CUES, N_FILM, T} from './timeline4';
+/** CUES.b is the last frame a caption is on screen; the shared Captions component treats b as exclusive, so shift by one (no blank frame between back-to-back cues) */
+const CAPS = CUES.map((c) => ({...c, b: c.b + 1}));
 import {P1, P2, P3, AwningLayer} from './StreetScenes4';
 import {CoastScene, FloodLayer} from './Coast4';
 import {GlobeFamily, SPACE_BG, Stage, geoAt} from './Space4';
@@ -39,7 +41,7 @@ export const FilmV4: React.FC<Film4Props> = ({captions = true, graphics = true, 
       <FloodLayer f={f} />
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{...abs}}>
         {marker && <WhatIfTag />}
-        {captions && <Captions f={f} cues={CUES} />}
+        {captions && <Captions f={f} cues={CAPS} />}
       </svg>
     </AbsoluteFill>
   );
