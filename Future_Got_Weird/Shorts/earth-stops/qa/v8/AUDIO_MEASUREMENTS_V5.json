@@ -1,0 +1,104 @@
+{
+ "loudness_aac": {
+  "Review": {
+   "integrated_LUFS": -15.5,
+   "LRA_LU": 2.2,
+   "true_peak_dBTP": -1.5
+  },
+  "ReviewNoMusic": {
+   "integrated_LUFS": -15.5,
+   "LRA_LU": 2.3,
+   "true_peak_dBTP": -1.5
+  }
+ },
+ "loudness_wav": {
+  "mix_v5": {
+   "integrated_LUFS": -15.5,
+   "LRA_LU": 2.2,
+   "true_peak_dBTP": -1.5
+  },
+  "mix_v5_nomusic": {
+   "integrated_LUFS": -15.5,
+   "LRA_LU": 2.3,
+   "true_peak_dBTP": -1.5
+  }
+ },
+ "aac_vs_wav": {
+  "lag_samples": 0,
+  "lag_ms": 0.0,
+  "aac_samples": 984064,
+  "wav_samples": 984000
+ },
+ "narration_cut_only": {
+  "pieces": 12,
+  "removed_total_s": 1.44,
+  "residual_dB_per_piece_vs_take_A_outside_6ms_joins": [
+   -73.2,
+   -70.3,
+   -74.4,
+   -72.7,
+   -72.4,
+   -71.9,
+   -71.4,
+   -71.5,
+   -71.3,
+   -71.2,
+   -71.0,
+   -70.3
+  ],
+  "note": "only silent audio between speech groups was removed; no stretch, speed or pitch change; each kept piece equals the take-A slice (residual below -60 dB = rounding)"
+ },
+ "voice_stem_vs_timeline": {
+  "gain_dB": -0.0,
+  "residual_dB": -74.0
+ },
+ "dual_mono": {
+  "max_abs_L_minus_R": 0.0
+ },
+ "masking_proxy": {
+  "voiced_windows": 116,
+  "median_dB": 29.6,
+  "p5_dB": 9.7,
+  "p1_dB": 7.9,
+  "worst_dB": 7.0,
+  "worst_at_s": 4.9,
+  "windows_below_6dB": []
+ },
+ "masking_named_windows_dB": {
+  "lock_vs_stopped_0.4s": 23.1,
+  "lock_0.5s": 6.6,
+  "bike_clang_2.3s(pause)": -74.7,
+  "chair_thwack_4.6s(pause)": -77.5,
+  "wave_hit_on_coast_11.2s(unvoiced_window_excluded)": -10.4
+ },
+ "coast_hit_50ms_voice_vs_fx_dB": {
+  "11.00": 55.3,
+  "11.05": 52.4,
+  "11.10": 48.3,
+  "11.15": 40.3,
+  "11.20": -9.0,
+  "11.25": -14.4,
+  "11.30": 3.2,
+  "11.35": -34.4,
+  "11.40": -91.4,
+  "11.45": -88.0
+ },
+ "event_timing_in_encode": {
+  "lock accent (picture contact f15 = 0.500 s)": 0.533,
+  "bike clang (f71 = 2.367 s)": 2.419,
+  "chair thwack (f138 = 4.600 s)": 4.605,
+  "wave hit (f336 = 11.200 s)": 11.235,
+  "pier snap / post break (f338 = 11.267 s)": 11.278,
+  "caliper seat clunk (f574 = 19.133 s)": 19.137
+ },
+ "audio_loop_seam": {
+  "first_sample": 0.016845703125,
+  "last_sample": 0.022125244140625,
+  "abs_step_across_seam": 0.005279541015625,
+  "median_abs_sample_step": 0.00677490234375,
+  "p99_abs_sample_step": 0.103271484375,
+  "rms_last_20ms": 0.028948823595467445,
+  "rms_first_20ms": 0.032709214555927145
+ },
+ "dead_air_windows_below_-48dBFS": []
+}

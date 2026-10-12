@@ -1,0 +1,116 @@
+{
+ "voice_rms_dBFS_voiced": -17.8,
+ "duck_dB_under_speech": {
+  "wind_air": 4.0,
+  "bed": 12.0,
+  "impacts": 7.0,
+  "friction": 9.0,
+  "liquid": 12.0,
+  "air_cloth": 10.0,
+  "air2": 14.0,
+  "bike": 10.0,
+  "ui": 8.0,
+  "steps": 9.0,
+  "objects": 12.0,
+  "wind": 16.0,
+  "water": 16.0,
+  "whirr": 10.0,
+  "rush": 10.0,
+  "globe": 8.0,
+  "whoosh": 10.0
+ },
+ "duck_lf_dB": 2.0,
+ "new_generated_clips": {
+  "lock": "oSSc7tnXhapZmOcL98IA",
+  "strain": "mwcSUnT0uiayBP17NEcA",
+  "clang": "VGIjrNVlzGF9K2dUDEtF",
+  "pier_long": "jDHpqBm9AZOBPQgIytSX",
+  "pier_short": "SsDr2RtLDV3mBL8wYo4b",
+  "debris": "kMnVYKIl4SpYF0aHiOJJ"
+ },
+ "v2_generated_picks": {
+  "sea_wall": "A",
+  "sea_surge": "B",
+  "chair_tip": "B/A",
+  "box_tumble": "B",
+  "wind_palms": "A",
+  "ground_stop": "B"
+ },
+ "mixes": {
+  "mix_v5": {
+   "before": [
+    -15.5,
+    -1.5
+   ],
+   "scale_db": 0.0,
+   "final": [
+    -15.5,
+    -1.5
+   ],
+   "loop_seam": {
+    "first_sample": 0.01687355501062718,
+    "last_sample": 0.022148572023526495,
+    "rms_last_20ms": 0.02896118609737086,
+    "rms_first_20ms": 0.032722841439526265
+   }
+  },
+  "mix_v5_nomusic": {
+   "before": [
+    -15.5,
+    -1.5
+   ],
+   "scale_db": 0.0,
+   "final": [
+    -15.5,
+    -1.5
+   ],
+   "loop_seam": {
+    "first_sample": 0.01687355501062718,
+    "last_sample": 0.02214857203180398,
+    "rms_last_20ms": 0.028961186097499845,
+    "rms_first_20ms": 0.032722841439526265
+   }
+  }
+ },
+ "placed_events": 109,
+ "speech_protection_windows": [
+  {
+   "t": [
+    0.56,
+    0.96
+   ],
+   "mid_dB": 8.0,
+   "sibilant_dB": 4.0,
+   "why": "\"stopped\": the vowel and the closing /pt/ after the lock clack (the clack itself sits in the /t/ closure at 0.52 s)"
+  },
+  {
+   "t": [
+    7.86,
+    8.38
+   ],
+   "mid_dB": 9.0,
+   "sibilant_dB": 3.0,
+   "why": "\"debris\": the awning rip, the flap and the gust against the stressed syllable"
+  },
+  {
+   "t": [
+    8.42,
+    9.12
+   ],
+   "mid_dB": 8.0,
+   "sibilant_dB": 3.0,
+   "why": "\"through the streets\": the awning cover whump and sweep against the end of the line"
+  },
+  {
+   "t": [
+    11.12,
+    11.38
+   ],
+   "mid_dB": 16.0,
+   "sibilant_dB": 10.0,
+   "why": "\"coast.\": the wave hit lands on its final /st/; the crash is reshaped (mid and sibilant bands) for ~0.26 s, the thump and the sub stay, and the crash recovers over ~0.1 s after the word"
+  }
+ ],
+ "pier_snap_time_in_clip_s": 3.406,
+ "note": "levels are design targets from measurement, not listening results; the tension swell is original synthesis and a separate stem; mix_v5_nomusic is the same mix without it; the loop bed is continuous over the seam by construction (periodic hum, strain split at t=0)"
+}

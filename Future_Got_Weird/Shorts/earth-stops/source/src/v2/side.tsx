@@ -1,6 +1,7 @@
 import React from 'react';
 import {C, H, OUTLINE, W} from '../theme';
 import {HERO_LOOK} from '../opening/rig';
+import type {Look} from '../components/Character';
 
 /**
  * Side / three-quarter view of the SAME cast member (clerkB: high bun, round-cornered glasses, earring, blue cardigan over a white shirt,
@@ -79,11 +80,11 @@ const seg = (a: V, b: V, w: number, color: string, ol = true) => (
 
 const TORSO = 'M -46 8 Q -52 -20 -50 -58 Q -56 -100 -46 -124 Q -38 -146 -10 -150 L 24 -150 Q 52 -146 56 -122 Q 60 -80 54 -38 Q 52 -8 44 8 Q 0 20 -46 8 Z';
 
-const Mitt: React.FC<{at: V; ang: number; sc: number}> = ({at, ang, sc}) => (
+const Mitt: React.FC<{at: V; ang: number; sc: number; skin?: string}> = ({at, ang, sc, skin = HERO_LOOK.skin}) => (
   <g transform={`translate(${at.x} ${at.y}) rotate(${-ang}) scale(${sc})`}>
-    <ellipse cx={0} cy={6} rx={20} ry={18} fill={HERO_LOOK.skin} stroke={C.ink} strokeWidth={OL} />
-    <ellipse cx={-6} cy={-6} rx={8} ry={11} fill={HERO_LOOK.skin} stroke={C.ink} strokeWidth={OL} transform="rotate(-24)" />
-    <ellipse cx={-6} cy={-6} rx={6} ry={9} fill={HERO_LOOK.skin} transform="rotate(-24)" />
+    <ellipse cx={0} cy={6} rx={20} ry={18} fill={skin} stroke={C.ink} strokeWidth={OL} />
+    <ellipse cx={-6} cy={-6} rx={8} ry={11} fill={skin} stroke={C.ink} strokeWidth={OL} transform="rotate(-24)" />
+    <ellipse cx={-6} cy={-6} rx={6} ry={9} fill={skin} transform="rotate(-24)" />
   </g>
 );
 
@@ -96,9 +97,11 @@ export const CharacterSide: React.FC<{
   scarf?: React.ReactNode; // behind-body scarf tail, in screen space
   scarfWrap?: boolean; // coral wrap round the neck (the E-A scarf prop)
   opacity?: number;
-}> = ({pose, hip, sc, holdN, scarf, scarfWrap = false, opacity = 1}) => {
+  look?: Look; // another member of the approved cast (V5); omitted = the hero (clerkB), so V1-V4 output is unchanged
+}> = ({pose, hip, sc, holdN, scarf, scarfWrap = false, opacity = 1, look}) => {
   const fk = sideFK(pose, hip, sc);
-  const L = HERO_LOOK;
+  const L = look ?? HERO_LOOK;
+  const hasBun = look ? look.hair === 'bun' : true, hasGlasses = look ? look.accessories.includes('glasses') : true, hasEarring = look ? look.accessories.includes('earring') : true;
   const lookX = pose.lookX ?? 1;
   const lookY = pose.lookY ?? 0.1;
   const brows = pose.brows ?? 0.9;
@@ -120,7 +123,7 @@ export const CharacterSide: React.FC<{
       <polyline points={`${S.x},${S.y} ${E.x},${E.y} ${Wh.x},${Wh.y}`} fill="none" stroke={C.ink} strokeWidth={armW + OL * 2 * sc} strokeLinecap="round" strokeLinejoin="round" />
       <line x1={S.x} y1={S.y} x2={E.x} y2={E.y} stroke={L.overlayColor ?? C.blue} strokeWidth={armW} strokeLinecap="round" />
       <line x1={E.x} y1={E.y} x2={Wh.x} y2={Wh.y} stroke={L.skin} strokeWidth={armW} strokeLinecap="round" />
-      <Mitt at={Wh} ang={ang} sc={sc} />
+      <Mitt at={Wh} ang={ang} sc={sc} skin={L.skin} />
     </g>
   );
   const eyeY = -6;
@@ -167,19 +170,19 @@ export const CharacterSide: React.FC<{
         <ellipse cx={0} cy={0} rx={58} ry={62} fill={L.skin} stroke={C.ink} strokeWidth={OL} />
         <path d="M 52 -2 Q 74 10 56 22 Q 52 14 50 4 Z" fill={L.skin} stroke={C.ink} strokeWidth={OL} strokeLinejoin="round" />
         <ellipse cx={-14} cy={6} rx={9} ry={12} fill={L.skin} stroke={C.ink} strokeWidth={OL} />
-        <circle cx={-14} cy={20} r={5} fill={C.saffron} stroke={C.ink} strokeWidth={3} />
+        {hasEarring && <circle cx={-14} cy={20} r={5} fill={C.saffron} stroke={C.ink} strokeWidth={3} />}
         {/* hair: cap over the crown and back of the head, bun at the back */}
-        <circle cx={-34} cy={-72} r={21} fill={L.hairColor} stroke={C.ink} strokeWidth={OL} transform={`rotate(${pose.bun ?? 0} -34 -56)`} />
+        {hasBun && <circle cx={-34} cy={-72} r={21} fill={L.hairColor} stroke={C.ink} strokeWidth={OL} transform={`rotate(${pose.bun ?? 0} -34 -56)`} />}
         <path d="M 48 -30 Q 44 -74 -4 -78 Q -62 -72 -66 -10 Q -66 26 -44 36 Q -32 20 -38 -4 Q -18 -28 14 -34 Q 36 -36 48 -30 Z" fill={L.hairColor} stroke={C.ink} strokeWidth={OL} strokeLinejoin="round" />
         {eye(8, 12, 'e1')}
         {eye(40, 9.5, 'e2')}
         {/* glasses: near lens full, far lens foreshortened, temple arm back to the ear */}
-        <g fill="none" stroke={C.ink} strokeWidth={3.5}>
+        {hasGlasses && <g fill="none" stroke={C.ink} strokeWidth={3.5}>
           <rect x={-5} y={eyeY - 15} width={30} height={26} rx={7} />
           <rect x={30} y={eyeY - 15} width={22} height={26} rx={7} />
           <line x1={25} y1={eyeY - 4} x2={30} y2={eyeY - 4} />
           <line x1={-5} y1={eyeY - 6} x2={-16} y2={eyeY - 2} />
-        </g>
+        </g>}
         {mouth === 'o' && <ellipse cx={38} cy={34} rx={7 * (pose.mouthScale ?? 1)} ry={9 * (pose.mouthScale ?? 1)} fill={C.ink} />}
         {mouth === 'smile' && <path d="M 26 32 Q 40 44 52 30" fill="none" stroke={C.ink} strokeWidth={OL} strokeLinecap="round" />}
         {mouth === 'flat' && <path d="M 28 34 L 52 34" fill="none" stroke={C.ink} strokeWidth={OL} strokeLinecap="round" />}

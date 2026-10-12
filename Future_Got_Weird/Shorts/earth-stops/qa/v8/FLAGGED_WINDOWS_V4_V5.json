@@ -1,0 +1,86 @@
+{
+ "V4": {
+  "\"stopped\": vowel and closing /pt/": {
+   "window_s": [
+    0.56,
+    0.96
+   ],
+   "speech_band_dB": 22.0,
+   "sibilant_band_dB": 11.8
+  },
+  "\"debris\"": {
+   "window_s": [
+    7.86,
+    8.38
+   ],
+   "speech_band_dB": 29.8,
+   "sibilant_band_dB": 4.1
+  },
+  "\"through the streets\"": {
+   "window_s": [
+    8.42,
+    9.12
+   ],
+   "speech_band_dB": 29.4,
+   "sibilant_band_dB": 9.0
+  },
+  "\"coast\": vowel": {
+   "window_s": [
+    11.0,
+    11.15
+   ],
+   "speech_band_dB": 51.0,
+   "sibilant_band_dB": 19.9
+  },
+  "\"coast\": final /st/": {
+   "window_s": [
+    11.15,
+    11.4
+   ],
+   "speech_band_dB": -19.4,
+   "sibilant_band_dB": -0.0
+  }
+ },
+ "V5": {
+  "\"stopped\": vowel and closing /pt/": {
+   "window_s": [
+    0.56,
+    0.96
+   ],
+   "speech_band_dB": 30.4,
+   "sibilant_band_dB": 16.6
+  },
+  "\"debris\"": {
+   "window_s": [
+    7.86,
+    8.38
+   ],
+   "speech_band_dB": 37.0,
+   "sibilant_band_dB": 7.2
+  },
+  "\"through the streets\"": {
+   "window_s": [
+    8.42,
+    9.12
+   ],
+   "speech_band_dB": 34.6,
+   "sibilant_band_dB": 12.1
+  },
+  "\"coast\": vowel": {
+   "window_s": [
+    11.0,
+    11.15
+   ],
+   "speech_band_dB": 51.2,
+   "sibilant_band_dB": 20.0
+  },
+  "\"coast\": final /st/": {
+   "window_s": [
+    11.15,
+    11.4
+   ],
+   "speech_band_dB": -6.2,
+   "sibilant_band_dB": 9.9
+  }
+ }
+}

@@ -1,0 +1,110 @@
+file,frame,time_s,rel_db_to_voice,group,source,job
+audio/v8/v5/sfx/loop_strain_full_event.wav,-40,-1.333,-9.0,bed,"procedural servo + elevenlabs-generated strain (V3 clip, high-passed 3.2 kHz, above the speech band)","the pads close: one rising strain split at the loop seam (40 frames at the end of the film, 14 at the start), cut dead at the lock"
+procedural: periodic rotation hum (audio/v8/v5/stems/foley_bed.wav),0,0.0,-10.0,bed,procedural (periodic over the loop),the planet turns: a low hum chopped once per revolution; cut dead at the pad lock (f14); silent while the planet is stopped; returns softly when the picture pulls out onto the turning Earth and swells to the opening level at the loop point
+audio/v8/v5/sfx/brake_stop_sub.wav,14,0.467,-13.0,impacts,"elevenlabs-generated (existing V2/V3 clip, reused)","sub layer under the stop: the whole planet arrested (generated in V2, low-passed 140 Hz)"
+gate,15,0.5,-60.0,bed,mix automation,the rotation bed is cut dead at the lock and stays silent
+audio/v8/v5/sfx/brake_lock_clack_gen.wav,15.6,0.52,-14.0,impacts,"elevenlabs-generated (existing V2/V3 clip, reused)","the pads lock on the belt: one short metallic clack (V3 generated clip, band-passed 500-6000 Hz, 60 ms) placed in the /t/ closure of ""stopped"", after its /s/ and before the vowel"
+audio/v8/v5/sfx/brake_lock_body.wav,15.6,0.52,-10.0,impacts,procedural,"mid body of the lock (150-300 Hz carries on a phone speaker and sits below the consonants of ""stopped"")"
+audio/v8/v5/sfx/brake_lock_sparks.wav,16,0.533,-22.0,impacts,procedural,"sparks leave the two contact lines (a bright, short hiss)"
+protect,16.8,0.56,-8.0,effects (mid -8 dB / sibilant -4 dB),mix automation,"""stopped"": the vowel and the closing /pt/ after the lock clack (the clack itself sits in the /t/ closure at 0.52 s)"
+audio/v8/v5/sfx/p1_air_rush.wav,20,0.667,-19.0,air_cloth,procedural,air past her while the camera rides with her: the carried-east rush (grows as the footing is lost)
+audio/v8/v5/sfx/p1_heel_strike.wav,20,0.667,-22.0,steps,procedural,"the planted foot arrives on the pavement (picture f20: heel strike, contact shadow)"
+audio/v8/v5/sfx/p1_scarf.wav,20,0.667,-24.0,air_cloth,procedural,scarf and cuffs flutter
+audio/v8/v5/sfx/p1_foot_drag.wav,21,0.7,-20.0,friction,procedural,"the planted shoe grips and drags back along the pavement while her body carries on (picture f20-26, the foot is pinned to the ground)"
+audio/v8/v5/sfx/p1_shoe_chirp.wav,24,0.8,-17.0,friction,procedural,the toe catches and chirps as the foot is pulled off the pavement
+audio/v8/v5/sfx/p1_feet_release.wav,26,0.867,-21.0,impacts,procedural,"the shoe tears off the pavement (picture: the supporting foot releases at f26, both feet are clear by f29); kept low: it is a slip, not a launch"
+audio/v8/v5/sfx/p1_pole_approach.wav,26,0.867,-22.0,whoosh,procedural,the lamp post looms: a low air-pressure swell that builds as she is carried toward it
+audio/v8/v5/sfx/p1_coffee_stream.wav,27,0.9,-13.0,liquid,procedural,coffee leaves the tipped cup as a tapering stream (picture f27: the cup was upright until f24)
+audio/v8/v5/sfx/p1_coffee_splat_0.wav,36,1.2,-17.0,liquid,procedural,coffee drops hit the pavement below her
+audio/v8/v5/sfx/p1_coffee_splat_1.wav,42,1.4,-18.0,liquid,procedural,coffee drops hit the pavement below her
+audio/v8/v5/sfx/p2_cut_air_release.wav,48,1.6,-23.0,whoosh,procedural,the cut to the still street: air comes back as the world starts to stream east
+audio/v8/v5/sfx/p2_mug_pass.wav,52,1.733,-23.0,liquid,procedural,the mug and its coffee go past
+audio/v8/v5/sfx/p2_chip_ground.wav,54,1.8,-26.0,ui,procedural,GROUND 0 MPH label lands
+audio/v8/v5/sfx/p2_bike_roll_in.wav,59,1.967,-20.0,bike,procedural,bicycle mechanics: the riderless bicycle freewheels in on the east-bound stream; its wheels are turning before it hits
+audio/v8/v5/sfx/p2_mug_floor_0.wav,60,2.0,-17.0,liquid,procedural,ceramic tick: the mug hits the pavement
+audio/v8/v5/sfx/p2_paper_0.wav,60,2.0,-26.0,air2,procedural,loose paper is swept by
+audio/v8/v5/sfx/p2_mug_skid_0.wav,61,2.033,-22.0,friction,procedural,ceramic scrapes along stone
+audio/v8/v5/sfx/p2_bike_lamp_clang_gen.wav,71,2.367,-6.0,impacts,"elevenlabs-generated (existing V2/V3 clip, reused)","impact: the bicycle strikes the lamp post, clang (V3 generated clip, high-passed 250 Hz); lands in the narration's 0.24 s breath after ""east"""
+audio/v8/v5/sfx/p2_lamp_ring.wav,72,2.4,-15.0,impacts,procedural,the lamp post rings after the hit (wobbles in the picture)
+audio/v8/v5/sfx/p2_bike_tumble.wav,73,2.433,-19.0,bike,procedural,bicycle mechanics: wheels spin down as it flips and carries on
+audio/v8/v5/sfx/p2_paper_1.wav,76,2.533,-25.0,air2,procedural,loose paper is swept by
+audio/v8/v5/sfx/p2_plate.wav,83,2.767,-18.0,ui,procedural,"the EQUATOR ~1,000 MPH plate lands (picture f82, on ""thousand"")"
+audio/v8/v5/sfx/p2_boxA_tumble.wav,91,3.033,-19.0,objects,"elevenlabs-generated (existing V2/V3 clip, reused)",cardboard box tumbles past (generated in V2)
+audio/v8/v5/sfx/p2_paper_2.wav,100,3.333,-26.0,air2,procedural,loose paper is swept by
+audio/v8/v5/sfx/p2_paper_3.wav,113,3.767,-25.0,air2,procedural,loose paper is swept by
+audio/v8/v5/sfx/p2_wind_palms.wav,118,3.933,-21.0,wind,"elevenlabs-generated (existing V2/V3 clip, reused)","air/foliage: wind through the palms, building (generated in V2)"
+audio/v8/v5/sfx/p3_gust_a.wav,120,4.0,-19.0,wind,procedural,air: the wind builds under the debris and keeps building (follows the picture's wind curve)
+audio/v8/v5/sfx/p2_paper_4.wav,124,4.133,-26.0,air2,procedural,loose paper is swept by
+audio/v8/v5/sfx/p3_wind_air_bands.wav,128,4.267,-17.0,wind_air,procedural,air: the wind as a force you can hear under the narration: a rumble below and a hiss above the speech band (follows the picture's wind curve)
+audio/v8/v5/sfx/p2_chair_palm_thwack.wav,138,4.6,-11.0,impacts,procedural,"impact: a chair slams into the palm trunk (in the narration's breath after ""equator"")"
+audio/v8/v5/sfx/p2_palm_shake.wav,138,4.6,-20.0,air2,procedural,the palm shakes its fronds after the hit
+audio/v8/v5/sfx/p2_chair_clatter.wav,140,4.667,-18.0,objects,"elevenlabs-generated (existing V2/V3 clip, reused)",the chair bounces off and clatters (generated in V2)
+audio/v8/v5/sfx/p2_paper_5.wav,146,4.867,-25.0,air2,procedural,loose paper is swept by
+audio/v8/v5/stems/music.wav,150,5.0,-13.0,music,"procedural (original synthesis; the V3 swell, re-timed)","optional restrained tension: a melody-free swell under the wind and the swell, cut at f322 so the silence before the wave hit is real (separate stem)"
+audio/v8/v5/sfx/p3_paper_0.wav,152,5.067,-24.0,air2,procedural,sheets and litter are swept past
+audio/v8/v5/sfx/p2_boxB_scuff.wav,154,5.133,-20.0,objects,procedural,"a bigger box scuffs past, nearer the lens"
+audio/v8/v5/sfx/p2_pot.wav,162,5.4,-21.0,objects,procedural,a clay pot tips and scatters soil as it goes
+audio/v8/v5/sfx/p2_paper_6.wav,164,5.467,-26.0,air2,procedural,loose paper is swept by
+audio/v8/v5/sfx/p3_paper_1.wav,168,5.6,-23.0,air2,procedural,sheets and litter are swept past
+audio/v8/v5/sfx/p2_chairB.wav,173,5.767,-23.0,objects,procedural,a hollow plastic chair clacks past
+audio/v8/v5/sfx/p3_gust_b.wav,176,5.867,-20.0,wind,procedural,air: the second gust as the camera starts to ride east with the debris and the awning loads
+audio/v8/v5/sfx/p3_camera_rush.wav,182,6.067,-22.0,rush,procedural,"the camera accelerates east with the stream: air rush follows the camera speed (a short blur, then controlled tracking)"
+audio/v8/v5/sfx/p3_fronds.wav,182,6.067,-21.0,air2,procedural,palm fronds thrash as the wind loads them
+audio/v8/v5/sfx/p3_debris_gen_0.wav,185,6.167,-18.0,objects,"elevenlabs-generated (existing V2/V3 clip, reused)",wind with tumbling cardboard and plastic passes the lens (V3 generated clip; re-pitched per pass so the passes are not identical)
+audio/v8/v5/sfx/p3_paper_2.wav,187,6.233,-24.0,air2,procedural,sheets and litter are swept past
+audio/v8/v5/sfx/p3_flag.wav,194,6.467,-25.0,air2,procedural,a flag snaps out
+audio/v8/v5/sfx/p3_bystander_skid.wav,195,6.5,-30.0,friction,procedural,"a second person: his shoes skid as the wind takes him (he enters at the left edge of the shot, already off the pavement)"
+audio/v8/v5/sfx/awn_strain_flutter.wav,196,6.533,-23.0,air_cloth,procedural,the awning cloth flutters harder and harder as the wind loads it (picture f196-236)
+audio/v8/v5/sfx/p3_paper_3.wav,198,6.6,-23.0,air2,procedural,sheets and litter are swept past
+audio/v8/v5/sfx/p3_bystander_cloth.wav,198,6.6,-27.0,air_cloth,procedural,"his shirt and trouser legs snap in the wind while he crosses the frame (a single, quiet layer)"
+audio/v8/v5/sfx/p3_post_pass_0.wav,200,6.667,-23.0,air2,procedural,a foreground post sweeps past the lens (air-pressure pulse)
+audio/v8/v5/sfx/awn_strain_creak.wav,200,6.667,-25.0,objects,procedural,the awning poles creak under load
+audio/v8/v5/sfx/p3_debris_gen_1.wav,203,6.767,-20.0,objects,"elevenlabs-generated (existing V2/V3 clip, reused)",wind with tumbling cardboard and plastic passes the lens (V3 generated clip; re-pitched per pass so the passes are not identical)
+audio/v8/v5/sfx/p3_paper_4.wav,212,7.067,-24.0,air2,procedural,sheets and litter are swept past
+audio/v8/v5/sfx/p3_paper_5.wav,222,7.4,-23.0,air2,procedural,sheets and litter are swept past
+protect,235.8,7.86,-9.0,effects (mid -9 dB / sibilant -3 dB),mix automation,"""debris"": the awning rip, the flap and the gust against the stressed syllable"
+audio/v8/v5/sfx/awn_rip.wav,236,7.867,-14.0,air_cloth,procedural,the cloth rips along the corner (picture f236-248)
+audio/v8/v5/sfx/awn_pole_crack.wav,240,8.0,-19.0,impacts,procedural,a pole cracks: the awning starts to let go (picture f240)
+audio/v8/v5/sfx/awn_free_flap.wav,248,8.267,-17.0,air_cloth,procedural,the torn awning whips free and flaps at the lens (picture f248-257)
+protect,252.6,8.42,-8.0,effects (mid -8 dB / sibilant -3 dB),mix automation,"""through the streets"": the awning cover whump and sweep against the end of the line"
+audio/v8/v5/sfx/awn_whump.wav,257,8.567,-14.0,impacts,procedural,the awning covers the lens: a soft cloth whump (picture f257)
+audio/v8/v5/sfx/awn_sweep_gust.wav,258,8.6,-18.0,air_cloth,procedural,the cloth is dragged off the lens by the wind (picture f258-266)
+audio/v8/v5/sfx/coast_calm_lap.wav,263,8.767,-25.0,water,procedural,the sea laps against the pier posts: the cut out of the wind is a cut into relative calm
+audio/v8/v5/sfx/coast_wind_air.wav,263,8.767,-19.0,wind_air,procedural,"air: the storm wind on the coast, thinner than in the street (bands outside the speech band)"
+audio/v8/v5/sfx/pier_creak_gen.wav,265.82,8.861,-22.0,objects,"elevenlabs-generated (existing V2/V3 clip, reused)","the pier posts creak under the load, in step with the crest passing the first post (V3 generated clip; the quiet creaks are given their own level)"
+audio/v8/v5/sfx/coast_swell_build.wav,268,8.933,-16.0,water,procedural,sea mass: the swell heaves up out of the bay and keeps growing (follows the crest height)
+audio/v8/v5/sfx/boat_hull_creak.wav,292,9.733,-24.0,objects,procedural,the hull creaks as the swell lifts the boat off its mooring line and carries it up the front face (picture f292-335)
+audio/v8/v5/sfx/coast_front_gen.wav,312,10.4,-20.0,water,"elevenlabs-generated (existing V2/V3 clip, reused)",sea mass: the front rolls toward the pier (generated in V2)
+audio/v8/v5/sfx/coast_post_slap_0.wav,320.1,10.67,-19.0,water,procedural,water arrives at post 1: slap and spray at the contact frame (picture burst)
+gate,325,10.833,-26.0,wind+wind_air+water+air2...,mix automation,eleven frames of near silence in the ambient layers before the crest reaches the boat and the pier; only the creaks (objects) remain
+audio/v8/v5/sfx/pier_snap_gen.wav,333.5,11.117,-8.0,impacts,"elevenlabs-generated (existing V2/V3 clip, reused)",the middle post snaps at the waterline (V3 generated clip; its snap lands on the picture's post-break frame)
+protect,333.6,11.12,-16.0,effects (mid -16 dB / sibilant -10 dB),mix automation,"""coast."": the wave hit lands on its final /st/; the crash is reshaped (mid and sibilant bands) for ~0.26 s, the thump and the sub stay, and the crash recovers over ~0.1 s after the word"
+audio/v8/v5/sfx/coast_wall_gen.wav,336,11.2,-6.0,water,"elevenlabs-generated (existing V2/V3 clip, reused)",sea contact: the crest reaches the boat and the pier and goes over (generated in V2: thump + broadband crash)
+audio/v8/v5/sfx/coast_wall_body.wav,336,11.2,-11.0,water,procedural,"sea contact: body of the impact (procedural, 120-1500 Hz)"
+audio/v8/v5/sfx/coast_hit_sub.wav,336,11.2,-14.0,impacts,"elevenlabs-generated (existing V2/V3 clip, reused)","sub under the front hit (generated in V2, low-passed 120 Hz)"
+audio/v8/v5/sfx/boat_capsize_splash.wav,336,11.2,-12.0,water,procedural,the lip breaks over the boat: it capsizes in a burst of spray (picture f335-340)
+audio/v8/v5/sfx/coast_front_rush.wav,336,11.2,-19.0,water,procedural,sea mass: the front keeps moving east through the frame
+audio/v8/v5/sfx/coast_post_slap_1.wav,336.5,11.217,-10.0,water,procedural,water arrives at post 2: slap and spray at the contact frame (picture burst)
+audio/v8/v5/sfx/boat_hull_knock.wav,338,11.267,-20.0,objects,procedural,the hull is flipped and knocks against the pier
+audio/v8/v5/sfx/coast_planks_gen.wav,342,11.4,-14.0,objects,"elevenlabs-generated (existing V2/V3 clip, reused)",the deck section splinters and flies off the pier (V3 generated clip; picture f342)
+audio/v8/v5/sfx/coast_post_slap_2.wav,346.6,11.553,-16.0,water,procedural,water arrives at post 3: slap and spray at the contact frame (picture burst)
+audio/v8/v5/sfx/coast_spray_burst.wav,351,11.7,-13.0,water,procedural,spray flung up by the rising water carries the cut into the calm stage
+audio/v8/v5/sfx/coast_flood_rise.wav,352,11.733,-15.0,water,procedural,sea mass: water rises through the frame and over the aftermath (picture f354-362)
+audio/v8/v5/sfx/coast_drain.wav,362,12.067,-18.0,water,procedural,"water drains off the frame in sheets and rivulets, revealing the calm stage (picture f362-384)"
+audio/v8/v5/sfx/stage_pigeon.wav,378,12.6,-29.0,air2,procedural,the pigeon hovers beside her in the carried-along air
+audio/v8/v5/sfx/stage_step_00.wav,380,12.667,-28.0,steps,procedural,a calm footstep: she is walking normally on the moving Earth
+audio/v8/v5/sfx/stage_chip.wav,382,12.733,-24.0,ui,procedural,NORMAL DAY label lands
+audio/v8/v5/sfx/stage_step_01.wav,395,13.167,-30.0,steps,procedural,a calm footstep: she is walking normally on the moving Earth
+audio/v8/v5/sfx/stage_arrow_0.wav,398,13.267,-23.0,ui,procedural,"one of three equal arrows pops in on ""you / move / with"": she, the mug and the bike share one motion"
+audio/v8/v5/sfx/stage_arrow_1.wav,404,13.467,-23.0,ui,procedural,"one of three equal arrows pops in on ""you / move / with"": she, the mug and the bike share one motion"
+audio/v8/v5/sfx/stage_step_02.wav,410,13.667,-28.0,steps,procedural,a calm footstep: she is walking normally on the moving Earth
+audio/v8/v5/sfx/stage_arrow_2.wav,410,13.667,-23.0,ui,procedural,"one of three equal arrows pops in on ""you / move / with"": she, the mug and the bike share one motion"
+audio/v8/v5/sfx/shrink_pull_out.wav,412,13.733,-22.0,whoosh,procedural,the picture pulls out from her walking slab onto the turning Earth (the one move that carries the cut)
+audio/v8/v5/sfx/globe_pop_equator.wav,436,14.533,-23.0,ui,procedural,the equator marker appears on the globe
+audio/v8/v5/sfx/globe_chip_equator.wav,438,14.6,-25.0,ui,procedural,EQUATOR label
+audio/v8/v5/sfx/globe_marker_equator.wav,438,14.6,-26.0,whirr,procedural,speed: the equator marker whirrs fast (fast ground)
+audio/v8/v5/sfx/globe_marker_pole.wav,454,15.133,-28.0,whirr,procedural,speed: near the pole the same whirr is slower (lower ground speed)
+audio/v8/v5/sfx/globe_chip_pole.wav,472,15.733,-25.0,ui,procedural,NEAR A POLE label
+audio/v8/v5/sfx/finale_ring_bloom.wav,524,17.467,-20.0,globe,procedural,the equator line swells into the belt
+audio/v8/v5/sfx/finale_caliper_slide.wav,542,18.067,-21.0,globe,procedural,the brake slides back in from the frame edge during the last line (motor glide)
+audio/v8/v5/sfx/finale_caliper_seat.wav,574,19.133,-13.0,impacts,procedural,"the bracket seats: the same opening composition is back, and the pads start to close (the strain bed takes over)"

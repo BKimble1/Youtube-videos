@@ -1,4 +1,4 @@
-# Credits and asset provenance — Earth Stops (v1 checkpoint, E-A v2, E-C, hook H1, V1, V2, V3 and V4 full films)
+# Credits and asset provenance — Earth Stops (v1 checkpoint, E-A v2, E-C, hook H1, V1, V2, V3, V4 and V5 full films)
 
 ## Picture
 - All artwork is original layered SVG drawn in code for this prototype (`source/src/opening/*`): street, facades, palms, lamp posts, mug, coffee, scarf, dust, effects.
@@ -72,3 +72,11 @@
 - **Software**: Remotion 4.0.533, React 19.1.0, TypeScript 5.8.3 (lockfile `source/package-lock.json`), FFmpeg, Python 3 + numpy + Pillow, esbuild.
 - **Sources**: `script/SOURCES.md` — R1–R6 were read by the reviewer, **not by Claude**; U1–U5 are uninspected.
 - **No AI frame-voting, no AI viewer subagents and no fabricated viewer tests were used for V4.** Frame inspection was done by the author reading contact sheets and stills of the decoded encode; nothing was played in real time and nothing was listened to.
+
+## V5 review cut (12 Oct 2026)
+- **Picture**: original code-drawn SVG; new files `source/src/film5/*` (a copy of film4 with `Opening5.ts` (the pinned-foot choreography), `Bystander5.tsx` (the second person), and the changes in `StreetScenes5.tsx`/`Film5.tsx`). Everything else is V4's drawing. Two additive edits to the shared side rig `source/src/v2/side.tsx` (a `look` prop so another approved cast member can be drawn with it, and the hand colour following the character's skin); with no `look` the rig draws exactly what V1-V4 drew (checked: frames of FilmV4 still match the V4 export). **Cast**: the second person is the approved cast's "regular person" (`CAST.person` in `source/src/components/cast.ts`: bob hair `#B8743A`, skin `#F7D9C4`, light-blue shirt, brown trousers, no glasses or bun) in the side rig built for the opening woman; the only new artwork is his shirt tail. No third-party footage, photographs, screenshots, stock art or image generation. ChatGPT artwork: not used. **Runway: no generation in V5** (no credits spent).
+- **Narration**: unchanged from V4 (ElevenLabs Test Voice `kk5XaSLo2XAw0sKM98zU`, take A, silences shortened); **no new voice generation**; the V5 voice-only mp3 is byte-identical to V4's. Provenance: `audio/v7/voice/NARRATION_PROVENANCE.md`.
+- **Sound effects**: **no new generation.** Reused V2/V3 one-shots plus original **numpy** Foley (`tools/foley_lib.py`, fixed seeds). New procedural events: heel strike, shoe drag, the second person's skid and cloth flutter (`tools/build_audio_v5.py`). **Speech protection** (local band-limited ducking of the effects on three words) is mix automation, not new material.
+- **Music**: **no licensed or library music was used and none was generated.** The optional tension swell is the same original synthesis as V4's (`music_only_v5`), with a no-music mix (`mix_v5_nomusic`). **Music credit manifest: empty.** Rights for voice, effects and music must be confirmed by a person before any recommendation to publish commercially.
+- **Fonts**, **Software**, **Sources**: as V4 (`script/SOURCES.md`; R1-R6 were read by the reviewer, **not by Claude**; U1-U5 uninspected).
+- **No AI frame-voting, no AI viewer subagents and no fabricated viewer tests were used for V5.** Frame inspection was done by the author reading contact sheets and stills of the decoded encode; nothing was played in real time and nothing was listened to.

@@ -1,0 +1,134 @@
+{
+ "scenes": {
+  "brake (pads close, lock)": {
+   "frames": [
+    0,
+    15
+   ],
+   "mean_step": 3.31,
+   "min_step": 2.88
+  },
+  "dive": {
+   "frames": [
+    15,
+    20
+   ],
+   "mean_step": 34.62,
+   "min_step": 6.99
+  },
+  "grounded step (foot pinned)": {
+   "frames": [
+    20,
+    26
+   ],
+   "mean_step": 24.58,
+   "min_step": 22.46
+  },
+  "loss of footing": {
+   "frames": [
+    26,
+    29
+   ],
+   "mean_step": 22.52,
+   "min_step": 21.6
+  },
+  "airborne, carried east": {
+   "frames": [
+    29,
+    48
+   ],
+   "mean_step": 27.9,
+   "min_step": 21.37
+  },
+  "still street": {
+   "frames": [
+    48,
+    128
+   ],
+   "mean_step": 4.68,
+   "min_step": 1.37
+  },
+  "loose things + wind": {
+   "frames": [
+    128,
+    182
+   ],
+   "mean_step": 5.57,
+   "min_step": 1.58
+  },
+  "tracking: second person crosses": {
+   "frames": [
+    182,
+    222
+   ],
+   "mean_step": 20.79,
+   "min_step": 1.6
+  },
+  "tracking + awning": {
+   "frames": [
+    222,
+    259
+   ],
+   "mean_step": 22.26,
+   "min_step": 13.72
+  },
+  "coast: swell visible, boat rides": {
+   "frames": [
+    259,
+    336
+   ],
+   "mean_step": 4.66,
+   "min_step": 0.89
+  },
+  "aftermath": {
+   "frames": [
+    336,
+    354
+   ],
+   "mean_step": 10.05,
+   "min_step": 7.16
+  },
+  "flood / drain": {
+   "frames": [
+    354,
+    384
+   ],
+   "mean_step": 11.05,
+   "min_step": 0.75
+  },
+  "NORMAL DAY": {
+   "frames": [
+    384,
+    414
+   ],
+   "mean_step": 1.23,
+   "min_step": 0.73
+  },
+  "pull-out": {
+   "frames": [
+    414,
+    436
+   ],
+   "mean_step": 4.35,
+   "min_step": 1.38
+  },
+  "globe": {
+   "frames": [
+    436,
+    500
+   ],
+   "mean_step": 3.04,
+   "min_step": 2.03
+  },
+  "ring + caliper + pads": {
+   "frames": [
+    500,
+    615
+   ],
+   "mean_step": 2.62,
+   "min_step": 0.89
+  }
+ },
+ "runs_of_5_or_more_frames_with_step_below_1.0": [],
+ "min_step_overall": 0.729
+}
