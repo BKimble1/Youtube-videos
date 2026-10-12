@@ -23,6 +23,9 @@ export type SidePose = {
   brows?: number; // -1..1
   lookX?: number;
   lookY?: number;
+  bun?: number; // optional: bun swing about its attachment (deg, + = clockwise); lags the head so hair reacts after the body
+  squint?: number; // optional 0..1: eyes narrow (a flinch)
+  mouthScale?: number; // optional: size of the open 'o' mouth (a shout)
 };
 export const THIGH = 79, SHIN = 79, UPPER = 84, FORE = 78;
 export const TORSO_H = 127, NECK_H = 152, HEAD_OFF = 55;
@@ -123,9 +126,9 @@ export const CharacterSide: React.FC<{
   const eyeY = -6;
   const eye = (cx: number, rx: number, k: string) => (
     <g key={k} transform={`translate(${cx} ${eyeY})`}>
-      <ellipse cx={0} cy={0} rx={rx} ry={13} fill={C.white} stroke={C.ink} strokeWidth={3} />
-      <circle cx={lookX * 4.5} cy={lookY * 4} r={5.5} fill={C.ink} />
-      <circle cx={lookX * 4.5 + 2} cy={lookY * 4 - 2} r={1.6} fill={C.white} />
+      <ellipse cx={0} cy={0} rx={rx} ry={13 * (1 - 0.72 * (pose.squint ?? 0))} fill={C.white} stroke={C.ink} strokeWidth={3} />
+      <circle cx={lookX * 4.5} cy={lookY * 4 * (1 - 0.6 * (pose.squint ?? 0))} r={5.5 * (1 - 0.45 * (pose.squint ?? 0))} fill={C.ink} />
+      <circle cx={lookX * 4.5 + 2} cy={lookY * 4 * (1 - 0.6 * (pose.squint ?? 0)) - 2} r={1.6 * (1 - 0.45 * (pose.squint ?? 0))} fill={C.white} />
       <line x1={-rx} y1={-21 - brows * 5} x2={rx} y2={-21 - brows * 5 - brows * 4} stroke={C.ink} strokeWidth={OL + 1} strokeLinecap="round" />
     </g>
   );
@@ -166,7 +169,7 @@ export const CharacterSide: React.FC<{
         <ellipse cx={-14} cy={6} rx={9} ry={12} fill={L.skin} stroke={C.ink} strokeWidth={OL} />
         <circle cx={-14} cy={20} r={5} fill={C.saffron} stroke={C.ink} strokeWidth={3} />
         {/* hair: cap over the crown and back of the head, bun at the back */}
-        <circle cx={-34} cy={-72} r={21} fill={L.hairColor} stroke={C.ink} strokeWidth={OL} />
+        <circle cx={-34} cy={-72} r={21} fill={L.hairColor} stroke={C.ink} strokeWidth={OL} transform={`rotate(${pose.bun ?? 0} -34 -56)`} />
         <path d="M 48 -30 Q 44 -74 -4 -78 Q -62 -72 -66 -10 Q -66 26 -44 36 Q -32 20 -38 -4 Q -18 -28 14 -34 Q 36 -36 48 -30 Z" fill={L.hairColor} stroke={C.ink} strokeWidth={OL} strokeLinejoin="round" />
         {eye(8, 12, 'e1')}
         {eye(40, 9.5, 'e2')}
@@ -177,7 +180,7 @@ export const CharacterSide: React.FC<{
           <line x1={25} y1={eyeY - 4} x2={30} y2={eyeY - 4} />
           <line x1={-5} y1={eyeY - 6} x2={-16} y2={eyeY - 2} />
         </g>
-        {mouth === 'o' && <ellipse cx={38} cy={34} rx={7} ry={9} fill={C.ink} />}
+        {mouth === 'o' && <ellipse cx={38} cy={34} rx={7 * (pose.mouthScale ?? 1)} ry={9 * (pose.mouthScale ?? 1)} fill={C.ink} />}
         {mouth === 'smile' && <path d="M 26 32 Q 40 44 52 30" fill="none" stroke={C.ink} strokeWidth={OL} strokeLinecap="round" />}
         {mouth === 'flat' && <path d="M 28 34 L 52 34" fill="none" stroke={C.ink} strokeWidth={OL} strokeLinecap="round" />}
         {mouth === 'grin' && <path d="M 26 30 Q 40 50 54 30 Z" fill={C.ink} />}
