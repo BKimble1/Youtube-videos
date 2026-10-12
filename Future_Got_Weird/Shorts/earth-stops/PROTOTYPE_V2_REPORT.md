@@ -8,7 +8,7 @@
 | `FGW_EarthStops_EA2_Opening_Silent_1080x1920.mp4` / `..._SFX_...mp4` | **E-A v2**: side-view hero, recomposed street, tapered coffee, loose bicycle vs anchored lamps/palm, camera-brake reveal |
 | `FGW_EarthStops_EC1_Opening_Silent_1080x1920.mp4` / `..._SFX_...mp4` | **E-C (minimal)**: a globe is the visible cause (spins, stops dead); the same street scene below is the effect |
 | `..._Silent_NoMarker_...mp4` (both) | no WHAT IF tag (staging-only test) |
-Each: H.264 High, 1080×1920, 30 fps, 75 frames, 2.500 s, yuv420p, bt709 (tv range). Silent files have no audio stream. SFX files copy the identical picture stream and add AAC, 48 kHz, 2 ch (identical channels, mono-safe), 320 kb/s requested. Checkpoint of v1 kept: tag `earth-stops-ea-v1`, `checkpoints/v1/`.
+Each: H.264 High, 1080×1920, 30 fps, 75 frames, 2.500 s, yuv420p, bt709 (tv range). Silent files have no audio stream. SFX files copy the identical picture stream and add AAC, 48 kHz, 2 ch (identical channels, mono-safe), 320 kb/s requested. Checkpoint of v1 kept: commit `0783b00` (pushed) and `checkpoints/v1/`; the local tag `earth-stops-ea-v1` could not be pushed (the remote hung up on every tag push), so use the commit hash.
 
 ## 2. The seven items
 | # | Ask | What was done | Evidence / caveat |

@@ -20,7 +20,7 @@ Exact export metadata (verbatim ffprobe, sha256, commands): `exports/v2/EXPORT_M
 |---|---|
 | `PROTOTYPE_V2_REPORT.md` | v2 report, comparison, recommendation, inspected / not inspected |
 | `PRODUCTION_STATE.md` | state, open decisions, recommended next step |
-| `checkpoints/v1/` | **v1 checkpoint**: commit/tag (`earth-stops-ea-v1`), sha256 of the v1 mp4s, verbatim copies of the v1 docs |
+| `checkpoints/v1/` | **v1 checkpoint**: commit `0783b00` (in the pushed branch history), sha256 of the v1 mp4s, verbatim copies of the v1 docs |
 | `FGW_EarthStops_EA_Opening_*.mp4`, `exports/FGW_EarthStops_EA_Opening_Silent_NoMarker_*.mp4` | v1 deliverables, unchanged |
 | `qa/v2/` | `QA_MEASUREMENTS_V2.json`, `AUDIO_MEASUREMENTS_V2.json`, `probe_ea2.json`, `probe_liquid_v2.json`, `sheets/` (all 75 frames of each clip, phone-width key frames, spectrograms), `keyframes/` (full-res), `lab/PoseLab2_0000.png` (side-pose test vs approved reference) |
 | `audio/v2/` | `cues_<variant>.json`, per-variant `sfx/*.wav`, `stems/*.wav` (incl. `effects_<variant>.wav`), `SFX_LOG.csv` |
@@ -42,7 +42,7 @@ ffmpeg -y -i exports/v2/FGW_EarthStops_EA2_Opening_Silent_1080x1920.mp4 -i audio
 python3 tools/qa_v2.py && python3 tools/qa_audio_v2.py && node tools/probe_liquid_v2.mjs qa/v2/probe_liquid_v2.json && python3 tools/export_metadata_v2.py
 node source/scripts/frames.mjs <outDir> EA2 0,12,30 1                     # individual frames (run from source/: node scripts/frames.mjs ...)
 ```
-Compositions: `EA2`, `EA2-NoMarker`, `EC1`, `EC1-NoMarker`, stills `PoseLab2` (side-pose test) and `PoseLab`; the v1 compositions (`OpeningEA`, `OpeningEA-NoMarker`, `OpeningEA-Bike`, `DirTest-*`) still render. Composition ids cannot contain underscores. To reproduce v1 exactly: `git checkout earth-stops-ea-v1`.
+Compositions: `EA2`, `EA2-NoMarker`, `EC1`, `EC1-NoMarker`, stills `PoseLab2` (side-pose test) and `PoseLab`; the v1 compositions (`OpeningEA`, `OpeningEA-NoMarker`, `OpeningEA-Bike`, `DirTest-*`) still render. Composition ids cannot contain underscores. To reproduce v1 exactly: `git checkout 0783b00`.
 
 ## How v2 is built
 - `src/v2/events2.json` (E-A) and `eventsEC.json` (E-C, `t0 = 10`) are the timed-event tables; `choreo2.ts` / `choreoEC.ts` make every position (hero joints, mug, 46 coffee parcels, camera, zoom, bicycle) a pure function of the frame. The picture, `probe_ea2.mjs`, `probe_liquid_v2.mjs` and the audio cue builder read the same functions.

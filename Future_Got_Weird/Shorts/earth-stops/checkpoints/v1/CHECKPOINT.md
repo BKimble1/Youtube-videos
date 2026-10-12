@@ -5,11 +5,11 @@ Preserved on request ("preserve the current version as a checkpoint") before any
 | | |
 |---|---|
 | Git commit | `0783b004586bef3f614ff65397cc55dff197a712` on `claude/fgw-earth-stops-short` |
-| Git tag | `earth-stops-ea-v1` (annotated; same commit) |
-| Restore everything as it was | `git checkout earth-stops-ea-v1` |
-| Restore one file | `git show earth-stops-ea-v1:Future_Got_Weird/Shorts/earth-stops/<path> > <path>` |
+| Git tag | `earth-stops-ea-v1` was created locally (annotated, same commit) but **could not be pushed**: the remote hung up on every tag push (4 attempts). The commit hash is the reference; the commit is in the pushed branch history. |
+| Restore everything as it was | `git checkout 0783b00` |
+| Restore one file | `git show 0783b00:Future_Got_Weird/Shorts/earth-stops/<path> > <path>` |
 
-## v1 deliverables (still at their original paths; untouched by v2: `git diff earth-stops-ea-v1 -- <path>` is empty)
+## v1 deliverables (still at their original paths; untouched by v2: `git diff 0783b00 -- <path>` is empty)
 | Path | sha256 |
 |---|---|
 | `FGW_EarthStops_EA_Opening_Silent_1080x1920.mp4` | `749ca0c81e40778a865920932d70a2849bd48c182779963d9d9ba9f1ff50a618` |
@@ -18,7 +18,7 @@ Preserved on request ("preserve the current version as a checkpoint") before any
 
 v1 source (`source/src/opening/*`), tools (`tools/*_opening.*`, `probe_choreo.mjs`), audio (`audio/`), QA (`qa/QA_MEASUREMENTS.json`, `qa/AUDIO_MEASUREMENTS.json`, key frames, sheets, reviewer rounds) are all unchanged and still build: the only edit to shared files since the tag is additive (`source/src/Root.tsx` gained the v2 compositions).
 
-Sanity check made after the v2 work: the `OpeningEA` composition still renders from the current tree; a frame-12 still differs from the delivered v1 mp4 by 3.6 (mean abs, 8-bit, 0.5 scale), the same order as the encode/scale noise of the identical check on v2 (2.9). That is not a bit-exact comparison; the tag is the exact record.
+Sanity check made after the v2 work: the `OpeningEA` composition still renders from the current tree; a frame-12 still differs from the delivered v1 mp4 by 3.6 (mean abs, 8-bit, 0.5 scale), the same order as the encode/scale noise of the identical check on v2 (2.9). That is not a bit-exact comparison; the commit is the exact record.
 
 ## Docs as they stood at the checkpoint (verbatim copies of the tagged files)
 `README.md`, `PROTOTYPE_QA_REPORT.md`, `PRODUCTION_STATE.md`, `credits.md`, `OWNER_APPROVAL_PROTOTYPE.md` in this folder. The same-named files one level up have since been updated for v2.

@@ -1,6 +1,6 @@
 # Production state — Earth Stops. You Don't. (opening prototypes: E-A v2 and E-C)
 
-Branch `claude/fgw-earth-stops-short` (from Atlas tip `3634cc5`). **Two opening prototypes complete; awaiting the owner's own viewing, listening and decision. Not published. Not uploaded. Not scheduled. Full production is paused.** No pull request opened. v1 is preserved (tag `earth-stops-ea-v1`, commit `0783b00`, `checkpoints/v1/`).
+Branch `claude/fgw-earth-stops-short` (from Atlas tip `3634cc5`). **Two opening prototypes complete; awaiting the owner's own viewing, listening and decision. Not published. Not uploaded. Not scheduled. Full production is paused.** No pull request opened. v1 is preserved: commit `0783b00` (in the pushed branch history; a local tag `earth-stops-ea-v1` was created but the remote refused the tag push, so the commit hash is the reference), `checkpoints/v1/`.
 
 ## Done
 - v1 (checkpoint): 2.5 s E-A opening, silent + procedural Foley.
