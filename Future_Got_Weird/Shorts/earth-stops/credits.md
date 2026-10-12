@@ -1,4 +1,4 @@
-# Credits and asset provenance — Earth Stops E-A opening prototype
+# Credits and asset provenance — Earth Stops opening prototypes (v1 checkpoint, E-A v2, E-C)
 
 ## Picture
 - All artwork is original layered SVG drawn in code for this prototype (`source/src/opening/*`): street, facades, palms, lamp posts, mug, coffee, scarf, dust, effects.
@@ -6,7 +6,13 @@
 - **Rig extension (this episode's copy only; the Atlas copy is untouched):** optional `legL`, `legR` (leg swing about the hip) and `footFlat` (shoes stay level with the ground) on `Pose`. Defaults reproduce the original rig exactly. Needed for planted-feet off-balance poses; see `qa/lab/PoseLab_0000.png`.
 - No third-party footage, photographs, screenshots or stock art. No image generation. ChatGPT artwork and Runway were not used.
 
+## v2 additions (E-A v2 and E-C)
+- **Side/three-quarter hero** (`source/src/v2/side.tsx`): new original artwork, drawn in code, of the **same cast member** (`clerkB` from `cast.ts`, as on the Atlas tip). Carried over unchanged from the approved cast: the `Look` colours (skin `#8D5A3C`, hair `#1E1A1A`, white shirt, blue cardigan, trousers `#2E3F5C`, shoes `#3B2A22`), glasses, earring, high bun, the front rig's segment lengths (thigh+shin 158, upper arm 84, forearm 78) and the 4 px outline. Changed: **only the view** (face turned toward travel with the nose on the silhouette, near ear and glasses temple, bun at the back, foreshortened torso); the work nametag stays dropped. The approved sheets have no side view, so this view is an extrapolation awaiting the owner's identity check.
+- **Props and set**: coral mug (`props.tsx`), riderless bicycle (`Bike2.tsx`), tall facades, awnings, curb, lamp posts and palms (`Street2.tsx`), dust/skid/stain/coffee effects (`Fx2.tsx`), globe with abstract landmasses (`Globe.tsx`; not a map), all original code-drawn SVG. No third-party footage, photographs, screenshots, stock art or image generation; Runway and ChatGPT artwork not used.
+- The `public/refs/cast_rig_check.png` crop is used only inside the internal pose-test sheet (`PoseLab2`), as the approved reference; it does not appear in either preview.
+
 ## Sound
+- v2 Foley: original numpy synthesis (`tools/foley_lib.py`, `tools/build_audio_v2.py`), fixed sha1 seeds, no samples, no stock library, no generation model. New effects over v1: spinning-planet whirr, planet-stop thump, ring bloom, riderless-bike freewheel, coffee patter.
 - Every sound is **original numpy synthesis** (`tools/build_audio_opening.py`): filtered noise and sine primitives, fixed seeds, no samples, no stock library, no generation model. Same method and precedent as the Atlas Short.
 - The connected ElevenLabs workspace does expose a Sound Effects node (`eleven_text_to_sound_v2`, 0.5–30 s). **It was not run** (no paid generation was authorised). Procedural Foley was used instead.
 - No narration (Test Voice `kk5XaSLo2XAw0sKM98zU` was confirmed present in the workspace but not used), no music, no ambience bed.

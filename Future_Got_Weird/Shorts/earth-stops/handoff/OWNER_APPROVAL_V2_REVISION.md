@@ -1,0 +1,11 @@
+# Owner approval record — v2 revision and E-C comparison (opening prototypes only)
+
+Recorded from the owner's message after reviewing the v1 prototype (verbatim core):
+
+> Keep full production paused. The current prototype demonstrates the mechanics, but its visible action can still read as an ordinary slip and coffee spill. "Not an earthquake" is not enough to pass the hook test. Authorize one focused prototype revision and a simple E-C comparison: [1] Preserve the existing cast identity and palette. Test one side/three-quarter off-balance pose against the approved references; do not redesign the character. [2] Recompose around the character, mug, and ground reference. Reduce unused sky/road. Keep the important liquid action visible rather than clipping it immediately. [3] Replace the rope-like coffee with a tapered fluid stream that breaks into varied droplets. Avoid repeated bead shapes and excessive outlines. [4] Make the event visibly affect more than her balance: one additional loose object can continue in the same direction while an anchored reference establishes the contrast. Keep the frame uncluttered. [5] Advance to a revealing second beat around 0.8–1.2 seconds. Do not spend the entire 2.5 seconds repeating the same slide. [6] Build a minimal E-C alternative that directly connects stopped ground with continuing motion. Compare its visual clarity against revised E-A; do not assume E-A wins. [7] Supply silent and SFX previews, with exact export metadata. No paid generation or full-video production yet. Do not run more AI frame-voting rounds as a substitute for playback review. Report exactly what was inspected and what still requires human viewing/listening. Preserve the current version as a checkpoint. Return both alternatives and your honest recommendation before proceeding.
+
+## What this authorizes
+One revision of the E-A opening (E-A v2) and one minimal E-C alternative (E-C), each as a silent preview and a procedural-Foley preview with exact export metadata; a checkpoint of v1; a written comparison and recommendation.
+
+## What this does NOT authorize
+Full production, script, narration, music, Runway, any paid generation, further AI "viewer" voting rounds, publishing, or proceeding past the recommendation without the owner's reply.

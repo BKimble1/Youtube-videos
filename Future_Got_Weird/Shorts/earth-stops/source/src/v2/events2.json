@@ -1,0 +1,6 @@
+{
+  "fps": 30,
+  "total_frames": 75,
+  "note": "E-A v2 timed events (30 fps). Read by choreo2.ts and tools/build_audio_ea2.py.",
+  "events": {"stop": 0, "tick": 2, "launch": 9, "brake_start": 20, "land": 27, "brake_end": 34}
+}

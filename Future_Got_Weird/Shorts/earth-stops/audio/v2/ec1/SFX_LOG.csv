@@ -1,0 +1,47 @@
+file,frame,time_s,gain_db,stem,note
+audio/v2/ec1/sfx/globe_spin_whirr.wav,0.0,0.0,-3.0,globe,frames 0-8: the planet turning fast (low rumble + air chopped once per revolution); cut dead on frame 8
+audio/v2/ec1/sfx/planet_stop_thump.wav,8.0,0.2667,0.0,globe,"frame 8: the planet stops: sub thump, crack and a low ring-down"
+audio/v2/ec1/sfx/ring_bloom.wav,8.0,0.2667,-9.0,globe,frames 8-17: the coral ring leaving the globe rim (graphic accent)
+audio/v2/ec1/sfx/shoe_scrape_planted.wav,10.0,0.3333,0.0,friction,frame 10: stopped shoes skid on rough paving until they leave the ground on frame 19
+audio/v2/ec1/sfx/stop_thud.wav,10.0,0.3333,-6.0,impacts,frame 10: restrained low weight under the first scrape
+audio/v2/ec1/sfx/coffee_stream.wav,10.0,0.3333,-5.0,liquid,frames 10-33: coffee thrown forward out of the mug as a tapering stream that breaks into drops
+audio/v2/ec1/sfx/air_rush.wav,11.0,0.3667,-9.0,air_cloth,"frames 11-47: air past the hero; level follows the street scroll speed, so it falls away as the camera brakes (frames 30-44) and the street goes still"
+audio/v2/ec1/sfx/ceramic_rim_tick.wav,12.0,0.4,1.0,liquid,frame 12: ceramic rim tick as the coffee lurches out
+audio/v2/ec1/sfx/jacket_scarf_flutter.wav,18.0,0.6,-10.0,air_cloth,frames 18-43: cardigan and scarf flutter while she is flung
+audio/v2/ec1/sfx/launch_scuff_snap.wav,19.0,0.6333,-5.0,impacts,frame 19: shoes leave the pavement
+audio/v2/ec1/sfx/coffee_patter_00.wav,33.25,1.1083,-20.0,liquid,"patter, drop k=0 r=5.6 at frame x 898.6"
+audio/v2/ec1/sfx/coffee_patter_01.wav,34.26,1.142,-20.0,liquid,"patter, drop k=3 r=5.6 at frame x 864.6"
+audio/v2/ec1/sfx/coffee_splat_big_00.wav,34.42,1.1473,-12.0,liquid,drop k=1 r=10.7 lands at frame x 854.8
+audio/v2/ec1/sfx/coffee_patter_02.wav,35.43,1.181,-20.0,liquid,"patter, drop k=4 r=5.7 at frame x 911.7"
+audio/v2/ec1/sfx/coffee_patter_03.wav,36.53,1.2177,-20.0,liquid,"patter, drop k=9 r=8.3 at frame x 867.4"
+audio/v2/ec1/sfx/coffee_splat_big_01.wav,36.69,1.223,-13.0,liquid,drop k=7 r=14.1 lands at frame x 906.7
+audio/v2/ec1/sfx/shoe_scrape_landing_skid.wav,37.0,1.2333,-8.0,friction,frames 37-75: landing slide to the cut; grit and slip rate follow the hero speed
+audio/v2/ec1/sfx/landing_thump.wav,37.0,1.2333,-2.0,impacts,frame 37: body lands (matches the squash and bounce)
+audio/v2/ec1/sfx/coffee_splat_big_02.wav,37.12,1.2373,-14.0,liquid,drop k=11 r=10.4 lands at frame x 880.8
+audio/v2/ec1/sfx/coffee_splat_big_03.wav,37.54,1.2513,-12.0,liquid,drop k=12 r=14.9 lands at frame x 841.1
+audio/v2/ec1/sfx/coffee_patter_04.wav,37.95,1.265,-20.0,liquid,"patter, drop k=10 r=5.6 at frame x 858.5"
+audio/v2/ec1/sfx/coffee_splat_big_04.wav,37.96,1.2653,-13.0,liquid,drop k=13 r=13.6 lands at frame x 867.6
+audio/v2/ec1/sfx/coffee_splat_big_05.wav,39.05,1.3017,-14.0,liquid,drop k=15 r=13 lands at frame x 836.3
+audio/v2/ec1/sfx/coffee_splat_big_06.wav,39.14,1.3047,-12.0,liquid,drop k=17 r=11.2 lands at frame x 841.7
+audio/v2/ec1/sfx/coffee_splat_big_07.wav,39.47,1.3157,-13.0,liquid,drop k=16 r=12.6 lands at frame x 875.8
+audio/v2/ec1/sfx/coffee_splat_big_08.wav,40.4,1.3467,-16.0,liquid,drop k=20 r=9.3 lands at frame x 846
+audio/v2/ec1/sfx/coffee_patter_05.wav,40.56,1.352,-20.0,liquid,"patter, drop k=18 r=7.3 at frame x 878.9"
+audio/v2/ec1/sfx/coffee_splat_big_09.wav,40.98,1.366,-12.0,liquid,drop k=19 r=11.5 lands at frame x 850.2
+audio/v2/ec1/sfx/coffee_patter_06.wav,41.82,1.394,-20.0,liquid,"patter, drop k=21 r=7.7 at frame x 862.8"
+audio/v2/ec1/sfx/coffee_splat_big_10.wav,42.33,1.411,-13.0,liquid,drop k=24 r=12.1 lands at frame x 881.2
+audio/v2/ec1/sfx/coffee_patter_07.wav,43.17,1.439,-20.0,liquid,"patter, drop k=26 r=6.9 at frame x 869.1"
+audio/v2/ec1/sfx/coffee_splat_big_11.wav,44.01,1.467,-14.0,liquid,drop k=28 r=14.6 lands at frame x 893.4
+audio/v2/ec1/sfx/coffee_patter_08.wav,44.59,1.4863,-20.0,liquid,"patter, drop k=27 r=6.6 at frame x 883.2"
+audio/v2/ec1/sfx/landing_bounce_thump.wav,45.0,1.5,-11.0,impacts,frame 45: the small second contact after the bounce
+audio/v2/ec1/sfx/coffee_patter_09.wav,46.18,1.5393,-20.0,liquid,"patter, drop k=29 r=4.5 at frame x 922.9"
+audio/v2/ec1/sfx/coffee_splat_big_12.wav,46.35,1.545,-12.0,liquid,drop k=30 r=12.2 lands at frame x 913.3
+audio/v2/ec1/sfx/coffee_splat_big_13.wav,46.36,1.5453,-13.0,liquid,drop k=33 r=12.1 lands at frame x 923
+audio/v2/ec1/sfx/coffee_patter_10.wav,47.28,1.576,-20.0,liquid,"patter, drop k=34 r=4.6 at frame x 911.3"
+audio/v2/ec1/sfx/coffee_splat_big_14.wav,48.62,1.6207,-14.0,liquid,drop k=36 r=13.9 lands at frame x 974.3
+audio/v2/ec1/sfx/coffee_splat_big_15.wav,49.13,1.6377,-12.0,liquid,drop k=39 r=16.5 lands at frame x 943.4
+audio/v2/ec1/sfx/coffee_patter_11.wav,49.29,1.643,-20.0,liquid,"patter, drop k=37 r=4.5 at frame x 934.1"
+audio/v2/ec1/sfx/coffee_splat_big_16.wav,50.64,1.688,-15.0,liquid,drop k=42 r=9.8 lands at frame x 965.6
+audio/v2/ec1/sfx/coffee_splat_big_17.wav,51.05,1.7017,-14.0,liquid,drop k=40 r=16 lands at frame x 1004.2
+audio/v2/ec1/sfx/coffee_patter_12.wav,51.31,1.7103,-20.0,liquid,"patter, drop k=43 r=5.1 at frame x 982.5"
+audio/v2/ec1/sfx/coffee_splat_big_18.wav,51.47,1.7157,-14.0,liquid,drop k=41 r=9.7 lands at frame x 1012.9
+audio/v2/ec1/sfx/coffee_patter_13.wav,53.15,1.7717,-20.0,liquid,"patter, drop k=45 r=6.2 at frame x 1001.5"

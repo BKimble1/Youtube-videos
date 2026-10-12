@@ -1,0 +1,104 @@
+{
+ "ea2": {
+  "file": "audio/v2/ea2/stems/effects_ea2.wav",
+  "samples": 120000,
+  "duration_s": 2.5,
+  "video_duration_s": 2.5,
+  "channels": 2,
+  "channels_identical_mono_safe": true,
+  "wav_sample_peak_dBFS": -2.0,
+  "stem_wav_loudness": {
+   "integrated_LUFS": -19.0,
+   "true_peak_dBFS": -1.8
+  },
+  "muxed_aac_loudness": {
+   "integrated_LUFS": -19.0,
+   "true_peak_dBFS": -2.8
+  },
+  "first_sample_time_s_over_0.01": 0.0001,
+  "rms_dBFS_per_250ms": [
+   -17.9,
+   -20.9,
+   -26.2,
+   -18.0,
+   -22.2,
+   -27.1,
+   -28.6,
+   -29.1,
+   -29.4,
+   -30.0
+  ],
+  "placed_events": 44,
+  "air_cloth_stem_rms_dB": {
+   "0.2s_ending_at_brake_start": -24.3,
+   "0.1_to_0.3s_after_brake_end": -120.0
+  },
+  "mix_rms_dB_around_brake": {
+   "0.2s_ending_at_brake_start": -26.1,
+   "0.1_to_0.3s_after_brake_end": -26.7
+  },
+  "landing_broadband_30ms_after_vs_before_dB": 16.7
+ },
+ "ec1": {
+  "file": "audio/v2/ec1/stems/effects_ec1.wav",
+  "samples": 120000,
+  "duration_s": 2.5,
+  "video_duration_s": 2.5,
+  "channels": 2,
+  "channels_identical_mono_safe": true,
+  "wav_sample_peak_dBFS": -2.0,
+  "stem_wav_loudness": {
+   "integrated_LUFS": -18.1,
+   "true_peak_dBFS": -2.0
+  },
+  "muxed_aac_loudness": {
+   "integrated_LUFS": -18.1,
+   "true_peak_dBFS": -1.9
+  },
+  "first_sample_time_s_over_0.01": 0.0008,
+  "rms_dBFS_per_250ms": [
+   -18.7,
+   -14.3,
+   -18.3,
+   -22.7,
+   -23.3,
+   -20.1,
+   -26.1,
+   -31.1,
+   -32.3,
+   -32.7
+  ],
+  "placed_events": 46,
+  "air_cloth_stem_rms_dB": {
+   "0.2s_ending_at_brake_start": -24.3,
+   "0.1_to_0.3s_after_brake_end": -120.0
+  },
+  "mix_rms_dB_around_brake": {
+   "0.2s_ending_at_brake_start": -23.8,
+   "0.1_to_0.3s_after_brake_end": -28.1
+  },
+  "landing_broadband_30ms_after_vs_before_dB": 17.0,
+  "globe_stop": {
+   "whirr_band_500to3000Hz_dB_60ms_before_vs_60to120ms_after": [
+    37.7,
+    30.2
+   ],
+   "sub_band_20to120Hz_dB_60ms_before_vs_60ms_after": [
+    42.5,
+    48.1
+   ],
+   "broadband_rms_dB_60ms_before_vs_60ms_after": [
+    -18.9,
+    -12.3
+   ],
+   "planet_stop_window_peak_vs_mix_peak": [
+    0.794,
+    0.794
+   ]
+  }
+ },
+ "not_done": [
+  "listening (by ear, phone speaker, headphones)",
+  "any narration/music/ambience interaction (none exist yet)"
+ ]
+}
