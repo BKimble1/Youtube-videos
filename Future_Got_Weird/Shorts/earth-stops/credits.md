@@ -1,4 +1,4 @@
-# Credits and asset provenance — Earth Stops (v1 checkpoint, E-A v2, E-C, hook H1)
+# Credits and asset provenance — Earth Stops (v1 checkpoint, E-A v2, E-C, hook H1, V1 full film)
 
 ## Picture
 - All artwork is original layered SVG drawn in code for this prototype (`source/src/opening/*`): street, facades, palms, lamp posts, mug, coffee, scarf, dust, effects.
@@ -34,3 +34,12 @@
 - **Source excerpts** for the claim ledger came from web searches on 12 Oct 2026; **no source page was opened** (network policy). See `script/SOURCES.md`.
 - The storyboard sheet's B02–B06 panels are schematic drawings made with Pillow (`tools/storyboard_sheet.py`); the B01 row is real frames of the encoded hook.
 - **No AI frame-voting or AI viewer subagents were used for H1.**
+
+## V1 full film (12 Oct 2026)
+- **Picture**: original code-drawn SVG; new files `source/src/film/*` (B02 globe diagram and street story, B03 plaza, B04 coast, B05 polar view and chart, B06 payoff/close-up/loop, captions and UI parts), reusing the v2 side-view cast rig, mug, bicycle, street, effects and the H1 hook source. Same cast member (`clerkB` look) as before; a cat, a pigeon, palms, a boat, chairs, a table, a plant pot, a box, a cone, a ball, a bench, a ladder, a lifebuoy and a hurricane icon are new original drawings. The globe is an abstract stylised disc, not a map. No third-party footage, photographs, stock art or image generation. ChatGPT artwork: not used.
+- **Narration**: ElevenLabs **Test Voice** (`kk5XaSLo2XAw0sKM98zU`), `eleven_v4`, the full script in one generation (2 variations), take A used unmodified. Provenance and spend estimate: `audio/v4/voice/NARRATION_PROVENANCE.md`. Scribe transcription of take A used for word times. **Not listened to by the author.**
+- **Sound**: original **numpy synthesis** (`tools/foley_lib.py`, `tools/sfx_audition_v1.py`, `tools/build_audio_v1.py`), fixed sha1 seeds, no samples, no stock library, no generation model. New candidates were audited (3 per cue, measured): `audio/v4/audition/`. ElevenLabs Sound Effects, Eleven Music, Runway sound effects and Runway music: **not run**. **No music.**
+- **Runway** (one generation): model `seedance-2`, image-to-video, 5 s, 720 × 1280, from a Remotion still of the B04 coast (`qa/v4/runway/FilmV1-Clean_0488.png`), task `901f6225-4775-460e-b5e2-2836d4bf2d2d`, **180 credits** (2,018 remained afterwards). Output not downloadable (host denied by the sandbox network policy) and **not used in the film**. Account plan lookup (`show_plans_and_credits`, `whoami`) was read once.
+- **Fonts** (SIL Open Font License, `@fontsource`): Barlow Condensed ExtraBold (tag, chips, plates, chart), Montserrat ExtraBold (captions).
+- **Source excerpts** for the claim ledger came from web searches on 12 Oct 2026; **no source page was opened**. See `script/SOURCES.md`.
+- **No AI frame-voting or AI viewer subagents were used for V1.** Frame inspection was done by the author reading contact sheets of the encoded file.

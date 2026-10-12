@@ -28,16 +28,16 @@ export const B6 = {
   eqChip: fs(WORD.at2 + 0.05),
   zoomA: 860, zoomB: 884,
   streak0: 888, streakPeak: 924, streak1: 982, streakOff: 998,
-  sip0: 988, sipUp: 1000, sipDown: 1008, sipEnd: 1016,
-  outA: 1004, outB: 1018, // pull back to the street
+  sip0: 986, sipUp: 996, sipDown: 1003, sipEnd: 1011,
+  outA: 1007, outB: 1017, // pull back to the street
   loopA: 1016, // the street shrinks, the globe returns: the hook's frame 0
   chipThousand: fs(WORD.thousand - 0.12),
 };
 
 /* ------------------------------------------------------------------ B06a globe */
-export const loopS = (f: number) => -8 - (N_FILM - 1 - f);
+export const loopS = (f: number) => -8 - (N_FILM - f); // the last frame is the frame BEFORE the hook's frame 0 (walk phase -9), so the loop is continuous to the frame
 const ICON_SC = 0.62 * 1.13;
-const spinSpeed = (f: number) => 1.15 * sm((f - B6.spin0) / (B6.spin1 - B6.spin0)) * (1 - 0.92 * sm((f - B6.spin1) / (B6.spinEnd - B6.spin1)));
+const spinSpeed = (f: number) => (0.4 + 1.15 * sm((f - B6.spin0) / (B6.spin1 - B6.spin0)) * (1 - 0.92 * sm((f - B6.spin1) / (B6.spinEnd - B6.spin1)))) * (1 - sm((f - (B6.zoomA - 16)) / 16)); // a slow drift from the first frame (the globe is never frozen), then the turn, then it settles so she is dead centre for the dive
 const thTab: number[] = (() => { const a = [filmTh(1000)]; for (let f = B6.a0; f < N_FILM + 10; f++) a.push(a[a.length - 1] - spinSpeed(f + 0.5)); return a; })();
 const th6 = (f: number) => { if (f <= B6.a0) return thTab[0]; const i = Math.floor(f - B6.a0), fr = f - B6.a0 - i; return thTab[Math.min(i, thTab.length - 2)] * (1 - fr) + thTab[Math.min(i + 1, thTab.length - 1)] * fr; };
 const heroLon6 = () => th6(B6.zoomA);
@@ -55,14 +55,14 @@ export const FinaleGlobe: React.FC<{f: number; graphics: boolean}> = ({f, graphi
   const sp = {th, thc: th - (f < B6.a0 ? 0 : 0), blurS: Math.min(9, spinSpeed(f)), blurC: Math.min(9, spinSpeed(f))};
   const hero = heroIconPos(f);
   const pop = popScale(f, B6.heroPop);
-  const pose = CALM(f);
+  const pose = blendPose(CALM(f), WALKP(loopS(f)), sm((f - (B6.zoomA - 8)) / (B6.zoomB - B6.zoomA + 8))); // settles into the close-up's walk phase during the dive
   const hipY = hero.feetY - 164 * ICON_SC * pop - 4;
   const arrow = popScale(f, B6.speedChip);
   const eq = popScale(f, B6.eqChip);
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H}}>
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
-        <rect x={0} y={0} width={W} height={H} fill={C.paper} />
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+        <rect x={-3000} y={-3000} width={W + 6000} height={H + 6000} fill={C.paper} />
         {[420, 640, 860, 1080, 1300].map((r, i) => <circle key={i} cx={BIG.cx} cy={BIG.cy} r={r} fill="none" stroke={C.paperLine} strokeWidth={6} opacity={0.7} />)}
         {stars.map((s, i) => <circle key={i} cx={s.x} cy={s.y} r={s.r} fill={C.paperLine} opacity={0.8} />)}
       </svg>
@@ -74,7 +74,7 @@ export const FinaleGlobe: React.FC<{f: number; graphics: boolean}> = ({f, graphi
       )}
       {graphics && (
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
-          {arrow > 0.01 && hero.c > 0.05 && <g transform={`translate(${hero.x} ${hero.feetY - 250}) scale(${arrow})`}><ArrowShape x={0} y={0} w={130} /></g>}
+          {arrow > 0.01 && hero.c > 0.05 && <g transform={`translate(${hero.x + 78} ${hero.feetY - 372}) scale(${arrow})`}><ArrowShape x={0} y={0} w={130} /></g>}
           <Chip x={BIG.cx} y={BIG.cy + BIG.R + 90} w={420} text="~1,000 MPH" tone="move" arrow scale={arrow} />
           <Chip x={BIG.cx} y={BIG.cy + 56} w={250} text="EQUATOR" tone="still" scale={eq} />
         </svg>
@@ -96,6 +96,22 @@ export const CLOSE_HIP = {x: 300, y: 1483};
 export const CLOSE_REF: HeroRef = {x: CLOSE_HIP.x, y: CLOSE_HIP.y, sc: CLOSE_SC};
 export const diveU = (f: number) => ramp(f, B6.zoomA, B6.zoomB, E.inOut);
 export const diveTransform = (f: number) => matchZoom(diveU(f), ICON_REF(B6.zoomA), CLOSE_REF);
+/** the close-up layer, scaled and placed so that its hero sits exactly on the globe icon's hero while the dive is in progress (so the dissolve between the two layers is a clean cross-fade of one figure) */
+export const closeAlign = (f: number) => {
+  const u = diveU(f), from = ICON_REF(B6.zoomA), h = ICON_REF(f);
+  const K = Math.exp(Math.log(CLOSE_REF.sc / from.sc) * u);
+  const P = {x: lerp(from.x, CLOSE_REF.x, u), y: lerp(from.y, CLOSE_REF.y, u)};
+  const pos = {x: P.x + K * (h.x - from.x), y: P.y + K * (h.y - from.y)};
+  return `translate(${pos.x}px, ${pos.y}px) scale(${(from.sc * K) / CLOSE_REF.sc}) translate(${-CLOSE_HIP.x}px, ${-CLOSE_HIP.y}px)`;
+};
+/** the street layer during the pull-back: zoomed so that its hero sits exactly on the close-up's hero, easing to the plain street at the end */
+export const streetAlign = (f: number) => {
+  if (f >= B6.outB) return 'none';
+  const u = ramp(f, B6.outA, B6.outB, E.inOut), c = closeHip(f), st = loopStreetHero(f);
+  const K = Math.exp(Math.log(st.sc / CLOSE_REF.sc) * (u - 1));
+  const P = {x: lerp(c.x, st.x, u), y: lerp(c.y, st.y, u)};
+  return `translate(${P.x}px, ${P.y}px) scale(${K}) translate(${-st.x}px, ${-st.y}px)`;
+};
 
 /* ------------------------------------------------------------------ B06b close-up */
 const SIP: SidePose = {lean: 1, head: -9, armN: {s: 50, e: 112}, armF: {s: 8, e: 14}, legN: {h: 4, k: 2, f: 0}, legF: {h: -4, k: 2, f: 0}, mouth: 'smile', brows: 0, lookY: 0.1};
@@ -123,9 +139,9 @@ export const Closeup: React.FC<{f: number; graphics: boolean}> = ({f, graphics})
   void steam;
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H}}>
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
         <defs><linearGradient id="spaceG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={C.ink} /><stop offset="1" stopColor={C.tealDeep} /></linearGradient></defs>
-        <g opacity={1 - ramp(f, B6.outA, B6.outA + 5, (x) => x)}>
+        <g>
           <rect x={-3000} y={-3000} width={W + 6000} height={H + 6000} fill="url(#spaceG)" />
           {stars.map((s, i) => <circle key={i} cx={s.x} cy={s.y} r={s.r} fill={C.cream} opacity={0.35 + 0.4 * sk} />)}
           {streaks}
@@ -152,7 +168,7 @@ export const LoopStreet: React.FC<{f: number}> = ({f}) => {
   const TX = 540 - 540 * S, TY = feet - top - GSY * S;
   const gc = {cx: lerp(GLOBE_FULL.cx, INSET.cx, p), cy: lerp(GLOBE_FULL.cy, INSET.cy, p), R: lerp(GLOBE_FULL.R, INSET.R, p)};
   const g0 = 20; // the hook's surface angle at frame 0
-  const th = g0 + 9 * (N_FILM - 1 - f);
+  const th = g0 + 9 * (N_FILM - f);
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H}}>
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
@@ -160,7 +176,7 @@ export const LoopStreet: React.FC<{f: number}> = ({f}) => {
         <rect x={0} y={0} width={W} height={H} fill="url(#skyL)" />
       </svg>
       {p < 1 && <div style={{position: 'absolute', left: -6, top: top - 7, width: W + 12, height: H, background: C.ink, borderRadius: `${rad0 + 4}px ${rad0 + 4}px 0 0`}} />}
-      <div style={{position: 'absolute', left: 0, top, width: W, height: H - top, overflow: 'hidden', borderRadius: `${rad0}px ${rad0}px 0 0`}}>
+      <div style={{position: 'absolute', left: 0, top, width: W, height: H - top, overflow: 'hidden', borderRadius: `${rad0}px ${rad0}px 0 0`, transform: streetAlign(f), transformOrigin: '0 0'}}>
         <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, transformOrigin: '0 0', transform: `translate(${TX}px, ${TY}px) scale(${S})`}}>
           <SceneH f={0} st={{s: loopS(f), mode: 'nostop'}} />
         </div>

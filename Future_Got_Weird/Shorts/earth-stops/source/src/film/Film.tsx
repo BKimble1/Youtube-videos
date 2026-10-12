@@ -6,12 +6,18 @@ import {GlobeH} from '../v2/GlobeH';
 import {OpeningH1} from '../v2/OpeningH1';
 import {Captions, WhatIfTag, popScale, ramp} from './ui';
 import {N_FILM, T} from './timeline';
-import {INSET, spinFor} from './globe';
+import {BIG, INSET, spinFor} from './globe';
 import {GlobeDiagram, diagramTransform, zoomU} from './B02';
 import {StreetStory} from './StreetStory';
 import {Coast, CoastGraphics, TideFill} from './B04';
 import {Polar} from './B05';
-import {B6, Closeup, FinaleGlobe, LoopStreet, CLOSE_HIP, CLOSE_REF, closeHip, diveTransform, diveU, loopStreetHero, matchZoom} from './B06';
+import {B6, Closeup, closeAlign, FinaleGlobe, LoopStreet, CLOSE_HIP, CLOSE_REF, closeHip, diveTransform, diveU, loopStreetHero, matchZoom} from './B06';
+
+/** the finale globe grows out of the polar disc's size and place while it dissolves in (f727-739) */
+const introTransform = (f: number) => {
+  const e = E.out(ramp(f, B6.a0 - 12, B6.a0 + 6, (x) => x)), sc = 0.74 + 0.26 * e, dy = (880 - BIG.cy) * (1 - e);
+  return `translate(0px, ${dy}px) translate(${BIG.cx}px, ${BIG.cy}px) scale(${sc}) translate(${-BIG.cx}px, ${-BIG.cy}px)`;
+};
 
 export type FilmProps = {captions?: boolean; graphics?: boolean; marker?: boolean};
 
@@ -47,16 +53,16 @@ export const FilmV1: React.FC<FilmProps> = ({captions = true, graphics = true, m
       {f >= T.wipe2B - 1 && f < T.b05end + 16 && <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, opacity: 1 - ramp(f, T.b05end - 4, T.b05end + 12, (x) => x)}}><Polar f={f} /></div>}
       {f >= T.wipe2A && f < T.wipe2B + 2 && <TideFill f={f} />}
       {f >= B6.a0 - 14 && f < B6.zoomB + 4 && (
-        <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, opacity: ramp(f, B6.a0 - 14, B6.a0 + 2, (x) => x) * (1 - ramp(f, B6.zoomB - 10, B6.zoomB - 2, (x) => x)), transform: diveTransform(f), transformOrigin: '0 0'}}>
+        <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, opacity: ramp(f, B6.a0 - 12, B6.a0, (x) => x) * (1 - ramp(f, B6.zoomB - 10, B6.zoomB - 2, (x) => x)), transform: `${introTransform(f)} ${diveTransform(f)}`, transformOrigin: '0 0'}}>
           <FinaleGlobe f={f} graphics={graphics} />
         </div>
       )}
       {f >= B6.zoomA + 6 && f < B6.outB + 2 && (
-        <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, opacity: ramp(f, B6.zoomB - 10, B6.zoomB - 2, (x) => x) * (1 - ramp(f, B6.outB - 6, B6.outB, (x) => x)), transform: f < B6.outA ? 'none' : matchZoom(ramp(f, B6.outA, B6.outB, E.inOut), {x: closeHip(f).x, y: closeHip(f).y, sc: CLOSE_REF.sc}, loopStreetHero(f)), transformOrigin: '0 0'}}>
+        <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, opacity: ramp(f, B6.zoomB - 10, B6.zoomB - 2, (x) => x) * (1 - ramp(f, B6.outA + 6, B6.outA + 8, (x) => x)), transform: f < B6.zoomB ? closeAlign(f) : f < B6.outA ? 'none' : matchZoom(ramp(f, B6.outA, B6.outB, E.inOut), {x: closeHip(f).x, y: closeHip(f).y, sc: CLOSE_REF.sc}, loopStreetHero(f)), transformOrigin: '0 0'}}>
           <Closeup f={f} graphics={graphics} />
         </div>
       )}
-      {f >= B6.outA && <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, opacity: ramp(f, B6.outA, B6.outA + 10, (x) => x)}}><LoopStreet f={f} /></div>}
+      {f >= B6.outA && <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, opacity: ramp(f, B6.outA, B6.outA + 6, (x) => x)}}><LoopStreet f={f} /></div>}
       {inset && <GlobeH f={f} cx={INSET.cx} cy={INSET.cy} R={insetR} id="gins" spin={spinFor(f)} />}
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
         {marker && <WhatIfTag off={f < B6.tagOff0 ? 0 : f < 1008 ? ramp(f, B6.tagOff0, B6.tagOff1, E.inOut) : 1 - ramp(f, 1008, 1026, E.out)} />}

@@ -105,7 +105,7 @@ const PolarChart: React.FC<{f: number}> = ({f}) => {
   const k = Math.exp(lerp(Math.log(BAR.k0), Math.log(BAR.k1), zoom));
   const cat = ramp(f, fs(WORD.category - 0.15), fs(WORD.category + 0.25), E.out);
   const starting = popScale(f, fs(WORD.starts - 0.15));
-  const out = ramp(f, T.b05end - 14, T.b05end, (x) => x);
+  const out = ramp(f, T.b05end - 26, T.b05end - 19, E.inOut); // the chart leaves first (f720-727), then the disc turns into the globe
   const xl = BAR.x0 + CAT5 * k;
   return (
     <g opacity={1 - out}>

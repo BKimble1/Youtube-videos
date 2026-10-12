@@ -1,0 +1,50 @@
+{
+ "voice_rms_dBFS_voiced": -17.8,
+ "group_rel_to_voice_dB": {
+  "globe": -3.0,
+  "globe2": -3.0,
+  "friction": -11.0,
+  "impacts": -8.0,
+  "liquid": -15.0,
+  "air_cloth": -17.0,
+  "bike": -15.0,
+  "graphics": -17.0,
+  "bed": -23.0,
+  "rewind": -10.0,
+  "air2": -17.0,
+  "wind": -13.0,
+  "water": -10.0,
+  "objects": -10.0,
+  "steps": -19.0,
+  "whoosh": -18.0
+ },
+ "duck_dB_under_speech": {
+  "friction": 4.0,
+  "liquid": 4.0,
+  "air_cloth": 5.0,
+  "bike": 4.0,
+  "graphics": 6.0,
+  "impacts": 6.0,
+  "globe": 0.0,
+  "globe2": 4.0,
+  "bed": 5.0,
+  "rewind": 3.0,
+  "air2": 8.0,
+  "wind": 9.0,
+  "water": 6.0,
+  "objects": 5.0,
+  "steps": 4.0,
+  "whoosh": 7.0
+ },
+ "mix_before_scale": {
+  "LUFS": -15.4,
+  "true_peak_dBFS": -1.1
+ },
+ "scale_applied_dB": -0.4,
+ "final": {
+  "LUFS": -15.8,
+  "true_peak_dBFS": -1.5
+ },
+ "placed_events": 137,
+ "note": "levels are design targets, not listening results"
+}

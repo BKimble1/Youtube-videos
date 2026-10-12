@@ -49,6 +49,8 @@ ev.sea_screen_edge = firstF((f) => front(f) + B04.DX >= 1080);
 // the rolling ball leaves the screen (screen x > 1100 at the street camera of B03)
 const ball = B03.OBJS.find((o) => o.kind === 'ball');
 ev.ball_exit = (() => { for (let f = T.stopF; f < N; f++) if (540 + (B03.objX(ball, f) - S.CAM_B03.x) * S.CAM_B03.z > 1100) return f; return null; })();
+evFrames.plaza_exit = Object.fromEntries(B03.OBJS.map((o) => [o.id, B03.exitFrame(o)]));
+evFrames.bike3 = [B03.bikeEnter3(), B03.bikeExit3()];
 const cues = {
   fps, total_frames: N, duration_s: N / fps, words: TL.WORD, events: ev, event_frames: evFrames, v0: B03.V0,
   curves: {wind: curve(B04.windK), speedK: curve(B06.speedK), pan_vel: curve((f) => (f >= T.panA - 1 && f <= T.panB + 1 ? Math.abs(S.camStoryVel(f)) : 0))},

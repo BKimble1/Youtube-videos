@@ -83,7 +83,7 @@
   "air": 451,
   "sea": 490,
   "wipe2_a": 525,
-  "wipe2_b": 548,
+  "wipe2_b": 544,
   "disc": 546,
   "bar_zoom_a": 665,
   "bar_zoom_b": 695,
@@ -105,12 +105,12 @@
   "b06_streakPeak": 924,
   "b06_streak1": 982,
   "b06_streakOff": 998,
-  "b06_sip0": 988,
-  "b06_sipUp": 1000,
-  "b06_sipDown": 1008,
-  "b06_sipEnd": 1016,
-  "b06_outA": 1004,
-  "b06_outB": 1018,
+  "b06_sip0": 986,
+  "b06_sipUp": 996,
+  "b06_sipDown": 1003,
+  "b06_sipEnd": 1011,
+  "b06_outA": 1007,
+  "b06_outB": 1017,
   "b06_loopA": 1016,
   "b06_chipThousand": 917,
   "sea_wall": 498,
@@ -201,42 +201,42 @@
    {
     "id": "chairA",
     "kind": "chair",
-    "tau": 16,
+    "tau": 70,
     "topple": null,
     "x0": 1860
    },
    {
     "id": "table",
     "kind": "table",
-    "tau": 26,
+    "tau": 55,
     "topple": null,
     "x0": 2000
    },
    {
     "id": "chairB",
     "kind": "chair",
-    "tau": 20,
+    "tau": 45,
     "topple": null,
     "x0": 2145
    },
    {
     "id": "plant",
     "kind": "plant",
-    "tau": 14,
+    "tau": 36,
     "topple": 4,
     "x0": 2265
    },
    {
     "id": "box",
     "kind": "box",
-    "tau": 34,
+    "tau": 75,
     "topple": null,
     "x0": 1790
    },
    {
     "id": "cone",
     "kind": "cone",
-    "tau": 24,
+    "tau": 30,
     "topple": 6,
     "x0": 2345
    },
@@ -247,6 +247,19 @@
     "topple": null,
     "x0": 2205
    }
+  ],
+  "plaza_exit": {
+   "chairA": 378,
+   "table": 371,
+   "chairB": 360,
+   "plant": 352,
+   "box": 383,
+   "cone": 346,
+   "ball": 344
+  },
+  "bike3": [
+   362,
+   432
   ]
  },
  "v0": 22,

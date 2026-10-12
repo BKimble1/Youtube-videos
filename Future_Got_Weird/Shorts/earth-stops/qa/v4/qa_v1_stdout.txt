@@ -1,0 +1,163 @@
+{
+ "container": {
+  "file": "exports/v4/FGW_EarthStops_V1_Review_1080x1920.mp4",
+  "video": "h264 High 1080x1920 30/1 yuv420p bt709",
+  "frames_counted": 1035,
+  "audio": "aac 48000 Hz 2 ch 257 kb/s",
+  "format_duration_s": 34.5,
+  "video_duration_s": 34.5,
+  "audio_duration_s": 34.5,
+  "size_MB": 23.09,
+  "within_Shorts_limit_60s": true
+ },
+ "frames_decoded": 1035,
+ "luminance": {
+  "min_mean_gray": 75.6,
+  "frames_below_20": [],
+  "max_mean_gray": 228.0
+ },
+ "motion_energy": {
+  "median_adjacent_frame_mean_abs_diff_0_255": 2.49,
+  "p10": 0.77,
+  "p90": 14.926,
+  "max": 51.0,
+  "max_at_frame": 1013
+ },
+ "frozen_runs_(>=3 identical frames)_[start,end,len]": [
+  [
+   541,
+   545,
+   5
+  ]
+ ],
+ "low_motion_runs_(diff<25%_of_median,>=8_frames)_[start,end,len]": [
+  [
+   741,
+   777,
+   37
+  ]
+ ],
+ "jump_frames_(diff>3x_p95)": [],
+ "loop_seam_full_res_mean_abs_diff": {
+  "last_vs_first": 8.788,
+  "last_vs_previous": 9.091,
+  "previous_vs_before": 10.708,
+  "first_vs_second": 8.59,
+  "second_vs_third": 8.291,
+  "note": "last_vs_first near 0 means the last frame IS the first frame, so on loop that frame is shown twice (a one-frame, 33 ms hold); compare with the ordinary adjacent diffs"
+ },
+ "voice_integrity": {
+  "take_samples": 1639680,
+  "voice_only_samples": 1656000,
+  "gain_applied_to_voice_in_mix_dB": -0.401,
+  "max_abs_residual_after_gain_(16-bit_full_scale=1)": 6.289800302750059e-05,
+  "rms_residual_dB_rel_voice": -75.5,
+  "channels_identical": true,
+  "note": "voice_only_v1.wav = the take, unmodified (no trim, stretch, pitch, EQ, compression), placed at 0 s, scaled by ONE constant gain (the mix level); a residual near the 16-bit quantisation floor (-90 dB) confirms nothing else was done"
+ },
+ "loudness": {
+  "mix_wav": {
+   "integrated_LUFS": -15.8,
+   "LRA_LU": 2.5,
+   "true_peak_dBFS": -1.5
+  },
+  "review_mp4_aac": {
+   "integrated_LUFS": -15.8,
+   "LRA_LU": 2.5,
+   "true_peak_dBFS": -1.6
+  },
+  "voice_only_wav": {
+   "integrated_LUFS": -15.8,
+   "LRA_LU": 2.5,
+   "true_peak_dBFS": -1.7
+  }
+ },
+ "audio_durations_s": {
+  "mix_wav": 34.5,
+  "video": 34.5
+ },
+ "sample_peak_dBFS_mix": -1.55,
+ "av_offset": {
+  "aac_vs_wav_lag_samples": 0,
+  "aac_vs_wav_lag_ms": 0.0,
+  "decoded_aac_samples": 1656832,
+  "mp4_audio_start_time_s": 0.0,
+  "mp4_video_start_time_s": 0.0,
+  "note": "measures the encoded audio against the WAV it was made from; picture-to-voice alignment inside the WAV is by construction (same TS modules) and checked by qa_captions_v1.py"
+ },
+ "speech_to_sfx_proxy_300_3400Hz": {
+  "voiced_100ms_windows": 187,
+  "median_dB": 26.1,
+  "p5_dB": 6.0,
+  "p1_dB": -4.8,
+  "worst_dB": -14.3,
+  "worst_at_s": 0.6,
+  "windows_below_+6_dB": 9,
+  "worst_12_(s,dB)": [
+   [
+    0.6,
+    -14.3
+   ],
+   [
+    6.1,
+    -6.7
+   ],
+   [
+    13.3,
+    -4.5
+   ],
+   [
+    19.1,
+    -1.1
+   ],
+   [
+    33.1,
+    1.4
+   ],
+   [
+    2.8,
+    3.9
+   ],
+   [
+    16.6,
+    4.0
+   ],
+   [
+    1.8,
+    4.1
+   ],
+   [
+    11.1,
+    4.5
+   ],
+   [
+    15.8,
+    6.0
+   ],
+   [
+    12.6,
+    6.0
+   ],
+   [
+    10.7,
+    7.5
+   ]
+  ],
+  "caveat": "a spectral-energy proxy for masking; it is not intelligibility and not a listening test"
+ },
+ "mix_silent_stretches_(<-50_dBFS,_>=100_ms)_[start_s,end_s]": [
+  [
+   19.55,
+   19.95
+  ],
+  [
+   21.5,
+   21.7
+  ],
+  [
+   24.1,
+   24.2
+  ]
+ ]
+}
+motion/s [13.32, 10.08, 13.65, 13.65, 9.98, 8.95, 8.24, 9.3, 3.01, 4.86, 11.94, 2.54, 2.41, 2.57, 3.35, 2.27, 3.32, 5.18, 2.58, 1.13, 0.85, 1.13, 1.33, 1.04, 5.24, 0.47, 2.04, 1.66, 3.99, 11.77, 1.98, 1.72, 2.59, 13.38, 16.59]

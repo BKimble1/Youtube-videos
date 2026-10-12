@@ -127,22 +127,27 @@ place('whoosh', 'b02_pan_swoosh', sw('v1_pan', at(E['pan_b'] - E['pan_a']) + 0.1
 # ================================================================ B03: the ground stops; everything loose keeps going (the same 100 ms void after the cut, then the sounds)
 tv = at(STOP) + 0.100
 fscr = lambda nm, dur, f0, f1: L.fx_scrape_furniture(nm, dur, f0, f1, 1800, 9000)  # the audited pick: metal legs on stone
+PX = EF['plaza_exit']  # frame at which each loose thing has left the screen (same module as the picture)
+dur_of = lambda oid: at(PX[oid] - STOP) + 0.08
+def slide(nm, oid, f0, f1, k, grp_gain, t_off, note, name_out):
+    d = dur_of(oid); x = fscr(nm, d, f0, f1); x = x * np.exp(-tgrid(d) / (d * k))  # keeps going: only -6..-8 dB by the time it leaves the screen
+    place('objects', name_out, fade(x, 0.003, 0.08), tv + t_off, grp_gain, note)
 for oid, kind, tau in [(o['id'], o['kind'], o['tau']) for o in EF['plaza']]:
-    sec = lambda frames: frames / FPS
-    if oid == 'chairA':
-        x = fscr('v1_chairA', sec(3 * tau + 6), 330, 170); x = x * np.exp(-tgrid(sec(3 * tau + 6)) / sec(tau * 1.3)); place('objects', 'b03_chairA_scrape', fade(x, 0.003, 0.05), tv, 0.0, 'a chair dragged by the stopped ground')
-    if oid == 'chairB':
-        x = fscr('v1_chairB', sec(3 * tau + 6), 360, 180); x = x * np.exp(-tgrid(sec(3 * tau + 6)) / sec(tau * 1.3)); place('objects', 'b03_chairB_scrape', fade(x, 0.003, 0.05), tv + 0.03, -1.5, 'the second chair')
-    if oid == 'table':
-        x = fscr('v1_table', sec(3 * tau + 6), 250, 130); x = x * np.exp(-tgrid(sec(3 * tau + 6)) / sec(tau * 1.4)); place('objects', 'b03_table_scrape', fade(x, 0.003, 0.06), tv, 1.0, 'the table, heavier')
+    if oid == 'chairA': slide('v1_chairA', oid, 330, 170, 1.3, 0.0, 0.0, 'a chair dragged by the stopped ground until it leaves the screen', 'b03_chairA_scrape')
+    if oid == 'chairB': slide('v1_chairB', oid, 360, 180, 1.3, -1.5, 0.03, 'the second chair', 'b03_chairB_scrape')
+    if oid == 'table': slide('v1_table', oid, 250, 130, 1.4, 1.0, 0.0, 'the table, heavier', 'b03_table_scrape')
     if oid == 'plant':
-        place('objects', 'b03_plant_slide', fade(fscr('v1_plant_slide', sec(14), 220, 120) * np.exp(-tgrid(sec(14)) / sec(7)), 0.003, 0.04), tv, -3.0, 'the pot slides')
+        slide('v1_plant_slide', oid, 220, 120, 1.0, -3.0, 0.0, 'the pot slides', 'b03_plant_slide')
         place('objects', 'b03_plant_tip', L.fx_pot_tip('v1_pot'), at(STOP + 9), 0.0, f'frame {STOP + 9}: the pot tips over and spills')
     if oid == 'box':
-        place('objects', 'b03_box_tumble', L.fx_cardboard_scrape('v1_box', 1.2), tv, -1.0, 'the cardboard box drags and tumbles')
+        place('objects', 'b03_box_tumble', fade(L.fx_cardboard_scrape('v1_box', dur_of('box')), 0.003, 0.08), tv, -1.0, 'the cardboard box drags and tumbles until it leaves the screen')
     if oid == 'cone':
-        place('objects', 'b03_cone_slide', fade(fscr('v1_cone_slide', sec(22), 420, 220) * np.exp(-tgrid(sec(22)) / sec(10)), 0.003, 0.04), tv, -4.0, 'the cone slides')
+        slide('v1_cone_slide', oid, 420, 220, 1.0, -4.0, 0.0, 'the cone slides', 'b03_cone_slide')
         place('objects', 'b03_cone_clack', L.fx_cone_clack('v1_cone'), at(STOP + 15), -1.0, f'frame {STOP + 15}: the cone tips (hollow clack)')
+bk0, bk1 = EF['bike3']
+bkd = at(bk1 - bk0); tbk = tgrid(bkd); fwb = L.fx_freewheel('v1_b03_freewheel', bkd, 24.0, 20.0)
+fwb = fwb * np.sin(np.pi * np.clip(tbk / bkd, 0, 1)) ** 0.6; fwb[-int(0.05 * SR):] *= np.linspace(1, 0, int(0.05 * SR))
+place('bike', 'b03_bike_freewheel', fwb, at(bk0), -10.0, f'frames {bk0}-{bk1}: the loose bicycle rolls east across the plaza (swell as it crosses)')
 ball_dur = at(E['ball_exit'] - STOP) + 0.12
 roll = L.fx_roll('v1_ball', ball_dur, 8.0, 7.0); roll = roll * np.linspace(1, 0.6, len(roll)); roll[-int(0.1 * SR):] *= np.linspace(1, 0, int(0.1 * SR))
 place('objects', 'b03_ball_roll', roll, tv, -3.0, f'frames {STOP}-{E["ball_exit"]}: the ball rolls off screen')
@@ -206,13 +211,13 @@ rsh = L.fx_gust('v1_rush', cd, 200, 3600, 0.0, 0.4, 0.5) * vcurve('speedK', at(c
 place('wind', 'b06_world_rush', fade(rsh, 0.05, 0.12), at(cu0), 1.0, f'frames {cu0}-{cu1}: the world streaks past her; the level follows the streak curve')
 foot = L.fx_footstep('v1_step', 0.6, 1.4)
 # contact frames follow the walk cycle (stride period 30 frames, feet land every 15): f = 5.5 mod 15
-step_frames = [5.5 + 15 * k for k in range(0, 80) if E['b06_zoomB'] <= 5.5 + 15 * k < E['b06_sipUp']]
+step_frames = [5.5 + 15 * k for k in range(0, 80) if E['b06_zoomB'] <= 5.5 + 15 * k < E['b06_sip0']]
 for i, fr in enumerate(step_frames):
     place('steps', f'b06_step_{i:02d}', foot, at(fr), -2.0 * (i % 2), f'frame {fr:.0f}: a footstep (walking in place)')
 place('graphics', 'b06_thousand_slap', slap, at(E['b06_chipThousand']), 0.0, f'frame {E["b06_chipThousand"]}: ~1,000 MPH lands on "thousand"')
-place('liquid', 'b06_cup_to_lips_tick', L.fx_ceramic_tick('v1_lips'), at(E['b06_sipUp'] - 2), -12.0, f'frame {E["b06_sipUp"] - 2}: the mug touches her lips')
-place('liquid', 'b06_sip', L.fx_sip('v1_sip'), at(E['b06_sipUp'] + 2), -10.0, f'frame {E["b06_sipUp"] + 2}: a sip (audited pick: pitched gulp)')
-place('liquid', 'b06_cup_down_tick', L.fx_ceramic_tick('v1_down'), at(E['b06_sipDown'] + 4), -14.0, f'frame {E["b06_sipDown"] + 4}: the mug comes down')
+place('liquid', 'b06_cup_to_lips_tick', L.fx_ceramic_tick('v1_lips'), at(E['b06_sipUp'] - 2), -20.0, f'frame {E["b06_sipUp"] - 2}: the mug touches her lips')
+place('liquid', 'b06_sip', L.fx_sip('v1_sip'), at(E['b06_sipUp'] + 2), -12.0, f'frame {E["b06_sipUp"] + 2}: a sip (audited pick: pitched gulp)')
+place('liquid', 'b06_cup_down_tick', L.fx_ceramic_tick('v1_down'), at(E['b06_sipDown'] + 4), -20.0, f'frame {E["b06_sipDown"] + 4}: the mug comes down')
 place('whoosh', 'b06_pullback_swoosh', sw('v1_pull', 0.55, up=False), at(E['b06_outA']), -2.0, f'frames {E["b06_outA"]}-{E["b06_outB"]}: she pulls back to the street')
 # the loop: the globe whirr returns under the last frames and arrives at the level it has on the hook's frame 0
 lp = E['b06_loopA']

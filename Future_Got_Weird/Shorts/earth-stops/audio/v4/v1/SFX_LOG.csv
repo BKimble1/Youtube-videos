@@ -1,0 +1,138 @@
+file,frame,time_s,gain_db_in_group,group,note
+audio/v4/v1/sfx/hook_globe_spin_bed.wav,0.0,0.0,0.0,globe,frames 0-5: the planet turning fast; cut dead at the stop frame
+audio/v4/v1/sfx/hook_shoe_scrape_planted.wav,8.0,0.2667,0.0,friction,hook: shoes grab and skid after the 100 ms void
+audio/v4/v1/sfx/hook_coffee_stream.wav,8.0,0.2667,-2.0,liquid,hook: coffee thrown out as a tapering stream
+audio/v4/v1/sfx/hook_air_rush.wav,9.0,0.3,0.0,air_cloth,hook: air past her; follows the street scroll
+audio/v4/v1/sfx/hook_ceramic_rim_tick.wav,10.0,0.3333,0.0,liquid,hook: ceramic rim tick
+audio/v4/v1/sfx/hook_jacket_scarf_flutter.wav,16.0,0.5333,-3.0,air_cloth,hook: cardigan and scarf flutter
+audio/v4/v1/sfx/hook_launch_scuff_snap.wav,17.0,0.5667,-12.0,impacts,"hook: shoes leave the pavement (4 dB lower than H1: its snap landed on the quiet end of ""Earth"")"
+audio/v4/v1/sfx/hook_coffee_patter_00.wav,31.25,1.0417,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_coffee_patter_01.wav,32.26,1.0753,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_coffee_splat_big_00.wav,32.42,1.0807,-8.0,liquid,hook: drop k=1 lands
+audio/v4/v1/sfx/hook_coffee_patter_02.wav,33.43,1.1143,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_coffee_patter_03.wav,34.53,1.151,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_coffee_splat_big_01.wav,34.69,1.1563,-9.0,liquid,hook: drop k=7 lands
+audio/v4/v1/sfx/hook_shoe_scrape_slide.wav,35.0,1.1667,-4.0,friction,hook: dragged to rest after the landing
+audio/v4/v1/sfx/hook_landing_thump.wav,35.0,1.1667,-2.0,impacts,hook: body lands
+audio/v4/v1/sfx/hook_coffee_splat_big_02.wav,35.12,1.1707,-10.0,liquid,hook: drop k=11 lands
+audio/v4/v1/sfx/hook_coffee_splat_big_03.wav,35.54,1.1847,-8.0,liquid,hook: drop k=12 lands
+audio/v4/v1/sfx/hook_coffee_patter_04.wav,35.95,1.1983,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_coffee_splat_big_04.wav,35.96,1.1987,-9.0,liquid,hook: drop k=13 lands
+audio/v4/v1/sfx/hook_coffee_splat_big_05.wav,37.05,1.235,-10.0,liquid,hook: drop k=15 lands
+audio/v4/v1/sfx/hook_coffee_splat_big_06.wav,37.14,1.238,-8.0,liquid,hook: drop k=17 lands
+audio/v4/v1/sfx/hook_coffee_splat_big_07.wav,37.47,1.249,-9.0,liquid,hook: drop k=16 lands
+audio/v4/v1/sfx/hook_coffee_splat_big_08.wav,38.4,1.28,-12.0,liquid,hook: drop k=20 lands
+audio/v4/v1/sfx/hook_coffee_patter_05.wav,38.56,1.2853,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_coffee_splat_big_09.wav,38.98,1.2993,-8.0,liquid,hook: drop k=19 lands
+audio/v4/v1/sfx/hook_coffee_patter_06.wav,39.82,1.3273,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_coffee_splat_big_10.wav,40.33,1.3443,-9.0,liquid,hook: drop k=24 lands
+audio/v4/v1/sfx/hook_bike_freewheel.wav,41.0,1.3667,0.0,bike,hook: riderless bicycle freewheeling
+audio/v4/v1/sfx/hook_coffee_patter_07.wav,41.17,1.3723,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_tag_slap_1.wav,42.0,1.4,-2.0,graphics,hook frame 42: 0 MPH tag on the lamp post lands (cardboard slap)
+audio/v4/v1/sfx/hook_coffee_splat_big_11.wav,42.01,1.4003,-10.0,liquid,hook: drop k=28 lands
+audio/v4/v1/sfx/hook_coffee_patter_08.wav,42.59,1.4197,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_landing_bounce.wav,43.0,1.4333,-9.0,impacts,hook: small second contact
+audio/v4/v1/sfx/hook_coffee_patter_09.wav,44.18,1.4727,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_coffee_splat_big_12.wav,44.35,1.4783,-8.0,liquid,hook: drop k=30 lands
+audio/v4/v1/sfx/hook_coffee_splat_big_13.wav,44.36,1.4787,-9.0,liquid,hook: drop k=33 lands
+audio/v4/v1/sfx/hook_coffee_patter_10.wav,45.28,1.5093,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_coffee_splat_big_14.wav,46.62,1.554,-10.0,liquid,hook: drop k=36 lands
+audio/v4/v1/sfx/hook_tag_slap_0.wav,47.0,1.5667,0.0,graphics,hook frame 47: speed tag on the bicycle lands (cardboard slap)
+audio/v4/v1/sfx/hook_coffee_splat_big_15.wav,47.13,1.571,-8.0,liquid,hook: drop k=39 lands
+audio/v4/v1/sfx/hook_coffee_patter_11.wav,47.29,1.5763,-16.0,liquid,hook: patter
+audio/v4/v1/sfx/hook_coffee_splat_big_16.wav,48.64,1.6213,-11.0,liquid,hook: drop k=42 lands
+audio/v4/v1/sfx/hook_coffee_patter_12.wav,49.31,1.6437,-16.0,liquid,hook: patter
+audio/v4/v1/stems/foley_rewind.wav,66.0,2.2,0.0,rewind,hook frames 66-90: the effects reversed at 2.75x
+audio/v4/v1/sfx/earth_turning_bed.wav,90.0,3.0,0.0,bed,"frames 90-312: the Earth turning under ""this street was moving east"" and B02; cut dead on ""Stop"" (f312) like the hook"
+audio/v4/v1/sfx/hook_tag_slap_2.wav,113.0,3.7667,3.0,graphics,hook frame 113: EAST plate lands (cardboard slap)
+audio/v4/v1/sfx/hook_tag_slap_3.wav,130.0,4.3333,3.0,graphics,hook frame 130: speed plate lands (cardboard slap)
+audio/v4/v1/sfx/hook_counter_ratchet.wav,130.0,4.3333,0.0,graphics,hook: odometer ticks while the number rolls up
+audio/v4/v1/sfx/hook_tag_slap_4.wav,132.0,4.4,-5.0,graphics,hook frame 132: EQUATOR tag lands (cardboard slap)
+audio/v4/v1/sfx/hook_counter_clunk.wav,151.0,5.0333,-2.0,graphics,hook: the counter reaches its stop
+audio/v4/v1/sfx/hook_tag_slap_5.wav,154.0,5.1333,-5.0,graphics,hook frame 154: MPH lands (cardboard slap)
+audio/v4/v1/sfx/b02_iris_swoosh.wav,173.9,5.7967,-2.0,whoosh,frame 176: the inset globe grows into the diagram (iris)
+audio/v4/v1/sfx/b02_icon_slap_0.wav,194.0,6.4667,-10.0,graphics,"frame 194: an icon lands on the globe (cardboard slap, quiet)"
+audio/v4/v1/sfx/b02_icon_slap_1.wav,197.0,6.5667,-10.0,graphics,"frame 197: an icon lands on the globe (cardboard slap, quiet)"
+audio/v4/v1/sfx/b02_icon_slap_2.wav,200.0,6.6667,-10.0,graphics,"frame 200: an icon lands on the globe (cardboard slap, quiet)"
+audio/v4/v1/sfx/b02_icon_slap_3.wav,203.0,6.7667,-10.0,graphics,"frame 203: an icon lands on the globe (cardboard slap, quiet)"
+audio/v4/v1/sfx/b02_icon_slap_4.wav,206.0,6.8667,-10.0,graphics,"frame 206: an icon lands on the globe (cardboard slap, quiet)"
+audio/v4/v1/sfx/b02_dive_swoosh.wav,226.0,7.5333,-3.0,whoosh,frames 226-247: dive from the globe into the street
+audio/v4/v1/sfx/b02_lens_slap.wav,250.0,8.3333,-2.0,graphics,frame 250: the cup lens lands
+audio/v4/v1/sfx/b02_arrow_slap_0.wav,262.0,8.7333,-6.0,graphics,frame 262: an east arrow lands
+audio/v4/v1/sfx/b02_arrow_slap_1.wav,266.0,8.8667,-6.0,graphics,frame 266: an east arrow lands
+audio/v4/v1/sfx/b02_arrow_slap_2.wav,270.0,9.0,-6.0,graphics,frame 270: an east arrow lands
+audio/v4/v1/sfx/b02_arrow_slap_3.wav,274.0,9.1333,-6.0,graphics,frame 274: an east arrow lands
+audio/v4/v1/sfx/b02_arrow_slap_4.wav,278.0,9.2667,-6.0,graphics,frame 278: an east arrow lands
+audio/v4/v1/sfx/b02_arrow_slap_5.wav,282.0,9.4,-6.0,graphics,frame 282: an east arrow lands
+audio/v4/v1/sfx/b02_chip_slap.wav,284.0,9.4667,0.0,graphics,frame 284: ALL MOVING EAST - TOGETHER lands
+audio/v4/v1/sfx/b02_pan_swoosh.wav,292.0,9.7333,1.0,whoosh,frames 292-312: whip pan east to the plaza
+audio/v4/v1/sfx/b03_chairA_scrape.wav,315.0,10.5,0.0,objects,a chair dragged by the stopped ground until it leaves the screen
+audio/v4/v1/sfx/b03_table_scrape.wav,315.0,10.5,1.0,objects,"the table, heavier"
+audio/v4/v1/sfx/b03_plant_slide.wav,315.0,10.5,-3.0,objects,the pot slides
+audio/v4/v1/sfx/b03_box_tumble.wav,315.0,10.5,-1.0,objects,the cardboard box drags and tumbles until it leaves the screen
+audio/v4/v1/sfx/b03_cone_slide.wav,315.0,10.5,-4.0,objects,the cone slides
+audio/v4/v1/sfx/b03_ball_roll.wav,315.0,10.5,-3.0,objects,frames 312-340: the ball rolls off screen
+audio/v4/v1/sfx/b03_chairB_scrape.wav,315.9,10.53,-1.5,objects,the second chair
+audio/v4/v1/sfx/b03_plant_tip.wav,321.0,10.7,0.0,objects,frame 321: the pot tips over and spills
+audio/v4/v1/sfx/b03_cone_clack.wav,327.0,10.9,-1.0,objects,frame 327: the cone tips (hollow clack)
+audio/v4/v1/sfx/b03_bike_freewheel.wav,362.0,12.0667,-10.0,bike,frames 362-432: the loose bicycle rolls east across the plaza (swell as it crosses)
+audio/v4/v1/sfx/b03_chip_slap_0.wav,366.0,12.2,-2.0,graphics,frame 366: FIXED chip lands
+audio/v4/v1/sfx/b03_chip_slap_1.wav,369.0,12.3,-5.0,graphics,frame 369: FIXED chip lands
+audio/v4/v1/sfx/b03_chip_slap_2.wav,393.0,13.1,0.0,graphics,frame 393: LOOSE chip lands
+audio/v4/v1/sfx/b03_wipe_swoosh.wav,424.0,14.1333,0.0,whoosh,frames 424-446: push wipe east to the coast
+audio/v4/v1/sfx/b04_at_first_slap.wav,437.0,14.5667,-1.0,graphics,frame 437: AT FIRST lands
+audio/v4/v1/sfx/b04_calm_sea.wav,440.0,14.6667,-8.0,water,frames 446-490: the calm sea lapping (cut as the surge begins)
+audio/v4/v1/sfx/b04_gust_1.wav,443.5,14.7833,0.0,wind,"frames 443-521: the air keeps going (the audited low gust, level follows the wind curve)"
+audio/v4/v1/sfx/b04_palm_fronds.wav,451.0,15.0333,0.0,air2,frames 451-523: palm fronds thrash
+audio/v4/v1/sfx/b04_flag_flutter.wav,453.0,15.1,-4.0,air2,frames 453-543: the flag snaps out
+audio/v4/v1/sfx/b04_pigeon_wings.wav,453.0,15.1,-6.0,air2,frames 453-495: a pigeon is swept past
+audio/v4/v1/sfx/b04_swish_0.wav,454.0,15.1333,-9.0,air2,frame 454: a cap is swept off
+audio/v4/v1/sfx/b04_swish_1.wav,457.0,15.2333,-9.0,air2,frame 457: a paper is swept off
+audio/v4/v1/sfx/b04_arrow_slap_0.wav,457.0,15.2333,-6.0,graphics,frame 457: a wind/water arrow lands
+audio/v4/v1/sfx/b04_cup_skitter_2.wav,460.0,15.3333,-14.0,air2,frame 460: a paper cup tumbles
+audio/v4/v1/sfx/b04_arrow_slap_1.wav,461.0,15.3667,-6.0,graphics,frame 461: a wind/water arrow lands
+audio/v4/v1/sfx/b04_swish_4.wav,465.0,15.5,-9.0,air2,frame 465: a paper is swept off
+audio/v4/v1/sfx/b04_arrow_slap_2.wav,465.0,15.5,-6.0,graphics,frame 465: a wind/water arrow lands
+audio/v4/v1/sfx/b04_cup_skitter_6.wav,471.0,15.7,-14.0,air2,frame 471: a paper cup tumbles
+audio/v4/v1/sfx/b04_swish_7.wav,478.0,15.9333,-9.0,air2,frame 478: a cap is swept off
+audio/v4/v1/sfx/b04_swish_8.wav,484.0,16.1333,-9.0,air2,frame 484: a paper is swept off
+audio/v4/v1/sfx/b04_surge.wav,487.0,16.2333,0.0,water,frames 487-535: the ocean keeps going (audited pick: rumble + foam)
+audio/v4/v1/sfx/b04_gust_2.wav,491.0,16.3667,-2.0,wind,frames 491-563: the wind keeps blowing
+audio/v4/v1/sfx/b04_arrow_slap_3.wav,492.0,16.4,-6.0,graphics,frame 492: a wind/water arrow lands
+audio/v4/v1/sfx/b04_fixed_slap.wav,496.0,16.5333,-3.0,graphics,frame 496: FIXED lands on the jetty post
+audio/v4/v1/sfx/b04_wall_slap.wav,498.0,16.6,0.0,water,frame 498: the bore hits the sea wall (audited pick: heavy thud)
+audio/v4/v1/sfx/b04_over_prom.wav,500.0,16.6667,-3.0,water,frame 500: water pours over the promenade
+audio/v4/v1/sfx/b04_tide_fill.wav,525.0,17.5,-1.0,water,frames 525-544: the sea rises to fill the frame
+audio/v4/v1/sfx/b05_disc_slap.wav,546.0,18.2,-2.0,graphics,frame 546: the polar view lands
+audio/v4/v1/sfx/b05_arrow_slap_0.wav,554.0,18.4667,-8.0,graphics,frame 554: latitude 0 arrow lands
+audio/v4/v1/sfx/b05_bar_ratchet_0.wav,560.0,18.6667,-16.0,graphics,frames 560-580: the speed bar rolls up
+audio/v4/v1/sfx/b05_arrow_slap_1.wav,575.0,19.1667,-8.0,graphics,frame 575: latitude 40 arrow lands
+audio/v4/v1/sfx/b05_bar_ratchet_1.wav,581.0,19.3667,-16.0,graphics,frames 581-601: the speed bar rolls up
+audio/v4/v1/sfx/b05_arrow_slap_2.wav,614.0,20.4667,-8.0,graphics,frame 614: latitude 80 arrow lands
+audio/v4/v1/sfx/b05_bar_ratchet_2.wav,620.0,20.6667,-16.0,graphics,frames 620-640: the speed bar rolls up
+audio/v4/v1/sfx/b05_bar_clunk_80.wav,640.0,21.3333,-8.0,graphics,the 80 degree bar reaches its value
+audio/v4/v1/sfx/b05_starting_slap.wav,654.0,21.8,-1.0,graphics,frame 654: STARTING SPEED ONLY lands
+audio/v4/v1/sfx/b05_axis_swoosh.wav,665.0,22.1667,-3.0,whoosh,frames 665-695: the speed axis is magnified
+audio/v4/v1/sfx/b05_cat5_slap.wav,670.0,22.3333,1.0,graphics,frame 670: 157 = CATEGORY 5 lands
+audio/v4/v1/sfx/b06_cross_swoosh.wav,725.5,24.1833,-4.0,whoosh,crossfade from the polar view to the globe
+audio/v4/v1/sfx/b06_tag_peel.wav,776.0,25.8667,-2.0,graphics,frame 776: the WHAT IF tag peels away
+audio/v4/v1/sfx/b06_earth_turns_again.wav,776.0,25.8667,0.0,bed,frames 776-866: the Earth turns again (the thought experiment is over)
+audio/v4/v1/sfx/b06_hero_slap.wav,788.0,26.2667,-8.0,graphics,frame 788: she lands on the globe
+audio/v4/v1/sfx/b06_speed_slap.wav,806.0,26.8667,-1.0,graphics,"frame 806: ~1,000 MPH lands"
+audio/v4/v1/sfx/b06_equator_slap.wav,854.0,28.4667,-2.0,graphics,frame 854: EQUATOR lands
+audio/v4/v1/sfx/b06_dive_swoosh.wav,860.0,28.6667,0.0,whoosh,frames 860-884: dive from the globe into her
+audio/v4/v1/sfx/b06_world_rush.wav,880.0,29.3333,1.0,wind,frames 880-1004: the world streaks past her; the level follows the streak curve
+audio/v4/v1/sfx/b06_step_00.wav,890.5,29.6833,-0.0,steps,frame 890: a footstep (walking in place)
+audio/v4/v1/sfx/b06_step_01.wav,905.5,30.1833,-2.0,steps,frame 906: a footstep (walking in place)
+audio/v4/v1/sfx/b06_thousand_slap.wav,917.0,30.5667,0.0,graphics,"frame 917: ~1,000 MPH lands on ""thousand"""
+audio/v4/v1/sfx/b06_step_02.wav,920.5,30.6833,-0.0,steps,frame 920: a footstep (walking in place)
+audio/v4/v1/sfx/b06_step_03.wav,935.5,31.1833,-2.0,steps,frame 936: a footstep (walking in place)
+audio/v4/v1/sfx/b06_step_04.wav,950.5,31.6833,-0.0,steps,frame 950: a footstep (walking in place)
+audio/v4/v1/sfx/b06_step_05.wav,965.5,32.1833,-2.0,steps,frame 966: a footstep (walking in place)
+audio/v4/v1/sfx/b06_step_06.wav,980.5,32.6833,-0.0,steps,frame 980: a footstep (walking in place)
+audio/v4/v1/sfx/b06_cup_to_lips_tick.wav,994.0,33.1333,-20.0,liquid,frame 994: the mug touches her lips
+audio/v4/v1/sfx/b06_sip.wav,998.0,33.2667,-12.0,liquid,frame 998: a sip (audited pick: pitched gulp)
+audio/v4/v1/sfx/b06_cup_down_tick.wav,1007.0,33.5667,-20.0,liquid,frame 1007: the mug comes down
+audio/v4/v1/sfx/b06_pullback_swoosh.wav,1007.0,33.5667,-2.0,whoosh,frames 1007-1017: she pulls back to the street
+audio/v4/v1/sfx/loop_globe_whirr.wav,1016.0,33.8667,0.0,globe2,frames 1016-1035: the globe spins up again as the street shrinks: the film loops into the hook
+audio/v4/v1/sfx/loop_tag_slap.wav,1020.0,34.0,-4.0,graphics,frame 1020: the WHAT IF tag returns

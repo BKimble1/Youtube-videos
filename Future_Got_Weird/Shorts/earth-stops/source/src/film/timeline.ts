@@ -30,7 +30,7 @@ export const T = {
   wipe1A: 424, wipe1B: 446, // push wipe east: plaza -> coast
   b04: 432,
   oceanF: fs(WORD.so2 - 0.1), // 16.34 s ocean starts to move
-  wipe2A: 525, wipe2B: 548, // the sea fills the frame, revealing the polar view
+  wipe2A: 525, wipe2B: 544, // the sea fills the frame (rises from below), revealing the polar view
   b05: 540,
   b05end: 746,
   b06: 739,

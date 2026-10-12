@@ -1,81 +1,52 @@
-# Earth Stops. You Don't. — Future Got Weird Short (hook H1 + proposed script)
+# Earth Stops. You Don't. — Future Got Weird Short (V1 review cut)
 
-**Status: hybrid hook H1 (first 6.0 s) built, with a proposed full script, claim ledger, source list and storyboard; awaiting the owner's viewing, listening and decision. Not a finished Short. Not uploaded, not scheduled, do not publish.** The remaining film (B02–B06) is not built and S3–S7 are not voiced. No Runway call, no music, no generated SFX. Approvals: `handoff/OWNER_APPROVAL_PROTOTYPE.md`, `OWNER_APPROVAL_V2_REVISION.md`, `OWNER_APPROVAL_H1_SCRIPT.md`.
+**Status: complete V1 review cut (34.5 s, 1080 × 1920, 30 fps) built; awaiting the owner's consolidated whole-film review. Not published, not uploaded, not scheduled. No pull request.** Nobody has watched it in real time or listened to it (see `QA_NOTES_V1.md`). Next step is the owner's coordinated V2 brief; no V2 work has been started.
 
-Native **1080 × 1920, 30 fps**. Branch `claude/fgw-earth-stops-short`, created from the Atlas tip `3634cc5` (`claude/pensive-mendel-3j0xsc`). Atlas and murder-tip work is untouched. Prototype checkpoint **`a885fd5`** (branch `claude/fgw-earth-stops-prototype-checkpoint-a885fd5`): `checkpoints/v2/CHECKPOINT.md`.
+Branch `claude/fgw-earth-stops-short` (created from the Atlas tip `3634cc5`). Checkpoints, all pushed as branches (tag pushes are refused by the remote): V1 hook **`dea9b81`** (`claude/fgw-earth-stops-hook-h1-checkpoint-dea9b81`, `checkpoints/v3/CHECKPOINT.md`), prototypes `a885fd5` (`checkpoints/v2/`), `0783b00` (`checkpoints/v1/`).
 
-**Start with `HOOK_H1_REPORT.md`** (brief vs result, voice timing, measured weak spots, exactly what was and was not inspected), then `script/STORYBOARD.md` and `script/storyboard/STORYBOARD_SHEET.png`.
+**Start with `V1_REPORT.md`** (what was built, what was and was not inspected, what the owner should judge), then `QA_NOTES_V1.md` (concise measurements and unavailable checks).
 
-## Hook H1 (exports/v3/, 6.0 s, 180 frames)
+## Deliverables (`exports/v4/`)
 | File | What |
 |---|---|
-| `FGW_EarthStops_Hook_H1_VoiceSFX_1080x1920.mp4` | picture + Test Voice + procedural SFX |
-| `FGW_EarthStops_Hook_H1_Silent_1080x1920.mp4` | picture only (captions, tag, graphics) |
-| `FGW_EarthStops_Hook_H1_Silent_Clean_1080x1920.mp4` | picture only, no captions/tag/graphics |
-| `..._VoiceOnly_...mp4`, `..._SFXOnly_...mp4` | each audio layer alone |
-Metadata: `exports/v3/EXPORT_METADATA.json` / `.md`. Nobody has watched these in real time or listened to them.
+| `FGW_EarthStops_V1_Review_1080x1920.mp4` | **the V1 review**: picture + Test Voice + captions + procedural sound (h264 + AAC) |
+| `FGW_EarthStops_V1_Silent_1080x1920.mp4` | picture only (captions, tag, graphics) |
+| `FGW_EarthStops_V1_VoiceOnly_48k.wav` / `.mp3` | the narration alone, aligned to the film (34.5 s, the unmodified take at the mix level) |
+| `FGW_EarthStops_V1_VoiceOnly_1080x1920.mp4` | the same voice-only audio on the picture |
+| `FGW_EarthStops_V1_SFXOnly_1080x1920.mp4` | the sound design alone on the picture |
+| `FGW_EarthStops_V1_Script.md` | final script (copy of `script/SCRIPT.md`) |
+| `FGW_EarthStops_V1_Captions.srt` | the 23 caption cues (also burned in) |
+| `EXPORT_METADATA.json` / `.md` | verbatim ffprobe, sizes, sha256, exact commands |
 
-## Script and claims (script/)
-`SCRIPT.md` (7 lines, ≈ 32 s; only S1–S2 voiced) · `CLAIM_LEDGER.md` (C00–C13, visual simplifications, not-claimed list, open items) · `SOURCES.md` (S1–S10; **no page opened**, excerpt-only; blocked hosts listed) · `STORYBOARD.md` (B01–B06, Runway/music HOLD, draft pinned description) · `speed_table.json` (from `tools/calc_speeds.py`).
-
-## Rebuild (H1)
-```bash
-cd source && npm ci && npx tsc --noEmit
-HS=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell
-F="--crf=16 --x264-preset=slow --color-space=bt709 --browser-executable=$HS --concurrency=4 --muted"
-npx remotion render src/index.ts HookH1 ../exports/v3/FGW_EarthStops_Hook_H1_Silent_1080x1920.mp4 $F   # and HookH1-Clean
-cd ..
-node tools/build_cues_h1.mjs && python3 tools/build_audio_h1.py        # cues from the same choreography as the picture; numpy-only Foley; voice = audio/v3/voice/narration_opening_48k.wav
-# mux commands: exports/v3/EXPORT_METADATA.md
-node tools/probe_h1.mjs qa/v3_probe_h1.json; python3 tools/qa_h1.py; python3 tools/sheets_h1.py
-python3 tools/sfx_audition_h1.py        # SFX candidates + audition reel
-python3 tools/storyboard_sheet.py && python3 tools/export_metadata_h1.py
-```
-H1 code: `source/src/v2/choreoH.ts` (all motion, timing constants, scene-time mapping/rewind), `SceneH.tsx` (street), `GlobeH.tsx` (globe), `OpeningH1.tsx` (composition, captions, readout). Compositions `HookH1`, `HookH1-Clean`.
-
-## Earlier prototypes: the two alternatives (v2, superseded by H1)
-| | E-A v2 | E-C (minimal) |
-|---|---|---|
-| Idea | She is already mid-fling at frame 0. Side-view hero, tapered coffee stream, a riderless bicycle that keeps going against lamp posts and a palm that never move; the camera brakes at 0.67–1.13 s and the street goes still | A globe is the visible cause: it spins (blurred), stops dead at 0.27 s with a coral pulse, and she (same scene, same hero, same coffee) is flung from 0.30 s; the camera brakes at 1.0–1.47 s |
-| Silent | `exports/v2/FGW_EarthStops_EA2_Opening_Silent_1080x1920.mp4` | `exports/v2/FGW_EarthStops_EC1_Opening_Silent_1080x1920.mp4` |
-| With procedural SFX | `exports/v2/FGW_EarthStops_EA2_Opening_SFX_1080x1920.mp4` | `exports/v2/FGW_EarthStops_EC1_Opening_SFX_1080x1920.mp4` |
-| No WHAT IF tag | `..._EA2_Opening_Silent_NoMarker_...mp4` | `..._EC1_Opening_Silent_NoMarker_...mp4` |
-Exact export metadata (verbatim ffprobe, sha256, commands): `exports/v2/EXPORT_METADATA.json` and `.md`.
-
-## Files
+## Where things are
 | Path | What |
 |---|---|
-| `PROTOTYPE_V2_REPORT.md` | v2 report, comparison, recommendation, inspected / not inspected |
-| `PRODUCTION_STATE.md` | state, open decisions, recommended next step |
-| `checkpoints/v1/` | **v1 checkpoint**: commit `0783b00` (in the pushed branch history), sha256 of the v1 mp4s, verbatim copies of the v1 docs |
-| `FGW_EarthStops_EA_Opening_*.mp4`, `exports/FGW_EarthStops_EA_Opening_Silent_NoMarker_*.mp4` | v1 deliverables, unchanged |
-| `qa/v2/` | `QA_MEASUREMENTS_V2.json`, `AUDIO_MEASUREMENTS_V2.json`, `probe_ea2.json`, `probe_liquid_v2.json`, `sheets/` (all 75 frames of each clip, phone-width key frames, spectrograms), `keyframes/` (full-res), `lab/PoseLab2_0000.png` (side-pose test vs approved reference) |
-| `audio/v2/` | `cues_<variant>.json`, per-variant `sfx/*.wav`, `stems/*.wav` (incl. `effects_<variant>.wav`), `SFX_LOG.csv` |
-| `source/` | editable Remotion project (pinned deps, lockfile); v2 code in `source/src/v2/`, v1 in `source/src/opening/` |
-| `tools/` | v2: `build_cues_v2.mjs`, `build_audio_v2.py`, `foley_lib.py`, `qa_v2.py`, `qa_audio_v2.py`, `probe_ea2.mjs`, `probe_liquid_v2.mjs`, `export_metadata_v2.py` · v1: `*_opening.*`, `probe_choreo.mjs` |
-| `credits.md`, `handoff/` | provenance; the owner's approval records |
+| `script/` | `SCRIPT.md` (as built, 7 lines, 101 words), `CLAIM_LEDGER.md`, `SOURCES.md` (**no page opened**; excerpt-only), `STORYBOARD.md` (all shots, transitions, Runway decision), `speed_table.json`, `SCRIPT_PROPOSAL_H1.md` (the old proposal with the bus) |
+| `source/` | editable Remotion project (pinned deps, lockfile). V1 = `source/src/film/` (compositions `FilmV1`, `FilmV1-Clean`); the hook comes from `source/src/v2/OpeningH1.tsx` |
+| `audio/v4/` | `voice/` (Test Voice take A, alignment, provenance), `cues_v1.json`, `v1/` (per-event WAVs, group stems, `mix_v1.wav`, `voice_only_v1.wav`, `sfx_only_v1.wav`, `SFX_LOG.csv`, `MIX_LOG.json`), `audition/` (3 candidates per new SFX with measurements) |
+| `qa/v4/` | `QA_V1.json`, `CAPTION_SYNC.json`, `qa_figures_v1.png`, `sheets/` (all 1,035 frames of the encoded file, 45 per sheet), `runway/` (the still sent to Runway), `render/` (log) |
+| `tools/` | V1: `build_cues_v1.mjs`, `build_audio_v1.py`, `sfx_audition_v1.py`, `audio_ratio_v1.py`, `measure_captions_v1.py`, `qa_captions_v1.py`, `qa_v1.py`, `sheets_v1.py`, `export_v1.py` · shared `foley_lib.py`, `calc_speeds.py` · older stages `*_h1.*`, `*_v2.*`, `*_opening.*` |
+| `checkpoints/`, `handoff/` | preserved states; the owner's approval records (`OWNER_APPROVAL_V1.md` is the latest) |
+| `HOOK_H1_REPORT.md`, `PROTOTYPE_V2_REPORT.md`, `PROTOTYPE_QA_REPORT.md` | earlier reports (history) |
+| `credits.md`, `PRODUCTION_STATE.md` | provenance; state and open decisions |
 
-## Rebuild (v2)
+## Rebuild (V1)
 ```bash
-cd source && npm ci                      # Remotion 4.0.533 / React 19.1.0 / TS 5.8.3 (+ fontsource 5.3.0)
-npx tsc --noEmit
-HS=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell   # headless *shell* is required
-F="--crf=16 --x264-preset=slow --color-space=bt709 --browser-executable=$HS --concurrency=4 --muted"
-for c in EA2 EC1 EA2-NoMarker EC1-NoMarker; do npx remotion render src/index.ts $c ../qa/v2/render/${c}_silent_raw.mp4 $F; done   # then copy to exports/v2/ with the names in EXPORT_METADATA.md
+cd source && npm ci && npx tsc --noEmit                      # Remotion 4.0.533 / React 19.1.0 / TS 5.8.3
+HS=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell      # the headless *shell* is required
+F="--browser-executable=$HS --crf=16 --x264-preset=slow --color-space=bt709 --concurrency=4 --muted"
+npx remotion render src/index.ts FilmV1 ../qa/v4/render/FilmV1_silent_raw.mp4 $F            # ~8 min on 4 cores
 cd ..
-node tools/build_cues_v2.mjs ea2 && python3 tools/build_audio_v2.py ea2     # cues from the same choreography as the picture; numpy-only Foley
-node tools/build_cues_v2.mjs ec1 && python3 tools/build_audio_v2.py ec1
-ffmpeg -y -i exports/v2/FGW_EarthStops_EA2_Opening_Silent_1080x1920.mp4 -i audio/v2/ea2/stems/effects_ea2.wav -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 320k -ar 48000 -movflags +faststart exports/v2/FGW_EarthStops_EA2_Opening_SFX_1080x1920.mp4   # likewise EC1
-python3 tools/qa_v2.py && python3 tools/qa_audio_v2.py && node tools/probe_liquid_v2.mjs qa/v2/probe_liquid_v2.json && python3 tools/export_metadata_v2.py
-node source/scripts/frames.mjs <outDir> EA2 0,12,30 1                     # individual frames (run from source/: node scripts/frames.mjs ...)
+node tools/build_cues_v1.mjs && python3 tools/build_audio_v1.py && python3 tools/audio_ratio_v1.py   # cues come from the SAME TS modules as the picture; numpy-only Foley
+python3 tools/qa_captions_v1.py                                                              # caption timing + SRT
+ffmpeg -y -i qa/v4/render/FilmV1_silent_raw.mp4 -i audio/v4/v1/stems/mix_v1.wav -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 320k -ar 48000 -movflags +faststart exports/v4/FGW_EarthStops_V1_Review_1080x1920.mp4
+python3 tools/qa_v1.py && python3 tools/sheets_v1.py && python3 tools/export_v1.py           # QA, contact sheets, the other exports + metadata
+node scripts/frames.mjs <outDir> FilmV1 0,100,400 0.5                                        # (from source/) individual stills
 ```
-Compositions: `EA2`, `EA2-NoMarker`, `EC1`, `EC1-NoMarker`, stills `PoseLab2` (side-pose test) and `PoseLab`; the v1 compositions (`OpeningEA`, `OpeningEA-NoMarker`, `OpeningEA-Bike`, `DirTest-*`) still render. Composition ids cannot contain underscores. To reproduce v1 exactly: `git checkout 0783b00`.
+Every position in the film is a pure function of the frame number; the picture, the caption lane, the cue builder and the audio all read the same TypeScript modules (`source/src/film/*`).
 
-## How v2 is built
-- `src/v2/events2.json` (E-A) and `eventsEC.json` (E-C, `t0 = 10`) are the timed-event tables; `choreo2.ts` / `choreoEC.ts` make every position (hero joints, mug, 46 coffee parcels, camera, zoom, bicycle) a pure function of the frame. The picture, `probe_ea2.mjs`, `probe_liquid_v2.mjs` and the audio cue builder read the same functions.
-- `side.tsx`: side/three-quarter rig of the same cast member (forward kinematics, hips-on-ground foot planting). `props.tsx`: mug. `Street2.tsx`: facades, curb, anchored lamps/palms, pan-blur that scales with camera speed (none when the camera is still). `Fx2.tsx`: dust, skid marks, stains, tapered coffee ribbon + droplets. `Bike2.tsx`: bicycle. `Opening2.tsx`: `Scene2` (one frame of the street scene) and the E-A composition. `Globe.tsx` + `OpeningEC.tsx`: the E-C globe and the scaled, clipped street panel.
-- `src/components/Character.tsx` is the Atlas rig plus optional `legL`/`legR`/`footFlat` (v1); the v2 side rig is a new component that uses the same `Look` (colours) and segment lengths.
-- Fonts: Barlow Condensed (tag). The Atlas caption system is carried by `src/fonts4.ts` and the Atlas tip; it is not used until there is narration to caption.
+## Claims
+`script/CLAIM_LEDGER.md` lists every spoken and on-screen claim with its basis, status and guardrail, the visual simplifications, and what is deliberately not claimed. Numbers: ground speed v = ω·N·cos φ (WGS 84): equator 1,040.4 mph, 40° 798.1, 80° 181.3; Category 5 starts at 157 mph. **All source statuses are "excerpt only"** — no source page was opened (network policy).
 
-## Claims (prototypes v1/v2; the hook and script claims are in script/CLAIM_LEDGER.md)
-The prototypes state no numbers and no scientific claims on screen. The only implicit claim is the premise (an impossible instant stop of the solid Earth; loose objects keep their motion), stipulated as hypothetical by the in-scene WHAT IF tag. E-C additionally draws a stylised planet with abstract landmasses (not a map). A claim ledger belongs to the script stage.
+## History
+v1 prototype `0783b00` → E-A v2 / E-C `a885fd5` → hybrid hook H1 + proposed script `dea9b81` → **V1 full review cut** (this commit onwards).

@@ -2,7 +2,7 @@ import React from 'react';
 import {C} from '../theme';
 import {E} from '../lib/motion';
 import {rand} from '../lib/anim';
-import {GYW} from '../v2/choreo2';
+import {BIKE_Y, GYW} from '../v2/choreo2';
 import {Puff} from '../v2/Fx2';
 import {ArrowShape, Chip, cl, popScale, ramp} from './ui';
 import {T, WORD, fs} from './timeline';
@@ -12,25 +12,34 @@ import {CAM_B03, toScr} from './street';
  * B03: "Stop the ground, and anything that isn't fixed to it keeps going." A plaza on the same street. At f 312 (the word "Stop") every loose thing leaves with the same
  * starting speed V0 (the ground's old speed); friction then takes each one down at its own rate. Lamp post, palms and the bolted bench do not move at all.
  */
+const sm = (x: number) => { const t = cl(x); return t * t * (3 - 2 * t); };
 export const B3 = {fix: fs(WORD.isnt - 0.05), loose: fs(WORD.keeps - 0.05)};
 export const OBJ_S = 1.5; // the loose things are drawn 1.5x so they read at phone size
 export const V0 = 22; // world px per frame, the same for every loose thing
 type Kind = 'chair' | 'table' | 'plant' | 'box' | 'cone' | 'ball';
 type Obj = {id: string; kind: Kind; x0: number; tau: number; flip?: boolean; topple?: number; line?: number};
 export const OBJS: Obj[] = [
-  {id: 'chairA', kind: 'chair', x0: 1860, tau: 16},
-  {id: 'table', kind: 'table', x0: 2000, tau: 26},
-  {id: 'chairB', kind: 'chair', x0: 2145, tau: 20, flip: true},
-  {id: 'plant', kind: 'plant', x0: 2265, tau: 14, topple: 4},
-  {id: 'box', kind: 'box', x0: 1790, tau: 34, line: 22},
-  {id: 'cone', kind: 'cone', x0: 2345, tau: 24, topple: 6},
+  {id: 'chairA', kind: 'chair', x0: 1860, tau: 70},
+  {id: 'table', kind: 'table', x0: 2000, tau: 55},
+  {id: 'chairB', kind: 'chair', x0: 2145, tau: 45, flip: true},
+  {id: 'plant', kind: 'plant', x0: 2265, tau: 36, topple: 4},
+  {id: 'box', kind: 'box', x0: 1790, tau: 75, line: 22},
+  {id: 'cone', kind: 'cone', x0: 2345, tau: 30, topple: 6},
   {id: 'ball', kind: 'ball', x0: 2205, tau: 90, line: -26},
 ];
 export const objX = (o: Obj, f: number) => {
   const t = f - T.stopF;
   return t <= 0 ? o.x0 : o.x0 + V0 * o.tau * (1 - Math.exp(-t / o.tau));
 };
-const sm = (x: number) => { const t = cl(x); return t * t * (3 - 2 * t); };
+/** frame at which a loose thing has left the screen on the right (screen x of its centre > 1170 at the plaza camera) */
+export const exitFrame = (o: Obj) => { for (let f = T.stopF; f < T.stopF + 400; f++) if (540 + (objX(o, f) - CAM_B03.x) * CAM_B03.z > 1170) return f; return T.stopF + 400; };
+/** the bicycle from the street (world x 520, behind the plaza line) is loose too: it keeps rolling east at the ground's old speed and crosses the plaza while the line "keeps going" is spoken */
+export const BIKE3 = {x0: 520, tau: 600, y: 0};
+export const bikeX3 = (f: number) => { const t = f - T.stopF; return t <= 0 ? BIKE3.x0 : BIKE3.x0 + V0 * BIKE3.tau * (1 - Math.exp(-t / BIKE3.tau)); };
+export const bikeAng3 = (f: number) => ((bikeX3(f) - BIKE3.x0) / 92) * (180 / Math.PI);
+export const bikeTilt3 = (f: number) => { const t = Math.max(0, f - T.stopF); return 7 * (1 - sm(t / 14)) + 1.6 * Math.sin(t * 0.35) * Math.exp(-t / 50) * (t > 0 ? 1 : 0); };
+export const bikeEnter3 = () => { for (let f = T.stopF; f < T.stopF + 400; f++) if (bikeX3(f) + 190 > CAM_B03.x - 540 / CAM_B03.z) return f; return T.stopF + 400; };
+export const bikeExit3 = () => { for (let f = T.stopF; f < T.stopF + 400; f++) if (bikeX3(f) - 190 > CAM_B03.x + 540 / CAM_B03.z) return f; return T.stopF + 400; };
 
 const OL = 4;
 const Chair: React.FC<{flip?: boolean}> = ({flip}) => (
@@ -159,17 +168,13 @@ export const B03Graphics: React.FC<{f: number}> = ({f}) => {
   const fix = B3.fix, loose = B3.loose;
   const bench = toScr(BENCH.x, BENCH.y - 140, cam);
   const lamp = toScr(2240 + 90, 540, cam);
-  const table = OBJS[1];
-  const tp = toScr(objX(table, f), GYW - 150 * OBJ_S, cam);
-  const cp = toScr(objX(OBJS[5], f), GYW - 170, cam);
-  const chairP = toScr(objX(OBJS[0], f), GYW - 170, cam);
+  const bp = toScr(bikeX3(f), BIKE_Y - 290, cam);
   const out = ramp(f, T.wipe1A - 6, T.wipe1A + 4);
-  void cp; void chairP;
   return (
     <g opacity={1 - out}>
       <Chip x={bench.x} y={bench.y} w={190} text="FIXED" tone="still" scale={popScale(f, fix)} />
       <Chip x={lamp.x + 30} y={lamp.y} w={190} text="FIXED" tone="still" scale={popScale(f, fix + 3)} />
-      <Chip x={tp.x} y={tp.y - 30} w={236} text="LOOSE" tone="move" arrow scale={popScale(f, loose)} />
+      <Chip x={bp.x - 30} y={bp.y} w={236} text="LOOSE" tone="move" arrow scale={popScale(f, loose)} />
     </g>
   );
 };

@@ -8,7 +8,7 @@ import {Cat, CALM, HeroAt, Pigeon, ramp} from './ui';
 import {T} from './timeline';
 import {HERO_X, camStory, camStoryVel} from './street';
 import {B02bGraphics} from './B02';
-import {B03Graphics, PlazaWorld} from './B03';
+import {B03Graphics, PlazaWorld, bikeAng3, bikeTilt3, bikeX3} from './B03';
 
 /** B02b + B03: one continuous street. She stands (calm, mug level) among the lamp, bicycle, cat, pigeon; then the camera whips east to the plaza. */
 export const StreetStory: React.FC<{f: number; graphics: boolean}> = ({f, graphics}) => {
@@ -20,7 +20,7 @@ export const StreetStory: React.FC<{f: number; graphics: boolean}> = ({f, graphi
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, opacity: op}}>
       <Street2 camX={cam.x} z={cam.z} blur={blur} pad={420}>
-        <BikeWorld f={0} at={{x: 520, ang: 0, tilt: 7}} />
+        <BikeWorld f={0} at={{x: bikeX3(f), ang: bikeAng3(f), tilt: bikeTilt3(f)}} />
         <g transform={`translate(0 0)`}><Cat x={720} y={GYW + 8} s={1.55} look={0.4} /></g>
         <Pigeon x={650} y={584} s={1.25} flap={flap} />
         <PlazaWorld f={f} />

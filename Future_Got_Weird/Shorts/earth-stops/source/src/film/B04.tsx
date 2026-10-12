@@ -120,6 +120,34 @@ const Wall: React.FC = () => (
     {Array.from({length: 9}).map((_, i) => <line key={i} x1={WALL_X1 + 40 + i * 120} y1={PROM_Y + 26} x2={WALL_X1 + 20 + i * 120} y2={PROM_Y + 26} stroke={C.paperLine} strokeWidth={4} />)}
     {Array.from({length: 26}).map((_, i) => <ellipse key={`g${i}`} cx={WALL_X1 + 30 + rand(i + 50) * 700} cy={PROM_Y + 70 + rand(i + 80) * 560} rx={8 + rand(i + 7) * 14} ry={4 + rand(i) * 5} fill={C.paperLine} opacity={0.8} />)}
     <rect x={WALL_X1 + 380} y={PROM_Y + 120} width={80} height={36} rx={6} fill={C.inkSoft} stroke={C.ink} strokeWidth={4} />
+    {/* masonry: courses and staggered joints, so the wall face reads as stone and not as a blank panel */}
+    {Array.from({length: 7}).map((_, r) => {
+      const y0 = PROM_Y + 26 + r * 100;
+      return (
+        <g key={`m${r}`}>
+          <line x1={WALL_X1} y1={y0 + 100} x2={W + 400} y2={y0 + 100} stroke="#C9B27F" strokeWidth={5} />
+          {Array.from({length: 7}).map((__, k) => <line key={k} x1={WALL_X1 + 30 + k * 190 + (r % 2) * 95} y1={y0} x2={WALL_X1 + 30 + k * 190 + (r % 2) * 95} y2={y0 + 100} stroke="#C9B27F" strokeWidth={5} />)}
+        </g>
+      );
+    })}
+    {/* an iron ladder, a lifebuoy and two bollards: fixed things bolted to the wall */}
+    <g>
+      {[0, 74].map((dx) => <line key={dx} x1={WALL_X1 + 120 + dx} y1={PROM_Y + 10} x2={WALL_X1 + 120 + dx} y2={PROM_Y + 520} stroke={C.ink} strokeWidth={13} strokeLinecap="round" />)}
+      {Array.from({length: 9}).map((_, i) => <line key={i} x1={WALL_X1 + 120} y1={PROM_Y + 56 + i * 54} x2={WALL_X1 + 194} y2={PROM_Y + 56 + i * 54} stroke={C.ink} strokeWidth={9} strokeLinecap="round" />)}
+      {[0, 74].map((dx) => <line key={`h${dx}`} x1={WALL_X1 + 120 + dx} y1={PROM_Y + 10} x2={WALL_X1 + 120 + dx} y2={PROM_Y + 520} stroke={C.saffronLight} strokeWidth={4} strokeLinecap="round" />)}
+    </g>
+    <g transform={`translate(${WALL_X1 + 300} ${PROM_Y + 250})`}>
+      <circle r={52} fill="none" stroke={C.ink} strokeWidth={34} />
+      <circle r={52} fill="none" stroke={C.coral} strokeWidth={24} />
+      <circle r={52} fill="none" stroke={C.cream} strokeWidth={24} strokeDasharray="41 41" />
+      <circle r={52} fill="none" stroke={C.ink} strokeWidth={3} />
+    </g>
+    {[WALL_X1 + 70, WALL_X1 + 560].map((x) => (
+      <g key={x}>
+        <rect x={x - 17} y={PROM_Y - 36} width={34} height={38} rx={8} fill={C.ink} />
+        <rect x={x - 13} y={PROM_Y - 22} width={26} height={7} fill={C.saffron} />
+      </g>
+    ))}
   </g>
 );
 
@@ -252,7 +280,7 @@ export const CoastGraphics: React.FC<{f: number}> = ({f}) => {
 export const TideFill: React.FC<{f: number}> = ({f}) => {
   const u = ramp(f, T.wipe2A, T.wipe2B, E.inOut);
   if (u <= 0) return null;
-  const top = lerp(level(f) - 30, -140, u);
+  const top = lerp(H + 40, -140, u); // rises from below the frame (no pop-in)
   const pts: string[] = [];
   for (let x = -20; x <= W + 20; x += 20) pts.push(`${x},${top + 8 * Math.sin(x / 50 - f * 0.4) + 5 * Math.sin(x / 21 - f * 0.7)}`);
   return (
