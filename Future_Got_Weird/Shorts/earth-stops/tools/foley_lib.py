@@ -281,3 +281,135 @@ def fx_clunk(name):
     """the counter reaching its stop: one solid mechanical clunk"""
     r = rng_for(name); t = tgrid(0.2)
     return norm(fft_filter(r.standard_normal(len(t)), 700, 4200) * np.exp(-t / 0.01) + ping(t, 240, 55, 0.8) + ping(t, 520, 90, 0.35), 0.85)
+
+
+# ------------------------------------------------------------------ V1 additions (whole film): wind, sea, furniture, small mechanisms. numpy only, seeded, no samples.
+def _swell(t, dur, p=0.8):
+    return np.sin(np.pi * np.clip(t / dur, 0, 1)) ** p
+
+
+def fx_gust(name, dur, lo=140, hi=1800, whistle=0.0, hiss=0.25, p=0.8):
+    """a gust of wind building and passing: band noise under a slow turbulence envelope, an optional thin whistle, a little high air"""
+    r = rng_for(name); t = tgrid(dur); n = len(t)
+    nz = fft_filter(r.standard_normal(n), lo, hi)
+    turb = 0.62 + 0.38 * np.sin(2 * np.pi * (0.9 * t + r.random())) * np.sin(2 * np.pi * (0.37 * t + r.random()))
+    env = _swell(t, dur, p) * turb
+    air = fft_filter(r.standard_normal(n), 2500, 7500) * hiss * env
+    wh = whistle * np.sin(2 * np.pi * np.cumsum(780 + 90 * np.sin(2 * np.pi * 0.7 * t)) / SR) * env * 0.25
+    return norm(nz * env + air + wh, 0.8)
+
+
+def fx_fronds(name, dur):
+    """palm fronds thrashing in wind: high-passed noise chopped by fast random flutter"""
+    r = rng_for(name); t = tgrid(dur); n = len(t)
+    nz = fft_filter(r.standard_normal(n), 1400, 7500)
+    fl = np.zeros(n)
+    for k in range(10):
+        fl += np.abs(np.sin(2 * np.pi * (6 + 9 * r.random()) * t + 6.28 * r.random()))
+    env = _swell(t, dur, 0.6) * (0.35 + 0.65 * fl / 10)
+    return norm(nz * env, 0.7)
+
+
+def fx_surge(name, dur, rumble=1.0, hiss=0.5, bubbly=0):
+    """a heavy surge of water: low rumble swelling, a hiss of foam rising behind it, optional bubble blips"""
+    r = rng_for(name); t = tgrid(dur); n = len(t)
+    u = np.clip(t / dur, 0, 1)
+    rum = fft_filter(r.standard_normal(n), 25, 260) * rumble * np.sin(np.pi * np.clip(u * 1.1, 0, 1)) ** 0.9
+    hs = fft_filter(r.standard_normal(n), 2200, 9000) * hiss * (u ** 1.4) * np.exp(-3 * np.clip(u - 0.82, 0, None))
+    out = rum + hs
+    for _ in range(bubbly):
+        k = int(r.random() * (n - 4000)); m = 3600; tc = np.arange(m) / SR
+        out[k:k + m] += 0.18 * np.sin(2 * np.pi * (380 + 500 * r.random()) * tc) * np.exp(-tc / 0.03)
+    return norm(out, 0.85)
+
+
+def fx_wave_slap(name, dur=0.9, thud=1.0, splash=1.0):
+    """water hitting a sea wall: a low thud, a splash burst, then spray patter"""
+    r = rng_for(name); t = tgrid(dur); n = len(t)
+    th = (ping(t, 62, 16, 1.0) + ping(t, 118, 30, 0.6)) * thud
+    sp = fft_filter(r.standard_normal(n), 900, 7000) * np.exp(-t / 0.16) * splash
+    out = th + 0.8 * sp
+    for _ in range(26):
+        k = int((0.06 + 0.5 * r.random()) * SR); m = 700; tc = np.arange(m) / SR
+        out[k:k + m] += 0.07 * fft_filter(r.standard_normal(m), 2500, 8000) * np.exp(-tc / 0.006)
+    return norm(out, 0.85)
+
+
+def fx_scrape_furniture(name, dur, f0=330, f1=170, lo=1500, hi=8500):
+    return fx_scrape(name, dur, f0=f0, f1=f1, lo=lo, hi=hi, att=0.003, rel=0.06)
+
+
+def fx_cardboard_scrape(name, dur):
+    """a cardboard box dragged and tumbling: soft paper-grit scrape with two dull thumps"""
+    r = rng_for(name); t = tgrid(dur); n = len(t)
+    nz = fft_filter(r.standard_normal(n), 700, 4200) * np.exp(-t / (dur * 0.5))
+    out = 0.7 * nz
+    for k, g in ((0.12 * dur, 0.9), (0.38 * dur, 0.7)):
+        i = int(k * SR); m = int(0.12 * SR); tc = np.arange(m) / SR
+        if i + m < n: out[i:i + m] += g * (ping(tc, 95, 38) + 0.3 * fft_filter(r.standard_normal(m), 400, 2500) * np.exp(-tc / 0.015))
+    return norm(out, 0.8)
+
+
+def fx_pot_tip(name):
+    """a clay pot tipping over: a hollow thunk, a roll, soil spilling"""
+    r = rng_for(name); dur = 0.7; t = tgrid(dur); n = len(t)
+    out = ping(t, 140, 28, 0.9) * (t < 0.2) + 0.45 * ping(np.maximum(t - 0.22, 0), 180, 26) * (t > 0.22)
+    soil = fft_filter(r.standard_normal(n), 1800, 7000) * np.exp(-np.maximum(t - 0.12, 0) / 0.12) * (t > 0.12)
+    for _ in range(18):
+        k = int((0.14 + 0.45 * r.random()) * SR); m = 500; tc = np.arange(m) / SR
+        soil[k:k + m] += 0.25 * fft_filter(r.standard_normal(m), 2500, 8000) * np.exp(-tc / 0.004)
+    return norm(out + 0.5 * soil, 0.8)
+
+
+def fx_cone_clack(name):
+    """a hollow plastic cone knocked over: two quick hollow clacks"""
+    t = tgrid(0.42); out = ping(t, 520, 55, 0.8) + 0.5 * ping(t, 1180, 90)
+    i = int(0.16 * SR); tt = t[:len(t) - i]
+    out[i:] += 0.7 * (ping(tt, 470, 60, 0.8) + 0.4 * ping(tt, 1050, 100))
+    return norm(out, 0.8)
+
+
+def fx_roll(name, dur, rate0=7.0, rate1=3.5):
+    """a ball rolling on paving: low band noise modulated at the revolution rate (the rate follows the ball's speed)"""
+    r = rng_for(name); t = tgrid(dur); n = len(t)
+    ph = np.cumsum(rate0 + (rate1 - rate0) * (t / dur)) / SR
+    am = 0.55 + 0.45 * np.abs(np.sin(np.pi * ph))
+    return norm(fft_filter(r.standard_normal(n), 90, 1500) * am * np.minimum(1, t / 0.02), 0.6)
+
+
+def fx_footstep(name, thud=0.7, mid=1.0, f=170):
+    """a soft shoe tap on paving (a low thud under a mid-band scuff, so a phone speaker still carries it)"""
+    r = rng_for(name); t = tgrid(0.12)
+    return norm(ping(t, f, 55, thud) + mid * fft_filter(r.standard_normal(len(t)), 500, 3200) * np.exp(-t / 0.012), 0.7)
+
+
+def fx_sip(name):
+    """a small sip: a short low gulp (pitch falls) over a soft liquid noise"""
+    r = rng_for(name); t = tgrid(0.34); n = len(t)
+    g = glide(t, 900, 420, 0.07) * np.exp(-t / 0.12) * 0.7
+    liq = fft_filter(r.standard_normal(n), 700, 3200) * np.exp(-t / 0.1) * (0.4 + 0.6 * np.abs(np.sin(2 * np.pi * 11 * t)))
+    return norm((g + 0.9 * liq) * np.minimum(1, t / 0.01), 0.55)
+
+
+def fx_pop(name):
+    """a small icon popping into place: a soft round tick"""
+    r = rng_for(name); t = tgrid(0.09)
+    return norm(ping(t, 560, 70, 0.8) + fft_filter(r.standard_normal(len(t)), 1200, 4800) * np.exp(-t / 0.004) * 0.6, 0.7)
+
+
+def fx_peel(name):
+    """a card peeling off a surface: crackly band noise"""
+    r = rng_for(name); t = tgrid(0.34); n = len(t)
+    nz = fft_filter(r.standard_normal(n), 1800, 8500)
+    cr = (r.random(n) > 0.965).astype(float); cr = np.convolve(cr, np.hanning(24), mode='same')
+    return norm((nz * 0.35 + cr * 2.0) * _swell(t, 0.34, 0.5), 0.55)
+
+
+def fx_swoosh(name, dur, lo_band=(260, 1200), hi_band=(1600, 6500), up=True):
+    """a camera move / zoom: a low band that fades into a high band (up) or the reverse (down), under a smooth envelope"""
+    r = rng_for(name); t = tgrid(dur); n = len(t)
+    a = fft_filter(r.standard_normal(n), *lo_band); b = fft_filter(r.standard_normal(n), *hi_band)
+    u = np.clip(t / dur, 0, 1)
+    w = u if up else 1 - u
+    env = np.sin(np.pi * u) ** 1.4
+    return norm((a * (1 - w) + 0.7 * b * w) * env, 0.7)

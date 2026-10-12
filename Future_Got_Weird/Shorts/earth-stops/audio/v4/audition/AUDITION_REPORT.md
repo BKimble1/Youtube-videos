@@ -1,0 +1,80 @@
+# V1 SFX audition (new cues; measured screening; not listened to by the author)
+
+The hook cues (globe spin, shoe scrape, tag slap, counter, stop cut) were screened earlier: `audio/v3/audition/`. These are the new cues of the rest of the film. Each has 3 procedural candidates; metrics and an explicit rule pick one. **A pick is a proxy, not a judgement of how it sounds.** `audition_reel.wav` plays every candidate in order (0.5 s gaps, each peak-normalised to the same level) so a person can check the pick.
+
+## gust
+Rule: rule: it must build (10-90 % onset >= 120 ms) and read as wind (spectral centroid 300-1800 Hz); then the least energy in the speech band 300-3400 Hz, because it plays under "At first, the air keeps going". **Pick: `b_low_rumble_gust`**
+
+| candidate | metrics | picked |
+|---|---|---|
+| `a_band_gust_140_1800` | dur_ms=1400, rms_dB=-16.8, peak=0.8, centroid_Hz=1492, frac_20_150Hz=0.004, frac_20_300Hz=0.085, frac_300_3400Hz_speech_band=0.792, frac_above_2k=0.15, onset_10_90_ms=390.6, decay_to_-20dB_ms=739, crest=5.6 |  |
+| `b_low_rumble_gust` | dur_ms=1400, rms_dB=-17.7, peak=0.8, centroid_Hz=702, frac_20_150Hz=0.088, frac_20_300Hz=0.261, frac_300_3400Hz_speech_band=0.694, frac_above_2k=0.054, onset_10_90_ms=925.0, decay_to_-20dB_ms=20, crest=6.1 | **yes** |
+| `c_airy_whistle_gust` | dur_ms=1400, rms_dB=-16.7, peak=0.8, centroid_Hz=2119, frac_20_150Hz=0.0, frac_20_300Hz=0.001, frac_300_3400Hz_speech_band=0.832, frac_above_2k=0.465, onset_10_90_ms=293.1, decay_to_-20dB_ms=857, crest=5.5 |  |
+
+## surge
+Rule: rule (revised after a first screening, which picked the deep rumble: 85 % of its energy is below 300 Hz and a phone speaker would barely carry it): heavy (>= 30 % of energy at 20-300 Hz) AND audible on a phone (>= 25 % of energy above 2 kHz, the foam); then the largest low-band share. **Pick: `a_rumble_foam`**
+
+| candidate | metrics | picked |
+|---|---|---|
+| `a_rumble_foam` | dur_ms=1300, rms_dB=-16.1, peak=0.85, centroid_Hz=3298, frac_20_150Hz=0.252, frac_20_300Hz=0.401, frac_300_3400Hz_speech_band=0.098, frac_above_2k=0.597, onset_10_90_ms=568.0, decay_to_-20dB_ms=690, crest=5.4 | **yes** |
+| `b_foam_bubbles` | dur_ms=1300, rms_dB=-16.5, peak=0.85, centroid_Hz=4672, frac_20_150Hz=0.051, frac_20_300Hz=0.083, frac_300_3400Hz_speech_band=0.204, frac_above_2k=0.856, onset_10_90_ms=892.0, decay_to_-20dB_ms=388, crest=5.7 |  |
+| `c_deep_rumble` | dur_ms=1300, rms_dB=-14.1, peak=0.85, centroid_Hz=916, frac_20_150Hz=0.468, frac_20_300Hz=0.851, frac_300_3400Hz_speech_band=0.026, frac_above_2k=0.147, onset_10_90_ms=369.4, decay_to_-20dB_ms=4, crest=4.3 |  |
+
+## furniture_scrape
+Rule: rule: a drag, not a grab (no onset limit; none of the three has a sharp onset), so: the most energy above 2 kHz, which sits above the voice (same reasoning as the hook scrape). **Pick: `b_metal_legs_scrape`**
+
+| candidate | metrics | picked |
+|---|---|---|
+| `a_stone_scrape` | dur_ms=500, rms_dB=-16.9, peak=0.85, centroid_Hz=3787, frac_20_150Hz=0.0, frac_20_300Hz=0.001, frac_300_3400Hz_speech_band=0.448, frac_above_2k=0.779, onset_10_90_ms=198.8, decay_to_-20dB_ms=252, crest=6.0 |  |
+| `b_metal_legs_scrape` | dur_ms=500, rms_dB=-17.9, peak=0.85, centroid_Hz=4954, frac_20_150Hz=0.0, frac_20_300Hz=0.002, frac_300_3400Hz_speech_band=0.272, frac_above_2k=0.944, onset_10_90_ms=63.9, decay_to_-20dB_ms=407, crest=6.7 | **yes** |
+| `c_heavy_scrape` | dur_ms=500, rms_dB=-17.9, peak=0.85, centroid_Hz=2320, frac_20_150Hz=0.0, frac_20_300Hz=0.002, frac_300_3400Hz_speech_band=0.781, frac_above_2k=0.58, onset_10_90_ms=116.2, decay_to_-20dB_ms=41, crest=6.7 |  |
+
+## wall_slap
+Rule: rule: a heavy hit (>= 25 % at 20-300 Hz); then the least speech-band energy, because it lands on the word "ocean". **Pick: `b_heavy_thud`**
+
+| candidate | metrics | picked |
+|---|---|---|
+| `a_thud_splash` | dur_ms=900, rms_dB=-23.3, peak=0.85, centroid_Hz=3586, frac_20_150Hz=0.067, frac_20_300Hz=0.067, frac_300_3400Hz_speech_band=0.4, frac_above_2k=0.77, onset_10_90_ms=2.1, decay_to_-20dB_ms=87, crest=12.4 |  |
+| `b_heavy_thud` | dur_ms=900, rms_dB=-22.1, peak=0.85, centroid_Hz=3029, frac_20_150Hz=0.258, frac_20_300Hz=0.258, frac_300_3400Hz_speech_band=0.28, frac_above_2k=0.632, onset_10_90_ms=1.9, decay_to_-20dB_ms=5, crest=10.8 | **yes** |
+| `c_splashy` | dur_ms=900, rms_dB=-23.3, peak=0.85, centroid_Hz=3744, frac_20_150Hz=0.013, frac_20_300Hz=0.013, frac_300_3400Hz_speech_band=0.436, frac_above_2k=0.811, onset_10_90_ms=1.9, decay_to_-20dB_ms=177, crest=12.4 |  |
+
+## footstep
+Rule: rule: a clear transient (crest >= 4), 15-60 % of energy in the speech band (a phone speaker carries it, it does not sit on the voice), centroid nearest 700 Hz. **Pick: `b_thud_and_scuff`**
+
+| candidate | metrics | picked |
+|---|---|---|
+| `a_thud_dominant` | dur_ms=120, rms_dB=-17.3, peak=0.7, centroid_Hz=179, frac_20_150Hz=0.002, frac_20_300Hz=0.994, frac_300_3400Hz_speech_band=0.005, frac_above_2k=0.002, onset_10_90_ms=1.0, decay_to_-20dB_ms=25, crest=5.1 |  |
+| `b_thud_and_scuff` | dur_ms=120, rms_dB=-19.8, peak=0.7, centroid_Hz=452, frac_20_150Hz=0.002, frac_20_300Hz=0.813, frac_300_3400Hz_speech_band=0.185, frac_above_2k=0.063, onset_10_90_ms=1.1, decay_to_-20dB_ms=25, crest=6.9 | **yes** |
+| `c_squeak_scuff` | dur_ms=200, rms_dB=-19.2, peak=0.85, centroid_Hz=2184, frac_20_150Hz=0.0, frac_20_300Hz=0.0, frac_300_3400Hz_speech_band=0.795, frac_above_2k=0.334, onset_10_90_ms=11.0, decay_to_-20dB_ms=67, crest=7.7 |  |
+
+## sip
+Rule: rule: short (<= 400 ms), a clear swallow transient (crest >= 3.5), carried by a phone speaker (>= 30 % in 300-3400 Hz); the pitched gulp is preferred over noise-only candidates because a sip needs a swallow to read at all (this preference is a judgement, not a measurement). **Pick: `a_gulp_and_liquid`**
+
+| candidate | metrics | picked |
+|---|---|---|
+| `a_gulp_and_liquid` | dur_ms=340, rms_dB=-19.0, peak=0.55, centroid_Hz=656, frac_20_150Hz=0.0, frac_20_300Hz=0.0, frac_300_3400Hz_speech_band=0.998, frac_above_2k=0.046, onset_10_90_ms=10.5, decay_to_-20dB_ms=221, crest=4.9 | **yes** |
+| `b_liquid_only` | dur_ms=340, rms_dB=-15.6, peak=0.8, centroid_Hz=1483, frac_20_150Hz=0.0, frac_20_300Hz=0.0, frac_300_3400Hz_speech_band=1.0, frac_above_2k=0.221, onset_10_90_ms=163.1, decay_to_-20dB_ms=143, crest=4.8 |  |
+| `c_peel_like` | dur_ms=340, rms_dB=-21.3, peak=0.55, centroid_Hz=626, frac_20_150Hz=0.051, frac_20_300Hz=0.091, frac_300_3400Hz_speech_band=0.441, frac_above_2k=0.073, onset_10_90_ms=142.9, decay_to_-20dB_ms=2, crest=6.4 |  |
+
+## Reel index (seconds into `audition_reel.wav`)
+
+| cue | candidate | start | length |
+|---|---|---|---|
+| gust | `a_band_gust_140_1800` | 0.0 | 1.4 |
+| gust | `b_low_rumble_gust` | 1.9 | 1.4 |
+| gust | `c_airy_whistle_gust` | 3.8 | 1.4 |
+| surge | `a_rumble_foam` | 5.7 | 1.3 |
+| surge | `b_foam_bubbles` | 7.5 | 1.3 |
+| surge | `c_deep_rumble` | 9.3 | 1.3 |
+| furniture_scrape | `a_stone_scrape` | 11.1 | 0.5 |
+| furniture_scrape | `b_metal_legs_scrape` | 12.1 | 0.5 |
+| furniture_scrape | `c_heavy_scrape` | 13.1 | 0.5 |
+| wall_slap | `a_thud_splash` | 14.1 | 0.9 |
+| wall_slap | `b_heavy_thud` | 15.5 | 0.9 |
+| wall_slap | `c_splashy` | 16.9 | 0.9 |
+| footstep | `a_thud_dominant` | 18.3 | 0.12 |
+| footstep | `b_thud_and_scuff` | 18.92 | 0.12 |
+| footstep | `c_squeak_scuff` | 19.54 | 0.2 |
+| sip | `a_gulp_and_liquid` | 20.24 | 0.34 |
+| sip | `b_liquid_only` | 21.08 | 0.34 |
+| sip | `c_peel_like` | 21.92 | 0.34 |

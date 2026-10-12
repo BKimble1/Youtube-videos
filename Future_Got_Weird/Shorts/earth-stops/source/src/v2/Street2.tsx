@@ -9,8 +9,8 @@ import {GSY, GYW, LAMPS, PALMS} from './choreo2';
  */
 const BASE = 1150, CURB_TOP = 1350, CURB_BOT = 1400;
 const INK = C.ink, sw = OUTLINE;
-type Style = {fill: string; trim: string; awn: [string, string]; door: string};
-const STYLES: Style[] = [
+export type Style = {fill: string; trim: string; awn: [string, string]; door: string};
+export const STYLES: Style[] = [
   {fill: C.cream, trim: C.teal, awn: [C.teal, C.cream], door: C.blue},
   {fill: C.saffronLight, trim: C.tealDeep, awn: [C.blue, C.cream], door: C.teal},
   {fill: C.saffronLight, trim: C.blue, awn: [C.tealDeep, C.cream], door: C.saffron},
@@ -19,7 +19,7 @@ const STYLES: Style[] = [
 const WIDTHS = [560, 520, 600, 540, 580, 520, 600, 560, 540, 600, 560, 520];
 const HEIGHTS = [1020, 940, 1090, 980, 1040, 960, 1100, 1000, 1060, 960, 1040, 980]; // tall facades: the pull-back (zoom 0.86) would otherwise open a band of empty sky above the street
 
-const Building: React.FC<{x: number; w: number; h: number; s: Style}> = ({x, w, h, s}) => {
+export const Building: React.FC<{x: number; w: number; h: number; s: Style}> = ({x, w, h, s}) => {
   const top = BASE - h;
   const cols = Math.max(2, Math.floor((w - 60) / 150));
   const gap = (w - cols * 84) / (cols + 1);

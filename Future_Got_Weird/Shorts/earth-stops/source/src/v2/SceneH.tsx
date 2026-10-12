@@ -29,8 +29,8 @@ const ScarfTailH: React.FC<{st: SceneState}> = ({st}) => {
   );
 };
 
-export const SceneH: React.FC<{f: number; pad?: number}> = ({f, pad = 420}) => {
-  const st = sceneFor(f), s = st.s, stop = st.mode === 'stop';
+export const SceneH: React.FC<{f: number; pad?: number; st?: SceneState}> = ({f, pad = 420, st: stIn}) => {
+  const st = stIn ?? sceneFor(f), s = st.s, stop = st.mode === 'stop';
   const z = zoomFor(st), cx = camFor(st);
   const T = `translate(540 ${GSY}) scale(${z}) translate(${-cx} ${-GYW})`;
   const hero = heroFor(st);

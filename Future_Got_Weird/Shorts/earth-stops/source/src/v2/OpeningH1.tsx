@@ -9,18 +9,18 @@ import {GlobeH, SPIN, surfaceAngle} from './GlobeH';
 import {GSY, LAMPS} from './choreo2';
 import {CHIP, EAST_F, GLOBE_FULL, GLOBE_STOP, INSET, MPH_F, NUM_A, NUM_B, RW0, RW1, RWK, bikeXH, panelP, sceneFor, toScreenFor, zoomFor} from './choreoH';
 
-export type HookH1Props = {marker?: boolean; captions?: boolean; graphics?: boolean};
+export type HookH1Props = {marker?: boolean; captions?: boolean; graphics?: boolean; tilde?: boolean};
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const pop = (f: number, a: number, dur = 5) => (f < a ? 0 : Math.min(1, (f - a) / dur));
-const popScale = (f: number, a: number) => { const t = pop(f, a, 6); return t <= 0 ? 0 : 1 + 0.12 * Math.sin(t * Math.PI) * (1 - t) * 3 - (1 - E.out(t)) * 0.2; };
+export const pop = (f: number, a: number, dur = 5) => (f < a ? 0 : Math.min(1, (f - a) / dur));
+export const popScale = (f: number, a: number) => { const t = pop(f, a, 6); return t <= 0 ? 0 : 1 + 0.12 * Math.sin(t * Math.PI) * (1 - t) * 3 - (1 - E.out(t)) * 0.2; };
 
 /* ------------------------------------------------------------------ small graphics */
-const ArrowShape: React.FC<{x: number; y: number; w: number; fill?: string}> = ({x, y, w, fill = C.coral}) => {
+export const ArrowShape: React.FC<{x: number; y: number; w: number; fill?: string}> = ({x, y, w, fill = C.coral}) => {
   const k = w / 100;
   return <path transform={`translate(${x} ${y}) scale(${k})`} d="M -50 -14 H 8 V -34 L 52 0 L 8 34 V 14 H -50 Z" fill={fill} stroke={C.ink} strokeWidth={5 / k} strokeLinejoin="round" />;
 };
-const Chip: React.FC<{x: number; y: number; w: number; text: string; tone: 'move' | 'still'; scale: number; opacity?: number; arrow?: boolean}> = ({x, y, w, text, tone, scale, opacity = 1, arrow}) => {
+export const Chip: React.FC<{x: number; y: number; w: number; text: string; tone: 'move' | 'still'; scale: number; opacity?: number; arrow?: boolean}> = ({x, y, w, text, tone, scale, opacity = 1, arrow}) => {
   if (scale <= 0.01 || opacity <= 0.01) return null;
   const h = 66, fill = tone === 'move' ? C.saffron : C.teal, col = tone === 'move' ? C.ink : C.cream;
   return (
@@ -71,7 +71,7 @@ const Rewind: React.FC<{f: number}> = ({f}) => {
 };
 
 /* ------------------------------------------------------------------ the speed readout that answers "what keeps moving, how fast" */
-const Readout: React.FC<{f: number}> = ({f}) => {
+const Readout: React.FC<{f: number; tilde?: boolean}> = ({f, tilde = false}) => {
   const sPlate = popScale(f, NUM_A), sArrow = popScale(f, EAST_F), sEq = popScale(f, NUM_A + 2), sMph = popScale(f, MPH_F);
   const v = Math.round(1000 * E.out(Math.max(0, Math.min(1, (f - NUM_A) / (NUM_B - NUM_A)))));
   const txt = v.toLocaleString('en-US');
@@ -89,8 +89,9 @@ const Readout: React.FC<{f: number}> = ({f}) => {
         <g transform={`translate(400 735) scale(${sPlate})`}>
           <rect x={-250 + 8} y={-96 + 9} width={500} height={192} rx={26} fill={C.ink} />
           <rect x={-250} y={-96} width={500} height={192} rx={26} fill={C.cream} stroke={C.ink} strokeWidth={5} />
-          <text x={sMph > 0.01 ? -52 : 0} y={-4} dy="0.36em" textAnchor="middle" fontFamily={HED_FONT} fontWeight={800} fontSize={172} letterSpacing={1} fill={C.ink}>{txt}</text>
-          {sMph > 0.01 && <text x={162} y={36} dy="0.36em" textAnchor="middle" fontFamily={HED_FONT} fontWeight={800} fontSize={72} letterSpacing={2} fill={C.coral} transform={`scale(${sMph})`} style={{transformOrigin: '162px 36px'}}>MPH</text>}
+          {tilde && <text x={-216} y={-18} dy="0.36em" textAnchor="middle" fontFamily={HED_FONT} fontWeight={800} fontSize={112} fill={C.coral}>~</text>}
+          <text x={tilde ? -190 : sMph > 0.01 ? -52 : 0} y={-4} dy="0.36em" textAnchor={tilde ? 'start' : 'middle'} fontFamily={HED_FONT} fontWeight={800} fontSize={tilde ? 160 : 172} letterSpacing={1} fill={C.ink}>{txt}</text>
+          {sMph > 0.01 && <text x={tilde ? 172 : 162} y={36} dy="0.36em" textAnchor="middle" fontFamily={HED_FONT} fontWeight={800} fontSize={72} letterSpacing={2} fill={C.coral} transform={`scale(${sMph})`} style={{transformOrigin: `${tilde ? 172 : 162}px 36px`}}>MPH</text>}
         </g>
       )}
       <Chip x={262} y={636} w={230} text="EQUATOR" tone="still" scale={sEq} />
@@ -100,7 +101,7 @@ const Readout: React.FC<{f: number}> = ({f}) => {
 
 /* ------------------------------------------------------------------ composition */
 const PANEL_TOP0 = 820, S0 = 0.82, FEET0 = 1500;
-export const OpeningH1: React.FC<HookH1Props> = ({marker = true, captions = true, graphics = true}) => {
+export const OpeningH1: React.FC<HookH1Props> = ({marker = true, captions = true, graphics = true, tilde = false}) => {
   const f = useCurrentFrame();
   const p = panelP(f);
   const top = lerp(PANEL_TOP0, 0, p), S = lerp(S0, 1, p), feet = lerp(FEET0, GSY, p), rad = lerp(40, 0, p);
@@ -142,7 +143,7 @@ export const OpeningH1: React.FC<HookH1Props> = ({marker = true, captions = true
             <Chip x={bk.x} y={bk.y - 85 * z} w={310} text="~1,000 MPH" tone="move" arrow scale={popScale(f, CHIP.bike)} opacity={Math.min(chipOff, f < CHIP.bikeOff ? 1 : Math.max(0, 1 - (f - CHIP.bikeOff) / 4))} />
             <Chip x={lm.x} y={lm.y - 40 * z} w={190} text="0 MPH" tone="still" scale={popScale(f, CHIP.lamp)} opacity={chipOff} />
             <Rewind f={f} />
-            <Readout f={f} />
+            <Readout f={f} tilde={tilde} />
           </g>
         )}
         {captions && <Captions f={f} />}

@@ -8,7 +8,8 @@ import {GLOBE_STOP} from './choreoH';
  * on one frame. The CLOUD layer is loose: after the surface freezes the clouds keep sliding east and slow down (the same idea as the loose things in the street).
  * An equator line and a pin at the centre (the street she is on) tie it to the scene.
  */
-export const SPIN = 9; // deg per frame before the stop (about 31 px per frame at the centre of the large globe)
+export const SPIN = 9;
+export const wrapDeg = (d: number) => ((((d + 180) % 360) + 360) % 360) - 180; // deg per frame before the stop (about 31 px per frame at the centre of the large globe)
 const TAU_C = 4;
 export const surfaceAngle = (f: number) => 20 - SPIN * Math.min(f, GLOBE_STOP);
 export const cloudAngle = (f: number) => (f <= GLOBE_STOP ? surfaceAngle(f) : surfaceAngle(f) - SPIN * TAU_C * (1 - Math.exp(-(f - GLOBE_STOP) / TAU_C)));
@@ -36,7 +37,7 @@ const closed = (pts: P[]): string => {
 };
 
 /** spin: override for the rewind / "was moving" state: surface angle, cloud angle and the blur of both (px) */
-export const GlobeH: React.FC<{f: number; cx: number; cy: number; R: number; id?: string; spin?: {th: number; thc: number; blurS: number; blurC: number}}> = ({f, cx, cy, R, id = 'g', spin}) => {
+export const GlobeH: React.FC<{f: number; cx: number; cy: number; R: number; id?: string; spin?: {th: number; thc: number; blurS: number; blurC: number}; pin?: boolean; halo?: boolean}> = ({f, cx, cy, R, id = 'g', spin, pin = true, halo = true}) => {
   const k = Math.max(0.5, R / 200);
   const proj = (lon: number, lat: number, th: number): P & {vis: boolean} => {
     const rel = rad(wrap(lon - th)), ph = rad(lat);
@@ -71,7 +72,7 @@ export const GlobeH: React.FC<{f: number; cx: number; cy: number; R: number; id?
         <filter id={`${id}BlurS`} filterUnits="userSpaceOnUse" x={cx - R - 60} y={cy - R - 20} width={2 * R + 120} height={2 * R + 40}><feGaussianBlur stdDeviation={`${Math.max(0.01, blurS)} 0`} /></filter>
         <filter id={`${id}BlurC`} filterUnits="userSpaceOnUse" x={cx - R - 60} y={cy - R - 20} width={2 * R + 120} height={2 * R + 40}><feGaussianBlur stdDeviation={`${Math.max(0.01, blurC)} 0`} /></filter>
       </defs>
-      <circle cx={cx} cy={cy} r={R + 16 * k} fill={C.cream} opacity={0.4} />
+      {halo && <circle cx={cx} cy={cy} r={R + 16 * k} fill={C.cream} opacity={0.4} />}
       <circle cx={cx} cy={cy} r={R} fill={C.teal} />
       <g clipPath={`url(#${id}Clip)`}>
         <g filter={blurS > 0.4 ? `url(#${id}BlurS)` : undefined}>
@@ -86,8 +87,8 @@ export const GlobeH: React.FC<{f: number; cx: number; cy: number; R: number; id?
         <line x1={cx - R} y1={cy} x2={cx + R} y2={cy} stroke={C.coral} strokeWidth={4 * k} opacity={0.95} />
       </g>
       <circle cx={cx} cy={cy} r={R} fill="none" stroke={C.ink} strokeWidth={rimW} />
-      <circle cx={cx} cy={cy} r={15 * k} fill={C.coral} stroke={C.ink} strokeWidth={5 * k} />
-      <circle cx={cx} cy={cy} r={5 * k} fill={C.cream} />
+      {pin && <circle cx={cx} cy={cy} r={15 * k} fill={C.coral} stroke={C.ink} strokeWidth={5 * k} />}
+      {pin && <circle cx={cx} cy={cy} r={5 * k} fill={C.cream} />}
     </svg>
   );
 };

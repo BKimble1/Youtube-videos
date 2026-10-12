@@ -1,33 +1,44 @@
-# Earth Stops. You Don't. — proposed script (for owner review)
+# Earth Stops. You Don't. — script (V1, as built)
 
-**Status: proposal. Only lines S1 and S2 have been voiced (Test Voice audition, `audio/v3/voice/`); S3–S7 are text and have not been generated.** The hypothetical is explicit in the picture (the `WHAT IF` tag stays up) and in the last beat. No claim is made that the stop could happen. Claims and sources: `CLAIM_LEDGER.md`, `SOURCES.md`. Pictures: `STORYBOARD.md`. Hook already built: `exports/v3/` (first 6.0 s).
+**Status: V1 review cut, 34.5 s, built and exported (`exports/v4/`). Not published.** This is the script as it is in the film. The earlier proposal (`SCRIPT_PROPOSAL_H1.md`) had a bus analogy; **the bus is removed** (owner direction); air-and-ocean is kept. The hypothetical is explicit: the first words are "What if", a `WHAT IF` tag stays on screen until "None of this can really happen" and returns for the loop, and the ending says it again in words.
 
-## Narration (spoken text only)
+Narration: ElevenLabs **Test Voice** (`kk5XaSLo2XAw0sKM98zU`, `eleven_v4`), one generation of the whole text (take A of 2), **unmodified** (no trimming, no stretching, no pitch change). Scribe returned the sent text word-for-word (101 words). Times below are measured on the take (Scribe word starts; speech ends from the energy segmentation of the audio). **Nobody has listened to it.**
 
-| # | Line | Words | Beat | Ledger | Time (s) |
-|---|---|---:|---|---|---|
-| S1 | What if Earth stopped—right now? | 6 | B01 hook | C00 | **0.03–2.17 (measured)** |
-| S2 | This street was moving east at about a thousand miles an hour. | 12 | B01 → explanation | C01, C02 | **2.74–5.83 (measured)** |
-| S3 | So was everything on it. You can't feel it, because it all moves together. | 14 | B02 shared motion | C03 | ≈ 6.3–10.3 |
-| S4 | Stop the ground, and it's a bus hitting the brakes. The bus stops. Everything loose doesn't. | 17 | B03 bus | C04 | ≈ 10.8–15.4 |
-| S5 | At first, the air keeps going. So does the ocean. | 10 | B04 air and ocean | C05 | ≈ 15.9–18.8 |
-| S6 | Farther from the equator, it's slower—but even at eighty degrees north, that's hurricane speed. | 16 | B05 latitude | C06, C07, C13 | ≈ 19.3–23.9 |
-| S7 | None of this can really happen. But the motion is real: her coffee's been doing a thousand miles an hour all along. It just never spilled. | 26 | B06 callback | C08, C09, C10 | ≈ 24.4–32.0 |
+## Narration (spoken text only) and where it sits
 
-**98 words; ≈ 32 s.** S1–S2 are measured from the audition take (S1 2.14 s, a 0.36 s dash pause, "right now?" ends 2.17 s, a 0.57 s paragraph pause, S2 3.09 s). S3–S7 are *estimates*: the audition voice read S2 at 3.9 words/s inside the sentence and S1 at 2.8 words/s with its pause, so the estimate uses 3.5 words/s inside sentences plus 0.5 s between sentences; the real take will differ by a second or two either way. The research brief's 28–32 s target is at its upper edge.
+| # | Line (verbatim) | Speech (s) | Scene | Ledger |
+|---|---|---|---|---|
+| S1 | What if Earth stopped—right now? | 0.04–2.23 (dash pause 1.21–1.56) | B01 hook | C00 |
+| S2 | This street was moving east at about a thousand miles an hour. | 2.81–5.68 | B01 hook | C01, C02 |
+| S3 | So was everything on it. You can't feel it, because it all moves together. | 6.08–9.90 | B02 | C03 |
+| S4 | Stop the ground, and anything that isn't fixed to it keeps going. | 10.36–13.79 | B03 | C04 |
+| S5 | At first, the air keeps going. So does the ocean. | 14.38–17.20 | B04 | C05 |
+| S6 | Farther from the equator, it's slower—but even at eighty degrees north, it starts at Category five hurricane speed. | 17.66–24.10 | B05 | C06, C07, C13 |
+| S7 | None of this can really happen. But the motion is real. At the equator, her coffee's been moving about a thousand miles an hour all along. It just never spilled. | 24.63–33.94 | B06 | C08, C09, C10 |
 
-**Optional cuts (each is complete without the others):** drop S4 (the bus) → ≈ 27 s; drop S5 (air and ocean) → ≈ 29 s. Optional additions (not in the count): "Gravity still holds you down." (ledger C11), or "Earth really is slowing, by about two milliseconds a century." (C12, adds ≈ 3.5 s).
+101 words, 34.16 s of audio; the film runs 34.5 s (the last 0.34 s is the loop transition). Pauses between sentences are the voice's own (0.4–0.6 s), not edited.
 
-Voice notes (from the audition, unlistened): Test Voice, `eleven_v4`, no tags; the em dash in S1 and S6 produced a 0.36 s pause in S1, which is where the picture's street goes still. Do not time-stretch.
+## What changed from the proposal
+- **Bus (old S4) removed.** New S4 states the principle directly and the picture shows it (a plaza where loose things slide and fixed things don't).
+- **Speed qualifications are explicit**: S2's "street" is placed on the equator on screen (`EQUATOR` chip, globe pin, S7 says "At the equator"); S6 says "it starts at" and the chart says `STARTING SPEED ONLY`; the plate reads `~1,000` (not `1,000`); S7 repeats "at the equator". The 80°N speed on screen is 181 mph (computed), compared with the 157 mph Category 5 threshold.
+- **Air and ocean escalate** (S5): wind first (palms thrash east, loose things and a pigeon are swept past), then the sea surges east over the beach, the seawall and the promenade and fills the frame.
+- **The coffee payoff** (S7): she is shown from the same side view, mug level and calm, while the world streaks past; she sips; nothing spills; the film loops straight back into frame 0 of the hook.
+
+## Scenes (time from the voice; frames at 30 fps)
+| Scene | Time (s) | Picture | Transition in |
+|---|---|---|---|
+| B01 hook | 0.0–6.1 | The H1 hook: globe stops at 0.17 s, street takes over, rewind, `EAST` / `EQUATOR` / `~1,000 MPH` readout | — |
+| B02 shared motion | 5.9–10.0 | Inset globe grows (iris) into a turning globe carrying her, a palm, a bicycle, a house, a cat, equal east arrows; zoom into her icon = the real street; `NO SLOSH` lens on the mug; six equal arrows; `ALL MOVING EAST — TOGETHER` | iris out of the hook's inset globe; dive into her icon |
+| B03 loose things | 10.0–14.4 | Whip pan east to a plaza; at "Stop" the inset globe stops and every loose thing leaves at the same starting speed (chairs, table, plant pot, box, cone, ball) while lamp post, palms and the bolted bench do not move; `FIXED` / `LOOSE` chips | whip pan |
+| B04 air and ocean | 14.4–18.0 | A coast: calm, then wind (palms, flag, litter, pigeon, streaks), then the sea (boat and buoy ride it) surges east over the beach, wall and promenade; `AT FIRST` chip; arrows shrink; the water rises to fill the frame | push wipe east; sea fills the frame |
+| B05 latitude | 18.0–24.6 | The planet from above the North Pole (counter-clockwise = east); rings at their true radii; three arrows and three bars proportional to 1,040 / 798 / 181 mph; the axis is magnified to read 181 against the 157 line; `STARTING SPEED ONLY`; `157 MPH = CATEGORY 5` | the water becomes the teal background |
+| B06 payoff | 24.6–34.5 | Still globe, `WHAT IF` peels away, globe turns, she rides it east; dive into her; close-up with the world streaking past; she sips; pull back to the street; the street shrinks and the globe returns: **frame 0 of the hook** | crossfade; dive; pull-back; loop |
 
 ## On-screen text (every string)
-
-`WHAT IF` (tag, top centre, through B05) · captions of S1–S7 in Montserrat ExtraBold, ≤ 2 lines, one coral emphasis word each (*stopped, now, east, thousand*, …) · `0 MPH`, `~1,000 MPH →` (tags on the lamp post and the bicycle), `BEFORE` (rewind chip), `EQUATOR`, `EAST`, `1,000 MPH` (the readout) · B02 `ALL MOVING EAST — TOGETHER` · B03 `BUS 0 · CUP →` · B05 `0° 1,040 · 40° 800 · 80° 180 MPH`, `157 = CATEGORY 5`, `STARTING SPEED ONLY` · B06 captions only. No source footer in the hook; sources go in the pinned description (draft in `STORYBOARD.md`).
+`WHAT IF` · captions (23 cues, below) · `0 MPH`, `~1,000 MPH →`, `BEFORE`, `EAST`, `EQUATOR`, `~1,000 MPH` (hook) · `NO SLOSH`, `ALL MOVING EAST — TOGETHER` (B02) · `FIXED`, `LOOSE →` (B03) · `AT FIRST`, `FIXED` (B04) · `0° EQUATOR`, `40°`, `80° NORTH`, `1,040 / 798 / 181 MPH`, `STARTING SPEED ONLY`, `157 MPH = CATEGORY 5` (B05) · `~1,000 MPH →`, `EQUATOR` (B06). No source footer; sources go in the pinned description (draft in `STORYBOARD.md`).
 
 ## Captions
+Montserrat ExtraBold 800, 68 px, cream with a 15 px ink outline, one coral emphasis word per cue, replaced (not faded), lane y ≈ 450–650, centred. 23 cues, built from the word times (`source/src/film/timeline.ts`); every cue starts within 120 ms of its first word except the hook's first cue (it starts at 0.57 s on purpose: the globe has the frame before). Widest line 749 px (limit 960). SRT: `exports/v4/FGW_EarthStops_V1_Captions.srt`. Timing check: `qa/v4/CAPTION_SYNC.json`.
 
-Same rules as the hook (Montserrat ExtraBold 800, 68 px, cream with an ink outline, replaced not faded, upper lane y ≈ 500–590, away from the character, the mug and the right-hand rail). One SRT will be generated from the real alignment when the full narration exists.
-
-## Sound plan (physical only; nothing is generated yet)
-
-Procedural Foley as in the hook (`tools/foley_lib.py`): B02 soft cloth/pavement room tone and a steady freewheel, B03 bus brake squeal and a ceramic slide (a different material from the opener), B04 wind pressure on palm fronds and a low water surge, B05 near-silence with a quiet card slap per number, B06 the opening cup tick. **No music** until the owner approves a source (hold). ElevenLabs Sound Effects and Eleven Music were **not** run.
+## Sound (physical only)
+Procedural numpy Foley (`tools/foley_lib.py`): turning-Earth bed (cut dead with a 100 ms void at the stop, in the hook and again on "Stop" in B03), cardboard slaps for every graphic, furniture/pot/box/cone/ball for B03, wind/fronds/flag/litter/wings for the air, surge/wall slap/foam for the sea, ratchet counters for the bars, footsteps, a sip, ceramic ticks. The new cues were audited (3 candidates each, measured): `audio/v4/audition/`. **No music** (held). ElevenLabs Sound Effects and Eleven Music were **not** run. Mix: −15.5 LUFS, −1.5 dBTP, set relative to the voice; **not listened to**.

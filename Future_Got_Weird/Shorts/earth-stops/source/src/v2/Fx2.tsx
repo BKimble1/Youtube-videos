@@ -20,7 +20,7 @@ const crPath = (pts: P2[]): string => {
 };
 
 /* ------------------------------------------------------------------ world-fixed ground effects: dust, skid marks, stains */
-const Puff: React.FC<{x: number; y: number; age: number; seed: number}> = ({x, y, age, seed}) => {
+export const Puff: React.FC<{x: number; y: number; age: number; seed: number}> = ({x, y, age, seed}) => {
   const life = 26;
   if (age < 0 || age > life) return null;
   const r = 26 + age * 3.1, o = 1 - (age / life) ** 2;

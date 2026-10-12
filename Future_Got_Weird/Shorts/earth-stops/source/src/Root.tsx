@@ -11,6 +11,8 @@ import {OpeningEC} from './v2/OpeningEC';
 import {FPS_EC, N_EC} from './v2/choreoEC';
 import {OpeningH1} from './v2/OpeningH1';
 import {FPS_H, N_H} from './v2/choreoH';
+import {FilmV1} from './film/Film';
+import {N_FILM, FPS as FPS_F} from './film/timeline';
 
 export const Root: React.FC = () => (
   <>
@@ -34,6 +36,9 @@ export const Root: React.FC = () => (
     {/* H1 hybrid hook (E-C cause + E-A v2 street action), 6.0 s */}
     <Composition id="HookH1" component={OpeningH1} width={W} height={H} fps={FPS_H} durationInFrames={N_H} defaultProps={{marker: true, captions: true, graphics: true}} />
     <Composition id="HookH1-Clean" component={OpeningH1} width={W} height={H} fps={FPS_H} durationInFrames={N_H} defaultProps={{marker: false, captions: false, graphics: false}} />
+    {/* V1 whole film, 34.5 s */}
+    <Composition id="FilmV1" component={FilmV1} width={W} height={H} fps={FPS_F} durationInFrames={N_FILM} defaultProps={{captions: true, graphics: true, marker: true}} />
+    <Composition id="FilmV1-Clean" component={FilmV1} width={W} height={H} fps={FPS_F} durationInFrames={N_FILM} defaultProps={{captions: false, graphics: false, marker: false}} />
     <Composition id="OpeningEA-NoMarker" component={Opening} width={W} height={H} fps={FPS} durationInFrames={N} defaultProps={{marker: false, streaks: true, ghost: false}} />
   </>
 );
