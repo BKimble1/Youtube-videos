@@ -195,3 +195,89 @@ def fx_freewheel(name, dur, rate0=21.0, rate1=11.0):
     rat = fft_filter(r.standard_normal(n), 400, 1400) * (0.5 + 0.5 * np.sin(2 * np.pi * 3.7 * t + 1.1)) ** 3 * 0.12
     env = np.minimum(1, t / 0.08) * np.minimum(1, (dur - t) / 0.1)
     return norm((clicks + hiss + rat) * env, 0.7)
+
+
+# ------------------------------------------------------------------ H1 additions (hook with narration)
+def fx_flywheel(name, dur, rev_hz=9.0):
+    """a heavy flywheel at speed: a low harmonic stack (55/110/165 Hz) with fast amplitude modulation at the revolution rate plus a thin band of air. Mostly below the speech band."""
+    r = rng_for(name); t = tgrid(dur); n = len(t)
+    stack = np.sin(2 * np.pi * 55 * t) + 0.7 * np.sin(2 * np.pi * 110 * t + 0.4) + 0.4 * np.sin(2 * np.pi * 165 * t + 1.1)
+    am = 0.62 + 0.38 * np.sin(2 * np.pi * rev_hz * t)
+    air = fft_filter(r.standard_normal(n), 140, 700) * 0.55
+    return norm((stack * am + air * (0.5 + 0.5 * np.sin(2 * np.pi * rev_hz * t + 1.3))) * np.minimum(1, t / 0.003), 0.85)
+
+
+def fx_turbine(name, dur):
+    """a spinning turbine: a high whine around 1.1 kHz over a noise band (sits in the speech band, so it is the masking-risk candidate)"""
+    r = rng_for(name); t = tgrid(dur); n = len(t)
+    whine = np.sin(2 * np.pi * (1100 + 40 * np.sin(2 * np.pi * 6 * t)) * t) * 0.6
+    nz = fft_filter(r.standard_normal(n), 600, 3200) * 0.5
+    return norm((whine + nz) * np.minimum(1, t / 0.003), 0.8)
+
+
+def fx_latch(name):
+    """a mechanism locking: one hard metallic clack and a short low knock (candidate stop accent; physical, not a collision)"""
+    r = rng_for(name); t = tgrid(0.18)
+    clack = fft_filter(r.standard_normal(len(t)), 1800, 7500) * np.exp(-t / 0.003) + 0.7 * ping(t, 2600, 140) + 0.4 * ping(t, 4100, 200)
+    knock = ping(t, 160, 70, 0.6)
+    return norm(clack + knock, 0.85)
+
+
+def fx_rubber_chirp(name):
+    """the sole of a shoe grabbing and slipping on stone: a short rubber squeal (800-1400 Hz glide) into a scuff"""
+    r = rng_for(name); t = tgrid(0.20)
+    sq = glide(t, 780, 1380, 0.04) * np.exp(-t / 0.05) * 0.55
+    sc = fft_filter(r.standard_normal(len(t)), 1200, 6500) * np.exp(-t / 0.045)
+    return norm(sq + 0.8 * sc, 0.85)
+
+
+def fx_tag_slap(name):
+    """a stiff cardboard tag slapped onto a surface: broadband slap, a light board resonance"""
+    r = rng_for(name); t = tgrid(0.12)
+    slap = fft_filter(r.standard_normal(len(t)), 900, 6000) * np.exp(-t / 0.008)
+    board = ping(t, 430, 90, 0.5) + ping(t, 980, 130, 0.25)
+    return norm(slap + board, 0.8)
+
+
+def fx_stamp_tap(name):
+    """a rubber stamp tapped once: duller, lower thud-tap"""
+    r = rng_for(name); t = tgrid(0.12)
+    tap = fft_filter(r.standard_normal(len(t)), 300, 2200) * np.exp(-t / 0.012)
+    return norm(tap + ping(t, 210, 60, 0.7), 0.8)
+
+
+def fx_sticker_press(name):
+    """a soft adhesive press: a quiet click with a short peel hiss"""
+    r = rng_for(name); t = tgrid(0.14)
+    click = fft_filter(r.standard_normal(len(t)), 1500, 5000) * np.exp(-t / 0.004)
+    hiss = fft_filter(r.standard_normal(len(t)), 3500, 9000) * np.exp(-t / 0.04) * 0.3
+    return norm(click + hiss, 0.7)
+
+
+def ratchet_train(name, n_ticks, t_end, ease=3.0, pitch_rise=0.0):
+    """mechanical counter / odometer ticks: n_ticks ticks over t_end seconds, evenly spaced in an ease-out curve (fast first, slowing at the end). Returns (audio, tick_times)."""
+    r = rng_for(name)
+    u = (np.arange(n_ticks) + 0.5) / n_ticks
+    times = t_end * (1 - (1 - u) ** (1.0 / ease)) if ease != 1 else t_end * u
+    out = np.zeros(int((t_end + 0.1) * SR))
+    for i, tt in enumerate(times):
+        k = int(tt * SR); m = int(0.014 * SR)
+        tc = np.arange(m) / SR
+        f = 2300 * (1 + pitch_rise * i / max(1, n_ticks - 1))
+        tick = fft_filter(r.standard_normal(m), 1500, 6500) * np.exp(-tc / 0.0025) + 0.5 * np.sin(2 * np.pi * f * tc) * np.exp(-tc / 0.004)
+        out[k:k + m] += (0.75 + 0.25 * r.random()) * tick
+    return norm(out, 0.7), times
+
+
+def fx_paper_swish(name, dur=0.28):
+    """a flat card sliding away: band noise with a quick rise and fall"""
+    r = rng_for(name); t = tgrid(dur); n = len(t)
+    nz = fft_filter(r.standard_normal(n), 1500, 7000)
+    env = np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 2
+    return norm(nz * env, 0.6)
+
+
+def fx_clunk(name):
+    """the counter reaching its stop: one solid mechanical clunk"""
+    r = rng_for(name); t = tgrid(0.2)
+    return norm(fft_filter(r.standard_normal(len(t)), 700, 4200) * np.exp(-t / 0.01) + ping(t, 240, 55, 0.8) + ping(t, 520, 90, 0.35), 0.85)

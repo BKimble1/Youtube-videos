@@ -1,0 +1,208 @@
+{
+ "metrics": {
+  "spin": {
+   "a_rumble_air_chop": {
+    "dur_ms": 400,
+    "rms_dB": -10.7,
+    "peak": 0.8,
+    "centroid_Hz": 482,
+    "frac_20_150Hz": 0.733,
+    "frac_300_3400Hz_speech_band": 0.266,
+    "frac_above_2k": 0.091,
+    "onset_10_90_ms": 383.7,
+    "decay_to_-20dB_ms": 14,
+    "crest": 2.7,
+    "picked": true
+   },
+   "b_flywheel_stack": {
+    "dur_ms": 400,
+    "rms_dB": -11.5,
+    "peak": 0.85,
+    "centroid_Hz": 83,
+    "frac_20_150Hz": 0.902,
+    "frac_300_3400Hz_speech_band": 0.004,
+    "frac_above_2k": 0.0,
+    "onset_10_90_ms": 32.2,
+    "decay_to_-20dB_ms": 11,
+    "crest": 3.2,
+    "picked": false
+   },
+   "c_turbine_whine": {
+    "dur_ms": 400,
+    "rms_dB": -10.0,
+    "peak": 0.8,
+    "centroid_Hz": 1188,
+    "frac_20_150Hz": 0.0,
+    "frac_300_3400Hz_speech_band": 0.999,
+    "frac_above_2k": 0.05,
+    "onset_10_90_ms": 50.8,
+    "decay_to_-20dB_ms": 349,
+    "crest": 2.5,
+    "picked": false
+   }
+  },
+  "scrape": {
+   "a_stickslip_scrape": {
+    "dur_ms": 300,
+    "rms_dB": -17.0,
+    "peak": 0.85,
+    "centroid_Hz": 3917,
+    "frac_20_150Hz": 0.0,
+    "frac_300_3400Hz_speech_band": 0.41,
+    "frac_above_2k": 0.797,
+    "onset_10_90_ms": 5.1,
+    "decay_to_-20dB_ms": 285,
+    "crest": 6.0,
+    "picked": true
+   },
+   "b_rubber_chirp_scuff": {
+    "dur_ms": 200,
+    "rms_dB": -19.0,
+    "peak": 0.85,
+    "centroid_Hz": 2163,
+    "frac_20_150Hz": 0.0,
+    "frac_300_3400Hz_speech_band": 0.799,
+    "frac_above_2k": 0.315,
+    "onset_10_90_ms": 1.6,
+    "decay_to_-20dB_ms": 93,
+    "crest": 7.6,
+    "picked": false
+   },
+   "c_heavy_grit_scrape": {
+    "dur_ms": 300,
+    "rms_dB": -15.6,
+    "peak": 0.85,
+    "centroid_Hz": 2243,
+    "frac_20_150Hz": 0.0,
+    "frac_300_3400Hz_speech_band": 0.814,
+    "frac_above_2k": 0.542,
+    "onset_10_90_ms": 8.1,
+    "decay_to_-20dB_ms": 281,
+    "crest": 5.1,
+    "picked": false
+   }
+  },
+  "tag": {
+   "a_cardboard_slap": {
+    "dur_ms": 120,
+    "rms_dB": -22.4,
+    "peak": 0.8,
+    "centroid_Hz": 1169,
+    "frac_20_150Hz": 0.0,
+    "frac_300_3400Hz_speech_band": 0.875,
+    "frac_above_2k": 0.189,
+    "onset_10_90_ms": 0.1,
+    "decay_to_-20dB_ms": 21,
+    "crest": 10.6,
+    "picked": true
+   },
+   "b_rubber_stamp_tap": {
+    "dur_ms": 120,
+    "rms_dB": -16.7,
+    "peak": 0.8,
+    "centroid_Hz": 265,
+    "frac_20_150Hz": 0.0,
+    "frac_300_3400Hz_speech_band": 0.057,
+    "frac_above_2k": 0.005,
+    "onset_10_90_ms": 0.7,
+    "decay_to_-20dB_ms": 21,
+    "crest": 5.5,
+    "picked": false
+   },
+   "c_sticker_press": {
+    "dur_ms": 140,
+    "rms_dB": -26.9,
+    "peak": 0.7,
+    "centroid_Hz": 6142,
+    "frac_20_150Hz": 0.0,
+    "frac_300_3400Hz_speech_band": 0.012,
+    "frac_above_2k": 1.0,
+    "onset_10_90_ms": 0.0,
+    "decay_to_-20dB_ms": 22,
+    "crest": 15.5,
+    "picked": false
+   }
+  },
+  "counter": {
+   "a_ratchet_18_ease_out": {
+    "dur_ms": 800,
+    "rms_dB": -27.0,
+    "peak": 0.7,
+    "centroid_Hz": 2853,
+    "frac_20_150Hz": 0.001,
+    "frac_300_3400Hz_speech_band": 0.796,
+    "frac_above_2k": 0.923,
+    "onset_10_90_ms": 128.1,
+    "decay_to_-20dB_ms": 7,
+    "crest": 15.6,
+    "picked": true
+   },
+   "b_ratchet_18_rising_pitch": {
+    "dur_ms": 800,
+    "rms_dB": -24.5,
+    "peak": 0.7,
+    "centroid_Hz": 3419,
+    "frac_20_150Hz": 0.001,
+    "frac_300_3400Hz_speech_band": 0.738,
+    "frac_above_2k": 0.952,
+    "onset_10_90_ms": 128.7,
+    "decay_to_-20dB_ms": 6,
+    "crest": 11.7,
+    "picked": false
+   },
+   "c_ratchet_12": {
+    "dur_ms": 800,
+    "rms_dB": -27.8,
+    "peak": 0.7,
+    "centroid_Hz": 3127,
+    "frac_20_150Hz": 0.001,
+    "frac_300_3400Hz_speech_band": 0.676,
+    "frac_above_2k": 0.915,
+    "onset_10_90_ms": 31.1,
+    "decay_to_-20dB_ms": 7,
+    "crest": 17.1,
+    "picked": false
+   }
+  },
+  "stop": {
+   "a_cut_then_scrape_33ms": {
+    "silence_gap_after_cut_ms": 32,
+    "first_sound_after_cut_peak_vs_bed_rms_dB": 6.4,
+    "picked": false
+   },
+   "b_cut_then_100ms_void_then_scrape": {
+    "silence_gap_after_cut_ms": 99,
+    "first_sound_after_cut_peak_vs_bed_rms_dB": 6.4,
+    "picked": true
+   },
+   "c_cut_latch_click_then_scrape": {
+    "silence_gap_after_cut_ms": 3,
+    "first_sound_after_cut_peak_vs_bed_rms_dB": 6.4,
+    "picked": false
+   }
+  }
+ },
+ "picks": {
+  "spin": {
+   "pick": "a_rumble_air_chop",
+   "rule": "rule: it must survive a phone speaker (>= 15% of energy at 300-3400 Hz) without sitting on the voice (<= 45% there), and read as a big turning mass (>= 30% at 20-150 Hz); then the largest low-band share. The pure low flywheel stack (0.4% at 300-3400 Hz) would be inaudible on a phone; the turbine whine (99.9% in the speech band) would mask the first word"
+  },
+  "stop": {
+   "pick": "b_cut_then_100ms_void_then_scrape",
+   "rule": "rule: the cut must be followed by a clear gap (>= 90 ms with nothing but the voice) and no added transient; a latch click would suggest a collision or a lock, which the owner asked to avoid"
+  },
+  "scrape": {
+   "pick": "a_stickslip_scrape",
+   "rule": "rule: onset <= 12 ms (a grab), then the most energy above 2 kHz (sits above the voice, masks it least)"
+  },
+  "tag": {
+   "pick": "a_cardboard_slap",
+   "rule": "rule: short, centroid closest to 2.2 kHz (audible on a phone speaker, above the voice body)"
+  },
+  "counter": {
+   "pick": "a_ratchet_18_ease_out",
+   "rule": "rule: a mechanical counter does not rise in pitch; ease-out spacing matches the on-screen number settling on 1,000"
+  }
+ },
+ "note": "objective screening only; nobody has listened to these"
+}

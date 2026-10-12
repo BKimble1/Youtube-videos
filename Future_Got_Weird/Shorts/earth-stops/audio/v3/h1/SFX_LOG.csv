@@ -1,0 +1,52 @@
+file,frame,time_s,gain_db_in_group,group,note
+audio/v3/h1/sfx/globe_spin_bed.wav,0.0,0.0,0.0,globe,frames 0-5: the planet turning fast (picked: rumble + air chopped); cut dead at the stop frame
+audio/v3/h1/sfx/shoe_scrape_planted.wav,8.0,0.2667,0.0,friction,frame 8: shoes grab and skid after the 100 ms void; stops when they leave the ground at frame 17
+audio/v3/h1/sfx/coffee_stream.wav,8.0,0.2667,-2.0,liquid,frames 8-31: coffee thrown out as a tapering stream
+audio/v3/h1/sfx/air_rush.wav,9.0,0.3,0.0,air_cloth,frames 9-45: air past her; level follows the street scroll speed and falls away at the brake
+audio/v3/h1/sfx/ceramic_rim_tick.wav,10.0,0.3333,0.0,liquid,frame 10: ceramic rim tick as the coffee lurches out
+audio/v3/h1/sfx/jacket_scarf_flutter.wav,16.0,0.5333,-3.0,air_cloth,frames 16-41: cardigan and scarf flutter
+audio/v3/h1/sfx/launch_scuff_snap.wav,17.0,0.5667,-8.0,impacts,frame 17: shoes leave the pavement
+audio/v3/h1/sfx/coffee_patter_00.wav,31.25,1.0417,-16.0,liquid,"patter, drop k=0"
+audio/v3/h1/sfx/coffee_patter_01.wav,32.26,1.0753,-16.0,liquid,"patter, drop k=3"
+audio/v3/h1/sfx/coffee_splat_big_00.wav,32.42,1.0807,-8.0,liquid,drop k=1 r=10.7 lands
+audio/v3/h1/sfx/coffee_patter_02.wav,33.43,1.1143,-16.0,liquid,"patter, drop k=4"
+audio/v3/h1/sfx/coffee_patter_03.wav,34.53,1.151,-16.0,liquid,"patter, drop k=9"
+audio/v3/h1/sfx/coffee_splat_big_01.wav,34.69,1.1563,-9.0,liquid,drop k=7 r=14.1 lands
+audio/v3/h1/sfx/shoe_scrape_slide.wav,35.0,1.1667,-4.0,friction,frames 35-65: dragged to rest after the landing; level follows her speed
+audio/v3/h1/sfx/landing_thump.wav,35.0,1.1667,-2.0,impacts,frame 35: body lands
+audio/v3/h1/sfx/coffee_splat_big_02.wav,35.12,1.1707,-10.0,liquid,drop k=11 r=10.4 lands
+audio/v3/h1/sfx/coffee_splat_big_03.wav,35.54,1.1847,-8.0,liquid,drop k=12 r=14.9 lands
+audio/v3/h1/sfx/coffee_patter_04.wav,35.95,1.1983,-16.0,liquid,"patter, drop k=10"
+audio/v3/h1/sfx/coffee_splat_big_04.wav,35.96,1.1987,-9.0,liquid,drop k=13 r=13.6 lands
+audio/v3/h1/sfx/coffee_splat_big_05.wav,37.05,1.235,-10.0,liquid,drop k=15 r=13 lands
+audio/v3/h1/sfx/coffee_splat_big_06.wav,37.14,1.238,-8.0,liquid,drop k=17 r=11.2 lands
+audio/v3/h1/sfx/coffee_splat_big_07.wav,37.47,1.249,-9.0,liquid,drop k=16 r=12.6 lands
+audio/v3/h1/sfx/coffee_splat_big_08.wav,38.4,1.28,-12.0,liquid,drop k=20 r=9.3 lands
+audio/v3/h1/sfx/coffee_patter_05.wav,38.56,1.2853,-16.0,liquid,"patter, drop k=18"
+audio/v3/h1/sfx/coffee_splat_big_09.wav,38.98,1.2993,-8.0,liquid,drop k=19 r=11.5 lands
+audio/v3/h1/sfx/coffee_patter_06.wav,39.82,1.3273,-16.0,liquid,"patter, drop k=21"
+audio/v3/h1/sfx/coffee_splat_big_10.wav,40.33,1.3443,-9.0,liquid,drop k=24 r=12.1 lands
+audio/v3/h1/sfx/bike_freewheel.wav,41.0,1.3667,0.0,bike,frames 41-66: riderless bicycle freewheeling; level follows how much of it is on screen and how near the middle
+audio/v3/h1/sfx/coffee_patter_07.wav,41.17,1.3723,-16.0,liquid,"patter, drop k=26"
+audio/v3/h1/sfx/tag_slap_1.wav,42.0,1.4,-2.0,graphics,frame 42: 0 MPH tag on the lamp post lands (cardboard slap)
+audio/v3/h1/sfx/coffee_splat_big_11.wav,42.01,1.4003,-10.0,liquid,drop k=28 r=14.6 lands
+audio/v3/h1/sfx/coffee_patter_08.wav,42.59,1.4197,-16.0,liquid,"patter, drop k=27"
+audio/v3/h1/sfx/landing_bounce_thump.wav,43.0,1.4333,-9.0,impacts,frame 43: small second contact
+audio/v3/h1/sfx/coffee_patter_09.wav,44.18,1.4727,-16.0,liquid,"patter, drop k=29"
+audio/v3/h1/sfx/coffee_splat_big_12.wav,44.35,1.4783,-8.0,liquid,drop k=30 r=12.2 lands
+audio/v3/h1/sfx/coffee_splat_big_13.wav,44.36,1.4787,-9.0,liquid,drop k=33 r=12.1 lands
+audio/v3/h1/sfx/coffee_patter_10.wav,45.28,1.5093,-16.0,liquid,"patter, drop k=34"
+audio/v3/h1/sfx/coffee_splat_big_14.wav,46.62,1.554,-10.0,liquid,drop k=36 r=13.9 lands
+audio/v3/h1/sfx/tag_slap_0.wav,47.0,1.5667,0.0,graphics,frame 47: speed tag on the bicycle lands (cardboard slap)
+audio/v3/h1/sfx/coffee_splat_big_15.wav,47.13,1.571,-8.0,liquid,drop k=39 r=16.5 lands
+audio/v3/h1/sfx/coffee_patter_11.wav,47.29,1.5763,-16.0,liquid,"patter, drop k=37"
+audio/v3/h1/sfx/coffee_splat_big_16.wav,48.64,1.6213,-11.0,liquid,drop k=42 r=9.8 lands
+audio/v3/h1/sfx/coffee_patter_12.wav,49.31,1.6437,-16.0,liquid,"patter, drop k=43"
+audio/v3/h1/stems/foley_rewind.wav,66.0,2.2,0.0,rewind,"frames 66-90: the hook effects reversed and played 2.75x (rewind), 250-7000 Hz"
+audio/v3/h1/sfx/earth_turning_bed.wav,90.0,3.0,0.0,bed,"frames 90-176: the Earth turning again under ""this street was moving east"" (the before-the-stop state)"
+audio/v3/h1/sfx/tag_slap_2.wav,113.0,3.7667,3.0,graphics,frame 113: EAST plate lands (cardboard slap)
+audio/v3/h1/sfx/tag_slap_3.wav,130.0,4.3333,3.0,graphics,frame 130: speed plate lands (cardboard slap)
+audio/v3/h1/sfx/counter_ratchet.wav,130.0,4.3333,0.0,graphics,"frames 130-151: odometer-style ticks while the number rolls up to 1,000"
+audio/v3/h1/sfx/tag_slap_4.wav,132.0,4.4,-5.0,graphics,frame 132: EQUATOR tag lands (cardboard slap)
+audio/v3/h1/sfx/counter_clunk.wav,151.0,5.0333,-2.0,graphics,frame 151: the counter reaches its stop
+audio/v3/h1/sfx/tag_slap_5.wav,154.0,5.1333,-5.0,graphics,frame 154: MPH lands (cardboard slap)

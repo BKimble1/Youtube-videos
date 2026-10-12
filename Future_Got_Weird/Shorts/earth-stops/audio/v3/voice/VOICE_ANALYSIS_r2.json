@@ -1,0 +1,102 @@
+{
+ "A": {
+  "duration_s": 6.0,
+  "first_speech_s": 0.03,
+  "last_speech_s": 5.81,
+  "speech_groups_s": [
+   [
+    0.03,
+    1.26
+   ],
+   [
+    1.63,
+    2.27
+   ],
+   [
+    2.8,
+    5.81
+   ]
+  ],
+  "gaps_ge_0.25s": [
+   [
+    1.26,
+    1.63,
+    0.37
+   ],
+   [
+    2.27,
+    2.8,
+    0.53
+   ]
+  ],
+  "all_gaps_ge_0.06s": [
+   [
+    1.26,
+    1.63,
+    0.37
+   ],
+   [
+    2.27,
+    2.8,
+    0.53
+   ]
+  ],
+  "f0_median_hz": 167.2,
+  "hook_tail_f0_hz": {
+   "before_tail_median": 158.9,
+   "last_0.35s_median": 213.3,
+   "last_0.35s_slope_hz_per_s": 29.5
+  },
+  "peak_dBFS": -1.7
+ },
+ "B": {
+  "duration_s": 6.0,
+  "first_speech_s": 0.03,
+  "last_speech_s": 5.83,
+  "speech_groups_s": [
+   [
+    0.03,
+    1.21
+   ],
+   [
+    1.57,
+    2.17
+   ],
+   [
+    2.74,
+    5.83
+   ]
+  ],
+  "gaps_ge_0.25s": [
+   [
+    1.21,
+    1.57,
+    0.36
+   ],
+   [
+    2.17,
+    2.74,
+    0.57
+   ]
+  ],
+  "all_gaps_ge_0.06s": [
+   [
+    1.21,
+    1.57,
+    0.36
+   ],
+   [
+    2.17,
+    2.74,
+    0.57
+   ]
+  ],
+  "f0_median_hz": 167.8,
+  "hook_tail_f0_hz": {
+   "before_tail_median": 173.9,
+   "last_0.35s_median": 188.4,
+   "last_0.35s_slope_hz_per_s": 264.5
+  },
+  "peak_dBFS": -0.94
+ }
+}

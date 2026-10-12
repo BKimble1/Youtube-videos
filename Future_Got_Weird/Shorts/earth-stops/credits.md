@@ -1,4 +1,4 @@
-# Credits and asset provenance — Earth Stops opening prototypes (v1 checkpoint, E-A v2, E-C)
+# Credits and asset provenance — Earth Stops (v1 checkpoint, E-A v2, E-C, hook H1)
 
 ## Picture
 - All artwork is original layered SVG drawn in code for this prototype (`source/src/opening/*`): street, facades, palms, lamp posts, mug, coffee, scarf, dust, effects.
@@ -25,3 +25,12 @@
 
 ## Independent reads
 - The "muted viewer" reads in `qa/read_test/` and `qa/dir_test/` were produced by AI subagents given only frames, with no background about the concept. They are a proxy, **not** an audience test and not human data.
+
+## Hook H1 and script (v3, 12 Oct 2026)
+- **Picture**: original code-drawn SVG; new files `source/src/v2/choreoH.ts`, `SceneH.tsx`, `GlobeH.tsx`, `OpeningH1.tsx`; reuses the v2 side-view cast rig, mug, bicycle, street and effects (see above). The globe is an abstract stylised disc, not a map. No third-party footage, photographs, stock art or image generation. **Runway: not called.** ChatGPT artwork: not used.
+- **Narration**: ElevenLabs **Test Voice** (`kk5XaSLo2XAw0sKM98zU`, category "generated"), authorised by the owner for the opening audition; model `eleven_v4`; text of S1–S2 only; take B of round 2 used unmodified (no trimming, stretching or processing beyond resampling to 48 kHz). Provenance and spend: `audio/v3/voice/NARRATION_PROVENANCE.md`. Scribe transcription used as a pronunciation/timing check. The performance has **not been listened to by the author**.
+- **SFX**: original **numpy synthesis** (`tools/foley_lib.py`, `tools/sfx_audition_h1.py`, `tools/build_audio_h1.py`), fixed sha1 seeds, no samples, no stock library, no generation model. ElevenLabs Sound Effects, Eleven Music and Runway audio: **not run**. **No music.**
+- **Fonts** (SIL Open Font License, bundled from npm via `@fontsource`): Barlow Condensed ExtraBold (tag, chips, plates), **Montserrat ExtraBold (captions, now in use)**.
+- **Source excerpts** for the claim ledger came from web searches on 12 Oct 2026; **no source page was opened** (network policy). See `script/SOURCES.md`.
+- The storyboard sheet's B02–B06 panels are schematic drawings made with Pillow (`tools/storyboard_sheet.py`); the B01 row is real frames of the encoded hook.
+- **No AI frame-voting or AI viewer subagents were used for H1.**

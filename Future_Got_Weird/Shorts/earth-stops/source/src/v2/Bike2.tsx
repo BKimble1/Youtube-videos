@@ -3,8 +3,8 @@ import {C} from '../theme';
 import {BIKE_R as R, BIKE_Y, bikeSpin, bikeTilt, bikeX} from './choreo2';
 
 /** The one extra loose object: a bicycle on the back line of the sidewalk. Same ground-frame speed as the hero; wheels spin up from rest as the stopped road grips them. */
-export const BikeWorld: React.FC<{f: number}> = ({f}) => {
-  const x = bikeX(f), y = BIKE_Y, ang = bikeSpin(f), tilt = bikeTilt(f);
+export const BikeWorld: React.FC<{f: number; at?: {x: number; ang: number; tilt: number}}> = ({f, at}) => {
+  const x = at ? at.x : bikeX(f), y = BIKE_Y, ang = at ? at.ang : bikeSpin(f), tilt = at ? at.tilt : bikeTilt(f);
   const hubR = {x: -1.05 * R, y: -R}, hubF = {x: 1.05 * R, y: -R};
   const bb = {x: 0, y: -0.86 * R}, seat = {x: -0.4 * R, y: -1.78 * R}, head = {x: 0.78 * R, y: -1.72 * R};
   const segs: [typeof hubR, typeof hubR][] = [[hubR, bb], [bb, seat], [seat, head], [bb, head], [head, hubF], [hubR, seat]];

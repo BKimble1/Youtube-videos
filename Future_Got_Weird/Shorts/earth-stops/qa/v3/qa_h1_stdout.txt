@@ -1,0 +1,196 @@
+{
+ "globe_sharpness_f0_to_f8": [
+  1.376,
+  1.376,
+  1.303,
+  1.247,
+  1.22,
+  3.512,
+  3.453,
+  3.766,
+  4.359
+ ],
+ "globe_stop_frame_by_sharpness_jump": 5,
+ "lean_px_head_minus_feet_f0_to_f12": [
+  36.9,
+  34.7,
+  31.5,
+  27.8,
+  25.5,
+  62.8,
+  94.7,
+  167.0,
+  147.1,
+  162.8,
+  175.6,
+  188.3,
+  185.9
+ ],
+ "hero_extents": {
+  "min_left": 9,
+  "max_right": 922,
+  "frames_with_any_extent_beyond_x940_(right_rail)": [],
+  "min_top": 726,
+  "max_bottom": 1501
+ },
+ "street_band_motion_mean_abs_diff": {
+  "rows": [
+   760,
+   880
+  ],
+  "f17_f27": 24.64,
+  "f45_f65_street_still": 0.032,
+  "f68_f89_rewind": 32.38,
+  "f95_f179_walk": 32.45
+ }
+}
+{
+ "files": {
+  "mix_wav": {
+   "integrated_LUFS": -15.7,
+   "true_peak_dBFS": -1.5
+  },
+  "mix_aac_in_mp4": {
+   "integrated_LUFS": -15.7,
+   "true_peak_dBFS": -1.5
+  },
+  "voice_only_aac": {
+   "integrated_LUFS": -15.5,
+   "true_peak_dBFS": -1.6
+  },
+  "sfx_only_aac": {
+   "integrated_LUFS": -26.0,
+   "true_peak_dBFS": -8.1
+  }
+ },
+ "duration_s": 6.0,
+ "channels_identical_mono_safe": true,
+ "sample_peak_dBFS": -1.52,
+ "first_voice_sample_over_0.01_s": 0.038,
+ "rms_dBFS_per_250ms": [
+  -16.1,
+  -15.9,
+  -22.5,
+  -17.4,
+  -24.1,
+  -26.1,
+  -17.6,
+  -16.9,
+  -21.4,
+  -31.8,
+  -25.8,
+  -18.4,
+  -20.2,
+  -17.2,
+  -20.0,
+  -21.9,
+  -22.1,
+  -17.5,
+  -21.0,
+  -15.8,
+  -16.1,
+  -18.4,
+  -20.9,
+  -38.1
+ ],
+ "globe_stop_sfx_only": {
+  "rms_dB_80ms_before_cut": -21.1,
+  "rms_dB_100ms_after_cut": -140.0,
+  "rms_dB_100_to_200ms_after_cut": -25.2,
+  "low_20_200Hz_dB_80ms_before_vs_80ms_after": [
+   42.9,
+   -137.0
+  ]
+ },
+ "globe_stop_full_mix_rms_dB": {
+  "80ms_before": -13.7,
+  "100ms_after": -16.9
+ },
+ "rewind_sfx_rms_dB_f66_f90": -29.1,
+ "speech_to_sfx_ratio_dB_300_3400Hz_voiced_frames_only": {
+  "per_250ms_window_(start_s, dB)": [
+   [
+    0.0,
+    17.4
+   ],
+   [
+    0.25,
+    17.6
+   ],
+   [
+    0.5,
+    5.2
+   ],
+   [
+    0.75,
+    22.0
+   ],
+   [
+    1.5,
+    20.3
+   ],
+   [
+    1.75,
+    19.2
+   ],
+   [
+    2.0,
+    24.8
+   ],
+   [
+    2.75,
+    14.4
+   ],
+   [
+    3.0,
+    34.9
+   ],
+   [
+    3.25,
+    30.9
+   ],
+   [
+    3.5,
+    29.8
+   ],
+   [
+    3.75,
+    21.7
+   ],
+   [
+    4.0,
+    31.0
+   ],
+   [
+    4.25,
+    19.1
+   ],
+   [
+    4.5,
+    26.9
+   ],
+   [
+    4.75,
+    33.1
+   ],
+   [
+    5.0,
+    24.9
+   ],
+   [
+    5.25,
+    26.8
+   ],
+   [
+    5.5,
+    27.5
+   ]
+  ],
+  "median_dB": 24.8,
+  "worst_100ms_(start_s, dB)": [
+   0.625,
+   -19.6
+  ],
+  "voice_active_frames": 147
+ }
+}

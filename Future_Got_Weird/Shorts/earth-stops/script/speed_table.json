@@ -1,0 +1,67 @@
+{
+ "inputs": {
+  "a_m": 6378137.0,
+  "flattening": 0.0033528106647474805,
+  "omega_rad_s": 7.292115e-05,
+  "sidereal_period_h_NASA": 23.9345,
+  "v_escape_m_s_NASA": 11186.0,
+  "cat5_threshold_mph_NHC": 157.0
+ },
+ "ground_speed_east_by_latitude": {
+  "0": {
+   "m_s": 465.1,
+   "km_h": 1674.4,
+   "mph": 1040.4
+  },
+  "30": {
+   "m_s": 403.13,
+   "km_h": 1451.3,
+   "mph": 901.8
+  },
+  "34": {
+   "m_s": 385.99,
+   "km_h": 1389.6,
+   "mph": 863.4
+  },
+  "40": {
+   "m_s": 356.78,
+   "km_h": 1284.4,
+   "mph": 798.1
+  },
+  "45": {
+   "m_s": 329.43,
+   "km_h": 1185.9,
+   "mph": 736.9
+  },
+  "60": {
+   "m_s": 233.14,
+   "km_h": 839.3,
+   "mph": 521.5
+  },
+  "80": {
+   "m_s": 81.03,
+   "km_h": 291.7,
+   "mph": 181.3
+  },
+  "90": {
+   "m_s": 0.0,
+   "km_h": 0.0,
+   "mph": 0.0
+  }
+ },
+ "checks": {
+  "equator_from_sidereal_period_m_s": 465.1,
+  "equator_if_24h_day_used_m_s_(wrong, shown for the record)": 463.83,
+  "rounded_for_narration": "about a thousand miles an hour (exact 1,040 mph; the rounding is 4 % low)",
+  "80deg_vs_cat5_threshold_mph": {
+   "ground_mph": 181.3,
+   "cat5_mph": 157.0,
+   "ratio": 1.15
+  },
+  "equator_vs_cat5": 6.63,
+  "circular_orbit_speed_m_s_from_NASA_v_esc": 7910.0,
+  "equator_speed_as_fraction_of_orbital_speed": 0.059,
+  "centripetal_acceleration_equator_m_s2": 0.0339,
+  "centripetal_as_fraction_of_g": 0.0035
+ }
+}

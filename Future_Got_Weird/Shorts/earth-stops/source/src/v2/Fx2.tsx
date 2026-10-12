@@ -47,11 +47,11 @@ const blob = (cx: number, cy: number, rx: number, ry: number, seed: number, n = 
 };
 
 /** t0: first frame of skidding (E-A is already skidding at frame 0, so t0 = -8; E-C starts at the stop, t0 = 0). b0: coffee birth offset. */
-export const GroundFx: React.FC<{f: number; t0?: number; b0?: number}> = ({f, t0 = -8, b0 = PARCEL_B0}) => {
+export const GroundFx: React.FC<{f: number; t0?: number; b0?: number; shoeX?: (t: number) => number; slideUntil?: number}> = ({f, t0 = -8, b0 = PARCEL_B0, shoeX = lowestShoeX, slideUntil = 66}) => {
   const emit: number[] = [-6, -4, -2, 0, 2, 4, 6, 8, EVT.land, EVT.land, EVT.land + 2].filter((e) => e >= t0 + 2);
-  for (let e = EVT.land + 4; e <= 66; e += 3) emit.push(e);
-  const skidA = {x0: lowestShoeX(t0), x1: lowestShoeX(Math.max(t0, Math.min(f, EVT.launch - 1)))}; // the mark grows behind the contact point, never ahead of it
-  const skidB = {x0: lowestShoeX(EVT.land), x1: lowestShoeX(Math.min(f, 66))};
+  for (let e = EVT.land + 4; e <= slideUntil; e += 3) emit.push(e);
+  const skidA = {x0: shoeX(t0), x1: shoeX(Math.max(t0, Math.min(f, EVT.launch - 1)))}; // the mark grows behind the contact point, never ahead of it
+  const skidB = {x0: shoeX(EVT.land), x1: shoeX(Math.min(f, slideUntil))};
   const stains = parcels(f, b0).filter((p) => p.landed);
   return (
     <g>
@@ -74,7 +74,7 @@ export const GroundFx: React.FC<{f: number; t0?: number; b0?: number}> = ({f, t0
           return <circle key={`c${p.k}-${i}`} cx={p.x + vx * t * 1.5} cy={p.y - (vy * t - 0.45 * t * t)} r={Math.max(2, 5 - t * 0.4)} fill={COFFEE} />;
         }),
       )}
-      {emit.map((e, i) => <Puff key={i} x={lowestShoeX(e) - 24} y={GYW - 16} age={f - e} seed={i * 7 + e + 40} />)}
+      {emit.map((e, i) => <Puff key={i} x={shoeX(e) - 24} y={GYW - 16} age={f - e} seed={i * 7 + e + 40} />)}
     </g>
   );
 };

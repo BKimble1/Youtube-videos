@@ -1,0 +1,117 @@
+{
+ "source": "ElevenLabs Scribe (eleven_scribe_v1) on round-2 take B (generation dXsG12lggE5glsJE6NJ1); transcript equals the sent text word-for-word (17/17 tokens; 'stopped\u2014right' is one token because of the em dash). Scribe word ends are padded toward the next word; the measured speech groups (ffmpeg/numpy 10 ms energy) are in speech_groups_s.",
+ "text": "What if Earth stopped\u2014right now?\n\nThis street was moving east at about a thousand miles an hour.",
+ "audio_file": "r2_takeB.mp3",
+ "audio_duration_s": 6.0,
+ "speech_groups_s": [
+  [
+   0.03,
+   1.21
+  ],
+  [
+   1.57,
+   2.17
+  ],
+  [
+   2.74,
+   5.83
+  ]
+ ],
+ "measured_notes": {
+  "em_dash_pause_s": [
+   1.21,
+   1.57
+  ],
+  "paragraph_pause_s": [
+   2.17,
+   2.74
+  ]
+ },
+ "words": [
+  {
+   "text": "What",
+   "start": 0,
+   "end": 0.16
+  },
+  {
+   "text": "if",
+   "start": 0.24,
+   "end": 0.32
+  },
+  {
+   "text": "Earth",
+   "start": 0.4,
+   "end": 0.64
+  },
+  {
+   "text": "stopped\u2014right",
+   "start": 0.72,
+   "end": 1.76
+  },
+  {
+   "text": "now?",
+   "start": 1.84,
+   "end": 2.72
+  },
+  {
+   "text": "This",
+   "start": 2.8,
+   "end": 2.88
+  },
+  {
+   "text": "street",
+   "start": 3.04,
+   "end": 3.2
+  },
+  {
+   "text": "was",
+   "start": 3.28,
+   "end": 3.36
+  },
+  {
+   "text": "moving",
+   "start": 3.44,
+   "end": 3.76
+  },
+  {
+   "text": "east",
+   "start": 3.84,
+   "end": 4.08
+  },
+  {
+   "text": "at",
+   "start": 4.12,
+   "end": 4.16
+  },
+  {
+   "text": "about",
+   "start": 4.24,
+   "end": 4.4
+  },
+  {
+   "text": "a",
+   "start": 4.48,
+   "end": 4.56
+  },
+  {
+   "text": "thousand",
+   "start": 4.64,
+   "end": 5.04
+  },
+  {
+   "text": "miles",
+   "start": 5.12,
+   "end": 5.28
+  },
+  {
+   "text": "an",
+   "start": 5.36,
+   "end": 5.44
+  },
+  {
+   "text": "hour.",
+   "start": 5.6,
+   "end": 6.08
+  }
+ ]
+}
