@@ -7,6 +7,7 @@ import {GSY, GYW, LAMPS, PALMS} from './choreo2';
  * so the contrast reads: anchored = never moves except by the camera; loose = hero, bicycle, coffee. No coral anywhere on the street.
  * Everything is drawn in world px under one camera transform (screen = (540 + (x - camX) z, GSY + (y - GYW) z)).
  */
+const mixHex = (a: string, b: string, t: number) => { const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16)); return '#' + pa.map((v, i) => Math.round(v + (pb[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
 const BASE = 1150, CURB_TOP = 1350, CURB_BOT = 1400;
 const INK = C.ink, sw = OUTLINE;
 export type Style = {fill: string; trim: string; awn: [string, string]; door: string};
@@ -86,7 +87,7 @@ const Lamp: React.FC<{x: number}> = ({x}) => (
 );
 
 /** pad: how far (scene px) the sky, ground and pan-blur region extend past the 1080x1920 frame; E-C draws this scene scaled into a panel and needs the margin. */
-export const Street2: React.FC<{camX: number; z: number; blur?: number; pad?: number; children?: React.ReactNode}> = ({camX, z, blur = 0, pad = 80, children}) => {
+export const Street2: React.FC<{camX: number; z: number; blur?: number; pad?: number; children?: React.ReactNode; palms?: boolean; lamps?: boolean; sky?: boolean; skyTint?: number}> = ({camX, z, blur = 0, pad = 80, children, palms = true, lamps = true, sky = true, skyTint = 0}) => {
   const bs: {x: number; w: number; h: number; s: Style; i: number}[] = [];
   let bx = -900;
   for (let i = 0; i < WIDTHS.length; i++) { bs.push({x: bx, w: WIDTHS[i], h: HEIGHTS[i], s: STYLES[i % STYLES.length], i}); bx += WIDTHS[i] + 14; }
@@ -96,8 +97,8 @@ export const Street2: React.FC<{camX: number; z: number; blur?: number; pad?: nu
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
       <defs>
         <linearGradient id="skyG2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={C.saffron} />
-          <stop offset="1" stopColor={C.saffronLight} />
+          <stop offset="0" stopColor={skyTint > 0 ? mixHex(C.saffron, '#C4553A', skyTint) : C.saffron} />
+          <stop offset="1" stopColor={skyTint > 0 ? mixHex(C.saffronLight, C.saffronDeep, skyTint * 0.8) : C.saffronLight} />
         </linearGradient>
         <linearGradient id="scrim" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor={C.ink} stopOpacity={0} />
@@ -108,8 +109,8 @@ export const Street2: React.FC<{camX: number; z: number; blur?: number; pad?: nu
         </filter>
       </defs>
       <rect x={-pad} y={-pad} width={W + 2 * pad} height={H + 2 * pad} fill="url(#skyG2)" />
-      <circle cx={860} cy={300} r={120} fill={C.saffron} opacity={0.55} />
-      <circle cx={860} cy={300} r={80} fill={C.saffronLight} />
+      {sky && <circle cx={860} cy={300} r={120} fill={C.saffron} opacity={0.55} />}
+      {sky && <circle cx={860} cy={300} r={80} fill={C.saffronLight} />}
       <g filter={blur > 0.4 ? 'url(#panBlur2)' : undefined}>
         <g transform={`translate(540 ${GSY}) scale(${z}) translate(${-camX} ${-GYW})`}>
           {bs.map((b) => <Building key={b.i} x={b.x} w={b.w} h={b.h} s={b.s} />)}
@@ -120,8 +121,8 @@ export const Street2: React.FC<{camX: number; z: number; blur?: number; pad?: nu
           <rect x={-1200} y={CURB_TOP} width={5200} height={10} fill={C.coralLight} />
           {curbJ.map((x) => <line key={x} x1={x} y1={CURB_TOP} x2={x} y2={CURB_BOT} stroke={INK} strokeWidth={4} />)}
           <rect x={-1200} y={CURB_BOT} width={5200} height={1600} fill={C.tealLight} />
-          {PALMS.map((x) => <Palm key={`p${x}`} x={x} />)}
-          {LAMPS.map((x) => <Lamp key={`l${x}`} x={x} />)}
+          {palms && PALMS.map((x) => <Palm key={`p${x}`} x={x} />)}
+          {lamps && LAMPS.map((x) => <Lamp key={`l${x}`} x={x} />)}
           {children}
         </g>
       </g>

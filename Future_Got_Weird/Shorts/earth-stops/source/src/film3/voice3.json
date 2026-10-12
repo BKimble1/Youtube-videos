@@ -1,0 +1,420 @@
+{
+ "film_s": 24.8,
+ "sr": 48000,
+ "segments": [
+  {
+   "name": "S1",
+   "take_a": 0.0,
+   "take_b": 5.05,
+   "shift_s": 0.0
+  },
+  {
+   "name": "S2",
+   "take_a": 5.05,
+   "take_b": 6.95,
+   "shift_s": 0.0
+  },
+  {
+   "name": "S3",
+   "take_a": 6.95,
+   "take_b": 8.0,
+   "shift_s": 0.0
+  },
+  {
+   "name": "S4",
+   "take_a": 8.0,
+   "take_b": 9.2,
+   "shift_s": 0.84
+  },
+  {
+   "name": "S5",
+   "take_a": 9.2,
+   "take_b": 11.95,
+   "shift_s": 3.69
+  },
+  {
+   "name": "S6",
+   "take_a": 11.95,
+   "take_b": 14.95,
+   "shift_s": 4.35
+  },
+  {
+   "name": "S7",
+   "take_a": 14.95,
+   "take_b": 18.24,
+   "shift_s": 4.7
+  }
+ ],
+ "words": [
+  {
+   "text": "If",
+   "start": 0.0,
+   "end": 0.16,
+   "seg": "S1"
+  },
+  {
+   "text": "Earth",
+   "start": 0.24,
+   "end": 0.4,
+   "seg": "S1"
+  },
+  {
+   "text": "stopped,",
+   "start": 0.48,
+   "end": 1.2,
+   "seg": "S1"
+  },
+  {
+   "text": "you’d",
+   "start": 1.24,
+   "end": 1.36,
+   "seg": "S1"
+  },
+  {
+   "text": "keep",
+   "start": 1.44,
+   "end": 1.6,
+   "seg": "S1"
+  },
+  {
+   "text": "moving",
+   "start": 1.76,
+   "end": 1.92,
+   "seg": "S1"
+  },
+  {
+   "text": "east—about",
+   "start": 2.0,
+   "end": 2.8,
+   "seg": "S1"
+  },
+  {
+   "text": "a",
+   "start": 2.88,
+   "end": 2.96,
+   "seg": "S1"
+  },
+  {
+   "text": "thousand",
+   "start": 3.04,
+   "end": 3.36,
+   "seg": "S1"
+  },
+  {
+   "text": "miles",
+   "start": 3.44,
+   "end": 3.6,
+   "seg": "S1"
+  },
+  {
+   "text": "an",
+   "start": 3.68,
+   "end": 3.76,
+   "seg": "S1"
+  },
+  {
+   "text": "hour",
+   "start": 3.88,
+   "end": 4.0,
+   "seg": "S1"
+  },
+  {
+   "text": "at",
+   "start": 4.08,
+   "end": 4.16,
+   "seg": "S1"
+  },
+  {
+   "text": "the",
+   "start": 4.2,
+   "end": 4.24,
+   "seg": "S1"
+  },
+  {
+   "text": "equator.",
+   "start": 4.36,
+   "end": 4.96,
+   "seg": "S1"
+  },
+  {
+   "text": "Loose",
+   "start": 5.2,
+   "end": 5.44,
+   "seg": "S2"
+  },
+  {
+   "text": "objects",
+   "start": 5.52,
+   "end": 5.92,
+   "seg": "S2"
+  },
+  {
+   "text": "keep",
+   "start": 6.0,
+   "end": 6.08,
+   "seg": "S2"
+  },
+  {
+   "text": "going",
+   "start": 6.24,
+   "end": 6.4,
+   "seg": "S2"
+  },
+  {
+   "text": "too.",
+   "start": 6.52,
+   "end": 7.04,
+   "seg": "S2"
+  },
+  {
+   "text": "So",
+   "start": 7.12,
+   "end": 7.2,
+   "seg": "S3"
+  },
+  {
+   "text": "does",
+   "start": 7.28,
+   "end": 7.36,
+   "seg": "S3"
+  },
+  {
+   "text": "the",
+   "start": 7.44,
+   "end": 7.48,
+   "seg": "S3"
+  },
+  {
+   "text": "air.",
+   "start": 7.52,
+   "end": 8.16,
+   "seg": "S3"
+  },
+  {
+   "text": "And",
+   "start": 9.08,
+   "end": 9.16,
+   "seg": "S4"
+  },
+  {
+   "text": "the",
+   "start": 9.2,
+   "end": 9.24,
+   "seg": "S4"
+  },
+  {
+   "text": "ocean.",
+   "start": 9.32,
+   "end": 10.12,
+   "seg": "S4"
+  },
+  {
+   "text": "You",
+   "start": 13.01,
+   "end": 13.05,
+   "seg": "S5"
+  },
+  {
+   "text": "don’t",
+   "start": 13.09,
+   "end": 13.29,
+   "seg": "S5"
+  },
+  {
+   "text": "feel",
+   "start": 13.37,
+   "end": 13.45,
+   "seg": "S5"
+  },
+  {
+   "text": "the",
+   "start": 13.53,
+   "end": 13.61,
+   "seg": "S5"
+  },
+  {
+   "text": "spin",
+   "start": 13.77,
+   "end": 13.93,
+   "seg": "S5"
+  },
+  {
+   "text": "because",
+   "start": 14.09,
+   "end": 14.25,
+   "seg": "S5"
+  },
+  {
+   "text": "you",
+   "start": 14.33,
+   "end": 14.41,
+   "seg": "S5"
+  },
+  {
+   "text": "move",
+   "start": 14.53,
+   "end": 14.65,
+   "seg": "S5"
+  },
+  {
+   "text": "with",
+   "start": 14.73,
+   "end": 14.81,
+   "seg": "S5"
+  },
+  {
+   "text": "Earth.",
+   "start": 14.89,
+   "end": 15.69,
+   "seg": "S5"
+  },
+  {
+   "text": "Closer",
+   "start": 16.43,
+   "end": 16.67,
+   "seg": "S6"
+  },
+  {
+   "text": "to",
+   "start": 16.75,
+   "end": 16.79,
+   "seg": "S6"
+  },
+  {
+   "text": "the",
+   "start": 16.83,
+   "end": 16.91,
+   "seg": "S6"
+  },
+  {
+   "text": "poles,",
+   "start": 16.99,
+   "end": 17.55,
+   "seg": "S6"
+  },
+  {
+   "text": "that",
+   "start": 17.63,
+   "end": 17.71,
+   "seg": "S6"
+  },
+  {
+   "text": "starting",
+   "start": 17.79,
+   "end": 18.11,
+   "seg": "S6"
+  },
+  {
+   "text": "speed",
+   "start": 18.19,
+   "end": 18.43,
+   "seg": "S6"
+  },
+  {
+   "text": "is",
+   "start": 18.47,
+   "end": 18.51,
+   "seg": "S6"
+  },
+  {
+   "text": "lower.",
+   "start": 18.67,
+   "end": 19.39,
+   "seg": "S6"
+  },
+  {
+   "text": "The",
+   "start": 19.78,
+   "end": 19.82,
+   "seg": "S7"
+  },
+  {
+   "text": "stop",
+   "start": 19.9,
+   "end": 20.22,
+   "seg": "S7"
+  },
+  {
+   "text": "is",
+   "start": 20.3,
+   "end": 20.38,
+   "seg": "S7"
+  },
+  {
+   "text": "imaginary.",
+   "start": 20.58,
+   "end": 21.5,
+   "seg": "S7"
+  },
+  {
+   "text": "The",
+   "start": 21.54,
+   "end": 21.58,
+   "seg": "S7"
+  },
+  {
+   "text": "motion",
+   "start": 21.66,
+   "end": 22.06,
+   "seg": "S7"
+  },
+  {
+   "text": "is",
+   "start": 22.14,
+   "end": 22.22,
+   "seg": "S7"
+  },
+  {
+   "text": "real.",
+   "start": 22.38,
+   "end": 23.02,
+   "seg": "S7"
+  }
+ ],
+ "groups": [
+  [
+   0.05,
+   1.02
+  ],
+  [
+   1.23,
+   2.34
+  ],
+  [
+   2.64,
+   4.77
+  ],
+  [
+   5.22,
+   6.72
+  ],
+  [
+   7.07,
+   7.8
+  ],
+  [
+   9.0,
+   9.74
+  ],
+  [
+   13.0,
+   15.24
+  ],
+  [
+   16.4,
+   17.44
+  ],
+  [
+   17.59,
+   19.0
+  ],
+  [
+   19.79,
+   21.17
+  ],
+  [
+   21.54,
+   22.73
+  ]
+ ]
+}

@@ -17,9 +17,10 @@ export const sm = (x: number) => { const t = cl(x); return t * t * (3 - 2 * t); 
 export const ramp = (f: number, a: number, b: number, e: (x: number) => number = E.inOut) => e(cl((f - a) / Math.max(1e-6, b - a)));
 
 /* ------------------------------------------------------------------ captions (Montserrat ExtraBold, cream, ink outline, replaced not faded) */
-export const Captions: React.FC<{f: number; cues?: Cue[]; dy?: number}> = ({f, cues = CUES, dy = 0}) => {
+export const Captions: React.FC<{f: number; cues?: {a: number; b: number; lines: Cue['lines']; dy?: number}[]; dy?: number}> = ({f, cues = CUES, dy = 0}) => {
   const c = cues.find((q) => f >= q.a && f < q.b);
   if (!c) return null;
+  dy += (c as {dy?: number}).dy ?? 0;
   const n = c.lines.length, base = n === 1 ? 520 : 480;
   return (
     <g fontFamily={CAP_FONT} fontWeight={800} fontSize={68} textAnchor="middle" strokeLinejoin="round">

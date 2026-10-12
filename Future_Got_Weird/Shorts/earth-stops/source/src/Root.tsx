@@ -15,6 +15,8 @@ import {FilmV1} from './film/Film';
 import {N_FILM, FPS as FPS_F} from './film/timeline';
 import {FilmV2} from './film2/Film2';
 import {N_FILM as N_V2, FPS as FPS_V2} from './film2/timeline';
+import {FilmV3} from './film3/Film3';
+import {N_FILM as N_V3, FPS as FPS_V3} from './film3/timeline3';
 
 export const Root: React.FC = () => (
   <>
@@ -44,6 +46,9 @@ export const Root: React.FC = () => (
     {/* V2 whole film, 25.3 s */}
     <Composition id="FilmV2" component={FilmV2} width={W} height={H} fps={FPS_V2} durationInFrames={N_V2} defaultProps={{captions: true, graphics: true, marker: true}} />
     <Composition id="FilmV2-Clean" component={FilmV2} width={W} height={H} fps={FPS_V2} durationInFrames={N_V2} defaultProps={{captions: false, graphics: false, marker: false}} />
+    {/* V3 whole film, 24.8 s */}
+    <Composition id="FilmV3" component={FilmV3} width={W} height={H} fps={FPS_V3} durationInFrames={N_V3} defaultProps={{captions: true, graphics: true, marker: true}} />
+    <Composition id="FilmV3-Clean" component={FilmV3} width={W} height={H} fps={FPS_V3} durationInFrames={N_V3} defaultProps={{captions: false, graphics: false, marker: false}} />
     <Composition id="OpeningEA-NoMarker" component={Opening} width={W} height={H} fps={FPS} durationInFrames={N} defaultProps={{marker: false, streaks: true, ghost: false}} />
   </>
 );
