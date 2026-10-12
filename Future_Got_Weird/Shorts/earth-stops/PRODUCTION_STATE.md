@@ -22,7 +22,7 @@ Branch `claude/fgw-earth-stops-short` (from Atlas tip `3634cc5`). **The complete
 9. Give the next revision brief, or approve a path to publication (not authorised yet).
 
 ## Commit record (all on `claude/fgw-earth-stops-short`, pushed)
-V4 `2fb391a` (checkpoint branch) → V5 review cut with the final render, exports, QA and documents (see `git log`; the hashes are recorded at the foot of `V5_REPORT.md` after the final push). **`exports/v8/` is from the commit that adds `QA_NOTES_V5.md`.**
+V4 `2fb391a` (checkpoint branch) → **V5 review cut with the final render, exports, QA and documents `ec708dd`** (**`exports/v8/` is from this commit**; its review master's sha256 starts `c5d0cc43…`) → a documentation-only commit recording these hashes.
 
 ## Not authorised yet
 Publishing, uploading, scheduling; pull requests; licensed music; further Runway spend; voice regeneration.
