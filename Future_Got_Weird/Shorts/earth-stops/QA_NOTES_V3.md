@@ -22,9 +22,9 @@ File checked: `exports/v6/FGW_EarthStops_V3_Review_1080x1920.mp4` (silent render
 |---|---|
 | Container | h264 High, 1080 × 1920, 30 fps, yuv420p, bt709; **744 frames counted** (24.800 s); AAC 48 kHz stereo (dual-mono) 253 kb/s; 17.3 MB; under the 60 s Shorts limit. Labeled preview: 540 × 960, 2.6 MB |
 | Frozen frames | **none**: no adjacent pair with mean difference < 0.05. The only *intentional* hold is f31–36 (the suspended beat: speed 12 %, vignette and zoom close; it is slowed motion, mean step ≈ 17 there, not a freeze) |
-| Hard changes | step > 4× median at f18–36 (brake dive, action cut f19→20, the carried-east motion, the cut f35→36), f70–80 (bike/chair impacts, shake), f168–218 (the wind tracking shot), f227–239 (the awning), f319–320 (wave hit shake), f369–376 (water band). Largest step f19→20 (109): the action cut. All are the designed cuts or fast moves; this statistic cannot judge whether any is good |
-| Frame-difference by scene (mean step, 0–255 scale, 270 × 480 grey) | brake 10.6 · carried east 21.3 · street 7.1 · wind 21.5 · **swell 3.1** · hit/flood/band 7.8 · NORMAL DAY 1.2 · globe 3.1 · finale 2.8. **Flag:** the swell build (7.9–10.6 s) is the quietest part of the escalation after the intense wind; it is slow-scale growth by design, but whether it reads as rising dread or a lull is a viewing question |
-| Loop seam (picture) | f743 → f0 mean step **4.03** vs median adjacent step 3.46 (**1.16×**); the extra is the caption appearing at f0 |
+| Hard changes | step > 4× median at f18–36 (brake dive, action cut f19→20, the carried-east motion, the cut f35→36), f70–80 (bike/chair impacts, shake), f168–218 (the wind tracking shot), f227–239 (the awning), f319–320 (wave hit shake), f369–376 (water band). Largest step f19→20 (110): the action cut. All are the designed cuts or fast moves; this statistic cannot judge whether any is good |
+| Frame-difference by scene (mean step, 0–255 scale, 270 × 480 grey) | brake 10.8 · carried east 21.3 · street 7.1 · wind 21.4 · **swell 3.1** · hit/flood/band 7.8 · NORMAL DAY 1.2 · globe 3.1 · finale 2.9. **Flag:** the swell build (7.9–10.6 s) is the quietest part of the escalation after the intense wind; it is slow-scale growth by design, but whether it reads as rising dread or a lull is a viewing question |
+| Loop seam (picture) | f743 → f0 mean step **4.07** vs median adjacent step 3.48 (**1.17×**); the extra is the caption appearing at f0 |
 | Loudness | **−15.9 LUFS integrated, LRA 3.9 LU (no-music mix: 4.0), true peak −1.5 dBTP** on the AAC mp4s; WAV mixes −15.9 / −1.5. The AAC encode is time-aligned with the WAV |
 | Narration integrity | the narration in the mix equals the cut timeline at one constant gain (−0.10 dB, residual −77 dB); each of the seven segments equals the take-B slice (residual ≈ −73 dB = 1-sample rounding). **No stretch, speed-up or pitch change** |
 | Mono | channels identical (dual-mono): mono fold-down is bit-identical |
@@ -53,6 +53,7 @@ File checked: `exports/v6/FGW_EarthStops_V3_Review_1080x1920.mp4` (silent render
 - The bicycle clang (f59) and the chair hit (f66) landed on the stressed word *east* (masking proxy −1 dB there): the bicycle and chair now start later so both hits fall in the narration's pause after *east* (f69, f74).
 - The brake bed sat in the speech band (proxy −14 dB at 0.1 s and −20 dB at 0.4 s): the servo whine was moved above 3.3 kHz and the hum split into < 280 Hz and > 3.6 kHz.
 - The caption *about a thousand* started 233 ms before its word: retimed.
+- In the stills the rotor ring's 40 fine ticks read as a measuring tape: replaced by 18 broad slots (a ventilated-rotor look) and the film re-rendered; the QA numbers and sheets below are from that final render (the first-second and transition stills listed in §A were read on earlier renders of the same composition and are unaffected except for the ring's slots).
 - The V2 SRT overlap and double space: fixed (see above).
 
 ## C. Not done / unavailable (a person must do these)

@@ -9,10 +9,10 @@
  "pix_fmt": "yuv420p",
  "duration_s": 24.8,
  "frames_counted": 744,
- "median_step": 3.464,
- "p95_step": 27.332,
- "seam_f743_to_f0": 4.027,
- "seam_vs_median": 1.16,
+ "median_step": 3.477,
+ "p95_step": 27.336,
+ "seam_f743_to_f0": 4.066,
+ "seam_vs_median": 1.17,
  "near_freeze_pairs_(diff<0.05)": [],
  "frames_with_step_gt_4x_median(first frame of new shot or very fast move)": [
   18,
@@ -116,11 +116,11 @@
  "largest_steps": [
   [
    19,
-   109.12
+   109.64
   ],
   [
    35,
-   59.44
+   59.45
   ],
   [
    229,
@@ -128,7 +128,7 @@
   ],
   [
    228,
-   34.51
+   34.5
   ],
   [
    234,
@@ -140,19 +140,19 @@
   ],
   [
    209,
-   32.53
+   32.54
   ],
   [
    202,
-   31.98
+   31.99
   ],
   [
    203,
-   31.75
+   31.76
   ],
   [
    197,
-   30.62
+   30.63
   ],
   [
    172,
@@ -160,27 +160,27 @@
   ],
   [
    210,
-   29.75
+   29.76
   ],
   [
    201,
-   29.74
+   29.75
   ],
   [
-   198,
-   29.74
+   170,
+   29.75
   ]
  ],
  "intentional_holds": {
   "f31-36": "suspended beat: speed 12 %, vignette closes; slowed motion, not a freeze"
  },
  "min_step_f30_to_f37": [
-  17.019,
-  12.466,
-  18.238,
-  22.289,
-  15.579,
-  59.445,
+  17.022,
+  12.467,
+  18.236,
+  22.296,
+  15.576,
+  59.449,
   4.93
  ]
 }

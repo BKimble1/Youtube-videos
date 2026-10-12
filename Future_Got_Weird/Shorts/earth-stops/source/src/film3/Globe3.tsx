@@ -60,14 +60,15 @@ export const RingHalf: React.FC<{cx: number; cy: number; R: number; rot: number;
   const top: {x: number; y: number}[] = [], bot: {x: number; y: number}[] = [];
   for (let l = a0; l <= a1 + 0.01; l += 6) { top.push(pt(l, h)); bot.push(pt(l, -h)); }
   const poly = `M ${top.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')} L ${[...bot].reverse().map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')} Z`;
+  // a slotted, ventilated rotor: 18 broad slots (the earlier 40 fine ticks read as a measuring tape); the slots also carry the rotation
   const ticks: React.ReactNode[] = [];
-  for (let k = 0; k < 40; k++) {
-    const l = wrap(k * 9 + rot * 1.0 + (front ? 0 : 0));
-    const lo = front ? l >= -88 && l <= 88 : l > 92 || l < -92;
+  for (let k = 0; k < 18; k++) {
+    const l = wrap(k * 20 + rot * 1.0);
+    const lo = front ? l >= -84 && l <= 84 : l > 96 || l < -96;
     if (!lo) continue;
     const lp = l < 0 && !front ? l + 360 : l;
-    const a = pt(lp, h * 0.72), b = pt(lp, -h * 0.72), a2 = pt(lp + 2.2, h * 0.72), b2 = pt(lp + 2.2, -h * 0.72);
-    ticks.push(<path key={k} d={`M ${a.x} ${a.y} L ${a2.x} ${a2.y} L ${b2.x} ${b2.y} L ${b.x} ${b.y} Z`} fill={C.ink} opacity={front ? 0.5 : 0.35} />);
+    const a = pt(lp, h * 0.5), b = pt(lp, -h * 0.5), a2 = pt(lp + 8, h * 0.5), b2 = pt(lp + 8, -h * 0.5);
+    ticks.push(<path key={k} d={`M ${a.x} ${a.y} L ${a2.x} ${a2.y} L ${b2.x} ${b2.y} L ${b.x} ${b.y} Z`} fill={C.ink} stroke={C.ink} strokeWidth={4} strokeLinejoin="round" opacity={front ? 0.82 : 0.5} />);
   }
   const hi = `M ${top.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')}`;
   return (
