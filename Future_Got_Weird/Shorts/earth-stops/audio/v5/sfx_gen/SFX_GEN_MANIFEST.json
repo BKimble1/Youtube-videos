@@ -1,0 +1,98 @@
+[
+ {
+  "file": "audio/v5/sfx_gen/sea_wall_A.mp3",
+  "generation_id": "kYDSifL3ZApaVRdBIufM",
+  "prompt": "Heavy ocean wave crashing against a stone seawall, deep thud then rushing foam",
+  "duration_secs": 1
+ },
+ {
+  "file": "audio/v5/sfx_gen/sea_wall_B.mp3",
+  "generation_id": "RQCS5MnlbsYqhal2LVtw",
+  "prompt": "Heavy ocean wave crashing against a stone seawall, deep thud then rushing foam",
+  "duration_secs": 1
+ },
+ {
+  "file": "audio/v5/sfx_gen/sea_surge_A.mp3",
+  "generation_id": "A1Nt4ccQNMyN1L2jFyr0",
+  "prompt": "Large ocean swell surging forward over a beach, heavy rushing water, low rumble",
+  "duration_secs": 1
+ },
+ {
+  "file": "audio/v5/sfx_gen/sea_surge_B.mp3",
+  "generation_id": "3dIFIrr8ZG6qfJjpaYD9",
+  "prompt": "Large ocean swell surging forward over a beach, heavy rushing water, low rumble",
+  "duration_secs": 1
+ },
+ {
+  "file": "audio/v5/sfx_gen/bike_roll_A.mp3",
+  "generation_id": "WgAHKljemo8LFBf1htyj",
+  "prompt": "Riderless bicycle rolling fast past on pavement, spokes ticking, chain rattle",
+  "duration_secs": 1
+ },
+ {
+  "file": "audio/v5/sfx_gen/bike_roll_B.mp3",
+  "generation_id": "Lq9celehkUn8zqFy3t8G",
+  "prompt": "Riderless bicycle rolling fast past on pavement, spokes ticking, chain rattle",
+  "duration_secs": 2
+ },
+ {
+  "file": "audio/v5/sfx_gen/chair_tip_A.mp3",
+  "generation_id": "An1LW0e1U8GrdoXlE7e8",
+  "prompt": "Metal cafe chair scraping across stone paving then tipping over with a clatter",
+  "duration_secs": 2
+ },
+ {
+  "file": "audio/v5/sfx_gen/chair_tip_B.mp3",
+  "generation_id": "JMgtlCdnES3LdvRs3hoO",
+  "prompt": "Metal cafe chair scraping across stone paving then tipping over with a clatter",
+  "duration_secs": 2
+ },
+ {
+  "file": "audio/v5/sfx_gen/box_tumble_A.mp3",
+  "generation_id": "ErLgjq3EmCwgy0Xhuywl",
+  "prompt": "Empty cardboard box tumbling and scuffing along a concrete pavement",
+  "duration_secs": 1
+ },
+ {
+  "file": "audio/v5/sfx_gen/box_tumble_B.mp3",
+  "generation_id": "N0e6UiAiERyorLtckwe6",
+  "prompt": "Empty cardboard box tumbling and scuffing along a concrete pavement",
+  "duration_secs": 1
+ },
+ {
+  "file": "audio/v5/sfx_gen/wind_palms_A.mp3",
+  "generation_id": "FQ6xafkOQsZ6kNXEteWz",
+  "prompt": "Strong gusting wind through palm fronds, a flag snapping, close",
+  "duration_secs": 2
+ },
+ {
+  "file": "audio/v5/sfx_gen/wind_palms_B.mp3",
+  "generation_id": "7IgkcY7fnPXvuhhEEIxR",
+  "prompt": "Strong gusting wind through palm fronds, a flag snapping, close",
+  "duration_secs": 2
+ },
+ {
+  "file": "audio/v5/sfx_gen/ground_stop_A.mp3",
+  "generation_id": "zd5JoV3FY1HHpUVQEgVw",
+  "prompt": "Sudden deep impact thud with a low sub drop, a huge heavy object slamming to a halt",
+  "duration_secs": 2
+ },
+ {
+  "file": "audio/v5/sfx_gen/ground_stop_B.mp3",
+  "generation_id": "28hseCmcJxfqnyNZbArB",
+  "prompt": "Sudden deep impact thud with a low sub drop, a huge heavy object slamming to a halt",
+  "duration_secs": 2
+ },
+ {
+  "file": "audio/v5/sfx_gen/sip_A.mp3",
+  "generation_id": "r3IxUTA6lnPalo0YPYs6",
+  "prompt": "One quiet sip of hot coffee from a ceramic mug, close, soft swallow",
+  "duration_secs": 2
+ },
+ {
+  "file": "audio/v5/sfx_gen/sip_B.mp3",
+  "generation_id": "RQcaINuDgNfSqFJF2WHg",
+  "prompt": "One quiet sip of hot coffee from a ceramic mug, close, soft swallow",
+  "duration_secs": 2
+ }
+]

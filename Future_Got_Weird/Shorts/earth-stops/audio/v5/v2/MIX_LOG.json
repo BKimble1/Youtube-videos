@@ -1,0 +1,62 @@
+{
+ "voice_rms_dBFS_voiced": -17.7,
+ "duck_dB_under_speech": {
+  "impacts": 7.0,
+  "friction": 9.0,
+  "liquid": 9.0,
+  "air_cloth": 10.0,
+  "air2": 14.0,
+  "bike": 10.0,
+  "ui": 8.0,
+  "steps": 9.0,
+  "objects": 14.0,
+  "wind": 16.0,
+  "water": 18.0,
+  "whirr": 10.0,
+  "whoosh": 10.0,
+  "rush": 8.0,
+  "globe": 6.0,
+  "sip": 3.0
+ },
+ "tension_swell_duck_dB": {
+  "low_band": 3.0,
+  "speech_band": 16.0
+ },
+ "duck_lf_dB": 2.0,
+ "generated_picks": {
+  "sea_wall": "A",
+  "sea_surge": "B",
+  "bike_roll": "B",
+  "chair_tip": "B",
+  "box_tumble": "B",
+  "wind_palms": "A",
+  "ground_stop": "B",
+  "sip": "A"
+ },
+ "mixes": {
+  "mix_v2": {
+   "before": [
+    -15.3,
+    -0.7
+   ],
+   "scale_db": -0.8,
+   "final": [
+    -16.1,
+    -1.5
+   ]
+  },
+  "mix_v2_nomusic": {
+   "before": [
+    -15.3,
+    -0.7
+   ],
+   "scale_db": -0.8,
+   "final": [
+    -16.1,
+    -1.5
+   ]
+  }
+ },
+ "placed_events": 107,
+ "note": "levels are design targets from measurement, not listening results; the tension swell is original synthesis and is a separate stem; mix_v2_nomusic is the same mix without it"
+}

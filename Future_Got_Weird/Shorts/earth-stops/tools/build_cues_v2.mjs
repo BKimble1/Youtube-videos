@@ -1,65 +1,43 @@
-// Writes audio/v2/cues_<variant>.json: the timed events the v2 Foley is built on, derived from the SAME choreography functions that draw the picture.
-// Usage: node tools/build_cues_v2.mjs ea2|ec1
+// Writes audio/v5/cues_v2.json: the timed events the V2 film's sound is built on, taken from the SAME modules that draw the picture (source/src/film2/*).
+// Usage: node tools/build_cues_v2.mjs
 import {build} from '../source/node_modules/esbuild/lib/main.js';
 import path from 'node:path'; import fs from 'node:fs'; import os from 'node:os';
 import {fileURLToPath, pathToFileURL} from 'node:url';
-const variant = process.argv[2];
-if (!['ea2', 'ec1'].includes(variant)) throw new Error('variant must be ea2 or ec1');
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const src = path.join(root, 'source/src');
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'fgw-cues2-'));
-fs.writeFileSync(path.join(tmp, 'e.ts'), `export * as A from '${src}/v2/choreo2'; export * as C from '${src}/v2/choreoEC';`);
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'fgw-cuesv2-'));
+fs.writeFileSync(path.join(tmp, 'e.ts'), `
+export * as TL from '${src}/film2/timeline';
+export * as HK from '${src}/film2/Hook2';
+export * as ST from '${src}/film2/Story2';
+export * as PZ from '${src}/film2/Plaza';
+export * as CO from '${src}/film2/Coast2';
+export * as PO from '${src}/film2/Payoff2';
+export * as SC from '${src}/film2/Scene2';
+`);
 const out = path.join(tmp, 'b.mjs');
-await build({entryPoints: [path.join(tmp, 'e.ts')], bundle: true, platform: 'node', format: 'esm', outfile: out, loader: {'.json': 'json'}, jsx: 'automatic', nodePaths: [path.join(root, 'source/node_modules')], logLevel: 'error'});
-const {A, C} = await import(pathToFileURL(out).href);
-const ec = variant === 'ec1';
-const fps = ec ? C.FPS_EC : A.FPS, N = ec ? C.N_EC : A.N, T0 = ec ? C.T0 : 0, B0 = ec ? 0 : A.PARCEL_B0;
-const PANEL_S = 0.82; // E-C draws the street scene scaled by this about x = 540
-const toFrameX = (sx) => (ec ? 540 + (sx - 540) * PANEL_S : sx);
-const sc = (f) => f - T0; // composition frame -> scene frame
-const frames = Array.from({length: N}, (_, f) => {
-  const s = sc(f);
-  const live = s >= 0;
-  return {
-    f, t: +(f / fps).toFixed(4),
-    v_hip: live ? +A.vHip(s).toFixed(3) : 0, // px/frame in the ground frame (scene px)
-    cam_rel: live ? +(A.camSpeed(s) * A.zoomAt(s)).toFixed(3) : 0, // px/frame the street scrolls past on screen
-    grounded: live ? A.grounded(s) : true,
-  };
-});
-// first scene frame each parcel is on the ground -> landing frame and where it lands on screen
-const seen = new Set(), landings = [];
-for (let s = 0; s <= N - T0 + 10; s++) {
-  for (const p of A.parcels(s, B0)) {
-    if (!p.landed || seen.has(p.k)) continue;
-    seen.add(p.k);
-    const lf = s - p.sinceLand;
-    const scr = A.toScreen(p.x, p.y, Math.max(0, lf));
-    const fx = toFrameX(scr.x), frame = lf + T0;
-    if (frame < N) landings.push({k: p.k, frame: +frame.toFixed(2), t: +(frame / fps).toFixed(4), screen_x: +fx.toFixed(1), r: +p.r.toFixed(1)});
-  }
-}
-landings.sort((a, b) => a.frame - b.frame);
-const EA = A.EVT; // events in scene frames
-const events = {
-  hero_stop: T0, cup_tick: EA.tick + T0, launch: EA.launch + T0, land: EA.land + T0, brake_start: EA.brake_start + T0, brake_end: EA.brake_end + T0,
-  jet_first: Math.max(0, T0 + B0), jet_last: +(T0 + B0 + 0.42 * 45).toFixed(1), flap_in: T0 + 8,
-  ...(ec ? {globe_stop: C.EVT_EC.stop, ring_end: C.EVT_EC.ring_end} : {}),
+await build({entryPoints: [path.join(tmp, 'e.ts')], bundle: true, platform: 'node', format: 'esm', outfile: out, loader: {'.json': 'json', '.css': 'empty', '.woff': 'empty', '.woff2': 'empty'}, jsx: 'automatic', nodePaths: [path.join(root, 'source/node_modules')], logLevel: 'error', define: {'process.env.NODE_ENV': '"production"'}});
+const {TL, HK, ST, PZ, CO, PO} = await import(pathToFileURL(out).href);
+const fps = TL.FPS, N = TL.N_FILM, T = TL.T;
+const curve = (fn) => Array.from({length: N}, (_, f) => +fn(f).toFixed(4));
+// bicycle pass: the frame its centre crosses the middle of the screen, and the frames it is on screen (plaza camera)
+const camP = ST.PLAZA;
+const bikeScreen = (f) => 540 + (PZ.bikeState(f - T.stopF).x - camP.cam) * camP.z;
+const onScreen = []; for (let f = T.stopF; f < N; f++) { const x = bikeScreen(f); if (x > -200 && x < 1280) onScreen.push(f); }
+const centre = (() => { for (let f = T.stopF; f < N; f++) if (bikeScreen(f) >= 540) return f; return null; })();
+const ev = {
+  globe_stop: T.globeStop, hook_tags: [HK.HK.lamp, HK.HK.bike], hook_rewind: [HK.HK.rw0, HK.HK.rw1], hook_eq: HK.HK.eq, hook_arrow: HK.HK.arrow, hook_plate: HK.HK.plate,
+  b02_pigeon_in: ST.B2.pigeonIn, b02_lens: ST.B2.lens, b02_you: ST.B2.you, b02_ground: ST.B2.ground, b02_air: ST.B2.air, b02_pulse: ST.B2.pulse, pan: [T.panA, T.panB],
+  stop: T.stopF, curb_tag: ST.B3.curb, loose_tag: ST.B3.loose, wipe1: [T.wipe1A, T.wipe1B],
+  bike_on_screen: [onScreen[0], onScreen[onScreen.length - 1]], bike_centre: centre,
+  chair_tip: [T.stopF + PZ.PLAZA_OBJ.chair.tip0, T.stopF + PZ.PLAZA_OBJ.chair.tip1],
+  air: CO.AIR_F, sea: CO.SEA_F, sea_wall: CO.WALL_F, sea_exit: CO.EXIT_F, foam: [T.foamA, T.foamB, T.foamC],
+  lat: [T.latA, T.latMove0, T.latMove1], streak: [T.streakA, T.streakB], pay: T.payA, chip_pay: PO.P2.chip, sip: [T.sipA, T.sipUp, T.sipDown, T.sipEnd],
 };
-let bike = null;
-if (!ec) {
-  const enter = Array.from({length: N}, (_, f) => f).find((f) => A.toScreen(A.bikeX(f), A.BIKE_Y, f).x + A.BIKE_R * 2.15 * A.zoomAt(f) > 0);
-  bike = {enter_frame: enter, note: 'first frame any part of the bicycle is on screen'};
-}
-const cues = {
-  variant, fps, total_frames: N, duration_s: N / fps, t0: T0,
-  events: Object.fromEntries(Object.entries(events).map(([k, v]) => [k, {frame: v, t: +(v / fps).toFixed(4)}])),
-  coffee: {emit_first_frame: events.jet_first, emit_last_frame: events.jet_last, landings},
-  bike, frames,
-};
-fs.mkdirSync(path.join(root, 'audio/v2'), {recursive: true});
-fs.writeFileSync(path.join(root, `audio/v2/cues_${variant}.json`), JSON.stringify(cues, null, 1));
-console.log(variant, 'events', JSON.stringify(cues.events));
-console.log('landings', landings.length, 'on screen', landings.filter((l) => l.screen_x > 0 && l.screen_x < 1080).length, 'bike', JSON.stringify(bike));
+const cues = {fps, total_frames: N, duration_s: N / fps, d_hook: T.D, words: TL.WORD, groups: TL.GROUPS, events: ev, junk: CO.JUNK.map((j) => ({kind: j.kind, f0: j.f0})),
+  curves: {wind: curve(CO.windK), level: curve((f) => (1340 - CO.level(f)) / 250)}};
+fs.mkdirSync(path.join(root, 'audio/v5'), {recursive: true});
+fs.writeFileSync(path.join(root, 'audio/v5/cues_v2.json'), JSON.stringify(cues, null, 1));
+console.log(JSON.stringify(ev));
 fs.rmSync(tmp, {recursive: true, force: true});
