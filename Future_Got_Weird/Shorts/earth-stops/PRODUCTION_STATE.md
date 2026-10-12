@@ -21,7 +21,7 @@ Branch `claude/fgw-earth-stops-short` (from Atlas tip `3634cc5`). **The complete
 8. Give the next revision brief, or approve a path to publication (not authorised yet).
 
 ## Commit record (all on `claude/fgw-earth-stops-short`, pushed)
-V3 work-in-progress `99297ba`. The V3 review commit and the documentation-only commit that records its hash follow it in `git log`.
+V3 work-in-progress `99297ba` → V3 review cut `2bf53c3` → final render (slotted rotor ring), re-export, QA numbers `e6fa93a` (**`exports/v6/` is from this commit**) → a documentation-only commit recording these hashes.
 
 ## Not authorised yet
 Publishing, uploading, scheduling; pull requests; licensed music; further Runway spend.
