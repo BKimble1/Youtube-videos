@@ -71,14 +71,14 @@ export const P1: React.FC<{f: number}> = ({f}) => {
 
 
 /* ================================================================== P2: the street stands still; everything that is loose goes east past it (f36-150) */
-const CAMX2 = 1250;
-const zoom2 = (f: number) => lerp(1.0, 1.1, cl((f - T.wideA) / (T.trackA - T.wideA)));
-const toS2 = (x: number, y: number, z: number) => ({x: 540 + (x - CAMX2) * z, y: GSY + (y - GYW) * z});
+export const CAMX2 = 1250;
+export const zoom2 = (f: number) => lerp(1.0, 1.1, cl((f - T.wideA) / (T.trackA - T.wideA)));
+export const toS2 = (x: number, y: number, z: number) => ({x: 540 + (x - CAMX2) * z, y: GSY + (y - GYW) * z});
 const LAMP_X2 = 1400, PALM_X2 = 1010;
-const BODIES = {
+export const BODIES = {
   mug: {x0: 380, y0: 1010, vx: 66, vy: -4, spin: 26, g: 1.5, floor: GYW - 34, e: 0.45, fr: 0.86, t0: 36} as Body,
-  bike: {x0: 440, y0: BY - BR, vx: 54, vy: 0, spin: 0, g: 1.0, floor: BY - BR, e: 0.3, fr: 0.93, roll: 0.998, t0: 44, hits: [{x: 1212, vxK: 0.5, vy: -19, spin: 17}]} as Body,
-  chairA: {x0: 400, y0: 800, vx: 60, vy: 0, spin: -16, g: 1.1, floor: GYW - 86, e: 0.42, fr: 0.88, t0: 56, hits: [{x: 985, vxK: -0.2, vy: -14, spin: 24}]} as Body,
+  bike: {x0: 440, y0: BY - BR, vx: 54, vy: 0, spin: 0, g: 1.0, floor: BY - BR, e: 0.3, fr: 0.93, roll: 0.998, t0: 54, hits: [{x: 1212, vxK: 0.5, vy: -19, spin: 17}]} as Body,
+  chairA: {x0: 400, y0: 800, vx: 60, vy: 0, spin: -16, g: 1.1, floor: GYW - 86, e: 0.42, fr: 0.88, t0: 64, hits: [{x: 985, vxK: -0.2, vy: -14, spin: 24}]} as Body,
   boxA: {x0: 420, y0: 880, vx: 66, vy: -6, spin: 18, g: 1.3, floor: GYW - 52, e: 0.5, fr: 0.88, t0: 68} as Body,
   boxB: {x0: 400, y0: 820, vx: 70, vy: -11, spin: -20, g: 1.3, floor: GYW - 78, e: 0.5, fr: 0.9, t0: 82} as Body,
   bin: {x0: 180, y0: 1468, vx: 72, vy: 0, spin: 0, g: 1.0, floor: 1468, e: 0.2, fr: 0.98, roll: 0.999, t0: 92, rollR: 92} as Body,
@@ -167,10 +167,10 @@ import {SpeedPlate} from '../film2/ui';
 
 
 /* ================================================================== P3: the wind. The camera follows the debris east (f150-238); a torn awning crosses the lens and the cut to the coast hides behind it */
-const camV = (f: number) => 64 * sm((f - 146) / 42);
-const camX3 = (f: number) => { let x = CAMX2; for (let t = T.trackA; t < f; t++) x += camV(t + 0.5); return x; };
+export const camV = (f: number) => 64 * sm((f - 146) / 42);
+export const camX3 = (f: number) => { let x = CAMX2; for (let t = T.trackA; t < f; t++) x += camV(t + 0.5); return x; };
 const Z3 = 1.1;
-const windK3 = (f: number) => 0.2 + 0.8 * sm((f - 148) / 38);
+export const windK3 = (f: number) => 0.2 + 0.8 * sm((f - 148) / 38);
 const FlagW: React.FC<{x: number; k: number; f: number}> = ({x, k, f}) => {
   const len = 110 + 120 * k, top = 700;
   const pts = Array.from({length: 9}).map((_, i) => { const u = i / 8; return {x: x + 8 + u * len, y: top + 90 * (1 - k) * u * u + Math.sin(f * 0.75 - u * 6) * (4 + 20 * k) * u}; });
@@ -192,7 +192,7 @@ const FgPost: React.FC<{x: number}> = ({x}) => (
     <rect x={x - 54} y={1230} width={108} height={22} fill={C.saffron} />
   </g>
 );
-const POSTS3 = [1850, 2620, 3380, 4130];
+export const POSTS3 = [1850, 2620, 3380, 4130];
 const SHEETS3 = Array.from({length: 70}).map((_, i) => ({t0: 148 + i * 1.2, dx: -1100 + rand(i + 1) * 1300, y: 640 + rand(i + 2) * 960, v: 84 + rand(i + 3) * 60, ph: rand(i + 4) * 6, kind: i % 3, s: 1.1 + rand(i + 5) * 1.0}));
 
 export const P3: React.FC<{f: number; graphics: boolean}> = ({f}) => {

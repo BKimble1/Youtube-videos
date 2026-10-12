@@ -1,0 +1,14 @@
+# V3 export metadata
+
+Source of truth: `EXPORT_METADATA.json` (verbatim `ffprobe -show_format -show_streams -of json`, size, sha256, counted frames). Summary:
+
+| file | bytes | sha256 | video | audio | duration |
+|---|---:|---|---|---|---|
+| `FGW_EarthStops_V3_MusicOnly_1080x1920.mp4` | 16628577 | `68a352bfc291a2cd465fef4ba72d2ed67a85577980be45a82b233d2013139d10` | h264 High 1080x1920 30/1 fps yuv420p bt709 744 frames | aac 48000 Hz 2 ch, 51 kb/s | 24.800 s |
+| `FGW_EarthStops_V3_ReviewNoMusic_1080x1920.mp4` | 17256304 | `33711d49aa4ec110d936951abaf25200ce45deaf579491f2f396654a640d9570` | h264 High 1080x1920 30/1 fps yuv420p bt709 744 frames | aac 48000 Hz 2 ch, 253 kb/s | 24.800 s |
+| `FGW_EarthStops_V3_Review_1080x1920.mp4` | 17256393 | `a9deb8c731221ccb0872448cedfdedc1e51dab684804e458e92e659d4821eb71` | h264 High 1080x1920 30/1 fps yuv420p bt709 744 frames | aac 48000 Hz 2 ch, 253 kb/s | 24.800 s |
+| `FGW_EarthStops_V3_Review_Preview_540x960_labeled.mp4` | 2620206 | `6804951594f3b044a59fa2fb2c6b836f4447a11aba6f633f582b457eb75350b6` | h264 High 540x960 30/1 fps yuv420p bt709 744 frames | aac 48000 Hz 2 ch, 127 kb/s | 24.810 s |
+| `FGW_EarthStops_V3_SFXOnly_1080x1920.mp4` | 17209682 | `7b65baf662852e54749950d3636c3cee2a40dd53fa8b9fc0a34f82142cb9349f` | h264 High 1080x1920 30/1 fps yuv420p bt709 744 frames | aac 48000 Hz 2 ch, 238 kb/s | 24.800 s |
+| `FGW_EarthStops_V3_Silent_1080x1920.mp4` | 16451382 | `1144d2b4b91f71e0fe7e2b90249b1d50a6d9322afebe9a9d4512d445ab4b551f` | h264 High 1080x1920 30/1 fps yuv420p bt709 744 frames | none (no audio track) | 24.800 s |
+| `FGW_EarthStops_V3_VoiceOnly_1080x1920.mp4` | 17039515 | `7b33326c5f8635bc04affc14db469dca41eff0715195be65a26d2cb7f14c7594` | h264 High 1080x1920 30/1 fps yuv420p bt709 744 frames | aac 48000 Hz 2 ch, 183 kb/s | 24.800 s |
+| `FGW_EarthStops_V3_VoiceOnly_48k.mp3` | 596781 | `93f545f2296fd0460f5a480f0f8c77292445153472d73a59187bf4a152346e3c` | - | mp3 48000 Hz 2 ch, 192 kb/s | 24.840 s |

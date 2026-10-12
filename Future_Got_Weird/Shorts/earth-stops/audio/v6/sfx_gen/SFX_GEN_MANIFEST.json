@@ -1,0 +1,142 @@
+{
+ "flow_id": "8AQcNds3jlE7BP7D8taV",
+ "generations": [
+  {
+   "id": "oSSc7tnXhapZmOcL98IA",
+   "status": "completed",
+   "model_id": "eleven_text_to_sound_v2",
+   "prompt": "Heavy industrial hydraulic clamp closing on a steel disc and locking with a deep metallic clack, one short hit",
+   "duration_secs": 1,
+   "created_at_unix_ms": 1791811611003,
+   "credits": 16.665,
+   "cue": "brake_lock",
+   "variation": "A",
+   "use": "used (high-passed 350 Hz, first 160 ms)",
+   "file": "audio/v6/sfx_gen/oSSc7tnXhapZmOcL98IA.mp3"
+  },
+  {
+   "id": "P3llKpTtGxrjP5PBkAoF",
+   "status": "completed",
+   "model_id": "eleven_text_to_sound_v2",
+   "prompt": "Heavy industrial hydraulic clamp closing on a steel disc and locking with a deep metallic clack, one short hit",
+   "duration_secs": 1,
+   "created_at_unix_ms": 1791811611042,
+   "credits": 16.665,
+   "cue": "brake_lock",
+   "variation": "B",
+   "use": "alternative, unused",
+   "file": "audio/v6/sfx_gen/P3llKpTtGxrjP5PBkAoF.mp3"
+  },
+  {
+   "id": "mwcSUnT0uiayBP17NEcA",
+   "status": "completed",
+   "model_id": "eleven_text_to_sound_v2",
+   "prompt": "Hydraulic actuator straining, rising mechanical whine and metal creak, building tension, one and a half seconds",
+   "duration_secs": 1,
+   "created_at_unix_ms": 1791811611901,
+   "credits": 16.665,
+   "cue": "actuator_strain",
+   "variation": "A",
+   "use": "used (high-passed 3.2 kHz, rising envelope, inside the loop bed)",
+   "file": "audio/v6/sfx_gen/mwcSUnT0uiayBP17NEcA.mp3"
+  },
+  {
+   "id": "SQeMHkPxqBtqYbvhk0D6",
+   "status": "completed",
+   "model_id": "eleven_text_to_sound_v2",
+   "prompt": "Hydraulic actuator straining, rising mechanical whine and metal creak, building tension, one and a half seconds",
+   "duration_secs": 1,
+   "created_at_unix_ms": 1791811611940,
+   "credits": 16.665,
+   "cue": "actuator_strain",
+   "variation": "B",
+   "use": "alternative, unused",
+   "file": "audio/v6/sfx_gen/SQeMHkPxqBtqYbvhk0D6.mp3"
+  },
+  {
+   "id": "5PL9YJ78syGuVjNSxEFc",
+   "status": "completed",
+   "model_id": "eleven_text_to_sound_v2",
+   "prompt": "Bicycle crashing into a metal lamp post with a loud clang and a spinning wheel rattle",
+   "duration_secs": 1,
+   "created_at_unix_ms": 1791811612911,
+   "credits": 16.665,
+   "cue": "bike_lamp_clang",
+   "variation": "A",
+   "use": "alternative, unused",
+   "file": "audio/v6/sfx_gen/5PL9YJ78syGuVjNSxEFc.mp3"
+  },
+  {
+   "id": "VGIjrNVlzGF9K2dUDEtF",
+   "status": "completed",
+   "model_id": "eleven_text_to_sound_v2",
+   "prompt": "Bicycle crashing into a metal lamp post with a loud clang and a spinning wheel rattle",
+   "duration_secs": 1,
+   "created_at_unix_ms": 1791811612949,
+   "credits": 16.665,
+   "cue": "bike_lamp_clang",
+   "variation": "B",
+   "use": "used (high-passed 250 Hz)",
+   "file": "audio/v6/sfx_gen/VGIjrNVlzGF9K2dUDEtF.mp3"
+  },
+  {
+   "id": "SsDr2RtLDV3mBL8wYo4b",
+   "status": "completed",
+   "model_id": "eleven_text_to_sound_v2",
+   "prompt": "Old wooden pier posts creaking and straining, then wooden planks splintering and snapping",
+   "duration_secs": 1,
+   "created_at_unix_ms": 1791811613770,
+   "credits": 16.665,
+   "cue": "pier_planks",
+   "variation": "A",
+   "use": "used (planks splinter, high-passed 300 Hz)",
+   "file": "audio/v6/sfx_gen/SsDr2RtLDV3mBL8wYo4b.mp3"
+  },
+  {
+   "id": "jDHpqBm9AZOBPQgIytSX",
+   "status": "completed",
+   "model_id": "eleven_text_to_sound_v2",
+   "prompt": "Old wooden pier posts creaking and straining, then wooden planks splintering and snapping",
+   "duration_secs": 7,
+   "created_at_unix_ms": 1791811613801,
+   "credits": 16.665,
+   "cue": "pier_planks",
+   "variation": "B",
+   "use": "used (7 s creak + snap; creak and snap placed separately; snap aligned to the wave hit)",
+   "file": "audio/v6/sfx_gen/jDHpqBm9AZOBPQgIytSX.mp3"
+  },
+  {
+   "id": "kMnVYKIl4SpYF0aHiOJJ",
+   "status": "completed",
+   "model_id": "eleven_text_to_sound_v2",
+   "prompt": "Strong wind with cardboard boxes and plastic chairs tumbling and clattering past on pavement, fast pass-by",
+   "duration_secs": 1,
+   "created_at_unix_ms": 1791811614936,
+   "credits": 16.665,
+   "cue": "debris_wind",
+   "variation": "A",
+   "use": "used three times, re-pitched 0.90/1.00/1.12",
+   "file": "audio/v6/sfx_gen/kMnVYKIl4SpYF0aHiOJJ.mp3"
+  },
+  {
+   "id": "f5jGhW3xRTRyQA6Y4zNH",
+   "status": "pending",
+   "model_id": "eleven_text_to_sound_v2",
+   "prompt": "Strong wind with cardboard boxes and plastic chairs tumbling and clattering past on pavement, fast pass-by",
+   "created_at_unix_ms": 1791811614964,
+   "credits": 16.665,
+   "cue": "debris_wind",
+   "variation": "B",
+   "use": "still pending when the session moved on; never downloaded, not used",
+   "file": null
+  }
+ ],
+ "note": "Five Sound Effects prompts x 2 variations (eleven_text_to_sound_v2, ~16.665 credits per clip, ~167 credits total by price check, not billing). The generated clips are 1.04 s (pier B: 7.03 s) 128 kbps 44.1 kHz stereo MP3. Picks were made from measured peak time, envelope, spectral centroid and fit to the job (tools/build_audio_v3.py), not by listening. V2 generated clips reused: sea_wall A, sea_surge B, chair_tip A/B, box_tumble B, wind_palms A, ground_stop B (audio/v5/sfx_gen/).",
+ "analysis": {
+  "lock_A": "peak@0.01 s, centroid 3.2 kHz, -20 dB by 0.45 s",
+  "strain_A": "flat to 0.65 s then falls; centroid 7.5 kHz",
+  "clang_B": "single transient, ring-out, centroid 3.1 kHz",
+  "pier_B": "7.0 s; creaks ~-45 dB re its snap; snap peak at 3.41 s",
+  "debris_A": "wind + tumbling objects, centroid 1.2 kHz"
+ }
+}

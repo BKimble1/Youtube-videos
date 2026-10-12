@@ -41,8 +41,8 @@ export type Cue = {a: number; b: number; lines: CapSeg[][]; dy?: number};
 const f = (s: number) => Math.round(s * FPS);
 export const CUES: Cue[] = [
   {a: 0, b: f(1.22) - 1, lines: [[['If Earth']], [['stopped,', true]]]},
-  {a: f(1.22), b: f(2.38) - 1, lines: [[['you’d keep']], [['moving '], ['east—', true]]]},
-  {a: f(2.38), b: f(3.42) - 1, lines: [[['about a']], [['thousand', true]]]},
+  {a: f(1.22), b: f(2.58) - 1, lines: [[['you’d keep']], [['moving '], ['east—', true]]]},
+  {a: f(2.58), b: f(3.42) - 1, lines: [[['about a']], [['thousand', true]]]},
   {a: f(3.42), b: f(4.06) - 1, lines: [[['miles an hour']]]},
   {a: f(4.06), b: f(5.14) - 1, lines: [[['at the '], ['equator.', true]]]},
   {a: f(5.16), b: f(7.04) - 1, lines: [[['Loose ', true], ['objects']], [['keep going too.']]]},

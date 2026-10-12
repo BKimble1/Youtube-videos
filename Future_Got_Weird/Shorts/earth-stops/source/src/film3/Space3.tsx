@@ -56,7 +56,7 @@ export const Stage: React.FC<{f: number; graphics: boolean; scale?: number; at?:
         <Pigeon x={820} y={820 + 12 * Math.sin(t * 0.17)} s={2.0} fly flap={t * 0.8} />
         {graphics && (
           <g transform={`scale(${pulse})`} style={{transformOrigin: '540px 900px'}}>
-            {arr(430, hip.x + 70, 650)}
+            {arr(430, 140, 1020)}
             {arr(436, 540, 1440)}
             {arr(441, 840, 700)}
           </g>

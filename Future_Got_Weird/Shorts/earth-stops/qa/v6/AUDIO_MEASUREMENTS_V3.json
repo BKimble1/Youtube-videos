@@ -1,0 +1,92 @@
+{
+ "muxed_aac": {
+  "FGW_EarthStops_V3_Review_1080x1920": {
+   "I": -15.9,
+   "LRA": 3.9,
+   "true_peak": -1.5
+  },
+  "FGW_EarthStops_V3_ReviewNoMusic_1080x1920": {
+   "I": -15.9,
+   "LRA": 4.0,
+   "true_peak": -1.5
+  }
+ },
+ "mix_log": {
+  "mix_v3": {
+   "before": [
+    -15.8,
+    -1.4
+   ],
+   "scale_db": -0.1,
+   "final": [
+    -15.9,
+    -1.5
+   ],
+   "loop_seam": {
+    "first_sample": -0.020834287978590448,
+    "last_sample": -0.0026591941712929045,
+    "rms_last_20ms": 0.03140661981243378,
+    "rms_first_20ms": 0.030954614515383484
+   }
+  },
+  "mix_v3_nomusic": {
+   "before": [
+    -15.8,
+    -1.4
+   ],
+   "scale_db": -0.1,
+   "final": [
+    -15.9,
+    -1.5
+   ],
+   "loop_seam": {
+    "first_sample": -0.020834287978590448,
+    "last_sample": -0.002659194171292896,
+    "rms_last_20ms": 0.03140661981243378,
+    "rms_first_20ms": 0.030954614515383484
+   }
+  }
+ },
+ "audio_loop_seam_samples": {
+  "seam_step": 0.018157958984375,
+  "median_step_pm40ms": 0.0150146484375,
+  "p99_step_pm40ms": 0.05859039306640626
+ },
+ "voice_integrity": {
+  "voice_stem_vs_timeline": {
+   "gain_dB": -0.10093063193974751,
+   "residual_dB": -77.04440280387738
+  },
+  "timeline_segments_vs_takeB": {
+   "S1": {
+    "gain_dB": -0.001,
+    "residual_dB": -73.9
+   },
+   "S2": {
+    "gain_dB": -0.001,
+    "residual_dB": -74.1
+   },
+   "S3": {
+    "gain_dB": -0.001,
+    "residual_dB": -74.1
+   },
+   "S4": {
+    "gain_dB": -0.001,
+    "residual_dB": -72.7
+   },
+   "S5": {
+    "gain_dB": -0.164,
+    "residual_dB": -14.2
+   },
+   "S6": {
+    "gain_dB": -0.235,
+    "residual_dB": -12.6
+   },
+   "S7": {
+    "gain_dB": -0.001,
+    "residual_dB": -72.5
+   }
+  }
+ },
+ "events": 101
+}

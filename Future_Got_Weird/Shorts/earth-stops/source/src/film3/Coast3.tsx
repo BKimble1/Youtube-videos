@@ -15,10 +15,10 @@ import {T} from './timeline3';
  */
 export const BASE = 1200, WALL_X = 640, PROM_Y = 1140;
 const POST_X = [110, 270, 430];
-const swellA = 250;
+export const swellA = 250;
 const mixHex = (a: string, b: string, t: number) => { const tt = Math.max(0, Math.min(1, t)); const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16)); return '#' + pa.map((v, i) => Math.round(v + (pb[i] - v) * tt).toString(16).padStart(2, '0')).join(''); };
-const xf = (f: number) => (f < swellA ? -700 : f < T.surgeHit ? lerp(-700, 470, Math.pow(cl((f - swellA) / (T.surgeHit - swellA)), 1.15)) : 470 + 15 * (f - T.surgeHit) + 0.11 * (f - T.surgeHit) ** 2);
-const crestH = (f: number) => 120 + 740 * E.inOut(cl((f - swellA) / 80));
+export const xf = (f: number) => (f < swellA ? -700 : f < T.surgeHit ? lerp(-700, 470, Math.pow(cl((f - swellA) / (T.surgeHit - swellA)), 1.15)) : 470 + 15 * (f - T.surgeHit) + 0.11 * (f - T.surgeHit) ** 2);
+export const crestH = (f: number) => 120 + 740 * E.inOut(cl((f - swellA) / 80));
 const wavePh = (f: number) => f * 0.09;
 const ripple = (x: number, f: number) => 7 * Math.sin(x / 58 - wavePh(f)) + 4 * Math.sin(x / 24 - 1.9 * wavePh(f));
 const yBase = (x: number) => (x < WALL_X ? BASE : PROM_Y);
@@ -163,7 +163,7 @@ export const CoastScene: React.FC<{f: number}> = ({f}) => {
 
 /** the water washes through the frame as a foam-edged band: its leading edge covers the coast, its trailing edge reveals the next scene; spray flies ahead of it */
 export const waterEdges = (f: number) => {
-  const u = ramp(f, T.sprayA - 18, T.sprayB - 8, E.inOut), L1 = lerp(-380, 1500, u);
+  const u = ramp(f, T.sprayA - 18, T.sprayB, E.inOut), L1 = lerp(-380, 1900, u); // the trailing edge (L1 - 800) leaves the frame exactly at sprayB: no held or popping band
   return {L1, L2: L1 - 800};
 };
 export const WaterBand: React.FC<{f: number}> = ({f}) => {
