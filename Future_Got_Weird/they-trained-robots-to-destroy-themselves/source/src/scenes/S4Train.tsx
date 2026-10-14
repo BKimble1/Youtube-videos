@@ -293,9 +293,9 @@ export const S4Train: React.FC = () => {
               <Headline size={46}>Practice runs in a real furnace: 0</Headline>
             </Card>
           )}
-          {wipe < 0.5 ? <IllusTag /> : <IllusTag text="SIMULATION · illustration" tone="blue" />}
+          {wipe < 0.5 ? <IllusTag /> : <IllusTag text="SIMULATION · illustration" tone="blue" opacity={1 - Math.min(1, shrink * 4)} />}
           {g > at('new AI model') - 6 && g < c.how + 4 && (
-            <Card x={90} y={90} w={720} h={200} bg={C.white} opacity={tw(g, at('new AI model') - 6, 12, E.back) * (1 - tw(g, c.how - 6, 10))} pad={28}>
+            <Card x={1110} y={80} w={720} h={200} bg={C.white} opacity={tw(g, at('new AI model') - 6, 12, E.back) * (1 - tw(g, c.how - 6, 10))} pad={28}>
               <Chip tone="ink" size={24}>FIGURE SAYS</Chip>
               <Headline size={50} style={{marginTop: 12}}>A new AI model, trained in simulation</Headline>
             </Card>
