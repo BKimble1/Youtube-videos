@@ -149,12 +149,14 @@ export const Real: React.FC = () => {
     if (tau < T_SLACK) cam = {...orbitCam, target: lerp3([STAGE.edgeX - 30, STAGE.deckY + 80, 0], com, smooth(seg(tau, REAL_START, R_TO + 0.2)))};
     else if (tau < T_FLOOR) {
       const knee = sk.side.R.knee;
-      cam = {pos: add(knee, [36, 8, 92]), target: knee, fov: 40, roll: 3};
+      const d = smooth(seg(tau, T_SLACK, T_FLOOR));
+      cam = {pos: add(knee, [36 - 26 * d, 8 + 6 * d, 92 - 14 * d]), target: knee, fov: 40 - 3 * d, roll: 3 - 2 * d};
       label = 'joints have slack';
     } else if (tau < T_NOISY) {
       // looking back down at the plate it pushed off: a raised weld seam under a straight edge
       const p: V3 = [STAGE.edgeX - 40, DECK.y, 20];
-      cam = {pos: add(p, [70, 70, 110]), target: add(p, [-6, 0, 0]), fov: 38, roll: -3};
+      const d = smooth(seg(tau, T_FLOOR, T_NOISY));
+      cam = {pos: add(p, [70 - 30 * d, 70 - 18 * d, 110 - 20 * d]), target: add(p, [-6, 0, 0]), fov: 38, roll: -3 + 2 * d};
       label = 'floors aren’t flat';
     } else if (tau < T_NEVER) {
       const head = add(sk.head.o, [10, 9, 0]);

@@ -3,7 +3,7 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {Cam3} from '../engine/camera';
-import {V3, clamp01, lerp3, mix, smooth} from '../engine/math';
+import {V3, add, clamp01, lerp3, mix, smooth} from '../engine/math';
 import {Item, box, line3, tube} from '../engine/prims';
 import {STAND} from '../robot/motion';
 import {T, blockStart} from '../cues';
@@ -237,7 +237,8 @@ export const Film: React.FC = () => {
   if (tau < T_HINT) {
     // match cut: the movie's chain becomes the foundry crane chain; the camera tilts down it to the robot at the edge
     const u = easeInOut(seg(tau, T_X + 0.22, T_BIZ + 0.3)) * 1;
-    const cam: Cam3 = {pos: lerp3([-40, 1150, 520], [140, 760, 620], u), target: lerp3([-60, 1100, 120], [-180, 620, 0], u), fov: 42};
+    const drift = smooth(seg(tau, T_BIZ + 0.3, T_HINT));
+    const cam: Cam3 = {pos: add(lerp3([-40, 1150, 520], [140, 760, 620], u), [70 * drift, -30 * drift, 40 * drift]), target: lerp3([-60, 1100, 120], [-180, 620, 0], u), fov: 42 - 3 * drift};
     return (
       <AbsoluteFill>
         <FoundryScene cam={cam} tau={tau} robots={[{pose, id: 'f3', inside: false}]} entries={[]} extra={craneChain(1500, 760)} />

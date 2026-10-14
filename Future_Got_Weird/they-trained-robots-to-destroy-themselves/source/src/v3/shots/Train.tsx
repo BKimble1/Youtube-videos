@@ -366,7 +366,9 @@ const PolicyShot: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   else {
     const drift = smooth(seg(tau, T_FOOT - 0.2, T('before the robot tips') + 0.3));
     const leg2: Cam3 = {pos: add(knee, [60 - 70 * drift, 30 + 10 * drift, 165 - 25 * drift]), target: add(knee, [0, 10, 0]), fov: 44 - 4 * drift};
-    cam = camMix(camMix(legCam, leg2, easeInOut(seg(tau, T_FOOT, T_FOOT + 0.4))), {...wide, pos: add(sk.pelvis, [140, 160, 520])}, easeInOut(seg(tau, T('before the robot tips') - 0.1, T_WISH + 0.5)));
+    const orb = (seg(tau, T_WISH - 0.6, T_REFLEX - 0.2)) * 0.5;
+    const wide2: Cam3 = {...wide, pos: add(sk.pelvis, [140 * Math.cos(orb) + 520 * Math.sin(orb), 160 - 30 * orb, 520 * Math.cos(orb) - 140 * Math.sin(orb)])};
+    cam = camMix(camMix(legCam, leg2, easeInOut(seg(tau, T_FOOT, T_FOOT + 0.4))), wide2, easeInOut(seg(tau, T('before the robot tips') - 0.1, T_WISH + 0.5)));
   }
   if (reflex) {
     const r = smooth(seg(tau, T_REFLEX - 0.2, TRAIN_END));

@@ -44,6 +44,27 @@ export const f02StandPose = (tau: number): Pose => {
 // an F.03 walks across the back of the bay (in front of the glass partition, never through it)
 const f03Walk = (tau: number) => walkPose([-640, 0, -440], Math.PI / 2, (tau - HOOK_TURN_START) * 92, 0, {stride: 58});
 
+/** The visor's glossy black filling the frame: dark graphite with a soft specular band (never a blank frame). */
+const VisorGlossSvg: React.FC<{k: number}> = ({k}) => (
+  <g opacity={k}>
+    <defs>
+      <linearGradient id="visorGloss" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#26323E" />
+        <stop offset="0.45" stopColor="#141B23" />
+        <stop offset="1" stopColor="#1C2630" />
+      </linearGradient>
+      <linearGradient id="visorSpec" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stopColor="#FFFFFF" stopOpacity={0} />
+        <stop offset="0.5" stopColor="#CFE3F2" stopOpacity={0.22} />
+        <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
+      </linearGradient>
+    </defs>
+    <rect width={1920} height={1080} fill="url(#visorGloss)" />
+    <path d="M520 0 L900 0 L520 1080 L140 1080 Z" fill="url(#visorSpec)" />
+  </g>
+);
+const VisorGloss: React.FC<{k: number}> = ({k}) => <VisorGlossSvg k={k} />;
+
 /** Camera framing the visor head-on from `dist` cm (shared by H11 and Why S2a so the visor matches exactly). */
 export const visorCam = (pose: Pose, dist: number, fov = 30): Cam3 => {
   const sk = solve(pose);
@@ -154,17 +175,20 @@ export const HookTurn: React.FC = () => {
     return (
       <AbsoluteFill style={{background: '#F4ECD6'}}>
         <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#F4ECD6" />} items={workshopFrame(pr, tau, warm)} robots={robots} frame={f}
-          over={k > 0 ? <rect width={1920} height={1080} fill="#07090B" opacity={k} /> : null} />
+          over={k > 0 ? <VisorGloss k={k} /> : null} />
       </AbsoluteFill>
     );
   }
   // H10: through the visor, an iris opens from black onto the training stage
   const iris = easeOut(clamp01((tau - T_THROUGH) / 0.45));
+  const r = 140 + iris * 1010;
   return (
-    <AbsoluteFill style={{background: '#07090B'}}>
-      <AbsoluteFill style={{clipPath: `circle(${(iris * 1150).toFixed(1)}px at 960px 540px)`}}>
+    <AbsoluteFill>
+      <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}><VisorGlossSvg k={1} /></svg>
+      <AbsoluteFill style={{clipPath: `circle(${r.toFixed(1)}px at 960px 540px)`}}>
         <SimStageFrame tau={tau} f={f} />
       </AbsoluteFill>
+      {iris < 1 ? <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}><circle cx={960} cy={540} r={r} fill="none" stroke="#BFE9FF" strokeWidth={8} opacity={1 - iris} /></svg> : null}
     </AbsoluteFill>
   );
 };
