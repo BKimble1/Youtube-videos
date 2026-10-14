@@ -131,9 +131,9 @@ export const foundryFrame = (o: SceneOpts, idp = ''): {pr: Proj; nodes: React.Re
         const camA = Math.atan2(pr.pos[2] - c[2], pr.pos[0] - c[0]);
         // local angle of the camera direction (inverse of the yaw rotation above)
         const la = Math.atan2(Math.cos(camA) * sa + Math.sin(camA) * ca, Math.cos(camA) * ca - Math.sin(camA) * sa);
-        const sw = Math.max(1.5, 6 * pr.p(c).s);
-        items.push({z: z + 2, key: 'men-far-' + idp + id, el: <path key={'men-far-' + idp + id} d={arc(la + Math.PI / 2, la + 1.5 * Math.PI)} fill="none" stroke="#FFE07A" strokeWidth={sw} strokeOpacity={0.85} strokeLinecap="round" />});
-        items.push({z: z - 2, key: 'men-near-' + idp + id, el: <path key={'men-near-' + idp + id} d={arc(la - Math.PI / 2, la + Math.PI / 2)} fill="none" stroke="#FFF2B8" strokeWidth={sw * 1.2} strokeOpacity={0.9} strokeLinecap="round" />});
+        const sw = Math.min(9, Math.max(1.5, 1.4 * pr.p(c).s));
+        items.push({z: z + 2, key: 'men-far-' + idp + id, el: <path key={'men-far-' + idp + id} d={arc(la + Math.PI / 2, la + 1.5 * Math.PI)} fill="none" stroke="#FFE07A" strokeWidth={sw} strokeOpacity={0.6} strokeLinecap="round" />});
+        items.push({z: z - 2, key: 'men-near-' + idp + id, el: <path key={'men-near-' + idp + id} d={arc(la - Math.PI / 2, la + Math.PI / 2)} fill="none" stroke="#FFF2B8" strokeWidth={sw * 1.2} strokeOpacity={0.75} strokeLinecap="round" />});
       }
     };
     (r.trail ?? []).forEach((tp, k) => draw(tp, `${r.id}-tr${k}`, 0.22 / (k + 1)));
@@ -301,7 +301,7 @@ export const HookFoundry: React.FC = () => {
     return (
       <AbsoluteFill>
         <FoundryScene cam={camH6(tau)} tau={tau} robots={[r2]} entries={entries} />
-        <Chip x={90} y={920} lines={['FIGURE · “F.02 DECOMMISSION” · SEP 30, 2026']} appear={tau - T_H6 - 0.25} size={30} />
+        <Chip x={100} y={920} lines={['FIGURE · “F.02 DECOMMISSION” · SEP 30, 2026']} appear={tau - T_H6 - 0.25} size={30} />
       </AbsoluteFill>
     );
   }

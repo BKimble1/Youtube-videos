@@ -63,9 +63,9 @@ const trial = (landX: number, landing: TrialSpec['landing'], lateral = 0, armSty
 const TRY1 = trial(-150, 'short');
 const TRY2 = trial(-22, 'stick');
 const FACE = trial(60, 'faceplant');
-const LANES = [-460, 0, 460];
+const LANES = [0, -460, -920];
 
-const simCam = (u: number): Cam3 => ({pos: lerp3([330, 760, 820], [280, 730, 760], u), target: [-110, 470, 0], fov: 48});
+const simCam = (u: number): Cam3 => ({pos: lerp3([520, 560, 640], [300, 740, 780], u), target: lerp3([-150, 520, 0], [-110, 470, 0], u), fov: 46, roll: mix(-3, 0, u)});
 
 export const StageShot: React.FC<{cam: Cam3; robots: RobotSpec[]; extra?: Item[]; f: number; chars?: CharSpec[]; over?: React.ReactNode; lanes?: number[]; ringPulse?: number; ringColor?: string; grid?: number}> = ({cam, robots, extra = [], f, chars, over, lanes = [0], ringPulse, ringColor, grid}) => {
   const pr = makeProj(cam);
@@ -142,7 +142,7 @@ export const Train: React.FC = () => {
     const s1 = TRY1.at(tau - (T_TRY + 0.75));
     const u = smooth(seg(tau, T_HOW, T_NUDGE));
     const ub = seg(tau, T_BAL - 0.35, T_NUDGE);
-    const cam = tau < T_BAL - 0.35 ? simCam(u) : {pos: lerp3([170, 640, 520], [140, 610, 480], ub), target: [-80, 470, 0] as V3, fov: 46};
+    const cam = tau < T_BAL - 0.35 ? simCam(u) : {pos: lerp3([260, 720, 660], [230, 700, 620], ub), target: [-100, 500, 0] as V3, fov: 46};
     const pr = makeProj(cam);
     const extra = tau > T_TRY + 0.75 + 0.1 ? [arc3(pr, 'a1', TRY1.arc(), '#4F7CC9', {upto: clamp01((tau - T_TRY - 0.75) / 0.95)})] : [];
     const sk = solve(s1.pose);
@@ -153,7 +153,7 @@ export const Train: React.FC = () => {
       <StageShot cam={cam} robots={[{id: 'try1', pose: s1.pose, kind: 'SIM', light: SL, ground: s1.phase === 'push' ? G0.deckY : G0.padY}]} extra={extra} f={f} ringColor={tau > T_TGT ? '#EF6B55' : undefined}
         over={(
           <>
-            <Chip x={80} y={70} lines={['HOW THIS KIND OF TRAINING GENERALLY WORKS']} appear={tau - T_HOW} tone="blue" size={34} />
+            <Chip x={100} y={64} lines={['HOW THIS KIND OF TRAINING GENERALLY WORKS']} appear={tau - T_HOW} tone="blue" size={34} />
             <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}>
               <Badge x={torso.x + 140} y={torso.y - 60} ok k={seg(tau, T_BAL, T_BAL + 0.3)} icon="level" />
               <Badge x={edge.x} y={edge.y - 120} ok k={seg(tau, T_PUSH, T_PUSH + 0.3)} icon="foot" />
@@ -197,7 +197,7 @@ export const Train: React.FC = () => {
   if (tau < T_FALL) {
     const u = easeInOut(seg(tau, T_COPIES, T_COPIES + 1.4));
     const back = easeInOut(seg(tau, T_FALL - 1.0, T_FALL));
-    const camFar: Cam3 = {pos: [900, 1150, 1500], target: [-110, 380, 0], fov: 46};
+    const camFar: Cam3 = {pos: [900, 1150, 1100], target: [-110, 380, -460], fov: 46};
     const cam = camMix(camMix(simCam(1), camFar, u), simCam(1), back);
     const outcomes: TrialSpec['landing'][] = ['short', 'stick', 'stick'];
     const lands = [-140, -26, -14];
@@ -240,7 +240,7 @@ export const Train: React.FC = () => {
     return (
       <StageShot cam={cam} robots={[{id: 'perf', pose: sp.pose, kind: 'PERF', light: SL, ground: sp.phase === 'push' ? G0.deckY : G0.padY}, {id: 'pbot', pose: sb.pose, kind: 'SIM', light: SL, ground: sb.phase === 'push' ? G0.deckY : G0.padY}]} extra={extra} f={f} lanes={[-230, 230]}
         over={(
-          <div style={{position: 'absolute', left: 80, bottom: 70, display: 'flex', gap: 24, opacity: seg(tau, T_STUNT + 0.3, T_STUNT + 0.7)}}>
+          <div style={{position: 'absolute', left: 100, bottom: 70, display: 'flex', gap: 24, opacity: seg(tau, T_STUNT + 0.3, T_STUNT + 0.7)}}>
             <div style={{fontFamily: F.body, fontWeight: 800, fontSize: 34, color: '#FFFFFF', background: '#6A4BB4', borderRadius: 14, padding: '10px 22px'}}>stunt performer</div>
             <div style={{fontFamily: F.body, fontWeight: 800, fontSize: 34, color: '#FFFFFF', background: '#3A5FA0', borderRadius: 14, padding: '10px 22px'}}>virtual robot</div>
           </div>
@@ -294,7 +294,7 @@ const SimTransform: React.FC<{tau: number; f: number}> = ({tau, f}) => {
           {rs > 0 ? <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}><rect x={feet.x - 160} y={scanY - 2} width={320} height={4} fill="#BFE9FF" /></svg> : null}
         </>
       )}
-      <Chip x={80} y={70} lines={['FIGURE SAYS', 'a new AI model, trained in simulation']} appear={tau - T_SIM - 1.3} tone="blue" size={34} />
+      <Chip x={100} y={64} lines={['FIGURE SAYS', 'a new AI model, trained in simulation']} appear={tau - T_SIM - 1.3} tone="blue" size={34} />
     </AbsoluteFill>
   );
 };
@@ -382,7 +382,7 @@ const PolicyShot: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   const cP = pr.p(chip);
   const actHot = seg(tau, tRide1 - 0.4, tRide1) * (1 - seg(tau, tOut1, tOut1 + 0.6));
   const hl = [
-    {prefix: 'kneeActR', color: C.saffron, amount: Math.max(actHot, (0.25 + 0.5 * fix) * (tau > T_FOOT ? 1 : 0)) * (reflex ? 0 : 1)},
+    {prefix: 'kneeActR', color: C.saffron, amount: 0.7 * Math.max(actHot, (0.25 + 0.5 * fix) * (tau > T_FOOT ? 1 : 0)) * (reflex ? 0 : 1)},
     {prefix: 'ankleActR', color: C.saffron, amount: (0.25 + 0.5 * fix) * (tau > T_FOOT ? 1 : 0) * (reflex ? 0 : 1)},
   ];
   const ham = reflex ? seg(tau, T_REFLEX - 0.2, T_REFLEX + 0.55) : 0;
@@ -407,10 +407,10 @@ const PolicyShot: React.FC<{tau: number; f: number}> = ({tau, f}) => {
                   return <circle cx={q.x} cy={q.y} r={18} fill="#FFE07A" stroke={C.ink} strokeWidth={4} />;
                 })()}
                 <rect x={cP.x - 34} y={cP.y - 24} width={68} height={48} rx={8} fill={C.ink} stroke={C.saffron} strokeWidth={5} />
-                <g transform={`translate(${cP.x + 60} ${cP.y - 70})`} opacity={seg(tau, T('a learned rule') - 0.3, T('a learned rule'))}>
-                  <rect x={0} y={-46} width={360} height={84} rx={14} fill={C.paper} stroke={C.ink} strokeWidth={4} />
-                  <text x={22} y={10} fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.ink}>POLICY</text>
-                  <text x={190} y={10} fontFamily={F.body} fontWeight={700} fontSize={26} fill={C.inkSoft}>a learned rule</text>
+                <g transform={`translate(${Math.min(1300, cP.x + 70)} ${Math.max(140, cP.y - 80)})`} opacity={seg(tau, T('a learned rule') - 0.3, T('a learned rule'))}>
+                  <rect x={0} y={-60} width={520} height={110} rx={18} fill={C.paper} stroke={C.ink} strokeWidth={5} />
+                  <text x={28} y={14} fontFamily={F.body} fontWeight={800} fontSize={56} fill={C.ink}>POLICY</text>
+                  <text x={262} y={12} fontFamily={F.body} fontWeight={700} fontSize={34} fill={C.inkSoft}>a learned rule</text>
                 </g>
               </g>
             ) : null}

@@ -1,0 +1,1323 @@
+{
+ "fps": 30,
+ "totalFrames": 7005,
+ "narrationEnd": 230.544,
+ "music": {
+  "hookEnd": 19.368,
+  "impact": 3.12,
+  "impact2": 12.968,
+  "curious": 19.368,
+  "training": 96.258,
+  "real": 150.534,
+  "prove": 190.374,
+  "payoff": 194.504,
+  "reflect": 204.82399999999998,
+  "freeze": 213.26399999999998,
+  "people": 217.464,
+  "question": 223.624,
+  "entry": 224.454,
+  "sting": 231.004,
+  "end": 233.5
+ },
+ "sections": {
+  "WHY_START": 19.368,
+  "FILM_START": 68.03399999999999,
+  "TRAIN_START": 94.258,
+  "REAL_START": 150.534,
+  "PROVE_START": 190.374,
+  "END_START": 204.82399999999998,
+  "TRAIN_END": 150.534,
+  "REAL_END": 190.374,
+  "FILM_END": 94.258,
+  "WHY_END": 68.03399999999999,
+  "HOOK_TURN_END": 19.368
+ },
+ "cues": [
+  {
+   "t": 0,
+   "kind": "furnace_roar",
+   "dur": 14.218,
+   "gain": 7
+  },
+  {
+   "t": 0,
+   "kind": "robot_push",
+   "gain": 2
+  },
+  {
+   "t": 0.1,
+   "kind": "step_grate",
+   "gain": -1
+  },
+  {
+   "t": 0.38,
+   "kind": "servo_whir",
+   "gain": -2
+  },
+  {
+   "t": 1.7000000000000002,
+   "kind": "whoosh_soft",
+   "gain": -6,
+   "pitch": -4
+  },
+  {
+   "t": 3.0900000000000003,
+   "kind": "sub_boom",
+   "gain": -11
+  },
+  {
+   "t": 3.12,
+   "kind": "molten_heavy",
+   "gain": -11
+  },
+  {
+   "t": 3.37,
+   "kind": "sizzle",
+   "dur": 3.4,
+   "gain": -13
+  },
+  {
+   "t": 4.37,
+   "kind": "sizzle",
+   "dur": 2.4,
+   "gain": -4
+  },
+  {
+   "t": 5.997999999999999,
+   "kind": "step_grate",
+   "gain": -7,
+   "pitch": 0.4
+  },
+  {
+   "t": 6.348,
+   "kind": "pop_tick",
+   "gain": -4
+  },
+  {
+   "t": 6.4895254237288125,
+   "kind": "step_grate",
+   "gain": -8.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 6.9810508474576265,
+   "kind": "step_grate",
+   "gain": -7,
+   "pitch": 0.4
+  },
+  {
+   "t": 7.4725762711864405,
+   "kind": "step_grate",
+   "gain": -8.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 7.964101694915254,
+   "kind": "step_grate",
+   "gain": -7,
+   "pitch": 0.4
+  },
+  {
+   "t": 8.455627118644067,
+   "kind": "step_grate",
+   "gain": -8.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 11.208,
+   "kind": "robot_push",
+   "gain": -8
+  },
+  {
+   "t": 12.938,
+   "kind": "sub_boom",
+   "gain": -16
+  },
+  {
+   "t": 12.968,
+   "kind": "molten_heavy",
+   "gain": -16
+  },
+  {
+   "t": 13.218,
+   "kind": "sizzle",
+   "dur": 3.4,
+   "gain": -18
+  },
+  {
+   "t": 13.918,
+   "kind": "amb_room",
+   "dur": 2.8500000000000014,
+   "gain": -2
+  },
+  {
+   "t": 13.918,
+   "kind": "tag_clink",
+   "gain": -9,
+   "pitch": -6
+  },
+  {
+   "t": 14.168,
+   "kind": "robot_step",
+   "gain": -10,
+   "pitch": 0.4
+  },
+  {
+   "t": 14.218,
+   "kind": "whoosh_soft",
+   "gain": -12,
+   "pitch": -3
+  },
+  {
+   "t": 14.798434782608695,
+   "kind": "robot_step",
+   "gain": -11.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 15.42886956521739,
+   "kind": "robot_step",
+   "gain": -10,
+   "pitch": 0.4
+  },
+  {
+   "t": 15.958,
+   "kind": "servo_whir",
+   "gain": -10,
+   "pitch": -3
+  },
+  {
+   "t": 16.059304347826085,
+   "kind": "robot_step",
+   "gain": -11.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 16.68973913043478,
+   "kind": "robot_step",
+   "gain": -10,
+   "pitch": 0.4
+  },
+  {
+   "t": 16.768,
+   "kind": "sim_blip",
+   "gain": -2
+  },
+  {
+   "t": 16.768,
+   "kind": "amb_sim",
+   "dur": 2.8999999999999986,
+   "gain": -2
+  },
+  {
+   "t": 17.158,
+   "kind": "whoosh_soft",
+   "gain": -12,
+   "pitch": 4
+  },
+  {
+   "t": 18.598,
+   "kind": "ding_yes",
+   "gain": -7
+  },
+  {
+   "t": 18.668,
+   "kind": "servo_whir",
+   "gain": -10,
+   "pitch": 2
+  },
+  {
+   "t": 19.368,
+   "kind": "sim_blip",
+   "gain": -6,
+   "pitch": -4
+  },
+  {
+   "t": 19.368,
+   "kind": "amb_room",
+   "dur": 32.306,
+   "gain": -3
+  },
+  {
+   "t": 19.968,
+   "kind": "servo_whir",
+   "gain": -10,
+   "pitch": -6
+  },
+  {
+   "t": 21.288,
+   "kind": "pop_tick",
+   "gain": -7
+  },
+  {
+   "t": 25.608,
+   "kind": "pop_tick",
+   "gain": -6
+  },
+  {
+   "t": 25.608,
+   "kind": "servo_whir",
+   "gain": -12,
+   "pitch": 1
+  },
+  {
+   "t": 28.108,
+   "kind": "tag_clink",
+   "gain": -7
+  },
+  {
+   "t": 28.258,
+   "kind": "padlock",
+   "gain": -9,
+   "pitch": -3
+  },
+  {
+   "t": 28.558,
+   "kind": "ding_yes",
+   "gain": -14,
+   "pitch": 5
+  },
+  {
+   "t": 28.888,
+   "kind": "robot_step",
+   "gain": -9,
+   "pitch": 0.4
+  },
+  {
+   "t": 29.459428571428575,
+   "kind": "robot_step",
+   "gain": -10.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 29.887999999999998,
+   "kind": "pop_tick",
+   "gain": -7
+  },
+  {
+   "t": 30.030857142857144,
+   "kind": "robot_step",
+   "gain": -9,
+   "pitch": 0.4
+  },
+  {
+   "t": 30.602285714285717,
+   "kind": "robot_step",
+   "gain": -10.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 31.173714285714286,
+   "kind": "robot_step",
+   "gain": -9,
+   "pitch": 0.4
+  },
+  {
+   "t": 31.74514285714286,
+   "kind": "robot_step",
+   "gain": -10.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 34.648,
+   "kind": "crane_chain",
+   "gain": -9
+  },
+  {
+   "t": 37.248000000000005,
+   "kind": "card_flick",
+   "gain": -5,
+   "pitch": -8
+  },
+  {
+   "t": 37.498000000000005,
+   "kind": "card_flick",
+   "gain": -5,
+   "pitch": -9
+  },
+  {
+   "t": 37.748000000000005,
+   "kind": "card_flick",
+   "gain": -5,
+   "pitch": -7
+  },
+  {
+   "t": 37.998000000000005,
+   "kind": "tag_clink",
+   "gain": -6,
+   "pitch": -6
+  },
+  {
+   "t": 39.315999999999995,
+   "kind": "whoosh_soft",
+   "gain": -9,
+   "pitch": -5
+  },
+  {
+   "t": 39.716,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": -10
+  },
+  {
+   "t": 39.766,
+   "kind": "sim_blip",
+   "gain": -9,
+   "pitch": -2
+  },
+  {
+   "t": 42.196,
+   "kind": "whoosh_soft",
+   "gain": -9,
+   "pitch": -6
+  },
+  {
+   "t": 42.616,
+   "kind": "tag_clink",
+   "gain": -7,
+   "pitch": -8
+  },
+  {
+   "t": 43.266,
+   "kind": "padlock",
+   "gain": -2
+  },
+  {
+   "t": 44.116,
+   "kind": "shutter_slam",
+   "gain": -5
+  },
+  {
+   "t": 44.846000000000004,
+   "kind": "tag_clink",
+   "gain": -12,
+   "pitch": 4
+  },
+  {
+   "t": 44.946000000000005,
+   "kind": "tag_clink",
+   "gain": -12,
+   "pitch": 5
+  },
+  {
+   "t": 45.04600000000001,
+   "kind": "tag_clink",
+   "gain": -12,
+   "pitch": 6
+  },
+  {
+   "t": 45.146,
+   "kind": "tag_clink",
+   "gain": -12,
+   "pitch": 7
+  },
+  {
+   "t": 45.29600000000001,
+   "kind": "servo_whir",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "t": 47.496,
+   "kind": "servo_whir",
+   "gain": -10,
+   "pitch": 1
+  },
+  {
+   "t": 47.996,
+   "kind": "padlock",
+   "gain": -6,
+   "pitch": -4
+  },
+  {
+   "t": 49.27133333333334,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": 1
+  },
+  {
+   "t": 49.49666666666667,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": -1
+  },
+  {
+   "t": 49.722,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": 1
+  },
+  {
+   "t": 49.94733333333334,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": -1
+  },
+  {
+   "t": 50.17266666666667,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": 1
+  },
+  {
+   "t": 50.398,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": -1
+  },
+  {
+   "t": 50.623333333333335,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": 1
+  },
+  {
+   "t": 50.84866666666667,
+   "kind": "card_flick",
+   "gain": -9,
+   "pitch": -1
+  },
+  {
+   "t": 51.153999999999996,
+   "kind": "whoosh_soft",
+   "gain": -6,
+   "pitch": 3
+  },
+  {
+   "t": 51.224,
+   "kind": "furnace_roar",
+   "dur": 6.270000000000003,
+   "gain": -8
+  },
+  {
+   "t": 54.134,
+   "kind": "sim_blip",
+   "gain": -5,
+   "pitch": -3
+  },
+  {
+   "t": 54.634,
+   "kind": "buzz_no",
+   "gain": -5
+  },
+  {
+   "t": 58.724,
+   "kind": "stamp",
+   "gain": -3
+  },
+  {
+   "t": 59.333999999999996,
+   "kind": "stamp",
+   "gain": -3
+  },
+  {
+   "t": 61.094,
+   "kind": "stamp",
+   "gain": -2
+  },
+  {
+   "t": 61.324000000000005,
+   "kind": "ding_yes",
+   "gain": -6
+  },
+  {
+   "t": 62.023999999999994,
+   "kind": "crane_chain",
+   "gain": -7
+  },
+  {
+   "t": 63.474000000000004,
+   "kind": "amb_room",
+   "dur": 4.859999999999985,
+   "gain": -4
+  },
+  {
+   "t": 66.194,
+   "kind": "clapper",
+   "gain": -3
+  },
+  {
+   "t": 66.31400000000001,
+   "kind": "tag_clink",
+   "gain": -8,
+   "pitch": -7
+  },
+  {
+   "t": 68.03399999999999,
+   "kind": "amb_room",
+   "dur": 10.536000000000001,
+   "gain": -6
+  },
+  {
+   "t": 68.08399999999999,
+   "kind": "paper_slide",
+   "gain": -8
+  },
+  {
+   "t": 70.08200000000001,
+   "kind": "pop_tick",
+   "gain": -5
+  },
+  {
+   "t": 75.592,
+   "kind": "pop_tick",
+   "gain": -3,
+   "pitch": 3
+  },
+  {
+   "t": 78.27,
+   "kind": "card_flick",
+   "gain": -7,
+   "pitch": -2
+  },
+  {
+   "t": 78.91999999999999,
+   "kind": "clapper",
+   "gain": -2
+  },
+  {
+   "t": 79.47,
+   "kind": "crane_chain",
+   "gain": -8
+  },
+  {
+   "t": 80.77,
+   "kind": "sizzle",
+   "dur": 1.6,
+   "gain": -10
+  },
+  {
+   "t": 84.94000000000001,
+   "kind": "crane_chain",
+   "gain": -6
+  },
+  {
+   "t": 85.04,
+   "kind": "whoosh_soft",
+   "gain": -8,
+   "pitch": -6
+  },
+  {
+   "t": 85.04,
+   "kind": "furnace_roar",
+   "dur": 2.397999999999996,
+   "gain": -9
+  },
+  {
+   "t": 87.438,
+   "kind": "paper_slide",
+   "gain": -6
+  },
+  {
+   "t": 87.438,
+   "kind": "amb_room",
+   "dur": 7.11999999999999,
+   "gain": -6
+  },
+  {
+   "t": 89.118,
+   "kind": "stamp",
+   "gain": -3
+  },
+  {
+   "t": 90.798,
+   "kind": "pop_tick",
+   "gain": -6
+  },
+  {
+   "t": 94.258,
+   "kind": "furnace_roar",
+   "dur": 5.440000000000012,
+   "gain": -6
+  },
+  {
+   "t": 95.258,
+   "kind": "sub_boom",
+   "gain": -24
+  },
+  {
+   "t": 99.348,
+   "kind": "whoosh_soft",
+   "gain": -6,
+   "pitch": 2
+  },
+  {
+   "t": 99.498,
+   "kind": "amb_sim",
+   "dur": 51.336,
+   "gain": -1
+  },
+  {
+   "t": 99.798,
+   "kind": "sim_blip",
+   "gain": -6
+  },
+  {
+   "t": 100.298,
+   "kind": "pop_tick",
+   "gain": -6
+  },
+  {
+   "t": 102.83800000000001,
+   "kind": "pop_tick",
+   "gain": -6
+  },
+  {
+   "t": 105.608,
+   "kind": "robot_push",
+   "gain": -8,
+   "pitch": 2
+  },
+  {
+   "t": 107.17800000000001,
+   "kind": "sim_fall",
+   "gain": -3
+  },
+  {
+   "t": 109.338,
+   "kind": "ding_yes",
+   "gain": -7
+  },
+  {
+   "t": 110.618,
+   "kind": "ding_yes",
+   "gain": -7,
+   "pitch": 2
+  },
+  {
+   "t": 111.818,
+   "kind": "buzz_no",
+   "gain": -6
+  },
+  {
+   "t": 112.956,
+   "kind": "rewind",
+   "gain": -4
+  },
+  {
+   "t": 113.906,
+   "kind": "slider_tick",
+   "gain": -7
+  },
+  {
+   "t": 114.206,
+   "kind": "slider_tick",
+   "gain": -8,
+   "pitch": 2
+  },
+  {
+   "t": 114.586,
+   "kind": "robot_push",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "t": 116.156,
+   "kind": "robot_step",
+   "gain": -4
+  },
+  {
+   "t": 116.206,
+   "kind": "ding_yes",
+   "gain": -5
+  },
+  {
+   "t": 119.77600000000001,
+   "kind": "sim_fall",
+   "gain": -9
+  },
+  {
+   "t": 119.94600000000001,
+   "kind": "robot_step",
+   "gain": -9
+  },
+  {
+   "t": 120.11600000000001,
+   "kind": "robot_step",
+   "gain": -9
+  },
+  {
+   "t": 123.096,
+   "kind": "sim_fall",
+   "gain": -3
+  },
+  {
+   "t": 123.766,
+   "kind": "sim_fall",
+   "gain": -5,
+   "pitch": -3
+  },
+  {
+   "t": 128.536,
+   "kind": "robot_step",
+   "gain": -6
+  },
+  {
+   "t": 128.786,
+   "kind": "robot_step",
+   "gain": -7,
+   "pitch": 1
+  },
+  {
+   "t": 131.64600000000002,
+   "kind": "robot_step",
+   "gain": -13,
+   "pitch": 0.4
+  },
+  {
+   "t": 132.44600000000003,
+   "kind": "robot_step",
+   "gain": -14.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 132.64600000000002,
+   "kind": "whoosh_soft",
+   "gain": -10,
+   "pitch": 3
+  },
+  {
+   "t": 132.946,
+   "kind": "sim_blip",
+   "gain": -7
+  },
+  {
+   "t": 133.246,
+   "kind": "robot_step",
+   "gain": -13,
+   "pitch": 0.4
+  },
+  {
+   "t": 134.04600000000002,
+   "kind": "robot_step",
+   "gain": -14.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 134.846,
+   "kind": "robot_step",
+   "gain": -13,
+   "pitch": 0.4
+  },
+  {
+   "t": 135.64600000000002,
+   "kind": "robot_step",
+   "gain": -14.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 136.44600000000003,
+   "kind": "robot_step",
+   "gain": -13,
+   "pitch": 0.4
+  },
+  {
+   "t": 136.486,
+   "kind": "servo_whir",
+   "gain": -9,
+   "pitch": 3
+  },
+  {
+   "t": 137.246,
+   "kind": "robot_step",
+   "gain": -14.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 138.04600000000002,
+   "kind": "robot_step",
+   "gain": -13,
+   "pitch": 0.4
+  },
+  {
+   "t": 139.734,
+   "kind": "tag_clink",
+   "gain": -5,
+   "pitch": -4
+  },
+  {
+   "t": 142.934,
+   "kind": "servo_whir",
+   "gain": -7
+  },
+  {
+   "t": 148.244,
+   "kind": "knee_tap",
+   "gain": -3
+  },
+  {
+   "t": 148.344,
+   "kind": "servo_whir",
+   "gain": -9,
+   "pitch": 4
+  },
+  {
+   "t": 150.534,
+   "kind": "amb_sim",
+   "dur": 1.1200000000000045,
+   "gain": -4
+  },
+  {
+   "t": 150.534,
+   "kind": "robot_push",
+   "gain": -7,
+   "pitch": 1
+  },
+  {
+   "t": 151.134,
+   "kind": "servo_whir",
+   "gain": -8
+  },
+  {
+   "t": 151.404,
+   "kind": "whoosh_soft",
+   "gain": -6,
+   "pitch": -4
+  },
+  {
+   "t": 151.454,
+   "kind": "furnace_roar",
+   "dur": 11.950000000000017,
+   "gain": -5
+  },
+  {
+   "t": 151.604,
+   "kind": "sub_boom",
+   "gain": -16,
+   "pitch": -4
+  },
+  {
+   "t": 153.774,
+   "kind": "servo_whir",
+   "gain": -6,
+   "pitch": -2
+  },
+  {
+   "t": 154.124,
+   "kind": "tag_clink",
+   "gain": -9,
+   "pitch": -8
+  },
+  {
+   "t": 155.474,
+   "kind": "tag_clink",
+   "gain": -8,
+   "pitch": -6
+  },
+  {
+   "t": 156.954,
+   "kind": "static",
+   "gain": -5
+  },
+  {
+   "t": 158.834,
+   "kind": "crane_chain",
+   "gain": -10,
+   "pitch": -2
+  },
+  {
+   "t": 163.00400000000002,
+   "kind": "sim_blip",
+   "gain": -5
+  },
+  {
+   "t": 163.05400000000003,
+   "kind": "whoosh_soft",
+   "gain": -8,
+   "pitch": 3
+  },
+  {
+   "t": 163.204,
+   "kind": "amb_sim",
+   "dur": 12.710000000000008,
+   "gain": -3
+  },
+  {
+   "t": 163.94400000000002,
+   "kind": "robot_step",
+   "gain": -5
+  },
+  {
+   "t": 166.994,
+   "kind": "sim_fall",
+   "gain": -5
+  },
+  {
+   "t": 168.094,
+   "kind": "sim_fall",
+   "gain": -6,
+   "pitch": 2
+  },
+  {
+   "t": 169.134,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 0
+  },
+  {
+   "t": 169.244,
+   "kind": "robot_step",
+   "gain": -6
+  },
+  {
+   "t": 169.684,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 1
+  },
+  {
+   "t": 170.23399999999998,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "t": 170.784,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 3
+  },
+  {
+   "t": 171.464,
+   "kind": "robot_step",
+   "gain": -5
+  },
+  {
+   "t": 171.564,
+   "kind": "ding_yes",
+   "gain": -6
+  },
+  {
+   "t": 175.91400000000002,
+   "kind": "amb_room",
+   "dur": 5.47999999999999,
+   "gain": -4
+  },
+  {
+   "t": 178.44400000000002,
+   "kind": "robot_push",
+   "gain": -6,
+   "pitch": -2
+  },
+  {
+   "t": 179.91400000000002,
+   "kind": "airbag",
+   "gain": -7
+  },
+  {
+   "t": 181.394,
+   "kind": "furnace_roar",
+   "dur": 9.280000000000001,
+   "gain": -2
+  },
+  {
+   "t": 185.734,
+   "kind": "elec_arc",
+   "gain": -3
+  },
+  {
+   "t": 185.934,
+   "kind": "static",
+   "gain": -4
+  },
+  {
+   "t": 187.61399999999998,
+   "kind": "robot_push",
+   "gain": -3
+  },
+  {
+   "t": 188.24399999999997,
+   "kind": "servo_whir",
+   "gain": -5
+  },
+  {
+   "t": 190.374,
+   "kind": "furnace_roar",
+   "dur": 10.580000000000013,
+   "gain": -3
+  },
+  {
+   "t": 190.424,
+   "kind": "sub_boom",
+   "gain": -16,
+   "pitch": -3
+  },
+  {
+   "t": 193.51399999999998,
+   "kind": "whoosh_soft",
+   "gain": -8,
+   "pitch": -5
+  },
+  {
+   "t": 194.474,
+   "kind": "sub_boom",
+   "gain": -13
+  },
+  {
+   "t": 194.504,
+   "kind": "molten_heavy",
+   "gain": -13
+  },
+  {
+   "t": 194.754,
+   "kind": "sizzle",
+   "dur": 3.4,
+   "gain": -15
+  },
+  {
+   "t": 195.104,
+   "kind": "whoosh_soft",
+   "gain": -13,
+   "pitch": -6
+  },
+  {
+   "t": 196.174,
+   "kind": "pop_tick",
+   "gain": -8
+  },
+  {
+   "t": 197.294,
+   "kind": "ding_yes",
+   "gain": -8,
+   "pitch": -2
+  },
+  {
+   "t": 199.294,
+   "kind": "tag_clink",
+   "gain": -10,
+   "pitch": -9
+  },
+  {
+   "t": 200.954,
+   "kind": "amb_room",
+   "dur": 4.1699999999999875,
+   "gain": -3
+  },
+  {
+   "t": 201.054,
+   "kind": "pop_tick",
+   "gain": -8,
+   "pitch": -2
+  },
+  {
+   "t": 202.254,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 2
+  },
+  {
+   "t": 202.45399999999998,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 3
+  },
+  {
+   "t": 202.654,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 4
+  },
+  {
+   "t": 202.85399999999998,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 5
+  },
+  {
+   "t": 203.054,
+   "kind": "pop_tick",
+   "gain": -10,
+   "pitch": 6
+  },
+  {
+   "t": 204.82399999999998,
+   "kind": "furnace_roar",
+   "dur": 12.640000000000015,
+   "gain": -4
+  },
+  {
+   "t": 205.17399999999998,
+   "kind": "step_grate",
+   "gain": -5,
+   "pitch": 0.4
+  },
+  {
+   "t": 205.93715789473683,
+   "kind": "step_grate",
+   "gain": -6.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 206.70031578947365,
+   "kind": "step_grate",
+   "gain": -5,
+   "pitch": 0.4
+  },
+  {
+   "t": 207.4634736842105,
+   "kind": "step_grate",
+   "gain": -6.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 208.134,
+   "kind": "trace",
+   "gain": -6
+  },
+  {
+   "t": 208.22663157894735,
+   "kind": "step_grate",
+   "gain": -5,
+   "pitch": 0.4
+  },
+  {
+   "t": 208.9897894736842,
+   "kind": "step_grate",
+   "gain": -6.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 209.75294736842102,
+   "kind": "step_grate",
+   "gain": -5,
+   "pitch": 0.4
+  },
+  {
+   "t": 210.224,
+   "kind": "pop_tick",
+   "gain": -9
+  },
+  {
+   "t": 210.51610526315787,
+   "kind": "step_grate",
+   "gain": -6.5,
+   "pitch": -0.6
+  },
+  {
+   "t": 210.824,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 1
+  },
+  {
+   "t": 211.224,
+   "kind": "pop_tick",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "t": 212.10399999999998,
+   "kind": "robot_push",
+   "gain": -2
+  },
+  {
+   "t": 212.70399999999998,
+   "kind": "servo_whir",
+   "gain": -4
+  },
+  {
+   "t": 215.324,
+   "kind": "whoosh_soft",
+   "gain": -5
+  },
+  {
+   "t": 217.464,
+   "kind": "amb_room",
+   "dur": 3.5200000000000102,
+   "gain": -4
+  },
+  {
+   "t": 218.144,
+   "kind": "map_pin",
+   "gain": -4
+  },
+  {
+   "t": 218.804,
+   "kind": "whoosh_soft",
+   "gain": -9,
+   "pitch": 3
+  },
+  {
+   "t": 219.44400000000002,
+   "kind": "tag_clink",
+   "gain": -7
+  },
+  {
+   "t": 219.724,
+   "kind": "whoosh_soft",
+   "gain": -9,
+   "pitch": 4
+  },
+  {
+   "t": 219.844,
+   "kind": "typing",
+   "gain": -8
+  },
+  {
+   "t": 220.594,
+   "kind": "ding_yes",
+   "gain": -6
+  },
+  {
+   "t": 220.984,
+   "kind": "amb_sim",
+   "dur": 2.6399999999999864,
+   "gain": -3
+  },
+  {
+   "t": 221.13400000000001,
+   "kind": "robot_push",
+   "gain": -9,
+   "pitch": 2
+  },
+  {
+   "t": 222.704,
+   "kind": "robot_step",
+   "gain": -4
+  },
+  {
+   "t": 222.78400000000002,
+   "kind": "ding_yes",
+   "gain": -5
+  },
+  {
+   "t": 223.624,
+   "kind": "furnace_roar",
+   "dur": 7.780000000000001,
+   "gain": -3
+  },
+  {
+   "t": 224.424,
+   "kind": "sub_boom",
+   "gain": -12
+  },
+  {
+   "t": 224.454,
+   "kind": "molten_heavy",
+   "gain": -12
+  },
+  {
+   "t": 224.704,
+   "kind": "sizzle",
+   "dur": 3.4,
+   "gain": -14
+  },
+  {
+   "t": 227.504,
+   "kind": "whoosh_soft",
+   "gain": -14,
+   "pitch": -7
+  },
+  {
+   "t": 229.504,
+   "kind": "ding_yes",
+   "gain": -9,
+   "pitch": -5
+  },
+  {
+   "t": 231.004,
+   "kind": "sting_end",
+   "gain": -2
+  }
+ ]
+}

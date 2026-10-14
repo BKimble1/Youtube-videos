@@ -22,3 +22,7 @@ qa/v2/review/*.mp4
 qa/v2/proto_video/*.mp4
 qa/v2/thumbs/thumb[AB].png
 tools/__pycache__/
+# V3: regenerated audio (tools/v3/mix_audio_v3.py) and QA frame dumps / review renders
+audio/v3/mix/*.wav
+qa/v3/*/f[0-9]*.png
+qa/v3/review/*.mp4

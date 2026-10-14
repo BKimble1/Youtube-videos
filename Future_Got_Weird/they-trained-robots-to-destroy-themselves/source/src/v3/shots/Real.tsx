@@ -206,9 +206,9 @@ export const Real: React.FC = () => {
             <circle cx={lens.x} cy={lens.y} r={260} fill="none" stroke={C.teal} strokeWidth={8} />
           </svg>
         ) : null}
-        {label ? <div style={{position: 'absolute', left: 90, bottom: 90, fontFamily: F.display, fontWeight: 700, fontSize: 64, color: '#FFFFFF', background: 'rgba(22,42,50,0.82)', padding: '10px 30px', borderRadius: 16}}>{label}</div> : null}
-        {tau >= T_NEVER && tau < T_MESSY ? <Chip x={80} y={70} lines={['FIGURE SAYS', 'a foundry the team had never visited']} appear={tau - T_NEVER - 0.4} tone="ink" size={34} /> : null}
-        {tau >= T_MESSY ? <Chip x={80} y={70} lines={['MESSY ON PURPOSE · a common technique']} appear={tau - T_MESSY - 0.2} tone="blue" size={34} /> : null}
+        {label ? <div style={{position: 'absolute', left: 100, bottom: 90, fontFamily: F.display, fontWeight: 700, fontSize: 64, color: '#FFFFFF', background: 'rgba(22,42,50,0.82)', padding: '10px 30px', borderRadius: 16}}>{label}</div> : null}
+        {tau >= T_NEVER && tau < T_MESSY ? <Chip x={100} y={64} lines={['FIGURE SAYS', 'a foundry the team had never visited']} appear={tau - T_NEVER - 0.4} tone="ink" size={34} /> : null}
+        {tau >= T_MESSY ? <Chip x={100} y={64} lines={['MESSY ON PURPOSE · a common technique']} appear={tau - T_MESSY - 0.2} tone="blue" size={34} /> : null}
       </AbsoluteFill>
     );
   }
@@ -257,7 +257,7 @@ export const Real: React.FC = () => {
     return (
       <AbsoluteFill>
         <Scene3D pr={pr} bg={<StageBg />} items={[...stage(pr, STAGE_ENV, {}), ...extra]} robots={robots} frame={f} />
-        <Chip x={80} y={70} lines={['MESSY ON PURPOSE · a common technique']} appear={tau - T_MESSY - 0.2} tone="blue" size={34} />
+        <Chip x={100} y={64} lines={['MESSY ON PURPOSE · a common technique']} appear={tau - T_MESSY - 0.2} tone="blue" size={34} />
         {caption ? <div style={{position: 'absolute', left: 1240, top: 220, fontFamily: F.display, fontWeight: 700, fontSize: 64, color: C.ink}}>{caption}</div> : null}
       </AbsoluteFill>
     );

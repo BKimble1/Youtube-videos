@@ -1,0 +1,129 @@
+speech windows: 3730, flagged (fx+beds within 6 dB of voice): 190
+   0.50-   0.55s  voice  -41.0 dB  fx  -32.8 dB  near: furnace_roar, robot_push, servo_whir, step_grate
+   1.45-   1.50s  voice  -30.4 dB  fx  -31.6 dB  near: 
+   2.20-   2.25s  voice  -32.0 dB  fx  -31.3 dB  near: whoosh_soft
+   2.75-   2.80s  voice  -31.9 dB  fx  -35.9 dB  near: 
+   3.05-   3.25s  voice  -25.0 dB  fx  -19.7 dB  near: molten_heavy, sub_boom
+   3.30-   3.45s  voice  -27.0 dB  fx  -24.3 dB  near: molten_heavy, sizzle, sub_boom
+   3.80-   3.85s  voice  -25.1 dB  fx  -26.0 dB  near: sizzle
+   4.00-   4.15s  voice  -37.5 dB  fx  -25.9 dB  near: 
+   4.30-   4.35s  voice  -34.7 dB  fx  -31.1 dB  near: sizzle
+   4.40-   4.65s  voice  -31.4 dB  fx  -29.1 dB  near: sizzle
+   5.40-   5.50s  voice  -31.7 dB  fx  -33.6 dB  near: 
+   5.60-   5.65s  voice  -29.8 dB  fx  -33.2 dB  near: 
+   5.75-   5.85s  voice  -33.1 dB  fx  -32.4 dB  near: 
+   6.30-   6.35s  voice  -37.2 dB  fx  -34.3 dB  near: pop_tick, step_grate
+   7.30-   7.35s  voice  -28.1 dB  fx  -32.9 dB  near: step_grate
+   7.45-   7.55s  voice  -28.1 dB  fx  -31.5 dB  near: step_grate
+   7.65-   7.70s  voice  -29.4 dB  fx  -30.6 dB  near: step_grate
+   7.95-   8.00s  voice  -33.8 dB  fx  -27.6 dB  near: step_grate
+   8.55-   8.65s  voice  -24.7 dB  fx  -29.5 dB  near: step_grate
+   9.10-   9.20s  voice  -30.2 dB  fx  -33.9 dB  near: 
+  10.40-  10.45s  voice  -36.4 dB  fx  -35.3 dB  near: 
+  10.60-  10.70s  voice  -38.8 dB  fx  -35.0 dB  near: 
+  11.00-  11.05s  voice  -31.8 dB  fx  -35.7 dB  near: 
+  11.20-  11.25s  voice  -34.3 dB  fx  -32.2 dB  near: robot_push
+  12.20-  12.25s  voice  -29.0 dB  fx  -34.5 dB  near: 
+  12.80-  12.90s  voice  -36.0 dB  fx  -32.7 dB  near: molten_heavy, sub_boom
+  13.50-  13.60s  voice  -27.0 dB  fx  -30.0 dB  near: molten_heavy, sizzle, sub_boom
+  13.85-  14.00s  voice  -32.3 dB  fx  -30.6 dB  near: amb_room, tag_clink
+  17.40-  17.45s  voice  -37.8 dB  fx  -41.6 dB  near: whoosh_soft
+  17.50-  17.55s  voice  -36.4 dB  fx  -40.3 dB  near: whoosh_soft
+  18.60-  18.65s  voice  -36.5 dB  fx  -33.8 dB  near: ding_yes, servo_whir
+  28.25-  28.30s  voice  -38.7 dB  fx  -37.5 dB  near: padlock, tag_clink
+  28.50-  28.65s  voice  -38.9 dB  fx  -41.6 dB  near: ding_yes, padlock, tag_clink
+  38.05-  38.10s  voice  -26.1 dB  fx  -30.8 dB  near: card_flick, tag_clink
+  38.50-  38.55s  voice  -41.7 dB  fx  -39.0 dB  near: tag_clink
+  40.20-  40.30s  voice  -37.9 dB  fx  -38.0 dB  near: card_flick, sim_blip
+  42.70-  42.75s  voice  -35.3 dB  fx  -32.6 dB  near: tag_clink, whoosh_soft
+  44.05-  44.20s  voice  -35.9 dB  fx  -33.8 dB  near: shutter_slam
+  44.85-  44.90s  voice  -31.8 dB  fx  -35.6 dB  near: tag_clink
+  45.10-  45.15s  voice  -38.3 dB  fx  -36.6 dB  near: tag_clink
+  45.35-  45.40s  voice  -40.3 dB  fx  -34.9 dB  near: servo_whir, tag_clink
+  47.95-  48.00s  voice  -34.1 dB  fx  -37.6 dB  near: padlock, servo_whir
+  51.60-  51.65s  voice  -32.5 dB  fx  -35.8 dB  near: furnace_roar, whoosh_soft
+  54.65-  54.70s  voice  -26.3 dB  fx  -29.5 dB  near: buzz_no, sim_blip
+  58.70-  58.75s  voice  -23.9 dB  fx  -26.1 dB  near: stamp
+  59.30-  59.35s  voice  -20.9 dB  fx  -26.2 dB  near: stamp
+  62.40-  62.45s  voice  -35.5 dB  fx  -39.6 dB  near: crane_chain
+  62.85-  62.90s  voice  -35.8 dB  fx  -39.2 dB  near: 
+  63.05-  63.10s  voice  -37.2 dB  fx  -41.5 dB  near: 
+  66.30-  66.35s  voice  -33.7 dB  fx  -35.6 dB  near: clapper, tag_clink
+  66.90-  66.95s  voice  -37.5 dB  fx  -40.7 dB  near: tag_clink
+  68.70-  68.80s  voice  -38.2 dB  fx  -43.2 dB  near: 
+  80.90-  80.95s  voice  -36.1 dB  fx  -41.9 dB  near: sizzle
+  85.65-  85.70s  voice  -32.6 dB  fx  -34.3 dB  near: 
+  86.15-  86.20s  voice  -40.3 dB  fx  -37.7 dB  near: 
+  86.35-  86.40s  voice  -37.1 dB  fx  -42.0 dB  near: 
+  87.55-  87.60s  voice  -35.7 dB  fx  -39.6 dB  near: amb_room, paper_slide
+  89.10-  89.15s  voice  -22.3 dB  fx  -26.2 dB  near: stamp
+  95.25-  95.30s  voice  -39.5 dB  fx  -38.3 dB  near: sub_boom
+  95.45-  95.50s  voice  -35.6 dB  fx  -37.0 dB  near: sub_boom
+  95.55-  95.60s  voice  -38.6 dB  fx  -37.3 dB  near: sub_boom
+  99.55-  99.65s  voice  -34.1 dB  fx  -36.0 dB  near: amb_sim, whoosh_soft
+ 100.25- 100.30s  voice  -39.0 dB  fx  -43.8 dB  near: pop_tick, sim_blip
+ 107.25- 107.30s  voice  -31.4 dB  fx  -34.5 dB  near: sim_fall
+ 110.60- 110.65s  voice  -39.6 dB  fx  -35.3 dB  near: ding_yes
+ 113.30- 113.40s  voice  -33.3 dB  fx  -36.5 dB  near: rewind
+ 114.60- 114.65s  voice  -34.7 dB  fx  -35.4 dB  near: robot_push, slider_tick
+ 123.85- 123.90s  voice  -41.7 dB  fx  -35.9 dB  near: sim_fall
+ 132.95- 133.00s  voice  -36.5 dB  fx  -36.0 dB  near: robot_step, sim_blip, whoosh_soft
+ 137.20- 137.30s  voice  -37.5 dB  fx  -40.9 dB  near: robot_step
+ 143.20- 143.25s  voice  -41.5 dB  fx  -44.0 dB  near: servo_whir
+ 152.00- 152.05s  voice  -28.3 dB  fx  -31.2 dB  near: furnace_roar, sub_boom, whoosh_soft
+ 152.15- 152.30s  voice  -36.8 dB  fx  -29.5 dB  near: sub_boom
+ 152.50- 152.60s  voice  -35.5 dB  fx  -37.0 dB  near: 
+ 153.20- 153.35s  voice  -36.3 dB  fx  -36.4 dB  near: 
+ 155.30- 155.35s  voice  -38.0 dB  fx  -43.8 dB  near: 
+ 155.90- 155.95s  voice  -36.7 dB  fx  -41.8 dB  near: tag_clink
+ 162.50- 162.55s  voice  -42.0 dB  fx  -46.3 dB  near: 
+ 163.55- 163.60s  voice  -34.8 dB  fx  -39.4 dB  near: amb_sim, sim_blip, whoosh_soft
+ 164.00- 164.05s  voice  -29.4 dB  fx  -33.7 dB  near: robot_step
+ 168.05- 168.10s  voice  -36.3 dB  fx  -37.7 dB  near: sim_fall
+ 171.45- 171.50s  voice  -39.9 dB  fx  -29.4 dB  near: ding_yes, robot_step
+ 179.90- 180.05s  voice  -27.3 dB  fx  -28.1 dB  near: airbag
+ 180.35- 180.40s  voice  -38.5 dB  fx  -34.0 dB  near: airbag
+ 181.00- 181.05s  voice  -37.4 dB  fx  -33.5 dB  near: 
+ 182.90- 182.95s  voice  -37.8 dB  fx  -41.5 dB  near: 
+ 183.50- 183.55s  voice  -40.6 dB  fx  -42.1 dB  near: 
+ 184.50- 184.55s  voice  -41.4 dB  fx  -40.6 dB  near: 
+ 186.10- 186.15s  voice  -39.8 dB  fx  -33.6 dB  near: elec_arc, static
+ 186.35- 186.40s  voice  -41.4 dB  fx  -45.2 dB  near: static
+ 187.70- 187.85s  voice  -34.2 dB  fx  -33.5 dB  near: robot_push
+ 189.15- 189.20s  voice  -39.2 dB  fx  -42.7 dB  near: 
+ 189.85- 189.90s  voice  -40.8 dB  fx  -43.2 dB  near: 
+ 190.55- 190.65s  voice  -26.9 dB  fx  -29.8 dB  near: furnace_roar, sub_boom
+ 190.95- 191.15s  voice  -33.6 dB  fx  -30.4 dB  near: furnace_roar, sub_boom
+ 191.45- 191.50s  voice  -33.8 dB  fx  -34.5 dB  near: 
+ 191.55- 191.60s  voice  -35.9 dB  fx  -35.5 dB  near: 
+ 191.85- 191.95s  voice  -36.7 dB  fx  -39.1 dB  near: 
+ 193.30- 193.35s  voice  -40.5 dB  fx  -44.3 dB  near: 
+ 194.10- 194.15s  voice  -31.9 dB  fx  -36.3 dB  near: whoosh_soft
+ 194.55- 194.70s  voice  -22.6 dB  fx  -24.9 dB  near: molten_heavy, sizzle, sub_boom
+ 194.75- 194.80s  voice  -23.8 dB  fx  -26.8 dB  near: molten_heavy, sizzle, sub_boom
+ 194.95- 195.25s  voice  -33.0 dB  fx  -27.5 dB  near: molten_heavy, sizzle, sub_boom, whoosh_soft
+ 196.75- 196.80s  voice  -40.6 dB  fx  -42.5 dB  near: pop_tick
+ 198.95- 199.00s  voice  -36.9 dB  fx  -42.5 dB  near: 
+ 199.20- 199.25s  voice  -36.6 dB  fx  -41.0 dB  near: tag_clink
+ 199.35- 199.50s  voice  -36.4 dB  fx  -33.4 dB  near: tag_clink
+ 205.30- 205.40s  voice  -40.8 dB  fx  -36.0 dB  near: furnace_roar, step_grate
+ 206.10- 206.15s  voice  -28.5 dB  fx  -33.4 dB  near: step_grate
+ 206.30- 206.35s  voice  -33.4 dB  fx  -38.6 dB  near: step_grate
+ 206.90- 206.95s  voice  -37.6 dB  fx  -38.7 dB  near: step_grate
+ 208.75- 208.80s  voice  -31.2 dB  fx  -35.3 dB  near: step_grate
+ 210.50- 210.55s  voice  -41.1 dB  fx  -29.2 dB  near: pop_tick, step_grate
+ 210.60- 210.65s  voice  -33.5 dB  fx  -33.6 dB  near: pop_tick, step_grate
+ 216.00- 216.05s  voice  -32.9 dB  fx  -33.4 dB  near: 
+ 219.05- 219.10s  voice  -39.6 dB  fx  -39.2 dB  near: whoosh_soft
+ 221.20- 221.25s  voice  -34.1 dB  fx  -39.7 dB  near: amb_sim, robot_push
+ 222.70- 222.75s  voice  -24.6 dB  fx  -28.7 dB  near: ding_yes, robot_step
+ 222.85- 222.90s  voice  -28.1 dB  fx  -33.0 dB  near: ding_yes, robot_step
+ 224.40- 224.55s  voice  -23.6 dB  fx  -21.4 dB  near: molten_heavy, sub_boom
+ 224.65- 224.70s  voice  -22.4 dB  fx  -26.0 dB  near: molten_heavy, sizzle, sub_boom
+ 224.85- 225.00s  voice  -26.8 dB  fx  -26.6 dB  near: molten_heavy, sizzle, sub_boom
+ 225.15- 225.30s  voice  -30.3 dB  fx  -25.0 dB  near: sizzle
+ 225.35- 225.45s  voice  -34.7 dB  fx  -28.1 dB  near: 
+ 225.55- 225.65s  voice  -28.8 dB  fx  -31.5 dB  near: 
+ 225.80- 225.85s  voice  -35.6 dB  fx  -33.6 dB  near: 
+ 228.95- 229.00s  voice  -40.6 dB  fx  -43.4 dB  near: 
+ 230.30- 230.35s  voice  -40.5 dB  fx  -46.0 dB  near: 

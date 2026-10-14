@@ -1,7 +1,7 @@
 // Reusable 3D props (asset ids PROP-*): studio, assembly line, panels, crate, shutter, recycling belt, film lights.
 import React from 'react';
 import {Proj} from '../engine/camera';
-import {V3, add, cross, mulS, norm, sub, mv, rotY, rotAxis, lerp3, rnd, clamp01} from '../engine/math';
+import {V3, add, cross, dot, mulS, norm, sub, mv, rotY, rotAxis, lerp3, rnd, clamp01} from '../engine/math';
 import {Env, Item, box, circle3, cylinder, line3, quad, tube} from '../engine/prims';
 import {hull, polyClosed, smoothClosed} from '../engine/draw';
 import {C, F} from '../../theme';
@@ -115,6 +115,26 @@ export const crate = (pr: Proj, env: Env, at: V3, fold: number, opts: {lid?: num
     }
   };
   const y0 = 12;
+  // stencilled arrows and a shipping label on the front wall, mapped through its four corners (u across, v up)
+  const frontDecals = (c: V3[], key: string, zf: number) => {
+    const at = (u: number, v: number): V3 => add(lerp3(c[0], c[1], u), mulS(sub(c[3], c[0]), v));
+    const P = (pts: [number, number][]) => polyClosed(pts.map(([u, v]) => pr.p(at(u, v))));
+    const arrow = (u0: number): [number, number][] => [[u0 - 0.05, 0.78], [u0 + 0.05, 0.78], [u0 + 0.05, 0.86], [u0 + 0.1, 0.86], [u0, 0.95], [u0 - 0.1, 0.86], [u0 - 0.05, 0.86]];
+    const lines = [0.43, 0.48, 0.53].map((v, i) => {
+      const a = pr.p(at(0.24, v)), b = pr.p(at(0.24 + (i === 2 ? 0.22 : 0.4), v));
+      return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#9AA4AE" strokeWidth={Math.max(1, 2 * a.s)} />;
+    });
+    items.push({z: zf - 0.3, key: k + key, el: (
+      <g key={k + key}>
+        <path d={P(arrow(0.2))} fill="#2B2F35" fillOpacity={0.85} />
+        <path d={P(arrow(0.8))} fill="#2B2F35" fillOpacity={0.85} />
+        <path d={P([[0.2, 0.38], [0.7, 0.38], [0.7, 0.62], [0.2, 0.62]])} fill="#FFFDF6" stroke="#2B2F35" strokeWidth={1.5} />
+        <path d={P([[0.2, 0.56], [0.7, 0.56], [0.7, 0.62], [0.2, 0.62]])} fill="#C94A36" />
+        {lines}
+        <path d={P([[0.08, 0.06], [0.92, 0.06], [0.92, 0.1], [0.08, 0.1]])} fill="#2B2F35" fillOpacity={0.55} />
+      </g>
+    )});
+  };
   const sw = clamp01(opts.swing ?? 0);
   if (sw > 0 && fold >= 1) {
     // the front wall as a door hinged on its left vertical edge, swinging out toward the camera
@@ -124,12 +144,19 @@ export const crate = (pr: Proj, env: Env, at: V3, fold: number, opts: {lid?: num
     const pts = [P(hx, y0, hz), P(ex, y0, ez), P(ex, y0 + H, ez), P(hx, y0 + H, hz)];
     const q = quad(pr, env, k + 'wF', pts, '#D2A065');
     if (q) items.push(q);
+    if (q && dot(norm(cross(sub(pts[1], pts[0]), sub(pts[3], pts[0]))), pr.toCam(pts[0])) > 0) frontDecals(pts, 'wFdec', q.z);
     for (let i = 1; i < 4; i++) {
       const a = lerp3(pts[0], pts[3], i / 4), b = lerp3(pts[1], pts[2], i / 4);
       items.push({...line3(pr, `${k}wFpl${i}`, [a, b], '#9E6B30', 2), z: (q?.z ?? 0) - 0.2});
     }
     // inside face of the crate shows as the door opens: a darker back wall behind the robot
-  } else wall('wF', P(-W / 2, y0, D / 2), P(W / 2, y0, D / 2), mv(R, [0, 0, 1]), H);
+  } else {
+    wall('wF', P(-W / 2, y0, D / 2), P(W / 2, y0, D / 2), mv(R, [0, 0, 1]), H);
+    if (fold >= 0.98) {
+      const c4 = [P(-W / 2, y0, D / 2 + 0.6), P(W / 2, y0, D / 2 + 0.6), P(W / 2, y0 + H, D / 2 + 0.6), P(-W / 2, y0 + H, D / 2 + 0.6)];
+      if (dot(mv(R, [0, 0, 1]), pr.toCam(c4[0])) > 0) frontDecals(c4, 'wFdec', pr.p(P(0, y0 + H / 2, D / 2)).z - 1);
+    }
+  }
   wall('wB', P(W / 2, y0, -D / 2), P(-W / 2, y0, -D / 2), mv(R, [0, 0, -1]), H);
   wall('wL', P(-W / 2, y0, -D / 2), P(-W / 2, y0, D / 2), mv(R, [-1, 0, 0]), H);
   wall('wR', P(W / 2, y0, D / 2), P(W / 2, y0, -D / 2), mv(R, [1, 0, 0]), H);

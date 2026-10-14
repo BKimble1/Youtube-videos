@@ -303,7 +303,7 @@ export const End: React.FC = () => {
   // plan view of the whole prepared set (deck, vessel, barriers, lights, crew); the last ripple settles into the ring
   const e = easeInOut(seg(tau, T_THESE, T_STUCK + 0.6));
   const ang = mix(0.9, 2.2, e);
-  const low: V3 = [FINAL.p1[0] + Math.sin(ang) * 112, LADLE.steel + 26, FINAL.p1[2] + Math.cos(ang) * 112];
+  const low: V3 = [FINAL.p1[0] + Math.sin(ang) * 120, LADLE.steel + 52, FINAL.p1[2] + Math.cos(ang) * 120];
   const high: V3 = [FINAL.p1[0] + Math.sin(ang) * 520, 2300, FINAL.p1[2] + Math.cos(ang) * 520];
   const camPos = lerp3(low, high, Math.pow(e, 1.4));
   const cam: Cam3 = {pos: camPos, target: lerp3([FINAL.p1[0], LADLE.steel + 10, FINAL.p1[2]], [60, LADLE.steel, 0], e), fov: mix(40, 34, e), roll: mix(-2, 0, e)};

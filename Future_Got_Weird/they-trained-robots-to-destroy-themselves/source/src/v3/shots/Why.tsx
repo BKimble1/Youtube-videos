@@ -175,7 +175,7 @@ const S2bc: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   const clamp = smooth(seg(tau, tPlace + 0.1, tPlace + 0.4));
   const stack: 'amber' | 'green' = clamp >= 0.99 ? 'green' : 'amber';
   // cameras: S2b starts low at the rack on the hands, follows the panel to the body; S2c cranes out along the line
-  const b0: Cam3 = {pos: [-70, 150, 200], target: [66, 100, -6], fov: 38, roll: 2};
+  const b0: Cam3 = {pos: [150, 245, 175], target: [40, 98, -20], fov: 40, roll: 2};
   const b1: Cam3 = {pos: [-250, 185, 300], target: [10, 140, -110], fov: 42, roll: 1};
   const camB = camMix(b0, b1, easeInOut(seg(tau, S2B + 0.9, S2B + 3.0)));
   const camB2: Cam3 = {...b1, pos: lerp3(b1.pos, [-200, 190, 330], smooth(seg(tau, S2B + 3.0, S2C + 1.2)))};
@@ -196,7 +196,7 @@ const S2bc: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   return (
     <AbsoluteFill>
       <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#E9E3D0" />} items={items} robots={robots} frame={f} />
-      {tau < S2C ? <Chip x={80} y={70} lines={['FIGURE SAYS', 'months loading parts at a BMW plant']} appear={tau - S2B - 0.3} tone="paper" size={40} /> : null}
+      {tau < S2C ? <Chip x={100} y={64} lines={['FIGURE SAYS', 'months loading parts at a BMW plant']} appear={tau - S2B - 0.3} tone="paper" size={40} /> : null}
       {tag > 0 && tagAt ? (
         <div style={{position: 'absolute', left: tagAt.x - 150, top: tagAt.y - 80, width: 300, textAlign: 'center', opacity: tag, fontFamily: F.body, fontWeight: 800, fontSize: 38, color: C.ink, background: C.paper, border: `3px solid ${C.ink}`, borderRadius: 12, padding: '6px 0'}}>
           F.03 · newer model
@@ -255,7 +255,7 @@ const S2e: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   const camDoor: Cam3 = {pos: [cx + 40, 125, cz + 230], target: [cx + 5, 108, cz], fov: 40};
   const camKnee: Cam3 = {pos: add(kneeC, [24, 16, 120]), target: add(kneeC, [6, 4, 0]), fov: 34};
   const camLock: Cam3 = {pos: [cx - 60, 150, cz + 300], target: [cx, 120, cz + 40], fov: 42};
-  let cam = camMix(camWide, camDoor, easeInOut(seg(tau, tPush, tOpen)));
+  let cam = camMix(camWide, camDoor, easeInOut(seg(tau, tOpen - 0.9, tOpen + 0.05)));
   if (tau > tOpen + 0.2) cam = camMix(camDoor, camKnee, easeInOut(seg(tau, tOpen + 0.2, tOpen + 1.0)));
   if (tau > tClose - 0.2) cam = camMix(camMix(camDoor, camKnee, 1 - easeInOut(seg(tau, tClose - 0.2, tClose + 0.45))), camLock, easeInOut(seg(tau, tClose + 0.45, tLock + 0.2)));
   const pr = makeProj(cam);
