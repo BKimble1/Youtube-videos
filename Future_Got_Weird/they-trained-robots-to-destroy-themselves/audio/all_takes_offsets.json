@@ -1,0 +1,72 @@
+[
+ {
+  "file": "b01_t1_89S4.mp3",
+  "offset": 0.0,
+  "dur": 21.92
+ },
+ {
+  "file": "b01_t2_z7Hh.mp3",
+  "offset": 23.92,
+  "dur": 22.0
+ },
+ {
+  "file": "b02_t1_PerN.mp3",
+  "offset": 47.92,
+  "dur": 49.92
+ },
+ {
+  "file": "b02_t2_2kyj.mp3",
+  "offset": 99.84,
+  "dur": 49.84
+ },
+ {
+  "file": "b03_t1_ukeu.mp3",
+  "offset": 151.68,
+  "dur": 27.52
+ },
+ {
+  "file": "b03_t2_Qlo5.mp3",
+  "offset": 181.2,
+  "dur": 27.6
+ },
+ {
+  "file": "b04_t1_1LTe.mp3",
+  "offset": 210.8,
+  "dur": 49.28
+ },
+ {
+  "file": "b04_t2_515I.mp3",
+  "offset": 262.08,
+  "dur": 49.2
+ },
+ {
+  "file": "b05_t1_rQ3A.mp3",
+  "offset": 313.28,
+  "dur": 43.36
+ },
+ {
+  "file": "b05_t2_PKhU.mp3",
+  "offset": 358.64,
+  "dur": 42.32
+ },
+ {
+  "file": "b06_t1_GeXj.mp3",
+  "offset": 402.96,
+  "dur": 26.48
+ },
+ {
+  "file": "b06_t2_IUAP.mp3",
+  "offset": 431.44,
+  "dur": 26.48
+ },
+ {
+  "file": "b07_t1_Li0N.mp3",
+  "offset": 459.92,
+  "dur": 29.28
+ },
+ {
+  "file": "b07_t2_vmY4.mp3",
+  "offset": 491.2,
+  "dur": 29.36
+ }
+]

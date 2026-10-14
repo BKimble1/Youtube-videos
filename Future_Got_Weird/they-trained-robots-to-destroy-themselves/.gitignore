@@ -1,0 +1,12 @@
+# Dependencies and Remotion caches are rebuilt from package-lock.json
+source/node_modules/
+source/.remotion/
+source/out/
+# Renders are too large for plain Git blobs; the upload master is kept as checksummed parts under backup/ instead
+exports/*.mp4
+# Large WAVs that the tools regenerate deterministically (see README → Rebuild)
+audio/mix/*.wav
+audio/narration/narration_v1.wav
+source/public/audio/music_bed.wav
+# One-off debug frames
+qa/dbg/

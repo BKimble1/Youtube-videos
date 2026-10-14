@@ -1,0 +1,75 @@
+These@0.10 robots@0.36 were@0.78 trained@0.96 to@1.22 jump@1.46 into@1.78 molten@2.10 steel.@2.64 
+Their@3.40 own@3.70 manufacturer@3.90 taught@4.66 them@4.88 to@5.02 do@5.18 it.@5.36 
+It's@5.92 not@6.14 a@6.32 special@6.46 effect.@6.76 
+Figure,@7.86 the@8.54 humanoid@8.66 robot@9.14 company,@9.50 says@10.20 the@10.44 jumps@10.58 were@10.88 real,@11.10 and@11.86 the@11.96 Finnish@12.10 steel@12.42 plant@12.68 that@12.92 hosted@13.08 them@13.44 says@13.78 its@13.96 spokesperson@14.22 watched@14.90 them@15.18 go@15.34 in.@15.56 
+So@16.42 why@16.82 turn@17.06 expensive@17.24 machines@17.82 into@18.28 a@18.50 spectacle?@18.66 
+And@19.66 how@19.82 do@19.94 you@20.02 teach@20.16 a@20.38 robot@20.50 its@20.88 final@21.10 jump?@21.48 
+Start@22.68 with@22.92 the@23.08 why.@23.26 
+These@24.18 are@24.36 F-02s,@24.62 Figure's@25.88 second-generation@26.32 humanoid.@27.18 
+Figure@28.24 says@28.54 they@28.78 spent@28.96 months@29.34 loading@29.72 parts@30.04 at@30.32 a@30.42 BMW@30.54 plant.@31.24 
+But@32.06 as@32.20 its@32.34 newer@32.56 F-03@33.04 fleet@33.80 grew,@34.08 keeping@34.78 the@35.06 old@35.24 ones@35.44 running@35.70 stopped@36.14 making@36.46 sense.@36.82 
+So@37.84 what@38.34 do@38.44 you@38.52 do@38.66 with@38.78 a@38.92 retired@38.98 robot?@39.46 
+Sell@40.40 it?@40.60 
+Figure@41.34 says@41.66 they're@41.88 packed@42.12 with@42.42 its@42.54 own@42.78 custom@43.02 hardware,@43.38 like@44.12 the@44.28 actuators@44.46 that@45.02 move@45.14 the@45.34 joints.@45.48 
+It@46.38 didn't@46.48 want@46.70 that@46.94 leaving@47.14 the@47.38 building.@47.50 
+Take@48.46 it@48.62 apart?@48.70 
+Figure@49.68 says@49.98 doing@50.24 that@50.50 for@50.66 every@50.94 robot@51.24 would@51.64 eat@51.80 so@52.18 much@52.40 engineering@52.62 time,@53.16 it@53.70 would@53.78 delay@53.92 the@54.28 next@54.38 model.@54.64 
+Melt@55.62 it?@55.88 
+Simple.@56.62 
+Except@57.40 a@57.72 robot@57.84 that@58.20 jumps@58.38 in@58.66 on@58.76 its@58.88 own@59.06 has@59.42 to@59.64 bring@59.74 its@59.90 battery.@60.06 
+Figure@61.14 says@61.44 foundries@61.70 in@62.14 the@62.24 US@62.40 and@62.72 Mexico@62.86 refused.@63.36 
+One@64.60 in@64.72 Imatra,@64.82 Finland,@65.52 said@66.14 yes.@66.36 
+Plenty@67.18 of@67.44 companies@67.56 just@68.00 recycle@68.18 old@68.70 hardware.@68.88 
+But@69.90 only@70.08 one@70.44 of@70.60 these@70.72 options@70.92 came@71.34 with@71.54 a@71.64 film@71.76 crew.@72.04 
+And@73.04 the@73.16 film?@73.30 
+Blame@74.12 a@74.38 reply@74.44 on@74.84 X.@75.34 
+In@76.08 August,@76.26 Figure's@76.90 CEO,@77.32 Brett@78.04 Adcock,@78.34 asked@79.14 what@79.46 to@79.64 do@79.80 with@79.98 the@80.12 old@80.22 robots.@80.42 
+Arnold@81.52 Schwarzenegger@81.78 replied,@82.38 "You@83.24 should@83.40 melt@83.68 them."@83.94 
+In@84.74 Terminator@84.86 2,@85.64 his@85.96 robot@86.16 character@86.52 ends@86.96 up@87.16 lowered@87.38 into@87.76 molten@88.04 steel@88.50 so@89.12 no@89.34 one@89.52 can@89.66 copy@89.82 its@90.10 technology,@90.26 which@91.34 is@91.50 almost@91.72 exactly@92.04 Figure's@92.70 reason.@93.06 
+Hollywood@93.98 wrote@94.40 the@94.60 business@94.72 case@95.10 in@95.40 1991.@95.54 
+Figure@97.08 took@97.38 the@97.58 hint,@97.68 and@98.20 Schwarzenegger@98.36 appears@99.00 in@99.42 the@99.52 finished@99.68 film.@100.04 
+Now@101.31 the@101.63 hard@101.81 part.@102.11 
+You@102.85 can't@102.99 rehearse@103.21 a@103.53 jump@103.67 like@103.89 this@104.11 in@104.27 a@104.39 real@104.51 furnace.@104.83 
+So@105.91 Figure@106.35 says@106.69 it@106.87 trained@107.03 a@107.29 new@107.45 AI@107.75 model@108.07 in@108.35 simulation.@108.51 
+Here's@109.73 how@109.95 that@110.11 kind@110.27 of@110.43 training@110.55 generally@110.95 works.@111.39 
+Thousands@112.33 of@112.81 virtual@112.97 robots@113.39 try@113.87 the@114.09 jump.@114.23 
+Each@114.95 attempt@115.13 gets@115.53 a@115.71 score.@115.81 
+Did@116.59 it@116.69 stay@116.83 balanced?@117.05 
+Push@117.85 off@118.07 cleanly?@118.27 
+Land@119.07 on@119.29 target?@119.45 
+The@120.31 software@120.47 nudges@120.99 the@121.33 controls@121.41 toward@121.93 whatever@122.19 scored@122.57 well,@122.91 and@123.41 they@123.51 try@123.65 again,@123.89 millions@124.79 of@125.25 times.@125.37 
+Virtual@126.39 robots@126.81 are@127.23 great@127.43 at@127.73 this.@127.89 
+They@128.51 can@128.63 fall@128.81 on@128.97 their@129.07 faces@129.25 all@129.73 day,@129.95 and@130.51 nobody@130.75 files@131.17 an@131.43 incident@131.55 report.@131.89 
+Figure@132.93 says@133.23 it@133.41 used@133.59 stunt@133.93 performers'@134.15 movements@134.69 as@135.09 a@135.23 reference,@135.31 a@136.21 kind@136.29 of@136.47 style@136.71 guide@137.09 for@137.39 a@137.51 good@137.61 leap.@137.81 
+The@138.65 result@138.75 is@139.11 called@139.27 a@139.65 policy,@139.81 a@140.87 learned@140.99 rule@141.35 that@141.63 turns@141.79 what@142.07 the@142.21 robot@142.33 senses@142.75 into@143.23 motor@143.47 commands@143.75 many@144.57 times@144.83 a@145.11 second.@145.25 
+Not@146.11 a@146.27 wish,@146.39 not@146.99 a@147.13 plan,@147.25 more@148.13 like@148.29 a@148.49 very@148.67 well-rehearsed@149.05 reflex.@149.73 
+But@151.07 a@151.19 simulator@151.35 is@151.97 never@152.27 quite@152.63 the@152.93 real@153.07 world.@153.35 
+Real@154.17 joints@154.43 have@154.73 slack.@154.99 
+Real@155.89 floors@156.15 aren't@156.61 perfectly@156.85 flat.@157.33 
+Sensors@158.19 are@158.57 noisy.@158.73 
+And@159.71 Figure@159.89 says@160.21 this@160.71 jump@160.93 had@161.23 to@161.45 work@161.59 at@161.77 a@161.85 foundry@161.99 the@162.43 team@162.55 had@162.79 never@163.05 visited.@163.35 
+A@164.29 common@164.41 fix@164.77 is@165.11 to@165.23 make@165.33 the@165.51 simulation@165.65 messy@166.35 on@166.75 purpose.@166.95 
+Change@167.93 the@168.23 weight,@168.37 the@168.91 friction,@169.07 the@169.77 timing@169.91 a@170.67 little@170.77 every@171.35 round@171.65 so@172.37 the@172.47 policy@172.59 can't@173.11 depend@173.37 on@173.81 one@174.09 perfect@174.39 world.@174.79 
+We@175.67 don't@175.75 know@175.91 which@176.11 variations@176.33 Figure@176.97 used.@177.35 
+That's@177.99 just@178.25 the@178.43 general@178.57 idea.@178.91 
+Figure@179.91 also@180.29 rehearsed@180.59 for@180.99 real,@181.21 with@181.79 robots@181.97 jumping@182.45 from@182.77 a@182.91 second@183.07 floor@183.43 onto@183.77 giant@184.15 airbags.@184.57 
+And@185.57 the@185.67 foundry@185.81 did@186.31 get@186.55 messy.@186.75 
+Figure@187.65 says@187.99 the@188.25 heat@188.43 and@188.71 electromagnetic@188.81 noise@189.69 knocked@190.17 out@190.49 cameras@190.69 and@191.15 other@191.37 electronics,@191.55 and@192.51 the@192.59 policies@192.73 kept@193.23 running@193.49 anyway.@193.77 
+So@195.12 what@195.52 does@195.66 this@195.82 prove?@196.04 
+Less@197.02 than@197.24 it@197.38 looks@197.48 like.@197.72 
+One@198.58 movement@198.80 practiced@199.48 for@199.94 one@200.18 kind@200.42 of@200.62 target@200.74 with@201.40 people@201.56 arranging@201.86 everything@202.46 around@202.88 it.@203.20 
+The@203.88 steel@204.00 plant@204.26 says@204.56 experts@204.88 supervised@205.36 the@205.92 work@206.06 alongside@206.52 normal@207.12 production.@207.44 
+We@208.46 haven't@208.60 seen@208.84 a@209.00 failure@209.14 rate,@209.50 a@209.98 test@210.10 report,@210.36 or@211.10 an@211.22 independent@211.38 check@211.94 of@212.22 how@212.32 autonomous@212.52 each@213.16 jump@213.38 was.@213.64 
+It@214.48 shows@214.60 a@214.84 trained@214.98 jump@215.34 can@215.58 survive@215.74 a@216.20 brutal@216.34 environment.@216.76 
+It@217.80 doesn't@217.92 show@218.20 a@218.40 robot@218.50 that@218.88 can@219.00 walk@219.18 into@219.40 any@219.74 factory@220.00 and@220.48 work@220.64 things@220.84 out.@221.16 
+So@222.35 why@222.77 is@222.97 it@223.09 so@223.29 uncomfortable@223.45 to@224.07 watch?@224.23 
+Partly,@225.19 it's@225.89 the@226.07 shape.@226.19 
+When@227.05 something@227.21 with@227.51 arms,@227.79 legs,@228.41 and@228.85 a@228.97 head@229.09 walks@229.45 to@229.77 the@229.87 edge@230.03 and@230.23 leaps,@230.41 it's@231.17 easy@231.43 to@231.67 see@231.83 someone@232.05 making@232.33 a@232.61 choice.@232.71 
+But@233.65 the@233.77 choice@233.91 wasn't@234.39 the@234.69 robots.@234.83 
+People@235.85 picked@236.19 the@236.41 ending,@236.55 built@237.19 the@237.39 target,@237.53 and@238.11 wrote@238.25 the@238.47 score.@238.61 
+The@239.45 policy@239.57 just@240.05 got@240.21 very@240.55 good@240.87 at@241.01 reaching@241.15 it.@241.47 
+They@242.33 trained@242.53 robots@242.87 to@243.33 destroy@243.43 themselves.@243.93 
+The@244.95 robots@245.05 didn't@245.45 want@245.75 anything.@245.95 
+They@246.71 just@246.85 stuck@247.07 the@247.29 landing.@247.41 
+Does@248.86 retiring@249.06 hardware@249.60 feel@250.06 different@250.34 when@250.76 the@250.88 hardware@250.98 looks@251.40 like@251.62 us?@251.88 
+

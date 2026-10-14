@@ -1,0 +1,18 @@
+{
+ "robot_step": 0.016,
+ "servo_whir": 0.0,
+ "robot_push": 0.05,
+ "molten_entry": 0.043,
+ "paper_slide": 0.0,
+ "paper_swish": 0.0,
+ "card_flick": 0.05,
+ "tag_clink": 0.05,
+ "stamp": 0.05,
+ "clapper": 0.05,
+ "map_pin": 0.05,
+ "sim_fall": 0.031,
+ "knee_tap": 0.05,
+ "airbag": 0.0,
+ "static": 0.05,
+ "whoosh_soft": 0.0
+}
