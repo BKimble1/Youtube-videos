@@ -222,12 +222,12 @@ Take C4, 44.48 s from first to last word after the edit (183.5 wpm over the span
 
 ### U21  frames [864, 915)   28.80- 30.50 s
 
-- **Action:** Travel over the neighbourhood; bank past a roofline into the arrival
+- **Action:** Travel over the neighbourhood; past a foreground trunk into the arrival
 - **VO:** toward him. While help is coming,
-- **Camera / transition:** Tracks the drone over the neighbourhood (parallax layers); a foreground roof edge sweeps across the lens and reveals his lawn
-- **Source:** Dispatch.tsx Flyover, RoofWipe
+- **Camera / transition:** Tracks the drone over the neighbourhood (parallax layers); a foreground tree trunk passes the lens: the flyover ahead of it, his lawn behind it (never a fully covered frame)
+- **Source:** Dispatch.tsx Flyover, TrunkWipe
 - **Captions:** While help is coming,
-- **Sound:** rotor_cross@864, amb_out_c@891, roof_past@892, rotor_arrive@897, rotor_texture@901, link@913
+- **Sound:** rotor_cross@864, amb_out_c@891, trunk_past@892, rotor_arrive@897, rotor_texture@901, link@913
 
 ### U22  frames [927, 987)   30.90- 32.90 s
 

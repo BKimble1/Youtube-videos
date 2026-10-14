@@ -87,7 +87,7 @@ export const soundCues = (): Cue[] => {
   c.push({id: 'latch_servo', kind: 'servo', f: B.latch + 1, dur: 0.25, gain: -27, p: {f0: 700, f1: 1100}});
   c.push({id: 'rotor_lift', kind: 'rotor', f: B.latch + 2, dur: (B.travel0 - B.latch - 2) / FPS, gain: -23, p: {spinup: 1, pan: 0, panTo: 0.35}});
   c.push({id: 'rotor_cross', kind: 'rotor', f: B.travel0, dur: (B.past0 + 6 - B.travel0) / FPS, gain: -24, p: {pass: 1, pan: -0.6, panTo: 0.6}});
-  c.push({id: 'roof_past', kind: 'swish', f: B.past0 + 1, dur: 0.45, gain: -27});
+  c.push({id: 'trunk_past', kind: 'swish', f: B.past0 + 1, dur: 0.45, gain: -27});
   c.push({id: 'rotor_arrive', kind: 'rotor', f: B.past0 + 6, dur: (B.act0 + 4 - B.past0 - 6) / FPS, gain: -24, p: {approach: 1, pan: -0.5, panTo: -0.15}});
   c.push({id: 'rotor_hover', kind: 'rotor', f: B.act0 + 4, dur: (B.green + 40 - B.act0 - 4) / FPS, gain: -33, p: {hover: 1, pan: -0.15, panTo: -0.4}});
   c.push({id: 'rotor_texture', kind: 'file', f: B.past0 + 10, gain: -34, p: {file: 'drone_1_f7S5LI3HdTlvGoa1G6Fp.mp3', offset: 0}});

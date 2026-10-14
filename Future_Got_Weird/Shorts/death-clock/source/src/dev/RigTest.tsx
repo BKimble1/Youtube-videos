@@ -9,7 +9,7 @@ import {Scene} from '../shots/Scene';
 import {collapseCam, collapseState, PROP} from '../shots/Opening';
 import {PAL} from '../lib/color';
 import {Journey3} from '../shots/Journey3';
-import {Flyover, HospitalBay, MAP_END, MapBlip, RoofWipe} from '../shots/Dispatch';
+import {Flyover, HospitalBay, MAP_END, MapBlip, TrunkWipe} from '../shots/Dispatch';
 import {B as B3} from '../lib/timeline3';
 import {Aftermath3} from '../shots/Aftermath3';
 
@@ -63,7 +63,7 @@ export const DispTest: React.FC = () => {
   return (
     <AbsoluteFill>
       <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-        {f < MAP_END ? <MapBlip id="mb" f={f} /> : f < B3.travel0 ? <HospitalBay id="hb" f={f} /> : <RoofWipe id="rw" f={f} before={<Flyover id="fo" f={f} />} after={<rect width={1080} height={1920} fill="#9C9" />} />}
+        {f < MAP_END ? <MapBlip id="mb" f={f} /> : f < B3.travel0 ? <HospitalBay id="hb" f={f} /> : <TrunkWipe id="rw" f={f} before={<Flyover id="fo" f={f} />} after={<rect width={1080} height={1920} fill="#9C9" />} />}
       </svg>
     </AbsoluteFill>
   );

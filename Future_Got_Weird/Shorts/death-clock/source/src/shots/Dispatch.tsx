@@ -2,7 +2,7 @@
 // the same neighbourhood to a hospital (0.7 s), then lands in the beacon of a drone dock on that hospital's rooftop
 // launch bay: clinical building, glass stairwell with a staff member, emergency equipment, a large EMERGENCY sign
 // on the parapet and the ambulance bay below. The cradle latch opens, the rotors spin up, the drone rises clear,
-// banks toward him and flies over the neighbourhood; a foreground roof edge wipes into his lawn.
+// banks toward him and flies over the neighbourhood; a foreground tree trunk passes the lens and wipes onto his lawn.
 import React from 'react';
 import {Drone, DronePose, DroneTop} from '../art/Drone';
 import {House, Tree} from '../art/Street';
@@ -294,11 +294,12 @@ export const HospitalBay: React.FC<{id: string; f: number}> = ({id, f}) => {
   );
 };
 
-// ---------------------------------------------------------------- over the neighbourhood, then a roof edge wipes to him
-export const WIPE = {in0: B.past0, cover: B.past0 + 6, out1: B.past0 + 14};
+// ---------------------------------------------------------------- over the neighbourhood, then a foreground trunk wipes to him
+export const WIPE = {in0: B.past0 - 1, cover: B.past0 + 6, out1: B.past0 + 15};
 
 export const Flyover: React.FC<{id: string; f: number}> = ({id, f}) => {
-  const t = inv(B.travel0, WIPE.cover, f);
+  // keeps its speed until the trunk has passed (the flyover stays visible ahead of the edge)
+  const t = Math.max(0, (f - B.travel0) / (WIPE.cover - B.travel0));
   const dp: DronePose = {x: lerp(380, 1500, t), y: 640 + Math.sin(t * Math.PI) * -26, s: 0.78, pitch: 15 + 3 * Math.sin(f * 0.3), spin: f * 1.9, beacon: 0.5 + 0.5 * Math.sin(f * 0.6)};
   const cam: Cam = {x: dp.x + 40, y: 820, z: 1.15, roll: -4};
   return (
@@ -329,32 +330,40 @@ export const Flyover: React.FC<{id: string; f: number}> = ({id, f}) => {
   );
 };
 
-/** The foreground roof edge that sweeps across the lens: under it the flyover, behind it his lawn. */
-export const RoofWipe: React.FC<{id: string; f: number; before: React.ReactNode; after: React.ReactNode}> = ({id, f, before, after}) => {
-  // the edge moves right-to-left across the frame (the drone banks past this roof toward him)
+/** A foreground tree trunk that sweeps across the lens: ahead of it the flyover, behind it his lawn. */
+export const TrunkWipe: React.FC<{id: string; f: number; before: React.ReactNode; after: React.ReactNode}> = ({id, f, before, after}) => {
+  // a trunk close to the lens, narrower than the frame, passes right-to-left at constant speed (the drone flies past it toward
+  // him): the flyover stays visible ahead of its leading edge, his lawn appears behind its trailing edge, and
+  // the frame is never fully covered. Leading edge just off the right at in0; trailing edge off the left at out1.
+  const RW = 760;
   const t = inv(WIPE.in0, WIPE.out1, f);
-  const x = lerp(1500, -1300, ease(t));
-  const roof = `M${fmt(x)},-200 L${fmt(x + 1800)},-200 L${fmt(x + 1800)},2200 L${fmt(x + 260)},2200 Q${fmt(x - 120)},1100 ${fmt(x)},-200 Z`;
-  const showAfter = f >= WIPE.cover;
+  const x = lerp(1240, -RW - 320, t);
+  const edge = (e: number) => `M${fmt(e)},-200 Q${fmt(e - 120)},1100 ${fmt(e + 260)},2200`;
+  const roof = `M${fmt(x)},-200 L${fmt(x + RW)},-200 Q${fmt(x + RW - 120)},1100 ${fmt(x + RW + 260)},2200 L${fmt(x + 260)},2200 Q${fmt(x - 120)},1100 ${fmt(x)},-200 Z`;
+  const ahead = `M-400,-200 L${fmt(x)},-200 Q${fmt(x - 120)},1100 ${fmt(x + 260)},2200 L-400,2200 Z`;
+  if (t <= 0) return <g>{before}</g>;
+  if (t >= 1) return <g>{after}</g>;
   return (
     <g>
-      {showAfter ? after : before}
-      {t > 0 && t < 1 && (
-        <g>
-          <defs>
-            <linearGradient id={`${id}-rf`} x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stopColor="#6E5A50" />
-              <stop offset="0.12" stopColor="#4A3C36" />
-              <stop offset="1" stopColor="#2E2622" />
-            </linearGradient>
-          </defs>
-          <path d={roof} fill={`url(#${id}-rf)`} />
-          {Array.from({length: 14}).map((_, i) => (
-            <path key={i} d={`M${fmt(x + 80 + i * 120)},-200 L${fmt(x + 80 + i * 120 - 40)},2200`} stroke="#5C4A42" strokeWidth={10} opacity={0.6} />
-          ))}
-          <path d={`M${fmt(x)},-200 Q${fmt(x - 120)},1100 ${fmt(x + 260)},2200`} fill="none" stroke="#8C766A" strokeWidth={22} />
-        </g>
-      )}
+      {after}
+      <defs>
+        <clipPath id={`${id}-ahead`} clipPathUnits="userSpaceOnUse">
+          <path d={ahead} />
+        </clipPath>
+        <linearGradient id={`${id}-rf`} gradientUnits="userSpaceOnUse" x1={x - 60} y1={0} x2={x + RW + 60} y2={0}>
+          <stop offset="0" stopColor="#8A6A50" />
+          <stop offset="0.14" stopColor="#634A39" />
+          <stop offset="0.86" stopColor="#4A382C" />
+          <stop offset="1" stopColor="#362922" />
+        </linearGradient>
+      </defs>
+      <g clipPath={`url(#${id}-ahead)`}>{before}</g>
+      <path d={roof} fill={`url(#${id}-rf)`} />
+      {Array.from({length: 6}).map((_, i) => (
+        <path key={i} d={`M${fmt(x + 110 + i * 120)},-200 L${fmt(x + 110 + i * 120 - 40)},2200`} stroke="#3E2F26" strokeWidth={10} opacity={0.45} />
+      ))}
+      <path d={edge(x)} fill="none" stroke="#A3836A" strokeWidth={22} />
+      <path d={edge(x + RW)} fill="none" stroke="#241D1A" strokeWidth={8} opacity={0.7} />
     </g>
   );
 };

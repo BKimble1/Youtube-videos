@@ -126,7 +126,7 @@ export const UNITS: [string, string, number, number][] = [
   ['U18', 'Location and data: the pulse crosses the neighbourhood map to the hospital', B.map0, B.hosp0],
   ['U19', 'Hospital rooftop launch bay: the pulse lands in the dock beacon', B.hosp0, B.latch],
   ['U20', 'Latch releases, rotors spin up, the drone rises clear and banks', B.latch, B.travel0],
-  ['U21', 'Travel over the neighbourhood; bank past a roofline into the arrival', B.travel0, B.arrive],
+  ['U21', 'Travel over the neighbourhood; past a foreground trunk into the arrival', B.travel0, B.arrive],
   ['U22', 'The band actuates: the port extends, one treatment pulse enters the vessel', B.act0, B.settleHeart0],
   ['U23', 'The pulse reaches the heart; its rhythm settles; the timer holds', B.settleHeart0, B.release0],
   ['U24', 'Fingers release, the support hand loads, the torso rises', B.release0, B.green],

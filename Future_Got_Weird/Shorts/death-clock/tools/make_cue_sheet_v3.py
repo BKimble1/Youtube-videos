@@ -34,7 +34,7 @@ NOTES = {
     'U18': ('Top-down map: the pulse runs from his location to the hospital block (0.7 s)', 'Dispatch.tsx MapBlip'),
     'U19': ('Wide on the hospital (sign high, ambulance bay low), the pulse comes down into the dock beacon; push in to the dock (z 0.72 -> 1.25)', 'Dispatch.tsx HospitalBay, hospCam'),
     'U20': ('Holds while the latch opens, the rotors spin up and the drone rises and banks right', 'Dispatch.tsx hospDrone, rotorPhase'),
-    'U21': ('Tracks the drone over the neighbourhood (parallax layers); a foreground roof edge sweeps across the lens and reveals his lawn', 'Dispatch.tsx Flyover, RoofWipe'),
+    'U21': ('Tracks the drone over the neighbourhood (parallax layers); a foreground tree trunk passes the lens: the flyover ahead of it, his lawn behind it (never a fully covered frame)', 'Dispatch.tsx Flyover, TrunkWipe'),
     'U22': ('The drone arrives beside him (data link); push onto the band (z 6.5), the case turns, the section re-opens, onto the port (z 18-20)', 'Aftermath3.tsx camAt, SectionLayers treat, PortModule blue'),
     'U23': ('Along the vessel, back out to the arm and chest (z 3.6 -> 5.2): the blue pulse climbs the arm, the heart settles; the window closes as he breathes out', 'Aftermath3.tsx overAll (blue pulse), ChestCut (chaos -> 0)'),
     'U24': ('Medium (z 2.2 -> 1.9): weight onto the arm, the push, the torso rises round the hips, the hand leaves the grass', 'Aftermath3.tsx BODY keys'),

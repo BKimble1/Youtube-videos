@@ -5,7 +5,7 @@ import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {Aftermath3} from './shots/Aftermath3';
 import {Journey3} from './shots/Journey3';
-import {Flyover, HospitalBay, MAP_END, MapBlip, RoofWipe, WIPE} from './shots/Dispatch';
+import {Flyover, HospitalBay, MAP_END, MapBlip, TrunkWipe, WIPE} from './shots/Dispatch';
 import {Captions, FictionCue} from './shots/Overlay';
 import {B} from './lib/timeline3';
 import './fonts';
@@ -15,7 +15,7 @@ export const shotNode = (f: number): React.ReactNode => {
   if (f < B.map0) return <Journey3 id="j3" f={f} />;
   if (f < MAP_END) return <MapBlip id="mb" f={f} />;
   if (f < B.travel0) return <HospitalBay id="hb" f={f} />;
-  if (f < WIPE.out1) return <RoofWipe id="rw" f={f} before={<Flyover id="fo" f={f} />} after={<Aftermath3 id="af" f={f} />} />;
+  if (f < WIPE.out1) return <TrunkWipe id="rw" f={f} before={<Flyover id="fo" f={f} />} after={<Aftermath3 id="af" f={f} />} />;
   return <Aftermath3 id="af" f={f} />;
 };
 
