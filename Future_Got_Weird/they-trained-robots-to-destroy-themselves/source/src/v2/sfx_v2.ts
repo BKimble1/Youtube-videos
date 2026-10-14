@@ -32,7 +32,7 @@ const hook = (): Cue[] => [
   {t: T_H6 + 0.15, kind: 'pop_tick', gain: -4},
   ...steps(R2_WALK0 + 0.2, 6, 58 / 118, 'step_grate', -7),
   {t: R2_IN - 1.06 - 0.7, kind: 'robot_push', gain: -4},
-  ...entry(R2_IN, -5),
+  ...entry(R2_IN, -10),                                       // under "go in"
 ];
 
 const turn = (): Cue[] => {
@@ -122,7 +122,7 @@ const train = (): Cue[] => {
   const a1 = tTry + 0.75, a2 = tNudge + 0.9, a3 = tNudge + 3.0;
   return [
     bed('furnace_roar', TRAIN_START, tSim + 1.2, -6),
-    {t: TRAIN_START + 1.0, kind: 'sub_boom', gain: -12},
+    {t: TRAIN_START + 1.0, kind: 'sub_boom', gain: -18},
     {t: tSim + 0.4, kind: 'whoosh_soft', gain: -6, pitch: 2},
     bed('amb_sim', tSim + 1.0, TRAIN_END + 0.3, -1),
     {t: tHow, kind: 'pop_tick', gain: -6},
@@ -192,7 +192,7 @@ const prove = (): Cue[] => {
     bed('furnace_roar', PROVE_START, tNota, -3),
     {t: PROVE_START + 0.05, kind: 'sub_boom', gain: -10, pitch: -3},
     {t: tSurvive + 0.1, kind: 'whoosh_soft', gain: -8, pitch: -5},
-    ...entry(PAYOFF_IN, -5),                                   // under "brutal environment"
+    ...entry(PAYOFF_IN, -13),                                  // under "brutal environment": kept below the word
     {t: T('one movement'), kind: 'pop_tick', gain: -8},
     {t: T('one kind of target'), kind: 'ding_yes', gain: -8, pitch: -2},
     {t: T('prepared and supervised') - 0.2, kind: 'tag_clink', gain: -10, pitch: -9},

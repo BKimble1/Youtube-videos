@@ -1,0 +1,5 @@
+0.4 s windows with speech: 543 of 583
+music  relative to voice during speech: median  -17.8 dB, 90th percentile   -8.7 dB
+sfx    relative to voice during speech: median  -42.6 dB, 90th percentile  -15.6 dB
+beds   relative to voice during speech: median  -30.7 dB, 90th percentile  -18.9 dB
+0.2 s windows where effects exceed the voice by >3 dB while speech is present (t s, dB): [(3.0, 8.8), (13.4, 3.2), (225.2, 3.5)]

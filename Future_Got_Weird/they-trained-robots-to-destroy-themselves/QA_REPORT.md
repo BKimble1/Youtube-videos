@@ -1,4 +1,138 @@
-# QA report — They Trained Robots to Destroy Themselves (v1)
+# QA report: They Trained Robots to Destroy Themselves
+
+# V2 (checked 14 Oct 2026)
+
+Not published. Every measurement below was taken from the files themselves; the scripts are `tools/v2/qa_v2.py`,
+`tools/v2/bursts_v2.py` and `tools/v2/sheets_v2.py`, and the raw results are in `qa/v2/qa_v2_results.json`.
+
+## Deliverables (ffprobe on the final files)
+
+| File | Spec | Notes |
+|---|---|---|
+| `exports/FGW_RobotsDestroy_v2_UPLOAD_1080p.mp4` | H.264 High, 1920×1080, 30 fps CFR (native), yuv420p, BT.709; 7,005 frames, 233.500 s; AAC-LC 48 kHz stereo (320 kb/s target, 285 kb/s average), 233.500 s; 93.6 MiB; SHA-256 `df49c74f4e39cf8e22662f4141f7da644c3ae2993903fc6f402647c02e85d1f6` | **Upload master.** Distinct name from the share copy. Rendered from source (CRF 16, x264 slow). The audio track is the final mix remuxed after the last two effect-gain trims; the video stream was copied unchanged. Backed up as five split parts in `backup/v2/`; the parts pass `sha256sum -c`, and the joined parts hash to the master's SHA-256. |
+| `exports/FGW_RobotsDestroy_v2_1080p_SHARE.mp4` | 1920×1080, 30 fps native, two-pass H.264 at 0.88 Mb/s, AAC 128 kb/s, 28.47 MiB | **Review/share copy, not for upload.** Made from the master; under the 30 MiB send limit. |
+| `captions/FGW_RobotsDestroy_v2.srt` | 75 cues, at most 2 lines × 42 characters, no overlaps; first cue 0.50 s, last ends 230.54 s | Matches the script word for word (677/677, 0 differing spans); display forms F.02s, F.03, Terminator 2, 1991 |
+| `thumbnail/FGW_RobotsDestroy_v2_thumbA_edge_1280x720.jpg` (main), `…v2_thumbB_leap…` | 1280×720 JPEG, 95 / 106 KB | Drawn with the V2 rig and foundry; checked at 246×138 (`qa/v2/thumbs/phone_size_check.png`) |
+
+## Picture (measured on the master)
+
+- **Runtime:** 3:53.5. That is narration 3:50.5 at natural speed plus a 2.5 s sting, inside the 3:45–4:05 target.
+- **Scene changes.** The ffmpeg scene detector (threshold 0.10) finds **73 scene changes**:
+  - median 2.65 s per segment, mean 3.16 s;
+  - the count includes a few false triggers on impact flashes and the iris (4 in the first 20 s);
+  - the planned shot list has 83 framings (`production/v2/SHOT_PLAN_V2.md`).
+- **Opening:** 11 compositions in the first 19.4 s.
+- **Longest unbroken segments** are moving camera shots, not holds:
+  - 16.0 s at 2:11.8, the policy push-in → follow-down → orbit → pull-out;
+  - 13.0 s at 2:43.0, the variation montage under one dolly;
+  - 9.1 s at 0:25.3, the assembly line with the F.03 walk-in;
+  - 8.2 s at 3:29.3, the tracking walk and leap.
+- **Static holds of 1.5 s or longer** (`freezedetect`, n=0.002): 40.5 s (1.8 s), 89.1 s (1.5 s), 146.2 s (1.6 s), 155.3 s (1.7 s), 157.0 s (1.7 s).
+  - Each is under 2 s and sits on a labelled close-up or a gag beat.
+  - The review render had holds up to 3.7 s; those were fixed.
+- **No black frames.**
+- **Frames reviewed:** one per second from the master in `qa/v2/final/sheet_00–05.png`. Dense bursts at 15 frames
+  per second (`qa/v2/bursts/`) cover:
+  - takeoff and hook impact;
+  - rim → cap match cut; iris into the simulation;
+  - lock and shutter; phone whip; chain → crane;
+  - simulation wipe; faceplant; airbag; electrical spark;
+  - payoff entry; last leap; reverse whip; last entry;
+  - ring → sting.
+- **Entries:** the robot is on the surface for two frames at each, then flash and splash. There is no upright pause on
+  the liquid, no figure sinking face-first and no flailing.
+
+## Audio (measured, not heard)
+
+- **Narration:**
+  - ElevenLabs Test Voice resolved by ID (`kk5XaSLo2XAw0sKM98zU`), `eleven_v4`; 28 takes, 7 selected
+    (`audio/v2/narration/takes_v2.json`).
+  - All takes were clean: 0 clipped samples, true peak −1.0 to −1.7 dBFS, −18.1 to −18.6 LUFS
+    (`takes_analysis.txt`).
+  - Stitched at natural speed; only eight silences over 0.62 s were shortened, to 0.48 s.
+- **Master loudness:** **-15.0 LUFS integrated, -1.5 dBTP true peak**, LRA 2.4 LU
+  (ffmpeg `ebur128` on the master file).
+- **Silences:** none over 1 s.
+- **A/V offset:** 0.0 ms against the mix (cross-correlation).
+- **Separation while the narrator speaks** (`qa/v2/mix_balance_v2.txt`):
+  - 0.4 s windows with speech: 543 of 583
+  - music  relative to voice during speech: median  -17.8 dB, 90th percentile   -8.7 dB
+  - sfx    relative to voice during speech: median  -42.6 dB, 90th percentile  -15.6 dB
+  - beds   relative to voice during speech: median  -30.7 dB, 90th percentile  -18.9 dB
+  - 0.2 s windows where effects exceed the voice by >3 dB while speech is present (t s, dB): [(3.0, 8.8), (13.4, 3.2), (225.2, 3.5)]
+- **Gain trims:** the entries on "go in", "brutal environment" and "retiring hardware" and the B4 low boom were each
+  lowered until no 0.2 s window exceeded the voice by more than about 3.5 dB. The remaining exception is the hook
+  impact on the first 0.2 s of "steel" (+8.8 dB in that window); it is deliberate and on the human listening list.
+- **Whooshes:** 7 in total, each on a real whip, wipe or descent; no whoosh on ordinary zooms.
+
+## Visual review performed (V2)
+
+1. **Rig sheet** checked from every side (`qa/v2/rig/`, `production/v2/ROBOT_REFERENCE_SHEET_v2.png`).
+2. **Opening prototype:** ten still rounds (`qa/v2/hook_r1…r10`), a 540p prototype video and frame bursts
+   (`qa/v2/proto_video/`).
+3. **Every section in stills, at least two rounds each:**
+   - `qa/v2/why_r1–r2`, `film_r1`, `train_r1–r2`, `real_r1–r3`, `prove_r1–r2`, `end_r1–r3`;
+   - cast placement before and after the fix: `chars_before`, `prove_r2`.
+4. **Full-length 540p review render** with the final mix. Frames were pulled from the MP4 itself at 1 per second
+   (234 frames, `qa/v2/review/sheet_00–05.png`).
+   - The review drove a polish round: `qa/v2/polish_r1–r2`.
+   - It also fed the measured static-hold check below.
+5. **Final master:** measurements below. Frames at 1 per second from the master (`qa/v2/final/sheet_*.png`), plus
+   16 dense bursts at 15 frames per second over every entry, contact, match cut and whip (`qa/v2/bursts/*.png`).
+6. **Thumbnails** at full size and at phone size (`qa/v2/thumbs/`).
+
+## Defect log (V2)
+
+| Where | Symptom | Cause | Change | Recheck |
+|---|---|---|---|---|
+| Whole film | Polygons behind the camera smeared across the frame | Projection through the near plane | Near-plane clipping for faces, hulls, lines and the robot | hook_r2→ |
+| Hook | Orange haze washed out the frame | Glow too strong | Palette darkened, glow 1.15→0.8, haze reduced, robot glow capped | hook_r3 |
+| Hook | The ladle wall covered the interior; a dark triangle appeared | Wall drawn as a full cylinder; stand mis-sorted | Near-half outer wall; stand moved to back items | hook_r4 |
+| Hook impact | The robot seemed to stand on the steel | Contact happened between shots | Contact moved into H4, faster crown, ejecta sheet, motion trail | hook_r5–r6 |
+| Hook close-up | The top-down sinking shot read as a person going under | Heat tint plus head-and-shoulders silhouette | Shot removed; replaced by the vented back-plate detail and a tilt up to the empty edge | hook_r7–r9 |
+| Hook | Smoke read as grey balloons | Flat circles | Radial-gradient puffs, skipped near the lens; flames as gradient tongues | hook_r8 |
+| B2–B5 | Robots too small; the rack hid the robot; clipboard 1.7 m tall; ghostly policy robot; clapper remnant; labels narrating production | Framing and scale | Reframed, rescaled, made opaque, removed | why_r2, train_r2, film_r1 |
+| B2, B4, B6 | Cast characters drawn far below and right of their feet | The cast rig draws a nested `<svg viewBox="-200 -500 …">`, so its ground point sits at (200, 500) inside it | `charItem` offsets by the viewBox origin; the clipboard is now held via `holdR` | chars_before → prove_r2 |
+| B5 | Variation robot cropped; airbag robot hidden inside the wall | Camera; ledge position | Reframed; balcony added, ledge at x −130 | real_r2–r3 |
+| B6 | Control-room crew missing; factory comparison too small | Cast offset (above); camera too far | Fixed; camera closer, thicker task paths, larger teal arc | prove_r2 |
+| B7 | Outline shot too far away; head cropped while tracking; crew looked like they stood on the rim; crew silhouettes out of frame | Camera heights and fov | Reframed four cameras; crew moved back; silhouettes rendered solid | end_r2–r3 |
+| 1:08–1:19 | Phone held one composition for 11 s with small text | One framing | Three framings: the phone arrives, a cut in on the post, a scroll-whip to the quoted reply | polish_r1 |
+| 1:43–1:59 | 13 s on nearly one sim framing | One camera | Closer cut for the three checks; a new angle for the corrections | polish_r1 |
+| 3:01–3:10 | 9 s single crane move | One move | Three framings: crane down, junction box arcing, low launch | polish_r1 |
+| Review render | Static holds of 1.5–3.7 s (queue, policy freeze, reflex, rounds, crate) found by `freezedetect` | Locked cameras | Slow drift or push added to each | polish_r2; remeasured on the master below |
+| B5 | Disclaimer chip duplicated the spoken "We don't know which variations Figure used" | Text clutter | Chip removed; T9 labels shortened to "stunt performer" / "virtual robot" | polish_r1 |
+| Mix | Entries landed up to 9 dB over the words "steel", "brutal environment", "retiring hardware" | Effect gain | Entries lowered 5–8 dB; the hook bed raised 5 dB; score +3 dB | Measured below |
+| Thumbnails | First drafts: robot tiny, or crowded by the deck | Camera | Reframed twice | qa/v2/thumbs |
+
+## What was not checked (limits)
+
+- **No real-time playback or listening.** This environment cannot play video or audio in real time. "Inspect the
+  entire rendered audiovisual video at normal speed" could not be done literally. Instead, every second of the
+  rendered file was inspected as frames (1 per second), plus 15-fps bursts at every contact and transition. The audio
+  was checked only by measurement: loudness, true peak, voice/music/effects separation, silences and A/V offset.
+  **The owner should watch and listen once before publishing.**
+- **Effects chosen by measurement only.** The ElevenLabs effect takes were chosen from objective measurements (onset,
+  peak, decay), not by ear.
+- **Reference pages blocked.** figure.ai, tendril.studio, YouTube, thinkfoundry.com and the Wikimedia logo were blocked
+  by the network policy. The robot likeness rests on text descriptions, and no logo is drawn.
+- **Word timings from alignment.** They come from forced alignment of the stitched narration (Scribe transcripts of
+  the selected takes). Captions match the script word for word; boundaries can be off by up to about 0.1 s.
+- **No 4K render.** 1080p is the requested master.
+
+## Human review list (in order)
+
+1. Watch the master once at normal speed with sound, especially:
+   - 0:00–0:20 (hook impact level under "steel");
+   - 1:08–1:19 (the phone);
+   - 3:10–3:16 (spotlight and entry);
+   - 3:33–3:53 (the ending and the sting).
+2. Compare the F.02/F.03 drawings with official photos (`production/v2/ROBOT_REFERENCE.md`).
+3. Run the pre-upload checks in `upload/UPLOAD_TEXT_v2.md`.
+
+---
+
+# V1
+
 
 Checked 14 Oct 2026. Not published. Every measurement below was taken from the files themselves.
 

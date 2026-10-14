@@ -1,0 +1,49 @@
+{
+ "file": "exports/FGW_RobotsDestroy_v2_UPLOAD_1080p.mp4",
+ "probe": {
+  "duration_s": 233.5,
+  "size_mib": 93.6,
+  "video": "h264 High 1920x1080 30/1 fps, yuv420p, frames 7005",
+  "color": "bt709/bt709/bt709",
+  "audio": "aac 48000 Hz 2 ch 285 kbps",
+  "bitrate_mbps": 3.36
+ },
+ "loudness": {
+  "integrated_lufs": -15.0,
+  "lra_lu": 2.4,
+  "true_peak_dbtp": -1.5
+ },
+ "frozen": [
+  [
+   40.5,
+   1.83
+  ],
+  [
+   89.1,
+   1.5
+  ],
+  [
+   146.17,
+   1.57
+  ],
+  [
+   155.3,
+   1.67
+  ],
+  [
+   156.97,
+   1.7
+  ]
+ ],
+ "black": [],
+ "silences": [],
+ "audio_offset_ms": 0.0,
+ "captions": {
+  "cues": 75,
+  "first": 0.5,
+  "last_end": 230.54399999999998,
+  "overlaps": 0,
+  "max_line_chars": 42
+ }
+}
+cuts: {'count': 73, 'segments': 74, 'mean_s': 3.16, 'median_s': 2.65, 'longest': [(15.97, 131.77), (12.97, 162.97), (9.13, 25.33), (8.23, 209.27), (6.13, 102.87), (6.0, 57.5), (5.97, 19.37), (5.77, 79.5)], 'first_20s': 15}

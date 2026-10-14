@@ -131,18 +131,18 @@
   {
    "t": 12.938,
    "kind": "sub_boom",
-   "gain": -5
+   "gain": -10
   },
   {
    "t": 12.968,
    "kind": "molten_heavy",
-   "gain": -5
+   "gain": -10
   },
   {
    "t": 13.218,
    "kind": "sizzle",
    "dur": 3.4,
-   "gain": -7
+   "gain": -12
   },
   {
    "t": 13.538,
@@ -482,7 +482,7 @@
   {
    "t": 95.258,
    "kind": "sub_boom",
-   "gain": -12
+   "gain": -18
   },
   {
    "t": 99.39800000000001,
@@ -865,18 +865,18 @@
   {
    "t": 194.474,
    "kind": "sub_boom",
-   "gain": -5
+   "gain": -13
   },
   {
    "t": 194.504,
    "kind": "molten_heavy",
-   "gain": -5
+   "gain": -13
   },
   {
    "t": 194.754,
    "kind": "sizzle",
    "dur": 3.4,
-   "gain": -7
+   "gain": -15
   },
   {
    "t": 196.174,

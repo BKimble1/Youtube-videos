@@ -38,7 +38,7 @@ res["loudness"] = {"integrated_lufs": float(re.search(r"I:\s+(-?[\d.]+) LUFS", s
                    "lra_lu": float(re.search(r"LRA:\s+(-?[\d.]+) LU", summ).group(1)),
                    "true_peak_dbtp": float(re.search(r"Peak:\s+(-?[\d.]+) dBFS", summ).group(1))}
 # hard cuts (scene score) on a downscaled decode
-e = run(["ffmpeg", "-hide_banner", "-nostats", "-i", MASTER, "-vf", "scale=480:270,select='gt(scene,0.28)',showinfo", "-an", "-f", "null", "-"]).stderr
+e = run(["ffmpeg", "-hide_banner", "-nostats", "-i", MASTER, "-vf", "scale=480:270,select='gt(scene,0.10)',showinfo", "-an", "-f", "null", "-"]).stderr
 cuts = [float(x) for x in re.findall(r"pts_time:([\d.]+)", e)]
 dur = res["probe"]["duration_s"]
 bounds = [0.0] + cuts + [dur]

@@ -1,5 +1,54 @@
 # Future Got Weird: They Trained Robots to Destroy Themselves
 
+## V2 (14 Oct 2026): the current version
+
+**Status.** The V2 rebuild is complete and V1 is preserved unchanged. The V2 upload master was rendered from source
+and checked with measurements and dense frame sheets. It is **not published**; that is the owner's step. Nobody has
+yet watched it in real time or listened to it; `QA_REPORT.md` (V2 section) lists exactly what was and wasn't checked.
+
+**Specs and versions**
+
+- Runtime: 3:53.5 (narration 3:50.5 plus a 2.5 s brand sting). 1920×1080, 30 fps native.
+- Voice: ElevenLabs Test Voice (resolved by ID `kk5XaSLo2XAw0sKM98zU`), `eleven_v4`, natural speed.
+- What changed: `production/v2/CHANGELOG_V1_TO_V2.md`.
+
+| What | Where |
+|---|---|
+| Revised script, claim IDs, pronunciation | `script/script_v2.md`; ledger delta in `research/claim_ledger.md` → "V2 changes" |
+| Robot / branding reference (sheet and asset IDs) | `production/v2/ROBOT_REFERENCE.md`, `production/v2/ROBOT_REFERENCE_SHEET_v2.png` |
+| Shot plan with audio cues, focus hand-offs, camera moves, transitions | `production/v2/SHOT_PLAN_V2.md` |
+| Narration takes, selection, word timings | `audio/v2/narration/`, `audio/v2/narration_words_v2.json`, `audio/v2/word_timeline_v2.txt` |
+| Effect takes, choices, cue sheet, mix measurements | `audio/v2/sfx_raw/`, `audio/v2/sfx_choices_v2.md`, `audio/v2/sfx_cues_v2.json`, `audio/v2/mix/mix_v2_measure.json` |
+| Editable source | `source/src/v2/` (compositions `V2Main`, `V2ThumbA/B`, `V2RobotSheet`) |
+| **Upload master 1080p** | `exports/FGW_RobotsDestroy_v2_UPLOAD_1080p.mp4` (Git-ignored; backed up as checksummed parts in `backup/v2/`) |
+| Share/review copy (compressed, not for upload) | `exports/FGW_RobotsDestroy_v2_1080p_SHARE.mp4` (Git-ignored; regenerate from the master, see `backup/v2/RESTORE.md`) |
+| Captions | `captions/FGW_RobotsDestroy_v2.srt` |
+| Thumbnails | `thumbnail/FGW_RobotsDestroy_v2_thumbA_edge_1280x720.jpg` (main), `…v2_thumbB_leap…` (backup) |
+| Title, description, chapters | `upload/UPLOAD_TEXT_v2.md`, `upload/chapters_v2.txt` |
+| QA | `QA_REPORT.md` (V2 section), `qa/v2/qa_v2_results.json`, contact sheets in `qa/v2/` |
+| Asset rights | `production/ASSET_RIGHTS.md` → "V2 additions" |
+
+### Rebuild V2
+
+    cd Future_Got_Weird/they-trained-robots-to-destroy-themselves
+    (cd source && npm ci)
+    python3 tools/v2/stitch_narration_v2.py                 # selected takes -> audio/v2/narration/narration_v2.(wav|mp3) + word timings
+    (cd source && node ../tools/v2/collect_sfx_v2.mjs)      # cue sheet from src/v2/sfx_v2.ts -> audio/v2/sfx_cues_v2.json
+    python3 tools/v2/prep_sfx_v2.py                         # choose/trim the V2 ElevenLabs takes -> source/public/v2/audio/sfx/
+    python3 tools/synth_audio.py                            # V1 in-house effects (reused by V2)
+    python3 tools/v2/synth_audio_v2.py                      # furnace bed, room tone, trace, V2 score (deterministic)
+    python3 tools/v2/mix_audio_v2.py                        # -> source/public/v2/audio/mix_v2.mp3 (-15 LUFS, -1.5 dBTP)
+    (cd source && npx remotion render src/index.ts V2Main ../exports/FGW_RobotsDestroy_v2_UPLOAD_1080p.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k)
+    python3 tools/v2/make_srt_v2.py                         # captions + transcript-vs-script check
+    python3 tools/v2/qa_v2.py                               # measured QA -> qa/v2/qa_v2_results.json
+    (cd source && npx remotion still src/index.ts V2ThumbA ../qa/v2/thumbs/thumbA.png)   # thumbnails (V2ThumbA / V2ThumbB)
+
+Stills for inspection: `cd source && COMP=V2Main SCALE=0.5 node stills.mjs ../qa/<dir> t:<seconds> …`.
+
+---
+
+## V1
+
 **Status (14 Oct 2026): v1 complete, first full production pass.** 1080p upload master rendered from source and
 reviewed in frames; narration, mix, captions, thumbnails and upload text done. **Not published** (that's the owner's
 step). Nobody has listened to the audio or watched the film at full speed yet; see `QA_REPORT.md` for exactly what
