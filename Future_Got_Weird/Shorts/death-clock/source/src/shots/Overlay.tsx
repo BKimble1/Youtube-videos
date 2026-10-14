@@ -99,7 +99,7 @@ export const CompressedTag: React.FC<{f: number}> = ({f}) => {
   if (a <= 0) return null;
   return (
     <g opacity={a}>
-      <rect x={84} y={248} width={286} height={50} rx={25} fill="#0F1C26" opacity={0.55} />
+      <rect x={84} y={248} width={330} height={50} rx={25} fill="#0F1C26" opacity={0.55} />
       <path d="M104,261 L120,273 L104,285 Z M120,261 L136,273 L120,285 Z" fill={PAL.signal} />
       <text x={148} y={283} fontFamily={UI_FONT} fontWeight={700} fontSize={30} letterSpacing={2.2} fill="#DDF6FF">
         TIME COMPRESSED

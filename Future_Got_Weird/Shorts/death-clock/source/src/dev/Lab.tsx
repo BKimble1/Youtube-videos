@@ -10,7 +10,7 @@ export const STAND: ManPose = {
   x: 540, y: 1010, s: 0.95, torso: 10, chest: 8, neck: 6, turn: 0.45, pelvis: 4,
   lTu: -292, lTv: 52, lWx: 0, lWy: 0, lW: 0, lElb: -1, lWr: 6,
   rTu: -86, rTv: -6, rWx: 0, rWy: 0, rW: 0, rElb: 1, rWr: -18,
-  lHip: 8, lKnee: 18, lAnk: 0, rHip: -10, rKnee: 6, rAnk: 0, breath: 0.5,
+  lHip: 8, lKnee: 18, lAnk: 0, rHip: -10, rKnee: 6, rAnk: 0, lFs: 1, lFsh: 1, rFs: 1, rFsh: 1, breath: 0.5,
 };
 
 export const LabMan: React.FC = () => (

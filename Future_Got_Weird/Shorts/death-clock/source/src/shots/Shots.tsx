@@ -167,12 +167,18 @@ export const S11 = (f: number) => {
   // lift-off from a rooftop pad in the same neighbourhood
   const t = inv(cutLift, b, f);
   const rise = easeIn(t);
-  const cam: Cam = {x: 560, y: 760 - rise * 60, z: 1.35};
+  // pad sits at screen y ~1060 so the low caption lane falls on the plain wall below it, clear of pad and drone
+  const cam: Cam = {x: 560, y: 994 - rise * 60, z: 1.35};
   const dp = {x: 520 + easeIn(clamp((t - 0.45) / 0.55)) * 560, y: 980 - rise * 330, s: 0.95, pitch: 14 * easeIn(clamp((t - 0.35) / 0.65)), spin: f * 1.7, beacon: 0.5 + 0.5 * Math.sin(f * 0.6)};
   return (
     <Street id="s11b" cam={cam}>
       <Lin id="s11-bld" d="M180,1080 h700 v800 h-700 Z" from={{x: 180, y: 1080}} to={{x: 880, y: 1880}} stops={[[0, '#E4E1DA'], [1, '#B4AEA4']]} />
       <Lin id="s11-roof" d="M150,1060 h760 v40 h-760 Z" from={{x: 0, y: 1060}} to={{x: 0, y: 1100}} stops={[[0, '#F2F0EB'], [1, '#C9C4BA']]} />
+      <Lin id="s11-lip" d="M150,1100 h760 v26 h-760 Z" from={{x: 0, y: 1100}} to={{x: 0, y: 1126}} stops={[[0, '#A39D92'], [1, '#C4BEB3']]} />
+      <Lin id="s11-vent" d="M760,1010 h110 v52 h-110 Z" from={{x: 760, y: 1010}} to={{x: 870, y: 1062}} stops={[[0, '#D9DDE0'], [1, '#97A0A8']]} />
+      <rect x={770} y={1022} width={90} height={6} rx={3} fill="#7E8891" opacity={0.6} />
+      <rect x={770} y={1036} width={90} height={6} rx={3} fill="#7E8891" opacity={0.6} />
+      <ellipse cx={815} cy={1066} rx={70} ry={8} fill="#000" opacity={0.18} />
       <ellipse cx={520} cy={1068} rx={250} ry={30} fill="#2F4256" />
       <ellipse cx={520} cy={1066} rx={218} ry={24} fill={PAL.signal} opacity={0.75} />
       <ellipse cx={520} cy={1066} rx={204} ry={20} fill="#3C5670" />
@@ -216,11 +222,20 @@ export const S12 = (f: number) => {
 /** The man, dog and leash without the street (for scenes that build their own world). */
 const StreetSubject: React.FC<{st: StreetState; id: string}> = ({st, id}) => {
   const j = manJoints(st.man);
+  const lie = clamp(st.man.pelvis / 80);
   return (
     <g>
-      <SoftShadow id={`${id}-sh`} c={{x: j.H.x - 120, y: GROUND + 6}} rx={420} ry={40} alpha={0.32} />
+      {/* ground shadow: long while he lies, gathered under him once he sits up */}
+      <SoftShadow id={`${id}-sh`} c={{x: j.H.x - lerp(70, 120, lie), y: GROUND + 6}} rx={lerp(250, 420, lie)} ry={40} alpha={0.32} />
+      {/* each foot keeps its own contact shadow (feet nearer the camera sit lower in frame) */}
+      {[j.lLeg, j.rLeg].map((L, i) => {
+        const fy = Math.max(L.A.y, L.toe.y);
+        const gy = Math.max(GROUND, fy) + 6;
+        const a = clamp(1 - (gy - 6 - fy) / 120) * 0.36 * (1 - lie);
+        return a > 0.01 ? <SoftShadow key={i} id={`${id}-fs${i}`} c={{x: (L.A.x + L.toe.x) / 2 + 10, y: gy}} rx={78} ry={16} alpha={a} /> : null;
+      })}
       <Dog id={`${id}-dog`} pose={st.dog} />
-      <Man id={`${id}-man`} pose={st.man} expr={st.expr} lHand={st.lHand} rHand={st.rHand} bandColor={st.bandColor} bandGlow={st.bandGlow} />
+      <Man id={`${id}-man`} pose={st.man} expr={st.expr} lHand={st.lHand} rHand={st.rHand} bandColor={st.bandColor} bandGlow={st.bandGlow} nearLegFront={st.nearLegFront} />
       <Leash a={j.R.W} b={collarRing(st.dog)} slack={60} />
     </g>
   );
@@ -294,25 +309,42 @@ const InjectInset: React.FC<{id: string; k: number; f: number}> = ({id, k, f}) =
 );
 
 // ---------------------------------------------------------------- S14: recovery, wide
-const SIT: Partial<ManPose> = {x: 770, y: 1612, torso: 14, chest: 8, neck: 4, turn: 0.45, pelvis: 58, lHip: 18, lKnee: 64, rHip: 14, rKnee: 56};
+// He pushes up on both hands, swings his legs round toward the camera and sits up on the grass: near knee raised
+// (drawn in front of the torso), far leg bent along the ground, right hand planted behind him, the band on his left
+// forearm resting across the knee, head lowered toward it (the close-up that follows looks at the same band).
+const SIT: Partial<ManPose> = {
+  x: 760, y: 1700, torso: -2, chest: 16, neck: 16, turn: 0.42, pelvis: -4,
+  lHip: 146, lKnee: 134, lAnk: -34, lFs: 0.95, lFsh: 1.0,
+  rHip: 112, rKnee: 92, rAnk: -20, rFs: 0.78, rFsh: 0.7,
+  rW: 1, rWx: 930, rWy: GROUND - 6, rElb: 1, rWr: -60,
+  lW: 1, lWx: 560, lWy: 1560, lElb: 1, lWr: 4,
+};
 export const recoveryState = (f: number): StreetState => {
   const [a, b] = SHOT.s14;
   const base = LIE.man;
   const keys: Key<ManPose>[] = [
     [a, {...base}],
-    [a + 22, {...base, x: 780, y: 1650, torso: 58, chest: 8, neck: -6, pelvis: 78, rW: 1, rWx: 560, rWy: GROUND + 4, rElb: -1, lWx: 470, lWy: GROUND + 40, lW: 1}],
-    [a + 48, {...base, ...SIT, rW: 1, rWx: 640, rWy: GROUND - 2, rElb: -1, lTu: -250, lTv: -60, lW: 0.4, lWx: 560, lWy: GROUND - 60, lElb: 1, lWr: 10}],
-    [b, {...base, ...SIT, rW: 1, rWx: 640, rWy: GROUND - 2, rElb: -1, lTu: -230, lTv: -70, lW: 0.2, lWx: 560, lWy: GROUND - 60, lElb: 1, lWr: 10}],
+    // up on both hands, hips still on the grass, legs starting to come round
+    [a + 18, {...base, x: 790, y: 1676, torso: 52, chest: 10, neck: -4, pelvis: 66, lHip: 40, lKnee: 70, lFs: 0.8, rHip: 30, rKnee: 64, rFs: 0.8,
+      rW: 1, rWx: 560, rWy: GROUND + 4, rElb: -1, lW: 1, lWx: 470, lWy: GROUND + 30, lElb: 1}],
+    // legs pointing toward the camera (short), torso coming upright over the hips
+    // legs pass under him pointing at the camera: shortest here
+    [a + 24, {...base, x: 782, y: 1694, torso: 34, chest: 11, neck: 2, pelvis: 40, lHip: 62, lKnee: 70, lAnk: -10, lFs: 0.3, lFsh: 0.36, rHip: 54, rKnee: 66, rAnk: -8, rFs: 0.3, rFsh: 0.34,
+      rW: 1, rWx: 740, rWy: GROUND - 2, rElb: 1, rWr: -30, lW: 1, lWx: 520, lWy: GROUND - 40, lElb: 1, lWr: 10}],
+    [a + 30, {...base, x: 772, y: 1704, torso: 16, chest: 12, neck: 6, pelvis: 14, lHip: 100, lKnee: 104, lAnk: -24, lFs: 0.4, lFsh: 0.34, rHip: 84, rKnee: 88, rAnk: -16, rFs: 0.36, rFsh: 0.32,
+      rW: 1, rWx: 900, rWy: GROUND - 4, rElb: 1, rWr: -40, lW: 1, lWx: 560, lWy: 1640, lElb: 1, lWr: 10}],
+    [a + 46, {...base, ...SIT}],
+    [b, {...base, ...SIT, neck: 20, lWy: 1556}],
   ];
   let man = trackRec(f, keys);
   const heave = 0.5 + 0.5 * Math.sin(f * 0.42);
-  man = {...man, breath: heave, torso: man.torso + heave * 1.4, neck: man.neck + noise1(f * 0.2, 4) * 2};
+  man = {...man, breath: heave, chest: man.chest + heave * 1.6, neck: man.neck + noise1(f * 0.2, 4) * 2};
   const expr = mixExpr(mixExpr(EXPR_WINCE, EXPR_GASP, inv(a, a + 30, f)), EXPR_RELIEF, inv(a + 34, b - 10, f));
   const dogT = easeInOut(inv(a + 10, a + 56, f));
-  const dog: DogPose = {...DOG_IDLE, x: lerp(1070, 960, dogT), y: GROUND - 10, s: 1.4, facing: -1, head: lerp(28, 12, dogT), ears: lerp(0.9, 0.5, dogT), tail: lerp(-6, 22 + 10 * Math.sin(f * 0.8), dogT), sit: easeInOut(inv(a + 50, a + 66, f)), step: f * 0.55, stepAmt: Math.sin(Math.PI * inv(a + 10, a + 56, f)), worry: lerp(1, 0.6, dogT), lean: 0};
-  const cam: Cam = {x: lerp(560, 800, easeInOut(inv(a, b, f))), y: lerp(1560, 1380, easeInOut(inv(a, b, f))), z: lerp(1.3, 0.96, easeInOut(inv(a, b, f)))};
+  const dog: DogPose = {...DOG_IDLE, x: lerp(1070, 1080, dogT), y: GROUND - 10, s: 1.4, facing: -1, head: lerp(28, 12, dogT), ears: lerp(0.9, 0.5, dogT), tail: lerp(-6, 22 + 10 * Math.sin(f * 0.8), dogT), sit: easeInOut(inv(a + 50, a + 66, f)), step: f * 0.55, stepAmt: Math.sin(Math.PI * inv(a + 10, a + 56, f)), worry: lerp(1, 0.6, dogT), lean: 0};
+  const cam: Cam = {x: lerp(560, 760, easeInOut(inv(a, b, f))), y: lerp(1560, 1420, easeInOut(inv(a, b, f))), z: lerp(1.3, 1.0, easeInOut(inv(a, b, f)))};
   const green = clamp(inv(DEV.recoverAt, DEV.recoverAt + 12, f));
-  return {man, expr, lHand: mixHand(HAND_LIMP, HAND_RELAXED, inv(a, a + 40, f)), rHand: mixHand(HAND_CLUTCH, HAND_BRACE, inv(a + 4, a + 20, f)), dog, cam, bandColor: mix(PAL.alert, PAL.normal, green), bandGlow: 0.8};
+  return {man, expr, lHand: mixHand(HAND_LIMP, HAND_RELAXED, inv(a, a + 40, f)), rHand: mixHand(HAND_CLUTCH, HAND_BRACE, inv(a + 4, a + 20, f)), dog, cam, bandColor: mix(PAL.alert, PAL.normal, green), bandGlow: 0.8, nearLegFront: f >= a + 26};
 };
 
 export const S14 = (f: number) => {

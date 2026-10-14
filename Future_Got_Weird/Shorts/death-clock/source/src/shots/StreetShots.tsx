@@ -18,7 +18,7 @@ const BASE: ManPose = {
   x: 600, y: 1180, s: 1.22, torso: 14, chest: 10, neck: 10, turn: 0.45, pelvis: 6,
   lTu: -322, lTv: 56, lWx: 0, lWy: 0, lW: 0, lElb: -1, lWr: 6,
   rTu: -84, rTv: -2, rWx: 0, rWy: 0, rW: 0, rElb: 1, rWr: -16,
-  lHip: -10, lKnee: 16, lAnk: 0, rHip: 16, rKnee: 10, rAnk: 4, breath: 0.4,
+  lHip: -10, lKnee: 16, lAnk: 0, rHip: 16, rKnee: 10, rAnk: 4, lFs: 1, lFsh: 1, rFs: 1, rFsh: 1, breath: 0.4,
 };
 const K = (over: Partial<ManPose>): ManPose => ({...BASE, ...over});
 
@@ -32,7 +32,7 @@ const FALL: Key<ManPose>[] = [
   [51, K({x: 790, y: 1684, torso: 86, chest: 4, neck: -14, turn: 0.35, pelvis: 86, lHip: 26, lKnee: 46, rHip: 18, rKnee: 36, lAnk: 10, rAnk: 10, lWx: 520, lWy: GROUND + 46, lW: 1, lElb: 1, lWr: 14, rTu: -96, rTv: 6})],
 ];
 
-export type StreetState = {man: ManPose; expr: Expr; lHand: HandPose; rHand: HandPose; dog: DogPose; cam: Cam; bandColor: string; bandGlow: number};
+export type StreetState = {man: ManPose; expr: Expr; lHand: HandPose; rHand: HandPose; dog: DogPose; cam: Cam; bandColor: string; bandGlow: number; nearLegFront?: boolean};
 
 export const fallState = (f: number): StreetState => {
   let man = trackRec(f, FALL.map(([k, p], i) => [k, p, i === 3 ? easeIn : i >= 4 ? easeOut : easeInOut] as Key<ManPose>));

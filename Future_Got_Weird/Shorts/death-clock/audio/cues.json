@@ -613,6 +613,20 @@
    }
   },
   {
+   "id": "rustle_push",
+   "kind": "rustle",
+   "f": 1114,
+   "dur": 0.6,
+   "gain": -31
+  },
+  {
+   "id": "rustle_sit",
+   "kind": "rustle",
+   "f": 1132,
+   "dur": 0.8,
+   "gain": -30
+  },
+  {
    "id": "hb_d0",
    "kind": "heartbeat",
    "f": 1140,

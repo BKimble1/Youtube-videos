@@ -70,6 +70,9 @@ export const soundCues = (): Cue[] => {
   c.push({id: 'rotor_hover', kind: 'rotor', f: SHOT.s13[0], dur: (SHOT.s15[0] - SHOT.s13[0]) / FPS, gain: -31, p: {spinup: 0, approach: 0, hover: 1}});
   c.push({id: 'inject_click', kind: 'inject', f: DEV.injectAt, gain: -21});
   c.push({id: 'stabilized', kind: 'confirm', f: DEV.freezeAt, gain: -21});
+  // clothing on grass as he pushes up and swings his legs round to sit
+  c.push({id: 'rustle_push', kind: 'rustle', f: SHOT.s14[0] + 4, dur: 0.6, gain: -31});
+  c.push({id: 'rustle_sit', kind: 'rustle', f: SHOT.s14[0] + 22, dur: 0.8, gain: -30});
   c.push({id: 'recover_breath_a', kind: 'file', f: SHOT.s14[0] + 2, gain: -24, p: {file: 'recover_breath_3_u0kMmd94TJjSZjKOuzAH.mp3', offset: 0}});
   c.push({id: 'recover_breath_b', kind: 'file', f: SHOT.s14[0] + 52, gain: -26, p: {file: 'recover_breath_1_tFCDclpcmymiy0MdhNUi.mp3', offset: 0}});
   c.push(...beats(SHOT.s14[0] + 30, SHOT.s15[0] + 20, 70, -27, 'hb_d', 0.8));

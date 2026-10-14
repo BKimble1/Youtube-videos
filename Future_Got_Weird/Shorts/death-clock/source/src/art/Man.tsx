@@ -50,6 +50,11 @@ export type ManPose = {
   rHip: number;
   rKnee: number;
   rAnk: number;
+  /** apparent length of each thigh / shin (1 = side-on, < 1 = pointing toward the camera) */
+  lFs: number;
+  lFsh: number;
+  rFs: number;
+  rFsh: number;
   breath: number;
 };
 
@@ -106,18 +111,20 @@ export const manJoints = (p: ManPose) => {
   const R = arm(rS, p.rTu, p.rTv, p.rWx, p.rWy, p.rW, p.rElb, p.rWr);
   const hipL = add(add(H, mul(px(p.pelvis), 34 * s)), mul(up(p.pelvis), -44 * s));
   const hipR = add(add(H, mul(px(p.pelvis), -40 * s)), mul(up(p.pelvis), -42 * s));
-  const leg = (hp: V, hip: number, knee: number, ank: number) => {
+  const leg = (hp: V, hip: number, knee: number, ank: number, fs: number, fsh: number) => {
     // legs rotate with the pelvis in the same sense as the torso lean (a lean of +a is a CCW turn of the body)
     const a1 = hip - p.pelvis;
-    const K = add(hp, mul(dirDown(a1), DIM.thigh * s));
+    const K = add(hp, mul(dirDown(a1), DIM.thigh * s * (fs ?? 1)));
     const a2 = a1 - knee;
-    const A = add(K, mul(dirDown(a2), DIM.shin * s));
+    const A = add(K, mul(dirDown(a2), DIM.shin * s * (fsh ?? 1)));
     const footDir = dirDown(a2 + 90 + ank);
-    const toe = add(A, mul(footDir, 84 * s));
-    return {hp, K, A, toe, footDir, shinAng: a2};
+    // a foot pointing toward the camera foreshortens with the shin
+    const fl = clamp(0.5 + 0.5 * (fsh ?? 1), 0.5, 1);
+    const toe = add(A, mul(footDir, 84 * s * fl));
+    return {hp, K, A, toe, footDir, shinAng: a2, fl};
   };
-  const lLeg = leg(hipL, p.lHip, p.lKnee, p.lAnk);
-  const rLeg = leg(hipR, p.rHip, p.rKnee, p.rAnk);
+  const lLeg = leg(hipL, p.lHip, p.lKnee, p.lAnk, p.lFs, p.lFsh);
+  const rLeg = leg(hipR, p.rHip, p.rKnee, p.rAnk, p.rFs, p.rFsh);
   return {H, C, Sh, N, head, tc, L, R, lLeg, rLeg, s, toWorld};
 };
 
@@ -153,9 +160,11 @@ type Props = {
   hideLeftForearm?: boolean;
   /** optional extra drawn between the torso and the arms (e.g. hand shadow on the chest) */
   children?: React.ReactNode;
+  /** draw the near leg in front of the torso (sitting with the near knee raised toward the camera) */
+  nearLegFront?: boolean;
 };
 
-export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, bandColor = PAL.normal, bandGlow = 0.6, hideLeftForearm, children}) => {
+export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, bandColor = PAL.normal, bandGlow = 0.6, hideLeftForearm, children, nearLegFront}) => {
   const j = manJoints(p);
   const s = p.s;
   const skin = PAL.skin;
@@ -198,7 +207,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
         <Capsule id={`${id}-${k}hm`} a={add(L.A, mul(sd, -36 * s))} b={add(L.A, mul(sd, -12 * s))} ra={27 * s} rb={27 * s} color={shade(pc, 0.12)} />
         {/* trainer: outline in the foot's own frame (x forward along the foot, y toward the ground) */}
         {(() => {
-          const F = (x: number, y: number) => add(add(L.A, mul(L.footDir, x * s)), mul(sd, y * s));
+          const F = (x: number, y: number) => add(add(L.A, mul(L.footDir, x * s * (x > 0 ? L.fl : 1))), mul(sd, y * s));
           const upper = smoothClosed([F(-34, -8), F(-30, 16), F(30, 20), F(90, 18), F(100, 6), F(86, -10), F(46, -20), F(10, -34), F(-14, -34), F(-32, -26)]);
           const sole = smoothClosed([F(-35, 10), F(98, 12), F(100, 24), F(40, 28), F(-33, 26)]);
           const c0 = F(20, -8);
@@ -259,7 +268,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
       {Leg('rl', j.rLeg, true)}
       {UpperArm('ra', j.R, true)}
       <Blob id={`${id}-pel`} d={pelD} c={loc(j.H, p.pelvis, -10, -30)} r={120 * s} color={PAL.pants} />
-      {Leg('ll', j.lLeg, false)}
+      {!nearLegFront && Leg('ll', j.lLeg, false)}
       <Blob id={`${id}-tor`} d={torsoD} c={torsoC} r={210 * s} color={PAL.shirt} k={1.1} />
       {/* cylindrical form shading across the torso: lit front edge -> shadowed back edge (light is upper-left) */}
       <Lin id={`${id}-tf`} d={torsoD} from={loc(j.C, tc, 40, -100)} to={loc(j.C, tc, 40, 96)} stops={[[0, '#FFF3E6', 0.22], [0.3, '#FFF3E6', 0], [0.62, '#5A2A1A', 0], [1, '#5A2A1A', 0.34]]} />
@@ -280,6 +289,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
       <Capsule id={`${id}-col`} a={loc(j.C, tc, 140, -36)} b={loc(j.C, tc, 146, 30)} ra={11 * s} rb={11 * s} color={shade(PAL.shirt, 0.22)} k={0.6} />
       <Head id={`${id}-hd`} c={j.head} R={DIM.headR * s} roll={-(tc + p.neck)} turn={p.turn} expr={expr} blink={blink} />
       {children}
+      {nearLegFront && Leg('ll', j.lLeg, false)}
       {ForeArm('rf', j.R, true, rHand, -1, false)}
       {UpperArm('la', j.L, false)}
       {!hideLeftForearm && ForeArm('lf', j.L, false, lHand, 1, true)}

@@ -1,0 +1,17 @@
+{
+ "total_frames": 1373,
+ "timer_first_frame": 579,
+ "timer_first_value": "00:02:14",
+ "displayed_changes": 22,
+ "lowest_displayed": "00:01:52",
+ "frozen_at_frame": 1056,
+ "frozen_value": "00:01:52",
+ "red_from_frame": 541,
+ "recover_from_frame": 1150,
+ "glitch_frames": [
+  1291,
+  1298
+ ],
+ "result": "PASS",
+ "failures": []
+}
