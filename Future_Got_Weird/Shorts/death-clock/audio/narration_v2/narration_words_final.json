@@ -1,0 +1,851 @@
+{
+ "source_take": "V4_R4IDiVOYhLW115iOIYDT.mp3",
+ "generation_id": "R4IDiVOYhLW115iOIYDT",
+ "voice_id": "kk5XaSLo2XAw0sKM98zU",
+ "model": "eleven_v4",
+ "sample_rate": 48000,
+ "duration_s": 45.46,
+ "first_sound_s": 0.03,
+ "speech_end_s": 44.06,
+ "tail_s": 1.4,
+ "groups_final": [
+  [
+   0.03,
+   2.58
+  ],
+  [
+   4.23,
+   8.31
+  ],
+  [
+   9.41,
+   12.01
+  ],
+  [
+   12.19,
+   13.78
+  ],
+  [
+   15.53,
+   17.02
+  ],
+  [
+   17.32,
+   19.41
+  ],
+  [
+   20.11,
+   24.81
+  ],
+  [
+   26.61,
+   28.75
+  ],
+  [
+   29.7,
+   34.34
+  ],
+  [
+   34.67,
+   37.78
+  ],
+  [
+   41.08,
+   41.25
+  ],
+  [
+   41.45,
+   42.83
+  ],
+  [
+   43.28,
+   44.06
+  ]
+ ],
+ "words": [
+  {
+   "text": "This",
+   "block": 1,
+   "group": 0,
+   "start": 0.12,
+   "end": 0.26,
+   "asr_text": "This"
+  },
+  {
+   "text": "device",
+   "block": 1,
+   "group": 0,
+   "start": 0.3,
+   "end": 0.62,
+   "asr_text": "device"
+  },
+  {
+   "text": "tells",
+   "block": 1,
+   "group": 0,
+   "start": 0.72,
+   "end": 0.92,
+   "asr_text": "tells"
+  },
+  {
+   "text": "you",
+   "block": 1,
+   "group": 0,
+   "start": 0.96,
+   "end": 1.08,
+   "asr_text": "you"
+  },
+  {
+   "text": "exactly",
+   "block": 1,
+   "group": 0,
+   "start": 1.14,
+   "end": 1.82,
+   "asr_text": "exactly"
+  },
+  {
+   "text": "when",
+   "block": 1,
+   "group": 0,
+   "start": 1.86,
+   "end": 1.98,
+   "asr_text": "when"
+  },
+  {
+   "text": "you",
+   "block": 1,
+   "group": 0,
+   "start": 2,
+   "end": 2.06,
+   "asr_text": "you"
+  },
+  {
+   "text": "are",
+   "block": 1,
+   "group": 0,
+   "start": 2.1,
+   "end": 2.22,
+   "asr_text": "are"
+  },
+  {
+   "text": "dying.",
+   "block": 1,
+   "group": 0,
+   "start": 2.24,
+   "end": 2.58,
+   "asr_text": "dying."
+  },
+  {
+   "text": "It",
+   "block": 2,
+   "group": 1,
+   "start": 4.28,
+   "end": 4.4,
+   "asr_text": "It"
+  },
+  {
+   "text": "works",
+   "block": 2,
+   "group": 1,
+   "start": 4.44,
+   "end": 4.68,
+   "asr_text": "works"
+  },
+  {
+   "text": "by",
+   "block": 2,
+   "group": 1,
+   "start": 4.72,
+   "end": 4.82,
+   "asr_text": "by"
+  },
+  {
+   "text": "injecting",
+   "block": 2,
+   "group": 1,
+   "start": 4.86,
+   "end": 5.26,
+   "asr_text": "injecting"
+  },
+  {
+   "text": "thousands",
+   "block": 2,
+   "group": 1,
+   "start": 5.46,
+   "end": 5.9,
+   "asr_text": "thousands"
+  },
+  {
+   "text": "of",
+   "block": 2,
+   "group": 1,
+   "start": 5.94,
+   "end": 6.06,
+   "asr_text": "of"
+  },
+  {
+   "text": "microscopic",
+   "block": 2,
+   "group": 1,
+   "start": 6.12,
+   "end": 6.78,
+   "asr_text": "microscopic"
+  },
+  {
+   "text": "nano-sensors",
+   "block": 2,
+   "group": 1,
+   "start": 6.86,
+   "end": 7.56,
+   "asr_text": "nanosensors"
+  },
+  {
+   "text": "through",
+   "block": 2,
+   "group": 1,
+   "start": 7.64,
+   "end": 7.78,
+   "asr_text": "through"
+  },
+  {
+   "text": "your",
+   "block": 2,
+   "group": 1,
+   "start": 7.82,
+   "end": 7.88,
+   "asr_text": "your"
+  },
+  {
+   "text": "skin.",
+   "block": 2,
+   "group": 1,
+   "start": 8.0,
+   "end": 8.3,
+   "asr_text": "skin."
+  },
+  {
+   "text": "These",
+   "block": 2,
+   "group": 2,
+   "start": 9.48,
+   "end": 9.64,
+   "asr_text": "These"
+  },
+  {
+   "text": "sensors",
+   "block": 2,
+   "group": 2,
+   "start": 9.68,
+   "end": 10.12,
+   "asr_text": "sensors"
+  },
+  {
+   "text": "constantly",
+   "block": 2,
+   "group": 2,
+   "start": 10.18,
+   "end": 10.76,
+   "asr_text": "constantly"
+  },
+  {
+   "text": "travel",
+   "block": 2,
+   "group": 2,
+   "start": 10.8,
+   "end": 11.08,
+   "asr_text": "travel"
+  },
+  {
+   "text": "through",
+   "block": 2,
+   "group": 2,
+   "start": 11.16,
+   "end": 11.3,
+   "asr_text": "through"
+  },
+  {
+   "text": "your",
+   "block": 2,
+   "group": 2,
+   "start": 11.32,
+   "end": 11.44,
+   "asr_text": "your"
+  },
+  {
+   "text": "bloodstream,",
+   "block": 2,
+   "group": 2,
+   "start": 11.46,
+   "end": 11.98,
+   "asr_text": "bloodstream,"
+  },
+  {
+   "text": "monitoring",
+   "block": 2,
+   "group": 3,
+   "start": 12.26,
+   "end": 12.74,
+   "asr_text": "monitoring"
+  },
+  {
+   "text": "your",
+   "block": 2,
+   "group": 3,
+   "start": 12.78,
+   "end": 12.94,
+   "asr_text": "your"
+  },
+  {
+   "text": "cellular",
+   "block": 2,
+   "group": 3,
+   "start": 12.96,
+   "end": 13.32,
+   "asr_text": "cellular"
+  },
+  {
+   "text": "decay.",
+   "block": 2,
+   "group": 3,
+   "start": 13.38,
+   "end": 13.76,
+   "asr_text": "decay."
+  },
+  {
+   "text": "If",
+   "block": 3,
+   "group": 4,
+   "start": 15.58,
+   "end": 15.64,
+   "asr_text": "If"
+  },
+  {
+   "text": "your",
+   "block": 3,
+   "group": 4,
+   "start": 15.68,
+   "end": 15.8,
+   "asr_text": "your"
+  },
+  {
+   "text": "organs",
+   "block": 3,
+   "group": 4,
+   "start": 15.86,
+   "end": 16.18,
+   "asr_text": "organs"
+  },
+  {
+   "text": "begin",
+   "block": 3,
+   "group": 4,
+   "start": 16.22,
+   "end": 16.42,
+   "asr_text": "begin"
+  },
+  {
+   "text": "to",
+   "block": 3,
+   "group": 4,
+   "start": 16.46,
+   "end": 16.6,
+   "asr_text": "to"
+  },
+  {
+   "text": "fail,",
+   "block": 3,
+   "group": 4,
+   "start": 16.66,
+   "end": 16.94,
+   "asr_text": "fail"
+  },
+  {
+   "text": "or",
+   "block": 3,
+   "group": 5,
+   "start": 17.36,
+   "end": 17.46,
+   "asr_text": "or"
+  },
+  {
+   "text": "your",
+   "block": 3,
+   "group": 5,
+   "start": 17.5,
+   "end": 17.62,
+   "asr_text": "your"
+  },
+  {
+   "text": "heart",
+   "block": 3,
+   "group": 5,
+   "start": 17.66,
+   "end": 17.84,
+   "asr_text": "heart"
+  },
+  {
+   "text": "experiences",
+   "block": 3,
+   "group": 5,
+   "start": 17.86,
+   "end": 18.5,
+   "asr_text": "experiences"
+  },
+  {
+   "text": "a",
+   "block": 3,
+   "group": 5,
+   "start": 18.56,
+   "end": 18.62,
+   "asr_text": "a"
+  },
+  {
+   "text": "lethal",
+   "block": 3,
+   "group": 5,
+   "start": 18.7,
+   "end": 18.98,
+   "asr_text": "lethal"
+  },
+  {
+   "text": "rhythm,",
+   "block": 3,
+   "group": 5,
+   "start": 19.08,
+   "end": 19.359,
+   "asr_text": "rhythm,"
+  },
+  {
+   "text": "the",
+   "block": 3,
+   "group": 6,
+   "start": 20.13,
+   "end": 20.19,
+   "asr_text": "the"
+  },
+  {
+   "text": "device",
+   "block": 3,
+   "group": 6,
+   "start": 20.21,
+   "end": 20.59,
+   "asr_text": "device"
+  },
+  {
+   "text": "immediately",
+   "block": 3,
+   "group": 6,
+   "start": 20.63,
+   "end": 21.25,
+   "asr_text": "immediately"
+  },
+  {
+   "text": "calculates",
+   "block": 3,
+   "group": 6,
+   "start": 21.29,
+   "end": 21.79,
+   "asr_text": "calculates"
+  },
+  {
+   "text": "your",
+   "block": 3,
+   "group": 6,
+   "start": 21.83,
+   "end": 21.91,
+   "asr_text": "your"
+  },
+  {
+   "text": "remaining",
+   "block": 3,
+   "group": 6,
+   "start": 21.95,
+   "end": 22.35,
+   "asr_text": "remaining"
+  },
+  {
+   "text": "life",
+   "block": 3,
+   "group": 6,
+   "start": 22.41,
+   "end": 22.59,
+   "asr_text": "life"
+  },
+  {
+   "text": "expectancy",
+   "block": 3,
+   "group": 6,
+   "start": 22.63,
+   "end": 23.33,
+   "asr_text": "expectancy"
+  },
+  {
+   "text": "down",
+   "block": 3,
+   "group": 6,
+   "start": 23.37,
+   "end": 23.59,
+   "asr_text": "down"
+  },
+  {
+   "text": "to",
+   "block": 3,
+   "group": 6,
+   "start": 23.61,
+   "end": 23.69,
+   "asr_text": "to"
+  },
+  {
+   "text": "the",
+   "block": 3,
+   "group": 6,
+   "start": 23.73,
+   "end": 23.79,
+   "asr_text": "the"
+  },
+  {
+   "text": "exact",
+   "block": 3,
+   "group": 6,
+   "start": 23.83,
+   "end": 24.33,
+   "asr_text": "exact"
+  },
+  {
+   "text": "second.",
+   "block": 3,
+   "group": 6,
+   "start": 24.47,
+   "end": 24.83,
+   "asr_text": "second."
+  },
+  {
+   "text": "This",
+   "block": 4,
+   "group": 7,
+   "start": 26.65,
+   "end": 26.79,
+   "asr_text": "This"
+  },
+  {
+   "text": "gives",
+   "block": 4,
+   "group": 7,
+   "start": 26.83,
+   "end": 26.99,
+   "asr_text": "gives"
+  },
+  {
+   "text": "you",
+   "block": 4,
+   "group": 7,
+   "start": 27.03,
+   "end": 27.11,
+   "asr_text": "you"
+  },
+  {
+   "text": "a",
+   "block": 4,
+   "group": 7,
+   "start": 27.15,
+   "end": 27.23,
+   "asr_text": "a"
+  },
+  {
+   "text": "critical",
+   "block": 4,
+   "group": 7,
+   "start": 27.31,
+   "end": 27.67,
+   "asr_text": "critical"
+  },
+  {
+   "text": "window",
+   "block": 4,
+   "group": 7,
+   "start": 27.75,
+   "end": 28.05,
+   "asr_text": "window"
+  },
+  {
+   "text": "to",
+   "block": 4,
+   "group": 7,
+   "start": 28.09,
+   "end": 28.19,
+   "asr_text": "to"
+  },
+  {
+   "text": "seek",
+   "block": 4,
+   "group": 7,
+   "start": 28.23,
+   "end": 28.41,
+   "asr_text": "seek"
+  },
+  {
+   "text": "help.",
+   "block": 4,
+   "group": 7,
+   "start": 28.45,
+   "end": 28.71,
+   "asr_text": "help."
+  },
+  {
+   "text": "The",
+   "block": 4,
+   "group": 8,
+   "start": 29.7,
+   "end": 29.78,
+   "asr_text": "The"
+  },
+  {
+   "text": "device",
+   "block": 4,
+   "group": 8,
+   "start": 29.8,
+   "end": 30.1,
+   "asr_text": "device"
+  },
+  {
+   "text": "automatically",
+   "block": 4,
+   "group": 8,
+   "start": 30.28,
+   "end": 30.82,
+   "asr_text": "automatically"
+  },
+  {
+   "text": "alerts",
+   "block": 4,
+   "group": 8,
+   "start": 30.88,
+   "end": 31.14,
+   "asr_text": "alerts"
+  },
+  {
+   "text": "emergency",
+   "block": 4,
+   "group": 8,
+   "start": 31.18,
+   "end": 31.66,
+   "asr_text": "emergency"
+  },
+  {
+   "text": "services",
+   "block": 4,
+   "group": 8,
+   "start": 31.76,
+   "end": 32.22,
+   "asr_text": "services"
+  },
+  {
+   "text": "with",
+   "block": 4,
+   "group": 8,
+   "start": 32.26,
+   "end": 32.38,
+   "asr_text": "with"
+  },
+  {
+   "text": "your",
+   "block": 4,
+   "group": 8,
+   "start": 32.4,
+   "end": 32.48,
+   "asr_text": "your"
+  },
+  {
+   "text": "exact",
+   "block": 4,
+   "group": 8,
+   "start": 32.52,
+   "end": 32.96,
+   "asr_text": "exact"
+  },
+  {
+   "text": "location",
+   "block": 4,
+   "group": 8,
+   "start": 33.0,
+   "end": 33.54,
+   "asr_text": "location"
+  },
+  {
+   "text": "and",
+   "block": 4,
+   "group": 8,
+   "start": 33.56,
+   "end": 33.64,
+   "asr_text": "and"
+  },
+  {
+   "text": "medical",
+   "block": 4,
+   "group": 8,
+   "start": 33.7,
+   "end": 33.96,
+   "asr_text": "medical"
+  },
+  {
+   "text": "data,",
+   "block": 4,
+   "group": 8,
+   "start": 34.06,
+   "end": 34.3,
+   "asr_text": "data,"
+  },
+  {
+   "text": "potentially",
+   "block": 4,
+   "group": 9,
+   "start": 34.68,
+   "end": 35.2,
+   "asr_text": "potentially"
+  },
+  {
+   "text": "saving",
+   "block": 4,
+   "group": 9,
+   "start": 35.26,
+   "end": 35.54,
+   "asr_text": "saving"
+  },
+  {
+   "text": "your",
+   "block": 4,
+   "group": 9,
+   "start": 35.56,
+   "end": 35.68,
+   "asr_text": "your"
+  },
+  {
+   "text": "life",
+   "block": 4,
+   "group": 9,
+   "start": 35.72,
+   "end": 35.98,
+   "asr_text": "life"
+  },
+  {
+   "text": "before",
+   "block": 4,
+   "group": 9,
+   "start": 36.02,
+   "end": 36.32,
+   "asr_text": "before"
+  },
+  {
+   "text": "you",
+   "block": 4,
+   "group": 9,
+   "start": 36.36,
+   "end": 36.52,
+   "asr_text": "you"
+  },
+  {
+   "text": "even",
+   "block": 4,
+   "group": 9,
+   "start": 36.6,
+   "end": 36.82,
+   "asr_text": "even"
+  },
+  {
+   "text": "lose",
+   "block": 4,
+   "group": 9,
+   "start": 36.86,
+   "end": 37.06,
+   "asr_text": "lose"
+  },
+  {
+   "text": "consciousness.",
+   "block": 4,
+   "group": 9,
+   "start": 37.1,
+   "end": 37.739,
+   "asr_text": "consciousness."
+  },
+  {
+   "text": "But",
+   "block": 5,
+   "group": 10,
+   "start": 41.09,
+   "end": 41.45,
+   "asr_text": "But"
+  },
+  {
+   "text": "if",
+   "block": 5,
+   "group": 11,
+   "start": 41.51,
+   "end": 41.59,
+   "asr_text": "if"
+  },
+  {
+   "text": "the",
+   "block": 5,
+   "group": 11,
+   "start": 41.63,
+   "end": 41.69,
+   "asr_text": "the"
+  },
+  {
+   "text": "countdown",
+   "block": 5,
+   "group": 11,
+   "start": 41.75,
+   "end": 42.11,
+   "asr_text": "countdown"
+  },
+  {
+   "text": "starts,",
+   "block": 5,
+   "group": 11,
+   "start": 42.31,
+   "end": 42.73,
+   "asr_text": "starts,"
+  },
+  {
+   "text": "would",
+   "block": 5,
+   "group": 12,
+   "start": 43.32,
+   "end": 43.44,
+   "asr_text": "would"
+  },
+  {
+   "text": "you",
+   "block": 5,
+   "group": 12,
+   "start": 43.48,
+   "end": 43.56,
+   "asr_text": "you"
+  },
+  {
+   "text": "want",
+   "block": 5,
+   "group": 12,
+   "start": 43.58,
+   "end": 43.7,
+   "asr_text": "want"
+  },
+  {
+   "text": "to",
+   "block": 5,
+   "group": 12,
+   "start": 43.72,
+   "end": 43.8,
+   "asr_text": "to"
+  },
+  {
+   "text": "know?",
+   "block": 5,
+   "group": 12,
+   "start": 43.84,
+   "end": 44.02,
+   "asr_text": "know?"
+  }
+ ]
+}

@@ -1,0 +1,153 @@
+{
+ "take": "V4_R4IDiVOYhLW115iOIYDT.mp3",
+ "method": "insert digital silence at the quietest 20 ms of each gap; no other processing",
+ "gaps": [
+  {
+   "gap": 1,
+   "between": [
+    2.58,
+    3.01
+   ],
+   "original_s": 0.43,
+   "target_s": 1.65,
+   "inserted_s": 1.22,
+   "insert_at_s": 2.909,
+   "beat": "after \"dying.\" - the camera tips from the wrist toward the band underside and a clean section opens in the arm"
+  },
+  {
+   "gap": 2,
+   "between": [
+    7.09,
+    7.53
+   ],
+   "original_s": 0.44,
+   "target_s": 1.1,
+   "inserted_s": 0.66,
+   "insert_at_s": 7.215,
+   "beat": "after \"skin.\" - the sensor stream reaches the vessel; one hero sensor is singled out"
+  },
+  {
+   "gap": 3,
+   "between": [
+    10.13,
+    10.31
+   ],
+   "original_s": 0.18,
+   "target_s": null,
+   "inserted_s": 0.0,
+   "insert_at_s": 10.222,
+   "beat": "\"bloodstream, | monitoring\" - natural, unchanged"
+  },
+  {
+   "gap": 4,
+   "between": [
+    11.9,
+    12.39
+   ],
+   "original_s": 0.49,
+   "target_s": 1.75,
+   "inserted_s": 1.26,
+   "insert_at_s": 12.185,
+   "beat": "after \"decay.\" - the hero signal pulses; pull back along the vessel to the same man, opened in section"
+  },
+  {
+   "gap": 5,
+   "between": [
+    13.88,
+    14.04
+   ],
+   "original_s": 0.16,
+   "target_s": 0.3,
+   "inserted_s": 0.14,
+   "insert_at_s": 13.97,
+   "beat": "\"fail, | or\" - a comma breath inside the sentence; the failing organ dims under the sensors"
+  },
+  {
+   "gap": 6,
+   "between": [
+    16.13,
+    16.46
+   ],
+   "original_s": 0.33,
+   "target_s": 0.7,
+   "inserted_s": 0.37,
+   "insert_at_s": 16.349,
+   "beat": "\"rhythm, | the device\" - a comma breath inside the sentence; the heart quivers and its signal leaves for the arm"
+  },
+  {
+   "gap": 7,
+   "between": [
+    21.16,
+    21.6
+   ],
+   "original_s": 0.44,
+   "target_s": 1.8,
+   "inserted_s": 1.36,
+   "insert_at_s": 21.509,
+   "beat": "after \"exact second.\" - red 00:02:14 holds; his eyes find the screen, the wrist turns, the hand reacts"
+  },
+  {
+   "gap": 8,
+   "between": [
+    23.74,
+    24.22
+   ],
+   "original_s": 0.48,
+   "target_s": 0.95,
+   "inserted_s": 0.47,
+   "insert_at_s": 24.025,
+   "beat": "after \"help.\" - the diagnostic resolves and the blue alert ring leaves the band"
+  },
+  {
+   "gap": 9,
+   "between": [
+    28.86,
+    29.19
+   ],
+   "original_s": 0.33,
+   "target_s": null,
+   "inserted_s": 0.0,
+   "insert_at_s": 29.109,
+   "beat": "\"data, | potentially\" - natural, unchanged (one connected emergency-services sentence)"
+  },
+  {
+   "gap": 10,
+   "between": [
+    32.3,
+    32.87
+   ],
+   "original_s": 0.57,
+   "target_s": 3.3,
+   "inserted_s": 2.73,
+   "insert_at_s": 32.705,
+   "beat": "after \"consciousness.\" - treatment pulse response, breathing, he plants a hand and sits up; the band turns green"
+  },
+  {
+   "gap": 11,
+   "between": [
+    33.04,
+    33.24
+   ],
+   "original_s": 0.2,
+   "target_s": null,
+   "inserted_s": 0.0,
+   "insert_at_s": 33.138,
+   "beat": "\"But | if\" - natural, unchanged"
+  },
+  {
+   "gap": 12,
+   "between": [
+    34.62,
+    34.88
+   ],
+   "original_s": 0.26,
+   "target_s": 0.45,
+   "inserted_s": 0.19,
+   "insert_at_s": 34.785,
+   "beat": "\"starts, | would\" - a comma breath; attention moves from the green readout to his worried face"
+  }
+ ],
+ "tail_s": 1.4,
+ "total_inserted_s": 8.4,
+ "final_duration_s": 45.46
+}

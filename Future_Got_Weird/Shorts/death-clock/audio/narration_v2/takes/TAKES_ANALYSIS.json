@@ -1,0 +1,62 @@
+{
+ "words": 98,
+ "method": "Objective comparison of narration takes (nobody can listen in this environment).",
+ "takes": [
+  {
+   "file": "V1_ZMicJdXfa6ci0wAEssMv.mp3",
+   "duration_s": 35.84,
+   "lead_in_s": 0.0,
+   "tail_s": 0.12,
+   "speech_span_s": 35.72,
+   "wpm_over_span": 164.6,
+   "pitch_median_hz": 154.8,
+   "pitch_range_semitones_p10_p90": 12.25,
+   "voiced_frames": 1583,
+   "level_spread_db_p10_p90": 17.88,
+   "spectral_centroid_hz": 1888.0,
+   "peak_dbfs": -1.43
+  },
+  {
+   "file": "V2_tQyowJwyUHKEvqNYiIWl.mp3",
+   "duration_s": 35.6,
+   "lead_in_s": 0.0,
+   "tail_s": 0.15,
+   "speech_span_s": 35.45,
+   "wpm_over_span": 165.9,
+   "pitch_median_hz": 152.9,
+   "pitch_range_semitones_p10_p90": 12.59,
+   "voiced_frames": 1516,
+   "level_spread_db_p10_p90": 18.23,
+   "spectral_centroid_hz": 1861.0,
+   "peak_dbfs": -1.36
+  },
+  {
+   "file": "V3_vTQ6W4mkOlpdf9kkvuEt.mp3",
+   "duration_s": 35.52,
+   "lead_in_s": 0.0,
+   "tail_s": 0.17,
+   "speech_span_s": 35.35,
+   "wpm_over_span": 166.3,
+   "pitch_median_hz": 160.0,
+   "pitch_range_semitones_p10_p90": 12.34,
+   "voiced_frames": 1593,
+   "level_spread_db_p10_p90": 17.85,
+   "spectral_centroid_hz": 1856.0,
+   "peak_dbfs": -1.29
+  },
+  {
+   "file": "V4_R4IDiVOYhLW115iOIYDT.mp3",
+   "duration_s": 35.84,
+   "lead_in_s": 0.0,
+   "tail_s": 0.16,
+   "speech_span_s": 35.68,
+   "wpm_over_span": 164.8,
+   "pitch_median_hz": 158.9,
+   "pitch_range_semitones_p10_p90": 12.51,
+   "voiced_frames": 1590,
+   "level_spread_db_p10_p90": 17.46,
+   "spectral_centroid_hz": 1891.0,
+   "peak_dbfs": -1.29
+  }
+ ]
+}
