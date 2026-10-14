@@ -18,8 +18,8 @@ inspection.
 
 | File | Spec | Notes |
 |---|---|---|
-| `exports/FGW_RobotsDestroy_v3_UPLOAD_1080p.mp4` | H.264 High, 1920×1080, 30 fps CFR (native), yuv420p, BT.709. 7,005 frames, 233.5 s. AAC 48 kHz stereo at 317 kb/s. 115.9 MiB. SHA-256 `4fa6deb8ebae70b21b7d4eda84363e38ea0b64855fddbdbcc12c97af9c7728e1` | **Upload master.** Its file name is distinct from the share copy's. Rendered from source (CRF 16, x264 slow) with the V3 mix. Backed up as split parts in `backup/v3/`. |
-| `exports/FGW_RobotsDestroy_v3_1080p_SHARE.mp4` | 1920×1080, 30 fps, two-pass H.264 at 0.88 Mb/s, AAC 128 kb/s | **Review/share copy, not for upload.** Made from the master. |
+| `exports/FGW_RobotsDestroy_v3_UPLOAD_1080p.mp4` | H.264 High, 1920×1080, 30 fps CFR (native), yuv420p, BT.709. 7,005 frames, 233.5 s. AAC 48 kHz stereo at 317 kb/s. 115.9 MiB. SHA-256 `4fa6deb8ebae70b21b7d4eda84363e38ea0b64855fddbdbcc12c97af9c7728e1` | **Upload master.** Its file name is distinct from the share copy's. Rendered from source (CRF 16, x264 slow) with the V3 mix. Backed up as six split parts in `backup/v3/`; the parts pass `sha256sum -c`, and the joined parts hash to the master's SHA-256. |
+| `exports/FGW_RobotsDestroy_v3_1080p_SHARE.mp4` | 1920×1080, 30 fps, two-pass H.264 at 0.88 Mb/s, AAC 128 kb/s, 233.5 s, 28.46 MiB | **Review/share copy, not for upload.** Made from the master. |
 | `captions/FGW_RobotsDestroy_v3.srt` | 75 cues, at most 42 characters per line, no overlaps. First cue at 0.50 s; last ends at 230.54 s | Identical to V2: narration and timing are unchanged |
 | `thumbnail/FGW_RobotsDestroy_v3_thumbA_edge_1280x720.jpg` (main), `…v3_thumbB_leap…` | 1280×720 JPEG | Drawn with the V3 F.02 model. Phone-size check: `qa/v3/thumbs/phone_size_check.png` |
 
