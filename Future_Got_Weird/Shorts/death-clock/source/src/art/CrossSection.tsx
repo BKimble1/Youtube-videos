@@ -3,6 +3,7 @@
 // gradient vessel tube with its near wall cut away (near/far wall and a masked lumen). The band's
 // fictional reservoir and micro-port sit on top. Stylized depiction of an invented mechanism.
 import React from 'react';
+import {Inked} from '../lib/ink';
 import {Bead, BeadDefs, Dot, Path, pathAt, smoothPath} from './Beads';
 import {Cam, Layer} from '../lib/camera';
 import {lit, mix, PAL, shade} from '../lib/color';
@@ -139,7 +140,10 @@ export const CrossSection: React.FC<{id: string; st: XSectionState}> = ({id, st}
         <Lin id={`${id}-vsh`} d={rect(-2000, vBot, 5000, 40)} from={{x: 0, y: vBot}} to={{x: 0, y: vBot + 40}} stops={[[0, '#5A1A20', 0.3], [1, '#5A1A20', 0]]} />
         {/* the device on top of the skin, cut through: case + glass, reservoir, port plate */}
         <SoftShadow id={`${id}-dsh`} c={{x: 560, y: XS.skinTop + 8}} rx={300} ry={22} alpha={0.35} color="#3A1A10" />
-        <Lin id={`${id}-case`} d={`M${XS.bandL},${XS.skinTop} L${XS.bandL},${352} Q${XS.bandL},${300} ${XS.bandL + 52},${300} L${XS.bandR - 52},${300} Q${XS.bandR},${300} ${XS.bandR},${352} L${XS.bandR},${XS.skinTop} Z`} from={{x: XS.bandL, y: 300}} to={{x: XS.bandR, y: XS.skinTop}} stops={[[0, lit(PAL.band, 0.2)], [0.5, PAL.band], [1, PAL.bandDeep]]} />
+        {/* crew ink contour around the device case (the cutaway's tissue layers stay soft, it is a diagram) */}
+        <Inked w={8}>
+          <Lin id={`${id}-case`} d={`M${XS.bandL},${XS.skinTop} L${XS.bandL},${352} Q${XS.bandL},${300} ${XS.bandL + 52},${300} L${XS.bandR - 52},${300} Q${XS.bandR},${300} ${XS.bandR},${352} L${XS.bandR},${XS.skinTop} Z`} from={{x: XS.bandL, y: 300}} to={{x: XS.bandR, y: XS.skinTop}} stops={[[0, lit(PAL.band, 0.2)], [0.5, PAL.band], [1, PAL.bandDeep]]} />
+        </Inked>
         <Lin id={`${id}-glass`} d={rect(XS.bandL + 30, 312, XS.bandR - XS.bandL - 60, 34)} from={{x: 0, y: 312}} to={{x: 0, y: 346}} stops={[[0, '#2B3C5E'], [1, '#0B1428']]} />
         <rect x={XS.bandL + 40} y={316} width={150} height={7} rx={3.5} fill="#FFFFFF" opacity={0.5} />
         <Lin id={`${id}-res`} d={`M380,436 Q380,420 396,420 L724,420 Q740,420 740,436 L740,548 Q740,564 724,564 L396,564 Q380,564 380,548 Z`} from={{x: 380, y: 420}} to={{x: 740, y: 564}} stops={[[0, '#0E2A55'], [1, '#06142E']]} />

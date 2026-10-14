@@ -43,14 +43,16 @@ export const PAL = {
   ink: '#172B3A',
   inkSoft: '#3A5163',
   white: '#FFFFFF',
-  // character
-  skin: '#E3A47F',
-  skinLight: '#F5CDB0',
-  skinDeep: '#B8714F',
-  hair: '#4A3022',
-  shirt: '#D8875E', // muted terracotta tee: reads against grass, leaves the blue band as the focal accent
-  pants: '#46566E',
-  shoe: '#EDEAE4',
+  // character: the Weird Crew's "guesser" (Video 01 cast.ts): peach skin, red spiky hair, white tee with
+  // saffron stripes, navy trousers, white shoes
+  skin: '#F2C9A8',
+  skinLight: '#FBE2CF',
+  skinDeep: '#C98B6A',
+  hair: '#C0392B',
+  shirt: '#FFFFFF',
+  stripe: '#FFC744',
+  pants: '#2E3F5C',
+  shoe: '#FFFFFF',
   // medical cutaway
   skinLayer: '#F0B595',
   fat: '#F2D27A',

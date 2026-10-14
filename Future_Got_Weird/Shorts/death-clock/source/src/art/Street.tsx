@@ -1,5 +1,6 @@
 // A normal, warm suburban street: pastel sky, muted houses and lawns, a picket fence, rounded trees.
-// Every surface is gradient-shaded from the same upper-left key light; no outlines, no textures.
+// Every surface is gradient-shaded from the same upper-left key light; set pieces carry a thin Weird Crew ink
+// contour (lighter than the characters' so the cast stays the focus); sky, clouds and grass stay soft.
 // Layered by depth so the camera gets parallax: sky (8), far trees (3.2), houses (2), back lawn and
 // sidewalk (1.35), the front lawn the man stands on (1), foreground tufts (0.62).
 import React from 'react';
@@ -7,6 +8,7 @@ import {lit, mix, PAL, shade} from '../lib/color';
 import {Cam, Layer} from '../lib/camera';
 import {hash, P, V} from '../lib/math';
 import {Blob, Capsule, Lin, SoftShadow, Sphere} from '../lib/shade';
+import {Inked, InkLine} from '../lib/ink';
 
 const rect = (x: number, y: number, w: number, h: number) => `M${x},${y} h${w} v${h} h${-w} Z`;
 
@@ -23,10 +25,14 @@ export const Tree: React.FC<{id: string; x: number; y: number; s: number; tint?:
   return (
     <g>
       <SoftShadow id={`${id}-sh`} c={{x: x + 30 * s, y: y + 4 * s}} rx={150 * s} ry={22 * s} alpha={0.22} />
-      <Capsule id={`${id}-tr`} a={{x, y: y - 20 * s}} b={{x: x + 6 * s, y: y - 230 * s}} ra={24 * s} rb={16 * s} color={mix('#8A6A50', '#9C8E84', tint)} spec={0.1} />
-      {blobs.map(([dx, dy, r], i) => (
-        <Sphere key={i} id={`${id}-c${i}`} c={{x: x + dx * s, y: y + dy * s}} r={r * s} color={i % 2 ? g : shade(g, 0.06)} k={0.9} />
-      ))}
+      <Inked w={5 * s}>
+        <Capsule id={`${id}-tr`} a={{x, y: y - 20 * s}} b={{x: x + 6 * s, y: y - 230 * s}} ra={24 * s} rb={16 * s} color={mix('#8A6A50', '#9C8E84', tint)} spec={0.1} />
+      </Inked>
+      <Inked w={5 * s}>
+        {blobs.map(([dx, dy, r], i) => (
+          <Sphere key={i} id={`${id}-c${i}`} c={{x: x + dx * s, y: y + dy * s}} r={r * s} color={i % 2 ? g : shade(g, 0.06)} k={0.9} spec={0.12} />
+        ))}
+      </Inked>
       {/* underside of the canopy in shadow */}
       <ellipse cx={x + 10 * s} cy={y - 175 * s} rx={130 * s} ry={34 * s} fill={shade(g, 0.4)} opacity={0.25} />
     </g>
@@ -43,7 +49,9 @@ export const Bush: React.FC<{id: string; x: number; y: number; s: number; color?
       [70, -30, 40],
       [-85, -22, 34],
     ].map(([dx, dy, r], i) => (
-      <Sphere key={i} id={`${id}-b${i}`} c={{x: x + dx * s, y: y + dy * s}} r={r * s} color={i % 2 ? color : shade(color, 0.07)} k={0.85} />
+      <Inked key={i} w={4.5 * s}>
+        <Sphere id={`${id}-b${i}`} c={{x: x + dx * s, y: y + dy * s}} r={r * s} color={i % 2 ? color : shade(color, 0.07)} k={0.85} spec={0.1} />
+      </Inked>
     ))}
   </g>
 );
@@ -55,10 +63,13 @@ export const House: React.FC<HouseProps> = ({id, x, y, w, h, wall, roof, door}) 
   const roofH = h * 0.62;
   const trim = '#F6F2EA';
   const top = y - h;
+  const HI = 4.5; // set-piece contour (thinner than the cast's)
   const win = (k: string, wx: number, wy: number, ww: number, wh: number) => (
     <g key={k}>
       <SoftShadow id={`${id}-${k}ws`} c={{x: wx + ww / 2 + 6, y: wy + wh + 8}} rx={ww * 0.7} ry={8} alpha={0.18} color="#3A3328" />
-      <Lin id={`${id}-${k}wt`} d={rect(wx - 8, wy - 8, ww + 16, wh + 16)} from={{x: wx, y: wy}} to={{x: wx + ww, y: wy + wh}} stops={[[0, '#FFFFFF'], [1, '#DCD6CB']]} />
+      <Inked w={HI}>
+        <Lin id={`${id}-${k}wt`} d={rect(wx - 8, wy - 8, ww + 16, wh + 16)} from={{x: wx, y: wy}} to={{x: wx + ww, y: wy + wh}} stops={[[0, '#FFFFFF'], [1, '#DCD6CB']]} />
+      </Inked>
       <Lin id={`${id}-${k}wg`} d={rect(wx, wy, ww, wh)} from={{x: wx, y: wy}} to={{x: wx + ww * 0.4, y: wy + wh}} stops={[[0, '#CFE6EF'], [0.55, '#8FB4C6'], [1, '#6E8FA3']]} />
       <path d={`M${wx + ww * 0.15},${wy + wh} L${wx + ww * 0.55},${wy} L${wx + ww * 0.75},${wy} L${wx + ww * 0.35},${wy + wh} Z`} fill="#FFFFFF" opacity={0.28} />
       <rect x={wx + ww / 2 - 3} y={wy} width={6} height={wh} fill={trim} />
@@ -68,13 +79,18 @@ export const House: React.FC<HouseProps> = ({id, x, y, w, h, wall, roof, door}) 
   return (
     <g>
       <SoftShadow id={`${id}-gs`} c={{x: x + w * 0.55, y: y + 6}} rx={w * 0.75} ry={26} alpha={0.22} color="#2E3A26" />
-      {/* side wall (shadow side) */}
+      {/* side wall (shadow side) + front wall: one outlined block, with an ink corner line */}
+      <Inked w={HI}>
       <Lin id={`${id}-sw`} d={`M${x + w},${y} L${x + w + side},${y - side * 0.28} L${x + w + side},${top - side * 0.28} L${x + w},${top} Z`} from={{x: x + w, y: top}} to={{x: x + w + side, y}} stops={[[0, shade(wall, 0.22)], [1, shade(wall, 0.32)]]} />
       {/* front wall */}
       <Lin id={`${id}-fw`} d={rect(x, top, w, h)} from={{x, y: top}} to={{x: x + w, y}} stops={[[0, lit(wall, 0.18)], [0.5, wall], [1, shade(wall, 0.1)]]} />
+      </Inked>
+      <InkLine d={`M${x + w},${top} L${x + w},${y}`} w={HI * 0.8} />
       {/* roof: lit front gable and darker side slope */}
+      <Inked w={HI}>
       <Lin id={`${id}-rs`} d={`M${x + w / 2},${top - roofH} L${x + w + side + 14},${top - side * 0.28 - 8} L${x + w + 14},${top + 10} Z`} from={{x: x + w / 2, y: top - roofH}} to={{x: x + w + side, y: top}} stops={[[0, shade(roof, 0.18)], [1, shade(roof, 0.36)]]} />
       <Lin id={`${id}-rf`} d={`M${x - 22},${top + 12} L${x + w / 2},${top - roofH} L${x + w + 22},${top + 12} L${x + w + 4},${top + 22} L${x + w / 2},${top - roofH + 30} L${x - 4},${top + 22} Z`} from={{x, y: top - roofH}} to={{x: x + w, y: top}} stops={[[0, lit(roof, 0.22)], [1, shade(roof, 0.12)]]} />
+      </Inked>
       {/* gable infill */}
       <Lin id={`${id}-gf`} d={`M${x + 2},${top + 14} L${x + w / 2},${top - roofH + 34} L${x + w - 2},${top + 14} Z`} from={{x, y: top - roofH}} to={{x: x + w, y: top}} stops={[[0, lit(wall, 0.1)], [1, shade(wall, 0.12)]]} />
       {/* eave shadow under the roof */}
@@ -83,8 +99,12 @@ export const House: React.FC<HouseProps> = ({id, x, y, w, h, wall, roof, door}) 
       {win('wb', x + w * 0.62, top + h * 0.22, w * 0.22, h * 0.28)}
       {win('wc', x + w * 0.39, top - roofH * 0.5 + 6, w * 0.22, roofH * 0.26)}
       {/* door + step */}
+      <Inked w={HI}>
       <Lin id={`${id}-dt`} d={rect(x + w * 0.4 - 8, y - h * 0.48 - 8, w * 0.2 + 16, h * 0.48 + 8)} from={{x, y: y - h}} to={{x: x + w, y}} stops={[[0, '#FFFFFF'], [1, '#DCD6CB']]} />
+      </Inked>
+      <Inked w={HI * 0.8}>
       <Lin id={`${id}-dr`} d={rect(x + w * 0.4, y - h * 0.48, w * 0.2, h * 0.48)} from={{x: x + w * 0.4, y: y - h * 0.48}} to={{x: x + w * 0.6, y}} stops={[[0, lit(door, 0.2)], [1, shade(door, 0.2)]]} />
+      </Inked>
       <circle cx={x + w * 0.56} cy={y - h * 0.24} r={4} fill="#E8D7A0" />
       <Lin id={`${id}-st`} d={rect(x + w * 0.36, y - 6, w * 0.28, 14)} from={{x, y: y - 6}} to={{x, y: y + 8}} stops={[[0, '#ECE8E0'], [1, '#B9B3A8']]} />
     </g>
@@ -170,12 +190,18 @@ export const Street: React.FC<StreetProps> = ({id, cam, children, fg}) => {
           const x = -900 + i * 62;
           return (
             <g key={i}>
-              <Lin id={`${id}-pk${i}`} d={`M${x},1250 L${x},1176 L${x + 13},1162 L${x + 26},1176 L${x + 26},1250 Z`} from={{x, y: 1160}} to={{x: x + 26, y: 1250}} stops={[[0, '#FFFFFF'], [0.6, '#EFEBE3'], [1, '#C9C3B8']]} />
+              <Inked w={3}>
+                <Lin id={`${id}-pk${i}`} d={`M${x},1250 L${x},1176 L${x + 13},1162 L${x + 26},1176 L${x + 26},1250 Z`} from={{x, y: 1160}} to={{x: x + 26, y: 1250}} stops={[[0, '#FFFFFF'], [0.6, '#EFEBE3'], [1, '#C9C3B8']]} />
+              </Inked>
             </g>
           );
         })}
-        <Lin id={`${id}-rl`} d={rect(-900, 1190, 2900, 12)} from={{x: 0, y: 1190}} to={{x: 0, y: 1202}} stops={[[0, '#F7F4EE'], [1, '#CFC9BE']]} />
-        <Lin id={`${id}-rl2`} d={rect(-900, 1228, 2900, 12)} from={{x: 0, y: 1228}} to={{x: 0, y: 1240}} stops={[[0, '#F7F4EE'], [1, '#CFC9BE']]} />
+        <Inked w={3}>
+          <Lin id={`${id}-rl`} d={rect(-900, 1190, 2900, 12)} from={{x: 0, y: 1190}} to={{x: 0, y: 1202}} stops={[[0, '#F7F4EE'], [1, '#CFC9BE']]} />
+        </Inked>
+        <Inked w={3}>
+          <Lin id={`${id}-rl2`} d={rect(-900, 1228, 2900, 12)} from={{x: 0, y: 1228}} to={{x: 0, y: 1240}} stops={[[0, '#F7F4EE'], [1, '#CFC9BE']]} />
+        </Inked>
         <Lin id={`${id}-fsh`} d={rect(-2400, 1250, 6000, 30)} from={{x: 0, y: 1250}} to={{x: 0, y: 1280}} stops={[[0, '#2F3D24', 0.22], [1, '#2F3D24', 0]]} />
         <Lin id={`${id}-sw`} d={rect(-2400, 1286, 6000, 64)} from={{x: 0, y: 1286}} to={{x: 0, y: 1350}} stops={[[0, '#E9E5DD'], [1, '#CFCAC0']]} />
         {Array.from({length: 30}).map((_, i) => (

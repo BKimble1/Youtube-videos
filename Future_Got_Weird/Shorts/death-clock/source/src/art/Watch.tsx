@@ -4,6 +4,7 @@
 // blue HELP ALERT SENT banner over the timer -> STABILIZING -> green "Life Expectancy: 42 Years" ->
 // one localized question-mark glitch.
 import React from 'react';
+import {INK} from '../lib/ink';
 import {UI_FONT} from '../fonts';
 import {lit, mix, PAL, shade} from '../lib/color';
 import {clamp, fmt, hash, inv, lerp} from '../lib/math';
@@ -204,6 +205,8 @@ export const screenLight = (s: ScreenState) => {
  * The case and band in a local frame: x runs along the forearm, y across it; origin = screen centre.
  * `r` is the forearm radius at the band (the band wraps from -r to +r across the arm).
  */
+const WATCH_INK = 10;
+
 export const WatchBody: React.FC<{id: string; r: number; screen: ScreenState; port?: number}> = ({id, r, screen, port = 0}) => {
   const bw = 150; // band width along the arm
   const cw = SW + 64;
@@ -237,16 +240,22 @@ export const WatchBody: React.FC<{id: string; r: number; screen: ScreenState; po
           <rect x={-SW / 2} y={-SH / 2} width={SW} height={SH} rx={26} />
         </clipPath>
       </defs>
-      {/* band (strap) across the arm, with soft segment ridges */}
+      {/* band (strap) across the arm, with soft segment ridges; crew ink contour around strap and case */}
+      <rect x={-bw / 2} y={-r * 1.06} width={bw} height={r * 2.12} rx={22} fill={INK} stroke={INK} strokeWidth={WATCH_INK * 2} />
       <rect x={-bw / 2} y={-r * 1.06} width={bw} height={r * 2.12} rx={22} fill={`url(#${id}-band)`} />
       {[-48, -16, 16, 48].map((x, i) => (
         <rect key={i} x={x - 2} y={-r * 1.02} width={4} height={r * 2.04} fill="#0B205F" opacity={0.18} />
       ))}
       <rect x={-bw / 2 + 8} y={-r * 0.98} width={bw - 16} height={r * 0.16} rx={8} fill="#FFFFFF" opacity={0.28} />
       {/* case: extruded side (fake 3D), top shell, bezel, glass */}
+      <rect x={cw / 2 - 4} y={-26} width={16} height={52} rx={8} fill={INK} stroke={INK} strokeWidth={WATCH_INK * 2} />
+      <rect x={-cw / 2 + 4} y={-ch / 2 + 16} width={cw - 8} height={ch + 10} rx={58} fill={INK} stroke={INK} strokeWidth={WATCH_INK * 2} />
+      <rect x={-cw / 2} y={-ch / 2} width={cw} height={ch} rx={56} fill={INK} stroke={INK} strokeWidth={WATCH_INK * 2} />
       <rect x={-cw / 2 + 4} y={-ch / 2 + 16} width={cw - 8} height={ch + 10} rx={58} fill={`url(#${id}-side)`} />
       <rect x={-cw / 2} y={-ch / 2} width={cw} height={ch} rx={56} fill={`url(#${id}-case)`} />
-      <rect x={-cw / 2 + 14} y={-ch / 2 + 12} width={cw * 0.55} height={10} rx={5} fill="#FFFFFF" opacity={0.55} />
+      {/* glossy shell highlights (the shiny plastic finish) */}
+      <rect x={-cw / 2 + 18} y={-ch / 2 + 12} width={cw * 0.55} height={12} rx={6} fill="#FFFFFF" opacity={0.7} />
+      <rect x={-cw / 2 + 12} y={-ch / 2 + 36} width={10} height={ch * 0.42} rx={5} fill="#FFFFFF" opacity={0.35} />
       <rect x={-SW / 2 - 12} y={-SH / 2 - 12} width={SW + 24} height={SH + 24} rx={36} fill={`url(#${id}-bez)`} />
       {/* crown button on the side */}
       <rect x={cw / 2 - 4} y={-26} width={16} height={52} rx={8} fill="#1D3E9B" />

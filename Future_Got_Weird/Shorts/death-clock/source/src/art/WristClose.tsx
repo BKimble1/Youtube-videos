@@ -2,6 +2,7 @@
 // almost horizontally (hand at screen-left), so the UI reads upright along the arm. Two backgrounds:
 // 'lying'  - the lawn, with his pained face lying in soft focus beyond the arm (distress stays visible)
 // 'sitting' - after the rescue: the street in soft focus and his upright face looking down at the band.
+// Weird Crew style: ink contours on the arm, hand, tee and head, dimensional gradients and glossy highlights.
 // The arm framing is identical in both, so the ending can match the opening wrist composition.
 // Native space is the 1080x1920 frame; a camera (Layer) moves through it with parallax.
 import React from 'react';
@@ -13,6 +14,7 @@ import {Cam, Layer} from '../lib/camera';
 import {lit, mix, PAL, shade} from '../lib/color';
 import {add, fmt, hash, mul, norm, sub, V} from '../lib/math';
 import {Capsule, Glow, Lin, SoftShadow} from '../lib/shade';
+import {Deco, Inked, InkLine} from '../lib/ink';
 
 export const CLOSE = {
   elbow: {x: 1320, y: 900} as V,
@@ -69,13 +71,31 @@ const LyingBg: React.FC<{id: string; expr: Expr; blink: number; headLift: number
       {Array.from({length: 26}).map((_, i) => (
         <Tuft key={i} id={`${id}-bt${i}`} x={-200 + hash(i, 2) * 1500} y={-100 + hash(i, 5) * 900} s={0.5 + hash(i, 8) * 0.4} seed={i + 100} color={mix(PAL.grass, PAL.grassLight, 0.3)} />
       ))}
-      {/* his tee/shoulder lying beyond the arm, running off the top-right */}
-      <g transform="translate(150 100)">
-        <path d={`M330,${520 + hl} C420,${330 + hl} 700,${250 + hl} 1300,${250 + hl} L1300,${700 + hl} C900,${720 + hl} 520,${700 + hl} 330,${520 + hl} Z`} fill={PAL.shirt} />
-        <path d={`M420,${400 + hl} C560,${300 + hl} 800,${280 + hl} 1300,${300 + hl} L1300,${380 + hl} C900,${370 + hl} 600,${380 + hl} 420,${400 + hl} Z`} fill={lit(PAL.shirt, 0.22)} opacity={0.6} />
-        <path d={`M360,${560 + hl} C620,${690 + hl} 900,${700 + hl} 1300,${690 + hl} L1300,${700 + hl} C900,${720 + hl} 520,${700 + hl} 330,${520 + hl} Z`} fill={shade(PAL.shirt, 0.35)} opacity={0.7} />
-      </g>
-      <Head id={`${id}-hd`} c={{x: CLOSE.face.x, y: CLOSE.face.y - headLift}} R={190} roll={-74 + headLift * 0.12} turn={0.3} expr={expr} blink={blink} />
+      {/* his striped tee/shoulder lying beyond the arm, running off the top-right (crew outline, soft focus) */}
+      {(() => {
+        const d = `M480,${620 + hl} C570,${430 + hl} 850,${350 + hl} 1450,${350 + hl} L1450,${800 + hl} C1050,${820 + hl} 670,${800 + hl} 480,${620 + hl} Z`;
+        return (
+          <g>
+            <Inked w={11}>
+              <Lin id={`${id}-tee`} d={d} from={{x: 0, y: 360 + hl}} to={{x: 0, y: 810 + hl}} stops={[[0, '#FFFFFF'], [0.45, '#F4F7FA'], [1, '#B9C6D3']]} />
+            </Inked>
+            <Deco>
+              <defs>
+                <clipPath id={`${id}-tc`}>
+                  <path d={d} />
+                </clipPath>
+              </defs>
+              <g clipPath={`url(#${id}-tc)`}>
+                {[640, 800, 960, 1120, 1280].map((x, i) => (
+                  <path key={i} d={`M${x},${200 + hl} l70,0 l-40,700 l-70,0 Z`} fill={PAL.stripe} />
+                ))}
+                <Lin id={`${id}-tsh`} d={d} from={{x: 0, y: 360 + hl}} to={{x: 0, y: 810 + hl}} stops={[[0, '#FFFFFF', 0.35], [0.35, '#FFFFFF', 0], [0.7, '#2E4A66', 0.05], [1, '#2E4A66', 0.32]]} />
+              </g>
+            </Deco>
+          </g>
+        );
+      })()}
+      <Head id={`${id}-hd`} c={{x: CLOSE.face.x, y: CLOSE.face.y - headLift}} R={190} roll={-74 + headLift * 0.12} turn={0.3} expr={expr} blink={blink} inkW={5.5} />
     </g>
   );
 };
@@ -89,13 +109,36 @@ const SittingBg: React.FC<{id: string; expr: Expr; blink: number}> = ({id, expr,
       <Tree id={`${id}-t1`} x={520} y={1000} s={0.95} />
     </g>
     <Lin id={`${id}-lawn`} d="M-2000,800 h5080 v4000 h-5080 Z" from={{x: 0, y: 800}} to={{x: 0, y: 1900}} stops={[[0, mix(PAL.grass, PAL.grassLight, 0.4)], [1, PAL.grass]]} />
-    {/* his upright torso behind the raised arm: broad shoulders, short neck */}
-    <path d="M-60,1700 C-40,1060 120,860 480,830 C840,860 1000,1060 1020,1700 Z" fill={PAL.shirt} />
-    <path d="M90,1050 C170,920 330,872 480,868 C330,900 220,960 150,1100 Z" fill={lit(PAL.shirt, 0.25)} opacity={0.6} />
-    <path d="M860,1040 C930,1200 980,1400 1000,1700 L1020,1700 C1000,1060 860,880 760,848 Z" fill={shade(PAL.shirt, 0.3)} opacity={0.7} />
-    <path d="M380,842 Q480,900 580,842 Q560,880 480,890 Q400,880 380,842 Z" fill={shade(PAL.shirt, 0.25)} />
-    <Capsule id={`${id}-nk`} a={{x: 480, y: 860}} b={{x: 480, y: 720}} ra={78} rb={74} color={PAL.skin} />
-    <Head id={`${id}-hd`} c={CLOSE.faceSit} R={205} roll={7} turn={0.18} expr={expr} blink={blink} />
+    {/* his upright striped tee behind the raised arm: broad shoulders, short neck (crew outline) */}
+    {(() => {
+      const d = 'M-60,1700 C-40,1060 120,860 480,830 C840,860 1000,1060 1020,1700 Z';
+      return (
+        <g>
+          <Inked w={11}>
+            <Capsule id={`${id}-nk`} a={{x: 480, y: 880}} b={{x: 480, y: 720}} ra={80} rb={76} color={shade(PAL.skin, 0.06)} />
+          </Inked>
+          <Inked w={11}>
+            <Lin id={`${id}-tee`} d={d} from={{x: 40, y: 900}} to={{x: 1000, y: 1300}} stops={[[0, '#FFFFFF'], [0.5, '#F4F7FA'], [1, '#B9C6D3']]} />
+          </Inked>
+          <Deco>
+            <defs>
+              <clipPath id={`${id}-tc`}>
+                <path d={d} />
+              </clipPath>
+            </defs>
+            <g clipPath={`url(#${id}-tc)`}>
+              {[960, 1120, 1280, 1440, 1600].map((y, i) => (
+                <path key={i} d={`M-100,${y} Q480,${y - 50} 1100,${y} l0,72 Q480,${y + 22} -100,${y + 72} Z`} fill={PAL.stripe} />
+              ))}
+              <Lin id={`${id}-tsh`} d={d} from={{x: 100, y: 900}} to={{x: 1000, y: 1200}} stops={[[0, '#FFFFFF', 0.4], [0.35, '#FFFFFF', 0], [0.7, '#2E4A66', 0.06], [1, '#2E4A66', 0.34]]} />
+              <ellipse cx={300} cy={960} rx={150} ry={46} transform="rotate(-24 300 960)" fill="#FFFFFF" opacity={0.3} />
+            </g>
+            <InkLine d="M368,846 Q480,920 592,846" w={10} />
+          </Deco>
+        </g>
+      );
+    })()}
+    <Head id={`${id}-hd`} c={CLOSE.faceSit} R={205} roll={7} turn={0.18} expr={expr} blink={blink} inkW={5.5} />
   </g>
 );
 
@@ -124,10 +167,12 @@ export const WristClose: React.FC<CloseProps> = ({id, cam, screen, expr, blink =
             Array.from({length: 10}).map((_, i) => (
               <Tuft key={i} id={`${id}-mt${i}`} x={hash(i, 12) * 1080} y={1180 + hash(i, 13) * 120} s={0.9 + hash(i, 14) * 0.5} seed={i + 200} />
             ))}
-          <Capsule id={`${id}-fa`} a={elbow} b={wrist} ra={C.rElbow} rb={C.rWrist} color={PAL.skin} spec={0.3} k={1.05} />
+          <Inked w={12}>
+            <Capsule id={`${id}-fa`} a={elbow} b={wrist} ra={C.rElbow} rb={C.rWrist} color={PAL.skin} spec={0.34} k={1.05} />
+          </Inked>
           {/* the screen's light on the skin around the band (local, not a screen-wide glow) */}
           <Glow id={`${id}-gl`} c={C.watch} r={330} ry={240} color={lightC} alpha={0.38} />
-          <Hand id={`${id}-hd`} wrist={add(wrist, mul(dir, -30))} ang={handAng} L={430} thumbSide={1} view="back" pose={hand} color={PAL.skin} sheen={1.2} />
+          <Hand id={`${id}-hd`} wrist={add(wrist, mul(dir, -30))} ang={handAng} L={430} thumbSide={1} view="back" pose={hand} color={PAL.skin} sheen={1.2} ink={12} />
           <g transform={`translate(${fmt(C.watch.x)} ${fmt(C.watch.y - rise * 0.7)}) rotate(${fmt(C.ang)}) scale(${C.scale})`}>
             <rect x={-88} y={-138} width={176} height={276} rx={30} fill="#5A2E1E" opacity={0.18} />
             <WatchBody id={`${id}-w`} r={138} screen={screen} port={port} />

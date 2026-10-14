@@ -1,9 +1,11 @@
 // The dog: one medium golden dog, teal collar with a ring for the leash. Seen from the side in 3/4,
 // facing screen-right (toward the man). Secondary and restrained: looks up, startles a step back,
 // sits and leans in. Built in a local frame (facing +x) and placed with translate/scale; the key light
-// is fixed in world space, so the frame is never mirrored or rotated.
+// is fixed in world space, so the frame is never mirrored or rotated. Weird Crew style: ink contours,
+// white-sclera eyes with catchlights, ink brows, glossy nose and collar.
 import React from 'react';
 import {lit, mix, PAL, shade} from '../lib/color';
+import {Deco, INK, Inked, InkLine} from '../lib/ink';
 import {add, fmt, mul, P, rad, rot, V} from '../lib/math';
 import {Blob, Capsule, SoftShadow, Sphere} from '../lib/shade';
 
@@ -73,11 +75,12 @@ export const Dog: React.FC<{id: string; pose: DogPose}> = ({id, pose: d}) => {
   })();
   const ring = W(118, bodyY - 66 + sit * 4);
 
+  const OUT = 6 * s;
   const leg = (k: string, top: V, foot: V, r0: number, r1: number, c: string) => (
-    <g key={k}>
-      <Capsule id={`${id}-${k}`} a={top} b={foot} ra={r0 * s} rb={r1 * s} color={c} spec={0.18} />
+    <Inked key={k} w={OUT}>
+      <Capsule id={`${id}-${k}`} a={top} b={foot} ra={r0 * s} rb={r1 * s} color={c} spec={0.22} />
       <Sphere id={`${id}-${k}p`} c={add(foot, {x: 6 * s * fx, y: -2 * s})} r={r1 * 1.35 * s} ry={r1 * 0.95 * s} color={c} k={0.7} />
-    </g>
+    </Inked>
   );
   // tail: three segments, curved
   const t0 = W(-120, bodyY - 6);
@@ -93,34 +96,62 @@ export const Dog: React.FC<{id: string; pose: DogPose}> = ({id, pose: d}) => {
       {leg('lf2', W(64, bodyY + 20), W(70 + legSwing(Math.PI), -4), 17, 12, farC)}
       {leg('lh2', W(-96, hipY + 10), W(-104 - legSwing(0) + sit * 30, -4), 22, 12, farC)}
       {/* tail */}
-      <Capsule id={`${id}-t0`} a={t0} b={t1} ra={15 * s} rb={12 * s} color={COL} spec={0.2} />
-      <Capsule id={`${id}-t1`} a={t1} b={t2} ra={12 * s} rb={9 * s} color={lit(COL, 0.06)} spec={0.2} />
-      <Capsule id={`${id}-t2`} a={t2} b={t3} ra={9 * s} rb={5 * s} color={lit(COL, 0.14)} spec={0.2} />
-      {/* body */}
-      <Blob id={`${id}-bd`} d={bodyD} c={W(10, bodyY - 20)} r={150 * s} color={COL} k={1.05} />
-      {/* lighter chest and belly fur */}
-      <Sphere id={`${id}-ch`} c={W(92, bodyY + 4)} r={44 * s} ry={50 * s} color={PAL.dogLight} k={0.7} />
-      {/* haunch */}
-      <Sphere id={`${id}-hn`} c={W(-82, hipY - 4)} r={52 * s} ry={58 * s} color={COL} k={0.9} spec={0.15} />
+      <Inked w={OUT}>
+        <Capsule id={`${id}-t0`} a={t0} b={t1} ra={15 * s} rb={12 * s} color={COL} spec={0.2} />
+        <Capsule id={`${id}-t1`} a={t1} b={t2} ra={12 * s} rb={9 * s} color={lit(COL, 0.06)} spec={0.2} />
+        <Capsule id={`${id}-t2`} a={t2} b={t3} ra={9 * s} rb={5 * s} color={lit(COL, 0.14)} spec={0.2} />
+      </Inked>
+      {/* body, chest and haunch merged into one outlined shape */}
+      <Inked w={OUT}>
+        <Blob id={`${id}-bd`} d={bodyD} c={W(10, bodyY - 20)} r={150 * s} color={COL} k={1.05} />
+        <Sphere id={`${id}-hn`} c={W(-82, hipY - 4)} r={52 * s} ry={58 * s} color={COL} k={0.9} spec={0.15} />
+      </Inked>
+      <Deco>
+        {/* lighter chest fur and the haunch's own rounded form */}
+        <Sphere id={`${id}-ch`} c={W(92, bodyY + 4)} r={44 * s} ry={50 * s} color={PAL.dogLight} k={0.7} />
+        <path d={`M${P(W(-40, hipY - 50))} Q${P(W(-20, hipY + 10))} ${P(W(-52, hipY + 44))}`} fill="none" stroke={INK} strokeWidth={OUT * 0.7} strokeLinecap="round" opacity={0.8} />
+        <ellipse cx={fmt(W(-10, bodyY - 30).x)} cy={fmt(W(-10, bodyY - 30).y)} rx={fmt(56 * s)} ry={fmt(12 * s)} fill="#FFFFFF" opacity={0.3} />
+      </Deco>
       {/* near legs */}
       {leg('lh1', W(-76, hipY + 18), W(-82 + legSwing(Math.PI) + sit * 40, -4), 24, 13, COL)}
       {leg('lf1', W(90, bodyY + 24), W(96 + legSwing(0), -4), 18, 13, COL)}
-      {/* neck */}
-      <Capsule id={`${id}-nk`} a={W(84, bodyY - 10)} b={add(headC, {x: -14 * s, y: 16 * s})} ra={42 * s} rb={34 * s} color={COL} />
+      {/* far ear behind the head */}
+      <Inked w={OUT}>
+        <Blob id={`${id}-fe`} d={`M${P(H(-18, -30))} C${P(H(-30, 0))} ${P(H(-30, 34))} ${P(H(-24, 60))} C${P(H(-8, 70))} ${P(H(4, 50))} ${P(H(2, 10))} Z`} c={H(-12, 10)} r={50 * s} color={farC} />
+      </Inked>
+      {/* neck + head + snout: one outlined shape */}
+      <Inked w={OUT}>
+        <Capsule id={`${id}-nk`} a={W(84, bodyY - 10)} b={add(headC, {x: -14 * s, y: 16 * s})} ra={42 * s} rb={34 * s} color={COL} />
+        <Sphere id={`${id}-hd`} c={headC} r={48 * s} ry={44 * s} color={COL} spec={0.25} />
+        <Capsule id={`${id}-sn`} a={H(18, 14)} b={H(66, 22)} ra={27 * s} rb={21 * s} color={PAL.dogLight} spec={0.3} />
+      </Inked>
       {/* collar + ring */}
-      <Capsule id={`${id}-cl`} a={W(96, bodyY - 92 + sit * 4)} b={W(136, bodyY - 50 + sit * 4)} ra={11 * s} rb={11 * s} color="#1CA7A0" spec={0.5} k={1.1} />
-      <Sphere id={`${id}-rg`} c={ring} r={7 * s} color="#C9CED4" spec={0.8} />
-      {/* head */}
-      <Blob id={`${id}-fe`} d={`M${P(H(-18, -30))} C${P(H(-30, 0))} ${P(H(-30, 34))} ${P(H(-24, 60))} C${P(H(-8, 70))} ${P(H(4, 50))} ${P(H(2, 10))} Z`} c={H(-12, 10)} r={50 * s} color={farC} />
-      <Sphere id={`${id}-hd`} c={headC} r={48 * s} ry={44 * s} color={COL} spec={0.25} />
-      <Capsule id={`${id}-sn`} a={H(18, 14)} b={H(66, 22)} ra={27 * s} rb={21 * s} color={PAL.dogLight} spec={0.3} />
-      <Sphere id={`${id}-ns`} c={H(72, 14)} r={12 * s} ry={10 * s} color="#2A1D18" spec={0.7} />
-      {/* mouth: soft dark wedge under the snout */}
-      <path d={`M${P(H(30, 34))} Q${P(H(52, 42))} ${P(H(70, 32))} Q${P(H(50, 38))} ${P(H(30, 34))} Z`} fill={shade(COL, 0.5)} opacity={0.6} />
-      {/* eye with one crisp reflection, and a worried brow bump */}
-      <ellipse cx={fmt(H(14, -12).x)} cy={fmt(H(14, -12).y)} rx={fmt(9 * s)} ry={fmt(10 * s)} fill="#2A1A12" />
-      <ellipse cx={fmt(H(11, -15).x + (fx < 0 ? -1.5 * s : 0))} cy={fmt(H(11, -15).y)} rx={fmt(3 * s)} ry={fmt(3 * s)} fill="#FFFFFF" />
-      <ellipse cx={fmt(H(10, -26 - d.worry * 4).x)} cy={fmt(H(10, -26 - d.worry * 4).y)} rx={fmt(12 * s)} ry={fmt(5 * s)} transform={`rotate(${fmt((headAng * 0.8 - 14 * d.worry) * fx)} ${fmt(H(10, -26).x)} ${fmt(H(10, -26).y)})`} fill={lit(COL, 0.25)} opacity={0.8} />
+      <Inked w={OUT * 0.8}>
+        <Capsule id={`${id}-cl`} a={W(96, bodyY - 92 + sit * 4)} b={W(136, bodyY - 50 + sit * 4)} ra={11 * s} rb={11 * s} color="#1CA7A0" spec={0.6} k={1.1} />
+        <Sphere id={`${id}-rg`} c={ring} r={7 * s} color="#C9CED4" spec={0.9} />
+      </Inked>
+      {/* glossy nose */}
+      <Inked w={OUT * 0.7}>
+        <Sphere id={`${id}-ns`} c={H(72, 14)} r={13 * s} ry={10.5 * s} color="#2A1D18" spec={0.85} />
+      </Inked>
+      {/* mouth line under the snout */}
+      <InkLine d={`M${P(H(34, 36))} Q${P(H(52, 44))} ${P(H(68, 32))}`} w={OUT * 0.7} />
+      {/* crew eye: white sclera, ink pupil, two catchlights; ink brow that lifts with worry */}
+      <Deco>
+        {(() => {
+          const ec = H(16, -10);
+          const pc = add(ec, {x: 2.5 * s * fx, y: 1.5 * s});
+          return (
+            <g>
+              <ellipse cx={fmt(ec.x)} cy={fmt(ec.y)} rx={fmt(13 * s)} ry={fmt(14.5 * s)} fill="#FFFFFF" stroke={INK} strokeWidth={fmt(OUT * 0.6)} />
+              <circle cx={fmt(pc.x)} cy={fmt(pc.y)} r={fmt(7.5 * s)} fill={INK} />
+              <circle cx={fmt(pc.x + 2.6 * s * fx)} cy={fmt(pc.y - 3 * s)} r={fmt(2.6 * s)} fill="#FFFFFF" />
+              <circle cx={fmt(pc.x - 2.2 * s * fx)} cy={fmt(pc.y + 2.6 * s)} r={fmt(1.2 * s)} fill="#FFFFFF" opacity={0.85} />
+            </g>
+          );
+        })()}
+      </Deco>
+      <InkLine d={`M${P(H(2, -30 + d.worry * 2))} Q${P(H(14, -36 - d.worry * 3))} ${P(H(28, -34 - d.worry * 9))}`} w={OUT * 0.9} />
       {/* near ear: floppy -> perked */}
       {(() => {
         const base = H(-16, -30);
@@ -128,7 +159,11 @@ export const Dog: React.FC<{id: string; pose: DogPose}> = ({id, pose: d}) => {
         const tipB = H(-22, -64);
         const tip = {x: tipA.x + (tipB.x - tipA.x) * d.ears, y: tipA.y + (tipB.y - tipA.y) * d.ears};
         const mid = {x: (base.x + tip.x) / 2 - 22 * s * fx, y: (base.y + tip.y) / 2};
-        return <Blob id={`${id}-er`} d={`M${P(H(2, -36))} Q${P(mid)} ${P(tip)} Q${P(add(mid, {x: 30 * s * fx, y: 6 * s}))} ${P(H(-4, -14))} Z`} c={mid} r={40 * s} color={mix(COL, PAL.dogDeep, 0.45)} />;
+        return (
+          <Inked w={OUT}>
+            <Blob id={`${id}-er`} d={`M${P(H(2, -36))} Q${P(mid)} ${P(tip)} Q${P(add(mid, {x: 30 * s * fx, y: 6 * s}))} ${P(H(-4, -14))} Z`} c={mid} r={40 * s} color={mix(COL, PAL.dogDeep, 0.45)} />
+          </Inked>
+        );
       })()}
     </g>
   );

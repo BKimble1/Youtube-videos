@@ -4,6 +4,18 @@ A 45.77 s vertical Short (1080×1920, 30 fps, 1373 frames) about a **fictional**
 
 Not uploaded, scheduled or published. The packaging text is in `upload/PACKAGING.md`.
 
+## Look
+
+The man is the Weird Crew's **guesser**, a member of the channel's established cast (Future Got Weird Video 01 rig and `cast.ts`; approved cast sheet `cast_rig_check.png`). He keeps his red spiky hair, peach skin, coral cheeks, white tee with saffron stripes, navy trousers and white shoes. He's drawn the crew way: an ink contour around each part, a round head, white-sclera eyes with ink pupils, thick ink brows, a hook nose and a drawn mouth. Captions and labels use the channel's Fredoka.
+
+On top of the crew construction, this Short adds:
+- **Dimensional gradients** from one fixed upper-left key light, with a cool bounce light on the shadow side.
+- **Glossy highlights** on the hair spikes, eyes (two catchlights), forehead, cheeks, nose, fingertips, shoes, band and drone.
+- **A wider expression range**: squeezed-shut "> <" eyes, pupils that shrink with fear, clenched teeth, an open gasp with tongue, worry lines, crow's feet and sweat drops.
+- **Smoother motion**: keyframes pass through a monotone cubic spline instead of easing to a stop at each key. Contacts arrive at speed. Springs give follow-through: the head trails the torso, the hair spikes swing, and the dog's ears and tail settle.
+
+The dog, the watch, the drone and the street set pieces carry the same contour; the street's lines are thinner, so the cast stays the focus. The cutaway, vessel and body-map diagrams stay soft apart from the device itself.
+
 ## Deliverables (`exports/v1/`)
 
 | File | What it is |
@@ -31,8 +43,9 @@ Supporting documents:
 ```
 script/      narration_locked.json (source of truth), CUE_SHEET.md
 source/      Remotion project (React/TypeScript), package-lock.json
-  src/lib/       timeline (word times -> shots), device states, captions, sound cues, math, colour, camera
-  src/art/       lineless gradient-shaded characters, props and environments (SVG)
+  src/lib/       timeline (word times -> shots), device states, captions, sound cues, math, colour, camera,
+                 ink.tsx (crew contours), shade.tsx (gradient primitives), motion.ts (splines, springs)
+  src/art/       Weird Crew characters (Man, Head, Hand, Dog), props and environments (SVG)
   src/shots/     the 16 shots, captions and the label overlay
   scripts/       export_cues.ts (writes audio/cues.json), frames.mjs (still renderer for QA)
 audio/       narration (takes, edit, alignment), sfx/gen (generated effects), stems, mix, cues.json
@@ -77,4 +90,4 @@ python3 tools/check_label.py exports/v1/FGW_DeathClock_v1_Clean_NoCaptions_1080x
 
 `npx remotion studio src/index.ts` (from `source/`) opens the compositions for scrubbing. `DeathClock` and `DeathClockClean` are the deliverables. The other compositions are development test rigs.
 
-Both renders take about 4 minutes each on this container with `--concurrency=4`. The renders are deterministic: no random calls at render time and no network fetches (fonts are bundled from @fontsource).
+Both renders take about 5 to 6 minutes each on this container with `--concurrency=4`. The renders are deterministic: no random calls at render time and no network fetches (fonts are bundled from @fontsource). Springs are re-simulated from a fixed window of past frames, so any single frame renders identically on its own.

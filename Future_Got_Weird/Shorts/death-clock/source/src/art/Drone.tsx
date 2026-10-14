@@ -2,6 +2,7 @@
 // heart-pulse mark (no real-world emblem), four arms with edge-on rotor discs, skids and a beacon.
 // Drawn through a local->world mapping so pitch never moves the key light.
 import React from 'react';
+import {Inked} from '../lib/ink';
 import {PAL} from '../lib/color';
 import {add, fmt, mul, P, rot, V} from '../lib/math';
 import {Capsule, Glow, Lin, SoftShadow, Sphere} from '../lib/shade';
@@ -12,6 +13,7 @@ export const Drone: React.FC<{id: string; p: DronePose; shadowY?: number}> = ({i
   const W = (x: number, y: number): V => add({x: p.x, y: p.y}, rot(mul({x, y}, p.s), p.pitch));
   const white = '#EEF2F6';
   const farC = '#B9C3CE';
+  const OUT = 6 * p.s;
   const rotor = (k: string, c: V, far: boolean) => {
     const ph = p.spin + (far ? 1.3 : 0);
     const bx = Math.cos(ph) * 86 * p.s;
@@ -38,28 +40,40 @@ export const Drone: React.FC<{id: string; p: DronePose; shadowY?: number}> = ({i
     <g>
       {shadowY !== undefined && <SoftShadow id={`${id}-sh`} c={{x: p.x + 20, y: shadowY}} rx={240 * p.s} ry={28 * p.s} alpha={0.28} />}
       {/* far arms + motors + rotors */}
-      <Capsule id={`${id}-afl`} a={W(-40, -30)} b={mFL} ra={11 * p.s} rb={9 * p.s} color={farC} />
-      <Capsule id={`${id}-afr`} a={W(40, -30)} b={mFR} ra={11 * p.s} rb={9 * p.s} color={farC} />
-      <Sphere id={`${id}-mfl`} c={mFL} r={16 * p.s} color="#6E7C8C" />
-      <Sphere id={`${id}-mfr`} c={mFR} r={16 * p.s} color="#6E7C8C" />
+      <Inked w={OUT}>
+        <Capsule id={`${id}-afl`} a={W(-40, -30)} b={mFL} ra={11 * p.s} rb={9 * p.s} color={farC} />
+        <Capsule id={`${id}-afr`} a={W(40, -30)} b={mFR} ra={11 * p.s} rb={9 * p.s} color={farC} />
+        <Sphere id={`${id}-mfl`} c={mFL} r={16 * p.s} color="#6E7C8C" />
+        <Sphere id={`${id}-mfr`} c={mFR} r={16 * p.s} color="#6E7C8C" />
+      </Inked>
       {rotor('rfl', add(mFL, {x: 0, y: -16 * p.s}), true)}
       {rotor('rfr', add(mFR, {x: 0, y: -16 * p.s}), true)}
       {/* skids */}
-      <Capsule id={`${id}-sk1`} a={W(-70, 50)} b={W(-80, 96)} ra={6 * p.s} rb={6 * p.s} color={farC} />
-      <Capsule id={`${id}-sk2`} a={W(70, 50)} b={W(80, 96)} ra={6 * p.s} rb={6 * p.s} color={farC} />
-      <Capsule id={`${id}-sk3`} a={W(-120, 98)} b={W(120, 98)} ra={7 * p.s} rb={7 * p.s} color="#9AA6B3" spec={0.3} />
+      <Inked w={OUT}>
+        <Capsule id={`${id}-sk1`} a={W(-70, 50)} b={W(-80, 96)} ra={6 * p.s} rb={6 * p.s} color={farC} />
+        <Capsule id={`${id}-sk2`} a={W(70, 50)} b={W(80, 96)} ra={6 * p.s} rb={6 * p.s} color={farC} />
+        <Capsule id={`${id}-sk3`} a={W(-120, 98)} b={W(120, 98)} ra={7 * p.s} rb={7 * p.s} color="#9AA6B3" spec={0.3} />
+      </Inked>
       {/* cargo pod */}
-      <Lin id={`${id}-pod`} d={`M${P(W(-62, 22))} L${P(W(62, 22))} L${P(W(58, 76))} L${P(W(-58, 76))} Z`} from={W(-62, 22)} to={W(58, 76)} stops={[[0, '#FFFFFF'], [1, '#C7D0DA']]} />
+      <Inked w={OUT}>
+        <Lin id={`${id}-pod`} d={`M${P(W(-62, 22))} L${P(W(62, 22))} L${P(W(58, 76))} L${P(W(-58, 76))} Z`} from={W(-62, 22)} to={W(58, 76)} stops={[[0, '#FFFFFF'], [1, '#C7D0DA']]} />
+      </Inked>
       <path d={`M${P(W(-22, 48))} L${P(W(-8, 48))} L${P(W(-2, 36))} L${P(W(6, 62))} L${P(W(12, 48))} L${P(W(24, 48))}`} fill="none" stroke={PAL.signalDeep} strokeWidth={5 * p.s} strokeLinejoin="round" strokeLinecap="round" />
       {/* body */}
-      <Capsule id={`${id}-bd`} a={W(-92, 0)} b={W(92, 0)} ra={42 * p.s} rb={42 * p.s} color={white} spec={0.7} />
-      <Capsule id={`${id}-st`} a={W(-86, 14)} b={W(86, 14)} ra={10 * p.s} rb={10 * p.s} color={PAL.signal} spec={0.4} k={0.8} />
-      <Sphere id={`${id}-cn`} c={W(-6, -24)} r={34 * p.s} ry={24 * p.s} color="#304A66" spec={0.8} />
+      <Inked w={OUT}>
+        <Capsule id={`${id}-bd`} a={W(-92, 0)} b={W(92, 0)} ra={42 * p.s} rb={42 * p.s} color={white} spec={0.8} />
+        <Sphere id={`${id}-cn`} c={W(-6, -24)} r={34 * p.s} ry={24 * p.s} color="#304A66" spec={0.9} />
+      </Inked>
+      <Capsule id={`${id}-st`} a={W(-86, 14)} b={W(86, 14)} ra={10 * p.s} rb={10 * p.s} color={PAL.signal} spec={0.5} k={0.8} />
       {/* near arms + motors + rotors */}
-      <Capsule id={`${id}-anl`} a={W(-50, -10)} b={mNL} ra={13 * p.s} rb={10 * p.s} color={white} spec={0.4} />
-      <Capsule id={`${id}-anr`} a={W(50, -10)} b={mNR} ra={13 * p.s} rb={10 * p.s} color={white} spec={0.4} />
-      <Sphere id={`${id}-mnl`} c={mNL} r={18 * p.s} color="#5E6C7C" spec={0.5} />
-      <Sphere id={`${id}-mnr`} c={mNR} r={18 * p.s} color="#5E6C7C" spec={0.5} />
+      <Inked w={OUT}>
+        <Capsule id={`${id}-anl`} a={W(-50, -10)} b={mNL} ra={13 * p.s} rb={10 * p.s} color={white} spec={0.5} />
+        <Sphere id={`${id}-mnl`} c={mNL} r={18 * p.s} color="#5E6C7C" spec={0.6} />
+      </Inked>
+      <Inked w={OUT}>
+        <Capsule id={`${id}-anr`} a={W(50, -10)} b={mNR} ra={13 * p.s} rb={10 * p.s} color={white} spec={0.5} />
+        <Sphere id={`${id}-mnr`} c={mNR} r={18 * p.s} color="#5E6C7C" spec={0.6} />
+      </Inked>
       {rotor('rnl', add(mNL, {x: 0, y: -18 * p.s}), false)}
       {rotor('rnr', add(mNR, {x: 0, y: -18 * p.s}), false)}
       {/* beacon */}

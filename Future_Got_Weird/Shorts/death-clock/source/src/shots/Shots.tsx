@@ -17,10 +17,11 @@ import {Bead, BeadDefs, pathAt, smoothPath} from '../art/Beads';
 import {Cam, Layer} from '../lib/camera';
 import {mix, PAL, shade} from '../lib/color';
 import {DEV, deviceState} from '../lib/device';
+import {SKey, spline, splineRec, spring} from '../lib/motion';
 import {add, clamp, easeIn, easeInOut, easeOut, fmt, inv, Key, lerp, noise1, settle, track, trackRec, V} from '../lib/math';
 import {Glow, Lin, SoftShadow} from '../lib/shade';
 import {fE, fS, SHOT} from '../lib/timeline';
-import {fallState, GROUND, Leash, StreetScene, StreetState} from './StreetShots';
+import {fallState, followThrough, GROUND, Leash, StreetScene, StreetState} from './StreetShots';
 
 const ang = (d: V) => (Math.atan2(d.y, d.x) * 180) / Math.PI;
 const normAng = (a: number) => ((((a + 180) % 360) + 360) % 360) - 180;
@@ -118,9 +119,10 @@ export const S08_10 = (f: number) => {
   // S09: close crop on the digits, hold, small pull back to his face and hand. S10: settle as the wave leaves.
   const W = CLOSE.watch;
   const cam: Cam = {
-    x: track(f, [[a, W.x], [a + 12, 640, easeOut], [b, 650], [b + 14, W.x], [b + 56, W.x], [c - 6, 560], [c + 16, 640]]),
-    y: track(f, [[a, W.y], [a + 12, 972, easeOut], [b, 980], [b + 14, W.y + 46], [b + 56, W.y + 46], [c - 6, 900], [c + 16, 972], [d - 16, 972], [d, 900, easeIn]]),
-    z: track(f, [[a, 2.3], [a + 12, 1.5, easeOut], [b, 1.64], [b + 14, 2.9], [b + 56, 2.9], [c - 6, 1.3], [c + 16, 1.5]]),
+    // monotone splines: the camera flows through its marks instead of stopping at each one
+    x: spline(f, [[a, W.x, 'hit'], [a + 12, 640], [b - 4, 650], [b + 20, W.x], [b + 56, W.x], [c - 6, 560], [c + 16, 640]]),
+    y: spline(f, [[a, W.y, 'hit'], [a + 12, 972], [b - 4, 980], [b + 20, W.y + 46], [b + 56, W.y + 46], [c - 6, 900], [c + 16, 972], [d - 16, 972], [d, 900]]),
+    z: spline(f, [[a, 2.3, 'hit'], [a + 12, 1.5], [b - 4, 1.64], [b + 20, 2.9], [b + 56, 2.9], [c - 6, 1.3], [c + 16, 1.5]]),
   };
   const screen = deviceState(f);
   // the blue wave: one expanding ring from the watch, then a signal that rises toward the sky
@@ -235,7 +237,7 @@ const StreetSubject: React.FC<{st: StreetState; id: string}> = ({st, id}) => {
         return a > 0.01 ? <SoftShadow key={i} id={`${id}-fs${i}`} c={{x: (L.A.x + L.toe.x) / 2 + 10, y: gy}} rx={78} ry={16} alpha={a} /> : null;
       })}
       <Dog id={`${id}-dog`} pose={st.dog} />
-      <Man id={`${id}-man`} pose={st.man} expr={st.expr} lHand={st.lHand} rHand={st.rHand} bandColor={st.bandColor} bandGlow={st.bandGlow} nearLegFront={st.nearLegFront} />
+      <Man id={`${id}-man`} pose={st.man} expr={st.expr} lHand={st.lHand} rHand={st.rHand} bandColor={st.bandColor} bandGlow={st.bandGlow} nearLegFront={st.nearLegFront} hairSway={st.hairSway} />
       <Leash a={j.R.W} b={collarRing(st.dog)} slack={60} />
     </g>
   );
@@ -247,9 +249,9 @@ export const S13 = (f: number) => {
   const port = clamp(inv(DEV.injectAt, DEV.injectAt + 6, f)) * (1 - clamp(inv(DEV.freezeAt, DEV.freezeAt + 20, f)));
   // close on the band's edge (the port pip), then pull back to his hand and breathing
   const pip = add(CLOSE.watch, {x: -150, y: 132});
-  const inT = easeInOut(inv(a, a + 18, f));
+  const inT = easeInOut(inv(a, a + 20, f));
   const outT = easeInOut(inv(DEV.freezeAt + 4, DEV.freezeAt + 30, f));
-  const cam: Cam = {x: lerp(lerp(OPEN_FRAME.x, 600, inT), 620, outT), y: lerp(lerp(OPEN_FRAME.y, 1040, inT), 960, outT), z: lerp(lerp(OPEN_FRAME.z, 2.0, inT), 1.4, outT)};
+  const cam: Cam = {x: lerp(lerp(OPEN_FRAME.x, 600, inT), 620, outT), y: lerp(lerp(OPEN_FRAME.y, 1040, inT), 960, outT), z: lerp(lerp(OPEN_FRAME.z, 1.86, inT), 1.4, outT)};
   // inset: the needle tip releases the fictional treatment into the vessel (stylized)
   const inset = clamp(inv(DEV.injectAt + 2, DEV.injectAt + 10, f)) * (1 - clamp(inv(DEV.freezeAt - 6, DEV.freezeAt + 4, f)));
   const k = inv(DEV.injectAt + 6, DEV.freezeAt, f);
@@ -322,8 +324,8 @@ const SIT: Partial<ManPose> = {
 export const recoveryState = (f: number): StreetState => {
   const [a, b] = SHOT.s14;
   const base = LIE.man;
-  const keys: Key<ManPose>[] = [
-    [a, {...base}],
+  const keys: SKey<ManPose>[] = [
+    [a, {...base, rWx: 560, rWy: GROUND + 4}, 'stop'],
     // up on both hands, hips still on the grass, legs starting to come round
     [a + 18, {...base, x: 790, y: 1676, torso: 52, chest: 10, neck: -4, pelvis: 66, lHip: 40, lKnee: 70, lFs: 0.8, rHip: 30, rKnee: 64, rFs: 0.8,
       rW: 1, rWx: 560, rWy: GROUND + 4, rElb: -1, lW: 1, lWx: 470, lWy: GROUND + 30, lElb: 1}],
@@ -336,15 +338,19 @@ export const recoveryState = (f: number): StreetState => {
     [a + 46, {...base, ...SIT}],
     [b, {...base, ...SIT, neck: 20, lWy: 1556}],
   ];
-  let man = trackRec(f, keys);
-  const heave = 0.5 + 0.5 * Math.sin(f * 0.42);
-  man = {...man, breath: heave, chest: man.chest + heave * 1.6, neck: man.neck + noise1(f * 0.2, 4) * 2};
+  const body = (t: number): ManPose => {
+    const m = splineRec(t, keys);
+    const heave = 0.5 + 0.5 * Math.sin(t * 0.42);
+    return {...m, breath: heave, chest: m.chest + heave * 1.6, neck: m.neck + noise1(t * 0.2, 4) * 2};
+  };
+  const ft = followThrough(body, f);
+  const man = {...body(f), neck: body(f).neck + ft.headLag};
   const expr = mixExpr(mixExpr(EXPR_WINCE, EXPR_GASP, inv(a, a + 30, f)), EXPR_RELIEF, inv(a + 34, b - 10, f));
   const dogT = easeInOut(inv(a + 10, a + 56, f));
-  const dog: DogPose = {...DOG_IDLE, x: lerp(1070, 1080, dogT), y: GROUND - 10, s: 1.4, facing: -1, head: lerp(28, 12, dogT), ears: lerp(0.9, 0.5, dogT), tail: lerp(-6, 22 + 10 * Math.sin(f * 0.8), dogT), sit: easeInOut(inv(a + 50, a + 66, f)), step: f * 0.55, stepAmt: Math.sin(Math.PI * inv(a + 10, a + 56, f)), worry: lerp(1, 0.6, dogT), lean: 0};
-  const cam: Cam = {x: lerp(560, 760, easeInOut(inv(a, b, f))), y: lerp(1560, 1420, easeInOut(inv(a, b, f))), z: lerp(1.3, 1.0, easeInOut(inv(a, b, f)))};
+  const dog: DogPose = {...DOG_IDLE, x: lerp(1070, 1160, dogT), y: GROUND - 10, s: 1.4, facing: -1, head: lerp(28, 12, dogT), ears: spring((t) => lerp(0.9, 0.5, easeInOut(inv(a + 10, a + 56, t))), f, 0.1, 0.25), tail: spring((t) => lerp(-6, 22 + 12 * Math.sin(t * 0.8), easeInOut(inv(a + 10, a + 56, t))), f, 0.12, 0.3), sit: easeInOut(inv(a + 50, a + 66, f)), step: f * 0.55, stepAmt: Math.sin(Math.PI * inv(a + 10, a + 56, f)), worry: lerp(1, 0.6, dogT), lean: 0};
+  const cam: Cam = {x: lerp(560, 760, easeInOut(inv(a, b, f))), y: lerp(1560, 1440, easeInOut(inv(a, b, f))), z: lerp(1.3, 0.96, easeInOut(inv(a, b, f)))};
   const green = clamp(inv(DEV.recoverAt, DEV.recoverAt + 12, f));
-  return {man, expr, lHand: mixHand(HAND_LIMP, HAND_RELAXED, inv(a, a + 40, f)), rHand: mixHand(HAND_CLUTCH, HAND_BRACE, inv(a + 4, a + 20, f)), dog, cam, bandColor: mix(PAL.alert, PAL.normal, green), bandGlow: 0.8, nearLegFront: f >= a + 26};
+  return {man, expr, lHand: mixHand(HAND_LIMP, HAND_RELAXED, inv(a, a + 40, f)), rHand: mixHand(HAND_CLUTCH, HAND_BRACE, inv(a + 4, a + 20, f)), dog, cam, bandColor: mix(PAL.alert, PAL.normal, green), bandGlow: 0.8, nearLegFront: f >= a + 26, hairSway: ft.hairSway};
 };
 
 export const S14 = (f: number) => {

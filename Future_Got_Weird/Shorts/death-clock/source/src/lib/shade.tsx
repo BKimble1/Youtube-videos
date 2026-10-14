@@ -1,7 +1,9 @@
-// Lineless gradient primitives. Every shape is drawn in the coordinates of the layer it sits in and its
-// gradient is userSpaceOnUse, oriented from ONE fixed key light (warm, upper-left). Because the light never
-// rotates with a part, shading stays continuous when limbs move (no gradient jumps). No strokes anywhere.
+// Gradient primitives. Every shape is drawn in the coordinates of the layer it sits in and its gradient is
+// userSpaceOnUse, oriented from ONE fixed key light (warm, upper-left). Because the light never rotates with a
+// part, shading stays continuous when limbs move (no gradient jumps). Inside an <Inked> group (lib/ink.tsx) each
+// primitive also contributes its silhouette to the group's ink contour (Weird Crew outline).
 import React from 'react';
+import {inkUnder, useInk} from './ink';
 import {lit, mix, rgba, shade} from './color';
 import {add, dot, fmt, len, mul, norm, P, perp, sub, V} from './math';
 
@@ -44,6 +46,8 @@ export const capsulePath = (a: V, b: V, ra: number, rb: number) => {
 
 /** Cylinder-shaded tapered capsule (limbs, fingers, vessels, cords). */
 export const Capsule: React.FC<CapsuleProps> = ({id, a, b, ra, rb, color, spec = 0, k = 1, opacity = 1, shadowTint}) => {
+  const ink = useInk();
+  if (ink.pass === 'ink') return inkUnder(ink.w, {d: capsulePath(a, b, ra, rb)}, opacity);
   const ax = norm(sub(b, a));
   let n = perp(ax);
   const m = dot(n, LIGHT);
@@ -98,6 +102,8 @@ type SphereProps = {
 
 /** Sphere / ellipsoid with a radial gradient whose focal point sits toward the key light. */
 export const Sphere: React.FC<SphereProps> = ({id, c, r, ry, color, spec = 0, k = 1, rotate = 0, opacity = 1}) => {
+  const ink = useInk();
+  if (ink.pass === 'ink') return inkUnder(ink.w, {ellipse: {cx: c.x, cy: c.y, rx: r, ry: ry ?? r, transform: rotate ? `rotate(${fmt(rotate)} ${fmt(c.x)} ${fmt(c.y)})` : undefined}}, opacity);
   const R = Math.max(r, ry ?? r);
   const f = add(c, mul(LIGHT, R * 0.42));
   const sp = add(c, mul(LIGHT, R * 0.52));
@@ -135,6 +141,8 @@ type BlobProps = {
 
 /** Arbitrary filled path with radial "ball" shading (heads, torsos, organs, canopies). */
 export const Blob: React.FC<BlobProps> = ({id, d, c, r, color, k = 1, focal = 0.45, opacity = 1, stops}) => {
+  const ink = useInk();
+  if (ink.pass === 'ink') return inkUnder(ink.w, {d}, opacity);
   const f = add(c, mul(LIGHT, r * focal));
   const st: [number, string][] = stops ?? [
     [0, lit(color, 0.32 * k)],
@@ -166,7 +174,10 @@ type LinProps = {
 };
 
 /** Arbitrary path with a linear gradient between two points (planar surfaces, skin layers, UI glass). */
-export const Lin: React.FC<LinProps> = ({id, d, from, to, stops, opacity = 1}) => (
+export const Lin: React.FC<LinProps> = ({id, d, from, to, stops, opacity = 1}) => {
+  const ink = useInk();
+  if (ink.pass === 'ink') return inkUnder(ink.w, {d}, opacity);
+  return (
   <g opacity={opacity}>
     <defs>
       <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={fmt(from.x)} y1={fmt(from.y)} x2={fmt(to.x)} y2={fmt(to.y)}>
@@ -177,7 +188,8 @@ export const Lin: React.FC<LinProps> = ({id, d, from, to, stops, opacity = 1}) =
     </defs>
     <path d={d} fill={`url(#${id})`} />
   </g>
-);
+  );
+};
 
 /** Soft contact / occlusion shadow: an ellipse fading from its centre (no blur filter, so it never clips). */
 export const SoftShadow: React.FC<{id: string; c: V; rx: number; ry: number; alpha?: number; color?: string; rotate?: number; core?: number}> = ({
@@ -189,7 +201,7 @@ export const SoftShadow: React.FC<{id: string; c: V; rx: number; ry: number; alp
   color = '#1B2E1E',
   rotate = 0,
   core = 0.25,
-}) => (
+}) => useInk().pass === 'ink' ? null : (
   <g>
     <defs>
       <radialGradient id={id}>
@@ -212,7 +224,7 @@ export const Glow: React.FC<{id: string; c: V; r: number; color: string; alpha?:
   alpha = 0.6,
   ry,
   blend = 'screen',
-}) => (
+}) => useInk().pass === 'ink' ? null : (
   <g style={{mixBlendMode: blend}}>
     <defs>
       <radialGradient id={id}>
@@ -226,8 +238,23 @@ export const Glow: React.FC<{id: string; c: V; r: number; color: string; alpha?:
 );
 
 /** Sharp-edged specular highlight (high opacity white shape). */
-export const Spec: React.FC<{c: V; rx: number; ry: number; rotate?: number; opacity?: number}> = ({c, rx, ry, rotate = -35, opacity = 0.85}) => (
+export const Spec: React.FC<{c: V; rx: number; ry: number; rotate?: number; opacity?: number}> = ({c, rx, ry, rotate = -35, opacity = 0.85}) => useInk().pass === 'ink' ? null : (
   <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(rx)} ry={fmt(ry)} transform={`rotate(${fmt(rotate)} ${fmt(c.x)} ${fmt(c.y)})`} fill="#FFFFFF" opacity={opacity} />
 );
+
+/** Glossy highlight: crisp white core plus a soft halo, for the shiny 2.5D finish (hair, cheeks, shoes, plastic). */
+export const Gloss: React.FC<{id: string; c: V; rx: number; ry: number; rotate?: number; opacity?: number}> = ({id, c, rx, ry, rotate = -35, opacity = 0.9}) =>
+  useInk().pass === 'ink' ? null : (
+    <g transform={`rotate(${fmt(rotate)} ${fmt(c.x)} ${fmt(c.y)})`}>
+      <defs>
+        <radialGradient id={id}>
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity={0.55 * opacity} />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(rx * 2.1)} ry={fmt(ry * 2.4)} fill={`url(#${id})`} />
+      <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(rx)} ry={fmt(ry)} fill="#FFFFFF" opacity={opacity} />
+    </g>
+  );
 
 export {rgba};

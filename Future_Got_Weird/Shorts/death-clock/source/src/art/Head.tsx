@@ -1,11 +1,25 @@
-// The man's head: clay-smooth egg form, 3/4 turn, enlarged expressive eyes with one crisp reflection,
-// clear brows, soft nose and mouth shapes. Lineless: every feature is a filled, gradient-shaded shape.
-// Drawn in a local 100-unit space; the key light is counter-rotated into that space so tilting the
-// head never moves the light.
+// The man's head in the Weird Crew style (Future Got Weird cast, Video 01 rig): tall oval head with ink contour,
+// side ears, white-sclera eyes with ink pupils, thick ink brows, hook nose, drawn mouth, coral cheeks. He is the
+// cast's "guesser" (red spiky hair, peach skin, cheeks). This version adds dimensional gradients, glossy
+// highlights and a wider expression range (squeezed-shut eyes, pupil size, teeth, tongue, worry lines, sweat).
+// Drawn in a local space where the head radius is 100; the key light is counter-rotated into that space so
+// tilting the head never moves the light.
 import React from 'react';
-import {lit, mix, PAL, shade} from '../lib/color';
+import {lit, mix, shade} from '../lib/color';
+import {INK, Inked, InkLine, InkPath, useInk} from '../lib/ink';
 import {add, clamp, fmt, lerp, mul, P, rot, V} from '../lib/math';
 import {LIGHT} from '../lib/shade';
+
+export const CREW = {
+  skin: '#F2C9A8',
+  hair: '#C0392B',
+  cheek: '#EF6B55',
+  shirt: '#FFFFFF',
+  stripe: '#FFC744',
+  pants: '#2E3F5C',
+  shoe: '#FFFFFF',
+  sole: '#B9C4CC',
+};
 
 export type Expr = {
   /** inner brow raise (worry/pain) 0..1 */
@@ -16,27 +30,35 @@ export type Expr = {
   lid: number;
   /** lower lid squint 0..1 */
   squint: number;
+  /** eyes squeezed shut (crew "> <" eyes) 0..1 */
+  shut: number;
+  /** pupil size (1 normal, smaller = fear) */
+  pupil: number;
   /** mouth opening 0..1 */
   open: number;
-  /** mouth width factor 0.6..1.3 */
+  /** mouth width factor 0.6..1.4 */
   wide: number;
-  /** clenched-teeth grimace 0..1 */
+  /** mouth corners: -1 frown .. 1 smile */
+  smile: number;
+  /** teeth showing 0..1 (above 0.5 with a small opening = clenched grimace) */
   teeth: number;
+  /** tongue 0..1 */
+  tongue: number;
   /** gaze offset -1..1 */
   gx: number;
   gy: number;
-  /** sweat bead visibility 0..1 */
+  /** sweat drops 0..1 */
   sweat: number;
   /** cheek flush 0..1 */
   flush: number;
 };
 
-export const EXPR_PAIN: Expr = {browIn: 1, browDown: 0.95, lid: 0.36, squint: 0.62, open: 0.58, wide: 1.3, teeth: 1, gx: -0.15, gy: 0.1, sweat: 1, flush: 0.8};
-export const EXPR_GASP: Expr = {browIn: 0.85, browDown: 0.2, lid: 0.25, squint: 0.15, open: 0.75, wide: 0.82, teeth: 0.15, gx: 0, gy: 0.1, sweat: 1, flush: 0.6};
-export const EXPR_WINCE: Expr = {browIn: 1, browDown: 1, lid: 0.7, squint: 0.8, open: 0.5, wide: 1.35, teeth: 1, gx: 0, gy: 0, sweat: 1, flush: 0.9};
-export const EXPR_RELIEF: Expr = {browIn: 0.55, browDown: 0, lid: 0.22, squint: 0.1, open: 0.32, wide: 0.9, teeth: 0, gx: 0, gy: 0.05, sweat: 0.7, flush: 0.35};
-export const EXPR_UNEASY: Expr = {browIn: 0.85, browDown: 0.05, lid: 0.02, squint: 0, open: 0.1, wide: 0.82, teeth: 0, gx: -0.1, gy: 0.75, sweat: 0.6, flush: 0.2};
-export const EXPR_NEUTRAL: Expr = {browIn: 0.1, browDown: 0, lid: 0.12, squint: 0, open: 0.05, wide: 1, teeth: 0, gx: 0, gy: 0, sweat: 0, flush: 0.1};
+export const EXPR_PAIN: Expr = {browIn: 1, browDown: 0.9, lid: 0.34, squint: 0.55, shut: 0.15, pupil: 0.85, open: 0.5, wide: 1.25, smile: -0.7, teeth: 1, tongue: 0, gx: -0.15, gy: 0.1, sweat: 1, flush: 0.8};
+export const EXPR_GASP: Expr = {browIn: 0.9, browDown: 0.1, lid: 0.06, squint: 0.08, shut: 0, pupil: 0.62, open: 0.85, wide: 0.78, smile: -0.35, teeth: 0.25, tongue: 0.55, gx: 0, gy: 0.1, sweat: 1, flush: 0.6};
+export const EXPR_WINCE: Expr = {browIn: 1, browDown: 1, lid: 0.6, squint: 0.8, shut: 1, pupil: 0.9, open: 0.42, wide: 1.35, smile: -0.85, teeth: 1, tongue: 0, gx: 0, gy: 0, sweat: 1, flush: 0.9};
+export const EXPR_RELIEF: Expr = {browIn: 0.55, browDown: 0, lid: 0.26, squint: 0.18, shut: 0, pupil: 1, open: 0.3, wide: 0.98, smile: 0.5, teeth: 0.3, tongue: 0.15, gx: 0, gy: 0.05, sweat: 0.7, flush: 0.45};
+export const EXPR_UNEASY: Expr = {browIn: 0.9, browDown: 0.05, lid: 0.05, squint: 0, shut: 0, pupil: 0.8, open: 0.1, wide: 0.82, smile: -0.4, teeth: 0, tongue: 0, gx: -0.1, gy: 0.7, sweat: 0.5, flush: 0.25};
+export const EXPR_NEUTRAL: Expr = {browIn: 0.1, browDown: 0, lid: 0.12, squint: 0, shut: 0, pupil: 1, open: 0.02, wide: 1, smile: 0.25, teeth: 0, tongue: 0, gx: 0, gy: 0, sweat: 0, flush: 0.1};
 
 export const mixExpr = (a: Expr, b: Expr, t: number): Expr => {
   const o = {} as Expr;
@@ -58,41 +80,19 @@ type Props = {
   blink?: number;
   skin?: string;
   hair?: string;
+  /** contour width in head-local units (head radius = 100) */
+  inkW?: number;
+  /** spike jiggle (deg) from the body's motion (follow-through) */
+  hairSway?: number;
 };
 
-// Catmull-Rom closed path
-const smoothClosed = (pts: V[]) => {
-  let d = `M${P(pts[0])}`;
-  for (let i = 0; i < pts.length; i++) {
-    const p0 = pts[(i - 1 + pts.length) % pts.length];
-    const p1 = pts[i];
-    const p2 = pts[(i + 1) % pts.length];
-    const p3 = pts[(i + 2) % pts.length];
-    const c1 = add(p1, mul({x: p2.x - p0.x, y: p2.y - p0.y}, 1 / 6));
-    const c2 = add(p2, mul({x: p1.x - p3.x, y: p1.y - p3.y}, 1 / 6));
-    d += ` C${P(c1)} ${P(c2)} ${P(p2)}`;
-  }
-  return d + ' Z';
-};
-const smoothOpen = (pts: V[]) => {
-  let d = `M${P(pts[0])}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[Math.max(0, i - 1)];
-    const p1 = pts[i];
-    const p2 = pts[i + 1];
-    const p3 = pts[Math.min(pts.length - 1, i + 2)];
-    const c1 = add(p1, mul({x: p2.x - p0.x, y: p2.y - p0.y}, 1 / 6));
-    const c2 = add(p2, mul({x: p1.x - p3.x, y: p1.y - p3.y}, 1 / 6));
-    d += ` C${P(c1)} ${P(c2)} ${P(p2)}`;
-  }
-  return d;
-};
+const Q = (a: V, c: V, b: V) => `M${P(a)} Q${P(c)} ${P(b)}`;
 
-export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink = 0, skin = PAL.skin, hair = PAL.hair}) => {
+export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink = 0, skin = CREW.skin, hair = CREW.hair, inkW = 7, hairSway = 0}) => {
   const Lc = rot(LIGHT, -roll); // light direction in head space
   const s = R / 100;
-  const xf = -36 * t; // face centre line
-  const skinD = shade(skin, 0.4);
+  const xf = -30 * t; // face centre line moves toward screen-left in 3/4
+  const fw = inkW * 0.74; // feature line width
   const rg = (gid: string, cx: number, cy: number, r: number, focal: number, stops: [number, string, number?][]) => {
     const f = add({x: cx, y: cy}, mul(Lc, r * focal));
     return (
@@ -103,241 +103,284 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
       </radialGradient>
     );
   };
+  // highlight point on the head surface toward the light (for glosses)
+  const lightPt = (r: number, cx = 0, cy = 0) => add({x: cx, y: cy}, mul(Lc, r));
 
-  // --- head silhouette (egg, narrower jaw, 3/4 turn moves chin and cheek)
-  const headPts: V[] = [
-    {x: 4, y: -104},
-    {x: 70, y: -82},
-    {x: 99, y: -18},
-    {x: 88, y: 36},
-    {x: 60, y: 76},
-    {x: 16 - 26 * t, y: 102},
-    {x: -34 - 22 * t, y: 92},
-    {x: -72 - 10 * t, y: 52},
-    {x: -92 - 4 * t, y: 0},
-    {x: -80, y: -64},
-  ];
-  const headD = smoothClosed(headPts);
-
-  // --- hair cap (short, side part), leaves the near ear free
+  // --- geometry (crew proportions, scaled from the Video 01 rig: head rx 58 / ry 62 -> 100 / 107)
+  const headD = `M0,-107 C55,-107 100,-60 100,0 C100,60 55,107 0,107 C-55,107 -100,60 -100,0 C-100,-60 -55,-107 0,-107 Z`;
+  const ear = (x: number) => `M${fmt(x)},-12 C${fmt(x + 16)},-12 ${fmt(x + 16)},32 ${fmt(x)},32 C${fmt(x - 16)},32 ${fmt(x - 16)},-12 ${fmt(x)},-12 Z`;
+  const nearEarX = 101 - 8 * t;
+  const farEarX = -101 + 22 * t;
+  // spiky hair (crew 'spiky'), shifted a little with the turn; spikes sway with follow-through
+  const hx = xf * 0.25;
+  const sw = (k: number) => rot({x: 0, y: -1}, hairSway * k);
+  const spike = (bx: number, by: number, len: number, k: number) => add({x: bx + hx, y: by}, mul(sw(k), len));
   const hairPts: V[] = [
-    {x: -72 - 6 * t, y: -58},
-    {x: -52, y: -92},
-    {x: 0, y: -113},
-    {x: 62, y: -97},
-    {x: 99, y: -46},
-    {x: 104, y: 4},
-    {x: 95, y: 34},
-    {x: 82 + 6 * t, y: 30},
-    {x: 76 + 8 * t, y: -4},
-    {x: 62 + 10 * t, y: -16},
-    {x: 46 + 14 * t, y: -12},
-    {x: 42 + 14 * t, y: 14},
-    {x: 34 + 14 * t, y: 16},
-    {x: 30 + 12 * t, y: -24},
-    {x: 10, y: -58},
-    {x: -24 - 10 * t, y: -64},
+    {x: -100 + hx, y: -21},
+    spike(-93, -110, 28, 1.2),
+    {x: -48 + hx, y: -107},
+    spike(-26, -126, 34, 1),
+    {x: 0 + hx, y: -110},
+    spike(26, -128, 36, 1),
+    {x: 48 + hx, y: -107},
+    spike(93, -110, 28, 1.2),
+    {x: 100 + hx, y: -21},
   ];
-  const hairD = smoothClosed(hairPts);
+  const hairD = `M${P(hairPts[0])} ${hairPts
+    .slice(1)
+    .map((p) => `L${P(p)}`)
+    .join(' ')} Q${fmt(60 + hx)},-55 ${fmt(0 + hx)},-62 Q${fmt(-60 + hx)},-55 ${fmt(-100 + hx)},-21 Z`;
 
-  // --- features
-  const eyeY = -6;
-  const nearX = xf + 33 * (1 - 0.18 * t);
-  const farX = xf - 33 * (1 - 0.42 * t);
-  const nearW = 1;
-  const farW = 1 - 0.38 * t;
-  const lidC = clamp(e.lid + blink * (1 - e.lid));
-  const sq = clamp(e.squint + blink * 0.3);
+  // --- eyes
+  const eyeY = -10;
+  const nearX = xf + 37 * (1 - 0.08 * t);
+  const farX = xf - 37 * (1 - 0.3 * t);
+  const farW = 1 - 0.32 * t;
+  const L = clamp(e.lid + (blink + e.shut) * (1 - e.lid));
+  const sq = clamp(e.squint + e.shut * 0.4);
 
-  const Eye = (k: 'n' | 'f', ex: number, wf: number) => {
-    const rx = 16.5 * wf;
-    const ry = 18.5;
-    const eyeD = `M${fmt(ex - rx)},${fmt(eyeY)} C${fmt(ex - rx)},${fmt(eyeY - ry * 1.32)} ${fmt(ex + rx)},${fmt(eyeY - ry * 1.32)} ${fmt(ex + rx)},${fmt(eyeY)} C${fmt(ex + rx)},${fmt(eyeY + ry * 1.25)} ${fmt(ex - rx)},${fmt(eyeY + ry * 1.25)} ${fmt(ex - rx)},${fmt(eyeY)} Z`;
-    const ix = ex + e.gx * rx * 0.42 - t * 3.5;
-    const iy = eyeY + 2 + e.gy * ry * 0.4;
-    const irR = 9.6;
-    // lids: skin shapes drawn over the eye, clipped to it
-    const topY = eyeY - ry * 1.05 + lidC * ry * 2.05;
-    const botY = eyeY + ry * 1.0 - sq * ry * 0.85;
+  const Eye = (k: 'n' | 'f', ex: number, wf: number, side: 1 | -1) => {
+    const rx = 21 * wf;
+    const ry = 23;
+    const eyeD = `M${fmt(ex - rx)},${eyeY} C${fmt(ex - rx)},${fmt(eyeY - ry * 1.33)} ${fmt(ex + rx)},${fmt(eyeY - ry * 1.33)} ${fmt(ex + rx)},${eyeY} C${fmt(ex + rx)},${fmt(eyeY + ry * 1.33)} ${fmt(ex - rx)},${fmt(eyeY + ry * 1.33)} ${fmt(ex - rx)},${eyeY} Z`;
+    const topY = eyeY - ry + L * ry * 2.05;
+    const botY = eyeY + ry - sq * ry * 0.95;
+    const closed = L > 0.9 || botY - topY < 4;
+    if (closed) {
+      // closed: a gentle lid arc for a blink, a squeezed chevron for pain (crew "> <" eyes)
+      const ch = e.shut;
+      const inner = side; // +1: inner corner toward screen-left for the near (right) eye
+      const tipX = ex - inner * rx * 0.9;
+      const d =
+        ch > 0.35
+          ? `M${fmt(ex + inner * rx * 0.85)},${fmt(eyeY - 11 * ch)} L${fmt(tipX)},${fmt(eyeY + 2)} L${fmt(ex + inner * rx * 0.85)},${fmt(eyeY + 13 * ch)}`
+          : Q({x: ex - rx, y: eyeY + 2}, {x: ex, y: eyeY + 12}, {x: ex + rx, y: eyeY + 2});
+      return <InkLine key={k} d={d} w={fw * 1.15} />;
+    }
+    const pr = 10.5 * e.pupil;
+    const ix = ex + e.gx * rx * 0.42 - t * 4;
+    const iy = eyeY + 2 + e.gy * ry * 0.38;
     return (
       <g key={k}>
         <defs>
           <clipPath id={`${id}-ec${k}`}>
             <path d={eyeD} />
           </clipPath>
-          {rg(`${id}-ew${k}`, ex, eyeY, ry * 1.25, 0.35, [
+          {rg(`${id}-ew${k}`, ex, eyeY - 4, ry * 1.4, 0.4, [
             [0, '#FFFFFF'],
-            [0.6, '#F7F2EE'],
-            [1, '#D9CEC8'],
-          ])}
-          {rg(`${id}-ei${k}`, ix, iy, irR, 0.1, [
-            [0, '#7A5235'],
-            [0.55, '#5B3A24'],
-            [1, '#2C1A10'],
+            [0.55, '#F6F8FA'],
+            [1, '#C9D5DE'],
           ])}
         </defs>
-        {/* socket shadow around the eye */}
-        <ellipse cx={fmt(ex + 1)} cy={fmt(eyeY + 1)} rx={fmt(rx * 1.32)} ry={fmt(ry * 1.3)} fill={skinD} opacity={0.22} />
-        <path d={eyeD} fill={`url(#${id}-ew${k})`} />
+        <Inked w={fw * 0.85}>
+          <InkPath d={eyeD} fill={`url(#${id}-ew${k})`} />
+        </Inked>
         <g clipPath={`url(#${id}-ec${k})`}>
-          <ellipse cx={fmt(ix)} cy={fmt(iy)} rx={fmt(irR * wf * 0.95 + irR * 0.05)} ry={fmt(irR)} fill={`url(#${id}-ei${k})`} />
-          <ellipse cx={fmt(ix)} cy={fmt(iy)} rx={fmt(4.6 * wf + 0.4)} ry={fmt(4.9)} fill="#0E0A08" />
-          {/* shadow cast by the upper lid onto the eyeball */}
-          <rect x={fmt(ex - rx - 2)} y={fmt(topY - 1)} width={fmt(rx * 2 + 4)} height={4} fill="#3B2A22" opacity={0.14} />
-          {/* upper lid */}
-          <path d={`M${fmt(ex - rx - 3)},${fmt(eyeY - ry * 1.6)} L${fmt(ex + rx + 3)},${fmt(eyeY - ry * 1.6)} L${fmt(ex + rx + 3)},${fmt(topY + 1.5)} Q${fmt(ex)},${fmt(topY - 4 - 3 * (1 - lidC))} ${fmt(ex - rx - 3)},${fmt(topY + 1.5)} Z`} fill={mix(skin, skinD, 0.25)} />
-          {/* lower lid */}
-          <path d={`M${fmt(ex - rx - 3)},${fmt(eyeY + ry * 1.6)} L${fmt(ex + rx + 3)},${fmt(eyeY + ry * 1.6)} L${fmt(ex + rx + 3)},${fmt(botY)} Q${fmt(ex)},${fmt(botY + 4)} ${fmt(ex - rx - 3)},${fmt(botY)} Z`} fill={mix(skin, lit(skin, 0.1), 0.5)} />
+          <circle cx={fmt(ix)} cy={fmt(iy)} r={fmt(pr)} fill={INK} />
+          {/* glossy catchlights: one big, one small (the shiny 2.5D eyes) */}
+          <circle cx={fmt(ix + pr * 0.38)} cy={fmt(iy - pr * 0.42)} r={fmt(pr * 0.34 + 0.6)} fill="#FFFFFF" />
+          <circle cx={fmt(ix - pr * 0.36)} cy={fmt(iy + pr * 0.36)} r={fmt(pr * 0.15 + 0.3)} fill="#FFFFFF" opacity={0.85} />
+          {/* upper lid with its soft shadow on the eyeball */}
+          <rect x={fmt(ex - rx - 4)} y={fmt(topY)} width={fmt(rx * 2 + 8)} height={7} fill="#5E7486" opacity={0.18} />
+          <path d={`M${fmt(ex - rx - 4)},${fmt(eyeY - ry * 1.7)} L${fmt(ex + rx + 4)},${fmt(eyeY - ry * 1.7)} L${fmt(ex + rx + 4)},${fmt(topY + 1)} Q${fmt(ex)},${fmt(topY - 6 * (1 - L))} ${fmt(ex - rx - 4)},${fmt(topY + 1)} Z`} fill={mix(skin, shade(skin, 0.2), 0.5)} />
+          {/* lower lid (squint) */}
+          <path d={`M${fmt(ex - rx - 4)},${fmt(eyeY + ry * 1.7)} L${fmt(ex + rx + 4)},${fmt(eyeY + ry * 1.7)} L${fmt(ex + rx + 4)},${fmt(botY)} Q${fmt(ex)},${fmt(botY + 6)} ${fmt(ex - rx - 4)},${fmt(botY)} Z`} fill={lit(skin, 0.06)} />
         </g>
-        {/* one crisp reflection */}
-        {lidC < 0.8 && <ellipse cx={fmt(ix - 3.4)} cy={fmt(Math.max(iy - 3.8, topY + 3))} rx={2.9} ry={2.6} fill="#FFFFFF" opacity={0.96} />}
-        {/* lash edge: a soft darker band along the upper lid edge (shape, not a line) */}
-        <path d={`M${fmt(ex - rx - 1)},${fmt(topY + 1.5)} Q${fmt(ex)},${fmt(topY - 4 - 3 * (1 - lidC))} ${fmt(ex + rx + 2)},${fmt(topY + 0.5)} Q${fmt(ex)},${fmt(topY - 0.5 - 3 * (1 - lidC))} ${fmt(ex - rx - 1)},${fmt(topY + 1.5)} Z`} fill="#3A2318" opacity={0.75} />
+        {L > 0.04 && <InkLine d={Q({x: ex - rx - 1, y: topY + 1}, {x: ex, y: topY - 6 * (1 - L)}, {x: ex + rx + 1, y: topY + 1})} w={fw} />}
+        {sq > 0.08 && <InkLine d={Q({x: ex - rx * 0.9, y: botY}, {x: ex, y: botY + 6}, {x: ex + rx * 0.9, y: botY})} w={fw * 0.7} opacity={clamp(sq * 2)} />}
       </g>
     );
   };
 
-  // brows: tapered filled shapes; inner end raised for worry/pain, whole brow lowered for strain
+  // brows: thick ink strokes; inner end raised for worry/pain, whole brow lowered for strain
   const Brow = (k: 'n' | 'f', ex: number, wf: number, inner: 1 | -1) => {
-    const by = -38 + e.browDown * 7;
-    const w = 21 * wf;
-    const innerX = ex + inner * w * (0.95 - 0.12 * e.browDown);
+    const by = -50 + e.browDown * 9;
+    const w = 22 * wf;
+    const innerX = ex + inner * w * 0.95;
     const outerX = ex - inner * w * 1.05;
-    const innerY = by - e.browIn * 15 + e.browDown * 3;
-    const outerY = by + e.browIn * 6 - 1;
-    const midY = by - 4 - e.browIn * 4;
-    const th = 7.5;
-    const d = `M${fmt(outerX)},${fmt(outerY)} Q${fmt(ex)},${fmt(midY - th)} ${fmt(innerX)},${fmt(innerY - th * 0.7)} Q${fmt(innerX + inner * 2)},${fmt(innerY + th * 0.4)} ${fmt(innerX - inner * 2)},${fmt(innerY + th * 0.5)} Q${fmt(ex)},${fmt(midY + th * 0.5)} ${fmt(outerX)},${fmt(outerY + 1.5)} Z`;
-    return (
-      <g key={`b${k}`}>
-        <defs>
-          <linearGradient id={`${id}-br${k}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor={lit(hair, 0.1)} />
-            <stop offset="1" stopColor={shade(hair, 0.3)} />
-          </linearGradient>
-        </defs>
-        <path d={d} fill={`url(#${id}-br${k})`} />
-      </g>
-    );
+    const innerY = by - e.browIn * 17 + e.browDown * 5;
+    const outerY = by + e.browIn * 5 - e.browDown * 1;
+    const midY = (innerY + outerY) / 2 - 5 + e.browDown * 2;
+    return <InkLine key={`b${k}`} d={Q({x: outerX, y: outerY}, {x: ex, y: midY}, {x: innerX, y: innerY})} w={inkW * 1.35} />;
   };
 
-  // nose (3/4): soft bridge highlight, tip ball, nostril and its cast shadow (down-right, away from the light)
-  const nx = xf - 14 * t - 2;
-  const ny = 30;
-  // mouth
+  // --- mouth
   const mx = xf - 6 * t;
-  const my = 60;
-  const mw = 21 * e.wide * (1 - 0.22 * t);
-  const mo = e.open * 20;
-  const lipCol = mix(skin, '#B85A55', 0.42);
-  const mouthD = `M${fmt(mx - mw)},${fmt(my)} Q${fmt(mx)},${fmt(my - 6 - mo * 0.25)} ${fmt(mx + mw)},${fmt(my + 1)} Q${fmt(mx + mw * 0.6)},${fmt(my + mo + 4)} ${fmt(mx)},${fmt(my + mo + 5)} Q${fmt(mx - mw * 0.6)},${fmt(my + mo + 4)} ${fmt(mx - mw)},${fmt(my)} Z`;
+  const my = 54;
+  const mw = 28 * e.wide * (1 - 0.15 * t);
+  const cornerY = my - e.smile * 10;
+  const o = e.open;
+  const upY = my - 2 - o * 6 - Math.max(0, e.smile) * 2;
+  const loY = my + 4 + o * 46 + Math.max(0, e.smile) * 12;
+  const mouthD = `M${fmt(mx - mw)},${fmt(cornerY)} Q${fmt(mx)},${fmt(upY - (cornerY - my) * 0.6)} ${fmt(mx + mw)},${fmt(cornerY)} Q${fmt(mx)},${fmt(loY)} ${fmt(mx - mw)},${fmt(cornerY)} Z`;
+  const clenched = e.teeth > 0.5 && o < 0.62;
 
-  return (
-    <g transform={`translate(${fmt(c.x)} ${fmt(c.y)}) rotate(${fmt(roll)}) scale(${fmt(s)})`}>
+  const pass = useInk().pass;
+  const body = (
+    <>
       <defs>
-        {rg(`${id}-sk`, -10, -10, 118, 0.5, [
-          [0, lit(skin, 0.3)],
+        {rg(`${id}-sk`, -6, -8, 126, 0.52, [
+          [0, lit(skin, 0.32)],
           [0.4, lit(skin, 0.08)],
-          [0.75, skin],
-          [0.94, shade(skin, 0.3)],
-          [1, shade(skin, 0.22)],
-        ])}
-        {rg(`${id}-hr`, 10, -50, 120, 0.55, [
-          [0, lit(hair, 0.28)],
-          [0.45, hair],
-          [1, shade(hair, 0.45)],
-        ])}
-        {rg(`${id}-ear`, 0, 0, 26, 0.4, [
-          [0, lit(skin, 0.2)],
-          [0.7, skin],
+          [0.74, skin],
+          [0.93, shade(skin, 0.22)],
           [1, shade(skin, 0.3)],
         ])}
-        <radialGradient id={`${id}-ck`}>
-          <stop offset="0" stopColor="#E86F63" stopOpacity={0.5} />
-          <stop offset="1" stopColor="#E86F63" stopOpacity={0} />
-        </radialGradient>
-        {rg(`${id}-mo`, mx, my + mo * 0.4, Math.max(8, mw), 0, [
-          [0, '#3A0E12'],
-          [1, '#6E1F24'],
+        {rg(`${id}-hr`, hx - 10, -90, 120, 0.6, [
+          [0, lit(hair, 0.38)],
+          [0.45, hair],
+          [1, shade(hair, 0.42)],
         ])}
+        {rg(`${id}-ear`, 0, 10, 30, 0.5, [
+          [0, lit(skin, 0.24)],
+          [0.7, skin],
+          [1, shade(skin, 0.28)],
+        ])}
+        <radialGradient id={`${id}-ck`}>
+          <stop offset="0" stopColor={CREW.cheek} stopOpacity={0.75} />
+          <stop offset="0.55" stopColor={CREW.cheek} stopOpacity={0.45} />
+          <stop offset="1" stopColor={CREW.cheek} stopOpacity={0} />
+        </radialGradient>
+        <linearGradient id={`${id}-mo`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#4A1720" />
+          <stop offset="1" stopColor="#8A2C36" />
+        </linearGradient>
+        <clipPath id={`${id}-hc`}>
+          <path d={headD} />
+        </clipPath>
+        <clipPath id={`${id}-mc`}>
+          <path d={mouthD} />
+        </clipPath>
       </defs>
 
-      {/* skull + face */}
-      <path d={headD} fill={`url(#${id}-sk)`} />
-      {/* jaw shadow on the underside */}
-      <path d={smoothOpen([{x: -40 - 20 * t, y: 90}, {x: 10 - 26 * t, y: 103}, {x: 58, y: 78}, {x: 86, y: 40}, {x: 66, y: 70}, {x: 14 - 26 * t, y: 96}, {x: -40 - 20 * t, y: 90}])} fill={shade(skin, 0.35)} opacity={0.35} />
-      {/* cheek flush */}
-      <ellipse cx={fmt(nearX + 6)} cy={32} rx={22} ry={13} fill={`url(#${id}-ck)`} opacity={0.35 + 0.65 * e.flush} />
-      <ellipse cx={fmt(farX - 2)} cy={32} rx={15} ry={12} fill={`url(#${id}-ck)`} opacity={0.3 + 0.55 * e.flush} />
-
+      {/* far ear (mostly hidden by the head in 3/4) */}
+      <Inked w={inkW * 0.9}>
+        <InkPath d={ear(farEarX)} fill={`url(#${id}-ear)`} />
+      </Inked>
+      {/* head */}
+      <Inked w={inkW}>
+        <InkPath d={headD} fill={`url(#${id}-sk)`} />
+      </Inked>
+      {pass !== 'ink' && (
+        <g clipPath={`url(#${id}-hc)`}>
+          {/* jaw shade and a cool bounce light on the shadow side: the head reads as a rounded form */}
+          <ellipse cx={18} cy={118} rx={110} ry={44} fill={shade(skin, 0.4)} opacity={0.22} />
+          <path d="M100,-10 C100,60 55,107 0,107 C50,96 88,56 94,-10 Z" fill="#CFE3F2" opacity={0.28} />
+          {/* hairline shadow on the forehead */}
+          <ellipse cx={hx} cy={-66} rx={108} ry={20} fill={shade(skin, 0.45)} opacity={0.2} />
+          {/* cheeks */}
+          <ellipse cx={fmt(nearX + 18)} cy={30} rx={21} ry={17} fill={`url(#${id}-ck)`} opacity={0.55 + 0.45 * e.flush} />
+          <ellipse cx={fmt(farX - 16 * farW)} cy={30} rx={fmt(18 * farW)} ry={16} fill={`url(#${id}-ck)`} opacity={0.5 + 0.45 * e.flush} />
+        </g>
+      )}
+      {/* near ear on top of the head edge (crew construction) */}
+      <Inked w={inkW * 0.9}>
+        <InkPath d={ear(nearEarX)} fill={`url(#${id}-ear)`} />
+      </Inked>
+      {pass !== 'ink' && <path d={Q({x: nearEarX + 3, y: 0}, {x: nearEarX - 6, y: 10}, {x: nearEarX + 2, y: 22})} fill="none" stroke={shade(skin, 0.35)} strokeWidth={4} strokeLinecap="round" opacity={0.6} />}
       {/* hair */}
-      <path d={hairD} fill={`url(#${id}-hr)`} />
-      <path d={smoothOpen([{x: -30, y: -96}, {x: 10, y: -106}, {x: 50, y: -96}, {x: 18, y: -98}, {x: -30, y: -96}])} fill="#FFFFFF" opacity={0.16} />
-      {/* grey at the temple (he's about forty) */}
-      <path d={smoothClosed([{x: 64 + 8 * t, y: -8}, {x: 76 + 6 * t, y: -24}, {x: 90, y: -10}, {x: 86, y: 22}, {x: 72 + 6 * t, y: 26}])} fill="#8D8A86" opacity={0.35} />
-      {/* near ear, on the side of the skull in front of the back hair */}
-      <g transform={`translate(${fmt(58 + 16 * t)} 14) rotate(8)`}>
-        <ellipse cx={0} cy={0} rx={14} ry={22} fill={`url(#${id}-ear)`} />
-        <ellipse cx={-1.5} cy={2} rx={7.5} ry={13} fill={shade(skin, 0.25)} opacity={0.45} />
-        <ellipse cx={-2} cy={1} rx={4} ry={8} fill={shade(skin, 0.45)} opacity={0.35} />
-        <ellipse cx={4} cy={-9} rx={3.5} ry={7} fill="#FFFFFF" opacity={0.2} />
-      </g>
+      <Inked w={inkW}>
+        <InkPath d={hairD} fill={`url(#${id}-hr)`} />
+      </Inked>
+      {pass !== 'ink' && (
+        <g>
+          {/* glossy streaks on the light side of the spikes */}
+          {[
+            [-26, -126, 34, 1],
+            [26, -128, 36, 1],
+            [-93, -110, 28, 1.2],
+          ].map(([bx, by, ln, k], i) => {
+            const tip = spike(bx, by, ln, k);
+            const base = {x: bx * 0.75 + hx, y: -72};
+            const m = add(base, mul({x: tip.x - base.x, y: tip.y - base.y}, 0.55));
+            const ang = (Math.atan2(tip.y - base.y, tip.x - base.x) * 180) / Math.PI;
+            return <ellipse key={i} cx={fmt(m.x - 5)} cy={fmt(m.y)} rx={fmt(Math.hypot(tip.x - base.x, tip.y - base.y) * 0.28)} ry={4.2} transform={`rotate(${fmt(ang)} ${fmt(m.x - 5)} ${fmt(m.y)})`} fill="#FFFFFF" opacity={0.5} />;
+          })}
+          <ellipse cx={fmt(-40 + hx)} cy={-78} rx={26} ry={6} transform={`rotate(-12 ${fmt(-40 + hx)} -78)`} fill="#FFFFFF" opacity={0.32} />
+        </g>
+      )}
 
-      {/* strain creases between the brows (soft darker shapes) */}
-      <ellipse cx={fmt(xf - 1)} cy={-30} rx={3.2} ry={8} fill={skinD} opacity={0.3 * e.browIn} />
-      <ellipse cx={fmt(xf + 6)} cy={-29} rx={2.6} ry={7} fill={skinD} opacity={0.22 * e.browIn} />
-
-      {e.squint > 0.3 &&
-        [
-          [nearX + 22, 1],
-          [farX - 20 * farW, -1],
-        ].map(([x0, sgn], i) => (
-          <g key={i} opacity={clamp((e.squint - 0.3) * 2)}>
-            <path d={`M${fmt(x0)},${-6} q${fmt(sgn * 10)},-4 ${fmt(sgn * 16)},-10 q${fmt(-sgn * 6)},8 ${fmt(-sgn * 16)},12 Z`} fill={skinD} opacity={0.35} />
-            <path d={`M${fmt(x0)},${2} q${fmt(sgn * 12)},2 ${fmt(sgn * 18)},8 q${fmt(-sgn * 9)},-2 ${fmt(-sgn * 18)},-5 Z`} fill={skinD} opacity={0.3} />
-          </g>
-        ))}
-      {Eye('f', farX, farW)}
-      {Eye('n', nearX, nearW)}
+      {/* worry lines above the brows */}
+      {e.browIn > 0.5 && (
+        <g opacity={clamp((e.browIn - 0.5) * 2)}>
+          <InkLine d={Q({x: xf - 14, y: -86}, {x: xf, y: -91}, {x: xf + 14, y: -86})} w={fw * 0.7} />
+          <InkLine d={Q({x: xf - 9, y: -76}, {x: xf, y: -80}, {x: xf + 9, y: -76})} w={fw * 0.6} />
+        </g>
+      )}
+      {Eye('f', farX, farW, -1)}
+      {Eye('n', nearX, 1, 1)}
+      {/* crow's feet when squeezing */}
+      {(e.shut > 0.3 || e.squint > 0.5) && (
+        <g opacity={clamp(Math.max(e.shut, (e.squint - 0.5) * 2))}>
+          {[-1, 0, 1].map((k) => (
+            <InkLine key={k} d={`M${fmt(nearX + 26)},${fmt(eyeY + k * 9)} l${fmt(9)},${fmt(k * 5 - 1)}`} w={fw * 0.6} />
+          ))}
+          {[-1, 0, 1].map((k) => (
+            <InkLine key={`f${k}`} d={`M${fmt(farX - 24 * farW)},${fmt(eyeY + k * 9)} l${fmt(-8 * farW)},${fmt(k * 5 - 1)}`} w={fw * 0.6} />
+          ))}
+        </g>
+      )}
       {Brow('f', farX, farW, 1)}
-      {Brow('n', nearX, nearW, -1)}
+      {Brow('n', nearX, 1, -1)}
 
-      {/* nose */}
-      <ellipse cx={fmt(nx + 9)} cy={fmt(ny + 8)} rx={10} ry={6} fill={skinD} opacity={0.32} />
-      <ellipse cx={fmt(xf - 6 * t - 1)} cy={fmt(6)} rx={4.5} ry={17} fill={lit(skin, 0.3)} opacity={0.32} transform={`rotate(${fmt(10 * t)} ${fmt(xf - 6 * t - 1)} 6)`} />
-      <circle cx={fmt(nx)} cy={fmt(ny)} r={10.5} fill={mix(skin, lit(skin, 0.15), 0.5)} />
-      <ellipse cx={fmt(nx - 3)} cy={fmt(ny - 4)} rx={3.6} ry={2.4} fill="#FFFFFF" opacity={0.5} />
-      <ellipse cx={fmt(nx + 4 - 3 * t)} cy={fmt(ny + 6)} rx={4.2} ry={2.6} fill={shade(skin, 0.55)} opacity={0.8} />
+      {/* nose: the crew hook, turned toward screen-left in 3/4, with a glossy tip */}
+      <InkLine d={`M${fmt(xf - 1)},${-2} Q${fmt(xf - 17 - 10 * t)},${24} ${fmt(xf - 2)},${31}`} w={fw} />
+      {pass !== 'ink' && <ellipse cx={fmt(xf - 9 - 6 * t)} cy={12} rx={4} ry={2.6} fill="#FFFFFF" opacity={0.7} transform={`rotate(-30 ${fmt(xf - 9 - 6 * t)} 12)`} />}
 
       {/* mouth */}
-      <path d={mouthD} fill={`url(#${id}-mo)`} />
-      {e.teeth > 0.01 && mo > 2 && (
-        <g opacity={e.teeth}>
-          <defs>
-            <clipPath id={`${id}-mc`}>
-              <path d={mouthD} />
-            </clipPath>
-          </defs>
-          <g clipPath={`url(#${id}-mc)`}>
-            <rect x={fmt(mx - mw)} y={fmt(my - 6)} width={fmt(mw * 2)} height={fmt(mo * 0.42 + 6)} fill="#F3EEE8" />
-            <rect x={fmt(mx - mw)} y={fmt(my + mo * 0.62)} width={fmt(mw * 2)} height={fmt(mo * 0.6 + 6)} fill="#E6DDD4" />
-          </g>
+      {o < 0.07 ? (
+        <InkLine d={Q({x: mx - mw, y: cornerY}, {x: mx, y: my + e.smile * 14}, {x: mx + mw, y: cornerY})} w={fw * 1.05} />
+      ) : (
+        <g>
+          <Inked w={fw * 0.85}>
+            <InkPath d={mouthD} fill={`url(#${id}-mo)`} />
+          </Inked>
+          {pass !== 'ink' && (
+            <g clipPath={`url(#${id}-mc)`}>
+              {e.tongue > 0.01 && <ellipse cx={fmt(mx + 4)} cy={fmt(loY + 2)} rx={fmt(mw * 0.62)} ry={fmt(8 + o * 14)} fill="#E27583" opacity={e.tongue} />}
+              {e.tongue > 0.01 && <ellipse cx={fmt(mx - 2)} cy={fmt(loY - 6 - o * 4)} rx={fmt(mw * 0.18)} ry={3} fill="#FFFFFF" opacity={0.45 * e.tongue} />}
+              {clenched ? (
+                <g opacity={e.teeth}>
+                  <rect x={fmt(mx - mw)} y={fmt(upY - 10)} width={fmt(mw * 2)} height={fmt(loY - upY + 20)} fill="#FBFAF6" />
+                  <rect x={fmt(mx - mw)} y={fmt((upY + loY) / 2 + 2)} width={fmt(mw * 2)} height={fmt(loY - upY)} fill="#E4E8EC" />
+                  <line x1={fmt(mx - mw)} y1={fmt((upY + loY) / 2 + 1)} x2={fmt(mx + mw)} y2={fmt((upY + loY) / 2 + 1)} stroke={INK} strokeWidth={fw * 0.6} />
+                  {[-0.5, 0, 0.5].map((k) => (
+                    <line key={k} x1={fmt(mx + k * mw)} y1={fmt(upY - 6)} x2={fmt(mx + k * mw)} y2={fmt(loY + 6)} stroke={INK} strokeWidth={fw * 0.4} opacity={0.6} />
+                  ))}
+                </g>
+              ) : (
+                e.teeth > 0.01 && <rect x={fmt(mx - mw)} y={fmt(upY - 12)} width={fmt(mw * 2)} height={fmt(12 + 6 + o * 8)} rx={3} fill="#FBFAF6" opacity={e.teeth} />
+              )}
+            </g>
+          )}
+          {pass !== 'ink' && <InkLine d={mouthD} w={fw * 0.85} />}
         </g>
       )}
-      {/* upper lip shape and lower lip sheen */}
-      <path d={`M${fmt(mx - mw - 1)},${fmt(my)} Q${fmt(mx - mw * 0.4)},${fmt(my - 7 - mo * 0.2)} ${fmt(mx)},${fmt(my - 5 - mo * 0.25)} Q${fmt(mx + mw * 0.4)},${fmt(my - 7 - mo * 0.2)} ${fmt(mx + mw + 1)},${fmt(my + 1)} Q${fmt(mx)},${fmt(my - 2 - mo * 0.2)} ${fmt(mx - mw - 1)},${fmt(my)} Z`} fill={lipCol} />
-      <ellipse cx={fmt(mx - 2)} cy={fmt(my + mo + 9)} rx={fmt(mw * 0.55)} ry={4} fill={lipCol} opacity={0.75} />
-      <ellipse cx={fmt(mx - 4)} cy={fmt(my + mo + 8)} rx={fmt(mw * 0.22)} ry={1.6} fill="#FFFFFF" opacity={0.35} />
-      {/* chin highlight */}
-      <ellipse cx={fmt(xf - 16 * t)} cy={88} rx={12} ry={6} fill="#FFFFFF" opacity={0.12} />
 
-      {/* sweat bead at the temple */}
-      {e.sweat > 0.01 && (
-        <g opacity={e.sweat} transform={`translate(${fmt(farX - 14)} ${fmt(-46)})`}>
-          <path d="M0,-9 C4,-3 6,2 6,5 C6,9 3,11 0,11 C-3,11 -6,9 -6,5 C-6,2 -4,-3 0,-9 Z" fill="#CFE7F0" opacity={0.85} />
-          <ellipse cx={-2} cy={4} rx={1.8} ry={2.6} fill="#FFFFFF" opacity={0.95} />
+      {/* sweat: crew-style outlined drops at the temple */}
+      {e.sweat > 0.02 &&
+        [
+          [farX - 44 * farW, -56, 1],
+          [farX - 52 * farW, -24, 0.7],
+        ].map(([x, y, k], i) => (
+          <g key={i} opacity={e.sweat} transform={`translate(${fmt(x)} ${fmt(y)}) scale(${k})`}>
+            <Inked w={fw * 0.7}>
+              <InkPath d="M0,-13 C6,-4 9,3 9,8 C9,14 5,17 0,17 C-5,17 -9,14 -9,8 C-9,3 -6,-4 0,-13 Z" fill="#BFE6F5" />
+            </Inked>
+            {pass !== 'ink' && <ellipse cx={-3} cy={6} rx={2.6} ry={4} fill="#FFFFFF" />}
+          </g>
+        ))}
+
+      {/* glossy highlights: forehead and cheekbone */}
+      {pass !== 'ink' && (
+        <g>
+          <ellipse cx={fmt(lightPt(52).x + 4)} cy={fmt(lightPt(52).y - 4)} rx={20} ry={9} transform={`rotate(-30 ${fmt(lightPt(52).x + 4)} ${fmt(lightPt(52).y - 4)})`} fill="#FFFFFF" opacity={0.42} />
+          <ellipse cx={fmt(farX - 6)} cy={22} rx={5} ry={3.4} fill="#FFFFFF" opacity={0.55} />
+          <ellipse cx={fmt(nearX + 8)} cy={20} rx={4.2} ry={3} fill="#FFFFFF" opacity={0.5} />
         </g>
       )}
-    </g>
+    </>
   );
+
+  return <g transform={`translate(${fmt(c.x)} ${fmt(c.y)}) rotate(${fmt(roll)}) scale(${fmt(s)})`}>{body}</g>;
 };

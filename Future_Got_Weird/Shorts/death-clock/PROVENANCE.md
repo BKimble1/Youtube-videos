@@ -6,13 +6,14 @@ Every element of the picture and the sound, where it came from, and whether it i
 
 | Element | Source | New / reused |
 |---|---|---|
-| Characters (man, dog), street, houses, trees, band/watch, drone, map, arm cross-section, vessel, body map, heart, organs | Drawn in code as SVG in `source/src/art/*.tsx`: lineless shapes with gradient shading, one fixed upper-left key light, white specular shapes and contact shadows. No image files, no photos, no AI image or video generation. | New for this Short |
+| The man | The Weird Crew's **guesser** from the channel's existing cast. His identity (colours, spiky hair, face construction, cheeks, ink outline) follows Video 01 V2's `components/cast.ts` and `Character.tsx` (branch `claude/new-session-96c7w8`) and the approved cast sheet `cast_rig_check.png` (Video 02 packet, branch `claude/new-session-h21vtg`). He is re-drawn as SVG in this project's posable 3/4 rig (`source/src/art/Man.tsx`, `Head.tsx`, `Hand.tsx`), with dimensional gradients, glossy highlights and extra expressions added. No raster art from those branches is in the film. | Reused identity, new drawing |
+| Dog, street, houses, trees, band/watch, drone, map, arm cross-section, vessel, body map, heart, organs | Drawn in code as SVG in `source/src/art/*.tsx`: gradient shading from one fixed upper-left key light, white highlights and contact shadows. Crew ink contours (`lib/ink.tsx`) go on the dog, props and set pieces. No image files, no photos, and no AI image or video generation. | New for this Short |
 | Animation, camera, shot timing | `source/src/shots/*.tsx`, `source/src/lib/*.ts`, keyed to the narration's measured word times | New |
 | Device UI (VITAL SCAN, CALCULATING, countdown, HELP ALERT SENT, STABILIZING, "Life Expectancy: 42 Years", glitch) | `source/src/art/Watch.tsx` with states from `source/src/lib/device.ts`. The countdown is computed from a single origin (00:02:14 at the `calculates` word) and never reaches zero. | New |
 | Captions, FUTURE CONCEPT label, TIME COMPRESSED tag | `source/src/shots/Overlay.tsx` | New |
-| Caption font | Montserrat ExtraBold (800), SIL Open Font License, bundled via `@fontsource/montserrat` 5.3.0 | Open-licensed |
+| Caption and label font | Fredoka (variable, set at 600), the channel's display face; SIL Open Font License, bundled via `@fontsource-variable/fredoka` 5.3.0 | Open-licensed, channel font |
 | UI font | Barlow Condensed 600/700/800, SIL Open Font License, bundled via `@fontsource/barlow-condensed` 5.3.0 | Open-licensed |
-| Render pipeline | Remotion 4.0.533, React 19.1.0, TypeScript 5.8.3. The `package.json` and lockfile are taken from the earlier Future Got Weird Short so the versions are known to work. Some packages listed there (Fredoka, Nunito, Source Serif 4, JetBrains Mono, js-tiktoken, zod) are unused here. | Reused toolchain |
+| Render pipeline | Remotion 4.0.533, React 19.1.0, TypeScript 5.8.3. The `package.json` and lockfile are taken from the earlier Future Got Weird Short so the versions are known to work. Some packages listed there (Montserrat, Nunito, Source Serif 4, JetBrains Mono, js-tiktoken, zod) are unused here. | Reused toolchain |
 | Runway | **Not used.** The deterministic Remotion build covered every shot, so no generated footage was needed and none is in the film. | n/a |
 
 Remotion is source-available under its own licence. Using it commercially may require a company licence depending on the owner's organisation size, and that has not been checked here.

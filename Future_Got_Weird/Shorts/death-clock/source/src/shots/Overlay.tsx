@@ -1,10 +1,10 @@
 // Screen-fixed overlays: the persistent FUTURE CONCEPT label (from frame zero, every shot), the
 // TIME COMPRESSED tag during the response montage, and the narration captions (master only).
-// Captions: Montserrat ExtraBold, 2-5-word phrases, at most two lines, one highlighted word,
+// Captions: Fredoka SemiBold (channel display face), 2-5-word phrases, at most two lines, one highlighted word,
 // restrained dark rounded backing, a short fade (no bounce, no scatter). Lanes keep them off the
 // watch screen, the injection path and his eyes.
 import React from 'react';
-import {CAP_FONT, UI_FONT} from '../fonts';
+import {CAP_FAMILY, CAP_FONT, CAP_WEIGHT} from '../fonts';
 import {chunkWindows} from '../lib/captions';
 import {PAL} from '../lib/color';
 import {clamp, inv} from '../lib/math';
@@ -25,21 +25,28 @@ const LANE: Record<ShotId, 'top' | 'low'> = {
 export const shotAt = (f: number): ShotId => (Object.keys(SHOT) as ShotId[]).find((k) => f >= SHOT[k][0] && f < SHOT[k][1]) ?? 's16';
 
 let ctx: CanvasRenderingContext2D | null = null;
-const measure = (t: string) => {
+const measureAt = (t: string, size: number, spacing = 0) => {
   if (!ctx && typeof document !== 'undefined') ctx = document.createElement('canvas').getContext('2d');
-  if (!ctx) return t.length * SIZE * 0.6;
-  ctx.font = `800 ${SIZE}px "Montserrat"`;
-  return ctx.measureText(t).width;
+  if (!ctx) return t.length * size * 0.6;
+  ctx.font = `${CAP_WEIGHT} ${size}px ${CAP_FAMILY}`;
+  return ctx.measureText(t).width + spacing * Math.max(0, t.length - 1);
 };
-const wrap = (words: string[]) => {
-  const lines: string[][] = [[]];
-  for (const w of words) {
-    const cur = lines[lines.length - 1];
-    const trial = [...cur, w].join(' ');
-    if (cur.length && measure(trial) > MAXW) lines.push([w]);
-    else cur.push(w);
+const measure = (t: string) => measureAt(t, SIZE);
+/** One line if it fits; otherwise the two-line split with the most even line widths (no one-word widows). */
+const wrap = (words: string[]): string[][] => {
+  if (measure(words.join(' ')) <= MAXW || words.length < 2) return [words];
+  let best: string[][] = [words];
+  let bestW = Infinity;
+  for (let i = 1; i < words.length; i++) {
+    const a = words.slice(0, i);
+    const b = words.slice(i);
+    const w = Math.max(measure(a.join(' ')), measure(b.join(' ')));
+    if (w < bestW) {
+      bestW = w;
+      best = [a, b];
+    }
   }
-  return lines;
+  return best;
 };
 
 export const Captions: React.FC<{f: number}> = ({f}) => {
@@ -69,7 +76,7 @@ export const Captions: React.FC<{f: number}> = ({f}) => {
             {l.map((w, k) => {
               const ww = measure(w);
               const el = (
-                <text key={k} x={x} y={top + 17 + LINE * (i + 0.5) + SIZE * 0.36} fontFamily={CAP_FONT} fontWeight={800} fontSize={SIZE} fill={w === hl ? '#FFC744' : '#FFFFFF'}>
+                <text key={k} x={x} y={top + 17 + LINE * (i + 0.5) + SIZE * 0.36} fontFamily={CAP_FONT} fontWeight={CAP_WEIGHT} fontSize={SIZE} fill={w === hl ? '#FFC744' : '#FFFFFF'}>
                   {w}
                 </text>
               );
@@ -83,25 +90,29 @@ export const Captions: React.FC<{f: number}> = ({f}) => {
   );
 };
 
-export const ConceptLabel: React.FC = () => (
-  <g>
-    <rect x={84} y={178} width={330} height={60} rx={30} fill="#0F1C26" opacity={0.6} />
-    <circle cx={116} cy={208} r={10} fill={PAL.signal} />
-    <circle cx={116} cy={208} r={4.5} fill="#FFFFFF" />
-    <text x={138} y={221} fontFamily={UI_FONT} fontWeight={700} fontSize={37} letterSpacing={2.6} fill="#FFFFFF">
-      FUTURE CONCEPT
-    </text>
-  </g>
-);
+export const ConceptLabel: React.FC = () => {
+  const tw = measureAt('FUTURE CONCEPT', 34, 1.6);
+  return (
+    <g>
+      <rect x={84} y={178} width={tw + 92} height={60} rx={30} fill="#0F1C26" opacity={0.62} />
+      <circle cx={116} cy={208} r={10} fill={PAL.signal} />
+      <circle cx={116} cy={208} r={4.5} fill="#FFFFFF" />
+      <text x={140} y={220} fontFamily={CAP_FONT} fontWeight={CAP_WEIGHT} fontSize={34} letterSpacing={1.6} fill="#FFFFFF">
+        FUTURE CONCEPT
+      </text>
+    </g>
+  );
+};
 
 export const CompressedTag: React.FC<{f: number}> = ({f}) => {
   const a = clamp(inv(DEV.compress0 - 2, DEV.compress0 + 6, f)) * (1 - clamp(inv(DEV.compress1 - 6, DEV.compress1, f)));
   if (a <= 0) return null;
+  const tw = measureAt('TIME COMPRESSED', 28, 1.4);
   return (
     <g opacity={a}>
-      <rect x={84} y={248} width={330} height={50} rx={25} fill="#0F1C26" opacity={0.55} />
+      <rect x={84} y={248} width={tw + 86} height={50} rx={25} fill="#0F1C26" opacity={0.58} />
       <path d="M104,261 L120,273 L104,285 Z M120,261 L136,273 L120,285 Z" fill={PAL.signal} />
-      <text x={148} y={283} fontFamily={UI_FONT} fontWeight={700} fontSize={30} letterSpacing={2.2} fill="#DDF6FF">
+      <text x={148} y={283} fontFamily={CAP_FONT} fontWeight={CAP_WEIGHT} fontSize={28} letterSpacing={1.4} fill="#DDF6FF">
         TIME COMPRESSED
       </text>
     </g>
