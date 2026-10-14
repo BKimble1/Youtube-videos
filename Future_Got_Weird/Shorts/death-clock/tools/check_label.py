@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check that the FUTURE CONCEPT label is present in every decoded frame of an encoded video.
 
-Crops the label pill region (x 84-484, y 178-238 in the 1080x1920 frame) from every frame. The text mask is taken from
+Crops the label pill region (x 84-524, y 178-238 in the 1080x1920 frame) from every frame. The text mask is taken from
 frame 0 (pixels brighter than 215 inside the pill). For each frame the contrast between the text pixels and the rest
 of the pill must exceed 60 (0-255), and the text pixels must stay above 200 on average. Reports the weakest frames.
 Usage: python3 tools/check_label.py video.mp4 [out.json]"""
@@ -9,13 +9,17 @@ import json, subprocess, sys
 import numpy as np
 
 vid = sys.argv[1]
-X, Y, W, H = 84, 178, 400, 60
+X, Y, W, H = 84, 178, 440, 60
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', vid, '-vf', f'crop={W}:{H}:{X}:{Y},format=gray', '-f', 'rawvideo', '-pix_fmt', 'gray', '-'], capture_output=True, check=True).stdout
 fr = np.frombuffer(raw, np.uint8).reshape(-1, H, W).astype(np.float32)
-# the pill's width follows its measured text: find its right edge on frame 0 (last dark pixel on the middle row)
-row = fr[0, H // 2]
-dark = np.where(row < 150)[0]
-PW = int(dark.max()) + 1 if len(dark) else W
+# the pill's width follows its measured text: find its right edge on frame 0 along a row near the pill's top
+# (above the text, inside the rounded ends): the first run of 6 pixels brighter than the pill after x = 40
+row = fr[0, 9]
+PW = W
+for x in range(40, W - 6):
+    if (row[x:x + 6] > 150).all():
+        PW = x + 10  # the rounded end at this row sits ~10 px inside the pill's full width
+        break
 fr = fr[:, :, :PW]
 W = PW
 yy, xx = np.mgrid[0:H, 0:W]
