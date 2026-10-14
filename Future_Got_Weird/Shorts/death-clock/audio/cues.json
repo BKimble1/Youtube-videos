@@ -1,0 +1,895 @@
+{
+ "fps": 30,
+ "total_frames": 1373,
+ "shots": {
+  "s01": [
+   0,
+   24
+  ],
+  "s02": [
+   24,
+   51
+  ],
+  "s03": [
+   51,
+   113
+  ],
+  "s04": [
+   113,
+   246
+  ],
+  "s05": [
+   246,
+   329
+  ],
+  "s06": [
+   329,
+   414
+  ],
+  "s07": [
+   414,
+   540
+  ],
+  "s08": [
+   540,
+   634
+  ],
+  "s09": [
+   634,
+   747
+  ],
+  "s10": [
+   747,
+   840
+  ],
+  "s11": [
+   840,
+   913
+  ],
+  "s12": [
+   913,
+   1008
+  ],
+  "s13": [
+   1008,
+   1110
+  ],
+  "s14": [
+   1110,
+   1201
+  ],
+  "s15": [
+   1201,
+   1288
+  ],
+  "s16": [
+   1288,
+   1373
+  ]
+ },
+ "device": {
+  "edgeIn": 75,
+  "redAt": 541,
+  "timerAt": 579,
+  "alertAt": 811,
+  "compress0": 874,
+  "compress1": 1008,
+  "compressRate": 2.5,
+  "injectAt": 1020,
+  "freezeAt": 1056,
+  "recoverAt": 1150,
+  "glitchAt": 1290,
+  "glitchLen": 9,
+  "START_SECS": 134
+ },
+ "countdown_at": {
+  "579": 134,
+  "874": 124.16666666666667,
+  "1008": 113,
+  "1020": 112.6,
+  "1056": 111.4
+ },
+ "music": {
+  "total": 45.766666666666666,
+  "tensionEnd": 27.033333333333335,
+  "swellAt": 18.033333333333335,
+  "hopeFrom": 26.9,
+  "thinFrom": 37,
+  "unsettleFrom": 39.86666666666667,
+  "glitchAt": 43,
+  "resolveFrom": 43.3,
+  "lastWordEnd": 42.86666666666667
+ },
+ "cues": [
+  {
+   "id": "hb_a0",
+   "kind": "heartbeat",
+   "f": 0,
+   "gain": -14,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "breath_catch",
+   "kind": "file",
+   "f": 0,
+   "gain": -24,
+   "p": {
+    "file": "breath_1_i0TXGqFeHqkEpFKKUdQf.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "rustle",
+   "kind": "rustle",
+   "f": 6,
+   "dur": 0.7,
+   "gain": -30
+  },
+  {
+   "id": "hb_a1",
+   "kind": "heartbeat",
+   "f": 15,
+   "gain": -14,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "hb_a2",
+   "kind": "heartbeat",
+   "f": 31,
+   "gain": -14,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "knees",
+   "kind": "thud",
+   "f": 33,
+   "gain": -20,
+   "p": {
+    "weight": 0.6
+   }
+  },
+  {
+   "id": "dog_whine",
+   "kind": "file",
+   "f": 36,
+   "gain": -27,
+   "p": {
+    "file": "dog_3_JB8U4frHpRyLaM7eJciP.mp3",
+    "offset": 0.13
+   }
+  },
+  {
+   "id": "hb_a3",
+   "kind": "heartbeat",
+   "f": 46,
+   "gain": -14,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "body_fall",
+   "kind": "file",
+   "f": 48,
+   "gain": -15,
+   "p": {
+    "file": "fall_4_9ukhH99iVXpBejeIoCqn.mp3",
+    "offset": 0.32
+   }
+  },
+  {
+   "id": "body_thud",
+   "kind": "thud",
+   "f": 48,
+   "gain": -18,
+   "p": {
+    "weight": 1
+   }
+  },
+  {
+   "id": "wrist_whoosh",
+   "kind": "whoosh",
+   "f": 51,
+   "dur": 0.33,
+   "gain": -17
+  },
+  {
+   "id": "hb_b0",
+   "kind": "heartbeat",
+   "f": 60,
+   "gain": -22,
+   "p": {
+    "tone": 0.9
+   }
+  },
+  {
+   "id": "ui_land",
+   "kind": "blip",
+   "f": 61,
+   "gain": -24,
+   "p": {
+    "freq": 880
+   }
+  },
+  {
+   "id": "edge_warble",
+   "kind": "warble",
+   "f": 75,
+   "dur": 0.8666666666666667,
+   "gain": -31
+  },
+  {
+   "id": "hb_b1",
+   "kind": "heartbeat",
+   "f": 77,
+   "gain": -22,
+   "p": {
+    "tone": 0.9
+   }
+  },
+  {
+   "id": "strained_exhale",
+   "kind": "file",
+   "f": 80,
+   "gain": -27,
+   "p": {
+    "file": "breath_4_y9jk69O2KtRNTZPOiz8T.mp3",
+    "offset": 0.3
+   }
+  },
+  {
+   "id": "hb_b2",
+   "kind": "heartbeat",
+   "f": 95,
+   "gain": -22,
+   "p": {
+    "tone": 0.9
+   }
+  },
+  {
+   "id": "glass_dive",
+   "kind": "dive",
+   "f": 99,
+   "dur": 0.6,
+   "gain": -20
+  },
+  {
+   "id": "needle_click",
+   "kind": "click",
+   "f": 124,
+   "gain": -21,
+   "p": {
+    "freq": 2400
+   }
+  },
+  {
+   "id": "needle_seat",
+   "kind": "click",
+   "f": 130,
+   "gain": -23,
+   "p": {
+    "freq": 1700
+   }
+  },
+  {
+   "id": "bead_ticks",
+   "kind": "ticks",
+   "f": 131,
+   "dur": 2.6,
+   "gain": -28,
+   "p": {
+    "rate": 34
+   }
+  },
+  {
+   "id": "flow",
+   "kind": "flow",
+   "f": 242,
+   "dur": 5.8,
+   "gain": -27
+  },
+  {
+   "id": "scan0",
+   "kind": "scan",
+   "f": 359,
+   "gain": -23,
+   "p": {
+    "freq": 1760
+   }
+  },
+  {
+   "id": "scan1",
+   "kind": "scan",
+   "f": 363,
+   "gain": -24,
+   "p": {
+    "freq": 1870
+   }
+  },
+  {
+   "id": "scan2",
+   "kind": "scan",
+   "f": 367,
+   "gain": -25,
+   "p": {
+    "freq": 1980
+   }
+  },
+  {
+   "id": "decay_detect",
+   "kind": "detect",
+   "f": 367,
+   "gain": -21
+  },
+  {
+   "id": "scan3",
+   "kind": "scan",
+   "f": 371,
+   "gain": -26,
+   "p": {
+    "freq": 2090
+   }
+  },
+  {
+   "id": "organ_flag",
+   "kind": "flag",
+   "f": 442,
+   "gain": -25
+  },
+  {
+   "id": "hb_c0",
+   "kind": "heartbeat",
+   "f": 460,
+   "gain": -16,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "hb_c1",
+   "kind": "heartbeat",
+   "f": 479,
+   "gain": -16,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "fibrillation",
+   "kind": "fib",
+   "f": 497,
+   "dur": 1.3666666666666667,
+   "gain": -18
+  },
+  {
+   "id": "signal_zip",
+   "kind": "zip",
+   "f": 514,
+   "dur": 0.85,
+   "gain": -22
+  },
+  {
+   "id": "alarm_pair",
+   "kind": "alarm",
+   "f": 536,
+   "gain": -16
+  },
+  {
+   "id": "tick609",
+   "kind": "clock",
+   "f": 609,
+   "gain": -25
+  },
+  {
+   "id": "tick639",
+   "kind": "clock",
+   "f": 639,
+   "gain": -25
+  },
+  {
+   "id": "tick669",
+   "kind": "clock",
+   "f": 669,
+   "gain": -25
+  },
+  {
+   "id": "tick699",
+   "kind": "clock",
+   "f": 699,
+   "gain": -25
+  },
+  {
+   "id": "tick729",
+   "kind": "clock",
+   "f": 729,
+   "gain": -25
+  },
+  {
+   "id": "tick759",
+   "kind": "clock",
+   "f": 759,
+   "gain": -25
+  },
+  {
+   "id": "tick789",
+   "kind": "clock",
+   "f": 789,
+   "gain": -25
+  },
+  {
+   "id": "transmit",
+   "kind": "send",
+   "f": 809,
+   "gain": -16
+  },
+  {
+   "id": "tick819",
+   "kind": "clock",
+   "f": 819,
+   "gain": -25
+  },
+  {
+   "id": "rise_sparkle",
+   "kind": "sparkle",
+   "f": 822,
+   "dur": 0.6,
+   "gain": -24
+  },
+  {
+   "id": "pin_drop",
+   "kind": "pin",
+   "f": 842,
+   "gain": -20
+  },
+  {
+   "id": "tick849",
+   "kind": "clock",
+   "f": 849,
+   "gain": -33
+  },
+  {
+   "id": "data",
+   "kind": "data",
+   "f": 852,
+   "dur": 0.95,
+   "gain": -27
+  },
+  {
+   "id": "tick876",
+   "kind": "clock",
+   "f": 876,
+   "gain": -33
+  },
+  {
+   "id": "dispatch",
+   "kind": "dispatch",
+   "f": 882,
+   "gain": -19
+  },
+  {
+   "id": "rotor_lift",
+   "kind": "rotor",
+   "f": 886,
+   "dur": 0.9,
+   "gain": -21,
+   "p": {
+    "spinup": 1,
+    "approach": 0,
+    "hover": 0
+   }
+  },
+  {
+   "id": "tick888",
+   "kind": "clock",
+   "f": 888,
+   "gain": -33
+  },
+  {
+   "id": "tick900",
+   "kind": "clock",
+   "f": 900,
+   "gain": -33
+  },
+  {
+   "id": "tick912",
+   "kind": "clock",
+   "f": 912,
+   "gain": -33
+  },
+  {
+   "id": "rotor_approach",
+   "kind": "rotor",
+   "f": 913,
+   "dur": 3.1666666666666665,
+   "gain": -23,
+   "p": {
+    "spinup": 0,
+    "approach": 1,
+    "hover": 0
+   }
+  },
+  {
+   "id": "tick924",
+   "kind": "clock",
+   "f": 924,
+   "gain": -33
+  },
+  {
+   "id": "rotor_texture",
+   "kind": "file",
+   "f": 933,
+   "gain": -32,
+   "p": {
+    "file": "drone_1_f7S5LI3HdTlvGoa1G6Fp.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "tick936",
+   "kind": "clock",
+   "f": 936,
+   "gain": -33
+  },
+  {
+   "id": "tick948",
+   "kind": "clock",
+   "f": 948,
+   "gain": -33
+  },
+  {
+   "id": "tick960",
+   "kind": "clock",
+   "f": 960,
+   "gain": -33
+  },
+  {
+   "id": "tick972",
+   "kind": "clock",
+   "f": 972,
+   "gain": -33
+  },
+  {
+   "id": "tick984",
+   "kind": "clock",
+   "f": 984,
+   "gain": -33
+  },
+  {
+   "id": "tick996",
+   "kind": "clock",
+   "f": 996,
+   "gain": -33
+  },
+  {
+   "id": "tick1008",
+   "kind": "clock",
+   "f": 1008,
+   "gain": -25
+  },
+  {
+   "id": "rotor_hover",
+   "kind": "rotor",
+   "f": 1008,
+   "dur": 6.433333333333334,
+   "gain": -31,
+   "p": {
+    "spinup": 0,
+    "approach": 0,
+    "hover": 1
+   }
+  },
+  {
+   "id": "inject_click",
+   "kind": "inject",
+   "f": 1020,
+   "gain": -21
+  },
+  {
+   "id": "tick1038",
+   "kind": "clock",
+   "f": 1038,
+   "gain": -25
+  },
+  {
+   "id": "stabilized",
+   "kind": "confirm",
+   "f": 1056,
+   "gain": -21
+  },
+  {
+   "id": "recover_breath_a",
+   "kind": "file",
+   "f": 1112,
+   "gain": -24,
+   "p": {
+    "file": "recover_breath_3_u0kMmd94TJjSZjKOuzAH.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "hb_d0",
+   "kind": "heartbeat",
+   "f": 1140,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "green_chime",
+   "kind": "chime",
+   "f": 1150,
+   "gain": -22
+  },
+  {
+   "id": "recover_breath_b",
+   "kind": "file",
+   "f": 1162,
+   "gain": -26,
+   "p": {
+    "file": "recover_breath_1_tFCDclpcmymiy0MdhNUi.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "hb_d1",
+   "kind": "heartbeat",
+   "f": 1166,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_d2",
+   "kind": "heartbeat",
+   "f": 1191,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_d3",
+   "kind": "heartbeat",
+   "f": 1217,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "glitch",
+   "kind": "glitch",
+   "f": 1290,
+   "dur": 0.3,
+   "gain": -17
+  }
+ ],
+ "captions": [
+  {
+   "text": "This device",
+   "start": 0.06,
+   "end": 0.66,
+   "hl": null,
+   "caps": false
+  },
+  {
+   "text": "tells you exactly",
+   "start": 0.66,
+   "end": 1.7,
+   "hl": "exactly",
+   "caps": false
+  },
+  {
+   "text": "when you are dying.",
+   "start": 1.7,
+   "end": 3.26,
+   "hl": "dying.",
+   "caps": false
+  },
+  {
+   "text": "It works by injecting",
+   "start": 3.76,
+   "end": 4.88,
+   "hl": "injecting",
+   "caps": false
+  },
+  {
+   "text": "thousands of",
+   "start": 4.88,
+   "end": 5.48,
+   "hl": null,
+   "caps": false
+  },
+  {
+   "text": "microscopic nano-sensors",
+   "start": 5.48,
+   "end": 6.9,
+   "hl": "nano-sensors",
+   "caps": true
+  },
+  {
+   "text": "through your skin.",
+   "start": 6.9,
+   "end": 8.36,
+   "hl": "skin.",
+   "caps": false
+  },
+  {
+   "text": "These sensors constantly travel",
+   "start": 8.42,
+   "end": 9.98,
+   "hl": "travel",
+   "caps": false
+  },
+  {
+   "text": "through your bloodstream,",
+   "start": 9.98,
+   "end": 11.04,
+   "hl": "bloodstream,",
+   "caps": false
+  },
+  {
+   "text": "monitoring your",
+   "start": 11.04,
+   "end": 11.7,
+   "hl": null,
+   "caps": false
+  },
+  {
+   "text": "cellular decay.",
+   "start": 11.7,
+   "end": 13.24,
+   "hl": "decay.",
+   "caps": false
+  },
+  {
+   "text": "If your organs",
+   "start": 13.77,
+   "end": 14.37,
+   "hl": "organs",
+   "caps": false
+  },
+  {
+   "text": "begin to fail,",
+   "start": 14.37,
+   "end": 15.25,
+   "hl": "fail,",
+   "caps": false
+  },
+  {
+   "text": "or your heart",
+   "start": 15.25,
+   "end": 15.81,
+   "hl": "heart",
+   "caps": false
+  },
+  {
+   "text": "experiences a lethal rhythm,",
+   "start": 15.81,
+   "end": 17.99,
+   "hl": "lethal",
+   "caps": false
+  },
+  {
+   "text": "the device immediately",
+   "start": 18.089,
+   "end": 19.23,
+   "hl": "immediately",
+   "caps": false
+  },
+  {
+   "text": "calculates your",
+   "start": 19.23,
+   "end": 19.83,
+   "hl": null,
+   "caps": false
+  },
+  {
+   "text": "remaining life expectancy",
+   "start": 19.83,
+   "end": 21.15,
+   "hl": "expectancy",
+   "caps": false
+  },
+  {
+   "text": "down to the exact second.",
+   "start": 21.15,
+   "end": 23.39,
+   "hl": "second.",
+   "caps": true
+  },
+  {
+   "text": "This gives you",
+   "start": 24.88,
+   "end": 25.36,
+   "hl": null,
+   "caps": false
+  },
+  {
+   "text": "a critical window",
+   "start": 25.36,
+   "end": 26.2,
+   "hl": "critical",
+   "caps": false
+  },
+  {
+   "text": "to seek help.",
+   "start": 26.2,
+   "end": 27.54,
+   "hl": "help.",
+   "caps": false
+  },
+  {
+   "text": "The device automatically",
+   "start": 28.02,
+   "end": 29.14,
+   "hl": "automatically",
+   "caps": false
+  },
+  {
+   "text": "alerts emergency services",
+   "start": 29.14,
+   "end": 30.5,
+   "hl": "emergency",
+   "caps": false
+  },
+  {
+   "text": "with your exact location",
+   "start": 30.5,
+   "end": 31.76,
+   "hl": "location",
+   "caps": false
+  },
+  {
+   "text": "and medical data,",
+   "start": 31.76,
+   "end": 33.24,
+   "hl": "data,",
+   "caps": false
+  },
+  {
+   "text": "potentially saving your life",
+   "start": 33.62,
+   "end": 34.96,
+   "hl": "potentially",
+   "caps": false
+  },
+  {
+   "text": "before you even",
+   "start": 34.96,
+   "end": 35.8,
+   "hl": null,
+   "caps": false
+  },
+  {
+   "text": "lose consciousness.",
+   "start": 35.8,
+   "end": 37.44,
+   "hl": "consciousness.",
+   "caps": false
+  },
+  {
+   "text": "But if the countdown starts,",
+   "start": 40.019,
+   "end": 42.04,
+   "hl": "countdown",
+   "caps": false
+  },
+  {
+   "text": "would you want to know?",
+   "start": 42.09,
+   "end": 43.57,
+   "hl": "know?",
+   "caps": false
+  }
+ ],
+ "words": 98
+}

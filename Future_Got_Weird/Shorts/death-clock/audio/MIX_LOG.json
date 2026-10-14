@@ -1,0 +1,635 @@
+{
+ "total_s": 45.766666666666666,
+ "static_gain_db": 5.19,
+ "limiter": {
+  "ceiling_dbfs": -1.8,
+  "lookahead_ms": 5,
+  "release_ms": 120,
+  "max_reduction_db": 1.85,
+  "samples_reduced": 429836,
+  "seconds_reduced": 8.955
+ },
+ "loudnorm_pass1": {
+  "input_i": "-20.19",
+  "input_tp": "-5.12",
+  "input_lra": "6.50",
+  "input_thresh": "-30.38",
+  "output_i": "-16.07",
+  "output_tp": "-1.50",
+  "output_lra": "5.10",
+  "output_thresh": "-26.16",
+  "normalization_type": "dynamic",
+  "target_offset": "1.07"
+ },
+ "measured_mix": {
+  "integrated_lufs": -14.9,
+  "lra_lu": 5.8,
+  "true_peak_dbtp": -1.7
+ },
+ "stems_sum_residual": 0.0,
+ "voice_compressor": {
+  "threshold_db": -20.0,
+  "ratio": 2.5,
+  "attack_ms": 12.0,
+  "release_ms": 150.0,
+  "max_gr_db": 5.73,
+  "mean_gr_db_during_speech": 1.58
+ },
+ "music_duck_db_under_speech": -9.9,
+ "continuous_fx_duck_db_under_speech": -6.0,
+ "effects_duck_db_under_speech": -2.5,
+ "cues": [
+  {
+   "id": "hb_a0",
+   "kind": "heartbeat",
+   "frame": 0,
+   "time_s": 0.0,
+   "gain_db": -14,
+   "source": "procedural"
+  },
+  {
+   "id": "breath_catch",
+   "kind": "file",
+   "frame": 0,
+   "time_s": 0.0,
+   "gain_db": -24,
+   "source": "breath_1_i0TXGqFeHqkEpFKKUdQf.mp3"
+  },
+  {
+   "id": "rustle",
+   "kind": "rustle",
+   "frame": 6,
+   "time_s": 0.2,
+   "gain_db": -30,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_a1",
+   "kind": "heartbeat",
+   "frame": 15,
+   "time_s": 0.5,
+   "gain_db": -14,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_a2",
+   "kind": "heartbeat",
+   "frame": 31,
+   "time_s": 1.033,
+   "gain_db": -14,
+   "source": "procedural"
+  },
+  {
+   "id": "knees",
+   "kind": "thud",
+   "frame": 33,
+   "time_s": 1.1,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "dog_whine",
+   "kind": "file",
+   "frame": 36,
+   "time_s": 1.07,
+   "gain_db": -27,
+   "source": "dog_3_JB8U4frHpRyLaM7eJciP.mp3"
+  },
+  {
+   "id": "hb_a3",
+   "kind": "heartbeat",
+   "frame": 46,
+   "time_s": 1.533,
+   "gain_db": -14,
+   "source": "procedural"
+  },
+  {
+   "id": "body_fall",
+   "kind": "file",
+   "frame": 48,
+   "time_s": 1.28,
+   "gain_db": -15,
+   "source": "fall_4_9ukhH99iVXpBejeIoCqn.mp3"
+  },
+  {
+   "id": "body_thud",
+   "kind": "thud",
+   "frame": 48,
+   "time_s": 1.6,
+   "gain_db": -18,
+   "source": "procedural"
+  },
+  {
+   "id": "wrist_whoosh",
+   "kind": "whoosh",
+   "frame": 51,
+   "time_s": 1.7,
+   "gain_db": -17,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_b0",
+   "kind": "heartbeat",
+   "frame": 60,
+   "time_s": 2.0,
+   "gain_db": -22,
+   "source": "procedural"
+  },
+  {
+   "id": "ui_land",
+   "kind": "blip",
+   "frame": 61,
+   "time_s": 2.033,
+   "gain_db": -24,
+   "source": "procedural"
+  },
+  {
+   "id": "edge_warble",
+   "kind": "warble",
+   "frame": 75,
+   "time_s": 2.5,
+   "gain_db": -31,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_b1",
+   "kind": "heartbeat",
+   "frame": 77,
+   "time_s": 2.567,
+   "gain_db": -22,
+   "source": "procedural"
+  },
+  {
+   "id": "strained_exhale",
+   "kind": "file",
+   "frame": 80,
+   "time_s": 2.367,
+   "gain_db": -27,
+   "source": "breath_4_y9jk69O2KtRNTZPOiz8T.mp3"
+  },
+  {
+   "id": "hb_b2",
+   "kind": "heartbeat",
+   "frame": 95,
+   "time_s": 3.167,
+   "gain_db": -22,
+   "source": "procedural"
+  },
+  {
+   "id": "glass_dive",
+   "kind": "dive",
+   "frame": 99,
+   "time_s": 3.3,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "needle_click",
+   "kind": "click",
+   "frame": 124,
+   "time_s": 4.133,
+   "gain_db": -21,
+   "source": "procedural"
+  },
+  {
+   "id": "needle_seat",
+   "kind": "click",
+   "frame": 130,
+   "time_s": 4.333,
+   "gain_db": -23,
+   "source": "procedural"
+  },
+  {
+   "id": "bead_ticks",
+   "kind": "ticks",
+   "frame": 131,
+   "time_s": 4.367,
+   "gain_db": -28,
+   "source": "procedural"
+  },
+  {
+   "id": "flow",
+   "kind": "flow",
+   "frame": 242,
+   "time_s": 8.067,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "scan0",
+   "kind": "scan",
+   "frame": 359,
+   "time_s": 11.967,
+   "gain_db": -23,
+   "source": "procedural"
+  },
+  {
+   "id": "scan1",
+   "kind": "scan",
+   "frame": 363,
+   "time_s": 12.1,
+   "gain_db": -24,
+   "source": "procedural"
+  },
+  {
+   "id": "scan2",
+   "kind": "scan",
+   "frame": 367,
+   "time_s": 12.233,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "decay_detect",
+   "kind": "detect",
+   "frame": 367,
+   "time_s": 12.233,
+   "gain_db": -21,
+   "source": "procedural"
+  },
+  {
+   "id": "scan3",
+   "kind": "scan",
+   "frame": 371,
+   "time_s": 12.367,
+   "gain_db": -26,
+   "source": "procedural"
+  },
+  {
+   "id": "organ_flag",
+   "kind": "flag",
+   "frame": 442,
+   "time_s": 14.733,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_c0",
+   "kind": "heartbeat",
+   "frame": 460,
+   "time_s": 15.333,
+   "gain_db": -16,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_c1",
+   "kind": "heartbeat",
+   "frame": 479,
+   "time_s": 15.967,
+   "gain_db": -16,
+   "source": "procedural"
+  },
+  {
+   "id": "fibrillation",
+   "kind": "fib",
+   "frame": 497,
+   "time_s": 16.567,
+   "gain_db": -18,
+   "source": "procedural"
+  },
+  {
+   "id": "signal_zip",
+   "kind": "zip",
+   "frame": 514,
+   "time_s": 17.133,
+   "gain_db": -22,
+   "source": "procedural"
+  },
+  {
+   "id": "alarm_pair",
+   "kind": "alarm",
+   "frame": 536,
+   "time_s": 17.867,
+   "gain_db": -16,
+   "source": "procedural"
+  },
+  {
+   "id": "tick609",
+   "kind": "clock",
+   "frame": 609,
+   "time_s": 20.3,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "tick639",
+   "kind": "clock",
+   "frame": 639,
+   "time_s": 21.3,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "tick669",
+   "kind": "clock",
+   "frame": 669,
+   "time_s": 22.3,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "tick699",
+   "kind": "clock",
+   "frame": 699,
+   "time_s": 23.3,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "tick729",
+   "kind": "clock",
+   "frame": 729,
+   "time_s": 24.3,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "tick759",
+   "kind": "clock",
+   "frame": 759,
+   "time_s": 25.3,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "tick789",
+   "kind": "clock",
+   "frame": 789,
+   "time_s": 26.3,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "transmit",
+   "kind": "send",
+   "frame": 809,
+   "time_s": 26.967,
+   "gain_db": -16,
+   "source": "procedural"
+  },
+  {
+   "id": "tick819",
+   "kind": "clock",
+   "frame": 819,
+   "time_s": 27.3,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "rise_sparkle",
+   "kind": "sparkle",
+   "frame": 822,
+   "time_s": 27.4,
+   "gain_db": -24,
+   "source": "procedural"
+  },
+  {
+   "id": "pin_drop",
+   "kind": "pin",
+   "frame": 842,
+   "time_s": 28.067,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "tick849",
+   "kind": "clock",
+   "frame": 849,
+   "time_s": 28.3,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "data",
+   "kind": "data",
+   "frame": 852,
+   "time_s": 28.4,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "tick876",
+   "kind": "clock",
+   "frame": 876,
+   "time_s": 29.2,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "dispatch",
+   "kind": "dispatch",
+   "frame": 882,
+   "time_s": 29.4,
+   "gain_db": -19,
+   "source": "procedural"
+  },
+  {
+   "id": "rotor_lift",
+   "kind": "rotor",
+   "frame": 886,
+   "time_s": 29.533,
+   "gain_db": -21,
+   "source": "procedural"
+  },
+  {
+   "id": "tick888",
+   "kind": "clock",
+   "frame": 888,
+   "time_s": 29.6,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "tick900",
+   "kind": "clock",
+   "frame": 900,
+   "time_s": 30.0,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "tick912",
+   "kind": "clock",
+   "frame": 912,
+   "time_s": 30.4,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "rotor_approach",
+   "kind": "rotor",
+   "frame": 913,
+   "time_s": 30.433,
+   "gain_db": -23,
+   "source": "procedural"
+  },
+  {
+   "id": "tick924",
+   "kind": "clock",
+   "frame": 924,
+   "time_s": 30.8,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "rotor_texture",
+   "kind": "file",
+   "frame": 933,
+   "time_s": 31.1,
+   "gain_db": -32,
+   "source": "drone_1_f7S5LI3HdTlvGoa1G6Fp.mp3"
+  },
+  {
+   "id": "tick936",
+   "kind": "clock",
+   "frame": 936,
+   "time_s": 31.2,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "tick948",
+   "kind": "clock",
+   "frame": 948,
+   "time_s": 31.6,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "tick960",
+   "kind": "clock",
+   "frame": 960,
+   "time_s": 32.0,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "tick972",
+   "kind": "clock",
+   "frame": 972,
+   "time_s": 32.4,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "tick984",
+   "kind": "clock",
+   "frame": 984,
+   "time_s": 32.8,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "tick996",
+   "kind": "clock",
+   "frame": 996,
+   "time_s": 33.2,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "tick1008",
+   "kind": "clock",
+   "frame": 1008,
+   "time_s": 33.6,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "rotor_hover",
+   "kind": "rotor",
+   "frame": 1008,
+   "time_s": 33.6,
+   "gain_db": -31,
+   "source": "procedural"
+  },
+  {
+   "id": "inject_click",
+   "kind": "inject",
+   "frame": 1020,
+   "time_s": 34.0,
+   "gain_db": -21,
+   "source": "procedural"
+  },
+  {
+   "id": "tick1038",
+   "kind": "clock",
+   "frame": 1038,
+   "time_s": 34.6,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "stabilized",
+   "kind": "confirm",
+   "frame": 1056,
+   "time_s": 35.2,
+   "gain_db": -21,
+   "source": "procedural"
+  },
+  {
+   "id": "recover_breath_a",
+   "kind": "file",
+   "frame": 1112,
+   "time_s": 37.067,
+   "gain_db": -24,
+   "source": "recover_breath_3_u0kMmd94TJjSZjKOuzAH.mp3"
+  },
+  {
+   "id": "hb_d0",
+   "kind": "heartbeat",
+   "frame": 1140,
+   "time_s": 38.0,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "green_chime",
+   "kind": "chime",
+   "frame": 1150,
+   "time_s": 38.333,
+   "gain_db": -22,
+   "source": "procedural"
+  },
+  {
+   "id": "recover_breath_b",
+   "kind": "file",
+   "frame": 1162,
+   "time_s": 38.733,
+   "gain_db": -26,
+   "source": "recover_breath_1_tFCDclpcmymiy0MdhNUi.mp3"
+  },
+  {
+   "id": "hb_d1",
+   "kind": "heartbeat",
+   "frame": 1166,
+   "time_s": 38.867,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_d2",
+   "kind": "heartbeat",
+   "frame": 1191,
+   "time_s": 39.7,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_d3",
+   "kind": "heartbeat",
+   "frame": 1217,
+   "time_s": 40.567,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "glitch",
+   "kind": "glitch",
+   "frame": 1290,
+   "time_s": 43.0,
+   "gain_db": -17,
+   "source": "procedural"
+  }
+ ]
+}

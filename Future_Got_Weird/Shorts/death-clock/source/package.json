@@ -28,6 +28,7 @@
   "devDependencies": {
     "@types/react": "19.1.0",
     "js-tiktoken": "1.0.21",
+    "tsx": "4.23.15",
     "typescript": "5.8.3"
   }
 }
