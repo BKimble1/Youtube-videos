@@ -1,0 +1,81 @@
+   0.50-   5.38 [B01] These robots were trained to jump into molten steel on purpose, by their own
+   5.46-   6.24 [B01] company.
+   6.32-  10.64 [B01] Figure, the robot maker, says the jumps were real, and a spokesperson for the
+  10.68-  13.52 [B01] Finnish steel plant says she watched them go in.
+  13.72-  15.68 [B01] So why would a company do this?
+  15.76-  19.04 [B01] And how does a robot learn a jump it only gets to make once?
+  19.49-  20.81 [B02] Start with why.
+  21.09-  25.13 [B02] These are F-zero-twos, Figure's second-generation humanoid.
+  25.41-  29.01 [B02] Figure says they spent months loading parts at a BMW plant.
+  29.09-  33.49 [B02] But as its newer F-zero-three fleet grew, keeping the old ones running stopped making
+  33.57-  34.45 [B02] sense.
+  34.57-  36.93 [B02] So what do you do with a retired robot?
+  37.05-  37.71 [B02] Sell it?
+  37.87-  41.63 [B02] Figure says they're packed with its own custom hardware, like the actuators that move
+  41.67-  44.67 [B02] the joints, and it didn't want that leaving the building.
+  44.75-  45.75 [B02] Take them apart?
+  45.91-  49.83 [B02] Figure says doing that for every robot would eat so much engineering time, it
+  49.91-  51.59 [B02] would delay the next model.
+  51.67-  52.63 [B02] Melt them?
+  52.83-  53.43 [B02] Simple.
+  53.63-  57.43 [B02] Except a robot that jumps in on its own brings its battery along.
+  57.59-  59.03 [B02] Figure says foundries in the U.S.
+  59.11-  60.79 [B02] and Mexico refused.
+  60.87-  63.31 [B02] One in Imatra, Finland, said yes.
+  63.59-  65.71 [B02] Recycling old hardware is normal.
+  65.91-  67.75 [B02] Bringing a film crew is not.
+  68.15-  69.86 [B03] Blame a reply on X.
+  70.18-  75.30 [B03] In August, Figure's CEO, Brett Adcock, asked what to do with the old robots.
+  75.54-  81.09 [B03] Arnold Schwarzenegger replied, "You should melt them." In Terminator Two, his robot character ends
+  81.17-  85.33 [B03] up lowered into molten steel so no one can copy its technology, which is
+  85.41-  87.50 [B03] almost exactly Figure's reason.
+  87.54-  90.62 [B03] Hollywood wrote the business case in nineteen ninety-one.
+  90.70-  93.98 [B03] Figure took the hint, and Schwarzenegger appears in the finished film.
+  94.38-  95.82 [B04] Now the hard part.
+  96.06-  98.86 [B04] You can't rehearse a jump like this in a real furnace.
+  99.10- 102.70 [B04] So Figure says it trained a new AI model in simulation.
+ 102.94- 105.34 [B04] Here's how that kind of training generally works.
+ 105.58- 109.10 [B04] A virtual robot tries the jump, and the attempt gets a score.
+ 109.34- 110.46 [B04] Did it stay balanced?
+ 110.62- 111.62 [B04] Push off cleanly?
+ 111.82- 112.62 [B04] Land on target?
+ 113.01- 117.89 [B04] The software nudges the controls toward whatever scored well, and it tries again, over
+ 118.05- 120.97 [B04] and over, in many virtual copies at once.
+ 121.25- 125.49 [B04] Virtual robots can fall on their faces all day, and nobody files an incident
+ 125.57- 126.53 [B04] report.
+ 126.69- 130.69 [B04] Figure says it used stunt performers' movements as a reference, a style guide for
+ 130.74- 131.81 [B04] a good leap.
+ 131.85- 135.89 [B04] The result is called a policy: a learned rule that turns what the robot
+ 135.97- 139.13 [B04] senses into motor commands, many times a second.
+ 139.21- 142.73 [B04] If a foot lands a little early, the sensors catch it, and the policy
+ 142.93- 145.85 [B04] adjusts the knee and ankle before the robot tips.
+ 145.93- 147.77 [B04] Not a wish, not a plan.
+ 147.89- 150.25 [B04] More like a very well-rehearsed reflex.
+ 150.65- 153.37 [B05] But a simulator is never quite the real world.
+ 153.77- 158.25 [B05] Real joints have slack, floors aren't perfectly flat, and sensors are noisy.
+ 158.73- 161.61 [B05] And Figure says this jump had to work at a foundry the team had
+ 161.77- 162.57 [B05] never visited.
+ 163.05- 166.29 [B05] A common fix is to make the simulation messy on purpose.
+ 166.49- 171.05 [B05] Change the weight, the footing, the timing, a little every round, so the policy
+ 171.13- 173.33 [B05] can't depend on one perfect world.
+ 173.61- 175.61 [B05] We don't know which variations Figure used.
+ 176.01- 180.33 [B05] It also rehearsed for real, with robots jumping from a second floor onto giant
+ 180.41- 181.45 [B05] airbags.
+ 181.49- 183.45 [B05] And the foundry did get messy.
+ 183.53- 188.33 [B05] Figure says the heat and electromagnetic noise knocked out cameras and other electronics, and
+ 188.41- 190.09 [B05] the policies kept running anyway.
+ 190.49- 192.41 [B06] So what does it prove?
+ 192.45- 195.61 [B06] That a trained jump can survive a brutal environment.
+ 195.65- 199.21 [B06] But it was one movement, for one kind of target, in a setting people
+ 199.49- 200.97 [B06] prepared and supervised.
+ 201.05- 204.49 [B06] That's not a robot that can walk into any factory and work things out.
+ 204.94- 207.34 [B07] So why is it uncomfortable to watch?
+ 207.58- 208.94 [B07] Partly, it's the shape.
+ 209.34- 213.26 [B07] When something with arms, legs and a head walks to the edge and leaps,
+ 213.34- 215.02 [B07] it looks like someone making a choice.
+ 215.42- 217.18 [B07] But the choice wasn't the robot's.
+ 217.58- 220.86 [B07] People picked the ending, built the target, and wrote the score.
+ 221.10- 223.26 [B07] The policy just got very good at reaching it.
+ 223.74- 227.18 [B07] Does retiring hardware feel different when the hardware looks like us?
+ 227.42- 229.06 [B07] These robots didn't want anything.
+ 229.18- 230.54 [B07] They just stuck the landing.

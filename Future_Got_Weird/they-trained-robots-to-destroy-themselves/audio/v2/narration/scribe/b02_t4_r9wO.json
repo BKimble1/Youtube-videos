@@ -1,0 +1,812 @@
+{
+"take": "b02_t4_r9wO.mp3",
+"generation_id": "r9wOwN5qRAKl4RwPbdZv",
+"transcript_id": "FkxiE932uJ8q6GDL2Vfx",
+"text": "Start with why. These are F-zero-twos, Figure's second-generation humanoid. Figure says they spent months loading parts at a BMW plant. But as its newer F-zero-three fleet grew, keeping the old ones running stopped making sense. So what do you do with a retired robot? Sell it? Figure says they're packed with its own custom hardware, like the actuators that move the joints, and it didn't want that leaving the building. Take them apart? Figure says doing that for every robot would eat so much engineering time, it would delay the next model. Melt them? Simple. Except a robot that jumps in on its own brings its battery along. Figure says foundries in the U.S. and Mexico refused. One in Imatra, Finland, said yes. Recycling old hardware is normal. Bringing a film crew is not.",
+"words": [
+{
+"text": "Start",
+"type": "word",
+"start": 0,
+"end": 0.32
+},
+{
+"text": "with",
+"type": "word",
+"start": 0.4,
+"end": 0.56
+},
+{
+"text": "why.",
+"type": "word",
+"start": 0.64,
+"end": 1.32
+},
+{
+"text": "These",
+"type": "word",
+"start": 1.6,
+"end": 1.84
+},
+{
+"text": "are",
+"type": "word",
+"start": 1.92,
+"end": 2.08
+},
+{
+"text": "F-zero-twos,",
+"type": "word",
+"start": 2.16,
+"end": 3.44
+},
+{
+"text": "Figure's",
+"type": "word",
+"start": 3.52,
+"end": 3.92
+},
+{
+"text": "second-generation",
+"type": "word",
+"start": 4.04,
+"end": 4.72
+},
+{
+"text": "humanoid.",
+"type": "word",
+"start": 4.8,
+"end": 5.64
+},
+{
+"text": "Figure",
+"type": "word",
+"start": 5.92,
+"end": 6.16
+},
+{
+"text": "says",
+"type": "word",
+"start": 6.24,
+"end": 6.48
+},
+{
+"text": "they",
+"type": "word",
+"start": 6.56,
+"end": 6.64
+},
+{
+"text": "spent",
+"type": "word",
+"start": 6.76,
+"end": 6.88
+},
+{
+"text": "months",
+"type": "word",
+"start": 7.04,
+"end": 7.36
+},
+{
+"text": "loading",
+"type": "word",
+"start": 7.52,
+"end": 7.68
+},
+{
+"text": "parts",
+"type": "word",
+"start": 7.8,
+"end": 7.92
+},
+{
+"text": "at",
+"type": "word",
+"start": 7.96,
+"end": 8
+},
+{
+"text": "a",
+"type": "word",
+"start": 8.08,
+"end": 8.16
+},
+{
+"text": "BMW",
+"type": "word",
+"start": 8.24,
+"end": 8.72
+},
+{
+"text": "plant.",
+"type": "word",
+"start": 8.8,
+"end": 9.52
+},
+{
+"text": "But",
+"type": "word",
+"start": 9.6,
+"end": 9.68
+},
+{
+"text": "as",
+"type": "word",
+"start": 9.76,
+"end": 9.84
+},
+{
+"text": "its",
+"type": "word",
+"start": 9.96,
+"end": 10.08
+},
+{
+"text": "newer",
+"type": "word",
+"start": 10.16,
+"end": 10.4
+},
+{
+"text": "F-zero-three",
+"type": "word",
+"start": 10.48,
+"end": 11.04
+},
+{
+"text": "fleet",
+"type": "word",
+"start": 11.2,
+"end": 11.44
+},
+{
+"text": "grew,",
+"type": "word",
+"start": 11.48,
+"end": 12.08
+},
+{
+"text": "keeping",
+"type": "word",
+"start": 12.16,
+"end": 12.4
+},
+{
+"text": "the",
+"type": "word",
+"start": 12.48,
+"end": 12.56
+},
+{
+"text": "old",
+"type": "word",
+"start": 12.64,
+"end": 12.72
+},
+{
+"text": "ones",
+"type": "word",
+"start": 12.8,
+"end": 12.96
+},
+{
+"text": "running",
+"type": "word",
+"start": 13.04,
+"end": 13.36
+},
+{
+"text": "stopped",
+"type": "word",
+"start": 13.52,
+"end": 13.68
+},
+{
+"text": "making",
+"type": "word",
+"start": 13.76,
+"end": 14
+},
+{
+"text": "sense.",
+"type": "word",
+"start": 14.08,
+"end": 14.96
+},
+{
+"text": "So",
+"type": "word",
+"start": 15.08,
+"end": 15.2
+},
+{
+"text": "what",
+"type": "word",
+"start": 15.52,
+"end": 15.6
+},
+{
+"text": "do",
+"type": "word",
+"start": 15.627,
+"end": 15.653
+},
+{
+"text": "you",
+"type": "word",
+"start": 15.68,
+"end": 15.84
+},
+{
+"text": "do",
+"type": "word",
+"start": 15.88,
+"end": 15.92
+},
+{
+"text": "with",
+"type": "word",
+"start": 16,
+"end": 16.08
+},
+{
+"text": "a",
+"type": "word",
+"start": 16.12,
+"end": 16.16
+},
+{
+"text": "retired",
+"type": "word",
+"start": 16.28,
+"end": 16.56
+},
+{
+"text": "robot?",
+"type": "word",
+"start": 16.64,
+"end": 17.44
+},
+{
+"text": "Sell",
+"type": "word",
+"start": 17.56,
+"end": 17.68
+},
+{
+"text": "it?",
+"type": "word",
+"start": 17.76,
+"end": 18.4
+},
+{
+"text": "Figure",
+"type": "word",
+"start": 18.56,
+"end": 18.72
+},
+{
+"text": "says",
+"type": "word",
+"start": 18.84,
+"end": 18.96
+},
+{
+"text": "they're",
+"type": "word",
+"start": 19.04,
+"end": 19.2
+},
+{
+"text": "packed",
+"type": "word",
+"start": 19.36,
+"end": 19.52
+},
+{
+"text": "with",
+"type": "word",
+"start": 19.56,
+"end": 19.6
+},
+{
+"text": "its",
+"type": "word",
+"start": 19.72,
+"end": 19.84
+},
+{
+"text": "own",
+"type": "word",
+"start": 19.92,
+"end": 20.08
+},
+{
+"text": "custom",
+"type": "word",
+"start": 20.16,
+"end": 20.4
+},
+{
+"text": "hardware,",
+"type": "word",
+"start": 20.48,
+"end": 21.12
+},
+{
+"text": "like",
+"type": "word",
+"start": 21.2,
+"end": 21.28
+},
+{
+"text": "the",
+"type": "word",
+"start": 21.36,
+"end": 21.44
+},
+{
+"text": "actuators",
+"type": "word",
+"start": 21.56,
+"end": 22
+},
+{
+"text": "that",
+"type": "word",
+"start": 22.08,
+"end": 22.16
+},
+{
+"text": "move",
+"type": "word",
+"start": 22.24,
+"end": 22.32
+},
+{
+"text": "the",
+"type": "word",
+"start": 22.36,
+"end": 22.4
+},
+{
+"text": "joints,",
+"type": "word",
+"start": 22.48,
+"end": 23.2
+},
+{
+"text": "and",
+"type": "word",
+"start": 23.24,
+"end": 23.28
+},
+{
+"text": "it",
+"type": "word",
+"start": 23.36,
+"end": 23.44
+},
+{
+"text": "didn't",
+"type": "word",
+"start": 23.52,
+"end": 23.68
+},
+{
+"text": "want",
+"type": "word",
+"start": 23.76,
+"end": 23.92
+},
+{
+"text": "that",
+"type": "word",
+"start": 24,
+"end": 24.08
+},
+{
+"text": "leaving",
+"type": "word",
+"start": 24.16,
+"end": 24.32
+},
+{
+"text": "the",
+"type": "word",
+"start": 24.4,
+"end": 24.48
+},
+{
+"text": "building.",
+"type": "word",
+"start": 24.68,
+"end": 25.36
+},
+{
+"text": "Take",
+"type": "word",
+"start": 25.44,
+"end": 25.52
+},
+{
+"text": "them",
+"type": "word",
+"start": 25.6,
+"end": 25.68
+},
+{
+"text": "apart?",
+"type": "word",
+"start": 25.76,
+"end": 26.64
+},
+{
+"text": "Figure",
+"type": "word",
+"start": 26.8,
+"end": 26.96
+},
+{
+"text": "says",
+"type": "word",
+"start": 27.04,
+"end": 27.28
+},
+{
+"text": "doing",
+"type": "word",
+"start": 27.4,
+"end": 27.52
+},
+{
+"text": "that",
+"type": "word",
+"start": 27.6,
+"end": 27.68
+},
+{
+"text": "for",
+"type": "word",
+"start": 27.8,
+"end": 27.92
+},
+{
+"text": "every",
+"type": "word",
+"start": 28,
+"end": 28.24
+},
+{
+"text": "robot",
+"type": "word",
+"start": 28.32,
+"end": 28.72
+},
+{
+"text": "would",
+"type": "word",
+"start": 28.8,
+"end": 28.88
+},
+{
+"text": "eat",
+"type": "word",
+"start": 29.04,
+"end": 29.2
+},
+{
+"text": "so",
+"type": "word",
+"start": 29.28,
+"end": 29.36
+},
+{
+"text": "much",
+"type": "word",
+"start": 29.44,
+"end": 29.6
+},
+{
+"text": "engineering",
+"type": "word",
+"start": 29.68,
+"end": 30.16
+},
+{
+"text": "time,",
+"type": "word",
+"start": 30.32,
+"end": 30.64
+},
+{
+"text": "it",
+"type": "word",
+"start": 30.68,
+"end": 30.72
+},
+{
+"text": "would",
+"type": "word",
+"start": 30.8,
+"end": 30.88
+},
+{
+"text": "delay",
+"type": "word",
+"start": 31.04,
+"end": 31.2
+},
+{
+"text": "the",
+"type": "word",
+"start": 31.28,
+"end": 31.36
+},
+{
+"text": "next",
+"type": "word",
+"start": 31.44,
+"end": 31.52
+},
+{
+"text": "model.",
+"type": "word",
+"start": 31.6,
+"end": 32.48
+},
+{
+"text": "Melt",
+"type": "word",
+"start": 32.56,
+"end": 32.72
+},
+{
+"text": "them?",
+"type": "word",
+"start": 32.8,
+"end": 33.52
+},
+{
+"text": "Simple.",
+"type": "word",
+"start": 33.72,
+"end": 34.32
+},
+{
+"text": "Except",
+"type": "word",
+"start": 34.52,
+"end": 34.72
+},
+{
+"text": "a",
+"type": "word",
+"start": 34.88,
+"end": 34.96
+},
+{
+"text": "robot",
+"type": "word",
+"start": 35.04,
+"end": 35.36
+},
+{
+"text": "that",
+"type": "word",
+"start": 35.44,
+"end": 35.52
+},
+{
+"text": "jumps",
+"type": "word",
+"start": 35.6,
+"end": 35.76
+},
+{
+"text": "in",
+"type": "word",
+"start": 35.84,
+"end": 35.92
+},
+{
+"text": "on",
+"type": "word",
+"start": 35.96,
+"end": 36
+},
+{
+"text": "its",
+"type": "word",
+"start": 36.08,
+"end": 36.24
+},
+{
+"text": "own",
+"type": "word",
+"start": 36.36,
+"end": 36.48
+},
+{
+"text": "brings",
+"type": "word",
+"start": 36.64,
+"end": 36.88
+},
+{
+"text": "its",
+"type": "word",
+"start": 36.96,
+"end": 37.04
+},
+{
+"text": "battery",
+"type": "word",
+"start": 37.24,
+"end": 37.44
+},
+{
+"text": "along.",
+"type": "word",
+"start": 37.64,
+"end": 38.32
+},
+{
+"text": "Figure",
+"type": "word",
+"start": 38.48,
+"end": 38.64
+},
+{
+"text": "says",
+"type": "word",
+"start": 38.72,
+"end": 38.88
+},
+{
+"text": "foundries",
+"type": "word",
+"start": 38.96,
+"end": 39.36
+},
+{
+"text": "in",
+"type": "word",
+"start": 39.44,
+"end": 39.48
+},
+{
+"text": "the",
+"type": "word",
+"start": 39.52,
+"end": 39.6
+},
+{
+"text": "U.S.",
+"type": "word",
+"start": 39.68,
+"end": 39.92
+},
+{
+"text": "and",
+"type": "word",
+"start": 40,
+"end": 40.08
+},
+{
+"text": "Mexico",
+"type": "word",
+"start": 40.32,
+"end": 40.56
+},
+{
+"text": "refused.",
+"type": "word",
+"start": 40.64,
+"end": 41.68
+},
+{
+"text": "One",
+"type": "word",
+"start": 41.76,
+"end": 41.92
+},
+{
+"text": "in",
+"type": "word",
+"start": 41.96,
+"end": 42
+},
+{
+"text": "Imatra,",
+"type": "word",
+"start": 42.08,
+"end": 42.72
+},
+{
+"text": "Finland,",
+"type": "word",
+"start": 42.8,
+"end": 43.28
+},
+{
+"text": "said",
+"type": "word",
+"start": 43.36,
+"end": 43.52
+},
+{
+"text": "yes.",
+"type": "word",
+"start": 43.6,
+"end": 44.2
+},
+{
+"text": "Recycling",
+"type": "word",
+"start": 44.48,
+"end": 45.04
+},
+{
+"text": "old",
+"type": "word",
+"start": 45.12,
+"end": 45.28
+},
+{
+"text": "hardware",
+"type": "word",
+"start": 45.52,
+"end": 45.76
+},
+{
+"text": "is",
+"type": "word",
+"start": 45.84,
+"end": 45.92
+},
+{
+"text": "normal.",
+"type": "word",
+"start": 46,
+"end": 46.6
+},
+{
+"text": "Bringing",
+"type": "word",
+"start": 46.8,
+"end": 47.04
+},
+{
+"text": "a",
+"type": "word",
+"start": 47.12,
+"end": 47.16
+},
+{
+"text": "film",
+"type": "word",
+"start": 47.2,
+"end": 47.44
+},
+{
+"text": "crew",
+"type": "word",
+"start": 47.52,
+"end": 47.76
+},
+{
+"text": "is",
+"type": "word",
+"start": 47.92,
+"end": 48
+},
+{
+"text": "not.",
+"type": "word",
+"start": 48.16,
+"end": 48.72
+}
+]
+}

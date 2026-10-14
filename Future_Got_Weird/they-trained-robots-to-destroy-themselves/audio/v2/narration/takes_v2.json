@@ -1,0 +1,232 @@
+{
+ "flow_id": "5V86e9WhKvx89s7odt5v",
+ "voice_id": "kk5XaSLo2XAw0sKM98zU",
+ "voice_name": "Test Voice",
+ "model": "eleven_v4",
+ "takes": [
+  {
+   "block": "b01",
+   "take": 1,
+   "file": "b01_t1_KhiZ.mp3",
+   "generation_id": "KhiZuguswSU735Xbg10m",
+   "duration": 18.8,
+   "credits": 306.9693
+  },
+  {
+   "block": "b01",
+   "take": 2,
+   "file": "b01_t2_3Km6.mp3",
+   "generation_id": "3Km6M5CaMQkJGpazTUTL",
+   "duration": 18.88,
+   "credits": 306.9693
+  },
+  {
+   "block": "b01",
+   "take": 3,
+   "file": "b01_t3_dbBY.mp3",
+   "generation_id": "dbBYbWQLuNrSy53bmtWx",
+   "duration": 18.96,
+   "credits": 306.9693
+  },
+  {
+   "block": "b01",
+   "take": 4,
+   "file": "b01_t4_byVm.mp3",
+   "generation_id": "byVmxCd9zyt0mi376JiG",
+   "duration": 18.72,
+   "credits": 306.9693
+  },
+  {
+   "block": "b02",
+   "take": 1,
+   "file": "b02_t1_9vUo.mp3",
+   "generation_id": "9vUor75O6iC4yvw40Yes",
+   "duration": 49.36,
+   "credits": 779.922
+  },
+  {
+   "block": "b02",
+   "take": 2,
+   "file": "b02_t2_QkRn.mp3",
+   "generation_id": "QkRntWRVJCR0rqshXewi",
+   "duration": 49.2,
+   "credits": 779.922
+  },
+  {
+   "block": "b02",
+   "take": 3,
+   "file": "b02_t3_zu9d.mp3",
+   "generation_id": "zu9docUFy3bSf9MauUjG",
+   "duration": 49.04,
+   "credits": 779.922
+  },
+  {
+   "block": "b02",
+   "take": 4,
+   "file": "b02_t4_r9wO.mp3",
+   "generation_id": "r9wOwN5qRAKl4RwPbdZv",
+   "duration": 48.64,
+   "credits": 779.922
+  },
+  {
+   "block": "b03",
+   "take": 1,
+   "file": "b03_t1_rm8J.mp3",
+   "generation_id": "rm8JAZvbfzm8sLqOmjCK",
+   "duration": 26.64,
+   "credits": 428.9571
+  },
+  {
+   "block": "b03",
+   "take": 2,
+   "file": "b03_t2_zvUR.mp3",
+   "generation_id": "zvURMWRXknqo1zgGzInt",
+   "duration": 27.04,
+   "credits": 428.9571
+  },
+  {
+   "block": "b03",
+   "take": 3,
+   "file": "b03_t3_Q1s6.mp3",
+   "generation_id": "Q1s6ycOAYUK2x1TBhoUW",
+   "duration": 26.32,
+   "credits": 428.9571
+  },
+  {
+   "block": "b03",
+   "take": 4,
+   "file": "b03_t4_GFQD.mp3",
+   "generation_id": "GFQDzVpBoQwp3hqlhjTB",
+   "duration": 26.56,
+   "credits": 428.9571
+  },
+  {
+   "block": "b04",
+   "take": 1,
+   "file": "b04_t1_aqev.mp3",
+   "generation_id": "aqevKqyy0R6MzeobU3M1",
+   "duration": 56.72,
+   "credits": 909.9090000000001
+  },
+  {
+   "block": "b04",
+   "take": 2,
+   "file": "b04_t2_wIsD.mp3",
+   "generation_id": "wIsD1AY10RYJAMLBTZT8",
+   "duration": 56.24,
+   "credits": 909.9090000000001
+  },
+  {
+   "block": "b04",
+   "take": 3,
+   "file": "b04_t3_dMWb.mp3",
+   "generation_id": "dMWbjaCNnqs5rbMLQ5Lj",
+   "duration": 56.64,
+   "credits": 909.9090000000001
+  },
+  {
+   "block": "b04",
+   "take": 4,
+   "file": "b04_t4_ucfU.mp3",
+   "generation_id": "ucfU6ygvzhwWj5SIp68k",
+   "duration": 56.8,
+   "credits": 909.9090000000001
+  },
+  {
+   "block": "b05",
+   "take": 1,
+   "file": "b05_t1_kXbb.mp3",
+   "generation_id": "kXbbCPABVmpXRGxrKMUN",
+   "duration": 39.92,
+   "credits": 664.9335
+  },
+  {
+   "block": "b05",
+   "take": 2,
+   "file": "b05_t2_ukBU.mp3",
+   "generation_id": "ukBUSaMdcb5rhZvt8Yod",
+   "duration": 39.44,
+   "credits": 664.9335
+  },
+  {
+   "block": "b05",
+   "take": 3,
+   "file": "b05_t3_gDU4.mp3",
+   "generation_id": "gDU44OBeomSeGJronOaf",
+   "duration": 39.84,
+   "credits": 664.9335
+  },
+  {
+   "block": "b05",
+   "take": 4,
+   "file": "b05_t4_Yj9c.mp3",
+   "generation_id": "Yj9cTm4oenDmlkdYoWAR",
+   "duration": 39.68,
+   "credits": 664.9335
+  },
+  {
+   "block": "b06",
+   "take": 1,
+   "file": "b06_t1_btTJ.mp3",
+   "generation_id": "btTJU66wxp6osNiNzM5p",
+   "duration": 14.16,
+   "credits": 240.9759
+  },
+  {
+   "block": "b06",
+   "take": 2,
+   "file": "b06_t2_FULH.mp3",
+   "generation_id": "FULHzAFIQ1A7ltpCC8SE",
+   "duration": 14.08,
+   "credits": 240.9759
+  },
+  {
+   "block": "b06",
+   "take": 3,
+   "file": "b06_t3_aK0M.mp3",
+   "generation_id": "aK0Mb4Ct6qdsCS55SwtW",
+   "duration": 14.16,
+   "credits": 240.9759
+  },
+  {
+   "block": "b06",
+   "take": 4,
+   "file": "b06_t4_1LdQ.mp3",
+   "generation_id": "1LdQBHM2TJQWUcuszee8",
+   "duration": 14,
+   "credits": 240.9759
+  },
+  {
+   "block": "b07",
+   "take": 1,
+   "file": "b07_t1_2eO2.mp3",
+   "generation_id": "2eO2DqmhZq9Os4SCudTW",
+   "duration": 25.6,
+   "credits": 450.9549
+  },
+  {
+   "block": "b07",
+   "take": 2,
+   "file": "b07_t2_cK5T.mp3",
+   "generation_id": "cK5TWkCq8gFPrjj6xP0x",
+   "duration": 26.08,
+   "credits": 450.9549
+  },
+  {
+   "block": "b07",
+   "take": 3,
+   "file": "b07_t3_j8Kw.mp3",
+   "generation_id": "j8KwEX3OumgxHlHqGYc1",
+   "duration": 26.32,
+   "credits": 450.9549
+  },
+  {
+   "block": "b07",
+   "take": 4,
+   "file": "b07_t4_GLVK.mp3",
+   "generation_id": "GLVKgNgitjf9A1YmkQM2",
+   "duration": 26.32,
+   "credits": 450.9549
+  }
+ ]
+}

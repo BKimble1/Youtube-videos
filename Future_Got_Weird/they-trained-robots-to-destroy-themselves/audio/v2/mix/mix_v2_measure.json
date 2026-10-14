@@ -1,0 +1,19 @@
+{
+ "integrated_lufs": -15.0,
+ "true_peak_dbtp": -1.5,
+ "lra_lu": 2.4,
+ "duration_s": 233.5,
+ "cues": 195,
+ "loudnorm_first_pass": {
+  "input_i": "-15.36",
+  "input_tp": "-0.17",
+  "input_lra": "2.30",
+  "input_thresh": "-25.87",
+  "output_i": "-15.10",
+  "output_tp": "-1.50",
+  "output_lra": "2.30",
+  "output_thresh": "-25.57",
+  "normalization_type": "dynamic",
+  "target_offset": "0.10"
+ }
+}

@@ -1,0 +1,698 @@
+{
+"take": "b05_t2_ukBU.mp3",
+"generation_id": "ukBUSaMdcb5rhZvt8Yod",
+"transcript_id": "DR1zJGMVuohv9lg2BkKI",
+"text": "But a simulator is never quite the real world. Real joints have slack, floors aren't perfectly flat, and sensors are noisy. And Figure says this jump had to work at a foundry the team had never visited. A common fix is to make the simulation messy on purpose. Change the weight, the footing, the timing, a little every round, so the policy can't depend on one perfect world. We don't know which variations Figure used. It also rehearsed for real, with robots jumping from a second floor onto giant airbags. And the foundry did get messy. Figure says the heat and electromagnetic noise knocked out cameras and other electronics, and the policies kept running anyway.",
+"words": [
+{
+"text": "But",
+"type": "word",
+"start": 0,
+"end": 0.16
+},
+{
+"text": "a",
+"type": "word",
+"start": 0.2,
+"end": 0.24
+},
+{
+"text": "simulator",
+"type": "word",
+"start": 0.32,
+"end": 0.8
+},
+{
+"text": "is",
+"type": "word",
+"start": 0.88,
+"end": 1.04
+},
+{
+"text": "never",
+"type": "word",
+"start": 1.2,
+"end": 1.44
+},
+{
+"text": "quite",
+"type": "word",
+"start": 1.6,
+"end": 1.84
+},
+{
+"text": "the",
+"type": "word",
+"start": 1.92,
+"end": 2
+},
+{
+"text": "real",
+"type": "word",
+"start": 2.12,
+"end": 2.24
+},
+{
+"text": "world.",
+"type": "word",
+"start": 2.32,
+"end": 2.72
+},
+{
+"text": "Real",
+"type": "word",
+"start": 3.12,
+"end": 3.36
+},
+{
+"text": "joints",
+"type": "word",
+"start": 3.44,
+"end": 3.68
+},
+{
+"text": "have",
+"type": "word",
+"start": 3.76,
+"end": 3.84
+},
+{
+"text": "slack,",
+"type": "word",
+"start": 3.92,
+"end": 4.64
+},
+{
+"text": "floors",
+"type": "word",
+"start": 4.72,
+"end": 4.96
+},
+{
+"text": "aren't",
+"type": "word",
+"start": 5.04,
+"end": 5.2
+},
+{
+"text": "perfectly",
+"type": "word",
+"start": 5.4,
+"end": 5.68
+},
+{
+"text": "flat,",
+"type": "word",
+"start": 5.76,
+"end": 6.32
+},
+{
+"text": "and",
+"type": "word",
+"start": 6.4,
+"end": 6.48
+},
+{
+"text": "sensors",
+"type": "word",
+"start": 6.56,
+"end": 6.88
+},
+{
+"text": "are",
+"type": "word",
+"start": 6.96,
+"end": 7.04
+},
+{
+"text": "noisy.",
+"type": "word",
+"start": 7.12,
+"end": 7.6
+},
+{
+"text": "And",
+"type": "word",
+"start": 8.08,
+"end": 8.16
+},
+{
+"text": "Figure",
+"type": "word",
+"start": 8.24,
+"end": 8.48
+},
+{
+"text": "says",
+"type": "word",
+"start": 8.56,
+"end": 8.8
+},
+{
+"text": "this",
+"type": "word",
+"start": 8.88,
+"end": 9.04
+},
+{
+"text": "jump",
+"type": "word",
+"start": 9.12,
+"end": 9.36
+},
+{
+"text": "had",
+"type": "word",
+"start": 9.44,
+"end": 9.52
+},
+{
+"text": "to",
+"type": "word",
+"start": 9.56,
+"end": 9.6
+},
+{
+"text": "work",
+"type": "word",
+"start": 9.68,
+"end": 9.84
+},
+{
+"text": "at",
+"type": "word",
+"start": 9.88,
+"end": 9.92
+},
+{
+"text": "a",
+"type": "word",
+"start": 9.96,
+"end": 10
+},
+{
+"text": "foundry",
+"type": "word",
+"start": 10.08,
+"end": 10.4
+},
+{
+"text": "the",
+"type": "word",
+"start": 10.48,
+"end": 10.56
+},
+{
+"text": "team",
+"type": "word",
+"start": 10.64,
+"end": 10.8
+},
+{
+"text": "had",
+"type": "word",
+"start": 10.88,
+"end": 10.96
+},
+{
+"text": "never",
+"type": "word",
+"start": 11.12,
+"end": 11.36
+},
+{
+"text": "visited.",
+"type": "word",
+"start": 11.44,
+"end": 11.92
+},
+{
+"text": "A",
+"type": "word",
+"start": 12.4,
+"end": 12.48
+},
+{
+"text": "common",
+"type": "word",
+"start": 12.56,
+"end": 12.8
+},
+{
+"text": "fix",
+"type": "word",
+"start": 12.88,
+"end": 13.2
+},
+{
+"text": "is",
+"type": "word",
+"start": 13.28,
+"end": 13.36
+},
+{
+"text": "to",
+"type": "word",
+"start": 13.4,
+"end": 13.44
+},
+{
+"text": "make",
+"type": "word",
+"start": 13.52,
+"end": 13.6
+},
+{
+"text": "the",
+"type": "word",
+"start": 13.64,
+"end": 13.68
+},
+{
+"text": "simulation",
+"type": "word",
+"start": 13.76,
+"end": 14.32
+},
+{
+"text": "messy",
+"type": "word",
+"start": 14.4,
+"end": 14.72
+},
+{
+"text": "on",
+"type": "word",
+"start": 14.8,
+"end": 14.88
+},
+{
+"text": "purpose.",
+"type": "word",
+"start": 14.96,
+"end": 15.64
+},
+{
+"text": "Change",
+"type": "word",
+"start": 15.84,
+"end": 16.08
+},
+{
+"text": "the",
+"type": "word",
+"start": 16.12,
+"end": 16.16
+},
+{
+"text": "weight,",
+"type": "word",
+"start": 16.24,
+"end": 16.8
+},
+{
+"text": "the",
+"type": "word",
+"start": 16.84,
+"end": 16.88
+},
+{
+"text": "footing,",
+"type": "word",
+"start": 16.96,
+"end": 17.52
+},
+{
+"text": "the",
+"type": "word",
+"start": 17.56,
+"end": 17.6
+},
+{
+"text": "timing,",
+"type": "word",
+"start": 17.68,
+"end": 18.4
+},
+{
+"text": "a",
+"type": "word",
+"start": 18.48,
+"end": 18.52
+},
+{
+"text": "little",
+"type": "word",
+"start": 18.56,
+"end": 18.72
+},
+{
+"text": "every",
+"type": "word",
+"start": 18.8,
+"end": 19.04
+},
+{
+"text": "round,",
+"type": "word",
+"start": 19.2,
+"end": 19.68
+},
+{
+"text": "so",
+"type": "word",
+"start": 19.76,
+"end": 19.84
+},
+{
+"text": "the",
+"type": "word",
+"start": 19.88,
+"end": 19.92
+},
+{
+"text": "policy",
+"type": "word",
+"start": 20,
+"end": 20.4
+},
+{
+"text": "can't",
+"type": "word",
+"start": 20.48,
+"end": 20.64
+},
+{
+"text": "depend",
+"type": "word",
+"start": 20.84,
+"end": 21.04
+},
+{
+"text": "on",
+"type": "word",
+"start": 21.12,
+"end": 21.2
+},
+{
+"text": "one",
+"type": "word",
+"start": 21.36,
+"end": 21.52
+},
+{
+"text": "perfect",
+"type": "word",
+"start": 21.68,
+"end": 22
+},
+{
+"text": "world.",
+"type": "word",
+"start": 22.08,
+"end": 22.68
+},
+{
+"text": "We",
+"type": "word",
+"start": 22.96,
+"end": 23.04
+},
+{
+"text": "don't",
+"type": "word",
+"start": 23.08,
+"end": 23.2
+},
+{
+"text": "know",
+"type": "word",
+"start": 23.24,
+"end": 23.28
+},
+{
+"text": "which",
+"type": "word",
+"start": 23.36,
+"end": 23.52
+},
+{
+"text": "variations",
+"type": "word",
+"start": 23.6,
+"end": 24.16
+},
+{
+"text": "Figure",
+"type": "word",
+"start": 24.24,
+"end": 24.48
+},
+{
+"text": "used.",
+"type": "word",
+"start": 24.56,
+"end": 24.96
+},
+{
+"text": "It",
+"type": "word",
+"start": 25.36,
+"end": 25.52
+},
+{
+"text": "also",
+"type": "word",
+"start": 25.64,
+"end": 25.76
+},
+{
+"text": "rehearsed",
+"type": "word",
+"start": 25.84,
+"end": 26.24
+},
+{
+"text": "for",
+"type": "word",
+"start": 26.28,
+"end": 26.32
+},
+{
+"text": "real,",
+"type": "word",
+"start": 26.48,
+"end": 27.04
+},
+{
+"text": "with",
+"type": "word",
+"start": 27.12,
+"end": 27.2
+},
+{
+"text": "robots",
+"type": "word",
+"start": 27.28,
+"end": 27.68
+},
+{
+"text": "jumping",
+"type": "word",
+"start": 27.76,
+"end": 28
+},
+{
+"text": "from",
+"type": "word",
+"start": 28.08,
+"end": 28.16
+},
+{
+"text": "a",
+"type": "word",
+"start": 28.24,
+"end": 28.32
+},
+{
+"text": "second",
+"type": "word",
+"start": 28.44,
+"end": 28.56
+},
+{
+"text": "floor",
+"type": "word",
+"start": 28.64,
+"end": 28.96
+},
+{
+"text": "onto",
+"type": "word",
+"start": 29.04,
+"end": 29.28
+},
+{
+"text": "giant",
+"type": "word",
+"start": 29.36,
+"end": 29.68
+},
+{
+"text": "airbags.",
+"type": "word",
+"start": 29.76,
+"end": 30.8
+},
+{
+"text": "And",
+"type": "word",
+"start": 30.84,
+"end": 30.88
+},
+{
+"text": "the",
+"type": "word",
+"start": 30.96,
+"end": 31
+},
+{
+"text": "foundry",
+"type": "word",
+"start": 31.04,
+"end": 31.52
+},
+{
+"text": "did",
+"type": "word",
+"start": 31.6,
+"end": 31.68
+},
+{
+"text": "get",
+"type": "word",
+"start": 31.76,
+"end": 31.92
+},
+{
+"text": "messy.",
+"type": "word",
+"start": 32.04,
+"end": 32.8
+},
+{
+"text": "Figure",
+"type": "word",
+"start": 32.88,
+"end": 33.12
+},
+{
+"text": "says",
+"type": "word",
+"start": 33.2,
+"end": 33.36
+},
+{
+"text": "the",
+"type": "word",
+"start": 33.44,
+"end": 33.6
+},
+{
+"text": "heat",
+"type": "word",
+"start": 33.72,
+"end": 33.84
+},
+{
+"text": "and",
+"type": "word",
+"start": 33.92,
+"end": 33.96
+},
+{
+"text": "electromagnetic",
+"type": "word",
+"start": 34,
+"end": 34.8
+},
+{
+"text": "noise",
+"type": "word",
+"start": 34.88,
+"end": 35.2
+},
+{
+"text": "knocked",
+"type": "word",
+"start": 35.28,
+"end": 35.52
+},
+{
+"text": "out",
+"type": "word",
+"start": 35.6,
+"end": 35.68
+},
+{
+"text": "cameras",
+"type": "word",
+"start": 35.76,
+"end": 36.16
+},
+{
+"text": "and",
+"type": "word",
+"start": 36.24,
+"end": 36.32
+},
+{
+"text": "other",
+"type": "word",
+"start": 36.4,
+"end": 36.56
+},
+{
+"text": "electronics,",
+"type": "word",
+"start": 36.64,
+"end": 37.6
+},
+{
+"text": "and",
+"type": "word",
+"start": 37.64,
+"end": 37.68
+},
+{
+"text": "the",
+"type": "word",
+"start": 37.76,
+"end": 37.84
+},
+{
+"text": "policies",
+"type": "word",
+"start": 38,
+"end": 38.32
+},
+{
+"text": "kept",
+"type": "word",
+"start": 38.44,
+"end": 38.56
+},
+{
+"text": "running",
+"type": "word",
+"start": 38.68,
+"end": 38.8
+},
+{
+"text": "anyway.",
+"type": "word",
+"start": 38.92,
+"end": 39.52
+}
+]
+}

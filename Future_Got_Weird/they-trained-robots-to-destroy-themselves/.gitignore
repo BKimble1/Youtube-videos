@@ -10,3 +10,15 @@ audio/narration/narration_v1.wav
 source/public/audio/music_bed.wav
 # One-off debug frames
 qa/dbg/
+# V2: regenerated audio (tools/v2/stitch_narration_v2.py, synth_audio_v2.py, mix_audio_v2.py)
+audio/v2/mix/*.wav
+audio/v2/narration/narration_v2.wav
+audio/v2/narration/scribe/candidates_concat.mp3
+source/public/v2/audio/music_v2.wav
+# V2 QA: keep contact sheets and results, not the individual frame dumps or review renders
+qa/v2/*/f[0-9]*.png
+qa/v2/review/f1/
+qa/v2/review/*.mp4
+qa/v2/proto_video/*.mp4
+qa/v2/thumbs/thumb[AB].png
+tools/__pycache__/

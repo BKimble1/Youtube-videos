@@ -132,3 +132,32 @@ Attention/discussion (audience questions only; not technical proof; not rechecke
 Audience questions the episode answers (from the coverage and discussion framing): Was it real or CGI?
 Why not just recycle them? Was Arnold really involved? Were the robots autonomous? Does it mean anything
 for real-world robot autonomy?
+
+## V2 changes (Oct 14, 2026)
+
+Only rows whose wording or on-screen treatment changed in V2 are listed. Sources and statuses of C01–C28 are unchanged.
+The reference pages named in the V2 brief (figure.ai, tendril.studio, youtube.com, thinkfoundry.com, commons.wikimedia.org)
+were still blocked by this environment's network policy on Oct 14, 2026, so nothing below rests on them directly.
+
+| ID | V2 wording | Basis | Status | V2 on-screen treatment |
+|---|---|---|---|---|
+| C01 | "These robots were trained to jump into molten steel — on purpose, by their own company." | As C01 | Company claim, attributed in the next sentence | Opening reenactment (original illustration, no source frame) |
+| C02 | "Figure, the robot maker, says the jumps were real" | As C02 | Company claim | One attribution chip: "Figure · 'F.02 Decommission' · Sep 30, 2026" |
+| C03 | "a spokesperson for the Finnish steel plant says she watched them go in" | Yle (as C03): Ovako's communications manager said she saw the robots jump | Corroborated by the host | Narration only; Imatra named on the shipping route later |
+| C17 | Retired in V2 (no "thousands of virtual robots" / "millions of times") | — | — | No attempt counter, score or success curve on screen |
+| C26 | Moved from narration to the description notes | As C26 | Editorial, scoped to "we haven't seen" | — |
+| C29 | "Recycling old hardware is normal. Bringing a film crew is not." | Recycling/e-waste disposal is ordinary practice; the film crew is C15/Think Foundry | Editorial | Clapperboard snaps shut |
+| C30 | "A virtual robot tries the jump, and the attempt gets a score … tries again, over and over, in many virtual copies at once." | General description of simulation-based reinforcement learning | **Conceptual**, not Figure's numbers, scores or logs | One entrance label: "How this kind of training generally works"; no counts |
+| C31 | "it was one movement, for one kind of target, in a setting people prepared and supervised. That's not a robot that can walk into any factory and work things out." | C16 (purpose-trained model), C25 (Ovako: expert supervision), C27 | Editorial inference | Bounded spotlight, then pull-out to the people and equipment around it |
+| C19a | "If a foot lands a little early, the sensors catch it, and the policy adjusts the knee and ankle before the robot tips." | Standard description of a feedback control policy | **Conceptual** example, not a Figure log | Push into a sensor, follow the signal to the knee/ankle, correction |
+| C12 | "In August, Figure's CEO, Brett Adcock, asked what to do with the old robots. Arnold Schwarzenegger replied, 'You should melt them.'" | As C12 | Attributed; post paraphrased, reply quoted | Phone cards marked PARAPHRASED / QUOTED; typographic, not screenshots; no voice for Schwarzenegger |
+| C22 | "A common fix is to make the simulation messy on purpose. Change the weight, the footing, the timing, a little every round … We don't know which variations Figure used." | As C22 (domain randomization, general technique) | **Conceptual**, explicitly not attributed to Figure | One entrance label "MESSY ON PURPOSE · a common technique"; three example variations shown only as consequences on an arc (heavier / slippery / a beat late); no settings panel, values or sliders; the spoken line carries the "we don't know" |
+| C23 | "It also rehearsed for real, with robots jumping from a second floor onto giant airbags." | As C23 | Reported | Original illustration of the rehearsal; no claim about how many rehearsals |
+| C24 | "Figure says the heat and electromagnetic noise knocked out cameras and other electronics, and the policies kept running anyway." | As C24 | Company claim (attributed in speech) | A crew monitor drops to NO SIGNAL and a junction box arcs (illustrative); the jump continues |
+
+Robot likeness and branding (V2 asset check): the F.02 drawing uses only features stated in text sources reachable here
+(all-dark exoskeleton shell with internal wiring, mesh-finished neck, front head cameras, torso battery, five-fingered hands;
+The Robot Report / Interesting Engineering / KR Asia launch coverage, Aug 2024) plus general knowledge of its appearance.
+F.03 is drawn as a soft, fabric-covered body over foam with a mask-like face (designboom / Gizmodo / robophilosophy coverage of the
+Oct 2025 launch). No Figure logo or on-body marking is drawn: the official logo and reference photos could not be loaded, and an
+unverified reconstruction would be "generic text masquerading as a logo". Identification is by narration and a plain caption.

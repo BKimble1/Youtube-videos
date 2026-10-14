@@ -1,0 +1,12 @@
+{
+ "molten_heavy": 0.05,
+ "sub_boom": 0.05,
+ "step_grate": 0.03,
+ "step_grate_b": 0.03,
+ "padlock": 0.01,
+ "shutter_slam": 0.33,
+ "crane_chain": 0.0,
+ "elec_arc": 0.1,
+ "rewind": 0.0,
+ "typing": 0.03
+}
