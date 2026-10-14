@@ -1,93 +1,80 @@
-# Future Got Weird Short: The Death Clock
+# Future Got Weird Short: The Death Clock (V2)
 
-A 45.77 s vertical Short (1080×1920, 30 fps, 1373 frames) about a **fictional** future wristband that counts down to the wearer's death and calls for help. The "FUTURE CONCEPT" label is on screen from the first frame to the last, in both the captioned and clean versions.
+A 45.47 s vertical Short (1080×1920, 30 fps, 1364 frames) about a **fictional** future wristband that counts down to the wearer's death and calls for help. A small, unboxed "FICTIONAL FUTURE DEVICE" cue sits in the upper-left corner for the first 1.3 s, and the packaging text is plainly hypothetical (`upload/PACKAGING_V2.md`).
 
-Not uploaded, scheduled or published. The packaging text is in `upload/PACKAGING.md`.
+Not uploaded, scheduled or published.
 
-## Look
+V2 revises V1 against the owner's review: a less theatrical narration with purposeful pauses, a coherent fall, an arm that stays attached, a new device, a literal journey into his arm and chest, a full-frame treatment, a sit-up with weight and contact, a green recovery screen, one brief genre cue instead of persistent badges, captions without plaques, thinner outlines, and a rebuilt sound design. **V1 is recoverable**: its deliverables are unchanged in `exports/v1/`, and its source is at commit `6772c36`.
 
-The man is the Weird Crew's **guesser**, a member of the channel's established cast (Future Got Weird Video 01 rig and `cast.ts`; approved cast sheet `cast_rig_check.png`). He keeps his red spiky hair, peach skin, coral cheeks, white tee with saffron stripes, navy trousers and white shoes. He's drawn the crew way: an ink contour around each part, a round head, white-sclera eyes with ink pupils, thick ink brows, a hook nose and a drawn mouth. Captions and labels use the channel's Fredoka.
-
-On top of the crew construction, this Short adds:
-- **Dimensional gradients** from one fixed upper-left key light, with a cool bounce light on the shadow side.
-- **Glossy highlights** on the hair spikes, eyes (two catchlights), forehead, cheeks, nose, fingertips, shoes, band and drone.
-- **A wider expression range**: squeezed-shut "> <" eyes, pupils that shrink with fear, clenched teeth, an open gasp with tongue, worry lines, crow's feet and sweat drops.
-- **Smoother motion**: keyframes pass through a monotone cubic spline instead of easing to a stop at each key. Contacts arrive at speed. Springs give follow-through: the head trails the torso, the hair spikes swing, and the dog's ears and tail settle.
-
-The dog, the watch, the drone and the street set pieces carry the same contour; the street's lines are thinner, so the cast stays the focus. The cutaway, vessel and body-map diagrams stay soft apart from the device itself.
-
-## Deliverables (`exports/v1/`)
+## Deliverables (`exports/v2/`)
 
 | File | What it is |
 |---|---|
-| `FGW_DeathClock_v1_Master_Captioned_1080x1920.mp4` | Upload master: burned-in captions, H.264 CRF 16, AAC 320k 48 kHz |
-| `FGW_DeathClock_v1_Clean_NoCaptions_1080x1920.mp4` | Same picture and mix with no narration captions. The label, TIME COMPRESSED tag and device UI stay. |
-| `FGW_DeathClock_v1_Review_540x960.mp4` | Smaller review copy with the same timing (not for upload) |
-| `FGW_DeathClock_v1_Cover_1080x1920.png` | Cover: frame 596 of the clean render |
-| `FGW_DeathClock_v1_Captions.srt` | Aligned subtitles (31 cues, same chunks as the burn-in) |
-| `FGW_DeathClock_v1_Narration_Locked.txt` | The five locked narration blocks, verbatim |
-| `audio/FGW_DeathClock_v1_Narration_Selected_48k.wav` | The selected narration take after the pause-only edit (mono, 24-bit) |
-| `audio/FGW_DeathClock_v1_Stem_{narration,music,effects}_48k.wav` | Stems after ducking and the shared limiter. They sum to the mix. |
-| `audio/FGW_DeathClock_v1_Mix_48k.wav` | Final mix |
+| `FGW_DeathClock_V2_Final_1080x1920.mp4` | Upload master: native 1080×1920 30 fps from the project source, burned-in captions, H.264 CRF 16, AAC 320k 48 kHz |
+| `FGW_DeathClock_V2_Review.mp4` | 540×960 review copy, the same 1364 frames and timing (not for upload) |
+| `FGW_DeathClock_V2_QA.md` | Timecoded QA notes: what was checked, how, and what is unresolved |
+| `FGW_DeathClock_V2_Captions.srt` | Aligned subtitles (31 cues, the same chunks as the burn-in) |
+| `FGW_DeathClock_V2_Cover_1080x1920.png` | Cover candidate (frame 790 of the caption-free composition) |
+| `FGW_DeathClock_V2_Narration_Locked.txt` | The five locked narration blocks, verbatim |
+| `audio/FGW_DeathClock_V2_Narration_48k.wav` | The selected V2 take after the pause-only edit (mono, 24-bit) |
+| `audio/FGW_DeathClock_V2_Stem_{narration,music,effects}_48k.wav` | Stems after ducking and the shared limiter; they sum to the mix |
+| `audio/FGW_DeathClock_V2_Mix_48k.wav` | Final mix |
 | `EXPORT_METADATA.json` | ffprobe data and SHA-256 for every file above |
 
-Supporting documents:
-- `qa/QA_NOTES.md`: timecoded QA notes. They say what was actually inspected and what was not.
-- `PROVENANCE.md`: asset and provenance manifest
-- `script/CUE_SHEET.md`: final cue sheet, generated from the same modules the picture renders from
-- `audio/narration/NARRATION_PROVENANCE.md`: voice, audition, take selection and edit
-- `qa/AUDIO_QA.json`, `audio/MIX_LOG.json`: loudness, true peak, voice-to-bed margins and mix settings
+Supporting documents: `script/CUE_SHEET_V2.md` (units, device states, every lengthened pause and what fills it), `audio/narration_v2/NARRATION_PROVENANCE.md` (audition, take choice, edit), `PROVENANCE.md`, `qa/v2/` (contact sheets and phone-overlay check decoded from the final MP4, audio and device checks).
+
+## How V2 is built
+
+**One world, one rig, one band.** From the fall to the help alert, everything is a single camera path in the street world (`source/src/shots/Journey.tsx`). The camera follows the fall, travels down his attached left arm onto the band, and turns about the wrist to the band's side (the case really rotates about the arm's axis, `art/Device.tsx`). There a section opens in the same arm (`art/Interior.tsx`). The port presses to the skin, and a narrow sensor stream runs into a vessel with near and far walls. The camera rides with one hero sensor, then pulls back along the same vessel into a front-view x-ray of the same man (head, hair and clothes outline kept), visits one organ and the heart, and follows the heart's red pulse back down the arm onto the band. Two switches between drawings happen deep inside the vessel, where only the lumen fills the frame; both draw the vessel's contents from the same path and the same arc-length generator, so they match.
+
+**Device** (`art/Device.tsx`): a forearm cylinder with the strap as a ring around it (far side visible past the wrist's outline, contact shadows on the skin), a slim cobalt case built as a 3D box on the cylinder (bevel, dark glass, side control) and the screen UI drawn into the glass plane. The same component draws the band in the wide shots, the macros, the side section and the ending. States come from `lib/device.ts`: green scan → crimson CALCULATING → 00:02:14 counting at film speed → diagnostic → HELP ALERT SENT → held (blue, STABILIZING) → green "Life Expectancy: 42 Years" → one "?" glitch.
+
+**Rescue and after** (`shots/Rescue.tsx`, `shots/Aftermath.tsx`): the alert ring opens a circular window onto a map of the same neighbourhood (his lawn and the dog are on it). The cut into the hub leads to the drone lifting off a rooftop pad; his medical data docks; it crosses the street and settles over him. Its light leads into the band, the same underside section, one blue treatment pulse and a wave along the vessel. The camera returns to the band face (timer held) for his deep breath, then the sit-up: the support hand meets the grass, the elbow loads, and the band turns green as he rises. The ending is the green readout toward his gaze, then his worried face, the "?" near "know?", his uneasy look and a short dip to black.
+
+**Finish:** outlines are thin selective edges (`lib/ink.tsx` `OUTLINE_K`), and the interiors use the same gradient-and-gloss primitives as the exterior. Captions (`shots/Overlay.tsx`): Fredoka Bold 70 px, a thin dark stroke and a small shadow, no plaque, 2–5 words, at most two lines, one lane (centre y 1450), and six emphasised words in the whole film.
+
+## One cue system
+
+`audio/narration_v2/narration_words_final.json` holds the measured word times. `source/src/lib/timeline.ts` turns them into the beat table `B` and the unit list `UNITS`; every camera mark, device state, caption window and sound cue reads from them. `source/scripts/export_cues.ts` writes `audio/v2/cues.json`, from which the mix, the SRT and the cue sheet are built.
+
+## Rebuild
+
+Requirements: Node 20+, Python 3.11+ with numpy, ffmpeg/ffprobe, and Chromium (`/opt/pw-browsers/...` here; the path is set in `source/remotion.config.ts`).
+
+```bash
+cd source
+npm ci
+npx tsc --noEmit
+npx tsx scripts/export_cues.ts            # -> ../audio/v2/cues.json
+npx tsx scripts/check_device.ts           # countdown and state logic, every frame -> ../qa/v2/DEVICE_CHECK.json
+cd ..
+python3 tools/build_voice_v2.py           # V4 take -> audio/narration_v2/narration_final_48k.wav (pause-only edit; committed)
+python3 tools/build_audio_v2.py           # cues + narration + SFX -> audio/v2/stems, audio/v2/mix, audio/v2/MIX_LOG.json
+python3 tools/qa_audio_v2.py qa/v2/AUDIO_QA.json
+python3 tools/make_srt_v2.py captions/FGW_DeathClock_V2.srt
+python3 tools/make_cue_sheet_v2.py        # -> script/CUE_SHEET_V2.md
+cd source
+npx remotion render src/index.ts DeathClock ../exports/_wip/v2_captioned_silent.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --muted --concurrency=4
+node scripts/frames.mjs ../exports/_wip/cover DeathClockClean 790 1 && mv ../exports/_wip/cover/DeathClockClean_0790.png ../exports/_wip/v2_cover.png
+cd ..
+python3 tools/export_v2.py                # mux, review copy, audio/text deliverables, metadata -> exports/v2
+F=exports/v2/FGW_DeathClock_V2_Final_1080x1920.mp4
+python3 tools/qa_sheets.py $F qa/v2 6 20,70,180,320,420,470,540,650,730,800,860,940,1030,1100,1160,1250,1316,1340
+python3 tools/motion_scan.py $F
+```
+
+The full render takes about 8–9 minutes on this container. Renders are deterministic: no random calls at render time, no network fetches, and springs are re-simulated from a fixed window of past frames. `npx remotion studio src/index.ts` opens the compositions. `DeathClock` (captioned) and `DeathClockClean` (no narration captions) are the film; `JourneyTest`, `DeviceTest` and `Lab*` are development rigs.
 
 ## Layout
 
 ```
-script/      narration_locked.json (source of truth), CUE_SHEET.md
-source/      Remotion project (React/TypeScript), package-lock.json
-  src/lib/       timeline (word times -> shots), device states, captions, sound cues, math, colour, camera,
-                 ink.tsx (crew contours), shade.tsx (gradient primitives), motion.ts (splines, springs)
-  src/art/       Weird Crew characters (Man, Head, Hand, Dog), props and environments (SVG)
-  src/shots/     the 16 shots, captions and the label overlay
-  scripts/       export_cues.ts (writes audio/cues.json), frames.mjs (still renderer for QA)
-audio/       narration (takes, edit, alignment), sfx/gen (generated effects), stems, mix, cues.json
-tools/       Python: voice edit, audio build/QA, SRT, cue sheet, export, QA sheets, motion scan
-captions/    FGW_DeathClock.srt
-exports/v1/  deliverables
-qa/          QA notes, audio QA, contact sheets from the decoded master
-upload/      PACKAGING.md (titles, description, fiction ledger, cover)
+script/      narration_locked.json (source of truth), CUE_SHEET_V2.md (V1: CUE_SHEET.md)
+source/src/  lib/ (timeline beats, device states, captions, sound cues, camera, ink, shading, motion)
+             art/ (Man, Head, Hand, Dog, Device, Interior, Street, Drone, Map, Vessel, Body)
+             shots/ (Journey, Rescue, Aftermath, Scene, StreetShots, Overlay)
+audio/       narration_v2/ (audition, takes, edit, word times), v2/ (cues, stems, mix), sfx/gen, V1 audio
+tools/       *_v2.py builders and checks; V1 tools kept
+exports/     v2/ deliverables; v1/ unchanged
+qa/v2/       decoded-frame sheets, phone overlay, AUDIO_QA.json, DEVICE_CHECK.json
+upload/      PACKAGING_V2.md (V1: PACKAGING.md)
 ```
-
-## One cue system
-
-`audio/narration/narration_words_final.json` holds the word times measured from the narration audio. `source/src/lib/timeline.ts` reads it, and every shot boundary, device state, caption window and sound cue is set relative to those words. `source/scripts/export_cues.ts` writes them to `audio/cues.json`. The mix, the SRT and the cue sheet are then built from that file. If the narration changes, rebuild from step 3 below and everything follows.
-
-## Rebuild
-
-Requirements: Node 20+, Python 3.11+ with numpy, ffmpeg/ffprobe, and Chromium (in this environment, `/opt/pw-browsers/...`; the path is set in `source/remotion.config.ts`).
-
-```bash
-cd source
-npm ci                                   # exact versions from package-lock.json
-npx tsc --noEmit                         # typecheck
-npx tsx scripts/export_cues.ts           # -> ../audio/cues.json
-cd ..
-python3 tools/build_voice.py             # T2 take -> narration_final_48k.wav (pause-only edit; already committed)
-python3 tools/build_audio.py             # cues.json + narration + SFX -> stems + mix (+ MIX_LOG.json)
-python3 tools/qa_audio.py                # -> qa/AUDIO_QA.json
-python3 tools/make_srt.py captions/FGW_DeathClock.srt
-python3 tools/make_cue_sheet.py          # -> script/CUE_SHEET.md
-cd source
-F="--crf=16 --x264-preset=slow --color-space=bt709 --muted --concurrency=4"
-npx remotion render src/index.ts DeathClock      ../exports/_wip/captioned_silent.mp4 $F
-npx remotion render src/index.ts DeathClockClean ../exports/_wip/clean_silent.mp4     $F
-cd ..
-python3 tools/export.py v1 596           # mux, review copy, cover, audio/text deliverables, metadata
-# QA on the encoded files
-python3 tools/qa_sheets.py exports/v1/FGW_DeathClock_v1_Master_Captioned_1080x1920.mp4 qa/v1 6 0,20,66,170,300,380,470,600,660,830,900,960,1040,1180,1262,1295
-python3 tools/motion_scan.py exports/v1/FGW_DeathClock_v1_Master_Captioned_1080x1920.mp4
-python3 tools/check_label.py exports/v1/FGW_DeathClock_v1_Clean_NoCaptions_1080x1920.mp4
-(cd source && npx tsx scripts/check_device.ts)   # countdown logic, every frame -> qa/DEVICE_CHECK.json
-```
-
-`npx remotion studio src/index.ts` (from `source/`) opens the compositions for scrubbing. `DeathClock` and `DeathClockClean` are the deliverables. The other compositions are development test rigs.
-
-Both renders take about 5 to 6 minutes each on this container with `--concurrency=4`. The renders are deterministic: no random calls at render time and no network fetches (fonts are bundled from @fontsource). Springs are re-simulated from a fixed window of past frames, so any single frame renders identically on its own.

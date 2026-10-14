@@ -15,8 +15,8 @@
   "TP_dbtp": -5.8
  },
  "effects": {
-  "I_lufs": -29.3,
-  "LRA_lu": 17.4,
+  "I_lufs": -29.4,
+  "LRA_lu": 17.3,
   "TP_dbtp": -10.8
  },
  "stems_sum_max_abs_error": 2.3841860763429423e-07,
@@ -30,7 +30,7 @@
   "speech_weighted": {
    "min": 10.7,
    "p5": 13.8,
-   "median": 18.3
+   "median": 18.1
   },
   "lowest_windows": [
    [

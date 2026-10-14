@@ -72,7 +72,7 @@ export const B = {
   heart1: fS('experiences') + 10,
   lethal: fS('lethal'),
   // the irregular heart's signal runs down the arm and lands as the red warning on the band
-  sig0: fE('rhythm') - 4,
+  sig0: fE('rhythm') - 12,
   sig1: fE('rhythm') + 14,
   red: fE('rhythm') + 14, // the warning lands in the pause before 'the device'
   timer: fS('calculates'),
@@ -104,9 +104,9 @@ export const B = {
   treat1: fE('consciousness') + 18,
   // recovery: breathing, the support hand on the grass, the elbow loads, he sits up; green
   out0: fE('consciousness') + 18,
-  sit0: fE('consciousness') + 36,
-  recover: fE('consciousness') + 64,
-  sit1: fE('consciousness') + 94,
+  sit0: fE('consciousness') + 44,
+  recover: fE('consciousness') + 70,
+  sit1: fE('consciousness') + 98,
   // ending: the green readout toward his gaze, attention to his worried face, one "?" near "know?"
   end0: fS('But if the countdown'),
   face0: fS('starts') + 4,

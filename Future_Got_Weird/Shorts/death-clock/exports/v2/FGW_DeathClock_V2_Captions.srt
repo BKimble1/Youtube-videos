@@ -1,0 +1,123 @@
+1
+00:00:00,060 --> 00:00:00,660
+This device
+
+2
+00:00:00,660 --> 00:00:01,800
+tells you exactly
+
+3
+00:00:01,800 --> 00:00:03,280
+when you are dying.
+
+4
+00:00:04,220 --> 00:00:05,400
+It works by injecting
+
+5
+00:00:05,400 --> 00:00:06,060
+thousands of
+
+6
+00:00:06,060 --> 00:00:07,580
+microscopic nano-sensors
+
+7
+00:00:07,580 --> 00:00:09,000
+through your skin.
+
+8
+00:00:09,420 --> 00:00:11,100
+These sensors constantly travel
+
+9
+00:00:11,100 --> 00:00:12,200
+through your bloodstream,
+
+10
+00:00:12,200 --> 00:00:12,900
+monitoring your
+
+11
+00:00:12,900 --> 00:00:14,460
+cellular decay.
+
+12
+00:00:15,520 --> 00:00:16,160
+If your organs
+
+13
+00:00:16,160 --> 00:00:17,300
+begin to fail,
+
+14
+00:00:17,300 --> 00:00:17,800
+or your heart
+
+15
+00:00:17,800 --> 00:00:20,059
+experiences a lethal rhythm,
+
+16
+00:00:20,070 --> 00:00:21,230
+the device immediately
+
+17
+00:00:21,230 --> 00:00:21,890
+calculates your
+
+18
+00:00:21,890 --> 00:00:23,310
+remaining life expectancy
+
+19
+00:00:23,310 --> 00:00:25,530
+down to the exact second.
+
+20
+00:00:26,590 --> 00:00:27,090
+This gives you
+
+21
+00:00:27,090 --> 00:00:28,030
+a critical window
+
+22
+00:00:28,030 --> 00:00:29,410
+to seek help.
+
+23
+00:00:29,640 --> 00:00:30,820
+The device automatically
+
+24
+00:00:30,820 --> 00:00:32,200
+alerts emergency services
+
+25
+00:00:32,200 --> 00:00:33,500
+with your exact location
+
+26
+00:00:33,500 --> 00:00:34,620
+and medical data,
+
+27
+00:00:34,620 --> 00:00:35,960
+potentially saving your life
+
+28
+00:00:35,960 --> 00:00:36,800
+before you even
+
+29
+00:00:36,800 --> 00:00:38,439
+lose consciousness.
+
+30
+00:00:41,030 --> 00:00:43,260
+But if the countdown starts,
+
+31
+00:00:43,260 --> 00:00:44,720
+would you want to know?

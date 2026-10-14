@@ -28,7 +28,7 @@ export const storyElapsed = (f: number) => Math.max(0, Math.min(f, DEV.freezeAt)
 export const countdownSecs = (f: number) => DEV.START_SECS - storyElapsed(f);
 
 export const deviceState = (f: number): ScreenState => {
-  const red = clamp(inv(DEV.redAt, DEV.redAt + 4, f));
+  const red = clamp(inv(DEV.redAt, DEV.redAt + 2, f));
   const timerIn = clamp(inv(DEV.timerAt, DEV.timerAt + 6, f));
   const alert = clamp(inv(DEV.alertAt, DEV.alertAt + 10, f));
   const stab = clamp(inv(DEV.freezeAt, DEV.freezeAt + 12, f));

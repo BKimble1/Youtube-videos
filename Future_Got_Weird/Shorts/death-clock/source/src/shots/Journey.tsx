@@ -209,9 +209,9 @@ const camB = (f: number): Cam => {
     [B.heart0 + 4, add(mul(LIVER, 0.4), mul(HEART, 0.6)), 4.6],
     [B.heart1, HEART, 6.4],
     [B.sig0, HEART, 7.0],
-    [B.sig0 + 12, add(mul(HEART, 0.4), mul(LJ.L.E, 0.6)), 4.2],
-    [B.sig1 - 4, BAND_C, 9.0],
-    [B.sig1 + 6, BAND_C, 11.0],
+    [B.sig0 + 10, add(mul(HEART, 0.4), mul(LJ.L.E, 0.6)), 4.4],
+    [B.sig1 - 2, BAND_C, 8.6],
+    [B.sig1 + 10, BAND_C, 11.0],
     [B.exact0, BAND_C, 11.6],
     [B.exact1 - 6, seconds, 14.5],
     [B.eyes0 - 1, seconds, 14.2],
@@ -219,14 +219,16 @@ const camB = (f: number): Cam => {
   // after "second.": a cut to his face as his eyes snap open, then the camera follows his gaze down to the wrist
   if (f >= B.eyes0) {
     const face = add(LJ.head, {x: 16, y: 110});
-    const wrist = add(RAISED, {x: 10, y: -30});
+    const wrist = add(RAISED, {x: 0, y: 0});
     const k2: [number, V, number][] = [
       [B.eyes0, face, 3.0],
       [B.eyes0 + 12, face, 3.1],
       [B.turn0 + 14, TWO_SHOT2, 3.8],
       [B.clench1, TWO_SHOT2, 4.0],
-      [B.alert, add(TWO_SHOT2, {x: 4, y: 10}), 4.3],
-      [B.map0, add(wrist, {x: 4, y: 6}), 6.4],
+      // the diagnostic resolves on the band and the alert goes out: closer on the screen
+      [B.diag0 + 30, add(mul(TWO_SHOT2, 0.4), mul(wrist, 0.6)), 6.0],
+      [B.alert, add(wrist, {x: 4, y: 10}), 7.4],
+      [B.map0, add(wrist, {x: 4, y: 10}), 7.8],
     ];
     return {
       x: spline(f, k2.map(([t, p]) => [t, p.x])),
@@ -383,6 +385,17 @@ export const Journey: React.FC<{id: string; f: number}> = ({id, f}) => {
       afterRightArm={chest('cx', false)}
       beforeLeftForearm={chest('ax2', true)}
       leash={!xrayMode}
+      extra={(() => {
+        const t = inv(B.red - 1, B.red + 14, f);
+        if (t <= 0 || t >= 1) return null;
+        const c = bandWorldAt(f);
+        return (
+          <g>
+            <circle cx={c.x.toFixed(2)} cy={c.y.toFixed(2)} r={(14 + t * 70).toFixed(2)} fill="none" stroke="#FF5A66" strokeWidth={(5 * (1 - t) + 1).toFixed(2)} opacity={0.9 * (1 - t)} />
+            <circle cx={c.x.toFixed(2)} cy={c.y.toFixed(2)} r={(10 + t * 40).toFixed(2)} fill="none" stroke="#FFD6D9" strokeWidth={(2.5 * (1 - t) + 0.5).toFixed(2)} opacity={0.8 * (1 - t)} />
+          </g>
+        );
+      })()}
     />
   );
 };

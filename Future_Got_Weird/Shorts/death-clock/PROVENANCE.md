@@ -1,5 +1,29 @@
 # Asset and provenance manifest: The Death Clock
 
+## V2 (current)
+
+What changed for V2, and where every V2 element comes from. The V1 manifest follows unchanged below.
+
+| Element | Source | New / reused |
+|---|---|---|
+| The man, dog, street | The same rig and art as V1 (the Weird Crew's guesser, re-drawn as SVG), with outlines reduced to thin selective edges (`lib/ink.tsx` `OUTLINE_K = 0.36`) | Reused, refinished |
+| The band | `source/src/art/Device.tsx`: a new parametric 3D wrist (strap ring, slim cobalt case, dark glass, bevel, side control) drawn in code; screen UI drawn in the compositor | New |
+| Inside the arm and chest | `source/src/art/Interior.tsx`: section layers, port module, sensor stream, vessel with near/far walls and flow, wall cells, x-ray of the arm and chest, one organ, a new heart (`Heart2`). Red cells reuse V1's `RBC` drawing. Drawn in code from gradient primitives; no image files | New |
+| Map, drone, rooftop pad | V1's map grid, drone and rooftop art, re-staged in `shots/Rescue.tsx` (his figure added to the map, a ring-wipe transition, a data card docking) | Reused, re-staged |
+| Animation, camera, timing | `source/src/shots/Journey.tsx`, `Rescue.tsx`, `Aftermath.tsx`, `Scene.tsx`, keyed to the V2 word times through `lib/timeline.ts` | New |
+| Captions, opening cue | `source/src/shots/Overlay.tsx`; Fredoka (variable, now at weight 700) and Barlow Condensed, both SIL OFL via @fontsource | New layout, same fonts |
+| Narration | ElevenLabs Test Voice (`kk5XaSLo2XAw0sKM98zU`), `eleven_v4`, flow `m2Pyn9dxqMB3w9eeZby3`; selected take V4, generation `R4IDiVOYhLW115iOIYDT`; blind Scribe check of all 98 words; pause-only edit. Full detail in `audio/narration_v2/NARRATION_PROVENANCE.md` | New take |
+| Generated sound effects | No new generations. Reused from V1's ElevenLabs `eleven_text_to_sound_v2` set in `audio/sfx/gen/`: `breath_1_i0TXGqFeHqkEpFKKUdQf`, `breath_2_C4k8MIkY48irqu90gUzx` (newly used, eyes opening), `breath_4_y9jk69O2KtRNTZPOiz8T`, `dog_3_JB8U4frHpRyLaM7eJciP`, `fall_4_9ukhH99iVXpBejeIoCqn`, `drone_1_f7S5LI3HdTlvGoa1G6Fp`, `recover_breath_1_tFCDclpcmymiy0MdhNUi`, `recover_breath_3_u0kMmd94TJjSZjKOuzAH` | Reused |
+| Procedural sound and music | `tools/build_audio_v2.py` (numpy, seeded per cue): V1's generators plus new scuff, hand pat, swish, servo, close pass, signal ring, receive, treatment wave, a drone pass with Doppler and moving pan, and a new low, curious music bed with a forward pulse | New |
+| Runway | Not used | n/a |
+
+V2 credits spent (tool-reported, ElevenLabs): narration audition about 2,616, full take about 2,688, blind Scribe 197. Total about 5,500. No other paid services.
+
+---
+
+## V1
+
+
 Every element of the picture and the sound, where it came from, and whether it is new for this Short or reused.
 
 ## Picture

@@ -128,7 +128,7 @@ export const MapV2: React.FC<{id: string; st: MapState}> = ({id, st}) => {
 };
 
 export const mapCam = (f: number): Cam => {
-  const mid = {x: 480, y: 900};
+  const mid = {x: 480, y: 985}; // his pin and figure stay above the caption lane, the hub below the top bar
   const t0 = B.map0 - 24;
   return {
     x: spline(f, [[t0, MAP.pin.x], [B.map0 + 4, MAP.pin.x - 20], [B.hub - 6, mid.x], [B.route1 - 26, mid.x + 10], [B.lift0, MAP.hub.x]]),

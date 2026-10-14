@@ -1,0 +1,13 @@
+{'frame': 747, 'diff': 42.7, 'local_median': 4.54, 'expected_cut': False}
+{'frame': 983, 'diff': 13.5, 'local_median': 1.18, 'expected_cut': False}
+{'frame': 984, 'diff': 15.1, 'local_median': 1.18, 'expected_cut': False}
+{'frame': 985, 'diff': 17.1, 'local_median': 1.38, 'expected_cut': False}
+{'frame': 986, 'diff': 18.5, 'local_median': 1.7, 'expected_cut': False}
+{'frame': 987, 'diff': 18.8, 'local_median': 2.04, 'expected_cut': False}
+{'frame': 988, 'diff': 18.9, 'local_median': 2.33, 'expected_cut': False}
+{'frame': 989, 'diff': 19.7, 'local_median': 2.52, 'expected_cut': False}
+{'frame': 990, 'diff': 20.5, 'local_median': 2.63, 'expected_cut': False}
+{'frame': 991, 'diff': 18.6, 'local_median': 2.98, 'expected_cut': False}
+{'frame': 992, 'diff': 36.8, 'local_median': 3.51, 'expected_cut': False}
+{'frame': 1066, 'diff': 34.7, 'local_median': 8.49, 'expected_cut': False}
+frames 1364 mean diff 7.47 max 42.7

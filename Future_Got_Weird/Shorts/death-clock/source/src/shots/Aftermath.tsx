@@ -112,7 +112,7 @@ const MED_ARR = {x: 360, y: 1640};
 const sitJ = manJoints({...base, ...SIT} as ManPose);
 const SIT_BAND = bandCenter(sitJ);
 const SIT_FACE = add(sitJ.head, {x: 10, y: 40});
-const TWO = {x: 606, y: 1340};
+const TWO = {x: 600, y: 1400}; // whole head in frame, the band above the caption lane
 
 export const afterCam = (f: number): Cam => {
   const keys: [number, V, number][] = [
@@ -124,15 +124,18 @@ export const afterCam = (f: number): Cam => {
     [T.pulse1, STREAM_VIEW, 32],
     [T.pulse1 + 12, W(SF.Xp - 1300, 520), 24],
     [T.wave1, W(SF.Xp - 2300, 520), 19],
-    [B.treat1 + 6, {x: 380, y: 1690}, 2.6],
-    [B.sit0, {x: 400, y: 1680}, 2.2],
+    // back along the arm to the band face: the timer is held (blue, STABILIZING) as he takes a deep breath
+    [B.treat1 + 6, BAND_C, 9.6],
+    [B.treat1 + 16, BAND_C, 9.1],
+    [B.sit0 - 4, {x: 380, y: 1690}, 2.5],
+    [B.sit0 + 4, {x: 400, y: 1680}, 2.2],
     [B.sit0 + 30, {x: 520, y: 1600}, 1.6],
     [B.sit1, {x: lerp(SIT_FACE.x, SIT_BAND.x, 0.6), y: lerp(SIT_FACE.y, SIT_BAND.y, 0.65)}, 2.2],
     [B.end0 + 4, SIT_BAND, 8.6],
     [B.face0 - 4, SIT_BAND, 9.2],
-    [B.face1 + 2, TWO, 2.9],
-    [B.react, TWO, 3.0],
-    [TOTAL, add(TWO, {x: 10, y: -40}), 3.35],
+    [B.face1 + 2, TWO, 2.5],
+    [B.react, TWO, 2.58],
+    [TOTAL, add(TWO, {x: 10, y: -30}), 2.8],
   ];
   return {
     x: spline(f, keys.map(([t, p]) => [t, p.x])),

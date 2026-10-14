@@ -262,11 +262,14 @@ export const VesselTube: React.FC<TubeProps> = ({id, path, f, px, s0, s1, sensor
         <path d={`M${path.pts.filter((_, i) => path.cum[i] <= wave.s && path.cum[i] >= wave.s - 2400).map(P2).join(' L')}`} fill="none" stroke="#FF7A88" strokeOpacity={0.42 * wave.a} strokeWidth={f2(rho * 1.7)} />
       </g>
     ) : null;
+  // the warning pulse keeps a readable size on screen at any zoom (at least ~70 px glow, ~16 px core)
+  const pr = Math.max(rho * 3, 48 / Math.max(px, 1e-4));
+  const pc = Math.max(rho * 0.55, 16 / Math.max(px, 1e-4));
   const pulseEl =
     pulse && pulse.a > 0.01 ? (
       <g>
-        <Glow id={`${id}-pl`} c={at(pulse.s).p} r={rho * 3} color={PAL.alert} alpha={0.9 * pulse.a} />
-        <circle cx={f2(at(pulse.s).p.x)} cy={f2(at(pulse.s).p.y)} r={f2(rho * 0.55)} fill="#FFD6D9" opacity={pulse.a} />
+        <Glow id={`${id}-pl`} c={at(pulse.s).p} r={pr} color={PAL.alert} alpha={0.75 * pulse.a} blend="normal" />
+        <circle cx={f2(at(pulse.s).p.x)} cy={f2(at(pulse.s).p.y)} r={f2(pc)} fill="#FFE3E6" opacity={pulse.a} />
       </g>
     ) : null;
   const sw = (w: number) => f2(Math.max(w, 0.5));
@@ -310,8 +313,8 @@ export const VesselTube: React.FC<TubeProps> = ({id, path, f, px, s0, s1, sensor
           const q = place(occluder.s, occluder.l);
           return <RBC id={`${id}-occ`} p={q.p} r={44} tilt={0.55} rot={q.a + 90 + 20 * Math.sin(f * 0.05)} tone={0.05} />;
         })()}
-        {pulseEl}
       </g>
+      {pulseEl}
     </g>
   );
 };
@@ -355,11 +358,12 @@ export const SectionLayers: React.FC<SectionProps> = ({id, sf, f, open, tube, st
   const X1 = sf.Xb - DEV_GEO.bandW * 500 + 260; // tucked under the strap's edge
   const X0 = X1 - 6900;
   const e = clamp(open);
-  // the window grows from the port: first along the arm, then down through the layers
-  const wx0 = lerp(sf.Xp - 160, X0, Math.pow(clamp(e * 1.15), 1.6));
-  const wx1 = lerp(sf.Xp + 160, X1, clamp(e * 1.4));
+  if (e <= 0.002) return null;
+  // the window grows from the port: first along the arm, then down through the layers (zero size when closed)
+  const wx0 = lerp(sf.Xp, X0, Math.pow(clamp(e * 1.15), 1.6));
+  const wx1 = lerp(sf.Xp, X1, clamp(e * 1.4));
   const top = Math.min(sf.dSurf(X0), sf.dSurf(X1)) - 300;
-  const depth = lerp(260, 1500, clamp((e - 0.1) / 0.9));
+  const depth = lerp(top, 1500, Math.pow(e, 0.7));
   const r = 120;
   const win = `M${f2(wx0)},${f2(top)} L${f2(wx1)},${f2(top)} L${f2(wx1)},${f2(depth - r)} Q${f2(wx1)},${f2(depth)} ${f2(wx1 - r)},${f2(depth)} L${f2(wx0 + r)},${f2(depth)} Q${f2(wx0)},${f2(depth)} ${f2(wx0)},${f2(depth - r)} Z`;
   const surf = (X: number) => sf.dSurf(X);

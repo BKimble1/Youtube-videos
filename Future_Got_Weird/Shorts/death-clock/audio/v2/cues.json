@@ -29,7 +29,7 @@
   "heart0": 521,
   "heart1": 546,
   "lethal": 561,
-  "sig0": 577,
+  "sig0": 569,
   "sig1": 595,
   "red": 595,
   "timer": 639,
@@ -58,9 +58,9 @@
   "freeze": 1114,
   "treat1": 1150,
   "out0": 1150,
-  "sit0": 1168,
-  "recover": 1196,
-  "sit1": 1226,
+  "sit0": 1176,
+  "recover": 1202,
+  "sit1": 1230,
   "end0": 1233,
   "face0": 1273,
   "face1": 1302,
@@ -122,12 +122,12 @@
    "U09",
    "The heart: organised beat turns irregular; sensors flag it",
    521,
-   577
+   569
   ],
   [
    "U10",
    "Its signal runs down the arm into the band: crimson, CALCULATING, 00:02:14",
-   577,
+   569,
    701
   ],
   [
@@ -198,7 +198,7 @@
   "diag1": 859,
   "alertAt": 861,
   "freezeAt": 1114,
-  "recoverAt": 1196,
+  "recoverAt": 1202,
   "glitchAt": 1313,
   "glitchLen": 9,
   "START_SECS": 134
@@ -549,7 +549,7 @@
    "id": "fibrillation",
    "kind": "fib",
    "f": 559,
-   "dur": 0.8,
+   "dur": 0.5333333333333333,
    "gain": -19
   },
   {
@@ -561,8 +561,8 @@
   {
    "id": "signal_run",
    "kind": "zip",
-   "f": 577,
-   "dur": 0.6,
+   "f": 569,
+   "dur": 0.8666666666666667,
    "gain": -25
   },
   {
@@ -820,13 +820,13 @@
   {
    "id": "hand_grass",
    "kind": "pat",
-   "f": 1170,
+   "f": 1178,
    "gain": -24
   },
   {
    "id": "hb_d0",
    "kind": "heartbeat",
-   "f": 1172,
+   "f": 1180,
    "gain": -27,
    "p": {
     "tone": 0.8
@@ -835,27 +835,27 @@
   {
    "id": "elbow_load",
    "kind": "rustle",
-   "f": 1174,
+   "f": 1182,
    "dur": 0.5,
    "gain": -31
   },
   {
    "id": "push_up",
    "kind": "rustle",
-   "f": 1190,
+   "f": 1198,
    "dur": 0.9,
    "gain": -30
   },
   {
    "id": "green",
    "kind": "chime",
-   "f": 1196,
+   "f": 1202,
    "gain": -25
   },
   {
    "id": "hb_d1",
    "kind": "heartbeat",
-   "f": 1197,
+   "f": 1205,
    "gain": -27,
    "p": {
     "tone": 0.8
@@ -864,7 +864,7 @@
   {
    "id": "recover_breath",
    "kind": "file",
-   "f": 1208,
+   "f": 1216,
    "gain": -27,
    "p": {
     "file": "recover_breath_1_tFCDclpcmymiy0MdhNUi.mp3",
@@ -874,7 +874,7 @@
   {
    "id": "sit_settle",
    "kind": "thud",
-   "f": 1222,
+   "f": 1226,
    "gain": -28,
    "p": {
     "weight": 0.35
@@ -883,7 +883,7 @@
   {
    "id": "hb_d2",
    "kind": "heartbeat",
-   "f": 1222,
+   "f": 1230,
    "gain": -27,
    "p": {
     "tone": 0.8
@@ -892,7 +892,7 @@
   {
    "id": "hb_d3",
    "kind": "heartbeat",
-   "f": 1247,
+   "f": 1255,
    "gain": -27,
    "p": {
     "tone": 0.8

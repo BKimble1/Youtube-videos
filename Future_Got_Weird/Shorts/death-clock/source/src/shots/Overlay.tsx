@@ -1,7 +1,7 @@
 // Screen-fixed overlays (V2): the narration captions (master only) and the one brief opening cue.
 // Captions: Fredoka Bold (the channel's display face), 2-5-word phrases, at most two lines, white with a thin
 // dark stroke and a small soft shadow (no plaque behind each phrase), at most one emphasis word in a phrase and
-// only six emphasised in the film. One fixed lane (centre y 1490 inside the 90-900 working area) that every
+// only six emphasised in the film. One fixed lane (centre y 1450 inside the 90-900 working area, clear of the Shorts title block) that every
 // shot is framed to keep clear: below the band's digits, the heart, the injection path and his face.
 // Opening cue: "FICTIONAL FUTURE DEVICE", small unboxed text in the quiet upper-left corner for about 1.3 s.
 import React from 'react';
@@ -11,7 +11,7 @@ import {clamp, inv} from '../lib/math';
 import {FPS} from '../lib/timeline';
 
 const WINDOWS = chunkWindows();
-export const CAP = {size: 70, line: 82, maxW: 780, cx: 495, cy: 1490, weight: 700};
+export const CAP = {size: 70, line: 82, maxW: 780, cx: 495, cy: 1450, weight: 700};
 
 let ctx: CanvasRenderingContext2D | null = null;
 const measure = (t: string) => {
