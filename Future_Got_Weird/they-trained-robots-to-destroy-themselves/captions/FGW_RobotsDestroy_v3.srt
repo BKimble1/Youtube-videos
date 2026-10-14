@@ -1,0 +1,346 @@
+1
+00:00:00,500 --> 00:00:04,820
+These robots were trained to jump
+into molten steel on purpose,
+
+2
+00:00:04,860 --> 00:00:06,238
+by their own company.
+
+3
+00:00:06,318 --> 00:00:09,518
+Figure, the robot maker,
+says the jumps were real,
+
+4
+00:00:09,558 --> 00:00:13,518
+and a spokesperson for the Finnish
+steel plant says she watched them go in.
+
+5
+00:00:13,718 --> 00:00:15,678
+So why would a company do this?
+
+6
+00:00:15,758 --> 00:00:19,038
+And how does a robot learn a
+jump it only gets to make once?
+
+7
+00:00:19,488 --> 00:00:20,808
+Start with why.
+
+8
+00:00:21,088 --> 00:00:25,128
+These are F.02s, Figure's
+second-generation humanoid.
+
+9
+00:00:25,408 --> 00:00:29,008
+Figure says they spent months
+loading parts at a BMW plant.
+
+10
+00:00:29,088 --> 00:00:33,488
+But as its newer F.03 fleet grew, keeping
+the old ones running stopped making
+
+11
+00:00:33,568 --> 00:00:36,928
+sense. So what do you
+do with a retired robot?
+
+12
+00:00:37,048 --> 00:00:40,426
+Sell it? Figure says they're packed
+with its own custom hardware,
+
+13
+00:00:40,506 --> 00:00:43,786
+like the actuators that move the joints,
+and it didn't want that leaving the
+
+14
+00:00:43,986 --> 00:00:45,754
+building. Take them apart?
+
+15
+00:00:45,914 --> 00:00:49,754
+Figure says doing that for every robot
+would eat so much engineering time,
+
+16
+00:00:49,794 --> 00:00:51,594
+it would delay the next model.
+
+17
+00:00:51,674 --> 00:00:53,434
+Melt them? Simple.
+
+18
+00:00:53,634 --> 00:00:57,434
+Except a robot that jumps in on
+its own brings its battery along.
+
+19
+00:00:57,594 --> 00:00:59,034
+Figure says foundries in the U.S.
+
+20
+00:00:59,114 --> 00:01:00,794
+and Mexico refused.
+
+21
+00:01:00,874 --> 00:01:03,314
+One in Imatra, Finland, said yes.
+
+22
+00:01:03,594 --> 00:01:05,714
+Recycling old hardware is normal.
+
+23
+00:01:05,914 --> 00:01:07,754
+Bringing a film crew is not.
+
+24
+00:01:08,154 --> 00:01:09,862
+Blame a reply on X.
+
+25
+00:01:10,182 --> 00:01:15,302
+In August, Figure's CEO, Brett Adcock,
+asked what to do with the old robots.
+
+26
+00:01:15,542 --> 00:01:18,610
+Arnold Schwarzenegger replied,
+"You should melt them."
+
+27
+00:01:18,690 --> 00:01:23,330
+In Terminator 2, his robot character
+ends up lowered into molten steel so no
+
+28
+00:01:23,410 --> 00:01:27,498
+one can copy its technology, which
+is almost exactly Figure's reason.
+
+29
+00:01:27,538 --> 00:01:30,618
+Hollywood wrote the business case in 1991.
+
+30
+00:01:30,698 --> 00:01:33,978
+Figure took the hint, and Schwarzenegger
+appears in the finished film.
+
+31
+00:01:34,378 --> 00:01:35,818
+Now the hard part.
+
+32
+00:01:36,058 --> 00:01:38,858
+You can't rehearse a jump
+like this in a real furnace.
+
+33
+00:01:39,098 --> 00:01:42,698
+So Figure says it trained a
+new AI model in simulation.
+
+34
+00:01:42,938 --> 00:01:45,338
+Here's how that kind of
+training generally works.
+
+35
+00:01:45,578 --> 00:01:49,098
+A virtual robot tries the jump,
+and the attempt gets a score.
+
+36
+00:01:49,338 --> 00:01:51,618
+Did it stay balanced? Push off cleanly?
+
+37
+00:01:51,818 --> 00:01:56,286
+Land on target? The software nudges the
+controls toward whatever scored well,
+
+38
+00:01:56,326 --> 00:02:00,966
+and it tries again, over and over,
+in many virtual copies at once.
+
+39
+00:02:01,246 --> 00:02:04,126
+Virtual robots can fall
+on their faces all day,
+
+40
+00:02:04,246 --> 00:02:06,526
+and nobody files an incident report.
+
+41
+00:02:06,686 --> 00:02:09,726
+Figure says it used stunt
+performers' movements as a reference,
+
+42
+00:02:09,806 --> 00:02:11,806
+a style guide for a good leap.
+
+43
+00:02:11,846 --> 00:02:16,366
+The result is called a policy: a learned
+rule that turns what the robot senses
+
+44
+00:02:16,486 --> 00:02:19,134
+into motor commands, many times a second.
+
+45
+00:02:19,214 --> 00:02:22,041
+If a foot lands a little
+early, the sensors catch it,
+
+46
+00:02:22,067 --> 00:02:25,854
+and the policy adjusts the knee
+and ankle before the robot tips.
+
+47
+00:02:25,934 --> 00:02:27,774
+Not a wish, not a plan.
+
+48
+00:02:27,894 --> 00:02:30,254
+More like a very well-rehearsed reflex.
+
+49
+00:02:30,654 --> 00:02:33,374
+But a simulator is never
+quite the real world.
+
+50
+00:02:33,774 --> 00:02:36,974
+Real joints have slack,
+floors aren't perfectly flat,
+
+51
+00:02:37,054 --> 00:02:41,214
+and sensors are noisy. And Figure says
+this jump had to work at a foundry the
+
+52
+00:02:41,294 --> 00:02:42,574
+team had never visited.
+
+53
+00:02:43,054 --> 00:02:46,294
+A common fix is to make the
+simulation messy on purpose.
+
+54
+00:02:46,494 --> 00:02:50,334
+Change the weight, the footing,
+the timing, a little every round,
+
+55
+00:02:50,414 --> 00:02:53,334
+so the policy can't depend
+on one perfect world.
+
+56
+00:02:53,614 --> 00:02:55,614
+We don't know which
+variations Figure used.
+
+57
+00:02:56,014 --> 00:03:00,334
+It also rehearsed for real, with robots
+jumping from a second floor onto giant
+
+58
+00:03:00,414 --> 00:03:03,454
+airbags. And the foundry did get messy.
+
+59
+00:03:03,534 --> 00:03:07,214
+Figure says the heat and electromagnetic
+noise knocked out cameras and other
+
+60
+00:03:07,294 --> 00:03:10,094
+electronics, and the
+policies kept running anyway.
+
+61
+00:03:10,494 --> 00:03:12,414
+So what does it prove?
+
+62
+00:03:12,454 --> 00:03:15,614
+That a trained jump can
+survive a brutal environment.
+
+63
+00:03:15,654 --> 00:03:18,414
+But it was one movement,
+for one kind of target,
+
+64
+00:03:18,454 --> 00:03:20,974
+in a setting people
+prepared and supervised.
+
+65
+00:03:21,054 --> 00:03:24,494
+That's not a robot that can walk
+into any factory and work things out.
+
+66
+00:03:24,944 --> 00:03:27,344
+So why is it uncomfortable to watch?
+
+67
+00:03:27,584 --> 00:03:28,944
+Partly, it's the shape.
+
+68
+00:03:29,344 --> 00:03:33,264
+When something with arms, legs and
+a head walks to the edge and leaps,
+
+69
+00:03:33,344 --> 00:03:35,024
+it looks like someone making a choice.
+
+70
+00:03:35,424 --> 00:03:37,184
+But the choice wasn't the robot's.
+
+71
+00:03:37,584 --> 00:03:40,864
+People picked the ending, built
+the target, and wrote the score.
+
+72
+00:03:41,104 --> 00:03:43,264
+The policy just got very
+good at reaching it.
+
+73
+00:03:43,744 --> 00:03:47,184
+Does retiring hardware feel different
+when the hardware looks like us?
+
+74
+00:03:47,424 --> 00:03:49,064
+These robots didn't want anything.
+
+75
+00:03:49,184 --> 00:03:50,544
+They just stuck the landing.
+

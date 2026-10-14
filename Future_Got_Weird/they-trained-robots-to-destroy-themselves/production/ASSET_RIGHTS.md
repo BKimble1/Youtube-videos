@@ -37,3 +37,21 @@ V1 rows above still apply to V1. V2 reuses A03 (V1 in-house sounds), A07 (cast) 
 | B09 | Runway | Not used in V2 (no generated media needed; output host still blocked) | — | — | — | — |
 
 V2 drops the A09 on-screen quote card: the opening attribution is now one chip naming Figure's post and date.
+
+## V3 additions (Oct 14, 2026)
+
+V3 reuses these unchanged:
+
+- B01 (narration), B02 (V2 effect takes), B03 (score, beds) and B07–B08 (post paraphrase, quote);
+- A03 (V1 in-house sounds), A07 (cast) and A08 (fonts).
+
+V3 makes no new generated media: no new narration, effect or music generations.
+
+| ID | Asset | Origin / creator | Use and basis | Modifications | Attribution | Status |
+|---|---|---|---|---|---|---|
+| C01 | Figure symbol | Wikimedia Commons "Figure-ai-logo.svg", author **Figure AI**, licence **CC BY 4.0** (https://commons.wikimedia.org/wiki/File:Figure-ai-logo.svg). Saved verbatim as `production/v3/brand/Figure-ai-logo.svg` | Identifies the company in editorial commentary about its news. Shown on an illustrative product-bay sign (0:13.9–0:25 and in the bay at 0:34–0:51) and on the F.03 chest, following the brief's placement description | Transparent copy (`Figure-symbol_transparent.svg`): the background rectangle is removed and the path is unchanged. On screen it is projected in perspective, never mirrored or stretched | Credit line in the description: "Figure symbol: Figure AI, via Wikimedia Commons, CC BY 4.0", plus a non-affiliation note | Check: CC BY 4.0 covers the copyright; the symbol is also a **trademark** of Figure AI. Use here is nominative and editorial, with no wordmark lock-up and no endorsement implied. Confirm you are comfortable with that before upload |
+| C02 | V3 illustration and animation | Original vector code in `source/src/v3`. Covers the F.02 / F.03 / avatar / performer model records, the product bay, production cell, loading dock, recycling line, training stage, foundry, airbag yard, effects and V3 thumbnails | Owned by the channel | — | — | Clear |
+| C03 | Robot likeness (V3) | As B05 (text descriptions and general knowledge). The V3 brief's reference images (figure.ai, tendril.studio, ctfassets, YouTube) were blocked by the network policy, so nothing was traced or sampled | Editorial depiction of real products | Stylised. F.02 carries no emblem (placement unverified); F.03 carries the chest symbol as described in the brief | Narration, the lower third, plain captions | Check: compare `production/v3/V3Sheet*.png` with official photos before upload |
+| C04 | V3 mix | `tools/v3/mix_audio_v3.py`. B01 narration, B03 score and the B02 / V1 effects placed on the V3 cue sheet (`source/src/v3/sfx_v3.ts`) | As B01–B03 | Re-cued; levels adjusted against speech (measured, `audio/v3/mix/speech_mask_v3.txt`) | — | Check: same plan note as A01 |
+
+B06 ("Figure logo: not used") is superseded for V3 by C01.

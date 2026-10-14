@@ -1,6 +1,51 @@
 # Future Got Weird: They Trained Robots to Destroy Themselves
 
-## V2 (14 Oct 2026): the current version
+## V3 (14 Oct 2026): the current version
+
+**Status.** The V3 rebuild is complete; V1 and V2 are preserved unchanged. V3 is a picture, animation, transition and
+defect-repair pass. The narration, story and timing are identical to V2: 3:53.5, 1920×1080, 30 fps native.
+
+The V3 upload master was rendered from source and checked with measurements, full-episode contact sheets and 25-frame
+strips around every changed transition. It is **not published**; that is the owner's step. Nobody has yet watched it
+in real time or listened to it. `QA_REPORT.md` (V3 section) lists exactly what was and wasn't checked and gives a
+focused review list.
+
+| What | Where |
+|---|---|
+| Defect log (V2 time, symptom, cause, change, V3 location, inspection) | `production/v3/DEFECT_LOG_V3.md` |
+| Model records (F.02, F.03, avatar, performer); symbol handling | `production/v3/MODEL_RECORDS_V3.md` |
+| Comparison sheets | `production/v3/V3SheetF02.png`, `V3SheetF03.png`, `V3SheetID.png` |
+| Figure symbol (verbatim SVG, transparent copy, path) | `production/v3/brand/` |
+| Source credits | `production/v3/CREDITS_V3.md`; rights in `production/ASSET_RIGHTS.md` → "V3 additions" |
+| Editable source | `source/src/v3/` (compositions `V3Main`, `V3ThumbA/B`, `V3SheetF02/F03/ID`, `V3Diag`, `V3CamTest`) |
+| Cue sheet, mix, speech-masking check | `source/src/v3/sfx_v3.ts`, `audio/v3/sfx_cues_v3.json`, `audio/v3/mix/mix_v3_measure.json`, `audio/v3/mix/speech_mask_v3.txt` |
+| **Upload master 1080p** | `exports/FGW_RobotsDestroy_v3_UPLOAD_1080p.mp4` (Git-ignored; backed up as checksummed parts in `backup/v3/`) |
+| Share/review copy (compressed, not for upload) | `exports/FGW_RobotsDestroy_v3_1080p_SHARE.mp4` (Git-ignored; regenerate with `tools/v3/share_and_backup_v3.sh`) |
+| Captions | `captions/FGW_RobotsDestroy_v3.srt` (same as V2; timing unchanged) |
+| Thumbnails | `thumbnail/FGW_RobotsDestroy_v3_thumbA_edge_1280x720.jpg` (main), `…v3_thumbB_leap…` (backup) |
+| Title, description, chapters | `upload/UPLOAD_TEXT_v3.md`, `upload/chapters_v3.txt` |
+| QA | `QA_REPORT.md` (V3 section), `qa/v3/qa_v3_results.json`, strips `qa/v3/strips/`, comparisons `qa/v3/compare/`, review sheets `qa/v3/review/` |
+
+### Rebuild V3
+
+    cd Future_Got_Weird/they-trained-robots-to-destroy-themselves
+    (cd source && npm ci)
+    # V2 audio inputs (narration, effects, score) as in "Rebuild V2" below, then:
+    (cd source && node ../tools/v3/collect_sfx_v3.mjs)      # cue sheet from src/v3/sfx_v3.ts -> audio/v3/sfx_cues_v3.json
+    python3 tools/v3/mix_audio_v3.py                        # -> source/public/v3/audio/mix_v3.mp3 (-15 LUFS, -1.5 dBTP)
+    python3 tools/v3/speech_mask_v3.py                      # where effects come within 6 dB of the voice (measurement)
+    (cd source && npx remotion render src/index.ts V3Main ../exports/FGW_RobotsDestroy_v3_UPLOAD_1080p.mp4 --props='{"audio":"mix"}' --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k)
+    bash tools/v3/share_and_backup_v3.sh                    # share copy + checksummed backup parts
+    python3 tools/v3/qa_v3.py                               # measured QA -> qa/v3/qa_v3_results.json
+    python3 tools/v3/strips_v3.py                           # ±12-frame strips at every changed transition
+    python3 tools/v3/compare_v3.py                          # V2 vs V3 comparison frames
+
+Stills for inspection: `cd source && COMP=V3Main SCALE=0.5 node stills.mjs ../qa/<dir> t:<seconds> …`. The neutral
+rig/contact diagnostic is `COMP=V3Diag`.
+
+---
+
+## V2 (14 Oct 2026)
 
 **Status.** The V2 rebuild is complete and V1 is preserved unchanged. The V2 upload master was rendered from source
 and checked with measurements and dense frame sheets. It is **not published**; that is the owner's step. Nobody has

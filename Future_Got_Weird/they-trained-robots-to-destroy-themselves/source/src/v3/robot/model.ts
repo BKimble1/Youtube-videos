@@ -141,8 +141,6 @@ const F02: Spec = {
       {kind: 'curve', pts: [[20.6, 0], [21.6, 60], [21.4, 120], [20.4, 180]], mat: 'seamLight', w: 0.5},
       {kind: 'poly', pts: F02_SIDE_POD, mat: 'recess'},
       {kind: 'poly', pts: mirrorT(F02_SIDE_POD), mat: 'recess'},
-      {kind: 'dot', y: 12, t: 165, r: 0.8, mat: 'lens'},
-      {kind: 'dot', y: 12, t: 195, r: 0.8, mat: 'lens'},
     ],
     chest: [
       {kind: 'poly', pts: F02_CHEST_PLATE, mat: 'panel'},

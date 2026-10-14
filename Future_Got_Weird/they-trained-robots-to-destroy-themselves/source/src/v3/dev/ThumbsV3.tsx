@@ -30,7 +30,7 @@ export const ThumbV3A: React.FC = () => {
 export const ThumbV3B: React.FC = () => {
   const st = PAYOFF.at(-0.7);
   const p = st.pose.pos;
-  const cam: Cam3 = {pos: [-330, 900, 110], target: [-10, 360, -30], fov: 38, roll: 2};
+  const cam: Cam3 = {pos: [-470, 900, 70], target: [-40, 380, -40], fov: 40, roll: 2};
   return (
     <AbsoluteFill>
       <FoundryScene cam={cam} tau={100} robots={[{pose: st.pose, id: 'thB', inside: false}]} entries={[]} />
