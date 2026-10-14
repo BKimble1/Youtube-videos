@@ -1,5 +1,143 @@
 # QA report: They Trained Robots to Destroy Themselves
 
+# V3 (checked 14 Oct 2026)
+
+Not published. Every figure below comes from the files themselves, using the scripts in `tools/v3/`:
+
+| Script | What it produces |
+|---|---|
+| `qa_v3.py` | Raw results in `qa/v3/qa_v3_results.json` |
+| `strips_v3.py` | 25-frame strips around each changed transition |
+| `compare_v3.py` | V2 vs V3 comparison frames |
+| `speech_mask_v3.py` | Speech-masking check |
+
+**No real-time viewing or listening was possible in this environment.** Everything below is measurement and frame
+inspection.
+
+## Deliverables
+
+| File | Spec | Notes |
+|---|---|---|
+| `exports/FGW_RobotsDestroy_v3_UPLOAD_1080p.mp4` | H.264 High, 1920×1080, 30 fps CFR (native), yuv420p, BT.709. 7,005 frames, 233.5 s. AAC 48 kHz stereo at 317 kb/s. 115.9 MiB. SHA-256 `4fa6deb8ebae70b21b7d4eda84363e38ea0b64855fddbdbcc12c97af9c7728e1` | **Upload master.** Its file name is distinct from the share copy's. Rendered from source (CRF 16, x264 slow) with the V3 mix. Backed up as split parts in `backup/v3/`. |
+| `exports/FGW_RobotsDestroy_v3_1080p_SHARE.mp4` | 1920×1080, 30 fps, two-pass H.264 at 0.88 Mb/s, AAC 128 kb/s | **Review/share copy, not for upload.** Made from the master. |
+| `captions/FGW_RobotsDestroy_v3.srt` | 75 cues, at most 42 characters per line, no overlaps. First cue at 0.50 s; last ends at 230.54 s | Identical to V2: narration and timing are unchanged |
+| `thumbnail/FGW_RobotsDestroy_v3_thumbA_edge_1280x720.jpg` (main), `…v3_thumbB_leap…` | 1280×720 JPEG | Drawn with the V3 F.02 model. Phone-size check: `qa/v3/thumbs/phone_size_check.png` |
+
+## Picture (measured on the master)
+
+**Scene changes (ffmpeg scene detector, threshold 0.10):** 82, against 73 in V2.
+
+- Median segment 2.40 s, mean 2.81 s.
+- 14 segments in the first 20 s.
+- The longest unbroken segments are all continuous camera moves:
+
+| Length | Starts at | Shot |
+|---|---|---|
+| 16.0 s | 2:11.8 | Policy: into the sensor, along the signal, out at the knee, the correction |
+| 12.7 s | 2:43.2 | The variation montage under one dolly |
+| 9.1 s | 0:25.3 | The production cell |
+
+**Defect screens on the final master:**
+
+| Check | Result | V2 / first V3 master |
+|---|---|---|
+| Static holds ≥ 1.5 s (`freezedetect`) | **none** | V2 had 5. The first V3 master had 3 (89.1, 146.2, 155.3 s); each now has a slow camera drift |
+| Black frames (`blackdetect`, ≥ 0.1 s) | **none** | The first V3 master had 5 frames at 16.6 s, where the camera passes through the visor. That stretch now shows the visor's glossy surface, and the iris opens directly from it |
+| Exact duplicate consecutive frames | 25 single repeats, no runs longer than 2 | The single repeats are deliberate near-freezes and ramps |
+| Single-frame "pop" candidates (difference spike that is not a cut) | **none** | — |
+| Silences > 1 s | none | — |
+
+**Audio offset against the mix:** 0.0 ms.
+
+## Audio (measured, not heard)
+
+**Loudness:**
+
+- Integrated −15.0 LUFS.
+- True peak −1.5 dBTP.
+- LRA 2.4 LU.
+
+**Narration:** unchanged from V2, the same takes and timing.
+
+**Cue sheet:** `source/src/v3/sfx_v3.ts` has 228 cues, re-cued to the new events (door sweeps, teardown bolts and
+seat, ring flight, chain pass, resolves, the sensor push). It uses no new effect generations.
+
+**Masking screen (`audio/v3/mix/speech_mask_v3.txt`):**
+
+- Out of 3,730 speech windows of 50 ms, 190 have effects and beds within 6 dB of the voice. These are mostly
+  isolated single windows on steps and ticks.
+- After the gain fixes logged in `production/v3/DEFECT_LOG_V3.md`, **no window of 150 ms or longer has effects louder
+  than the voice.**
+- The biggest remaining overlaps sit under the entries at 3.1 s ("steel"), 13.5 s, 194.6 s and 224.4 s ("retiring
+  hardware"). Those impacts were deliberately kept under the words. **Listen to these four.**
+
+## Visual review performed (V3)
+
+**Development rounds:** stills for every changed shot in `qa/v3/*_r*/`.
+
+**Full-episode review:** a 540p review render at 2 fps; contact sheets in `qa/v3/review/sheet_01…13.png`.
+
+**Transition strips:** `qa/v3/strips/`, 36 strips cut from the upload master, every one inspected. Each strip is
+25 consecutive frames: 12 before the boundary, the boundary frame, and 12 after. Groups of four are in
+`qa/v3/strips_group*.png`. The boundary times come straight from the shot code (`qa/v3/transitions_v3.json`).
+
+**Comparison frames, V2 left / V3 right (`qa/v3/compare/`):**
+
+| Sheet | What it shows |
+|---|---|
+| `block_intersection_v2_vs_v3.png` | 2:11.8 / 2:12.1 / 2:12.4. In V2 the robot is inside the block face. In V3 it walks on the open stage floor with a contact shadow, clear of the tower legs and pedestal |
+| `model_emblem_v2_vs_v3.png` | 0:19.6 / 0:21.5 / 0:23.5 / 0:24.8. V2 is a studio turntable with a slash visor. V3 shows the scan resolve from the avatar visor to the F.02, then the product bay with the Figure-symbol sign and the lower third |
+| `f03_emblem_v2_vs_v3.png` | 0:30.2 / 0:31.0. The F.03 with the chest symbol in the new production cell |
+
+**Model sheets:** `production/v3/V3SheetF02.png`, `V3SheetF03.png`, `V3SheetID.png`. The ID sheet has silhouettes,
+phone-size versions, the symbol flat and the symbol projected.
+
+**Neutral rig diagnostic (`qa/v3/diag_r2`):** stand, walk past a block face, walk on a platform, crouch, launch,
+descend, land, all under a 360° camera orbit. Results:
+
+- no intersections;
+- feet planted on the floor and on the platform top;
+- correct occlusion against the block and the railing;
+- the camera never inside geometry.
+
+**Not done:** frame-by-frame review of every frame. The strips cover the transitions; the 2 fps sheets cover the
+rest.
+
+## Defect log
+
+See `production/v3/DEFECT_LOG_V3.md`. It gives the V2 time, symptom, verified cause, change, V3 location and
+inspection for every P0, P1 and P2 item, plus the defects found and fixed during V3.
+
+## What was not checked (limits)
+
+1. **Real-time playback and listening.** Motion smoothness, the feel of the speed ramps, and the mix were judged from
+   frames and measurements only.
+2. **Reference photos.** None of the reference hosts (figure.ai, tendril.studio, ctfassets, YouTube) could be reached.
+   The F.02 and F.03 shapes and the F.03 chest-symbol placement follow text descriptions and the brief, not photos.
+3. **Official branding cross-check.** The symbol path comes from the supplied Wikimedia file, saved verbatim. It
+   could not be compared with Figure's own site.
+4. **Every-frame inspection.** Full 30 fps review was done only around the transitions. Between transitions, coverage
+   is 2 fps.
+
+## Human review list (in order)
+
+1. **Full watch with sound, at 100 %.**
+   - The opening 0:00–0:20: push-off, splash, macro, second robot, actuator match, visor pass-through.
+   - The mid-air hand-off 2:30.5–2:44 (sim → foundry → sim).
+   - The final reveal 3:47–3:51.
+2. **Compare with official photos.**
+   - Compare `production/v3/V3SheetF02.png` and `V3SheetF03.png` with official F.02 and F.03 photos.
+   - Decide whether the F.03 chest symbol (0:29–0:34, 0:51) stays.
+   - The F.02 carries no emblem by design.
+3. **Trademark comfort.** The Figure symbol appears on an illustrative product-bay sign and on the F.03. The credit
+   and a non-affiliation line are in the description (`upload/UPLOAD_TEXT_v3.md`). See `production/ASSET_RIGHTS.md`
+   C01.
+4. **Listen to the four entry impacts** (3.1 s, 13.5 s, 194.6 s, 224.4 s) for any masking of "steel", "go in",
+   "brutal environment" and "retiring hardware".
+5. **Phone-size thumbnail choice:** see `qa/v3/thumbs/phone_size_check.png`.
+
+---
+
 # V2 (checked 14 Oct 2026)
 
 Not published. Every measurement below was taken from the files themselves; the scripts are `tools/v2/qa_v2.py`,
