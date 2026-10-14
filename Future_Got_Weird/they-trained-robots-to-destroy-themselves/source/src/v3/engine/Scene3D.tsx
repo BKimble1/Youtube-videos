@@ -66,7 +66,7 @@ export const robotShadow = (pr: Proj, id: string, pose: Pose, ground: number): I
   const out: Item[] = [];
   const h = sk.pelvis[1] - ground - 95;
   const k = clamp01(1 - h / 260);
-  const body = groundShadow(pr, 'sh-' + id, [sk.pelvis[0], ground, sk.pelvis[2]], 34 + 20 * (1 - k), 24 + 14 * (1 - k), 0.34 * k, pose.yaw);
+  const body = groundShadow(pr, 'sh-' + id, [sk.pelvis[0], ground, sk.pelvis[2]], 30 + 16 * (1 - k), 20 + 10 * (1 - k), 0.26 * k, pose.yaw);
   if (body) out.push(body);
   for (const s of ['L', 'R'] as const) {
     const a = sk.side[s].ankle;

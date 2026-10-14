@@ -1,19 +1,29 @@
-// SECTION B4: how a final jump is trained. One large learning sequence (conceptual), the performer reference,
-// and the policy explained by pushing into a sensor, following the signal to a joint, and pulling back out.
+// SECTION B4 (V3): how a final jump is trained, on the designed training stage (sets/Stage.tsx), which shares the
+// foundry's world placement (tower = walkway, landing pedestal = ladle).
+//   T1/T2  foundry: low angle at the edge, dolly-zoom down to the steel
+//   T3     foundry → simulation: the robot holds its pose on the edge; the surroundings transform outward from its
+//          feet (root and foot support unchanged), then the robot itself resolves into the training avatar
+//   T4/T5  attempt 1 lands short; three checks
+//   T6     one visible correction (the launch vector is nudged) causes one improved trial that lands on target
+//   T7     many copies at once; T8 the face-plant gag; T9 performer reference
+//   T10–12 the policy: into the head sensor, along the signal, out through the knee actuator, the correction, a reflex
+// Conceptual illustration of simulation training in general, not Figure's simulator or data.
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {Cam3, makeProj, camMix} from '../engine/camera';
-import {V3, add, clamp01, lerp3, mix, smooth, norm} from '../engine/math';
+import {Cam3, Proj, makeProj, camMix} from '../engine/camera';
+import {V3, add, sub, mulS, clamp01, lerp3, mix, smooth, norm, len} from '../engine/math';
 import {Item, box} from '../engine/prims';
 import {Scene3D, RobotSpec, CharSpec} from '../engine/Scene3D';
-import {SIM_ENV, SIM_FOUNDRY, SimBg, arc3, simWorld} from '../sets/SimWorld';
+import {STAGE, STAGE_ENV, StageBg, stage} from '../sets/Stage';
+import {arc3} from '../sets/SimWorld';
 import {DECK, LADLE} from '../sets/Foundry';
-import {STAND, walkPose, blendPose} from '../robot/motion';
+import {STAND, walkPose} from '../robot/motion';
 import {Pose, solve} from '../robot/rig';
+import {ModelKind} from '../robot/model';
 import {makeTrial, TrialSpec} from '../robot/trial';
 import {T, blockStart} from '../cues';
 import {FILM_END} from './Film';
-import {FoundryScene, easeInOut, easeOut} from './HookFoundry';
+import {FoundryScene, foundryFrame, easeInOut, easeOut} from './HookFoundry';
 import {Chip} from '../ui/Chip';
 import {CAST} from '../../components/cast';
 import {IDLE} from '../../components/Character';
@@ -22,8 +32,8 @@ import {C, F} from '../../theme';
 export const TRAIN_START = FILM_END;
 export const TRAIN_END = blockStart('B05') - 0.12;
 const seg = (t: number, a: number, b: number) => clamp01((t - a) / (b - a));
-const SL = {dir: norm([-0.4, 0.85, 0.45])};
-const G0 = SIM_FOUNDRY;
+export const SL = {dir: norm([-0.4, 0.85, 0.45])};
+const G0 = STAGE;
 
 const T_CANT = T('You can’t rehearse') - 0.1;
 const T_SIM = T('So Figure says it trained') - 0.1;
@@ -47,25 +57,24 @@ const lookPose = (): Pose => {
   return p;
 };
 
-// ---------------------------------------------------------------- trials
+// ---------------------------------------------------------------- trials (landing on the pedestal top)
 const trial = (landX: number, landing: TrialSpec['landing'], lateral = 0, armStyle = 0) =>
-  makeTrial({edgeX: G0.edgeX, deckY: G0.platTop, floorY: G0.floorY, lateral, landX, landing, T: 0.95, armStyle});
+  makeTrial({edgeX: G0.edgeX, deckY: G0.deckY, floorY: G0.padY, lateral, landX, landing, T: 0.95, armStyle});
 const TRY1 = trial(-150, 'short');
-const TRY2 = trial(-95, 'short');
-const TRY3 = trial(-22, 'stick');
-const FACE = trial(70, 'faceplant');
-const tAt = (start: number, tau: number) => tau - start; // physical = screen in the sim (no ramps)
+const TRY2 = trial(-22, 'stick');
+const FACE = trial(60, 'faceplant');
+const LANES = [-460, 0, 460];
 
-const simCam = (u: number): Cam3 => ({pos: lerp3([300, 700, 700], [260, 680, 640], u), target: [-110, 480, 0], fov: 50});
+const simCam = (u: number): Cam3 => ({pos: lerp3([330, 760, 820], [280, 730, 760], u), target: [-110, 470, 0], fov: 48});
 
-const SimShot: React.FC<{cam: Cam3; robots: RobotSpec[]; extra?: Item[]; f: number; chars?: CharSpec[]; over?: React.ReactNode; lanes?: number[]; ringPulse?: number; ringColor?: string}> = ({cam, robots, extra = [], f, chars, over, lanes = [0], ringPulse, ringColor}) => {
+export const StageShot: React.FC<{cam: Cam3; robots: RobotSpec[]; extra?: Item[]; f: number; chars?: CharSpec[]; over?: React.ReactNode; lanes?: number[]; ringPulse?: number; ringColor?: string; grid?: number}> = ({cam, robots, extra = [], f, chars, over, lanes = [0], ringPulse, ringColor, grid}) => {
   const pr = makeProj(cam);
   const items: Item[] = [];
-  lanes.forEach((z, k) => items.push(...simWorld(pr, SIM_ENV, {geo: G0, lane: z, key: k === 0 ? '' : 'L' + k, floor: k === 0, grid: k === 0 ? 1 : 0, ringPulse, ringColor})));
-  items.push(...extra.map((x) => x));
+  lanes.forEach((z, k) => items.push(...stage(pr, STAGE_ENV, {lane: z, key: k === 0 ? '' : 'L' + k, floor: k === 0, ringPulse, ringColor, grid})));
+  items.push(...extra);
   return (
     <AbsoluteFill>
-      <Scene3D pr={pr} bg={<SimBg />} items={items} robots={robots} chars={chars} frame={f} />
+      <Scene3D pr={pr} bg={<StageBg />} items={items} robots={robots} chars={chars} frame={f} />
       {over}
     </AbsoluteFill>
   );
@@ -87,6 +96,24 @@ const Badge: React.FC<{x: number; y: number; ok: boolean; k: number; icon: 'leve
   );
 };
 
+/** Launch vector at the edge: a 3D arrow from the toes along the take-off velocity (length ∝ speed). */
+const launchArrow = (pr: Proj, key: string, v: V3, color: string, k: number): Item | null => {
+  if (k <= 0) return null;
+  const o: V3 = [G0.edgeX + 4, G0.deckY + 6, 0];
+  const tip = add(o, mulS(v, 0.32 * k));
+  const a = pr.p(o), b = pr.p(tip);
+  const d = norm(sub(tip, o));
+  const side = norm([-d[2] || 0.0001, 0, d[0]]);
+  const h1 = pr.p(add(tip, add(mulS(d, -26), mulS([0, 1, 0], 12)))), h2 = pr.p(add(tip, add(mulS(d, -26), mulS([0, -1, 0], 12))));
+  void side;
+  return {z: a.z - 60, key, el: (
+    <g key={key}>
+      <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={color} strokeWidth={9} strokeLinecap="round" />
+      <path d={`M${b.x} ${b.y} L${h1.x} ${h1.y} L${h2.x} ${h2.y} Z`} fill={color} stroke={color} strokeWidth={4} strokeLinejoin="round" />
+    </g>
+  )};
+};
+
 // ---------------------------------------------------------------- the section
 export const Train: React.FC = () => {
   const f = useCurrentFrame();
@@ -104,49 +131,29 @@ export const Train: React.FC = () => {
     const eye: V3 = [DECK.edgeX - 20, DECK.y + 168, 0];
     const back = mix(0, 140, u);
     const tgt: V3 = [-10, LADLE.steel, 0];
-    const dir = norm([tgt[0] - eye[0], tgt[1] - eye[1], tgt[2] - eye[2]]);
-    const cam: Cam3 = {pos: [eye[0] - dir[0] * back, eye[1] - dir[1] * back, eye[2] - dir[2] * back], target: tgt, fov: mix(62, 36, u)};
+    const dir = norm(sub(tgt, eye));
+    const cam: Cam3 = {pos: sub(eye, mulS(dir, back)), target: tgt, fov: mix(62, 36, u)};
     return <FoundryScene cam={cam} tau={tau} robots={[]} entries={[]} />;
   }
-  // T3 "So Figure says it trained a new AI model in simulation.": the same shot converts into a virtual copy
-  if (tau < T_HOW) {
-    const u = smooth(seg(tau, T_SIM, T_HOW));
-    const cam: Cam3 = {pos: lerp3([260, 820, 640], [330, 780, 760], u), target: [-140, 470, 0], fov: 46};
-    const wipe = easeInOut(seg(tau, T_SIM + 0.4, T_SIM + 1.9));
-    const x = wipe * 2200 - 140;
-    const pose = lookPose();
-    return (
-      <AbsoluteFill>
-        <FoundryScene cam={cam} tau={tau} robots={[{pose, id: 't3', inside: false}]} entries={[]} />
-        <AbsoluteFill style={{clipPath: `polygon(0 0, ${x}px 0, ${x - 300}px 1080px, 0 1080px)`}}>
-          <SimShot cam={cam} robots={[{id: 't3s', pose, kind: 'SIM', light: SL}]} f={f} />
-        </AbsoluteFill>
-        <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}>
-          {wipe > 0 && wipe < 1 ? <line x1={x} y1={0} x2={x - 300} y2={1080} stroke="#BFD7F7" strokeWidth={10} /> : null}
-        </svg>
-        {wipe >= 1 ? <Chip x={80} y={70} lines={['FIGURE SAYS', 'a new AI model, trained in simulation']} appear={tau - T_SIM - 1.9} tone="blue" size={32} /> : null}
-      </AbsoluteFill>
-    );
-  }
-  // T4 label + T5 attempt 1 + T5b the three checks
+  // T3 "So Figure says it trained a new AI model in simulation.": the surroundings transform around the standing robot
+  if (tau < T_HOW) return <SimTransform tau={tau} f={f} />;
+  // T4 label + T5 attempt 1 + the three checks
   if (tau < T_NUDGE) {
-    const s1 = TRY1.at(tAt(T_TRY + 0.75, tau));
+    const s1 = TRY1.at(tau - (T_TRY + 0.75));
     const u = smooth(seg(tau, T_HOW, T_NUDGE));
-    // cut in closer for the three checks
     const ub = seg(tau, T_BAL - 0.35, T_NUDGE);
-    const cam = tau < T_BAL - 0.35 ? simCam(u) : {pos: lerp3([170, 560, 470], [140, 540, 430], ub), target: [-80, 430, 0] as V3, fov: 46};
+    const cam = tau < T_BAL - 0.35 ? simCam(u) : {pos: lerp3([170, 640, 520], [140, 610, 480], ub), target: [-80, 470, 0] as V3, fov: 46};
     const pr = makeProj(cam);
-    const ghost = tau > T_TRY + 0.75 + 0.1 ? [arc3(pr, 'a1', TRY1.arc(), '#4F7CC9', {upto: clamp01((tau - T_TRY - 0.75) / 0.95)})] : [];
+    const extra = tau > T_TRY + 0.75 + 0.1 ? [arc3(pr, 'a1', TRY1.arc(), '#4F7CC9', {upto: clamp01((tau - T_TRY - 0.75) / 0.95)})] : [];
     const sk = solve(s1.pose);
     const torso = pr.p(add(sk.torso.o, [0, 70, 0]));
-    const edge = pr.p([G0.edgeX, G0.platTop + 40, 140]);
-    const ring = pr.p([G0.target[0], G0.floorY + 120, 0]);
-    const ringBad = tau > T_TGT ? 1 : 0;
+    const edge = pr.p([G0.edgeX, G0.deckY + 40, 140]);
+    const ring = pr.p([G0.target[0], G0.padY + 120, 0]);
     return (
-      <SimShot cam={cam} robots={[{id: 'try1', pose: s1.pose, kind: 'SIM', light: SL}]} extra={ghost} f={f} ringColor={ringBad ? '#EF6B55' : undefined}
+      <StageShot cam={cam} robots={[{id: 'try1', pose: s1.pose, kind: 'SIM', light: SL, ground: s1.phase === 'push' ? G0.deckY : G0.padY}]} extra={extra} f={f} ringColor={tau > T_TGT ? '#EF6B55' : undefined}
         over={(
           <>
-            <Chip x={80} y={70} lines={['HOW THIS KIND OF TRAINING GENERALLY WORKS']} appear={tau - T_HOW} tone="blue" size={32} />
+            <Chip x={80} y={70} lines={['HOW THIS KIND OF TRAINING GENERALLY WORKS']} appear={tau - T_HOW} tone="blue" size={34} />
             <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}>
               <Badge x={torso.x + 140} y={torso.y - 60} ok k={seg(tau, T_BAL, T_BAL + 0.3)} icon="level" />
               <Badge x={edge.x} y={edge.y - 120} ok k={seg(tau, T_PUSH, T_PUSH + 0.3)} icon="foot" />
@@ -156,76 +163,82 @@ export const Train: React.FC = () => {
         )} />
     );
   }
-  // T6 nudge: rewind, attempt 2 lands closer, attempt 3 sticks it; earlier arcs stay as faint ghosts
+  // T6 one correction: rewind; the launch vector (blue) is nudged longer and flatter (teal); the improved attempt
+  // follows the new vector and lands in the ring
   if (tau < T_COPIES) {
-    const tA2 = T_NUDGE + 0.9, tA3 = T_NUDGE + 3.0;
-    // a new angle for the corrections: in front of the platform, drifting round as the attempts improve
+    const tA2 = T_NUDGE + 2.3;
     const ua = easeInOut(seg(tau, T_NUDGE, T_COPIES));
-    const cam: Cam3 = {pos: lerp3([-30, 610, 650], [90, 590, 610], ua), target: [-100, 450, 0], fov: 50, roll: mix(-2, 1, ua)};
+    const cam: Cam3 = {pos: lerp3([-40, 690, 700], [80, 670, 650], ua), target: [-100, 470, 0], fov: 50, roll: mix(-2, 1, ua)};
     const pr = makeProj(cam);
     const rew = seg(tau, T_NUDGE, T_NUDGE + 0.8);
     let pose: Pose;
-    if (tau < tA2 - 0.62) {
-      // rewind: the failed attempt plays backwards to the edge
-      const back = (1 - easeInOut(rew)) * 2.2;
-      pose = TRY1.at(back).pose;
-    } else if (tau < tA3 - 0.62) pose = TRY2.at(tau - tA2).pose;
-    else pose = TRY3.at(tau - tA3).pose;
+    let phase = 'push';
+    if (tau < tA2 - 0.62) pose = TRY1.at((1 - easeInOut(rew)) * 2.2 - (rew >= 1 ? 0.62 : 0)).pose;
+    else {
+      const s = TRY2.at(tau - tA2);
+      pose = s.pose;
+      phase = s.phase;
+    }
+    const nudge = easeInOut(seg(tau, T_NUDGE + 1.0, T_NUDGE + 1.6));
+    const vA = TRY1.v0, vB = TRY2.v0;
+    const v = lerp3(vA, vB, nudge);
     const extra: Item[] = [arc3(pr, 'g1', TRY1.arc(), '#9DBBEA', {opacity: 0.5, width: 4})];
-    if (tau > tA2) extra.push(arc3(pr, 'g2', TRY2.arc(), tau > tA3 ? '#9DBBEA' : '#4F7CC9', {upto: clamp01((tau - tA2) / 0.95), opacity: tau > tA3 ? 0.6 : 0.9}));
-    if (tau > tA3) extra.push(arc3(pr, 'g3', TRY3.arc(), C.teal, {upto: clamp01((tau - tA3) / 0.95), width: 6}));
-    const hit = tau > tA3 + 0.95 ? clamp01(1 - (tau - tA3 - 0.95) / 0.6) : 0;
-    const trail = tau < tA2 - 0.62 ? [TRY1.at((1 - easeInOut(rew)) * 2.2 + 0.08).pose, TRY1.at((1 - easeInOut(rew)) * 2.2 + 0.16).pose] : undefined;
-    return <SimShot cam={cam} robots={[{id: 'nud', pose, kind: 'SIM', light: SL, trail}]} extra={extra} f={f} ringPulse={hit} />;
+    const showArrow = seg(tau, T_NUDGE + 0.7, T_NUDGE + 0.95) * (1 - seg(tau, tA2 + 0.2, tA2 + 0.6));
+    const ghostA = launchArrow(pr, 'arrA', vA, '#9DBBEA', nudge > 0 ? showArrow : 0);
+    const arr = launchArrow(pr, 'arrB', v, nudge > 0.5 ? C.teal : '#4F7CC9', showArrow);
+    if (ghostA && nudge > 0) extra.push(ghostA);
+    if (arr) extra.push(arr);
+    if (tau > tA2) extra.push(arc3(pr, 'g2', TRY2.arc(), C.teal, {upto: clamp01((tau - tA2) / 0.95), width: 6}));
+    const hit = tau > tA2 + 0.95 ? clamp01(1 - (tau - tA2 - 0.95) / 0.6) : 0;
+    const trail = tau < tA2 - 0.62 && rew < 1 ? [TRY1.at((1 - easeInOut(rew)) * 2.2 + 0.08).pose, TRY1.at((1 - easeInOut(rew)) * 2.2 + 0.16).pose] : undefined;
+    return <StageShot cam={cam} robots={[{id: 'nud', pose, kind: 'SIM', light: SL, trail, ground: phase === 'push' ? G0.deckY : G0.padY}]} extra={extra} f={f} ringPulse={hit} />;
   }
-  // T7 "and over, in many virtual copies at once": five large lanes, then back to one success
+  // T7 "and over, in many virtual copies at once": three lanes, staggered
   if (tau < T_FALL) {
-    const lanes = [-300, 0, 300];
     const u = easeInOut(seg(tau, T_COPIES, T_COPIES + 1.4));
     const back = easeInOut(seg(tau, T_FALL - 1.0, T_FALL));
-    const camFar: Cam3 = {pos: [620, 1000, 1180], target: [-110, 400, 0], fov: 48};
+    const camFar: Cam3 = {pos: [900, 1150, 1500], target: [-110, 380, 0], fov: 46};
     const cam = camMix(camMix(simCam(1), camFar, u), simCam(1), back);
     const outcomes: TrialSpec['landing'][] = ['short', 'stick', 'stick'];
-    const lands = [-120, -30, -12];
-    const robots: RobotSpec[] = lanes.map((z, k) => {
-      const tr = makeTrial({edgeX: G0.edgeX, deckY: G0.platTop, floorY: G0.floorY, lateral: z, landX: lands[k], landing: outcomes[k], T: 0.95, armStyle: k * 0.2});
+    const lands = [-140, -26, -14];
+    const robots: RobotSpec[] = LANES.map((z, k) => {
+      const tr = makeTrial({edgeX: G0.edgeX, deckY: G0.deckY, floorY: G0.padY, lateral: z, landX: lands[k], landing: outcomes[k], T: 0.95, armStyle: k * 0.2});
       const start = T_COPIES + 0.4 + k * 0.17;
-      return {id: 'ln' + k, pose: tr.at(tau - start).pose, kind: 'SIM', light: SL};
+      const s = tr.at(tau - start);
+      return {id: 'ln' + k, pose: s.pose, kind: 'SIM' as ModelKind, light: SL, ground: s.phase === 'push' ? G0.deckY : G0.padY};
     });
-    return <SimShot cam={cam} robots={robots} f={f} lanes={lanes} />;
+    return <StageShot cam={cam} robots={robots} f={f} lanes={LANES} />;
   }
-  // T8 face-plant gag: nobody files an incident report
+  // T8 face-plant gag: nobody files an incident report (the clerk stands on the stage floor beside the pedestal)
   if (tau < T_STUNT) {
     const s = FACE.at(tau - (T_FALL + 1.0));
     const u = smooth(seg(tau, T_FALL, T_STUNT));
-    const cam: Cam3 = {pos: lerp3([460, 600, 560], [420, 570, 520], u), target: [60, 380, 60], fov: 46};
+    const cam: Cam3 = {pos: lerp3([520, 640, 600], [470, 610, 560], u), target: [80, 360, 60], fov: 46};
     const shrug = seg(tau, T('nobody files') - 0.1, T('nobody files') + 0.4);
-    const chars: CharSpec[] = [{id: 'clerk', look: CAST.clerkA, pose: {...IDLE, armL: {a: 40 + 35 * shrug, b: 70 + 40 * shrug}, armR: {a: 20, b: 95}, brows: 0.6 * shrug, mouth: shrug > 0.5 ? 'flat' : 'smile', lookX: -0.6, tilt: -6 * shrug}, feet: [230, G0.floorY, -80], seed: 2, holdR: (<g transform="translate(26 -30) rotate(8) scale(0.55)">
+    const chars: CharSpec[] = [{id: 'clerk', look: CAST.clerkA, pose: {...IDLE, armL: {a: 40 + 35 * shrug, b: 70 + 40 * shrug}, armR: {a: 20, b: 95}, brows: 0.6 * shrug, mouth: shrug > 0.5 ? 'flat' : 'smile', lookX: -0.6, tilt: -6 * shrug}, feet: [40, G0.padY, -120], seed: 2, holdR: (<g transform="translate(26 -30) rotate(8) scale(0.55)">
               <rect x={-70} y={-90} width={140} height={190} rx={10} fill="#C9924F" stroke={C.ink} strokeWidth={6} />
               <rect x={-58} y={-70} width={116} height={156} rx={4} fill="#FFFFFF" stroke={C.ink} strokeWidth={4} />
               <text x={0} y={-36} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={22} fill={C.ink}>INCIDENT</text>
               <text x={0} y={-10} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={22} fill={C.ink}>REPORT</text>
               {[0, 1, 2].map((k) => <line key={k} x1={-40} y1={20 + k * 22} x2={40} y2={20 + k * 22} stroke="#D9DEE4" strokeWidth={6} />)}
             </g>)}];
-    return <SimShot cam={cam} robots={[{id: 'face', pose: s.pose, kind: 'SIM', light: SL}]} f={f} chars={chars} />;
+    return <StageShot cam={cam} robots={[{id: 'face', pose: s.pose, kind: 'SIM', light: SL, ground: s.phase === 'push' ? G0.deckY : G0.padY}]} f={f} chars={chars} />;
   }
-  // T9 stunt-performer reference: performer and virtual robot share one arc
+  // T9 stunt-performer reference: performer and virtual robot share one arc (two lanes)
   if (tau < T_POLICY) {
     const start = T_STUNT + 1.0;
-    const perf = makeTrial({edgeX: G0.edgeX, deckY: G0.platTop, floorY: G0.floorY, lateral: -90, landX: -22, landing: 'stick', T: 0.95});
-    const bot = makeTrial({edgeX: G0.edgeX, deckY: G0.platTop, floorY: G0.floorY, lateral: 90, landX: -22, landing: 'stick', T: 0.95});
-    const lag = seg(tau, start + 1.8, start + 2.6) * 0; // the robot matches the reference beat-for-beat
+    const perf = makeTrial({edgeX: G0.edgeX, deckY: G0.deckY, floorY: G0.padY, lateral: -230, landX: -22, landing: 'stick', T: 0.95});
+    const bot = makeTrial({edgeX: G0.edgeX, deckY: G0.deckY, floorY: G0.padY, lateral: 230, landX: -22, landing: 'stick', T: 0.95});
     const u = smooth(seg(tau, T_STUNT, T_POLICY));
-    const cam: Cam3 = {pos: lerp3([200, 640, 760], [150, 610, 700], u), target: [-110, 440, 0], fov: 46};
+    const cam: Cam3 = {pos: lerp3([260, 720, 1080], [200, 690, 1000], u), target: [-110, 460, 0], fov: 46};
     const pr = makeProj(cam);
     const extra = [
       arc3(pr, 'pa', perf.arc(), '#7656C2', {upto: clamp01((tau - start) / 0.95)}),
       arc3(pr, 'ba', bot.arc(), '#4F7CC9', {upto: clamp01((tau - start - 0.25) / 0.95)}),
     ];
-    const pp = pr.p([G0.edgeX - 60, G0.platTop + 230, -90]);
-    const bp = pr.p([G0.edgeX - 60, G0.platTop + 230, 90]);
+    const sp = perf.at(tau - start), sb = bot.at(tau - start - 0.25);
     return (
-      <SimShot cam={cam} robots={[{id: 'perf', pose: perf.at(tau - start).pose, kind: 'PERF', light: SL}, {id: 'pbot', pose: bot.at(tau - start - 0.25 - lag).pose, kind: 'SIM', light: SL}]} extra={extra} f={f} lanes={[-90, 90]}
+      <StageShot cam={cam} robots={[{id: 'perf', pose: sp.pose, kind: 'PERF', light: SL, ground: sp.phase === 'push' ? G0.deckY : G0.padY}, {id: 'pbot', pose: sb.pose, kind: 'SIM', light: SL, ground: sb.phase === 'push' ? G0.deckY : G0.padY}]} extra={extra} f={f} lanes={[-230, 230]}
         over={(
           <div style={{position: 'absolute', left: 80, bottom: 70, display: 'flex', gap: 24, opacity: seg(tau, T_STUNT + 0.3, T_STUNT + 0.7)}}>
             <div style={{fontFamily: F.body, fontWeight: 800, fontSize: 34, color: '#FFFFFF', background: '#6A4BB4', borderRadius: 14, padding: '10px 22px'}}>stunt performer</div>
@@ -238,31 +251,77 @@ export const Train: React.FC = () => {
   return <PolicyShot tau={tau} f={f} />;
 };
 
-// ---------------------------------------------------------------- policy: sensor → rule → joints
+// ---------------------------------------------------------------- T3: foundry → simulation
+const SimTransform: React.FC<{tau: number; f: number}> = ({tau, f}) => {
+  const u = smooth(seg(tau, T_SIM, T_HOW));
+  const cam: Cam3 = {pos: lerp3([260, 820, 640], [330, 780, 760], u), target: [-140, 470, 0], fov: 46};
+  const pr = makeProj(cam);
+  const pose = lookPose();
+  const feet = pr.p([DECK.edgeX - 34, DECK.y, 0]);
+  // the surroundings transform outward from the robot's feet (12–16 frames), then the robot resolves (top → bottom)
+  const r = easeInOut(seg(tau, T_SIM + 0.35, T_SIM + 0.85)) * 2400;
+  const rs = easeInOut(seg(tau, T_SIM + 0.75, T_SIM + 1.15));
+  const sk = solve(pose);
+  const top = pr.p(add(sk.head.o, [0, 30, 0])).y, bot = feet.y + 10;
+  const scanY = mix(top, bot, rs);
+  const done = rs >= 1;
+  const {nodes, defs} = foundryFrame({cam, tau, robots: [], entries: []});
+  const robotLayer = (kind: ModelKind, clip: string) => (
+    <AbsoluteFill style={{clipPath: clip}}>
+      <Scene3D pr={pr} bg={null} items={[]} robots={[{id: 't3r' + kind, pose, kind, light: SL}]} frame={f} />
+    </AbsoluteFill>
+  );
+  return (
+    <AbsoluteFill>
+      <AbsoluteFill style={{background: '#18141C'}}>
+        <svg width={1920} height={1080} viewBox="0 0 1920 1080"><defs>{defs}</defs>{nodes}</svg>
+      </AbsoluteFill>
+      {r > 0 ? (
+        <AbsoluteFill style={{clipPath: `circle(${r.toFixed(1)}px at ${feet.x.toFixed(1)}px ${feet.y.toFixed(1)}px)`}}>
+          <StageShot cam={cam} robots={[]} f={f} grid={0.6 * (1 - seg(tau, T_SIM + 1.2, T_SIM + 2.2))} />
+        </AbsoluteFill>
+      ) : null}
+      {r > 0 && r < 2400 ? (
+        <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}>
+          <circle cx={feet.x} cy={feet.y} r={r} fill="none" stroke="#BFE9FF" strokeWidth={10} opacity={0.9} />
+          <circle cx={feet.x} cy={feet.y} r={Math.max(0, r - 26)} fill="none" stroke="#BFE9FF" strokeWidth={4} opacity={0.4} />
+        </svg>
+      ) : null}
+      {done ? robotLayer('SIM', 'none') : (
+        <>
+          {robotLayer('F02', `polygon(0 ${scanY}px, 1920px ${scanY}px, 1920px 1080px, 0 1080px)`)}
+          {rs > 0 ? robotLayer('SIM', `polygon(0 0, 1920px 0, 1920px ${scanY}px, 0 ${scanY}px)`) : null}
+          {rs > 0 ? <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}><rect x={feet.x - 160} y={scanY - 2} width={320} height={4} fill="#BFE9FF" /></svg> : null}
+        </>
+      )}
+      <Chip x={80} y={70} lines={['FIGURE SAYS', 'a new AI model, trained in simulation']} appear={tau - T_SIM - 1.3} tone="blue" size={34} />
+    </AbsoluteFill>
+  );
+};
+
+// ---------------------------------------------------------------- policy: sensor → signal → actuator → correction
+// The virtual F.02-shaped robot walks across the open stage floor (z = 330: clear of the tower legs and the pedestal).
+const WALK0: V3 = [-430, 0, 330];
+const WALK_V = 70;
+const policyWalk = (tau: number, until = Infinity) => walkPose(WALK0, Math.PI / 2, Math.max(0, (Math.min(tau, until) - (T_POLICY - 0.5)) * WALK_V), 0, {stride: 56});
 const PolicyShot: React.FC<{tau: number; f: number}> = ({tau, f}) => {
-  // the F.02 walks along the virtual deck; a foot meets a raised plate early and the knee/ankle correct
-  const walkStart = T_POLICY - 0.5;
-  const bumpX = 40;
-  const dist = Math.max(0, (tau - walkStart) * 70);
-  let pose = walkPose([-300, 0, 0], Math.PI / 2, dist, G0.floorY, {stride: 56});
   const early = seg(tau, T('lands a little early') - 0.1, T('lands a little early') + 0.4);
   const fix = seg(tau, T('adjusts the knee') - 0.2, T('before the robot tips') + 0.2);
   const tip = early * (1 - fix);
+  let pose = policyWalk(tau);
   if (tau > T_FOOT) {
-    // freeze the walk mid-stride on the bump, tilt, then correct
-    const frozen = walkPose([-300, 0, 0], Math.PI / 2, (T_FOOT - walkStart) * 70, G0.floorY, {stride: 56});
+    // freeze the walk mid-stride on the raised plate, tilt, then correct at the knee and ankle
+    const frozen = policyWalk(T_FOOT);
     pose = {...frozen, roll: frozen.roll + 0.16 * tip, pitch: frozen.pitch - 0.1 * tip};
     if (pose.footR) pose.footR = {...pose.footR, pos: add(pose.footR.pos, [0, 6 * early, 0]), roll: -0.25 * early * (1 - fix)};
-    pose.legR = {...pose.legR};
     pose.armL = {...pose.armL, roll: 0.14 + 0.5 * tip};
     pose.armR = {...pose.armR, roll: 0.14 + 0.3 * tip};
   }
-  // reflex tap: sitting on the platform edge, the hammer taps the knee and the shin kicks
+  // reflex tap: sitting on the tower's launch edge, legs over the edge, the hammer taps the knee and the shin kicks
   const reflex = tau > T_REFLEX - 0.2;
   if (reflex) {
     const kick = Math.max(0, Math.sin(clamp01((tau - T_REFLEX - 0.55) / 0.4) * Math.PI));
-    const p = STAND([G0.edgeX - 10, G0.platTop + 14, 0], Math.PI / 2);
-    p.pos = [G0.edgeX - 14, G0.platTop + 12, 0];
+    const p = STAND([G0.edgeX - 14, G0.deckY + 12, 0], Math.PI / 2);
     p.legL = {pitch: 1.5, roll: 0.05, knee: 1.5 - 0.9 * kick, ankle: 0.1};
     p.legR = {pitch: 1.5, roll: 0.05, knee: 1.5, ankle: 0.1};
     p.footL = undefined;
@@ -272,66 +331,94 @@ const PolicyShot: React.FC<{tau: number; f: number}> = ({tau, f}) => {
     pose = p;
   }
   const sk = solve(pose);
-  const frozenR = walkPose([-300, 0, 0], Math.PI / 2, (T_FOOT - walkStart) * 70, G0.floorY, {stride: 56}).footR!.pos;
+  const frozenR = policyWalk(T_FOOT).footR!.pos;
   const bumpPos: V3 = [frozenR[0] + 4, 0, frozenR[2]];
-  void bumpX;
-  // camera: push into the head sensor, follow the signal down to the knee, pull out to the whole robot
-  const head = add(sk.head.o, [12, 9, 0]);
+  // signal path: head sensor → policy (chest) → hip → knee → ankle
+  const head = add(sk.head.o, [10, 9, 6]);
+  const chip = add(sk.torso.o, [0, 22, 6]);
+  const pathPts: V3[] = [head, add(sk.neck.o, [0, 2, 6]), chip, add(sk.pelvis, [0, 0, 6]), add(sk.side.R.hip, [0, 0, 4]), add(sk.side.R.knee, [0, 0, 6]), add(sk.side.R.ankle, [0, 0, 4])];
+  const cum = [0];
+  for (let i = 1; i < pathPts.length; i++) cum.push(cum[i - 1] + len(sub(pathPts[i], pathPts[i - 1])));
+  const along = (u: number): V3 => {
+    const d = clamp01(u) * cum[cum.length - 1];
+    let i = 1;
+    while (i < cum.length - 1 && cum[i] < d) i++;
+    const r = (d - cum[i - 1]) / Math.max(1e-6, cum[i] - cum[i - 1]);
+    return lerp3(pathPts[i - 1], pathPts[i], r);
+  };
+  // camera: wide → into the head sensor → ride the signal down to the knee → out through the actuator → the leg
+  const tIn0 = T_POLICY, tIn1 = T_POLICY + 1.2;         // push into the sensor ("The result is called a policy")
+  const tRide0 = tIn1 + 0.15, tRide1 = T('into motor commands') + 0.2;
+  const tOut1 = T('many times a second') + 0.6;
+  const side: V3 = [0, 0, 1];                              // the robot's right side faces +z
+  const wide: Cam3 = {pos: add(sk.pelvis, [120, 140, 470]), target: add(sk.pelvis, [0, 20, 0]), fov: 44};
+  const lens: Cam3 = {pos: add(head, [8, 2, 26]), target: head, fov: 30};
+  const rideU = easeInOut(seg(tau, tRide0, tRide1));
+  const pulse = along(Math.min(0.83, 0.05 + rideU * 0.8));
+  const ride: Cam3 = {pos: add(pulse, add(mulS(side, 62), [18, 12, 0])), target: pulse, fov: 38};
   const knee = sk.side.R.knee;
-  const into = easeInOut(seg(tau, T_POLICY, T_POLICY + 1.4));
-  const down = easeInOut(seg(tau, T_POLICY + 3.2, T_FOOT));
-  const out = easeInOut(seg(tau, T('before the robot tips') - 0.2, T_WISH + 0.4));
-  const wide: Cam3 = {pos: add(sk.pelvis, [90, 120, 420]), target: add(sk.pelvis, [0, 20, 0]), fov: 44};
-  const camHead: Cam3 = {pos: add(head, [38, 10, 70]), target: head, fov: 40};
-  const drift = smooth(seg(tau, T_FOOT - 0.5, T('before the robot tips') + 0.3));   // slow orbit while the correction plays
-  const camKnee: Cam3 = {pos: add(knee, [60 - 70 * drift, 30 + 10 * drift, 160 - 25 * drift]), target: add(knee, [0, 10, 0]), fov: 44 - 4 * drift};
-  let cam = camMix(camMix(camMix(wide, camHead, into), camKnee, down), wide, out);
+  const legCam: Cam3 = {pos: add(knee, [70, 34, 170]), target: add(knee, [-6, -4, 0]), fov: 42};
+  let cam: Cam3;
+  if (tau < tIn1) cam = camMix(wide, lens, easeInOut(seg(tau, tIn0, tIn1)));
+  else if (tau < tRide0) cam = lens;
+  else if (tau < tRide1) cam = camMix(lens, ride, easeInOut(seg(tau, tRide0, tRide0 + 0.5)));
+  else if (tau < T_FOOT) cam = camMix(ride, legCam, easeInOut(seg(tau, tRide1, tOut1)));
+  else {
+    const drift = smooth(seg(tau, T_FOOT - 0.2, T('before the robot tips') + 0.3));
+    const leg2: Cam3 = {pos: add(knee, [60 - 70 * drift, 30 + 10 * drift, 165 - 25 * drift]), target: add(knee, [0, 10, 0]), fov: 44 - 4 * drift};
+    cam = camMix(camMix(legCam, leg2, easeInOut(seg(tau, T_FOOT, T_FOOT + 0.4))), {...wide, pos: add(sk.pelvis, [140, 160, 520])}, easeInOut(seg(tau, T('before the robot tips') - 0.1, T_WISH + 0.5)));
+  }
   if (reflex) {
     const r = smooth(seg(tau, T_REFLEX - 0.2, TRAIN_END));
     cam = {pos: add(sk.side.L.knee, [80 - 30 * r, 60 - 15 * r, 260 - 80 * r]), target: add(sk.side.L.knee, [-30, -10, 0]), fov: 42};
   }
   const pr = makeProj(cam);
-  // signal path: head sensors → policy chip in the chest → hip → knee → ankle
-  const chip = add(sk.torso.o, [0, 22, 0]);
-  const pathPts: V3[] = [head, add(sk.neck.o, [0, 2, 0]), chip, sk.pelvis, sk.side.R.hip, sk.side.R.knee, sk.side.R.ankle];
   const P2 = pathPts.map((q) => pr.p(q));
   const rate = tau > T('many times a second') - 0.2 ? 3.2 : 1.1;
   const pulses = [0, 0.33, 0.66].map((o) => ((tau * rate + o) % 1));
-  const pt = (u: number) => {
-    const n = P2.length - 1;
-    const x = u * n, i = Math.min(n - 1, Math.floor(x)), r = x - i;
-    return {x: P2[i].x + (P2[i + 1].x - P2[i].x) * r, y: P2[i].y + (P2[i + 1].y - P2[i].y) * r};
-  };
-  const showLoop = tau < T_WISH + 0.3 && !reflex;
-  const xr = showLoop ? seg(tau, T_POLICY + 0.6, T_POLICY + 1.2) : 0;
+  const pt = (u: number) => pr.p(along(u));
+  const showLoop = tau > tIn1 - 0.3 && tau < T_WISH + 0.3 && !reflex;
+  const xr = showLoop ? seg(tau, tIn1 - 0.3, tIn1) : 0;
   const cP = pr.p(chip);
+  const actHot = seg(tau, tRide1 - 0.4, tRide1) * (1 - seg(tau, tOut1, tOut1 + 0.6));
   const hl = [
-    {prefix: 'kneeAct', color: C.saffron, amount: (0.25 + 0.5 * fix) * xr},
-    {prefix: 'ankleAct', color: C.saffron, amount: (0.25 + 0.5 * fix) * xr},
+    {prefix: 'kneeActR', color: C.saffron, amount: Math.max(actHot, (0.25 + 0.5 * fix) * (tau > T_FOOT ? 1 : 0)) * (reflex ? 0 : 1)},
+    {prefix: 'ankleActR', color: C.saffron, amount: (0.25 + 0.5 * fix) * (tau > T_FOOT ? 1 : 0) * (reflex ? 0 : 1)},
   ];
   const ham = reflex ? seg(tau, T_REFLEX - 0.2, T_REFLEX + 0.55) : 0;
   const kneeP = pr.p(add(sk.side.L.knee, [8, -6, 0]));
+  const lensK = seg(tau, tIn1 - 0.35, tIn1) * (1 - seg(tau, tRide0, tRide0 + 0.35));   // inside the sensor: iris + first pulse
+  const lensP = pr.p(head);
+  const ground = reflex ? undefined : 0;
   return (
     <AbsoluteFill>
-      <SimShot cam={cam} robots={[{id: 'pol', pose, light: SL, highlight: hl}]} f={f}
-        extra={tau > T_FOOT - 0.5 && !reflex ? box(pr, SIM_ENV, 'bump', {c: [bumpPos[0], G0.floorY + 3, bumpPos[2]], size: [46, 6, 34], color: C.saffron}) : []}
+      <StageShot cam={cam} robots={[{id: 'pol', pose, kind: 'SIM', light: SL, highlight: hl, ground}]} f={f}
+        extra={tau > T_FOOT - 0.5 && !reflex ? box(pr, STAGE_ENV, 'bump', {c: [bumpPos[0], 3, bumpPos[2]], size: [46, 6, 34], color: C.saffron}) : []}
         over={(
           <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}>
             {xr > 0 ? (
               <g opacity={xr}>
                 <path d={'M' + P2.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join('L')} fill="none" stroke={C.saffron} strokeWidth={5} strokeDasharray="10 10" strokeOpacity={0.8} />
-                {pulses.map((u, k) => {
-                  const q = pt(u);
+                {tau < tRide0 + 0.4 || tau > tRide1 ? pulses.map((u, k) => {
+                  const q = pt(u * 0.83);
                   return <circle key={k} cx={q.x} cy={q.y} r={11} fill="#FFE07A" stroke={C.ink} strokeWidth={3} />;
-                })}
+                }) : (() => {
+                  const q = pr.p(pulse);
+                  return <circle cx={q.x} cy={q.y} r={18} fill="#FFE07A" stroke={C.ink} strokeWidth={4} />;
+                })()}
                 <rect x={cP.x - 34} y={cP.y - 24} width={68} height={48} rx={8} fill={C.ink} stroke={C.saffron} strokeWidth={5} />
-                <circle cx={P2[0].x} cy={P2[0].y} r={18 + 6 * Math.sin(tau * 9)} fill="none" stroke={C.teal} strokeWidth={5} />
-                <circle cx={P2[0].x} cy={P2[0].y} r={8} fill={C.teal} />
-                <g transform={`translate(${cP.x + 60} ${cP.y - 70})`}>
+                <g transform={`translate(${cP.x + 60} ${cP.y - 70})`} opacity={seg(tau, T('a learned rule') - 0.3, T('a learned rule'))}>
                   <rect x={0} y={-46} width={360} height={84} rx={14} fill={C.paper} stroke={C.ink} strokeWidth={4} />
                   <text x={22} y={10} fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.ink}>POLICY</text>
                   <text x={190} y={10} fontFamily={F.body} fontWeight={700} fontSize={26} fill={C.inkSoft}>a learned rule</text>
                 </g>
+              </g>
+            ) : null}
+            {lensK > 0 ? (
+              <g opacity={lensK}>
+                <circle cx={lensP.x} cy={lensP.y} r={180 + 900 * lensK} fill="none" stroke="#0B1620" strokeWidth={900 * lensK} opacity={0.85} />
+                <circle cx={lensP.x} cy={lensP.y} r={60 + 40 * Math.sin(tau * 9)} fill="none" stroke={C.teal} strokeWidth={8} />
+                <circle cx={lensP.x} cy={lensP.y} r={18} fill="#FFE07A" />
               </g>
             ) : null}
             {reflex ? (
@@ -345,4 +432,3 @@ const PolicyShot: React.FC<{tau: number; f: number}> = ({tau, f}) => {
     </AbsoluteFill>
   );
 };
-void blendPose; void LADLE;

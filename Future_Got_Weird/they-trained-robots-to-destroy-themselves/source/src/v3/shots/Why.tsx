@@ -2,11 +2,13 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {Cam3, makeProj, camMix, orbit} from '../engine/camera';
-import {V3, add, clamp01, lerp3, mix, smooth, norm, DEG} from '../engine/math';
-import {Item, box, quad, line3, sortItems} from '../engine/prims';
+import {V3, add, sub, mulS, clamp01, lerp3, mix, smooth, norm, DEG} from '../engine/math';
+import {Item, box, quad, line3, sortItems, circle3, mixHex} from '../engine/prims';
+import {ActuatorSection, actuatorPuck} from '../fx/Cutaway';
 import {Scene3D, RobotSpec, CharSpec} from '../engine/Scene3D';
-import {STUDIO_ENV, StudioBg, turntable, LINE_ENV, lineSet, panelBetween, crate, Padlock, shutter, recycleSet, filmLights, partsRack} from '../sets/Props3D';
-import {WORKSHOP_ENV, WS, scrapBin, stand, workbench, workshopBack, toolCart} from '../sets/Workshop';
+import {panelBetween, crate, Padlock, shutter, recycleSet, filmLights, partsRack, dockSet} from '../sets/Props3D';
+import {CELL, CELL_ENV, cellSet} from '../sets/Line';
+import {WORKSHOP_ENV, WS, stand, workbench, workshopBack, toolCart} from '../sets/Workshop';
 import {STAND, walkPose, blendPose, poseTrack} from '../robot/motion';
 import {Pose, solve} from '../robot/rig';
 import {T, blockStart} from '../cues';
@@ -51,7 +53,7 @@ const S2a: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   const pose = s2aPose(tau);
   const c0 = visorCam(s2aPose(WHY_START), 62);
   const c1: Cam3 = {pos: [-262, 182, 70], target: [-176, 158, -118], fov: 34, roll: -1};
-  const c2: Cam3 = {pos: [-470, 205, 330], target: [-95, 205, -280], fov: 42, roll: -1.5};
+  const c2: Cam3 = {pos: [-430, 190, 330], target: [-110, 240, -300], fov: 44, roll: -1.5};
   const u1 = easeInOut(seg(tau, WHY_START + 0.45, WHY_START + 1.9));
   const u2 = easeInOut(seg(tau, WHY_START + 1.6, S2B + 0.2));
   const cam = camMix(camMix(c0, c1, u1), c2, u2);
@@ -146,59 +148,60 @@ const S2bc: React.FC<{tau: number; f: number}> = ({tau, f}) => {
       f02 = walkPose([F02_LINE[0] - 20, 0, F02_LINE[2] + 70], -Math.PI / 2 - 0.25, w, 0, {stride: 58});
     }
   }
-  robots.push({id: 'f02line', pose: f02, light: LIGHT});
-  // the placed panel stays on the car; while held it rides between the hands
+  robots.push({id: 'f02line', pose: f02, light: LIGHT, ground: 0});
   const K = lineKeys();
-  const pnl = st.panelPlaced ? panelBetween(makeProj({pos: [0, 0, 1], target: [0, 0, 0]}), LINE_ENV, 'x', K.placed[0], K.placed[1]) : null;
-  void pnl;
-  // F.03 walks in from the right and takes the station (S2c)
+  // F.03 walks in from the right and takes the station (S2c); it loads the next panel from the rack
+  let p03: Pose | null = null;
   if (tau > S2C - 0.4) {
     const tw = tau - (S2C - 0.4);
     const walkDist = Math.min(tw * 105, 330);
-    let p03 = walkPose([400, 0, F02_LINE[2] + 30], -Math.PI / 2, walkDist, 0, {stride: 60});
+    p03 = walkPose([400, 0, F02_LINE[2] + 30], -Math.PI / 2, walkDist, 0, {stride: 60});
     if (walkDist >= 330) {
       const k = seg(tau, S2C - 0.4 + 330 / 105, S2C - 0.4 + 330 / 105 + 0.8);
       const at = STAND([70, 95.4, F02_LINE[2] + 30], -Math.PI / 2 + (-Math.PI / 2) * smooth(k));
       p03 = blendPose(p03, at, smooth(Math.min(1, k * 2)));
     }
-    robots.push({id: 'f03line', pose: p03, kind: 'F03', light: LIGHT});
+    robots.push({id: 'f03line', pose: p03, kind: 'F03', light: LIGHT, ground: 0});
   }
-  // the wider line: more F.03 stations revealed as the camera pulls back
-  const stations = [-760, -1460, 700, 1400];
-  stations.forEach((x, k) => {
+  // further stations: F.03s at work
+  CELL.stationX.slice(1).forEach((x, k) => {
     const p = STAND([x, 95.4, -2], Math.PI);
-    p.handL = {pos: [x + 28, 104, carSide + 4]};
-    p.handR = {pos: [x - 30, 104, carSide + 4]};
-    robots.push({id: 'st' + k, pose: p, kind: 'F03', light: LIGHT});
+    p.handL = {pos: [x + 28, 104 + 3 * Math.sin(tau * 2 + k), CELL.carSide + 4]};
+    p.handR = {pos: [x - 30, 104 + 3 * Math.sin(tau * 2 + k), CELL.carSide + 4]};
+    robots.push({id: 'st' + k, pose: p, kind: 'F03', light: LIGHT, ground: 0});
   });
-  // cameras: S2b dolly along the station, S2c pull back to the long line
-  const camB: Cam3 = {pos: lerp3([-300, 185, 330], [-240, 170, 290], smooth(seg(tau, S2B, S2C))), target: [20, 112, -30], fov: 42, roll: 2};
-  const camC: Cam3 = {pos: [140, 360, 1350], target: [-40, 110, -80], fov: 46};
-  const cam = tau < S2C + 1.2 ? camB : camMix(camB, camC, easeInOut(seg(tau, S2C + 1.2, S2C + 3.4)));
+  // the panel: on the rack, carried, placed; clamps close and the stack light turns green
+  const tPlace = S2B + 2.8;
+  const clamp = smooth(seg(tau, tPlace + 0.1, tPlace + 0.4));
+  const stack: 'amber' | 'green' = clamp >= 0.99 ? 'green' : 'amber';
+  // cameras: S2b starts low at the rack on the hands, follows the panel to the body; S2c cranes out along the line
+  const b0: Cam3 = {pos: [-70, 150, 200], target: [66, 100, -6], fov: 38, roll: 2};
+  const b1: Cam3 = {pos: [-250, 185, 300], target: [10, 140, -110], fov: 42, roll: 1};
+  const camB = camMix(b0, b1, easeInOut(seg(tau, S2B + 0.9, S2B + 3.0)));
+  const camB2: Cam3 = {...b1, pos: lerp3(b1.pos, [-200, 190, 330], smooth(seg(tau, S2B + 3.0, S2C + 1.2)))};
+  const camC: Cam3 = {pos: [640, 560, 900], target: [-160, 90, -160], fov: 44, roll: -2};
+  const cam = tau < S2B + 3.0 ? camB : tau < S2C + 1.2 ? camB2 : camMix(camB2, camC, easeInOut(seg(tau, S2C + 1.2, S2C + 3.6)));
   const pr = makeProj(cam);
-  items.push(...lineSet(pr, LINE_ENV, 0));
-  items.push(...partsRack(pr, LINE_ENV, [96, 50, 2], tau > S2B + 1.0 ? 1 : 2));
+  items.push(...cellSet(pr, CELL_ENV, tau, {stack, clamp, hmi: seg(tau, S2B, tPlace + 0.4), armT: tau}));
+  items.push(...partsRack(pr, CELL_ENV, [96, 50, 2], tau > S2B + 1.0 ? 1 : 2));
   const panelNow = st.panelPlaced ? K.placed : st.hands;
-  const pi = panelBetween(pr, LINE_ENV, 'pnl', panelNow[0], panelNow[1]);
+  const pi = panelBetween(pr, CELL_ENV, 'pnl', panelNow[0], panelNow[1], 46, '#7F93A8');
   if (pi) items.push(pi);
-  stations.forEach((x, k) => {
-    const q = panelBetween(pr, LINE_ENV, 'stp' + k, [x + 28, 104, carSide + 4], [x - 30, 104, carSide + 4]);
+  CELL.stationX.slice(1).forEach((x, k) => {
+    const q = panelBetween(pr, CELL_ENV, 'stp' + k, [x + 28, 104, CELL.carSide + 4], [x - 30, 104, CELL.carSide + 4], 46, '#7F93A8');
     if (q) items.push(q);
   });
-  const chipB = seg(tau, S2B + 0.3, S2B + 0.6);
   const tag = seg(tau, S2C + 0.9, S2C + 1.3) * (1 - seg(tau, S2C + 3.8, S2C + 4.2));
-  const p03pos = robots.find((r) => r.id === 'f03line');
-  const tagAt = p03pos ? pr.p(add(solve(p03pos.pose).head.o, [0, 40, 0])) : null;
+  const tagAt = p03 ? pr.p(add(solve(p03).head.o, [0, 40, 0])) : null;
   return (
     <AbsoluteFill>
-      <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#EEE7D3" />} items={items} robots={robots} frame={f} />
-      {tau < S2C ? <Chip x={80} y={70} lines={['FIGURE SAYS', 'months loading parts at a BMW plant']} appear={tau - S2B - 0.3} tone="paper" size={34} /> : null}
+      <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#E9E3D0" />} items={items} robots={robots} frame={f} />
+      {tau < S2C ? <Chip x={80} y={70} lines={['FIGURE SAYS', 'months loading parts at a BMW plant']} appear={tau - S2B - 0.3} tone="paper" size={40} /> : null}
       {tag > 0 && tagAt ? (
-        <div style={{position: 'absolute', left: tagAt.x - 120, top: tagAt.y - 70, width: 240, textAlign: 'center', opacity: tag, fontFamily: F.body, fontWeight: 800, fontSize: 32, color: C.ink, background: C.paper, border: `3px solid ${C.ink}`, borderRadius: 12, padding: '6px 0'}}>
+        <div style={{position: 'absolute', left: tagAt.x - 150, top: tagAt.y - 80, width: 300, textAlign: 'center', opacity: tag, fontFamily: F.body, fontWeight: 800, fontSize: 38, color: C.ink, background: C.paper, border: `3px solid ${C.ink}`, borderRadius: 12, padding: '6px 0'}}>
           F.03 · newer model
         </div>
       ) : null}
-      {void chipB}
     </AbsoluteFill>
   );
 };
@@ -206,130 +209,145 @@ const S2bc: React.FC<{tau: number; f: number}> = ({tau, f}) => {
 // ---------------------------------------------------------------- workshop shots
 const wsRobotOnStand = (tau: number): Pose => {
   const p = STAND([WS.stand[0], WS.standTop + 95.4, WS.stand[2]], 0.15);
-  p.head.pitch = 0.18;
+  p.head.pitch = 0.18 + 0.02 * Math.sin(tau * 0.7);
   return p;
 };
-const wsItems = (pr: ReturnType<typeof makeProj>, tau: number, opts: {crateFold?: number; noBench?: boolean} = {}) => {
+const wsItems = (pr: ReturnType<typeof makeProj>, tau: number, opts: {crateFold?: number; noBench?: boolean; swing?: number; noCrate?: boolean} = {}) => {
   const env = WORKSHOP_ENV;
-  const items: Item[] = [...workshopBack(pr, env, tau), ...stand(pr, env), ...scrapBin(pr, env)];
+  const items: Item[] = [...workshopBack(pr, env, tau), ...stand(pr, env)];
   if (!opts.noBench) items.push(...workbench(pr, env));
-  items.push(...crate(pr, env, WS.crate, opts.crateFold ?? 0, {key: 'wsCrate'}));
+  if (!opts.noCrate) items.push(...crate(pr, env, WS.crate, opts.crateFold ?? 0, {key: 'wsCrate', swing: opts.swing}));
+  items.push(...toolCart(pr, env, [380, 0, 60], 'wsCart'));
   return items;
 };
 
-/** S2d: "So what do you do with a retired robot?" crane across the three options. */
+/** S2d: "So what do you do with a retired robot?" crane across the bay: the retired F.02, the crate, the bench. */
 const S2d: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   const u = easeInOut(seg(tau, S2D, S2E));
   const cam: Cam3 = {pos: lerp3([-300, 560, 1050], [120, 260, 820], u), target: lerp3([-100, 60, -100], [60, 110, -100], u), fov: 50, roll: mix(-3, 0, u)};
   const pr = makeProj(cam);
   const chars: CharSpec[] = [{id: 'eng', look: CAST.clerkB, pose: {...IDLE, lookX: -0.6, armR: {a: 30, b: 60}}, feet: [WS.bench[0] - 40, 0, WS.bench[2] + 80], flip: true, seed: 3}];
-  return <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#F4ECD6" />} items={wsItems(pr, tau)} robots={[{id: 'wsR', pose: wsRobotOnStand(tau), light: LIGHT}]} chars={chars} frame={f} />;
+  return <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#F4ECD6" />} items={wsItems(pr, tau)} robots={[{id: 'wsR', pose: wsRobotOnStand(tau), light: LIGHT, ground: WS.standTop}]} chars={chars} frame={f} />;
 };
 
-/** S2e: "Sell it?" the crate folds up around the robot; cutaway to an actuator; a padlock and a roller door stop it leaving. */
+/** S2e: "Sell it?" the crate closes around the robot; its front door sweeps past the lens to an orderly cutaway of
+ *  a knee actuator ("custom actuators"), then sweeps shut again; a padlock and the roller door stop it leaving. */
+const CR_POSE = (): Pose => {
+  const p = STAND([WS.crate[0], 12 + 95.4, WS.crate[2]], Math.PI / 2);
+  p.head.pitch = 0.12;
+  return p;
+};
 const S2e: React.FC<{tau: number; f: number}> = ({tau, f}) => {
-  const tFold0 = T('Sell it') - 0.05, tFold1 = tFold0 + 1.2;
-  const tCut0 = T('like the actuators') - 0.6, tCut1 = T('and it didn’t want') - 0.25;
+  const tFold0 = T('Sell it') - 0.05, tFold1 = tFold0 + 1.0;
+  const tPush = T('Figure says they’re packed') - 0.1;
+  const tOpen = T('custom hardware') - 0.2;
+  const tClose = T('and it didn’t want') - 0.35;
   const tLock = T('leaving the building') - 0.5;
   const fold = smooth(seg(tau, tFold0, tFold1));
-  const robotPos: V3 = [WS.crate[0], 12 + 95.4, WS.crate[2]];
-  const pose = STAND(robotPos, -0.2);
-  pose.head.pitch = 0.1;
-  const env = WORKSHOP_ENV;
-  // phases
-  const cut = seg(tau, tCut0, tCut0 + 0.6) * (1 - seg(tau, tCut1, tCut1 + 0.4));
-  const lockU = seg(tau, tLock, tLock + 0.35);
-  const doorU = smooth(seg(tau, tLock + 0.45, tLock + 1.2));
-  const dw = smooth(seg(tau, S2E, S2F));   // the wide keeps drifting in
-  const camWide: Cam3 = {pos: lerp3([360, 230, 520], [420, 205, 420], dw), target: [600, 115, -80], fov: 46, roll: mix(-2, 1, dw)};
-  const kneeL = solve(pose).side.L.knee;
-  const camKnee: Cam3 = {pos: add(kneeL, [-30, 18, 120]), target: kneeL, fov: 34};
-  const camLock: Cam3 = {pos: [380, 210, 560], target: [640, 130, -60], fov: 42};
-  let cam = camWide;
-  if (tau >= tCut0 && tau < tCut1 + 0.4) cam = camMix(camWide, camKnee, easeInOut(seg(tau, tCut0, tCut0 + 0.6)) * (1 - easeInOut(seg(tau, tCut1, tCut1 + 0.4))));
-  if (tau >= tCut1 + 0.4) cam = camMix(camWide, camLock, easeInOut(seg(tau, tCut1 + 0.4, tLock)));
+  const swing = easeInOut(seg(tau, tOpen, tOpen + 0.5)) * (1 - easeInOut(seg(tau, tClose, tClose + 0.45)));
+  const pose = CR_POSE();
+  const sk = solve(pose);
+  const out = norm(sub(sk.side.R.knee, sk.side.L.knee));
+  const kneeC = add(sk.side.R.knee, mulS(out, 6.5));
+  const [cx, , cz] = WS.crate;
+  const dw = smooth(seg(tau, S2E, tPush));
+  const camWide: Cam3 = {pos: lerp3([360, 230, 520], [420, 205, 440], dw), target: [600, 115, -80], fov: 46, roll: mix(-2, 0, dw)};
+  const camDoor: Cam3 = {pos: [cx + 40, 125, cz + 230], target: [cx + 5, 108, cz], fov: 40};
+  const camKnee: Cam3 = {pos: add(kneeC, [24, 16, 120]), target: add(kneeC, [6, 4, 0]), fov: 34};
+  const camLock: Cam3 = {pos: [cx - 60, 150, cz + 300], target: [cx, 120, cz + 40], fov: 42};
+  let cam = camMix(camWide, camDoor, easeInOut(seg(tau, tPush, tOpen)));
+  if (tau > tOpen + 0.2) cam = camMix(camDoor, camKnee, easeInOut(seg(tau, tOpen + 0.2, tOpen + 1.0)));
+  if (tau > tClose - 0.2) cam = camMix(camMix(camDoor, camKnee, 1 - easeInOut(seg(tau, tClose - 0.2, tClose + 0.45))), camLock, easeInOut(seg(tau, tClose + 0.45, tLock + 0.2)));
   const pr = makeProj(cam);
-  const items = wsItems(pr, tau, {crateFold: fold});
-  // loading bay door in the right wall behind the crate
+  const items = wsItems(pr, tau, {crateFold: fold, swing});
+  const env = WORKSHOP_ENV;
+  const doorU = smooth(seg(tau, tLock + 0.45, tLock + 1.2));
   const doorItems = shutter(pr, env, 520, 760, WS.wallZ + 2, 320, doorU);
   items.push(...doorItems.map((d) => ({...d, z: 1e6 - 3})));
-  const robots: RobotSpec[] = [{id: 'cr', pose, light: LIGHT, opacity: 1, hide: cut > 0.5 ? [] : undefined, highlight: cut > 0 ? [{prefix: 'kneeAct', color: C.saffron, amount: 0.6 * cut}] : undefined}];
-  // x-ray: the near crate wall turns translucent during the cutaway
-  const xray = cut;
-  const itemsX = items.map((it) => (xray > 0 && it.key.startsWith('wsCratewF') ? {...it, el: <g key={it.key} opacity={1 - 0.85 * xray}>{it.el}</g>} : it));
-  const kp = pr.p(kneeL);
-  const r = 7 * kp.s;
-  const spin = (tau - tCut0) * 3;
+  const cut = seg(tau, tOpen + 0.35, tOpen + 0.7) * (1 - seg(tau, tClose - 0.15, tClose + 0.1));
+  const lockU = seg(tau, tLock, tLock + 0.35);
+  const lbl = pr.p(add(kneeC, [12, 6, 0]));
+  const lblK = seg(tau, T('like the actuators') - 0.1, T('like the actuators') + 0.25);
   return (
     <AbsoluteFill>
-      <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#F4ECD6" />} items={itemsX} robots={robots} frame={f} />
-      {cut > 0.05 ? (
-        <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}} opacity={cut}>
-          {/* simplified actuator internals: stator teeth, rotor, planetary gear ring */}
-          <g transform={`translate(${kp.x} ${kp.y})`}>
-            <circle r={r * 1.45} fill="#1F262D" stroke={C.saffron} strokeWidth={6} />
-            {Array.from({length: 12}, (_, k) => {
-              const a = (k / 12) * Math.PI * 2;
-              return <rect key={k} x={-r * 0.12} y={-r * 1.32} width={r * 0.24} height={r * 0.36} fill="#C9854A" transform={`rotate(${(a * 180) / Math.PI})`} />;
-            })}
-            <circle r={r * 0.85} fill="#5B6670" stroke="#0A1115" strokeWidth={3} />
-            {Array.from({length: 3}, (_, k) => {
-              const a = spin + (k / 3) * Math.PI * 2;
-              return <circle key={k} cx={Math.cos(a) * r * 0.45} cy={Math.sin(a) * r * 0.45} r={r * 0.24} fill="#8F9BA6" stroke="#0A1115" strokeWidth={2} />;
-            })}
-            <circle r={r * 0.16} fill={C.saffron} />
-          </g>
-          <line x1={kp.x + r * 1.5} y1={kp.y - r * 0.6} x2={kp.x + r * 3.2} y2={kp.y - r * 1.6} stroke={C.ink} strokeWidth={5} />
-          <g transform={`translate(${kp.x + r * 3.2} ${kp.y - r * 1.6})`}>
-            <rect x={0} y={-48} width={430} height={84} rx={14} fill={C.paper} stroke={C.ink} strokeWidth={4} />
-            <text x={24} y={8} fontFamily={F.body} fontWeight={800} fontSize={42} fill={C.ink}>custom actuators</text>
-          </g>
-        </svg>
-      ) : null}
-      {lockU > 0 ? (
-        <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}>
-          <Padlock pr={pr} at={[WS.crate[0], 110, WS.crate[2] + 58]} size={30} shut={seg(tau, tLock + 0.25, tLock + 0.4)} drop={easeOut(lockU)} />
-        </svg>
-      ) : null}
+      <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#F4ECD6" />} items={items} robots={[{id: 'cr', pose, light: LIGHT, hide: cut > 0.3 ? ['kneeActR'] : undefined}]} frame={f}
+        over={(
+          <>
+            <ActuatorSection pr={pr} c={kneeC} axis={out} t={tau} k={cut} />
+            {cut > 0.05 && lblK > 0 ? (
+              <g opacity={Math.min(cut, lblK)}>
+                <line x1={lbl.x - 10} y1={lbl.y + 20} x2={lbl.x + 120} y2={lbl.y - 60} stroke={C.ink} strokeWidth={5} />
+                <g transform={`translate(${lbl.x + 120} ${lbl.y - 60})`}>
+                  <rect x={0} y={-48} width={430} height={84} rx={14} fill={C.paper} stroke={C.ink} strokeWidth={4} />
+                  <text x={24} y={8} fontFamily={F.body} fontWeight={800} fontSize={42} fill={C.ink}>custom actuators</text>
+                </g>
+              </g>
+            ) : null}
+            {lockU > 0 ? <Padlock pr={pr} at={[cx + 50, 120, cz + 58]} size={26} shut={seg(tau, tLock + 0.25, tLock + 0.4)} drop={easeOut(lockU)} /> : null}
+          </>
+        )} />
     </AbsoluteFill>
   );
 };
 
-/** S2f: "Take them apart?" exploded view; match to the bench; a long queue and a flipping calendar. */
+/** S2f: "Take them apart?" a tactile teardown on the stand: the bolts back out, the knee actuator slides out, turns
+ *  to the light, slides back and seats. Then the queue of robots that would wait, and the calendar. */
+const TD_POSE = (): Pose => {
+  const p = STAND([WS.stand[0], WS.standTop + 95.4, WS.stand[2]], Math.PI / 2);
+  p.head.pitch = 0.15;
+  return p;
+};
+const S2F_QUEUE = () => T('Take them apart') - 0.05 + 3.75;
+export const s2gRimCam = (u: number): Cam3 => ({pos: [mix(60, 90, u), mix(800, 860, u), mix(230, 260, u)], target: [0, LADLE.steel, 0], fov: 44, roll: mix(-4, 0, u)});
 const S2f: React.FC<{tau: number; f: number}> = ({tau, f}) => {
-  const tEx0 = T('Take them apart') - 0.05;
-  const tQueue = T('Figure says doing that') - 0.1;
+  const t0 = T('Take them apart') - 0.05;
   const env = WORKSHOP_ENV;
-  if (tau < tQueue) {
-    const ex = easeInOut(seg(tau, tEx0 + 0.1, tEx0 + 1.1));
-    const cam = orbit([WS.stand[0], 120, WS.stand[2]], 330, mix(20, 55, seg(tau, S2F, tQueue)), 25, 40);
+  if (tau < S2F_QUEUE()) {
+    const pose = TD_POSE();
+    const sk = solve(pose);
+    const out = norm(sub(sk.side.R.knee, sk.side.L.knee));
+    const open = smooth(seg(tau, t0 + 0.1, t0 + 0.6));
+    const sep = easeInOut(seg(tau, t0 + 0.6, t0 + 1.3)) * (1 - easeInOut(seg(tau, t0 + 2.8, t0 + 3.3)));
+    const seat = seg(tau, t0 + 3.3, t0 + 3.55);
+    const d = 22 * sep;
+    const detached = tau > t0 + 0.6 && tau < t0 + 3.3;
+    const pc = add(sk.side.R.knee, mulS(out, 2.6 + d));
+    const tilt = 0.5 * Math.sin(Math.PI * seg(tau, t0 + 1.3, t0 + 2.8));
+    const axis = norm(add(out, mulS([1, 0, 0], tilt)));
+    const kneeC = sk.side.R.knee;
+    const drift = smooth(seg(tau, S2F, S2F_QUEUE()));
+    const cam: Cam3 = {pos: add(kneeC, [mix(50, 20, drift), mix(34, 24, drift), mix(150, 120, drift)]), target: add(kneeC, [mix(-4, 4, drift), 6, 12]), fov: 38};
     const pr = makeProj(cam);
-    return <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#F4ECD6" />} items={wsItems(pr, tau)} robots={[{id: 'ex', pose: wsRobotOnStand(tau), light: LIGHT, explode: ex * 0.9}]} frame={f} />;
+    const items = wsItems(pr, tau, {noCrate: true});
+    items.push(actuatorPuck(pr, env, 'tdPuck', pc, detached ? axis : out, {r: 5.8, w: 7, boltOut: detached ? 3 : 3 * open * (1 - seat), bolts: 6, z: pr.p(pc).z - 30}));
+    const chars: CharSpec[] = [{id: 'tdEng', look: CAST.clerkB, pose: {...IDLE, lookX: -0.7, lookY: 0.5, armL: {a: 60, b: 70}, armR: {a: 50 + 20 * sep, b: 80}, mouth: 'flat'}, feet: [WS.stand[0] + 85, 0, WS.stand[2] - 45], flip: true, seed: 5}];
+    const flash = seat > 0 && seat < 1 ? pr.p(add(kneeC, mulS(out, 6))) : null;
+    return (
+      <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#F4ECD6" />} items={items} robots={[{id: 'td', pose, light: LIGHT, hide: ['kneeActR'], ground: WS.standTop}]} chars={chars} frame={f}
+        over={flash ? <circle cx={flash.x} cy={flash.y} r={(20 + 60 * seat) * flash.s} fill="none" stroke="#FFFFFF" strokeWidth={6} opacity={1 - seat} /> : null} />
+    );
   }
-  // the queue: stands receding along the wall, each with a robot waiting; the engineer works on one
-  const u = easeInOut(seg(tau, tQueue, tQueue + 2.2));
-  const u2 = easeInOut(seg(tau, tQueue + 2.2, S2G));   // then a slow push toward the calendar and the waiting queue
-  const cam: Cam3 = {pos: lerp3(lerp3([300, 140, 0], [380, 250, 300], u), [250, 230, 170], u2), target: lerp3(lerp3([300, 105, -300], [-80, 120, -440], u), [-140, 170, -460], u2), fov: mix(mix(36, 58, u), 50, u2)};
+  // the queue: stands receding along the wall, each with a robot waiting; the engineer works on one at the bench
+  const tQ = S2F_QUEUE();
+  const u = easeInOut(seg(tau, tQ, tQ + 1.6));
+  const u2 = easeInOut(seg(tau, tQ + 1.6, S2G - 0.45));
+  const cam: Cam3 = {pos: lerp3(lerp3([300, 140, 0], [380, 250, 300], u), [300, 205, 120], u2), target: lerp3(lerp3([300, 105, -300], [-80, 120, -440], u), ACT_TOP_W, u2), fov: mix(mix(36, 58, u), 46, u2)};
   const pr = makeProj(cam);
   const items: Item[] = [...workshopBack(pr, env, tau), ...workbench(pr, env)];
   const robots: RobotSpec[] = [];
   for (let k = 0; k < 9; k++) {
     const x = -200 - k * 170;
     items.push(...box(pr, env, 'q' + k, {c: [x, 6, -420], size: [120, 12, 100], color: C.blue}));
-    robots.push({id: 'q' + k, pose: STAND([x, 12 + 95.4, -420], 0), light: LIGHT});
+    robots.push({id: 'q' + k, pose: STAND([x, 12 + 95.4, -420], 0), light: LIGHT, ground: 12});
   }
-  // a robot lying on the bench being worked on (exploded a little)
-  const benchBot = STAND([WS.bench[0], 100 + 20, WS.bench[2]], Math.PI / 2);
-  benchBot.pitch = -Math.PI / 2;
-  robots.push({id: 'bench', pose: benchBot, light: LIGHT, explode: 0.35});
-  // the covered next model, waiting
   const cloth = quad(pr, env, 'cloth', [[540, 0, -560], [700, 0, -560], [680, 185, -545], [560, 185, -545]], '#EF6B55', {smooth: true});
   if (cloth) items.push(cloth);
   const chars: CharSpec[] = [{id: 'eng2', look: CAST.clerkB, pose: {...IDLE, lookX: -0.4, lookY: 0.4, armL: {a: 40, b: 80}, armR: {a: 30, b: 70}, mouth: 'flat'}, feet: [WS.bench[0] - 10, 0, WS.bench[2] + 70], seed: 5}];
-  // wall calendar: pages flip while the queue doesn't move
-  const cal = pr.p([-60, 300, WS.wallZ + 4]);
-  const flips = Math.floor(seg(tau, tQueue + 0.8, WHY_END) * 9);
+  const cal = pr.p([-430, 330, WS.wallZ + 4]);
+  const flips = Math.floor(seg(tau, tQ + 0.6, S2G - 0.5) * 9);
   const tagP = pr.p([620, 215, -540]);
+  // "Melt them?": a retaining ring pops off the actuator in the vise and flies at the lens, becoming the ladle rim
+  const fly = seg(tau, S2G - 0.42, S2G);
   return (
     <AbsoluteFill>
       <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#F4ECD6" />} items={items} robots={robots} chars={chars} frame={f} />
@@ -343,29 +361,37 @@ const S2f: React.FC<{tau: number; f: number}> = ({tau, f}) => {
           <rect x={-100} y={-26} width={200} height={46} rx={8} fill={C.paper} stroke={C.ink} strokeWidth={3} />
           <text x={0} y={8} textAnchor="middle" fontFamily={F.body} fontWeight={800} fontSize={26} fill={C.ink}>NEXT MODEL</text>
         </g>
+        {fly > 0 ? <FlyingRing pr={pr} u={fly} /> : null}
       </svg>
     </AbsoluteFill>
   );
 };
+const ACT_TOP_W: V3 = [WS.bench[0] - 70, 118, WS.bench[2] - 6];
 
-/** S2g: "Melt them? Simple." scrap-bin rim → ladle rim; "Except … brings its battery along." x-ray battery at the edge. */
+/** The retaining ring: point-wise morph from its projection on the actuator to the ladle rim's projection in S2g. */
+const FlyingRing: React.FC<{pr: ReturnType<typeof makeProj>; u: number}> = ({pr, u}) => {
+  const n = 48;
+  const prR = makeProj(s2gRimCam(0));
+  const e = u * u * (3 - 2 * u) * 0.35 + Math.pow(u, 3) * 0.65;   // accelerates toward the lens
+  const ring = (rS: number, rE: number) => {
+    const a = circle3([ACT_TOP_W[0], ACT_TOP_W[1] + 3 + 60 * e, ACT_TOP_W[2]], rS, n).slice(0, n).map((q) => pr.p(q));
+    const b = circle3([0, LADLE.rim + 0.5, 0], rE, n).slice(0, n).map((q) => prR.p(q));
+    return a.map((q, k) => ({x: mix(q.x, b[k].x, e), y: mix(q.y, b[k].y, e)}));
+  };
+  const outer = ring(6, LADLE.rTop + 14), inner = ring(4.8, LADLE.rIn + 5);
+  const d = (pts: {x: number; y: number}[]) => 'M' + pts.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join('L') + 'Z';
+  const col = mixHex('#AEB8C2', '#E0662A', clamp01((e - 0.35) / 0.65));
+  return <path d={d(outer) + d(inner)} fillRule="evenodd" fill={col} stroke="#2B2F35" strokeWidth={2 + 6 * e} />;
+};
+
+/** S2g: "Melt them? Simple." the ladle rim under molten light; "Except … brings its battery along": the battery. */
 const S2g: React.FC<{tau: number; f: number}> = ({tau, f}) => {
-  const tSimple = T('Simple') - 0.05;
   const tBatt = T('Except a robot') - 0.1;
-  if (tau < tSimple) {
-    const [x, , z] = WS.bin;
-    const u = smooth(seg(tau, S2G, tSimple));
-    const cam: Cam3 = {pos: [x + 40, mix(330, 270, u), z + 90], target: [x, 70, z], fov: 44, roll: mix(-4, 0, u)};
-    const pr = makeProj(cam);
-    return <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#F4ECD6" />} items={wsItems(pr, tau)} robots={[{id: 'wsR2', pose: wsRobotOnStand(tau), light: LIGHT}]} frame={f} />;
-  }
   if (tau < tBatt) {
-    // the ladle rim from above, aligned with the bin rim
-    const u = smooth(seg(tau, tSimple, tBatt));
-    const cam: Cam3 = {pos: [140, mix(1250, 1150, u), 360], target: [0, LADLE.steel, 0], fov: 44, roll: mix(-4, 0, u)};
-    return <FoundryScene cam={cam} tau={tau} robots={[]} entries={[]} />;
+    const u = smooth(seg(tau, S2G, tBatt));
+    return <FoundryScene cam={s2gRimCam(u)} tau={tau} robots={[]} entries={[]} />;
   }
-  // at the edge: the torso battery glows through an x-ray cutaway
+  // at the edge: the torso battery glows through a cutaway
   const pose = STAND([DECK.edgeX - 34, DECK.y + 95.4, 0], Math.PI / 2);
   pose.head.pitch = 0.35;
   const u = easeInOut(seg(tau, tBatt, S2H));
@@ -410,22 +436,18 @@ const S2h: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   const lift = smooth(seg(tau, tLift, S2I));
   const crateAt: V3 = [0, lift * 380, 0];
   const u = easeInOut(seg(tau, S2H, S2I));
-  const cam: Cam3 = {pos: lerp3([150, 150, 420], [110, 170 + lift * 120, 380], u), target: [0, 110 + lift * 260, 0], fov: 44};
+  const cam: Cam3 = {pos: lerp3([260, 170, 520], [200, 190 + lift * 120, 470], u), target: [0, 120 + lift * 240, -60], fov: 44};
   const pr = makeProj(cam);
   const env = WORKSHOP_ENV;
   const items: Item[] = [];
-  const fl = quad(pr, env, 'dock', [[-2000, 0, -1200], [2000, 0, -1200], [2000, 0, 1500], [-2000, 0, 1500]], '#C9CCBE', {flat: true, stroke: false});
-  if (fl) items.push({...fl, z: 1e6 + 1});
-  const wall = quad(pr, env, 'dockWall', [[-2000, 0, -400], [2000, 0, -400], [2000, 700, -400], [-2000, 700, -400]], '#D9E4EE', {flat: true, stroke: false});
-  if (wall) items.push({...wall, z: 1e6});
+  items.push(...dockSet(pr, env));
   items.push(...crate(pr, env, crateAt, 1, {lid: 1, key: 'dkCrate'}));
   if (tau > tLift - 0.6) {
     const hookY = 260 + crateAt[1] + 120 - (1 - seg(tau, tLift - 0.6, tLift)) * -200;
-    items.push(line3(pr, 'hk1', [[0, hookY + 600, 0], [0, hookY, 0]], '#2B2E33', 5));
+    items.push(line3(pr, 'hk1', [[0, 690, 0], [0, hookY, 0]], '#2B2E33', 5));
     items.push(...box(pr, env, 'hkb', {c: [0, hookY - 10, 0], size: [40, 30, 30], color: C.saffron}));
     for (const s of [-1, 1]) items.push(line3(pr, 'sl' + s, [[0, hookY - 20, 0], [s * 55, crateAt[1] + 214, s * 48]], '#3B3D40', 3));
   }
-  sortItems(items);
   const face = pr.p(add(crateAt, [0, 120, 56]));
   const sc = face.s;
   const stamp = (t0: number, text: string, sub: string, col: string, dx: number, dy: number, rot: number) => {

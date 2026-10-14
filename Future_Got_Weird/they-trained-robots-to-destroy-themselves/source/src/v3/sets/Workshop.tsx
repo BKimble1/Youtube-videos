@@ -21,7 +21,7 @@ export const WS = {
   crate: [640, 0, -60] as V3,
   bin: [-640, 0, 120] as V3,
   wallZ: -620,
-  sign: [-10, 340, -620] as V3,      // centre of the company sign on the back wall, beside the stand
+  sign: [-90, 372, -620] as V3,      // centre of the company sign on the back wall, above and behind the stand
   bay: [-980, 0, -420] as V3,        // background assembly bay (behind the glass partition)
 };
 

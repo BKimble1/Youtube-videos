@@ -31,7 +31,8 @@ const Phone: React.FC<{tau: number}> = ({tau}) => {
   const reply = easeOut(seg(tau, T_REPLY, T_REPLY + 0.45));
   const post = easeOut(seg(tau, T_POST, T_POST + 0.45));
   const close = tau >= T_POST + 0.2;
-  const tiltY = (close ? -4 : mix(-24, -8, enter)) + Math.sin((tau - FILM_START) * 0.9) * (close ? 0.8 : 2);
+  const out = Math.pow(seg(tau, T_T2 - 0.32, T_T2), 2);       // the phone turns edge-on and away (into the clapper)
+  const tiltY = (close ? -4 : mix(-24, -8, enter)) + Math.sin((tau - FILM_START) * 0.9) * (close ? 0.8 : 2) + 90 * out;
   // three framings: the phone arrives; cut in on the post; a fast scroll-whip down to the reply
   const push = tau < T_POST + 0.2 ? mix(1, 1.08, easeInOut(seg(tau, FILM_START, T_POST + 0.2)))
     : tau < T_REPLY - 0.2 ? mix(1.85, 1.98, seg(tau, T_POST + 0.2, T_REPLY - 0.2))
@@ -124,7 +125,7 @@ const Movie: React.FC<{tau: number}> = ({tau}) => {
           </g>
         </g>
         {/* clapperboard */}
-        <g transform={`translate(960 ${330 + toChain * 900}) rotate(${-3 + toChain * 25})`} opacity={1 - toChain}>
+        <g transform={`translate(960 ${330 + toChain * 900}) rotate(${-3 + toChain * 25}) scale(${Math.max(0.02, Math.sin((Math.PI / 2) * easeOut(seg(tau, T_T2, T_T2 + 0.3))))} 1)`} opacity={1 - toChain}>
           <rect x={-420} y={0} width={840} height={440} rx={14} fill="#1E2026" stroke="#0B0C0F" strokeWidth={8} />
           <g transform={`translate(-420 0) rotate(${-open})`}>
             <rect x={0} y={-96} width={840} height={96} rx={8} fill="#F4ECD6" stroke="#0B0C0F" strokeWidth={8} />
@@ -138,6 +139,22 @@ const Movie: React.FC<{tau: number}> = ({tau}) => {
     </AbsoluteFill>
   );
 };
+
+/** A heavy chain right in front of the lens (out-of-focus, warm rim light), used as an occlusion transition. */
+const LensChain: React.FC<{x: number; tilt: number}> = ({x, tilt}) => (
+  <g transform={`translate(${x} 540) rotate(${tilt})`}>
+    {Array.from({length: 6}, (_, k) => {
+      const y = -820 + k * 360;
+      return k % 2 === 0
+        ? <ellipse key={k} cx={0} cy={y} rx={210} ry={270} fill="none" stroke="#140F10" strokeWidth={130} />
+        : <rect key={k} x={-70} y={y - 260} width={140} height={520} rx={70} fill="#140F10" />;
+    })}
+    {Array.from({length: 6}, (_, k) => {
+      const y = -820 + k * 360;
+      return k % 2 === 0 ? <path key={'h' + k} d={`M${262} ${y - 190} A${270} ${330} 0 0 1 ${262} ${y + 190}`} fill="none" stroke="#FF8A2A" strokeOpacity={0.6} strokeWidth={12} /> : null;
+    })}
+  </g>
+);
 
 // ---------------------------------------------------------------- foundry: the crane chain match, the business case gag, the film crew
 const craneChain = (y0: number, y1: number): ((pr: Parameters<NonNullable<Parameters<typeof FoundryScene>[0]['extra']>>[0]) => Item[]) => (pr) => {
@@ -197,12 +214,29 @@ export const Film: React.FC = () => {
       </AbsoluteFill>
     );
   }
-  if (tau < T_REASON + 0.25) return <Movie tau={tau} />;
+  const T_X = T_REASON + 0.25;
+  if (tau < T_X - 0.22) return <Movie tau={tau} />;
   const pose = STAND([DECK.edgeX - 34, DECK.y + 95.4, 0], Math.PI / 2);
   pose.head.pitch = 0.3;
+  if (tau < T_X + 0.22) {
+    // a crane chain swings past the lens: the movie's glow on one side, the foundry on the other
+    const e = easeInOut(seg(tau, T_X - 0.22, T_X + 0.22));
+    const bx = mix(-420, 2340, e);
+    const u0 = 0;
+    const cam: Cam3 = {pos: lerp3([-40, 1150, 520], [140, 760, 620], u0), target: lerp3([-60, 1100, 120], [-180, 620, 0], u0), fov: 42};
+    return (
+      <AbsoluteFill>
+        <AbsoluteFill style={{clipPath: `polygon(${bx}px 0, 1920px 0, 1920px 1080px, ${bx}px 1080px)`}}><Movie tau={Math.min(tau, T_X - 0.01)} /></AbsoluteFill>
+        <AbsoluteFill style={{clipPath: `polygon(0 0, ${bx}px 0, ${bx}px 1080px, 0 1080px)`}}>
+          <FoundryScene cam={cam} tau={tau} robots={[{pose, id: 'f3', inside: false}]} entries={[]} extra={craneChain(1500, 760)} />
+        </AbsoluteFill>
+        <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}><LensChain x={bx} tilt={mix(-6, 6, e)} /></svg>
+      </AbsoluteFill>
+    );
+  }
   if (tau < T_HINT) {
     // match cut: the movie's chain becomes the foundry crane chain; the camera tilts down it to the robot at the edge
-    const u = easeInOut(seg(tau, T_REASON + 0.25, T_BIZ + 0.3));
+    const u = easeInOut(seg(tau, T_X + 0.22, T_BIZ + 0.3)) * 1;
     const cam: Cam3 = {pos: lerp3([-40, 1150, 520], [140, 760, 620], u), target: lerp3([-60, 1100, 120], [-180, 620, 0], u), fov: 42};
     return (
       <AbsoluteFill>

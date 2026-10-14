@@ -6,9 +6,10 @@ import {Cam3, makeProj, camMix, Proj} from '../engine/camera';
 import {V3, add, clamp01, lerp3, mix, smooth, norm} from '../engine/math';
 import {Item, Env, box, circle3, line3} from '../engine/prims';
 import {polyClosed} from '../engine/draw';
-import {Scene3D} from '../engine/Scene3D';
+import {Scene3D, CharSpec} from '../engine/Scene3D';
 import {arc3} from '../sets/SimWorld';
-import {LINE_ENV, lineSet} from '../sets/Props3D';
+import {filmLights} from '../sets/Props3D';
+import {CELL_ENV, cellSet} from '../sets/Line';
 import {LADLE} from '../sets/Foundry';
 import {STAND, ballistic} from '../robot/motion';
 import {Pose} from '../robot/rig';
@@ -86,6 +87,13 @@ const Crew: React.FC<{f: number; k: number}> = ({f, k}) => {
   );
 };
 
+/** Crew on the foundry floor behind the barriers (seen in the wide reveal). */
+export const FLOOR_CREW: CharSpec[] = [
+  {id: 'fc1', look: CAST.clerkA, pose: {...IDLE, armL: {a: 18, b: 85}, armR: {a: 10, b: 20}, lookX: -0.5, lookY: -0.5, mouth: 'flat'}, feet: [700, 0, 200], seed: 7},
+  {id: 'fc2', look: CAST.checker, pose: {...IDLE, armL: {a: 12, b: 25}, armR: {a: 26, b: 100}, lookX: -0.6, lookY: -0.6, mouth: 'flat'}, feet: [760, 0, 20], seed: 9},
+  {id: 'fc3', look: CAST.clerkC, pose: {...IDLE, armL: {a: 8, b: 12}, armR: {a: 8, b: 12}, lookX: -0.6, lookY: -0.5, mouth: 'flat'}, feet: [710, 0, -170], seed: 11},
+];
+
 // ---------------------------------------------------------------- factory comparison
 const FAC_ROBOT: V3 = [0, 95.4, 260];
 const TASKS: {to: V3; from: V3; lift: number}[] = [
@@ -147,21 +155,24 @@ export const Prove: React.FC = () => {
       </AbsoluteFill>
     );
   }
-  // P2: real time returns; the entry, hard
-  if (tau < T_BUT) {
-    const u = seg(tau, T_SURVIVE, T_BUT);
-    const follow = lerp3(add(st.pose.pos, [0, -20, 0]), [-30, 420, 0], easeInOut(seg(tau, PAYOFF_IN - 0.3, PAYOFF_IN + 0.4)));
-    const cam: Cam3 = {pos: lerp3([260, 640, 520], [240, 520, 470], easeOut(u)), target: follow, fov: 48, roll: -2};
+  // P2: real time returns; the entry, hard. The camera then rises straight off the ripple into P3 (no cut).
+  const p2Cam = (t: number): Cam3 => {
+    const u = seg(t, T_SURVIVE, T_BUT);
+    const follow = lerp3(add(payoffState(Math.min(t, PAYOFF_IN + 0.3)).pose.pos, [0, -20, 0]), [-30, 420, 0], easeInOut(seg(t, PAYOFF_IN - 0.3, PAYOFF_IN + 0.4)));
+    return {pos: lerp3([260, 640, 520], [240, 520, 470], easeOut(u)), target: follow, fov: 48, roll: -2};
+  };
+  if (tau < T_BUT - 0.5) {
     const shake = eIn.t >= 0 ? Math.exp(-eIn.t * 5) : 0;
-    return <FoundryScene cam={cam} tau={tau} robots={robot} entries={[eIn]} shake={shake} />;
+    return <FoundryScene cam={p2Cam(tau)} tau={tau} robots={robot} entries={[eIn]} shake={shake} />;
   }
   // P3/P4: pull back — one arc, one target, then the people who set it up (through the control-room glass)
   if (tau < T_NOTA) {
-    const u = easeInOut(seg(tau, T_BUT, T_SETTING + 0.6));
+    const u = easeInOut(seg(tau, T_BUT - 0.5, T_SETTING + 0.6));
     const w = easeInOut(seg(tau, T_SETTING, T_SETTING + 1.1));
     const camA: Cam3 = {pos: lerp3([620, 1050, 820], [760, 1220, 980], u), target: [-110, 440, 0], fov: 44};
     const camB: Cam3 = {pos: [900, 1000, -560], target: [-110, 460, 20], fov: 40};
-    const cam = camMix(camA, camB, w);
+    const rise = easeInOut(seg(tau, T_BUT - 0.5, T_BUT + 1.0));
+    const cam = camMix(camMix(p2Cam(T_BUT - 0.5), camA, rise), camB, w);
     const arcK = easeInOut(seg(tau, T_ONEMOVE - 0.1, T_ONEMOVE + 0.55));
     const ringK = easeOut(seg(tau, T_ONETARGET, T_ONETARGET + 0.35));
     const pulse = Math.max(0, Math.sin((tau - T_ONETARGET) * 7)) * (tau > T_ONETARGET ? Math.exp(-(tau - T_ONETARGET) * 1.5) : 0);
@@ -174,13 +185,15 @@ export const Prove: React.FC = () => {
         out.push(surfaceRing(pr, c, 26, C.teal, 5, ringK * 0.8, 'tring2'));
       }
       out.push(...barriers(pr, env, seg(tau, T_PREPARED - 0.4, T_PREPARED + 0.6)));
+      // the human-prepared setting: film lights on stands, a camera crane, crew behind the barriers
+      out.push(...filmLights(pr, env, 1));
       return out;
     };
     // the window frame slides in from beyond the edges as the camera retreats through the glass
     const win = easeOut(seg(tau, T_SETTING + 0.2, T_SETTING + 1.2));
     return (
       <AbsoluteFill>
-        <FoundryScene cam={cam} tau={tau} robots={robot} entries={[eIn]} extra={extra} flameScale={0.6} />
+        <FoundryScene cam={cam} tau={tau} robots={robot} entries={[eIn]} extra={extra} flameScale={0.6} chars={FLOOR_CREW} frame={f} />
         {win > 0 ? (
           <AbsoluteFill style={{transform: `scale(${mix(1.9, 1, win)})`, transformOrigin: '960px 520px', opacity: Math.min(1, win * 2)}}>
             <svg width={1920} height={1080} viewBox="0 0 1920 1080"><ControlWindow /></svg>
@@ -197,7 +210,7 @@ export const Prove: React.FC = () => {
   const d = mix(470, 360, easeInOut(u));
   const cam: Cam3 = {pos: add(tgt, [Math.sin((a * Math.PI) / 180) * d, 70, Math.cos((a * Math.PI) / 180) * d]), target: tgt, fov: 54, roll: mix(3, -2, u)};
   const pr = makeProj(cam);
-  const items: Item[] = [...lineSet(pr, LINE_ENV, tau - T_NOTA), ...factoryProps(pr, LINE_ENV)];
+  const items: Item[] = [...cellSet(pr, CELL_ENV, tau, {stack: 'green', clamp: 1, hmi: 1, armT: tau}), ...factoryProps(pr, CELL_ENV)];
   // the trained jump, shrunk to a small teal arc beside the robot
   const mini = PAY_ARC.map((q) => [(q[0] - PAYOFF.p0[0]) * 0.5 - 200, (q[1] - PAYOFF.p1[1]) * 0.5 + 115, 290] as V3);
   const miniK = easeOut(seg(tau, T_NOTA + 0.1, T_NOTA + 0.6));
@@ -219,7 +232,7 @@ export const Prove: React.FC = () => {
   return (
     <AbsoluteFill>
       <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#EEE7D3" />} items={items}
-        robots={[{id: 'fac', pose: factoryRobot(tau), light: {dir: norm([-0.35, 0.85, 0.4])}}]} frame={f} />
+        robots={[{id: 'fac', pose: factoryRobot(tau), light: {dir: norm([-0.35, 0.85, 0.4])}, ground: 0}]} frame={f} />
     </AbsoluteFill>
   );
 };

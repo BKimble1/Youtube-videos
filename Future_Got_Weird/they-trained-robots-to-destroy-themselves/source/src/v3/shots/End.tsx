@@ -7,7 +7,9 @@ import {Cam3, makeProj, Proj} from '../engine/camera';
 import {V3, add, clamp01, lerp3, mix, smooth, norm} from '../engine/math';
 import {Item, Env} from '../engine/prims';
 import {Scene3D, robotItems, CharSpec} from '../engine/Scene3D';
-import {SIM_ENV, SIM_FOUNDRY, SimBg, arc3, simWorld} from '../sets/SimWorld';
+import {arc3} from '../sets/SimWorld';
+import {STAGE, STAGE_ENV, StageBg, stage} from '../sets/Stage';
+import {filmLights} from '../sets/Props3D';
 import {LADLE} from '../sets/Foundry';
 import {makeJump, walkToEdge} from '../robot/jump';
 import {blendPose} from '../robot/motion';
@@ -25,7 +27,7 @@ export const END_FRAMES_TOTAL = Math.round((NARR_END + 2.95) * 30);
 const END_T = END_FRAMES_TOTAL / 30;
 const seg = (t: number, a: number, b: number) => clamp01((t - a) / (b - a));
 const SL = {dir: norm([-0.4, 0.85, 0.45])};
-const G0 = SIM_FOUNDRY;
+const G0 = {edgeX: STAGE.edgeX, platTop: STAGE.deckY, floorY: STAGE.padY};
 
 const T_SHAPE = T('Partly, it’s the shape') - 0.1;
 const T_WHEN = T('When something with arms') - 0.1;
@@ -264,8 +266,8 @@ export const End: React.FC = () => {
     const hit = tau - T_REACH;
     return (
       <AbsoluteFill>
-        <Scene3D pr={pr} bg={<SimBg />} items={[...simWorld(pr, SIM_ENV, {geo: G0, ringPulse: hit > 0 ? Math.exp(-hit * 4) * Math.abs(Math.sin(hit * 12)) : 0}), ...extra]}
-          robots={[...ghosts, {id: 'fin', pose: s.pose, kind: 'SIM', light: SL}]} frame={f} />
+        <Scene3D pr={pr} bg={<StageBg />} items={[...stage(pr, STAGE_ENV, {ringPulse: hit > 0 ? Math.exp(-hit * 4) * Math.abs(Math.sin(hit * 12)) : 0}), ...extra]}
+          robots={[...ghosts, {id: 'fin', pose: s.pose, kind: 'SIM', light: SL, ground: s.phase === 'push' ? STAGE.deckY : STAGE.padY}]} frame={f} />
       </AbsoluteFill>
     );
   }
@@ -297,10 +299,14 @@ export const End: React.FC = () => {
       </AbsoluteFill>
     );
   }
-  // E8: straight down onto the settling steel; the target ring appears where it went in, then opens into the sting
-  const u = seg(tau, T_THESE, T_STING);
-  const rot = mix(-8, 22, easeInOut(u));
-  const cam: Cam3 = {pos: [Math.sin((rot * Math.PI) / 180) * 40, mix(1250, 1600, easeOut(u)), Math.cos((rot * Math.PI) / 180) * 40], target: [0, LADLE.steel, 0], fov: 30, roll: rot};
+  // E8: a new vantage — at steel level across the settling surface, then one crane move up and over into a high
+  // plan view of the whole prepared set (deck, vessel, barriers, lights, crew); the last ripple settles into the ring
+  const e = easeInOut(seg(tau, T_THESE, T_STUCK + 0.6));
+  const ang = mix(0.9, 2.2, e);
+  const low: V3 = [FINAL.p1[0] + Math.sin(ang) * 112, LADLE.steel + 26, FINAL.p1[2] + Math.cos(ang) * 112];
+  const high: V3 = [FINAL.p1[0] + Math.sin(ang) * 520, 2300, FINAL.p1[2] + Math.cos(ang) * 520];
+  const camPos = lerp3(low, high, Math.pow(e, 1.4));
+  const cam: Cam3 = {pos: camPos, target: lerp3([FINAL.p1[0], LADLE.steel + 10, FINAL.p1[2]], [60, LADLE.steel, 0], e), fov: mix(40, 34, e), roll: mix(-2, 0, e)};
   const pr = makeProj(cam);
   const ringK = easeOut(seg(tau, T_STUCK - 0.05, T_STUCK + 0.5));
   const c: V3 = [FINAL.p1[0], LADLE.steel + 1, FINAL.p1[2]];
@@ -311,8 +317,8 @@ export const End: React.FC = () => {
   const out = seg(tau, END_T - 0.35, END_T);
   return (
     <AbsoluteFill>
-      <FoundryScene cam={cam} tau={tau} robots={[]} entries={[eIn]} flameScale={0.4}
-        extra={(p2: Proj) => (ringK > 0 ? [surfaceRing(p2, c, 46, C.teal, 9, ringK, 'endRing'), surfaceRing(p2, c, 24, C.teal, 6, ringK * 0.85, 'endRing2')] : [])} />
+      <FoundryScene cam={cam} tau={tau} robots={[]} entries={[eIn]} flameScale={0.4} chars={CREW} frame={f}
+        extra={(p2: Proj, env: Env) => [...barriers(p2, env, 1), ...filmLights(p2, env, 1), ...(ringK > 0 ? [surfaceRing(p2, c, 46, C.teal, 9, ringK, 'endRing'), surfaceRing(p2, c, 24, C.teal, 6, ringK * 0.85, 'endRing2')] : [])]} />
       {open > 0 ? (
         <AbsoluteFill style={{background: C.paper, clipPath: `circle(${mix(40, 2300, open)}px at ${cq.x}px ${cq.y}px)`}}>
           <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', flexDirection: 'column', opacity: 1 - out}}>
