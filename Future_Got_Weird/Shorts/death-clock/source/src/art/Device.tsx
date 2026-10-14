@@ -14,7 +14,8 @@ import {UI_FONT} from '../fontNames';
 import {lit, mix, PAL, shade} from '../lib/color';
 import {add, clamp, hash, len, lerp, mul, norm, sub, V} from '../lib/math';
 import {Capsule, Glow, Lin, Sphere} from '../lib/shade';
-import {Inked} from '../lib/ink';
+import {Inked, InkFade, useInk} from '../lib/ink';
+import {Limb} from '../lib/limb';
 import {fmtClock, ScreenState} from '../lib/screen';
 import {Hand, HandPose} from './Hand';
 
@@ -72,6 +73,8 @@ export type DeviceView = {
   caseOpen?: number;
   /** turn the glass UI 180 degrees so it reads upright when the forearm points screen-left (default: by direction) */
   flip?: boolean;
+  /** V3: turn the UI layout in quarter turns so it reads upright on screen (portrait when the arm is vertical) */
+  upright?: boolean;
 };
 
 export type CaseGeo = {uc: number; R: number; rr: number; t: number; L: number; Wd: number; roll: number; sy: number};
@@ -124,7 +127,7 @@ const BG = {
   rec: ['#14583A', '#07291B'],
 };
 
-export const ScreenUI: React.FC<{id: string; s: ScreenState}> = ({id, s}) => {
+export const ScreenUI: React.FC<{id: string; s: ScreenState; rot?: number}> = ({id, s, rot = 0}) => {
   const green = PAL.normal;
   const crimson = PAL.alert;
   const stab = s.stab;
@@ -151,6 +154,8 @@ export const ScreenUI: React.FC<{id: string; s: ScreenState}> = ({id, s}) => {
         </radialGradient>
       </defs>
       <rect x={-SW / 2} y={-SH / 2} width={SW} height={SH} fill={`url(#${id}-bg)`} />
+      {/* V3: the band turns its layout upright (portrait) when the forearm is held vertical */}
+      <g transform={rot ? `rotate(${f2(rot)}) scale(${f2(Math.abs(Math.sin((rot * Math.PI) / 180)) > 0.5 ? (SH / SW) * 0.99 : 1)})` : undefined}>
       {/* green: vital scan */}
       {showGreen > 0.01 && (
         <g opacity={showGreen}>
@@ -243,6 +248,7 @@ export const ScreenUI: React.FC<{id: string; s: ScreenState}> = ({id, s}) => {
           </g>
         </g>
       )}
+      </g>
     </g>
   );
 };
@@ -316,9 +322,17 @@ type WristProps = {
   hand?: {pose: HandPose; L: number; ang: number; thumbSide: 1 | -1; offset: number};
   skin?: string;
   ink: number;
+  /** V3: the shoulder; when given, the whole arm is one continuous limb (no elbow piece) */
+  S?: V;
+  rS?: number;
+  /** drawn right after the arm's skin (the sleeve over the upper arm) */
+  afterArm?: React.ReactNode;
+  /** dissolve the arm's own contour here (where it grows out of the body) */
+  fade?: InkFade[];
 };
 
-export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin = PAL.skin, ink}) => {
+export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin = PAL.skin, ink, S, rS, afterArm, fade}) => {
+  const pass = useInk().pass;
   const A = armFrame(E, W, rE, rW);
   const R = rW;
   const G = DEV_GEO;
@@ -361,6 +375,8 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
   const fr0 = caseFrame(A, ub, rr0, dev.roll, sy);
   const flip = dev.flip ?? A.u.x < 0;
   const fr1 = caseFrame(A, ub, rr1, dev.roll, sy, flip);
+  // quarter turns that bring the glass's layout upright on screen
+  const uiRot = dev.upright ? -Math.round((Math.atan2(fr1.ax.y, fr1.ax.x) * 180) / Math.PI / 90) * 90 : 0;
   // a pillowed profile: full size through the lower body, a chamfered lip at the glass
   const layers: [number, number][] = [
     [rr0, 1],
@@ -382,6 +398,28 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
   const geo: CaseGeo = {uc: ub, R, rr: armR(A, ub), t: cT, L: cL, Wd: cW, roll: dev.roll, sy};
   const caseOpen = dev.caseOpen ?? 0;
 
+  // the arm: one continuous limb from the shoulder (or the forearm alone in close views) with the hand inside the
+  // same contour group, so no line crosses the elbow or the wrist
+  const armGroup = (
+    <Inked w={ink} id={`${id}-ai`} fade={fade}>
+      {S && rS ? (
+        <Limb id={`${id}-lb`} A={S} B={E} C={W} rA={rS} rB={rE} rC={rW} color={skin} spec={0.2} crease={ink * 0.7} />
+      ) : (
+        <Capsule id={`${id}-fa`} a={add(E, mul(A.u, -rE))} b={W} ra={rE * 1.02} rb={rW} color={skin} spec={0.22} />
+      )}
+      {hand && <Hand id={`${id}-hd`} wrist={add(W, mul(A.u, -hand.offset))} ang={hand.ang} L={hand.L} thumbSide={hand.thumbSide} view="back" pose={hand.pose} color={skin} ink={ink * 0.85} bare />}
+    </Inked>
+  );
+  if (pass === 'ink') {
+    // inside a figure's silhouette pass only the arm, hand and sleeve contribute
+    return (
+      <g>
+        {armGroup}
+        {afterArm}
+      </g>
+    );
+  }
+
   return (
     <g>
       <defs>
@@ -394,11 +432,8 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
       </defs>
       {/* far side of the strap: only its edge shows past the wrist's outline */}
       <Lin id={`${id}-stb`} d={strap(false)} from={topP} to={botP} stops={[[0, shade(PAL.band, 0.35)], [1, shade(PAL.band, 0.6)]]} />
-      {/* forearm (elbow sphere + tapered cylinder) */}
-      <Inked w={ink}>
-        <Sphere id={`${id}-el`} c={E} r={rE} color={skin} k={0.6} />
-        <Capsule id={`${id}-fa`} a={E} b={W} ra={rE} rb={rW} color={skin} spec={0.22} />
-      </Inked>
+      {armGroup}
+      {afterArm}
       {dev.inArm && <g clipPath={`url(#${id}-arm)`}>{dev.inArm(A)}</g>}
       {/* the screen's coloured light on the skin, and the strap's contact shadows, kept on the arm */}
       <g clipPath={`url(#${id}-arm)`}>
@@ -458,7 +493,7 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
           <path d={`M${rrect(cL * 0.475 - 0.1 * R, cW * 0.475 - 0.1 * R, (G.caseRad - 0.09) * R).map(([a, b]) => `${f2(a)},${f2(b)}`).join(' L')} Z`} fill={`url(#${id}-gl)`} />
           <g transform={`scale(${f4(kUI)})`}>
             <g clipPath={`url(#${id}-scr)`}>
-              <ScreenUI id={`${id}-ui`} s={dev.screen} />
+              <ScreenUI id={`${id}-ui`} s={dev.screen} rot={uiRot} />
               {/* one restrained reflection on the glass, away from the digits */}
               <path d={`M${-SW / 2},${-SH / 2 + 22} L${-SW / 2 + 58},${-SH / 2} L${-SW / 2 + 92},${-SH / 2} L${-SW / 2},${-SH / 2 + 56} Z`} fill="#FFFFFF" opacity={0.12} />
             </g>
@@ -469,7 +504,6 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
       )}
       {/* lit top lip of the case in profile */}
       {facing <= 0.04 && <path d={`M${P2(fr1.at(-cL / 2 + G.caseRad * R, 0))} L${P2(fr1.at(cL / 2 - G.caseRad * R, 0))}`} stroke="#9DB8FF" strokeOpacity={0.7} strokeWidth={f2(R * 0.05)} strokeLinecap="round" />}
-      {hand && <Hand id={`${id}-hd`} wrist={add(W, mul(A.u, -hand.offset))} ang={hand.ang} L={hand.L} thumbSide={hand.thumbSide} view="back" pose={hand.pose} color={skin} ink={ink * 0.85} />}
       {dev.overArm && dev.overArm(A)}
     </g>
   );

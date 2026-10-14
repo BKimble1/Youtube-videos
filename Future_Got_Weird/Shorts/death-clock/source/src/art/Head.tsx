@@ -53,10 +53,10 @@ export type Expr = {
   flush: number;
 };
 
-export const EXPR_PAIN: Expr = {browIn: 1, browDown: 0.9, lid: 0.34, squint: 0.55, shut: 0.15, pupil: 0.85, open: 0.5, wide: 1.25, smile: -0.7, teeth: 1, tongue: 0, gx: -0.15, gy: 0.1, sweat: 1, flush: 0.8};
-export const EXPR_GASP: Expr = {browIn: 0.9, browDown: 0.1, lid: 0.06, squint: 0.08, shut: 0, pupil: 0.62, open: 0.85, wide: 0.78, smile: -0.35, teeth: 0.25, tongue: 0.55, gx: 0, gy: 0.1, sweat: 1, flush: 0.6};
-export const EXPR_WINCE: Expr = {browIn: 1, browDown: 1, lid: 0.6, squint: 0.8, shut: 1, pupil: 0.9, open: 0.42, wide: 1.35, smile: -0.85, teeth: 1, tongue: 0, gx: 0, gy: 0, sweat: 1, flush: 0.9};
-export const EXPR_RELIEF: Expr = {browIn: 0.55, browDown: 0, lid: 0.26, squint: 0.18, shut: 0, pupil: 1, open: 0.3, wide: 0.98, smile: 0.5, teeth: 0.3, tongue: 0.15, gx: 0, gy: 0.05, sweat: 0.7, flush: 0.45};
+export const EXPR_PAIN: Expr = {browIn: 1, browDown: 0.75, lid: 0.32, squint: 0.45, shut: 0, pupil: 0.85, open: 0.3, wide: 0.86, smile: -0.85, teeth: 0.2, tongue: 0, gx: -0.15, gy: 0.1, sweat: 0.8, flush: 0.6};
+export const EXPR_GASP: Expr = {browIn: 0.95, browDown: 0.15, lid: 0.12, squint: 0.1, shut: 0, pupil: 0.66, open: 0.5, wide: 0.72, smile: -0.6, teeth: 0.15, tongue: 0.1, gx: 0, gy: 0.1, sweat: 0.8, flush: 0.5};
+export const EXPR_WINCE: Expr = {browIn: 1, browDown: 1, lid: 0.6, squint: 0.75, shut: 0.85, pupil: 0.9, open: 0.24, wide: 0.92, smile: -0.9, teeth: 0.3, tongue: 0, gx: 0, gy: 0, sweat: 0.8, flush: 0.7};
+export const EXPR_RELIEF: Expr = {browIn: 0.7, browDown: 0, lid: 0.3, squint: 0.12, shut: 0, pupil: 1, open: 0.2, wide: 0.85, smile: 0.05, teeth: 0, tongue: 0, gx: 0, gy: 0.05, sweat: 0.5, flush: 0.35};
 export const EXPR_UNEASY: Expr = {browIn: 0.9, browDown: 0.05, lid: 0.05, squint: 0, shut: 0, pupil: 0.8, open: 0.1, wide: 0.82, smile: -0.4, teeth: 0, tongue: 0, gx: -0.1, gy: 0.7, sweat: 0.5, flush: 0.25};
 export const EXPR_NEUTRAL: Expr = {browIn: 0.1, browDown: 0, lid: 0.12, squint: 0, shut: 0, pupil: 1, open: 0.02, wide: 1, smile: 0.25, teeth: 0, tongue: 0, gx: 0, gy: 0, sweat: 0, flush: 0.1};
 
@@ -108,7 +108,11 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
 
   // --- geometry (crew proportions, scaled from the Video 01 rig: head rx 58 / ry 62 -> 100 / 107)
   const headD = `M0,-107 C55,-107 100,-60 100,0 C100,60 55,107 0,107 C-55,107 -100,60 -100,0 C-100,-60 -55,-107 0,-107 Z`;
-  const ear = (x: number) => `M${fmt(x)},-12 C${fmt(x + 16)},-12 ${fmt(x + 16)},32 ${fmt(x)},32 C${fmt(x - 16)},32 ${fmt(x - 16)},-12 ${fmt(x)},-12 Z`;
+  // V3 ear: a rim that grows out of the side of the head (its flat side is inside the head, and it shares the
+  // head's contour group, so no outlined disk); an inner rim line and a shaded hollow give it the form of an ear
+  const ear = (x: number, k = 1) =>
+    `M${fmt(x - 8 * k)},-16 C${fmt(x + 10 * k)},-24 ${fmt(x + 22 * k)},-8 ${fmt(x + 20 * k)},8 C${fmt(x + 19 * k)},22 ${fmt(x + 12 * k)},34 ${fmt(x + 3 * k)},36 C${fmt(x - 4 * k)},37 ${fmt(x - 9 * k)},32 ${fmt(x - 10 * k)},26 L${fmt(x - 12 * k)},-8 Z`;
+  const earRim = (x: number, k = 1) => `M${fmt(x - 2 * k)},-10 C${fmt(x + 9 * k)},-13 ${fmt(x + 14 * k)},0 ${fmt(x + 12 * k)},11 C${fmt(x + 11 * k)},19 ${fmt(x + 6 * k)},26 ${fmt(x)},27`;
   const nearEarX = 101 - 8 * t;
   const farEarX = -101 + 22 * t;
   // spiky hair (crew 'spiky'), shifted a little with the turn; spikes sway with follow-through
@@ -255,11 +259,12 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
 
       {/* far ear (mostly hidden by the head in 3/4) */}
       <Inked w={inkW * 0.9}>
-        <InkPath d={ear(farEarX)} fill={`url(#${id}-ear)`} />
+        <InkPath d={ear(farEarX, -1)} fill={`url(#${id}-ear)`} />
       </Inked>
-      {/* head */}
+      {/* head, with the near ear in the same contour group (crew construction, one silhouette) */}
       <Inked w={inkW}>
         <InkPath d={headD} fill={`url(#${id}-sk)`} />
+        <InkPath d={ear(nearEarX)} fill={`url(#${id}-ear)`} />
       </Inked>
       {pass !== 'ink' && (
         <g clipPath={`url(#${id}-hc)`}>
@@ -273,11 +278,12 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
           <ellipse cx={fmt(farX - 16 * farW)} cy={30} rx={fmt(18 * farW)} ry={16} fill={`url(#${id}-ck)`} opacity={0.5 + 0.45 * e.flush} />
         </g>
       )}
-      {/* near ear on top of the head edge (crew construction) */}
-      <Inked w={inkW * 0.9}>
-        <InkPath d={ear(nearEarX)} fill={`url(#${id}-ear)`} />
-      </Inked>
-      {pass !== 'ink' && <path d={Q({x: nearEarX + 3, y: 0}, {x: nearEarX - 6, y: 10}, {x: nearEarX + 2, y: 22})} fill="none" stroke={shade(skin, 0.35)} strokeWidth={4} strokeLinecap="round" opacity={0.6} />}
+      {pass !== 'ink' && (
+        <g>
+          <ellipse cx={fmt(nearEarX + 5)} cy={11} rx={6} ry={11} fill={shade(skin, 0.3)} opacity={0.45} />
+          <path d={earRim(nearEarX)} fill="none" stroke={shade(skin, 0.42)} strokeWidth={3.4} strokeLinecap="round" opacity={0.75} />
+        </g>
+      )}
       {/* hair */}
       <Inked w={inkW}>
         <InkPath d={hairD} fill={`url(#${id}-hr)`} />
@@ -360,8 +366,8 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
       {/* sweat: crew-style outlined drops at the temple */}
       {e.sweat > 0.02 &&
         [
-          [farX - 44 * farW, -56, 1],
-          [farX - 52 * farW, -24, 0.7],
+          [farX - 44 * farW, -56, 0.5],
+          [farX - 50 * farW, -34, 0.34],
         ].map(([x, y, k], i) => (
           <g key={i} opacity={e.sweat} transform={`translate(${fmt(x)} ${fmt(y)}) scale(${k})`}>
             <Inked w={fw * 0.7}>

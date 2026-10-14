@@ -50,9 +50,12 @@ export type SceneProps = {
   /** drawn in the world before him (ground light, shadows of things above) */
   under?: React.ReactNode;
   nearLegFront?: boolean;
+  overAll?: React.ReactNode;
+  /** hide the street foreground tufts */
+  noTufts?: boolean;
 };
 
-export const Scene: React.FC<SceneProps> = ({id, cam, man, expr, blink = 0, lHand, rHand, dog, hairSway = 0, dev, backdrop = 0, backdropC, afterRightArm, beforeLeftForearm, leash = true, extra, under, nearLegFront}) => {
+export const Scene: React.FC<SceneProps> = ({id, cam, man, expr, blink = 0, lHand, rHand, dog, hairSway = 0, dev, backdrop = 0, backdropC, afterRightArm, beforeLeftForearm, leash = true, extra, under, nearLegFront, overAll, noTufts}) => {
   const j = manJoints(man);
   // the left forearm's own contact shadow on the grass when it rests there
   const fa = j.L;
@@ -61,7 +64,7 @@ export const Scene: React.FC<SceneProps> = ({id, cam, man, expr, blink = 0, lHan
   const ang = (Math.atan2(fa.W.y - fa.E.y, fa.W.x - fa.E.x) * 180) / Math.PI;
   const flen = Math.hypot(fa.W.x - fa.E.x, fa.W.y - fa.E.y);
   return (
-    <Street id={`${id}-st`} cam={cam} fg={backdrop < 0.05 && cam.z < 3 ? <FrontTufts id={`${id}-fg`} xs={[[60, 2050, 1.6], [980, 2080, 1.8], [820, 2120, 1.4]]} /> : null}>
+    <Street id={`${id}-st`} cam={cam} fg={!noTufts && backdrop < 0.05 && cam.z < 3 ? <FrontTufts id={`${id}-fg`} xs={[[60, 2050, 1.6], [980, 2080, 1.8], [820, 2120, 1.4]]} /> : null}>
       <Contacts id={`${id}-ct`} j={j} ground={GROUND} />
       {onGround > 0.01 && (
         <g>
@@ -83,6 +86,7 @@ export const Scene: React.FC<SceneProps> = ({id, cam, man, expr, blink = 0, lHan
         nearLegFront={nearLegFront}
         inkK={1 / Math.max(1, Math.sqrt(cam.z / 1.4))}
         afterRightArm={afterRightArm}
+        overAll={overAll}
         beforeLeftForearm={
           <g>
             {beforeLeftForearm}

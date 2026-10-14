@@ -1,24 +1,22 @@
-// The V2 film: units chosen by the beat table (lib/timeline.ts), screen-fixed overlays on top.
+// The V3 film: one world per stretch, chosen by the V3 beat table (lib/timeline3.ts); screen-fixed overlays on top.
+// Frames 0-7 are the cold open, which is also the continuation of the film's last push into the glass (the loop).
 // Captioned master = captions on; clean version = captions off (device UI and the opening cue stay).
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {Aftermath} from './shots/Aftermath';
-import {bandWorldAt, Journey, journeyCam} from './shots/Journey';
-import {LiftOff, MapShot, RingWipe, Travel} from './shots/Rescue';
+import {Aftermath3} from './shots/Aftermath3';
+import {Journey3} from './shots/Journey3';
+import {Flyover, HospitalBay, MAP_END, MapBlip, RoofWipe, WIPE} from './shots/Dispatch';
 import {Captions, FictionCue} from './shots/Overlay';
-import {toScreen} from './lib/camera';
-import {B} from './lib/timeline';
+import {B} from './lib/timeline3';
 import './fonts';
 
-const ringAnchor = toScreen(journeyCam(B.ring), bandWorldAt(B.ring));
-
 export const shotNode = (f: number): React.ReactNode => {
-  if (f < B.ring) return <Journey id="j" f={f} />;
-  if (f < B.map0 + 4) return <RingWipe id="rw" f={f} c={ringAnchor} under={<Journey id="j" f={f} />} over={<MapShot id="map" f={f} anchor={ringAnchor} />} />;
-  if (f < B.lift0) return <MapShot id="map" f={f} anchor={ringAnchor} />;
-  if (f < B.travel0) return <LiftOff id="lift" f={f} />;
-  if (f < B.arrive0) return <Travel id="trav" f={f} />;
-  return <Aftermath id="aft" f={f} />;
+  if (f < B.cut) return <Aftermath3 id="af" f={f} />;
+  if (f < B.map0) return <Journey3 id="j3" f={f} />;
+  if (f < MAP_END) return <MapBlip id="mb" f={f} />;
+  if (f < B.travel0) return <HospitalBay id="hb" f={f} />;
+  if (f < WIPE.out1) return <RoofWipe id="rw" f={f} before={<Flyover id="fo" f={f} />} after={<Aftermath3 id="af" f={f} />} />;
+  return <Aftermath3 id="af" f={f} />;
 };
 
 export const Film: React.FC<{captions: boolean}> = ({captions}) => {

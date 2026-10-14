@@ -1,4 +1,4 @@
-// Screen-fixed overlays (V2): the narration captions (master only) and the one brief opening cue.
+// Screen-fixed overlays (V3, same design as V2): the narration captions (master only) and the one brief opening cue.
 // Captions: Fredoka Bold (the channel's display face), 2-5-word phrases, at most two lines, white with a thin
 // dark stroke and a small soft shadow (no plaque behind each phrase), at most one emphasis word in a phrase and
 // only six emphasised in the film. One fixed lane (centre y 1450 inside the 90-900 working area, clear of the Shorts title block) that every
@@ -8,7 +8,7 @@ import React from 'react';
 import {CAP_FAMILY, CAP_FONT, UI_FONT} from '../fonts';
 import {chunkWindows} from '../lib/captions';
 import {clamp, inv} from '../lib/math';
-import {FPS} from '../lib/timeline';
+import {FPS} from '../lib/timeline3';
 
 const WINDOWS = chunkWindows();
 export const CAP = {size: 70, line: 82, maxW: 780, cx: 495, cy: 1450, weight: 700};

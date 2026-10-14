@@ -15,14 +15,40 @@ type InkState = {pass: 'both' | 'ink' | 'fill'; w: number};
 export const InkCtx = React.createContext<InkState>({pass: 'both', w: 0});
 export const useInk = () => React.useContext(InkCtx);
 
-/** Outline the union of the children with an ink contour of width w (in the children's own units). */
-export const Inked: React.FC<{w: number; children: React.ReactNode; opacity?: number}> = ({w, children, opacity}) => {
+export type InkFade = {c: {x: number; y: number}; r: number};
+
+/** Outline the union of the children with an ink contour of width w (in the children's own units).
+ *  V3: `fade` dissolves the group's own contour inside the given circles (joints where a part grows out of the body:
+ *  shoulder, hip, wrist), so a limb has no drawn line where it attaches. A figure is wrapped in one outer group,
+ *  so its exterior silhouette stays outlined everywhere; inner groups draw only occlusion lines. */
+export const Inked: React.FC<{w: number; children: React.ReactNode; opacity?: number; fade?: InkFade[]; id?: string}> = ({w, children, opacity, fade, id}) => {
   const parent = useInk();
   // inside a parent's ink pass, a nested group simply contributes its silhouette
   if (parent.pass === 'ink') return <InkCtx.Provider value={{pass: 'ink', w: Math.max(w, parent.w)}}>{children}</InkCtx.Provider>;
+  const inkLayer = <InkCtx.Provider value={{pass: 'ink', w}}>{children}</InkCtx.Provider>;
+  const faded = fade && fade.length > 0 && id;
   return (
     <g opacity={opacity}>
-      <InkCtx.Provider value={{pass: 'ink', w}}>{children}</InkCtx.Provider>
+      {faded ? (
+        <g>
+          <defs>
+            <radialGradient id={`${id}-fg`}>
+              <stop offset="0" stopColor="#000" />
+              <stop offset="0.55" stopColor="#000" />
+              <stop offset="1" stopColor="#FFF" />
+            </radialGradient>
+            <mask id={`${id}-fm`}>
+              <rect x="-20000" y="-20000" width="40000" height="40000" fill="#FFF" />
+              {fade!.map((q, i) => (
+                <circle key={i} cx={q.c.x.toFixed(2)} cy={q.c.y.toFixed(2)} r={q.r.toFixed(2)} fill={`url(#${id}-fg)`} />
+              ))}
+            </mask>
+          </defs>
+          <g mask={`url(#${id}-fm)`}>{inkLayer}</g>
+        </g>
+      ) : (
+        inkLayer
+      )}
       <InkCtx.Provider value={{pass: 'fill', w}}>{children}</InkCtx.Provider>
     </g>
   );

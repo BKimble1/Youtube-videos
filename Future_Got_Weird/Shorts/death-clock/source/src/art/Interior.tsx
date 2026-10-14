@@ -399,6 +399,13 @@ export const SectionLayers: React.FC<SectionProps> = ({id, sf, f, open, tube, st
       {/* the clean rim of the cut: a lit bevel where the skin was opened, and its shadow inside */}
       <path d={win} fill="none" stroke="#FBE2CF" strokeWidth={f2(26)} opacity={0.9 * e} />
       <path d={win} fill="none" stroke="#7A3A2E" strokeWidth={f2(8)} opacity={0.35 * e} transform="translate(0 14)" />
+      {/* V3: the cut's moving edge while the window opens, a bright line leading along the arm and down */}
+      {e > 0.01 && e < 0.985 && (
+        <g opacity={Math.sin(Math.PI * Math.min(1, e * 1.05))}>
+          <path d={`M${f2(wx0)},${f2(top + 40)} L${f2(wx0)},${f2(depth - r)} Q${f2(wx0)},${f2(depth)} ${f2(wx0 + r)},${f2(depth)} L${f2(wx1 - r)},${f2(depth)}`} fill="none" stroke="#9FE8FF" strokeWidth={70} opacity={0.25} strokeLinecap="round" />
+          <path d={`M${f2(wx0)},${f2(top + 40)} L${f2(wx0)},${f2(depth - r)} Q${f2(wx0)},${f2(depth)} ${f2(wx0 + r)},${f2(depth)} L${f2(wx1 - r)},${f2(depth)}`} fill="none" stroke="#E9FBFF" strokeWidth={18} strokeLinecap="round" />
+        </g>
+      )}
     </g>
   );
 };

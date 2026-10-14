@@ -9,8 +9,9 @@
 import React from 'react';
 import {lit, mix, PAL, shade} from '../lib/color';
 import {Deco, Inked, InkLine} from '../lib/ink';
-import {add, clamp, dirDown, fmt, len, lerpV, mul, norm, P, perp, sub, V} from '../lib/math';
-import {Blob, Capsule, Glow, Lin, Sphere} from '../lib/shade';
+import {Limb} from '../lib/limb';
+import {add, clamp, dirDown, dot, fmt, len, lerpV, mul, norm, P, perp, sub, V} from '../lib/math';
+import {Blob, Capsule, Lin, LIGHT} from '../lib/shade';
 import {Expr, Head} from './Head';
 import {Hand, HandPose} from './Hand';
 import {DeviceView, Wrist3D, DEV_GEO} from './Device';
@@ -59,11 +60,19 @@ export type ManPose = {
   rFs: number;
   rFsh: number;
   breath: number;
+  /** V3: world-space ankle targets (feet planted on the ground), blended in by lA / rA (0 = angles above) */
+  lAx?: number;
+  lAy?: number;
+  lA?: number;
+  rAx?: number;
+  rAy?: number;
+  rA?: number;
 };
 
 const up = (a: number): V => ({x: -Math.sin((a * Math.PI) / 180), y: -Math.cos((a * Math.PI) / 180)});
 const px = (a: number): V => ({x: Math.cos((a * Math.PI) / 180), y: -Math.sin((a * Math.PI) / 180)});
 const ang = (d: V) => (Math.atan2(d.y, d.x) * 180) / Math.PI;
+const cross2 = (a: V, b: V) => a.x * b.y - a.y * b.x;
 
 export const DIM = {
   waist: 200,
@@ -71,8 +80,8 @@ export const DIM = {
   neck: 18,
   headR: 96,
   headUp: 100,
-  upperArm: 176,
-  foreArm: 158,
+  upperArm: 199,
+  foreArm: 178,
   hand: 96,
   thigh: 226,
   shin: 216,
@@ -114,27 +123,39 @@ export const manJoints = (p: ManPose) => {
   const R = arm(rS, p.rTu, p.rTv, p.rWx, p.rWy, p.rW, p.rElb, p.rWr);
   const hipL = add(add(H, mul(px(p.pelvis), 34 * s)), mul(up(p.pelvis), -44 * s));
   const hipR = add(add(H, mul(px(p.pelvis), -40 * s)), mul(up(p.pelvis), -42 * s));
-  const leg = (hp: V, hip: number, knee: number, ank: number, fs: number, fsh: number) => {
+  const leg = (hp: V, hip: number, knee: number, ank: number, fs: number, fsh: number, tx?: number, ty?: number, tw?: number) => {
     // legs rotate with the pelvis in the same sense as the torso lean (a lean of +a is a CCW turn of the body)
     const a1 = hip - p.pelvis;
-    const K = add(hp, mul(dirDown(a1), DIM.thigh * s * (fs ?? 1)));
-    const a2 = a1 - knee;
-    const A = add(K, mul(dirDown(a2), DIM.shin * s * (fsh ?? 1)));
-    const footDir = dirDown(a2 + 90 + ank);
+    let K = add(hp, mul(dirDown(a1), DIM.thigh * s * (fs ?? 1)));
+    let a2 = a1 - knee;
+    let A = add(K, mul(dirDown(a2), DIM.shin * s * (fsh ?? 1)));
+    let footDir = dirDown(a2 + 90 + ank);
+    const w = clamp(tw ?? 0);
+    if (w > 0 && tx !== undefined && ty !== undefined) {
+      // planted foot: two-bone IK from the hip to the ankle target, knee forward (toward his front, screen-left)
+      const T = {x: tx, y: ty};
+      const r = ik(hp, T, DIM.thigh * s * (fs ?? 1), DIM.shin * s * (fsh ?? 1), 1);
+      K = lerpV(K, r.E, w);
+      A = lerpV(A, r.W, w);
+      const sd = norm(sub(A, K));
+      a2 = (Math.atan2(-sd.x, sd.y) * 180) / Math.PI;
+      // the planted foot stays flat on the grass, toes toward his front
+      footDir = norm(lerpV(footDir, dirDown(90 + ank * 0.3), w));
+    }
     // a foot pointing toward the camera foreshortens with the shin
     const fl = clamp(0.5 + 0.5 * (fsh ?? 1), 0.5, 1);
     const toe = add(A, mul(footDir, 84 * s * fl));
     return {hp, K, A, toe, footDir, shinAng: a2, fl};
   };
-  const lLeg = leg(hipL, p.lHip, p.lKnee, p.lAnk, p.lFs, p.lFsh);
-  const rLeg = leg(hipR, p.rHip, p.rKnee, p.rAnk, p.rFs, p.rFsh);
+  const lLeg = leg(hipL, p.lHip, p.lKnee, p.lAnk, p.lFs, p.lFsh, p.lAx, p.lAy, p.lA);
+  const rLeg = leg(hipR, p.rHip, p.rKnee, p.rAnk, p.rFs, p.rFsh, p.rAx, p.rAy, p.rA);
   return {H, C, Sh, N, head, tc, L, R, lLeg, rLeg, s, toWorld};
 };
 
 /** World position of the band on the left wrist's axis (for glows, camera targets and UI anchoring). */
 export const bandCenter = (j: Joints) => add(j.L.W, mul(j.L.foreDir, -DEV_GEO.bandFromWrist * 17 * j.s));
 /** Forearm radii (elbow, wrist) at the rig's scale. */
-export const foreRadii = (s: number) => ({rE: 24 * s, rW: 17 * s});
+export const foreRadii = (s: number) => ({rE: 23.5 * s, rW: 17 * s});
 
 const smoothClosed = (pts: V[]) => {
   let d = `M${P(pts[0])}`;
@@ -204,9 +225,11 @@ type Props = {
   beforeLeftForearm?: React.ReactNode;
   /** drawn over the right forearm and hand, under the left arm (the chest x-ray shows through the clutching hand) */
   afterRightArm?: React.ReactNode;
+  /** V3: drawn over everything (the torso cutaway seen through the near arm) */
+  overAll?: React.ReactNode;
 };
 
-export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, bandColor = PAL.normal, bandGlow = 0.6, hideLeftForearm, children, nearLegFront, hairSway = 0, device, inkK = 1, overTorso, beforeLeftForearm, afterRightArm}) => {
+export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, hideLeftForearm, children, nearLegFront, hairSway = 0, device, inkK = 1, overTorso, beforeLeftForearm, afterRightArm, overAll}) => {
   const j = manJoints(p);
   const s = p.s;
   const OUT = 7 * s * inkK; // crew contour
@@ -233,6 +256,10 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
   const pelPts: V[] = [loc(j.H, p.pelvis, 10, -86), loc(j.H, p.pelvis, 10, 90), loc(j.H, p.pelvis, -52, 94), loc(j.H, p.pelvis, -84, 30), loc(j.H, p.pelvis, -80, -60)];
   const pelD = smoothClosed(pelPts);
 
+  // V3 construction: one outer contour group for the whole figure (its exterior silhouette), thinner occlusion
+  // lines inside it, and limbs that are single continuous shapes (lib/limb.tsx). No joint is drawn as a separate
+  // round piece; a contour that would cross a joint where a part grows out of the body is dissolved there.
+  const IN = OUT * 0.72;
   const Leg = (k: string, L: Joints['lLeg'], isFar: boolean) => {
     const pc = isFar ? far(PAL.pants) : PAL.pants;
     const shoe = isFar ? far(PAL.shoe) : PAL.shoe;
@@ -240,16 +267,21 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
     const F = (x: number, y: number) => add(add(L.A, mul(L.footDir, x * s * (x > 0 ? L.fl : 1))), mul(sd, y * s));
     const upper = smoothClosed([F(-34, -8), F(-30, 16), F(30, 20), F(90, 18), F(100, 6), F(86, -10), F(46, -20), F(10, -34), F(-14, -34), F(-32, -26)]);
     const sole = smoothClosed([F(-35, 10), F(98, 12), F(100, 24), F(40, 28), F(-33, 26)]);
+    const ankle = add(L.A, mul(sd, -8 * s));
+    const cuff0 = add(L.A, mul(sd, -40 * s));
+    const nb = perp(sd);
     return (
       <g key={k}>
-        <Inked w={OUT}>
-          <Capsule id={`${id}-${k}th`} a={L.hp} b={L.K} ra={44 * s} rb={34 * s} color={pc} spec={0.14} />
-          <Sphere id={`${id}-${k}kn`} c={L.K} r={34 * s} color={pc} k={0.5} />
-          <Capsule id={`${id}-${k}sh`} a={L.K} b={add(L.A, mul(sd, -6 * s))} ra={33 * s} rb={27 * s} color={pc} spec={0.12} />
-          <Capsule id={`${id}-${k}hm`} a={add(L.A, mul(sd, -36 * s))} b={add(L.A, mul(sd, -12 * s))} ra={29 * s} rb={29 * s} color={shade(pc, 0.1)} />
+        <Inked w={IN} id={`${id}-${k}i`} fade={[{c: L.hp, r: 62 * s}]}>
+          <Limb id={`${id}-${k}lb`} A={L.hp} B={L.K} C={ankle} rA={43 * s} rB={33 * s} rC={28 * s} color={pc} spec={0.12} crease={IN * 0.8} />
         </Inked>
+        <Deco>
+          {/* trouser hem: a darker turned band and its fold line, not a separate piece */}
+          <path d={`M${P(add(cuff0, mul(nb, 29 * s)))} Q${P(add(add(cuff0, mul(sd, 5 * s)), mul(nb, 0)))} ${P(add(cuff0, mul(nb, -29 * s)))} L${P(add(ankle, mul(nb, -28 * s)))} L${P(add(ankle, mul(nb, 28 * s)))} Z`} fill={shade(pc, 0.12)} opacity={0.8} />
+          <InkLine d={`M${P(add(cuff0, mul(nb, 27 * s)))} Q${P(add(cuff0, mul(sd, 5 * s)))} ${P(add(cuff0, mul(nb, -27 * s)))}`} w={IN * 0.6} opacity={0.6} />
+        </Deco>
         {/* white crew shoe: rounded upper, grey sole, glossy toe */}
-        <Inked w={OUT * 0.9}>
+        <Inked w={IN * 0.9}>
           <Blob id={`${id}-${k}so`} d={sole} c={F(30, 18)} r={80 * s} color={mix(shoe, '#B9C4CC', 0.7)} k={0.5} />
           <Blob id={`${id}-${k}sp`} d={upper} c={F(20, -8)} r={90 * s} color={shoe} k={0.9} stops={[[0, '#FFFFFF'], [0.55, mix(shoe, '#E9EEF2', 0.5)], [1, mix(shoe, '#AFC0CE', isFar ? 0.8 : 0.6)]]} />
         </Inked>
@@ -261,66 +293,101 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
     );
   };
 
-  // upper arm = the tee's short white sleeve over the shoulder (crew rig: sleeve from shoulder to elbow)
-  const UpperArm = (k: string, A: Joints['L'], isFar: boolean) => {
+  // the tee's short sleeve: a tube that grows out of the shoulder (its contour and fill dissolve into the tee there)
+  // and ends in an open hem; the arm comes out of the opening
+  const sleeveParts = (k: string, A: Joints['L'], isFar: boolean) => {
+    const u = norm(sub(A.E, A.S));
+    const n = perp(u);
+    const r0 = 38 * s;
+    const r1 = 34 * s;
+    const top = add(A.S, mul(u, -10 * s));
+    const hem = add(A.S, mul(u, DIM.upperArm * 0.56 * s));
+    const p1 = add(top, mul(n, r0));
+    const p2 = add(hem, mul(n, r1));
+    const p3 = add(hem, mul(n, -r1));
+    const p4 = add(top, mul(n, -r0));
+    const d = `M${P(p1)} L${P(p2)} Q${P(add(hem, mul(u, r1 * 0.36)))} ${P(p3)} L${P(p4)} A${fmt(r0)} ${fmt(r0)} 0 0 ${cross2(sub(p4, top), mul(u, -1)) > 0 ? 1 : 0} ${P(p1)} Z`;
+    let ln = n;
+    if (dot(ln, LIGHT) < 0) ln = mul(ln, -1);
+    const mid = mul(add(top, hem), 0.5);
     const c = isFar ? far(PAL.shirt) : PAL.shirt;
-    const cuff = add(A.S, mul(sub(A.E, A.S), 0.86));
-    return (
-      <g key={k}>
-        <Inked w={OUT}>
-          <Capsule id={`${id}-${k}ua`} a={A.S} b={A.E} ra={30 * s} rb={24 * s} color={isFar ? far(skin) : skin} spec={0.2} />
-          <Capsule id={`${id}-${k}sl`} a={add(A.S, mul(sub(A.E, A.S), -0.06))} b={cuff} ra={38 * s} rb={33 * s} color={c} spec={0.25} k={1.2} />
-        </Inked>
-      </g>
+    const fadeR = r0 * 1.15;
+    const inner = (
+      <ellipse key="in" cx={fmt(hem.x)} cy={fmt(hem.y)} rx={fmt(r1 * 0.24)} ry={fmt(r1 * 0.93)} transform={`rotate(${fmt(ang(u))} ${fmt(hem.x)} ${fmt(hem.y)})`} fill={shade(c, 0.42)} />
     );
-  };
-
-  const ForeArm = (k: string, A: Joints['L'], isFar: boolean, hp: HandPose, thumbSide: 1 | -1, withBand: boolean) => {
-    const sk = isFar ? far(skin) : skin;
-    const nb = perp(A.foreDir);
-    const bc = add(A.W, mul(A.foreDir, -20 * s));
-    return (
-      <g key={k}>
-        <Inked w={OUT}>
-          <Sphere id={`${id}-${k}el`} c={A.E} r={24 * s} color={sk} k={0.6} />
-          <Capsule id={`${id}-${k}fa`} a={A.E} b={A.W} ra={24 * s} rb={17 * s} color={sk} spec={0.24} />
+    const body = (
+      <g key="sl">
+        <defs>
+          <radialGradient id={`${id}-${k}sf`} gradientUnits="userSpaceOnUse" cx={fmt(A.S.x)} cy={fmt(A.S.y)} r={fmt(fadeR)}>
+            <stop offset="0" stopColor="#FFF" />
+            <stop offset="0.45" stopColor="#FFF" />
+            <stop offset="1" stopColor="#000" />
+          </radialGradient>
+          <mask id={`${id}-${k}sm`}>
+            <rect x="-20000" y="-20000" width="40000" height="40000" fill={`url(#${id}-${k}sf)`} />
+          </mask>
+        </defs>
+        <Inked w={IN} id={`${id}-${k}si`} fade={[{c: A.S, r: fadeR * 1.1}]}>
+          <Lin id={`${id}-${k}sg`} d={d} from={add(mid, mul(ln, r0))} to={add(mid, mul(ln, -r0))} stops={[[0, '#FFFFFF'], [0.45, mix(c, '#F2F5F8', 0.5)], [0.85, mix(c, '#C9D5E0', 0.8)], [1, mix(c, '#B4C3D1', 0.8)]]} />
         </Inked>
-        <Hand id={`${id}-${k}h`} wrist={add(A.W, mul(A.foreDir, -6 * s))} ang={A.handAng} L={DIM.hand * s} thumbSide={thumbSide} view="back" pose={hp} color={sk} ink={OUT * 0.85} />
-        {withBand && (
-          <g>
-            <Glow id={`${id}-bg`} c={bc} r={70 * s} color={bandColor} alpha={0.5 * bandGlow} />
-            {/* cobalt band wrapping the wrist */}
-            <Inked w={OUT * 0.75}>
-              <Capsule id={`${id}-bd`} a={add(bc, mul(nb, -21 * s))} b={add(bc, mul(nb, 21 * s))} ra={14 * s} rb={14 * s} color={PAL.band} spec={0.75} k={1.2} />
-            </Inked>
-            {/* glass face */}
-            <g transform={`translate(${fmt(bc.x)} ${fmt(bc.y)}) rotate(${fmt(ang(A.foreDir) - 90)})`}>
-              <rect x={fmt(-16 * s)} y={fmt(-13 * s)} width={fmt(32 * s)} height={fmt(26 * s)} rx={fmt(8 * s)} fill={PAL.bandDeep} stroke="#172B3A" strokeWidth={fmt(OUT * 0.6)} />
-              <rect x={fmt(-12.5 * s)} y={fmt(-9.5 * s)} width={fmt(25 * s)} height={fmt(19 * s)} rx={fmt(6 * s)} fill={mix(bandColor, '#0B1622', 0.4)} />
-              <rect x={fmt(-9.5 * s)} y={fmt(-6.5 * s)} width={fmt(19 * s)} height={fmt(13 * s)} rx={fmt(4 * s)} fill={lit(bandColor, 0.2)} opacity={0.9} />
-              <rect x={fmt(-11 * s)} y={fmt(-8.5 * s)} width={fmt(8 * s)} height={fmt(3 * s)} rx={fmt(1.5 * s)} fill="#FFFFFF" opacity={0.85} />
+        {!isFar && (
+          <Deco>
+            <defs>
+              <clipPath id={`${id}-${k}sc`}>
+                <path d={d} />
+              </clipPath>
+            </defs>
+            {/* the tee's stripes and shading run on into the top of the sleeve, so it grows out of the shoulder */}
+            <g clipPath={`url(#${id}-${k}sc)`} mask={`url(#${id}-${k}sm)`}>
+              {stripes.map((sd, i) => (
+                <path key={i} d={sd} fill={PAL.stripe} />
+              ))}
             </g>
-          </g>
+          </Deco>
         )}
+        <Deco>
+          {/* soft fold where the sleeve gathers at the shoulder, and a sheen along the lit side */}
+          <path d={`M${P(add(add(A.S, mul(u, 30 * s)), mul(n, -r0 * 0.55)))} Q${P(add(A.S, mul(u, 44 * s)))} ${P(add(add(A.S, mul(u, 34 * s)), mul(n, r0 * 0.5)))}`} fill="none" stroke="#2E4A66" strokeOpacity={0.06} strokeWidth={fmt(4 * s)} strokeLinecap="round" />
+          <ellipse cx={fmt(add(mid, mul(ln, r0 * 0.55)).x)} cy={fmt(add(mid, mul(ln, r0 * 0.55)).y)} rx={fmt(26 * s)} ry={fmt(4 * s)} transform={`rotate(${fmt(ang(u))} ${fmt(add(mid, mul(ln, r0 * 0.55)).x)} ${fmt(add(mid, mul(ln, r0 * 0.55)).y)})`} fill="#FFFFFF" opacity={0.5} />
+        </Deco>
       </g>
     );
+    return {inner, body};
   };
 
+  // an arm's skin + hand as one contour group (the hand's palm and fingers join the forearm's silhouette)
+  const armGroup = (k: string, A: Joints['L'], isFar: boolean, hp: HandPose, thumbSide: 1 | -1) => {
+    const sk = isFar ? far(skin) : skin;
+    return (
+      <Inked w={IN} key={k}>
+        <Limb id={`${id}-${k}lb`} A={A.S} B={A.E} C={A.W} rA={29 * s} rB={23.5 * s} rC={17 * s} color={sk} spec={0.22} crease={IN * 0.8} />
+        <Hand id={`${id}-${k}h`} wrist={add(A.W, mul(A.foreDir, -6 * s))} ang={A.handAng} L={DIM.hand * s} thumbSide={thumbSide} view="back" pose={hp} color={sk} ink={IN * 0.9} bare />
+      </Inked>
+    );
+  };
+  // the far (right) arm: the whole arm behind the torso, then the forearm and hand again in front of it, cut at the
+  // elbow's bisector so the forearm crosses the chest while the upper arm stays behind
+  const farSleeve = sleeveParts('rs', j.R, true);
+  const nearSleeve = sleeveParts('ls', j.L, false);
+  // the near leg in front of the torso (sitting): cut past the hip so the tee's hem stays over the top of the thigh
   const nearLeg = Leg('ll', j.lLeg, false);
+
   return (
-    <g>
+    <Inked w={OUT}>
       {Leg('rl', j.rLeg, true)}
-      {UpperArm('ra', j.R, true)}
-      <Inked w={OUT}>
+      {farSleeve.inner}
+      {armGroup('ra', j.R, true, rHand, -1)}
+      {farSleeve.body}
+      <Inked w={IN}>
         <Blob id={`${id}-pel`} d={pelD} c={loc(j.H, p.pelvis, -10, -30)} r={120 * s} color={PAL.pants} />
       </Inked>
-      {!nearLegFront && nearLeg}
+      {nearLeg}
       {/* neck behind the tee's neckline */}
-      <Inked w={OUT}>
+      <Inked w={IN}>
         <Capsule id={`${id}-nk`} a={add(j.N, mul(up(tc), -24 * s))} b={add(j.N, mul(up(tc + p.neck), 46 * s))} ra={30 * s} rb={28 * s} color={shade(skin, 0.08)} />
       </Inked>
       {/* tee */}
-      <Inked w={OUT}>
+      <Inked w={IN}>
         <Blob id={`${id}-tor`} d={torsoD} c={torsoC} r={210 * s} color={PAL.shirt} k={1.1} stops={[[0, '#FFFFFF'], [0.5, '#F8FAFC'], [0.82, '#DCE3EA'], [1, '#B9C6D3']]} />
       </Inked>
       <Deco>
@@ -328,6 +395,20 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
           <clipPath id={`${id}-tclip`}>
             <path d={torsoD} />
           </clipPath>
+          {/* the far forearm is in front of the tee where it crosses it; elsewhere the arm behind the body shows */}
+          <mask id={`${id}-rfm`}>
+            <path d={torsoD} fill="#FFF" stroke="#FFF" strokeWidth={fmt(OUT * 0.8 + 2)} strokeLinejoin="round" />
+          </mask>
+          {/* the near thigh is in front of the body, except where the tee's lower edge hangs over the hip */}
+          <clipPath id={`${id}-llh`}>
+            <circle cx={fmt(j.lLeg.hp.x)} cy={fmt(j.lLeg.hp.y)} r={fmt(96 * s)} />
+          </clipPath>
+          <mask id={`${id}-llm`}>
+            <rect x="-20000" y="-20000" width="40000" height="40000" fill="#FFF" />
+            <g clipPath={`url(#${id}-llh)`}>
+              <path d={torsoD} fill="#000" />
+            </g>
+          </mask>
         </defs>
         <g clipPath={`url(#${id}-tclip)`}>
           {stripes.map((d, i) => (
@@ -351,23 +432,51 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
         <InkLine d={`M${P(loc(j.C, tc, 146, -36))} Q${P(loc(j.C, tc, 128, 0))} ${P(loc(j.C, tc, 148, 32))}`} w={OUT * 0.7} />
       </Deco>
       <Head id={`${id}-hd`} c={j.head} R={DIM.headR * s} roll={-(tc + p.neck)} turn={p.turn} expr={expr} blink={blink} hairSway={hairSway} inkW={7 * inkK} />
-      {children}
-      {overTorso}
-      {nearLegFront && nearLeg}
-      {ForeArm('rf', j.R, true, rHand, -1, false)}
-      {afterRightArm}
-      {UpperArm('la', j.L, false)}
-      {beforeLeftForearm}
-      {!hideLeftForearm && !device && ForeArm('lf', j.L, false, lHand, 1, true)}
-      {!hideLeftForearm && device && (
-        <Wrist3D id={`${id}-dv`} E={j.L.E} W={j.L.W} rE={24 * s} rW={17 * s} dev={device} hand={{pose: lHand, L: DIM.hand * s, ang: j.L.handAng, thumbSide: 1, offset: 6 * s}} ink={OUT} />
+      <Deco>
+        {children}
+        {overTorso}
+      </Deco>
+      {nearLegFront && (
+        <g mask={`url(#${id}-llm)`}>
+          <Inked w={IN}>
+            <Limb id={`${id}-llf`} A={j.lLeg.hp} B={j.lLeg.K} C={add(j.lLeg.A, mul(dirDown(j.lLeg.shinAng), -8 * s))} rA={43 * s} rB={33 * s} rC={28 * s} color={PAL.pants} spec={0.12} crease={IN * 0.8} />
+          </Inked>
+        </g>
       )}
-    </g>
+      {/* the far forearm and hand cross the chest in front of the tee */}
+      <g mask={`url(#${id}-rfm)`}>
+        <Inked w={IN}>
+          <Capsule id={`${id}-rffa`} a={j.R.E} b={j.R.W} ra={23.5 * s} rb={17 * s} color={far(skin)} spec={0.2} />
+          <Hand id={`${id}-rfh`} wrist={add(j.R.W, mul(j.R.foreDir, -6 * s))} ang={j.R.handAng} L={DIM.hand * s} thumbSide={-1} view="back" pose={rHand} color={far(skin)} ink={IN * 0.9} bare />
+        </Inked>
+      </g>
+      <Deco>{afterRightArm}</Deco>
+      {!hideLeftForearm && nearSleeve.inner}
+      {!hideLeftForearm && !device && armGroup('la', j.L, false, lHand, 1)}
+      {!hideLeftForearm && !device && nearSleeve.body}
+      <Deco>{beforeLeftForearm}</Deco>
+      {!hideLeftForearm && device && (
+        <Wrist3D
+          id={`${id}-dv`}
+          E={j.L.E}
+          W={j.L.W}
+          rE={23.5 * s}
+          rW={17 * s}
+          S={j.L.S}
+          rS={29 * s}
+          afterArm={nearSleeve.body}
+          dev={device}
+          hand={{pose: lHand, L: DIM.hand * s, ang: j.L.handAng, thumbSide: 1, offset: 6 * s}}
+          ink={IN}
+        />
+      )}
+      <Deco>{overAll}</Deco>
+    </Inked>
   );
 };
 
 export const lerpPose = (a: ManPose, b: ManPose, t: number): ManPose => {
   const o = {} as ManPose;
-  (Object.keys(a) as (keyof ManPose)[]).forEach((k) => (o[k] = a[k] + (b[k] - a[k]) * t));
+  (Object.keys(a) as (keyof ManPose)[]).forEach((k) => (o[k] = (a[k] ?? 0) + ((b[k] ?? 0) - (a[k] ?? 0)) * t));
   return o;
 };

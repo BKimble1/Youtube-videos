@@ -1,0 +1,287 @@
+{
+ "take": "C4.mp3",
+ "generation_id": "pWhwT8eZU9ybLzm60jKR",
+ "method": "remove silence from the quietest stretch of each gap longer than its target; 5 ms crossfades; no other processing",
+ "gaps": [
+  {
+   "gap": 1,
+   "between_s": [
+    2.48,
+    2.83
+   ],
+   "original_s": 0.35,
+   "target_s": 0.26,
+   "removed_s": 0.09,
+   "cut_at_s": 2.65,
+   "final_s": 0.26,
+   "note": "\"dying,\" | \"and he has\" - one connected opening"
+  },
+  {
+   "gap": 2,
+   "between_s": [
+    5.03,
+    5.53
+   ],
+   "original_s": 0.5,
+   "target_s": 0.3,
+   "removed_s": 0.2,
+   "cut_at_s": 5.235,
+   "final_s": 0.3,
+   "note": "\"change it.\" | \"Under the band,\" - the port opens under the band"
+  },
+  {
+   "gap": 3,
+   "between_s": [
+    6.19,
+    6.4
+   ],
+   "original_s": 0.21,
+   "target_s": null,
+   "removed_s": 0.0,
+   "cut_at_s": null,
+   "final_s": 0.21,
+   "note": "\"band,\" | \"microscopic\" - recorded comma"
+  },
+  {
+   "gap": 4,
+   "between_s": [
+    10.24,
+    10.66
+   ],
+   "original_s": 0.42,
+   "target_s": 0.26,
+   "removed_s": 0.16,
+   "cut_at_s": 10.396,
+   "final_s": 0.26,
+   "note": "\"bloodstream.\" | \"They sweep\""
+  },
+  {
+   "gap": 5,
+   "between_s": [
+    12.0,
+    12.14
+   ],
+   "original_s": 0.14,
+   "target_s": null,
+   "removed_s": 0.0,
+   "cut_at_s": null,
+   "final_s": 0.14,
+   "note": "\"cells,\" | \"monitoring\" - recorded comma"
+  },
+  {
+   "gap": 6,
+   "between_s": [
+    15.55,
+    16.0
+   ],
+   "original_s": 0.45,
+   "target_s": 0.3,
+   "removed_s": 0.15,
+   "cut_at_s": 15.688,
+   "final_s": 0.3,
+   "note": "\"signals.\" | \"If an organ\" - the signal leaves the vessel"
+  },
+  {
+   "gap": 7,
+   "between_s": [
+    19.17,
+    19.48
+   ],
+   "original_s": 0.31,
+   "target_s": 0.24,
+   "removed_s": 0.07,
+   "cut_at_s": 19.32,
+   "final_s": 0.24,
+   "note": "\"rhythm,\" | \"the warning\""
+  },
+  {
+   "gap": 8,
+   "between_s": [
+    21.26,
+    21.75
+   ],
+   "original_s": 0.49,
+   "target_s": 0.3,
+   "removed_s": 0.19,
+   "cut_at_s": 21.47,
+   "final_s": 0.3,
+   "note": "\"wrist.\" | \"The red screen\" - the pulse lands in the red screen"
+  },
+  {
+   "gap": 9,
+   "between_s": [
+    23.09,
+    23.49
+   ],
+   "original_s": 0.4,
+   "target_s": 0.27,
+   "removed_s": 0.13,
+   "cut_at_s": 23.162,
+   "final_s": 0.27,
+   "note": "\"counting.\" | \"Every second\""
+  },
+  {
+   "gap": 10,
+   "between_s": [
+    24.87,
+    25.28
+   ],
+   "original_s": 0.41,
+   "target_s": 0.31,
+   "removed_s": 0.1,
+   "cut_at_s": 25.09,
+   "final_s": 0.31,
+   "note": "\"matters.\" | \"His location\" - the transmission pulse leaves the band"
+  },
+  {
+   "gap": 11,
+   "between_s": [
+    27.93,
+    28.21
+   ],
+   "original_s": 0.28,
+   "target_s": 0.24,
+   "removed_s": 0.04,
+   "cut_at_s": 28.0,
+   "final_s": 0.24,
+   "note": "\"hospital,\" | \"where\""
+  },
+  {
+   "gap": 12,
+   "between_s": [
+    30.54,
+    31.02
+   ],
+   "original_s": 0.48,
+   "target_s": 0.28,
+   "removed_s": 0.2,
+   "cut_at_s": 30.722,
+   "final_s": 0.28,
+   "note": "\"him.\" | \"While help\""
+  },
+  {
+   "gap": 13,
+   "between_s": [
+    31.85,
+    32.13
+   ],
+   "original_s": 0.28,
+   "target_s": 0.24,
+   "removed_s": 0.04,
+   "cut_at_s": 31.999,
+   "final_s": 0.24,
+   "note": "\"coming,\" | \"the band\""
+  },
+  {
+   "gap": 14,
+   "between_s": [
+    34.09,
+    34.27
+   ],
+   "original_s": 0.18,
+   "target_s": null,
+   "removed_s": 0.0,
+   "cut_at_s": null,
+   "final_s": 0.18,
+   "note": "\"injection,\" | \"potentially\" - recorded comma"
+  },
+  {
+   "gap": 15,
+   "between_s": [
+    35.59,
+    36.14
+   ],
+   "original_s": 0.55,
+   "target_s": 0.32,
+   "removed_s": 0.23,
+   "cut_at_s": 35.82,
+   "final_s": 0.32,
+   "note": "\"time.\" | \"His heartbeat\" - the treatment pulse reaches the heart"
+  },
+  {
+   "gap": 16,
+   "between_s": [
+    37.84,
+    38.36
+   ],
+   "original_s": 0.52,
+   "target_s": 0.29,
+   "removed_s": 0.23,
+   "cut_at_s": 38.04,
+   "final_s": 0.29,
+   "note": "\"sits up.\" | \"Green replaces\""
+  },
+  {
+   "gap": 17,
+   "between_s": [
+    39.48,
+    39.97
+   ],
+   "original_s": 0.49,
+   "target_s": 0.3,
+   "removed_s": 0.19,
+   "cut_at_s": 39.69,
+   "final_s": 0.3,
+   "note": "\"red.\" | \"Life expectancy\" - the green readout"
+  },
+  {
+   "gap": 18,
+   "between_s": [
+    40.91,
+    41.08
+   ],
+   "original_s": 0.17,
+   "target_s": null,
+   "removed_s": 0.0,
+   "cut_at_s": null,
+   "final_s": 0.17,
+   "note": "\"expectancy,\" | \"forty-two\" - recorded"
+  },
+  {
+   "gap": 19,
+   "between_s": [
+    42.08,
+    42.55
+   ],
+   "original_s": 0.47,
+   "target_s": 0.31,
+   "removed_s": 0.16,
+   "cut_at_s": 42.3,
+   "final_s": 0.31,
+   "note": "\"years.\" | \"But that number\""
+  },
+  {
+   "gap": 20,
+   "between_s": [
+    44.27,
+    44.77
+   ],
+   "original_s": 0.5,
+   "target_s": 0.3,
+   "removed_s": 0.2,
+   "cut_at_s": 44.479,
+   "final_s": 0.3,
+   "note": "\"once.\" | \"If your countdown\""
+  },
+  {
+   "gap": 21,
+   "between_s": [
+    45.97,
+    46.17
+   ],
+   "original_s": 0.2,
+   "target_s": null,
+   "removed_s": 0.0,
+   "cut_at_s": null,
+   "final_s": 0.2,
+   "note": "\"started,\" | \"would you\" - recorded comma"
+  }
+ ],
+ "removed_total_s": 2.38,
+ "final_duration_s": 45.0,
+ "speech_span_s": 44.48,
+ "wpm_over_span": 183.5,
+ "max_gap_s": 0.32,
+ "tail_s": 0.48,
+ "loop_seam_silence_s": 0.52
+}

@@ -4,7 +4,7 @@
 // Drawn in world coordinates from a wrist point and a direction, so the key light stays fixed.
 import React from 'react';
 import {lit, mix} from '../lib/color';
-import {Deco, Inked, InkLine} from '../lib/ink';
+import {Deco, Inked, InkLine, useInk} from '../lib/ink';
 import {add, fmt, mul, P, perp, rad, rot, V} from '../lib/math';
 import {Blob, Capsule, SoftShadow} from '../lib/shade';
 
@@ -49,6 +49,9 @@ type Props = {
   sheen?: number;
   /** contour width (world units); default scales with the hand */
   ink?: number;
+  /** V3: palm and fingers join the surrounding <Inked> group (the forearm's), so no contour crosses the wrist;
+   *  the palm's back edge fades into the forearm beneath it. The thumb keeps its own contour over the palm. */
+  bare?: boolean;
 };
 
 const FINGERS = [
@@ -61,13 +64,14 @@ const FINGERS = [
 ];
 const SEG = [0.45, 0.31, 0.24];
 
-export const Hand: React.FC<Props> = ({id, wrist, ang, L, thumbSide: ts, view, pose, color, contact, sheen = 1, ink}) => {
+export const Hand: React.FC<Props> = ({id, wrist, ang, L, thumbSide: ts, view, pose, color, contact, sheen = 1, ink, bare}) => {
+  const pass = useInk().pass;
   const iw = ink ?? L * 0.06;
   const dir = {x: Math.cos(rad(ang)), y: Math.sin(rad(ang))};
   const n = perp(dir); // clockwise side
   const W = (u: number, vv: number): V => add(wrist, add(mul(dir, u * L), mul(n, vv * L * ts)));
   const palmPts: [number, number][] = [
-    [-0.03, -0.19],
+    [-0.03, -0.17],
     [0.2, -0.235],
     [0.4, -0.225],
     [0.475, -0.12],
@@ -76,7 +80,7 @@ export const Hand: React.FC<Props> = ({id, wrist, ang, L, thumbSide: ts, view, p
     [0.43, 0.245],
     [0.27, 0.28],
     [0.12, 0.27],
-    [-0.03, 0.2],
+    [-0.03, 0.17],
   ];
   // smooth closed path through palm points (Catmull-Rom -> cubic)
   const pts = palmPts.map(([u, vv]) => W(u, vv));
@@ -161,13 +165,40 @@ export const Hand: React.FC<Props> = ({id, wrist, ang, L, thumbSide: ts, view, p
   );
 
   // The thumb sits beside the palm (it is the nearest digit to the viewer in these poses), so it is drawn last.
+  const f0 = W(-0.04, 0);
+  const f1 = W(0.16, 0);
+  const palm = bare ? (
+    <g>
+      <defs>
+        <linearGradient id={`${id}-pf`} gradientUnits="userSpaceOnUse" x1={fmt(f0.x)} y1={fmt(f0.y)} x2={fmt(f1.x)} y2={fmt(f1.y)}>
+          <stop offset="0" stopColor="#000" />
+          <stop offset="1" stopColor="#FFF" />
+        </linearGradient>
+        <mask id={`${id}-pm`}>
+          <rect x="-20000" y="-20000" width="40000" height="40000" fill={`url(#${id}-pf)`} />
+        </mask>
+      </defs>
+      <g mask={pass === 'ink' ? undefined : `url(#${id}-pm)`}>
+        <Blob id={`${id}-palm`} d={d} c={palmC} r={0.42 * L} color={color} k={1.05} />
+      </g>
+    </g>
+  ) : (
+    <Blob id={`${id}-palm`} d={d} c={palmC} r={0.42 * L} color={color} k={1.05} />
+  );
   return (
     <g>
-      {contact && <SoftShadow id={`${id}-cs`} c={add(palmC, contact.offset)} rx={0.62 * L} ry={0.36 * L} alpha={contact.alpha} rotate={ang} />}
-      <Inked w={iw}>
-        <Blob id={`${id}-palm`} d={d} c={palmC} r={0.42 * L} color={color} k={1.05} />
-        {fingerEls}
-      </Inked>
+      {contact && pass !== 'ink' && <SoftShadow id={`${id}-cs`} c={add(palmC, contact.offset)} rx={0.62 * L} ry={0.36 * L} alpha={contact.alpha} rotate={ang} />}
+      {bare ? (
+        <>
+          {palm}
+          {fingerEls}
+        </>
+      ) : (
+        <Inked w={iw}>
+          {palm}
+          {fingerEls}
+        </Inked>
+      )}
       {sepLines}
       {thumbEl}
     </g>

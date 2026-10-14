@@ -1,7 +1,7 @@
-// Caption chunks: 2-5-word phrases of the locked narration; six of them carry one emphasis word (no more).
+// V3 caption chunks: 2-5-word phrases of the V3 narration; six of them carry one emphasis word (no more).
 // Every chunk is a contiguous run of narration words (checked at load), so the captions can never
 // drift from the script. Times come from the aligned word list.
-import {WORDS} from './timeline';
+import {WORDS} from './timeline3';
 
 export type Chunk = {from: number; to: number; hl?: string; caps?: boolean};
 
@@ -10,33 +10,40 @@ const RAW: [string, string?, boolean?][] = [
   ['This device'],
   ['tells you exactly'],
   ['when you are dying.', 'dying.'],
-  ['It works by injecting'],
-  ['thousands of'],
+  ['And he has'],
+  ['just over two minutes'],
+  ['to change it.'],
+  ['Under the band,'],
   ['microscopic nano-sensors', 'nano-sensors'],
-  ['through your skin.'],
-  ['These sensors constantly travel'],
-  ['through your bloodstream,'],
-  ['monitoring your'],
-  ['cellular decay.'],
-  ['If your organs'],
-  ['begin to fail,'],
-  ['or your heart'],
-  ['experiences a lethal rhythm,', 'lethal'],
-  ['the device immediately'],
-  ['calculates your'],
-  ['remaining life expectancy'],
-  ['down to the exact second.', 'second.'],
-  ['This gives you'],
-  ['a critical window'],
-  ['to seek help.', 'help.'],
-  ['The device automatically'],
-  ['alerts emergency services'],
-  ['with your exact location'],
-  ['and medical data,'],
-  ['potentially saving your life'],
-  ['before you even'],
-  ['lose consciousness.'],
-  ['But if the countdown starts,'],
+  ['slip through his skin'],
+  ['and race into his bloodstream.'],
+  ['They sweep past blood cells,'],
+  ['monitoring cellular decay'],
+  ['and sending a constant'],
+  ['stream of signals.'],
+  ['If an organ starts failing,'],
+  ['or his heart slips'],
+  ['into a lethal rhythm,', 'lethal'],
+  ['the warning races'],
+  ['back to his wrist.'],
+  ['The red screen keeps counting.'],
+  ['Every second matters.', 'second'],
+  ['His location and medical data'],
+  ['reach a nearby hospital,'],
+  ['where an emergency drone'],
+  ['launches straight toward him.'],
+  ['While help is coming,'],
+  ['the band delivers'],
+  ['an automatic injection,'],
+  ['potentially buying him time.'],
+  ['His heartbeat steadies'],
+  ['as he sits up.'],
+  ['Green replaces red:'],
+  ['life expectancy,'],
+  ['forty-two years.', 'forty-two'],
+  ['But that number'],
+  ['already changed once.'],
+  ['If your countdown started,'],
   ['would you want to know?', 'know?'],
 ];
 
@@ -62,7 +69,8 @@ export const chunkWindows = () =>
   CHUNKS.map((c, k) => {
     const start = WORDS[c.from].start - 0.06;
     const lastEnd = WORDS[c.to].end;
-    const next = k < CHUNKS.length - 1 ? WORDS[CHUNKS[k + 1].from].start - 0.06 : lastEnd + 1.2;
+    // the last phrase clears 0.3 s after "know?", so the loop seam carries no caption
+    const next = k < CHUNKS.length - 1 ? WORDS[CHUNKS[k + 1].from].start - 0.06 : lastEnd + 0.3;
     const end = Math.min(next, lastEnd + 0.7);
     return {...c, start, end, text: c.words.join(' ')};
   });

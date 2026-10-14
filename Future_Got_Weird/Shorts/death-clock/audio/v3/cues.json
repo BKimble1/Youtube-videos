@@ -1,0 +1,1434 @@
+{
+ "fps": 30,
+ "total_frames": 1350,
+ "beats": {
+  "cut": 8,
+  "hipHit": 35,
+  "handHit": 39,
+  "settle": 56,
+  "macro": 78,
+  "buzz0": 83,
+  "tense0": 90,
+  "tip0": 119,
+  "tip1": 151,
+  "open0": 158,
+  "open1": 190,
+  "port0": 185,
+  "port1": 201,
+  "stream0": 206,
+  "stream1": 257,
+  "heroRing": 247,
+  "retract0": 261,
+  "retract1": 277,
+  "dive0": 264,
+  "dive1": 299,
+  "pass0": 306,
+  "pass1": 346,
+  "bend0": 342,
+  "wall0": 353,
+  "decay": 381,
+  "scan0": 368,
+  "signal0": 400,
+  "signal1": 419,
+  "pull0": 423,
+  "pull1": 461,
+  "organ0": 463,
+  "fail": 488,
+  "heart0": 511,
+  "lethal": 538,
+  "sig0": 565,
+  "sig1": 612,
+  "red": 612,
+  "count0": 626,
+  "crit0": 677,
+  "tx0": 705,
+  "tx1": 726,
+  "map0": 727,
+  "hosp0": 754,
+  "dock": 797,
+  "latch": 813,
+  "lift0": 837,
+  "bank0": 860,
+  "travel0": 864,
+  "past0": 891,
+  "arrive": 915,
+  "act0": 927,
+  "inject0": 952,
+  "inject1": 981,
+  "hold": 983,
+  "settleHeart0": 987,
+  "settleHeart1": 1026,
+  "release0": 1037,
+  "rise0": 1056,
+  "rise1": 1094,
+  "green": 1098,
+  "life": 1140,
+  "uneasy0": 1211,
+  "return0": 1273,
+  "glitch": 1327,
+  "glitchLen": 10,
+  "callback": 1337
+ },
+ "units": [
+  [
+   "U01",
+   "Cold open: red 00:02:14 in extreme foreground on the band, fingers tensing (shared with the loop bridge)",
+   0,
+   8
+  ],
+  [
+   "U02",
+   "Low three-quarter: knees give, hips drop over planted feet, the left hand reaches",
+   8,
+   35
+  ],
+  [
+   "U03",
+   "Hips land, hand contacts the grass, elbow gives and locks, torso settles",
+   35,
+   56
+  ],
+  [
+   "U04",
+   "The camera follows the bracing wrist into the band",
+   40,
+   78
+  ],
+  [
+   "U05",
+   "Band vibrates, fingers press into the grass, the countdown keeps running",
+   78,
+   119
+  ],
+  [
+   "U06",
+   "Tilt round the case to its underside: the recessed port",
+   119,
+   158
+  ],
+  [
+   "U07",
+   "A clean cut edge sweeps the skin open under the band; the port extends",
+   158,
+   206
+  ],
+  [
+   "U08",
+   "The sensor stream crosses the skin into the vessel; one hero sensor lights",
+   206,
+   264
+  ],
+  [
+   "U09",
+   "Follow the hero across the near vessel wall into the bloodstream",
+   264,
+   299
+  ],
+  [
+   "U10",
+   "Past a red cell (occlusion), round a bend in the vessel",
+   306,
+   353
+  ],
+  [
+   "U11",
+   "The changed cell: contact scan, the cell greys and wrinkles",
+   353,
+   400
+  ],
+  [
+   "U12",
+   "Signals leave the hero; follow them up the arm and out to the body",
+   400,
+   463
+  ],
+  [
+   "U13",
+   "Torso cutaway: one organ dims under amber sensors",
+   463,
+   511
+  ],
+  [
+   "U14",
+   "The heart: regular, then an irregular, lethal rhythm",
+   511,
+   565
+  ],
+  [
+   "U15",
+   "The warning pulse races down the arm into the red screen",
+   565,
+   626
+  ],
+  [
+   "U16",
+   "The red countdown, tight and readable; the band vibrates, light on the skin",
+   626,
+   677
+  ],
+  [
+   "U17",
+   "Critical seconds: fingers dig in, eyes move between the band and the street, transmission pulse",
+   677,
+   727
+  ],
+  [
+   "U18",
+   "Location and data: the pulse crosses the neighbourhood map to the hospital",
+   727,
+   754
+  ],
+  [
+   "U19",
+   "Hospital rooftop launch bay: the pulse lands in the dock beacon",
+   754,
+   813
+  ],
+  [
+   "U20",
+   "Latch releases, rotors spin up, the drone rises clear and banks",
+   813,
+   864
+  ],
+  [
+   "U21",
+   "Travel over the neighbourhood; bank past a roofline into the arrival",
+   864,
+   915
+  ],
+  [
+   "U22",
+   "The band actuates: the port extends, one treatment pulse enters the vessel",
+   927,
+   987
+  ],
+  [
+   "U23",
+   "The pulse reaches the heart; its rhythm settles; the timer holds",
+   987,
+   1037
+  ],
+  [
+   "U24",
+   "Fingers release, the support hand loads, the torso rises",
+   1037,
+   1098
+  ],
+  [
+   "U25",
+   "Green replaces red; Life Expectancy: 42 Years",
+   1098,
+   1211
+  ],
+  [
+   "U26",
+   "Uneasy reaction, gaze, hesitation",
+   1211,
+   1273
+  ],
+  [
+   "U27",
+   "Back to the glass; one local \"?\" glitch becomes the red 00:02:14 callback; loop",
+   1273,
+   1350
+  ]
+ ],
+ "device": {
+  "START_SECS": 134,
+  "gap0": 726,
+  "gap1": 925,
+  "atGap1": 41.3
+ },
+ "countdown_at": {
+  "0": 134,
+  "612": 113.6,
+  "626": 113.133,
+  "677": 111.433,
+  "726": 109.8,
+  "927": 41.233,
+  "983": 39.367,
+  "1337": 134
+ },
+ "music": {
+  "total": 45,
+  "bpm": 100,
+  "journeyFrom": 3.966666666666667,
+  "urgentFrom": 17.733333333333334,
+  "rescueFrom": 23.433333333333334,
+  "releaseFrom": 32.9,
+  "thinFrom": 40.233333333333334,
+  "glitchAt": 44.233333333333334,
+  "glitchEnd": 44.56666666666667,
+  "callbackAt": 44.56666666666667
+ },
+ "cues": [
+  {
+   "id": "amb_out_a",
+   "kind": "amb",
+   "f": 0,
+   "dur": 4.3,
+   "gain": -36
+  },
+  {
+   "id": "warn0",
+   "kind": "alarm1",
+   "f": 0,
+   "gain": -19
+  },
+  {
+   "id": "buzz_open",
+   "kind": "buzz",
+   "f": 0,
+   "dur": 0.3,
+   "gain": -27
+  },
+  {
+   "id": "hb_a0",
+   "kind": "heartbeat",
+   "f": 0,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "breath_catch",
+   "kind": "file",
+   "f": 6,
+   "gain": -24,
+   "p": {
+    "file": "breath_1_i0TXGqFeHqkEpFKKUdQf.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "knees_give",
+   "kind": "rustle",
+   "f": 10,
+   "dur": 0.6,
+   "gain": -31
+  },
+  {
+   "id": "hb_a1",
+   "kind": "heartbeat",
+   "f": 15,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "shoe_scuff",
+   "kind": "scuff",
+   "f": 20,
+   "gain": -30
+  },
+  {
+   "id": "hb_a2",
+   "kind": "heartbeat",
+   "f": 31,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "hips_land",
+   "kind": "thud",
+   "f": 35,
+   "gain": -21,
+   "p": {
+    "weight": 0.7
+   }
+  },
+  {
+   "id": "dog_whine",
+   "kind": "file",
+   "f": 37,
+   "gain": -30,
+   "p": {
+    "file": "dog_3_JB8U4frHpRyLaM7eJciP.mp3",
+    "offset": 0.13
+   }
+  },
+  {
+   "id": "hand_grass",
+   "kind": "pat",
+   "f": 39,
+   "gain": -23
+  },
+  {
+   "id": "weight_on_arm",
+   "kind": "rustle",
+   "f": 42,
+   "dur": 0.35,
+   "gain": -32
+  },
+  {
+   "id": "body_settle",
+   "kind": "file",
+   "f": 43,
+   "gain": -24,
+   "p": {
+    "file": "fall_4_9ukhH99iVXpBejeIoCqn.mp3",
+    "offset": 0.32
+   }
+  },
+  {
+   "id": "hb_a3",
+   "kind": "heartbeat",
+   "f": 45,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "strained_exhale",
+   "kind": "file",
+   "f": 60,
+   "gain": -29,
+   "p": {
+    "file": "breath_4_y9jk69O2KtRNTZPOiz8T.mp3",
+    "offset": 0.3
+   }
+  },
+  {
+   "id": "hb_a4",
+   "kind": "heartbeat",
+   "f": 62,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "hb_a5",
+   "kind": "heartbeat",
+   "f": 76,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "buzz0",
+   "kind": "buzz",
+   "f": 83,
+   "dur": 0.3,
+   "gain": -25
+  },
+  {
+   "id": "tick90",
+   "kind": "clock",
+   "f": 90,
+   "gain": -29
+  },
+  {
+   "id": "hb_a6",
+   "kind": "heartbeat",
+   "f": 92,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "fingers_dig",
+   "kind": "rustle",
+   "f": 92,
+   "dur": 0.4,
+   "gain": -31
+  },
+  {
+   "id": "buzz1",
+   "kind": "buzz",
+   "f": 99,
+   "dur": 0.3,
+   "gain": -25
+  },
+  {
+   "id": "hb_a7",
+   "kind": "heartbeat",
+   "f": 107,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "tick120",
+   "kind": "clock",
+   "f": 120,
+   "gain": -29
+  },
+  {
+   "id": "tilt",
+   "kind": "swish",
+   "f": 121,
+   "dur": 0.5,
+   "gain": -26
+  },
+  {
+   "id": "case_turn",
+   "kind": "servo",
+   "f": 141,
+   "dur": 0.35,
+   "gain": -28,
+   "p": {
+    "f0": 900,
+    "f1": 1250
+   }
+  },
+  {
+   "id": "cut_edge",
+   "kind": "scan",
+   "f": 159,
+   "gain": -28,
+   "p": {
+    "freq": 2200,
+    "dur": 1.0666666666666667
+   }
+  },
+  {
+   "id": "port_out",
+   "kind": "servo",
+   "f": 185,
+   "dur": 0.3,
+   "gain": -25,
+   "p": {
+    "f0": 1400,
+    "f1": 2100
+   }
+  },
+  {
+   "id": "port_touch",
+   "kind": "click",
+   "f": 201,
+   "gain": -23,
+   "p": {
+    "freq": 2600
+   }
+  },
+  {
+   "id": "stream",
+   "kind": "ticks",
+   "f": 206,
+   "dur": 1.7,
+   "gain": -30,
+   "p": {
+    "rate": 34
+   }
+  },
+  {
+   "id": "flow",
+   "kind": "flow",
+   "f": 216,
+   "dur": 8.5,
+   "gain": -27
+  },
+  {
+   "id": "hero_mark",
+   "kind": "blip",
+   "f": 247,
+   "gain": -26,
+   "p": {
+    "freq": 1320
+   }
+  },
+  {
+   "id": "port_back",
+   "kind": "servo",
+   "f": 261,
+   "dur": 0.3,
+   "gain": -30,
+   "p": {
+    "f0": 2100,
+    "f1": 1300
+   }
+  },
+  {
+   "id": "dive_in",
+   "kind": "swish",
+   "f": 264,
+   "dur": 0.6,
+   "gain": -28
+  },
+  {
+   "id": "cell_pass",
+   "kind": "pass",
+   "f": 318,
+   "gain": -27,
+   "p": {
+    "pan": -0.35
+   }
+  },
+  {
+   "id": "bend_pass",
+   "kind": "pass",
+   "f": 344,
+   "gain": -29,
+   "p": {
+    "pan": 0.3
+   }
+  },
+  {
+   "id": "wall_scan",
+   "kind": "scan",
+   "f": 368,
+   "gain": -27,
+   "p": {
+    "freq": 1760
+   }
+  },
+  {
+   "id": "decay_detect",
+   "kind": "detect",
+   "f": 382,
+   "gain": -23
+  },
+  {
+   "id": "signal_out",
+   "kind": "ring",
+   "f": 400,
+   "gain": -25
+  },
+  {
+   "id": "signal0",
+   "kind": "blip",
+   "f": 406,
+   "gain": -31,
+   "p": {
+    "freq": 990
+   }
+  },
+  {
+   "id": "signal1",
+   "kind": "blip",
+   "f": 411,
+   "gain": -32,
+   "p": {
+    "freq": 1100
+   }
+  },
+  {
+   "id": "signal2",
+   "kind": "blip",
+   "f": 416,
+   "gain": -33,
+   "p": {
+    "freq": 1210
+   }
+  },
+  {
+   "id": "signal3",
+   "kind": "blip",
+   "f": 421,
+   "gain": -34,
+   "p": {
+    "freq": 1320
+   }
+  },
+  {
+   "id": "pull_out",
+   "kind": "swish",
+   "f": 427,
+   "dur": 0.7,
+   "gain": -28
+  },
+  {
+   "id": "window_open",
+   "kind": "scan",
+   "f": 457,
+   "gain": -30,
+   "p": {
+    "freq": 1500,
+    "dur": 0.6
+   }
+  },
+  {
+   "id": "hb_c0",
+   "kind": "heartbeat",
+   "f": 459,
+   "gain": -20,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "hb_c1",
+   "kind": "heartbeat",
+   "f": 480,
+   "gain": -20,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "organ_dim",
+   "kind": "flag",
+   "f": 488,
+   "gain": -26
+  },
+  {
+   "id": "hb_c2",
+   "kind": "heartbeat",
+   "f": 501,
+   "gain": -20,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "hb_c3",
+   "kind": "heartbeat",
+   "f": 522,
+   "gain": -20,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "fibrillation",
+   "kind": "fib",
+   "f": 536,
+   "dur": 1.0333333333333334,
+   "gain": -21
+  },
+  {
+   "id": "heart_sense",
+   "kind": "detect",
+   "f": 544,
+   "gain": -24
+  },
+  {
+   "id": "signal_run",
+   "kind": "zip",
+   "f": 565,
+   "dur": 1.5666666666666667,
+   "gain": -32
+  },
+  {
+   "id": "amb_out_b",
+   "kind": "amb",
+   "f": 602,
+   "dur": 4.166666666666667,
+   "gain": -36
+  },
+  {
+   "id": "warn_land",
+   "kind": "alarm",
+   "f": 611,
+   "gain": -20
+  },
+  {
+   "id": "hb_d0",
+   "kind": "heartbeat",
+   "f": 616,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "buzz2",
+   "kind": "buzz",
+   "f": 630,
+   "dur": 0.26666666666666666,
+   "gain": -25
+  },
+  {
+   "id": "tick630",
+   "kind": "clock",
+   "f": 630,
+   "gain": -29
+  },
+  {
+   "id": "hb_d1",
+   "kind": "heartbeat",
+   "f": 632,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "hb_d2",
+   "kind": "heartbeat",
+   "f": 649,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "tick660",
+   "kind": "clock",
+   "f": 660,
+   "gain": -29
+  },
+  {
+   "id": "hb_d3",
+   "kind": "heartbeat",
+   "f": 664,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "buzz3",
+   "kind": "buzz",
+   "f": 679,
+   "dur": 0.3,
+   "gain": -25
+  },
+  {
+   "id": "crit_breath",
+   "kind": "file",
+   "f": 679,
+   "gain": -28,
+   "p": {
+    "file": "breath_2_C4k8MIkY48irqu90gUzx.mp3",
+    "offset": 0.05
+   }
+  },
+  {
+   "id": "hb_d4",
+   "kind": "heartbeat",
+   "f": 681,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "grass_grip",
+   "kind": "rustle",
+   "f": 681,
+   "dur": 0.45,
+   "gain": -30
+  },
+  {
+   "id": "tick690",
+   "kind": "clock",
+   "f": 690,
+   "gain": -29
+  },
+  {
+   "id": "hb_d5",
+   "kind": "heartbeat",
+   "f": 696,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "send",
+   "kind": "send",
+   "f": 705,
+   "gain": -20
+  },
+  {
+   "id": "hb_d6",
+   "kind": "heartbeat",
+   "f": 713,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "tick720",
+   "kind": "clock",
+   "f": 720,
+   "gain": -29
+  },
+  {
+   "id": "map_data",
+   "kind": "data",
+   "f": 727,
+   "dur": 0.65,
+   "gain": -30
+  },
+  {
+   "id": "amb_roof",
+   "kind": "amb",
+   "f": 745,
+   "dur": 4.233333333333333,
+   "gain": -34,
+   "p": {
+    "wind": 1
+   }
+  },
+  {
+   "id": "hosp_receive",
+   "kind": "receive",
+   "f": 797,
+   "gain": -24
+  },
+  {
+   "id": "latch",
+   "kind": "click",
+   "f": 813,
+   "gain": -22,
+   "p": {
+    "freq": 1500
+   }
+  },
+  {
+   "id": "latch_servo",
+   "kind": "servo",
+   "f": 814,
+   "dur": 0.25,
+   "gain": -27,
+   "p": {
+    "f0": 700,
+    "f1": 1100
+   }
+  },
+  {
+   "id": "rotor_lift",
+   "kind": "rotor",
+   "f": 815,
+   "dur": 1.6333333333333333,
+   "gain": -23,
+   "p": {
+    "spinup": 1,
+    "pan": 0,
+    "panTo": 0.35
+   }
+  },
+  {
+   "id": "rotor_cross",
+   "kind": "rotor",
+   "f": 864,
+   "dur": 1.1,
+   "gain": -24,
+   "p": {
+    "pass": 1,
+    "pan": -0.6,
+    "panTo": 0.6
+   }
+  },
+  {
+   "id": "amb_out_c",
+   "kind": "amb",
+   "f": 891,
+   "dur": 15.3,
+   "gain": -36
+  },
+  {
+   "id": "roof_past",
+   "kind": "swish",
+   "f": 892,
+   "dur": 0.45,
+   "gain": -27
+  },
+  {
+   "id": "rotor_arrive",
+   "kind": "rotor",
+   "f": 897,
+   "dur": 1.1333333333333333,
+   "gain": -24,
+   "p": {
+    "approach": 1,
+    "pan": -0.5,
+    "panTo": -0.15
+   }
+  },
+  {
+   "id": "rotor_texture",
+   "kind": "file",
+   "f": 901,
+   "gain": -34,
+   "p": {
+    "file": "drone_1_f7S5LI3HdTlvGoa1G6Fp.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "link",
+   "kind": "blip",
+   "f": 913,
+   "gain": -27,
+   "p": {
+    "freq": 990
+   }
+  },
+  {
+   "id": "tilt2",
+   "kind": "swish",
+   "f": 929,
+   "dur": 0.35,
+   "gain": -27
+  },
+  {
+   "id": "rotor_hover",
+   "kind": "rotor",
+   "f": 931,
+   "dur": 6.9,
+   "gain": -33,
+   "p": {
+    "hover": 1,
+    "pan": -0.15,
+    "panTo": -0.4
+   }
+  },
+  {
+   "id": "port_out2",
+   "kind": "servo",
+   "f": 944,
+   "dur": 0.25,
+   "gain": -24,
+   "p": {
+    "f0": 1400,
+    "f1": 2100
+   }
+  },
+  {
+   "id": "inject",
+   "kind": "inject",
+   "f": 952,
+   "gain": -21
+  },
+  {
+   "id": "treat_wave",
+   "kind": "wave",
+   "f": 962,
+   "dur": 1.2,
+   "gain": -23
+  },
+  {
+   "id": "held",
+   "kind": "confirm",
+   "f": 984,
+   "gain": -25
+  },
+  {
+   "id": "fib_fade",
+   "kind": "fib",
+   "f": 987,
+   "dur": 0.6,
+   "gain": -26
+  },
+  {
+   "id": "hb_e0",
+   "kind": "heartbeat",
+   "f": 1005,
+   "gain": -20,
+   "p": {
+    "tone": 0.9
+   }
+  },
+  {
+   "id": "hb_e1",
+   "kind": "heartbeat",
+   "f": 1026,
+   "gain": -20,
+   "p": {
+    "tone": 0.9
+   }
+  },
+  {
+   "id": "deep_breath",
+   "kind": "file",
+   "f": 1035,
+   "gain": -24,
+   "p": {
+    "file": "recover_breath_3_u0kMmd94TJjSZjKOuzAH.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "fingers_release",
+   "kind": "rustle",
+   "f": 1039,
+   "dur": 0.3,
+   "gain": -33
+  },
+  {
+   "id": "hb_e2",
+   "kind": "heartbeat",
+   "f": 1048,
+   "gain": -20,
+   "p": {
+    "tone": 0.9
+   }
+  },
+  {
+   "id": "load",
+   "kind": "pat",
+   "f": 1049,
+   "gain": -27
+  },
+  {
+   "id": "push_up",
+   "kind": "rustle",
+   "f": 1056,
+   "dur": 0.9,
+   "gain": -30
+  },
+  {
+   "id": "hb_f0",
+   "kind": "heartbeat",
+   "f": 1071,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "sit_settle",
+   "kind": "thud",
+   "f": 1092,
+   "gain": -29,
+   "p": {
+    "weight": 0.3
+   }
+  },
+  {
+   "id": "hb_f1",
+   "kind": "heartbeat",
+   "f": 1096,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "recover_breath",
+   "kind": "file",
+   "f": 1100,
+   "gain": -28,
+   "p": {
+    "file": "recover_breath_1_tFCDclpcmymiy0MdhNUi.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "green",
+   "kind": "chime",
+   "f": 1100,
+   "gain": -24
+  },
+  {
+   "id": "hb_f2",
+   "kind": "heartbeat",
+   "f": 1121,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f3",
+   "kind": "heartbeat",
+   "f": 1146,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f4",
+   "kind": "heartbeat",
+   "f": 1171,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f5",
+   "kind": "heartbeat",
+   "f": 1196,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f6",
+   "kind": "heartbeat",
+   "f": 1221,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f7",
+   "kind": "heartbeat",
+   "f": 1246,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f8",
+   "kind": "heartbeat",
+   "f": 1271,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "glitch",
+   "kind": "glitch",
+   "f": 1327,
+   "dur": 0.3333333333333333,
+   "gain": -22
+  },
+  {
+   "id": "hb_g0",
+   "kind": "heartbeat",
+   "f": 1335,
+   "gain": -24,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "callback_hum",
+   "kind": "buzz",
+   "f": 1339,
+   "dur": 0.25,
+   "gain": -33
+  }
+ ],
+ "captions": [
+  {
+   "text": "This device",
+   "start": 0.06,
+   "end": 0.64,
+   "hl": null
+  },
+  {
+   "text": "tells you exactly",
+   "start": 0.64,
+   "end": 1.7,
+   "hl": null
+  },
+  {
+   "text": "when you are dying.",
+   "start": 1.7,
+   "end": 2.69,
+   "hl": "dying."
+  },
+  {
+   "text": "And he has",
+   "start": 2.69,
+   "end": 3.23,
+   "hl": null
+  },
+  {
+   "text": "just over two minutes",
+   "start": 3.23,
+   "end": 4.33,
+   "hl": null
+  },
+  {
+   "text": "to change it.",
+   "start": 4.33,
+   "end": 5.21,
+   "hl": null
+  },
+  {
+   "text": "Under the band,",
+   "start": 5.21,
+   "end": 6.11,
+   "hl": null
+  },
+  {
+   "text": "microscopic nano-sensors",
+   "start": 6.11,
+   "end": 7.57,
+   "hl": "nano-sensors"
+  },
+  {
+   "text": "slip through his skin",
+   "start": 7.57,
+   "end": 8.51,
+   "hl": null
+  },
+  {
+   "text": "and race into his bloodstream.",
+   "start": 8.51,
+   "end": 10.15,
+   "hl": null
+  },
+  {
+   "text": "They sweep past blood cells,",
+   "start": 10.15,
+   "end": 11.69,
+   "hl": null
+  },
+  {
+   "text": "monitoring cellular decay",
+   "start": 11.69,
+   "end": 13.11,
+   "hl": null
+  },
+  {
+   "text": "and sending a constant",
+   "start": 13.11,
+   "end": 14.23,
+   "hl": null
+  },
+  {
+   "text": "stream of signals.",
+   "start": 14.23,
+   "end": 15.38,
+   "hl": null
+  },
+  {
+   "text": "If an organ starts failing,",
+   "start": 15.38,
+   "end": 16.72,
+   "hl": null
+  },
+  {
+   "text": "or his heart slips",
+   "start": 16.72,
+   "end": 17.54,
+   "hl": null
+  },
+  {
+   "text": "into a lethal rhythm,",
+   "start": 17.54,
+   "end": 18.77,
+   "hl": "lethal"
+  },
+  {
+   "text": "the warning races",
+   "start": 18.77,
+   "end": 19.75,
+   "hl": null
+  },
+  {
+   "text": "back to his wrist.",
+   "start": 19.75,
+   "end": 20.82,
+   "hl": null
+  },
+  {
+   "text": "The red screen keeps counting.",
+   "start": 20.82,
+   "end": 22.51,
+   "hl": null
+  },
+  {
+   "text": "Every second matters.",
+   "start": 22.51,
+   "end": 24.13,
+   "hl": "second"
+  },
+  {
+   "text": "His location and medical data",
+   "start": 24.13,
+   "end": 25.61,
+   "hl": null
+  },
+  {
+   "text": "reach a nearby hospital,",
+   "start": 25.61,
+   "end": 27.05,
+   "hl": null
+  },
+  {
+   "text": "where an emergency drone",
+   "start": 27.05,
+   "end": 28.13,
+   "hl": null
+  },
+  {
+   "text": "launches straight toward him.",
+   "start": 28.13,
+   "end": 29.63,
+   "hl": null
+  },
+  {
+   "text": "While help is coming,",
+   "start": 29.63,
+   "end": 30.71,
+   "hl": null
+  },
+  {
+   "text": "the band delivers",
+   "start": 30.71,
+   "end": 31.43,
+   "hl": null
+  },
+  {
+   "text": "an automatic injection,",
+   "start": 31.43,
+   "end": 32.85,
+   "hl": null
+  },
+  {
+   "text": "potentially buying him time.",
+   "start": 32.85,
+   "end": 34.5,
+   "hl": null
+  },
+  {
+   "text": "His heartbeat steadies",
+   "start": 34.5,
+   "end": 35.52,
+   "hl": null
+  },
+  {
+   "text": "as he sits up.",
+   "start": 35.52,
+   "end": 36.53,
+   "hl": null
+  },
+  {
+   "text": "Green replaces red:",
+   "start": 36.53,
+   "end": 37.94,
+   "hl": null
+  },
+  {
+   "text": "life expectancy,",
+   "start": 37.94,
+   "end": 39.1,
+   "hl": null
+  },
+  {
+   "text": "forty-two years.",
+   "start": 39.1,
+   "end": 40.3,
+   "hl": "forty-two"
+  },
+  {
+   "text": "But that number",
+   "start": 40.3,
+   "end": 40.94,
+   "hl": null
+  },
+  {
+   "text": "already changed once.",
+   "start": 40.94,
+   "end": 42.38,
+   "hl": null
+  },
+  {
+   "text": "If your countdown started,",
+   "start": 42.38,
+   "end": 43.76,
+   "hl": null
+  },
+  {
+   "text": "would you want to know?",
+   "start": 43.76,
+   "end": 44.78,
+   "hl": "know?"
+  }
+ ],
+ "words": 136
+}

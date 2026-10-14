@@ -1,6 +1,28 @@
 # Asset and provenance manifest: The Death Clock
 
-## V2 (current)
+## V3 (current)
+
+What changed for V3, and where every V3 element comes from. The V2 and V1 manifests follow unchanged below.
+
+| Element | Source | New / reused |
+|---|---|---|
+| The man (rig construction) | `source/src/lib/limb.tsx` (one continuous contour per arm and leg, blended segment shading, a crease only on a bent joint), `lib/ink.tsx` (joint fades; one outer silhouette group per figure), `art/Man.tsx` (sleeve that grows out of the shoulder and ends in a hem, far forearm in front of the chest only where it crosses it, near thigh under the tee's hem, planted-foot IK, arms about 13% longer so a hand can reach the grass), `art/Hand.tsx` (palm and fingers join the forearm's contour), `art/Head.tsx` (ear shape inside the head's contour, smaller sweat, pain expressions without a grin) | Rebuilt from V2 |
+| The band | `art/Device.tsx` (V2 design); the elbow sphere is gone (the arm is one limb from the shoulder), and the screen layout turns upright in portrait when the arm is vertical | Reused, changed |
+| Inside the arm | `art/Interior.tsx` (V2 section, port, stream, vessel, heart) with a moving cut edge added | Reused, changed |
+| Torso cutaway | `art/Cutaway.tsx`: an oval window on the chest with a rim, a far wall showing the cut layers, parallax for the deep layers, one organ and the V2 heart | New |
+| Hospital launch bay, map, flyover, roof wipe | `shots/Dispatch.tsx`: the building, EMERGENCY parapet sign, glass stairwell with a staff member, equipment cabinet, oxygen cylinders, drone dock with beacon ring and cradle latch, ambulance bay; a top-down map; a flyover with parallax; a foreground roof-edge wipe. Drawn in code. The drone is V1/V2's drone art | New (drone reused) |
+| Animation, camera, timing | `shots/Opening.tsx`, `Journey3.tsx`, `Dispatch.tsx`, `Aftermath3.tsx`, `Film.tsx`, keyed to the V3 word times through `lib/timeline3.ts`; device states in `lib/device3.ts` | New |
+| Captions, opening cue | `shots/Overlay.tsx` (V2 design), V3 phrase chunks in `lib/captions.ts` | Reused design, new chunks |
+| Narration | ElevenLabs Test Voice (`kk5XaSLo2XAw0sKM98zU`), `eleven_v4`, flow `m2Pyn9dxqMB3w9eeZby3`; selected take C4, generation `pWhwT8eZU9ybLzm60jKR`; blind Scribe of three takes; silence-only gap edit. Full detail in `audio/narration_v3/NARRATION_PROVENANCE.md` | New take |
+| Generated sound effects | No new generations; the same V1 `eleven_text_to_sound_v2` clips as V2 (`audio/sfx/gen/`) | Reused |
+| Procedural sound and music | `tools/build_audio_v3.py`: V2's generators plus garden air, the band's vibration motor and a single warning transient; a cyclic music bed (oscillators on the 1/45 Hz grid, 75 beats at 100 bpm), effects that wrap through the loop point | New |
+| Runway | Not used | n/a |
+
+V3 credits spent (tool-reported, ElevenLabs): auditions 12 takes about 3,896; full takes 8 about 6,939; blind Scribe of three takes about 779. Total about 11,614. No other paid services.
+
+---
+
+## V2
 
 What changed for V2, and where every V2 element comes from. The V1 manifest follows unchanged below.
 

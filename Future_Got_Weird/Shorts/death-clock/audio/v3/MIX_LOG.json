@@ -1,0 +1,947 @@
+{
+ "total_s": 45.0,
+ "static_gain_db": 4.23,
+ "limiter": {
+  "ceiling_dbfs": -1.8,
+  "lookahead_ms": 5,
+  "release_ms": 120,
+  "max_reduction_db": 1.24,
+  "samples_reduced": 286010,
+  "seconds_reduced": 5.959
+ },
+ "loudnorm_pass1": {
+  "input_i": "-19.23",
+  "input_tp": "-4.78",
+  "input_lra": "1.90",
+  "input_thresh": "-29.29",
+  "output_i": "-15.27",
+  "output_tp": "-1.50",
+  "output_lra": "1.70",
+  "output_thresh": "-25.32",
+  "normalization_type": "dynamic",
+  "target_offset": "0.27"
+ },
+ "measured_mix": {
+  "integrated_lufs": -15.0,
+  "lra_lu": 1.7,
+  "true_peak_dbtp": -1.7
+ },
+ "stems_sum_residual": 0.0,
+ "voice_compressor": {
+  "threshold_db": -20.0,
+  "ratio": 2.5,
+  "attack_ms": 12.0,
+  "release_ms": 150.0,
+  "max_gr_db": 6.46,
+  "mean_gr_db_during_speech": 1.79
+ },
+ "music_duck_db_under_speech": -12.0,
+ "continuous_fx_duck_db_under_speech": -6.0,
+ "effects_duck_db_under_speech": -2.5,
+ "cues": [
+  {
+   "id": "amb_out_a",
+   "kind": "amb",
+   "frame": 0,
+   "time_s": 0.0,
+   "gain_db": -36,
+   "source": "procedural"
+  },
+  {
+   "id": "warn0",
+   "kind": "alarm1",
+   "frame": 0,
+   "time_s": 0.0,
+   "gain_db": -19,
+   "source": "procedural"
+  },
+  {
+   "id": "buzz_open",
+   "kind": "buzz",
+   "frame": 0,
+   "time_s": 0.0,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_a0",
+   "kind": "heartbeat",
+   "frame": 0,
+   "time_s": 0.0,
+   "gain_db": -19,
+   "source": "procedural"
+  },
+  {
+   "id": "breath_catch",
+   "kind": "file",
+   "frame": 6,
+   "time_s": 0.2,
+   "gain_db": -24,
+   "source": "breath_1_i0TXGqFeHqkEpFKKUdQf.mp3"
+  },
+  {
+   "id": "knees_give",
+   "kind": "rustle",
+   "frame": 10,
+   "time_s": 0.333,
+   "gain_db": -31,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_a1",
+   "kind": "heartbeat",
+   "frame": 15,
+   "time_s": 0.5,
+   "gain_db": -19,
+   "source": "procedural"
+  },
+  {
+   "id": "shoe_scuff",
+   "kind": "scuff",
+   "frame": 20,
+   "time_s": 0.667,
+   "gain_db": -30,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_a2",
+   "kind": "heartbeat",
+   "frame": 31,
+   "time_s": 1.033,
+   "gain_db": -19,
+   "source": "procedural"
+  },
+  {
+   "id": "hips_land",
+   "kind": "thud",
+   "frame": 35,
+   "time_s": 1.167,
+   "gain_db": -21,
+   "source": "procedural"
+  },
+  {
+   "id": "dog_whine",
+   "kind": "file",
+   "frame": 37,
+   "time_s": 1.103,
+   "gain_db": -30,
+   "source": "dog_3_JB8U4frHpRyLaM7eJciP.mp3"
+  },
+  {
+   "id": "hand_grass",
+   "kind": "pat",
+   "frame": 39,
+   "time_s": 1.3,
+   "gain_db": -23,
+   "source": "procedural"
+  },
+  {
+   "id": "weight_on_arm",
+   "kind": "rustle",
+   "frame": 42,
+   "time_s": 1.4,
+   "gain_db": -32,
+   "source": "procedural"
+  },
+  {
+   "id": "body_settle",
+   "kind": "file",
+   "frame": 43,
+   "time_s": 1.113,
+   "gain_db": -24,
+   "source": "fall_4_9ukhH99iVXpBejeIoCqn.mp3"
+  },
+  {
+   "id": "hb_a3",
+   "kind": "heartbeat",
+   "frame": 45,
+   "time_s": 1.5,
+   "gain_db": -19,
+   "source": "procedural"
+  },
+  {
+   "id": "strained_exhale",
+   "kind": "file",
+   "frame": 60,
+   "time_s": 1.7,
+   "gain_db": -29,
+   "source": "breath_4_y9jk69O2KtRNTZPOiz8T.mp3"
+  },
+  {
+   "id": "hb_a4",
+   "kind": "heartbeat",
+   "frame": 62,
+   "time_s": 2.067,
+   "gain_db": -19,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_a5",
+   "kind": "heartbeat",
+   "frame": 76,
+   "time_s": 2.533,
+   "gain_db": -19,
+   "source": "procedural"
+  },
+  {
+   "id": "buzz0",
+   "kind": "buzz",
+   "frame": 83,
+   "time_s": 2.767,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "tick90",
+   "kind": "clock",
+   "frame": 90,
+   "time_s": 3.0,
+   "gain_db": -29,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_a6",
+   "kind": "heartbeat",
+   "frame": 92,
+   "time_s": 3.067,
+   "gain_db": -19,
+   "source": "procedural"
+  },
+  {
+   "id": "fingers_dig",
+   "kind": "rustle",
+   "frame": 92,
+   "time_s": 3.067,
+   "gain_db": -31,
+   "source": "procedural"
+  },
+  {
+   "id": "buzz1",
+   "kind": "buzz",
+   "frame": 99,
+   "time_s": 3.3,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_a7",
+   "kind": "heartbeat",
+   "frame": 107,
+   "time_s": 3.567,
+   "gain_db": -19,
+   "source": "procedural"
+  },
+  {
+   "id": "tick120",
+   "kind": "clock",
+   "frame": 120,
+   "time_s": 4.0,
+   "gain_db": -29,
+   "source": "procedural"
+  },
+  {
+   "id": "tilt",
+   "kind": "swish",
+   "frame": 121,
+   "time_s": 4.033,
+   "gain_db": -26,
+   "source": "procedural"
+  },
+  {
+   "id": "case_turn",
+   "kind": "servo",
+   "frame": 141,
+   "time_s": 4.7,
+   "gain_db": -28,
+   "source": "procedural"
+  },
+  {
+   "id": "cut_edge",
+   "kind": "scan",
+   "frame": 159,
+   "time_s": 5.3,
+   "gain_db": -28,
+   "source": "procedural"
+  },
+  {
+   "id": "port_out",
+   "kind": "servo",
+   "frame": 185,
+   "time_s": 6.167,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "port_touch",
+   "kind": "click",
+   "frame": 201,
+   "time_s": 6.7,
+   "gain_db": -23,
+   "source": "procedural"
+  },
+  {
+   "id": "stream",
+   "kind": "ticks",
+   "frame": 206,
+   "time_s": 6.867,
+   "gain_db": -30,
+   "source": "procedural"
+  },
+  {
+   "id": "flow",
+   "kind": "flow",
+   "frame": 216,
+   "time_s": 7.2,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "hero_mark",
+   "kind": "blip",
+   "frame": 247,
+   "time_s": 8.233,
+   "gain_db": -26,
+   "source": "procedural"
+  },
+  {
+   "id": "port_back",
+   "kind": "servo",
+   "frame": 261,
+   "time_s": 8.7,
+   "gain_db": -30,
+   "source": "procedural"
+  },
+  {
+   "id": "dive_in",
+   "kind": "swish",
+   "frame": 264,
+   "time_s": 8.8,
+   "gain_db": -28,
+   "source": "procedural"
+  },
+  {
+   "id": "cell_pass",
+   "kind": "pass",
+   "frame": 318,
+   "time_s": 10.6,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "bend_pass",
+   "kind": "pass",
+   "frame": 344,
+   "time_s": 11.467,
+   "gain_db": -29,
+   "source": "procedural"
+  },
+  {
+   "id": "wall_scan",
+   "kind": "scan",
+   "frame": 368,
+   "time_s": 12.267,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "decay_detect",
+   "kind": "detect",
+   "frame": 382,
+   "time_s": 12.733,
+   "gain_db": -23,
+   "source": "procedural"
+  },
+  {
+   "id": "signal_out",
+   "kind": "ring",
+   "frame": 400,
+   "time_s": 13.333,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "signal0",
+   "kind": "blip",
+   "frame": 406,
+   "time_s": 13.533,
+   "gain_db": -31,
+   "source": "procedural"
+  },
+  {
+   "id": "signal1",
+   "kind": "blip",
+   "frame": 411,
+   "time_s": 13.7,
+   "gain_db": -32,
+   "source": "procedural"
+  },
+  {
+   "id": "signal2",
+   "kind": "blip",
+   "frame": 416,
+   "time_s": 13.867,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "signal3",
+   "kind": "blip",
+   "frame": 421,
+   "time_s": 14.033,
+   "gain_db": -34,
+   "source": "procedural"
+  },
+  {
+   "id": "pull_out",
+   "kind": "swish",
+   "frame": 427,
+   "time_s": 14.233,
+   "gain_db": -28,
+   "source": "procedural"
+  },
+  {
+   "id": "window_open",
+   "kind": "scan",
+   "frame": 457,
+   "time_s": 15.233,
+   "gain_db": -30,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_c0",
+   "kind": "heartbeat",
+   "frame": 459,
+   "time_s": 15.3,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_c1",
+   "kind": "heartbeat",
+   "frame": 480,
+   "time_s": 16.0,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "organ_dim",
+   "kind": "flag",
+   "frame": 488,
+   "time_s": 16.267,
+   "gain_db": -26,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_c2",
+   "kind": "heartbeat",
+   "frame": 501,
+   "time_s": 16.7,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_c3",
+   "kind": "heartbeat",
+   "frame": 522,
+   "time_s": 17.4,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "fibrillation",
+   "kind": "fib",
+   "frame": 536,
+   "time_s": 17.867,
+   "gain_db": -21,
+   "source": "procedural"
+  },
+  {
+   "id": "heart_sense",
+   "kind": "detect",
+   "frame": 544,
+   "time_s": 18.133,
+   "gain_db": -24,
+   "source": "procedural"
+  },
+  {
+   "id": "signal_run",
+   "kind": "zip",
+   "frame": 565,
+   "time_s": 18.833,
+   "gain_db": -32,
+   "source": "procedural"
+  },
+  {
+   "id": "amb_out_b",
+   "kind": "amb",
+   "frame": 602,
+   "time_s": 20.067,
+   "gain_db": -36,
+   "source": "procedural"
+  },
+  {
+   "id": "warn_land",
+   "kind": "alarm",
+   "frame": 611,
+   "time_s": 20.367,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_d0",
+   "kind": "heartbeat",
+   "frame": 616,
+   "time_s": 20.533,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "buzz2",
+   "kind": "buzz",
+   "frame": 630,
+   "time_s": 21.0,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "tick630",
+   "kind": "clock",
+   "frame": 630,
+   "time_s": 21.0,
+   "gain_db": -29,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_d1",
+   "kind": "heartbeat",
+   "frame": 632,
+   "time_s": 21.067,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_d2",
+   "kind": "heartbeat",
+   "frame": 649,
+   "time_s": 21.633,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "tick660",
+   "kind": "clock",
+   "frame": 660,
+   "time_s": 22.0,
+   "gain_db": -29,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_d3",
+   "kind": "heartbeat",
+   "frame": 664,
+   "time_s": 22.133,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "buzz3",
+   "kind": "buzz",
+   "frame": 679,
+   "time_s": 22.633,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "crit_breath",
+   "kind": "file",
+   "frame": 679,
+   "time_s": 22.583,
+   "gain_db": -28,
+   "source": "breath_2_C4k8MIkY48irqu90gUzx.mp3"
+  },
+  {
+   "id": "hb_d4",
+   "kind": "heartbeat",
+   "frame": 681,
+   "time_s": 22.7,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "grass_grip",
+   "kind": "rustle",
+   "frame": 681,
+   "time_s": 22.7,
+   "gain_db": -30,
+   "source": "procedural"
+  },
+  {
+   "id": "tick690",
+   "kind": "clock",
+   "frame": 690,
+   "time_s": 23.0,
+   "gain_db": -29,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_d5",
+   "kind": "heartbeat",
+   "frame": 696,
+   "time_s": 23.2,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "send",
+   "kind": "send",
+   "frame": 705,
+   "time_s": 23.5,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_d6",
+   "kind": "heartbeat",
+   "frame": 713,
+   "time_s": 23.767,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "tick720",
+   "kind": "clock",
+   "frame": 720,
+   "time_s": 24.0,
+   "gain_db": -29,
+   "source": "procedural"
+  },
+  {
+   "id": "map_data",
+   "kind": "data",
+   "frame": 727,
+   "time_s": 24.233,
+   "gain_db": -30,
+   "source": "procedural"
+  },
+  {
+   "id": "amb_roof",
+   "kind": "amb",
+   "frame": 745,
+   "time_s": 24.833,
+   "gain_db": -34,
+   "source": "procedural"
+  },
+  {
+   "id": "hosp_receive",
+   "kind": "receive",
+   "frame": 797,
+   "time_s": 26.567,
+   "gain_db": -24,
+   "source": "procedural"
+  },
+  {
+   "id": "latch",
+   "kind": "click",
+   "frame": 813,
+   "time_s": 27.1,
+   "gain_db": -22,
+   "source": "procedural"
+  },
+  {
+   "id": "latch_servo",
+   "kind": "servo",
+   "frame": 814,
+   "time_s": 27.133,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "rotor_lift",
+   "kind": "rotor",
+   "frame": 815,
+   "time_s": 27.167,
+   "gain_db": -23,
+   "source": "procedural"
+  },
+  {
+   "id": "rotor_cross",
+   "kind": "rotor",
+   "frame": 864,
+   "time_s": 28.8,
+   "gain_db": -24,
+   "source": "procedural"
+  },
+  {
+   "id": "amb_out_c",
+   "kind": "amb",
+   "frame": 891,
+   "time_s": 29.7,
+   "gain_db": -36,
+   "source": "procedural"
+  },
+  {
+   "id": "roof_past",
+   "kind": "swish",
+   "frame": 892,
+   "time_s": 29.733,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "rotor_arrive",
+   "kind": "rotor",
+   "frame": 897,
+   "time_s": 29.9,
+   "gain_db": -24,
+   "source": "procedural"
+  },
+  {
+   "id": "rotor_texture",
+   "kind": "file",
+   "frame": 901,
+   "time_s": 30.033,
+   "gain_db": -34,
+   "source": "drone_1_f7S5LI3HdTlvGoa1G6Fp.mp3"
+  },
+  {
+   "id": "link",
+   "kind": "blip",
+   "frame": 913,
+   "time_s": 30.433,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "tilt2",
+   "kind": "swish",
+   "frame": 929,
+   "time_s": 30.967,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "rotor_hover",
+   "kind": "rotor",
+   "frame": 931,
+   "time_s": 31.033,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "port_out2",
+   "kind": "servo",
+   "frame": 944,
+   "time_s": 31.467,
+   "gain_db": -24,
+   "source": "procedural"
+  },
+  {
+   "id": "inject",
+   "kind": "inject",
+   "frame": 952,
+   "time_s": 31.733,
+   "gain_db": -21,
+   "source": "procedural"
+  },
+  {
+   "id": "treat_wave",
+   "kind": "wave",
+   "frame": 962,
+   "time_s": 32.067,
+   "gain_db": -23,
+   "source": "procedural"
+  },
+  {
+   "id": "held",
+   "kind": "confirm",
+   "frame": 984,
+   "time_s": 32.8,
+   "gain_db": -25,
+   "source": "procedural"
+  },
+  {
+   "id": "fib_fade",
+   "kind": "fib",
+   "frame": 987,
+   "time_s": 32.9,
+   "gain_db": -26,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_e0",
+   "kind": "heartbeat",
+   "frame": 1005,
+   "time_s": 33.5,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_e1",
+   "kind": "heartbeat",
+   "frame": 1026,
+   "time_s": 34.2,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "deep_breath",
+   "kind": "file",
+   "frame": 1035,
+   "time_s": 34.5,
+   "gain_db": -24,
+   "source": "recover_breath_3_u0kMmd94TJjSZjKOuzAH.mp3"
+  },
+  {
+   "id": "fingers_release",
+   "kind": "rustle",
+   "frame": 1039,
+   "time_s": 34.633,
+   "gain_db": -33,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_e2",
+   "kind": "heartbeat",
+   "frame": 1048,
+   "time_s": 34.933,
+   "gain_db": -20,
+   "source": "procedural"
+  },
+  {
+   "id": "load",
+   "kind": "pat",
+   "frame": 1049,
+   "time_s": 34.967,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "push_up",
+   "kind": "rustle",
+   "frame": 1056,
+   "time_s": 35.2,
+   "gain_db": -30,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_f0",
+   "kind": "heartbeat",
+   "frame": 1071,
+   "time_s": 35.7,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "sit_settle",
+   "kind": "thud",
+   "frame": 1092,
+   "time_s": 36.4,
+   "gain_db": -29,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_f1",
+   "kind": "heartbeat",
+   "frame": 1096,
+   "time_s": 36.533,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "recover_breath",
+   "kind": "file",
+   "frame": 1100,
+   "time_s": 36.667,
+   "gain_db": -28,
+   "source": "recover_breath_1_tFCDclpcmymiy0MdhNUi.mp3"
+  },
+  {
+   "id": "green",
+   "kind": "chime",
+   "frame": 1100,
+   "time_s": 36.667,
+   "gain_db": -24,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_f2",
+   "kind": "heartbeat",
+   "frame": 1121,
+   "time_s": 37.367,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_f3",
+   "kind": "heartbeat",
+   "frame": 1146,
+   "time_s": 38.2,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_f4",
+   "kind": "heartbeat",
+   "frame": 1171,
+   "time_s": 39.033,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_f5",
+   "kind": "heartbeat",
+   "frame": 1196,
+   "time_s": 39.867,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_f6",
+   "kind": "heartbeat",
+   "frame": 1221,
+   "time_s": 40.7,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_f7",
+   "kind": "heartbeat",
+   "frame": 1246,
+   "time_s": 41.533,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_f8",
+   "kind": "heartbeat",
+   "frame": 1271,
+   "time_s": 42.367,
+   "gain_db": -27,
+   "source": "procedural"
+  },
+  {
+   "id": "glitch",
+   "kind": "glitch",
+   "frame": 1327,
+   "time_s": 44.233,
+   "gain_db": -22,
+   "source": "procedural"
+  },
+  {
+   "id": "hb_g0",
+   "kind": "heartbeat",
+   "frame": 1335,
+   "time_s": 44.5,
+   "gain_db": -24,
+   "source": "procedural"
+  },
+  {
+   "id": "callback_hum",
+   "kind": "buzz",
+   "frame": 1339,
+   "time_s": 44.633,
+   "gain_db": -33,
+   "source": "procedural"
+  }
+ ]
+}

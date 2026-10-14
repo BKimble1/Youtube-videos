@@ -1,0 +1,68 @@
+{
+ "mix": {
+  "I_lufs": -15.0,
+  "LRA_lu": 1.7,
+  "TP_dbtp": -1.7
+ },
+ "narration": {
+  "I_lufs": -15.1,
+  "LRA_lu": 1.7,
+  "TP_dbtp": -1.4
+ },
+ "music": {
+  "I_lufs": -29.5,
+  "LRA_lu": 6.0,
+  "TP_dbtp": -9.4
+ },
+ "effects": {
+  "I_lufs": -32.1,
+  "LRA_lu": 12.4,
+  "TP_dbtp": -12.8
+ },
+ "stems_sum_max_abs_error": 2.3841860763429423e-07,
+ "duration_s": 45.0,
+ "voice_margin_db": {
+  "broadband": {
+   "min": 5.8,
+   "p5": 9.2,
+   "median": 13.3
+  },
+  "speech_weighted": {
+   "min": 10.3,
+   "p5": 14.6,
+   "median": 19.3
+  },
+  "lowest_windows": [
+   [
+    20.01,
+    8.7,
+    10.3
+   ],
+   [
+    23.3,
+    8.6,
+    11.8
+   ],
+   [
+    35.34,
+    11.0,
+    12.7
+   ],
+   [
+    0.04,
+    10.0,
+    13.2
+   ],
+   [
+    9.51,
+    8.3,
+    13.3
+   ],
+   [
+    26.39,
+    10.0,
+    13.9
+   ]
+  ]
+ }
+}
