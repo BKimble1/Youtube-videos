@@ -1,52 +1,46 @@
-// Device-state continuity for the whole film, in one place. Every shot that shows the screen calls
-// deviceState(f), so the countdown begins ONCE from a single origin, decrements consistently in story
-// time, stays above zero through the intervention, and every view of the band agrees.
-//   green VITAL SCAN -> slight red edge warning -> crimson + 00:02:14 -> HELP ALERT SENT (blue) over
-//   the timer -> STABILIZING (timer frozen) -> green "Life Expectancy: 42 Years" -> one ? glitch.
+// Device-state continuity for the whole film, in one place. Every shot that shows the screen calls deviceState(f),
+// so the countdown begins ONCE from a single origin and every view of the band agrees.
+//   green VITAL SCAN -> crimson CALCULATING -> 00:02:14 counting down in real time -> the diagnostic resolves ->
+//   HELP ALERT SENT (blue strip) -> treatment: the timer is HELD (blue, STABILIZING) -> green
+//   "Life Expectancy: 42 Years" -> one localized question-mark glitch.
+// The countdown runs at film speed while it is active (no hidden compression), stops when the treatment holds it,
+// and never reaches zero.
 import {SCREEN_IDLE, ScreenState} from './screen';
 import {clamp, inv} from './math';
-import {fE, fS, FPS, SHOT} from './timeline';
+import {B, FPS} from './timeline';
 
 export const DEV = {
-  edgeIn: SHOT.s03[0] + 24, // slight red edge creeps in while he lies there
-  redAt: SHOT.s08[0] + 1, // decisive switch to crimson right at the cut back to the watch (alarm sits in the pause before "the device")
-  timerAt: fS('calculates'), // countdown appears at exactly 00:02:14
-  alertAt: fE('seek help') + 6, // blue pulse leaves, banner slides in
-  compress0: SHOT.s11[0] + 34, // emergency-response montage (time compressed)
-  compress1: SHOT.s12[1],
-  compressRate: 2.5, // story seconds per film second inside the montage
-  injectAt: fS('potentially') + 10, // tiny automated injection from the band
-  freezeAt: fS('potentially') + 46, // treatment response: countdown stops
-  recoverAt: SHOT.s14[0] + 40, // screen turns green during the recovery
-  glitchAt: fE('want to know') + 4,
-  glitchLen: 9,
+  redAt: B.red, // decisive switch to crimson as the heart's signal reaches the band
+  timerAt: B.timer, // countdown appears at exactly 00:02:14
+  diag0: B.diag0,
+  diag1: B.diag1,
+  alertAt: B.alert, // HELP ALERT SENT
+  freezeAt: B.freeze, // the treatment holds the timer
+  recoverAt: B.recover, // green readout
+  glitchAt: B.glitch,
+  glitchLen: B.glitchLen,
   START_SECS: 134, // 00:02:14
 };
 
-/** Story seconds elapsed since the countdown origin (compressed inside the montage window). */
-export const storyElapsed = (f: number) => {
-  const g = Math.min(f, DEV.freezeAt);
-  const base = Math.max(0, g - DEV.timerAt) / FPS;
-  const inside = Math.max(0, Math.min(g, DEV.compress1) - DEV.compress0) / FPS;
-  return base + inside * (DEV.compressRate - 1);
-};
+/** Seconds elapsed on the countdown (film time between its origin and the hold). */
+export const storyElapsed = (f: number) => Math.max(0, Math.min(f, DEV.freezeAt) - DEV.timerAt) / FPS;
 
 export const countdownSecs = (f: number) => DEV.START_SECS - storyElapsed(f);
 
 export const deviceState = (f: number): ScreenState => {
   const red = clamp(inv(DEV.redAt, DEV.redAt + 4, f));
   const timerIn = clamp(inv(DEV.timerAt, DEV.timerAt + 6, f));
-  const alert = clamp(inv(DEV.alertAt, DEV.alertAt + 10, f)) * (1 - clamp(inv(DEV.injectAt + 4, DEV.injectAt + 12, f)));
-  const stab = clamp(inv(DEV.injectAt + 4, DEV.injectAt + 12, f));
+  const alert = clamp(inv(DEV.alertAt, DEV.alertAt + 10, f));
+  const stab = clamp(inv(DEV.freezeAt, DEV.freezeAt + 12, f));
   const recover = clamp(inv(DEV.recoverAt, DEV.recoverAt + 12, f));
   const g = f - DEV.glitchAt;
   const glitch = g >= 0 && g < DEV.glitchLen ? Math.sin((g / DEV.glitchLen) * Math.PI) ** 0.5 : 0;
-  // the alarm flash is fast at first, slower once help is on the way
+  // the border pulse is fast at first, slower once help is on the way, still once the timer is held
   const flashRate = f < DEV.alertAt ? 0.085 : 0.05;
   return {
     ...SCREEN_IDLE,
     f,
-    edge: red > 0 ? 0 : clamp(inv(DEV.edgeIn, DEV.edgeIn + 30, f)) * 0.7,
+    edge: 0,
     red,
     secs: f >= DEV.timerAt ? countdownSecs(f) : null,
     timerIn,
@@ -55,5 +49,6 @@ export const deviceState = (f: number): ScreenState => {
     stab,
     recover,
     glitch,
+    diag: clamp(inv(DEV.diag0, DEV.diag1, f)),
   };
 };

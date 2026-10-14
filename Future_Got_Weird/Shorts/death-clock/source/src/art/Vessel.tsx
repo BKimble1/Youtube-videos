@@ -19,7 +19,7 @@ const LUM = VS.rOut - VS.wall;
 const rect = (x: number, y: number, w: number, h: number) => `M${x},${y} h${w} v${h} h${-w} Z`;
 
 /** Red blood cell: biconcave disc seen at a tilt (rim lighter, dimpled centre darker). */
-const RBC: React.FC<{id: string; p: V; r: number; tilt: number; rot: number; tone: number}> = ({id, p, r, tilt, rot, tone}) => {
+export const RBC: React.FC<{id: string; p: V; r: number; tilt: number; rot: number; tone: number}> = ({id, p, r, tilt, rot, tone}) => {
   const base = mix('#D23A47', '#8E1A28', tone);
   return (
     <g transform={`translate(${fmt(p.x)} ${fmt(p.y)}) rotate(${fmt(rot)})`}>
@@ -38,7 +38,7 @@ const RBC: React.FC<{id: string; p: V; r: number; tilt: number; rot: number; ton
 };
 
 /** Tissue cell: soft sphere with a nucleus. decay 0..1 shrinks, wrinkles and greys it. */
-const Cell: React.FC<{id: string; c: V; r: number; decay: number; glow: number; glowColor: string; f: number}> = ({id, c, r, decay, glow, glowColor, f}) => {
+export const Cell: React.FC<{id: string; c: V; r: number; decay: number; glow: number; glowColor: string; f: number}> = ({id, c, r, decay, glow, glowColor, f}) => {
   const col = mix('#F4A9A0', '#8E7C94', decay);
   const rr = r * (1 - 0.18 * decay);
   const pts: string[] = [];
@@ -57,7 +57,7 @@ const Cell: React.FC<{id: string; c: V; r: number; decay: number; glow: number; 
 };
 
 /** Gradient ring (a diagnostic scan pulse), not a stroke. */
-const Ring: React.FC<{id: string; c: V; r: number; color: string; a: number}> = ({id, c, r, color, a}) => (
+export const Ring: React.FC<{id: string; c: V; r: number; color: string; a: number}> = ({id, c, r, color, a}) => (
   <g>
     <defs>
       <radialGradient id={id}>

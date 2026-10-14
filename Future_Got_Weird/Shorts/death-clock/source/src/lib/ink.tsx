@@ -6,6 +6,10 @@
 import React from 'react';
 
 export const INK = '#172B3A';
+/** V2 finish: contours are thin, selective edges (about 0.36 of the crew rig's width) so the exterior shares one
+ *  art system with the soft interiors; facial feature lines stay a little heavier so the face still reads. */
+export const OUTLINE_K = 0.36;
+export const FEATURE_K = 0.8;
 
 type InkState = {pass: 'both' | 'ink' | 'fill'; w: number};
 export const InkCtx = React.createContext<InkState>({pass: 'both', w: 0});
@@ -30,18 +34,18 @@ export const Deco: React.FC<{children: React.ReactNode}> = ({children}) => (useI
 /** A plain path that takes part in the outline: widened ink in the ink pass, the given fill otherwise. */
 export const InkPath: React.FC<{d: string; fill: string; opacity?: number; transform?: string}> = ({d, fill, opacity, transform}) => {
   const ink = useInk();
-  if (ink.pass === 'ink') return <path d={d} fill={INK} stroke={INK} strokeWidth={ink.w * 2} strokeLinejoin="round" opacity={opacity} transform={transform} />;
+  if (ink.pass === 'ink') return <path d={d} fill={INK} stroke={INK} strokeWidth={ink.w * 2 * OUTLINE_K} strokeLinejoin="round" opacity={opacity} transform={transform} />;
   return <path d={d} fill={fill} opacity={opacity} transform={transform} />;
 };
 
 /** The ink underlay for a primitive (used by the gradient primitives in shade.tsx). */
 export const inkUnder = (w: number, el: {d?: string; ellipse?: {cx: number; cy: number; rx: number; ry: number; transform?: string}}, opacity?: number) =>
   el.d !== undefined ? (
-    <path d={el.d} fill={INK} stroke={INK} strokeWidth={w * 2} strokeLinejoin="round" opacity={opacity} />
+    <path d={el.d} fill={INK} stroke={INK} strokeWidth={w * 2 * OUTLINE_K} strokeLinejoin="round" opacity={opacity} />
   ) : (
-    <ellipse cx={el.ellipse!.cx} cy={el.ellipse!.cy} rx={el.ellipse!.rx} ry={el.ellipse!.ry} transform={el.ellipse!.transform} fill={INK} stroke={INK} strokeWidth={w * 2} opacity={opacity} />
+    <ellipse cx={el.ellipse!.cx} cy={el.ellipse!.cy} rx={el.ellipse!.rx} ry={el.ellipse!.ry} transform={el.ellipse!.transform} fill={INK} stroke={INK} strokeWidth={w * 2 * OUTLINE_K} opacity={opacity} />
   );
 
 /** Ink line (brows, creases, mouth line, nose hook): the crew's drawn features. */
 export const InkLine: React.FC<{d: string; w: number; opacity?: number; color?: string}> = ({d, w, opacity, color = INK}) =>
-  useInk().pass === 'ink' ? null : <path d={d} fill="none" stroke={color} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" opacity={opacity} />;
+  useInk().pass === 'ink' ? null : <path d={d} fill="none" stroke={color} strokeWidth={w * FEATURE_K} strokeLinecap="round" strokeLinejoin="round" opacity={opacity} />;

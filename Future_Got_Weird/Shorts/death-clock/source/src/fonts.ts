@@ -7,10 +7,7 @@ import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/barlow-condensed/800.css';
 import {cancelRender, continueRender, delayRender} from 'remotion';
 
-export const CAP_FONT = '"Fredoka Variable", sans-serif';
-export const CAP_FAMILY = '"Fredoka Variable"';
-export const CAP_WEIGHT = 600;
-export const UI_FONT = '"Barlow Condensed", sans-serif';
+export {CAP_FONT, CAP_FAMILY, CAP_WEIGHT, UI_FONT} from './fontNames';
 
 const probe = (font: string, w: number) => {
   const c = document.createElement('canvas').getContext('2d')!;
@@ -25,6 +22,7 @@ if (typeof document !== 'undefined') {
   const handle = delayRender('fonts');
   Promise.all([
     document.fonts.load('600 70px "Fredoka Variable"'),
+    document.fonts.load('700 70px "Fredoka Variable"'),
     document.fonts.load('600 70px "Barlow Condensed"'),
     document.fonts.load('700 70px "Barlow Condensed"'),
     document.fonts.load('800 70px "Barlow Condensed"'),

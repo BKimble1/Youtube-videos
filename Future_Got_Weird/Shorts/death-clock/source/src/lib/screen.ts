@@ -24,6 +24,8 @@ export type ScreenState = {
   scanText?: string;
   /** dive through the glass: the screen opens onto the reservoir 0..1 */
   dive?: number;
+  /** V2: the diagnostic resolving under the digits 0..1 (hands over to the help alert) */
+  diag?: number;
 };
 
 export const SCREEN_IDLE: ScreenState = {red: 0, edge: 0, secs: null, timerIn: 0, flash: 0, alert: 0, stab: 0, recover: 0, glitch: 0, f: 0};

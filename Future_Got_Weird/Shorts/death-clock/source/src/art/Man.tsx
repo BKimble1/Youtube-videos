@@ -13,6 +13,7 @@ import {add, clamp, dirDown, fmt, len, lerpV, mul, norm, P, perp, sub, V} from '
 import {Blob, Capsule, Glow, Lin, Sphere} from '../lib/shade';
 import {Expr, Head} from './Head';
 import {Hand, HandPose} from './Hand';
+import {DeviceView, Wrist3D, DEV_GEO} from './Device';
 
 export type ManPose = {
   x: number;
@@ -130,8 +131,10 @@ export const manJoints = (p: ManPose) => {
   return {H, C, Sh, N, head, tc, L, R, lLeg, rLeg, s, toWorld};
 };
 
-/** World position of the band face on the left wrist (for glows, camera targets and UI anchoring). */
-export const bandCenter = (j: Joints) => add(j.L.W, mul(j.L.foreDir, -20 * j.s));
+/** World position of the band on the left wrist's axis (for glows, camera targets and UI anchoring). */
+export const bandCenter = (j: Joints) => add(j.L.W, mul(j.L.foreDir, -DEV_GEO.bandFromWrist * 17 * j.s));
+/** Forearm radii (elbow, wrist) at the rig's scale. */
+export const foreRadii = (s: number) => ({rE: 24 * s, rW: 17 * s});
 
 const smoothClosed = (pts: V[]) => {
   let d = `M${P(pts[0])}`;
@@ -146,6 +149,31 @@ const smoothClosed = (pts: V[]) => {
   }
   return d + ' Z';
 };
+
+/** The tee's outline (shared by the drawing and the x-ray clip). */
+export const torsoPath = (p: ManPose) => {
+  const j = manJoints(p);
+  const s = p.s;
+  const tc = j.tc;
+  const loc = (O: V, a: number, u: number, vv: number) => add(O, add(mul(up(a), u * s), mul(px(a), vv * s)));
+  const br = 1 + 0.03 * p.breath;
+  return smoothClosed([
+    loc(j.H, p.torso, -18, -84),
+    loc(j.H, p.torso, 64, -86),
+    loc(j.H, p.torso, 140, -82),
+    loc(j.C, tc, 52, -98 * br),
+    loc(j.C, tc, 118, -88),
+    loc(j.C, tc, 146, -40),
+    loc(j.C, tc, 154, 0),
+    loc(j.C, tc, 150, 36),
+    loc(j.C, tc, 128, 92),
+    loc(j.C, tc, 48, 94 * br),
+    loc(j.H, p.torso, 104, 84),
+    loc(j.H, p.torso, -16, 90),
+  ]);
+};
+/** Torso-local point (u along the spine from O, v across), as the drawing uses. */
+export const torsoPt = (p: ManPose, O: V, a: number, u: number, vv: number) => add(O, add(mul(up(a), u * p.s), mul(px(a), vv * p.s)));
 
 type Props = {
   id: string;
@@ -166,34 +194,29 @@ type Props = {
   nearLegFront?: boolean;
   /** hair spike follow-through (deg) */
   hairSway?: number;
+  /** V2: the left forearm, band and hand drawn by the device model (one design at every scale) */
+  device?: DeviceView;
+  /** contour width multiplier (thin selective edges at macro scale) */
+  inkK?: number;
+  /** drawn over the torso and head, under the arms (x-ray of the chest) */
+  overTorso?: React.ReactNode;
+  /** drawn over the left upper arm, under the left forearm (x-ray of the upper arm, section backdrop) */
+  beforeLeftForearm?: React.ReactNode;
+  /** drawn over the right forearm and hand, under the left arm (the chest x-ray shows through the clutching hand) */
+  afterRightArm?: React.ReactNode;
 };
 
-export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, bandColor = PAL.normal, bandGlow = 0.6, hideLeftForearm, children, nearLegFront, hairSway = 0}) => {
+export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, bandColor = PAL.normal, bandGlow = 0.6, hideLeftForearm, children, nearLegFront, hairSway = 0, device, inkK = 1, overTorso, beforeLeftForearm, afterRightArm}) => {
   const j = manJoints(p);
   const s = p.s;
-  const OUT = 7 * s; // crew contour
+  const OUT = 7 * s * inkK; // crew contour
   const skin = PAL.skin;
   const far = (c: string) => shade(c, 0.14);
   const tc = j.tc;
   const loc = (O: V, a: number, u: number, vv: number) => add(O, add(mul(up(a), u * s), mul(px(a), vv * s)));
   const br = 1 + 0.03 * p.breath;
 
-  // --- torso / tee (front contour on the screen-left side, back on the right)
-  const torsoPts: V[] = [
-    loc(j.H, p.torso, -18, -84),
-    loc(j.H, p.torso, 64, -86),
-    loc(j.H, p.torso, 140, -82),
-    loc(j.C, tc, 52, -98 * br),
-    loc(j.C, tc, 118, -88),
-    loc(j.C, tc, 146, -40),
-    loc(j.C, tc, 154, 0),
-    loc(j.C, tc, 150, 36),
-    loc(j.C, tc, 128, 92),
-    loc(j.C, tc, 48, 94 * br),
-    loc(j.H, p.torso, 104, 84),
-    loc(j.H, p.torso, -16, 90),
-  ];
-  const torsoD = smoothClosed(torsoPts);
+  const torsoD = torsoPath(p);
   const torsoC = loc(j.C, tc, 60, -30);
   // saffron stripes across the tee (the guesser's shirt), following the torso's own frame
   const stripeAng = p.torso + p.chest * 0.5;
@@ -327,12 +350,18 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
         {/* neckline */}
         <InkLine d={`M${P(loc(j.C, tc, 146, -36))} Q${P(loc(j.C, tc, 128, 0))} ${P(loc(j.C, tc, 148, 32))}`} w={OUT * 0.7} />
       </Deco>
-      <Head id={`${id}-hd`} c={j.head} R={DIM.headR * s} roll={-(tc + p.neck)} turn={p.turn} expr={expr} blink={blink} hairSway={hairSway} />
+      <Head id={`${id}-hd`} c={j.head} R={DIM.headR * s} roll={-(tc + p.neck)} turn={p.turn} expr={expr} blink={blink} hairSway={hairSway} inkW={7 * inkK} />
       {children}
+      {overTorso}
       {nearLegFront && nearLeg}
       {ForeArm('rf', j.R, true, rHand, -1, false)}
+      {afterRightArm}
       {UpperArm('la', j.L, false)}
-      {!hideLeftForearm && ForeArm('lf', j.L, false, lHand, 1, true)}
+      {beforeLeftForearm}
+      {!hideLeftForearm && !device && ForeArm('lf', j.L, false, lHand, 1, true)}
+      {!hideLeftForearm && device && (
+        <Wrist3D id={`${id}-dv`} E={j.L.E} W={j.L.W} rE={24 * s} rW={17 * s} dev={device} hand={{pose: lHand, L: DIM.hand * s, ang: j.L.handAng, thumbSide: 1, offset: 6 * s}} ink={OUT} />
+      )}
     </g>
   );
 };

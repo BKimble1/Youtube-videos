@@ -76,7 +76,7 @@ export const beat = (f: number, chaos: number) => {
   return lerp(reg, fib, chaos);
 };
 
-const Heart: React.FC<{id: string; c: V; s: number; chaos: number; f: number}> = ({id, c, s, chaos, f}) => {
+export const Heart: React.FC<{id: string; c: V; s: number; chaos: number; f: number}> = ({id, c, s, chaos, f}) => {
   const b = beat(f, chaos);
   const k = s * (1 + 0.07 * b);
   const H = (x: number, y: number): V => ({x: c.x + x * k, y: c.y + y * k});

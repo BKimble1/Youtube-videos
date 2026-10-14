@@ -26,13 +26,17 @@ const BASE: ManPose = {
 const K = (over: Partial<ManPose>): ManPose => ({...BASE, ...over});
 
 // the fall, frame keys (S01 0-24 stumble + buckling knee, S02 24-51 knees -> brace -> onto his side)
+const HAND_PLANT = {x: 262, y: 1858}; // the left hand braces here and stays planted (recovery-position arm)
 const FALL: SKey<ManPose>[] = [
   [0, K({}), 'stop'],
   [14, K({y: 1198, torso: 19, chest: 12, neck: 14, lKnee: 34, lHip: -2, rKnee: 16, lTu: -318, lTv: 30})],
   [24, K({y: 1240, torso: 24, chest: 14, neck: 12, lHip: 6, lKnee: 58, rHip: 22, rKnee: 30, lTu: -306, lTv: -4, lWr: 14})],
-  [34, K({x: 596, y: 1446, torso: 34, chest: 16, neck: 8, pelvis: 8, lHip: 2, lKnee: 96, rHip: 8, rKnee: 98, lTu: -220, lTv: -110, lWx: 380, lWy: 1770, lW: 0.6, lElb: -1, lWr: 30}), 'hit'],
-  [42, K({x: 610, y: 1500, torso: 52, chest: 12, neck: 0, pelvis: 30, lHip: 20, lKnee: 104, rHip: 26, rKnee: 100, lWx: 372, lWy: GROUND - 4, lW: 1, lElb: 1, lWr: 24})],
-  [51, K({x: 790, y: 1684, torso: 86, chest: 4, neck: -14, turn: 0.35, pelvis: 86, lHip: 26, lKnee: 46, rHip: 18, rKnee: 36, lAnk: 10, rAnk: 10, lWx: 520, lWy: GROUND + 46, lW: 1, lElb: 1, lWr: 14, rTu: -96, rTv: 6}), 'hit'],
+  // knees hit; the left hand reaches for the grass ahead of him
+  [34, K({x: 596, y: 1446, torso: 34, chest: 16, neck: 8, pelvis: 8, lHip: 2, lKnee: 96, rHip: 8, rKnee: 98, lTu: -220, lTv: -110, lWx: HAND_PLANT.x, lWy: HAND_PLANT.y, lW: 0.55, lElb: -1, lWr: 20}), 'hit'],
+  // the hand plants: the arm takes the weight, nearly straight
+  [42, K({x: 610, y: 1500, torso: 52, chest: 12, neck: 0, pelvis: 30, lHip: 20, lKnee: 104, rHip: 26, rKnee: 100, lWx: HAND_PLANT.x, lWy: HAND_PLANT.y, lW: 1, lElb: -1, lWr: 16}), 'hit'],
+  // he rolls onto his side; the planted hand stays put and the elbow folds in front of his chest
+  [51, K({x: 790, y: 1684, torso: 86, chest: 4, neck: -14, turn: 0.35, pelvis: 86, lHip: 26, lKnee: 46, rHip: 18, rKnee: 36, lAnk: 10, rAnk: 10, lWx: HAND_PLANT.x, lWy: HAND_PLANT.y, lW: 1, lElb: -1, lWr: 8, rTu: -96, rTv: 6}), 'hit'],
 ];
 
 export type StreetState = {man: ManPose; expr: Expr; lHand: HandPose; rHand: HandPose; dog: DogPose; cam: Cam; bandColor: string; bandGlow: number; nearLegFront?: boolean; hairSway?: number};
@@ -97,7 +101,7 @@ export const fallState = (f: number): StreetState => {
 };
 
 /** Contact shadows from whichever joints are near the ground. */
-const Contacts: React.FC<{id: string; j: ReturnType<typeof manJoints>; ground: number}> = ({id, j, ground}) => {
+export const Contacts: React.FC<{id: string; j: ReturnType<typeof manJoints>; ground: number}> = ({id, j, ground}) => {
   const pts: [V, number, number][] = [
     [j.lLeg.A, 70, 16],
     [j.rLeg.A, 64, 15],
@@ -109,7 +113,6 @@ const Contacts: React.FC<{id: string; j: ReturnType<typeof manJoints>; ground: n
     [j.C, 130, 22],
     [j.Sh, 110, 20],
     [j.head, 90, 18],
-    [j.L.W, 60, 13],
   ];
   return (
     <g>

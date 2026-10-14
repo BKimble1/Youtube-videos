@@ -2,7 +2,8 @@
 // The camera names the world point at screen centre and a zoom. Farther layers pan and zoom less,
 // nearer layers more, which gives real parallax and occlusion from flat vector layers.
 import React from 'react';
-import {fmt} from './math';
+// 4 decimals: deep zooms (the vessel journey runs at z > 100) would otherwise jitter by a pixel per frame
+const fmt = (n: number) => (Math.abs(n) < 1e-9 ? '0' : n.toFixed(4));
 
 export type Cam = {x: number; y: number; z: number; roll?: number};
 

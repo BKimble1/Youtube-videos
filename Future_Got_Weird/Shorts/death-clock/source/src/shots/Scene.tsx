@@ -1,0 +1,97 @@
+// One street-world scene with the same rig, dog, band and camera; every V2 shot that shows him uses it.
+// Optional layers: the diagram backdrop that isolates the forearm (section views), the x-ray of the chest and
+// upper arm, and extras drawn in the world after him (the drone, light, rings).
+import React from 'react';
+import {DeviceView} from '../art/Device';
+import {collarRing, Dog, DogPose} from '../art/Dog';
+import {Expr} from '../art/Head';
+import {HandPose} from '../art/Hand';
+import {Man, manJoints, ManPose} from '../art/Man';
+import {FrontTufts, Street} from '../art/Street';
+import {Cam} from '../lib/camera';
+import {clamp, V} from '../lib/math';
+import {SoftShadow} from '../lib/shade';
+import {Contacts, GROUND, Leash} from './StreetShots';
+
+const f2 = (n: number) => n.toFixed(2);
+
+export const Backdrop: React.FC<{id: string; c: V; a: number}> = ({id, c, a}) =>
+  a > 0.01 ? (
+    <g opacity={a}>
+      <defs>
+        <radialGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" cx={f2(c.x)} cy={f2(c.y)} r={260}>
+          <stop offset="0" stopColor="#2A4C63" />
+          <stop offset="0.6" stopColor="#173041" />
+          <stop offset="1" stopColor="#0C1A24" />
+        </radialGradient>
+      </defs>
+      <rect x={c.x - 6000} y={c.y - 6000} width={12000} height={12000} fill={`url(#${id}-g)`} />
+    </g>
+  ) : null;
+
+export type SceneProps = {
+  id: string;
+  cam: Cam;
+  man: ManPose;
+  expr: Expr;
+  blink?: number;
+  lHand: HandPose;
+  rHand: HandPose;
+  dog: DogPose;
+  hairSway?: number;
+  dev: DeviceView;
+  backdrop?: number;
+  backdropC?: V;
+  afterRightArm?: React.ReactNode;
+  beforeLeftForearm?: React.ReactNode;
+  leash?: boolean;
+  /** drawn in the world after him (drone, rings, light) */
+  extra?: React.ReactNode;
+  /** drawn in the world before him (ground light, shadows of things above) */
+  under?: React.ReactNode;
+  nearLegFront?: boolean;
+};
+
+export const Scene: React.FC<SceneProps> = ({id, cam, man, expr, blink = 0, lHand, rHand, dog, hairSway = 0, dev, backdrop = 0, backdropC, afterRightArm, beforeLeftForearm, leash = true, extra, under, nearLegFront}) => {
+  const j = manJoints(man);
+  // the left forearm's own contact shadow on the grass when it rests there
+  const fa = j.L;
+  const onGround = clamp(1 - (GROUND + 30 - Math.max(fa.E.y, fa.W.y)) / 60);
+  const mid = {x: (fa.E.x + fa.W.x) / 2, y: (fa.E.y + fa.W.y) / 2};
+  const ang = (Math.atan2(fa.W.y - fa.E.y, fa.W.x - fa.E.x) * 180) / Math.PI;
+  const flen = Math.hypot(fa.W.x - fa.E.x, fa.W.y - fa.E.y);
+  return (
+    <Street id={`${id}-st`} cam={cam} fg={backdrop < 0.05 && cam.z < 3 ? <FrontTufts id={`${id}-fg`} xs={[[60, 2050, 1.6], [980, 2080, 1.8], [820, 2120, 1.4]]} /> : null}>
+      <Contacts id={`${id}-ct`} j={j} ground={GROUND} />
+      {onGround > 0.01 && (
+        <g>
+          <SoftShadow id={`${id}-fas`} c={{x: mid.x + 4, y: mid.y + 22 * man.s}} rx={flen * 0.62} ry={13 * man.s} rotate={ang} alpha={0.34 * onGround} />
+          <SoftShadow id={`${id}-hds`} c={{x: fa.W.x + Math.cos((fa.handAng * Math.PI) / 180) * 50 * man.s, y: fa.W.y + 24 * man.s}} rx={52 * man.s} ry={12 * man.s} rotate={fa.handAng} alpha={0.3 * onGround} />
+        </g>
+      )}
+      {under}
+      <Dog id={`${id}-dog`} pose={dog} />
+      <Man
+        id={`${id}-man`}
+        pose={man}
+        expr={expr}
+        blink={blink}
+        lHand={lHand}
+        rHand={rHand}
+        hairSway={hairSway}
+        device={dev}
+        nearLegFront={nearLegFront}
+        inkK={1 / Math.max(1, Math.sqrt(cam.z / 1.4))}
+        afterRightArm={afterRightArm}
+        beforeLeftForearm={
+          <g>
+            {beforeLeftForearm}
+            {backdropC && <Backdrop id={`${id}-bd`} c={backdropC} a={backdrop} />}
+          </g>
+        }
+      />
+      {leash && backdrop < 0.05 && <Leash a={j.R.W} b={collarRing(dog)} slack={60 + 40 * clamp((j.R.W.y - 1300) / 400)} />}
+      {extra}
+    </Street>
+  );
+};
