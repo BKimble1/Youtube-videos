@@ -10,6 +10,10 @@ import {HookFoundry, HOOK_FOUNDRY_END} from './v2/shots/HookFoundry';
 import {ProtoV2, PROTO_V2_FRAMES} from './v2/dev/Proto';
 import {MainV2, MAIN_V2_FRAMES} from './v2/MainV2';
 import {ThumbV2A, ThumbV2B} from './v2/dev/ThumbsV2';
+import {MainV3, MAIN_V3_FRAMES} from './v3/MainV3';
+import {ThumbV3A, ThumbV3B} from './v3/dev/ThumbsV3';
+import {RobotSheetV3} from './v3/dev/RobotSheet';
+import {Diagnostic, DIAG_FRAMES} from './v3/dev/Diagnostic';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -25,6 +29,13 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="V2ThumbA" component={ThumbV2A} durationInFrames={1} fps={30} width={1920} height={1080} />
     <Composition id="V2ThumbB" component={ThumbV2B} durationInFrames={1} fps={30} width={1920} height={1080} />
     <Composition id="V2RobotSheet" component={RobotSheet} durationInFrames={1} fps={30} width={1920} height={1080} />
+    <Composition id="V3Main" component={MainV3} durationInFrames={MAIN_V3_FRAMES} fps={30} width={1920} height={1080} defaultProps={{audio: 'narration' as const}} />
+    <Composition id="V3ThumbA" component={ThumbV3A} durationInFrames={1} fps={30} width={1920} height={1080} />
+    <Composition id="V3ThumbB" component={ThumbV3B} durationInFrames={1} fps={30} width={1920} height={1080} />
+    <Composition id="V3SheetF02" component={RobotSheetV3} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
+    <Composition id="V3SheetF03" component={RobotSheetV3} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{page: 1}} />
+    <Composition id="V3SheetID" component={RobotSheetV3} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{page: 2}} />
+    <Composition id="V3Diag" component={Diagnostic} durationInFrames={DIAG_FRAMES} fps={30} width={1920} height={1080} defaultProps={{kind: 'F02' as const}} />
     <Composition id="KitRobot" component={KitRobot} durationInFrames={1} fps={30} width={1920} height={1080} />
   </>
 );
