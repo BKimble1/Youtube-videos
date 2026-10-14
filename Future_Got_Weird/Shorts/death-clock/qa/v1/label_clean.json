@@ -1,0 +1,33 @@
+{
+ "video": "exports/v1/FGW_DeathClock_v1_Clean_NoCaptions_1080x1920.mp4",
+ "pill_width_px": 407,
+ "frames": 1373,
+ "text_pixels": 3100,
+ "contrast_min": 144.9,
+ "contrast_median": 181.3,
+ "text_lum_min": 249.2,
+ "weakest_frames": [
+  [
+   51,
+   144.9
+  ],
+  [
+   49,
+   144.9
+  ],
+  [
+   50,
+   144.9
+  ],
+  [
+   52,
+   144.9
+  ],
+  [
+   48,
+   145.1
+  ]
+ ],
+ "failing_frames": [],
+ "result": "PASS"
+}

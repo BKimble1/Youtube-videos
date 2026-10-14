@@ -19,7 +19,7 @@ Not uploaded, not scheduled, not published. Publishing is the owner's step.
 - No product branding, logos, real names, real patient data, drug names, doses or treatment instructions anywhere in the picture or text.
 
 ## Cover
-`exports/v1/FGW_DeathClock_v1_Cover_1080x1920.png`: a frame of the finished clean render (frame 596, 19.87 s): the band in the foreground with the crimson 00:02:14 countdown legible, his collapsed, pained face lying on the grass behind it, the FUTURE CONCEPT label top-left. Taken from the render, not painted separately.
+`exports/v1/FGW_DeathClock_v1_Cover_1080x1920.png`: a frame of the finished clean render (frame 596, 19.87 s): the band in the foreground with the crimson 00:02:14 countdown legible, his collapsed, pained face lying on the grass behind it (the Weird Crew's guesser: red spiky hair, striped tee), the FUTURE CONCEPT label top-left. Taken from the render, not painted separately.
 
 ## Fiction ledger (what is invented; there are no real-world capability claims)
 | Spoken line | Status | How the picture treats it |
