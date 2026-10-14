@@ -1,0 +1,129 @@
+{
+ "take": "T2_K4mDnwmDmX1uUihT1Bt6.mp3",
+ "method": "insert digital silence at the quietest 20 ms of each gap; no other processing",
+ "gaps": [
+  {
+   "gap": 1,
+   "between": [
+    2.64,
+    3.09
+   ],
+   "original_s": 0.45,
+   "target_s": 1.15,
+   "inserted_s": 0.7,
+   "insert_at_s": 2.909,
+   "beat": "after \"dying.\" \u2014 camera lands on the watch, then dives through the screen"
+  },
+  {
+   "gap": 2,
+   "between": [
+    7.0,
+    7.51
+   ],
+   "original_s": 0.51,
+   "target_s": 0.75,
+   "inserted_s": 0.24,
+   "insert_at_s": 7.427,
+   "beat": "after \"skin.\" \u2014 beads cross into the vessel"
+  },
+  {
+   "gap": 3,
+   "between": [
+    9.91,
+    10.08
+   ],
+   "original_s": 0.17,
+   "target_s": null,
+   "inserted_s": 0.0,
+   "insert_at_s": 10.01,
+   "beat": "\"bloodstream, | monitoring\" \u2014 natural, unchanged"
+  },
+  {
+   "gap": 4,
+   "between": [
+    11.64,
+    12.15
+   ],
+   "original_s": 0.51,
+   "target_s": 1.2,
+   "inserted_s": 0.69,
+   "insert_at_s": 12.067,
+   "beat": "after \"decay.\" \u2014 follow one signal to the heart"
+  },
+  {
+   "gap": 5,
+   "between": [
+    15.7,
+    16.04
+   ],
+   "original_s": 0.34,
+   "target_s": 0.8,
+   "inserted_s": 0.46,
+   "insert_at_s": 15.97,
+   "beat": "\"rhythm, | the device\" \u2014 match cut back to the watch, green to crimson"
+  },
+  {
+   "gap": 6,
+   "between": [
+    20.62,
+    21.11
+   ],
+   "original_s": 0.49,
+   "target_s": 2.2,
+   "inserted_s": 1.71,
+   "insert_at_s": 21.027,
+   "beat": "after \"exact second.\" \u2014 reading hold on the red 00:02:14 countdown"
+  },
+  {
+   "gap": 7,
+   "between": [
+    23.03,
+    23.58
+   ],
+   "original_s": 0.55,
+   "target_s": 1.25,
+   "inserted_s": 0.7,
+   "insert_at_s": 23.502,
+   "beat": "after \"help.\" \u2014 blue pulse leaves the watch"
+  },
+  {
+   "gap": 8,
+   "between": [
+    28.07,
+    28.39
+   ],
+   "original_s": 0.32,
+   "target_s": 1.1,
+   "inserted_s": 0.78,
+   "insert_at_s": 28.306,
+   "beat": "\"data, | potentially\" \u2014 drone departs and crosses the neighbourhood"
+  },
+  {
+   "gap": 9,
+   "between": [
+    31.5,
+    32.16
+   ],
+   "original_s": 0.66,
+   "target_s": 3.3,
+   "inserted_s": 2.64,
+   "insert_at_s": 31.942,
+   "beat": "after \"consciousness.\" \u2014 injection takes hold, he breathes and sits up"
+  },
+  {
+   "gap": 10,
+   "between": [
+    33.52,
+    33.95
+   ],
+   "original_s": 0.43,
+   "target_s": 0.7,
+   "inserted_s": 0.27,
+   "insert_at_s": 33.867,
+   "beat": "\"starts, | would\" \u2014 a held beat before the question"
+  }
+ ],
+ "tail_s": 2.85,
+ "total_inserted_s": 8.19,
+ "final_duration_s": 45.75
+}

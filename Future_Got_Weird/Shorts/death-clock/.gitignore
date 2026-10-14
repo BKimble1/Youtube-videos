@@ -1,0 +1,5 @@
+source/node_modules/
+source/out/
+exports/_wip/
+qa/_wip/
+*.log
