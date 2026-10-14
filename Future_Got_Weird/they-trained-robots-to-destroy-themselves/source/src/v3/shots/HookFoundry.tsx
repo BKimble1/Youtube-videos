@@ -79,7 +79,7 @@ type SceneOpts = {
   cam: Cam3;
   tau: number;
   robots: SceneRobot[];
-  entries: {at: V3; t: number; seed: number}[];
+  entries: {at: V3; t: number; seed: number; scale?: number}[];
   extra?: (pr: Proj, env: Env) => Item[];
   shake?: number;
   flameScale?: number;
@@ -113,14 +113,34 @@ export const foundryFrame = (o: SceneOpts, idp = ''): {pr: Proj; nodes: React.Re
       const z = r.inside ? Math.max(zc - LADLE.rTop * 0.8, Math.min(zc + LADLE.rTop * 0.8, z0)) : z0;
       ri.sort((a, b) => b.z - a.z);
       const solid = opacity >= 1 && !r.inside && bound.pts.length > 0;
-      items.push({z: z + (opacity < 1 ? 1 : 0), key: 'robot-' + idp + id, geo: solid ? {kind: 'body', pts: bound.pts} : undefined, bb: solid ? bound.bb : undefined,
+      items.push({z: z + (opacity < 1 ? 1 : 0), key: 'robot-' + idp + id, geo: solid ? {kind: 'body', pts: bound.pts} : undefined, bb: solid ? bound.bb : undefined, poly: solid ? bound.pts.map((q) => pr.p(q)) : undefined,
         el: <g key={'robot-' + idp + id} opacity={opacity}>{ri.map((x) => x.el)}</g>});
+      if (opacity >= 1 && r.inside && r.clipY !== undefined && sk.pelvis[1] - 95 < r.clipY) {
+        // waterline: a hot meniscus around the body where it meets the steel (far arc behind, near arc in front)
+        const c: V3 = [sk.pelvis[0], r.clipY + 0.6, sk.pelvis[2]];
+        const ca = Math.cos(pose.yaw), sa = Math.sin(pose.yaw);
+        const arc = (a0: number, a1: number) => {
+          const q: {x: number; y: number}[] = [];
+          for (let k = 0; k <= 16; k++) {
+            const a = a0 + ((a1 - a0) * k) / 16;
+            const lx = Math.cos(a) * 25, lz = Math.sin(a) * 17;
+            q.push(pr.p([c[0] + lx * ca + lz * sa, c[1], c[2] - lx * sa + lz * ca]));
+          }
+          return 'M' + q.map((v) => `${v.x.toFixed(1)} ${v.y.toFixed(1)}`).join('L');
+        };
+        const camA = Math.atan2(pr.pos[2] - c[2], pr.pos[0] - c[0]);
+        // local angle of the camera direction (inverse of the yaw rotation above)
+        const la = Math.atan2(Math.cos(camA) * sa + Math.sin(camA) * ca, Math.cos(camA) * ca - Math.sin(camA) * sa);
+        const sw = Math.max(1.5, 6 * pr.p(c).s);
+        items.push({z: z + 2, key: 'men-far-' + idp + id, el: <path key={'men-far-' + idp + id} d={arc(la + Math.PI / 2, la + 1.5 * Math.PI)} fill="none" stroke="#FFE07A" strokeWidth={sw} strokeOpacity={0.85} strokeLinecap="round" />});
+        items.push({z: z - 2, key: 'men-near-' + idp + id, el: <path key={'men-near-' + idp + id} d={arc(la - Math.PI / 2, la + Math.PI / 2)} fill="none" stroke="#FFF2B8" strokeWidth={sw * 1.2} strokeOpacity={0.9} strokeLinecap="round" />});
+      }
     };
     (r.trail ?? []).forEach((tp, k) => draw(tp, `${r.id}-tr${k}`, 0.22 / (k + 1)));
     draw(r.pose, r.id, 1);
   }
   for (const e of entries) {
-    items.push(...splash(pr, [e.at[0], LADLE.steel, e.at[2]], e.t, LADLE.steel, {seed: e.seed, inside: insideLadle}));
+    items.push(...splash(pr, [e.at[0], LADLE.steel, e.at[2]], e.t, LADLE.steel, {seed: e.seed, inside: insideLadle, scale: e.scale}));
     items.push(...flames(pr, [e.at[0], LADLE.steel, e.at[2]], e.t - 0.25, {seed: e.seed + 3, height: 45 * (o.flameScale ?? 1), width: 30 * (o.flameScale ?? 1), strength: clamp01((e.t - 0.25) * 2) * (1 - clamp01((e.t - 3.5) / 2))}));
     items.push(...smoke(pr, [e.at[0], LADLE.steel + 10, e.at[2]], e.t - 0.15, {seed: e.seed + 7, n: 16, dark: 0.75, opacity: 0.5}));
   }
@@ -162,13 +182,14 @@ export const FoundryScene: React.FC<SceneOpts> = (o) => {
 const comAt = (tau: number): V3 => add(robot1(tau).pose.pos, [0, 10, 0]);
 
 const camH1 = (tau: number): Cam3 => {
-  // behind the robot's shoulder at deck height: the push-off and the glowing ladle are both in frame from frame 0
+  // high behind three-quarter, above the railing line: the loaded push-off, the drop and the glowing ladle are all in
+  // frame from frame 0; the camera rises and tilts with the body after takeoff (no hold)
   const u = easeInOut(tau / 0.8);
   const com = comAt(tau);
-  const a: Cam3 = {pos: [-500, DECK.y + 118, 236], target: [-120, 590, -40], fov: 50, roll: -6};
-  const b: Cam3 = {pos: [-380, DECK.y + 132, 262], target: [-70, 560, -20], fov: 48, roll: -3};
+  const a: Cam3 = {pos: [-380, DECK.y + 230, 200], target: [-120, DECK.y, -20], fov: 46, roll: -3};
+  const b: Cam3 = {pos: [-360, DECK.y + 250, 230], target: [-80, DECK.y + 40, -20], fov: 46, roll: -2};
   const c = camMix(a, b, u);
-  c.target = lerp3(c.target, com, 0.25 * smooth(clamp01((tau - 0.42) / 0.38)));
+  c.target = lerp3(c.target, com, 0.35 * smooth(clamp01((tau - 0.3) / 0.5)));
   return c;
 };
 const camH2 = (tau: number): Cam3 => {
@@ -274,7 +295,7 @@ export const HookFoundry: React.FC = () => {
   const s2 = robot2(tau);
   const r2: SceneRobot = {pose: s2.pose, clipY: s2.clipY, id: 'r2', inside: s2.phase === 'plunge'};
   const e2t = s2.phase === 'plunge' ? tau - R2_IN : -1;
-  const entries = [{...e1, seed: 11}, {at: JUMP2.p1, t: e2t, seed: 23}];
+  const entries = [{...e1, seed: 11}, {at: JUMP2.p1, t: e2t, seed: 23, scale: 0.75}];
   if (tau < T_H7) {
     // the next robot walks out; the one source attribution sits cleanly in the frame (no nested reenactment)
     return (
@@ -298,3 +319,4 @@ export const HookFoundry: React.FC = () => {
 };
 
 export {T_IN, T_TO, T_H2, T_H3, T_H4, T_H5, T_H5B, T_H6, T_H7, R2_IN, R2_WALK0, JUMP2};
+export const JUMP1_P1 = JUMP1.p1;

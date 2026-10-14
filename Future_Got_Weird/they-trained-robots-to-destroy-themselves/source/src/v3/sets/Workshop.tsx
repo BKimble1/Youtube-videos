@@ -6,9 +6,9 @@
 // Illustrative; not a reconstruction of Figure's facility. Key positions (WS) are unchanged from V2 so staging holds.
 import React from 'react';
 import {Proj} from '../engine/camera';
-import {V3, add, norm, rnd} from '../engine/math';
-import {Env, Item, box, circle3, cylinder, line3, quad, tube, planeGeo, bbOf} from '../engine/prims';
-import {polyClosed} from '../engine/draw';
+import {V3, add, norm, rnd, dot, clamp01} from '../engine/math';
+import {Env, Item, box, circle3, cylinder, line3, quad, tube, planeGeo, bbOf, shadeFace} from '../engine/prims';
+import {polyClosed, hull} from '../engine/draw';
 import {SYMBOL_POLY} from '../brand/figureSymbol';
 import {C} from '../../theme';
 
@@ -30,6 +30,8 @@ const COL = {
   standBase: '#4F7CC9', post: '#E9E4D6', wood: '#C9924F', woodDark: '#9E6B30', steel: '#9AA4AE', steelDark: '#6E7882',
   peg: '#E7DCC0', bin: '#7E8A94', binRim: '#B9C2C9', signBg: '#1B1F24', signRim: '#3A414A', glass: '#CFE6EE', cart: '#D9534A', cartDark: '#A83A33',
 };
+
+const hullPts = (pr: Proj, pts: V3[]) => hull(pts.map((q) => pr.p(q)));
 
 /** Symbol on a flat wall (normal +z): polygon in world space, height h centred on c. Never mirrored (+x stays +x). */
 export const symbolOnWall = (pr: Proj, key: string, c: V3, h: number, fill: string, z?: number): Item => {
@@ -157,8 +159,79 @@ export const stand = (pr: Proj, env: Env): Item[] => {
   return items;
 };
 
+/** Actuator face radii (cm): housing edge, output flange, bearing groove, hub, bore. The ratios match the three
+ *  ripple rings at the end of the foundry shot, so the rings become the machined rings in the match cut. */
+export const ACT_R = {housing: 12, flange: 9.7, groove: 7.4, hub: 5, bore: 1.8, bolts: 10.85, h: 14};
+
+/** Rotary actuator in the vise: finned housing, machined face with concentric rings and a bolt circle (one item).
+ *  `warm` (0..1) adds the task lamp's warm pool on the face (the colour bridge from the molten ripple). */
+export const actuatorUnit = (pr: Proj, env: Env, base: V3, o: {warm?: number} = {}): Item => {
+  const R = ACT_R;
+  const top = add(base, [0, R.h, 0]);
+  const ring = (r: number, y = 0, seg = 48) => circle3(add(top, [0, y, 0]), r, seg).slice(0, seg);
+  const bot = circle3(base, R.housing, 48).slice(0, 48);
+  const side = hullPts(pr, [...bot, ...ring(R.housing)]);
+  const lit = shadeFace(env, '#59626C', norm(add(env.light, [0, 0.2, 0])), top);
+  const dark = shadeFace(env, '#59626C', [0, -0.2, 1], top);
+  const faceC = shadeFace(env, '#8D98A3', [0, 1, 0], top);
+  const flangeC = shadeFace(env, '#B5BFC8', [0, 1, 0], top);
+  const hubC = shadeFace(env, '#D5DCE2', [0, 1, 0], top);
+  const P = (pts: V3[]) => polyClosed(pts.map((q) => pr.p(q)));
+  const c2 = pr.p(top);
+  const sw = env.lineW;
+  const fins: React.ReactNode[] = [];
+  // vertical cooling fins on the visible half of the housing
+  for (let k = 0; k < 24; k++) {
+    const a = (k / 24) * Math.PI * 2;
+    const q0: V3 = [base[0] + Math.cos(a) * R.housing, base[1] + 1.5, base[2] + Math.sin(a) * R.housing];
+    if (dot([Math.cos(a), 0, Math.sin(a)], pr.toCam(q0)) < 0.15) continue;
+    const a0 = pr.p(q0), a1 = pr.p([q0[0], top[1] - 2, q0[2]]);
+    fins.push(<line key={k} x1={a0.x} y1={a0.y} x2={a1.x} y2={a1.y} stroke="#2F363D" strokeWidth={Math.max(0.8, 0.5 * a0.s)} strokeOpacity={0.55} />);
+  }
+  const bolts: React.ReactNode[] = [];
+  for (let k = 0; k < 8; k++) {
+    const a = (k / 8) * Math.PI * 2 + 0.2;
+    const bc: V3 = [top[0] + Math.cos(a) * R.bolts, top[1] + 0.4, top[2] + Math.sin(a) * R.bolts];
+    bolts.push(<path key={k} d={P(circle3(bc, 0.75, 12).slice(0, 12))} fill="#E3E8EC" stroke={env.ink} strokeWidth={Math.max(0.6, sw * 0.5)} />);
+  }
+  const warm = clamp01(o.warm ?? 0);
+  const gid = 'actWarm';
+  const wr = R.housing * c2.s * 1.25;
+  return {
+    z: pr.p(add(base, [0, R.h / 2, 0])).z, key: 'act1', prop: true,
+    geo: {kind: 'body', pts: [...bot.filter((_, k) => k % 6 === 0), ...ring(R.housing).filter((_, k) => k % 6 === 0)]}, bb: bbOf(side),
+    el: (
+      <g key="act1">
+        <defs>
+          <linearGradient id="actSideG" gradientUnits="userSpaceOnUse" x1={side.reduce((m, q) => Math.min(m, q.x), 1e9)} y1={0} x2={side.reduce((m, q) => Math.max(m, q.x), -1e9)} y2={0}>
+            <stop offset="0" stopColor={dark} />
+            <stop offset="0.6" stopColor={lit} />
+            <stop offset="1" stopColor={dark} />
+          </linearGradient>
+          <radialGradient id={gid} cx={c2.x} cy={c2.y} r={wr} gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#FFD873" stopOpacity={0.75 * warm} />
+            <stop offset="0.45" stopColor="#FFA43C" stopOpacity={0.6 * warm} />
+            <stop offset="0.8" stopColor="#F07A22" stopOpacity={0.35 * warm} />
+            <stop offset="1" stopColor="#E06A1A" stopOpacity={0} />
+          </radialGradient>
+        </defs>
+        <path d={polyClosed(side)} fill="url(#actSideG)" stroke={env.ink} strokeWidth={sw} strokeLinejoin="round" />
+        {fins}
+        <path d={P(ring(R.housing))} fill={faceC} stroke={env.ink} strokeWidth={sw} />
+        <path d={P(ring(R.flange, 0.6))} fill={flangeC} stroke={env.ink} strokeWidth={sw * 0.8} />
+        {bolts}
+        <path d={P(ring(R.groove, 0.7))} fill="#2E353C" stroke={env.ink} strokeWidth={sw * 0.6} />
+        <path d={P(ring(R.groove - 0.9, 0.8))} fill={flangeC} />
+        <path d={P(ring(R.hub, 1.2))} fill={hubC} stroke={env.ink} strokeWidth={sw * 0.7} />
+        <path d={P(ring(R.bore, 1.3))} fill="#1C2126" />
+        {warm > 0.01 ? <path d={P(ring(R.housing + 0.5, 1.4))} fill={`url(#${gid})`} /> : null}
+      </g>
+    ),
+  };
+};
+
 /** Workbench with a fixture (vise) holding an actuator, parts trays, a monitor on an arm and a task lamp. */
-export const workbench = (pr: Proj, env: Env, opts: {partsOn?: boolean} = {}): Item[] => {
+export const workbench = (pr: Proj, env: Env, opts: {partsOn?: boolean; warm?: number} = {}): Item[] => {
   const [x, , z] = WS.bench;
   const items: Item[] = [];
   items.push(...box(pr, env, 'bTop', {c: [x, 92, z], size: [240, 8, 90], color: COL.wood, side: COL.woodDark}));
@@ -167,9 +240,9 @@ export const workbench = (pr: Proj, env: Env, opts: {partsOn?: boolean} = {}): I
   if (opts.partsOn !== false) {
     // fixture: vise jaws clamping the actuator housing whose top is the match-cut circle
     items.push(...box(pr, env, 'viseB', {c: [x - 70, 100, z - 6], size: [44, 8, 30], color: COL.steelDark}));
-    items.push(...box(pr, env, 'viseJ1', {c: [x - 92, 106, z - 6], size: [6, 16, 28], color: '#4F7CC9'}));
-    items.push(...box(pr, env, 'viseJ2', {c: [x - 48, 106, z - 6], size: [6, 16, 28], color: '#4F7CC9'}));
-    items.push(...cylinder(pr, env, 'act1', {base: [x - 70, 96, z - 6], r0: 9, r1: 9, h: 14, color: '#5B6670', cap: '#8F9BA6', seg: 24}));
+    items.push(...box(pr, env, 'viseJ1', {c: [x - 70 - ACT_R.housing - 3, 110, z - 6], size: [6, 12, 28], color: '#4F7CC9'}));
+    items.push(...box(pr, env, 'viseJ2', {c: [x - 70 + ACT_R.housing + 3, 110, z - 6], size: [6, 12, 28], color: '#4F7CC9'}));
+    items.push(actuatorUnit(pr, env, [x - 70, 104, z - 6], {warm: opts.warm ?? 0}));
     items.push(...cylinder(pr, env, 'act2', {base: [x - 30, 96, z + 18], r0: 7, r1: 7, h: 11, color: '#5B6670', cap: '#8F9BA6', seg: 18}));
     // parts tray with fasteners
     items.push(...box(pr, env, 'tray1', {c: [x + 10, 98, z + 20], size: [40, 4, 26], color: '#7E8A94'}));

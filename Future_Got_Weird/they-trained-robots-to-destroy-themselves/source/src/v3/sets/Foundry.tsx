@@ -312,8 +312,8 @@ export const ladle = (pr: Proj, envIn: Env): {back: Item[]; front: Item[]} => {
     const near = dot(sub(pr.pos, spoutC), [1, 0, 0]) > 0;
     const sp = box(pr, env, 'spout', {c: spoutC, size: [64, 34, 96], color: COL.band, top: COL.rimTop});
     const ch = quad(pr, env, 'spoutCh', [[rTop - 4, rim + 0.6, -26], [rTop + 56, rim - 8, -20], [rTop + 56, rim - 8, 20], [rTop - 4, rim + 0.6, 26]], '#3A1C14', {stroke: false});
-    for (const it of sp) (near ? front : back).push({...it, z: near ? zc - R - 1.5 : zc + R + 1.5});
-    if (ch) (near ? front : back).push({...ch, z: near ? zc - R - 1.6 : zc + R + 1.4});
+    for (const it of sp) if (!(globalThis as any).__dbgNoSpout) (near ? front : back).push({...it, z: near ? zc - R - 1.5 : zc + R + 1.5});
+    if (ch && !(globalThis as any).__dbgNoSpout) (near ? front : back).push({...ch, z: near ? zc - R - 1.6 : zc + R + 1.4});
   }
   // floor contact shadow around the stand
   {

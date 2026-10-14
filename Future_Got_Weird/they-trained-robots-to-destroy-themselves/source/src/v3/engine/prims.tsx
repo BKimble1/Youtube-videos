@@ -8,8 +8,12 @@ import {hull, polyClosed, polyOpen, smoothClosed, smoothOpen, Pt, clipNear, clip
 /** Screen-space bounding box [x0, y0, x1, y1]. */
 export type BB = [number, number, number, number];
 /** Geometry that lets the sorter resolve occlusion exactly: a face's plane (n·x = d), or a dynamic body's points. */
-export type Geo = {kind: 'plane'; n: V3; d: number} | {kind: 'body'; pts: V3[]};
-export type Item = {z: number; key: string; el: React.ReactNode; geo?: Geo; bb?: BB};
+/** A plane may carry its own outline points (`pts`): the face is then also constrained against other planes. */
+export type Geo = {kind: 'plane'; n: V3; d: number; pts?: V3[]} | {kind: 'body'; pts: V3[]};
+/** `grp`: items of one convex solid (a box's faces) are never constrained against each other. */
+/** `prop`: a static set piece (box face, cylinder); it never jumps past an overlapping item that has no geometry. */
+/** `poly`: the item's screen outline (convexified for overlap tests), so only genuinely overlapping pairs are ordered. */
+export type Item = {z: number; key: string; el: React.ReactNode; geo?: Geo; bb?: BB; grp?: string; prop?: boolean; poly?: Pt[]};
 
 export const bbOf = (pts: {x: number; y: number}[]): BB => {
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
@@ -19,7 +23,7 @@ export const bbOf = (pts: {x: number; y: number}[]): BB => {
   }
   return [x0, y0, x1, y1];
 };
-export const planeGeo = (n: V3, p: V3): Geo => ({kind: 'plane', n, d: dot(n, p)});
+export const planeGeo = (n: V3, p: V3, pts?: V3[]): Geo => ({kind: 'plane', n, d: dot(n, p), pts});
 export type Glow = {pos: V3; color: string; strength: number; falloff: number};
 export type Env = {light: V3; ambient: number; glow?: Glow; ink: string; lineW: number; fog?: {color: string; near: number; far: number; max: number}};
 
@@ -68,7 +72,7 @@ export const fogged = (env: Env, color: string, z: number) => (env.fog ? mixHex(
 
 // ---------------------------------------------------------------- primitives
 
-export const quad = (pr: Proj, env: Env, key: string, pts: V3[], base: string, opts: {stroke?: boolean; flat?: boolean; opacity?: number; zBias?: number; smooth?: boolean} = {}): Item | null => {
+export const quad = (pr: Proj, env: Env, key: string, pts: V3[], base: string, opts: {stroke?: boolean; flat?: boolean; opacity?: number; zBias?: number; smooth?: boolean; solid?: boolean} = {}): Item | null => {
   if (pts.length < 3) return null;
   const n = norm(cross(sub(pts[1], pts[0]), sub(pts[2], pts[0])));
   const c = mulS(pts.reduce((a, b) => add(a, b), [0, 0, 0] as V3), 1 / pts.length);
@@ -81,7 +85,7 @@ export const quad = (pr: Proj, env: Env, key: string, pts: V3[], base: string, o
   const d = opts.smooth ? smoothClosed(p2) : polyClosed(p2);
   return {
     z: z - (opts.zBias ?? 0),
-    key, geo: planeGeo(n, pts[0]), bb: bbOf(p2),
+    key, geo: planeGeo(n, pts[0], opts.solid ? pts : undefined), bb: bbOf(p2), poly: p2,
     el: <path key={key} d={d} fill={fill} fillOpacity={opts.opacity ?? 1} stroke={opts.stroke === false ? 'none' : env.ink} strokeWidth={env.lineW} strokeLinejoin="round" />,
   };
 };
@@ -115,7 +119,7 @@ export const box = (
     const fp = cl.map((q) => pr.p(q));
     out.push({
       z: pr.p(o.c).z - (o.zBias ?? 0) - 0.01 * out.length,
-      key: key + f.id, geo: planeGeo(f.n, f.pts[0]), bb: bbOf(fp),
+      key: key + f.id, geo: planeGeo(f.n, f.pts[0], f.pts), bb: bbOf(fp), grp: key, prop: true, poly: fp,
       el: <path key={key + f.id} d={polyClosed(fp)} fill={fill} stroke={o.stroke === false ? 'none' : env.ink} strokeWidth={env.lineW} strokeLinejoin="round" />,
     });
   }
@@ -157,8 +161,19 @@ export const cylinder = (
   const cDark = fogged(env, shadeFace(env, o.color, nDark, mid), m2.z);
   const cMid = fogged(env, shadeFace(env, o.color, pr.toCam(mid), mid), m2.z);
   const gid = key + '-cg';
-  const items: Item[] = [{
-    z, key,
+  let cap: React.ReactNode = null;
+  if (o.cap !== false) {
+    const topC = add(o.base, [0, o.h, 0]);
+    if (dot([0, 1, 0], pr.toCam(topC)) > 0 && inFront(pr, top).length === top.length) {
+      const capFill = fogged(env, shadeFace(env, o.cap ?? o.color, [0, 1, 0], topC), m2.z);
+      cap = <path d={smoothClosed(top.map((q) => pr.p(q)))} fill={capFill} stroke={o.capStroke === false ? 'none' : env.ink} strokeWidth={env.lineW} />;
+    }
+  }
+  // one item (side + cap) carrying its points, so it sorts exactly against the faces it rests on or stands behind
+  const body: V3[] = [];
+  for (let k = 0; k < seg; k += Math.max(1, Math.floor(seg / 12))) body.push(bot[k], top[k]);
+  return [{
+    z, key, geo: {kind: 'body', pts: body}, bb: bbOf(h), prop: true, poly: h,
     el: (
       <g key={key}>
         <defs>
@@ -169,17 +184,10 @@ export const cylinder = (
           </linearGradient>
         </defs>
         <path d={smoothClosed(h)} fill={`url(#${gid})`} stroke={o.stroke === false ? 'none' : env.ink} strokeWidth={env.lineW} strokeLinejoin="round" />
+        {cap}
       </g>
     ),
   }];
-  if (o.cap !== false) {
-    const topC = add(o.base, [0, o.h, 0]);
-    if (dot([0, 1, 0], pr.toCam(topC)) > 0 && inFront(pr, top).length === top.length) {
-      const capFill = fogged(env, shadeFace(env, o.cap ?? o.color, [0, 1, 0], topC), m2.z);
-      items.push({z: z - 0.5, key: key + 'cap', el: <path key={key + 'cap'} d={smoothClosed(top.map((q) => pr.p(q)))} fill={capFill} stroke={o.capStroke === false ? 'none' : env.ink} strokeWidth={env.lineW} />});
-    }
-  }
-  return items;
 };
 
 /** Horizontal cylinder between two points (pipes, beams, trunnions). */
@@ -204,7 +212,7 @@ export const tube = (pr: Proj, env: Env, key: string, a: V3, b: V3, r: number, c
   const mid = mulS(add(a, b), 0.5);
   const m2 = pr.p(mid);
   const fill = fogged(env, shadeFace(env, color, norm(add(env.light, pr.toCam(mid))), mid), m2.z);
-  return {z: m2.z - (opts.zBias ?? 0), key, geo: opts.plane ? planeGeo(opts.plane, mid) : undefined, bb: h.length ? bbOf(h) : undefined, el: <path key={key} d={smoothClosed(h)} fill={fill} stroke={opts.stroke === false ? 'none' : env.ink} strokeWidth={env.lineW} strokeLinejoin="round" />};
+  return {z: m2.z - (opts.zBias ?? 0), key, geo: opts.plane ? planeGeo(opts.plane, mid) : undefined, bb: h.length ? bbOf(h) : undefined, poly: h.length ? h : undefined, el: <path key={key} d={smoothClosed(h)} fill={fill} stroke={opts.stroke === false ? 'none' : env.ink} strokeWidth={env.lineW} strokeLinejoin="round" />};
 };
 
 export const line3 = (pr: Proj, key: string, pts: V3[], stroke: string, width: number, opts: {z?: number; smooth?: boolean; opacity?: number; dash?: string; cap?: 'round' | 'butt'; plane?: V3} = {}): Item => {
@@ -227,38 +235,144 @@ export const line3 = (pr: Proj, key: string, pts: V3[], stroke: string, width: n
 export const sortItems = (items: Item[], pr?: Proj) => {
   items.sort((a, b) => b.z - a.z);
   if (!pr) return items;
-  const EPS = 2.5; // cm: contact (feet on a floor) counts as "in front of" the floor
-  const overlap = (a: BB, b: BB) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
-  const bodies = items.filter((it) => it.geo?.kind === 'body' && it.bb);
-  for (const B of bodies) {
-    const pts = (B.geo as {kind: 'body'; pts: V3[]}).pts;
-    let lo = -1, hi = items.length;
-    for (let j = 0; j < items.length; j++) {
-      const P = items[j];
-      if (P === B || P.geo?.kind !== 'plane' || !P.bb || !overlap(B.bb!, P.bb)) continue;
-      const {n, d} = P.geo;
-      const camSide = dot(n, pr.pos) - d;
+  const EPS = 2.5; // cm: contact (feet on a floor, a part on a bench) counts as "in front of" the surface
+  const n = items.length;
+  const bbo = (a: BB, b: BB) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
+  const hulls = new Map<Item, Pt[]>();
+  const hullOf = (it: Item) => {
+    let h = hulls.get(it);
+    if (!h) { h = it.poly && it.poly.length >= 3 ? hull(it.poly) : []; hulls.set(it, h); }
+    return h;
+  };
+  // separating-axis test on the convex outlines (shrunk by half a pixel so shared edges do not count as overlap)
+  const sepAxis = (a: Pt[], b: Pt[]) => {
+    for (const P of [a, b]) {
+      for (let i = 0; i < P.length; i++) {
+        const p0 = P[i], p1 = P[(i + 1) % P.length];
+        const nx = p1.y - p0.y, ny = p0.x - p1.x;
+        const l = Math.hypot(nx, ny) || 1;
+        let amin = Infinity, amax = -Infinity, bmin = Infinity, bmax = -Infinity;
+        for (const q of a) { const v = (q.x * nx + q.y * ny) / l; if (v < amin) amin = v; if (v > amax) amax = v; }
+        for (const q of b) { const v = (q.x * nx + q.y * ny) / l; if (v < bmin) bmin = v; if (v > bmax) bmax = v; }
+        if (amax - 0.5 <= bmin || bmax - 0.5 <= amin) return true;
+      }
+    }
+    return false;
+  };
+  const overlap2 = (A: Item, B: Item) => {
+    if (!A.bb || !B.bb || !bbo(A.bb, B.bb)) return false;
+    const ha = hullOf(A), hb = hullOf(B);
+    if (ha.length < 3 || hb.length < 3) return true;
+    return !sepAxis(ha, hb);
+  };
+  const ptsOf = (it: Item) => (it.geo?.kind === 'body' ? it.geo.pts : it.geo?.kind === 'plane' ? it.geo.pts : undefined);
+  // constraint graph: edge a → b means "a is drawn before b"
+  const succ: number[][] = Array.from({length: n}, () => []);
+  const indeg = new Int32Array(n);
+  const edge = (a: number, b: number) => { succ[a].push(b); indeg[b]++; };
+  for (let bi = 0; bi < n; bi++) {
+    const B = items[bi];
+    const pts = ptsOf(B);
+    // background-layer items (z ≥ 1e5: floors, walls, floor decals) keep their place; they only act as planes
+    if (!pts || !B.bb || B.z >= 1e5) continue;
+    for (let pj = 0; pj < n; pj++) {
+      const P = items[pj];
+      if (pj === bi || P.geo?.kind !== 'plane' || !P.bb || (B.grp && P.grp === B.grp) || !overlap2(B, P)) continue;
+      const {n: nn, d} = P.geo;
+      const camSide = dot(nn, pr.pos) - d;
       if (Math.abs(camSide) < 1e-6) continue;
       const sgn = Math.sign(camSide);
       let mn = Infinity, mx = -Infinity;
       for (const q of pts) {
-        const v = (dot(n, q) - d) * sgn;
+        const v = (dot(nn, q) - d) * sgn;
         if (v < mn) mn = v;
         if (v > mx) mx = v;
       }
-      if (mn > -EPS) lo = Math.max(lo, j);        // body on the camera side: draw after P
-      else if (mx < EPS) hi = Math.min(hi, j);    // body behind the plane: draw before P
+      if (mn > -EPS) edge(pj, bi);        // B on the camera side of P's plane: P cannot hide B
+      else if (mx < EPS) edge(bi, pj);    // B behind P's plane: B cannot hide P
     }
-    const i = items.indexOf(B);
-    if (lo >= hi) continue; // conflicting constraints: keep the depth order
-    if (i <= lo) {
-      items.splice(i, 1);
-      items.splice(lo, 0, B); // lo shifted down by one after removal → lands right after P
-    } else if (i >= hi) {
-      items.splice(i, 1);
-      items.splice(hi, 0, B);
+    if (B.prop) {
+      // a set piece keeps its depth order against overlapping items that carry no geometry (vessel walls, fx)
+      for (let xj = 0; xj < n; xj++) {
+        const X = items[xj];
+        if (xj === bi || X.geo || (X.bb && !overlap2(X, B))) continue;
+        if (xj < bi) edge(xj, bi); else edge(bi, xj);
+      }
     }
   }
+  // Mutually non-occluding faces (two faces that each lie behind the other's plane) form harmless cycles. Collapse
+  // strongly connected components (Tarjan), keep depth order inside each, and order the components topologically;
+  // among the drawable components the one holding the earliest item in depth order goes first.
+  const comp = new Int32Array(n).fill(-1);
+  const low = new Int32Array(n), num = new Int32Array(n).fill(-1);
+  const onStack = new Uint8Array(n);
+  const stack: number[] = [];
+  let counter = 0, nComp = 0;
+  for (let root = 0; root < n; root++) {
+    if (num[root] >= 0) continue;
+    const work: [number, number][] = [[root, 0]];
+    num[root] = low[root] = counter++;
+    stack.push(root); onStack[root] = 1;
+    while (work.length) {
+      const top = work[work.length - 1];
+      const v = top[0];
+      if (top[1] < succ[v].length) {
+        const w = succ[v][top[1]++];
+        if (num[w] < 0) {
+          num[w] = low[w] = counter++;
+          stack.push(w); onStack[w] = 1;
+          work.push([w, 0]);
+        } else if (onStack[w]) low[v] = Math.min(low[v], num[w]);
+      } else {
+        work.pop();
+        if (work.length) { const u = work[work.length - 1][0]; low[u] = Math.min(low[u], low[v]); }
+        if (low[v] === num[v]) {
+          for (;;) { const w = stack.pop()!; onStack[w] = 0; comp[w] = nComp; if (w === v) break; }
+          nComp++;
+        }
+      }
+    }
+  }
+  const members: number[][] = Array.from({length: nComp}, () => []);
+  for (let i = 0; i < n; i++) members[comp[i]].push(i); // ascending: depth order inside a component
+  const cSucc: number[][] = Array.from({length: nComp}, () => []);
+  const cIn = new Int32Array(nComp);
+  for (let v = 0; v < n; v++) for (const w of succ[v]) if (comp[v] !== comp[w]) { cSucc[comp[v]].push(comp[w]); cIn[comp[w]]++; }
+  const key = (c: number) => members[c][0];
+  const heap: number[] = [];
+  const less = (a: number, b: number) => key(a) < key(b);
+  const push = (v: number) => {
+    heap.push(v);
+    let i = heap.length - 1;
+    while (i > 0) { const p = (i - 1) >> 1; if (!less(heap[i], heap[p])) break; [heap[p], heap[i]] = [heap[i], heap[p]]; i = p; }
+  };
+  const pop = (): number => {
+    const top = heap[0], last = heap.pop()!;
+    if (heap.length) {
+      heap[0] = last;
+      let i = 0;
+      for (;;) {
+        const l = 2 * i + 1, r = l + 1;
+        let m = i;
+        if (l < heap.length && less(heap[l], heap[m])) m = l;
+        if (r < heap.length && less(heap[r], heap[m])) m = r;
+        if (m === i) break;
+        [heap[m], heap[i]] = [heap[i], heap[m]];
+        i = m;
+      }
+    }
+    return top;
+  };
+  for (let c = 0; c < nComp; c++) if (cIn[c] === 0) push(c);
+  const out: Item[] = [];
+  while (heap.length) {
+    const c = pop();
+    for (const i of members[c]) out.push(items[i]);
+    for (const d of cSucc[c]) if (--cIn[d] === 0) push(d);
+  }
+  const dbg = (globalThis as {__sortDbg?: string[]}).__sortDbg;
+  if (dbg) members.forEach((m) => { if (m.length > 1) dbg.push('[' + m.map((i) => items[i].key).join(' ') + ']'); });
+  for (let i = 0; i < n; i++) items[i] = out[i];
   return items;
 };
 

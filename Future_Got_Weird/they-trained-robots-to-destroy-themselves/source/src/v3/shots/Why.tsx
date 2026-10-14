@@ -6,11 +6,11 @@ import {V3, add, clamp01, lerp3, mix, smooth, norm, DEG} from '../engine/math';
 import {Item, box, quad, line3, sortItems} from '../engine/prims';
 import {Scene3D, RobotSpec, CharSpec} from '../engine/Scene3D';
 import {STUDIO_ENV, StudioBg, turntable, LINE_ENV, lineSet, panelBetween, crate, Padlock, shutter, recycleSet, filmLights, partsRack} from '../sets/Props3D';
-import {WORKSHOP_ENV, WS, scrapBin, stand, workbench, workshopBack} from '../sets/Workshop';
+import {WORKSHOP_ENV, WS, scrapBin, stand, workbench, workshopBack, toolCart} from '../sets/Workshop';
 import {STAND, walkPose, blendPose, poseTrack} from '../robot/motion';
 import {Pose, solve} from '../robot/rig';
 import {T, blockStart} from '../cues';
-import {HOOK_TURN_END} from './HookTurn';
+import {HOOK_TURN_END, SimStageFrame, visorCam, f02StandPose, WS_LIGHT} from './HookTurn';
 import {FoundryScene, robotLight, easeInOut, easeOut} from './HookFoundry';
 import {DECK, LADLE} from '../sets/Foundry';
 import {Chip} from '../ui/Chip';
@@ -32,27 +32,57 @@ const S2H = T('Figure says foundries') - 0.1;
 const S2I = T('Recycling old hardware') - 0.12;
 const LIGHT = {dir: norm([-0.45, 0.8, 0.55])};
 
-// ---------------------------------------------------------------- S2a product turntable
+// ---------------------------------------------------------------- S2a product bay: the visor resolves into the F.02
+// Opens on the visor framing H11 ends on (same head-relative camera), a scan line resolves the schematic avatar into
+// the finished F.02, then one continuous move pulls back to the whole robot on its maintenance stand with the company
+// sign (the Figure symbol) readable on the wall behind it. The F.02 itself carries no emblem: its placement could not
+// be verified, so identification comes from the sign and the lower third.
+const S2A_RESOLVE = 0.4;
+const s2aPose = (tau: number): Pose => {
+  const p = f02StandPose(tau);
+  // close-up: head level like the avatar's; then a small "powered" settle of the head and hands
+  const k = smooth(seg(tau, WHY_START + 0.6, WHY_START + 1.6));
+  p.head = {pitch: mix(-0.02, 0.06, k), yaw: mix(0, -0.12, k), roll: 0};
+  p.armL = {...p.armL, grip: mix(0.2, 0.45, k), elbow: mix(0.12, 0.2, k)};
+  p.armR = {...p.armR, grip: mix(0.2, 0.45, k), elbow: mix(0.12, 0.2, k)};
+  return p;
+};
 const S2a: React.FC<{tau: number; f: number}> = ({tau, f}) => {
-  const ang = (tau - WHY_START) * 0.28;
-  const pose = STAND([0, 8 + 95.4, 0], ang);
-  pose.head.pitch = -0.04;
-  pose.armL.elbow = 0.3;
-  pose.armR.elbow = 0.3;
-  const u1 = easeInOut(seg(tau, WHY_START, WHY_START + 1.2));
-  const u2 = easeInOut(seg(tau, WHY_START + 1.0, WHY_START + 3.3));
-  const close = orbit([0, 157, 0], 70, mix(-40, -10, u1), 2, 30);
-  const wide = orbit([0, 98, 0], 340, mix(-10, 38, u2) + (tau - WHY_START - 3.3 > 0 ? (tau - WHY_START - 3.3) * 5 : 0), 30, 38);
-  const cam = camMix(close, wide, u2);
+  const pose = s2aPose(tau);
+  const c0 = visorCam(s2aPose(WHY_START), 62);
+  const c1: Cam3 = {pos: [-262, 182, 70], target: [-176, 158, -118], fov: 34, roll: -1};
+  const c2: Cam3 = {pos: [-470, 205, 330], target: [-95, 205, -280], fov: 42, roll: -1.5};
+  const u1 = easeInOut(seg(tau, WHY_START + 0.45, WHY_START + 1.9));
+  const u2 = easeInOut(seg(tau, WHY_START + 1.6, S2B + 0.2));
+  const cam = camMix(camMix(c0, c1, u1), c2, u2);
   const pr = makeProj(cam);
-  const items = turntable(pr, STUDIO_ENV, ang);
-  const lbl = seg(tau, WHY_START + 3.0, WHY_START + 3.4);
+  const env = WORKSHOP_ENV;
+  const items: Item[] = [...workshopBack(pr, env, tau), ...stand(pr, env), ...workbench(pr, env), ...toolCart(pr, env, [80, 0, 40], 'cartS2a')];
+  const robots: RobotSpec[] = [
+    {id: 's2a', pose, light: WS_LIGHT, ground: WS.standTop},
+    {id: 's2aBay', pose: STAND([-1050, 40 + 95.4, -420], 0.3), light: WS_LIGHT},
+  ];
+  // scan resolve: above the line the finished F.02, below it the schematic avatar (frozen last frame of H11)
+  const r = seg(tau, WHY_START, WHY_START + S2A_RESOLVE);
+  const scanY = -60 + easeInOut(r) * 1200;
+  const lbl = seg(tau, T('These are') + 0.2, T('These are') + 0.6);
   return (
     <AbsoluteFill>
-      <Scene3D pr={pr} bg={<StudioBg />} items={items} robots={[{id: 'tt', pose, light: LIGHT}]} frame={f} />
+      <Scene3D pr={pr} bg={<rect width={1920} height={1080} fill="#F4ECD6" />} items={items} robots={robots} frame={f} />
+      {r < 1 ? (
+        <>
+          <AbsoluteFill style={{clipPath: `polygon(0 ${scanY}px, 1920px ${scanY}px, 1920px 1080px, 0 1080px)`}}>
+            <SimStageFrame tau={HOOK_TURN_END - 1 / 30} f={f} />
+          </AbsoluteFill>
+          <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}>
+            <rect x={0} y={scanY - 3} width={1920} height={6} fill="#BFE9FF" />
+            <rect x={0} y={scanY - 24} width={1920} height={24} fill="#BFE9FF" opacity={0.25} />
+          </svg>
+        </>
+      ) : null}
       {lbl > 0 ? (
-        <div style={{position: 'absolute', left: 110, top: 760, opacity: lbl, transform: `translateX(${(1 - easeOut(lbl)) * -40}px)`}}>
-          <div style={{fontFamily: F.display, fontWeight: 700, fontSize: 108, color: C.ink, lineHeight: 1}}>F.02</div>
+        <div style={{position: 'absolute', left: 110, top: 770, opacity: lbl, transform: `translateX(${(1 - easeOut(lbl)) * -40}px)`}}>
+          <div style={{fontFamily: F.display, fontWeight: 700, fontSize: 104, color: C.ink, lineHeight: 1}}>F.02</div>
           <div style={{fontFamily: F.body, fontWeight: 800, fontSize: 40, color: C.inkSoft, marginTop: 6}}>Figure's second-generation humanoid</div>
           <div style={{width: 120, height: 8, background: C.saffron, borderRadius: 4, marginTop: 14}} />
         </div>

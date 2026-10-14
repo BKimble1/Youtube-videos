@@ -1,3 +1,4 @@
+import {CamTest} from './v3/dev/CamTest';
 import React from 'react';
 import {Composition} from 'remotion';
 import './fonts';
@@ -35,6 +36,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="V3SheetF02" component={RobotSheetV3} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
     <Composition id="V3SheetF03" component={RobotSheetV3} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{page: 1}} />
     <Composition id="V3SheetID" component={RobotSheetV3} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{page: 2}} />
+    <Composition id="V3CamTest" component={CamTest} durationInFrames={40} fps={30} width={1920} height={1080} defaultProps={{shots: []}} />
     <Composition id="V3Diag" component={Diagnostic} durationInFrames={DIAG_FRAMES} fps={30} width={1920} height={1080} defaultProps={{kind: 'F02' as const}} />
     <Composition id="KitRobot" component={KitRobot} durationInFrames={1} fps={30} width={1920} height={1080} />
   </>
