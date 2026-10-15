@@ -35,6 +35,8 @@ V4 redraws the whole episode as vector illustration: about 85 % flat and control
 | 9 places (review render 1) | Holds of 1.5–3.3 s with almost nothing moving | Static cameras | Slow drifts and pushes (booth, scoring, side views, wide foundry, silhouette) |
 | 2:40 (review render 2) | One remaining 1.9 s hold | Static wide after the pull-back | Slow drift |
 | 2:59–3:00 (review render 2) | Robot's upper body cropped in the last 0.3 s of the drop | The camera settled on the airbag before the speed-ramp ended | The camera follows to touchdown, then settles |
+| 1:03 (full-episode sheets, master 1) | The push into the Imatra doorway passed through the crew member: her face filled the frame for a moment | The crate and crew stood in front of the door being pushed into | They now walk into the glowing doorway (recede toward it) before the camera pushes in |
+| 2:37 (full-episode sheets, master 1) | The "noisy sensors" readout was cut off at the top | The readout was anchored above the head; R2's slow push raised the head on screen | Moved beside the head |
 | Various (development) | Off-frame tags and bubbles; a duplicate crane hook; a reflex hammer that read as an arrow; a lever left in the final frame; the clipboard never left | Placement | Fixed individually |
 | 0:03 "steel" (mix) | Impact 7 dB over the word | Level | Lowered: now 4 dB over for 0.2 s, deliberately on the word (V3: 5.3 dB). Other windows of ≥ 150 ms with effects over the voice: 0:04.0 (furnace bed between words), 0:44.05 (+1.7 dB, the padlock and the shutter) and 3:31.9 (+0.1 dB). V3 had 14 such windows; V4 has 4 (`audio/v4/mix/speech_mask_v4.txt`; measurement, not listening) |
 
