@@ -15,7 +15,7 @@ Not uploaded, not scheduled, not published. Publishing is the owner's step. Earl
 
 ## On-screen context
 
-- **Opening cue:** one small, unboxed "FICTIONAL FUTURE DEVICE" text cue in the upper right, frames 4-44 (0.13-1.47 s). There are no persistent badges.
+- **Opening cue:** one small, unboxed "FICTIONAL FUTURE DEVICE" text cue in the upper right, frames 8-44 (0.27-1.47 s), starting on the cut to the wide. There are no persistent badges.
 - **The rescue montage:** it shows an invented service.
   - The countdown runs at film speed whenever the band is in picture.
   - Story time is compressed only while the map, the hospital launch and the flight are on screen (24.2-29.6 s), when the band is out of picture.
