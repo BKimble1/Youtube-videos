@@ -58,13 +58,14 @@ Supporting files:
   - one compact geometry for every view: rounded profile, side button, underside panel and seam, shutter, actuator, small reservoir and sensor cartridge
   - the hand clears into the section backdrop with a soft straight edge timed to the case roll (no circular cut), and the forearm falls into shadow past the band
   - the sensor shot is a light touch with sparse cyan beads
+  - in the underside close-up the far end of the case falls into shadow away from the port, so the profile never reads as a rail
   - the treatment chain: the shutter opens, the piston advances, the nose presses the skin, and the section opens from the contact point, and one blue-white slug runs along a narrow continuous channel from the port into the vessel, entering with the flow, and is tracked; then a match cut into the chest view, where the heart settles
 - **Dispatch** (`shots/Dispatch.tsx`, `art/Drone.tsx`, Aftermath3 arrival):
   - the transmission pulse continues onto the map and into the hospital's dock ring, with a match cut on the dock beacon
   - a continuous rooftop approach; the order is latch, then rotor spin-up, then lift, then travel; the rotor blur turns with pitch
   - the drone is identical across the cut to the neighbourhood (screen position, scale, pitch, no roll); the houses sit on grass
   - one trunk that fully covers the frame for two frames at the swap (897-898), with the drone's position, pitch and speed continuous behind it
-  - the arrival brakes into a hover above-right of his head (at least 84 world units of clearance), with sky between the drone and the house roof, a soft ground shadow on the lawn that follows it, and a retreat before the recovery; the drone blinks and the band's ring answers, with no line drawn across him
+  - the arrival brakes into a hover above-left of his head (about 75 world units or more of clearance), with sky between the drone and the house roof, a soft ground shadow on the lawn that follows it, and a retreat before the recovery; the drone blinks and the band's ring answers, with no line drawn across him
 - **Loop and device states** (`lib/device3.ts`):
   - one periodic alarm in loop time (emissions at frames 1344, 6 and 18) drives the border flash, a ring round the glass that never crosses the digits, and the sound onsets
   - no frame-0 ring, shake or glow step
