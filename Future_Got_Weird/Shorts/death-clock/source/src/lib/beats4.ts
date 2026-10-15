@@ -146,12 +146,14 @@ export const B4 = {
 
 /**
  * The 987 match cut (device -> anatomy): where the treatment slug rests on screen on the last device frame (986), so the
- * chest view can open with the pulse at the same place, size and colour. Screen px of the 1080x1920 master. The camera
- * tracks the slug, so on screen it has come to rest there (it moved 1 px from 985 to 986); `dir` and `speed` are its
- * motion through the arm at 986 in screen terms (deg, atan2 convention: -90 = straight up; px/frame at the 986 zoom),
- * for the chest view to carry on; `r` is the core's half-width, `rimR` the rim's, and `len` the slug's overall length
- * (round ends included), all in px.
+ * chest view can open with the pulse at the same place, size, axis and colour. Screen px of the 1080x1920 master. The
+ * camera tracks the slug, so on screen it has come to rest there (it moved 0.3 px from 985 to 986); `dir` and `speed` are
+ * its motion through the arm at 986 in screen terms (deg, atan2 convention: -90 = straight up; px/frame at the 986
+ * zoom); `r` is the core's half-width, `rimR` the rim's, and `len` the slug's overall length (round ends included), all
+ * in px. V4 picture fix round: the slug bunches as it brakes (133 -> 83 px) and the tracking rolls onto the vena
+ * cava's screen axis (dir -91.8 -> -132.5, the axis of the SVC pulse at 987), and the point moved left from
+ * (540, 640) so that the chest view can hold one framing from the cut (Aftermath3 MATCH) with the window in frame.
  */
-export const TREAT_MATCH = {f: B.settleHeart0, x: 540, y: 640, r: 10.7, rimR: 17.9, len: 133, dir: -91.8, speed: 8.3, core: '#EAF4FF', rim: '#4F86FF'};
+export const TREAT_MATCH = {f: B.settleHeart0, x: 460, y: 640, r: 10.6, rimR: 17.6, len: 83, dir: -132.5, speed: 7.2, core: '#EAF4FF', rim: '#4F86FF'};
 
 export {B, TOTAL};

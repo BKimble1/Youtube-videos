@@ -163,6 +163,48 @@ def main():
         p, f0 = rp[0]['p'], rp[0]['f']
         res['rotor']['blade_pass_hz_at'] = {str(f): round(140 * p['rate'][f - f0], 1) for f in (815, 817, 820, 825, 830, 835, 839, 845) if 0 <= f - f0 < len(p['rate'])}
         res['rotor']['rate_source'] = cues4.get('sources', {}).get('rotor_rate')
+        # the off-frame hand-off (Dispatch.droneView null from the frame after the drone was last framed): the rotor cue
+        # alone (cue gain, unducked), 0.1 s level per frame, against the frame-to-frame wobble of the framed run before
+        # it (the four detuned blade voices beat by a few dB on their own)
+        src = cues4.get('sources', {}).get('rotor_view', '') or ''
+        h0 = int(src.split('off frame from ')[1].split(':')[0]) if 'off frame from ' in src else None
+        if h0:
+            xr = B4.GEN4['rotor'](rp[0]) * B4.db(rp[0]['gain'])
+
+            def l01(f):
+                a = int((f - f0) / FPS * SR)
+                w = int(0.1 * SR)
+                s = xr[max(0, a - w // 2):a + w // 2]
+                return round(float(20 * np.log10(np.sqrt(np.mean(s ** 2)) + 1e-12)), 1)
+
+            fr = list(range(h0 - 6, h0 + 26))
+            lv = [l01(f) for f in fr]
+            ref = [l01(f) for f in range(h0 - 30, h0)]
+            res['rotor']['handoff'] = {'off_frame_from': h0, 'frames': [fr[0], fr[-1]], 'level_0.1s_db': lv,
+                                       'max_step_db': round(float(np.max(np.abs(np.diff(lv)))), 1), 'step_at_handoff_db': round(lv[6] - lv[5], 1),
+                                       'framed_run_max_step_db (reference)': round(float(np.max(np.abs(np.diff(ref)))), 1)}
+
+        # the blade voices' beating at the picture's cuts (fix round 1): per-frame level of the rotor cue alone at the
+        # hospital -> flyover cut (B.travel0), the trunk wipe's cover frame and the off-frame hand-off, against the mean
+        # of the 10 frames around it; a trough there (dip below about -2 dB) could read as a dip at the cut
+        xr1 = B4.GEN4['rotor'](rp[0]) * B4.db(rp[0]['gain'])
+
+        def l1(f):
+            a = int(round((f - f0) / FPS * SR))
+            s = xr1[a:a + SR // FPS]
+            return float(20 * np.log10(np.sqrt(np.mean(s ** 2)) + 1e-12))
+
+        wsrc = cues4.get('sources', {}).get('wipe', '') or ''
+        cover = json.loads(wsrc[wsrc.index('{'):])['cover'] if '{' in wsrc else None
+        cuts = {'hospital->flyover cut (B.travel0)': cues4['beats']['travel0'], 'trunk wipe cover': cover, 'off-frame hand-off': h0}
+        rows_c = {}
+        for k, f in cuts.items():
+            if f is None:
+                continue
+            loc = float(np.mean([l1(g) for g in range(f - 5, f + 5)]))
+            rows_c[f'{k} {f}'] = {'level_db_f-1_f_f+1': [round(l1(g), 1) for g in (f - 1, f, f + 1)], 'vs_local_mean_db': round(min(l1(g) for g in (f - 1, f, f + 1)) - loc, 1)}
+        res['rotor']['beating_at_cuts'] = {'seed': p.get('seed'), 'cuts': rows_c,
+                                           'ok (no frame at a cut more than 2 dB under its local mean)': all(v['vs_local_mean_db'] >= -2 for v in rows_c.values())}
     # ---- seam
     mm, ee, mu, nn = x.mean(1) / FULL, e.mean(1) / FULL, m.mean(1) / FULL, n.mean(1) / FULL
     mm3, ee3 = x3.mean(1) / FULL, e3.mean(1) / FULL
@@ -175,6 +217,15 @@ def main():
     L = json.load(open(A4 / 'MIX_LOG.json'))
     res['build'] = {'g3_bit_exact_vs_v3': L['g3']['bit_exact'], 'static_gain_db': L['g3']['static_gain_db'], 'safety': {k: v for k, v in L['safety'].items() if k != 'corrections'},
                     'generators_measured': L.get('generators_measured')}
+    # ---- cue tables for the sensor shot and the treatment: [frame, id, kind, gain dB, length (frames), bus, own duck dB]
+    rows = {r['id']: r for r in L['cues']}
+
+    def table(lo, hi):
+        return [[c['f'], c['id'], c['kind'], c['gain'], round((c.get('dur') or rows[c['id']]['len_s']) * FPS, 1), rows[c['id']].get('bus'), (c.get('p') or {}).get('duck')]
+                for c in cues4['cues'] if lo <= c['f'] <= hi]
+    res['cue_tables [frame, id, kind, gain_db, len_frames, bus, own_duck_db]'] = {'119-300': table(119, 300), '921-1040': table(921, 1040)}
+    res['sources'] = cues4.get('sources', {})
+    res['hook_notes'] = cues4.get('hook_notes', {})
     json.dump(res, open(OUT / 'AUDIO_QA.json', 'w'), indent=1)
     lo = res['loudness']
     print(f"V4 mix {lo['v4_mix']} | V3 mix {lo['v3_mix']}")

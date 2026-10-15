@@ -159,8 +159,9 @@ type TubeProps = {
   /** legacy V3 name: drawn as the compact dose below (no glow blob) */
   wave?: {s: number; a: number};
   /** V4 treatment dose in the lumen: the slug's head arc length, strength, width scale and how much it lights the
-   *  lumen round it (all normal blend, alpha <= 0.35, masked to the lumen) */
-  dose?: {s: number; a: number; w?: number; glow?: number; body?: boolean; from?: number; wake?: number};
+   *  lumen round it (all normal blend, alpha <= 0.35, masked to the lumen); `len` scales its length (it bunches as it
+   *  brakes into the 987 match cut, Aftermath3 treatState) */
+  dose?: {s: number; a: number; w?: number; glow?: number; body?: boolean; from?: number; wake?: number; len?: number};
   /** V4 sensors: the discrete beads released from the port, drawn once they have merged into the flow */
   release?: SensorRelease;
   /** a red warning pulse travelling back toward the band */
@@ -277,7 +278,8 @@ export const VesselTube: React.FC<TubeProps> = ({id, path, f, px, s0, s1, sensor
   // its length set by the slug's speed); normal blend, inside the lumen only (replaces V3's glow blob and long trail)
   const doseEl = (() => {
     if (!dose || dose.a <= 0.01) return null;
-    const tail = dose.s - TREAT_SLUG.len;
+    const sLen = TREAT_SLUG.len * (dose.len ?? 1);
+    const tail = dose.s - sLen;
     const wk = Math.max(0, dose.wake ?? 0);
     const w0 = Math.max(dose.from ?? -1e9, tail - wk);
     const dW = wk > 4 ? subPathD(path, w0, tail + 4) : null;
@@ -302,7 +304,7 @@ export const VesselTube: React.FC<TubeProps> = ({id, path, f, px, s0, s1, sensor
           </radialGradient>
         </defs>
         {dW && <path d={dW} fill="none" stroke={`url(#${id}-dw)`} strokeWidth={f2(TREAT_SLUG.w * 0.6 * (dose.w ?? 1))} strokeLinecap="butt" />}
-        <ellipse cx={f2(mid.x)} cy={f2(mid.y)} rx={f2(TREAT_SLUG.len * 0.5 + TREAT_SLUG.w * 1.1)} ry={f2(TREAT_SLUG.w * (1.05 + 0.25 * g))} transform={`rotate(${f2(ang)} ${f2(mid.x)} ${f2(mid.y)})`} fill={`url(#${id}-dh)`} />
+        <ellipse cx={f2(mid.x)} cy={f2(mid.y)} rx={f2(sLen * 0.5 + TREAT_SLUG.w * 1.1)} ry={f2(TREAT_SLUG.w * (1.05 + 0.25 * g))} transform={`rotate(${f2(ang)} ${f2(mid.x)} ${f2(mid.y)})`} fill={`url(#${id}-dh)`} />
         {dose.body !== false && <SlugStroke path={path} u0={tail} u1={dose.s} w={dose.w ?? 1} rigid />}
       </g>
     );

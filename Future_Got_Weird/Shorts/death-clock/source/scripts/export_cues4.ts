@@ -10,7 +10,8 @@ import {fileURLToPath} from 'node:url';
 import {chunkWindows} from '../src/lib/captions';
 import {B4} from '../src/lib/beats4';
 import {countdown3, DEV3} from '../src/lib/device3';
-import {HeartSound, musicPlan4, PictureHooks, soundCues4, SOURCES} from '../src/lib/sound4';
+import {easeInOut, inv} from '../src/lib/math';
+import {musicPlan4, PictureHooks, SensorBeats, soundCues4, SOURCES} from '../src/lib/sound4';
 import {B, FPS, TOTAL, UNITS, WORDS} from '../src/lib/timeline3';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -29,36 +30,33 @@ const tryImport = async (rel: string): Promise<{m: Mod | null; err?: string}> =>
 };
 const fn = (v: unknown) => (typeof v === 'function' ? (v as (...a: unknown[]) => unknown) : null);
 
-/** heart4.ts -> HeartSound. Preferred contract: `export const heartSound4: HeartSound` (or a function returning one).
- * Also accepted: a beat list (numbers, or {f|frame, kind?}) under a few likely names; kinds 'quiver'/'irregular'/'fib'
- * mark the irregular spans, everything else is a regular lub. */
-const heartFrom = (m: Mod): {h: HeartSound; how: string} | null => {
-  const isHS = (o: unknown): o is HeartSound => !!o && typeof o === 'object' && Array.isArray((o as HeartSound).journey) && Array.isArray((o as HeartSound).settled);
-  for (const name of ['heartSound4', 'HEART_SOUND4']) {
-    const v = fn(m[name]) ? fn(m[name])!() : m[name];
-    if (isHS(v)) return {h: v, how: `heart4.${name}`};
+/** The frame (fractional) where a rising dent first reaches `frac` of its full depth: the first integer frame at or
+ *  past it, then bisection on the (continuous) picture function between that frame and the one before. */
+const dentOnset = (dent: (f: number) => number, a: number, b: number, frac = 0.1): number | undefined => {
+  let peak = 0;
+  for (let f = a; f <= b; f++) peak = Math.max(peak, dent(f));
+  if (!(peak > 0)) return undefined;
+  const thr = frac * peak;
+  for (let f = a + 1; f <= b; f++) {
+    if (dent(f) >= thr && dent(f - 1) < thr) {
+      let lo = f - 1;
+      let hi = f;
+      for (let i = 0; i < 30; i++) {
+        const m = (lo + hi) / 2;
+        if (dent(m) >= thr) hi = m;
+        else lo = m;
+      }
+      return Math.round(hi * 100) / 100;
+    }
   }
-  for (const name of ['HEART4', 'heartBeats4', 'HEART_BEATS', 'BEATS4', 'heartBeats', 'LUBS']) {
-    const raw = fn(m[name]) ? fn(m[name])!() : m[name];
-    const arr = Array.isArray(raw) ? raw : raw && typeof raw === 'object' && Array.isArray((raw as Mod).beats) ? ((raw as Mod).beats as unknown[]) : null;
-    if (!arr) continue;
-    const items = arr
-      .map((b) => (typeof b === 'number' ? {f: b, kind: 'lub'} : b && typeof b === 'object' ? {f: Number((b as Mod).f ?? (b as Mod).frame), kind: String((b as Mod).kind ?? 'lub')} : null))
-      .filter((b): b is {f: number; kind: string} => !!b && Number.isFinite(b.f));
-    if (!items.length) continue;
-    const irr = (k: string) => /quiver|irreg|fib/i.test(k);
-    const lubs = items.filter((b) => !irr(b.kind)).map((b) => b.f);
-    const jIrr = items.filter((b) => irr(b.kind) && b.f < B.hold).map((b) => b.f);
-    const tIrr = items.filter((b) => irr(b.kind) && b.f >= B.hold).map((b) => b.f);
-    const h: HeartSound = {
-      journey: lubs.filter((f) => f < B.lethal),
-      fib: jIrr.length ? [Math.min(...jIrr), Math.max(...jIrr) + 4] : [B.lethal - 2, B.lethal - 2 + (B.sig0 + 4 - B.lethal)],
-      quiver: tIrr.length ? [Math.min(...tIrr), Math.max(...tIrr) + 2] : [B.settleHeart0, B.settleHeart0 + 16],
-      settled: lubs.filter((f) => f >= B.settleHeart0),
-    };
-    return {h, how: `heart4.${name} (beat list adapter)`};
-  }
-  return null;
+  return undefined;
+};
+
+/** frames over which a picture quantity moves (|change| per frame above eps), within [a, b] */
+const moving = (q: (f: number) => number, a: number, b: number, eps = 1e-3): [number, number] | null => {
+  const fr: number[] = [];
+  for (let f = a + 1; f <= b; f++) if (Math.abs(q(f) - q(f - 1)) > eps) fr.push(f);
+  return fr.length ? [fr[0] - 1, fr[fr.length - 1]] : null;
 };
 
 (async () => {
@@ -100,17 +98,107 @@ const heartFrom = (m: Mod): {h: HeartSound; how: string} | null => {
       hooks.mapEnd = D.MAP_END;
       hooks.origin!.mapEnd = 'Dispatch.MAP_END';
     }
+    const w = D.WIPE as Record<string, number> | undefined;
+    if (w && [w.in0, w.cover, w.out1].every((v) => typeof v === 'number')) {
+      hooks.wipe = {in0: w.in0, cover: w.cover, out1: w.out1};
+      hooks.origin!.wipe = 'Dispatch.WIPE';
+    }
   } else notes.dispatch = `Dispatch.tsx not imported (${disp.err})`;
-  const ht = await tryImport('../src/lib/heart4');
-  if (ht.m) {
-    const r = heartFrom(ht.m);
-    if (r) {
-      hooks.heart = r.h;
-      hooks.origin!.heart = r.how;
-    } else notes.heart4 = `present but no recognised export (exports: ${Object.keys(ht.m).join(', ')})`;
-  } else notes.heart4 = ht.err ?? 'not present';
+
+  // ---- the sensor shot: Journey3 SENSOR_BEATS; the light touch measured with the picture's own press function
+  //      (art/Interior portPress on Journey3's stroke = ease(inv(B.port0, B.port1, f)) with PORT_GEO.pressSensor); the
+  //      bead exits from Journey3's SENSOR_REL (not exported: read from the source text and cross-checked)
+  const j3 = await tryImport('../src/shots/Journey3.tsx');
+  const itr = await tryImport('../src/art/Interior.tsx');
+  const dvc = await tryImport('../src/art/Device.tsx');
+  const j3src = fs.readFileSync(path.resolve(here, '../src/shots/Journey3.tsx'), 'utf8');
+  if (j3.m && j3.m.SENSOR_BEATS && typeof j3.m.SENSOR_BEATS === 'object') {
+    const sb = j3.m.SENSOR_BEATS as SensorBeats;
+    hooks.sensor = {beats: sb};
+    hooks.origin!.sensor = 'Journey3.SENSOR_BEATS';
+    const press = fn(itr.m?.portPress);
+    const PG = dvc.m?.PORT_GEO as Record<string, number> | undefined;
+    const SECu = (itr.m?.SEC as Record<string, number> | undefined)?.units;
+    const strokeLine = /const stroke = ease\(inv\(B\.port0, B\.port1, f\)\)/.test(j3src) && /PRESS_S = PORT_GEO\.pressSensor \* SEC\.units/.test(j3src);
+    if (press && PG && typeof SECu === 'number' && strokeLine) {
+      const P = PG.pressSensor * SECu;
+      const dent = (f: number) => Number(press(easeInOut(inv(sb.nose0, sb.touch, f)), P));
+      hooks.sensor.contact = dentOnset(dent, sb.nose0, sb.touch + 2);
+      hooks.origin!.sensorContact = 'Interior.portPress(Journey3 stroke, PORT_GEO.pressSensor) at 10% of the dimple depth';
+    } else notes.sensorContact = `light touch not measured (portPress ${!!press}, PORT_GEO ${!!PG}, SEC.units ${typeof SECu}, Journey3 stroke/press lines found ${strokeLine}); using SENSOR_BEATS.touch`;
+    const m = j3src.match(/SENSOR_REL: SensorRelease = \{t0: B\.stream0 ([+-]) (\d+), t1: B\.stream1 ([+-]) (\d+), n: (\d+), feed: (\d+), travel: (\d+), vVessel: \d+, heroMerge: B\.heroRing ([+-]) (\d+)\}/);
+    if (m) {
+      const sg = (s: string, v: string) => (s === '-' ? -1 : 1) * Number(v);
+      const t0 = B.stream0 + sg(m[1], m[2]);
+      const t1 = B.stream1 + sg(m[3], m[4]);
+      const n = Number(m[5]);
+      const travel = Number(m[7]);
+      const heroMerge = B.heroRing + sg(m[8], m[9]);
+      hooks.sensor.beadExits = Array.from({length: n}, (_, k) => t0 + (k * (t1 - t0)) / Math.max(1, n - 1));
+      hooks.sensor.heroExit = heroMerge - travel;
+      // cross-check with the picture's own release function: each bead must be at the nose tip (feed -> stream) there
+      const rs = fn(itr.m?.releaseState);
+      if (rs) {
+        const rel = {t0, t1, n, feed: Number(m[6]), travel, vVessel: 16, heroMerge};
+        const bad = [...hooks.sensor.beadExits.map((f, k) => [k, f]), [-1, hooks.sensor.heroExit]].filter(([k, f]) => {
+          const a = rs(rel, k, f - 0.01) as {phase: string};
+          const b = rs(rel, k, f + 0.01) as {phase: string};
+          return !(a.phase === 'feed' && b.phase === 'stream');
+        });
+        notes.sensorRelease = bad.length ? `releaseState disagrees for beads ${JSON.stringify(bad)}` : `Journey3 SENSOR_REL {t0 ${t0}, t1 ${t1}, n ${n}, travel ${travel}, heroMerge ${heroMerge}}: every exit is the feed -> stream switch of Interior.releaseState`;
+      }
+      hooks.origin!.sensorRelease = 'Journey3 SENSOR_REL (source text) + Interior.releaseState check';
+    } else notes.sensorRelease = 'Journey3 SENSOR_REL not found in the source text: the bead ticks use the V4 fallback (stream0+2 .. stream1-5, 16 beads)';
+  } else notes.sensor = `Journey3 SENSOR_BEATS not imported (${j3.err ?? 'no export'})`;
+
+  // ---- the treatment: Aftermath3 treatState is the picture's mechanism state; the press lands on the frame the nose's
+  //      dimple first reads, and every motion the cues follow is checked against the B4 keys they are placed on
+  const a3 = await tryImport('../src/shots/Aftermath3.tsx');
+  const ts = fn(a3.m?.treatState);
+  /** each mechanism motion as the picture moves it, and the cue (id) that has to follow it (checked once the cues exist) */
+  const treatChecks: {name: string; moves: [number, number] | null; keys: [number, number]; cue: string; at: 'span' | 'end'}[] = [];
+  let slugRows: string[] = [];
+  if (ts) {
+    const st = (g: number) => ts(g) as {roll: number; shutter: number; stroke: number; dimple: number; head: number; dose?: unknown};
+    const T = B4;
+    hooks.treat = {contact: dentOnset((g) => st(g).dimple, T.tStroke0, T.tStroke1 + 2)};
+    hooks.origin!.treatContact = 'Aftermath3.treatState(g).dimple at 10% of its depth';
+    const span = (q: (g: number) => number, a: number, b: number) => moving(q, a - 3, b + 3);
+    // the roll to the underside: the swish follows the frames the picture actually turns the case over (V4 continuity:
+    // a smoothstep that starts one frame before tRoll0 and rests at the tCut punch-in, not tRoll0..tRoll1)
+    const rollSpan = span((g) => st(g).roll, T.tRoll0, Math.max(T.tRoll1, T.tCut));
+    if (rollSpan) {
+      hooks.treat.roll = rollSpan;
+      hooks.origin!.treatRoll = 'Aftermath3.treatState(g).roll (frames it moves)';
+    }
+    treatChecks.push(
+      {name: 'roll', moves: rollSpan, keys: [T.tRoll0, T.tRoll1], cue: 'tilt2', at: 'span'},
+      {name: 'shutter open', moves: span((g) => st(g).shutter, T.tShut0, T.tShut1), keys: [T.tShut0, T.tShut1], cue: 'shutter', at: 'span'},
+      {name: 'stroke', moves: span((g) => st(g).stroke, T.tStroke0, T.tStroke1), keys: [T.tStroke0, T.tStroke1], cue: 'actuator', at: 'span'},
+      {name: 'retract', moves: span((g) => st(g).stroke, T.tRetract0, T.tRetract1), keys: [T.tRetract0, T.tRetract1], cue: 'retract', at: 'span'},
+      {name: 'shutter close', moves: span((g) => st(g).shutter, T.tShutClose0, T.tShutClose1), keys: [T.tShutClose0, T.tShutClose1], cue: 'port_close', at: 'end'},
+    );
+    let slug0 = -1;
+    let lumen = -1;
+    for (let g = T.tSlug0 - 4; g <= T.treatMatch; g++) {
+      if (slug0 < 0 && st(g).head >= 0) slug0 = g;
+      if (lumen < 0 && st(g).dose) lumen = g;
+    }
+    slugRows = [`slug leaves at ${slug0} (tSlug0 ${T.tSlug0})${slug0 === T.tSlug0 ? '' : ' MISMATCH'}`, `slug in the lumen from ${lumen} (tSlugLumen ${T.tSlugLumen})${Math.abs(lumen - T.tSlugLumen) <= 1 ? '' : ' MISMATCH'}`];
+  } else notes.treatState = `Aftermath3.treatState not imported (${a3.err ?? 'no export'})`;
 
   const cues = soundCues4(hooks);
+  if (ts) {
+    // the cue must start and end within 1 frame of the motion it follows (or, for 'end', sit on the frame it stops)
+    const rows = treatChecks.map(({name, moves, keys, cue, at}) => {
+      const c = cues.find((q) => q.id === cue);
+      const cs: [number, number] | null = c ? [c.f, c.f + Math.round((c.dur ?? 0) * FPS * 1000) / 1000] : null;
+      const ok = !!moves && !!cs && (at === 'end' ? Math.abs(cs[0] - moves[1]) <= 1 : Math.abs(cs[0] - moves[0]) <= 1 && Math.abs(cs[1] - moves[1]) <= 1);
+      const cueTxt = !cs ? 'missing' : at === 'end' ? `${cs[0]}` : `${cs[0]}-${cs[1]}`;
+      return `${name} moves ${moves ? moves.join('-') : 'never'} (keys ${keys.join('-')}), ${cue} ${cueTxt}${ok ? '' : ' MISMATCH'}`;
+    });
+    notes.treatState = [...rows, ...slugRows].join('; ');
+  }
   const ids = new Set<string>();
   for (const c of cues) {
     if (ids.has(c.id)) throw new Error(`duplicate cue id ${c.id}`);

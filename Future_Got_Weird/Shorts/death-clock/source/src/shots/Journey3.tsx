@@ -20,7 +20,7 @@ import {Cam, toScreen} from '../lib/camera';
 import {PAL} from '../lib/color';
 import {deviceState3} from '../lib/device3';
 import {spline, splineRec, SKey} from '../lib/motion';
-import {add, clamp, easeInOut, fmt, inv, lerp, mul, noise1, norm, sub, V} from '../lib/math';
+import {add, clamp, easeInOut, fmt, inv, lerp, mul, noise1, norm, smooth, sub, V} from '../lib/math';
 import {Glow} from '../lib/shade';
 import {B} from '../lib/timeline3';
 import {B4} from '../lib/beats4';
@@ -137,7 +137,41 @@ const onVP = (path: typeof VP, s: number, l = 0) => {
   const p = add(q.p, mul(q.nrm, l));
   return W(p.x, p.y);
 };
-const heroWorld = (f: number) => onVP(VP, heroS(f), heroL(f));
+/** the hero's world position (also read by scripts/check_captions4.ts) */
+export const heroWorld = (f: number) => onVP(VP, heroS(f), heroL(f));
+/** V4 continuity: the arc length the dive and ride cameras follow. heroS changes its acceleration at B.dive1 (the 'race'
+ *  starts there), which the hero-locked camera turned into a one-frame jolt of the whole picture at 299/300; the camera
+ *  follows a C2 blend of it instead (a quintic Hermite matching position, speed and acceleration at both ends of
+ *  FOLLOW: the dive's own values at dive1), so the camera lags a little as the hero races off (it leads on screen by
+ *  up to about 46 px, then the camera catches up) and the picture's acceleration builds over three frames instead of
+ *  one */
+const FOLLOW: [number, number] = [B.dive1, B.dive1 + 11];
+const camS = (() => {
+  const [t0, t1] = FOLLOW;
+  const e = 0.05;
+  // at t0 (the knot) the dive side's speed and acceleration (one-sided), so the camera lags as the hero races off
+  const v0 = (3 * heroS(t0) - 4 * heroS(t0 - e) + heroS(t0 - 2 * e)) / (2 * e);
+  const a0 = (heroS(t0) - 2 * heroS(t0 - e) + heroS(t0 - 2 * e)) / (e * e);
+  const v1 = (heroS(t1 + e) - heroS(t1 - e)) / (2 * e);
+  const a1 = (heroS(t1 + e) - 2 * heroS(t1) + heroS(t1 - e)) / (e * e);
+  const [p0, p1] = [heroS(t0), heroS(t1)];
+  const h = t1 - t0;
+  return (f: number) => {
+    if (f <= t0 || f >= t1) return heroS(f);
+    const u = (f - t0) / h;
+    const [u2, u3, u4, u5] = [u * u, u ** 3, u ** 4, u ** 5];
+    return (
+      (1 - 10 * u3 + 15 * u4 - 6 * u5) * p0 +
+      (u - 6 * u3 + 8 * u4 - 3 * u5) * h * v0 +
+      (0.5 * u2 - 1.5 * u3 + 1.5 * u4 - 0.5 * u5) * h * h * a0 +
+      (0.5 * u3 - u4 + 0.5 * u5) * h * h * a1 +
+      (-4 * u3 + 7 * u4 - 3 * u5) * h * v1 +
+      (10 * u3 - 15 * u4 + 6 * u5) * p1
+    );
+  };
+})();
+/** the point the dive and ride cameras are anchored on (the hero, but on camS) */
+const heroCamW = (f: number) => onVP(VP, camS(f), heroL(f));
 /** camera roll that turns the flow to screen-up, smoothed over the bends */
 const travelRoll = (s: number) => {
   const wa = onVP(VP, Math.max(0, s - 260));
@@ -267,13 +301,26 @@ const camOpen = (f: number): Cam => {
 };
 
 const Z_RIDE = 4.0 * LOCAL_PER_WORLD;
+/** V4 continuity: the log-zoom rate (per frame) the dive hands to the ride at B.dive1. The dive's zoom no longer eases
+ *  to a stop there (and the ride's push toward the passing cell no longer starts from rest at pass0): the push now
+ *  starts at dive1 at this rate, so the zoom runs on through the boundary (mean screen flow no longer dips to a near
+ *  stop at 294-299 before the ride accelerates) */
+const DIVE_Z_RATE = 0.016;
+/** cubic Hermite from (t0, v0, slope m0) to (t1, v1, slope m1), clamped outside */
+const herm = (t0: number, t1: number, v0: number, v1: number, m0: number, m1: number, t: number) => {
+  const h = t1 - t0;
+  const u = clamp((t - t0) / h);
+  return (2 * u ** 3 - 3 * u ** 2 + 1) * v0 + (u ** 3 - 2 * u ** 2 + u) * h * m0 + (-2 * u ** 3 + 3 * u ** 2) * v1 + (u ** 3 - u ** 2) * h * m1;
+};
 const rideCam = (f: number): Cam => {
-  const s = heroS(f);
-  const h = heroWorld(f);
+  const s = camS(f);
+  const h = heroCamW(f);
   const fwd = sub(onVP(VP, s + 2), onVP(VP, s));
   const fl = Math.hypot(fwd.x, fwd.y) || 1;
-  // distance and depth vary: closer as the hero meets the cell, back off as the signals leave
-  const zz = Z_RIDE * (1 + 0.25 * ease(inv(B.pass0, B.pass0 + 14, f)) * (1 - ease(inv(B.pass1 - 10, B.pass1, f))) + 0.3 * ease(inv(B.wall0, B.decay, f)) - 0.3 * ease(inv(B.signal0, B.signal1, f)));
+  // distance and depth vary: closer as the hero meets the cell (from dive1, at the dive's last zoom rate), back off as
+  // the signals leave
+  const push = herm(B.dive1, B.pass0 + 14, 0, 0.25, DIVE_Z_RATE, 0, f);
+  const zz = Z_RIDE * (1 + push * (1 - ease(inv(B.pass1 - 10, B.pass1, f))) + 0.3 * ease(inv(B.wall0, B.decay, f)) - 0.3 * ease(inv(B.signal0, B.signal1, f)));
   const lead = 150 / zz;
   return {x: h.x + (fwd.x / fl) * lead, y: h.y + (fwd.y / fl) * lead, z: zz, roll: travelRoll(s)};
 };
@@ -288,17 +335,25 @@ const ROT = (p: V, deg: number): V => {
 const SCR_C = {x: 540, y: 960};
 /** screen position of world point p (subject plane, with the camera's roll) */
 export const screenOf = (c: Cam, p: V): V => add(SCR_C, mul(ROT(sub(p, c), c.roll ?? 0), c.z));
+/** C2 ease (smootherstep): at rest, with no acceleration, at both ends and no acceleration step anywhere */
+const smoother = (t: number) => t * t * t * (t * (6 * t - 15) + 10);
 const diveCam = (f: number): Cam => {
   const a = camOpen(B.dive0 + 2);
   const b = rideCam(B.dive1);
   const t = inv(B.dive0 + 2, B.dive1, f);
-  const e = ease(t);
-  const z = expLerp(a.z, b.z, e);
-  const roll = lerp(0, b.roll ?? 0, ease(clamp((t - 0.15) / 0.85)));
-  const sa = screenOf(a, heroWorld(B.dive0 + 2));
-  const sb = screenOf(b, heroWorld(B.dive1));
+  // V4 continuity: a C2 ease (smootherstep); the cubic in-out flipped its acceleration at the midpoint (a one-frame
+  // jolt of the whole picture at 283/284, larger than the 299/300 hitch)
+  const e = smoother(t);
+  // the zoom starts from rest (as camOpen ends) and ends at the ride's push rate (DIVE_Z_RATE), not at rest: a little of
+  // t^2 (slope 0 at the start, 2 at the end) mixed into the ease
+  const lz = Math.log(b.z / a.z);
+  const wl = clamp((DIVE_Z_RATE * (B.dive1 - B.dive0 - 2)) / (2 * lz));
+  const z = a.z * Math.exp(lz * ((1 - wl) * e + wl * t * t));
+  const roll = lerp(0, b.roll ?? 0, smoother(clamp((t - 0.15) / 0.85)));
+  const sa = screenOf(a, heroCamW(B.dive0 + 2));
+  const sb = screenOf(b, heroCamW(B.dive1));
   const s = {x: lerp(sa.x, sb.x, e), y: lerp(sa.y, sb.y, e)};
-  const c = sub(heroWorld(f), mul(ROT(sub(s, SCR_C), -roll), 1 / z));
+  const c = sub(heroCamW(f), mul(ROT(sub(s, SCR_C), -roll), 1 / z));
   return {x: c.x, y: c.y, z, roll};
 };
 
@@ -368,18 +423,29 @@ const camBody = (f: number): Cam => {
     [B.red + 4, BAND_C, 7.0],
     [B.count0 + 4, seconds, 8.6],
     [B.crit0 - 4, seconds, 9.2],
+    // V4 captions: half way out the band is held higher (it no longer swings down into the lane while the glass is large)
+    bandAt(B.crit0 + 7, 827, 1268, 3.56),
     [B.crit0 + 14, TWO, 2.2],
     [B.tx0, add(TWO, {x: 6, y: 8}), 2.3],
     // the transmission pulse lifts off the band; the camera tilts up with it
     [B.map0, add(BAND_C, {x: -40, y: -520}), 2.4],
   ];
+  // V4 captions: through the critical seconds the view sits further left in the world (one smooth shift, in from the
+  // zoom-out and out again while the transmission pulse lifts the camera), so the band stays right of 'Every second
+  // matters.' as it drops through the caption lane (708-714); the shift is gone by tx1 - 1, so the pulse's last two
+  // frames, which the map's handoff reads (Dispatch.tsx txHandoff), are unchanged
+  const shift = CRIT_SHIFT * smooth(inv(B.crit0 + 2, B.crit0 + 14, f)) * (1 - smooth(inv(B.tx0 + 8, B.tx1 - 1, f)));
   return {
-    x: spline(f, keys.map(([t, p]) => [t, p.x])),
+    x: spline(f, keys.map(([t, p]) => [t, p.x])) - shift,
     y: spline(f, keys.map(([t, p]) => [t, p.y])),
     z: Math.exp(spline(f, keys.map(([t, , z]) => [t, Math.log(z)]))),
     roll: 0,
   };
 };
+/** world units the critical-seconds two-shot is shifted (the band about 165 px further right on screen; 72 -> 80 in the
+ *  picture fix round: the glass passes >= 48 px right of 'matters.' (was 29), the case >= 70 px inside the frame's right
+ *  edge, and the transmission pulse's slide back to centre peaks at 41 px/frame (was 39)) */
+const CRIT_SHIFT = 80;
 
 export const journeyCam3 = (f: number): Cam => {
   let c: Cam;
@@ -422,6 +488,19 @@ export const ArmTrace: React.FC<{id: string; tr: {pts: V[]; hem: number}; a: num
   );
 };
 
+const ROLLBACK0 = B.pull0 + 8;
+const ROLLBACK1 = B.pull0 + 24;
+/** The device's turn and the section backdrop in the journey (also read by scripts/check_captions4.ts). V4 merge
+ *  (anatomy + device): the backdrop rises with the device's hand clearing (S_BACK) and falls with the pull-back (as
+ *  rv.backdrop); the case rolls back to face the camera WHILE the backdrop and the hand veil fade, so the hand is never
+ *  seen in its back view beside a case still turned to its profile */
+export const journeyDevice = (f: number) => {
+  const backdrop = clamp(inv(S_BACK0, S_BACK1, f)) * (1 - clamp(inv(ROLLBACK0, B.pull0 + 26, f)));
+  const handVeil = clamp(inv(S_VEIL0, S_VEIL1, f)) * (1 - clamp(inv(ROLLBACK0 + 4, ROLLBACK1, f)));
+  const rollBase = f < S_ROLL0 ? 0 : SEC_ROLL * ease(inv(S_ROLL0, B.tip1, f)) * (1 - ease(inv(ROLLBACK0, ROLLBACK1, f)));
+  return {backdrop, handVeil, roll: rollBase + buzz(f) * 3.2 * Math.sin(f * 2.6)};
+};
+
 export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
   const cam = journeyCam3(f);
   const man = manAt(f);
@@ -439,12 +518,7 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
   // V4 merge (anatomy + device): the backdrop rises with the device's hand clearing (S_BACK) and falls with the
   // pull-back (as rv.backdrop); the case rolls back to face the camera WHILE the backdrop and the hand veil fade, so
   // the hand is never seen in its back view beside a case still turned to its profile
-  const ROLLBACK0 = B.pull0 + 8;
-  const ROLLBACK1 = B.pull0 + 24;
-  const backdrop = clamp(inv(S_BACK0, S_BACK1, f)) * (1 - clamp(inv(ROLLBACK0, B.pull0 + 26, f)));
-  const handVeil = clamp(inv(S_VEIL0, S_VEIL1, f)) * (1 - clamp(inv(ROLLBACK0 + 4, ROLLBACK1, f)));
-  const rollBase = f < S_ROLL0 ? 0 : SEC_ROLL * ease(inv(S_ROLL0, B.tip1, f)) * (1 - ease(inv(ROLLBACK0, ROLLBACK1, f)));
-  const roll = rollBase + bz * 3.2 * Math.sin(f * 2.6);
+  const {backdrop, handVeil, roll} = journeyDevice(f);
   // V4 mechanism: the shutter opens, the nose advances to a light touch (small dimple), retract, then close
   const shutter = ease(inv(S_SHUT0, S_SHUT1, f)) * (1 - ease(inv(S_CLOSE0, S_CLOSE1, f)));
   const stroke = ease(inv(B.port0, B.port1, f)) * (1 - ease(inv(B.retract0, B.retract0 + 8, f)));

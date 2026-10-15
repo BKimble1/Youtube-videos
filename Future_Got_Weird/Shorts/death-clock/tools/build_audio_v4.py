@@ -10,7 +10,9 @@ stems ("option R"; script/V4_DESIGN.md area 8, sound.md fix plan steps 2-5).
   3. The V4 effects bus is built from audio/v4/cues.json with V3's ducking (one-shots -2.5 dB, continuous beds -6 dB
      under speech), plus an optional per-cue duck: p.duck (dB at full speech) with p.duckLead (s of look-ahead).
      New kinds: press (soft contact), tpulse (restrained treatment pulse). Extended: rotor 'curve' mode (per-frame
-     rate/dist/pan/lvl arrays, continuous phase) and shaped spin-up params; alarm1 p.low / p.att / p.ring.
+     rate/dist/pan/lvl arrays, continuous phase, smoothed doppler) and shaped spin-up params; alarm1 p.low / p.att /
+     p.ring; fib p.at / p.amp / p.bed (a thump on each drawn heart twitch over a quiver bed, lib/heart4.ts); ticks p.at
+     (one tick per sensor bead leaving the nose, Journey3 SENSOR_REL).
      V3 kinds and params not named above go through the V3 generators unchanged.
   4. effects x G3, ROUNDED to int24 (V3's writer truncated); mix = narration + music + effects as an exact integer
      sum, so the stems sum to the mix with zero residual. No new limiter, no re-normalisation: an effects-only
@@ -255,10 +257,88 @@ def g_alarm1(c):
     return norm(fade(x, 0.0, 0.01), 0.85)
 
 
-def _rotor_bank(c, bpf, d):
-    """V3's rotor voice: four detuned 8-harmonic blade tones on a continuous phase, plus a blade-modulated hiss."""
+def _frames_to_samples(arr, n):
+    """per-frame values (frame 0 = cue start) -> per-sample, linear between frames, held at the ends"""
+    arr = np.asarray(arr, float).ravel()
+    if arr.size == 1:
+        return np.full(n, float(arr[0]))
+    return np.interp(np.arange(n) / SR * FPS, np.arange(arr.size), arr)
+
+
+def g_fib(c):
+    """The irregular heart, following the drawn heart (lib/heart4.ts via sound4.ts heartPlan4):
+    - p.at (s from the cue start) / p.amp: one low thump per drawn one-sided twitch (a full-amplitude thump peaks at
+      0.85, as V3's normalised stream did); a little 170 -> 105 Hz body so it still reads on a phone speaker;
+    - p.bed (per frame, 0..1) at p.bedDb under a full thump: a faint quiver of small irregular thumps (V3's stream
+      texture), so the rhythm reads as fibrillating rather than as a slow irregular beat; it follows fibAmp and, in
+      the journey, the chest window closing.
+    Without p.at it is V3's g_fib, bit for bit."""
+    p = c.get('p') or {}
+    if 'at' not in p:
+        return V3.g_fib(c)
+    d = c['dur']
     t = tg(d)
     r = rng(c['id'])
+    out = np.zeros_like(t)
+    m = int(0.16 * SR)
+    tt = np.arange(m) / SR
+
+    def thump(f0):
+        return glide(tt, f0, 50, 0.03) * env(tt, 0.003, 0.035) + 0.3 * glide(tt, 170, 105, 0.03) * env(tt, 0.002, 0.025)
+
+    unit = 0.85 / np.max(np.abs(thump(105.0)))
+    at = [float(a) for a in np.atleast_1d(p['at'])]
+    amps = [float(a) for a in np.atleast_1d(p.get('amp', [1.0] * len(at)))]
+    for a, k in zip(at, amps):
+        i = int(round(a * SR))
+        if 0 <= i < len(out):
+            seg = thump(95 + 20 * r.random()) * k * unit
+            out[i:i + m] += seg[:len(out[i:i + m])]
+    if 'bed' in p:
+        bed = np.zeros_like(t)
+        r2 = rng(c['id'] + ':bed')
+        s = 0.0
+        while s < d:
+            seg = glide(tt, 80 + 30 * r2.random(), 48, 0.03) * env(tt, 0.004, 0.03) * (0.5 + 0.5 * r2.random())
+            i = int(s * SR)
+            bed[i:i + m] += seg[:len(bed[i:i + m])]
+            s += 0.09 + r2.random() * 0.13
+        bed = bed / (np.max(np.abs(bed)) or 1) * 0.85 * db(float(p.get('bedDb', -14)))  # peak bedDb under a full thump
+        out += bed * _frames_to_samples(p['bed'], len(t))
+    return fade(out, 0.0, 0.05)
+
+
+def g_ticks(c):
+    """Sensor ticks. With p.at (s from the cue start): one tick per bead at exactly those times (V3's tick: a 12 ms
+    2.8-6 kHz ping), level 0.5-0.9 seeded, or p.amp[i] when it is > 0 (the hero bead: 1). Without p.at it is V3's
+    g_ticks (random times at p.rate per second), bit for bit."""
+    p = c.get('p') or {}
+    if 'at' not in p:
+        return V3.g_ticks(c)
+    d = c['dur']
+    t = tg(d)
+    r = rng(c['id'])
+    out = np.zeros_like(t)
+    at = [float(a) for a in np.atleast_1d(p['at'])]
+    amps = [float(a) for a in np.atleast_1d(p.get('amp', [0.0] * len(at)))]
+    m = int(0.012 * SR)
+    tt = np.arange(m) / SR
+    for a, k in zip(at, amps):
+        f0 = 2800 + r.random() * 3200
+        lvl = 0.5 + 0.4 * r.random()
+        seg = np.sin(2 * np.pi * f0 * tt) * env(tt, 0.0004, 0.003) * (k if k > 0 else lvl)
+        i = int(round(a * SR))
+        out[i:i + m] += seg[:len(out[i:i + m])]
+    return out * 0.6
+
+
+def _rotor_bank(c, bpf, d):
+    """V3's rotor voice: four detuned 8-harmonic blade tones on a continuous phase, plus a blade-modulated hiss.
+    p.seed (optional) re-seeds the four start phases and the hiss: the detuned voices beat by several dB at ~3 Hz, and
+    the seed decides where the troughs fall (chosen so none lands on a picture cut; see sound4.ts rotorPath)."""
+    t = tg(d)
+    seed = (c.get('p') or {}).get('seed')
+    r = rng(c['id'] if seed is None else f"{c['id']}#{int(seed)}")
     out = np.zeros_like(t)
     for det in (0.97, 0.99, 1.01, 1.035):
         ph = 2 * np.pi * np.cumsum(bpf * det) / SR + r.random() * 6
@@ -294,7 +374,13 @@ def g_rotor(c):
         rate = np.maximum(_curve(p, 'rate', 1.0, n), 0)
         dist = np.maximum(_curve(p, 'dist', 1.0, n), 0.3)
         lvl = _curve(p, 'lvl', 0.0, n)
+        # radial speed from the per-frame distance: the linear interpolation makes its derivative piecewise constant
+        # (a pitch step at every frame boundary), so it is smoothed over p.dopplerSmooth s (Hann) before use
         vr = np.gradient(dist, 1 / SR) * float(p.get('doppler', 0))
+        ws = int(float(p.get('dopplerSmooth', 0)) * SR)
+        if ws > 1:
+            k = np.hanning(ws)
+            vr = np.convolve(np.concatenate([np.full(ws, vr[0]), vr, np.full(ws, vr[-1])]), k / k.sum(), mode='same')[ws:-ws]
         bpf = float(p.get('bpf', 140)) * rate * (343 / (343 + vr))
         t, tone, hiss = _rotor_bank(c, bpf, d)
         spd = np.clip(rate, 0, 1.2)
@@ -322,15 +408,21 @@ def g_rotor(c):
 
 
 GEN4 = dict(V3.GEN_FUN)
-GEN4.update(press=g_press, tpulse=g_tpulse, alarm1=g_alarm1, rotor=g_rotor)
+GEN4.update(press=g_press, tpulse=g_tpulse, alarm1=g_alarm1, rotor=g_rotor, fib=g_fib, ticks=g_ticks)
 NEW_KINDS = ('press', 'tpulse')
-EXTENDED = {'alarm1': ('low', 'att', 'ring'), 'rotor': ('curve', 'shape', 'tau', 'spin', 'bpf0', 'bpf1')}
+EXTENDED = {'alarm1': ('low', 'att', 'ring'), 'rotor': ('curve', 'shape', 'tau', 'spin', 'bpf0', 'bpf1'), 'fib': ('at',), 'ticks': ('at',)}
 
 
 def render4(c):
+    """A cue's mono signal and start time. p.polarity -1 inverts it (inaudible on its own; used where a cue's waveform
+    would otherwise add to a narration peak that V3's limiter held at the ceiling, so no de-peak is needed there)."""
     if c['kind'] == 'file':
-        return render_v3(c)
-    return GEN4[c['kind']](c), c['f'] / FPS
+        x, at = render_v3(c)
+    else:
+        x, at = GEN4[c['kind']](c), c['f'] / FPS
+    if float((c.get('p') or {}).get('polarity', 1)) < 0:
+        x = -x
+    return x, at
 
 
 # ------------------------------------------------------------------ placement (V3 place() plus pan curves and per-cue ducks)

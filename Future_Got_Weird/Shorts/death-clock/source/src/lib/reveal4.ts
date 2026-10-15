@@ -86,6 +86,9 @@ const traceA = (f: number) => (f < B.map0 ? ease(inv(B4.traceIn0, B4.traceIn1, f
 // in-out eases: the window emerges slowly from under the arm, opens, and slows again as it slides back under it
 const chestJourney = (f: number) => ease(inv(B4.chestOpen0, B4.chestOpen1, f)) * (1 - ease(inv(B4.chestClose0, B4.chestClose1, f)));
 const chestTreat = (f: number) => (f >= B4.chestCut ? 1 - ease(inv(B4.treatClose0, B4.treatClose1, f)) : 0);
+/** where the treatment pulse is along the visible vena cava (art/Heart4 SVC_PULSE, 0 = the window's top edge) on the
+ *  cut frame B4.chestCut */
+const SVC_T0 = 0.5;
 
 export const revealAt = (f: number): Reveal => {
   const heart = heartAt(f);
@@ -122,9 +125,11 @@ export const revealAt = (f: number): Reveal => {
   const pre = f < B4.chestCut;
   const armOpen = pre && f >= B.act0 + 4 ? ease(inv(B.act0 + 4, B.act0 + 16, f)) : 0;
   const chestOpen = chestTreat(f);
-  // it is already entering the window's top edge on the cut frame (the match with the vessel shot), decelerates a
-  // little and enters the right atrium at treatSvc1
-  const svc = f >= B4.chestCut && f <= B4.treatSvc1 + 1 ? {t: clamp(0.26 + 0.74 * inv(B4.chestCut, B4.treatSvc1, f)), a: 1 - clamp((f - B4.treatSvc1) / 2)} : undefined;
+  // it is already in the vena cava on the cut frame (the match with the vessel shot: V4 continuity, all but its tip
+  // inside the window's cut band there, where t 0.26 left half of it under the band), gathers speed from the slug's
+  // near-rest and enters the right atrium at treatSvc1
+  const svcU = inv(B4.chestCut, B4.treatSvc1, f);
+  const svc = f >= B4.chestCut && f <= B4.treatSvc1 + 1 ? {t: clamp(SVC_T0 + (1 - SVC_T0) * svcU * (0.4 + 0.6 * svcU)), a: 1 - clamp((f - B4.treatSvc1) / 2)} : undefined;
   // the cyan light: rises as the pulse enters the atrium, stays local, gone within 10 frames
   const lt = f - B4.treatSvc1;
   const lN = B4.treatLight1 - B4.treatSvc1; // 10 frames
