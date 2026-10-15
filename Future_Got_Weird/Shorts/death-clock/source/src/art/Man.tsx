@@ -529,16 +529,6 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
           })}
           {/* glossy sheen across the chest */}
           <ellipse cx={fmt(loc(j.C, tc, 96, -40).x)} cy={fmt(loc(j.C, tc, 96, -40).y)} rx={fmt(44 * s)} ry={fmt(16 * s)} transform={`rotate(${fmt(-tc - 30)} ${fmt(loc(j.C, tc, 96, -40).x)} ${fmt(loc(j.C, tc, 96, -40).y)})`} fill="#FFFFFF" opacity={0.35} />
-          {nearLegFront && (
-            // V4: the tee's hem where it lies over the raised near thigh (the edge of the hidden disc round the hip)
-            // runs on past the thigh's top contour as a fold line up to the tee's own outline, so the thigh ends at one
-            // continuous hem edge that the thigh passes under, not in a navy point on the stripes. Drawn here, under
-            // the thigh (which redraws its own part of it), the far forearm, the head and the near arm.
-            <g>
-              <circle cx={fmt(j.lLeg.hp.x)} cy={fmt(j.lLeg.hp.y)} r={fmt(96 * s + 4 * s)} fill="none" stroke="#2E4A66" strokeOpacity={0.14} strokeWidth={fmt(8 * s)} />
-              <circle cx={fmt(j.lLeg.hp.x)} cy={fmt(j.lLeg.hp.y)} r={fmt(96 * s)} fill="none" stroke={INK} strokeWidth={fmt(IN * 0.62)} />
-            </g>
-          )}
         </g>
         {/* neckline */}
         <InkLine d={`M${P(loc(j.C, tc, 146, -36))} Q${P(loc(j.C, tc, 128, 0))} ${P(loc(j.C, tc, 148, 32))}`} w={OUT * 0.7} />

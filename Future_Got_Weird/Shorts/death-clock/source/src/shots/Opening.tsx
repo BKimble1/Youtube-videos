@@ -44,8 +44,18 @@ export const COLLAPSE: SKey<ManPose>[] = [
   [56, {...PROP}, 'stop'],
 ];
 
+/** V4: after the hips meet the grass their height has its own keys, starting at rest. With one shared tangent the
+ *  'hit' arrival at 35 overshot about 17 units into the ground and rebounded, which kicked the elbow and the head. */
+const HIP_LANDED: [number, number, ('auto' | 'stop' | 'hit')?][] = [
+  [B.hipHit, COLLAPSE[4][1].y, 'stop'],
+  [39, COLLAPSE[5][1].y],
+  [45, COLLAPSE[6][1].y],
+  [56, PROP.y, 'stop'],
+];
+
 const collapseBody = (f: number): ManPose => {
   let m = splineRec(f, COLLAPSE);
+  if (f > B.hipHit) m = {...m, y: spline(f, HIP_LANDED)};
   // tremor while still up, and laboured breathing once down
   const up = 1 - inv(26, 36, f);
   const down = inv(40, 60, f);
