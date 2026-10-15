@@ -1,5 +1,116 @@
 # QA report: They Trained Robots to Destroy Themselves
 
+# V6 (checked 15 Oct 2026)
+
+Not published. Every figure below comes from the final files, using the scripts in `tools/v6/`:
+
+| Script | What it produces |
+|---|---|
+| `qa_v6.py` | Raw results in `qa/v6/qa_v6_results.json` |
+| `strips_v6.py` | 25-frame strips around each of the 32 transitions and contacts (`qa/v6/strips/`, times in `qa/v6/transitions_v6.json`) |
+| `compare_v6.py` | V5 vs V6 at the same timecodes for 14 problem spots in the brief (`qa/v6/compare/`) |
+| `phone_v6.py` | 42 text/detail moments at 390×219, the width of an iPhone in portrait (`qa/v6/phone/`) |
+| `speech_mask_v6.py` | Speech-masking check |
+
+**No real-time viewing or listening was possible in this environment.** Everything below is measurement and frame
+inspection.
+
+## Deliverables
+
+| File | Spec | Notes |
+|---|---|---|
+| `exports/FGW_RobotsDestroy_v6_UPLOAD_1080p.mp4` | H.264 High, **1920×1080**, 30 fps CFR (native, rendered from source), yuv420p, BT.709. 6,502 frames, 216.73 s. AAC-LC 48 kHz stereo at 285 kb/s. 86.8 MiB. SHA-256 `0caf39372b68e75686b9dcd11906c60f1cef80b9d485ba36f5a2acb3e51d7d10` | **Upload master.** CRF 16, x264 slow; the audio is the V6 mix encoded from the 48 kHz WAV. Backed up as five split parts in `backup/v6/`; the parts pass `sha256sum -c`, and the joined parts hash to the master |
+| `exports/FGW_RobotsDestroy_v6_1080p_SHARE.mp4` | 1920×1080, 30 fps, two-pass H.264 at 0.96 Mb/s, AAC 128 kb/s, 216.75 s, 28.5 MiB. SHA-256 `4291586be5450aa8a10ff6b3b7f1ae490167e66f368db166589aa748ab36bd36` | **Review/share copy, not for upload.** Made from the master |
+| `captions/FGW_RobotsDestroy_v6.srt` | 70 cues, at most 42 characters per line, no overlaps. First cue at 0.46 s; last ends at 214.60 s | Byte-identical to the V5 captions (the narration did not change) |
+
+Runtime: 3:36.7, the same as V5.
+
+## Picture (measured on the final master)
+
+| Check | Result |
+|---|---|
+| Scene detector (0.10) | 25 detections, as V5. Most are single moments, not edits: the material wipe at 0:02.8, the clap flash at 1:09.8, the dice at 2:32, the lights going out at 3:13, the logo |
+| Static holds ≥ 1.5 s (`freezedetect`) | Two: 1:01.0 for 4.9 s and 1:06.3 for 2.3 s. These are the phone post and the reply card held still while each is narrated; only the single highlight changes. They are deliberate (the brief asks for no breathing scale on readable text). V5 had one flag (0:34.5) |
+| Black (`blackdetect`, ≥ 0.1 s) | 0.57 s at 3:13.5: the aisle lights going out before the glow (intended) |
+| Exact duplicate consecutive frames | 49 frames. Runs longer than 2: 3 frames at 0:42.7 (the shutter fully closed between the edge shot and the street, intended) and 28 frames at 3:35.6 (the logo hold) |
+| Single-frame "pop" candidates | **none** |
+| Silences > 1 s | none |
+| Audio offset against the mix | 0.0 ms |
+| Planted-foot slide (rig, frame by frame) | ≤ 1.35 world units/frame on every measured robot walk, stance and landing: Imatra, options, factory fleet, airbag hall, prove aisle, end silhouette, all four training attempts, the baseline variation round. The first V6 master had a 24-unit pop on the arriving F.03's planted foot at 0:17.9 (at the stop-step hand-over); it was fixed and the master re-rendered |
+
+## Audio (measured, not heard)
+
+- **Loudness:** integrated −15.0 LUFS, true peak −1.5 dBTP, LRA 2.4 LU.
+- **Narration:** unchanged from V5 (no trims were needed).
+- **Cue sheet:** 269 cues in `source/src/v6/sfx_v6.ts`, re-timed to the V6 events (`audio/v6/sfx_cues_v6.json`).
+- **Score:** regenerated against the V6 event times; the ending's resolution now lands on the "10" cards, because the
+  second (symbolic) landing was removed.
+- **Masking (`audio/v6/mix/speech_mask_v6.txt`):** 115 of 3,533 speech windows have effects and beds within 6 dB of the
+  voice (V5: 113). No window has effects more than 1.5 dB above a voice louder than −33 dB; the one found in the first
+  mix (the options scrap splash at 0:38.3) was lowered by 3 dB.
+
+## Visual review performed (V6)
+
+- **Development rounds:** stills for every changed shot in `qa/v6/*_r*/`, each fix re-checked before moving on.
+- **Full quarter-scale draft:** every section at 2 frames/s (contact sheets, scratch only), before the master render.
+- **Transition and contact strips (32), frame by frame:** opening material wipe, splash, rewinds, crate wipe, the
+  shutter to the street, the card lifting off the phone, the slate, through the monitor, foot → sim, stage → grid,
+  dive, split pose match, reflex tap, sim → real, dice, airbag dent, airbag → deck, monitors losing their picture,
+  ripple → target, truck out of the set, lights out, ending rewind, final entry, glow → logo.
+- **V5 vs V6 (`qa/v6/compare/`):** the banner across the robot's head at 1:33–1:37 is gone (corner label); the
+  PARAPHRASED pill no longer floats above the reply; the reply card no longer doubles during the flip; the policy lines
+  no longer cross the body; the mallet no longer swings through the leg; the second blue-avatar jump is gone.
+- **Phone size (`qa/v6/phone/`):** every caption, chip, card and label was checked at 390 px wide. After the first
+  pass, "Training illustration", the policy labels and the variations qualification were enlarged and re-rendered.
+
+## Acceptance criteria (brief §3)
+
+1. **No face or essential gesture covered or cropped.** Met as far as frames show: the training banner is gone, every
+   jump camera holds the head and the hand tips (framing guards), and the crew are kept inside the frame.
+2. **No accidental intersections, skating, detached props, unclear resets or duplicated whole scenes.** Robot feet are
+   measured (above). Props have one owner at a time: the wrench, sign, actuator, clipboard, report, target and slate.
+   Every reset clears its trail and shows ◀◀. The whole-room crossfade in the limits section is gone. Crew feet are
+   not measured (see below).
+3. **Readable push-off, continuous flight, synchronised contact.** Every jump uses the same ballistic rig. The contacts
+   (splash, landing, airbag dent) land on their event frames, and the sounds are cued from those times.
+4. **Text tied to the correct card or scene, readable when needed.** PARAPHRASED is clipped with its card. The reply
+   names the post it answers. The qualifications sit on their own scenes, and the phone-size check passed after the
+   labels were enlarged.
+5. **Repeated-loop feeling reduced.** Factory: one cycle, then the reveal. Failed attempt: close evidence views instead
+   of a held crouch. Variations: a baseline round and changes on cue. Ending: one rewind and one final jump.
+6. **The closing action resolves once.** One final jump and splash, the "10" cards, then the logo; nothing after the
+   payoff.
+7. **Factual distinctions, voice, identity and V5 improvements preserved.** The narration, captions, upload text,
+   designs, chest marks, Crew and palette are unchanged.
+
+## Unresolved defects and limits (honest list)
+
+1. **No real-time playback or listening here.** Motion feel, comic timing and the mix were judged from frames and
+   measurements. Rim-light stability at normal speed was judged from consecutive frames only.
+2. **Phone post holds.** The post card is still for 4.9 s and the reply card for 2.3 s (the freezedetect flags above).
+   Both are covered by narration, and the highlight is the only change. If they feel static at full speed, the fix is a
+   slow one-way push, not a breathing scale.
+3. **Crew animation remains a cutout rig.** The technician and the crate pusher slide with a two-beat bob rather than
+   doing full walk cycles. Crew feet are not measured by the rig check, which covers robots only.
+4. **The director's business-case grip** is a hand drawn over the end of his arm in screen space, aligned to the
+   computed hand position. It reads correctly in stills but is not part of his rig.
+5. **The splash is stylised:** a crown polygon and ballistic droplets, not a fluid simulation.
+6. **Every-frame inspection** covered the 32 strips. Elsewhere the review used stills and 2 fps contact sheets.
+7. **The F.02/F.03 drawings** are still not compared with official photos (unchanged from V4/V5).
+8. **Repository size.** The first V6 master's backup parts (commit `7de6199`) remain in Git history after the
+   re-render; the current parts in `backup/v6/` are the final master's.
+9. **The share copy** is compressed (0.96 Mb/s); fine lines are softer than in the master.
+
+## Human review list (in order)
+
+1. **Full watch with sound at 100 %.** In particular: 0:00–0:07, 0:20–0:49, 0:58–1:12, 1:24–2:20, 2:47–2:58 and
+   3:13–3:36.7.
+2. **The phone post (1:00–1:09).** Confirm the still reading hold feels right.
+3. **The ending.** Confirm the single final jump plus the "10" cards resolves the story without the symbolic avatar.
+4. **Trademark comfort,** as before. The credit line is in `upload/UPLOAD_TEXT_v6.md`.
+
+---
+
 # V5 (checked 15 Oct 2026)
 
 Not published. Every figure below comes from the files themselves, using the scripts in `tools/v5/`:

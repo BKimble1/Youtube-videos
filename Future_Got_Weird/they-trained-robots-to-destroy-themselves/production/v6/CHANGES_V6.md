@@ -114,4 +114,14 @@ end silhouettes.
 
 ## Unresolved defects and limits
 
-See `QA_REPORT.md` (V6 section) for the measured checks and the final list.
+1. No real-time viewing or listening in this environment. Motion feel and the mix were judged from frames and
+   measurements only.
+2. The phone post (4.9 s) and the reply card (2.3 s) are held still while narrated; only the highlight changes.
+3. The crew are cutout rigs: their steps slide with a bob, and the rig check does not measure their feet.
+4. The director's grip on the business case is a hand overlay aligned to his computed hand position.
+5. The splash is stylised (a crown polygon and droplets).
+6. Frame-by-frame inspection covered the 32 transition and contact strips; elsewhere the review used stills and
+   contact sheets.
+7. The robot drawings are still not compared with official photos.
+
+Measured results and the acceptance-criteria check are in `QA_REPORT.md` (V6 section).
