@@ -86,11 +86,12 @@ export const Captions: React.FC<{f: number}> = ({f}) => {
 };
 
 /** The one brief genre cue: plain small text, no box, dot or pill. */
-export const CUE = {from: 4, to: 44, text: 'FICTIONAL FUTURE DEVICE'};
+export const CUE = {from: 8, to: 44, text: 'FICTIONAL FUTURE DEVICE'};
 export const FictionCue: React.FC<{f: number}> = ({f}) => {
-  // V4: the fade-in is eased (cubic), so it is still faint (<= 0.22) over the end close-up's sleeve until the cut to the
-  // wide at 8 and full by 9; same frames (4-44), same fade-out
-  const a = clamp(inv(CUE.from, CUE.from + 5, f)) ** 3 * (1 - clamp(inv(CUE.to - 7, CUE.to, f)));
+  // V4: the cue starts on the cut to the wide (8), never over the close-up's sleeve, and eases in and out of its fade
+  // (smoothstep 0.16, 0.5, 0.84, 1 over 8-11), so nothing straddles the cut or pops after it; same fade-out by 44
+  const s = clamp(inv(CUE.from - 1, CUE.from + 3, f));
+  const a = (f >= CUE.from ? s * s * (3 - 2 * s) : 0) * (1 - clamp(inv(CUE.to - 7, CUE.to, f)));
   if (a <= 0) return null;
   return (
     <g opacity={a}>

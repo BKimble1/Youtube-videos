@@ -41,9 +41,14 @@ const Mono: React.FC<{text: string; x: number; y: number; size: number; cell: nu
 };
 
 /** ECG-style trace (a UI mark, not an outline). irregular 0..1 breaks the rhythm. */
-const trace = (f: number, w: number, amp: number, irregular: number) => {
+export const trace = (f: number, w: number, amp: number, irregular: number) => {
   const pts: string[] = [];
-  const n = 90;
+  // V4: 270 samples over the 3 beats (90 per beat). At 30 per beat the R window (4% of a beat) held about 1.2 samples,
+  // so on some frames no sample landed in it and the spike blinked out (1339, 1344). The irregular wobble is still
+  // evaluated on the old 90-sample grid and interpolated, so the trace keeps its V3 character
+  const n = 270;
+  const N0 = 90;
+  const wob = (j: number) => Math.sin(j * 1.7 + f * 0.4);
   for (let i = 0; i <= n; i++) {
     const x = -w / 2 + (w * i) / n;
     const ph = (i / n) * 3 + f * 0.035;
@@ -55,7 +60,9 @@ const trace = (f: number, w: number, amp: number, irregular: number) => {
     else if (kk >= 0.46 && kk < 0.5) y = amp * (1 + irregular * 0.6 * jitter);
     else if (kk >= 0.5 && kk < 0.54) y = -amp * 0.5;
     else if (kk > 0.66 && kk < 0.76) y = amp * 0.18 * Math.sin(((kk - 0.66) / 0.1) * Math.PI);
-    y += irregular * Math.sin(i * 1.7 + f * 0.4) * amp * 0.12;
+    const j = (i * N0) / n;
+    const j0 = Math.floor(j);
+    y += irregular * (wob(j0) + (wob(j0 + 1) - wob(j0)) * (j - j0)) * amp * 0.12;
     pts.push(`${fmt(x)},${fmt(-y)}`);
   }
   return pts.join(' ');
