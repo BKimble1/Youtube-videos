@@ -1,6 +1,31 @@
 # Asset and provenance manifest: The Death Clock
 
-## V3 (current)
+## V4 (current)
+
+V4 is a focused polish of V3: same narration recording, captions, story, length (45.000 s, 1350 frames, 30 fps) and fictional premise. This table lists what changed for V4 and where each element comes from. The V3, V2 and V1 manifests follow unchanged below.
+
+| Element | Source | New / reused |
+|---|---|---|
+| Director's spec | `script/V4_DESIGN.md` (locks and decisions for every area) | New |
+| Leash | `source/src/art/Leash.tsx`: collar ring, slack hang, touchdown, cord lying on the grass, released handle loop with a contact shadow. It is drawn once in `shots/Scene.tsx` between the dog and the man and is never attached to him | New |
+| Rig | `art/Man.tsx`: soft IK with planted hand and feet, planted-hand angle locked in world space, sleeve top and waist creases redrawn. `shots/Opening.tsx`: hip landing without overshoot | Changed |
+| Band | `art/Device.tsx`: compact case geometry shared by every view (front, side, underside), port, shutter, actuator, contact shadow, the alarm ring drawn concentric with the glass. `art/Watch.tsx`: denser ECG trace. `lib/device3.ts`: one periodic alarm state in loop time; the compressed countdown span ends before the band is in picture | Changed |
+| Inside the arm, treatment | `art/Interior.tsx`: sensor port mechanism, skin dimple, the sensor stream, the treatment channel and pulse in the vessel. `shots/Journey3.tsx` (sensor shot), `shots/Aftermath3.tsx` (treatment chain). The hand fades into the section backdrop (`shots/Scene.tsx`, HandVeil) | Changed |
+| Arm and chest reveals | `art/Cutaway.tsx` (a separate chest window on the front thorax), `art/Heart4.tsx` and `lib/heart4.ts` (heart between the lungs, irregular-to-regular beat), `lib/reveal4.ts` (one authority: the arm and chest reveals never overlap) | New |
+| Dispatch | `shots/Dispatch.tsx`: map beacon into the dock beacon, continuous approach to the rooftop, latch / spin-up / lift / travel order, matched rooftop-to-neighbourhood cut, trunk wipe. Arrival and hover clear of his head in `shots/Aftermath3.tsx` | Changed |
+| Timing | `lib/timeline3.ts` (V3 word times, unchanged); V4 keys in `lib/beats4.ts` | New keys |
+| Captions, opening cue | Unchanged design and timing (`shots/Overlay.tsx`, `lib/captions.ts`). The cue moved to the upper right and starts on the cut at frame 8. Collisions checked by `scripts/check_captions4.ts` | Reused |
+| Narration | The V3 recording, reused byte for byte (sha256 `795c856e...77ab`). No new voice generation | Reused |
+| Music | The V3 music stem, reused byte for byte (sha256 `3d64640f...38d9`) | Reused |
+| Effects | `tools/build_audio_v4.py`, from `audio/v4/cues.json` (exported from `source/src/lib/sound4.ts`, keyed to the picture). The V3 generators plus a soft contact press, a restrained treatment pulse, a rotor model with continuous phase, a latch and shaped spin-up, the alarm in loop time and sensor-bead ticks. The V1 ElevenLabs clips are reused (`audio/sfx/gen/`). The mix is the exact sum of the three stems under V3's gain envelope, with no new limiter or re-normalisation | New bus, reused clips |
+| Export and QA tools | `tools/export_v4.py`, `tools/seam_check_v4.py`, `tools/qa_audio_v4.py`, `tools/qa_sheets.py`, `tools/motion_scan.py`, `source/scripts/check_device3.ts`, `source/scripts/check_captions4.ts` | New / extended |
+| Runway | Not used | n/a |
+
+V4 credits spent: none. No ElevenLabs or Runway generation was made for V4.
+
+---
+
+## V3
 
 What changed for V3, and where every V3 element comes from. The V2 and V1 manifests follow unchanged below.
 
