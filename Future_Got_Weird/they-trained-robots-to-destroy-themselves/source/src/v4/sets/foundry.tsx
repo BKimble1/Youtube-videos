@@ -22,7 +22,7 @@ const E = (cx: number, cy: number, rx: number, ry: number) => `M${cx - rx} ${cy}
 const halfE = (cx: number, cy: number, rx: number, ry: number, front: boolean) => `M${cx - rx} ${cy}A${rx} ${ry} 0 0 ${front ? 0 : 1} ${cx + rx} ${cy}`;
 
 /** The back of the building (draw in a parallax layer ~0.55). */
-export const FoundryBack: React.FC<{lw: number; t: number; lights?: number}> = ({lw, t, lights = 1}) => {
+export const FoundryBack: React.FC<{lw: number; t: number; lights?: number; hook?: boolean}> = ({lw, t, lights = 1, hook = true}) => {
   const els: React.ReactNode[] = [];
   els.push(<rect key="bg" x={-3000} y={-1500} width={7000} height={4000} fill={FCOL.wall} />);
   for (let i = -6; i <= 12; i++) {
@@ -51,8 +51,8 @@ export const FoundryBack: React.FC<{lw: number; t: number; lights?: number}> = (
   els.push(<rect key="gird" x={-1600} y={60} width={4400} height={70} fill={FCOL.col} stroke={FCOL.ink} strokeWidth={lw} />);
   for (let i = -15; i < 28; i++) els.push(<path key={'gx' + i} d={`M${i * 100} 64 L${i * 100 + 50} 126 L${i * 100 + 100} 64`} fill="none" stroke={FCOL.ink} strokeWidth={lw * 0.7} opacity={0.6} />);
   els.push(<rect key="trol" x={430} y={128} width={170} height={60} rx={6} fill="#4F5562" stroke={FCOL.ink} strokeWidth={lw} />);
-  els.push(<line key="cable" x1={515} y1={188} x2={515} y2={300} stroke={FCOL.ink} strokeWidth={lw * 1.2} />);
-  els.push(<path key="hook" d="M500 300 h30 v20 q0 30 -22 30 q-20 0 -20 -18" fill="none" stroke={FCOL.ink} strokeWidth={lw * 2} strokeLinecap="round" />);
+  if (hook) els.push(<line key="cable" x1={515} y1={188} x2={515} y2={300} stroke={FCOL.ink} strokeWidth={lw * 1.2} />);
+  if (hook) els.push(<path key="hook" d="M500 300 h30 v20 q0 30 -22 30 q-20 0 -20 -18" fill="none" stroke={FCOL.ink} strokeWidth={lw * 2} strokeLinecap="round" />);
   // floor
   els.push(<rect key="floor" x={-3000} y={FD.floor} width={7000} height={1200} fill="#251C21" />);
   els.push(<line key="fl" x1={-3000} y1={FD.floor} x2={4000} y2={FD.floor} stroke={FCOL.ink} strokeWidth={lw} />);

@@ -2,7 +2,7 @@
 // wrappers (constant ink width at any zoom), chips and labels in screen space.
 import React from 'react';
 import {Robot2D, RPose, RobotProps} from '../rig/Robot2D';
-import {Character, Look, Pose as CPose} from '../../components/Character';
+import {Character, Look, Pose as CPose, Arm as CArm, reach, handWorld} from '../../components/Character';
 import {C, F} from '../../theme';
 
 export type Cam = {x: number; y: number; z: number; rot?: number};
@@ -81,6 +81,15 @@ export const Crew: React.FC<{look: Look; pose: CPose; x: number; y: number; h?: 
       </g>
     );
   };
+
+/** Arm angles that put a crew member's hand on a world point (handles `flip`). */
+export const crewReach = (c: {x: number; y: number; h: number; flip?: boolean}, side: -1 | 1, wx: number, wy: number, elbow: 1 | -1 = 1): CArm =>
+  reach({x: c.x, y: c.y, scale: c.h / 440}, side, c.flip ? 2 * c.x - wx : wx, wy, elbow);
+/** World position of a crew member's hand for an arm pose. */
+export const crewHand = (c: {x: number; y: number; h: number; flip?: boolean}, arm: CArm, side: -1 | 1) => {
+  const p = handWorld({x: c.x, y: c.y, scale: c.h / 440}, arm, side);
+  return {x: c.flip ? 2 * c.x - p.x : p.x, y: p.y};
+};
 
 export {Robot2D};
 export type {RPose};

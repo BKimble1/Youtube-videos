@@ -4,12 +4,12 @@ import {Cam, Layer} from '../kit/scene';
 import {FoundryBack, Deck, LadleBack, LadleFront, HeatGlow, Embers, Booth, Disturb, FD} from './foundry';
 import {StageBack, Tower, Pad} from './stage';
 
-export const FoundryView: React.FC<{cam: Cam; t: number; hit?: Disturb; scar?: number; behind?: React.ReactNode; inside?: React.ReactNode; front?: React.ReactNode; booth?: React.ReactNode; deck?: boolean; glow?: number; lights?: number; extraBack?: React.ReactNode}> =
-  ({cam, t, hit, scar, behind, inside, front, booth, deck = true, glow = 1, lights = 1, extraBack}) => {
+export const FoundryView: React.FC<{cam: Cam; t: number; hit?: Disturb; scar?: number; behind?: React.ReactNode; inside?: React.ReactNode; front?: React.ReactNode; booth?: React.ReactNode; deck?: boolean; glow?: number; lights?: number; extraBack?: React.ReactNode; hook?: boolean}> =
+  ({cam, t, hit, scar, behind, inside, front, booth, deck = true, glow = 1, lights = 1, extraBack, hook = true}) => {
     const lw = 4 / cam.z;
     return (
       <g>
-        <Layer cam={cam} p={0.6}><FoundryBack lw={4 / (1 + (cam.z - 1) * 0.6)} t={t} lights={lights} /></Layer>
+        <Layer cam={cam} p={0.6}><FoundryBack lw={4 / (1 + (cam.z - 1) * 0.6)} t={t} lights={lights} hook={hook} /></Layer>
         <Layer cam={cam}>
           {extraBack}
           {booth !== undefined ? <Booth lw={lw}>{booth}</Booth> : null}

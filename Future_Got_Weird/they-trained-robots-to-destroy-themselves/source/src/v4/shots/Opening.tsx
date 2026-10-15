@@ -4,7 +4,7 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {T, blockStart} from '../../v3/cues';
-import {Cam, Scene, Layer, Bot, Crew, Chip, mixCam, seg, smooth, easeInOut, easeOut, keys, toScreen, lerp} from '../kit/scene';
+import {Cam, Scene, Layer, Bot, Crew, Chip, mixCam, seg, smooth, easeInOut, easeOut, easeIn, keys, toScreen, lerp} from '../kit/scene';
 import {FoundryView, StageView, FD} from '../sets/views';
 import {Splash} from '../sets/foundry';
 import {Arc} from '../sets/stage';
@@ -33,7 +33,7 @@ export const JUMP1 = makeJump({
   rate: [[0.38, 1], [0.6, 1], [1.0, 0.3], [2.5, 0.3], [2.9, 1], [T_IN, 1]],
 });
 /** Wide composition shared by the opening shot and the training stage. */
-export const CAM_WIDE: Cam = {x: 560, y: 470, z: 1.35};
+export const CAM_WIDE: Cam = {x: 600, y: 428, z: 1.26};
 const CAM_ENTRY: Cam = {x: 720, y: 660, z: 1.62};
 const CAM_BOOTH: Cam = {x: 1080, y: 560, z: 0.9};
 const CAM_RING: Cam = {x: ENTRY_X, y: FD.ladle.surf, z: 3.0};
@@ -78,9 +78,9 @@ export const Opening: React.FC = () => {
   // ------------------------------------------------ foundry
   let cam: Cam;
   if (tau < T_IN) {
-    // one viewpoint and one composition: subject, arc and destination stay in frame; the camera only eases toward the
-    // entry point in the second half of the flight
-    cam = mixCam(CAM_WIDE, CAM_ENTRY, easeInOut(seg(tau, 1.6, T_IN)));
+    // one viewpoint and one composition: subject, arc and destination stay in frame (raised hands at the apex included);
+    // the camera only starts toward the entry point once the robot is falling
+    cam = mixCam(CAM_WIDE, CAM_ENTRY, easeIn(seg(tau, 2.5, T_IN)));
   }
   else if (tau < T_FIG) cam = mixCam(CAM_ENTRY, {x: ENTRY_X, y: 690, z: 1.75}, easeOut(seg(tau, T_IN, T_FIG)));
   else if (tau < T_WHY) cam = mixCam({x: ENTRY_X, y: 690, z: 1.75}, CAM_BOOTH, easeInOut(seg(tau, T_FIG, T_FIG + 1.4)));

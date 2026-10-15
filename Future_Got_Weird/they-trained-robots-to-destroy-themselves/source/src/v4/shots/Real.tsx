@@ -27,7 +27,7 @@ const T_NEVER = T('And Figure says this jump') - 0.1;
 /** The stable side view shared by Train's end and R1/R2. */
 export const SIDE_S = 0.78;
 export const SIDE_X = 120;
-export const CAM_SIDE: Cam = {x: 210, y: 360, z: 1.48};
+export const CAM_SIDE: Cam = {x: 170, y: 320, z: 1.6};
 export const sidePose = (o: Partial<RPose> = {}): RPose => stand(SIDE_X, FD.deck.top, SIDE_S, {yaw: 0.8, armN: A(4, 14, {grip: 0.3}), armF: A(-4, 16, {grip: 0.3}), ...o});
 
 const robust = (tau: number) => {

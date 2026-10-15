@@ -4,12 +4,14 @@ import {AbsoluteFill, Audio, Sequence, staticFile} from 'remotion';
 import {NARR_END} from '../v3/cues';
 import {Opening, OPEN_END} from './shots/Opening';
 import {Why, WHY_END} from './shots/Why';
+import {Film, FILM_START, FILM_END} from './shots/Film';
 import {Real, REAL_START, REAL_END} from './shots/Real';
 
 export const MAIN_V4_FRAMES = Math.round((NARR_END + 2.95) * 30);
 export const SECTIONS_V4: {id: string; start: number; end: number; C: React.FC}[] = [
   {id: 'open', start: 0, end: OPEN_END, C: Opening},
   {id: 'why', start: OPEN_END, end: WHY_END, C: Why},
+  {id: 'film', start: FILM_START, end: FILM_END, C: Film},
   {id: 'real', start: REAL_START, end: REAL_END, C: Real},
 ];
 
