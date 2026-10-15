@@ -25,20 +25,20 @@
    "f1": 18,
    "item": "shoeR",
    "caption": "This device",
-   "minGap": -15.8,
+   "minGap": -38.5,
    "maxAlpha": 1
   },
   {
-   "f0": 18,
+   "f0": 16,
    "f1": 18,
    "item": "shoeL",
    "caption": "This device",
-   "minGap": 22.1,
-   "maxAlpha": 0.5
+   "minGap": 13.9,
+   "maxAlpha": 1
   },
   {
    "f0": 20,
-   "f1": 36,
+   "f1": 35,
    "item": "shoeL",
    "caption": "tells you exactly",
    "minGap": -74,
@@ -46,7 +46,7 @@
   },
   {
    "f0": 20,
-   "f1": 35,
+   "f1": 34,
    "item": "shoeR",
    "caption": "tells you exactly",
    "minGap": -74,
