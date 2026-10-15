@@ -136,15 +136,20 @@ export const ScreenUI: React.FC<{id: string; s: ScreenState; rot?: number}> = ({
   const crimson = PAL.alert;
   const stab = s.stab;
   const rec = s.recover;
-  // sequential blends: each later state fully replaces the earlier one (no red left under the recovery)
-  const top = mix(mix(mix(BG.green[0], BG.red[0], s.red), BG.blue[0], stab), BG.rec[0], rec);
-  const bot = mix(mix(mix(BG.green[1], BG.red[1], s.red), BG.blue[1], stab), BG.rec[1], rec);
+  // sequential blends: each later state fully replaces the earlier one (no red left under the recovery).
+  // V4: the held state stays red (steady, not flashing; cyan border and label), so "green replaces red" is literal
+  const HELD_BLUE = 0;
+  const top = mix(mix(mix(BG.green[0], BG.red[0], s.red), BG.blue[0], stab * HELD_BLUE), BG.rec[0], rec);
+  const bot = mix(mix(mix(BG.green[1], BG.red[1], s.red), BG.blue[1], stab * HELD_BLUE), BG.rec[1], rec);
   const flash = s.red * (1 - stab) * (0.5 + 0.5 * Math.cos(s.flash * Math.PI * 2));
   const scanY = -SH / 2 + ((s.f * 4) % SH);
   const showGreen = (1 - s.red) * (1 - rec);
-  const showRed = s.red * (1 - rec);
+  // V4: green replaces red as a wipe up the glass (no dissolve, no ghost digits under the new readout)
+  const wiping = rec > 0.001 && rec < 0.999;
+  const wipeY = SH / 2 + 12 - (SH + 24) * rec;
+  const showRed = wiping ? s.red : s.red * (1 - rec);
   const diag = s.diag ?? 0;
-  const timerCol = mix('#FFFFFF', '#CFF4FF', stab);
+  const timerCol = '#FFFFFF';
   return (
     <g>
       <defs>
@@ -174,8 +179,18 @@ export const ScreenUI: React.FC<{id: string; s: ScreenState; rot?: number}> = ({
       )}
       {s.edge > 0.01 && <rect x={-SW / 2} y={-SH / 2} width={SW} height={SH} fill={`url(#${id}-edge)`} opacity={s.edge * (0.6 + 0.4 * Math.sin(s.f * 0.5))} />}
       {/* crimson countdown; blue when the treatment holds it */}
+      {wiping && (
+        <defs>
+          <clipPath id={`${id}-wr`}>
+            <rect x={-SW} y={-SH * 1.5} width={SW * 2} height={f2(wipeY + SH * 1.5)} />
+          </clipPath>
+          <clipPath id={`${id}-wg`}>
+            <rect x={-SW} y={f2(wipeY)} width={SW * 2} height={SH * 2} />
+          </clipPath>
+        </defs>
+      )}
       {showRed > 0.01 && (
-        <g opacity={showRed}>
+        <g opacity={showRed} clipPath={wiping ? `url(#${id}-wr)` : undefined}>
           <rect x={-SW / 2 + 6} y={-SH / 2 + 6} width={SW - 12} height={SH - 12} rx={16} fill="none" stroke={mix(lit(crimson, 0.25), PAL.signal, Math.max(stab, s.alert * 0.6))} strokeWidth={5} opacity={0.3 + 0.6 * Math.max(flash, stab * 0.8)} />
           {s.secs === null && (
             <text x={0} y={16} textAnchor="middle" fontFamily={UI_FONT} fontWeight={800} fontSize={40} letterSpacing={4} fill="#FFD6D9" opacity={0.6 + 0.4 * Math.sin(s.f * 0.7)}>
@@ -220,8 +235,9 @@ export const ScreenUI: React.FC<{id: string; s: ScreenState; rot?: number}> = ({
       {/* the state change into stabilizing: one blue sweep across the glass */}
       {stab > 0.01 && stab < 0.99 && <rect x={-SW / 2 + (SW + 60) * stab - 60} y={-SH / 2} width={60} height={SH} fill="#BFF3FF" opacity={0.35 * Math.sin(stab * Math.PI)} />}
       {/* green recovery readout: exactly "Life Expectancy: 42 Years" */}
+      {wiping && <rect x={-SW / 2} y={f2(wipeY - 2)} width={SW} height={4} fill={lit(green, 0.5)} opacity={0.7} />}
       {rec > 0.01 && (
-        <g opacity={rec * (1 - clamp(s.glitch * 1.4))}>
+        <g opacity={(wiping ? 1 : rec) * (1 - clamp(s.glitch * 1.4))} clipPath={wiping ? `url(#${id}-wg)` : undefined}>
           <rect x={-SW / 2 + 6} y={-SH / 2 + 6} width={SW - 12} height={SH - 12} rx={16} fill="none" stroke={lit(green, 0.35)} strokeWidth={4} opacity={0.7} />
           <text x={0} y={-34} textAnchor="middle" fontFamily={UI_FONT} fontWeight={700} fontSize={36} letterSpacing={0.5} fill={lit(green, 0.6)}>
             Life Expectancy:
