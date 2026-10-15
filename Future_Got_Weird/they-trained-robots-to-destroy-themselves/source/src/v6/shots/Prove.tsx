@@ -10,7 +10,8 @@ import {useCurrentFrame} from 'remotion';
 import {T} from '../cues';
 import {Cam, Layer, Bot, mixCam, seg, smooth, easeInOut, easeOut, backOut, lerp, toScreen, rnd} from '../../v4/kit/scene';
 import {FoundryView5, FD} from '../sets/foundry5';
-import {Splash, FCOL} from '../../v4/sets/foundry';
+import {FCOL} from '../../v4/sets/foundry';
+import {Splash6} from '../sets/splash6';
 import {Arc, TGT_X} from '../../v4/sets/stage';
 import {FilmLight, TripodCam, Mark} from '../../v4/sets/props';
 import {BayBack, BCOL} from '../../v4/sets/bay';
@@ -73,8 +74,10 @@ const SetWorld: React.FC<{t: number; f: number; cam: Cam}> = ({t, f, cam}) => {
   const arcPulse = Math.max(0, 1 - Math.abs(t - T_ONEMOVE - 0.2) / 0.5);
   const ringIn = backOut(seg(t, T_WHAT + 0.15, T_WHAT + 0.55), 1.6);
   const ringPulse = Math.max(0, 1 - Math.abs(t - T_ONETGT - 0.25) / 0.45);
-  const ghosts = [0.18, 0.5, 0.82];
-  const ghostK = (i: number) => seg(t, T_ONEMOVE - 0.05 + i * 0.1, T_ONEMOVE + 0.15 + i * 0.1) * (1 - seg(t, T_PREP - 0.3, T_PREP + 0.1));
+  // V6: ONE ghost travels the path once on "one movement" (no stacked copies), then clears
+  const G0 = T_ONEMOVE - 0.1, G1 = G0 + 1.1;
+  const ghostK = seg(t, G0, G0 + 0.15) * (1 - seg(t, G1 - 0.2, G1));
+  const ghostPose = J.pose(lerp(J.tTO - 0.1, J.tEnd - 0.08, easeInOut(seg(t, G0, G1 - 0.15)))).pose;
   const tape = easeOut(seg(t, T_PREP - 0.05, T_PREP + 0.55));
   const radio = smooth(seg(t, T_SUPER - 0.15, T_SUPER + 0.3));
   const tick = Math.sin(Math.PI * seg(t, T_SUPER, T_SUPER + 0.5));
@@ -93,16 +96,13 @@ const SetWorld: React.FC<{t: number; f: number; cam: Cam}> = ({t, f, cam}) => {
       behind={(
         <g>
           <Arc pts={[...J.arc()].reverse()} k={arcK} lw={lw} color={C.teal} width={3 + 2 * arcPulse} />
-          {ghosts.map((u, i) => {
-            const k = ghostK(i);
-            return k > 0.01 ? <g key={i} opacity={0.5 * k}><Bot cam={cam} id={'pvg' + i} model="SIM" s={S} pose={J.pose(J.tTO + u * J.T).pose} /></g> : null;
-          })}
+          {ghostK > 0.01 ? <g opacity={0.6 * ghostK}><Bot cam={cam} id="pvg" model="SIM" s={S} pose={ghostPose} /></g> : null}
         </g>
       )}
       inside={(
         <>
-          <Splash x={TGT_X} t={tHit} lw={lw} part="back" scale={1.1} />
-          <Splash x={TGT_X} t={tHit} lw={lw} part="front" scale={1.1} />
+          <Splash6 x={TGT_X} t={tHit} lw={lw} part="back" scale={1.1} />
+          <Splash6 x={TGT_X} t={tHit} lw={lw} part="front" scale={1.1} />
           {ringIn > 0.01 ? (
             <g transform={`translate(${TGT_X} ${SURF}) scale(${ringIn * (1 + 0.18 * ringPulse)}) translate(${-TGT_X} ${-SURF})`}>
               {ring(92, 4 + 2 * ringPulse, lw, 'a')}{ring(46, 3.2 + 1.5 * ringPulse, lw, 'b')}
@@ -185,11 +185,10 @@ export const Aisle: React.FC<{t: number; cam: Cam; children?: React.ReactNode; d
 const AisleActors: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const lw = 4 / cam.z;
   const offer = seg(t, T_WORK + 0.05, T_WORK + 0.45) * (1 - seg(t, PROVE_END - 0.4, PROVE_END - 0.08));
-  const flick = rnd(Math.floor(t * 12)) > 0.35 ? 1 : 0.3;
   return (
     <g>
       {offer > 0 ? (
-        <g opacity={0.85 * offer * flick}>
+        <g opacity={0.85 * offer}>
           <ellipse cx={RING_X} cy={G} rx={92} ry={18} fill="none" stroke={C.teal} strokeWidth={lw * 3.4} />
           <ellipse cx={RING_X} cy={G} rx={44} ry={9} fill="none" stroke={C.teal} strokeWidth={lw * 2.6} />
         </g>
@@ -226,7 +225,6 @@ export const Prove: React.FC = () => {
   const showAisle = seamX < 1930;
   const q = backOut(seg(t, T_WORK + 0.2, T_WORK + 0.5), 1.7) * (1 - easeOut(seg(t, PROVE_END - 0.4, PROVE_END - 0.08)));
   const qs = toScreen(camF, SPILL_X + 280, G - 210);
-  const heat = seg(t, PROVE_START, PROVE_START + 0.2) * (1 - seg(t, T_PAN0, T_PAN0 + 0.4));
   void lw; void F; void FCOL;
   return (
     <div style={{position: 'absolute', inset: 0, background: '#221A21', overflow: 'hidden'}}>
@@ -247,14 +245,6 @@ export const Prove: React.FC = () => {
         <div style={{position: 'absolute', inset: 0, clipPath: `inset(0 ${Math.max(0, 1920 - seamX)}px 0 0)`}}>
           <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0, background: '#221A21'}}>
             <SetWorld t={t} f={f} cam={cam} />
-            {heat > 0 ? (
-              <g opacity={0.45 * heat} style={{mixBlendMode: 'screen'}}>
-                {Array.from({length: 6}, (_, i) => {
-                  const y = 300 + i * 120 + Math.sin(t * 2 + i) * 20;
-                  return <path key={i} d={`M-40 ${y} Q 480 ${y - 18 + Math.sin(t * 3 + i) * 14} 960 ${y} T 1960 ${y}`} fill="none" stroke="#FFB870" strokeWidth={10} opacity={0.16} />;
-                })}
-              </g>
-            ) : null}
             <Mark x={tg.x} y={tg.y} ok k={check} s={0.7} />
           </svg>
         </div>

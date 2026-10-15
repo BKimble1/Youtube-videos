@@ -15,7 +15,8 @@ import {useCurrentFrame} from 'remotion';
 import {T} from '../cues';
 import {Cam, Scene, Layer, Bot, Crew, Chip, mixCam, seg, smooth, easeInOut, easeOut, easeIn, backOut, lerp, toScreen, rnd} from '../../v4/kit/scene';
 import {FoundryView5, FD} from '../sets/foundry5';
-import {Splash, FCOL} from '../../v4/sets/foundry';
+import {FCOL} from '../../v4/sets/foundry';
+import {Splash6} from '../sets/splash6';
 import {StageBack, Tower, Pad, Arc, TGT_X} from '../../v4/sets/stage';
 import {FilmLight, TripodCam} from '../../v4/sets/props';
 import {rig, RPose, Rig} from '../../v4/rig/Robot2D';
@@ -151,9 +152,26 @@ const ROUNDS = [
 ].map((r) => ({...r, J: makeJump5({toeX: TOE_X, deckY: DECK, endX: r.endX, endY: SURF, s: S, tReady: r.tTO - 0.75 - 0.3 * r.delay, tPush: r.tTO - 0.3, tTO: r.tTO, apex: (r.weight ? 66 : 80) * S, outcome: 'stick', depth: 1.2 + 0.25 * r.weight, swing: 1.15})}));
 const roundAt = (t: number) => (t < ROUNDS[0].J.tReady ? -1 : t < ROUNDS[1].J.tReady - 0.05 ? 0 : t < ROUNDS[2].J.tReady - 0.05 ? 1 : 2);
 const READY_V = ROUNDS[0].J.READY;
+// V6: a clean baseline round right after the dice ("one perfect world"), so the set never holds an unchanged robot;
+// then each variation appears on its word and is tested in the rounds
+const R_BASE = makeJump5({toeX: TOE_X, deckY: DECK, endX: TGT_X, endY: SURF, s: S, tReady: DICE1 + 0.1, tPush: DICE1 + 0.55, tTO: DICE1 + 0.85, apex: 80 * S, outcome: 'stick', depth: 1.2, swing: 1.15});
+const BASE_RW0 = R_BASE.tEnd + 0.45, BASE_RW1 = BASE_RW0 + 0.3;
+/** Die events: it rolls only when a condition changes (weight, footing, timing, each round). */
+const DIE_EV: [number, number][] = [[DICE1, 1], [VAR.w, 3], [VAR.f, 5], [VAR.tm, 2], [ROUNDS[0].J.tReady, 6], [ROUNDS[1].J.tReady, 4], [ROUNDS[2].J.tReady, 1]];
+const dieAt = (t: number) => {
+  let n = 1, roll = 0;
+  for (const [t0, face] of DIE_EV) if (t >= t0) { n = face; roll = Math.max(0, 1 - (t - t0) / 0.3); }
+  return {n: roll > 0.5 ? ((n + Math.floor(roll * 9)) % 6) + 1 : n, roll};
+};
 const variedPose = (t: number): RPose => {
+  if (t < BASE_RW0) return R_BASE.pose(Math.max(t, R_BASE.tReady)).pose;
+  if (t < BASE_RW1) return R_BASE.pose(lerp(BASE_RW0, R_BASE.tReady, easeInOut(seg(t, BASE_RW0, BASE_RW1)))).pose;
   const i = roundAt(t);
-  if (i < 0) return READY_V;
+  if (i < 0) {
+    // the load arrives: a brief knee flex under it (feet planted)
+    const flex = Math.sin(Math.PI * seg(t, VAR.w + 0.2, VAR.w + 0.65));
+    return {...READY_V, y: READY_V.y + 10 * flex};
+  }
   const r = ROUNDS[i];
   // reset between rounds: a short rewind back onto the tower
   const next = ROUNDS[i + 1];
@@ -224,14 +242,40 @@ const hallPose = (t: number): RPose => {
   if (t < HJ.tEnd) return HJ.pose(t).pose;
   const d = t - HJ.tEnd;
   const base = HJ.pose(HJ.tEnd).pose;
-  const sink = bagSquash(t) * 170 * HALL.bagS * 0.22;
+  const sq = bagSquash(t);
+  const sink = sq * 170 * HALL.bagS * 0.22;                      // = the dent depth under the feet (world)
+  const comp = Math.max(0, sq - 0.25) * 34 * S;                  // knees compress at the peak, release on the rebound
   // knees soak it, then the robot settles in a crouch on the bag (feet stay on the bag's surface)
   const crouch = smooth(seg(d, 0, 0.35));
   const fN = base.footN ?? {x: HJ.p1.x, y: BAG_TOP, pitch: 0};
   const r0 = rig(base, S).pts;
-  return {...base, x: base.x + 10 * crouch, y: base.y + sink + 60 * S * crouch, rot: base.rot + 18 * crouch, waist: 10 * crouch,
+  return {...base, x: base.x + 10 * crouch, y: base.y + sink + 60 * S * crouch + comp, rot: base.rot + 18 * crouch, waist: 10 * crouch,
     armN: A(lerp(62, 40, crouch), lerp(30, 50, crouch)), armF: A(lerp(50, 30, crouch), lerp(34, 50, crouch)),
     footN: {x: r0.ankleN[0], y: r0.ankleN[1] + sink, pitch: 0}, footF: {x: r0.ankleF[0], y: r0.ankleF[1] + sink, pitch: 0}, ...(fN ? {} : {})};
+};
+/** V6 airbag: the bag keeps its shape; the top dents locally under the feet (depth in bag units) and the sides bulge
+ * a little. The dent follows bagSquash: deep at contact, a damped rebound, then a shallow settled dip. */
+const DENT_W = 78;
+const Airbag6: React.FC<{x: number; y: number; s: number; dent: number; dentX: number; lw: number}> = ({x, y, s, dent, dentX, lw}) => {
+  const bulge = 1 + 0.035 * Math.min(1, dent / 30);
+  const top: string[] = [];
+  for (let i = 0; i <= 40; i++) {
+    const bx = -200 + i * 10;
+    const d = dent * Math.exp(-Math.pow((bx - dentX) / DENT_W, 2));
+    top.push(`${bx.toFixed(1)} ${(-170 + d).toFixed(1)}`);
+  }
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s * bulge} ${s})`}>
+      <path d={`M -300 0 Q -320 -150 -200 -170 L ${top.join(' L ')} Q 320 -150 300 0 Z`} fill={C.coral} stroke={C.ink} strokeWidth={6 / s} strokeLinejoin="round" />
+      {[-150, 0, 150].map((sx) => {
+        const d = dent * Math.exp(-Math.pow((sx - dentX) / DENT_W, 2));
+        return <path key={sx} d={`M ${sx} ${-160 + d} Q ${sx + 20} ${-80 + d * 0.5} ${sx} 0`} fill="none" stroke={C.coralDeep} strokeWidth={5 / s} />;
+      })}
+      {dent > 2 ? <path d={`M ${dentX - DENT_W * 1.1} ${-164} Q ${dentX} ${-170 + dent * 1.35} ${dentX + DENT_W * 1.1} ${-164}`} fill="none" stroke="#B8402E" strokeWidth={4 / s} opacity={Math.min(1, dent / 20)} /> : null}
+      <rect x={-310} y={-8} width={620} height={16} rx={8} fill={C.coralDeep} stroke={C.ink} strokeWidth={4 / s} />
+      {void lw}
+    </g>
+  );
 };
 const HallBack: React.FC<{lw: number}> = ({lw}) => (
   <g>
@@ -257,6 +301,12 @@ const Mezz: React.FC<{lw: number}> = ({lw}) => (
     {[-1400, -1000, -600, -200, 120].map((x) => <line key={x} x1={x} y1={HALL.ledge - 92} x2={x} y2={HALL.ledge} stroke="#E8A928" strokeWidth={lw * 2} />)}
   </g>
 );
+
+/** Head top, raised hand tips, wrists and toes of the robot in the hall (for framing). */
+const hallPts = (t: number): [number, number][] => {
+  const pp = rig(hallPose(t), S).pts;
+  return [[pp.head[0], pp.head[1] - 60 * S], [pp.handN[0], pp.handN[1] - 24 * S], [pp.handF[0], pp.handF[1] - 24 * S], pp.wrN, pp.wrF, pp.toeN, pp.toeF];
+};
 
 // ------------------------------------------------------------------ the messy foundry and the jump
 const CROUCH_T = T_DIDGET - 0.1;               // matched cut: crouched on the bag → crouched at the deck edge
@@ -299,7 +349,7 @@ export const MonitorScreen: React.FC<{x: number; y: number; w: number; h: number
 );
 const CAM_MESS: Cam = {x: 470, y: 520, z: 1.35};
 const CAM_MON: Cam = {x: 1240, y: 520, z: 1.25};
-const CAM_JUMP: Cam = {x: 620, y: 560, z: 1.3};
+const CAM_JUMP: Cam = {x: 600, y: 460, z: 1.2};          // V6: holds the whole leap incl. raised hands
 export const CAM_REAL_END: Cam = {x: TGT_X, y: 680, z: 1.4};
 
 // ------------------------------------------------------------------ section
@@ -387,24 +437,30 @@ export const Real: React.FC = () => {
     const camRaw = (tt: number): Cam => {
       const pp = rig(variedPose(tt), S).pts;
       const base = mixCam({x: 600, y: 560, z: 1.2}, {x: 580, y: 545, z: 1.25}, seg(tt, DICE_COVER, T_ALSO));
-      const fc = fitIn(base, [[pp.head[0], pp.head[1] - 40], pp.toeN, pp.toeF, pp.wrN, pp.wrF, [TGT_X, SURF + 60], [TOE_X - 300, DECK - 260]], {top: 130, bottom: 120, left: 140, right: 140});
+      const fc = fitIn(base, [[pp.head[0], pp.head[1] - 40], [pp.handN[0], pp.handN[1] - 24 * S], [pp.handF[0], pp.handF[1] - 24 * S], pp.toeN, pp.toeF, pp.wrN, pp.wrF, [TGT_X, SURF + 60], [TOE_X - 300, DECK - 260]], {top: 130, bottom: 120, left: 140, right: 140});
       return {...fc, x: fc.x + 45 * smooth(seg(tt, ROUNDS[2].J.tEnd + 0.4, T_ALSO))};   // drifts on under the caption
     };
-    const cam = smoothCam(camRaw, t, 0.2);
+    const cam = (() => {
+      const c = smoothCam(camRaw, t, 0.2);
+      const pp = rig(variedPose(t), S).pts;
+      return fitIn(c, [[pp.head[0], pp.head[1] - 40], [pp.handN[0], pp.handN[1] - 24 * S], [pp.handF[0], pp.handF[1] - 24 * S], pp.toeN, pp.toeF], {top: 60, bottom: 60, left: 80, right: 80});
+    })();
     const lw = 4 / cam.z;
     const p = variedPose(t);
     const w = weightOn(t), ice = iceOn(t);
     const i = roundAt(t);
     const watchK = i < 0 ? seg(t, VAR.tm, VAR.tm + 0.2) : i === 2 ? 1 - seg(t, ROUNDS[2].J.tTO, ROUNDS[2].J.tTO + 0.3) : 0;
-    const dieN = i < 0 ? 1 : i + 2;
+    const die = dieAt(t);
     const dieK = seg(t, DICE1 - 0.15, DICE1 + 0.15);
+    const baseArc = t < BASE_RW0 ? seg(t, R_BASE.tTO, R_BASE.tEnd) * (1 - seg(t, BASE_RW0 - 0.25, BASE_RW0)) : 0;
     const caption = seg(t, T_DONTKNOW + 0.1, T_DONTKNOW + 0.4) * (1 - seg(t, T_ALSO - 0.4, T_ALSO - 0.1));
-    const landPulse = ROUNDS.reduce((m, r) => Math.max(m, Math.max(0, 1 - Math.abs(t - r.J.tEnd - 0.1) / 0.4)), 0);
+    const landPulse = [...ROUNDS.map((r) => r.J), R_BASE].reduce((m, J) => Math.max(m, Math.max(0, 1 - Math.abs(t - J.tEnd - 0.1) / 0.4)), 0);
     return (
       <Scene bg="#EEF4FD" over={<Chip x={96} y={946} lines={['Variations shown are illustrative · Figure hasn’t said which it used']} k={caption} size={30} tone="paper" />}>
         <Layer cam={cam}>
           <StageBack lw={lw} grid={0.45} />
-          {i >= 0 ? <Arc pts={ROUNDS[i].J.arc()} k={seg(t, ROUNDS[i].J.tTO, ROUNDS[i].J.tEnd)} lw={lw} color={C.teal} /> : null}
+          {i >= 0 ? <Arc pts={ROUNDS[i].J.arc()} k={seg(t, ROUNDS[i].J.tTO, ROUNDS[i].J.tEnd) * (1 - seg(t, ROUNDS[i].J.tEnd + 0.5, ROUNDS[i].J.tEnd + 0.8))} lw={lw} color={C.teal} /> : null}
+          {baseArc > 0 ? <Arc pts={R_BASE.arc()} k={baseArc} lw={lw} color={C.blue} /> : null}
           <Tower lw={lw} />
           {ice > 0 ? <path d={`M${TOE_X - 260} ${DECK - 15} L${TOE_X - 2} ${DECK - 15} L${TOE_X + 4} ${DECK} L${TOE_X - 260} ${DECK} Z`} fill="#CFEFFF" stroke="#7FC8E8" strokeWidth={lw} opacity={0.9 * ice} /> : null}
           {ice > 0 ? [0, 1, 2].map((k) => <line key={k} x1={TOE_X - 220 + k * 70} y1={DECK - 12} x2={TOE_X - 190 + k * 70} y2={DECK - 4} stroke="#FFFFFF" strokeWidth={lw * 1.5} opacity={ice} />) : null}
@@ -412,7 +468,7 @@ export const Real: React.FC = () => {
           <Bot cam={cam} id="rlV" model="SIM" s={S} pose={p} after={{torso: weightBlock(w, 4 / (cam.z * S))}} />
         </Layer>
         <Stopwatch x={toScreen(cam, TOE_X - 250, DECK - 250).x} y={toScreen(cam, TOE_X - 250, DECK - 250).y} k={watchK} t={t} t0={VAR.tm} />
-        {dieK > 0 ? <Die x={1700} y={170} s={0.5 * backOut(Math.min(1, dieK * 2), 1.6)} rot={-8 + Math.sin(t * 3) * 3} n={dieN} col={C.paper} /> : null}
+        {dieK > 0 ? <Die x={1730} y={160} s={0.42 * backOut(Math.min(1, dieK * 2), 1.6)} rot={-8 + die.roll * 300} n={die.n} col={C.paper} /> : null}
         <DiceWipeLayer t={t} />
       </Scene>
     );
@@ -425,9 +481,9 @@ export const Real: React.FC = () => {
     const camRaw = (tt: number): Cam => {
       const pp = rig(hallPose(tt), S).pts;
       const base: Cam = tt < HJ.tTO ? {x: TOE_X + 80, y: HALL.ledge - 160, z: 1.7} : {x: lerp(TOE_X + 80, HALL.bagX, seg(tt, HJ.tTO, HJ.tEnd)), y: lerp(HALL.ledge - 160, BAG_TOP - 140, easeIn(seg(tt, HJ.tTO, HJ.tEnd))), z: 1.7};
-      return fitIn(base, [[pp.head[0], pp.head[1] - 40], pp.toeN, pp.toeF, pp.wrN, pp.wrF], {top: 170, bottom: 120, left: 170, right: 170});
+      return fitIn(base, hallPts(tt), {top: 170, bottom: 120, left: 170, right: 170});
     };
-    const cam = smoothCam(camRaw, t, 0.14);
+    const cam = fitIn(smoothCam(camRaw, t, 0.14), hallPts(t), {top: 70, bottom: 60, left: 80, right: 80});
     const lw = 4 / cam.z;
     const sq = bagSquash(t);
     const d = t - HJ.tEnd;
@@ -437,7 +493,7 @@ export const Real: React.FC = () => {
         <Layer cam={cam}>
           <HallBack lw={lw} />
           <Mezz lw={lw} />
-          <Airbag x={HALL.bagX} y={HALL.floor} s={HALL.bagS} squash={sq} />
+          <Airbag6 x={HALL.bagX} y={HALL.floor} s={HALL.bagS} dent={sq * 170 * 0.22} dentX={(HJ.p1.x - HALL.bagX) / HALL.bagS} lw={lw} />
           {d > 0 && d < 0.6 ? [-1, 1].map((sx) => <g key={sx}>{[0, 1, 2].map((i) => <path key={i} d={`M${HALL.bagX + sx * (220 + d * 260 + i * 30)} ${BAG_TOP + 40 - i * 26} q${sx * 30} -20 ${sx * 60} 0`} fill="none" stroke="#FFFFFF" strokeWidth={lw * 2} strokeLinecap="round" opacity={1 - d / 0.6} />)}</g>) : null}
           <Bot cam={cam} id="rlH" model="F02" s={S} pose={p} />
         </Layer>
@@ -470,6 +526,7 @@ export const Real: React.FC = () => {
   const mon1 = t < T_KNOCKED ? 0 : t < T_KNOCKED + 0.6 ? 1 : 2;
   const mon2 = t < T_ELEC ? 0 : t < T_ELEC + 0.5 ? 1 : 2;
   const haze = seg(t, CROUCH_T, CROUCH_T + 0.8);
+  const shimmer = 1 - seg(t, T_KEPT - 0.6, T_KEPT - 0.2);
   const emi = seg(t, T_HEAT + 0.3, T_HEAT + 0.8) * (1 - seg(t, T_KEPT + 0.2, T_KEPT + 0.8));
   const B = FD.booth;
   const spark = (x: number, y: number, t0: number) => t > t0 && t < t0 + 0.6 ? (
@@ -488,7 +545,7 @@ export const Real: React.FC = () => {
           </g>
         )}
         behind={!under ? <Bot cam={cam} id="rlP" model="F02" s={S} pose={p} clipBelow={st.phase === 'after' ? SURF + 1 : undefined} /> : null}
-        inside={<><Splash x={TGT_X} t={tHit} lw={lw} part="back" scale={1.1} /><Splash x={TGT_X} t={tHit} lw={lw} part="front" scale={1.1} /></>}
+        inside={<><Splash6 x={TGT_X} t={tHit} lw={lw} part="back" scale={1.1} /><Splash6 x={TGT_X} t={tHit} lw={lw} part="front" scale={1.1} /></>}
         front={(
           <g>
             {BARRIERS.map((x) => <Barrier key={x} x={x} lw={lw} />)}
@@ -499,14 +556,18 @@ export const Real: React.FC = () => {
             <CameraIcon x={1180} y={FD.floor - 430} s={0.6} broken={seg(t, T_KNOCKED + 0.1, T_KNOCKED + 0.4)} />
           </g>
         )} />
-      {haze > 0 ? (
-        <g opacity={0.5 * haze} style={{mixBlendMode: 'screen'}}>
-          {Array.from({length: 7}, (_, i) => {
-            const y = 300 + i * 110 + Math.sin(t * 2 + i) * 20;
-            return <path key={i} d={`M-40 ${y} Q 480 ${y - 18 + Math.sin(t * 3 + i) * 14} 960 ${y} T 1960 ${y}`} fill="none" stroke="#FFB870" strokeWidth={10} opacity={0.18} />;
-          })}
-        </g>
-      ) : null}
+      {/* V6: heat shimmer only in the air just above the ladle (no full-frame overlay), cleared before the jump */}
+      {haze > 0 && shimmer > 0 ? (() => {
+        const a = toScreen(cam, FD.ladle.cx - FD.ladle.srx * 0.8, SURF - 220), b = toScreen(cam, FD.ladle.cx + FD.ladle.srx * 0.8, SURF - 20);
+        return (
+          <g opacity={0.55 * haze * shimmer} style={{mixBlendMode: 'screen'}}>
+            {Array.from({length: 4}, (_, i) => {
+              const y = lerp(b.y, a.y, (i + ((t * 0.6) % 1)) / 4);
+              return <path key={i} d={`M${a.x} ${y} Q ${(a.x + b.x) / 2} ${y - 10 + Math.sin(t * 3 + i) * 8} ${b.x} ${y}`} fill="none" stroke="#FFB870" strokeWidth={6} opacity={0.3} />;
+            })}
+          </g>
+        );
+      })() : null}
     </Scene>
   );
 };
