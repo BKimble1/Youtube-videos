@@ -4,7 +4,7 @@
 import {T, NARR_END} from './cues';
 import {HOOK_END, T_HIT, T_LAND2, HOOK_EV as HE} from './shots/Hook';
 import {FACTORY_END, FACTORY_EV as FE} from './shots/Factory';
-import {OPTIONS_END, OPTIONS_EV as OE} from './shots/Options';
+import {OPTIONS_END, OPTIONS_EV as OE, OPTIONS_TIMES as OT} from './shots/Options';
 import {IMATRA_START, IMATRA_END} from './shots/Imatra';
 import {POST_END, POST_EV as PE} from './shots/Post';
 import {TRAIN_START, TRAIN_END, TRAIN_EV as TE} from './shots/Train';
@@ -49,7 +49,7 @@ const hook = (): Cue[] => {
     {t: J0.tPush, kind: 'robot_push', gain: -2},
     {t: J0.tPush + 0.06, kind: 'step_grate', gain: -5},                       // the planted push
     ...entry(T_HIT, -11, 1.2),                                                 // under "metal": kept below the voice
-    {t: T_SWAP - 0.2, kind: 'trace', gain: -9},                               // the surface cools into the target
+    {t: T_HIT + 0.5, kind: 'trace', gain: -9},                                // V6: the material wipe spreads from the entry
     {t: T_SWAP, kind: 'sim_blip', gain: -6},
     bed('amb_sim', T_SWAP, HOOK_END + 0.3, -4),
     {t: J1.tPush, kind: 'robot_push', gain: -11, pitch: 3},
@@ -73,7 +73,8 @@ const factory = (): Cue[] => {
     out.push({t: hang - 0.35, kind: 'servo_whir', gain: -16, pitch: -1});
   }
   for (let t = T_MONTHS + 0.3; t < T_NEWER + 1.0; t += 0.32) out.push({t, kind: 'counter_tick', gain: -15});   // months pass
-  FLEET.forEach((_, j) => out.push(...falls(footfalls(FACTORY_WALK.fleetWalk(j)), 'robot_step', -14 - j)));
+  out.push(...falls(footfalls(FACTORY_WALK.fleetWalk(2)), 'robot_step', -15));   // V6: only the new arrival walks in
+  void FLEET;
   out.push(
     {t: T_KEEP + 0.1, kind: 'tag_clink', gain: -10, pitch: 4}, {t: T_KEEP + 0.36, kind: 'tag_clink', gain: -11, pitch: 5},
     {t: T_KEEP + 0.2, kind: 'elec_arc', gain: -16},
@@ -87,37 +88,45 @@ const factory = (): Cue[] => {
 
 const options = (): Cue[] => {
   const {PUSH0, SHUT_T1, POP, PULL0, SHOW, CUT_CLOCK, W0, W1} = OE;
+  const {T_DROPHIT, T_TILT0, T_FLIP, ASM0} = OT;
   const tSell = T('Sell it'), tPack = T('packed with'), tBldg = T('the building'), tApart = T('Take them apart') - 0.06;
   const tMelt = T('Melt them') - 0.06, tSimple = T('Simple'), tBrings = T('brings its battery'), tWhere = T('Figure says foundries') - 0.05;
   const tUS = T('U.S.'), tMex = T('Mexico'), tYes = T('said yes'), tDelay = T('delay the next');
   const out: Cue[] = [
     bed('amb_room', FACTORY_END, tMelt + 0.3, -4),
-    {t: tSell + 0.12, kind: 'card_flick', gain: -9},                          // FOR SALE tag
-    {t: tSell + 0.7, kind: 'knee_tap', gain: -13, pitch: -5}, {t: tSell + 0.95, kind: 'knee_tap', gain: -14, pitch: -4},  // crate panels
+    ...[0, 0.12, 0.24, 0.36].map((d, k) => ({t: ASM0 + 0.38 + d, kind: 'knee_tap', gain: -13 - k * 0.5, pitch: -5 + k})),  // crate panels land
+    {t: tSell, kind: 'tag_clink', gain: -10, pitch: 3},                       // FOR SALE hung on its hook
+    {t: T_FLIP + 0.12, kind: 'card_flick', gain: -8},                         // flipped to NOT FOR SALE
     {t: tPack - 0.05, kind: 'pop_tick', gain: -11},                           // the knee lens
     {t: PUSH0, kind: 'paper_slide', gain: -9, pitch: -6},                     // the shove
     {t: SHUT_T1, kind: 'shutter_slam', gain: -7},
     {t: tBldg + 0.15, kind: 'padlock', gain: -7},
     {t: tApart + 0.42, kind: 'knee_tap', gain: -9, pitch: -5},                // the crate falls away
-    {t: tApart + 0.95, kind: 'typing', gain: -13},                            // ratchet on the knee bolts
+    {t: tApart + 1.0, kind: 'servo_whir', gain: -15, pitch: 4},               // the knee cover is twisted by hand
     {t: POP, kind: 'card_flick', gain: -7, pitch: -4},                        // cover off
     {t: PULL0, kind: 'servo_whir', gain: -13, pitch: 2},
     {t: SHOW, kind: 'tag_clink', gain: -10, pitch: 5},
   ];
-  for (let t = CUT_CLOCK; t < tMelt; t += 0.5) out.push({t, kind: 'counter_tick', gain: -13});    // rotor → clock: it ticks
+  for (let t = CUT_CLOCK; t < tMelt; t += 0.5) out.push({t, kind: 'counter_tick', gain: -14});    // rotor → clock: it ticks
+  // V6: the bench work that moves the clock: two ratchet strokes, the wrench set down, the part lifted, the part piled
+  const c0 = CUT_CLOCK + 0.15;
+  out.push({t: c0 + 0.1, kind: 'typing', gain: -14}, {t: c0 + 1.05, kind: 'tag_clink', gain: -12, pitch: -2},
+    {t: c0 + 1.55, kind: 'paper_slide', gain: -15, pitch: -4}, {t: c0 + 2.8, kind: 'knee_tap', gain: -12, pitch: -3});
   out.push(
     {t: tDelay, kind: 'paper_slide', gain: -12, pitch: 3},                    // the launch flag slides
     bed('furnace_roar', tMelt, OPTIONS_END + 0.4, -2),
     {t: tMelt + 0.2, kind: 'sizzle', dur: 1.0, gain: -12},                    // the clock face heats
-    {t: tSimple - 0.2, kind: 'crane_chain', gain: -12},
-    ...entry(tSimple + 0.3, -13, 1.6),                                         // scrap in; cut on the splash
+    {t: T_DROPHIT - 0.35, kind: 'whoosh_soft', gain: -15, pitch: 2},          // scrap falls into the top view
+    ...entry(T_DROPHIT, -13, 1.6),
+    {t: T_TILT0, kind: 'whoosh_soft', gain: -15, pitch: -3},                  // top view tilts to the side view
     ...falls(footfalls(OPTIONS_WALK.EDGE_WALK), 'step_grate', -10),
     {t: tBrings + 0.4, kind: 'elec_arc', gain: -15},
-    {t: tUS - 0.2 + 0.32, kind: 'shutter_slam', gain: -10, pitch: 1},
+    {t: tWhere, kind: 'shutter_slam', gain: -9, pitch: 1},                    // V6: the shutter wipes into the street
     {t: tUS + 0.08, kind: 'marker_x', gain: -12},
     {t: tMex - 0.15 + 0.3, kind: 'shutter_slam', gain: -11, pitch: 2},
     {t: tMex + 0.12, kind: 'marker_x', gain: -12},
     {t: tYes, kind: 'ding_yes', gain: -11},
+    {t: tYes - 0.12, kind: 'knee_tap', gain: -14, pitch: -8},                 // the Imatra lights come up
     {t: tWhere + 0.3, kind: 'robot_step', gain: -16, pitch: -6},              // hand truck wheels (soft)
   );
   return out;
@@ -144,11 +153,13 @@ const post = (): Cue[] => {
     bed('amb_room', IMATRA_END, POST_END + 0.3, -6),
     {t: tPost - 0.2, kind: 'paper_swish', gain: -13},                         // the scroll
     {t: tReply, kind: 'pop_tick', gain: -7},                                  // the reply arrives
+    {t: PE.LIFT0, kind: 'paper_swish', gain: -14, pitch: 2},                 // the reply card lifts off the phone
     {t: FLIP0, kind: 'card_flick', gain: -8},
     {t: CLAP, kind: 'clapper', gain: -4},
     {t: DROP0, kind: 'whoosh_soft', gain: -13, pitch: -4},
     {t: tLower - 0.3, kind: 'crane_chain', gain: -11},
     {t: tLower + 0.9, kind: 'sizzle', dur: 1.0, gain: -18},
+    {t: T('copy its technology') + 0.9, kind: 'crane_chain', gain: -14, pitch: 2},   // the hook retracts
     {t: tReason + 0.1, kind: 'pop_tick', gain: -11},
     {t: t1991 + 0.1, kind: 'stamp', gain: -9},
     {t: tHint + 0.1, kind: 'sim_blip', gain: -12, pitch: -3},                 // the monitor comes on
@@ -160,16 +171,17 @@ const train = (): Cue[] => {
   const tSims = T('So Figure says it trained'), tNudge = T('The software nudges'), tCopies = T('in many virtual copies');
   const tNobody = T('nobody files'), tPol = T('a policy'), tEarly = T('a little early'), tCatch = T('sensors catch it'), tAdj = T('adjusts the knee'), tTips = T('before the robot tips');
   const out: Cue[] = [
-    {t: TRAIN_START + 0.6, kind: 'trace', gain: -12},                         // the practice arc draws to the steel
-    {t: tSims - 0.05, kind: 'knee_tap', gain: -8, pitch: -9},                 // lights out
-    {t: tSims + 0.3, kind: 'trace', gain: -8},                                // scanline rebuild
-    {t: tSims + 1.05, kind: 'sim_blip', gain: -9},
-    bed('amb_sim', tSims + 0.3, TRAIN_END + 0.3, -4),
+    {t: T('can’t rehearse'), kind: 'trace', gain: -12},                        // the practice arc draws to the steel
+    {t: TE.T_DARK0, kind: 'knee_tap', gain: -8, pitch: -9},                   // lights out (on the launch foot)
+    {t: TE.T_DARK1, kind: 'trace', gain: -8},                                 // scanline rebuild
+    {t: TE.T_BUILD1 - 0.05, kind: 'sim_blip', gain: -9},
+    bed('amb_sim', TE.T_DARK1, TRAIN_END + 0.3, -4),
     {t: TOSS + 0.5, kind: 'tag_clink', gain: -9},                             // the target lands on the pad
     {t: SLIP0, kind: 'paper_slide', gain: -11, pitch: 3},                     // the slip
     {t: A1.tEnd, kind: 'sim_fall', gain: -5},
     {t: A1.tEnd + 0.15, kind: 'buzz_no', gain: -14},
     {t: RW1a, kind: 'rewind', gain: -10},
+    {t: TE.RW2a, kind: 'rewind', gain: -13},
     ...[0, 1, 2].map((k) => ({t: tNudge + 0.55 + k * 0.25, kind: 'slider_tick', gain: -12, pitch: k})),
     {t: A2.tPush, kind: 'robot_push', gain: -12, pitch: 3},
     {t: A2.tEnd, kind: 'knee_tap', gain: -8},
@@ -180,7 +192,7 @@ const train = (): Cue[] => {
   ];
   for (let k = 0; k < 9; k++) out.push({t: tCopies + 0.2 + k * 0.27, kind: 'pop_tick', gain: -16 + k * 0.4, pitch: k % 3});   // parallel trials land
   out.push(
-    {t: tNobody + 0.2, kind: 'paper_swish', gain: -11},                       // the incident report is tossed
+    {t: TE.REL - 0.05, kind: 'paper_swish', gain: -11},                       // the incident report is tossed
     {t: T_DIVE, kind: 'whoosh_soft', gain: -13, pitch: 2},
     {t: SPLIT0, kind: 'card_flick', gain: -11},
     {t: SG.tPush, kind: 'robot_push', gain: -12, pitch: 3},
@@ -210,6 +222,10 @@ const real = (): Cue[] => {
     ...[0.7, 1.2, 1.7].map((d, k) => ({t: tNever + d, kind: 'pop_tick', gain: -12, pitch: k})),
     ...[0.1, 0.24, 0.4].map((d, k) => ({t: DICE0 + d, kind: 'tag_clink', gain: -11, pitch: -2 + 2 * k})),   // dice tumble
     bed('amb_sim', DICE_COVER, tAlso + 0.1, -4),
+    {t: RE.R_BASE.tPush, kind: 'robot_push', gain: -12, pitch: 3},            // V6: the clean baseline round
+    {t: RE.R_BASE.tEnd, kind: 'knee_tap', gain: -8},
+    {t: RE.BASE_RW0, kind: 'rewind', gain: -14},
+    ...RE.DIE_EV.slice(1).map(([t0], k) => ({t: t0, kind: 'tag_clink', gain: -17, pitch: 4 + (k % 3)})),   // the die rolls only on a change
     {t: VAR.w, kind: 'stamp', gain: -11},                                     // the weight block
     {t: VAR.f, kind: 'trace', gain: -12},                                     // ice on the tower top
     ...[0, 1, 2, 3].map((k) => ({t: VAR.tm + k * 0.25, kind: 'counter_tick', gain: -13})),
@@ -243,7 +259,7 @@ const prove = (): Cue[] => {
   return [
     {t: tWhat + 0.15, kind: 'trace', gain: -11},                              // the ripple becomes the target
     {t: tSurv, kind: 'ding_yes', gain: -11},
-    ...[0, 1, 2].map((k) => ({t: tOne - 0.05 + k * 0.1, kind: 'sim_blip', gain: -15, pitch: k * 2})),
+    {t: tOne - 0.1, kind: 'trace', gain: -13},                                // V6: one ghost travels the path
     {t: tKind + 0.2, kind: 'tag_clink', gain: -12, pitch: 3},
     {t: tPrep, kind: 'paper_slide', gain: -12, pitch: 5},                     // tape laid along the floor
     {t: tSuper + 0.2, kind: 'static', gain: -20},                             // radio squelch
@@ -256,7 +272,7 @@ const prove = (): Cue[] => {
 };
 
 const end = (): Cue[] => {
-  const {LIGHTS, J1, RW0, T_CLAP, J2, J3, T_CARDS, T_FLARE, TOSS, PAD0, BUILD0} = EE;
+  const {LIGHTS, J1, RW0, T_CLAP, J2, T_CARDS, T_FLARE, TOSS} = EE;
   const tWhy = T('So why is it uncomfortable'), tWhen = T('When something with'), tWrote = T('wrote the score');
   const swap = tWhy + 0.85;
   return [
@@ -276,11 +292,6 @@ const end = (): Cue[] => {
     {t: J2.tPush, kind: 'robot_push', gain: -6},
     {t: J2.tPush + 0.06, kind: 'step_grate', gain: -5},
     ...entry(J2.tEnd, -13, 1.6),
-    {t: PAD0, kind: 'trace', gain: -10},                                      // the surface cools into the pad
-    {t: BUILD0, kind: 'sim_blip', gain: -10},                                 // the avatar builds
-    {t: J3.tPush, kind: 'robot_push', gain: -12, pitch: 3},
-    {t: J3.tEnd, kind: 'knee_tap', gain: -5},
-    {t: J3.tEnd + 0.04, kind: 'ding_yes', gain: -9},
     {t: T_CARDS, kind: 'card_flick', gain: -8}, {t: T_CARDS + 0.08, kind: 'card_flick', gain: -9, pitch: 2},
     {t: T_FLARE + 0.2, kind: 'sting_end', gain: -6},
   ];
@@ -288,7 +299,7 @@ const end = (): Cue[] => {
 
 export const collectV6 = () => {
   const cues = [...hook(), ...factory(), ...options(), ...imatra(), ...post(), ...train(), ...real(), ...prove(), ...end()].sort((a, b) => a.t - b.t);
-  const {J1, RW0, RW1, T_CLAP, J2, J3, T_FLARE} = EE;
+  const {J1, RW0, RW1, T_CLAP, J2, T_CARDS, T_FLARE} = EE;
   const swap = T('So why is it uncomfortable') + 0.85;
   return {
     fps: 30,
@@ -299,7 +310,7 @@ export const collectV6 = () => {
       impact: T_HIT, impact2: T_LAND2, swap0: HE.T_SWAP, hookEnd: HOOK_END, curious: HOOK_END, film: IMATRA_START,
       training: TRAIN_START, fail: TE.A1.tEnd, lift: TE.A3.tEnd, real: REAL_START, payoff: RE.J_PAY.tEnd, prove: REAL_END, end: END_START,
       dark0: T('So why is it uncomfortable'), swap, leap: J1.tTO, rewind0: RW0, rewind1: RW1, people: T('People picked the ending'),
-      clap: T_CLAP, entry: J2.tEnd, pad: EE.PAD0, stick: J3.tEnd, flare: T_FLARE,
+      clap: T_CLAP, entry: J2.tEnd, pad: J2.tEnd + 0.9, stick: T_CARDS, flare: T_FLARE,
     },
     // the motivated transitions, for qa/v5 strips (12 frames either side of each)
     transitions: {
@@ -312,7 +323,9 @@ export const collectV6 = () => {
       t17_sim_foot_to_real: REAL_START + 0.6, t18_dice_wipe: RE.DICE_COVER, t19_airbag_to_deck: RE.CROUCH_T,
       t20_monitor_loses_picture: T('knocked out cameras'), t21_ripple_to_target: T('So what does it prove') + 0.3,
       t22_truck_out_of_set: VE.T_PAN0 + 0.6, t23_lights_out_silhouette: swap, t24_rewind: RW0 + 0.3,
-      t25_surface_to_sim_pad: EE.PAD0 + 0.25, t26_glow_to_logo: T_FLARE + 0.2,
+      t25_final_entry: J2.tEnd + 0.1, t26_glow_to_logo: T_FLARE + 0.2,
+      t27_material_wipe: T_HIT + 0.9, t28_shutter_to_street: T('Figure says foundries') - 0.1, t29_card_lifts_off_phone: PE.LIFT0 + 0.1,
+      t30_foot_to_sim: TE.T_DARK1 + 0.4, t31_reflex_tap: TE.T_TAP1, t32_airbag_dent: RE.HJ.tEnd + 0.1,
     },
     cues,
   };

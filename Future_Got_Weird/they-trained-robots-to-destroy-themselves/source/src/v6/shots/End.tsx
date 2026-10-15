@@ -13,7 +13,7 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {T, NARR_END} from '../cues';
 import {Cam, Layer, Bot, Crew, mixCam, seg, smooth, easeInOut, easeOut, easeIn, backOut, lerp, toScreen, rnd, crewHand, crewReach} from '../../v4/kit/scene';
 import {FD} from '../sets/foundry5';
-import {Splash} from '../../v4/sets/foundry';
+import {Splash6} from '../sets/splash6';
 import {Arc, TGT_X, SCOL} from '../../v4/sets/stage';
 import {BigClapper} from '../../v4/sets/props';
 import {RPose, rig} from '../../v4/rig/Robot2D';
@@ -71,7 +71,7 @@ const j1Clock = (t: number) => {
 const RW0 = T_BUT, RW1 = T_BUT + 0.62;
 const C_RW = j1Clock(RW0);
 // the walk to the edge: whole strides ending with the near foot on take-1's ready mark, then a stop step (no sliding)
-const E_STEPS = 6, E_SW = 150 * S;
+const E_STEPS = 4, E_SW = 150 * S;    // V6: a shorter walk to the edge
 const E_X0 = J1.READY.footN!.x - (E_STEPS + 0.25) * E_SW;
 const FOOT0 = E_X0 + 0.25 * E_SW;                                       // near foot before the walk (= the crouch's near foot)
 const K0_FOOT = AV.j.K0.footN!.x - AV.j.K0.x;                          // near-foot offset from the pelvis in the aisle crouch
@@ -163,9 +163,9 @@ const SilSet: React.FC<{cam: Cam; t: number; glow?: number; children?: React.Rea
 const RimDefs: React.FC = () => (
   <defs>
     <filter id="rimSil5" x="-30%" y="-30%" width="160%" height="160%">
-      <feMorphology in="SourceAlpha" operator="dilate" radius="3" result="d" />
-      <feOffset in="d" dx="-2" dy="-3" result="do" />
-      <feFlood floodColor="#FFB45A" result="o" />
+      <feMorphology in="SourceAlpha" operator="dilate" radius="2.2" result="d" />
+      <feOffset in="d" dx="-1.6" dy="-2.2" result="do" />
+      <feFlood floodColor="#F2A350" floodOpacity="0.85" result="o" />
       <feComposite in="o" in2="do" operator="in" result="rim" />
       <feFlood floodColor="#120708" result="k" />
       <feComposite in="k" in2="SourceAlpha" operator="in" result="sil" />
@@ -218,9 +218,10 @@ const J3 = (() => {
   const tEnd = T_STUCK - 0.04;
   return makeJump5({...spec, tReady: tEnd - Tf - 0.55, tPush: tEnd - Tf - 0.28, tTO: tEnd - Tf});
 })();
-const PAD0 = T_THESE + 0.05, PAD1 = T_THESE + 0.55;
-const BUILD0 = J3.tReady - 0.5, BUILD1 = J3.tReady - 0.05;
-const T_CARDS = J3.tEnd + 0.18;
+// V6: no second (blue) demonstration after the payoff; the cards come up once, on "stuck the landing"
+const PAD0 = T_THESE + 0.05;
+const BUILD0 = J3.tReady - 0.5;
+const T_CARDS = T_STUCK + 0.12;
 const T_FLARE = NARR_END + 0.12;
 
 export const End: React.FC = () => {
@@ -277,7 +278,7 @@ export const End: React.FC = () => {
   const glowPulse = Math.max(0, 1 - Math.abs(t - T_ENDING - 0.2) / 0.45);
   const tHit = t - J2.tEnd;
   const surfPulse = Math.max(0, 1 - Math.abs(t - J2.tEnd - 0.1) / 0.5);
-  const pad = easeInOut(seg(t, PAD0, PAD1));
+  const pad = 0;
   const ringK = t < TOSS + 0.5 ? 0 : 1;
   const fly = t > TOSS && t < TOSS + 0.5 ? seg(t, TOSS, TOSS + 0.5) : -1;
   const plan = seg(t, T_POLICY - 0.15, T_POLICY + 0.3) * (1 - seg(t, J2.tEnd, J2.tEnd + 0.4));
@@ -295,12 +296,6 @@ export const End: React.FC = () => {
   const hTos = crewHand(CR.tos, tosArm, 1);
   const hSco = crewHand(CR.sco, scoArm, 1);
   const crewPose = (arm: {a: number; b: number}, other: {a: number; b: number}, lookY = -0.2) => ({...IDLE, armR: arm, armL: other, lookX: 0.6, lookY, mouth: 'flat' as const});
-  // the symbolic avatar on the pad
-  const avOn = t > BUILD0;
-  const build = seg(t, BUILD0, BUILD1);
-  const avPose = t < J3.tReady ? J3.READY : J3.pose(t).pose;
-  const avR = rig(avPose, S).pts;
-  const avTop = avR.head[1] - 80, avBot = DECK + 10;
   const padS = toScreen(cam, TGT_X, SURF);
 
   return (
@@ -314,27 +309,20 @@ export const End: React.FC = () => {
                 {/* the target they built, floating on the surface (on the pad it becomes the pad's own target) */}
                 {ringK > 0 ? <g opacity={1}>{ring(TGT_X, 92 * (1 + 0.15 * surfPulse), 4.4, lw, 'a')}{ring(TGT_X, 46, 3.4, lw, 'b')}{pad > 0.5 ? <ellipse cx={TGT_X} cy={SURF} rx={14} ry={14 * (L.sry / L.srx)} fill={C.teal} /> : null}</g> : null}
                 {plan > 0 ? <Arc pts={J2.arc()} k={plan} lw={lw} color={C.teal} width={3} opacity={0.9} /> : null}
-                {t < J2.tEnd + 1 ? <><Splash x={TGT_X} t={tHit} lw={lw} part="back" scale={1.1} /></> : null}
-                {!gone && t < PAD0 ? <Bot cam={cam} id="eSil" model="SIL" s={S} pose={p} hl={hl} clipBelow={below ? SURF + 1 : undefined} /> : null}
-                {t < J2.tEnd + 1 ? <Splash x={TGT_X} t={tHit} lw={lw} part="front" scale={1.1} /> : null}
-                {avOn ? (
-                  <g>
-                    <clipPath id="e5Build"><rect x={-2000} y={avTop - 20} width={5000} height={(avBot - avTop + 40) * build} /></clipPath>
-                    <g clipPath={build < 1 ? 'url(#e5Build)' : undefined}><Bot cam={cam} id="eAv3" model="SIM" s={S} pose={avPose} /></g>
-                    {build > 0 && build < 1 ? <line x1={avR.pelvis[0] - 160} y1={avTop - 20 + (avBot - avTop + 40) * build} x2={avR.pelvis[0] + 160} y2={avTop - 20 + (avBot - avTop + 40) * build} stroke={C.teal} strokeWidth={lw * 3} /> : null}
-                  </g>
-                ) : null}
+                {t < J2.tEnd + 1.2 ? <Splash6 x={TGT_X} t={tHit} lw={lw} part="back" scale={1.1} /> : null}
+                {!gone ? <Bot cam={cam} id="eSil" model="SIL" s={S} pose={p} hl={hl} clipBelow={below ? SURF + 1 : undefined} /> : null}
+                {t < J2.tEnd + 1.2 ? <Splash6 x={TGT_X} t={tHit} lw={lw} part="front" scale={1.1} /> : null}
               </g>
             )}
             front={(
               <g>
                 <g filter="url(#rimSil5)">
-                  <Crew look={CAST.clerkC} x={CR.dir.x} y={CR.dir.y} h={CR.dir.h} frame={f} seed={14} flip shadow={false} life={0.4} pose={{...crewPose(dirArmR, dirArmL, -0.1)}} />
-                  <Crew look={CAST.clerkA} x={CR.tos.x} y={CR.tos.y} h={CR.tos.h} frame={f} seed={3} flip shadow={false} life={0.4} pose={crewPose(tosArm, {a: 14, b: 18})} />
-                  <Crew look={CAST.clerkB} x={CR.sco.x} y={CR.sco.y} h={CR.sco.h} frame={f} seed={9} flip shadow={false} life={0.4} pose={crewPose(scoArm, {a: 12, b: 16})} />
+                  <Crew look={CAST.clerkC} x={CR.dir.x} y={CR.dir.y} h={CR.dir.h} frame={f} seed={14} flip shadow={false} life={0.15} pose={{...crewPose(dirArmR, dirArmL, -0.1)}} />
+                  <Crew look={CAST.clerkA} x={CR.tos.x} y={CR.tos.y} h={CR.tos.h} frame={f} seed={3} flip shadow={false} life={0.15} pose={crewPose(tosArm, {a: 14, b: 18})} />
+                  <Crew look={CAST.clerkB} x={CR.sco.x} y={CR.sco.y} h={CR.sco.h} frame={f} seed={9} flip shadow={false} life={0.15} pose={crewPose(scoArm, {a: 12, b: 16})} />
                 </g>
                 {/* props stay in colour: slate, target, score card */}
-                <g transform={`translate(${hDir.x} ${hDir.y}) rotate(${lerp(-20, 6, slateUp)})`}><BigClapper x={-40} y={-20} s={0.13} clap={t < T_CLAP ? 0 : 1} text="DEMO" /></g>
+                <g transform={`translate(${hDir.x} ${hDir.y}) rotate(${lerp(-20, 6, slateUp)})`}><BigClapper x={-40} y={-20} s={0.13} clap={easeIn(seg(t, T_CLAP - 0.14, T_CLAP))} text="DEMO" /></g>
                 {t < TOSS ? <g transform={`translate(${hTos.x} ${hTos.y}) scale(0.55)`}><ellipse rx={92} ry={30} fill="#FFFFFF" stroke={C.teal} strokeWidth={16} /><ellipse rx={40} ry={13} fill="none" stroke={C.teal} strokeWidth={12} /></g> : null}
                 {fly >= 0 ? (
                   <g transform={`translate(${lerp(hTos.x, TGT_X, fly)} ${lerp(hTos.y, SURF, fly) - Math.sin(Math.PI * fly) * 220}) scale(${lerp(0.55, 1, fly)})`}>

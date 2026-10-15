@@ -576,4 +576,4 @@ export const Real: React.FC = () => {
 const DiceWipeLayer: React.FC<{t: number}> = ({t}) => <DiceWipe t={t} />;
 void Crew; void CAST; void IDLE; void easeOut; void C; void Chip;
 /** Event times for the sound cue sheet. */
-export const REAL_EV = {T_X0, T_X1, DICE0, DICE1, DICE_COVER, ROUNDS, VAR, HJ, CROUCH_T, J_PAY, HALL_WALK, hallPose};
+export const REAL_EV = {T_X0, T_X1, DICE0, DICE1, DICE_COVER, ROUNDS, VAR, HJ, CROUCH_T, J_PAY, HALL_WALK, hallPose, R_BASE, BASE_RW0, DIE_EV};

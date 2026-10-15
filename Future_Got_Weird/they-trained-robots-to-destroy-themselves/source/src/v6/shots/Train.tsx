@@ -782,4 +782,4 @@ export const Train: React.FC = () => {
 };
 void easeIn; void Robot2D; void DEMO0; void DEMO1;
 /** Event times for the sound cue sheet. */
-export const TRAIN_EV = {A1, A2, A3, SG, T_GRID0, RW1a, RW1b, TOSS, SPLIT0, T_DIVE, DEMO0, DEMO1, T_TAP1, T_TAP2, SLIP0, PER};
+export const TRAIN_EV = {A1, A2, A3, SG, T_GRID0, RW1a, RW1b, RW2a, TOSS, SPLIT0, T_DIVE, DEMO0, DEMO1, T_TAP1, T_TAP2, SLIP0, PER, T_DARK0, T_DARK1, T_BUILD1, REL};
