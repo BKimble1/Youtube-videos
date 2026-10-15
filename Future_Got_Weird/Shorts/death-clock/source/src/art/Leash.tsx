@@ -40,10 +40,13 @@ export const leashGeo = (dog: DogPose, f: number) => {
   const h = T.y - R.y;
   // a tiny secondary sway on the hang only (<= 3.7 units); the cord on the grass stays put
   const sw = 2.6 * Math.sin((2 * Math.PI * f) / 52) + 1.1 * Math.sin((2 * Math.PI * f) / 23 + 1);
+  // V4 fix: the hang arrives at the touchdown nearly straight down (a slack cord settling), with a long last handle,
+  // and the lying part leaves on that same tangent (no zig-zag kink at the touchdown)
+  const tin = {x: 0.242, y: 0.97};
+  const kh = Math.max(0.32 * h, 12);
   const h1 = {x: R.x - 3 + sw, y: R.y + 0.55 * h};
-  const h2 = {x: T.x + 16 + 0.3 * sw, y: T.y - 6};
+  const h2 = {x: T.x - tin.x * kh + 0.3 * sw, y: T.y - tin.y * kh};
   // lying part: leaves the touchdown on the hang's own tangent, enters the handle's eye along the handle axis
-  const tin = {x: -0.936, y: 0.351};
   const k = 0.38 * Math.max(Math.hypot(eye.x - T.x, eye.y - T.y), 40);
   const g1 = add(T, mul(tin, k));
   const g2 = add(eye, mul(u, k));

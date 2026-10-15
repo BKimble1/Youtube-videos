@@ -366,7 +366,15 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
     const sf1 = add(A.S, mul(u, fadeR));
     const big = 4000;
     const hemSide = `M${P(add(A.S, mul(n, big)))} L${P(add(add(A.S, mul(n, big)), mul(u, big)))} L${P(add(add(A.S, mul(n, -big)), mul(u, big)))} L${P(add(A.S, mul(n, -big)))} Z`;
+    // near sleeve (V4 fix): a copy of the tee covers the crown and the tube's top, opaque down to tm0 and gone by tm1,
+    // over the sleeve's fill and side lines; the copy's stripes end on a soft, slightly arched edge (radial ramp about
+    // sc, from S + 10 s on the axis). The crown never covers the head (its ellipse, hm).
+    const tm0 = add(A.S, mul(u, 20 * s));
+    const tm1 = add(A.S, mul(u, 38 * s));
+    const scR = 130 * s;
+    const sc = add(A.S, mul(u, 10 * s + scR));
     const inkFade = isFar ? [{c: add(top, mul(u, -hc * 0.5)), r: r0 * 1.25}] : [{c: add(top, mul(u, -24 * s)), r: r0 * 1.65}];
+    const hR = DIM.headR * s + 7 * inkK * 0.36 + 1;
     const body = (
       <g key="sl">
         <defs>
@@ -393,23 +401,75 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
             </clipPath>
           )}
         </defs>
-        <g clipPath={isFar ? undefined : `url(#${id}-${k}cc)`}>
+        {!isFar && (
+          <defs>
+            <mask id={`${id}-${k}hm`}>
+              <rect x="-20000" y="-20000" width="40000" height="40000" fill="#FFF" />
+              <ellipse cx={fmt(j.head.x)} cy={fmt(j.head.y)} rx={fmt(hR)} ry={fmt(hR + 0.07 * DIM.headR * s)} transform={`rotate(${fmt(-(tc + p.neck))} ${fmt(j.head.x)} ${fmt(j.head.y)})`} fill="#000" />
+              <path d={hemSide} fill="#FFF" />
+            </mask>
+          </defs>
+        )}
+        <g clipPath={isFar ? undefined : `url(#${id}-${k}cc)`} mask={isFar ? undefined : `url(#${id}-${k}hm)`}>
         {/* the crown's contour dissolves into the shoulder; the sides keep theirs below it */}
         <Inked w={IN} id={`${id}-${k}si`} fade={inkFade}>
           <Lin id={`${id}-${k}sg`} d={d} from={add(mid, mul(ln, r0))} to={add(mid, mul(ln, -r0))} stops={[[0, '#FFFFFF'], [0.45, mix(c, '#F2F5F8', 0.5)], [0.85, mix(c, '#C9D5E0', 0.8)], [1, mix(c, '#B4C3D1', 0.8)]]} />
         </Inked>
         {!isFar && (
+          // V4 fix: the sleeve's top IS the tee: the tee's own fill, stripes and form shading (its gradients, by id) are
+          // painted again, opaque, over the crown and the crown's side lines, and fade out down the tube, so the sleeve
+          // emerges from the shoulder with no run-on lines and no translucent strip; the stripes end on a clean,
+          // slightly rounded edge (no smear) where the plain sleeve begins
           <Deco>
             <defs>
-              <clipPath id={`${id}-${k}sc`}>
-                <path d={d} />
+              <linearGradient id={`${id}-${k}tg`} gradientUnits="userSpaceOnUse" x1={fmt(tm0.x)} y1={fmt(tm0.y)} x2={fmt(tm1.x)} y2={fmt(tm1.y)}>
+                <stop offset="0" stopColor="#FFF" />
+                <stop offset="1" stopColor="#000" />
+              </linearGradient>
+              <mask id={`${id}-${k}tm`}>
+                <path d={d} fill={`url(#${id}-${k}tg)`} stroke={`url(#${id}-${k}tg)`} strokeWidth={fmt(2 * (IN * 0.36 + 2 * s))} strokeLinejoin="round" />
+              </mask>
+              <radialGradient id={`${id}-${k}rg`} gradientUnits="userSpaceOnUse" cx={fmt(sc.x)} cy={fmt(sc.y)} r={fmt(scR)}>
+                <stop offset="0" stopColor="#000" />
+                <stop offset={fmt((scR - 10 * s) / scR)} stopColor="#000" />
+                <stop offset="1" stopColor="#FFF" />
+              </radialGradient>
+              <mask id={`${id}-${k}sc`}>
+                <rect x="-20000" y="-20000" width="40000" height="40000" fill={`url(#${id}-${k}rg)`} />
+              </mask>
+            </defs>
+            <g clipPath={`url(#${id}-tclip)`}>
+              <g mask={`url(#${id}-${k}tm)`}>
+                <path d={torsoD} fill={`url(#${id}-tor)`} />
+                <g mask={`url(#${id}-${k}sc)`}>
+                  {stripes.map((sd, i) => (
+                    <path key={i} d={sd} fill={PAL.stripe} />
+                  ))}
+                </g>
+                <path d={torsoD} fill={`url(#${id}-tf)`} />
+                <path d={torsoD} fill={`url(#${id}-tb)`} />
+                <InkLine d={`M${P(loc(j.C, tc, 146, -36))} Q${P(loc(j.C, tc, 128, 0))} ${P(loc(j.C, tc, 148, 32))}`} w={OUT * 0.7} />
+              </g>
+            </g>
+          </Deco>
+        )}
+        {!isFar && (
+          // where the far forearm or hand passes behind the crown, the sleeve's edge stays drawn as an occlusion line
+          // (only over that arm: an alpha mask of its silhouette), so the fingers tuck behind the arm, not into the tee
+          <Deco>
+            <defs>
+              <mask id={`${id}-${k}om`} style={{maskType: 'alpha'}}>
+                <Inked w={IN}>
+                  <Capsule id={`${id}-${k}oa`} a={j.R.E} b={j.R.W} ra={23.5 * s} rb={17 * s} color="#000" />
+                  <Hand id={`${id}-${k}oh`} wrist={add(j.R.W, mul(j.R.foreDir, -6 * s))} ang={j.R.handAng} L={DIM.hand * s} thumbSide={-1} view="back" pose={rHand} color="#000" ink={IN * 0.9} bare />
+                </Inked>
+              </mask>
+              <clipPath id={`${id}-${k}ox`}>
+                <path d={`M-20000 -20000 H20000 V20000 H-20000 Z ${d}`} clipRule="evenodd" />
               </clipPath>
             </defs>
-            {/* the tee's stripes and shading run on into the top of the sleeve, so it grows out of the shoulder */}
-            <g clipPath={`url(#${id}-${k}sc)`} mask={`url(#${id}-${k}sm)`}>
-              {stripes.map((sd, i) => (
-                <path key={i} d={sd} fill={PAL.stripe} />
-              ))}
+            <g mask={`url(#${id}-${k}om)`}>
+              <path d={d} fill="none" stroke={INK} strokeWidth={fmt(IN * 0.72)} strokeLinejoin="round" clipPath={`url(#${id}-${k}ox)`} />
             </g>
           </Deco>
         )}

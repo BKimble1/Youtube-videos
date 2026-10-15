@@ -140,34 +140,24 @@ const onVP = (path: typeof VP, s: number, l = 0) => {
 /** the hero's world position (also read by scripts/check_captions4.ts) */
 export const heroWorld = (f: number) => onVP(VP, heroS(f), heroL(f));
 /** V4 continuity: the arc length the dive and ride cameras follow. heroS changes its acceleration at B.dive1 (the 'race'
- *  starts there), which the hero-locked camera turned into a one-frame jolt of the whole picture at 299/300; the camera
- *  follows a C2 blend of it instead (a quintic Hermite matching position, speed and acceleration at both ends of
- *  FOLLOW: the dive's own values at dive1), so the camera lags a little as the hero races off (it leads on screen by
- *  up to about 46 px, then the camera catches up) and the picture's acceleration builds over three frames instead of
- *  one */
-const FOLLOW: [number, number] = [B.dive1, B.dive1 + 11];
+ *  starts there); a hero-locked camera turns that into a jolt of the whole picture, and the V4 quintic catch-up over
+ *  299-310 still swung the red cells' flow from about 20 px/frame up the screen to 57 down within ~6 frames. The camera
+ *  now follows a smoothed copy of heroS across the dive end instead (a raised-cosine average over +-FOLLOW_K frames,
+ *  blended in and out over 8 frames at the ends of FOLLOW), so its speed ramps monotonically from the dive's to the
+ *  race's over ~20 frames: the flow turns round gently, and the hero drifts a little behind, then ahead, on screen */
+const FOLLOW: [number, number] = [B.dive1 - 20, B.dive1 + 30];
+const FOLLOW_K = 10;
 const camS = (() => {
   const [t0, t1] = FOLLOW;
-  const e = 0.05;
-  // at t0 (the knot) the dive side's speed and acceleration (one-sided), so the camera lags as the hero races off
-  const v0 = (3 * heroS(t0) - 4 * heroS(t0 - e) + heroS(t0 - 2 * e)) / (2 * e);
-  const a0 = (heroS(t0) - 2 * heroS(t0 - e) + heroS(t0 - 2 * e)) / (e * e);
-  const v1 = (heroS(t1 + e) - heroS(t1 - e)) / (2 * e);
-  const a1 = (heroS(t1 + e) - 2 * heroS(t1) + heroS(t1 - e)) / (e * e);
-  const [p0, p1] = [heroS(t0), heroS(t1)];
-  const h = t1 - t0;
+  const n = 4 * FOLLOW_K;
+  const wts = Array.from({length: 2 * n + 1}, (_, j) => 0.5 + 0.5 * Math.cos((Math.PI * (j - n)) / n));
+  const wsum = wts.reduce((x, y) => x + y, 0);
+  const smoothS = (f: number) => wts.reduce((acc, w, j) => acc + w * heroS(f + (j - n) / 4), 0) / wsum;
+  const c2 = (t: number) => t * t * t * (t * (6 * t - 15) + 10);
   return (f: number) => {
     if (f <= t0 || f >= t1) return heroS(f);
-    const u = (f - t0) / h;
-    const [u2, u3, u4, u5] = [u * u, u ** 3, u ** 4, u ** 5];
-    return (
-      (1 - 10 * u3 + 15 * u4 - 6 * u5) * p0 +
-      (u - 6 * u3 + 8 * u4 - 3 * u5) * h * v0 +
-      (0.5 * u2 - 1.5 * u3 + 1.5 * u4 - 0.5 * u5) * h * h * a0 +
-      (0.5 * u3 - u4 + 0.5 * u5) * h * h * a1 +
-      (-4 * u3 + 7 * u4 - 3 * u5) * h * v1 +
-      (10 * u3 - 15 * u4 + 6 * u5) * p1
-    );
+    const w = c2(clamp((f - t0) / 8)) * (1 - c2(clamp((f - t1 + 8) / 8)));
+    return lerp(heroS(f), smoothS(f), w);
   };
 })();
 /** the point the dive and ride cameras are anchored on (the hero, but on camS) */
@@ -669,13 +659,67 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
             {/* the transmission pulse: a blue ring leaves the band and rises toward the street; it is drawn through
                 its last frame (B.tx1) and the map picks it up one frame on at the same screen point and speed
                 (Dispatch.tsx txPulseW/txHandoff replicate this world path: keep them in step) */}
-            {tx > 0 && f <= B.tx1 && (
-              <g>
-                <Glow id={`${id}-txg`} c={add(BAND_C, {x: -40 * ease(tx), y: -520 * Math.pow(tx, 1.4)})} r={60 + 40 * tx} color="#39C6F4" alpha={0.8 * (1 - tx * 0.3)} />
-                <circle cx={fmt(BAND_C.x - 40 * ease(tx))} cy={fmt(BAND_C.y - 520 * Math.pow(tx, 1.4))} r={fmt(10 + 34 * tx)} fill="none" stroke="#BFF3FF" strokeWidth={fmt(4)} opacity={0.95} />
-                <circle cx={fmt(BAND_C.x - 40 * ease(tx))} cy={fmt(BAND_C.y - 520 * Math.pow(tx, 1.4))} r={fmt(6)} fill="#FFFFFF" />
-              </g>
-            )}
+            {/* V4 fix: the same path, masked. Nothing is drawn over the band's glass (a soft-edged hole round it, so the
+                emitter's glow never washes the digits; the pulse emerges past the case's top edge). On his body the ring
+                and glow are clipped to the bare arm's skin (wrist to the sleeve hem), so they end at the sleeve edge and
+                never cross the tee or the sleeve; once the pulse is past the hem (behind his shoulder) it is drawn again
+                wherever it is clear of the tee, rising on into the air, where the map picks it up at 727 */}
+            {tx > 0 && f <= B.tx1 && (() => {
+              const mk = `${id}-txm`;
+              const A = j.L;
+              const ms = man.s;
+              const hem = add(A.S, mul(sub(A.E, A.S), 0.56));
+              const ua = norm(sub(A.E, A.S));
+              const quad = (p: V, q: V, rp: number, rq: number) => {
+                const d = norm(sub(q, p));
+                const n = {x: -d.y, y: d.x};
+                const pts = [add(p, mul(n, rp)), add(q, mul(n, rq)), add(q, mul(n, -rq)), add(p, mul(n, -rp))];
+                return `M${pts.map((v) => `${fmt(v.x)},${fmt(v.y)}`).join(' L')} Z`;
+              };
+              const pc = add(BAND_C, {x: -40 * ease(tx), y: -520 * Math.pow(tx, 1.4)});
+              // how far the pulse's centre is past the hem, toward the shoulder (world)
+              const past = -((pc.x - hem.x) * ua.x + (pc.y - hem.y) * ua.y);
+              const air = smooth(clamp(past / (30 * ms)));
+              const sl0 = add(A.S, mul(ua, -40 * ms));
+              const sl1 = add(hem, mul(ua, 8 * ms));
+              const box = {x: fmt(BAND_C.x - 3000), y: fmt(BAND_C.y - 3000), width: 6000, height: 6000};
+              const glassHole = <circle cx={fmt(GLASS_C.x)} cy={fmt(GLASS_C.y)} r={fmt(CASE_HALF_DIAG * 1.15)} fill={`url(#${mk}-g)`} />;
+              const pulse = (
+                <>
+                  <Glow id={`${id}-txg`} c={pc} r={60 + 40 * tx} color="#39C6F4" alpha={0.8 * (1 - tx * 0.3)} />
+                  <circle cx={fmt(pc.x)} cy={fmt(pc.y)} r={fmt(10 + 34 * tx)} fill="none" stroke="#BFF3FF" strokeWidth={fmt(4)} opacity={0.95} />
+                  <circle cx={fmt(pc.x)} cy={fmt(pc.y)} r={fmt(6)} fill="#FFFFFF" />
+                </>
+              );
+              return (
+                <g>
+                  <defs>
+                    <radialGradient id={`${mk}-g`}>
+                      <stop offset={0.78} stopColor="#000000" />
+                      <stop offset={1} stopColor="#000000" stopOpacity={0} />
+                    </radialGradient>
+                    <mask id={`${mk}-a`} maskUnits="userSpaceOnUse" {...box}>
+                      <path d={quad(A.W, A.E, R0.rW, R0.rE)} fill="#FFFFFF" />
+                      <circle cx={fmt(A.E.x)} cy={fmt(A.E.y)} r={fmt(R0.rE)} fill="#FFFFFF" />
+                      <path d={quad(A.E, hem, 23.5 * ms, 25.9 * ms)} fill="#FFFFFF" />
+                      {glassHole}
+                    </mask>
+                    <mask id={`${mk}-b`} maskUnits="userSpaceOnUse" {...box}>
+                      <rect {...box} fill="#FFFFFF" />
+                      <path d={torsoPath(man)} fill="#000000" stroke="#000000" strokeWidth={fmt(16 * ms)} />
+                      <path d={`M${fmt(sl0.x)},${fmt(sl0.y)} L${fmt(sl1.x)},${fmt(sl1.y)}`} stroke="#000000" strokeWidth={fmt(2 * 46 * ms)} />
+                      {glassHole}
+                    </mask>
+                  </defs>
+                  <g mask={`url(#${mk}-a)`}>{pulse}</g>
+                  {air > 0.01 && (
+                    <g mask={`url(#${mk}-b)`} opacity={fmt(air)}>
+                      {pulse}
+                    </g>
+                  )}
+                </g>
+              );
+            })()}
           </g>
         );
       })()}

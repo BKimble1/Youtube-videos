@@ -515,8 +515,10 @@ export const SectionLayers: React.FC<SectionProps> = ({id, sf, open, tube, x0, x
           frames never read as an empty outline on the skin */}
       <path d={win} fill="none" stroke="#F8DCCB" strokeWidth={16} opacity={0.85 * rimK} />
       <path d={win} fill="none" stroke="#172B3A" strokeWidth={5} opacity={0.4 * rimK} />
-      {sweep && e > 0.01 && e < 0.985 && (
-        <path d={`M${f2(wx0)},${f2(top + 40)} L${f2(wx0)},${f2(dep - rc)} A${f2(rc)},${f2(rc)} 0 0 0 ${f2(wx0 + rc)},${f2(dep)} L${f2(wx1 - rc)},${f2(dep)}`} fill="none" stroke="#C9F4FF" strokeWidth={12} strokeLinecap="round" opacity={0.7 * Math.sin(Math.PI * Math.min(1, e * 1.05))} />
+      {/* V4 fix: the sweep's lit edge belongs to the overview only; it is gone by e 0.41 (the punch-in at 177, e 0.43),
+          so no bright line runs down the window's cut edge in the close-up */}
+      {sweep && e > 0.01 && e < 0.41 && (
+        <path d={`M${f2(wx0)},${f2(top + 40)} L${f2(wx0)},${f2(dep - rc)} A${f2(rc)},${f2(rc)} 0 0 0 ${f2(wx0 + rc)},${f2(dep)} L${f2(wx1 - rc)},${f2(dep)}`} fill="none" stroke="#C9F4FF" strokeWidth={12} strokeLinecap="round" opacity={0.7 * Math.sin(Math.PI * Math.min(1, e * 1.05)) * (1 - smooth(clamp((e - 0.3) / 0.11)))} />
       )}
     </g>
   );
@@ -581,9 +583,10 @@ export const streamPath = (sf: SecFrame, vp: Arc & {entry: number}): Arc => {
 };
 
 /** The sensors crossing into the vessel: sparse discrete cyan beads that fan out along the curved route (each bead
- *  fast out of the nose, slowing to the flow's speed as it merges, arriving at its own lane in the flow), and a faint
- *  trace of the route. */
-export const StreamDraw: React.FC<{id: string; sf: SecFrame; vp: Arc & {entry: number}; f: number; rel: SensorRelease; trace: number}> = ({id, sf, vp, f, rel, trace}) => {
+ *  fast out of the nose, slowing to the flow's speed as it merges, arriving at its own lane in the flow). V4 fix: no
+ *  standalone trace of the route (it ran ahead of the leading bead and outlived the stream); each bead's own short wake
+ *  is the only trail. `trace` is kept in the props for the caller but no longer drawn. */
+export const StreamDraw: React.FC<{id: string; sf: SecFrame; vp: Arc & {entry: number}; f: number; rel: SensorRelease; trace: number}> = ({id, sf, vp, f, rel}) => {
   const sp = streamPath(sf, vp);
   const L = sp.L;
   const c = clamp(1 - (rel.vVessel * rel.travel) / L, 0, 0.9);
@@ -608,7 +611,6 @@ export const StreamDraw: React.FC<{id: string; sf: SecFrame; vp: Arc & {entry: n
   return (
     <g>
       <BeadDefs id={`${id}-b`} />
-      {trace > 0.01 && <path d={`M${sp.pts.map(P2).join(' L')}`} fill="none" stroke={PAL.signal} strokeOpacity={0.14 * trace} strokeWidth={16} strokeLinecap="round" />}
       {els}
     </g>
   );
