@@ -4,8 +4,8 @@
   "bytes": 2113
  },
  "FGW_DeathClock_V4_Cover_1080x1920.png": {
-  "sha256": "a283c0032ce369eac52041cd64cd7d1a7f9be4004a884ebffe06a234d4645350",
-  "bytes": 1205279,
+  "sha256": "66b791499098b32e1b87b85fe91b8fbaa1759ec897713e64678d47e85526c0ee",
+  "bytes": 1197629,
   "ffprobe": {
    "programs": [],
    "streams": [
@@ -20,13 +20,13 @@
     }
    ],
    "format": {
-    "size": "1205279"
+    "size": "1197629"
    }
   }
  },
  "FGW_DeathClock_V4_Final_1080x1920.mp4": {
-  "sha256": "fb29c9326b5270d9d005ca2fecd1c96fe12db896774de84bdd3a28a3e8e5e24c",
-  "bytes": 28782937,
+  "sha256": "01ad1f5d385f68937db9ba63cd9f77fae83c04a817312cd8e36b92d5cf9b6eaa",
+  "bytes": 28782197,
   "ffprobe": {
    "programs": [],
    "streams": [
@@ -53,8 +53,8 @@
    ],
    "format": {
     "duration": "45.000000",
-    "size": "28782937",
-    "bit_rate": "5116966"
+    "size": "28782197",
+    "bit_rate": "5116835"
    }
   }
  },
@@ -63,8 +63,8 @@
   "bytes": 835
  },
  "FGW_DeathClock_V4_Review.mp4": {
-  "sha256": "b953c7d69617b314100f1b87670356c6087377011f0d6e5a7c9cec63216c0945",
-  "bytes": 5517292,
+  "sha256": "9669e5c9797372774351aa9b93dea8b24d14a3607c3317095a2d565c53d5b744",
+  "bytes": 5523882,
   "ffprobe": {
    "programs": [],
    "streams": [
@@ -91,8 +91,8 @@
    ],
    "format": {
     "duration": "45.013000",
-    "size": "5517292",
-    "bit_rate": "980568"
+    "size": "5523882",
+    "bit_rate": "981739"
    }
   }
  },
