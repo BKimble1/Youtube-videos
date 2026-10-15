@@ -21,6 +21,7 @@ inspection.
 |---|---|---|
 | `exports/FGW_RobotsDestroy_v6_UPLOAD_1080p.mp4` | H.264 High, **1920×1080**, 30 fps CFR (native, rendered from source), yuv420p, BT.709. 6,502 frames, 216.73 s. AAC-LC 48 kHz stereo at 285 kb/s. 87.2 MiB. SHA-256 `dd761d33327ae8dcf529977df1e84d1f00d9fc85c2d39ba95465ee805a206486` | **Upload master.** CRF 16, x264 slow; the audio is the V6 mix encoded from the 48 kHz WAV. Backed up as five split parts in `backup/v6/`; the parts pass `sha256sum -c`, and the joined parts hash to the master |
 | `exports/FGW_RobotsDestroy_v6_1080p_SHARE.mp4` | 1920×1080, 30 fps, two-pass H.264 at 0.96 Mb/s, AAC 128 kb/s, 216.75 s, 28.5 MiB. SHA-256 `781da846674b03178eca6822f93ad5fc3a72ecc2ce8cc2c58130a95142470bef` | **Review/share copy, not for upload.** Made from the master |
+| `exports/FGW_RobotsDestroy_v6_UPLOAD_4K.mp4` | H.264 High, **3840×2160**, 30 fps, yuv420p, BT.709, 6,502 frames, 216.73 s, 7.2 Mb/s video; AAC 48 kHz from the same mix (−15.0 LUFS, −1.5 dBTP). 194 MiB. SHA-256 `de3c7070d21b90abaf4423f975bf6e8e123e62abd1b80addf4a3579aae07ce18` | **4K upload master.** Rendered natively at 2× scale from the vector source (not upscaled). It matches the 1080p master: the mean difference at eight timecodes, compared at 480×270, is 0.24–0.81 of 255 |
 | `captions/FGW_RobotsDestroy_v6.srt` | 70 cues, at most 42 characters per line, no overlaps. First cue at 0.46 s; last ends at 214.60 s | Byte-identical to the V5 captions (the narration did not change) |
 
 Runtime: 3:36.7, the same as V5.

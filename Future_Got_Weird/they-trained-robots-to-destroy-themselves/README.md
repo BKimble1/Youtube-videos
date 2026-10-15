@@ -29,6 +29,7 @@ real time or listened to it here. `QA_REPORT.md` (V6 section) lists exactly what
 | Narration | Unchanged V5 narration (`audio/v5/narration/`), word timings `source/src/v6/data/narration_words_v5.json` |
 | Cue sheet, score, mix, speech-masking check | `source/src/v6/sfx_v6.ts`, `audio/v6/sfx_cues_v6.json`, `tools/v6/synth_score_v6.py`, `tools/v6/mix_audio_v6.py`, `audio/v6/mix/mix_v6_measure.json`, `audio/v6/mix/speech_mask_v6.txt` |
 | **Upload master 1080p** | `exports/FGW_RobotsDestroy_v6_UPLOAD_1080p.mp4` (Git-ignored; backed up as checksummed parts in `backup/v6/`) |
+| **Upload master 4K** | `exports/FGW_RobotsDestroy_v6_UPLOAD_4K.mp4`: 3840×2160, 30 fps, rendered natively from the source at 2× scale (not upscaled), H.264 CRF 17, AAC 320 kb/s from the same mix, 194 MiB, SHA-256 `de3c7070d21b90abaf4423f975bf6e8e123e62abd1b80addf4a3579aae07ce18`. Git-ignored and not split into backup parts (it is reproducible with the command below) |
 | Share/review copy (compressed, not for upload) | `exports/FGW_RobotsDestroy_v6_1080p_SHARE.mp4` (Git-ignored; regenerate with `tools/v6/share_and_backup_v6.sh`) |
 | Captions | `captions/FGW_RobotsDestroy_v6.srt` (identical to V5: same narration) |
 | Title, description, chapters | `upload/UPLOAD_TEXT_v6.md`, `upload/chapters_v6.txt` (same text and times as V5) |
@@ -45,6 +46,8 @@ real time or listened to it here. `QA_REPORT.md` (V6 section) lists exactly what
     python3 tools/v6/speech_mask_v6.py                      # where effects come within 6 dB of the voice
     (cd source && npx remotion render src/index.ts V6Main ../exports/FGW_RobotsDestroy_v6_UPLOAD_1080p.mp4 --props='{"audio":"mix"}' --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k)
     bash tools/v6/share_and_backup_v6.sh                    # share copy + checksummed backup parts
+    (cd source && npx remotion render src/index.ts V6Main /tmp/v6_4k_video.mp4 --props='{"audio":false}' --scale=2 --crf=17 --x264-preset=medium --color-space=bt709)
+    ffmpeg -i /tmp/v6_4k_video.mp4 -i audio/v6/mix/mix_v6.wav -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 320k -ar 48000 -movflags +faststart exports/FGW_RobotsDestroy_v6_UPLOAD_4K.mp4   # 4K master
     python3 tools/v6/qa_v6.py                               # measured QA -> qa/v6/qa_v6_results.json
     python3 tools/v6/strips_v6.py                           # ±12-frame strips at every transition (qa/v6/transitions_v6.json)
     python3 tools/v6/compare_v6.py                          # V5 vs V6 frames at the brief's problem spots
