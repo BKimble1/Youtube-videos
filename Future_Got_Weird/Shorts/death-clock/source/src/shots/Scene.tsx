@@ -57,11 +57,13 @@ export type SceneProps = {
   under?: React.ReactNode;
   nearLegFront?: boolean;
   overAll?: React.ReactNode;
+  /** V4: drawn over the tee, under the near thigh, the far forearm and hand and the near arm (the chest window) */
+  overTorso?: React.ReactNode;
   /** hide the street foreground tufts */
   noTufts?: boolean;
 };
 
-export const Scene: React.FC<SceneProps> = ({id, f, cam, man, expr, blink = 0, lHand, rHand, dog, hairSway = 0, dev, backdrop = 0, backdropC, afterRightArm, beforeLeftForearm, leash = true, extra, under, nearLegFront, overAll, noTufts}) => {
+export const Scene: React.FC<SceneProps> = ({id, f, cam, man, expr, blink = 0, lHand, rHand, dog, hairSway = 0, dev, backdrop = 0, backdropC, afterRightArm, beforeLeftForearm, leash = true, extra, under, nearLegFront, overAll, overTorso, noTufts}) => {
   const j = manJoints(man);
   // the left forearm's own contact shadow on the grass when it rests there
   const fa = j.L;
@@ -93,6 +95,7 @@ export const Scene: React.FC<SceneProps> = ({id, f, cam, man, expr, blink = 0, l
         inkK={1 / Math.max(1, Math.sqrt(cam.z / 1.4))}
         afterRightArm={afterRightArm}
         overAll={overAll}
+        overTorso={overTorso}
         beforeLeftForearm={
           <g>
             {beforeLeftForearm}

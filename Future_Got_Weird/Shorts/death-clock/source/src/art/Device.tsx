@@ -15,7 +15,7 @@ import {lit, mix, PAL, shade} from '../lib/color';
 import {add, clamp, hash, len, lerp, mul, norm, sub, V} from '../lib/math';
 import {Capsule, Glow, Lin, Sphere} from '../lib/shade';
 import {Inked, InkFade, useInk} from '../lib/ink';
-import {Limb} from '../lib/limb';
+import {Limb, limbGeo} from '../lib/limb';
 import {fmtClock, ScreenState} from '../lib/screen';
 import {ringAlpha} from '../lib/device3';
 import {Hand, HandPose} from './Hand';
@@ -68,6 +68,9 @@ export type DeviceView = {
   overArm?: (A: ArmFrame) => React.ReactNode;
   /** drawn between the arm surface and the strap (the section window opens under the strap edge) */
   inArm?: (A: ArmFrame) => React.ReactNode;
+  /** V4: drawn on the bare arm skin, under the sleeve and the strap, clipped to the bare arm (the exterior
+   *  diagnostic trace) */
+  onSkin?: (A: ArmFrame) => React.ReactNode;
   /** case content clipped to the case profile when cut open (the underside module) */
   caseCut?: (A: ArmFrame, c: CaseGeo) => React.ReactNode;
   /** 0..1 how far the case's near half is cut away */
@@ -447,6 +450,16 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
       {/* far side of the strap: only its edge shows past the wrist's outline */}
       <Lin id={`${id}-stb`} d={strap(false)} from={topP} to={botP} stops={[[0, shade(PAL.band, 0.35)], [1, shade(PAL.band, 0.6)]]} />
       {armGroup}
+      {dev.onSkin && S && rS && (
+        <g>
+          <defs>
+            <clipPath id={`${id}-skin`}>
+              <path d={limbGeo(S, E, W, rS, rE, rW).d} />
+            </clipPath>
+          </defs>
+          <g clipPath={`url(#${id}-skin)`}>{dev.onSkin(A)}</g>
+        </g>
+      )}
       {afterArm}
       {dev.inArm && <g clipPath={`url(#${id}-arm)`}>{dev.inArm(A)}</g>}
       {/* the screen's coloured light on the skin, and the strap's contact shadows, kept on the arm */}

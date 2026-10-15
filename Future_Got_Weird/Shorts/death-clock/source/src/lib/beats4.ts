@@ -48,6 +48,57 @@ export const B4 = {
   retreat1: B.release0 + 15,
 
   // ---- reveal states and heartbeat (lib/reveal4.ts, lib/heart4.ts) -- owned by the anatomy area
+  // Journey: arm section -> closed exterior with a trace -> chest window -> closed chest -> wrist.
+  /** the arm section closes (shrinks back to the port) while the camera pulls out of the vessel */
+  armClose0: 442,
+  armClose1: 454,
+  /** the case turns back from its profile (section) roll to face the camera, after the cut has closed */
+  caseRoll0: 452,
+  caseRoll1: 468,
+  /** the exterior diagnostic trace on the bare arm skin: fades in as the section closes, out after the landing */
+  traceIn0: 446,
+  traceIn1: 456,
+  traceOut0: B.red,
+  traceOut1: B.red + 12,
+  /** amber diagnostic dashes leave the band and run up the trace toward the chest (launch frames) */
+  sigLaunch: [450, 458, 466, 474, 482, 490] as number[],
+  /** frames a dash takes from the band to the sleeve hem, under the sleeve, and along the chest segment */
+  sigArmT: 16,
+  sigHiddenT: 6,
+  sigChestT: 5,
+  /** the chest window: grows out from under the near arm, slides back under it (nothing left behind) */
+  chestOpen0: B.organ0,
+  chestOpen1: B.organ0 + 14,
+  chestClose0: 570,
+  chestClose1: 584,
+  /** the failing organ (liver) dims; sensors appear on it, then on the heart */
+  organDim0: B.fail - 4,
+  organDim1: B.fail + 10,
+  organSense0: B.organ0 + 8,
+  heartSense0: B.heart0 - 6,
+  /** the red warning: leaves the heart, runs under the sleeve, emerges at the hem and lands in the band */
+  warn0: B.sig0,
+  warnArmEdge: B.sig0 + 5,
+  warnHem: B.sig0 + 13,
+  warn1: B.sig1 - 4,
+  /** his free (right) hand grips low (his raised near knee, clear of the window) while the chest is shown */
+  rLow0: B.pull0,
+  rLow1: B.organ0,
+  rHigh0: B.count0,
+  rHigh1: B.count0 + 12,
+  // Treatment: a hard cut from the vessel into the same chest view, already open; the pulse runs down the
+  // superior vena cava into the right atrium, the rhythm settles (lib/heart4.ts), the window closes.
+  chestCut: B.settleHeart0,
+  treatSvc1: B.settleHeart0 + 8,
+  treatLight1: B.settleHeart0 + 18, // the cyan light where the pulse enters the atrium is gone by here
+  /** the window closes right after the full lub (its squeeze 1026-1030 is seen open), before the camera pulls */
+  treatClose0: B.settleHeart1 - 1,
+  treatClose1: B.settleHeart1 + 9,
+  /** the pull from the chest view out to the recovery framing (it joins the recovery keys at treatPull1) */
+  treatPull0: B.settleHeart1 + 4,
+  treatPull1: B.release0 + 9,
+  treatHigh0: B.settleHeart1 + 8,
+  treatHigh1: B.release0 + 13,
 
   // ---- treatment sub-beats (Aftermath3 treatment) -- owned by the device/treatment area
 };

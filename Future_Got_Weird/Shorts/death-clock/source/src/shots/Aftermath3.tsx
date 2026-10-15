@@ -1,7 +1,8 @@
 // V3 arrival -> treatment -> recovery -> the question -> the loop bridge, in his street world with the same rig.
 // The drone arrives as assistance and hovers beside him (a data link to the band, no healing light); the band
-// treats: its case turns, the port presses, one blue pulse runs into the established vessel and up the arm to
-// the heart, whose rhythm settles; the window closes as his fingers release and he breathes. The support hand
+// treats: its case turns, the port presses, one blue pulse runs into the established vessel; a hard cut into the
+// same chest window as the journey (already open) shows the pulse arrive through the superior vena cava and the
+// heart's rhythm settle (lib/reveal4.ts, lib/heart4.ts); the window closes cleanly and he breathes. The support hand
 // loads, he pushes up to sitting and lifts the wrist: green replaces red, "Life Expectancy: 42 Years". Unease.
 // The camera returns to the glass; one local "?" glitch turns into the red 00:02:14 of the opening, and the same
 // push carries on through frames 0-7 of the next play (the cold open), so the loop is one camera move.
@@ -11,18 +12,18 @@ import {Drone, DronePose} from '../art/Drone';
 import {EXPR_GASP, EXPR_PAIN, EXPR_RELIEF, EXPR_UNEASY, Expr, mixExpr} from '../art/Head';
 import {HAND_BRACE, HAND_CLUTCH, HAND_RELAXED, HandPose, mixHand} from '../art/Hand';
 import {PortModule, SectionLayers, VesselTube} from '../art/Interior';
-import {ChestCut, cutGeo, cutPathD} from '../art/Cutaway';
-import {manJoints, ManPose, torsoPath} from '../art/Man';
+import {ChestWindow, HAND_GRIP} from '../art/Cutaway';
+import {manJoints, ManPose} from '../art/Man';
 import {Cam} from '../lib/camera';
 import {PAL} from '../lib/color';
 import {deviceState3} from '../lib/device3';
-import {limbGeo} from '../lib/limb';
 import {spline, splineRec, SKey} from '../lib/motion';
-import {add, clamp, easeIn, easeInOut, easeOut, fmt, inv, lerp, mul, noise1, V} from '../lib/math';
+import {add, clamp, easeIn, easeInOut, easeOut, fmt, inv, lerp, mul, noise1, smooth, V} from '../lib/math';
 import {Glow} from '../lib/shade';
 import {B, TOTAL} from '../lib/timeline3';
+import {revealAt} from '../lib/reveal4';
 import {dogAt, PROP} from './Opening';
-import {BAND_C, LOCAL_PER_WORLD, PJ, R0, SEC_ROLL, SF, VP, VPX, W} from './Journey3';
+import {BAND_C, CHEST, CHEST_CAM, LOCAL_PER_WORLD, PJ, SEC_ROLL, SF, VP, W, withLowGrip, Z_CHEST} from './Journey3';
 import {Scene} from './Scene';
 import {B4} from '../lib/beats4';
 import {DRONE_S, droneBeacon, flightPitch, flyCam, flyDrone, hermite, rotorPhase, toScreenD} from './Dispatch';
@@ -52,7 +53,10 @@ const BODY: SKey<ManPose>[] = [
   [TOTAL + B.cut, {...SIT, neck: 3}],
 ];
 
-export const manAt = (f: number): ManPose => {
+/** V4: his free hand grips his raised knee (clear of the chest window) while the chest is shown, then rises to his
+ *  chest again (the same world-pinned grip as the journey) */
+export const manAt = (f: number): ManPose => withLowGrip(manAt0(f), revealAt(f).rHandLow);
+const manAt0 = (f: number): ManPose => {
   if (f < B.release0) {
     // breathing is held while the camera is inside the arm (the section frame is built on the still pose)
     const env = clamp(1 - inv(B.act0 - 6, B.act0, f) + inv(B.settleHeart1 - 6, B.release0, f));
@@ -91,7 +95,8 @@ const handsAt = (f: number): {l: HandPose; r: HandPose} => {
   // the callback: the fingers tense again with the red screen (and keep tensing into the cold open)
   l = mixHand(l, claw, ease(inv(B.callback - 2, TOTAL + B.cut, f)));
   const r0 = mixHand(HAND_CLUTCH, {...HAND_CLUTCH, curl: [0.55, 0.62, 0.66, 0.7]}, 0.5 + 0.5 * Math.sin(f * 0.3));
-  const r = mixHand(r0, {...HAND_CLUTCH, curl: [0.3, 0.34, 0.38, 0.42], spread: 0.5}, ease(inv(B.release0, B.release0 + 20, f)));
+  const r1 = mixHand(r0, {...HAND_CLUTCH, curl: [0.3, 0.34, 0.38, 0.42], spread: 0.5}, ease(inv(B.release0, B.release0 + 20, f)));
+  const r = mixHand(r1, HAND_GRIP, revealAt(f).rHandLow);
   return {l, r};
 };
 
@@ -142,8 +147,6 @@ export const arriveDrone3 = (f: number): DronePose => {
 const SEC_VIEW = W(SF.Xp - 760, 420);
 const PORT_VIEW = W(SF.Xp - 80, 200);
 const VES_VIEW = W(SF.Xp - 900, 520);
-const CUT0 = cutGeo(PJ.C, PJ.tc, PROP.s, 1);
-const HEART0 = CUT0.loc(86, -46);
 const MED = {x: 560, y: 1450};
 
 /** The trunk-wipe truck (frames before B.arrive): one rightward move that starts at the flyover's camera speed (v0,
@@ -152,7 +155,19 @@ const MED = {x: 560, y: 1450};
 const TRUCK = {x0: -16, y0: 1250, z0: 1.25, v0: 30};
 
 export const camAt = (g: number, wristW: V, headW: V): Cam => {
-  if (g < B.release0 + 4) {
+  if (g >= B4.chestCut && g < B4.treatPull1) {
+    // V4: the hard cut into the treatment chest view (the journey's framing) and a slow push while the rhythm
+    // settles; the window closes (1025-1035) before the pull gathers speed, and the pull lands on the recovery
+    // path itself at treatPull1 (same position, zoom and velocity), so there is no seam
+    const hold = ease(inv(B4.chestCut, B4.treatPull0, g));
+    const a = {x: CHEST_CAM.x - 3 * hold, y: CHEST_CAM.y - 2 * hold};
+    const za = Z_CHEST * (1 + 0.04 * hold);
+    // smoothstep (peak speed 1.5x the average, half that of the cubic in-out): an even pull, no whip
+    const e = smooth(inv(B4.treatPull0, B4.treatPull1, g));
+    const r = recoveryCam(g, wristW, headW);
+    return {x: lerp(a.x, r.x, e), y: lerp(a.y, r.y, e), z: Math.exp(lerp(Math.log(za), Math.log(r.z), e)), roll: lerp(0, r.roll ?? 0, e)};
+  }
+  if (g < B.release0 + 4 && g < B4.chestCut) {
     const keys: [number, V, number][] = [
       [B4.arrive0, {x: TRUCK.x0, y: TRUCK.y0}, TRUCK.z0],
       // V4 (dispatch): 60 world lower than V3, so the band holds at about y 1585 under the caption through 920 and the
@@ -164,8 +179,8 @@ export const camAt = (g: number, wristW: V, headW: V): Cam => {
       [B.inject0 + 10, PORT_VIEW, 20],
       [B.inject1 - 6, VES_VIEW, 15],
       [B.settleHeart0 + 6, add(mul(BAND_C, 0.4), mul(PJ.L.E, 0.6)), 3.6],
-      [B.settleHeart0 + 18, add(mul(HEART0, 0.7), mul(CUT0.c, 0.3)), 4.8],
-      [B.settleHeart1 - 4, HEART0, 5.2],
+      [B.settleHeart0 + 18, add(mul(CHEST.heart, 0.7), mul(CHEST.centroid, 0.3)), 4.8],
+      [B.settleHeart1 - 4, CHEST.heart, 5.2],
       [B.release0 + 4, MED, 2.2],
     ];
     const sx = (t: number) => spline(t, keys.map(([k, p]) => [k, p.x]));
@@ -185,7 +200,12 @@ export const camAt = (g: number, wristW: V, headW: V): Cam => {
     }
     return {x: sx(g), y: sy(g), z: Math.exp(sz(g)), roll: 0};
   }
-  // recovery and the question; the end pushes into the glass and keeps going through the loop point
+  return recoveryCam(g, wristW, headW);
+};
+
+/** recovery and the question; the end pushes into the glass and keeps going through the loop point (before its
+ *  first key it holds the medium shot) */
+const recoveryCam = (g: number, wristW: V, headW: V): Cam => {
   const twoShot = (k: number) => ({x: lerp(headW.x, wristW.x, k) + 10, y: lerp(headW.y, wristW.y, k)});
   const keys: [number, V, number][] = [
     [B.release0 + 4, MED, 2.2],
@@ -222,66 +242,38 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
   const blink = Math.max(0, 1 - Math.abs(((g - 20) % 85) - 3) / 3) * (g > B.return0 + 20 ? 0 : 1);
 
   // treatment (in the established section) and the heart settling (the chest window)
-  const secOn = g >= B.act0 + 4 && g < B.settleHeart0 + 4;
+  // V4: the arm section (device/treatment area) ends at the hard cut into the chest view; no frame shows both
+  const rv = revealAt(g);
+  const secOn = g >= B.act0 + 4 && g < B4.chestCut;
   const roll = g < B.act0 ? 0 : g < B.settleHeart0 + 4 ? SEC_ROLL * ease(inv(B.act0, B.act0 + 12, g)) : SEC_ROLL * (1 - ease(inv(B.settleHeart0 + 4, B.settleHeart0 + 16, g)));
   const open = ease(inv(B.act0 + 4, B.act0 + 16, g)) * (1 - ease(inv(B.settleHeart0, B.settleHeart0 + 6, g)));
   const portExt = clamp(inv(B.inject0 - 8, B.inject0, g)) * (1 - clamp(inv(B.inject1, B.inject1 + 10, g)));
   const treat = clamp(inv(B.inject0, B.inject0 + 16, g));
   const waveS = lerp(VP.entry, VP.entry + 5200, clamp(inv(B.inject0 + 10, B.settleHeart0 + 6, g)));
   const pxs = cam.z / LOCAL_PER_WORLD;
-  const backdrop = clamp(inv(B.act0 + 2, B.act0 + 12, g)) * (1 - clamp(inv(B.settleHeart0, B.settleHeart0 + 10, g)));
+  const backdrop = rv.backdrop;
   const tube = <VesselTube id={`${id}-vt`} path={VP} f={g} px={pxs} s0={VP.entry - 900} s1={99999} sensors={1} sensorFront={VP.entry + 4000} wave={g >= B.inject0 + 10 ? {s: waveS, a: 1} : undefined} dimFrom={waveS} />;
-  // the see-through arm and the chest window while the wave climbs to the heart
-  const xA = clamp(inv(B.settleHeart0 - 4, B.settleHeart0 + 6, g)) * (1 - clamp(inv(B.settleHeart1 + 4, B.release0 + 8, g)));
-  const cutOpen = ease(inv(B.settleHeart0 + 2, B.settleHeart0 + 14, g)) * (1 - ease(inv(B.settleHeart1, B.release0 + 6, g)));
-  const cg = cutGeo(j.C, j.tc, man.s, cutOpen);
-  const chaos = 1 - ease(inv(B.settleHeart0 + 16, B.settleHeart1 - 2, g));
-  const waveX = lerp(40, VPX.L - 40, ease(inv(B.settleHeart0, B.settleHeart0 + 22, g)));
-  const chest = (key: string) => (
-    <ChestCut id={`${id}-${key}`} f={g} g={cg} cam={cam} open={cutOpen} organ={1 - 0.5 * ease(inv(B.settleHeart0 + 20, B.settleHeart1, g))} chaos={chaos} organSense={0.8} heartSense={1} heartPos={cg.loc(86, -46)} heartSize={27 * man.s} bodyD={torsoPath(man)} />
-  );
-  const limbD = limbGeo(j.L.S, j.L.E, j.L.W, 29 * man.s, 23.5 * man.s, 17 * man.s).d;
-  const A = armFrame(j.L.E, j.L.W, R0.rE, R0.rW);
-  const u0 = A.L - (1.75 + 0.62) * A.rW;
-  const bandCut = (() => {
-    const a = add(A.E, mul(A.u, u0));
-    const b = add(A.E, mul(A.u, A.L + 400));
-    const n = mul(A.n, 400);
-    return `M${fmt(a.x + n.x)},${fmt(a.y + n.y)} L${fmt(b.x + n.x)},${fmt(b.y + n.y)} L${fmt(b.x - n.x)},${fmt(b.y - n.y)} L${fmt(a.x - n.x)},${fmt(a.y - n.y)} Z`;
-  })();
-  const vline = `M${VPX.pts.map((q) => `${fmt(q.x)},${fmt(q.y)}`).join(' L')}`;
-  const overAll =
-    xA > 0.01 ? (
-      <g>
-        <defs>
-          <mask id={`${id}-lc`}>
-            <path d={limbD} fill="#FFF" />
-            <path d={bandCut} fill="#000" />
-          </mask>
-          <clipPath id={`${id}-cc`}>
-            <path d={cutPathD(cg)} />
-          </clipPath>
-        </defs>
-        <g mask={`url(#${id}-lc)`} opacity={xA}>
-          {cutOpen > 0.01 && (
-            <g clipPath={`url(#${id}-cc)`}>
-              {chest('cx2')}
-              <path d={limbD} fill="#F7D3BD" opacity={0.14} />
-            </g>
-          )}
-          <g transform={SF.matrix}>
-            <path d={vline} fill="none" stroke="#C9566A" strokeWidth={560} strokeLinecap="round" strokeLinejoin="round" opacity={0.28} />
-            <path d={vline} fill="none" stroke="#E07A88" strokeWidth={300} strokeLinecap="round" strokeLinejoin="round" opacity={0.35} />
-            <VesselTube id={`${id}-xt`} path={VPX} f={g} px={pxs} s0={0} s1={99999} sensors={1} sensorFront={VPX.L} wave={{s: waveX, a: 1}} dimFrom={waveX} />
-            {/* the treatment pulse climbing the arm toward the heart */}
-            {[0, 90, 180, 270].map((d, i) => {
-              const q = VPX.at(Math.max(0, waveX - d));
-              return <circle key={i} cx={fmt(q.p.x)} cy={fmt(q.p.y)} r={fmt(i ? 120 - i * 22 : 190)} fill={i ? '#7FE3FF' : '#39C6F4'} opacity={i ? 0.5 - i * 0.12 : 0.35} />;
-            })}
-            <circle cx={fmt(VPX.at(waveX).p.x)} cy={fmt(VPX.at(waveX).p.y)} r={70} fill="#E4FBFF" />
-          </g>
-        </g>
-      </g>
+  // the treatment chest view: the same window and interior as the journey, open from the cut
+  const chest =
+    rv.chestOpen > 0.004 ? (
+      <ChestWindow
+        id={`${id}-cw`}
+        f={g}
+        C={j.C}
+        tc={j.tc}
+        s={man.s}
+        open={rv.chestOpen}
+        organDim={rv.organDim}
+        organSense={rv.organSense}
+        organWarn={rv.organWarn}
+        heart={rv.heart}
+        heartSense={rv.heartSense}
+        heartWarn={rv.heartWarn}
+        traceA={0}
+        pulses={[]}
+        treat={rv.treat}
+        treatLight={rv.treatLight}
+      />
     ) : null;
 
   const dev: DeviceView = {
@@ -337,8 +329,7 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
       backdropC={W(SF.Xp - 600, 400)}
       nearLegFront
       noTufts
-      afterRightArm={cutOpen > 0.01 ? chest('cx') : null}
-      overAll={overAll}
+      overTorso={chest}
       under={showDrone && shK > 0.01 ? <SoftShadow id={`${id}-drs`} c={{x: dp.x + 40, y: GROUND + 6}} rx={190 * dp.s * shK} ry={24 * dp.s * shK} alpha={0.16 * shK} /> : null}
       extra={
         <g>
