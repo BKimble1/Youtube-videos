@@ -71,7 +71,7 @@ const CAM_KNEE: Cam = {x: R0.kneeN[0] + 90, y: R0.kneeN[1] - 10, z: 3.4};
 const CAM_SOLE: Cam = {x: R0.ankleN[0] + 90, y: DECK - 50, z: 3.4};
 const CAM_HEAD: Cam = {x: R0.head[0] + 150, y: R0.head[1] + 30, z: 2.7};
 const CAM_RW: Cam = {x: 700, y: 600, z: 0.92};
-const T_X0 = REAL_START + 0.12, T_X1 = REAL_START + 1.35;     // the transfer (shell → floor → light → shadow)
+const T_X0 = REAL_START + 0.08, T_X1 = REAL_START + 0.8;      // the transfer (shell → floor → light → shadow), kept short
 const realCamRaw = (t: number): Cam => {
   let c = mixCam(CAM_R0, CAM_RMED, easeInOut(seg(t, T_X1 - 0.05, T_JOINTS - 0.15)));
   c = mixCam(c, CAM_KNEE, easeInOut(seg(t, T_JOINTS - 0.2, T_JOINTS + 0.45)));
@@ -87,12 +87,11 @@ const realPose = (t: number): RPose => {
   const sl = seg(t, T_JOINTS + 0.55, T_JOINTS + 1.5);
   if (sl > 0 && sl < 1) {
     const env = Math.sin(Math.PI * sl);
-    p.x += Math.sin(sl * 34) * 5 * env;
-    p.y += Math.abs(Math.sin(sl * 34)) * 3 * env;
+    p.x += Math.sin(sl * 34) * 5 * env;     // V6: horizontal knock only, feet planted, no vertical bob
   }
   // an uneven plate under the near foot: the sole tilts over the seam, the ankle takes it
   const tilt = smooth(seg(t, T_FLOORS + 0.2, T_FLOORS + 0.55)) * (1 - smooth(seg(t, T_NEVER, T_NEVER + 0.6)));
-  if (p.footN) p.footN = {...p.footN, y: p.footN.y - 7 * tilt, pitch: 8 * tilt};
+  if (p.footN) p.footN = {...p.footN, y: p.footN.y - 12 * tilt, pitch: 10 * tilt};
   p.rot += -1.2 * tilt;
   return p;
 };
@@ -312,10 +311,11 @@ export const Real: React.FC = () => {
   if (t < DICE_COVER) {
     const cam = t < T_X1 + 0.1 ? realCamRaw(t) : smoothCam(realCamRaw, t, 0.22);
     const lw = 4 / cam.z;
-    const shell = smooth(seg(t, T_X0, T_X0 + 0.4));
-    const floor = smooth(seg(t, T_X0 + 0.35, T_X0 + 0.75));
-    const light = smooth(seg(t, T_X0 + 0.6, T_X0 + 1.05));
-    const shadow = smooth(seg(t, T_X0 + 0.9, T_X1));
+    // V6: the layered handoff lasts ~0.6 s (shell, then the floor and the room light together)
+    const shell = smooth(seg(t, T_X0, T_X0 + 0.25));
+    const floor = smooth(seg(t, T_X0 + 0.15, T_X0 + 0.4));
+    const light = smooth(seg(t, T_X0 + 0.2, T_X0 + 0.6));
+    const shadow = smooth(seg(t, T_X0 + 0.45, T_X1));
     const p = realPose(t);
     const r = rig(p, S).pts;
     // the sim world behind (only while the transfer runs), positioned so the avatar coincides with the robot
@@ -339,7 +339,7 @@ export const Real: React.FC = () => {
             extraBack={<g><FilmLight x={-260} y={FD.deck.top} lw={lw} on={1} aim={16} id="rlA" /><FilmLight x={1440} y={FD.floor} lw={lw} on={1} aim={205} h={560} id="rlB" /></g>}
             behind={(
               <g>
-                {seam > 0 ? <path d={`M${R0.ankleN[0] + 6} ${DECK - 16} l14 -${8 * seam} l90 0 l0 ${8 * seam}`} fill="#8E8A92" stroke={FCOL.ink} strokeWidth={lw} /> : null}
+                {seam > 0 ? <path d={`M${R0.ankleN[0] + 6} ${DECK - 16} l14 -${13 * seam} l96 0 l0 ${13 * seam}`} fill="#8E8A92" stroke={C.saffron} strokeWidth={lw * 1.6} strokeLinejoin="round" /> : null}
                 {shadow > 0 ? <ellipse cx={(r.ankleN[0] + r.ankleF[0]) / 2 + 12} cy={DECK - 15} rx={70} ry={8} fill="#000" opacity={0.35 * shadow} /> : null}
               </g>
             )}

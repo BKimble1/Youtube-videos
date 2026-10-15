@@ -14,7 +14,7 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {T} from '../cues';
-import {Cam, Scene, Layer, Bot, Crew, Chip, mixCam, seg, smooth, easeInOut, easeOut, easeIn, backOut, lerp, toScreen, crewReach, rnd} from '../../v4/kit/scene';
+import {Cam, Scene, Layer, Bot, Crew, Chip, mixCam, seg, smooth, easeInOut, easeOut, easeIn, backOut, lerp, toScreen, crewReach, crewHand, rnd} from '../../v4/kit/scene';
 import {FoundryView5, FD} from '../sets/foundry5';
 import {StageBack, Tower, Pad, Arc, TGT_X} from '../../v4/sets/stage';
 import {FilmLight} from '../../v4/sets/props';
@@ -99,7 +99,16 @@ const mainPose = (t: number): RPose => {
 // ------------------------------------------------------------------ cameras
 const CAM_FOOT: Cam = {x: 330, y: 540, z: 3.4};
 const CAM_ARC: Cam = {x: 570, y: 570, z: 1.42};
-export const CAM_TR: Cam = {x: 560, y: 572, z: 1.3};
+// V6 safe framing: one camera for every attempt, every grid cell and the split panels. It holds the whole jump
+// envelope of A1–A3 and the style-guide leap (world x 170–924, head/hand tops ≥ 77, incl. raised hands) with the pad,
+// leaves the top-right column free for the score card, and keeps the floor line in frame.
+export const CAM_SAFE: Cam = {x: 913, y: 506, z: 1.06};
+/** The split-screen panel camera (each half is 960 wide): the same envelope fitted into half the frame. */
+const CAM_PANEL: Cam = {x: 611, y: 540, z: 0.95};
+// close views on the evidence for the three questions (attempt 1)
+const CLOSE_BAL: Cam = {x: 640, y: 690, z: 2.3};
+const CLOSE_PUSH: Cam = {x: 330, y: 590, z: 2.3};
+const CLOSE_LAND: Cam = {x: 660, y: 740, z: 1.9};
 // V6: through the monitor → back out just enough for the practice arc → push in on the launch foot, where the set
 // turns into the simulation; the sim then opens out from that same detail (no wide reset before the rebuild)
 const T_DARK0 = T_SIMS + 0.22, T_DARK1 = T_DARK0 + 0.3, T_BUILD1 = T_DARK1 + 0.75;
@@ -111,13 +120,25 @@ const edgeCamRaw = (t: number): Cam => {
 
 /** Stage camera during the attempts: open out from the foot, lean in on the evidence while the questions are asked,
  * back out for 2 and 3. */
+const PULL0 = T_BUILD1 + 0.1, PULL1 = T_HOW + 0.1;
 const stageCamRaw = (t: number): Cam => {
-  let c = mixCam(CAM_FOOT, CAM_TR, easeInOut(seg(t, T_BUILD1 + 0.1, T_HOW + 0.1)));
-  c = mixCam(c, {x: 520, y: 640, z: 1.5}, easeInOut(seg(t, T_BAL - 0.4, T_BAL + 0.4)));
-  c = creep(c, t, T_BAL + 0.4, T_NUDGE - 0.2, 0.04, -20);   // while the questions are asked
-  c = mixCam(c, CAM_TR, easeInOut(seg(t, T_NUDGE - 0.2, T_NUDGE + 0.8)));
-  c = mixCam(c, {...CAM_TR, x: CAM_TR.x + 40, z: CAM_TR.z * 1.05}, easeInOut(seg(t, A3.tReady, A3.tEnd)));
+  // open out from the foot: zoom eases in log space and the frame rises early, so the head arrives with the frame
+  const u = seg(t, PULL0, PULL1), uz = easeInOut(u), up = easeOut(u);
+  let c: Cam = {x: lerp(CAM_FOOT.x, CAM_SAFE.x, uz), y: lerp(CAM_FOOT.y, CAM_SAFE.y, up), z: Math.exp(lerp(Math.log(CAM_FOOT.z), Math.log(CAM_SAFE.z), uz))};
+  // the three questions, each on its evidence; then back to the safe framing for the nudge and attempts 2–3
+  c = mixCam(c, CLOSE_BAL, easeInOut(seg(t, T_BAL - 0.45, T_BAL + 0.15)));
+  c = mixCam(c, CLOSE_PUSH, easeInOut(seg(t, T_PUSH - 0.4, T_PUSH + 0.2)));
+  c = mixCam(c, CLOSE_LAND, easeInOut(seg(t, T_LAND - 0.4, T_LAND + 0.2)));
+  c = mixCam(c, CAM_SAFE, easeInOut(seg(t, T_NUDGE - 0.25, T_NUDGE + 0.6)));
   return c;
+};
+/** Keeps the avatar's head (and raised hands) inside the top of the frame, weighted by w. */
+const headGuard = (c: Cam, p: RPose, w: number): Cam => {
+  if (w <= 0) return c;
+  const P = rig(p, S).pts;
+  const top = Math.min(P.head[1] - 60 * S, P.handN[1] - 24 * S, P.handF[1] - 24 * S);
+  const sy = 540 + (top - c.y) * c.z;
+  return sy < 80 ? {...c, y: c.y - ((80 - sy) / c.z) * w} : c;
 };
 
 // ------------------------------------------------------------------ overlays
@@ -164,6 +185,16 @@ const ScoreCard: React.FC<{t: number}> = ({t}) => {
     </div>
   );
 };
+/** ◀◀ while an attempt rewinds to its ready stance (the same cue as the opening's reset). */
+const RewindBadge: React.FC<{t: number}> = ({t}) => {
+  const k = Math.max(seg(t, RW1a - 0.05, RW1a + 0.08) * (1 - seg(t, RW1b, RW1b + 0.15)), seg(t, RW2a - 0.05, RW2a + 0.08) * (1 - seg(t, RW2b, RW2b + 0.15)));
+  if (k <= 0) return null;
+  return (
+    <div style={{position: 'absolute', left: 960 - 70, top: 930, width: 140, height: 76, borderRadius: 38, background: C.ink, opacity: k, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2}}>
+      {[0, 1].map((i) => <div key={i} style={{width: 0, height: 0, borderTop: '20px solid transparent', borderBottom: '20px solid transparent', borderRight: `30px solid ${C.paper}`}} />)}
+    </div>
+  );
+};
 /** The controls being nudged (under the score card). */
 const Controls: React.FC<{t: number}> = ({t}) => {
   const k = seg(t, T_NUDGE + 0.2, T_NUDGE + 0.5) * (1 - seg(t, A2.tTO + 0.1, A2.tTO + 0.4));
@@ -206,6 +237,13 @@ const TargetToss: React.FC<{t: number; lw: number; f: number; cam: Cam}> = ({t, 
   );
 };
 
+// ------------------------------------------------------------------ the incident report toss (grid section)
+const REL = T_NOBODY + 0.55;                                 // the report leaves her hand
+const hand0Rel = (() => {
+  const cb = {x: 1470, y: 1180, h: 760, flip: true};
+  return crewHand(cb, {a: 165, b: -15}, 1);
+})();
+
 // ------------------------------------------------------------------ the stage world (main)
 const StageWorld: React.FC<{t: number; cam: Cam; f: number}> = ({t, cam, f}) => {
   const lw = 4 / cam.z;
@@ -216,16 +254,18 @@ const StageWorld: React.FC<{t: number; cam: Cam; f: number}> = ({t, cam, f}) => 
   const hiPush = i === 0 ? Math.max(0, 1 - Math.abs(t - T_PUSH - 0.3) / 0.6) : 0;
   const hiLand = i === 0 ? Math.max(0, 1 - Math.abs(t - T_LAND - 0.3) / 0.6) : 0;
   const hiBal = i === 0 ? Math.max(0, 1 - Math.abs(t - T_BAL - 0.3) / 0.6) : 0;
-  const skid = t > SLIP0 && t < RW1b ? seg(t, SLIP0, SLIP1) * (1 - seg(t, RW1a, RW1b)) : 0;
-  const land1 = t > A1.tEnd && t < RW1b ? 1 - seg(t, RW1a, RW1b) : 0;
-  const arcK = t < RW1a ? seg(t, A1.tTO, A1.tEnd) : 0;
+  // V6: the trail and the evidence marks clear before the rewind starts
+  const clear1 = 1 - seg(t, RW1a - 0.3, RW1a);
+  const skid = t > SLIP0 && t < RW1a ? seg(t, SLIP0, SLIP1) * clear1 : 0;
+  const land1 = t > A1.tEnd && t < RW1a ? clear1 : 0;
+  const arcK = t < RW1a ? seg(t, A1.tTO, A1.tEnd) * clear1 : 0;
   const nudge = Math.sin(Math.PI * seg(t, T_NUDGE + 0.5, T_NUDGE + 1.3));
   const pulse = Math.max(0, 1 - Math.abs(t - A3.tEnd - 0.12) / 0.4) + 0.6 * Math.max(0, 1 - Math.abs(t - A2.tEnd - 0.12) / 0.4);
   return (
     <g>
       <StageBack lw={lw} grid={0.4} />
-      <Arc pts={A1.arc()} k={arcK * (1 - seg(t, RW1a, RW1b))} lw={lw} color={C.coral} />
-      <Arc pts={a.arc()} k={i > 0 ? seg(t, a.tTO, a.tEnd) * (1 - seg(t, a.tEnd + 0.4, a.tEnd + 0.8)) : 0} lw={lw} color={C.teal} />
+      <Arc pts={A1.arc()} k={arcK} lw={lw} color={C.coral} />
+      <Arc pts={a.arc()} k={i > 0 ? seg(t, a.tTO, a.tEnd) * (1 - seg(t, a.tEnd + 0.2, a.tEnd + 0.5)) : 0} lw={lw} color={C.teal} />
       <Tower lw={lw} />
       {skid > 0 ? <rect x={TOE_X - 50 * S - 46 * S * skid} y={DECK - 18} width={46 * S * skid + 20} height={6} rx={3} fill={C.coral} opacity={0.9} /> : null}
       {hiPush > 0 ? <circle cx={TOE_X - 50 * S} cy={DECK - 12} r={34 + 20 * hiPush} fill="none" stroke={C.saffron} strokeWidth={lw * 3} opacity={hiPush} /> : null}
@@ -244,12 +284,13 @@ const StageWorld: React.FC<{t: number; cam: Cam; f: number}> = ({t, cam, f}) => 
 const SG_TO = T_GUIDE - 0.55;
 const SG = jump({tTO: SG_TO, outcome: 'stick', endX: TGT_X, apex: 86 * S});
 const SPLIT0 = T_STUNT + 0.35, SPLIT1 = SPLIT0 + 0.5;
-const CAM_SG: Cam = {x: 520, y: 600, z: 1.08};
+const CAM_SG: Cam = CAM_SAFE;
 
 // ------------------------------------------------------------------ the grid of copies
 const COLS = 4, ROWS = 3, MAIN = {c: 1, r: 1};
-const CELL = {x0: -240, y0: 60, w: 1740, h: 980};
-const CAM_ST: Cam = {x: CELL.x0 + CELL.w / 2, y: CELL.y0 + CELL.h / 2, z: 1080 / CELL.h};
+// each cell is exactly the safe framing (the main stage shrinks into one of them with no reframe)
+const CELL = {x0: CAM_SAFE.x - 960 / CAM_SAFE.z, y0: CAM_SAFE.y - 540 / CAM_SAFE.z, w: 1920 / CAM_SAFE.z, h: 1080 / CAM_SAFE.z};
+const CAM_ST: Cam = CAM_SAFE;
 const GAP = 150;
 const GRID_W = COLS * CELL.w + (COLS - 1) * GAP, GRID_H = ROWS * CELL.h + (ROWS - 1) * GAP;
 const cellOff = (c: number, r: number) => ({dx: (c - MAIN.c) * (CELL.w + GAP), dy: (r - MAIN.r) * (CELL.h + GAP)});
@@ -258,7 +299,7 @@ const CAM_GRID: Cam = (() => {
   const cx = CELL.x0 + o0.dx + GRID_W / 2, cy = CELL.y0 + o0.dy + GRID_H / 2;
   return {x: cx, y: cy - 60, z: Math.min(1920 / (GRID_W + 300), 1080 / (GRID_H + 380))};
 })();
-const PER = 1.9;
+const PER = 2.4;
 /** Outcome of loop n in cell k: success probability rises over the section ("over and over"). */
 const cellTrial = (k: number, t: number) => {
   const tl0 = t + rnd(k * 7 + 1) * PER;
@@ -295,15 +336,25 @@ const MiniWorld: React.FC<{k: number; t: number; cam: Cam; lw: number}> = ({k, t
   const tr = cellTrial(k, t);
   const J = cellJump(tr.out, Math.floor(rnd(k * 3 + tr.n) * 3));
   const landed = tr.tl > J.tEnd + 0.1;
-  const p = tr.tl < PER - 0.08 ? J.pose(tr.tl).pose : null;
-  const border = landed ? (tr.ok ? C.teal : C.coral) : '#4F7CC9';
+  const p = J.pose(Math.min(tr.tl, J.tEnd + 0.9)).pose;
+  // V6: the avatar fades out at the end of a loop and in at the start of the next (no pop); the result is a small
+  // badge that settles in after the landing, not a border colour flashing every loop
+  const vis = seg(tr.tl, 0, 0.18) * (1 - seg(tr.tl, PER - 0.3, PER - 0.05));
+  const badge = landed ? seg(tr.tl, J.tEnd + 0.1, J.tEnd + 0.3) * (1 - seg(tr.tl, PER - 0.3, PER - 0.05)) : 0;
   return (
     <g>
       <StageBack lw={lw} grid={0.3} />
       <Tower lw={lw} />
       <Pad lw={lw} pulse={landed && tr.ok ? Math.max(0, 1 - (tr.tl - J.tEnd) / 0.5) : 0} />
-      {p ? <Bot cam={cam} id={'cell' + k} model="SIM" s={S} pose={p} /> : null}
-      <rect x={CELL.x0} y={CELL.y0} width={CELL.w} height={CELL.h} fill="none" stroke={border} strokeWidth={lw * 7} />
+      {vis > 0.01 ? <g opacity={vis}><Bot cam={cam} id={'cell' + k} model="SIM" s={S} pose={p} /></g> : null}
+      {badge > 0 ? (
+        <g transform={`translate(${CELL.x0 + CELL.w - 150} ${CELL.y0 + 150}) scale(${backOut(badge, 1.6)})`} opacity={badge}>
+          <circle r={90} fill={tr.ok ? C.teal : C.coral} stroke={C.ink} strokeWidth={14} />
+          {tr.ok ? <path d="M-44 4 L-12 36 L46 -34" fill="none" stroke="#fff" strokeWidth={26} strokeLinecap="round" strokeLinejoin="round" />
+            : <path d="M-36 -36 L36 36 M36 -36 L-36 36" fill="none" stroke="#fff" strokeWidth={26} strokeLinecap="round" />}
+        </g>
+      ) : null}
+      <rect x={CELL.x0} y={CELL.y0} width={CELL.w} height={CELL.h} fill="none" stroke="#4F7CC9" strokeWidth={lw * 6} />
     </g>
   );
 };
@@ -340,8 +391,8 @@ const sidePose = (t: number): RPose => {
   // early contact starts a forward tip; the command arrives; knee and ankle bend; the tip is caught
   const tip = smooth(seg(t, T_EARLY, T_ADJ + 0.2)) * (1 - smooth(seg(t, T_ADJ + 0.25, T_TIPS + 0.5)));
   const bend = Math.sin(Math.PI * seg(t, T_ADJ, T_TIPS + 0.9));
-  p.rot += 9 * tip;
-  p.waist += 5 * tip - 4 * bend;
+  p.rot += 12 * tip;
+  p.waist += 5 * tip - 9 * bend;          // the hips take the correction (visible counter-bend)
   p.y += 22 * bend * (1 - back);
   p.armN = A(4 + 26 * tip, 14 + 20 * tip, {grip: 0.3});
   // reflex: tap below the knee → the lower leg kicks forward and returns (twice)
@@ -349,7 +400,7 @@ const sidePose = (t: number): RPose => {
   if (kick > 0) {
     const kn = rig(sideBase(), S).pts.kneeN;
     const Lsh = 140 * S + 6;
-    const th = (44 * kick * Math.PI) / 180;
+    const th = (30 * kick * Math.PI) / 180;
     p.footN = {x: kn[0] + Math.sin(th) * Lsh + 12, y: kn[1] + Math.cos(th) * Lsh, pitch: 0};
   }
   return p;
@@ -361,54 +412,116 @@ export const CAM_TOFOOT: Cam = (() => {
   return {x: r.pts.ankleN[0] + 40, y: r.pts.ankleN[1] - 20, z: 4.2};
 })();
 
+/** A polyline and a point a fraction u along it (by length). */
+const along = (pts: {x: number; y: number}[], u: number) => {
+  const L = pts.slice(1).map((q, i) => Math.hypot(q.x - pts[i].x, q.y - pts[i].y));
+  let d = Math.max(0, Math.min(1, u)) * L.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < L.length; i++) {
+    if (d <= L[i] || i === L.length - 1) { const k = L[i] ? Math.min(1, d / L[i]) : 0; return {x: lerp(pts[i].x, pts[i + 1].x, k), y: lerp(pts[i].y, pts[i + 1].y, k)}; }
+    d -= L[i];
+  }
+  return pts[pts.length - 1];
+};
+/** The first fraction u of a polyline, as an SVG path. */
+const partPath = (pts: {x: number; y: number}[], u: number) => {
+  const L = pts.slice(1).map((q, i) => Math.hypot(q.x - pts[i].x, q.y - pts[i].y));
+  let d = Math.max(0, Math.min(1, u)) * L.reduce((a, b) => a + b, 0);
+  const out = [pts[0]];
+  for (let i = 0; i < L.length && d > 0; i++) {
+    const k = L[i] ? Math.min(1, d / L[i]) : 0;
+    out.push({x: lerp(pts[i].x, pts[i + 1].x, k), y: lerp(pts[i].y, pts[i + 1].y, k)});
+    d -= L[i];
+  }
+  return 'M' + out.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join('L');
+};
+/** V6 policy diagram: the box is named first, then the sensing lines grow in, then the command lines grow out. Every
+ * connector leaves its joint horizontally to the front and runs in its own vertical lane in clear space (nothing
+ * crosses the robot's face or body; lanes are ordered so no two lines cross). */
 const PolicyBox: React.FC<{t: number; cam: Cam; p: RPose}> = ({t, cam, p}) => {
-  const k = seg(t, T_POL - 0.25, T_POL + 0.2) * (1 - seg(t, T_WISH - 0.3, T_WISH));
+  const k = seg(t, T_POL - 0.25, T_POL + 0.2) * (1 - seg(t, T_WISH - 0.45, T_WISH - 0.1));
   if (k <= 0) return null;
   const r = rig(p, S);
   const sc = (q: number[]) => toScreen(cam, q[0], q[1]);
-  const head = sc(r.pts.head);
-  const box = {x: head.x + 330, y: head.y + 40, w: 300, h: 120};
-  const inPts = [sc(r.pts.toeN), sc(r.pts.visor)];
-  const outPts = [sc(r.pts.kneeN), sc(r.pts.ankleN)];
-  const kIn = seg(t, T_SENSES - 0.3, T_SENSES + 0.2), kOut = seg(t, T_MOTOR - 0.2, T_MOTOR + 0.3);
+  const head = sc(r.pts.head), visor = sc(r.pts.visor), toe = sc(r.pts.toeN), knee = sc(r.pts.kneeN), ankle = sc(r.pts.ankleN);
+  const front = Math.max(...Object.values(r.pts).map((q) => sc(q as number[]).x));   // the robot's front edge on screen
+  const box = {x: front + 300, y: head.y + 30, w: 300, h: 120};
+  const bx0 = box.x - box.w / 2, by1 = box.y + box.h / 2;
+  const lane = (i: number) => Math.max(front + 70 + i * 60, bx0 + 40 + i * 70);
+  // inputs: visor → straight to the box's left side; toe → out to its lane → up into the box
+  const inVisor = [visor, {x: bx0, y: visor.y}];
+  const inToe = [toe, {x: lane(2), y: toe.y}, {x: lane(2), y: by1}];
+  // outputs: box → down its lane → in to the joint (knee nearest lane, ankle next)
+  const outKnee = [{x: lane(0), y: by1}, {x: lane(0), y: knee.y}, knee];
+  const outAnkle = [{x: lane(1), y: by1}, {x: lane(1), y: ankle.y}, ankle];
+  const kIn = easeOut(seg(t, T_SENSES - 0.3, T_SENSES + 0.4)), kOut = easeOut(seg(t, T_MOTOR - 0.2, T_MOTOR + 0.5));
   const demo = t > DEMO0 - 0.4 && t < DEMO1;
   const ping = seg(t, T_CATCH - 0.15, T_CATCH + 0.55);      // contact signal travels up
   const cmd = seg(t, T_ADJ - 0.25, T_ADJ + 0.35);            // command travels down
-  const ph = (t - T_POL) * (demo ? 0.0 : 3.2);
-  const inA = {x: box.x - box.w / 2, y: box.y + 14}, outA = {x: box.x, y: box.y + box.h / 2};
-  const dot = (a: {x: number; y: number}, b: {x: number; y: number}, u: number, col: string, key: string, r0 = 11) =>
-    <circle key={key} cx={lerp(a.x, b.x, u)} cy={lerp(a.y, b.y, u)} r={r0} fill={col} stroke={C.ink} strokeWidth={3} />;
+  const ph = (t - T_POL) * 0.8;
+  const line = (pts: {x: number; y: number}[], u: number, col: string, w: number, key: string, op = 1) =>
+    <path key={key} d={partPath(pts, u)} fill="none" stroke={col} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" opacity={op} />;
+  const dot = (pts: {x: number; y: number}[], u: number, col: string, key: string, r0 = 11) => {
+    const q = along(pts, u);
+    return <circle key={key} cx={q.x} cy={q.y} r={r0} fill={col} stroke={C.ink} strokeWidth={3} />;
+  };
   const els: React.ReactNode[] = [];
-  inPts.forEach((s, i) => {
-    if (kIn <= 0) return;
-    const hot = demo && i === 0;
-    const e = {x: lerp(s.x, inA.x, easeOut(kIn)), y: lerp(s.y, inA.y, easeOut(kIn))};
-    els.push(<line key={'il' + i} x1={s.x} y1={s.y} x2={e.x} y2={e.y} stroke={hot && ping > 0 ? C.saffron : C.blue} strokeWidth={hot && ping > 0 ? 8 : 5} strokeLinecap="round" opacity={demo && !hot ? 0.35 : 1} />);
-    els.push(<circle key={'ic' + i} cx={s.x} cy={s.y} r={hot ? 14 + 10 * Math.max(0, 1 - Math.abs(t - T_EARLY) / 0.4) : 11} fill={hot ? C.saffron : C.blue} stroke={C.ink} strokeWidth={3} />);
-    if (kIn >= 1 && !demo) els.push(dot(s, inA, (ph + i * 0.5) % 1, C.blue, 'ip' + i));
-    if (hot && ping > 0 && ping < 1) els.push(dot(s, inA, ping, C.saffron, 'ping', 15));
-  });
-  outPts.forEach((o, i) => {
-    if (kOut <= 0) return;
-    const e = {x: lerp(outA.x, o.x, easeOut(kOut)), y: lerp(outA.y, o.y, easeOut(kOut))};
+  if (kIn > 0) {
+    els.push(line(inVisor, kIn, C.blue, 5, 'iv', demo ? 0.35 : 1));
+    els.push(line(inToe, kIn, demo && ping > 0 ? C.saffron : C.blue, demo && ping > 0 ? 8 : 5, 'it'));
+    els.push(<circle key="ivj" cx={visor.x} cy={visor.y} r={10} fill={C.blue} stroke={C.ink} strokeWidth={3} opacity={demo ? 0.35 : 1} />);
+    els.push(<circle key="itj" cx={toe.x} cy={toe.y} r={demo ? 13 + 9 * Math.max(0, 1 - Math.abs(t - T_EARLY) / 0.4) : 10} fill={demo ? C.saffron : C.blue} stroke={C.ink} strokeWidth={3} />);
+    if (kIn >= 1 && !demo) { els.push(dot(inVisor, ph % 1, C.blue, 'dv')); els.push(dot(inToe, (ph + 0.5) % 1, C.blue, 'dt')); }
+    if (demo && ping > 0 && ping < 1) els.push(dot(inToe, ping, C.saffron, 'ping', 15));
+  }
+  if (kOut > 0) {
     const hot = demo && cmd > 0;
-    els.push(<line key={'ol' + i} x1={outA.x} y1={outA.y} x2={e.x} y2={e.y} stroke={hot ? C.saffron : C.teal} strokeWidth={hot ? 8 : 5} strokeLinecap="round" />);
-    if (kOut >= 1 && !demo) els.push(dot(outA, o, (ph + 0.25 + i * 0.4) % 1, C.teal, 'op' + i));
-    if (hot && cmd < 1) els.push(dot(outA, o, cmd, C.saffron, 'cmd' + i, 15));
-  });
+    els.push(line(outKnee, kOut, hot ? C.saffron : C.teal, hot ? 8 : 5, 'ok'));
+    els.push(line(outAnkle, kOut, hot ? C.saffron : C.teal, hot ? 8 : 5, 'oa'));
+    if (kOut >= 1) {
+      els.push(<circle key="okj" cx={knee.x} cy={knee.y} r={10} fill={C.teal} stroke={C.ink} strokeWidth={3} />);
+      els.push(<circle key="oaj" cx={ankle.x} cy={ankle.y} r={10} fill={C.teal} stroke={C.ink} strokeWidth={3} />);
+    }
+    if (kOut >= 1 && !demo) { els.push(dot(outKnee, (ph + 0.25) % 1, C.teal, 'dk')); els.push(dot(outAnkle, (ph + 0.75) % 1, C.teal, 'da')); }
+    if (hot && cmd < 1) { els.push(dot(outKnee, cmd, C.saffron, 'ck', 15)); els.push(dot(outAnkle, cmd, C.saffron, 'ca', 15)); }
+  }
   const flash = demo ? Math.max(0, 1 - Math.abs(t - (T_CATCH + 0.6)) / 0.45) : 0;
   return (
     <g opacity={Math.min(1, k * 2.5)}>
       {els}
-      <rect x={box.x - box.w / 2} y={box.y - box.h / 2} width={box.w} height={box.h} rx={22} fill={flash > 0 ? C.saffronLight : C.ink} stroke={C.ink} strokeWidth={6} />
+      <rect x={bx0} y={box.y - box.h / 2} width={box.w} height={box.h} rx={22} fill={flash > 0 ? C.saffronLight : C.ink} stroke={C.ink} strokeWidth={6} />
       <text x={box.x} y={box.y + 18} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={56} fill={flash > 0 ? C.ink : C.paper}>POLICY</text>
-      {kIn > 0.5 ? <text x={inA.x - 24} y={inA.y - 70} textAnchor="end" fontFamily={F.body} fontWeight={800} fontSize={32} fill={C.blueDeep} opacity={kIn * (demo ? 0.4 : 1)}>senses</text> : null}
-      {kOut > 0.5 ? <text x={outA.x + 26} y={outA.y + 90} fontFamily={F.body} fontWeight={800} fontSize={32} fill={C.tealDeep} opacity={kOut * (demo ? 0.4 : 1)}>motor commands</text> : null}
+      {kIn > 0.5 ? <text x={bx0 - 16} y={visor.y - 18} textAnchor="end" fontFamily={F.body} fontWeight={800} fontSize={32} fill={C.blueDeep} opacity={kIn * (demo ? 0.4 : 1)}>senses</text> : null}
+      {kOut > 0.5 ? <text x={lane(2) + 24} y={(by1 + knee.y) / 2} fontFamily={F.body} fontWeight={800} fontSize={32} fill={C.tealDeep} opacity={kOut * (demo ? 0.4 : 1)}>motor commands</text> : null}
     </g>
   );
 };
 
-// reflex hammer
+// reflex mallet (V6): pivot (her hand) in front of the shin, head swings in on a circle that stays in front of the leg
+const TAP = (() => {
+  const kn = rig(sideBase(), S).pts.kneeN;
+  const strike = {x: kn[0] + 16, y: kn[1] + 24};
+  const H = {x: strike.x + 78, y: strike.y - 74};
+  return {strike, H, L: Math.hypot(strike.x - H.x, strike.y - H.y), cx: H.x + 118};
+})();
+const PSI_HIT = Math.atan2(TAP.strike.y - TAP.H.y, TAP.strike.x - TAP.H.x);   // ≈ 136°
+const D2R = Math.PI / 180;
+const PSI_REST = 78 * D2R, PSI_COCK = 58 * D2R, PSI_REB = 112 * D2R;
+/** Mallet angle about the hand: rest → cock back → in to contact on the tap → rebound → rest. */
+const malletAngle = (t: number) => {
+  let a = PSI_REST;
+  for (const tt of [T_TAP1, T_TAP2]) {
+    if (t < tt - 0.45 || t > tt + 0.6) continue;
+    if (t < tt - 0.15) a = lerp(PSI_REST, PSI_COCK, smooth(seg(t, tt - 0.45, tt - 0.15)));
+    else if (t < tt) a = lerp(PSI_COCK, PSI_HIT, easeIn(seg(t, tt - 0.15, tt)));
+    else if (t < tt + 0.12) a = lerp(PSI_HIT, PSI_REB, easeOut(seg(t, tt, tt + 0.12)));
+    else a = lerp(PSI_REB, PSI_REST, smooth(seg(t, tt + 0.12, tt + 0.6)));
+  }
+  return a;
+};
+/** Her hand draws back a little right after each contact (follow-through, clear of the kicking shin). */
+const reboundK = (t: number) => Math.max(Math.sin(Math.PI * seg(t, T_TAP1, T_TAP1 + 0.5)), Math.sin(Math.PI * seg(t, T_TAP2, T_TAP2 + 0.5)));
+const CAM_REFLEX: Cam = {x: 830, y: 640, z: 1.9};
+// reflex hammer (V5 prop, unused)
 const hammerProp = (
   <g transform="rotate(-60)">
     <rect x={-6} y={-6} width={12} height={96} rx={5} fill="#9AA4AE" stroke={C.ink} strokeWidth={4} />
@@ -429,8 +542,9 @@ const reportProp = (
 export const Train: React.FC = () => {
   const f = useCurrentFrame() + Math.round(TRAIN_START * 30);
   const t = f / 30;
-  const generalK = seg(t, T_HOW + 0.1, T_HOW + 0.5) * (1 - seg(t, TRAIN_END - 1.1, TRAIN_END - 0.75)); // cleared before the push to the foot
-  const general = <Chip x={96} y={60} lines={['HOW THIS KIND OF TRAINING GENERALLY WORKS · ILLUSTRATION']} k={generalK} size={30} tone="ink" />;
+  // V6: a short corner identifier for the whole illustrated explanation, bottom-left, clear of every trajectory
+  const generalK = seg(t, T_BUILD1 + 0.3, T_BUILD1 + 0.6) * (1 - seg(t, TRAIN_END - 1.1, TRAIN_END - 0.75)); // cleared before the push to the foot
+  const general = <Chip x={32} y={986} lines={['Training illustration']} k={generalK} size={28} tone="paper" />;
 
   // ============================== E + B: the edge, the burnt practice arc, lights out, the rebuild
   if (t < T_BUILD1 + 0.01) {
@@ -494,7 +608,7 @@ export const Train: React.FC = () => {
   if (t < T_DIVE + 0.6) {
     const shrink = easeInOut(seg(t, T_GRID0, T_GRID0 + 1.1));
     const dive = easeIn(seg(t, T_DIVE, T_DIVE + 0.6));
-    const base = smoothCam(stageCamRaw, Math.min(t, T_GRID0), 0.25);
+    const base = headGuard(smoothCam(stageCamRaw, Math.min(t, T_GRID0), 0.25), mainPose(Math.min(t, T_GRID0)), smooth(seg(t, PULL0 + 0.15, PULL0 + 0.9)));
     // the grid's world: main cell at origin, others offset; the camera pulls back from the main cell to the grid
     const selCam: Cam = (() => {
       const o = cellOff(SELECT.c, SELECT.r);
@@ -506,11 +620,10 @@ export const Train: React.FC = () => {
     const lw = 4 / cam.z;
     const showGrid = t > T_GRID0 - 0.05;
     const crew = seg(t, T_FALL + 0.4, T_FALL + 1.0) * (1 - seg(t, T_DIVE - 0.4, T_DIVE));
-    const toss = seg(t, T_NOBODY + 0.3, T_NOBODY + 1.2);
-    const shrug = smooth(seg(t, T_NOBODY + 0.2, T_NOBODY + 0.55));
+    const shrug = smooth(seg(t, REL + 0.1, REL + 0.45));
     return (
       <Scene bg={showGrid ? '#DCE6F4' : '#EEF4FD'}
-        over={<>{general}<ScoreCard t={t} /><Controls t={t} /></>}>
+        over={<>{general}<ScoreCard t={t} /><Controls t={t} /><RewindBadge t={t} /></>}>
         <Layer cam={cam}>
           {showGrid ? Array.from({length: COLS * ROWS}, (_, k) => {
             const c = k % COLS, r = Math.floor(k / COLS);
@@ -532,14 +645,28 @@ export const Train: React.FC = () => {
             {showGrid ? <rect x={CELL.x0} y={CELL.y0} width={CELL.w} height={CELL.h} fill="none" stroke={C.teal} strokeWidth={lw * 7} /> : null}
           </g>
         </Layer>
-        {crew > 0 ? (
-          <g transform={`translate(${lerp(2300, 1560, easeOut(crew))} 0)`}>
-            <Crew look={CAST.clerkB} x={0} y={1180} h={760} flip frame={f} seed={9} front="L" life={0.6}
-              holdL={toss < 0.05 ? <g transform="scale(-1.1 1.1)">{reportProp}</g> : undefined}
-              pose={{...IDLE, armL: {a: lerp(40, 150, shrug), b: lerp(70, -30, shrug)}, armR: {a: lerp(14, 110, shrug), b: lerp(16, -30, shrug)}, lookX: -0.6, lookY: -0.2, mouth: shrug > 0.5 ? 'smirk' : 'flat', browAsym: shrug, brows: 0.3}} />
-          </g>
-        ) : null}
-        {toss > 0.05 && toss < 1 ? <g transform={`translate(${1460 - toss * 700} ${640 - Math.sin(Math.PI * toss) * 300 + toss * 500}) rotate(${-toss * 400}) scale(1.1)`}>{reportProp}</g> : null}
+        {crew > 0 ? (() => {
+          // V6: she brings the INCIDENT REPORT in at chest height, fully in frame, then tosses it away over her shoulder
+          const cb = {x: lerp(2250, 1470, easeOut(crew)), y: 1180, h: 760, flip: true};
+          const hold = crewReach(cb, 1, cb.x - 210, 650);
+          const wind = easeIn(seg(t, T_NOBODY + 0.2, REL));
+          const after = smooth(seg(t, REL + 0.15, REL + 0.6));
+          const up = {a: 165, b: -15}, rest = {a: 14, b: 16};
+          let armR = {a: lerp(hold.a, up.a, wind), b: lerp(hold.b, up.b, wind)};
+          armR = {a: lerp(armR.a, rest.a, after), b: lerp(armR.b, rest.b, after)};
+          const hand = crewHand(cb, armR, 1);
+          const held = t < REL;
+          const fl = t - REL;
+          const paper = held ? {x: hand.x - 1.5 * 60, y: hand.y - 1.5 * 40, r: -8 + 40 * wind}
+            : {x: hand0Rel.x - 90 + 1300 * fl, y: hand0Rel.y - 60 - 900 * fl + 1300 * fl * fl, r: 32 + 520 * fl};
+          return (
+            <g>
+              <Crew look={CAST.clerkB} x={cb.x} y={cb.y} h={cb.h} flip frame={f} seed={9} front="R" life={0.6}
+                pose={{...IDLE, armR, armL: {a: lerp(14, 60, shrug), b: lerp(16, 40, shrug)}, lookX: -0.6, lookY: -0.2, mouth: shrug > 0.5 ? 'smirk' : 'flat', browAsym: shrug, brows: 0.3}} />
+              {held || fl < 0.9 ? <g transform={`translate(${paper.x} ${paper.y}) rotate(${paper.r}) scale(1.5)`}>{reportProp}</g> : null}
+            </g>
+          );
+        })() : null}
       </Scene>
     );
   }
@@ -548,14 +675,15 @@ export const Train: React.FC = () => {
   if (t < T_POLICY + 0.4) {
     const split = easeInOut(seg(t, SPLIT0, SPLIT1));
     const p = SG.pose(t).pose;
-    const camR = mixCam(CAM_ST, CAM_SG, easeInOut(seg(t, T_DIVE + 0.6, SPLIT1)));
-    const lwR = 4 / camR.z;
     const out = easeInOut(seg(t, T_POLICY - 0.1, T_POLICY + 0.4));
+    // V6: while split, both halves use the panel framing (the whole leap fits each half); back to the safe framing after
+    const camR = mixCam(CAM_SAFE, CAM_PANEL, split * (1 - out));
+    const lwR = 4 / camR.z;
     const half = 960 * split * (1 - out);                      // the avatar's window slides right, the performer's in from the left
     const match = (tt: number) => Math.max(0, 1 - Math.abs(t - tt) / 0.35);
     const keyT = [SG.tPush - 0.05, SG.tTO + 0.32, SG.tEnd + 0.05];
     return (
-      <Scene bg="#EEF4FD" over={<>{general}<Chip x={96} y={958} lines={['Illustration of the general method']} k={seg(t, SPLIT1, SPLIT1 + 0.3) * (1 - out)} size={30} tone="paper" /></>}>
+      <Scene bg="#EEF4FD" over={general}>
         <defs>
           <clipPath id="sgR"><rect x={half} y={0} width={1920 - half} height={1080} /></clipPath>
           <clipPath id="sgL"><rect x={0} y={0} width={half} height={1080} /></clipPath>
@@ -600,22 +728,22 @@ export const Train: React.FC = () => {
   const camRaw = (tt: number) => {
     let c = mixCam(CAM_SG, CAM_POL, easeInOut(seg(tt, T_POLICY + 0.4, T_POL + 0.7)));
     c = creep(c, tt, T_POL + 0.7, DEMO0, 0.025, 24, -18);   // the definition is spoken over a slow push
+    c = mixCam(c, CAM_REFLEX, easeInOut(seg(tt, T_WISH - 0.2, T_WISH + 0.4)));   // diagram cleared; the reflex beat
     c = mixCam(c, CAM_TOFOOT, easeInOut(seg(tt, TRAIN_END - 1.1, TRAIN_END)));
     return c;
   };
   const cam = t > TRAIN_END - 1.2 ? camRaw(t) : smoothCam(camRaw, t, 0.2);
   const lw = 4 / cam.z;
   const plate = plateUp(t);
-  const sb = {x: SG_END.x - 230, y: SURF, h: 350};
+  // V6 reflex beat: the assistant stands on the robot's front side; the mallet pivots at her wrist and its head comes
+  // in from the front onto the tendon below the knee (never through the leg), rebounds, and settles at rest
   const tapK = Math.max(seg(t, T_WISH - 0.2, T_WISH + 0.3) * (1 - seg(t, TRAIN_END - 0.9, TRAIN_END - 0.4)), 0);
-  const kn = rig(sideBase(), S).pts.kneeN;
-  const strike = {x: kn[0] + 10, y: kn[1] + 26};
-  const swing = (tt: number) => Math.sin(Math.PI * seg(t, tt - 0.35, tt + 0.1));
-  const up = {a: 120, b: 40};
-  const hit = crewReach(sb, 1, strike.x - 10, strike.y);
-  const sw = Math.max(swing(T_TAP1), swing(T_TAP2));
-  const armB = {a: lerp(lerp(20, up.a, smooth(seg(t, T_WISH, T_WISH + 0.3))), hit.a, sw), b: lerp(lerp(24, up.b, smooth(seg(t, T_WISH, T_WISH + 0.3))), hit.b, sw)};
-  const sbx = lerp(sb.x - 700, sb.x, easeOut(tapK));
+  const enter = (1 - easeOut(tapK)) * 700;
+  const cb = {x: TAP.cx + enter, y: SURF, h: 380, flip: true};
+  const H = {x: TAP.H.x + enter + 34 * reboundK(t), y: TAP.H.y};
+  const psi = malletAngle(t);
+  const head = {x: H.x + TAP.L * Math.cos(psi), y: H.y + TAP.L * Math.sin(psi)};
+  const armB = crewReach(cb, 1, H.x, H.y);
   return (
     <Scene bg="#EEF4FD" over={general}>
       <Layer cam={cam}>
@@ -628,9 +756,25 @@ export const Train: React.FC = () => {
           </g>
         ) : null}
         <Bot cam={cam} id="trP" model="SIM" s={S} pose={p}
-          hl={{footN: {color: C.saffron, amount: Math.max(0, 1 - Math.abs(t - T_EARLY - 0.1) / 0.5)}, kneeN: {color: C.teal, amount: Math.sin(Math.PI * seg(t, T_ADJ, T_TIPS + 0.8))}, ankleN: {color: C.teal, amount: Math.sin(Math.PI * seg(t, T_ADJ, T_TIPS + 0.8))}}} />
-        {tapK > 0.01 ? <Crew look={CAST.clerkB} x={sbx} y={sb.y} h={sb.h} frame={f} seed={9} front="R" holdR={hammerProp} life={0.5}
-          pose={{...IDLE, armR: armB, armL: {a: 14, b: 16}, lookX: 0.8, lookY: 0.4, mouth: t > T_TAP1 + 0.1 ? 'grin' : 'smile', brows: 0.4}} /> : null}
+          hl={{footN: {color: C.saffron, amount: Math.max(0, 1 - Math.abs(t - T_EARLY - 0.1) / 0.5)}, kneeN: {color: C.teal, amount: Math.sin(Math.PI * seg(t, T_ADJ, T_TIPS + 0.8))}, ankleN: {color: C.teal, amount: Math.sin(Math.PI * seg(t, T_ADJ, T_TIPS + 0.8))}, hipN: {color: C.teal, amount: Math.sin(Math.PI * seg(t, T_ADJ, T_TIPS + 0.8))}}} />
+        {/* the contact pivot: the early foot on the raised plate is where the body starts to tip */}
+        {(() => {
+          const pk = seg(t, T_EARLY - 0.05, T_EARLY + 0.2) * (1 - seg(t, T_TIPS + 0.4, T_TIPS + 0.8));
+          if (pk <= 0) return null;
+          const tp = rig(p, S).pts.toeN;
+          return <path d={`M${tp[0] - 14} ${tp[1] + 2} L${tp[0]} ${tp[1] - 12} L${tp[0] + 14} ${tp[1] + 2} Z`} fill={C.saffron} stroke={C.ink} strokeWidth={lw} opacity={pk} transform={`translate(0 ${-PLATE.h * plateUp(t) + 2})`} />;
+        })()}
+        {tapK > 0.01 ? (
+          <g>
+            <Crew look={CAST.clerkB} x={cb.x} y={cb.y} h={cb.h} flip frame={f} seed={9} front="R" life={0.3}
+              pose={{...IDLE, armR: armB, armL: {a: 14, b: 16}, lookX: -0.8, lookY: 0.5, mouth: t > T_TAP1 + 0.1 ? 'grin' : 'smile', brows: 0.4}} />
+            <line x1={H.x} y1={H.y} x2={head.x} y2={head.y} stroke={C.ink} strokeWidth={lw * 4.2} strokeLinecap="round" />
+            <line x1={H.x} y1={H.y} x2={head.x} y2={head.y} stroke="#9AA4AE" strokeWidth={lw * 2.2} strokeLinecap="round" />
+            <g transform={`translate(${head.x} ${head.y}) rotate(${(psi * 180) / Math.PI + 90})`}>
+              <rect x={-20} y={-12} width={40} height={24} rx={10} fill={C.coral} stroke={C.ink} strokeWidth={lw} />
+            </g>
+          </g>
+        ) : null}
       </Layer>
       <PolicyBox t={t} cam={cam} p={p} />
     </Scene>
