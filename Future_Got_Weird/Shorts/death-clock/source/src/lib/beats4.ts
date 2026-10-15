@@ -34,13 +34,18 @@ export const B4 = {
   go0: B.bank0 - 6,
   /** flyover: the drone climbs over the roofs until the trunk wipe starts (WIPE.in0) */
   climb1: B.past0 - 1,
-  /** arrival: from the trunk wipe (arrive0) to wipeLock the drone holds the flyover drone's screen position behind the
-   *  trunk; it then crosses to HOVER2, braking with a nose-up flare from flare0, settles at hover0 and hovers */
+  /** arrival: from the trunk wipe (arrive0) to wipeLock (the trunk's full cover, WIPE.cover) the drone holds the
+   *  flyover drone's screen position behind the trunk; from there one quintic ease (zero screen speed at the lock)
+   *  carries it out from behind the trunk to HOVER2 (the climb leads by 9 frames): it accelerates to wipeLock + 9 and
+   *  brakes over the last 9 frames with a nose-up flare from flare0 + 2, settling at settle0.
+   *  (hover0 is the sound mix's hover key, lib/sound4.ts) */
   arrive0: B.past0 - 1,
   wipeLock: B.past0 + 6,
   flare0: B.past0 + 12,
   hover0: B.past0 + 19,
-  /** the dashed data link drone -> band: fades in once the drone is clear of his head, out before the case turns */
+  settle0: B.arrive,
+  /** the lock-on (no line to him): at link0 the drone's beacon and sensor blink and the ring round the band pops on in
+   *  sync (the 'link' blip); the ring is out before the case turns */
   link0: B.past0 + 18,
   link1: B.arrive + 5,
   /** the drone climbs out of frame while the camera is still on the chest, before the recovery framing returns */
@@ -128,7 +133,7 @@ export const B4 = {
   /** entry: the compact section opens at the same point (a shallow slit of skin bands at the dimple just before the
    *  contact, so the press is seen in the skin bands, then it deepens to the vessel); one blue-white slug runs
    *  reservoir -> nose -> channel -> through the wall -> into the lumen */
-  tWin0: B.inject0 - 6, // 946 (a shallow slit of skin bands at the dimple, deepening over 950-953)
+  tWin0: B.inject0 - 6, // 946 (V4 final: one shape grows from the dimple, all layers together, to full depth at tWin1)
   tWin1: B.inject0 + 6, // 958
   tSlug0: B.inject0 + 4, // 956 leaves the reservoir (treatment pulse cue)
   tSlugTip: B.inject0 + 10, // 962 at the nose tip / skin (the feed now enters the rod under the actuator)

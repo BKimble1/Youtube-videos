@@ -135,9 +135,10 @@ const handsAt = (f: number): {l: HandPose; r: HandPose} => {
 };
 
 // ---------------------------------------------------------------- the drone: arrives beside him and hovers
-/** HOVER2: above and to the right of his head, so the data link drops almost vertically to the band, with a clear
- *  air gap over the hair (the minimum drone-to-hair distance stays >= 60 world on every frame it is drawn). */
-export const HOVER2 = {x: BAND_C.x - 10, y: PJ.head.y - 345};
+/** HOVER2: above and to the right of his head, with a clear air gap over the hair (>= 60 world on every frame it is
+ *  drawn) and clear sky between its skids and the roof ridge of the house behind (V4 QA: it was 30 world further left
+ *  and 55 lower, where its skid bar sat on that ridge as it settled) */
+export const HOVER2 = {x: BAND_C.x + 20, y: PJ.head.y - 400};
 /** The flyover's drone carried into this camera: same screen position (and, with TRUCK.z0, the same size). While the
  *  trunk passes (arrive0..wipeLock) the two shots show one drone at one screen point. */
 const lockW = (f: number): V => {
@@ -145,33 +146,29 @@ const lockW = (f: number): V => {
   const c = camAt(f, BAND_C, PJ.head);
   return {x: c.x + (s.x - 540) / c.z, y: c.y + (s.y - 960) / c.z};
 };
-let arriveFrom: {p: V; v: V} | null = null;
-const arriveStart = () => {
-  if (!arriveFrom) {
-    const p = lockW(B4.wipeLock);
-    const q = lockW(B4.wipeLock - 1);
-    arriveFrom = {p, v: {x: p.x - q.x, y: p.y - q.y}};
-  }
-  return arriveFrom;
-};
-/** Arrival: behind the trunk it is the flyover's drone (lockW); it then comes out from behind the trunk, crosses to
- *  HOVER2 and brakes with a nose-up flare, settles (hover0) and hovers with a small bob, and climbs out of frame
- *  (retreat0-1) while the camera is still on his chest, before the recovery framing returns. */
+/** quintic smoothstep: zero speed and acceleration at both ends */
+const step5 = (t: number) => t * t * t * (10 + t * (6 * t - 15));
+/** Arrival: behind the trunk it is the flyover's drone (lockW, fixed on screen); from wipeLock (the trunk's full cover)
+ *  a quintic blend from that screen-fixed point into HOVER2 brings it out from behind the trunk (zero screen speed and
+ *  acceleration at the lock, so no jump): the climb leads (it is clear above the roof ridge before it slows), the
+ *  forward travel brakes over the last 9 frames with a nose-up flare and settles at settle0; it hovers with a small bob
+ *  and climbs out of frame (retreat0-1) while the camera is still on his chest, before the recovery framing returns. */
 export const arriveDrone3 = (f: number): DronePose => {
   const back = ease(inv(B4.retreat0, B4.retreat1, f));
-  const bob = Math.sin(f * 0.2) * 5 * clamp(inv(B4.hover0 - 2, B4.hover0 + 10, f));
-  let p: V;
-  if (f <= B4.wipeLock) p = lockW(f);
-  else {
-    const a = arriveStart();
-    p = {x: hermite(B4.wipeLock, B4.hover0, a.p.x, HOVER2.x, a.v.x, 0, f), y: hermite(B4.wipeLock, B4.hover0, a.p.y, HOVER2.y, a.v.y, 0, f)};
-  }
-  const flare = -8 * Math.sin(Math.PI * clamp(inv(B4.flare0 - 3, B4.hover0 + 5, f)));
+  const bob = Math.sin(f * 0.2) * 5 * clamp(inv(B4.settle0 - 4, B4.settle0 + 8, f));
+  const wx = step5(clamp(inv(B4.wipeLock, B4.settle0, f)));
+  const wy = step5(clamp(inv(B4.wipeLock, B4.settle0 - 10, f)));
+  const lk = wx < 1 ? lockW(f) : HOVER2;
+  const p: V = {x: lerp(lk.x, HOVER2.x, wx), y: lerp(lk.y, HOVER2.y, wy)};
+  // the flyover's nose-down pitch (and its rock) carries on through the lock and eases out while it accelerates; the
+  // flare (nose up) builds as it brakes and is level again just after it settles
+  const fwd = flightPitch(f) * (1 - step5(clamp(inv(B4.wipeLock, B4.wipeLock + 9, f))));
+  const flare = -7 * Math.sin(Math.PI * clamp(inv(B4.flare0 + 2, B4.settle0 + 1, f))) ** 2;
   return {
     x: p.x + 30 * back,
     y: p.y - 210 * back + bob,
     s: DRONE_S,
-    pitch: flightPitch(f) * (1 - ease(inv(B4.wipeLock, B4.flare0, f))) + flare,
+    pitch: fwd + flare,
     spin: rotorPhase(f),
     beacon: droneBeacon(f),
   };
@@ -186,16 +183,20 @@ export const arriveDrone3 = (f: number): DronePose => {
 const TP = treatPath(SF, VP);
 const PRESS_T = PORT_GEO.pressTreat * SEC.units;
 const T_INJ = B4.tSlugLumen - B4.tSlug0;
-const V_INJ = TP.uMerge / (T_INJ - 1.5 * (1 - Math.exp(-T_INJ / 1.5))); // injection speed (local units / frame)
+const U_M4 = TP.uMerge - TP.shift; // V4's merge on V4's route: the head's timing below is V4's
+const V_INJ = U_M4 / (T_INJ - 1.5 * (1 - Math.exp(-T_INJ / 1.5))); // injection speed (local units / frame)
 const V_FLOW = 12; // the blood's speed (VesselTube FLOW)
 /** the slug's head along TP (local units; < 0 before it leaves the reservoir): it gathers speed out of the reservoir,
- *  runs the channel, then slows from the injection speed toward the blood's as the flow carries it */
+ *  runs the channel, then slows from the injection speed toward the blood's as the flow carries it. V4 final: V4's
+ *  timing plus the curved channel's TP.shift, taken up evenly (C2) by TRACK0 - 0.5, so from there the slug (and the
+ *  tracking, which reads it from TRACK0 - 0.5) is exactly where V4 had it */
 export const slugHead = (g: number) => {
   const t = g - B4.tSlug0;
   if (t < 0) return -1;
-  if (t <= T_INJ) return V_INJ * (t - 1.5 * (1 - Math.exp(-t / 1.5)));
+  const k = TP.shift * smoother(clamp(t / (B4.tTrack0 - 0.5 - B4.tSlug0)));
+  if (t <= T_INJ) return V_INJ * (t - 1.5 * (1 - Math.exp(-t / 1.5))) + k;
   const t2 = t - T_INJ;
-  return TP.uMerge + V_FLOW * t2 + (V_INJ - V_FLOW) * 5 * (1 - Math.exp(-t2 / 5));
+  return U_M4 + V_FLOW * t2 + (V_INJ - V_FLOW) * 5 * (1 - Math.exp(-t2 / 5)) + k;
 };
 /** world point of the slug's middle */
 export const slugWorld = (g: number) => {
@@ -228,22 +229,28 @@ export const treatState = (g: number) => {
     stroke,
     dimple: portPress(stroke, PRESS_T),
     level: 1 - 0.7 * ease(inv(T.tSlug0, T.tSlugTip + 3, g)),
-    open: ease(inv(T.tWin0, T.tWin1, g)),
+    // V4 final: one shape growing from the dimple (SectionLayers): `open` deepens it over tWin0..tWin1 and `reach` runs
+    // its elbow side up the arm, past the top of frame by about tWin1 - 1 and complete (2100) off frame by TRACK0 - 1
+    open: clamp(inv(T.tWin0, T.tWin1, g)),
+    reach: 2100 * ((q) => q * q * (2 - q))(clamp(inv(T.tWin0, T.tTrack0 - 1, g))),
+    /** the channel runs from the nose tip into the lumen as the stroke lands, ahead of the slug; it closes as the
+     *  piston retracts */
+    channel: {k: ease(inv(T.tStroke1, T.tWin1, g)), a: 1 - ease(inv(T.tRetract0, T.tRetract1, g))},
     head,
     trail: Math.max(0, head - Math.max(0, slugHead(g - 10))),
     /** round the bend in the lumen the trace fades within about 3 frames (no J left behind) */
     trailLumen: Math.max(0, head - Math.max(0, slugHead(g - 3))),
     w,
     dose:
-      inLumen > 0
+      head > TP.uJoin
         ? {
             s: TP.sMerge + inLumen - ((1 - lenK) * TREAT_SLUG.len) / 2,
-            a: clamp(inLumen / 60),
+            a: clamp((head - TP.uJoin) / 60),
             w,
             len: lenK,
             glow: 0.25 + 0.75 * Math.sin(Math.PI * clamp((g - (T.tSlugLumen - 2)) / 7)),
-            body: head - TREAT_SLUG.len >= TP.uMerge,
-            from: TP.sMerge,
+            body: head - TREAT_SLUG.len >= TP.uJoin,
+            from: TP.sMerge + TP.uJoin - TP.uMerge,
             // a short trail behind it: how far it travelled in the last 4 frames (it shortens as the slug slows)
             wake: head - slugHead(g - 4),
           }
@@ -547,7 +554,7 @@ const recoveryCam = (g: number, wristW: V, headW: V): Cam => {
  *  crosses the digits; the case has not turned yet (roll 0) while the link is on. */
 export const dataLink = (g: number, man: ManPose, dp: DronePose) => {
   const j = manJoints(man);
-  const a = clamp(inv(B4.link0 - 2, B4.link0 + 2, g)) * (1 - clamp(inv(B4.link1 - 5, B4.link1, g))) * (1 - clamp(inv(B4.tApproach0 + 2, B4.tBack1, g)));
+  const a = clamp(inv(B4.link0 - 1, B4.link0, g)) * (1 - clamp(inv(B4.link1 - 5, B4.link1, g))) * (1 - clamp(inv(B4.tApproach0 + 2, B4.tBack1, g)));
   const from = {x: dp.x - Math.sin((dp.pitch * Math.PI) / 180) * 80 * dp.s, y: dp.y + Math.cos((dp.pitch * Math.PI) / 180) * 80 * dp.s};
   const rw = 17 * man.s;
   const arm = armFrame(j.L.E, j.L.W, 23.5 * man.s, rw);
@@ -627,8 +634,8 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
     inArm: () =>
       secOn ? (
         <g transform={SF.matrix}>
-          <SectionLayers id={`${id}-sec`} sf={SF} f={g} open={tr.open} dimple={tr.dimple} tube={tube}>
-            <TreatChannel id={`${id}-tct`} tp={TP} head={tr.head} trail={tr.trail} trailLumen={tr.trailLumen} w={tr.w} part="tissue" />
+          <SectionLayers id={`${id}-sec`} sf={SF} f={g} open={tr.open} reach={tr.reach} dimple={tr.dimple} tube={tube}>
+            <TreatChannel id={`${id}-tct`} tp={TP} head={tr.head} trail={tr.trail} trailLumen={tr.trailLumen} w={tr.w} part="tissue" channel={tr.channel} />
           </SectionLayers>
           <PortLight id={`${id}-pl`} sf={SF} press={tr.dimple} a={clamp(tr.dimple / PRESS_T)} color="#A9C8FF" />
           <SkinDimple id={`${id}-dm`} sf={SF} amp={tr.dimple} />
@@ -637,9 +644,17 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
   };
   const dp = arriveDrone3(g);
   const showDrone = g < B.return0 + 30;
-  const {a: linkA, from: linkFrom, to: linkTo, c: glassC, r: linkR} = dataLink(g, man, dp);
-  // the drone's soft ground shadow: broad and faint at this height, it follows the drone (and its bob)
-  const shK = clamp(1 - (GROUND - dp.y) / 2200);
+  const {a: linkA, c: glassC, r: linkR} = dataLink(g, man, dp);
+  // the drone's soft ground shadow on the lawn in front of him (the drone is drawn in front of him): it follows the
+  // drone (and its bob), offset away from the upper-left sun, broader and fainter the higher it is; gone with the retreat
+  const shH = Math.max(0, GROUND - dp.y);
+  const shK = clamp(1 - shH / 2600) * (1 - clamp(inv(B4.retreat0, B4.retreat0 + 10, g)));
+  const shC = {x: dp.x + 0.15 * shH, y: GROUND + 150};
+  const shRx = (120 + 0.12 * shH) * dp.s;
+  // the lock-on: the drone's sensor and beacon blink and the ring round the band pops on in the same frame (link0, the
+  // 'link' blip), with one ripple off the ring; nothing is drawn between them (no line or light across him)
+  const lock = g >= B4.link0 - 1 ? clamp(1 - Math.abs(g - B4.link0) / (g < B4.link0 ? 1.5 : 6)) : 0;
+  const sensor = add({x: dp.x, y: dp.y}, rot({x: 0, y: 80 * dp.s}, dp.pitch));
   return (
     <Scene
       id={id}
@@ -659,15 +674,28 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
       nearLegFront
       noTufts
       overTorso={chest}
-      under={showDrone && shK > 0.01 ? <SoftShadow id={`${id}-drs`} c={{x: dp.x + 40, y: GROUND + 6}} rx={190 * dp.s * shK} ry={24 * dp.s * shK} alpha={0.16 * shK} /> : null}
+      under={
+        showDrone && shK > 0.01 ? (
+          <g>
+            <SoftShadow id={`${id}-drs`} c={shC} rx={shRx * 1.25} ry={shRx * 0.2} alpha={0.14 * shK} />
+            <SoftShadow id={`${id}-drc`} c={shC} rx={shRx * 0.7} ry={shRx * 0.11} alpha={0.26 * shK} />
+          </g>
+        ) : null
+      }
       extra={
         <g>
-          {showDrone && <Drone id={`${id}-dr`} p={dp} blur={1} />}
-          {/* the drone has found him: a thin data link dropping almost vertically to the band (no light on him) */}
+          {showDrone && <Drone id={`${id}-dr`} p={{...dp, beacon: Math.max(dp.beacon, lock)}} blur={1} />}
+          {showDrone && lock > 0.01 && (
+            <g>
+              <Glow id={`${id}-dlk`} c={sensor} r={120 * dp.s} color={PAL.signal} alpha={lock} />
+              <circle cx={fmt(sensor.x)} cy={fmt(sensor.y)} r={fmt(13 * dp.s)} fill="#CFF4FF" opacity={fmt(lock)} />
+            </g>
+          )}
+          {/* the drone has found him: the ring round the band pops on with the drone's blink (no line, no light on him) */}
           {linkA > 0.01 && (
             <g opacity={fmt(linkA)}>
-              <path d={`M${fmt(linkFrom.x)},${fmt(linkFrom.y)} L${fmt(linkTo.x)},${fmt(linkTo.y)}`} stroke={PAL.signal} strokeWidth={3} strokeDasharray="6 10" opacity={0.8} />
-              <circle cx={fmt(glassC.x)} cy={fmt(glassC.y)} r={fmt(linkR)} fill="none" stroke={PAL.signal} strokeWidth={3} />
+              <circle cx={fmt(glassC.x)} cy={fmt(glassC.y)} r={fmt(linkR)} fill="none" stroke={PAL.signal} strokeWidth={fmt(3 + 2.5 * lock)} />
+              {lock > 0.01 && <circle cx={fmt(glassC.x)} cy={fmt(glassC.y)} r={fmt(linkR + ((1 - lock) * 14) / cam.z)} fill="none" stroke={PAL.signal} strokeWidth={2} opacity={fmt(0.8 * lock)} />}
             </g>
           )}
         </g>

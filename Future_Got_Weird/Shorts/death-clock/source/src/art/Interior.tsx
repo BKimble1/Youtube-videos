@@ -445,11 +445,14 @@ type SectionProps = {
   dimple?: number;
   /** the sensor shot: a thin cyan edge leads the opening */
   sweep?: boolean;
+  /** the treatment (no sweep): how far the window reaches toward the elbow (local units from the port); it runs on
+   *  off frame after `open` completes (default: the whole window) */
+  reach?: number;
   /** drawn inside the window over the vessel (the sensor stream, the treatment channel) */
   children?: React.ReactNode;
 };
 
-export const SectionLayers: React.FC<SectionProps> = ({id, sf, open, tube, x0, x1, depth, dimple = 0, sweep = false, children}) => {
+export const SectionLayers: React.FC<SectionProps> = ({id, sf, open, tube, x0, x1, depth, dimple = 0, sweep = false, reach, children}) => {
   const X0 = x0 ?? sf.Xp - SEC_WIN.back;
   const X1 = x1 ?? sf.Xp + SEC_WIN.fwd;
   const DEP = depth ?? SEC_WIN.depth;
@@ -464,11 +467,16 @@ export const SectionLayers: React.FC<SectionProps> = ({id, sf, open, tube, x0, x
   // patch of fat.
   const eL = sweep ? smooth(clamp(Math.sqrt(e) / 0.35)) : smooth(clamp(e / 0.3));
   const eD = sweep ? smooth(clamp((e - 0.15) / 0.85)) : smooth(clamp((e - 0.06) / 0.6));
-  const wx0 = lerp(Xp - 120, X0, eL);
-  const wx1 = lerp(Xp + 120, X1, Math.min(1, eL * 1.6));
+  // V4 final (treatment, no sweep): one shape grows from the dimple's floor, all the layers opening together (no slit
+  // along the arm, no lone slab of fat): `open` (linear) deepens it with an ease-in, the wrist side follows the depth,
+  // and the elbow side runs on at `reach` (past the top of frame before it completes)
+  const pT = e * e * (2 - e);
+  const dnT = (X1 - Xp) * (1 - Math.pow(1 - clamp(pT / 0.5), 2));
+  const wx0 = sweep ? lerp(Xp - 120, X0, eL) : Math.max(X0, Xp - Math.max(dnT, reach ?? Xp - X0));
+  const wx1 = sweep ? lerp(Xp + 120, X1, Math.min(1, eL * 1.6)) : Xp + dnT;
   const top = Math.min(surf(X0), surf(X1)) - 300;
   // (the sweep's first frame is a shallow slit too; it is through the fat by the time it has run half its length)
-  const dep = lerp(surf(Xp) + (sweep ? lerp(60, SEC.fat + 110, smooth(clamp(eL / 0.5))) : 50), DEP, eD);
+  const dep = sweep ? lerp(surf(Xp) + lerp(60, SEC.fat + 110, smooth(clamp(eL / 0.5))), DEP, eD) : lerp(surf(Xp) + dimple, DEP, pT);
   const rc = Math.min(260, (dep - surf(Xp)) * 0.5, (wx1 - wx0) * 0.5);
   const rimK = sweep ? Math.min(1, 0.45 + 3 * e) : smooth(clamp((dep - surf(Xp) - SEC.skin + 30) / 160));
   const win = `M${f2(wx0)},${f2(top)} L${f2(wx1)},${f2(top)} L${f2(wx1)},${f2(dep - rc)} A${f2(rc)},${f2(rc)} 0 0 1 ${f2(wx1 - rc)},${f2(dep)} L${f2(wx0 + rc)},${f2(dep)} A${f2(rc)},${f2(rc)} 0 0 1 ${f2(wx0)},${f2(dep - rc)} Z`;
@@ -660,10 +668,16 @@ const SlugStroke: React.FC<{path: Arc; u0: number; u1: number; w: number; rigid?
   );
 };
 
-export type TreatPath = {arc: Arc; uTip: number; uBend: number; uMerge: number; sMerge: number};
+export type TreatPath = {arc: Arc; uTip: number; uBend: number; uMerge: number; sMerge: number; uJoin: number; uWall: number; shift: number};
 /** The treatment route in the section frame: reservoir outlet -> feed -> down the rod to the nose tip (full stroke) ->
- *  a straight channel leaning toward the flow through skin, fat and the near wall -> one bend that meets the flow
- *  tangentially in the lumen -> on along the vessel. Continuous; it never leaves the channel or the lumen. */
+ *  one narrow channel that leaves the nose leaning toward the flow and curves evenly through skin, fat and the near
+ *  wall (about 40 deg to the vessel there) into the lumen, where it meets the flow tangentially on the axis (uJoin) ->
+ *  on along the vessel. Continuous; it never leaves the channel or the lumen.
+ *  V4 final: the curve replaces V4's straight channel and tight bend (the slug turned about 75 deg in 3 frames at the
+ *  wall). From the join on the route is V4's own (the same points), `shift` (local units) further along it, and
+ *  uMerge / sMerge keep V4's map between the route and the vessel (s = sMerge + u - uMerge), so with the head's timing
+ *  shifted to match (Aftermath3 slugHead) the slug is where V4 had it from the join on (the 987 match). uWall: where the
+ *  channel opens into the lumen (uBend: the trace ends there). */
 export const treatPath = (sf: SecFrame, vp: Arc & {entry: number}): TreatPath => {
   const pf = portFrame(sf);
   const PG = PORT_GEO;
@@ -704,13 +718,41 @@ export const treatPath = (sf: SecFrame, vp: Arc & {entry: number}): TreatPath =>
   const flow: V[] = [];
   for (let s = sM + 20; s <= sM + 3000; s += 20) flow.push(vp.at(s).p);
   const a = arc([...inCase, ...tissue, ...flow]);
-  return {arc: a, uTip: a.cum[inCase.length - 1], uBend: a.cum[inCase.length + 9], uMerge: a.cum[inCase.length + tissue.length - 1], sMerge: sM};
+  // V4 final: the curved channel, a cubic from the nose tip (V4's lean) to the vessel's axis JOIN steps along the flow,
+  // tangent to it there; the route goes on through V4's own flow points
+  const JOIN = 15;
+  const P1 = flow[JOIN - 1];
+  const d1 = vp.at(sM + 20 * JOIN).dir;
+  const ch = len(sub(P1, tip));
+  const curve: V[] = [];
+  for (let i = 1; i <= 40; i++) {
+    const q = i / 40;
+    const h00 = 2 * q ** 3 - 3 * q ** 2 + 1;
+    const h10 = q ** 3 - 2 * q ** 2 + q;
+    const h01 = -2 * q ** 3 + 3 * q ** 2;
+    const h11 = q ** 3 - q ** 2;
+    curve.push(i === 40 ? P1 : {x: h00 * tip.x - h10 * ch * Math.sin(th) + h01 * P1.x + h11 * ch * d1.x, y: h00 * tip.y + h10 * ch * Math.cos(th) + h01 * P1.y + h11 * ch * d1.y});
+  }
+  const b = arc([...inCase, ...curve, ...flow.slice(JOIN)]);
+  const uJoin = b.cum[inCase.length + curve.length - 1];
+  const shift = uJoin - a.cum[inCase.length + tissue.length - 1 + JOIN];
+  // the channel opens into the lumen where the curve crosses the lumen's near edge (SEC.rho from the axis)
+  let uWall = uJoin;
+  for (let u = b.cum[inCase.length - 1]; u < uJoin; u += 2) {
+    if (b.at(u).p.y > P1.y - SEC.rho) {
+      uWall = u;
+      break;
+    }
+  }
+  const uMerge = a.cum[inCase.length + tissue.length - 1] + shift;
+  return {arc: b, uTip: b.cum[inCase.length - 1], uBend: uWall, uMerge, sMerge: sM, uJoin, uWall, shift};
 };
 
-/** The slug and the faint trace it leaves (20 local wide, alpha 0.35; only along the case's bore and the straight
- *  channel, never round the bend in the lumen). `part` picks which stretch this layer owns:
+/** The slug and the faint trace it leaves (20 local wide, alpha 0.35; only along the case's bore and the channel,
+ *  never in the lumen). `part` picks which stretch this layer owns:
  *  inside the case (caseCut layer: the slug is fluid in the bore, clipped to the feed, the hollow rod and the nose, at
- *  the bore's width) or the tissue (section layer: a rigid capsule that widens as it leaves the nose tip). The trace
+ *  the bore's width) or the tissue (section layer: the channel, and the slug following it, widening as it leaves the
+ *  nose tip). The trace
  *  fades over `trail` (about 10 frames of travel). `trailLumen` is accepted for compatibility and ignored. The slug is
  *  drawn while any of it is still short of the merge point; VesselTube's dose takes it over from there. */
 export const TreatChannel: React.FC<{
@@ -723,7 +765,9 @@ export const TreatChannel: React.FC<{
   part: 'case' | 'tissue';
   /** part 'case': the bore the slug runs in (the port frame and the nose's current stroke) */
   bore?: {sf: SecFrame; stroke: number; press: number};
-}> = ({id, tp, head, trail, w = 1, part, bore}) => {
+  /** part 'tissue': the channel itself, run from the nose tip into the lumen (k 0..1) at opacity a */
+  channel?: {k: number; a: number};
+}> = ({id, tp, head, trail, w = 1, part, bore, channel}) => {
   const tail = head - TREAT_SLUG.len;
   const trace = (key: string, c0: number, c1: number, tr: number, alpha = 0.35) => {
     const tr0 = Math.max(c0, tail - tr);
@@ -744,7 +788,7 @@ export const TreatChannel: React.FC<{
       </g>
     );
   };
-  const live = head > 0 && tail < tp.uMerge;
+  const live = head > 0 && tail < tp.uJoin;
   if (part === 'case') {
     let clip: React.ReactNode = null;
     if (bore) {
@@ -772,11 +816,20 @@ export const TreatChannel: React.FC<{
   }
   // the slug widens from the bore's width to its own as it leaves the nose tip
   const wT = w * lerp(0.6, 1, smooth(clamp((head - tp.uTip) / TREAT_SLUG.len)));
+  // V4 final: one narrow channel (a pale bore with a thin blue-grey wall) from the nose tip to where it opens into the
+  // lumen; the slug runs in it and on along the same curve into the flow (no free-floating capsule, no turn in place)
+  const chD = channel && channel.a > 0.01 && channel.k > 0.01 ? subPathD(tp.arc, tp.uTip - 12, lerp(tp.uTip, tp.uWall + 16, channel.k)) : null;
   return (
     <g>
-      {/* the trace stays on the straight channel (it ends where the bend into the lumen starts): no ghost J */}
+      {chD && (
+        <g opacity={f2(channel?.a ?? 0)}>
+          <path d={chD} fill="none" stroke="#35548A" strokeOpacity={0.55} strokeWidth={34} strokeLinecap="round" strokeLinejoin="round" />
+          <path d={chD} fill="none" stroke="#EAF1FF" strokeOpacity={0.8} strokeWidth={18} strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+      )}
+      {/* the trace stays in the channel (it ends where the channel opens into the lumen): no ghost J */}
       {trace('tr', tp.uTip, tp.uBend, trail)}
-      {live && head > tp.uTip && <SlugStroke path={tp.arc} u0={Math.max(tp.uTip - TREAT_SLUG.len, tail)} u1={head} w={wT} rigid />}
+      {live && head > tp.uTip && <SlugStroke path={tp.arc} u0={Math.max(tp.uTip - TREAT_SLUG.len, tail)} u1={head} w={wT} />}
     </g>
   );
 };

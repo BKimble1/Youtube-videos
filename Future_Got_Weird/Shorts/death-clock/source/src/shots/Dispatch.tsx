@@ -488,12 +488,15 @@ export const Flyover: React.FC<{id: string; f: number}> = ({id, f}) => {
 
 /** A foreground tree trunk that sweeps across the lens: ahead of it the flyover, behind it his lawn. */
 export const TrunkWipe: React.FC<{id: string; f: number; before: React.ReactNode; after: React.ReactNode}> = ({id, f, before, after}) => {
-  // a trunk close to the lens, narrower than the frame, passes right-to-left at constant speed (the drone flies past it toward
-  // him): the flyover stays visible ahead of its leading edge, his lawn appears behind its trailing edge, and
-  // the frame is never fully covered. Leading edge just off the right at in0; trailing edge off the left at out1.
-  const RW = 760;
+  // a trunk close to the lens, wider than the frame, passes right-to-left at one constant speed (the drone flies past it
+  // toward him): the flyover stays visible ahead of its leading edge, his lawn appears behind its trailing edge, and the
+  // two never share a frame: the trunk covers the whole frame at WIPE.cover and the frame after (the swap happens
+  // there). Its edges span e-29 .. e+172 px over the frame's height, so full cover needs x <= -172 and
+  // x + RW - 29 >= 1080. Leading edge first in frame at in0 + 1; trailing edge gone by in0 + 15 (out1 = in0 + 16).
+  const RW = 1500;
+  const TV = 190; // px/frame
   const t = inv(WIPE.in0, WIPE.out1, f);
-  const x = lerp(1240, -RW - 320, t);
+  const x = 1150 - TV * (f - WIPE.in0);
   const edge = (e: number) => `M${fmt(e)},-200 Q${fmt(e - 120)},1100 ${fmt(e + 260)},2200`;
   const roof = `M${fmt(x)},-200 L${fmt(x + RW)},-200 Q${fmt(x + RW - 120)},1100 ${fmt(x + RW + 260)},2200 L${fmt(x + 260)},2200 Q${fmt(x - 120)},1100 ${fmt(x)},-200 Z`;
   const ahead = `M-400,-200 L${fmt(x)},-200 Q${fmt(x - 120)},1100 ${fmt(x + 260)},2200 L-400,2200 Z`;
@@ -520,7 +523,7 @@ export const TrunkWipe: React.FC<{id: string; f: number; before: React.ReactNode
       <path d={roof} fill={`url(#${id}-rf)`} />
       {/* bark grooves, kept inside the trunk's silhouette */}
       <g clipPath={`url(#${id}-bark)`}>
-        {Array.from({length: 6}).map((_, i) => (
+        {Array.from({length: 12}).map((_, i) => (
           <path key={i} d={`M${fmt(x + 110 + i * 120)},-200 L${fmt(x + 110 + i * 120 - 40)},2200`} stroke="#3E2F26" strokeWidth={10} opacity={0.45} />
         ))}
       </g>
