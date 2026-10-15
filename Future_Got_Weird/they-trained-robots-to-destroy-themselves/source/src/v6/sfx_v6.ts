@@ -117,7 +117,7 @@ const options = (): Cue[] => {
     bed('furnace_roar', tMelt, OPTIONS_END + 0.4, -2),
     {t: tMelt + 0.2, kind: 'sizzle', dur: 1.0, gain: -12},                    // the clock face heats
     {t: T_DROPHIT - 0.35, kind: 'whoosh_soft', gain: -15, pitch: 2},          // scrap falls into the top view
-    ...entry(T_DROPHIT, -13, 1.6),
+    ...entry(T_DROPHIT, -16, 1.6),                                            // under the voice (masking check)
     {t: T_TILT0, kind: 'whoosh_soft', gain: -15, pitch: -3},                  // top view tilts to the side view
     ...falls(footfalls(OPTIONS_WALK.EDGE_WALK), 'step_grate', -10),
     {t: tBrings + 0.4, kind: 'elec_arc', gain: -15},

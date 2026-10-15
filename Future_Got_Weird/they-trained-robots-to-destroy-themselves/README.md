@@ -1,6 +1,59 @@
 # Future Got Weird: They Trained Robots to Destroy Themselves
 
-## V5 (15 Oct 2026): the current version
+## V6 (15 Oct 2026): the current version
+
+**Status.** The V6 finishing pass is complete. V1–V5 are preserved unchanged.
+
+V6 is a focused animation clean-up of V5 with the same narration and runtime (3:36.7). It keeps the V5 opening,
+story and narrator, the vector F.02/F.03 designs and chest marks, the Crew, the warm-foundry / cool-simulation
+contrast and the orange end silhouettes, and fixes:
+
+- the opening's continuous trajectory, settling splash and an environment-wide material change (no white disc);
+- the factory's single task cycle and F.03 reveal, and prop ownership (wrench, sign, actuator, report, target, slate);
+- the training section's framing: a short corner label instead of the long banner, one safe camera for every attempt,
+  close views of the failed landing's evidence, clean resets, a calm grid and a matched split view;
+- the policy diagram's routing, the balance pivot, the reflex mallet and a shorter sim-to-real double exposure;
+- the variations, the airbag dent, local heat shimmer, a single ghost on the trajectory and one warehouse response;
+- an ending that resolves once (no second blue-avatar jump) with a single "10" beat;
+- the sound cue sheet, score and mix, re-timed to the new events.
+
+The format is 1920×1080 at 30 fps native. It is **not published**; that is the owner's step. Nobody has watched it in
+real time or listened to it here. `QA_REPORT.md` (V6 section) lists exactly what was checked.
+
+| What | Where |
+|---|---|
+| Completed fixes by section | `production/v6/CHANGES_V6.md` |
+| Unresolved defects and limits | `QA_REPORT.md` (V6 section) |
+| Source credits | `production/v6/CREDITS_V6.md` |
+| Editable source | `source/src/v6/` (composition `V6Main`) |
+| Narration | Unchanged V5 narration (`audio/v5/narration/`), word timings `source/src/v6/data/narration_words_v5.json` |
+| Cue sheet, score, mix, speech-masking check | `source/src/v6/sfx_v6.ts`, `audio/v6/sfx_cues_v6.json`, `tools/v6/synth_score_v6.py`, `tools/v6/mix_audio_v6.py`, `audio/v6/mix/mix_v6_measure.json`, `audio/v6/mix/speech_mask_v6.txt` |
+| **Upload master 1080p** | `exports/FGW_RobotsDestroy_v6_UPLOAD_1080p.mp4` (Git-ignored; backed up as checksummed parts in `backup/v6/`) |
+| Share/review copy (compressed, not for upload) | `exports/FGW_RobotsDestroy_v6_1080p_SHARE.mp4` (Git-ignored; regenerate with `tools/v6/share_and_backup_v6.sh`) |
+| Captions | `captions/FGW_RobotsDestroy_v6.srt` (identical to V5: same narration) |
+| Title, description, chapters | `upload/UPLOAD_TEXT_v6.md`, `upload/chapters_v6.txt` (same text and times as V5) |
+| Thumbnails | The V4 files remain current |
+| QA | `QA_REPORT.md` (V6 section), `qa/v6/qa_v6_results.json`, transition strips `qa/v6/strips/`, phone-size pages `qa/v6/phone/`, V5-vs-V6 frames `qa/v6/compare/` |
+
+### Rebuild V6
+
+    cd Future_Got_Weird/they-trained-robots-to-destroy-themselves
+    (cd source && npm ci)
+    (cd source && node ../tools/v6/collect_sfx_v6.mjs)      # cue sheet + transition times -> audio/v6/sfx_cues_v6.json
+    python3 tools/v6/synth_score_v6.py                      # -> source/public/v6/audio/music_v6.wav
+    python3 tools/v6/mix_audio_v6.py                        # -> source/public/v6/audio/mix_v6.mp3 (-15 LUFS, -1.5 dBTP)
+    python3 tools/v6/speech_mask_v6.py                      # where effects come within 6 dB of the voice
+    (cd source && npx remotion render src/index.ts V6Main ../exports/FGW_RobotsDestroy_v6_UPLOAD_1080p.mp4 --props='{"audio":"mix"}' --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k)
+    bash tools/v6/share_and_backup_v6.sh                    # share copy + checksummed backup parts
+    python3 tools/v6/qa_v6.py                               # measured QA -> qa/v6/qa_v6_results.json
+    python3 tools/v6/strips_v6.py                           # ±12-frame strips at every transition (qa/v6/transitions_v6.json)
+    python3 tools/v6/compare_v6.py                          # V5 vs V6 frames at the brief's problem spots
+
+Stills for inspection: `cd source && COMP=V6Main SCALE=0.5 node stills.mjs ../qa/<dir> t:<seconds> …`.
+
+---
+
+## V5 (15 Oct 2026)
 
 **Status.** The V5 revision is complete. V1–V4 are preserved unchanged.
 
