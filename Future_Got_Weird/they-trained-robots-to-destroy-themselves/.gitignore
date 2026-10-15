@@ -30,3 +30,11 @@ qa/v3/review/*.mp4
 audio/v4/mix/*.wav
 qa/v4/*/f[0-9]*.png
 qa/v4/review/*.mp4
+# V5: regenerated audio (tools/v5/stitch_narration_v5.py, synth_score_v5.py, mix_audio_v5.py) and QA frame dumps
+audio/v5/mix/*.wav
+audio/v5/narration/narration_v5.wav
+source/public/v5/audio/music_v5.wav
+qa/v5/*/f[0-9]*.png
+qa/v5/v4look/
+qa/v5/inspect/
+tools/*/__pycache__/

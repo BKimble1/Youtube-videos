@@ -94,7 +94,12 @@ the channel's Crew and the orange furnace look, and rebuilds the timeline around
     - **Unfamiliar task:** the camera trucks out past the edge of the prepared set into an ordinary parts aisle. The
       example is a spilled tote across the aisle. The trained avatar stops and can only offer its jump-ready crouch,
       so its target rings flicker on an empty floor.
-11. **Ending (3:12–3:36.7).** Rebuilt.
+11. **Held shots and walks.** Shots that used to sit still for 2–3 s now creep slowly: the options two-shot, the
+    stage before the target toss, the score questions, the policy definition and the unknown-foundry wide. The airbag
+    hall opens on a short walk to the ledge edge instead of a 2.2 s static frame. Every walk now covers whole strides
+    and ends with a stop step, so the planted foot never slides (`source/src/v5/rig/stop.ts`). Footstep sounds are
+    placed on the computed footfalls.
+12. **Ending (3:12–3:36.7).** Rebuilt.
     - **Into the silhouette:** the aisle's lights go out bank by bank and the avatar fills black. A warm glow rises
       behind the same shape, now a backlit silhouette on the foundry deck at the same screen position and size.
     - **The walk and leap:** arms, legs and head are picked out on the words. It walks to the edge and leaps. The
@@ -113,8 +118,8 @@ the channel's Crew and the orange furnace look, and rebuilds the timeline around
       silence.
     - V4's extra furnace close-up, its target overlay, the "a choice?" bubble and the "not the robot's",
       "picked the ending", "built the target" and "wrote the score" tags are gone.
-12. **Sound.**
-    - **Re-cued from the animation's own event times** (`source/src/v5/sfx_v5.ts`, 258 cues). The effects are short
+13. **Sound.**
+    - **Re-cued from the animation's own event times** (`source/src/v5/sfx_v5.ts`, 266 cues). The effects are short
       mechanical, contact, reset and impact sounds, with only three whooshes in the whole film.
     - **Re-timed in-house score:**
       - the ostinato drops out on the opening impact;
@@ -194,8 +199,13 @@ overlay.
 - **Narration joins and new takes were checked by transcript, waveform timing and level, not by ear.** The word
   timings come from ElevenLabs Scribe transcripts of the chosen takes, and the captions and `script/script_v5.md` are
   built from those timings.
-- **Foot contact was checked in stills, not measured on every frame.** Short blends from a walk into a stance can
-  still slide a few pixels.
+- **Foot contact was measured on the rig, frame by frame, for the main walks and jumps, not for every character.**
+  - **Walks measured:** the aisle avatar, the ending silhouette, the Imatra walk-out, the Options edge walk, the F.03
+    fleet and the airbag-hall ledge walk.
+  - **Jumps measured:** the stick landings and push-offs in the hook, training, sim rounds, payoff and ending.
+  - **Result:** a planted toe moves at most 1.35 world units per frame, about 1 px on screen. The first V5 render had
+    a walk-to-stance blend that slid about 9 px per frame; it was replaced by a stop step before the final render.
+  - **Not measured:** crew characters' feet.
 - **Not every secondary character moves physically.** Crew members gesture and react but do not walk; where a crew
   member enters, it is by camera reveal.
 - **The airbag hall is the plainest set** in the film: a grey hall, a mezzanine and the bag.
