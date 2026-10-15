@@ -493,7 +493,7 @@ export const Real: React.FC = () => {
           <g>
             {BARRIERS.map((x) => <Barrier key={x} x={x} lw={lw} />)}
             <TripodCam x={1180} y={FD.floor} lw={lw} />
-            <SetCrew f={f} lookC={t > T_KNOCKED - 0.2 ? 0.95 : 0.5} />
+            <SetCrew f={f} lookC={t > T_KNOCKED - 0.2 ? 0.95 : 0.5} showA={false} />   {/* clipboard crew stays out of the jump shots (no head at the frame edge) */}
             {spark(B.x0 + 330, B.y0 + 125, T_ELEC)}
             {spark(1180, FD.floor - 400, T_KNOCKED + 0.1)}
             <CameraIcon x={1180} y={FD.floor - 430} s={0.6} broken={seg(t, T_KNOCKED + 0.1, T_KNOCKED + 0.4)} />
