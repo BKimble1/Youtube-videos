@@ -38,7 +38,7 @@
    }
   },
   "bit_exact": true,
-  "rebuild_s": 32.7,
+  "rebuild_s": 20.9,
   "v3_inputs_sha256": "6bd7b6f54c8899ba8aff0ca2d7ee8224d717dc1e09fc0e05b789a8e31d67e3de"
  },
  "cues": [
@@ -815,8 +815,8 @@
   {
    "id": "latch_pin",
    "kind": "pin",
-   "frame": 813,
-   "time_s": 27.1,
+   "frame": 797,
+   "time_s": 26.567,
    "gain_db": -24,
    "len_s": 0.5,
    "source": "procedural",
@@ -825,8 +825,8 @@
   {
    "id": "latch_servo",
    "kind": "servo",
-   "frame": 813,
-   "time_s": 27.1,
+   "frame": 797,
+   "time_s": 26.567,
    "gain_db": -27,
    "len_s": 0.267,
    "source": "procedural",
@@ -835,10 +835,10 @@
   {
    "id": "rotor_path",
    "kind": "rotor",
-   "frame": 814,
-   "time_s": 27.133,
+   "frame": 798,
+   "time_s": 26.6,
    "gain_db": -25.1,
-   "len_s": 8.3,
+   "len_s": 8.833,
    "source": "procedural",
    "bus": "continuous",
    "pan": "curve"
@@ -846,8 +846,8 @@
   {
    "id": "latch_click",
    "kind": "click",
-   "frame": 821,
-   "time_s": 27.367,
+   "frame": 805,
+   "time_s": 26.833,
    "gain_db": -30,
    "len_s": 0.08,
    "source": "procedural",
@@ -1238,7 +1238,7 @@
   "passes": [
    {
     "pass": 0,
-    "sample_peak_dbfs": -1.7139,
+    "sample_peak_dbfs": -1.7699,
     "samples_over": 4
    },
    {
@@ -1248,7 +1248,7 @@
    }
   ],
   "true_peak_dbtp_4x": [
-   -1.756
+   -1.761
   ],
   "corrections": [
    {
@@ -1266,11 +1266,18 @@
     "pulse_dbfs": -113.1
    },
    {
-    "t_s": 29.714,
-    "frame": 891.4,
+    "t_s": 30.9157,
+    "frame": 927.5,
     "ch": 0,
-    "excess_lsb": 67930,
-    "pulse_dbfs": -41.8
+    "excess_lsb": 20840,
+    "pulse_dbfs": -52.1
+   },
+   {
+    "t_s": 34.7517,
+    "frame": 1042.6,
+    "ch": 0,
+    "excess_lsb": 1470,
+    "pulse_dbfs": -75.1
    },
    {
     "t_s": 2.7758,
@@ -1287,15 +1294,22 @@
     "pulse_dbfs": -113.1
    },
    {
-    "t_s": 29.714,
-    "frame": 891.4,
+    "t_s": 30.9157,
+    "frame": 927.5,
     "ch": 1,
-    "excess_lsb": 62838,
-    "pulse_dbfs": -42.5
+    "excess_lsb": 23674,
+    "pulse_dbfs": -51.0
+   },
+   {
+    "t_s": 34.7517,
+    "frame": 1042.6,
+    "ch": 1,
+    "excess_lsb": 40,
+    "pulse_dbfs": -106.5
    }
   ],
-  "corrected_samples": 143,
-  "correction_peak_dbfs": -41.8,
+  "corrected_samples": 192,
+  "correction_peak_dbfs": -51.0,
   "final_sample_peak_dbfs": -1.8
  },
  "stems_sum_residual_lsb": 0,
@@ -1313,16 +1327,16 @@
   "target_offset": "0.26"
  },
  "loudnorm_pass1_effects": {
-  "input_i": "-31.47",
+  "input_i": "-31.52",
   "input_tp": "-13.78",
   "input_lra": "12.80",
-  "input_thresh": "-42.57",
-  "output_i": "-15.54",
+  "input_thresh": "-42.53",
+  "output_i": "-15.57",
   "output_tp": "-1.50",
-  "output_lra": "9.10",
-  "output_thresh": "-26.29",
+  "output_lra": "9.00",
+  "output_thresh": "-26.24",
   "normalization_type": "dynamic",
-  "target_offset": "0.54"
+  "target_offset": "0.57"
  },
  "loudnorm_pass1_v3_mix_for_reference": {
   "input_i": "-19.23",
@@ -1366,10 +1380,10 @@
   },
   "rotor_path": {
    "kind": "rotor",
-   "len_s": 8.3,
-   "centroid_hz": 223.0,
-   "energy_above_3k_pct": 0.178,
-   "energy_below_100hz_pct": 0.585
+   "len_s": 8.833,
+   "centroid_hz": 223.5,
+   "energy_above_3k_pct": 0.181,
+   "energy_below_100hz_pct": 0.33
   },
   "contact": {
    "kind": "press",
@@ -1410,7 +1424,7 @@
   "organDim0": "B4.organDim0",
   "mapEnd": "Dispatch.MAP_END",
   "pulseLand": "B4.pulseLand",
-  "latch": "B.latch 813 (Dispatch latch swing 813-821); spin0 817, blur0 821, spin1 839, lift 837-862",
+  "latch": "B4.latch0 797 (Dispatch latch swing 797-805); spin0 801, blur0 804, spin1 814, lift 812-835",
   "climb1": "B4.climb1",
   "arrive0": "B4.arrive0",
   "flare0": "B4.flare0",
@@ -1419,7 +1433,7 @@
   "retreat1": "B4.retreat1",
   "lift1": "B4.lift1",
   "rotor_rate": "Dispatch.rotorPhase",
-  "rotor_view": "Dispatch.droneView (framed 814-918; off frame from 919: eased over 12 f into the off-frame hover model, no step)",
+  "rotor_view": "Dispatch.droneView (framed 798-918; off frame from 919: eased over 12 f into the off-frame hover model, no step)",
   "wipe": "Dispatch.WIPE {\"in0\":890,\"cover\":897,\"out1\":906}",
   "link0": "B4.link0",
   "treatment": "B4 tRoll 931-939, tShut 941-945, tStroke 945-951, tSlug0 956 -> tSlugLumen 968, tTrack0 965, tRetract 973-981, tShutClose 981-985, treatMatch 987, treatSvc1 995",
@@ -1471,9 +1485,9 @@
  "outputs": {
   "audio/v4/stems/narration.wav": "795c856e4463f9e18f82ac2dd30ae5642796c78716b839a73dc521f20b8977ab",
   "audio/v4/stems/music.wav": "3d64640fddc3baeb4b6e94fa34af2e752dcdc3a7424402cfeaf3b0717e6038d9",
-  "audio/v4/stems/effects.wav": "fed4856ce37d3b4766e8f6bf0b9f31352d4473b826e506b7dd9b7047a7ebde3b",
-  "audio/v4/mix/FGW_DeathClock_V4_mix_48k.wav": "d8ed7f88cd15cb88578b3a5edb4bdcbbbbc6f78a8ef561135e2a3aefba27ed6f"
+  "audio/v4/stems/effects.wav": "482bd89e132a7256d0fb5ba40a0498c86599b7e75a236ab720d667ae2b491a0e",
+  "audio/v4/mix/FGW_DeathClock_V4_mix_48k.wav": "f6d1976b559e5c5a8f5a4eb7d0afce1870e4d8221969a7c717a7f1831c14c493"
  },
- "cues_json_sha256": "8af8b175c1f2cbac2082aa48ef565528127473cecc37259a243e72d9a74c04fd",
- "build_s": 651.5
+ "cues_json_sha256": "914bbb7e8d464c7288109186ad2193ca4de73ae3dfea46e95ffc3eaaf9c66c5a",
+ "build_s": 44.6
 }

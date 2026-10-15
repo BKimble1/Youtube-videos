@@ -48,6 +48,8 @@
 | **33.3–34.3 s (1000–1030).** The heartbeat settling was barely visible (about 3–4% area). | The contraction is legible: twitches of about 4–6%, then beats of about 9–10% (geometry and render measurements). The beat frames, which the sound uses, are unchanged. |
 | **34.7–35.0 s (1042/1043), carried over from V3.** The right hand popped from flat to upright and the arm re-routed. | One continuous reach around the shoulder. The hand turns at most 24°/frame (29° at 1046/1047). |
 | **36.6–36.9 s (1097–1106), carried over from V3.** The push into the green close-up stalled, surged and stalled. | One eased push for the band's position and zoom. The close-up arrives about 4 frames later, and its speed never reverses. |
+| **0.27–1.17 s (8–35), director's note: he briefly appeared to float in the collapse.** | The hips used to glide at a steady ~16 units/frame onto an invisible chair. Now the legs fail progressively: the hips accelerate from the cut (7 units/frame) into the landing at frame 35 (about 33 units/frame). The camera follows only half of the drop and catches up after the impact. Frames 0–7 (the loop's cold open), the landing frame, the hand plant at 39 and the settle are unchanged. |
+| **25–29 s, director's note: the drone launch could be quicker.** | The camera reaches the rooftop at 26.53 s (796, was about 829). The latch opens at 26.57 s (797, was 813), the spin-up takes 13 frames instead of 22, and the drone lifts off at 27.07 s (812, was 837). It is nose-down and travelling from 27.67 s (830), so it is moving on "launches". The 863/864 cut stays matched in screen position, scale, pitch and roll, and everything from the trunk wipe (890) on is unchanged. The latch and rotor sounds moved with the picture. The EMERGENCY sign now slides partly out of frame at the cut as the camera follows the drone. |
 | **ECG.** The R spike blinked out at 1339 and 1344. | Denser trace sampling. |
 
 ## Measurements on the final files
@@ -94,5 +96,5 @@ The final round confirmed every fix in the tables above and found no regressions
 3. **Treatment sounds:** the treatment pulse (31.87–32.33 s), heard under "an automatic injection" and ducked under it.
 4. **Sensor-bead ticks:** heard under "microscopic nano-sensors" (6.9–8.4 s).
 5. **Rotor:** continuity over 28.7–31.3 s (860–940), including the new drone path through the trunk wipe (the rotor pan and distance follow it).
-6. **Mechanism sounds:** the latch pin and servo at 27.1 s (813), the latch click at 27.37 s (821) and the rotor spin-up from 27.13 s. Also the shutter at 31.37 s, actuator 31.5 s, contact 31.6 s, retract 32.43 s and port close 32.83 s.
+6. **Mechanism sounds:** the latch pin and servo at 26.57 s (797), the latch click at 26.83 s (805) and the rotor spin-up from 26.6 s (798), now under "reach a nearby hospital". Also the shutter at 31.37 s, actuator 31.5 s, contact 31.6 s, retract 32.43 s and port close 32.83 s.
 7. **Narration:** confirm it is unchanged from V3. It is byte-identical, but the voice quality has not been certified by listening.

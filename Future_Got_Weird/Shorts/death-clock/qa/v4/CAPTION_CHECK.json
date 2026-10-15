@@ -25,16 +25,16 @@
    "f1": 18,
    "item": "shoeR",
    "caption": "This device",
-   "minGap": -40.2,
+   "minGap": -15.8,
    "maxAlpha": 1
   },
   {
-   "f0": 16,
+   "f0": 18,
    "f1": 18,
    "item": "shoeL",
    "caption": "This device",
-   "minGap": 13.4,
-   "maxAlpha": 1
+   "minGap": 22.1,
+   "maxAlpha": 0.5
   },
   {
    "f0": 20,
@@ -46,7 +46,7 @@
   },
   {
    "f0": 20,
-   "f1": 34,
+   "f1": 35,
    "item": "shoeR",
    "caption": "tells you exactly",
    "minGap": -74,
