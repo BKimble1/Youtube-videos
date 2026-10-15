@@ -135,6 +135,9 @@ export type DeviceView = {
   /** V4: 0..1 progress of Scene's hand veil. The thumb's base contour, which lies over the forearm (where the veil keeps
    *  the skin), dissolves with it, so no orphan ink strokes are left on the bare wrist once the hand has gone */
   handVeil?: number;
+  /** V4 final: drawn over the whole case, clipped to its silhouette (a view-local falloff into shadow; the treatment
+   *  underside view only) */
+  caseShade?: (A: ArmFrame, c: CaseGeo) => React.ReactNode;
 };
 
 /** V4 polish: Scene's hand veil is one straight soft edge (no circle, no arc), shared with Wrist3D so the thumb's contour
@@ -740,6 +743,16 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
           strokeWidth={f2(R * 0.045)}
           strokeLinecap="round"
         />
+      )}
+      {dev.caseShade && (
+        <g>
+          <defs>
+            <clipPath id={`${id}-csh`}>
+              <path d={poly(caseHull)} />
+            </clipPath>
+          </defs>
+          <g clipPath={`url(#${id}-csh)`}>{dev.caseShade(A, geo)}</g>
+        </g>
       )}
       {/* V4: the alarm ring round the glass (loop alarm and the warning landing) */}
       <AlarmRing c={fr1.O} R={R} u={dev.screen.ring ?? 0} env={dev.screen.ringEnv ?? 0} />

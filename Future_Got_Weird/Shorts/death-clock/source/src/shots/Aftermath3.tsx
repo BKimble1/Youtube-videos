@@ -7,7 +7,7 @@
 // The camera returns to the glass; one local "?" glitch turns into the red 00:02:14 of the opening, and the same
 // push carries on through frames 0-7 of the next play (the cold open), so the loop is one camera move.
 import React from 'react';
-import {armFrame, DeviceView, PORT_GEO} from '../art/Device';
+import {armFrame, ArmFrame, CaseGeo, DeviceView, PORT_GEO} from '../art/Device';
 import {Drone, DronePose} from '../art/Drone';
 import {EXPR_GASP, EXPR_PAIN, EXPR_RELIEF, EXPR_UNEASY, Expr, mixExpr} from '../art/Head';
 import {HAND_BRACE, HAND_CLUTCH, HAND_RELAXED, HandPose, mixHand} from '../art/Hand';
@@ -80,7 +80,58 @@ const BODY: SKey<ManPose>[] = [
 
 /** V4: his free hand grips his raised knee (clear of the chest window) while the chest is shown, then rises to his
  *  chest again (the same world-pinned grip as the journey) */
-export const manAt = (f: number): ManPose => withLowGrip(manAt0(f), revealAt(f).rHandLow);
+export const manAt = (f: number): ManPose => {
+  const m = manAt0(f);
+  if (f > B4.treatHigh0 && f < B4.treatHigh1) return reachUp(m, reachAt(m, reachEase(inv(B4.treatHigh0, B4.treatHigh1, f))));
+  return withLowGrip(m, revealAt(f).rHandLow);
+};
+/** an even ease: smoothstep-shaped velocity ramps over the first and last quarter, constant speed between (peak speed
+ *  1.33x the average, 1.5x for smoothstep) */
+const reachEase = (u: number) => {
+  const r = 0.25;
+  const vm = 1 / (1 - r);
+  const x = clamp(u);
+  const ramp = (t: number) => vm * r * (t ** 3 - t ** 4 / 2);
+  return x < r ? ramp(x / r) : x > 1 - r ? 1 - ramp((1 - x) / r) : vm * r * 0.5 + vm * (x - r);
+};
+/** the reach's parameter at share e of the move: re-timed so the drawn elbow (after Man's tuck behind the tee, which
+ *  takes the far elbow in over a short band of heights), the hand and the hand's angle each travel at an even rate
+ *  (on the plain parameter the tuck moved the elbow 117 px in one frame at 1043-1044) */
+const reachAt = (m: ManPose, e: number) => {
+  const N = 48;
+  const R = Array.from({length: N + 1}, (_, i) => manJoints(reachUp(m, i / N)).R);
+  const steps = R.slice(1).map((r, i) => [Math.hypot(r.E.x - R[i].E.x, r.E.y - R[i].E.y), Math.hypot(r.W.x - R[i].W.x, r.W.y - R[i].W.y), Math.abs(((r.handAng - R[i].handAng + 540) % 360) - 180)]);
+  const tot = [0, 1, 2].map((k) => steps.reduce((a, st) => a + st[k], 0) || 1);
+  const cum = [0];
+  steps.forEach((st) => cum.push(cum[cum.length - 1] + st.reduce((a, x, k) => a + ((k === 2 ? 1.6 : 1) * x) / tot[k], 0)));
+  const target = e * cum[N];
+  let i = 0;
+  while (i < N - 1 && cum[i + 1] < target) i++;
+  return (i + clamp((target - cum[i]) / (cum[i + 1] - cum[i] || 1))) / N;
+};
+/** V4 polish: the reach from the low grip on the knee back up to the chest (B4.treatHigh0 -> treatHigh1) runs in the
+ *  arm's own terms: the hand's direction and distance from the shoulder and the wrist's bend each interpolate on one
+ *  even curve, so the elbow swings down round the shoulder and the palm turns up from the knee continuously (V3/V4
+ *  blended the IK target on a straight line and the palm from the planted angle: the hand turned 54-84 deg/frame at
+ *  1038-1040 and the elbow jumped 187 px from in front of him to under the hand at 1042-1043). The target is given in
+ *  the torso frame (rW 0), so the hand angle is the forearm's plus the wrist bend; both ends match the poses either side. */
+const reachUp = (m: ManPose, p: number): ManPose => {
+  const R0 = manJoints(withLowGrip(m, 1)).R;
+  const j1 = manJoints(m);
+  const S = j1.R.S;
+  const [o0, o1] = [sub(R0.W, S), sub(j1.R.W, S)];
+  const a0 = Math.atan2(o0.y, o0.x);
+  const da = ((((Math.atan2(o1.y, o1.x) - a0) % (2 * Math.PI)) + 3 * Math.PI) % (2 * Math.PI)) - Math.PI;
+  const a = a0 + da * p;
+  const d = lerp(Math.hypot(o0.x, o0.y), Math.hypot(o1.x, o1.y), p);
+  const T = sub(add(S, {x: d * Math.cos(a), y: d * Math.sin(a)}), j1.toWorld(0, 0));
+  const U = sub(j1.toWorld(1, 0), j1.toWorld(0, 0));
+  const Vv = sub(j1.toWorld(0, 1), j1.toWorld(0, 0));
+  const det = U.x * Vv.y - U.y * Vv.x;
+  // the gripping palm's bend on the forearm (its world angle is held while planted on the knee)
+  const bend0 = ((R0.handAng - (Math.atan2(R0.foreDir.y, R0.foreDir.x) * 180) / Math.PI + 540) % 360) - 180;
+  return {...m, rW: 0, rTu: (T.x * Vv.y - T.y * Vv.x) / det, rTv: (U.x * T.y - U.y * T.x) / det, rWr: lerp(bend0, m.rWr, p)};
+};
 /** the treatment's breathing (held while the camera is inside the arm: the section frame is built on the still pose),
  *  as offsets from the pose; also evaluated just past B.release0, where it hands over to the recovery breathing */
 const heldBreath = (f: number) => {
@@ -135,10 +186,14 @@ const handsAt = (f: number): {l: HandPose; r: HandPose} => {
 };
 
 // ---------------------------------------------------------------- the drone: arrives beside him and hovers
-/** HOVER2: above and to the right of his head, with a clear air gap over the hair (>= 60 world on every frame it is
- *  drawn) and clear sky between its skids and the roof ridge of the house behind (V4 QA: it was 30 world further left
- *  and 55 lower, where its skid bar sat on that ridge as it settled) */
-export const HOVER2 = {x: BAND_C.x + 20, y: PJ.head.y - 400};
+/** HOVER2: above his head and left of the ridge of the house behind, with a clear air gap over the hair (>= 60 world
+ *  on every frame it is drawn) and sky between its skids and every roof outline (V4 final: it was 340 world further
+ *  right and 35 higher, centred over that ridge with its skid bar on or 20-40 px over it, 904-912, and its top cropped
+ *  from 910); low enough to keep >= 30 px headroom until the push (B.arrive) */
+export const HOVER2 = {x: BAND_C.x - 320, y: PJ.head.y - 365};
+/** the arrival climbs this far above HOVER2 (behind the trunk, by wipeLock + 6) and settles down onto it (wipeLock + 7
+ *  -> settle0 - 2): the camera is still high while it comes out, so the extra height keeps the skids clear of the roof */
+const OVER2 = 60;
 /** The flyover's drone carried into this camera: same screen position (and, with TRUCK.z0, the same size). While the
  *  trunk passes (arrive0..wipeLock) the two shots show one drone at one screen point. */
 const lockW = (f: number): V => {
@@ -159,7 +214,8 @@ export const arriveDrone3 = (f: number): DronePose => {
   const wx = step5(clamp(inv(B4.wipeLock, B4.settle0, f)));
   const wy = step5(clamp(inv(B4.wipeLock, B4.settle0 - 10, f)));
   const lk = wx < 1 ? lockW(f) : HOVER2;
-  const p: V = {x: lerp(lk.x, HOVER2.x, wx), y: lerp(lk.y, HOVER2.y, wy)};
+  const over = OVER2 * step5(clamp(inv(B4.wipeLock, B4.wipeLock + 6, f))) * (1 - step5(clamp(inv(B4.wipeLock + 7, B4.settle0 - 2, f))));
+  const p: V = {x: lerp(lk.x, HOVER2.x, wx), y: lerp(lk.y, HOVER2.y, wy) - over};
   // the flyover's nose-down pitch (and its rock) carries on through the lock and eases out while it accelerates; the
   // flare (nose up) builds as it brakes and is level again just after it settles
   const fwd = flightPitch(f) * (1 - step5(clamp(inv(B4.wipeLock, B4.wipeLock + 9, f))));
@@ -532,7 +588,26 @@ const bandHeadAt = (t: number): [V, V] => {
  *  it also takes out the acceleration step at the B.green - 2 key); x and the zoom stay on the keys */
 const TILT: [number, number] = [B.rise1 - 13, B.green];
 let tiltJets: [Jet, Jet] | null = null;
+/** V4 polish: the push into the green close-up (B.green - 2 -> PUSH[1]) as one move: the band's screen x, y and the log
+ *  zoom each run one quintic, C2 with the path on either side, so the lift of the wrist and the push no longer add up
+ *  to a stall and a surge (V3/V4: the band slowed to 12 px/frame at 1099, surged to 21 at 1102-1103 with the zoom at
+ *  13 %/frame, then nearly stopped at 1105, 6 px/frame) */
+const PUSH: [number, number] = [B.green - 2, B.green + 18];
+let pushJets: [Jet, Jet][] | null = null;
 const recoveryCam = (g: number, wristW: V, headW: V): Cam => {
+  if (g > PUSH[0] && g < PUSH[1]) {
+    if (!pushJets) {
+      const ch = (k: number) => (t: number) => {
+        const [bw, hw] = bandHeadAt(t);
+        const c = recoveryCam(t, bw, hw);
+        return k === 0 ? 540 + (bw.x - c.x) * c.z : k === 1 ? 960 + (bw.y - c.y) * c.z : Math.log(c.z);
+      };
+      pushJets = [0, 1, 2].map((k) => [jet(ch(k), PUSH[0], -1), jet(ch(k), PUSH[1], 1)]);
+    }
+    const [x, y, lz] = pushJets.map(([j0, j1]) => quintic(PUSH[0], PUSH[1], j0, j1, g));
+    const z = Math.exp(lz);
+    return {...recoveryCam0(g, wristW, headW), x: wristW.x - (x - 540) / z, y: wristW.y - (y - 960) / z, z};
+  }
   const c = recoveryCam0(g, wristW, headW);
   if (g <= TILT[0] || g >= TILT[1]) return c;
   if (!tiltJets) {
@@ -563,6 +638,30 @@ export const dataLink = (g: number, man: ManPose, dp: DronePose) => {
   const r = (0.5 * Math.hypot(DEV_GEO.caseL, DEV_GEO.caseW) + 0.16 + 0.3 * (0.5 + 0.5 * Math.sin(g * 0.5))) * rw;
   const d = Math.max(1e-6, Math.hypot(from.x - c.x, from.y - c.y));
   return {a, from, to: {x: c.x + ((from.x - c.x) / d) * r, y: c.y + ((from.y - c.y) / d) * r}, c, r};
+};
+
+/** V4 final: in the treatment underside view the case falls off into the backdrop's shadow away from the port (a
+ *  smoothstep along the case, in case radii R from its centre: from a0, past the module, to a1 near the wrist end),
+ *  like the forearm's falloff past the case, so as the tracking pulls back the underside reads as the port-end detail
+ *  with the rest of the case receding, not as one long rail. Fixed to the case (no pop): on from the punch-in. */
+const CASE_FALL = {a0: -0.2, a1: 0.85, k: 0.88, color: '#21405A'};
+const CaseFalloff: React.FC<{id: string; A: ArmFrame; c: CaseGeo}> = ({id, A, c}) => {
+  const p0 = armPt(A, c.uc + CASE_FALL.a0 * c.R, 0);
+  const p1 = armPt(A, c.uc + CASE_FALL.a1 * c.R, 0);
+  const o = armPt(A, c.uc, 0);
+  const h = 4 * c.R;
+  return (
+    <g>
+      <defs>
+        <linearGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" x1={fmt(p0.x)} y1={fmt(p0.y)} x2={fmt(p1.x)} y2={fmt(p1.y)}>
+          {[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1].map((t) => (
+            <stop key={t} offset={t} stopColor={CASE_FALL.color} stopOpacity={(CASE_FALL.k * smooth(t)).toFixed(4)} />
+          ))}
+        </linearGradient>
+      </defs>
+      <rect x={fmt(o.x - h)} y={fmt(o.y - h)} width={fmt(2 * h)} height={fmt(2 * h)} fill={`url(#${id}-g)`} />
+    </g>
+  );
 };
 
 // ---------------------------------------------------------------- render
@@ -631,6 +730,7 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
         <TreatChannel id={`${id}-tcc`} tp={TP} head={tr.head} trail={tr.trail} w={tr.w} part="case" bore={{sf: SF, stroke: tr.stroke, press: PRESS_T}} />
       </g>
     ),
+    caseShade: secOn && g >= B4.tCut ? (A, c) => <CaseFalloff id={`${id}-cf`} A={A} c={c} /> : undefined,
     inArm: () =>
       secOn ? (
         <g transform={SF.matrix}>

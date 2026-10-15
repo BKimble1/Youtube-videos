@@ -77,13 +77,14 @@ export type HeartState = {
   chaos: number;
 };
 
-/** ventricular contraction 0..1 (k = frames since the lub): squeeze 0-4 (60% by +2), hold, refill with a 1% overshoot */
+/** ventricular contraction 0..1 (k = frames since the lub): quick squeeze 0-4 (60% by +2), hold, slower refill over
+ *  6 frames with a small overshoot, settled by +14 (V4 polish: was a 4-frame refill) */
 const ventK = (k: number) => {
   if (k <= 0) return 0;
   if (k <= 4) return 1 - Math.pow(1 - k / 4, 1.4);
   if (k <= 5) return 1;
-  if (k <= 9) return lerp(1, -0.125, smooth((k - 5) / 4));
-  if (k <= 12) return lerp(-0.125, 0, smooth((k - 9) / 3));
+  if (k <= 11) return lerp(1, -0.1, smooth((k - 5) / 6));
+  if (k <= 14) return lerp(-0.1, 0, smooth((k - 11) / 3));
   return 0;
 };
 /** atrial kick: squeeze over k -5..-2, back by 0 */
@@ -115,10 +116,10 @@ export const heartAt = (f: number): HeartState => {
   let r = 0;
   for (const b of LUBS) {
     const k = f - b.f;
-    if (k < -6 || k > 13) continue;
-    // V4 fix: the picture's squeeze for a weak beat is less weak than the sound's level (the first organised beat of
-    // the treatment, amp 0.6, still squeezes about 8% of the heart's area; a full beat about 10%)
-    const va = 0.5 + 0.5 * b.amp;
+    if (k < -6 || k > 14) continue;
+    // V4 fix: the picture's squeeze for a weak beat is less weak than the sound's level (V4 polish: the first organised
+    // beat of the treatment, amp 0.6, squeezes at 0.88 of a full beat, so it reads as the first clear, regular beat)
+    const va = 0.7 + 0.3 * b.amp;
     v += va * ventK(k);
     a += va * atrK(k);
     w += va * wringK(k);
@@ -137,13 +138,15 @@ export const heartAt = (f: number): HeartState => {
   const n = (rate: number, seed: number) => A * noise1(f * rate, seed);
   const chaos = f >= HEART4.treat.quiver0 - 1 ? clamp(inv(HEART4.treat.still1 + 1, HEART4.treat.quiver0, f)) : clamp((f - HEART4.journey.fib0) / HEART4.journey.fibRamp);
   return {
-    ventW: 1 - 0.08 * v,
-    ventL: 1 - 0.06 * v,
+    // V4 polish: was 0.08 / 0.06; the ventricles shrink in front of the atria and great-vessel roots (red too), so the
+    // drawn heart's silhouette loses about 10-12% of its area on a full beat only with a 16.5% / 11.5% ventricle squeeze
+    ventW: 1 - 0.165 * v,
+    ventL: 1 - 0.115 * v,
     wring: 2 * w,
-    // one-sided twitches squeeze a ventricle by up to about 12% (V4 fix, was 5.5%: each irregular twitch takes about
-    // 4-7% off the heart's area, so the irregular state and its settling read at phone size)
-    lv: 0.12 * lv,
-    rv: 0.12 * rv,
+    // one-sided twitches squeeze a ventricle by up to about 20% (V4 polish, was 12%, before that 5.5%: each uneven
+    // twitch takes about 3-6% off the drawn heart's silhouette, well under a regular beat)
+    lv: 0.2 * lv,
+    rv: 0.2 * rv,
     atria: 1 - 0.07 * a,
     roots: 1 + 0.04 * r,
     nRV: 0.02 * n(0.2, 31),
