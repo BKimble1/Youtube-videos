@@ -20,7 +20,7 @@ import {ms} from '../rig/geom';
 import {WHY_A_END} from './WhyA';
 import {S_OPEN} from './Opening';
 import {CAST} from '../../components/cast';
-import {IDLE, Pose as CPose} from '../../components/Character';
+import {IDLE, Pose as CPose, mixPose} from '../../components/Character';
 import {HangTag, Wrench} from '../../components/Props';
 import {C, F} from '../../theme';
 
@@ -107,7 +107,7 @@ const Signpost: React.FC<{lw: number; hi: number; t: number}> = ({lw, hi, t}) =>
       {opts.map((o, i) => {
         const wig = i === hi ? Math.sin(t * 18) * 3 * Math.max(0, 1 - t * 0.9) : 0;
         return (
-          <g key={o.lab} transform={`rotate(${wig} 491 ${o.y})`} opacity={i === hi ? 1 : 0.55}>
+          <g key={o.lab} transform={`rotate(${wig} 491 ${o.y})`} opacity={i === hi ? 1 : lerp(1, 0.55, seg(t, 0, 0.3))}>
             <path d={`M502 ${o.y - 46} L940 ${o.y - 46} L990 ${o.y} L940 ${o.y + 46} L502 ${o.y + 46} Z`} fill={i === hi ? C.saffron : C.paper} stroke={BCOL.ink} strokeWidth={lw} strokeLinejoin="round" />
             <text x={560} y={o.y + 16} fontFamily={F.display} fontWeight={700} fontSize={46} fill={BCOL.ink}>{o.lab}</text>
           </g>
@@ -294,13 +294,14 @@ export const WhyB: React.FC<{tau: number; f: number}> = ({tau, f}) => {
                 <g>
                   <rect x={CX - 150} y={G - 34} width={300} height={22} rx={6} fill={BCOL.frameD} stroke={BCOL.ink} strokeWidth={lw} />
                   {[-110, 110].map((dx) => <circle key={dx} cx={CX + dx} cy={G - 8} r={14} fill={BCOL.ink} />)}
+                  <path d={`M${CX - 150} ${G - 30} L${CX - 170} ${G - 300}`} stroke={BCOL.frameD} strokeWidth={lw * 3} strokeLinecap="round" />
                 </g>
               ) : null}
               <Crate x={CX} y={G} w={CW} h={CH} lw={lw} parts={parts}
                 front={<Bot cam={cam} id="wbS" model="F02" s={1} pose={p} hl={{kneeN: {color: C.teal, amount: lensK * (1 - seg(tau, SW0, SW0 + 0.2))}}} />} />
               {tagIn > 0 ? <g opacity={Math.min(1, tagIn * 3)}><HangTag x={CX - 170} y={G - CH - 20} s={1.15} text="FOR SALE?" swing={swing} /></g> : null}
               <Crew look={CAST.clerkA} x={ax} y={G} h={560} frame={f} seed={3} front="R" holdR={hammer(4)}
-                pose={{...IDLE, armR: {a: 70 + 50 * tap, b: 60 - 30 * tap}, armL: {a: 12, b: 14}, lookX: 0.8, lookY: 0.1, mouth: 'smile', brows: 0.3}} />
+                pose={mixPose({...IDLE, armR: {a: 150, b: 120}, armL: {a: 10, b: 10}, lookX: 0.8, lookY: -0.3, brows: 0.5, mouth: 'hmm'}, {...IDLE, armR: {a: 70 + 50 * tap, b: 60 - 30 * tap}, armL: {a: 12, b: 14}, lookX: 0.8, lookY: 0.1, mouth: 'smile', brows: 0.3}, smooth(seg(tau, T0, T0 + 0.4)))} />
             </Layer>
             <Lens ax={kneeS.x} ay={kneeS.y} cx={1390} cy={460} r={290} k={lensK * (1 - seg(tau, SW1 - 0.05, SW1))} id="kneeLens">
               <ActuatorArt r={240} rot={rot} lw={5} id="actL" />
@@ -584,8 +585,10 @@ const Normal: React.FC<{tau: number; f: number; t0: number}> = ({tau, f, t0}) =>
           </g>
         ) : null}
         {clapIn > 0 && clapOut < 1 ? <BigClapper x={960} y={lerp(1500, 560, clapIn) + clapOut * 1000} s={0.95} rot={-4} clap={clap} /> : null}
-        {coverS > 0 ? <BigClapper {...clapCover(coverS)} clap={1} /> : null}
       </Scene>
+      {coverS > 0 ? <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}><BigClapper {...clapCover(coverS)} clap={1} /></svg> : null}
     </div>
   );
 };
+/** Event times for the sound cue sheet. */
+export const WHYB_EV = {SW0, SW1, SW2, TOSS0, TOSS1, crankAngle};

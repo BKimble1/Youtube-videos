@@ -185,7 +185,7 @@ const BizClipboard: React.FC<{tau: number}> = ({tau}) => {
 
 /** Director's monitor with the film's title (no frames from the film are reproduced). */
 const TitleMonitor: React.FC<{tau: number}> = ({tau}) => {
-  const enter = easeOut(seg(tau, T_HINT + 0.2, T_HINT + 0.7));
+  const enter = easeOut(seg(tau, T_HINT + 0.2, T_HINT + 0.7)) * (1 - easeIn(seg(tau, FILM_END - 1.3, FILM_END - 0.8)));
   return (
     <g transform={`translate(${80 - (1 - enter) * 600} 640)`} opacity={enter}>
       <rect x={0} y={0} width={700} height={400} rx={18} fill="#1E2026" stroke="#0B0C0F" strokeWidth={8} />
@@ -207,7 +207,7 @@ const cF: Cam = {x: 520, y: 470, z: 1.1};
 export const TRAIN_C0: Cam = {x: 330, y: 390, z: 2.0, rot: -3};
 
 /** The foundry crane chain and hook in the main layer — the film's chain, now a real object in the set. */
-const CraneChain: React.FC<{lw: number; sw: number}> = ({lw, sw}) => {
+export const CraneChain: React.FC<{lw: number; sw: number}> = ({lw, sw}) => {
   const links: React.ReactNode[] = [];
   for (let k = 0; k < 26; k++) {
     const y = -900 + k * 44;

@@ -379,3 +379,11 @@ export const Scrap: React.FC<{x: number; y: number; kind: number; rot?: number; 
     </g>
   );
 };
+
+/** The film crew's two lights, in the same place in every foundry shot after the crew arrives. */
+export const FilmSetLights: React.FC<{lw: number; on?: number; id?: string}> = ({lw, on = 1, id = 'fs'}) => (
+  <g>
+    <FilmLight x={-260} y={1000 - 440} lw={lw} on={on} aim={16} id={id + 'A'} />
+    <FilmLight x={1440} y={1000} lw={lw} on={on} aim={205} h={560} id={id + 'B'} />
+  </g>
+);

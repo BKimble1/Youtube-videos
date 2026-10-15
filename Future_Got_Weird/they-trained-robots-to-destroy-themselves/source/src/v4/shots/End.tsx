@@ -16,7 +16,7 @@ import {rig, RPose} from '../rig/Robot2D';
 import {stand, walk, blend, A, crouch} from '../rig/poses';
 import {PROVE_END, Factory} from './Prove';
 import {TOE_X, ENTRY_X, S_OPEN} from './Opening';
-import {BigClapper} from '../sets/props';
+import {BigClapper, FilmSetLights} from '../sets/props';
 import {CAST} from '../../components/cast';
 import {IDLE} from '../../components/Character';
 import {C, F} from '../../theme';
@@ -152,7 +152,7 @@ export const End: React.FC = () => {
     const flare = Math.max(0, 1 - Math.abs(tau - T_SHAPE) / 0.25);
     const scene = (
       <Scene bg="#221A21">
-        <FoundryView cam={cam} t={tau} glow={1 + flare} behind={<Bot cam={cam} id="eR1" model="F02" s={S} pose={{...STANDBACK, head: 6 * smooth(seg(tau, T_WHY, T_WHY + 1))}} />} />
+        <FoundryView cam={cam} t={tau} glow={1 + flare} extraBack={<FilmSetLights lw={4 / cam.z} id="fsE" />} behind={<Bot cam={cam} id="eR1" model="F02" s={S} pose={{...STANDBACK, head: 6 * smooth(seg(tau, T_WHY, T_WHY + 1))}} />} />
         {flare > 0 ? <rect width={1920} height={1080} fill="#FFE2B0" opacity={flare * 0.85} /> : null}
       </Scene>
     );
@@ -173,7 +173,7 @@ export const End: React.FC = () => {
 
   // ------------------------------------------------ E2–E4: the silhouette, the choice, the people, the arcs
   if (tau < T_DOES - 0.25) {
-    let cam = {...CAM_E1, z: 1.35, x: 100};
+    let cam: Cam = mixCam({...CAM_E1, z: 1.35, x: 100}, {...CAM_E1, z: 1.5, x: 120, y: 455}, smooth(seg(tau, T_SHAPE, T_WALKS - 0.3)));
     cam = mixCam(cam, {x: 160, y: 430, z: 1.25}, easeInOut(seg(tau, T_WALKS - 0.3, T_LEAPS + 0.5)));
     cam = mixCam(cam, CAM_E3, easeInOut(seg(tau, T_PEOPLE - 0.4, T_PEOPLE + 0.5)));
     const flare = Math.max(0, 1 - Math.abs(tau - T_SHAPE) / 0.25);
@@ -337,3 +337,5 @@ export const End: React.FC = () => {
   );
 };
 void easeIn; void RimDefs;
+/** Event times for the sound cue sheet. */
+export const END_EV = {W0, W1, EJ_T0, T_STING, T_LEAPS};

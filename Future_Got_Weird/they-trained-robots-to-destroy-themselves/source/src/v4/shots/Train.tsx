@@ -17,11 +17,11 @@ import {Cam, Scene, Layer, Bot, Crew, Chip, Tag, mixCam, seg, smooth, easeInOut,
 import {RollWipe} from '../kit/roll';
 import {FoundryView, StageView, FD} from '../sets/views';
 import {StageBack, Tower, Pad, Arc, TGT_X} from '../sets/stage';
-import {Mark} from '../sets/props';
+import {Mark, FilmSetLights} from '../sets/props';
 import {makeJump} from '../rig/jump';
 import {rig, RPose, Robot2D} from '../rig/Robot2D';
 import {stand, blend, A} from '../rig/poses';
-import {FILM_END, TRAIN_C0} from './Film';
+import {FILM_END, TRAIN_C0, CraneChain} from './Film';
 import {REAL_START, SIDE_X, CAM_SIDE, sidePose} from './Real';
 import {S_OPEN, TOE_X} from './Opening';
 import {CAST} from '../../components/cast';
@@ -511,6 +511,13 @@ const MiniWorld: React.FC<{k: number; tau: number; cam: Cam; lw: number}> = ({k,
   );
 };
 
+/** A slow screen-space drift so held beats never freeze; it fades out before the section's last frame (CAM_SIDE). */
+const drift = (cam: Cam, tau: number): Cam => {
+  const k = seg(tau, TRAIN_START, TRAIN_START + 1.5) * (1 - seg(tau, TRAIN_END - 1.4, TRAIN_END - 0.5));
+  const ph = ((tau - TRAIN_START) * 2 * Math.PI) / 13;
+  return {...cam, x: cam.x + (16 * Math.sin(ph) * k) / cam.z, y: cam.y + (9 * Math.sin(ph * 0.8 + 1) * k) / cam.z, z: cam.z * (1 + 0.015 * Math.sin(ph * 0.6) * k)};
+};
+
 // ---------------------------------------------------------------- section
 export const Train: React.FC = () => {
   const f = useCurrentFrame();
@@ -527,8 +534,8 @@ export const Train: React.FC = () => {
     const aps = toScreen(cam, ap.x, ap.y);
     return (
       <Scene bg="#221A21">
-        <FoundryView cam={cam} t={tau} glow={1}
-          behind={<g><Arc pts={arc} k={arcK} lw={lw} color={no > 0 ? C.coral : '#FFF4D6'} width={3} /><Bot cam={cam} id="trF" model="F02" s={S} pose={{...ROBOT_T, head: 14 * look, neck: 6 * look}} /></g>} />
+        <FoundryView cam={cam} t={tau} glow={1} hook={false} extraBack={<FilmSetLights lw={lw} id="fsT" />}
+          behind={<g><CraneChain lw={lw} sw={0} /><Arc pts={arc} k={arcK} lw={lw} color={no > 0 ? C.coral : '#FFF4D6'} width={3} /><Bot cam={cam} id="trF" model="F02" s={S} pose={{...ROBOT_T, head: 14 * look, neck: 6 * look}} /></g>} />
         {arcK > 0.5 ? (
           <g opacity={Math.min(1, (arcK - 0.5) * 3) * (1 - no)}>
             <rect x={aps.x - 130} y={aps.y - 110} width={260} height={64} rx={14} fill={C.paper} stroke={C.ink} strokeWidth={4} />
@@ -542,7 +549,7 @@ export const Train: React.FC = () => {
   if (tau < T_WIPE) {
     let cam = mixCam(TRAIN_C0, cLow2, easeInOut(seg(tau, TRAIN_START, T_REH - 0.2)));
     cam = mixCam(cam, cPract, easeInOut(seg(tau, T_REH - 0.2, T_REH + 0.8)));
-    return foundry(cam);
+    return foundry(drift(cam, tau));
   }
 
   // ------------------------------------------ stage (main cell, grid, side view)
@@ -550,6 +557,7 @@ export const Train: React.FC = () => {
   cam = mixCam(cam, CAM_GRID, easeInOut(seg(tau, T_OVER + 0.25, T_COPIES + 0.7)));
   cam = mixCam(cam, CAM_ST, easeInOut(seg(tau, T_FALL - 0.55, T_FALL + 0.45)));
   cam = mixCam(cam, CAM_SIDE, easeInOut(seg(tau, T_POLICY + 0.2, T_POL + 0.7)));
+  cam = drift(cam, tau);
   const lw = 4 / cam.z;
   const grid = cam.z < CAM_ST.z * 0.95 && tau > T_OVER && tau < T_FALL + 0.6;
   const world = grid ? (
@@ -601,3 +609,5 @@ export const Train: React.FC = () => {
   return stage;
 };
 void Chip; void lerp;
+/** Event times for the sound cue sheet. */
+export const TRAIN_EV = {A1, A2, A3, FP, SG, REW, T_TAP, T_WIPE, SIDE0, keyStyle: [SG.tPush - 0.1, SG.tPush + 0.38 + 0.42, SG.tEnd - 0.02]};

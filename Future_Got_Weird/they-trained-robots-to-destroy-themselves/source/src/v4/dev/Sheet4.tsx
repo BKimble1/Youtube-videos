@@ -32,7 +32,7 @@ export const Sheet4: React.FC<{page?: number}> = ({page = 0}) => {
           <Panel x={40} y={84} w={360} h={640} label="front">{fig(m, 0, 180, 610, 0.88, `s${page}a`)}</Panel>
           <Panel x={415} y={84} w={360} h={640} label="three-quarter">{fig(m, 0.5, 180, 610, 0.88, `s${page}b`)}</Panel>
           <Panel x={790} y={84} w={360} h={640} label="side">{fig(m, 1, 180, 610, 0.88, `s${page}c`)}</Panel>
-          <Panel x={1165} y={84} w={360} h={640} label="three-quarter, facing left (markings not mirrored)">{fig(m, 0.5, 180, 610, 0.88, `s${page}d`, -1)}</Panel>
+          <Panel x={1165} y={84} w={360} h={640} label="¾ facing left · symbol not mirrored">{fig(m, 0.5, 180, 610, 0.88, `s${page}d`, -1)}</Panel>
           <Panel x={1540} y={84} w={340} h={310} label="head (front)">
             <g transform="translate(170 180) scale(2.6) translate(0 -22)"><Robot2D id={`s${page}e`} model={m} s={1} px={2.6} pose={stand(0, 610, 1, {yaw: 0})} /></g>
           </Panel>

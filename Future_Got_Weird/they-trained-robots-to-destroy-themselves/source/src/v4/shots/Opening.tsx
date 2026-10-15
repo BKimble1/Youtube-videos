@@ -37,6 +37,11 @@ export const CAM_WIDE: Cam = {x: 600, y: 428, z: 1.26};
 const CAM_ENTRY: Cam = {x: 720, y: 660, z: 1.62};
 const CAM_BOOTH: Cam = {x: 1080, y: 560, z: 0.9};
 const CAM_RING: Cam = {x: ENTRY_X, y: FD.ladle.surf, z: 3.0};
+/** The booth framing keeps drifting slowly while the witness is on screen. */
+const boothCam = (tau: number): Cam => {
+  const u = smooth(seg(tau, T_FIG + 0.8, T_WHY));
+  return {x: CAM_BOOTH.x + 70 * u, y: CAM_BOOTH.y - 10 * u, z: CAM_BOOTH.z * (1 + 0.1 * u)};
+};
 
 // the avatar on the tower: same crouch as the opening, then stands and turns to the camera
 const AV_STAND = stand(TOE_X - 70 * S_OPEN, FD.deck.top, S_OPEN, {yaw: 0, armN: {sh: 2, el: 8, grip: 0.3}, armF: {sh: 2, el: 8, grip: 0.3}});
@@ -83,8 +88,8 @@ export const Opening: React.FC = () => {
     cam = mixCam(CAM_WIDE, CAM_ENTRY, easeIn(seg(tau, 2.5, T_IN)));
   }
   else if (tau < T_FIG) cam = mixCam(CAM_ENTRY, {x: ENTRY_X, y: 690, z: 1.75}, easeOut(seg(tau, T_IN, T_FIG)));
-  else if (tau < T_WHY) cam = mixCam({x: ENTRY_X, y: 690, z: 1.75}, CAM_BOOTH, easeInOut(seg(tau, T_FIG, T_FIG + 1.4)));
-  else cam = mixCam(CAM_BOOTH, CAM_RING, easeInOut(seg(tau, T_WHY, T_HOW + 0.5)));
+  else if (tau < T_WHY) cam = mixCam({x: ENTRY_X, y: 690, z: 1.75}, boothCam(tau), easeInOut(seg(tau, T_FIG, T_FIG + 1.4)));
+  else cam = mixCam(boothCam(tau), CAM_RING, easeInOut(seg(tau, T_WHY, T_HOW + 0.5)));
   const lw = 4 / cam.z;
   const inVessel = st.phase === 'after' || (st.phase === 'air' && st.u > 0.97);
   const robotGone = st.phase === 'after' && st.u > 0.9;

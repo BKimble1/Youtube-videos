@@ -20,6 +20,7 @@ import {TOE_X, ENTRY_X} from './Opening';
 import {CAST} from '../../components/cast';
 import {IDLE} from '../../components/Character';
 import {Airbag, CameraIcon} from '../../components/Props';
+import {FilmSetLights, TripodCam} from '../sets/props';
 import {C, F} from '../../theme';
 
 export const REAL_START = blockStart('B05') - 0.12;
@@ -34,6 +35,8 @@ const T_NEVER = T('And Figure says this jump') - 0.1;
 export const SIDE_S = 0.6;
 export const SIDE_X = 180;
 export const CAM_SIDE: Cam = {x: 230, y: 380, z: 2.05};
+/** R2 creeps in on the same side view (no frozen holds); R3 pulls back from here. */
+const CAM_SIDE2: Cam = {x: 236, y: 372, z: 2.3};
 export const sidePose = (o: Partial<RPose> = {}): RPose => stand(SIDE_X, FD.deck.top, SIDE_S, {yaw: 0.8, armN: A(4, 14, {grip: 0.3}), armF: A(-4, 16, {grip: 0.3}), ...o});
 
 const robust = (tau: number) => {
@@ -61,7 +64,7 @@ export const Real: React.FC = () => {
 
   // ---------------------------------------------- R1/R2: transfer + robustness (one stable side view)
   if (tau < T_NEVER) {
-    const cam = CAM_SIDE;
+    const cam = mixCam(CAM_SIDE, CAM_SIDE2, smooth(seg(tau, T_SIMR + 0.62, T_NEVER)));
     const lw = 4 / cam.z;
     const st = robust(tau);
     const r = rig(st.pose, SIDE_S);
@@ -78,7 +81,7 @@ export const Real: React.FC = () => {
     const hl = {kneeN: {color: C.teal, amount: kHl}, ankleN: {color: C.teal, amount: aHl}};
     const foundry = (
       <Scene bg="#221A21">
-        <FoundryView cam={cam} t={tau} glow={0.9} behind={<>{st.tilt > 0 ? plate : null}<Bot cam={cam} id="rR" model="F02" s={SIDE_S} pose={st.pose} hl={hl} /></>} />
+        <FoundryView cam={cam} t={tau} glow={0.9} extraBack={<FilmSetLights lw={4 / cam.z} id="fsR2" />} behind={<>{st.tilt > 0 ? plate : null}<Bot cam={cam} id="rR" model="F02" s={SIDE_S} pose={st.pose} hl={hl} /></>} />
       </Scene>
     );
     const stage = (
@@ -143,14 +146,15 @@ const T_CUT = T_ALSO - 0.05;                       // match cut: the avatar's fo
 
 const K0 = crouch(TOE_X, FD.deck.top, SIDE_S);
 const R3CAM: Cam = {x: 620, y: 520, z: 0.82};
+const R3END: Cam = {x: 660, y: 512, z: 0.87};
 
 // ---------------------------------------------------------------- R3: a foundry the team had never visited
 const R3: React.FC<{tau: number}> = ({tau}) => {
   const u = easeInOut(seg(tau, T_NEVER, T_NEVER + 2.2));
-  const cam = mixCam(CAM_SIDE, R3CAM, u);
+  const cam = mixCam(mixCam(CAM_SIDE2, R3CAM, u), R3END, smooth(seg(tau, T_NEVER + 2.2, T_FIX - 0.1)));
   return (
     <Scene bg="#221A21" over={<Chip x={100} y={64} lines={['FIGURE SAYS', 'a foundry the team had never visited']} k={seg(tau, T_NEVER + 0.5, T_NEVER + 0.9) * (1 - seg(tau, T_FIX - 0.5, T_FIX - 0.2))} size={38} />}>
-      <FoundryView cam={cam} t={tau} behind={<Bot cam={cam} id="rR3" model="F02" s={SIDE_S} pose={sidePose({head: 8 * u})} />} />
+      <FoundryView cam={cam} t={tau} extraBack={<FilmSetLights lw={4 / cam.z} id="fsR3" />} behind={<Bot cam={cam} id="rR3" model="F02" s={SIDE_S} pose={sidePose({head: 8 * u})} />} />
     </Scene>
   );
 };
@@ -172,7 +176,7 @@ const MiniIcons: React.FC<{w: number; ice: boolean; dt: number}> = ({w, ice, dt}
 );
 
 const R4: React.FC<{tau: number; f: number}> = ({tau, f}) => {
-  let cam = mixCam(R3CAM, CAM_V, easeInOut(seg(tau, T_FIX + 0.55, T_MESSY + 0.9)));
+  let cam = mixCam(R3END, CAM_V, easeInOut(seg(tau, T_FIX + 0.55, T_MESSY + 0.9)));
   cam = mixCam(cam, CAM_FOOT_ST, easeIn(seg(tau, T_DONT + 1.25, T_CUT)));
   const lw = 4 / cam.z;
   const toCrouch = smooth(seg(tau, T_FIX + 0.6, T_FIX + 1.5));
@@ -281,7 +285,7 @@ const HJ_PUSH = T_JUMPING - 0.75;
 const HJ = makeJump({toeX: TOE_X, deckY: HALL.ledge, endX: HALL.bagX, endY: BAG_TOP + 8, s: SIDE_S, tPush: HJ_PUSH, tTO: HJ_PUSH + 0.38, tEnd: T_BAGS + 0.05, apex: 50 * SIDE_S,
   rate: [[HJ_PUSH + 0.38, 1], [HJ_PUSH + 0.7, 0.42], [T_BAGS - 0.35, 0.42], [T_BAGS + 0.05, 1]], outcome: 'stick', landX: HALL.bagX});
 const CAM_FOOT_H: Cam = {x: CAM_FOOT_ST.x, y: HALL.ledge - 34, z: 4.0};
-const CAM_BAG: Cam = {x: HALL.bagX, y: 700, z: 2.2};
+const CAM_BAG: Cam = {x: HALL.bagX, y: 610, z: 1.75};
 
 const HallBack: React.FC<{lw: number}> = ({lw}) => (
   <g>
@@ -314,8 +318,8 @@ const R5: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   const pel = r.pts.pelvis;
   let cam: Cam = {...CAM_FOOT_H, z: lerp(4.0, 4.3, seg(tau, T_CUT, HJ_PUSH))};
   const follow = easeInOut(seg(tau, HJ_PUSH + 0.1, HJ_PUSH + 0.9));
-  if (follow > 0) cam = {x: lerp(cam.x, pel[0] + 70, follow), y: lerp(cam.y, pel[1] - 30, follow), z: lerp(cam.z, 2.25, follow)};
-  cam = mixCam(cam, CAM_BAG, easeInOut(seg(tau, T_BAGS - 0.55, T_BAGS + 0.2)));
+  if (follow > 0) cam = {x: lerp(cam.x, pel[0] + 70, follow), y: lerp(cam.y, pel[1] - 60, follow), z: lerp(cam.z, 2.1, follow)};
+  cam = mixCam(cam, CAM_BAG, easeInOut(seg(tau, T_BAGS - 0.05, T_BAGS + 0.45)));
   const lw = 4 / cam.z;
   const d = tau - (T_BAGS + 0.05);
   const squash = d > 0 ? Math.exp(-d * 3.2) * Math.abs(Math.cos(d * 9)) * 1.0 : 0;
@@ -349,7 +353,7 @@ const CAM_MESS: Cam = {x: 760, y: 470, z: 1.0};
 export const CAM_REAL_END: Cam = {x: 430, y: 380, z: 1.5};
 const EDGE_STAND = stand(250, FD.deck.top, SIDE_S, {yaw: 0.8, armN: A(4, 12, {grip: 0.3}), armF: A(-4, 14, {grip: 0.3})});
 
-const Monitor: React.FC<{x: number; y: number; lw: number; state: number; t: number; id: number}> = ({x, y, lw, state, t, id}) => (
+export const Monitor: React.FC<{x: number; y: number; lw: number; state: number; t: number; id: number}> = ({x, y, lw, state, t, id}) => (
   <g>
     <rect x={x - 80} y={y - 55} width={160} height={110} rx={8} fill="#1A1D21" stroke={FCOL_INK} strokeWidth={lw} />
     {state < 0.5 ? (
@@ -373,7 +377,7 @@ const Monitor: React.FC<{x: number; y: number; lw: number; state: number; t: num
 const FCOL_INK = '#120C10';
 
 const R6: React.FC<{tau: number; f: number}> = ({tau, f}) => {
-  const cam = mixCam(CAM_MESS, CAM_REAL_END, easeInOut(seg(tau, T_KEPT - 1.4, REAL_END)));
+  const cam = mixCam(mixCam(CAM_MESS, {x: 720, y: 460, z: 1.1}, smooth(seg(tau, T_DIDGET, T_KEPT - 1.4))), CAM_REAL_END, easeInOut(seg(tau, T_KEPT - 1.4, REAL_END)));
   const lw = 4 / cam.z;
   const toCrouch = smooth(seg(tau, T_KEPT - 1.3, T_KEPT - 0.45));
   const p = tau < PAYOFF_T0 ? blend(EDGE_STAND, PAYOFF.K0, toCrouch) : PAYOFF.pose(tau).pose;
@@ -390,7 +394,7 @@ const R6: React.FC<{tau: number; f: number}> = ({tau, f}) => {
       const rr = R + (k % 2 ? 14 : -14);
       return `${(L.cx + Math.cos(a) * rr).toFixed(1)} ${(L.surf - 40 + Math.sin(a) * rr * 0.6).toFixed(1)}`;
     }).join('L');
-    return <path key={i} d={'M' + d + 'Z'} fill="none" stroke="#FFE08A" strokeWidth={lw * 2} opacity={(1 - ph) * 0.55 * emi} />;
+    return <path key={i} d={'M' + d + 'Z'} fill="none" stroke="#FFE08A" strokeWidth={lw * 2} opacity={(1 - ph) * 0.55 * emi * (1 - seg(tau, REAL_END - 0.6, REAL_END))} />;
   }) : null;
   const camPole = {x: 1180, y: 560};
   const spark = (x: number, y: number, t0: number) => tau > t0 && tau < t0 + 0.6 ? (
@@ -398,12 +402,12 @@ const R6: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   ) : null;
   const r = rig(p, SIDE_S);
   const headS = toScreen(cam, r.pts.head[0], r.pts.head[1]);
-  const polK = seg(tau, T_KEPT - 0.9, T_KEPT - 0.6);
+  const polK = seg(tau, T_KEPT - 0.9, T_KEPT - 0.6) * (1 - seg(tau, REAL_END - 0.45, REAL_END));
   const monS = toScreen(cam, FD.booth.x0 + 140, FD.booth.y0 + 140);
   const poleS = toScreen(cam, camPole.x, camPole.y);
   return (
     <Scene bg="#221A21" over={<Chip x={100} y={64} lines={['FIGURE SAYS', 'heat and electromagnetic noise knocked out cameras']} k={seg(tau, T_HEAT + 0.1, T_HEAT + 0.5) * (1 - seg(tau, T_KEPT - 1.2, T_KEPT - 0.9))} size={38} />}>
-      <FoundryView cam={cam} t={tau} glow={1.2}
+      <FoundryView cam={cam} t={tau} glow={1.2} extraBack={<FilmSetLights lw={lw} id="fsR6" />}
         booth={(
           <g>
             <Monitor x={FD.booth.x0 + 140} y={FD.booth.y0 + 140} lw={lw} state={mon} t={tau} id={1} />
@@ -414,6 +418,11 @@ const R6: React.FC<{tau: number; f: number}> = ({tau, f}) => {
         front={(
           <g>
             {rings}
+            <TripodCam x={1330} y={FD.floor} lw={lw} />
+            <Crew look={CAST.clerkA} x={-120} y={FD.floor} h={400} frame={f} seed={3}
+              holdL={<g><rect x={-40} y={-10} width={80} height={104} rx={8} fill="#C9924F" stroke={C.ink} strokeWidth={4} /><rect x={-32} y={4} width={64} height={80} rx={4} fill="#FFFDF6" /></g>}
+              pose={{...IDLE, armL: {a: 40, b: 70}, armR: {a: 12, b: 14}, lookX: 0.8, lookY: -0.2, mouth: 'flat'}} />
+            <Crew look={CAST.clerkC} x={1480} y={FD.floor} h={400} frame={f} seed={14} flip pose={{...IDLE, armR: {a: 70, b: 40}, armL: {a: 50, b: 60}, lookX: 0.4, mouth: tau > T_CAMS ? 'o' : 'flat', brows: tau > T_CAMS ? 0.6 : 0}} />
             <rect x={camPole.x - 8} y={camPole.y + 30} width={16} height={FD.floor - camPole.y - 30} fill="#3A3D44" stroke={FCOL_INK} strokeWidth={lw} />
             <CameraIcon x={camPole.x} y={camPole.y} s={0.9} broken={seg(tau, T_CAMS + 0.1, T_CAMS + 0.4)} />
             {spark(camPole.x, camPole.y, T_CAMS + 0.1)}
@@ -436,3 +445,5 @@ const R6: React.FC<{tau: number; f: number}> = ({tau, f}) => {
   );
 };
 const PAYOFF_T0 = T_KEPT - 0.38;
+/** Event times for the sound cue sheet. */
+export const REAL_EV = {T_SIMR, T_FIX, T_CUT, HJ_PUSH, PAYOFF_T0, T_DIDGET};

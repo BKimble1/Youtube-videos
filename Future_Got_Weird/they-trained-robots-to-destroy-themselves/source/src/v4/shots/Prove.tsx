@@ -10,11 +10,12 @@ import {Cam, Scene, Layer, Bot, Crew, Chip, Tag, mixCam, seg, smooth, easeInOut,
 import {FoundryView, FD} from '../sets/views';
 import {Splash} from '../sets/foundry';
 import {BayBack, Conveyor, PartsCart, BAY, BCOL} from '../sets/bay';
-import {FilmLight, TripodCam, Mark} from '../sets/props';
+import {FilmSetLights, TripodCam, Mark} from '../sets/props';
+import {CameraIcon} from '../../components/Props';
 import {Arc} from '../sets/stage';
 import {rig} from '../rig/Robot2D';
 import {stand, A} from '../rig/poses';
-import {REAL_END, PAYOFF, CAM_REAL_END, SIDE_S} from './Real';
+import {REAL_END, PAYOFF, CAM_REAL_END, SIDE_S, Monitor} from './Real';
 import {ENTRY_X} from './Opening';
 import {CAST} from '../../components/cast';
 import {IDLE} from '../../components/Character';
@@ -70,17 +71,11 @@ const SetView: React.FC<{tau: number; f: number; cam: Cam}> = ({tau, f, cam}) =>
     <FoundryView cam={cam} t={tau} hit={{x: ENTRY_X, t: tHit}} scar={seg(tau, T_IN + 0.8, T_IN + 2.5)} glow={1}
       booth={(
         <g>
-          <rect x={FD.booth.x0 + 30} y={FD.booth.y0 + 30} width={FD.booth.x1 - FD.booth.x0 - 60} height={190} fill="#6B4A3A" opacity={0.7} />
-          <Crew look={CAST.checker} x={FD.booth.x0 + 230} y={FD.booth.y0 + 330} h={300} frame={f} seed={21} flip shadow={false}
-            pose={{...IDLE, armL: {a: 14, b: 30}, armR: {a: 26, b: 120}, lookX: -0.8, lookY: 0.3, mouth: 'flat'}} />
+          <Monitor x={FD.booth.x0 + 140} y={FD.booth.y0 + 140} lw={lw} state={2} t={tau} id={1} />
+          <Monitor x={FD.booth.x0 + 320} y={FD.booth.y0 + 140} lw={lw} state={2} t={tau} id={2} />
         </g>
       )}
-      extraBack={(
-        <g>
-          <FilmLight x={-260} y={FD.deck.top} lw={lw} on={1} aim={16} id="flP1" />
-          <FilmLight x={1440} y={FD.floor} lw={lw} on={1} aim={205} h={560} id="flP2" />
-        </g>
-      )}
+      extraBack={<FilmSetLights lw={lw} id="fsP" />}
       behind={<Arc pts={PAYOFF.arc()} k={arcK} lw={lw} color={C.teal} width={3} />}
       inside={(
         <>
@@ -92,6 +87,8 @@ const SetView: React.FC<{tau: number; f: number; cam: Cam}> = ({tau, f, cam}) =>
       )}
       front={(
         <g>
+          <rect x={1172} y={590} width={16} height={FD.floor - 590} fill="#3A3D44" stroke={FD_INK} strokeWidth={lw} />
+          <CameraIcon x={1180} y={560} s={0.9} broken={1} />
           {[420, 560, 1020, 1160].map((x, i) => <Barrier key={x} x={x} lw={lw} k={barK(i)} />)}
           <TripodCam x={1330} y={FD.floor} lw={lw} />
           <Crew look={CAST.clerkC} x={1480} y={FD.floor} h={400} frame={f} seed={14} flip pose={{...IDLE, armR: {a: 70, b: 40}, armL: {a: 50, b: 60}, lookX: 0.4, mouth: 'flat'}} />
@@ -100,7 +97,7 @@ const SetView: React.FC<{tau: number; f: number; cam: Cam}> = ({tau, f, cam}) =>
             pose={{...IDLE, armL: {a: 40, b: 70}, armR: {a: 12, b: 14}, lookX: 0.8, lookY: -0.2, mouth: 'flat'}} />
           {supK > 0 ? (
             <g opacity={supK}>
-              {[[-120, FD.floor - 220], [1480, FD.floor - 220], [FD.booth.x0 + 230, FD.booth.y0 + 130]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={160} fill="none" stroke={C.teal} strokeWidth={lw * 3} strokeDasharray={`${lw * 8} ${lw * 6}`} />)}
+              {[[-120, FD.floor - 220], [1480, FD.floor - 220], [FD.booth.x0 + 230, FD.booth.y0 + 140]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={160} fill="none" stroke={C.teal} strokeWidth={lw * 3} strokeDasharray={`${lw * 8} ${lw * 6}`} />)}
             </g>
           ) : null}
         </g>
@@ -180,7 +177,7 @@ export const Prove: React.FC = () => {
   let cam = mixCam(CAM_REAL_END, fol, easeInOut(seg(tau, PROVE_START, PROVE_START + 0.7)));
   cam = mixCam(cam, CAM_ENT, easeInOut(seg(tau, T_IN - 0.6, T_IN + 0.15)));
   cam = mixCam(cam, CAM_SET, easeInOut(seg(tau, T_BUT - 0.3, T_ONETGT + 0.5)));
-  const spot = seg(tau, T_WHAT - 0.4, T_WHAT) * (1 - seg(tau, T_IN - 0.5, T_IN - 0.1));
+  const spot = seg(tau, PROVE_START, T_WHAT + 0.1) * (1 - seg(tau, T_IN - 0.5, T_IN - 0.1));
   const rs = toScreen(cam, pr.pts.chest[0], pr.pts.chest[1]);
   const set = (
     <Scene bg="#221A21"
