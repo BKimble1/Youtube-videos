@@ -52,6 +52,9 @@ type Props = {
   /** V3: palm and fingers join the surrounding <Inked> group (the forearm's), so no contour crosses the wrist;
    *  the palm's back edge fades into the forearm beneath it. The thumb keeps its own contour over the palm. */
   bare?: boolean;
+  /** V4: 0..1 while the band rolls off the wrist: the thumb's own contour dissolves round its base, where it lies on
+   *  the wrist under the band (the case hides it in the front view; nothing else changes) */
+  thumbFade?: number;
 };
 
 const FINGERS = [
@@ -64,7 +67,7 @@ const FINGERS = [
 ];
 const SEG = [0.45, 0.31, 0.24];
 
-export const Hand: React.FC<Props> = ({id, wrist, ang, L, thumbSide: ts, view, pose, color, contact, sheen = 1, ink, bare}) => {
+export const Hand: React.FC<Props> = ({id, wrist, ang, L, thumbSide: ts, view, pose, color, contact, sheen = 1, ink, bare, thumbFade = 0}) => {
   const pass = useInk().pass;
   const iw = ink ?? L * 0.06;
   const dir = {x: Math.cos(rad(ang)), y: Math.sin(rad(ang))};
@@ -154,7 +157,7 @@ export const Hand: React.FC<Props> = ({id, wrist, ang, L, thumbSide: ts, view, p
   const tDir3 = rot(tDir2, -pose.thumbCurl * 30 * ts);
   const t3 = add(t2, mul(tDir3, 0.12 * L * (1 - pose.thumbCurl * 0.45)));
   const thumbEl = (
-    <Inked w={iw}>
+    <Inked w={iw} id={`${id}-tk`} fade={thumbFade > 0.01 ? [{c: tBase, r: 0.34 * L * thumbFade}] : undefined}>
       <Capsule id={`${id}-t0`} a={tBase} b={t1} ra={0.1 * L} rb={0.078 * L} color={color} spec={0.22 * sheen} />
       <Capsule id={`${id}-t1`} a={t1} b={t2} ra={0.076 * L} rb={0.07 * L} color={color} spec={0.26 * sheen} />
       <Capsule id={`${id}-t2`} a={t2} b={t3} ra={0.07 * L} rb={0.064 * L} color={lit(color, 0.04)} spec={0.26 * sheen} />

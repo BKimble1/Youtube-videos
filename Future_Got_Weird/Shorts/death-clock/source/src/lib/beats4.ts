@@ -101,6 +101,57 @@ export const B4 = {
   treatHigh1: B.release0 + 13,
 
   // ---- treatment sub-beats (Aftermath3 treatment) -- owned by the device/treatment area
+  // Mapped to the locked words: 'the band' 923-933, 'delivers' 934-944, 'an' 945-950, 'automatic' 952-964,
+  // 'injection,' 966-981, 'potentially' from 987. The countdown keeps its origin and holds at B.hold (983).
+  /** approach: the camera follows the wrist to the band's front (00:00:42, HELP ALERT SENT) */
+  tApproach0: B.act0 - 6, // 921
+  /** the street gives way to the section backdrop, then the hand is swept into it from the fingertips back to the wrist
+   *  line (Scene's hand veil), before the case starts to turn */
+  tBack0: B.act0 - 3, // 924
+  tBack1: B.act0 + 1, // 928
+  tVeil0: B.act0 + 1, // 928
+  tVeil1: B.act0 + 5, // 932
+  /** the case rolls to its underside; the roll reads as a camera orbit round the forearm (the hand is already gone) */
+  tRoll0: B.act0 + 4, // 931 (under 1 deg at 932)
+  tRoll1: B.act0 + 12, // 939: profile overview (z <= 12.5, the whole case, still closed), the port on its contact point
+  /** punch-in on the port end: the contact detail, the rest of the case running off frame; the case's cut-away is open
+   *  from this frame (it never fades in on the overview) */
+  tCut: B.act0 + 14, // 941
+  /** actuation: the shutter slides open, the piston advances, the nose meets the skin (dimple, attached shadow) */
+  tShut0: B.act0 + 14, // 941
+  tShut1: B.act0 + 18, // 945
+  tStroke0: B.act0 + 18, // 945 (actuator)
+  tContact: B.act0 + 22, // 949 (soft contact / press)
+  tStroke1: B.act0 + 24, // 951 full stroke
+  /** entry: the compact section opens at the same point (a shallow slit of skin bands at the dimple just before the
+   *  contact, so the press is seen in the skin bands, then it deepens to the vessel); one blue-white slug runs
+   *  reservoir -> nose -> channel -> through the wall -> into the lumen */
+  tWin0: B.inject0 - 6, // 946 (a shallow slit of skin bands at the dimple, deepening over 950-953)
+  tWin1: B.inject0 + 6, // 958
+  tSlug0: B.inject0 + 4, // 956 leaves the reservoir (treatment pulse cue)
+  tSlugTip: B.inject0 + 10, // 962 at the nose tip / skin (the feed now enters the rod under the actuator)
+  tSlugLumen: B.inject0 + 16, // 968 merges with the flow
+  tMerge1: B.inject0 + 19, // 971
+  /** internal response: the camera tracks the slug with the flow from tTrack0 (it starts from rest; the slug rises on
+   *  screen and slows into TREAT_MATCH, never sinking as the camera pulls back); the zoom has been easing out since
+   *  tStroke1 + 2. The piston retracts and the shutter closes in view */
+  tTrack0: B.inject0 + 13, // 965
+  tRetract0: B.inject0 + 21, // 973
+  tRetract1: B.inject1, // 981
+  tShutClose0: B.inject1, // 981
+  tShutClose1: B.inject1 + 4, // 985
+  /** the slug has decelerated to its match point (TREAT_MATCH); the anatomy area's chest view cuts in here */
+  treatMatch: B.settleHeart0, // 987
 };
+
+/**
+ * The 987 match cut (device -> anatomy): where the treatment slug rests on screen on the last device frame (986), so the
+ * chest view can open with the pulse at the same place, size and colour. Screen px of the 1080x1920 master. The camera
+ * tracks the slug, so on screen it has come to rest there (it moved 1 px from 985 to 986); `dir` and `speed` are its
+ * motion through the arm at 986 in screen terms (deg, atan2 convention: -90 = straight up; px/frame at the 986 zoom),
+ * for the chest view to carry on; `r` is the core's half-width, `rimR` the rim's, and `len` the slug's overall length
+ * (round ends included), all in px.
+ */
+export const TREAT_MATCH = {f: B.settleHeart0, x: 540, y: 640, r: 10.7, rimR: 17.9, len: 133, dir: -91.8, speed: 8.3, core: '#EAF4FF', rim: '#4F86FF'};
 
 export {B, TOTAL};

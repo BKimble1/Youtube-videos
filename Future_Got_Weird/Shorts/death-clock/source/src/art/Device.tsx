@@ -12,7 +12,7 @@
 import React from 'react';
 import {UI_FONT} from '../fontNames';
 import {lit, mix, PAL, shade} from '../lib/color';
-import {add, clamp, hash, len, lerp, mul, norm, sub, V} from '../lib/math';
+import {add, clamp, hash, inv, len, lerp, mul, norm, smooth, sub, V} from '../lib/math';
 import {Capsule, Glow, Lin, Sphere} from '../lib/shade';
 import {Inked, InkFade, useInk} from '../lib/ink';
 import {Limb, limbGeo} from '../lib/limb';
@@ -41,17 +41,68 @@ export const armR = (A: ArmFrame, u: number) => lerp(A.rE, A.rW, clamp(u / A.L))
 export const armMatrix = (A: ArmFrame, k = 1) =>
   `matrix(${f4(A.u.x / k)} ${f4(A.u.y / k)} ${f4(-A.n.x / k)} ${f4(-A.n.y / k)} ${f4(A.E.x)} ${f4(A.E.y)})`;
 
-/** Device geometry, all relative to the wrist radius R (one design at every scale). */
+/** Device geometry, all relative to the wrist radius R (one design at every scale). V4: the ONE spec read by every
+ *  view (front, tilt, profile, underside) and by the section mechanism in Interior.tsx (PORT_GEO, 1000 local = R). */
 export const DEV_GEO = {
   bandFromWrist: 1.75, // band centre sits this many R behind the wrist joint (clear of the hand)
   bandW: 0.95,
   ringOut: 1.07,
-  caseL: 2.0,
-  caseW: 1.62,
-  caseT: 0.32,
-  caseRad: 0.4,
+  caseL: 2.0, // along the arm (unchanged: the UI typography and the loop/hook frames keep their scale)
+  caseW: 1.62, // across
+  caseT: 0.44, // V4: thickness 0.32 -> 0.44 (profile aspect about 4.5:1, a watch rather than a rail)
+  caseRad: 0.4, // corner radius in the glass plane
   screenL: 0.8, // fraction of case length used by the screen
   screenW: 0.74,
+  // V4 profile: the ends are rounded in every view (a radius at the glass edge, a small chamfer above the back panel)
+  glassRad: 0.13,
+  bodyChamfer: 0.04,
+  /** the back follows the skin's taper and sits this far into it (no hairline gap, no hidden overlap at the port) */
+  sink: 0.008,
+  /** the projection lean fades from the shot's yaw to this as the case turns to profile (2.0R + 1.62R sin 4 = 2.11R) */
+  yawProfile: 4,
+  // back panel: a lighter plate under the body, inset from the outline, with a dark seam where it meets the body
+  panelT: 0.06,
+  panelInset: 0.1,
+  panelRad: 0.03,
+  seamW: 0.012,
+  // side button on the long side wall (b = -caseW/2, the wall that faces the camera in the underside views)
+  btnA: 0.45,
+  btnL: 0.3,
+  btnH: 0.1,
+  btnProud: 0.04,
+};
+
+/**
+ * The underside mechanism, in R (Interior.tsx draws it in the section frame, 1000 local = R). xi runs along the arm
+ * from the port toward the wrist, h is the height above the back face (into the case). The port keeps V3's place
+ * (0.72R toward the elbow from the band centre = SEC.portBack), so VP.entry and the contact point do not move.
+ */
+export const PORT_GEO = {
+  a: -0.72, // port centre along the case from the band centre (toward the elbow)
+  bore: 0.19, // opening through the back panel
+  nose: 0.16, // nose width
+  noseL: 0.09, // nose length
+  recess: 0.05, // the nose tip sits this far inside the back face when closed
+  shutterL: 0.24,
+  shutterT: 0.03,
+  shutterSlide: 0.2, // slides toward the case centre to open
+  piston: 0.1, // rod width
+  stroke: 0.1, // maximum travel
+  pressTreat: 0.045, // nose tip past the skin line at full treatment stroke (= dimple depth)
+  pressSensor: 0.026, // the sensors' light touch (a small dimple that still reads in the skin bands)
+  dimpleHalf: 0.24,
+  // V4 compact layout: the payloads sit beside the actuator, stacked through the case's thickness (the treatment
+  // reservoir above, its feed entering the rod just under the actuator; the sensor cartridge below, its feed along the
+  // panel), so the whole mechanism lies within about half a wrist radius of the port
+  actuator: {xi0: -0.13, xi1: 0.13, h0: 0.26, h1: 0.345},
+  treatRes: {xi0: 0.17, xi1: 0.45, h0: 0.175, h1: 0.3},
+  sensorCart: {xi0: 0.17, xi1: 0.45, h0: 0.068, h1: 0.158},
+  treatFeedH: 0.2375,
+  sensorFeedH: 0.075,
+  /** the electronics: a slim board closing the pocket on the wrist side */
+  board: {xi0: 0.475, xi1: 0.505, h0: 0.075, h1: 0.33},
+  /** the local cut-away of the near wall around the port end (not the whole case) */
+  cut: {xi0: -0.2, xi1: 0.53, h1: 0.36},
 };
 export const SW = 300; // screen design space (along the arm)
 export const SH = 232; // across the arm
@@ -79,9 +130,34 @@ export type DeviceView = {
   flip?: boolean;
   /** V3: turn the UI layout in quarter turns so it reads upright on screen (portrait when the arm is vertical) */
   upright?: boolean;
+  /** V4: drawn right after the arm and hand, before the section, strap and case (Scene's hand veil during the roll) */
+  afterHand?: (A: ArmFrame) => React.ReactNode;
+  /** V4: 0..1 progress of Scene's hand veil. The thumb's base contour, which lies over the forearm (where the veil keeps
+   *  the skin), dissolves with it, so no orphan ink strokes are left on the bare wrist once the hand has gone */
+  handVeil?: number;
 };
 
 export type CaseGeo = {uc: number; R: number; rr: number; t: number; L: number; Wd: number; roll: number; sy: number};
+
+/** Inset of the case outline at height h above the back (the rounded profile), all in R: [h, inset] samples. */
+export const caseProfile = () => {
+  const G = DEV_GEO;
+  const out: {body: [number, number][]; panel: [number, number][]} = {body: [], panel: []};
+  const rc = G.bodyChamfer;
+  const rt = G.glassRad;
+  const rp = G.panelRad;
+  [0, 45, 90].forEach((d) => {
+    const t = (d * Math.PI) / 180;
+    out.body.push([G.panelT + rc * (1 - Math.cos(t)), rc * (1 - Math.sin(t))]);
+    out.panel.push([rp * (1 - Math.cos(t)), rp * (1 - Math.sin(t))]);
+  });
+  out.panel.push([G.panelT, 0]);
+  [90, 60, 30, 0].forEach((d) => {
+    const t = (d * Math.PI) / 180;
+    out.body.push([G.caseT - rt * (1 - Math.cos(t)), rt * (1 - Math.sin(t))]);
+  });
+  return out;
+};
 
 // ------------------------------------------------------------------ screen UI (design space SW x SH, origin at centre)
 const Mono: React.FC<{text: string; x: number; y: number; size: number; cell: number; colon: number; fill: string; weight?: number}> = ({text, x, y, size, cell, colon, fill, weight = 800}) => {
@@ -317,18 +393,6 @@ const rrect = (a: number, b: number, c: number, n = 6): [number, number][] => {
 };
 const poly = (pts: V[]) => `M${pts.map(P2).join(' L')} Z`;
 
-/** The case's planar frame at radius rr, tilted by roll: maps (a along arm, b across, y-down on the glass). */
-const caseFrame = (A: ArmFrame, uc: number, rr: number, roll: number, sy: number, flip = false) => {
-  const r = (roll * Math.PI) / 180;
-  const sb = Math.sin(r);
-  const cb = Math.cos(r);
-  const O = armPt(A, uc, rr * sb, rr * cb, sy);
-  // glass "down" = minus the tangent (0, cos, -sin) of the cylinder at the case; flip turns the glass frame 180 deg
-  const k = flip ? -1 : 1;
-  const ax = mul(A.u, k);
-  const ay: V = mul({x: -A.n.x * cb + A.u.x * sb * sy, y: -A.n.y * cb + A.u.y * sb * sy}, k);
-  return {O, ax, ay, cb, sb, at: (a: number, b: number): V => add(O, add(mul(ax, a), mul(ay, b)))};
-};
 const matrixOf = (fr: {O: V; ax: V; ay: V}, k: number) => `matrix(${f4(fr.ax.x * k)} ${f4(fr.ax.y * k)} ${f4(fr.ay.x * k)} ${f4(fr.ay.y * k)} ${f4(fr.O.x)} ${f4(fr.O.y)})`;
 
 // ------------------------------------------------------------------ V4 alarm ring (loop area)
@@ -399,37 +463,84 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
     return `M${P2(p1)} L${P2(p2)} A${f2(rW)} ${f2(rW)} 0 0 1 ${P2(p3)} L${P2(p4)} A${f2(rE)} ${f2(rE)} 0 0 1 ${P2(p1)} Z`;
   })();
 
-  // case
+  // case (V4: one rounded solid that every view projects; no separate side sprite)
   const cL = G.caseL * R;
   const cW = G.caseW * R;
   const cT = G.caseT * R;
-  const rr0 = armR(A, ub) * 0.985;
-  const rr1 = armR(A, ub) + cT;
-  const fr0 = caseFrame(A, ub, rr0, dev.roll, sy);
+  const rRoll = (dev.roll * Math.PI) / 180;
+  const sb = Math.sin(rRoll);
+  const cb = Math.cos(rRoll);
+  const sRoll = Math.abs(sb);
+  // the projection lean fades toward profile, so the side view keeps the case's own length (never a stretched rail)
+  const syC = Math.sin((lerp(dev.yaw ?? 14, G.yawProfile, smooth(sRoll)) * Math.PI) / 180);
+  // the back follows the forearm's taper (tangent to the skin under the port) and sits a hair into it
+  const kTaper = (A.rW - A.rE) / A.L;
+  const rBack = armR(A, ub) - G.sink * R;
+  const ayC: V = {x: -A.n.x * cb + A.u.x * sb * syC, y: -A.n.y * cb + A.u.y * sb * syC};
+  /** a point of the case: a along the arm from the band centre, b across (glass-down axis), h above the back face */
+  const casePt = (a: number, b: number, h: number): V => {
+    const r = rBack + kTaper * a + h;
+    const p = armPt(A, ub + a, r * sb, r * cb, syC);
+    return {x: p.x + ayC.x * b, y: p.y + ayC.y * b};
+  };
+  /** the case plane at height h as an affine frame (flip turns it 180 deg for the glass UI) */
+  const planeAt = (h: number, flipIt = false) => {
+    const O = casePt(0, 0, h);
+    const k = flipIt ? -1 : 1;
+    const ax = mul(sub(casePt(1, 0, h), O), k);
+    const ay = mul(ayC, k);
+    return {O, ax, ay, at: (a: number, b: number): V => add(O, add(mul(ax, a), mul(ay, b)))};
+  };
   const flip = dev.flip ?? A.u.x < 0;
-  const fr1 = caseFrame(A, ub, rr1, dev.roll, sy, flip);
+  const fr1 = planeAt(cT, flip);
   // quarter turns that bring the glass's layout upright on screen
   const uiRot = dev.upright ? -Math.round((Math.atan2(fr1.ax.y, fr1.ax.x) * 180) / Math.PI / 90) * 90 : 0;
-  // a pillowed profile: full size through the lower body, a chamfered lip at the glass
-  const layers: [number, number][] = [
-    [rr0, 1],
-    [rr0 + (rr1 - rr0) * 0.55, 1],
-    [rr0 + (rr1 - rr0) * 0.85, 0.985],
-    [rr1, 0.95],
-  ];
-  const sideHull = hull(
-    layers.flatMap(([rr, k]) => {
-      const fr = caseFrame(A, ub, rr, dev.roll, sy);
-      return rrect((cL / 2) * k, (cW / 2) * k, G.caseRad * R * k).map(([a, b]) => fr.at(a, b));
-    }),
-  );
-  const facing = fr1.cb; // > 0: the glass is turned toward the camera
-  const frMid = caseFrame(A, ub, (rr0 + rr1) / 2 + cT * 0.12, dev.roll, sy);
-  const sideFrom = fr1.at(0, -cW / 2);
-  const sideTo = fr0.at(0, cW / 2);
+  // the body (rounded glass edge, a small chamfer at its lower edge) on a lighter back panel inset from the outline
+  const PROF = caseProfile();
+  const layerPts = (h: number, e: number, hx: number, hy: number, rad: number) => rrect(hx - e, hy - e, Math.max(0.02 * R, rad - e)).map(([a, b]) => casePt(a, b, h));
+  const pI = G.panelInset * R;
+  const bodyPts = PROF.body.flatMap(([h, e]) => layerPts(h * R, e * R, cL / 2, cW / 2, G.caseRad * R));
+  const panelPts = PROF.panel.flatMap(([h, e]) => layerPts(h * R, e * R, cL / 2 - pI, cW / 2 - pI, (G.caseRad - G.panelInset) * R));
+  const bodyHull = hull(bodyPts);
+  const panelHull = hull(panelPts);
+  const caseHull = hull([...bodyPts, ...panelPts]);
+  const facing = cb; // > 0: the glass is turned toward the camera
+  const sideFrom = casePt(0, -cW / 2, cT);
+  const sideTo = casePt(0, cW / 2, G.panelT * R);
   const kUI = (G.screenL * cL) / SW;
-  const geo: CaseGeo = {uc: ub, R, rr: armR(A, ub), t: cT, L: cL, Wd: cW, roll: dev.roll, sy};
+  const geo: CaseGeo = {uc: ub, R, rr: armR(A, ub), t: cT, L: cL, Wd: cW, roll: dev.roll, sy: syC};
   const caseOpen = dev.caseOpen ?? 0;
+  // the nose reaches past the back face, so the underside module may also draw in a small box round the port
+  const PG = PORT_GEO;
+  const portBox = hull([-1, 1].flatMap((ka) => [-1, 1].flatMap((kb) => [-0.1 * R, 0.12 * R].map((h) => casePt((PG.a + ka * 0.13) * R, (kb * cW) / 2, h)))));
+  // contact shadows: a soft offset rim round the base (front views), a dark wedge along the back edge (profile)
+  const wedgeA = smooth(clamp((sRoll - 0.45) / 0.55));
+  const inward = mul(A.n, sb < 0 ? 1 : -1);
+  const contactAt = (u: number) => armPt(A, u, armR(A, u) * sb, armR(A, u) * cb, sy);
+  const wedge = (() => {
+    const u0 = ub - cL / 2 - 0.15 * R;
+    const u1 = ub + cL / 2 + 0.15 * R;
+    const N = 14;
+    const pts: V[] = [];
+    for (let i = 0; i <= N; i++) pts.push(contactAt(lerp(u0, u1, i / N)));
+    for (let i = N; i >= 0; i--) pts.push(add(contactAt(lerp(u0, u1, i / N)), mul(inward, 0.07 * R * Math.pow(Math.sin((Math.PI * i) / N), 0.35))));
+    return poly(pts);
+  })();
+  // the side button: a flush pill on the long side wall (a small nub in the front view)
+  const button = (() => {
+    if (-sb < -0.17) return null; // its wall has turned away
+    const hm = ((G.panelT + G.caseT) / 2) * R;
+    const hh = (G.btnH / 2) * R;
+    const pill = (b: number) => rrect((G.btnL / 2) * R, hh, hh * 0.95).map(([x, y]) => casePt(G.btnA * R + x, b, hm + y));
+    const base = pill(-cW / 2);
+    const top = pill(-cW / 2 - G.btnProud * R);
+    return (
+      <g>
+        <path d={poly(hull([...base, ...top]))} fill="#173A9A" stroke="#0A1A44" strokeWidth={f2(R * 0.015)} strokeLinejoin="round" />
+        {-sb > 0.05 && <Lin id={`${id}-bt`} d={poly(top)} from={casePt(G.btnA * R, -cW / 2, hm + hh)} to={casePt(G.btnA * R, -cW / 2, hm - hh)} stops={[[0, '#7A9DF7'], [0.5, '#3D68D8'], [1, '#22489F']]} opacity={clamp(-sb * 1.6)} />}
+      </g>
+    );
+  })();
 
   // the arm: one continuous limb from the shoulder (or the forearm alone in close views) with the hand inside the
   // same contour group, so no line crosses the elbow or the wrist
@@ -440,7 +551,7 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
       ) : (
         <Capsule id={`${id}-fa`} a={add(E, mul(A.u, -rE))} b={W} ra={rE * 1.02} rb={rW} color={skin} spec={0.22} />
       )}
-      {hand && <Hand id={`${id}-hd`} wrist={add(W, mul(A.u, -hand.offset))} ang={hand.ang} L={hand.L} thumbSide={hand.thumbSide} view="back" pose={hand.pose} color={skin} ink={ink * 0.85} bare />}
+      {hand && <Hand id={`${id}-hd`} wrist={add(W, mul(A.u, -hand.offset))} ang={hand.ang} L={hand.L} thumbSide={hand.thumbSide} view="back" pose={hand.pose} color={skin} ink={ink * 0.85} bare thumbFade={Math.max(clamp(inv(4, 20, Math.abs(dev.roll))), smooth(clamp(inv(0.3, 0.75, dev.handVeil ?? 0))))} />}
     </Inked>
   );
   if (pass === 'ink') {
@@ -477,16 +588,40 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
         </g>
       )}
       {afterArm}
+      {dev.afterHand && dev.afterHand(A)}
       {dev.inArm && <g clipPath={`url(#${id}-arm)`}>{dev.inArm(A)}</g>}
       {/* the screen's coloured light on the skin, and the strap's contact shadows, kept on the arm */}
       <g clipPath={`url(#${id}-arm)`}>
-        {facing > -0.2 && <Glow id={`${id}-lt`} c={armPt(A, ub, armR(A, ub) * Math.sin((dev.roll * Math.PI) / 180) * 0.6, 0, sy)} r={R * 2.6} ry={R * 1.6} color={light} alpha={0.42 * glowK * clamp(facing + 0.4)} />}
+        {/* V4 art lock: the screen's light is two small local pools spilling past the case's ends onto the skin, flat
+            ellipses centred on the case's edge (about a quarter wrist radius deep, normal blend, alpha <= 0.35), so it
+            reads as light along the edge, never as a halo round the case or a wash over the digits; only while the
+            glass faces the camera (none in the profile and underside views) */}
+        {facing > 0.15 &&
+          [-1, 1].map((e) => {
+            const c = casePt(e * cL / 2, 0, G.sink * R);
+            const ax = sub(casePt(e * cL / 2 + R, 0, G.sink * R), c);
+            const ang = (Math.atan2(ax.y, ax.x) * 180) / Math.PI;
+            const a = Math.min(0.35, 0.3 * glowK) * smooth(clamp((facing - 0.15) / 0.55));
+            const gid = `${id}-lt${e > 0 ? 'h' : 'e'}`;
+            return (
+              <g key={e}>
+                <defs>
+                  <radialGradient id={gid}>
+                    <stop offset="0" stopColor={light} stopOpacity={a} />
+                    <stop offset="0.4" stopColor={light} stopOpacity={a * 0.5} />
+                    <stop offset="1" stopColor={light} stopOpacity={0} />
+                  </radialGradient>
+                </defs>
+                <ellipse cx={f2(c.x)} cy={f2(c.y)} rx={f2(R * 0.26)} ry={f2(R * 0.62)} transform={`rotate(${f2(ang)} ${f2(c.x)} ${f2(c.y)})`} fill={`url(#${gid})`} />
+              </g>
+            );
+          })}
         {[ub - bw / 2, ub + bw / 2].map((u0, i) => {
-          const d = `M${ring(u0 + (i ? 1 : -1) * R * 0.05, true).map(P2).join(' L')}`;
+          const d = `M${ring(u0 + (i ? 1 : -1) * R * 0.05, true, 32).map(P2).join(' L')}`;
           return (
             <g key={i}>
-              <path d={d} fill="none" stroke="#6B3A2A" strokeOpacity={0.14} strokeWidth={f2(R * 0.34)} />
-              <path d={d} fill="none" stroke="#6B3A2A" strokeOpacity={0.2} strokeWidth={f2(R * 0.12)} />
+              <path d={d} fill="none" stroke="#6B3A2A" strokeOpacity={0.14} strokeWidth={f2(R * 0.34)} strokeLinejoin="round" />
+              <path d={d} fill="none" stroke="#6B3A2A" strokeOpacity={0.2} strokeWidth={f2(R * 0.12)} strokeLinejoin="round" />
             </g>
           );
         })}
@@ -498,15 +633,26 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
         return <path key={i} d={d} fill="none" stroke="#0B205F" strokeOpacity={0.22} strokeWidth={f2(R * 0.03)} />;
       })}
       <path d={`M${ring(ub - bw / 2 + R * 0.04, true, 12).slice(8, 13).map(P2).join(' L')}`} fill="none" stroke="#FFFFFF" strokeOpacity={0.35} strokeWidth={f2(R * 0.05)} strokeLinecap="round" />
-      {/* case: side walls (hull of the outline at the skin and at the glass) */}
-      <path d={poly(sideHull)} fill="#0E2A6E" stroke="#0A1A44" strokeWidth={f2(R * 0.035)} strokeLinejoin="round" />
-      <Lin id={`${id}-cs`} d={poly(sideHull)} from={sideFrom} to={sideTo} stops={[[0, '#2F5FD8'], [0.45, '#1A3E9E'], [1, '#0B2160']]} />
-      {/* the underside module, when the case is opened in section */}
+      {/* V4 contact shadows on the skin and strap: a soft offset rim (front), a dark wedge along the back edge (profile) */}
+      <g clipPath={`url(#${id}-arm)`}>
+        {cb * cb > 0.02 &&
+          [0.02, 0.05, 0.08].map((d, i) => (
+            <path key={i} d={poly(rrect(cL / 2 + d * R, cW / 2 + d * R, (G.caseRad + d) * R).map(([a, b]) => add(casePt(a, b, 0), {x: 0.03 * R, y: 0.05 * R})))} fill="#3A1E14" opacity={0.06 * cb * cb} />
+          ))}
+        {wedgeA > 0.01 && <Lin id={`${id}-cw`} d={wedge} from={contactAt(ub)} to={add(contactAt(ub), mul(inward, 0.07 * R))} stops={[[0, '#4A2418', 0.35], [1, '#4A2418', 0]]} opacity={wedgeA} />}
+      </g>
+      {/* case: the back panel (a lighter plate; its dark seam is the body's lower outline), then the rounded body */}
+      <path d={poly(panelHull)} fill="#1D3F9E" stroke="#0A1A44" strokeWidth={f2(R * 0.02)} strokeLinejoin="round" />
+      {wedgeA > 0.01 && <path d={`M${P2(casePt(-(cL / 2 - pI - 0.12 * R), Math.sign(sb || 1) * (cW / 2 - pI), G.panelT * R * 0.4))} L${P2(casePt(cL / 2 - pI - 0.12 * R, Math.sign(sb || 1) * (cW / 2 - pI), G.panelT * R * 0.4))}`} stroke="#6F95F5" strokeOpacity={0.45 * wedgeA} strokeWidth={f2(R * 0.012)} strokeLinecap="round" />}
+      <path d={poly(bodyHull)} fill="#0E2A6E" stroke="#0A1A44" strokeWidth={f2(R * 0.035)} strokeLinejoin="round" />
+      <Lin id={`${id}-cs`} d={poly(bodyHull)} from={sideFrom} to={sideTo} stops={[[0, '#2F5FD8'], [0.45, '#1A3E9E'], [1, '#0B2160']]} />
+      {/* the underside module, when the case is opened in section (a local cut-away at the port end) */}
       {caseOpen > 0.01 && dev.caseCut && (
         <g>
           <defs>
             <clipPath id={`${id}-cc`}>
-              <path d={poly(sideHull)} />
+              <path d={poly(caseHull)} />
+              <path d={poly(portBox)} />
             </clipPath>
           </defs>
           <g clipPath={`url(#${id}-cc)`} opacity={caseOpen}>
@@ -514,10 +660,16 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
           </g>
         </g>
       )}
-      {/* side control (crown) toward the hand */}
-      <Capsule id={`${id}-cr`} a={frMid.at(cL / 2 - 0.02 * R, 0)} b={frMid.at(cL / 2 + 0.12 * R, 0)} ra={0.1 * R} rb={0.1 * R} color="#2A56C9" spec={0.6} k={1.2} />
-      {/* glass face (only when turned toward the camera) */}
+      {/* side button on the long side wall */}
+      {button}
+      {/* glass face (only when turned toward the camera), kept inside the case's rounded silhouette */}
       {facing > 0.04 && (
+        <g clipPath={`url(#${id}-gcl)`}>
+        <defs>
+          <clipPath id={`${id}-gcl`}>
+            <path d={poly(caseHull)} />
+          </clipPath>
+        </defs>
         <g transform={matrixOf(fr1, 1)}>
           <defs>
             <linearGradient id={`${id}-top`} gradientUnits="userSpaceOnUse" x1={f2(-cL / 2)} y1={f2(-cW / 2)} x2={f2(cL / 3)} y2={f2(cW / 2)}>
@@ -544,9 +696,18 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
           {/* gloss on the cobalt shell */}
           <ellipse cx={f2(-cL * 0.18)} cy={f2(-cW / 2 + 0.05 * R)} rx={f2(cL * 0.26)} ry={f2(0.035 * R)} fill="#FFFFFF" opacity={0.65} />
         </g>
+        </g>
       )}
-      {/* lit top lip of the case in profile */}
-      {facing <= 0.04 && <path d={`M${P2(fr1.at(-cL / 2 + G.caseRad * R, 0))} L${P2(fr1.at(cL / 2 - G.caseRad * R, 0))}`} stroke="#9DB8FF" strokeOpacity={0.7} strokeWidth={f2(R * 0.05)} strokeLinecap="round" />}
+      {/* lit lip along the rounded glass edge in profile (the one controlled reflection of the side view) */}
+      {sRoll > 0.9 && (
+        <path
+          d={`M${P2(casePt(-(cL / 2 - G.glassRad * R), 0, cT - 0.035 * R))} L${P2(casePt(cL / 2 - G.glassRad * R, 0, cT - 0.035 * R))}`}
+          stroke="#9DB8FF"
+          strokeOpacity={0.7 * smooth(clamp((sRoll - 0.9) / 0.1))}
+          strokeWidth={f2(R * 0.045)}
+          strokeLinecap="round"
+        />
+      )}
       {/* V4: the alarm ring round the glass (loop alarm and the warning landing) */}
       <AlarmRing c={fr1.O} R={R} u={dev.screen.ring ?? 0} env={dev.screen.ringEnv ?? 0} />
       {dev.overArm && dev.overArm(A)}

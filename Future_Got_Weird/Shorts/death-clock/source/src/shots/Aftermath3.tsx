@@ -7,13 +7,13 @@
 // The camera returns to the glass; one local "?" glitch turns into the red 00:02:14 of the opening, and the same
 // push carries on through frames 0-7 of the next play (the cold open), so the loop is one camera move.
 import React from 'react';
-import {armFrame, DeviceView} from '../art/Device';
+import {armFrame, DeviceView, PORT_GEO} from '../art/Device';
 import {Drone, DronePose} from '../art/Drone';
 import {EXPR_GASP, EXPR_PAIN, EXPR_RELIEF, EXPR_UNEASY, Expr, mixExpr} from '../art/Head';
 import {HAND_BRACE, HAND_CLUTCH, HAND_RELAXED, HandPose, mixHand} from '../art/Hand';
-import {PortModule, SectionLayers, VesselTube} from '../art/Interior';
+import {PortLight, PortMech, portPress, SEC, SectionLayers, SkinDimple, TREAT_SLUG, TreatChannel, treatPath, VesselTube} from '../art/Interior';
 import {ChestWindow, HAND_GRIP} from '../art/Cutaway';
-import {manJoints, ManPose} from '../art/Man';
+import {manJoints, ManPose, torsoPath} from '../art/Man';
 import {Cam} from '../lib/camera';
 import {PAL} from '../lib/color';
 import {deviceState3} from '../lib/device3';
@@ -22,8 +22,9 @@ import {add, clamp, easeIn, easeInOut, easeOut, fmt, inv, lerp, mul, noise1, smo
 import {Glow} from '../lib/shade';
 import {B, TOTAL} from '../lib/timeline3';
 import {revealAt} from '../lib/reveal4';
+import {TREAT_MATCH} from '../lib/beats4';
 import {dogAt, PROP} from './Opening';
-import {BAND_C, CHEST, CHEST_CAM, LOCAL_PER_WORLD, PJ, SEC_ROLL, SF, VP, W, withLowGrip, Z_CHEST} from './Journey3';
+import {BAND_C, CASE_W, CHEST, CHEST_CAM, frameOn, LOCAL_PER_WORLD, PJ, PORT_W, SEC_ROLL, SF, VP, W, withLowGrip, Z_CHEST} from './Journey3';
 import {Scene} from './Scene';
 import {B4} from '../lib/beats4';
 import {DRONE_S, droneBeacon, flightPitch, flyCam, flyDrone, hermite, rotorPhase, toScreenD} from './Dispatch';
@@ -143,6 +144,130 @@ export const arriveDrone3 = (f: number): DronePose => {
   };
 };
 
+// ---------------------------------------------------------------- V4 treatment (device area; keys in lib/beats4.ts B4)
+// One mechanism chain at the established contact point, all a pure function of the frame: approach and roll (the hand
+// is swept into the backdrop first), actuation (shutter, piston, the nose's press with a dimple and attached shadow), entry (the
+// compact section at the same point; one blue-white slug, not the sensor cyan, from the small reservoir down the rod and
+// a straight channel through the wall into the lumen), internal response (tracked with the flow among red cells while
+// the piston retracts and the shutter closes), ending on the slug decelerating at TREAT_MATCH for the 987 match cut.
+const TP = treatPath(SF, VP);
+const PRESS_T = PORT_GEO.pressTreat * SEC.units;
+const T_INJ = B4.tSlugLumen - B4.tSlug0;
+const V_INJ = TP.uMerge / (T_INJ - 1.5 * (1 - Math.exp(-T_INJ / 1.5))); // injection speed (local units / frame)
+const V_FLOW = 12; // the blood's speed (VesselTube FLOW)
+/** the slug's head along TP (local units; < 0 before it leaves the reservoir): it gathers speed out of the reservoir,
+ *  runs the channel, then slows from the injection speed toward the blood's as the flow carries it */
+export const slugHead = (g: number) => {
+  const t = g - B4.tSlug0;
+  if (t < 0) return -1;
+  if (t <= T_INJ) return V_INJ * (t - 1.5 * (1 - Math.exp(-t / 1.5)));
+  const t2 = t - T_INJ;
+  return TP.uMerge + V_FLOW * t2 + (V_INJ - V_FLOW) * 5 * (1 - Math.exp(-t2 / 5));
+};
+/** world point of the slug's middle */
+export const slugWorld = (g: number) => {
+  const q = TP.arc.at(Math.max(0, slugHead(g) - TREAT_SLUG.len / 2)).p;
+  return W(q.x, q.y);
+};
+export const treatState = (g: number) => {
+  const T = B4;
+  const on = g >= T.tRoll0 && g < T.treatMatch;
+  const roll = on ? SEC_ROLL * ease(inv(T.tRoll0, T.tRoll1, g)) : 0;
+  const shutter = ease(inv(T.tShut0, T.tShut1, g)) * (1 - ease(inv(T.tShutClose0, T.tShutClose1, g)));
+  const stroke = ease(inv(T.tStroke0, T.tStroke1, g)) * (1 - ease(inv(T.tRetract0, T.tRetract1, g)));
+  const head = slugHead(g);
+  const inLumen = head - TP.uMerge;
+  const w = 1 + 0.12 * ease(inv(T.treatMatch - 7, T.treatMatch - 1, g));
+  return {
+    on,
+    roll,
+    // the cut-away is open from the punch-in (the cut to the port end), never fading in on the overview
+    caseOpen: g >= T.tCut ? 1 : 0,
+    shutter,
+    stroke,
+    dimple: portPress(stroke, PRESS_T),
+    level: 1 - 0.7 * ease(inv(T.tSlug0, T.tSlugTip + 3, g)),
+    open: ease(inv(T.tWin0, T.tWin1, g)),
+    head,
+    trail: Math.max(0, head - Math.max(0, slugHead(g - 10))),
+    /** round the bend in the lumen the trace fades within about 3 frames (no J left behind) */
+    trailLumen: Math.max(0, head - Math.max(0, slugHead(g - 3))),
+    w,
+    dose:
+      inLumen > 0
+        ? {
+            s: TP.sMerge + inLumen,
+            a: clamp(inLumen / 60),
+            w,
+            glow: 0.25 + 0.75 * Math.sin(Math.PI * clamp((g - (T.tSlugLumen - 2)) / 7)),
+            body: head - TREAT_SLUG.len >= TP.uMerge,
+            from: TP.sMerge,
+            // a short trail behind it: how far it travelled in the last 4 frames (it shortens as the slug slows)
+            wake: head - slugHead(g - 4),
+          }
+        : undefined,
+  };
+};
+/** the treatment camera: profile overview at z <= 12.5 after the roll, then (cut) the port end with the case running
+ *  off frame, contact and entry, then it tracks the slug to its match point (TREAT_MATCH) and comes to rest */
+const TREAT_OVER: [number, V, number][] = [
+  [B4.tRoll1, frameOn(CASE_W, 425, 1075, 11.8), 11.8],
+  [B4.tCut, frameOn(CASE_W, 423, 1072, 12.3), 12.3],
+];
+/** The port-end detail (as in the sensor shot): the compact mechanism and its cut-away above the caption lane, about a
+ *  quarter of the case running off the bottom of the frame. The contact point's screen position is keyed (it comes to
+ *  rest at TRACK0, where the tracking takes over); the zoom is one ease from the full stroke to the match frame, so it
+ *  is already pulling back gently as the slug leaves the nose and the case clears the caption lane while it tracks. */
+const DETAIL_AT: [number, number, number][] = [
+  [B4.tCut, 440, 850],
+  [B4.tStroke1, 432, 855],
+  [B4.tTrack0, 422, 858],
+];
+const Z_DETAIL = 41;
+const Z_MATCH = 27.5;
+const Z_PULL0 = B4.tStroke1 + 2; // 953
+const TRACK0 = B4.tTrack0; // 965
+const TRACK1 = B4.treatMatch - 1; // 986
+const detailZ = (g: number) => Math.exp(lerp(Math.log(Z_DETAIL), Math.log(Z_MATCH), smooth(inv(Z_PULL0, TRACK1, g))));
+const detailCam = (g: number): Cam => ({
+  ...frameOn(PORT_W, spline(g, DETAIL_AT.map(([t, x]) => [t, x])), spline(g, DETAIL_AT.map(([t, , y]) => [t, y])), detailZ(g)),
+  roll: 0,
+});
+/** The tracking (internal response): from TRACK0 the camera follows a point that runs along the vessel at the slug's
+ *  pace (upstream of the merge while the slug is still in the channel, the slug itself once it is in the lumen), so it
+ *  never follows the slug's turn into the flow. That point's screen position eases from where the detail camera sees
+ *  it, at its screen speed there (so the camera's motion is continuous), to TREAT_MATCH on the last frame, at rest. So
+ *  the slug rises on screen and slows into its match point, never sinking as the camera pulls back. */
+const trackPt = (g: number) => {
+  const q = VP.at(TP.sMerge + slugHead(g) - TREAT_SLUG.len / 2 - TP.uMerge).p;
+  return W(q.x, q.y);
+};
+const toScr = (c: {x: number; y: number; z: number}, p: V) => ({x: 540 + (p.x - c.x) * c.z, y: 960 + (p.y - c.y) * c.z});
+const TRACK = (() => {
+  const camEnd = {...frameOn(slugWorld(TRACK1), TREAT_MATCH.x, TREAT_MATCH.y, Z_MATCH), z: Z_MATCH};
+  const a0 = toScr(detailCam(TRACK0), trackPt(TRACK0));
+  const a1 = toScr(camEnd, trackPt(TRACK1));
+  const s0 = toScr(detailCam(TRACK0 - 0.5), trackPt(TRACK0 - 0.5));
+  const s1 = toScr(detailCam(TRACK0 + 0.5), trackPt(TRACK0 + 0.5));
+  return {a0, a1, v0: {x: s1.x - s0.x, y: s1.y - s0.y}, T: TRACK1 - TRACK0};
+})();
+/** one component of the anchor: from a0 at speed v0 (per frame) to a1 at rest over T frames, without overshoot (a cubic
+ *  while that is monotone, otherwise a power ease-out with the same start speed) */
+const anchorAt = (s: number, a0: number, a1: number, v0: number, T: number) => {
+  const d = a1 - a0;
+  const m = v0 * T;
+  const r = Math.abs(d) > 1e-6 ? m / d : 0;
+  if (r > 3) return a1 - d * Math.pow(1 - s, r);
+  const s2 = s * s;
+  const s3 = s2 * s;
+  return (2 * s3 - 3 * s2 + 1) * a0 + (s3 - 2 * s2 + s) * m + (-2 * s3 + 3 * s2) * a1;
+};
+const trackCam = (g: number): Cam => {
+  const {a0, a1, v0, T} = TRACK;
+  const s = clamp((g - TRACK0) / T);
+  return {...frameOn(trackPt(g), anchorAt(s, a0.x, a1.x, v0.x, T), anchorAt(s, a0.y, a1.y, v0.y, T), detailZ(g)), roll: 0};
+};
+
 // ---------------------------------------------------------------- camera
 const SEC_VIEW = W(SF.Xp - 760, 420);
 const PORT_VIEW = W(SF.Xp - 80, 200);
@@ -174,10 +299,8 @@ export const camAt = (g: number, wristW: V, headW: V): Cam => {
       // hovering drone has headroom; the push to the band then crosses the caption lane at the 921 caption change
       [B.arrive, {x: 500, y: 1360}, 1.6],
       [B.act0 + 2, BAND_C, 6.5],
-      [B.act0 + 14, SEC_VIEW, 11],
-      [B.inject0 - 4, PORT_VIEW, 18],
-      [B.inject0 + 10, PORT_VIEW, 20],
-      [B.inject1 - 6, VES_VIEW, 15],
+      // V4: the treatment's own cameras (TREAT_OVER, detailCam, trackCam) run from here to B4.treatMatch, with cuts at B4.tCut
+      // and B4.treatMatch; the keys below are the V3 chest/recovery path after the match cut
       [B.settleHeart0 + 6, add(mul(BAND_C, 0.4), mul(PJ.L.E, 0.6)), 3.6],
       [B.settleHeart0 + 18, add(mul(CHEST.heart, 0.7), mul(CHEST.centroid, 0.3)), 4.8],
       [B.settleHeart1 - 4, CHEST.heart, 5.2],
@@ -198,6 +321,12 @@ export const camAt = (g: number, wristW: V, headW: V): Cam => {
         roll: 0,
       };
     }
+    // V4 treatment (device area): the overview approach, the punch-in to the port end (B4.tCut), then the tracking of the
+    // slug with the flow (TRACK0) up to the match cut into the chest view (B4.treatMatch = B4.chestCut)
+    const run = (ks: [number, V, number][]): Cam => ({x: spline(g, ks.map(([t, p]) => [t, p.x])), y: spline(g, ks.map(([t, p]) => [t, p.y])), z: zLog(g, ks.map(([t, , z]) => [t, z])), roll: 0});
+    if (g >= TRACK0 && g < B4.treatMatch) return trackCam(g);
+    if (g >= B4.tCut && g < B4.treatMatch) return detailCam(g);
+    if (g < B4.treatMatch) return run([...keys.filter(([t]) => t <= B.act0 + 2), ...TREAT_OVER]);
     return {x: sx(g), y: sy(g), z: Math.exp(sz(g)), roll: 0};
   }
   return recoveryCam(g, wristW, headW);
@@ -241,18 +370,19 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
   const hands = handsAt(g);
   const blink = Math.max(0, 1 - Math.abs(((g - 20) % 85) - 3) / 3) * (g > B.return0 + 20 ? 0 : 1);
 
-  // treatment (in the established section) and the heart settling (the chest window)
-  // V4: the arm section (device/treatment area) ends at the hard cut into the chest view; no frame shows both
+  // V4 treatment (device area, B4 keys): approach, actuation, entry, tracking; it ends at B4.treatMatch, where the
+  // anatomy area's chest view cuts in (one reveal authority, lib/reveal4.ts); no frame shows both
   const rv = revealAt(g);
-  const secOn = g >= B.act0 + 4 && g < B4.chestCut;
-  const roll = g < B.act0 ? 0 : g < B.settleHeart0 + 4 ? SEC_ROLL * ease(inv(B.act0, B.act0 + 12, g)) : SEC_ROLL * (1 - ease(inv(B.settleHeart0 + 4, B.settleHeart0 + 16, g)));
-  const open = ease(inv(B.act0 + 4, B.act0 + 16, g)) * (1 - ease(inv(B.settleHeart0, B.settleHeart0 + 6, g)));
-  const portExt = clamp(inv(B.inject0 - 8, B.inject0, g)) * (1 - clamp(inv(B.inject1, B.inject1 + 10, g)));
-  const treat = clamp(inv(B.inject0, B.inject0 + 16, g));
-  const waveS = lerp(VP.entry, VP.entry + 5200, clamp(inv(B.inject0 + 10, B.settleHeart0 + 6, g)));
+  const tr = treatState(g);
+  const secOn = tr.on && g < B4.chestCut;
+  const roll = tr.roll;
   const pxs = cam.z / LOCAL_PER_WORLD;
-  const backdrop = rv.backdrop;
-  const tube = <VesselTube id={`${id}-vt`} path={VP} f={g} px={pxs} s0={VP.entry - 900} s1={99999} sensors={1} sensorFront={VP.entry + 4000} wave={g >= B.inject0 + 10 ? {s: waveS, a: 1} : undefined} dimFrom={waveS} />;
+  // the backdrop is complete before the hand veil sweeps the hand away (fingertips first), and both before the roll;
+  // it is gone from the cut into the chest view (it would cover the torso)
+  const backdrop = g < B4.chestCut ? clamp(inv(B4.tBack0, B4.tBack1, g)) : 0;
+  const handVeil = g < B4.treatMatch ? clamp(inv(B4.tVeil0, B4.tVeil1, g)) : 0;
+  // the vessel at the contact point: red cells for scale, the dose; no sensor beads (no repeated sensor emission)
+  const tube = <VesselTube id={`${id}-vt`} path={VP} f={g} px={pxs} s0={VP.entry - 900} s1={99999} sensors={0} sensorFront={0} dose={tr.dose} />;
   // the treatment chest view: the same window and interior as the journey, open from the cut
   const chest =
     rv.chestOpen > 0.004 ? (
@@ -283,23 +413,30 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
     flip: false,
     upright: true,
     glow: 1,
-    caseOpen: secOn ? open : 0,
+    caseOpen: secOn ? tr.caseOpen : 0,
     caseCut: () => (
       <g transform={SF.matrix}>
-        <PortModule id={`${id}-pm`} sf={SF} f={g} ext={portExt} reservoir={1} blue={1} />
+        <SkinDimple id={`${id}-dg`} sf={SF} amp={tr.dimple} part="gap" />
+        <PortMech id={`${id}-pm`} sf={SF} f={g} shutter={tr.shutter} stroke={tr.stroke} press={PRESS_T} treatLevel={tr.level} sensorLeft={0} />
+        <TreatChannel id={`${id}-tcc`} tp={TP} head={tr.head} trail={tr.trail} w={tr.w} part="case" bore={{sf: SF, stroke: tr.stroke, press: PRESS_T}} />
       </g>
     ),
     inArm: () =>
       secOn ? (
         <g transform={SF.matrix}>
-          <SectionLayers id={`${id}-sec`} sf={SF} f={g} open={open} tube={tube} stream={0} streamA={0} treat={treat} />
+          <SectionLayers id={`${id}-sec`} sf={SF} f={g} open={tr.open} dimple={tr.dimple} tube={tube}>
+            <TreatChannel id={`${id}-tct`} tp={TP} head={tr.head} trail={tr.trail} trailLumen={tr.trailLumen} w={tr.w} part="tissue" />
+          </SectionLayers>
+          <PortLight id={`${id}-pl`} sf={SF} press={tr.dimple} a={clamp(tr.dimple / PRESS_T)} color="#A9C8FF" />
+          <SkinDimple id={`${id}-dm`} sf={SF} amp={tr.dimple} />
         </g>
       ) : null,
   };
   const dp = arriveDrone3(g);
   const showDrone = g < B.return0 + 30;
   // the data link appears once the drone is clear to the right of his head and is gone before the case turns
-  const linkA = clamp(inv(B4.link0 - 2, B4.link0 + 2, g)) * (1 - clamp(inv(B4.link1 - 5, B4.link1, g)));
+  // (V4 device: and it is gone before the case starts to roll, so no spare circle beside the turning case)
+  const linkA = clamp(inv(B4.link0 - 2, B4.link0 + 2, g)) * (1 - clamp(inv(B4.link1 - 5, B4.link1, g))) * (1 - clamp(inv(B4.tApproach0 + 2, B4.tBack1, g)));
   const linkFrom = {x: dp.x - Math.sin((dp.pitch * Math.PI) / 180) * 80 * dp.s, y: dp.y + Math.cos((dp.pitch * Math.PI) / 180) * 80 * dp.s};
   // it ends on a ring round the glass that starts just outside the case's corners (as the alarm ring does), so neither
   // the dashed line nor the ring ever crosses the digits; the case has not turned yet (roll 0) while the link is on
@@ -327,6 +464,7 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
       dev={dev}
       backdrop={backdrop}
       backdropC={W(SF.Xp - 600, 400)}
+      handVeil={handVeil}
       nearLegFront
       noTufts
       overTorso={chest}

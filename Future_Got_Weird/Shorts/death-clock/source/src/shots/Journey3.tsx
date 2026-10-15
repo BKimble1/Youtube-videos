@@ -9,14 +9,15 @@
 // the red warning dash runs back down the trace into the band. Then the critical seconds and the transmission pulse.
 // V4: every anatomy state comes from lib/reveal4.ts (revealAt); there is no hidden switch.
 import React from 'react';
-import {armFrame, armR, DEV_GEO, DeviceView} from '../art/Device';
+import {armFrame, armR, DEV_GEO, DeviceView, PORT_GEO} from '../art/Device';
 import {EXPR_GASP, EXPR_PAIN, EXPR_WINCE, Expr, mixExpr} from '../art/Head';
 import {HAND_BRACE, HAND_CLUTCH, HandPose, mixHand} from '../art/Hand';
-import {Hero, PortModule, SEC, secFrame, SecFrame, SectionLayers, VesselTube, vesselPath, WallCell, TissueFill} from '../art/Interior';
+import {Hero, PortLight, PortMech, portPress, releaseState, SEC, secFrame, SecFrame, SectionLayers, SensorRelease, SkinDimple, STREAM_MERGE, StreamDraw, VesselTube, vesselPath, WallCell, TissueFill} from '../art/Interior';
 import {ChestWindow, chestWorld, HAND_GRIP, LOW_GRIP, TraceDash} from '../art/Cutaway';
 import {foreRadii, Joints, manJoints, ManPose, torsoPath} from '../art/Man';
 import {DogPose} from '../art/Dog';
 import {Cam, toScreen} from '../lib/camera';
+import {PAL} from '../lib/color';
 import {deviceState3} from '../lib/device3';
 import {spline, splineRec, SKey} from '../lib/motion';
 import {add, clamp, easeInOut, fmt, inv, lerp, mul, noise1, norm, sub, V} from '../lib/math';
@@ -98,12 +99,15 @@ const armTraceAt = (tr: {pts: V[]; hem: number}, t: number) => alongPts(tr.pts, 
 
 // ---------------------------------------------------------------- the hero sensor's ride (arc length along VP)
 const E0 = VP.entry;
+/** V4: the sensors leave the cartridge one by one, cross into the vessel and enter the flow at the vessel entry; the hero
+ *  is one of them and arrives there at heroRing - 12 */
+const SENSOR_REL: SensorRelease = {t0: B.stream0 + 2, t1: B.stream1 - 5, n: 16, feed: 9, travel: 12, vVessel: 16, heroMerge: B.heroRing - 12};
 const S_TARGET = E0 + 1660; // the wall cell that changes state
 const heroS = (f: number) =>
   E0 +
   spline(f, [
-    [B.heroRing - 12, -50],
-    [B.dive0, 30],
+    [B.heroRing - 12, STREAM_MERGE], // V4: it merges into the flow where the sensor route meets it (was -50)
+    [B.dive0, STREAM_MERGE + 30],
     [B.dive1, 340],
     [B.pass0 + 8, 640],
     [B.pass1, 1380],
@@ -114,7 +118,8 @@ const heroS = (f: number) =>
   ]);
 const WALL_SIDE: 1 | -1 = 1;
 const heroL = (f: number) => {
-  const wander = 30 * Math.sin(f * 0.07) + 14 * noise1(f * 0.05, 3);
+  // V4: on the centreline as it merges, then it wanders (unchanged from heroRing + 3)
+  const wander = (30 * Math.sin(f * 0.07) + 14 * noise1(f * 0.05, 3)) * ease(inv(B.heroRing - 12, B.heroRing + 3, f));
   const toWall = ease(inv(B.wall0 - 4, B.decay - 6, f));
   return lerp(wander, WALL_SIDE * (SEC.rho - 70), toWall);
 };
@@ -203,13 +208,62 @@ export const SEC_VIEW = W(SF.Xp - 760, 420);
 export const PORT_VIEW = W(SF.Xp + 520, 160);
 export const STREAM_VIEW = W(SF.Xp + 420, 380);
 
+// V4 sensor shot (119-299), one geometry with the treatment: the case rolls to its underside (the hand is swept into the
+// backdrop), a profile overview with the whole case in frame at z <= 12.5, then a punch-in on the port end with the rest
+// of the case running off frame: the shutter opens, a light touch, the sensors, the hero; retract and close as the
+// dive starts. Contact point and port stay above the caption lane.
+/** the contact point (the port on the skin) and the case's centre in profile */
+export const PORT_W = W(SF.Xp, SF.dSurf(SF.Xp));
+export const CASE_W = W(SF.Xb, SF.dSurf(SF.Xb) - 230);
+/** camera that puts world point p at screen (sx, sy) at zoom z */
+export const frameOn = (p: V, sx: number, sy: number, z: number) => ({x: p.x - (sx - 540) / z, y: p.y - (sy - 960) / z, z});
+/** the hand leaves before the case turns: the backdrop completes, then the veil sweeps the hand from the fingertips back
+ *  to the wrist line, and only then does the roll begin (so the case never orbits beside the back-view hand) */
+const S_BACK0 = B.tip0 - 5; // 114
+const S_BACK1 = B.tip0 + 2; // 121
+const S_VEIL0 = B.tip0 + 2; // 121
+const S_VEIL1 = B.tip0 + 8; // 127
+const S_ROLL0 = B.tip0 + 7; // 126 (the roll is still under 2 deg at 130)
+/** the case's cut-away opens on the overview once the case is at rest edge-on (a 4-frame wipe along the case) */
+const S_REVEAL0 = B.tip1 + 1; // 152
+const S_REVEAL1 = B.tip1 + 5; // 156
+const S_CUT = B.open0 + 19; // 177: after 'Under the band,'
+const S_SHUT0 = S_CUT + 1; // 178
+const S_SHUT1 = B.port0; // 185
+const S_CLOSE0 = B.retract0 + 8; // 269: the shutter closes once the nose is back in
+const S_CLOSE1 = B.retract1; // 277
+const PRESS_S = PORT_GEO.pressSensor * SEC.units;
+/** the sensor shot's mechanism beats (for the V4 sound cues): punch-in, shutter open, light touch, shutter close */
+export const SENSOR_BEATS = {back0: S_BACK0, back1: S_BACK1, veil0: S_VEIL0, veil1: S_VEIL1, roll0: S_ROLL0, roll1: B.tip1, reveal0: S_REVEAL0, reveal1: S_REVEAL1, cut: S_CUT, shut0: S_SHUT0, shut1: S_SHUT1, nose0: B.port0, touch: B.port1, retract0: B.retract0, close0: S_CLOSE0, close1: S_CLOSE1};
+
 const camOpen = (f: number): Cam => {
   if (f < 46) return {...collapseCam(f), roll: 0};
   const c46 = collapseCam(46);
-  const xs: [number, number][] = [[46, c46.x], [58, lerp(c46.x, BAND_C.x, 0.45)], [B.macro, BAND_C.x], [B.tip0, BAND_C.x + 2], [B.tip1, SEC_VIEW.x], [B.open0, SEC_VIEW.x], [B.port0 + 6, PORT_VIEW.x], [B.stream0 + 10, PORT_VIEW.x], [B.heroRing, STREAM_VIEW.x], [B.dive0 + 2, STREAM_VIEW.x]];
-  const ys: [number, number][] = [[46, c46.y], [58, lerp(c46.y, BAND_C.y, 0.5)], [B.macro, BAND_C.y + 2], [B.tip0, BAND_C.y], [B.tip1, SEC_VIEW.y], [B.open0, SEC_VIEW.y], [B.port0 + 6, PORT_VIEW.y], [B.stream0 + 10, PORT_VIEW.y], [B.heroRing, STREAM_VIEW.y], [B.dive0 + 2, STREAM_VIEW.y]];
-  const zs: [number, number][] = [[46, c46.z], [58, 2.4], [B.macro, 7.2], [B.tip0, 7.8], [B.tip1, 12.5], [B.open0, 13], [B.port0 + 6, 20], [B.stream0 + 10, 24], [B.heroRing, 30], [B.dive0 + 2, 33]];
-  return {x: spline(f, xs), y: spline(f, ys), z: zKeys(f, zs), roll: 0};
+  const keys: [number, {x: number; y: number; z: number}][] =
+    f < S_CUT
+      ? [
+          [46, c46],
+          [58, {x: lerp(c46.x, BAND_C.x, 0.45), y: lerp(c46.y, BAND_C.y, 0.5), z: 2.4}],
+          [B.macro, {x: BAND_C.x, y: BAND_C.y + 2, z: 7.2}],
+          [B.tip0, {x: BAND_C.x + 2, y: BAND_C.y, z: 7.8}],
+          [B.tip1, frameOn(CASE_W, 425, 1075, 11.8)],
+          [S_CUT, frameOn(CASE_W, 423, 1072, 12.4)],
+        ]
+      : [
+          // the port-end detail: the compact mechanism and its cut-away sit above the caption lane, and the zoom is
+          // close enough that about a quarter of the case runs off the bottom of the frame (a detail, never the slab)
+          [S_CUT, frameOn(PORT_W, 440, 850, 41)],
+          [B.port1, frameOn(PORT_W, 432, 855, 41.5)],
+          [B.stream0 + 10, frameOn(PORT_W, 405, 860, 42)],
+          [B.heroRing, frameOn(PORT_W, 370, 862, 42.5)],
+          [B.dive0 + 2, frameOn(PORT_W, 340, 860, 43)],
+        ];
+  return {
+    x: spline(f, keys.map(([t, c]) => [t, c.x])),
+    y: spline(f, keys.map(([t, c]) => [t, c.y])),
+    z: zKeys(f, keys.map(([t, c]) => [t, c.z])),
+    roll: 0,
+  };
 };
 
 const Z_RIDE = 4.0 * LOCAL_PER_WORLD;
@@ -224,13 +278,28 @@ const rideCam = (f: number): Cam => {
   return {x: h.x + (fwd.x / fl) * lead, y: h.y + (fwd.y / fl) * lead, z: zz, roll: travelRoll(s)};
 };
 
+/** V4: the dive is anchored on the hero: its screen position runs straight from where the port-end framing holds it to
+ *  where the ride holds it (well above the caption lane), while the zoom and roll ease in as in V3. The camera is solved
+ *  from that, so the ride from B.dive1 on is unchanged. */
+const ROT = (p: V, deg: number): V => {
+  const a = (deg * Math.PI) / 180;
+  return {x: p.x * Math.cos(a) - p.y * Math.sin(a), y: p.x * Math.sin(a) + p.y * Math.cos(a)};
+};
+const SCR_C = {x: 540, y: 960};
+/** screen position of world point p (subject plane, with the camera's roll) */
+export const screenOf = (c: Cam, p: V): V => add(SCR_C, mul(ROT(sub(p, c), c.roll ?? 0), c.z));
 const diveCam = (f: number): Cam => {
   const a = camOpen(B.dive0 + 2);
   const b = rideCam(B.dive1);
   const t = inv(B.dive0 + 2, B.dive1, f);
   const e = ease(t);
-  const k = Math.pow(e, 0.6);
-  return {x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), z: expLerp(a.z, b.z, e), roll: lerp(0, b.roll ?? 0, ease(clamp((t - 0.15) / 0.85)))};
+  const z = expLerp(a.z, b.z, e);
+  const roll = lerp(0, b.roll ?? 0, ease(clamp((t - 0.15) / 0.85)));
+  const sa = screenOf(a, heroWorld(B.dive0 + 2));
+  const sb = screenOf(b, heroWorld(B.dive1));
+  const s = {x: lerp(sa.x, sb.x, e), y: lerp(sa.y, sb.y, e)};
+  const c = sub(heroWorld(f), mul(ROT(sub(s, SCR_C), -roll), 1 / z));
+  return {x: c.x, y: c.y, z, roll};
 };
 
 /** The pull-out: it starts exactly on rideCam(pull0) (same centre, zoom and roll, at rest) and backs straight out of
@@ -367,9 +436,29 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
   const rv = revealAt(f);
   const sectionMode = f >= B.tip0 - 2 && rv.armOpen > 0.002;
   const bz = buzz(f);
-  // the case turns to its profile for the section and back to face the camera once the cut has closed
-  const roll = (f < B.tip0 ? 0 : SEC_ROLL * ease(inv(B.tip0, B.tip1, f)) * (1 - ease(inv(B4.caseRoll0, B4.caseRoll1, f)))) + bz * 3.2 * Math.sin(f * 2.6);
-  const portExt = clamp(inv(B.port0, B.port1, f)) * (1 - clamp(inv(B.retract0, B.retract1, f)));
+  // V4 merge (anatomy + device): the backdrop rises with the device's hand clearing (S_BACK) and falls with the
+  // pull-back (as rv.backdrop); the case rolls back to face the camera WHILE the backdrop and the hand veil fade, so
+  // the hand is never seen in its back view beside a case still turned to its profile
+  const ROLLBACK0 = B.pull0 + 8;
+  const ROLLBACK1 = B.pull0 + 24;
+  const backdrop = clamp(inv(S_BACK0, S_BACK1, f)) * (1 - clamp(inv(ROLLBACK0, B.pull0 + 26, f)));
+  const handVeil = clamp(inv(S_VEIL0, S_VEIL1, f)) * (1 - clamp(inv(ROLLBACK0 + 4, ROLLBACK1, f)));
+  const rollBase = f < S_ROLL0 ? 0 : SEC_ROLL * ease(inv(S_ROLL0, B.tip1, f)) * (1 - ease(inv(ROLLBACK0, ROLLBACK1, f)));
+  const roll = rollBase + bz * 3.2 * Math.sin(f * 2.6);
+  // V4 mechanism: the shutter opens, the nose advances to a light touch (small dimple), retract, then close
+  const shutter = ease(inv(S_SHUT0, S_SHUT1, f)) * (1 - ease(inv(S_CLOSE0, S_CLOSE1, f)));
+  const stroke = ease(inv(B.port0, B.port1, f)) * (1 - ease(inv(B.retract0, B.retract0 + 8, f)));
+  const dimple = portPress(stroke, PRESS_S);
+  const feedT: number[] = [];
+  let inCart = 0;
+  for (let k = -1; k < SENSOR_REL.n; k++) {
+    const st = releaseState(SENSOR_REL, k, f);
+    if (st.phase === 'feed') feedT.push(st.t);
+    if (st.phase === 'cart') inCart++;
+  }
+  // the cut-away opens only once the case is at rest edge-on (a hard-edged wipe), and closes with the arm section
+  const caseOpen = f >= S_REVEAL0 ? 1 - ease(inv(ROLLBACK0 - 8, ROLLBACK0, f)) : 0;
+  const caseReveal = ease(inv(S_REVEAL0, S_REVEAL1, f));
   const pxs = cam.z / LOCAL_PER_WORLD;
   const hs = heroS(f);
   const inRide = f >= B.dive0 && f < B.pull0;
@@ -385,10 +474,10 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
   // the sensor stream (far up the vessel by now) fades while the camera is still deep in the vessel, so its bead
   // cloud never scrolls into view as a speckle when the pull-out widens the view
   const sensorsA = clamp(inv(B.stream0 + 26, B.stream0 + 36, f)) * (1 - clamp(inv(B.pull0, B.pull0 + 10, f)));
-  const tubeCommon = {f, px: pxs, sensors: sensorsA, sensorFront, cells, s0: inRide ? hs - 900 : -99999, s1: inRide ? hs + 1500 : 99999};
+  const tubeCommon = {f, px: pxs, sensors: sensorsA, sensorFront, release: SENSOR_REL, cells, s0: inRide ? hs - 900 : f < B.dive0 ? E0 - 900 : -99999, s1: inRide ? hs + 1500 : 99999};
   // the red cell the hero passes behind: it overtakes on the near side
   const occluder = {s: hs + lerp(-260, 300, ease(inv(B.pass0 + 2, B.pass0 + 26, f))), l: 18};
-  const tubeSection = <VesselTube id={`${id}-vt`} path={VP} {...tubeCommon} hero={f >= B.stream1 - 12 ? hero(f) : undefined} occluder={occluder} />;
+  const tubeSection = <VesselTube id={`${id}-vt`} path={VP} {...tubeCommon} hero={f >= B.heroRing - 12 ? hero(f) : undefined} occluder={occluder} />;
 
   const tr = armTrace(j);
   const dev: DeviceView = {
@@ -398,16 +487,21 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
     flip: false,
     upright: true,
     glow: 1 + 0.6 * bz,
-    caseOpen: rv.caseOpen,
+    caseOpen,
     caseCut: () => (
       <g transform={SF.matrix}>
-        <PortModule id={`${id}-pm`} sf={SF} f={f} ext={portExt} reservoir={1 - 0.4 * clamp(inv(B.stream0, B.stream1, f))} blue={0} />
+        <SkinDimple id={`${id}-dg`} sf={SF} amp={dimple} part="gap" />
+        <PortMech id={`${id}-pm`} sf={SF} f={f} shutter={shutter} stroke={stroke} press={PRESS_S} treatLevel={1} sensorLeft={inCart / (SENSOR_REL.n + 1)} feed={feedT} reveal={caseReveal} />
       </g>
     ),
     inArm: () =>
       sectionMode ? (
         <g transform={SF.matrix}>
-          <SectionLayers id={`${id}-sec`} sf={SF} f={f} open={rv.armOpen} tube={tubeSection} stream={clamp(inv(B.stream0, B.stream1, f))} streamA={clamp(inv(B.stream0, B.stream0 + 4, f)) * (1 - clamp(inv(B.dive1 - 10, B.dive1, f)))} />
+          <SectionLayers id={`${id}-sec`} sf={SF} f={f} open={rv.armOpen} dimple={dimple} sweep tube={tubeSection}>
+            <StreamDraw id={`${id}-st`} sf={SF} vp={VP} f={f} rel={SENSOR_REL} trace={clamp(inv(B.stream0, B.stream0 + 6, f)) * (1 - clamp(inv(B.stream1, B.retract0 + 6, f)))} />
+          </SectionLayers>
+          <PortLight id={`${id}-pl`} sf={SF} press={dimple} a={clamp(dimple / PRESS_S)} color={PAL.signal} />
+          <SkinDimple id={`${id}-dm`} sf={SF} amp={dimple} />
         </g>
       ) : null,
     onSkin: rv.trace.a > 0.01 ? () => <ArmTrace id={`${id}-tr`} tr={tr} a={rv.trace.a} pulses={rv.trace.pulses} cam={cam} /> : undefined,
@@ -446,8 +540,9 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
       dog={dog}
       hairSway={hairSway}
       dev={dev}
-      backdrop={rv.backdrop}
-      backdropC={sectionMode ? W(SF.Xp - 600, 400) : BAND_C}
+      backdrop={backdrop}
+      backdropC={f >= S_BACK0 - 1 && backdrop > 0 ? W(SF.Xp - 600, 400) : BAND_C}
+      handVeil={handVeil}
       nearLegFront={f > 24}
       noTufts={f > B.macro - 30}
       overTorso={chest}
