@@ -1,5 +1,131 @@
 # QA report: They Trained Robots to Destroy Themselves
 
+# V5 (checked 15 Oct 2026)
+
+Not published. Every figure below comes from the files themselves, using the scripts in `tools/v5/`:
+
+| Script | What it produces |
+|---|---|
+| `qa_v5.py` | Raw results in `qa/v5/qa_v5_results.json` |
+| `strips_v5.py` | 25-frame strips around each of the 26 transitions |
+| `compare_v5.py` | V4 vs V5 frames, matched by content because the narration was recut |
+| `speech_mask_v5.py` | Speech-masking check |
+
+The rig measurement in `production/v5/CHANGES_V5.md` also counts here: it checks every main walk and jump for planted-foot slide.
+
+**No real-time viewing or listening was possible in this environment.** Everything below is measurement and frame inspection.
+
+## Deliverables
+
+| File | Spec | Notes |
+|---|---|---|
+| `exports/FGW_RobotsDestroy_v5_UPLOAD_1080p.mp4` | H.264 High, 1920×1080, 30 fps CFR (native), yuv420p, BT.709. 6,502 frames, 216.75 s. AAC 48 kHz stereo at 317 kb/s. 88.9 MiB. SHA-256 `0c2aa135eb7bb43aa26f7c1580f20c39371d314bfd8a1fd7e32092568aab0ba3` | **Upload master.** Rendered from source (CRF 16, x264 slow) with the V5 mix. Backed up as five split parts in `backup/v5/`; the parts pass `sha256sum -c`, and the joined parts hash to the master |
+| `exports/FGW_RobotsDestroy_v5_1080p_SHARE.mp4` | 1920×1080, 30 fps, two-pass H.264 at 0.96 Mb/s, AAC 128 kb/s, 216.75 s, 28.5 MiB. SHA-256 `4ef680a6c6e7e999ca6cfccde1d97be0ab61107b225a8545d536f0b81df889ef` | **Review/share copy, not for upload.** Made from the master |
+| `captions/FGW_RobotsDestroy_v5.srt` | 70 cues, at most 42 characters per line, no overlaps. First cue at 0.46 s; last ends at 214.60 s | New: built from the V5 word timings, word-for-word identical to `script/script_v5.md` |
+
+## Picture (measured on the master)
+
+**Scene changes (ffmpeg scene detector, threshold 0.10):** 25 (V4 had 38).
+
+- Median segment 1.28 s, mean 8.34 s; 4 segments in the first 20 s.
+- The longest is 81.8 s from 1:10.3. It is continuous camera movement: the film set, the push through the monitor, training, the grid, the policy and sim-to-real, up to the dice wipe.
+
+Most V5 transitions are camera moves, wipes by objects and matched cuts, which stay below the detector. Several detected "cuts" are single moments, not edits:
+
+- the clap flash at 1:09.8 (counted as eight);
+- the dice wipe at 2:32;
+- the three banks of lights going out at 3:13;
+- the logo.
+
+**Defect screens on the final master:**
+
+| Check | Result | First V5 render (fixed before the final) |
+|---|---|---|
+| Static holds ≥ 1.5 s (`freezedetect`) | One flag: 0:34.5, exactly 1.5 s, the clock room. Every frame there still changes (500–800 px at 480×270: the clock hands and the queue), so this is low motion under the detector's noise floor, not a hold | 8, from 0:20.9 to 2:44.5. Each now has a slow camera creep, or (airbag hall) a walk to the ledge |
+| Black (`blackdetect`, ≥ 0.1 s) | 0.6 s at 3:13.5. This is the aisle's lights going out bank by bank before the glow rises (intended) | Same; intended |
+| Exact duplicate consecutive frames | 55 frames. The only run longer than 2 is 28 frames at 3:35.6: the logo hold (intended) | 175 frames, including a 66-frame run at 2:44.5 |
+| Single-frame "pop" candidates | **none** | One at 0:20.9: the crate wipe's last 300 px vanished instead of sliding out |
+| Silences > 1 s | none | — |
+| Planted-foot slide (rig, frame by frame) | ≤ 1.35 world units/frame (about 1 px) on every measured walk and landing | About 9 px/frame in the aisle walk-to-stance blend; replaced by a stop step |
+| Crew at the frame edge in the real-jump shots | none | A head at the bottom edge at 2:49.9–2:50.3 and a hand at the right edge at 2:58.3 |
+
+**Audio offset against the mix:** 0.0 ms.
+
+## Audio (measured, not heard)
+
+**Loudness:** integrated −15.0 LUFS, true peak −1.5 dBTP, LRA 2.4 LU.
+
+**Narration:**
+
+- **New takes:** a new hook line (four takes, one chosen) and a tighter take of the Imatra lines, both in the same ElevenLabs voice.
+- **Recut:** every other line is an existing V2 take. Redundant lines and gaps were cut, and the voice was not sped up.
+- **Joins:** 0.40–0.52 s lead-ins with 12 ms crossfades (`audio/v5/narration/narration_edit_log_v5.json`).
+
+**Score:** re-timed in-house to the V5 cut (`tools/v5/synth_score_v5.py`).
+
+- The ostinato drops out on the opening impact.
+- Training stays thin while the attempts fail, then lifts a whole step with a pad and shaker on the bullseye at 1:47.3.
+- It is silent while the aisle lights go out, holds a note through the slowed leap and plays pizzicato for the people.
+- It resolves in D major on the symbolic landing and fades out before 3:36.7.
+
+**Cue sheet:** `source/src/v5/sfx_v5.ts` has 266 cues, all tied to the V5 animation's own event times. Footsteps sit on the computed footfalls of each walk. There are only three whooshes, and no new effect generations.
+
+**Masking screen (`audio/v5/mix/speech_mask_v5.txt`):**
+
+- Out of 3,533 speech windows of 50 ms, 113 have effects and beds within 6 dB of the voice. Most are quiet word tails.
+- Effects also dip 4 dB under speech.
+- After the molten impacts and the airbag were lowered, no window has effects more than 1.5 dB above a voice louder than −33 dB.
+
+## Visual review performed (V5)
+
+**Development rounds:** stills for every section in `qa/v5/*_r*/`:
+
+- hook, factory, options, Imatra, post, training;
+- real, prove, end;
+- walks, creeps, edges.
+
+**Full-episode contact sheet:** `qa/v5/full_r1/sheet.png`, one frame every 3 s.
+
+**Phone-size pages:** `qa/v5/phone_r1/phone_0…2.png`. Every label was checked at 845 px wide, the size of an iPhone in landscape. Three chips and two prop labels were enlarged after this pass.
+
+**Measured QA on the first V5 master:** it found the pop, the static runs and the walk slide listed above. All were fixed, then the master was re-rendered.
+
+**Transition strips:** `qa/v5/strips/`, 26 strips from the master; the times are in `qa/v5/transitions_v5.json`. All 26 were inspected. The strip pass on the second master found the crew head and hand at the frame edges; both were fixed before this final render.
+
+**Comparison frames, V4 left / V5 right (`qa/v5/compare/`):**
+
+| Sheet | What it shows |
+|---|---|
+| `opening_first_seconds.png` | The new opening |
+| `policy_tipping_label_removed.png` | The "tipping?" dial and labels are gone; one anchored diagram |
+| `banner_and_card_clearance.png` | The V4 banner covered the crew member; V5 has no banner |
+| `real_jump_no_hold.png` | V4 held the jump at 3:11–3:13; V5 is mid-flight at the same moment |
+| `unfamiliar_task_and_ending.png` | One task instead of six icons; the rebuilt ending |
+
+## What was not checked (limits)
+
+1. **Real-time playback and listening.** Motion smoothness, comic timing, the new narration joins and the mix were judged from frames and measurements only.
+2. **Every-frame inspection.** Full 30 fps review was done around the 26 transitions; elsewhere the review used stills and contact sheets.
+3. **Crew feet.** The rig measurement covers the robots, not the crew characters.
+4. **The share copy** is compressed (0.96 Mb/s). Fine lines are softer than in the master; it is not for upload.
+5. **The share copy as seen on the phone.** It arrived at 910×512 through the app's file transport; the file itself is 1920×1080 (ffprobe).
+
+## Human review list (in order)
+
+1. **Full watch with sound, at 100 %.** In particular:
+   - the opening 0:00–0:12;
+   - the options 0:20–0:49;
+   - the post and slate 0:58–1:12;
+   - training 1:24–2:20;
+   - the real jump 2:50–2:58;
+   - the factory aisle 3:09–3:13;
+   - the ending 3:13–3:36.7.
+2. **Listen to the new hook line and the Imatra take,** and the joins at 0:07.2, 0:45.9 and 3:12.9.
+3. **Ending tableau.** Check that the line-art avatar on the pad reads as symbolic, not as the destroyed robot returning.
+4. **Trademark comfort.** As V4: the symbol is on the robot drawings, and the credit line is in `upload/UPLOAD_TEXT_v5.md`.
+
+---
+
 # V4 (checked 15 Oct 2026)
 
 Not published. Every figure below comes from the files themselves, using the scripts in `tools/v4/`:
