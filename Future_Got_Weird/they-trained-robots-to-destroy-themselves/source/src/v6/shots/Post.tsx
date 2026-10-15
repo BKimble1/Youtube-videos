@@ -8,7 +8,7 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {T} from '../cues';
-import {Cam, Scene, Layer, Bot, Crew, mixCam, seg, smooth, easeInOut, easeOut, easeIn, lerp, clamp01, toScreen, backOut} from '../../v4/kit/scene';
+import {Cam, Scene, Layer, Bot, Crew, mixCam, seg, smooth, easeInOut, easeOut, easeIn, lerp, clamp01, toScreen, backOut, crewHand} from '../../v4/kit/scene';
 import {FoundryView5, FD} from '../sets/foundry5';
 import {FilmLight, TripodCam, ActuatorArt} from '../../v4/sets/props';
 import {stand, A} from '../../v4/rig/poses';
@@ -23,9 +23,7 @@ import {C, F} from '../../theme';
 export const POST_START = IMATRA_END;
 export const POST_END = T('Now the hard') - 0.1;
 const T_POST = T('In August') - 0.05;
-const T_ASKED = T('asked what to do');
 const T_REPLY = T('Arnold Schwarzenegger replied') - 0.05;
-const T_YOU = T('You should melt');
 const T_T2 = T('In Terminator Two');
 const T_TWO = T('Two');
 const T_LOWER = T('lowered into');
@@ -40,30 +38,59 @@ const FS = S_HK;
 
 // ------------------------------------------------------------------ the phone (screen space, HTML)
 const FLIP0 = T_T2 - 0.3, FLIP1 = T_T2 - 0.05;       // reply card lifts and flips into the slate
+const LIFT0 = FLIP0 - 0.18;                            // the reply card leaves the phone (and the phone drops away)
 const CLAP = T_TWO;                                    // the clap lands on "Two"
 const FILL0 = CLAP + 0.02, FILL1 = CLAP + 0.2;         // the slate fills the lens
 const DROP0 = FILL1 + 0.04, DROP1 = DROP0 + 0.36;      // and drops away, revealing the set
-const QUOTE = ['“You', 'should', 'melt', 'them.”'];
+const T_OLD = T('the old robots');
+const T_MELT = T('melt them');
+// V6 phone geometry (phone-local px): fixed card heights so the reply card can leave the phone exactly where it sits
+const PH = {left: 660, w: 600, h: 1120, ox: 300, oy: 201.6};
+const BEZ = 26, HEAD = 92, CARD_W = 504, POST_H = 300, REPLY_H = 362, GAP = 22;
+const phoneTop = (t: number) => 70 + (1 - easeOut(seg(t, POST_START, POST_START + 0.35))) * 700 + lerp(0, 120, easeInOut(seg(t, T_POST - 0.2, T_POST + 0.5)))
+  + 1000 * easeIn(seg(t, LIFT0, LIFT0 + 0.45));
+const phoneScale = (t: number) => lerp(1.0, 1.5, easeInOut(seg(t, T_POST - 0.2, T_POST + 0.5))) * lerp(1, 0.94, easeInOut(seg(t, T_REPLY - 0.1, T_REPLY + 0.4)));
+const feedScroll = (t: number) => lerp(-1500, 0, easeOut(seg(t, POST_START + 0.05, T_POST + 0.1))) + (POST_H + GAP + 8) * easeInOut(seg(t, T_REPLY - 0.05, T_REPLY + 0.45));
+/** Phone-local top of the reply card (inside the screen, under the post). */
+const replyLocalY = (t: number) => BEZ + HEAD + 24 - feedScroll(t) + POST_H + GAP + (1 - easeOut(seg(t, T_REPLY, T_REPLY + 0.4))) * 80;
+/** Phone-local → screen. */
+const phoneToScreen = (t: number, lx: number, ly: number) => {
+  const P = phoneScale(t);
+  return {x: PH.left + PH.ox + (lx - PH.ox) * P, y: phoneTop(t) + PH.oy + (ly - PH.oy) * P, P};
+};
+
+const avatar = (letter: string, col: string) => (
+  <div style={{width: 74, height: 74, borderRadius: 37, background: col, color: '#fff', fontFamily: F.display, fontWeight: 700, fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>{letter}</div>
+);
+/** The reply card (also used, unchanged, when it lifts off the phone). One highlight: "melt them." */
+const ReplyCard: React.FC<{t: number}> = ({t}) => {
+  const hl = easeOut(seg(t, T_MELT - 0.05, T_MELT + 0.25));
+  return (
+    <div style={{width: CARD_W, height: REPLY_H, boxSizing: 'border-box', background: '#FFFFFF', borderRadius: 26, padding: '22px 26px', border: `3px solid ${C.teal}`}}>
+      <div style={{display: 'flex', gap: 14, alignItems: 'center'}}>
+        {avatar('A', C.coral)}
+        <div style={{whiteSpace: 'nowrap'}}>
+          <div style={{fontFamily: F.body, fontWeight: 800, fontSize: 29, color: C.ink, lineHeight: 1.15}}>Arnold Schwarzenegger</div>
+          <div style={{fontFamily: F.body, fontWeight: 700, fontSize: 24, color: C.inkMuted}}>reply · Aug 19, 2026</div>
+        </div>
+      </div>
+      <div style={{fontFamily: F.body, fontWeight: 700, fontSize: 24, color: C.inkMuted, marginTop: 10, whiteSpace: 'nowrap'}}>Replying to <span style={{color: C.blue}}>Brett Adcock</span></div>
+      <div style={{fontFamily: F.display, fontWeight: 600, fontSize: 60, color: C.ink, marginTop: 6, lineHeight: 1.1}}>
+        “You should <span style={{background: `rgba(28,167,160,${0.26 * hl})`, borderRadius: 8, padding: '0 4px', margin: '0 -4px'}}>melt them.”</span>
+      </div>
+      <div style={{display: 'inline-block', marginTop: 14, padding: '6px 16px', borderRadius: 999, background: C.tealLight, fontFamily: F.body, fontWeight: 800, fontSize: 24, color: C.tealDeep}}>QUOTED</div>
+    </div>
+  );
+};
 
 const Phone: React.FC<{t: number}> = ({t}) => {
-  const enter = easeOut(seg(t, POST_START, POST_START + 0.35));
-  // feed scroll: a quick flick that decelerates onto the post, then a nudge up when the reply arrives
-  const flick = easeOut(seg(t, POST_START + 0.05, T_POST + 0.1));
-  const scroll = lerp(-1500, 0, flick) + 330 * easeInOut(seg(t, T_REPLY - 0.05, T_REPLY + 0.45));
+  const P = phoneScale(t);
+  const scroll = feedScroll(t);
   const reply = easeOut(seg(t, T_REPLY, T_REPLY + 0.4));
-  const lift = seg(t, FLIP0 - 0.15, FLIP0);
-  // read at phone size: push in on the post, ease back a little for the reply
-  const push = lerp(1.0, 1.5, easeInOut(seg(t, T_POST - 0.2, T_POST + 0.5))) * lerp(1, 0.94, easeInOut(seg(t, T_REPLY - 0.1, T_REPLY + 0.4)));
-  const sway = Math.sin((t - POST_START) * 1.1) * 0.8;
-  const words = (t0: number) => QUOTE.map((w, i) => {
-    const on = seg(t, t0 + i * 0.3, t0 + i * 0.3 + 0.12);
-    return <span key={i} style={{background: on > 0 ? `rgba(28,167,160,${0.22 * on})` : undefined, borderRadius: 8, padding: '0 4px'}}>{w} </span>;
-  });
-  const avatar = (letter: string, col: string) => (
-    <div style={{width: 74, height: 74, borderRadius: 37, background: col, color: '#fff', fontFamily: F.display, fontWeight: 700, fontSize: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>{letter}</div>
-  );
+  // one controlled emphasis on the post while it is being read
+  const hlPost = easeOut(seg(t, T_OLD - 0.1, T_OLD + 0.3));
   const filler = (k: number) => (
-    <div key={'fl' + k} style={{background: '#FFFFFF', borderRadius: 26, padding: '26px 28px', margin: '0 22px 22px', height: 260, boxSizing: 'content-box', opacity: 0.9}}>
+    <div key={'fl' + k} style={{background: '#FFFFFF', borderRadius: 26, padding: '26px 28px', margin: `0 22px ${GAP}px`, height: 260, boxSizing: 'content-box', opacity: 0.9}}>
       <div style={{display: 'flex', gap: 16, alignItems: 'center'}}>
         <div style={{width: 64, height: 64, borderRadius: 32, background: ['#D3E1F8', '#FBD2C8', '#BFE8E3', '#FFE9A8'][k % 4]}} />
         <div style={{width: 220, height: 20, borderRadius: 10, background: '#D9DEE4'}} />
@@ -72,35 +99,32 @@ const Phone: React.FC<{t: number}> = ({t}) => {
     </div>
   );
   return (
-    <div style={{position: 'absolute', left: 960 - 300, top: 70 + (1 - enter) * 700 + lerp(0, 120, easeInOut(seg(t, T_POST - 0.2, T_POST + 0.5))), width: 600, height: 1120, transform: `rotate(${sway}deg) scale(${push})`, transformOrigin: '50% 18%'}}>
+    <div style={{position: 'absolute', left: PH.left, top: phoneTop(t), width: PH.w, height: PH.h, transform: `scale(${P})`, transformOrigin: `${PH.ox}px ${PH.oy}px`}}>
       <div style={{position: 'absolute', inset: 0, background: '#1C1F25', borderRadius: 72, border: '8px solid #0E1013', boxShadow: '30px 40px 0 rgba(22,42,50,0.18)'}} />
-      <div style={{position: 'absolute', left: 26, top: 26, right: 26, bottom: 26, background: '#EEF1F4', borderRadius: 52, overflow: 'hidden'}}>
-        <div style={{height: 92, background: '#FFFFFF', borderBottom: '2px solid #D9DEE4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: F.body, fontWeight: 800, fontSize: 30, color: C.ink}}>Posts</div>
-        <div style={{transform: `translateY(${-scroll + 24 - 2004}px)`}}>
-          {[0, 1, 2, 3, 4, 5].map(filler)}
-          <div style={{background: '#FFFFFF', borderRadius: 26, padding: '26px 28px', margin: '0 22px 22px', border: '3px solid #D9DEE4'}}>
-            <div style={{display: 'flex', gap: 18, alignItems: 'center'}}>
-              {avatar('B', C.blue)}
-              <div>
-                <div style={{fontFamily: F.body, fontWeight: 800, fontSize: 34, color: C.ink}}>Brett Adcock</div>
-                <div style={{fontFamily: F.body, fontWeight: 700, fontSize: 25, color: C.inkMuted}}>Figure CEO · Aug 2026</div>
+      <div style={{position: 'absolute', left: BEZ, top: BEZ, right: BEZ, bottom: BEZ, background: '#EEF1F4', borderRadius: 52, overflow: 'hidden'}}>
+        {/* the feed scrolls under the header and is clipped by it: a card's qualification never outlives its card */}
+        <div style={{position: 'absolute', left: 0, right: 0, top: HEAD, bottom: 0, overflow: 'hidden'}}>
+          <div style={{transform: `translateY(${-scroll + 24 - 2004}px)`}}>
+            {[0, 1, 2, 3, 4, 5].map(filler)}
+            <div style={{height: POST_H, boxSizing: 'border-box', background: '#FFFFFF', borderRadius: 26, padding: '26px 28px', margin: `0 22px ${GAP}px`, border: '3px solid #D9DEE4'}}>
+              <div style={{display: 'flex', gap: 18, alignItems: 'center'}}>
+                {avatar('B', C.blue)}
+                <div>
+                  <div style={{fontFamily: F.body, fontWeight: 800, fontSize: 34, color: C.ink}}>Brett Adcock</div>
+                  <div style={{fontFamily: F.body, fontWeight: 700, fontSize: 25, color: C.inkMuted}}>Figure CEO · Aug 2026</div>
+                </div>
               </div>
-            </div>
-            <div style={{fontFamily: F.body, fontWeight: 700, fontStyle: 'italic', fontSize: 38, color: C.inkSoft, marginTop: 20, lineHeight: 1.28}}>asks what to do with the retired F.02 robots</div>
-            <div style={{display: 'inline-block', marginTop: 16, padding: '6px 16px', borderRadius: 999, background: C.paperDeep, fontFamily: F.body, fontWeight: 800, fontSize: 24, color: C.inkSoft, opacity: seg(t, T_ASKED, T_ASKED + 0.3)}}>PARAPHRASED</div>
-          </div>
-          <div style={{background: '#FFFFFF', borderRadius: 26, padding: '26px 28px', margin: '0 22px 22px', border: `3px solid ${C.teal}`, opacity: reply * (1 - lift), transform: `translateY(${(1 - reply) * 80}px)`}}>
-            <div style={{display: 'flex', gap: 18, alignItems: 'center'}}>
-              {avatar('A', C.coral)}
-              <div>
-                <div style={{fontFamily: F.body, fontWeight: 800, fontSize: 34, color: C.ink}}>Arnold Schwarzenegger</div>
-                <div style={{fontFamily: F.body, fontWeight: 700, fontSize: 25, color: C.inkMuted}}>reply · Aug 19, 2026</div>
+              <div style={{fontFamily: F.body, fontWeight: 700, fontStyle: 'italic', fontSize: 38, color: C.inkSoft, marginTop: 18, lineHeight: 1.28}}>
+                asks what to do with the <span style={{background: `rgba(244,182,64,${0.38 * hlPost})`, borderRadius: 6, padding: '0 4px', margin: '0 -4px', boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone'}}>retired F.02 robots</span>
               </div>
+              <div style={{display: 'inline-block', marginTop: 14, padding: '6px 16px', borderRadius: 999, background: C.paperDeep, fontFamily: F.body, fontWeight: 800, fontSize: 24, color: C.inkSoft}}>PARAPHRASED</div>
             </div>
-            <div style={{fontFamily: F.display, fontWeight: 600, fontSize: 60, color: C.ink, marginTop: 18, lineHeight: 1.1}}>{words(T_YOU - 0.02)}</div>
-            <div style={{display: 'inline-block', marginTop: 16, padding: '6px 16px', borderRadius: 999, background: C.tealLight, fontFamily: F.body, fontWeight: 800, fontSize: 24, color: C.tealDeep}}>QUOTED</div>
           </div>
+          {reply > 0 && t < LIFT0 ? (
+            <div style={{position: 'absolute', left: 22, top: replyLocalY(t) - BEZ - HEAD, opacity: reply}}><ReplyCard t={t} /></div>
+          ) : null}
         </div>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: HEAD, background: '#FFFFFF', borderBottom: '2px solid #D9DEE4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: F.body, fontWeight: 800, fontSize: 30, color: C.ink}}>Posts</div>
       </div>
     </div>
   );
@@ -113,40 +137,52 @@ const PhoneBg: React.FC<{t: number}> = ({t}) => (
   </AbsoluteFill>
 );
 
-/** The reply card as it leaves the phone, then the slate it flips into (screen space SVG). */
+/** The reply card leaving the phone (the same HTML card, from exactly where it sat), turning edge-on; it comes round
+ * as the 1991 slate, claps, fills the lens and drops away. One moving subject throughout. */
+const SLATE_K = 0.82;
+const CardLift: React.FC<{t: number}> = ({t}) => {
+  if (t < LIFT0 || t > FLIP0 + 0.05 + (FLIP1 - FLIP0 - 0.05) / 2) return null;
+  const at = phoneToScreen(LIFT0, BEZ + 22 + CARD_W / 2, replyLocalY(LIFT0) + REPLY_H / 2);
+  const u = easeInOut(seg(t, LIFT0, FLIP0 + 0.1));
+  const flip = seg(t, FLIP0 + 0.05, FLIP1);
+  const sx = Math.max(0.02, Math.abs(Math.cos(Math.PI * flip)));
+  const cx = lerp(at.x, 960, u), cy = lerp(at.y, 520, u);
+  const sc = lerp(at.P, (840 * SLATE_K) / CARD_W, u);
+  return (
+    <div style={{position: 'absolute', left: cx - CARD_W / 2, top: cy - REPLY_H / 2, width: CARD_W, height: REPLY_H, transform: `scale(${sc * sx}, ${sc})`, transformOrigin: '50% 50%',
+      filter: `drop-shadow(0 ${18 * u}px ${24 * u}px rgba(22,42,50,0.25))`}}>
+      <ReplyCard t={t} />
+    </div>
+  );
+};
 const CardToSlate: React.FC<{t: number}> = ({t}) => {
-  if (t < FLIP0 - 0.15 || t > DROP1) return null;
-  // the card: from its place on the phone to the centre, turning edge-on
-  const u = easeInOut(seg(t, FLIP0 - 0.15, FLIP0 + 0.1));
-  const flip = seg(t, FLIP0 + 0.05, FLIP1);              // 0 → 1: card edge-on at 0.5, slate face-on at 1
+  if (t < LIFT0 || t > DROP1) return null;
+  const flip = seg(t, FLIP0 + 0.05, FLIP1);              // card edge-on at 0.5, slate face-on at 1
+  if (flip < 0.5) return null;
   const sx = Math.abs(Math.cos(Math.PI * flip));
-  const cardSide = flip < 0.5;
-  const cx = lerp(960, 960, u), cy = lerp(700, 520, u);
-  const sc = lerp(1, 1.25, u);
-  // after the flip: the slate; clap; fill the lens; drop away
-  const clap = easeIn(seg(t, CLAP - 0.12, CLAP));
+  // the clap: the stick swings down onto the slate about its hinge (top-left corner) and stays shut
+  const clap = easeIn(seg(t, CLAP - 0.14, CLAP));
+  const bounce = Math.sin(Math.PI * seg(t, CLAP, CLAP + 0.1)) * 3;
   const fill = easeIn(seg(t, FILL0, FILL1));
   const drop = easeIn(seg(t, DROP0, DROP1));
   const s2 = lerp(1.0, 3.4, fill);
+  const cx = 960, cy = 520;
   return (
     <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{position: 'absolute', inset: 0}}>
-      {cardSide ? (
-        <g transform={`translate(${cx} ${cy}) scale(${sc * sx} ${sc})`}>
-          <rect x={-275} y={-150} width={550} height={300} rx={26} fill="#FFFFFF" stroke={C.teal} strokeWidth={4} />
-          <text x={-230} y={10} fontFamily={F.display} fontWeight={600} fontSize={52} fill={C.ink}>“You should melt them.”</text>
+      <g transform={`translate(${cx} ${cy + drop * 1500}) rotate(${-2 + drop * 14}) scale(${sx * s2 * SLATE_K} ${s2 * SLATE_K})`}>
+        <rect x={-420} y={-180} width={840} height={440} rx={16} fill="#1E2026" stroke="#0B0C0F" strokeWidth={8} />
+        <text x={-370} y={-40} fontFamily={F.display} fontWeight={700} fontSize={92} fill="#F4ECD6">Terminator 2</text>
+        <text x={-370} y={80} fontFamily={F.mono} fontWeight={700} fontSize={70} fill={C.saffron}>1991</text>
+        <line x1={-420} y1={130} x2={420} y2={130} stroke="#F4ECD6" strokeWidth={4} />
+        {/* lower (fixed) stick on the slate's top edge, upper stick hinged at the top-left corner */}
+        <rect x={-420} y={-236} width={840} height={56} rx={6} fill="#F4ECD6" stroke="#0B0C0F" strokeWidth={8} />
+        {Array.from({length: 7}, (_, k) => <path key={'lo' + k} d={`M${-390 + k * 122} -236 l60 0 l-30 56 l-60 0 Z`} fill="#1E2026" />)}
+        <g transform={`rotate(${-26 * (1 - clap) - bounce} -420 -236)`}>
+          <rect x={-420} y={-292} width={840} height={56} rx={6} fill="#F4ECD6" stroke="#0B0C0F" strokeWidth={8} />
+          {Array.from({length: 7}, (_, k) => <path key={'up' + k} d={`M${-360 + k * 122} -292 l60 0 l-30 56 l-60 0 Z`} fill="#1E2026" />)}
         </g>
-      ) : (
-        <g transform={`translate(${cx} ${cy + drop * 1500}) rotate(${-2 + drop * 14}) scale(${sx * s2 * 0.82} ${s2 * 0.82})`}>
-          <rect x={-420} y={-180} width={840} height={440} rx={16} fill="#1E2026" stroke="#0B0C0F" strokeWidth={8} />
-          <g transform={`rotate(${-24 * (1 - clap)} -420 -180)`}>
-            <rect x={-420} y={-276} width={840} height={96} rx={8} fill="#F4ECD6" stroke="#0B0C0F" strokeWidth={8} />
-            {Array.from({length: 7}, (_, k) => <path key={k} d={`M${-390 + k * 122} -276 l60 0 l-52 96 l-60 0 Z`} fill="#1E2026" />)}
-          </g>
-          <text x={-370} y={-40} fontFamily={F.display} fontWeight={700} fontSize={92} fill="#F4ECD6">Terminator 2</text>
-          <text x={-370} y={80} fontFamily={F.mono} fontWeight={700} fontSize={70} fill={C.saffron}>1991</text>
-          <line x1={-420} y1={130} x2={420} y2={130} stroke="#F4ECD6" strokeWidth={4} />
-        </g>
-      )}
+        <circle cx={-420} cy={-236} r={14} fill="#8F9BA6" stroke="#0B0C0F" strokeWidth={6} />
+      </g>
     </svg>
   );
 };
@@ -154,11 +190,11 @@ const CardToSlate: React.FC<{t: number}> = ({t}) => {
 // ------------------------------------------------------------------ the film set (side view)
 const CHX = 790;                                      // crane hook over the ladle
 const HOOK_TOP = 150, HOOK_LOW = FD.ladle.surf + 60;
-const hookY = (t: number) => lerp(HOOK_TOP, HOOK_LOW, easeInOut(seg(t, DROP0 - 0.2, T_COPY + 0.45)));
+const hookY = (t: number) => lerp(HOOK_TOP, HOOK_LOW, easeInOut(seg(t, DROP0 - 0.2, T_COPY + 0.45))) - (HOOK_LOW + 700) * easeInOut(seg(t, T_COPY + 0.9, T_REASON + 1.0));
 export const POST_ROBOT = stand(FD.deck.edge - 4 - 64 * FS, FD.deck.top, FS, {yaw: 0.7, armN: A(4, 12, {grip: 0.3}), armF: A(-4, 14, {grip: 0.3})});
 const ROBOT = POST_ROBOT;
 const CAM_SET: Cam = {x: 760, y: 470, z: 1.05};
-const CAM_DIP: Cam = {x: 700, y: 560, z: 1.18};
+const CAM_DIP: Cam = {x: 790, y: 560, z: 1.1};
 const CAM_DIR: Cam = {x: 900, y: 560, z: 0.98};
 // the monitor (world, foreground left) and the feed camera it shows
 const MON = {x: 120, y: 760, w: 480, h: 270};
@@ -237,8 +273,9 @@ const Clipboard: React.FC<{k: number; stamp: number}> = ({k, stamp}) => {
 };
 
 /** The monitor on its stand (world). Shows the title card, then the live feed (a real render of the set). */
+const titleK = (t: number) => seg(t, T_HINT - 0.1, T_HINT + 0.2) * (1 - seg(t, T_APPEARS + 0.55, T_APPEARS + 0.75));
 const Monitor: React.FC<{t: number; f: number; cam: Cam; lw: number}> = ({t, f, cam, lw}) => {
-  const live = seg(t, T_APPEARS + 0.55, T_APPEARS + 0.75);
+  const live = 1 - titleK(t);
   const s0 = toScreen(cam, MON.x, MON.y), s1 = toScreen(cam, MON.x + MON.w, MON.y + MON.h);
   const sc = (s1.x - s0.x) / 1920;
   return (
@@ -247,7 +284,7 @@ const Monitor: React.FC<{t: number; f: number; cam: Cam; lw: number}> = ({t, f, 
       <rect x={MON.x - 26} y={MON.y - 26} width={MON.w + 52} height={MON.h + 52} rx={18} fill="#1E2026" stroke="#0B0C0F" strokeWidth={lw * 2} />
       <rect x={MON.x} y={MON.y} width={MON.w} height={MON.h} fill="#0B0C0F" />
       {live < 1 ? (
-        <g opacity={(1 - live) * seg(t, T_HINT + 0.1, T_HINT + 0.4)}>
+        <g opacity={1 - live}>
           <text x={MON.x + MON.w / 2} y={MON.y + 116} textAnchor="middle" fontFamily={F.mono} fontWeight={700} fontSize={42} fill="#F4ECD6">F.02 DECOMMISSION</text>
           <text x={MON.x + MON.w / 2} y={MON.y + 170} textAnchor="middle" fontFamily={F.body} fontWeight={800} fontSize={30} fill="#AEB3BD">Figure · Sep 30, 2026</text>
           <text x={MON.x + MON.w / 2} y={MON.y + 216} textAnchor="middle" fontFamily={F.body} fontWeight={700} fontSize={30} fill="#AEB3BD" opacity={seg(t, T_APPEARS - 0.2, T_APPEARS + 0.1)}>with Arnold Schwarzenegger</text>
@@ -268,7 +305,8 @@ export const Post: React.FC = () => {
     return (
       <AbsoluteFill>
         <PhoneBg t={t} />
-        {t < FLIP0 + 0.1 ? <Phone t={t} /> : null}
+        {t < LIFT0 + 0.5 ? <Phone t={t} /> : null}
+        <CardLift t={t} />
         <CardToSlate t={t} />
       </AbsoluteFill>
     );
@@ -284,8 +322,11 @@ export const Post: React.FC = () => {
   const tDip = t - (T_COPY + 0.45);
   // the monitor's live picture (screen space): the set from the feed camera, mapped into the screen rect
   const s0 = toScreen(cam, MON.x, MON.y), s1 = toScreen(cam, MON.x + MON.w, MON.y + MON.h);
-  const live = seg(t, T_APPEARS + 0.55, T_APPEARS + 0.75);
+  const live = 1 - titleK(t);
   const sc = (s1.x - s0.x) / 1920;
+  // the director holds the business case by its edge (the board follows his hand)
+  const dirC = {x: 1420, y: FD.floor + 40, h: 470, flip: true};
+  const handS = (() => { const w = crewHand(dirC, dirArm, 1); return toScreen(cam, w.x, w.y); })();
   return (
     <AbsoluteFill>
       <Scene bg="#221A21">
@@ -305,7 +346,7 @@ export const Post: React.FC = () => {
           front={(
             <g>
               <TripodCam x={-120} y={FD.floor + 40} lw={lw} h={420} />
-              <Crew look={CAST.clerkC} x={1480} y={FD.floor + 40} h={470} frame={f} seed={14} flip life={0.6}
+              <Crew look={CAST.clerkC} x={1420} y={FD.floor + 40} h={470} frame={f} seed={14} flip life={0.6}
                 pose={{...IDLE, armR: dirArm, armL: {a: 40, b: 60}, lookX: clipIn > 0.5 ? 0.6 : -0.5, lookY: 0.1, mouth: t > T_1991 && clipIn > 0.5 ? 'grin' : 'smile', brows: clipIn > 0.5 ? 0.5 : 0}} />
               <Monitor t={t} f={f} cam={cam} lw={lw} />
             </g>
@@ -314,10 +355,21 @@ export const Post: React.FC = () => {
         <Badge x={1180} y={240} k={kChip} label="1991 film"><ChipIcon x={0} y={0} s={1.2} /></Badge>
         {kEq > 0 ? <text x={1400} y={270} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={110} fill={C.paper} opacity={kEq}>≈</text> : null}
         <Badge x={1620} y={240} k={kAct} label="Figure"><ActuatorArt r={88} rot={(t - T_FIGR) * 40} lw={4} id="pstAct" /></Badge>
-        {/* the business case, held up by the director */}
+        {/* the business case, held up by the director: his hand grips its right edge */}
         {clipIn > 0 ? (() => {
-          const hs = toScreen(cam, 1480 - 110, FD.floor + 40 - 380);
-          return <g transform={`translate(${hs.x - 120 + (1 - clipIn) * 300} ${hs.y - 60 + (1 - clipIn) * 400}) rotate(-6) scale(${0.62})`}><Clipboard k={clipIn} stamp={stamp} /></g>;
+          const sc2 = 0.62 * lerp(0.55, 1, easeOut(clipIn));
+          const th = (-6 * Math.PI) / 180, gx = 226 * sc2, gy = 10 * sc2;
+          const tx = handS.x - (gx * Math.cos(th) - gy * Math.sin(th)), ty = handS.y - (gx * Math.sin(th) + gy * Math.cos(th));
+          const hk = (470 / 440) * cam.z;
+          return (
+            <g opacity={Math.min(1, clipIn * 4)}>
+              <g transform={`translate(${tx} ${ty}) rotate(-6) scale(${sc2})`}><Clipboard k={1} stamp={stamp} /></g>
+              <g transform={`translate(${handS.x} ${handS.y}) scale(${hk})`}>
+                <ellipse cx={4} cy={0} rx={15} ry={13} fill={CAST.clerkC.skin} stroke={C.ink} strokeWidth={4 / hk} />
+                <path d="M-8 -6 q-10 2 -12 10" fill="none" stroke={C.ink} strokeWidth={4 / hk} strokeLinecap="round" />
+              </g>
+            </g>
+          );
         })() : null}
         {/* live feed inside the monitor */}
         {live > 0 ? (
@@ -340,4 +392,4 @@ export const Post: React.FC = () => {
 };
 void Layer; void clamp01; void backOut;
 /** Event times for the sound cue sheet. */
-export const POST_EV = {FLIP0, FLIP1, CLAP, FILL1, DROP0, DROP1, PUSH0};
+export const POST_EV = {LIFT0, FLIP0, FLIP1, CLAP, FILL1, DROP0, DROP1, PUSH0};

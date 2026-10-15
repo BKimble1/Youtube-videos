@@ -412,7 +412,8 @@ const Street: React.FC<{t: number; f: number}> = ({t, f}) => {
   const lw = 4 / cam.z;
   const shutUS = 1;   // V6: it came down over the previous shot
   const shutMX = easeIn(seg(t, T_MEX - 0.15, T_MEX + 0.15));
-  const openIM = easeOut(seg(t, T_YES - 0.35, T_YES + 0.2));
+  // V6: the Imatra doorway is dark until "said yes"; then the lights come up inside (a real space behind the door)
+  const lightsIM = easeOut(seg(t, T_YES - 0.15, T_YES + 0.45));
   // the U.S. doorway shows the battery shot (screen picture mapped into the doorway)
   const d = doorRect(FAC[0].x);
   const s0 = toScreen(cam, d.x0, d.y0), s1 = toScreen(cam, d.x1, d.y1);
@@ -439,9 +440,13 @@ const Street: React.FC<{t: number; f: number}> = ({t, f}) => {
         <rect x={-3000} y={FY + 60} width={9000} height={14} fill="#F2C14B" />
         {FAC.map((fc, i) => (
           <Facade key={fc.label} x={fc.x} y={FY} w={FW} h={FH} lw={lw} label={fc.label} tint={i === 2 ? '#D9C4A0' : '#C9B79A'}
-            shut={i === 0 ? shutUS : i === 1 ? shutMX : 0} glow={i === 2 ? openIM : 0}
+            shut={i === 0 ? shutUS : i === 1 ? shutMX : 0}
             mark={i === 2 ? 'ok' : 'x'} markK={i === 0 ? seg(t, T_US + 0.05, T_US + 0.35) : i === 1 ? seg(t, T_MEX + 0.1, T_MEX + 0.4) : seg(t, T_YES, T_YES + 0.3)} />
         ))}
+        {lightsIM > 0 ? (() => {
+          const d = doorRect(FAC[2].x);
+          return <path d={`M${d.x0} ${FY} L${d.x1} ${FY} L${d.x1 + 160} ${FY + 140} L${d.x0 - 160} ${FY + 140} Z`} fill="#FFC870" opacity={0.42 * lightsIM} />;
+        })() : null}
         <g>
           <rect x={crateX - 150} y={G - 330} width={300} height={300} fill="#D9A35E" stroke={C.ink} strokeWidth={lw} />
           {[1, 2, 3].map((k) => <line key={k} x1={crateX - 150 + k * 75} y1={G - 330} x2={crateX - 150 + k * 75} y2={G - 30} stroke="#8A5A26" strokeWidth={lw * 0.7} />)}
@@ -458,21 +463,20 @@ const Street: React.FC<{t: number; f: number}> = ({t, f}) => {
           pose={{...IDLE, armR: arm, armL: {a: 30, b: 40}, bob, lean: pushing ? 6 : 0, lookX: 0.7, lookY: 0, mouth: t > T_YES ? 'grin' : t > T_US ? 'frown' : 'flat', brows: t > T_YES ? 0.6 : t > T_US ? -0.2 : 0}} />
       </Layer>
       {/* the Imatra foundry, seen through its open door as we push in */}
-      {t > T_YES - 0.4 ? (() => {
+      {t > T_YES - 0.5 ? (() => {
         const di = doorRect(FAC[2].x);
         const a0 = toScreen(cam, di.x0, di.y0), a1 = toScreen(cam, di.x1, di.y1);
         const sci = (a1.x - a0.x) / 1920;
-        const glow = openIM * (1 - smooth(seg(t, T_YES + 0.3, OPTIONS_END - 0.1)));
         return (
           <g>
-            <defs><clipPath id="imDoor"><rect x={a0.x} y={a0.y + (a1.y - a0.y) * (1 - openIM)} width={a1.x - a0.x} height={(a1.y - a0.y) * openIM} /></clipPath></defs>
+            <defs><clipPath id="imDoor"><rect x={a0.x} y={a0.y} width={a1.x - a0.x} height={a1.y - a0.y} /></clipPath></defs>
             <g clipPath="url(#imDoor)">
               {/* V6: the foundry is a space behind the door (it scales less than the facade as we approach), not a
                   shrunken picture; at the cut the door fills the frame and the view is exactly CAM_IM0 */}
               <g transform={`translate(${(a0.x + a1.x) / 2 - 960} ${(a0.y + a1.y) / 2 - 540})`}>
                 <ImatraWorld t={t} f={f} cam={{...CAM_IM0, z: CAM_IM0.z * Math.pow(Math.min(1, sci), 0.45)}} />
               </g>
-              <rect x={a0.x} y={a0.y} width={a1.x - a0.x} height={a1.y - a0.y} fill="#FFB347" opacity={0.85 * glow} />
+              <rect x={a0.x} y={a0.y} width={a1.x - a0.x} height={a1.y - a0.y} fill="#2A1E1A" opacity={0.9 * (1 - lightsIM)} />
             </g>
           </g>
         );

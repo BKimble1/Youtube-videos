@@ -77,7 +77,10 @@ const RW2a = A2.tEnd + 0.55, RW2b = RW2a + 0.25;
 const A3 = jump({tTO: T_AGAIN + 0.35, outcome: 'stick', endX: TGT_X + 4, apex: 82 * S});
 const T_GRID0 = A3.tEnd + 0.45;                              // the frame starts to shrink into a panel
 /** The avatar on the main stage (attempts 1–3). */
+const EDGE_POSE: RPose = {...POST_ROBOT, neck: 10, head: 12};   // the robot looking down at the steel (edge shot)
 const mainPose = (t: number): RPose => {
+  // V6: the avatar settles from the edge pose into its ready stance as the sim opens out (no pop)
+  if (t < T_BUILD1 + 0.7) return blend(EDGE_POSE, A1.pose(t).pose, smooth(seg(t, T_BUILD1, T_BUILD1 + 0.7)));
   if (t < RW1a) {
     const p = A1.pose(t).pose;
     if (t > SLIP0 && t < A1.tTO + 0.02 && p.footN) {
@@ -96,19 +99,20 @@ const mainPose = (t: number): RPose => {
 // ------------------------------------------------------------------ cameras
 const CAM_FOOT: Cam = {x: 330, y: 540, z: 3.4};
 const CAM_ARC: Cam = {x: 570, y: 570, z: 1.42};
-const CAM_MID: Cam = {x: 520, y: 600, z: 1.35};
 export const CAM_TR: Cam = {x: 560, y: 572, z: 1.3};
+// V6: through the monitor → back out just enough for the practice arc → push in on the launch foot, where the set
+// turns into the simulation; the sim then opens out from that same detail (no wide reset before the rebuild)
+const T_DARK0 = T_SIMS + 0.22, T_DARK1 = T_DARK0 + 0.3, T_BUILD1 = T_DARK1 + 0.75;
 const edgeCamRaw = (t: number): Cam => {
-  let c = mixCam(CAM_FEED, CAM_FOOT, easeInOut(seg(t, TRAIN_START, T_HARD + 1.2)));
-  c = mixCam(c, CAM_ARC, easeInOut(seg(t, T_REH - 0.1, T_FURN + 0.1)));
-  c = mixCam(c, CAM_MID, easeInOut(seg(t, T_FURN + 0.4, T_SIMS + 0.2)));
-  c = mixCam(c, CAM_TR, easeInOut(seg(t, T_SIMS + 1.1, T_SIMS + 2.3)));
+  let c = mixCam(CAM_FEED, CAM_ARC, easeInOut(seg(t, T_HARD + 0.15, T_REH + 0.25)));
+  c = mixCam(c, CAM_FOOT, easeInOut(seg(t, T_FURN + 0.45, T_SIMS + 0.4)));
   return c;
 };
 
-/** Stage camera during the attempts: lean in on the evidence while the questions are asked, back out for 2 and 3. */
+/** Stage camera during the attempts: open out from the foot, lean in on the evidence while the questions are asked,
+ * back out for 2 and 3. */
 const stageCamRaw = (t: number): Cam => {
-  let c = mixCam(creep({...CAM_TR, x: CAM_TR.x - 30, z: CAM_TR.z * 0.97}, t, T_SIMS + 1.1, T_HOW, 0.05, 30), CAM_TR, seg(t, T_HOW, T_TRIES));
+  let c = mixCam(CAM_FOOT, CAM_TR, easeInOut(seg(t, T_BUILD1 + 0.1, T_HOW + 0.1)));
   c = mixCam(c, {x: 520, y: 640, z: 1.5}, easeInOut(seg(t, T_BAL - 0.4, T_BAL + 0.4)));
   c = creep(c, t, T_BAL + 0.4, T_NUDGE - 0.2, 0.04, -20);   // while the questions are asked
   c = mixCam(c, CAM_TR, easeInOut(seg(t, T_NUDGE - 0.2, T_NUDGE + 0.8)));
@@ -429,7 +433,6 @@ export const Train: React.FC = () => {
   const general = <Chip x={96} y={60} lines={['HOW THIS KIND OF TRAINING GENERALLY WORKS · ILLUSTRATION']} k={generalK} size={30} tone="ink" />;
 
   // ============================== E + B: the edge, the burnt practice arc, lights out, the rebuild
-  const T_DARK0 = T_SIMS - 0.05, T_DARK1 = T_SIMS + 0.3, T_BUILD1 = T_SIMS + 1.1;
   if (t < T_BUILD1 + 0.01) {
     const cam = smoothCam(edgeCamRaw, t, 0.2);
     const lw = 4 / cam.z;

@@ -8,7 +8,8 @@ import {useCurrentFrame} from 'remotion';
 import {T} from '../cues';
 import {Cam, Scene, Layer, Bot, Crew, Chip, mixCam, seg, smooth, easeInOut, easeOut, easeIn, lerp} from '../../v4/kit/scene';
 import {FoundryView5, FD} from '../sets/foundry5';
-import {Splash, FCOL} from '../../v4/sets/foundry';
+import {FCOL} from '../../v4/sets/foundry';
+import {Splash6} from '../sets/splash6';
 import {FilmLight, TripodCam, Scrap} from '../../v4/sets/props';
 import {RPose} from '../../v4/rig/Robot2D';
 import {stand, walk, blend, A, ANK} from '../../v4/rig/poses';
@@ -122,8 +123,8 @@ export const ImatraWorld: React.FC<{t: number; f: number; cam: Cam}> = ({t, f, c
       )}
       behind={p ? <Bot cam={cam} id="imR" model="F02" s={FS} pose={p} /> : null}
       inside={<>
-        <Splash x={760} t={tHit} lw={lw} part="front" scale={0.9} />
-        <Splash x={FD.ladle.cx} t={scrapHit} lw={lw} part="front" scale={0.45} />
+        <Splash6 x={760} t={tHit} lw={lw} part="front" scale={0.9} />
+        <Splash6 x={FD.ladle.cx} t={scrapHit} lw={lw} part="front" scale={0.45} />
       </>} />
   );
 };
