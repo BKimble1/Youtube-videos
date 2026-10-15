@@ -38,11 +38,11 @@ export const B4 = {
    *  trunk; it then crosses to HOVER2, braking with a nose-up flare from flare0, settles at hover0 and hovers */
   arrive0: B.past0 - 1,
   wipeLock: B.past0 + 6,
-  flare0: B.past0 + 15,
-  hover0: B.arrive - 1,
+  flare0: B.past0 + 12,
+  hover0: B.past0 + 19,
   /** the dashed data link drone -> band: fades in once the drone is clear of his head, out before the case turns */
-  link0: B.past0 + 19,
-  link1: B.arrive + 6,
+  link0: B.past0 + 18,
+  link1: B.arrive + 5,
   /** the drone climbs out of frame while the camera is still on the chest, before the recovery framing returns */
   retreat0: B.release0 - 6,
   retreat1: B.release0 + 15,

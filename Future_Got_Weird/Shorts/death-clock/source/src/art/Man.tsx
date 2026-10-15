@@ -8,8 +8,8 @@
 // (V4: nothing is tied to his hands; the dog's leash lies on the grass, art/Leash.tsx).
 import React from 'react';
 import {lit, mix, PAL, shade} from '../lib/color';
-import {Deco, Inked, InkLine} from '../lib/ink';
-import {Limb} from '../lib/limb';
+import {Deco, INK, Inked, InkLine, InkPath} from '../lib/ink';
+import {Limb, limbGeo} from '../lib/limb';
 import {add, clamp, dirDown, dot, fmt, len, lerpV, mul, norm, P, perp, sub, V} from '../lib/math';
 import {Blob, Capsule, Lin, LIGHT} from '../lib/shade';
 import {Expr, Head} from './Head';
@@ -148,13 +148,16 @@ export const manJoints = (p: ManPose) => {
   };
   const L = arm(lS, p.lTu, p.lTv, p.lWx, p.lWy, p.lW, p.lElb, p.lWr);
   // V4: when the far elbow hangs low beside the lap (seated), it tucks in behind the tee's front contour instead of
-  // poking out under the hem as a spike or hook (the arm swivels; the hand keeps its place and angle)
+  // poking out under the hem as a spike or hook (the arm swivels; the hand keeps its place and angle). The blend runs
+  // over a wide band of elbow heights (86-118 above the hips), so it tucks gradually as he slumps (18-31) and comes
+  // out over about 20 frames as he sits up (1062-1082), never in a swing; the SIT clutch (elbow at about 125) is
+  // untouched.
   const tuckFar = (A: ReturnType<typeof arm>) => {
     const X = px(p.torso);
     const d = sub(A.E, H);
     const u = dot(d, up(p.torso)) / s;
     const v = dot(d, X) / s;
-    const k = sstep(96, 86, u);
+    const k = sstep(118, 86, u);
     const vMin = -60; // tee front edge (-85) + elbow radius (23.5) + a little
     return k > 0 && v < vMin ? {...A, E: add(A.E, mul(X, (vMin - v) * k * s))} : A;
   };
@@ -338,10 +341,11 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
     const n = perp(u);
     const r0 = 38 * s;
     const r1 = 34 * s;
-    // V4: a low, flat crown (just over the arm's own rounded top) that sits inside the tee's shoulder line, so the
-    // sleeve no longer reads as a separate round cap with a second lobe behind it
+    // V4: the near sleeve has no crown outline of its own: its top runs on past the shoulder joint and is cut by the
+    // tee's own outline (clip below), so there is one shoulder line, the tee's, and the sleeve's sides dissolve into
+    // the shoulder under it (no dome, no second lobe). The far sleeve, behind the tee, keeps the low crown.
     const top = A.S;
-    const hc = 32 * s;
+    const hc = (isFar ? 32 : 64) * s;
     const hem = add(A.S, mul(u, DIM.upperArm * 0.56 * s));
     const p1 = add(top, mul(n, r0));
     const p2 = add(hem, mul(n, r1));
@@ -356,20 +360,42 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
     const inner = (
       <ellipse key="in" cx={fmt(hem.x)} cy={fmt(hem.y)} rx={fmt(r1 * 0.24)} ry={fmt(r1 * 0.93)} transform={`rotate(${fmt(ang(u))} ${fmt(hem.x)} ${fmt(hem.y)})`} fill={shade(c, 0.42)} />
     );
+    // near sleeve: the tee's stripes run on through the whole crown (they match the tee's on both sides) and fade
+    // out down the tube; the side contours fade out toward the shoulder line
+    const sf0 = add(A.S, mul(u, r0 * 0.5));
+    const sf1 = add(A.S, mul(u, fadeR));
+    const big = 4000;
+    const hemSide = `M${P(add(A.S, mul(n, big)))} L${P(add(add(A.S, mul(n, big)), mul(u, big)))} L${P(add(add(A.S, mul(n, -big)), mul(u, big)))} L${P(add(A.S, mul(n, -big)))} Z`;
+    const inkFade = isFar ? [{c: add(top, mul(u, -hc * 0.5)), r: r0 * 1.25}] : [{c: add(top, mul(u, -24 * s)), r: r0 * 1.65}];
     const body = (
       <g key="sl">
         <defs>
-          <radialGradient id={`${id}-${k}sf`} gradientUnits="userSpaceOnUse" cx={fmt(A.S.x)} cy={fmt(A.S.y)} r={fmt(fadeR)}>
-            <stop offset="0" stopColor="#FFF" />
-            <stop offset="0.45" stopColor="#FFF" />
-            <stop offset="1" stopColor="#000" />
-          </radialGradient>
+          {isFar ? (
+            <radialGradient id={`${id}-${k}sf`} gradientUnits="userSpaceOnUse" cx={fmt(A.S.x)} cy={fmt(A.S.y)} r={fmt(fadeR)}>
+              <stop offset="0" stopColor="#FFF" />
+              <stop offset="0.45" stopColor="#FFF" />
+              <stop offset="1" stopColor="#000" />
+            </radialGradient>
+          ) : (
+            <linearGradient id={`${id}-${k}sf`} gradientUnits="userSpaceOnUse" x1={fmt(sf0.x)} y1={fmt(sf0.y)} x2={fmt(sf1.x)} y2={fmt(sf1.y)}>
+              <stop offset="0" stopColor="#FFF" />
+              <stop offset="1" stopColor="#000" />
+            </linearGradient>
+          )}
           <mask id={`${id}-${k}sm`}>
             <rect x="-20000" y="-20000" width="40000" height="40000" fill={`url(#${id}-${k}sf)`} />
           </mask>
+          {!isFar && (
+            // the crown is cut by the tee's outline: the tee itself plus everything on the hem side of the shoulder
+            <clipPath id={`${id}-${k}cc`}>
+              <path d={torsoD} />
+              <path d={hemSide} />
+            </clipPath>
+          )}
         </defs>
+        <g clipPath={isFar ? undefined : `url(#${id}-${k}cc)`}>
         {/* the crown's contour dissolves into the shoulder; the sides keep theirs below it */}
-        <Inked w={IN} id={`${id}-${k}si`} fade={[{c: add(top, mul(u, -hc * 0.5)), r: r0 * 1.25}]}>
+        <Inked w={IN} id={`${id}-${k}si`} fade={inkFade}>
           <Lin id={`${id}-${k}sg`} d={d} from={add(mid, mul(ln, r0))} to={add(mid, mul(ln, -r0))} stops={[[0, '#FFFFFF'], [0.45, mix(c, '#F2F5F8', 0.5)], [0.85, mix(c, '#C9D5E0', 0.8)], [1, mix(c, '#B4C3D1', 0.8)]]} />
         </Inked>
         {!isFar && (
@@ -392,18 +418,36 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
           <path d={`M${P(add(add(A.S, mul(u, 30 * s)), mul(n, -r0 * 0.55)))} Q${P(add(A.S, mul(u, 44 * s)))} ${P(add(add(A.S, mul(u, 34 * s)), mul(n, r0 * 0.5)))}`} fill="none" stroke="#2E4A66" strokeOpacity={0.06} strokeWidth={fmt(4 * s)} strokeLinecap="round" />
           <ellipse cx={fmt(add(mid, mul(ln, r0 * 0.55)).x)} cy={fmt(add(mid, mul(ln, r0 * 0.55)).y)} rx={fmt(26 * s)} ry={fmt(4 * s)} transform={`rotate(${fmt(ang(u))} ${fmt(add(mid, mul(ln, r0 * 0.55)).x)} ${fmt(add(mid, mul(ln, r0 * 0.55)).y)})`} fill="#FFFFFF" opacity={0.5} />
         </Deco>
+        </g>
       </g>
     );
     return {inner, body};
   };
 
+  // the near arm's skin starts a little down its own axis from the shoulder joint, so its rounded top (and its contour)
+  // stays inside the tee's shoulder line, under the sleeve, which is now cut by that line
+  const nearArmTop = add(j.L.S, mul(norm(sub(j.L.E, j.L.S)), 5 * s));
+  // V4: the flesh in the crook of a tightly folded arm. Where the upper arm and the forearm close to a narrow V (the
+  // far arm's chest clutch), the two tubes alone leave a sliver between them through which the far knee showed as a
+  // dark tick beside the tee; this fills the crook in a shaded skin tone, out to where the tee covers it.
+  const crookWeb = (A: Joints['L']) => {
+    const uS = norm(sub(A.S, A.E));
+    const uW = norm(sub(A.W, A.E));
+    const th = (Math.acos(clamp(dot(uS, uW), -1, 1)) * 180) / Math.PI;
+    const k = sstep(55, 35, th);
+    if (k <= 0) return null;
+    const dd = k * 0.78 * Math.min(len(sub(A.S, A.E)), len(sub(A.W, A.E)));
+    return `M${P(A.E)} L${P(add(A.E, mul(uS, dd)))} L${P(add(A.E, mul(uW, dd)))} Z`;
+  };
   // an arm's skin + hand as one contour group (the hand's palm and fingers join the forearm's silhouette)
   const armGroup = (k: string, A: Joints['L'], isFar: boolean, hp: HandPose, thumbSide: 1 | -1) => {
     const sk = isFar ? far(skin) : skin;
+    const web = isFar ? crookWeb(A) : null;
     return (
       <Inked w={IN} key={k}>
+        {web && <InkPath d={web} fill={shade(sk, 0.18)} />}
         {/* the far arm's tightly folded elbow shows no inner crease (that side of the fold is hidden) */}
-        <Limb id={`${id}-${k}lb`} A={A.S} B={A.E} C={A.W} rA={29 * s} rB={23.5 * s} rC={17 * s} color={sk} spec={0.22} crease={isFar ? 0 : IN * 0.8} />
+        <Limb id={`${id}-${k}lb`} A={isFar ? A.S : nearArmTop} B={A.E} C={A.W} rA={29 * s} rB={23.5 * s} rC={17 * s} color={sk} spec={0.22} crease={isFar ? 0 : IN * 0.8} />
         <Hand id={`${id}-${k}h`} wrist={add(A.W, mul(A.foreDir, -6 * s))} ang={A.handAng} L={DIM.hand * s} thumbSide={thumbSide} view="back" pose={hp} color={sk} ink={IN * 0.9} bare />
       </Inked>
     );
@@ -485,6 +529,16 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
           })}
           {/* glossy sheen across the chest */}
           <ellipse cx={fmt(loc(j.C, tc, 96, -40).x)} cy={fmt(loc(j.C, tc, 96, -40).y)} rx={fmt(44 * s)} ry={fmt(16 * s)} transform={`rotate(${fmt(-tc - 30)} ${fmt(loc(j.C, tc, 96, -40).x)} ${fmt(loc(j.C, tc, 96, -40).y)})`} fill="#FFFFFF" opacity={0.35} />
+          {nearLegFront && (
+            // V4: the tee's hem where it lies over the raised near thigh (the edge of the hidden disc round the hip)
+            // runs on past the thigh's top contour as a fold line up to the tee's own outline, so the thigh ends at one
+            // continuous hem edge that the thigh passes under, not in a navy point on the stripes. Drawn here, under
+            // the thigh (which redraws its own part of it), the far forearm, the head and the near arm.
+            <g>
+              <circle cx={fmt(j.lLeg.hp.x)} cy={fmt(j.lLeg.hp.y)} r={fmt(96 * s + 4 * s)} fill="none" stroke="#2E4A66" strokeOpacity={0.14} strokeWidth={fmt(8 * s)} />
+              <circle cx={fmt(j.lLeg.hp.x)} cy={fmt(j.lLeg.hp.y)} r={fmt(96 * s)} fill="none" stroke={INK} strokeWidth={fmt(IN * 0.62)} />
+            </g>
+          )}
         </g>
         {/* neckline */}
         <InkLine d={`M${P(loc(j.C, tc, 146, -36))} Q${P(loc(j.C, tc, 128, 0))} ${P(loc(j.C, tc, 148, 32))}`} w={OUT * 0.7} />
@@ -508,6 +562,24 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
           </Inked>
         </g>
       )}
+      {nearLegFront && (
+        // V4: where the tee's lower edge lies over the raised thigh (the edge of the hidden disc round the hip) it is
+        // drawn as the tee's own edge, an ink line with a soft shadow on the thigh, so the thigh passes under the tee
+        // instead of ending in an unlined navy point on the shirt
+        <Deco>
+          <defs>
+            <clipPath id={`${id}-llt`}>
+              <path d={limbGeo(j.lLeg.hp, j.lLeg.K, add(j.lLeg.A, mul(dirDown(j.lLeg.shinAng), -8 * s)), 43 * s, 33 * s, 28 * s).d} />
+            </clipPath>
+          </defs>
+          <g clipPath={`url(#${id}-tclip)`}>
+            <g clipPath={`url(#${id}-llt)`}>
+              <circle cx={fmt(j.lLeg.hp.x)} cy={fmt(j.lLeg.hp.y)} r={fmt(96 * s + 5 * s)} fill="none" stroke="#0B1622" strokeOpacity={0.22} strokeWidth={fmt(10 * s)} />
+              <circle cx={fmt(j.lLeg.hp.x)} cy={fmt(j.lLeg.hp.y)} r={fmt(96 * s)} fill="none" stroke={INK} strokeWidth={fmt(IN * 0.62)} />
+            </g>
+          </g>
+        </Deco>
+      )}
       <Deco>{afterRightArm}</Deco>
       {!hideLeftForearm && nearSleeve.inner}
       {!hideLeftForearm && !device && armGroup('la', j.L, false, lHand, 1)}
@@ -520,7 +592,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
           W={j.L.W}
           rE={23.5 * s}
           rW={17 * s}
-          S={j.L.S}
+          S={nearArmTop}
           rS={29 * s}
           afterArm={nearSleeve.body}
           dev={device}

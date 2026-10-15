@@ -19,8 +19,10 @@ export const LEASH = {
   w: 8,
   /** the collar's contour width (Dog.tsx: Inked w = OUT * 0.8 = 6 * 1.4 * 0.8), so the cord's outline matches it */
   inkW: 6.72,
-  /** the released handle: on the grass (GROUND + 62), right of his seat and left of the forepaws */
-  handle: {c: {x: 780, y: 1862} as V, ang: -10, len: 78, wid: 24},
+  /** the released handle: on the grass (GROUND + 62), right of his seat and left of the forepaws. V4 fix round: 16
+   *  units right of the spec's (780, 1862), so in the critical-seconds two-shot (689-709) its tip no longer sits alone
+   *  at the right frame edge; it is further from him and still clear of the forepaws */
+  handle: {c: {x: 796, y: 1862} as V, ang: -10, len: 78, wid: 24},
 };
 
 const rad = (a: number) => (a * Math.PI) / 180;

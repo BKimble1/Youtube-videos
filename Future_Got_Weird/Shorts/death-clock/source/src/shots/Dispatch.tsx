@@ -15,6 +15,9 @@ import {smoothPath} from '../art/Beads';
 import {B, B4} from '../lib/beats4';
 import {UI_FONT} from '../fontNames';
 import {BAND_C, journeyCam3} from './Journey3';
+// (a cycle: Aftermath3 reads this module's flight functions; both sides use the other only inside functions)
+import {arriveDrone3, camAt, loopF, manAt} from './Aftermath3';
+import {manJoints} from '../art/Man';
 
 const ease = easeInOut;
 const rect = (x: number, y: number, w: number, h: number) => `M${fmt(x)},${fmt(y)} h${fmt(w)} v${fmt(h)} h${fmt(-w)} Z`;
@@ -419,6 +422,30 @@ export const flyCam = (f: number): Cam => {
   const h = hospCam(B.travel0 - 1);
   return {x: flyDrone(f).x + (H_X1 - DOCK.x), y: h.y, z: h.z, roll: 0};
 };
+/** The drone as it appears on screen in whichever shot is drawn (for the rotor cue's pan and distance): the hospital
+ *  to B.travel0-1, the flyover to B4.arrive0-1, then the arrival in his camera (from arrive0 to wipeLock both shots
+ *  hold the drone at one screen point and, at arrive0, one size). x, y = screen position of the drone centre, scale =
+ *  apparent size (pose scale x camera zoom; 1.025 in the flyover). null while it is out of frame (and on the map). */
+export const droneView = (f: number): {x: number; y: number; scale: number} | null => {
+  if (f < MAP_END) return null;
+  let cam: Cam;
+  let p: DronePose;
+  if (f < B.travel0) [cam, p] = [hospCam(f), hospDrone(f)];
+  else if (f < B4.arrive0) [cam, p] = [flyCam(f), flyDrone(f)];
+  else {
+    const g = loopF(f);
+    const man = manAt(g);
+    const j = manJoints(man);
+    const wrist = add(j.L.W, {x: j.L.foreDir.x * -1.75 * 17 * man.s, y: j.L.foreDir.y * -1.75 * 17 * man.s});
+    [cam, p] = [camAt(g, wrist, j.head), arriveDrone3(g)];
+  }
+  const s = toScreenD(cam, 1, p);
+  const k = p.s * cam.z;
+  // the drone's extent (rotor tips +-275, rotor tops -100, skids +105, pose units)
+  const inFrame = s.x + 275 * k > 0 && s.x - 275 * k < 1080 && s.y + 105 * k > 0 && s.y - 100 * k < 1920;
+  return inFrame ? {x: s.x, y: s.y, scale: k} : null;
+};
+
 /** flyover ground planes: far lawn + far trees (2.4) behind the houses; the near lawn (1.3) under the house bases */
 const FAR_LAWN = 1110;
 const NEAR_LAWN = 1180;

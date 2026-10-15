@@ -28,6 +28,7 @@ import {B4} from '../lib/beats4';
 import {DRONE_S, droneBeacon, flightPitch, flyCam, flyDrone, hermite, rotorPhase, toScreenD} from './Dispatch';
 import {SoftShadow} from '../lib/shade';
 import {GROUND} from './StreetShots';
+import {armPt, armR, DEV_GEO} from '../art/Device';
 
 const ease = easeInOut;
 const zLog = (f: number, keys: [number, number][]) => Math.exp(spline(f, keys.map(([t, z]) => [t, Math.log(z)])));
@@ -154,7 +155,9 @@ export const camAt = (g: number, wristW: V, headW: V): Cam => {
   if (g < B.release0 + 4) {
     const keys: [number, V, number][] = [
       [B4.arrive0, {x: TRUCK.x0, y: TRUCK.y0}, TRUCK.z0],
-      [B.arrive, {x: 500, y: 1420}, 1.6],
+      // V4 (dispatch): 60 world lower than V3, so the band holds at about y 1585 under the caption through 920 and the
+      // hovering drone has headroom; the push to the band then crosses the caption lane at the 921 caption change
+      [B.arrive, {x: 500, y: 1360}, 1.6],
       [B.act0 + 2, BAND_C, 6.5],
       [B.act0 + 14, SEC_VIEW, 11],
       [B.inject0 - 4, PORT_VIEW, 18],
@@ -306,6 +309,15 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
   // the data link appears once the drone is clear to the right of his head and is gone before the case turns
   const linkA = clamp(inv(B4.link0 - 2, B4.link0 + 2, g)) * (1 - clamp(inv(B4.link1 - 5, B4.link1, g)));
   const linkFrom = {x: dp.x - Math.sin((dp.pitch * Math.PI) / 180) * 80 * dp.s, y: dp.y + Math.cos((dp.pitch * Math.PI) / 180) * 80 * dp.s};
+  // it ends on a ring round the glass that starts just outside the case's corners (as the alarm ring does), so neither
+  // the dashed line nor the ring ever crosses the digits; the case has not turned yet (roll 0) while the link is on
+  const linkRw = 17 * man.s;
+  const linkA3 = armFrame(j.L.E, j.L.W, 23.5 * man.s, linkRw);
+  const linkU = linkA3.L - DEV_GEO.bandFromWrist * linkRw;
+  const glassC = armPt(linkA3, linkU, 0, armR(linkA3, linkU) + DEV_GEO.caseT * linkRw, Math.sin((14 * Math.PI) / 180));
+  const linkR = (0.5 * Math.hypot(DEV_GEO.caseL, DEV_GEO.caseW) + 0.16 + 0.3 * (0.5 + 0.5 * Math.sin(g * 0.5))) * linkRw;
+  const linkD = Math.max(1e-6, Math.hypot(linkFrom.x - glassC.x, linkFrom.y - glassC.y));
+  const linkTo = {x: glassC.x + ((linkFrom.x - glassC.x) / linkD) * linkR, y: glassC.y + ((linkFrom.y - glassC.y) / linkD) * linkR};
   // the drone's soft ground shadow: broad and faint at this height, it follows the drone (and its bob)
   const shK = clamp(1 - (GROUND - dp.y) / 2200);
   return (
@@ -334,8 +346,8 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
           {/* the drone has found him: a thin data link dropping almost vertically to the band (no light on him) */}
           {linkA > 0.01 && (
             <g opacity={fmt(linkA)}>
-              <path d={`M${fmt(linkFrom.x)},${fmt(linkFrom.y)} L${fmt(bandW.x)},${fmt(bandW.y)}`} stroke={PAL.signal} strokeWidth={3} strokeDasharray="6 10" opacity={0.8} />
-              <circle cx={fmt(bandW.x)} cy={fmt(bandW.y)} r={fmt(22 + 8 * Math.sin(g * 0.5))} fill="none" stroke={PAL.signal} strokeWidth={3} />
+              <path d={`M${fmt(linkFrom.x)},${fmt(linkFrom.y)} L${fmt(linkTo.x)},${fmt(linkTo.y)}`} stroke={PAL.signal} strokeWidth={3} strokeDasharray="6 10" opacity={0.8} />
+              <circle cx={fmt(glassC.x)} cy={fmt(glassC.y)} r={fmt(linkR)} fill="none" stroke={PAL.signal} strokeWidth={3} />
             </g>
           )}
         </g>
