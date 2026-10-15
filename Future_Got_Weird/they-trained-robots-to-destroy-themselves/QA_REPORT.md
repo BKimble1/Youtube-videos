@@ -19,11 +19,16 @@ inspection.
 
 | File | Spec | Notes |
 |---|---|---|
-| `exports/FGW_RobotsDestroy_v6_UPLOAD_1080p.mp4` | H.264 High, **1920×1080**, 30 fps CFR (native, rendered from source), yuv420p, BT.709. 6,502 frames, 216.73 s. AAC-LC 48 kHz stereo at 285 kb/s. 86.8 MiB. SHA-256 `0caf39372b68e75686b9dcd11906c60f1cef80b9d485ba36f5a2acb3e51d7d10` | **Upload master.** CRF 16, x264 slow; the audio is the V6 mix encoded from the 48 kHz WAV. Backed up as five split parts in `backup/v6/`; the parts pass `sha256sum -c`, and the joined parts hash to the master |
-| `exports/FGW_RobotsDestroy_v6_1080p_SHARE.mp4` | 1920×1080, 30 fps, two-pass H.264 at 0.96 Mb/s, AAC 128 kb/s, 216.75 s, 28.5 MiB. SHA-256 `4291586be5450aa8a10ff6b3b7f1ae490167e66f368db166589aa748ab36bd36` | **Review/share copy, not for upload.** Made from the master |
+| `exports/FGW_RobotsDestroy_v6_UPLOAD_1080p.mp4` | H.264 High, **1920×1080**, 30 fps CFR (native, rendered from source), yuv420p, BT.709. 6,502 frames, 216.73 s. AAC-LC 48 kHz stereo at 285 kb/s. 87.2 MiB. SHA-256 `dd761d33327ae8dcf529977df1e84d1f00d9fc85c2d39ba95465ee805a206486` | **Upload master.** CRF 16, x264 slow; the audio is the V6 mix encoded from the 48 kHz WAV. Backed up as five split parts in `backup/v6/`; the parts pass `sha256sum -c`, and the joined parts hash to the master |
+| `exports/FGW_RobotsDestroy_v6_1080p_SHARE.mp4` | 1920×1080, 30 fps, two-pass H.264 at 0.96 Mb/s, AAC 128 kb/s, 216.75 s, 28.5 MiB. SHA-256 `781da846674b03178eca6822f93ad5fc3a72ecc2ce8cc2c58130a95142470bef` | **Review/share copy, not for upload.** Made from the master |
 | `captions/FGW_RobotsDestroy_v6.srt` | 70 cues, at most 42 characters per line, no overlaps. First cue at 0.46 s; last ends at 214.60 s | Byte-identical to the V5 captions (the narration did not change) |
 
 Runtime: 3:36.7, the same as V5.
+
+**Follow-up re-render (same day).** After the first review, six spots were redone and the master re-rendered: the
+panel hanging, the factory service, the bench spanner, the reflex hammer, the Imatra scrap skip and the film-set chain
+(`production/v6/CHANGES_V6.md`, "Follow-up fixes"). Every figure in this section is from that final master. Frames of
+the six spots taken from the master itself are in `qa/v6/followup/master_spots.png`.
 
 ## Picture (measured on the final master)
 
@@ -32,7 +37,7 @@ Runtime: 3:36.7, the same as V5.
 | Scene detector (0.10) | 25 detections, as V5. Most are single moments, not edits: the material wipe at 0:02.8, the clap flash at 1:09.8, the dice at 2:32, the lights going out at 3:13, the logo |
 | Static holds ≥ 1.5 s (`freezedetect`) | Two: 1:01.0 for 4.9 s and 1:06.3 for 2.3 s. These are the phone post and the reply card held still while each is narrated; only the single highlight changes. They are deliberate (the brief asks for no breathing scale on readable text). V5 had one flag (0:34.5) |
 | Black (`blackdetect`, ≥ 0.1 s) | 0.57 s at 3:13.5: the aisle lights going out before the glow (intended) |
-| Exact duplicate consecutive frames | 49 frames. Runs longer than 2: 3 frames at 0:42.7 (the shutter fully closed between the edge shot and the street, intended) and 28 frames at 3:35.6 (the logo hold) |
+| Exact duplicate consecutive frames | 50 frames. Runs longer than 2: 3 frames at 0:42.7 (the shutter fully closed between the edge shot and the street, intended) and 28 frames at 3:35.6 (the logo hold) |
 | Single-frame "pop" candidates | **none** |
 | Silences > 1 s | none |
 | Audio offset against the mix | 0.0 ms |
@@ -42,10 +47,10 @@ Runtime: 3:36.7, the same as V5.
 
 - **Loudness:** integrated −15.0 LUFS, true peak −1.5 dBTP, LRA 2.4 LU.
 - **Narration:** unchanged from V5 (no trims were needed).
-- **Cue sheet:** 269 cues in `source/src/v6/sfx_v6.ts`, re-timed to the V6 events (`audio/v6/sfx_cues_v6.json`).
+- **Cue sheet:** 270 cues in `source/src/v6/sfx_v6.ts`, re-timed to the V6 events (`audio/v6/sfx_cues_v6.json`).
 - **Score:** regenerated against the V6 event times; the ending's resolution now lands on the "10" cards, because the
   second (symbolic) landing was removed.
-- **Masking (`audio/v6/mix/speech_mask_v6.txt`):** 115 of 3,533 speech windows have effects and beds within 6 dB of the
+- **Masking (`audio/v6/mix/speech_mask_v6.txt`):** 114 of 3,533 speech windows have effects and beds within 6 dB of the
   voice (V5: 113). No window has effects more than 1.5 dB above a voice louder than −33 dB; the one found in the first
   mix (the options scrap splash at 0:38.3) was lowered by 3 dB.
 

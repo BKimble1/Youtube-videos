@@ -2,11 +2,11 @@
  "file": "exports/FGW_RobotsDestroy_v6_UPLOAD_1080p.mp4",
  "probe": {
   "duration_s": 216.733333,
-  "size_mib": 86.8,
+  "size_mib": 87.2,
   "video": "h264 High 1920x1080 30/1 fps, yuv420p, frames 6502",
   "color": "bt709/bt709/bt709",
   "audio": "aac 48000 Hz 2 ch 285 kbps",
-  "bitrate_mbps": 3.36
+  "bitrate_mbps": 3.37
  },
  "loudness": {
   "integrated_lufs": -15.0,
@@ -99,7 +99,7 @@
  ],
  "silences": [],
  "duplicates": {
-  "frames": 49,
+  "frames": 50,
   "runs_over_2": [
    [
     42.67,
