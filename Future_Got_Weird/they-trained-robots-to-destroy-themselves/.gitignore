@@ -26,3 +26,7 @@ tools/__pycache__/
 audio/v3/mix/*.wav
 qa/v3/*/f[0-9]*.png
 qa/v3/review/*.mp4
+# V4: QA frame dumps / review renders (keep contact sheets)
+audio/v4/mix/*.wav
+qa/v4/*/f[0-9]*.png
+qa/v4/review/*.mp4
