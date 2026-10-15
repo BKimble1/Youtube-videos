@@ -1,6 +1,59 @@
 # Future Got Weird: They Trained Robots to Destroy Themselves
 
-## V3 (14 Oct 2026): the current version
+## V4 (15 Oct 2026): the current version
+
+**Status.** The V4 revision is complete; V1–V3 are preserved unchanged. V4 redraws the episode as a fast illustrated
+explanation in vector art (about 85 % flat/controlled 2.5D, 15 % atmosphere) with cartoon F.02 and F.03
+characters (drawn from the brief's descriptions) and the channel's Crew. Narration, story, chapters and timing are identical to V2/V3: 3:53.5, 1920×1080,
+30 fps native.
+
+The V4 upload master was rendered from source and checked with measurements, transition strips around every
+transition and V3-vs-V4 comparison frames. It is **not published**; that is the owner's step. Nobody has yet watched
+it in real time or listened to it. `QA_REPORT.md` (V4 section) lists exactly what was and wasn't checked.
+
+| What | Where |
+|---|---|
+| Defect log (the brief's six ranked fixes, plus defects found during V4) | `production/v4/DEFECT_LOG_V4.md` |
+| Model records (F.02, F.03, avatar, performer, silhouette); symbol handling | `production/v4/MODEL_RECORDS_V4.md` |
+| Comparison sheets (front / ¾ / side / ¾ left, head, chest, phone-size; key poses) | `production/v4/V4Sheet0.png`, `V4Sheet1.png`, `V4Sheet2.png` |
+| Source credits | `production/v4/CREDITS_V4.md`; rights in `production/ASSET_RIGHTS.md` → "V4 additions" |
+| Editable source | `source/src/v4/` (compositions `V4Main`, `V4ThumbA/B`, `V4Sheet0/1/2`) |
+| Cue sheet, mix, speech-masking check | `source/src/v4/sfx_v4.ts`, `audio/v4/sfx_cues_v4.json`, `audio/v4/mix/mix_v4_measure.json`, `audio/v4/mix/speech_mask_v4.txt` |
+| **Upload master 1080p** | `exports/FGW_RobotsDestroy_v4_UPLOAD_1080p.mp4` (Git-ignored; backed up as checksummed parts in `backup/v4/`) |
+| Share/review copy (compressed, not for upload) | `exports/FGW_RobotsDestroy_v4_1080p_SHARE.mp4` (Git-ignored; regenerate with `tools/v4/share_and_backup_v4.sh`) |
+| Captions | `captions/FGW_RobotsDestroy_v4.srt` (same as V2/V3; timing unchanged) |
+| Thumbnails | `thumbnail/FGW_RobotsDestroy_v4_thumbA_edge_1280x720.jpg` (main), `…v4_thumbB_leap…` (backup) |
+| Title, description, chapters | `upload/UPLOAD_TEXT_v4.md`, `upload/chapters_v4.txt` |
+| QA | `QA_REPORT.md` (V4 section), `qa/v4/qa_v4_results.json`, strips `qa/v4/strips/`, comparisons `qa/v4/compare/` (model/emblem, 0:19.6 transition, 2:15 limb overlap, building/airbag) |
+
+**Source layout (`source/src/v4/`)**
+
+- `rig/` holds the vector robot: matrices, models, the `Robot2D` renderer, poses and the jump builder.
+- `kit/` holds the camera, timing, crew wrapper and chips, plus the paper-roll transition.
+- `sets/` holds the foundry, teaching stage, product bay and props.
+- `shots/` holds `Opening`, `WhyA`/`WhyB`, `Film`, `Train`, `Real`, `Prove` and `End`.
+- `sfx_v4.ts` is the cue sheet.
+- `dev/` holds the sheets and thumbnails.
+
+### Rebuild V4
+
+    cd Future_Got_Weird/they-trained-robots-to-destroy-themselves
+    (cd source && npm ci)
+    # V2 audio inputs (narration, effects, score) as in "Rebuild V2" below, then:
+    (cd source && node ../tools/v4/collect_sfx_v4.mjs)      # cue sheet from src/v4/sfx_v4.ts -> audio/v4/sfx_cues_v4.json
+    python3 tools/v4/mix_audio_v4.py                        # -> source/public/v4/audio/mix_v4.mp3 (-15 LUFS, -1.5 dBTP)
+    python3 tools/v4/speech_mask_v4.py                      # where effects come within 6 dB of the voice (measurement)
+    (cd source && npx remotion render src/index.ts V4Main ../exports/FGW_RobotsDestroy_v4_UPLOAD_1080p.mp4 --props='{"audio":"mix"}' --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k)
+    bash tools/v4/share_and_backup_v4.sh                    # share copy + checksummed backup parts
+    python3 tools/v4/qa_v4.py                               # measured QA -> qa/v4/qa_v4_results.json
+    python3 tools/v4/strips_v4.py                           # ±12-frame strips at every transition (qa/v4/transitions_v4.json)
+    python3 tools/v4/compare_v4.py                          # V3 vs V4 comparison frames
+
+Stills for inspection: `cd source && COMP=V4Main SCALE=0.5 node stills.mjs ../qa/<dir> t:<seconds> …`.
+
+---
+
+## V3 (14 Oct 2026)
 
 **Status.** The V3 rebuild is complete; V1 and V2 are preserved unchanged. V3 is a picture, animation, transition and
 defect-repair pass. The narration, story and timing are identical to V2: 3:53.5, 1920×1080, 30 fps native.

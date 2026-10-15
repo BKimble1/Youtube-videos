@@ -55,3 +55,20 @@ V3 makes no new generated media: no new narration, effect or music generations.
 | C04 | V3 mix | `tools/v3/mix_audio_v3.py`. B01 narration, B03 score and the B02 / V1 effects placed on the V3 cue sheet (`source/src/v3/sfx_v3.ts`) | As B01–B03 | Re-cued; levels adjusted against speech (measured, `audio/v3/mix/speech_mask_v3.txt`) | — | Check: same plan note as A01 |
 
 B06 ("Figure logo: not used") is superseded for V3 by C01.
+
+## V4 additions (Oct 15, 2026)
+
+V4 reuses these unchanged:
+
+- B01 (narration), B02 (V2 effect takes) and B03 (score, beds);
+- A03 (V1 in-house effects, three more of which are now cued);
+- A07 (cast), A08 (fonts), B07–B08 (post paraphrase, quote) and C01 (Figure symbol).
+
+V4 makes no new generated media: no new narration, effect or music generations.
+
+| ID | Asset | Origin / creator | Use and basis | Modifications | Attribution | Status |
+|---|---|---|---|---|---|---|
+| D01 | V4 illustration and animation | Original vector code in `source/src/v4`. It covers the F.02 / F.03 / avatar / performer / silhouette characters, the product bay, crate, foundry, teaching stage, street of foundry doors, test hall, factory aisle and all props | Owned by the channel | — | — | Clear |
+| D02 | Robot likeness (V4) | The V4 brief's written descriptions. Its reference images (NVIDIA blog, tendril.studio, ctfassets, Wikimedia previews) were blocked by the network policy, so nothing was traced or sampled | Editorial depiction of real products | Stylised. The F.02 now carries the symbol on the visor and chest with "F.02" below, as the V4 brief describes; the F.03 carries the chest symbol | Narration, titles, the credit line | Check: compare `production/v4/V4Sheet*.png` with official photos before upload |
+| D03 | V4 mix | `tools/v4/mix_audio_v4.py`: B01 narration, B03 score and B02 / V1 effects on the V4 cue sheet (`source/src/v4/sfx_v4.ts`) | As B01–B03 | Re-cued to the V4 animation; levels checked against speech (`audio/v4/mix/speech_mask_v4.txt`) | — | Check: same plan note as A01 |
+
