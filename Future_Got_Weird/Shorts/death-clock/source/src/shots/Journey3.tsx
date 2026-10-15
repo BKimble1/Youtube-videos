@@ -542,8 +542,9 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
   // cloud never scrolls into view as a speckle when the pull-out widens the view
   const sensorsA = clamp(inv(B.stream0 + 26, B.stream0 + 36, f)) * (1 - clamp(inv(B.pull0, B.pull0 + 10, f)));
   const tubeCommon = {f, px: pxs, sensors: sensorsA, sensorFront, release: SENSOR_REL, cells, s0: inRide ? hs - 900 : f < B.dive0 ? E0 - 900 : -99999, s1: inRide ? hs + 1500 : 99999};
-  // the red cell the hero passes behind: it overtakes on the near side
-  const occluder = {s: hs + lerp(-260, 300, ease(inv(B.pass0 + 2, B.pass0 + 26, f))), l: 18};
+  // the red cell the hero passes behind, on the near side. V4: the hero sweeps past it (it drifts back down the screen
+  // with every other cell, faster for its nearer depth); in V3 it overtook the hero and crossed the shot against the flow
+  const occluder = {s: hs + lerp(300, -260, ease(inv(B.pass0 + 2, B.pass0 + 26, f))), l: 18};
   const tubeSection = <VesselTube id={`${id}-vt`} path={VP} {...tubeCommon} hero={f >= B.heroRing - 12 ? hero(f) : undefined} occluder={occluder} />;
 
   const tr = armTrace(j);
