@@ -1,29 +1,83 @@
-# Future Got Weird Short: The Death Clock (V3)
+# Future Got Weird Short: The Death Clock (V4)
 
-A 45.0 s vertical Short (1080×1920, 30 fps, 1350 frames) about a **fictional** future wristband that counts down to the wearer's death, calls a hospital's drone and treats him. It is built as a loop: the last frame leads straight into the first. A small, unboxed "FICTIONAL FUTURE DEVICE" cue sits in the upper-left corner for the first 1.3 s, and the packaging text is plainly hypothetical (`upload/PACKAGING_V3.md`).
+A 45.0 s vertical Short (1080×1920, 30 fps, 1350 frames) about a **fictional** future wristband that counts down to the wearer's death, calls a hospital's drone and treats him. It is built as a loop: the last frame leads straight into the first. A small, unboxed "FICTIONAL FUTURE DEVICE" cue sits in the upper right for the first 1.3 s, and the packaging text is plainly hypothetical (`upload/PACKAGING_V4.md`).
 
 Not uploaded, scheduled or published.
 
-V3 rebuilds V2's weak systems against the V3 brief: a new 136-word narration read fast and nearly continuously, a rebuilt character rig with no exposed joint pieces, a supported collapse with planted contacts, a cold open on the red countdown, more action in the body journey, a curved torso cutaway in place of a flat x-ray panel, a hospital launch bay instead of a house-front platform, and a real audiovisual loop. **V1 and V2 are recoverable**: their deliverables are unchanged in `exports/v1/` and `exports/v2/`; V1's source is at commit `6772c36`, V2's at commit `7f601c1`.
+V4 is a focused polish of V3 against the V4 brief. It keeps V3's narration (the same recording), caption text and timing, story, hook, runtime, music stem and countdown origin. It corrects the defects the V3 review found:
+- the leash
+- the superimposed arm and chest reveals
+- the device geometry and treatment mechanism
+- the dispatch transitions and head clearance
+- the loop wrap
 
-## Deliverables (`exports/v3/`)
+**V1-V3 are recoverable.** Their deliverables are unchanged in `exports/v1/`, `exports/v2/` and `exports/v3/`. V1's source is at commit `6772c36`, V2's at `7f601c1` and V3's at `b5c02b1`.
+
+The director's design decisions are in `script/V4_DESIGN.md`.
+
+## Deliverables (`exports/v4/`)
 
 | File | What it is |
 |---|---|
-| `FGW_DeathClock_V3_Final_1080x1920.mp4` | Upload master: native 1080×1920 30 fps from the project source, burned-in captions, H.264 CRF 16, AAC 320k 48 kHz |
-| `FGW_DeathClock_V3_Review.mp4` | 540×960 review copy, the same 1350 frames and timing (a downscale of the master; not for upload) |
-| `FGW_DeathClock_V3_QA.md` | Timecoded QA notes: what was inspected, measured and not heard |
-| `FGW_DeathClock_V3_Captions.srt` | Aligned subtitles (38 cues, the same chunks as the burn-in) |
-| `FGW_DeathClock_V3_Cover_1080x1920.png` | Cover candidate (a frame of the caption-free composition) |
-| `FGW_DeathClock_V3_Narration.txt` | The V3 narration text |
-| `audio/FGW_DeathClock_V3_Narration_48k.wav` | The selected take after the silence-only gap edit (mono, 24-bit, exactly 45.0 s) |
-| `audio/FGW_DeathClock_V3_Stem_{narration,music,effects}_48k.wav` | Stems after ducking and the shared limiter; they sum to the mix |
-| `audio/FGW_DeathClock_V3_Mix_48k.wav` | Final mix |
+| `FGW_DeathClock_V4_Final_1080x1920.mp4` | Upload master: native 1080×1920 30 fps from the project source, burned-in captions, H.264 CRF 16, AAC 320k 48 kHz |
+| `FGW_DeathClock_V4_Review.mp4` | 540×960 review copy, the same 1350 frames and timing (a downscale of the master; not for upload) |
+| `FGW_DeathClock_V4_QA.md` | Timecoded correction and QA notes: what was inspected, measured and not heard |
+| `FGW_DeathClock_V4_Captions.srt` | Aligned subtitles (38 cues; caption text and timing unchanged from V3) |
+| `FGW_DeathClock_V4_Cover_1080x1920.png` | Cover candidate (a frame of the caption-free composition) |
+| `FGW_DeathClock_V4_Narration.txt` | The narration text (unchanged) |
+| `audio/FGW_DeathClock_V4_Narration_48k.wav` | The selected take after V3's silence-only gap edit (unchanged; mono, 24-bit, 45.0 s) |
+| `audio/FGW_DeathClock_V4_Stem_{narration,music,effects}_48k.wav` | Narration and music stems byte-identical to V3; effects stem rebuilt for V4; the three sum exactly to the mix |
+| `audio/FGW_DeathClock_V4_Mix_48k.wav` | Final mix |
 | `EXPORT_METADATA.json` | ffprobe data and SHA-256 for every file above |
 
-Supporting documents: `script/CUE_SHEET_V3.md` (27 units, countdown states, every narration gap), `audio/narration_v3/NARRATION_PROVENANCE.md` (audition, takes, selection, edit), `PROVENANCE.md`, `qa/v3/` (decoded-frame sheets, phone-overlay check, motion scan, seam check, device and audio checks, the prototype gate renders).
+Supporting files:
+- `qa/v4/`: decoded-frame sheets, phone overlay, motion scan, seam check, `DEVICE_CHECK.json`, `CAPTION_CHECK.json` and `AUDIO_QA.json`
+- `script/V4_DESIGN.md`
+- `PROVENANCE.md`
 
-## How V3 is built
+## What V4 changes (and where)
+
+- **Leash** (`art/Leash.tsx`, drawn once in `shots/Scene.tsx`):
+  - from the dog's collar ring, a J-hang to the grass and a released handle loop at one world point between the dog and the man
+  - never attached to him; no visibility gates
+  - one shared dog pose (`dogAt`)
+- **Rig** (`art/Man.tsx`, `shots/Opening.tsx`):
+  - soft two-bone IK; planted hands and feet stay exactly on their targets (bone stretch of 4.5% or less)
+  - the planted palm holds its angle in world space
+  - the hips land at rest (no overshoot at the hand contact)
+  - the far elbow tucks inside the tee
+  - the near sleeve crown is cut by the tee's outline; waist folds are soft creases
+- **Arm and chest anatomy** (`lib/reveal4.ts`, `lib/heart4.ts`, `art/Cutaway.tsx`, `art/Heart4.tsx`):
+  - one reveal authority: arm section, then closed exterior with a thin diagnostic trace, then chest window, then close, then wrist
+  - the arm and the chest are never open together
+  - the chest window is torso-shaped, sits on the visible front thorax and is mounted under the arm, sleeve and hand, which occlude it
+  - inside: a central heart between a larger right lung and a smaller notched left lung, great vessels with the arch toward his left, the diaphragm, and a liver that dims for the "organ failing" beat
+  - the heart squeezes on systole and its beats are shared with the sound
+  - the signals and the warning travel as dashes on the arm's trace, not as particles in the blood
+- **Device and treatment** (`art/Device.tsx`, `art/Interior.tsx`, `art/Hand.tsx`, B4 treatment keys):
+  - one compact geometry for every view: rounded profile, side button, underside panel and seam, shutter, actuator, small reservoir and sensor cartridge
+  - the hand clears into the section backdrop as the camera orbits to the underside
+  - the sensor shot is a light touch with sparse cyan beads
+  - the treatment chain: the shutter opens, the piston advances, the nose presses the skin, and one blue-white slug runs down a straight channel into the vessel and is tracked with the flow; then a match cut into the chest view, where the heart settles
+- **Dispatch** (`shots/Dispatch.tsx`, `art/Drone.tsx`, Aftermath3 arrival):
+  - the transmission pulse continues onto the map and into the hospital's dock ring, with a match cut on the dock beacon
+  - a continuous rooftop approach; the order is latch, then rotor spin-up, then lift, then travel; the rotor blur turns with pitch
+  - the drone is identical across the cut to the neighbourhood (screen position, scale, pitch, no roll); the houses sit on grass
+  - one consistent camera truck behind the trunk wipe
+  - the arrival brakes to a hover clear of his head (at least about 87 world units) and retreats before the recovery; the data link stays clear of his face and the digits
+- **Loop and device states** (`lib/device3.ts`):
+  - one periodic alarm in loop time (emissions at frames 1344, 6 and 18) drives the border flash, a ring round the glass that never crosses the digits, and the sound onsets
+  - no frame-0 ring, shake or glow step
+  - the screen's clock runs in loop time
+  - the compressed story time ends before the band is seen again
+  - the held screen stays red, and green wipes up over it at "Green replaces red"
+- **Captions:** the text, timing and style are unchanged. `scripts/check_captions4.ts` checks every captioned frame against the digits, port, treatment slug, heart, eyes and hero sensor; collisions were fixed by camera keys only.
+- **Sound** (`lib/sound4.ts`, `tools/build_audio_v4.py`):
+  - the V3 narration and music stems are reused byte-for-byte
+  - only the effects bus is rebuilt, under V3's own gain envelope (no loudness rebuild)
+  - new cues follow the picture: latch, rotor path, shutter, actuator, contact, treatment pulse, retract, port close, heartbeats from the shared schedule, the periodic alarm and a cyclic ambience
+
+## How V3 is built (the base V4 polishes)
 
 **Rig** (`source/src/lib/limb.tsx`, `lib/ink.tsx`, `art/Man.tsx`, `art/Hand.tsx`, `art/Head.tsx`). Each arm and leg is one continuous contour from shoulder to wrist or hip to ankle: the two segments' side lines meet in an arc round the outside of the joint and a soft fold inside; the two cylinder gradients cross-fade across the joint, and a short crease is drawn only on a clearly bent joint. The whole figure is one outer contour group (its exterior silhouette), with thinner occlusion lines inside; a contour that would cross a joint where a part grows out of the body (shoulder, hip) dissolves there. The sleeve grows out of the shoulder (the tee's stripes run on into it) and ends in an open hem; the palm and fingers share the forearm's contour, so no line crosses the wrist; the ear sits inside the head's contour. Feet can be planted with two-bone IK, so the collapse never slides a foot.
 
@@ -39,48 +93,55 @@ Supporting documents: `script/CUE_SHEET_V3.md` (27 units, countdown states, ever
 
 ## One cue system
 
-`audio/narration_v3/narration_words_final.json` (copied to `source/src/data/narration_words_v3.json`) holds the measured word times. `source/src/lib/timeline3.ts` turns them into the beat table `B` and the unit list `UNITS`; every camera mark, device state, caption window and sound cue reads from them. `source/scripts/export_cues3.ts` writes `audio/v3/cues.json`, from which the mix, the SRT and the cue sheet are built.
+The cue system is unchanged from V3:
+- `source/src/data/narration_words_v3.json` holds the measured word times.
+- `lib/timeline3.ts` turns them into the beat table `B`; V4 does not change it. Captions, countdown and the reused music stem read it.
+- V4's new action keys live in `lib/beats4.ts` (`B4`). The picture and `lib/sound4.ts` both read them, along with the shared heartbeat schedule (`lib/heart4.ts`), the alarm onsets (`lib/device3.ts`) and the drone's screen view (`Dispatch.droneView`).
+- `scripts/export_cues4.ts` writes `audio/v4/cues.json`, from which the effects stem and the mix are built.
 
 ## Rebuild
 
 Requirements: Node 20+, Python 3.11+ with numpy and Pillow, ffmpeg/ffprobe, and Chromium (`/opt/pw-browsers/...` here; the path is set in `source/remotion.config.ts`).
 
 ```bash
-python3 tools/build_voice_v3.py           # take C4 -> audio/narration_v3/narration_final_48k.wav (silence-only gap edit; committed)
-cp audio/narration_v3/narration_words_final.json source/src/data/narration_words_v3.json
 cd source
 npm ci
 npx tsc --noEmit
-npx tsx scripts/export_cues3.ts           # -> ../audio/v3/cues.json
-npx tsx scripts/check_device3.ts          # countdown and states, every frame -> ../qa/v3/DEVICE_CHECK.json
+npx tsx scripts/check_device3.ts          # countdown, alarm and device states, every frame -> ../qa/v4/DEVICE_CHECK.json
+npx tsx scripts/check_captions4.ts        # captions vs digits/port/slug/heart/eyes/hero, every frame -> ../qa/v4/CAPTION_CHECK.json
+npx tsx scripts/export_cues4.ts           # -> ../audio/v4/cues.json (asserts timeline3, caption windows and the V3 music plan are unchanged)
 cd ..
-python3 tools/build_audio_v3.py           # cues + narration + SFX -> audio/v3/stems, audio/v3/mix, audio/v3/MIX_LOG.json
-python3 tools/qa_audio_v3.py qa/v3/AUDIO_QA.json
-python3 tools/make_srt_v3.py captions/FGW_DeathClock_V3.srt
-python3 tools/make_cue_sheet_v3.py        # -> script/CUE_SHEET_V3.md
+python3 -B tools/build_audio_v4.py        # V3 narration/music stems reused; effects rebuilt under V3's gain envelope -> audio/v4
+python3 -B tools/qa_audio_v4.py           # -> qa/v4/AUDIO_QA.json
 cd source
-npx remotion render src/index.ts DeathClock ../exports/_wip/v3_captioned_silent.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --muted --concurrency=4
-node scripts/frames.mjs ../exports/_wip/cover DeathClockClean 690 1 && mv ../exports/_wip/cover/DeathClockClean_0690.png ../exports/_wip/v3_cover.png
+npx remotion render src/index.ts DeathClock ../exports/_wip/v4_captioned_silent.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --muted --concurrency=4
+node scripts/frames.mjs ../exports/_wip/cover DeathClockClean COVER_FRAME 1 && mv ../exports/_wip/cover/DeathClockClean_*.png ../exports/_wip/v4_cover.png
 cd ..
-python3 tools/export_v3.py                # mux, review copy, audio/text deliverables, metadata -> exports/v3
-F=exports/v3/FGW_DeathClock_V3_Final_1080x1920.mp4
-python3 tools/qa_sheets.py $F qa/v3 6 0,40,90,200,330,420,520,640,690,760,830,960,1060,1150,1240,1300,1340
-python3 tools/motion_scan.py $F
-python3 tools/seam_check_v3.py            # loop seam: last 1.5 s + first 1.5 s x3, picture and sound -> qa/v3/seam
+python3 -B tools/export_v4.py             # mux, review copy, audio/text deliverables, metadata -> exports/v4
+F=exports/v4/FGW_DeathClock_V4_Final_1080x1920.mp4
+python3 tools/qa_sheets.py $F qa/v4 6 0,40,90,200,330,420,520,640,690,760,830,960,1060,1150,1240,1300,1340
+python3 tools/motion_scan.py $F qa/v4/cuts.json qa/v4/MOTION_SCAN.json
+python3 -B tools/seam_check_v4.py         # loop seam: last 1.5 s + first 1.5 s x3, picture and sound -> qa/v4/seam
 ```
 
-The full render takes about 20–25 minutes on this container (the deep zooms inside the arm are the slow frames). Renders are deterministic: no random calls at render time, no network fetches, springs re-simulated from a fixed window of past frames. `npx remotion studio src/index.ts` opens the compositions: `DeathClock` (captioned) and `DeathClockClean` (no narration captions) are the film; `RigCollapse`, `RigElbow`, `J3Test`, `DispTest`, `AftTest`, `DeviceTest` and `Lab*` are development rigs.
+The V4 audio build reads `audio/v3/cues.json` and the V3 tools (read-only) to rebuild V3's gain envelope, so those V3 files must stay as committed.
+
+The full render takes about 25-30 minutes on this container. Renders are deterministic: no random calls at render time and no network fetches.
+
+`npx remotion studio src/index.ts` opens the compositions:
+- `DeathClock` (captioned) and `DeathClockClean` (no narration captions) are the film.
+- `RigCollapse`, `RigElbow`, `J3Test`, `DispTest`, `AftTest`, `DeviceTest` and `Lab*` are development rigs.
 
 ## Layout
 
 ```
-script/      narration_v3.json (V3 text), CUE_SHEET_V3.md (V2/V1: narration_locked.json, CUE_SHEET_V2.md, CUE_SHEET.md)
-source/src/  lib/ (timeline3, device3, captions, sound3, limb, camera, ink, shading, motion)
-             art/ (Man, Head, Hand, Dog, Device, Interior, Cutaway, Street, Drone, Map, ...)
+script/      narration_v3.json (the locked text), V4_DESIGN.md, CUE_SHEET_V3.md (V2/V1 cue sheets kept)
+source/src/  lib/ (timeline3, beats4, device3, reveal4, heart4, captions, sound3, sound4, limb, camera, ink, shading, motion)
+             art/ (Man, Head, Hand, Dog, Leash, Device, Interior, Cutaway, Heart4, Street, Drone, Map, ...)
              shots/ (Opening, Journey3, Dispatch, Aftermath3, Scene, StreetShots, Overlay)
-audio/       narration_v3/ (audition, takes, edit, word times), v3/ (cues, stems, mix); V1/V2 audio kept
-tools/       *_v3.py builders and checks; V1/V2 tools kept
-exports/     v3/ deliverables; v1/, v2/ unchanged
-qa/v3/       decoded-frame sheets, phone overlay, motion scan, seam check, AUDIO_QA.json, DEVICE_CHECK.json, prototype/
-upload/      PACKAGING_V3.md (V2: PACKAGING_V2.md, V1: PACKAGING.md)
+audio/       narration_v3/ (audition, takes, edit, word times), v4/ (cues, stems, mix); V1-V3 audio kept
+tools/       *_v4.py builders and checks; V1-V3 tools kept
+exports/     v4/ deliverables; v1/, v2/, v3/ unchanged
+qa/v4/       decoded-frame sheets, phone overlay, motion scan, seam check, CAPTION_CHECK.json, AUDIO_QA.json, DEVICE_CHECK.json
+upload/      PACKAGING_V4.md (earlier versions kept)
 ```
