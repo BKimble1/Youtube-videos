@@ -58,31 +58,62 @@ const robotAt = (t: number): RPose | null => {
 };
 
 export const IMATRA_EV = {robotAt: (t: number) => robotAt(t), IM_WALK};
-/** Crane skip: travels along the girder over the ladle and tips its scrap in. */
+/** Crane skip (V6.1): a runway girder on the same plane as the skip, a trolley riding on it, two hoist ropes to a hook
+ * block, and a bail pinned to the bucket's pivot. The trolley carries it over the ladle and the bucket tips about that
+ * pin (so it never leaves its ropes); the scrap pours from its lip into the steel. */
+const SK = {girderY: 96, girderH: 34, pinY: 430, pour: 125};
+const skipPin = (t: number) => ({x: lerp(140, FD.ladle.cx - 70, easeInOut(seg(t, T_RECYC - 0.4, T_RECYC + 0.5))), y: SK.pinY});
+const skipTip = (t: number) => easeInOut(seg(t, T_RECYC + 0.5, T_RECYC + 0.85)) * (1 - easeInOut(seg(t, T_RECYC + 1.6, T_RECYC + 2.1)));
+/** The bucket's pouring lip in world space (local (88, -36) rotated about the pin). */
+const lipAt = (t: number) => {
+  const p = skipPin(t), a = (SK.pour * skipTip(t) * Math.PI) / 180;
+  return {x: p.x + 88 * Math.cos(a) + 36 * Math.sin(a), y: p.y + 88 * Math.sin(a) - 36 * Math.cos(a)};
+};
+const POUR0 = T_RECYC + 0.74;                              // first scrap leaves the lip (bucket past 90°)
 const Skip: React.FC<{t: number; lw: number}> = ({t, lw}) => {
-  const t0 = T_RECYC - 0.4;
-  const x = lerp(160, FD.ladle.cx - 40, easeInOut(seg(t, t0, t0 + 0.9)));
-  const tip = easeInOut(seg(t, t0 + 0.9, t0 + 1.25)) * (1 - easeInOut(seg(t, t0 + 2.0, t0 + 2.5)));
-  const by = 470;
-  const pieces = [0, 1, 2, 3].map((k) => {
-    const td = t - (t0 + 1.05 + k * 0.08);
+  const p = skipPin(t);
+  const tip = skipTip(t);
+  const blockY = p.y - 120;
+  const trolY = SK.girderY + SK.girderH;
+  const pieces = [0, 1, 2, 3, 4].map((k) => {
+    const t0 = POUR0 + k * 0.07;
+    const td = t - t0;
     if (td < 0) return null;
-    const y = by + 30 + 0.5 * 2400 * td * td;
+    const l0 = lipAt(t0);
+    const x = l0.x + 60 * td + k * 6, y = l0.y + 120 * td + 0.5 * 2400 * td * td;
     if (y > FD.ladle.surf - 4) return null;
-    return <Scrap key={k} x={x + 40 + k * 26} y={y} kind={k} rot={td * 300} lw={lw} />;
+    return <Scrap key={k} x={x} y={y} kind={k % 4} rot={td * 300 + k * 40} lw={lw} />;
   });
   return (
     <g>
-      <rect x={x - 80} y={128} width={160} height={56} rx={6} fill="#4F5562" stroke={FCOL.ink} strokeWidth={lw} />
-      <line x1={x} y1={184} x2={x} y2={by - 60} stroke={FCOL.ink} strokeWidth={lw * 1.4} />
-      <g transform={`rotate(${tip * 62} ${x + 70} ${by})`}>
-        <path d={`M${x - 90} ${by - 60} L${x + 90} ${by - 60} L${x + 70} ${by + 40} L${x - 70} ${by + 40} Z`} fill="#6A5A57" stroke={FCOL.ink} strokeWidth={lw} strokeLinejoin="round" />
-        {tip < 0.4 ? [0, 1, 2].map((k) => <Scrap key={k} x={x - 40 + k * 40} y={by - 70} kind={k + 1} lw={lw} />) : null}
+      {/* runway girder (same plane as the skip) */}
+      <rect x={-1200} y={SK.girderY} width={3600} height={SK.girderH} fill="#3E3238" stroke={FCOL.ink} strokeWidth={lw} />
+      {Array.from({length: 36}, (_, i) => <path key={i} d={`M${-1200 + i * 100} ${SK.girderY + 4} L${-1150 + i * 100} ${trolY - 4} L${-1100 + i * 100} ${SK.girderY + 4}`} fill="none" stroke={FCOL.ink} strokeWidth={lw * 0.6} opacity={0.5} />)}
+      {/* trolley riding on the girder's bottom flange */}
+      {[-38, 38].map((dx) => <circle key={dx} cx={p.x + dx} cy={trolY + 2} r={11} fill="#2B2E35" stroke={FCOL.ink} strokeWidth={lw * 0.8} />)}
+      <rect x={p.x - 66} y={trolY + 8} width={132} height={40} rx={6} fill="#4F5562" stroke={FCOL.ink} strokeWidth={lw} />
+      {/* two hoist ropes to the hook block, the bail from the block to the bucket's pin */}
+      {[-30, 30].map((dx) => <line key={dx} x1={p.x + dx} y1={trolY + 48} x2={p.x + dx * 0.4} y2={blockY} stroke={FCOL.ink} strokeWidth={lw * 1.4} />)}
+      <rect x={p.x - 22} y={blockY - 6} width={44} height={34} rx={6} fill="#6A6F78" stroke={FCOL.ink} strokeWidth={lw} />
+      <path d={`M${p.x - 12} ${blockY + 28} L${p.x - 4} ${p.y} M${p.x + 12} ${blockY + 28} L${p.x + 4} ${p.y}`} stroke={FCOL.ink} strokeWidth={lw * 2.2} strokeLinecap="round" />
+      <g transform={`rotate(${SK.pour * tip} ${p.x} ${p.y})`}>
+        <path d={`M${p.x - 92} ${p.y - 36} L${p.x + 92} ${p.y - 36} L${p.x + 70} ${p.y + 64} L${p.x - 70} ${p.y + 64} Z`} fill="#6A5A57" stroke={FCOL.ink} strokeWidth={lw} strokeLinejoin="round" />
+        <rect x={p.x - 96} y={p.y - 44} width={192} height={12} rx={4} fill="#7E6C68" stroke={FCOL.ink} strokeWidth={lw * 0.8} />
+        {[-50, 0, 50].map((dx) => <line key={dx} x1={p.x + dx} y1={p.y - 30} x2={p.x + dx * 0.8} y2={p.y + 60} stroke={FCOL.ink} strokeWidth={lw * 0.6} opacity={0.5} />)}
+        {t < POUR0 + 0.05 ? [0, 1, 2].map((k) => <Scrap key={k} x={p.x - 46 + k * 46} y={p.y - 48} kind={k + 1} lw={lw} />) : null}
       </g>
+      <circle cx={p.x} cy={p.y} r={9} fill="#9AA4AE" stroke={FCOL.ink} strokeWidth={lw} />
       {pieces}
     </g>
   );
 };
+/** When and where the first scrap reaches the steel (for the splash and the sound). */
+const SKIP_FALL = (() => {
+  const l0 = lipAt(POUR0);
+  const dt = (-120 + Math.sqrt(120 * 120 + 2 * 2400 * (FD.ladle.surf - l0.y))) / 2400;
+  return {t: POUR0 + dt, x: l0.x + 60 * dt + 12};
+})();
+export const SKIP_HIT = SKIP_FALL.t;
 
 const silhouette = <filter id="silIm"><feColorMatrix type="matrix" values="0 0 0 0 0.06  0 0 0 0 0.04  0 0 0 0 0.05  0 0 0 1 0" /></filter>;
 
@@ -92,7 +123,7 @@ export const ImatraWorld: React.FC<{t: number; f: number; cam: Cam}> = ({t, f, c
   const p = robotAt(t);
   const flash = Math.max(0, 1 - Math.abs(t - T_GOIN - 0.05) / 0.35) * (t > T_GOIN - 0.3 ? 1 : 0);
   const tHit = t - (T_GOIN - 0.05);
-  const scrapHit = t - (T_RECYC - 0.4 + 1.42);
+  const scrapHit = t - SKIP_HIT;
   const lights = smooth(seg(t, T_FILM + 0.25, T_FILM + 0.4));
   const B = FD.booth;
   const lean = smooth(seg(t, T_SPOKE + 0.6, T_GOIN - 0.2)) * (1 - smooth(seg(t, T_GOIN, T_GOIN + 0.4)));
@@ -112,7 +143,7 @@ export const ImatraWorld: React.FC<{t: number; f: number; cam: Cam}> = ({t, f, c
     </g>
   );
   return (
-    <FoundryView5 cam={cam} t={t} hook={false} id="imf" hit={tHit > 0 ? {x: 760, t: tHit} : scrapHit > 0 ? {x: FD.ladle.cx, t: scrapHit} : undefined}
+    <FoundryView5 cam={cam} t={t} hook={false} id="imf" hit={tHit > 0 ? {x: 760, t: tHit} : scrapHit > 0 ? {x: SKIP_FALL.x, t: scrapHit} : undefined}
       booth={witness}
       extraBack={(
         <g>
@@ -124,7 +155,7 @@ export const ImatraWorld: React.FC<{t: number; f: number; cam: Cam}> = ({t, f, c
       behind={p ? <Bot cam={cam} id="imR" model="F02" s={FS} pose={p} /> : null}
       inside={<>
         <Splash6 x={760} t={tHit} lw={lw} part="front" scale={0.9} />
-        <Splash6 x={FD.ladle.cx} t={scrapHit} lw={lw} part="front" scale={0.45} />
+        <Splash6 x={SKIP_FALL.x} t={scrapHit} lw={lw} part="front" scale={0.45} />
       </>} />
   );
 };

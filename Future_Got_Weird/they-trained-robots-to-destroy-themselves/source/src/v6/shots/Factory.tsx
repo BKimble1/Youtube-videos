@@ -43,14 +43,18 @@ const R0 = rig(P0, 1);
 const PALM_OFF = {x: R0.pts.handN[0] - R0.pts.wrN[0], y: R0.pts.handN[1] - R0.pts.wrN[1]};
 /** Grip point at the cut: the near palm. The panel's top edge sits just under it. */
 const G0 = {x: R0.pts.handN[0], y: R0.pts.handN[1]};
-const TOTE_X = G0.x + 6;
+// V6.1: panels are held by a top corner (near hand), so the tab and its hole stay visible on the way to the hook
+const CORNER = PANEL.w / 2 - 16;
+const TOTE_X = G0.x + 6 + CORNER;
 const PANEL_IN_TOTE = {x: TOTE_X, y: G0.y + 6 + PANEL.h / 2};
 const TOTE_TOP = PANEL_IN_TOTE.y + 14;
 const HOOK_X = G0.x + 22;
 const HOOK_Y = G0.y - 92;
-/** Hanging panel centre for a hook tip at x. */
-const hangAt = (hx: number) => ({x: hx, y: HOOK_Y + PANEL.tab - 8 + PANEL.h / 2});
-const GRIP_ON_HOOK = {x: 0, y: HOOK_Y + PANEL.tab - 8 - 6}; // grip (palm) relative to a hook tip
+/** Hanging panel centre for a hook at x: the tab's hole sits in the bottom of the J (x + 10, HOOK_Y). */
+const hangAt = (hx: number) => ({x: hx + 10, y: HOOK_Y + PANEL.tab - 8 + PANEL.h / 2});
+const GRIP_ON_HOOK = {x: 10 - CORNER, y: HOOK_Y + PANEL.tab - 8 - 6}; // F.02 palm (top-left corner) on a hung panel
+/** F.02 palm for the tab hole at (hx, hy): the hole is CORNER right of and 8 above the palm. */
+const palmForHole = (hx: number, hy: number) => ({x: hx - CORNER, y: hy + 8});
 
 // ------------------------------------------------------------------ plant time and the line
 const HSP = 330, V = 140, PER = HSP / V; // hook spacing, line speed (u/s), cycle period (s)
@@ -88,11 +92,11 @@ const BODY_REACH: RPose = {...BODY_REST, y: BODY_REST.y + 14, rot: 6, waist: 12,
 const BODY_LIFT: RPose = {...BODY_REST, y: BODY_REST.y - 4, rot: -2, waist: 0, neck: -6, head: -8};
 
 type Held = {pose: RPose; panel: {x: number; y: number} | null; grip: number; k: number; ph: number};
-const panelFromPalm = (pm: {x: number; y: number}) => ({x: pm.x, y: pm.y + 6 + PANEL.h / 2});
+const panelFromPalm = (pm: {x: number; y: number}, face: 1 | -1 = 1) => ({x: pm.x + face * CORNER, y: pm.y + 6 + PANEL.h / 2});
 /** Where a panel waits in the tote for cycles ≥ 1: exactly under the palm the reaching pose arrives at. */
 const PANEL_IN_TOTE_K = (() => {
   const wt = {x: G0.x - PALM_OFF.x, y: G0.y - PALM_OFF.y};
-  const p = reachArms({...BODY_REACH, ...feet}, 1, 1, wt, {x: wt.x - 10, y: wt.y + 8}, 1);
+  const p = reachArms({...BODY_REACH, ...feet}, 1, 1, wt, {x: wt.x + 2 * CORNER, y: wt.y + 2}, 1);
   return panelFromPalm(palms(p, 1, 1).N);
 })();
 /** F.02 pose for plant time tau. Cycle 0 starts from the matched pose (FK arms), blending into the grasp. */
@@ -106,26 +110,33 @@ const f02At = (tau: number): Held => {
   else body = blend(BODY_LIFT, BODY_REST, smooth(seg(ph, PH.rel, 1)));
   body = {...body, ...feet};
   const hk = hookX(k, tau);
+  // after letting go the hand no longer follows the moving hook: it pulls back from where it released
+  const hkRel = hookX(k, C0 + (k + PH.rel) * PER);
   const onHook = {x: hk + GRIP_ON_HOOK.x, y: GRIP_ON_HOOK.y};
-  const g0 = k === 0 ? G0 : {x: PANEL_IN_TOTE_K.x, y: PANEL_IN_TOTE_K.y - 6 - PANEL.h / 2};
+  const g0 = k === 0 ? G0 : {x: PANEL_IN_TOTE_K.x - CORNER, y: PANEL_IN_TOTE_K.y - 6 - PANEL.h / 2};
+  // the tab goes up the right side of the hook, over its tip, then drops its hole into the bottom of the J
+  const below = palmForHole(hk + 30, HOOK_Y + 26), above = palmForHole(hk + 30, HOOK_Y - 24);
   let grip: {x: number; y: number};
   if (ph < PH.grip) grip = g0;
   else if (ph < PH.lift) {
-    const a = {x: hk - 12, y: GRIP_ON_HOOK.y + 46};
     const u = smooth(seg(ph, PH.grip, PH.lift));
-    grip = {x: lerp(g0.x, a.x, u), y: lerp(g0.y, a.y, u) - Math.sin(Math.PI * u) * 24};
+    grip = {x: lerp(g0.x, below.x, u), y: lerp(g0.y, below.y, u) - Math.sin(Math.PI * u) * 24};
   } else if (ph < PH.over) {
     const u = smooth(seg(ph, PH.lift, PH.over));
-    grip = {x: lerp(hk - 12, onHook.x, u), y: lerp(GRIP_ON_HOOK.y + 46, onHook.y - 16, u)};
-  } else if (ph < PH.hang) grip = {x: onHook.x, y: lerp(onHook.y - 16, onHook.y, smooth(seg(ph, PH.over, PH.hang)))};
-  else {
+    grip = {x: lerp(below.x, above.x, u), y: lerp(below.y, above.y, u)};
+  } else if (ph < PH.hang) {
+    const u = smooth(seg(ph, PH.over, PH.hang));
+    grip = {x: lerp(above.x, onHook.x, u), y: lerp(above.y, onHook.y, u)};
+  } else {
     const u = smooth(seg(ph, PH.hang, PH.rel));
-    grip = {x: onHook.x - 30 * u, y: onHook.y + 20 * u};
+    const hx = ph < PH.rel ? hk : hkRel;
+    grip = {x: hx + GRIP_ON_HOOK.x - 26 * u, y: GRIP_ON_HOOK.y + 36 * u};
   }
   const w = k === 0 && ph < PH.grip ? smooth(seg(ph, PH.reach, PH.grip)) : ph < PH.reach ? smooth(seg(ph, 0.02, PH.reach)) : ph < PH.rel ? 1 : 1 - smooth(seg(ph, PH.rel, 0.97));
   const gripK = ph < PH.reach ? 0.12 : ph < PH.grip ? lerp(0.12, 0.88, smooth(seg(ph, PH.reach, PH.grip))) : ph < PH.hang ? 0.88 : lerp(0.88, 0.12, smooth(seg(ph, PH.hang, PH.rel)));
   const wN = {x: grip.x - PALM_OFF.x, y: grip.y - PALM_OFF.y};
-  const pose = reachArms({...body, armN: {...body.armN, grip: gripK}, armF: {...body.armF, grip: gripK}}, 1, 1, wN, {x: wN.x - 10, y: wN.y + 8}, w);
+  // far hand braces the other top corner (behind the panel)
+  const pose = reachArms({...body, armN: {...body.armN, grip: gripK}, armF: {...body.armF, grip: gripK}}, 1, 1, wN, {x: wN.x + 2 * CORNER, y: wN.y + 2}, w);
   let panel: {x: number; y: number} | null = null;
   if (ph < PH.reach) panel = k === 0 ? panelFromPalm(G0) : PANEL_IN_TOTE_K;
   else if (ph < PH.hang + 0.05) {
@@ -150,23 +161,23 @@ const f03At = (tau: number) => {
   const kf = (tau - (TK(0) + LAG * PER) + 0.3 * PER) / PER;
   const k = Math.floor(kf), ph = kf - k;
   const hk = hookX(k, tau);
-  const top = {x: hk, y: GRIP_ON_HOOK.y};
-  const jig = {x: JIG_X, y: JIG_PANEL_Y - 6 - PANEL.h / 2};
+  const top = {x: hangAt(hk).x + CORNER, y: GRIP_ON_HOOK.y};   // its palm on the panel's top-right corner
+  const jig = {x: JIG_X + CORNER, y: JIG_PANEL_Y - 6 - PANEL.h / 2};
   let grip = top;
-  if (ph >= 0.3 && ph < 0.42) grip = {x: hk, y: GRIP_ON_HOOK.y - 26 * smooth(seg(ph, 0.3, 0.42))};
+  if (ph >= 0.3 && ph < 0.42) grip = {x: top.x + 14 * smooth(seg(ph, 0.3, 0.42)), y: GRIP_ON_HOOK.y - 30 * smooth(seg(ph, 0.3, 0.42))};
   else if (ph >= 0.42 && ph < 0.8) {
     const u = smooth(seg(ph, 0.42, 0.8));
-    const a = {x: hookX(k, TK(k) + LAG * PER + 0.12 * PER), y: GRIP_ON_HOOK.y - 26};
+    const a = {x: hangAt(hookX(k, TK(k) + LAG * PER + 0.12 * PER)).x + CORNER + 14, y: GRIP_ON_HOOK.y - 30};
     grip = {x: lerp(a.x, jig.x, u), y: lerp(a.y, jig.y, u) - Math.sin(Math.PI * u) * 30};
   } else if (ph >= 0.8) grip = {x: jig.x + 24 * smooth(seg(ph, 0.8, 0.88)), y: jig.y + 16 * smooth(seg(ph, 0.8, 0.88))};
   const body = ph < 0.42 ? blend(F3_REST, F3_REACH, smooth(seg(ph, 0.05, 0.28))) : ph < 0.8 ? blend(F3_REACH, F3_BEND, smooth(seg(ph, 0.5, 0.8))) : blend(F3_BEND, F3_REST, smooth(seg(ph, 0.86, 1)));
   const w = ph < 0.3 ? smooth(seg(ph, 0.05, 0.28)) : ph < 0.86 ? 1 : 1 - smooth(seg(ph, 0.86, 0.99));
   const gK = ph < 0.22 ? 0.12 : ph < 0.32 ? lerp(0.12, 0.88, seg(ph, 0.22, 0.32)) : ph < 0.8 ? 0.88 : lerp(0.88, 0.12, seg(ph, 0.8, 0.88));
   const wN = {x: grip.x + PALM_OFF.x, y: grip.y - PALM_OFF.y};
-  const pose = reachArms({...body, armN: {...body.armN, grip: gK}, armF: {...body.armF, grip: gK}}, 1, -1, wN, {x: wN.x + 10, y: wN.y + 8}, w);
+  const pose = reachArms({...body, armN: {...body.armN, grip: gK}, armF: {...body.armF, grip: gK}}, 1, -1, wN, {x: wN.x - 2 * CORNER, y: wN.y + 2}, w);
   let panel: {x: number; y: number} | null = null;
   if (ph >= 0.3 && ph < 0.84) {
-    const fromPalm = panelFromPalm(palms(pose, 1, -1).N);
+    const fromPalm = panelFromPalm(palms(pose, 1, -1).N, -1);
     const onH = hangAt(hk);
     const toJig = {x: JIG_X, y: JIG_PANEL_Y};
     const u0 = smooth(seg(ph, 0.3, 0.36)), u1 = smooth(seg(ph, 0.76, 0.84));
@@ -222,7 +233,7 @@ const camLine = (t: number) => (t < HOOK_END + 0.35 ? camRaw(t) : smoothCam(camR
 
 // ------------------------------------------------------------------ service / power-down shot (after T_KEEP)
 const SV_CAM: Cam = {x: 40, y: 640, z: 1.22};
-const DOLLY_X = 30;
+
 
 export const Factory: React.FC = () => {
   const f = useCurrentFrame() + Math.round(HOOK_END * 30);
@@ -281,8 +292,8 @@ export const Factory: React.FC = () => {
             {j < 2 || t > fl.tIn ? <Bot cam={cam} id={'fl3' + j} model="F03" s={1} face={-1} pose={fleetPose(j, t)} /> : null}
           </g>
         )) : null}
-        <HookLine x0={-1400} x1={6000} lw={lw} hooks={hooks} hookY={HOOK_Y} />
         {hanging}
+        <HookLine x0={-1400} x1={6000} lw={lw} hooks={hooks} hookY={HOOK_Y} />
         {/* the F.03 station: jig + robot */}
         <rect x={JIG_X - 70} y={G - 24} width={140} height={24} rx={6} fill={BCOL.frameD} stroke={BCOL.ink} strokeWidth={lw} />
         {f3.k > -6 ? <Panel x={JIG_X} y={JIG_PANEL_Y} lw={lw} /> : null}
@@ -301,54 +312,71 @@ export const Factory: React.FC = () => {
   );
 };
 
-/** Service shot: the F.02 stopped, a technician at its forearm, then power-down and onto a hand truck.
- * V6: the wrench is a world prop with one owner at a time — on the bolt in an opened forearm hatch (hand on the handle,
- * three short ratchet strokes), then back on the technician's belt; only then does the hand press the power button.
- * Depth order is fixed: robot → hatch/component → wrench → technician's hand. */
+/** Service shot (V6.1): the F.02 turns to face the technician and holds its forearm out to him; the hatch faces the
+ * camera and a short spanner works the bolt between them (nothing crosses the robot's body). The spanner goes back on
+ * his belt, he steps in and presses the power button on the robot's chest, and the robot powers down and settles back
+ * against the hand truck waiting behind it. Depth order: hand truck → robot → hatch → spanner → technician. */
+const SV_X = 60;                                           // the robot's root x
 const Service: React.FC<{t: number; f: number}> = ({t, f}) => {
   const cam = smoothCam((tt) => mixCam(SV_CAM, {...SV_CAM, x: SV_CAM.x - 60, z: SV_CAM.z * 1.04}, seg(tt, T_KEEP, FACTORY_END)), t, 0.2);
   const lw = 4 / cam.z;
-  const offK = smooth(seg(t, T_STOP + 0.25, T_STOP + 0.8));
-  const sag = smooth(seg(t, T_STOP + 0.45, T_STOP + 1.0));
-  const tip = smooth(seg(t, T_STOP + 1.05, T_WIPE + 0.1));
-  const base = stand(0, G, 1, {yaw: 0.45, armN: A(lerp(30, 4, sag), lerp(70, 12, sag), {grip: 0.3}), armF: A(-6, 16), neck: 10 * sag, head: 16 * sag, waist: 4 * sag});
-  const pivot = {x: DOLLY_X + 40, y: G - 30};
-  const ang = -14 * tip;
-  const tech = {x: -330, y: G, h: 560, flip: false};
-  const R = rig(base, 1).pts;
+  const PRESS = T_STOP + 0.25;
+  const offK = smooth(seg(t, PRESS, PRESS + 0.45));
+  const sag = smooth(seg(t, PRESS + 0.2, PRESS + 0.75));
+  // the forearm is held out to the technician while the hatch is open, then lowered before he steps in
+  const present = smooth(seg(t, T_KEEP - 0.35, T_KEEP)) * (1 - smooth(seg(t, T_STOP - 0.3, T_STOP + 0.05)));
+  const base = stand(SV_X, G, 1, {yaw: 0.85, armN: A(lerp(4, 80, present), lerp(12, 6, present), {grip: 0.3 + 0.2 * present}),
+    armF: A(-6, 16), neck: 12 * sag, head: 18 * sag, waist: 5 * sag, rot: 4 * sag}, -1);
+  const R = rig(base, 1, -1).pts;
   const fa = Math.atan2(R.wrN[1] - R.elN[1], R.wrN[0] - R.elN[0]);
-  const bolt = {x: R.elN[0] + 0.32 * (R.wrN[0] - R.elN[0]), y: R.elN[1] + 0.32 * (R.wrN[1] - R.elN[1])};
-  const hatchK = smooth(seg(t, T_KEEP - 0.2, T_KEEP + 0.1)) * (1 - smooth(seg(t, T_STOP - 0.3, T_STOP - 0.05)));
-  // wrench work: three strokes about the bolt, then to the belt
-  const W0 = T_KEEP + 0.12, W1 = T_STOP - 0.38, H1 = T_STOP - 0.08;
-  const LW = 112;
-  const th0 = (205 * Math.PI) / 180;
-  const stroke = t < W1 ? Math.sin(Math.PI * 3 * seg(t, W0, W1)) * 0.26 : 0;
+  const bolt = {x: R.elN[0] + 0.55 * (R.wrN[0] - R.elN[0]), y: R.elN[1] + 0.55 * (R.wrN[1] - R.elN[1])};
+  const hatchK = smooth(seg(t, T_KEEP - 0.05, T_KEEP + 0.2)) * (1 - smooth(seg(t, T_STOP - 0.45, T_STOP - 0.25)));
+  // technician: works from arm's length, then one step in for the button
+  const stepIn = step2(-354, -236, T_STOP - 0.12, T_STOP + 0.22, t);
+  const tech = {x: stepIn.x, y: G, h: 560, flip: false};
+  // spanner work: three short strokes about the bolt, then onto the belt
+  const W0 = T_KEEP + 0.25, W1 = T_STOP - 0.5, H1 = T_STOP - 0.18;
+  const LW = 78;
+  const th0 = (164 * Math.PI) / 180;                       // handle toward his hand, slightly down
+  const stroke = t < W1 ? Math.sin(Math.PI * 3 * seg(t, W0, W1)) * 0.2 : 0;
   const th = th0 + stroke;
   const onBolt = {x: bolt.x + LW * Math.cos(th), y: bolt.y + LW * Math.sin(th)};
-  const belt = {x: tech.x + 52, y: G - 0.47 * tech.h};
+  const belt = {x: tech.x + 66, y: G - 0.42 * tech.h};       // pocket at his right hip
   const toBelt = smooth(seg(t, W1, H1));
-  const button = {x: R.shF[0] - 40, y: R.shF[1] + 40};
-  const handle = {x: DOLLY_X - 60, y: G - 560};
-  let hand = t < W1 ? onBolt : {x: lerp(onBolt.x, belt.x + 4, toBelt), y: lerp(onBolt.y, belt.y - 46, toBelt)};
-  if (t > H1) hand = {x: lerp(belt.x + 4, button.x, smooth(seg(t, H1, T_STOP + 0.22))), y: lerp(belt.y - 46, button.y, smooth(seg(t, H1, T_STOP + 0.22)))};
-  if (t > T_STOP + 0.9) hand = {x: lerp(button.x, handle.x, smooth(seg(t, T_STOP + 0.9, T_STOP + 1.3))), y: lerp(button.y, handle.y, smooth(seg(t, T_STOP + 0.9, T_STOP + 1.3)))};
+  const button = {x: R.chest[0] - 30, y: R.chest[1] + 16};
+  const rest = {x: tech.x + 70, y: G - 0.42 * tech.h};
+  let hand = onBolt;
+  if (t < T_KEEP + 0.15) hand = {x: lerp(rest.x, onBolt.x, smooth(seg(t, T_KEEP - 0.2, T_KEEP + 0.15))), y: lerp(rest.y, onBolt.y, smooth(seg(t, T_KEEP - 0.2, T_KEEP + 0.15)))};
+  else if (t >= W1 && t < H1) hand = {x: lerp(onBolt.x, belt.x + 4, toBelt), y: lerp(onBolt.y, belt.y - 10, toBelt)};
+  else if (t >= H1) {
+    const toBtn = smooth(seg(t, T_STOP + 0.0, PRESS)), back = smooth(seg(t, PRESS + 0.25, PRESS + 0.7));
+    const b0 = {x: belt.x + 4, y: belt.y - 10};
+    hand = {x: lerp(lerp(b0.x, button.x - 4, toBtn), rest.x, back), y: lerp(lerp(b0.y, button.y, toBtn), rest.y, back)};
+  }
   const armR = crewReach(tech, 1, hand.x, hand.y);
-  // the wrench: jaw on the bolt while working; carried by the hand to the belt; then hanging on the belt
-  const wr = t < W1 ? {jaw: bolt, end: onBolt, rot: th} : t < H1 ? {jaw: {x: hand.x - LW * Math.cos(lerp(th0, -Math.PI / 2, toBelt)), y: hand.y - LW * Math.sin(lerp(th0, -Math.PI / 2, toBelt))}, end: hand, rot: lerp(th0, -Math.PI / 2, toBelt)} : {jaw: {x: belt.x + 4, y: belt.y + 66}, end: {x: belt.x + 4, y: belt.y - 46}, rot: -Math.PI / 2};
+  // the spanner: jaw on the bolt while working (hand on its handle); carried to the belt; then hanging on the belt
+  // carried: the jaw swings from the bolt round to hanging below the hand (164° → 270°, never through the robot)
+  const rotC = lerp(th0, (3 * Math.PI) / 2, toBelt);
+  const wr = t < W1 ? {jaw: bolt, end: onBolt}
+    : t < H1 ? {jaw: {x: hand.x - LW * Math.cos(rotC), y: hand.y - LW * Math.sin(rotC)}, end: hand}
+      : {jaw: {x: belt.x + 4, y: belt.y - 10 + LW}, end: {x: belt.x + 4, y: belt.y - 10}};
   const sparkK = (1 - seg(t, W1 - 0.2, W1)) * seg(t, W0, W0 + 0.15);
   const hooks = Array.from({length: 12}, (_, i) => -900 + i * HSP + ((t * V) % HSP));
   const jawRot = (Math.atan2(wr.end.y - wr.jaw.y, wr.end.x - wr.jaw.x) * 180) / Math.PI;
   const wrench = (
     <g>
-      <line x1={wr.jaw.x} y1={wr.jaw.y} x2={wr.end.x} y2={wr.end.y} stroke="#162A32" strokeWidth={lw * 5.2} strokeLinecap="round" />
-      <line x1={wr.jaw.x} y1={wr.jaw.y} x2={wr.end.x} y2={wr.end.y} stroke="#9AA4AE" strokeWidth={lw * 3.2} strokeLinecap="round" />
+      <line x1={wr.jaw.x} y1={wr.jaw.y} x2={wr.end.x} y2={wr.end.y} stroke="#162A32" strokeWidth={lw * 6} strokeLinecap="round" />
+      <line x1={wr.jaw.x} y1={wr.jaw.y} x2={wr.end.x} y2={wr.end.y} stroke="#9AA4AE" strokeWidth={lw * 3.6} strokeLinecap="round" />
       <g transform={`translate(${wr.jaw.x} ${wr.jaw.y}) rotate(${jawRot})`}>
-        <path d="M6 -14 A15 15 0 1 0 6 14 L-2 6 L-2 -6 Z" fill="#9AA4AE" stroke="#162A32" strokeWidth={lw} strokeLinejoin="round" />
+        <path d="M6 -15 A16 16 0 1 0 6 15 L-2 6 L-2 -6 Z" fill="#9AA4AE" stroke="#162A32" strokeWidth={lw} strokeLinejoin="round" />
       </g>
-      {t >= H1 ? <rect x={belt.x - 8} y={belt.y - 54} width={24} height={20} rx={4} fill="#4A3A2C" stroke="#162A32" strokeWidth={lw * 0.8} /> : null}
     </g>
   );
+  // hand truck waiting behind the robot (mirrored: toe plate under its heels, upright at its back)
+  const DX = SV_X + 20;
+  const lean = 5 * sag;                                     // settles back against the upright
+  const heel = {x: R.heelN[0], y: G};
+  const btnOn = 1 - offK;
   return (
     <Scene bg={BCOL.wall}>
       <Layer cam={cam}>
@@ -357,26 +385,33 @@ const Service: React.FC<{t: number; f: number}> = ({t, f}) => {
         <Tote x={TOTE_X} top={TOTE_TOP} lw={lw} />
         <Panel x={PANEL_IN_TOTE.x} y={PANEL_IN_TOTE.y} lw={lw} />
         <Tote x={TOTE_X} top={TOTE_TOP} lw={lw} front />
-        <Dolly x={DOLLY_X + lerp(-60, 0, smooth(seg(t, T_STOP + 0.6, T_STOP + 1.0)))} lw={lw} tilt={14 * tip} />
-        <g transform={`rotate(${ang} ${pivot.x} ${pivot.y})`}>
-          <Bot cam={cam} id="svf02" model="F02" s={1} pose={base} off={offK} />
+        <g transform={`translate(${2 * DX} 0) scale(-1 1)`}><Dolly x={DX} lw={lw} /></g>
+        <g transform={`rotate(${lean} ${heel.x} ${heel.y})`}>
+          <Bot cam={cam} id="svf02" model="F02" s={1} face={-1} pose={base} off={offK} />
+          {/* chest power button: lit while running */}
+          <circle cx={button.x + 4} cy={button.y} r={9} fill={btnOn > 0.5 ? C.teal : '#2B2E35'} stroke={C.ink} strokeWidth={lw * 0.7} />
           {hatchK > 0.01 ? (
             <g transform={`translate(${bolt.x} ${bolt.y}) rotate(${(fa * 180) / Math.PI})`} opacity={Math.min(1, hatchK * 2)}>
               <rect x={-22} y={-11} width={44} height={22} rx={5} fill="#1A1F24" stroke={C.ink} strokeWidth={lw * 0.8} />
               <circle r={7} fill="#9AA4AE" stroke={C.ink} strokeWidth={lw * 0.6} />
-              <rect x={-24} y={-11 - 16 * hatchK} width={48} height={8} rx={3} fill="#2B2E35" stroke={C.ink} strokeWidth={lw * 0.6} />
+              <rect x={-24} y={11 + 2} width={48} height={8} rx={3} fill="#2B2E35" stroke={C.ink} strokeWidth={lw * 0.6} transform={`translate(0 ${10 * hatchK})`} />
             </g>
           ) : null}
         </g>
         <Sparks x={bolt.x} y={bolt.y} t={t} k={sparkK} lw={lw} />
         {t < H1 ? wrench : null}
-        <Crew look={CAST.clerkA} x={tech.x} y={tech.y} h={tech.h} frame={f} seed={4} life={0.4}
-          pose={{...IDLE, armR, armL: {a: 14, b: 20}, lookX: 0.7, lookY: t < T_STOP ? 0.1 : -0.2, mouth: t < T_STOP ? 'flat' : 'hmm', brows: t < T_STOP ? -0.2 : 0.3}} />
+        <Crew look={CAST.clerkA} x={tech.x} y={tech.y} h={tech.h} frame={f} seed={4} life={0.4} front="R"
+          pose={{...IDLE, armR, armL: {a: 14, b: 20}, bob: stepIn.bob, lookX: 0.7, lookY: t < T_STOP ? 0.15 : -0.1, mouth: t < PRESS ? 'flat' : 'hmm', brows: t < PRESS ? -0.2 : 0.3}} />
         {t >= H1 ? wrench : null}
       </Layer>
       <CrateWipe t={t} />
     </Scene>
   );
+};
+/** A short step for the cutout cast: a slide with a two-beat bob. */
+const step2 = (x0: number, x1: number, t0: number, t1: number, t: number) => {
+  const u = seg(t, t0, t1);
+  return {x: lerp(x0, x1, smooth(u)), bob: u > 0 && u < 1 ? -Math.abs(Math.sin(u * Math.PI * 2)) * 10 : 0};
 };
 
 /** A crate on a pallet jack crosses the foreground right → left; fully covers the frame at its middle. */

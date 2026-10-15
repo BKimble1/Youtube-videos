@@ -1,4 +1,4 @@
-speech windows: 3533, flagged (fx+beds within 6 dB of voice): 115
+speech windows: 3533, flagged (fx+beds within 6 dB of voice): 114
    1.10-   1.20s  voice  -27.2 dB  fx  -28.0 dB  near: robot_push, step_grate
    2.45-   2.60s  voice  -33.2 dB  fx  -28.4 dB  near: molten_heavy, sizzle, sub_boom
    3.10-   3.15s  voice  -26.8 dB  fx  -29.0 dB  near: trace
@@ -19,8 +19,8 @@ speech windows: 3533, flagged (fx+beds within 6 dB of voice): 115
   52.30-  52.35s  voice  -38.2 dB  fx  -43.0 dB  near: 
   53.10-  53.15s  voice  -41.6 dB  fx  -41.8 dB  near: 
   53.60-  53.75s  voice  -35.0 dB  fx  -33.6 dB  near: crane_chain, molten_heavy, sizzle, sub_boom
-  55.95-  56.05s  voice  -34.3 dB  fx  -34.6 dB  near: sizzle
-  56.90-  56.95s  voice  -36.6 dB  fx  -40.4 dB  near: knee_tap
+  56.00-  56.05s  voice  -36.1 dB  fx  -37.0 dB  near: sizzle
+  56.90-  56.95s  voice  -36.6 dB  fx  -39.9 dB  near: knee_tap
   58.00-  58.05s  voice  -34.5 dB  fx  -40.2 dB  near: card_flick
   58.10-  58.15s  voice  -34.0 dB  fx  -39.6 dB  near: card_flick
  105.15- 105.20s  voice  -38.6 dB  fx  -41.9 dB  near: knee_tap

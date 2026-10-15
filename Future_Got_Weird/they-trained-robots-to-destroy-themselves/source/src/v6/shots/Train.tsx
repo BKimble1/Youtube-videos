@@ -497,15 +497,17 @@ const PolicyBox: React.FC<{t: number; cam: Cam; p: RPose}> = ({t, cam, p}) => {
 };
 
 // reflex mallet (V6): pivot (her hand) in front of the shin, head swings in on a circle that stays in front of the leg
+// V6.1: she stands right beside the knee; her fist is just in front of and above it, the hammer hangs from her fist and
+// a wrist flick brings the rubber head in from the front onto the tendon below the kneecap (never through the leg)
 const TAP = (() => {
   const kn = rig(sideBase(), S).pts.kneeN;
-  const strike = {x: kn[0] + 16, y: kn[1] + 24};
-  const H = {x: strike.x + 78, y: strike.y - 74};
-  return {strike, H, L: Math.hypot(strike.x - H.x, strike.y - H.y), cx: H.x + 118};
+  const strike = {x: kn[0] + 18, y: kn[1] + 26};
+  const H = {x: kn[0] + 64, y: kn[1] - 42};
+  return {strike, H, L: Math.hypot(strike.x - H.x, strike.y - H.y), cx: kn[0] + 178};
 })();
-const PSI_HIT = Math.atan2(TAP.strike.y - TAP.H.y, TAP.strike.x - TAP.H.x);   // ≈ 136°
+const PSI_HIT = Math.atan2(TAP.strike.y - TAP.H.y, TAP.strike.x - TAP.H.x);   // ≈ 110°
 const D2R = Math.PI / 180;
-const PSI_REST = 78 * D2R, PSI_COCK = 58 * D2R, PSI_REB = 112 * D2R;
+const PSI_REST = 88 * D2R, PSI_COCK = 58 * D2R, PSI_REB = 72 * D2R;
 /** Mallet angle about the hand: rest → cock back → in to contact on the tap → rebound → rest. */
 const malletAngle = (t: number) => {
   let a = PSI_REST;
@@ -519,7 +521,7 @@ const malletAngle = (t: number) => {
   return a;
 };
 /** Her hand draws back a little right after each contact (follow-through, clear of the kicking shin). */
-const reboundK = (t: number) => Math.max(Math.sin(Math.PI * seg(t, T_TAP1, T_TAP1 + 0.5)), Math.sin(Math.PI * seg(t, T_TAP2, T_TAP2 + 0.5)));
+const reboundK = (t: number) => 0.5 * Math.max(Math.sin(Math.PI * seg(t, T_TAP1, T_TAP1 + 0.5)), Math.sin(Math.PI * seg(t, T_TAP2, T_TAP2 + 0.5)));
 const CAM_REFLEX: Cam = {x: 830, y: 640, z: 1.9};
 // reflex hammer (V5 prop, unused)
 const hammerProp = (
@@ -766,13 +768,14 @@ export const Train: React.FC = () => {
         })()}
         {tapK > 0.01 ? (
           <g>
-            <Crew look={CAST.clerkB} x={cb.x} y={cb.y} h={cb.h} flip frame={f} seed={9} front="R" life={0.3}
-              pose={{...IDLE, armR: armB, armL: {a: 14, b: 16}, lookX: -0.8, lookY: 0.5, mouth: t > T_TAP1 + 0.1 ? 'grin' : 'smile', brows: 0.4}} />
-            <line x1={H.x} y1={H.y} x2={head.x} y2={head.y} stroke={C.ink} strokeWidth={lw * 4.2} strokeLinecap="round" />
-            <line x1={H.x} y1={H.y} x2={head.x} y2={head.y} stroke="#9AA4AE" strokeWidth={lw * 2.2} strokeLinecap="round" />
-            <g transform={`translate(${head.x} ${head.y}) rotate(${(psi * 180) / Math.PI + 90})`}>
-              <rect x={-20} y={-12} width={40} height={24} rx={10} fill={C.coral} stroke={C.ink} strokeWidth={lw} />
+            {/* the reflex hammer (drawn under her fist, so she grips its handle) */}
+            <line x1={H.x} y1={H.y} x2={head.x} y2={head.y} stroke={C.ink} strokeWidth={lw * 4.4} strokeLinecap="round" />
+            <line x1={H.x} y1={H.y} x2={head.x} y2={head.y} stroke="#B9C2CB" strokeWidth={lw * 2.4} strokeLinecap="round" />
+            <g transform={`translate(${head.x} ${head.y}) rotate(${(psi * 180) / Math.PI})`}>
+              <path d="M-6 -17 L8 -9 Q12 0 8 9 L-6 17 Q-11 0 -6 -17 Z" fill={C.coral} stroke={C.ink} strokeWidth={lw} strokeLinejoin="round" />
             </g>
+            <Crew look={CAST.clerkB} x={cb.x} y={cb.y} h={cb.h} flip frame={f} seed={9} front="R" life={0.3}
+              pose={{...IDLE, armR: armB, armL: {a: 14, b: 16}, lookX: -0.8, lookY: 0.55, mouth: t > T_TAP1 + 0.1 ? 'grin' : 'smile', brows: 0.4}} />
           </g>
         ) : null}
       </Layer>

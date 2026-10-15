@@ -337,10 +337,13 @@ export const Post: React.FC = () => {
               <FilmLight x={1440} y={FD.floor} lw={lw} on={1} aim={205} h={560} id="pstLB" />
             </g>
           )}
-          behind={(
+          behind={<Bot cam={cam} id="pstR" model="F02" s={FS} pose={{...ROBOT, head: 4 + 6 * smooth(seg(t, T_LOWER, T_COPY))}} />}
+          inside={(
+            // V6.1: the chain hangs inside the vessel (in front of its back wall) and is cut at the molten surface,
+            // so the chip is lowered into the steel, not behind the ladle
             <g>
-              <HookChain t={t} lw={lw} />
-              <Bot cam={cam} id="pstR" model="F02" s={FS} pose={{...ROBOT, head: 4 + 6 * smooth(seg(t, T_LOWER, T_COPY))}} />
+              <defs><clipPath id="pstAboveSurf"><rect x={-3000} y={-3000} width={7000} height={3000 + FD.ladle.surf} /></clipPath></defs>
+              <g clipPath="url(#pstAboveSurf)"><HookChain t={t} lw={lw} /></g>
             </g>
           )}
           front={(

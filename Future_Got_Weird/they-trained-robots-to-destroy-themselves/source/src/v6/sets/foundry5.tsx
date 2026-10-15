@@ -34,7 +34,7 @@ export const FoundryView5: React.FC<FoundryProps> = ({cam, t, hit, scar, behind,
   const lw = 4 / cam.z;
   return (
     <g>
-      <Layer cam={cam} p={0.6}><FoundryBack lw={4 / (1 + (cam.z - 1) * 0.6)} t={t} lights={lights} hook={hook} /></Layer>
+      <Layer cam={cam} p={0.6}><FoundryBack lw={4 / (1 + (cam.z - 1) * 0.6)} t={t} lights={lights} hook={hook} trolley={hook} /></Layer>
       <Layer cam={cam}>
         {extraBack}
         {booth !== undefined ? <Booth lw={lw}>{booth}</Booth> : null}

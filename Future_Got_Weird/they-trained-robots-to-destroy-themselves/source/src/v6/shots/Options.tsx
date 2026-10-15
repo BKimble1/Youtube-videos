@@ -228,36 +228,59 @@ const CLOCK_WIDE: Cam = {x: 40, y: 520, z: 0.8};
 const C0W = CUT_CLOCK + 0.15;
 const STEPS = [[C0W, C0W + 1.1], [C0W + 1.1, C0W + 2.05], [C0W + 2.05, C0W + 2.95]];
 const clockAngle = (t: number) => STEPS.reduce((a, [s0, s1]) => a + 360 * easeInOut(seg(t, s0, s1)), 0);
-const P_BOLT = {x: 150, y: G - 345}, P_PART = {x: 108, y: G - 352}, P_LIFT = {x: 150, y: G - 470}, P_PILE = {x: 30, y: G - 360};
-const P_WR_REST = {x: 168, y: G - 334};
-const clerkB = {x: 270, y: G, h: 520, flip: true};
+// V6.1 bench at her waist height: a knee module with a cover bolt; spanner on the bolt (jaw) and in her hand (handle)
+const BENCH_Y = G - 250;
+const MOD = {x0: 30, x1: 130, y0: BENCH_Y - 56};
+const P_BOLT = {x: 116, y: BENCH_Y - 30}, P_PART = {x: 78, y: BENCH_Y - 30}, P_LIFT = {x: 150, y: G - 400}, P_PILE = {x: 166, y: BENCH_Y - 22};
+const SP_L = 64;                                         // spanner length (jaw → end of handle)
+const P_WR_REST = {x: 64, y: BENCH_Y - 6};                // the spanner lying flat in front of the module: jaw here, handle →
+const clerkB = {x: 300, y: G, h: 520, flip: true};
 /** clerk B's hand target and what she holds at time t. */
 const workAt = (t: number) => {
   const [a0, a1] = STEPS[0], [b0, b1] = STEPS[1], [c0, c1] = STEPS[2];
   const rest = {x: clerkB.x - 90, y: G - 300};
+  // spanner: jaw on the bolt, handle toward her; two strokes; then carried and laid flat (handle → right)
+  const D2R = Math.PI / 180;
+  const strokeU = seg(t, a0, a1 - 0.3);
+  const th = (20 + 24 * Math.sin(Math.PI * 2 * strokeU)) * D2R;
+  const onBolt = {x: P_BOLT.x + SP_L * Math.cos(th), y: P_BOLT.y + SP_L * Math.sin(th)};
+  const restEnd = {x: P_WR_REST.x + SP_L, y: P_WR_REST.y};
   let p = rest;
-  let wrench: 'hand' | 'bench' = 'hand', part: 'bench' | 'hand' | 'pile' = 'bench';
-  if (t < a0) p = {x: lerp(rest.x, P_BOLT.x, smooth(seg(t, a0 - 0.35, a0))), y: lerp(rest.y, P_BOLT.y, smooth(seg(t, a0 - 0.35, a0)))};
-  else if (t < a1) {
-    // two ratchet strokes about the bolt, then the wrench is laid on the bench
-    const u = seg(t, a0, a1 - 0.25);
-    const th = (200 + 22 * Math.sin(Math.PI * 2 * u)) * Math.PI / 180;
-    p = t < a1 - 0.25 ? {x: P_BOLT.x + 40 * Math.cos(th) + 40, y: P_BOLT.y + 40 * Math.sin(th) + 14} : {x: lerp(P_BOLT.x + 2, P_WR_REST.x, smooth(seg(t, a1 - 0.25, a1))), y: lerp(P_BOLT.y + 0, P_WR_REST.y, smooth(seg(t, a1 - 0.25, a1)))};
-  } else if (t < b1) {
-    wrench = 'bench';
-    const g = smooth(seg(t, b0, b0 + 0.35)), l = smooth(seg(t, b0 + 0.45, b1));
-    p = {x: lerp(lerp(P_WR_REST.x, P_PART.x, g), P_LIFT.x, l), y: lerp(lerp(P_WR_REST.y, P_PART.y, g), P_LIFT.y, l)};
-    part = t > b0 + 0.4 ? 'hand' : 'bench';
-  } else if (t < c1) {
-    wrench = 'bench';
-    const m = smooth(seg(t, c0, c1 - 0.2));
-    p = {x: lerp(P_LIFT.x, P_PILE.x, m), y: lerp(P_LIFT.y, P_PILE.y, m) - Math.sin(Math.PI * m) * 30};
-    part = t < c1 - 0.15 ? 'hand' : 'pile';
+  let spanner: {jaw: {x: number; y: number}; end: {x: number; y: number}} = {jaw: P_BOLT, end: onBolt};
+  let inHand = true, part: 'bench' | 'hand' | 'pile' = 'bench';
+  let cover = 1;                                          // the module's cover plate is on until the bolt is out
+  if (t < a0) {
+    const u = smooth(seg(t, a0 - 0.4, a0));
+    p = {x: lerp(rest.x, onBolt.x, u), y: lerp(rest.y, onBolt.y, u)};
+    spanner = {jaw: {x: p.x - SP_L, y: p.y + 6}, end: p};
+    if (u < 0.5) inHand = false;
+    if (u < 0.5) spanner = {jaw: P_WR_REST, end: restEnd};
+  } else if (t < a1 - 0.3) {
+    p = onBolt;
+  } else if (t < a1) {
+    // carry the spanner over and lay it flat on the bench
+    const u = smooth(seg(t, a1 - 0.3, a1));
+    const rot = lerp(th, 0, u);
+    p = {x: lerp(onBolt.x, restEnd.x, u), y: lerp(onBolt.y, restEnd.y, u) - Math.sin(Math.PI * u) * 20};
+    spanner = {jaw: {x: p.x - SP_L * Math.cos(rot), y: p.y - SP_L * Math.sin(rot)}, end: p};
+    cover = 1 - u;
   } else {
-    wrench = 'bench'; part = 'pile';
-    p = {x: lerp(P_PILE.x, rest.x, smooth(seg(t, c1, c1 + 0.4))), y: lerp(P_PILE.y, rest.y, smooth(seg(t, c1, c1 + 0.4)))};
+    inHand = false; cover = 0;
+    spanner = {jaw: P_WR_REST, end: restEnd};
+    if (t < b1) {
+      const g = smooth(seg(t, b0, b0 + 0.35)), l = smooth(seg(t, b0 + 0.45, b1));
+      p = {x: lerp(lerp(restEnd.x, P_PART.x, g), P_LIFT.x, l), y: lerp(lerp(restEnd.y, P_PART.y, g), P_LIFT.y, l)};
+      part = t > b0 + 0.4 ? 'hand' : 'bench';
+    } else if (t < c1) {
+      const m = smooth(seg(t, c0, c1 - 0.2));
+      p = {x: lerp(P_LIFT.x, P_PILE.x, m), y: lerp(P_LIFT.y, P_PILE.y, m) - Math.sin(Math.PI * m) * 30};
+      part = t < c1 - 0.15 ? 'hand' : 'pile';
+    } else {
+      part = 'pile';
+      p = {x: lerp(P_PILE.x, rest.x, smooth(seg(t, c1, c1 + 0.4))), y: lerp(P_PILE.y, rest.y, smooth(seg(t, c1, c1 + 0.4)))};
+    }
   }
-  return {p, wrench, part};
+  return {p, spanner, inHand, part, cover};
 };
 const T_TOP = T_MELT + 0.55; // the clock face has become the ladle seen from above
 const T_DROP0 = T_TOP + 0.02, T_DROPHIT = T_TOP + 0.37;      // scrap falls into the top view ("Simple.")
@@ -276,24 +299,43 @@ const Clockroom: React.FC<{t: number; f: number; cam: Cam; heat: number}> = ({t,
         const x = -360 - i * 170;
         return <Bot key={i} cam={cam} id={'cq' + i} model="F02" s={0.7} pose={stand(x, G - 50, 0.7, {yaw: 0.5, head: 8 + 3 * Math.sin(i * 1.3), armN: A(1, 5), armF: A(1, 5)})} off={1} />;
       })}
-      {/* bench with the opened robot and a technician */}
-      <rect x={-200} y={G - 330} width={380} height={24} rx={6} fill={C.woodDeep} stroke={C.ink} strokeWidth={lw} />
-      {[-180, 150].map((x) => <rect key={x} x={x} y={G - 306} width={20} height={306} fill={BCOL.beamD} stroke={C.ink} strokeWidth={lw} />)}
-      {[[-120, 0], [-40, 3]].map(([x, k]) => <Scrap key={x} x={x} y={G - 352} kind={k} lw={lw} />)}
+      {/* bench (waist height) with a knee module being stripped by a technician */}
+      <rect x={-200} y={BENCH_Y} width={380} height={24} rx={6} fill={C.woodDeep} stroke={C.ink} strokeWidth={lw} />
+      {[-180, 150].map((x) => <rect key={x} x={x} y={BENCH_Y + 24} width={20} height={G - BENCH_Y - 24} fill={BCOL.beamD} stroke={C.ink} strokeWidth={lw} />)}
+      {[[-140, 0], [-70, 3]].map(([x, k]) => <Scrap key={x} x={x} y={BENCH_Y - 16} kind={k} lw={lw} />)}
       {(() => {
         const w = workAt(t);
         const armR = crewReach(clerkB, 1, w.p.x, w.p.y);
         const hand = crewHand(clerkB, armR, 1);
         const looking = smooth(seg(t, STEPS[2][1], STEPS[2][1] + 0.5));
-        const partAt = w.part === 'bench' ? P_PART : w.part === 'hand' ? {x: hand.x, y: hand.y + 6} : P_PILE;
+        const partAt = w.part === 'bench' ? P_PART : w.part === 'hand' ? {x: hand.x - 4, y: hand.y + 4} : P_PILE;
+        const jr = (Math.atan2(w.spanner.end.y - w.spanner.jaw.y, w.spanner.end.x - w.spanner.jaw.x) * 180) / Math.PI;
+        const spanner = (
+          <g>
+            <line x1={w.spanner.jaw.x} y1={w.spanner.jaw.y} x2={w.spanner.end.x} y2={w.spanner.end.y} stroke={C.ink} strokeWidth={lw * 5.6} strokeLinecap="round" />
+            <line x1={w.spanner.jaw.x} y1={w.spanner.jaw.y} x2={w.spanner.end.x} y2={w.spanner.end.y} stroke="#9AA4AE" strokeWidth={lw * 3.4} strokeLinecap="round" />
+            <g transform={`translate(${w.spanner.jaw.x} ${w.spanner.jaw.y}) rotate(${jr})`}>
+              <path d="M6 -13 A14 14 0 1 0 6 13 L-2 5 L-2 -5 Z" fill="#9AA4AE" stroke={C.ink} strokeWidth={lw} strokeLinejoin="round" />
+            </g>
+          </g>
+        );
         return (
           <g>
-            {w.part !== 'hand' ? <Scrap x={partAt.x} y={partAt.y} kind={1} lw={lw} /> : null}
-            {w.wrench === 'bench' ? <g transform={`translate(${P_WR_REST.x} ${P_WR_REST.y}) rotate(-96) scale(0.55)`}><Wrench x={0} y={0} s={0.9} rot={0} /></g> : null}
-            <Crew look={CAST.clerkB} x={clerkB.x} y={clerkB.y} h={clerkB.h} flip frame={f} seed={9} life={0.5}
-              pose={{...IDLE, armR, armL: {a: 40, b: 40}, lookX: lerp(-0.6, -0.3, looking), lookY: lerp(0.6, -0.8, looking), mouth: looking > 0.5 ? 'o' : 'flat', brows: 0.5 * looking}}
-              holdR={w.wrench === 'hand' ? <g transform="scale(0.7)"><Wrench x={0} y={0} s={0.9} rot={-30} /></g> : undefined} />
-            {w.part === 'hand' ? <Scrap x={partAt.x} y={partAt.y} kind={1} lw={lw} /> : null}
+            {/* the knee module: housing, rotor inside, cover plate with its bolt */}
+            <rect x={MOD.x0} y={MOD.y0} width={MOD.x1 - MOD.x0} height={BENCH_Y - MOD.y0} rx={10} fill="#3A3F47" stroke={C.ink} strokeWidth={lw} />
+            {w.part === 'bench' ? <g transform={`translate(${P_PART.x} ${P_PART.y})`}><ActuatorArt r={22} rot={0} lw={lw} id="benchRot" /></g> : null}
+            {w.cover > 0.02 ? (
+              <g opacity={w.cover}>
+                <rect x={MOD.x0 + 6} y={MOD.y0 + 6} width={MOD.x1 - MOD.x0 - 12} height={BENCH_Y - MOD.y0 - 12} rx={8} fill="#6E7680" stroke={C.ink} strokeWidth={lw * 0.8} />
+                <circle cx={P_BOLT.x} cy={P_BOLT.y} r={7} fill="#B9C2CB" stroke={C.ink} strokeWidth={lw * 0.7} />
+              </g>
+            ) : null}
+            {w.part === 'pile' ? <g transform={`translate(${P_PILE.x} ${P_PILE.y})`}><ActuatorArt r={22} rot={0} lw={lw} id="benchRotP" /></g> : null}
+            {!w.inHand ? spanner : null}
+            {w.inHand ? spanner : null}
+            <Crew look={CAST.clerkB} x={clerkB.x} y={clerkB.y} h={clerkB.h} flip frame={f} seed={9} life={0.5} front="R"
+              pose={{...IDLE, armR, armL: {a: 30, b: 30}, lookX: lerp(-0.6, -0.3, looking), lookY: lerp(0.7, -0.8, looking), mouth: looking > 0.5 ? 'o' : 'flat', brows: 0.5 * looking}} />
+            {w.part === 'hand' ? <g transform={`translate(${partAt.x} ${partAt.y})`}><ActuatorArt r={22} rot={(t - STEPS[1][0]) * 60} lw={lw} id="benchRotH" /></g> : null}
           </g>
         );
       })()}

@@ -11,7 +11,7 @@ import {TRAIN_START, TRAIN_END, TRAIN_EV as TE} from './shots/Train';
 import {REAL_START, REAL_END, REAL_EV as RE} from './shots/Real';
 import {PROVE_START, PROVE_END, PROVE_EV as VE} from './shots/Prove';
 import {END_START, END_HOLD, END_EV as EE} from './shots/End';
-import {IMATRA_EV} from './shots/Imatra';
+import {IMATRA_EV, SKIP_HIT} from './shots/Imatra';
 import {OPTIONS_WALK} from './shots/Options';
 import {FACTORY_WALK} from './shots/Factory';
 import {footfalls} from './rig/stop';
@@ -78,9 +78,10 @@ const factory = (): Cue[] => {
   out.push(
     {t: T_KEEP + 0.1, kind: 'tag_clink', gain: -10, pitch: 4}, {t: T_KEEP + 0.36, kind: 'tag_clink', gain: -11, pitch: 5},
     {t: T_KEEP + 0.2, kind: 'elec_arc', gain: -16},
-    {t: T_STOP + 0.25, kind: 'servo_whir', gain: -8, pitch: -7},              // powered down: spin-down
+    {t: T_STOP + 0.25, kind: 'pop_tick', gain: -12, pitch: -2},              // V6.1: the chest power button
+    {t: T_STOP + 0.3, kind: 'servo_whir', gain: -8, pitch: -7},               // powered down: spin-down
     {t: T_STOP + 0.5, kind: 'knee_tap', gain: -12, pitch: -3},                // the sag
-    {t: T_STOP + 1.0, kind: 'tag_clink', gain: -12, pitch: -6},               // onto the hand truck
+    {t: T_STOP + 0.95, kind: 'tag_clink', gain: -12, pitch: -6},              // settles back against the hand truck
     {t: T_WIPE, kind: 'paper_slide', gain: -7, pitch: -7},                    // the crate crosses the lens
   );
   return out;
@@ -139,7 +140,7 @@ const imatra = (): Cue[] => {
     ...falls(footfalls(IMATRA_EV.IM_WALK), 'step_grate', -11, IMATRA_START),
     ...entry(tGoin - 0.05, -17, 1.4),                                         // heard from the booth, distant
     {t: tRecyc - 0.4, kind: 'crane_chain', gain: -11},
-    ...entry(tRecyc - 0.4 + 1.42, -19, 1.0),
+    ...entry(SKIP_HIT, -19, 1.0),
     {t: tFilm + 0.25, kind: 'knee_tap', gain: -9, pitch: -8}, {t: tFilm + 0.33, kind: 'knee_tap', gain: -10, pitch: -7},  // film lights on
     {t: IMATRA_END - 0.6, kind: 'card_flick', gain: -15},
   ];
