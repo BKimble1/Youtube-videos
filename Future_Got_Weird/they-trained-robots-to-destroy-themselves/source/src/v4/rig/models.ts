@@ -11,7 +11,7 @@
 // SIM: the F.02 silhouette in a schematic blue treatment (opaque). PERF: a generic human stunt performer.
 import {P} from './geom';
 
-export type ModelKey = 'F02' | 'F03' | 'SIM' | 'PERF';
+export type ModelKey = 'F02' | 'F03' | 'SIM' | 'PERF' | 'SIL';
 export type Pal = {
   base: string; shade: string; hi: string; ink: string;
   joint: string; jointHi: string; face: string; faceRim: string; faceGlint: string; mark: string;
@@ -22,6 +22,7 @@ export const PAL: Record<ModelKey, Pal> = {
   F02: {base: '#434A53', shade: '#2B3036', hi: '#67727E', ink: '#0B0F12', joint: '#17191C', jointHi: '#5C6670', face: '#050607', faceRim: '#9AA3AD', faceGlint: '#3B4A5C', mark: '#F3F5F6'},
   F03: {base: '#E8E3D9', shade: '#CDC5B7', hi: '#F8F6F1', ink: '#1D2A30', joint: '#2A2E33', jointHi: '#55595F', face: '#0A0C0E', faceRim: '#2A2E33', faceGlint: '#33404E', mark: '#1E2226', band: '#2A2E33'},
   SIM: {base: '#D5E4FA', shade: '#AAC5EE', hi: '#EEF4FD', ink: '#2C4A80', joint: '#7FA3DA', jointHi: '#B9CFF2', face: '#3A5FA0', faceRim: '#7FA3DA', faceGlint: '#6C8FCB', mark: '#2C4A80', dots: '#1CA7A0'},
+  SIL: {base: '#1A0E10', shade: '#1A0E10', hi: '#2A181A', ink: '#0E0607', joint: '#1A0E10', jointHi: '#2A181A', face: '#0E0607', faceRim: '#1A0E10', faceGlint: '#1A0E10', mark: '#1A0E10'},
   PERF: {base: '#7656C2', shade: '#5B3FA0', hi: '#9C82DA', ink: '#1D1630', joint: '#3A2C66', jointHi: '#9C82DA', face: '#E2B48F', faceRim: '#3A2C66', faceGlint: '#F2C9A8', mark: '#FFFFFF', dots: '#FFFFFF'},
 };
 
@@ -109,4 +110,4 @@ export const F03 = {
 };
 
 /** Model → part tables (SIM and PERF reuse the F.02 skeleton and silhouette). */
-export const ART = {F02, F03, SIM: F02, PERF: F02} as const;
+export const ART = {F02, F03, SIM: F02, PERF: F02, SIL: F02} as const;

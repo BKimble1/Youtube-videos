@@ -26,8 +26,8 @@ export const FoundryView: React.FC<{cam: Cam; t: number; hit?: Disturb; scar?: n
     );
   };
 
-export const StageView: React.FC<{cam: Cam; grid?: number; pulse?: number; bad?: boolean; behind?: React.ReactNode; onPad?: React.ReactNode; front?: React.ReactNode; tower?: boolean; pad?: boolean; target?: boolean}> =
-  ({cam, grid = 0.5, pulse = 0, bad, behind, onPad, front, tower = true, pad = true, target = true}) => {
+export const StageView: React.FC<{cam: Cam; grid?: number; pulse?: number; bad?: boolean; behind?: React.ReactNode; onPad?: React.ReactNode; front?: React.ReactNode; tower?: boolean; pad?: boolean; target?: boolean; tk?: number}> =
+  ({cam, grid = 0.5, pulse = 0, bad, behind, onPad, front, tower = true, pad = true, target = true, tk = 1}) => {
     const lw = 4 / cam.z;
     return (
       <g>
@@ -35,7 +35,7 @@ export const StageView: React.FC<{cam: Cam; grid?: number; pulse?: number; bad?:
           <StageBack lw={lw} grid={grid} />
           {behind}
           {tower ? <Tower lw={lw} /> : null}
-          {pad ? <Pad lw={lw} pulse={pulse} bad={bad} target={target} /> : null}
+          {pad ? <Pad lw={lw} pulse={pulse} bad={bad} target={target} tk={tk} /> : null}
           {onPad}
           {front}
         </Layer>

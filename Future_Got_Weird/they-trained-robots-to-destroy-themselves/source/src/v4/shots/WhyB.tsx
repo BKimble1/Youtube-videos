@@ -18,6 +18,7 @@ import {rig, RPose, Rig} from '../rig/Robot2D';
 import {stand, walk, blend, A} from '../rig/poses';
 import {ms} from '../rig/geom';
 import {WHY_A_END} from './WhyA';
+import {S_OPEN} from './Opening';
 import {CAST} from '../../components/cast';
 import {IDLE, Pose as CPose} from '../../components/Character';
 import {HangTag, Wrench} from '../../components/Props';
@@ -71,9 +72,11 @@ const cOut: Cam = {x: CX + 300, y: 660, z: 1.25};
 const cApart: Cam = {x: CX + 140, y: 650, z: 1.4};
 const cMach: Cam = {x: -760, y: 560, z: 0.95};
 const cHub: Cam = {x: HUB.x, y: HUB.y, z: 5.5};
-const ROBOT_EDGE = (o: Partial<RPose> = {}) => stand(230, FD.deck.top, 1, {yaw: 0.8, armN: A(4, 12, {grip: 0.3}), armF: A(-4, 14, {grip: 0.3}), ...o});
+/** Foundry robots use the opening's scale everywhere (no surprise scale changes next to the ladle). */
+export const FS = S_OPEN;
+const ROBOT_EDGE = (o: Partial<RPose> = {}) => stand(250, FD.deck.top, FS, {yaw: 0.8, armN: A(4, 12, {grip: 0.3}), armF: A(-4, 14, {grip: 0.3}), ...o});
 const cLad: Cam = {x: 860, y: 740, z: 1.4};
-const cBatt: Cam = {x: 250, y: 270, z: 1.25};
+const cBatt: Cam = {x: 330, y: 370, z: 2.0};
 const GLARE = '#FFC870';
 
 // door swing timing
@@ -385,23 +388,23 @@ export const WhyB: React.FC<{tau: number; f: number}> = ({tau, f}) => {
     const ringOn = tau < T_GL + 0.62;
     const r0 = 56 * cHub.z;
     // the robot walks in to the edge on its own
-    const W0 = T_EXCEPT - 0.3, W1 = T_ONOWN + 0.15, X0 = -560;
+    const W0 = T_EXCEPT - 0.3, W1 = T_ONOWN + 0.15, X0 = -420;
     const wu = seg(tau, W0, W1);
-    const dist = (230 - X0) * (0.5 * wu + 0.5 * smooth(wu));
-    const pw = walk(X0, FD.deck.top, 1, dist, 1, {yaw: 0.8}, 150);
+    const dist = (250 - X0) * (0.5 * wu + 0.5 * smooth(wu));
+    const pw = walk(X0, FD.deck.top, FS, dist, 1, {yaw: 0.8}, 150);
     const p = tau < W0 ? null : blend(pw, ROBOT_EDGE(), smooth(seg(tau, W1 - 0.3, W1 + 0.1)));
     const battK = seg(tau, T_BRINGS - 0.2, T_BRINGS + 0.25);
     const battGlow = 0.5 + 0.5 * Math.sin((tau - T_BATT) * 9) * (tau > T_BATT ? 1 : 0);
-    const r = rig(p ?? ROBOT_EDGE(), 1);
+    const r = rig(p ?? ROBOT_EDGE(), FS);
     const chestS = toScreen(cam, r.pts.chest[0] + 10, r.pts.chest[1] + 30);
-    const headS = toScreen(cam, r.pts.head[0], r.pts.head[1] - 120);
+    const headS = toScreen(cam, r.pts.head[0], r.pts.head[1] - 60);
     const ok = backOut(seg(tau, T_SIMPLE - 0.05, T_SIMPLE + 0.3), 1.6) * (1 - seg(tau, T_EXCEPT - 0.1, T_EXCEPT + 0.15));
     return (
       <Scene bg="#221A21">
         <FoundryView cam={cam} t={tau} glow={1}
-          behind={p ? <Bot cam={cam} id="wbE" model="F02" s={1} pose={p} after={{torso: batteryWindow(battK, tau > T_BATT ? battGlow : 0, 4 / cam.z)}} /> : null} />
+          behind={p ? <Bot cam={cam} id="wbE" model="F02" s={FS} pose={p} after={{torso: batteryWindow(battK, tau > T_BATT ? battGlow : 0, 4 / (cam.z * FS))}} /> : null} />
         <Tag ax={chestS.x} ay={chestS.y} x={chestS.x + 230} y={chestS.y + 120} text="battery pack" k={seg(tau, T_BATT - 0.1, T_BATT + 0.3)} size={40} />
-        {p ? <Warn x={headS.x + 190} y={headS.y + 150} k={seg(tau, T_EXCEPT + 0.35, T_EXCEPT + 0.7)} s={0.9} /> : null}
+        {p ? <Warn x={headS.x + 170} y={headS.y + 40} k={seg(tau, T_EXCEPT + 0.35, T_EXCEPT + 0.7)} s={0.9} /> : null}
         {ok > 0.01 ? <Mark x={1480} y={300} ok k={ok} s={1.2} /> : null}
         {gr > 0 ? (
           <g>
@@ -454,7 +457,7 @@ const Street: React.FC<{tau: number; f: number; tIn: number}> = ({tau, f, tIn}) 
     <g>
       <svg x={PIC.x0} y={PIC.y0} width={PIC.w} height={PIC.h} viewBox="0 0 1920 1080" overflow="hidden">
         <rect width={1920} height={1080} fill="#221A21" />
-        <FoundryView cam={cBatt} t={tau} glow={1} behind={<Bot cam={cBatt} id="wbPic" model="F02" s={1} pose={ROBOT_EDGE()} />} />
+        <FoundryView cam={cBatt} t={tau} glow={1} behind={<Bot cam={cBatt} id="wbPic" model="F02" s={FS} pose={ROBOT_EDGE()} />} />
       </svg>
     </g>
   );
@@ -496,30 +499,36 @@ const Street: React.FC<{tau: number; f: number; tIn: number}> = ({tau, f, tIn}) 
 export const clapCover = (k: number) => ({x: 960, y: lerp(1400, -150, k), s: lerp(1.2, 3.2, k), rot: lerp(-6, 0, k)});
 
 // ---------------------------------------------------------------- recycling is normal; a film crew is not
-const cRec: Cam = {x: 520, y: 395, z: 0.95};
+const cRec: Cam = {x: 560, y: 470, z: 1.02};
 const Normal: React.FC<{tau: number; f: number; t0: number}> = ({tau, f, t0}) => {
-  const cam = mixCam(cRec, {x: 540, y: 385, z: 0.99}, smooth(seg(tau, t0, t0 + 4.5)));
+  const cam = mixCam(cRec, {x: 580, y: 480, z: 1.08}, smooth(seg(tau, t0, t0 + 4.5)));
   const lw = 4 / cam.z;
   const gr = (1 - easeOut(seg(tau, t0, t0 + 0.6))) * 2300;
-  // scrap slides down a chute and drops into the ladle
-  const CH0 = {x: -560, y: 260}, CH1 = {x: 520, y: 620};
+  // a crane skip over the ladle tips scrap in, a piece at a time
+  const SK = {x: 830, y: 330};
+  const tip = 10 + 22 * Math.max(0, Math.sin((tau - t0) * 4.2));
   const scrap: React.ReactNode[] = [];
   const splashes: React.ReactNode[] = [];
-  for (let i = 0; i < 8; i++) {
-    const ts = t0 - 0.8 + i * 0.55;
-    const u = (tau - ts) / 1.0;
-    if (u < 0) continue;
-    const kind = i;
-    if (u < 1) {
-      const x = lerp(CH0.x, CH1.x, u), y = lerp(CH0.y, CH1.y, u) - 26;
-      scrap.push(<Scrap key={'s' + i} x={x} y={y} kind={kind} rot={20} lw={lw} />);
-    } else {
-      const v = (tau - ts - 1.0) / 0.42;
-      const lx = 640 + rnd(i * 5) * 160;
-      if (v < 1) scrap.push(<Scrap key={'s' + i} x={lerp(CH1.x, lx, v)} y={lerp(CH1.y - 26, FD.ladle.surf, v * v) - Math.sin(Math.PI * v) * 40} kind={kind} rot={20 + v * 120} lw={lw} />);
-      splashes.push(<Splash key={'sp' + i} x={lx} t={tau - ts - 1.42} lw={lw} part="front" scale={0.32} />);
-    }
+  for (let i = 0; i < 9; i++) {
+    const ts = t0 - 0.2 + i * 0.5;
+    const v = (tau - ts) / 0.5;
+    if (v < 0) continue;
+    const lx = SK.x - 40 + rnd(i * 5) * 120;
+    if (v < 1) scrap.push(<Scrap key={'s' + i} x={lerp(SK.x - 60, lx, v)} y={lerp(SK.y + 50, FD.ladle.surf, v * v)} kind={i} rot={20 + v * 160} lw={lw} />);
+    splashes.push(<Splash key={'sp' + i} x={lx} t={tau - ts - 0.5} lw={lw} part="front" scale={0.32} />);
   }
+  const skip = (
+    <g>
+      <line x1={SK.x} y1={-700} x2={SK.x} y2={SK.y - 70} stroke="#1A1314" strokeWidth={lw * 2.4} />
+      <g transform={`translate(${SK.x} ${SK.y}) rotate(${-tip})`}>
+        <path d="M-60 -70 L60 -70 M0 -70 L0 -40" stroke="#1A1314" strokeWidth={lw * 2} />
+        <path d="M-110 -40 L110 -40 L80 60 L-90 60 Z" fill="#6E6A72" stroke={C.ink} strokeWidth={lw} strokeLinejoin="round" />
+        <path d="M-100 -30 L100 -30" stroke="#8A8590" strokeWidth={lw * 2} />
+        <Scrap x={-20} y={-44} kind={1} rot={8} lw={lw} />
+        <Scrap x={40} y={-50} kind={0} rot={-12} lw={lw} />
+      </g>
+    </g>
+  );
   const clapIn = easeOut(seg(tau, T_FILM - 0.05, T_FILM + 0.25));
   const clapOut = easeIn(seg(tau, T_FILM + 0.62, T_FILM + 0.92));
   const clap = seg(tau, T_FILM + 0.34, T_FILM + 0.42);
@@ -545,27 +554,26 @@ const Normal: React.FC<{tau: number; f: number; t0: number}> = ({tau, f, t0}) =>
         <FoundryView cam={cam} t={tau} glow={1}
           extraBack={(
             <g>
-              <FilmLight x={-430} y={FD.deck.top} lw={lw} on={lights(T_FILM + 0.65)} aim={16} id="flA" />
+              <FilmLight x={-260} y={FD.deck.top} lw={lw} on={lights(T_FILM + 0.65)} aim={16} id="flA" />
               <g transform={`translate(${(1 - crewIn) * 700} 0)`}>
-                <FilmLight x={1330} y={FD.floor} lw={lw} on={lights(T_FILM + 0.8)} aim={205} h={520} id="flB" />
+                <FilmLight x={1440} y={FD.floor} lw={lw} on={lights(T_FILM + 0.8)} aim={205} h={560} id="flB" />
               </g>
+              {skip}
             </g>
           )}
           behind={(
             <g>
-              <path d={`M${CH0.x} ${CH0.y} L${CH1.x} ${CH1.y} L${CH1.x} ${CH1.y + 30} L${CH0.x} ${CH0.y + 30} Z`} fill="#6E6A72" stroke={C.ink} strokeWidth={lw} strokeLinejoin="round" />
-              {scrap}
-              <Bot cam={cam} id="wbN" model="F02" s={1} pose={ROBOT_EDGE()} />
-              <Crew look={CAST.clerkB} x={-100} y={FD.deck.top} h={540} frame={f} seed={9} front="L"
+              <Bot cam={cam} id="wbN" model="F02" s={FS} pose={ROBOT_EDGE()} />
+              <Crew look={CAST.clerkB} x={-60} y={FD.deck.top} h={400} frame={f} seed={9} front="L"
                 holdL={<g transform="rotate(-10)"><rect x={-40} y={-10} width={80} height={104} rx={8} fill="#C9924F" stroke={C.ink} strokeWidth={4} /><rect x={-32} y={4} width={64} height={80} rx={4} fill="#FFFDF6" /></g>}
                 pose={{...IDLE, armL: {a: 40, b: 70}, armR: {a: 10, b: 12}, lookX: 0.7, lookY: 0.3, mouth: tau > T_NOT ? 'o' : 'smile', brows: tau > T_NOT ? 0.8 : 0.2}} />
             </g>
           )}
-          inside={<g>{splashes}</g>}
+          inside={<g>{scrap}{splashes}</g>}
           front={(
             <g transform={`translate(${(1 - crewIn) * 800} 0)`}>
-              <TripodCam x={1180} y={FD.floor} lw={lw} />
-              <Crew look={CAST.clerkC} x={1400} y={FD.floor} h={540} frame={f} seed={14} flip
+              <TripodCam x={1170} y={FD.floor} lw={lw} />
+              <Crew look={CAST.clerkC} x={1330} y={FD.floor} h={400} frame={f} seed={14} flip
                 pose={{...IDLE, armR: {a: 70, b: 40}, armL: {a: 50, b: 60}, lookX: 0.4, mouth: 'smile'}} />
             </g>
           )} />

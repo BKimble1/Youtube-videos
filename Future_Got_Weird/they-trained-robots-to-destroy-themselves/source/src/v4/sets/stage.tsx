@@ -6,6 +6,8 @@ import {C} from '../../theme';
 import {FD} from './foundry';
 
 export const SCOL = {bg0: '#EEF4FD', bg1: '#D9E6F8', grid: '#BFD3F0', ink: '#2C4A80', tower: '#C7DAF6', towerTop: '#E3EDFB', towerSide: '#A9C2EA', pad: '#CFE0F8', padTop: '#EAF2FD', target: C.teal, targetD: C.tealDeep, coral: C.coral};
+/** Target centre on the pad = where the robot entered the steel in the opening. */
+export const TGT_X = 760;
 const E = (cx: number, cy: number, rx: number, ry: number) => `M${cx - rx} ${cy}A${rx} ${ry} 0 1 0 ${cx + rx} ${cy}A${rx} ${ry} 0 1 0 ${cx - rx} ${cy}Z`;
 
 export const StageBack: React.FC<{lw: number; grid?: number}> = ({lw, grid = 1}) => (
@@ -40,7 +42,7 @@ export const Tower: React.FC<{lw: number; edge?: number; top?: number; x0?: numb
 );
 
 /** Landing pad with the target (top ellipse = the ladle's molten-surface ellipse). */
-export const Pad: React.FC<{lw: number; pulse?: number; bad?: boolean; target?: boolean; zone?: number}> = ({lw, pulse = 0, bad, target = true, zone = 1}) => {
+export const Pad: React.FC<{lw: number; pulse?: number; bad?: boolean; target?: boolean; zone?: number; tk?: number}> = ({lw, pulse = 0, bad, target = true, zone = 1, tk = 1}) => {
   const L = FD.ladle;
   const col = bad ? SCOL.coral : SCOL.target;
   return (
@@ -48,12 +50,12 @@ export const Pad: React.FC<{lw: number; pulse?: number; bad?: boolean; target?: 
       <path d={`M${L.cx - L.srx - 20} ${L.surf} L${L.cx - L.srx + 10} ${FD.floor} L${L.cx + L.srx - 10} ${FD.floor} L${L.cx + L.srx + 20} ${L.surf} Z`} fill={SCOL.pad} stroke={SCOL.ink} strokeWidth={lw} strokeLinejoin="round" />
       <path d={E(L.cx, L.surf, L.srx + 20, L.sry + 6)} fill={SCOL.padTop} stroke={SCOL.ink} strokeWidth={lw} />
       {zone > 0 ? <path d={E(L.cx, L.surf, 150, 150 * (L.sry / L.srx))} fill="none" stroke={SCOL.ink} strokeWidth={lw * 0.8} strokeDasharray={`${lw * 4} ${lw * 3}`} opacity={0.5 * zone} /> : null}
-      {target ? (
-        <g>
-          <path d={E(L.cx, L.surf, 92 * (1 + 0.12 * pulse), 92 * (1 + 0.12 * pulse) * (L.sry / L.srx))} fill="none" stroke={col} strokeWidth={lw * 4.2} />
-          <path d={E(L.cx, L.surf, 46, 46 * (L.sry / L.srx))} fill="none" stroke={col} strokeWidth={lw * 3.4} />
-          <path d={E(L.cx, L.surf, 13, 13 * (L.sry / L.srx))} fill={col} />
-          {pulse > 0 ? <path d={E(L.cx, L.surf, 92 + 120 * (1 - pulse), (92 + 120 * (1 - pulse)) * (L.sry / L.srx))} fill="none" stroke={col} strokeWidth={lw * 2} opacity={pulse} /> : null}
+      {target && tk > 0.01 ? (
+        <g transform={`translate(${TGT_X} ${L.surf}) scale(${tk}) translate(${-TGT_X} ${-L.surf})`}>
+          <path d={E(TGT_X, L.surf, 92 * (1 + 0.12 * pulse), 92 * (1 + 0.12 * pulse) * (L.sry / L.srx))} fill="none" stroke={col} strokeWidth={lw * 4.2} />
+          <path d={E(TGT_X, L.surf, 46, 46 * (L.sry / L.srx))} fill="none" stroke={col} strokeWidth={lw * 3.4} />
+          <path d={E(TGT_X, L.surf, 13, 13 * (L.sry / L.srx))} fill={col} />
+          {pulse > 0 ? <path d={E(TGT_X, L.surf, 92 + 120 * (1 - pulse), (92 + 120 * (1 - pulse)) * (L.sry / L.srx))} fill="none" stroke={col} strokeWidth={lw * 2} opacity={pulse} /> : null}
         </g>
       ) : null}
     </g>

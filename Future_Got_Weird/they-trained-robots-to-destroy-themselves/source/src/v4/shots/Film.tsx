@@ -197,13 +197,14 @@ const TitleMonitor: React.FC<{tau: number}> = ({tau}) => {
 };
 
 // ---------------------------------------------------------------- 2D foundry beats
-const ROBOT = stand(230, FD.deck.top, 1, {yaw: 0.8, armN: A(4, 12, {grip: 0.3}), armF: A(-4, 14, {grip: 0.3})});
+const FS = 0.6;
+const ROBOT = stand(250, FD.deck.top, FS, {yaw: 0.8, armN: A(4, 12, {grip: 0.3}), armF: A(-4, 14, {grip: 0.3})});
 const T_X = T_REASON + 0.25;            // the chain crosses the lens
-const CHAIN_X = 520, HOOK_Y = 230;
+const CHAIN_X = 520, HOOK_Y = 170;
 const cTop: Cam = {x: CHAIN_X, y: 20, z: 1.5};
-const cF: Cam = {x: 480, y: 330, z: 0.95};
+const cF: Cam = {x: 520, y: 470, z: 1.1};
 /** First camera of the training section: low and close at the edge (Film ends by pushing into it). */
-export const TRAIN_C0: Cam = {x: 300, y: 280, z: 1.3, rot: -3};
+export const TRAIN_C0: Cam = {x: 330, y: 390, z: 2.0, rot: -3};
 
 /** The foundry crane chain and hook in the main layer — the film's chain, now a real object in the set. */
 const CraneChain: React.FC<{lw: number; sw: number}> = ({lw, sw}) => {
@@ -276,21 +277,21 @@ const FoundryBeats: React.FC<{tau: number; f: number}> = ({tau, f}) => {
       <FoundryView cam={cam} t={tau} glow={1} hook={false}
         extraBack={(
           <g>
-            <FilmLight x={-430} y={FD.deck.top} lw={lw} on={1} aim={16} id="flA2" />
-            <FilmLight x={1330} y={FD.floor} lw={lw} on={1} aim={205} h={520} id="flB2" />
+            <FilmLight x={-260} y={FD.deck.top} lw={lw} on={1} aim={16} id="flA2" />
+            <FilmLight x={1440} y={FD.floor} lw={lw} on={1} aim={205} h={560} id="flB2" />
           </g>
         )}
         behind={(
           <g>
             <CraneChain lw={lw} sw={sw} />
-            <Bot cam={cam} id="fmR" model="F02" s={1} pose={{...ROBOT, head: 6 * smooth(seg(tau, T_X + 0.4, T_X + 1.2))}} />
+            <Bot cam={cam} id="fmR" model="F02" s={FS} pose={{...ROBOT, head: 6 * smooth(seg(tau, T_X + 0.4, T_X + 1.2))}} />
           </g>
         )}
         front={(
           <g>
             <g transform={`translate(${(1 - jibIn) * 900} 0)`}><Jib lw={lw} a={jibA} /></g>
-            <TripodCam x={1180} y={FD.floor} lw={lw} />
-            <Crew look={CAST.clerkC} x={1400} y={FD.floor} h={540} frame={f} seed={14} flip
+            <TripodCam x={1170} y={FD.floor} lw={lw} />
+            <Crew look={CAST.clerkC} x={1330} y={FD.floor} h={400} frame={f} seed={14} flip
               pose={{...IDLE, armR: {a: 70, b: 40}, armL: {a: 50, b: 60}, lookX: 0.4, mouth: 'smile'}} />
           </g>
         )} />
