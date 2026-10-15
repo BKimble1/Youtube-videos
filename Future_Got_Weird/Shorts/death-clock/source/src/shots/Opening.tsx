@@ -56,8 +56,9 @@ const HIP_LANDED: [number, number, ('auto' | 'stop' | 'hit')?][] = [
 
 /** V4 polish: the hips' height from the cut to the impact. It was one constant ~16 units/frame glide (a sit onto an
  *  invisible chair). Now the legs fail progressively: the hips' acceleration grows linearly from the cut (constant
- *  jerk), so they never drift at a steady speed, and they land at exactly B.hipHit at about 33 units/frame. */
-const FALL_V0 = 7; // units/frame at the cut: he is already buckling
+ *  jerk), so they never slow or hover, and they land at exactly B.hipHit at about 23 units/frame. The speed at the cut
+ *  keeps V3's pace (a slower start read as a slow sink into an invisible chair). */
+const FALL_V0 = 12; // units/frame at the cut: he is already buckling
 const hipFallY = (f: number) => {
   const y0 = COLLAPSE[1][1].y;
   const T = B.hipHit - B.cut;
