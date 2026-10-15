@@ -42,26 +42,33 @@ export const toScreenD = (cam: Cam, depth: number, p: V): V => {
 export const DRONE_S = 0.82;
 /** One rotor phase for every shot: still in the cradle, spinning up only after the latch has opened (B4.spin0). */
 export const rotorRate = (t: number) => (t < B4.spin0 ? 0 : 0.05 + 1.6 * clamp((t - B4.spin0) / (B4.spin1 - B4.spin0)) ** 3);
-export const rotorPhase = (f: number) => {
+const spinUp = (s0: number, s1: number, f: number) => {
   let ph = 0;
-  const n = Math.min(f, B4.spin1);
-  for (let t = B4.spin0; t < n; t++) ph += rotorRate(t);
-  return ph + Math.max(0, f - B4.spin1) * rotorRate(B4.spin1);
+  const n = Math.min(f, s1);
+  for (let t = s0; t < n; t++) ph += 0.05 + 1.6 * clamp((t - s0) / (s1 - s0)) ** 3;
+  return ph + Math.max(0, f - s1) * 1.65;
 };
+/** launch fix: the shorter spin-up gains SPIN_TRIM (< 1 turn, eased in over it) so that from the flyover on the blade
+ *  angle equals the V4 master's (spin-up B.latch + 4 .. + 26) modulo a whole turn: the wipe and arrival rotors are unchanged */
+const SPIN_TRIM = (() => {
+  const d = spinUp(B.latch + 4, B.latch + 26, 2000) - spinUp(B4.spin0, B4.spin1, 2000);
+  return ((d % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+})();
+export const rotorPhase = (f: number) => spinUp(B4.spin0, B4.spin1, f) + SPIN_TRIM * easeInOut(inv(B4.spin0, B4.spin1, f));
 /** rotor motion blur: grows with the spin-up, full from blur1 on (flyover and arrival too) */
 export const rotorBlur = (f: number) => clamp(inv(B4.blur0, B4.blur1, f));
 
-/** Forward travel since B4.go0 (world units, same in the hospital and the flyover): the speed builds as
- *  GO_A*(f-go0)^2 until it reaches CRUISE, then holds. Small at the 863/864 cut, so the EMERGENCY sign stays whole. */
-const GO_A = 0.156;
+/** Forward travel since B4.go0 (world units, same in the hospital and the flyover): the speed eases (smoothstep) up
+ *  to CRUISE at B4.go1, then holds. About 290 at the 863/864 cut, so the hospital frame stays inside the facade. */
 export const CRUISE = 34;
-const GO_T = Math.sqrt(CRUISE / GO_A);
 export const travelX = (f: number) => {
+  const T = B4.go1 - B4.go0;
   const t = Math.max(0, f - B4.go0);
-  return t < GO_T ? (GO_A * t ** 3) / 3 : (GO_A * GO_T ** 3) / 3 + (t - GO_T) * CRUISE;
+  const u = clamp(t / T);
+  return t < T ? CRUISE * T * (u ** 3 - u ** 4 / 2) : CRUISE * (T / 2 + t - T);
 };
 /** lift clear of the dock (0..1) */
-const riseAt = (f: number) => easeInOut(inv(B.lift0, B4.lift1, f));
+const riseAt = (f: number) => easeInOut(inv(B4.lift0, B4.lift1, f));
 /** nose-down pitch for forward flight, a small wobble while airborne that grows into the cruise rock */
 export const flightPitch = (f: number) =>
   lerp(0, 15, ease(inv(B4.pitch0, B4.pitch1, f))) + lerp(0.6 * Math.sin(f * 0.5), 3 * Math.sin(f * 0.3), ease(inv(B.travel0, B.travel0 + 12, f))) * riseAt(f);
@@ -127,7 +134,7 @@ const DECK_Y = 1000; // front edge of the roof deck
 const H_Z0 = 0.72;
 const H_Z1 = 1.25;
 const H_RATE = 0.011; // log-zoom per frame at the cut (map and hospital)
-const H_ARR = B.latch + 16; // the approach ends on the rooftop
+const H_ARR = B4.hospArr; // the approach ends on the rooftop (just before the latch opens)
 const H_X1 = 680;
 export const hospCam = (f: number): Cam => {
   const lnz = f < MAP_END ? Math.log(H_Z0) + H_RATE * (f - MAP_END) : hermite(MAP_END, H_ARR, Math.log(H_Z0), Math.log(H_Z1), H_RATE, 0, f);
@@ -236,7 +243,7 @@ export const MapBlip: React.FC<{id: string; f: number}> = ({id, f}) => {
 // ---------------------------------------------------------------- the hospital launch bay
 /** drone beacon blink, the same function in every shot */
 export const droneBeacon = (f: number) => 0.5 + 0.5 * Math.sin(f * 0.6);
-/** Takeoff: the latch opens (B.latch), the rotors spin up after it (B4.spin0), the drone lifts clear (B.lift0 ->
+/** Takeoff: the latch opens (B4.latch0), the rotors spin up after it (B4.spin0), the drone lifts clear (B4.lift0 ->
  *  B4.lift1), pitches nose-down (B4.pitch0) and only then travels forward (B4.go0). */
 export const hospDrone = (f: number): DronePose => ({
   x: DOCK.x + travelX(f),
@@ -263,7 +270,7 @@ export const HospitalBay: React.FC<{id: string; f: number}> = ({id, f}) => {
   // the dock beacon was lit by the map's pulse (B4.pulseLand): same flash phase and ripple across the cut
   const bc = beaconAt(f);
   const beaconPulse = bc.pulse;
-  const latch = easeOut(inv(B.latch, B.latch + 8, f));
+  const latch = easeOut(inv(B4.latch0, B4.latch0 + 8, f));
   const ambLight = Math.sin(f * 0.9) > 0 ? 1 : 0.25;
   return (
     <g>
@@ -394,7 +401,7 @@ export const HospitalBay: React.FC<{id: string; f: number}> = ({id, f}) => {
         {/* downwash: dust rings on the deck as it lifts */}
         {[0, 0.33, 0.66].map((o, i) => {
           const t = ((f - B4.spin0) * 0.05 + o) % 1;
-          const a = rotorBlur(f) * (1 - inv(B.bank0, B.travel0, f));
+          const a = rotorBlur(f) * (1 - inv(B4.go0, B4.go0 + 10, f));
           return a > 0.01 ? <ellipse key={i} cx={fmt(dp.x)} cy={DECK_Y - 64} rx={150 + t * 260} ry={24 + t * 40} fill="none" stroke="#FFFFFF" strokeWidth={6} opacity={(1 - t) * 0.35 * a} /> : null;
         })}
       </Layer>
@@ -406,12 +413,20 @@ export const HospitalBay: React.FC<{id: string; f: number}> = ({id, f}) => {
 export const WIPE = {in0: B.past0 - 1, cover: B.past0 + 6, out1: B.past0 + 15};
 
 /** The flyover continues the hospital's last move on the same drone: same pose scale, pitch function, forward
- *  speed (travelX) and camera lock, so the 863/864 cut changes only the background. FLY_X0 is the drone's x in the
- *  flyover world at the cut; FLY_CLIMB is how far it climbs over the roofs before the trunk wipe (roll stays 0). */
+ *  speed (travelX) and camera lock, so the 863/864 cut changes only the background. FLY_X0 was the drone's x in the
+ *  flyover world at the cut in the V4 master; FLY_CLIMB is how far it climbs over the roofs before the trunk wipe (roll stays 0). */
 const FLY_X0 = 700;
 const FLY_CLIMB = 120;
+/** launch fix: the flyover x is anchored at the trunk wipe (B4.arrive0) to its V4 master value (FLY_X0 at the cut plus
+ *  the master's run to the wipe: 0.156 t^2 from 854 up to CRUISE), so with the quicker launch the wipe and arrival stay identical */
+const FLY_XW = (() => {
+  const a = 0.156;
+  const T = Math.sqrt(CRUISE / a);
+  const run = (t: number) => (t < T ? (a * t ** 3) / 3 : (a * T ** 3) / 3 + (t - T) * CRUISE);
+  return FLY_X0 + run(B4.arrive0 - 854) - run(B.travel0 - 854);
+})();
 export const flyDrone = (f: number): DronePose => ({
-  x: FLY_X0 + travelX(f) - travelX(B.travel0),
+  x: FLY_XW + travelX(f) - travelX(B4.arrive0),
   y: DOCK.y - 88 - 330 - FLY_CLIMB * ease(inv(B.travel0, B4.climb1, f)),
   s: DRONE_S,
   pitch: flightPitch(f),

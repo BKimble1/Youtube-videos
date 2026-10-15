@@ -251,7 +251,7 @@ const rotorPath = (h: PictureHooks, latch: number): Cue => {
   // under) -- that drop now starts only when the drone has left the frame, so it rides the off-frame hand-off
   const lvlK: [number, number][] = [[f0, 0], [flare0, 0], [flare0 + 5, 1.5], [hover, 0], [Math.max(hover, lastVis), 0], [Math.max(hover, lastVis) + 20, -8], [away0, -8], [f1, -12]];
   // blade load: a touch more effort while it lifts clear of the dock and in the braking flare
-  const loadK: [number, number][] = [[f0, 1], [B.lift0, 1], [B.lift0 + 8, 1.04], [lift1, 1], [flare0, 1], [flare0 + 5, 1.06], [hover + 4, 1]];
+  const loadK: [number, number][] = [[f0, 1], [B4.lift0, 1], [B4.lift0 + 8, 1.04], [lift1, 1], [flare0, 1], [flare0 + 5, 1.06], [hover + 4, 1]];
   SOURCES.rotor_view = h.droneView
     ? `${h.origin?.droneView ?? 'hook'} (framed ${visIdx.length ? `${frames[visIdx[0]]}-${lastVis}` : 'never'}; off frame from ${lastVis + 1}: eased over ${VIEW_EASE} f into the off-frame hover model, no step)`
     : 'fallback keyframes (V3 framing, continuous at 864 and the wipe)';
@@ -466,14 +466,15 @@ export const soundCues4 = (h: PictureHooks = {}): Cue[] => {
   // inaudible on its own): in phase it added to a narration peak at 751.2 that V3's limiter holds at the ceiling
   // (a -42 dBFS de-peak pulse in the effects stem, about the level of the effects there)
   c.push({id: 'hosp_receive', kind: 'receive', f: k4(['pulseLand', 'dockLand'], B.dock), gain: -24, p: {duck: -8, polarity: -1}});
-  // takeoff order (Dispatch.tsx): the cradle latch swings open over B.latch .. +8 (easeOut), the rotors start at
-  // B4.spin0 and reach full speed at spin1 (rotorRate), their blur grows from blur0, the drone lifts clear from B.lift0.
+  // takeoff order (Dispatch.tsx): the cradle latch swings open over B4.latch0 .. +8 (easeOut), the rotors start at
+  // B4.spin0 and reach full speed at spin1 (rotorRate), their blur grows from blur0, the drone lifts clear from B4.lift0
+  // (launch fix: the quicker takeoff runs on these B4 keys, no longer on the words B.latch / B.lift0).
   // Sound: the pin releases on the latch frame, the cradle servo runs the swing, a click as the arms reach their stops,
   // then ONE rotor cue on the picture's rotorPhase (silent until spin0), perspective and pan from droneView
-  const latch = B.latch;
-  const LATCH_SWING = 8; // Dispatch.tsx HospitalBay: easeOut(inv(B.latch, B.latch + 8, f))
-  SOURCES.latch = `B.latch ${latch} (Dispatch latch swing ${latch}-${latch + LATCH_SWING}); spin0 ${B4.spin0}, blur0 ${B4.blur0}, spin1 ${B4.spin1}, lift ${B.lift0}-${B4.lift1}`;
-  if (!(latch < B4.spin0 && B4.spin0 < B4.spin1 && B4.blur0 >= B4.spin0 && B4.spin0 < B.lift0 && B.lift0 <= B4.lift1)) throw new Error(`takeoff order broken: latch ${latch} spin0 ${B4.spin0} blur0 ${B4.blur0} spin1 ${B4.spin1} lift0 ${B.lift0}`);
+  const latch = B4.latch0;
+  const LATCH_SWING = 8; // Dispatch.tsx HospitalBay: easeOut(inv(B4.latch0, B4.latch0 + 8, f))
+  SOURCES.latch = `B4.latch0 ${latch} (Dispatch latch swing ${latch}-${latch + LATCH_SWING}); spin0 ${B4.spin0}, blur0 ${B4.blur0}, spin1 ${B4.spin1}, lift ${B4.lift0}-${B4.lift1}`;
+  if (!(latch < B4.spin0 && B4.spin0 < B4.spin1 && B4.blur0 >= B4.spin0 && B4.spin0 < B4.lift0 && B4.lift0 <= B4.lift1)) throw new Error(`takeoff order broken: latch ${latch} spin0 ${B4.spin0} blur0 ${B4.blur0} spin1 ${B4.spin1} lift0 ${B4.lift0}`);
   c.push({id: 'latch_pin', kind: 'pin', f: latch, gain: -24});
   c.push({id: 'latch_servo', kind: 'servo', f: latch, dur: LATCH_SWING / FPS, gain: -27, p: {f0: 700, f1: 1100}});
   c.push({id: 'latch_click', kind: 'click', f: latch + LATCH_SWING, gain: -30, p: {freq: 2200}});

@@ -33,9 +33,10 @@ export const PROP: ManPose = K({x: 672, y: 1712, torso: 16, chest: 34, neck: -12
 export const COLLAPSE: SKey<ManPose>[] = [
   [0, K({y: 1236, torso: 10, chest: 18, neck: 10})],
   [8, K({y: 1290, torso: 10, chest: 20, neck: 8, lTu: -290, lTv: 10})],
-  // the knees give: hips fall over the planted feet, the left hand starts its reach for the grass
-  [18, K({x: 664, y: 1440, torso: 12, chest: 22, neck: 4, lTu: -250, lTv: -40, lW: 0.35, lWr: 40})],
-  [28, K({x: 670, y: 1610, torso: 12, chest: 26, neck: 0, pelvis: 12, lW: 0.8, lWr: 70})],
+  // the knees give: the legs still carry him, the hips sink forward toward the feet and the torso folds over them,
+  // the left hand starts its reach for the grass; then the legs fail and he sits back as he drops (y: hipFallY)
+  [18, K({x: 634, y: 1360, torso: 15, chest: 24, neck: 4, lTu: -250, lTv: -40, lW: 0.35, lWr: 40})],
+  [28, K({x: 662, y: 1506, torso: 15, chest: 27, neck: 0, pelvis: 12, lW: 0.8, lWr: 70})],
   // hips meet the grass; the upper back keeps curling forward and the hand meets the grass a beat later
   [35, K({x: 672, y: 1716, torso: 13, chest: 30, neck: -4, pelvis: 18, lW: 0.96, lWr: 80}), 'hit'],
   [39, K({x: 672, y: 1714, torso: 15, chest: 33, neck: -8, pelvis: 18, lW: 1, lWr: 84}), 'hit'],
@@ -53,8 +54,21 @@ const HIP_LANDED: [number, number, ('auto' | 'stop' | 'hit')?][] = [
   [56, PROP.y, 'stop'],
 ];
 
+/** V4 polish: the hips' height from the cut to the impact. It was one constant ~16 units/frame glide (a sit onto an
+ *  invisible chair). Now the legs fail progressively: the hips' acceleration grows linearly from the cut (constant
+ *  jerk), so they never drift at a steady speed, and they land at exactly B.hipHit at about 33 units/frame. */
+const FALL_V0 = 7; // units/frame at the cut: he is already buckling
+const hipFallY = (f: number) => {
+  const y0 = COLLAPSE[1][1].y;
+  const T = B.hipHit - B.cut;
+  const J = (6 * (COLLAPSE[4][1].y - y0 - FALL_V0 * T)) / T ** 3;
+  const t = f - B.cut;
+  return y0 + FALL_V0 * t + (J * t ** 3) / 6;
+};
+
 const collapseBody = (f: number): ManPose => {
   let m = splineRec(f, COLLAPSE);
+  if (f >= B.cut && f <= B.hipHit) m = {...m, y: hipFallY(f)};
   if (f > B.hipHit) m = {...m, y: spline(f, HIP_LANDED)};
   // tremor while still up, and laboured breathing once down
   const up = 1 - inv(26, 36, f);
@@ -127,8 +141,16 @@ export const dogAt = (f: number): DogPose => {
 };
 
 /** Low three-quarter framing of the collapse (camera y below his chest, ground in the lower third). */
+/** V4 polish: the camera takes up only part of the hips' drop and trails it on a spring (it lags the fall instead of
+ *  cancelling it), catches up after the impact and hands over to the original path by 46; a small, quickly damped
+ *  jolt as the hips hit. */
+const CAM_FOLLOW = 0.51;
+const CAM_K = 0.5;
+const camDrop = (f: number) => 1310 + CAM_FOLLOW * (hipFallY(clamp(f, B.cut, B.hipHit)) - COLLAPSE[1][1].y);
 export const collapseCam = (f: number) => ({
   x: spline(f, [[8, 560], [24, 540], [40, 490], [56, 480]]),
-  y: spline(f, [[8, 1310], [24, 1400], [40, 1520], [56, 1540]]),
+  y:
+    lerp(spring(camDrop, f, CAM_K, 1, 30), spline(f, [[8, 1310], [24, 1400], [40, 1520], [56, 1540]]), easeInOut(inv(40, 46, f))) -
+    (f > B.hipHit ? 3 * Math.exp(-(f - B.hipHit) / 3) * Math.sin((f - B.hipHit) * 1.9) : 0),
   z: spline(f, [[8, 1.34], [24, 1.38], [40, 1.5], [56, 1.56]]),
 });

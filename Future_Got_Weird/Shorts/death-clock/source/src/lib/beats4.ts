@@ -18,20 +18,28 @@ export const B4 = {
   /** the location pulse (the journey's transmission ring, carried onto the map at B.map0) lands in the hospital's
    *  dock ring; the dock beacon's ripple and flash phase start here and run on across the 747/748 match cut */
   pulseLand: B.map0 + 16,
-  /** the latch clicks open at B.latch; the rotors start AFTER it and reach full speed at spin1 */
-  spin0: B.latch + 4,
-  spin1: B.latch + 26,
+  /** quicker launch (V4 launch fix): the takeoff no longer waits for the words B.latch ('where' 813), B.lift0 ('drone'
+   *  837) and B.bank0 ('straight' 860); the picture and the takeoff cues (lib/sound4.ts) read these keys instead.
+   *  The hospital approach settles on the rooftop at hospArr and the latch clicks open at latch0 */
+  hospArr: B.latch - 17, // 796
+  latch0: B.latch - 16, // 797
+  /** the rotors start AFTER the latch and reach full speed at spin1 (a short spin-up) */
+  spin0: B.latch - 12, // 801
+  spin1: B.latch + 1, // 814
   /** rotor blur grows with the spin-up (hospital); it stays full in the flyover and the arrival */
-  blur0: B.latch + 8,
-  blur1: B.latch + 28,
-  /** lift clear of the dock: B.lift0 -> lift1 (330 world up) */
-  lift1: B.bank0 + 2,
+  blur0: B.latch - 9, // 804
+  blur1: B.latch + 3, // 816
+  /** lift clear of the dock: lift0 -> lift1 (330 world up) */
+  lift0: B.latch - 1, // 812
+  lift1: B.lift0 - 2, // 835
   /** the hospital camera's x locks onto the drone from here (it then trucks with the forward travel) */
-  camLock: B.lift0 + 13,
-  /** nose-down pitch, then forward travel (the drone is ~290 world clear of the dock when it starts to move) */
-  pitch0: B.bank0 - 8,
-  pitch1: B.bank0 + 2,
-  go0: B.bank0 - 6,
+  camLock: B.latch + 12, // 825
+  /** nose-down pitch, then forward travel (the drone is ~315 world clear of the dock when it starts to move); the
+   *  speed eases up to CRUISE at go1, so it is travelling on 'launches' (844) and fast at the 863/864 cut */
+  pitch0: B.lift0 - 9, // 828
+  pitch1: B.lift0 + 1, // 838
+  go0: B.lift0 - 7, // 830
+  go1: B.travel0 + 20, // 884
   /** flyover: the drone climbs over the roofs until the trunk wipe starts (WIPE.in0) */
   climb1: B.past0 - 1,
   /** arrival: from the trunk wipe (arrive0) to wipeLock (the trunk's full cover, WIPE.cover) the drone holds the
