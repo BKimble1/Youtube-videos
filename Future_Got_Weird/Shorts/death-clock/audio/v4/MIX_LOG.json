@@ -1,0 +1,1479 @@
+{
+ "version": "v4",
+ "route": "option R: V3 narration + music stems reused byte for byte; only the effects bus is rebuilt, under V3 gain envelope G3; exact integer sum; no re-normalisation, no new limiter",
+ "listened": false,
+ "note": "Nothing in this build has been listened to; all figures are measurements.",
+ "reused_stems": {
+  "narration": {
+   "sha256": "795c856e4463f9e18f82ac2dd30ae5642796c78716b839a73dc521f20b8977ab",
+   "equals_v3": true
+  },
+  "music": {
+   "sha256": "3d64640fddc3baeb4b6e94fa34af2e752dcdc3a7424402cfeaf3b0717e6038d9",
+   "equals_v3": true
+  }
+ },
+ "g3": {
+  "static_gain_db": 4.23,
+  "static_gain_source": "audio/v3/MIX_LOG.json loudnorm_pass1.input_i (frozen; no re-normalisation)",
+  "premix_peak_over_0.98": 0.5878,
+  "limiter_max_reduction_db": 1.24,
+  "limiter_samples_reduced": 286010,
+  "rebuild_vs_v3_files": {
+   "narration": {
+    "max_abs_lsb": 0,
+    "samples_differing": 0
+   },
+   "music": {
+    "max_abs_lsb": 0,
+    "samples_differing": 0
+   },
+   "effects": {
+    "max_abs_lsb": 0,
+    "samples_differing": 0
+   },
+   "mix": {
+    "max_abs_lsb": 0,
+    "samples_differing": 0
+   }
+  },
+  "bit_exact": true,
+  "rebuild_s": 32.7,
+  "v3_inputs_sha256": "6bd7b6f54c8899ba8aff0ca2d7ee8224d717dc1e09fc0e05b789a8e31d67e3de"
+ },
+ "cues": [
+  {
+   "id": "hb_a0",
+   "kind": "heartbeat",
+   "frame": 0,
+   "time_s": 0.0,
+   "gain_db": -27,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "alarm_h6",
+   "kind": "alarm1",
+   "frame": 6,
+   "time_s": 0.2,
+   "gain_db": -24,
+   "len_s": 1.66,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -8.0,
+   "duck_lead_s": 0.05
+  },
+  {
+   "id": "buzz_h6",
+   "kind": "buzz",
+   "frame": 6,
+   "time_s": 0.2,
+   "gain_db": -30,
+   "len_s": 0.3,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "breath_catch",
+   "kind": "file",
+   "frame": 6,
+   "time_s": 0.2,
+   "gain_db": -24,
+   "len_s": 1.0,
+   "source": "breath_1_i0TXGqFeHqkEpFKKUdQf.mp3",
+   "bus": "one-shot"
+  },
+  {
+   "id": "knees_give",
+   "kind": "rustle",
+   "frame": 10,
+   "time_s": 0.333,
+   "gain_db": -31,
+   "len_s": 0.6,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_a1",
+   "kind": "heartbeat",
+   "frame": 15,
+   "time_s": 0.5,
+   "gain_db": -23,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "shoe_scuff",
+   "kind": "scuff",
+   "frame": 20,
+   "time_s": 0.667,
+   "gain_db": -30,
+   "len_s": 0.22,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_a2",
+   "kind": "heartbeat",
+   "frame": 31,
+   "time_s": 1.033,
+   "gain_db": -21,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hips_land",
+   "kind": "thud",
+   "frame": 35,
+   "time_s": 1.167,
+   "gain_db": -21,
+   "len_s": 0.5,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "dog_whine",
+   "kind": "file",
+   "frame": 37,
+   "time_s": 1.103,
+   "gain_db": -30,
+   "len_s": 1.0,
+   "source": "dog_3_JB8U4frHpRyLaM7eJciP.mp3",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hand_grass",
+   "kind": "pat",
+   "frame": 39,
+   "time_s": 1.3,
+   "gain_db": -23,
+   "len_s": 0.35,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "weight_on_arm",
+   "kind": "rustle",
+   "frame": 42,
+   "time_s": 1.4,
+   "gain_db": -32,
+   "len_s": 0.35,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "body_settle",
+   "kind": "file",
+   "frame": 43,
+   "time_s": 1.113,
+   "gain_db": -24,
+   "len_s": 2.0,
+   "source": "fall_4_9ukhH99iVXpBejeIoCqn.mp3",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_a3",
+   "kind": "heartbeat",
+   "frame": 45,
+   "time_s": 1.5,
+   "gain_db": -19,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "strained_exhale",
+   "kind": "file",
+   "frame": 60,
+   "time_s": 1.7,
+   "gain_db": -29,
+   "len_s": 2.0,
+   "source": "breath_4_y9jk69O2KtRNTZPOiz8T.mp3",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_a4",
+   "kind": "heartbeat",
+   "frame": 62,
+   "time_s": 2.067,
+   "gain_db": -19,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_a5",
+   "kind": "heartbeat",
+   "frame": 76,
+   "time_s": 2.533,
+   "gain_db": -19,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "buzz0",
+   "kind": "buzz",
+   "frame": 83,
+   "time_s": 2.767,
+   "gain_db": -25,
+   "len_s": 0.3,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "tick90",
+   "kind": "clock",
+   "frame": 90,
+   "time_s": 3.0,
+   "gain_db": -29,
+   "len_s": 0.06,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_a6",
+   "kind": "heartbeat",
+   "frame": 92,
+   "time_s": 3.067,
+   "gain_db": -19,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "fingers_dig",
+   "kind": "rustle",
+   "frame": 92,
+   "time_s": 3.067,
+   "gain_db": -31,
+   "len_s": 0.4,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "buzz1",
+   "kind": "buzz",
+   "frame": 99,
+   "time_s": 3.3,
+   "gain_db": -25,
+   "len_s": 0.3,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_a7",
+   "kind": "heartbeat",
+   "frame": 107,
+   "time_s": 3.567,
+   "gain_db": -19,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "tick120",
+   "kind": "clock",
+   "frame": 120,
+   "time_s": 4.0,
+   "gain_db": -29,
+   "len_s": 0.06,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "case_turn",
+   "kind": "swish",
+   "frame": 126,
+   "time_s": 4.2,
+   "gain_db": -28,
+   "len_s": 0.913,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "case_reveal",
+   "kind": "scan",
+   "frame": 152,
+   "time_s": 5.067,
+   "gain_db": -32,
+   "len_s": 0.133,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "cut_edge",
+   "kind": "scan",
+   "frame": 159,
+   "time_s": 5.3,
+   "gain_db": -28,
+   "len_s": 1.067,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "shutter_open",
+   "kind": "servo",
+   "frame": 178,
+   "time_s": 5.933,
+   "gain_db": -29,
+   "len_s": 0.233,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "port_out",
+   "kind": "servo",
+   "frame": 185,
+   "time_s": 6.167,
+   "gain_db": -28,
+   "len_s": 0.533,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -6.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "port_touch",
+   "kind": "click",
+   "frame": 193.94,
+   "time_s": 6.465,
+   "gain_db": -26,
+   "len_s": 0.08,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "stream",
+   "kind": "ticks",
+   "frame": 207,
+   "time_s": 6.9,
+   "gain_db": -28,
+   "len_s": 1.567,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -3.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "flow",
+   "kind": "flow",
+   "frame": 216,
+   "time_s": 7.2,
+   "gain_db": -27,
+   "len_s": 8.5,
+   "source": "procedural",
+   "bus": "continuous"
+  },
+  {
+   "id": "hero_mark",
+   "kind": "blip",
+   "frame": 247,
+   "time_s": 8.233,
+   "gain_db": -26,
+   "len_s": 0.28,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "port_back",
+   "kind": "servo",
+   "frame": 261,
+   "time_s": 8.7,
+   "gain_db": -30,
+   "len_s": 0.267,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -6.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "dive_in",
+   "kind": "swish",
+   "frame": 264,
+   "time_s": 8.8,
+   "gain_db": -28,
+   "len_s": 0.68,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "shutter_shut",
+   "kind": "click",
+   "frame": 277,
+   "time_s": 9.233,
+   "gain_db": -31,
+   "len_s": 0.08,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "cell_pass",
+   "kind": "pass",
+   "frame": 318,
+   "time_s": 10.6,
+   "gain_db": -27,
+   "len_s": 0.45,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "bend_pass",
+   "kind": "pass",
+   "frame": 344,
+   "time_s": 11.467,
+   "gain_db": -29,
+   "len_s": 0.45,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "wall_scan",
+   "kind": "scan",
+   "frame": 368,
+   "time_s": 12.267,
+   "gain_db": -27,
+   "len_s": 0.3,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "decay_detect",
+   "kind": "detect",
+   "frame": 382,
+   "time_s": 12.733,
+   "gain_db": -23,
+   "len_s": 0.4,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "signal_out",
+   "kind": "ring",
+   "frame": 400,
+   "time_s": 13.333,
+   "gain_db": -25,
+   "len_s": 0.9,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "signal0",
+   "kind": "blip",
+   "frame": 406,
+   "time_s": 13.533,
+   "gain_db": -31,
+   "len_s": 0.28,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "signal1",
+   "kind": "blip",
+   "frame": 411,
+   "time_s": 13.7,
+   "gain_db": -32,
+   "len_s": 0.28,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "signal2",
+   "kind": "blip",
+   "frame": 416,
+   "time_s": 13.867,
+   "gain_db": -33,
+   "len_s": 0.28,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "signal3",
+   "kind": "blip",
+   "frame": 421,
+   "time_s": 14.033,
+   "gain_db": -34,
+   "len_s": 0.28,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "pull_out",
+   "kind": "swish",
+   "frame": 427,
+   "time_s": 14.233,
+   "gain_db": -28,
+   "len_s": 0.78,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_c0",
+   "kind": "heartbeat",
+   "frame": 459,
+   "time_s": 15.3,
+   "gain_db": -20,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "window_open",
+   "kind": "scan",
+   "frame": 463,
+   "time_s": 15.433,
+   "gain_db": -30,
+   "len_s": 0.6,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_c1",
+   "kind": "heartbeat",
+   "frame": 480,
+   "time_s": 16.0,
+   "gain_db": -20,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "organ_dim",
+   "kind": "flag",
+   "frame": 484,
+   "time_s": 16.133,
+   "gain_db": -26,
+   "len_s": 0.6,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_c2",
+   "kind": "heartbeat",
+   "frame": 501,
+   "time_s": 16.7,
+   "gain_db": -20,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_c3",
+   "kind": "heartbeat",
+   "frame": 522,
+   "time_s": 17.4,
+   "gain_db": -20,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "fibrillation",
+   "kind": "fib",
+   "frame": 536,
+   "time_s": 17.867,
+   "gain_db": -21,
+   "len_s": 1.733,
+   "source": "procedural",
+   "bus": "continuous"
+  },
+  {
+   "id": "heart_sense",
+   "kind": "detect",
+   "frame": 544,
+   "time_s": 18.133,
+   "gain_db": -24,
+   "len_s": 0.4,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "signal_run",
+   "kind": "zip",
+   "frame": 565,
+   "time_s": 18.833,
+   "gain_db": -32,
+   "len_s": 1.567,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "amb_out_b",
+   "kind": "amb",
+   "frame": 602,
+   "time_s": 20.067,
+   "gain_db": -36,
+   "len_s": 4.167,
+   "source": "procedural",
+   "bus": "continuous"
+  },
+  {
+   "id": "warn_land",
+   "kind": "alarm",
+   "frame": 611,
+   "time_s": 20.367,
+   "gain_db": -20,
+   "len_s": 0.5,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_d0",
+   "kind": "heartbeat",
+   "frame": 616,
+   "time_s": 20.533,
+   "gain_db": -25,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "buzz2",
+   "kind": "buzz",
+   "frame": 630,
+   "time_s": 21.0,
+   "gain_db": -25,
+   "len_s": 0.267,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "tick630",
+   "kind": "clock",
+   "frame": 630,
+   "time_s": 21.0,
+   "gain_db": -29,
+   "len_s": 0.06,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_d1",
+   "kind": "heartbeat",
+   "frame": 632,
+   "time_s": 21.067,
+   "gain_db": -25,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_d2",
+   "kind": "heartbeat",
+   "frame": 649,
+   "time_s": 21.633,
+   "gain_db": -25,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "tick660",
+   "kind": "clock",
+   "frame": 660,
+   "time_s": 22.0,
+   "gain_db": -29,
+   "len_s": 0.06,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_d3",
+   "kind": "heartbeat",
+   "frame": 664,
+   "time_s": 22.133,
+   "gain_db": -25,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "buzz3",
+   "kind": "buzz",
+   "frame": 679,
+   "time_s": 22.633,
+   "gain_db": -25,
+   "len_s": 0.3,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "crit_breath",
+   "kind": "file",
+   "frame": 679,
+   "time_s": 22.583,
+   "gain_db": -28,
+   "len_s": 2.0,
+   "source": "breath_2_C4k8MIkY48irqu90gUzx.mp3",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_d4",
+   "kind": "heartbeat",
+   "frame": 681,
+   "time_s": 22.7,
+   "gain_db": -25,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "grass_grip",
+   "kind": "rustle",
+   "frame": 681,
+   "time_s": 22.7,
+   "gain_db": -30,
+   "len_s": 0.45,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "tick690",
+   "kind": "clock",
+   "frame": 690,
+   "time_s": 23.0,
+   "gain_db": -29,
+   "len_s": 0.06,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_d5",
+   "kind": "heartbeat",
+   "frame": 696,
+   "time_s": 23.2,
+   "gain_db": -25,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "send",
+   "kind": "send",
+   "frame": 705,
+   "time_s": 23.5,
+   "gain_db": -20,
+   "len_s": 0.9,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_d6",
+   "kind": "heartbeat",
+   "frame": 713,
+   "time_s": 23.767,
+   "gain_db": -25,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "tick720",
+   "kind": "clock",
+   "frame": 720,
+   "time_s": 24.0,
+   "gain_db": -29,
+   "len_s": 0.06,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "map_data",
+   "kind": "data",
+   "frame": 727,
+   "time_s": 24.233,
+   "gain_db": -30,
+   "len_s": 0.7,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hosp_receive",
+   "kind": "receive",
+   "frame": 743,
+   "time_s": 24.767,
+   "gain_db": -24,
+   "len_s": 0.8,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -8.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "amb_roof",
+   "kind": "amb",
+   "frame": 745,
+   "time_s": 24.833,
+   "gain_db": -34,
+   "len_s": 4.233,
+   "source": "procedural",
+   "bus": "continuous"
+  },
+  {
+   "id": "latch_pin",
+   "kind": "pin",
+   "frame": 813,
+   "time_s": 27.1,
+   "gain_db": -24,
+   "len_s": 0.5,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "latch_servo",
+   "kind": "servo",
+   "frame": 813,
+   "time_s": 27.1,
+   "gain_db": -27,
+   "len_s": 0.267,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "rotor_path",
+   "kind": "rotor",
+   "frame": 814,
+   "time_s": 27.133,
+   "gain_db": -25.1,
+   "len_s": 8.3,
+   "source": "procedural",
+   "bus": "continuous",
+   "pan": "curve"
+  },
+  {
+   "id": "latch_click",
+   "kind": "click",
+   "frame": 821,
+   "time_s": 27.367,
+   "gain_db": -30,
+   "len_s": 0.08,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "amb_loop",
+   "kind": "amb",
+   "frame": 891,
+   "time_s": 29.7,
+   "gain_db": -36,
+   "len_s": 19.6,
+   "source": "procedural",
+   "bus": "continuous"
+  },
+  {
+   "id": "trunk_past",
+   "kind": "swish",
+   "frame": 892,
+   "time_s": 29.733,
+   "gain_db": -27,
+   "len_s": 0.53,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "rotor_texture",
+   "kind": "file",
+   "frame": 901,
+   "time_s": 30.033,
+   "gain_db": -34,
+   "len_s": 3.0,
+   "source": "drone_1_f7S5LI3HdTlvGoa1G6Fp.mp3",
+   "bus": "one-shot"
+  },
+  {
+   "id": "link",
+   "kind": "blip",
+   "frame": 909,
+   "time_s": 30.3,
+   "gain_db": -27,
+   "len_s": 0.28,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "tilt2",
+   "kind": "swish",
+   "frame": 930,
+   "time_s": 31.0,
+   "gain_db": -29,
+   "len_s": 0.447,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -6.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "shutter",
+   "kind": "servo",
+   "frame": 941,
+   "time_s": 31.367,
+   "gain_db": -28,
+   "len_s": 0.133,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -6.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "actuator",
+   "kind": "servo",
+   "frame": 945,
+   "time_s": 31.5,
+   "gain_db": -29,
+   "len_s": 0.2,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -6.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "contact",
+   "kind": "press",
+   "frame": 948.07,
+   "time_s": 31.602,
+   "gain_db": -25,
+   "len_s": 0.22,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -6.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "tpulse",
+   "kind": "tpulse",
+   "frame": 956,
+   "time_s": 31.867,
+   "gain_db": -27,
+   "len_s": 0.467,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -6.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "treat_flow",
+   "kind": "flow",
+   "frame": 965,
+   "time_s": 32.167,
+   "gain_db": -31,
+   "len_s": 1.067,
+   "source": "procedural",
+   "bus": "continuous"
+  },
+  {
+   "id": "retract",
+   "kind": "servo",
+   "frame": 973,
+   "time_s": 32.433,
+   "gain_db": -31,
+   "len_s": 0.267,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -6.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "port_close",
+   "kind": "click",
+   "frame": 985,
+   "time_s": 32.833,
+   "gain_db": -30,
+   "len_s": 0.08,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -6.0,
+   "duck_lead_s": 0.0
+  },
+  {
+   "id": "fib_fade",
+   "kind": "fib",
+   "frame": 987,
+   "time_s": 32.9,
+   "gain_db": -24,
+   "len_s": 0.767,
+   "source": "procedural",
+   "bus": "continuous"
+  },
+  {
+   "id": "hb_e0",
+   "kind": "heartbeat",
+   "frame": 1005,
+   "time_s": 33.5,
+   "gain_db": -24.437,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_e1",
+   "kind": "heartbeat",
+   "frame": 1026,
+   "time_s": 34.2,
+   "gain_db": -20,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "deep_breath",
+   "kind": "file",
+   "frame": 1035,
+   "time_s": 34.5,
+   "gain_db": -24,
+   "len_s": 2.0,
+   "source": "recover_breath_3_u0kMmd94TJjSZjKOuzAH.mp3",
+   "bus": "one-shot"
+  },
+  {
+   "id": "fingers_release",
+   "kind": "rustle",
+   "frame": 1039,
+   "time_s": 34.633,
+   "gain_db": -33,
+   "len_s": 0.3,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_e2",
+   "kind": "heartbeat",
+   "frame": 1047,
+   "time_s": 34.9,
+   "gain_db": -22.5,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "load",
+   "kind": "pat",
+   "frame": 1049,
+   "time_s": 34.967,
+   "gain_db": -27,
+   "len_s": 0.35,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "push_up",
+   "kind": "rustle",
+   "frame": 1056,
+   "time_s": 35.2,
+   "gain_db": -30,
+   "len_s": 0.9,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_e3",
+   "kind": "heartbeat",
+   "frame": 1068,
+   "time_s": 35.6,
+   "gain_db": -25,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_f0",
+   "kind": "heartbeat",
+   "frame": 1091,
+   "time_s": 36.367,
+   "gain_db": -27,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "sit_settle",
+   "kind": "thud",
+   "frame": 1092,
+   "time_s": 36.4,
+   "gain_db": -29,
+   "len_s": 0.5,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "recover_breath",
+   "kind": "file",
+   "frame": 1100,
+   "time_s": 36.667,
+   "gain_db": -28,
+   "len_s": 2.0,
+   "source": "recover_breath_1_tFCDclpcmymiy0MdhNUi.mp3",
+   "bus": "one-shot"
+  },
+  {
+   "id": "green",
+   "kind": "chime",
+   "frame": 1100,
+   "time_s": 36.667,
+   "gain_db": -24,
+   "len_s": 1.4,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_f1",
+   "kind": "heartbeat",
+   "frame": 1116,
+   "time_s": 37.2,
+   "gain_db": -27,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_f2",
+   "kind": "heartbeat",
+   "frame": 1141,
+   "time_s": 38.033,
+   "gain_db": -27,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_f3",
+   "kind": "heartbeat",
+   "frame": 1166,
+   "time_s": 38.867,
+   "gain_db": -27,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_f4",
+   "kind": "heartbeat",
+   "frame": 1191,
+   "time_s": 39.7,
+   "gain_db": -27,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_f5",
+   "kind": "heartbeat",
+   "frame": 1216,
+   "time_s": 40.533,
+   "gain_db": -27,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_f6",
+   "kind": "heartbeat",
+   "frame": 1241,
+   "time_s": 41.367,
+   "gain_db": -27,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_f7",
+   "kind": "heartbeat",
+   "frame": 1266,
+   "time_s": 42.2,
+   "gain_db": -27,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "glitch",
+   "kind": "glitch",
+   "frame": 1327,
+   "time_s": 44.233,
+   "gain_db": -22,
+   "len_s": 0.393,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "hb_g0",
+   "kind": "heartbeat",
+   "frame": 1335,
+   "time_s": 44.5,
+   "gain_db": -27,
+   "len_s": 0.42,
+   "source": "procedural",
+   "bus": "one-shot"
+  },
+  {
+   "id": "alarm_t1344",
+   "kind": "alarm1",
+   "frame": 1344,
+   "time_s": 44.8,
+   "gain_db": -15,
+   "len_s": 1.66,
+   "source": "procedural",
+   "bus": "own duck",
+   "duck_db": -10.0,
+   "duck_lead_s": 0.04
+  },
+  {
+   "id": "buzz_t1344",
+   "kind": "buzz",
+   "frame": 1344,
+   "time_s": 44.8,
+   "gain_db": -30,
+   "len_s": 0.4,
+   "source": "procedural",
+   "bus": "one-shot"
+  }
+ ],
+ "safety": {
+  "ceiling_dbfs": -1.8,
+  "tolerance_lsb": 3,
+  "true_peak_max_dbtp": -1.5,
+  "method": "de-peak: 1 ms Hann pulses subtracted from the effects stem at each over (no gain riding)",
+  "passes": [
+   {
+    "pass": 0,
+    "sample_peak_dbfs": -1.7139,
+    "samples_over": 4
+   },
+   {
+    "pass": 1,
+    "sample_peak_dbfs": -1.8,
+    "samples_over": 0
+   }
+  ],
+  "true_peak_dbtp_4x": [
+   -1.756
+  ],
+  "corrections": [
+   {
+    "t_s": 2.7758,
+    "frame": 83.3,
+    "ch": 0,
+    "excess_lsb": 2196,
+    "pulse_dbfs": -71.6
+   },
+   {
+    "t_s": 19.4221,
+    "frame": 582.7,
+    "ch": 0,
+    "excess_lsb": 18,
+    "pulse_dbfs": -113.1
+   },
+   {
+    "t_s": 29.714,
+    "frame": 891.4,
+    "ch": 0,
+    "excess_lsb": 67930,
+    "pulse_dbfs": -41.8
+   },
+   {
+    "t_s": 2.7758,
+    "frame": 83.3,
+    "ch": 1,
+    "excess_lsb": 2196,
+    "pulse_dbfs": -71.6
+   },
+   {
+    "t_s": 19.4221,
+    "frame": 582.7,
+    "ch": 1,
+    "excess_lsb": 18,
+    "pulse_dbfs": -113.1
+   },
+   {
+    "t_s": 29.714,
+    "frame": 891.4,
+    "ch": 1,
+    "excess_lsb": 62838,
+    "pulse_dbfs": -42.5
+   }
+  ],
+  "corrected_samples": 143,
+  "correction_peak_dbfs": -41.8,
+  "final_sample_peak_dbfs": -1.8
+ },
+ "stems_sum_residual_lsb": 0,
+ "mix_sample_peak_dbfs": -1.8,
+ "loudnorm_pass1_mix": {
+  "input_i": "-15.06",
+  "input_tp": "-1.76",
+  "input_lra": "1.90",
+  "input_thresh": "-25.09",
+  "output_i": "-15.26",
+  "output_tp": "-1.87",
+  "output_lra": "1.70",
+  "output_thresh": "-25.31",
+  "normalization_type": "dynamic",
+  "target_offset": "0.26"
+ },
+ "loudnorm_pass1_effects": {
+  "input_i": "-31.47",
+  "input_tp": "-13.78",
+  "input_lra": "12.80",
+  "input_thresh": "-42.57",
+  "output_i": "-15.54",
+  "output_tp": "-1.50",
+  "output_lra": "9.10",
+  "output_thresh": "-26.29",
+  "normalization_type": "dynamic",
+  "target_offset": "0.54"
+ },
+ "loudnorm_pass1_v3_mix_for_reference": {
+  "input_i": "-19.23",
+  "input_tp": "-4.78",
+  "input_lra": "1.90",
+  "input_thresh": "-29.29",
+  "output_i": "-15.27",
+  "output_tp": "-1.50",
+  "output_lra": "1.70",
+  "output_thresh": "-25.32",
+  "normalization_type": "dynamic",
+  "target_offset": "0.27"
+ },
+ "ducking": {
+  "speech_env": "V3 speech_env from the untouched narration (10 ms hops, -30 dB gate, attack ~30 ms, release ~300 ms, loop-wrapped)",
+  "one_shot_bus_db": -2.5,
+  "continuous_bus_db": -6.0,
+  "per_cue": "p.duck dB at full speech, p.duckLead s look-ahead (cyclic roll)"
+ },
+ "generators_measured": {
+  "alarm_h6": {
+   "kind": "alarm1",
+   "len_s": 1.66,
+   "centroid_hz": 1262.1,
+   "energy_above_3k_pct": 3.888,
+   "energy_below_100hz_pct": 0.0
+  },
+  "stream": {
+   "kind": "ticks",
+   "len_s": 1.567,
+   "centroid_hz": 4264.7,
+   "energy_above_3k_pct": 86.004,
+   "energy_below_100hz_pct": 0.0
+  },
+  "fibrillation": {
+   "kind": "fib",
+   "len_s": 1.733,
+   "centroid_hz": 84.6,
+   "energy_above_3k_pct": 0.0,
+   "energy_below_100hz_pct": 84.47
+  },
+  "rotor_path": {
+   "kind": "rotor",
+   "len_s": 8.3,
+   "centroid_hz": 223.0,
+   "energy_above_3k_pct": 0.178,
+   "energy_below_100hz_pct": 0.585
+  },
+  "contact": {
+   "kind": "press",
+   "len_s": 0.22,
+   "centroid_hz": 194.9,
+   "energy_above_3k_pct": 0.0,
+   "energy_below_100hz_pct": 11.378
+  },
+  "tpulse": {
+   "kind": "tpulse",
+   "len_s": 0.467,
+   "centroid_hz": 338.6,
+   "energy_above_3k_pct": 0.0,
+   "energy_below_100hz_pct": 0.0
+  },
+  "fib_fade": {
+   "kind": "fib",
+   "len_s": 0.767,
+   "centroid_hz": 83.3,
+   "energy_above_3k_pct": 0.0,
+   "energy_below_100hz_pct": 86.365
+  },
+  "alarm_t1344": {
+   "kind": "alarm1",
+   "len_s": 1.66,
+   "centroid_hz": 1262.1,
+   "energy_above_3k_pct": 3.888,
+   "energy_below_100hz_pct": 0.0
+  }
+ },
+ "sources": {
+  "heart": "lib/heart4.ts heartBeats()/fibAmp(): journey lubs 459,480,501,522; journey twitches 538,545,556,562,571 (x reveal4 chestOpen, to 584); treatment twitches 988,992,997,1000 (quiver 987-1005); settled lubs 1005@0.6,1026@1,1047@1,1068@1",
+  "alarm": "device3 helper: tail 1344 head 6,18; agrees with B4",
+  "sensor": "Journey3.SENSOR_BEATS {\"back0\":112,\"back1\":122,\"veil0\":124,\"veil1\":137,\"roll0\":126,\"roll1\":151,\"reveal0\":152,\"reveal1\":156,\"cut\":177,\"shut0\":178,\"shut1\":185,\"nose0\":185,\"touch\":201,\"retract0\":261,\"close0\":269,\"close1\":277}",
+  "sensor_touch": "Interior.portPress(Journey3 stroke, PORT_GEO.pressSensor) at 10% of the dimple depth 193.94 (SENSOR_BEATS.touch 201 = full stroke)",
+  "sensor_beads": "Journey3 SENSOR_REL (source text) + Interior.releaseState check: 16 ticks 208-252, hero 223",
+  "chestOpen0": "B4.chestOpen0",
+  "organDim0": "B4.organDim0",
+  "mapEnd": "Dispatch.MAP_END",
+  "pulseLand": "B4.pulseLand",
+  "latch": "B.latch 813 (Dispatch latch swing 813-821); spin0 817, blur0 821, spin1 839, lift 837-862",
+  "climb1": "B4.climb1",
+  "arrive0": "B4.arrive0",
+  "flare0": "B4.flare0",
+  "hover0": "B4.hover0",
+  "retreat0": "B4.retreat0",
+  "retreat1": "B4.retreat1",
+  "lift1": "B4.lift1",
+  "rotor_rate": "Dispatch.rotorPhase",
+  "rotor_view": "Dispatch.droneView (framed 814-918; off frame from 919: eased over 12 f into the off-frame hover model, no step)",
+  "wipe": "Dispatch.WIPE {\"in0\":890,\"cover\":897,\"out1\":906}",
+  "link0": "B4.link0",
+  "treatment": "B4 tRoll 931-939, tShut 941-945, tStroke 945-951, tSlug0 956 -> tSlugLumen 968, tTrack0 965, tRetract 973-981, tShutClose 981-985, treatMatch 987, treatSvc1 995",
+  "treat_contact": "Aftermath3.treatState(g).dimple at 10% of its depth 948.07 (B4.tContact 949)",
+  "treat_roll": "Aftermath3.treatState(g).roll (frames it moves) 930-941 (B4 tRoll 931-939, tCut 941)",
+  "held": "dropped (TIMER HELD first on screen ~1042-1050 in the medium shot, under words; the green chime confirms)"
+ },
+ "diff_vs_v3": {
+  "added": [
+   "alarm_h6",
+   "buzz_h6",
+   "case_reveal",
+   "shutter_open",
+   "shutter_shut",
+   "latch_pin",
+   "rotor_path",
+   "latch_click",
+   "amb_loop",
+   "shutter",
+   "actuator",
+   "contact",
+   "tpulse",
+   "treat_flow",
+   "retract",
+   "port_close",
+   "hb_e3",
+   "alarm_t1344",
+   "buzz_t1344"
+  ],
+  "removed": [
+   "amb_out_a",
+   "warn0",
+   "buzz_open",
+   "tilt",
+   "latch",
+   "rotor_lift",
+   "rotor_cross",
+   "amb_out_c",
+   "rotor_arrive",
+   "rotor_hover",
+   "port_out2",
+   "inject",
+   "treat_wave",
+   "held",
+   "hb_f8",
+   "callback_hum"
+  ]
+ },
+ "outputs": {
+  "audio/v4/stems/narration.wav": "795c856e4463f9e18f82ac2dd30ae5642796c78716b839a73dc521f20b8977ab",
+  "audio/v4/stems/music.wav": "3d64640fddc3baeb4b6e94fa34af2e752dcdc3a7424402cfeaf3b0717e6038d9",
+  "audio/v4/stems/effects.wav": "fed4856ce37d3b4766e8f6bf0b9f31352d4473b826e506b7dd9b7047a7ebde3b",
+  "audio/v4/mix/FGW_DeathClock_V4_mix_48k.wav": "d8ed7f88cd15cb88578b3a5edb4bdcbbbbc6f78a8ef561135e2a3aefba27ed6f"
+ },
+ "cues_json_sha256": "8af8b175c1f2cbac2082aa48ef565528127473cecc37259a243e72d9a74c04fd",
+ "build_s": 651.5
+}

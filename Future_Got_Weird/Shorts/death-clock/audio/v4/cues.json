@@ -1,0 +1,2807 @@
+{
+ "version": "v4",
+ "fps": 30,
+ "total_frames": 1350,
+ "beats": {
+  "cut": 8,
+  "hipHit": 35,
+  "handHit": 39,
+  "settle": 56,
+  "macro": 78,
+  "buzz0": 83,
+  "tense0": 90,
+  "tip0": 119,
+  "tip1": 151,
+  "open0": 158,
+  "open1": 190,
+  "port0": 185,
+  "port1": 201,
+  "stream0": 206,
+  "stream1": 257,
+  "heroRing": 247,
+  "retract0": 261,
+  "retract1": 277,
+  "dive0": 264,
+  "dive1": 299,
+  "pass0": 306,
+  "pass1": 346,
+  "bend0": 342,
+  "wall0": 353,
+  "decay": 381,
+  "scan0": 368,
+  "signal0": 400,
+  "signal1": 419,
+  "pull0": 423,
+  "pull1": 461,
+  "organ0": 463,
+  "fail": 488,
+  "heart0": 511,
+  "lethal": 538,
+  "sig0": 565,
+  "sig1": 612,
+  "red": 612,
+  "count0": 626,
+  "crit0": 677,
+  "tx0": 705,
+  "tx1": 726,
+  "map0": 727,
+  "hosp0": 754,
+  "dock": 797,
+  "latch": 813,
+  "lift0": 837,
+  "bank0": 860,
+  "travel0": 864,
+  "past0": 891,
+  "arrive": 915,
+  "act0": 927,
+  "inject0": 952,
+  "inject1": 981,
+  "hold": 983,
+  "settleHeart0": 987,
+  "settleHeart1": 1026,
+  "release0": 1037,
+  "rise0": 1056,
+  "rise1": 1094,
+  "green": 1098,
+  "life": 1140,
+  "uneasy0": 1211,
+  "return0": 1273,
+  "glitch": 1327,
+  "glitchLen": 10,
+  "callback": 1337
+ },
+ "beats4": {
+  "alarmPeriod": 12,
+  "alarmPhase0": 6,
+  "alarmOn0": 1337,
+  "alarmOff1": 30,
+  "pulseLand": 743,
+  "spin0": 817,
+  "spin1": 839,
+  "blur0": 821,
+  "blur1": 841,
+  "lift1": 862,
+  "camLock": 850,
+  "pitch0": 852,
+  "pitch1": 862,
+  "go0": 854,
+  "climb1": 890,
+  "arrive0": 890,
+  "wipeLock": 897,
+  "flare0": 903,
+  "hover0": 910,
+  "settle0": 915,
+  "link0": 909,
+  "link1": 920,
+  "retreat0": 1031,
+  "retreat1": 1052,
+  "armClose0": 442,
+  "armClose1": 454,
+  "caseRoll0": 452,
+  "caseRoll1": 468,
+  "traceIn0": 446,
+  "traceIn1": 456,
+  "traceOut0": 612,
+  "traceOut1": 624,
+  "sigLaunch": [
+   450,
+   458,
+   466,
+   474,
+   482,
+   490
+  ],
+  "sigArmT": 16,
+  "sigHiddenT": 6,
+  "sigChestT": 5,
+  "chestOpen0": 463,
+  "chestOpen1": 477,
+  "chestClose0": 570,
+  "chestClose1": 584,
+  "organDim0": 484,
+  "organDim1": 498,
+  "organSense0": 471,
+  "heartSense0": 505,
+  "warn0": 565,
+  "warnArmEdge": 570,
+  "warnHem": 578,
+  "warn1": 608,
+  "rLow0": 423,
+  "rLow1": 463,
+  "rHigh0": 626,
+  "rHigh1": 638,
+  "chestCut": 987,
+  "treatSvc1": 995,
+  "treatLight1": 1005,
+  "treatClose0": 1025,
+  "treatClose1": 1035,
+  "treatPull0": 1030,
+  "treatPull1": 1046,
+  "treatHigh0": 1034,
+  "treatHigh1": 1050,
+  "tApproach0": 921,
+  "tBack0": 923,
+  "tBack1": 928,
+  "tVeil0": 928,
+  "tVeil1": 939,
+  "tRoll0": 931,
+  "tRoll1": 939,
+  "tCut": 941,
+  "tShut0": 941,
+  "tShut1": 945,
+  "tStroke0": 945,
+  "tContact": 949,
+  "tStroke1": 951,
+  "tWin0": 946,
+  "tWin1": 958,
+  "tSlug0": 956,
+  "tSlugTip": 962,
+  "tSlugLumen": 968,
+  "tMerge1": 971,
+  "tTrack0": 965,
+  "tRetract0": 973,
+  "tRetract1": 981,
+  "tShutClose0": 981,
+  "tShutClose1": 985,
+  "treatMatch": 987
+ },
+ "units": [
+  [
+   "U01",
+   "Cold open: red 00:02:14 in extreme foreground on the band, fingers tensing (shared with the loop bridge)",
+   0,
+   8
+  ],
+  [
+   "U02",
+   "Low three-quarter: knees give, hips drop over planted feet, the left hand reaches",
+   8,
+   35
+  ],
+  [
+   "U03",
+   "Hips land, hand contacts the grass, elbow gives and locks, torso settles",
+   35,
+   56
+  ],
+  [
+   "U04",
+   "The camera follows the bracing wrist into the band",
+   40,
+   78
+  ],
+  [
+   "U05",
+   "Band vibrates, fingers press into the grass, the countdown keeps running",
+   78,
+   119
+  ],
+  [
+   "U06",
+   "Tilt round the case to its underside: the recessed port",
+   119,
+   158
+  ],
+  [
+   "U07",
+   "A clean cut edge sweeps the skin open under the band; the port extends",
+   158,
+   206
+  ],
+  [
+   "U08",
+   "The sensor stream crosses the skin into the vessel; one hero sensor lights",
+   206,
+   264
+  ],
+  [
+   "U09",
+   "Follow the hero across the near vessel wall into the bloodstream",
+   264,
+   299
+  ],
+  [
+   "U10",
+   "Past a red cell (occlusion), round a bend in the vessel",
+   306,
+   353
+  ],
+  [
+   "U11",
+   "The changed cell: contact scan, the cell greys and wrinkles",
+   353,
+   400
+  ],
+  [
+   "U12",
+   "Signals leave the hero; follow them up the arm and out to the body",
+   400,
+   463
+  ],
+  [
+   "U13",
+   "Torso cutaway: one organ dims under amber sensors",
+   463,
+   511
+  ],
+  [
+   "U14",
+   "The heart: regular, then an irregular, lethal rhythm",
+   511,
+   565
+  ],
+  [
+   "U15",
+   "The warning pulse races down the arm into the red screen",
+   565,
+   626
+  ],
+  [
+   "U16",
+   "The red countdown, tight and readable; the band vibrates, light on the skin",
+   626,
+   677
+  ],
+  [
+   "U17",
+   "Critical seconds: fingers dig in, eyes move between the band and the street, transmission pulse",
+   677,
+   727
+  ],
+  [
+   "U18",
+   "Location and data: the pulse crosses the neighbourhood map to the hospital",
+   727,
+   754
+  ],
+  [
+   "U19",
+   "Hospital rooftop launch bay: the pulse lands in the dock beacon",
+   754,
+   813
+  ],
+  [
+   "U20",
+   "Latch releases, rotors spin up, the drone rises clear and banks",
+   813,
+   864
+  ],
+  [
+   "U21",
+   "Travel over the neighbourhood; past a foreground trunk into the arrival",
+   864,
+   915
+  ],
+  [
+   "U22",
+   "The band actuates: the port extends, one treatment pulse enters the vessel",
+   927,
+   987
+  ],
+  [
+   "U23",
+   "The pulse reaches the heart; its rhythm settles; the timer holds",
+   987,
+   1037
+  ],
+  [
+   "U24",
+   "Fingers release, the support hand loads, the torso rises",
+   1037,
+   1098
+  ],
+  [
+   "U25",
+   "Green replaces red; Life Expectancy: 42 Years",
+   1098,
+   1211
+  ],
+  [
+   "U26",
+   "Uneasy reaction, gaze, hesitation",
+   1211,
+   1273
+  ],
+  [
+   "U27",
+   "Back to the glass; one local \"?\" glitch becomes the red 00:02:14 callback; loop",
+   1273,
+   1350
+  ]
+ ],
+ "device": {
+  "START_SECS": 134,
+  "gap0": 726,
+  "gap1": 889,
+  "atGap1": 42.5
+ },
+ "countdown_at": {
+  "0": 134,
+  "612": 113.6,
+  "626": 113.133,
+  "677": 111.433,
+  "726": 109.8,
+  "927": 41.233,
+  "983": 39.367,
+  "1337": 134
+ },
+ "music": {
+  "total": 45,
+  "bpm": 100,
+  "journeyFrom": 3.966666666666667,
+  "urgentFrom": 17.733333333333334,
+  "rescueFrom": 23.433333333333334,
+  "releaseFrom": 32.9,
+  "thinFrom": 40.233333333333334,
+  "glitchAt": 44.233333333333334,
+  "glitchEnd": 44.56666666666667,
+  "callbackAt": 44.56666666666667
+ },
+ "music_frozen_to_v3": true,
+ "sources": {
+  "heart": "lib/heart4.ts heartBeats()/fibAmp(): journey lubs 459,480,501,522; journey twitches 538,545,556,562,571 (x reveal4 chestOpen, to 584); treatment twitches 988,992,997,1000 (quiver 987-1005); settled lubs 1005@0.6,1026@1,1047@1,1068@1",
+  "alarm": "device3 helper: tail 1344 head 6,18; agrees with B4",
+  "sensor": "Journey3.SENSOR_BEATS {\"back0\":112,\"back1\":122,\"veil0\":124,\"veil1\":137,\"roll0\":126,\"roll1\":151,\"reveal0\":152,\"reveal1\":156,\"cut\":177,\"shut0\":178,\"shut1\":185,\"nose0\":185,\"touch\":201,\"retract0\":261,\"close0\":269,\"close1\":277}",
+  "sensor_touch": "Interior.portPress(Journey3 stroke, PORT_GEO.pressSensor) at 10% of the dimple depth 193.94 (SENSOR_BEATS.touch 201 = full stroke)",
+  "sensor_beads": "Journey3 SENSOR_REL (source text) + Interior.releaseState check: 16 ticks 208-252, hero 223",
+  "chestOpen0": "B4.chestOpen0",
+  "organDim0": "B4.organDim0",
+  "mapEnd": "Dispatch.MAP_END",
+  "pulseLand": "B4.pulseLand",
+  "latch": "B.latch 813 (Dispatch latch swing 813-821); spin0 817, blur0 821, spin1 839, lift 837-862",
+  "climb1": "B4.climb1",
+  "arrive0": "B4.arrive0",
+  "flare0": "B4.flare0",
+  "hover0": "B4.hover0",
+  "retreat0": "B4.retreat0",
+  "retreat1": "B4.retreat1",
+  "lift1": "B4.lift1",
+  "rotor_rate": "Dispatch.rotorPhase",
+  "rotor_view": "Dispatch.droneView (framed 814-918; off frame from 919: eased over 12 f into the off-frame hover model, no step)",
+  "wipe": "Dispatch.WIPE {\"in0\":890,\"cover\":897,\"out1\":906}",
+  "link0": "B4.link0",
+  "treatment": "B4 tRoll 931-939, tShut 941-945, tStroke 945-951, tSlug0 956 -> tSlugLumen 968, tTrack0 965, tRetract 973-981, tShutClose 981-985, treatMatch 987, treatSvc1 995",
+  "treat_contact": "Aftermath3.treatState(g).dimple at 10% of its depth 948.07 (B4.tContact 949)",
+  "treat_roll": "Aftermath3.treatState(g).roll (frames it moves) 930-941 (B4 tRoll 931-939, tCut 941)",
+  "held": "dropped (TIMER HELD first on screen ~1042-1050 in the medium shot, under words; the green chime confirms)"
+ },
+ "hook_notes": {
+  "sensorRelease": "Journey3 SENSOR_REL {t0 208, t1 252, n 16, travel 12, heroMerge 235}: every exit is the feed -> stream switch of Interior.releaseState",
+  "treatState": "roll moves 930-941 (keys 931-939), tilt2 930-941; shutter open moves 941-945 (keys 941-945), shutter 941-945; stroke moves 945-951 (keys 945-951), actuator 945-951; retract moves 973-981 (keys 973-981), retract 973-981; shutter close moves 981-985 (keys 981-985), port_close 985; slug leaves at 956 (tSlug0 956); slug in the lumen from 973 (tSlugLumen 968) MISMATCH"
+ },
+ "diff_vs_v3": {
+  "added": [
+   "alarm_h6",
+   "buzz_h6",
+   "case_reveal",
+   "shutter_open",
+   "shutter_shut",
+   "latch_pin",
+   "rotor_path",
+   "latch_click",
+   "amb_loop",
+   "shutter",
+   "actuator",
+   "contact",
+   "tpulse",
+   "treat_flow",
+   "retract",
+   "port_close",
+   "hb_e3",
+   "alarm_t1344",
+   "buzz_t1344"
+  ],
+  "removed": [
+   "amb_out_a",
+   "warn0",
+   "buzz_open",
+   "tilt",
+   "latch",
+   "rotor_lift",
+   "rotor_cross",
+   "amb_out_c",
+   "rotor_arrive",
+   "rotor_hover",
+   "port_out2",
+   "inject",
+   "treat_wave",
+   "held",
+   "hb_f8",
+   "callback_hum"
+  ]
+ },
+ "cues": [
+  {
+   "id": "hb_a0",
+   "kind": "heartbeat",
+   "f": 0,
+   "gain": -27,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "alarm_h6",
+   "kind": "alarm1",
+   "f": 6,
+   "gain": -24,
+   "p": {
+    "low": 0,
+    "att": 0.004,
+    "ring": 0.3,
+    "duck": -8,
+    "duckLead": 0.05
+   }
+  },
+  {
+   "id": "buzz_h6",
+   "kind": "buzz",
+   "f": 6,
+   "dur": 0.3,
+   "gain": -30,
+   "p": {
+    "polarity": -1
+   }
+  },
+  {
+   "id": "breath_catch",
+   "kind": "file",
+   "f": 6,
+   "gain": -24,
+   "p": {
+    "file": "breath_1_i0TXGqFeHqkEpFKKUdQf.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "knees_give",
+   "kind": "rustle",
+   "f": 10,
+   "dur": 0.6,
+   "gain": -31
+  },
+  {
+   "id": "hb_a1",
+   "kind": "heartbeat",
+   "f": 15,
+   "gain": -23,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "shoe_scuff",
+   "kind": "scuff",
+   "f": 20,
+   "gain": -30
+  },
+  {
+   "id": "hb_a2",
+   "kind": "heartbeat",
+   "f": 31,
+   "gain": -21,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "hips_land",
+   "kind": "thud",
+   "f": 35,
+   "gain": -21,
+   "p": {
+    "weight": 0.7
+   }
+  },
+  {
+   "id": "dog_whine",
+   "kind": "file",
+   "f": 37,
+   "gain": -30,
+   "p": {
+    "file": "dog_3_JB8U4frHpRyLaM7eJciP.mp3",
+    "offset": 0.13
+   }
+  },
+  {
+   "id": "hand_grass",
+   "kind": "pat",
+   "f": 39,
+   "gain": -23
+  },
+  {
+   "id": "weight_on_arm",
+   "kind": "rustle",
+   "f": 42,
+   "dur": 0.35,
+   "gain": -32
+  },
+  {
+   "id": "body_settle",
+   "kind": "file",
+   "f": 43,
+   "gain": -24,
+   "p": {
+    "file": "fall_4_9ukhH99iVXpBejeIoCqn.mp3",
+    "offset": 0.32
+   }
+  },
+  {
+   "id": "hb_a3",
+   "kind": "heartbeat",
+   "f": 45,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "strained_exhale",
+   "kind": "file",
+   "f": 60,
+   "gain": -29,
+   "p": {
+    "file": "breath_4_y9jk69O2KtRNTZPOiz8T.mp3",
+    "offset": 0.3
+   }
+  },
+  {
+   "id": "hb_a4",
+   "kind": "heartbeat",
+   "f": 62,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "hb_a5",
+   "kind": "heartbeat",
+   "f": 76,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "buzz0",
+   "kind": "buzz",
+   "f": 83,
+   "dur": 0.3,
+   "gain": -25
+  },
+  {
+   "id": "tick90",
+   "kind": "clock",
+   "f": 90,
+   "gain": -29
+  },
+  {
+   "id": "hb_a6",
+   "kind": "heartbeat",
+   "f": 92,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "fingers_dig",
+   "kind": "rustle",
+   "f": 92,
+   "dur": 0.4,
+   "gain": -31
+  },
+  {
+   "id": "buzz1",
+   "kind": "buzz",
+   "f": 99,
+   "dur": 0.3,
+   "gain": -25
+  },
+  {
+   "id": "hb_a7",
+   "kind": "heartbeat",
+   "f": 107,
+   "gain": -19,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "tick120",
+   "kind": "clock",
+   "f": 120,
+   "gain": -29
+  },
+  {
+   "id": "case_turn",
+   "kind": "swish",
+   "f": 126,
+   "dur": 0.8333333333333334,
+   "gain": -28
+  },
+  {
+   "id": "case_reveal",
+   "kind": "scan",
+   "f": 152,
+   "gain": -32,
+   "p": {
+    "freq": 1800,
+    "dur": 0.13333333333333333
+   }
+  },
+  {
+   "id": "cut_edge",
+   "kind": "scan",
+   "f": 159,
+   "gain": -28,
+   "p": {
+    "freq": 2200,
+    "dur": 1.0666666666666667
+   }
+  },
+  {
+   "id": "shutter_open",
+   "kind": "servo",
+   "f": 178,
+   "dur": 0.23333333333333334,
+   "gain": -29,
+   "p": {
+    "f0": 1900,
+    "f1": 2600
+   }
+  },
+  {
+   "id": "port_out",
+   "kind": "servo",
+   "f": 185,
+   "dur": 0.5333333333333333,
+   "gain": -28,
+   "p": {
+    "f0": 900,
+    "f1": 1300,
+    "duck": -6
+   }
+  },
+  {
+   "id": "port_touch",
+   "kind": "click",
+   "f": 193.94,
+   "gain": -26,
+   "p": {
+    "freq": 2600
+   }
+  },
+  {
+   "id": "stream",
+   "kind": "ticks",
+   "f": 207,
+   "dur": 1.5666666666666667,
+   "gain": -28,
+   "p": {
+    "at": [
+     0.0333,
+     0.1311,
+     0.2289,
+     0.3267,
+     0.4244,
+     0.5222,
+     0.62,
+     0.7178,
+     0.8156,
+     0.9133,
+     1.0111,
+     1.1089,
+     1.2067,
+     1.3044,
+     1.4022,
+     1.5
+    ],
+    "amp": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "duck": -3
+   }
+  },
+  {
+   "id": "flow",
+   "kind": "flow",
+   "f": 216,
+   "dur": 8.5,
+   "gain": -27
+  },
+  {
+   "id": "hero_mark",
+   "kind": "blip",
+   "f": 247,
+   "gain": -26,
+   "p": {
+    "freq": 1320
+   }
+  },
+  {
+   "id": "port_back",
+   "kind": "servo",
+   "f": 261,
+   "dur": 0.26666666666666666,
+   "gain": -30,
+   "p": {
+    "f0": 1300,
+    "f1": 900,
+    "duck": -6
+   }
+  },
+  {
+   "id": "dive_in",
+   "kind": "swish",
+   "f": 264,
+   "dur": 0.6,
+   "gain": -28
+  },
+  {
+   "id": "shutter_shut",
+   "kind": "click",
+   "f": 277,
+   "gain": -31,
+   "p": {
+    "freq": 1800
+   }
+  },
+  {
+   "id": "cell_pass",
+   "kind": "pass",
+   "f": 318,
+   "gain": -27,
+   "p": {
+    "pan": -0.35
+   }
+  },
+  {
+   "id": "bend_pass",
+   "kind": "pass",
+   "f": 344,
+   "gain": -29,
+   "p": {
+    "pan": 0.3
+   }
+  },
+  {
+   "id": "wall_scan",
+   "kind": "scan",
+   "f": 368,
+   "gain": -27,
+   "p": {
+    "freq": 1760
+   }
+  },
+  {
+   "id": "decay_detect",
+   "kind": "detect",
+   "f": 382,
+   "gain": -23
+  },
+  {
+   "id": "signal_out",
+   "kind": "ring",
+   "f": 400,
+   "gain": -25
+  },
+  {
+   "id": "signal0",
+   "kind": "blip",
+   "f": 406,
+   "gain": -31,
+   "p": {
+    "freq": 990
+   }
+  },
+  {
+   "id": "signal1",
+   "kind": "blip",
+   "f": 411,
+   "gain": -32,
+   "p": {
+    "freq": 1100
+   }
+  },
+  {
+   "id": "signal2",
+   "kind": "blip",
+   "f": 416,
+   "gain": -33,
+   "p": {
+    "freq": 1210
+   }
+  },
+  {
+   "id": "signal3",
+   "kind": "blip",
+   "f": 421,
+   "gain": -34,
+   "p": {
+    "freq": 1320
+   }
+  },
+  {
+   "id": "pull_out",
+   "kind": "swish",
+   "f": 427,
+   "dur": 0.7,
+   "gain": -28
+  },
+  {
+   "id": "hb_c0",
+   "kind": "heartbeat",
+   "f": 459,
+   "gain": -20,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "window_open",
+   "kind": "scan",
+   "f": 463,
+   "gain": -30,
+   "p": {
+    "freq": 1500,
+    "dur": 0.6
+   }
+  },
+  {
+   "id": "hb_c1",
+   "kind": "heartbeat",
+   "f": 480,
+   "gain": -20,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "organ_dim",
+   "kind": "flag",
+   "f": 484,
+   "gain": -26
+  },
+  {
+   "id": "hb_c2",
+   "kind": "heartbeat",
+   "f": 501,
+   "gain": -20,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "hb_c3",
+   "kind": "heartbeat",
+   "f": 522,
+   "gain": -20,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "fibrillation",
+   "kind": "fib",
+   "f": 536,
+   "dur": 1.7333333333333334,
+   "gain": -21,
+   "p": {
+    "at": [
+     0.0667,
+     0.3,
+     0.6667,
+     0.8667,
+     1.1667
+    ],
+    "amp": [
+     0.55,
+     0.85,
+     0.75,
+     0.65,
+     0.549
+    ],
+    "bed": [
+     0,
+     0.167,
+     0.333,
+     0.5,
+     0.667,
+     0.833,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     0.999,
+     0.988,
+     0.961,
+     0.907,
+     0.818,
+     0.685,
+     0.5,
+     0.315,
+     0.182,
+     0.093,
+     0.039,
+     0.012,
+     0.001,
+     0,
+     0
+    ],
+    "bedDb": -14
+   }
+  },
+  {
+   "id": "heart_sense",
+   "kind": "detect",
+   "f": 544,
+   "gain": -24
+  },
+  {
+   "id": "signal_run",
+   "kind": "zip",
+   "f": 565,
+   "dur": 1.5666666666666667,
+   "gain": -32
+  },
+  {
+   "id": "amb_out_b",
+   "kind": "amb",
+   "f": 602,
+   "dur": 4.166666666666667,
+   "gain": -36
+  },
+  {
+   "id": "warn_land",
+   "kind": "alarm",
+   "f": 611,
+   "gain": -20
+  },
+  {
+   "id": "hb_d0",
+   "kind": "heartbeat",
+   "f": 616,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "buzz2",
+   "kind": "buzz",
+   "f": 630,
+   "dur": 0.26666666666666666,
+   "gain": -25
+  },
+  {
+   "id": "tick630",
+   "kind": "clock",
+   "f": 630,
+   "gain": -29
+  },
+  {
+   "id": "hb_d1",
+   "kind": "heartbeat",
+   "f": 632,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "hb_d2",
+   "kind": "heartbeat",
+   "f": 649,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "tick660",
+   "kind": "clock",
+   "f": 660,
+   "gain": -29
+  },
+  {
+   "id": "hb_d3",
+   "kind": "heartbeat",
+   "f": 664,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "buzz3",
+   "kind": "buzz",
+   "f": 679,
+   "dur": 0.3,
+   "gain": -25
+  },
+  {
+   "id": "crit_breath",
+   "kind": "file",
+   "f": 679,
+   "gain": -28,
+   "p": {
+    "file": "breath_2_C4k8MIkY48irqu90gUzx.mp3",
+    "offset": 0.05
+   }
+  },
+  {
+   "id": "hb_d4",
+   "kind": "heartbeat",
+   "f": 681,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "grass_grip",
+   "kind": "rustle",
+   "f": 681,
+   "dur": 0.45,
+   "gain": -30
+  },
+  {
+   "id": "tick690",
+   "kind": "clock",
+   "f": 690,
+   "gain": -29
+  },
+  {
+   "id": "hb_d5",
+   "kind": "heartbeat",
+   "f": 696,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "send",
+   "kind": "send",
+   "f": 705,
+   "gain": -20
+  },
+  {
+   "id": "hb_d6",
+   "kind": "heartbeat",
+   "f": 713,
+   "gain": -25,
+   "p": {
+    "tone": 0.95
+   }
+  },
+  {
+   "id": "tick720",
+   "kind": "clock",
+   "f": 720,
+   "gain": -29
+  },
+  {
+   "id": "map_data",
+   "kind": "data",
+   "f": 727,
+   "dur": 0.7,
+   "gain": -30
+  },
+  {
+   "id": "hosp_receive",
+   "kind": "receive",
+   "f": 743,
+   "gain": -24,
+   "p": {
+    "duck": -8,
+    "polarity": -1
+   }
+  },
+  {
+   "id": "amb_roof",
+   "kind": "amb",
+   "f": 745,
+   "dur": 4.233333333333333,
+   "gain": -34,
+   "p": {
+    "wind": 1
+   }
+  },
+  {
+   "id": "latch_pin",
+   "kind": "pin",
+   "f": 813,
+   "gain": -24
+  },
+  {
+   "id": "latch_servo",
+   "kind": "servo",
+   "f": 813,
+   "dur": 0.26666666666666666,
+   "gain": -27,
+   "p": {
+    "f0": 700,
+    "f1": 1100
+   }
+  },
+  {
+   "id": "rotor_path",
+   "kind": "rotor",
+   "f": 814,
+   "dur": 8.3,
+   "gain": -25.1,
+   "p": {
+    "curve": 1,
+    "bpf": 140,
+    "doppler": 8,
+    "dopplerSmooth": 0.25,
+    "fadeOut": 0.3,
+    "seed": 16,
+    "rate": [
+     0,
+     0,
+     0,
+     0.0303,
+     0.0304,
+     0.031,
+     0.0328,
+     0.0361,
+     0.0417,
+     0.05,
+     0.0615,
+     0.0769,
+     0.0967,
+     0.1214,
+     0.1515,
+     0.1877,
+     0.2304,
+     0.2802,
+     0.3377,
+     0.4033,
+     0.4777,
+     0.5614,
+     0.6549,
+     0.7589,
+     0.875,
+     1.0059,
+     1.0123,
+     1.02,
+     1.0277,
+     1.0341,
+     1.0385,
+     1.04,
+     1.0397,
+     1.0386,
+     1.037,
+     1.0348,
+     1.0321,
+     1.0289,
+     1.0255,
+     1.0218,
+     1.0182,
+     1.0145,
+     1.0111,
+     1.0079,
+     1.0052,
+     1.003,
+     1.0014,
+     1.0003,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1.0057,
+     1.0207,
+     1.0393,
+     1.0543,
+     1.06,
+     1.056,
+     1.045,
+     1.03,
+     1.015,
+     1.004,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "dist": [
+     1.0252,
+     1.022,
+     1.019,
+     1.0162,
+     1.0136,
+     1.0113,
+     1.0092,
+     1.0073,
+     1.0056,
+     1.0041,
+     1.0029,
+     1.0018,
+     1.001,
+     1.0005,
+     1.0001,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     0.9996,
+     0.9984,
+     0.9964,
+     0.9936,
+     0.99,
+     0.9856,
+     0.9805,
+     0.9754,
+     0.9709,
+     0.967,
+     0.9636,
+     0.9606,
+     0.9578,
+     0.9552,
+     0.9528,
+     0.9502,
+     0.9476,
+     0.9448,
+     0.9418,
+     0.9383,
+     0.9344,
+     0.9299,
+     0.9248,
+     0.919,
+     0.9124,
+     0.8929,
+     0.8517,
+     0.7944,
+     0.8014,
+     0.8207,
+     0.8499,
+     0.8866,
+     0.9281,
+     0.9722,
+     1.0162,
+     1.0578,
+     1.0944,
+     1.1237,
+     1.143,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.15,
+     1.1659,
+     1.2133,
+     1.2911,
+     1.3976,
+     1.5304,
+     1.6865,
+     1.8625,
+     2.0544,
+     2.2579,
+     2.4685,
+     2.6815,
+     2.8921,
+     3.0956,
+     3.2875,
+     3.4635,
+     3.6196,
+     3.7524,
+     3.8589,
+     3.9367,
+     3.9841,
+     4,
+     4.0245,
+     4.0955,
+     4.2061,
+     4.3455,
+     4.5,
+     4.6545,
+     4.7939,
+     4.9045,
+     4.9755,
+     5
+    ],
+    "pan": [
+     -0.0387,
+     -0.0396,
+     -0.0404,
+     -0.0412,
+     -0.042,
+     -0.0428,
+     -0.0436,
+     -0.0443,
+     -0.045,
+     -0.0458,
+     -0.0464,
+     -0.0471,
+     -0.0477,
+     -0.0483,
+     -0.0489,
+     -0.0495,
+     -0.05,
+     -0.0505,
+     -0.051,
+     -0.0514,
+     -0.0519,
+     -0.0523,
+     -0.0527,
+     -0.0531,
+     -0.0534,
+     -0.0538,
+     -0.0541,
+     -0.0543,
+     -0.0546,
+     -0.0548,
+     -0.055,
+     -0.0552,
+     -0.0553,
+     -0.0554,
+     -0.0555,
+     -0.0555,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0556,
+     -0.0553,
+     -0.0537,
+     -0.0509,
+     -0.0478,
+     -0.0456,
+     -0.0457,
+     -0.0494,
+     -0.0573,
+     -0.0699,
+     -0.0871,
+     -0.1083,
+     -0.1326,
+     -0.1588,
+     -0.1855,
+     -0.2116,
+     -0.236,
+     -0.2584,
+     -0.2793,
+     -0.3045,
+     -0.3397,
+     -0.3863,
+     -0.3777,
+     -0.354,
+     -0.3181,
+     -0.2732,
+     -0.2222,
+     -0.1681,
+     -0.1141,
+     -0.0631,
+     -0.0182,
+     0.0177,
+     0.0414,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.05,
+     0.0483,
+     0.0433,
+     0.0351,
+     0.0239,
+     0.01,
+     -0.0065,
+     -0.025,
+     -0.0452,
+     -0.0666,
+     -0.0888,
+     -0.1112,
+     -0.1334,
+     -0.1548,
+     -0.175,
+     -0.1935,
+     -0.21,
+     -0.2239,
+     -0.2351,
+     -0.2433,
+     -0.2483,
+     -0.25,
+     -0.25,
+     -0.25,
+     -0.25,
+     -0.25,
+     -0.25,
+     -0.25,
+     -0.25,
+     -0.25,
+     -0.25,
+     -0.25
+    ],
+    "lvl": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0.1432,
+     0.5182,
+     0.9818,
+     1.3568,
+     1.5,
+     0.75,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     -0.0492,
+     -0.1958,
+     -0.436,
+     -0.7639,
+     -1.1716,
+     -1.6489,
+     -2.184,
+     -2.7639,
+     -3.3743,
+     -4,
+     -4.6257,
+     -5.2361,
+     -5.816,
+     -6.3511,
+     -6.8284,
+     -7.2361,
+     -7.564,
+     -7.8042,
+     -7.9508,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8,
+     -8.0103,
+     -8.0409,
+     -8.0917,
+     -8.1621,
+     -8.2513,
+     -8.3585,
+     -8.4825,
+     -8.6221,
+     -8.7758,
+     -8.9421,
+     -9.1192,
+     -9.3054,
+     -9.4987,
+     -9.6971,
+     -9.8987,
+     -10.1013,
+     -10.3029,
+     -10.5013,
+     -10.6946,
+     -10.8808,
+     -11.0579,
+     -11.2242,
+     -11.3779,
+     -11.5175,
+     -11.6415,
+     -11.7487,
+     -11.8379,
+     -11.9083,
+     -11.9591,
+     -11.9897,
+     -12
+    ]
+   }
+  },
+  {
+   "id": "latch_click",
+   "kind": "click",
+   "f": 821,
+   "gain": -30,
+   "p": {
+    "freq": 2200
+   }
+  },
+  {
+   "id": "amb_loop",
+   "kind": "amb",
+   "f": 891,
+   "dur": 19.6,
+   "gain": -36
+  },
+  {
+   "id": "trunk_past",
+   "kind": "swish",
+   "f": 892,
+   "dur": 0.45,
+   "gain": -27
+  },
+  {
+   "id": "rotor_texture",
+   "kind": "file",
+   "f": 901,
+   "gain": -34,
+   "p": {
+    "file": "drone_1_f7S5LI3HdTlvGoa1G6Fp.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "link",
+   "kind": "blip",
+   "f": 909,
+   "gain": -27,
+   "p": {
+    "freq": 990
+   }
+  },
+  {
+   "id": "tilt2",
+   "kind": "swish",
+   "f": 930,
+   "dur": 0.36666666666666664,
+   "gain": -29,
+   "p": {
+    "duck": -6
+   }
+  },
+  {
+   "id": "shutter",
+   "kind": "servo",
+   "f": 941,
+   "dur": 0.13333333333333333,
+   "gain": -28,
+   "p": {
+    "f0": 1900,
+    "f1": 2600,
+    "duck": -6
+   }
+  },
+  {
+   "id": "actuator",
+   "kind": "servo",
+   "f": 945,
+   "dur": 0.2,
+   "gain": -29,
+   "p": {
+    "f0": 900,
+    "f1": 1300,
+    "duck": -6
+   }
+  },
+  {
+   "id": "contact",
+   "kind": "press",
+   "f": 948.07,
+   "gain": -25,
+   "p": {
+    "duck": -6
+   }
+  },
+  {
+   "id": "tpulse",
+   "kind": "tpulse",
+   "f": 956,
+   "gain": -27,
+   "p": {
+    "dur": 0.4667,
+    "duck": -6
+   }
+  },
+  {
+   "id": "treat_flow",
+   "kind": "flow",
+   "f": 965,
+   "dur": 1.0666666666666667,
+   "gain": -31
+  },
+  {
+   "id": "retract",
+   "kind": "servo",
+   "f": 973,
+   "dur": 0.26666666666666666,
+   "gain": -31,
+   "p": {
+    "f0": 1300,
+    "f1": 900,
+    "duck": -6
+   }
+  },
+  {
+   "id": "port_close",
+   "kind": "click",
+   "f": 985,
+   "gain": -30,
+   "p": {
+    "freq": 1800,
+    "duck": -6
+   }
+  },
+  {
+   "id": "fib_fade",
+   "kind": "fib",
+   "f": 987,
+   "dur": 0.7666666666666667,
+   "gain": -24,
+   "p": {
+    "at": [
+     0.0333,
+     0.1667,
+     0.3333,
+     0.4333
+    ],
+    "amp": [
+     0.8,
+     0.683,
+     0.567,
+     0.45
+    ],
+    "bed": [
+     1,
+     0.967,
+     0.933,
+     0.9,
+     0.867,
+     0.833,
+     0.8,
+     0.767,
+     0.733,
+     0.7,
+     0.667,
+     0.633,
+     0.6,
+     0.522,
+     0.35,
+     0.178,
+     0.1,
+     0.05,
+     0
+    ],
+    "bedDb": -14
+   }
+  },
+  {
+   "id": "hb_e0",
+   "kind": "heartbeat",
+   "f": 1005,
+   "gain": -24.437,
+   "p": {
+    "tone": 0.9
+   }
+  },
+  {
+   "id": "hb_e1",
+   "kind": "heartbeat",
+   "f": 1026,
+   "gain": -20,
+   "p": {
+    "tone": 0.9
+   }
+  },
+  {
+   "id": "deep_breath",
+   "kind": "file",
+   "f": 1035,
+   "gain": -24,
+   "p": {
+    "file": "recover_breath_3_u0kMmd94TJjSZjKOuzAH.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "fingers_release",
+   "kind": "rustle",
+   "f": 1039,
+   "dur": 0.3,
+   "gain": -33
+  },
+  {
+   "id": "hb_e2",
+   "kind": "heartbeat",
+   "f": 1047,
+   "gain": -22.5,
+   "p": {
+    "tone": 0.9
+   }
+  },
+  {
+   "id": "load",
+   "kind": "pat",
+   "f": 1049,
+   "gain": -27
+  },
+  {
+   "id": "push_up",
+   "kind": "rustle",
+   "f": 1056,
+   "dur": 0.9,
+   "gain": -30
+  },
+  {
+   "id": "hb_e3",
+   "kind": "heartbeat",
+   "f": 1068,
+   "gain": -25,
+   "p": {
+    "tone": 0.9
+   }
+  },
+  {
+   "id": "hb_f0",
+   "kind": "heartbeat",
+   "f": 1091,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "sit_settle",
+   "kind": "thud",
+   "f": 1092,
+   "gain": -29,
+   "p": {
+    "weight": 0.3
+   }
+  },
+  {
+   "id": "recover_breath",
+   "kind": "file",
+   "f": 1100,
+   "gain": -28,
+   "p": {
+    "file": "recover_breath_1_tFCDclpcmymiy0MdhNUi.mp3",
+    "offset": 0
+   }
+  },
+  {
+   "id": "green",
+   "kind": "chime",
+   "f": 1100,
+   "gain": -24
+  },
+  {
+   "id": "hb_f1",
+   "kind": "heartbeat",
+   "f": 1116,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f2",
+   "kind": "heartbeat",
+   "f": 1141,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f3",
+   "kind": "heartbeat",
+   "f": 1166,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f4",
+   "kind": "heartbeat",
+   "f": 1191,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f5",
+   "kind": "heartbeat",
+   "f": 1216,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f6",
+   "kind": "heartbeat",
+   "f": 1241,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "hb_f7",
+   "kind": "heartbeat",
+   "f": 1266,
+   "gain": -27,
+   "p": {
+    "tone": 0.8
+   }
+  },
+  {
+   "id": "glitch",
+   "kind": "glitch",
+   "f": 1327,
+   "dur": 0.3333333333333333,
+   "gain": -22
+  },
+  {
+   "id": "hb_g0",
+   "kind": "heartbeat",
+   "f": 1335,
+   "gain": -27,
+   "p": {
+    "tone": 1
+   }
+  },
+  {
+   "id": "alarm_t1344",
+   "kind": "alarm1",
+   "f": 1344,
+   "gain": -15,
+   "p": {
+    "low": 0,
+    "att": 0.004,
+    "ring": 0.3,
+    "duck": -10,
+    "duckLead": 0.04
+   }
+  },
+  {
+   "id": "buzz_t1344",
+   "kind": "buzz",
+   "f": 1344,
+   "dur": 0.4,
+   "gain": -30
+  }
+ ],
+ "captions": [
+  {
+   "text": "This device",
+   "start": 0.06,
+   "end": 0.64,
+   "hl": null
+  },
+  {
+   "text": "tells you exactly",
+   "start": 0.64,
+   "end": 1.7,
+   "hl": null
+  },
+  {
+   "text": "when you are dying.",
+   "start": 1.7,
+   "end": 2.69,
+   "hl": "dying."
+  },
+  {
+   "text": "And he has",
+   "start": 2.69,
+   "end": 3.23,
+   "hl": null
+  },
+  {
+   "text": "just over two minutes",
+   "start": 3.23,
+   "end": 4.33,
+   "hl": null
+  },
+  {
+   "text": "to change it.",
+   "start": 4.33,
+   "end": 5.21,
+   "hl": null
+  },
+  {
+   "text": "Under the band,",
+   "start": 5.21,
+   "end": 6.11,
+   "hl": null
+  },
+  {
+   "text": "microscopic nano-sensors",
+   "start": 6.11,
+   "end": 7.57,
+   "hl": "nano-sensors"
+  },
+  {
+   "text": "slip through his skin",
+   "start": 7.57,
+   "end": 8.51,
+   "hl": null
+  },
+  {
+   "text": "and race into his bloodstream.",
+   "start": 8.51,
+   "end": 10.15,
+   "hl": null
+  },
+  {
+   "text": "They sweep past blood cells,",
+   "start": 10.15,
+   "end": 11.69,
+   "hl": null
+  },
+  {
+   "text": "monitoring cellular decay",
+   "start": 11.69,
+   "end": 13.11,
+   "hl": null
+  },
+  {
+   "text": "and sending a constant",
+   "start": 13.11,
+   "end": 14.23,
+   "hl": null
+  },
+  {
+   "text": "stream of signals.",
+   "start": 14.23,
+   "end": 15.38,
+   "hl": null
+  },
+  {
+   "text": "If an organ starts failing,",
+   "start": 15.38,
+   "end": 16.72,
+   "hl": null
+  },
+  {
+   "text": "or his heart slips",
+   "start": 16.72,
+   "end": 17.54,
+   "hl": null
+  },
+  {
+   "text": "into a lethal rhythm,",
+   "start": 17.54,
+   "end": 18.77,
+   "hl": "lethal"
+  },
+  {
+   "text": "the warning races",
+   "start": 18.77,
+   "end": 19.75,
+   "hl": null
+  },
+  {
+   "text": "back to his wrist.",
+   "start": 19.75,
+   "end": 20.82,
+   "hl": null
+  },
+  {
+   "text": "The red screen keeps counting.",
+   "start": 20.82,
+   "end": 22.51,
+   "hl": null
+  },
+  {
+   "text": "Every second matters.",
+   "start": 22.51,
+   "end": 24.13,
+   "hl": "second"
+  },
+  {
+   "text": "His location and medical data",
+   "start": 24.13,
+   "end": 25.61,
+   "hl": null
+  },
+  {
+   "text": "reach a nearby hospital,",
+   "start": 25.61,
+   "end": 27.05,
+   "hl": null
+  },
+  {
+   "text": "where an emergency drone",
+   "start": 27.05,
+   "end": 28.13,
+   "hl": null
+  },
+  {
+   "text": "launches straight toward him.",
+   "start": 28.13,
+   "end": 29.63,
+   "hl": null
+  },
+  {
+   "text": "While help is coming,",
+   "start": 29.63,
+   "end": 30.71,
+   "hl": null
+  },
+  {
+   "text": "the band delivers",
+   "start": 30.71,
+   "end": 31.43,
+   "hl": null
+  },
+  {
+   "text": "an automatic injection,",
+   "start": 31.43,
+   "end": 32.85,
+   "hl": null
+  },
+  {
+   "text": "potentially buying him time.",
+   "start": 32.85,
+   "end": 34.5,
+   "hl": null
+  },
+  {
+   "text": "His heartbeat steadies",
+   "start": 34.5,
+   "end": 35.52,
+   "hl": null
+  },
+  {
+   "text": "as he sits up.",
+   "start": 35.52,
+   "end": 36.53,
+   "hl": null
+  },
+  {
+   "text": "Green replaces red:",
+   "start": 36.53,
+   "end": 37.94,
+   "hl": null
+  },
+  {
+   "text": "life expectancy,",
+   "start": 37.94,
+   "end": 39.1,
+   "hl": null
+  },
+  {
+   "text": "forty-two years.",
+   "start": 39.1,
+   "end": 40.3,
+   "hl": "forty-two"
+  },
+  {
+   "text": "But that number",
+   "start": 40.3,
+   "end": 40.94,
+   "hl": null
+  },
+  {
+   "text": "already changed once.",
+   "start": 40.94,
+   "end": 42.38,
+   "hl": null
+  },
+  {
+   "text": "If your countdown started,",
+   "start": 42.38,
+   "end": 43.76,
+   "hl": null
+  },
+  {
+   "text": "would you want to know?",
+   "start": 43.76,
+   "end": 44.78,
+   "hl": "know?"
+  }
+ ],
+ "words": 136
+}

@@ -1,0 +1,239 @@
+{
+ "FGW_DeathClock_V4_Captions.srt": {
+  "sha256": "babe19c4f8154effb08728fbf5dadb806f2cc5d112a7feb92d73823972f1f9ce",
+  "bytes": 2113
+ },
+ "FGW_DeathClock_V4_Cover_1080x1920.png": {
+  "sha256": "95040073c785d33630d3f12a30df789246cea2ffe3ec8bb617dbcf0df8ad13bb",
+  "bytes": 1194374,
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "png",
+     "width": 1080,
+     "height": 1920,
+     "pix_fmt": "rgb24",
+     "color_space": "gbr",
+     "r_frame_rate": "25/1",
+     "nb_read_frames": "1"
+    }
+   ],
+   "format": {
+    "size": "1194374"
+   }
+  }
+ },
+ "FGW_DeathClock_V4_Final_1080x1920.mp4": {
+  "sha256": "4fd22a46083af6f96d38b6fce450545a39810769235be42aa3df0855328733bc",
+  "bytes": 28877815,
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "h264",
+     "width": 1080,
+     "height": 1920,
+     "pix_fmt": "yuv420p",
+     "color_space": "bt709",
+     "color_transfer": "bt709",
+     "color_primaries": "bt709",
+     "r_frame_rate": "30/1",
+     "nb_frames": "1350",
+     "nb_read_frames": "1350"
+    },
+    {
+     "codec_name": "aac",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "nb_frames": "2111",
+     "nb_read_frames": "2110"
+    }
+   ],
+   "format": {
+    "duration": "45.000000",
+    "size": "28877815",
+    "bit_rate": "5133833"
+   }
+  }
+ },
+ "FGW_DeathClock_V4_Narration.txt": {
+  "sha256": "f2092b6d7acbe3a53bf7cf4dff561b4a33867fef5a2919b84bdc4de71b2e37c4",
+  "bytes": 835
+ },
+ "FGW_DeathClock_V4_Review.mp4": {
+  "sha256": "e98f6ddb1785c83657324880af92967fd43d00dd67637d74113fc639615354ea",
+  "bytes": 5544624,
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "h264",
+     "width": 540,
+     "height": 960,
+     "pix_fmt": "yuv420p",
+     "color_space": "bt709",
+     "color_transfer": "bt709",
+     "color_primaries": "bt709",
+     "r_frame_rate": "30/1",
+     "nb_frames": "1350",
+     "nb_read_frames": "1350"
+    },
+    {
+     "codec_name": "aac",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "nb_frames": "2111",
+     "nb_read_frames": "2110"
+    }
+   ],
+   "format": {
+    "duration": "45.013000",
+    "size": "5544624",
+    "bit_rate": "985426"
+   }
+  }
+ },
+ "audio/FGW_DeathClock_V4_Mix_48k.wav": {
+  "sha256": "d8ed7f88cd15cb88578b3a5edb4bdcbbbbc6f78a8ef561135e2a3aefba27ed6f",
+  "bytes": 12960044,
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "pcm_s24le",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "nb_read_frames": "3168"
+    }
+   ],
+   "format": {
+    "duration": "45.000000",
+    "size": "12960044",
+    "bit_rate": "2304007"
+   }
+  }
+ },
+ "audio/FGW_DeathClock_V4_Narration_48k.wav": {
+  "sha256": "46963b9117ea7ec486a040ee42bfa26aa8c1e14ac08ad25257833ee701dbf428",
+  "bytes": 6480102,
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "pcm_s24le",
+     "sample_rate": "48000",
+     "channels": 1,
+     "r_frame_rate": "0/0",
+     "nb_read_frames": "1583"
+    }
+   ],
+   "format": {
+    "duration": "45.000000",
+    "size": "6480102",
+    "bit_rate": "1152018"
+   }
+  }
+ },
+ "audio/FGW_DeathClock_V4_Stem_effects_48k.wav": {
+  "sha256": "fed4856ce37d3b4766e8f6bf0b9f31352d4473b826e506b7dd9b7047a7ebde3b",
+  "bytes": 12960044,
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "pcm_s24le",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "nb_read_frames": "3168"
+    }
+   ],
+   "format": {
+    "duration": "45.000000",
+    "size": "12960044",
+    "bit_rate": "2304007"
+   }
+  }
+ },
+ "audio/FGW_DeathClock_V4_Stem_music_48k.wav": {
+  "sha256": "3d64640fddc3baeb4b6e94fa34af2e752dcdc3a7424402cfeaf3b0717e6038d9",
+  "bytes": 12960044,
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "pcm_s24le",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "nb_read_frames": "3168"
+    }
+   ],
+   "format": {
+    "duration": "45.000000",
+    "size": "12960044",
+    "bit_rate": "2304007"
+   }
+  }
+ },
+ "audio/FGW_DeathClock_V4_Stem_narration_48k.wav": {
+  "sha256": "795c856e4463f9e18f82ac2dd30ae5642796c78716b839a73dc521f20b8977ab",
+  "bytes": 12960044,
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "pcm_s24le",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "nb_read_frames": "3168"
+    }
+   ],
+   "format": {
+    "duration": "45.000000",
+    "size": "12960044",
+    "bit_rate": "2304007"
+   }
+  }
+ },
+ "_reused_from_v3": {
+  "audio/FGW_DeathClock_V4_Narration_48k.wav": "exports/v3/audio/FGW_DeathClock_V3_Narration_48k.wav",
+  "FGW_DeathClock_V4_Narration.txt": "exports/v3/FGW_DeathClock_V3_Narration.txt",
+  "FGW_DeathClock_V4_Captions.srt": "exports/v3/FGW_DeathClock_V3_Captions.srt"
+ },
+ "_audio": {
+  "route": "option R: V3 narration + music stems reused byte for byte; only the effects bus is rebuilt, under V3 gain envelope G3; exact integer sum; no re-normalisation, no new limiter",
+  "mix_loudnorm_pass1": {
+   "input_i": "-15.06",
+   "input_tp": "-1.76",
+   "input_lra": "1.90"
+  },
+  "listened": false
+ },
+ "_commands": {
+  "mux": [
+   "-map",
+   "0:v:0",
+   "-map",
+   "1:a:0",
+   "-c:v",
+   "copy",
+   "-c:a",
+   "aac",
+   "-b:a",
+   "320k",
+   "-ar",
+   "48000",
+   "-movflags",
+   "+faststart",
+   "-shortest"
+  ],
+  "review": "scale=540:960 lanczos, libx264 crf 23 slow, aac 128k",
+  "silent_master": "exports/_wip/v4_captioned_silent.mp4"
+ }
+}

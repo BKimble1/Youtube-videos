@@ -1,0 +1,1354 @@
+{
+ "listened": false,
+ "note": "Measurements only. Nothing has been auditioned.",
+ "loudness": {
+  "v4_mix": {
+   "I_lufs": -15.0,
+   "LRA_lu": 1.7,
+   "TP_dbtp": -1.8
+  },
+  "v3_mix": {
+   "I_lufs": -15.0,
+   "LRA_lu": 1.7,
+   "TP_dbtp": -1.7
+  },
+  "v4_narration": {
+   "I_lufs": -15.1,
+   "LRA_lu": 1.7,
+   "TP_dbtp": -1.4
+  },
+  "v4_music": {
+   "I_lufs": -29.5,
+   "LRA_lu": 6.0,
+   "TP_dbtp": -9.4
+  },
+  "v4_effects": {
+   "I_lufs": -32.2,
+   "LRA_lu": 12.5,
+   "TP_dbtp": -13.8
+  },
+  "v3_effects": {
+   "I_lufs": -32.1,
+   "LRA_lu": 12.4,
+   "TP_dbtp": -12.8
+  }
+ },
+ "loudnorm_pass1": {
+  "v4_mix": {
+   "input_i": "-15.06",
+   "input_tp": "-1.76",
+   "input_lra": "1.90"
+  },
+  "v3_mix": {
+   "input_i": "-15.05",
+   "input_tp": "-1.74",
+   "input_lra": "2.00"
+  }
+ },
+ "sample_peak_dbfs": {
+  "v4_mix": -1.8,
+  "v3_mix": -1.8
+ },
+ "stems_sum_max_abs_error_lsb": 0,
+ "duration_s": 45.0,
+ "reused_stems_sha256": {
+  "narration": {
+   "v4": "795c856e4463f9e18f82ac2dd30ae5642796c78716b839a73dc521f20b8977ab",
+   "v3": "795c856e4463f9e18f82ac2dd30ae5642796c78716b839a73dc521f20b8977ab",
+   "equal": true
+  },
+  "music": {
+   "v4": "3d64640fddc3baeb4b6e94fa34af2e752dcdc3a7424402cfeaf3b0717e6038d9",
+   "v3": "3d64640fddc3baeb4b6e94fa34af2e752dcdc3a7424402cfeaf3b0717e6038d9",
+   "equal": true
+  }
+ },
+ "voice_margin_db": {
+  "v4": {
+   "broadband": {
+    "min": 5.8,
+    "p5": 9.2,
+    "median": 13.5
+   },
+   "speech_weighted": {
+    "min": 10.3,
+    "p5": 15.0,
+    "median": 19.3
+   },
+   "lowest_windows_s_bb_sw": [
+    [
+     20.01,
+     8.7,
+     10.3
+    ],
+    [
+     23.3,
+     8.6,
+     11.8
+    ],
+    [
+     35.34,
+     10.2,
+     12.7
+    ],
+    [
+     9.51,
+     8.3,
+     13.3
+    ],
+    [
+     0.04,
+     11.0,
+     14.3
+    ],
+    [
+     12.69,
+     12.1,
+     14.7
+    ]
+   ]
+  },
+  "v3": {
+   "broadband": {
+    "min": 5.8,
+    "p5": 9.2,
+    "median": 13.3
+   },
+   "speech_weighted": {
+    "min": 10.3,
+    "p5": 14.6,
+    "median": 19.3
+   },
+   "lowest_windows_s_bb_sw": [
+    [
+     20.01,
+     8.7,
+     10.3
+    ],
+    [
+     23.3,
+     8.6,
+     11.8
+    ],
+    [
+     35.34,
+     11.0,
+     12.7
+    ],
+    [
+     0.04,
+     10.0,
+     13.2
+    ],
+    [
+     9.51,
+     8.3,
+     13.3
+    ],
+    [
+     26.39,
+     10.0,
+     13.9
+    ]
+   ]
+  },
+  "v4_windows_more_than_0.5dB_below_v3 [t_s, v4_bb, v3_bb, v4_sw, v3_sw]": [
+   [
+    0.24,
+    11.8,
+    11.6,
+    15.5,
+    19.1
+   ],
+   [
+    0.44,
+    12.1,
+    10.6,
+    18.8,
+    21.3
+   ],
+   [
+    0.64,
+    13.5,
+    12.6,
+    19.7,
+    20.5
+   ],
+   [
+    6.51,
+    13.9,
+    14.2,
+    19.6,
+    20.7
+   ],
+   [
+    17.6,
+    16.2,
+    16.8,
+    21.4,
+    21.4
+   ],
+   [
+    24.59,
+    12.7,
+    13.0,
+    18.2,
+    19.5
+   ],
+   [
+    24.79,
+    15.1,
+    15.6,
+    20.3,
+    22.1
+   ],
+   [
+    24.99,
+    13.8,
+    13.9,
+    20.2,
+    20.8
+   ],
+   [
+    27.08,
+    14.1,
+    14.6,
+    17.9,
+    18.7
+   ],
+   [
+    28.48,
+    13.1,
+    13.5,
+    19.7,
+    20.4
+   ],
+   [
+    28.68,
+    13.4,
+    14.2,
+    19.1,
+    19.7
+   ],
+   [
+    28.88,
+    11.2,
+    11.9,
+    16.6,
+    16.8
+   ],
+   [
+    29.69,
+    12.7,
+    13.3,
+    18.5,
+    19.0
+   ],
+   [
+    29.89,
+    12.9,
+    14.1,
+    17.8,
+    18.5
+   ],
+   [
+    30.09,
+    11.1,
+    12.2,
+    16.1,
+    17.0
+   ],
+   [
+    31.76,
+    14.2,
+    14.5,
+    19.9,
+    20.7
+   ],
+   [
+    34.54,
+    12.3,
+    13.1,
+    14.8,
+    14.8
+   ],
+   [
+    35.34,
+    10.2,
+    11.0,
+    12.7,
+    12.7
+   ],
+   [
+    35.54,
+    12.4,
+    13.3,
+    17.1,
+    16.9
+   ],
+   [
+    36.93,
+    15.8,
+    16.9,
+    18.2,
+    18.1
+   ],
+   [
+    39.46,
+    17.8,
+    21.1,
+    24.8,
+    24.7
+   ],
+   [
+    40.37,
+    19.9,
+    21.5,
+    28.9,
+    28.7
+   ],
+   [
+    41.17,
+    15.7,
+    16.7,
+    19.4,
+    19.4
+   ]
+  ],
+  "v4_min_not_below_v3_min": true
+ },
+ "effects_vs_v3": {
+  "frames_differing_beyond_1lsb": [
+   [
+    0,
+    155
+   ],
+   [
+    178,
+    203
+   ],
+   [
+    206,
+    208
+   ],
+   [
+    210,
+    225
+   ],
+   [
+    227,
+    249
+   ],
+   [
+    251,
+    252
+   ],
+   [
+    254,
+    255
+   ],
+   [
+    261,
+    269
+   ],
+   [
+    277,
+    279
+   ],
+   [
+    457,
+    480
+   ],
+   [
+    484,
+    505
+   ],
+   [
+    536,
+    575
+   ],
+   [
+    577,
+    583
+   ],
+   [
+    728,
+    766
+   ],
+   [
+    797,
+    1349
+   ]
+  ],
+  "changed_or_removed_cues": [
+   [
+    "actuator",
+    945
+   ],
+   [
+    "alarm_h6",
+    6
+   ],
+   [
+    "alarm_t1344",
+    1344
+   ],
+   [
+    "amb_loop",
+    891
+   ],
+   [
+    "amb_out_a",
+    0
+   ],
+   [
+    "amb_out_c",
+    891
+   ],
+   [
+    "buzz_h6",
+    6
+   ],
+   [
+    "buzz_open",
+    0
+   ],
+   [
+    "buzz_t1344",
+    1344
+   ],
+   [
+    "callback_hum",
+    1339
+   ],
+   [
+    "case_reveal",
+    152
+   ],
+   [
+    "case_turn",
+    126
+   ],
+   [
+    "contact",
+    948.07
+   ],
+   [
+    "fib_fade",
+    987
+   ],
+   [
+    "fibrillation",
+    536
+   ],
+   [
+    "hb_a0",
+    0
+   ],
+   [
+    "hb_a1",
+    15
+   ],
+   [
+    "hb_a2",
+    31
+   ],
+   [
+    "hb_e0",
+    1005
+   ],
+   [
+    "hb_e2",
+    1047
+   ],
+   [
+    "hb_e3",
+    1068
+   ],
+   [
+    "hb_f0",
+    1091
+   ],
+   [
+    "hb_f1",
+    1116
+   ],
+   [
+    "hb_f2",
+    1141
+   ],
+   [
+    "hb_f3",
+    1166
+   ],
+   [
+    "hb_f4",
+    1191
+   ],
+   [
+    "hb_f5",
+    1216
+   ],
+   [
+    "hb_f6",
+    1241
+   ],
+   [
+    "hb_f7",
+    1266
+   ],
+   [
+    "hb_f8",
+    1271
+   ],
+   [
+    "hb_g0",
+    1335
+   ],
+   [
+    "held",
+    984
+   ],
+   [
+    "hosp_receive",
+    743
+   ],
+   [
+    "inject",
+    952
+   ],
+   [
+    "latch",
+    813
+   ],
+   [
+    "latch_click",
+    821
+   ],
+   [
+    "latch_pin",
+    813
+   ],
+   [
+    "latch_servo",
+    813
+   ],
+   [
+    "link",
+    909
+   ],
+   [
+    "map_data",
+    727
+   ],
+   [
+    "organ_dim",
+    484
+   ],
+   [
+    "port_back",
+    261
+   ],
+   [
+    "port_close",
+    985
+   ],
+   [
+    "port_out",
+    185
+   ],
+   [
+    "port_out2",
+    944
+   ],
+   [
+    "port_touch",
+    193.94
+   ],
+   [
+    "retract",
+    973
+   ],
+   [
+    "rotor_arrive",
+    897
+   ],
+   [
+    "rotor_cross",
+    864
+   ],
+   [
+    "rotor_hover",
+    931
+   ],
+   [
+    "rotor_lift",
+    815
+   ],
+   [
+    "rotor_path",
+    814
+   ],
+   [
+    "shutter",
+    941
+   ],
+   [
+    "shutter_open",
+    178
+   ],
+   [
+    "shutter_shut",
+    277
+   ],
+   [
+    "stream",
+    207
+   ],
+   [
+    "tilt",
+    121
+   ],
+   [
+    "tilt2",
+    930
+   ],
+   [
+    "tpulse",
+    956
+   ],
+   [
+    "treat_flow",
+    965
+   ],
+   [
+    "treat_wave",
+    962
+   ],
+   [
+    "warn0",
+    0
+   ],
+   [
+    "window_open",
+    463
+   ]
+  ],
+  "note": "Unchanged V3 cues render identically (V3 generators, same ids/seeds); differences outside the changed cues would be a fault."
+ },
+ "rotor": {
+  "v4_cues": [
+   "rotor_path"
+  ],
+  "v3_cues": [
+   "rotor_lift",
+   "rotor_cross",
+   "rotor_arrive",
+   "rotor_hover"
+  ],
+  "span_frames": [
+   814,
+   1063
+  ],
+  "measured_from_full_speed_frame": 839,
+  "v4_level_db_every_5f": [
+   -33.5,
+   -34.6,
+   -34.1,
+   -32.6,
+   -36.9,
+   -33.4,
+   -40.2,
+   -35.4,
+   -40.2,
+   -38.3,
+   -37.0,
+   -39.8,
+   -37.6,
+   -36.9,
+   -37.7,
+   -34.5,
+   -36.1,
+   -35.7,
+   -41.5,
+   -43.0,
+   -43.3,
+   -45.0,
+   -42.7,
+   -45.8,
+   -44.6,
+   -45.8,
+   -48.3,
+   -44.9,
+   -51.2,
+   -44.4,
+   -48.4,
+   -45.5,
+   -45.2,
+   -46.5,
+   -43.4,
+   -47.9,
+   -44.8,
+   -46.8,
+   -45.4,
+   -46.2,
+   -52.0,
+   -53.1,
+   -58.3
+  ],
+  "v3_level_db_every_5f": [
+   -32.5,
+   -37.5,
+   -31.0,
+   -36.5,
+   -36.3,
+   -57.2,
+   -45.9,
+   -42.8,
+   -42.1,
+   -43.9,
+   -41.1,
+   -61.4,
+   -57.7,
+   -46.1,
+   -42.0,
+   -39.4,
+   -38.1,
+   -37.1,
+   -47.8,
+   -50.5,
+   -44.5,
+   -48.5,
+   -48.1,
+   -49.6,
+   -50.2,
+   -49.5,
+   -47.8,
+   -45.8,
+   -46.6,
+   -43.1,
+   -47.4,
+   -41.3,
+   -46.8,
+   -40.4,
+   -48.7,
+   -41.8,
+   -51.6,
+   -44.4,
+   -49.6,
+   -47.8,
+   -47.1,
+   -50.2,
+   -48.1
+  ],
+  "v4_max_frame_to_frame_step_db": 6.2,
+  "v4_max_step_at_frame": 892,
+  "v3_max_frame_to_frame_step_db": 15.7,
+  "v3_max_step_at_frame": 908,
+  "v4_min_db_0.2s_avg": -56.2,
+  "v3_min_db_0.2s_avg": -63.4,
+  "v3_level_at_old_joins_db": {
+   "863": -57.6,
+   "864": -57.2,
+   "896": -75.9,
+   "930": -57.3,
+   "931": -59.2
+  },
+  "v4_level_at_old_joins_db": {
+   "863": -35.1,
+   "864": -33.4,
+   "896": -35.9,
+   "930": -39.8,
+   "931": -42.1
+  },
+  "blade_pass_hz_at": {
+   "815": 0,
+   "817": 4.2,
+   "820": 4.6,
+   "825": 10.8,
+   "830": 32.3,
+   "835": 78.6,
+   "839": 140.8,
+   "845": 145.6
+  },
+  "rate_source": "Dispatch.rotorPhase",
+  "handoff": {
+   "off_frame_from": 919,
+   "frames": [
+    913,
+    944
+   ],
+   "level_0.1s_db": [
+    -36.9,
+    -35.5,
+    -34.5,
+    -34.4,
+    -34.5,
+    -35.0,
+    -35.1,
+    -34.7,
+    -35.4,
+    -36.7,
+    -37.5,
+    -36.8,
+    -37.3,
+    -39.6,
+    -42.2,
+    -43.1,
+    -42.0,
+    -41.2,
+    -41.3,
+    -43.0,
+    -44.3,
+    -44.2,
+    -44.7,
+    -46.4,
+    -48.8,
+    -47.6,
+    -44.6,
+    -42.9,
+    -43.0,
+    -44.6,
+    -46.2,
+    -46.2
+   ],
+   "max_step_db": 3.0,
+   "step_at_handoff_db": -0.1,
+   "framed_run_max_step_db (reference)": 3.2
+  },
+  "beating_at_cuts": {
+   "seed": 16,
+   "cuts": {
+    "hospital->flyover cut (B.travel0) 864": {
+     "level_db_f-1_f_f+1": [
+      -35.1,
+      -33.4,
+      -33.7
+     ],
+     "vs_local_mean_db": 1.5
+    },
+    "trunk wipe cover 897": {
+     "level_db_f-1_f_f+1": [
+      -35.9,
+      -32.3,
+      -33.3
+     ],
+     "vs_local_mean_db": 1.0
+    },
+    "off-frame hand-off 919": {
+     "level_db_f-1_f_f+1": [
+      -35.7,
+      -35.7,
+      -33.2
+     ],
+     "vs_local_mean_db": -0.1
+    }
+   },
+   "ok (no frame at a cut more than 2 dB under its local mean)": true
+  }
+ },
+ "seam_per_frame_db_1338_1349_then_0_8": {
+  "mix_v4": [
+   -31.7,
+   -32.4,
+   -28.2,
+   -29.5,
+   -29.6,
+   -28.2,
+   -21.2,
+   -20.7,
+   -19.2,
+   -19.7,
+   -19.6,
+   -19.2,
+   -16.4,
+   -19.3,
+   -18.3,
+   -11.5,
+   -13.9,
+   -20.0,
+   -22.0,
+   -26.2,
+   -24.4
+  ],
+  "mix_v3": [
+   -31.0,
+   -31.8,
+   -26.2,
+   -28.9,
+   -28.7,
+   -27.0,
+   -27.0,
+   -26.4,
+   -25.6,
+   -24.2,
+   -24.2,
+   -22.7,
+   -15.1,
+   -19.5,
+   -17.5,
+   -11.3,
+   -13.8,
+   -19.2,
+   -21.7,
+   -26.7,
+   -24.7
+  ],
+  "effects_v4": [
+   -36.7,
+   -43.1,
+   -33.6,
+   -37.5,
+   -40.4,
+   -48.0,
+   -22.0,
+   -21.4,
+   -20.3,
+   -21.0,
+   -20.8,
+   -21.6,
+   -23.9,
+   -27.5,
+   -30.6,
+   -33.4,
+   -32.0,
+   -31.5,
+   -29.0,
+   -27.9,
+   -29.6
+  ],
+  "effects_v3": [
+   -34.9,
+   -36.2,
+   -29.4,
+   -34.6,
+   -34.8,
+   -36.2,
+   -43.7,
+   -41.9,
+   -48.7,
+   -58.7,
+   -67.6,
+   -75.4,
+   -19.2,
+   -22.3,
+   -24.2,
+   -25.2,
+   -27.1,
+   -26.7,
+   -28.0,
+   -27.5,
+   -31.8
+  ],
+  "music": [
+   -33.8,
+   -32.6,
+   -31.1,
+   -30.1,
+   -29.1,
+   -28.5,
+   -27.1,
+   -27.0,
+   -25.8,
+   -24.2,
+   -24.2,
+   -22.7,
+   -17.2,
+   -21.9,
+   -26.0,
+   -30.1,
+   -31.6,
+   -33.2,
+   -33.5,
+   -31.6,
+   -31.5
+  ],
+  "narration": [
+   -81.9,
+   -85.1,
+   -240.0,
+   -240.0,
+   -240.0,
+   -240.0,
+   -240.0,
+   -240.0,
+   -240.0,
+   -240.0,
+   -240.0,
+   -240.0,
+   -79.9,
+   -21.7,
+   -19.3,
+   -11.3,
+   -14.1,
+   -20.5,
+   -23.7,
+   -38.9,
+   -28.1
+  ]
+ },
+ "seam_step_1349_to_0_db": {
+  "mix_v4": 2.8,
+  "mix_v3": 7.6,
+  "effects_v4": -2.3,
+  "effects_v3": 56.2,
+  "target_mix": "< 3 dB"
+ },
+ "build": {
+  "g3_bit_exact_vs_v3": true,
+  "static_gain_db": 4.23,
+  "safety": {
+   "ceiling_dbfs": -1.8,
+   "tolerance_lsb": 3,
+   "true_peak_max_dbtp": -1.5,
+   "method": "de-peak: 1 ms Hann pulses subtracted from the effects stem at each over (no gain riding)",
+   "passes": [
+    {
+     "pass": 0,
+     "sample_peak_dbfs": -1.7139,
+     "samples_over": 4
+    },
+    {
+     "pass": 1,
+     "sample_peak_dbfs": -1.8,
+     "samples_over": 0
+    }
+   ],
+   "true_peak_dbtp_4x": [
+    -1.756
+   ],
+   "corrected_samples": 143,
+   "correction_peak_dbfs": -41.8,
+   "final_sample_peak_dbfs": -1.8
+  },
+  "generators_measured": {
+   "alarm_h6": {
+    "kind": "alarm1",
+    "len_s": 1.66,
+    "centroid_hz": 1262.1,
+    "energy_above_3k_pct": 3.888,
+    "energy_below_100hz_pct": 0.0
+   },
+   "stream": {
+    "kind": "ticks",
+    "len_s": 1.567,
+    "centroid_hz": 4264.7,
+    "energy_above_3k_pct": 86.004,
+    "energy_below_100hz_pct": 0.0
+   },
+   "fibrillation": {
+    "kind": "fib",
+    "len_s": 1.733,
+    "centroid_hz": 84.6,
+    "energy_above_3k_pct": 0.0,
+    "energy_below_100hz_pct": 84.47
+   },
+   "rotor_path": {
+    "kind": "rotor",
+    "len_s": 8.3,
+    "centroid_hz": 223.0,
+    "energy_above_3k_pct": 0.178,
+    "energy_below_100hz_pct": 0.585
+   },
+   "contact": {
+    "kind": "press",
+    "len_s": 0.22,
+    "centroid_hz": 194.9,
+    "energy_above_3k_pct": 0.0,
+    "energy_below_100hz_pct": 11.378
+   },
+   "tpulse": {
+    "kind": "tpulse",
+    "len_s": 0.467,
+    "centroid_hz": 338.6,
+    "energy_above_3k_pct": 0.0,
+    "energy_below_100hz_pct": 0.0
+   },
+   "fib_fade": {
+    "kind": "fib",
+    "len_s": 0.767,
+    "centroid_hz": 83.3,
+    "energy_above_3k_pct": 0.0,
+    "energy_below_100hz_pct": 86.365
+   },
+   "alarm_t1344": {
+    "kind": "alarm1",
+    "len_s": 1.66,
+    "centroid_hz": 1262.1,
+    "energy_above_3k_pct": 3.888,
+    "energy_below_100hz_pct": 0.0
+   }
+  }
+ },
+ "cue_tables [frame, id, kind, gain_db, len_frames, bus, own_duck_db]": {
+  "119-300": [
+   [
+    120,
+    "tick120",
+    "clock",
+    -29,
+    1.8,
+    "one-shot",
+    null
+   ],
+   [
+    126,
+    "case_turn",
+    "swish",
+    -28,
+    25.0,
+    "one-shot",
+    null
+   ],
+   [
+    152,
+    "case_reveal",
+    "scan",
+    -32,
+    4.0,
+    "one-shot",
+    null
+   ],
+   [
+    159,
+    "cut_edge",
+    "scan",
+    -28,
+    32.0,
+    "one-shot",
+    null
+   ],
+   [
+    178,
+    "shutter_open",
+    "servo",
+    -29,
+    7.0,
+    "one-shot",
+    null
+   ],
+   [
+    185,
+    "port_out",
+    "servo",
+    -28,
+    16.0,
+    "own duck",
+    -6
+   ],
+   [
+    193.94,
+    "port_touch",
+    "click",
+    -26,
+    2.4,
+    "one-shot",
+    null
+   ],
+   [
+    207,
+    "stream",
+    "ticks",
+    -28,
+    47.0,
+    "own duck",
+    -3
+   ],
+   [
+    216,
+    "flow",
+    "flow",
+    -27,
+    255.0,
+    "continuous",
+    null
+   ],
+   [
+    247,
+    "hero_mark",
+    "blip",
+    -26,
+    8.4,
+    "one-shot",
+    null
+   ],
+   [
+    261,
+    "port_back",
+    "servo",
+    -30,
+    8.0,
+    "own duck",
+    -6
+   ],
+   [
+    264,
+    "dive_in",
+    "swish",
+    -28,
+    18.0,
+    "one-shot",
+    null
+   ],
+   [
+    277,
+    "shutter_shut",
+    "click",
+    -31,
+    2.4,
+    "one-shot",
+    null
+   ]
+  ],
+  "921-1040": [
+   [
+    930,
+    "tilt2",
+    "swish",
+    -29,
+    11.0,
+    "own duck",
+    -6
+   ],
+   [
+    941,
+    "shutter",
+    "servo",
+    -28,
+    4.0,
+    "own duck",
+    -6
+   ],
+   [
+    945,
+    "actuator",
+    "servo",
+    -29,
+    6.0,
+    "own duck",
+    -6
+   ],
+   [
+    948.07,
+    "contact",
+    "press",
+    -25,
+    6.6,
+    "own duck",
+    -6
+   ],
+   [
+    956,
+    "tpulse",
+    "tpulse",
+    -27,
+    14.0,
+    "own duck",
+    -6
+   ],
+   [
+    965,
+    "treat_flow",
+    "flow",
+    -31,
+    32.0,
+    "continuous",
+    null
+   ],
+   [
+    973,
+    "retract",
+    "servo",
+    -31,
+    8.0,
+    "own duck",
+    -6
+   ],
+   [
+    985,
+    "port_close",
+    "click",
+    -30,
+    2.4,
+    "own duck",
+    -6
+   ],
+   [
+    987,
+    "fib_fade",
+    "fib",
+    -24,
+    23.0,
+    "continuous",
+    null
+   ],
+   [
+    1005,
+    "hb_e0",
+    "heartbeat",
+    -24.437,
+    12.6,
+    "one-shot",
+    null
+   ],
+   [
+    1026,
+    "hb_e1",
+    "heartbeat",
+    -20,
+    12.6,
+    "one-shot",
+    null
+   ],
+   [
+    1035,
+    "deep_breath",
+    "file",
+    -24,
+    60.0,
+    "one-shot",
+    null
+   ],
+   [
+    1039,
+    "fingers_release",
+    "rustle",
+    -33,
+    9.0,
+    "one-shot",
+    null
+   ]
+  ]
+ },
+ "sources": {
+  "heart": "lib/heart4.ts heartBeats()/fibAmp(): journey lubs 459,480,501,522; journey twitches 538,545,556,562,571 (x reveal4 chestOpen, to 584); treatment twitches 988,992,997,1000 (quiver 987-1005); settled lubs 1005@0.6,1026@1,1047@1,1068@1",
+  "alarm": "device3 helper: tail 1344 head 6,18; agrees with B4",
+  "sensor": "Journey3.SENSOR_BEATS {\"back0\":112,\"back1\":122,\"veil0\":124,\"veil1\":137,\"roll0\":126,\"roll1\":151,\"reveal0\":152,\"reveal1\":156,\"cut\":177,\"shut0\":178,\"shut1\":185,\"nose0\":185,\"touch\":201,\"retract0\":261,\"close0\":269,\"close1\":277}",
+  "sensor_touch": "Interior.portPress(Journey3 stroke, PORT_GEO.pressSensor) at 10% of the dimple depth 193.94 (SENSOR_BEATS.touch 201 = full stroke)",
+  "sensor_beads": "Journey3 SENSOR_REL (source text) + Interior.releaseState check: 16 ticks 208-252, hero 223",
+  "chestOpen0": "B4.chestOpen0",
+  "organDim0": "B4.organDim0",
+  "mapEnd": "Dispatch.MAP_END",
+  "pulseLand": "B4.pulseLand",
+  "latch": "B.latch 813 (Dispatch latch swing 813-821); spin0 817, blur0 821, spin1 839, lift 837-862",
+  "climb1": "B4.climb1",
+  "arrive0": "B4.arrive0",
+  "flare0": "B4.flare0",
+  "hover0": "B4.hover0",
+  "retreat0": "B4.retreat0",
+  "retreat1": "B4.retreat1",
+  "lift1": "B4.lift1",
+  "rotor_rate": "Dispatch.rotorPhase",
+  "rotor_view": "Dispatch.droneView (framed 814-918; off frame from 919: eased over 12 f into the off-frame hover model, no step)",
+  "wipe": "Dispatch.WIPE {\"in0\":890,\"cover\":897,\"out1\":906}",
+  "link0": "B4.link0",
+  "treatment": "B4 tRoll 931-939, tShut 941-945, tStroke 945-951, tSlug0 956 -> tSlugLumen 968, tTrack0 965, tRetract 973-981, tShutClose 981-985, treatMatch 987, treatSvc1 995",
+  "treat_contact": "Aftermath3.treatState(g).dimple at 10% of its depth 948.07 (B4.tContact 949)",
+  "treat_roll": "Aftermath3.treatState(g).roll (frames it moves) 930-941 (B4 tRoll 931-939, tCut 941)",
+  "held": "dropped (TIMER HELD first on screen ~1042-1050 in the medium shot, under words; the green chime confirms)"
+ },
+ "hook_notes": {
+  "sensorRelease": "Journey3 SENSOR_REL {t0 208, t1 252, n 16, travel 12, heroMerge 235}: every exit is the feed -> stream switch of Interior.releaseState",
+  "treatState": "roll moves 930-941 (keys 931-939), tilt2 930-941; shutter open moves 941-945 (keys 941-945), shutter 941-945; stroke moves 945-951 (keys 945-951), actuator 945-951; retract moves 973-981 (keys 973-981), retract 973-981; shutter close moves 981-985 (keys 981-985), port_close 985; slug leaves at 956 (tSlug0 956); slug in the lumen from 973 (tSlugLumen 968) MISMATCH"
+ }
+}
