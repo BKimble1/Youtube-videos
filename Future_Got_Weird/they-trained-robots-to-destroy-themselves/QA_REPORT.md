@@ -1,5 +1,152 @@
 # QA report: They Trained Robots to Destroy Themselves
 
+# V4 (checked 15 Oct 2026)
+
+Not published. Every figure below comes from the files themselves, using the scripts in `tools/v4/`:
+
+| Script | What it produces |
+|---|---|
+| `qa_v4.py` | Raw results in `qa/v4/qa_v4_results.json` |
+| `strips_v4.py` | 25-frame strips around each transition |
+| `compare_v4.py` | V3 vs V4 comparison frames |
+| `speech_mask_v4.py` | Speech-masking check |
+
+**No real-time viewing or listening was possible in this environment.** Everything below is measurement and frame inspection.
+
+## Deliverables
+
+| File | Spec | Notes |
+|---|---|---|
+| `exports/FGW_RobotsDestroy_v4_UPLOAD_1080p.mp4` | H.264 High, 1920×1080, 30 fps CFR (native), yuv420p, BT.709. 7,005 frames, 233.5 s. AAC 48 kHz stereo at 317 kb/s. 90.3 MiB. SHA-256 `aeeb5f5624dcfa5c6d90ac02eccc671d94104575da7f320716251e147ccf9988` | **Upload master.** Rendered from source (CRF 16, x264 slow) with the V4 mix. Backed up as five split parts in `backup/v4/`; the parts pass `sha256sum -c`, and the joined parts hash to the master |
+| `exports/FGW_RobotsDestroy_v4_1080p_SHARE.mp4` | 1920×1080, 30 fps, two-pass H.264 at 0.88 Mb/s, AAC 128 kb/s, 233.5 s, 28.44 MiB. SHA-256 `61f72e859c2ef02c345182781f0ebc48520165f7cece3f38888a930bda156a5d` | **Review/share copy, not for upload.** Made from the master |
+| `captions/FGW_RobotsDestroy_v4.srt` | 75 cues, at most 42 characters per line, no overlaps. First cue at 0.50 s; last ends at 230.54 s | Identical to V2/V3; narration and timing unchanged |
+| `thumbnail/FGW_RobotsDestroy_v4_thumbA_edge_1280x720.jpg` (main), `…v4_thumbB_leap…` | 1280×720 JPEG | Drawn with the V4 F.02. Phone-size check: `qa/v4/thumbs/phone_size_check.png` |
+
+## Picture (measured on the master)
+
+**Scene changes (ffmpeg scene detector, threshold 0.10):** 38. V3 had 82.
+
+V4 changes scene mostly through camera moves, paper-roll wipes, matched cuts, the door sweep and glare reveals, and many of these stay below the detector's threshold. A long "segment" is therefore continuous motion, not a held shot.
+
+- Median segment 2.21 s, mean 5.99 s; 4 segments in the first 20 s.
+- The longest is 63.8 s from 1:27.5. It runs through:
+  - the film-crew set;
+  - the low angle and the roll into the stage;
+  - the attempts;
+  - the grid of copies;
+  - the side view.
+
+**Defect screens on the final master:**
+
+| Check | Result | Earlier V4 renders |
+|---|---|---|
+| Static holds ≥ 1.5 s (`freezedetect`) | **none** | Review render 1 had 9; review render 2 had 1. Each now has a slow camera drift or push |
+| Black frames (`blackdetect`, ≥ 0.1 s) | **none** | A development frame at 3:25 (flats closing over nothing) was fixed before review 1 |
+| Exact duplicate consecutive frames | 33 frames. One run longer than 2: 5 frames at 0:34.5, where the stand starts entering | — |
+| Single-frame "pop" candidates (a difference spike that is not a cut) | **none** | Review render 1 had one at 1:08.0 (a card above the covering clapper). Fixed |
+| Hard cuts at section joins | none at 1:34 and 3:10 | Review render 1 had both. The film-set elements are now carried across |
+| Silences > 1 s | none | — |
+
+**Audio offset against the mix:** 0.0 ms.
+
+## Audio (measured, not heard)
+
+**Loudness:**
+
+- Integrated −15.0 LUFS.
+- True peak −1.5 dBTP.
+- LRA 2.4 LU.
+
+**Narration:** unchanged from V2, the same takes and timing.
+
+**Score:** unchanged from V2/V3.
+
+**Cue sheet:** `source/src/v4/sfx_v4.ts` has 332 cues, all tied to the V4 animation's own event times. Examples:
+
+- the crate door's sweep and slam;
+- the actuator toss and its landing on the crank;
+- clock ticks and calendar flips;
+- the rewinds and dial clicks;
+- the early foot contact;
+- the airbag;
+- the interference;
+- the choice-bubble pop.
+
+There are no new effect generations; three V1 effects are newly used.
+
+**Masking screen (`audio/v4/mix/speech_mask_v4.txt`):**
+
+- Out of 3,730 speech windows of 50 ms, 173 have effects and beds within 6 dB of the voice. V3 had 190.
+- Runs of 150 ms or longer where effects average louder than the voice: 4.
+  - 0:03.0, +4.0 dB: the entry impact, kept on the word "steel".
+  - 0:04.0: the furnace bed between words.
+  - 0:44.05, +1.7 dB: the padlock and shutter.
+  - 3:31.9, +0.1 dB.
+- Measured the same way, the V3 mix on disk has 14 such runs. This merged-run criterion differs from the one quoted in the V3 section below.
+
+## Visual review performed (V4)
+
+**Development rounds:** stills for every section in `qa/v4/*_r*/` (opening, model intro, retirement options, film, training, transfer, prove, end, boundaries, airbag).
+
+**Two full review renders (540p)** were measured with `qa_v4.py`. The holds, pops and boundary cuts they found were fixed (see the defect log).
+
+**Full-episode contact sheets:** `qa/v4/review/sheet_01…10.png` show the final master at 1 fps. A pass over the first master found two framing defects, at 1:03 and 2:37. Both were fixed, then the master was re-rendered. Both fixes are verified on the final master's sheets.
+
+**Transition strips:** `qa/v4/strips/`, 27 strips cut from the final upload master, each 25 consecutive frames. The boundary times are in `qa/v4/transitions_v4.json`. The key ones inspected:
+
+| Strip | What it shows |
+|---|---|
+| 02 | Ripple → inked target → stage |
+| 03 | The 0:19.37 matched pose |
+| 04 | Crate door across the lens |
+| 06 | Actuator glare → ladle rim |
+| 12 | Foundry → stage roll |
+| 15 | Early foot contact |
+| 18 | Foot match cut into the airbag hall |
+| 19 | Airbag landing |
+| 21 | Transfer → prove |
+
+**Comparison frames, V3 left / V4 right (`qa/v4/compare/`):**
+
+| Sheet | What it shows |
+|---|---|
+| `model_emblem_v3_vs_v4.png` | 0:19.45 / 0:21.5 / 0:23.0 / 0:30.5. V3: a dark visor close-up and a 3D bay. V4: the emblem pull-out, the F.02 dominant with the title, the matched F.02/F.03 front poses |
+| `transition_0196_v3_vs_v4.png` | 0:19.30–0:19.75. V3: the split reveal (dark head above a blue body, with a seam). V4: a complete matched pose, avatar chest → F.02 chest |
+| `limb_overlap_2m15_v3_vs_v4.png` | 2:15.5–2:23.4. V3: translucent blue limbs showing through one another. V4: an opaque side-view rig, the policy overlay outside the body, the early foot on the plate |
+| `building_airbag_v3_vs_v4.png` | 2:56.5–3:00.4. V3: a small robot on a detached building. V4: close on the foot at the ledge, the tracked descent, a landing that fills the frame |
+
+**Model sheets:** `production/v4/V4Sheet0.png` (F.02), `V4Sheet1.png` (F.03) and `V4Sheet2.png` (key poses). They include phone-size versions.
+
+**Not done:** an every-frame review. The strips cover the transitions; the 1 fps sheets cover the rest.
+
+## Defect log
+
+See `production/v4/DEFECT_LOG_V4.md`. It covers the brief's six ranked fixes and every defect found and fixed during V4.
+
+## What was not checked (limits)
+
+1. **Real-time playback and listening.** Motion smoothness, the speed ramps, the walk cycles, comic timing and the mix were judged from frames and measurements only. The share copy is compressed (0.88 Mb/s) and will show softness on fine lines and the grid of copies; it is not for upload.
+2. **Reference photos.** None of the V4 reference hosts could be reached: blogs.nvidia.com, tendril.studio, images.ctfassets.net and upload.wikimedia.org. The F.02 and F.03 designs and the symbol placements follow the brief's text, not photos.
+3. **Official branding cross-check.** The symbol path is the brief's Appendix A path, unchanged. It could not be compared with Figure's own site.
+4. **Every-frame inspection.** Full 30 fps review was done only around the transitions; elsewhere coverage is 1 fps.
+
+## Human review list (in order)
+
+1. **Full watch with sound, at 100 %.** In particular:
+   - the opening 0:00–0:20;
+   - the crate door 0:42.4–0:43.4;
+   - the toss and crank 0:46–0:51;
+   - the glare 0:51.6–0:53;
+   - the training stage 1:39–2:30;
+   - the airbag 2:56–3:01;
+   - the conclusion 3:25–3:53.
+2. **Compare the models with official photos:** `production/v4/V4Sheet0.png` and `V4Sheet1.png`, and the symbol on the F.02 visor and chest ("F.02" below).
+3. **Trademark comfort.** The Figure symbol is on the F.02 and F.03 drawings. The credit and a non-affiliation line are in `upload/UPLOAD_TEXT_v4.md`; see `production/ASSET_RIGHTS.md` C01/D02.
+4. **Listen to the impact on "steel" at 0:03 and the padlock and shutter at 0:44.**
+5. **Thumbnail choice at phone size:** `qa/v4/thumbs/phone_size_check.png`.
+
+---
+
 # V3 (checked 14 Oct 2026)
 
 Not published. Every figure below comes from the files themselves, using the scripts in `tools/v3/`:
