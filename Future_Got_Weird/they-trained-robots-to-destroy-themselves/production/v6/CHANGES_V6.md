@@ -112,6 +112,24 @@ end silhouettes.
 - Cue sheet re-timed to every changed event (`source/src/v6/sfx_v6.ts` → `audio/v6/sfx_cues_v6.json`), score
   regenerated (`tools/v6/synth_score_v6.py`) and the mix rebuilt at -15 LUFS / -1.5 dBTP (`tools/v6/mix_audio_v6.py`).
 
+## Follow-up fixes after the first V6 review (same runtime, re-rendered)
+
+- **Hanging panels (0:07–0:12):** the F.02 carries each panel by its two top corners, so the tab and its hole stay
+  visible. It raises the panel beside the hook and drops the hole onto the J; the hooks are drawn in front of hung tabs.
+  The released hand pulls back instead of trailing the moving line, and the F.03 unloads the same way in reverse.
+- **Service (0:17–0:20):** the F.02 faces the technician and holds its forearm out. A short spanner works the hatch bolt
+  between them and goes back on his belt. He steps in and presses a chest power button, and the robot settles back
+  against the hand truck behind it. Nothing crosses the robot's body, and his arm is never locked straight.
+- **Clock-room bench (0:33–0:36):** the bench is at waist height with a knee module on it. The spanner's jaw sits on the
+  cover bolt with its handle in her hand, then it lies flat on the bench. She lifts the rotor out and sets it down.
+- **Reflex test (2:15–2:18):** a proper reflex hammer in her fist, and she stands clear of the robot. A wrist flick
+  brings the rubber head onto the tendon below the kneecap from the front, and it rebounds clear of the kicking shin.
+- **Imatra scrap skip (0:55–0:57):** it hangs from a trolley riding its own runway girder (on the same plane, so no
+  parallax drift), by two ropes, a hook block and a bail pinned to the bucket. The bucket tips about that pin and the
+  scrap pours from its lip; the splash is placed where the scrap lands. The unattached background trolley is gone.
+- **Terminator 2 chain (1:11–1:14):** the chain hangs inside the ladle, in front of its back wall, and is cut at the
+  molten surface. The chip is lowered into the steel instead of behind the pot.
+
 ## Unresolved defects and limits
 
 1. No real-time viewing or listening in this environment. Motion feel and the mix were judged from frames and
