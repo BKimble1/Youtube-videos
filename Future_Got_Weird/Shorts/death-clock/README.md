@@ -56,15 +56,15 @@ Supporting files:
   - the signals and the warning travel as dashes on the arm's trace, not as particles in the blood
 - **Device and treatment** (`art/Device.tsx`, `art/Interior.tsx`, `art/Hand.tsx`, B4 treatment keys):
   - one compact geometry for every view: rounded profile, side button, underside panel and seam, shutter, actuator, small reservoir and sensor cartridge
-  - the hand clears into the section backdrop as the camera orbits to the underside
+  - the hand clears into the section backdrop with a soft straight edge timed to the case roll (no circular cut), and the forearm falls into shadow past the band
   - the sensor shot is a light touch with sparse cyan beads
-  - the treatment chain: the shutter opens, the piston advances, the nose presses the skin, and one blue-white slug runs down a straight channel into the vessel and is tracked with the flow; then a match cut into the chest view, where the heart settles
+  - the treatment chain: the shutter opens, the piston advances, the nose presses the skin, and the section opens from the contact point, and one blue-white slug runs along a narrow continuous channel from the port into the vessel, entering with the flow, and is tracked; then a match cut into the chest view, where the heart settles
 - **Dispatch** (`shots/Dispatch.tsx`, `art/Drone.tsx`, Aftermath3 arrival):
   - the transmission pulse continues onto the map and into the hospital's dock ring, with a match cut on the dock beacon
   - a continuous rooftop approach; the order is latch, then rotor spin-up, then lift, then travel; the rotor blur turns with pitch
   - the drone is identical across the cut to the neighbourhood (screen position, scale, pitch, no roll); the houses sit on grass
-  - one consistent camera truck behind the trunk wipe
-  - the arrival brakes to a hover clear of his head (at least about 87 world units) and retreats before the recovery; the data link stays clear of his face and the digits
+  - one trunk that fully covers the frame for two frames at the swap (897-898), with the drone's position, pitch and speed continuous behind it
+  - the arrival brakes into a hover above-right of his head (at least 84 world units of clearance), with sky between the drone and the house roof, a soft ground shadow on the lawn that follows it, and a retreat before the recovery; the drone blinks and the band's ring answers, with no line drawn across him
 - **Loop and device states** (`lib/device3.ts`):
   - one periodic alarm in loop time (emissions at frames 1344, 6 and 18) drives the border flash, a ring round the glass that never crosses the digits, and the sound onsets
   - no frame-0 ring, shake or glow step
@@ -83,9 +83,9 @@ Supporting files:
 
 **One world from the collapse to the transmission** (`shots/Opening.tsx`, `shots/Journey3.tsx`). The supported collapse (knees give over planted feet, hips land, the left hand reaches and plants, the elbow gives and locks); the camera follows that wrist into the band, whose layout turns upright on the vertical forearm; it buzzes and the fingers dig in; the camera tilts round the case to its underside port; a bright cut edge sweeps the section open; the port presses and a narrow sensor stream enters the vessel; the camera follows one hero sensor across the near wall, overtaking the flow, past a red cell, round a bend to a changed cell, scans it and follows its signals back up the same arm (now seen through) into an oval cutaway in his chest (`art/Cutaway.tsx`: rim, far wall, parallax): the liver dims, the heart turns irregular, and its warning races down the arm into the red screen. One invisible switch happens deep inside the vessel.
 
-**Dispatch** (`shots/Dispatch.tsx`): a 0.7 s map blip to a hospital; the pulse lands in the beacon of a drone dock on the hospital's rooftop launch bay (EMERGENCY parapet sign, glass stairwell with a staff member, equipment, ambulance bay below); the latch opens, the rotors spin up, the drone rises, banks and flies over the neighbourhood; a foreground tree trunk passes the lens and wipes onto his lawn (the flyover stays ahead of it, his lawn appears behind it; the frame is never fully covered).
+**Dispatch** (`shots/Dispatch.tsx`): a 0.7 s map blip to a hospital; the pulse lands in the beacon of a drone dock on the hospital's rooftop launch bay (EMERGENCY parapet sign, glass stairwell with a staff member, equipment, ambulance bay below); the latch opens, the rotors spin up, the drone rises, banks and flies over the neighbourhood; a foreground tree trunk passes the lens and wipes onto his lawn (V4: the trunk fully covers the frame for two frames at the swap, so the two scenes are never side by side).
 
-**Treatment, recovery, question, loop** (`shots/Aftermath3.tsx`): the drone arrives beside him (assistance, a data link, no healing light); the band turns its case, the port injects one blue pulse into the same vessel and it climbs the arm to the heart, whose rhythm settles; the window closes as he breathes out; the hand loads, he pushes up to sitting and lifts the wrist: green replaces red, "Life Expectancy: 42 Years". Unease. The camera pushes into the glass, one local "?" glitch turns into the opening's red 00:02:14, and the same push carries through frames 0–7 of the next play (the cold open), then cuts to the collapse.
+**Treatment, recovery, question, loop** (`shots/Aftermath3.tsx`): the drone arrives beside him (assistance, a lock-on blink answered by the band, no healing light); the band turns its case, the port injects one blue pulse into the same vessel and it climbs the arm to the heart, whose rhythm settles; the window closes as he breathes out; the hand loads, he pushes up to sitting and lifts the wrist: green replaces red, "Life Expectancy: 42 Years". Unease. The camera pushes into the glass, one local "?" glitch turns into the opening's red 00:02:14, and the same push carries through frames 0–7 of the next play (the cold open), then cuts to the collapse.
 
 **Device states** (`lib/device3.ts`): one origin, red 00:02:14 at frame 0, counting at film speed whenever the band is in picture; compressed story time while the dispatch is on screen; held at 00:00:40; green; one glitch; the red callback. `source/scripts/check_device3.ts` checks every frame.
 
