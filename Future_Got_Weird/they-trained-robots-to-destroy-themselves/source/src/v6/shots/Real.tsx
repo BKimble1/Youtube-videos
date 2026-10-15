@@ -456,7 +456,7 @@ export const Real: React.FC = () => {
     const caption = seg(t, T_DONTKNOW + 0.1, T_DONTKNOW + 0.4) * (1 - seg(t, T_ALSO - 0.4, T_ALSO - 0.1));
     const landPulse = [...ROUNDS.map((r) => r.J), R_BASE].reduce((m, J) => Math.max(m, Math.max(0, 1 - Math.abs(t - J.tEnd - 0.1) / 0.4)), 0);
     return (
-      <Scene bg="#EEF4FD" over={<Chip x={96} y={946} lines={['Variations shown are illustrative · Figure hasn’t said which it used']} k={caption} size={30} tone="paper" />}>
+      <Scene bg="#EEF4FD" over={<Chip x={64} y={940} lines={['Variations shown are illustrative · Figure hasn’t said which it used']} k={caption} size={38} tone="paper" />}>
         <Layer cam={cam}>
           <StageBack lw={lw} grid={0.45} />
           {i >= 0 ? <Arc pts={ROUNDS[i].J.arc()} k={seg(t, ROUNDS[i].J.tTO, ROUNDS[i].J.tEnd) * (1 - seg(t, ROUNDS[i].J.tEnd + 0.5, ROUNDS[i].J.tEnd + 0.8))} lw={lw} color={C.teal} /> : null}

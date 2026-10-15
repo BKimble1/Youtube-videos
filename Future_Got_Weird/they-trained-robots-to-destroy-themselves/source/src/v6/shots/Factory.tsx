@@ -195,8 +195,11 @@ const fleetPose = (j: number, t: number): RPose => {
   const t0 = j === 2 ? w.t1 + STOP_DUR + 0.1 : f.tIn;
   const u = seg(t, t0, t0 + 1.5);
   const k = Math.sin(Math.PI * smooth(u));
+  // the new arrival keeps its feet exactly where its stop step planted them (no pop at the hand-over)
+  const ws = j === 2 ? walkStop(w, w.t1 + STOP_DUR) : null;
+  const feet = ws ? {footN: ws.footN!, footF: ws.footF!} : w.feet;
   return stand(w.lead + 12, G, 1, {yaw: 0.55, rot: 8 * k, waist: 16 * k, neck: 6 * k, head: 8 * k,
-    armN: A(4 + 54 * k, 14 + 26 * k, {grip: 0.3 + 0.4 * k}), armF: A(-4 + 44 * k, 16 + 28 * k, {grip: 0.3 + 0.4 * k}), ...w.feet}, -1);
+    armN: A(4 + 54 * k, 14 + 26 * k, {grip: 0.3 + 0.4 * k}), armF: A(-4 + 44 * k, 16 + 28 * k, {grip: 0.3 + 0.4 * k}), ...feet}, -1);
 };
 
 // ------------------------------------------------------------------ cameras

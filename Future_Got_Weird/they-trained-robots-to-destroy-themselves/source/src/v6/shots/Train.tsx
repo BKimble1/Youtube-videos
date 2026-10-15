@@ -490,8 +490,8 @@ const PolicyBox: React.FC<{t: number; cam: Cam; p: RPose}> = ({t, cam, p}) => {
       {els}
       <rect x={bx0} y={box.y - box.h / 2} width={box.w} height={box.h} rx={22} fill={flash > 0 ? C.saffronLight : C.ink} stroke={C.ink} strokeWidth={6} />
       <text x={box.x} y={box.y + 18} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={56} fill={flash > 0 ? C.ink : C.paper}>POLICY</text>
-      {kIn > 0.5 ? <text x={bx0 - 16} y={visor.y - 18} textAnchor="end" fontFamily={F.body} fontWeight={800} fontSize={32} fill={C.blueDeep} opacity={kIn * (demo ? 0.4 : 1)}>senses</text> : null}
-      {kOut > 0.5 ? <text x={lane(2) + 24} y={(by1 + knee.y) / 2} fontFamily={F.body} fontWeight={800} fontSize={32} fill={C.tealDeep} opacity={kOut * (demo ? 0.4 : 1)}>motor commands</text> : null}
+      {kIn > 0.5 ? <text x={bx0 - 16} y={visor.y - 18} textAnchor="end" fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.blueDeep} opacity={kIn * (demo ? 0.4 : 1)}>senses</text> : null}
+      {kOut > 0.5 ? <text x={lane(2) + 24} y={(by1 + knee.y) / 2} fontFamily={F.body} fontWeight={800} fontSize={40} fill={C.tealDeep} opacity={kOut * (demo ? 0.4 : 1)}>motor commands</text> : null}
     </g>
   );
 };
@@ -544,7 +544,7 @@ export const Train: React.FC = () => {
   const t = f / 30;
   // V6: a short corner identifier for the whole illustrated explanation, bottom-left, clear of every trajectory
   const generalK = seg(t, T_BUILD1 + 0.3, T_BUILD1 + 0.6) * (1 - seg(t, TRAIN_END - 1.1, TRAIN_END - 0.75)); // cleared before the push to the foot
-  const general = <Chip x={32} y={986} lines={['Training illustration']} k={generalK} size={28} tone="paper" />;
+  const general = <Chip x={32} y={976} lines={['Training illustration']} k={generalK} size={32} tone="paper" />;
 
   // ============================== E + B: the edge, the burnt practice arc, lights out, the rebuild
   if (t < T_BUILD1 + 0.01) {
