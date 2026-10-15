@@ -3,10 +3,10 @@
  "note": "Measurements only. The exact listening check: play seam_check_x3 and judge the 1349 -> 0 join three times.",
  "clip": "qa/v4/seam/seam_check_x3.mp4",
  "picture": {
-  "wrap_pair_mean_abs_diff": 4.84,
+  "wrap_pair_mean_abs_diff": 4.83,
   "tail_median": 5.12,
   "tail_max_last_30": 5.61,
-  "head_frames_0_7_max": 4.54
+  "head_frames_0_7_max": 4.55
  },
  "per_frame_db": {
   "frames": [

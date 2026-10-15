@@ -64,7 +64,7 @@
 | Contact sheets | `tools/qa_sheets.py`, every 6th frame (`qa/v4/sheet_*.jpg`), plus a phone-size overlay (`qa/v4/phone_ui_overlay.jpg`) | See the final inspection below. |
 | Loop seam, picture | `tools/seam_check_v4.py` (`qa/v4/seam/`) | The 1349 → 0 pair differs by 4.84 (of 255), against a median of 5.12 over the last second; frames 0–7 reach at most 4.54. No black, frozen or duplicated frame. |
 | Loop seam, sound (measured, **not heard**) | `seam_check_v4.py`, per-frame RMS | The mix steps +2.8 dB across 1349 → 0, against V3's 7.6 dB (target under 3 dB). Most of it is the V3 music stem's downbeat at frame 0 (+5.5 dB on that stem). The alarm onsets in the effects are spaced 12.7 frames across the join, at −6.2 and +6.5 frames. |
-| Loudness | ebur128 on the final MP4's audio, the review MP4 and the mix WAV | **Final MP4:** −15.0 LUFS, LRA 1.7 LU, peak −1.7 dBFS.<br>**Review MP4:** −15.0 LUFS, −1.6 dBFS.<br>**Mix WAV:** −15.06 LUFS, −1.76 dBTP; V3 was −15.05 / −1.74. No re-normalisation and no new limiter. |
+| Loudness | ebur128 on the final MP4's audio, the review MP4 and the mix WAV | **Final MP4:** −15.0 LUFS, LRA 1.7 LU, peak −1.8 dBFS.<br>**Review MP4:** −15.0 LUFS, −1.6 dBFS.<br>**Mix WAV:** −15.06 LUFS, −1.76 dBTP; V3 was −15.05 / −1.74. No re-normalisation and no new limiter. |
 | Voice over bed (measured) | `tools/qa_audio_v4.py` (`qa/v4/AUDIO_QA.json`) | **Broadband margin:** minimum 5.8 dB, median 13.5.<br>**Speech-weighted margin:** minimum 10.3 dB, median 19.3.<br>Both minimums equal V3's. The tightest windows are at 20.0 s, 23.3 s and 35.3 s. |
 | Narration unchanged | sha256 | The narration and music stems, the narration WAV, the text and the SRT are identical to V3. |
 

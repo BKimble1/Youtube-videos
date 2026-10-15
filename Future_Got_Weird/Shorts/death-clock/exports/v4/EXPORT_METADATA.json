@@ -4,8 +4,8 @@
   "bytes": 2113
  },
  "FGW_DeathClock_V4_Cover_1080x1920.png": {
-  "sha256": "95040073c785d33630d3f12a30df789246cea2ffe3ec8bb617dbcf0df8ad13bb",
-  "bytes": 1194374,
+  "sha256": "a283c0032ce369eac52041cd64cd7d1a7f9be4004a884ebffe06a234d4645350",
+  "bytes": 1205279,
   "ffprobe": {
    "programs": [],
    "streams": [
@@ -20,13 +20,13 @@
     }
    ],
    "format": {
-    "size": "1194374"
+    "size": "1205279"
    }
   }
  },
  "FGW_DeathClock_V4_Final_1080x1920.mp4": {
-  "sha256": "4fd22a46083af6f96d38b6fce450545a39810769235be42aa3df0855328733bc",
-  "bytes": 28877815,
+  "sha256": "fb29c9326b5270d9d005ca2fecd1c96fe12db896774de84bdd3a28a3e8e5e24c",
+  "bytes": 28782937,
   "ffprobe": {
    "programs": [],
    "streams": [
@@ -53,8 +53,8 @@
    ],
    "format": {
     "duration": "45.000000",
-    "size": "28877815",
-    "bit_rate": "5133833"
+    "size": "28782937",
+    "bit_rate": "5116966"
    }
   }
  },
@@ -63,8 +63,8 @@
   "bytes": 835
  },
  "FGW_DeathClock_V4_Review.mp4": {
-  "sha256": "e98f6ddb1785c83657324880af92967fd43d00dd67637d74113fc639615354ea",
-  "bytes": 5544624,
+  "sha256": "b953c7d69617b314100f1b87670356c6087377011f0d6e5a7c9cec63216c0945",
+  "bytes": 5517292,
   "ffprobe": {
    "programs": [],
    "streams": [
@@ -91,13 +91,13 @@
    ],
    "format": {
     "duration": "45.013000",
-    "size": "5544624",
-    "bit_rate": "985426"
+    "size": "5517292",
+    "bit_rate": "980568"
    }
   }
  },
  "audio/FGW_DeathClock_V4_Mix_48k.wav": {
-  "sha256": "d8ed7f88cd15cb88578b3a5edb4bdcbbbbc6f78a8ef561135e2a3aefba27ed6f",
+  "sha256": "f6d1976b559e5c5a8f5a4eb7d0afce1870e4d8221969a7c717a7f1831c14c493",
   "bytes": 12960044,
   "ffprobe": {
    "programs": [],
@@ -139,7 +139,7 @@
   }
  },
  "audio/FGW_DeathClock_V4_Stem_effects_48k.wav": {
-  "sha256": "fed4856ce37d3b4766e8f6bf0b9f31352d4473b826e506b7dd9b7047a7ebde3b",
+  "sha256": "482bd89e132a7256d0fb5ba40a0498c86599b7e75a236ab720d667ae2b491a0e",
   "bytes": 12960044,
   "ffprobe": {
    "programs": [],
