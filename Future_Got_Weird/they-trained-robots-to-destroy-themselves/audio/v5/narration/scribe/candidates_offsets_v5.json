@@ -1,0 +1,42 @@
+[
+ {
+  "take": "hook_t1_FgC7.mp3",
+  "offset": 0.0,
+  "length": 6.48
+ },
+ {
+  "take": "hook_t2_mKPp.mp3",
+  "offset": 7.68,
+  "length": 6.64
+ },
+ {
+  "take": "hook_t3_k09C.mp3",
+  "offset": 15.52,
+  "length": 6.56
+ },
+ {
+  "take": "hook_t4_47qY.mp3",
+  "offset": 23.28,
+  "length": 6.64
+ },
+ {
+  "take": "wit_t1_AwOE.mp3",
+  "offset": 31.12,
+  "length": 7.92
+ },
+ {
+  "take": "wit_t2_5sjc.mp3",
+  "offset": 40.24,
+  "length": 7.92
+ },
+ {
+  "take": "wit_t3_ayLP.mp3",
+  "offset": 49.36,
+  "length": 8.08
+ },
+ {
+  "take": "wit_t4_4djn.mp3",
+  "offset": 58.64,
+  "length": 8.16
+ }
+]

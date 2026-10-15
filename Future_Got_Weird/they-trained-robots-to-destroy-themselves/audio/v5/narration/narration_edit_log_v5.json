@@ -1,0 +1,137 @@
+{
+ "lead": 0.4,
+ "long": 0.52,
+ "keep": 0.4,
+ "pieces": [
+  {
+   "block": "B00",
+   "take": "hook_t1_FgC7",
+   "from": "This robot jumps",
+   "until": null,
+   "start": 0.4,
+   "length": 6.42,
+   "take_range_s": [
+    0.06,
+    6.48
+   ],
+   "shortened_silences": 0
+  },
+  {
+   "block": "B02",
+   "take": "b02_t4_r9wO",
+   "from": "These are",
+   "until": "One in Imatra",
+   "start": 7.22,
+   "length": 38.391,
+   "take_range_s": [
+    1.46,
+    41.72
+   ],
+   "shortened_silences": 7
+  },
+  {
+   "block": "B02",
+   "take": "wit_t3_ayLP",
+   "from": "One in Imatra",
+   "until": null,
+   "start": 45.911,
+   "length": 7.944,
+   "take_range_s": [
+    0.06,
+    8.08
+   ],
+   "shortened_silences": 0
+  },
+  {
+   "block": "B02",
+   "take": "b02_t4_r9wO",
+   "from": "Recycling old hardware",
+   "until": null,
+   "start": 54.195,
+   "length": 4.091,
+   "take_range_s": [
+    44.34,
+    48.64
+   ],
+   "shortened_silences": 0
+  },
+  {
+   "block": "B03",
+   "take": "b03_t4_GFQD",
+   "from": "Blame a reply",
+   "until": null,
+   "start": 58.646,
+   "length": 25.35,
+   "take_range_s": [
+    0.0,
+    26.56
+   ],
+   "shortened_silences": 4
+  },
+  {
+   "block": "B04",
+   "take": "b04_t2_wIsD",
+   "from": "Now the hard",
+   "until": null,
+   "start": 84.356,
+   "length": 54.985,
+   "take_range_s": [
+    0.0,
+    56.24
+   ],
+   "shortened_silences": 6
+  },
+  {
+   "block": "B05",
+   "take": "b05_t2_ukBU",
+   "from": "But a simulator",
+   "until": null,
+   "start": 139.701,
+   "length": 38.609,
+   "take_range_s": [
+    0.0,
+    39.44
+   ],
+   "shortened_silences": 4
+  },
+  {
+   "block": "B06",
+   "take": "b06_t4_1LdQ",
+   "from": "So what does",
+   "until": null,
+   "start": 178.67,
+   "length": 13.895,
+   "take_range_s": [
+    0.0,
+    14.0
+   ],
+   "shortened_silences": 0
+  },
+  {
+   "block": "B07",
+   "take": "b07_t1_2eO2",
+   "from": "So why is",
+   "until": "Does retiring hardware",
+   "start": 192.965,
+   "length": 18.312,
+   "take_range_s": [
+    0.0,
+    18.56
+   ],
+   "shortened_silences": 0
+  },
+  {
+   "block": "B07",
+   "take": "b07_t1_2eO2",
+   "from": "These robots didn't",
+   "until": null,
+   "start": 211.577,
+   "length": 3.022,
+   "take_range_s": [
+    22.36,
+    25.6
+   ],
+   "shortened_silences": 0
+  }
+ ]
+}

@@ -1,6 +1,74 @@
 # Future Got Weird: They Trained Robots to Destroy Themselves
 
-## V4 (15 Oct 2026): the current version
+## V5 (15 Oct 2026): the current version
+
+**Status.** The V5 revision is complete. V1–V4 are preserved unchanged.
+
+V5 is a substantial editing and animation pass on V4. It keeps the V4 vector F.02/F.03 robots, the Crew and the
+orange furnace look, and makes these changes:
+
+- a new 7-second opening, with a matched cut from the furnace surface to the simulator target;
+- a recut narration with a new hook line (3:53.5 → **3:36.7**, without speeding up the voice);
+- consequences shown on screen for every retirement option;
+- 26 transitions built from objects in the scenes;
+- a sequential policy diagram;
+- sim-to-real close-ups;
+- a continuous real jump;
+- an unfamiliar-task example;
+- a rebuilt ending (silhouette, three crew actions, a symbolic simulator landing, glow into the logo);
+- a re-cued sound design and score.
+
+The format is 1920×1080 at 30 fps native.
+
+It is **not published**; that is the owner's step. Nobody has watched it in real time or listened to it here.
+`QA_REPORT.md` (V5 section) lists exactly what was checked.
+
+| What | Where |
+|---|---|
+| Change list, transitions, text audit, unresolved limitations | `production/v5/CHANGES_V5.md` |
+| Source credits | `production/v5/CREDITS_V5.md` |
+| Editable source | `source/src/v5/` (composition `V5Main`) |
+| Narration (new hook and Imatra takes, recut) | `tools/v5/stitch_narration_v5.py`, `audio/v5/narration/`, word timings `audio/v5/narration_words_v5.json`, script `script/script_v5.md` |
+| Cue sheet, score, mix, speech-masking check | `source/src/v5/sfx_v5.ts`, `audio/v5/sfx_cues_v5.json`, `tools/v5/synth_score_v5.py`, `tools/v5/mix_audio_v5.py`, `audio/v5/mix/mix_v5_measure.json`, `audio/v5/mix/speech_mask_v5.txt` |
+| **Upload master 1080p** | `exports/FGW_RobotsDestroy_v5_UPLOAD_1080p.mp4` (Git-ignored; backed up as checksummed parts in `backup/v5/`) |
+| Share/review copy (compressed, not for upload) | `exports/FGW_RobotsDestroy_v5_1080p_SHARE.mp4` (Git-ignored; regenerate with `tools/v5/share_and_backup_v5.sh`) |
+| Captions | `captions/FGW_RobotsDestroy_v5.srt` (new timings) |
+| Title, description, chapters | `upload/UPLOAD_TEXT_v5.md`, `upload/chapters_v5.txt` |
+| Thumbnails | The V4 files remain current |
+| QA | `QA_REPORT.md` (V5 section), `qa/v5/qa_v5_results.json`, transition strips `qa/v5/strips/`, phone-size pages `qa/v5/phone_r1/`, V4-vs-V5 frames `qa/v5/compare/` |
+
+**Source layout (`source/src/v5/`)**
+
+- `cues.ts` holds the V5 word cues.
+- `rig/` holds `jump5` (weight shift → planted push → ballistic flight → plunge, stick, short or faceplant) and
+  `arms` (FK/IK arm blend, palm-locked props).
+- `kit/` holds `cam5`, with smoothed cameras and framing guards.
+- `sets/` holds the foundry, plant and set dressing.
+- `shots/` holds `Hook`, `Factory`, `Options`, `Imatra`, `Post`, `Train`, `Real`, `Prove` and `End`.
+- `MainV5.tsx` is the timeline.
+- `sfx_v5.ts` is the cue sheet and also exports the transition times.
+
+### Rebuild V5
+
+    cd Future_Got_Weird/they-trained-robots-to-destroy-themselves
+    (cd source && npm ci)
+    python3 tools/v5/stitch_narration_v5.py                 # narration from the takes -> audio/v5 + word timings
+    (cd source && node ../tools/v5/collect_sfx_v5.mjs)      # cue sheet + transition times -> audio/v5/sfx_cues_v5.json
+    python3 tools/v5/synth_score_v5.py                      # -> source/public/v5/audio/music_v5.wav
+    python3 tools/v5/mix_audio_v5.py                        # -> source/public/v5/audio/mix_v5.mp3 (-15 LUFS, -1.5 dBTP)
+    python3 tools/v5/speech_mask_v5.py                      # where effects come within 6 dB of the voice
+    python3 tools/v5/make_srt_v5.py                         # captions + script check
+    (cd source && npx remotion render src/index.ts V5Main ../exports/FGW_RobotsDestroy_v5_UPLOAD_1080p.mp4 --props='{"audio":"mix"}' --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k)
+    bash tools/v5/share_and_backup_v5.sh                    # share copy + checksummed backup parts
+    python3 tools/v5/qa_v5.py                               # measured QA -> qa/v5/qa_v5_results.json
+    python3 tools/v5/strips_v5.py                           # ±12-frame strips at every transition (qa/v5/transitions_v5.json)
+    python3 tools/v5/compare_v5.py                          # V4 vs V5 frames for the brief's problem spots
+
+Stills for inspection: `cd source && COMP=V5Main SCALE=0.5 node stills.mjs ../qa/<dir> t:<seconds> …`.
+
+---
+
+## V4 (15 Oct 2026)
 
 **Status.** The V4 revision is complete; V1–V3 are preserved unchanged. V4 redraws the episode as a fast illustrated
 explanation in vector art (about 85 % flat/controlled 2.5D, 15 % atmosphere) with cartoon F.02 and F.03

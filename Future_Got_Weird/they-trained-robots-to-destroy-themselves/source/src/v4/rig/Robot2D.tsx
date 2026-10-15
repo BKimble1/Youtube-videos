@@ -146,6 +146,38 @@ export const rig = (pose0: RPose, s = 1, face: 1 | -1 = 1): Rig => {
   return {M, pts, yaw, face, s};
 };
 
+/** The same pose with every IK target resolved into joint angles (targets removed). Lets a planted pose hand over to
+ *  free (FK) motion without a pop: the FK angles reproduce the IK limb exactly. */
+export const solveIK = (pose0: RPose, s = 1, face: 1 | -1 = 1): RPose => {
+  const pose: RPose = {...pose0, armN: {...pose0.armN}, armF: {...pose0.armF}, legN: {...pose0.legN}, legF: {...pose0.legF}};
+  const yaw = pose.yaw ?? 1;
+  const root = mul(mul(T(pose.x, pose.y), S(face * s, s)), R(pose.rot));
+  const rootInv = inv(root);
+  const sinT = Math.max(0.3, Math.sin(yaw * 90 * D2R));
+  for (const sd of ['N', 'F'] as const) {
+    const tg = sd === 'N' ? pose.footN : pose.footF;
+    if (!tg) continue;
+    const q = apply(rootInv, [tg.x, tg.y]);
+    const h = hipPos(sd, yaw);
+    const [hip, kn] = ik2((q[0] - h[0]) / sinT, q[1] - h[1], SK.TH, SK.SH, 1);
+    const leg = sd === 'N' ? pose.legN : pose.legF;
+    leg.hip = hip; leg.kn = kn;
+    leg.an = (pose.rot + (tg.pitch ?? 0)) / Math.max(0.3, yaw) - (hip - kn);
+  }
+  const torso = mul(mul(root, T(0, SK.waist)), R(pose.waist));
+  const torsoInv = inv(torso);
+  for (const sd of ['N', 'F'] as const) {
+    const tg = sd === 'N' ? pose.handN : pose.handF;
+    if (!tg) continue;
+    const q = apply(torsoInv, [tg.x, tg.y]);
+    const sp = shPos(sd, yaw);
+    const [sh, el] = ik2((q[0] - sp[0]) / sinT, q[1] - sp[1], SK.UA, SK.FA, -1);
+    const arm = sd === 'N' ? pose.armN : pose.armF;
+    arm.sh = sh; arm.el = el;
+  }
+  return {...pose, footN: undefined, footF: undefined, handN: undefined, handF: undefined};
+};
+
 /** Ground the rig: returns the pelvis y that puts the lowest sole on `groundY` for a pose (useful for idle/crouch). */
 export const soleY = (r: Rig) => Math.max(...['N', 'F'].map((sd) => Math.max(apply(r.M['foot' + sd], [-10, 31])[1], apply(r.M['foot' + sd], [40, 31])[1])));
 
@@ -173,6 +205,7 @@ export type RobotProps = {
   after?: Partial<Record<string, (r: Rig) => React.ReactNode>>; // extra drawing after a part (cutaways, props in hand)
   clipBelow?: number;              // world y below which the robot is hidden (molten surface)
   opacity?: number;
+  off?: number;                    // 0..1 powered down: the visor glints go out (V5)
 };
 
 const SYM_H = 368.64;
@@ -184,7 +217,7 @@ const Symbol: React.FC<{m: Mat; cx: number; cy: number; h: number; sx: number; f
   return <path d={PATH_D} transform={ms(t)} fill={fill} />;
 };
 
-export const Robot2D: React.FC<RobotProps> = ({pose, model = 'F02', s = 1, face = 1, id, px, inkPx = 4.2, hl = {}, marks, after = {}, clipBelow, opacity = 1}) => {
+export const Robot2D: React.FC<RobotProps> = ({pose, model = 'F02', s = 1, face = 1, id, px, inkPx = 4.2, hl = {}, marks, after = {}, clipBelow, opacity = 1, off = 0}) => {
   const r = rig(pose, s, face);
   const yaw = r.yaw;
   const hy = pose.headYaw ?? yaw;
@@ -379,8 +412,8 @@ export const Robot2D: React.FC<RobotProps> = ({pose, model = 'F02', s = 1, face 
     out.push(P_('visor', vd, r.M.head, pal.face));
     // glint: a soft reflection band (moves with the head's turn, not painted on)
     const gx = lerp(isF03 ? -14 : -8, isF03 ? 32 : 31, hy);
-    out.push(<path key="glint" d={smooth([[gx - 4, -76], [gx + 4, -78], [gx + 2, -44], [gx - 5, -40]])} transform={ms(r.M.head)} fill={pal.faceGlint} fillOpacity={0.9} />);
-    out.push(<path key="glint2" d={circle(gx + (isF03 ? 16 : 10) * (1 - hy), -72, isF03 ? 3.2 : 2.4)} transform={ms(r.M.head)} fill="#FFFFFF" fillOpacity={0.55} />);
+    out.push(<path key="glint" d={smooth([[gx - 4, -76], [gx + 4, -78], [gx + 2, -44], [gx - 5, -40]])} transform={ms(r.M.head)} fill={pal.faceGlint} fillOpacity={0.9 * (1 - 0.85 * off)} />);
+    out.push(<path key="glint2" d={circle(gx + (isF03 ? 16 : 10) * (1 - hy), -72, isF03 ? 3.2 : 2.4)} transform={ms(r.M.head)} fill="#FFFFFF" fillOpacity={0.55 * (1 - off)} />);
     if (showMarks && model === 'F02') {
       const sx = Math.cos(hy * 80 * D2R);
       out.push(<Symbol key="vsym" m={r.M.head} cx={lerp(0, 34, hy)} cy={-70} h={13} sx={sx} flip={flip} fill={pal.mark} />);
