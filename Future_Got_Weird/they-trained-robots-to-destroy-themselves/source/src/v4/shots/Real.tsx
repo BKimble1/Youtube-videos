@@ -93,9 +93,9 @@ export const Real: React.FC = () => {
     // noisy sensor readout (a jittery trace that settles once filtered)
     const nzK = seg(tau, T_NOISY, T_NOISY + 0.3) * (1 - seg(tau, T_NEVER - 0.3, T_NEVER));
     const trace = Array.from({length: 40}, (_, i) => {
-      const x = headS.x + 70 + i * 9;
+      const x = headS.x + 130 + i * 9;
       const calm = smooth(seg(tau, T_NOISY + 0.8, T_NOISY + 1.3));
-      const y = headS.y - 120 + (Math.sin(i * 1.7 + tau * 40) * 18 + Math.sin(i * 0.7 + tau * 23) * 10) * (1 - calm) + Math.sin(i * 0.25) * 6 * calm;
+      const y = headS.y + 40 + (Math.sin(i * 1.7 + tau * 40) * 18 + Math.sin(i * 0.7 + tau * 23) * 10) * (1 - calm) + Math.sin(i * 0.25) * 6 * calm;
       return `${x.toFixed(1)} ${y.toFixed(1)}`;
     });
     return (
@@ -106,10 +106,10 @@ export const Real: React.FC = () => {
           <Tag ax={footS.x} ay={footS.y} x={footS.x + 180} y={footS.y + 60} text="uneven floor" k={seg(tau, T_FLOOR + 0.1, T_FLOOR + 0.45) * (1 - seg(tau, T_NOISY - 0.2, T_NOISY))} />
           {nzK > 0 ? (
             <g opacity={nzK}>
-              <rect x={headS.x + 50} y={headS.y - 190} width={400} height={140} rx={16} fill={C.paper} stroke={C.ink} strokeWidth={4} />
+              <rect x={headS.x + 110} y={headS.y - 30} width={400} height={140} rx={16} fill={C.paper} stroke={C.ink} strokeWidth={4} />
               <path d={'M' + trace.join('L')} fill="none" stroke={C.coral} strokeWidth={4} strokeLinejoin="round" />
-              <text x={headS.x + 70} y={headS.y - 158} fontFamily='"Nunito Variable", sans-serif' fontWeight={800} fontSize={28} fill={C.ink}>noisy sensors</text>
-              <line x1={headS.x + 10} y1={headS.y - 10} x2={headS.x + 50} y2={headS.y - 60} stroke={C.ink} strokeWidth={4} />
+              <text x={headS.x + 130} y={headS.y + 2} fontFamily='"Nunito Variable", sans-serif' fontWeight={800} fontSize={28} fill={C.ink}>noisy sensors</text>
+              <line x1={headS.x + 20} y1={headS.y} x2={headS.x + 110} y2={headS.y + 20} stroke={C.ink} strokeWidth={4} />
             </g>
           ) : null}
         </svg>

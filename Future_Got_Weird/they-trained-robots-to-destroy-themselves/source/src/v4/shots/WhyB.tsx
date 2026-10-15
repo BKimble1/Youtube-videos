@@ -481,7 +481,7 @@ const Street: React.FC<{tau: number; f: number; tIn: number}> = ({tau, f, tIn}) 
           );
         })}
         {isFinite(crateX) ? (
-          <g>
+          <g transform={`translate(-100 1000) scale(${lerp(1, 0.28, easeIn(seg(tau, T_YES + 0.1, tIn + 0.45)))}) translate(100 -1000)`}>
             <rect x={crateX - 130} y={1000 - 34} width={260} height={18} rx={6} fill={BCOL.frameD} stroke={C.ink} strokeWidth={lw} />
             {[-90, 90].map((dx) => <circle key={dx} cx={crateX + dx} cy={1000 - 10} r={12} fill={C.ink} />)}
             <Crate x={crateX} y={1000 - 30} w={240} h={190} lw={lw} />
