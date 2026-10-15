@@ -38,3 +38,8 @@ qa/v5/*/f[0-9]*.png
 qa/v5/v4look/
 qa/v5/inspect/
 tools/*/__pycache__/
+# V6: regenerated audio and QA frame dumps
+audio/v6/mix/*.wav
+source/public/v6/audio/music_v6.wav
+qa/v6/*/f[0-9]*.png
+qa/v6/review/*.mp4

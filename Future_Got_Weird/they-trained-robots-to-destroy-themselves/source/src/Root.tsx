@@ -1,5 +1,6 @@
 import {ThumbV4A, ThumbV4B} from './v4/dev/ThumbsV4';
 import {MainV5, MAIN_V5_FRAMES} from './v5/MainV5';
+import {MainV6, MAIN_V6_FRAMES} from './v6/MainV6';
 import {MainV4, MAIN_V4_FRAMES} from './v4/MainV4';
 import {Sheet4} from './v4/dev/Sheet4';
 import {CamTest} from './v3/dev/CamTest';
@@ -42,6 +43,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="V3SheetID" component={RobotSheetV3} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{page: 2}} />
     <Composition id="V4Main" component={MainV4} durationInFrames={MAIN_V4_FRAMES} fps={30} width={1920} height={1080} defaultProps={{audio: 'narration' as const}} />
     <Composition id="V5Main" component={MainV5} durationInFrames={MAIN_V5_FRAMES} fps={30} width={1920} height={1080} defaultProps={{audio: 'narration' as const}} />
+    <Composition id="V6Main" component={MainV6} durationInFrames={MAIN_V6_FRAMES} fps={30} width={1920} height={1080} defaultProps={{audio: 'narration' as const}} />
     <Composition id="V4ThumbA" component={ThumbV4A} durationInFrames={1} fps={30} width={1920} height={1080} />
     <Composition id="V4ThumbB" component={ThumbV4B} durationInFrames={1} fps={30} width={1920} height={1080} />
     <Composition id="V4Sheet0" component={Sheet4} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
