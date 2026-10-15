@@ -90,9 +90,10 @@ const ventK = (k: number) => {
 const atrK = (k: number) => (k < -5 || k >= 0 ? 0 : k < -2 ? smooth((k + 5) / 3) : 1 - smooth((k + 2) / 2));
 const wringK = (k: number) => (k <= 0 || k >= 7 ? 0 : Math.sin((Math.PI * k) / 7) ** 1.5);
 const rootK = (k: number) => (k <= 1 ? 0 : k <= 5 ? smooth((k - 1) / 4) : k <= 9 ? 1 - smooth((k - 5) / 4) : 0);
-/** one-sided twitch: squeeze over 3 frames, release over 4 (smooth both ways: its content stays below 8 Hz) */
-const TW_LEN = 7;
-const twK = (k: number) => (k <= 0 || k >= TW_LEN ? 0 : k <= 3 ? smooth(k / 3) : 1 - smooth((k - 3) / 4));
+/** one-sided twitch: squeeze over 2 frames, release over 3 (smooth both ways; V4 fix: was 3 + 4, so the twitches 4-5
+ *  frames apart overlapped and the heart never relaxed between them; a 5-frame twitch is about 6 Hz, under 8 Hz) */
+const TW_LEN = 5;
+const twK = (k: number) => (k <= 0 || k >= TW_LEN ? 0 : k <= 2 ? smooth(k / 2) : 1 - smooth((k - 2) / 3));
 
 /** amplitude of the irregular state at frame f (0..1) */
 export const fibAmp = (f: number) => {
@@ -115,10 +116,13 @@ export const heartAt = (f: number): HeartState => {
   for (const b of LUBS) {
     const k = f - b.f;
     if (k < -6 || k > 13) continue;
-    v += b.amp * ventK(k);
-    a += b.amp * atrK(k);
-    w += b.amp * wringK(k);
-    r += b.amp * rootK(k);
+    // V4 fix: the picture's squeeze for a weak beat is less weak than the sound's level (the first organised beat of
+    // the treatment, amp 0.6, still squeezes about 8% of the heart's area; a full beat about 10%)
+    const va = 0.5 + 0.5 * b.amp;
+    v += va * ventK(k);
+    a += va * atrK(k);
+    w += va * wringK(k);
+    r += va * rootK(k);
   }
   let lv = 0;
   let rv = 0;
@@ -136,9 +140,10 @@ export const heartAt = (f: number): HeartState => {
     ventW: 1 - 0.08 * v,
     ventL: 1 - 0.06 * v,
     wring: 2 * w,
-    // one-sided twitches squeeze a ventricle by up to about 5.5% (the irregular state must read at phone size)
-    lv: 0.055 * lv,
-    rv: 0.055 * rv,
+    // one-sided twitches squeeze a ventricle by up to about 12% (V4 fix, was 5.5%: each irregular twitch takes about
+    // 4-7% off the heart's area, so the irregular state and its settling read at phone size)
+    lv: 0.12 * lv,
+    rv: 0.12 * rv,
     atria: 1 - 0.07 * a,
     roots: 1 + 0.04 * r,
     nRV: 0.02 * n(0.2, 31),

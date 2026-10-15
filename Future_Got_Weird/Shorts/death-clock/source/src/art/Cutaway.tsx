@@ -6,30 +6,33 @@
 // and no organ ever draws over the arm.
 //
 // The interior is one self-consistent anterior layout (the anatomy reference, shifted toward his front and scaled
-// to fit), tuned to read at phone size: a large heart in the middle of the visible part of the window, resting on
-// the diaphragm with its apex down toward +V (as far toward +V as the near arm allows); two light pink lungs with
-// a soft darker rim, the larger right lung on the -V (front) side and the smaller left lung with its cardiac notch
-// on +V (above and beside the heart, then under the arm), their anterior borders nearly meeting above the arch
-// across a darker mediastinal gap. The right lung's anterior margin is drawn IN FRONT of the heart's right border
-// (as in situ: over the outer part of the right atrium, just lateral of the vena cava), so one continuous pale
-// crescent runs from the vena cava down to its rounded base on the diaphragm and the heart visibly sits between
-// the lungs. The great vessels sit above the heart between them (the aortic arch toward +V, its end passing behind
-// the left lung); the diaphragm band below; and, under it, the liver (the "organ failing" beat: warm orange-red,
-// greying and darkening as it fails) in the lower front corner with its left lobe running on under the heart, on
-// the warm wall tone of the abdomen. The back wall is a deep warm red. Edge: one thin, restrained matte cut band
-// (skin, fat, muscle) with a thin ink line; no rim highlight, crescent, depth ring, gloss or white dots. The window
-// opens and closes by scaling about a pivot under the near arm (WIN_PIVOT): at open 0 its scale is K_HIDE, where
-// the whole window (band and ink line included) already lies under the near arm and sleeve, so it grows out from
-// under the arm and slides back under it; its last sliver beside the sleeve (open below about 0.38, one or two
-// frames) also fades out, so nothing small is ever left on the bare tee.
+// to fit), tuned to read at phone size. V4 fix: the heart sits in the middle of the visible part of the window with
+// lung on both sides (a right-lung crescent of about 10 units between the right atrium and the front cut edge, the
+// left lung beside its left border), resting on the diaphragm with its apex down toward +V (his left), more than
+// 10 world clear of the near arm; two light pink lungs with a soft darker rim, the larger right lung on the -V
+// (front) side and the smaller left lung with its cardiac notch on +V (above and beside the heart, then under the
+// arm), their anterior borders nearly meeting above the arch across a darker mediastinal gap. The right lung's
+// anterior margin is drawn IN FRONT of the heart's right border (as in situ: over the outer part of the right
+// atrium, just lateral of the vena cava, never over it), so one continuous pale crescent runs from the vena cava down
+// to its base on the right dome and the heart visibly sits between the lungs. The great vessels sit above the heart
+// between them (the vena cava, the one blue vessel, into the right atrium; the aortic arch toward +V, its end passing
+// behind the left lung); the diaphragm band below, its right dome higher; under the right dome, on his right side in
+// the window's lower front corner, the liver (the "organ failing" beat: warm orange-red, turning a dull desaturated
+// grey-brown as it fails, never a dark hole), well toward -V of the apex; under the left dome (below the heart's
+// lower border and the apex) the pale stomach. The back wall is a deep warm red. Edge: one thin, restrained matte cut
+// band (skin, fat, muscle) with a thin ink line; no rim highlight, crescent, depth ring, gloss or white dots. The
+// diagnostic trace's chest segment runs along that cut edge at skin level to a small contact dot on the rim (no wire
+// across the lung into the heart). The window opens and closes by geometry alone, always fully opaque: it scales
+// about a pivot under the near arm (WIN_PIVOT) from K_HIDE, where the whole window (band and ink line included)
+// already lies under the near arm and sleeve, so it grows out from under the arm and slides back under it.
 import React from 'react';
 import {mix, shade} from '../lib/color';
 import {INK} from '../lib/ink';
 import {HeartState} from '../lib/heart4';
 import {TracePulse} from '../lib/reveal4';
-import {add, clamp, fmt, mul, rot, smooth, V} from '../lib/math';
+import {add, clamp, fmt, mul, rot, V} from '../lib/math';
 import {LIGHT} from '../lib/shade';
-import {alongPts, closedD, Heart4, HEART_TILT, heartSensorAt, openD, sensorColor, svcAt} from './Heart4';
+import {alongPts, closedD, Heart4, HEART_TILT, openD, sensorColor, svcAt} from './Heart4';
 
 export type UV = [number, number];
 /** torso (u up the spine from C, v toward his back/left; rig units) -> the window group's local frame */
@@ -65,163 +68,183 @@ export const CHEST4 = {
     [92, -87.5],
     [110, -82],
   ] as UV[],
-  /** heart centre and scale: as large as the near arm allows (its apex, the part nearest the arm, stays 10 world
-   *  clear of the arm and sleeve ink edge), low in the cavity on the diaphragm, the right atrium just inside the
-   *  front cut band */
-  heart: [82.5, -57.3] as UV,
+  /** heart centre and vessel scale. V4 fix: the heart sits between the lungs, with lung on both sides inside the
+   *  window: its centre is 4 up and 7 toward +V of the first layout's and the drawn heart is HEART_BODY (0.88) of
+   *  heartK (art/Heart4); heartK itself is the vena cava and treatment pulse scale the 987 match reads (Aftermath3
+   *  MATCH), so it is unchanged. Its apex stays more than 10 world clear of the arm and sleeve ink edge, and the
+   *  right atrium about 15 units inside the window's front edge (a right-lung crescent of about 10 units shows there) */
+  heart: [86.5, -50.3] as UV,
   heartK: 1.15,
   /** right lung (larger), behind the heart: its medial edge runs behind the vena cava, the right atrium and the right
    *  ventricle, its base on the right dome (under the diaphragm band); inside the window it shows above the arch
-   *  (where the two lungs' anterior borders nearly meet) and, with rFront in front of the heart, along the front edge */
+   *  (where the two lungs' anterior borders nearly meet) and, with rFront in front of the heart, along the front edge.
+   *  (The thoracic outlines are the first layout's, scaled 0.88 about its heart centre and moved with the heart.) */
   rLung: [
-    [152, -30],
-    [140, -27],
-    [131, -27.5],
-    [124.5, -30],
-    [120, -35],
-    [116, -44],
-    [112, -54],
-    [108, -62],
-    [103, -67],
-    [95, -71],
-    [85, -73],
-    [76, -72.5],
-    [69, -70.5],
-    [66, -70.5],
-    [67, -75],
-    [64, -80],
-    [60, -87],
-    [55.5, -94],
-    [50, -102],
-    [52, -114],
-    [92, -114],
-    [124, -104],
-    [146, -84],
-    [156, -56],
+    [147.7, -26.3],
+    [137.1, -23.6],
+    [129.2, -24.1],
+    [123.5, -26.3],
+    [119.5, -30.7],
+    [116.0, -38.6],
+    [112.5, -47.4],
+    [108.9, -54.4],
+    [104.5, -58.8],
+    [97.5, -62.4],
+    [88.7, -64.1],
+    [80.8, -63.7],
+    [74.6, -61.9],
+    [72.0, -61.9],
+    [72.9, -65.9],
+    [70.2, -70.3],
+    [66.7, -76.4],
+    [62.7, -82.6],
+    [57.9, -89.6],
+    [59.7, -100.2],
+    [94.9, -100.2],
+    [123.0, -91.4],
+    [142.4, -73.8],
+    [151.2, -49.2],
   ] as UV[],
   /** left lung (smaller): its medial edge passes in front of the end of the aortic arch and the left pulmonary
    *  artery (the hilum), then the cardiac notch curves round the heart's left border with a narrow mediastinal gap,
    *  and the lingula tucks in toward the apex; the rest runs under the near arm */
   lLung: [
-    [146, -21],
-    [137, -22.5],
-    [130, -23.5],
-    [123, -25.5],
-    [116, -29.5],
-    [110, -31],
-    [104, -28.5],
-    [98, -25.5],
-    [90, -29.5],
-    [83, -30.5],
-    [76, -31.2],
-    [69, -34.5],
-    [62.5, -38],
-    [56.5, -43.3],
-    [55, -41],
-    [52.5, -35],
-    [48.5, -26],
-    [42, -14],
-    [35, 0],
-    [29, 14],
-    [46, 38],
-    [100, 48],
-    [132, 36],
-    [148, 10],
+    [142.4, -18.4],
+    [134.5, -19.7],
+    [128.3, -20.6],
+    [122.1, -22.3],
+    [116.0, -25.8],
+    [110.7, -27.2],
+    [105.4, -25.0],
+    [100.1, -22.3],
+    [93.1, -25.8],
+    [86.9, -26.7],
+    [80.8, -27.3],
+    [74.6, -30.2],
+    [68.9, -33.3],
+    [63.6, -38.0],
+    [62.3, -36.0],
+    [60.1, -30.7],
+    [56.6, -22.8],
+    [50.9, -12.2],
+    [44.7, 0.1],
+    [39.4, 12.4],
+    [54.4, 33.6],
+    [101.9, 42.4],
+    [130.1, 31.8],
+    [144.1, 8.9],
   ] as UV[],
   /** the right lung's anterior margin, drawn IN FRONT of the heart's right border (as in situ): its medial edge runs
-   *  just lateral of the vena cava, over the outer 2-3 units of the right atrium and the right ventricle's border, into
-   *  the cardiophrenic angle, then its rounded base follows the top of the diaphragm out to the front edge; the rest of
-   *  the outline lies outside the window. With the right lung behind it, this makes one continuous front crescent from
-   *  the vena cava's exit to the diaphragm, at least 5 units wide beside the atrium. */
+   *  just lateral of the vena cava (at least 1.5 units clear of it, so the vena cava and the treatment pulse in it are
+   *  never covered), over the outer part of the right atrium and the right ventricle's border, into the cardiophrenic
+   *  angle; below that it is cut by the diaphragm's top line (clip), so its base sits on the right dome. With the right
+   *  lung behind it, this makes one continuous front crescent from the vena cava's exit to the dome, about 10 units
+   *  wide beside the atrium. */
   rFront: [
-    [126, -77],
-    [116, -74.4],
-    [110, -74.9],
-    [104.5, -75.3],
-    [100, -75.1],
-    [95, -74.7],
-    [90, -74.4],
-    [85, -73.6],
-    [80.5, -72.6],
-    [75.5, -72.1],
-    [70.5, -71.4],
-    [67.2, -71.6],
-    [65.3, -74.2],
-    [62.2, -79.5],
-    [57.6, -86.5],
-    [51, -96],
-    [44, -106],
-    [60, -118],
-    [100, -112],
-    [124, -96],
+    [126.0, -71.5],
+    [116.0, -69.4],
+    [110.7, -69.0],
+    [105.9, -68.6],
+    [101.9, -68.6],
+    [97.5, -68.6],
+    [93.1, -68.4],
+    [88.7, -67.6],
+    [84.7, -66.2],
+    [80.3, -64.4],
+    [75.9, -63.0],
+    [72.0, -62.6],
+    [66.0, -64.0],
+    [58.0, -76.0],
+    [50.0, -92.0],
+    [66.7, -103.7],
+    [101.9, -98.4],
+    [123.0, -84.4],
   ] as UV[],
   /** one faint fissure per lung (right: the horizontal fissure across the front margin; left: the oblique fissure) */
   rFissure: [
-    [88.5, -94],
-    [86.8, -86],
-    [84.6, -79.5],
+    [93.8, -84.6],
+    [92.3, -77.6],
+    [90.3, -71.8],
   ] as UV[],
   lFissure: [
-    [126, 2],
-    [113, -10],
-    [100, -17],
-    [87, -23],
+    [124.8, 1.9],
+    [113.3, -8.7],
+    [101.9, -14.8],
+    [90.5, -20.1],
   ] as UV[],
-  /** top edge of the diaphragm: the right dome under the right lung, the heart resting on it (its lower border
-   *  overlaps the band), lower on the left under the left lung */
+  /** top edge of the diaphragm: the right dome high under the right lung (the liver under it), the heart resting on
+   *  the central part (its lower border overlaps the band), lower again on the left under the left lung */
   diaphragm: [
-    [46, -104],
-    [54, -92],
-    [60, -82],
-    [64.5, -75.5],
-    [65.5, -71],
-    [62, -66.5],
-    [59.5, -61],
-    [57, -56],
-    [54.6, -50],
-    [54, -45],
-    [51.5, -38],
-    [46.5, -28],
-    [40, -16],
-    [33, 0],
-    [27, 14],
+    [50, -108],
+    [58, -99],
+    [65, -91],
+    [70.5, -83],
+    [73.5, -76],
+    [73.5, -70],
+    [71, -65],
+    [67, -58],
+    [62, -51],
+    [59.5, -43],
+    [56.5, -35],
+    [52.5, -27],
+    [46.5, -16],
+    [39.5, -2],
+    [32, 12],
   ] as UV[],
   diaphragmT: 5,
-  /** liver: under the right dome in the window's lower front corner, its left lobe running on under the heart along
-   *  the diaphragm toward +V (its top tucks under the diaphragm band) to a rounded tip short of the near arm; its
-   *  inferior border rises from the window's bottom edge to that tip */
+  /** liver (the failing organ): the right lobe under the right dome, in the window's lower front corner on his right
+   *  (-V) side; its medial border runs from the cardiophrenic angle down to the window's bottom, well toward -V of the
+   *  apex (nothing of it lies under the heart's left half). Its top is cut by the diaphragm band (clip). */
   liver: [
-    [42, -104],
-    [50, -92],
-    [56, -82],
-    [60.5, -75.5],
-    [61.5, -71],
-    [58, -66.5],
-    [55.5, -61],
-    [53, -56],
-    [50.8, -51.5],
-    [48.6, -48.2],
-    [45, -47],
-    [41.5, -49.2],
-    [37.5, -53.5],
-    [33.5, -60],
-    [30, -69],
-    [27, -82],
-    [25, -96],
-    [30, -110],
-    [44, -113],
+    [76, -66],
+    [78, -76],
+    [75, -84],
+    [69, -93],
+    [61, -102],
+    [52, -112],
+    [38, -116],
+    [25, -106],
+    [21, -92],
+    [25, -83],
+    [32, -76.5],
+    [41, -72.5],
+    [51, -70.2],
+    [60, -68.8],
+    [68, -67.5],
+  ] as UV[],
+  /** the stomach under the left dome (under the heart's lower border and the apex, running on under the near arm):
+   *  pale and neutral, it fills the abdomen beside the liver so nothing under the heart reads as a dark hole. Its top
+   *  is cut by the diaphragm band (clip); its -V edge runs on under the liver (drawn over it), so one edge separates them */
+  stomach: [
+    [64, -58],
+    [62, -44],
+    [58, -31],
+    [52, -19],
+    [44, -5],
+    [36, 9],
+    [22, 14],
+    [10, 0],
+    [7, -22],
+    [10, -42],
+    [14, -64],
+    [22, -76],
+    [33, -77],
+    [45, -74],
+    [56, -71],
+    [63, -66],
   ] as UV[],
   liverSensors: [
-    [52, -79],
-    [42, -70],
-    [46, -56],
+    [62, -82],
+    [50, -85],
+    [40, -81],
   ] as UV[],
-  /** the diagnostic trace's chest segment: from under the near arm to the left-ventricle sensor */
-  trace: [
-    [68, -6],
-    [71, -18],
-    [73.5, -29],
-  ] as UV[],
+  /** the diagnostic trace's chest segment: along the window's cut edge at skin level (the rim), from under the sleeve
+   *  at the window's top (+V) end to a small contact dot on the rim above the heart's base; no line crosses the
+   *  interior. Given as the window outline's vertex span (start vertex index, end vertex index + fraction toward the
+   *  next vertex down the -V side) */
+  traceRim: {from: 4, to: 3, toFrac: 0.75, inset: 0.9},
+  /** where the trace emerges from under the sleeve (camera framing landmark) */
+  trace: [[131, 18]] as UV[],
 };
 
 const polyCentroid = (pts: V[]): V => {
@@ -246,6 +269,40 @@ export const WIN_PIVOT = L([85, 40]);
 /** window scale at which all of it (band and ink line included) lies at least 1 world unit inside the near arm and
  *  sleeve in every pose it is shown in (Journey 463-584, treatment 987-1036; probed: 0.40) */
 export const K_HIDE = 0.38;
+/** open amounts below this keep the window at K_HIDE (hidden): see ChestWindow */
+const OPEN_MIN = 0.08;
+/** The trace's chest segment along the window's cut edge (CHEST4.traceRim): points of the window outline's spline (the
+ *  same Catmull-Rom curve closedD draws) from vertex `from` back to vertex `to` and on toFrac toward the next vertex,
+ *  set `inset` units inside the edge (the skin stratum of the cut band), at window scale k about WIN_PIVOT. */
+const rimTrace = (k: number): V[] => {
+  const P = WIN_L;
+  const n = P.length;
+  const at = (i: number, t: number): V => {
+    const p0 = P[(i - 1 + n) % n];
+    const p1 = P[i % n];
+    const p2 = P[(i + 1) % n];
+    const p3 = P[(i + 2) % n];
+    const c1 = add(p1, mul(add(p2, mul(p0, -1)), 1 / 6));
+    const c2 = add(p2, mul(add(p3, mul(p1, -1)), -1 / 6));
+    const u = 1 - t;
+    return add(add(mul(p1, u * u * u), mul(c1, 3 * u * u * t)), add(mul(c2, 3 * u * t * t), mul(p2, t * t * t)));
+  };
+  const {from, to, toFrac, inset} = CHEST4.traceRim;
+  const raw: V[] = [];
+  for (let i = from - 1; i >= to; i--) for (let j = 8; j >= 1; j--) raw.push(at(i, j / 8));
+  raw.push(at(to, 0) /* vertex `to` */);
+  for (let j = 7; j >= Math.round(8 * (1 - toFrac)); j--) raw.push(at(to - 1, j / 8));
+  return raw.map((p, i) => {
+    const a = raw[Math.max(0, i - 1)];
+    const b = raw[Math.min(raw.length - 1, i + 1)];
+    const d = {x: b.x - a.x, y: b.y - a.y};
+    const l = Math.hypot(d.x, d.y) || 1;
+    let nrm = {x: -d.y / l, y: d.x / l};
+    if ((WIN_C.x - p.x) * nrm.x + (WIN_C.y - p.y) * nrm.y < 0) nrm = mul(nrm, -1);
+    const q = add(p, mul(nrm, inset));
+    return add(WIN_PIVOT, mul(add(q, mul(WIN_PIVOT, -1)), k));
+  });
+};
 const HEART_L = L(CHEST4.heart);
 /** the heart landmark the treatment camera keys are set on (Aftermath3 camAt): the first layout's heart centre, kept
  *  fixed so that enlarging and re-centring the heart does not move any camera */
@@ -323,12 +380,14 @@ type Props = {
 
 export const ChestWindow: React.FC<Props> = ({id, f, C, tc, s, open, organDim, organSense, organWarn, heart, heartSense, heartWarn, traceA, pulses, treat, treatLight = 0}) => {
   const o = clamp(open);
-  if (o <= 0) return null;
-  // the window scales from K_HIDE (all of it under the near arm) to 1 about WIN_PIVOT; its last sliver beside the
-  // sleeve (open below about 0.38, a frame or two of the open and the close) also fades out, gone by open 0.08, so
-  // it never lingers as a crescent
-  const k = K_HIDE + (1 - K_HIDE) * o;
-  const fadeA = smooth(clamp((o - 0.08) / 0.3));
+  // the window opens and closes by geometry alone: it scales from K_HIDE (all of it, band and ink line included,
+  // under the near arm and sleeve) to 1 about WIN_PIVOT, always fully opaque, so every frame shows either an opaque
+  // window of some size growing out from under the arm (or sliding back under it) or nothing. The scale leaves
+  // K_HIDE only once the open amount passes OPEN_MIN, so the slow tail of the open/close ease is spent under the arm
+  // and no thin crescent lingers beside the sleeve
+  const g = clamp((o - OPEN_MIN) / (1 - OPEN_MIN));
+  if (g <= 0) return null;
+  const k = K_HIDE + (1 - K_HIDE) * g;
   const light = LIGHT_TN(tc);
   const winD = closedD(WIN_L);
   const scaleT = `translate(${fmt(WIN_PIVOT.x)} ${fmt(WIN_PIVOT.y)}) scale(${fmt(k)}) translate(${fmt(-WIN_PIVOT.x)} ${fmt(-WIN_PIVOT.y)})`;
@@ -337,13 +396,19 @@ export const ChestWindow: React.FC<Props> = ({id, f, C, tc, s, open, organDim, o
   const llD = closedD(CHEST4.lLung.map(L));
   const dTop = CHEST4.diaphragm.map(L);
   const dBot = CHEST4.diaphragm.map(([u, v]) => L([u - CHEST4.diaphragmT, v])).reverse();
-  // the failing liver: a warm, bright orange-red that greys AND darkens (about 30% lower luma) as it fails
-  const liverCol = mix('#D2643F', '#625753', clamp(organDim));
+  // the failing liver: a warm, bright orange-red that turns a dull, desaturated grey-brown as it fails (it stays an
+  // organ colour at about the same lightness, never a dark hole)
+  const liverCol = mix('#D2643F', '#98705F', clamp(organDim));
   const lvD = closedD(CHEST4.liver.map(L));
   const hk = CHEST4.heartK;
-  const sensorEnd = heartSensorAt(heart, HEART_L, hk, 0);
-  const tracePts = [...CHEST4.trace.map(L), sensorEnd];
+  // the diagnostic trace's chest segment runs along the window's cut edge (skin level), scaled with the window
+  const rim = rimTrace(k);
   const tracePulses = pulses.filter((p) => p.leg === 'chest');
+  // the diaphragm's top line closed upward (the thorax) and downward (the abdomen): the right lung's front margin is
+  // cut by the first, the liver by the second
+  const dTopD = openD(dTop);
+  const aboveD = `${dTopD} L${fmt(dTop[dTop.length - 1].x)},-250 L${fmt(dTop[0].x)},-250 Z`;
+  const belowD = `${dTopD} L${fmt(dTop[dTop.length - 1].x)},60 L${fmt(dTop[0].x)},60 Z`;
   // lungs: light pink lit toward the head, deepening toward their edges, with a soft darker rim inside the outline
   const lungStops: [number, string][] = [
     [0, '#FBDADC'],
@@ -366,15 +431,21 @@ export const ChestWindow: React.FC<Props> = ({id, f, C, tc, s, open, organDim, o
   // the liver sensors swell once as they turn amber (the start of the 'organ failing' beat), then stay small
   const lsR = 1.8 * (1 + 0.45 * Math.sin(Math.PI * clamp(organWarn / 0.4)) * (organWarn < 0.999 ? 1 : 0));
   return (
-    <g transform={`translate(${fmt(C.x)} ${fmt(C.y)}) rotate(${fmt(-tc)}) scale(${fmt(s)})`} opacity={fadeA < 0.999 ? fmt(fadeA) : undefined}>
+    <g transform={`translate(${fmt(C.x)} ${fmt(C.y)}) rotate(${fmt(-tc)}) scale(${fmt(s)})`}>
       <defs>
         <clipPath id={`${id}-w`}>
           <path d={winD} transform={scaleT} />
         </clipPath>
-        {/* above u 94 the left lung's medial edge passes in front of the arch's end and the left pulmonary artery
+        {/* above u 96.6 the left lung's medial edge passes in front of the arch's end and the left pulmonary artery
             (there the lung never overlaps the heart itself, so the clip line is invisible) */}
         <clipPath id={`${id}-top`}>
-          <rect x={-200} y={-200} width={400} height={106} />
+          <rect x={-200} y={-200} width={400} height={103.4} />
+        </clipPath>
+        <clipPath id={`${id}-above`}>
+          <path d={aboveD} />
+        </clipPath>
+        <clipPath id={`${id}-below`}>
+          <path d={belowD} />
         </clipPath>
         <clipPath id={`${id}-rlc`}>
           <path d={rlD} />
@@ -391,17 +462,22 @@ export const ChestWindow: React.FC<Props> = ({id, f, C, tc, s, open, organDim, o
           <stop offset="0.3" stopColor="#97464A" />
           <stop offset="1" stopColor="#8E4243" />
         </linearGradient>
-        {/* below the diaphragm: the same warm wall tone, a touch lighter under the band */}
-        <linearGradient id={`${id}-ab`} gradientUnits="userSpaceOnUse" x1={0} y1={-56} x2={0} y2={-24}>
-          <stop offset="0" stopColor="#9C4A48" />
-          <stop offset="1" stopColor="#874042" />
+        {/* below the diaphragm: a warm abdominal wall tone, lighter under the band (no dark hole under the heart) */}
+        <linearGradient id={`${id}-ab`} gradientUnits="userSpaceOnUse" x1={0} y1={-70} x2={0} y2={-24}>
+          <stop offset="0" stopColor="#B4615A" />
+          <stop offset="1" stopColor="#9C5050" />
         </linearGradient>
-        {grad(`${id}-rl`, L([116, -68]), 30, light, lungStops)}
+        {grad(`${id}-rl`, L([116, -59.7]), 26.4, light, lungStops)}
         {/* the right lung's front margin is lit on its own (a rounded lobe edge: light along its middle, deeper at its
             heart border and base) */}
-        {grad(`${id}-rf`, L([86, -82]), 24, light, lungStops)}
-        {grad(`${id}-ll`, L([104, -22]), 40, light, lungStops)}
-        {grad(`${id}-lv`, L([47, -68]), 26, light, [
+        {grad(`${id}-rf`, L([92, -76]), 21, light, lungStops)}
+        {grad(`${id}-ll`, L([105.4, -19.2]), 35, light, lungStops)}
+        {grad(`${id}-st`, L([40, -36]), 30, light, [
+          [0, '#E6B6A4'],
+          [0.55, '#CF9282'],
+          [1, '#A86D60'],
+        ])}
+        {grad(`${id}-lv`, L([60, -84]), 24, light, [
           [0, mix(liverCol, '#F6CDB6', 0.22)],
           [0.6, liverCol],
           [1, shade(liverCol, 0.32)],
@@ -414,10 +490,13 @@ export const ChestWindow: React.FC<Props> = ({id, f, C, tc, s, open, organDim, o
         {lung(rlD, 'rl', 'rlc')}
         {lung(llD, 'll', 'llc')}
         {fissure(CHEST4.lFissure)}
-        {/* below the diaphragm: the abdomen (the warm wall tone), the liver under the right dome with its left lobe
-            under the heart (dims when it starts failing), then the diaphragm band over their tops */}
+        {/* below the diaphragm: the abdomen (the warm wall tone), the liver under the right dome in the lower front
+            corner (dims when it starts failing), then the diaphragm band over their tops */}
         <path d={`${openD(dBot)} L${fmt(L([-20, -120]).x)},${fmt(L([-20, -120]).y)} L${fmt(L([-20, 40]).x)},${fmt(L([-20, 40]).y)} Z`} fill={`url(#${id}-ab)`} />
-        <path d={lvD} fill={`url(#${id}-lv)`} stroke={INK} strokeOpacity={0.35 + 0.2 * clamp(organDim)} strokeWidth={0.7} />
+        <g clipPath={`url(#${id}-below)`}>
+          <path d={closedD(CHEST4.stomach.map(L))} fill={`url(#${id}-st)`} stroke={INK} strokeOpacity={0.3} strokeWidth={0.6} />
+          <path d={lvD} fill={`url(#${id}-lv)`} stroke={INK} strokeOpacity={0.35 + 0.15 * clamp(organDim)} strokeWidth={0.7} />
+        </g>
         <path d={`${openD(dTop)} L${openD(dBot).slice(1)} Z`} fill="#B65A52" />
         <path d={openD(dBot.slice().reverse())} fill="none" stroke="#7E3434" strokeWidth={0.8} opacity={0.6} />
         <path d={openD(dTop)} fill="none" stroke="#E39A8E" strokeWidth={1.2} strokeLinecap="round" />
@@ -428,31 +507,36 @@ export const ChestWindow: React.FC<Props> = ({id, f, C, tc, s, open, organDim, o
             const col = sensorColor(organWarn);
             return <circle key={i} cx={fmt(p.x)} cy={fmt(p.y)} r={fmt(lsR)} fill={col} stroke={shade(col, 0.55)} strokeWidth={0.5} opacity={organSense} />;
           })}
-        {/* the heart with its great vessels; the trace's end sensor shows as soon as the trace reaches it */}
-        <Heart4 id={`${id}-h`} c={HEART_L} k={hk} st={heart} light={light} sense={heartSense} senseEnd={traceA} warn={heartWarn} treat={treat} treatLight={treatLight} />
-        {/* the right lung's anterior margin over the heart's right border, so the heart sits between the lungs */}
-        {lung(rfD, 'rf', 'rfc')}
-        <g clipPath={`url(#${id}-rfc)`}>{fissure(CHEST4.rFissure)}</g>
+        {/* the heart with its great vessels */}
+        <Heart4 id={`${id}-h`} c={HEART_L} k={hk} st={heart} light={light} sense={heartSense} warn={heartWarn} treat={treat} treatLight={treatLight} />
+        {/* the right lung's anterior margin over the heart's right border, so the heart sits between the lungs; its
+            base is cut by the diaphragm's top line */}
+        <g clipPath={`url(#${id}-above)`}>
+          {lung(rfD, 'rf', 'rfc')}
+          <g clipPath={`url(#${id}-rfc)`}>{fissure(CHEST4.rFissure)}</g>
+        </g>
         {/* the aortic arch and the left pulmonary artery pass behind the left lung's medial edge */}
         <g clipPath={`url(#${id}-top)`}>
           {lung(llD, 'll', 'llc')}
           {fissure(CHEST4.lFissure)}
         </g>
-        {/* the diagnostic trace's short chest segment, from under the arm to the heart sensor */}
-        {traceA > 0.01 && (
-          <g opacity={traceA}>
-            <path d={openD(tracePts)} fill="none" stroke="#1B4E66" strokeWidth={1.5} strokeOpacity={0.3} strokeLinecap="round" />
-            <path d={openD(tracePts)} fill="none" stroke="#9EEBFF" strokeWidth={0.75} strokeOpacity={0.5} strokeLinecap="round" />
-            {tracePulses.map((p) => (
-              <TraceDash key={`${p.kind}${p.key}`} id={`${id}-d${p.kind}${p.key}`} pts={tracePts} t={p.t} len={7} kind={p.kind} a={p.a} w={1} />
-            ))}
-          </g>
-        )}
         {/* the cut band: skin, fat and muscle strata, matte, thin and constant (the inside half of each stroke) */}
         {band(10.4, '#3A1216', 0.22)}
         {band(9, '#A9504B')}
         {band(5.6, '#DDBE84')}
         {band(3.2, '#E8BBA2')}
+        {/* the diagnostic trace's chest segment: a thin line in the skin stratum of the cut edge, from under the sleeve
+            to a small contact dot on the rim (no wire crosses the lungs or reaches the heart); its dashes run along it */}
+        {traceA > 0.01 && (
+          <g opacity={traceA < 0.999 ? fmt(traceA) : undefined}>
+            <path d={openD(rim)} fill="none" stroke="#1B4E66" strokeWidth={1.4} strokeOpacity={0.25} strokeLinecap="round" />
+            <path d={openD(rim)} fill="none" stroke="#9EEBFF" strokeWidth={0.7} strokeOpacity={0.6} strokeLinecap="round" />
+            {tracePulses.map((p) => (
+              <TraceDash key={`${p.kind}${p.key}`} id={`${id}-d${p.kind}${p.key}`} pts={rim} t={p.t} len={7} kind={p.kind} a={p.a} w={1} />
+            ))}
+            <circle cx={fmt(rim[rim.length - 1].x)} cy={fmt(rim[rim.length - 1].y)} r={1.7} fill={sensorColor(heartWarn)} stroke={shade(sensorColor(heartWarn), 0.55)} strokeWidth={0.55} />
+          </g>
+        )}
       </g>
       {/* the tee's cut edge: one thin ink line */}
       <path d={winD} transform={scaleT} fill="none" stroke={INK} strokeWidth={0.85} strokeOpacity={0.55} strokeLinejoin="round" />

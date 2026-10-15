@@ -578,10 +578,12 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
   const secOn = tr.on && g < B4.chestCut;
   const roll = tr.roll;
   const pxs = cam.z / LOCAL_PER_WORLD;
-  // the backdrop is complete before the hand veil sweeps the hand away (fingertips first), and both before the roll;
-  // it is gone from the cut into the chest view (it would cover the torso)
+  // the backdrop (a vignette closing in toward the band) is complete before the hand veil sweeps the hand away
+  // (fingertips first) as the roll starts; it is gone from the cut into the chest view (it would cover the torso)
   const backdrop = g < B4.chestCut ? clamp(inv(B4.tBack0, B4.tBack1, g)) : 0;
-  const handVeil = g < B4.treatMatch ? clamp(inv(B4.tVeil0, B4.tVeil1, g)) : 0;
+  // V4 polish: the veil's progress is eased out against the push-in (the hand grows on screen as it goes), so the
+  // hand recedes at an even pace
+  const handVeil = g < B4.treatMatch ? 1 - Math.pow(1 - clamp(inv(B4.tVeil0, B4.tVeil1, g)), 1.5) : 0;
   // the vessel at the contact point: red cells for scale, the dose; no sensor beads (no repeated sensor emission)
   const tube = <VesselTube id={`${id}-vt`} path={VP} f={g} px={pxs} s0={VP.entry - 900} s1={99999} sensors={0} sensorFront={0} dose={tr.dose} />;
   // the treatment chest view: the same window and interior as the journey, open from the cut

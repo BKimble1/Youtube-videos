@@ -105,12 +105,14 @@ export const B4 = {
   // 'injection,' 966-981, 'potentially' from 987. The countdown keeps its origin and holds at B.hold (983).
   /** approach: the camera follows the wrist to the band's front (00:00:42, HELP ALERT SENT) */
   tApproach0: B.act0 - 6, // 921
-  /** the street gives way to the section backdrop, then the hand is swept into it from the fingertips back to the wrist
-   *  line (Scene's hand veil), before the case starts to turn */
-  tBack0: B.act0 - 3, // 924
+  /** the street gives way to the section backdrop (a vignette closing in from the frame edges toward the band), then
+   *  the hand recedes into it (Scene's hand veil: one straight soft edge from beyond the fingertips back over the wrist)
+   *  while the case starts to turn (its edge reaches the fingers in frame as the roll starts moving, 930): the palm is
+   *  gone as the roll passes 30 deg (934-935), the thumb's root and the wrist by 936 */
+  tBack0: B.act0 - 4, // 923
   tBack1: B.act0 + 1, // 928
-  tVeil0: B.act0 + 1, // 928
-  tVeil1: B.act0 + 5, // 932
+  tVeil0: B.act0 + 1, // 928 (the edge is still beyond the fingers in frame)
+  tVeil1: B.act0 + 12, // 939 (eased out: the hand in frame is gone by 936)
   /** the case rolls to its underside; the roll reads as a camera orbit round the forearm (the hand is already gone) */
   tRoll0: B.act0 + 4, // 931 (under 1 deg at 932)
   tRoll1: B.act0 + 12, // 939: profile overview (z <= 12.5, the whole case, still closed), the port on its contact point

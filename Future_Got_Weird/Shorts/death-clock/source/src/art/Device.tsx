@@ -137,6 +137,27 @@ export type DeviceView = {
   handVeil?: number;
 };
 
+/** V4 polish: Scene's hand veil is one straight soft edge (no circle, no arc), shared with Wrist3D so the thumb's contour
+ *  dissolves in step with the skin under it. phi is measured from the wrist centre in wrist radii R, across the forearm
+ *  toward the fingers (-v), tilted `tilt` deg toward the hand's heel (+u). The edge (soft over `w`) comes in from beyond
+ *  the fingertips (`e0`) at a steady speed past the far side of the wrist end (`e1`): the fingers go first, then the
+ *  palm, the thumb from its tip, and last the heel and the thumb's root at the wrist, so what is left of the hand is
+ *  always joined to the forearm. */
+export const HAND_VEIL = {tilt: 30, w: 1.5, e0: 6.5, e1: -1.6};
+export const handVeilDir = (A: ArmFrame): V => {
+  const k = (HAND_VEIL.tilt * Math.PI) / 180;
+  return {x: -A.n.x * Math.cos(k) + A.u.x * Math.sin(k), y: -A.n.y * Math.cos(k) + A.u.y * Math.sin(k)};
+};
+/** the edge (phi, in R) at veil progress t: beyond it (phi >= edge) the sweep is complete, w short of it nothing */
+export const handVeilEdge = (t: number) => lerp(HAND_VEIL.e0, HAND_VEIL.e1, clamp(t));
+/** 0..1 how far the sweep covers world point q at progress t (Scene multiplies in the forearm's own falloff) */
+export const handVeilCover = (A: ArmFrame, t: number, q: V) => {
+  if (t <= 0) return 0;
+  const d = handVeilDir(A);
+  const phi = ((q.x - A.W.x) * d.x + (q.y - A.W.y) * d.y) / A.rW;
+  return smooth(clamp((phi - (handVeilEdge(t) - HAND_VEIL.w)) / HAND_VEIL.w));
+};
+
 export type CaseGeo = {uc: number; R: number; rr: number; t: number; L: number; Wd: number; roll: number; sy: number};
 
 /** Inset of the case outline at height h above the back (the rounded profile), all in R: [h, inset] samples. */
@@ -542,6 +563,18 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
     );
   })();
 
+  // V4 polish: the thumb's base contour (over the forearm, where the veil keeps the skin) dissolves as the veil's
+  // sweep covers the thumb where it leaves the forearm (Hand.tsx: tBase = W(0.1, 0.19), then 0.15L along the thumb's
+  // angle), gone by the time that skin is 60% covered, so it never outlives the thumb as a stray line
+  const thumbVeil = (() => {
+    if (!hand || !((dev.handVeil ?? 0) > 0)) return 0;
+    const hw = add(W, mul(A.u, -hand.offset));
+    const ha = (hand.ang * Math.PI) / 180;
+    const hd = {x: Math.cos(ha), y: Math.sin(ha)};
+    const tb = add(hw, add(mul(hd, 0.1 * hand.L), mul({x: -hd.y * hand.thumbSide, y: hd.x * hand.thumbSide}, 0.19 * hand.L)));
+    const ta = ((hand.ang + hand.pose.thumb * hand.thumbSide) * Math.PI) / 180;
+    return smooth(clamp(handVeilCover(A, dev.handVeil ?? 0, add(tb, mul({x: Math.cos(ta), y: Math.sin(ta)}, 0.15 * hand.L))) / 0.6));
+  })();
   // the arm: one continuous limb from the shoulder (or the forearm alone in close views) with the hand inside the
   // same contour group, so no line crosses the elbow or the wrist
   const armGroup = (
@@ -551,7 +584,7 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
       ) : (
         <Capsule id={`${id}-fa`} a={add(E, mul(A.u, -rE))} b={W} ra={rE * 1.02} rb={rW} color={skin} spec={0.22} />
       )}
-      {hand && <Hand id={`${id}-hd`} wrist={add(W, mul(A.u, -hand.offset))} ang={hand.ang} L={hand.L} thumbSide={hand.thumbSide} view="back" pose={hand.pose} color={skin} ink={ink * 0.85} bare thumbFade={Math.max(clamp(inv(4, 20, Math.abs(dev.roll))), smooth(clamp(inv(0.3, 0.75, dev.handVeil ?? 0))))} />}
+      {hand && <Hand id={`${id}-hd`} wrist={add(W, mul(A.u, -hand.offset))} ang={hand.ang} L={hand.L} thumbSide={hand.thumbSide} view="back" pose={hand.pose} color={skin} ink={ink * 0.85} bare thumbFade={Math.max(clamp(inv(4, 20, Math.abs(dev.roll))), thumbVeil)} />}
     </Inked>
   );
   if (pass === 'ink') {

@@ -12,18 +12,25 @@
 // Invariant (checkReveal): armOpen * chestOpen == 0 on every frame except the cut frame.
 import {B} from './timeline3';
 import {B4} from './beats4';
-import {clamp, easeIn, easeInOut, inv} from './math';
+import {clamp, easeIn, easeInOut, easeInQuad, inv} from './math';
 import {heartAt, HeartState} from './heart4';
 
 const ease = easeInOut;
 
 /** A pulse on the diagnostic trace. leg 'arm': t 0 = band edge .. 1 = sleeve hem (drawn on the bare arm skin);
- *  'hidden': under the sleeve (not drawn); 'chest': t 0 = the arm's front edge in the window .. 1 = the heart sensor. */
+ *  'hidden': under the sleeve (not drawn); 'chest': t 0 = under the sleeve at the window's cut edge .. 1 = the contact
+ *  dot on the rim (it runs along the cut edge at skin level, art/Cutaway CHEST4.traceRim). */
 export type TracePulse = {kind: 'signal' | 'warning'; leg: 'arm' | 'hidden' | 'chest'; t: number; a: number; key: number};
 
 export type Reveal = {
-  /** the arm section window (SectionLayers open) 0..1 */
+  /** the arm section window's open amount 0..1 (0 = nothing drawn); the invariant and the checks read it */
   armOpen: number;
+  /** the arm section's own opening (the V3 sweep, SectionLayers open); it stays 1 while the section closes */
+  armSec: number;
+  /** V4 fix: the arm section closes by ONE shared geometry for every layer (skin, fat, vessel, muscle, rim): its
+   *  elbow-side end slides down the arm into the band (Journey3 clips the whole section with it), 1 = full length ..
+   *  0 = shut under the strap; it accelerates into the band (no lingering sliver) */
+  armLen: number;
   /** the device case cut showing its port module 0..1 */
   caseOpen: number;
   /** the dark section backdrop behind the forearm 0..1 */
@@ -42,7 +49,8 @@ export type Reveal = {
   /** liver sensor state, same scale */
   organWarn: number;
   heart: HeartState;
-  /** treatment pulse in the superior vena cava: t 0 = window top .. 1 = entering the right atrium */
+  /** treatment pulse in the superior vena cava: t 0 = window top .. 1 = entering the right atrium; past 1 it runs on
+   *  under the atrium wall (art/Heart4 draws it behind the atrium, so it is gone without a fade) */
   treat?: {t: number; a: number};
   /** restrained local cyan light where the pulse enters the right atrium (alpha scale 0..1) */
   treatLight: number;
@@ -95,7 +103,9 @@ export const revealAt = (f: number): Reveal => {
   if (f < B.map0) {
     // ---------------------------------------------------------------- the journey
     const close = 1 - ease(inv(B4.armClose0, B4.armClose1, f));
-    const armOpen = f >= B.tip0 - 2 ? J.open(f) * close : 0;
+    const armSec = f >= B.tip0 - 2 ? J.open(f) : 0;
+    const armOpen = armSec * close;
+    const armLen = 1 - easeInQuad(inv(B4.armClose0, B4.armClose1, f));
     const caseOpen = f >= B.tip0 - 2 ? ease(inv(B.tip1 - 6, B.open0 + 4, f)) * (1 - ease(inv(B4.armClose0 - 2, B4.armClose1 - 4, f))) : 0;
     const backdrop = clamp(inv(B.tip0 + 2, B.tip0 + 16, f)) * (1 - clamp(inv(B.pull0 + 8, B.pull0 + 26, f)));
     const a = traceA(f);
@@ -104,6 +114,8 @@ export const revealAt = (f: number): Reveal => {
     const heartWarn = clamp(inv(B.heart0 + 4, B.heart0 + 12, f)) + clamp(inv(B.lethal - 2, B.lethal + 6, f));
     return {
       armOpen,
+      armSec,
+      armLen,
       caseOpen,
       backdrop,
       trace: {a, pulses},
@@ -129,7 +141,10 @@ export const revealAt = (f: number): Reveal => {
   // inside the window's cut band there, where t 0.26 left half of it under the band), gathers speed from the slug's
   // near-rest and enters the right atrium at treatSvc1
   const svcU = inv(B4.chestCut, B4.treatSvc1, f);
-  const svc = f >= B4.chestCut && f <= B4.treatSvc1 + 1 ? {t: clamp(SVC_T0 + (1 - SVC_T0) * svcU * (0.4 + 0.6 * svcU)), a: 1 - clamp((f - B4.treatSvc1) / 2)} : undefined;
+  // (V4 fix) from treatSvc1 it runs on at the same speed (0.1 per frame) in under the atrium wall, hidden by it by
+  // about treatSvc1 + 4, and is dropped after treatSvc1 + 5
+  const svcT = f <= B4.treatSvc1 ? clamp(SVC_T0 + (1 - SVC_T0) * svcU * (0.4 + 0.6 * svcU)) : 1 + 0.1 * (f - B4.treatSvc1);
+  const svc = f >= B4.chestCut && f <= B4.treatSvc1 + 5 ? {t: svcT, a: 1} : undefined;
   // the cyan light: rises as the pulse enters the atrium, stays local, gone within 10 frames
   const lt = f - B4.treatSvc1;
   const lN = B4.treatLight1 - B4.treatSvc1; // 10 frames
@@ -138,6 +153,8 @@ export const revealAt = (f: number): Reveal => {
   const heartWarn = 2 - clamp(inv(B4.chestCut + 8, B.settleHeart0 + 16, f)) - clamp(inv(B.settleHeart0 + 18, B.settleHeart0 + 26, f));
   return {
     armOpen,
+    armSec: armOpen,
+    armLen: 1,
     caseOpen: pre ? 1 : 0,
     backdrop: pre ? clamp(inv(B.act0 + 2, B.act0 + 12, f)) : 0,
     trace: {a: 0, pulses: []},

@@ -3,8 +3,10 @@
 // rounded lobe on his right (-x) side where the superior vena cava enters from above; a small left-atrial ear
 // peeks out at the upper left border; the anterior interventricular groove separates the broad right-ventricle
 // face from the narrow left-ventricle strip that runs down to the apex (down and toward his left). The aorta
-// rises behind the pulmonary trunk and arches toward his left (+x); the pulmonary trunk leaves the top of the
-// right ventricle in front of it and runs up and to his left. Beats come from lib/heart4.ts: the ventricles
+// rises behind the pulmonary trunk and arches toward his left (+x); the pulmonary trunk (dusky violet-red: the
+// superior vena cava is the one blue vessel) leaves the top of the right ventricle in front of it and runs up and to
+// his left. The treatment pulse runs down the vena cava and on in under the right atrium's wall, which then lights
+// with a restrained cyan rim and a small local glow. Beats come from lib/heart4.ts: the ventricles
 // SHRINK on systole about a pivot a third of the way from base to apex (the apex rises), the atria squeeze
 // just before. One soft specular (<= 0.3), at most three small state-coloured sensors (never white).
 import React from 'react';
@@ -20,6 +22,10 @@ import {add, clamp, fmt, mul, rot, V} from '../lib/math';
 export const HEART_TILT = 10;
 /** heart-local -> window-frame offset (unscaled) */
 const tilt = (p: V): V => rot(p, HEART_TILT);
+/** V4 fix: the drawn heart (chambers, aorta, pulmonary trunk, sensors) is this fraction of the vessel scale k about
+ *  its centre, so it sits between the lungs with lung on both sides inside the window. The superior vena cava and
+ *  the treatment pulse stay at k: the 987 match (Aftermath3 MATCH, beats4 TREAT_MATCH) reads svcAt and k. */
+export const HEART_BODY = 0.88;
 
 // ---------------------------------------------------------------- geometry (local units, heart centre at 0,0)
 const VENT: V[] = [
@@ -109,6 +115,9 @@ const vent = (st: HeartState, p: V): V => {
 };
 const atrium = (st: HeartState, p: V, c: V, n: number): V => add(c, mul({x: p.x - c.x, y: p.y - c.y}, st.atria * (1 + n)));
 
+/** the pulmonary trunk's colour (not blue: the vena cava is the one blue vessel) */
+const PT_C = '#8E5486';
+
 const ellPts = (c: V, rx: number, ry: number, deg: number, n = 18): V[] =>
   Array.from({length: n}).map((_, i) => {
     const a = (i / n) * Math.PI * 2;
@@ -159,9 +168,19 @@ export const alongPts = (pts: V[], t: number): V => {
 export const sensorColor = (w: number) => (w <= 1 ? mix('#46CFFF', '#FFB23E', clamp(w)) : mix('#FFB23E', '#FF4A5A', clamp(w - 1)));
 
 /** Where heart sensor i sits (local frame of the window group), given the heart centre, scale and state. */
-export const heartSensorAt = (st: HeartState, c: V, k: number, i: number): V => add(add(c, {x: st.qx, y: st.qy}), mul(tilt(vent(st, HEART_SENSORS[i])), k));
+export const heartSensorAt = (st: HeartState, c: V, k: number, i: number): V => add(add(c, {x: st.qx, y: st.qy}), mul(tilt(vent(st, HEART_SENSORS[i])), k * HEART_BODY));
 /** A point of the SVC (t 0 = top .. 1 = into the right atrium) in the window group's frame. */
 export const svcAt = (st: HeartState, c: V, k: number, t: number): V => add(add(c, {x: st.qx, y: st.qy}), mul(tilt(alongPts(SVC_PULSE, t)), k));
+/** the pulse path in heart-local units; past t 1 it runs straight on (along the last segment) under the atrium wall */
+const pulseAt = (t: number): V => {
+  if (t <= 1) return alongPts(SVC_PULSE, t);
+  const a = SVC_PULSE[SVC_PULSE.length - 2];
+  const b = SVC_PULSE[SVC_PULSE.length - 1];
+  const segs = SVC_PULSE.slice(1).map((p, i) => Math.hypot(p.x - SVC_PULSE[i].x, p.y - SVC_PULSE[i].y));
+  const Lp = segs.reduce((x, y) => x + y, 0);
+  const d = Math.hypot(b.x - a.x, b.y - a.y);
+  return add(b, mul({x: (b.x - a.x) / d, y: (b.y - a.y) / d}, (t - 1) * Lp));
+};
 
 type Props = {
   id: string;
@@ -203,7 +222,10 @@ export const Heart4: React.FC<Props> = ({id, c, k, st, light: lightW, sense, sen
   const spec = clamp(0.24 + 0.03 * st.chaos * Math.sin(st.qx * 9));
   const specC = vent(st, {x: -7, y: -9});
   const tl = clamp(treatLight);
-  const raTop = atrium(st, {x: -14.5, y: -15}, RA.c, 0);
+  // where the vena cava meets the right atrium, in the body group's units (it is drawn at HEART_BODY)
+  const raTop = mul(SVC_PULSE[SVC_PULSE.length - 1], 1 / HEART_BODY);
+  const raD = closedD(raPts);
+  const BK = HEART_BODY;
   return (
     <g transform={`translate(${fmt(c.x + st.qx)} ${fmt(c.y + st.qy)}) rotate(${HEART_TILT}) scale(${fmt(k)})`}>
       <defs>
@@ -228,65 +250,87 @@ export const Heart4: React.FC<Props> = ({id, c, k, st, light: lightW, sense, sen
         <clipPath id={`${id}-vc`}>
           <path d={ventD} />
         </clipPath>
+        <clipPath id={`${id}-rac`}>
+          <path d={raD} />
+        </clipPath>
+        <radialGradient id={`${id}-tmg`}>
+          <stop offset="0" stopColor="#FFFFFF" />
+          <stop offset="1" stopColor="#000000" />
+        </radialGradient>
+        <mask id={`${id}-tm`} maskUnits="userSpaceOnUse" x={-60} y={-60} width={120} height={120}>
+          <circle cx={fmt(raTop.x)} cy={fmt(raTop.y)} r={13} fill={`url(#${id}-tmg)`} />
+        </mask>
       </defs>
-      {/* superior vena cava (deoxygenated, the backmost vessel), down into the right atrium */}
+      {/* superior vena cava: the one blue vessel, from above the window down into the right atrium (the backmost
+          vessel, at the vessel scale k) */}
       <path d={openD(SVC)} fill="none" stroke={shade('#4A5296', 0.25)} strokeWidth={6.6} strokeLinecap="round" />
       <path d={openD(SVC)} fill="none" stroke="#5A63A8" strokeWidth={4.8} strokeLinecap="round" />
       <path d={openD(SVC.map((p) => add(p, mul(light, 1))))} fill="none" stroke="#7C86C4" strokeWidth={1.2} strokeLinecap="round" opacity={0.5} />
-      {/* aorta: rises behind the pulmonary trunk and arches toward his left */}
-      <path d={openD(ao)} fill="none" stroke={shade('#D94A55', 0.3)} strokeWidth={fmt(10.5 * wr)} strokeLinecap="round" strokeLinejoin="round" />
-      <path d={openD(ao)} fill="none" stroke="#D94A55" strokeWidth={fmt(8.4 * wr)} strokeLinecap="round" strokeLinejoin="round" />
-      <path d={openD(ao.map((p) => add(p, mul(light, 1.8))))} fill="none" stroke="#E86E7A" strokeWidth={fmt(2 * wr)} strokeLinecap="round" opacity={0.45} />
-      {/* atria behind the ventricles: the right atrium lobe and the small left-atrial ear */}
-      <path d={closedD(laPts)} fill={atr} stroke={INK} strokeOpacity={0.45} strokeWidth={0.7} />
-      <path d={closedD(raPts)} fill={`url(#${id}-a)`} stroke={INK} strokeOpacity={0.45} strokeWidth={0.7} />
-      {/* ventricles */}
-      <path d={ventD} fill={`url(#${id}-v)`} stroke={INK} strokeOpacity={0.5} strokeWidth={0.75} />
-      <g clipPath={`url(#${id}-vc)`}>
-        {/* the narrow left-ventricle strip is a touch darker than the right-ventricle face */}
-        <path d={`${openD(groove)} L${P(vent(st, {x: 30, y: 30}))} L${P(vent(st, {x: 30, y: -30}))} Z`} fill={dark} opacity={0.18} />
-        {/* the coronary (atrioventricular) groove line along the right atrium */}
-        <path d={openD([vent(st, {x: -10.8, y: -15}), vent(st, {x: -12.8, y: -2.5}), vent(st, {x: -10.8, y: 11})])} fill="none" stroke={shade(base, 0.55)} strokeWidth={1.1} opacity={0.4} strokeLinecap="round" />
-        {/* one soft specular on the right-ventricle face */}
-        <ellipse cx={fmt(specC.x)} cy={fmt(specC.y)} rx={7} ry={3} transform={`rotate(-35 ${fmt(specC.x)} ${fmt(specC.y)})`} fill={`url(#${id}-s)`} opacity={spec} />
-      </g>
-      {/* anterior interventricular groove */}
-      <path d={openD(groove)} fill="none" stroke={shade(base, 0.5)} strokeWidth={1.3} opacity={0.55} strokeLinecap="round" />
-      {/* pulmonary trunk (in front of the aortic root) and the left pulmonary artery */}
-      <path d={openD([...pt, ...LPA.slice(1)])} fill="none" stroke={shade('#5F6FBE', 0.3)} strokeWidth={fmt(8.4 * wr)} strokeLinecap="round" strokeLinejoin="round" />
-      <path d={openD([...pt, ...LPA.slice(1)])} fill="none" stroke="#5F6FBE" strokeWidth={fmt(6.6 * wr)} strokeLinecap="round" strokeLinejoin="round" />
-      <path d={openD(pt.map((p) => add(p, mul(light, 1.2))))} fill="none" stroke="#8B9AE0" strokeWidth={fmt(2 * wr)} strokeLinecap="round" opacity={0.6} />
-      {/* sensors on the surface: small, state-coloured, no halo */}
-      {HEART_SENSORS.map((p, i) => {
-        const a = i === 0 ? Math.max(sense, senseEnd) : sense;
-        if (a <= 0.01) return null;
-        const q = vent(st, p);
-        return <circle key={i} cx={fmt(q.x)} cy={fmt(q.y)} r={1.6} fill={sensorColor(warn)} stroke={shade(sensorColor(warn), 0.55)} strokeWidth={0.55} opacity={a} />;
-      })}
-      {/* treatment: restrained local cyan light where the pulse enters the right atrium (radius 4 local, about
-          5.6 world at the window's heart scale 1.15: a quarter of the wrist radius; alpha <= 0.35, normal blending) */}
-      {tl > 0.01 && <circle cx={fmt(raTop.x)} cy={fmt(raTop.y + 2)} r={4} fill={`url(#${id}-tl)`} opacity={0.35 * tl} />}
       {treat && treat.a > 0.01 && (() => {
-        // the pulse: one narrow slug inside the vena cava (core #EAF4FF, rim #4F86FF)
-        const p = alongPts(SVC_PULSE, treat.t);
-        const q = alongPts(SVC_PULSE, Math.max(0, treat.t - 0.12));
+        // the treatment pulse: one narrow slug inside the vena cava (core #EAF4FF, rim #4F86FF). It is drawn before the
+        // atrium, so as it runs on past t 1 it slides in under the atrium wall and is gone (no fade over the heart)
+        const p = pulseAt(treat.t);
+        const q = pulseAt(Math.max(0, treat.t - 0.12));
         const ang = (Math.atan2(p.y - q.y, p.x - q.x) * 180) / Math.PI;
         return (
-          <g opacity={treat.a}>
+          <g opacity={treat.a < 0.999 ? fmt(treat.a) : undefined}>
             <ellipse cx={fmt(p.x)} cy={fmt(p.y)} rx={5.2} ry={2.6} transform={`rotate(${fmt(ang)} ${fmt(p.x)} ${fmt(p.y)})`} fill="#4F86FF" />
             <ellipse cx={fmt(p.x)} cy={fmt(p.y)} rx={3.6} ry={1.4} transform={`rotate(${fmt(ang)} ${fmt(p.x)} ${fmt(p.y)})`} fill="#EAF4FF" />
           </g>
         );
       })()}
+      {/* the heart itself (chambers, aorta, pulmonary trunk, sensors) at HEART_BODY of the vessel scale */}
+      <g transform={`scale(${BK})`}>
+        {/* aorta: rises behind the pulmonary trunk and arches toward his left */}
+        <path d={openD(ao)} fill="none" stroke={shade('#D94A55', 0.3)} strokeWidth={fmt(10.5 * wr)} strokeLinecap="round" strokeLinejoin="round" />
+        <path d={openD(ao)} fill="none" stroke="#D94A55" strokeWidth={fmt(8.4 * wr)} strokeLinecap="round" strokeLinejoin="round" />
+        <path d={openD(ao.map((p) => add(p, mul(light, 1.8))))} fill="none" stroke="#E86E7A" strokeWidth={fmt(2 * wr)} strokeLinecap="round" opacity={0.45} />
+        {/* atria behind the ventricles: the right atrium lobe and the small left-atrial ear */}
+        <path d={closedD(laPts)} fill={atr} stroke={INK} strokeOpacity={0.45} strokeWidth={0.7} />
+        <path d={raD} fill={`url(#${id}-a)`} stroke={INK} strokeOpacity={0.45} strokeWidth={0.7} />
+        {/* treatment: the pulse lights the right atrium where it enters, a restrained local cyan light inside the
+            atrium (radius 4.5 body units, about 5.5 world: a quarter of the wrist radius; alpha <= 0.35, normal
+            blending) and a thin cyan rim light along the atrium wall near the entry, fading along it */}
+        {tl > 0.01 && (
+          <g clipPath={`url(#${id}-rac)`}>
+            <circle cx={fmt(raTop.x)} cy={fmt(raTop.y)} r={4.5} fill={`url(#${id}-tl)`} opacity={fmt(0.35 * tl)} />
+            <path d={raD} fill="none" stroke="#86EAFF" strokeWidth={4.4} mask={`url(#${id}-tm)`} opacity={fmt(tl)} />
+          </g>
+        )}
+        {/* ventricles */}
+        <path d={ventD} fill={`url(#${id}-v)`} stroke={INK} strokeOpacity={0.5} strokeWidth={0.75} />
+        <g clipPath={`url(#${id}-vc)`}>
+          {/* the narrow left-ventricle strip is a touch darker than the right-ventricle face */}
+          <path d={`${openD(groove)} L${P(vent(st, {x: 30, y: 30}))} L${P(vent(st, {x: 30, y: -30}))} Z`} fill={dark} opacity={0.18} />
+          {/* the coronary (atrioventricular) groove line along the right atrium */}
+          <path d={openD([vent(st, {x: -10.8, y: -15}), vent(st, {x: -12.8, y: -2.5}), vent(st, {x: -10.8, y: 11})])} fill="none" stroke={shade(base, 0.55)} strokeWidth={1.1} opacity={0.4} strokeLinecap="round" />
+          {/* one soft specular on the right-ventricle face */}
+          <ellipse cx={fmt(specC.x)} cy={fmt(specC.y)} rx={7} ry={3} transform={`rotate(-35 ${fmt(specC.x)} ${fmt(specC.y)})`} fill={`url(#${id}-s)`} opacity={spec} />
+        </g>
+        {/* anterior interventricular groove */}
+        <path d={openD(groove)} fill="none" stroke={shade(base, 0.5)} strokeWidth={1.3} opacity={0.55} strokeLinecap="round" />
+        {/* pulmonary trunk (in front of the aortic root) and the left pulmonary artery: a dusky violet-red, so the vena
+            cava is the only blue vessel in the window */}
+        <path d={openD([...pt, ...LPA.slice(1)])} fill="none" stroke={shade(PT_C, 0.3)} strokeWidth={fmt(8.4 * wr)} strokeLinecap="round" strokeLinejoin="round" />
+        <path d={openD([...pt, ...LPA.slice(1)])} fill="none" stroke={PT_C} strokeWidth={fmt(6.6 * wr)} strokeLinecap="round" strokeLinejoin="round" />
+        <path d={openD(pt.map((p) => add(p, mul(light, 1.2))))} fill="none" stroke={mix(PT_C, '#FFFFFF', 0.3)} strokeWidth={fmt(2 * wr)} strokeLinecap="round" opacity={0.6} />
+        {/* sensors on the surface: small, state-coloured, no halo (the same size on screen as before the body scale) */}
+        {HEART_SENSORS.map((p, i) => {
+          const a = i === 0 ? Math.max(sense, senseEnd) : sense;
+          if (a <= 0.01) return null;
+          const q = vent(st, p);
+          return <circle key={i} cx={fmt(q.x)} cy={fmt(q.y)} r={fmt(1.6 / BK)} fill={sensorColor(warn)} stroke={shade(sensorColor(warn), 0.55)} strokeWidth={fmt(0.55 / BK)} opacity={a} />;
+        })}
+      </g>
     </g>
   );
 };
 
 /** The heart's silhouette (ventricles, right atrium, left-atrial ear) for state st, relative to the heart centre,
- *  turned by HEART_TILT and unscaled (multiply by k and add the centre); for layout checks (clearance from the near
- *  arm, inside the window). */
+ *  turned by HEART_TILT and unscaled (multiply by k and add the centre; HEART_BODY is included); for layout checks
+ *  (clearance from the near arm, inside the window). */
 export const heartOutline = (st: HeartState): V[] => [
   ...VENT.map((p) => vent(st, p)),
   ...ellPts(RA.c, RA.rx, RA.ry, RA.rot, 24).map((p) => atrium(st, p, RA.c, st.nRA)),
   ...ellPts(LAA.c, LAA.rx, LAA.ry, LAA.rot, 12).map((p) => atrium(st, p, LAA.c, st.nLA)),
-].map((p) => add(tilt(p), {x: st.qx, y: st.qy}));
+].map((p) => add(tilt(mul(p, HEART_BODY)), {x: st.qx, y: st.qy}));

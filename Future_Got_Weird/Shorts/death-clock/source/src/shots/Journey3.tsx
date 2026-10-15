@@ -12,7 +12,7 @@ import React from 'react';
 import {armFrame, armR, DEV_GEO, DeviceView, PORT_GEO} from '../art/Device';
 import {EXPR_GASP, EXPR_PAIN, EXPR_WINCE, Expr, mixExpr} from '../art/Head';
 import {HAND_BRACE, HAND_CLUTCH, HandPose, mixHand} from '../art/Hand';
-import {Hero, PortLight, PortMech, portPress, releaseState, SEC, secFrame, SecFrame, SectionLayers, SensorRelease, SkinDimple, STREAM_MERGE, StreamDraw, VesselTube, vesselPath, WallCell, TissueFill} from '../art/Interior';
+import {Hero, PortLight, PortMech, portPress, releaseState, SEC, SEC_WIN, secFrame, SecFrame, SectionLayers, SensorRelease, SkinDimple, STREAM_MERGE, StreamDraw, VesselTube, vesselPath, WallCell, TissueFill} from '../art/Interior';
 import {ChestWindow, chestWorld, HAND_GRIP, LOW_GRIP, TraceDash} from '../art/Cutaway';
 import {foreRadii, Joints, manJoints, ManPose, torsoPath} from '../art/Man';
 import {DogPose} from '../art/Dog';
@@ -251,12 +251,13 @@ export const PORT_W = W(SF.Xp, SF.dSurf(SF.Xp));
 export const CASE_W = W(SF.Xb, SF.dSurf(SF.Xb) - 230);
 /** camera that puts world point p at screen (sx, sy) at zoom z */
 export const frameOn = (p: V, sx: number, sy: number, z: number) => ({x: p.x - (sx - 540) / z, y: p.y - (sy - 960) / z, z});
-/** the hand leaves before the case turns: the backdrop completes, then the veil sweeps the hand from the fingertips back
- *  to the wrist line, and only then does the roll begin (so the case never orbits beside the back-view hand) */
-const S_BACK0 = B.tip0 - 5; // 114
-const S_BACK1 = B.tip0 + 2; // 121
-const S_VEIL0 = B.tip0 + 2; // 121
-const S_VEIL1 = B.tip0 + 8; // 127
+/** the backdrop completes (a vignette closing in toward the band), then the hand recedes into it as the case starts to
+ *  turn (the veil's soft edge reaches the hand in frame as the roll begins, ~127, and it is gone by 135, roll 20 deg),
+ *  so the case never orbits beside the back-view hand */
+const S_BACK0 = B.tip0 - 7; // 112
+const S_BACK1 = B.tip0 + 3; // 122
+const S_VEIL0 = B.tip0 + 5; // 124
+const S_VEIL1 = B.tip0 + 18; // 137
 const S_ROLL0 = B.tip0 + 7; // 126 (the roll is still under 2 deg at 130)
 /** the case's cut-away opens on the overview once the case is at rest edge-on (a 4-frame wipe along the case) */
 const S_REVEAL0 = B.tip1 + 1; // 152
@@ -495,8 +496,10 @@ const ROLLBACK1 = B.pull0 + 24;
  *  rv.backdrop); the case rolls back to face the camera WHILE the backdrop and the hand veil fade, so the hand is never
  *  seen in its back view beside a case still turned to its profile */
 export const journeyDevice = (f: number) => {
-  const backdrop = clamp(inv(S_BACK0, S_BACK1, f)) * (1 - clamp(inv(ROLLBACK0, B.pull0 + 26, f)));
-  const handVeil = clamp(inv(S_VEIL0, S_VEIL1, f)) * (1 - clamp(inv(ROLLBACK0 + 4, ROLLBACK1, f)));
+  // V4 polish: on the way out the hand comes back first, at full backdrop (still below the frame), then the backdrop
+  // opens out from the band as a vignette: the veil never runs over a partial backdrop
+  const backdrop = clamp(inv(S_BACK0, S_BACK1, f)) * (1 - clamp(inv(ROLLBACK0 + 10, B.pull0 + 26, f)));
+  const handVeil = clamp(inv(S_VEIL0, S_VEIL1, f)) * (1 - clamp(inv(ROLLBACK0, ROLLBACK0 + 10, f)));
   const rollBase = f < S_ROLL0 ? 0 : SEC_ROLL * ease(inv(S_ROLL0, B.tip1, f)) * (1 - ease(inv(ROLLBACK0, ROLLBACK1, f)));
   return {backdrop, handVeil, roll: rollBase + buzz(f) * 3.2 * Math.sin(f * 2.6)};
 };
@@ -571,11 +574,48 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
     inArm: () =>
       sectionMode ? (
         <g transform={SF.matrix}>
-          <SectionLayers id={`${id}-sec`} sf={SF} f={f} open={rv.armOpen} dimple={dimple} sweep tube={tubeSection}>
-            <StreamDraw id={`${id}-st`} sf={SF} vp={VP} f={f} rel={SENSOR_REL} trace={clamp(inv(B.stream0, B.stream0 + 6, f)) * (1 - clamp(inv(B.stream1, B.retract0 + 6, f)))} />
-          </SectionLayers>
-          <PortLight id={`${id}-pl`} sf={SF} press={dimple} a={clamp(dimple / PRESS_S)} color={PAL.signal} />
-          <SkinDimple id={`${id}-dm`} sf={SF} amp={dimple} />
+          {/* V4 fix: the section closes by ONE shared geometry (lib/reveal4 armLen): its elbow-side end slides down the arm
+              into the band, cutting every layer (skin, fat, vessel, muscle and the rim) at the same edge, so no layer
+              outlives another; the section's own opening stays full meanwhile */}
+          {(() => {
+            const shut = rv.armLen < 0.999;
+            const X0 = SF.Xp - SEC_WIN.back;
+            const X1 = SF.Xp + SEC_WIN.fwd;
+            // the edge runs on past the window's wrist-side end (under the strap), so its last visible frame is a short
+            // full-depth piece already sliding in under the band
+            const Xe = lerp(X0, X1 + 600, 1 - rv.armLen);
+            const top = Math.min(SF.dSurf(X0), SF.dSurf(X1)) - 300;
+            const dep = SEC_WIN.depth;
+            const rc = Math.max(0.1, Math.min(260, (dep - SF.dSurf(SF.Xp)) * 0.5, (X1 - Xe) * 0.5));
+            const q = (x: number, y: number) => `${x.toFixed(1)},${y.toFixed(1)}`;
+            const clipD = `M${q(Xe, top - 400)} L${q(X1 + 600, top - 400)} L${q(X1 + 600, dep + 400)} L${q(Xe + rc, dep + 400)} L${q(Xe + rc, dep)} A${rc.toFixed(1)},${rc.toFixed(1)} 0 0 1 ${q(Xe, dep - rc)} Z`;
+            const edgeD = `M${q(Xe, top)} L${q(Xe, dep - rc)} A${rc.toFixed(1)},${rc.toFixed(1)} 0 0 0 ${q(Xe + rc, dep)}`;
+            return (
+              <>
+                {shut && (
+                  <defs>
+                    <clipPath id={`${id}-secw`}>
+                      <path d={clipD} />
+                    </clipPath>
+                  </defs>
+                )}
+                <g clipPath={shut ? `url(#${id}-secw)` : undefined}>
+                  <SectionLayers id={`${id}-sec`} sf={SF} f={f} open={rv.armSec} dimple={dimple} sweep tube={tubeSection}>
+                    <StreamDraw id={`${id}-st`} sf={SF} vp={VP} f={f} rel={SENSOR_REL} trace={clamp(inv(B.stream0, B.stream0 + 6, f)) * (1 - clamp(inv(B.stream1, B.retract0 + 6, f)))} />
+                  </SectionLayers>
+                  <PortLight id={`${id}-pl`} sf={SF} press={dimple} a={clamp(dimple / PRESS_S)} color={PAL.signal} />
+                  <SkinDimple id={`${id}-dm`} sf={SF} amp={dimple} />
+                </g>
+                {/* the moving cut edge carries the section's own restrained rim (a thin lit bevel and a thin ink line) */}
+                {shut && Xe < X1 && (
+                  <>
+                    <path d={edgeD} fill="none" stroke="#F8DCCB" strokeWidth={16} opacity={0.85} />
+                    <path d={edgeD} fill="none" stroke="#172B3A" strokeWidth={5} opacity={0.4} />
+                  </>
+                )}
+              </>
+            );
+          })()}
         </g>
       ) : null,
     onSkin: rv.trace.a > 0.01 ? () => <ArmTrace id={`${id}-tr`} tr={tr} a={rv.trace.a} pulses={rv.trace.pulses} cam={cam} /> : undefined,
