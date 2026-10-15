@@ -26,6 +26,10 @@ export type ScreenState = {
   dive?: number;
   /** V2: the diagnostic resolving under the digits 0..1 (hands over to the help alert) */
   diag?: number;
+  /** V4: alarm ring phase 0..1 (0 = emission) round the glass (lib/device3.ts alarmAt) */
+  ring?: number;
+  /** V4: alarm ring envelope 0..1 (0 = no ring) */
+  ringEnv?: number;
 };
 
 export const SCREEN_IDLE: ScreenState = {red: 0, edge: 0, secs: null, timerIn: 0, flash: 0, alert: 0, stab: 0, recover: 0, glitch: 0, f: 0};

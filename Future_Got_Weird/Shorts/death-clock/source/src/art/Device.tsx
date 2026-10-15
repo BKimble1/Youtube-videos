@@ -17,6 +17,7 @@ import {Capsule, Glow, Lin, Sphere} from '../lib/shade';
 import {Inked, InkFade, useInk} from '../lib/ink';
 import {Limb} from '../lib/limb';
 import {fmtClock, ScreenState} from '../lib/screen';
+import {ringAlpha} from '../lib/device3';
 import {Hand, HandPose} from './Hand';
 
 const f2 = (n: number) => (Math.abs(n) < 1e-9 ? '0' : n.toFixed(2));
@@ -311,6 +312,19 @@ const caseFrame = (A: ArmFrame, uc: number, rr: number, roll: number, sy: number
 };
 const matrixOf = (fr: {O: V; ax: V; ay: V}, k: number) => `matrix(${f4(fr.ax.x * k)} ${f4(fr.ax.y * k)} ${f4(fr.ay.x * k)} ${f4(fr.ay.y * k)} ${f4(fr.O.x)} ${f4(fr.O.y)})`;
 
+// ------------------------------------------------------------------ V4 alarm ring (loop area)
+/** The band's red alarm ring (ScreenState.ring / ringEnv from lib/device3.ts alarmAt): one expanding stroke,
+ *  concentric with the glass centre, starting just outside the case's corners so it never crosses the digits.
+ *  A thin line (normal blend, no glow) that fades in as it leaves the case and out as it grows. */
+export const AlarmRing: React.FC<{c: V; R: number; u: number; env: number}> = ({c, R, u, env}) => {
+  if (env <= 0.001) return null;
+  const a = ringAlpha(u, env);
+  if (a < 0.004) return null;
+  const r = (0.5 * Math.hypot(DEV_GEO.caseL, DEV_GEO.caseW) + 0.16 + 0.75 * u) * R;
+  // the line scales with the band (about 9 px in the glass close-ups, a hairline in the wide shot after the cut)
+  return <circle cx={f2(c.x)} cy={f2(c.y)} r={f2(r)} fill="none" stroke="#FF5A66" strokeWidth={f2(0.04 * R)} opacity={f2(a)} />;
+};
+
 // ------------------------------------------------------------------ the forearm, strap, case and hand
 type WristProps = {
   id: string;
@@ -504,6 +518,8 @@ export const Wrist3D: React.FC<WristProps> = ({id, E, W, rE, rW, dev, hand, skin
       )}
       {/* lit top lip of the case in profile */}
       {facing <= 0.04 && <path d={`M${P2(fr1.at(-cL / 2 + G.caseRad * R, 0))} L${P2(fr1.at(cL / 2 - G.caseRad * R, 0))}`} stroke="#9DB8FF" strokeOpacity={0.7} strokeWidth={f2(R * 0.05)} strokeLinecap="round" />}
+      {/* V4: the alarm ring round the glass (loop alarm and the warning landing) */}
+      <AlarmRing c={fr1.O} R={R} u={dev.screen.ring ?? 0} env={dev.screen.ringEnv ?? 0} />
       {dev.overArm && dev.overArm(A)}
     </g>
   );

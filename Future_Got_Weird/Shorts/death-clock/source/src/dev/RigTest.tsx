@@ -21,7 +21,7 @@ export const RigCollapse: React.FC = () => {
   return (
     <AbsoluteFill>
       <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-        <Scene id="rc" cam={collapseCam(f)} man={st.man} expr={st.expr} blink={st.blink} lHand={st.lHand} rHand={st.rHand} dog={st.dog} hairSway={st.hairSway} dev={{screen: redScreen(f), roll: -30, yaw: 14}} nearLegFront={f > 24} />
+        <Scene id="rc" f={f} cam={collapseCam(f)} man={st.man} expr={st.expr} blink={st.blink} lHand={st.lHand} rHand={st.rHand} dog={st.dog} hairSway={st.hairSway} dev={{screen: redScreen(f), roll: -30, yaw: 14}} nearLegFront={f > 24} />
       </svg>
     </AbsoluteFill>
   );

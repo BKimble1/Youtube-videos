@@ -21,9 +21,13 @@ import {spline, splineRec, SKey} from '../lib/motion';
 import {add, clamp, easeIn, easeInOut, easeOut, fmt, inv, lerp, mul, noise1, V} from '../lib/math';
 import {Glow} from '../lib/shade';
 import {B, TOTAL} from '../lib/timeline3';
-import {PROP} from './Opening';
+import {dogAt, PROP} from './Opening';
 import {BAND_C, LOCAL_PER_WORLD, PJ, R0, SEC_ROLL, SF, VP, VPX, W} from './Journey3';
 import {Scene} from './Scene';
+import {B4} from '../lib/beats4';
+import {DRONE_S, droneBeacon, flightPitch, flyCam, flyDrone, hermite, rotorPhase, toScreenD} from './Dispatch';
+import {SoftShadow} from '../lib/shade';
+import {GROUND} from './StreetShots';
 
 const ease = easeInOut;
 const zLog = (f: number, keys: [number, number][]) => Math.exp(spline(f, keys.map(([t, z]) => [t, Math.log(z)])));
@@ -91,17 +95,45 @@ const handsAt = (f: number): {l: HandPose; r: HandPose} => {
 };
 
 // ---------------------------------------------------------------- the drone: arrives beside him and hovers
-const HOVER = {x: BAND_C.x - 150, y: PJ.head.y - 250};
+/** HOVER2: above and to the right of his head, so the data link drops almost vertically to the band, with a clear
+ *  air gap over the hair (the minimum drone-to-hair distance stays >= 60 world on every frame it is drawn). */
+export const HOVER2 = {x: BAND_C.x - 10, y: PJ.head.y - 345};
+/** The flyover's drone carried into this camera: same screen position (and, with TRUCK.z0, the same size). While the
+ *  trunk passes (arrive0..wipeLock) the two shots show one drone at one screen point. */
+const lockW = (f: number): V => {
+  const s = toScreenD(flyCam(f), 1, flyDrone(f));
+  const c = camAt(f, BAND_C, PJ.head);
+  return {x: c.x + (s.x - 540) / c.z, y: c.y + (s.y - 960) / c.z};
+};
+let arriveFrom: {p: V; v: V} | null = null;
+const arriveStart = () => {
+  if (!arriveFrom) {
+    const p = lockW(B4.wipeLock);
+    const q = lockW(B4.wipeLock - 1);
+    arriveFrom = {p, v: {x: p.x - q.x, y: p.y - q.y}};
+  }
+  return arriveFrom;
+};
+/** Arrival: behind the trunk it is the flyover's drone (lockW); it then comes out from behind the trunk, crosses to
+ *  HOVER2 and brakes with a nose-up flare, settles (hover0) and hovers with a small bob, and climbs out of frame
+ *  (retreat0-1) while the camera is still on his chest, before the recovery framing returns. */
 export const arriveDrone3 = (f: number): DronePose => {
-  const t = easeOut(inv(B.past0 + 4, B.act0 + 4, f));
-  const back = ease(inv(B.rise0, B.green + 30, f));
+  const back = ease(inv(B4.retreat0, B4.retreat1, f));
+  const bob = Math.sin(f * 0.2) * 5 * clamp(inv(B4.hover0 - 2, B4.hover0 + 10, f));
+  let p: V;
+  if (f <= B4.wipeLock) p = lockW(f);
+  else {
+    const a = arriveStart();
+    p = {x: hermite(B4.wipeLock, B4.hover0, a.p.x, HOVER2.x, a.v.x, 0, f), y: hermite(B4.wipeLock, B4.hover0, a.p.y, HOVER2.y, a.v.y, 0, f)};
+  }
+  const flare = -8 * Math.sin(Math.PI * clamp(inv(B4.flare0 - 3, B4.hover0 + 5, f)));
   return {
-    x: lerp(HOVER.x - 700, HOVER.x, t) - back * 120,
-    y: lerp(HOVER.y - 420, HOVER.y, t) - back * 260 + Math.sin(f * 0.2) * 5 * t,
-    s: 0.72,
-    pitch: lerp(16, 0, ease(t)) - 6 * back,
-    spin: f * 1.8,
-    beacon: 0.5 + 0.5 * Math.sin(f * 0.6),
+    x: p.x + 30 * back,
+    y: p.y - 210 * back + bob,
+    s: DRONE_S,
+    pitch: flightPitch(f) * (1 - ease(inv(B4.wipeLock, B4.flare0, f))) + flare,
+    spin: rotorPhase(f),
+    beacon: droneBeacon(f),
   };
 };
 
@@ -113,10 +145,15 @@ const CUT0 = cutGeo(PJ.C, PJ.tc, PROP.s, 1);
 const HEART0 = CUT0.loc(86, -46);
 const MED = {x: 560, y: 1450};
 
+/** The trunk-wipe truck (frames before B.arrive): one rightward move that starts at the flyover's camera speed (v0,
+ *  world/frame) and decelerates into the B.arrive key (C1 there, whatever that key holds); the start zoom gives the
+ *  drone the flyover's screen size (DRONE_S * z0), and y0 keeps the band under the caption lane while it holds. */
+const TRUCK = {x0: -16, y0: 1250, z0: 1.25, v0: 30};
+
 export const camAt = (g: number, wristW: V, headW: V): Cam => {
   if (g < B.release0 + 4) {
     const keys: [number, V, number][] = [
-      [B.past0 + 8, {x: 470, y: 1350}, 1.35],
+      [B4.arrive0, {x: TRUCK.x0, y: TRUCK.y0}, TRUCK.z0],
       [B.arrive, {x: 500, y: 1420}, 1.6],
       [B.act0 + 2, BAND_C, 6.5],
       [B.act0 + 14, SEC_VIEW, 11],
@@ -128,7 +165,22 @@ export const camAt = (g: number, wristW: V, headW: V): Cam => {
       [B.settleHeart1 - 4, HEART0, 5.2],
       [B.release0 + 4, MED, 2.2],
     ];
-    return {x: spline(g, keys.map(([t, p]) => [t, p.x])), y: spline(g, keys.map(([t, p]) => [t, p.y])), z: zLog(g, keys.map(([t, , z]) => [t, z])), roll: 0};
+    const sx = (t: number) => spline(t, keys.map(([k, p]) => [k, p.x]));
+    const sy = (t: number) => spline(t, keys.map(([k, p]) => [k, p.y]));
+    const sz = (t: number) => Math.log(zLog(t, keys.map(([k, , z]) => [k, z])));
+    if (g < B.arrive) {
+      // the truck behind the trunk: Hermite into the B.arrive key with the spline's own slope there (C1)
+      const a = B.arrive;
+      const e = 1e-3;
+      const m = (s: (t: number) => number) => (s(a + e) - s(a)) / e;
+      return {
+        x: hermite(B4.arrive0, a, TRUCK.x0, sx(a), TRUCK.v0, m(sx), g),
+        y: hermite(B4.arrive0, a, TRUCK.y0, sy(a), 0, m(sy), g),
+        z: Math.exp(hermite(B4.arrive0, a, Math.log(TRUCK.z0), sz(a), 0, m(sz), g)),
+        roll: 0,
+      };
+    }
+    return {x: sx(g), y: sy(g), z: Math.exp(sz(g)), roll: 0};
   }
   // recovery and the question; the end pushes into the glass and keeps going through the loop point
   const twoShot = (k: number) => ({x: lerp(headW.x, wristW.x, k) + 10, y: lerp(headW.y, wristW.y, k)});
@@ -159,10 +211,9 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
   const man = manAt(g);
   const j = manJoints(man);
   const bandW = add(j.L.W, mul(j.L.foreDir, -1.75 * 17 * man.s));
-  const cam0 = camAt(g, bandW, j.head);
-  // the warning transient at the loop point: a short shake of the glass close-up
-  const hit = g >= TOTAL ? Math.exp(-(g - TOTAL) / 3) : 0;
-  const cam: Cam = hit > 0.01 ? {...cam0, x: cam0.x + (hit * noise1(g * 3.3, 61) * 3) / cam0.z * 6, y: cam0.y + (hit * noise1(g * 2.9, 62) * 3) / cam0.z * 6} : cam0;
+  // V4: one camera trajectory through the loop point (no frame-0 shake: the alarm is a periodic ring that is already
+  // running before the wrap, drawn by the device itself; lib/device3.ts alarmAt)
+  const cam: Cam = camAt(g, bandW, j.head);
   const expr = exprAt(g);
   const hands = handsAt(g);
   const blink = Math.max(0, 1 - Math.abs(((g - 20) % 85) - 3) / 3) * (g > B.return0 + 20 ? 0 : 1);
@@ -236,7 +287,7 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
     yaw: 14,
     flip: false,
     upright: true,
-    glow: 1 + 0.8 * hit,
+    glow: 1,
     caseOpen: secOn ? open : 0,
     caseCut: () => (
       <g transform={SF.matrix}>
@@ -252,41 +303,39 @@ export const Aftermath3: React.FC<{id: string; f: number}> = ({id, f}) => {
   };
   const dp = arriveDrone3(g);
   const showDrone = g < B.return0 + 30;
-  const linkA = clamp(inv(B.arrive - 6, B.arrive + 4, g)) * (1 - clamp(inv(B.act0 + 2, B.act0 + 8, g)));
+  // the data link appears once the drone is clear to the right of his head and is gone before the case turns
+  const linkA = clamp(inv(B4.link0 - 2, B4.link0 + 2, g)) * (1 - clamp(inv(B4.link1 - 5, B4.link1, g)));
+  const linkFrom = {x: dp.x - Math.sin((dp.pitch * Math.PI) / 180) * 80 * dp.s, y: dp.y + Math.cos((dp.pitch * Math.PI) / 180) * 80 * dp.s};
+  // the drone's soft ground shadow: broad and faint at this height, it follows the drone (and its bob)
+  const shK = clamp(1 - (GROUND - dp.y) / 2200);
   return (
     <Scene
       id={id}
+      f={g}
       cam={cam}
       man={man}
       expr={expr}
       blink={blink}
       lHand={hands.l}
       rHand={hands.r}
-      dog={{x: 1070, y: 1790, s: 1.4, facing: -1, sit: ease(inv(B.green, B.life, g)), head: 26 + 4 * Math.sin(g * 0.05), ears: 0.95, tail: lerp(-6, 14, ease(inv(B.rise0, B.green, g))) + 6 * Math.sin(g * 0.3) * ease(inv(B.green, B.life, g)), lean: 0, step: 0, stepAmt: 0, worry: lerp(1, 0.4, ease(inv(B.rise0, B.life, g)))}}
+      dog={dogAt(g)}
       hairSway={0}
       dev={dev}
       backdrop={backdrop}
       backdropC={W(SF.Xp - 600, 400)}
-      leash={!secOn && xA < 0.05}
       nearLegFront
       noTufts
       afterRightArm={cutOpen > 0.01 ? chest('cx') : null}
       overAll={overAll}
+      under={showDrone && shK > 0.01 ? <SoftShadow id={`${id}-drs`} c={{x: dp.x + 40, y: GROUND + 6}} rx={190 * dp.s * shK} ry={24 * dp.s * shK} alpha={0.16 * shK} /> : null}
       extra={
         <g>
-          {showDrone && <Drone id={`${id}-dr`} p={dp} />}
-          {/* the drone has found him: a thin data link to the band (no light on him) */}
+          {showDrone && <Drone id={`${id}-dr`} p={dp} blur={1} />}
+          {/* the drone has found him: a thin data link dropping almost vertically to the band (no light on him) */}
           {linkA > 0.01 && (
-            <g opacity={linkA}>
-              <path d={`M${fmt(dp.x)},${fmt(dp.y + 40 * dp.s)} L${fmt(bandW.x)},${fmt(bandW.y)}`} stroke={PAL.signal} strokeWidth={3} strokeDasharray="6 10" opacity={0.8} />
+            <g opacity={fmt(linkA)}>
+              <path d={`M${fmt(linkFrom.x)},${fmt(linkFrom.y)} L${fmt(bandW.x)},${fmt(bandW.y)}`} stroke={PAL.signal} strokeWidth={3} strokeDasharray="6 10" opacity={0.8} />
               <circle cx={fmt(bandW.x)} cy={fmt(bandW.y)} r={fmt(22 + 8 * Math.sin(g * 0.5))} fill="none" stroke={PAL.signal} strokeWidth={3} />
-            </g>
-          )}
-          {/* the warning transient at the loop point: one red ring off the glass */}
-          {hit > 0.02 && (
-            <g>
-              <circle cx={fmt(bandW.x)} cy={fmt(bandW.y)} r={fmt(26 + (1 - hit) * 40)} fill="none" stroke="#FF5A66" strokeWidth={fmt(1 + 3 * hit)} opacity={0.9 * hit} />
-              <Glow id={`${id}-hg`} c={bandW} r={60} color="#FF3B4E" alpha={0.5 * hit} />
             </g>
           )}
         </g>

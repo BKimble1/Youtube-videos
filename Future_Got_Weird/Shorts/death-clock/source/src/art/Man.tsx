@@ -4,8 +4,8 @@
 // and glossy highlights. Seen in 3/4 view facing screen-left, so his LEFT side (and left arm) is nearest the camera
 // and his RIGHT hand can clutch his chest. Arms are two-bone IK chains whose hand targets are given either in
 // upper-torso space (hand stays on the chest while the body moves) or in world space (hand planted on the ground).
-// Joint positions come from one pure function shared by the drawing, the contact shadows, the leash and the
-// camera targets.
+// Joint positions come from one pure function shared by the drawing, the contact shadows and the camera targets
+// (V4: nothing is tied to his hands; the dog's leash lies on the grass, art/Leash.tsx).
 import React from 'react';
 import {lit, mix, PAL, shade} from '../lib/color';
 import {Deco, Inked, InkLine} from '../lib/ink';
@@ -87,17 +87,39 @@ export const DIM = {
   shin: 216,
 };
 
-/** Two-bone IK: elbow on side `side` (+1 = clockwise of the shoulder->target line). */
-const ik = (S: V, T: V, l1: number, l2: number, side: number) => {
+/** V4 soft IK: past SOFT_IK of full reach the solve eases toward full extension instead of snapping through the
+ *  straight (singular) pose, so an elbow or knee never pops. */
+export const SOFT_IK = 0.96;
+/** most a planted limb may stretch (both bones scaled) to keep its effector exactly on target */
+export const MAX_STRETCH = 1.045;
+/** Two-bone IK: elbow on side `side` (+1 = clockwise of the shoulder->target line). `plant` 0..1: how firmly the
+ *  effector is planted in the world; a planted effector stays exactly on its target (bones stretch <= 4.5%). */
+const ik = (S: V, T: V, l1: number, l2: number, side: number, plant = 0) => {
   const d0 = sub(T, S);
-  const dist = clamp(len(d0), Math.abs(l1 - l2) + 0.5, l1 + l2 - 0.5);
+  const Lt = l1 + l2;
+  const d = Math.max(len(d0), Math.abs(l1 - l2) + 0.5);
+  const ds = SOFT_IK * Lt;
+  const soft = d <= ds ? d : ds + (Lt - ds) * (1 - Math.exp(-(d - ds) / (Lt - ds)));
+  const sc = 1 + (clamp(d / soft, 1, MAX_STRETCH) - 1) * clamp(plant);
+  const reach = soft * sc;
+  const b1 = l1 * sc;
+  const b2 = l2 * sc;
   const dir = norm(d0);
-  const a = (l1 * l1 + dist * dist - l2 * l2) / (2 * dist);
-  const h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+  const a = (b1 * b1 + reach * reach - b2 * b2) / (2 * reach);
+  const h = Math.sqrt(Math.max(0, b1 * b1 - a * a));
   const E = add(add(S, mul(dir, a)), mul(perp(dir), h * side));
-  const W = add(S, mul(dir, dist));
-  return {E, W};
+  const W = add(S, mul(dir, reach));
+  return {E, W, sc};
 };
+/** smoothstep */
+const sstep = (a: number, b: number, x: number) => {
+  const t = clamp((x - a) / (b - a));
+  return t * t * (3 - 2 * t);
+};
+/** shortest-way angle blend (deg) */
+const lerpAng = (a: number, b: number, t: number) => a + ((((b - a) % 360) + 540) % 360 - 180) * t;
+/** the planted left palm lies flat on the grass, fingers toward his front: its angle is held in world space */
+export const PLANT_HAND_ANG = 172.6;
 
 export type Joints = ReturnType<typeof manJoints>;
 
@@ -113,14 +135,30 @@ export const manJoints = (p: ManPose) => {
   const rS = add(add(Sh, mul(px(tc), -54 * s)), mul(up(tc), -14 * s));
   const toWorld = (u: number, vv: number) => add(Sh, add(mul(up(tc), u * s), mul(px(tc), vv * s)));
   const arm = (S: V, tu: number, tv: number, wx: number, wy: number, w: number, elb: number, wr: number) => {
-    const T = lerpV(toWorld(tu, tv), {x: wx, y: wy}, clamp(w));
-    // elbow side in screen terms: the torso's +v axis rotated into the shoulder->target frame
-    const {E, W} = ik(S, T, DIM.upperArm * s, DIM.foreArm * s, elb >= 0 ? 1 : -1);
+    const wc = clamp(w);
+    // V4: the last of the torso -> world blend is taken as the hand touches down, so a planted hand never creeps
+    const wt = wc + (1 - wc) * sstep(0.95, 0.99, wc);
+    const T = lerpV(toWorld(tu, tv), {x: wx, y: wy}, wt);
+    // elbow side in screen terms: the torso's +v axis rotated into the shoulder->target frame; a (nearly) planted
+    // hand stays exactly on its target (soft IK with a small stretch instead of a clamp that leaves it short)
+    const {E, W} = ik(S, T, DIM.upperArm * s, DIM.foreArm * s, elb >= 0 ? 1 : -1, sstep(0.8, 0.9, wc));
     const fd = norm(sub(W, E));
-    return {S, E, W, foreDir: fd, handAng: ang(fd) + wr};
+    // the planted palm keeps its angle in world space (it turns flat onto the grass as it lands, no flap or rock)
+    return {S, E, W, foreDir: fd, handAng: lerpAng(ang(fd) + wr, PLANT_HAND_ANG, sstep(0.75, 1, wc))};
   };
   const L = arm(lS, p.lTu, p.lTv, p.lWx, p.lWy, p.lW, p.lElb, p.lWr);
-  const R = arm(rS, p.rTu, p.rTv, p.rWx, p.rWy, p.rW, p.rElb, p.rWr);
+  // V4: when the far elbow hangs low beside the lap (seated), it tucks in behind the tee's front contour instead of
+  // poking out under the hem as a spike or hook (the arm swivels; the hand keeps its place and angle)
+  const tuckFar = (A: ReturnType<typeof arm>) => {
+    const X = px(p.torso);
+    const d = sub(A.E, H);
+    const u = dot(d, up(p.torso)) / s;
+    const v = dot(d, X) / s;
+    const k = sstep(96, 86, u);
+    const vMin = -60; // tee front edge (-85) + elbow radius (23.5) + a little
+    return k > 0 && v < vMin ? {...A, E: add(A.E, mul(X, (vMin - v) * k * s))} : A;
+  };
+  const R = tuckFar(arm(rS, p.rTu, p.rTv, p.rWx, p.rWy, p.rW, p.rElb, p.rWr));
   const hipL = add(add(H, mul(px(p.pelvis), 34 * s)), mul(up(p.pelvis), -44 * s));
   const hipR = add(add(H, mul(px(p.pelvis), -40 * s)), mul(up(p.pelvis), -42 * s));
   const leg = (hp: V, hip: number, knee: number, ank: number, fs: number, fsh: number, tx?: number, ty?: number, tw?: number) => {
@@ -134,7 +172,7 @@ export const manJoints = (p: ManPose) => {
     if (w > 0 && tx !== undefined && ty !== undefined) {
       // planted foot: two-bone IK from the hip to the ankle target, knee forward (toward his front, screen-left)
       const T = {x: tx, y: ty};
-      const r = ik(hp, T, DIM.thigh * s * (fs ?? 1), DIM.shin * s * (fsh ?? 1), 1);
+      const r = ik(hp, T, DIM.thigh * s * (fs ?? 1), DIM.shin * s * (fsh ?? 1), 1, sstep(0.8, 0.9, w));
       K = lerpV(K, r.E, w);
       A = lerpV(A, r.W, w);
       const sd = norm(sub(A, K));
@@ -300,13 +338,16 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
     const n = perp(u);
     const r0 = 38 * s;
     const r1 = 34 * s;
-    const top = add(A.S, mul(u, -10 * s));
+    // V4: a low, flat crown (just over the arm's own rounded top) that sits inside the tee's shoulder line, so the
+    // sleeve no longer reads as a separate round cap with a second lobe behind it
+    const top = A.S;
+    const hc = 32 * s;
     const hem = add(A.S, mul(u, DIM.upperArm * 0.56 * s));
     const p1 = add(top, mul(n, r0));
     const p2 = add(hem, mul(n, r1));
     const p3 = add(hem, mul(n, -r1));
     const p4 = add(top, mul(n, -r0));
-    const d = `M${P(p1)} L${P(p2)} Q${P(add(hem, mul(u, r1 * 0.36)))} ${P(p3)} L${P(p4)} A${fmt(r0)} ${fmt(r0)} 0 0 ${cross2(sub(p4, top), mul(u, -1)) > 0 ? 1 : 0} ${P(p1)} Z`;
+    const d = `M${P(p1)} L${P(p2)} Q${P(add(hem, mul(u, r1 * 0.36)))} ${P(p3)} L${P(p4)} A${fmt(r0)} ${fmt(hc)} ${fmt(ang(n))} 0 ${cross2(sub(p4, top), mul(u, -1)) > 0 ? 1 : 0} ${P(p1)} Z`;
     let ln = n;
     if (dot(ln, LIGHT) < 0) ln = mul(ln, -1);
     const mid = mul(add(top, hem), 0.5);
@@ -327,7 +368,8 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
             <rect x="-20000" y="-20000" width="40000" height="40000" fill={`url(#${id}-${k}sf)`} />
           </mask>
         </defs>
-        <Inked w={IN} id={`${id}-${k}si`} fade={[{c: A.S, r: fadeR * 1.1}]}>
+        {/* the crown's contour dissolves into the shoulder; the sides keep theirs below it */}
+        <Inked w={IN} id={`${id}-${k}si`} fade={[{c: add(top, mul(u, -hc * 0.5)), r: r0 * 1.25}]}>
           <Lin id={`${id}-${k}sg`} d={d} from={add(mid, mul(ln, r0))} to={add(mid, mul(ln, -r0))} stops={[[0, '#FFFFFF'], [0.45, mix(c, '#F2F5F8', 0.5)], [0.85, mix(c, '#C9D5E0', 0.8)], [1, mix(c, '#B4C3D1', 0.8)]]} />
         </Inked>
         {!isFar && (
@@ -360,7 +402,8 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
     const sk = isFar ? far(skin) : skin;
     return (
       <Inked w={IN} key={k}>
-        <Limb id={`${id}-${k}lb`} A={A.S} B={A.E} C={A.W} rA={29 * s} rB={23.5 * s} rC={17 * s} color={sk} spec={0.22} crease={IN * 0.8} />
+        {/* the far arm's tightly folded elbow shows no inner crease (that side of the fold is hidden) */}
+        <Limb id={`${id}-${k}lb`} A={A.S} B={A.E} C={A.W} rA={29 * s} rB={23.5 * s} rC={17 * s} color={sk} spec={0.22} crease={isFar ? 0 : IN * 0.8} />
         <Hand id={`${id}-${k}h`} wrist={add(A.W, mul(A.foreDir, -6 * s))} ang={A.handAng} L={DIM.hand * s} thumbSide={thumbSide} view="back" pose={hp} color={sk} ink={IN * 0.9} bare />
       </Inked>
     );
@@ -417,13 +460,28 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
           {/* cylindrical form shading across the tee and stripes: lit front edge -> cool shadowed back edge */}
           <Lin id={`${id}-tf`} d={torsoD} from={loc(j.C, tc, 40, -100)} to={loc(j.C, tc, 40, 96)} stops={[[0, '#FFFFFF', 0.4], [0.3, '#FFFFFF', 0], [0.6, '#2E4A66', 0], [1, '#2E4A66', 0.32]]} />
           <Lin id={`${id}-tb`} d={torsoD} from={loc(j.H, p.torso, 120, 0)} to={loc(j.H, p.torso, -20, 0)} stops={[[0, '#2E4A66', 0], [1, '#2E4A66', 0.16]]} />
-          {/* soft folds where the tee gathers at the waist */}
+          {/* soft folds where the tee gathers at the waist: shallow crease strokes that fade at both ends (V4: no
+              filled discs) */}
           {[
             [70, 0, 46, 9, 8],
             [36, -30, 34, 7, -6],
           ].map(([u, vv, rx, ry, a], i) => {
-            const q = loc(j.H, p.torso, u, vv);
-            return <ellipse key={i} cx={fmt(q.x)} cy={fmt(q.y)} rx={fmt(rx * s)} ry={fmt(ry * s)} transform={`rotate(${fmt(-p.torso + a)} ${fmt(q.x)} ${fmt(q.y)})`} fill="#2E4A66" opacity={0.12} />;
+            const e = (t: number, h: number) => loc(j.H, p.torso + a * 0.2, u + h, vv + t * rx);
+            const fid = `${id}-wf${i}`;
+            const g0 = e(-1, 0);
+            const g1 = e(1, 0);
+            return (
+              <g key={i}>
+                <defs>
+                  <linearGradient id={fid} gradientUnits="userSpaceOnUse" x1={fmt(g0.x)} y1={fmt(g0.y)} x2={fmt(g1.x)} y2={fmt(g1.y)}>
+                    <stop offset="0" stopColor="#2E4A66" stopOpacity={0} />
+                    <stop offset="0.5" stopColor="#2E4A66" stopOpacity={0.16} />
+                    <stop offset="1" stopColor="#2E4A66" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <path d={`M${P(g0)} Q${P(e(0, -ry * 1.4))} ${P(g1)}`} fill="none" stroke={`url(#${fid})`} strokeWidth={fmt(3.2 * s)} strokeLinecap="round" />
+              </g>
+            );
           })}
           {/* glossy sheen across the chest */}
           <ellipse cx={fmt(loc(j.C, tc, 96, -40).x)} cy={fmt(loc(j.C, tc, 96, -40).y)} rx={fmt(44 * s)} ry={fmt(16 * s)} transform={`rotate(${fmt(-tc - 30)} ${fmt(loc(j.C, tc, 96, -40).x)} ${fmt(loc(j.C, tc, 96, -40).y)})`} fill="#FFFFFF" opacity={0.35} />
@@ -436,6 +494,13 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
         {children}
         {overTorso}
       </Deco>
+      {/* the far forearm and hand cross the chest in front of the tee (behind the raised near thigh) */}
+      <g mask={`url(#${id}-rfm)`}>
+        <Inked w={IN}>
+          <Capsule id={`${id}-rffa`} a={j.R.E} b={j.R.W} ra={23.5 * s} rb={17 * s} color={far(skin)} spec={0.2} />
+          <Hand id={`${id}-rfh`} wrist={add(j.R.W, mul(j.R.foreDir, -6 * s))} ang={j.R.handAng} L={DIM.hand * s} thumbSide={-1} view="back" pose={rHand} color={far(skin)} ink={IN * 0.9} bare />
+        </Inked>
+      </g>
       {nearLegFront && (
         <g mask={`url(#${id}-llm)`}>
           <Inked w={IN}>
@@ -443,13 +508,6 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
           </Inked>
         </g>
       )}
-      {/* the far forearm and hand cross the chest in front of the tee */}
-      <g mask={`url(#${id}-rfm)`}>
-        <Inked w={IN}>
-          <Capsule id={`${id}-rffa`} a={j.R.E} b={j.R.W} ra={23.5 * s} rb={17 * s} color={far(skin)} spec={0.2} />
-          <Hand id={`${id}-rfh`} wrist={add(j.R.W, mul(j.R.foreDir, -6 * s))} ang={j.R.handAng} L={DIM.hand * s} thumbSide={-1} view="back" pose={rHand} color={far(skin)} ink={IN * 0.9} bare />
-        </Inked>
-      </g>
       <Deco>{afterRightArm}</Deco>
       {!hideLeftForearm && nearSleeve.inner}
       {!hideLeftForearm && !device && armGroup('la', j.L, false, lHand, 1)}

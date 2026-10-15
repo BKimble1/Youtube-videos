@@ -9,7 +9,11 @@ import {Capsule, Glow, Lin, SoftShadow, Sphere} from '../lib/shade';
 
 export type DronePose = {x: number; y: number; s: number; pitch: number; spin: number; beacon: number};
 
-export const Drone: React.FC<{id: string; p: DronePose; shadowY?: number}> = ({id, p, shadowY}) => {
+/**
+ * blur: 0..1 motion-blur disc on each rotor (spin-up -> full speed). It is centred on the rotor and rotated with the
+ * pitch through the same local->world mapping as the rotor itself, so it never drifts off the rotors in a bank.
+ */
+export const Drone: React.FC<{id: string; p: DronePose; shadowY?: number; blur?: number}> = ({id, p, shadowY, blur = 0}) => {
   const W = (x: number, y: number): V => add({x: p.x, y: p.y}, rot(mul({x, y}, p.s), p.pitch));
   const white = '#EEF2F6';
   const farC = '#B9C3CE';
@@ -27,6 +31,7 @@ export const Drone: React.FC<{id: string; p: DronePose; shadowY?: number}> = ({i
           </radialGradient>
         </defs>
         <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(96 * p.s)} ry={fmt(13 * p.s)} fill={`url(#${id}-${k})`} transform={`rotate(${fmt(p.pitch)} ${fmt(c.x)} ${fmt(c.y)})`} />
+        {blur > 0.01 && <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(100 * p.s)} ry={fmt(15 * p.s)} fill="#FFFFFF" opacity={fmt(0.25 * Math.min(1, blur))} transform={`rotate(${fmt(p.pitch)} ${fmt(c.x)} ${fmt(c.y)})`} />}
         {/* one blade glint sweeping across the disc */}
         <ellipse cx={fmt(c.x + bx)} cy={fmt(c.y)} rx={fmt(Math.max(3, 40 * p.s * Math.abs(Math.sin(ph))))} ry={fmt(3.5 * p.s)} fill="#FFFFFF" opacity={0.55} transform={`rotate(${fmt(p.pitch)} ${fmt(c.x)} ${fmt(c.y)})`} />
       </g>

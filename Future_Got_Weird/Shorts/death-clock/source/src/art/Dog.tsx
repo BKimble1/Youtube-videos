@@ -40,7 +40,7 @@ export const dogPoint = (d: DogPose, x: number, y: number): V => {
   const r = rot({x: x * fx, y}, -d.lean * fx, {x: -80 * fx, y: 0});
   return {x: d.x + r.x * d.s, y: d.y + r.y * d.s};
 };
-/** The collar ring the leash clips to. */
+/** The collar ring the leash clips to (the drawing uses this same point). */
 export const collarRing = (d: DogPose): V => dogPoint(d, 118, -128 + d.sit * 26 - 66 + d.sit * 4);
 
 export const Dog: React.FC<{id: string; pose: DogPose}> = ({id, pose: d}) => {
@@ -73,7 +73,8 @@ export const Dog: React.FC<{id: string; pose: DogPose}> = ({id, pose: d}) => {
     }
     return dd + ' Z';
   })();
-  const ring = W(118, bodyY - 66 + sit * 4);
+  // the collar ring: the same point the leash (art/Leash.tsx) clips to
+  const ring = collarRing(d);
 
   const OUT = 6 * s;
   const leg = (k: string, top: V, foot: V, r0: number, r1: number, c: string) => (

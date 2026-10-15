@@ -15,6 +15,37 @@ export const B4 = {
   alarmOff1: 30,
 
   // ---- dispatch (shots/Dispatch.tsx, Aftermath3 arrival) -- owned by the dispatch area
+  /** the location pulse (the journey's transmission ring, carried onto the map at B.map0) lands in the hospital's
+   *  dock ring; the dock beacon's ripple and flash phase start here and run on across the 747/748 match cut */
+  pulseLand: B.map0 + 16,
+  /** the latch clicks open at B.latch; the rotors start AFTER it and reach full speed at spin1 */
+  spin0: B.latch + 4,
+  spin1: B.latch + 26,
+  /** rotor blur grows with the spin-up (hospital); it stays full in the flyover and the arrival */
+  blur0: B.latch + 8,
+  blur1: B.latch + 28,
+  /** lift clear of the dock: B.lift0 -> lift1 (330 world up) */
+  lift1: B.bank0 + 2,
+  /** the hospital camera's x locks onto the drone from here (it then trucks with the forward travel) */
+  camLock: B.lift0 + 13,
+  /** nose-down pitch, then forward travel (the drone is ~290 world clear of the dock when it starts to move) */
+  pitch0: B.bank0 - 8,
+  pitch1: B.bank0 + 2,
+  go0: B.bank0 - 6,
+  /** flyover: the drone climbs over the roofs until the trunk wipe starts (WIPE.in0) */
+  climb1: B.past0 - 1,
+  /** arrival: from the trunk wipe (arrive0) to wipeLock the drone holds the flyover drone's screen position behind the
+   *  trunk; it then crosses to HOVER2, braking with a nose-up flare from flare0, settles at hover0 and hovers */
+  arrive0: B.past0 - 1,
+  wipeLock: B.past0 + 6,
+  flare0: B.past0 + 15,
+  hover0: B.arrive - 1,
+  /** the dashed data link drone -> band: fades in once the drone is clear of his head, out before the case turns */
+  link0: B.past0 + 19,
+  link1: B.arrive + 6,
+  /** the drone climbs out of frame while the camera is still on the chest, before the recovery framing returns */
+  retreat0: B.release0 - 6,
+  retreat1: B.release0 + 15,
 
   // ---- reveal states and heartbeat (lib/reveal4.ts, lib/heart4.ts) -- owned by the anatomy area
 

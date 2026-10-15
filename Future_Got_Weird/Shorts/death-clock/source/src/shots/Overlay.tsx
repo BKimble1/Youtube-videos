@@ -97,7 +97,9 @@ export const FictionCue: React.FC<{f: number}> = ({f}) => {
           <feDropShadow dx={0} dy={0} stdDeviation={4} floodColor="#FFFFFF" floodOpacity={0.9} />
         </filter>
       </defs>
-      <text x={74} y={244} fontFamily={UI_FONT} fontWeight={700} fontSize={36} letterSpacing={4} fill="#17324A" filter="url(#cue-sh)">
+      {/* V4: upper right, in the sky clear of his head (upper left in the collapse framing) and above the house roof
+          as the camera lowers (36-44) */}
+      <text x={1006} y={196} textAnchor="end" fontFamily={UI_FONT} fontWeight={700} fontSize={36} letterSpacing={4} fill="#17324A" filter="url(#cue-sh)">
         {CUE.text}
       </text>
     </g>

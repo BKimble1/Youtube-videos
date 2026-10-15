@@ -14,7 +14,6 @@ import {HAND_BRACE, HAND_CLUTCH, HandPose, mixHand} from '../art/Hand';
 import {Hero, PortModule, SEC, secFrame, SecFrame, SectionLayers, VesselTube, vesselPath, WallCell, TissueFill} from '../art/Interior';
 import {ChestCut, CutEdge, cutGeo, cutPathD} from '../art/Cutaway';
 import {foreRadii, manJoints, ManPose, torsoPath} from '../art/Man';
-import {DogPose} from '../art/Dog';
 import {Cam} from '../lib/camera';
 import {deviceState3} from '../lib/device3';
 import {limbGeo} from '../lib/limb';
@@ -22,7 +21,7 @@ import {spline, splineRec, SKey} from '../lib/motion';
 import {add, clamp, easeInOut, easeOut, fmt, inv, lerp, mul, noise1, sub, V} from '../lib/math';
 import {Glow} from '../lib/shade';
 import {B} from '../lib/timeline3';
-import {collapseCam, collapseState, PROP} from './Opening';
+import {collapseCam, collapseState, dogAt, PROP} from './Opening';
 import {Scene} from './Scene';
 
 const ease = easeInOut;
@@ -155,11 +154,6 @@ const handAt = (f: number): {l: HandPose; r: HandPose} => {
   return {l, r};
 };
 
-const dogAt = (f: number): DogPose => {
-  const d0 = collapseState(Math.min(f, B.settle)).dog;
-  if (f < B.settle) return d0;
-  return {...d0, head: d0.head + 5 * Math.sin(f * 0.05), tail: d0.tail + 3 * Math.sin(f * 0.19), step: d0.step, stepAmt: 0, lean: 2 * Math.sin(f * 0.04)};
-};
 
 // ---------------------------------------------------------------- camera
 export const SEC_VIEW = W(SF.Xp - 760, 420);
@@ -397,6 +391,7 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
   return (
     <Scene
       id={id}
+      f={f}
       cam={cam}
       man={man}
       expr={expr}
@@ -408,7 +403,6 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
       dev={dev}
       backdrop={backdrop}
       backdropC={sectionMode ? W(SF.Xp - 600, 400) : BAND_C}
-      leash={!xMode && !sectionMode}
       nearLegFront={f > 24}
       noTufts={f > B.macro - 30}
       afterRightArm={
@@ -421,19 +415,15 @@ export const Journey3: React.FC<{id: string; f: number}> = ({id, f}) => {
       }
       overAll={overAll}
       extra={(() => {
-        // the warning lands in the red screen: one ring out of the band
-        const t = inv(B.red - 1, B.red + 14, f);
+        // V4: the warning landing at B.red is the device's own alarm ring (lib/device3.ts alarmAt, drawn by Wrist3D
+        // round the glass, outside the case), the same helper as the loop alarm
         const tx = inv(B.tx0, B.tx1, f);
         return (
           <g>
-            {t > 0 && t < 1 && (
-              <g>
-                <circle cx={fmt(BAND_C.x)} cy={fmt(BAND_C.y)} r={fmt(14 + t * 70)} fill="none" stroke="#FF5A66" strokeWidth={fmt(5 * (1 - t) + 1)} opacity={0.9 * (1 - t)} />
-                <circle cx={fmt(BAND_C.x)} cy={fmt(BAND_C.y)} r={fmt(10 + t * 40)} fill="none" stroke="#FFD6D9" strokeWidth={fmt(2.5 * (1 - t) + 0.5)} opacity={0.8 * (1 - t)} />
-              </g>
-            )}
-            {/* the transmission pulse: a blue ring leaves the band and rises out of frame toward the street */}
-            {tx > 0 && tx < 1 && (
+            {/* the transmission pulse: a blue ring leaves the band and rises toward the street; it is drawn through
+                its last frame (B.tx1) and the map picks it up one frame on at the same screen point and speed
+                (Dispatch.tsx txPulseW/txHandoff replicate this world path: keep them in step) */}
+            {tx > 0 && f <= B.tx1 && (
               <g>
                 <Glow id={`${id}-txg`} c={add(BAND_C, {x: -40 * ease(tx), y: -520 * Math.pow(tx, 1.4)})} r={60 + 40 * tx} color="#39C6F4" alpha={0.8 * (1 - tx * 0.3)} />
                 <circle cx={fmt(BAND_C.x - 40 * ease(tx))} cy={fmt(BAND_C.y - 520 * Math.pow(tx, 1.4))} r={fmt(10 + 34 * tx)} fill="none" stroke="#BFF3FF" strokeWidth={fmt(4)} opacity={0.95} />

@@ -1,17 +1,20 @@
-// One street-world scene with the same rig, dog, band and camera; every V2 shot that shows him uses it.
+// One street-world scene with the same rig, dog, leash, band and camera; every shot that shows him uses it.
 // Optional layers: the diagram backdrop that isolates the forearm (section views), the x-ray of the chest and
 // upper arm, and extras drawn in the world after him (the drone, light, rings).
+// V4: the leash is drawn here and only here, from the dog's collar to its released handle on the grass, between the
+// dog and the man; it is never tied to his hands and has no visibility gates (the section backdrop covers it).
 import React from 'react';
 import {DeviceView} from '../art/Device';
-import {collarRing, Dog, DogPose} from '../art/Dog';
+import {Dog, DogPose} from '../art/Dog';
 import {Expr} from '../art/Head';
 import {HandPose} from '../art/Hand';
+import {Leash} from '../art/Leash';
 import {Man, manJoints, ManPose} from '../art/Man';
 import {FrontTufts, Street} from '../art/Street';
 import {Cam} from '../lib/camera';
 import {clamp, V} from '../lib/math';
 import {SoftShadow} from '../lib/shade';
-import {Contacts, GROUND, Leash} from './StreetShots';
+import {Contacts, GROUND} from './StreetShots';
 
 const f2 = (n: number) => n.toFixed(2);
 
@@ -31,6 +34,8 @@ export const Backdrop: React.FC<{id: string; c: V; a: number}> = ({id, c, a}) =>
 
 export type SceneProps = {
   id: string;
+  /** frame (loop time in Aftermath3), for the leash's secondary sway */
+  f: number;
   cam: Cam;
   man: ManPose;
   expr: Expr;
@@ -44,6 +49,7 @@ export type SceneProps = {
   backdropC?: V;
   afterRightArm?: React.ReactNode;
   beforeLeftForearm?: React.ReactNode;
+  /** explicit opt-out only (default true); no shot gates it */
   leash?: boolean;
   /** drawn in the world after him (drone, rings, light) */
   extra?: React.ReactNode;
@@ -55,7 +61,7 @@ export type SceneProps = {
   noTufts?: boolean;
 };
 
-export const Scene: React.FC<SceneProps> = ({id, cam, man, expr, blink = 0, lHand, rHand, dog, hairSway = 0, dev, backdrop = 0, backdropC, afterRightArm, beforeLeftForearm, leash = true, extra, under, nearLegFront, overAll, noTufts}) => {
+export const Scene: React.FC<SceneProps> = ({id, f, cam, man, expr, blink = 0, lHand, rHand, dog, hairSway = 0, dev, backdrop = 0, backdropC, afterRightArm, beforeLeftForearm, leash = true, extra, under, nearLegFront, overAll, noTufts}) => {
   const j = manJoints(man);
   // the left forearm's own contact shadow on the grass when it rests there
   const fa = j.L;
@@ -63,17 +69,17 @@ export const Scene: React.FC<SceneProps> = ({id, cam, man, expr, blink = 0, lHan
   const mid = {x: (fa.E.x + fa.W.x) / 2, y: (fa.E.y + fa.W.y) / 2};
   const ang = (Math.atan2(fa.W.y - fa.E.y, fa.W.x - fa.E.x) * 180) / Math.PI;
   const flen = Math.hypot(fa.W.x - fa.E.x, fa.W.y - fa.E.y);
+  // V4: the planted palm's own contact shadow follows the wrist's height above the plant (GROUND - 14), so the hand
+  // reads as pressing the grass (V3 keyed it to GROUND + 30, which left it at alpha 0.08 while planted)
+  const handOn = clamp(1 - (GROUND - 14 - fa.W.y) / 40);
   return (
     <Street id={`${id}-st`} cam={cam} fg={!noTufts && backdrop < 0.05 && cam.z < 3 ? <FrontTufts id={`${id}-fg`} xs={[[60, 2050, 1.6], [980, 2080, 1.8], [820, 2120, 1.4]]} /> : null}>
       <Contacts id={`${id}-ct`} j={j} ground={GROUND} />
-      {onGround > 0.01 && (
-        <g>
-          <SoftShadow id={`${id}-fas`} c={{x: mid.x + 4, y: mid.y + 22 * man.s}} rx={flen * 0.62} ry={13 * man.s} rotate={ang} alpha={0.34 * onGround} />
-          <SoftShadow id={`${id}-hds`} c={{x: fa.W.x + Math.cos((fa.handAng * Math.PI) / 180) * 50 * man.s, y: fa.W.y + 24 * man.s}} rx={52 * man.s} ry={12 * man.s} rotate={fa.handAng} alpha={0.3 * onGround} />
-        </g>
-      )}
+      {onGround > 0.01 && <SoftShadow id={`${id}-fas`} c={{x: mid.x + 4, y: mid.y + 22 * man.s}} rx={flen * 0.62} ry={13 * man.s} rotate={ang} alpha={0.34 * onGround} />}
+      {handOn > 0.01 && <SoftShadow id={`${id}-hds`} c={{x: fa.W.x + Math.cos((fa.handAng * Math.PI) / 180) * 50 * man.s, y: fa.W.y + 24 * man.s}} rx={52 * man.s} ry={12 * man.s} rotate={fa.handAng} alpha={0.3 * handOn} />}
       {under}
       <Dog id={`${id}-dog`} pose={dog} />
+      {leash && <Leash id={`${id}-ls`} dog={dog} f={f} />}
       <Man
         id={`${id}-man`}
         pose={man}
@@ -94,7 +100,6 @@ export const Scene: React.FC<SceneProps> = ({id, cam, man, expr, blink = 0, lHan
           </g>
         }
       />
-      {leash && backdrop < 0.05 && <Leash a={j.R.W} b={collarRing(dog)} slack={60 + 40 * clamp((j.R.W.y - 1300) / 400)} />}
       {extra}
     </Street>
   );

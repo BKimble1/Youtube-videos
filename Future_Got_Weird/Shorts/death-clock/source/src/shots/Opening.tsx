@@ -6,8 +6,9 @@ import {EXPR_GASP, EXPR_PAIN, EXPR_WINCE, Expr, mixExpr} from '../art/Head';
 import {HAND_BRACE, HAND_CLUTCH, HAND_RELAXED, HandPose, mixHand} from '../art/Hand';
 import {ManPose} from '../art/Man';
 import {DogPose, DOG_IDLE} from '../art/Dog';
-import {clamp, easeOut, inv, lerp, noise1, settle} from '../lib/math';
+import {clamp, easeInOut, easeOut, inv, lerp, noise1, settle} from '../lib/math';
 import {SKey, spline, splineRec, spring} from '../lib/motion';
+import {B} from '../lib/timeline3';
 import {GROUND, followThrough} from './StreetShots';
 
 // feet stay where they stand through the whole collapse
@@ -87,6 +88,32 @@ export const collapseState = (f: number): OpenState => {
   };
   const blink = f > 58 ? clamp(1 - Math.abs(((f - 58) % 70) - 3) / 3) : 0;
   return {man, expr, lHand, rHand, dog, hairSway: ft.hairSway, blink};
+};
+
+/** V4: the one dog pose for the whole film (Journey3 and Aftermath3 both read it, so the collar, and the leash clipped
+ *  to it, come from one place). f is story time: Aftermath3 passes its loop time (f >= TOTAL for frames 0-7).
+ *  The collapse startle (step back, lean, perked ears), then alert idling beside him, then, after green, it sits. */
+export const dogAt = (f: number): DogPose => {
+  if (f < B.settle) return collapseState(f).dog;
+  if (f < B.map0) {
+    const d0 = collapseState(B.settle).dog;
+    return {...d0, head: d0.head + 5 * Math.sin(f * 0.05), tail: d0.tail + 3 * Math.sin(f * 0.19), stepAmt: 0, lean: 2 * Math.sin(f * 0.04)};
+  }
+  const sit = easeInOut(inv(B.green, B.life, f));
+  return {
+    x: 1070,
+    y: 1790,
+    s: 1.4,
+    facing: -1,
+    sit,
+    head: 26 + 4 * Math.sin(f * 0.05),
+    ears: 0.95,
+    tail: lerp(-6, 14, easeInOut(inv(B.rise0, B.green, f))) + 6 * Math.sin(f * 0.3) * sit,
+    lean: 0,
+    step: 0,
+    stepAmt: 0,
+    worry: lerp(1, 0.4, easeInOut(inv(B.rise0, B.life, f))),
+  };
 };
 
 /** Low three-quarter framing of the collapse (camera y below his chest, ground in the lower third). */
