@@ -22,3 +22,7 @@ qa/**/*.png
 !qa/ingest_test_sheet.png
 !qa/short_r2/render_sheet.png
 source/public/companion/sfx_companion.wav
+# Short v3: regenerated narration/effects WAVs and intermediate edits of the takes
+source/public/short3/*.wav
+audio/short_v3/tight/*.wav
+audio/short_v3/tight/*.mp3

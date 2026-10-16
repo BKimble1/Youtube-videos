@@ -26,7 +26,9 @@ PLAN = [
     ('c06', ('b2', 'This', 0), 'event', {}, {}),
     ('c07', ('b2', 'Everything', 0), 'foot', {'slot': 'F2_RAMP_CLIMB', 'chip': 'Tesla demonstration · closed course'}, {}),
     ('c08', ('b2', 'The', 0), 'foot', {'slot': 'F3_INVERTED', 'chip': 'Tesla demonstration · closed course'}, {}),
-    ('c09', ('b2', 'On', 0), 'foot', {'slot': 'F4_LAUNCH_ROLL', 'chip': 'Tesla demonstration · closed course'}, {}),
+    # side angle of the second run (2:06.40 → 2:11.60): leaves the ramp on "launched", touches down as the shot ends;
+    # c01 already showed the aerial angle of the same run
+    ('c09', ('b2', 'On', 0), 'foot', {'slot': 'F1_AIRBORNE', 'offset': -1.85, 'chip': 'Tesla demonstration · closed course'}, {}),
     ('c10', ('b2', 'It', 0), 'foot', {'slot': 'F6_FIVE_VEHICLES'}, {}),
     ('c12', ('b2', 'This', 1), 'timeline', {}, {'y17': ('b2', '2017', 0), 'y28': ('b2', '2028', 0)}),
     ('c13', ('b3', 'Start', 0), 'suction', {}, {'grav': ('b3', 'gravity', 0), 'fan': ('b3', 'fans', 0), 'gap': ('b3', 'thin', 0),

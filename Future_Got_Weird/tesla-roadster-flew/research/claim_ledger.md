@@ -68,3 +68,21 @@ Source: the owner's five screen recordings of Tesla's replay (draft release `roa
 | C8 | **Conflict.** The on-stream 0–60 run shows a stopwatch running from 00.00 and **stopping at 01.00** (`rec_225218` 0:17.15–0:18.10), followed by a card reading **"0-60mph 1 sec"** (0:46–0:48). No "0.81" appears in any recording | Short: the narration still says "0.81 seconds? Tesla's own test." The card now reads "TESLA'S FIGURE" with the note "the stream's own timer read 1.00 s". Companion: B1 re-voiced to "at about one second", B5 re-voiced to "the on-screen timer stopped at one second flat. Tesla says it has measured as little as 0.81 seconds", and the g-force arithmetic is redone for 1.00 s (≈ 2.7 g) |
 | C13 | **Not shown.** In `rec_225050` the doors open and several people approach the car. No Optimus robot is visible in the seat | Companion: "And in the driver's seat? An Optimus robot… programmed into the car." **removed** (8 s cut from B2) |
 | C16 | Recomputed: 26.8 m/s ÷ 1.00 s ≈ 27 m/s² ≈ **2.7 g** (stream run); 0.81 s ≈ 3.4 g (Tesla's figure) | Companion card shows both |
+
+## Short v3 recheck (16 Oct 2026, ~04:20 UTC)
+
+- **C8 resolved.** Search results for Gizmodo, Jalopnik, Electrek and CarScoops (the sites themselves don't resolve
+  here) agree on the order. The stream first showed a *pre-recorded clip* of a one-second run (our `rec_225218`, timer
+  stopping at 01.00, card "0-60mph 1 sec"). Then came a *live run* that Tesla says reached 60 mph in 0.81 s. It was not
+  timed on screen, and Electrek mentions "technical difficulties with the timer". Our `rec_225340` 0:45–0:48 shows a
+  launch from the start line with no timer overlay, recorded after `rec_225218`. That is consistent with it being the
+  live run, though the recording itself can't prove it. Short v3 says "0.81 seconds, by Tesla's own test". It shows
+  the number over that launch with "TESLA'S CLAIM · ITS OWN TEST" and "live run · the stream's timed clip read 1.00 s".
+- **C10/C11** (Rocket invite-only, one seat, not approved for public road use): consistent again across outlets in a
+  fresh search (Electrek, Teslarati, Motor Illustrated, Drive Tesla Canada). `www.tesla.com` doesn't resolve from this
+  container (DNS), so the live page wording is **still unverified first-hand**.
+- **C12** (2028 production target): consistent ("scheduled to go into production in 2028"). It appears in v3 only as
+  on-screen text.
+- **C5 / airborne control:** the side replay of the hop (`rec_224911` 0:36.2–0:38.6) shows gas plumes firing upward
+  while the car is upside down, an opposite pair (one up, one down) while it rolls, and two plumes firing down once it
+  is upright. Every v3 vector is drawn on one of those visible plumes. No nozzle positions are drawn.

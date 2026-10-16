@@ -1,6 +1,35 @@
-# QA report: Tesla Roadster Short and companion (16 Oct 2026, ~03:45 UTC)
+# QA report: Tesla Roadster Short and companion
 
-## Short: review copy v2, with real footage (not yet approved as final)
+## Short: review copy v3 (owner revision of 16 Oct 2026; not yet approved as final)
+
+`exports/FGW_Roadster_Short_REVIEW_v3.mp4` is Git-ignored. Rebuild it with `TAG=v3 bash tools/render_short_v3.sh`.
+The script, the timestamped shot list and the change list are in `script/short_v3_script.md`. Exact source in/out
+times are in `footage/CLIP_LEDGER.md` (Short v3 section).
+
+| Check | Result |
+|---|---|
+| Format | 1080×1920, 30 fps, H.264 yuv420p, 1102 frames = **36.73 s**; AAC 48 kHz stereo 320 kb/s; 18.3 MB |
+| Loudness | **−14.1 LUFS integrated, −1.5 dBTP**, LRA 2.7 LU |
+| Black frames | none |
+| Holds | freezedetect (0.5 s) flags only 8.7–9.2 s (diagram settling) and 10.87–11.43 s (the zoomed "thin gap" view). Both have slow drift and jostling air below the detector's threshold. The first render had 1.2 s static holds; these were fixed by adding a slow camera drift, a streaming outside-air field and pulsing pressure arrows |
+| First 2 s | Inspected at 10 fps (`qa/evidence/short_v3_first2s_10fps.jpg`). 0.00–0.53: the white Roadster upright midair on two jets, the whole car in frame, bright. 0.53: the top view of the car on the ramp. 1.80: upside down. Narration starts at 0.08 s |
+| Car silhouette | The suction diagram's car is hand-traced from `rec_224911` 0:38.50 (`research/trace/profile_trace.json`): white body, dark side skirt, dark canopy, wheel covers, red tail light. No fans, vents or nozzles are drawn. The gap is opened by 10 source px for legibility, under the one "SIMPLIFIED ILLUSTRATION" label |
+| Diagrams | Suction: air leaves the gap, the camera pushes in on "THIN GAP" and then "LOW PRESSURE", and pulls back to "NORMAL AIR PRESSURE" and "PRESSES IT INTO THE RAMP". Airborne: real flip at half speed, with vectors only on visible plumes ("GAS JETS", "ROLL" with an opposite pair, "HOLD STEADY") |
+| 0.81 graphic | Over the live run (`rec_225340`, which has no timer overlay): counts 0.00 → 0.81 on the spoken number, then "TESLA'S CLAIM · ITS OWN TEST" and "live run · the stream's timed clip read 1.00 s" |
+| Captions and safe areas | Phrase captions at y 1290–1450 and x 110–930. They clear the bottom title zone (y > 1580) and the right-hand button rail (x > 930). Checked at 360×640 with the zones overlaid (`qa/evidence/short_v3_phone_safe_areas.jpg`). Upload SRT: `captions/FGW_Roadster_Short_v3.srt` |
+| Ending and loop | The last frame is `rec_224911` 0:38.08 (rolling upright). Frame 0 is 0:38.30, on the other side of the broadcast's own camera cut, so the loop plays as an ordinary cut (`qa/evidence/short_v3_loop_seam.jpg`). The demo audio also continues across it |
+| Real event sound | Hop lift-off and touchdown (s09), the live run's launch blast (s10), and jet hiss under the loop shots. **The ramp recording `rec_224730` is silent**, so the ramp launch and landing carry designed effects only |
+| Footage share | 28.9 of 36.7 s is real footage (79%). 13.8 s of it carries overlays. The suction diagram (7.8 s) is the one fully animated stretch |
+| Wording check | An independent Scribe transcription of the edited narration (uploaded as audio, not aligned to the prompt) matched the script word for word |
+
+### Not checked here (v3)
+
+- **Listening.** There is no audio playback here: the voice, the event audio levels and the effects all need one listen.
+- **Tesla's live Roadster page** doesn't resolve from this container. The Rocket wording and the trim names rest on
+  consistent press reports (claim ledger, "Short v3 recheck").
+- **Rights and Content ID.** These are only visible in YouTube Studio during upload.
+
+## Earlier: review copy v2 (superseded by v3)
 
 `exports/FGW_Roadster_Short_REVIEW_v2.mp4` is Git-ignored. It was delivered to the owner in the session and can be
 regenerated with `TAG=v2 bash tools/render_short.sh`.
@@ -38,4 +67,6 @@ regenerated with `TAG=v2 bash tools/render_short.sh`.
 
 ## Companion
 
-See the companion section below once its review render is inspected.
+Review copy v1 was rendered (`exports/FGW_Roadster_Companion_REVIEW_v1.mp4`, 3:34) but is **on hold**. It still uses
+the box-car suction and thruster diagrams the owner rejected for the Short. Those panels are to be rebuilt with the v3
+traced Roadster and the real-footage vectors before anyone reviews it.

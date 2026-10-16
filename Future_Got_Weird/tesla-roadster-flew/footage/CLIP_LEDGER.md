@@ -60,3 +60,39 @@ Content ID has not been observed; it only appears in YouTube Studio during uploa
 | c20 | 2:01.90–2:08.94 | F4_LAUNCH_ROLL | `rec_224730.mp4` | 2:17.95 → 2:24.99 |
 | c22 | 2:16.40–2:22.64 | F7_ACCEL_RUN | `rec_225218.mp4` | 0:15.60 → 0:21.84 |
 | c26 | 3:02.36–3:06.92 | F1_AIRBORNE | `rec_224730.mp4` | 2:08.25 → 2:12.81 |
+
+## Short v3 (9:16, owner revision of 16 Oct 2026): clips and shots as rendered
+
+The clip files are Git-ignored and cut with ffmpeg from the recordings above (H.264 CRF 14, 30 fps). The slow-motion
+clips are motion-interpolated with ffmpeg `minterpolate`. Each is split at broadcast camera cuts so that no frame blends
+two shots.
+
+| Clip (`source/public/footage/`) | Recording | Span | Notes |
+|---|---|---|---|
+| `v3_hop_side.mp4` | `rec_224911.mp4` | 0:33.80–0:40.00 | side replay of the hop: lift-off, flip, upright on two jets; broadcast cut at 0:38.12–0:38.14 |
+| `v3_hop_slow.mp4` | `rec_224911.mp4` | 0:36.20–0:38.12 + 0:38.14–0:39.04 | the same, half speed |
+| `v3_hop_front.mp4` | `rec_224911.mp4` | 0:17.80–0:22.40 | front angle then side angle (cut at 0:20.97); real sound |
+| `v3_hop_aerial.mp4` | `rec_224911.mp4` | 0:41.00–0:49.00 | aerial replay of the hop |
+| `v3_overhead.mp4` | `rec_224730.mp4` | 1:07.00–1:10.20 | top view on the ramp from 1:08.25 (first run) |
+| `v3_inverted.mp4` | `rec_224730.mp4` | 1:16.90–1:20.30 | close-up from below, upside down (1:17.47–1:19.90) |
+| `v3_ramp_aerial.mp4` | `rec_224730.mp4` | 2:15.80–2:26.80 | aerial, second run: inverted, launch, roll, landing |
+| `v3_ramp_side.mp4` | `rec_224730.mp4` | 2:04.50–2:13.50 | side angle, second run (not used in v3) |
+| `v3_live.mp4` | `rec_225340.mp4` | 0:45.00–0:48.40 | live 0–60 run, no timer overlay; real launch sound |
+| `v3_live_slow.mp4` | `rec_225340.mp4` | 0:46.80–0:48.05 | the launch at 0.4× |
+| `v3_accel.mp4`, `v3_stage.mp4` | `rec_225218`, `rec_225050` | | cut for review, not used |
+
+| Shot | Short time | Recording | Source in → out |
+|---|---|---|---|
+| s01 | 0.00–0.53 | `rec_224911.mp4` | 0:38.30 → 0:38.83 |
+| s02 | 0.53–1.80 | `rec_224730.mp4` | 1:08.30 → 1:09.57 |
+| s03 | 1.80–3.42 | `rec_224730.mp4` | 1:17.50 → 1:19.12 |
+| s04 | 3.42–5.85 | `rec_224730.mp4` | 2:17.12 → 2:19.55 |
+| s05 | 5.85–6.70 | `rec_224730.mp4` | 2:22.90 → 2:23.75 |
+| s06 | 6.70–8.50 | `rec_224730.mp4` | 1:18.65 → 1:19.82 (0.65×) |
+| s07 | 8.50–16.30 | (illustration) | traced from `rec_224911.mp4` 0:38.50 |
+| s08 | 16.30–20.40 | `rec_224911.mp4` | 0:36.50 → 0:38.56 (0.5×) |
+| s09 | 20.40–23.45 | `rec_224911.mp4` | 0:19.40 → 0:22.45 |
+| s10 | 23.45–27.50 | `rec_225340.mp4` | 0:45.60 → 0:46.85, then 0:46.80 → 0:47.92 (0.4×) |
+| s11 | 27.50–33.10 | `rec_224911.mp4` | 0:43.40 → 0:49.00 |
+| s12 | 33.10–34.45 | `rec_224730.mp4` | 2:20.80 → 2:22.15 |
+| s13 | 34.45–36.73 | `rec_224911.mp4` | 0:35.83 → 0:38.12 (runs into s01) |

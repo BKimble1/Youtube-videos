@@ -7,33 +7,46 @@ as evidence, plus the channel's own warm vector animation for the explanations.
 
 | Piece | State |
 |---|---|
-| **Short** (42.1 s, 9:16) | Script, narration, animation, captions, sound and render pipeline are done. **Final render blocked: the official Tesla footage can't be reached from this environment.** Only a placeholder review copy exists, and it is not for upload. See `QA_REPORT.md` and `footage/CUT_SHEET.md` |
-| **Companion** (≈3:38, 16:9) | **Paused at the owner's request** until the Short is final. Done: script, six narration blocks (Test Voice), stitched track and word timings, shot list (`source/src/data/companion_shots.json`), panels (`source/src/companion/Panels.tsx`). Not done: the timeline composition, effects, render, QA, thumbnail |
+| **Short** (36.7 s, 9:16) | **Review copy v3** (owner revision): bright Roadster in frame 0, the traced-car suction diagram, airborne vectors on real plumes, the Semi payoff, the 0.81 graphic over the live run, and a loop. Composition `ShortV3`. Awaiting the owner's approval and one listen. Then run `bash tools/render_short_v3.sh --final`. Script and change list: `script/short_v3_script.md`. Review copy v2 (`Short`) is superseded |
+| **Companion** (3:34.2, 16:9) | Review copy v1 rendered but **on hold**: its suction and thruster panels still use the rejected box car. To be rebuilt with the v3 traced Roadster and real-footage vectors. Thumbnail draft: `tools/render_thumbnail.sh` |
+
+Nothing has been uploaded or published. The footage release `roadster-footage-2026-10-15` is still a draft.
+
+**Owner decisions before FINAL.**
+
+1. Listen once to Short v3: the voice (pauses tightened, no time-stretch), the real event sound under the hop and the
+   live launch, and the effects. Auditions are in `audio/short_v3/auditions/` if you want a different voice.
+2. Recheck Tesla's live Roadster page for the Rocket road-use wording and the trim names (claim ledger C10, C11).
 
 ## Files
 
 | What | Where |
 |---|---|
-| Claim ledger (facts, sources, corrections to the brief) | `research/claim_ledger.md` |
-| Short script, storyboard, take choice | `script/short_script.md` |
+| Claim ledger (facts, sources, corrections to the brief, footage checks) | `research/claim_ledger.md` |
+| Short v3 script, shot list, change list | `script/short_v3_script.md` (v2: `script/short_script.md`) |
 | Companion script | `script/companion_script.md` |
-| Footage needed: source URL, windows, slot lengths, hand-off | `footage/CUT_SHEET.md` |
-| Clip ledger (filled at ingest) | `footage/CLIP_LEDGER.md` |
-| Narration takes / alignments | `audio/short/`, `audio/companion/` (ElevenLabs flow `8baHNxGa4ViVC2FKXh4s`) |
-| Remotion source | `source/src/` (composition `Short`; footage slots in `source/src/data/footage.json`) |
-| Captions (upload) | `captions/FGW_Roadster_Short.srt` |
-| Title, description, pinned comment | `upload/UPLOAD_TEXT_SHORT.md` |
-| QA | `QA_REPORT.md`, `qa/` |
+| Clip ledger (source recordings, exact in/out of every footage shot) | `footage/CLIP_LEDGER.md` |
+| Cut lists (in-points, 9:16 crops) | `footage/cuts_short.json`, `footage/cuts_companion.json` |
+| Original footage hand-off sheet | `footage/CUT_SHEET.md` |
+| Narration takes and alignments | `audio/short/`, `audio/companion/` (ElevenLabs flow `8baHNxGa4ViVC2FKXh4s`) |
+| Remotion source | `source/src/` (compositions `ShortV3` in `short3/`, `Short` (v2), `Companion`, `Thumbnail`) |
+| Captions (upload) | `captions/FGW_Roadster_Short_v3.srt`, `captions/FGW_Roadster_Companion.srt` |
+| Title, description, pinned comment, chapters | `upload/` |
+| QA | `QA_REPORT.md`, `qa/evidence/` |
 
-## Finish the Short once the footage arrives
+## Rebuild from a fresh checkout
 
     cd Future_Got_Weird/tesla-roadster-flew
     (cd source && npm ci)
-    python3 tools/ingest_footage.py --replay <replay.mp4> --cuts footage/cuts.json   # or: --clips <dir of F1_…F6_….mp4>
-    # inspect qa/footage/*.png, then set cx/cy/zoom per slot in source/src/data/footage.json
-    python3 tools/check_footage.py short                                            # must report 6/6
-    bash tools/render_short.sh                                                      # → exports/FGW_Roadster_Short_FINAL.mp4 (−14 LUFS, −1.5 dBTP)
+    # the owner's recordings → footage/release/rec_<time>.mp4 (draft release roadster-footage-2026-10-15)
+    python3 tools/ingest_footage.py --cuts footage/cuts_short.json
+    python3 tools/ingest_footage.py --cuts footage/cuts_companion.json
+    python3 tools/check_footage.py short && python3 tools/check_footage.py companion
+    bash tools/cut_v3_clips.sh               # Short v3 clips (spans in footage/CLIP_LEDGER.md)
+    TAG=v3 bash tools/render_short_v3.sh     # → exports/FGW_Roadster_Short_REVIEW_v3.mp4 (−14 LUFS, −1.5 dBTP)
+    TAG=v1 bash tools/render_companion.sh    # → exports/FGW_Roadster_Companion_REVIEW_v1.mp4 (−15 LUFS, −1.5 dBTP)
 
-Stills for inspection: `cd source && COMP=Short node stills.mjs ../qa/<dir> t:<seconds> …`.
-Regenerated files (effects WAV, companion narration WAV, renders, Tesla clips) are Git-ignored. Rebuild them with
-`tools/make_sfx_short.py`, `tools/stitch_companion.py` and the render script.
+Stills for inspection: `cd source && COMP=ShortV3 node stills.mjs ../qa/<dir> t:<seconds> …` (or `COMP=Companion`).
+Frame sheets of a source window: `bash tools/scan_window.sh <file> <start> <dur> <fps> <out.png>`.
+Regenerated files (Tesla clips, effects and narration WAVs, renders, frame sheets) are Git-ignored. The render
+scripts rebuild the WAVs.

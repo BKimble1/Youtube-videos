@@ -21,10 +21,12 @@
 
 **Captions:** `captions/FGW_Roadster_Companion.srt`.
 
-**Thumbnail concept.** A real midair frame of the car on its jets, from the side angle (`rec_224730` ≈ 2:08.3–2:09.5),
-cropped large. Add one original vector arrow pointing at the jet plume, and at most `HOW DID IT?`. No drawn Roadster
-and no city skyline. Pick the frame from the review render or the frame sheets in `qa/footage_scan/`.
+**Thumbnail (draft).** `exports/FGW_Roadster_Companion_THUMB_draft2.png` (1280×720; rebuild with
+`TAG=draft2 bash tools/render_thumbnail.sh`). A real midair frame from the side angle (`rec_224730` at 2:08.60): the
+car just off the ramp, underside toward camera, one gas jet firing sideways and one downward. It is cropped large
+(1.75×), with one original saffron arrow toward the sideways jet and `HOW DID IT?`. There is no drawn Roadster and no
+skyline. It was checked at 320×180 feed size, where the words and the car still read.
 
-**Pinned comment:** Would you trust the upside-down drive or the landing more?
+**Pinned comment:** Which matters more to you: the stunt, or the version people can actually drive? (the video's closing question)
 
 **After both are live:** set this video as the Short's Related Video in YouTube Studio.

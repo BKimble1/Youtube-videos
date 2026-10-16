@@ -23,7 +23,9 @@ Claims: C2, C3, C8.
 *(Edited after the footage arrived. "five Tesla vehicles" became the pickup `b2pickup_rowofteslas_t1_jOAN`, because five
 can't be counted (C7). The Optimus sentences were cut, because the supplied recordings don't show it (C13).)*
 
-Picture: F2, F3, F4, F6 footage with the chip `Tesla demonstration · closed course`; timeline card 2017 → 2028.
+Picture: F2 ramp climb, F3 inverted close-up, the side angle of the second run (F1 clip, 2:06.40–2:11.60: leaves the
+ramp, rolls upright, touches down) and F6 hop, with the chip `Tesla demonstration · closed course`; timeline card
+2017 → 2028.
 Claims: C1, C2, C3, C7, C13, C14, C12.
 
 ## B3 · Upside down (≈0:58–1:43)
