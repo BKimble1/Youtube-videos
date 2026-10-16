@@ -1,0 +1,13 @@
+# Dependencies and Remotion caches
+source/node_modules/
+source/.remotion/
+# Renders: review copies and masters are regenerated with tools/render_short.sh
+exports/
+# Official Tesla clips are not redistributed through the repo; footage/CLIP_LEDGER.md records them
+source/public/footage/*
+!source/public/footage/.gitkeep
+# Regenerated audio and QA frame dumps
+source/public/short/sfx_short.wav
+source/public/companion/narration_companion.wav
+qa/**/f[0-9]*.png
+tools/__pycache__/

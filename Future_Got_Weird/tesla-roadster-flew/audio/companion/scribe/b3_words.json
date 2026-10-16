@@ -1,0 +1,800 @@
+{
+"words": [
+{
+"text": "[curious]",
+"type": "word",
+"start": 0,
+"end": 0.128
+},
+{
+"text": "Start",
+"type": "word",
+"start": 0.16,
+"end": 0.4
+},
+{
+"text": "with",
+"type": "word",
+"start": 0.48,
+"end": 0.56
+},
+{
+"text": "the",
+"type": "word",
+"start": 0.6,
+"end": 0.64
+},
+{
+"text": "upside-down",
+"type": "word",
+"start": 0.72,
+"end": 1.36
+},
+{
+"text": "trick,",
+"type": "word",
+"start": 1.44,
+"end": 1.84
+},
+{
+"text": "because",
+"type": "word",
+"start": 1.96,
+"end": 2.08
+},
+{
+"text": "it's",
+"type": "word",
+"start": 2.12,
+"end": 2.24
+},
+{
+"text": "the",
+"type": "word",
+"start": 2.32,
+"end": 2.4
+},
+{
+"text": "cleverest.",
+"type": "word",
+"start": 2.48,
+"end": 3.52
+},
+{
+"text": "Under",
+"type": "word",
+"start": 3.64,
+"end": 3.76
+},
+{
+"text": "that",
+"type": "word",
+"start": 3.84,
+"end": 3.92
+},
+{
+"text": "ramp,",
+"type": "word",
+"start": 4,
+"end": 4.56
+},
+{
+"text": "gravity",
+"type": "word",
+"start": 4.8,
+"end": 5.04
+},
+{
+"text": "pulls",
+"type": "word",
+"start": 5.12,
+"end": 5.28
+},
+{
+"text": "the",
+"type": "word",
+"start": 5.36,
+"end": 5.44
+},
+{
+"text": "car",
+"type": "word",
+"start": 5.52,
+"end": 5.6
+},
+{
+"text": "away",
+"type": "word",
+"start": 5.68,
+"end": 5.92
+},
+{
+"text": "with",
+"type": "word",
+"start": 6,
+"end": 6.08
+},
+{
+"text": "its",
+"type": "word",
+"start": 6.2,
+"end": 6.32
+},
+{
+"text": "full",
+"type": "word",
+"start": 6.4,
+"end": 6.56
+},
+{
+"text": "weight.",
+"type": "word",
+"start": 6.64,
+"end": 7.28
+},
+{
+"text": "That's",
+"type": "word",
+"start": 7.36,
+"end": 7.68
+},
+{
+"text": "one",
+"type": "word",
+"start": 7.76,
+"end": 7.92
+},
+{
+"text": "g.",
+"type": "word",
+"start": 8,
+"end": 8.64
+},
+{
+"text": "To",
+"type": "word",
+"start": 8.72,
+"end": 8.8
+},
+{
+"text": "stay",
+"type": "word",
+"start": 8.88,
+"end": 8.96
+},
+{
+"text": "put,",
+"type": "word",
+"start": 9.12,
+"end": 9.68
+},
+{
+"text": "something",
+"type": "word",
+"start": 9.84,
+"end": 10
+},
+{
+"text": "has",
+"type": "word",
+"start": 10.08,
+"end": 10.16
+},
+{
+"text": "to",
+"type": "word",
+"start": 10.24,
+"end": 10.4
+},
+{
+"text": "push",
+"type": "word",
+"start": 10.52,
+"end": 10.64
+},
+{
+"text": "back",
+"type": "word",
+"start": 10.76,
+"end": 10.88
+},
+{
+"text": "harder.",
+"type": "word",
+"start": 10.96,
+"end": 11.84
+},
+{
+"text": "Tesla",
+"type": "word",
+"start": 12,
+"end": 12.16
+},
+{
+"text": "says",
+"type": "word",
+"start": 12.24,
+"end": 12.4
+},
+{
+"text": "fans",
+"type": "word",
+"start": 12.56,
+"end": 12.88
+},
+{
+"text": "pull",
+"type": "word",
+"start": 12.96,
+"end": 13.2
+},
+{
+"text": "air",
+"type": "word",
+"start": 13.32,
+"end": 13.44
+},
+{
+"text": "out",
+"type": "word",
+"start": 13.52,
+"end": 13.6
+},
+{
+"text": "from",
+"type": "word",
+"start": 13.68,
+"end": 13.76
+},
+{
+"text": "under",
+"type": "word",
+"start": 13.84,
+"end": 13.92
+},
+{
+"text": "the",
+"type": "word",
+"start": 13.96,
+"end": 14
+},
+{
+"text": "car.",
+"type": "word",
+"start": 14.08,
+"end": 14.88
+},
+{
+"text": "That",
+"type": "word",
+"start": 14.96,
+"end": 15.04
+},
+{
+"text": "leaves",
+"type": "word",
+"start": 15.08,
+"end": 15.28
+},
+{
+"text": "a",
+"type": "word",
+"start": 15.36,
+"end": 15.44
+},
+{
+"text": "thin",
+"type": "word",
+"start": 15.56,
+"end": 15.68
+},
+{
+"text": "layer",
+"type": "word",
+"start": 15.76,
+"end": 16
+},
+{
+"text": "of",
+"type": "word",
+"start": 16.08,
+"end": 16.16
+},
+{
+"text": "low-pressure",
+"type": "word",
+"start": 16.24,
+"end": 16.72
+},
+{
+"text": "air",
+"type": "word",
+"start": 16.8,
+"end": 16.96
+},
+{
+"text": "between",
+"type": "word",
+"start": 17.04,
+"end": 17.28
+},
+{
+"text": "the",
+"type": "word",
+"start": 17.36,
+"end": 17.44
+},
+{
+"text": "floor",
+"type": "word",
+"start": 17.6,
+"end": 17.76
+},
+{
+"text": "and",
+"type": "word",
+"start": 17.8,
+"end": 17.84
+},
+{
+"text": "the",
+"type": "word",
+"start": 17.92,
+"end": 18
+},
+{
+"text": "ramp,",
+"type": "word",
+"start": 18.08,
+"end": 18.64
+},
+{
+"text": "while",
+"type": "word",
+"start": 18.72,
+"end": 18.8
+},
+{
+"text": "the",
+"type": "word",
+"start": 18.84,
+"end": 18.88
+},
+{
+"text": "air",
+"type": "word",
+"start": 18.96,
+"end": 19.04
+},
+{
+"text": "on",
+"type": "word",
+"start": 19.12,
+"end": 19.2
+},
+{
+"text": "the",
+"type": "word",
+"start": 19.28,
+"end": 19.36
+},
+{
+"text": "other",
+"type": "word",
+"start": 19.48,
+"end": 19.6
+},
+{
+"text": "side",
+"type": "word",
+"start": 19.68,
+"end": 19.92
+},
+{
+"text": "stays",
+"type": "word",
+"start": 20,
+"end": 20.24
+},
+{
+"text": "at",
+"type": "word",
+"start": 20.32,
+"end": 20.4
+},
+{
+"text": "normal",
+"type": "word",
+"start": 20.52,
+"end": 20.64
+},
+{
+"text": "pressure\u2026",
+"type": "word",
+"start": 20.72,
+"end": 21.52
+},
+{
+"text": "and",
+"type": "word",
+"start": 21.6,
+"end": 21.68
+},
+{
+"text": "normal",
+"type": "word",
+"start": 21.76,
+"end": 22.08
+},
+{
+"text": "air",
+"type": "word",
+"start": 22.16,
+"end": 22.24
+},
+{
+"text": "pressure",
+"type": "word",
+"start": 22.32,
+"end": 22.64
+},
+{
+"text": "is",
+"type": "word",
+"start": 22.72,
+"end": 22.8
+},
+{
+"text": "surprisingly",
+"type": "word",
+"start": 22.92,
+"end": 23.6
+},
+{
+"text": "strong.",
+"type": "word",
+"start": 23.8,
+"end": 24.48
+},
+{
+"text": "The",
+"type": "word",
+"start": 24.56,
+"end": 24.64
+},
+{
+"text": "difference",
+"type": "word",
+"start": 24.88,
+"end": 25.12
+},
+{
+"text": "shoves",
+"type": "word",
+"start": 25.2,
+"end": 25.44
+},
+{
+"text": "the",
+"type": "word",
+"start": 25.52,
+"end": 25.6
+},
+{
+"text": "car",
+"type": "word",
+"start": 25.72,
+"end": 25.84
+},
+{
+"text": "into",
+"type": "word",
+"start": 25.92,
+"end": 26.08
+},
+{
+"text": "the",
+"type": "word",
+"start": 26.12,
+"end": 26.16
+},
+{
+"text": "surface.",
+"type": "word",
+"start": 26.24,
+"end": 27.2
+},
+{
+"text": "Tesla",
+"type": "word",
+"start": 27.28,
+"end": 27.6
+},
+{
+"text": "claims",
+"type": "word",
+"start": 27.76,
+"end": 27.92
+},
+{
+"text": "the",
+"type": "word",
+"start": 28,
+"end": 28.08
+},
+{
+"text": "system",
+"type": "word",
+"start": 28.24,
+"end": 28.4
+},
+{
+"text": "can",
+"type": "word",
+"start": 28.48,
+"end": 28.56
+},
+{
+"text": "pull",
+"type": "word",
+"start": 28.64,
+"end": 28.72
+},
+{
+"text": "up",
+"type": "word",
+"start": 28.8,
+"end": 28.88
+},
+{
+"text": "to",
+"type": "word",
+"start": 29,
+"end": 29.12
+},
+{
+"text": "two",
+"type": "word",
+"start": 29.24,
+"end": 29.36
+},
+{
+"text": "g:",
+"type": "word",
+"start": 29.44,
+"end": 30.16
+},
+{
+"text": "double",
+"type": "word",
+"start": 30.24,
+"end": 30.48
+},
+{
+"text": "what",
+"type": "word",
+"start": 30.56,
+"end": 30.64
+},
+{
+"text": "it",
+"type": "word",
+"start": 30.68,
+"end": 30.72
+},
+{
+"text": "needs",
+"type": "word",
+"start": 30.8,
+"end": 30.96
+},
+{
+"text": "to",
+"type": "word",
+"start": 31,
+"end": 31.04
+},
+{
+"text": "hang",
+"type": "word",
+"start": 31.12,
+"end": 31.28
+},
+{
+"text": "there.",
+"type": "word",
+"start": 31.36,
+"end": 32.08
+},
+{
+"text": "Racing",
+"type": "word",
+"start": 32.16,
+"end": 32.48
+},
+{
+"text": "teams",
+"type": "word",
+"start": 32.64,
+"end": 32.8
+},
+{
+"text": "tried",
+"type": "word",
+"start": 32.84,
+"end": 33.04
+},
+{
+"text": "fan",
+"type": "word",
+"start": 33.12,
+"end": 33.28
+},
+{
+"text": "cars",
+"type": "word",
+"start": 33.36,
+"end": 33.68
+},
+{
+"text": "back",
+"type": "word",
+"start": 33.76,
+"end": 33.84
+},
+{
+"text": "in",
+"type": "word",
+"start": 33.88,
+"end": 33.92
+},
+{
+"text": "the",
+"type": "word",
+"start": 33.96,
+"end": 34
+},
+{
+"text": "1970s,",
+"type": "word",
+"start": 34.04,
+"end": 35.2
+},
+{
+"text": "and",
+"type": "word",
+"start": 35.24,
+"end": 35.28
+},
+{
+"text": "they",
+"type": "word",
+"start": 35.36,
+"end": 35.44
+},
+{
+"text": "gripped",
+"type": "word",
+"start": 35.467,
+"end": 35.84
+},
+{
+"text": "so",
+"type": "word",
+"start": 35.96,
+"end": 36.08
+},
+{
+"text": "well",
+"type": "word",
+"start": 36.16,
+"end": 36.4
+},
+{
+"text": "that",
+"type": "word",
+"start": 36.48,
+"end": 36.56
+},
+{
+"text": "the",
+"type": "word",
+"start": 36.64,
+"end": 36.72
+},
+{
+"text": "rules",
+"type": "word",
+"start": 36.8,
+"end": 37.12
+},
+{
+"text": "shut",
+"type": "word",
+"start": 37.16,
+"end": 37.28
+},
+{
+"text": "them",
+"type": "word",
+"start": 37.36,
+"end": 37.44
+},
+{
+"text": "down.",
+"type": "word",
+"start": 37.52,
+"end": 38.32
+},
+{
+"text": "And",
+"type": "word",
+"start": 38.4,
+"end": 38.48
+},
+{
+"text": "notice:",
+"type": "word",
+"start": 38.68,
+"end": 39.28
+},
+{
+"text": "this",
+"type": "word",
+"start": 39.4,
+"end": 39.52
+},
+{
+"text": "suction",
+"type": "word",
+"start": 39.56,
+"end": 40
+},
+{
+"text": "is",
+"type": "word",
+"start": 40.04,
+"end": 40.08
+},
+{
+"text": "a",
+"type": "word",
+"start": 40.16,
+"end": 40.32
+},
+{
+"text": "separate",
+"type": "word",
+"start": 40.4,
+"end": 40.72
+},
+{
+"text": "system",
+"type": "word",
+"start": 40.88,
+"end": 41.04
+},
+{
+"text": "from",
+"type": "word",
+"start": 41.12,
+"end": 41.2
+},
+{
+"text": "the",
+"type": "word",
+"start": 41.24,
+"end": 41.28
+},
+{
+"text": "jets.",
+"type": "word",
+"start": 41.36,
+"end": 42
+}
+],
+"text": "[curious] Start with the upside-down trick, because it's the cleverest. Under that ramp, gravity pulls the car away with its full weight. That's one g. To stay put, something has to push back harder. Tesla says fans pull air out from under the car. That leaves a thin layer of low-pressure air between the floor and the ramp, while the air on the other side stays at normal pressure\u2026 and normal air pressure is surprisingly strong. The difference shoves the car into the surface. Tesla claims the system can pull up to two g: double what it needs to hang there. Racing teams tried fan cars back in the 1970s, and they gripped so well that the rules shut them down. And notice: this suction is a separate system from the jets.",
+"source_generation": [
+"GBiZAALskrW0jTnoDOJH"
+]
+}

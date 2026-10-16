@@ -1,0 +1,46 @@
+{
+  "_readme": "Footage slots for the Short and the companion. Put official Tesla clips in source/public/footage/ and set `file` (name inside that folder), `in` (seconds into that file), and optionally `cx`/`cy` (0..1 crop centre for the 9:16 fill), `zoom` (>=1) and `audio` (0..1 level for the demo's own sound). A slot with file=null renders as a labelled placeholder and blocks the final render (tools/check_footage.py). Record every clip in footage/CLIP_LEDGER.md.",
+  "source_mark": "Tesla demo · Oct 15, 2026",
+  "slots": {
+    "F1_AIRBORNE": {
+      "label": "Roadster midair",
+      "want": "Car clearly airborne, largest official angle, recognisable at phone size. Frame 0 of the Short and its last shot (loop).",
+      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.35
+    },
+    "F2_RAMP_CLIMB": {
+      "label": "Climbing the curved ramp",
+      "want": "Car driving up the C-shaped ramp toward the inverted section.",
+      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.25
+    },
+    "F3_INVERTED": {
+      "label": "Hanging upside down",
+      "want": "Car stopped upside down on the ramp (Engadget: held for a few seconds). Also used as the match-cut into the suction diagram.",
+      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.25
+    },
+    "F4_LAUNCH_ROLL": {
+      "label": "Launch and midair roll",
+      "want": "Second run: leaves the ramp, rotates/rolls upright with thrusters firing.",
+      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.4
+    },
+    "F5_LANDING": {
+      "label": "Landing",
+      "want": "Touchdown on the pavement after the roll. A 0.5 s strongest moment is replayed near the end.",
+      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.45
+    },
+    "F6_FIVE_VEHICLES": {
+      "label": "Clearing five Tesla vehicles",
+      "want": "Thruster hop over Cybercab, Cybertruck, Semi, Model Y, Model 3. If all five are not visible, switch the Short to the 'row of Teslas' pickup (see script).",
+      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.4
+    },
+    "F7_ACCEL_RUN": {
+      "label": "0-60 run",
+      "want": "Companion only: the acceleration run and Tesla's on-screen 0.81 s result.",
+      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.4
+    },
+    "F8_OPTIMUS_SEAT": {
+      "label": "Optimus in the driver's seat",
+      "want": "Companion only: door opens, Optimus seated (Engadget: only for show).",
+      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.3
+    }
+  }
+}

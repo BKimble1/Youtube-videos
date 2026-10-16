@@ -1,0 +1,137 @@
+[
+ {
+  "cue": "whoosh",
+  "t": 10.58,
+  "gain_db": -24
+ },
+ {
+  "cue": "hum",
+  "t": 10.75,
+  "gain_db": -30
+ },
+ {
+  "cue": "whoosh",
+  "t": 13.93,
+  "gain_db": -25
+ },
+ {
+  "cue": "hiss1",
+  "t": 14.217,
+  "gain_db": -27
+ },
+ {
+  "cue": "hiss2",
+  "t": 15.883,
+  "gain_db": -28
+ },
+ {
+  "cue": "tick",
+  "t": 21.88,
+  "gain_db": -26
+ },
+ {
+  "cue": "tick",
+  "t": 22.047,
+  "gain_db": -26
+ },
+ {
+  "cue": "tick",
+  "t": 22.213,
+  "gain_db": -26
+ },
+ {
+  "cue": "blip",
+  "t": 23.453,
+  "gain_db": -27
+ },
+ {
+  "cue": "thunk",
+  "t": 28.367,
+  "gain_db": -20
+ },
+ {
+  "cue": "whoosh",
+  "t": 29.83,
+  "gain_db": -25
+ },
+ {
+  "cue": "tick",
+  "t": 30.117,
+  "gain_db": -27
+ },
+ {
+  "cue": "tick",
+  "t": 30.207,
+  "gain_db": -27
+ },
+ {
+  "cue": "tick",
+  "t": 30.297,
+  "gain_db": -27
+ },
+ {
+  "cue": "tick",
+  "t": 30.387,
+  "gain_db": -27
+ },
+ {
+  "cue": "tick",
+  "t": 30.477,
+  "gain_db": -27
+ },
+ {
+  "cue": "tick",
+  "t": 30.567,
+  "gain_db": -27
+ },
+ {
+  "cue": "tick",
+  "t": 30.657,
+  "gain_db": -27
+ },
+ {
+  "cue": "tick",
+  "t": 30.747,
+  "gain_db": -27
+ },
+ {
+  "cue": "tick",
+  "t": 30.837,
+  "gain_db": -27
+ },
+ {
+  "cue": "tick",
+  "t": 30.927,
+  "gain_db": -27
+ },
+ {
+  "cue": "blip2",
+  "t": 30.927,
+  "gain_db": -27
+ },
+ {
+  "cue": "thunk",
+  "t": 33.173,
+  "gain_db": -21
+ },
+ {
+  "cue": "whoosh",
+  "t": 34.53,
+  "gain_db": -26
+ },
+ {
+  "cue": "tick",
+  "t": 34.75,
+  "gain_db": -25
+ },
+ {
+  "cue": "tick",
+  "t": 34.983,
+  "gain_db": -25
+ },
+ {
+  "cue": "thunk",
+  "t": 35.017,
+  "gain_db": -26
+ }
+]

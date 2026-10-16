@@ -1,0 +1,680 @@
+{
+"words": [
+{
+"text": "Then",
+"type": "word",
+"start": 0,
+"end": 0.24
+},
+{
+"text": "there's",
+"type": "word",
+"start": 0.32,
+"end": 0.48
+},
+{
+"text": "the",
+"type": "word",
+"start": 0.56,
+"end": 0.6
+},
+{
+"text": "acceleration.",
+"type": "word",
+"start": 0.64,
+"end": 1.68
+},
+{
+"text": "In",
+"type": "word",
+"start": 1.92,
+"end": 2
+},
+{
+"text": "a",
+"type": "word",
+"start": 2.027,
+"end": 2.053
+},
+{
+"text": "run",
+"type": "word",
+"start": 2.08,
+"end": 2.24
+},
+{
+"text": "at",
+"type": "word",
+"start": 2.28,
+"end": 2.32
+},
+{
+"text": "the",
+"type": "word",
+"start": 2.4,
+"end": 2.44
+},
+{
+"text": "event,",
+"type": "word",
+"start": 2.48,
+"end": 3.04
+},
+{
+"text": "Tesla",
+"type": "word",
+"start": 3.12,
+"end": 3.44
+},
+{
+"text": "showed",
+"type": "word",
+"start": 3.52,
+"end": 3.76
+},
+{
+"text": "zero",
+"type": "word",
+"start": 3.84,
+"end": 4
+},
+{
+"text": "to",
+"type": "word",
+"start": 4.08,
+"end": 4.24
+},
+{
+"text": "sixty",
+"type": "word",
+"start": 4.36,
+"end": 4.64
+},
+{
+"text": "in",
+"type": "word",
+"start": 4.72,
+"end": 4.96
+},
+{
+"text": "0.81",
+"type": "word",
+"start": 5.08,
+"end": 6
+},
+{
+"text": "seconds.",
+"type": "word",
+"start": 6.16,
+"end": 6.96
+},
+{
+"text": "That's",
+"type": "word",
+"start": 7.04,
+"end": 7.2
+},
+{
+"text": "Tesla's",
+"type": "word",
+"start": 7.36,
+"end": 7.68
+},
+{
+"text": "own",
+"type": "word",
+"start": 7.76,
+"end": 7.84
+},
+{
+"text": "test.",
+"type": "word",
+"start": 7.92,
+"end": 8.64
+},
+{
+"text": "Nobody",
+"type": "word",
+"start": 8.72,
+"end": 9.04
+},
+{
+"text": "independent",
+"type": "word",
+"start": 9.12,
+"end": 9.6
+},
+{
+"text": "has",
+"type": "word",
+"start": 9.68,
+"end": 9.76
+},
+{
+"text": "timed",
+"type": "word",
+"start": 9.84,
+"end": 10.08
+},
+{
+"text": "it.",
+"type": "word",
+"start": 10.16,
+"end": 10.72
+},
+{
+"text": "For",
+"type": "word",
+"start": 10.8,
+"end": 10.88
+},
+{
+"text": "perspective,",
+"type": "word",
+"start": 10.96,
+"end": 11.76
+},
+{
+"text": "that",
+"type": "word",
+"start": 11.84,
+"end": 12
+},
+{
+"text": "averages",
+"type": "word",
+"start": 12.08,
+"end": 12.4
+},
+{
+"text": "about",
+"type": "word",
+"start": 12.56,
+"end": 12.72
+},
+{
+"text": "three",
+"type": "word",
+"start": 12.8,
+"end": 12.96
+},
+{
+"text": "and",
+"type": "word",
+"start": 13.04,
+"end": 13.08
+},
+{
+"text": "a",
+"type": "word",
+"start": 13.12,
+"end": 13.16
+},
+{
+"text": "half",
+"type": "word",
+"start": 13.2,
+"end": 13.36
+},
+{
+"text": "times",
+"type": "word",
+"start": 13.44,
+"end": 13.76
+},
+{
+"text": "the",
+"type": "word",
+"start": 13.8,
+"end": 13.84
+},
+{
+"text": "pull",
+"type": "word",
+"start": 13.92,
+"end": 14
+},
+{
+"text": "of",
+"type": "word",
+"start": 14.08,
+"end": 14.16
+},
+{
+"text": "gravity:",
+"type": "word",
+"start": 14.4,
+"end": 15.04
+},
+{
+"text": "far",
+"type": "word",
+"start": 15.12,
+"end": 15.36
+},
+{
+"text": "more",
+"type": "word",
+"start": 15.44,
+"end": 15.6
+},
+{
+"text": "than",
+"type": "word",
+"start": 15.72,
+"end": 15.84
+},
+{
+"text": "ordinary",
+"type": "word",
+"start": 16.04,
+"end": 16.24
+},
+{
+"text": "road",
+"type": "word",
+"start": 16.32,
+"end": 16.56
+},
+{
+"text": "tires",
+"type": "word",
+"start": 16.64,
+"end": 16.96
+},
+{
+"text": "can",
+"type": "word",
+"start": 17.04,
+"end": 17.12
+},
+{
+"text": "grip",
+"type": "word",
+"start": 17.173,
+"end": 17.28
+},
+{
+"text": "on",
+"type": "word",
+"start": 17.36,
+"end": 17.44
+},
+{
+"text": "their",
+"type": "word",
+"start": 17.52,
+"end": 17.6
+},
+{
+"text": "own.",
+"type": "word",
+"start": 17.68,
+"end": 18.48
+},
+{
+"text": "So",
+"type": "word",
+"start": 18.6,
+"end": 18.72
+},
+{
+"text": "Tesla",
+"type": "word",
+"start": 18.88,
+"end": 19.2
+},
+{
+"text": "leans",
+"type": "word",
+"start": 19.28,
+"end": 19.52
+},
+{
+"text": "on",
+"type": "word",
+"start": 19.6,
+"end": 19.68
+},
+{
+"text": "thrusters",
+"type": "word",
+"start": 19.76,
+"end": 20.16
+},
+{
+"text": "here",
+"type": "word",
+"start": 20.28,
+"end": 20.4
+},
+{
+"text": "too.",
+"type": "word",
+"start": 20.52,
+"end": 21.04
+},
+{
+"text": "It",
+"type": "word",
+"start": 21.12,
+"end": 21.2
+},
+{
+"text": "says",
+"type": "word",
+"start": 21.28,
+"end": 21.44
+},
+{
+"text": "they",
+"type": "word",
+"start": 21.52,
+"end": 21.6
+},
+{
+"text": "push",
+"type": "word",
+"start": 21.68,
+"end": 21.92
+},
+{
+"text": "harder",
+"type": "word",
+"start": 22.04,
+"end": 22.24
+},
+{
+"text": "than",
+"type": "word",
+"start": 22.32,
+"end": 22.4
+},
+{
+"text": "the",
+"type": "word",
+"start": 22.48,
+"end": 22.56
+},
+{
+"text": "tires",
+"type": "word",
+"start": 22.693,
+"end": 22.96
+},
+{
+"text": "could.",
+"type": "word",
+"start": 23.08,
+"end": 23.68
+},
+{
+"text": "And",
+"type": "word",
+"start": 23.8,
+"end": 23.92
+},
+{
+"text": "that's",
+"type": "word",
+"start": 24.04,
+"end": 24.24
+},
+{
+"text": "where",
+"type": "word",
+"start": 24.32,
+"end": 24.4
+},
+{
+"text": "the",
+"type": "word",
+"start": 24.427,
+"end": 24.453
+},
+{
+"text": "versions",
+"type": "word",
+"start": 24.48,
+"end": 24.88
+},
+{
+"text": "split.",
+"type": "word",
+"start": 24.96,
+"end": 25.76
+},
+{
+"text": "Performance",
+"type": "word",
+"start": 26.08,
+"end": 26.4
+},
+{
+"text": "is",
+"type": "word",
+"start": 26.48,
+"end": 26.56
+},
+{
+"text": "the",
+"type": "word",
+"start": 26.64,
+"end": 26.72
+},
+{
+"text": "road-ready",
+"type": "word",
+"start": 26.8,
+"end": 27.28
+},
+{
+"text": "two-seater,",
+"type": "word",
+"start": 27.36,
+"end": 28.08
+},
+{
+"text": "with",
+"type": "word",
+"start": 28.16,
+"end": 28.24
+},
+{
+"text": "the",
+"type": "word",
+"start": 28.28,
+"end": 28.32
+},
+{
+"text": "suction",
+"type": "word",
+"start": 28.4,
+"end": 28.72
+},
+{
+"text": "system.",
+"type": "word",
+"start": 28.8,
+"end": 29.6
+},
+{
+"text": "Thrust",
+"type": "word",
+"start": 29.68,
+"end": 30.08
+},
+{
+"text": "adds",
+"type": "word",
+"start": 30.16,
+"end": 30.32
+},
+{
+"text": "rear",
+"type": "word",
+"start": 30.48,
+"end": 30.64
+},
+{
+"text": "cold-gas",
+"type": "word",
+"start": 30.8,
+"end": 31.28
+},
+{
+"text": "thrusters.",
+"type": "word",
+"start": 31.36,
+"end": 32.48
+},
+{
+"text": "Rocket",
+"type": "word",
+"start": 32.68,
+"end": 32.88
+},
+{
+"text": "is",
+"type": "word",
+"start": 33,
+"end": 33.12
+},
+{
+"text": "invite-only,",
+"type": "word",
+"start": 33.32,
+"end": 34.16
+},
+{
+"text": "seats",
+"type": "word",
+"start": 34.24,
+"end": 34.48
+},
+{
+"text": "one,",
+"type": "word",
+"start": 34.56,
+"end": 34.96
+},
+{
+"text": "and",
+"type": "word",
+"start": 35,
+"end": 35.04
+},
+{
+"text": "has",
+"type": "word",
+"start": 35.12,
+"end": 35.28
+},
+{
+"text": "the",
+"type": "word",
+"start": 35.36,
+"end": 35.44
+},
+{
+"text": "full",
+"type": "word",
+"start": 35.52,
+"end": 35.6
+},
+{
+"text": "flight",
+"type": "word",
+"start": 35.76,
+"end": 35.92
+},
+{
+"text": "system\u2026",
+"type": "word",
+"start": 36,
+"end": 36.8
+},
+{
+"text": "and",
+"type": "word",
+"start": 36.88,
+"end": 36.96
+},
+{
+"text": "Tesla's",
+"type": "word",
+"start": 37.12,
+"end": 37.44
+},
+{
+"text": "own",
+"type": "word",
+"start": 37.52,
+"end": 37.68
+},
+{
+"text": "page",
+"type": "word",
+"start": 37.8,
+"end": 37.92
+},
+{
+"text": "says",
+"type": "word",
+"start": 38,
+"end": 38.24
+},
+{
+"text": "Rocket",
+"type": "word",
+"start": 38.48,
+"end": 38.8
+},
+{
+"text": "is",
+"type": "word",
+"start": 38.92,
+"end": 39.04
+},
+{
+"text": "not",
+"type": "word",
+"start": 39.12,
+"end": 39.28
+},
+{
+"text": "approved",
+"type": "word",
+"start": 39.48,
+"end": 39.68
+},
+{
+"text": "for",
+"type": "word",
+"start": 39.76,
+"end": 39.84
+},
+{
+"text": "public",
+"type": "word",
+"start": 39.92,
+"end": 40.16
+},
+{
+"text": "road",
+"type": "word",
+"start": 40.24,
+"end": 40.4
+},
+{
+"text": "use.",
+"type": "word",
+"start": 40.48,
+"end": 41.04
+}
+],
+"text": "Then there's the acceleration. In a run at the event, Tesla showed zero to sixty in 0.81 seconds. That's Tesla's own test. Nobody independent has timed it. For perspective, that averages about three and a half times the pull of gravity: far more than ordinary road tires can grip on their own. So Tesla leans on thrusters here too. It says they push harder than the tires could. And that's where the versions split. Performance is the road-ready two-seater, with the suction system. Thrust adds rear cold-gas thrusters. Rocket is invite-only, seats one, and has the full flight system\u2026 and Tesla's own page says Rocket is not approved for public road use.",
+"source_generation": [
+"LHj6zG9CMDgW8TN9LN6a"
+]
+}
