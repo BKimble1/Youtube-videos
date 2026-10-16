@@ -101,7 +101,7 @@ characters per line).
 
 | Check | Result |
 |---|---|
-| Format | 1920×1080, 30 fps, H.264, 4,995 frames = **2:46.5** (container 166.6 s); AAC 48 kHz stereo 320 kb/s; about 41 MB. A 4K master (`exports/FGW_Roadster_Companion_REVIEW_v3_4K.mp4`, 3840×2160) is the same composition redrawn at twice the resolution by `tools/render_companion_v3_4k.sh`, with the 1080p soundtrack copied in unchanged |
+| Format | 1920×1080, 30 fps, H.264, 4,995 frames = **2:46.5** (container 166.6 s); AAC 48 kHz stereo 320 kb/s; about 41 MB. A 4K master (`exports/FGW_Roadster_Companion_REVIEW_v3_4K.mp4`, 3840×2160) is the same composition redrawn at twice the resolution by `tools/render_companion_v3_4k.sh`, with the 1080p soundtrack copied in unchanged. Checked: 4,995 frames, 166.6 s, about 80 MB, −15.0 LUFS, −1.5 dBFS true peak, no black frames; spot frames match the 1080p layout |
 | Loudness | **−15.0 LUFS integrated**, LRA 3.3 LU, true peak **−1.5 dBFS** after AAC (two-pass loudnorm to −15 / −1.5 dBTP) |
 | Length and pace | 465 spoken words in 2:42.6 of narration; per block 182–198 wpm (opening 167, versions 182 after a 1.08× pitch-kept speed-up, ending 174) |
 | Narration words | Each chosen take's actual audio was stored as a plain asset and transcribed by Scribe. All nine match the script; the only differences are spellings ("Gs", "'70s", "off center") |
