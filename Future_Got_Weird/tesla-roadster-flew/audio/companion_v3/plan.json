@@ -1,5 +1,5 @@
 {
-  "_readme": "Companion v3 narration placement. Each phrase = words [from, to] of a tightened block (audio/companion_v3/tight/<block>.json), placed so that its first word starts at `at` seconds on the film timeline. Gaps are picture beats.",
+  "_readme": "Companion v3 narration placement. Each phrase = words [from, to] of a tightened block (audio/companion_v3/tight/<block>.json), placed so that its first word starts at `at` seconds on the film timeline. Gaps are picture beats. A4 starts at \"Tesla claimed\": the take's opening \"For a live run,\" is left out (the run the 0.81 s belongs to is not established).",
   "phrases": [
     ["P1", "V1", 0, 5, 0.15],
     ["P2", "V1", 6, 9, 2.7],
@@ -33,7 +33,7 @@
     ["A1", "V6", 0, 6, 95.6],
     ["A2", "V6", 7, 25, 97.7],
     ["A3", "V6", 26, 40, 103.9],
-    ["A4", "V6", 41, 56, 108.5],
+    ["A4", "V6", 45, 56, 109.15],
     ["S1", "V7", 0, 7, 114.6],
     ["S2", "V7", 8, 13, 117.6],
     ["S3", "V7", 14, 19, 120.0],

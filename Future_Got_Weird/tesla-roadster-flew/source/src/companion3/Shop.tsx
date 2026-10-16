@@ -1,8 +1,8 @@
 // The ground half of the story, in one continuous side-view world from the outdoor test lane into the workshop:
 //   launch     the car settles; lane markings run out ahead and a timing gantry folds up; rear thrust at launch
 //              (gas out the back, push forward) against the smaller push the tyres can take
-//   compare    after the stream's own run: "Shown 1.00 s" (that run's timer) beside "Tesla says 0.81 s" (a live run,
-//              not independently timed), while the car rolls on toward the workshop
+//   compare    after the stream's own run: "Shown 1.00 s" (that run's timer) beside "Tesla says 0.81 s" (Tesla-claimed
+//              time, not independently timed; which run it belongs to isn't established), while the car rolls on
 //   versions   it passes behind a foreground pillar onto a moving assembly line: fans (Performance), tank and rear
 //              nozzle (Thrust), jets all around (Rocket); the public-road sign answers the last line
 //   limits     the body opens on the air supply: each burst drops the dial, the onboard compressor creeps it back
@@ -22,7 +22,7 @@ export const SHOP = {start: cue('landing', 'R7', 0, true) + 0.05, footA: 103.6, 
 const T = {
   same: cue('same', 'A1'), push: cue('push', 'A1'), ground: cue('ground.', 'A1'), thrusters: cue('thrusters', 'A2'), back: cue('back', 'A2'),
   shove: cue('shove', 'A2'), launch: cue('launch,', 'A2'), tires: cue('tires', 'A2'), grip: cue('grip.', 'A2'),
-  live: cue('live', 'A4'), claimed: cue('claimed', 'A4'), seconds: cue('seconds.', 'A4'), nobody: cue('Nobody', 'A4'), indep: cue('independently', 'A4'),
+  claimed: cue('claimed', 'A4'), seconds: cue('seconds.', 'A4'), nobody: cue('Nobody', 'A4'), indep: cue('independently', 'A4'),
   versions: cue('versions', 'S1'), performance: cue('Performance', 'S2'), fans: cue('fans', 'S2'), forGrip: cue('grip.', 'S2'),
   thrust: cue('Thrust', 'S3'), rear: cue('rear', 'S3'), launches: cue('launches.', 'S3'), rocket: cue('Rocket', 'S4'), jets: cue('jets', 'S4'),
   around: cue('around,', 'S4'), flight: cue('flight.', 'S4'), isnt: cue("isn't", 'S5'), approved: cue('approved', 'S5'),
@@ -281,7 +281,7 @@ const Compare: React.FC<{t: number}> = ({t}) => {
   return (
     <div style={{position: 'absolute', left: 0, right: 0, top: 70, display: 'flex', justifyContent: 'center', gap: 40}}>
       <Pill head="Shown" big="1.00 s" small="recorded run · stream's own timer" bg={C.cream} o={a} dx={0} />
-      <Pill head="Tesla says" big="0.81 s" small={q > 0.5 ? 'live run · not independently timed' : 'live run'} bg={C.saffronLight} o={b} dx={0} />
+      <Pill head="Tesla says" big="0.81 s" small={q > 0.5 ? 'Tesla-claimed time · not independently timed' : 'Tesla-claimed time'} bg={C.saffronLight} o={b} dx={0} />
     </div>
   );
 };

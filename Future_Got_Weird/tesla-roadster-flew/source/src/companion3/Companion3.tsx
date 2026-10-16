@@ -6,10 +6,11 @@
 //  71.6  rear view: off-centre push, roll, opposite pair, downward thrust, hover needs thrust = weight; landing
 //  89.9  the real second run (end-on, real speed)
 //  94.9  the same push on the ground, the launch; the stream's recorded run with its own timer; shown vs claimed
-// 113.9  versions on a moving assembly line; 130.3 the air supply; 143.7 the opening shot again, landing, the Crew
+// 113.9  versions on a moving assembly line; 130.3 the air supply; 143.7 the opening shot again, landing, the verdict
+// 157.3  Tesla's aerial shot of the second run: rolling on its jets, jets down, touchdown on the last word; fade out
 import React from 'react';
 import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame} from 'remotion';
-import {FPS} from './kit3';
+import {cue, FPS, ramp} from './kit3';
 import {BayScene, TraceOverlay} from './BayScene';
 import {OpeningFoot, OPEN3} from './OpeningFoot';
 import {RollRear, ROLL} from './RollRear';
@@ -17,7 +18,10 @@ import {Shop, SHOP, ShownTag} from './Shop';
 import {Foot} from '../companion2/Foot';
 import {ev} from './kit3';
 
-export const C3_DURATION = 166.5;
+export const C3_DURATION = 165.0;
+// The closing shot: rec_224730 from 2:19.25 (tools/cut_c3_clips.sh, c3_end_aerial). The car touches down about 5.05 s
+// into the clip (2:24.3, when the smoke spreads flat under it); that lands on "leap", the last word.
+export const END = {start: cue('questions.', 'E5', 0, true) + 0.14, touchdown: cue('leap', 'E7'), clipTouchdown: 5.05, fade: 0.6};
 export const C3_FRAMES = Math.round(C3_DURATION * FPS);
 
 const seq = (a: number, b: number, node: React.ReactNode, key: string) => (
@@ -31,6 +35,19 @@ const Bay: React.FC<{from: number}> = ({from}) => {
 const Trace: React.FC<{from: number}> = ({from}) => {
   const f = useCurrentFrame();
   return <TraceOverlay t={from + f / FPS} />;
+};
+
+const EndFoot: React.FC = () => {
+  const f = useCurrentFrame();
+  const t = END.start + f / FPS;
+  const black = ramp(t, C3_DURATION - END.fade, C3_DURATION - 1 / FPS);
+  return (
+    <AbsoluteFill style={{opacity: ramp(t, END.start, END.start + 0.25)}}>
+      {/* silent recording: its sound is built in tools/make_bed_c3.py (jets, touchdown, smoke) */}
+      <Foot src="c3_end_aerial.mp4" muted from={END.clipTouchdown - (END.touchdown - END.start)} view={() => ({x: 960, y: 500, z: 1.12})} />
+      <AbsoluteFill style={{background: '#000', opacity: black}} />
+    </AbsoluteFill>
+  );
 };
 
 const ShopFrom: React.FC<{from: number}> = ({from}) => <Sequence from={-Math.round((from - SHOP.start) * FPS)}><Shop /></Sequence>;
@@ -56,7 +73,9 @@ export const Companion3: React.FC<{audio?: boolean; narration?: boolean}> = ({au
     {seq(SHOP.footA, SHOP.footB, <RecRun />, 'recrun')}
     {seq(SHOP.footB, SHOP.end, <ShopFrom from={SHOP.footB} />, 'shop2')}
     {seq(4.1, 5.0, <Trace from={4.1} />, 'trace')}
-    {seq(143.7, C3_DURATION, <Bay from={143.7} />, 'bay2')}
+    {seq(143.7, END.start + 0.3, <Bay from={143.7} />, 'bay2')}
+    {/* the real landing carries the last two lines (dissolve in, fade out to black with the music) */}
+    {seq(END.start, C3_DURATION, <EndFoot />, 'end')}
     {audio && narration && <Audio src={staticFile('companion3/narration.wav')} />}
     {audio && <Audio src={staticFile('companion3/bed.wav')} />}
   </AbsoluteFill>

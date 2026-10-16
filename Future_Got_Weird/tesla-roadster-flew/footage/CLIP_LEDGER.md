@@ -158,10 +158,14 @@ the recording's own speed. Nothing is drawn over the footage except the "Shown 1
 | 0:02.45–0:04.80 | `c3_hang` | `rec_224730.mp4` | 1:17.50 → 1:19.85 | The first run's hang, close-up from below, cropped 1.3× so the 4,697 kg gauge and the pitch/altitude dials are out of frame; it fades out under the drawn outline |
 | 1:29.90–1:34.87 | `c3_roll_real` | `rec_224730.mp4` | 2:07.00 → 2:11.95 | The second run, end-on: rolls upright off the top of the ramp (2:07.0–2:08.0), side and downward jets, four jets down (2:09.9), touchdown in smoke (about 2:11.3). Silent recording |
 | 1:43.60–1:49.00 | `c3_rec_run` (sound) | `rec_225218.mp4` | 0:15.60 → 0:21.00 | The stream's recorded run, side-rear angle: launch with the rear gas jet (0:17.1), the burned-in timer stops at 01.00 (0:18.05); "Shown 1.00 s" appears then |
+| 2:37.30–2:45.00 | `c3_end_aerial` | `rec_224730.mp4` | 2:19.25 → 2:26.95 | Final cut: the second run from the air, rolling upright on its jets, jets down, touchdown in smoke (about 2:24.3, timed to the last word, "leap"), the camera dropping in behind the car; 0.25 s dissolve in, 0.6 s fade to black. Cropped 1.12× (Tesla's corner logo out of frame). Silent recording |
+
+Final cut (FINAL_4K): every clip is scaled to 3840×2160 with Lanczos when it is cut (no sharpening). `c3_open_hop` also
+gets a gentle shadow lift (a curve that keeps black at black and rolls the highlights off) and is cropped 1.3× instead
+of 1.2×.
 
 Not used in v3:
 
 - the stream's later launch (`rec_225340`), because the 0.81 s claim is shown away from any run footage;
-- the aerial second run;
 - the hop's front angle;
 - every slowed clip.

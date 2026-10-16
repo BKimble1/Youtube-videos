@@ -28,7 +28,7 @@ def cue(w, p=None, n=0, end=False):
     hits = [x for x in words if norm(x['w']) == norm(w) and (p is None or x['p'] == p)]
     return hits[n]['e' if end else 's']
 
-TOTAL = 166.5
+TOTAL = 165.0
 riser, thump = v2.riser, v2.thump
 music = np.zeros((int((TOTAL + 3) * SR), 2))
 sfx = np.zeros_like(music)
@@ -68,6 +68,8 @@ S = dict(same=cue('same', 'A1'), push=cue('push', 'A1'), ground=cue('ground', 'A
 SHOP1 = 143.7
 En = dict(start=SHOP1, fans=cue('fans', 'E2'), hold=cue('hold', 'E2'), drive=cue('jets', 'E3') + 0.05,
           lip=cue('motion', 'E3') - 0.05, abs=cue('Absolutely', 'E6'), commute=cue('commute', 'E7'), leap=cue('leap', 'E7', 0, True))
+# the closing shot (Companion3.tsx END): Tesla's aerial of the second run, from 2:19.25, touchdown on "leap"
+END0, TD = cue('questions', 'E5', 0, True) + 0.14, cue('leap', 'E7')
 
 # ---------------------------------------------------------------- effects
 def valve_burst(t, gdb=-24, pan=0.0, d=0.28):
@@ -179,11 +181,19 @@ s(fx.tick(1800), S['how'], -30); s(fx.tick(1800), S['how'] + 0.5, -33)
 panel(S['steering'] - 0.2, 0.5, -30)
 s(fx.motor(1.6, 220, 380, 0.6), S['drove'], -32)
 
-# ending: the opening shot again, one cue per system, the full landing, the clipboard
-a(fx.room(TOTAL - SHOP1), SHOP1, -43)
+# ending: the opening shot again, one cue per system, the full landing
+a(fx.room(END0 - SHOP1 + 0.4), SHOP1, -43)
 s(fx.squat(), En['hold'] + 0.05, -28)
 stunt(En['drive'], En['lip'], En['fans'] - 0.3, En['drive'] + 0.3, gdb=-1)
-s(fx.scratch(), En['abs'] - 0.05, -30, -0.3)
+# the real landing (a silent recording): open air, the two jet streams while it rolls upright, the down jets hitting
+# the ground and the smoke spreading, the touchdown on "leap", then the hiss dying away
+a(fx.wind(TOTAL - END0), END0, -42)
+s(fx.gas(3.4, flutter=9), END0 + 0.04, -34, -0.25)
+s(fx.gas(3.2, flutter=6, lo=700, hi=7000), END0 + 0.2, -36, 0.25)
+s(fx.gas(1.9, flutter=6, lo=300, hi=5000), TD - 1.7, -31)
+s(fx.swell(1.7, 900), TD - 1.15, -32)
+s(fx.tyre(1.0), TD, -22); s(fx.squat(), TD + 0.12, -28)
+s(fx.gas(1.6, flutter=4, lo=400, hi=3000), TD + 0.05, -37)
 
 # ---------------------------------------------------------------- music
 D = 73.42
@@ -236,7 +246,7 @@ while t < SHOP1 - 0.4:
     mplace(v1.bass([D, 49.0, 61.74, 55.0][bi % 4], 2.0), t, 0.13)
     t += BAR; bi += 1
 # ending: a light pluck groove under the replay, a hit on the landing, then the D-major resolution swelling under
-# the verdict and ringing out to the end
+# the verdict, a soft hit as the real car touches down, ringing out into the final fade
 groove(music, SHOP1 + 0.1, En['lip'], 'pluck', fade_in=1.0, thin=True, gain=0.75)
 mplace(v1.pad(CH[0], FALL_T + 0.5, 0.3, 0.6), En['lip'], 0.015)
 mplace(thump(42, 1.0), En['lip'] + FALL_T, 0.35)
@@ -253,6 +263,7 @@ mplace(v1.pad((146.83, 220.0, 293.66, 369.99, 440.0), TOTAL - fin + 0.4, 1.2, 2.
 mplace(v1.bass(D, TOTAL - fin), fin + 0.05, 0.15)
 for k3, f in enumerate([293.66, 369.99, 440.0]):
     mplace(v1.piano(f, 3.5), fin + k3 * 0.03, 0.07)
+mplace(thump(40, 1.2), TD, 0.22)   # touchdown of the real car
 mplace(v1.piano(587.33, 3.6), En['leap'] + 0.1, 0.075)
 mplace(v1.piano(880.0, 3.0), En['leap'] + 0.1 + BEAT, 0.04)
 
@@ -268,7 +279,7 @@ def gain_env(points):
     tt2 = np.arange(len(music)) / SR
     return np.interp(tt2, [p[0] for p in points], [p[1] for p in points])
 # the score steps aside for the stream's own run and fades cleanly at the very end
-music *= gain_env([(0, 1), (FOOT_A - 0.2, 1), (FOOT_A + 0.3, 0.15), (FOOT_B - 0.3, 0.15), (FOOT_B + 0.4, 1), (TOTAL - 1.6, 1), (TOTAL - 0.05, 0), (TOTAL + 3, 0)])[:, None]
+music *= gain_env([(0, 1), (FOOT_A - 0.2, 1), (FOOT_A + 0.3, 0.15), (FOOT_B - 0.3, 0.15), (FOOT_B + 0.4, 1), (TOTAL - 1.9, 1), (TOTAL - 0.05, 0), (TOTAL + 3, 0)])[:, None]
 speech = np.zeros(len(music))
 for w in words:
     speech[int((w['s'] - 0.06) * SR):int((w['e'] + 0.06) * SR)] = 1

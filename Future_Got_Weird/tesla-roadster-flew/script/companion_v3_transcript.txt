@@ -14,7 +14,7 @@ Up here, wheels and fans can't help. That's where the second system comes in. Te
 Now push off-center. One side up, the other side down, and the car rolls. Fire the opposite pair and the roll stops. Then aim the gas down. That pushes the car upward and slows the fall. To truly hover, the thrust would have to match the car's whole weight. Here's the real one. It rolls upright, then the jets fire down to soften the landing.
 
 [1:35] 0-60: shown vs claimed
-The same push works on the ground. Tesla says thrusters at the back shove the car forward at launch, harder than the tires alone could grip. On the stream, a recorded run was shown at 1 second on its own timer. For a live run, Tesla claimed 0.81 seconds. Nobody timed that one independently.
+The same push works on the ground. Tesla says thrusters at the back shove the car forward at launch, harder than the tires alone could grip. On the stream, a recorded run was shown at 1 second on its own timer. Tesla claimed 0.81 seconds. Nobody timed that one independently.
 
 [1:54] Three versions
 Tesla lists three versions built up like this. Performance gets the fans for grip. Thrust adds rear thrusters for launches. Rocket adds jets all around, and it's the only one Tesla lists with flight. Tesla says that one isn't approved for public road use.

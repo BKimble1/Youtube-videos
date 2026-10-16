@@ -61,7 +61,7 @@ didn't earn its seconds. The take is kept in `audio/companion_v3/takes/`.
 | 1:35.6 | The same push works on the ground. | Back to the drawing on an outdoor test lane: the car settles, lane markings run out ahead, a timing gantry folds up |
 | 1:37.7 | Tesla says thrusters at the back shove the car forward at launch, harder than the tires alone could grip. | The rear nozzle is ringed. The lights go red, red, green; valve, burst and launch fire just after the word "launch" ends, so the blast never covers it. A large push from the nozzle is set against smaller push arrows at the tyre contact patches. The car runs under the gantry |
 | 1:43.6 | On the stream, a recorded run was shown at one second, on its own timer. | **Tesla footage**, the stream's recorded run at its own speed and sound (`rec_225218` 0:15.60–0:21.00): launch with the rear gas jet; when its burned-in timer stops at 01.00, **Shown 1.00 s** · recorded run · stream's own timer |
-| 1:48.5 | For a live run, Tesla claimed zero point eight one seconds. Nobody timed that one independently. | Back to the drawn lane, the car rolling on toward a workshop. One compact pair: **Shown 1.00 s** (recorded run · stream's own timer) beside **Tesla says 0.81 s** (live run, then "· not independently timed") |
+| 1:49.2 | Tesla claimed zero point eight one seconds. Nobody timed that one independently. | Back to the drawn lane, the car rolling on toward a workshop. One compact pair: **Shown 1.00 s** (recorded run · stream's own timer) beside **Tesla says 0.81 s** (Tesla-claimed time, then "· not independently timed") |
 | 1:54.6 | Tesla lists three versions, built up like this. | The car passes behind a foreground pillar and comes out on a moving assembly line, bare: its panels open on empty bays |
 | 1:57.6 | Performance gets the fans, for grip. | Station PERFORMANCE: an arm seats the fan housings |
 | 2:00.0 | Thrust adds rear thrusters, for launches. | Station THRUST: tank, valve and rear nozzle seated; one short puff on "launches" |
@@ -76,8 +76,8 @@ didn't earn its seconds. The take is kept in `audio/companion_v3/takes/`.
 | 2:28.2 | The jets change its motion in the air. | It drives off the end; the fan cue disappears at the lip; only the jets fire as it rolls upright and brakes |
 | 2:30.6 | Tesla showed a spectacular stunt. | Touchdown, suspension compression and settle |
 | 2:33.4 | How long it can stay up, and how repeatable that is, are still the questions. | The landed car; **the checker** (clipboard) watching |
-| 2:37.8 | Clever engineering? Absolutely. | She ticks the clipboard |
-| 2:40.3 | Your next commute? That's a much bigger leap. | She lowers the clipboard with a raised eyebrow as the music resolves. The right half of the frame stays clear for an end-screen element; the music rings out to 2:46.5 |
+| 2:37.8 | Clever engineering? Absolutely. | **Tesla footage**, dissolving in at 2:37.3: the second run from the air at its own speed (`rec_224730` 2:19.25–2:26.95), rolling upright on its jets |
+| 2:40.3 | Your next commute? That's a much bigger leap. | The jets fire down into the ground; the car touches down in smoke on "leap"; the camera drops in behind it as the music resolves and the picture and sound fade out together (ends 2:45.0) |
 
 ## Claims and where they come from
 
@@ -95,7 +95,7 @@ didn't earn its seconds. The take is kept in `audio/companion_v3/takes/`.
 | It rolls upright, then the jets fire down to soften the landing | Observed | `rec_224730` 2:07.0–2:08.0 (rolls upright off the ramp top), 2:09.9 (four plumes down), about 2:11.3 (touchdown in smoke) |
 | Rear thrusters shove it forward at launch, harder than the tires alone could grip | Tesla's claim | Musk ("main thrusters in the rear"), "4–5× tire force" credited to Tesla (Electrek). Arrow lengths are illustrative |
 | A recorded run was shown at one second, on its own timer | Observed | The stream's timer stops at 01.00 (`rec_225218` 0:18.05) |
-| Tesla claimed 0.81 s for a live run; not independently timed | Tesla's claim | Jalopnik, Electrek, Engadget (notes §5). Shown only on a plate beside the 1.00 s pair, never over a run |
+| Tesla claimed 0.81 s; not independently timed | Tesla's claim | Jalopnik, Electrek, Engadget (notes §5). Shown only on a plate beside the 1.00 s pair, never over a run |
 | Three versions: Performance (fans), Thrust (adds rear thrusters), Rocket (jets all around, the only one with flight) | Tesla's claim | Tesla page via press (notes §1–2). "Built up like this" is staging; that Rocket also has the fans rests on reports that all three get the suction system |
 | Rocket isn't approved for public road use | Tesla's claim | Tesla's page as reported (notes §1) |
 | Every burst spends what's in the tank | Physics | Stored gas is used up by each firing. The dial has no numbers |
@@ -210,6 +210,25 @@ Music sits about 15 dB under every word. The final mix is normalised to −15 LU
 14. **Sound.** v2 used sparse generic whooshes, ticks and blips. v3 builds a sound for each visible action (listed
     above) and adds a clear sound change at the moment the grip is lost.
 
+## Final cut (FGW_Roadster_Companion_FINAL_4K)
+
+A limited cleanup of REVIEW_v3. Narration, structure, animation and pacing are otherwise unchanged.
+
+1. **Opening (0:00–0:02).** The hop is graded a little brighter (a gentle curve: black stays black, the car body
+   goes from about 35–45% to 50–60% brightness, highlights roll off) and cropped 1.3× instead of 1.2×. The whole car,
+   the parked Teslas' lights and the lit ground line stay in frame.
+2. **0.81 s.** The sources don't establish which run the 0.81 s came from, so "live run" is gone. The plate reads
+   "Tesla says 0.81 s · Tesla-claimed time · not independently timed". The narration drops "For a live run," from the
+   same take, so the voice and delivery are unchanged: "Tesla claimed zero point eight one seconds" now starts at
+   1:49.15 (461 words).
+3. **Ending (2:37.3–2:45.0).** The drawn hold on the checker and the parked car is replaced by Tesla's aerial shot of
+   the second run (rolling upright on its jets, jets down, touchdown in smoke). The last two lines play over it, and
+   the touchdown lands on "leap". The silent recording gets jet hiss, the ground blast, the touchdown and the smoke
+   dying away. The music resolves and fades with a 0.6 s fade to black. There is no end card. The film is 1.5 s shorter
+   (2:45.0).
+4. **Export.** Native 3840×2160 from the project (`tools/render_companion_final_4k.sh`). The clips are pre-scaled to
+   4K with Lanczos when cut. The audio is mixed losslessly and encoded once to AAC.
+
 ## Unresolved source questions
 
 - **Tesla's own Roadster page** still doesn't resolve from this machine. These rest on press reports and search
@@ -221,8 +240,9 @@ Music sits about 15 dB under every word. The final mix is normalised to −15 LU
   "Built up like this" (Rocket also having the fans) depends on reports that all three versions get the suction
   system. Recheck before upload.
 - **Which run the 0.81 s claim belongs to.** v3 no longer shows the later launch (`rec_225340`). The narration says
-  Tesla claimed 0.81 s "for a live run", and the plate says "live run · not independently timed". Confirm against
-  the stream that the claim was made for the live run, not as a best-of figure.
+  The final cut no longer ties the 0.81 s to a particular run: the narration says only "Tesla claimed zero point eight
+  one seconds" and the plate says "Tesla-claimed time · not independently timed". Press reports place it on a live
+  run after the recorded one; confirm against the stream before saying so.
 - **"Built with help from SpaceX"** is Tesla's statement as reported (Electrek, The Drive), not a SpaceX statement.
 - **"Onboard compressors refill it"** is from Moravy's "self-recharging air tanks" (TechCrunch) and InsideEVs.
   Tesla gave no refill time. Confirm the wording if Tesla's page lists it differently.

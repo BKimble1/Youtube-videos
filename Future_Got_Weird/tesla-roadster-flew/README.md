@@ -8,18 +8,18 @@ as evidence, plus the channel's own warm vector animation for the explanations.
 | Piece | State |
 |---|---|
 | **Short** (31.1 s, 9:16, 30 fps) | **FINAL v4** (owner's final pass): `exports/FGW_Roadster_Short_FINAL_v4.mp4`, composition `ShortV4`, `bash tools/render_short_v4.sh`. Script and changes: `script/short_v4_final.md`; QA: `QA_REPORT.md`. Not uploaded: publishing is the owner's action. v3 (`ShortV3`) and v2 (`Short`) are superseded |
-| **Companion** (2:46.5, 16:9, 30 fps) | **Review copy v3**: `exports/FGW_Roadster_Companion_REVIEW_v3.mp4`, composition `Companion3`, `bash tools/render_companion_v3.sh`; 4K master `exports/FGW_Roadster_Companion_REVIEW_v3_4K.mp4` via `bash tools/render_companion_v3_4k.sh`. Script, timeline, sources per line, change log and open source questions: `script/companion_v3_script.md`; QA: `QA_REPORT.md`. The owner's V3 revision brief: tighter (465 words), one coherent story (hangs on → leaves the track → controls its motion → what it proves), transitions inside one illustrated space, far less on-screen text, new Test Voice performance, sound built from visible actions. v2 (`Companion2`) and v1 (`Companion`) are superseded |
+| **Companion** (2:45.0, 16:9, 30 fps) | **FINAL 4K** (owner's cleanup pass: brighter opening, "Tesla-claimed time" for 0.81 s, ending on the real aerial landing): `exports/FGW_Roadster_Companion_FINAL_4K.mp4`, 3840×2160, composition `Companion3`, `bash tools/render_companion_final_4k.sh` (after `bash tools/cut_c3_clips.sh`). The review copies (`REVIEW_v3`, `REVIEW_v3_4K`) are superseded. Script, timeline, sources per line, change log and open source questions: `script/companion_v3_script.md`; QA: `QA_REPORT.md`. The owner's V3 revision brief: tighter (465 words), one coherent story (hangs on → leaves the track → controls its motion → what it proves), transitions inside one illustrated space, far less on-screen text, new Test Voice performance, sound built from visible actions. v2 (`Companion2`) and v1 (`Companion`) are superseded |
 
 Nothing has been uploaded or published. The footage release `roadster-footage-2026-10-15` is still a draft.
 
 **Before upload.**
 
-1. Listen once to FINAL v4 and to the companion REVIEW_v3 before uploading. The checks were measurements and
+1. Listen once to FINAL v4 and to the companion FINAL_4K before uploading. The checks were measurements and
    transcription, not a human listen.
 2. Recheck Tesla's live Roadster page for the Rocket road-use wording, the trim names, and "flight on Rocket only"
    (claim ledger C10, C11; `research/companion_v2_source_notes.md` §1–2).
-3. Companion: confirm that Tesla's 0.81 s was claimed for the live run (v3 shows it only as a plate beside the recorded
-   run's 1.00 s, never over run footage). See `script/companion_v3_script.md`, "Unresolved source questions".
+3. Companion: the final cut calls 0.81 s a "Tesla-claimed time" and doesn't tie it to a run. Confirm against the stream
+   before saying which run it was. See `script/companion_v3_script.md`, "Unresolved source questions".
 
 ## Files
 
@@ -52,8 +52,8 @@ Nothing has been uploaded or published. The footage release `roadster-footage-20
     bash tools/cut_c2_clips.sh               # companion v2 clips (spans in footage/CLIP_LEDGER.md)
     bash tools/render_companion_v2.sh        # → exports/FGW_Roadster_Companion_REVIEW_v2.mp4 (superseded)
     bash tools/cut_c3_clips.sh               # companion v3 clips (spans in footage/CLIP_LEDGER.md, "Companion v3")
-    bash tools/render_companion_v3.sh        # → exports/FGW_Roadster_Companion_REVIEW_v3.mp4 (−15 LUFS, −1.5 dBTP)
-    bash tools/render_companion_v3_4k.sh     # → exports/FGW_Roadster_Companion_REVIEW_v3_4K.mp4 (3840×2160, same soundtrack)
+    bash tools/render_companion_final_4k.sh  # → exports/FGW_Roadster_Companion_FINAL_4K.mp4 (3840×2160, −15 LUFS, −1.5 dBTP)
+    bash tools/render_companion_v3.sh        # optional 1080p check copy → exports/FGW_Roadster_Companion_REVIEW_v3.mp4
     bash tools/qa_c3.sh exports/FGW_Roadster_Companion_REVIEW_v3.mp4 qa/c3/final
 
 Stills for inspection: `cd source && COMP=ShortV4 node stills.mjs ../qa/<dir> t:<seconds> …` (or `COMP=Companion`).

@@ -8,7 +8,7 @@
 > curved ramp. That's two different air tricks. Fans pull air from under the car so the outside air presses it onto
 > the track (Tesla says up to 2 g). Cold-gas thrusters, built with SpaceX's help, push it around once it leaves the
 > track. Then: the same push at launch, the 0–60 numbers (the stream's recorded run read 1.00 s on its own timer; Tesla
-> says a live run hit 0.81 s, not independently timed), the three versions, and what the demo didn't show.
+> claims 0.81 s, not independently timed), the three versions, and what the demo didn't show.
 >
 > Footage: Tesla Roadster reveal livestream (Tesla), shown at its own speed. The illustrations are original and
 > simplified. Fan, duct, seal, tank, valve, nozzle and compressor positions are staging, not Tesla's engineering
