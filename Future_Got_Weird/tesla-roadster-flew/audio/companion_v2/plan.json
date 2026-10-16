@@ -1,0 +1,28 @@
+{
+  "_readme": "Companion v2 narration placement. Each phrase = words [from, to] of a tightened block (audio/companion_v2/tight/<block>.json), placed so that its first word starts at `at` seconds on the film timeline. Gaps between phrases are picture beats (landing, push-in, chair throw, stunt sound).",
+  "phrases": [
+    ["P1", "N1", 0, 6, 0.12],
+    ["P2", "N1", 7, 15, 2.85],
+    ["P3", "N1", 16, 17, 7.15],
+    ["P4", "N1", 18, 33, 8.65],
+    ["P5", "N2a", 0, 107, 13.90],
+    ["P6", "N2b", 0, 17, 48.10],
+    ["P7", "N2b", 18, 34, 54.20],
+    ["P8", "N2b", 35, 54, 59.50],
+    ["P9", "N2b", 55, 81, 65.80],
+    ["P10", "N3a", 0, 20, 74.60],
+    ["P11", "N3a", 21, 46, 81.20],
+    ["P12", "N3b", 0, 25, 91.40],
+    ["P13", "N3b", 26, 80, 98.80],
+    ["P14", "N3b", 81, 109, 114.50],
+    ["P15", "N4", 0, 6, 124.20],
+    ["P16a", "N4", 7, 11, 127.90],
+    ["P16b", "N4", 12, 13, 129.75],
+    ["P17", "N5", 0, 26, 132.00],
+    ["P18", "N5", 27, 37, 140.30],
+    ["P19", "N5", 38, 58, 143.70],
+    ["P20", "N6", 0, 60, 151.50],
+    ["P21", "N7", 0, 41, 173.60],
+    ["P22", "N8", 0, 39, 187.20]
+  ]
+}

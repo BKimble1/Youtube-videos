@@ -117,3 +117,32 @@ at 0:38.12–0:38.14 are outside them).
 | s06 | 17.96–22.18 | `rec_225218.mp4` | 0:16.00 → 0:18.56, then 0:21.60 → 0:23.26 (overhead replay) |
 | s07 | 22.18–28.16 | `rec_224730.mp4` | 2:17.12 → 2:23.10 (dimmed under the trim beat) |
 | s08 | 28.16–31.13 | `rec_224911.mp4` | 0:38.14 → 0:39.22 (0.37×) |
+
+## Companion v2 (16:9 review copy): shots as rendered
+
+Clips are cut by `tools/cut_c2_clips.sh` into `source/public/footage/c2_*.mp4` (Git-ignored). Slowed clips are
+motion-interpolated and never cross a broadcast camera cut (the hop's cut at 0:38.12–0:38.14 is slowed on each side
+separately). The illustrations between shots are drawn from the reference board `qa/reference/roadster_board.jpg`
+(stills: `rec_225050` 0:17.0 rear, `rec_224911` 0:38.5 side, `rec_224730` 1:18.5 hang, `rec_224911` 0:37.7 underside).
+
+| Film time | Clip | Recording | Source in → out | Shows |
+|---|---|---|---|---|
+| 0:00.00–0:08.45 | `c2_open_aerial` | `rec_224730.mp4` | 2:16.42 → 2:24.87 | Second run from the air: upside down under the ramp, leaves it (~2:18.0), rolls with gas (2:18.7–2:21.5), lands in smoke (~2:24.3). Silent recording |
+| 0:08.45–0:13.30 | `c2_hang_slow` | `rec_224730.mp4` | 1:17.50 → 1:19.86 (0.5×) | First run's hang, close-up from below (stops before Tesla's cut at 1:19.90); push-in to the gap, match into the illustration |
+| 1:20.60–1:25.05 | `c2_side_run2` | `rec_224730.mp4` | 2:07.20 → 2:11.65 | Second run, side angle (car end-on): leaves the ramp, plumes, four jets down, touchdown ~2:11.3 |
+| 1:54.60–1:59.24 | `c2_hop_slow_a` | `rec_224911.mp4` | 0:35.80 → 0:38.12 (0.5×) | Hop side replay: inverted above the row with plumes up, then an opposite pair while it turns over |
+| 1:59.24–2:03.90 | `c2_run2_slow` | `rec_224730.mp4` | 2:09.60 → 2:11.92 (0.5×) | Second run: four plumes firing down into the landing |
+| 2:03.90–2:09.40 | `c2_hop_front` (sound) | `rec_224911.mp4` | 0:17.00 → 0:22.50 | The hop live: approach, lift-off from flat ground at 0:20.0, Tesla's cut to the side angle at 0:20.97, flip over the Semi, touchdown ~0:22.2 |
+| 2:09.40–2:11.60 | `c2_hop_siderep` (sound) | `rec_224911.mp4` | 0:34.30 → 0:36.50 | Side replay: lift-off on four jets beside the parked Teslas, Semi at left |
+| 2:11.60–2:18.00 | `c2_rec_run` (sound) | `rec_225218.mp4` | 0:12.10 → 0:18.50 | The stream's recorded run: rear (cut 0:13.53), overhead (cut 0:15.47), side-rear; launch 0:17.1 with the rear gas jet; the burned-in timer stops at 01.00 |
+| 2:18.00–2:23.50 | `c2_rec_overhead` | `rec_225218.mp4` | 0:21.66 → 0:24.96 (0.6×) | Its overhead replay (timer already at 01.00) |
+| 2:23.50–2:26.30 | `c2_live_a` (sound) | `rec_225340.mp4` | 0:43.60 → 0:46.40 | A later launch: the car at the line |
+| 2:26.30–2:30.70 | `c2_live_b` | `rec_225340.mp4` | 0:46.40 → 0:48.60 (0.5×) | Its gas blast (0:46.62). Real sound of 0:46.40–0:48.60 at speed under it (in `bed.wav`) |
+| 2:53.20–3:00.73 | `c2_limits_aer` | `rec_224911.mp4` | 0:41.55 → 0:49.08 | The hop's aerial replay (after the dissolve that ends ~0:41.5) |
+| 3:00.73–3:06.73 | `c2_run2_approach` | `rec_224730.mp4` | 1:59.25 → 2:05.25 | Second run's approach on the track (ends before the dissolve at 2:05.3) |
+| 3:06.73–3:11.97 | `c2_end_aerial` | `rec_224730.mp4` | 2:16.45 → 2:18.35 (0.365×) | Upside down on the ramp, slowed |
+| 3:11.97–3:17.10 | `c2_end_hop` | `rec_224911.mp4` | 0:37.85 → 0:38.12 + 0:38.14 → 0:39.40 (0.3125×) | The hop turning over, then upright on two jets |
+| 3:17.10–3:20.50 | `c2_end_front` | `rec_224911.mp4` | 0:19.75 → 0:20.96 (0.33×) | The hop from the front: lift-off and rise toward the Semi (ends before the cut at 0:20.97) |
+
+Not used: `rec_225050` (stage) except as a drawing reference; the black "0-60mph 1 sec" card (`rec_225218` 0:46.5);
+the 4,697 kg "downforce" gauge (visible at the bottom left of the hang close-up, covered by the Crew foreground).

@@ -29,3 +29,13 @@ audio/short_v3/tight/*.mp3
 source/public/short4/*.wav
 audio/short_v4/tight/*.wav
 audio/short_v4/tight/*.mp3
+# Companion v2: regenerated audio (tools/render_companion_v2.sh rebuilds it); unchosen takes stay in the ElevenLabs flow
+source/public/companion2/*.wav
+audio/companion_v2/tight/*.wav
+audio/companion_v2/scribe/*.mp3
+audio/companion_v2/takes_unused/
+qa/c2/spot*/
+qa/c2/ramp*/
+qa/c2/open1/
+qa/c2/mid1/
+qa/c2/late1/

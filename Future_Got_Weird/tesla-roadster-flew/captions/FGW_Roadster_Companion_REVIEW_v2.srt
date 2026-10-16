@@ -1,0 +1,321 @@
+1
+00:00:00,070 --> 00:00:02,790
+Tesla made a car drive upside down.
+
+2
+00:00:02,800 --> 00:00:05,703
+Then it left the ramp,
+rolled over in midair,
+
+3
+00:00:07,100 --> 00:00:08,490
+and landed.
+
+4
+00:00:08,600 --> 00:00:10,910
+Those are two different
+engineering tricks,
+
+5
+00:00:10,920 --> 00:00:13,830
+and the first one starts
+with the air around you.
+
+6
+00:00:13,850 --> 00:00:17,749
+On an earlier run, the car
+stopped up here and just hung.
+
+7
+00:00:17,759 --> 00:00:20,985
+Gravity was still pulling it
+down with all of its weight.
+
+8
+00:00:20,995 --> 00:00:22,454
+So what held it up?
+
+9
+00:00:22,464 --> 00:00:23,119
+Air.
+
+10
+00:00:23,129 --> 00:00:24,070
+At sea level,
+
+11
+00:00:24,080 --> 00:00:28,950
+air presses on everything with about ten
+tons on every square meter from every
+
+12
+00:00:28,960 --> 00:00:31,508
+side, so normally, it cancels out.
+
+13
+00:00:31,518 --> 00:00:34,185
+Tesla says fans pull
+air from under the car,
+
+14
+00:00:34,195 --> 00:00:36,304
+out of the thin gap against the ramp.
+
+15
+00:00:36,314 --> 00:00:37,484
+Not all of it,
+
+16
+00:00:37,494 --> 00:00:40,997
+just enough that the air left in
+the gap pushes back more weakly.
+
+17
+00:00:41,007 --> 00:00:44,586
+So the outside air wins and
+presses the car into the ramp.
+
+18
+00:00:44,596 --> 00:00:45,881
+The gap isn't pulling.
+
+19
+00:00:45,891 --> 00:00:48,040
+The air around it is pushing.
+
+20
+00:00:48,050 --> 00:00:52,604
+And that push always points into the
+surface, on the floor, up the wall,
+
+21
+00:00:52,614 --> 00:00:54,140
+even across the ceiling.
+
+22
+00:00:54,150 --> 00:00:57,386
+But only if it beats the
+car's weight, plus every bump,
+
+23
+00:00:57,396 --> 00:00:59,440
+and only while the seal holds.
+
+24
+00:00:59,450 --> 00:01:02,257
+Tesla says the fans
+can pull up to two g's.
+
+25
+00:01:02,267 --> 00:01:05,709
+Taken at face value, that's
+about twice the car's weight.
+
+26
+00:01:05,750 --> 00:01:08,865
+Race teams tried fan
+cars back in the 1970s.
+
+27
+00:01:08,875 --> 00:01:11,685
+They gripped so well
+that rivals cried foul,
+
+28
+00:01:11,695 --> 00:01:14,385
+and the cars were quickly
+pushed out of racing.
+
+29
+00:01:14,550 --> 00:01:17,026
+Now watch what happens
+when it leaves the ramp.
+
+30
+00:01:17,036 --> 00:01:21,140
+The gap opens, air rushes back in,
+and the grip is gone.
+
+31
+00:01:21,150 --> 00:01:23,597
+In the air, the car needs a second trick.
+
+32
+00:01:23,607 --> 00:01:26,112
+Tesla calls them cold-gas thrusters.
+
+33
+00:01:26,122 --> 00:01:28,894
+Compressed air built
+with help from SpaceX.
+
+34
+00:01:28,904 --> 00:01:31,094
+No fuel, no flame.
+
+35
+00:01:31,350 --> 00:01:34,678
+Throw something heavy one way,
+and you get pushed the other way.
+
+36
+00:01:34,688 --> 00:01:38,734
+Throw it from off to one side,
+and you don't just move, you turn.
+
+37
+00:01:38,750 --> 00:01:40,877
+The car does the same thing with gas.
+
+38
+00:01:40,887 --> 00:01:44,267
+Gas goes out one way, and the
+car gets pushed the opposite way.
+
+39
+00:01:44,277 --> 00:01:48,067
+Push one side up and the other
+side down, and the car rolls.
+
+40
+00:01:48,077 --> 00:01:50,372
+Fire the opposite pair to stop the roll.
+
+41
+00:01:50,382 --> 00:01:54,440
+Fire the gas downward, and the car
+is pushed up, slowing its fall.
+
+42
+00:01:54,450 --> 00:01:56,751
+Here's the real thing at half speed.
+
+43
+00:01:56,761 --> 00:02:00,317
+A pair fires in opposite directions,
+and the car turns over.
+
+44
+00:02:00,327 --> 00:02:03,817
+Then the gas fires down to
+ease it toward the ground.
+
+45
+00:02:04,150 --> 00:02:06,060
+Then the showpiece.
+
+46
+00:02:06,070 --> 00:02:07,660
+No ramp in sight.
+
+47
+00:02:07,850 --> 00:02:11,150
+Over a row of Teslas, Semi included.
+
+48
+00:02:11,950 --> 00:02:14,140
+The thrusters aren't just for flying.
+
+49
+00:02:14,150 --> 00:02:17,892
+Tesla says the ones at the back also
+shove the car forward at launch,
+
+50
+00:02:17,902 --> 00:02:20,240
+harder than the tires alone could grip.
+
+51
+00:02:20,250 --> 00:02:23,640
+The stream first showed a
+recorded run that took one second.
+
+52
+00:02:23,650 --> 00:02:28,794
+Then came a live run, which Tesla
+says hit 60 in 0.81 seconds.
+
+53
+00:02:28,804 --> 00:02:31,074
+Nobody timed that one independently.
+
+54
+00:02:31,450 --> 00:02:33,610
+So which Roadster does what?
+
+55
+00:02:33,620 --> 00:02:35,605
+Tesla lists three versions.
+
+56
+00:02:35,615 --> 00:02:38,695
+Performance has the fan
+suction and no thrusters.
+
+57
+00:02:38,705 --> 00:02:40,793
+Thrust adds thrusters at the back.
+
+58
+00:02:40,803 --> 00:02:42,613
+Rocket gets thrusters all around,
+
+59
+00:02:42,623 --> 00:02:45,311
+and it's the only version
+Tesla lists with flight.
+
+60
+00:02:45,321 --> 00:02:47,348
+It seats one, it's invite-only,
+
+61
+00:02:47,358 --> 00:02:50,970
+and Tesla's own page says it isn't
+approved for public road use.
+
+62
+00:02:50,980 --> 00:02:53,530
+Production is targeted for 2028.
+
+63
+00:02:53,550 --> 00:02:56,224
+Some things the demo didn't answer.
+
+64
+00:02:56,234 --> 00:02:57,666
+How long can it stay up?
+
+65
+00:02:57,676 --> 00:03:01,709
+How much air does each hop use,
+and how fast do the tanks refill?
+
+66
+00:03:01,719 --> 00:03:03,873
+And no one was driving from inside.
+
+67
+00:03:03,883 --> 00:03:06,693
+Musk said the car ran itself for the demo.
+
+68
+00:03:07,150 --> 00:03:10,141
+So how does one car pull off both tricks?
+
+69
+00:03:10,151 --> 00:03:12,031
+Air pressure holds it to the ramp.
+
+70
+00:03:12,041 --> 00:03:14,098
+Gas thrust steers it through the air.
+
+71
+00:03:14,108 --> 00:03:17,878
+And a flying car you can drive
+every day on public roads?
+
+72
+00:03:17,888 --> 00:03:19,798
+This demo didn't show that.

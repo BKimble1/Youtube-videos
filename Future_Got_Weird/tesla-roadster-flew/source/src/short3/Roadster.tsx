@@ -40,6 +40,10 @@ export const PROFILE = {
   wheelBottom: Math.max(...wheels.map((w) => w.c[1] + w.r)),
   floor: Math.max(...skirt.map((p) => p[1])),
 };
+/** Levelled wheel centres and skirt points (source pixels), for placing the car on a surface. */
+export const WHEELS = wheels;
+export const BODY = body;
+export const SKIRT = skirt;
 const BODY_CORNERS = new Set([0, 22, 23, 26, 27, 28, 41, 46, 47, 58, 60]);
 
 /**

@@ -1,0 +1,23 @@
+[0:00] Opening
+Tesla made a car drive upside down. Then it left the ramp, rolled over in midair, and landed. Those are two different engineering tricks, and the first one starts with the air around you.
+
+[0:13] Trick 1: air pressure
+On an earlier run, the car stopped up here and just hung. Gravity was still pulling it down with all of its weight. So what held it up? Air. At sea level, air presses on everything with about ten tons on every square meter from every side, so normally, it cancels out. Tesla says fans pull air from under the car, out of the thin gap against the ramp. Not all of it, just enough that the air left in the gap pushes back more weakly. So the outside air wins and presses the car into the ramp. The gap isn't pulling. The air around it is pushing. And that push always points into the surface, on the floor, up the wall, even across the ceiling. But only if it beats the car's weight, plus every bump, and only while the seal holds. Tesla says the fans can pull up to two g's. Taken at face value, that's about twice the car's weight. Race teams tried fan cars back in the 1970s. They gripped so well that rivals cried foul, and the cars were quickly pushed out of racing.
+
+[1:14] Leaving the ramp; trick 2: gas thrust
+Now watch what happens when it leaves the ramp. The gap opens, air rushes back in, and the grip is gone. In the air, the car needs a second trick. Tesla calls them cold-gas thrusters. Compressed air built with help from SpaceX. No fuel, no flame. Throw something heavy one way, and you get pushed the other way. Throw it from off to one side, and you don't just move, you turn. The car does the same thing with gas. Gas goes out one way, and the car gets pushed the opposite way. Push one side up and the other side down, and the car rolls. Fire the opposite pair to stop the roll. Fire the gas downward, and the car is pushed up, slowing its fall. Here's the real thing at half speed. A pair fires in opposite directions, and the car turns over. Then the gas fires down to ease it toward the ground.
+
+[2:04] The hop
+Then the showpiece. No ramp in sight. Over a row of Teslas, Semi included.
+
+[2:12] 0-60
+The thrusters aren't just for flying. Tesla says the ones at the back also shove the car forward at launch, harder than the tires alone could grip. The stream first showed a recorded run that took one second. Then came a live run, which Tesla says hit 60 in 0.81 seconds. Nobody timed that one independently.
+
+[2:31] Which Roadster does what
+So which Roadster does what? Tesla lists three versions. Performance has the fan suction and no thrusters. Thrust adds thrusters at the back. Rocket gets thrusters all around, and it's the only version Tesla lists with flight. It seats one, it's invite-only, and Tesla's own page says it isn't approved for public road use. Production is targeted for 2028.
+
+[2:53] What the demo did not show
+Some things the demo didn't answer. How long can it stay up? How much air does each hop use, and how fast do the tanks refill? And no one was driving from inside. Musk said the car ran itself for the demo.
+
+[3:07] The answer
+So how does one car pull off both tricks? Air pressure holds it to the ramp. Gas thrust steers it through the air. And a flying car you can drive every day on public roads? This demo didn't show that.

@@ -91,8 +91,35 @@ regenerated with `TAG=v2 bash tools/render_short.sh`.
 - **Tesla's live Roadster page.** Its wording (Rocket "not approved for public road use", trim names) is still only
   confirmed through search snapshots.
 
-## Companion
+## Companion: review copy v2 (16 Oct 2026)
 
-Review copy v1 was rendered (`exports/FGW_Roadster_Companion_REVIEW_v1.mp4`, 3:34) but is **on hold**. It still uses
-the box-car suction and thruster diagrams the owner rejected for the Short. Those panels are to be rebuilt with the v3
-traced Roadster and the real-footage vectors before anyone reviews it.
+`exports/FGW_Roadster_Companion_REVIEW_v2.mp4` is Git-ignored. Rebuild it with `bash tools/cut_c2_clips.sh` and
+`bash tools/render_companion_v2.sh` (composition `Companion2`). Script, timeline, sources for each line, Crew roles,
+changes and open issues are in `script/companion_v2_script.md`. Shot spans are in `footage/CLIP_LEDGER.md`
+("Companion v2"). Captions: `captions/FGW_Roadster_Companion_REVIEW_v2.srt`. The QA script is `tools/qa_c2.sh`.
+
+| Check | Result |
+|---|---|
+| Format | 1920×1080, 30 fps, H.264 yuv420p, 6,015 frames = **3:20.5** (container 200.6 s); AAC 48 kHz stereo 320 kb/s; about 85 MB |
+| Loudness | **−15.0 LUFS integrated, −1.5 dBTP**, LRA 3.1 LU (two-pass loudnorm) |
+| Black frames / freezes | **None** (blackdetect ≥0.1 s; freezedetect ≥0.6 s at −55 dB). The first render had a 0.2 s near-black start on the hop (the front camera's dark approach, now skipped) and eight low-motion holds (the stopped fan car, the floating analogy before each throw, the diagram while the fall slows). These were fixed with a slow push toward the fan car, pulsing suction arrows, a zero-g sway, faster stars, and clouds rising past the falling car |
+| Speech clarity | Each word's narration level against everything else (score, effects, event sound), measured on a render without narration: **median 24.9 dB, 10th percentile 18.1 dB; 3 of 597 words under 10 dB**. The lowest is a quiet trailing "it," at 0:36.9 (4.6 dB). The first mix had a median of 11.2 dB and a minimum of −9.9 dB. The score now sits about 7.5 dB lower overall and ducks a further 15 dB under every word; effects duck 6 dB under words |
+| Intelligibility | An independent Scribe transcription of the **final mixed soundtrack** returned the script word for word. The only differences are number formatting ("10", "1970s", "0.81", "2028"). Its word starts match the caption timing (median offset 0.00 s, maximum 0.05 s) |
+| Rotations | Checked frame by frame (`qa/evidence/companion_v2_roll_diagram_104-110s.jpg`, `…_leaving_ramp_76-81s.jpg`, `…_zero_g_tumble_96-99s.jpg`). The car is one rigid drawing in every rotation, with wheels, glass and lights attached. The roll's off-centre pair pushes up on one side and down on the other (turning); the opposite pair decelerates it to upright; both firing down are labelled "no turning" |
+| Opening match | `qa/evidence/companion_v2_match_12.55-13.45s.jpg`: the real car under the ramp dissolves into the illustrated car at the same nose-left, upside-down orientation and about the same size and slope |
+| Roadster consistency | The side profile is traced from `rec_224911` 0:38.5 and the rear view is drawn from `rec_225050` 0:17.0. The two views are scaled to each other and compared on `qa/reference/roadster_board.jpg`. No box cars, no old red Roadster |
+| Diagram physics | Weight is always straight down. The pressure push always points into the surface (floor, wall, ceiling). Low pressure is drawn as weaker push from the gap side, never as a pull, and the gap keeps some air. Gas (blue) and push on the car (saffron) are opposite everywhere, with a key on screen. On real footage, arrows sit only on visible plumes; no rotation direction is drawn over the footage |
+| Crew anatomy | Feet on the ground in every standing shot (or behind the barrier); hands on the mat, broom, stopwatch and ball through IK; eyes and layering checked in the strips. The end beat originally had clerkC's pointing arm crossing the checker's face for 0.8 s; the two were swapped so it no longer crosses (`qa/evidence/companion_v2_end_crew_197-200s.jpg`) |
+| Text | Labels raised to 36–52 px after a phone-size check (`qa/evidence/companion_v2_phone_640x360_every4s.jpg`, one frame every 4 s at 640×360). No label sits on the car, its path, or the vehicles it clears in the stunt. The evidence tag at the top left changes with the material (footage / illustration / claim / analogy / not shown) |
+| Audio joins | Phrase joins use 10 ms fades inside pauses; pause cuts use 12 ms crossfades. True peak −1.5 dBTP, no clipping |
+
+### Not checked here (companion v2)
+
+- **Listening.** This environment has no audio playback. The checks above are measurements and machine transcription,
+  not a human listen.
+- **Tesla's live Roadster page** doesn't resolve from this container. The trims, Rocket's road-use wording and
+  "flight on Rocket only" rest on consistent press reports and search snapshots (`research/companion_v2_source_notes.md`).
+- **Content ID and rights.** These are only visible in YouTube Studio during upload.
+
+Review copy v1 (`exports/FGW_Roadster_Companion_REVIEW_v1.mp4`, 3:34, composition `Companion`) is superseded. It used
+the rejected box-car diagrams.
