@@ -1,6 +1,32 @@
 # QA report: Tesla Roadster Short and companion
 
-## Short: review copy v3 (owner revision of 16 Oct 2026; not yet approved as final)
+## Short: FINAL v4 (owner's final editing pass, 16 Oct 2026)
+
+`exports/FGW_Roadster_Short_FINAL_v4.mp4` is Git-ignored. Rebuild it with `bash tools/render_short_v4.sh`. The script,
+timeline and changes are in `script/short_v4_final.md`. Exact source in/out times are in `footage/CLIP_LEDGER.md`
+(FINAL v4 section). Upload captions: `captions/FGW_Roadster_Short_FINAL_v4.srt`.
+
+| Check | Result |
+|---|---|
+| Format | 1080×1920, **30 fps** (unchanged), H.264 yuv420p, 934 frames = **31.13 s**; AAC 48 kHz stereo 320 kb/s; 15.6 MB |
+| Loudness | **−14.1 LUFS integrated, −1.4 dBTP**, LRA 2.4 LU |
+| Black frames / freezes | none (blackdetect 0.05 s; freezedetect 0.5 s). The first FINAL render had 0.73 s and 0.57 s low-motion holds at the edges of the suction diagram. They were fixed: the air starts moving on "fans", the car seats on "ramp", and the explainer cuts 0.12 s sooner |
+| First 3 s | Inspected at 10 fps (`qa/evidence/short_final_v4_first2s_10fps.jpg`). 0.00–1.55: the real lift-off, continuous, the car rising on its jets with the ground and parked cars below. 1.55: the car under the ramp on "And hang upside down" |
+| Speech clarity | Per-word level of the narration against everything else (effects and event sound), measured on a render without narration: **minimum margin 12.1 dB, median 31.4 dB** (`tools/speech_clarity.py`). The first FINAL mix fell to −2.7 dB under the Semi line and +3.3 dB on "0.81". The event audio is now ducked under speech and swells only in the gaps (touchdown, launch blast) |
+| Intelligibility | A Scribe transcription of the **final mixed soundtrack** returned all 93 script words with the same timings as the clean narration, so the captions track the audio |
+| Audio joins | Eight sharp transients in the final mix. All are consonant onsets or releases already present in the voice track, none at an edit join; no clipping (true peak −1.4 dBTP) |
+| Safe areas | Captions at y 1290–1450 and x 110–930. Labels sit at the top. Checked at 360×640 with the Shorts UI zones overlaid (`qa/evidence/short_final_v4_phone_safe_areas.jpg`) |
+| Claims | Fans: "Tesla says". 0.81 s: "Tesla's claimed best" and "by Tesla's own test", kept separate from "Shown run: 1.00 s" over the run whose stream timer reads 01.00. Rocket: "Tesla lists", "it says", "per Tesla's Roadster page". The diagram is labelled "SIMPLIFIED ILLUSTRATION" and drawn on a dark illustrated background, distinct from the footage |
+
+### Not checked here (FINAL v4)
+
+- **Listening.** This environment has no audio playback. The checks above are measurements and machine transcription,
+  not a human listen.
+- **Tesla's live Roadster page** doesn't resolve from this container. The Rocket wording rests on consistent press
+  reports.
+- **Content ID and rights.** These are only visible in YouTube Studio during upload.
+
+## Earlier: review copy v3 (superseded by FINAL v4)
 
 `exports/FGW_Roadster_Short_REVIEW_v3.mp4` is Git-ignored. Rebuild it with `TAG=v3 bash tools/render_short_v3.sh`.
 The script, the timestamped shot list and the change list are in `script/short_v3_script.md`. Exact source in/out

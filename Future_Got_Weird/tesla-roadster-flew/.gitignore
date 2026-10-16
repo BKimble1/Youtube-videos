@@ -26,3 +26,6 @@ source/public/companion/sfx_companion.wav
 source/public/short3/*.wav
 audio/short_v3/tight/*.wav
 audio/short_v3/tight/*.mp3
+source/public/short4/*.wav
+audio/short_v4/tight/*.wav
+audio/short_v4/tight/*.mp3

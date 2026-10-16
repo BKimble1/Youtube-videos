@@ -96,3 +96,24 @@ two shots.
 | s11 | 27.50–33.10 | `rec_224911.mp4` | 0:43.40 → 0:49.00 |
 | s12 | 33.10–34.45 | `rec_224730.mp4` | 2:20.80 → 2:22.15 |
 | s13 | 34.45–36.73 | `rec_224911.mp4` | 0:35.83 → 0:38.12 (runs into s01) |
+
+## Short FINAL v4 (owner's final pass): shots as rendered
+
+New clips (Git-ignored, cut by `tools/render_short_v4.sh`):
+
+- `v4_open.mp4`: `rec_224911` 0:34.45–0:35.76 at 0.84×
+- `v4_end_slow.mp4`: `rec_224911` 0:38.14–0:39.22 at 0.37×
+
+Both are motion-interpolated and lie entirely within one camera shot (the dissolve at about 0:34.25 and the camera cut
+at 0:38.12–0:38.14 are outside them).
+
+| Shot | Short time | Recording | Source in → out |
+|---|---|---|---|
+| s01 | 0.00–1.55 | `rec_224911.mp4` | 0:34.45 → 0:35.76 (0.84×) |
+| s02 | 1.55–4.10 | `rec_224730.mp4` | 1:17.47 → 1:19.82 (0.92×) |
+| s03 | 4.10–10.26 | (illustration) | traced from `rec_224911.mp4` 0:38.50 |
+| s04 | 10.26–14.68 | `rec_224911.mp4` | 0:36.50 → 0:38.71 (0.5×) |
+| s05 | 14.68–17.96 | `rec_224911.mp4` | 0:19.10 → 0:22.38 |
+| s06 | 17.96–22.18 | `rec_225218.mp4` | 0:16.00 → 0:18.56, then 0:21.60 → 0:23.26 (overhead replay) |
+| s07 | 22.18–28.16 | `rec_224730.mp4` | 2:17.12 → 2:23.10 (dimmed under the trim beat) |
+| s08 | 28.16–31.13 | `rec_224911.mp4` | 0:38.14 → 0:39.22 (0.37×) |

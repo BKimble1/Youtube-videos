@@ -2,12 +2,14 @@
 """Short v3 narration: the selected Test Voice take with its pauses tightened (no time-stretch, no pitch change).
 Pauses found with silencedetect (-38 dB, >=120 ms). Sentence-length pauses (>=0.33 s) become SENT s, shorter ones
 become at most COMMA s; each cut is made in the middle of the silence with a 12 ms crossfade.
-Usage: build_short_v3_narration.py take.mp3 out.wav [map.json]   (map.json: old->new time anchors for retiming)"""
+Usage: [SENT=0.2 COMMA=0.12] build_short_v3_narration.py take.mp3 out.wav [map.json]   (map.json: old->new time anchors)"""
 import json, re, subprocess, sys
 import numpy as np
 
 SR = 48000
-SENT, COMMA, LEAD, TAIL, XF = 0.20, 0.12, 0.03, 0.20, 0.012
+import os
+SENT = float(os.environ.get('SENT', 0.20)); COMMA = float(os.environ.get('COMMA', 0.12))
+LEAD, TAIL, XF = 0.03, 0.20, 0.012
 src, out = sys.argv[1], sys.argv[2]
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', src, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True).stdout
 x = np.frombuffer(raw, np.float32).copy()
