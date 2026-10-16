@@ -8,7 +8,7 @@ as evidence, plus the channel's own warm vector animation for the explanations.
 | Piece | State |
 |---|---|
 | **Short** (31.1 s, 9:16, 30 fps) | **FINAL v4** (owner's final pass): `exports/FGW_Roadster_Short_FINAL_v4.mp4`, composition `ShortV4`, `bash tools/render_short_v4.sh`. Script and changes: `script/short_v4_final.md`; QA: `QA_REPORT.md`. Not uploaded: publishing is the owner's action. v3 (`ShortV3`) and v2 (`Short`) are superseded |
-| **Companion** (2:46.5, 16:9, 30 fps) | **Review copy v3**: `exports/FGW_Roadster_Companion_REVIEW_v3.mp4`, composition `Companion3`, `bash tools/render_companion_v3.sh`. Script, timeline, sources per line, change log and open source questions: `script/companion_v3_script.md`; QA: `QA_REPORT.md`. The owner's V3 revision brief: tighter (465 words), one coherent story (hangs on → leaves the track → controls its motion → what it proves), transitions inside one illustrated space, far less on-screen text, new Test Voice performance, sound built from visible actions. v2 (`Companion2`) and v1 (`Companion`) are superseded |
+| **Companion** (2:46.5, 16:9, 30 fps) | **Review copy v3**: `exports/FGW_Roadster_Companion_REVIEW_v3.mp4`, composition `Companion3`, `bash tools/render_companion_v3.sh`; 4K master `exports/FGW_Roadster_Companion_REVIEW_v3_4K.mp4` via `bash tools/render_companion_v3_4k.sh`. Script, timeline, sources per line, change log and open source questions: `script/companion_v3_script.md`; QA: `QA_REPORT.md`. The owner's V3 revision brief: tighter (465 words), one coherent story (hangs on → leaves the track → controls its motion → what it proves), transitions inside one illustrated space, far less on-screen text, new Test Voice performance, sound built from visible actions. v2 (`Companion2`) and v1 (`Companion`) are superseded |
 
 Nothing has been uploaded or published. The footage release `roadster-footage-2026-10-15` is still a draft.
 
@@ -53,6 +53,7 @@ Nothing has been uploaded or published. The footage release `roadster-footage-20
     bash tools/render_companion_v2.sh        # → exports/FGW_Roadster_Companion_REVIEW_v2.mp4 (superseded)
     bash tools/cut_c3_clips.sh               # companion v3 clips (spans in footage/CLIP_LEDGER.md, "Companion v3")
     bash tools/render_companion_v3.sh        # → exports/FGW_Roadster_Companion_REVIEW_v3.mp4 (−15 LUFS, −1.5 dBTP)
+    bash tools/render_companion_v3_4k.sh     # → exports/FGW_Roadster_Companion_REVIEW_v3_4K.mp4 (3840×2160, same soundtrack)
     bash tools/qa_c3.sh exports/FGW_Roadster_Companion_REVIEW_v3.mp4 qa/c3/final
 
 Stills for inspection: `cd source && COMP=ShortV4 node stills.mjs ../qa/<dir> t:<seconds> …` (or `COMP=Companion`).
