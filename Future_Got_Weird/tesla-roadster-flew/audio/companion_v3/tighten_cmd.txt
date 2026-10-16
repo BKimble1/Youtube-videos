@@ -1,0 +1,1 @@
+TEMPO="V7=1.08" PAUSES="V2=0.40/0.20,V5=0.40/0.20,V3=0.42/0.22" python3 tools/tighten_blocks_v3.py

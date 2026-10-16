@@ -1,0 +1,402 @@
+{
+"take": "V5_t2_GuBt",
+"text": "Now push off center. One side up, the other side down, and the car rolls. Fire the opposite pair and the roll stops. Then aim the gas down. That pushes the car upward and slows the fall. To truly hover, the thrust would have to match the car's whole weight. Here's the real one. It rolls upright, then the jets fire down to soften the landing",
+"words": [
+{
+"text": "Now",
+"type": "word",
+"start": 0.12,
+"end": 0.24
+},
+{
+"text": "push",
+"type": "word",
+"start": 0.38,
+"end": 0.6
+},
+{
+"text": "off",
+"type": "word",
+"start": 0.8,
+"end": 0.94
+},
+{
+"text": "center.",
+"type": "word",
+"start": 1.04,
+"end": 1.34
+},
+{
+"text": "One",
+"type": "word",
+"start": 1.76,
+"end": 1.88
+},
+{
+"text": "side",
+"type": "word",
+"start": 1.96,
+"end": 2.16
+},
+{
+"text": "up,",
+"type": "word",
+"start": 2.24,
+"end": 2.36
+},
+{
+"text": "the",
+"type": "word",
+"start": 2.6,
+"end": 2.72
+},
+{
+"text": "other",
+"type": "word",
+"start": 2.78,
+"end": 2.9
+},
+{
+"text": "side",
+"type": "word",
+"start": 3,
+"end": 3.22
+},
+{
+"text": "down,",
+"type": "word",
+"start": 3.26,
+"end": 3.5
+},
+{
+"text": "and",
+"type": "word",
+"start": 3.72,
+"end": 3.8
+},
+{
+"text": "the",
+"type": "word",
+"start": 3.82,
+"end": 3.9
+},
+{
+"text": "car",
+"type": "word",
+"start": 3.94,
+"end": 4.12
+},
+{
+"text": "rolls.",
+"type": "word",
+"start": 4.24,
+"end": 4.64
+},
+{
+"text": "Fire",
+"type": "word",
+"start": 5.1,
+"end": 5.32
+},
+{
+"text": "the",
+"type": "word",
+"start": 5.36,
+"end": 5.48
+},
+{
+"text": "opposite",
+"type": "word",
+"start": 5.54,
+"end": 5.88
+},
+{
+"text": "pair",
+"type": "word",
+"start": 5.94,
+"end": 6.14
+},
+{
+"text": "and",
+"type": "word",
+"start": 6.32,
+"end": 6.4
+},
+{
+"text": "the",
+"type": "word",
+"start": 6.44,
+"end": 6.54
+},
+{
+"text": "roll",
+"type": "word",
+"start": 6.58,
+"end": 6.72
+},
+{
+"text": "stops.",
+"type": "word",
+"start": 6.88,
+"end": 7.28
+},
+{
+"text": "Then",
+"type": "word",
+"start": 7.78,
+"end": 7.96
+},
+{
+"text": "aim",
+"type": "word",
+"start": 8.22,
+"end": 8.36
+},
+{
+"text": "the",
+"type": "word",
+"start": 8.4,
+"end": 8.48
+},
+{
+"text": "gas",
+"type": "word",
+"start": 8.52,
+"end": 8.78
+},
+{
+"text": "down.",
+"type": "word",
+"start": 8.82,
+"end": 9.08
+},
+{
+"text": "That",
+"type": "word",
+"start": 9.52,
+"end": 9.68
+},
+{
+"text": "pushes",
+"type": "word",
+"start": 9.72,
+"end": 9.98
+},
+{
+"text": "the",
+"type": "word",
+"start": 10,
+"end": 10.08
+},
+{
+"text": "car",
+"type": "word",
+"start": 10.12,
+"end": 10.24
+},
+{
+"text": "upward",
+"type": "word",
+"start": 10.4,
+"end": 10.74
+},
+{
+"text": "and",
+"type": "word",
+"start": 10.82,
+"end": 10.9
+},
+{
+"text": "slows",
+"type": "word",
+"start": 11.04,
+"end": 11.34
+},
+{
+"text": "the",
+"type": "word",
+"start": 11.38,
+"end": 11.48
+},
+{
+"text": "fall.",
+"type": "word",
+"start": 11.52,
+"end": 11.76
+},
+{
+"text": "To",
+"type": "word",
+"start": 12.28,
+"end": 12.38
+},
+{
+"text": "truly",
+"type": "word",
+"start": 12.46,
+"end": 12.82
+},
+{
+"text": "hover,",
+"type": "word",
+"start": 12.86,
+"end": 13.12
+},
+{
+"text": "the",
+"type": "word",
+"start": 13.44,
+"end": 13.54
+},
+{
+"text": "thrust",
+"type": "word",
+"start": 13.58,
+"end": 13.88
+},
+{
+"text": "would",
+"type": "word",
+"start": 13.92,
+"end": 14
+},
+{
+"text": "have",
+"type": "word",
+"start": 14.04,
+"end": 14.18
+},
+{
+"text": "to",
+"type": "word",
+"start": 14.2,
+"end": 14.3
+},
+{
+"text": "match",
+"type": "word",
+"start": 14.36,
+"end": 14.6
+},
+{
+"text": "the",
+"type": "word",
+"start": 14.64,
+"end": 14.7
+},
+{
+"text": "car's",
+"type": "word",
+"start": 14.76,
+"end": 15.06
+},
+{
+"text": "whole",
+"type": "word",
+"start": 15.14,
+"end": 15.34
+},
+{
+"text": "weight.",
+"type": "word",
+"start": 15.44,
+"end": 15.72
+},
+{
+"text": "Here's",
+"type": "word",
+"start": 16.239,
+"end": 16.42
+},
+{
+"text": "the",
+"type": "word",
+"start": 16.46,
+"end": 16.54
+},
+{
+"text": "real",
+"type": "word",
+"start": 16.58,
+"end": 16.76
+},
+{
+"text": "one.",
+"type": "word",
+"start": 16.84,
+"end": 16.96
+},
+{
+"text": "It",
+"type": "word",
+"start": 17.36,
+"end": 17.46
+},
+{
+"text": "rolls",
+"type": "word",
+"start": 17.52,
+"end": 17.74
+},
+{
+"text": "upright,",
+"type": "word",
+"start": 17.8,
+"end": 18.16
+},
+{
+"text": "then",
+"type": "word",
+"start": 18.56,
+"end": 18.68
+},
+{
+"text": "the",
+"type": "word",
+"start": 18.72,
+"end": 18.82
+},
+{
+"text": "jets",
+"type": "word",
+"start": 18.88,
+"end": 19.16
+},
+{
+"text": "fire",
+"type": "word",
+"start": 19.22,
+"end": 19.48
+},
+{
+"text": "down",
+"type": "word",
+"start": 19.52,
+"end": 19.76
+},
+{
+"text": "to",
+"type": "word",
+"start": 19.78,
+"end": 19.92
+},
+{
+"text": "soften",
+"type": "word",
+"start": 19.98,
+"end": 20.28
+},
+{
+"text": "the",
+"type": "word",
+"start": 20.32,
+"end": 20.38
+},
+{
+"text": "landing",
+"type": "word",
+"start": 20.42,
+"end": 20.78
+}
+]
+}

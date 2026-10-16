@@ -39,3 +39,7 @@ qa/c2/ramp*/
 qa/c2/open1/
 qa/c2/mid1/
 qa/c2/late1/
+# Companion v3: regenerated audio (tools/render_companion_v3.sh rebuilds it); unchosen takes stay in the ElevenLabs flow
+source/public/companion3/*.wav
+audio/companion_v3/tight/*.wav
+audio/companion_v3/takes_unused/

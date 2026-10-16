@@ -1,0 +1,26 @@
+[0:00] Opening
+Tesla showed its Roadster doing this. Then, hanging upside down. The trick is air, but two completely different systems. One sticks it to the track. The other throws it around in midair. So what did that actually prove?
+
+[0:15] Trick 1: the grip
+First, the grip. Tesla says fans pull air out from under the floor. Seal the edges, and the air left in that gap thins out. Not to a vacuum, just lower pressure. So the air outside pushes harder than the air underneath, and that difference presses the car against the track, always into the surface, even upside down, where gravity pulls straight down, away from the ramp. Tesla says the fans can pull up to two g's. On paper, that's about twice the car's weight.
+
+[0:44] Leaving the ramp
+But it only works while the seal holds. At the end of the ramp, the surface runs out. Air floods back into the gap, and the grip is gone.
+
+[0:52] Trick 2: cold-gas thrust
+Up here, wheels and fans can't help. That's where the second system comes in. Tesla says these thrusters, built with help from SpaceX, run on compressed air. Open a valve and gas blasts out of a nozzle. Gas goes out one way, the car gets pushed the other way. No fuel, no flame, just cold gas.
+
+[1:12] Turning over and landing
+Now push off-center. One side up, the other side down, and the car rolls. Fire the opposite pair and the roll stops. Then aim the gas down. That pushes the car upward and slows the fall. To truly hover, the thrust would have to match the car's whole weight. Here's the real one. It rolls upright, then the jets fire down to soften the landing.
+
+[1:35] 0-60: shown vs claimed
+The same push works on the ground. Tesla says thrusters at the back shove the car forward at launch, harder than the tires alone could grip. On the stream, a recorded run was shown at 1 second on its own timer. For a live run, Tesla claimed 0.81 seconds. Nobody timed that one independently.
+
+[1:54] Three versions
+Tesla lists three versions built up like this. Performance gets the fans for grip. Thrust adds rear thrusters for launches. Rocket adds jets all around, and it's the only one Tesla lists with flight. Tesla says that one isn't approved for public road use.
+
+[2:10] The catch: air
+The catch is the air. Every burst spends what's in the tank. Tesla says onboard compressors refill it, but hasn't said how long that takes. And nobody was steering from inside. Musk said the car drove itself for the demo.
+
+[2:24] The answer
+Two systems, two jobs. The fans hold it to a surface. The jets change its motion in the air. Tesla showed a spectacular stunt. How long it can stay up and how repeatable that is are still the questions. Clever engineering? Absolutely. Your next commute? That's a much bigger leap.

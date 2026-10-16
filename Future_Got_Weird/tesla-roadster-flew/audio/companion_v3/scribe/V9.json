@@ -1,0 +1,306 @@
+{
+"take": "V9_t3_uYwi",
+"text": "Two systems, two jobs. The fans hold it to a surface. The jets change its motion in the air. Tesla showed a spectacular stunt. How long it can stay up and how repeatable that is are still the questions. Clever engineering? Absolutely. Your next commute? That's a much bigger leap",
+"words": [
+{
+"text": "Two",
+"type": "word",
+"start": 0.08,
+"end": 0.24
+},
+{
+"text": "systems,",
+"type": "word",
+"start": 0.38,
+"end": 0.9
+},
+{
+"text": "two",
+"type": "word",
+"start": 1.12,
+"end": 1.3
+},
+{
+"text": "jobs.",
+"type": "word",
+"start": 1.46,
+"end": 1.94
+},
+{
+"text": "The",
+"type": "word",
+"start": 2.32,
+"end": 2.42
+},
+{
+"text": "fans",
+"type": "word",
+"start": 2.48,
+"end": 2.74
+},
+{
+"text": "hold",
+"type": "word",
+"start": 2.78,
+"end": 2.94
+},
+{
+"text": "it",
+"type": "word",
+"start": 2.96,
+"end": 3.04
+},
+{
+"text": "to",
+"type": "word",
+"start": 3.08,
+"end": 3.16
+},
+{
+"text": "a",
+"type": "word",
+"start": 3.2,
+"end": 3.28
+},
+{
+"text": "surface.",
+"type": "word",
+"start": 3.34,
+"end": 3.76
+},
+{
+"text": "The",
+"type": "word",
+"start": 4.12,
+"end": 4.22
+},
+{
+"text": "jets",
+"type": "word",
+"start": 4.3,
+"end": 4.58
+},
+{
+"text": "change",
+"type": "word",
+"start": 4.62,
+"end": 4.8
+},
+{
+"text": "its",
+"type": "word",
+"start": 4.84,
+"end": 4.96
+},
+{
+"text": "motion",
+"type": "word",
+"start": 5.02,
+"end": 5.3
+},
+{
+"text": "in",
+"type": "word",
+"start": 5.34,
+"end": 5.4
+},
+{
+"text": "the",
+"type": "word",
+"start": 5.42,
+"end": 5.48
+},
+{
+"text": "air.",
+"type": "word",
+"start": 5.6,
+"end": 5.8
+},
+{
+"text": "Tesla",
+"type": "word",
+"start": 6.32,
+"end": 6.7
+},
+{
+"text": "showed",
+"type": "word",
+"start": 6.74,
+"end": 7
+},
+{
+"text": "a",
+"type": "word",
+"start": 7.04,
+"end": 7.12
+},
+{
+"text": "spectacular",
+"type": "word",
+"start": 7.22,
+"end": 8
+},
+{
+"text": "stunt.",
+"type": "word",
+"start": 8.14,
+"end": 8.42
+},
+{
+"text": "How",
+"type": "word",
+"start": 8.98,
+"end": 9.12
+},
+{
+"text": "long",
+"type": "word",
+"start": 9.14,
+"end": 9.3
+},
+{
+"text": "it",
+"type": "word",
+"start": 9.32,
+"end": 9.4
+},
+{
+"text": "can",
+"type": "word",
+"start": 9.42,
+"end": 9.56
+},
+{
+"text": "stay",
+"type": "word",
+"start": 9.62,
+"end": 9.8
+},
+{
+"text": "up",
+"type": "word",
+"start": 9.9,
+"end": 10.06
+},
+{
+"text": "and",
+"type": "word",
+"start": 10.26,
+"end": 10.4
+},
+{
+"text": "how",
+"type": "word",
+"start": 10.46,
+"end": 10.58
+},
+{
+"text": "repeatable",
+"type": "word",
+"start": 10.6,
+"end": 11.08
+},
+{
+"text": "that",
+"type": "word",
+"start": 11.12,
+"end": 11.26
+},
+{
+"text": "is",
+"type": "word",
+"start": 11.32,
+"end": 11.62
+},
+{
+"text": "are",
+"type": "word",
+"start": 11.66,
+"end": 11.82
+},
+{
+"text": "still",
+"type": "word",
+"start": 11.92,
+"end": 12.08
+},
+{
+"text": "the",
+"type": "word",
+"start": 12.12,
+"end": 12.18
+},
+{
+"text": "questions.",
+"type": "word",
+"start": 12.24,
+"end": 12.74
+},
+{
+"text": "Clever",
+"type": "word",
+"start": 13.18,
+"end": 13.5
+},
+{
+"text": "engineering?",
+"type": "word",
+"start": 13.54,
+"end": 14.08
+},
+{
+"text": "Absolutely.",
+"type": "word",
+"start": 14.54,
+"end": 15.28
+},
+{
+"text": "Your",
+"type": "word",
+"start": 15.7,
+"end": 15.8
+},
+{
+"text": "next",
+"type": "word",
+"start": 15.84,
+"end": 16.059
+},
+{
+"text": "commute?",
+"type": "word",
+"start": 16.1,
+"end": 16.44
+},
+{
+"text": "That's",
+"type": "word",
+"start": 16.86,
+"end": 17.06
+},
+{
+"text": "a",
+"type": "word",
+"start": 17.12,
+"end": 17.18
+},
+{
+"text": "much",
+"type": "word",
+"start": 17.32,
+"end": 17.58
+},
+{
+"text": "bigger",
+"type": "word",
+"start": 17.62,
+"end": 17.82
+},
+{
+"text": "leap",
+"type": "word",
+"start": 17.9,
+"end": 18.14
+}
+]
+}

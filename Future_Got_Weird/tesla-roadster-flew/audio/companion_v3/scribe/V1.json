@@ -1,0 +1,234 @@
+{
+"take": "V1_t4_O8kS",
+"text": "Tesla showed its Roadster doing this, then hanging upside down. The trick is air, but two completely different systems. One sticks it to the track. The other throws it around in midair. So what did that actually prove?",
+"words": [
+{
+"text": "Tesla",
+"type": "word",
+"start": 0.1,
+"end": 0.44
+},
+{
+"text": "showed",
+"type": "word",
+"start": 0.52,
+"end": 0.7
+},
+{
+"text": "its",
+"type": "word",
+"start": 0.74,
+"end": 0.84
+},
+{
+"text": "Roadster",
+"type": "word",
+"start": 0.96,
+"end": 1.36
+},
+{
+"text": "doing",
+"type": "word",
+"start": 1.46,
+"end": 1.68
+},
+{
+"text": "this,",
+"type": "word",
+"start": 1.88,
+"end": 2.24
+},
+{
+"text": "then",
+"type": "word",
+"start": 2.76,
+"end": 3
+},
+{
+"text": "hanging",
+"type": "word",
+"start": 3.32,
+"end": 3.58
+},
+{
+"text": "upside",
+"type": "word",
+"start": 3.62,
+"end": 3.92
+},
+{
+"text": "down.",
+"type": "word",
+"start": 3.94,
+"end": 4.24
+},
+{
+"text": "The",
+"type": "word",
+"start": 4.7,
+"end": 4.8
+},
+{
+"text": "trick",
+"type": "word",
+"start": 4.86,
+"end": 5.1
+},
+{
+"text": "is",
+"type": "word",
+"start": 5.24,
+"end": 5.44
+},
+{
+"text": "air,",
+"type": "word",
+"start": 5.56,
+"end": 5.78
+},
+{
+"text": "but",
+"type": "word",
+"start": 6.16,
+"end": 6.32
+},
+{
+"text": "two",
+"type": "word",
+"start": 6.4,
+"end": 6.6
+},
+{
+"text": "completely",
+"type": "word",
+"start": 6.64,
+"end": 7.28
+},
+{
+"text": "different",
+"type": "word",
+"start": 7.32,
+"end": 7.58
+},
+{
+"text": "systems.",
+"type": "word",
+"start": 7.62,
+"end": 8.06
+},
+{
+"text": "One",
+"type": "word",
+"start": 8.62,
+"end": 8.74
+},
+{
+"text": "sticks",
+"type": "word",
+"start": 8.94,
+"end": 9.12
+},
+{
+"text": "it",
+"type": "word",
+"start": 9.16,
+"end": 9.22
+},
+{
+"text": "to",
+"type": "word",
+"start": 9.26,
+"end": 9.34
+},
+{
+"text": "the",
+"type": "word",
+"start": 9.38,
+"end": 9.44
+},
+{
+"text": "track.",
+"type": "word",
+"start": 9.48,
+"end": 9.82
+},
+{
+"text": "The",
+"type": "word",
+"start": 10.2,
+"end": 10.3
+},
+{
+"text": "other",
+"type": "word",
+"start": 10.38,
+"end": 10.72
+},
+{
+"text": "throws",
+"type": "word",
+"start": 10.74,
+"end": 11.02
+},
+{
+"text": "it",
+"type": "word",
+"start": 11.06,
+"end": 11.1
+},
+{
+"text": "around",
+"type": "word",
+"start": 11.16,
+"end": 11.4
+},
+{
+"text": "in",
+"type": "word",
+"start": 11.44,
+"end": 11.52
+},
+{
+"text": "midair.",
+"type": "word",
+"start": 11.58,
+"end": 11.98
+},
+{
+"text": "So",
+"type": "word",
+"start": 12.56,
+"end": 12.92
+},
+{
+"text": "what",
+"type": "word",
+"start": 12.96,
+"end": 13.06
+},
+{
+"text": "did",
+"type": "word",
+"start": 13.06,
+"end": 13.16
+},
+{
+"text": "that",
+"type": "word",
+"start": 13.2,
+"end": 13.32
+},
+{
+"text": "actually",
+"type": "word",
+"start": 13.38,
+"end": 13.74
+},
+{
+"text": "prove?",
+"type": "word",
+"start": 13.78,
+"end": 14.2
+}
+]
+}

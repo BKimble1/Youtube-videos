@@ -146,3 +146,22 @@ separately). The illustrations between shots are drawn from the reference board 
 
 Not used: `rec_225050` (stage) except as a drawing reference; the black "0-60mph 1 sec" card (`rec_225218` 0:46.5);
 the 4,697 kg "downforce" gauge (visible at the bottom left of the hang close-up, covered by the Crew foreground).
+
+## Companion v3 (16:9 review copy): shots as rendered
+
+Clips are cut by `tools/cut_c3_clips.sh` into `source/public/footage/c3_*.mp4` (Git-ignored). Every v3 clip plays at
+the recording's own speed. Nothing is drawn over the footage except the "Shown 1.00 s" plate on the stream's own run.
+
+| Film time | Clip | Recording | Source in → out | Shows |
+|---|---|---|---|---|
+| 0:00.00–0:02.45 | `c3_open_hop` (sound) | `rec_224911.mp4` | 0:34.40 → 0:36.85 | The hop, Tesla's side replay: airborne on four jets beside the parked Teslas, rolling inverted above the Semi (cut on the inverted profile) |
+| 0:02.45–0:04.80 | `c3_hang` | `rec_224730.mp4` | 1:17.50 → 1:19.85 | The first run's hang, close-up from below, cropped 1.3× so the 4,697 kg gauge and the pitch/altitude dials are out of frame; it fades out under the drawn outline |
+| 1:29.90–1:34.87 | `c3_roll_real` | `rec_224730.mp4` | 2:07.00 → 2:11.95 | The second run, end-on: rolls upright off the top of the ramp (2:07.0–2:08.0), side and downward jets, four jets down (2:09.9), touchdown in smoke (about 2:11.3). Silent recording |
+| 1:43.60–1:49.00 | `c3_rec_run` (sound) | `rec_225218.mp4` | 0:15.60 → 0:21.00 | The stream's recorded run, side-rear angle: launch with the rear gas jet (0:17.1), the burned-in timer stops at 01.00 (0:18.05); "Shown 1.00 s" appears then |
+
+Not used in v3:
+
+- the stream's later launch (`rec_225340`), because the 0.81 s claim is shown away from any run footage;
+- the aerial second run;
+- the hop's front angle;
+- every slowed clip.
