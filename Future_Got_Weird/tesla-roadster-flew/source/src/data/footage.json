@@ -1,46 +1,92 @@
 {
   "_readme": "Footage slots for the Short and the companion. Put official Tesla clips in source/public/footage/ and set `file` (name inside that folder), `in` (seconds into that file), and optionally `cx`/`cy` (0..1 crop centre for the 9:16 fill), `zoom` (>=1) and `audio` (0..1 level for the demo's own sound). A slot with file=null renders as a labelled placeholder and blocks the final render (tools/check_footage.py). Record every clip in footage/CLIP_LEDGER.md.",
-  "source_mark": "Tesla demo · Oct 15, 2026",
+  "source_mark": "Tesla demo \u00b7 Oct 15, 2026",
   "slots": {
     "F1_AIRBORNE": {
-      "label": "Roadster midair",
-      "want": "Car clearly airborne, largest official angle, recognisable at phone size. Frame 0 of the Short and its last shot (loop).",
-      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.35
+      "label": "Roadster midair on its jets (side angle)",
+      "want": "Opens the Short (128.25\u2013130.65) and closes it: the last 3.4 s play 124.85\u2013128.25 so the end loops into frame 0.",
+      "file": "F1_AIRBORNE.mp4",
+      "in": 3.6,
+      "cx": 0.45,
+      "cy": 0.45,
+      "zoom": 1.2,
+      "audio": 0.35
     },
     "F2_RAMP_CLIMB": {
-      "label": "Climbing the curved ramp",
-      "want": "Car driving up the C-shaped ramp toward the inverted section.",
-      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.25
+      "label": "Climbing the curved ramp (first run, wide)",
+      "want": "63.6\u201365.6",
+      "file": "F2_RAMP_CLIMB.mp4",
+      "in": 0.5,
+      "cx": 0.54,
+      "cy": 0.5,
+      "zoom": 1.3,
+      "audio": 0.25
     },
     "F3_INVERTED": {
-      "label": "Hanging upside down",
-      "want": "Car stopped upside down on the ramp (Engadget: held for a few seconds). Also used as the match-cut into the suction diagram.",
-      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.25
+      "label": "Upside down against the ramp (close-up from below)",
+      "want": "77.5\u201378.9, and 78.9\u201379.55 as the match-cut into the suction diagram; the close-up shot runs 77.47\u201379.90",
+      "file": "F3_INVERTED.mp4",
+      "in": 0.5,
+      "cx": 0.5,
+      "cy": 0.35,
+      "zoom": 1.0,
+      "audio": 0.25
     },
     "F4_LAUNCH_ROLL": {
-      "label": "Launch and midair roll",
-      "want": "Second run: leaves the ramp, rotates/rolls upright with thrusters firing.",
-      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.4
+      "label": "Leaves the ramp and rolls on its jets (aerial angle)",
+      "want": "137.95\u2013140.85; the aerial landing at +6.5 s (144.45\u2013146.23) is the 'So yes, the demo flew' shot",
+      "file": "F4_LAUNCH_ROLL.mp4",
+      "in": 0.6,
+      "cx": 0.5,
+      "cy": 0.45,
+      "zoom": 1.05,
+      "audio": 0.4
     },
     "F5_LANDING": {
-      "label": "Landing",
-      "want": "Touchdown on the pavement after the roll. A 0.5 s strongest moment is replayed near the end.",
-      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.45
+      "label": "Settling into its landing (side angle)",
+      "want": "131.7\u2013132.95",
+      "file": "F5_LANDING.mp4",
+      "in": 0.5,
+      "cx": 0.5,
+      "cy": 0.55,
+      "zoom": 1.1,
+      "audio": 0.45
     },
     "F6_FIVE_VEHICLES": {
-      "label": "Clearing five Tesla vehicles",
-      "want": "Thruster hop over Cybercab, Cybertruck, Semi, Model Y, Model 3. If all five are not visible, switch the Short to the 'row of Teslas' pickup (see script).",
-      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.4
+      "label": "Flipping over a Semi and a row of Teslas (side angle)",
+      "want": "18.6\u201322.83: front angle of the approach with the Semi and the row (to 20.97), then the side angle of the flip over the Semi. Five vehicles are not clearly countable, so the Short uses the 'row of Teslas' line",
+      "file": "F6_FIVE_VEHICLES.mp4",
+      "in": 0.5,
+      "cx": 0.49,
+      "cy": 0.42,
+      "zoom": 1.2,
+      "audio": 0.4,
+      "cxKeys": [
+        [
+          2.37,
+          0.68
+        ]
+      ]
     },
     "F7_ACCEL_RUN": {
-      "label": "0-60 run",
-      "want": "Companion only: the acceleration run and Tesla's on-screen 0.81 s result.",
-      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.4
+      "label": "0-60 run with Tesla's on-screen timer",
+      "want": "15.6-21.84 side angle: launch, timer runs 0.00 -> 1.00 (17.15-18.1), thruster smoke; +6.0 s = top-down angle (21.6-25.4) for the opening tease",
+      "file": "F7_ACCEL_RUN.mp4",
+      "in": 0.5,
+      "cx": 0.5,
+      "cy": 0.5,
+      "zoom": 1.0,
+      "audio": 0.4
     },
     "F8_OPTIMUS_SEAT": {
       "label": "Optimus in the driver's seat",
       "want": "Companion only: door opens, Optimus seated (Engadget: only for show).",
-      "file": null, "in": 0, "cx": 0.5, "cy": 0.5, "zoom": 1, "audio": 0.3
+      "file": null,
+      "in": 0,
+      "cx": 0.5,
+      "cy": 0.5,
+      "zoom": 1,
+      "audio": 0.3
     }
   }
 }

@@ -6,11 +6,12 @@ import json, os, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 NEED = {
     'short': ['F1_AIRBORNE', 'F2_RAMP_CLIMB', 'F3_INVERTED', 'F4_LAUNCH_ROLL', 'F5_LANDING', 'F6_FIVE_VEHICLES'],
-    'companion': ['F1_AIRBORNE', 'F2_RAMP_CLIMB', 'F3_INVERTED', 'F4_LAUNCH_ROLL', 'F5_LANDING', 'F6_FIVE_VEHICLES', 'F7_ACCEL_RUN', 'F8_OPTIMUS_SEAT'],
+    # F8 (Optimus) is no longer used: the supplied recordings don't show it, so the companion dropped that line
+    'companion': ['F1_AIRBORNE', 'F2_RAMP_CLIMB', 'F3_INVERTED', 'F4_LAUNCH_ROLL', 'F5_LANDING', 'F6_FIVE_VEHICLES', 'F7_ACCEL_RUN'],
 }
 # seconds each slot must have before / after its `in` frame (the Short's shot lengths and offsets; F1 loops from in - 3.4 s)
-NEED_SHORT = {'F1_AIRBORNE': (3.4, 2.4), 'F2_RAMP_CLIMB': (0, 2.0), 'F3_INVERTED': (0, 2.05), 'F4_LAUNCH_ROLL': (0, 2.9),
-              'F5_LANDING': (0, 1.98), 'F6_FIVE_VEHICLES': (0, 4.23), 'F7_ACCEL_RUN': (0, 3.5), 'F8_OPTIMUS_SEAT': (0, 8.1)}
+NEED_SHORT = {'F1_AIRBORNE': (3.4, 2.4), 'F2_RAMP_CLIMB': (0, 2.0), 'F3_INVERTED': (0, 2.05), 'F4_LAUNCH_ROLL': (0, 8.28),
+              'F5_LANDING': (0, 1.98), 'F6_FIVE_VEHICLES': (0, 4.23), 'F7_ACCEL_RUN': (0, 9.8), 'F8_OPTIMUS_SEAT': (0, 8.1)}
 target = sys.argv[1] if len(sys.argv) > 1 else 'short'
 slots = json.load(open(os.path.join(ROOT, 'source/src/data/footage.json')))['slots']
 bad = []

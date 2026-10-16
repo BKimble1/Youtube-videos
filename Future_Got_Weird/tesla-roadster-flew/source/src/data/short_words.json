@@ -1,10 +1,13 @@
 {
- "take": "short_t4_KPLc",
+ "take": "short_t4_KPLc + pickup_rowofteslas_t1_BfOG at 17.62 s",
  "voice_id": "kk5XaSLo2XAw0sKM98zU",
  "model": "eleven_v4",
- "generation_id": "KPLcYkFqAPKyhZ70hjOg",
- "duration": 41.72,
- "note": "Scribe returned a forced alignment to the prompt text; first word and the 0.81 span corrected from the energy envelope.",
+ "generation_ids": [
+  "KPLcYkFqAPKyhZ70hjOg",
+  "BfOGGu4lZ1cCiHFFYGiT"
+ ],
+ "duration": 41.68,
+ "note": "Scribe returned forced alignments to the prompt text; first word and the 0.81 span corrected from the energy envelope.",
  "words": [
   {
    "w": "Tesla",
@@ -268,58 +271,53 @@
   },
   {
    "w": "It",
-   "s": 17.68,
-   "e": 17.76
+   "s": 17.7,
+   "e": 17.86
   },
   {
    "w": "even",
-   "s": 17.88,
-   "e": 18.0
+   "s": 17.98,
+   "e": 18.1
   },
   {
    "w": "cleared",
-   "s": 18.04,
-   "e": 18.4
-  },
-  {
-   "w": "five",
-   "s": 18.48,
-   "e": 18.72
-  },
-  {
-   "w": "of",
-   "s": 18.8,
-   "e": 18.88
-  },
-  {
-   "w": "Tesla's",
-   "s": 19.04,
-   "e": 19.36
-  },
-  {
-   "w": "own",
-   "s": 19.44,
-   "e": 19.6
-  },
-  {
-   "w": "vehicles",
-   "s": 19.68,
-   "e": 20.16
+   "s": 18.18,
+   "e": 18.34
   },
   {
    "w": "a",
-   "s": 20.507,
-   "e": 20.56
+   "s": 18.42,
+   "e": 18.5
+  },
+  {
+   "w": "row",
+   "s": 18.58,
+   "e": 18.66
+  },
+  {
+   "w": "of",
+   "s": 18.74,
+   "e": 18.82
+  },
+  {
+   "w": "Teslas,",
+   "s": 18.9,
+   "e": 19.53
+  },
+  {
+   "w": "a",
+   "s": 19.9,
+   "e": 19.94
   },
   {
    "w": "Semi",
-   "s": 20.6,
-   "e": 20.88
+   "s": 19.98,
+   "e": 20.34
   },
   {
    "w": "included.",
-   "s": 21.12,
-   "e": 21.84
+   "s": 20.62,
+   "e": 20.93
   },
   {
    "w": "But",

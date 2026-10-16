@@ -64,17 +64,25 @@ def main():
     man = json.load(open(MANIFEST))
     os.makedirs(OUTDIR, exist_ok=True)
     rows = []
-    if a.replay:
+    if a.cuts:
+        # cuts.json: {SLOT: "0:14:32.5"} with --replay, or {SLOT: {"file": path, "in": s, "post": s, "cx": .., "cy": .., "zoom": ..}}
         cuts = json.load(open(a.cuts))
-        info = probe(a.replay)
-        for slot, t in cuts.items():
+        base = os.path.dirname(os.path.abspath(a.cuts))
+        for slot, spec in cuts.items():
+            if slot.startswith('_'):
+                continue
+            spec = spec if isinstance(spec, dict) else {'in': spec}
+            src = spec.get('file') and os.path.join(base, spec['file']) or a.replay
             pre, post = NEED[slot]
-            t_in = secs(t)
+            post = max(post, spec.get('post', 0))
+            t_in = secs(spec['in'])
+            dur = float(probe(src)['format']['duration'])
+            start, end = max(0, t_in - pre), min(dur, t_in + post)
             out = os.path.join(OUTDIR, slot + '.mp4')
-            encode(a.replay, t_in - pre, pre + post, out)
-            man['slots'][slot].update(file=slot + '.mp4', **{'in': round(min(pre, t_in), 3)})
-            rows.append((slot, os.path.basename(a.replay), tc(t_in - pre), tc(t_in), tc(t_in + post), sheet(out, slot, pre)))
-        print('replay', info['format']['duration'], 's')
+            encode(src, start, end - start, out)
+            man['slots'][slot].update(file=slot + '.mp4', **{'in': round(t_in - start, 3)},
+                                      **{k: spec[k] for k in ('cx', 'cy', 'zoom', 'audio', 'label', 'want', 'cxKeys') if k in spec})
+            rows.append((slot, os.path.basename(src), tc(start), tc(t_in), tc(end), sheet(out, slot, t_in - start)))
     elif a.clips:
         ins = json.load(open(a.in_json)) if a.in_json else {}
         for slot in NEED:
@@ -93,7 +101,7 @@ def main():
             ok = t_in >= pre - 0.01 and dur - t_in >= post - 0.01
             rows.append((slot, os.path.basename(src), '0:00:00', tc(t_in), tc(dur), sheet(out, slot, t_in) + ('' if ok else '  ⚠ too short for its shot')))
     else:
-        ap.error('give --replay with --cuts, or --clips')
+        ap.error('give --cuts (with --replay for plain timecodes), or --clips')
     json.dump(man, open(MANIFEST, 'w'), indent=2)
     with open(LEDGER, 'a') as L:
         for slot, src, a0, ain, a1, sh in rows:

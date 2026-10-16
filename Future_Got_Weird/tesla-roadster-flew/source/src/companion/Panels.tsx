@@ -104,7 +104,7 @@ export const EventCard: React.FC<{f: number}> = ({f}) => (
 
 /* ---------- c12: 2017 → 2028 ---------- */
 export const Timeline: React.FC<{f: number; at17: number; at28: number}> = ({f, at17, at28}) => {
-  const line = tw(f, at17 + 10, Math.max(12, at28 - at17 - 10), E.inOut);
+  const line = tw(f, Math.min(at17, 6) + 10, Math.max(12, at28 - Math.min(at17, 6) - 10), E.inOut);
   return (
     <div style={{position: 'absolute', inset: 0}}>
       <svg width={1920} height={1080} style={{position: 'absolute'}}>
@@ -113,7 +113,7 @@ export const Timeline: React.FC<{f: number; at17: number; at28: number}> = ({f, 
           <circle key={y} cx={420 + (i + 1) * 98} cy={560} r={9} fill={C.inkMuted} opacity={line * 1.1 > (i + 1) / 11 ? 1 : 0} />
         ))}
       </svg>
-      {[{x: 420, y: 'first shown', yr: '2017', at: at17, c: C.blueLight}, {x: 1500, y: 'production target', yr: '2028', at: at28, c: C.saffron}].map((k) => (
+      {[{x: 420, y: 'first shown', yr: '2017', at: Math.min(at17, 6), c: C.blueLight}, {x: 1500, y: 'production target', yr: '2028', at: at28, c: C.saffron}].map((k) => (
         <div key={k.yr} style={{position: 'absolute', left: k.x - 210, top: 330, width: 420, textAlign: 'center', ...pop(f, k.at)}}>
           <div style={{...card, background: k.c, padding: '20px 0'}}><H1 size={120}>{k.yr}</H1></div>
           <Body size={44} style={{marginTop: 120}}>{k.y}</Body>
@@ -131,11 +131,11 @@ export const GMeter: React.FC<{f: number; gAt: number; twoAt: number; doubleAt: 
   const g1 = tw(f, gAt, 16);
   const g2 = tw(f, twoAt, 24, E.out);
   const dbl = sp(f, doubleAt, SNAP);
-  const H = 520, base = 820, unit = H / 2.2;
+  const H = 520, base = 760, unit = H / 2.2;
   return (
     <div style={{position: 'absolute', left: 1120, top: 150, width: 680, height: 800, opacity: tw(f, gAt - 6, 10)}}>
       <H1 size={52} style={{textAlign: 'center'}}>Pull needed vs. pull claimed</H1>
-      <svg width={680} height={720} style={{position: 'absolute', top: 70}}>
+      <svg width={680} height={860} style={{position: 'absolute', top: 70, overflow: 'visible'}}>
         {[1, 2].map((g) => (
           <g key={g}>
             <path d={`M 40 ${base - 70 - g * unit} L 640 ${base - 70 - g * unit}`} stroke={C.paperLine} strokeWidth={4} strokeDasharray="10 10" />
@@ -150,7 +150,7 @@ export const GMeter: React.FC<{f: number; gAt: number; twoAt: number; doubleAt: 
       <div style={{position: 'absolute', left: 340, top: 70 + base - 70 - unit * 2 - 120, width: 330, textAlign: 'center', opacity: g2}}>
         <Chip text="Tesla's claim: up to 2 g" kind="demo" size={28} />
       </div>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 740, textAlign: 'center', opacity: Math.min(1, dbl * 1.5), transform: `scale(${0.8 + 0.2 * dbl})`}}>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 76, textAlign: 'center', opacity: Math.min(1, dbl * 1.5), transform: `scale(${0.8 + 0.2 * dbl})`}}>
         <H1 size={58} color={C.tealDeep}>2× what it needs</H1>
       </div>
     </div>
@@ -304,28 +304,26 @@ export const Checklist: React.FC<{f: number; title: string; items: [string, numb
   </div>
 );
 
-/* ---------- c24: 3.4 g ---------- */
-export const GCompare: React.FC<{f: number; at34: number; tiresAt: number; thrAt: number; pushAt: number}> = ({f, at34, tiresAt, thrAt, pushAt}) => {
-  const b1 = tw(f, tiresAt, 18), b2 = tw(f, at34, 24);
-  const unit = 300;
+/* ---------- c24: what one second means ---------- */
+export const GCompare: React.FC<{f: number; gAt: number; tiresAt: number; thrAt: number; pushAt: number}> = ({f, gAt, tiresAt, thrAt, pushAt}) => {
+  const b1 = tw(f, tiresAt, 18), b2 = tw(f, gAt, 24);
+  const unit = 220; // px per g, same scale for both bars
   return (
     <div style={{position: 'absolute', inset: 0}}>
-      <div style={{position: 'absolute', left: 120, top: 120, width: 900, ...pop(f, 0)}}>
+      <div style={{position: 'absolute', left: 120, top: 110, width: 900, ...pop(f, 0)}}>
         <Chip text="OUR ARITHMETIC" kind="illus" size={30} />
         <div style={{fontFamily: F.mono, fontWeight: 700, fontSize: 44, color: C.ink, marginTop: 34, lineHeight: 1.6}}>
-          60 mph = 26.8 m/s<br />26.8 ÷ 0.81 s ≈ 33 m/s²<br />≈ <span style={{background: C.saffron, padding: '0 10px', borderRadius: 10}}>3.4 g</span> on average
+          60 mph = 26.8 m/s<br />26.8 ÷ 1.00 s ≈ 27 m/s²<br />≈ <span style={{background: C.saffron, padding: '0 10px', borderRadius: 10}}>2.7 g</span> on average
         </div>
+        <Body size={32} color={C.inkMuted} style={{marginTop: 14, opacity: tw(f, gAt + 20, 10)}}>Tesla's 0.81 s figure would be ≈ 3.4 g</Body>
       </div>
       <svg width={1920} height={1080} style={{position: 'absolute'}}>
-        <rect x={1120} y={760 - unit * 1 * b1} width={220} height={unit * 1 * b1} rx={16} fill={C.blueLight} stroke={C.ink} strokeWidth={6} />
-        <rect x={1440} y={760 - unit * 3.4 * 0.62 * b2} width={220} height={unit * 3.4 * 0.62 * b2} rx={16} fill={C.saffron} stroke={C.ink} strokeWidth={6} />
-        <path d="M 1080 760 L 1720 760" stroke={C.ink} strokeWidth={8} strokeLinecap="round" />
-        <text x={1230} y={820} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={38} fill={C.ink} opacity={b1}>road tires ≈ 1 g</text>
-        <text x={1550} y={820} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={38} fill={C.ink} opacity={b2}>0.81 s run ≈ 3.4 g</text>
+        <rect x={1140} y={800 - unit * 1 * b1} width={220} height={unit * 1 * b1} rx={16} fill={C.blueLight} stroke={C.ink} strokeWidth={6} />
+        <rect x={1460} y={800 - unit * 2.73 * b2} width={220} height={unit * 2.73 * b2} rx={16} fill={C.saffron} stroke={C.ink} strokeWidth={6} />
+        <path d="M 1100 800 L 1740 800" stroke={C.ink} strokeWidth={8} strokeLinecap="round" />
+        <text x={1250} y={860} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={38} fill={C.ink} opacity={b1}>road tires ≈ 1 g</text>
+        <text x={1570} y={860} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={38} fill={C.ink} opacity={b2}>1.00 s run ≈ 2.7 g</text>
       </svg>
-      <div style={{position: 'absolute', left: 1100, top: 880, width: 640, textAlign: 'center', opacity: tw(f, tiresAt + 10, 10)}}>
-        <Body size={30} color={C.inkMuted}>bar heights not to scale across both</Body>
-      </div>
       <div style={{position: 'absolute', left: 120, top: 640, width: 860, ...pop(f, thrAt)}}>
         <div style={{...card, padding: '30px 40px', display: 'flex', alignItems: 'center', gap: 30}}>
           <JetIcon size={130} f={f} />
@@ -392,7 +390,7 @@ export const Sources: React.FC<{f: number}> = ({f}) => (
       Footage: Tesla's Roadster reveal livestream, Oct 15, 2026<br />
       Tesla Roadster page (trims, road-use wording)<br />
       Engadget live blog · TechCrunch · Electrek · InsideEVs · The Drive<br />
-      0–60 figure: Tesla's own test, not independently timed<br />
+      0–60: the stream's timer read 1.00 s; 0.81 s is Tesla's stated figure<br />
       Diagrams: original illustrations, not Tesla's actual layout
     </Body>
     <Body size={30} color={C.inkMuted} style={{marginTop: 34}}>Full list and claim ledger in the description.</Body>

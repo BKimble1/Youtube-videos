@@ -5,7 +5,8 @@ import {C, F} from '../theme';
 import {Chip} from './base';
 
 export type SlotId = keyof typeof manifest.slots;
-type Slot = {label: string; want: string; file: string | null; in: number; cx: number; cy: number; zoom: number; audio: number};
+/** cxKeys: [seconds after `in`, cx] steps, for clips that contain a broadcast cut between two camera angles. */
+type Slot = {label: string; want: string; file: string | null; in: number; cx: number; cy: number; zoom: number; audio: number; cxKeys?: [number, number][]};
 export const slot = (id: SlotId) => manifest.slots[id] as Slot;
 export const missingSlots = (ids: SlotId[]) => ids.filter((id) => !slot(id).file);
 
@@ -21,7 +22,12 @@ export const FootageShot: React.FC<{id: SlotId; offset?: number; duck?: number; 
   const frame = useCurrentFrame();
   const {fps, width, height, durationInFrames} = useVideoConfig();
   if (!s.file) return <Placeholder id={id} />;
-  const scale = s.zoom * (1 + push * (frame / Math.max(1, durationInFrames)));
+  // the crop settings in footage.json are for the 9:16 Short; a 16:9 frame shows the whole 16:9 source
+  const portrait = height > width;
+  const scale = (portrait ? s.zoom : 1) * (1 + push * (frame / Math.max(1, durationInFrames)));
+  const tIn = offset + frame / fps;
+  const cx = portrait ? (s.cxKeys ?? []).reduce((v, [t, c]) => (tIn >= t ? c : v), s.cx) : 0.5;
+  const cy = portrait ? s.cy : 0.5;
   const fade = interpolate(frame, [0, 3], [0, 1], {extrapolateRight: 'clamp'});
   return (
     <AbsoluteFill style={{background: '#000', overflow: 'hidden'}}>
@@ -31,8 +37,8 @@ export const FootageShot: React.FC<{id: SlotId; offset?: number; duck?: number; 
         volume={s.audio * duck * fade}
         style={{
           position: 'absolute', width, height, objectFit: 'cover',
-          objectPosition: `${s.cx * 100}% ${s.cy * 100}%`, transform: `scale(${scale})`,
-          transformOrigin: `${s.cx * 100}% ${s.cy * 100}%`,
+          objectPosition: `${cx * 100}% ${cy * 100}%`, transform: `scale(${scale})`,
+          transformOrigin: `${cx * 100}% ${cy * 100}%`,
         }}
       />
       {mark && (

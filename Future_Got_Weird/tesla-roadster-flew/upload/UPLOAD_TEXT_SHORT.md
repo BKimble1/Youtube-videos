@@ -6,8 +6,8 @@
 
 > Tesla's Oct 15, 2026 Roadster reveal showed the car hanging upside down on a ramp with fan suction, then rolling
 > upright in midair with compressed-gas thrusters and landing. Tesla's page lists flight on the invite-only Rocket
-> version, which it says is not approved for public road use. Tesla targets production in 2028, and the 0.81-second
-> 0–60 run was Tesla's own test. Here's the engineering behind the demo.
+> version, which it says is not approved for public road use. Tesla targets production in 2028. Tesla cites a
+> 0.81-second 0–60, though the stream's own timer read 1.00 s. Here's the engineering behind the demo.
 > Footage: Tesla Roadster reveal livestream (Tesla). Diagrams: original illustrations.
 > #TeslaRoadster #Engineering #FutureGotWeird
 

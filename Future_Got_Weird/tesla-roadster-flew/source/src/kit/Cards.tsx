@@ -48,8 +48,8 @@ export const TrimCards: React.FC<{f: number; highlightAt: number; stampAt: numbe
             display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative',
           }}>
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-              <div style={{fontFamily: F.display, fontWeight: 700, fontSize: portrait ? 76 : 62, color: C.ink, letterSpacing: 1}}>{t.name}</div>
-              <div style={{display: 'flex'}}>{[...Array(t.seats)].map((_, k) => <Seat key={k} size={portrait ? 64 : 54} color={rocket ? C.coral : C.blueLight} />)}</div>
+              <div style={{fontFamily: F.display, fontWeight: 700, fontSize: portrait ? 76 : 52, color: C.ink, letterSpacing: portrait ? 1 : 0}}>{t.name}</div>
+              <div style={{display: 'flex'}}>{[...Array(t.seats)].map((_, k) => <Seat key={k} size={portrait ? 64 : 42} color={rocket ? C.coral : C.blueLight} />)}</div>
             </div>
             <div style={{fontFamily: F.body, fontWeight: 800, fontSize: portrait ? 40 : 36, color: C.inkSoft, marginTop: 6}}>
               {t.line} · {t.seats} seat{t.seats > 1 ? 's' : ''}
@@ -79,7 +79,9 @@ export const TrimCards: React.FC<{f: number; highlightAt: number; stampAt: numbe
 };
 
 /** 0-60 card: a stopwatch counts to 0.81 in real time while the speed bar fills; then the attribution tag lands. */
-export const AccelCard: React.FC<{f: number; tagAt: number; portrait?: boolean}> = ({f, tagAt, portrait = true}) => {
+export const AccelCard: React.FC<{f: number; tagAt: number; portrait?: boolean; chip?: string; note?: string}> = ({
+  f, tagAt, portrait = true, chip = "TESLA'S FIGURE · OCT 15, 2026", note = 'the stream’s own timer read 1.00 s',
+}) => {
   const run0 = 8;
   const secs = Math.max(0, Math.min(0.81, (f - run0) / 30));
   const fill = secs / 0.81;
@@ -89,7 +91,7 @@ export const AccelCard: React.FC<{f: number; tagAt: number; portrait?: boolean}>
   const k = portrait ? 1 : 0.86;
   return (
     <div style={{width: portrait ? 920 : 1100, textAlign: 'center', fontFamily: F.display, color: C.ink}}>
-      <Chip text="TESLA DEMO · OCT 15, 2026" kind="demo" size={34 * k} />
+      <Chip text={chip} kind="demo" size={34 * k} />
       <div style={{fontWeight: 700, fontSize: 96 * k, marginTop: 40 * k}}>0–60 mph</div>
       <div style={{fontWeight: 700, fontSize: 250 * k, lineHeight: 1, marginTop: 10, transform: `scale(${done ? 1 + 0.06 * (1 - big) + 0.0 : 1})`, color: done ? C.ink : C.inkSoft}}>
         {secs.toFixed(2)}<span style={{fontSize: 120 * k}}> s</span>
@@ -107,7 +109,7 @@ export const AccelCard: React.FC<{f: number; tagAt: number; portrait?: boolean}>
         </div>
       </div>
       <div style={{fontFamily: F.body, fontWeight: 800, fontSize: 36 * k, color: C.inkSoft, marginTop: 22 * k, opacity: tw(f, tagAt + 8, 10)}}>
-        not independently timed
+        {note}
       </div>
     </div>
   );

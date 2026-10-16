@@ -1,0 +1,436 @@
+1
+00:00:00,660 --> 00:00:03,440
+That is a Tesla Roadster leaving a ramp,
+
+2
+00:00:03,460 --> 00:00:05,240
+rolling over in midair…
+
+3
+00:00:05,260 --> 00:00:06,600
+and landing.
+
+4
+00:00:06,620 --> 00:00:09,040
+At the same reveal, it hung upside down,
+
+5
+00:00:09,060 --> 00:00:11,120
+and Tesla timed a zero-to-sixty run at
+
+6
+00:00:11,140 --> 00:00:12,840
+about one second.
+
+7
+00:00:12,860 --> 00:00:14,760
+Three astonishing clips.
+
+8
+00:00:14,780 --> 00:00:16,720
+Three different engineering tricks.
+
+9
+00:00:16,740 --> 00:00:18,750
+So what exactly flew?
+
+10
+00:00:19,220 --> 00:00:21,120
+This was Tesla's Roadster reveal on
+
+11
+00:00:21,140 --> 00:00:23,920
+October 15th, at SpaceX's test site in
+
+12
+00:00:23,940 --> 00:00:25,440
+McGregor, Texas.
+
+13
+00:00:25,460 --> 00:00:27,120
+Everything you're seeing is a controlled
+
+14
+00:00:27,140 --> 00:00:28,880
+stunt on a closed course,
+
+15
+00:00:28,900 --> 00:00:30,960
+not a car on a public street.
+
+16
+00:00:30,980 --> 00:00:32,720
+The car drove up a curved ramp and
+
+17
+00:00:32,740 --> 00:00:35,680
+stopped, upside down, for a few seconds.
+
+18
+00:00:35,700 --> 00:00:37,760
+On another run, it launched off,
+
+19
+00:00:37,780 --> 00:00:39,973
+rolled itself upright, and set down on the
+
+20
+00:00:39,993 --> 00:00:40,880
+pavement.
+
+21
+00:00:40,900 --> 00:00:43,180
+It even hopped over a row of Teslas,
+
+22
+00:00:43,200 --> 00:00:44,530
+a Semi included.
+
+23
+00:00:44,900 --> 00:00:47,000
+This Roadster was first promised back in
+
+24
+00:00:47,020 --> 00:00:48,360
+2017.
+
+25
+00:00:48,380 --> 00:00:51,670
+Tesla now says production starts in 2028.
+
+26
+00:00:52,400 --> 00:00:54,180
+Start with the upside-down trick,
+
+27
+00:00:54,200 --> 00:00:55,860
+because it's the cleverest.
+
+28
+00:00:55,880 --> 00:00:57,900
+Under that ramp, gravity pulls the car
+
+29
+00:00:57,920 --> 00:00:59,580
+away with its full weight.
+
+30
+00:00:59,600 --> 00:01:00,940
+That's one g.
+
+31
+00:01:00,960 --> 00:01:03,180
+To stay put, something has to push back
+
+32
+00:01:03,200 --> 00:01:04,220
+harder.
+
+33
+00:01:04,240 --> 00:01:06,180
+Tesla says fans pull air out from under
+
+34
+00:01:06,200 --> 00:01:07,180
+the car.
+
+35
+00:01:07,200 --> 00:01:09,020
+That leaves a thin layer of low-pressure
+
+36
+00:01:09,040 --> 00:01:10,940
+air between the floor and the ramp,
+
+37
+00:01:10,960 --> 00:01:12,740
+while the air on the other side stays at
+
+38
+00:01:12,760 --> 00:01:13,820
+normal pressure…
+
+39
+00:01:13,840 --> 00:01:16,020
+and normal air pressure is surprisingly
+
+40
+00:01:16,040 --> 00:01:16,780
+strong.
+
+41
+00:01:16,800 --> 00:01:18,460
+The difference shoves the car into the
+
+42
+00:01:18,480 --> 00:01:19,500
+surface.
+
+43
+00:01:19,520 --> 00:01:21,660
+Tesla claims the system can pull up to two
+
+44
+00:01:21,680 --> 00:01:24,380
+g: double what it needs to hang there.
+
+45
+00:01:24,400 --> 00:01:26,260
+Racing teams tried fan cars back in the
+
+46
+00:01:26,280 --> 00:01:29,020
+1970s, and they gripped so well that the
+
+47
+00:01:29,040 --> 00:01:30,620
+rules shut them down.
+
+48
+00:01:30,640 --> 00:01:33,100
+And notice: this suction is a separate
+
+49
+00:01:33,120 --> 00:01:34,490
+system from the jets.
+
+50
+00:01:35,060 --> 00:01:36,350
+Now the jets.
+
+51
+00:01:36,580 --> 00:01:38,640
+These are cold-gas thrusters:
+
+52
+00:01:38,660 --> 00:01:40,240
+a tank of compressed gas,
+
+53
+00:01:40,260 --> 00:01:42,030
+some valves, and nozzles.
+
+54
+00:01:42,180 --> 00:01:43,120
+No fuel.
+
+55
+00:01:43,140 --> 00:01:44,030
+No flame.
+
+56
+00:01:44,260 --> 00:01:46,240
+Push gas out one way, and the car gets
+
+57
+00:01:46,260 --> 00:01:48,160
+pushed the other way, like letting go of a
+
+58
+00:01:48,180 --> 00:01:49,190
+balloon.
+
+59
+00:01:49,220 --> 00:01:51,400
+Fire a nozzle up on one side and down on
+
+60
+00:01:51,420 --> 00:01:53,520
+the other, and the car rolls.
+
+61
+00:01:53,540 --> 00:01:55,360
+Fire the opposite pair, and the roll
+
+62
+00:01:55,380 --> 00:01:56,390
+stops.
+
+63
+00:01:56,420 --> 00:01:58,400
+Tesla says it worked with SpaceX to make
+
+64
+00:01:58,420 --> 00:02:00,320
+thrusters like these work in air,
+
+65
+00:02:00,340 --> 00:02:01,710
+not just in space.
+
+66
+00:02:02,020 --> 00:02:04,320
+Watch the launch again: the ramp provides
+
+67
+00:02:04,340 --> 00:02:05,800
+the speed and the height,
+
+68
+00:02:05,820 --> 00:02:07,960
+and the jets help manage the rotation and
+
+69
+00:02:07,980 --> 00:02:09,030
+the landing.
+
+70
+00:02:09,060 --> 00:02:10,880
+What none of this shows is sustained
+
+71
+00:02:10,900 --> 00:02:13,080
+flight, a useful flying range,
+
+72
+00:02:13,100 --> 00:02:14,880
+or anything certified to carry people
+
+73
+00:02:14,900 --> 00:02:15,950
+through the air.
+
+74
+00:02:16,520 --> 00:02:18,420
+Then there's the acceleration.
+
+75
+00:02:18,440 --> 00:02:20,260
+In the run at the event, the on-screen
+
+76
+00:02:20,280 --> 00:02:22,530
+timer stopped at one second flat.
+
+77
+00:02:22,760 --> 00:02:24,660
+Tesla says it has measured as little as
+
+78
+00:02:24,680 --> 00:02:27,780
+0.81 seconds but that's Tesla's own
+
+79
+00:02:27,800 --> 00:02:30,020
+number, and nobody independent has timed
+
+80
+00:02:30,040 --> 00:02:30,650
+it.
+
+81
+00:02:30,680 --> 00:02:33,380
+For perspective, even one second averages
+
+82
+00:02:33,400 --> 00:02:35,780
+almost three times the pull of gravity:
+
+83
+00:02:35,800 --> 00:02:37,860
+far more than ordinary road tires can grip
+
+84
+00:02:37,880 --> 00:02:38,690
+on their own.
+
+85
+00:02:39,000 --> 00:02:41,620
+So Tesla leans on thrusters here too.
+
+86
+00:02:41,640 --> 00:02:43,460
+It says they push harder than the tires
+
+87
+00:02:43,480 --> 00:02:44,180
+could.
+
+88
+00:02:44,200 --> 00:02:46,050
+And that's where the versions split.
+
+89
+00:02:46,280 --> 00:02:48,500
+Performance is the road-ready two-seater,
+
+90
+00:02:48,520 --> 00:02:49,810
+with the suction system.
+
+91
+00:02:50,040 --> 00:02:52,610
+Thrust adds rear cold-gas thrusters.
+
+92
+00:02:52,840 --> 00:02:55,340
+Rocket is invite-only, seats one,
+
+93
+00:02:55,360 --> 00:02:57,180
+and has the full flight system…
+
+94
+00:02:57,200 --> 00:02:59,940
+and Tesla's own page says Rocket is not
+
+95
+00:02:59,960 --> 00:03:01,810
+approved for public road use.
+
+96
+00:03:02,480 --> 00:03:04,690
+So, did the Roadster fly?
+
+97
+00:03:04,720 --> 00:03:06,340
+For a few seconds…
+
+98
+00:03:06,360 --> 00:03:07,020
+yes.
+
+99
+00:03:07,040 --> 00:03:09,260
+A car left the ground and used jets of air
+
+100
+00:03:09,280 --> 00:03:11,460
+to turn itself over and land.
+
+101
+00:03:11,480 --> 00:03:14,300
+That part is real, and it's genuinely new.
+
+102
+00:03:14,320 --> 00:03:16,620
+The bigger idea, a flying car you can
+
+103
+00:03:16,640 --> 00:03:19,220
+actually drive, is still unproven.
+
+104
+00:03:19,240 --> 00:03:21,100
+And the version that flies isn't approved
+
+105
+00:03:21,120 --> 00:03:22,260
+for the road.
+
+106
+00:03:22,280 --> 00:03:25,180
+Tesla says production starts in 2028.
+
+107
+00:03:25,200 --> 00:03:26,700
+Which matters more to you:
+
+108
+00:03:26,720 --> 00:03:27,740
+the stunt…
+
+109
+00:03:27,760 --> 00:03:30,480
+or the version people can actually drive?
+

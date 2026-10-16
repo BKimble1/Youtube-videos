@@ -13,7 +13,7 @@ export const FPS = 30;
 const fr = (s: number) => Math.round(s * FPS);
 
 /**
- * Shot list in seconds, cut to the selected narration take (short_t4_KPLc, word times in data/short_words.json).
+ * Shot list in seconds, cut to the narration (take short_t4_KPLc with the 'row of Teslas' pickup; tools/build_short_narration.py).
  * Footage shots play official Tesla clips from data/footage.json; anim shots are our own vector explainers.
  */
 type Shot =
@@ -29,12 +29,12 @@ export const SHOTS: Shot[] = [
   {id: 'sh06', a: 9.95, b: 10.6, kind: 'foot', slot: 'F3_INVERTED', offset: 1.4, push: 0.12}, // match-cut source: the real underside
   {id: 'sh07', a: 10.6, b: 13.95, kind: 'suction'},                                    // "…fans pull air from under the car, pinning it to the ramp."
   {id: 'sh08', a: 13.95, b: 17.65, kind: 'thrust'},                                    // "In the air, jets of compressed gas help control the roll."
-  {id: 'sh09', a: 17.65, b: 21.88, kind: 'foot', slot: 'F6_FIVE_VEHICLES'},            // "It even cleared five of Tesla's own vehicles — a Semi included."
+  {id: 'sh09', a: 17.65, b: 21.88, kind: 'foot', slot: 'F6_FIVE_VEHICLES'},            // "It even cleared a row of Teslas — a Semi included." (pickup line)
   {id: 'sh10', a: 21.88, b: 29.85, kind: 'trims'},                                     // "But the version that flies is the Rocket … public roads."
   {id: 'sh11', a: 29.85, b: 34.55, kind: 'accel'},                                     // "That 0 to 60 in 0.81 seconds? Tesla's own test."
   {id: 'sh12', a: 34.55, b: 36.92, kind: 'target'},                                    // "Production is targeted for 2028."
-  {id: 'sh13', a: 36.92, b: 38.7, kind: 'foot', slot: 'F5_LANDING', offset: 0.2},      // "So yes, the demo flew." (landing replay)
-  {id: 'sh14', a: 38.7, b: 42.1, kind: 'foot', slot: 'F1_AIRBORNE', offset: -3.4, push: 0.03}, // "The flying commute? Still a question." ends on frame 0's image (loop)
+  {id: 'sh13', a: 36.92, b: 38.7, kind: 'foot', slot: 'F4_LAUNCH_ROLL', offset: 6.5},  // "So yes, the demo flew." (the same landing, aerial angle)
+  {id: 'sh14', a: 38.7, b: 42.1, kind: 'foot', slot: 'F1_AIRBORNE', offset: -3.4, push: 0},   // "The flying commute? Still a question." ends on frame 0's image (loop)
 ];
 export const SHORT_FRAMES = fr(42.1);
 export const SHORT_SLOTS = Array.from(new Set(SHOTS.flatMap((s) => (s.kind === 'foot' ? [s.slot] : [])))) as SlotId[];
@@ -111,7 +111,7 @@ export const ShortMain: React.FC<{audio?: boolean}> = ({audio = true}) => {
         </Sequence>
       ))}
       <Captions words={words.words as Word[]} y={1340} size={68} />
-      {audio && <Audio src={staticFile('short/narration_short.mp3')} />}
+      {audio && <Audio src={staticFile('short/narration_short.wav')} />}
       {audio && <Audio src={staticFile('short/sfx_short.wav')} />}
     </AbsoluteFill>
   );

@@ -31,16 +31,16 @@ car, pinning it to the ramp.
 In the air, jets of compressed gas help
 
 9
-00:00:16,520 --> 00:00:17,660
+00:00:16,520 --> 00:00:17,680
 control the roll.
 
 10
-00:00:17,680 --> 00:00:19,660
-It even cleared five of Tesla's own
+00:00:17,700 --> 00:00:19,780
+It even cleared a row of Teslas,
 
 11
-00:00:19,680 --> 00:00:21,900
-vehicles a Semi included.
+00:00:19,900 --> 00:00:21,180
+a Semi included.
 
 12
 00:00:21,920 --> 00:00:24,420

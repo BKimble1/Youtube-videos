@@ -1,12 +1,14 @@
-# Companion: "Tesla's Roadster Actually Flew. Here's How." (16:9, target 3:20–3:45)
+# Companion: "Tesla's Roadster Actually Flew. Here's How." (16:9, 3:34.2 as edited)
 
 Narration: ElevenLabs Test Voice (`kk5XaSLo2XAw0sKM98zU`, `eleven_v4`), generated in six blocks so each beat can be
 retaken without regenerating the rest. Claim IDs refer to `research/claim_ledger.md`.
 
 ## B1 · Proof and question (≈0:00–0:18)
 > [curious] That is a Tesla Roadster leaving a ramp, rolling over in midair… and landing. At the same reveal, it hung
-> upside down, and Tesla showed a zero-to-sixty run in under a second. Three astonishing clips. Three different
+> upside down, and Tesla timed a zero-to-sixty run at about one second. Three astonishing clips. Three different
 > engineering tricks. So what exactly flew?
+
+*(Re-voiced as take `b1v2_t1_HylM`: the stream's timer read 1.00 s, so the earlier "in under a second" was wrong.)*
 
 Picture: F4 launch → F5 landing (footage). Then three quick teaser tiles: UPSIDE DOWN · IN THE AIR · 0–60.
 Claims: C2, C3, C8.
@@ -15,11 +17,13 @@ Claims: C2, C3, C8.
 > This was Tesla's Roadster reveal on October 15th, at SpaceX's test site in McGregor, Texas. Everything you're seeing
 > is a controlled stunt on a closed course, not a car on a public street. The car drove up a curved ramp and stopped,
 > upside down, for a few seconds. On another run, it launched off, rolled itself upright, and set down on the
-> pavement. It even hopped over five Tesla vehicles, a Semi included. And in the driver's seat? An Optimus robot,
-> which Engadget reports was only there for show. The stunts were programmed into the car. This Roadster was first
-> promised back in 2017. Tesla now says production starts in 2028.
+> pavement. It even hopped over a row of Teslas, a Semi included. This Roadster was first promised back in 2017. Tesla
+> now says production starts in 2028.
 
-Picture: F3, F4, F6, F8 (Optimus) footage with the chip `Tesla demonstration · closed course`; timeline card 2017 → 2028.
+*(Edited after the footage arrived. "five Tesla vehicles" became the pickup `b2pickup_rowofteslas_t1_jOAN`, because five
+can't be counted (C7). The Optimus sentences were cut, because the supplied recordings don't show it (C13).)*
+
+Picture: F2, F3, F4, F6 footage with the chip `Tesla demonstration · closed course`; timeline card 2017 → 2028.
 Claims: C1, C2, C3, C7, C13, C14, C12.
 
 ## B3 · Upside down (≈0:58–1:43)
@@ -46,14 +50,17 @@ Picture: thruster diagram; balloon mini-diagram; F4 revisit with a rotation arro
 Claims: C5, C3, C15.
 
 ## B5 · The fast number and the versions (≈2:30–3:10)
-> Then there's the acceleration. In a run at the event, Tesla showed zero to sixty in 0.81 seconds. That's Tesla's own
-> test. Nobody independent has timed it. For perspective, that averages about three and a half times the pull of
-> gravity: far more than ordinary road tires can grip on their own. So Tesla leans on thrusters here too. It says
+> Then there's the acceleration. In the run at the event, the on-screen timer stopped at one second flat. Tesla says it
+> has measured as little as 0.81 seconds — but that's Tesla's own number, and nobody independent has timed it. For
+> perspective, even one second averages almost three times the pull of gravity: far more than ordinary road tires can
+> grip on their own. So Tesla leans on thrusters here too. It says
 > they push harder than the tires could. And that's where the versions split. Performance is the road-ready
 > two-seater, with the suction system. Thrust adds rear cold-gas thrusters. Rocket is invite-only, seats one, and has
 > the full flight system… and Tesla's own page says Rocket is not approved for public road use.
 
-Picture: 0–60 card (landscape); "≈ 3.4 g average · our arithmetic" card; trim cards (landscape) with the stamp.
+Picture: the real run with Tesla's on-screen timer (00.00 → 01.00); 0–60 card ("TESLA'S FIGURE", 0.81 s, "the
+stream's own timer read 1.00 s"); "≈ 2.7 g average · our arithmetic" card noting 0.81 s ≈ 3.4 g; trim cards (16:9) with
+the stamp. *(Re-voiced as take `b5v2_t1_k6sE`.)*
 Claims: C8, C16, C17, C10, C11.
 
 ## B6 · Verdict and question (≈3:10–3:40)

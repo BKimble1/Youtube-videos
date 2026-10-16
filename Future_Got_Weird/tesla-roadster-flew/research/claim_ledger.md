@@ -53,3 +53,18 @@ wording was adjusted.
 - The exact current wording on the live US `tesla.com/roadster` page (C9–C11). The only snapshot came from the NZ page
   via search.
 - Who owns and licenses the replay footage, and Content ID behavior. Neither has been observed.
+
+## Checked against the supplied footage (16 Oct 2026, ~03:15 UTC)
+
+Source: the owner's five screen recordings of Tesla's replay (draft release `roadster-footage-2026-10-15`). See
+`footage/CLIP_LEDGER.md`. Frames were inspected on 1–10 fps sheets in `qa/footage_scan/`.
+
+| ID | What the footage shows | Effect on the scripts |
+|---|---|---|
+| C2 | **Confirmed.** First run: the car climbs the C-shaped ramp and holds upside down near the top (`rec_224730` 0:56–1:34). A close-up from below shows it inverted against the ramp (1:17.47–1:19.90) | Kept |
+| C3 | **Confirmed.** Second run: it leaves the top of the ramp, rolls upright with jets firing, descends on downward jets into smoke and lands (side angle 2:05–2:15, aerial 2:16–2:27) | Kept |
+| C5 | **Consistent.** Visible white gas jets fire sideways and downward during the roll and descent. No flame is visible | Kept |
+| C7 | **Partly confirmed.** The hop clears the Semi and a row of parked Teslas (`rec_224911` 0:17–0:24). The car flips upside down above the Semi. **Five distinct vehicles can't be counted with confidence** | Short and companion now say "a row of Teslas — a Semi included". The Short uses the pickup line already recorded. The companion's B2 already said "five Tesla vehicles", so **its B2 still says five: flagged** |
+| C8 | **Conflict.** The on-stream 0–60 run shows a stopwatch running from 00.00 and **stopping at 01.00** (`rec_225218` 0:17.15–0:18.10), followed by a card reading **"0-60mph 1 sec"** (0:46–0:48). No "0.81" appears in any recording | Short: the narration still says "0.81 seconds? Tesla's own test." The card now reads "TESLA'S FIGURE" with the note "the stream's own timer read 1.00 s". Companion: B1 re-voiced to "at about one second", B5 re-voiced to "the on-screen timer stopped at one second flat. Tesla says it has measured as little as 0.81 seconds", and the g-force arithmetic is redone for 1.00 s (≈ 2.7 g) |
+| C13 | **Not shown.** In `rec_225050` the doors open and several people approach the car. No Optimus robot is visible in the seat | Companion: "And in the driver's seat? An Optimus robot… programmed into the car." **removed** (8 s cut from B2) |
+| C16 | Recomputed: 26.8 m/s ÷ 1.00 s ≈ 27 m/s² ≈ **2.7 g** (stream run); 0.81 s ≈ 3.4 g (Tesla's figure) | Companion card shows both |

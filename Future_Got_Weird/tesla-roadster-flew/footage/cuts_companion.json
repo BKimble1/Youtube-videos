@@ -1,0 +1,13 @@
+{
+  "_readme": "Companion-only slot. The Short's slots (F1-F6) come from footage/cuts_short.json; their 9:16 crop settings are ignored in 16:9.",
+  "F7_ACCEL_RUN": {
+    "file": "release/rec_225218.mp4",
+    "in": 15.6,
+    "post": 10.0,
+    "cx": 0.5,
+    "cy": 0.5,
+    "zoom": 1.0,
+    "label": "0-60 run with Tesla's on-screen timer",
+    "want": "15.6-21.84 side angle: launch, timer runs 0.00 -> 1.00 (17.15-18.1), thruster smoke; +6.0 s = top-down angle (21.6-25.4) for the opening tease"
+  }
+}
