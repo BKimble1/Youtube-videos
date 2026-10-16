@@ -91,7 +91,40 @@ regenerated with `TAG=v2 bash tools/render_short.sh`.
 - **Tesla's live Roadster page.** Its wording (Rocket "not approved for public road use", trim names) is still only
   confirmed through search snapshots.
 
-## Companion: review copy v2 (16 Oct 2026)
+## Companion: review copy v3 (16 Oct 2026)
+
+`exports/FGW_Roadster_Companion_REVIEW_v3.mp4` is Git-ignored. Rebuild it with `bash tools/cut_c3_clips.sh` and
+`bash tools/render_companion_v3.sh` (composition `Companion3`); QA with `bash tools/qa_c3.sh <mp4> qa/c3/final`.
+Script, timeline, sources, change log and open questions: `script/companion_v3_script.md`. Shots:
+`footage/CLIP_LEDGER.md` ("Companion v3"). Captions: `captions/FGW_Roadster_Companion_REVIEW_v3.srt` (60 cues, ≤42
+characters per line).
+
+| Check | Result |
+|---|---|
+| Format | 1920×1080, 30 fps, H.264, 4,995 frames = **2:46.5** (container 166.6 s); AAC 48 kHz stereo 320 kb/s; about 41 MB |
+| Loudness | **−15.0 LUFS integrated**, LRA 3.3 LU, true peak **−1.2 dBFS** after AAC (two-pass loudnorm to −15 / −1.5 dBTP) |
+| Length and pace | 465 spoken words in 2:42.6 of narration; per block 182–198 wpm (opening 167, versions 182 after a 1.08× pitch-kept speed-up, ending 174) |
+| Narration words | Each chosen take's actual audio was stored as a plain asset and transcribed by Scribe. All nine match the script; the only differences are spellings ("Gs", "'70s", "off center"). The final mix itself could not be uploaded for transcription from this session (the upload tool is blocked), so mix-level intelligibility is measured below instead |
+| Speech clarity | Each word's narration level against everything else (score, effects, the stream's own sound), measured on a render without narration: *pending: measured on the final render* |
+| Black frames | **None** (blackdetect ≥0.1 s). The first render flagged 0.13 s at 0:00.67: Tesla's dark night replay around a small car. The hop now plays at a 1.2× crop toward the car |
+| Low-motion holds | freezedetect (≥0.6 s at −55 dB) on the first render found long holds: the floor-gap explanation (9 s), the hang (10.5 s), the launch prep, the limits and the ending. They were fixed with motion that follows the action, not cuts or zoom tricks: a slow drift in on the gap while it thins; a gentle move in on the hang while the push grows, then a look ahead to the end of the ramp; the car creeping to the line; a belt that keeps crawling under each station with the arm riding along; a drift in on the dial; rings on the two systems; and the air dial returning on the open questions. *Final freeze check pending.* |
+| Opening at phone size | `qa/evidence/companion_v3_phone_opening_0-3s.jpg` (6 fps at 320 px wide). The car is readable from the first frame (side profile on four jets, parked Teslas and the Semi below). It rolls inverted, and the cut lands on the hang's inverted profile at 0:02.45 |
+| Match | `qa/evidence/companion_v3_match_2.2-5.0s.jpg`. The drawn outline traces the real car (same position, nose-left, about 10° slope) before a 0.23 s dissolve; the drawn ramp edge sits on the real one within a few pixels |
+| Physics, frame by frame | Strips in `qa/evidence/companion_v3_*.jpg`. Checks: <br>• Weight is always straight down from the centre of mass. <br>• The net pressure push is attached to the car and always points into the local surface (floor, wall, ceiling); it never rides into free flight (it shrinks to nothing as the gap refills, before the car separates). <br>• Gas-out (blue) and push (saffron) are opposite and start at the same nozzle. <br>• The rear-view couple turns the car clockwise, matching its arrows; the opposite pair stops it upright. <br>• The downward pair is shown shorter than the weight (no hover), and the car lands |
+| Car consistency | One traced Roadster throughout (side), plus the rear view drawn from the stage footage at matched scale. Panels hinge from fixed lines; wheels, glass and nozzles stay attached through every rotation; tyres flatten slightly and the body settles on every landing |
+| Text at phone size | `qa/evidence/companion_v3_phone_640x360_every3s.jpg`. The labels that remain are "air tank", "valve", "air supply", "2×", the version signs, "flight", "PUBLIC ROAD" and the Shown/Tesla says pair; all read at 640×360. The secondary qualifiers under the 1.00 s / 0.81 s figures were raised to 36 px |
+| End screen | The right half of the frame stays clear from 2:40.5 to the end (car and checker at the left); the music rings out without a cut |
+
+### Not checked here (companion v3)
+
+- **Listening.** This environment has no audio playback. Effects, music balance and voice tone were checked by
+  measurement only (speech margins, loudness, peaks), not by ear.
+- **Final-mix transcription.** The asset upload tool was blocked this session, so the final mix wasn't transcribed.
+  The per-take Scribe passes and the per-word speech margins stand in.
+- **Tesla's live Roadster page** (see `script/companion_v3_script.md`, "Unresolved source questions").
+- **Content ID and rights.** These are only visible in YouTube Studio.
+
+## Earlier: companion review copy v2 (16 Oct 2026, superseded by v3)
 
 `exports/FGW_Roadster_Companion_REVIEW_v2.mp4` is Git-ignored. Rebuild it with `bash tools/cut_c2_clips.sh` and
 `bash tools/render_companion_v2.sh` (composition `Companion2`). Script, timeline, sources for each line, Crew roles,
