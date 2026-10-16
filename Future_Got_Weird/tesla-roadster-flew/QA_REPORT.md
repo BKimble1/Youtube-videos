@@ -91,7 +91,31 @@ regenerated with `TAG=v2 bash tools/render_short.sh`.
 - **Tesla's live Roadster page.** Its wording (Rocket "not approved for public road use", trim names) is still only
   confirmed through search snapshots.
 
-## Companion: review copy v3 (16 Oct 2026)
+## Companion: FINAL 4K (16 Oct 2026)
+
+`exports/FGW_Roadster_Companion_FINAL_4K.mp4` is Git-ignored. Rebuild it with `bash tools/cut_c3_clips.sh` and
+`bash tools/render_companion_final_4k.sh`. This is the owner's limited cleanup pass on REVIEW_v3: the opening grade
+and crop, "Tesla-claimed time" for 0.81 s, and the ending on Tesla's aerial landing shot (see
+`script/companion_v3_script.md`, "Final cut"). All checks were run on the exported file.
+
+| Check | Result |
+|---|---|
+| Format | 3840×2160 (16:9), 30 fps, H.264 High, yuv420p, BT.709, 4,950 frames = **2:45.0**; AAC-LC 48 kHz stereo, about 290 kb/s; about 135 MB. Rendered natively at 4K from the project (vector art and text drawn at 4K; the recordings scaled to 4K once, with Lanczos, from the original screen recordings) |
+| Loudness | **−15.0 LUFS integrated**, LRA 3.3 LU, true peak **−1.5 dBFS**. The mix was rendered losslessly and encoded to AAC once |
+| Black frames | Only the last 0.17 s, the end of the intended 0.6 s fade to black |
+| Holds (≥1.2 s, freezedetect −55 dB) | Three, all under narration and unchanged from REVIEW_v3: the lit PUBLIC ROAD sign (2.1 s at 2:08.4), the clerk at the sign (1.3 s at 2:21.0) and the drawn landing (1.6 s at 2:31.6). There is no static hold at the end |
+| Opening at phone size | At 320 px wide, the car, its four jets, the parked Teslas and the Semi read from the first frame. The car body went from about 35–45% to 50–60% brightness; black stays black and no light clips more than in the source |
+| 0.81 s wording | The plate reads "Tesla says · 0.81 s · Tesla-claimed time · not independently timed". The narration says "Tesla claimed zero point eight one seconds" (same take, "For a live run," removed) |
+| Intelligibility | An independent Scribe transcription of the **exported soundtrack** returned all 461 words in order, with no substitutions or omissions, including "Tesla claimed zero point eight one seconds" and the final "leap". Word starts match the captions (median 0.00 s, maximum 0.04 s). Words: `audio/companion_v3/scribe/final_4k_words.json` |
+| Speech clarity | Per-word margin over everything else: median 21.5 dB, 10th percentile 14.9 dB. 4 of 461 words are under 10 dB full-band: "up" 0:39.6 (a timing artefact, see v3), "the" 1:39.8, "launch," 1:40.6, and "leap" 2:42.35 (5.9 dB full-band because of the touchdown's sub-bass; **14.0 dB in the 300–4,000 Hz speech band**) |
+| Ending | The ending dissolves into the footage at 2:37.3 (0.25 s). The car rolls upright on its jets, fires them down, and touches down in smoke on "leap" (2:42.35). The camera drops in behind it. The music resolves and the picture and sound fade out together: the level falls from −23 dB at 2:42.8 to −59 dB at 2:44.75 and digital silence at the last sample, with no cut-off |
+| Effects balance | The ending's effects (jets, ground blast, touchdown, smoke) sit at the same level as the rest of the bed (about −36 dB RMS under a −19 dB voice). The touchdown accent after the last word reaches −28.7 dB RMS |
+| Transitions | Opening cut on the inverted profile at 0:02.45 and the traced-outline match, unchanged. The 0.81 s plate appears as the narration names it, after the cut back from the stream's run at 1:49.0. Drawing to footage at 2:37.3, a straight dissolve on the sentence break |
+
+Not checked here: a human listen (this environment has no audio playback; the checks above are measurements and an
+independent transcription), and Content ID and rights (visible only in YouTube Studio).
+
+## Earlier: companion review copy v3 (16 Oct 2026)
 
 `exports/FGW_Roadster_Companion_REVIEW_v3.mp4` is Git-ignored. Rebuild it with `bash tools/cut_c3_clips.sh` and
 `bash tools/render_companion_v3.sh` (composition `Companion3`); QA with `bash tools/qa_c3.sh <mp4> qa/c3/final`.
