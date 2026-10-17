@@ -43,7 +43,7 @@ export const puffsAt = (s: SmokeSource, t: number): Puff[] => {
       const jd = {x: s.jet.x + (rnd(sd * 7) - 0.5) * js * len3(s.jet), y: s.jet.y + (rnd(sd * 11) - 0.3) * js * len3(s.jet), z: s.jet.z + (rnd(sd * 13) - 0.5) * js * len3(s.jet)};
       c = add3(c, mul3(jd, (1 - Math.exp(-2.5 * age)) / 2.5));
     }
-    const up = (s.up ?? 0.9) * (1 - Math.exp(-1.2 * age)) / 1.2 * (0.7 + 0.6 * rnd(sd * 17));
+    const up = (s.up ?? 0.9) * age * (1 - 0.45 * u) * (0.7 + 0.6 * rnd(sd * 17)); // keeps rising, slowing as it ages
     const w = s.wind ?? {x: 0.6, y: 0, z: -0.35};
     c = add3(c, {x: w.x * age + noise(te * 0.7 + age * 0.4, sd % 97) * 0.6 * age, y: up, z: w.z * age + noise(te * 0.5 + age * 0.3, (sd % 89) + 5) * 0.6 * age});
     const r = (s.size ?? 0.5) * (0.7 + 0.6 * rnd(sd * 19)) + (s.grow ?? 0.9) * Math.sqrt(age);

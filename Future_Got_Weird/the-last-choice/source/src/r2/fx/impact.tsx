@@ -32,7 +32,7 @@ export const impact = (o: ImpactOpts): FxOut => {
       fx(sparks3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_sp`, n: Math.round(8 + 18 * s), dir: n, spread: 70, speed: [2.5, 9 * Math.sqrt(s)], ground: o.ground, seed, flash: 0.22 * s})),
       fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_ch`, n: Math.round(2 + 4 * s), dir: n, spread: 55, speed: [1.5, 5], size: [0.03, 0.09 * s], material: m === 'armor' ? 'armor' : 'metal', ground: o.ground, seed: seed + 3})),
       s > 0.7 ? fx(ring3({at: o.at, normal: n, t: o.t, t0: o.t0, key: `${o.key}_rg`, r0: 0.1, speed: 6 * s, dur: 0.18, width: 0.05})) : null,
-      fx([], o.t - o.t0 < 0.12 ? [{pos: add3(o.at, mul3(n, 0.3)), color: '#FFE2A8', power: 0.9 * s * (1 - (o.t - o.t0) / 0.12), radius: 5}] : [], shakeAt(o.t, o.t0, 0.03 * s)),
+      fx([], [], shakeAt(o.t, o.t0, 0.03 * s)),
     );
   }
   // concrete / asphalt
@@ -88,15 +88,22 @@ export const plateState = (t: number, e: PlateEvents) => ({
  */
 export const BarrierPlate: React.FC<{w: number; h: number; dent?: number; crack?: number; shattered?: number; flash?: number; ink?: number; fill?: string; shade?: string; light?: string; inkC?: string; seed?: number; strap?: string}> = ({w, h, dent = 0, crack = 0, shattered = 0, flash = 0, ink = 2, fill = '#8E9AA0', shade = '#6F7B82', light = '#C3CBCF', inkC = '#162A32', seed = 7, strap = '#3B2F2A'}) => {
   const outline = `M ${f1(-w / 2)} ${f1(-h * 0.38)} Q ${f1(-w * 0.1)} ${f1(-h * 0.62)} ${f1(w / 2)} ${f1(-h * 0.42)} L ${f1(w * 0.47)} ${f1(h * 0.4)} Q ${f1(-w * 0.05)} ${f1(h * 0.6)} ${f1(-w * 0.48)} ${f1(h * 0.42)} Z`;
+  // strap ends: the straps run behind the plate round the forearm; only their ends show past the edges
+  const straps = (
+    <g>
+      <rect x={f1(-w * 0.2)} y={f1(-h * 0.66)} width={f1(w * 0.09)} height={f1(h * 1.32)} rx={f1(w * 0.015)} fill={strap} stroke={inkC} strokeWidth={ink * 0.7} />
+      <rect x={f1(w * 0.08)} y={f1(-h * 0.66)} width={f1(w * 0.09)} height={f1(h * 1.32)} rx={f1(w * 0.015)} fill={strap} stroke={inkC} strokeWidth={ink * 0.7} />
+    </g>
+  );
   if (shattered >= 1) {
-    // jagged remnant around the straps
-    const rem = `M ${f1(-w * 0.18)} ${f1(-h * 0.3)} L ${f1(-w * 0.05)} ${f1(-h * 0.45)} L ${f1(w * 0.08)} ${f1(-h * 0.22)} L ${f1(w * 0.2)} ${f1(-h * 0.36)} L ${f1(w * 0.16)} ${f1(h * 0.12)} L ${f1(w * 0.24)} ${f1(h * 0.3)} L ${f1(-w * 0.02)} ${f1(h * 0.42)} L ${f1(-w * 0.12)} ${f1(h * 0.18)} L ${f1(-w * 0.24)} ${f1(h * 0.28)} Z`;
+    // a jagged remnant still strapped on (about half the plate), its broken edges raw
+    const rem = `M ${f1(-w * 0.34)} ${f1(-h * 0.36)} L ${f1(-w * 0.12)} ${f1(-h * 0.5)} L ${f1(w * 0.02)} ${f1(-h * 0.3)} L ${f1(w * 0.12)} ${f1(-h * 0.48)} L ${f1(w * 0.3)} ${f1(-h * 0.28)} L ${f1(w * 0.22)} ${f1(-h * 0.02)} L ${f1(w * 0.34)} ${f1(h * 0.2)} L ${f1(w * 0.12)} ${f1(h * 0.44)} L ${f1(-w * 0.04)} ${f1(h * 0.26)} L ${f1(-w * 0.18)} ${f1(h * 0.48)} L ${f1(-w * 0.36)} ${f1(h * 0.3)} L ${f1(-w * 0.26)} ${f1(h * 0.02)} Z`;
     return (
       <g>
+        {straps}
         <path d={rem} fill={fill} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />
-        <path d={`M ${f1(-w * 0.12)} ${f1(-h * 0.1)} L ${f1(w * 0.05)} ${f1(h * 0.05)}`} stroke={inkC} strokeWidth={ink * 0.6} />
-        <rect x={f1(-w * 0.2)} y={f1(-h * 0.55)} width={f1(w * 0.09)} height={f1(h * 1.1)} fill={strap} stroke={inkC} strokeWidth={ink * 0.7} />
-        <rect x={f1(w * 0.08)} y={f1(-h * 0.55)} width={f1(w * 0.09)} height={f1(h * 1.1)} fill={strap} stroke={inkC} strokeWidth={ink * 0.7} />
+        <path d={`M ${f1(-w * 0.3)} ${f1(h * 0.18)} L ${f1(w * 0.26)} ${f1(h * 0.16)}`} stroke={shade} strokeWidth={ink * 1.6} strokeLinecap="round" />
+        <path d={`M ${f1(-w * 0.2)} ${f1(-h * 0.2)} L ${f1(w * 0.02)} ${f1(-h * 0.02)} L ${f1(w * 0.18)} ${f1(-h * 0.14)}`} fill="none" stroke={inkC} strokeWidth={ink * 0.7} strokeLinejoin="round" />
       </g>
     );
   }
@@ -109,6 +116,7 @@ export const BarrierPlate: React.FC<{w: number; h: number; dent?: number; crack?
   ].slice(0, 2 + Math.round(crack * 2)) : [];
   return (
     <g>
+      {straps}
       <path d={outline} fill={fill} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />
       <path d={`M ${f1(-w * 0.44)} ${f1(h * 0.2)} Q ${f1(-w * 0.05)} ${f1(h * 0.42)} ${f1(w * 0.45)} ${f1(h * 0.2)} L ${f1(w * 0.47)} ${f1(h * 0.4)} Q ${f1(-w * 0.05)} ${f1(h * 0.6)} ${f1(-w * 0.48)} ${f1(h * 0.42)} Z`} fill={shade} />
       <path d={`M ${f1(-w * 0.4)} ${f1(-h * 0.3)} Q ${f1(-w * 0.1)} ${f1(-h * 0.48)} ${f1(w * 0.38)} ${f1(-h * 0.34)}`} fill="none" stroke={light} strokeWidth={ink * 0.9} strokeLinecap="round" />
@@ -121,8 +129,6 @@ export const BarrierPlate: React.FC<{w: number; h: number; dent?: number; crack?
         </g>
       ))}
       {cracks.map((d, i) => <path key={i} d={d} fill="none" stroke={inkC} strokeWidth={ink * 0.75} strokeLinejoin="round" strokeLinecap="round" />)}
-      <rect x={f1(-w * 0.2)} y={f1(-h * 0.55)} width={f1(w * 0.09)} height={f1(h * 1.1)} fill={strap} stroke={inkC} strokeWidth={ink * 0.7} />
-      <rect x={f1(w * 0.08)} y={f1(-h * 0.55)} width={f1(w * 0.09)} height={f1(h * 1.1)} fill={strap} stroke={inkC} strokeWidth={ink * 0.7} />
       {flash > 0 && <path d={outline} fill="#FFFFFF" opacity={0.75 * flash} />}
     </g>
   );
@@ -137,7 +143,7 @@ export const plateHit = (o: {at: V3; normal: V3; t: number; t0: number; key: str
     fx(sparks3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_sp`, n: Math.round(16 * big), dir: n, spread: 75, speed: [2.5, 8 * big], ground: o.ground, seed, flash: 0.3 * big})),
     fx(ring3({at: o.at, normal: n, t: o.t, t0: o.t0, key: `${o.key}_rg`, r0: 0.12, speed: 7 * big, dur: 0.18, width: 0.06})),
     o.stage !== 'dent' ? fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_ch`, n: o.stage === 'shatter' ? 11 : 4, dir: n, spread: o.stage === 'shatter' ? 85 : 50, speed: o.stage === 'shatter' ? [3, 8] : [1.5, 4], size: o.stage === 'shatter' ? [0.06, 0.16] : [0.025, 0.06], material: 'plate', ground: o.ground, seed: seed + 4, spin: 1300})) : null,
-    fx([], o.t - o.t0 < 0.1 ? [{pos: add3(o.at, mul3(n, 0.3)), color: '#FFE8B8', power: 1.1 * big * (1 - (o.t - o.t0) / 0.1), radius: 5}] : [], shakeAt(o.t, o.t0, 0.035 * big)),
+    fx([], [], shakeAt(o.t, o.t0, 0.035 * big)),
   );
 };
 
@@ -212,7 +218,7 @@ export const blast = (o: BlastOpts): FxOut => {
   // the flash and the light it throws
   if (a < 0.22) items.push({kind: 'sprite', pos: o.at, key: `${o.key}_flash`, bias: 0.6, draw: (c) => glowEl(gid(o.key, 'fl'), c.x, c.y, size * c.k * (2 + a * 12), glowTone(c, '#FFF4D0', 0.2), 1 - a / 0.22, 0.22)});
   const lights: PointLight[] = [];
-  if (a < 2.2) lights.push({pos: add3(o.at, {x: 0, y: size * 0.6, z: 0}), color: '#FF9440', power: 2.6 * Math.exp(-1.6 * a) + (a < 0.1 ? 2 : 0), radius: size * 12, flicker: 0.25, seed});
+  if (a < 1.8) lights.push({pos: add3(o.at, {x: 0, y: size * 0.6, z: 0}), color: '#FF9440', power: 2.2 * Math.exp(-2.2 * a) + (a < 0.1 ? 1.5 : 0), radius: size * 5.5, flicker: 0.25, seed});
   // scorch on the ground
   if (o.ground !== undefined || o.groundH) items.push({kind: 'mesh', mesh: scorchMesh({x: o.at.x, y: g, z: o.at.z}, size * 1.2, seed, o.groundH), key: `${o.key}_scorch`, opacity: clamp(a / 0.15)});
   const smoke = columnSource({x: o.at.x, y: g + size * 0.3, z: o.at.z}, o.t0 + 0.15, o.t0 + 2.4, seed + 7, size * 0.55, '#2E272B');

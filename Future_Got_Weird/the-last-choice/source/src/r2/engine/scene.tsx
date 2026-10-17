@@ -101,7 +101,8 @@ const meshOut = (it: MeshItem, v: View, L: LightRig, mats: Record<string, Materi
   };
   const world = dynamic ? m.verts.map(wp) : m.verts;
   // bounding-sphere frustum cull
-  const c0 = it.xf || it.fn ? (it.xf ? xfPoint(m.center, it.xf) : m.center) : m.center;
+  let c0 = it.xf ? xfPoint(m.center, it.xf) : m.center;
+  if (it.fn) c0 = it.fn(c0, -1);
   const sc = it.xf?.scale ? (typeof it.xf.scale === 'number' ? it.xf.scale : Math.max(it.xf.scale.x, it.xf.scale.y, it.xf.scale.z)) : 1;
   const R = m.radius * sc * (it.fn ? 1.5 : 1) + 0.5;
   const cv = toView(v, c0);

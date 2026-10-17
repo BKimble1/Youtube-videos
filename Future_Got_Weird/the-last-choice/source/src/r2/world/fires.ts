@@ -3,6 +3,7 @@
 // lighting rig takes the near ones as point lights. Positions in metres (see plan.ts).
 import {V3, noise, clamp} from '../../kit/math';
 import {PointLight} from '../engine';
+import {groundH} from './ground';
 
 export type Fire = {
   id: string;
@@ -22,27 +23,29 @@ export type Fire = {
   heat?: number;
   /** interior fire seen through an opening (drawn without ground scorch) */
   interior?: boolean;
+  /** if set, pos.y is resolved as groundH(x, z) + this (fires on the ground / on wrecks) */
+  ground?: number;
 };
 
 export const FIRES: Fire[] = [
   // the collapsed building west of the ridge (behind the Director as he faces east: smoke and warm rim behind him)
-  {id: 'ruinW1', pos: {x: -22, y: 1.6, z: -7}, size: 4.2, spread: 1.6, seed: 1, light: {power: 1.15, radius: 26}, smoke: 1.3},
+  {id: 'ruinW1', pos: {x: -22, y: 0, z: -7}, ground: 0.3, size: 4.2, spread: 1.6, seed: 1, light: {power: 1.15, radius: 26}, smoke: 1.3},
   {id: 'ruinW2', pos: {x: -27, y: 5.5, z: 10}, size: 3.0, spread: 1.3, seed: 2, interior: true, light: {power: 0.8, radius: 18}, smoke: 0.9},
-  {id: 'ruinW3', pos: {x: -15, y: 1.2, z: 15}, size: 1.6, spread: 1.0, seed: 3, smoke: 0.5, heat: 0.6},
+  {id: 'ruinW3', pos: {x: -15, y: 0, z: 15}, ground: 0.25, size: 1.6, spread: 1.0, seed: 3, smoke: 0.5, heat: 0.6},
   // small fires in the ridge rubble
-  {id: 'ridgeN', pos: {x: 2.5, y: 2.9, z: -11}, size: 1.0, spread: 1.2, seed: 4, light: {power: 0.55, radius: 9}, smoke: 0.35, heat: 0.3},
-  {id: 'ridgeS', pos: {x: -1.5, y: 3.0, z: 13.5}, size: 0.8, spread: 1.1, seed: 5, smoke: 0.3, heat: 0.7},
-  {id: 'spillE', pos: {x: 16, y: 0.3, z: -7}, size: 0.7, spread: 1.4, seed: 6, light: {power: 0.45, radius: 8}, smoke: 0.25, heat: 0.4},
+  {id: 'ridgeN', pos: {x: 2.5, y: 0, z: -11}, ground: 0.2, size: 1.0, spread: 1.2, seed: 4, light: {power: 0.55, radius: 9}, smoke: 0.35, heat: 0.3},
+  {id: 'ridgeS', pos: {x: -1.5, y: 0, z: 13.5}, ground: 0.2, size: 0.8, spread: 1.1, seed: 5, smoke: 0.3, heat: 0.7},
+  {id: 'spillE', pos: {x: 16, y: 0, z: -7}, ground: 0.2, size: 0.7, spread: 1.4, seed: 6, light: {power: 0.45, radius: 8}, smoke: 0.25, heat: 0.4},
   // the south flank: a burning facade spilled across the sidewalk
   {id: 'southA', pos: {x: 34, y: 0.8, z: 18.5}, size: 3.4, spread: 1.8, seed: 7, light: {power: 1.0, radius: 22}, smoke: 1.1},
   {id: 'southB', pos: {x: 47, y: 7.5, z: 21}, size: 4.5, spread: 1.4, seed: 8, interior: true, light: {power: 0.9, radius: 22}, smoke: 1.2, heat: -0.4},
   {id: 'southC', pos: {x: 58, y: 14.2, z: 21}, size: 3.2, spread: 1.2, seed: 9, interior: true, smoke: 0.8},
   {id: 'southD', pos: {x: 54, y: 0.6, z: 16}, size: 1.6, spread: 1.5, seed: 10, light: {power: 0.6, radius: 12}, smoke: 0.5, heat: 0.2},
   // the crater: burning debris and a car
-  {id: 'craterCar', pos: {x: 57, y: -2.2, z: 4}, size: 2.2, spread: 1.6, seed: 11, light: {power: 0.85, radius: 16}, smoke: 0.9},
-  {id: 'craterRim', pos: {x: 72, y: 0.5, z: -11}, size: 1.2, spread: 1.3, seed: 12, smoke: 0.4, heat: 0.5},
+  {id: 'craterCar', pos: {x: 57, y: 0, z: 4}, ground: 1.25, size: 2.2, spread: 1.6, seed: 11, light: {power: 0.85, radius: 16}, smoke: 0.9},
+  {id: 'craterRim', pos: {x: 72, y: 0, z: -11}, ground: 0.25, size: 1.2, spread: 1.3, seed: 12, smoke: 0.4, heat: 0.5},
   // the taxi crushed under the girder, the bus wreck
-  {id: 'taxi', pos: {x: 57, y: 0.7, z: -12.6}, size: 1.5, spread: 1.4, seed: 13, light: {power: 0.7, radius: 12}, smoke: 0.7},
+  {id: 'taxi', pos: {x: 46.5, y: 0, z: -14.2}, ground: 0.75, size: 1.5, spread: 1.4, seed: 13, light: {power: 0.7, radius: 12}, smoke: 0.7},
   {id: 'bus', pos: {x: 92, y: 1.4, z: 9}, size: 3.0, spread: 2.2, seed: 14, light: {power: 0.9, radius: 18}, smoke: 1.2, heat: -0.2},
   // burning floors along the avenue (different heights, not every window)
   {id: 'bldN1', pos: {x: 26, y: 18, z: -21}, size: 3.6, spread: 1.6, seed: 15, interior: true, smoke: 1.0},
@@ -62,6 +65,9 @@ export const FIRES: Fire[] = [
   {id: 'city8', pos: {x: 1300, y: 160, z: 120}, size: 30, spread: 1.5, seed: 28, smoke: 4.4},
   {id: 'city9', pos: {x: 640, y: 40, z: -120}, size: 15, spread: 1.8, seed: 29, smoke: 2.8},
 ];
+
+// resolve ground-relative fires once
+FIRES.forEach((f) => { if (f.ground !== undefined) f.pos = {...f.pos, y: groundH(f.pos.x, f.pos.z) + f.ground}; });
 
 /** Burn intensity 0..1.3 at time t (slow breathing + flicker), 0 before `from`. */
 export const burn = (f: Fire, t: number) => {

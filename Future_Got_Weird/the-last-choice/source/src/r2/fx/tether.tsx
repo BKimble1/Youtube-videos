@@ -33,7 +33,7 @@ export type TetherOpts = {
 
 export type TetherState = {phase: 'idle' | 'flight' | 'slack' | 'taut' | 'snapped'; clamp: V3 | null; tension: number};
 
-const CABLE = '#4E5A62', CABLE_HI = '#9AA6AE', CLAMP = '#2A2D31', JAW = '#E8B23A';
+const CABLE = '#2E3A42', CABLE_HI = '#E8B23A', CLAMP = '#2A2D31', JAW = '#E8B23A'; // dark cable with a hazard-yellow tracer
 
 /** Sample a cable between a and b with sag (m) along −y, plus an optional lateral wave (m) of `waves` half-cycles. */
 const span = (a: V3, b: V3, sag: number, n = 14, wave = 0, waves = 3, phase = 0): V3[] => {
@@ -60,13 +60,13 @@ const cableItems = (pts: V3[], key: string, opts: {chunk?: number; r?: number} =
         const S = seg.map((p) => project(c.view, p));
         if (S.some((s) => s.z < c.view.near)) return null;
         const kAvg = S.reduce((s, q) => s + q.k, 0) / S.length;
-        const w = Math.max(1.3, (opts.r ?? 0.013) * 2 * kAvg);
+        const w = Math.max(2.0, (opts.r ?? 0.016) * 2 * kAvg);
         const d = 'M' + S.map((s) => `${f1(s.x)} ${f1(s.y)}`).join('L');
         return (
           <g>
             <path d={d} fill="none" stroke={inkTone(c)} strokeWidth={f1(w + 1.4)} strokeLinecap="round" strokeLinejoin="round" />
             <path d={d} fill="none" stroke={tone(c, CABLE)} strokeWidth={f1(w)} strokeLinecap="round" strokeLinejoin="round" />
-            {w > 2.4 && <path d={d} fill="none" stroke={tone(c, CABLE_HI, 2)} strokeWidth={f1(w * 0.3)} strokeLinecap="round" opacity={0.7} transform={`translate(0 ${f1(-w * 0.18)})`} />}
+            <path d={d} fill="none" stroke={tone(c, CABLE_HI, 2)} strokeWidth={f1(Math.max(0.8, w * 0.32))} strokeLinecap="round" strokeDasharray={`${f1(w * 3)} ${f1(w * 2.2)}`} opacity={0.85} />
           </g>
         );
       },

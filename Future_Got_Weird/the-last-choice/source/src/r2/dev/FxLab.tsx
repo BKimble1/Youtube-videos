@@ -85,7 +85,7 @@ export const FxLab: React.FC<{page?: number}> = ({page = 0}) => {
     out = combine(
       flare({key: 'fl', from: hand, to: {x: 5, y: 0, z: -0.4}, t0: 0.25, flight: 0.8, apex: 1.6, ignite: 0.0, seed: 3}, t),
       optikFlash({key: 'of', eye, t, at: 1.3}),
-      smokeCanister({key: 'cn', from: hand, to: {x: 8, y: 0, z: 2.2}, t0: 2.0, flight: 0.85, seed: 9}, t),
+      smokeCanister({key: 'cn', from: hand, to: {x: 6.2, y: 0, z: 1.6}, t0: 2.0, flight: 0.85, seed: 9}, t),
     );
     items.push(boxItem({x: 7, y: 0, z: 0.5}), eyeItem(eye, t, blindAmount(t, 1.3)), dotItem(hand, 'hand'));
   }

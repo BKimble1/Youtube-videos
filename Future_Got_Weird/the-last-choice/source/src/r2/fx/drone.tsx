@@ -11,17 +11,19 @@ import {smokeItems, columnSource} from './smoke';
 
 // ------------------------------------------------------------------ mesh (local: front = −z, up = +y, origin = body centre)
 const ARM_TIPS: V3[] = [{x: -0.3, y: 0.02, z: -0.25}, {x: 0.3, y: 0.02, z: -0.25}, {x: 0.3, y: 0.02, z: 0.25}, {x: -0.3, y: 0.02, z: 0.25}];
-const ARM_ROOTS: V3[] = [{x: -0.12, y: 0, z: -0.1}, {x: 0.12, y: 0, z: -0.1}, {x: 0.12, y: 0, z: 0.1}, {x: -0.12, y: 0, z: 0.1}];
+const ARM_ROOTS: V3[] = [{x: -0.17, y: 0, z: -0.12}, {x: 0.17, y: 0, z: -0.12}, {x: 0.17, y: 0, z: 0.12}, {x: -0.17, y: 0, z: 0.12}];
 const armMesh = (i: number): Mesh => merge(
   strut(ARM_ROOTS[i], ARM_TIPS[i], 0.018, 5, 'ally_arm'),
   {...cylinder(0.038, 0.055, 7, 'ally_dark', 'ally_dark', -0.02), verts: cylinder(0.038, 0.055, 7, 'ally_dark', 'ally_dark', -0.02).verts.map((p) => add3(p, ARM_TIPS[i]))},
 );
+/** tape strips lie on the top panel: draw them after it */
+const onTop = (m: Mesh): Mesh => ({...m, faces: m.faces.map((f) => ({...f, bias: 0.06}))});
 const bodyMesh = (arms: number[]): Mesh => merge(
   cbox(0.34, 0.1, 0.28, ['ally_panel', 'ally_dark', 'ally_body', 'ally_body', 'ally_body', 'ally_body'], -0.05),
   {...cbox(0.12, 0.07, 0.07, 'ally_dark', -0.1), verts: cbox(0.12, 0.07, 0.07, 'ally_dark', -0.1).verts.map((p) => add3(p, {x: 0, y: 0, z: -0.15}))},
   {...cbox(0.06, 0.04, 0.02, 'ally_lens', -0.085), verts: cbox(0.06, 0.04, 0.02, 'ally_lens', -0.085).verts.map((p) => add3(p, {x: 0, y: 0, z: -0.19}))},
-  xfMesh(cbox(0.38, 0.008, 0.05, 'ally_tape', 0.05), {yaw: 28, pos: {x: 0.02, y: 0, z: 0.02}}),
-  xfMesh(cbox(0.2, 0.008, 0.045, 'ally_tape', 0.052), {yaw: -64, pos: {x: -0.07, y: 0, z: 0.05}}),
+  onTop(xfMesh(cbox(0.3, 0.01, 0.05, 'ally_tape', 0.05), {yaw: 28, pos: {x: 0.02, y: 0, z: 0.0}})),
+  onTop(xfMesh(cbox(0.16, 0.01, 0.045, 'ally_tape', 0.05), {yaw: -64, pos: {x: -0.06, y: 0, z: 0.03}})),
   strut({x: 0.1, y: 0.05, z: 0.11}, {x: 0.15, y: 0.19, z: 0.17}, 0.006, 4, 'ally_arm'),
   ...arms.map(armMesh),
 );

@@ -49,7 +49,9 @@ export const flare = (o: FlareOpts, t: number): FxOut => {
     });
   }
   const ig = o.ignite ?? o.t0 - 0.2;
-  const trail: SmokeSource = {pos: (te) => add3(thrown(o, te).p, {x: 0, y: 0.06, z: 0}), start: ig + 0.2, end: ig + (o.burn ?? 25), rate: 5, life: 3, up: 0.8, size: 0.08, grow: 0.35, color: '#C7A6A0', opacity: 0.5, seed: seed + 13};
+  // a thin pink-grey wisp once it has landed (in flight it only streaks sparks)
+  const landed = o.t0 + (o.flight ?? 0.9);
+  const trail: SmokeSource = {pos: (te) => add3(thrown(o, te).p, {x: 0, y: 0.06, z: 0}), start: Math.max(ig + 0.2, landed + 0.3), end: ig + (o.burn ?? 25), rate: 4, life: 2.4, up: 0.9, size: 0.06, grow: 0.28, color: '#C9ABA4', opacity: 0.42, seed: seed + 13};
   const lights: PointLight[] = b > 0 ? [{pos: add3(tip, {x: 0, y: 0.3, z: 0}), color: '#FF5A40', power: 1.15 * b, radius: 11, flicker: 0.3, seed}] : [];
   return combine(
     fx(items, lights),

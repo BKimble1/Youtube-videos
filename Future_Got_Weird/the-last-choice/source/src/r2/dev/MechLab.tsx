@@ -14,11 +14,11 @@ const LIGHT: LightRig = {
   sun: {x: -0.84, y: 0.32, z: 0.2}, sunColor: '#FFC08A', ambient: '#4A5878',
   lights: [], fogColor: '#9C7E73', fogStart: 40, fogEnd: 700, skyTop: '#3B3446', skyHorizon: '#C88466', ink: '#162A32',
 };
-const GROUND = prep(terrain(-60, 320, -60, 60, 6, () => 0, (x, z) => (Math.abs(z) < 14 ? 'g_asphalt' : 'g_ground')));
+const GROUND = prep(terrain(-80, 420, -90, 90, 4, () => 0, (x, z) => (Math.abs(z) < 14 ? 'g_asphalt' : 'g_ground')));
 const label = (s: string) => <text x={30} y={60} fill="#fff" fontSize={34} fontFamily="sans-serif" stroke="#000" strokeWidth={4} paintOrder="stroke">{s}</text>;
 
 const scene = (v: View, items: Item[], t: number, title: string, extra?: React.ReactNode) => (
-  <Scene view={v} light={LIGHT} mats={MATS} items={[{kind: 'mesh', mesh: GROUND, key: 'g'}, ...items]} t={t} over={<g>{label(title)}{extra}</g>} />
+  <Scene view={v} light={LIGHT} mats={MATS} items={[{kind: 'mesh', mesh: GROUND, key: 'g', sortKey: 'max'}, ...items]} t={t} over={<g>{label(title)}{extra}</g>} />
 );
 
 export const MechLab: React.FC<{page?: number}> = ({page = 0}) => {
@@ -42,17 +42,27 @@ export const MechLab: React.FC<{page?: number}> = ({page = 0}) => {
     return scene(makeView(cam), items, t, `${heavyPage ? 'heavy' : 'combat units + drone'} · ${name}`);
   }
   if (page === 1) {
-    // action cycles: march, strike, ram, drone dive
-    const cam: Cam3 = {pos: {x: 6, y: 3.2, z: 15}, target: {x: 4, y: 1.6, z: 0}, fov: 42};
+    // action cycles up close: march (planted feet), strike → block exchange, raise
+    const cam: Cam3 = {pos: {x: 1.8, y: 1.6, z: 4.2}, target: {x: 1.8, y: 1.15, z: -2}, fov: 42};
+    const cyc = Math.floor(t / 3) * 3;
+    const items: Item[] = [
+      ...combatUnit({id: 11, t, pos: {x: 0, y: 0, z: 0}, heading: 90, gait: {path: straightPath({x: -4.5, y: 0, z: -4.5}, 90), dist: t * 1.25, start: 0}}),
+      ...combatUnit({id: 12, t, pos: {x: 1.0, y: 0, z: -2}, heading: 90, strike: {t0: cyc + 1.2, side: 'R', target: {x: 2.15, y: 1.75, z: -2.05}}}),
+      ...combatUnit({id: 13, t, pos: {x: 2.6, y: 0, z: -2}, heading: 270, block: {t0: cyc + 0.75, t1: cyc + 1.6, side: 'L'}, hits: [{t0: cyc + 1.2, dir: {x: 1, y: 0, z: 0}, strength: 0.6}]}),
+    ];
+    return scene(makeView(cam), items, t, 'actions · march (planted feet) · strike → block');
+  }
+  if (page === 7) {
+    // heavy: ram strike and launcher fire; drone dive / mark / cutter
+    const cam: Cam3 = {pos: {x: 6, y: 4.2, z: 17}, target: {x: 4, y: 2.2, z: 0}, fov: 42};
+    const cyc = Math.floor(t / 3) * 3;
     const ph = t % 3;
     const items: Item[] = [
-      ...combatUnit({id: 11, t, pos: {x: 0, y: 0, z: 0}, heading: 90, gait: {path: straightPath({x: -4, y: 0, z: 1}, 90), dist: t * 1.25}}),
-      ...combatUnit({id: 12, t, pos: {x: 3, y: 0, z: -2}, heading: 90, strike: {t0: Math.floor(t / 3) * 3 + 1.2, side: 'R', target: {x: 4.1, y: 1.5, z: -2}}}),
-      ...combatUnit({id: 13, t, pos: {x: 4.6, y: 0, z: -2}, heading: 270, block: {t0: Math.floor(t / 3) * 3 + 0.7, t1: Math.floor(t / 3) * 3 + 1.6, side: 'L'}}),
-      ...heavy({id: 14, t, pos: {x: 9, y: 0, z: -6}, heading: 250, ram: {t0: Math.floor(t / 3) * 3 + 1.6, target: {x: 6.2, y: 0.6, z: -4.5}}}),
+      ...heavy({id: 14, t, pos: {x: 9, y: 0, z: -6}, heading: 250, ram: {t0: cyc + 1.6, target: {x: 4.6, y: 0.5, z: -4.2}}, fire: {t0: cyc + 2.6, target: {x: -10, y: 0, z: 4}}}),
       ...drone({id: 15, t, pos: {x: lerp(-2, 6, smooth(ph / 2.2)), y: lerp(5, 1.2, smooth(ph / 2.2)), z: 2}, heading: 100, vel: {x: 4, y: -2, z: 0}, eye: 'amber'}),
+      ...drone({id: 16, t, pos: {x: 0, y: 3.5, z: 3}, heading: 120, look: {x: 4.6, y: 0.5, z: -4.2}, mark: {target: {x: 4.6, y: 0.5, z: -4.2}}, eye: 'amber', cutter: (Math.sin(t * 2) + 1) / 2}),
     ];
-    return scene(makeView(cam), items, t, 'actions · march · strike/block · ram · drone dive');
+    return scene(makeView(cam), items, t, 'heavy ram + launcher · drone dive · drone mark + cutter');
   }
   if (page === 2) {
     // damage sequence: plate torn, arm detached, fall, wreck

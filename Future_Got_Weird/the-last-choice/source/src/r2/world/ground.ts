@@ -124,7 +124,7 @@ export const groundH = (x: number, z: number): number => {
   return h;
 };
 /** The level patch at the ridge's east foot (van, death slab, radio). */
-export const FOOT = {x: 8.0, z: 4.6, r: 3.2};
+export const FOOT = {x: 7.6, z: 2.4, r: 3.0};
 
 /** Surface normal by central differences (e = 0.25 m). */
 export const groundN = (x: number, z: number): V3 => {
@@ -147,5 +147,7 @@ export const CLEAR_ZONES: {x: number; z: number; r: number}[] = [
   {x: PLAN.deathPos.x, z: PLAN.deathPos.z, r: 1.3},
   {x: 5, z: 2, r: 2.2},
   {x: -4, z: 0, r: 2.5}, // where the Crew come up the west slope
+  {x: PLAN.directorStand.x - 3.2, z: PLAN.directorStand.z + 1.2, r: 2.6}, // camera corridor behind his stand
+  {x: PLAN.van.pos.x, z: PLAN.van.pos.z, r: 3.4}, // the van
 ];
 export const isClear = (x: number, z: number, pad = 0) => CLEAR_ZONES.every((c) => Math.hypot(x - c.x, z - c.z) > c.r + pad);

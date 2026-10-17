@@ -20,17 +20,20 @@ export const PLAN = {
   /** Where the Director lies buried at the start, stands, and where he dies. */
   directorBuried: {x: 0.6, y: 0, z: 2.2} as V3, // y resolved from groundH at use
   directorStand: {x: 1.6, y: 0, z: 1.4} as V3,
-  /** The broken vehicle with the radio: a delivery van tipped against the east foot of the ridge, side door open. */
-  van: {pos: {x: 9.2, y: 0, z: 6.4} as V3, heading: 205, tiltDeg: 14},
+  /**
+   * The broken vehicle with the radio: a delivery van at the ridge's east foot, its rear jammed into the rubble,
+   * pointing out over the avenue (ESE) at his left hand; its open sliding door faces him (SSW).
+   */
+  van: {pos: {x: 8.3, y: 0, z: 1.15} as V3, heading: 120, tiltDeg: 10},
   /** The radio sits on the van's floor at the open side door (world position of the radio's base). */
-  radio: {x: 8.15, y: 0.78, z: 5.05} as V3,
+  radio: {x: 8.13, y: 0.88, z: 1.81} as V3, // = RADIO.pos in world/props.ts (computed from the van; keep in sync)
   /** He dies sitting against a broken slab a step from the van — radio and body share one frame. */
   deathPos: {x: 7.0, y: 0, z: 3.4} as V3,
   deathHeading: 120, // facing out over the battlefield (east-south-east)
   /** The avenue (roadway z in ±14, sidewalks to ±19, building lots beyond). */
   avenue: {x0: 10, x1: 1400, roadZ: 14, walkZ: 19},
   /** The crater in the avenue: the main battlefield. */
-  crater: {center: {x: 62, y: 0, z: 2} as V3, radius: 16, depth: 3.5, rim: 0.8},
+  crater: {center: {x: 62, y: 0, z: 0} as V3, radius: 16, depth: 3.5, rim: 0.8},
   /** North flank: a fallen elevated-rail girder lying diagonally into the avenue, one end on a building. */
   girder: {from: {x: 36, y: 0, z: -17} as V3, to: {x: 80, y: 8, z: -5} as V3},
   /** South flank: a burning building whose facade has spilled across the sidewalk; a bus wreck. */
