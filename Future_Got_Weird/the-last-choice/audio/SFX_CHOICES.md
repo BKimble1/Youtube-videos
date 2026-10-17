@@ -27,7 +27,7 @@ Source: ElevenLabs `eleven_text_to_sound_v2`, flow `z1if6RWnmC2gvHiGpM0u`, two t
 | metal_tear | metal_tear_v2.mp3 | 0.027 | duration_s=2.0, onset_dominance=28.1 |
 | padlock | reused: they-trained-robots-to-destroy-themselves/source/public/v2/audio/sfx/padlock.wav | 0.05 |  |
 | projector_beep | synthesised (rising chirp) | 0 |  |
-| radio_on | radio_on_v2.mp3 | 0.0 | duration_s=16.0 |
+| radio_on | radio_on_v2.mp3 | 0.304 | duration_s=16.0 |
 | refuge_bed | refuge_bed_L_v1.mp3 | 0.0 | duration_s=15.0, steadiness_std_db=1.3 |
 | robot_step | reused: they-trained-robots-to-destroy-themselves/source/public/audio/sfx/robot_step.wav | 0.05 |  |
 | robot_step_heavy | robot_step_heavy_v1.mp3 | 0.03 | duration_s=2.0, onset_dominance=803638.1 |

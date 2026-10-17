@@ -107,7 +107,7 @@
  },
  "radio_on": {
   "take": "radio_on_v2.mp3",
-  "lead_s": 0.0,
+  "lead_s": 0.304,
   "duration_s": 16.0
  },
  "refuge_bed": {

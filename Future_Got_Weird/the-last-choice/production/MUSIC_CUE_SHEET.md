@@ -74,7 +74,7 @@ vocal phrases · 140–164 sparse stop-time solo · 164.5 dense ensemble out-cho
 | **1:21.23** | splice / destination hit | the warden is smashed into the column |
 | 1:24.03 | accent (145.88) | the warden hits the street |
 | **1:41.15** | B♭ arrival (163.0) | the operator chooses to hold the lever |
-| 1:45.25 | onset (167.10) | **the blast** hits the gantry; muffled perspective 1:45.29–1:49.60 with an ear ring over it (`PERSPECTIVE` in `src/film/sfx.ts`) |
+| 1:45.25 | onset (167.10) | **the blast** hits the gantry; full-weight impact, then a muffled perspective 1:45.57–1:49.60 with an ear ring over it (`PERSPECTIVE` in `src/film/sfx.ts`) |
 | 1:58.15 | softening (180.0) | carrying the friend down to the waterfront |
 | **2:05.75** | final hit (187.6) | the refuge doors open |
 | 2:11.95 | ring-out ends | — silence: the hands, the sheet |

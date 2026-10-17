@@ -22,6 +22,7 @@ OUT = os.path.join(ROOT, "audio", "sfx")
 os.makedirs(OUT, exist_ok=True)
 SR = 48000
 BEDS = {"fire_bed", "city_bed", "refuge_bed", "drone_rotor", "steam_vent", "breath_ragged"}
+CLICK_FIRST = {"radio_on"}  # sweeps whose cue time is a click at the start of the take
 SWEEPS = {"cable_strain", "gate_roll", "shutter_close", "glass_door", "radio_on", "crane_trolley", "steps_gravel", "breath_exert", "servo_heavy", "gantry_collapse", "debris_rain", "hydraulic", "sparks"}
 
 
@@ -92,6 +93,9 @@ for kind, files in sorted(kinds.items()):
             i0 = int(np.argmax(env > thr))
             st = max(0, i0 - int(0.01 * SR))
             lead = (i0 - st) / SR
+            if kind in CLICK_FIRST:
+                # the sync point is the first strong event (the switch click), not the faint lead-in before it
+                lead = (int(np.argmax(env > 0.1 * env.max())) - st) / SR
         else:
             k = int(np.argmax(o))
             t_hit = k * 256 / SR

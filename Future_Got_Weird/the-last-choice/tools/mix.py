@@ -23,7 +23,7 @@ A = T["anchors"]
 N = int(round((T["end"] + 0.2) * SR))
 SFX = os.path.join(ROOT, "audio", "sfx")
 CH = json.load(open(os.path.join(SFX, "choices.json")))
-TARGET_LUFS, CEIL_DBTP = -16.0, -1.5
+TARGET_LUFS, CEIL_DBTP = -16.0, -2.0  # -2.0 leaves headroom for AAC encoder overshoot (delivered file <= -1.5 dBTP)
 
 # default levels (dB re. the -3 dBFS-normalised file) — set by role, then per-cue gain
 LEVEL = {

@@ -1,0 +1,36 @@
+{
+ "file": "FGW_TheLastChoice_R1_REVIEW_1080p.mp4",
+ "size_mb": 105.4,
+ "duration_s": 205.4,
+ "video": {
+  "codec_name": "h264",
+  "width": 1920,
+  "height": 1080,
+  "r_frame_rate": "30/1",
+  "pix_fmt": "yuv420p",
+  "nb_frames": "6162",
+  "color_space": "bt709"
+ },
+ "audio": [
+  {
+   "codec_name": "aac",
+   "sample_rate": "48000",
+   "channels": 2,
+   "bit_rate": "292638"
+  }
+ ],
+ "timeline_end_s": 205.4,
+ "black_spans": [
+  "200.967\u2013205.367"
+ ],
+ "frozen_spans": [
+  "202.833"
+ ],
+ "loudness": {
+  "I_lufs": -16.5,
+  "LRA_lu": 15.3,
+  "true_peak_dbfs": -1.6
+ },
+ "audio_sample_peak_dbfs": -1.63,
+ "audio_clipped_samples": 0
+}

@@ -19,11 +19,12 @@ export const BEDS: {kind: string; a: number; b: number; gain?: number; fade?: nu
 // The decisive blast (C13): film ≈105.25 (a Portals onset, rec 167.10), defined once in shots/C2/world.ts.
 export const BLAST = BEAT.blast;
 export const PERSPECTIVE: {kind: 'muffle' | 'duck'; a: number; b: number; amt?: number}[] = [
-  // after the blast the world goes dull and distant; it clears as the Director catches the friend's wrist (C14)
-  {kind: 'muffle', a: BLAST + 0.04, b: 109.6, amt: 0.9},
+  // the blast lands at full weight, then the world goes dull and distant; it clears as the Director catches the
+  // friend's wrist (C14)
+  {kind: 'muffle', a: BLAST + 0.32, b: 109.6, amt: 0.9},
 ];
 /** Mix-level cues that belong to the perspective rather than to a shot: the ear ring rides over the muffle. */
 const MIX_CUES: Cue[] = [
-  {t: BLAST + 0.06, kind: 'tinnitus', gain: 0},
+  {t: BLAST + 0.3, kind: 'tinnitus', gain: 0},
 ];
 export const CUES: Cue[] = [...SHOT_CUES, ...MIX_CUES].sort((p, q) => p.t - q.t);

@@ -1823,16 +1823,16 @@
    "gain": 0
   },
   {
-   "t": 105.307,
-   "kind": "tinnitus",
-   "gain": 0
-  },
-  {
    "t": 105.367,
    "kind": "debris_rain",
    "pan": -0.4,
    "dist": 0.4,
    "gain": -2
+  },
+  {
+   "t": 105.547,
+   "kind": "tinnitus",
+   "gain": 0
   },
   {
    "t": 105.907,
@@ -2596,7 +2596,7 @@
  "perspective": [
   {
    "kind": "muffle",
-   "a": 105.287,
+   "a": 105.567,
    "b": 109.6,
    "amt": 0.9
   }
