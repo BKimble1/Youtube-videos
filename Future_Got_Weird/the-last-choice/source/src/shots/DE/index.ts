@@ -13,6 +13,7 @@ import E3 from './E3';
 import E4 from './E4';
 import E5 from './E5';
 import E6 from './E6';
+import E7 from './E7';
 
-export const SHOTS_DE: Record<string, React.FC> = {D1, D2, D3, D4, D5, E1, E2, E3, E4, E5, E6, T1};
+export const SHOTS_DE: Record<string, React.FC> = {D1, D2, D3, D4, D5, E1, E2, E3, E4, E5, E6, E7, T1};
 export const CUES_DE: Cue[] = [];

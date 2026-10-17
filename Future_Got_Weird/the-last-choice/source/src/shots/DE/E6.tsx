@@ -72,8 +72,8 @@ const E6: React.FC = () => {
       </Layer>
       <Layer cam={cam} p={0.45}>
         {/* the city beyond: ruins, the bridge, reconstruction — the place they came through */}
-        <FarBank x0={-16000} x1={16000} y={-60} t={t} time={time} ink={kk * 1.8} seed={22} height={1900} ruined={0.45} />
-        <ReconstructionSite x={-2600} y={-60} s={2.2} progress={0.46} t={t} time={time} ink={kk * 1.8} seed={6} />
+        <FarBank x0={-16000} x1={16000} y={-60} t={t} time={time} ink={kk * 1.8} seed={22} height={1250} ruined={0.45} />
+        <ReconstructionSite x={-3400} y={-60} s={1.25} progress={0.4572} t={t} time={time} ink={kk * 1.8} seed={6} />
         <CantileverBridge x={6000} y={-40} w={9000} h={2000} time={time} ink={kk * 1.8} />
       </Layer>
       <Layer cam={cam} p={1}>

@@ -16,11 +16,12 @@ export const breakerProps = (T: number, ink: number) => {
 
 export const BreakerAt: React.FC<{T: number; ink: number}> = ({T, ink}) => <Breaker {...breakerProps(T, ink)} />;
 
-/** The escort warden that walks behind the breaker and holds (coordinated pause). */
-export const EscortWarden: React.FC<{T: number; ink: number; x0?: number}> = ({T, ink, x0 = 7600}) => {
-  const d = keys(T, [[86, 0], [94.0, 1380, easeOut]]);
-  const p = wardenWalker(x0, d, 1, DECK, {t: T, s: 0.95, ink, seed: 7, lock: 0, look: {x: 0.6, y: 0.1}, z: -1});
-  const scan = T > 94 ? Math.sin((T - 94) * 0.9) * 25 : 0;
+/** The replacement warden from C8 (eye lit), walking the deck behind the Crew with the breaker; it holds at the
+ *  breaker's flank (a coordinated pause) while the breaker does the work. */
+export const EscortWarden: React.FC<{T: number; ink: number; x0?: number}> = ({T, ink, x0 = 7700}) => {
+  const d = keys(T, [[86, 0], [93.0, 1160, easeOut]]);
+  const p = wardenWalker(x0, d, 1, DECK, {t: T, s: 0.95, ink, seed: 7, lock: 0, look: {x: 0.6, y: 0.1}, z: -1, glow: 1});
+  const scan = T > 93 ? Math.sin((T - 93) * 0.9) * 25 : 0;
   return <Warden {...p} headYaw={scan} />;
 };
 

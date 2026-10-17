@@ -15,14 +15,14 @@ import {K} from '../../sets/cityKit';
 
 export {CATWALK, DECK, VENT_X};
 export const COLUMN_X = 8640; // steel hanger column the warden is smashed into (C8)
-export const DAVIT = {px: 9000, py: -1960, L: 410};
+export const DAVIT = {px: 9080, py: -2060, L: 440};
 // the steam cloud the decoy is projected on (hangs below and west of the vent)
 export const CLOUD = {x0: 7520, y0: -1420, x1: 8620, y1: -330};
 
 export type CatwalkSceneProps = {
   cam: Cam; T: number; crew: ActorProps[]; id: string;
   extraParts?: {z: number; el: React.ReactElement}[];
-  street?: React.ReactNode; back?: React.ReactNode; onCloud?: React.ReactNode; front?: React.ReactNode; screen?: React.ReactNode;
+  street?: React.ReactNode; deck?: React.ReactNode; back?: React.ReactNode; onCloud?: React.ReactNode; front?: React.ReactNode; screen?: React.ReactNode;
   rail?: {bay?: [number, number]; bend?: number; hide?: boolean};
   hook?: {theta: number}; column?: {dent: number};
   steam?: number; flash?: number; shakeInk?: number;
@@ -43,7 +43,7 @@ export const SteamCloud: React.FC<{T: number; amt?: number; id: string}> = ({T, 
     <Steam mode="jet" t={T} x={VENT_X - 30} y={-1300} dir={150} length={520} width={220} rate={30} opacity={0.75 * amt} seed={9} id={`${id}sj`} />
   </g>
 );
-export const CatwalkScene: React.FC<CatwalkSceneProps> = ({cam, T, crew, id, extraParts, street, back, onCloud, front, screen, rail, hook, column, steam = 1, flash = 0}) => {
+export const CatwalkScene: React.FC<CatwalkSceneProps> = ({cam, T, crew, id, extraParts, street, deck, back, onCloud, front, screen, rail, hook, column, steam = 1, flash = 0}) => {
   const ink = inkFor(cam.z);
   const h = hauler(T);
   const gt = gapTaxi(T);
@@ -64,11 +64,14 @@ export const CatwalkScene: React.FC<CatwalkSceneProps> = ({cam, T, crew, id, ext
         {street}
         <WrecksNear t={T} ink={ink} />
         <Viaduct t={T} ink={ink} ventX={VENT_X} vent={0} />
+        {/* on the deck (behind its south parapet) */}
+        {deck}
+        {/* the deck parapet and stair rail are inboard of the outboard catwalk: they stay BEHIND the Crew */}
+        <ViaductFront ink={ink} catwalk={false} />
         {column && <SteelColumn x={COLUMN_X} y0={-1510} y1={CATWALK} ink={ink} dent={column.dent} />}
         {back}
         <Cast actors={crew} extra={extraParts} />
         {hook && <DavitHook px={DAVIT.px} py={DAVIT.py} L={DAVIT.L} theta={hook.theta} ink={ink} deckY={DECK} t={T} />}
-        <ViaductFront ink={ink} catwalk={false} />
         {rail?.hide ? <rect x={7450} y={CATWALK + 20} width={2930} height={40} fill={K.steelDark} stroke="#162A32" strokeWidth={ink * 0.8} />
           : <CatwalkRail x0={7450} x1={10380} y={CATWALK} ink={ink} bay={rail?.bay} bend={rail?.bend} steel={K.steel} steelDark={K.steelDark} />}
         {steam > 0 && <SteamCloud T={T} amt={steam} id={id} />}

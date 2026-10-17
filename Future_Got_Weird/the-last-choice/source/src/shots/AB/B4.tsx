@@ -8,7 +8,7 @@ import {AbsoluteFill} from 'remotion';
 import {useShot} from '../../film/useShot';
 import {M} from '../../film/timing';
 import {look, dmg, CIV} from '../../film/crew';
-import {Cast, ActorProps} from '../../rig/actor';
+import {Cast, ActorProps, solve} from '../../rig/actor';
 import {Cam, Frame, Grade, Layer, shake} from '../../kit/cam';
 import {clamp, lerp, noise, smooth, easeOut, keys} from '../../kit/math';
 import {SubwayInterior, RollGate, rollGateBottom} from '../../sets/city';
@@ -33,23 +33,29 @@ export const B4: React.FC = () => {
   const cam = shake(cam0, t, 5 * jolt + 0.3, 9);
   const ik = inkL(cam);
   // gate: a crack (fingers under the edge), two jolts, then the carrier's back takes it
-  const open = keys(t, [[0, 0.1], [J1 - 0.02, 0.1], [J1 + 0.07, 0.27, easeOut], [J2 - 0.02, 0.27], [J2 + 0.08, 0.45, easeOut], [0.95, 0.46], [1.25, 0.53], [4.1, 0.53]])
-    + Math.sin(t * 23) * 0.004 * (t > 1.2 ? 1 : 0);
-  const bot = rollGateBottom(GY, GH, open);
-  // the carrier behind the gate: heave (hands under the edge), then under it, holding it up on his back
-  const under = ease(t, 0.75, 1.2);
+  // the carrier: heaves from behind (hands under the edge), then steps under it, bends at the hips and takes the gate
+  // across his upper back, hands braced on his knees, head tucked in front of and below the bar
+  const under = ease(t, 0.75, 1.25);
   const cx = 820;
-  const cy = lerp(GY - 30, GY + 4, under);
+  const cy = lerp(GY - 30, GY + 8, under);
   const nod = Math.max(0, Math.sin(Math.PI * clamp((t - 3.2) / 0.45)));
-  const strain = Math.sin(t * 17) * 2 * under;
-  const C: ActorProps = {look: look('carrier'), t: T, seed: 2, x: cx, y: cy, s: 1, z: lerp(-0.4, 0.15, under), dmg: dmg('carrier', T), breath: 1,
-    yaw: lerp(10, 40, under), drop: lerp(70, 64, under), lean: lerp(8, 26, under),
-    head: {pitch: lerp(-30, 4, under) + nod * 14, yaw: lerp(0, 34, under) + nod * 6},
-    face: {mouth: nod > 0.2 ? 'flat' : 'grit', brows: -0.7 + nod * 0.4, squint: 0.6 * (1 - nod), lookX: 0.6},
-    legL: {foot: {x: cx - 80, y: cy - 10, z: -10}}, legR: {foot: {x: cx + 90, y: cy - 10, z: 12}},
-    armL: {hand: {x: cx - lerp(60, 90, under), y: bot + 6 + strain, z: lerp(20, -10, under)}, pole: {x: -0.5, y: 1, z: 0.2}},
-    armR: {hand: {x: cx + lerp(70, 100, under), y: bot + 6 - strain, z: lerp(20, 30, under)}, pole: {x: 0.5, y: 1, z: 0.2}},
-    handL: 'fist', handR: 'fist'};
+  const strain = Math.sin(t * 17) * 1.5 * under;
+  const Cpose = (k: number): ActorProps => ({look: look('carrier'), t: T, seed: 2, x: cx, y: cy, s: 1, z: lerp(-0.4, 0.15, k), dmg: dmg('carrier', T), breath: 1,
+    yaw: lerp(10, 16, k), drop: lerp(70, 34, k), lean: lerp(8, 57, k), side: 0,
+    head: {pitch: lerp(-30, 56, k) - nod * 8, yaw: lerp(0, 12, k) + nod * 4},
+    face: {mouth: nod > 0.2 ? 'flat' : 'grit', brows: -0.7 + nod * 0.4, squint: 0.6 * (1 - nod), lookX: 0.4 * nod, lookY: -0.3 * nod},
+    legL: {foot: {x: cx - lerp(80, 74, k), y: cy - 10, z: lerp(-10, -22, k)}}, legR: {foot: {x: cx + lerp(90, 76, k), y: cy - 10, z: lerp(12, 22, k)}}});
+  const cRig = solve(Cpose(under));
+  const backTop = Math.min(cRig.sh[0].y, cRig.sh[1].y) - 30;      // the top of his upper back under the bar
+  const openHold = (GY - backTop - 2) / (GH * 0.92);
+  const open = (t < 0.95 ? keys(t, [[0, 0.1], [J1 - 0.02, 0.1], [J1 + 0.07, 0.27, easeOut], [J2 - 0.02, 0.27], [J2 + 0.08, 0.45, easeOut], [0.95, 0.46]])
+    : lerp(0.46, openHold, ease(t, 0.95, 1.35))) + Math.sin(t * 23) * 0.003 * (t > 1.35 ? 1 : 0);
+  const bot = rollGateBottom(GY, GH, open);
+  const kneeL = cRig.knee[0], kneeR = cRig.knee[1];
+  const C: ActorProps = {...Cpose(under),
+    armL: under < 0.5 ? {hand: {x: cx - 60, y: bot + 4, z: 20}} : {hand: {x: kneeL.x + 6, y: kneeL.y - 14 + strain, z: kneeL.z + 16}, pole: {x: -0.6, y: 0.2, z: 0.6}},
+    armR: under < 0.5 ? {hand: {x: cx + 70, y: bot + 4, z: 20}} : {hand: {x: kneeR.x - 6, y: kneeR.y - 14 - strain, z: kneeR.z + 16}, pole: {x: 0.6, y: 0.2, z: 0.6}},
+    handL: under < 0.5 ? 'fist' : 'mitt', handR: under < 0.5 ? 'fist' : 'mitt'};
   // the builder on our side: pry bar under the edge, levering on the hits, then out of the way
   const bx = 1240, by = GY + 70;
   const lever = keys(t, [[0, 0], [J1, 0.45, easeOut], [J2 - 0.05, 0.5], [J2 + 0.08, 1, easeOut], [1.1, 1]]);
@@ -67,24 +73,25 @@ export const B4: React.FC = () => {
     : {...walker(look('builder'), {x0: bx, dist: ease(t, 1.4, 2.0) * 90, dir: 1, ground: by, gait: HURRY}, {t: T, seed: 6, s: 1, z: 0.5, dmg: dmg('builder', T)}), yaw: lerp(90, -40, ease(t, 2.1, 2.5)), head: {yaw: -20}};
   // the civilians duck under, one by one, toward the Director
   const civs = [0, 1, 2].map((i) => {
-    const t0 = 1.2 + i * 0.6;
-    const thru = smooth(clamp((t - t0) / 0.6));        // ducking under the edge, toward us
-    const walk = clamp((t - t0 - 0.55) / 1.4);          // then off to the right, to the Director
-    const duck = Math.sin(Math.PI * clamp((t - t0 + 0.1) / 0.8));
-    const x0 = 1060 + i * 70;
-    const d = 60 * thru + smooth(walk) * (340 + i * 50);
-    const g = lerp(GY - 40, GY + 50 + i * 16, thru);
-    const w = walker(CIV[i], {x0, dist: d, dir: 1, ground: g, gait: SHUFFLE}, {t: T, s: 0.97, seed: 70 + i, z: thru < 0.45 ? -0.6 - i * 0.01 : 0.3 + i * 0.05});
-    return {...w, drop: (w.drop ?? 0) + duck * 120, lean: 8 + duck * 36, head: {pitch: -duck * 14, yaw: walk > 0.5 ? -24 : 0},
+    const t0 = 1.3 + i * 0.6;
+    const thru = smooth(clamp((t - t0) / 0.6));        // ducking under the edge beside the carrier, toward us
+    const run = Math.max(0, t - t0 - 0.5);             // then hurrying off right, toward the stairs
+    const duck = Math.sin(Math.PI * clamp((t - t0 + 0.1) / 0.85));
+    const x0 = 1030 + i * 60;
+    const d = 60 * thru + run * (660 - i * 20) * smooth(clamp(run / 0.3));
+    const g = lerp(GY - 40, GY + 120 + i * 14, thru);
+    const w = walker(CIV[i], {x0, dist: d, dir: 1, ground: g, gait: run > 0 ? HURRY : SHUFFLE}, {t: T, s: 0.97, seed: 70 + i, z: thru < 0.45 ? -0.6 - i * 0.01 : 0.3 + i * 0.05});
+    return {...w, drop: (w.drop ?? 0) + duck * 135, lean: 8 + duck * 48, head: {pitch: -duck * 18, yaw: run > 0.3 ? 10 : 0},
       face: {mouth: 'o' as const, worry: 0.9, brows: 0.5}, armL: {fk: {fwd: 30 + duck * 30, out: 10, bend: 60}}, armR: {fk: {fwd: 20 + duck * 20, out: 10, bend: 40}}} as ActorProps;
   });
-  // the Director receives them on the platform
-  const dx = 1900;
-  const D: ActorProps = {look: look('director'), t: T, seed: 4, x: dx, y: GY + 110, s: 1, z: 0.6, dmg: dmg('director', T), breath: 0.8,
-    yaw: -70, lean: 6, head: {pitch: 4 + nod * 14, yaw: -6}, face: {mouth: 'flat', brows: -0.1, lookX: -0.6},
-    legL: {foot: {x: dx + 50, y: GY + 100}}, legR: {foot: {x: dx - 60, y: GY + 100}},
-    armR: {fk: {fwd: lerp(10, 50, ease(t, 1.6, 2.0)) * (1 - ease(t, 3.0, 3.4)), out: 12, bend: 30}}, armL: {fk: {fwd: 8, out: 10, bend: 24}},
-    handR: 'open'};
+  // the Director, a little back from the path, sends them on toward the stairs (right); a nod to the carrier
+  const dx = 1610;
+  const wave = ease(t, 1.9, 2.2) * (1 - ease(t, 3.0, 3.3));
+  const D: ActorProps = {look: look('director'), t: T, seed: 4, x: dx, y: GY + 30, s: 1, z: -0.1, dmg: dmg('director', T), breath: 0.8,
+    yaw: lerp(-40, -60, ease(t, 3.0, 3.3)), lean: 6, head: {pitch: 4 + nod * 14, yaw: lerp(30, -10, ease(t, 2.9, 3.2))}, face: {mouth: 'flat', brows: -0.1, lookX: lerp(0.4, -0.6, ease(t, 2.9, 3.2))},
+    legL: {foot: {x: dx + 50, y: GY + 20}}, legR: {foot: {x: dx - 60, y: GY + 20}},
+    armR: wave > 0.02 ? {hand: {x: dx + 120 + Math.sin(t * 9) * 20 * wave, y: GY - 300, z: 60}, w: wave, fk: {fwd: 10, out: 12, bend: 30}} : {fk: {fwd: 10, out: 12, bend: 30}},
+    armL: {fk: {fwd: 8, out: 10, bend: 24}}, handR: 'open'};
   const passage = (
     <g>
       <rect x={GX - GW / 2} y={GY - GH} width={GW} height={GH} fill="#120E10" />

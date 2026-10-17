@@ -11,13 +11,17 @@ import {BreakerAt, Drones, EscortWarden} from './machines';
 import {SHOT} from './world';
 
 const camAt = (T: number): Cam => {
-  const u = clamp((T - SHOT.C9.start) / (SHOT.C9.end - SHOT.C9.start));
-  return {x: lerp(12420, 12280, smooth(u)), y: lerp(-1300, -1340, smooth(u)), z: lerp(0.292, 0.305, smooth(u))};
+  // open on the group at the ladder (the handover, the pursuers behind), then pull back and pan east to the signature
+  // wide as the friend makes for the lever: the gap, the gantry, the landing, the refuge entrance
+  const s = SHOT.C9.start;
+  const u = smooth(clamp((T - (s + 1.15)) / 2.2));
+  const z = Math.exp(lerp(Math.log(0.6), Math.log(0.3), u));
+  return {x: lerp(9830, 12260, u) + 60 * clamp((T - s) / 1.2), y: lerp(-1640, -1330, u), z: z * (1 + 0.012 * clamp((T - s - 3.4) / 0.6))};
 };
 
 export const C9: React.FC = () => {
   const {t, T} = useShot('C9');
-  const cam = smoothCam(camAt, T, 0.4);
+  const cam = smoothCam(camAt, T, 0.25);
   const ink = ik(cam);
   const slots = slotsOf(crewAt(T), ink, {
     deckBack: <g><EscortWarden T={T} ink={ink} /><BreakerAt T={T} ink={ink} /></g>,

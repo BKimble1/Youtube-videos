@@ -58,6 +58,38 @@ export const supportedBy = (helper: ActorProps, T: number, over: Partial<ActorPr
     ...over,
   };
 };
+/** The teammate held on the carrier's good (right) side: his right arm round her waist, her left (injured) side
+ *  against him, her right hand on his forearm; his gashed left forearm guarded against his chest. */
+export const heldBy = (carrier: ActorProps, T: number, over: Partial<ActorProps> = {}): ActorProps => {
+  const yaw = carrier.yaw ?? 90;
+  const dir = Math.sin((yaw * Math.PI) / 180) >= 0 ? 1 : -1;
+  const x = carrier.x + dir * 22;
+  const y = carrier.y;
+  const cr = (carrier.legR?.foot ?? {x, y: y - 10}) as V2;
+  return {
+    ...base('teammate', T, 21),
+    x, y, z: (carrier.z ?? 0) + 0.08, yaw: yaw - dir * 6, drop: (carrier.drop ?? 0) + 16, lean: 8, side: dir * 5,
+    legR: {foot: {x: cr.x + dir * 30, y: cr.y}},
+    legL: {foot: {x: x - dir * 66, y: y - 16}, pitch: -38},
+    armR: {hand: {x: x + dir * 12, y: y - 200, z: 40}, pole: {x: 0, y: 1, z: 0.5}}, handR: 'fist',
+    armL: {hand: {x: x + dir * 28, y: y - 300, z: 30}, pole: {x: 0, y: 1, z: -0.3}}, handL: 'fist',
+    face: {mouth: 'pant', brows: -0.3, worry: 0.8, lids: 0.3, lookX: dir * 0.4},
+    head: {pitch: 8},
+    satchel: {radio: radioOnStrap(T)}, breath: 0.9,
+    ...over,
+  };
+};
+/** The carrier's arms while holding the teammate (heldBy): right arm round her, left forearm guarded. */
+const carrierHold = (p: ActorProps, T: number): ActorProps => {
+  const dir = Math.sin(((p.yaw ?? 90) * Math.PI) / 180) >= 0 ? 1 : -1;
+  return {...p, armR: {hand: {x: p.x + dir * 34, y: p.y - 205 + 4 * Math.sin(T * 5), z: (p.z ?? 0) * 1 + 50}, pole: {x: 0, y: 0.5, z: 1}},
+    zArm: [p.zArm?.[0], 40], zHand: [p.zHand?.[0], 145], handR: 'mitt', ...guard(p)};
+};
+/** The carrier guards his gashed left forearm: held across the body. */
+const guard = (p: ActorProps): Partial<ActorProps> => {
+  const dir = Math.sin(((p.yaw ?? 90) * Math.PI) / 180) >= 0 ? 1 : -1;
+  return {armL: {hand: {x: p.x + dir * 24, y: p.y - 228 + (p.drop ?? 0), z: (p.z ?? 0) + 34}, pole: {x: 0, y: 1, z: -0.4}}, handL: 'fist'};
+};
 /** The helper's left hand around the teammate's waist. */
 const helperArm = (p: ActorProps, T: number): ActorProps => {
   const dir = Math.sin(((p.yaw ?? 90) * Math.PI) / 180) >= 0 ? 1 : -1;
@@ -124,7 +156,10 @@ export const LEAP = [98.55, 99.05] as const;
 const PICK = 99.32;
 
 // ================================================================== FRIEND
-const F_CLIMB = [BEAT.sprint + 0.48, BEAT.sprint + 1.1] as const;     // 89.19 → 89.81
+// C1 → C9 continuity: the friend arrives first supporting the teammate (with the civilians); the Director, builder and
+// limping carrier come up behind. On the hit the friend hands the teammate to the builder and breaks for the ladder.
+const HANDOVER = BEAT.sprint - 0.05;                                   // 88.66 friend → builder
+const F_CLIMB = [89.0, 89.62] as const;
 export const LET_GO = BEAT.blast - 0.63;                               // 104.62
 /** The friend working the lever: west of the box, stepping back as the handle comes down, hands on the handle. */
 export const leverPose = (T: number, over: Partial<ActorProps> = {}): ActorProps => {
@@ -170,9 +205,12 @@ export const friendAt = (T: number): Placed => {
   const b = {...base('friend', T, 11), visor: visorOn(T)};
   return run(T, 'friend', [
     {t: -1e9, slot: 'catwalk', f: (T) => {
-      const p = mover(look('friend'), T, [[86.0, 8640], [BEAT.sprint, 9520], [F_CLIMB[0] - 0.02, LADDER_X - 25, easeOut]], {...JOG, stride: 190}, CW, {...b, t: T, yaw: 76, face: {mouth: 'pant', brows: -0.5, lookX: 0.6}});
-      return T > BEAT.sprint ? {...p, lean: 16} : p;
+      // supporting the teammate, waiting at the ladder; looking back for the others, then up at the gantry
+      const p = helperArm(mover(look('friend'), T, [[86.0, 9300], [88.25, 9790, easeOut]], {...WALK, stride: 110}, CW, {...b, t: T, yaw: 72, z: 0, face: {mouth: 'pant', brows: -0.5}}), T);
+      const back = ramp(T, 88.0, 88.3) * (1 - ramp(T, 88.45, 88.62));
+      return {...p, head: {yaw: 60 * back, pitch: -10 * (1 - back)}, twist: 18 * back, face: {mouth: 'pant', brows: -0.5, lookX: -0.8 * back + 0.5 * (1 - back), lookY: -0.4 * (1 - back)}};
     }},
+    {t: HANDOVER, slot: 'catwalk', bl: 0.3, f: (T) => ({...mover(look('friend'), T, [[HANDOVER, 9790], [F_CLIMB[0] - 0.02, LADDER_X - 25, easeOut]], {...JOG, stride: 170}, CW, {...b, t: T, yaw: 76, face: {mouth: 'grit', brows: -0.6, lookY: -0.5}}), lean: 12})},
     {t: F_CLIMB[0], slot: 'catwalk', bl: 0.12, f: (T) => climb(look('friend'), LADDER_X, CW, TOP, ramp(T, F_CLIMB[0], F_CLIMB[1]), {...b, t: T})},
     {t: F_CLIMB[1] + 0.05, slot: 'deck', bl: 0.25, f: (T) => ({...mover(look('friend'), T, [[F_CLIMB[1] + 0.05, LADDER_X], [F_CLIMB[1] + 0.62, 10222, easeOut]], HURRY, TOP, {...b, t: T, yaw: 78, face: {mouth: 'pant', brows: -0.4}}), z: -0.4})},
     {t: F_CLIMB[1] + 0.55, slot: 'deck', bl: 0.4, f: (T) => leverPose(T)},
@@ -183,15 +221,15 @@ export const friendAt = (T: number): Placed => {
 };
 
 // ================================================================== DIRECTOR
-const D_CLIMB = [BEAT.sprint + 1.06, BEAT.sprint + 1.68] as const;   // 89.77 → 90.39
+const D_CLIMB = [89.66, 90.28] as const;
 const HOIST = [BEAT.grab - 0.55, BEAT.grab + 0.45] as const;         // 90.80 → 91.80
-const CA_CLIMB = [91.9, 92.55] as const;
-const HANDOFF = 93.0;
-const D_TO_F = [HANDOFF + 0.08, HANDOFF + 0.6] as const;             // 93.08 → 93.6
-const D_REACH = 93.68;
-const SHAKE = 94.0;
-const NOD = 94.7;
-const D_GO = 95.38;
+const CA_CLIMB = [92.55, 93.25] as const;                             // the carrier climbs one-armed
+const HANDOFF = 93.6;                                                 // the Director hands the teammate to the carrier
+const D_TO_F = [HANDOFF + 0.05, HANDOFF + 0.5] as const;
+const D_REACH = 94.15;
+const SHAKE = 94.45;
+const NOD = 95.0;
+const D_GO = 95.48;
 export const D_BOARD = 96.28;
 const hoistHands = (T: number) => {
   const c = ramp(T, HOIST[0], HOIST[1]);
@@ -212,9 +250,9 @@ export const directorAt = (T: number): Placed => {
     };
   };
   // walking the teammate east (in front of the operator) until the carrier takes over
-  const holdTm = (T: number): ActorProps => helperArm(mover(look('director'), T, [[HOIST[1] + 0.45, DX + 10], [HANDOFF, 10390, easeOut]], {...WALK, stride: 110}, TOP,
+  const holdTm = (T: number): ActorProps => helperArm(mover(look('director'), T, [[HOIST[1] + 0.45, DX + 10], [HANDOFF, 10110, easeOut]], {...WALK, stride: 100}, TOP,
     {...b, t: T, yaw: 72, z: 0.36, face: {mouth: 'pant', brows: -0.5, lookX: -0.4}, head: {yaw: 20}}), T);
-  const toF = (T: number) => ({...mover(look('director'), T, [[D_TO_F[0], 10390], [D_TO_F[1], 10372, easeOut]], WALK, TOP, {...b, t: T, yaw: -70, face: {mouth: 'flat', brows: -0.6, worry: 0.4}}), z: lerp(0.36, 0.6, ramp(T, D_TO_F[0], D_TO_F[1]))});
+  const toF = (T: number) => ({...mover(look('director'), T, [[D_TO_F[0], 10110], [D_TO_F[1], 10372, easeOut]], HURRY, TOP, {...b, t: T, yaw: 70, face: {mouth: 'flat', brows: -0.6, worry: 0.4}}), z: lerp(0.36, 0.6, ramp(T, D_TO_F[0], D_TO_F[1]))});
   const reach = (T: number): ActorProps => {
     const h = leverHandle(gantryAt(T).lever ?? -46);
     const r = ramp(T, D_REACH, D_REACH + 0.35) * (1 - ramp(T, SHAKE + 0.5, SHAKE + 0.8));
@@ -272,12 +310,12 @@ export const directorAt = (T: number): Placed => {
       face: {mouth: 'pant', brows: -0.5, worry: 0.6, lookX: -0.7}, head: {pitch: -2, yaw: -10 * back}};
   };
   return run(T, 'director', [
-    {t: -1e9, slot: 'catwalk', f: (T) => mover(look('director'), T, [[86.0, 8480], [D_CLIMB[0] - 0.04, LADDER_X - 25, easeOut]], {...JOG, stride: 186}, CW, {...b, t: T, yaw: 74, face: {mouth: 'pant', brows: -0.6, lookX: 0.5}})},
+    {t: -1e9, slot: 'catwalk', f: (T) => mover(look('director'), T, [[86.0, 8250], [88.0, 9300], [D_CLIMB[0] - 0.04, LADDER_X - 25, easeOut]], {...JOG, stride: 186}, CW, {...b, t: T, yaw: 74, face: {mouth: 'pant', brows: -0.6, lookX: 0.5}})},
     {t: D_CLIMB[0], slot: 'catwalk', bl: 0.12, f: (T) => climb(look('director'), LADDER_X, CW, TOP, ramp(T, D_CLIMB[0], D_CLIMB[1]), {...b, t: T})},
     {t: D_CLIMB[1], slot: 'deck', bl: 0.4, f: kneel},
     {t: HOIST[1] + 0.3, slot: 'deck', bl: 0.6, f: holdTm},
     {t: D_TO_F[0], slot: 'deck', bl: 0.25, f: toF},
-    {t: D_TO_F[1] - 0.05, slot: 'deck', bl: 0.3, f: reach},
+    {t: D_TO_F[1] - 0.05, slot: 'deck', bl: 0.35, f: reach},
     {t: D_GO, slot: (T) => (T > D_BOARD - 0.2 ? 'basket' : 'deck'), bl: 0.25, f: go},
     {t: D_BOARD, slot: 'basket', bl: 0.3, f: through},
     {t: LEAP[0], slot: (T) => (T < LEAP[0] + 0.3 ? 'basket' : 'landing'), bl: 0.12, f: leap},
@@ -291,25 +329,14 @@ export const directorAt = (T: number): Placed => {
 // ================================================================== CARRIER + TEAMMATE
 const PAIR_ARRIVE = BEAT.grab - 0.95; // 90.40 at the ladder foot
 const CA_LX = -150, TM_LX = -190;
-const CA_BOARD = [HANDOFF + 0.12, HANDOFF + 1.1] as const;
+const CA_BOARD = [HANDOFF + 0.15, 95.3] as const;
 const EXIT_CA = [104.72, 105.5] as const;            // walk the teammate into the basket
 export const carrierAt = (T: number): Placed => {
   const b = base('carrier', T, 41);
   const lp = limpOf('carrier', T);
-  const boost = (T: number): ActorProps => {
-    const c = ramp(T, HOIST[0], HOIST[1]);
-    const x = LADDER_X + 6;
-    const hy = lerp(CW - 200, CW - 380, c);
-    return {
-      ...b, t: T, x, y: CW, z: 0.5, yaw: 168, drop: lerp(40, 10, c), lean: lerp(18, 4, c),
-      legL: {foot: {x: x - 50, y: CW - 10, z: 30}}, legR: {foot: {x: x + 46, y: CW - 10, z: 60}},
-      armL: {hand: {x: x - 34, y: hy, z: -30}}, armR: {hand: {x: x + 34, y: hy, z: -30}},
-      head: {pitch: -26}, face: {mouth: 'grit', brows: -0.7, lookY: -0.6},
-    };
-  };
-  const catchUp = (T: number) => helperArm(mover(look('carrier'), T, [[CA_CLIMB[1], LADDER_X], [HANDOFF, 10350, easeOut]], {...HURRY, stride: 130, limp: lp}, TOP, {...b, t: T, yaw: 72, z: 0.42, face: {mouth: 'grit', brows: -0.5}}), T);
-  const walkIn = (T: number) => helperArm(mover(look('carrier'), T, [[CA_BOARD[0], 10350], [CA_BOARD[1], bx(CA_LX), easeOut]], {...WALK, stride: 120, limp: lp}, TOP, {...b, t: T, yaw: 72, z: 0.42, face: {mouth: 'grit', brows: -0.5}}), T);
-  const ride = (T: number) => helperArm(rider(look('carrier'), T, CA_LX, 0.42, {...b, t: T, seed: 41, hold: false, face: {mouth: 'grit', brows: -0.5, lookX: -0.4}, head: {yaw: 40 * ramp(T, 96.0, 96.5)}}), T);
+  const catchUp = (T: number) => { const p = mover(look('carrier'), T, [[CA_CLIMB[1], LADDER_X], [HANDOFF, 10066, easeOut]], {...HURRY, stride: 120, limp: lp}, TOP, {...b, t: T, yaw: 72, z: 0.42, face: {mouth: 'grit', brows: -0.5}}); return {...p, ...guard(p)}; };
+  const walkIn = (T: number) => carrierHold(mover(look('carrier'), T, [[HANDOFF + 0.1, 10066], [CA_BOARD[1], bx(CA_LX), easeOut]], {...WALK, stride: 112, limp: lp}, TOP, {...b, t: T, yaw: 72, z: 0.42, face: {mouth: 'grit', brows: -0.5}}), T);
+  const ride = (T: number) => carrierHold(rider(look('carrier'), T, CA_LX, 0.42, {...b, t: T, seed: 41, hold: false, face: {mouth: 'grit', brows: -0.5, lookX: -0.4}, head: {yaw: 40 * ramp(T, 96.0, 96.5)}}), T);
   const setDown = (T: number): ActorProps => {
     const k = ramp(T, EXIT_CA[1], EXIT_CA[1] + 0.5);
     const x = 12700;
@@ -334,13 +361,17 @@ export const carrierAt = (T: number): Placed => {
     return {...mover(look('carrier'), T, [[RISE[1], tr.friend.x + 190 - 220], [J2[1] + 0.5, tr.friend.x + 190]], {...WALK, limp: lp}, gy, {...b, t: T, yaw: 70, face: {mouth: 'grit', brows: -0.6, lookX: -0.5}, head: {yaw: 30}}), x, z: -0.1};
   };
   return run(T, 'carrier', [
-    {t: -1e9, slot: 'catwalk', f: (T) => helperArm(mover(look('carrier'), T, [[86.0, 8300], [PAIR_ARRIVE, LADDER_X - 70, easeOut]], {...HURRY, stride: 140, limp: lp}, CW, {...b, t: T, yaw: 72, face: {mouth: 'grit', brows: -0.6}}), T)},
-    {t: PAIR_ARRIVE + 0.3, slot: 'catwalk', bl: 0.4, f: boost},
+    {t: -1e9, slot: 'catwalk', f: (T) => {
+      // limping on his own behind the others, guarding the gashed forearm
+      const p = mover(look('carrier'), T, [[86.0, 8350], [88.0, 9080], [91.0, LADDER_X - 120, easeOut]], {...WALK, stride: 118, limp: lp}, CW, {...b, t: T, yaw: 72, face: {mouth: 'grit', brows: -0.6, lookY: -0.3}});
+      return {...p, ...guard(p)};
+    }},
+    {t: CA_CLIMB[0] - 0.4, slot: 'catwalk', bl: 0.2, f: (T) => { const p = mover(look('carrier'), T, [[CA_CLIMB[0] - 0.4, LADDER_X - 120], [CA_CLIMB[0] - 0.02, LADDER_X - 25, easeOut]], {...WALK, stride: 110, limp: lp}, CW, {...b, t: T, yaw: 72}); return {...p, ...guard(p)}; }},
     {t: CA_CLIMB[0], slot: 'catwalk', bl: 0.15, f: (T) => climb(look('carrier'), LADDER_X, CW, TOP, ramp(T, CA_CLIMB[0], CA_CLIMB[1]), {...b, t: T})},
     {t: CA_CLIMB[1], slot: 'deck', bl: 0.3, f: catchUp},
-    {t: CA_BOARD[0], slot: (T) => (T > CA_BOARD[1] - 0.3 ? 'basket' : 'deck'), bl: 0.2, f: walkIn},
+    {t: HANDOFF, slot: (T) => (T > CA_BOARD[1] - 0.3 ? 'basket' : 'deck'), bl: 0.4, f: walkIn},
     {t: CA_BOARD[1], slot: 'basket', bl: 0.3, f: ride},
-    {t: EXIT_CA[0], slot: (T) => (T < EXIT_CA[0] + 0.35 ? 'basket' : 'landing'), bl: 0.25, f: (T) => flinch(helperArm(exitTo(look('carrier'), T, CA_LX, EXIT_CA[0], EXIT_CA[1], 12700, 0.45, {...WALK, stride: 120, limp: lp}, {...b, t: T, seed: 41, face: {mouth: 'grit', brows: -0.5}}), T), T, 0.7)},
+    {t: EXIT_CA[0], slot: (T) => (T < EXIT_CA[0] + 0.35 ? 'basket' : 'landing'), bl: 0.25, f: (T) => flinch(carrierHold(exitTo(look('carrier'), T, CA_LX, EXIT_CA[0], EXIT_CA[1], 12700, 0.45, {...WALK, stride: 120, limp: lp}, {...b, t: T, seed: 41, face: {mouth: 'grit', brows: -0.5}}), T), T, 0.7)},
     {t: EXIT_CA[1], slot: 'landing', bl: 0.4, f: setDown},
     {t: 106.9, slot: (T) => (T > 107.2 ? 'walk' : 'landing'), bl: 0.3, f: (T) => ({...mover(look('carrier'), T, [[106.9, 12600], [109.6, 11010, easeOut]], {...HURRY, stride: 150, limp: lp}, onWalk(T), {...b, t: T, yaw: -76, face: {mouth: 'grit', brows: -0.7, worry: 0.5}}), z: -0.1})},
     {t: 109.6, slot: 'walk', bl: 0.35, f: slopeTop},
@@ -379,25 +410,32 @@ export const teammateAt = (T: number): Placed => {
       head: {yaw: 20, pitch: -2}, satchel: {radio: radioOnStrap(T)}, breath: 0.9};
   };
   return run(T, 'teammate', [
-    {t: -1e9, slot: 'catwalk', f: (T) => supportedBy(carrierAt(T).p, T)},
+    {t: -1e9, slot: 'catwalk', f: (T) => supportedBy(friendAt(T).p, T)},
+    {t: HANDOVER, slot: 'catwalk', bl: 0.35, f: (T) => supportedBy(builderAt(T).p, T, {face: {mouth: 'pant', worry: 0.9, brows: 0.1, lids: 0.3, lookX: 0.7}, head: {yaw: -30 * ramp(T, HANDOVER, HANDOVER + 0.3) * (1 - ramp(T, HANDOVER + 0.9, HANDOVER + 1.2)), pitch: -6}})},
     {t: PAIR_ARRIVE + 0.3, slot: 'catwalk', bl: 0.4, f: hoisted},
     {t: HOIST[1], slot: 'deck', bl: 0.3, f: kneelTop},
     {t: HOIST[1] + 0.45, slot: 'deck', bl: 0.5, f: (T) => supportedBy(directorAt(T).p, T)},
-    {t: HANDOFF, slot: (T) => carrierAt(T).slot, bl: 0.35, f: (T) => supportedBy(carrierAt(T).p, T, T > CA_BOARD[1] ? {face: {mouth: 'pant', worry: 0.9, brows: -0.2, lids: 0.3, lookX: -0.6}, head: {yaw: 50 * ramp(T, 96.2, 96.8), pitch: 4}} : {})},
+    {t: HANDOFF, slot: (T) => carrierAt(T).slot, bl: 0.45, f: (T) => heldBy(carrierAt(T).p, T, T > CA_BOARD[1] ? {face: {mouth: 'pant', worry: 0.9, brows: -0.2, lids: 0.3, lookX: -0.6}, head: {yaw: 50 * ramp(T, 96.2, 96.8), pitch: 4}} : {})},
     {t: EXIT_CA[1], slot: 'landing', bl: 0.5, f: (T) => flinch(sitting(T), T, 0.5)},
   ]);
 };
 
 // ================================================================== BUILDER and CIVILIANS
-const B_CLIMB = [92.55, 93.05] as const;
+const B_CLIMB = [91.9, 92.5] as const;
 const B_LX = 40;
 export const builderAt = (T: number): Placed => {
   const b = base('builder', T, 51);
-  const arrive = PAIR_ARRIVE + 0.1;
-  const wait = (T: number) => {
-    const p = mover(look('builder'), T, [[86.0, 8150], [arrive, 9770, easeOut]], {...HURRY, stride: 150}, CW, {...b, t: T, yaw: 70, face: {mouth: 'pant', brows: -0.5}});
-    const lb = ramp(T, arrive, arrive + 0.5) * (1 - ramp(T, B_CLIMB[0] - 0.7, B_CLIMB[0] - 0.4));
-    return {...p, twist: 30 * lb, head: {yaw: 70 * lb}, face: {mouth: 'flat' as const, brows: -0.6, lookX: -0.8 * lb}};
+  /** Boosting the teammate up the ladder from below: hands under her hips, rising. */
+  const boost = (T: number): ActorProps => {
+    const c = ramp(T, HOIST[0], HOIST[1]);
+    const x = LADDER_X + 6;
+    const hy = lerp(CW - 200, CW - 380, c);
+    return {
+      ...b, t: T, x, y: CW, z: 0.5, yaw: 168, drop: lerp(40, 10, c), lean: lerp(18, 4, c),
+      legL: {foot: {x: x - 50, y: CW - 10, z: 30}}, legR: {foot: {x: x + 46, y: CW - 10, z: 60}},
+      armL: {hand: {x: x - 34, y: hy, z: -30}}, armR: {hand: {x: x + 34, y: hy, z: -30}},
+      head: {pitch: -26}, face: {mouth: 'grit', brows: -0.7, lookY: -0.6},
+    };
   };
   /** Kneeling up-slope of the prone Director, both hands on their legs. */
   const kneelX = (T: number) => {
@@ -417,8 +455,9 @@ export const builderAt = (T: number): Placed => {
       face: {mouth: 'grit', brows: -0.8, lookY: 0.5}, head: {pitch: 20}};
   };
   return run(T, 'builder', [
-    {t: -1e9, slot: 'catwalk', f: wait},
-    {t: B_CLIMB[0] - 0.6, slot: 'catwalk', bl: 0.15, f: (T) => mover(look('builder'), T, [[B_CLIMB[0] - 0.6, 9770], [B_CLIMB[0] - 0.05, LADDER_X - 10, easeOut]], HURRY, CW, {...b, t: T, yaw: 70})},
+    {t: -1e9, slot: 'catwalk', f: (T) => ({...mover(look('builder'), T, [[86.0, 8450], [88.0, 9330], [HANDOVER - 0.02, 9830, easeOut]], {...JOG, stride: 176}, CW, {...b, t: T, yaw: 72, face: {mouth: 'pant', brows: -0.5}}), z: 0.12})},
+    {t: HANDOVER, slot: 'catwalk', bl: 0.3, f: (T) => helperArm(mover(look('builder'), T, [[HANDOVER, 9830], [PAIR_ARRIVE, LADDER_X - 36, easeInOut]], {...WALK, stride: 100}, CW, {...b, t: T, yaw: 72, z: 0.12, face: {mouth: 'pant', brows: -0.5, lookX: 0.5}}), T)},
+    {t: PAIR_ARRIVE + 0.3, slot: 'catwalk', bl: 0.4, f: boost},
     {t: B_CLIMB[0], slot: 'catwalk', bl: 0.15, f: (T) => climb(look('builder'), LADDER_X, CW, TOP, ramp(T, B_CLIMB[0], B_CLIMB[1]), {...b, t: T})},
     {t: B_CLIMB[1], slot: (T) => (T > B_CLIMB[1] + 0.6 ? 'basket' : 'deck'), bl: 0.3, f: (T) => mover(look('builder'), T, [[B_CLIMB[1], LADDER_X], [B_CLIMB[1] + 0.85, bx(B_LX), easeOut]], HURRY, TOP, {...b, t: T, yaw: 70, z: -0.6})},
     {t: B_CLIMB[1] + 0.85, slot: 'basket', bl: 0.3, f: (T) => rider(look('builder'), T, B_LX, -0.6, {...b, t: T, seed: 51, hold: false, yaw: T < 95.2 ? -60 : 70,
@@ -429,8 +468,8 @@ export const builderAt = (T: number): Placed => {
     {t: RISE[0], slot: (T) => trio(T).slot, bl: 0.9, f: (T) => (T > LAY[0] ? layDown(T).bld : trio(T).bld)},
   ]);
 };
-const CIV_X = [9620, 9480, 9340];
-const V_CLIMB = [[93.4, 93.85], [93.8, 94.25], [93.0, 93.45]] as const;
+const CIV_X = [9640, 9560, 9700];
+const V_CLIMB = [[93.75, 94.2], [94.2, 94.65], [93.3, 93.75]] as const;
 const V_LX = [210, -40, 150];
 const V_Z = [-0.5, -0.9, 0.55];
 const V_EXIT = [104.5, 104.95, 104.35];
@@ -439,11 +478,10 @@ export const civAt = (i: number, T: number): Placed => {
   const lk = CIV[i];
   const s = 0.96 * (lk.height ?? 1);
   const b = {look: lk, t: T, seed: 61 + i, s};
-  const arrive = PAIR_ARRIVE + 0.3 + i * 0.25;
   const [c0, c1] = V_CLIMB[i];
   const face = {mouth: 'pant' as const, worry: 0.7, brows: -0.2};
   return run(T, `civ${i}`, [
-    {t: -1e9, slot: 'catwalk', f: (T) => ({...mover(lk, T, [[86.0, 7980 - i * 160], [arrive, CIV_X[i], easeOut]], {...HURRY, stride: 140}, CW, {...b, t: T, yaw: 70, face}), z: -0.2 - i * 0.1})},
+    {t: -1e9, slot: 'catwalk', f: (T) => ({...mover(lk, T, [[86.0, CIV_X[i] - 520], [88.2 + i * 0.12, CIV_X[i], easeOut]], {...WALK, stride: 112}, CW, {...b, t: T, yaw: 70, face}), z: -0.3 - i * 0.1})},
     {t: c0 - 0.75, slot: 'catwalk', bl: 0.15, f: (T) => mover(lk, T, [[c0 - 0.75, CIV_X[i]], [c0 - 0.05, LADDER_X - 10, easeOut]], {...HURRY, stride: 140}, CW, {...b, t: T, yaw: 70, face})},
     {t: c0, slot: 'catwalk', bl: 0.15, f: (T) => climb(lk, LADDER_X, CW, TOP, ramp(T, c0, c1), {...b, t: T})},
     {t: c1, slot: (T) => (T > c1 + 0.55 ? 'basket' : 'deck'), bl: 0.3, f: (T) => ({...mover(lk, T, [[c1, LADDER_X], [c1 + 0.8, bx(V_LX[i]), easeOut]], HURRY, TOP, {...b, t: T, yaw: 70, face}), z: V_Z[i]})},
