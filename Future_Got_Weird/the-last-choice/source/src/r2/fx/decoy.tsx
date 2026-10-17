@@ -172,6 +172,11 @@ export type DecoyOpts = {
   on: number; off?: number;
   /** smoke density sampler (smokeDensity bound to the shot's smoke sources) */
   density: (p: V3, t: number) => number;
+  /**
+   * light lands on the cloud's near surface: the figures are drawn over smoke puffs up to this many metres in front of
+   * their plane (default 3.5) while solid things nearer than that still cover them
+   */
+  surface?: number;
   seed?: number;
 };
 
@@ -217,24 +222,33 @@ export const decoyItems = (o: DecoyOpts): FxOut => {
     const W = (p: P2): V3 => add3(foot, add3(mul3(U, p.x * H), mul3(V, p.y * H)));
     const mid = W({x: 0, y: 0.6});
     items.push({
-      kind: 'sprite', pos: mid, key: `${o.key}_fig${j}`,
+      kind: 'sprite', pos: mid, key: `${o.key}_fig${j}`, bias: o.surface ?? 3.5,
       draw: (c) => {
         const out: React.ReactElement[] = [];
         // edge-on factor: how flat the plane is to this camera
         const toCam = norm3(sub3(c.view.pos, mid));
         const e = Math.abs(dot3(N, toCam));
         let dAvg = 0;
-        parts.forEach((pt, k) => {
+        // parts grouped into three brightness bands by the smoke density under them; each band is one path (union),
+        // so overlapping limbs don't double up; parts over thin smoke drop out (the figure breaks up)
+        const bands: string[] = ['', '', ''];
+        parts.forEach((pt) => {
           const loc = pt.kind === 'line' ? thick(pt.pts, pt.w * 1.15) : pt.pts;
-          const ctr = loc.reduce((s, p) => ({x: s.x + p.x / loc.length, y: s.y + p.y / loc.length}), {x: 0, y: 0});
-          const dens = o.density(W(ctr), t);
-          dAvg += dens / parts.length;
-          const S = loc.map((p) => project(c.view, W(p)));
-          if (S.some((s) => s.z < c.view.near)) return;
-          const op = clamp(dens * 1.9 - 0.08) * pw;
-          if (op < 0.02) return;
-          const col = glowTone(c, dens > 0.6 ? '#FFFBEA' : glowC, 0.25);
-          out.push(<polygon key={k} points={S.map((s) => `${f1(s.x)},${f1(s.y)}`).join(' ')} fill={col} opacity={f1(op * 0.92)} />);
+          // long limbs are split in two so each half reads its own density
+          const pieces = pt.kind === 'line' ? [thick(pt.pts.slice(0, 2), pt.w * 1.15), thick(pt.pts.slice(1), pt.w * 1.15)] : [loc];
+          pieces.forEach((pc) => {
+            const ctr = pc.reduce((s2, p) => ({x: s2.x + p.x / pc.length, y: s2.y + p.y / pc.length}), {x: 0, y: 0});
+            const dens = o.density(W(ctr), t) * pw;
+            dAvg += dens / (parts.length * 1.6);
+            if (dens < 0.22) return;
+            const S = pc.map((p) => project(c.view, W(p)));
+            if (S.some((s2) => s2.z < c.view.near)) return;
+            const b = dens < 0.36 ? 0 : dens < 0.62 ? 1 : 2;
+            bands[b] += 'M' + S.map((s2) => `${f1(s2.x)} ${f1(s2.y)}`).join('L') + 'Z';
+          });
+        });
+        bands.forEach((d, b) => {
+          if (d) out.push(<path key={b} d={d} fill={glowTone(c, b === 2 ? '#FFFBEA' : glowC, 0.25)} opacity={[0.32, 0.6, 0.9][b]} />);
         });
         // scattered light around the figure, in the smoke
         const g = glowEl(gid(o.key, 'g', j), c.x, c.y, H * 0.55 * c.k * Math.max(0.25, e), glowTone(c, glowC, 0.3), 0.32 * dAvg * pw, 0, 1.6 / Math.max(0.25, e));
@@ -248,22 +262,22 @@ export const decoyItems = (o: DecoyOpts): FxOut => {
       },
     });
   }
-  // the light cone from the lens to the projected group (faint, brighter where it crosses smoke)
-  const corners = [
-    add3(base, mul3(U, -2.2 * sp + drift)), add3(base, mul3(U, 2.2 * sp + drift)),
-    add3(add3(base, mul3(V, H)), mul3(U, 2.2 * sp + drift)), add3(add3(base, mul3(V, H)), mul3(U, -2.2 * sp + drift)),
-  ];
-  const midRay = (k: number) => add3(P0, mul3(sub3(add3(o.center, mul3(U, drift)), P0), k));
-  const coneD = [0.3, 0.5, 0.7, 0.85].reduce((s, k) => s + o.density(midRay(k), t), 0) / 4;
-  items.push({
-    kind: 'sprite', pos: midRay(0.55), key: `${o.key}_cone`, bias: -0.5,
-    draw: (c) => {
-      const S = [P0, ...corners].map((p) => project(c.view, p));
-      if (S.some((s) => s.z < c.view.near)) return null;
-      const hp = hull(S);
-      return <polygon points={hp.map((s) => `${f1(s.x)},${f1(s.y)}`).join(' ')} fill={glowTone(c, '#FFF0C8', 0.3)} opacity={f1((0.05 + 0.2 * coneD) * pw)} />;
-    },
-  });
+  // the beam: one faint wedge from the lens to each figure, brighter where it crosses smoke (it lights the smoke, not
+  // the air); a fainter overall wedge ties them together
+  for (let j = 0; j < 4; j++) {
+    const fx0 = (j - 1.5) * sp + drift;
+    const a = add3(add3(base, mul3(V, H * 0.15)), mul3(U, fx0 - H * 0.12)), b = add3(add3(base, mul3(V, H * 0.95)), mul3(U, fx0 + H * 0.12));
+    const ctr = add3(add3(base, mul3(V, H * 0.55)), mul3(U, fx0));
+    const dB = [0.5, 0.75, 0.92].reduce((s2, k) => s2 + o.density(add3(P0, mul3(sub3(ctr, P0), k)), t), 0) / 3;
+    items.push({
+      kind: 'sprite', pos: add3(P0, mul3(sub3(ctr, P0), 0.8)), key: `${o.key}_beam${j}`, bias: -0.3,
+      draw: (c) => {
+        const S = [P0, a, b].map((p) => project(c.view, p));
+        if (S.some((s2) => s2.z < c.view.near)) return null;
+        return <polygon points={S.map((s2) => `${f1(s2.x)},${f1(s2.y)}`).join(' ')} fill={glowTone(c, '#FFF0C8', 0.3)} opacity={f1((0.025 + 0.12 * dB) * pw)} />;
+      },
+    });
+  }
   // the lens itself
   items.push({
     kind: 'sprite', pos: P0, key: `${o.key}_lens`, bias: 0.1,

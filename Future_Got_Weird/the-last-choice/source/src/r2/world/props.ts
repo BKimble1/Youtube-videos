@@ -91,24 +91,21 @@ const buildVan = (): Mesh => {
   quad(rect(-W, floor - 0.2, W, top, zR), 'van', [{pts: [{x: -0.02, y: floor, z: zR + 0.01}, {x: 0.02, y: floor, z: zR + 0.01}, {x: 0.02, y: top - 0.1, z: zR + 0.01}, {x: -0.02, y: top - 0.1, z: zR + 0.01}], mat: 'vanDark'}]);
   quad(rect(-W, floor - 0.2, W, top, zF), 'van');
   quad([{x: -W, y: floor - 0.2, z: zF}, {x: W, y: floor - 0.2, z: zF}, {x: W, y: floor - 0.2, z: zR}, {x: -W, y: floor - 0.2, z: zR}], 'vanDark');
-  // the door opening: jambs, floor, ceiling, and the dark interior (inner left wall)
-  const inner = W - 0.06;
-  quad([{x: W, y: dy0, z: dz0}, {x: inner, y: dy0, z: dz0}, {x: inner, y: dy1, z: dz0}, {x: W, y: dy1, z: dz0}], 'vanFloor');
-  quad([{x: W, y: dy0, z: dz1}, {x: W, y: dy1, z: dz1}, {x: inner, y: dy1, z: dz1}, {x: inner, y: dy0, z: dz1}], 'vanFloor');
   const shell = {verts, faces, crease: 25} as Mesh;
   let van = orientOutward(shell, {x: 0, y: 1.6, z: 0.9});
-  // interior (seen through the door): floor, far wall, ceiling — inward-facing, drawn first
-  const interior: Mesh = {
+  // the door opening's jambs, sill and lintel face INTO the opening (built after the outward fix-up)
+  const inner = W - 0.06;
+  const opening: Mesh = {
     verts: [
-      {x: -inner, y: floor, z: zF + 0.05}, {x: inner, y: floor, z: zF + 0.05}, {x: inner, y: floor, z: zR - 0.05}, {x: -inner, y: floor, z: zR - 0.05},
-      {x: -inner, y: top - 0.05, z: zF + 0.05}, {x: -inner, y: top - 0.05, z: zR - 0.05},
+      {x: inner, y: dy0, z: dz0}, {x: W, y: dy0, z: dz0}, {x: W, y: dy1, z: dz0}, {x: inner, y: dy1, z: dz0},
+      {x: inner, y: dy0, z: dz1}, {x: W, y: dy0, z: dz1}, {x: W, y: dy1, z: dz1}, {x: inner, y: dy1, z: dz1},
     ],
     faces: [
-      {v: [0, 3, 2, 1], mat: 'vanFloor'}, // floor, facing up
-      {v: [0, 4, 5, 3], mat: 'interiorDeep'}, // far (left) wall, facing +x
+      {v: [0, 1, 2, 3], mat: 'vanFloor'}, // jamb at dz0, facing +z
+      {v: [5, 4, 7, 6], mat: 'vanFloor'}, // jamb at dz1, facing −z
+      {v: [0, 4, 5, 1], mat: 'vanFloor'}, // sill, facing +y
+      {v: [3, 2, 6, 7], mat: 'vanDark'}, // lintel, facing −y
     ],
-    twoSided: true,
-    bias: -0.6,
   };
   // the slid-back door panel, cab, wheels, bumper
   const door = box({x: W + 0.04, y: dy0 - 0.05, z: dz1 + 0.05}, {x: W + 0.12, y: dy1 + 0.04, z: dz1 + 1.85}, ['van', 'van', 'van', 'van', 'vanDark', 'van']);
@@ -119,9 +116,26 @@ const buildVan = (): Mesh => {
   const wheel = (x: number, z: number) => xfMesh(cylinder(0.43, 0.3, 10, 'tire', 'steelDark', -0.15), {roll: 90, pos: {x, y: 0.43, z}});
   parts.push(door, cab, windshield, wheel(-W + 0.1, -2.1), wheel(W - 0.1, -2.1), wheel(-W + 0.1, 2.0), wheel(W - 0.1, 2.0));
   parts.push(box({x: -W, y: 0.35, z: -3.08}, {x: W, y: 0.62, z: -2.92}, 'steelDark'));
-  van = merge(van, ...parts);
+  van = merge(van, opening, ...parts);
   van.crease = 28;
-  return merge(interior, van);
+  return van;
+};
+/** The van's dark interior seen through the open door (floor and far wall), drawn behind everything of the van. */
+const buildVanInterior = (): Mesh => {
+  const W = 1.05, floor = 0.62, top = 2.72, zF = -1.25, zR = 3.0, inner = W - 0.06;
+  return {
+    verts: [
+      {x: -inner, y: floor, z: zF + 0.05}, {x: inner, y: floor, z: zF + 0.05}, {x: inner, y: floor, z: zR - 0.05}, {x: -inner, y: floor, z: zR - 0.05},
+      {x: -inner, y: top - 0.05, z: zF + 0.05}, {x: -inner, y: top - 0.05, z: zR - 0.05},
+    ],
+    faces: [
+      {v: [0, 3, 2, 1], mat: 'vanFloor'}, // floor, facing up
+      {v: [0, 4, 5, 3], mat: 'interiorDeep'}, // far (left) wall, facing +x
+    ],
+    twoSided: true,
+    bias: -0.6,
+    inkBoundary: false,
+  };
 };
 
 /** The radio: R1's RadioSmall look (battered red-brown body, dark round grille, warm dial, antenna, carry handle). */
@@ -168,6 +182,8 @@ export const RADIO = {
 
 let VAN_P: Prepped | null = null, RADIO_OFF: Prepped | null = null, RADIO_ON: Prepped | null = null;
 export const vanMesh = () => (VAN_P ??= prep(buildVan()));
+let VAN_IN: Prepped | null = null;
+export const vanInteriorMesh = () => (VAN_IN ??= prep(buildVanInterior()));
 export const radioMesh = (on: boolean) => (on ? (RADIO_ON ??= prep(buildRadio(true))) : (RADIO_OFF ??= prep(buildRadio(false))));
 /** Radio object → world transform (van + radio placement) as a vertex function. */
 export const radioFn = (p: V3) => radioLocalToWorld(p);
@@ -176,15 +192,16 @@ export const radioFn = (p: V3) => radioLocalToWorld(p);
 export const DEATH_SLAB = (() => {
   const hd = headingVec(PLAN.deathHeading);
   const back = mul3(hd, -1);
-  const right = {x: -hd.z, y: 0, z: hd.x}; // to the slab's right as seen by someone sitting facing hd
+  const right = {x: -hd.z, y: 0, z: hd.x}; // the sitter's right (facing hd)
   const base = {x: PLAN.deathPos.x + back.x * 0.42, y: groundH(PLAN.deathPos.x, PLAN.deathPos.z) - 0.25, z: PLAN.deathPos.z + back.z * 0.42};
   const lean = norm3(add3({x: 0, y: 1, z: 0}, mul3(back, 0.36)));
-  const o = add3(base, mul3(right, -1.15));
+  // u runs from the sitter's right to left so the slab's front face (U × V) faces the sitter's heading
+  const o = add3(base, mul3(right, 1.15));
   return {base, lean, right, o, face: hd};
 })();
 const buildDeathSlab = (): Mesh => {
   const {o, right, lean} = DEATH_SLAB;
-  const m = slab(o, right, lean, [{u: 0, v: 0}, {u: 2.3, v: 0}, {u: 2.25, v: 1.05}, {u: 1.7, v: 1.32}, {u: 1.25, v: 1.18}, {u: 0.7, v: 1.45}, {u: 0.08, v: 1.2}], 0.32, 'concrete', 'concreteEdge', 'concreteDark');
+  const m = slab(o, mul3(right, -1), lean, [{u: 0, v: 0}, {u: 2.3, v: 0}, {u: 2.25, v: 1.05}, {u: 1.7, v: 1.32}, {u: 1.25, v: 1.18}, {u: 0.7, v: 1.45}, {u: 0.08, v: 1.2}], 0.32, 'concrete', 'concreteEdge', 'concreteDark');
   return m;
 };
 let DS: Prepped | null = null;

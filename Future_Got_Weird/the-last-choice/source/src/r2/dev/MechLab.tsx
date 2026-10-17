@@ -24,20 +24,22 @@ const scene = (v: View, items: Item[], t: number, title: string, extra?: React.R
 export const MechLab: React.FC<{page?: number}> = ({page = 0}) => {
   const f = useCurrentFrame();
   const t = f / 30;
-  if (page === 0) {
-    // turnarounds: unit, drone, heavy on a turntable; camera angle from frame (0..150: 5 views)
-    const views: [number, number, string][] = [[0, 8, 'front'], [40, 8, 'three-quarter'], [90, 8, 'side'], [150, 8, 'rear three-quarter'], [180, 8, 'back'], [30, -6, 'low angle'], [30, 38, 'high angle']];
+  if (page === 0 || page === 6) {
+    // turnarounds (page 0: combat units + drone up close; page 6: the heavy). One view per 20 frames.
+    const views: [number, number, string][] = [[0, 6, 'front'], [40, 6, 'three-quarter'], [90, 6, 'side'], [140, 6, 'rear three-quarter'], [180, 6, 'back'], [30, -10, 'low angle'], [30, 40, 'high angle']];
     const vi = Math.min(views.length - 1, Math.floor(f / 20));
     const [az, el, name] = views[vi];
-    const target: V3 = {x: 3, y: 2.4, z: 0};
-    const cam: Cam3 = orbit(target, 17, 180 + az, el, 40);
-    const items: Item[] = [
-      ...combatUnit({id: 1, t, pos: {x: -1.5, y: 0, z: 0}, heading: 180, eye: 'cyan', idle: 0.3}),
-      ...combatUnit({id: 2, t, pos: {x: 0.6, y: 0, z: 0.4}, heading: 180, eye: 'amber', idle: 0.3, raise: {t0: -1, t1: 99, side: 'R'}}),
-      ...drone({id: 3, t, pos: {x: -0.4, y: 3.1, z: -1.2}, heading: 180, eye: 'cyan'}),
-      ...heavy({id: 4, t, pos: {x: 7.2, y: 0, z: -2}, heading: 180}),
-    ];
-    return scene(makeView(cam), items, t, `turnaround · ${name}`);
+    const heavyPage = page === 6;
+    const target: V3 = heavyPage ? {x: 0, y: 3.0, z: 0} : {x: 0, y: 1.25, z: 0};
+    const cam: Cam3 = orbit(target, heavyPage ? 17 : 6.2, 180 + az, el, 40);
+    const items: Item[] = heavyPage
+      ? heavy({id: 4, t, pos: {x: 0, y: 0, z: 0}, heading: 180})
+      : [
+          ...combatUnit({id: 1, t, pos: {x: -0.75, y: 0, z: 0}, heading: 180, eye: 'cyan', idle: 0.3}),
+          ...combatUnit({id: 2, t, pos: {x: 0.85, y: 0, z: 0.3}, heading: 180, eye: 'amber', idle: 0.3, raise: {t0: -1, t1: 99, side: 'R'}}),
+          ...drone({id: 3, t, pos: {x: 0.1, y: 2.55, z: -0.6}, heading: 180, eye: 'cyan'}),
+        ];
+    return scene(makeView(cam), items, t, `${heavyPage ? 'heavy' : 'combat units + drone'} · ${name}`);
   }
   if (page === 1) {
     // action cycles: march, strike, ram, drone dive

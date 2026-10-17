@@ -73,8 +73,10 @@ export type FigProps = {
   armL?: ArmT; armR?: ArmT; legL?: LegT; legR?: LegT;
   handL?: HandShape; handR?: HandShape;
   holdL?: HoldFn; holdR?: HoldFn; wearL?: WearFn; wearR?: WearFn;
-  /** extra parts (two-handed tools etc.) drawn with access to the solved rig */
+  /** extra parts (two-handed tools etc.) drawn with access to the solved rig (use r.toolZ for a tool between the hands) */
   extra?: (r: Rig2) => Part[];
+  /** a tool is held in both hands: both hands' curled fingers draw over it */
+  twoHanded?: boolean;
   dmg?: Damage; ink?: number; breath?: number;
   /** contact shadow opacity (default 1); 0 to hide */
   shadow?: number;
@@ -91,6 +93,8 @@ export type Rig2 = {
   hip: [V3, V3]; knee: [V3, V3]; ankle: [V3, V3]; sh: [V3, V3]; el: [V3, V3]; wr: [V3, V3];
   neck: V3; headC: V3; torsoZ: number;
   palm: [V3, V3]; hands: [HandFrame, HandFrame];
+  /** depth rank of each arm part (relative frame of the parts) and of a tool held in both hands */
+  armRank: [number, number]; toolZ: number;
   /** convert a body-local point to the drawn (view) frame */
   loc: (l: Loc) => V3;
 };
@@ -216,8 +220,16 @@ export const solve2 = (p: FigProps): Rig2 => {
     neck: pnt(neck), headC: pnt(headC), torsoZ: vec(sub3(at(P, up, 0, 70 * s, 0), root)).z,
     palm: [vec(palm[0]), vec(palm[1])],
     hands: [] as unknown as [HandFrame, HandFrame],
+    armRank: [0, 0], toolZ: 0,
     loc: (l: Loc) => pnt(fromPivot(l)),
   };
+  out.armRank = [0, 1].map((i) => {
+    const S = out.sh[i], E = out.el[i], Wr = out.wr[i];
+    const armZ = S.z * 0.3 + E.z * 0.35 + Wr.z * 0.35;
+    const zA = p.zArm?.[i];
+    return zA !== undefined ? out.torsoZ + zA : armZ > out.torsoZ + 6 * s ? out.torsoZ + 40 + armZ * 1e-3 : out.torsoZ - 40 + armZ * 1e-3;
+  }) as [number, number];
+  out.toolZ = Math.max(out.armRank[0], out.armRank[1]) + 0.3;
   void torsoZ;
   // hand frames (in the drawn frame)
   out.hands = [0, 1].map((i) => {
@@ -561,8 +573,8 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const wearFn = i === 0 ? p.wearL : p.wearR;
     const dorsal = mul3(r.palm[i], -1);
     const wear = wearFn ? wearFn({E, W: Wr, dorsal, ang: ang2(E, Wr), len: len3(sub3(Wr, E))}, s, ink, col) : null;
-    const zA = p.zArm?.[i];
-    const armRank = zA !== undefined ? r.torsoZ + zA : front ? r.torsoZ + 40 + armZ * 1e-3 : r.torsoZ - 40 + armZ * 1e-3;
+    const armRank = r.armRank[i];
+    void front;
     add(armRank, `arm${i}`, (
       <g>
         {wear && !wear.front && wear.el}
@@ -582,7 +594,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
       </g>
     ));
     const zF = p.zHandFront?.[i];
-    add(zF !== undefined ? r.torsoZ + zF : armRank + 0.5, `handf${i}`, handEl(hFront));
+    add(zF !== undefined ? r.torsoZ + zF : p.twoHanded ? r.toolZ + 0.3 : armRank + 0.5, `handf${i}`, handEl(hFront));
   });
 
   // ---------------- neck and head

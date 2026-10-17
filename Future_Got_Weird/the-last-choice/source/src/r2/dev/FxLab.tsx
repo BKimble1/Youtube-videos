@@ -33,7 +33,7 @@ const PAGES = ['tether: fire, bite, slack, wrap, taut, cut, reel', 'decoy: smoke
 export const FxLab: React.FC<{page?: number}> = ({page = 0}) => {
   const f = useCurrentFrame();
   const t = f / 30;
-  let cam: Cam3 = orbit({x: 3.5, y: 1.4, z: 0}, 12, 196, 9, 42);
+  let cam: Cam3 = orbit({x: 3.6, y: 1.3, z: -0.4}, 8.2, 202, 11, 46);
   const items: Item[] = [{kind: 'mesh', mesh: GROUND, key: 'ground'}];
   let out: FxOut = fx();
   let overlay: React.ReactNode = null;
@@ -54,15 +54,15 @@ export const FxLab: React.FC<{page?: number}> = ({page = 0}) => {
   }
   if (page === 1 || page === 2) {
     const cans: CanisterOpts[] = [
-      {key: 'canA', from: {x: 0, y: 1.2, z: 0.3}, to: {x: 9, y: 0, z: -1}, t0: -6, seed: 2},
-      {key: 'canB', from: {x: 0, y: 1.2, z: 0.3}, to: {x: 10.5, y: 0, z: 1.4}, t0: -5.2, seed: 5},
-      {key: 'canC', from: {x: 0, y: 1.2, z: 0.3}, to: {x: 11.5, y: 0, z: -0.4}, t0: -4.4, seed: 8},
+      {key: 'canA', from: {x: 0, y: 1.2, z: 0.3}, to: {x: 9, y: 0, z: -1.2}, t0: -7, seed: 2, grow: 1.35, size: 0.5, rate: 9},
+      {key: 'canB', from: {x: 0, y: 1.2, z: 0.3}, to: {x: 10.5, y: 0, z: 1.4}, t0: -6.2, seed: 5, grow: 1.35, size: 0.5, rate: 9},
+      {key: 'canC', from: {x: 0, y: 1.2, z: 0.3}, to: {x: 12, y: 0, z: -0.2}, t0: -5.4, seed: 8, grow: 1.35, size: 0.5, rate: 9},
     ];
     const srcs = cans.map(canisterSource);
     cans.forEach((c) => (out = combine(out, smokeCanister(c, t))));
-    out = combine(out, decoyItems({key: 'dec', t, projector: () => ({x: 0.25, y: 1.3, z: 0.5}), center: {x: 10.5, y: 3.4, z: 0}, walkHeading: 270, height: 6.5, on: 1.25, off: 4.0, density: (p, tt) => smokeDensity(p, tt, srcs), seed: 4}));
+    out = combine(out, decoyItems({key: 'dec', t, projector: () => ({x: 0.25, y: 1.3, z: 0.5}), center: {x: 11.6, y: 2.8, z: 0.2}, walkHeading: 270, height: 5.2, on: 1.25, off: 4.0, density: (p, tt) => smokeDensity(p, tt, srcs), seed: 4}));
     items.push(dotItem({x: 0.25, y: 1.3, z: 0.5}, 'proj', '#3B4A55'), boxItem({x: 7.5, y: 0, z: 3.5}));
-    cam = page === 1 ? orbit({x: 6, y: 2.8, z: 0}, 15, 165, 7, 46) : {pos: {x: 21, y: 8.5, z: 0.6}, target: {x: 10, y: 3.4, z: 0}, fov: 46};
+    cam = page === 1 ? orbit({x: 6.5, y: 2.6, z: 0}, 15, 168, 7, 46) : {pos: {x: 22, y: 8, z: 0.8}, target: {x: 11.6, y: 2.8, z: 0.2}, fov: 46};
     if (page === 1) {
       const fg = decoyFinger({w: 360, h: 240, t, t0: -1.6});
       overlay = (
@@ -78,7 +78,7 @@ export const FxLab: React.FC<{page?: number}> = ({page = 0}) => {
     const pose = (tt: number) => droneKeys(tt, [[0, 1, 0.12, 1], [0.3, 1, 0.12, 1], [1.0, 1, 1.8, 1], [2.0, 5, 2.6, -1], [2.6, 6.4, 1.5, 0.4], [3.0, 4.6, 1.25, 1.6], [4.6, 4.6, 1.25, 1.6]], tt > 2.8 ? {x: 7, y: 1.4, z: 0.5} : undefined, 2);
     out = allyDrone({key: 'ally', t, pose, spinUp: 0.2, hits: [{at: 3.15, dir: {x: -1, y: 0, z: 0.3}}, {at: 3.55, dir: {x: -1, y: 0.2, z: 0.4}, strength: 1.3}], destroyAt: 4.1, destroyDir: {x: -0.5, y: 0, z: 1}, ground: 0, seed: 6});
     items.push(boxItem({x: 7, y: 0, z: 0.5}), dotItem({x: 3, y: 0.4, z: 2.2}, 'wounded'));
-    cam = orbit({x: 4, y: 1.3, z: 0.8}, 10, 200, 10, 44);
+    cam = t > 2.7 && t < 4.0 ? orbit({x: 4.6, y: 1.2, z: 1.6}, 3.2, 215, 12, 44) : orbit({x: 4, y: 1.3, z: 0.8}, 10, 200, 10, 44);
   }
   if (page === 4) {
     const eye = {x: 6.6, y: 2.0, z: 0.5};

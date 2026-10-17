@@ -109,7 +109,7 @@ export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
   const hullR = rcomp(B, euler(yawAdd, pitch, roll));
   const hull: Pose3 = {pos: hullPos, R: hullR};
   // head
-  const headMount = apply(hull, {x: 0, y: -0.25, z: -2.05});
+  const headMount = apply(hull, HV.head);
   let headR = rcomp(hullR, euler(noise(t * 0.25, sp.id + 5) * 10, 6, 0));
   if (sp.look) {
     const d = norm3(sub3(sp.look, headMount));
@@ -138,13 +138,13 @@ export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
       target = {x: base.x, y: g(base.x, base.z), z: base.z};
     }
     const ankle = add3(target, {x: 0, y: 0.22, z: 0});
-    const out = add3(mul3(right, L.sx), mul3(UP, 0.9));
+    const out = add3(mul3(right, L.sx), mul3(UP, 0.55));
     const r = ik2(H, ankle, HV.upperLen, HV.lowerLen, out);
     hip.push(H); knee.push(r.mid); foot.push(r.end);
   });
   // ram arm: boom from the shoulder, aimed down-forward at rest, at the target on the strike
   const shoulder = apply(hull, HV.ramShoulder);
-  let boomDir = norm3(add3(mul3(fwd, 1), mul3(UP, -0.55)));
+  let boomDir = norm3(add3(mul3(fwd, 1), mul3(UP, -0.18))); // ram held out low in front, under the head
   let ext = 0.2;
   if (rp && sp.ram) {
     const toT = sub3(sp.ram.target, shoulder);
@@ -187,7 +187,7 @@ const toppleXf = (sp: HeavySpec, r0: HeavyRig, t: number) => {
   if (u > 1.6) ang = 80 + Math.exp(-(u - 1.6) * 5) * Math.sin((u - 1.6) * 14) * -6 + (1 - Math.exp(-(u - 1.6) * 4)) * 2;
   const R = rotAxisM(axis, ang);
   // keep the hull above ground: test hull corners after rotation
-  const corners = [-1, 1].flatMap((sx) => [-1, 1].flatMap((sz) => [-0.65, 0.95].map((y) => apply(r0.hull, {x: sx * 1.15, y, z: sz * 1.9}))));
+  const corners = [-1, 1].flatMap((sx) => [-1, 1].flatMap((sz) => [-0.9, 1.3].map((y) => apply(r0.hull, {x: sx * 1.45, y, z: sz * 2.35}))));
   const rot = (p: V3) => add3(pivot, rmul(R, sub3(p, pivot)));
   let lift = 0;
   corners.forEach((c) => { const q = rot({x: c.x, y: c.y - sag, z: c.z}); lift = Math.max(lift, g(q.x, q.z) + 0.05 - q.y); });
@@ -203,7 +203,7 @@ export const heavyAttach = (sp: HeavySpec) => {
   const X = (p: V3) => (tx ? tx.xf(p) : p);
   return {
     ramTip: X(apply(r.ramPose, {x: 0, y: 0, z: -1.4})), muzzle: X(apply(r.launcher, {x: 0, y: 0.05, z: -0.82})),
-    eye: X(apply(r.head, {x: 0, y: 0.01, z: -0.46})), hull: X(r.hull.pos), head: X(r.head.pos),
+    eye: X(apply(r.head, {x: 0, y: 0.01, z: -0.5})), hull: X(r.hull.pos), head: X(r.head.pos),
     knees: r.knee.map(X), feet: r.foot.map(X), fwd: r.fwd,
   };
 };
@@ -296,7 +296,7 @@ export const heavy = (sp: HeavySpec): Item[] => {
       items.push(partItem(HEAVY.foot, P({pos: F, R: rotHeading(r.heading)}), `${key}_ft${i}`));
     }
   });
-  const eyeW = (tx ? tx.xf : (p: V3) => p)(apply(r.head, {x: 0, y: 0.01, z: -0.46}));
+  const eyeW = (tx ? tx.xf : (p: V3) => p)(apply(r.head, {x: 0, y: 0.01, z: -0.5}));
   if (eyeState !== 'off') items.push(eyeGlow(eyeW, eyeState, 1, 0.09, `${key}_eg`));
   // muzzle flash on fire
   if (sp.fire) {

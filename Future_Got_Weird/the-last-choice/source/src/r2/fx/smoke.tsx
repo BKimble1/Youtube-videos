@@ -55,13 +55,14 @@ export const puffsAt = (s: SmokeSource, t: number): Puff[] => {
 
 /** Smoke density at a world point (0 = clear air, ~1 = thick). */
 export const smokeDensity = (p: V3, t: number, sources: SmokeSource[]): number => {
+  // matched to what is drawn: a puff is solid inside ~0.8 r and gone by ~1.3 r
   let d = 0;
   for (const s of sources) for (const q of puffsAt(s, t)) {
     const dx = p.x - q.c.x, dy = p.y - q.c.y, dz = p.z - q.c.z;
     const k = (dx * dx + dy * dy + dz * dz) / (q.r * q.r);
-    if (k < 6) d += q.o * Math.exp(-k * 1.1) * 0.75;
+    if (k < 2.5) d += q.o * Math.exp(-k * 2.4) * 0.9;
   }
-  return clamp(d);
+  return 1 - Math.exp(-d * 1.4);
 };
 
 /** Draw the puffs of some sources. Two-tone illustrated puffs lit from the sun side; no gradients, no blur. */

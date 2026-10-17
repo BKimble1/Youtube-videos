@@ -82,14 +82,16 @@ const unitPelvis = M_(
 );
 // torso frame (spine + ribs), visible when the plates come off
 const unitCore = M_(
-  taper(0.30, 0.18, 0, 0.46, 0.22, 0.52, 'm_frame'),
-  bx(-0.05, 0.0, 0.06, 0.05, 0.50, 0.14, 'm_joint'),
+  taper(0.30, 0.22, 0, 0.50, 0.30, 0.52, 'm_frame'),
+  bx(-0.05, 0.0, 0.08, 0.05, 0.50, 0.17, 'm_joint'),
+  bx(-0.16, 0.30, -0.155, 0.16, 0.36, -0.13, 'm_joint'),
+  bx(-0.14, 0.16, -0.14, 0.14, 0.22, -0.12, 'm_joint'),
 );
-// chest front plate (tears off forward), back plate (the "back plate" pried off), modelled on the spine joint
-const chestPts = [{u: -0.21, v: 0.0}, {u: 0.21, v: 0.0}, {u: 0.33, v: 0.36}, {u: 0.30, v: 0.56}, {u: -0.30, v: 0.56}, {u: -0.33, v: 0.36}];
-const unitChest = fixOutward(slab({x: 0, y: 0.02, z: -0.14}, {x: 1, y: 0, z: 0}, {x: 0, y: 0.97, z: -0.24}, chestPts, 0.07, 'm_plate', 'm_plate2'));
-const unitChestRidge = bx(-0.03, 0.12, -0.25, 0.03, 0.50, -0.19, 'm_plate2');
-const unitBack = fixOutward(slab({x: 0, y: 0.04, z: 0.13}, {x: 1, y: 0, z: 0}, {x: 0, y: 0.98, z: 0.17}, chestPts.map((p) => ({u: p.u * 0.92, v: p.v * 0.95})), 0.06, 'm_plate2', 'm_plateDeep'));
+// chest front plate (tears off forward) and back plate (the "back plate" pried off), hugging the core
+const chestPts = [{u: -0.17, v: 0.0}, {u: 0.17, v: 0.0}, {u: 0.27, v: 0.30}, {u: 0.27, v: 0.50}, {u: -0.27, v: 0.50}, {u: -0.27, v: 0.30}];
+const unitChest = fixOutward(slab({x: 0, y: 0.05, z: -0.125}, {x: 1, y: 0, z: 0}, {x: 0, y: 0.986, z: -0.165}, chestPts, 0.06, 'm_plate', 'm_plate2'));
+const unitChestRidge = bx(-0.025, 0.14, -0.235, 0.025, 0.50, -0.18, 'm_plate2');
+const unitBack = fixOutward(slab({x: 0, y: 0.05, z: 0.165}, {x: 1, y: 0, z: 0}, {x: 0, y: 0.99, z: 0.12}, chestPts.map((p) => ({u: p.u * 0.95, v: p.v * 0.96})), 0.06, 'm_plate2', 'm_plateDeep'));
 const unitNeck = cylinder(0.065, 0.12, 6, 'm_joint', 'm_joint', -0.02);
 // head: angular helmet, recessed visor band, single eye, crest
 const unitHead = M_(
@@ -105,7 +107,7 @@ const upperL = M_(
   bx(-0.085, -0.30, -0.08, 0.02, -0.06, 0.08, 'm_plate2'),
   cylinder(0.075, 0.12, 6, 'm_joint', 'm_joint', -U.upper - 0.06),
 );
-const pauldronL = fixOutward(RZ(taper(0.24, 0.30, -0.10, 0.20, 0.26, 0.06, 'm_plate'), 18));
+const pauldronL = fixOutward(T(RZ(taper(0.31, 0.35, -0.13, 0.25, 0.30, 0.07, 'm_plate'), 20), {x: -0.03, y: 0, z: 0}));
 const foreL = M_(
   taper(0.15, 0.16, -U.fore, 0.13, 0.14, -0.02, ['m_plate', 'm_dark', 'm_plate', 'm_plate2', 'm_plate', 'm_plate2']),
   bx(-0.045, -U.fore + 0.06, -0.10, 0.045, -0.06, -0.08, 'm_plate2'),
@@ -178,34 +180,38 @@ export const DRONE_ROTORS: V3[] = [45, 135, 225, 315].map((a) => { const r = (a 
 
 // ------------------------------------------------------------------ heavy walker (~6 m)
 export const HV = {
-  hullY: 3.55, // hull reference (centre) height when standing
-  hipX: 1.15, hipZ: 1.25, hipDrop: -0.45,
-  upperLen: 1.9, lowerLen: 2.15, footX: 2.15, footZ: 2.25,
-  ramShoulder: {x: 0, y: -0.55, z: -1.55} as V3, boom: 2.4,
-  launcher: {x: 0.55, y: 0.95, z: 0.35} as V3,
+  hullY: 4.05, // hull reference (centre) height when standing
+  hipX: 1.45, hipZ: 1.6, hipDrop: -0.6,
+  upperLen: 1.95, lowerLen: 2.2, footX: 2.55, footZ: 2.7,
+  ramShoulder: {x: 0, y: -0.85, z: -1.9} as V3, boom: 2.6,
+  launcher: {x: 0.7, y: 1.45, z: 0.5} as V3,
+  head: {x: 0, y: 0.55, z: -2.15} as V3,
 };
-const hullProfile = [{z: -1.95, y: 0.1}, {z: -1.55, y: 0.75}, {z: 0.55, y: 0.95}, {z: 1.85, y: 0.65}, {z: 1.95, y: -0.25}, {z: 1.25, y: -0.65}, {z: -1.45, y: -0.6}];
-const hullCore = prismX(hullProfile.map((p) => ({z: p.z * 0.92, y: p.y * 0.86})), 1.02, 'm_frame', 'm_dark');
-const hullPlateSide = (sd: 1 | -1) => fixOutward(prismX([{z: -1.7, y: 0.55}, {z: 0.5, y: 0.8}, {z: 1.6, y: 0.55}, {z: 1.6, y: -0.45}, {z: -1.3, y: -0.45}], 0.07, 'm_plate2', 'm_plate', sd * 1.12));
-const hullTop = fixOutward(T(RX(prismX([{z: -1.2, y: 0}, {z: 1.4, y: 0}, {z: 1.3, y: 0.12}, {z: -1.1, y: 0.12}], 0.95, 'm_plate2', 'm_plate2'), -4), {x: 0, y: 0.86, z: 0}));
-const hullNose = fixOutward(prismX([{z: -2.05, y: 0.05}, {z: -1.62, y: 0.85}, {z: -1.42, y: 0.78}, {z: -1.82, y: -0.05}], 0.98, 'm_plate', 'm_plate2'));
+const hullProfile = [{z: -1.95, y: 0.1}, {z: -1.55, y: 0.85}, {z: 0.55, y: 1.1}, {z: 1.95, y: 0.75}, {z: 2.05, y: -0.3}, {z: 1.3, y: -0.75}, {z: -1.45, y: -0.7}];
+const HS = 1.25;
+const hullCore = prismX(hullProfile.map((p) => ({z: p.z * 0.92 * HS, y: p.y * 0.86 * HS})), 1.3, 'm_frame', 'm_dark');
+const hullPlateSide = (sd: 1 | -1) => fixOutward(prismX([{z: -1.7, y: 0.55}, {z: 0.5, y: 0.8}, {z: 1.6, y: 0.55}, {z: 1.6, y: -0.45}, {z: -1.3, y: -0.45}].map((p) => ({z: p.z * HS, y: p.y * HS})), 0.08, 'm_plate2', 'm_plate', sd * 1.42));
+const hullTop = fixOutward(T(RX(prismX([{z: -1.5, y: 0}, {z: 1.75, y: 0}, {z: 1.6, y: 0.14}, {z: -1.4, y: 0.14}], 1.2, 'm_plate2', 'm_plate2'), -4), {x: 0, y: 1.1 * HS - 0.05, z: 0}));
+const hullNose = fixOutward(prismX([{z: -2.05, y: 0.05}, {z: -1.62, y: 0.85}, {z: -1.42, y: 0.78}, {z: -1.82, y: -0.05}].map((p) => ({z: p.z * HS, y: p.y * HS})), 1.22, 'm_plate', 'm_plate2'));
 const heavyHead = M_(
-  bx(-0.42, -0.30, -0.40, 0.42, 0.25, 0.30, ['m_plate', 'm_dark', 'm_plate2', 'm_plate2', 'm_plate2', 'm_plate2']),
-  bx(-0.36, -0.06, -0.43, 0.36, 0.08, -0.38, 'm_glass'),
-  bx(-0.10, -0.05, -0.46, 0.10, 0.07, -0.42, 'm_eye'),
-  bx(-0.06, 0.25, -0.30, 0.06, 0.38, 0.20, 'm_plate2'),
+  taper(0.95, 0.85, -0.32, 0.8, 0.7, 0.28, ['m_plate', 'm_dark', 'm_plate2', 'm_plate2', 'm_plate2', 'm_plate2'], 0, 0.05),
+  bx(-0.40, -0.08, -0.45, 0.40, 0.08, -0.40, 'm_glass'),
+  bx(-0.12, -0.06, -0.49, 0.12, 0.08, -0.44, 'm_eye'),
+  bx(-0.07, 0.28, -0.30, 0.07, 0.42, 0.25, 'm_plate2'),
+  cylinder(0.3, 0.3, 8, 'm_joint', 'm_dark', -0.6),
 );
 const heavyUpper = M_(
-  bx(-0.24, -HV.upperLen, -0.26, 0.24, 0.10, 0.26, 'm_plate2'),
-  bx(-0.27, -1.30, -0.32, 0.27, -0.20, -0.20, 'm_plate'),
-  cylinder(0.32, 0.6, 8, 'm_joint', 'm_dark', -0.1),
+  taper(0.5, 0.56, -HV.upperLen, 0.62, 0.66, 0.12, 'm_plate2'),
+  bx(-0.33, -1.45, -0.40, 0.33, -0.25, -0.27, 'm_plate'),
+  cylinder(0.4, 0.75, 8, 'm_joint', 'm_dark', -0.2),
 );
 const heavyLower = M_(
-  taper(0.36, 0.40, -HV.lowerLen, 0.42, 0.46, 0.0, 'm_frame'),
-  bx(-0.25, -1.6, -0.30, 0.25, -0.15, -0.20, 'm_plate'),
-  cylinder(0.28, 0.55, 8, 'm_joint', 'm_dark', -0.05),
+  taper(0.46, 0.5, -HV.lowerLen, 0.54, 0.6, 0.0, 'm_frame'),
+  bx(-0.31, -1.75, -0.38, 0.31, -0.2, -0.26, 'm_plate'),
+  bx(-0.08, -1.9, 0.26, 0.08, -0.3, 0.36, 'm_piston'),
+  cylinder(0.36, 0.7, 8, 'm_joint', 'm_dark', -0.05),
 );
-const heavyFoot = M_(cylinder(0.48, 0.22, 8, 'm_dark', 'm_rubber', -0.22), bx(-0.18, -0.05, -0.18, 0.18, 0.25, 0.18, 'm_frame'));
+const heavyFoot = M_(cylinder(0.62, 0.26, 8, 'm_dark', 'm_rubber', -0.22), bx(-0.24, -0.05, -0.24, 0.24, 0.28, 0.24, 'm_frame'));
 const heavyBoom = M_(
   bx(-0.26, -0.26, -HV.boom, 0.26, 0.26, 0.15, ['m_plate2', 'm_dark', 'm_plate2', 'm_plate2', 'm_plate', 'm_plate']),
   bx(-0.06, 0.26, -HV.boom + 0.4, 0.06, 0.38, -0.2, 'm_piston'),
