@@ -40,7 +40,7 @@ const E5: React.FC = () => {
   const reach = easeInOut(seg(t, 3.55, 4.6));
   const contact = 4.6;
   const touched = t >= contact;
-  const handGlass: V2 = {x: x + 118, y: GLASS_Y - 258};
+  const handGlass: V2 = {x: x + 136, y: GLASS_Y - 258};
   // a tiny recoil at contact, then the palm settles flat
   const recoil = touched ? Math.exp(-(t - contact) * 9) * Math.sin((t - contact) * 30) * 4 : 0;
   const director: ActorProps = {
@@ -48,7 +48,7 @@ const E5: React.FC = () => {
     drop: stop ? 0 : g.drop, lean: 4 + 6 * reach,
     legL: {foot: {x: x - 30 * s, y: feetY(g.L), z: 0}, pitch: g.L.pitch * 0.25}, legR: {foot: {x: x + 30 * s, y: feetY(g.R), z: 0}, pitch: g.R.pitch * 0.25},
     // right arm reaches forward (into depth) to the glass; left hand carries the visor at the side
-    armR: reach > 0 ? {hand: {x: lerp(x + 70, handGlass.x, reach), y: lerp(yy - 170 * s, handGlass.y + recoil, reach), z: -80 * reach}, w: 1, pole: {x: 1, y: 0.6, z: 0.3}} : {fk: {fwd: g.armR * 0.6, out: 8, bend: 18}},
+    armR: reach > 0 ? {hand: {x: lerp(x + 70, handGlass.x, reach) + 46 * Math.sin(Math.PI * reach), y: lerp(yy - 170 * s, handGlass.y + recoil, reach), z: -80 * reach}, w: 1, pole: {x: 1, y: 0.6, z: 0.3}} : {fk: {fwd: g.armR * 0.6, out: 8, bend: 18}},
     armL: {hand: {x: x - 74 * s, y: yy - 150 * s, z: 10}, pole: {x: -1, y: 0.5, z: 0}},
     handL: 'fist', handR: 'open',
     head: {pitch: lerp(4, -6, reach), yaw: -8},
@@ -119,11 +119,17 @@ const E5: React.FC = () => {
         )}
         <Actor {...director} />
         {visor}
-        {reach > 0.85 && (
-          <HandCU x={handGlass.x} y={handGlass.y + 28 * s + recoil} rot={-90} s={0.46 * s} skin={look('director').skin} view="back" side="R"
-            curl={lerp(0.25, 0, smooth(seg(t, contact - 0.1, contact + 0.25)))} spread={lerp(0.3, 0.7, smooth(seg(t, contact, contact + 0.3)))} thumb={0.25}
-            blood={(dmg('director', T).handBlood?.R ?? 0) * 0.6} ink={handInk} />
-        )}
+        {reach > 0.04 && (() => {
+          // the close-up hand follows the rig's forearm through the reach (curled like the rig's mitt), then opens
+          // flat on the glass at contact
+          const fa = (Math.atan2(r.wr[1].y - r.el[1].y, r.wr[1].x - r.el[1].x) * 180) / Math.PI;
+          const flat = smooth(seg(t, contact - 0.12, contact + 0.2));
+          return (
+            <HandCU x={r.wr[1].x} y={r.wr[1].y + recoil} rot={lerp(fa, -90, flat)} s={0.57 * s} skin={look('director').skin} view="back" side="R"
+              curl={lerp(0.85, 0, smooth(seg(t, contact - 0.45, contact + 0.15)))} spread={lerp(0.1, 0.7, flat)} thumb={lerp(0.7, 0.25, flat)}
+              blood={(dmg('director', T).handBlood?.R ?? 0) * 0.6} ink={handInk} />
+          );
+        })()}
         {/* foreground leaves (parallax) */}
       </Layer>
       <Layer cam={cam} p={1.35}>

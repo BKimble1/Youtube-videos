@@ -70,8 +70,9 @@ export const CatwalkScene: React.FC<CatwalkSceneProps> = ({cam, T, crew, id, ext
         <ViaductFront ink={ink} catwalk={false} />
         {column && <SteelColumn x={COLUMN_X} y0={-1510} y1={CATWALK} ink={ink} dent={column.dent} />}
         {back}
-        <Cast actors={crew} extra={extraParts} />
+        {/* the hook swings in front of anything in `back` (the warden) and behind the Crew who handle it */}
         {hook && <DavitHook px={DAVIT.px} py={DAVIT.py} L={DAVIT.L} theta={hook.theta} ink={ink} deckY={DECK} t={T} />}
+        <Cast actors={crew} extra={extraParts} />
         {rail?.hide ? <rect x={7450} y={CATWALK + 20} width={2930} height={40} fill={K.steelDark} stroke="#162A32" strokeWidth={ink * 0.8} />
           : <CatwalkRail x0={7450} x1={10380} y={CATWALK} ink={ink} bay={rail?.bay} bend={rail?.bend} steel={K.steel} steelDark={K.steelDark} />}
         {steam > 0 && <SteamCloud T={T} amt={steam} id={id} />}

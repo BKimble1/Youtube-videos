@@ -4,7 +4,7 @@
 // ruined building one at a time — reconstruction that takes nights, not seconds. (7.4 s)
 import React from 'react';
 import {useShot} from '../../film/useShot';
-import {look, dmg} from '../../film/crew';
+import {look, dmg, radioOnStrap} from '../../film/crew';
 import {Cast, ActorProps} from '../../rig/actor';
 import {Attendant, ServiceBot} from '../../mech';
 import {Frame, Layer, Grade, camAt, inkFor} from '../../kit/cam';
@@ -47,7 +47,7 @@ const E4: React.FC = () => {
     armR: {hand: {x: TX - 110, y: tTop - 10, z: 30}}, armL: {hand: {x: TX - 120, y: tTop - 6, z: -30}},
     face: {closed: wake < 0.5, mouth: 'flat', lids: 0.5, worry: 0.4}, dmg: dmg('carrier', T), breath: 0.3};
   const mateP: ActorProps = {...mate, lean: lerp(24, 8, wake), head: {pitch: lerp(26, 4, wake)},
-    armR: {hand: {x: TX + 120, y: tTop - 8, z: 30}}, face: {closed: wake < 0.6, mouth: 'flat', lids: 0.45, worry: 0.5}, dmg: dmg('teammate', T), breath: 0.3};
+    armR: {hand: {x: TX + 120, y: tTop - 8, z: 30}}, face: {closed: wake < 0.6, mouth: 'flat', lids: 0.45, worry: 0.5}, dmg: dmg('teammate', T), breath: 0.3, satchel: {radio: radioOnStrap(T)}};
   // ---- the builder (right), their tool bag on the floor; an attendant locks it away
   const BX = 380, BY = 40;
   const builder = seated(look('builder'), BX, BY, benchTop(BY, 1), {t, s: 1, yaw: 30, z: 0, seed: 41, knees: 72, spread: 40});

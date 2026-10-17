@@ -192,19 +192,21 @@ export const Motes: React.FC<{t: number; n?: number; seed?: number; op?: number}
   return <g>{els}</g>;
 };
 
-/** A wool blanket draped over someone's shoulders (shape at a shoulder-centre position). */
-export const Blanket: React.FC<{x: number; y: number; s: number; k: number; ink: number}> = ({x, y, s, k, ink}) => {
+/** A wool blanket worn as a shawl, at a figure's shoulder centre (x, y): over the shoulders and upper arms, open in
+ *  front so the shirt shows, the two ends hanging toward the lap. k 0..1 lowers it into place. */
+export const Blanket: React.FC<{x: number; y: number; s: number; k: number; ink: number; color?: string}> = ({x, y, s, k, ink, color = '#8C97A8'}) => {
   if (k <= 0) return null;
   const drop = (1 - k) * -140 * s;
+  const q = (px: number, py: number) => `${(px * s).toFixed(1)} ${(py * s).toFixed(1)}`;
+  const outer = `M ${q(-96, 40)} Q ${q(-100, -10)} ${q(-50, -16)} Q ${q(0, -26)} ${q(50, -16)} Q ${q(100, -10)} ${q(96, 40)} L ${q(104, 176)} Q ${q(80, 188)} ${q(46, 182)} L ${q(22, 34)} Q ${q(0, 18)} ${q(-22, 34)} L ${q(-46, 182)} Q ${q(-80, 188)} ${q(-104, 176)} Z`;
   return (
     <g transform={`translate(${x} ${y + drop})`} opacity={clamp(k * 3)}>
-      <path d={`M ${-92 * s} ${40 * s} Q ${-100 * s} ${-6 * s} ${-40 * s} ${-14 * s} Q 0 ${-24 * s} ${40 * s} ${-14 * s} Q ${100 * s} ${-6 * s} ${92 * s} ${40 * s} L ${100 * s} ${190 * s} Q 0 ${206 * s} ${-100 * s} ${190 * s} Z`} fill="#8C97A8" stroke={C.ink} strokeWidth={ink} strokeLinejoin="round" />
-      {[-50, 0, 50].map((dx) => <path key={dx} d={`M ${dx * s} ${0} Q ${(dx + 8) * s} ${90 * s} ${dx * s} ${190 * s}`} fill="none" stroke="#6F7A8C" strokeWidth={ink * 0.8} />)}
-      <path d={`M ${-100 * s} ${170 * s} L ${100 * s} ${170 * s}`} stroke="#C9B37A" strokeWidth={8 * s} />
+      <path d={outer} fill={color} stroke={C.ink} strokeWidth={ink} strokeLinejoin="round" />
+      <path d={`M ${q(-70, 30)} Q ${q(-66, 100)} ${q(-74, 170)} M ${q(70, 30)} Q ${q(66, 100)} ${q(74, 170)}`} fill="none" stroke="#6F7A8C" strokeWidth={ink * 0.8} />
+      <path d={`M ${q(-104, 160)} L ${q(-46, 166)} M ${q(46, 166)} L ${q(104, 160)}`} stroke="#C9B37A" strokeWidth={7 * s} />
     </g>
   );
 };
-
 
 /** A paper water cup (hand-local prop: x along the forearm). */
 export const Cup: React.FC<{s: number; ink: number}> = ({s, ink}) => (

@@ -626,21 +626,27 @@ export const carry3 = (T: number, x: number, ground: (x: number) => number, farR
   const db = base('director', T, 31);
   const bb = base(farRole, T, farRole === 'builder' ? 51 : 41);
   const dz = 0.35, bz = -0.35;
-  const hS = (dx: number, z: number) => ({x: x + dx, y: gy - 300, z});
   const fl = (x0: number) => ground(x0) - 10;
-  const dir: ActorProps = {...db, x: x + 18, y: gy, z: dz, yaw: 70, drop: 30 - 20 * rise, lean: 18 + lean,
-    legL: {foot: {x: x + 70 + 40 * step, y: fl(x + 70 + 40 * step)}}, legR: {foot: {x: x - 40 - 40 * step, y: fl(x - 40 - 40 * step)}},
-    armL: {hand: {x: x - 10, y: gy - 215, z: -20}}, armR: {hand: {x: x + 40, y: gy - 330, z: 60}}, handL: 'fist',
-    face: {mouth: 'grit', brows: -0.7, worry: 0.6, lookX: -0.4}, head: {pitch: 6, yaw: 18}};
-  const far: ActorProps = {...bb, x: x - 12, y: gy, z: bz, yaw: 72, drop: 30 - 20 * rise, lean: 18 + lean,
-    legL: {foot: {x: x + 50 - 40 * step, y: fl(x + 50 - 40 * step)}}, legR: {foot: {x: x - 60 + 40 * step, y: fl(x - 60 + 40 * step)}},
-    armR: {hand: {x: x + 10, y: gy - 215, z: 20}}, armL: {hand: {x: x + 20, y: gy - 330, z: -60}},
+  // three-quarter view, the friend in front between them (the focus): the friend's left arm over the Director's
+  // shoulders (right of frame), the right arm over the other helper's (left); the helpers' arms round the friend's back
+  const fz = 0.5, dz2 = 0.3, bz2 = 0.2;
+  const dir: ActorProps = {...db, x: x + 74, y: gy, z: dz2, yaw: 46, drop: 26 - 16 * rise, lean: 14 + lean,
+    legL: {foot: {x: x + 120 + 34 * step, y: fl(x + 120 + 34 * step), z: -10}}, legR: {foot: {x: x + 30 - 34 * step, y: fl(x + 30 - 34 * step), z: 30}},
+    armR: {hand: {x: x - 10, y: gy - 215, z: 80}, pole: {x: 0, y: 0.6, z: -1}}, armL: {hand: {x: x + 60, y: gy - 250, z: 60}}, handL: 'fist',
+    zArm: [undefined, -60], zHand: [undefined, (fz - dz2) * 1000 + 60],
+    face: {mouth: 'grit', brows: -0.7, worry: 0.6, lookX: -0.5}, head: {pitch: 4, yaw: 22}};
+  const far: ActorProps = {...bb, x: x - 70, y: gy, z: bz2, yaw: 52, drop: 26 - 16 * rise, lean: 14 + lean,
+    legL: {foot: {x: x - 20 - 34 * step, y: fl(x - 20 - 34 * step)}}, legR: {foot: {x: x - 120 + 34 * step, y: fl(x - 120 + 34 * step)}},
+    armL: {hand: {x: x + 14, y: gy - 215, z: 70}, pole: {x: 0, y: 0.6, z: -1}}, armR: {hand: {x: x - 90, y: gy - 230, z: 40}},
+    zArm: [-60, undefined], zHand: [(fz - bz2) * 1000 + 60, undefined],
     face: {mouth: 'grit', brows: -0.6}, head: {pitch: 4}};
-  const friend: ActorProps = {...fb, visor: visorOn(T), x, y: gy, z: 0, yaw: 72, drop: lerp(150, 70, rise), lean: lerp(10, 34, rise) + lean * 0.5, shadow: false,
-    legL: {foot: {x: x - 80, y: ground(x - 80) - 14}, pitch: -50}, legR: {foot: {x: x - 40 + 10 * step, y: ground(x - 40) - 12}, pitch: -40},
-    armR: {hand: hS(30, 40)}, armL: {hand: hS(10, -40)},
-    zArm: [-40, 30], zHand: [-30, 400],
-    handL: 'limp', handR: 'limp', head: {pitch: 40, yaw: 10, roll: 12 + 4 * Math.sin(T * 3.6) * moving}, face: {closed: false, lids: 0.75, mouth: 'pain', worry: 0.9, brows: 0}, breath: 0.6};
+  const rD = solve(dir), rF = solve(far);
+  const shD = rD.sh[1], shF = rF.sh[0];
+  const friend: ActorProps = {...fb, visor: visorOn(T), x, y: gy, z: fz, yaw: 50, drop: lerp(150, 64, rise), lean: lerp(10, 22, rise) + lean * 0.5, shadow: false,
+    legL: {foot: {x: x - 40, y: ground(x - 40) - 14}, pitch: -50}, legR: {foot: {x: x + 4 + 10 * step, y: ground(x + 4) - 12}, pitch: -40},
+    armL: {hand: {x: shD.x + 18, y: shD.y - 4, z: 30}}, armR: {hand: {x: shF.x - 18, y: shF.y - 4, z: 30}},
+    zArm: [-30, -30], zHand: [-(fz - dz2) * 1000 + 40, -(fz - bz2) * 1000 + 40],
+    handL: 'limp', handR: 'limp', head: {pitch: 26, yaw: -6, roll: 10 + 4 * Math.sin(T * 3.6) * moving}, face: {closed: false, lids: 0.72, mouth: 'pain', worry: 0.9, brows: 0}, breath: 0.6};
   return {friend, dir, far};
 };
 

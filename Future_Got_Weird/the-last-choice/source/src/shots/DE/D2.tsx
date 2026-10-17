@@ -14,7 +14,7 @@ import {gurneyTop} from '../../sets/refugeInterior';
 import {add3, mul3, norm3, cross3, sub3, dot3} from '../../kit/math';
 
 const ID = 'D2';
-export const TIME_OF_DAY = 0.85; // late morning light (refLight scale)
+export const TIME_OF_DAY = 1.55; // late afternoon light (refLight scale), continuing from D1
 export const VISOR_SWAP = 1.6;   // visorOn(T) turns false at D2 start + 1.6 s
 
 /** Blend two bases (orthonormalised). */

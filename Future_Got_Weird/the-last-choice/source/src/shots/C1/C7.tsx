@@ -55,7 +55,7 @@ export const crewC7 = (t: number, T: number): ActorProps[] => {
   }];
 };
 
-const camAt = (t: number): Cam => mixCam({x: 7700, y: -900, z: 0.8}, {x: 8380, y: -1320, z: 1.05}, smooth(seg(t, 1.8, 4.5)));
+const camAt = (t: number): Cam => mixCam({x: 7820, y: -1050, z: 0.78}, {x: 8380, y: -1320, z: 1.05}, smooth(seg(t, 1.8, 4.5)));
 
 export const C7Shot: React.FC = () => {
   const {t, T} = useShot(ID);

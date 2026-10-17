@@ -74,13 +74,12 @@ export const crewC5 = (t: number, T: number) => {
     armL: {fk: {fwd: 40, out: 4, bend: 110}}, handL: 'fist', armR: {hand: {x: BX - 240, y: g - 290, z: 10}},
     face: {mouth: 'grit', brows: -0.5, lids: 0.3, lookX: -0.4}, head: {yaw: -20 + 12 * noise(t * 0.6, 2)}});
   // the friend kneels by the teammate, who sits against the girder
-  out.push({look: look('teammate'), t, seed: 36, dmg: dmg('teammate', T), x: BX + 470, y: g, z: -40, yaw: 70, drop: 128, lean: -16, breath: 1,
+  out.push({look: look('teammate'), t, seed: 36, dmg: dmg('teammate', T), x: BX + 490, y: g, z: 60, yaw: 70, drop: 128, lean: -16, breath: 1,
     legR: {foot: {x: BX + 600, y: g - 12}}, legL: {foot: {x: BX + 560, y: g - 12}, pitch: 10}, satchel: {radio: radioOnStrap(T)},
     armL: {hand: {x: BX + 520, y: g - 190, z: 30}}, handL: 'fist', armR: {fk: {fwd: 20, out: 30, bend: 30}},
     face: {mouth: 'sad', worry: 0.8, lids: 0.45}, head: {pitch: 8, roll: 6}});
-  out.push({...stand(look('friend'), BX + 380, g, {t}, 40), seed: 33, dmg: dmg('friend', T), yaw: 55, drop: 92, lean: 18, z: 30,
-    legL: {foot: {x: BX + 330, y: g - 10}}, legR: {foot: {x: BX + 430, y: g - 10}},
-    armR: {hand: {x: BX + 470, y: g - 250, z: 0}}, face: {mouth: 'flat', worry: 0.5, lookX: -0.6}, head: {yaw: -40}});
+  out.push({...stand(look('friend'), BX + 355, g, {t}, 40), seed: 33, dmg: dmg('friend', T), yaw: 20, drop: 6, lean: 4, z: -20,
+    armR: {hand: {x: BX + 455, y: g - 250, z: 30}}, face: {mouth: 'flat', worry: 0.6, lookX: 0.3, lookY: 0.5}, head: {yaw: 10, pitch: 14}});
   // civilians further along, crouched low
   [0, 1, 2].forEach((i) => out.push({...stand(CIV[i], BX + 760 + i * 150, g, {t}, 34), s: CIV[i].height, seed: 50 + i, yaw: 80 - i * 30, drop: 70 + 20 * i, lean: 20, face: FACE.worry}));
   return {out, tp, b};

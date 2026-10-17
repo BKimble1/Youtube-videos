@@ -40,20 +40,20 @@ const G = CATWALK;
 // ------------------------------------------------------------------ the hook
 // staged in three clear zones: the warden (≈ 8700–9060) | the Director and the carrier on the hook (≈ 9220–9540) |
 // the builder down on the grating behind them (≈ 9600–9800)
-const hookTheta = (t: number) => keys(t, [[0, 0], [1.55, 0], [1.9, -40], [2.3, -10, easeIn], [SMASH, 8], [SMASH + 0.17, 30, easeOut], [SMASH + 0.5, 10], [SMASH + 1.2, -16], [SMASH + 2.0, 6], [SMASH + 2.8, -4], [9.4, 0]]) + 1.5 * Math.sin(t * 2.1);
+const hookTheta = (t: number) => keys(t, [[0, 0], [1.55, 0], [1.9, -40], [2.3, -22, easeIn], [SMASH, -6], [SMASH + 0.17, 26, easeOut], [SMASH + 0.5, 10], [SMASH + 1.2, -16], [SMASH + 2.0, 6], [SMASH + 2.8, -4], [9.4, 0]]) + 1.5 * Math.sin(t * 2.1);
 
 // ------------------------------------------------------------------ the tablet: slips from her hands when the warden lands, clatters, is crushed
-const DROP_TAB = 0.95, STAMP_X = 8880;
+const DROP_TAB = 0.62, STAMP_X = 8880;
 const tabletAt = (t: number, hands: V2) => {
   if (t < DROP_TAB) return {x: hands.x, y: hands.y, rot: -10, held: true};
   const a = t - DROP_TAB, landT = 0.22;
-  if (a < landT) { const u = a / landT; return {x: lerp(hands.x, STAMP_X, u), y: lerp(hands.y, G - 8, u * u), rot: -10 - 150 * u, held: false}; }
+  if (a < landT) { const u = a / landT; return {x: lerp(8790, STAMP_X, u), y: lerp(-1375, G - 8, u * u), rot: -10 - 150 * u, held: false}; }
   const b2 = a - landT;
   return {x: STAMP_X, y: G - 8 - 26 * Math.abs(Math.sin(b2 * 14)) * Math.exp(-b2 * 9), rot: -170 + 10 * Math.exp(-b2 * 8) * Math.sin(b2 * 30), held: false};
 };
 
 // ------------------------------------------------------------------ the warden
-const WX0 = 8700, WX_LUNGE = 8900, WX_HIT = 8940;
+const WX0 = 8700, WX_LUNGE = 8900, WX_HIT = 9050;
 const warden = (t: number, T: number): WardenProps & {dy: number; front: boolean} => {
   const s = 1;
   const base: WardenProps = {x: WX0, y: G, s, t: T, seed: 44, yaw: 90, lock: 1, look: {x: 0.4, y: 0.2}, glow: 0.8};
@@ -67,7 +67,7 @@ const warden = (t: number, T: number): WardenProps & {dy: number; front: boolean
   // B. landing crouch, rise, lunge after the fleeing builder (the swipe falls short), C. wind-up and backhand
   const land = 1 - smooth(seg(t, LAND, LAND + 0.45));
   const lunge = smooth(seg(t, 1.4, RAKE));
-  const step2 = smooth(seg(t, RAKE + 0.05, 2.3));
+  const step2 = smooth(seg(t, RAKE + 0.05, BACKHAND));
   const x = lerp(lerp(WX0, WX_LUNGE, lunge), WX_HIT, step2);
   const wind = smooth(seg(t, 2.02, 2.3)) * (1 - smooth(seg(t, 2.3, BACKHAND)));
   const bh = smooth(seg(t, 2.3, BACKHAND)) * (1 - smooth(seg(t, SMASH, SMASH + 0.1)));
@@ -110,14 +110,14 @@ const warden = (t: number, T: number): WardenProps & {dy: number; front: boolean
 };
 
 // ------------------------------------------------------------------ the Crew
-const BFALL = 9690;                    // where the builder goes down, behind the Director and the carrier
+const BFALL = 9790;                    // where the builder goes down, behind the Director and the carrier
 const crewC8 = (t: number, T: number) => {
   const out: ActorProps[] = [];
   // builder: pulls the tablet, sees the warden land, drops the tablet and runs east past the Director and the carrier;
   // glances back, trips and goes down hard on the grating at C8 + 2.0 (her marks); props herself up and watches;
   // the Director pulls her up; they run
   const startle = smooth(seg(t, LAND, LAND + 0.2));
-  const runX = sk(t, [[0.95, 8870], [1.85, BFALL]], 0.15);
+  const runX = sk(t, [[0.6, 8870], [1.45, BFALL - 20], [1.85, BFALL]], 0.15);
   const trip = smooth(seg(t, 1.88, 2.05));
   const sitUp = smooth(seg(t, 2.55, 3.2));
   const up = smooth(seg(t, 5.95, 6.6));
@@ -125,11 +125,11 @@ const crewC8 = (t: number, T: number) => {
   const lookBack = smooth(seg(t, 7.0, 7.3)) * (1 - smooth(seg(t, 7.9, 8.2)));
   let builder: ActorProps;
   const bFace = t < LAND ? {mouth: 'flat' as const, brows: 0.2, lookX: -0.6} : t < 1.85 ? FACE.alarm : t < 5.5 ? {mouth: 'pain' as const, brows: -0.4, worry: 0.8, lids: 0.35} : FACE.grit;
-  if (t < 0.95) {
-    builder = {...stand(look('builder'), 8870, G, {t}, 40), seed: 37, dmg: dmg('builder', T), z: 40, breath: 0.8, yaw: lerp(-70, -85, startle), lean: lerp(10, -12, startle), face: bFace};
+  if (t < 0.6) {
+    builder = {...stand(look('builder'), 8870, G, {t}, 40), seed: 37, dmg: dmg('builder', T), z: 40, breath: 0.8, yaw: -70, lean: 10, face: bFace};
   } else if (t < 1.85) {
     const m = mover(look('builder'), {x0: 8870, dist: runX - 8870, dir: 1, ground: G, gait: G_RUN, t});
-    builder = {...m, seed: 37, dmg: dmg('builder', T), z: 40, face: bFace, head: {yaw: t > 1.55 ? 140 * smooth(seg(t, 1.55, 1.75)) : 0}};
+    builder = {...m, seed: 37, dmg: dmg('builder', T), z: 40, face: t < 0.9 ? FACE.alarm : bFace, head: {yaw: t > 1.5 ? 140 * smooth(seg(t, 1.5, 1.7)) : 0}};
   } else if (t < 6.6) {
     // down on hands and knees, then sits up facing the fight; pulled up by the Director
     const kneel = trip * (1 - sitUp);
@@ -155,34 +155,34 @@ const crewC8 = (t: number, T: number) => {
   // Director: waves her on, runs back, hauls the hook with the carrier, shoves it and follows through — straight into
   // the warden's backhand (wind-up, contact at BACKHAND, recoil; crew.ts adds the lip cut at C8 + 2.5); hand to his mouth
   const hk = davitHook(DAVIT.px, DAVIT.py, DAVIT.L, hookTheta(t));
-  const holding = t >= 1.55 && t < 2.15;
-  const dx = keys(t, [[0, 9570], [0.95, 9570], [1.5, 9420], [1.9, 9440], [2.2, 9260], [BACKHAND, 9222], [BACKHAND + 0.4, 9335, easeOut], [5.6, 9335], [5.95, BFALL - 170]]);
+  const holding = t >= 1.5 && t < 2.1;
+  const dx = keys(t, [[0, 9330], [1.2, 9330], [1.5, 9400], [1.9, 9420], [2.1, 9380], [2.3, 9335], [BACKHAND, 9335], [BACKHAND + 0.4, 9375, easeOut], [5.6, 9375], [5.95, BFALL - 170]]);
   const recoil = smooth(seg(t, BACKHAND - 0.03, BACKHAND + 0.1)) * (1 - smooth(seg(t, BACKHAND + 0.6, BACKHAND + 1.3)));
   const mouth = smooth(seg(t, BACKHAND + 0.45, BACKHAND + 0.75)) * (1 - smooth(seg(t, 3.9, 4.4)));
   const runD = sk(t, [[6.6, 0], [9.4, 700]], 0.25);
   let director: ActorProps;
   if (t < 6.6) {
-    const moving = (t > 0.95 && t < 1.5) || (t > 5.6 && t < 5.95);
-    const dm = mover(look('director'), {x0: 9570, dist: Math.abs(9570 - dx), dir: -1, ground: G, gait: G_RUN, t});
+    const moving = t > 5.6 && t < 5.95;
+    const dm = mover(look('director'), {x0: 9375, dist: Math.abs(dx - 9375), dir: 1, ground: G, gait: G_RUN, t});
     const sd = stand(look('director'), dx, G, {t}, 46, -1);
     director = {...(moving ? dm : sd), x: dx, seed: 31, dmg: dmg('director', T), z: 20, breath: 0.9,
-      yaw: t < 0.95 ? -60 : t > 5.6 ? lerp(-90, 90, smooth(seg(t, 5.6, 5.95))) : -90 + 45 * recoil,
-      lean: holding ? (t < 1.9 ? -18 : 26) : (t > 2.15 && t < BACKHAND ? 18 : 4) - 30 * recoil,
-      drop: holding ? 26 : 10 + 24 * recoil, twist: 30 * recoil,
+      yaw: t < 1.0 ? -60 : t > 5.6 ? lerp(-90, 90, smooth(seg(t, 5.6, 5.95))) : -90 + 45 * recoil,
+      lean: holding ? (t < 1.9 ? -18 : 26) : (t > 2.3 && t < BACKHAND ? 8 : 4) - 16 * recoil,
+      drop: holding ? 26 : 10 + 20 * recoil, twist: 16 * recoil,
       face: recoil > 0.15 ? {mouth: 'pain', brows: -0.7, lids: 0.75} : t > 1.0 ? FACE.grit : {...FACE.worry, lookX: -0.5},
-      head: {yaw: 30 * recoil, roll: -26 * recoil, pitch: -16 * recoil},
-      armR: holding ? {hand: {x: hk.x + 28, y: hk.y + 34, z: 30}} : mouth > 0.01 ? {hand: {x: dx - 46, y: G - 375, z: 60}, w: mouth} : t < 0.95 ? {fk: {fwd: 70 + 30 * Math.sin(t * 13), out: 20, bend: 40}} : t > 2.15 && t < BACKHAND ? {fk: {fwd: 70, out: 10, bend: 20}} : undefined,
-      armL: holding ? {hand: {x: hk.x + 6, y: hk.y + 64, z: -10}} : t > 2.15 && t < BACKHAND ? {fk: {fwd: 60, out: 10, bend: 30}} : recoil > 0.2 ? {fk: {fwd: -20, out: 40, bend: 30}} : undefined};
+      head: {yaw: 22 * recoil, roll: -10 * recoil, pitch: -20 * recoil},
+      armR: holding ? {hand: {x: hk.x + 28, y: hk.y + 34, z: 30}} : mouth > 0.01 ? {hand: {x: dx - 46, y: G - 375, z: 60}, w: mouth} : t < 1.0 ? {fk: {fwd: 70 + 30 * Math.sin(t * 13), out: 20, bend: 40}} : t > 2.25 && t < BACKHAND ? {fk: {fwd: 60, out: 14, bend: 70}} : undefined,
+      armL: holding ? {hand: {x: hk.x + 6, y: hk.y + 64, z: -10}} : t > 2.25 && t < BACKHAND ? {fk: {fwd: 50, out: 14, bend: 80}} : recoil > 0.2 ? {fk: {fwd: -20, out: 40, bend: 30}} : undefined};
     if (t > 5.95) director = {...director, yaw: 90, drop: 40, lean: 20, armR: {hand: dirHandFor(t)}, face: FACE.grit, head: {}};
   } else {
     director = {...mover(look('director'), {x0: BFALL - 170, dist: runD, dir: 1, ground: G, gait: G_RUN, t}), seed: 31, dmg: dmg('director', T), z: 20, face: FACE.grit};
   }
   out.push(director);
   // carrier: beside the Director on the hook with his good right arm, guards the cut one; limps on after them
-  const cx = keys(t, [[0, 9640], [1.0, 9640], [1.6, 9480], [1.9, 9500], [2.25, 9470], [6.6, 9470]]);
-  const cHold = t >= 1.6 && t < 2.15;
+  const cx = keys(t, [[0, 9430], [1.25, 9430], [1.55, 9565], [1.9, 9575], [2.3, 9625], [6.6, 9625]]);
+  const cHold = t >= 1.55 && t < 2.1;
   const runC = sk(t, [[6.6, 0], [9.4, 560]], 0.3);
-  const cm = t < 6.6 ? {...stand(look('carrier'), cx, G, {t}, 40, -1), x: cx} : mover(look('carrier'), {x0: 9470, dist: runC, dir: 1, ground: G, gait: {...G_HURRY, limp: limpOf('carrier', T)}, t});
+  const cm = t < 6.6 ? {...stand(look('carrier'), cx, G, {t}, 40, -1), x: cx} : mover(look('carrier'), {x0: 9625, dist: runC, dir: 1, ground: G, gait: {...G_HURRY, limp: limpOf('carrier', T)}, t});
   out.push({...cm, seed: 35, dmg: dmg('carrier', T), z: -30, yaw: t < 6.6 ? -90 : 90, lean: cHold ? (t < 1.9 ? -14 : 22) : (cm.lean ?? 4), drop: cHold ? 22 : (cm.drop ?? 8),
     armR: cHold ? {hand: {x: hk.x + 60, y: hk.y + 20, z: -20}} : t < 6.6 ? {fk: {fwd: 20, out: 10, bend: 30}} : cm.armR,
     armL: {fk: {fwd: 40, out: 4, bend: 110}}, handL: 'fist', face: FACE.pain, breath: 0.9});
@@ -198,7 +198,7 @@ const dirHandFor = (t: number): V2 => {
 // ------------------------------------------------------------------ camera
 const camAt = (t: number): Cam => {
   const k: [number, Cam][] = [
-    [0, {x: 8150, y: -1110, z: 1.3}], [0.12, {x: 8170, y: -1120, z: 1.3}], [0.95, {x: 9150, y: -1500, z: 1.25}], [1.6, {x: 9215, y: -1515, z: 1.4}], [3.5, {x: 9185, y: -1505, z: 1.4}],
+    [0, {x: 8150, y: -1110, z: 1.3}], [0.12, {x: 8170, y: -1120, z: 1.3}], [0.95, {x: 9180, y: -1500, z: 1.25}], [1.6, {x: 9270, y: -1515, z: 1.4}], [3.5, {x: 9250, y: -1505, z: 1.4}],
     [5.45, {x: 9050, y: -790, z: 0.44}], [6.6, {x: 9480, y: -1510, z: 0.72}], [8.0, {x: 9660, y: -1530, z: 0.78}], [9.4, {x: 9800, y: -1530, z: 0.78}],
   ];
   let i = 1;
@@ -276,10 +276,11 @@ export const CUES: Cue[] = [
   c(LAND + 0.02, 'step_grate', {pan: -0.1, gain: 2, rate: 0.7}),
   c(1.4, 'servo_heavy', {pan: 0, dist: 0.1, gain: 2, rate: 1.2}),
   c(1.6, 'cable_strain', {pan: 0.3, dist: 0.1, gain: -2}),
-  c(RAKE, 'body_fall', {pan: 0.2, gain: 1}),
-  c(RAKE + 0.05, 'breath_exert', {pan: 0.2, gain: -3}),
-  c(RAKE + 0.5, 'glass_shatter', {pan: -0.05, gain: -14, rate: 1.6}),
-  c(BACKHAND, 'body_fall', {pan: 0.25, gain: -4, rate: 1.2}),
+  c(2.0, 'body_fall', {pan: 0.45, gain: 1}),
+  c(2.03, 'breath_exert', {pan: 0.45, gain: -3}),
+  c(DROP_TAB + 0.22, 'glass_shatter', {pan: -0.05, gain: -14, rate: 1.6}),
+  c(BACKHAND, 'body_fall', {pan: 0.15, gain: -4, rate: 1.25}),
+  c(BACKHAND + 0.02, 'breath_exert', {pan: 0.15, gain: -5, rate: 1.1}),
   c(SMASH, 'wreck_slam', {pan: 0.05, dist: 0.05, gain: 4}),
   c(SMASH + 0.03, 'metal_tear', {pan: 0, dist: 0.05, gain: 2}),
   c(COLUMN, 'elec_arc', {pan: -0.2, dist: 0.1, gain: 0}),

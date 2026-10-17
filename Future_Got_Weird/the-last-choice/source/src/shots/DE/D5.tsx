@@ -40,8 +40,8 @@ const D5: React.FC = () => {
   const bag = bagRadio(bagP);
   // hand path for the radio: at the bag → up in front of the chest (switch on) → down onto the bench → tuning → lap
   const up = {x: MATE_X - 46, y: seatY - 112};
-  const k1 = easeInOut(seg(t, 0.0, 0.42)), k2 = easeInOut(seg(t, 0.75, 1.55)), k3 = easeInOut(seg(t, 2.25, 2.9));
-  const radioPos: V2 = t < 0.75 ? {x: lerp(bag.x, up.x, k1), y: lerp(bag.y, up.y, k1)} : {x: lerp(up.x, radioRest.x, k2), y: lerp(up.y, radioRest.y, k2) - Math.sin(Math.PI * k2) * 30};
+  const k1 = easeInOut(seg(t, 0.4, 0.78)), k2 = easeInOut(seg(t, 0.8, 1.55)), k3 = easeInOut(seg(t, 2.25, 2.9));
+  const radioPos: V2 = t < 0.8 ? {x: lerp(bag.x, up.x, k1), y: lerp(bag.y, up.y, k1)} : {x: lerp(up.x, radioRest.x, k2), y: lerp(up.y, radioRest.y, k2) - Math.sin(Math.PI * k2) * 30};
   const tune = t > 1.55 && t < tSong + 0.2 ? Math.sin((t - 1.55) * 9) * 4 : 0;
   // the visor: notice → lean down → grasp → lift → hold (landing the lift on the vocal)
   const notice = smooth(seg(t, 3.5, 4.2));

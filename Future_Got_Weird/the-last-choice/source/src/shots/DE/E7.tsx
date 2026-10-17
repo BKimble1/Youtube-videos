@@ -4,7 +4,7 @@
 // the friend stood. The Director holds the visor. Hold. (6.95 s; the end card follows on M.CARD.)
 import React from 'react';
 import {useShot} from '../../film/useShot';
-import {look, dmg, CIV} from '../../film/crew';
+import {look, dmg, CIV, radioOnStrap} from '../../film/crew';
 import {Cast, ActorProps, solve} from '../../rig/actor';
 import {Frame, Layer, Grade, Cam, camAt} from '../../kit/cam';
 import {lerp, seg, smooth, easeInOut, noise} from '../../kit/math';
@@ -64,7 +64,7 @@ const E7: React.FC = () => {
     legL: {foot: {x: lerp(sT.x - 106, sT.x, step) - 30 * tS, y: ty - 14 * tS, z: -20}, pitch: lerp(30, 10, step)},
     legR: {foot: {x: lerp(sT.x - 50, sT.x + 66, smooth(seg(t, 0.4, 1.4))), y: ty - 10 * tS, z: 10}},
     armR: reach > 0 ? {hand: {x: lerp(tx + 70 * tS, shoulder.x, reach), y: lerp(ty - 170 * tS, shoulder.y, reach), z: shoulder.z + 20}, pole: {x: 0.3, y: 1, z: 0.5}} : {fk: {fwd: 6, out: 8, bend: 20}},
-    zHand: [undefined, 1500], handR: 'open',
+    zHand: [undefined, 1500], handR: 'open', satchel: {radio: radioOnStrap(T)},
   };
   // ---- the carrier and the builder in their slots (bandaged forearm; no bag)
   const carrier: ActorProps = {

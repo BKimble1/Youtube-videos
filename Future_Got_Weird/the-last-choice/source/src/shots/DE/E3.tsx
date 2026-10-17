@@ -4,7 +4,7 @@
 // eye regards them, then it moves on), sits back down and holds it. No tug-of-war; the transfer is continuous. (9.0 s)
 import React from 'react';
 import {useShot} from '../../film/useShot';
-import {look, dmg} from '../../film/crew';
+import {look, dmg, radioOnStrap} from '../../film/crew';
 import {Cast, ActorProps, solve, handCenter} from '../../rig/actor';
 import {ServiceBot, serviceGrip, ServiceBotProps} from '../../mech';
 import {Frame, Layer, Grade, camAt, inkFor, smoothCam, Cam} from '../../kit/cam';
@@ -82,7 +82,7 @@ const E3: React.FC = () => {
     handR: t < 1.35 ? 'fist' : 'open',
     head: {yaw: lerp(-14, -26, smooth(seg(t, 1.2, 1.8))) + 10 * smooth(seg(t, 5.6, 6.4)), pitch: lerp(22, 8, smooth(seg(t, 1.2, 1.8))) + 14 * smooth(seg(t, 5.6, 6.4))},
     face: {mouth: t > 4.9 ? 'sad' : 'flat', worry: 0.5 + 0.4 * smooth(seg(t, 4.3, 5.2)), brows: -0.1 - 0.2 * aside, lids: 0.4, lookX: lerp(0.5, 0.9, mateReach), lookY: 0.4},
-    dmg: dmg('teammate', T), breath: 0.4,
+    dmg: dmg('teammate', T), breath: 0.4, satchel: {radio: radioOnStrap(T)},
   };
   const mateHandW = handCenter(solve(mateP), 1);
   // ---------------- the Director: bench → rises → takes the visor → back to the bench
@@ -116,7 +116,15 @@ const E3: React.FC = () => {
   if (t < 0.6) { vC = placeBy(mateHandW, LAP_B, 0, -0.14, 1.53); }
   else if (t < 1.4) { vB = mixBasis(LAP_B, SEAT_B, place); vC = placeBy(mateHandW, vB, 0, -0.14, 1.53); }
   else if (t < 4.25) { vB = SEAT_B; vC = {x: visorOnSeat.x, y: visorOnSeat.y - 4}; }
-  else if (t < 4.95) { vB = mixBasis(SEAT_B, TRAY_B, lift); vC = placeBy(gripW, vB, 90, -0.45, 1.04); }
+  else if (t < 4.95) {
+    // held by the band in the gripper; blend out the seat/tray offsets so pick-up and set-down don't pop
+    vB = mixBasis(SEAT_B, TRAY_B, lift);
+    const seatPos = {x: visorOnSeat.x, y: visorOnSeat.y - 4}, trayPos = {x: trayTop.x, y: trayTop.y - 24};
+    const g0 = placeBy({x: visorOnSeat.x + 30, y: visorOnSeat.y - 6}, SEAT_B, 90, -0.45, 1.04);
+    const g1 = placeBy({x: trayTop.x - 30, y: trayTop.y - 26}, TRAY_B, 90, -0.45, 1.04);
+    const p = placeBy(gripW, vB, 90, -0.45, 1.04);
+    vC = {x: p.x + (seatPos.x - g0.x) * (1 - lift) + (trayPos.x - g1.x) * lift, y: p.y + (seatPos.y - g0.y) * (1 - lift) + (trayPos.y - g1.y) * lift};
+  }
   else if (t < 7.35) { vB = TRAY_B; vC = {x: trayTop.x, y: trayTop.y - 24}; }
   else { vB = mixBasis(TRAY_B, LAP_B, smooth(seg(t, 7.35, 7.9))); vC = placeBy(dHandW, vB, 0, -0.14, 1.53); }
   // after the lift the visor rides on the tray: draw it as the bot's tray child

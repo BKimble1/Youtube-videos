@@ -88,12 +88,12 @@ const E6: React.FC = () => {
         <Plant x={PANE.x1 - 40} y={FLOOR} s={0.6} t={t} seed={91} ink={kk * 0.8} kind="fern" />
         <Actor {...dir} />
         <Visor x={lhx - tip.x * DS} y={lhy - tip.y * DS} s={DS} b={vB} ink={kk} />
-        <HandCU x={hand.x} y={hand.y + 26} rot={-90} s={0.4 * DS} skin={look('director').skin} view="back" side="L" curl={0} spread={0.7} thumb={0.25} ink={kk * 0.8}
+        <HandCU x={hand.x} y={hand.y + 36} rot={-90} s={0.56 * DS} skin={look('director').skin} view="back" side="L" curl={0} spread={0.7} thumb={0.25} ink={kk * 0.8}
           blood={(dmg('director', T).handBlood?.R ?? 0) * 0.5} />
         {/* glass in front of them: tint, sheen, the print of the palm, the pane's frame */}
         <rect x={PANE.x0} y={PANE.y0} width={PANE.x1 - PANE.x0} height={PANE.y1 - PANE.y0} fill="#D6F0F6" opacity={0.16} />
         <polygon points={`${PANE.x0 + 30},${PANE.y1} ${PANE.x0 + 70},${PANE.y1} ${PANE.x0 + 180},${PANE.y0} ${PANE.x0 + 140},${PANE.y0}`} fill="#FFFFFF" opacity={0.08 + 0.05 * sheen} />
-        <Glow x={hand.x} y={hand.y + 8} r={44} color="#FFFFFF" opacity={0.3} id="e6print" />
+        <Glow x={hand.x} y={hand.y - 4} r={70} color="#FFFFFF" opacity={0.42} id="e6print" />
         {[PANE.x0, PANE.x1].map((xx) => <line key={xx} x1={xx} y1={PANE.y1} x2={xx} y2={PANE.y0 - 90} stroke={mull} strokeWidth={mw} />)}
         <line x1={PANE.x0 - 40} y1={PANE.y0} x2={PANE.x1 + 40} y2={PANE.y0} stroke={mull} strokeWidth={mw * 0.8} opacity={0.9} />
         {wardens.map((w, i) => <Warden key={i} {...w} ink={kk} />)}
