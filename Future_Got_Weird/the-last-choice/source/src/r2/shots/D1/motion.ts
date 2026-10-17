@@ -173,6 +173,71 @@ export const linePath = (pts: XZ[], turn = 1.4) => {
   };
 };
 
+/**
+ * A path re-parameterised by "gait distance": steep ground (the crater's inner slope, the rim) costs more gait distance
+ * per metre, so a gait with a fixed stride takes shorter steps there and a run with a fixed profile in gait distance
+ * slows on the climb. `k` = extra gait metres per metre per unit of |slope| above `flat`; `cap` = max density.
+ * Returns the warped path (s → point, heading), its gait length Ls, and the density / slope at s.
+ */
+export const slopeWarp = (path: (d: number) => {pos: V3; heading: number}, L: number, o: {k?: number; flat?: number; cap?: number; win?: number} = {}) => {
+  const k = o.k ?? 1.7, flat = o.flat ?? 0.1, cap = o.cap ?? 2.8, w = o.win ?? 0.7, step = 0.2;
+  const gAt = (d: number) => {
+    const p = path(clamp(d, 0, L)).pos;
+    return groundH(p.x, p.z);
+  };
+  const n = Math.max(2, Math.ceil(L / step));
+  const D: number[] = [], S: number[] = [], SL: number[] = [];
+  let acc = 0;
+  for (let i = 0; i <= n; i++) {
+    const d = (L * i) / n;
+    // slope along the path, averaged over ±win m (the rubble is blocky)
+    const sl = (gAt(d + w) - gAt(d - w)) / (Math.min(L, d + w) - Math.max(0, d - w) || 1);
+    const dens = Math.min(cap, 1 + k * Math.max(0, Math.abs(sl) - flat));
+    if (i > 0) acc += ((dens + (1 + k * Math.max(0, Math.abs(SL[i - 1]) - flat))) / 2) * (L / n);
+    D.push(d); S.push(acc); SL.push(sl);
+  }
+  const Ls = acc;
+  const dOfS = (s: number) => {
+    if (s <= 0) return 0;
+    if (s >= Ls) return L + (s - Ls);
+    let lo = 0, hi = n;
+    while (hi - lo > 1) { const m = (lo + hi) >> 1; if (S[m] <= s) lo = m; else hi = m; }
+    return lerp(D[lo], D[hi], (s - S[lo]) / Math.max(1e-9, S[hi] - S[lo]));
+  };
+  const idx = (s: number) => clamp(Math.round((dOfS(s) / L) * n), 0, n);
+  return {
+    path: (s: number) => path(dOfS(s)),
+    Ls, dOfS,
+    slope: (s: number) => SL[idx(s)],
+    density: (s: number) => Math.min(cap, 1 + k * Math.max(0, Math.abs(SL[idx(s)]) - flat)),
+  };
+};
+
+/**
+ * A gait foot: the mech kit's footAt math (mech/kit.tsx; duplicated here so the specs stay pure), with the swinging
+ * foot kept clear of the ground it passes over (a straight swing between two plants cuts through a convex rim).
+ * Returns the ground contact point (the kit adds the ankle height), stance flag and swing fraction.
+ */
+export const gaitFoot = (path: (d: number) => {pos: V3; heading: number}, dist: number, phase: number, stride: number, duty: number, lateral: number, lift: number) => {
+  const c = dist / stride + phase;
+  const n = Math.floor(c), u = c - n;
+  const plantD = (q: number) => (q - phase + duty / 2) * stride;
+  const place = (d: number) => {
+    const p = path(d);
+    const h = (p.heading * Math.PI) / 180;
+    const x = p.pos.x + Math.cos(h) * lateral, z = p.pos.z + Math.sin(h) * lateral;
+    return {x, y: groundH(x, z), z};
+  };
+  if (u < duty) return {...place(plantD(n)), stance: true, s: 0};
+  const s = (u - duty) / (1 - duty);
+  const a = place(plantD(n)), b = place(plantD(n + 1));
+  const e = smooth(s);
+  const x = lerp(a.x, b.x, e), z = lerp(a.z, b.z, e);
+  const L = Math.sin(Math.PI * s) * lift;
+  const y = Math.max(lerp(a.y, b.y, e) + L, groundH(x, z) + L * 0.75 + 0.02 * Math.sin(Math.PI * s));
+  return {x, y, z, stance: false, s};
+};
+
 /** window weight: 0 before a, ramps to 1 by a+ri, holds, falls to 0 from b−ro to b */
 export const win = (T: number, a: number, b: number, ri = 0.15, ro = 0.15) => smooth(seg(T, a, a + ri)) * (1 - smooth(seg(T, b - ro, b)));
 export const after = (T: number, a: number, d = 0.15) => smooth(seg(T, a, a + d));

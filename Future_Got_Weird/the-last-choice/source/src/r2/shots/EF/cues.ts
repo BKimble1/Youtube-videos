@@ -30,16 +30,19 @@ export const CUES_EF: Cue[] = [
   {t: FINAL_BREATH, kind: 'final_breath', gain: -1, pan: 0, dist: 0.04},
   {t: M.EYES_CLOSE + 0.6, kind: 'rubble_shift', gain: -17, pan: -0.2, dist: 0.35}, // his head settles against the slab
   {t: 197.6, kind: 'servo_whir', gain: -18, pan: 0.65, dist: 0.85},
-  // she lets his hand down and moves to the van door, off screen
-  {t: 198.0, kind: 'cloth_move', gain: -10, pan: 0.45, dist: 0.2},
-  {t: 198.55, kind: 'steps_gravel', gain: -13, pan: 0.5, dist: 0.2, dur: 0.4, fade: 0.1},
-  // ---- F1: her fingers find the knob (a small dry click before the radio's own click on RADIO_CLICK)
-  {t: GRIP, kind: 'lever_clunk', gain: -20, rate: 1.9, pan: 0.45, dist: 0.25},
-  // she turns back to him on her knees (right foot, left knee, right foot) and sits back on her heels
-  {t: 201.32, kind: 'cloth_move', gain: -11, pan: -0.1, dist: 0.25},
-  {t: 201.72, kind: 'steps_gravel', gain: -15, pan: -0.1, dist: 0.3, dur: 0.25, fade: 0.08},
-  {t: 202.12, kind: 'steps_gravel', gain: -15, pan: -0.1, dist: 0.3, dur: 0.25, fade: 0.08},
-  {t: 202.6, kind: 'cloth_move', gain: -13, pan: -0.1, dist: 0.35},
+  // her right hand slides from his (the left keeps holding it); she turns on her knees toward the van door and reaches
+  // (the camera leaves his face with her)
+  {t: 198.05, kind: 'cloth_move', gain: -12, pan: 0.4, dist: 0.15},
+  {t: 198.5, kind: 'steps_gravel', gain: -15, pan: 0.45, dist: 0.2, dur: 0.3, fade: 0.1},
+  {t: 198.85, kind: 'cloth_move', gain: -13, pan: 0.2, dist: 0.2},
+  {t: 198.92, kind: 'steps_gravel', gain: -16, pan: 0.2, dist: 0.2, dur: 0.3, fade: 0.1},
+  // ---- F1: her fingers close on the knob (a small dry click before the radio's own click on RADIO_CLICK)
+  {t: GRIP, kind: 'lever_clunk', gain: -20, rate: 1.9, pan: 0.1, dist: 0.25},
+  // she lets go and turns back to him on her knees, her right hand coming back onto his
+  {t: 201.0, kind: 'cloth_move', gain: -12, pan: -0.35, dist: 0.25},
+  {t: 201.3, kind: 'steps_gravel', gain: -15, pan: -0.35, dist: 0.3, dur: 0.25, fade: 0.08},
+  {t: 201.95, kind: 'steps_gravel', gain: -15, pan: -0.3, dist: 0.3, dur: 0.25, fade: 0.08},
+  {t: 202.1, kind: 'cloth_move', gain: -14, pan: -0.3, dist: 0.35},
   // the crane rises past the ring: a unit's sensor follows the lens; drones holding in the smoke
   {t: 203.8, kind: 'servo_whir', gain: -17, pan: 0.5, dist: 0.5},
   {t: 206.2, kind: 'drone_rotor', gain: -18, pan: 0.3, dist: 0.6, dur: 6, fade: 2},

@@ -11,12 +11,14 @@ import type {FigProps} from '../../rig';
 import {unitAttach} from '../../mech';
 import {M} from '../../timing';
 import {XZ, KP, KR, G, onG, rel, keyRoot, keyN, footAt, autoSteps, runDist, runSpeed, cruise, pathLen, fwdOf, rightOf, headingTo, wrapD, win, after} from './motion';
-import {EV, unitD1} from './machines';
+import {EV, unitD1, BR4, br4X, br4Z} from './machines';
 
 // ------------------------------------------------------------------ helpers
 type Seg =
   | {kind: 'run'; path: XZ[]; T0: number; T1: number; gait: GaitW; A?: number; D?: number}
-  | {kind: 'stand'; root: KR[]; feet?: {L: KP[]; R: KP[]}; stag?: number};
+  | {kind: 'stand'; root: KR[]; feet?: {L: KP[]; R: KP[]}; stag?: number}
+  /** a scripted move (root and footholds as functions of T), e.g. the BR4 drive */
+  | {kind: 'fn'; T0: number; at: (T: number) => {pos: V3; heading: number; footL: V3; footR: V3}};
 
 const GAITS = {
   dir: {stride: 2.1, duty: 0.34, lift: 0.17, bob: 10, armAmp: 40, lean: 15} as GaitW,
@@ -27,7 +29,7 @@ const GAITS = {
   push: {stride: 1.1, duty: 0.55, lift: 0.06, bob: 4, armAmp: 0, lean: 26} as GaitW,
 };
 
-type Body = {pos: V3; heading: number; footL: V3; footR: V3; gait?: Pose; runK: number; seg: number; inRun: boolean};
+type Body = {pos: V3; heading: number; footL: V3; footR: V3; gait?: Pose; runK: number; seg: number; inRun: boolean; phase?: number};
 
 /** sample a timeline of runs and stands (feet planted; a run starts from the stance and settles into the next) */
 const bodyAt = (segs: Seg[], T: number): Body => {
@@ -35,10 +37,11 @@ const bodyAt = (segs: Seg[], T: number): Body => {
   let i = 0;
   for (let k = 0; k < segs.length; k++) {
     const s = segs[k];
-    const a = s.kind === 'run' ? s.T0 : s.root[0][0];
+    const a = s.kind === 'stand' ? s.root[0][0] : s.T0;
     if (T >= a) i = k;
   }
   const s = segs[i];
+  if (s.kind === 'fn') return {...s.at(T), runK: 0, seg: i, inRun: false};
   if (s.kind === 'run') {
     const L = pathLen(s.path);
     const A = s.A ?? 1.0, D = s.D ?? 0.6;
@@ -56,7 +59,7 @@ const bodyAt = (segs: Seg[], T: number): Body => {
       fl = mixFoot(pb.footL, fl, w); fr = mixFoot(pb.footR, fr, w);
     }
     void end;
-    return {pos: g.pos, heading: g.heading, footL: fl, footR: fr, gait: g.pose, runK: k, seg: i, inRun: true};
+    return {pos: g.pos, heading: g.heading, footL: fl, footR: fr, gait: g.pose, runK: k, seg: i, inRun: true, phase: g.phase};
   }
   const b = standAt(s, T);
   // settle out of the previous run: the feet land on their first stance footholds
@@ -187,18 +190,44 @@ const dirFeetBR1 = (() => {
 })();
 const D_AFTER: KR[] = [
   [EV.br1 + 0.75, BR1_P.x - SKID - 0.1, -0.76, 90], [80.7, 40.12, -0.77, 90], [81.0, 40.12, -0.77, 90], [81.65, 39.6, 0.15, 76],
-  [83.3, 39.6, 0.15, 50], [84.55, 39.6, 0.15, 62], [85.45, 41.5, -0.88, 90], [85.72, 41.5, -0.88, 90],
+  [83.3, 39.6, 0.15, 50], [84.3, 39.6, 0.15, 62],
 ];
-const D_CHARGE: XZ[] = [{x: 41.5, z: -0.88}, {x: 43.32, z: -0.95}, {x: 45.35, z: -1.0}]; // charge, contact at 43.32, drive
+// after BR3 he hurries into the gap U1 and U2 left (84.3 → 85.3) and sets himself in front of U3
+const D_TO_GAP: XZ[] = [{x: 39.6, z: 0.15}, {x: 40.6, z: -0.45}, {x: 42.35, z: -0.92}];
+const D_SET: KR[] = [[85.3, 42.35, -0.92, 90], [BR4.gather, 42.35, -0.92, 90]];
+/**
+ * BR4, his side (the timeline is shared with U3 in machines.ts: br4X/br4Z/BR4): the left foot plants forward as he
+ * dips (gather), two burst strides (right, then left landing as the shoulder meets the chest), three short driving
+ * steps (right, left, right; low lift), the shove, the left foot catches him. Footholds [T, x, lift] on his two lines.
+ */
+const BR4_FEET: {L: [number, number, number][]; R: [number, number, number][]} = {
+  // each foot lands ≈ 0.2–0.28 m ahead of the root and lifts once the root is ≈ 0.3 m past it
+  L: [[85.68, 42.51, 0], [85.86, 42.74, 0.07], [86.16, 42.74, 0], [BR4.hit - 0.02, 44.11, 0.1], [86.55, 44.11, 0], [86.7, 44.91, 0.05],
+    [86.93, 44.91, 0], [87.12, 45.6, 0.06]],
+  R: [[85.92, 42.19, 0], [86.12, 43.15, 0.12], [86.28, 43.15, 0], [86.46, 44.42, 0.05], [86.7, 44.42, 0], [86.86, 45.2, 0.05],
+    [87.15, 45.2, 0], [87.36, 45.42, 0.04]],
+};
+const br4Feet = (() => {
+  const z = (T: number) => br4Z(T);
+  const mk = (k: [number, number, number][], side: -1 | 1): KP[] => k.map(([t, x, l]) => [t, x, z(t) + side * 0.15, l] as KP);
+  return {L: mk(BR4_FEET.L, -1), R: mk(BR4_FEET.R, 1)};
+})();
+const br4Body = (T: number) => {
+  const x = br4X(T), z = br4Z(T);
+  return {pos: onG(x, z), heading: 90, footL: footAt(br4Feet.L, T, 0.06), footR: footAt(br4Feet.R, T, 0.06)};
+};
+// then up the slope to look over the crest into the crater (the gap), and on to the slab
 const D_DRIVE: KR[] = [
-  [EV.br4Fall, 45.35, -1.0, 90], [87.4, 45.7, -0.98, 92], [88.2, 45.62, -0.98, 90], [89.8, 45.62, -0.98, 90],
+  [BR4.settle, br4X(BR4.settle), br4Z(BR4.settle), 90], [88.1, br4X(BR4.settle), br4Z(BR4.settle), 90], [88.75, 45.85, -0.98, 92], [89.8, 45.85, -0.98, 90],
   [91.0, 46.6, 2.5, 160], [91.45, 46.8, 2.75, 270], [94.3, 46.8, 2.75, 270],
 ];
 const DIR_SEGS: Seg[] = [
   {kind: 'run', path: DIR_RUN, T0: M.CHARGE, T1: EV.clash, gait: GAITS.dir, A: 1.0, D: 0},
   {kind: 'stand', root: [...D_FIGHT, [EV.br1, BR1_P.x, BR1_P.z, 90], [EV.br1 + 0.32, BR1_P.x - SKID + 0.02, -0.76, 91], ...D_AFTER], feet: undefined},
-  {kind: 'run', path: D_CHARGE, T0: 85.72, T1: EV.br4Fall, gait: GAITS.dir, A: 0.38, D: 0.25},
-  {kind: 'stand', root: D_DRIVE},
+  {kind: 'run', path: D_TO_GAP, T0: 84.3, T1: 85.3, gait: GAITS.hurry, A: 0.35, D: 0.4},
+  {kind: 'stand', root: D_SET, feet: undefined},
+  {kind: 'fn', T0: BR4.gather, at: br4Body},
+  {kind: 'stand', root: D_DRIVE, feet: undefined},
 ];
 // explicit feet for the fight stand (guard, skid, re-plant, recover): the footholds after the skid continue the steps
 (() => {
@@ -209,6 +238,17 @@ const DIR_SEGS: Seg[] = [
   after.L.slice(1).forEach((k) => L.push(k));
   after.R.slice(1).forEach((k) => R.push(k));
   (DIR_SEGS[1] as Extract<Seg, {kind: 'stand'}>).feet = {L, R};
+  // set in front of U3: feet where the BR4 footholds start (left forward)
+  const z = br4Z(BR4.gather);
+  (DIR_SEGS[3] as Extract<Seg, {kind: 'stand'}>).feet = {
+    L: [[85.3, 42.51, z - 0.15]], R: [[85.3, 42.19, z + 0.15]],
+  };
+  br4Feet.L.unshift([BR4.gather, 42.51, z - 0.15]); br4Feet.R.unshift([BR4.gather, 42.19, z + 0.15]);
+  // after the drive: start the walk from where the feet are
+  const dv = autoSteps(D_DRIVE, {stepLen: 0.45, half: 0.15, stag: 0.12});
+  const lL = br4Feet.L[br4Feet.L.length - 1], lR = br4Feet.R[br4Feet.R.length - 1];
+  dv.L[0] = [dv.L[0][0], lL[1], lL[2]]; dv.R[0] = [dv.R[0][0], lR[1], lR[2]];
+  (DIR_SEGS[5] as Extract<Seg, {kind: 'stand'}>).feet = dv;
 })();
 
 /** The plate guard (left wrist target, body-local rig units) and the plate's world centre for a given guard. */
@@ -218,6 +258,29 @@ const plateFromGuard = (b: {pos: V3; heading: number}, g: {r: number; u: number;
   const w = fromLoc(b, g);
   const f = fwdOf(b.heading);
   return {x: w.x + f.x * 0.05, y: w.y - 0.15, z: w.z + f.z * 0.05};
+};
+
+const lerpLoc = (a: {r: number; u: number; f: number}, b: {r: number; u: number; f: number}, k: number) => ({r: lerp(a.r, b.r, k), u: lerp(a.u, b.u, k), f: lerp(a.f, b.f, k)});
+/**
+ * The plate arm on the run: still guarded (forearm up across the chest, plate forward) but carried by the torso, so it
+ * rides the stride's bob and lean, counter-rotates with the shoulders and pumps a little in time with the legs.
+ * The target is set in the torso's frame (about the pelvis), then turned into the body frame the rig takes.
+ */
+const guardRun = (b: Body): Pose => {
+  const g = b.gait ?? {};
+  const c = b.phase ?? 0, sw = Math.sin(2 * Math.PI * c);
+  const lean = g.lean ?? 14, drop = g.drop ?? 0;
+  const twist = -7 * sw; // the left shoulder comes forward as the right leg does
+  // torso frame (r, u from the pelvis, f), at sw = 0 this is the old fixed guard {−6, 268, 96} at lean 15
+  const r1 = -6 + 6 * sw, u1 = 129 + 6 * sw, f1 = 65 + 16 * sw;
+  const tl = (lean * Math.PI) / 180, tw = (-twist * Math.PI) / 180;
+  const u2 = u1 * Math.cos(tl) - f1 * Math.sin(tl), f2 = u1 * Math.sin(tl) + f1 * Math.cos(tl);
+  const r3 = r1 * Math.cos(tw) + f2 * Math.sin(tw), f3 = -r1 * Math.sin(tw) + f2 * Math.cos(tw);
+  return {
+    twist,
+    armL: {local: {r: r3, u: 165 - drop + u2, f: f3}, pole: {r: -1, u: -0.6, f: 0}, palm: {r: 0.3, u: 0, f: -1}},
+    armR: g.armR, handL: 'fist', handR: 'fist',
+  };
 };
 
 export const directorAt = (T: number): CrewOut => {
@@ -260,11 +323,35 @@ export const directorAt = (T: number): CrewOut => {
   }
   // after BR1: a glance down at the plate (the dent), then up again
   const glance = win(T, 80.25, 81.15, 0.25, 0.3);
-  // BR4 charge: tuck the plate, shoulder first; drive; stumble on the crest; stand in the gap, breathing
-  const chg = T > 85.4 && T < EV.br4Fall + 0.3 ? smooth(clamp((T - 85.4) / 0.35)) * (1 - after(T, EV.br4Fall, 0.35)) : 0;
-  if (chg > 0) pose = blendPose(pose, layer(CHARGE_POSE, {drop: 30 + 14 * win(T, EV.br4, EV.br4Fall, 0.05, 0.1), lean: 32}), chg);
-  const stumble = win(T, EV.br4Fall, 88.1, 0.12, 0.6);
-  if (stumble > 0) pose = blendPose(pose, layer(BRACED({wide: 0.9}), {drop: 40, lean: 30, armR: {local: {r: 40, u: 120, f: 70}}, handR: 'brace', face: {mouth: 'pant', brows: -0.3}, head: {pitch: 10}}), stumble);
+  // BR4: gather (left foot plants, he dips, the plate tucks in front of his face, left shoulder leading) → burst →
+  // shoulder and plate into U3's chest → three short driving steps, low → the shove → he catches himself on the slope
+  const g4 = T > 85.2 && T < BR4.settle + 0.9 ? smooth(clamp((T - 85.3) / 0.36)) * (1 - after(T, BR4.settle - 0.05, 0.55)) : 0;
+  let chg = 0, tuck = 0;
+  if (g4 > 0) {
+    const kB = smooth(clamp((T - BR4.go) / 0.2)); // burst
+    const kD = after(T, BR4.hit - 0.03, 0.06); // contact → drive
+    const kS = win(T, BR4.release - 0.06, BR4.release + 0.32, 0.08, 0.18); // the shove
+    const imp = T < BR4.hit ? 0 : Math.exp(-(T - BR4.hit) * 9); // the impact jolt
+    // right arm: pumps through the burst, then the open hand on its flank, then shoves with the plate arm
+    const pump = Math.sin(clamp((T - BR4.go) / (BR4.hit - BR4.go)) * Math.PI * 1.5);
+    const armR0 = {r: 52, u: 196 + 40 * pump, f: -30 + 90 * pump};
+    const armR1 = {r: 34, u: 250, f: 112}, armR2 = {r: 30, u: 285, f: 150};
+    const aR = lerpLoc(lerpLoc(lerpLoc({r: 50, u: 190, f: -26}, armR0, kB), armR1, kD), armR2, kS);
+    // the plate arm: tucked in front of his face, forearm up, plate facing forward; pushed out in the shove
+    const aL = lerpLoc(lerpLoc({r: 10, u: 262, f: 122}, {r: 8, u: 252, f: 132 - 22 * imp}, kD), {r: 2, u: 290, f: 165}, kS);
+    const P: Pose = {
+      drop: lerp(lerp(60, 40, kB), 46, kD) + 10 * imp, lean: lerp(lerp(24, 33, kB), 36, kD) - 10 * kS + 6 * imp, twist: lerp(-30, -24, kD) + 8 * kS, side: 0,
+      armL: {local: aL, pole: {r: -1, u: -0.8, f: 0.1}, palm: {r: -0.25, u: 0.15, f: -1}}, armR: {local: aR, pole: {r: 1, u: -0.6, f: -0.3}},
+      handL: 'fist', handR: kD > 0.5 && kS < 0.5 ? 'open' : 'fist',
+      head: {pitch: -6 + 10 * kD, yaw: 10 * kD, roll: 0}, face: {mouth: kD > 0.3 ? 'grit' : 'grit', brows: -1, squint: 0.5 + 0.4 * kD},
+      breath: 0.6,
+    };
+    pose = blendPose(pose, P, g4);
+    chg = g4;
+    tuck = g4 * (1 - kS * 0.6);
+  }
+  const stumble = win(T, BR4.release + 0.15, 88.4, 0.35, 0.6);
+  if (stumble > 0) pose = blendPose(pose, layer(BRACED({wide: 0.9}), {drop: 40, lean: 26, armR: {local: {r: 40, u: 120, f: 70}}, handR: 'brace', face: {mouth: 'pant', brows: -0.3}, head: {pitch: 10}}), stumble * (1 - g4 * 0.7));
   // the gap, then the slab: crouch with his back to it, panting, plate dented
   const crouch = after(T, 91.3, 0.55);
   if (crouch > 0) pose = blendPose(pose, layer(KNEEL('R'), {drop: 70, lean: -6, armL: {local: {r: -30, u: 200, f: 60}, palm: {r: 0.4, u: 0.2, f: -1}}, armR: {local: {r: 52, u: 120, f: 70}}, handL: 'fist', handR: 'relaxed', face: {mouth: 'pant', brows: 0.1, worry: 0.2}, breath: 0.9}), crouch);
@@ -274,13 +361,13 @@ export const directorAt = (T: number): CrewOut => {
   const u3 = unitAttach(unitD1('U3', T));
   const tgt = T < 82 ? u1.head : T < 84.3 ? add3(u1.chest, {x: 0, y: 0.2, z: 0}) : T < 89.8 ? u3.head : {x: 46.4, y: 1.9, z: 3.7};
   const hy = lookYaw(b, tgt, 75), hp = lookPitch(b, tgt);
-  pose = layer(pose, {head: {yaw: lerp(hy, -20, glance), pitch: lerp(hp, 30, glance), roll: 0}, face: {...(pose.face ?? {}), lookY: 0.7 * glance}});
+  // (in the drive his head stays tucked behind the plate, eyes up)
+  const ph = pose.head ?? {};
+  pose = layer(pose, {head: {yaw: lerp(lerp(hy, -20, glance), ph.yaw ?? 0, tuck), pitch: lerp(lerp(hp, 30, glance), ph.pitch ?? 0, tuck), roll: 0}, face: {...(pose.face ?? {}), lookY: 0.7 * glance - 0.5 * tuck}});
   // the plate arm: body-local guard (holds against any camera) except during the run, the charge, the crouch
   const guardOn = (T > EV.clash - 0.6 ? 1 : 0) * (1 - chg) * (1 - crouch) * (1 - stumble * 0.6) * (T < 91.0 ? 1 : 1 - after(T, 90.6, 0.5));
   const arm = blendPose(pose, layer(pose, {armL: {local: guard, pole: {r: -1, u: -0.7, f: 0.1}, palm: {r: -0.55, u: 0.1, f: -1}}}), guardOn);
-  const runArms: Pose = b.seg === 2
-    ? {armL: CHARGE_POSE.armL, armR: CHARGE_POSE.armR, lean: 38, drop: 40, twist: -34, handL: 'fist', handR: 'fist', face: {mouth: 'grit', brows: -1}}
-    : {armL: {local: {r: -6, u: 268, f: 96}, pole: {r: -1, u: -0.6, f: 0}, palm: {r: 0.3, u: 0, f: -1}}, armR: b.gait?.armR, handL: 'fist', handR: 'fist'};
+  const runArms: Pose = guardRun(b);
   const final = withRun(b, withLook(arm, 'director', b, T), runArms);
   const spec = base('director', 'd1dir', 11, b, T, {...final, handL: 'fist', handR: final.handR ?? 'fist', wearL: plateWear(plate, {glint})});
   const plateW = plateFromGuard(b, guard);

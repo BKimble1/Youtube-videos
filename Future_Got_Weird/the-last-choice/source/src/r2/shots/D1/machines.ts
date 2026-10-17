@@ -22,9 +22,10 @@ import {M} from '../../timing';
 import {PLAN} from '../../world/plan';
 import {armyUnits} from '../B/army';
 import {rnd} from '../../../kit/math';
-import {XZ, KR, KP, G, keyRoot, footAt, autoSteps, runDist, runSpeed, cruise, linePath, pathLen, fwdOf, rightOf, win, after} from './motion';
+import {XZ, KR, KP, G, keyRoot, footAt, autoSteps, runDist, runSpeed, cruise, linePath, pathLen, fwdOf, rightOf, headingTo, win, after, slopeWarp, gaitFoot} from './motion';
 
 const ground = G;
+const lerp3s = (a: V3, b: V3, k: number): V3 => ({x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), z: lerp(a.z, b.z, k)});
 const RUN_T0 = 57.0; // the front starts its run on C6's build (the system commits)
 export const D1_IDS = {U1: 8101, U2: 8102, U3: 8103, U4: 8104, U5: 8105, U6: 8106, U7: 8107, U8: 8108};
 
@@ -41,7 +42,7 @@ export const EV = {
   br1Lock: 78.5, br1: 79.1, // U1's swing meets the plate: the plate dents
   br2: 81.78, // breaker → U1's chest plate
   br3Fire: 82.98, br3Bite: 83.28, br3Taut: 83.45, br3Topple: 83.5, br3Crash: 84.06, // tether swings U1 into U2
-  br4Go: 85.95, br4: 86.36, br4Fall: 86.98, // the Director's shoulder charge → U3 into the crater
+  br4Go: 85.9, br4: 86.36, br4Fall: 87.35, // the Director's shoulder drive → U3 over the crest, down into the crater
 };
 
 // ------------------------------------------------------------------ the Director's plate, as the units aim at it
@@ -115,6 +116,7 @@ type Plan = {
   id: number;
   lane: XZ[]; // approach from the halted front to the final spot (the last segment points along the final heading)
   T0: number; T1: number; stride?: number;
+  walk?: boolean; // a short walk-up, not a charge (upright, low swing)
   root?: KR[]; // after arrival: [T, x, z, heading] (first key = arrival)
   feet?: {L: KP[]; R: KP[]}; // explicit footsteps after arrival (default: autoSteps(root))
   act?: (T: number) => Partial<UnitSpec>;
@@ -123,23 +125,65 @@ type Plan = {
 /** the active one of several strikes (each has a window −0.42 … +0.85 s around its contact) */
 const pickStrike = (T: number, list: NonNullable<UnitSpec['strike']>[]) => list.find((s) => T > s.t0 - 0.43 && T < s.t0 + 0.86);
 
+const HIPW = 0.15; // mech parts U.hipW (the kit's gait feet sit hipW + 0.02 off the path; standing feet hipW + 0.04)
+/**
+ * The approach in gait distance: the lanes climb out of the bowl and over the west rim (≈ 2.5–4 m up in a few metres),
+ * so steep ground costs extra gait distance (shorter steps, slower climb — see motion.ts slopeWarp). Cached per plan.
+ */
+const WARP = new Map<Plan, ReturnType<typeof slopeWarp>>();
+const warpOf = (pl: Plan) => {
+  let w = WARP.get(pl);
+  if (!w) WARP.set(pl, (w = slopeWarp(linePath(pl.lane, 1.2), pathLen(pl.lane))));
+  return w;
+};
+
 const run = (pl: Plan, T: number): UnitSpec => {
   const L = pathLen(pl.lane);
   const path = linePath(pl.lane, 1.2);
   const end = path(L);
   const base: UnitSpec = {id: pl.id, t: T, pos: end.pos, heading: end.heading, ground, idle: 0.55, key: `d1u${pl.id}`};
   if (T < pl.T1) {
-    const dist = runDist(T, pl.T0, pl.T1, L, 1.2, 0.75);
-    const v = runSpeed(T, pl.T0, pl.T1, L, 1.2, 0.75);
-    const k = clamp(v / cruise(pl.T0, pl.T1, L, 1.2, 0.75));
-    return {...base, gait: {path, dist, stride: pl.stride ?? 2.3, lift: 0.16 + 0.1 * k, start: 0, end: L}, crouch: 0.05 + 0.2 * k, lean: 4 + 11 * k, lockAt: pl.T0 + 0.4};
+    const W = warpOf(pl), Ls = W.Ls;
+    const dist = runDist(T, pl.T0, pl.T1, Ls, 1.2, 0.75);
+    const v = runSpeed(T, pl.T0, pl.T1, Ls, 1.2, 0.75);
+    const k = clamp(v / cruise(pl.T0, pl.T1, Ls, 1.2, 0.75));
+    const stride = pl.stride ?? 2.3, lift = pl.walk ? 0.12 : 0.16 + 0.1 * k;
+    const sl = clamp(W.slope(dist), -1, 1); // + = climbing
+    // the feet (the kit's gait math, swing kept clear of the rim) blended to standing at the run's ends
+    const wk = smooth(dist / 0.6) * (1 - smooth((dist - (Ls - 0.6)) / 0.6));
+    const at = W.path(dist), fw = fwdOf(at.heading), rt = rightOf(at.heading);
+    const foot = (sd: -1 | 1, phase: number) => {
+      const f = gaitFoot(W.path, dist, phase, stride, 0.55, sd * (HIPW + 0.02), lift);
+      const bx = at.pos.x + rt.x * sd * (HIPW + 0.04) + fw.x * sd * 0.04, bz = at.pos.z + rt.z * sd * (HIPW + 0.04) + fw.z * sd * 0.04;
+      return {p: lerp3s({x: bx, y: G(bx, bz), z: bz}, f, wk), pitch: (f.stance ? 0 : Math.sin(Math.PI * f.s) * -12) * wk};
+    };
+    const fl = foot(-1, 0), fr = foot(1, 0.5);
+    return {
+      ...base, gait: {path: W.path, dist, stride, lift, start: 0, end: Ls}, feet: {L: fl.p, R: fr.p, pitchL: fl.pitch, pitchR: fr.pitch},
+      // climbing: a deeper crouch (the downhill foot stays in reach) and a lean into the slope
+      crouch: (pl.walk ? 0.05 + 0.06 * k : 0.05 + 0.2 * k) + 0.12 * Math.abs(sl) * wk,
+      lean: (pl.walk ? 3 + 4 * k : 4 + 11 * k) + clamp(sl * 22, -8, 16) * wk,
+      lockAt: pl.T0 + 0.4,
+    };
   }
   const root: KR[] = pl.root ?? [[pl.T1, end.pos.x, end.pos.z, end.heading]];
   const r = keyRoot(root, T);
   const feet = pl.feet ?? autoSteps(root, {stepLen: 0.55});
   const fl = footAt(feet.L, T, 0.11), fr = footAt(feet.R, T, 0.11);
-  return {...base, pos: {x: r.p.x, y: 0, z: r.p.z}, heading: r.h, feet: {L: fl, R: fr}, lockAt: pl.T0 + 0.4, ...(pl.act ? pl.act(T) : {})};
+  const sp: UnitSpec = {...base, pos: {x: r.p.x, y: 0, z: r.p.z}, heading: r.h, feet: {L: fl, R: fr}, lockAt: pl.T0 + 0.4, ...(pl.act ? pl.act(T) : {})};
+  // on the rim's slopes a planted foot can sit well below the pelvis's ground: crouch enough to keep it in reach
+  const f = sp.feet ?? {};
+  const gy = G(sp.pos.x, sp.pos.z);
+  const need = Math.max(0, ...[f.L, f.R].map((q) => {
+    if (!q) return 0;
+    const dh = Math.min(0.9, Math.hypot(q.x - sp.pos.x, q.z - sp.pos.z));
+    return HIP_Y + (gy - q.y) - ANKLE - Math.sqrt(LEG * LEG - dh * dh);
+  }));
+  if (need > (sp.crouch ?? 0)) sp.crouch = need;
+  return sp;
 };
+// the unit's leg (mech parts U): hip 1.05 m above the root's ground when standing, thigh + shin 0.98 (keep a little bend)
+const HIP_Y = 1.05, ANKLE = 0.1, LEG = 0.95;
 
 // U1 — the Director's opponent
 const U1_ROOT: KR[] = [
@@ -183,7 +227,6 @@ const U1: Plan = {
     };
   },
 };
-const lerp3s = (a: V3, b: V3, k: number): V3 => ({x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), z: lerp(a.z, b.z, k)});
 
 // U2 — north of U1; BR3 partner
 const U2: Plan = {
@@ -201,22 +244,101 @@ const U2: Plan = {
 };
 
 // U3 — last in line, in the gap; BR4
-const U3_ROOT: KR[] = [
-  [68.62, 44.6, -0.9, 270], [84.3, 44.6, -0.9, 270], [85.3, 44.25, -0.95, 270],
-  [EV.br4, 44.25, -0.95, 270], [EV.br4Fall, 46.3, -1.02, 267],
-];
+// ---- BR4, the shared timeline (the Director's side is in crew.tsx): he gathers low at (42.35, −0.92), bursts two
+// strides into U3's chest (shoulder and tucked plate into its lower chest plate) at EV.br4, drives it 1.2 m back up the
+// rim's west face in three short steps, shoves off; U3 staggers two steps back onto the crest (x ≈ 46.5, +1.0), its
+// heels catch and it topples backward over the crest, lands on the inner slope and slides down it.
+export const BR4 = {gather: M.BR4, go: 85.9, hit: EV.br4, release: 86.95, settle: 87.4, fall: EV.br4Fall, slide0: 88.0, slide1: 89.2};
+/** the Director's root x through BR4 (85.64 → 87.4): gather, burst, drive (decelerating from the impact), settle */
+export const br4X = (T: number): number => {
+  if (T <= BR4.gather) return 42.35;
+  if (T < BR4.go) return 42.35 + 0.12 * smooth((T - BR4.gather) / (BR4.go - BR4.gather));
+  if (T < BR4.hit) return 42.47 + 1.5 * Math.pow((T - BR4.go) / (BR4.hit - BR4.go), 1.7); // ≈ 5.5 m/s at contact
+  if (T < BR4.release) { const u = T - BR4.hit; return 43.97 + 2.4 * u - 0.68 * u * u; } // 2.4 → 1.6 m/s
+  const xr = 43.97 + 2.4 * 0.59 - 0.68 * 0.59 * 0.59;
+  const u = Math.min(T - BR4.release, 0.45);
+  return xr + 1.6 * u - (1.6 / 0.9) * u * u; // stops over 0.45 s
+};
+export const br4Z = (T: number) => lerp(-0.92, -0.98, smooth(clamp((T - BR4.go) / 1.2)));
+/** U3's root x: waiting, driven (0.48 m ahead of him), shoved off (2.6 m/s, slowing), heels caught on the crest, slide */
+const U3_GAP = 0.63;
+const u3X = (T: number): number => {
+  if (T < BR4.hit) return 44.6;
+  if (T < BR4.release) return br4X(T) + U3_GAP;
+  const x0 = br4X(BR4.release) + U3_GAP;
+  const u = Math.min(T - BR4.release, BR4.fall - BR4.release);
+  const xf = x0 + 2.6 * u - 1.0 * u * u;
+  if (T < BR4.slide0) return xf;
+  const k = clamp((T - BR4.slide0) / (BR4.slide1 - BR4.slide0));
+  return xf + 1.25 * (1 - (1 - k) * (1 - k)); // slides down the inner slope, friction-slowed
+};
+/**
+ * The angle (from upright) at which a body toppled about pivot p in direction d comes to rest on the ground: the first
+ * angle at which the body line (crumpled length ≈ 2 m) touches the terrain, allowing for the torso's thickness.
+ */
+const restAng = (p: XZ, d: XZ, lo = 70, hi = 150): number => {
+  const py = G(p.x, p.z) + 0.16;
+  for (let a = lo; a <= hi; a += 0.5) {
+    const sa = Math.sin((a * Math.PI) / 180), ca = Math.cos((a * Math.PI) / 180);
+    for (const [sx, need] of [[0.6, 0.16], [1.0, 0.2], [1.4, 0.22], [1.8, 0.18], [2.05, 0.14]]) {
+      const x = p.x + d.x * sx * sa, z = p.z + d.z * sx * sa;
+      if (py + sx * ca - G(x, z) < need) return a;
+    }
+  }
+  return hi;
+};
+const U3_FALL_DIR = {x: 1, y: 0, z: -0.04};
+const U3_ROOT: KR[] = [[68.62, 44.6, -0.9, 270], [84.3, 44.6, -0.9, 270], [84.9, 44.6, -0.95, 270]];
+/** U3's feet through BR4: planted; skidding back with the drive (heels lifting); two stagger steps back; the slide */
+const u3Feet = (T: number): {L: V3; R: V3; pitchL: number; pitchR: number} => {
+  const z = -0.95, half = 0.19;
+  const at = (x: number, sd: -1 | 1, up = 0): V3 => ({x, y: G(x, z - sd * half) + up, z: z - sd * half}); // heading 270: right = −z
+  const x = u3X(T);
+  if (T < BR4.release) { const lift = win(T, BR4.hit, BR4.release + 0.05, 0.12, 0.12); return {L: at(x, -1), R: at(x, 1), pitchL: -14 * lift, pitchR: -10 * lift}; }
+  // stagger: right foot back, then left (each lands at the root's position then)
+  const step = (t0: number, t1: number, x0: number, x1: number, sd: -1 | 1): V3 => {
+    const u = clamp((T - t0) / (t1 - t0));
+    const xx = lerp(x0, x1, smooth(u));
+    return at(xx, sd, Math.sin(Math.PI * u) * 0.12);
+  };
+  const xr = u3X(BR4.release), xa = u3X(BR4.release + 0.2), xb = u3X(BR4.fall) + 0.15;
+  const slide = T > BR4.slide0 ? u3X(T) - u3X(BR4.slide0) : 0;
+  const R = step(BR4.release + 0.02, BR4.release + 0.2, xr, xa + 0.1, 1);
+  const L = step(BR4.release + 0.2, BR4.fall - 0.02, xr, xb, -1);
+  return {L: {...at(L.x + slide, -1), y: T < BR4.fall ? L.y : G(L.x + slide, L.z)}, R: {...at(R.x + slide, 1), y: T < BR4.fall ? R.y : G(R.x + slide, R.z)}, pitchL: 0, pitchR: 0};
+};
 const U3: Plan = {
   id: D1_IDS.U3, lane: lane(VID.U3, {x: 70, z: -2.2}, {x: 47.9, z: -0.9}, {x: 44.6, z: -0.9}), T0: RUN_T0 + 0.35, T1: 68.62,
   root: U3_ROOT,
-  act: (T) => ({
-    look: T < EV.br4Fall ? (T < 84 ? directorHead(T) : {x: 41.5, y: 1.6, z: -0.8}) : undefined,
-    raise: {t0: 85.2, t1: 86.2, side: 'L'},
-    hits: [{t0: 68.74, dir: {x: 1, y: 0, z: 0}, strength: 0.7}, {t0: EV.br4, dir: {x: 1, y: 0, z: -0.02}, strength: 1.7}],
-    fall: {t0: EV.br4Fall, dir: {x: 1, y: 0, z: -0.06}, ang: 110}, // over the rim, down the inner slope
-    damage: {dent: {t0: EV.br4, deg: -8}, dead: {t0: 87.85}},
-    lockAt: 67.8,
-  }),
+  act: (T) => {
+    if (T < 85.0) return {look: T < 84 ? directorHead(T) : {x: 41.5, y: 1.6, z: -0.8}, hits: [{t0: 68.74, dir: {x: 1, y: 0, z: 0}, strength: 0.7}], lockAt: 67.8};
+    // it leans in and raises its left arm to hammer down on him as he comes; the hit folds it over his shoulder, then
+    // the drive lifts it and bends it back (heels up), the shove sends it over the crest
+    const wind = smooth(clamp((T - 85.1) / 0.6));
+    const back = after(T, BR4.hit + 0.1, 0.5) * 0.35 + after(T, BR4.release, 0.3) * 0.65;
+    const curl = after(T, BR4.fall, 0.5); // it curls as it goes over (chin in), so it lies along the slope
+    const feet = u3Feet(T);
+    const x = u3X(T);
+    const pivot = {x: (feet.L.x + feet.R.x) / 2, z: (feet.L.z + feet.R.z) / 2};
+    const gx = G(x, -0.95);
+    return {
+      pos: {x, y: 0, z: -0.95}, heading: T < BR4.release ? 270 : lerp(270, 266, after(T, BR4.release, 0.4)),
+      feet,
+      look: T < BR4.hit ? {x: br4X(T), y: G(br4X(T), -0.92) + 1.2, z: -0.92} : undefined,
+      crouch: T < BR4.hit ? 0.3 * wind : lerp(0.3, 0.02, smooth(clamp((T - BR4.hit) / 0.25))),
+      lean: T < BR4.hit ? 16 * wind : lerp(16 - 40 * back, 10, curl),
+      raise: {t0: 85.1, t1: BR4.hit + 0.2, side: 'L'},
+      // its right arm reaches over his back as it folds, then flails forward as it goes over
+      armR: T > BR4.hit - 0.05 && T < BR4.fall + 0.1 ? {hand: {x: x - 0.62, y: gx + 1.55 + 0.5 * back, z: -0.72}, open: true} : undefined,
+      hits: [{t0: BR4.hit, dir: {x: 1, y: 0, z: -0.02}, strength: 1.0}, {t0: BR4.release, dir: {x: 1, y: 0, z: 0}, strength: 0.8}],
+      fall: {t0: BR4.fall, dir: U3_FALL_DIR, ang: restAng(pivot, U3_FALL_DIR)}, // over the crest, down the inner slope
+      damage: {dent: {t0: BR4.hit, deg: -8}, dead: {t0: BR4.slide1 - 0.3}},
+      lockAt: 67.8,
+    };
+  },
 };
+/** U3's fall and slide (for FX/sound): ground contact on the inner slope, then the slide */
+export const U3_SLIDE = {t0: BR4.slide0, t1: BR4.slide1};
 
 // U4 — the breaker's; knee broken, then pried and ripped
 const U4_P = {x: 41.45, z: 3.72}, U4_H = 285;
@@ -313,30 +435,38 @@ const U8: Plan = {
   act: (T) => ({look: {x: 37.0, y: 1.6, z: 7.6}, strike: pickStrike(T, [{t0: 76.0, side: 'L', target: {x: 41.0, y: 1.4, z: 8.6}, kind: 'punch'}]), lockAt: 67.9}),
 };
 
-// the reserve: the vanguard's second rank follows the front line into the crater and halts there (it holds while the
-// front fights)
+// the reserve: as the front line leaves the east rim, the vanguard's second rank steps up into the empty slots and
+// holds there on the far rim (x ≈ 81, ground ≈ +0.3…+0.9): over the west rim's crest "the gap" shows the crater and
+// that line beyond it. (The bowl floor, −2.5…−3.7, is hidden from the fight by the west rim.)
 const RESERVE_SPOTS: [number, XZ][] = (() => {
-  // order-preserving assignment of rank-2 vanguard units to the halt spots (sorted by z), so their lanes never cross
-  const spots: XZ[] = [{x: 58.6, z: -9.8}, {x: 57.4, z: -5.6}, {x: 61.8, z: -3.6}, {x: 58.8, z: -1.6}, {x: 63.4, z: 0.4}, {x: 58.0, z: 0.9}, {x: 62.2, z: 4.4}, {x: 58.9, z: 6.6}];
+  const vacated = (['U1', 'U2', 'U4', 'U5', 'U6', 'U7', 'U8'] as const).map((n) => vanAt(VID[n])).sort((a, b) => a.z - b.z);
+  // order-preserving assignment of free second-rank units to the vacated slots (sorted by z): no crossing paths
   const src = VAN.filter((u) => !TAKEN.has(u.id) && u.rest.x >= VAN_X0 + 1.3 && u.rest.x < VAN_X0 + 3.5).sort((a, b) => a.rest.z - b.rest.z);
-  const n = spots.length, m = src.length;
-  if (m < n) return spots.map((p): [number, XZ] => [pick(p.z, 1), p]);
+  const n = vacated.length, m = src.length;
+  if (m < n) return vacated.map((p): [number, XZ] => [pick(p.z, 1), p]);
   const cost: number[][] = Array.from({length: n + 1}, () => Array(m + 1).fill(1e9));
   for (let j = 0; j <= m; j++) cost[0][j] = 0;
-  for (let i = 1; i <= n; i++) for (let j = i; j <= m; j++) cost[i][j] = Math.min(cost[i][j - 1], cost[i - 1][j - 1] + Math.abs(src[j - 1].rest.z - spots[i - 1].z));
+  for (let i = 1; i <= n; i++) for (let j = i; j <= m; j++) cost[i][j] = Math.min(cost[i][j - 1], cost[i - 1][j - 1] + Math.abs(src[j - 1].rest.z - vacated[i - 1].z));
   const out: [number, XZ][] = [];
   for (let i = n, j = m; i > 0; j--) {
     if (cost[i][j] === cost[i][j - 1] && j > i) continue;
-    out.unshift([src[j - 1].id, spots[i - 1]]); TAKEN.add(src[j - 1].id); i--;
+    out.unshift([src[j - 1].id, vacated[i - 1]]); TAKEN.add(src[j - 1].id); i--;
   }
   return out;
 })();
-const RESERVE: Plan[] = RESERVE_SPOTS.map(([vid, p], i) => ({
-  id: 8111 + i,
-  lane: avoid([vanAt(vid), {x: p.x + 1.5, z: p.z}, {x: p.x, z: p.z}]),
-  T0: RUN_T0 + 0.9 + (i % 4) * 0.25, T1: 68.6 + (i % 5) * 0.3, stride: 2.0,
-  act: (T: number) => ({look: {x: 42, y: 1.5, z: p.z * 0.4}, lockAt: 67.8 + i * 0.07, idle: 0.4}),
-}));
+const RESERVE: Plan[] = RESERVE_SPOTS.map(([vid, p], i) => {
+  const from = vanAt(vid);
+  // a short walk-up, rippling along the rank once the front has gone (≈ 58.4–61.4)
+  const T0 = RUN_T0 + 1.3 + Math.abs(p.z) * 0.06 + (i % 2) * 0.2;
+  const T1 = T0 + 1.6 + Math.hypot(p.x - from.x, p.z - from.z) * 0.35;
+  const mid = {x: lerp(from.x, p.x, 0.5), z: lerp(from.z, p.z, 0.5)};
+  return {
+    id: 8111 + i, lane: [from, mid, p], T0, T1, stride: 1.5, walk: true,
+    // arrive, then square up to face west across the crater
+    root: [[T1, p.x, p.z, headingTo(mid, p)], [T1 + 0.9, p.x, p.z, 270]],
+    act: () => ({look: {x: 44, y: 1.5, z: p.z * 0.4}, lockAt: T0 + 0.4, idle: 0.4}),
+  };
+});
 /** the vanguard units D1 animates itself (leave them out when drawing B's army) */
 export const D1_ARMY_IDS = new Set<number>(TAKEN);
 
@@ -352,7 +482,7 @@ export const unitFootfalls = (T: number, win = 1.0, names = FRONT): {t: number; 
   names.forEach((nm) => {
     const pl = PLANS[nm];
     if (T - win > pl.T1 || T < pl.T0) return;
-    const L = pathLen(pl.lane), path = linePath(pl.lane, 1.2), W = pl.stride ?? 2.3, duty = 0.55;
+    const Wp = warpOf(pl), L = Wp.Ls, path = Wp.path, W = pl.stride ?? 2.3, duty = 0.55;
     const a = Math.max(pl.T0, T - win), b = Math.min(T, pl.T1);
     const d = (t: number) => runDist(t, pl.T0, pl.T1, L, 1.2, 0.75);
     const d0 = d(a), d1 = d(b);

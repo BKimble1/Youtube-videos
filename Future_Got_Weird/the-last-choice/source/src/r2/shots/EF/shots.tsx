@@ -14,10 +14,10 @@ import {Stage, useShotTime} from '../../film/stage';
 import {persistItems} from '../../film/continuity';
 import {RADIO, polyline3, FIRES} from '../../world';
 import type {AtmosOpts} from '../../world';
-import {figureSprite, ClaspCU, dmgR2} from '../../rig';
+import {ClaspCU, dmgR2} from '../../rig';
 import {M} from '../../timing';
-import {camE1, camE2, camF1, fadeF1, FACE} from './camera';
-import {directorSpec, pilotSpec, clasped, othersItems, KNOB, knobAngle, DIR_HEAD, DIR_CHEST} from './crew';
+import {camE1, camF1, fadeF1} from './camera';
+import {directorSpec, pilotSpec, clasped, othersItems, KNOB, knobAngle, DIR_HEAD, DIR_CHEST, pilotRightLayer, pilotAnchor} from './crew';
 import {tableauMachineItems} from './machines';
 
 /** A slow handheld drift (m) — breathing life, not shake. */
@@ -55,15 +55,12 @@ const E1Clasp: React.FC = () => {
   );
 };
 
-// ------------------------------------------------------------------ E2
+// ------------------------------------------------------------------ E2 (and F1: one camera, one scene)
+// E2 and F1 render the same scene through the same camera (camF1 → camClose before the rise), so the cut between them
+// at 199.30 is invisible: the move off his face starts inside E2 (MOVE.a 198.30) and lands on the knob in F1.
 const E2: React.FC = () => {
   const {T} = useShotTime(M.RING_END);
-  // the drift dies away as he does: still after the eyes close
-  const amp = 0.004 * (1 - smooth((T - M.EYES_CLOSE) / 1.2)) + 0.0012;
-  const cam = withDrift(camE2(T), T, amp);
-  // the sprite is anchored at his head: in an extreme close-up his seat projects far below the frame (the scene culls
-  // sprites whose anchor is more than a frame off screen)
-  return <Stage T={T} cam={cam} items={() => [{...figureSprite(directorSpec(T, DIR_HEAD)), pos: FACE}]} />;
+  return <Aftermath T={T} />;
 };
 
 // ------------------------------------------------------------------ F1
@@ -82,8 +79,8 @@ const radioBeacon = (on: number): Item => ({
 const knobMark = (T: number): Item => {
   const a = (knobAngle(T) * Math.PI) / 180;
   const c = add3(KNOB.c, mul3(KNOB.n, 0.003));
-  const tip = add3(c, add3(mul3(KNOB.ax, Math.cos(a) * KNOB.r * 0.85), mul3(KNOB.ay, Math.sin(a) * KNOB.r * 0.85)));
-  return polyline3('ef_knobMark', [c, tip], 0.0035, '#EDE6D6', {minPx: 0.8, bias: 0.12});
+  const tip = add3(c, add3(mul3(KNOB.ax, Math.cos(a) * KNOB.r * 0.92), mul3(KNOB.ay, Math.sin(a) * KNOB.r * 0.92)));
+  return polyline3('ef_knobMark', [c, tip], 0.0045, '#EDE6D6', {minPx: 0.8, bias: 0.12});
 };
 
 /**
@@ -107,9 +104,11 @@ const f1Atmos = (T: number, camY: number): AtmosOpts => {
     }),
   };
 };
-const pilotChest = (T: number) => { const p = pilotSpec(T); return {x: p.pos.x, y: p.pos.y + 0.6, z: p.pos.z}; };
 const F1: React.FC = () => {
   const {T} = useShotTime(M.RADIO_CLICK - 0.6);
+  return <Aftermath T={T} />;
+};
+const Aftermath: React.FC<{T: number}> = ({T}) => {
   const cam = camF1(T);
   const on = dialOn(T);
   const lights: PointLight[] = on > 0 ? [{pos: RADIO.dial, color: '#FFC36A', power: 0.55 * on, radius: 1.6, flicker: 0.05}] : [];
@@ -119,10 +118,10 @@ const F1: React.FC = () => {
         ...persistItems(v, T, {exceptSec: 'EF', lod: {full: 30, mid: 140}}),
         ...tableauMachineItems(v, T, {near: v.pos.y < 3}),
         ...othersItems(T),
-        // he sits against the slab: seen from above, the slab's faces sort nearer than his seat — keep him in front of it
-        {...figureSprite(directorSpec(T, DIR_HEAD)), bias: 0.8},
-        // in front of the van door: a small bias keeps the van's lower side panel (one long face) from sorting over her
-        {...figureSprite(pilotSpec(T, pilotChest(T))), bias: 0.6},
+        // the two of them as one sprite (her hand holds his to the end): he sits against the slab — seen from above
+        // the slab's faces sort nearer than his seat, so the pair is biased in front of it (and of the van's long
+        // lower side panel beside her); never culled by its anchor (his seat is far below the frame in the close-up)
+        clasped(directorSpec(T, DIR_HEAD), pilotSpec(T, pilotAnchor(T)), pilotRightLayer(T), {bias: 0.8, noCull: true}),
         knobMark(T),
         ...(on > 0 ? [radioBeacon(on)] : []),
       ]} />

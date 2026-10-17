@@ -11,6 +11,7 @@ import {
   plateWear, hipReel, Part, figureSprite, SH_X, SH_H, UPPER, FORE, HIP_H, THIGH, SHIN,
 } from '../../rig';
 import {TB_CREW, DIRECTOR_SEAT} from './tableau';
+import {KNOB_POS} from './camera';
 import {M} from '../../timing';
 
 const hv = headingVec;
@@ -130,7 +131,7 @@ export const directorSpec = (T: number, anchor?: V3): FigSpec => {
 // ================================================================== the drone pilot (checker)
 const PIL0 = TB_CREW.drone.pos; // on hands and knees at FINAL_HIT
 /** Where she kneels at his left side, facing him (E1/E2): close enough that her arms bend as she holds his hand. */
-export const PIL_Q = at3(DIR.pos, DIR.heading - 60, 0.88, 0, 0);
+export const PIL_Q = at3(DIR.pos, DIR.heading - 60, 0.9, 0, 0);
 const PIL_HQ = headingTo(PIL_Q, DIR.pos);
 
 /** The knob: its axis (out of the radio front), and two in-plane directions (local x and up on the radio face). */
@@ -144,17 +145,29 @@ export const KNOB = (() => {
 /** The twist: her fingers' angle on the knob face (deg in the ax/ay plane), and the knob's own pointer angle. */
 export const GRIP_T = 199.5, TWIST_A = 199.6, TWIST_B = M.RADIO_CLICK, RELEASE_T = 200.6;
 export const twistK = (T: number) => (T < TWIST_A ? 0 : T > TWIST_B ? 1 : easeIn(clamp((T - TWIST_A) / (TWIST_B - TWIST_A))) * 0.35 + smooth((T - TWIST_A) / (TWIST_B - TWIST_A)) * 0.65);
-export const knobAngle = (T: number) => -150 + 105 * twistK(T); // pointer: OFF (−150°) → ON (−45°), a firm quarter-plus turn
+/** Where her fingertips hold the knob's rim (deg in the face's ax/ay plane: 0 = toward her (west), 90 = up): they
+ *  turn with it, from below-west to above-west, a firm quarter-plus turn. */
+const holdAngle = (T: number) => -52 + 105 * twistK(T);
+/** The knob's pointer (deg): opposite her fingertips, so it stays clear of her hand — OFF lower right → ON upper right. */
+export const knobAngle = (T: number) => holdAngle(T) + 180;
 const inPlane = (deg: number) => add3(mul3(KNOB.ax, Math.cos((deg * Math.PI) / 180)), mul3(KNOB.ay, Math.sin((deg * Math.PI) / 180)));
 
-/** Her right hand on the knob (world wrist target + orientation): the fingers wrap the knob's rim and turn with it. */
+/**
+ * Her right hand on the knob (world wrist target + orientation): the curled fingertips close on the knob's near rim
+ * (its face, with the pointer, stays clear beyond them) and the hand turns round the knob with it. The palm is turned
+ * toward the lens: a gripping hand seen from its back reads as a fist.
+ */
 const knobHand = (T: number) => {
-  const fa = 122 - 105 * twistK(T); // fingers' direction on the face rotates with the knob
-  const fingers = norm3(add3(mul3(inPlane(fa), 0.62), mul3(KNOB.n, -0.78)));
-  const grip = add3(KNOB.c, mul3(KNOB.n, 0.035));
-  const wrist = sub3(grip, mul3(fingers, 0.075));
-  // the palm faces the knob's side the fingers wrap round (toward the axis), thumb on the near side
-  const palm = norm3(add3(mul3(inPlane(fa - 90), 0.7), mul3(KNOB.n, -0.3)));
+  const hw = holdAngle(T);
+  // the hand lies across the knob's face from her side, fingers toward the rim and a little in: as the knob turns the
+  // whole hand turns round it (a dial turned by the wrist, readable at a glance)
+  const fingers = norm3(add3(mul3(inPlane(hw + 180), 0.85), mul3(KNOB.n, -0.5)));
+  // the curled fingertips close over the knob's near half; its far half, with the pointer, stays in view
+  const tip = add3(KNOB.c, add3(mul3(KNOB.n, 0.015), mul3(inPlane(hw), 0.002)));
+  const wrist = sub3(tip, mul3(fingers, 0.125));
+  const toCam = norm3(sub3(KNOB_POS, KNOB.c));
+  const dp = toCam.x * fingers.x + toCam.y * fingers.y + toCam.z * fingers.z;
+  const palm = norm3(sub3(toCam, mul3(fingers, dp)));
   return {wrist, fingers, palm};
 };
 
@@ -291,11 +304,11 @@ export const pilotSpec = (T: number, anchor?: V3): FigSpec => {
     keyPose([
       [C1, {...CRAWL_POSE}],
       [C1 + 0.75, {...KNEEL_UP, lean: 14}],
-      [CLASP_T - 0.55, {...KNEEL_UP, lean: 24, drop: 86}], // reaching for his hand: shoulders forward and down
-      [CLASP_T, {...KNEEL_UP, lean: 32, drop: 92, twist: -5}],
-      [191.2, {...KNEEL_UP, lean: 29, drop: 96, twist: -4}],
-      [196.6, {...KNEEL_UP, lean: 27, drop: 98, twist: -3}],
-      [LET_R, {...KNEEL_UP, lean: 27, drop: 98}],
+      [CLASP_T - 0.55, {...KNEEL_UP, lean: 24, drop: 88}], // reaching for his hand: shoulders forward and down
+      [CLASP_T, {...KNEEL_UP, lean: 29, drop: 94, twist: -6}],
+      [191.2, {...KNEEL_UP, lean: 27, drop: 97, twist: -5}],
+      [196.6, {...KNEEL_UP, lean: 26, drop: 99, twist: -4}],
+      [LET_R, {...KNEEL_UP, lean: 26, drop: 99}],
       // turned to the van door: the left shoulder dips toward his hand, the right rises to the knob
       [TURN.b, {...KNEEL_UP, lean: 12, drop: 92, side: 10}],
       [GRIP_T, {...KNEEL_UP, lean: 16, drop: 94, side: 13}],
@@ -369,6 +382,15 @@ export const pilotSpec = (T: number, anchor?: V3): FigSpec => {
       armL: {pole: {r: -1, u: -0.6, f: -0.2}}, armR: {pole: {r: 1, u: -0.6, f: -0.2}}},
     world: {handR: hR, handL: hL, footL: knee(-1), footR: knee(1), orientR: orR,
       orientL: {palm: {x: 0, y: -1, z: 0}, fingers: norm3({x: fwdD.x, y: -0.4, z: fwdD.z}), w: reachL}}};
+};
+
+/** Her perspective anchor: the chest; while her right arm is out to the knob, most of the way along it (so the hand on
+ *  the knob is drawn at its true size next to it). */
+export const pilotAnchor = (T: number): V3 => {
+  const p = pilotSpec(T);
+  const chest = {x: p.pos.x, y: p.pos.y + 0.6, z: p.pos.z};
+  const w = smooth((T - 198.85) / 0.55) * (1 - smooth((T - (RELEASE_T + 0.1)) / 0.6));
+  return w <= 0 ? chest : lerp3(chest, lerp3(chest, knobHand(T).wrist, 0.85), w);
 };
 
 /**

@@ -1,8 +1,8 @@
 // E/F cameras (pure: no React — probed in node for speed, clearance and on-screen sizes).
 //
 // E2 → F1 is ONE camera (the cut at 199.30 is invisible: both shots render the same camera and the same scene):
-//   E2 193.10–198.50  extreme close on his face (a slow push while he breathes his last; still after the eyes close)
-//   A  198.50–201.50  off his still face — following her as she turns to the van door — a pan right with a truck to
+//   E2 193.10–198.30  extreme close on his face (a slow push while he breathes his last; still after the eyes close)
+//   A  198.30–201.50  off his still face — following her as she turns to the van door — a pan right with a truck to
 //                     the radio, arriving as her hand turns the knob (twist 199.60–199.90, the click on 199.90); hold
 //   B  201.50–230.40  the rising pullback: a crane that rises and swings clockwise round him (S → SW → WSW) so that
 //                     the first wide (~203) holds the radio AND his body, the companions and the ring pass below, then
@@ -163,16 +163,6 @@ const driftE = (T: number, amp: number): V3 => {
 };
 const e2Amp = (T: number) => 0.004 * (1 - smooth((T - M.EYES_CLOSE) / 1.2)) + 0.0012;
 
-/** Where a world point sits on screen (fractions) for a camera (the engine's convention: no roll). */
-const screenOf = (pos: V3, target: V3, fov: number, p: V3) => {
-  const f = norm3(sub3(target, pos));
-  const r = norm3({x: -f.z, y: 0, z: f.x});
-  const u = {x: r.y * f.z - r.z * f.y, y: r.z * f.x - r.x * f.z, z: r.x * f.y - r.y * f.x};
-  const d = sub3(p, pos);
-  const dz = d.x * f.x + d.y * f.y + d.z * f.z;
-  const hY = (fov / 2) * (Math.PI / 180), hX = Math.atan(Math.tan(hY) * (16 / 9));
-  return {sx: 0.5 + (d.x * r.x + d.y * r.y + d.z * r.z) / dz / Math.tan(hX) / 2, sy: 0.5 - (d.x * u.x + d.y * u.y + d.z * u.z) / dz / Math.tan(hY) / 2};
-};
 
 // ------------------------------------------------------------------ F1
 /**
@@ -181,15 +171,34 @@ const screenOf = (pos: V3, target: V3, fov: number, p: V3) => {
  * knob face ~45° to the lens. The move's speed peaks early (a third of the way) and lands softly, so the camera is
  * almost settled while she turns the knob.
  */
-export const MOVE = {a: 198.5, b: 200.35};
+export const MOVE = {a: 198.3, b: 200.1};
 const E2_END = camE2(MOVE.a);
-const E2_FACE: V3 = {x: 6.53, y: 1.075, z: 3.04};
-const E2_SCREEN = screenOf(E2_END.pos, E2_END.target, E2_END.fov ?? 30, E2_FACE);
-export const KNOB_POS: V3 = {x: 8.47, y: 1.27, z: 3.1};
+// (1.3 m from the knob at bearing 155°: her head is out of frame left, her right arm comes in from the left edge, the
+// hand side-on, the knob face ~55° to the lens)
+export const KNOB_POS: V3 = {x: 8.54, y: 1.22, z: 2.99};
+/** The move bows out to the south, away from her (her head passes no nearer than ~1 m). */
+const MOVE_CTRL: V3 = {x: 8.0, y: 1.3, z: 3.9};
 /** The knob composition: the knob a little right of centre and below (her arm comes in across the left half). */
-const KNOB_SUBJ: V3 = {x: 7.98, y: 0.96, z: 1.83}, KNOB_SX = 0.6, KNOB_SY = 0.56, KNOB_FOV = 32;
-/** The move's progress: k(0)=0 with zero speed, speed peaking at a third, a long soft landing (k', k'' → 0 at 1). */
-const moveK = (u: number) => { const x = clamp(u); return 1 - (1 - x) ** 3 * (1 + 3 * x); };
+const KNOB_SUBJ: V3 = {x: 7.98, y: 0.96, z: 1.83}, KNOB_SX = 0.56, KNOB_SY = 0.56, KNOB_FOV = 32;
+/** Camera heading/elevation (deg) of an aim, and back (the engine's convention: yaw 0 = north (−z), 90 = east). */
+const yawPitch = (pos: V3, target: V3) => { const f = norm3(sub3(target, pos)); return {yaw: (Math.atan2(f.x, -f.z) * 180) / Math.PI, pitch: (Math.asin(f.y) * 180) / Math.PI}; };
+const aimYP = (pos: V3, yaw: number, pitch: number): V3 => {
+  const y = (yaw * Math.PI) / 180, p = (pitch * Math.PI) / 180;
+  return add3(pos, {x: Math.sin(y) * Math.cos(p), y: Math.sin(p), z: -Math.cos(y) * Math.cos(p)});
+};
+const A0 = yawPitch(E2_END.pos, E2_END.target);
+const A1 = yawPitch(KNOB_POS, aimFor(KNOB_POS, KNOB_SUBJ, KNOB_FOV, KNOB_SX, KNOB_SY));
+/**
+ * The move's progress (0..1): speed ∝ u^1.6 (1−u)^3.2 — it leaves his face gently (no jolt: speed and acceleration
+ * start at zero), peaks a third of the way in and lands softly. Integrated once into a table.
+ */
+const MOVE_TBL = (() => {
+  const n = 400, acc = [0];
+  const v = (u: number) => u ** 1.6 * (1 - u) ** 3.2;
+  for (let i = 1; i <= n; i++) acc.push(acc[i - 1] + (v((i - 1) / n) + v(i / n)) / 2);
+  return acc.map((a) => a / acc[n]);
+})();
+const moveK = (u: number) => { const x = clamp(u) * (MOVE_TBL.length - 1), i = Math.min(MOVE_TBL.length - 2, Math.floor(x)); return lerp(MOVE_TBL[i], MOVE_TBL[i + 1], x - i); };
 export const RISE_T0 = 201.5;
 
 /** The point the pullback keeps in frame (his chest), and the polar keys around it. */
@@ -211,7 +220,7 @@ const RISE_POLAR: [number, number, number, number, number, number][] = [
 export const RISE_KEYS: PathKey[] = [
   // the radio (end of the pan), then the first wide: the radio and his body, her between them
   {pos: KNOB_POS, subj: KNOB_SUBJ, sx: KNOB_SX, sy: KNOB_SY, fov: KNOB_FOV},
-  {pos: {x: 9.2, y: 2.45, z: 5.95}, subj: {x: 7.25, y: 0.82, z: 2.6}, sx: 0.5, sy: 0.5, fov: 39},
+  {pos: {x: 9.45, y: 2.45, z: 5.95}, subj: {x: 7.25, y: 0.82, z: 2.6}, sx: 0.5, sy: 0.5, fov: 39},
   ...RISE_POLAR.map(([b, R, H, fov, sx, sy]) => ({pos: polar(b, R, H), subj: HIM, sx, sy, fov})),
 ];
 /** Speed profile (shape only; scaled to the path): a gentle start from rest, a steady growth, a slight settle. */
@@ -237,12 +246,13 @@ export const camClose = (T: number): Cam3 => {
     return {pos: add3(c.pos, d), target: add3(c.target, mul3(d, 1.25)), fov: c.fov};
   }
   const u = (T - MOVE.a) / (MOVE.b - MOVE.a);
-  const kP = moveK(u), kS = moveK(u * 1.08); // the pan leads the truck a little
-  // the truck: a slight arc up and out (away from her) between the two ends
-  const out = {x: 0.12, y: 0.1, z: 0.16};
-  const pos = add3(lerp3(E2_END.pos, KNOB_POS, kP), mul3(out, Math.sin(Math.PI * kP)));
+  const kP = moveK(u), kS = moveK(u * 1.15); // the pan leads the truck a little
+  // the truck: a bow out to the south between the two ends (quadratic Bézier), eased by kP
+  const pos = add3(add3(mul3(E2_END.pos, (1 - kP) ** 2), mul3(MOVE_CTRL, 2 * kP * (1 - kP))), mul3(KNOB_POS, kP * kP));
   const fov = lerp(E2_END.fov ?? 30, KNOB_FOV, kP);
-  const target = aimFor(pos, lerp3(E2_FACE, KNOB_SUBJ, kS), fov, lerp(E2_SCREEN.sx, KNOB_SX, kS), lerp(E2_SCREEN.sy, KNOB_SY, kS));
+  // the pan: heading and elevation turn monotonically from E2's aim to the knob's (no overshoot as the lens trucks past
+  // her), the same eased progress as the truck, a touch ahead of it
+  const target = aimYP(pos, A0.yaw + (((A1.yaw - A0.yaw + 540) % 360) - 180) * kS, lerp(A0.pitch, A1.pitch, kS));
   const kd = smooth(u);
   const d = add3(mul3(driftE(T, e2Amp(T)), 1 - kd), mul3(drift(T, 0.006), kd));
   return {pos: add3(pos, d), target: add3(target, mul3(d, 1.3)), fov};

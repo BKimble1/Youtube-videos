@@ -43,12 +43,14 @@ const B2: Cue[] = [
 ];
 
 // B3 — the reveal: his two steps down, then the army's lockstep (H1/H2 synchronized, layered near → far)
-const armyStep = (t: number, g = 0): Cue[] => [
-  c(t, 'robot_step_heavy', {gain: g, pan: 0.15, dist: 0.6}),
-  c(t + 0.012, 'robot_step_heavy', {gain: g - 2, pan: 0.45, dist: 0.75}),
-  c(t + 0.025, 'robot_step_heavy', {gain: g - 3, pan: -0.15, dist: 0.85}),
-  c(t + 0.006, 'robot_step', {gain: g - 2, pan: 0.3, dist: 0.6}),
-  c(t + 0.018, 'robot_step', {gain: g - 4, pan: 0.0, dist: 0.8}),
+// p0 shifts the cluster's pan to where the army sits in the shot's frame
+const pn = (p: number) => Math.max(-1, Math.min(1, p));
+const armyStep = (t: number, g = 0, p0 = 0): Cue[] => [
+  c(t, 'robot_step_heavy', {gain: g, pan: pn(p0 + 0.15), dist: 0.6}),
+  c(t + 0.012, 'robot_step_heavy', {gain: g - 2, pan: pn(p0 + 0.45), dist: 0.75}),
+  c(t + 0.025, 'robot_step_heavy', {gain: g - 3, pan: pn(p0 - 0.15), dist: 0.85}),
+  c(t + 0.006, 'robot_step', {gain: g - 2, pan: pn(p0 + 0.3), dist: 0.6}),
+  c(t + 0.018, 'robot_step', {gain: g - 4, pan: pn(p0), dist: 0.8}),
 ];
 const B3: Cue[] = [
   c(TB.step1 + 0.4, 'steps_gravel', {gain: -9, pan: -0.45, dist: 0.15, dur: 0.45, fade: 0.1}),
@@ -62,9 +64,9 @@ const B3: Cue[] = [
 
 // B4 — inside the army: the near heavy turns its head on H3; feet all around the lens
 const B4: Cue[] = [
-  c(M.H3 + 0.03, 'heavy_servo', {gain: 0, pan: -0.55, dist: 0.25}),
-  c(M.H3 + 0.05, 'servo_whir', {gain: -4, pan: -0.55, dist: 0.25, dur: 0.9, fade: 0.2}),
-  ...[0, 2, 4, 6].map((k) => c(beat(Math.ceil((M.H3 - M.H1) / (M.H2 - M.H1)) + k), 'heavy_stomp', {gain: -9, pan: -0.5, dist: 0.3})),
+  c(M.H3 + 0.03, 'heavy_servo', {gain: 0, pan: -0.7, dist: 0.25}),
+  c(M.H3 + 0.05, 'servo_whir', {gain: -4, pan: -0.7, dist: 0.25, dur: 0.9, fade: 0.2}),
+  ...[0, 2, 4, 6].map((k) => c(beat(Math.ceil((M.H3 - M.H1) / (M.H2 - M.H1)) + k), 'heavy_stomp', {gain: -9, pan: -0.75, dist: 0.3})),
   ...[0, 1, 2, 3, 4, 5, 6, 7].map((k) => c(beat(Math.ceil((M.H3 - M.H1) / (M.H2 - M.H1)) + k) + 0.01, 'robot_step', {gain: -6, pan: k % 2 ? 0.45 : -0.2, dist: 0.25})),
   c(24.6, 'drone_pass', {gain: -8, pan: 0.6, dist: 0.35}),
 ];
@@ -80,11 +82,11 @@ const B5: Cue[] = [
   c(TB.ready, 'breath_ragged', {gain: -7, pan: 0.0, dist: 0.2, dur: 1.0, fade: 0.3}),
 ];
 
-// B6 — the halts (the global army_halt sits on H4): the last steps plant together, wave by wave
+// B6 — the halts (the global army_halt sits on H4): the last steps plant together, wave by wave (the army is upper right)
 const B6: Cue[] = [
-  ...armyStep(STOP.van, -3),
-  ...armyStep(STOP.main, 0),
-  ...armyStep(STOP.rear, 1),
+  ...armyStep(STOP.van, -3, 0.35),
+  ...armyStep(STOP.main, 0, 0.45),
+  ...armyStep(STOP.rear, 1, 0.5),
   c(STOP.rear + 0.01, 'heavy_stomp', {gain: -3, pan: 0.5, dist: 0.8}),
   c(STOP.rear + 0.4, 'servo_heavy', {gain: -10, pan: 0.4, dist: 0.85, dur: 1.5, fade: 0.6}), // a settle of hydraulics
 ];

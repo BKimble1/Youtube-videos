@@ -33,22 +33,25 @@ export const CAM_B2: CamKey[] = [
 /** B3: behind his left shoulder at 1.5 m; it rises and swings over to his right shoulder as he steps down to the
  * brink, and backs off while the lens lengthens (a slow dolly-zoom), so the army grows behind him into a wall of
  * machines: his head and shoulders stay a dark shape in the lower left. */
-const HEAD3 = {x: R1.x, y: R1.y + 1.58, z: R1.z};
-const HEADS = {x: STAND.x, y: STAND.y + 1.5, z: STAND.z};
+const HEAD3 = {x: R1.x, y: R1.y + 1.58, z: R1.z}; // above his head (crouched, braced, it is ~1.25 m over his feet): it sits low in frame
+const HEADS = {x: STAND.x, y: STAND.y + 1.22, z: STAND.z}; // his head on the brink
 const ARMY_AIM = {x: 84, y: 2.0, z: -2.5};
 export const CAM_B3: CamKey[] = [
   {t: 0, pos: {x: HEAD3.x - 1.25, y: HEAD3.y + 0.12, z: HEAD3.z - 0.8}, target: {x: HEAD3.x + 30, y: HEAD3.y - 2.6, z: HEAD3.z + 6.5}, fov: 42},
   {t: 1.05, pos: {x: HEADS.x - 2.0, y: HEADS.y + 0.55, z: HEADS.z + 0.35}, target: {x: 70, y: -4.5, z: -1.5}, fov: 32},
-  {t: 2.1, pos: {x: HEADS.x - 3.6, y: HEADS.y + 0.5, z: HEADS.z + 0.62}, target: ARMY_AIM, fov: 20},
-  {t: SHOT_T.B3[1] - SHOT_T.B3[0], pos: {x: HEADS.x - 8.0, y: HEADS.y + 0.42, z: HEADS.z + 1.05}, target: ARMY_AIM, fov: 10},
+  // (the slab he crawled out of lies between the lens and him from here: it hides him below the chest)
+  {t: 2.1, pos: {x: HEADS.x - 3.6, y: HEADS.y + 0.6, z: HEADS.z + 0.62}, target: ARMY_AIM, fov: 20},
+  {t: SHOT_T.B3[1] - SHOT_T.B3[0], pos: {x: HEADS.x - 8.0, y: HEADS.y + 0.52, z: HEADS.z + 1.05}, target: ARMY_AIM, fov: 10},
 ];
 
-/** B4: from inside the army, riding level with the foreground heavy (HEAVIES_B[0]) ~17 m behind its head and 14 m to its
- * north at 5.6 m: the heavy fills the left of frame in three-quarter rear view, its sensor head at the hull's front
- * corner swings round to him on H3; he is a tiny figure on the crest, right of centre, past the ranks. */
+/** B4: from inside the army, riding level with the foreground heavy (HEAVIES_B[0]) ~17 m behind its head and 16 m to its
+ * north at 4 m, just under its sensor head: the heavy fills the left of frame in three-quarter rear view, its head at
+ * the hull's front corner swings round to him on H3; he is a tiny figure on the crest, right of centre, past the ranks.
+ * The line to him passes ~1.5 m south of the old rail column at (105, −11) (just left of him in frame) and under the
+ * fallen girder's truss (from higher, the truss hides him). */
 export const CAM_B4: CamKey[] = [
-  {t: 0, pos: {x: 133.2, y: 5.6, z: -15.0}, target: {x: 41.6, y: 1.2, z: 25.0}, fov: 30},
-  {t: SHOT_T.B4[1] - SHOT_T.B4[0], pos: {x: 127.4, y: 5.55, z: -14.9}, target: {x: 35.8, y: 1.2, z: 25.1}, fov: 29},
+  {t: 0, pos: {x: 133.2, y: 4.0, z: -17.0}, target: {x: 41.6, y: 0.6, z: 26.0}, fov: 30},
+  {t: SHOT_T.B4[1] - SHOT_T.B4[0], pos: {x: 127.4, y: 3.95, z: -16.9}, target: {x: 35.8, y: 0.6, z: 26.1}, fov: 29},
 ];
 /** B5: from the avenue south-east of the van (its open door, the radio on the floor), pushing in and up the slope to
  * a medium close of him from below, east-south-east. */

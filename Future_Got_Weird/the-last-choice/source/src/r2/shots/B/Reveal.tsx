@@ -8,7 +8,7 @@ import {Stage, useShotTime, camPath} from '../../film/stage';
 import {V3, lerp3, smooth, clamp} from '../../../kit/math';
 import type {Item, View} from '../../engine';
 import {M} from '../../timing';
-import {R1, STAND} from './director';
+import {STAND, dirB} from './director';
 import {dirSprite, armyB, B_COLUMNS} from './kit';
 import {slabItem, chunkItems, supportItems} from './rubble';
 import {heavyPosB} from './army';
@@ -19,8 +19,11 @@ export const B3_START = M.ORCH, B3_END = 23.54;
 export const ShotB3: React.FC = () => {
   const {t, T} = useShotTime(B3_START);
   const cam = camPath(CAM_B3, t, 0.55);
+  const p = dirB(T).pos;
+  const neck: V3 = {x: p.x, y: p.y + 1.5, z: p.z};
   const items = (v: View): Item[] => [
-    dirSprite(T, {bias: 0.6, anchor: T < 18.2 ? {x: R1.x, y: R1.y + 1.5, z: R1.z} : undefined}),
+    // his feet are far below the frame: take the rig's perspective at his neck so the head and shoulders land true
+    dirSprite(T, {bias: 0.6, anchor: neck}),
     slabItem(T), ...supportItems(), ...chunkItems(T),
     ...armyB(v, T, {maxFull: 4, maxMid: 30, farFrom: 110}),
   ];
