@@ -1,5 +1,39 @@
 # QA report: Tesla Roadster Short and companion
 
+## Rocket Short: FINAL ("The Problem With Tesla's Rocket Car", 17 Oct 2026)
+
+`exports/FGW_Rocket_Short_FINAL.mp4` (Git-ignored; `bash tools/render_rocket.sh`), composition `RocketShort`. Script and
+timeline: `script/rocket_short.md`. Evidence: `qa/evidence/rocket_*.jpg`.
+
+| Check | Result |
+|---|---|
+| Format | 1080×1920, **30 fps** (the recordings' rate), H.264 yuv420p, 1028 frames = **34.27 s**; AAC 48 kHz stereo 320 kb/s; 15.0 MB |
+| Loudness | **−14.0 LUFS integrated, −1.5 dBTP** (sample peak −1.49 dBFS, no clipping), LRA 2.6 LU |
+| Footage speed | Both clips play at the recordings' own speed. No slow motion and no frame interpolation, so nothing distorts the car |
+| Black frames / gaps | None (blackdetect 0.05 s). No audio gap over 0.25 s below −45 dB |
+| Holds | freezedetect (0.5 s, n 0.003) flags only low-motion beats inside the schematic: 4.9 s (0.57), 10.5 s (1.1, THRUST = WEIGHT, deliberately held on "entire weight"), 14.3 s (1.0, the frame closed on "protection"), 16.3 s (0.53), 22.3 s (0.83, level after the correction). Jets, gas ribbons and dots keep moving through all of them. No footage freezes |
+| First 2 s | 10 fps (`qa/evidence/rocket_first2s_10fps.jpg`). From frame 0, the white Roadster is climbing on two jets above the parked cars, whole car in frame. It rolls inverted by 0.4 s. The narration starts at 0.14 s. One small label at the top |
+| Match into the drawing | 15 fps (`qa/evidence/rocket_match_2.9-4.1s.jpg`). On "catch" the flow chevrons sit on both real jet pairs (checked after moving the schematic's front lift jet to where the replay's front plume exits). The saffron outline lands on the real car at 0:38.59. The drawing replaces it at 0:38.71 at the same size and position, still descending, and the night fades to dusk |
+| Torque and correction | 5 fps (`qa/evidence/rocket_torque_correction_17-22.6s.jpg`): <br>• offset push behind the centre-of-mass marker → nose-down turn (red arrow, max 6.7°); <br>• nose pulse → stopped by 20.3; <br>• second nose pulse → turning back (teal); <br>• tail pulse → level at 22.26. <br>The marker stays fixed to the body, and every pulse arrow points up at a nozzle firing down. The force arrows are hidden while the car is tilted |
+| Physics | Thrust is opposite the exhaust throughout. The hover is drawn THRUST = WEIGHT. The bursts average to the weight (the car bobs 400–409 units and ends level). The bigger tank adds weight, and thrust grows to match. Gas use is dots only (no gauge, numbers or linear decline). Fan suction is not shown. The plumes are pale cold gas with no flame. Only the labelled loose patch is disturbed; the pad is intact and nobody is nearby |
+| Gravel and wipe | 4 fps (`qa/evidence/rocket_gravel_wipe_23-28s.jpg`). The jet meets the patch as the car gets low; gravel is thrown outward along the pad; mottled dust engulfs the frame (full cover for about 2 frames) and thins over the real aerial |
+| Ending and loop | `qa/evidence/rocket_loop_seam.jpg`. The last 0.8 s is `rec_224911` 0:34.45–0:35.22 and frame 0 is 0:35.25, so the loop is one continuous shot. The replay's own sound and the same jet bed run across it, and the score ends on the opening's drone and ostinato. No black tail, end card or pause |
+| Safe areas | 360×640 with the Shorts zones overlaid (`qa/evidence/rocket_phone_safe_areas.jpg`): captions at y 1300–1450, x 110–930; title zone y > 1580; right rail x > 930. The "loose surface" tag first sat under a caption plate and was moved beside the patch with a leader line. The CTA is a plain text cue at the top, not a button, with no arrow |
+| Wording | Independent Scribe transcriptions, uploaded as plain audio and not aligned to the prompt: the placed narration and the **final mixed soundtrack** both return all 102 script words (only a comma differs, after "jump"). The mix's word times match the clean narration within about 0.1 s |
+| Speech clarity | `tools/speech_clarity.py` on a render without narration: median margin 24 dB, every content word ≥ 11.5 dB. The two lowest are "a" in "with a catch" (6 dB) and the trailing "up." (6.5 dB). In both windows the voice itself is near silence between syllables, and the bed under them is about −39 dBFS, soft music. Both transcribe correctly in the final mix |
+| Transients | Sharp onsets (> 18 dB in 5 ms) are word onsets, or the plosives inside "rocket", "compressed" and "keeping". None sits at an edit join |
+| Claims | Per line: `research/claim_ledger.md` ("Rocket Short: claim-to-source note") |
+
+### Not checked here (Rocket Short)
+
+- **A human listen.** The audio checks are measurements and transcriptions.
+- **Tesla's live Roadster page** (trim names, flight on the Rocket only, compressed air). tesla.com is blocked from this
+  container.
+- **YouTube.** Related Video availability on the account (advanced features), whether `ujV0J6-cfX8` is public or
+  unlisted, and its exact title. youtube.com and support.google.com are blocked.
+- **Content ID and rights.** These are only visible in YouTube Studio during upload.
+
+
 ## Short: FINAL v4 (owner's final editing pass, 16 Oct 2026)
 
 `exports/FGW_Roadster_Short_FINAL_v4.mp4` is Git-ignored. Rebuild it with `bash tools/render_short_v4.sh`. The script,

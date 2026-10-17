@@ -7,6 +7,7 @@ as evidence, plus the channel's own warm vector animation for the explanations.
 
 | Piece | State |
 |---|---|
+| **Rocket Short** "The Problem With Tesla's Rocket Car" (34.3 s, 9:16, 30 fps) | **FINAL** (17 Oct 2026): `exports/FGW_Rocket_Short_FINAL.mp4`, composition `RocketShort`, `bash tools/render_rocket.sh`. Script, timeline and changes: `script/rocket_short.md`; QA: `QA_REPORT.md`; upload text and the Related Video steps: `upload/UPLOAD_TEXT_ROCKET.md`. A follow-up to the Roadster video on what cold-gas thrust asks of a car: real footage opens and closes it, and one labelled schematic carries the explanation. Not uploaded |
 | **Short** (31.1 s, 9:16, 30 fps) | **FINAL v4** (owner's final pass): `exports/FGW_Roadster_Short_FINAL_v4.mp4`, composition `ShortV4`, `bash tools/render_short_v4.sh`. Script and changes: `script/short_v4_final.md`; QA: `QA_REPORT.md`. Not uploaded: publishing is the owner's action. v3 (`ShortV3`) and v2 (`Short`) are superseded |
 | **Companion** (2:45.0, 16:9, 30 fps) | **FINAL 4K** (owner's cleanup pass: brighter opening, "Tesla-claimed time" for 0.81 s, ending on the real aerial landing): `exports/FGW_Roadster_Companion_FINAL_4K.mp4`, 3840×2160, composition `Companion3`, `bash tools/render_companion_final_4k.sh` (after `bash tools/cut_c3_clips.sh`). The review copies (`REVIEW_v3`, `REVIEW_v3_4K`) are superseded. Script, timeline, sources per line, change log and open source questions: `script/companion_v3_script.md`; QA: `QA_REPORT.md`. The owner's V3 revision brief: tighter (465 words), one coherent story (hangs on → leaves the track → controls its motion → what it proves), transitions inside one illustrated space, far less on-screen text, new Test Voice performance, sound built from visible actions. v2 (`Companion2`) and v1 (`Companion`) are superseded |
 
@@ -34,6 +35,7 @@ Nothing has been uploaded or published. The footage release `roadster-footage-20
 | Cut lists (in-points, 9:16 crops) | `footage/cuts_short.json`, `footage/cuts_companion.json` |
 | Original footage hand-off sheet | `footage/CUT_SHEET.md` |
 | Narration takes and alignments | `audio/short/`, `audio/companion/`, `audio/companion_v2/`, `audio/companion_v3/` (ElevenLabs flow `8baHNxGa4ViVC2FKXh4s`) |
+| Rocket Short | script and timeline `script/rocket_short.md`; Remotion `source/src/rocket/`; narration `audio/rocket/`; tools `tools/*rocket*`; captions `captions/FGW_Rocket_Short_FINAL.srt`; upload `upload/UPLOAD_TEXT_ROCKET.md` |
 | Remotion source | `source/src/` (compositions `ShortV4` in `short4/`, `ShortV3` in `short3/`, `Short` (v2), `Companion3` in `companion3/`, `Companion2` in `companion2/`, `Companion` (v1), `Thumbnail`) |
 | Captions (upload) | `captions/FGW_Roadster_Short_FINAL_v4.srt`, `captions/FGW_Roadster_Companion_REVIEW_v3.srt` |
 | Title, description, pinned comment, chapters | `upload/` |
@@ -55,6 +57,7 @@ Nothing has been uploaded or published. The footage release `roadster-footage-20
     bash tools/render_companion_final_4k.sh  # → exports/FGW_Roadster_Companion_FINAL_4K.mp4 (3840×2160, −15 LUFS, −1.5 dBTP)
     bash tools/render_companion_v3.sh        # optional 1080p check copy → exports/FGW_Roadster_Companion_REVIEW_v3.mp4
     bash tools/qa_c3.sh exports/FGW_Roadster_Companion_REVIEW_v3.mp4 qa/c3/final
+    bash tools/render_rocket.sh              # Rocket Short -> exports/FGW_Rocket_Short_FINAL.mp4 (cuts its clips, rebuilds narration, bed, captions)
 
 Stills for inspection: `cd source && COMP=ShortV4 node stills.mjs ../qa/<dir> t:<seconds> …` (or `COMP=Companion`).
 Frame sheets of a source window: `bash tools/scan_window.sh <file> <start> <dur> <fps> <out.png>`.
