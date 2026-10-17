@@ -733,7 +733,7 @@ const B0 = {x: 46.9, z: -3.8};
 const DEC_RUN: XZ[] = [{x: B0.x - 0.05, z: B0.z + 0.05}, {x: 45.8, z: -2.2}, {x: DEC_SPOT.x, z: DEC_SPOT.z}];
 const DEC_THROWN = {from: {x: 42.6, z: 1.55}, to: {x: 41.5, z: 1.8}};
 const DEC_BACK2: XZ[] = [{x: DEC_THROWN.to.x, z: DEC_THROWN.to.z}, {x: 38.8, z: 1.9}, {x: 35.0, z: 2.0}, {x: D4S('decoy').pos.x, z: D4S('decoy').pos.z}];
-const DEC_UP = 145.98, DEC_RISE = 1.07, DEC_FEET = DEC_UP + DEC_RISE * (3.8 / 7.2);
+const DEC_UP = 145.98, DEC_RISE = 1.07, DEC_FEET = DEC_UP + DEC_RISE * (2.6 / 7.2);
 const DEC_SEGS: Seg[] = smoothSegs([
   {kind: 'stand', stag: 0.06, root: [[M.P3, B0.x, B0.z, 80], [127.4, B0.x, B0.z, 80], [127.55, B0.x - 0.05, B0.z + 0.05, headingTo(DEC_RUN[0], DEC_RUN[1])]]},
   {kind: 'run', path: DEC_RUN, T0: 127.6, T1: 129.5, gait: GAITS.walk, A: 0.4, D: 0.5},
