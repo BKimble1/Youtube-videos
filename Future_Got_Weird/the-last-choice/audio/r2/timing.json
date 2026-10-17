@@ -169,6 +169,20 @@
    "pan": 0.35
   },
   {
+   "t": 0.72,
+   "kind": "sub_boom",
+   "gain": -4,
+   "pan": -0.3,
+   "dist": 0.9
+  },
+  {
+   "t": 4.6,
+   "kind": "debris_rain",
+   "gain": -8,
+   "pan": -0.3,
+   "dist": 0.95
+  },
+  {
    "t": 18.46,
    "kind": "eyes_on",
    "gain": 0,
