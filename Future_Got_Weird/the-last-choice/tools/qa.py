@@ -52,8 +52,11 @@ if mode == "measure":
         eb = run("ffmpeg", "-hide_banner", "-nostats", "-i", mp4, "-vn", "-af", "ebur128=peak=true", "-f", "null", "-").stderr
         s = eb[eb.rfind("Summary:"):]
         res["loudness"] = {"I_lufs": float(s.split("I:")[1].split("LUFS")[0]), "LRA_lu": float(s.split("LRA:")[1].split("LU")[0]), "true_peak_dbfs": float(s.split("Peak:")[1].split("dBFS")[0])}
-        vd = run("ffmpeg", "-hide_banner", "-nostats", "-i", mp4, "-vn", "-af", "astats=metadata=0:reset=0", "-f", "null", "-").stderr
-        res["audio_clipped_samples"] = sum(int(float(l.split(":")[1])) for l in vd.splitlines() if "Number of clipped samples" in l or "Peak count" in l and False)
+        import numpy as np
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", mp4, "-vn", "-ac", "2", "-f", "f32le", "-"], capture_output=True).stdout
+        x = np.frombuffer(raw, dtype=np.float32)
+        res["audio_sample_peak_dbfs"] = round(float(20 * np.log10(np.max(np.abs(x)) + 1e-12)), 2)
+        res["audio_clipped_samples"] = int(np.sum(np.abs(x) >= 0.9999))
     json.dump(res, open(os.path.join(out, "qa_results.json"), "w"), indent=1)
     print(json.dumps(res, indent=1))
 elif mode == "strips":

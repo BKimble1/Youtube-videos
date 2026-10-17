@@ -115,6 +115,7 @@ def interior_at(t):
 
 sfx = np.zeros((N, 2))
 beds = np.zeros((N, 2))
+ring = np.zeros((N, 2))  # the ear ring after the blast sits on top of the muffle, so it is not filtered
 for c in T["cues"]:
     kind = c["kind"]
     if kind not in CH:
@@ -129,7 +130,7 @@ for c in T["cues"]:
         f = int((c.get("fade") or 0.3) * SR)
         g = np.ones(len(y)); g[:f] = np.linspace(0, 1, f); g[-f:] = np.linspace(1, 0, f)
         y = y * g[:, None]
-    place(sfx, y, c["t"] - lead, LEVEL.get(kind, -14) + (c.get("gain") or 0), c.get("pan") or 0, c.get("dist") or 0, interior_at(c["t"]))
+    place(ring if kind == "tinnitus" else sfx, y, c["t"] - lead, LEVEL.get(kind, -14) + (c.get("gain") or 0), c.get("pan") or 0, c.get("dist") or 0, interior_at(c["t"]))
 
 for b in T["beds"]:
     y = load_kind(b["kind"])
@@ -174,11 +175,7 @@ if muf.max() > 0:
     music, sfx, beds = muffle(music), muffle(sfx), muffle(beds)
 music *= (10 ** (-duck / 20))[:, None]
 
-# tinnitus rides on top of the muffle (added after)
-for c in T["cues"]:
-    if c["kind"] == "tinnitus_post":
-        pass
-
+sfx = sfx + ring
 mix = music + sfx + beds
 os.makedirs(os.path.join(ROOT, "audio", "mix"), exist_ok=True)
 
