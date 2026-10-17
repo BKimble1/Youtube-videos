@@ -218,6 +218,42 @@ if muf.max() > 0:
         return x * (1 - muf)[:, None] + lo * muf[:, None] * 0.55
     music_portals, music_llt, sfx, beds = muffle(music_portals), muffle(music_llt), muffle(sfx), muffle(beds)
 
+# music priority: the score stays in front of the battle. Where the effects bus's short-term level comes within
+# SFX_MARGIN dB of the music's, the effects give way (ratio SFX_RATIO, at most SFX_MAX_GR dB, smoothed so single hits
+# keep their attack). Not applied where a perspective duck already lowers the music for a story hit (the strike).
+SFX_MARGIN, SFX_RATIO, SFX_MAX_GR = 3.0, 0.6, 5.0
+
+
+def short_db(x, win=0.35):
+    p = np.mean(x ** 2, axis=1)
+    n = int(win * SR)
+    k = np.ones(n) / n
+    return 10 * np.log10(np.convolve(p, k, mode="same") + 1e-12)
+
+
+def smooth_gr(gr, att=0.08, rel=0.45):
+    # one-pole smoothing on 10 ms blocks (fast enough for the music-priority rule; keeps the loop cheap)
+    blk = int(0.01 * SR)
+    nb = len(gr) // blk + 1
+    g = np.array([gr[i * blk:(i + 1) * blk].max() if i * blk < len(gr) else 0 for i in range(nb)])
+    out = np.zeros(nb)
+    a_att, a_rel = np.exp(-0.01 / att), np.exp(-0.01 / rel)
+    v = 0.0
+    for i in range(nb):
+        a = a_att if g[i] > v else a_rel
+        v = a * v + (1 - a) * g[i]
+        out[i] = v
+    return np.repeat(out, blk)[: len(gr)]
+
+
+mus_db = short_db(music_portals + music_llt)
+sfx_db = short_db(sfx)
+over = np.clip(sfx_db - (mus_db - SFX_MARGIN), 0, None) * SFX_RATIO
+over[mus_db < -45] = 0  # no music there (the title, E2): nothing to give way to
+over[duck > 0.5] = 0
+sfx_gr = np.minimum(smooth_gr(over), SFX_MAX_GR)
+sfx = sfx * (10 ** (-sfx_gr / 20))[:, None]
+
 mix = music_portals + music_llt + sfx + beds
 
 
@@ -265,6 +301,9 @@ if len(hot):
     spans.append((a, prev))
 meas = {"integrated_lufs": I, "lra_lu": LRA, "true_peak_dbtp": TP, "gain_db": round(20 * np.log10(g), 2),
         "limiter_max_gr_db": round(float(gr_db.min()), 2), "limiter_spans": [{"t": round(a / SR, 2), "dur": round((b - a) / SR, 2), "max_gr_db": round(float(gr_db[a:b + 1].min()), 1)} for a, b in spans],
-        "cues": len(T["cues"]), "missing_kinds": sorted(missing), "radio_mix": R}
+        "cues": len(T["cues"]), "missing_kinds": sorted(missing), "radio_mix": R,
+        "sfx_music_priority": {"margin_db": SFX_MARGIN, "ratio": SFX_RATIO, "max_gr_db": round(float(sfx_gr.max()), 2),
+                               "mean_gr_db_when_active": round(float(sfx_gr[sfx_gr > 0.1].mean()) if (sfx_gr > 0.1).any() else 0.0, 2),
+                               "active_s": round(float((sfx_gr > 0.1).sum() / SR), 1)}}
 json.dump(meas, open(os.path.join(OUT, "measure.json"), "w"), indent=1)
 print(json.dumps({k: v for k, v in meas.items() if k != "limiter_spans"}))
