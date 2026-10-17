@@ -38,20 +38,20 @@ export const CAM_C4: CamKey[] = [
 
 /** C5a (50.00–51.20): close two-shot from the west in front of them: the breaker's hand lands on his shoulder; the look. */
 export const CAM_C5A: CamKey[] = [
-  {t: 0, pos: {x: -0.2, y: 5.08, z: 1.62}, target: {x: 1.36, y: 4.72, z: 0.98}, fov: 33},
-  {t: D(CUT.c5a, CUT.c5b), pos: {x: -0.12, y: 5.05, z: 1.56}, target: {x: 1.36, y: 4.74, z: 0.98}, fov: 32},
+  {t: 0, pos: {x: -0.32, y: 4.68, z: 1.32}, target: {x: 1.22, y: 4.5, z: 1.0}, fov: 34},
+  {t: D(CUT.c5a, CUT.c5b), pos: {x: -0.22, y: 4.67, z: 1.3}, target: {x: 1.22, y: 4.52, z: 1.0}, fov: 33},
 ];
 
 /** C5b (51.20–52.10): close on her right hip from the west: the hand to the reel, the click; the drone rises past behind her. */
 export const CAM_C5B: CamKey[] = [
-  {t: 0, pos: {x: -1.25, y: 6.05, z: -2.5}, target: {x: 0.08, y: 6.05, z: -2.12}, fov: 40},
-  {t: D(CUT.c5b, CUT.c5c), pos: {x: -1.22, y: 6.08, z: -2.48}, target: {x: 0.08, y: 6.12, z: -2.12}, fov: 39},
+  {t: 0, pos: {x: -0.92, y: 5.96, z: -3.45}, target: {x: 0.15, y: 6.08, z: -2.2}, fov: 42},
+  {t: D(CUT.c5b, CUT.c5c), pos: {x: -0.88, y: 5.98, z: -3.4}, target: {x: 0.15, y: 6.16, z: -2.2}, fov: 41},
 ];
 
 /** C5c (52.10–53.04): close on his plate forearm and face from his front-left: the strap check. */
 export const CAM_C5C: CamKey[] = [
-  {t: 0, pos: {x: 0.78, y: 4.62, z: 2.42}, target: {x: 1.2, y: 4.55, z: 1.42}, fov: 31},
-  {t: D(CUT.c5c, CUT.c6), pos: {x: 0.8, y: 4.66, z: 2.38}, target: {x: 1.2, y: 4.62, z: 1.42}, fov: 30},
+  {t: 0, pos: {x: 0.8, y: 4.5, z: 2.3}, target: {x: 1.13, y: 4.36, z: 1.42}, fov: 36},
+  {t: D(CUT.c5c, CUT.c6), pos: {x: 0.84, y: 4.53, z: 2.24}, target: {x: 1.14, y: 4.44, z: 1.42}, fov: 35},
 ];
 
 /** C6 (53.04–59.95): the group frame — low on the east slope in front of them, looking up at all seven on the crest

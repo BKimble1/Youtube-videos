@@ -248,7 +248,7 @@ export const directorC = (T: number, v?: View): CrewC => {
       const n = norm3(sub3(R.W(r.el[0]), R.W(r.sh[0]))); // roughly the upper arm's direction; the strap is on the forearm's outer face
       const out = norm3(sub3(onArm, R.chest));
       const tgt = add3(onArm, add3(mul3(out, 0.05 - 0.022 * press), mul3(n, 0.0)));
-      spec = handTo(v, {...spec, pose: layerFn(spec.pose, {handR: press > 0.3 ? 'grip' : 'reach'})}, 'R', tgt, strapW, {palm: mul3(out, -1), w: 0.7});
+      spec = handTo(v, {...spec, pose: layerFn(spec.pose, {handR: press > 0.3 ? 'grip' : 'reach', zArm: [undefined, 45]})}, 'R', tgt, strapW, {palm: mul3(out, -1), w: 0.7});
       pts.strap = tgt;
     }
   }
@@ -285,6 +285,8 @@ export const tetherC = (T: number, v?: View): CrewC => {
   const reelW = win(T, TT.reel - 0.22, TT.reelOff + 0.25, 0.22, 0.25);
   const press = win(T, TT.click - 0.06, TT.click + 0.16, 0.05, 0.1);
   if (reelW > 0) pose = blendPose(pose, layer(pose, {armL: {local: {r: 58, u: 170 - (pose.drop ?? 0) + 4, f: 30 - 6 * press}, pole: {r: -0.4, u: -1, f: 0.6}}, handL: 'brace', head: {...pose.head, pitch: 26, yaw: 18}, face: {mouth: 'flat', brows: -0.4, lookY: 0.6}}), reelW);
+  // (the reaching arm crosses in front of her body to the far hip)
+  if (reelW > 0.2) pose.zArm = [45, undefined];
   // C6: launcher up, ready
   const ready = after(T, TT.turn + 0.3, 1.2);
   if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(8, 18, after(T, 57.5, 1.6)), lean: 8, armR: {local: {r: 30, u: 240, f: 90}}, armL: {local: {r: -30, u: 220, f: 60}}, handL: 'open', face: {mouth: 'flat', brows: -0.5}}), ready);
