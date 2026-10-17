@@ -100,8 +100,8 @@ export const CAM_9: CamKey[] = [
 // D3-10: low on the crater's north-west slope under the girder (the water main behind us): heavy 2 comes over heavy 1's
 // wreck toward us, a leg lifted high over it; its front-right foot comes down on this side, close
 export const CAM_10: CamKey[] = [
-  {t: 0, pos: g(57.2, -9.9, 1.2), target: at(64.0, 1.6, -4.8), fov: 46},
-  {t: d(SH3.d310, SH3.d311a), pos: g(57.0, -10.0, 1.15), target: at(62.6, 1.2, -5.0), fov: 48},
+  {t: 0, pos: g(57.0, -10.1, 1.2), target: at(64.5, -0.4, -4.8), fov: 48},
+  {t: d(SH3.d310, SH3.d311a), pos: g(56.8, -10.2, 1.15), target: at(63.0, -0.9, -5.2), fov: 50},
 ];
 // D3-11a: wide from the south-west, clear of the cover slab: they run; the round; the blast on the rim; they are thrown
 export const CAM_11a: CamKey[] = [

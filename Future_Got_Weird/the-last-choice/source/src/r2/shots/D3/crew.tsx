@@ -733,7 +733,7 @@ const B0 = {x: 46.9, z: -3.8};
 const DEC_RUN: XZ[] = [{x: B0.x - 0.05, z: B0.z + 0.05}, {x: 45.8, z: -2.2}, {x: DEC_SPOT.x, z: DEC_SPOT.z}];
 const DEC_THROWN = {from: {x: 42.6, z: 1.55}, to: {x: 41.5, z: 1.8}};
 const DEC_BACK2: XZ[] = [{x: DEC_THROWN.to.x, z: DEC_THROWN.to.z}, {x: 38.8, z: 1.9}, {x: 35.0, z: 2.0}, {x: D4S('decoy').pos.x, z: D4S('decoy').pos.z}];
-const DEC_UP = 145.98, DEC_RISE = 1.07;
+const DEC_UP = 145.98, DEC_RISE = 1.07, DEC_FEET = DEC_UP + DEC_RISE * (3.8 / 7.2);
 const DEC_SEGS: Seg[] = smoothSegs([
   {kind: 'stand', stag: 0.06, root: [[M.P3, B0.x, B0.z, 80], [127.4, B0.x, B0.z, 80], [127.55, B0.x - 0.05, B0.z + 0.05, headingTo(DEC_RUN[0], DEC_RUN[1])]]},
   {kind: 'run', path: DEC_RUN, T0: 127.6, T1: 129.5, gait: GAITS.walk, A: 0.4, D: 0.5},
@@ -794,7 +794,8 @@ export const decoyAt = (T: number): CrewOut => {
   const final = down ? pose : withRun(b, pose, runArms);
   const sketch = clamp((T - EV3.sketch) / (EV3.tap - EV3.sketch));
   const glow = T > 129.6 && T < EV3.smash ? 0.35 + 0.4 * win(T, EV3.tap, EV3.tap + 0.4, 0.05, 0.3) : 0;
-  const spec = base('decoy', 'd3dec', 6, b, T, {...final, handL: 'grip', holdL: tablet({screen: true, sketch: T < EV3.sketch ? 0 : T > EV3.tap ? 1 : sketch, figures: 4, glow, smashed})}, world, !down);
+  // (the rise's keys leave the legs to the footholds from its kneel on: the feet are planted from there)
+  const spec = base('decoy', 'd3dec', 6, b, T, {...final, handL: 'grip', holdL: tablet({screen: true, sketch: T < EV3.sketch ? 0 : T > EV3.tap ? 1 : sketch, figures: 4, glow, smashed})}, world, !down || T >= DEC_FEET);
   return {spec, body: b};
 };
 
@@ -817,7 +818,7 @@ const rawAt = (role: Role2, T: number): CrewOut => {
  */
 /** getting up: the moment a body leaves its 'down' pose (fk legs) for its feet (world footholds) — over 0.22 s the
  *  pose blends from the last down frame and the feet from where its ankles were */
-const RISE: Partial<Record<Role2, number[]>> = {director: [DIR_UP + 0.85], runner: [RUN_DOWN.t1], tether: [EV3.tUp + 0.3, EV3.tRun], flares: [FLR_UP + 0.55], decoy: [DEC_UP + DEC_RISE]};
+const RISE: Partial<Record<Role2, number[]>> = {director: [DIR_UP + 0.85], runner: [RUN_DOWN.t1], tether: [EV3.tUp + 0.3, EV3.tRun], flares: [FLR_UP + 0.55], decoy: [DEC_FEET, DEC_UP + DEC_RISE]};
 const RISE_W = 0.22;
 /** going down (thrown by the blast, the cable cut): over 0.12 s the pose blends from the last standing frame and the
  *  feet leave their footholds for where the falling pose puts its ankles — a hard, fast move, not a one-frame jump */

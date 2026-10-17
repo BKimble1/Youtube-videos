@@ -715,7 +715,9 @@ export const droneD3 = (pl: DPlan, T: number): DroneSpec => {
   const bi = DRONES_B.findIndex((d) => d.id === pl.from.id);
   const hov = (t: number) => (pl.from.r > 0 ? D1_HOVER(pl.from.id, pl.from.c, t, pl.from.r) : bi >= 0 ? droneSpecB(bi, t).pos : pl.from.c);
   // the first key is the hover position at its own time (the move starts from where it was)
-  const keys: K4[] = pl.keys.map((k, i) => (i === 0 ? [k0, hov(k0).x, hov(k0).y, hov(k0).z] as K4 : k));
+  // (a second key a quarter second on, still on the hover, so the move starts from rest, not with a jolt)
+  const h1 = hov(k0 + 0.25);
+  const keys: K4[] = [[k0, hov(k0).x, hov(k0).y, hov(k0).z], [k0 + 0.25, h1.x, h1.y, h1.z], ...pl.keys.slice(1)];
   const at = (t: number) => (t < k0 ? hov(t) : splV(keys, t));
   let pos = at(T);
   const vel = mul3(sub3(at(T + 0.05), at(T - 0.05)), 10);
