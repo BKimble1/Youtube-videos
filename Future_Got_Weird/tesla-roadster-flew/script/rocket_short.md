@@ -1,128 +1,157 @@
-# Rocket Short: "The Problem With Tesla's Rocket Car" (34.27 s, 9:16, 30 fps)
+# Rocket Short: "The Problem With Tesla's Rocket Car" (final pass: 34.2 s, 9:16, 30 fps)
 
-Export: `exports/FGW_Rocket_Short_FINAL.mp4` (Git-ignored). Rebuild everything with `bash tools/render_rocket.sh`
-(composition `RocketShort`, `source/src/rocket/`). Upload captions: `captions/FGW_Rocket_Short_FINAL.srt`. Upload text and
-the Related Video steps: `upload/UPLOAD_TEXT_ROCKET.md`. QA: `QA_REPORT.md` ("Rocket Short"). Sources per line:
-`research/claim_ledger.md` ("Rocket Short: claim-to-source note"). Clips: `footage/CLIP_LEDGER.md` ("Rocket Short").
+Export: `exports/FGW_Rocket_Short_FINAL_PASS.mp4` (Git-ignored). Rebuild everything with `bash tools/render_rocket.sh`
+(composition `RocketShort`, `source/src/rocket/`). Upload captions: `captions/FGW_Rocket_Short_FINAL_PASS.srt`. Upload
+text and the Related Video steps: `upload/UPLOAD_TEXT_ROCKET.md`. QA: `QA_REPORT.md` ("Rocket Short: FINAL PASS").
+Sources per line: `research/claim_ledger.md` ("Rocket Short: claim-to-source note"). Clips: `footage/CLIP_LEDGER.md`
+("Rocket Short"). The first version (`FGW_Rocket_Short_FINAL.mp4`) is superseded; what changed and why is at the end.
 
 A follow-up to "Tesla's Flying Roadster Isn't What You Think": the engineering trade-offs behind cold-gas thrust on a car.
-It is not a recap, a disaster story or a prediction. The original title idea, "...Break The Law Of Physics", is answered
-in the script ("None of this breaks physics.") instead of being asserted.
+It is not a recap, a disaster story or a prediction.
 
 ## Narration (as recorded)
 
-> This Tesla can jump. But rocket thrust comes with a catch. These jets blast compressed air. Every burst uses some up.
-> Keeping a car airborne on thrust means pushing against its entire weight. Bigger tanks can buy more time, but add weight
-> and need protection. Then comes balance. Thrust that misses the center of mass can make it rotate. Other thrusters can
-> correct that, but those corrections use air too. And fire a jet near loose gravel? That blast can send debris flying.
-> None of this breaks physics. It gives a sports car spacecraft problems. Full Roadster breakdown in the linked video.
+> This Tesla can jump. But its air supply isn't endless. These jets blast compressed air. Every burst uses some up.
+> Hovering means pushing against the car's entire weight. Bigger tanks can buy more time, but add weight and need
+> protection. Then comes balance. Thrust that misses the center of mass can make it rotate. Other thrusters can correct
+> that, but those corrections use air too. And fire a jet near loose gravel? That blast can send debris flying. None of
+> this breaks physics. It gives a sports car spacecraft problems. It also drives upside down. Tap the linked breakdown.
 
-The brief's default script, unchanged (102 words).
+99 words, 176 wpm over 33.7 s. The voice starts at 0.16 s and ends at 33.82 s; the film ends 0.38 s later.
 
 - **Voice.** Test Voice `kk5XaSLo2XAw0sKM98zU`, `eleven_v4`, `[excited] [quickly]`, `[dryly]` on "It gives a sports car
-  spacecraft problems." Four takes are in `audio/rocket/takes/` (ElevenLabs flow `8baHNxGa4ViVC2FKXh4s`). The pick is
-  `r_t1_IyNt`. Of the two fastest takes it has the widest pitch movement (14.1 semitones), and it has a beat before
-  "problems" for the dry line.
-- **Edit.** Pauses are tightened only (`tools/tighten_rocket.py`): sentence gaps go to 0.27 s and short gaps to at most
-  0.15 s. There is no time-stretch and no pitch change. The sentences are then placed on the timeline
-  (`tools/build_rocket_narration.py`), with five small extra beats where the picture needs one:
-  - after "catch." +0.12 s (the match into the drawing);
+  spacecraft problems." The approved take is `audio/rocket/takes/r_t1_IyNt.mp3`.
+- **Re-recorded lines.** The hook, the hover line and the CTA were re-recorded in the same voice, model and tags, as part
+  of the full revised script so each line has its natural context (`audio/rocket/takes_fp/`, four takes, ElevenLabs flow
+  `8baHNxGa4ViVC2FKXh4s`). Take `fp_t4_8N47` supplies them. Its levels per sentence sat closest to the approved take's,
+  and its hover line's pitch (162 Hz median) sits between its neighbours in the approved take (156 and 163 Hz).
+- **Splice.** `tools/build_rocket_narration.py` places each sentence block from its take:
+  - from the new take: sentences 0–1 (hook), 4 (hover), 13–14 (CTA);
+  - from the approved take: everything else.
+  Every block is cut in the middle of its silences with 8 ms fades. The new take gets one overall gain (−0.29 dB),
+  measured on the 11 sentences both takes share, so its own dynamics stay. All 14 joins sit at −63 dBFS or quieter
+  (`joins` in `source/src/data/rocket_words.json`). No time-stretch, no pitch change, no global speed-up.
+- **Beats.** Pauses are tightened only (`tools/tighten_rocket.py`, sentence gaps 0.27 s). Six small extra beats where the
+  picture needs one:
+  - after "endless." +0.10 s (the match into the drawing);
+  - after "weight." +0.12 s (into the tank);
   - after "protection." +0.20 s (the frame closes);
   - after "too." +0.25 s (the correction settles);
-  - after "flying." +0.20 s (the dust wipe);
+  - after "flying." +0.20 s (the dust pass);
   - after "problems." +0.15 s (the touchdown).
-- **Pace.** 181 wpm over 33.8 s of speech. The voice starts at 0.14 s and ends at 33.96 s, and the film ends 0.3 s later.
-- **Wording check.** The placed narration was uploaded as plain audio (`audio/rocket/verify/narration_placed.mp3`) and
-  transcribed independently with Scribe. All 102 words match the script. The only difference is a comma after "jump".
-  These timings drive the animation and captions (`audio/rocket/scribe/placed_verify.json`): the take's own alignment had
-  drifted up to 0.3 s late at some sentence ends. The final mixed soundtrack transcribes the same way
-  (`audio/rocket/verify/final_mix.mp3`).
+- **Wording check.** The placed narration was uploaded as plain audio (`audio/rocket/verify/narration_placed_fp.mp3`) and
+  transcribed independently with Scribe: all 99 words match the script (commas aside). These are the times that drive
+  the animation and captions (`audio/rocket/scribe/placed_verify_fp.json`).
 
-## Timeline
+## Timeline: six compositions, then the live finish
 
 | Time (s) | Words | Picture | Source |
 |---|---|---|---|
-| 0.00–2.96 | "This Tesla can jump. But rocket thrust comes with a" | **Real**, one continuous camera at its own speed: the Roadster climbing on two jets above the parked Teslas and the Semi, rolling inverted with jets firing, rolling back upright. One small label: "TESLA ROADSTER DEMO · OCT 15, 2026 / flight listed for the Rocket version only, per Tesla". The crop follows the car (measured every 0.25 s) | `rec_224911` 0:35.25 → 0:38.21 |
-| 2.96–3.46 | "catch." | Still real: upright on four downward jets. Blue flow chevrons and a down arrow sit on the two visible jet pairs. An air release and a low hit play. A saffron outline draws onto the car (3.34) | → 0:38.71 |
-| 3.46–3.95 | — | **Match**: the drawn Roadster replaces the real car at the same place and size, still descending on its jets. The night becomes the illustrated dusk. One label for the whole schematic: "SIMPLIFIED SCHEMATIC · not Tesla's layout" | illustration |
-| 3.78–5.98 | "These jets blast compressed air." | The lower side panel lifts off: a tank of gas (dots), a valve, a manifold, the two lift nozzles. A gas ribbon runs tank → valve → nozzle. Tags read "air tank", "valve", "nozzle". The jets brake the car to a hover (thrust a little above weight, then equal) | illustration |
-| 5.98–7.70 | "Every burst uses some up." | The jets fire in bursts on "burst", "uses", "some", "up". Each burst takes dots out of the tank, with a valve click and a puff. Between bursts nothing pushes, so the car bobs a few units. The bursts average to its weight | illustration |
-| 7.74–11.34 | "Keeping a car airborne… entire weight." | Pull back. WEIGHT points down from the floor and THRUST points up from the roof, on the same line, equal (marks on "entire weight"). The car holds height while dots keep leaving | illustration |
-| 11.64–14.82 | "Bigger tanks can buy more time, but add weight and need protection." | Push toward the tank: it grows and holds more dots. On "add weight": a heavier wall and mounts, WEIGHT grows (a white ghost marks the old length), THRUST grows to match. On "protection": a frame closes around the tank. No impact, rupture or explosion | illustration |
-| 15.38–16.52 | "Then comes balance." | The forces retract into a centre-of-mass marker on the body | illustration |
-| 16.88–19.34 | "Thrust that misses the center of mass can make it rotate." | The rear lift jet runs stronger: the resultant push moves behind the centre. A dashed line of action and a coral lever arm are drawn. The car turns nose-down about the marker (red arrow), at most 6.7° | illustration |
-| 19.66–22.68 | "Other thrusters can correct that, but those corrections use air too." | A small nose thruster pulses: the turn stops by "correct". A second nose pulse turns it back (teal arrow), and a tail pulse stops it level. Each pulse takes dots from the same tank, and the tank rim glows on "air" | illustration |
-| 23.26–27.40 | "And fire a jet near loose gravel? That blast can send debris flying." | The panel closes and the car descends to a low hover. At ground level, the rear jet meets a patch of loose gravel ("loose surface"). The front jet only spreads air over the bare pad. On "blast" and "debris", gravel is thrown outward along the pad, a few pieces higher, and a dust cloud rolls toward the camera and wipes the frame | illustration |
-| 27.40–33.47 | "None of this breaks physics. It gives a sports car spacecraft problems. Full Roadster breakdown…" | **Real**, from the air: the second ramp run rolling upright on its jets, with a roll arrow across the car; side plumes, with the small tank motif losing a few dots; jets down into smoke, with a dashed "clear area" ring. Touchdown at 31.60, just after "problems". The motifs resolve by 32.3. The CTA text cue "Full Roadster breakdown / in the linked video" appears at 31.87 | `rec_224730` 2:20.10 → 2:26.17 |
-| 33.47–34.27 | "…in the linked video." | **Real**: the hop's side replay again, lifting off from the smoke. It runs straight into frame 0 (0:35.25), so the loop is one continuous shot. The CTA stays to the last frame | `rec_224911` 0:34.45 → 0:35.22 |
+| 0.00–3.46 | "This Tesla can jump. But its air supply isn't endless." | **A. Real**, one continuous camera at its own speed: frame 0 is the white Roadster climbing on two jets above the parked Teslas (whole car, upright), then it rolls inverted with jets firing and back upright. A restrained shadow lift on the clip (curve; black stays black, highlights untouched). One brief tag, "Rocket version" (0.25–2.0). Blue flow marks on the two real jets from 2.94; a saffron outline draws onto the car at 3.34 | `rec_224911` 0:35.25 → 0:38.71 |
+| 3.46–7.4 | "These jets blast compressed air. Every burst uses some up." | **B. Gas close-up.** The drawn Roadster replaces the real car at the same place and size, still descending on its jets; the night becomes the dusk site. One push-in (3.48 → 4.35) as the side panel and sill lift off: the tank of gas, the valve under it, the pipe along the sill, the front lift nozzle and its exit. A brief "Illustration" tag (3.76–5.1). Steady jets brake the car; then five bursts: the valve lever opens, a few gas markers run the pipe and leave with the puff, the gas in the tank pales a step (24 → 8 markers by 7.5; no number) | illustration |
+| 7.4–10.6 | "Hovering means pushing against the car's entire weight." | **C. Whole-car forces.** Pull back to the whole car (panel shut): WEIGHT down from the floor and THRUST up from the roof on the centre's line, the same length, labels large; equal ticks on "entire weight". Both gone by 10.72 | illustration |
+| 10.6–14.3 | "Bigger tanks can buy more time, but add weight and need protection." | **D. Tank close-up.** Push in as the panel lifts again; the tank becomes the subject and the rest of the frame dims. It grows into a bigger tank holding more gas; on "add weight" its wall thickens, brackets bolt it to the sill and the roof rail and a small weight arrow grows (the plume grows to match); on "protection" a frame closes round it. No extra-time claim | illustration |
+| 14.3–21.9 | "Then comes balance. … can make it rotate. Other thrusters can correct that, but those corrections use air too." | **E. Balance, larger side view.** Pull back as the panel shuts. A centre-of-mass dot and one label ("center of mass"). The rear lift jet runs stronger: an amber push behind the dot, its line of action and lever arm; the car turns nose-down (one amber arc at the nose; max 8.5° at 19.2). One nose-thruster burst (19.02–19.47, saffron push at the nose) stops the turn and sends it back; a short trim of the lift jets stops it level at 20.92; the dot goes from amber to white. A dashed phantom of the tank shows that burst's gas leaving for the nose, and the tank paler on "air" | illustration |
+| 21.9–26.54 | "And fire a jet near loose gravel? That blast can send debris flying." | **F. Nozzle to ground.** The car descends to a low hover and the camera follows the rear jet down: the rear pod under the overhang, the plume, its footprint on a patch of loose gravel. A light stir as the jet arrives; on "blast" a few larger stones are thrown outward along the pad, land and skid; a little dust. A short dust pass (fully covered for about 3 frames) carries into the footage. The pad is intact; nobody is nearby | illustration |
+| 26.54–31.00 | "None of this breaks physics. It gives a sports car spacecraft problems." | **G. Real**, from the air: the second ramp run rolling upright on its jets, side plumes, jets down into smoke, touchdown at 30.70 just after "problems". No graphics | `rec_224730` 2:20.14 → 2:24.60 |
+| 31.00–31.85 | "It also drives" | **H. Real**, from the air: the same run driving along the underside of the curved ramp, upside down. Cut before any exhaust shows near the car | `rec_224730` 2:16.60 → 2:17.45 |
+| 31.85–34.20 | "upside down. Tap the linked breakdown." | **H. Real**: the first run's hang, close-up from below, shown whole in a band (the reveal's corner gauges out of frame). One cue, "How it drives upside down", from 31.81; it clears at 33.80, so the last 0.4 s is the clean shot | `rec_224730` 1:17.50 → 1:19.85 |
 
-Real footage: 10.3 of 34.3 s (30%). That roughly follows the brief's own shot plan: no real shot shows a steady hover, a
-tank, a lever arm or loose gravel, so those are illustrated, and the real car opens, anchors the match, returns and
-closes the loop.
+Real footage: 3.46 + 4.46 + 0.85 + 2.35 = 11.1 of 34.2 s (33%).
 
-## Opening frame
+## Ending
 
-Three 9:16 candidates from the actual footage were compared at phone size
-(`qa/evidence/rocket_opening_candidates.jpg`):
-
-- `rec_224911` 0:34.45, lift-off from the smoke;
-- **0:35.25, climbing on two bright jets: chosen**: the whole car is large and recognizable, and the jets explain the
-  motion at once;
-- 0:38.30, upright on four jets: it clips the car's tail, and the match needs it later.
-
-The first second: the car is in flight on its jets, with the parked cars below, and the narration starts at 0.14 s.
+A clean ending rather than a forced loop. The CTA cue is gone 0.4 s before the last frame; the last shot is the hang
+close-up, and frame 0 is the hop climbing on its jets. Both are real, night, centred, and similar in scale. The score
+ends on the opening's drone and marimba figure at the opening's level, so a replay continues the same music.
 
 ## Physics, as animated
 
-- **Thrust and exhaust.** Thrust is always opposite the exhaust. Gas leaves the nozzles downward (blue), and the push is
-  drawn upward (saffron).
-- **Hover and other phases.**
-  - Hover: THRUST equals WEIGHT, and the car holds height.
-  - Braking from the footage's descent: thrust 1.13× weight.
-  - Bursts: on 2.25× weight for 0.16 s, off for 0.20 s. They average to the weight.
-  - Descent: below the weight, then above it, to stop.
-  - The real hop is never said to need thrust through its whole arc.
-- **Torque.** Torque follows the lever arm. The offset resultant behind the centre turns the car nose-down. Upward pulses
-  at the nose turn it nose-up, and at the tail nose-down. The rotation is deliberately slow and small, so it can be read
-  (not to scale). The thrust and weight arrows are hidden while the car is tilted, so no unbalanced sideways force is
-  drawn.
-- **Gas use.** The dots are illustrative. There is no gauge, no number and no linear "pressure" readout. A bigger tank
-  holds more dots, and its added weight then needs more thrust (the arrows show it), so no proportional time gain is
+- **One car-local frame.** Every attachment point is in the car's own coordinates (`sim.ts`): the body, the three nozzle
+  mounts, the plume origins, the pipes and the centre-of-mass dot. The scene places that frame once (height, mirror,
+  pitch about the centre of mass), so nothing can drift off the body at any scale or angle.
+- **Nozzles.** Three, all fixed and all firing down:
+  - two lift nozzles, one on the sill behind the front wheel and one in a pod bolted under the rear overhang;
+  - a small nose thruster in the front bumper.
+  Each is a housing whose top edge sits inside the underbody it is bolted to, then a bell. The plume starts at the bell's
+  exit. Only its puffs drift; the origin never moves.
+- **Thrust and exhaust.** Thrust is always opposite the exhaust. Gas leaves the nozzles downward (blue); the push is
+  drawn upward (saffron); the imbalance is amber.
+- **Hover and bursts.**
+  - Hover: THRUST equals WEIGHT, drawn to the same scale.
+  - Braking the footage's descent: thrust 1.13× weight.
+  - Bursts: 2.25× weight for 0.16 s, off for 0.20 s; they average to the weight, and the car bobs 400–409 units.
+  - The jump itself is never said to need thrust through its arc ("Hovering means…").
+- **Torque.**
+  - Rear jet stronger, front weaker (same total): the push sits behind the centre, so the car turns nose-down.
+  - The nose thruster pushes up at the nose: nose-up torque, which stops the turn and reverses it.
+  - The trim (rear slightly stronger again) stops it level.
+  - Each step's direction agrees with its force. Slow and small to be readable (not to scale).
+- **Gas.** Markers and a paler tint are the only reserve cue: no gauge, no number, no linear readout. The bigger tank
+  holds more markers, and its added weight then needs more thrust (the plume grows), so no proportional time gain is
   implied.
-- **Fan suction.** Not shown anywhere. It is a separate system.
-- **Cold gas.** Pale exhaust, no flame.
-- **Gravel.** Only the loose patch is disturbed: the pad is intact and nobody is nearby. It is labelled "loose surface"
-  and drawn as a schematic, not as an observed event.
-- **Hardware.** The tank, valve, manifold and pitch thrusters are generic. The two lift-jet exits sit where the replay
-  shows plumes, so the drawn jets continue the real ones through the match.
+- **Fan suction.** Not shown. The CTA shows the upside-down drive and hang and points to the long video, which explains
+  the fans. Nothing says the jets hold the car to the ramp.
+- **Cold gas.** Pale exhaust, no flame. **Gravel.** Only a loose patch moves; the pad is intact; drawn as a schematic,
+  not an observed event.
 
 ## Sound (`tools/make_bed_rocket.py`)
 
-- **Score.** The channel's in-house score: the robots video's instruments, in D major at 104 BPM.
-  - drone and marimba under the opening, a restrained low hit on "catch";
-  - a pluck groove through the cutaway, a thinner marimba groove for balance, the darker groove into the dust;
-  - the D-major resolution under the return, a soft hit and piano at the touchdown;
-  - the last bars return to the opening's drone and ostinato, so the loop doesn't restart the music.
-- **Effects** come only from visible actions:
-  - a valve click before every burst;
-  - gas only while a nozzle fires;
-  - lighter clicks and puffs for the pitch thrusters;
-  - mounts and the frame latch;
-  - brief, small gravel ticks and the dust swell;
-  - on the silent aerial: jets while plumes are visible, then the touchdown.
-- **Mix.** The replay's own sound plays under the opening and the loop bridge. Music, effects and that sound duck under
-  every word.
+- **Score.** The channel's in-house score, D major at 104 BPM:
+  - the drone and marimba under the opening;
+  - one restrained low hit as the outline lands;
+  - a pluck groove through B–D, a thinner marimba groove for balance, the darker groove into the dust;
+  - the D-major resolution under the payoff, a soft hit at touchdown and piano on "problems";
+  - the opening's drone and marimba again under the CTA, through the last frame.
+- **Effects.** Only from visible actions:
+  - an air release on the real jets;
+  - the panel each time it opens or shuts;
+  - a valve click before every burst and gas only while a nozzle fires;
+  - the bigger tank, the wall, two bracket ticks, the frame latch;
+  - the dot's tick;
+  - the rear jet surging (panned right), the nose burst (left), the short trim (right);
+  - a few gravel ticks and a short dust swell;
+  - on the silent aerial, the jets while visible and the touchdown;
+  - open air only under the upside-down shots.
+  There is no whoosh on the cuts.
+- **Mix.** The replay's own sound plays under the opening. Music, effects and that sound duck under every word.
 
-## Changes from the brief and why
+## Changes in the final pass (owner's audit, 17 Oct 2026)
 
-1. **Length: 34.3 s** (the brief targets about 34–40). The default script at the requested pace fills 33.8 s, and the
-   brief says not to stretch it.
-2. **The 31–35 s return uses the second ramp run from the air**, not the hop. It shows the most satisfying controlled
-   manoeuvre available: a roll upright on jets and a landing in smoke. "Spacecraft problems" sits on its final descent.
-3. **CTA.** It plays over the camera dropping in behind the landed car. The last 0.8 s is the hop's lift-off, which makes
-   the loop seamless (no end card, no black, no pause).
-4. **Opening label.** It names the flying version ("flight listed for the Rocket version only, per Tesla") rather than
-   claiming the demo car's trim, which no source confirms (claim ledger C10, C11).
+1. **Floating rear hardware: the cause.** The rear lift nozzle (car-local x −175, y −36) and the tail pitch thruster
+   (x −207, y −46) had been placed to match where the replay shows plumes. The traced body's rear overhang, though, ends
+   at y −73 to −83 there. Both bells hung 35–40 units below it, beside and behind the rear tyre. Their pipes existed only
+   inside the cutaway's clip, so with the panel shut nothing joined them to the car. The rear plume also came from the
+   lift bell while the tail bell sat apart: "a nozzle-like object floating behind the rear wheel".
+2. **The fix.**
+   - Every nozzle is now a mounted unit whose housing is set into the outline it is bolted to (values checked against
+     the traced outline).
+   - The rear lift nozzle moved into a pod under the overhang (x −186). The tail thruster is gone: the final settle is a
+     brief lift-jet trim.
+   - The centre of mass moved to midway between the two lift jets (x −62).
+   - The cutaway now opens the sill too, so every pipe visibly reaches its mount.
+   - Reviewed at the match (2.28×), the gas close-up (5.6×), the whole car (1.55×), mid-pitch (2.15×, 8.5°) and the
+     gravel close view (3.29×).
+3. **Plaques removed.**
+   - The date/demo label is now a brief "Rocket version" tag.
+   - The persistent "SIMPLIFIED SCHEMATIC · not Tesla's layout" is now a 1.3 s "Illustration" tag. The full disclosure
+     is in the upload description.
+   - The "air tank", "valve", "nozzle" and "loose surface" tags are gone: the close-ups show those parts large enough
+     to read.
+   - THRUST/WEIGHT are larger (50 px) and leave when the force beat ends.
+   - The checkered centre-of-mass marker is now a plain dot with one label.
+   - The aerial's tank capsule, dashed ring and "clear area" label are gone.
+4. **Recomposed middle.** Six compositions joined by five camera moves, one per beat: push-in to the gas close-up, pull
+   back to the forces, push-in to the tank, pull back to the balance view, follow the jet down to the gravel. Each move
+   reveals the next subject; there are no zoom pulses within a beat. Richer shading: metal gradients on the nozzle units
+   and pipes, cylinder shading on the tank, ribs inside the body, and a parallax far layer with hills, light towers, a
+   hangar and haze.
+5. **New lines.** "But its air supply isn't endless." (hook), "Hovering means pushing against the car's entire weight."
+   (more precise than "Keeping a car airborne on thrust…"), "It also drives upside down. Tap the linked breakdown."
+   (CTA). The CTA was checked against the companion final in this repo, which opens on the same hang and explains the
+   fan suction. The YouTube page itself could not be opened (upload notes).
+6. **Ending.** A clean ending on the hang close-up instead of the loop bridge, with the CTA cue gone before the last
+   frame.
 
 ## Before upload
 
@@ -131,7 +160,7 @@ The first second: the car is in flight on its jets, with the parked cars below, 
   - that flight is listed only for the Rocket;
   - that the thrusters use compressed air.
   The page was blocked from this container.
-- In YouTube Studio, set the Related Video to `ujV0J6-cfX8`. First confirm advanced features and that the target is public
-  or unlisted (`upload/UPLOAD_TEXT_ROCKET.md`).
+- Confirm that `ujV0J6-cfX8` is the companion cut that shows and explains the upside-down hang. Then set it as the
+  Short's Related Video and check the link on a phone (`upload/UPLOAD_TEXT_ROCKET.md`).
 - Listen once with sound before publishing. The checks here are measurements and independent transcriptions, not a human
   listen.

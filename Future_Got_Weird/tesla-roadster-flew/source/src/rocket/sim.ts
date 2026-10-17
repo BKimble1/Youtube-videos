@@ -1,28 +1,43 @@
-// The schematic car's motion and gas use, as one deterministic model (all times are film seconds).
-//   Height: the car arrives from the footage still descending; its jets brake it to a hover (thrust slightly above
-//   weight), it holds on steady jets (thrust = weight), it is held by short bursts (twice its weight for a moment, then
-//   nothing: it bobs, and each burst spends gas), it holds again, and it descends toward the ground near the end.
-//   Pitch: offset thrust (the rear lift jet stronger than the front) turns it nose-down about its centre of mass; the
-//   rotation continues once the jets rebalance; a nose thruster stops it; a second nose pulse turns it back; a tail
-//   pulse stops it level. The rotation is kept small and slow so it can be read (not to scale).
-//   Gas: dots in the tank leave for whichever nozzle is firing; a burst takes a few, a hold takes a steady trickle.
-// Car-local frame (as companion3/Car3): facing +x, contact line y = 0, up is -y, 100 units ~ 1 m. On screen the car is
-// mirrored to face left, like the real car in Tesla's side replay.
+// The schematic car's hardware, motion and gas use, as one deterministic model (all times are film seconds).
+// Everything here is in ONE car-local frame (as companion3/Car3): facing +x, contact line y = 0, up is -y, 100 units
+// ~ 1 m. The scene places that frame once (translate to the height, mirror to face left like the real car in Tesla's
+// side replay, pitch about the centre of mass), so the body, the nozzle mounts, the plume origins and the
+// centre-of-mass marker can never drift apart.
+//   Hardware (generic, not Tesla's layout): a tank between the wheels, one valve under it, a manifold along the sill,
+//   two downward lift nozzles (one on the sill behind the front wheel, one in a pod bolted under the rear overhang) and
+//   a small downward nose thruster in the front bumper. Each nozzle hangs from a mount on the underbody; its exit is the
+//   plume's origin.
+//   Height: the car arrives from the footage still descending; its jets brake it to a hover, it is held by short bursts
+//   (on at 2.25 x its weight, then off: it bobs and each burst spends gas), it hovers on steady jets (thrust = weight),
+//   and it descends toward the ground near the end.
+//   Pitch: the rear lift jet runs stronger, so the lift misses the centre of mass and the car turns nose-down; one
+//   burst from the nose thruster stops the turn and sends it back; the lift jets trim briefly (rear a little stronger)
+//   to stop it level. Kept slow and small enough to read (not to scale).
+//   Gas: markers in the tank leave for whichever nozzle is firing; a burst takes a few, a hover a steady trickle.
 import {T} from './data';
 
 export const G = 981;
-export const CG = {x: -57, y: -58};                 // illustrative centre of mass (between the two lift jets)
+/** Nozzle exits (plume origins). */
 export const NOZ = {
-  front: {x: 62, y: -22},                          // lift jets where the replay shows plumes: behind the front wheel...
-  rear: {x: -175, y: -36},                         // ...and near the tail
-  nose: {x: 190, y: -38},                          // small pitch thrusters ("other thrusters")
-  tail: {x: -207, y: -46},
+  front: {x: 62, y: -13},                          // on the sill, behind the front wheel
+  rear: {x: -186, y: -55},                         // pod under the rear overhang, behind the rear wheel
+  nose: {x: 190, y: -26},                          // small pitch thruster in the front bumper
 };
 export type NozKey = keyof typeof NOZ;
+/** Mounts: each housing's top edge sits 3 units inside the underbody it is bolted to (values at x - w and x + w, from
+ *  the traced outline: sill bottom -22.9..-24.0, rear overhang -77.1..-73.0, bumper -34.0..-34.5), then the housing
+ *  bottom, its half width, the bell's throat and exit half widths. */
+export const MOUNT: Record<NozKey, {top: [number, number]; bot: number; w: number; bell: number; exit: number}> = {
+  front: {top: [-26, -27], bot: -19, w: 11, bell: 6, exit: 9},
+  rear: {top: [-80, -76], bot: -66, w: 10, bell: 6, exit: 9},
+  nose: {top: [-37, -37.5], bot: -31, w: 7, bell: 3.5, exit: 5.5},
+};
+/** Illustrative centre of mass: midway between the two lift jets, so equal jets give no turn. */
+export const CG = {x: (NOZ.front.x + NOZ.rear.x) / 2, y: -52};
 
 // ---------------------------------------------------------------- vertical motion
 export const H_HOVER = 400;
-export const H_LOW = 120;
+export const H_LOW = 100;
 const BRAKE_T0 = T.swap - 0.02;
 const V0 = -135;                                    // units/s (down) at the swap, matching the replay's descent on screen
 const BRAKE_DUR = 1.05;
@@ -33,7 +48,7 @@ const ON = 0.16, GAP = 0.2, P1 = T.burst - 0.04;
 export const BURSTS: [number, number][] = [[P1 - GAP - ON / 2, P1 - GAP], ...[0, 1, 2, 3].map((k): [number, number] => [P1 + k * (ON + GAP), P1 + k * (ON + GAP) + ON])];
 const BURST_SPAN: [number, number] = [BURSTS[0][0], BURSTS[4][1] + GAP / 2];
 const BURST_K = 1 + GAP / ON;
-const DESC0 = T.fire - 0.3, DESC1 = T.gravel - 0.05;
+export const DESC0 = T.tooEnd + 0.2, DESC1 = T.gravel - 0.3;
 
 /** Thrust over weight from the lift jets (before the descent). */
 const liftRatio = (t: number) => {
@@ -78,16 +93,15 @@ export const liftAt = (t: number) => {
 };
 
 // ---------------------------------------------------------------- pitch
-const P = {a0: T.misses + 0.03, a1: T.mass + 0.2, c0: T.thrusters + 0.05, c1: T.thrusters + 0.45};
 // segments of constant angular acceleration (deg/s^2), built so the car ends level
 type Seg = {t0: number; t1: number; a: number};
-const W1 = 3;                                     // deg/s after the offset thrust
-const W2 = -8;                                    // deg/s after the second nose pulse
+const W1 = 4;                                     // deg/s nose-down once the offset thrust has acted
+const W2 = 6;                                     // deg/s nose-up after the corrective burst
 const segs: Seg[] = [];
-segs.push({t0: P.a0, t1: P.a1, a: W1 / (P.a1 - P.a0)});            // offset lift thrust: nose-down torque
-segs.push({t0: P.c0, t1: P.c1, a: -W1 / (P.c1 - P.c0)});           // nose thruster: stops the turn
-const e0 = T.corrections - 0.39, e1 = e0 + 0.3;
-segs.push({t0: e0, t1: e1, a: W2 / (e1 - e0)});                    // nose thruster again: turns it back
+const A0 = T.misses + 0.03, A1 = T.mass + 0.2;
+segs.push({t0: A0, t1: A1, a: W1 / (A1 - A0)});                    // offset lift thrust: nose-down torque
+const C0 = T.thrusters + 0.04, C1 = C0 + 0.45;
+segs.push({t0: C0, t1: C1, a: -(W1 + W2) / (C1 - C0)});            // nose thruster: stops the turn and sends it back
 const pitchRaw = (t: number, list: Seg[]) => {
   let th = 0, w = 0, tc = list.length ? Math.min(list[0].t0, t) : t;
   for (const s of list) {
@@ -100,69 +114,71 @@ const pitchRaw = (t: number, list: Seg[]) => {
   th += w * (t - tc);
   return {th, w};
 };
-// the tail pulse starts when the coasting car is one pulse-width of rotation from level
+// the trim starts when the returning car is one stopping distance from level
 {
-  const after = pitchRaw(e1, segs);
-  const dur = 0.3;
-  const stopTh = -0.5 * W2 * dur;                  // degrees turned while stopping
-  const g0 = e1 + (after.th - stopTh) / -W2;
-  segs.push({t0: g0, t1: g0 + dur, a: -W2 / dur});
+  const after = pitchRaw(C1, segs);
+  const dur = 0.35;
+  const stopTh = 0.5 * W2 * dur;                  // degrees turned while stopping
+  const g0 = C1 + (after.th - stopTh) / W2;
+  segs.push({t0: g0, t1: g0 + dur, a: W2 / dur});
 }
 export const PITCH_SEGS = segs;
 /** Nose-down pitch (deg) and its rate (deg/s). */
 export const pitchAt = (t: number) => pitchRaw(t, segs);
+export const SETTLED = segs[2].t1;
 
 // ---------------------------------------------------------------- nozzle outputs (0..~2, 1 = its share of a hover)
 const win = (t: number, a: number, b: number, r = 0.04) => Math.max(0, Math.min(1, (t - a) / r, (b - t) / r));
 const IMB = 0.42;                                  // rear stronger / front weaker while the thrust misses the centre
-const offsetAmt = (t: number) => win(t, segs[0].t0, segs[0].t1, 0.12);
-export const offsetAt = offsetAmt;
+const TRIM = 0.3;                                  // the brief rear-stronger trim that stops the return level
+export const offsetAt = (t: number) => win(t, segs[0].t0, segs[0].t1, 0.12);
+export const trimAt = (t: number) => win(t, segs[2].t0, segs[2].t1, 0.08);
 export const nozzleAt = (t: number) => {
   const lift = liftAt(t);
-  const k = IMB * offsetAmt(t);
+  const k = IMB * offsetAt(t) + TRIM * trimAt(t);
   return {
     front: lift * (1 - k),
     rear: lift * (1 + k),
-    nose: win(t, segs[1].t0, segs[1].t1) + win(t, segs[2].t0, segs[2].t1),
-    tail: win(t, segs[3].t0, segs[3].t1),
+    nose: 1.6 * win(t, segs[1].t0, segs[1].t1, 0.05),
   };
 };
 
-// ---------------------------------------------------------------- gas reserve (dots)
-export const TANK_SMALL = {x0: -120, x1: 68, y0: -97, y1: -70};
-export const TANK_BIG = {x0: -152, x1: 108, y0: -99, y1: -61};
-export const GROW = {t0: T.bigger + 0.05, t1: T.bigger + 0.75};
-export const N_SMALL = 34;
-export const N_BIG = 30;                           // extra dots the bigger tank brings
+// ---------------------------------------------------------------- gas reserve (markers)
+export const TANK_SMALL = {x0: -78, x1: 38, y0: -96, y1: -70};
+export const TANK_BIG = {x0: -94, x1: 54, y0: -100, y1: -64};
+export const GROW = {t0: T.bigger + 0.08, t1: T.bigger + 0.85};
+export const N_SMALL = 24;
+export const N_BIG = 18;                           // extra markers the bigger tank holds
 export type Dot = {u: number; v: number; born: number; leave: number; to: NozKey};
 const rnd = (i: number) => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 // leave events: [time, nozzle]
 const events: [number, NozKey][] = [];
-const trickle = (a: number, b: number, rate: number, alt = true) => {
-  for (let t = a, k = 0; t < b; t += 1 / rate, k++) events.push([t, alt && k % 2 ? 'rear' : 'front']);
+const trickle = (a: number, b: number, rate: number) => {
+  for (let t = a, k = 0; t < b; t += 1 / rate, k++) events.push([t, k % 2 ? 'rear' : 'front']);
 };
-trickle(T.swap + 0.7, BURST_SPAN[0] - 0.05, 2.4);
-for (const [a] of BURSTS) events.push([a + 0.01, 'front'], [a + 0.03, 'rear']);
-trickle(BURST_SPAN[1] + 0.05, GROW.t0, 1.4);
-trickle(GROW.t1 + 0.1, T.then + 0.4, 1.6);
-trickle(T.then + 0.4, segs[0].t0, 1.2);
-trickle(segs[0].t0, segs[0].t1, 2.4, false);       // offset: mostly the stronger rear jet
-for (let i = 0; i < events.length; i++) if (events[i][0] >= segs[0].t0 && events[i][0] < segs[0].t1 && i % 3) events[i][1] = 'rear';
-trickle(segs[0].t1, T.fire - 0.3, 1.2);
-events.push([segs[1].t0 + 0.02, 'nose'], [segs[1].t0 + 0.14, 'nose']);
-events.push([segs[2].t0 + 0.02, 'nose'], [segs[2].t0 + 0.14, 'nose']);
-events.push([segs[3].t0 + 0.02, 'tail'], [segs[3].t0 + 0.14, 'tail']);
-events.sort((a, b) => a[0] - b[0]);
-// dots: homes on a jittered grid in tank-normalised coordinates; the ones nearest the outlet leave first
-const OUT_U = 0.52;
-const mk = (n: number, born: number, seed: number) => Array.from({length: n}, (_, i) => {
-  const cols = 9, r = Math.floor(i / cols), c = i % cols;
-  return {u: (c + 0.5 + (rnd(seed + i) - 0.5) * 0.7) / cols, v: (r + 0.5 + (rnd(seed + i + 77) - 0.5) * 0.6) / Math.ceil(n / cols), born, leave: Infinity, to: 'front' as NozKey};
+trickle(T.swap + 0.9, BURST_SPAN[0] - 0.05, 1.4);
+BURSTS.forEach(([a], i) => {
+  events.push([a + 0.01, 'front']);
+  if (i > 0) events.push([a + 0.05, 'front'], [a + 0.03, 'rear']);
 });
-const small = mk(N_SMALL, -1, 3);
-const extra = mk(N_BIG, GROW.t0 + 0.15, 101);
-// spread the extra dots over the bigger tank without piling on the old ones
-extra.forEach((d, i) => { d.u = (i % 10 + 0.5 + (rnd(i + 900) - 0.5) * 0.6) / 10; d.v = (Math.floor(i / 10) + 0.5 + (rnd(i + 950) - 0.5) * 0.5) / 3; });
+trickle(BURST_SPAN[1] + 0.3, GROW.t0, 0.9);
+trickle(GROW.t1 + 0.2, segs[0].t0, 0.8);
+trickle(segs[0].t0 + 0.1, segs[0].t1, 2.2);         // offset: mostly the stronger rear jet
+for (let i = 0; i < events.length; i++) if (events[i][0] >= segs[0].t0 && events[i][0] < segs[0].t1 && i % 3) events[i][1] = 'rear';
+events.push([segs[1].t0 + 0.02, 'nose'], [segs[1].t0 + 0.14, 'nose'], [segs[1].t0 + 0.26, 'nose']);
+events.push([segs[2].t0 + 0.04, 'rear']);
+trickle(segs[1].t1 + 0.3, DESC1, 0.7);
+events.sort((a, b) => a[0] - b[0]);
+// markers: homes on a jittered grid in tank-normalised coordinates; the ones nearest the outlet leave first
+export const OUT_U = 0.5;
+const mk = (n: number, cols: number, born: number, seed: number) => Array.from({length: n}, (_, i) => {
+  const rows = Math.ceil(n / cols), r = Math.floor(i / cols), c = i % cols;
+  return {u: (c + 0.5 + (rnd(seed + i) - 0.5) * 0.45) / cols, v: (r + 0.5 + (rnd(seed + i + 77) - 0.5) * 0.4) / rows, born, leave: Infinity, to: 'front' as NozKey};
+});
+const small = mk(N_SMALL, 8, -1, 3);
+const extra = mk(N_BIG, 9, GROW.t0 + 0.2, 101);
+// the extra markers sit between the old ones (two rows, offset half a cell)
+extra.forEach((d, i) => { d.v = (Math.floor(i / 9) + 1) / 3 + (rnd(i + 950) - 0.5) * 0.08; d.u = ((i % 9) + 0.5 + (rnd(i + 900) - 0.5) * 0.3) / 9; });
 export const DOTS: Dot[] = [...small, ...extra];
 for (const [t, to] of events) {
   let best = -1, bd = Infinity;
@@ -173,20 +189,26 @@ for (const [t, to] of events) {
   });
   if (best >= 0) { DOTS[best].leave = t; DOTS[best].to = to; }
 }
-export const DOT_TRAVEL = 0.42;                   // seconds from the tank to the nozzle exit
+export const DOT_TRAVEL = 0.38;                   // seconds from the tank to the nozzle exit
+/** Share of the current tank's capacity still in it (drives the gas tint; no number is ever shown). */
+export const reserveAt = (t: number) => {
+  const cap = t < GROW.t0 + 0.2 ? N_SMALL : N_SMALL + N_BIG;
+  return DOTS.filter((d) => d.born <= t && d.leave > t).length / cap;
+};
 /** Tank rectangle at time t (grows on "Bigger tanks"). */
 export const tankAt = (t: number) => {
   const u = smooth(Math.max(0, Math.min(1, (t - GROW.t0) / (GROW.t1 - GROW.t0))));
   const L = (a: number, b: number) => a + (b - a) * u;
   return {x0: L(TANK_SMALL.x0, TANK_BIG.x0), x1: L(TANK_SMALL.x1, TANK_BIG.x1), y0: L(TANK_SMALL.y0, TANK_BIG.y0), y1: L(TANK_SMALL.y1, TANK_BIG.y1), grow: u};
 };
-export const VALVE = {x: -22, y: -55};
-export const MANIFOLD_Y = -44;
-/** Gas path from the tank outlet to a nozzle exit (car-local). */
+export const VALVE = {x: -20, y: -55};
+export const MANIFOLD_Y = -33;
+/** Gas path from the tank outlet through the valve to a nozzle exit (car-local). The pipes run inside the sill and,
+ *  for the rear pod and the nose thruster, over the wheel arches. */
 export const pathTo = (to: NozKey, tank: {x0: number; x1: number; y1: number}): [number, number][] => {
   const ox = tank.x0 + (tank.x1 - tank.x0) * OUT_U;
-  const n = NOZ[to];
-  const small = to === 'nose' || to === 'tail';
-  const my = small ? MANIFOLD_Y - 6 : MANIFOLD_Y;
-  return [[ox, tank.y1], [VALVE.x, VALVE.y], [VALVE.x, my], [n.x, my], [n.x, n.y]];
+  const head: [number, number][] = [[ox, tank.y1], [VALVE.x, VALVE.y], [VALVE.x, MANIFOLD_Y]];
+  if (to === 'front') return [...head, [NOZ.front.x, MANIFOLD_Y], [NOZ.front.x, NOZ.front.y]];
+  if (to === 'rear') return [...head, [-100, MANIFOLD_Y], [-100, -95], [NOZ.rear.x, -95], [NOZ.rear.x, NOZ.rear.y]];
+  return [...head, [92, MANIFOLD_Y], [92, -90], [158, -90], [174, -79], [NOZ.nose.x, -52], [NOZ.nose.x, NOZ.nose.y]];
 };

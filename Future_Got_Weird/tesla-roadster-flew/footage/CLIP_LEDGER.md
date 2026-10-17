@@ -170,33 +170,35 @@ Not used in v3:
 - the hop's front angle;
 - every slowed clip.
 
-## Rocket Short ("The Problem With Tesla's Rocket Car", 17 Oct 2026): clips and shots as rendered
+## Rocket Short ("The Problem With Tesla's Rocket Car", final pass, 17 Oct 2026): clips and shots as rendered
 
-Clips are cut by `tools/cut_rocket_clips.sh` into `source/public/footage/rk_*.mp4` (Git-ignored), scaled once to
-3414×1920 (Lanczos) so the 9:16 render only crops. **Both play at the recording's own speed: no slow motion, no frame
-interpolation.** The recordings repeat about every fifth frame (a screen capture of a ~24 fps stream); that cadence is
-left as recorded.
+Clips are cut by `tools/cut_rocket_clips.sh` into `source/public/footage/rk_*.mp4` (Git-ignored). Three are scaled once to
+3414×1920 (Lanczos) so the 9:16 render only crops; the hang close-up is scaled to 2074×1166 (1.08×) because it is shown
+whole. **All four play at the recording's own speed: no slow motion, no frame interpolation.** The recordings repeat
+about every fifth frame (a screen capture of a ~24 fps stream); that cadence is left as recorded.
 
 | Clip | Recording | Span | Notes |
 |---|---|---|---|
-| `rk_hop.mp4` | `rec_224911.mp4` | 0:34.20–0:40.30 | Tesla's side replay of the hop. **One continuous camera** from 0:34.45 (a dissolve ends just before) to past 0:39.5. There is no cut at 0:38.12, contrary to the earlier rows above: checked frame by frame. The companion's shadow-lift curve is applied (black stays black) |
-| `rk_aerial.mp4` | `rec_224730.mp4` | 2:19.80–2:26.767 | The second ramp run from the air. Ends on the last frame before the broadcast's cut at 2:26.75. Silent recording |
+| `rk_hop.mp4` | `rec_224911.mp4` | 0:34.20–0:40.30 | Tesla's side replay of the hop. **One continuous camera** from 0:34.45 (a dissolve ends just before) to past 0:39.5; no cut at 0:38.12 (checked frame by frame). A gentle shadow-lift curve, slightly stronger in the low mids than the companion's: black stays black, highlights untouched |
+| `rk_aerial.mp4` | `rec_224730.mp4` | 2:19.80–2:26.767 | The second ramp run from the air. Silent recording |
+| `rk_inv.mp4` | `rec_224730.mp4` | 2:16.30–2:17.60 | The same run from the air, driving along the underside of the ramp. The broadcast's dissolve into this shot ends about 2:16.55. Faint haze appears behind the car from about 2:17.4, and white exhaust shows by 2:18.3 as it reaches the ramp's end: the Short uses only 2:16.60–2:17.45. Silent |
+| `rk_hang.mp4` | `rec_224730.mp4` | 1:17.20–1:19.89 | The first run's hang, close-up from below, up to Tesla's cut at 1:19.90. The reveal's own gauges (downforce kg, pitch, altitude) sit in the bottom corners. In the render they fall outside the band (left and right of the frame, and under the bottom fade). Silent |
 
 | Shot | Short time | Recording | Source in → out | What it shows |
 |---|---|---|---|---|
-| r01 | 0.00–3.46 (outline from 3.34; the drawing replaces it at 3.46) | `rec_224911.mp4` | 0:35.25 → 0:38.71 | Climbing on two jets above the parked Teslas and the Semi ("This Tesla can jump."), rolling inverted with jets firing, rolling back upright on four downward jets. "catch" (2.96 = 0:38.21) lands as the car comes upright with its jets down; the flow chevrons sit on those visible plumes. The crop follows the car (centre measured every 0.25 s on magnified frames). The swap is at 0:38.71, next to 0:38.50, the frame the traced Roadster was drawn from |
-| — | 3.46–27.40 | (illustration) | — | The labelled schematic ("SIMPLIFIED SCHEMATIC · not Tesla's layout") |
-| r02 | 27.40–33.47 (under the thinning dust until about 27.8) | `rec_224730.mp4` | 2:20.10 → 2:26.17 | Rolling upright on its jets (2:20.1–2:21.3, "None of this breaks physics."), side plumes, jets down into smoke, touchdown about 2:24.3 at 31.60 (just after "problems", which ends at 31.42), the camera dropping in behind the car under the CTA. The crop zooms 1.3× and eases to 1.05×; Tesla's corner logo stays out of frame |
-| r03 | 33.47–34.27 | `rec_224911.mp4` | 0:34.45 → 0:35.22 | The hop's lift-off from the smoke. It continues straight into frame 0 (0:35.25), so the loop is one shot |
+| r01 | 0.00–3.46 (outline from 3.34; the drawing replaces it at 3.46) | `rec_224911.mp4` | 0:35.25 → 0:38.71 | Climbing on two jets above the parked Teslas and the Semi ("This Tesla can jump."), rolling inverted with jets firing, rolling back upright on four downward jets. The flow marks sit on the two visible plumes from 2.94 (0:38.19). The crop follows the car (centre measured every 0.25 s on magnified frames). The swap is at 0:38.71, next to 0:38.50, the frame the traced Roadster was drawn from |
+| — | 3.46–26.54 | (illustration) | — | Six illustrated compositions (`script/rocket_short.md`); a brief "Illustration" tag at 3.76–5.1 |
+| r02 | 26.54–31.00 (under the thinning dust until about 26.85) | `rec_224730.mp4` | 2:20.14 → 2:24.60 | Rolling upright on its jets ("None of this breaks physics."), side plumes, jets down into smoke, touchdown about 2:24.3 at 30.70 (just after "problems", which ends at 30.54). The crop zooms 1.3×; Tesla's corner logo stays out of frame. No graphics |
+| r03 | 31.00–31.85 | `rec_224730.mp4` | 2:16.60 → 2:17.45 | Driving along the underside of the curved ramp, upside down ("It also drives"). The crop holds the car (measured at 2:16.75, 2:17.05, 2:17.35: about x 1110–1133, y 476–489) with a slow push-in 1.1→1.2× |
+| r04 | 31.85–34.20 | `rec_224730.mp4` | 1:17.50 → 1:19.85 | The first run's hang, close-up from below ("upside down. Tap the linked breakdown."): source x 420–1420 across the frame, y 242–1180 with soft fades to black; the gauges are out of frame. The cue "How it drives upside down" clears at 33.80 |
 
 Opening-frame candidates (9:16 crops, compared at phone size, `qa/evidence/rocket_opening_candidates.jpg`):
 
 - A `rec_224911` 0:34.45, lift-off from the smoke: dim and partly in smoke, but with ground context;
-- **B `rec_224911` 0:35.25, climbing on two bright jets above the parked Teslas: chosen.** The whole car is large and
-  recognizable, the jets explain the motion at once, and the ground and parked cars show the height;
+- **B `rec_224911` 0:35.25, climbing on two bright jets above the parked Teslas: chosen.** The whole car is upright,
+  large and recognizable, the jets explain the motion at once, and the ground and parked cars show the height;
 - C `rec_224911` 0:38.30, upright on four jets: bright, but the crop clips the tail, and this moment is needed later for
   the match into the drawing.
 
-Footage share: 3.46 + 6.07 + 0.80 = 10.3 s of 34.27 s is real footage (30%). The brief's own shot plan is mostly
-illustration in the middle: no real shot shows a steady hover, a tank, a lever arm or loose gravel. So the share wasn't
-pushed higher.
+Footage share: 3.46 + 4.46 + 0.85 + 2.35 = 11.1 s of 34.2 s is real footage (33%). The first version's loop bridge
+(`rec_224911` 0:34.45–0:35.22 as the last 0.8 s) is gone: the film now ends cleanly on the hang.

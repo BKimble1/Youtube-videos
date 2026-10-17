@@ -76,6 +76,7 @@ for t in takes:
 
 out, placed, t_out = [np.zeros(int(LEAD * SR), np.float32)], [], LEAD
 XF = int(0.008 * SR)
+joins = []
 for k, (take, kb) in enumerate(PLAN):
     T = takes[take]
     a, b = T['cuts'][kb], T['cuts'][kb + 1]
@@ -86,6 +87,7 @@ for k, (take, kb) in enumerate(PLAN):
     for i in blk:
         w = T['words'][i]
         placed.append({'w': w['w'], 's': round(t_out + w['s'] - a, 3), 'e': round(t_out + w['e'] - a, 3), 'b': k, 'take': take})
+    if k > 0: joins.append([round(t_out, 3), PLAN[k - 1][0], take])
     out.append(seg); t_out += len(seg) / SR
     gap = EXTRA.get(T['words'][blk[-1]]['w'], 0.0)
     if gap:
@@ -109,7 +111,7 @@ if os.path.exists(VERIFY):
         print('WARNING: verification transcript does not match the placed words; keeping aligner times')
 for w in placed:
     w['e'] = round(min(w['e'], end - 0.02), 3)
-json.dump({'takes': {t: T['take'] for t, T in takes.items()}, 'plan': PLAN, 'gain_db': {t: round(20 * np.log10(g), 2) for t, g in gain.items()}, 'dur': round(end, 3), 'extra': EXTRA, 'words': placed},
+json.dump({'takes': {t: T['take'] for t, T in takes.items()}, 'plan': PLAN, 'gain_db': {t: round(20 * np.log10(g), 2) for t, g in gain.items()}, 'dur': round(end, 3), 'extra': EXTRA, 'joins': joins, 'words': placed},
           open(os.path.join(ROOT, 'source/src/data/rocket_words.json'), 'w'), indent=0)
 span = placed[-1]['e'] - placed[0]['s']
 print(f'narration.wav {end:.2f}s, {len(placed)} words, {60 * len(placed) / span:.0f} wpm over {span:.2f}s')

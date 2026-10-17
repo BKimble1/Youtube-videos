@@ -1,12 +1,12 @@
 // Opening: Tesla's side replay of the hop, one continuous camera at the recording's own speed (rec_224911 0:35.25 to
 // 0:38.70): the car climbing on its jets above the parked Teslas and the Semi, rolling inverted, rolling back upright on
 // four downward jets. The 9:16 crop follows the car (keys from frame-by-frame measurement, footage/CLIP_LEDGER.md).
-// One small label names what is shown and which version flies.
+// One brief tag, "Rocket version", says which version this is (the version Tesla lists as the one that flies).
 import React from 'react';
 import {AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame} from 'remotion';
 import {Clip, Key} from '../short3/Clip';
 import {C, F} from '../theme';
-import {FPS, HOP_FILE0, LOOP_SRC, OPEN_SRC, T, words} from './data';
+import {FPS, HOP_FILE0, OPEN_SRC, T, words} from './data';
 
 // car centre in the replay (rec_224911 seconds -> source px), measured every 0.25 s on magnified frames; the crop follows a
 // Catmull-Rom curve through them, sampled per frame
@@ -36,18 +36,10 @@ export const speechFree = (t: number, margin = 0.1, fade = 0.15) => {
 };
 const duck = (t: number) => 0.2 + 0.8 * speechFree(t);
 
-/** The loop bridge: the replay's lift-off just before frame 0, with its own sound. */
-export const LoopBridge: React.FC<{audio?: boolean; start: number}> = ({audio = true, start}) => (
-  <AbsoluteFill>
-    <Clip src="rk_hop.mp4" from={LOOP_SRC - HOP_FILE0} cx={HOP_CX} />
-    {audio && <Audio src={staticFile('footage/rk_hop.mp4')} trimBefore={Math.round((LOOP_SRC - HOP_FILE0) * FPS)} volume={(f) => 0.16 * duck(start + f / FPS)} />}
-  </AbsoluteFill>
-);
-
 export const Opening: React.FC<{audio?: boolean}> = ({audio = true}) => {
   const frame = useCurrentFrame();
   const t = frame / FPS;
-  const label = interpolate(t, [0, 0.12, 2.3, 2.6], [1, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const label = interpolate(t, [0.25, 0.45, 1.75, 2.0], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   return (
     <AbsoluteFill>
       <Clip src="rk_hop.mp4" from={OPEN_SRC - HOP_FILE0} cx={HOP_CX} />
@@ -59,11 +51,8 @@ export const Opening: React.FC<{audio?: boolean}> = ({audio = true}) => {
         </Sequence>
       )}
       {label > 0 && (
-        <div style={{position: 'absolute', top: 44, width: 1080, display: 'flex', justifyContent: 'center', opacity: label}}>
-          <div style={{fontFamily: F.body, textAlign: 'center', background: 'rgba(10,16,20,0.72)', border: '2px solid rgba(255,251,240,0.55)', borderRadius: 20, padding: '6px 20px', color: C.cream}}>
-            <div style={{fontWeight: 800, fontSize: 30, letterSpacing: 0.6}}>TESLA ROADSTER DEMO · OCT 15, 2026</div>
-            <div style={{fontWeight: 700, fontSize: 25, opacity: 0.9}}>flight listed for the Rocket version only, per Tesla</div>
-          </div>
+        <div style={{position: 'absolute', top: 236, width: 1080, textAlign: 'center', opacity: label}}>
+          <span style={{fontFamily: F.body, fontWeight: 700, fontSize: 30, letterSpacing: 1.5, color: C.cream, background: 'rgba(10,16,20,0.55)', borderRadius: 16, padding: '5px 18px'}}>Rocket version</span>
         </div>
       )}
     </AbsoluteFill>

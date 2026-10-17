@@ -52,6 +52,8 @@ const SKIRT_D = smooth(SKIRT, new Set([0, 5, 6, 10]));
 const GLASS_D = smooth(GLASS, new Set([0, 9, 10]));
 /** The body outline (car-local), for tracing the car over footage. */
 export const OUTLINE_D = BODY_D;
+/** The dark lower sill (car-local), for clipping cutaways that reach into it. */
+export const SKIRT_OUTLINE_D = SKIRT_D;
 const poly = (pts: P[]) => 'M ' + pts.map((p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' L ') + ' Z';
 
 /** Car-local geometry for scenes. */
