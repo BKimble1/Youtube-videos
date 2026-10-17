@@ -3,7 +3,7 @@
 // an arm, recoil from hits, crumple-and-topple falls that end as a persistent wreck, plates and limbs torn off.
 import React from 'react';
 import {V3, add3, sub3, mul3, dot3, cross3, norm3, len3, lerp, lerp3, clamp, smooth, easeIn, easeOut, rnd, noise, seg, f2} from '../../kit/math';
-import {Item, View, project, toView} from '../engine';
+import {Item, View, project, toView, shade, inkColor} from '../engine';
 import {UNIT, UNIT_MID, U, DEBRIS} from './parts';
 import {R3, Pose3, rotHeading, rcomp, euler, segFrame, ik2, apply, rmul, rotAxisM, I3, lookFrame, fwdOf, slerpish} from './mat3';
 import {Ground, FLAT, Path, footAt, partItem, eyeGlow, makeThrow, thrownPose, spray, cable, fluidPool, CABLES} from './kit';
@@ -48,7 +48,8 @@ export type UnitSpec = {
   grab?: {t0: number; side: Side; target: V3; hold?: (t: number) => V3};
   raise?: {t0: number; t1: number; side: Side};
   hits?: {t0: number; dir: V3; strength: number}[];
-  fall?: {t0: number; dir: V3};
+  /** knocked down (crumple → topple → settle); with getUp the unit rises again from that time (machines do) */
+  fall?: {t0: number; dir: V3; getUp?: number};
   eye?: 'cyan' | 'amber' | 'off';
   /** eye turns amber at this time (commit) */
   lockAt?: number;
@@ -98,7 +99,7 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
     const p = sp.gait.path(sp.gait.dist);
     root = p.pos;
     heading = p.heading;
-    walkPh = sp.gait.dist / (sp.gait.stride ?? 1.7);
+    walkPh = sp.gait.dist / (sp.gait.stride ?? 1.5);
     walking = true;
     const st = sp.gait.start ?? -1e9, en = sp.gait.end ?? 1e9;
     walkK = smooth((sp.gait.dist - st) / 0.6) * (1 - smooth((sp.gait.dist - (en - 0.6)) / 0.6));
@@ -116,11 +117,13 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
     stag = add3(stag, mul3(d, 0.18 * h.strength * smooth(u / 0.25) * (1 - smooth((u - 0.3) / 0.9) * 0.4)));
     recoil += e * 22 * Math.sign(dot3(d, fwd) || 1) * -1;
   });
+  const footRoot = root; // standing feet stay where they are; a hit shoves the pelvis, not the feet
   root = add3(root, stag);
   const idle = sp.idle ?? 1;
   const breath = Math.sin(t * 1.3 + seed) * 0.008 * idle;
-  const bob = walking ? 0.035 * (1 - Math.cos(walkPh * Math.PI * 4)) * 0.5 * walkK : 0;
-  const crouch = (sp.crouch ?? 0) + bob + breath;
+  // marching: knees stay bent (a low, purposeful gait) so the planted foot is always within reach — no foot slide
+  const bob = walking ? (0.085 + 0.03 * (1 - Math.cos(walkPh * Math.PI * 4)) * 0.5) * walkK : 0;
+  const crouch = (sp.crouch ?? 0) + bob + breath + len3(stag) * 0.6;
   // strike body motion
   let twist = sp.twist ?? 0, lean = sp.lean ?? (walking ? 6 * walkK : 0);
   const sk = sp.strike ? strikeK(t, sp.strike.t0) : null;
@@ -157,10 +160,10 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
   [0, 1].forEach((i) => {
     const sd = i === 0 ? -1 : 1;
     let target: V3, fh = heading, pitch = 0;
-    const base = add3(root, add3(mul3(right, sd * (U.hipW + 0.04)), mul3(fwd, sd * 0.04)));
+    const base = add3(footRoot, add3(mul3(right, sd * (U.hipW + 0.04)), mul3(fwd, sd * 0.04)));
     const stand = {x: base.x, y: g(base.x, base.z) + U.ankleH, z: base.z};
     if (sp.gait) {
-      const f = footAt(sp.gait.path, sp.gait.dist, i === 0 ? 0 : 0.5, sp.gait.stride ?? 1.7, 0.6, sd * (U.hipW + 0.02), sp.gait.lift ?? 0.16, g);
+      const f = footAt(sp.gait.path, sp.gait.dist, i === 0 ? 0 : 0.5, sp.gait.stride ?? 1.5, 0.55, sd * (U.hipW + 0.02), sp.gait.lift ?? 0.16, g);
       target = {x: f.pos.x, y: f.pos.y + U.ankleH, z: f.pos.z};
       fh = f.heading;
       pitch = f.stance ? 0 : Math.sin(Math.PI * f.s) * -12;
@@ -238,10 +241,16 @@ const fallXform = (sp: UnitSpec, rig: UnitRig, t: number) => {
   const g = sp.ground ?? FLAT;
   const d = norm3({x: sp.fall.dir.x, y: 0, z: sp.fall.dir.z});
   const axis = norm3(cross3(UP, d)); // rotating about this tips the body toward d
-  const crumple = smooth(u / 0.28);
+  let crumple = smooth(u / 0.28);
   const tu = clamp((u - 0.18) / 0.62);
   let ang = 86 * easeIn(tu);
   if (u > 0.8) ang = 86 + Math.exp(-(u - 0.8) * 7) * Math.sin((u - 0.8) * 22) * -8 + (1 - Math.exp(-(u - 0.8) * 6)) * 2;
+  if (sp.fall.getUp !== undefined && t > sp.fall.getUp) {
+    // push up from the ground: torso rises first (to a crouch), then the legs straighten
+    const g1 = smooth((t - sp.fall.getUp) / 1.1);
+    ang = ang * (1 - g1);
+    crumple = crumple * (1 - smooth((t - sp.fall.getUp - 0.6) / 0.7)) + 0.0;
+  }
   const piv = mul3(add3(rig.an[0], rig.an[1]), 0.5);
   const pivot = {x: piv.x, y: g(piv.x, piv.z) + 0.16 * smooth(tu * 1.5), z: piv.z};
   const R = rotAxisM(axis, ang);
@@ -338,7 +347,8 @@ export const combatUnit = (sp: UnitSpec): Item[] => {
   const lod = sp.lod ?? 'full';
   const D = sp.damage ?? {};
   const deadEye = D.dead && t >= D.dead.t0;
-  const eyeState: 'cyan' | 'amber' | 'off' = deadEye || (sp.fall && t > sp.fall.t0 + 0.5) ? 'off' : sp.lockAt !== undefined && t >= sp.lockAt ? 'amber' : sp.eye ?? 'cyan';
+  const downNow = !!sp.fall && t > sp.fall.t0 + 0.5 && (sp.fall.getUp === undefined || t < sp.fall.getUp + 0.3);
+  const eyeState: 'cyan' | 'amber' | 'off' = deadEye || (downNow && sp.fall?.getUp === undefined) ? 'off' : downNow ? 'cyan' : sp.lockAt !== undefined && t >= sp.lockAt ? 'amber' : sp.eye ?? 'cyan';
   const eyeRemap = eyeState === 'amber' ? {m_eye: 'm_eyeLock'} : eyeState === 'off' ? {m_eye: 'm_eyeOff'} : undefined;
   if (lod === 'far') return [unitFarSprite(sp, r, fx ? fx.xf : null, eyeState, key)];
   const P = partPoses(r);
@@ -441,7 +451,7 @@ export const combatUnit = (sp: UnitSpec): Item[] => {
     const k = Math.floor((t - D.leak.t0) / per);
     items.push(...spray(t, D.leak.t0 + k * per, src, {x: 0, y: -0.2, z: 0}, 3, 0.6, 'fluid', sp.id * 11 + k, `${key}_lk${k}`, g, 0.7));
   }
-  if (sp.fall && t > sp.fall.t0 + 0.8 && (D.leak || D.armOff || D.chest)) {
+  if (sp.fall && sp.fall.getUp === undefined && t > sp.fall.t0 + 0.8 && (D.leak || D.armOff || D.chest)) {
     const c = fx ? fx.landPos : r.spine.pos;
     const pool = fluidPool({x: c.x, y: 0, z: c.z}, t, sp.fall.t0 + 0.8, 0.9, sp.id, `${key}_pool`, g);
     if (pool) items.push(pool);
@@ -449,28 +459,38 @@ export const combatUnit = (sp: UnitSpec): Item[] => {
   return items;
 };
 
-/** Far LOD: a small 2D silhouette at the unit's root (hundreds of these are cheap). */
+/** Far LOD: a small 2D figure at the unit's root, lit like the meshes (pale plates over a dark frame, stride). */
 const unitFarSprite = (sp: UnitSpec, r: UnitRig, xf: ((p: V3) => V3) | null, eye: 'cyan' | 'amber' | 'off', key: string): Item => {
   const base = xf ? xf(r.pelvis.pos) : {x: r.pelvis.pos.x, y: r.pelvis.pos.y - U.pelvisH, z: r.pelvis.pos.z};
   const down = !!xf;
-  const ph = sp.gait ? (sp.gait.dist / (sp.gait.stride ?? 1.7)) * Math.PI * 2 : 0;
+  const walkK = sp.gait ? 1 : 0;
+  const ph = sp.gait ? (sp.gait.dist / (sp.gait.stride ?? 1.5)) * Math.PI * 2 : 0;
   return {
-    kind: 'sprite', pos: base, key: `${key}_far`,
+    kind: 'sprite', pos: base, key: `${key}_far`, n: {x: -0.6, y: 0.3, z: 0.4},
     draw: (c) => {
       const h = 2.2 * c.k;
       if (h < 0.8) return null;
       const s = h / 2.2;
       const x = c.x, y = c.y;
-      const col = c.lit.fog > 0.6 ? '#5B5458' : '#3D4A54';
-      const fog = c.lit.fog;
-      if (down) return <ellipse cx={f2(x)} cy={f2(y - 0.15 * s)} rx={f2(0.9 * s)} ry={f2(0.2 * s)} fill={col} opacity={1 - fog * 0.6} />;
-      const st = Math.sin(ph) * 0.18 * s;
-      const d = `M${f2(x - 0.3 * s)} ${f2(y - 1.75 * s)} L${f2(x + 0.3 * s)} ${f2(y - 1.75 * s)} L${f2(x + 0.2 * s)} ${f2(y - 1.05 * s)} L${f2(x + 0.12 * s + st)} ${f2(y)} L${f2(x + 0.02 * s)} ${f2(y)} L${f2(x)} ${f2(y - 0.9 * s)} L${f2(x - 0.02 * s)} ${f2(y)} L${f2(x - 0.12 * s - st)} ${f2(y)} L${f2(x - 0.2 * s)} ${f2(y - 1.05 * s)} Z`;
+      const plate = shade(c.light, {base: '#C3CFD6'}, c.lit);
+      const frame = shade(c.light, {base: '#4C5D69'}, c.lit);
+      const ink = inkColor(c.light, undefined, c.lit);
+      if (down) return <ellipse cx={f2(x)} cy={f2(y - 0.15 * s)} rx={f2(0.9 * s)} ry={f2(0.22 * s)} fill={frame} />;
+      const st = Math.sin(ph) * 0.2 * s * walkK;
+      const sw = Math.max(0.6, 0.13 * s);
+      const thin = h < 14;
       return (
-        <g opacity={1 - fog * 0.55}>
-          <path d={d} fill={col} />
-          <rect x={f2(x - 0.12 * s)} y={f2(y - 2.1 * s)} width={f2(0.24 * s)} height={f2(0.3 * s)} fill={col} />
-          {eye !== 'off' && <circle cx={f2(x)} cy={f2(y - 1.95 * s)} r={f2(Math.max(0.7, 0.07 * s))} fill={eye === 'cyan' ? '#62D6EA' : '#FFB23F'} />}
+        <g>
+          {/* legs (frame) with stride */}
+          <line x1={f2(x - 0.1 * s)} y1={f2(y - 1.0 * s)} x2={f2(x - 0.12 * s - st)} y2={f2(y)} stroke={frame} strokeWidth={f2(sw)} strokeLinecap="round" />
+          <line x1={f2(x + 0.1 * s)} y1={f2(y - 1.0 * s)} x2={f2(x + 0.12 * s + st)} y2={f2(y)} stroke={frame} strokeWidth={f2(sw)} strokeLinecap="round" />
+          {/* arms */}
+          <line x1={f2(x - 0.3 * s)} y1={f2(y - 1.62 * s)} x2={f2(x - 0.34 * s + st * 0.5)} y2={f2(y - 0.95 * s)} stroke={frame} strokeWidth={f2(sw * 0.9)} strokeLinecap="round" />
+          <line x1={f2(x + 0.3 * s)} y1={f2(y - 1.62 * s)} x2={f2(x + 0.34 * s - st * 0.5)} y2={f2(y - 0.95 * s)} stroke={frame} strokeWidth={f2(sw * 0.9)} strokeLinecap="round" />
+          {/* torso plate + head */}
+          <path d={`M${f2(x - 0.33 * s)} ${f2(y - 1.72 * s)} L${f2(x + 0.33 * s)} ${f2(y - 1.72 * s)} L${f2(x + 0.2 * s)} ${f2(y - 1.0 * s)} L${f2(x - 0.2 * s)} ${f2(y - 1.0 * s)} Z`} fill={plate} stroke={thin ? 'none' : ink} strokeWidth={0.8} />
+          <rect x={f2(x - 0.12 * s)} y={f2(y - 2.12 * s)} width={f2(0.24 * s)} height={f2(0.32 * s)} fill={plate} stroke={thin ? 'none' : ink} strokeWidth={0.8} />
+          {eye !== 'off' && <circle cx={f2(x)} cy={f2(y - 1.97 * s)} r={f2(Math.max(0.7, 0.06 * s))} fill={eye === 'cyan' ? '#62D6EA' : '#FFB23F'} />}
         </g>
       );
     },

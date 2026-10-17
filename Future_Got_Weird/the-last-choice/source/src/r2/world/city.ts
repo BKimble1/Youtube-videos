@@ -112,11 +112,14 @@ const blocks = (): Bldg[] => {
         const s = 5000 + n;
         const w = Math.min(bnd - x, 18 + R(s, 1) * 34);
         const far = x > 560;
-        const hBase = far ? 40 + R(s, 2) * 110 : 14 + R(s, 2) * 46;
-        const h = hBase + (R(s, 3) < 0.1 ? 60 + R(s, 4) * 90 : 0);
+        const hBase = far ? 40 + R(s, 2) * 110 : 14 + R(s, 2) * 42;
+        const h = hBase + (R(s, 3) < 0.1 ? (far ? 60 + R(s, 4) * 90 : 18 + R(s, 4) * 30) : 0);
         const kind: Kind = far && h > 90 ? (R(s, 5) < 0.5 ? 'glass' : 'tower') : kindFor(x, s);
-        // skip the ridge zone (the collapse fills it) and the west ruin's footprint
-        if (!(x < 20 && x + w > -45 && zA < 40)) {
+        // skip the ridge zone (the collapse fills it), the west ruin's footprint and the failing tower's lot
+        const T = PLAN.failingTower;
+        const zc = side < 0 ? -(zA + zB) / 2 : (zA + zB) / 2;
+        const nearTower = Math.abs(x + w / 2 - T.base.x) < T.width / 2 + w / 2 + 6 && Math.abs(zc - T.base.z) < (zB - zA) / 2 + T.width / 2 + 4;
+        if (!(x < 20 && x + w > -45 && zA < 40) && !nearTower) {
           out.push({
             id: `B${n}`, x0: x, x1: x + w,
             z0: side < 0 ? -zB : zA, z1: side < 0 ? -zA : zB,
@@ -145,6 +148,7 @@ const skyline = (): Bldg[] => {
     const s = 9000 + n;
     const cx = 1450 + (R(s, 1) - 0.5) * 1700, cz = -100 + (R(s, 2) - 0.5) * 1600;
     if (Math.abs(cz) < 40) continue; // keep the avenue's corridor open toward the horizon
+    if (Math.hypot(cx - PLAN.failingTower.base.x, cz - PLAN.failingTower.base.z) < 90) continue;
     const core = Math.exp(-(((cx - 1500) / 600) ** 2) - ((cz + 150) / 500) ** 2);
     const h = 60 + R(s, 3) * 120 + core * (120 + R(s, 4) * 200);
     const w = 22 + R(s, 5) * 30, d = 22 + R(s, 6) * 30;
@@ -387,7 +391,7 @@ export const bldgMesh = (b: Bldg, lod: number): Prepped => {
 export const lodFor = (b: Bldg, d: number) => {
   const size = Math.max(b.h, b.x1 - b.x0);
   if (b.zone === 'far') return d < 600 ? 1 : 2;
-  if (d < 140 + size * 2) return 0;
+  if (d < 110 + size * 0.6) return 0;
   if (d < 520 + size * 3) return 1;
   return 2;
 };

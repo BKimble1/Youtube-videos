@@ -4,7 +4,7 @@ import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {Scene, Item, makeView, orbit, prep, terrain, LightRig, Material, Cam3, View} from '../engine';
 import {V3, seg, smooth, lerp} from '../../kit/math';
-import {MECH_MATS, combatUnit, drone, heavy, straightPath, armyItems, reformSlots, lineSlots, arcSlots, Formation} from '../mech';
+import {MECH_MATS, combatUnit, drone, heavy, straightPath, polyPathFn, armyItems, reformSlots, lineSlots, arcSlots, column, standing, combine, Formation} from '../mech';
 
 const MATS: Record<string, Material> = {
   ...MECH_MATS,
@@ -14,7 +14,7 @@ const LIGHT: LightRig = {
   sun: {x: -0.84, y: 0.32, z: 0.2}, sunColor: '#FFC08A', ambient: '#4A5878',
   lights: [], fogColor: '#9C7E73', fogStart: 40, fogEnd: 700, skyTop: '#3B3446', skyHorizon: '#C88466', ink: '#162A32',
 };
-const GROUND = prep(terrain(-80, 420, -90, 90, 4, () => 0, (x, z) => (Math.abs(z) < 14 ? 'g_asphalt' : 'g_ground')));
+const GROUND = prep(terrain(-80, 420, -90, 90, 10, () => 0, (x, z) => (Math.abs(z) < 14 ? 'g_asphalt' : 'g_ground')));
 const label = (s: string) => <text x={30} y={60} fill="#fff" fontSize={34} fontFamily="sans-serif" stroke="#000" strokeWidth={4} paintOrder="stroke">{s}</text>;
 
 const scene = (v: View, items: Item[], t: number, title: string, extra?: React.ReactNode) => (
@@ -66,7 +66,7 @@ export const MechLab: React.FC<{page?: number}> = ({page = 0}) => {
   }
   if (page === 2) {
     // damage sequence: plate torn, arm detached, fall, wreck
-    const cam: Cam3 = {pos: {x: 2.5, y: 2.0, z: 6.5}, target: {x: 0.3, y: 1.0, z: 0}, fov: 40};
+    const cam: Cam3 = {pos: {x: 1.5, y: 2.2, z: 8.0}, target: {x: 0.2, y: 0.9, z: -1}, fov: 42};
     const items: Item[] = [
       ...combatUnit({
         id: 21, t, pos: {x: 0, y: 0, z: 0}, heading: 120,
@@ -75,45 +75,43 @@ export const MechLab: React.FC<{page?: number}> = ({page = 0}) => {
         fall: {t0: 2.6, dir: {x: -0.6, y: 0, z: -0.8}},
       }),
       ...combatUnit({id: 22, t, pos: {x: 2.6, y: 0, z: -1.5}, heading: 250, damage: {back: {t0: 1.2, dir: {x: 0.4, y: 0.5, z: -1}}, pauldronL: {t0: 2.0, dir: {x: -1, y: 0.4, z: 0}}}}),
+      ...combatUnit({id: 23, t, pos: {x: -2.2, y: 0, z: -2.5}, heading: 160, hits: [{t0: 1.0, dir: {x: 0, y: 0, z: -1}, strength: 1.2}], fall: {t0: 1.05, dir: {x: 0.2, y: 0, z: -1}, getUp: 3.2}, lockAt: 4.2}),
     ];
-    return scene(makeView(cam), items, t, 'damage · chest plate · arm torn off · fall · wreck persists');
+    return scene(makeView(cam), items, t, 'damage · chest plate · arm torn off · fall · wreck persists · knocked down and gets up');
   }
   if (page === 3) {
     // heavy topple after a knee break (front-left leg pinned)
-    const cam: Cam3 = {pos: {x: 14, y: 4, z: 14}, target: {x: 0, y: 2.5, z: 0}, fov: 42};
+    const cam: Cam3 = {pos: {x: 16, y: 5, z: 12}, target: {x: -1, y: 2.0, z: -2}, fov: 44};
     const items: Item[] = [
       ...heavy({id: 31, t, pos: {x: 0, y: 0, z: 0}, heading: 200, gait: {path: straightPath({x: 1, y: 0, z: -3}, 200), dist: Math.min(t, 1.2) * 1.2}, kneeBreak: {t0: 1.4, leg: 0, dir: {x: -1, y: 0, z: 0.4}}}),
     ];
     return scene(makeView(cam), items, t, 'heavy · knee broken · topple · wreck');
   }
   if (page === 4) {
-    // formation re-form: line → arc with ripple; LOD by distance
+    // formation re-form: a 3-rank line advancing west halts as one, then re-forms into an arc around the survivors'
+    // position (ripple delay, paths sorted so they don't cross); LOD by distance (full near, mid, far sprites)
     const center: V3 = {x: 20, y: 0, z: 0};
-    const A = lineSlots({x: 60, y: 0, z: 0}, 270, 24, 1.9, 3, 2.4, 41);
-    const B = arcSlots(center, 14, 200, 340, 72, 42);
-    const form: Formation = reformSlots(A, B, 1.0, 0.035, 2.6, center);
-    const cam: Cam3 = {pos: {x: -6, y: 9 + t * 0.4, z: 22}, target: {x: 30, y: 0, z: -2}, fov: 45};
+    const advance = column(straightPath({x: 37, y: 0, z: 0}, 270), 42, 14, 1.9, 2.4, 1.3, 0, 41, 1.0);
+    const B = arcSlots(center, 8.5, 28, 152, 42, 42, 3, 2.2);
+    const A = advance.slots(1.0 + 0.8).map((s) => ({...s, path: undefined, dist: undefined, ctl: undefined}));
+    const re = reformSlots(A, B, 1.5, 0.03, 2.6, center, 2.4);
+    const form: Formation = {slots: (tt) => (tt < 1.5 ? advance.slots(tt) : re.slots(tt))};
+    const cam: Cam3 = {pos: {x: 25, y: 30, z: 17}, target: {x: 27, y: 0, z: 0}, fov: 50};
     const v = makeView(cam);
-    return scene(v, armyItems(v, t, form, {}), t, 'formation · line → arc (ripple) · LOD by distance');
+    const crewMark: Item = {kind: 'sprite', pos: center, key: 'crew', draw: (c) => <circle cx={c.x} cy={c.y} r={10} fill="#FFC744" stroke="#162A32" strokeWidth={3} />};
+    return scene(v, [crewMark, ...armyItems(v, t, form, {})], t, 'formation · advance → halt as one → re-form into an arc (ripple) · LOD');
   }
-  // page 5: the army filling the avenue from a high wide
-  const cam: Cam3 = {pos: {x: 40, y: 70, z: 90}, target: {x: 160, y: 0, z: -10}, fov: 44};
+  // page 5: the army filling the avenue from a high wide — a front block holding, columns streaming west along the
+  // avenue and south out of two cross streets, heavies among them, drones above
+  const cam: Cam3 = {pos: {x: 78, y: 30, z: 40}, target: {x: 175, y: 0, z: -8}, fov: 42};
   const v = makeView(cam);
-  const cols: Formation = {slots: (tt) => {
-    const out: {pos: V3; heading: number; dist: number; id: number}[] = [];
-    let id = 500;
-    for (let c = 0; c < 6; c++) for (let r = 0; r < 26; r++) {
-      const d = tt * 1.3 + r * 2.6;
-      out.push({pos: {x: 300 - d + ((c * 7) % 3) * 0.3, y: 0, z: -11 + c * 4.4}, heading: 270, dist: d, id: id++});
-    }
-    for (let r = 0; r < 30; r++) {
-      const d = tt * 1.3 + r * 2.4;
-      out.push({pos: {x: 124 + (r % 2) * 2.2, y: 0, z: -60 + d}, heading: 180, dist: d, id: id++});
-    }
-    return out;
-  }};
-  const drones: Item[] = Array.from({length: 14}, (_, i) => drone({id: 900 + i, t, pos: {x: 140 + (i % 7) * 18, y: 14 + (i % 3) * 5 + Math.sin(t + i) * 0.6, z: -20 + Math.floor(i / 7) * 30}, heading: 270, eye: 'cyan', lod: 'far'})).flat();
-  const heavies: Item[] = [heavy({id: 950, t, pos: {x: 220 - t * 0.9, y: 0, z: 2}, heading: 270, gait: {path: straightPath({x: 220, y: 0, z: 2}, 270), dist: t * 0.9}, lod: 'mid'}), heavy({id: 951, t, pos: {x: 260, y: 0, z: -6}, heading: 270, gait: {path: straightPath({x: 262, y: 0, z: -6}, 270), dist: t * 0.9}, lod: 'mid'})].flat();
-  return scene(v, [...armyItems(v, t, cols, {}), ...drones, ...heavies], t, 'army · avenue from a high wide');
+  const front = standing(lineSlots({x: 112, y: 0, z: 0}, 270, 12, 2.0, 3, 2.4, 61));
+  const avenue = column(straightPath({x: 150, y: 0, z: 0}, 90 + 180), 6 * 34, 6, 3.6, 2.7, 1.3, -6, 62);
+  const cross1 = column(polyPathFn([{x: 124, y: 0, z: -110}, {x: 124, y: 0, z: -14}, {x: 100, y: 0, z: -7}]), 3 * 26, 3, 2.6, 2.6, 1.3, -40, 63);
+  const cross2 = column(straightPath({x: 262, y: 0, z: -40}, 180), 3 * 30, 3, 2.6, 2.6, 1.3, -6, 64);
+  const army = combine(front, avenue, cross1, cross2);
+  const drones: Item[] = Array.from({length: 18}, (_, i) => drone({id: 900 + i, t, pos: {x: 120 + (i % 9) * 22 + Math.sin(t * 0.7 + i) * 2, y: 12 + (i % 3) * 6, z: -24 + Math.floor(i / 9) * 30}, heading: 270, eye: 'cyan', lod: 'far', scale: 1.6})).flat();
+  const heavies: Item[] = [0, 1, 2].map((k) => heavy({id: 950 + k, t, pos: {x: 0, y: 0, z: 0}, heading: 270, gait: {path: straightPath({x: 210 + k * 46, y: 0, z: k % 2 ? 8 : -8}, 270), dist: t * 0.9}, lod: k === 0 ? 'mid' : 'far'})).flat();
+  return scene(v, [...armyItems(v, t, army, {maxFull: 6, maxMid: 30, farFrom: 90}), ...drones, ...heavies], t, 'army · avenue from a high wide (front block, columns, heavies, drones)');
 };
 void seg;

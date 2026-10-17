@@ -64,6 +64,13 @@ export const FIRES: Fire[] = [
   {id: 'city7', pos: {x: 980, y: 90, z: -180}, size: 26, spread: 1.6, seed: 27, smoke: 4.0, heat: 0.3},
   {id: 'city8', pos: {x: 1300, y: 160, z: 120}, size: 30, spread: 1.5, seed: 28, smoke: 4.4},
   {id: 'city9', pos: {x: 640, y: 40, z: -120}, size: 15, spread: 1.8, seed: 29, smoke: 2.8},
+  // fires spreading through the blocks either side of the avenue (several blocks, different stages)
+  {id: 'blk1', pos: {x: 150, y: 26, z: -70}, size: 9, spread: 2.0, seed: 30, smoke: 2.0},
+  {id: 'blk2', pos: {x: 205, y: 34, z: 66}, size: 10, spread: 1.8, seed: 31, smoke: 2.2, heat: 0.3},
+  {id: 'blk3', pos: {x: 360, y: 20, z: -64}, size: 11, spread: 2.2, seed: 32, smoke: 2.4},
+  {id: 'blk4', pos: {x: 430, y: 40, z: 120}, size: 13, spread: 1.6, seed: 33, smoke: 2.6, heat: -0.2},
+  {id: 'blk5', pos: {x: 520, y: 28, z: -200}, size: 12, spread: 2.0, seed: 34, smoke: 2.4},
+  {id: 'blk6', pos: {x: 280, y: 18, z: -130}, size: 8, spread: 2.4, seed: 35, smoke: 1.8, heat: 0.5},
 ];
 
 // resolve ground-relative fires once

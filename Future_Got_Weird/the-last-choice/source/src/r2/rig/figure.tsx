@@ -34,7 +34,13 @@ export type Face = {
 };
 /** Body-local point relative to the root (feet centre on the ground), rig units at s = 1: r = character's right, u = up, f = forward. */
 export type Loc = {r: number; u: number; f: number};
-export type ArmT = {fk?: {fwd: number; out: number; bend: number}; local?: Loc; abs?: V3; pole?: Loc; w?: number; palm?: Loc};
+export type ArmT = {
+  fk?: {fwd: number; out: number; bend: number}; local?: Loc; abs?: V3; pole?: Loc; w?: number; palm?: Loc;
+  /** hand orientation independent of the forearm (a wrist bent to plant a palm, grab a ledge): the fingers' direction
+   *  and the palm's facing, body-local (`fingers`, `palm`) or in the unpitched drawing frame (`fingersAbs`, `palmAbs`,
+   *  set by the sprite from world directions); `orientW` fades it in (default 1 when given) */
+  fingers?: Loc; fingersAbs?: V3; palmAbs?: V3; orientW?: number;
+};
 export type LegT = {fk?: {fwd: number; knee: number}; local?: Loc; abs?: V3; pole?: Loc; pitch?: number; w?: number};
 export type LimbId = 'armL0' | 'armL1' | 'armR0' | 'armR1' | 'legL0' | 'legL1' | 'legR0' | 'legR1';
 export type Decal = {limb: LimbId; u: number; kind: 'tear' | 'blood' | 'bandage' | 'scrape' | 'dirt'; size?: number; seed?: number; amt?: number};
@@ -51,7 +57,7 @@ export type FigLight = {
   fire?: number; fireC?: string; fog?: number; fogC?: string;
 };
 export type Part = {z: number; key: string; el: React.ReactElement};
-export type HandFrame = {pos: V3; dir: V2; ang: number; palmN: V3; thumb: number; pv: number};
+export type HandFrame = {pos: V3; dir: V2; ang: number; palmN: V3; thumb: number; pv: number; /** on-screen length factor (fingers toward/away from the camera) */ len: number};
 export type HoldFn = (h: HandFrame, s: number, ink: number, col: (c: string) => string) => React.ReactNode;
 export type WearFn = (fa: {E: V3; W: V3; dorsal: V3; ang: number; len: number}, s: number, ink: number, col: (c: string) => string) => {el: React.ReactNode; front: boolean} | null;
 
@@ -93,6 +99,8 @@ export type Rig2 = {
   hip: [V3, V3]; knee: [V3, V3]; ankle: [V3, V3]; sh: [V3, V3]; el: [V3, V3]; wr: [V3, V3];
   neck: V3; headC: V3; torsoZ: number;
   palm: [V3, V3]; hands: [HandFrame, HandFrame];
+  /** wrist-bend orientation per hand (drawn frame), when the pose sets one */
+  orient: [{fingers: V3 | null; palm: V3 | null; w: number}, {fingers: V3 | null; palm: V3 | null; w: number}];
   /** depth rank of each arm part (relative frame of the parts) and of a tool held in both hands */
   armRank: [number, number]; toolZ: number;
   /** convert a body-local point to the drawn (view) frame */
@@ -184,6 +192,7 @@ export const solve2 = (p: FigProps): Rig2 => {
   // arms
   const sh: [V3, V3] = [at(P, up, -SH_X * s, SH_H * s, 0), at(P, up, SH_X * s, SH_H * s, 0)];
   const el: V3[] = [], wr: V3[] = [], palm: V3[] = [];
+  const orient: {fingers: V3 | null; palm: V3 | null; w: number}[] = [];
   ([p.armL, p.armR] as (ArmT | undefined)[]).forEach((A, i) => {
     const sd = i === 0 ? -1 : 1;
     const S = sh[i];
@@ -202,6 +211,9 @@ export const solve2 = (p: FigProps): Rig2 => {
     el.push(r.mid); wr.push(r.end);
     const hs = (i === 0 ? p.handL : p.handR) ?? 'relaxed';
     palm.push(dirOf(up, A?.palm ?? defaultPalm(hs, sd)));
+    const fd = A?.fingersAbs ? norm3(A.fingersAbs) : A?.fingers ? dirOf(up, A.fingers) : null;
+    const pd = A?.palmAbs ? norm3(A.palmAbs) : null;
+    orient.push({fingers: fd, palm: pd, w: fd || pd ? clamp(A?.orientW ?? 1) : 0});
   });
   const torsoZ = at(P, up, 0, 70 * s, 0).z;
   // ---- the view: camera pitch about the screen x axis through the root, then screen rotation
@@ -220,6 +232,7 @@ export const solve2 = (p: FigProps): Rig2 => {
     neck: pnt(neck), headC: pnt(headC), torsoZ: vec(sub3(at(P, up, 0, 70 * s, 0), root)).z,
     palm: [vec(palm[0]), vec(palm[1])],
     hands: [] as unknown as [HandFrame, HandFrame],
+    orient: orient.map((o) => ({fingers: o.fingers ? vec(o.fingers) : null, palm: o.palm ? vec(o.palm) : null, w: o.w})) as Rig2['orient'],
     armRank: [0, 0], toolZ: 0,
     loc: (l: Loc) => pnt(fromPivot(l)),
   };
@@ -235,14 +248,18 @@ export const solve2 = (p: FigProps): Rig2 => {
   out.hands = [0, 1].map((i) => {
     const sd = i === 0 ? -1 : 1;
     const E = out.el[i], Wr = out.wr[i];
-    const ad = norm3(sub3(Wr, E));
-    const pn = out.palm[i];
+    const o = out.orient[i];
+    const fa = norm3(sub3(Wr, E));
+    // a bent wrist: blend the hand's axis toward the given fingers direction, and its palm toward the given facing
+    const ad = o.fingers && o.w > 0 ? norm3(add3(mul3(fa, 1 - o.w), mul3(o.fingers, o.w))) : fa;
+    const pn = o.palm && o.w > 0 ? norm3(add3(mul3(out.palm[i], 1 - o.w), mul3(o.palm, o.w))) : out.palm[i];
+    const len = o.fingers ? lerp(1, Math.max(0.32, Math.hypot(ad.x, ad.y)), o.w) : 1;
     const thumbV = mul3({x: pn.y * ad.z - pn.z * ad.y, y: pn.z * ad.x - pn.x * ad.z, z: pn.x * ad.y - pn.y * ad.x}, sd);
     const a2 = Math.atan2(ad.y, ad.x);
     const perp = {x: -Math.sin(a2), y: Math.cos(a2)};
     const thumb = Math.sign(thumbV.x * perp.x + thumbV.y * perp.y) || 1;
-    const pos = add3(Wr, mul3(ad, 2 * s));
-    return {pos, dir: {x: Math.cos(a2), y: Math.sin(a2)}, ang: (a2 * 180) / Math.PI, palmN: pn, thumb, pv: pn.z};
+    const pos = add3(Wr, mul3(fa, 2 * s));
+    return {pos, dir: {x: Math.cos(a2), y: Math.sin(a2)}, ang: (a2 * 180) / Math.PI, palmN: pn, thumb, pv: pn.z, len};
   }) as [HandFrame, HandFrame];
   return out;
 };
@@ -569,7 +586,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const holdFn = i === 0 ? p.holdL : p.holdR;
     const hold = holdFn ? holdFn(hf, s, ink, col) : null;
     const [hBack, hFront] = handGlyph(hShape[i], {s, ink, skin, inkC, pv: hf.pv, thumb: hf.thumb, blood: hb, dirt: (dmg.dirt ?? 0) * 0.6, holding: hold});
-    const handEl = (layer: React.ReactElement) => <g transform={`translate(${f2(hf.pos.x)} ${f2(hf.pos.y)}) rotate(${f2(hf.ang)})`}>{layer}</g>;
+    const handEl = (layer: React.ReactElement) => <g transform={`translate(${f2(hf.pos.x)} ${f2(hf.pos.y)}) rotate(${f2(hf.ang)})${hf.len < 0.995 ? ` scale(${f2(hf.len)} 1)` : ''}`}>{layer}</g>;
     const wearFn = i === 0 ? p.wearL : p.wearR;
     const dorsal = mul3(r.palm[i], -1);
     const wear = wearFn ? wearFn({E, W: Wr, dorsal, ang: ang2(E, Wr), len: len3(sub3(Wr, E))}, s, ink, col) : null;

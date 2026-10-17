@@ -25,8 +25,11 @@ export const MATS: Record<string, Material> = {
   paintW: {base: '#CFC8B9', lit: 0.6},
   paintY: {base: '#C9A246', lit: 0.6},
   crack: {base: '#26211F', noInk: true},
-  scorch: {base: '#2E2826', noInk: true, opacity: 0.75},
+  scorch: {base: '#2E2826', noInk: true, opacity: 0.55},
   stain: {base: '#3A3330', noInk: true, opacity: 0.5},
+  chipLight: {base: '#A0968A', noInk: true, opacity: 0.55, lit: 0.5},
+  chipDark: {base: '#47403B', noInk: true, opacity: 0.55, lit: 0.5},
+  chipMid: {base: '#7A7066', noInk: true, opacity: 0.6, lit: 0.5},
   manhole: {base: '#3B3836'},
   // concrete and structure
   concrete: {base: '#A0988D'},

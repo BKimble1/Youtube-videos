@@ -84,23 +84,32 @@ export const groundGrid = (
     const a = id(i, j), b = id(i + 1, j), c = id(i + 1, j + 1), d = id(i, j + 1);
     const ax = x0 + dx * i, bx = ax + dx, az = z0 + dz * j, bz = az + dz;
     const mx = (ax + bx) / 2, mz = (az + bz) / 2;
-    const e = Math.max(dx, dz) * 0.75;
+    // sample the slope over ~2.5 m: light falls in large shapes, small rubble lumps stay in the silhouette only
+    const e = Math.max(2.4, Math.max(dx, dz) * 1.5);
     const gx = (h(mx + e, mz) - h(mx - e, mz)) / (2 * e), gz = (h(mx, mz + e) - h(mx, mz - e)) / (2 * e);
     const L = Math.hypot(gx, 1, gz);
     const sn = {x: -gx / L, y: 1 / L, z: -gz / L};
     const slope = Math.acos(clamp(sn.y, -1, 1)) * 57.2958;
-    const ov: Overlay[] = [];
+    // one path per material/width per cell: group the clipped pieces
+    const groups = new Map<string, Overlay>();
+    const addOv = (pts: V3[], mat: string, line?: number) => {
+      const key = `${mat}|${line ?? 0}`;
+      let g = groups.get(key);
+      if (!g) { g = {polys: [], mat, line}; groups.set(key, g); }
+      g.polys!.push(pts);
+    };
     decals.forEach((dc, k) => {
       const bb = dbb[k];
       if (bb.x1 < ax || bb.x0 > bx || bb.z1 < az || bb.z0 > bz) return;
       const lift = dc.lift ?? 0.012;
       if (dc.line) {
-        clipLineRect(dc.pts, ax, bx, az, bz).forEach((pc) => ov.push({pts: pc.map((p) => ({x: p.x, y: h(p.x, p.z) + lift, z: p.z})), mat: dc.mat, line: dc.line}));
+        clipLineRect(dc.pts, ax, bx, az, bz).forEach((pc) => addOv(pc.map((p) => ({x: p.x, y: h(p.x, p.z) + lift, z: p.z})), dc.mat, dc.line));
       } else {
         const pc = clipRect(dc.pts, ax, bx, az, bz);
-        if (pc.length >= 3) ov.push({pts: pc.map((p) => ({x: p.x, y: h(p.x, p.z) + lift, z: p.z})), mat: dc.mat});
+        if (pc.length >= 3) addOv(pc.map((p) => ({x: p.x, y: h(p.x, p.z) + lift, z: p.z})), dc.mat);
       }
     });
+    const ov = [...groups.values()];
     faces.push({v: [a, d, c, b], mat: mat(mx, mz, slope), sn, ov: ov.length ? ov : undefined});
   }
   return {verts, faces, twoSided: true, crease: o.crease ?? 40, inkBoundary: o.inkBoundary ?? false, sortKey: o.sortKey ?? 'max', bias: o.bias};
@@ -112,6 +121,15 @@ export const blobXZ = (x: number, z: number, r: number, seed: number, n = 11, ro
     const a = (i / n) * Math.PI * 2;
     const rr = r * (1 - rough / 2 + rough * rnd(seed * 31 + i));
     return {x: x + Math.cos(a) * rr * sx, z: z + Math.sin(a) * rr * sz};
+  });
+
+/** Small chips of rubble/dust scattered over an area (texture for close shots): n polygons of 0.06–0.3 m. */
+export const chipsXZ = (x0: number, x1: number, z0: number, z1: number, n: number, seed: number, mats: string[]): Decal[] =>
+  Array.from({length: n}, (_, i) => {
+    const s = seed * 977 + i;
+    const x = x0 + rnd(s) * (x1 - x0), z = z0 + rnd(s * 3) * (z1 - z0);
+    const r = 0.03 + Math.pow(rnd(s * 5), 2.4) * 0.14;
+    return {pts: blobXZ(x, z, r, s, 4 + Math.floor(rnd(s * 7) * 3), 0.6, 1 + rnd(s * 9) * 0.8, 1), mat: mats[i % mats.length], lift: 0.02};
   });
 
 /** A jagged crack polyline from (x,z) heading `ang` (radians) of length L. */

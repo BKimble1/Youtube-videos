@@ -69,13 +69,19 @@ export const riseSpec = (u: number) => {
   const H0 = RISE_HEAD;
   const palmR = at3(pos, H0, 0.62, 0.22, 0.03), palmL = at3(pos, H0, 0.5, -0.3, 0.03);
   const kneeL = at3(pos, H0, 0.34, -0.15, 0.48);
-  const handR = keyV([[0, add3(palmR, {x: 0, y: 0.25, z: 0})], [0.8, palmR], [3.0, palmR], [3.9, add3(kneeL, mul3(headingVec(H0), 0.03))], [4.9, add3(kneeL, {x: 0, y: 0.05, z: 0})], [6.0, bod3(pos, H0, 0.15, 0.48, 0.95)], [7.2, bod3(pos, H0, 0.22, 0.34, 0.8)], [9.5, bod3(pos, 90, 0.25, 0.34, 0.8)]], u);
-  const handL = keyV([[0, at3(pos, H0, 0.2, -0.24, 0.05)], [0.9, palmL], [2.4, palmL], [3.6, bod3(pos, H0, 0.32, 0.02, 0.9)], [7.2, bod3(pos, H0, 0.3, 0.04, 1.0)], [9.5, bod3(pos, 90, 0.32, 0.02, 1.0)]], u);
+  const handR = keyV([[0, add3(palmR, {x: 0, y: 0.25, z: 0})], [0.8, palmR], [2.3, palmR], [3.4, add3(kneeL, mul3(headingVec(H0), 0.03))], [4.9, add3(kneeL, {x: 0, y: 0.05, z: 0})], [6.0, bod3(pos, H0, 0.15, 0.48, 0.95)], [7.2, bod3(pos, H0, 0.22, 0.34, 0.8)], [9.5, bod3(pos, 90, 0.25, 0.34, 0.8)]], u);
+  const handL = keyV([[0, at3(pos, H0, 0.2, -0.24, 0.05)], [0.9, palmL], [1.9, palmL], [3.6, bod3(pos, H0, 0.36, -0.1, 0.6)], [5.0, bod3(pos, H0, 0.34, -0.1, 0.74)], [6.2, bod3(pos, H0, 0.32, -0.08, 0.92)], [7.2, bod3(pos, H0, 0.32, -0.08, 0.92)], [9.5, bod3(pos, 90, 0.34, -0.06, 0.94)]], u);
   const footL = keyV([[0, at3(pos, H0, -0.62, -0.14, 0.05)], [1.3, at3(pos, H0, -0.6, -0.14, 0.05)], [2.6, at3(pos, H0, 0.08, -0.15, 0.02)], [3.8, at3(pos, H0, 0.3, -0.15, 0.02)], [6.2, at3(pos, H0, 0.3, -0.15, 0.02)], [7.2, at3(pos, H0, 0.2, -0.18, 0.02)], [8.4, at3(pos, 120, 0.2, -0.18, 0.02)], [9.2, at3(pos, 90, 0.2, -0.18, 0.02)]], u);
   const footR = keyV([[0, at3(pos, H0, -0.64, 0.14, 0.05)], [1.3, at3(pos, H0, -0.62, 0.14, 0.05)], [2.6, at3(pos, H0, -0.5, 0.13, 0.08)], [3.8, at3(pos, H0, -0.44, 0.14, 0.1)], [5.0, at3(pos, H0, -0.4, 0.15, 0.08)], [6.0, at3(pos, H0, 0.02, 0.17, 0.02)], [7.2, at3(pos, H0, -0.08, 0.18, 0.02)], [7.9, at3(pos, 110, -0.08, 0.2, 0.02)], [8.8, at3(pos, 90, -0.08, 0.18, 0.02)]], u);
   const pose = keyPose(RISE_KEYS, u);
   const T = M.SOLO + u;
-  return {pos, heading, handR, handL, footL, footR, pose, T};
+  // planted palms: the wrist bends so the palm lies on the rubble, fingers forward and a little out
+  const plantR = u < 0.8 ? smooth(u / 0.8) : 1 - smooth((u - 2.1) / 0.5);
+  const plantL = u < 0.9 ? smooth((u - 0.3) / 0.6) : 1 - smooth((u - 1.75) / 0.4);
+  const down = {x: 0, y: -1, z: 0};
+  const orientR = {fingers: add3(mul3(headingVec(H0), 0.9), mul3(headingVec(H0 + 90), 0.3)), palm: down, w: plantR};
+  const orientL = {fingers: add3(mul3(headingVec(H0), 0.9), mul3(headingVec(H0 - 90), 0.3)), palm: down, w: plantL};
+  return {pos, heading, handR, handL, footL, footR, orientR, orientL, pose, T};
 };
 
 const sceneFor = (view: ReturnType<typeof makeView>, T: number, figs: Item[], o: {atmos?: boolean} = {}) => (
@@ -133,7 +139,7 @@ export const RigLab: React.FC<{page?: number}> = ({page = 0}) => {
     const fig = figureSprite({
       key: 'dir', look, t: R.T, seed: 11, pos: R.pos, heading: R.heading,
       pose: {...R.pose, handL: R.pose.handL, wearL: plateWear(toolsR2('director', R.T).plate ?? 'intact'), dmg: dmgR2('director', R.T)},
-      world: {handL: R.handL, handR: R.handR, footL: R.footL, footR: R.footR},
+      world: {handL: R.handL, handR: R.handR, footL: R.footL, footR: R.footR, orientL: R.orientL, orientR: R.orientR},
     });
     // camera: low, three-quarter front, slowly rising with him; ends behind his right shoulder as he turns east
     const fwd = headingVec(RISE_HEAD), right = headingVec(RISE_HEAD + 90);
@@ -141,8 +147,22 @@ export const RigLab: React.FC<{page?: number}> = ({page = 0}) => {
     const side = CS === 1 ? -1 : 1;
     const c0: Cam3 = {pos: add3(R.pos, {x: fwd.x * 1.1 + right.x * 2.5 * side, y: 0.55, z: fwd.z * 1.1 + right.z * 2.5 * side}), target: add3(R.pos, {x: fwd.x * 0.35, y: 0.2, z: fwd.z * 0.35}), fov: 44};
     const c1: Cam3 = {pos: add3(R.pos, {x: fwd.x * 1.4 + right.x * 3.0 * side, y: 0.8, z: fwd.z * 1.4 + right.z * 3.0 * side}), target: add3(R.pos, {x: fwd.x * 0.1, y: 1.0, z: fwd.z * 0.1}), fov: 44};
-    const c2: Cam3 = {pos: add3(R.pos, {x: -2.4, y: 1.0, z: 1.6}), target: add3(R.pos, {x: 6, y: 0.6, z: -1}), fov: 46};
-    const cam = u < 7.6 ? mixCam3(c0, c1, smooth(u / 7)) : mixCam3(c1, c2, smooth((u - 7.6) / 1.6));
+    // over his right shoulder looking east at the avenue; kept above the rubble so the ridge never blocks the lens
+    const c2p = add3(R.pos, {x: -2.0, y: 1.55, z: 1.4});
+    c2p.y = Math.max(c2p.y, groundH(c2p.x, c2p.z) + 0.7);
+    const c2: Cam3 = {pos: c2p, target: add3(R.pos, {x: 7, y: 0.95, z: -1.7}), fov: 50};
+    // the end move orbits around him (through his front as he turns), so he never leaves the frame
+    const orbit = (a: Cam3, b: Cam3, k: number): Cam3 => {
+      const oa = {x: a.pos.x - R.pos.x, z: a.pos.z - R.pos.z}, ob = {x: b.pos.x - R.pos.x, z: b.pos.z - R.pos.z};
+      const aa = Math.atan2(oa.x, oa.z), ab = Math.atan2(ob.x, ob.z);
+      const da = ((ab - aa + 3 * Math.PI) % (2 * Math.PI)) - Math.PI;
+      const ang = aa + da * k, rr = lerp(Math.hypot(oa.x, oa.z), Math.hypot(ob.x, ob.z), k);
+      const x = R.pos.x + Math.sin(ang) * rr, z = R.pos.z + Math.cos(ang) * rr;
+      // rise a little mid-move to clear the slabs around him; the aim leaves him for the avenue only at the end
+      const y = Math.max(lerp(a.pos.y, b.pos.y, k) + 0.6 * Math.sin(Math.PI * k), groundH(x, z) + 0.6);
+      return {pos: {x, y, z}, target: lerp3(a.target, b.target, k * k * k), fov: lerp(a.fov ?? 44, b.fov ?? 44, k)};
+    };
+    const cam = u < 7.2 ? mixCam3(c0, c1, smooth(u / 7.2)) : orbit(c1, c2, smooth((u - 7.2) / 2.6));
     const view = makeView(cam);
     return sceneFor(view, R.T, [fig]);
   }
@@ -202,6 +222,27 @@ export const RigLab: React.FC<{page?: number}> = ({page = 0}) => {
           const x = 220 + (i * 3 + j) * 190, y = 620;
           return <g key={`${i}${j}`}><Figure look={look} t={t} id={`pc${i}${j}`} x={x} y={y} s={0.62} ink={3} pitch={pitch} yaw={yaw} light={LIGHT0} wearL={plateWear('dented')} {...BRACED()} dmg={dmgR2('director', 100)} /><Label x={x} y={y + 60} t={`${pitch}° / ${yaw}°`} size={18} /></g>;
         }))}
+      </svg>
+    );
+  }
+  if (page === 13) {
+    // head turnaround at close-up scale: the director (row 1) and the six others at three-quarter (row 2)
+    const cells: {role: typeof ROLES2[number]; yaw: number; label: string; pitch?: number}[] = [
+      ...[0, 20, 40, 65, 90, 150].map((yaw) => ({role: 'director' as const, yaw, label: `director ${yaw}°`})),
+      ...(['tether', 'decoy', 'breaker', 'drone', 'runner', 'flares'] as const).map((role, i) => ({role, yaw: [40, -40, 60, -25, 75, 30][i], label: `${role} ${[40, -40, 60, -25, 75, 30][i]}°`})),
+    ];
+    return (
+      <svg width="100%" height="100%" viewBox="0 0 1920 1080" style={{background: BG}}>
+        <defs>{cells.map((_, i) => <clipPath key={i} id={`hc${i}`}><rect x={(i % 6) * 310 + 30} y={Math.floor(i / 6) * 500 + 70} width={300} height={440} rx={16} /></clipPath>)}</defs>
+        {cells.map((c, i) => {
+          const x = (i % 6) * 310 + 180, y = Math.floor(i / 6) * 500 + 330 + 744;
+          return (
+            <g key={i}>
+              <g clipPath={`url(#hc${i})`}><Figure look={lookR2(c.role)} t={t} seed={5 + i} id={`hd${i}`} x={x} y={y} s={2} ink={5} yaw={c.yaw} pitch={c.pitch ?? 4} light={LIGHT0} dmg={dmgR2(c.role, 30)} {...STAND} /></g>
+              <Label x={x} y={Math.floor(i / 6) * 500 + 540} t={c.label} size={20} />
+            </g>
+          );
+        })}
       </svg>
     );
   }

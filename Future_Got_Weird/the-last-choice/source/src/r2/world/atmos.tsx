@@ -135,11 +135,14 @@ export const smokeColumn = (key: string, base: V3, o: ColumnOpts, t: number): It
       draw: (c: SpriteCtx) => {
         const R = r * c.k;
         if (R < 0.8) return null;
+        // never let a puff swallow the camera: fade when the lens is inside or close to it
+        const near = clamp((c.z - r * 0.7) / (r * 1.6));
+        if (near <= 0.02) return null;
         const fogK = c.lit.fog;
         const baseC = mix(mix('#2E2A2A', '#8A8580', 1 - dark), c.light.fogColor, 0.25 + fogK * 0.65);
         const litC = mix(mix(baseC, c.light.sunColor, 0.28), c.light.fogColor, fogK * 0.5);
         const warmC = mix(baseC, '#C8552E', warm * (1 - k) * 0.7);
-        const a = alpha * fade * (1 - fogK * 0.35);
+        const a = alpha * fade * near * (1 - fogK * 0.35);
         const sx = c.light.sun.x >= 0 ? 1 : -1; // highlight toward the sun side (screen approx)
         return (
           <g opacity={f1(a)}>
@@ -164,7 +167,7 @@ export const puffItem = (key: string, pos: V3, r: number, o: {dark?: number; alp
     const litC = mix(mix(baseC, c.light.sunColor, 0.28), c.light.fogColor, c.lit.fog * 0.5);
     const sx = c.light.sun.x >= 0 ? 1 : -1;
     return (
-      <g opacity={f1((o.alpha ?? 0.8) * (1 - c.lit.fog * 0.35))}>
+      <g opacity={f1((o.alpha ?? 0.8) * (1 - c.lit.fog * 0.35) * clamp((c.z - r * 0.7) / (r * 1.6)))}>
         <path d={blobD(c.x, c.y, R, s, (o.t ?? 0) * 0.3)} fill={baseC} />
         <path d={blobD(c.x - sx * R * 0.18, c.y - R * 0.22, R * 0.68, s + 3, (o.t ?? 0) * 0.3)} fill={litC} opacity={0.75} />
       </g>
@@ -242,19 +245,50 @@ const towerDust = (t: number): Item[] => {
   const st = towerState(t);
   const out: Item[] = [];
   if (st.tc > 0 && !st.collapsed) {
-    const hinge = T.height * 0.62 - st.drop;
+    const hinge = T.height * 0.6 - st.drop;
     // a dust cloud bursting at the collapse front and billowing down the tower's faces
     for (let i = 0; i < 16; i++) {
       const s = 3000 + i;
       const a = (i / 16) * Math.PI * 2;
       const grow = clamp(st.tc / 5);
-      const r = 18 + grow * 55;
+      const r = 20 + grow * 60;
       const p = {x: T.base.x + Math.cos(a) * (T.width * 0.5 + r * 0.35), y: Math.max(8, hinge - (rnd(s) * 0.9) * grow * 90), z: T.base.z + Math.sin(a) * (T.width * 0.5 + r * 0.35)};
-      out.push(puffItem(`tdust${i}`, p, r * (0.6 + rnd(s + 1) * 0.4), {dark: 0.12, alpha: 0.88 * smooth(st.tc / 0.8), seed: s, t}));
+      out.push(puffItem(`tdust${i}`, p, r * (0.6 + rnd(s + 1) * 0.4), {dark: 0.04, alpha: 0.9 * smooth(st.tc / 0.8), seed: s, t}));
     }
   }
   if (st.collapsed || t > M.TITLE_OUT) {
     out.push(...smokeColumn('stumpSmoke', {x: T.base.x, y: T.height * 0.42, z: T.base.z}, {n: 12, life: 30, rise: 6, r0: 18, r1: 80, drift: 3, dark: 0.45, alpha: 0.75, warm: 0.2, seed: 77}, t));
+  }
+  return out;
+};
+
+// ------------------------------------------------------------------ the smoke ceiling (thick smoke over the city)
+/** Dark flat cloud banks of smoke at 170–280 m drifting with the wind: the city under a lid of smoke. */
+const ceiling = (t: number, k: number): Item[] => {
+  const out: Item[] = [];
+  for (let i = 0; i < 46; i++) {
+    const s = 5000 + i;
+    const x = -300 + rnd(s) * 2600, z = -900 + rnd(s * 3) * 1800;
+    const y = 290 + rnd(s * 5) * 100;
+    const r = 70 + rnd(s * 7) * 110;
+    const p = {x: x + WIND.x * t * 2.2, y, z: z + WIND.z * t * 2.2};
+    out.push({
+      kind: 'sprite', key: `ceil_${i}`, pos: p,
+      draw: (c: SpriteCtx) => {
+        const R = r * c.k;
+        if (R < 3 || c.z < r * 0.8) return null;
+        const near = clamp((c.z - r * 0.8) / (r * 1.5));
+        const col = mix('#3B3233', c.light.fogColor, 0.35 + c.lit.fog * 0.5);
+        const und = mix('#7A4A38', c.light.fogColor, 0.4 + c.lit.fog * 0.5); // lit from below by the fires
+        const d = blobD(c.x, c.y, R, s, t * 0.05);
+        return (
+          <g opacity={f1(0.72 * k * near)}>
+            <path d={d} fill={col} transform={`translate(${f1(c.x)} ${f1(c.y)}) scale(1 0.38) translate(${f1(-c.x)} ${f1(-c.y)})`} />
+            <path d={blobD(c.x, c.y + R * 0.12, R * 0.8, s + 9, t * 0.05)} fill={und} opacity={0.5} transform={`translate(${f1(c.x)} ${f1(c.y)}) scale(1 0.3) translate(${f1(-c.x)} ${f1(-c.y)})`} />
+          </g>
+        );
+      },
+    });
   }
   return out;
 };
@@ -270,6 +304,8 @@ export type AtmosOpts = {
   columns?: {key: string; base: V3; o: ColumnOpts}[];
   /** skip fires by id */
   skipFires?: string[];
+  /** the smoke ceiling over the city (0 = none, default 1) */
+  ceiling?: number;
 };
 
 export const atmosItems = (view: View, t: number, o: AtmosOpts = {}): Item[] => {
@@ -285,14 +321,15 @@ export const atmosItems = (view: View, t: number, o: AtmosOpts = {}): Item[] => 
       const big = f.size > 8;
       const n = Math.max(3, Math.round((big ? 9 : d < 60 ? 7 : 5) * Math.min(1.5, smokeK)));
       items.push(...smokeColumn(`sm_${f.id}`, {x: f.pos.x, y: f.pos.y + f.size * 0.8, z: f.pos.z}, {
-        n, life: big ? 26 : 10 + f.smoke * 3, rise: big ? 7 : 1.6 + f.smoke * 0.8, r0: big ? f.size * 0.6 : 0.6 + f.smoke * 0.5,
-        r1: big ? f.size * 4 : 3 + f.smoke * 4.5, drift: big ? 2.6 : 1.1, dark: 0.55 + (f.heat ?? 0) * 0.1, alpha: (big ? 0.78 : 0.62) * Math.min(1, smokeK), warm: 0.45, seed: f.seed,
+        n, life: big ? 26 : 10 + f.smoke * 3, rise: big ? 6 : 1.6 + f.smoke * 0.8, r0: big ? Math.min(10, f.size * 0.5) : 0.6 + f.smoke * 0.5,
+        r1: big ? Math.min(42, f.size * 1.8) : 3 + f.smoke * 4.5, drift: big ? 2.6 : 1.1, dark: 0.55 + (f.heat ?? 0) * 0.1, alpha: (big ? 0.78 : 0.62) * Math.min(1, smokeK), warm: 0.45, seed: f.seed,
       }, t));
     }
   });
   if (o.embers !== false) items.push(...embers(view, t));
   if ((o.haze ?? 1) > 0) items.push(...groundHaze(t, o.haze ?? 1));
   items.push(...towerDust(t));
+  if ((o.ceiling ?? 1) > 0) items.push(...ceiling(t, o.ceiling ?? 1));
   (o.columns ?? []).forEach((c) => items.push(...smokeColumn(c.key, c.base, c.o, t)));
   return items;
 };

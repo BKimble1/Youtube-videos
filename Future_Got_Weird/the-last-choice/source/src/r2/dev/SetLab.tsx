@@ -74,10 +74,16 @@ const camFor = (page: number, f: number): {cam: Cam3; t: number} => {
       const u = smooth(f / 198);
       return {cam: {pos: lerp3(AERIAL.from.pos, AERIAL.to.pos, u), target: lerp3(AERIAL.from.target, AERIAL.to.target, u), fov: 44}, t: f / 30};
     }
-    case 1: return {cam: {pos: {x: st.x - 3.4, y: sy + 0.9, z: st.z + 1.6}, target: {x: 70, y: 3, z: -4}, fov: 36}, t: 20 + f / 30};
+    case 1: {
+      const cx = st.x - 2.8, cz = st.z + 0.45;
+      return {cam: {pos: {x: cx, y: Math.max(groundH(cx, cz), sy, groundH(0.4, cz)) + 1.75, z: cz}, target: {x: 70, y: 1.5, z: -4}, fov: 36}, t: 20 + f / 30};
+    }
     case 2: return {cam: {pos: {x: 43 + f * 0.01, y: 3.6, z: 17}, target: {x: 64, y: -0.5, z: -2}, fov: 42}, t: 100 + f / 30};
     case 3: return {cam: {pos: {x: 49, y: 1.3, z: -1 - f * 0.005}, target: {x: 60, y: 3.5, z: -14}, fov: 44}, t: 110 + f / 30};
-    case 4: return {cam: {pos: {x: 12.6, y: 1.45, z: 0.6}, target: {x: 7.9, y: 0.75, z: 4.6}, fov: 42}, t: 190 + f / 30};
+    case 4: {
+      const d = PLAN.deathPos, hd = headingVec(PLAN.deathHeading);
+      return {cam: {pos: {x: d.x + hd.x * 3.4, y: groundH(d.x, d.z) + 1.25, z: d.z + hd.z * 3.4}, target: {x: (d.x + RADIO.pos.x) / 2, y: 0.85, z: (d.z + RADIO.pos.z) / 2}, fov: 42}, t: 190 + f / 30};
+    }
     case 5: {
       const u = smooth(f / 299);
       return {cam: {pos: spline(PULLBACK.pos, u), target: spline(PULLBACK.tgt, u), fov: lerp(36, 46, u)}, t: 200 + f / 30};
@@ -86,7 +92,8 @@ const camFor = (page: number, f: number): {cam: Cam3; t: number} => {
       const a = (f / 300) * 360;
       const c = {x: 2, y: 2, z: 1};
       const r = 9;
-      return {cam: {pos: {x: c.x + Math.sin((a * Math.PI) / 180) * r, y: 1.2, z: c.z - Math.cos((a * Math.PI) / 180) * r}, target: {x: c.x, y: 2.6, z: c.z}, fov: 50}, t: 30};
+      const px = c.x + Math.sin((a * Math.PI) / 180) * r, pz = c.z - Math.cos((a * Math.PI) / 180) * r;
+      return {cam: {pos: {x: px, y: groundH(px, pz) + 1.5, z: pz}, target: {x: c.x, y: 3.4, z: c.z}, fov: 50}, t: 30};
     }
   }
 };

@@ -44,13 +44,17 @@ export const PLAN = {
   /** The enemy's approach: formations come west along the avenue and out of the cross streets. */
   enemyFront: {x: 110, z0: -12, z1: 12},
   /** The distant tower that fails in the opening (collapse begins on the first low hit). */
-  failingTower: {base: {x: 760, y: 0, z: -300} as V3, height: 230, width: 34},
+  failingTower: {base: {x: 640, y: 0, z: -208} as V3, height: 265, width: 40},
   /** Skyline mass (generic Midtown-like towers; no real logos). */
   skyline: {x0: 600, x1: 2600, z0: -900, z1: 900},
 };
 
-/** Opening aerial path hint: high over the avenue east of the battlefield, drifting west toward the ridge. */
+/**
+ * Opening aerial: high over the west end of the district, drifting east along the avenue and looking east toward the
+ * skyline, so the failing tower (north-east) and the formations streaming west along the avenue are in frame; near
+ * rooftops along the avenue's south side pass below the lens.
+ */
 export const AERIAL = {
-  from: {pos: {x: 520, y: 210, z: 160} as V3, target: {x: 300, y: 40, z: -60} as V3},
-  to: {pos: {x: 300, y: 150, z: 120} as V3, target: {x: 80, y: 10, z: -40} as V3},
+  from: {pos: {x: -30, y: 132, z: 16} as V3, target: {x: 900, y: 18, z: -48} as V3},
+  to: {pos: {x: 118, y: 116, z: 9} as V3, target: {x: 960, y: 26, z: -78} as V3},
 };

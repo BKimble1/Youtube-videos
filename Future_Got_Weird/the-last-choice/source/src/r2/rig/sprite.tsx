@@ -4,7 +4,7 @@
 import React from 'react';
 import {V3, add3, sub3, mul3, dot3, norm3, cross3, rad, clamp} from '../../kit/math';
 import {View, figureView, project, SpriteItem, SpriteCtx} from '../engine';
-import {Figure, FigProps, FigLight, figureParts, Rig2, Loc, ArmT, LegT} from './figure';
+import {Figure, FigProps, FigLight, figureParts, solve2, Rig2, Loc, ArmT, LegT, THIGH, SHIN} from './figure';
 import {Look} from './looks';
 import {mix, hex} from '../engine/color';
 
@@ -34,6 +34,8 @@ export const worldToRig = (F: FigFrame, p: V3): V3 => {
   const d = sub3(p, F.pos);
   return {x: F.x + dot3(d, F.Rh) * F.k, y: F.y - d.y * F.k, z: dot3(d, F.Ch) * F.k};
 };
+/** A world DIRECTION → the rig's unpitched drawing frame (x screen right, y down, z toward the camera). */
+export const dirToRig = (F: FigFrame, d: V3): V3 => ({x: dot3(d, F.Rh), y: -d.y, z: dot3(d, F.Ch)});
 /** A point of the DRAWN rig (after pitch and screen rotation) → world. */
 export const rigToWorld = (F: FigFrame, q: V3): V3 => {
   const rr = rad(F.rot), cr = Math.cos(rr), sr = Math.sin(rr);
@@ -68,7 +70,9 @@ export const figLight = (c: SpriteCtx, F: FigFrame, o: {key?: number; rim?: numb
   };
 };
 
-export type WorldTargets = {handL?: V3; handR?: V3; footL?: V3; footR?: V3; poleL?: Loc; poleR?: Loc};
+/** A hand's orientation in the world (a palm planted on the ground: palm (0,-1,0), fingers along the ground). */
+export type WorldOrient = {fingers?: V3; palm?: V3; w?: number};
+export type WorldTargets = {handL?: V3; handR?: V3; footL?: V3; footR?: V3; poleL?: Loc; poleR?: Loc; orientL?: WorldOrient; orientR?: WorldOrient};
 
 export type FigSpec = {
   key: string;
@@ -91,10 +95,17 @@ export type FigSpec = {
   /** called with the solved rig and frame (export world points for FX) */
   onRig?: (r: Rig2, F: FigFrame) => void;
   inkPx?: number;
+  /** lower the pelvis when a world foot target is out of the legs' reach (default true; a foot on lower ground) */
+  reach?: boolean;
 };
 
-const armWorld = (F: FigFrame, a: ArmT | undefined, w: V3 | undefined): ArmT | undefined => (w ? {...(a ?? {}), abs: worldToRig(F, w), local: undefined} : a);
-const legWorld = (F: FigFrame, a: LegT | undefined, w: V3 | undefined): LegT | undefined => (w ? {...(a ?? {}), abs: worldToRig(F, w), local: undefined} : a);
+// a world target overrides the pose's limb target at full weight (a pose's `w` only fades its own local targets)
+const armWorld = (F: FigFrame, a: ArmT | undefined, w: V3 | undefined, o?: WorldOrient): ArmT | undefined => {
+  const t = w ? {...(a ?? {}), abs: worldToRig(F, w), local: undefined, w: undefined} : a;
+  if (!o || (!o.fingers && !o.palm)) return t;
+  return {...(t ?? {}), fingersAbs: o.fingers ? dirToRig(F, o.fingers) : undefined, palmAbs: o.palm ? dirToRig(F, o.palm) : undefined, orientW: o.w ?? 1};
+};
+const legWorld = (F: FigFrame, a: LegT | undefined, w: V3 | undefined): LegT | undefined => (w ? {...(a ?? {}), abs: worldToRig(F, w), local: undefined, w: undefined} : a);
 
 /** Build the FigProps for a spec in a view (used by the sprite and by `figureRig`). */
 export const figProps = (view: View, spec: FigSpec, F?: FigFrame): {F: FigFrame; props: FigProps} => {
@@ -106,9 +117,23 @@ export const figProps = (view: View, spec: FigSpec, F?: FigFrame): {F: FigFrame;
     look: spec.look, t: spec.t, seed: spec.seed ?? 1, id: spec.key,
     x: Fr.x, y: Fr.y, s: Fr.s, yaw: Fr.yaw + (base.yaw ?? 0), pitch: Fr.pitch, rot: Fr.rot,
     ink: spec.inkPx ?? clamp(Fr.s * 4, 0.9, 5.5),
-    armL: armWorld(Fr, base.armL, w.handL), armR: armWorld(Fr, base.armR, w.handR),
+    armL: armWorld(Fr, base.armL, w.handL, w.orientL), armR: armWorld(Fr, base.armR, w.handR, w.orientR),
     legL: legWorld(Fr, base.legL, w.footL), legR: legWorld(Fr, base.legR, w.footR),
   };
+  if (spec.reach !== false && (w.footL || w.footR)) {
+    // a planted foot below the root (downhill, a step off a slab) would leave the leg straight and the foot hanging:
+    // drop the pelvis just enough that the farther foot is reached with a 1.5% bend left in the knee
+    const r0 = solve2(props);
+    const reach = ((THIGH + SHIN) / 251.4) * 0.985;
+    let need = 0;
+    ([w.footL, w.footR] as (V3 | undefined)[]).forEach((T, i) => {
+      if (!T) return;
+      const H = rigToWorld(Fr, r0.hip[i]);
+      const hz = Math.hypot(H.x - T.x, H.z - T.z), dy = H.y - T.y;
+      if (hz * hz + dy * dy > reach * reach) need = Math.max(need, dy - Math.sqrt(Math.max(0, reach * reach - hz * hz)));
+    });
+    if (need > 0.002) props.drop = (props.drop ?? 0) + need * 251.4;
+  }
   return {F: Fr, props};
 };
 

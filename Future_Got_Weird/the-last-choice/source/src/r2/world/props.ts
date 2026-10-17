@@ -2,7 +2,7 @@
 // elevated-rail girder with the crushed taxi, the bus wreck, burnt cars, broken slabs and rebar for the ridge, and a
 // foreground-debris helper. Local model space: forward = −z (north at heading 0), right = +x, up = +y.
 import {V3, rnd, add3, sub3, mul3, norm3, cross3, len3} from '../../kit/math';
-import {Mesh, Face, Overlay, Prepped, prep, box, cylinder, merge, xfMesh, xfPoint, Xf, slab, chunk, cbox, headingVec} from '../engine';
+import {Mesh, Face, Overlay, Prepped, prep, box, cylinder, merge, xfMesh, xfPoint, Xf, slab, cbox, headingVec} from '../engine';
 import {PLAN} from './plan';
 import {groundH} from './ground';
 
@@ -280,14 +280,39 @@ export const brokenSlab = (o: V3, U: V3, V: V3, w: number, h: number, thick: num
   return slab(o, U, V, pts, thick, face, edge, 'concreteDark');
 };
 
-/** Seeded concrete chunk mesh (cached by seed bucket and material). */
+/**
+ * A piece of broken concrete about 1 m across (scale it): an irregular 5–7-sided slab with a tilted, uneven top —
+ * reads as fractured material, not a box. Seeded.
+ */
+export const rubblePiece = (seed: number, top: string, side: string): Mesh => {
+  const n = 5 + Math.floor(rnd(seed * 3) * 3);
+  const verts: V3[] = [];
+  const base: {x: number; z: number}[] = [];
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + (rnd(seed * 7 + i) - 0.5) * 0.7;
+    const r = 0.38 + rnd(seed * 11 + i) * 0.2;
+    base.push({x: Math.cos(a) * r * (1 + rnd(seed) * 0.4), z: Math.sin(a) * r});
+  }
+  const h0 = 0.22 + rnd(seed * 13) * 0.32;
+  const tx = (rnd(seed * 17) - 0.5) * 0.5, tz = (rnd(seed * 19) - 0.5) * 0.5;
+  base.forEach((p) => verts.push({x: p.x, y: 0, z: p.z}));
+  base.forEach((p, i) => verts.push({x: p.x * (0.8 + rnd(seed * 23 + i) * 0.15), y: Math.max(0.06, h0 + p.x * tx + p.z * tz + (rnd(seed * 29 + i) - 0.5) * 0.1), z: p.z * (0.8 + rnd(seed * 31 + i) * 0.15)}));
+  // the base polygon runs CCW in angle (x→z), i.e. clockwise seen from above: the top must be reversed to face up
+  const faces: Face[] = [{v: base.map((_, i) => n + (n - 1 - i)), mat: top}, {v: base.map((_, i) => i), mat: side}];
+  for (let i = 0; i < n; i++) { const j = (i + 1) % n; faces.push({v: [i, n + i, n + j, j], mat: side}); }
+  return orientOutward({verts, faces, crease: 22}, {x: 0, y: h0 * 0.4, z: 0});
+};
+
+/** Seeded rubble mesh (cached by seed bucket and material). */
 const CHUNKS = new Map<string, Prepped>();
+const RUBBLE_MATS: [string, string][] = [['concrete', 'concreteEdge'], ['rubble', 'rubbleDark'], ['concreteDark', 'rubbleDark'], ['dust', 'concreteEdge']];
 export const chunkMesh = (seed: number, mat = 'rubble'): Prepped => {
-  const k = `${seed % 24}:${mat}`;
+  const s = seed % 32;
+  const k = `${s}:${mat}`;
   let m = CHUNKS.get(k);
   if (!m) {
-    const s = seed % 24;
-    m = prep(chunk(0.9 + rnd(s * 3) * 0.6, 0.5 + rnd(s * 5) * 0.6, 0.8 + rnd(s * 7) * 0.6, s + 1, s % 3 === 0 ? 'concrete' : s % 3 === 1 ? mat : 'concreteEdge', 0.3));
+    const [top, side] = mat === 'brickDark' ? ['brick', 'brickDark'] : mat === 'rubbleDark' && s % 2 ? ['rubbleDark', 'concreteDark'] : RUBBLE_MATS[s % RUBBLE_MATS.length];
+    m = prep(rubblePiece(s + 1, top, side));
     CHUNKS.set(k, m);
   }
   return m;

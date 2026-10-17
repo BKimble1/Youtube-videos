@@ -18,10 +18,10 @@ export const plateWear = (state: PlateState, o: {glint?: number} = {}): WearFn =
   const nz = fa.dorsal.z;
   const front = nz > -0.12;
   const across = Math.max(0.16, Math.abs(nz));
-  const L = 64, Wd = 46; // half-length along the forearm, half-width across (rig units)
+  const L = 52, Wd = 34; // half-length along the forearm, half-width across (rig units)
   const mid = {x: lerp(fa.E.x, fa.W.x, 0.55), y: lerp(fa.E.y, fa.W.y, 0.55)};
   const dl = Math.hypot(fa.dorsal.x, fa.dorsal.y);
-  const off = 13 * s * (dl > 1e-3 ? 1 : 0);
+  const off = 10 * s * (dl > 1e-3 ? 1 : 0);
   const cx = mid.x + (dl > 1e-3 ? (fa.dorsal.x / dl) * off : 0), cy = mid.y + (dl > 1e-3 ? (fa.dorsal.y / dl) * off : 0);
   const k = s;
   const y = (v: number) => v * across;
@@ -43,16 +43,16 @@ export const plateWear = (state: PlateState, o: {glint?: number} = {}): WearFn =
         <g>
           {/* raised rim band and a bolt row: it was a machine's armour */}
           <path d={'M ' + shape.map((q) => `${f2(q.x * 0.8 * k)} ${f2(y(q.y) * 0.72 * k)}`).join(' L ') + ' Z'} fill="none" stroke={edge} strokeWidth={3 * k} strokeLinejoin="round" />
-          {state !== 'shattered' && [-40, 40].map((xx) => <circle key={xx} cx={xx * k} cy={y(-Wd + 9) * k} r={3 * k} fill={col(METAL_D)} />)}
-          {(state === 'dented' || state === 'cracked') && <ellipse cx={-14 * k} cy={y(6) * k} rx={13 * k} ry={y(10) * k} fill={col('#A9B2B8')} stroke={C.ink} strokeWidth={ink * 0.5} />}
-          {(state === 'dented' || state === 'cracked') && [0, 1, 2].map((i) => <line key={i} x1={(10 + i * 9) * k} y1={y(-20 + i * 6) * k} x2={(34 + i * 9) * k} y2={y(-14 + i * 6) * k} stroke={C.ink} strokeWidth={ink * 0.45} strokeLinecap="round" opacity={0.6} />)}
+          {state !== 'shattered' && [-32, 32].map((xx) => <circle key={xx} cx={xx * k} cy={y(-Wd + 9) * k} r={3 * k} fill={col(METAL_D)} />)}
+          {(state === 'dented' || state === 'cracked') && <ellipse cx={-12 * k} cy={y(4) * k} rx={11 * k} ry={y(8) * k} fill={col('#A9B2B8')} stroke={C.ink} strokeWidth={ink * 0.5} />}
+          {(state === 'dented' || state === 'cracked') && [0, 1, 2].map((i) => <line key={i} x1={(8 + i * 8) * k} y1={y(-15 + i * 5) * k} x2={(28 + i * 8) * k} y2={y(-10 + i * 5) * k} stroke={C.ink} strokeWidth={ink * 0.45} strokeLinecap="round" opacity={0.6} />)}
           {state === 'cracked' && <path d={`M ${-L * k} ${y(-8) * k} L ${-30 * k} ${y(-2) * k} L ${-12 * k} ${y(8) * k} L ${8 * k} ${y(2) * k} L ${30 * k} ${y(16) * k} L ${50 * k} ${y(12) * k} M ${-12 * k} ${y(8) * k} L ${-4 * k} ${y(28) * k}`} fill="none" stroke={C.ink} strokeWidth={ink * 0.8} strokeLinecap="round" strokeLinejoin="round" />}
           {state === 'shattered' && <path d={`M ${20 * k} ${y(-30) * k} L ${36 * k} ${y(-6) * k} L ${30 * k} ${y(20) * k}`} fill="none" stroke={C.ink} strokeWidth={ink * 0.6} />}
           {(o.glint ?? 0) > 0 && <path d={`M ${-30 * k} ${y(-30) * k} L ${10 * k} ${y(-34) * k}`} stroke="#FFFFFF" strokeWidth={4 * k} strokeLinecap="round" opacity={o.glint} />}
         </g>
       )}
       {/* straps around the forearm */}
-      {[-22, 30].map((xx) => <rect key={xx} x={(xx - 5) * k} y={-y(Wd + 4) * k} width={10 * k} height={y(2 * Wd + 8) * k} rx={3 * k} fill={col(RUBBER)} opacity={front ? 1 : 0.9} />)}
+      {[-18, 24].map((xx) => <rect key={xx} x={(xx - 5) * k} y={-y(Wd + 4) * k} width={10 * k} height={y(2 * Wd + 8) * k} rx={3 * k} fill={col(RUBBER)} opacity={front ? 1 : 0.9} />)}
     </g>
   );
   return {el, front};

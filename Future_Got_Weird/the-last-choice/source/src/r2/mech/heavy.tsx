@@ -4,7 +4,7 @@
 // broken: the leg folds the wrong way, the hull tips toward that corner and lands on its side (the wreck stays).
 import React from 'react';
 import {V3, add3, sub3, mul3, norm3, len3, dot3, cross3, clamp, lerp, lerp3, smooth, easeIn, easeOut, noise, seg, f2} from '../../kit/math';
-import {Item} from '../engine';
+import {Item, shade} from '../engine';
 import {HEAVY, HV, DEBRIS} from './parts';
 import {Pose3, R3, rotHeading, rcomp, euler, segFrame, ik2, apply, rmul, rotAxisM, lookFrame, fwdOf, I3, slerpish} from './mat3';
 import {Ground, FLAT, Path, footAt, partItem, eyeGlow, makeThrow, thrownPose, spray, cable, fluidPool, CABLES} from './kit';
@@ -171,28 +171,50 @@ export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
 };
 const solvePinDist = (sp: HeavySpec) => (sp.gait ? sp.gait.dist : 0);
 
-/** Topple transform after a knee break: rotate about the broken corner's ground point, keep the hull on the ground. */
+/**
+ * Topple after a knee break: the broken corner sags, then the hull rolls onto that side (about its own long axis,
+ * nose or tail dipping toward the broken end) and comes to rest lying on its side on the ground. Everything rigidly
+ * attached to the hull follows `xf`; legs are re-solved separately (see fallenLeg).
+ */
 const toppleXf = (sp: HeavySpec, r0: HeavyRig, t: number) => {
   if (!sp.kneeBreak || t < sp.kneeBreak.t0) return null;
   const g = sp.ground ?? FLAT;
   const u = t - sp.kneeBreak.t0;
-  const d = norm3({x: sp.kneeBreak.dir.x, y: 0, z: sp.kneeBreak.dir.z});
-  const axis = norm3(cross3(UP, d));
-  const pf = r0.foot[sp.kneeBreak.leg];
-  const pivot = {x: pf.x, y: g(pf.x, pf.z), z: pf.z};
-  // sag (knee folding) then the topple accelerates; bounce on landing
-  const sag = smooth(u / 0.5) * 0.9;
-  const tu = clamp((u - 0.35) / 1.25);
-  let ang = 74 * easeIn(tu) + sag * 6;
-  if (u > 1.6) ang = 80 + Math.exp(-(u - 1.6) * 5) * Math.sin((u - 1.6) * 14) * -6 + (1 - Math.exp(-(u - 1.6) * 4)) * 2;
-  const R = rotAxisM(axis, ang);
-  // keep the hull above ground: test hull corners after rotation
-  const corners = [-1, 1].flatMap((sx) => [-1, 1].flatMap((sz) => [-0.9, 1.3].map((y) => apply(r0.hull, {x: sx * 1.45, y, z: sz * 2.35}))));
-  const rot = (p: V3) => add3(pivot, rmul(R, sub3(p, pivot)));
-  let lift = 0;
-  corners.forEach((c) => { const q = rot({x: c.x, y: c.y - sag, z: c.z}); lift = Math.max(lift, g(q.x, q.z) + 0.05 - q.y); });
-  const xf = (p: V3) => { const q = rot({x: p.x, y: p.y - sag * clamp((p.y - pivot.y) / 3), z: p.z}); return {x: q.x, y: q.y + lift, z: q.z}; };
-  return {xf, R, landT: sp.kneeBreak.t0 + 1.6, landPos: xf(r0.hull.pos)};
+  const L = LEGS[sp.kneeBreak.leg];
+  const f0 = fwdOf(r0.hull.R), right0 = rmul(r0.hull.R, {x: 1, y: 0, z: 0});
+  const sag = smooth(u / 0.45);
+  const fall = easeIn(clamp((u - 0.3) / 1.2));
+  let k = 0.12 * sag + 0.88 * fall;
+  if (u > 1.5) k = 1 + Math.exp(-(u - 1.5) * 6) * Math.sin((u - 1.5) * 16) * -0.06;
+  const roll = L.sx * 74 * k;
+  const pitch = L.sz * 11 * k;
+  const Rd = rcomp(rotAxisM(f0, roll), rotAxisM(right0, pitch));
+  const p0 = r0.hull.pos;
+  const restY = g(p0.x + right0.x * L.sx * 1.7, p0.z + right0.z * L.sx * 1.7) + 1.55;
+  const pos = {
+    x: p0.x + (right0.x * L.sx * 1.7 - f0.x * L.sz * 0.5) * smooth(k),
+    y: lerp(p0.y, restY, k),
+    z: p0.z + (right0.z * L.sx * 1.7 - f0.z * L.sz * 0.5) * smooth(k),
+  };
+  const xf = (p: V3) => add3(pos, rmul(Rd, sub3(p, p0)));
+  return {xf, R: Rd, k, landT: sp.kneeBreak.t0 + 1.5, landPos: pos};
+};
+
+/** A leg after the topple: blends from planted to a folded, hull-local pose; segment lengths kept by IK. */
+const fallenLeg = (sp: HeavySpec, r0: HeavyRig, i: number, tx: {xf: (p: V3) => V3; R: R3; k: number}) => {
+  const g = sp.ground ?? FLAT;
+  const L = LEGS[i];
+  const H = tx.xf(r0.hip[i]);
+  const R1 = rcomp(tx.R, r0.hull.R);
+  const loc = (v: V3) => add3(H, rmul(R1, v));
+  const broken = sp.kneeBreak!.leg === i;
+  const folded = loc({x: L.sx * 0.9, y: -2.6, z: L.sz * 0.9});
+  const kk = broken ? 1 : smooth(clamp((tx.k - 0.15) / 0.7));
+  let tgt = lerp3(r0.foot[i], folded, kk);
+  tgt = {...tgt, y: Math.max(tgt.y, g(tgt.x, tgt.z) + 0.25)};
+  const pole = rmul(R1, {x: L.sx, y: 0.6, z: 0});
+  const r = ik2(H, tgt, HV.upperLen, HV.lowerLen, pole);
+  return {H, K: r.mid, F: r.end, outward: rmul(R1, {x: L.sx, y: 0, z: 0})};
 };
 
 const rotPose = (P: Pose3, xf: (p: V3) => V3, R: R3): Pose3 => ({pos: xf(P.pos), R: rcomp(R, P.R)});
@@ -246,17 +268,19 @@ export const heavy = (sp: HeavySpec): Item[] => {
   if (sp.lod === 'far') {
     const base = tx ? tx.xf(r.hull.pos) : {x: r.hull.pos.x, y: r.hull.pos.y - HV.hullY, z: r.hull.pos.z};
     return [{
-      kind: 'sprite', pos: base, key: `${key}_far`,
+      kind: 'sprite', pos: base, key: `${key}_far`, n: {x: -0.6, y: 0.3, z: 0.4},
       draw: (c) => {
         const s = c.k;
         if (s * 6 < 1.5) return null;
-        const col = c.lit.fog > 0.6 ? '#5B5458' : '#3A4650';
+        const plate = shade(c.light, {base: '#C3CFD6'}, c.lit), frame = shade(c.light, {base: '#4C5D69'}, c.lit), dark = shade(c.light, {base: '#24323C'}, c.lit);
         const x = c.x, y = c.y;
+        const lw = Math.max(1, 0.45 * s);
         return (
-          <g opacity={1 - c.lit.fog * 0.5}>
-            <path d={`M${f2(x - 2.2 * s)} ${f2(y - 3.0 * s)} L${f2(x + 2.0 * s)} ${f2(y - 3.3 * s)} L${f2(x + 2.2 * s)} ${f2(y - 4.4 * s)} L${f2(x - 1.6 * s)} ${f2(y - 4.6 * s)} Z`} fill={col} />
-            {[-1.9, -0.8, 0.8, 1.9].map((dx, i) => <line key={i} x1={f2(x + dx * s * 0.9)} y1={f2(y - 3.1 * s)} x2={f2(x + dx * s)} y2={f2(y)} stroke={col} strokeWidth={f2(Math.max(1, 0.4 * s))} />)}
-            {eyeState !== 'off' && <circle cx={f2(x - 2.1 * s)} cy={f2(y - 3.2 * s)} r={f2(Math.max(0.8, 0.12 * s))} fill={eyeState === 'cyan' ? '#62D6EA' : '#FFB23F'} />}
+          <g>
+            {[-2.4, -1.1, 1.1, 2.4].map((dx, i) => <polyline key={i} points={`${f2(x + dx * s * 0.5)},${f2(y - 3.4 * s)} ${f2(x + dx * s * 1.15)},${f2(y - 2.0 * s)} ${f2(x + dx * s)},${f2(y)}`} fill="none" stroke={frame} strokeWidth={f2(lw)} strokeLinejoin="round" />)}
+            <path d={`M${f2(x - 2.4 * s)} ${f2(y - 3.3 * s)} L${f2(x + 2.3 * s)} ${f2(y - 3.5 * s)} L${f2(x + 2.4 * s)} ${f2(y - 4.9 * s)} L${f2(x - 1.8 * s)} ${f2(y - 5.1 * s)} Z`} fill={plate} />
+            <rect x={f2(x - 2.9 * s)} y={f2(y - 4.0 * s)} width={f2(0.9 * s)} height={f2(0.7 * s)} fill={dark} />
+            {eyeState !== 'off' && <circle cx={f2(x - 2.5 * s)} cy={f2(y - 3.65 * s)} r={f2(Math.max(0.8, 0.12 * s))} fill={eyeState === 'cyan' ? '#62D6EA' : '#FFB23F'} />}
           </g>
         );
       },
@@ -273,27 +297,28 @@ export const heavy = (sp: HeavySpec): Item[] => {
   items.push(partItem(HEAVY.boom, P(r.boomPose), `${key}_boom`));
   items.push(partItem(HEAVY.ram, P(r.ramPose), `${key}_ram`));
   items.push(partItem(HEAVY.launcher, P(r.launcher), `${key}_lau`));
-  r.hip.forEach((H, i) => {
-    const K = r.knee[i], F = r.foot[i];
+  r.hip.forEach((H0, i) => {
     const brokenLeg = broken && sp.kneeBreak!.leg === i;
-    const outward = add3(mul3(rmul(r.hull.R, {x: 1, y: 0, z: 0}), LEGS[i].sx), {x: 0, y: 0, z: 0});
-    items.push(partItem(HEAVY.upper, P({pos: H, R: segFrame(sub3(K, H), outward)}), `${key}_up${i}`));
+    const fl = tx ? fallenLeg(sp, r, i, tx) : null;
+    const H = fl ? fl.H : H0, K = fl ? fl.K : r.knee[i], F = fl ? fl.F : r.foot[i];
+    const outward = fl ? fl.outward : mul3(rmul(r.hull.R, {x: 1, y: 0, z: 0}), LEGS[i].sx);
+    items.push(partItem(HEAVY.upper, {pos: H, R: segFrame(sub3(K, H), outward)}, `${key}_up${i}`));
     if (brokenLeg) {
-      // the lower leg buckles backward and drops off the knee
+      // the lower leg buckles and drops off the knee (thrown from where it was at the break)
       const u = t - sp.kneeBreak!.t0;
-      const R0 = segFrame(sub3(F, K), outward);
-      const th = makeThrow(sp.kneeBreak!.t0, K, add3(norm3(sp.kneeBreak!.dir), {x: 0, y: -0.3, z: 0}), 1.6, sp.id * 71);
-      const Q = thrownPose(th, t, g, rcomp(rotAxisM(norm3(cross3(UP, sp.kneeBreak!.dir)), -40 * smooth(u / 0.4)), R0), 0.25);
+      const K0 = r.knee[i], F0 = r.foot[i];
+      const R0 = segFrame(sub3(F0, K0), mul3(rmul(r.hull.R, {x: 1, y: 0, z: 0}), LEGS[i].sx));
+      const th = makeThrow(sp.kneeBreak!.t0, K0, add3(norm3(sp.kneeBreak!.dir), {x: 0, y: -0.3, z: 0}), 1.6, sp.id * 71);
+      const Q = thrownPose(th, t, g, rcomp(rotAxisM(norm3(cross3(UP, sp.kneeBreak!.dir)), -40 * smooth(u / 0.4)), R0), 0.3);
       items.push(partItem(HEAVY.lower, Q, `${key}_lo${i}`));
       items.push(partItem(HEAVY.foot, {pos: apply(Q, {x: 0, y: -HV.lowerLen, z: 0}), R: Q.R}, `${key}_ft${i}`));
-      // cables from the shattered knee
-      const kw = tx ? tx.xf(K) : K;
-      CABLES.slice(0, 3).forEach((c, k) => items.push(cable(kw, add3(kw, {x: (k - 1) * 0.15, y: -0.6 - k * 0.1, z: 0.1}), 0.05, c, 0.04, `${key}_kc${k}`, true, 4)));
-      items.push(...spray(t, sp.kneeBreak!.t0, K, sp.kneeBreak!.dir, 22, 4, 'spark', sp.id * 13, `${key}_ks`, g, 0.7));
-      items.push(...spray(t, sp.kneeBreak!.t0 + 0.05, K, add3(sp.kneeBreak!.dir, {x: 0, y: 0.4, z: 0}), 14, 2.5, 'fluid', sp.id * 17, `${key}_kf`, g, 1.1));
+      // cables from the shattered knee (now hanging from the upper leg's end)
+      CABLES.slice(0, 3).forEach((c, k) => items.push(cable(K, add3(K, {x: (k - 1) * 0.15, y: -0.6 - k * 0.1, z: 0.1}), 0.05, c, 0.04, `${key}_kc${k}`, true, 4)));
+      items.push(...spray(t, sp.kneeBreak!.t0, K0, sp.kneeBreak!.dir, 22, 4, 'spark', sp.id * 13, `${key}_ks`, g, 0.7));
+      items.push(...spray(t, sp.kneeBreak!.t0 + 0.05, K0, add3(sp.kneeBreak!.dir, {x: 0, y: 0.4, z: 0}), 14, 2.5, 'fluid', sp.id * 17, `${key}_kf`, g, 1.1));
     } else {
-      items.push(partItem(HEAVY.lower, P({pos: K, R: segFrame(sub3(F, K), outward)}), `${key}_lo${i}`));
-      items.push(partItem(HEAVY.foot, P({pos: F, R: rotHeading(r.heading)}), `${key}_ft${i}`));
+      items.push(partItem(HEAVY.lower, {pos: K, R: segFrame(sub3(F, K), outward)}, `${key}_lo${i}`));
+      items.push(partItem(HEAVY.foot, fl ? {pos: F, R: segFrame(sub3(F, K), outward)} : {pos: F, R: rotHeading(r.heading)}, `${key}_ft${i}`));
     }
   });
   const eyeW = (tx ? tx.xf : (p: V3) => p)(apply(r.head, {x: 0, y: 0.01, z: -0.5}));

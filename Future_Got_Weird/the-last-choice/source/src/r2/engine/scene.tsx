@@ -4,6 +4,19 @@
 //
 // Painter's order: every face and every sprite is an item with a depth (view-space z, metres). Larger depth draws
 // first. Large surfaces should be subdivided (terrain cells, facade bays) so the order stays right next to figures.
+//
+// DEPTH CONTRACT FOR FIGURES (characters, 2D machines, props drawn as sprites):
+//   - Put a figure's sprite `pos` at its FOOT point on the ground (x, groundH(x, z), z). Its painter depth is that point.
+//   - Ground meshes use sortKey 'max' (a cell's farthest corner) and a small negative bias, and flat streets are
+//     forced first (bias −1e5), so the cell a figure stands on — on the street, the crater floor or the ridge slope — is
+//     always drawn BEFORE the figure. Terrain that is genuinely in front (the crater's near rim, the ridge crest seen
+//     from below) still draws after and hides the feet, which is correct.
+//   - Objects (slabs, wrecks, walls, machines as meshes) sort by face mean depth; a figure standing behind a slab is
+//     covered by it, one in front covers it.
+//   - Two figures in contact (a carry, a grapple) should be ONE sprite that draws both in the right internal order, or
+//     use `bias` (metres, + = drawn later) to force who is in front.
+//   - Painted marks (Overlay: windows, decals) are drawn inside their face's own item and never sort apart from it.
+//   - A MeshItem with `fn` passes index −1 for overlay points and the culling centre.
 import React from 'react';
 import {V3, add3, sub3, mul3, dot3, cross3, norm3, len3, clamp} from '../../kit/math';
 import {View, toView, viewToScreen, SP} from './camera';

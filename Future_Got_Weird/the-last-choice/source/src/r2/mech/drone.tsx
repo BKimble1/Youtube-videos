@@ -3,7 +3,7 @@
 // persists) or be smashed apart (pieces thrown). Pose is a pure function of time and the caller's position/velocity.
 import React from 'react';
 import {V3, add3, sub3, mul3, norm3, len3, clamp, lerp, rnd, noise, smooth, easeIn, f2} from '../../kit/math';
-import {Item, project, toView} from '../engine';
+import {Item, project, toView, shade} from '../engine';
 import {DRONE, DRONE_ROTORS, DEBRIS} from './parts';
 import {Pose3, rotHeading, rcomp, euler, lookFrame, rmul, apply, rotAxisM, segFrame, I3} from './mat3';
 import {Ground, FLAT, partItem, partItemS, eyeGlow, beam, makeThrow, thrownPose, spray} from './kit';
@@ -108,9 +108,9 @@ export const drone = (sp: DroneSpec): Item[] => {
       draw: (c) => {
         const w = 0.75 * sc * c.k;
         if (w < 0.6) return null;
-        const col = c.lit.fog > 0.6 ? '#5B5458' : '#3D4A54';
+        const col = shade(c.light, {base: '#4C5D69'}, c.lit);
         return (
-          <g opacity={1 - c.lit.fog * 0.5}>
+          <g>
             <rect x={f2(c.x - w / 2)} y={f2(c.y - w * 0.07)} width={f2(w)} height={f2(Math.max(0.8, w * 0.14))} rx={f2(w * 0.05)} fill={col} />
             {eyeState !== 'off' && <circle cx={f2(c.x)} cy={f2(c.y + w * 0.1)} r={f2(Math.max(0.6, w * 0.06))} fill={eyeState === 'cyan' ? '#62D6EA' : '#FFB23F'} />}
           </g>

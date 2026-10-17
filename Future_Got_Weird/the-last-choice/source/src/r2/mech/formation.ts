@@ -71,9 +71,11 @@ export const column = (path: Path, count: number, lanes: number, laneGap: number
     for (let i = 0; i < count; i++) {
       const lane = i % lanes, rank = Math.floor(i / lanes);
       const id = idBase + seed * 1000 + i;
-      const jit = (rnd(id * 3) - 0.5) * 0.4;
+      // irregular spacing: units keep station loosely (no pasted grid); a few places are empty (losses en route)
+      if (rnd(id * 13 + 5) < 0.06) continue;
+      const jit = (rnd(id * 3) - 0.5) * spacing * 0.45;
       const along = d0 - rank * spacing + jit;
-      const latOff = (lane - (lanes - 1) / 2) * laneGap + (rnd(id * 5) - 0.5) * 0.3;
+      const latOff = (lane - (lanes - 1) / 2) * laneGap + (rnd(id * 5) - 0.5) * laneGap * 0.35;
       const lp: Path = (d) => {
         const q = path(d);
         const h = (q.heading * Math.PI) / 180;
@@ -91,10 +93,20 @@ export const column = (path: Path, count: number, lanes: number, laneGap: number
  * Re-form from slots A to slots B: unit i starts walking at t0 + ripple·order (order by bearing around `pivot` so
  * paths don't cross), takes `dur`-ish seconds at its own pace, then turns to face B's heading.
  */
-export const reformSlots = (A: Slot[], B: Slot[], t0: number, ripple: number, dur: number, pivot: V3, speed = 1.6): Formation => {
+export const reformSlots = (A: Slot[], B: Slot[], t0: number, ripple: number, dur: number, pivot: V3, speed = 1.6, depth = 3): Formation => {
   const bearing = (p: V3) => Math.atan2(p.x - pivot.x, -(p.z - pivot.z));
-  const ai = A.map((s, i) => ({s, i, b: bearing(s.pos)})).sort((p, q) => p.b - q.b);
-  const bi = B.map((s, i) => ({s, i, b: bearing(s.pos)})).sort((p, q) => p.b - q.b);
+  const rad = (p: V3) => Math.hypot(p.x - pivot.x, p.z - pivot.z);
+  // sort by bearing, then within each window of `depth` (one per rank/row) by distance, so ranks keep their order
+  const order = (L: Slot[]) => {
+    const o = L.map((s, i) => ({s, i, b: bearing(s.pos)})).sort((p, q) => p.b - q.b);
+    for (let k = 0; k < o.length; k += depth) {
+      const w = o.slice(k, k + depth).sort((p, q) => rad(p.s.pos) - rad(q.s.pos));
+      o.splice(k, w.length, ...w);
+    }
+    return o;
+  };
+  const ai = order(A);
+  const bi = order(B);
   const n = Math.min(ai.length, bi.length);
   const pairs = Array.from({length: n}, (_, k) => {
     const a = ai[Math.floor((k * ai.length) / n)].s, b = bi[Math.floor((k * bi.length) / n)].s;

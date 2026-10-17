@@ -33,6 +33,6 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="R2EngineLab" component={EngineLab} durationInFrames={120} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
     <Composition id="R2SetLab" component={SetLab} durationInFrames={300} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
     <Composition id="R2FxLab" component={FxLab} durationInFrames={150} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
-    <Composition id="R2MechLab" component={MechLab} durationInFrames={150} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
+    <Composition id="R2MechLab" component={MechLab} durationInFrames={300} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
   </>
 );

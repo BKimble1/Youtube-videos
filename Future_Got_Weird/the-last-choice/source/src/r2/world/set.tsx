@@ -13,7 +13,7 @@ import {V3, rnd, add3, mul3, norm3, rotAxis, rad} from '../../kit/math';
 import {View, Item, MeshItem, Prepped, prep, box, merge, xfMesh, Mesh, Face, mix as mixC} from '../engine';
 import {PLAN} from './plan';
 import {groundH, CLEAR_ZONES, isClear, noise2, FOOT} from './ground';
-import {groundGrid, Decal, blobXZ, crackXZ, rebarAt, polyline3} from './geom';
+import {groundGrid, Decal, blobXZ, crackXZ, rebarAt, polyline3, chipsXZ} from './geom';
 import {CITY, Bldg, bldgMesh, lodFor, coneMesh} from './city';
 import {vanMesh, vanInteriorMesh, VAN_XF, radioMesh, radioFn, RADIO, deathSlabMesh, carMesh, busMesh, girderMesh, columnMeshes, brokenSlab, chunkMesh, beam} from './props';
 import {M} from '../timing';
@@ -25,21 +25,21 @@ const ridgeMat = (x: number, z: number, slope: number) => {
   const h = groundH(x, z);
   const az = Math.abs(z);
   if (h > 0.35 || x < -8) {
-    const n = noise2(x * 0.32, z * 0.32, 71) + 0.5 * noise2(x * 0.9, z * 0.9, 72);
-    if (slope > 34) return 'concreteDark';
-    if (n > 0.55) return 'concrete';
-    if (n < -0.5) return 'rubbleDark';
-    if (n > 0.2 && h > 1.5) return 'dust';
+    const n = noise2(x * 0.12, z * 0.12, 71) + 0.35 * noise2(x * 0.35, z * 0.35, 72);
+    if (slope > 38) return 'concreteDark';
+    if (n > 0.6) return 'concrete';
+    if (n < -0.6) return 'rubbleDark';
+    if (n > 0.25 && h > 1.5) return 'dust';
     return 'rubble';
   }
-  if (x > 9 && az < PLAN.avenue.roadZ) return noise2(x * 0.2, z * 0.2, 73) > 0.45 ? 'asphaltBroken' : 'asphalt';
+  if (x > 9 && az < PLAN.avenue.roadZ) return noise2(x * 0.08, z * 0.08, 73) > 0.5 ? 'asphaltBroken' : 'asphalt';
   if (x > 9 && az < PLAN.avenue.walkZ) return 'sidewalk';
   return noise2(x * 0.3, z * 0.3, 74) > 0.3 ? 'rubbleDark' : 'dirt';
 };
 const craterMat = (x: number, z: number, slope: number) => {
   const r = Math.hypot(x - PLAN.crater.center.x, z - PLAN.crater.center.z) / PLAN.crater.radius;
-  if (r < 0.75) return noise2(x * 0.4, z * 0.4, 81) > 0.2 ? 'scorched' : 'dirt';
-  if (r < 1.2) return slope > 25 ? 'rubbleDark' : noise2(x * 0.5, z * 0.5, 82) > 0 ? 'asphaltBroken' : 'rubble';
+  if (r < 0.78) return noise2(x * 0.12, z * 0.12, 81) > 0.35 ? 'dirt' : 'scorched';
+  if (r < 1.18) return slope > 30 ? 'rubbleDark' : 'asphaltBroken';
   if (Math.abs(z) > PLAN.avenue.roadZ) return 'sidewalk';
   return 'asphalt';
 };
@@ -167,6 +167,9 @@ const ridgeDecals = (): Decal[] => {
   // scorch on the rubble, dust fans, the burial hollow where the Director lies at the start
   for (let i = 0; i < 9; i++) d.push({pts: blobXZ(-6 + rnd(i * 41) * 16, -16 + rnd(i * 43) * 32, 0.8 + rnd(i * 47) * 1.6, i + 200, 10, 0.5), mat: rnd(i) > 0.5 ? 'scorch' : 'dust'});
   d.push({pts: blobXZ(PLAN.directorBuried.x, PLAN.directorBuried.z, 1.3, 222, 12, 0.35, 1.2, 0.8), mat: 'rubbleDark'});
+  // close-shot texture: chips of light dust and dark grit over the crest, the foot and the burial spot
+  d.push(...chipsXZ(-8, 12, -16, 16, 1100, 1, ['chipLight', 'chipDark', 'chipMid', 'chipDark']));
+  d.push(...chipsXZ(PLAN.deathPos.x - 3, PLAN.deathPos.x + 3, PLAN.deathPos.z - 3, PLAN.deathPos.z + 3, 260, 2, ['chipLight', 'chipDark', 'chipMid']));
   return d;
 };
 
@@ -183,6 +186,7 @@ const buildStatic = (): Static[] => {
   const C = PLAN.crater;
   const craterDec: Decal[] = [];
   for (let i = 0; i < 7; i++) craterDec.push({pts: blobXZ(C.center.x + (rnd(i * 3) - 0.5) * 18, C.center.z + (rnd(i * 5) - 0.5) * 18, 1 + rnd(i * 7) * 2, i + 300, 10, 0.5), mat: 'scorch'});
+  craterDec.push(...chipsXZ(C.center.x - 20, C.center.x + 20, C.center.z - 19, C.center.z + 19, 800, 3, ['chipLight', 'chipDark', 'chipMid']));
   for (let x = 40; x < 86; x += 11.5) for (let z = -19; z < 19; z += 9.5) {
     out.push(meshOf(prep(groundGrid(x, Math.min(86, x + 11.5), z, Math.min(19, z + 9.5), 1.45, 1.45, groundH, craterMat, craterDec, {sortKey: 'max', bias: -0.15, crease: 42})), `crater_${x}_${z}`));
   }
@@ -402,29 +406,43 @@ const getStatic = () => {
 
 // ------------------------------------------------------------------ the failing tower
 const TW = PLAN.failingTower;
-const HINGE = 0.62;
+const HINGE = 0.6;
 let TOWER: {lower: Prepped; upper: Prepped; stump: Prepped} | null = null;
+/** A distinctive setback tower: a broad base, two setbacks, a crown and a spire (so it reads at 700 m). */
+const towerBody = (id: string, y0: number, y1: number): Mesh => {
+  const W2 = TW.width / 2;
+  const tiers: [number, number, number][] = [[0, TW.height * 0.48, 1], [TW.height * 0.48, TW.height * 0.74, 0.78], [TW.height * 0.74, TW.height * 0.92, 0.58]];
+  const parts: Mesh[] = [];
+  tiers.forEach(([a, b, k], i) => {
+    const lo = Math.max(a, y0), hi = Math.min(b, y1);
+    if (hi <= lo + 0.5) return;
+    const w = W2 * k;
+    const bl: Bldg = {id: `${id}${i}`, x0: -w, x1: w, z0: -w, z1: w, h: hi - lo, kind: 'limestone', front: 'W', seed: 77 + i, zone: 'far', storey: 4};
+    const m = bldgMesh(bl, 1);
+    parts.push(xfMesh({verts: m.verts, faces: m.faces}, {pos: {x: 0, y: lo - y0, z: 0}}));
+  });
+  if (y1 >= TW.height * 0.92) parts.push(coneMesh(W2 * 0.3, TW.height * 0.12, 6, 'steel', {x: 0, y: TW.height * 0.92 - y0, z: 0}));
+  const m = merge(...parts);
+  m.crease = 30;
+  return m;
+};
 const towerMeshes = () => {
   if (TOWER) return TOWER;
-  const b: Bldg = {id: 'TOWER', x0: -TW.width / 2, x1: TW.width / 2, z0: -TW.width / 2, z1: TW.width / 2, h: TW.height, kind: 'glass', front: 'W', seed: 77, zone: 'far', storey: 4};
   const hingeY = TW.height * HINGE;
-  const lower = prep(xfMesh(meshOfBldg({...b, h: hingeY}), {pos: TW.base}));
-  const up = meshOfBldg({...b, id: 'TOWERU', h: TW.height - hingeY});
-  const spire = coneMesh(4, 26, 6, 'steel', {x: 0, y: TW.height - hingeY, z: 0});
-  const upper = prep(merge(up, spire));
-  const stump = prep(xfMesh(meshOfBldg({...b, id: 'TOWERS', h: TW.height * 0.42, crown: {keep: [[0.1, 0.45], [0.6, 0.8]], low: TW.height * 0.32}}), {pos: TW.base}));
+  const lower = prep(xfMesh(towerBody('TL', 0, hingeY), {pos: TW.base}));
+  const upper = prep(towerBody('TU', hingeY, TW.height * 1.05));
+  const stumpH = TW.height * 0.4;
+  const sb: Bldg = {id: 'TOWERS', x0: -TW.width / 2, x1: TW.width / 2, z0: -TW.width / 2, z1: TW.width / 2, h: stumpH, kind: 'limestone', front: 'W', seed: 79, zone: 'far', storey: 4, crown: {keep: [[0.05, 0.4], [0.62, 0.85]], low: stumpH * 0.72}};
+  const st = bldgMesh(sb, 1);
+  const stump = prep(xfMesh({verts: st.verts, faces: st.faces, crease: 30}, {pos: TW.base}));
   TOWER = {lower, upper, stump};
   return TOWER;
-};
-const meshOfBldg = (b: Bldg): Mesh => {
-  const p = bldgMesh(b, 1);
-  return {verts: p.verts, faces: p.faces, crease: p.crease};
 };
 /** Collapse progress: tilt (deg) and drop (m) of the upper section, how far the lower section has crumbled (m). */
 export const towerState = (t: number) => {
   const tc = Math.max(0, t - M.LOW_HIT);
-  const tilt = Math.min(38, 0.5 * 1.25 * tc * tc + 1.2 * tc);
-  const drop = Math.min(TW.height * 0.5, 0.5 * 2.6 * tc * tc);
+  const tilt = Math.min(42, 4 * tc + 1.6 * tc * tc);
+  const drop = Math.min(TW.height * 0.5, 2 * tc * tc);
   return {tc, tilt, drop, collapsed: t > M.TITLE_IN + 0.2};
 };
 const towerItems = (t: number, mode: 'auto' | 'intact' | 'collapsed'): Item[] => {
