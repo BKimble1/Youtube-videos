@@ -40,8 +40,34 @@ const THROW_T = EV3.blast + 0.01;
  * first heading, ≤ 300°/s, half before and half after the run's nominal start); a scripted move ('fn': thrown, a fall)
  * and a stand after one take the body's heading, root and feet over from where the previous segment left them.
  */
+/** a polyline with each interior corner bevelled (≤0.6 m back along each side, the middle pulled toward the corner) */
+function roundPath(pts: XZ[]): XZ[] {
+  if (pts.length < 3) return pts;
+  const out: XZ[] = [pts[0]];
+  for (let i = 1; i < pts.length - 1; i++) {
+    const a = pts[i - 1], v = pts[i], b = pts[i + 1];
+    const la = Math.hypot(v.x - a.x, v.z - a.z), lb = Math.hypot(b.x - v.x, b.z - v.z);
+    if (la < 1e-3 || lb < 1e-3) { out.push(v); continue; }
+    const ca = Math.min(0.6, la * 0.3), cb = Math.min(0.6, lb * 0.3);
+    const A = {x: v.x - ((v.x - a.x) / la) * ca, z: v.z - ((v.z - a.z) / la) * ca}, B = {x: v.x + ((b.x - v.x) / lb) * cb, z: v.z + ((b.z - v.z) / lb) * cb};
+    out.push(A, {x: (A.x + B.x) * 0.25 + v.x * 0.5, z: (A.z + B.z) * 0.25 + v.z * 0.5}, B);
+  }
+  out.push(pts[pts.length - 1]);
+  return out;
+}
 function smoothSegs(segs: Seg[]): Seg[] {
   const out: Seg[] = segs.map((s) => (s.kind === 'stand' ? {...s, root: s.root.map((k) => [...k] as KR)} : {...s}));
+  // no turn on the spot faster than 360°/s (a hold's last key moves back to give the turn its time)
+  out.forEach((s) => {
+    if (s.kind !== 'stand') return;
+    for (let j = s.root.length - 1; j >= 1; j--) {
+      const a = s.root[j - 1], b = s.root[j], dh = Math.abs(wrapD(b[3] - a[3]));
+      const need = dh / 360;
+      if (b[0] - a[0] >= need || j < 2) continue;
+      const lo = s.root[j - 2][0] + 0.05;
+      if (a[1] === s.root[j - 2][1] && a[2] === s.root[j - 2][2] && Math.abs(wrapD(a[3] - s.root[j - 2][3])) < 1) a[0] = Math.max(lo, b[0] - need);
+    }
+  });
   for (let k = 1; k < out.length; k++) {
     const s = out[k], p = out[k - 1];
     if (s.kind !== 'run' || p.kind !== 'stand') continue;
@@ -57,6 +83,14 @@ function smoothSegs(segs: Seg[]): Seg[] {
     p.root = [...keep, [t0, at0.p.x, at0.p.z, at0.h], [t1, s.path[0].x, s.path[0].z, at0.h + wrapD(hR - at0.h)]];
     s.T0 = t1;
   }
+  // fast runs take longer strides (a sprint is not a pitter-patter: ≈3.5 steps/s at 7 m/s), corners are rounded
+  out.forEach((s) => {
+    if (s.kind !== 'run') return;
+    s.path = roundPath(s.path);
+    const vc = cruise(s.T0, s.T1, pathLen(s.path), s.A ?? 1.0, s.D ?? 0.6);
+    const k = clamp(vc / 3.6, 1, 1.7);
+    if (k > 1.02) s.gait = {...s.gait, stride: s.gait.stride * k, duty: Math.min(s.gait.duty, 0.9 / (s.gait.stride * k)), lift: s.gait.lift * (0.8 + 0.2 * k)};
+  });
   const res: Seg[] = [];
   out.forEach((s, k) => {
     const prev = res.slice();
@@ -777,8 +811,23 @@ const rawAt = (role: Role2, T: number): CrewOut => {
  * The Crew at T: D2's own spec blended out over the first 0.45 s (the cut from D2-7 is exact), D4's own spec blended in
  * over the last 0.55 s (the cut into D4-1a is exact).
  */
+/** getting up: the moment a body leaves its 'down' pose (fk legs) for its feet (world footholds) — over 0.22 s the
+ *  pose blends from the last down frame and the feet from where its ankles were */
+const RISE: Partial<Record<Role2, number>> = {director: DIR_UP + 0.85, runner: RUN_DOWN.t1, tether: EV3.tRun, flares: FLR_UP + 0.55, decoy: DEC_UP + 0.8};
+const RISE_W = 0.22;
+const riseFix = (role: Role2, T: number, o: CrewOut): CrewOut => {
+  const R = RISE[role];
+  if (R === undefined || T < R || T >= R + RISE_W) return o;
+  const s0 = rawAt(role, R - 1e-3).spec, p0 = s0.pose, p1 = o.spec.pose;
+  if (!p0 || !p1 || typeof p0 === 'function' || typeof p1 === 'function') return o;
+  const w = smooth((T - R) / RISE_W);
+  const r0 = figureRig(SOLVE_VIEW, s0);
+  const ank = (i: 0 | 1): V3 => { const a = r0.W(r0.rig.ankle[i]); return {x: a.x, y: Math.max(G(a.x, a.z), a.y - 0.04), z: a.z}; };
+  const wf = o.spec.world ?? {};
+  return {...o, spec: {...o.spec, pose: blendPose(p0, p1, w), world: {...wf, ...(wf.footL ? {footL: mixFoot(ank(0), wf.footL, w)} : {}), ...(wf.footR ? {footR: mixFoot(ank(1), wf.footR, w)} : {})}}};
+};
 export const crewAt = (role: Role2, T: number): CrewOut => {
-  const o = rawAt(role, T);
+  const o = riseFix(role, T, rawAt(role, T));
   if (T < M.P3 + 0.45) {
     const d2 = d2CrewAt(role as D2Role, T).spec;
     return {...o, spec: towardSpec(d2, o.spec, smooth((T - M.P3) / 0.45))};
@@ -793,7 +842,7 @@ export const crewAt = (role: Role2, T: number): CrewOut => {
 // ------------------------------------------------------------------ footfalls (dust and sound where running feet land)
 const ALL_SEGS: Record<string, Seg[]> = {director: DIR_SEGS, breaker: BRK_SEGS, tether: TTH_SEGS, runner: RUN_SEGS, drone: PIL_SEGS, flares: FLR_SEGS, decoy: DEC_SEGS};
 import {gaitW} from '../../rig/gait';
-import {runDist, runSpeed, pathLen} from '../D4/motion';
+import {runDist, runSpeed, pathLen, cruise} from '../D4/motion';
 export type Footfall = {t: number; pos: V3; key: string; speed: number};
 export const crewFootfalls = (T: number, winS = 1.2): Footfall[] => {
   const out: Footfall[] = [];
