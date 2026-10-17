@@ -6,7 +6,8 @@ import {Stage, useShotTime, camPath, CamKey} from '../../film/stage';
 import {V3} from '../../../kit/math';
 import {d4Items, d4FxAt, D4Opts} from './battle';
 import {crewAt} from './crew';
-import {SH} from './times';
+import {SH, EV} from './times';
+const M_STRIKE = EV.strike;
 import {G} from './motion';
 
 const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
@@ -44,8 +45,8 @@ export const D4_1b = shot(SH.d41b, [
 // over backward onto the street.
 export const D4_2a = shot(SH.d42a, [
   {t: 0, pos: g(22.4, 12.6, 0.8), target: g(20.0, 7.8, 1.15), fov: 42},
-  {t: 1.0, pos: g(21.8, 12.4, 0.8), target: g(18.6, 7.9, 1.05), fov: 41},
-  {t: SH.d42b - SH.d42a, pos: g(21.4, 12.2, 0.85), target: g(18.0, 7.7, 0.75), fov: 40},
+  {t: 0.95, pos: g(21.6, 12.2, 0.85), target: g(17.3, 8.0, 1.1), fov: 38},
+  {t: SH.d42b - SH.d42a, pos: g(21.3, 12.0, 0.85), target: g(17.6, 7.75, 0.7), fov: 38},
 ], (T) => ({full: 30, tweak: {runner: {anchor: chest('runner', T, 1.0)}}}), 0.02);
 
 // ------------------------------------------------------------------ D4-2b (156.70–158.50): the tether operator disarmed
@@ -120,26 +121,44 @@ export const D4_6b = shot(SH.d46b, [
   {t: SH.d47 - SH.d46b, pos: g(15.1, 5.4, 1.5), target: g(12.4, 4.6, 1.5), fov: 34},
 ], (T) => ({full: 30, tweak: {director: {anchor: chest('director', T, 1.5)}}}), 0.012);
 
-// ------------------------------------------------------------------ D4-7 (175.04–177.76): the ram rises at her; he runs
-export const D4_7 = shot(SH.d47, [
-  {t: 0, pos: g(14.0, 14.5, 6.0), target: g(11.2, 3.6, 2.0), fov: 46},
-  {t: SH.d48 - SH.d47, pos: g(13.6, 14.0, 5.6), target: g(10.6, 3.4, 1.8), fov: 44},
-], (T) => ({full: 34, tweak: {director: {anchor: chest('director', T, 1.2)}}}), 0.016);
+// ------------------------------------------------------------------ D4-7a (175.04–175.85): the threat aimed at HER
+// Low, from beyond the slab's south end, along the van's side: she sits against the van in the left mid-ground, heavy 2
+// looms in over her (screen right), its amber eye on her. He is just out of frame right.
+export const D4_7a = shot(SH.d47, [
+  {t: 0, pos: g(6.3, 4.95, 0.85), target: g(11.6, 2.13, 2.2), fov: 48},
+  {t: SH.d47b - SH.d47, pos: g(6.33, 4.94, 0.85), target: g(11.6, 2.13, 2.3), fov: 48},
+], (T) => ({full: 34, tweak: {drone: {anchor: chest('drone', T, 0.5)}}}), 0.012);
+// ------------------------------------------------------------------ D4-7b (175.85–176.45): he sees it
+// Close on his face from her direction: looking at the heavy, his head snaps round to her (175.98), the body follows,
+// and he launches toward the lens.
+export const D4_7b = shot(SH.d47b, [
+  {t: 0, pos: g(11.79, 5.85, 1.62), target: g(13.0, 6.58, 1.55), fov: 30},
+  {t: SH.d47c - SH.d47b, pos: g(11.76, 5.83, 1.6), target: g(12.95, 6.5, 1.5), fov: 31},
+], (T) => ({full: 30, near: true, tweak: {director: {anchor: chest('director', T, 1.45)}}}), 0.014);
+// ------------------------------------------------------------------ D4-7c (176.45–177.45): the sprint
+// Back on 7a's lens: the ram rears up over her; he sprints in from the right across the frame, plants between the
+// heavy and her, the plate up.
+export const D4_7c = shot(SH.d47c, [
+  {t: 0, pos: g(6.34, 4.94, 0.85), target: g(11.95, 2.83, 2.35), fov: 48},
+  {t: SH.d48 - SH.d47c, pos: g(6.4, 4.92, 0.86), target: g(11.9, 2.75, 2.6), fov: 48},
+], (T) => ({full: 34, tweak: {drone: {anchor: chest('drone', T, 0.5)}, director: {anchor: chest('director', T, 1.1)}}}), 0.012);
 
-// ------------------------------------------------------------------ D4-8 (177.76–179.30): STRIKE
-// From behind the slab's south end, low, looking east along the ram: it comes in from the right at his raised plate,
-// the plate bursts, and he is thrown back toward us into the slab (left foreground); the drone pilot beside the van.
+// ------------------------------------------------------------------ D4-8 (177.45–179.30): STRIKE, side-on
+// Profile from the south (the ram's side is screen right, the slab screen left, the van behind): he is planted with
+// the plate up in front of her; the ram comes down from the right onto the plate (177.76): flash, the plate bursts,
+// he is thrown left — back into the slab — and the lens eases left with him.
 export const D4_8 = shot(SH.d48, [
-  {t: 0, pos: g(4.2, 6.3, 1.45), target: g(12.0, 2.6, 1.8), fov: 48},
-  {t: 0.5, pos: g(4.25, 6.25, 1.4), target: g(10.3, 3.0, 1.35), fov: 48},
-  {t: SH.d49a - SH.d48, pos: g(4.35, 6.2, 1.35), target: g(8.7, 3.2, 1.0), fov: 46},
-], (T) => ({full: 34, near: true, tweak: {director: {anchor: chest('director', T, 1.0)}, drone: {anchor: chest('drone', T, 0.6)}}}), 0.012);
+  {t: 0, pos: g(8.4, 7.2, 1.4), target: g(8.65, 3.1, 1.85), fov: 52},
+  {t: M_STRIKE - SH.d48 + 0.12, pos: g(8.38, 7.2, 1.4), target: g(8.45, 3.15, 1.6), fov: 52},
+  {t: SH.d49a - SH.d48, pos: g(8.15, 7.15, 1.3), target: g(7.35, 3.3, 1.15), fov: 48},
+], (T) => ({full: 34, near: true, tweak: {director: {anchor: chest('director', T, 1.0)}, drone: {anchor: chest('drone', T, 0.5)}}}), 0.01);
 
-// ------------------------------------------------------------------ D4-9a (179.30–180.80): he slides down beside the van
+// ------------------------------------------------------------------ D4-9a (179.30–180.80): he slides down the slab
+// From in front of him (east-south-east, low): the slab behind him, he slides down it; the drone pilot at the right.
 export const D4_9a = shot(SH.d49a, [
-  {t: 0, pos: g(8.3, 6.6, 1.0), target: g(7.0, 3.1, 0.9), fov: 44},
-  {t: SH.d49b - SH.d49a, pos: g(8.2, 6.4, 0.95), target: g(6.95, 3.15, 0.75), fov: 42},
-], (T) => ({full: 30, near: true, tweak: {director: {anchor: chest('director', T, 0.8)}}}), 0.01);
+  {t: 0, pos: g(9.0, 4.6, 1.0), target: g(6.9, 3.35, 0.85), fov: 42},
+  {t: SH.d49b - SH.d49a, pos: g(8.9, 4.55, 0.95), target: g(6.85, 3.3, 0.65), fov: 40},
+], (T) => ({full: 30, near: true, tweak: {director: {anchor: chest('director', T, 0.8)}, drone: {anchor: chest('drone', T, 0.5)}}}), 0.01);
 
 // ------------------------------------------------------------------ D4-9b (180.80–183.30): the others held
 // From beside the van's front, looking south across them: each of them straining toward him (screen right) is

@@ -108,7 +108,8 @@ const blockFeet = (() => {
 const RUN2: XZ[] = [{x: BLOCK_ROOT[5][1], z: BLOCK_ROOT[5][2]}, {x: 24.5, z: 2.2}, {x: 20.0, z: 2.75}, {x: 17.2, z: 2.6}, {x: 14.0, z: 1.6}, {x: GATHER.director.x, z: GATHER.director.z}];
 const CHARGE1: XZ[] = [{x: GATHER.director.x + 0.05, z: GATHER.director.z + 0.05}, {x: 12.75, z: -1.0}, {x: 12.98, z: -2.15}];
 const CHARGE2: XZ[] = [{x: 13.1, z: -2.4}, {x: 14.6, z: -2.5}, {x: 16.0, z: -2.75}];
-const SPRINT: XZ[] = [{x: 11.8, z: 6.3}, {x: 10.6, z: 4.75}, {x: 9.5, z: 3.55}];
+// (from 1.5 m further out than before, past the decoy maker and round the van's corner: the sprint must cross the frame)
+const SPRINT: XZ[] = [{x: 13.0, z: 6.6}, {x: 11.3, z: 5.0}, {x: 9.5, z: 3.55}];
 /** his braced stance at the plant (left foot toward the heavy) */
 const PLANT_FEET = (() => {
   const f = fwdOf(PLANT.h), r = rightOf(PLANT.h);
@@ -127,9 +128,9 @@ const DIR_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.14, root: [
     [165.04, 16.0, -2.75, runEnd(CHARGE2).h], [165.35, 16.2, -2.85, 85], [166.0, 16.4, -2.75, 75], [167.3, 16.4, -2.75, 72], [168.1, 16.4, -2.9, 215],
     [169.0, 15.0, -2.45, 250], [169.9, 14.1, -1.0, 210], [170.6, 14.0, 0.6, 200], [171.4, 14.0, 0.9, 300], [172.4, 13.8, 1.5, 15], [173.4, 13.5, 2.9, 120], [174.6, 12.3, 5.2, 190],
-    [175.3, 11.8, 6.3, 72], [175.85, 11.8, 6.3, 74], [176.3, 11.78, 6.27, headingTo(SPRINT[0], SPRINT[1])],
+    [175.5, 12.95, 6.52, 80], [EV.dirSees, 13.0, 6.6, 76], [EV.dirSprint, 12.98, 6.58, headingTo(SPRINT[0], SPRINT[1])],
   ]},
-  {kind: 'run', path: SPRINT, T0: 176.3, T1: 177.42, gait: GAITS.sprint, A: 0.3, D: 0.25},
+  {kind: 'run', path: SPRINT, T0: EV.dirSprint, T1: EV.dirPlant, gait: GAITS.sprint, A: 0.3, D: 0.25},
   {kind: 'stand', root: [[177.42, SPRINT[2].x, SPRINT[2].z, runEnd(SPRINT).h], [177.66, PLANT.x, PLANT.z, PLANT.h], [178.0, PLANT.x, PLANT.z, PLANT.h]], feet: PLANT_FEET},
 ];
 /** the plate's world centre for a body and a guard (as marks.plateAt) */
@@ -164,8 +165,8 @@ const dirLook = (T: number): V3 | null => {
   if (T > 170.5 && T < 171.6) return {x: 9, y: 3.5, z: -16}; // north: units on the ridge's end
   if (T > 171.6 && T < 172.6) return {x: 2.5, y: 5.0, z: -4}; // west: on the crest behind the van
   if (T > 172.6 && T < 173.7) return {x: 6, y: 3.0, z: 18}; // south
-  if (T > 173.7 && T < 175.75) return heavyAttach(heavy2At(T)).eye; // the heavy comes on
-  if (T > 175.75 && T < 176.4) return ON(PILOT_DOWN, 0.7); // where its eye goes: her
+  if (T > 173.7 && T < EV.dirSees) return heavyAttach(heavy2At(T)).eye; // the heavy comes on
+  if (T >= EV.dirSees && T < 176.5) return ON(PILOT_DOWN, 0.7); // where its eye goes: her (his head snaps round)
   if (T > 177.3 && T < 177.8) return heavyAttach(heavy2At(T)).ramTip;
   return null;
 };
@@ -254,7 +255,10 @@ export const dirSeatSpec = (T: number, anchor?: V3): FigSpec => {
   if (T >= 186.0) return s;
   const p = s.pose as Pose;
   const bb = slumpBreath(T);
-  return {...s, key: 'd4dir', pose: {...p, bodyPitch: -(27 + bb * 1.3), head: {...(p.head ?? {}), pitch: 24 - bb * 2.2}, face: {...(p.face ?? {}), open: clamp(0.14 + 0.2 * bb, 0, 0.6), mouth: 'breath'}}};
+  // (until the wide D4-10 hides his face: hurt, not E/F's quiet breath — its small open mouth reads as a smile here)
+  const hurt = T < 185.5;
+  return {...s, key: 'd4dir', pose: {...p, bodyPitch: -(27 + bb * 1.3), head: {...(p.head ?? {}), pitch: 24 - bb * 2.2},
+    face: {...(p.face ?? {}), open: clamp(0.14 + 0.2 * bb, 0, 0.6), mouth: hurt ? 'sad' : 'breath', ...(hurt ? {worry: 0.85, brows: 0.55} : {})}}};
 };
 const dirSeat = (T: number): CrewOut => ({spec: dirSeatSpec(T), body: {pos: DIRECTOR_SEAT, heading: TB_CREW.director.heading}});
 /** against the slab (177.99–179.3): leaning back on it, knees going, head down, right hand to his left side */
@@ -266,7 +270,7 @@ const againstSpec = (T: number): FigSpec => {
     head: {pitch: -12 * snap + 26 * sag, yaw: -10, roll: 8 * sag},
     armL: {fk: {fwd: 8, out: 18, bend: 20}}, handL: 'limp',
     armR: {fk: {fwd: 30, out: 10, bend: 70}}, handR: 'open',
-    face: {mouth: sag > 0.3 ? 'breath' : 'pain', open: 0.3, lid: 0.25 + 0.2 * sag, brows: 0.4, worry: 0.6},
+    face: {mouth: sag > 0.35 ? 'sad' : 'pain', lid: 0.25 + 0.2 * sag, brows: 0.55, worry: 0.9},
     breath: 1, wearL: plateWear('shattered'),
   };
   const s = base('director', 'd4dir', 11, {pos: ON(SLAM), heading: SLAM.h, footL: SLAM_FEET.L, footR: SLAM_FEET.R}, T, pose);
@@ -443,16 +447,14 @@ export const runnerAt = (T: number): CrewOut => {
 // ================================================================== THE BREAKER (honest): limping, the breaker empty
 const BRK_RUN1: XZ[] = [{x: 31.7, z: 2.72}, {x: 24.0, z: 4.6}, {x: 16.2, z: 4.65}, {x: GATHER.breaker.x, z: GATHER.breaker.z}];
 const BRK_RUN2: XZ[] = [{x: GATHER.breaker.x, z: GATHER.breaker.z}, {x: 13.95, z: 4.3}];
-const BRK_RUN3: XZ[] = [{x: 11.3, z: 7.4}, {x: 10.25, z: 7.75}];
 const BRK_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 31.8, 2.7, 80], [150.2, 31.75, 2.7, 80], [150.55, 31.7, 2.72, 266]], stag: 0.1},
   {kind: 'run', path: BRK_RUN1, T0: 150.55, T1: 159.6, gait: GAITS.limp, A: 0.6, D: 0.7},
   {kind: 'stand', stag: 0.12, root: [[159.6, GATHER.breaker.x, GATHER.breaker.z, runEnd(BRK_RUN1).h], [160.0, GATHER.breaker.x, GATHER.breaker.z, GATHER.breaker.h], [162.42, GATHER.breaker.x, GATHER.breaker.z, 86]]},
   {kind: 'run', path: BRK_RUN2, T0: 162.42, T1: 163.85, gait: GAITS.limp, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.16, root: [[163.85, 13.95, 4.3, 92], [164.4, 14.0, 4.3, 94], [164.8, 13.8, 4.45, 102], [165.6, 13.6, 4.6, 95], [167.0, 13.5, 4.7, 85],
-    [170.6, 13.3, 4.9, 80], [172.5, 12.6, 6.5, 70], [174.6, 12.0, 7.6, 60], [178.6, 11.8, 7.6, 300], [179.0, BRK_RUN3[0].x, BRK_RUN3[0].z, headingTo(BRK_RUN3[0], BRK_RUN3[1])]]},
-  {kind: 'run', path: BRK_RUN3, T0: 179.0, T1: 181.0, gait: GAITS.limp, A: 0.5, D: 0.6},
-  {kind: 'stand', stag: 0.1, root: [[181.0, BRK_RUN3[1].x, BRK_RUN3[1].z, runEnd(BRK_RUN3).h], [181.5, 9.9, 7.85, 325], [182.1, TB_CREW.breaker.pos.x, TB_CREW.breaker.pos.z, TB_CREW.breaker.heading]]},
+    [170.6, 13.3, 4.9, 80], [172.5, 12.6, 6.5, 70], [174.6, 12.0, 7.6, 60], [178.6, 11.8, 7.6, 300], [179.6, 11.7, 7.58, 308],
+    [180.7, 11.5, 7.52, 314], [181.5, 11.45, 7.5, 316], [182.1, TB_CREW.breaker.pos.x, TB_CREW.breaker.pos.z, TB_CREW.breaker.heading]]},
 ];
 /** the breaker's two hands on the tool: port, or the swing (wind-up overhead → contact on the tip target → recoil) */
 const swingHands = (b: {pos: V3; heading: number}, tip: V3, k: number) => {

@@ -82,7 +82,7 @@ export const DROPS: Record<string, Drop> = {
   // the drone pilot lets go of the controller as her arm comes up at the diving drone (170.0, as her hands part)
   controller: {kind: 'controller', t0: 170.0, from: {x: 11.82, y: 1.12, z: 3.97}, to: {x: 12.2, z: 4.3, yaw: 70}, flight: 0.5, apex: 0.12, spin: 360, key: 'd4_controller'},
   // the breaker lets the empty breaker fall as his leg gives
-  breaker: {kind: 'breaker', t0: 181.35, from: {x: 9.76, y: 1.22, z: 7.62}, to: {x: 10.3, z: 7.35, yaw: 40}, flight: 0.45, apex: 0.03, spin: 180, key: 'd4_breaker'},
+  breaker: {kind: 'breaker', t0: 181.35, from: {x: 11.27, y: 0.93, z: 7.26}, to: {x: 11.32, z: 6.86, yaw: 30}, flight: 0.45, apex: 0.03, spin: 180, key: 'd4_breaker'},
 };
 
 // ------------------------------------------------------------------ the slab heavy 2 staggers off (D4-5)

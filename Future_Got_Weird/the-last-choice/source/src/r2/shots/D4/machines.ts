@@ -17,7 +17,7 @@
 import type {UnitSpec, HeavySpec, DroneSpec, Path} from '../../mech';
 import {V3, clamp, smooth, lerp, easeIn, easeOut, rnd} from '../../../kit/math';
 import {M} from '../../timing';
-import {TB_RING, TB_OUTER, TB_HOLDERS, TB_WRECKS, TB_HEAVY2, TB_DRONES, DIRECTOR_HEAD, T0 as TB_T0} from '../EF/tableau';
+import {TB_RING, TB_OUTER, TB_HOLDERS, TB_WRECKS, TB_HEAVY2, TB_DRONES, DIRECTOR_HEAD, T0 as TB_T0, w1Ground} from '../EF/tableau';
 import {EV} from './times';
 import {ARC_START, arcStartPos, HEAVY2_START} from './start';
 import {BLOCK_PLATE, RUNNER_CHEST, LAUNCHER_FRONT, LAUNCHER_GRIP, tugGrip, STRIKE_PLATE, HEAVY_STRIKE, PILOT_DOWN, PLANT} from './marks';
@@ -83,7 +83,7 @@ export const dirHeadAt = (T: number): V3 => {
   const k: [number, number, number][] = [
     [M.P4, 36.6, 1.0], [150.8, 35.5, 1.1], [152.75, 29.6, 1.75], [154.6, 29.2, 1.8], [156.6, 22.5, 2.95], [159.8, 12.6, 0.3],
     [162.4, 12.65, 0.35], [163.3, 13.0, -2.3], [165.0, 15.9, -2.5], [168.5, 16.2, -2.0], [170.6, 14.2, 0.9], [175.0, 12.3, 5.7],
-    [176.3, 12.2, 5.6], [177.42, 9.35, 3.45], [M.STRIKE, 9.15, 3.35], [178.0, 7.0, 3.42], [180.65, 6.6, 3.1],
+    [175.5, 12.95, 6.52], [176.35, 12.98, 6.58], [177.42, 9.35, 3.45], [M.STRIKE, 9.15, 3.35], [178.0, 7.0, 3.42], [180.65, 6.6, 3.1],
   ];
   let x = k[0][1], z = k[0][2];
   if (T >= k[k.length - 1][0]) { x = k[k.length - 1][1]; z = k[k.length - 1][2]; }
@@ -110,7 +110,7 @@ const W1: UPlan = {
       raise: {t0: 162.55, t1: 163.35, side: 'R'},
       look: dead ? undefined : dirHeadAt(T),
       hits: [{t0: EV.w1Swing + 0.02, dir: {x: 1, y: 0, z: 0}, strength: 0.55}, {t0: EV.w1Smash, dir: {x: 0.85, y: 0, z: -0.5}, strength: 1.5}],
-      fall: W1_TB.fall, damage: W1_TB.damage, idle: dead ? 0 : 0.45,
+      fall: W1_TB.fall, damage: W1_TB.damage, idle: dead ? 0 : 0.45, ground: w1Ground, // it stands and falls on low rubble
     };
   },
 };
@@ -188,9 +188,9 @@ const H1: UPlan = {
     {k: 'walk', pts: [H1_AT, H1_HOLD], T0: 170.7, T1: 171.9, A: 0.4, D: 0.5, raw: true},
     {k: 'keys', root: [[171.9, H1_HOLD.x, H1_HOLD.z, headingTo(H1_AT, H1_HOLD)], [172.4, H1_HOLD.x, H1_HOLD.z, 250], [175.5, H1_HOLD.x, H1_HOLD.z, 252], [175.8, H1_HOLD.x, H1_HOLD.z, headingTo(H1_HOLD, {x: 19.0, z: -2.4})]]},
     {k: 'walk', pts: [H1_HOLD, {x: 19.0, z: -2.4}, {x: 17.6, z: -1.2}, H1_WAIT], T0: 175.8, T1: 177.9, A: 0.4, D: 0.5, raw: true},
-    {k: 'keys', root: [[177.9, H1_WAIT.x, H1_WAIT.z, headingTo({x: 17.6, z: -1.2}, H1_WAIT)], [178.4, H1_WAIT.x, H1_WAIT.z, headingTo(H1_WAIT, {x: 14.4, z: -1.0})]]},
-    {k: 'walk', pts: [H1_WAIT, {x: 14.4, z: -1.0}, H1_TB.pos], T0: 178.4, T1: 179.7, A: 0.3, D: 0.4, raw: true},
-    {k: 'keys', root: [[179.7, H1_TB.pos.x, H1_TB.pos.z, headingTo({x: 14.4, z: -1.0}, H1_TB.pos)], [179.95, H1_TB.pos.x, H1_TB.pos.z, H1_TB.heading]]},
+    {k: 'keys', root: [[177.9, H1_WAIT.x, H1_WAIT.z, headingTo({x: 17.6, z: -1.2}, H1_WAIT)], [178.4, H1_WAIT.x, H1_WAIT.z, headingTo(H1_WAIT, {x: 14.0, z: -1.35})]]},
+    {k: 'walk', pts: [H1_WAIT, {x: 14.0, z: -1.35}, H1_TB.pos], T0: 178.4, T1: 179.7, A: 0.3, D: 0.4, raw: true},
+    {k: 'keys', root: [[179.7, H1_TB.pos.x, H1_TB.pos.z, headingTo({x: 14.0, z: -1.35}, H1_TB.pos)], [179.95, H1_TB.pos.x, H1_TB.pos.z, H1_TB.heading]]},
   ],
   act: (T) => {
     const f = h1Fist(T);
@@ -248,7 +248,7 @@ const holderPlan = (idx: 1 | 2 | 3, arcI: number, hold: XZ, via: XZ[], approach:
 };
 const H2 = holderPlan(1, 18, {x: 21.5, z: 12.4}, [{x: 15.6, z: 10.1}, {x: 13.2, z: 8.6}, {x: 12.9, z: 7.0}], [176.9, EV.grabDecoy - 0.55]);
 const H3 = holderPlan(2, 17, {x: 24.4, z: 11.0}, [{x: 18.6, z: 9.9}, {x: 15.9, z: 8.45}], [177.9, EV.grabFlares - 0.55]);
-const H4 = holderPlan(3, 16, {x: 17.6, z: 14.6}, [{x: 14.4, z: 9.4}, {x: 11.4, z: 8.6}], [178.3, EV.grabBreaker - 0.55]);
+const H4 = holderPlan(3, 16, {x: 17.6, z: 14.6}, [{x: 14.4, z: 9.4}, {x: 12.9, z: 8.75}], [178.3, EV.grabBreaker - 0.55]);
 /** when each holder's tableau spec takes over (the reach before the grab starts at t0 − 0.5) */
 export const HOLDER_FINAL: Record<number, number> = {7101: 179.95, 7102: EV.grabDecoy - 0.55, 7103: EV.grabFlares - 0.55, 7104: EV.grabBreaker - 0.55, 7105: 159.75};
 
@@ -314,7 +314,7 @@ export const unitD4 = (name: string, T: number): UnitSpec => unitAt(NAMED[name],
 
 // ================================================================== HEAVY 2
 // Hull root: one line out of the crater (heading 262) to the stop where it is blinded; it staggers back off a slab
-// (166.41), recovers, comes on to the van (176.3), rams (177.76), steps back into the ring's open sector (TB_HEAVY2).
+// (166.41), recovers, comes on to the van (176.3), rams (177.76), takes one slow step back into its tableau stance (TB_HEAVY2).
 type HSeg = {t0: number; t1: number; a: [number, number, number]; b: [number, number, number]; ease: (u: number) => number};
 /** a constant-speed walk with a decelerating tail (it was already walking at the cut in) */
 const cruiseStop = (tail: number) => (u: number) => (u < 1 - tail ? u / (1 - tail / 2) : (1 - tail + tail * (1 - (1 - (u - (1 - tail)) / tail) ** 2) / 2) / (1 - tail / 2));
@@ -378,7 +378,7 @@ const H2_FEET: KP[][] = (() => {
     q.forEach((k, i) => k.slice(1).forEach((kk) => L[i].push(kk)));
   };
   add(HSEGS[2], 1.9);
-  add(HSEGS[3], 2.1, [1, 2, 0, 3]);
+  add(HSEGS[3], 2.0, [1, 2, 0, 3]); // one deliberate step per leg, the front-right first (clear of H1 coming in)
   return L;
 })();
 /** foot on the slab (raised by its thickness) before the slip */

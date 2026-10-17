@@ -7,7 +7,8 @@
 //   TB.ring / TB.outer   the ring of units around the van area (inner ring + a looser outer ring), facing in
 //   TB.reserve           a block of units that halted in the avenue between the crater and the cross street
 //   TB.heavy2            the second heavy, standing east of the van with its ram at rest (its ram struck the Director at
-//                        STRIKE 177.76: the ram tip met his plate at TB.strikePoint and threw him back against the slab)
+//                        STRIKE 177.76: the ram tip met his plate at TB.strikePoint and threw him back against the slab;
+//                        it rammed from 0.6 m further west and stepped back once)
 //   TB.heavy1            the first heavy's wreck lying across the crater (fell at HEAVY_DOWN 125.64; D3 owns the fall —
 //                        if D3 registers its own wreck in PERSIST_D3, the EF shots draw that instead of this fallback)
 //   TB.wrecks            units the Crew downed in D4 near the ridge foot (fallen, eyes off) — D4 makes them fall there
@@ -80,7 +81,7 @@ const CREW_POS: Record<Exclude<Role2, 'director'>, {x: number; z: number}> = {
   tether: {x: 12.35, z: 0.55},
   decoy: {x: 10.95, z: 6.05},
   flares: {x: 13.95, z: 7.35},
-  breaker: {x: 9.7, z: 7.95},
+  breaker: {x: 11.4, z: 7.5}, // clear of the big leaning slab south of the van (rslab_15 covered 9.7, 7.95)
   runner: {x: 18.0, z: 7.7},
 };
 const faceDir = (p: {x: number; z: number}) => headingTo(p, PLAN.deathPos);
@@ -176,17 +177,21 @@ export const TB_OUTER: RingUnit[] = (() => {
   return out;
 })();
 
-/** Second heavy: east of the van, facing it, ram at rest (it recovered after STRIKE and stopped on FINAL_HIT). */
-export const TB_HEAVY2 = {id: 7401, pos: {x: 20.2, y: 0, z: 2.2} as V3, heading: 262, look: DIRECTOR_HEAD, eye: 'amber' as const,
-  /** where its ram tip met the Director's plate at STRIKE (he was in front of the drone pilot, by the van's front) */
-  strikePoint: {x: 9.6, y: 1.35, z: 3.0} as V3};
+/**
+ * Second heavy: east of the van, facing him, ram at rest. It rammed from 0.6 m further west (16.4, 3.0) and took one
+ * slow step back as the ram recovered (D4 178.9–180.4); this stance keeps its feet clear of the holders, the wrecks
+ * and the rubble.
+ */
+export const TB_HEAVY2 = {id: 7401, pos: {x: 17.0, y: 0, z: 3.0} as V3, heading: 270, look: DIRECTOR_HEAD, eye: 'amber' as const,
+  /** where its ram tip met the Director's plate at STRIKE (he was planted in front of the drone pilot, by the van) */
+  strikePoint: {x: 9.67, y: 1.43, z: 3.31} as V3};
 /** The first heavy's wreck across the crater (fallback for D3's: knee broken at t0, topples south into the crater). */
 export const TB_HEAVY1 = {id: 7402, pos: {x: 60.5, y: 0, z: -11.5} as V3, heading: 262, kneeBreak: {t0: M.HEAVY_DOWN - 1.5, leg: 0 as const, dir: {x: 0.1, y: 0, z: 1} as V3},
   pinned: {t0: 121.6, leg: 1 as const}};
 
 /** Units the Crew downed in D4 (the Director smashed through two at ARRIVAL; one tripped by the wrapped cable). */
-export const TB_WRECKS: {id: number; pos: V3; heading: number; fall: {t0: number; dir: V3}; damage?: UnitSpec['damage']; note: string}[] = [
-  {id: 7501, pos: {x: 13.4, y: 0, z: -3.0}, heading: 250, fall: {t0: 163.4, dir: {x: 0.85, y: 0, z: -0.5}}, damage: {chest: {t0: 163.3, dir: {x: 0.9, y: 0.3, z: -0.4}, speed: 3}, dead: {t0: 163.6}}, note: 'smashed by the Director (ARRIVAL), chest plate off'},
+export const TB_WRECKS: {id: number; pos: V3; heading: number; fall: {t0: number; dir: V3; ang?: number}; damage?: UnitSpec['damage']; note: string}[] = [
+  {id: 7501, pos: {x: 13.4, y: 0, z: -3.0}, heading: 250, fall: {t0: 163.4, dir: {x: 0.85, y: 0, z: -0.5}, ang: 90}, damage: {chest: {t0: 163.3, dir: {x: 0.9, y: 0.3, z: -0.4}, speed: 3}, dead: {t0: 163.6}}, note: 'smashed by the Director (ARRIVAL), chest plate off'},
   {id: 7502, pos: {x: 15.0, y: 0, z: 3.9}, heading: 275, fall: {t0: 164.5, dir: {x: 0.25, y: 0, z: 1}}, damage: {armOff: {side: 'L', t0: 164.4, dir: {x: 0.5, y: 0.4, z: 1}, speed: 3}, dead: {t0: 164.8}}, note: 'smashed by the Director, arm torn off'},
   {id: 7503, pos: {x: 16.8, y: 0, z: -2.6}, heading: 265, fall: {t0: 165.1, dir: {x: 0.3, y: 0, z: -1}}, damage: {dead: {t0: 165.4}}, note: 'legs wrapped by the tether cable, toppled'},
 ];
@@ -218,8 +223,16 @@ export const holderSpecs = (T: number, grip?: (h: Holder, T: number) => V3): Uni
   ...(h.who ? {grab: {t0: h.t0, side: h.side, target: h.at, hold: (t: number) => (grip ? grip(h, t) : h.at)}} : {look: h.look}),
 }));
 
+/**
+ * W1 (7501) stood and fell on low rubble (set chunks sch_11/sch_31 at its feet, sch_9 under its head): its ground is
+ * the street plus those chunks (domes of their measured radius and height), so its feet stand on them and the wreck
+ * lies on them (fall.ang 90: level at the chunks' height) instead of sinking through.
+ */
+const W1_RUBBLE = [{x: 13.35, z: -3.02, r: 0.5, h: 0.27}, {x: 13.32, z: -3.25, r: 0.72, h: 0.34}, {x: 15.33, z: -4.51, r: 0.8, h: 0.3}];
+export const w1Ground = (x: number, z: number): number =>
+  G(x, z) + Math.max(0, ...W1_RUBBLE.map((c) => c.h * clamp(1 - ((x - c.x) ** 2 + (z - c.z) ** 2) / (c.r * c.r))));
 export const wreckSpecs = (T: number): UnitSpec[] => TB_WRECKS.map((w) => ({
-  id: w.id, t: T, pos: w.pos, heading: w.heading, ground: G, fall: w.fall, damage: w.damage, idle: 0, key: `tb_w${w.id}`,
+  id: w.id, t: T, pos: w.pos, heading: w.heading, ground: w.id === 7501 ? w1Ground : G, fall: w.fall, damage: w.damage, idle: 0, key: `tb_w${w.id}`,
 }));
 
 export const heavy2Spec = (T: number): HeavySpec => ({id: TB_HEAVY2.id, t: T, pos: TB_HEAVY2.pos, heading: TB_HEAVY2.heading, look: TB_HEAVY2.look, eye: TB_HEAVY2.eye, ground: G, key: 'tb_heavy2'});

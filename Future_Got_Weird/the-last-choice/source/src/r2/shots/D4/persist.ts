@@ -9,7 +9,7 @@
 //   d4_halligan  the runner's halligan, knocked from his hand, at ≈ (18.6, 6.8)
 //   d4_tablet    the smashed tablet the decoy maker let fall at ≈ (13.1, 5.7)
 //   d4_controller the drone pilot's controller, dropped as the drone came at her, at ≈ (12.2, 4.3)
-//   d4_breaker   the empty breaker, dropped as the breaker's leg gave, at ≈ (10.3, 7.35)
+//   d4_breaker   the empty breaker, dropped as the breaker's leg gave, at ≈ (11.3, 6.9)
 import type {Persist} from '../../film/continuity';
 import {wreckSpecs} from '../EF/tableau';
 import {DROPS, dropAt, heavySlab, wrapPoints, polyCable, looseEnd} from './props';

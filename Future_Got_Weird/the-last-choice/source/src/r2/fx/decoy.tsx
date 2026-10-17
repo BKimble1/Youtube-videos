@@ -299,7 +299,7 @@ export const decoyItems = (o: DecoyOpts): FxOut => {
         // the light: a wide soft bloom of the whole figure; then the translucent body, its warm-white core and the scan
         // bands, all softened so no outline is crisp
         const soft = (
-          <g filter={`url(#${fSoft})`}>
+          <g filter={fpx > 150 ? `url(#${fSoft})` : undefined}>
             {body.map((d, bi) => (d ? <path key={`b${bi}`} d={d} fill={glowTone(c, BRIGHT[bi], 0.25)} opacity={f1(0.14 + 0.36 * ((bi + 0.6) / 4))} /> : null))}
             {core.map((d, bi) => (d ? <path key={`c${bi}`} d={d} fill={coreCol} stroke={coreCol} strokeWidth={f1(coreW)} strokeLinecap="round" strokeLinejoin="round" opacity={f1(0.15 + 0.6 * ((bi + 0.6) / 4))} /> : null))}
             {fpx > 60 && <path d={all} fill={`url(#${pid})`} opacity={f1(0.16 * pw * flick)} />}
@@ -314,7 +314,8 @@ export const decoyItems = (o: DecoyOpts): FxOut => {
             </pattern>
           </defs>
         );
-        const bloom = <path d={all} fill={glowCol} filter={`url(#${fBig})`} opacity={f1(0.55 * (0.4 + 0.6 * dAvg) * pw * flick)} />;
+        // (small on screen: the radial glow stands in for the blurred bloom, which would cost more than it shows)
+        const bloom = fpx > 45 ? <path d={all} fill={glowCol} filter={`url(#${fBig})`} opacity={f1(0.55 * (0.4 + 0.6 * dAvg) * pw * flick)} /> : null;
         // scattered light around the figure, in the smoke
         const g = glowEl(gid(o.key, 'g', j), c.x, c.y, H * 0.6 * k * Math.max(0.25, e), glowTone(c, glowC, 0.3), 0.36 * dAvg * pw * flick, 0, 1.5 / Math.max(0.25, e));
         // seen edge-on: a flat sheet of light, nothing behind it
@@ -365,10 +366,11 @@ export const decoyItems = (o: DecoyOpts): FxOut => {
             <g style={blend}>
               <defs>
                 <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={f1(A.x)} y1={f1(A.y)} x2={f1(B.x)} y2={f1(B.y)}>
-                  <stop offset="0" stopColor={col} stopOpacity={0.6} />
-                  <stop offset="0.1" stopColor={col} stopOpacity={0.3} />
-                  <stop offset="0.5" stopColor={col} stopOpacity={0.04 + 0.1 * haze} />
-                  <stop offset="1" stopColor={col} stopOpacity={0.04 + 0.16 * haze} />
+                  <stop offset="0" stopColor={col} stopOpacity={0.85} />
+                  <stop offset="0.07" stopColor={col} stopOpacity={0.5} />
+                  <stop offset="0.25" stopColor={col} stopOpacity={0.2} />
+                  <stop offset="0.6" stopColor={col} stopOpacity={0.06 + 0.1 * haze} />
+                  <stop offset="1" stopColor={col} stopOpacity={0.05 + 0.14 * haze} />
                 </linearGradient>
               </defs>
               <path d={pathOf(hull(S))} fill={`url(#${id})`} opacity={f1(0.75 * pw)} />
@@ -389,7 +391,19 @@ export const decoyItems = (o: DecoyOpts): FxOut => {
         draw: (c) => {
           const S = [P0, a, b].map((p) => project(c.view, p));
           if (S.some((s2) => s2.z < c.view.near)) return null;
-          return <polygon style={blend} points={S.map((s2) => `${f1(s2.x)},${f1(s2.y)}`).join(' ')} fill={glowTone(c, '#FFF0C8', 0.3)} opacity={f1((0.02 + 0.09 * dB) * pw)} />;
+          const A = S[0], B = project(c.view, ctr), id = gid(o.key, 'ray', j), col = glowTone(c, '#FFF0C8', 0.3);
+          return (
+            <g style={blend}>
+              <defs>
+                <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={f1(A.x)} y1={f1(A.y)} x2={f1(B.x)} y2={f1(B.y)}>
+                  <stop offset="0" stopColor={col} stopOpacity={0.55} />
+                  <stop offset="0.15" stopColor={col} stopOpacity={0.22} />
+                  <stop offset="1" stopColor={col} stopOpacity={0.06 + 0.22 * dB} />
+                </linearGradient>
+              </defs>
+              <polygon points={S.map((s2) => `${f1(s2.x)},${f1(s2.y)}`).join(' ')} fill={`url(#${id})`} opacity={f1(0.6 * pw)} />
+            </g>
+          );
         },
       });
     }

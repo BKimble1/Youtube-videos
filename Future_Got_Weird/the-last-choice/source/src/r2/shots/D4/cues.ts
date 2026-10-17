@@ -31,15 +31,15 @@ export const CUES_D4: Cue[] = [
   {t: EV.dirRun2 + 0.15, kind: 'steps_gravel', gain: -3, pan: -0.05, dist: 0.1},
   // ---- D4-2a the runner struck down (154.50–156.70)
   {t: 154.55, kind: 'run_rubble', gain: -4, pan: 0.15, dist: 0.15, dur: 1.2, fade: 0.2},
-  {t: 154.95, kind: 'robot_step_heavy', gain: -3, pan: -0.5, dist: 0.15},
-  {t: 155.25, kind: 'robot_step_heavy', gain: -3, pan: -0.55, dist: 0.2},
-  {t: 155.42, kind: 'steps_gravel', gain: -2, pan: -0.3, dist: 0.2}, // he checks
-  {t: 155.45, kind: 'servo_whir', gain: -4, pan: -0.5, dist: 0.2},
-  {t: EV.runnerHit - 0.16, kind: 'robot_swing', gain: 0, pan: -0.45, dist: 0.2},
-  {t: EV.runnerHit, kind: 'armor_hit', gain: -2, pan: -0.25, dist: 0.15},
-  {t: EV.runnerHit + 0.02, kind: 'breath_exert', gain: 0, pan: -0.2, dist: 0.15}, // the wind knocked out of him
-  {t: 156.45, kind: 'lever_clunk', gain: 2, pan: 0.15, dist: 0.2, rate: 0.8}, // the halligan lands
-  {t: 156.55, kind: 'body_fall', gain: 0, pan: 0, dist: 0.15},
+  {t: 154.95, kind: 'robot_step_heavy', gain: -3, pan: -0.35, dist: 0.15},
+  {t: 155.25, kind: 'robot_step_heavy', gain: -3, pan: -0.25, dist: 0.15},
+  {t: 155.42, kind: 'steps_gravel', gain: -2, pan: 0.05, dist: 0.15}, // he checks
+  {t: 155.45, kind: 'servo_whir', gain: -4, pan: -0.15, dist: 0.2},
+  {t: EV.runnerHit - 0.16, kind: 'robot_swing', gain: 0, pan: -0.2, dist: 0.2},
+  {t: EV.runnerHit, kind: 'armor_hit', gain: -2, pan: 0.05, dist: 0.15},
+  {t: EV.runnerHit + 0.02, kind: 'breath_exert', gain: 0, pan: 0.05, dist: 0.15}, // the wind knocked out of him
+  {t: 156.45, kind: 'lever_clunk', gain: 2, pan: 0.35, dist: 0.15, rate: 0.8}, // the halligan lands
+  {t: 156.55, kind: 'body_fall', gain: 0, pan: 0.1, dist: 0.15},
   // ---- D4-2b the tether operator disarmed (156.70–158.50)
   {t: 156.8, kind: 'servo_whir', gain: -4, pan: 0.3, dist: 0.05},
   {t: EV.disarmGrab, kind: 'servo_heavy', gain: -2, pan: 0.35, dist: 0.05},
@@ -111,7 +111,7 @@ export const CUES_D4: Cue[] = [
   {t: EV.droneHit + 0.01, kind: 'sparks', gain: -4, pan: -0.15, dist: 0.05},
   {t: EV.droneHit + 0.03, kind: 'breath_exert', gain: 0, pan: -0.15, dist: 0.05}, // brow cut
   {t: 170.5, kind: 'lever_clunk', gain: -2, pan: -0.15, dist: 0.85, rate: 1.3}, // the controller lands
-  {t: 170.3, kind: 'drone_pass', gain: -4, pan: -0.15, dist: 0.05},
+  {t: 170.3, kind: 'drone_pass', gain: -4, pan: -0.2, dist: 0.05},
   // ---- D4-6a REALIZE — the wide (170.40–173.10): the ring closing, the columns, the drones
   {t: EV.realize + 0.1, kind: 'army_march', gain: -6, pan: 0.15, dist: 0.95, dur: 4.6, fade: 1},
   {t: 170.6, kind: 'body_fall', gain: -6, pan: -0.15, dist: 0.85}, // she lands
@@ -123,37 +123,38 @@ export const CUES_D4: Cue[] = [
   {t: 173.2, kind: 'breath_ragged', gain: -2, pan: 0.1, dist: 0.05},
   {t: 173.7, kind: 'servo_whir', gain: -6, pan: -0.85, dist: 0.3},
   {t: 174.3, kind: 'breath_ragged', gain: -5, pan: -0.85, dist: 0.1},
-  // ---- D4-7 the ram rises at her; he runs (175.04–177.76)
-  {t: EV.dirSees, kind: 'sensor_lock', gain: -2, pan: 0.6, dist: 0.35},
-  {t: EV.ramWind, kind: 'heavy_servo', gain: 3, pan: 0.6, dist: 0.35}, // the ram winds up
-  {t: EV.dirSprint, kind: 'breath_exert', gain: 0, pan: 0, dist: 0.3},
-  {t: EV.dirSprint + 0.02, kind: 'run_rubble', gain: 0, pan: 0, dist: 0.3, dur: 1.15, fade: 0.1},
-  {t: 176.9, kind: 'breath_ragged', gain: -2, pan: -0.2, dist: 0.4, rate: 1.15}, // her gasp
-  {t: EV.dirPlant, kind: 'steps_gravel', gain: 0, pan: -0.1, dist: 0.35},
-  // ---- D4-8 STRIKE (177.76–179.30)
-  {t: EV.strike, kind: 'ram_strike', gain: 3, pan: -0.1, dist: 0.15},
-  {t: EV.strike + 0.005, kind: 'plate_shatter', gain: 3, pan: -0.1, dist: 0.15},
-  {t: EV.strike + 0.02, kind: 'breath_exert', gain: 0, pan: -0.1, dist: 0.15},
+  // ---- D4-7a/b/c the ram rises at her; his head snaps round; he sprints and plants (175.04–177.45)
+  {t: EV.dirSees, kind: 'sensor_lock', gain: -2, pan: -0.85, dist: 0.15},
+  {t: EV.ramWind, kind: 'heavy_servo', gain: 3, pan: 0.3, dist: 0.3}, // the ram winds up
+  {t: EV.dirSprint, kind: 'breath_exert', gain: 0, pan: 0.05, dist: 0.05},
+  {t: EV.dirSprint + 0.02, kind: 'run_rubble', gain: 0, pan: 0.05, dist: 0.05, dur: 1.08, fade: 0.1},
+  {t: 176.9, kind: 'breath_ragged', gain: -2, pan: -0.4, dist: 0.05, rate: 1.15}, // her gasp
+  {t: EV.dirPlant, kind: 'steps_gravel', gain: 0, pan: 0.05, dist: 0.1},
+  // ---- D4-8 STRIKE side-on (177.45–179.30): the contact at 177.76
+  {t: EV.strike, kind: 'ram_strike', gain: 3, pan: 0.15, dist: 0.1},
+  {t: EV.strike + 0.005, kind: 'plate_shatter', gain: 3, pan: 0.15, dist: 0.1},
+  {t: EV.strike + 0.02, kind: 'breath_exert', gain: 0, pan: 0.15, dist: 0.1},
   {t: EV.slam, kind: 'body_fall', gain: 3, pan: -0.35, dist: 0.1}, // his back on the slab
   {t: EV.slam + 0.01, kind: 'rubble_shift', gain: -3, pan: -0.35, dist: 0.1},
   {t: 178.15, kind: 'debris_rain', gain: -10, pan: -0.35, dist: 0.1},
-  {t: 178.35, kind: 'breath_ragged', gain: -2, pan: -0.2, dist: 0.15},
-  {t: 178.6, kind: 'heavy_servo', gain: -6, pan: 0.3, dist: 0.4, rate: 0.85}, // the ram retracts
-  // ---- D4-9a SOFTEN: he slides down beside the van (179.30–180.80)
-  {t: EV.slide + 0.05, kind: 'rubble_shift', gain: -2, pan: -0.05, dist: 0.1, dur: 1.3, fade: 0.3},
-  {t: 179.7, kind: 'breath_ragged', gain: -2, pan: -0.05, dist: 0.1, rate: 0.9},
-  {t: EV.slideEnd - 0.1, kind: 'body_fall', gain: -8, pan: -0.1, dist: 0.1},
+  {t: 178.35, kind: 'breath_ragged', gain: -2, pan: 0.05, dist: 0.1},
+  {t: 178.6, kind: 'heavy_servo', gain: -6, pan: 0.85, dist: 0.25, rate: 0.85}, // the ram retracts
+  {t: 178.95, kind: 'servo_heavy', gain: -6, pan: 0.85, dist: 0.25, rate: 0.8}, // it shifts its weight back
+  // ---- D4-9a SOFTEN: he slides down the slab (179.30–180.80)
+  {t: EV.slide + 0.05, kind: 'rubble_shift', gain: -2, pan: 0, dist: 0.05, dur: 1.3, fade: 0.3},
+  {t: 179.7, kind: 'breath_ragged', gain: -2, pan: 0, dist: 0.05, rate: 0.9},
+  {t: EV.slideEnd - 0.1, kind: 'body_fall', gain: -8, pan: 0, dist: 0.05},
   // ---- D4-9b the others held (180.80–183.30): the grabs = EF TB_HOLDERS t0s
-  {t: EV.grabTether, kind: 'servo_whir', gain: -2, pan: 0.85, dist: 0.25},
-  {t: EV.grabTether + 0.06, kind: 'breath_exert', gain: -4, pan: 0.85, dist: 0.2},
+  {t: EV.grabTether, kind: 'servo_whir', gain: -2, pan: 0.85, dist: 0.15},
+  {t: EV.grabTether + 0.06, kind: 'breath_exert', gain: -4, pan: 0.85, dist: 0.15},
   {t: EV.grabDecoy, kind: 'servo_whir', gain: -2, pan: -0.15, dist: 0.1},
   {t: EV.grabDecoy + 0.06, kind: 'breath_exert', gain: -3, pan: 0.05, dist: 0.1},
-  {t: 181.35, kind: 'breath_exert', gain: -4, pan: 0.1, dist: 0.2},
-  {t: 181.75, kind: 'lever_clunk', gain: -1, pan: 0.15, dist: 0.2, rate: 0.8}, // the breaker hits the street
+  {t: 181.35, kind: 'breath_exert', gain: -4, pan: -0.1, dist: 0.15},
+  {t: 181.75, kind: 'lever_clunk', gain: -1, pan: -0.1, dist: 0.15, rate: 0.8}, // the breaker hits the street
   {t: EV.grabFlares, kind: 'servo_whir', gain: -2, pan: -0.7, dist: 0.2},
   {t: EV.grabFlares + 0.05, kind: 'breath_exert', gain: -3, pan: -0.55, dist: 0.15},
-  {t: EV.grabBreaker, kind: 'servo_heavy', gain: -3, pan: 0.05, dist: 0.2},
-  {t: EV.grabBreaker + 0.08, kind: 'body_fall', gain: -6, pan: 0.15, dist: 0.2}, // pressed down
+  {t: EV.grabBreaker, kind: 'servo_heavy', gain: -3, pan: -0.2, dist: 0.2},
+  {t: EV.grabBreaker + 0.08, kind: 'body_fall', gain: -6, pan: -0.1, dist: 0.15}, // pressed down
   {t: 182.8, kind: 'cloth_move', gain: -6, pan: 0.05, dist: 0.1},
   // ---- D4-10 the ring holds (183.30–186.90); army_halt is global at FINAL_HIT
   {t: 183.6, kind: 'servo_whir', gain: -8, pan: -0.05, dist: 0.75},
@@ -162,7 +163,7 @@ export const CUES_D4: Cue[] = [
   {t: 184.6, kind: 'breath_ragged', gain: -6, pan: -0.05, dist: 0.85},
   {t: 185.4, kind: 'rubble_shift', gain: -12, pan: -0.05, dist: 0.85, dur: 0.8, fade: 0.3},
   {t: 186.2, kind: 'breath_ragged', gain: -8, pan: -0.15, dist: 0.85, rate: 0.9},
-  // ---- heavy 2's feet (front legs while it walks; every foot in the stagger and the back-off)
+  // ---- heavy 2's feet (front legs while it walks; every foot in the stagger and the step back)
   {t: 150.2, kind: 'heavy_stomp', gain: -4, pan: 0.45, dist: 0.95},
   {t: 150.93, kind: 'heavy_stomp', gain: -4, pan: 0.45, dist: 0.95},
   {t: 151.66, kind: 'heavy_stomp', gain: -4, pan: 0.45, dist: 0.95},
@@ -197,15 +198,11 @@ export const CUES_D4: Cue[] = [
   {t: 173.12, kind: 'heavy_stomp', gain: -3, pan: 0.85, dist: 0.2},
   {t: 173.82, kind: 'heavy_stomp', gain: -3, pan: 0.85, dist: 0.15},
   {t: 174.52, kind: 'heavy_stomp', gain: -3, pan: 0.85, dist: 0.1},
-  {t: 175.22, kind: 'heavy_stomp', gain: -3, pan: 0.65, dist: 0.4},
-  {t: 175.92, kind: 'heavy_stomp', gain: -3, pan: 0.6, dist: 0.35},
-  {t: 176.27, kind: 'heavy_stomp', gain: -3, pan: 0.6, dist: 0.35},
-  {t: 179.42, kind: 'heavy_stomp', gain: -6, pan: 0.85, dist: 0.25},
-  {t: 179.98, kind: 'heavy_stomp', gain: -6, pan: 0.85, dist: 0.3},
-  {t: 180.54, kind: 'heavy_stomp', gain: -6, pan: 0.85, dist: 0.3},
-  {t: 181.11, kind: 'heavy_stomp', gain: -6, pan: -0.85, dist: 0.15},
-  {t: 181.67, kind: 'heavy_stomp', gain: -6, pan: -0.85, dist: 0.2},
-  {t: 182.23, kind: 'heavy_stomp', gain: -6, pan: -0.85, dist: 0.2},
-  {t: 182.79, kind: 'heavy_stomp', gain: -6, pan: -0.85, dist: 0.2},
-  {t: 183.36, kind: 'heavy_stomp', gain: -6, pan: 0.4, dist: 0.75},
+  {t: 175.22, kind: 'heavy_stomp', gain: -3, pan: 0.35, dist: 0.35},
+  {t: 175.92, kind: 'heavy_stomp', gain: -3, pan: -0.85, dist: 0.15},
+  {t: 176.27, kind: 'heavy_stomp', gain: -3, pan: -0.85, dist: 0.15},
+  {t: 179.36, kind: 'heavy_stomp', gain: -5, pan: 0.85, dist: 0.25},
+  {t: 179.86, kind: 'heavy_stomp', gain: -5, pan: 0.85, dist: 0.25},
+  {t: 180.36, kind: 'heavy_stomp', gain: -5, pan: 0.85, dist: 0.25},
+  {t: 180.86, kind: 'heavy_stomp', gain: -5, pan: -0.85, dist: 0.1},
 ];

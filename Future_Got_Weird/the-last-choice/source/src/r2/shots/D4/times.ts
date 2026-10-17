@@ -36,7 +36,7 @@ export const EV = {
   realize: M.REALIZE,
   // ---- D4-7 the ram winds up at the drone pilot; the Director runs (175.04–177.76)
   heavyGo: 170.7, // heavy 2 comes on again
-  dirSees: 175.75, dirSprint: 176.3, dirPlant: 177.42,
+  dirSees: 175.98, dirSprint: 176.35, dirPlant: 177.42, // his head snaps round to her; the sprint; the plant
   ramWind: M.STRIKE - 1.3,
   // ---- D4-8 STRIKE (177.76–179.30)
   strike: M.STRIKE,
@@ -44,7 +44,7 @@ export const EV = {
   // ---- D4-9 SOFTEN (179.30–183.30)
   slide: M.SOFTEN, slideEnd: 180.65,
   grabTether: 180.4, grabDecoy: 181.0, grabFlares: 181.7, grabBreaker: 182.3, // = EF tableau TB_HOLDERS t0s
-  heavyBack: 178.9, heavyBackEnd: 183.4, // heavy 2 steps back into its sector of the ring (as the ram retracts)
+  heavyBack: 178.9, heavyBackEnd: 180.9, // heavy 2 takes one slow step back into its tableau stance (as the ram retracts)
   pilotUp: 183.7, pilotUpEnd: 185.45, // the drone pilot gets onto her hands and knees
   crawl: 186.4, // EF pilotSpec takes over (her crawl to him)
   // ---- D4-10 the ring holds (183.30–186.90)
@@ -54,5 +54,7 @@ export const EV = {
 /** Shot boundaries (film s). */
 export const SH = {
   d41: M.P4, d41b: 152.6, d42a: 154.5, d42b: 156.7, d43: 158.5, d43b: 160.75, d44a: M.ARRIVAL, d44b: 163.62, d44c: 164.72, d44d: 165.62,
-  d45: M.LOCAL_WIN, d46a: M.REALIZE, d46b: 173.1, d47: 175.04, d48: M.STRIKE, d49a: M.SOFTEN, d49b: 180.8, d410: M.B184, end: M.FINAL_HIT,
+  d45: M.LOCAL_WIN, d46a: M.REALIZE, d46b: 173.1, d47: 175.04, d47b: 175.85, d47c: 176.45,
+  // D4-8 opens 0.31 s before STRIKE: the ram's last thrust, the contact (177.76) and his flight into the slab in one shot
+  d48: 177.45, d49a: M.SOFTEN, d49b: 180.8, d410: M.B184, end: M.FINAL_HIT,
 };
