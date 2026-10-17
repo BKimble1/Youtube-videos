@@ -599,7 +599,8 @@ export const runnerAt = (T: number): CrewOut => {
 };
 
 // ================================================================== THE DRONE PILOT (checker)
-const DRN_RUN: XZ[] = [{x: 0.0, z: 2.0}, {x: 3.6, z: 4.9}, {x: 6.8, z: 5.4}, {x: 11, z: 5.0}, {x: 20, z: 2.5}, {x: 35.2, z: 1.2}];
+// (starts beside B's slab, east of its broken corner, clear of the shed chunks: C ends her here)
+const DRN_RUN: XZ[] = [{x: 1.28, z: 2.12}, {x: 3.6, z: 4.9}, {x: 6.8, z: 5.4}, {x: 11, z: 5.0}, {x: 20, z: 2.5}, {x: 35.2, z: 1.2}];
 const DRN_SEGS: Seg[] = [
   {kind: 'run', path: DRN_RUN, T0: M.CHARGE + 0.45, T1: 68.9, gait: GAITS.heavy, A: 1.2, D: 0.8},
   {kind: 'stand', root: [[68.9, 35.2, 1.2, 84], [76.6, 35.2, 1.2, 84], [77.3, 35.45, 1.05, 76], [86.6, 35.45, 1.05, 80], [88.8, 39.8, 5.4, 80], [91.0, 44.6, 5.8, 85], [92.0, 46.2, 6.1, 95], [92.45, 46.55, 6.05, 250], [94.3, 46.55, 6.05, 250]], stag: 0.08},

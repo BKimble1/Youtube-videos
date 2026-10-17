@@ -430,6 +430,8 @@ const D_PLAN: Plan = {
 };
 /** where D's second blow lands: the allied drone, hovering between it and the runner */
 export const SHIELD_AT: V3 = on({x: 49.72, z: -6.32}, 1.28);
+/** the allied drone's centre at the blow: just beyond the fist's contact, on the runner's side, a little higher */
+export const SHIELD_DRONE: V3 = {x: SHIELD_AT.x - 0.14, y: SHIELD_AT.y + 0.1, z: SHIELD_AT.z - 0.17};
 
 // ---- 8108 (D1's U8): strikes through figure 3 at DECOY_HITa, again at 101.45; searches the smoke; survives
 const U8_HIT = besideFig(3, EV2.hitA, 0.95, -0.3);
@@ -599,6 +601,6 @@ export const enemyDronesD2 = (T: number): DroneSpec[] => enemyDrones(T).map((s) 
 export const ALLY2_KEYS: K4[] = [
   [90.5, 45.2, 4.3, 4.9], [94.3, 45.4, 3.5, 4.6], [96.4, 46.2, 4.0, 2.6], [98.3, 46.0, 4.3, 0.2], [100.6, 46.6, 4.4, -5.6], [102.4, 48.2, 4.2, -8.0],
   [104.6, 50.6, 4.5, -7.2], [106.6, 49.6, 4.2, -5.6], [108.6, 48.8, 4.0, -5.0], [110.6, 48.6, 3.2, -5.4], [112.5, 48.3, 2.3, -5.8],
-  [112.95, SHIELD_AT.x - 0.35, SHIELD_AT.y + 0.12, SHIELD_AT.z + 0.15], [EV2.shield, SHIELD_AT.x, SHIELD_AT.y, SHIELD_AT.z],
+  [112.95, SHIELD_DRONE.x - 0.4, SHIELD_DRONE.y + 0.15, SHIELD_DRONE.z + 0.12], [EV2.shield, SHIELD_DRONE.x, SHIELD_DRONE.y, SHIELD_DRONE.z],
   [113.85, 48.9, 1.7, -5.9], [115.0, 48.2, 2.1, -5.7], [116.92, 47.9, 2.4, -5.6],
 ];

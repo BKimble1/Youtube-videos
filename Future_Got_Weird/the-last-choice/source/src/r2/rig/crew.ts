@@ -54,6 +54,9 @@ export const dmgR2 = (r: Role2, T: number): Damage => {
   }
   if (r === 'flares') {
     d.dirt = grime(T, 0.35);
+    // the satchel on his left hip (C on): two flares and two smoke canisters. Each leaves the bag when it appears in his
+    // hand: D1's flare 76.55 (thrown 77.3), D2's canisters 94.44 / 95.03, D4's last flare 160.45 — empty from heavy 2's arrival
+    d.satchel = {flares: T <= 76.55 ? 2 : T <= 160.45 ? 1 : 0, canisters: T <= 94.44 ? 2 : T <= 95.03 ? 1 : 0};
     if (after(T, M.HEAVY2_FIRE)) { d.browCut = {side: -1, amt: 0.9}; stains.push({phi: 50, h: 95, size: 18, seed: 9, kind: 'tear'}); }
   }
   return d;

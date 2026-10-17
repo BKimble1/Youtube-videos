@@ -4,9 +4,9 @@
 // Once a machine is set in its tableau place it is drawn from the tableau's own spec (shots/EF/tableau.ts), so the
 // last frames are E/F's first.
 import type {Item, View} from '../../engine';
-import {toView} from '../../engine';
+import {toView, viewToScreen} from '../../engine';
 import {V3} from '../../../kit/math';
-import {combatUnit, drone, heavy, armyItems, standing, UnitSpec} from '../../mech';
+import {combatUnit, drone, heavy, armyItems, standing, UnitSpec, Formation} from '../../mech';
 import {figureSprite, FigSpec, Role2} from '../../rig';
 import {persistItems, persistAt} from '../../film/continuity';
 import {FxOut} from '../../fx';
@@ -36,6 +36,22 @@ export type D4Opts = {
 
 const grip = (h: Holder, T: number): V3 => (h.who && h.who !== 'drone' && h.who !== 'director' && h.who !== 'runner' ? gripAt(h.who, T) : h.at);
 
+/**
+ * On screen (with a margin)? A point `up` m above the ground spot: in front of the camera and within the frame widened
+ * by `m` frame widths/heights on each side (units are ~2 m tall; near ones get a wider margin). Off-screen machines
+ * are not drawn: the avenue's block and streams alone are ~1000 slots.
+ */
+const onScreen = (v: View, p: V3, m = 0.15, up = 1.0): boolean => {
+  const q = toView(v, {x: p.x, y: G(p.x, p.z) + up, z: p.z});
+  if (q.z < 0.3) return false;
+  const s = viewToScreen(v, q);
+  const mm = q.z < 8 ? m + 0.35 : m;
+  return s.x > -mm * v.W && s.x < (1 + mm) * v.W && s.y > -(mm + 0.3) * v.H && s.y < (1 + mm + 0.3) * v.H;
+};
+const culled = (f: Formation, v: View, maxD = Infinity): Formation => ({
+  slots: (t) => f.slots(t).filter((s) => onScreen(v, s.pos) && Math.hypot(s.pos.x - v.pos.x, s.pos.z - v.pos.z) < maxD),
+});
+
 /** every combat unit's spec at T (named + ring), switching to the tableau's spec once set */
 export const unitSpecsAt = (T: number): {name: string; spec: UnitSpec}[] => {
   const out: {name: string; spec: UnitSpec}[] = [];
@@ -63,7 +79,7 @@ export const d4Items = (v: View, T: number, o: D4Opts = {}): Item[] => {
     const p = spec.gait ? spec.gait.path(spec.gait.dist).pos : spec.pos;
     const q = {x: p.x, y: G(p.x, p.z) + 1.1, z: p.z};
     return {name, spec, p, d: dist(q), z: toView(v, q).z};
-  }).filter((u) => u.z > -2).sort((a, b) => a.d - b.d);
+  }).filter((u) => u.z > -2 && (u.d < 4 || onScreen(v, u.p, 0.2))).sort((a, b) => a.d - b.d);
   const maxFull = o.maxFull ?? 14;
   specs.forEach((u, i) => {
     const lod: UnitSpec['lod'] = i < maxFull && u.d < full ? 'full' : u.d < far ? 'mid' : 'far';
@@ -90,10 +106,11 @@ export const d4Items = (v: View, T: number, o: D4Opts = {}): Item[] => {
   });
   // the avenue: the halted block and the columns streaming west
   if (!o.near) {
-    items.push(...armyItems(v, T, standing(TB_RESERVE), {ground: G, maxFull: 2, maxMid: 20, farFrom: 110, ctl: () => ({idle: 0.18})}));
-    items.push(...armyItems(v, T, streamForm(), {ground: G, maxFull: 0, maxMid: 26, farFrom: 120}));
+    // (from a low camera the columns beyond ~320 m are specks behind the rubble: leave them out; the wides keep all)
+    items.push(...armyItems(v, T, culled(standing(TB_RESERVE), v), {ground: G, maxFull: 1, maxMid: 8, farFrom: 110, ctl: () => ({idle: 0.18})}));
+    items.push(...armyItems(v, T, culled(streamForm(), v, v.pos.y > 8 ? Infinity : 320), {ground: G, maxFull: 0, maxMid: 6, farFrom: 120}));
   }
-  items.push(...persistItems(v, T, {exceptSec: 'D4'}));
+  items.push(...persistItems(v, T, {exceptSec: 'D4', lod: {full: 30, mid: 120}}));
   items.push(...(o.extra ?? []));
   return items;
 };

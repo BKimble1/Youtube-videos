@@ -17,6 +17,7 @@ import {V2, V3, add3, sub3, mul3, dot3, len3, norm3, rotAxis, rad, lerp, clamp, 
 import {handGlyph, HandShape} from './hands';
 import {blobPath, tearPath, ellipsoid2, ang2} from './util';
 import {mix} from '../engine/color';
+import {satchelParts, Satchel} from './gear';
 
 // ------------------------------------------------------------------ dimensions (rig units at s = 1)
 export const HIP_H = 165, HIP_X = 33, THIGH = 78, SHIN = 77, ANKLE_H = 10, LEG_W = 38;
@@ -48,6 +49,8 @@ export type Stain = {phi: number; h: number; size: number; amt?: number; seed?: 
 export type Damage = {
   browCut?: {side: 1 | -1; amt: number}; noseBleed?: number; lipCut?: number; mouthBlood?: number; bruise?: {side: 1 | -1; amt: number};
   dirt?: number; dust?: number; stains?: Stain[]; decals?: Decal[]; handBlood?: {L?: number; R?: number}; pale?: number;
+  /** worn gear that travels with the role's continuity (dmgR2): the flare carrier's satchel and what is left in it */
+  satchel?: Satchel;
 };
 /** Scene light on the figure, already in the figure's screen frame (x right, y down, z toward the viewer). */
 export type FigLight = {
@@ -632,6 +635,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
   headParts.forEach((hp, k) => add(r.torsoZ + 5 + k * 0.01, `head${k}`, hp));
 
   if (p.extra) p.extra(r).forEach((q) => parts.push(q));
+  if (dmg.satchel) satchelParts(r, dmg.satchel, inkC, col).forEach((q) => parts.push(q));
 
   parts.forEach((q) => { if (q.key !== 'shadow') q.z = q.z - r.torsoZ; });
   return {parts, rig: r};

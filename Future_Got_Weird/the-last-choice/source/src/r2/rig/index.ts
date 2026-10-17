@@ -13,6 +13,7 @@
 //   gait:  gaitW(path, dist, WALK_W | HURRY_W | RUN_W | SPRINT_W | LIMP_W, groundH) → world feet + body pose
 //   props: plateWear, tetherLauncher (+launcherMuzzle, hipReel), tablet (+projectorLens), breaker (+breakerTip),
 //          controller, halligan1/halligan2 (+halliganTip), flare, canister
+//   gear:  satchelParts (host's satchel, drawn by figureParts from dmgR2('flares').satchel), breakerCarry, controllerHold
 //   crew:  lookR2(role), dmgR2(role, filmT), toolsR2(role, filmT), limpR2(role, filmT)
 //   inserts: ClaspCU (his grip loosening in her hands)
 export * from './figure';
@@ -21,6 +22,7 @@ export * from './hands';
 export * from './poses';
 export * from './gait';
 export * from './props';
+export * from './gear';
 export * from './crew';
 export * from './sprite';
 export * from './closeups';

@@ -77,12 +77,12 @@ export const DROPS: Record<string, Drop> = {
   launcher: {kind: 'launcher', t0: EV.launcherDrop, from: {x: 19.0, y: G(19.0, -1.0) + 0.75, z: -1.0}, to: LAUNCHER_REST, flight: 0.42, apex: 0.05, spin: 180, key: 'd4_launcher'},
   // the halligan flies out of the runner's hand as the blow lands
   halligan: {kind: 'halligan', t0: EV.runnerHit + 0.06, from: {x: 17.45, y: G(17.45, 7.55) + 1.5, z: 7.55}, to: {x: 18.55, z: 6.75, yaw: 140}, flight: 0.7, apex: 0.5, spin: 520, key: 'd4_halligan'},
-  // the decoy maker lets the smashed tablet fall at her feet
-  tablet: {kind: 'tablet', t0: EV.tabletDrop, from: {x: 11.35, y: G(11.35, 5.3) + 0.95, z: 5.3}, to: {x: 11.55, z: 5.15, yaw: 20}, flight: 0.45, apex: 0.02, spin: 180, key: 'd4_tablet'},
-  // the controller flies from the drone pilot's hands as the drone hits her
-  controller: {kind: 'controller', t0: EV.droneHit + 0.02, from: {x: 11.6, y: G(11.6, 4.1) + 1.15, z: 4.1}, to: {x: 12.15, z: 4.75, yaw: 70}, flight: 0.55, apex: 0.35, spin: 360, key: 'd4_controller'},
+  // the decoy maker lets the smashed tablet fall in front of her (from her left hand at 160.15)
+  tablet: {kind: 'tablet', t0: EV.tabletDrop, from: {x: 12.87, y: 1.04, z: 5.81}, to: {x: 13.12, z: 5.7, yaw: 20}, flight: 0.4, apex: 0.02, spin: 180, key: 'd4_tablet'},
+  // the drone pilot lets go of the controller as her arm comes up at the diving drone (170.0, as her hands part)
+  controller: {kind: 'controller', t0: 170.0, from: {x: 11.82, y: 1.12, z: 3.97}, to: {x: 12.2, z: 4.3, yaw: 70}, flight: 0.5, apex: 0.12, spin: 360, key: 'd4_controller'},
   // the breaker lets the empty breaker fall as his leg gives
-  breaker: {kind: 'breaker', t0: 181.35, from: {x: 10.15, y: G(10.15, 7.85) + 0.9, z: 7.85}, to: {x: 10.55, z: 8.45, yaw: 40}, flight: 0.45, apex: 0.03, spin: 180, key: 'd4_breaker'},
+  breaker: {kind: 'breaker', t0: 181.35, from: {x: 9.76, y: 1.22, z: 7.62}, to: {x: 10.3, z: 7.35, yaw: 40}, flight: 0.45, apex: 0.03, spin: 180, key: 'd4_breaker'},
 };
 
 // ------------------------------------------------------------------ the slab heavy 2 staggers off (D4-5)

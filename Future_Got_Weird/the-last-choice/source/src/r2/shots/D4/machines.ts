@@ -117,11 +117,15 @@ const W1: UPlan = {
 
 // ------------------------------------------------------------------ W2 (7502): its arm torn off by the club at 164.4
 const W2_TB = TB_WRECKS[1];
+const W2_WAIT = {x: 36.8, z: 2.5};
 const W2: UPlan = {
   id: 7502, name: 'W2', eye: 'amber',
   steps: [
-    {k: 'walk', pts: [arcStartPos(ARC_START[3]).pos, {x: 36.5, z: 4.3}, {x: 32.6, z: 3.2}, {x: 27.0, z: 3.9}, {x: 24.0, z: 5.0}, {x: 20.0, z: 5.1}, arrive(W2_TB.pos, W2_TB.heading), W2_TB.pos], T0: M.P4, T1: 161.2, A: 0.2, D: 0.7},
-    {k: 'keys', root: [[161.2, W2_TB.pos.x, W2_TB.pos.z, W2_TB.heading]]},
+    // it closes on the block from the east and watches it (clear of the D4-1b lens), then follows the retreat
+    {k: 'walk', pts: [arcStartPos(ARC_START[3]).pos, {x: 39.0, z: 3.0}, W2_WAIT], T0: M.P4, T1: 153.4, A: 0.2, D: 0.6},
+    {k: 'keys', root: [[153.4, W2_WAIT.x, W2_WAIT.z, headingTo({x: 39.0, z: 3.0}, W2_WAIT)], [153.8, W2_WAIT.x, W2_WAIT.z, 268], [154.5, W2_WAIT.x, W2_WAIT.z, 266]]},
+    {k: 'walk', pts: [W2_WAIT, {x: 32.6, z: 2.4}, {x: 27.0, z: 3.9}, {x: 24.0, z: 5.0}, {x: 20.0, z: 5.1}, arrive(W2_TB.pos, W2_TB.heading), W2_TB.pos], T0: 154.5, T1: 161.4, A: 0.5, D: 0.7},
+    {k: 'keys', root: [[161.4, W2_TB.pos.x, W2_TB.pos.z, W2_TB.heading]]},
   ],
   act: (T) => {
     const dead = T >= W2_TB.fall.t0;
@@ -413,8 +417,9 @@ export const heavy2Footfalls = (Ta: number, Tb: number): {t: number; pos: V3; le
 // ================================================================== drones: into their tableau places
 type DKey = [number, number, number, number];
 const DRONE_KEYS: Record<number, DKey[]> = {
-  // the diver: follows the fight, dives on the drone pilot at 170.22, pulls up, holds low over the ring
-  7601: [[M.P4, 46, 7.5, 7], [158, 24, 7.5, 7], [165.5, 17.5, 7.8, 7.6], [169.45, 15.4, 7.2, 7.2], [170.22, 11.5, 1.78, 4.05], [170.62, 10.4, 3.0, 5.2], [172.6, 7.6, 5.0, 8.2], [175.5, 6.2, 5.6, 9.4]],
+  // the diver: follows the fight, dives on the drone pilot at 170.22, rebounds up the way it came (away from D4-5's
+  // lens), then settles low over the ring
+  7601: [[M.P4, 46, 7.5, 7], [158, 24, 7.5, 7], [165.5, 17.5, 7.8, 7.6], [169.45, 15.4, 7.2, 7.2], [170.22, 11.42, 1.66, 3.97], [170.62, 12.0, 3.1, 3.5], [172.6, 8.8, 5.0, 7.2], [175.5, 6.2, 5.6, 9.4]],
   7602: [[M.P4, 50, 9, -6], [160, 26, 8.5, -5.5], [170, 17, 7.2, -4.6], [178, 14.5, 6.4, -3.8]],
   7603: [[M.P4, 44, 12, -12], [162, 20, 11, -9], [172, 7, 9.6, -4.5], [179, 3.2, 9.2, -2.6]],
   7604: [[M.P4, 48, 10, 12], [161, 27, 9, 12], [171, 20, 8.2, 11], [178.5, 17.4, 7.6, 10.2]],
@@ -438,7 +443,8 @@ export const droneD4 = (id: number, T: number): DroneSpec => {
   const tb = TB_DRONES.find((d) => d.id === id)!;
   const k = DRONE_KEYS[id];
   // hovering sway, dying away into the tableau's stillness
-  const sway = 1 - smooth((T - (k[k.length - 1][0] - 1)) / 4);
+  // (none on the diver through its dive: it must hit her head where the keys put it)
+  const sway = (1 - smooth((T - (k[k.length - 1][0] - 1)) / 4)) * (id === 7601 ? 1 - win(T, 168.9, 171.2, 0.5, 0.6) : 1);
   const s = (f: number, p: number) => Math.sin(T * f + id * p) * sway;
   const p0 = kxyz(k, T);
   const pos = {x: p0.x + s(0.37, 1.3) * 0.6, y: p0.y + s(0.6, 2.1) * 0.25, z: p0.z + s(0.29, 0.7) * 0.6};

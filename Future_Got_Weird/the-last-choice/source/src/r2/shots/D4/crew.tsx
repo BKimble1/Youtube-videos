@@ -196,8 +196,11 @@ export const directorAt = (T: number): CrewOut => {
   }
   const glance = win(T, 153.95, 154.4, 0.15, 0.15); // a look down at the plate: cracked right through
   // D4-3: panting; he looks round at them; the arm goes up (161.75)
-  const arm = win(T, EV.armUp - 0.25, 162.3, 0.3, 0.2);
-  if (arm > 0) pose = blendPose(pose, layer(pose, {armR: {local: {r: 36, u: 452, f: 46}, pole: {r: 1, u: 0, f: -0.4}}, handR: 'fist', face: {mouth: 'grit', brows: -0.9}, lean: 2, drop: 14}), arm);
+  // (the fist goes well above his head — from behind him it must clear the head to read)
+  const arm = win(T, EV.armUp - 0.3, 162.3, 0.28, 0.18);
+  // and it sweeps forward, at them, as he goes (not back down past his head)
+  const go = after(T, 162.0, 0.25);
+  if (arm > 0) pose = blendPose(pose, layer(pose, {armR: {local: {r: 24, u: lerp(565, 430, go), f: lerp(34, 175, go)}, pole: {r: 1, u: 0, f: -0.4}}, handR: 'fist', face: {mouth: 'grit', brows: -0.9}, lean: 2 + 10 * go, drop: 10}), arm);
   // the charges: shoulder-down run, the plate driven into W1's chest (163.3); into W3 (165.02)
   const ch1 = win(T, 162.05, 163.55, 0.2, 0.25), ch2 = win(T, 163.95, 165.25, 0.2, 0.25);
   let chg = 0;
@@ -215,7 +218,7 @@ export const directorAt = (T: number): CrewOut => {
   // after the charges: the breath of hope (soft face), then the ring: dread
   const hope = win(T, 166.2, 170.5, 0.6, 0.5), dread = win(T, 170.5, 176.0, 0.5, 0.3);
   if (hope > 0) pose = blendPose(pose, layer(pose, {drop: 18, lean: 6, face: {mouth: 'pant', brows: 0.15, worry: 0.15, squint: 0}, breath: 1}), hope);
-  if (dread > 0) pose = blendPose(pose, layer(pose, {drop: 22, lean: 4, face: {mouth: 'open', open: 0.25, brows: 0.6, worry: 0.75}, breath: 0.9}), dread);
+  if (dread > 0) pose = blendPose(pose, layer(pose, {drop: 22, lean: 4, face: {mouth: 'sad', brows: 0.7, worry: 0.9}, breath: 0.9}), dread);
   // he sees the ram rise at her: the sprint; the plant; a high block (the plate up into the ram's path)
   const see = win(T, EV.dirSees, 176.4, 0.12, 0.2);
   if (see > 0) pose = face(pose, {mouth: 'o', brows: 0.8, worry: 0.6});
@@ -226,6 +229,9 @@ export const directorAt = (T: number): CrewOut => {
   if (lt) pose = look(pose, b, lt, 1 - chg);
   if (glance > 0) { const h = pose.head ?? {}; pose = {...pose, head: {yaw: lerp(h.yaw ?? 0, -22, glance), pitch: lerp(h.pitch ?? 0, 32, glance), roll: h.roll}, face: {...pose.face, lookY: 0.7 * glance}}; }
   // the plate arm: the body-local guard except on the runs, the charges, the raised arm's balance
+  // spent, looking round at the ring (REALIZE → he sees the ram): the plate arm sinks to his waist, off his face
+  const sink = win(T, 170.7, EV.dirSees + 0.15, 0.6, 0.3);
+  if (sink > 0) guard = lerpLoc(guard, {r: 16, u: 262, f: 74}, sink);
   const gSet = T > 177.3 ? lerpLoc(guard, STRIKE_GUARD, after(T, 177.3, 0.3)) : guard;
   const guardOn = (1 - chg) * (1 - 0.5 * arm);
   pose = blendPose(pose, layer(pose, {armL: {local: gSet, pole: {r: -1, u: -0.7, f: 0.1}, palm: {r: -0.55, u: 0.1, f: -1}}, handL: 'fist'}), guardOn);
@@ -355,7 +361,7 @@ export const tetherAt = (T: number): CrewOut => {
     pose = layer(pose, {head: {pitch: 26 * (1 - smooth((T - 161.5) / 0.4)), yaw: 18}, handL: 'grip', handR: 'grip'});
   }
   // the throw (164.45): a sidearm whip of the loop at W3's shins; the haul (164.9): she leans back on it; lets go 165.45
-  const thr = win(T, 164.1, EV.cableHaul + 0.05, 0.2, 0.08), haul = win(T, EV.cableHaul, 165.5, 0.08, 0.2);
+  const thr = win(T, 164.1, EV.cableHaul + 0.05, 0.2, 0.08), haul = win(T, EV.cableHaul - 0.08, 165.5, 0.22, 0.2);
   if (thr > 0 || haul > 0) {
     const k = clamp((T - 164.1) / (EV.cableThrow + 0.1 - 164.1));
     const hr = lerp3v(fromLoc(b, {r: 60, u: 230, f: -30}), fromLoc(b, {r: 10, u: 200, f: 140}), easeIn(k));
@@ -377,7 +383,7 @@ export const tetherAt = (T: number): CrewOut => {
     : T > 161.6 && T < 162.4 ? headOf('director', T) : T > 162.4 && T < 165.4 ? unitAttach(unitD4('W3', T)).kneeL
       : T > 167.8 && T < 169.0 ? headOf('director', T) : T > 175.7 && T < 177.9 ? ON(PILOT_DOWN, 0.6) : T >= 177.9 ? ON(SLAM, 1.1) : null;
   if (lt) pose = look(pose, b, lt, 1);
-  if (T > 170.5 && T < 175.7) pose = face(pose, {mouth: 'open', open: 0.2, brows: 0.6, worry: 0.8});
+  if (T > 170.5 && T < 175.7) pose = face(pose, {mouth: 'sad', brows: 0.65, worry: 0.85});
   const runArms: Pose = {armR: {local: {r: 26, u: 236, f: 64}}, armL: b.gait?.armL};
   const final = withRun(b, pose, armed ? runArms : gaitArms(b.gait));
   const spec = base('tether', 'd4tth', 3, b, T, {...final, handR: armed ? 'grip' : final.handR ?? 'open', handL: final.handL ?? 'open', holdR: armed ? tetherLauncher({loaded: false}) : undefined, extra: hipReel(0)}, world);
@@ -417,7 +423,7 @@ export const runnerAt = (T: number): CrewOut => {
     // then he lies there, a weak try at lifting his head, and settles into the tableau's pose (breathing)
     if (T > EV.runnerDown) {
       const lie: FigSpec = {...spec, pos: ON(RUNNER_DOWN), heading: RUNNER_DOWN.h, pose: {...LYING_BACK, head: {roll: 8, pitch: -4 - 14 * win(T, 157.2, 158.1, 0.3, 0.4), yaw: -20}, face: {mouth: 'pant', brows: 0.5, worry: 0.6, lids: 0.35}, breath: 0.7, dmg: dmgR2('runner', T)}, world: {}};
-      spec = toward(lie, DOWN_SPEC(T), smooth((T - 157.9) / 0.7));
+      spec = toward(toward(spec, lie, smooth((T - EV.runnerDown) / 0.3)), DOWN_SPEC(T), smooth((T - 157.9) / 0.7));
     }
     return {spec, body: {pos, heading}};
   }
@@ -491,7 +497,8 @@ export const breakerAt = (T: number): CrewOut => {
     const sw = k < 0.36 ? smooth(k / 0.36) : 1;
     pose = layer(pose, {
       drop: lerp(20, 12, sw) + (k > 0.45 && k < 0.8 ? 26 * Math.sin(Math.PI * clamp((k - 0.45) / 0.35)) : 0),
-      lean: k < 0.36 ? lerp(8, -14, smooth(k / 0.36)) : k < 0.55 ? lerp(-14, 34, easeIn((k - 0.36) / 0.19)) : lerp(34, 8, smooth((k - 0.55) / 0.45)),
+      // (the body leads the club: its lean is smooth, not whipped with the hands — the head must not lurch)
+      lean: k < 0.36 ? lerp(8, -14, smooth(k / 0.36)) : k < 0.55 ? lerp(-14, 24, smooth((k - 0.36) / 0.19)) : lerp(24, 8, smooth((k - 0.55) / 0.45)),
       twist: k < 0.36 ? 16 * smooth(k / 0.36) : lerp(16, -6, smooth((k - 0.36) / 0.3)),
       face: {mouth: 'grit', brows: -1, squint: 0.5},
     });
@@ -501,7 +508,7 @@ export const breakerAt = (T: number): CrewOut => {
   if (stag > 0) pose = blendPose(pose, layer(pose, {drop: 44, lean: 22, side: -8, face: {mouth: 'pain', brows: 0.4}}), stag);
   const hope = win(T, 166.4, 170.5, 0.6, 0.5);
   if (hope > 0) pose = face(pose, {mouth: 'pant', brows: 0.1, worry: 0.1});
-  if (T > 170.5 && T < 178) pose = face(pose, {mouth: 'open', open: 0.2, brows: 0.6, worry: 0.8});
+  if (T > 170.5 && T < 178) pose = face(pose, {mouth: 'sad', brows: 0.65, worry: 0.85});
   // the leg gives as he limps toward him; he sits down hard (the breaker falls from his hands at 181.35)
   const sit = after(T, 181.3, 0.75);
   const port = {front: fromLoc(b, {r: -16, u: 250, f: 118}), back: fromLoc(b, {r: 32, u: 205, f: 34})};
@@ -542,7 +549,7 @@ export const decoyAt = (T: number): CrewOut => {
   const tab = win(T, 159.5, EV.tabletDrop + 0.2, 0.3, 0.2);
   if (tab > 0) pose = blendPose(pose, layer(pose, {armL: {local: {r: -20, u: 230, f: 120}}, head: {pitch: 30, yaw: -8}, face: {mouth: 'sad', brows: 0.6, worry: 0.8, lookY: 0.8}}), tab);
   if (!hasTablet) pose = layer(pose, {armL: {local: {r: -30, u: 190, f: 70}}, handL: 'relaxed'});
-  if (T > 170.5 && T < 178) pose = face(pose, {mouth: 'open', open: 0.25, brows: 0.7, worry: 0.95});
+  if (T > 170.5 && T < 178) pose = face(pose, {mouth: 'sad', brows: 0.7, worry: 0.95});
   // reaching toward him after the strike; her right wrist goes back where the unit catches it (181.0)
   const reach = after(T, 178.4, 0.4);
   const world: FigSpec['world'] = {};
@@ -612,9 +619,9 @@ export const pilotAt = (T: number): CrewOut => {
     const arm = win(T, 177.2, 178.1, 0.25, 0.3);
     pose = layer(pose, {
       face: {mouth: fear > 0.3 ? 'open' : 'pant', open: 0.4 * fear, brows: 0.7, worry: 0.9, squint: T > M.STRIKE - 0.05 && T < 178.0 ? 1 : 0, lid: T > M.STRIKE - 0.05 && T < 177.95 ? 0.85 : 0.1},
-      ...(arm > 0 ? {armL: {local: {r: -10, u: 300, f: 60}, pole: {r: -1, u: -0.2, f: 0}}, handL: 'open' as const} : {}),
       dmg,
     });
+    if (arm > 0) pose = blendPose(pose, layer(pose, {armL: {local: {r: -10, u: 300, f: 60}, pole: {r: -1, u: -0.2, f: 0}}, handL: 'open'}), arm);
     // she turns toward him on the ground after the strike (onto her hip, facing him)
     const turn = smooth((T - 178.6) / 1.6);
     if (turn > 0) heading = heading + wrapD(205 - heading) * turn * (1 - smooth((T - EV.pilotUp) / 1.2));
@@ -625,7 +632,8 @@ export const pilotAt = (T: number): CrewOut => {
       const hp = (sd: number) => ON({x: pos.x - f.x * 0.32 + r.x * sd * 0.2, z: pos.z - f.z * 0.32 + r.z * sd * 0.2}, 0.03);
       const w = smooth((T - 171.0) / 0.6);
       const R0 = figureRig(SOLVE_VIEW, spec);
-      spec = {...spec, world: {handL: arm > 0.05 ? undefined : lerp3v(R0.handL, hp(-1), w), handR: lerp3v(R0.handR, hp(1), w), orientL: {palm: {x: 0, y: -1, z: 0}, fingers: {x: -f.x, y: 0, z: -f.z}, w: w * (1 - arm)}, orientR: {palm: {x: 0, y: -1, z: 0}, fingers: {x: -f.x, y: 0, z: -f.z}, w}}};
+      const planted = lerp3v(R0.handL, hp(-1), w);
+      spec = {...spec, world: {handL: arm > 0 ? lerp3v(planted, R0.handL, smooth(arm)) : planted, handR: lerp3v(R0.handR, hp(1), w), orientL: {palm: {x: 0, y: -1, z: 0}, fingers: {x: -f.x, y: 0, z: -f.z}, w: w * (1 - arm)}, orientR: {palm: {x: 0, y: -1, z: 0}, fingers: {x: -f.x, y: 0, z: -f.z}, w}}};
     }
     // looks: the drone (gone), the heavy, its ram, then him
     const lt: V3 = T < 175.6 ? heavyAttach(heavy2At(T)).eye : T < M.STRIKE ? heavyAttach(heavy2At(T)).ramTip : ON(SLAM, 1.0);
@@ -649,7 +657,7 @@ export const pilotAt = (T: number): CrewOut => {
 };
 
 // ================================================================== THE FLARE CARRIER (host)
-const FLR_RUN1: XZ[] = [{x: 33.8, z: 8.42}, {x: 27.0, z: 8.9}, {x: 21.0, z: 10.0}, {x: 17.0, z: 10.1}, {x: 15.4, z: 10.3}, {x: 13.6, z: 8.5}, {x: GATHER.flares.x, z: GATHER.flares.z}];
+const FLR_RUN1: XZ[] = [{x: 33.8, z: 8.42}, {x: 27.0, z: 8.9}, {x: 23.5, z: 7.6}, {x: 20.0, z: 5.6}, {x: 16.2, z: 4.7}, {x: 14.6, z: 4.75}, {x: 13.2, z: 6.2}, {x: GATHER.flares.x, z: GATHER.flares.z}];
 const FLR_RUN2: XZ[] = [{x: GATHER.flares.x, z: GATHER.flares.z}, {x: 14.25, z: 6.55}];
 const FLR_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 34.0, 8.4, 86], [150.35, 33.9, 8.4, 86], [150.7, 33.8, 8.42, 268]], stag: 0.12},
@@ -674,7 +682,7 @@ export const flaresAt = (T: number): CrewOut => {
   const thK = clamp((T - (FLARE.throw - 0.4 * 0.75)) / 0.75);
   const thW = win(T, FLARE.throw - 0.32, FLARE.throw + 0.6, 0.06, 0.3);
   if (thW > 0) pose = blendPose(pose, THROW(thK), thW);
-  if (T > 170.5 && T < 178) pose = face(pose, {mouth: 'open', open: 0.2, brows: 0.6, worry: 0.7});
+  if (T > 170.5 && T < 178) pose = face(pose, {mouth: 'sad', brows: 0.6, worry: 0.8});
   // toward him after the strike; his right arm goes back where the unit takes it (181.7)
   const world: FigSpec['world'] = {};
   const go = after(T, 178.4, 0.4);
@@ -698,7 +706,7 @@ export const flaresAt = (T: number): CrewOut => {
 
 // ================================================================== all of them
 export const ROLES: Role2[] = ['director', 'tether', 'runner', 'breaker', 'decoy', 'drone', 'flares'];
-export const crewAt = (role: Role2, T: number): CrewOut => {
+const rawAt = (role: Role2, T: number): CrewOut => {
   switch (role) {
     case 'director': return directorAt(T);
     case 'tether': return tetherAt(T);
@@ -708,6 +716,25 @@ export const crewAt = (role: Role2, T: number): CrewOut => {
     case 'drone': return pilotAt(T);
     default: return flaresAt(T);
   }
+};
+/**
+ * Where a body's timeline switches branch (a hit, a release, a hand taking a new target) the pose would jump in one
+ * frame: there it is blended from its last pre-switch state into the new one over d s (pops found by a frame-to-frame
+ * scan of every joint).
+ */
+const SWITCHES: Partial<Record<Role2, [number, number][]>> = {
+  runner: [[EV.runnerHit, 0.1], [EV.runnerDown, 0.2]],
+  drone: [[EV.droneHit, 0.14]],
+  tether: [[EV.disarmTear + 0.02 - 1e-3, 0.12], [164.1, 0.12], [165.5 - 1e-3, 0.18]],
+  decoy: [[EV.grabDecoy - 0.45, 0.25]],
+  flares: [[EV.grabFlares - 0.45, 0.25]],
+};
+export const crewAt = (role: Role2, T: number): CrewOut => {
+  const o = rawAt(role, T);
+  for (const [t0, d] of SWITCHES[role] ?? []) {
+    if (T >= t0 && T < t0 + d) return {...o, spec: toward(rawAt(role, t0 - 1e-3).spec, o.spec, smooth((T - t0) / d))};
+  }
+  return o;
 };
 
 // ------------------------------------------------------------------ footfalls (dust and sound where running feet land)

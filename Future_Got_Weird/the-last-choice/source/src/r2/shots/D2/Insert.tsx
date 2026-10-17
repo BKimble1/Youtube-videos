@@ -14,7 +14,7 @@ const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
 const SKIN = '#8D5A3C', SKIN_D = '#6E4329', SKIN_L = '#A9714F', SLEEVE = '#3E6FB0', SLEEVE_D = '#2E5488', INK = '#162A32';
 const SLATE = '#3A444C', SLATE_L = '#58646D', SLATE_D = '#262D33';
 
-const KEYS: CamKey[] = [
+export const KEYS: CamKey[] = [
   {t: 0, pos: g(46.98, 4.18, 1.35), target: g(46.4, 4.55, 0.72), fov: 40},
   {t: 97.55 - 95.38, pos: g(46.96, 4.2, 1.33), target: g(46.38, 4.56, 0.7), fov: 39},
 ];

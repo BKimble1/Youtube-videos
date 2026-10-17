@@ -4,7 +4,7 @@ import {M} from '../../timing';
 
 /** shot boundaries (they tile M.BASS_OUT → M.CHARGE) */
 export const CUT = {
-  c1: M.BASS_OUT, c2: M.ALLY1, c3: 40.16, c4: M.MARCH, c5a: 50.0, c5b: 51.2, c5c: 52.1, c6: M.ASSEMBLE, end: M.CHARGE,
+  c1: M.BASS_OUT, c2: M.ALLY1, c3: 40.16, c4: M.MARCH, c4b: 46.7, c5a: 50.0, c5b: 51.2, c5c: 52.1, c6: M.ASSEMBLE, end: M.CHARGE,
 };
 
 /** the Director (C1: the turn; C5: the touch, the strap; C6: the turn, the step) */
@@ -60,8 +60,8 @@ export const T3 = {
   launch: 47.05, spin: 47.3, lift: 47.72, // the pilot stops, holds the drone up; the rotors spin up; it lifts off her palm
   ctrl: 48.15, // her hands come together on the controller
   pilotGo: 48.35,
-  arriveDecoy: 52.2, arriveFlares: 51.5, arrivePilot: 52.9,
-  turnPilot: 53.3, turnFlares: 53.44, turnDecoy: 53.52,
+  arriveDecoy: 52.2, arriveFlares: 51.0, arrivePilot: 54.0,
+  turnPilot: 54.3, turnFlares: 53.44, turnDecoy: 53.52,
 };
 
 /** the allied drone: carried, lifts off, rises past the tether (C5b), holds over the group (joins D1's keys at 56) */

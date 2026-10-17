@@ -366,13 +366,14 @@ const RUN_SEGS: Seg[] = [
 })();
 /** knocked back: two stumbling steps back along D's blow, into the breaker's arms; then lowered to a kneel there */
 const runnerFlight = (T: number) => {
-  const u = clamp((T - EV2.knock) / (EV2.catch - EV2.knock));
-  const k = easeOut(u);
+  // the pelvis goes back with the stumbling feet (not ahead of them): he is falling, the steps barely keep up
+  const u = clamp((T - EV2.knock - 0.04) / (EV2.catch - 0.12 - EV2.knock - 0.04));
+  const k = lerp(smooth(u), easeOut(u), 0.35);
   const x = lerp(RUN_GUARD.x, RUN_CAUGHT.x, k), z = lerp(RUN_GUARD.z, RUN_CAUGHT.z, k);
   const h = RUN_GUARD.h + 14 * k;
   const f = fwdOf(h), r = rightOf(h);
   const back = (dist: number, side: number): V3 => { const fx = RUN_GUARD.x - f.x * dist + r.x * side, fz = RUN_GUARD.z - f.z * dist + r.z * side; return {x: fx, y: G(fx, fz), z: fz}; };
-  // the feet: right foot steps back (110.6–110.85), left foot back (110.9–111.2), the right slides as he lands on the cradle
+  // the feet: right foot steps back (110.52–110.74), left foot back (110.7–110.96), the right slides as he lands on the cradle
   const step = (t0: number, t1: number, a: V3, b2: V3, lift: number) => {
     const s = clamp((T - t0) / (t1 - t0));
     const p = lerp3v(a, b2, smooth(s));
@@ -380,8 +381,8 @@ const runnerFlight = (T: number) => {
   };
   const fR0 = back(-0.05, 0.15), fL0 = back(-0.18, -0.15);
   const fR1 = back(0.55, 0.2), fL1 = back(0.78, -0.12), fR2 = back(0.95, 0.22);
-  const footR = T < 110.6 ? fR0 : T < 111.2 ? step(110.6, 110.85, fR0, fR1, 0.14) : step(111.2, 111.5, fR1, fR2, 0);
-  const footL = step(110.9, 111.2, fL0, fL1, 0.12);
+  const footR = T < 110.52 ? fR0 : T < 111.05 ? step(110.52, 110.74, fR0, fR1, 0.14) : step(111.05, 111.4, fR1, fR2, 0);
+  const footL = step(110.7, 110.96, fL0, fL1, 0.12);
   return {pos: onG(x, z), heading: h, footL, footR};
 };
 /** the pry: fork tip on B's back-plate edge; the bar levers about the tip; the plate pops (D1's pryHands) */
@@ -430,7 +431,7 @@ export const runnerAt = (T: number): CrewOut => {
   // he's lowered to his knees and stays there, breathing, hand on his ribs
   const fallK = clamp((T - EV2.knock) / (EV2.catch + 0.25 - EV2.knock));
   if (T > EV2.knock) {
-    const kb = keyPose([[0, layer(STAND, {drop: 20})], [0.18, layer(KNOCKED_BACK(0.15), {drop: 14})], [0.7, layer(KNOCKED_BACK(0.4), {drop: 34})], [1, layer(KNOCKED_BACK(0.42), {drop: 70, bodyPitch: -46})]], fallK);
+    const kb = keyPose([[0, layer(STAND, {drop: 20})], [0.18, layer(KNOCKED_BACK(0.15), {drop: 14})], [0.7, layer(KNOCKED_BACK(0.33), {drop: 22})], [1, layer(KNOCKED_BACK(0.42), {drop: 70, bodyPitch: -46})]], fallK);
     const w = 1 - ramp(T, 112.0, 112.9);
     pose = blendPose(pose, {...kb, handR: 'grip'}, w);
     pose = blendPose(pose, layer(KNEEL('R'), {drop: 84, lean: 18, armL: {local: {r: -20, u: 170, f: 70}}, armR: {local: {r: 40, u: 150, f: 60}}, handL: 'brace', head: {pitch: 14}, face: {mouth: 'pant', brows: 0.4, worry: 0.6, squint: 0.3}, breath: 1}), 1 - w);

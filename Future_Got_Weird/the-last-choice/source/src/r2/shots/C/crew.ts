@@ -9,7 +9,7 @@ import {V3, add3, sub3, mul3, norm3, dot3, lerp, lerp3, clamp, smooth, easeOut, 
 import type {View} from '../../engine';
 import {
   FigSpec, FigFrame, Pose, blendPose, layer, lookR2, dmgR2, toolsR2, plateWear, tetherLauncher, hipReel, tablet, breaker,
-  controller, halligan1, BRACED, figureRig, handOn, SH_X, SH_H,
+  controller, halligan1, BRACED, figureRig, handOn, SH_X, SH_H, breakerCarry, controllerHold,
 } from '../../rig';
 import type {Rig2, Part} from '../../rig';
 import type {GaitW} from '../../rig/gait';
@@ -25,7 +25,6 @@ import {
 } from './motion';
 import {GC, onGC, wallGrip, WALL} from './ground';
 import {TD, TT, TR, TB2, T3, TDR, TEND, CUT} from './beats';
-import {flareBag, breakerCarry, controllerHold} from './gear';
 
 export type RoleC = 'director' | 'tether' | 'runner' | 'breaker' | 'drone' | 'flares' | 'decoy';
 export const ROLES_C: RoleC[] = ['director', 'tether', 'runner', 'breaker', 'drone', 'flares', 'decoy'];
@@ -489,24 +488,25 @@ export const breakerC = (T: number, v?: View, dir?: FigSpec): CrewC => {
 
 // ================================================================== THE THREE FROM THE EDGE OF THE STREET (C4)
 // The drone pilot (checker): the drone in her left hand, the controller in her right; she stops on the slope, holds
-// the drone up on her palm, the rotors spin up and it lifts off; her hands come together on the controller; up onto
-// the slab in the crest notch. The flare carrier (host): the satchel of flares and canisters on his hip. The decoy
+// the drone up on her palm, the rotors spin up and it lifts off; her hands come together on the controller; up over
+// the slab in the crest notch and down off its east edge to her place beside it (D1's start: PILOT_SPOT). The flare carrier (host): the satchel of flares and canisters on his hip. The decoy
 // maker (clerkB): the tablet with the clip-on projector in her left hand.
 const DR_PATH: XZ[] = [{x: -11.6, z: 11.2}, {x: -9.2, z: 8.6}, {x: -7.4, z: 7.5}, {x: -6.0, z: 6.3}, {x: -4.9, z: 5.5}];
 const DR_WALK = walkSeg(DR_PATH, T3.go, T3.launch, G_HURRY, {A: 0.7, D: 0.6});
 const DR_E = walkEnd(DR_WALK);
-const DR_PATH2: XZ[] = [{x: DR_E.x, z: DR_E.z}, {x: -3.9, z: 4.4}, {x: -2.6, z: 3.3}, {x: -1.45, z: 2.45}, {x: -0.62, z: 2.05}, {x: 0.0, z: 2.0}];
-const DR_WALK2 = walkSeg(DR_PATH2, T3.pilotGo, T3.arrivePilot, G_WALK, {A: 0.6, D: 0.7});
+const PILOT_SPOT = {x: 1.28, z: 2.12, h: 140.2}; // = D1/crew.tsx DRN_RUN[0] and its heading to the next point
+const DR_PATH2: XZ[] = [{x: DR_E.x, z: DR_E.z}, {x: -3.9, z: 4.4}, {x: -2.6, z: 3.3}, {x: -1.45, z: 2.45}, {x: -0.62, z: 2.05}, {x: -0.1, z: 1.93}, {x: 0.5, z: 1.88}, {x: 0.98, z: 2.0}, {x: PILOT_SPOT.x, z: PILOT_SPOT.z}];
+const DR_WALK2 = walkSeg(DR_PATH2, T3.pilotGo, T3.arrivePilot, G_WALK, {A: 0.6, D: 0.7, k: 0.7});
 const DR_E2 = walkEnd(DR_WALK2);
 const DR_SEGS: Seg[] = [
   DR_WALK,
   standSeg([[T3.launch, DR_E.x, DR_E.z, DR_E.h], [T3.pilotGo, DR_E.x, DR_E.z, DR_E.h]], {half: 0.14, stag: 0.08}),
   DR_WALK2,
-  standSeg([[T3.arrivePilot, DR_E2.x, DR_E2.z, DR_E2.h], [T3.turnPilot, 0.0, 2.0, DR_E2.h], [54.2, 0.0, 2.0, 129], [M.CHARGE + 1, 0.0, 2.0, 129]], {half: 0.13, stag: 0.04}),
+  standSeg([[T3.arrivePilot, DR_E2.x, DR_E2.z, DR_E2.h], [T3.turnPilot, DR_E2.x, DR_E2.z, DR_E2.h], [55.0, PILOT_SPOT.x, PILOT_SPOT.z, PILOT_SPOT.h], [M.CHARGE + 1, PILOT_SPOT.x, PILOT_SPOT.z, PILOT_SPOT.h]], {half: 0.13, stag: 0.04, turnStep: 65}),
 ];
 /** the drone in her left hand (carried at her side; held up on the palm at the launch) — body-local, view-free */
 const CARRY = {r: -40, u: 168, f: 34};
-const HOLD_UP = {r: -14, u: 352, f: 74};
+const HOLD_UP = {r: -92, u: 386, f: -6}; // up and out on her left side, clear of her face (it shows under the drone)
 const droneHandLoc = (T: number) => {
   const up = keyN([[T3.launch - 0.3, 0], [T3.spin, 1]], T);
   return {r: lerp(CARRY.r, HOLD_UP.r, up), u: lerp(CARRY.u, HOLD_UP.u, up), f: lerp(CARRY.f, HOLD_UP.f, up)};
@@ -550,12 +550,15 @@ export const pilotC = (T: number, v?: View): CrewC => {
   if (!b.inWalk) pose = addPose(pose, weight(b));
   // the launch: the drone up on her palm; the rotors spin; it leaves the palm; the hand lowers
   const after2 = after(T, T3.lift + 0.05, 0.4);
-  pose = layer(pose, {armL: {local: hasDrone ? droneHandLoc(T) : {r: lerp(HOLD_UP.r, -22, after2), u: lerp(HOLD_UP.u, 218, after2), f: lerp(HOLD_UP.f, 84, after2)}}});
+  // (down her side first, then in to the controller: the hand does not wipe across her face)
+  const in2 = after2 * after2;
+  pose = layer(pose, {armL: {local: hasDrone ? droneHandLoc(T) : {r: lerp(HOLD_UP.r, -22, in2), u: lerp(HOLD_UP.u, 198, after2), f: lerp(HOLD_UP.f, 74, in2)}}});
   if (ctrl2) {
     const k = after(T, T3.ctrl, 0.25);
-    pose = blendPose(pose, layer(pose, {armL: {local: {r: -22, u: 218, f: 84}}, armR: {local: {r: 22, u: 218, f: 84}}}), k);
+    // (held low at her chest, so a low lens still sees her face over it)
+    pose = blendPose(pose, layer(pose, {armL: {local: {r: -22, u: 198, f: 74}}, armR: {local: {r: 22, u: 198, f: 74}}}), k);
   }
-  const a = lookSeq(b, T, [[44.3, {x: 0, y: 4.4, z: 2.0}], [T3.launch - 0.2, droneBody(T)], [T3.pilotGo + 0.4, {x: 0.0, y: 4.6, z: 2.0}], [50.4, droneBody(T)], [T3.arrivePilot + 0.1, {x: 1.25, y: 4.9, z: 1.35}], [T3.turnPilot, add3(droneBody(T), {x: 0, y: 0, z: 0})]], 0.35, {lim: 80});
+  const a = lookSeq(b, T, [[44.3, {x: 0, y: 4.4, z: 2.0}], [T3.launch - 0.2, droneBody(T)], [T3.pilotGo + 0.4, {x: 0.0, y: 4.6, z: 2.0}], [50.4, droneBody(T)], [52.3, {x: 0.2, y: 4.1, z: 2.25}], [52.9, {x: 1.25, y: 4.9, z: 1.35}], [53.6, ARMY_EYE], [56.1, droneBody(T)], [56.9, ARMY_EYE]], 0.35, {lim: 80});
   pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch}});
   const ready = after(T, T3.turnPilot + 0.3, 1.2);
   if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(8, 12, after(T, 57.6, 1.6)), lean: 8, face: {mouth: 'flat', brows: -0.4, squint: 0.3}}), ready);
@@ -572,7 +575,7 @@ export const pilotC = (T: number, v?: View): CrewC => {
 };
 
 const FL_PATH: XZ[] = [{x: -12.0, z: 13.0}, {x: -9.6, z: 10.4}, {x: -7.6, z: 9.1}, {x: -6.0, z: 7.6}, {x: -4.65, z: 6.1}, {x: -3.55, z: 4.88}, {x: -2.0, z: 4.68}, {x: -0.6, z: 4.55}, {x: 0.45, z: 4.62}, {x: 1.0, z: 4.8}];
-const FL_WALK = walkSeg(FL_PATH, T3.go + 0.25, T3.arriveFlares, G_HURRY, {A: 0.7, D: 0.7});
+const FL_WALK = walkSeg(FL_PATH, T3.go - 0.3, T3.arriveFlares, G_HURRY, {A: 0.7, D: 0.7});
 const FL_E = walkEnd(FL_WALK);
 const FL_SEGS: Seg[] = [
   FL_WALK,
@@ -589,7 +592,7 @@ export const flaresC = (T: number): CrewC => {
   pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch}});
   const ready = after(T, T3.turnFlares + 0.2, 1.2);
   if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(10, 22, after(T, 57.6, 1.6)), lean: 9, armR: {local: {r: 52, u: 216, f: 60}}, armL: {local: {r: -30, u: 228, f: 90}}, handL: 'open', handR: 'open', face: {mouth: 'flat', brows: -0.5}}), ready);
-  const eb = endBlend('flares', T, b.pos, b.heading, {...pose, extra: flareBag(), dmg: dmgR2('flares', T)}, {footL: b.footL, footR: b.footR});
+  const eb = endBlend('flares', T, b.pos, b.heading, {...pose, dmg: dmgR2('flares', T)}, {footL: b.footL, footR: b.footR});
   const spec: FigSpec = {key: 'cFlr', look: lookR2('flares'), t: T, seed: 9, pos: eb.pos, heading: eb.heading, pose: (F: FigFrame) => ({...eb.pose, face: {...(eb.pose.face ?? {}), ...eyesTo(F, b, a, null)}}), world: eb.world};
   return {spec, body: b, pts: {}};
 };

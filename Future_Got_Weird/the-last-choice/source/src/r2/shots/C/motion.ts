@@ -9,6 +9,7 @@ import {V3, clamp, smooth, lerp} from '../../../kit/math';
 import type {GaitW} from '../../rig/gait';
 import type {Pose} from '../../rig/poses';
 import {GC} from './ground';
+import {groundH} from '../../world/ground';
 
 export type XZ = {x: number; z: number};
 /** [T, x, z, heading] */
@@ -247,7 +248,7 @@ export const gaitC = (path: Warped, s: number, o: GaitW, hipX = 0.15): GaitOut =
       const x = p.x + Math.cos(hr) * hipX * side, z = p.z + Math.sin(hr) * hipX * side;
       return {x, y: GC(x, z), z};
     };
-    if (u < o.duty) return {pos: place(plantS(k)), pitch: clamp((u - (o.duty - 0.16)) / 0.16) * 22, stance: true, sw: 0};
+    if (u < o.duty) { const q = place(plantS(k)); return {pos: q, so: q.y - groundH(q.x, q.z), pitch: clamp((u - (o.duty - 0.16)) / 0.16) * 22, stance: true, sw: 0}; }
     const w = (u - o.duty) / (1 - o.duty);
     const a = place(plantS(k)), b = place(plantS(k + 1));
     // a step up (a ledge, the slab's edge): the foot rises first, then reaches over onto it
@@ -257,7 +258,7 @@ export const gaitC = (path: Warped, s: number, o: GaitW, hipX = 0.15): GaitOut =
     const lift = Math.sin(Math.PI * Math.min(1, w * 1.05)) * o.lift;
     const ey = up ? smooth(Math.min(1, w * 2.4)) : e;
     const y = Math.max(lerp(a.y, b.y, ey) + lift, GC(x, z) + lift * 0.75 + 0.02 * Math.sin(Math.PI * w));
-    return {pos: {x, y, z}, pitch: lerp(22, -10, clamp(w * 2)) * (1 - clamp((w - 0.7) / 0.3)), stance: false, sw: Math.sin(Math.PI * w)};
+    return {pos: {x, y, z}, so: lerp(a.y - groundH(a.x, a.z), b.y - groundH(b.x, b.z), ey), pitch: lerp(22, -10, clamp(w * 2)) * (1 - clamp((w - 0.7) / 0.3)), stance: false, sw: Math.sin(Math.PI * w)};
   };
   const R = foot(0, 1), Lf = foot(0.5, -1);
   const c = s / W;
@@ -273,7 +274,10 @@ export const gaitC = (path: Warped, s: number, o: GaitW, hipX = 0.15): GaitOut =
     legL: {pitch: Lf.pitch}, legR: {pitch: R.pitch},
     breath: 0.45,
   };
-  return {pos: {x: p.x, y: GC(p.x, p.z), z: p.z}, heading: p.heading, footL: Lf.pos, footR: R.pos, pose, phase: c, stanceL: Lf.stance, stanceR: R.stance, slope: sl, swingL: Lf.sw, swingR: R.sw};
+  // the root rides the terrain plus the feet's mean height on the slab (so it follows the feet up onto / down off the
+  // slab's edge instead of popping there); off the slab this is GC itself
+  const y = groundH(p.x, p.z) + (Lf.so + R.so) / 2;
+  return {pos: {x: p.x, y, z: p.z}, heading: p.heading, footL: Lf.pos, footR: R.pos, pose, phase: c, stanceL: Lf.stance, stanceR: R.stance, slope: sl, swingL: Lf.sw, swingR: R.sw};
 };
 
 // ------------------------------------------------------------------ a timeline of walks, stands and scripted moves

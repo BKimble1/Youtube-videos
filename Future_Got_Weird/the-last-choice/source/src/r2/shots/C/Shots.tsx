@@ -9,7 +9,7 @@ import {combine} from '../../fx';
 import {motes} from '../B/kit';
 import {CUT} from './beats';
 import {crewItems, droneFx, dustFx, setC, armyC, C_COLUMNS} from './kit';
-import {CAM_C1, CAM_C2, CAM_C3, CAM_C4, CAM_C5A, CAM_C5B, CAM_C5C, CAM_C6} from './cams';
+import {CAM_C1, CAM_C2, CAM_C3, CAM_C4A, CAM_C4B, CAM_C5A, CAM_C5B, CAM_C5C, CAM_C6} from './cams';
 import {crewC} from './crew';
 
 const head = (T: number, up = 1.55): V3 => { const b = crewC(T).director.body.pos; return {x: b.x, y: b.y + up, z: b.z}; };
@@ -45,12 +45,19 @@ export const ShotC3: React.FC = () => {
 };
 
 // ------------------------------------------------------------------ C4
-export const ShotC4: React.FC = () => {
+export const ShotC4a: React.FC = () => {
   const {t, T} = useShotTime(CUT.c4);
-  const cam = camPath(CAM_C4, t, 0.4);
+  const cam = camPath(CAM_C4A, t, 0.5);
   const f = combine(dustFx(T), droneFx(T));
-  const items = (v: View): Item[] => [...setC(v, T), ...crewItems(v, T), ...f.items, ...armyC(v, T)];
-  return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.018} atmos={{columns: C_COLUMNS, smoke: 0.8, haze: 0.15}} vignette={0.55} />;
+  const items = (v: View): Item[] => [...setC(v, T), ...crewItems(v, T), ...f.items];
+  return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.012} atmos={{columns: C_COLUMNS, smoke: 0.7, haze: 0.15}} vignette={0.55} />;
+};
+export const ShotC4b: React.FC = () => {
+  const {t, T} = useShotTime(CUT.c4b);
+  const cam = camPath(CAM_C4B, t, 0.5);
+  const f = combine(dustFx(T), droneFx(T));
+  const items = (v: View): Item[] => [...setC(v, T), ...crewItems(v, T), ...f.items, ...armyC(v, T, {maxMid: 10})];
+  return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.01} atmos={{columns: C_COLUMNS, smoke: 0.7, haze: 0.15}} vignette={0.55} />;
 };
 
 // ------------------------------------------------------------------ C5 (three close-ups)

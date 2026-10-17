@@ -7,9 +7,9 @@
 //   d4_cable     the cut tether cable wound round W3's shins, its free end on the street
 //   d4_launcher  the tether launcher, torn from her hands by H1 and flung down at ≈ (18.9, −0.9)
 //   d4_halligan  the runner's halligan, knocked from his hand, at ≈ (18.6, 6.8)
-//   d4_tablet    the smashed tablet the decoy maker let fall at ≈ (11.6, 5.2)
-//   d4_controller the drone pilot's controller, knocked from her hands at ≈ (11.8, 4.3)
-//   d4_breaker   the empty breaker, dropped as the breaker's leg gave, at ≈ (10.6, 8.5)
+//   d4_tablet    the smashed tablet the decoy maker let fall at ≈ (13.1, 5.7)
+//   d4_controller the drone pilot's controller, dropped as the drone came at her, at ≈ (12.2, 4.3)
+//   d4_breaker   the empty breaker, dropped as the breaker's leg gave, at ≈ (10.3, 7.35)
 import type {Persist} from '../../film/continuity';
 import {wreckSpecs} from '../EF/tableau';
 import {DROPS, dropAt, heavySlab, wrapPoints, polyCable, looseEnd} from './props';

@@ -41,8 +41,8 @@ const pairRunnerBreaker = (v: View, T: number, runner: FigSpec, brk: FigSpec): {
   if (T < EV2.knock + 0.2) return {runner, breaker: brk};
   if (T < 112.85) {
     // the cradle: his chest at the faller's shoulder blades; his palms come onto the back as the weight arrives
-    const w = smooth(clamp((T - 110.95) / 0.42));
-    const c = supportCatch(v, runner, brk, {w, cradle: {r: 0, u: 96, f: 58}});
+    const w = smooth(clamp((T - 110.74) / 0.44)); // his hands come up as the runner's back reaches him (≈110.9) and take the weight on CATCH
+    const c = supportCatch(v, runner, brk, {w, cradle: {r: 0, u: 96, f: 58}, backL: {r: -36, u: 116, f: -34}, backR: {r: 34, u: 104, f: -34}});
     return {runner: c.faller, breaker: c.catcher};
   }
   // kneeling behind him, both hands on his shoulders (then one stays: BRIGHT)

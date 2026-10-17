@@ -49,17 +49,22 @@ const C3: Cue[] = [
   c(TB2.hand1 + 0.3, 'hydraulic', {gain: -20, pan: 0.0, dist: 0.65, rate: 1.5}), // the tank knocks as he pushes up
 ];
 
-// C4 — MARCH: the breaker through the foreground; the three on the slope; the drone: the rotors spin up with a whine,
-// it lifts off her palm and climbs (its bed hums on under the rest of the section)
+// C4a/C4b — MARCH: the three climb out of the street toward the lens (the pilot nearest, right; the others' steps a
+// gravel bed); she stops; the drone: the rotors spin up with a whine, it lifts off her palm and climbs (its bed hums on
+// under the rest of the section); the flare carrier and the decoy maker climb past behind her; she goes on up
 const C4: Cue[] = [
-  ...steps([45.31, 45.58, 45.85], {gain: -6, pan: -0.75, dist: 0.2, rate: 0.85}),
-  c(45.32, 'breath_exert', {gain: -12, pan: -0.75, dist: 0.2, dur: 0.6, fade: 0.15}),
-  c(45.4, 'steps_gravel', {gain: -10, pan: 0.3, dist: 0.6, dur: 4.5, fade: 0.4}),
-  c(46.25, 'rubble_shift', {gain: -15, pan: 0.35, dist: 0.6, dur: 0.6, fade: 0.2}),
-  c(TB2.hand2, 'rubble_shift', {gain: -16, pan: -0.85, dist: 0.6, dur: 0.6, fade: 0.2}),
-  c(T3.spin, 'servo_whir', {gain: -10, pan: 0.2, dist: 0.45, dur: 0.9, rate: 1.6, fade: 0.2}), // the rotors spin up
-  c(T3.spin + 0.05, 'ally_drone', {gain: -9, pan: 0.2, dist: 0.45, dur: M.CHARGE + 0.3 - (T3.spin + 0.05), fade: 0.7}),
-  c(T3.lift, 'drone_pass', {gain: -11, pan: 0.2, dist: 0.45}), // it lifts off and climbs
+  ...steps([45.54, 45.8, 46.05, 46.3, 46.57], {gain: -9, pan: 0.3, dist: 0.35}),
+  c(45.5, 'breath_exert', {gain: -13, pan: 0.3, dist: 0.35, dur: 0.6, fade: 0.15}),
+  c(45.4, 'steps_gravel', {gain: -11, pan: 0.0, dist: 0.6, dur: 4.5, fade: 0.4}),
+  c(46.25, 'rubble_shift', {gain: -15, pan: -0.35, dist: 0.6, dur: 0.6, fade: 0.2}),
+  c(46.95, 'steps_gravel', {gain: -12, pan: 0.05, dist: 0.4, dur: 0.3, fade: 0.1}), // she stops
+  ...steps([47.43, 47.71, 47.98, 48.26, 48.54], {gain: -10, pan: -0.1, dist: 0.45}), // the flare carrier, behind her
+  c(47.6, 'cloth_move', {gain: -15, pan: -0.05, dist: 0.45, dur: 0.4, fade: 0.1}), // his satchel swings
+  c(TB2.hand2, 'rubble_shift', {gain: -20, pan: -0.6, dist: 0.8, dur: 0.6, fade: 0.2}), // the breaker, off on the crest
+  c(T3.spin, 'servo_whir', {gain: -10, pan: 0.05, dist: 0.35, dur: 0.9, rate: 1.6, fade: 0.2}), // the rotors spin up
+  c(T3.spin + 0.05, 'ally_drone', {gain: -9, pan: 0.05, dist: 0.35, dur: M.CHARGE + 0.3 - (T3.spin + 0.05), fade: 0.7}),
+  c(T3.lift, 'drone_pass', {gain: -11, pan: 0.05, dist: 0.35}), // it lifts off and climbs
+  ...steps([48.95, 49.26, 49.56, 49.86], {gain: -11, pan: -0.15, dist: 0.4}), // she goes on up
 ];
 
 // C5 — the hand on the shoulder (cloth, his breath out); the reel's lock clicks, the drone rises past; the strap
@@ -83,6 +88,9 @@ const C6: Cue[] = [
   ...steps([53.78, 54.12, 54.45], {gain: -12, pan: -0.3, dist: 0.55}), // breaker
   ...steps([53.83, 54.21, 54.6], {gain: -14, pan: -0.6, dist: 0.6}), // flare carrier
   ...steps([53.91, 54.31, 54.7], {gain: -14, pan: -0.8, dist: 0.6}), // decoy maker
+  ...steps([52.6, 52.9], {gain: -15, pan: -0.45, dist: 0.5}), // the drone pilot across the slab (off, left) …
+  c(53.2, 'rubble_shift', {gain: -12, pan: -0.1, dist: 0.5, dur: 0.5, fade: 0.15}), // … down off its edge …
+  ...steps([53.2, 53.55, 54.65, 55.0], {gain: -11, pan: -0.1, dist: 0.5}), // … to her place; her turn
   c(53.6, 'rubble_shift', {gain: -15, pan: 0.0, dist: 0.6, dur: 1.2, fade: 0.4}),
   c(TD.step - 0.08, 'breath_exert', {gain: -9, pan: 0.0, dist: 0.35, dur: 0.7, fade: 0.2}),
   c(TD.step - 0.3, 'cloth_move', {gain: -12, pan: 0.0, dist: 0.35, dur: 0.5, fade: 0.15}), // the plate comes up

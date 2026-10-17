@@ -132,8 +132,9 @@ export const d4Fx = (T: number): FxOut => {
     out.push(fx(ring3({at: STRIKE_PLATE, normal: {x: 1, y: 0.1, z: 0}, t: T, t0: EV.strike, key: 'd4strr', r0: 0.15, speed: 9, dur: 0.2, width: 0.07})));
     out.push(fx([], [], shakeAt(T, EV.strike, 0.2, 5)));
     // the slab: his back slams into it — concrete dust and grit off its face
-    const back = {x: SLAM.x - 0.25, y: G(SLAM.x, SLAM.z) + 1.1, z: SLAM.z - 0.05};
-    out.push(impact({at: back, normal: {x: -0.2, y: 0.9, z: -0.4}, t: T, t0: EV.slam, key: 'd4slam', strength: 0.45, material: 'concrete', ground: ground(back), seed: 211}));
+    // (at his mid-back against the slab face, spraying up along it: it must not cloud his head)
+    const back = {x: SLAM.x - 0.3, y: G(SLAM.x, SLAM.z) + 0.75, z: SLAM.z - 0.17};
+    out.push(impact({at: back, normal: {x: 0.25, y: 0.9, z: 0.15}, t: T, t0: EV.slam, key: 'd4slam', strength: 0.28, material: 'concrete', ground: ground(back), seed: 211}));
     out.push(fx([], [], shakeAt(T, EV.slam, 0.07)));
     // his feet scrape in front of the slab as they come down
     out.push(bodyDust(T, {x: SLAM.x + 0.15, y: 0, z: SLAM.z}, EV.slam + 0.03, 'd4slf', 213, 0.8));

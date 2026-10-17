@@ -56,14 +56,19 @@ export const D4_2b = shot(SH.d42b, [
   {t: SH.d43 - SH.d42b, pos: g(18.4, 1.35, 1.12), target: g(18.4, -1.3, 1.2), fov: 44},
 ], (T) => ({full: 30, tweak: {tether: {anchor: chest('tether', T, 1.2)}}}), 0.016);
 
-// ------------------------------------------------------------------ D4-3 (158.50–162.42): at the van
+// ------------------------------------------------------------------ D4-3a (158.50–160.75): at the van
 // From the south, behind them, low: the van and the ridge beyond, the units holding beyond them to the right; they
 // come in and stand, spent; the Director (front) looks round at them — toward us — and raises his arm.
-export const D4_3 = shot(SH.d43, [
+export const D4_3a = shot(SH.d43, [
   {t: 0, pos: g(14.6, 11.4, 1.55), target: g(12.2, 3.0, 1.35), fov: 40},
-  {t: 2.4, pos: g(14.3, 10.2, 1.5), target: g(12.3, 2.6, 1.45), fov: 36},
-  {t: SH.d44a - SH.d43, pos: g(14.2, 9.8, 1.5), target: g(12.4, 1.8, 1.55), fov: 34},
-], (T) => ({full: 30, near: false, tweak: {director: {anchor: chest('director', T, 1.3)}}}), 0.014);
+  {t: SH.d43b - SH.d43, pos: g(14.4, 10.6, 1.5), target: g(12.3, 2.6, 1.4), fov: 38},
+], () => ({full: 30}), 0.014);
+// ------------------------------------------------------------------ D4-3b (160.75–162.42): he looks round at them; the arm
+// Close behind his right shoulder from among them: he looks back at them (to us), turns to the units, raises his arm.
+export const D4_3b = shot(SH.d43b, [
+  {t: 0, pos: g(13.6, 4.6, 1.45), target: g(12.6, 0.4, 1.75), fov: 38},
+  {t: SH.d44a - SH.d43b, pos: g(13.5, 4.2, 1.45), target: g(12.65, 0.2, 1.9), fov: 38},
+], (T) => ({full: 30, tweak: {director: {anchor: chest('director', T, 1.4)}}}), 0.012);
 
 // ------------------------------------------------------------------ D4-4a (162.42–163.62): the surge; W1 smashed
 export const D4_4a = shot(SH.d44a, [
@@ -78,9 +83,12 @@ export const D4_4b = shot(SH.d44b, [
 ], (T) => ({full: 30, tweak: {breaker: {anchor: chest('breaker', T, 1.3)}}}), 0.022);
 
 // ------------------------------------------------------------------ D4-4c (164.72–165.62): the cable round its shins; driven over
+// From the south-east, a little high, looking north-west across W3's shins: the loop whips round them (right), taut
+// back to her hands (left) as she hauls; the Director drives into its chest from beyond. (A view from the south put
+// the rubble block sch_21 between the lens and the shins.)
 export const D4_4c = shot(SH.d44c, [
-  {t: 0, pos: g(14.4, 2.6, 0.6), target: g(16.6, -2.5, 0.5), fov: 46},
-  {t: SH.d44d - SH.d44c, pos: g(14.5, 2.55, 0.62), target: g(16.9, -2.8, 0.4), fov: 46},
+  {t: 0, pos: g(18.3, 0.4, 1.7), target: g(15.95, -1.75, 0.75), fov: 48},
+  {t: SH.d44d - SH.d44c, pos: g(18.15, 0.28, 1.65), target: g(16.0, -1.85, 0.7), fov: 47},
 ], (T) => ({full: 30, tweak: {tether: {anchor: chest('tether', T, 0.9)}}}), 0.02);
 
 // ------------------------------------------------------------------ D4-4d (165.62–166.41): the last flare into heavy 2's eye
@@ -122,9 +130,9 @@ export const D4_7 = shot(SH.d47, [
 // From behind the slab's south end, low, looking east along the ram: it comes in from the right at his raised plate,
 // the plate bursts, and he is thrown back toward us into the slab (left foreground); the drone pilot beside the van.
 export const D4_8 = shot(SH.d48, [
-  {t: 0, pos: g(5.0, 5.4, 1.35), target: g(12.0, 2.6, 1.9), fov: 50},
-  {t: 0.5, pos: g(5.05, 5.35, 1.3), target: g(11.0, 2.8, 1.6), fov: 49},
-  {t: SH.d49a - SH.d48, pos: g(5.15, 5.3, 1.25), target: g(9.6, 3.1, 1.25), fov: 46},
+  {t: 0, pos: g(4.2, 6.3, 1.45), target: g(12.0, 2.6, 1.8), fov: 48},
+  {t: 0.5, pos: g(4.25, 6.25, 1.4), target: g(10.3, 3.0, 1.35), fov: 48},
+  {t: SH.d49a - SH.d48, pos: g(4.35, 6.2, 1.35), target: g(8.7, 3.2, 1.0), fov: 46},
 ], (T) => ({full: 34, near: true, tweak: {director: {anchor: chest('director', T, 1.0)}, drone: {anchor: chest('drone', T, 0.6)}}}), 0.012);
 
 // ------------------------------------------------------------------ D4-9a (179.30–180.80): he slides down beside the van
