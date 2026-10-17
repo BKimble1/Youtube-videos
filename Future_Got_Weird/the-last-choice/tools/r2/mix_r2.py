@@ -47,10 +47,11 @@ LEVEL = {
     "tether_fire": -10, "tether_clamp": -10, "tether_reel": -12, "cable_snap": -8, "breaker_charge": -13, "breaker_empty": -12,
     "heavy_servo": -12, "servo_heavy": -14, "servo_whir": -17, "robot_swing": -12, "eyes_on": -14, "army_halt": -7, "sensor_lock": -16,
     "drone_pass": -12, "ally_drone": -18, "ally_drone_crash": -10, "projector_on": -16, "flare_ignite": -12, "smoke_canister": -12,
-    "sparks": -14, "elec_arc": -15, "hydraulic": -14,
+    "sparks": -14, "elec_arc": -15, "hydraulic": -14, "robot_step": -15, "robot_step_heavy": -13, "drone_rotor": -17,
+    "cable_strain": -14, "steam_vent": -17, "lever_clunk": -19, "projector_beep": -18,
     # people
     "rubble_shift": -10, "breath_exert": -15, "breath_ragged": -18, "final_breath": -14, "cloth_move": -20, "body_fall": -11,
-    "steps_gravel": -16, "run_rubble": -16,
+    "steps_gravel": -16, "run_rubble": -16, "tinnitus": -24,
     # radio
     "radio_on": -13, "static": -17,
     # beds
