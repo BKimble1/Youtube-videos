@@ -160,8 +160,116 @@
   }
  ],
  "end": 258,
- "cues": [],
- "beds": [],
- "perspective": [],
- "radio": null
+ "cues": [
+  {
+   "t": 0.72,
+   "kind": "tower_collapse",
+   "gain": 0,
+   "dist": 0.85,
+   "pan": 0.35
+  },
+  {
+   "t": 18.46,
+   "kind": "eyes_on",
+   "gain": 0,
+   "dist": 0.6
+  },
+  {
+   "t": 30.26,
+   "kind": "army_halt",
+   "gain": -2,
+   "dist": 0.55
+  },
+  {
+   "t": 186.9,
+   "kind": "army_halt",
+   "gain": 0,
+   "dist": 0.3
+  },
+  {
+   "t": 199.9,
+   "kind": "radio_on",
+   "gain": 0,
+   "pan": 0.15
+  },
+  {
+   "t": 199.95000000000002,
+   "kind": "static",
+   "gain": -2,
+   "pan": 0.15,
+   "dur": 0.55,
+   "fade": 0.15
+  }
+ ],
+ "beds": [
+  {
+   "kind": "wind_ruins",
+   "a": 0,
+   "b": 257,
+   "gain": -1,
+   "fade": 1
+  },
+  {
+   "kind": "battle_far",
+   "a": 0,
+   "b": 188.9,
+   "gain": 0,
+   "fade": 2
+  },
+  {
+   "kind": "fire_bed",
+   "a": 0,
+   "b": 256,
+   "gain": -2,
+   "fade": 1.5
+  },
+  {
+   "kind": "army_march",
+   "a": 16.76,
+   "b": 37,
+   "gain": -6,
+   "fade": 1.2,
+   "dist": 0.6
+  },
+  {
+   "kind": "army_march",
+   "a": 59.949999999999996,
+   "b": 149.86,
+   "gain": -4,
+   "fade": 2,
+   "dist": 0.35
+  },
+  {
+   "kind": "drone_swarm",
+   "a": 128.02,
+   "b": 186.9,
+   "gain": -4,
+   "fade": 2,
+   "dist": 0.3
+  },
+  {
+   "kind": "machine_hum",
+   "a": 186.4,
+   "b": 232.4,
+   "gain": 0,
+   "fade": 2,
+   "dist": 0.4
+  }
+ ],
+ "perspective": [
+  {
+   "kind": "duck",
+   "a": 177.71,
+   "b": 178.96,
+   "amt": 4,
+   "rise": 0.05,
+   "fall": 1
+  }
+ ],
+ "radio": {
+  "a": 203.1,
+  "b": 216.905,
+  "radioDb": -5,
+  "awayDb": -10
+ }
 }
