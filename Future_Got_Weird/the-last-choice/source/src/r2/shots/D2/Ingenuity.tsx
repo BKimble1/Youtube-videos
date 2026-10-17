@@ -14,9 +14,9 @@ const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
 // Medium, low from the south-west by the slab's south end: the flare carrier rises off his knee, turns to the slab,
 // pulls a pin and lobs a canister over it into the crater, then the second; the others crouched along the slab.
 const D21: CamKey[] = [
-  {t: 0, pos: g(44.75, 7.85, 1.05), target: g(46.95, 4.75, 1.45), fov: 40},
-  {t: 0.6, pos: g(44.8, 7.8, 1.1), target: g(47.0, 4.7, 1.6), fov: 41},
-  {t: 95.38 - M.P2, pos: g(44.9, 7.7, 1.15), target: g(47.15, 4.6, 1.8), fov: 42},
+  {t: 0, pos: g(49.65, 7.65, 1.35), target: g(46.85, 5.0, 1.15), fov: 40},
+  {t: 0.6, pos: g(49.6, 7.6, 1.4), target: g(46.9, 4.95, 1.5), fov: 41},
+  {t: 95.38 - M.P2, pos: g(49.5, 7.55, 1.45), target: g(47.1, 4.8, 1.85), fov: 42},
 ];
 export const D2_1: React.FC = () => {
   const {t, T} = useShotTime(M.P2);
@@ -35,9 +35,9 @@ export const D2_2a: React.FC = () => {
 // Wide from behind and above the slab's south end: she sets the tablet on the slab's top edge and switches it on; the
 // beam crosses the crater and giant walking figures of light appear on the white smoke; the machines turn to them.
 const D22: CamKey[] = [
-  {t: 0, pos: g(43.6, 7.2, 2.6), target: g(53.5, 0.5, 0.6), fov: 50},
-  {t: 0.8, pos: g(43.75, 7.05, 2.7), target: g(54.5, 0.0, 1.0), fov: 49},
-  {t: 99.5 - 97.55, pos: g(44.05, 6.75, 2.85), target: g(55.8, -0.8, 1.5), fov: 47},
+  {t: 0, pos: g(43.9, 9.6, 3.3), target: g(54.5, 0.8, 0.4), fov: 50},
+  {t: 0.8, pos: g(44.05, 9.45, 3.35), target: g(55.6, 0.3, 0.9), fov: 49},
+  {t: 99.5 - 97.55, pos: g(44.35, 9.15, 3.4), target: g(56.8, -0.3, 1.4), fov: 47},
 ];
 export const D2_2b: React.FC = () => {
   const {t, T} = useShotTime(97.55);
@@ -51,8 +51,8 @@ export const D2_2b: React.FC = () => {
 // figure's leg (HITa), another hammers through one (HITb) as two drones dive through the giants' chests, and far beyond
 // the smoke heavy 1 fires into it (HITc): the blast inside the white wall.
 const D23a: CamKey[] = [
-  {t: 0, pos: g(47.6, 9.6, 1.9), target: g(60.0, 0.5, 1.2), fov: 50},
-  {t: 100.7 - 99.5, pos: g(47.9, 9.35, 1.95), target: g(60.4, 0.2, 1.3), fov: 49},
+  {t: 0, pos: g(46.2, 8.4, 2.0), target: g(60.5, 0.6, 1.4), fov: 50},
+  {t: 100.7 - 99.5, pos: g(46.45, 8.2, 2.05), target: g(60.9, 0.3, 1.5), fov: 49},
 ];
 export const D2_3a: React.FC = () => {
   const {t, T} = useShotTime(M.DECOY_HITa);
@@ -62,11 +62,11 @@ export const D2_3a: React.FC = () => {
 };
 
 // ------------------------------------------------------------------ D2-3b (100.70–102.20): the fist passes through the light
-// Medium, low in the smoke beside the unit at figure 3: the blast's smoke still rolling, it swings again (101.45) and its
-// fist goes through the giant's leg — the light lies on its arm, the figure walks on.
+// Medium, low at the smoke's edge behind the unit at figure 2: the blast's smoke still rolling, it swings again (101.3),
+// its fist goes through the giant's leg — the light lies on its arm, the figure walks on; beyond, another (101.45).
 const D23b: CamKey[] = [
-  {t: 0, pos: g(56.3, 5.6, 1.25), target: g(59.4, 1.9, 1.7), fov: 42},
-  {t: 102.2 - 100.7, pos: g(56.6, 5.4, 1.3), target: g(59.6, 1.9, 1.85), fov: 41},
+  {t: 0, pos: g(54.0, 2.6, 1.35), target: g(58.8, 0.6, 1.9), fov: 44},
+  {t: 102.2 - 100.7, pos: g(54.2, 2.5, 1.4), target: g(59.0, 0.7, 2.0), fov: 43},
 ];
 export const D2_3b: React.FC = () => {
   const {t, T} = useShotTime(100.7);

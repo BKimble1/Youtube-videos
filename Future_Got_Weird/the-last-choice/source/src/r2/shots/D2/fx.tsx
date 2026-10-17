@@ -25,7 +25,7 @@ export const canisters = (): CanisterOpts[] => (CANS ??= ([0, 1] as const).map((
   const to = {x: CAN_TO[i].x, y: G(CAN_TO[i].x, CAN_TO[i].z), z: CAN_TO[i].z};
   return {
     key: `d2can${i}`, from: canisterFrom(i), to, t0: i === 0 ? EV2.rel1 : EV2.rel2, flight: EV2.canFlight, apex: 2.3, ground: to.y, popDelay: EV2.pop,
-    dur: 16, rate: 13, life: 10, size: 0.62, grow: 1.5, wind: {x: 0.22, y: 0, z: -0.06}, color: '#EEEAE3', seed: 3 + i * 5, bounce: 1.1, roll: 0.6,
+    dur: 16, rate: 13, life: 10, size: 0.6, grow: 1.35, wind: {x: 0.3, y: 0, z: 0.0}, color: '#EEEAE3', seed: 3 + i * 5, bounce: 1.1, roll: 0.6,
   };
 }));
 let SRC: SmokeSource[] | null = null;
@@ -158,7 +158,7 @@ export const d2Fx = (T: number): FxOut => {
     walkSpeed: DECOY.walkSpeed, on: EV2.projOn, off: EV2.projOff, density: smokeAt, seed: DECOY.seed, surface: 3.2,
   }));
   // ---- D2-3: fists through the light (no contact: the light lands on them), drones diving through it
-  out.push(lightOn(T, decoyPt(3, EV2.hitA, 0.25), EV2.hitA, 'd2thA'), lightOn(T, decoyPt(2, EV2.hitB, 0.24), EV2.hitB, 'd2thB'), lightOn(T, decoyPt(3, 101.45, 0.3), 101.45, 'd2thA2'));
+  out.push(lightOn(T, decoyPt(3, EV2.hitA, 0.25), EV2.hitA, 'd2thA'), lightOn(T, decoyPt(2, EV2.hitB, 0.24), EV2.hitB, 'd2thB'), lightOn(T, decoyPt(3, 101.45, 0.3), 101.45, 'd2thA2'), lightOn(T, decoyPt(2, 101.3, 0.28), 101.3, 'd2thB2'));
   ([[1, 103.55], [2, 103.95], [3, 104.35]] as [number, number][]).forEach(([j, t0]) => out.push(lightOn(T, decoyPt(j, t0, 0.27), t0, `d2thR${j}`)));
   diveThrough(T).forEach((d) => out.push(lightOn(T, d.at, d.tc, `d2dive${d.id}`, 0.6)));
   // heavy 1 fires into the smoke: muzzle flash, the round's streak, the blast inside the white wall

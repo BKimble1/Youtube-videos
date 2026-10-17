@@ -75,10 +75,10 @@ export const POST3 = postSouth(3);
 export const ANCHOR: V3 = postSouth(3, 0.42);
 
 // ------------------------------------------------------------------ the smoke and the decoy (geometry only)
-export const CAN_TO: [XZ, XZ] = [{x: 54.6, z: -4.0}, {x: 58.0, z: 0.9}];
+export const CAN_TO: [XZ, XZ] = [{x: 55.7, z: -3.3}, {x: 59.0, z: 1.6}];
 /** the light figures' plane: walking south-east across the crater, the plane facing the projector (south-west) */
 export const DECOY = {
-  center: on({x: 56.4, z: -1.6}, 3.0) as V3,
+  center: on({x: 57.4, z: -0.9}, 3.0) as V3,
   walkHeading: 136, height: 6.0, spacing: 2.6, walkSpeed: 0.45, seed: 4,
 };
 const DU: V3 = {x: Math.sin((DECOY.walkHeading * Math.PI) / 180), y: 0, z: -Math.cos((DECOY.walkHeading * Math.PI) / 180)};
@@ -102,7 +102,7 @@ const besideFig = (j: number, T: number, off: number, along = 0): {x: number; z:
   return {x, z, h: headingTo({x, z}, {x: f.x + DU.x * along, z: f.z + DU.z * along})};
 };
 /** where heavy 1's round lands (inside the smoke, among the figures' feet) */
-export const BLAST_AT: V3 = on({x: 55.6, z: -3.2}, 0.35);
+export const BLAST_AT: V3 = on({x: 56.6, z: -2.6}, 0.35);
 
 // ------------------------------------------------------------------ unit plans
 type Walk = {kind: 'walk'; pts: XZ[]; T0: number; T1: number; stride?: number; A?: number; D?: number};
@@ -154,6 +154,16 @@ const run = (pl: Plan, T: number): UnitSpec => {
     sp = {id: pl.id, t: T, ground, idle: 0.3, key: pl.key, ...ph.at(T)};
   }
   sp = {...sp, ...act, lean: (sp.lean ?? 0) + (act.lean ?? 0), crouch: (sp.crouch ?? 0) + (act.crouch ?? 0)};
+  // the kit's hit stagger holds at 60 % and drops out 1.2 s after the blow (a pop of up to 0.17 m): carry that remainder
+  // on the root instead and let it settle over the next 0.5 s (as D1)
+  for (const h of sp.hits ?? []) {
+    const u = T - h.t0;
+    if (u <= 1.2 || u > 1.7) continue;
+    const k = 0.108 * h.strength * (1 - smooth((u - 1.2) / 0.5));
+    const l = Math.hypot(h.dir.x, h.dir.z) || 1;
+    sp.pos = {x: sp.pos.x + (h.dir.x / l) * k, y: sp.pos.y, z: sp.pos.z + (h.dir.z / l) * k};
+    sp.crouch = (sp.crouch ?? 0) + k * 0.6;
+  }
   // on the rim's slopes a planted foot can sit well below the pelvis's ground: crouch enough to keep it in reach
   const f = sp.feet ?? {};
   if (!sp.gait) {
@@ -183,7 +193,7 @@ const restAng = (p: XZ, d: XZ, lo = 70, hi = 150): number => {
   return hi;
 };
 const hdir = (h: number): V3 => ({x: Math.sin((h * Math.PI) / 180), y: 0, z: -Math.cos((h * Math.PI) / 180)});
-const smokeC: V3 = on({x: 56.2, z: -1.8}, 2.2);
+const smokeC: V3 = on({x: 57.2, z: -1.1}, 2.2);
 const crewAt: V3 = on({x: 49.0, z: -7.0}, 1.5);
 
 // ---- A (D1's U5): watches the light by the girder; bashed; turns back; clamped and dragged into C
@@ -365,7 +375,8 @@ const D_HIT = besideFig(2, EV2.hitB, 1.0, -0.25);
 export const D_UP = {x: 51.15, z: -5.35, h: 304};
 const D_STEP = {x: 50.5, z: -5.82};
 const D_IN: Walk = {kind: 'walk', pts: [{x: 54.2, z: 8.0}, {x: 55.3, z: 4.4}, {x: D_HIT.x, z: D_HIT.z}], T0: 97.45, T1: 99.45, stride: 1.6, A: 0.6, D: 0.6};
-const D_UPW: Walk = {kind: 'walk', pts: [{x: D_HIT.x + hdir(D_HIT.h).x * 0.35, z: D_HIT.z + hdir(D_HIT.h).z * 0.35}, {x: 54.4, z: -2.9}, {x: D_UP.x, z: D_UP.z}], T0: 107.55, T1: 110.15, stride: 1.7, A: 0.6, D: 0.7};
+const D_HIT2 = besideFig(2, 101.3, 1.0, -0.25);
+const D_UPW: Walk = {kind: 'walk', pts: [{x: D_HIT2.x, z: D_HIT2.z}, {x: 54.6, z: -3.6}, {x: 52.4, z: -4.7}, {x: D_UP.x, z: D_UP.z}], T0: 107.45, T1: 110.15, stride: 1.7, A: 0.6, D: 0.7};
 /** the backhand: D's right hand sweeps across its body and out into the runner's left shoulder at KNOCKBACK */
 export const dBackhand = (T: number, target: V3): {hand: V3; open: boolean} | undefined => {
   if (T < 109.85 || T > 111.3) return undefined;
@@ -386,9 +397,9 @@ const D_PLAN: Plan = {
     {kind: 'd1', name: 'U6'},
     {kind: 'stand', root: [[97.05, 54.2, 8.0, 88], [97.45, 54.2, 8.0, 18]]},
     D_IN,
-    {kind: 'stand', root: [[D_IN.T1, D_HIT.x, D_HIT.z, 0], [99.62, D_HIT.x, D_HIT.z, D_HIT.h], [100.15, D_HIT.x + hdir(D_HIT.h).x * 0.35, D_HIT.z + hdir(D_HIT.h).z * 0.35, D_HIT.h],
-      [101.6, D_HIT.x + hdir(D_HIT.h).x * 0.35, D_HIT.z + hdir(D_HIT.h).z * 0.35, D_HIT.h + 20], [104.5, D_HIT.x + hdir(D_HIT.h).x * 0.35, D_HIT.z + hdir(D_HIT.h).z * 0.35, D_HIT.h + 20],
-      [105.6, D_HIT.x + hdir(D_HIT.h).x * 0.35, D_HIT.z + hdir(D_HIT.h).z * 0.35, 330], [107.5, D_HIT.x + hdir(D_HIT.h).x * 0.35, D_HIT.z + hdir(D_HIT.h).z * 0.35, 330]]},
+    {kind: 'stand', root: [[D_IN.T1, D_HIT.x, D_HIT.z, 0], [99.62, D_HIT.x, D_HIT.z, D_HIT.h], [100.15, D_HIT.x + hdir(D_HIT.h).x * 0.3, D_HIT.z + hdir(D_HIT.h).z * 0.3, D_HIT.h],
+      [100.95, D_HIT2.x, D_HIT2.z, D_HIT2.h], [101.9, D_HIT2.x, D_HIT2.z, D_HIT2.h + 20], [104.5, D_HIT2.x, D_HIT2.z, D_HIT2.h + 20],
+      [105.6, D_HIT2.x, D_HIT2.z, 325], [107.4, D_HIT2.x, D_HIT2.z, 325]]},
     D_UPW,
     {kind: 'stand', root: [[D_UPW.T1, D_UP.x, D_UP.z, 0], [110.3, D_UP.x, D_UP.z, D_UP.h], [112.25, D_UP.x, D_UP.z, D_UP.h], [112.75, D_STEP.x, D_STEP.z, D_UP.h - 4], [EV2.counter, D_STEP.x, D_STEP.z, D_UP.h - 4]]},
   ],
@@ -400,7 +411,7 @@ const D_PLAN: Plan = {
     const bh = dBackhand(T, on({x: 49.95, z: -6.12}, 1.32));
     return {
       look: T < EV2.counter + 0.1 ? look : undefined, lockAt: 57.6, idle: 0.45,
-      strike: pickStrike(T, [{t0: EV2.hitB, side: 'L', target: fig2, kind: 'hammer'}, {t0: EV2.shield, side: 'L', target: SHIELD_AT, kind: 'hammer'}]),
+      strike: pickStrike(T, [{t0: EV2.hitB, side: 'L', target: fig2, kind: 'hammer'}, {t0: 101.3, side: 'R', target: decoyPt(2, 101.3, 0.28), kind: 'punch'}, {t0: EV2.shield, side: 'L', target: SHIELD_AT, kind: 'hammer'}]),
       armR: bh ? {hand: bh.hand, open: bh.open} : undefined,
       twist: bh ? 26 * win(T, 109.9, 110.3, 0.3, 0.05) - 30 * win(T, 110.3, 111.2, 0.12, 0.6) : 0,
       hits: [

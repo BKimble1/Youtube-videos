@@ -83,18 +83,20 @@ const B5: Cue[] = [
   c(TB.ready, 'breath_ragged', {gain: -7, pan: 0.0, dist: 0.2, dur: 1.0, fade: 0.3}),
 ];
 
-// B6 — the halts (the global army_halt sits on H4). The lens is among the vanguard's ranks looking west: the machine
-// just left of the lens and its rank slow from H4 and plant their last step two beats later (31.06); the main body (H5a) and the rear and the
-// heavies (H5b) plant behind the lens, all around.
+// B6 — the halts (the global army_halt sits on H4). The lens is on a crane 6 m over the main body's front ranks, looking
+// west: the vanguard (the heads across the bottom of the frame, 20–40 m off) slows from H4 and plants two beats later
+// (31.06); the main body right below the lens plants on H5a; the rear and the heavies (the nearest just right of the
+// lens) on H5b.
 const B6: Cue[] = [
-  c(STOP.van, 'robot_step_heavy', {gain: 2, pan: -0.45, dist: 0.08}), // the nearest machine plants, a few metres off
-  c(STOP.van + 0.008, 'robot_step', {gain: -1, pan: -0.85, dist: 0.12}),
-  ...armyStep(STOP.van + 0.004, -4, -0.1),
-  ...armyStep(STOP.main, 0, 0),
-  c(STOP.main + 0.01, 'robot_step_heavy', {gain: -2, pan: 0.6, dist: 0.3}),
-  ...armyStep(STOP.rear, 1, 0),
-  c(STOP.rear + 0.01, 'heavy_stomp', {gain: -3, pan: 0.1, dist: 0.6}),
-  c(STOP.rear + 0.4, 'servo_heavy', {gain: -10, pan: 0.0, dist: 0.6, dur: 1.5, fade: 0.6}), // a settle of hydraulics
+  ...armyStep(STOP.van, -2, 0).map((q) => ({...q, dist: Math.max(0.35, (q.dist ?? 0.6) - 0.25)})),
+  c(STOP.main, 'robot_step_heavy', {gain: 1, pan: -0.35, dist: 0.12}), // the ranks right under the lens
+  c(STOP.main + 0.008, 'robot_step_heavy', {gain: 0, pan: 0.35, dist: 0.14}),
+  c(STOP.main + 0.015, 'robot_step', {gain: -2, pan: 0.0, dist: 0.18}),
+  ...armyStep(STOP.main + 0.004, -3, 0),
+  c(STOP.rear, 'heavy_stomp', {gain: 0, pan: 0.75, dist: 0.12}), // the heavy beside the crane
+  ...armyStep(STOP.rear + 0.006, -2, 0),
+  c(STOP.rear + 0.4, 'servo_heavy', {gain: -8, pan: 0.7, dist: 0.15, dur: 1.5, fade: 0.6}), // its hydraulics settle
+  c(31.4, 'drone_pass', {gain: -16, pan: 0.3, dist: 0.6}), // the drones holding over the crater
 ];
 
 export const CUES_B: Cue[] = [...B1, ...B2, ...B3, ...B4, ...B5, ...B6];

@@ -48,7 +48,7 @@ export const TB2 = {
   go: 38.2,
   hand1: 44.7, hand1Off: 45.2, // his left palm on the steep rubble bank, the push up
   hand2: 46.95, hand2Off: 47.45, // again at the steep step below the crest
-  arrive: 49.7, // at the Director's right side (he turns to face him)
+  arrive: 49.5, // at the Director's right side (he turns to face him)
   touch: 50.28, touchOff: 50.98, // C5a: his left hand on the Director's right shoulder
   go2: 51.05, arrive2: 53.45,
   turn: 53.36,
@@ -60,7 +60,7 @@ export const T3 = {
   launch: 47.05, spin: 47.3, lift: 47.72, // the pilot stops, holds the drone up; the rotors spin up; it lifts off her palm
   ctrl: 48.15, // her hands come together on the controller
   pilotGo: 48.35,
-  arriveDecoy: 52.3, arriveFlares: 51.6, arrivePilot: 52.9,
+  arriveDecoy: 52.2, arriveFlares: 51.5, arrivePilot: 52.9,
   turnPilot: 53.3, turnFlares: 53.44, turnDecoy: 53.52,
 };
 
@@ -68,4 +68,4 @@ export const T3 = {
 export const TDR = {past: 51.62};
 
 /** the end: everyone settles into D1's first frame (blend window) */
-export const TEND = {blend: 59.3};
+export const TEND = {blend: 59.42};

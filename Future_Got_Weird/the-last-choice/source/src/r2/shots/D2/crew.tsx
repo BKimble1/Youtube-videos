@@ -145,8 +145,8 @@ const sp = (who: keyof typeof SPOTS) => SPOTS[who];
 const at3 = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
 /** an expanding window that stays on: 0 before a, 1 after b */
 const ramp = (T: number, a: number, b: number) => smooth(clamp((T - a) / Math.max(1e-6, b - a)));
-const SMOKE_EYE = at3(56.0, -1.8, 3.2);
-const figEye = (T: number) => at3(56.6 + 0.3 * Math.sin(T * 0.4), -1.2, 3.6);
+const SMOKE_EYE = at3(57.0, -1.1, 3.2);
+const figEye = (T: number) => at3(57.6 + 0.3 * Math.sin(T * 0.4), -0.5, 3.6);
 const BLAST = EV2.blast;
 /** the flinch everyone gives the blast in the smoke (head ducks, shoulders up) */
 const flinch = (T: number, t0: number, k = 1): Pose => {
@@ -156,7 +156,7 @@ const flinch = (T: number, t0: number, k = 1): Pose => {
 
 // ================================================================== THE DIRECTOR (clerkC, plate on the left forearm)
 const D0 = sp('director');
-export const DIR_GUARD_AT = {x: 49.0, z: -4.9};
+export const DIR_GUARD_AT = {x: 49.6, z: -3.7};
 export const DIR_BASH_A = {x: 54.03, z: -8.1}; // standing at A's back-right as the plate lands (EV2.bash)
 const DIR_HOLD = {x: 48.6, z: -10.35};
 const DIR_COUNTER = {x: 49.92, z: -5.02}; // at D's left side as the plate lands (EV2.counter)
@@ -524,7 +524,7 @@ export const clampTarget = (T: number): V3 => unitAttach(unitD2('A', T)).chest;
 
 // ================================================================== THE DRONE PILOT (checker)
 const P0 = sp('drone');
-export const PILOT_AT = {x: 47.3, z: -5.6};
+export const PILOT_AT = {x: 46.35, z: -6.2};
 const DRN_SEGS: Seg[] = [
   {kind: 'stand', root: [[94.3, P0.x, P0.z, 250], [103.75, P0.x, P0.z, 250], [104.05, P0.x + 0.05, P0.z - 0.15, 330]]},
   {kind: 'run', path: [{x: P0.x + 0.05, z: P0.z - 0.15}, {x: 45.8, z: 5.6}, {x: 45.3, z: 3.0}, {x: 45.3, z: -1.5}, {x: 46.6, z: -4.6}, PILOT_AT], T0: 104.08, T1: 106.75, gait: GAITS.jog, A: 0.6, D: 0.7},

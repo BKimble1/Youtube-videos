@@ -349,8 +349,8 @@ export const heavyStance = (x: number, z: number, h: number, i: number): [number
  * lateral sequence (FL, RR, FR, RL), each landing where its stance will be a third of a cycle later, so the last cycle
  * sets every foot on the final stance. `cycle` = seconds per full cycle (all four legs once).
  */
-export const quadSteps = (root: KR[], o: {cycle?: number; lift?: number} = {}): KP[][] => {
-  const order = [0, 3, 1, 2];
+export const quadSteps = (root: KR[], o: {cycle?: number; lift?: number; order?: number[]} = {}): KP[][] => {
+  const order = o.order ?? [0, 3, 1, 2];
   const r0 = root[0];
   const legs: KP[][] = [0, 1, 2, 3].map((i) => [[r0[0], ...heavyStance(r0[1], r0[2], r0[3], i)] as KP]);
   for (let s = 1; s < root.length; s++) {

@@ -34,11 +34,12 @@ export const CAM_C3: CamKey[] = [
   {t: D(CUT.c3, CUT.c4), pos: {x: 2.6, y: 6.48, z: 2.5}, target: {x: -3.9, y: 2.55, z: -0.85}, fov: 39},
 ];
 
-/** C4 (45.30–50.00): wide from the north side of the ridge, looking south along it: the tether operator gains the
- * summit close to the lens, the breaker climbs, the three come up the far slope; the drone lifts off and rises. */
+/** C4 (45.30–50.00): from the north-west slope (north of them), looking south-south-east up the flank: the breaker
+ * climbs through the foreground; the three come up from the edge of the street; the pilot stops, holds her drone up
+ * on her palm, it lifts off and climbs out of frame; they climb on toward him (left edge, on the crest). */
 export const CAM_C4: CamKey[] = [
-  {t: 0, pos: {x: -4.2, y: 6.9, z: -9.0}, target: {x: -2.3, y: 3.2, z: 4.0}, fov: 43},
-  {t: D(CUT.c4, CUT.c5a), pos: {x: -3.85, y: 6.85, z: -8.7}, target: {x: -1.9, y: 3.5, z: 3.8}, fov: 42},
+  {t: 0, pos: {x: -7.4, y: 4.5, z: -3.2}, target: {x: -4.3, y: 2.1, z: 5.8}, fov: 45},
+  {t: D(CUT.c4, CUT.c5a), pos: {x: -6.75, y: 4.75, z: -2.65}, target: {x: -2.7, y: 3.1, z: 4.4}, fov: 45},
 ];
 
 /** C5a (50.00–51.20): close two-shot from the west in front of them: the breaker's hand lands on his shoulder; the look. */

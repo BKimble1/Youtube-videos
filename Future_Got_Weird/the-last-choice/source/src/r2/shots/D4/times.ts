@@ -44,7 +44,7 @@ export const EV = {
   // ---- D4-9 SOFTEN (179.30–183.30)
   slide: M.SOFTEN, slideEnd: 180.65,
   grabTether: 180.4, grabDecoy: 181.0, grabFlares: 181.7, grabBreaker: 182.3, // = EF tableau TB_HOLDERS t0s
-  heavyBack: 180.35, heavyBackEnd: 184.55, // heavy 2 steps back into its sector of the ring
+  heavyBack: 178.9, heavyBackEnd: 183.4, // heavy 2 steps back into its sector of the ring (as the ram retracts)
   pilotUp: 183.7, pilotUpEnd: 185.45, // the drone pilot gets onto her hands and knees
   crawl: 186.4, // EF pilotSpec takes over (her crawl to him)
   // ---- D4-10 the ring holds (183.30–186.90)

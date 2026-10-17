@@ -17,6 +17,7 @@ import {M} from '../../timing';
 import {STAND} from './director';
 import {ARMY_B} from './army';
 import {dirSprite, dirSpec, armyB, B_COLUMNS, strapItems} from './kit';
+import type {ColumnOpts} from '../../world/atmos';
 import {slabItem, chunkItems, supportItems} from './rubble';
 import {CAM_B5, CAM_B6, B5_ANCHOR} from './cams';
 
@@ -36,8 +37,9 @@ const SIL = '#1C1517', RIM = '#FFC788';
 const dirSilhouette = (T: number): Item => {
   const base = dirSpec(T, {anchor: {x: STAND.x, y: STAND.y + 0.9, z: STAND.z}});
   const pose = base.pose as Partial<FigProps>;
-  const dark = figureSprite({...base, key: 'dirB6', pose: {...pose, silhouette: SIL}});
-  const rim = figureSprite({...base, key: 'dirB6r', pose: {...pose, silhouette: RIM}});
+  // (no blood or dust marks: they keep their own colours and would show as specks on the silhouette)
+  const dark = figureSprite({...base, key: 'dirB6', pose: {...pose, dmg: {}, silhouette: SIL}});
+  const rim = figureSprite({...base, key: 'dirB6r', pose: {...pose, dmg: {}, silhouette: RIM}});
   return {
     ...dark, noCull: true,
     draw: (c) => (
@@ -88,7 +90,7 @@ const glowItems = (T: number): Item[] => [
 
 /** three drones holding low over the crater, gimbals on him (B6 only) */
 const B6_DRONES: {id: number; at: V3; ph: number}[] = [
-  {id: 3391, at: {x: 62, y: 1.5, z: -2}, ph: 0.3}, {id: 3392, at: {x: 56, y: 3.0, z: 11}, ph: 2.1}, {id: 3393, at: {x: 70, y: 0.9, z: 7.5}, ph: 4.0},
+  {id: 3391, at: {x: 74, y: 3.2, z: 0.5}, ph: 0.3}, {id: 3392, at: {x: 70, y: 4.2, z: 9}, ph: 2.1}, {id: 3393, at: {x: 64, y: 1.5, z: 3}, ph: 4.0},
 ];
 const droneItems = (T: number): Item[] => B6_DRONES.flatMap((d) => drone({
   id: d.id, t: T, heading: 270, pos: {x: d.at.x + Math.sin(T * 0.3 + d.ph) * 0.3, y: d.at.y + Math.sin(T * 0.9 + d.ph) * 0.18, z: d.at.z + Math.sin(T * 0.23 + d.ph) * 0.4},
@@ -97,8 +99,8 @@ const droneItems = (T: number): Item[] => B6_DRONES.flatMap((d) => drone({
 
 /** The eyes of a share of the machines in front light the air around their heads: seen from behind, a cyan halo just in
  * front of the face, drawn before the head so it shows round its edges. */
-const eyeSpill = (v: View, T: number): Item[] => ARMY_B.slots(T).filter((s) => rnd(s.id * 53 + 7) < 0.3 && s.pos.x < 96).map((s) => {
-  const pos = {x: s.pos.x - 0.2, y: groundH(s.pos.x, s.pos.z) + 1.93, z: s.pos.z};
+const eyeSpill = (v: View, T: number): Item[] => ARMY_B.slots(T).filter((s) => rnd(s.id * 53 + 7) < 0.2 && s.pos.x < 96).map((s) => {
+  const pos = {x: s.pos.x - 0.2, y: groundH(s.pos.x, s.pos.z) + 2.0, z: s.pos.z};
   return {
     kind: 'sprite' as const, key: `b6es${s.id}`, pos,
     draw: (c: SpriteCtx) => {
@@ -116,6 +118,12 @@ const eyeSpill = (v: View, T: number): Item[] => ARMY_B.slots(T).filter((s) => r
 });
 void toView;
 
+/** the crater's smoke for this lens: the same pits, but lying low in the bowl (the tall columns would veil him) */
+const B6_CRATER: {key: string; base: V3; o: ColumnOpts}[] = [
+  {key: 'b6k1', base: {x: 64, y: -3.4, z: -5}, o: {n: 7, life: 11, rise: 0.17, r0: 2.2, r1: 5, drift: 0.7, dark: 0.25, alpha: 0.32, warm: 0.2, seed: 81}},
+  {key: 'b6k2', base: {x: 58, y: -2.8, z: 5}, o: {n: 6, life: 10, rise: 0.15, r0: 2, r1: 4.5, drift: 0.7, dark: 0.3, alpha: 0.3, warm: 0.25, seed: 82}},
+  {key: 'b6k3', base: {x: 69, y: -2.6, z: 8}, o: {n: 6, life: 10, rise: 0.16, r0: 2, r1: 4.5, drift: 0.6, dark: 0.3, alpha: 0.28, warm: 0.2, seed: 83}},
+];
 export const B6_START = M.H4, B6_END = M.BASS_OUT;
 export const ShotB6: React.FC = () => {
   const {t, T} = useShotTime(B6_START);
@@ -127,5 +135,5 @@ export const ShotB6: React.FC = () => {
     ...glowItems(T), ...droneItems(T), ...eyeSpill(v, T),
     ...armyB(v, T, {maxFull: 30, maxMid: 60, farFrom: 120, drones: false}),
   ];
-  return <Stage T={T} cam={cam} items={items} drift={0.006} atmos={{columns: B_COLUMNS.filter((c) => c.key !== 'bCr3'), smoke: 0.12, haze: 0.04}} light={{shadowK: 0.6}} vignette={0.6} />;
+  return <Stage T={T} cam={cam} items={items} drift={0.006} atmos={{columns: B6_CRATER, smoke: 0.05, haze: 0.04}} light={{shadowK: 0.6}} vignette={0.6} />;
 };

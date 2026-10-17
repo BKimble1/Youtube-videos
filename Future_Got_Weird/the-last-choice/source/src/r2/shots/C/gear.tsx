@@ -17,10 +17,10 @@ const P = (q: {x: number; y: number}) => `${f2(q.x)} ${f2(q.y)}`;
 /** The satchel on the left hip (strap over the right shoulder): flap, buckle, two flares and a canister poking out. */
 export const flareBag = (o: {open?: number} = {}) => (r: Rig2): Part[] => {
   const s = r.s, ink = r.ink;
-  const c = at(r.P, r.base, -70 * s, -6 * s, -6 * s); // bag centre (left hip, a little back)
+  const c = at(r.P, r.base, -84 * s, -14 * s, -8 * s); // bag centre (left hip, a little back)
   const fwd = r.base.F, rt = r.base.R;
   // the bag's outline: a box seen from this side (width along the body's forward axis, depth across)
-  const w = 52 * s, h = 46 * s, d = 22 * s;
+  const w = 92 * s, h = 74 * s, d = 30 * s;
   const ax = {x: fwd.x * w, y: fwd.y * w}, ay = {x: 0, y: h}, az = {x: -rt.x * d, y: -rt.y * d};
   const corner = (i: number, j: number, k: number) => ({x: c.x + ax.x * i + ay.x * j + az.x * k, y: c.y + ax.y * i + ay.y * j + az.y * k});
   const front = [corner(-0.5, -0.5, 0.5), corner(0.5, -0.5, 0.5), corner(0.5, 0.5, 0.5), corner(-0.5, 0.5, 0.5)];
@@ -31,10 +31,10 @@ export const flareBag = (o: {open?: number} = {}) => (r: Rig2): Part[] => {
   // flares and a canister standing out of the top behind the flap
   const top = (u: number) => corner(u, -0.5, 0);
   const sticks = [-0.3, -0.12, 0.18].map((u, i) => {
-    const b = top(u), t = {x: b.x, y: b.y - (i === 2 ? 16 : 22) * s};
+    const b = top(u), t = {x: b.x, y: b.y - (i === 2 ? 22 : 34) * s};
     return i === 2
-      ? <rect key={i} x={b.x - 8 * s} y={t.y} width={16 * s} height={18 * s} rx={3 * s} fill="#7D8A90" stroke={C.ink} strokeWidth={ink * 0.6} />
-      : <path key={i} d={`M ${P(b)} L ${P(t)}`} stroke={FLARE} strokeWidth={9 * s} strokeLinecap="round" />;
+      ? <rect key={i} x={b.x - 11 * s} y={t.y} width={22 * s} height={26 * s} rx={4 * s} fill="#7D8A90" stroke={C.ink} strokeWidth={ink * 0.6} />
+      : <g key={i}><path d={`M ${P(b)} L ${P(t)}`} stroke={C.ink} strokeWidth={12 * s + ink} strokeLinecap="round" /><path d={`M ${P(b)} L ${P(t)}`} stroke={FLARE} strokeWidth={12 * s} strokeLinecap="round" /></g>;
   });
   const bag = (
     <g strokeLinejoin="round">
@@ -51,8 +51,8 @@ export const flareBag = (o: {open?: number} = {}) => (r: Rig2): Part[] => {
   const mid = at(r.P, r.up, 10 * s, 70 * s, chestF ? 38 * s : -38 * s);
   const a = corner(-0.45, -0.5, 0.2), b = corner(0.45, -0.5, 0.2);
   const strapD = `M ${P(shR)} Q ${P(mid)} ${P(chestF ? a : b)}`;
-  const strap = <path d={strapD} fill="none" stroke={CANVAS_D} strokeWidth={8 * s} strokeLinecap="round" />;
-  const strapInk = <path d={strapD} fill="none" stroke={C.ink} strokeWidth={8 * s + ink * 1.4} strokeLinecap="round" />;
+  const strap = <path d={strapD} fill="none" stroke={CANVAS} strokeWidth={10 * s} strokeLinecap="round" />;
+  const strapInk = <path d={strapD} fill="none" stroke={C.ink} strokeWidth={10 * s + ink * 1.4} strokeLinecap="round" />;
   return [
     {z: zBag, key: 'cBag', el: bag},
     {z: chestF ? r.torsoZ + 1.5 : r.torsoZ - 45, key: 'cBagStrap', el: <g>{strapInk}{strap}</g>},
