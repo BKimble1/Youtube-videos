@@ -97,16 +97,16 @@ export const CAM_9: CamKey[] = [
   {t: 1.0, pos: at(38.95, 1.33, 4.85), target: at(44.0, 1.5, -0.6), fov: 46},
   {t: d(SH3.d39, SH3.d310), pos: at(38.9, 1.3, 4.9), target: at(43.5, 1.1, -0.9), fov: 46},
 ];
-// D3-10: long lens from the rim, low behind the arc: the second heavy comes over the first one's wreck; its foot comes
-// down on this side
+// D3-10: low on the crater's north-west slope under the girder (the water main behind us): heavy 2 comes over heavy 1's
+// wreck toward us, a leg lifted high over it; its front-right foot comes down on this side, close
 export const CAM_10: CamKey[] = [
-  {t: 0, pos: at(44.6, 2.5, -2.6), target: at(63.2, 0.6, -4.4), fov: 31},
-  {t: d(SH3.d310, SH3.d311a), pos: at(44.65, 2.48, -2.6), target: at(62.0, 0.3, -4.3), fov: 29},
+  {t: 0, pos: g(57.2, -9.9, 1.2), target: at(64.0, 1.6, -4.8), fov: 46},
+  {t: d(SH3.d310, SH3.d311a), pos: g(57.0, -10.0, 1.15), target: at(62.6, 1.2, -5.0), fov: 48},
 ];
-// D3-11a: wide from the south-west: they run; the round; the blast on the rim; they are thrown
+// D3-11a: wide from the south-west, clear of the cover slab: they run; the round; the blast on the rim; they are thrown
 export const CAM_11a: CamKey[] = [
-  {t: 0, pos: g(37.0, 9.8, 3.8), target: at(45.2, 0.6, -1.0), fov: 48},
-  {t: d(SH3.d311a, SH3.d311b), pos: g(36.8, 9.9, 3.9), target: at(44.6, 0.6, -0.8), fov: 48},
+  {t: 0, pos: g(36.0, 6.0, 3.8), target: at(45.5, 0.8, -2.0), fov: 50},
+  {t: d(SH3.d311a, SH3.d311b), pos: g(35.8, 6.1, 3.9), target: at(44.8, 0.8, -1.6), fov: 50},
 ];
 // D3-11b: insert — the breaker's gauge (he is down on one knee, the tool across his thigh)
 export const CAM_11b: CamFn = (t, T) => {
