@@ -596,6 +596,8 @@ export const tetherAt = (T: number): CrewOut => {
       [0.12, {drop: 60, lean: -30, armR: {fk: {fwd: 50, out: 30, bend: 20}}, armL: {fk: {fwd: 40, out: 50, bend: 20}}, handL: 'open', face: {mouth: 'o', brows: 0.7, worry: 0.6}}],
       [0.35, {drop: 130, lean: -18, bodyPitch: -20, legL: {local: {r: -30, u: 40, f: 110}}, legR: {local: {r: 34, u: 46, f: 96}}, armL: {fk: {fwd: -30, out: 30, bend: 20}}, handL: 'brace', face: {mouth: 'pain', brows: 0.5}}],
       [0.55, {drop: 128, lean: -10, bodyPitch: -12, legL: {local: {r: -30, u: 40, f: 110}}, legR: {local: {r: 34, u: 46, f: 96}}, handL: 'brace', head: {pitch: -20}, face: {mouth: 'open', brows: 0.6, worry: 0.7}}],
+      // (the left leg comes back under her lifted, not swept through the ground)
+      [0.68, {drop: 104, lean: 8, bodyPitch: -2, legL: {local: {r: -34, u: 86, f: 18}}, legR: {local: {r: 35, u: 30, f: 84}}, handL: 'brace', face: {mouth: 'grit', brows: -0.2}}],
       [0.8, layer(KNEEL('L'), {drop: 76, lean: 20, face: {mouth: 'grit', brows: -0.4}})],
       [1, layer(BRACED({wide: 0.7}), {drop: 26, lean: 14, face: {mouth: 'grit'}})],
     ], u);
@@ -731,7 +733,7 @@ const B0 = {x: 46.9, z: -3.8};
 const DEC_RUN: XZ[] = [{x: B0.x - 0.05, z: B0.z + 0.05}, {x: 45.8, z: -2.2}, {x: DEC_SPOT.x, z: DEC_SPOT.z}];
 const DEC_THROWN = {from: {x: 42.6, z: 1.55}, to: {x: 41.5, z: 1.8}};
 const DEC_BACK2: XZ[] = [{x: DEC_THROWN.to.x, z: DEC_THROWN.to.z}, {x: 38.8, z: 1.9}, {x: 35.0, z: 2.0}, {x: D4S('decoy').pos.x, z: D4S('decoy').pos.z}];
-const DEC_UP = 146.25;
+const DEC_UP = 145.98, DEC_RISE = 1.07;
 const DEC_SEGS: Seg[] = smoothSegs([
   {kind: 'stand', stag: 0.06, root: [[M.P3, B0.x, B0.z, 80], [127.4, B0.x, B0.z, 80], [127.55, B0.x - 0.05, B0.z + 0.05, headingTo(DEC_RUN[0], DEC_RUN[1])]]},
   {kind: 'run', path: DEC_RUN, T0: 127.6, T1: 129.5, gait: GAITS.walk, A: 0.4, D: 0.5},
@@ -740,14 +742,14 @@ const DEC_SEGS: Seg[] = smoothSegs([
     [EV3.smash + 0.35, DEC_SPOT.x - 0.45, DEC_SPOT.z - 0.1, DEC_SPOT.h + 20], [137.2, DEC_SPOT.x - 0.5, DEC_SPOT.z - 0.1, DEC_SPOT.h + 15], [EV3.fallBack, DEC_SPOT.x - 0.5, DEC_SPOT.z - 0.1, DEC_SPOT.h + 5], [EV3.fallBack + 0.15, DEC_SPOT.x - 0.5, DEC_SPOT.z - 0.1, headingTo({x: DEC_SPOT.x - 0.5, z: DEC_SPOT.z - 0.1}, BACK.decoy[1])]]},
   {kind: 'run', path: [{x: DEC_SPOT.x - 0.5, z: DEC_SPOT.z - 0.1}, BACK.decoy[1], BACK.decoy[2]], T0: EV3.fallBack + 0.2, T1: THROW_T, gait: GAITS.run, A: 0.35, D: 0},
   {kind: 'fn', T0: THROW_T, at: (T) => decoyThrownBody(T)},
-  {kind: 'stand', stag: 0.06, root: [[DEC_UP + 0.8, DEC_THROWN.to.x + 0.3, DEC_THROWN.to.z, 268], [DEC_UP + 0.88, DEC_THROWN.to.x + 0.3, DEC_THROWN.to.z, headingTo(DEC_BACK2[0], DEC_BACK2[1])]]},
-  {kind: 'run', path: [{x: DEC_THROWN.to.x + 0.3, z: DEC_THROWN.to.z}, ...DEC_BACK2.slice(1)], T0: DEC_UP + 0.9, T1: 149.3, gait: GAITS.run, A: 0.35, D: 0.6},
+  {kind: 'stand', stag: 0.06, root: [[DEC_UP + DEC_RISE, DEC_THROWN.to.x + 0.3, DEC_THROWN.to.z, 268], [DEC_UP + DEC_RISE + 0.08, DEC_THROWN.to.x + 0.3, DEC_THROWN.to.z, headingTo(DEC_BACK2[0], DEC_BACK2[1])]]},
+  {kind: 'run', path: [{x: DEC_THROWN.to.x + 0.3, z: DEC_THROWN.to.z}, ...DEC_BACK2.slice(1)], T0: DEC_UP + DEC_RISE + 0.1, T1: 149.3, gait: GAITS.run, A: 0.35, D: 0.6},
   {kind: 'stand', stag: 0.06, root: [[149.3, D4S('decoy').pos.x, D4S('decoy').pos.z, runEnd(DEC_BACK2).h], [149.75, D4S('decoy').pos.x, D4S('decoy').pos.z, D4S('decoy').heading]]},
 ]);
 /** she is thrown forward: onto her front, then up (the rise from the rubble, quick) */
 const decoyThrownBody = (T: number) => {
   const u = clamp((T - THROW_T) / 0.5), e = 1 - (1 - u) * (1 - u);
-  const up = T > DEC_UP ? smooth((T - DEC_UP) / 0.8) : 0;
+  const up = T > DEC_UP ? smooth((T - DEC_UP) / DEC_RISE) : 0;
   const x = lerp(DEC_THROWN.from.x, DEC_THROWN.to.x, e) + 0.3 * up, z = lerp(DEC_THROWN.from.z, DEC_THROWN.to.z, e);
   const h = 268;
   const f = fwdOf(h), r = rightOf(h);
@@ -780,11 +782,11 @@ export const decoyAt = (T: number): CrewOut => {
   if (hurt > 0) pose = blendPose(pose, layer(pose, {armR: {local: {r: -10, u: 260, f: 40}}, handR: 'fist', armL: {local: {r: -36, u: 205, f: 70}}, face: {mouth: 'sad', brows: 0.5, worry: 0.8}}), hurt);
   // the blast: forward onto her front; up (the rise, quick)
   let down = false;
-  if (T >= THROW_T && T < DEC_UP + 0.8) {
+  if (T >= THROW_T && T < DEC_UP + DEC_RISE) {
     down = true;
     const u = clamp((T - THROW_T) / 0.45);
     const fallP: Pose = keyPose([[0, layer(STAND, {drop: 20, lean: 18})], [0.4, {drop: 60, lean: 50, bodyPitch: 30, armL: {fk: {fwd: 90, out: 20, bend: 20}}, armR: {fk: {fwd: 90, out: 20, bend: 20}}, handL: 'open', handR: 'open', face: {mouth: 'pain', squint: 1}}], [1, RISE_KEYS[0][1]]], u);
-    pose = T < DEC_UP ? (u < 1 ? fallP : layer(RISE_KEYS[0][1], {head: {pitch: -30}, face: {mouth: 'pant', brows: 0.4, worry: 0.6}})) : keyPose(RISE_KEYS, ((T - DEC_UP) / 0.8) * 7.2);
+    pose = T < DEC_UP ? (u < 1 ? fallP : layer(RISE_KEYS[0][1], {head: {pitch: -30}, face: {mouth: 'pant', brows: 0.4, worry: 0.6}})) : keyPose(RISE_KEYS, ((T - DEC_UP) / DEC_RISE) * 7.2);
   }
   const lt: V3 | null = T < 127.4 ? (T < 119.9 ? H1_EYE(T) : heavyAttach(heavy1D3(Math.min(T, 126.4))).hull) : work > 0.5 ? null : T < 135.95 ? at3(56.5, -0.5, 3.2) : T < EV3.smash ? at3(47.6, 3.2, 1.0) : T < EV3.fallBack ? null : null;
   if (!down && lt) pose = look(pose, b, lt, 0.9);
@@ -815,11 +817,26 @@ const rawAt = (role: Role2, T: number): CrewOut => {
  */
 /** getting up: the moment a body leaves its 'down' pose (fk legs) for its feet (world footholds) — over 0.22 s the
  *  pose blends from the last down frame and the feet from where its ankles were */
-const RISE: Partial<Record<Role2, number>> = {director: DIR_UP + 0.85, runner: RUN_DOWN.t1, tether: EV3.tRun, flares: FLR_UP + 0.55, decoy: DEC_UP + 0.8};
+const RISE: Partial<Record<Role2, number[]>> = {director: [DIR_UP + 0.85], runner: [RUN_DOWN.t1], tether: [EV3.tUp + 0.3, EV3.tRun], flares: [FLR_UP + 0.55], decoy: [DEC_UP + DEC_RISE]};
 const RISE_W = 0.22;
+/** going down (thrown by the blast, the cable cut): over 0.12 s the pose blends from the last standing frame and the
+ *  feet leave their footholds for where the falling pose puts its ankles — a hard, fast move, not a one-frame jump */
+const FALL: Partial<Record<Role2, number>> = {director: EV3.blast, runner: THROW_T, flares: THROW_T, decoy: THROW_T, tether: EV3.cut};
+const FALL_W = 0.12;
+const fallFix = (role: Role2, T: number, o: CrewOut): CrewOut => {
+  const F = FALL[role];
+  if (F === undefined || T < F || T >= F + FALL_W) return o;
+  const s0 = rawAt(role, F - 1e-3).spec, p0 = s0.pose, p1 = o.spec.pose;
+  if (!p0 || !p1 || typeof p0 === 'function' || typeof p1 === 'function' || !s0.world?.footL || !s0.world?.footR) return o;
+  const w = smooth((T - F) / FALL_W);
+  const r1 = figureRig(SOLVE_VIEW, o.spec);
+  const ank = (i: 0 | 1): V3 => { const a = r1.W(r1.rig.ankle[i]); return {x: a.x, y: Math.max(G(a.x, a.z), a.y - 0.04), z: a.z}; };
+  const wf = o.spec.world ?? {};
+  return {...o, spec: {...o.spec, pose: blendPose(p0, p1, w), world: {...wf, footL: mixFoot(s0.world.footL, wf.footL ?? ank(0), w), footR: mixFoot(s0.world.footR, wf.footR ?? ank(1), w)}}};
+};
 const riseFix = (role: Role2, T: number, o: CrewOut): CrewOut => {
-  const R = RISE[role];
-  if (R === undefined || T < R || T >= R + RISE_W) return o;
+  const R = RISE[role]?.find((r) => T >= r && T < r + RISE_W);
+  if (R === undefined) return o;
   const s0 = rawAt(role, R - 1e-3).spec, p0 = s0.pose, p1 = o.spec.pose;
   if (!p0 || !p1 || typeof p0 === 'function' || typeof p1 === 'function') return o;
   const w = smooth((T - R) / RISE_W);
@@ -840,7 +857,7 @@ const needRaw = (role: Role2, j: number): number => {
   let v = NEED.get(key);
   if (v === undefined) {
     if (NEED.size > 6000) NEED.clear();
-    const T = j / FPS, sp = riseFix(role, T, rawAt(role, T)).spec;
+    const T = j / FPS, sp = riseFix(role, T, fallFix(role, T, rawAt(role, T))).spec;
     const base0 = (typeof sp.pose === 'function' ? sp.pose(figFrame(SOLVE_VIEW, sp.pos, sp.heading, sp.anchor)) : sp.pose)?.drop ?? 0;
     v = Math.max(0, (figProps(SOLVE_VIEW, sp).props.drop ?? 0) - base0);
     NEED.set(key, v);
@@ -872,7 +889,7 @@ export const crewAt = (role: Role2, T: number): CrewOut => {
   return r;
 };
 const crewAt0 = (role: Role2, T: number): CrewOut => {
-  const o = needFix(role, T, riseFix(role, T, rawAt(role, T)));
+  const o = needFix(role, T, riseFix(role, T, fallFix(role, T, rawAt(role, T))));
   if (T < M.P3 + 0.45) {
     const d2 = d2CrewAt(role as D2Role, T).spec;
     return {...o, spec: towardSpec(d2, o.spec, smooth((T - M.P3) / 0.45))};
