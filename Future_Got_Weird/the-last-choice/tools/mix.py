@@ -27,12 +27,12 @@ TARGET_LUFS, CEIL_DBTP = -16.0, -1.5
 
 # default levels (dB re. the -3 dBFS-normalised file) — set by role, then per-cue gain
 LEVEL = {
-    "taxi_drop": -4, "wreck_slam": -3, "blast": -1, "gantry_collapse": -4, "metal_tear": -7, "glass_shatter": -9, "debris_rain": -12,
+    "taxi_drop": -4, "wreck_slam": -6, "blast": -3, "gantry_collapse": -6, "metal_tear": -9, "glass_shatter": -10, "debris_rain": -13,
     "launcher": -8, "body_fall": -10, "robot_step_heavy": -12, "robot_step": -14, "servo_heavy": -15, "servo_whir": -17, "sensor_lock": -18,
     "sparks": -13, "elec_arc": -14, "hydraulic": -13, "cable_strain": -13, "crane_trolley": -15, "crane_chain": -15, "lever_clunk": -10,
     "gate_roll": -10, "shutter_slam": -10, "shutter_close": -13, "glass_door": -16, "padlock": -14, "radio_on": -14, "static": -16,
     "hand_glass": -12, "breath_exert": -14, "breath_ragged": -18, "steps_gravel": -15, "step_grate": -15, "step_grate_b": -15,
-    "sub_boom": -6, "tinnitus": -22, "projector_beep": -20, "drone_rotor": -22, "steam_vent": -16,
+    "sub_boom": -9, "tinnitus": -22, "projector_beep": -20, "drone_rotor": -22, "steam_vent": -16,
     "fire_bed": -22, "city_bed": -20, "refuge_bed": -24,
 }
 MUSIC_DB = -1.0
@@ -213,8 +213,10 @@ mix *= out[:, None]
 
 I, LRA, TP = lufs(mix)
 sf.write(os.path.join(ROOT, "audio", "mix", "mix.wav"), mix, SR, subtype="PCM_24")
+# final stems (post muffle/duck, at the mix gain; limiter not applied) — separate from build_music's input stem
+os.makedirs(os.path.join(ROOT, "audio", "mix", "stems"), exist_ok=True)
 for name, x in (("music", music), ("sfx", sfx), ("beds", beds)):
-    sf.write(os.path.join(ROOT, "audio", "mix", f"stem_{name}.wav"), x.astype(np.float32), SR, subtype="FLOAT")
+    sf.write(os.path.join(ROOT, "audio", "mix", "stems", f"{name}.wav"), x.astype(np.float32), SR, subtype="FLOAT")
 pub = os.path.join(ROOT, "source", "public", "audio")
 os.makedirs(pub, exist_ok=True)
 sf.write(os.path.join(pub, "mix.wav"), mix, SR, subtype="PCM_16")
@@ -224,6 +226,22 @@ for s in T["shots"]:
     a, b = int(s["start"] * SR), int(s["end"] * SR)
     x = mix[a:b]
     sec[s["id"]] = round(float(10 * np.log10(np.mean(x ** 2) + 1e-12)), 1)
-meas = {"integrated_lufs": I, "lra_lu": LRA, "true_peak_dbtp": TP, "gain_db": round(20 * np.log10(g), 2), "limiter_max_gr_db": round(float(20 * np.log10(out.min())), 2), "shot_rms_dbfs": sec, "cues": len(T["cues"])}
+# where the limiter works hardest (> 2 dB), merged into spans, with the loudest cue nearby
+gr_db = 20 * np.log10(out)
+spans, i = [], 0
+hot = np.where(gr_db < -2)[0]
+if len(hot):
+    a = hot[0]; prev = hot[0]
+    for k in hot[1:]:
+        if k - prev > SR // 4:
+            spans.append((a, prev)); a = k
+        prev = k
+    spans.append((a, prev))
+lim = []
+for a, b in spans:
+    t0, t1 = a / SR, b / SR
+    near = [c["kind"] for c in T["cues"] if t0 - 0.6 <= c["t"] <= t1 + 0.1]
+    lim.append({"t": round(t0, 2), "dur": round(t1 - t0, 2), "max_gr_db": round(float(gr_db[a:b + 1].min()), 1), "cues": near})
+meas = {"limiter_spans": lim, "integrated_lufs": I, "lra_lu": LRA, "true_peak_dbtp": TP, "gain_db": round(20 * np.log10(g), 2), "limiter_max_gr_db": round(float(20 * np.log10(out.min())), 2), "shot_rms_dbfs": sec, "cues": len(T["cues"])}
 json.dump(meas, open(os.path.join(ROOT, "audio", "mix", "mix_measure.json"), "w"), indent=1)
 print(json.dumps({k: v for k, v in meas.items() if k != "shot_rms_dbfs"}))

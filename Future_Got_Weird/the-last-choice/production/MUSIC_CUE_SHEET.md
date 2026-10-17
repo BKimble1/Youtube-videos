@@ -70,10 +70,11 @@ vocal phrases · 140–164 sparse stop-time solo · 164.5 dense ensemble out-cho
 | **0:38.70** | hit on re-entry (39.16) | cut to the assembly composition |
 | 0:45.54 | march begins | the group moves off the terrace |
 | 0:53.28 | accent (53.74) | the hauler starts |
-| 1:18.70 | accent (79.16) | the small drone sees the projection edge-on |
+| 1:18.70 | accent (79.16) | the small drone's eye snaps amber (3 frames after the C7→C8 cut) |
 | **1:21.23** | splice / destination hit | the warden is smashed into the column |
 | 1:24.03 | accent (145.88) | the warden hits the street |
 | **1:41.15** | B♭ arrival (163.0) | the operator chooses to hold the lever |
+| 1:45.25 | onset (167.10) | **the blast** hits the gantry; muffled perspective 1:45.29–1:49.60 with an ear ring over it (`PERSPECTIVE` in `src/film/sfx.ts`) |
 | 1:58.15 | softening (180.0) | carrying the friend down to the waterfront |
 | **2:05.75** | final hit (187.6) | the refuge doors open |
 | 2:11.95 | ring-out ends | — silence: the hands, the sheet |
