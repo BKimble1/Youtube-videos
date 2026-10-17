@@ -23,44 +23,44 @@ export const TD = {
 
 /** the tether operator (clerkA): out of the smoke (C2), up the west slope, a hand onto the summit; the reel (C5b) */
 export const TT = {
-  go: 37.9, // starts walking inside the smoke (seen from 38.46)
+  go: 36.5, // starts walking inside the smoke (seen from 38.46)
   top: 48.55, // on the summit
-  handOn: 48.0, handOff: 48.5, // the last step up: left hand on the rock
+  handOn: 47.08, handOff: 47.5, // the last step up: left hand on the rock
   reel: 51.38, click: 51.52, reelOff: 51.78, // C5b: her left hand on the reel, the lock clicks
   turn: 53.3,
 };
 
 /** the runner (guesser): the sprint out of the smoke, the vault (C3), up to his place */
 export const TR = {
-  go: 39.35, // starts running inside the smoke
+  go: 38.4, // starts running inside the smoke (south of his POV)
   takeoff: 41.4, // last plant before the wall (left foot)
-  hand: 41.5, // the left palm lands on the wall's top edge
-  over: 41.74, // the hips pass over the edge
-  land: 41.98, // the right foot lands beyond it (then the left)
-  release: 41.86, // the palm leaves the edge
-  rec: 42.45, // recovered (up out of the crouch, moving)
+  hand: 41.48, // the left palm lands on the wall's top edge
+  over: 41.67, // the hips pass over the edge
+  release: 41.75, // the palm leaves the edge
+  land: 41.87, // the right foot lands beyond it (then the left)
+  rec: 42.38, // recovered (up out of the crouch, moving)
   arrive: 46.3,
   turn: 53.24,
 };
 
 /** the breaker (honest): climbs on the north side (C3, a hand on a rubble block), round behind him to his left */
 export const TB2 = {
-  go: 39.4,
-  hand1: 42.9, hand1Off: 43.6, // right palm on the rubble block, the push up
-  hand2: 46.45, hand2Off: 47.05, // a second time at the steep step below the crest
-  arrive: 49.95, // at the Director's left side
-  touch: 50.28, touchOff: 50.98, // C5a: his right hand on the Director's left shoulder
-  go2: 51.05, arrive2: 52.75,
+  go: 38.2,
+  hand1: 44.7, hand1Off: 45.2, // his left palm on the steep rubble bank, the push up
+  hand2: 46.95, hand2Off: 47.45, // again at the steep step below the crest
+  arrive: 49.7, // at the Director's right side (he turns to face him)
+  touch: 50.28, touchOff: 50.98, // C5a: his left hand on the Director's right shoulder
+  go2: 51.05, arrive2: 53.45,
   turn: 53.36,
 };
 
 /** the three from the edge of the street (C4): the decoy maker, the drone pilot, the flare carrier */
 export const T3 = {
-  go: 44.35,
+  go: 42.4,
   launch: 47.05, spin: 47.3, lift: 47.72, // the pilot stops, holds the drone up; the rotors spin up; it lifts off her palm
   ctrl: 48.15, // her hands come together on the controller
   pilotGo: 48.35,
-  arriveDecoy: 52.15, arriveFlares: 51.7, arrivePilot: 52.75,
+  arriveDecoy: 52.3, arriveFlares: 51.6, arrivePilot: 52.9,
   turnPilot: 53.3, turnFlares: 53.44, turnDecoy: 53.52,
 };
 

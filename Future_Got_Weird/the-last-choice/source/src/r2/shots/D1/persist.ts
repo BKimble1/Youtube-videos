@@ -6,8 +6,8 @@
 //   d1_u4  face down just west of the rim at ≈ (40.4, 4.0): left knee broken, back plate pried off, cables torn out
 //   d1_u1  on its front at ≈ (41.0, −2.9): chest plate smashed off (the plate lies ~2 m north-west), torso dented
 //   d1_u2  under/beside U1 at ≈ (41.0, −3.9): left pauldron torn off
-//   d1_u3  on its back, head-down on the crater's inner slope below "the gap": heels at the crest's inner edge
-//          (≈ 47.5–47.9, −1.0, y ≈ +0.7), head ≈ (48.8, −1.0, y ≈ −0.2); it slid ~1.25 m down after landing (88.0–89.2)
+//   d1_u3  on its back, head-down on the crater's inner slope below "the gap": feet ≈ (47.6, −1.5, y ≈ +0.4), head
+//          ≈ (48.65, −2.1, y ≈ −0.4); it went over the crest diagonally (north-east) and slid ~1.25 m down (87.7–88.9)
 // plus the fractured slab just inside the crest of the crater's west rim (base x ≈ 47.8, z 1.2 … 5.6; the crest here is
 // +1.0…+1.3 at x ≈ 46.5–47) the Crew take cover behind at BREATH.
 import type {Persist} from '../../film/continuity';

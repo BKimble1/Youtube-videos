@@ -313,15 +313,16 @@ export const bodyAt = (segs: Seg[], T: number): Body => {
     const A = s.A ?? 0.8, D = s.D ?? 0.7;
     const v = (runDist(T + 0.03, s.T0, s.T1, s.path.Ls, A, D) - runDist(T - 0.03, s.T0, s.T1, s.path.Ls, A, D)) / 0.06;
     const k = clamp(v / cruise(s.T0, s.T1, s.path.Ls, A, D) * 1.25);
-    let fl = g.footL, fr = g.footR;
-    // push-off: the feet come out of the previous stance into the gait over the first 0.3 s
+    let fl = g.footL, fr = g.footR, hd = g.heading;
+    // push-off: the feet come out of the previous stance into the gait over the first 0.3 s, the body turns onto the path
     const prev = segs[i - 1];
     if (prev && prev.kind !== 'walk') {
       const pb = bodyAt(segs.slice(0, i), s.T0);
       const w = smooth(clamp((T - s.T0) / 0.32));
       fl = mixFoot(pb.footL, fl, w); fr = mixFoot(pb.footR, fr, w);
+      hd = lerpAng(pb.heading, g.heading, smooth(clamp((T - s.T0) / 0.42)));
     }
-    return {pos: g.pos, heading: g.heading, footL: fl, footR: fr, gait: g.pose, runK: k, seg: i, inWalk: true, phase: g.phase, slope: g.slope, swingL: g.swingL, swingR: g.swingR};
+    return {pos: g.pos, heading: hd, footL: fl, footR: fr, gait: g.pose, runK: k, seg: i, inWalk: true, phase: g.phase, slope: g.slope, swingL: g.swingL, swingR: g.swingR};
   }
   const b = standAt(s, T);
   // settle out of the previous walk: the feet land on their first stance footholds

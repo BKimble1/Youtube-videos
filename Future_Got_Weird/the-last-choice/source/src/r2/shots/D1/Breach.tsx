@@ -77,8 +77,8 @@ const D18_KEYS: CamKey[] = [
   {t: 1.3, pos: g(42.6, -1.55, 0.7), target: g(46.1, -0.8, 1.35), fov: 42},
   {t: 1.8, pos: g(43.3, -1.75, 0.95), target: g(47.1, -0.8, 1.3), fov: 43},
   {t: 2.55, pos: ga(43.9, 1.95, -2.3), target: ga(48.7, 0.45, -0.5), fov: 46},
-  {t: 3.25, pos: ga(44.35, 2.45, -2.6), target: ga(49.6, 0.25, -0.45), fov: 49},
-  {t: M.GAIN1 - M.BR4, pos: ga(44.45, 2.5, -2.65), target: ga(49.7, 0.3, -0.4), fov: 50},
+  {t: 3.25, pos: ga(44.35, 2.45, -2.6), target: ga(49.6, 0.7, -0.45), fov: 49},
+  {t: M.GAIN1 - M.BR4, pos: ga(44.45, 2.5, -2.65), target: ga(49.7, 0.9, -0.4), fov: 50},
 ];
 export const D1_8: React.FC = () => {
   const {t, T} = useShotTime(M.BR4);

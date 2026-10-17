@@ -53,7 +53,7 @@ export const WALL = {
   V: {x: Math.sin(LEAN), y: Math.cos(LEAN), z: 0} as V3, // up the wall (leaning east)
   thick: 0.24,
   // outline (u along the wall from its north end, v up the face), metres: a jagged broken top, flat in the middle
-  out: [[0, 0], [2.3, 0], [2.3, 0.62], [2.12, 0.86], [1.86, 1.08], [1.62, 1.13], [1.2, 1.15], [0.66, 1.12], [0.42, 0.98], [0.2, 0.74], [0, 0.66]] as [number, number][],
+  out: [[0, 0], [2.3, 0], [2.3, 0.56], [2.12, 0.78], [1.86, 0.97], [1.62, 1.02], [1.2, 1.03], [0.66, 1.0], [0.42, 0.88], [0.2, 0.67], [0, 0.6]] as [number, number][],
 };
 /** the wall's front normal (west, a little up) */
 export const WALL_N: V3 = norm3(cross3(WALL.U, WALL.V));
@@ -67,7 +67,7 @@ export const wallTopV = (u: number): number => {
     const lo = Math.min(ua, ub), hi = Math.max(ua, ub);
     if (u >= lo && u <= hi) return va + ((vb - va) * (u - ua)) / (ub - ua || 1);
   }
-  return 0.66;
+  return 0.6;
 };
 /** where the runner's left palm lands: on the top edge, mid-thickness, at z (world) */
 export const wallGrip = (z: number): V3 => {

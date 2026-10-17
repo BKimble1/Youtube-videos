@@ -41,7 +41,7 @@ export const EV = {
   br1Lock: 78.5, br1: 79.1, // U1's swing meets the plate: the plate dents
   br2: 81.78, // breaker → U1's chest plate
   br3Fire: 82.98, br3Bite: 83.28, br3Taut: 83.45, br3Topple: 83.5, br3Crash: 84.06, // tether swings U1 into U2
-  br4Go: 85.9, br4: 86.36, br4Fall: 87.35, // the Director's shoulder drive → U3 over the crest, down into the crater
+  br4Go: 85.9, br4: 86.36, br4Fall: 86.98, // the Director's shoulder drive → U3 over the crest, down into the crater
 };
 
 // ------------------------------------------------------------------ the Director's plate, as the units aim at it
@@ -259,8 +259,9 @@ const U2: Plan = {
 // ---- BR4, the shared timeline (the Director's side is in crew.tsx): he gathers low at (42.35, −0.92), bursts two
 // strides into U3's chest (shoulder and tucked plate into its lower chest plate) at EV.br4, drives it 1.2 m back up the
 // rim's west face in three short steps, shoves off; U3 staggers two steps back onto the crest (x ≈ 46.5, +1.0), its
-// heels catch and it topples backward over the crest, lands on the inner slope and slides down it.
-export const BR4 = {gather: M.BR4, go: 85.9, hit: EV.br4, release: 86.95, settle: 87.4, fall: EV.br4Fall, slide0: 88.0, slide1: 89.2};
+// already tipping back as it staggers (the fall starts at the shove), its heels catch on the crest and it goes over
+// backward, lands on the inner slope and slides down it.
+export const BR4 = {gather: M.BR4, go: 85.9, hit: EV.br4, release: 86.95, settle: 87.4, fall: EV.br4Fall, stag: 87.2, slide0: 87.7, slide1: 88.9};
 /** the Director's root x through BR4 (85.64 → 87.4): gather, burst, drive (decelerating from the impact), settle */
 export const br4X = (T: number): number => {
   if (T <= BR4.gather) return 42.35;
@@ -272,18 +273,20 @@ export const br4X = (T: number): number => {
   return xr + 1.6 * u - (1.6 / 0.9) * u * u; // stops over 0.45 s
 };
 export const br4Z = (T: number) => lerp(-0.62, -0.72, smooth(clamp((T - BR4.go) / 1.2))); // a little south of U3's line (it stands at −0.95): his left shoulder meets its chest
-/** U3's root x: waiting, driven (0.48 m ahead of him), shoved off (2.6 m/s, slowing), heels caught on the crest, slide */
+/** U3's root x (before the slide): waiting, driven (0.63 m ahead of him), shoved off (3.2 m/s, slowing), heels caught on the crest */
 const U3_GAP = 0.63;
 const u3X = (T: number): number => {
   if (T < BR4.hit) return 44.6;
   if (T < BR4.release) return br4X(T) + U3_GAP;
   const x0 = br4X(BR4.release) + U3_GAP;
-  const u = Math.min(T - BR4.release, BR4.fall - BR4.release);
-  const xf = x0 + 2.6 * u - 1.0 * u * u;
-  if (T < BR4.slide0) return xf;
-  const k = clamp((T - BR4.slide0) / (BR4.slide1 - BR4.slide0));
-  return xf + 1.25 * (1 - (1 - k) * (1 - k)); // slides down the inner slope, friction-slowed
+  const u = Math.min(T - BR4.release, BR4.stag - BR4.release);
+  const xf = x0 + 3.2 * u - 1.2 * u * u;
+  return xf;
 };
+/** how far it has slid down the inner slope (m, along U3_FALL_DIR), friction-slowed */
+const u3Slide = (T: number) => (T < BR4.slide0 ? 0 : 1.25 * (1 - (1 - clamp((T - BR4.slide0) / (BR4.slide1 - BR4.slide0))) ** 2));
+/** it twists as it staggers (toward its left), so it goes over the crest diagonally, down-slope to the north-east */
+const u3H = (T: number) => (T < BR4.release ? 270 : lerp(270, 245, smooth(clamp((T - BR4.release) / (BR4.stag - BR4.release + 0.2)))));
 /**
  * The angle (from upright) at which a body toppled about pivot p in direction d comes to rest on the ground: the first
  * angle at which the body line (crumpled length ≈ 2 m) touches the terrain, allowing for the torso's thickness.
@@ -299,26 +302,25 @@ const restAng = (p: XZ, d: XZ, lo = 70, hi = 150): number => {
   }
   return hi;
 };
-const U3_FALL_DIR = {x: 1, y: 0, z: -0.04};
+const U3_FALL_DIR = {x: 0.894, y: 0, z: -0.447}; // backward and to its left: across the low camera, down the slope
 const U3_ROOT: KR[] = [[68.62, 44.6, -0.9, 270], [84.3, 44.6, -0.9, 270], [84.9, 44.6, -0.95, 270]];
 /** U3's feet through BR4: planted; skidding back with the drive (heels lifting); two stagger steps back; the slide */
 const u3Feet = (T: number): {L: V3; R: V3; pitchL: number; pitchR: number} => {
-  const z = -0.95, half = 0.19;
-  const at = (x: number, sd: -1 | 1, up = 0): V3 => ({x, y: G(x, z - sd * half) + up, z: z - sd * half}); // heading 270: right = −z
+  const z0 = -0.95, half = 0.19;
+  const sl = u3Slide(T), h = u3H(T), rt = rightOf(h);
+  const at = (x: number, sd: -1 | 1, up = 0): V3 => {
+    const fx = x + U3_FALL_DIR.x * sl + rt.x * sd * half, fz = z0 + U3_FALL_DIR.z * sl + rt.z * sd * half;
+    return {x: fx, y: G(fx, fz) + up, z: fz};
+  };
   const x = u3X(T);
   if (T < BR4.release) { const lift = win(T, BR4.hit, BR4.release + 0.05, 0.12, 0.12); return {L: at(x, -1), R: at(x, 1), pitchL: -14 * lift, pitchR: -10 * lift}; }
-  // stagger: right foot back, then left (each lands at the root's position then)
+  // stagger: right foot back, then left; both end side by side on the crest (it topples about its heels)
   const step = (t0: number, t1: number, x0: number, x1: number, sd: -1 | 1): V3 => {
     const u = clamp((T - t0) / (t1 - t0));
-    const xx = lerp(x0, x1, smooth(u));
-    return at(xx, sd, Math.sin(Math.PI * u) * 0.12);
+    return at(lerp(x0, x1, smooth(u)), sd, T < BR4.stag ? Math.sin(Math.PI * u) * 0.12 : 0);
   };
-  // (both feet end side by side on the crest: it topples about its heels)
-  const xr = u3X(BR4.release), xf = u3X(BR4.fall);
-  const slide = T > BR4.slide0 ? u3X(T) - u3X(BR4.slide0) : 0;
-  const R = step(BR4.release + 0.02, BR4.release + 0.2, xr, xf - 0.04, 1);
-  const L = step(BR4.release + 0.2, BR4.fall - 0.02, xr, xf + 0.04, -1);
-  return {L: {...at(L.x + slide, -1), y: T < BR4.fall ? L.y : G(L.x + slide, L.z)}, R: {...at(R.x + slide, 1), y: T < BR4.fall ? R.y : G(R.x + slide, R.z)}, pitchL: 0, pitchR: 0};
+  const xr = u3X(BR4.release), xf = u3X(BR4.stag);
+  return {R: step(BR4.release + 0.02, BR4.release + 0.15, xr, xf - 0.04, 1), L: step(BR4.release + 0.12, BR4.stag - 0.02, xr, xf + 0.04, -1), pitchL: 0, pitchR: 0};
 };
 const U3: Plan = {
   id: D1_IDS.U3, lane: lane(VID.U3, {x: 70, z: -2.2}, {x: 47.9, z: -0.9}, {x: 44.6, z: -0.9}), T0: RUN_T0 + 0.35, T1: 68.62,
@@ -329,13 +331,15 @@ const U3: Plan = {
     // the drive lifts it and bends it back (heels up), the shove sends it over the crest
     const wind = smooth(clamp((T - 85.1) / 0.6));
     const back = after(T, BR4.hit + 0.1, 0.5) * 0.35 + after(T, BR4.release, 0.3) * 0.65;
-    const curl = after(T, BR4.fall, 0.5); // it curls as it goes over (chin in), so it lies along the slope
+    // (it stays bent back as it tips over the crest, then curls — chin in — as it lands, so it lies along the slope)
+    const curl = after(T, BR4.fall + 0.55, 0.3);
     const feet = u3Feet(T);
-    const x = u3X(T);
+    const sl = u3Slide(T);
+    const x = u3X(T) + U3_FALL_DIR.x * sl, z = -0.95 + U3_FALL_DIR.z * sl;
     const pivot = {x: (feet.L.x + feet.R.x) / 2, z: (feet.L.z + feet.R.z) / 2};
-    const gx = G(x, -0.95);
+    const gx = G(x, z);
     return {
-      pos: {x, y: 0, z: -0.95}, heading: T < BR4.release ? 270 : lerp(270, 266, after(T, BR4.release, 0.4)),
+      pos: {x, y: 0, z}, heading: u3H(T),
       feet,
       look: T < BR4.hit ? {x: br4X(T), y: G(br4X(T), br4Z(T)) + 1.2, z: br4Z(T)} : undefined,
       crouch: T < BR4.hit ? 0.3 * wind : lerp(0.3, 0.02, smooth(clamp((T - BR4.hit) / 0.25))),
@@ -538,5 +542,5 @@ export const WRECKS = {
   U4: 'face down just west of the rim at (40.4, 4.1), back plate off, cables torn out',
   U1: 'on its side at (40.9, −4.4), chest plate off (the plate lies at (38.9, −3.7)), dented',
   U2: 'face down under U1 at (41.0, −4.6), left pauldron torn off',
-  U3: 'on its back head-down on the crater\'s inner slope below the gap: feet at the crest (≈ 47.5, −1.0, y ≈ +0.7), head at (48.8, −1.0, y ≈ −0.2)',
+  U3: 'on its back, head-down on the crater\'s inner slope below the gap: feet ≈ (47.6, −1.5, y ≈ +0.4), pelvis ≈ (48.1, −1.7, y ≈ 0), head ≈ (48.65, −2.1, y ≈ −0.4)',
 };

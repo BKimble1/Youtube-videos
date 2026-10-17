@@ -26,8 +26,10 @@ export const plateAt = (x: number, z: number, h: number, g = GUARD): V3 => {
 
 // ------------------------------------------------------------------ D4-1: W1's blow on the plate
 /** where he stands to take it (he has just spun round to face it), and the plate there */
-export const BLOCK = {x: 29.62, z: 1.76, h: 90, t: EV.w1Swing};
-export const BLOCK_PLATE = plateAt(BLOCK.x, BLOCK.z, BLOCK.h);
+export const BLOCK = {x: 30.6, z: 1.72, h: 90, t: EV.w1Swing};
+/** his guard braced for the blow (the plate up and in, weight forward: D1's BR1 brace) */
+export const BLOCK_GUARD = {r: 2, u: 353, f: 106};
+export const BLOCK_PLATE = plateAt(BLOCK.x, BLOCK.z, BLOCK.h, BLOCK_GUARD);
 /** how far the blow drives him back (heels skid) */
 export const BLOCK_SKID = 0.42;
 

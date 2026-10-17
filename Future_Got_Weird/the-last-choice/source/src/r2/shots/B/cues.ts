@@ -53,13 +53,14 @@ const armyStep = (t: number, g = 0, p0 = 0): Cue[] => [
   c(t + 0.018, 'robot_step', {gain: g - 4, pan: pn(p0), dist: 0.8}),
 ];
 const B3: Cue[] = [
-  c(TB.step1 + 0.4, 'steps_gravel', {gain: -9, pan: -0.45, dist: 0.15, dur: 0.45, fade: 0.1}),
-  c(TB.step2 + 0.45, 'steps_gravel', {gain: -9, pan: -0.45, dist: 0.15, dur: 0.45, fade: 0.1}),
-  ...armyStep(M.H1, 0),
-  ...armyStep(M.H2, 1),
-  c(M.H1 + 0.08, 'breath_exert', {gain: -14, pan: -0.45, dist: 0.15, dur: 0.5, fade: 0.15}), // his breath catches
+  // (he is lower left, the army across the right two-thirds)
+  c(TB.step1 + 0.4, 'steps_gravel', {gain: -9, pan: -0.5, dist: 0.2, dur: 0.45, fade: 0.1}),
+  c(TB.step2 + 0.45, 'steps_gravel', {gain: -9, pan: -0.5, dist: 0.2, dur: 0.45, fade: 0.1}),
+  ...armyStep(M.H1, 0, 0.3),
+  ...armyStep(M.H2, 1, 0.3),
+  c(M.H1 + 0.08, 'breath_exert', {gain: -14, pan: -0.5, dist: 0.2, dur: 0.5, fade: 0.15}), // his breath catches
   // the lockstep carries on under the march bed, fading as the camera settles
-  ...[3, 4, 5, 6, 7, 8].flatMap((k) => [c(beat(k), 'robot_step_heavy', {gain: -6 - k, pan: 0.2, dist: 0.75}), c(beat(k) + 0.01, 'robot_step', {gain: -8 - k, pan: 0.0, dist: 0.8})]),
+  ...[3, 4, 5, 6, 7, 8].flatMap((k) => [c(beat(k), 'robot_step_heavy', {gain: -6 - k, pan: 0.5, dist: 0.75}), c(beat(k) + 0.01, 'robot_step', {gain: -8 - k, pan: 0.3, dist: 0.8})]),
 ];
 
 // B4 — inside the army: the near heavy turns its head on H3; feet all around the lens
@@ -82,13 +83,18 @@ const B5: Cue[] = [
   c(TB.ready, 'breath_ragged', {gain: -7, pan: 0.0, dist: 0.2, dur: 1.0, fade: 0.3}),
 ];
 
-// B6 — the halts (the global army_halt sits on H4): the last steps plant together, wave by wave (the army is upper right)
+// B6 — the halts (the global army_halt sits on H4). The lens is among the vanguard's ranks looking west: the machine
+// just left of the lens and its rank slow from H4 and plant their last step two beats later (31.06); the main body (H5a) and the rear and the
+// heavies (H5b) plant behind the lens, all around.
 const B6: Cue[] = [
-  ...armyStep(STOP.van, -3, 0.35),
-  ...armyStep(STOP.main, 0, 0.45),
-  ...armyStep(STOP.rear, 1, 0.5),
-  c(STOP.rear + 0.01, 'heavy_stomp', {gain: -3, pan: 0.5, dist: 0.8}),
-  c(STOP.rear + 0.4, 'servo_heavy', {gain: -10, pan: 0.4, dist: 0.85, dur: 1.5, fade: 0.6}), // a settle of hydraulics
+  c(STOP.van, 'robot_step_heavy', {gain: 2, pan: -0.45, dist: 0.08}), // the nearest machine plants, a few metres off
+  c(STOP.van + 0.008, 'robot_step', {gain: -1, pan: -0.85, dist: 0.12}),
+  ...armyStep(STOP.van + 0.004, -4, -0.1),
+  ...armyStep(STOP.main, 0, 0),
+  c(STOP.main + 0.01, 'robot_step_heavy', {gain: -2, pan: 0.6, dist: 0.3}),
+  ...armyStep(STOP.rear, 1, 0),
+  c(STOP.rear + 0.01, 'heavy_stomp', {gain: -3, pan: 0.1, dist: 0.6}),
+  c(STOP.rear + 0.4, 'servo_heavy', {gain: -10, pan: 0.0, dist: 0.6, dur: 1.5, fade: 0.6}), // a settle of hydraulics
 ];
 
 export const CUES_B: Cue[] = [...B1, ...B2, ...B3, ...B4, ...B5, ...B6];

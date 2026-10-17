@@ -87,8 +87,8 @@ export const footAt = (k: KP[], T: number, lift = 0.12): V3 & {swing: number} =>
  * ends with both feet set. `half` = half the stance width (m), `stepLen` = max step (m), `back` = stance stagger
  * (the left foot `back` m ahead of centre, the right behind: a fighting stance; 0 = square).
  */
-export const autoSteps = (root: KR[], o: {half?: number; stepLen?: number; stag?: number} = {}): {L: KP[]; R: KP[]} => {
-  const half = o.half ?? 0.19, stepLen = o.stepLen ?? 0.6, stag = o.stag ?? 0;
+export const autoSteps = (root: KR[], o: {half?: number; stepLen?: number; stag?: number; turn?: number} = {}): {L: KP[]; R: KP[]} => {
+  const half = o.half ?? 0.19, stepLen = o.stepLen ?? 0.6, stag = o.stag ?? 0, turnStep = o.turn ?? 50;
   const stance = (x: number, z: number, h: number, side: -1 | 1): [number, number] => {
     const f = fwdOf(h), r = rightOf(h);
     const fo = side < 0 ? stag : -stag;
@@ -101,7 +101,7 @@ export const autoSteps = (root: KR[], o: {half?: number; stepLen?: number; stag?
     const a = root[i - 1], b = root[i];
     const dist = Math.hypot(b[1] - a[1], b[2] - a[2]);
     const turn = Math.abs(wrapD(b[3] - a[3]));
-    const n = Math.max(dist > 0.02 || turn > 4 ? 1 : 0, Math.ceil(dist / stepLen), Math.ceil(turn / 50));
+    const n = Math.max(dist > 0.02 || turn > 4 ? 1 : 0, Math.ceil(dist / stepLen), Math.ceil(turn / turnStep));
     if (n === 0) {
       L.push([b[0], L[L.length - 1][1], L[L.length - 1][2]]);
       R.push([b[0], R[R.length - 1][1], R[R.length - 1][2]]);
@@ -265,7 +265,7 @@ const FEET = new WeakMap<object, {L: KP[]; R: KP[]}>();
 export const standAt = (s: Extract<Seg, {kind: 'stand'}>, T: number): Body => {
   const r = keyRoot(s.root, T);
   let feet = s.feet ?? FEET.get(s);
-  if (!feet) FEET.set(s, (feet = autoSteps(s.root, {stepLen: s.stepLen ?? 0.5, half: s.half ?? 0.15, stag: s.stag ?? 0.12})));
+  if (!feet) FEET.set(s, (feet = autoSteps(s.root, {stepLen: s.stepLen ?? 0.5, half: s.half ?? 0.15, stag: s.stag ?? 0.12, turn: 95})));
   const fl = footAt(feet.L, T, 0.1), fr = footAt(feet.R, T, 0.1);
   return {pos: onG(r.p.x, r.p.z), heading: r.h, footL: fl, footR: fr, runK: 0, seg: 0, inRun: false};
 };

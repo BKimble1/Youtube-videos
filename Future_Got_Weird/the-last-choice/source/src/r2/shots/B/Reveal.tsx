@@ -1,6 +1,7 @@
-// B3 (16.76–23.54, ORCH): from behind his left shoulder the camera rises and swings over to a high over-shoulder wide
-// — the reveal: the crater and the army below. Ranks come out of the smoke with their eyes dark; on H1/H2 they strike
-// two synchronized steps and the eyes light in a ripple from the front rank back. He steps down to the brink.
+// B3 (16.76–23.54, ORCH): from behind his right shoulder (he holds the lower-left third) the camera cranes up and back
+// over the crest to a high over-shoulder — the reveal: the crater and the whole army beyond. The ranks march with their
+// eyes dark; on H1/H2 they strike two synchronized steps and the eyes light in a ripple from the front rank back. He
+// steps down to the brink.
 // B4 (23.54–27.00, H3): long lens from inside the army looking back west: a heavy in the foreground turns its head
 // toward camera-right — to him, a tiny silhouette on the crest.
 import React from 'react';
@@ -9,7 +10,7 @@ import {V3, lerp3, smooth, clamp} from '../../../kit/math';
 import type {Item, View} from '../../engine';
 import {M} from '../../timing';
 import {STAND, dirB} from './director';
-import {dirSprite, armyB, B_COLUMNS} from './kit';
+import {dirSprite, armyB} from './kit';
 import {slabItem, chunkItems, supportItems} from './rubble';
 import {heavyPosB} from './army';
 import {CAM_B3, CAM_B4} from './cams';
@@ -25,9 +26,12 @@ export const ShotB3: React.FC = () => {
     // his feet are far below the frame: take the rig's perspective at his neck so the head and shoulders land true
     dirSprite(T, {bias: 0.6, anchor: neck}),
     slabItem(T), ...supportItems(), ...chunkItems(T),
-    ...armyB(v, T, {maxFull: 4, maxMid: 30, farFrom: 110}),
+    // the front ranks are 85–90 px tall here: solid (mid) machines, not flat far sprites
+    ...armyB(v, T, {maxFull: 0, maxMid: 140, farFrom: 175}),
   ];
-  return <Stage T={T} cam={cam} items={items} drift={0.02} atmos={{columns: B_COLUMNS, smoke: 0.3, haze: 0.15}} vignette={0.55} />;
+  // the crater's smokes lie across the line to the army from this lens: left out, with a thin haze and half the street
+  // haze, so the lockstep and the eye ripple read
+  return <Stage T={T} cam={cam} items={items} drift={0.015} atmos={{smoke: 0.1, haze: 0.05}} light={{hazeK: 0.45}} vignette={0.55} />;
 };
 
 // ------------------------------------------------------------------ B4

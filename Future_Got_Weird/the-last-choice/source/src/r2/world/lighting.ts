@@ -134,6 +134,8 @@ export type LightOpts = {
   phaseT?: number;
   /** scale the shadow tone level (a backlit shot exposed for the sky: < 1 sinks the sides facing away from the sun) */
   shadowK?: number;
+  /** scale the low street haze (< 1 to see a distant army through it) */
+  hazeK?: number;
 };
 
 /** The light rig for film time t. */
@@ -151,7 +153,7 @@ export const lightFor = (t: number, o: LightOpts = {}): LightRig => {
     fogStart: p.fogStart,
     fogEnd: p.fogEnd,
     fogMax: p.fogMax,
-    groundHaze: {height: 5, amount: p.haze, color: p.hazeColor},
+    groundHaze: {height: 5, amount: p.haze * (o.hazeK ?? 1), color: p.hazeColor},
     skyTop: p.skyTop,
     skyHorizon: p.skyHorizon,
     skyGlow: {color: p.glow, at: p.glowAt, width: 0.9},

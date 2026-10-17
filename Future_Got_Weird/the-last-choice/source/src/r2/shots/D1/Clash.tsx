@@ -13,14 +13,15 @@ const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
 // ------------------------------------------------------------------ D1-3 (CLASH 68.30–72.00): the slam, then the line
 // Cut on the beat to a low, medium-wide three-quarter from the south-south-west, 3.4 m off the contact (he left, U1
 // right, near profile so the plate arm shows between them): the plate meets U1's chest big in frame, girder and the
-// avenue's north side behind; U1 staggers back into U3. From 1.2 s the camera cranes up and back over the breaker's
-// head so the engagement spreads around them: the breaker and U4 below right, U2 coming in, the runner, the line.
+// avenue's north side behind; U1 staggers back into U3. From 1.2 s the camera pulls back and up to the south-south-west
+// past the breaker and U4, so the engagement spreads around them: the breaker and U4 in front, the Director and U1
+// beyond, U2 coming in, the runner on the left, the rest of the line along the rim.
 const D13: CamKey[] = [
   {t: 0, pos: g(40.3, 2.6, 0.75), target: g(41.8, -0.7, 1.3), fov: 42},
   {t: 0.5, pos: g(40.3, 2.6, 0.75), target: g(41.95, -0.7, 1.3), fov: 42},
   {t: 1.2, pos: g(40.25, 2.7, 0.85), target: g(42.0, -0.65, 1.25), fov: 43},
-  {t: 2.4, pos: g(39.9, 3.4, 2.0), target: g(41.8, -0.6, 1.0), fov: 50},
-  {t: 72.0 - M.CLASH, pos: g(39.5, 3.95, 2.9), target: g(41.6, -0.8, 0.9), fov: 54},
+  {t: 2.4, pos: g(39.4, 4.6, 1.7), target: g(41.6, -0.3, 1.05), fov: 47},
+  {t: 72.0 - M.CLASH, pos: g(38.6, 6.6, 2.3), target: g(41.4, 0.0, 1.0), fov: 50},
 ];
 export const D1_3: React.FC = () => {
   const {t, T} = useShotTime(M.CLASH);

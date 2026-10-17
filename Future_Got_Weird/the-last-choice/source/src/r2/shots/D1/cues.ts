@@ -6,7 +6,7 @@ import type {Cue} from '../../../film/cue';
 import {M} from '../../timing';
 
 const CLASH = M.CLASH + 0.03;
-const BR1 = 79.1, BR2 = 81.78, BR3_FIRE = 82.98, BR3_BITE = 83.28, BR3_TAUT = 83.45, BR3_CRASH = 84.06, BR4 = 86.36, BR4_RELEASE = 86.95, BR4_FALL = 87.35, BR4_LAND = 88.15;
+const BR1 = 79.1, BR2 = 81.78, BR3_FIRE = 82.98, BR3_BITE = 83.28, BR3_TAUT = 83.45, BR3_CRASH = 84.06, BR4 = 86.36, BR4_RELEASE = 86.95, BR4_FALL = 86.98, BR4_LAND = 87.78;
 
 export const CUES_D1: Cue[] = [
   // ---- D1-1 the charge down the ridge (59.95–64.00): rubble under seven people, breath, the ally drone overhead
@@ -120,9 +120,9 @@ export const CUES_D1: Cue[] = [
   {t: 86.7, kind: 'steps_gravel', gain: -2, pan: 0.05, dist: 0.2, rate: 1.1},
   {t: 86.86, kind: 'steps_gravel', gain: -2, pan: 0.05, dist: 0.2, rate: 1.2},
   {t: BR4_RELEASE, kind: 'breath_exert', gain: -2, pan: 0.05, dist: 0.2},
-  {t: BR4_RELEASE + 0.2, kind: 'robot_step_heavy', gain: -3, pan: 0.15, dist: 0.3},
-  {t: BR4_FALL - 0.02, kind: 'robot_step_heavy', gain: -4, pan: 0.15, dist: 0.3},
-  {t: BR4_FALL + 0.1, kind: 'servo_heavy', gain: -6, pan: 0.15, dist: 0.35},
+  {t: BR4_RELEASE + 0.17, kind: 'robot_step_heavy', gain: -3, pan: 0.15, dist: 0.3},
+  {t: 87.18, kind: 'robot_step_heavy', gain: -4, pan: 0.15, dist: 0.3},
+  {t: BR4_FALL + 0.3, kind: 'servo_heavy', gain: -6, pan: 0.15, dist: 0.35},
   {t: BR4_LAND, kind: 'robot_fall', gain: 1, pan: 0.0, dist: 0.4},
   // the slide down the inner slope
   {t: BR4_LAND - 0.05, kind: 'rubble_shift', gain: -3, pan: 0.0, dist: 0.4, dur: 1.2, fade: 0.4},

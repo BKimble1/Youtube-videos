@@ -64,7 +64,7 @@ export const B5_ANCHOR: V3 = {x: CHEST5.x, y: CHEST5.y + 0.3, z: CHEST5.z};
 
 /** B6: the lonely silhouette — the reverse: low among the vanguard's ranks east of the crater, the lens at chest height
  * in the lane the ranks leave around the old rail column (80, −5), looking west and a touch up: the back and legs of
- * the nearest machine large and dark on the left (it takes its last step and plants one beat after H4), more backs at
+ * the nearest machine large and dark on the left (it slows from H4 and plants its last step two beats later), more backs at
  * the frame edge, the column and the fallen girder on the right, the crater's rim and its smoke between, and ~85 m off
  * on the ridge crest, small, him — backlit by the low western sun against the smoke over the west ruin. The sight line
  * clears every unit by ≥ 0.8 m and the column by ≥ 1.1 m. Hold, drifting in a hair. */
