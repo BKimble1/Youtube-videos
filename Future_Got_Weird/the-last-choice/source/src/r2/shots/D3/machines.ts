@@ -189,12 +189,27 @@ export const H1_FOOT = (() => {
     return {c: c!, axis: f, hl: 3.3, hw: 1.6};
   };
 })();
-/** distance (m) from a ground point to the wreck's footprint (negative inside) */
-export const wreckDist = (p: XZ): number => {
+/** distance (m) from a ground point to the wreck's footprint (negative inside); `body` = the hull alone (a heavy's
+ *  foot may come down right beside it), else the whole wreck with its folded legs and head */
+export const wreckDist = (p: XZ, body = false): number => {
   const w = H1_FOOT();
   const dx = p.x - w.c.x, dz = p.z - w.c.z;
   const a = dx * w.axis.x + dz * w.axis.z, s = -dx * w.axis.z + dz * w.axis.x;
-  return Math.max(Math.abs(a) - w.hl, Math.abs(s) - w.hw);
+  return body ? Math.max(Math.abs(a + 0.3) - 2.6, Math.abs(s) - 1.15) : Math.max(Math.abs(a) - w.hl, Math.abs(s) - w.hw);
+};
+/** the units' wrecks on the rim and its slopes (D1, D2): ground centres, for paths that step over them */
+export const UNIT_WRECKS: XZ[] = [
+  {x: 51.4, z: -9.1}, {x: 51.65, z: -9.0}, {x: 51.6, z: -6.43}, {x: 51.9, z: -6.24}, {x: 49.24, z: -9.6}, {x: 49.05, z: -9.19},
+  {x: 49.33, z: -5.04}, {x: 49.22, z: -4.62}, {x: 50.14, z: -5.54}, {x: 48.44, z: -1.97}, {x: 48.66, z: -2.1}, {x: 47.6, z: -1.5},
+  {x: 40.94, z: -2.7}, {x: 41.6, z: -1.84}, {x: 40.82, z: -3.82}, {x: 41.32, z: -2.84}, {x: 40.81, z: 3.76}, {x: 41.87, z: 4.08},
+];
+/** does a polyline pass over a unit wreck (within r)? */
+export const overWreck = (pts: XZ[], r = 0.75): boolean => {
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i], L = Math.hypot(b.x - a.x, b.z - a.z), n = Math.max(2, Math.ceil(L / 0.3));
+    for (let k = 0; k <= n; k++) { const u = k / n, x = lerp(a.x, b.x, u), z = lerp(a.z, b.z, u); if (UNIT_WRECKS.some((w) => Math.hypot(w.x - x, w.z - z) < r)) return true; }
+  }
+  return false;
 };
 
 // ================================================================== HEAVY 2 (tableau 7401; HEAVIES_B[2] at rest)
@@ -243,10 +258,14 @@ export const H2_LEGS: KP[][] = (() => {
   taus.reverse();
   const r0 = h2Root(H2_T0);
   const legs: KP[][] = [0, 1, 2, 3].map((i) => [[H2_T0 - 1, ...heavyStance(r0.x, r0.z, r0.h, i)] as KP]);
-  const clearOf = (p: XZ, dir: XZ): XZ => {
-    let q = {...p};
-    for (let k = 0; k < 30 && wreckDist(q) < 0.55; k++) q = {x: q.x + dir.x * 0.25, z: q.z + dir.z * 0.25};
-    return q;
+  /** a landing never on the wreck's hull: pushed on past it, or held short of it, whichever keeps the step a step */
+  const clearOf = (prev: XZ, p: XZ, dir: XZ): XZ => {
+    if (wreckDist(p, true) > 0.35) return p;
+    let f = {...p}, b = {...p};
+    for (let k = 0; k < 40 && wreckDist(f, true) < 0.4; k++) f = {x: f.x + dir.x * 0.2, z: f.z + dir.z * 0.2};
+    for (let k = 0; k < 40 && wreckDist(b, true) < 0.4; k++) b = {x: b.x - dir.x * 0.2, z: b.z - dir.z * 0.2};
+    const lf = Math.hypot(f.x - prev.x, f.z - prev.z), lb = Math.hypot(b.x - prev.x, b.z - prev.z);
+    return lf < 4.3 ? f : lb > 0.5 ? b : f;
   };
   taus.forEach((t, ci) => {
     const next = ci < taus.length - 1 ? taus[ci + 1] : M.P4;
@@ -258,18 +277,19 @@ export const H2_LEGS: KP[][] = (() => {
       let p: XZ;
       if (ci === taus.length - 1) p = S4[i];
       else { const rp = h2Root(Math.min(M.P4, t1 + c * 0.4)); const s = heavyStance(rp.x, rp.z, rp.h, i); p = {x: s[0], z: s[1]}; }
-      // stepping over the wreck: a high step, and never landing on it
       const dir = {x: hv(h2Root(t1).h).x, z: hv(h2Root(t1).h).z};
-      if (T_OVER(prev, p)) p = ci === taus.length - 1 ? p : clearOf(p, dir);
+      if (ci < taus.length - 1) p = clearOf(prev, p, dir);
+      // stepping over the wreck: a high step
       const over = T_OVER(prev, p);
-      L.push([t0, prev.x, prev.z], [t1, p.x, p.z, over ? 3.35 : 0.55]);
+      if (Math.hypot(p.x - prev.x, p.z - prev.z) < 0.08) { L.push([t1, prev.x, prev.z]); return; }
+      L.push([t0, prev.x, prev.z], [t1, p.x, p.z, over ? 3.5 : 0.55]);
     });
   });
   return legs;
 })();
 /** does a swing from a to b pass over (or land on) heavy 1's wreck? */
 function T_OVER(a: XZ, b: XZ): boolean {
-  for (let k = 1; k <= 8; k++) { const u = k / 8; if (wreckDist({x: lerp(a.x, b.x, u), z: lerp(a.z, b.z, u)}) < 0.6) return true; }
+  for (let k = 1; k < 10; k++) { const u = k / 10; if (wreckDist({x: lerp(a.x, b.x, u), z: lerp(a.z, b.z, u)}) < 0.3) return true; }
   return false;
 }
 /** every step heavy 2 takes over the wreck: [leg, lift time, landing time, landing point] (for FX, sound) */
@@ -459,6 +479,8 @@ function buildPlan(id: number, src: Src, k: number, line: XZ, a1: {x: number; z:
   const f = hv(fin.h);
   const pre = {x: fin.x - f.x * 1.1, z: fin.z - f.z * 1.1};
   steps.push({k: 'walk', pts: [{x: a2.x, z: a2.z}, pre, {x: fin.x, z: fin.z}], T0: 145.6 + (k % 5) * 0.07, T1: M.P4, A: 0.45, D: 0.55});
+  // replacements step over the wrecks in their way (a high step)
+  steps.forEach((st) => { if (st.k === 'walk' && overWreck(st.pts)) st.lift = 0.5; });
   return {
     id, key: `d3a${id}`, steps,
     act: (T) => ({
