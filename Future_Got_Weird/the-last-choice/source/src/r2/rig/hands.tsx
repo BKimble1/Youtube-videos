@@ -122,7 +122,10 @@ export const handGlyph = (shape: HandShape, o: HG): [React.ReactElement, React.R
       break;
     }
   }
-  if ((o.blood ?? 0) > 0) (front.length ? front : back).push(<path key="bl" d={blobPath(9 * k, 21, 8, 0.5)} transform={`translate(${f2(14 * k)} ${f2(-2 * k)})`} fill={BLOOD.main} opacity={o.blood} />);
+  // blood is on the palm (cut on the rubble): full on the palm side, only a smear over the knuckles from the back
+  if ((o.blood ?? 0) > 0) (front.length ? front : back).push(palm && !edge
+    ? <path key="bl" d={blobPath(9 * k, 21, 8, 0.5)} transform={`translate(${f2(14 * k)} ${f2(-2 * k)})`} fill={BLOOD.main} opacity={o.blood} />
+    : <path key="bl" d={blobPath(4.5 * k, 23, 7, 0.55, 1.6, 0.7)} transform={`translate(${f2(19 * k)} ${f2(4 * k)})`} fill={BLOOD.main} opacity={(o.blood ?? 0) * 0.55} />);
   if ((o.dirt ?? 0) > 0) back.push(<path key="dt" d={blobPath(7 * k, 5, 8, 0.5)} transform={`translate(${f2(8 * k)} ${f2(-6 * k)})`} fill="rgba(60,45,40,0.3)" opacity={o.dirt} />);
   return [wrap(back, 'hb'), wrap(front, 'hf')];
 };

@@ -166,10 +166,18 @@ export const thrownPose = (th: Throw, t: number, ground: Ground, R0: R3 = I3, re
 };
 
 // ------------------------------------------------------------------ sprites
-/** Glowing sensor eye (sprite at the eye's world position). `power` 0..1, radius in metres. */
-export const eyeGlow = (pos: V3, color: 'cyan' | 'amber' | 'off', power: number, radius: number, key: string, bias = 0.06): Item => ({
+/**
+ * Glowing sensor eye (sprite at the eye's world position). `power` 0..1, radius in metres. `facing` (optional, world
+ * direction the eye looks): the glow fades out as the eye turns away from the camera (no glow on the back of a head).
+ */
+export const eyeGlow = (pos: V3, color: 'cyan' | 'amber' | 'off', power0: number, radius: number, key: string, bias = 0.06, facing?: V3): Item => ({
   kind: 'sprite', pos, key, bias,
   draw: (c) => {
+    let power = power0;
+    if (facing) {
+      const d = sub3(c.view.pos, pos), l = len3(d) || 1;
+      power *= clamp(((facing.x * d.x + facing.y * d.y + facing.z * d.z) / l + 0.1) / 0.35);
+    }
     if (color === 'off' || power <= 0.01) return null;
     const r = Math.max(1.5, radius * c.k);
     const col = color === 'cyan' ? EYE.cyan : EYE.amber;

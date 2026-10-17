@@ -49,7 +49,7 @@ export type UnitSpec = {
   raise?: {t0: number; t1: number; side: Side};
   hits?: {t0: number; dir: V3; strength: number}[];
   /** knocked down (crumple → topple → settle); with getUp the unit rises again from that time (machines do) */
-  fall?: {t0: number; dir: V3; getUp?: number};
+  fall?: {t0: number; dir: V3; getUp?: number; /** final topple angle (deg, default 86); > 90 lies down a slope, < 86 rests propped */ ang?: number};
   eye?: 'cyan' | 'amber' | 'off';
   /** eye turns amber at this time (commit) */
   lockAt?: number;
@@ -62,6 +62,11 @@ export type UnitSpec = {
   /** formation passthrough: gait start/end (see gait.start/end) */
   gaitStart?: number;
   gaitEnd?: number;
+  /**
+   * explicit world footholds (ground contact points), overriding the gait/standing feet per foot: planted stagger
+   * steps, a skid, a knee down (pair with crouch). pitchL/R tilt the foot (deg). Optional; absent = unchanged.
+   */
+  feet?: {L?: V3; R?: V3; pitchL?: number; pitchR?: number};
 };
 
 export type UnitRig = {
@@ -174,6 +179,12 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
       target = stand;
       fh = heading + sd * 6;
     }
+    const fo = i === 0 ? sp.feet?.L : sp.feet?.R;
+    if (fo) {
+      target = {x: fo.x, y: fo.y + U.ankleH, z: fo.z};
+      fh = heading + sd * 6;
+      pitch = (i === 0 ? sp.feet?.pitchL : sp.feet?.pitchR) ?? 0;
+    }
     // keep the hip-ankle distance reachable (crouch lowers the pelvis; reach clamps)
     const r = ik2(hip[i], target, U.thigh, U.shin, add3(fwd, mul3(right, sd * 0.12))); // knees bend forward, a little out
     kn.push(r.mid); an.push(r.end);
@@ -243,8 +254,9 @@ const fallXform = (sp: UnitSpec, rig: UnitRig, t: number) => {
   const axis = norm3(cross3(UP, d)); // rotating about this tips the body toward d
   let crumple = smooth(u / 0.28);
   const tu = clamp((u - 0.18) / 0.62);
-  let ang = 86 * easeIn(tu);
-  if (u > 0.8) ang = 86 + Math.exp(-(u - 0.8) * 7) * Math.sin((u - 0.8) * 22) * -8 + (1 - Math.exp(-(u - 0.8) * 6)) * 2;
+  const A = sp.fall.ang ?? 86;
+  let ang = A * easeIn(tu);
+  if (u > 0.8) ang = A + Math.exp(-(u - 0.8) * 7) * Math.sin((u - 0.8) * 22) * -8 + (1 - Math.exp(-(u - 0.8) * 6)) * 2;
   if (sp.fall.getUp !== undefined && t > sp.fall.getUp) {
     // push up from the ground: torso rises first (to a crouch), then the legs straighten
     const g1 = smooth((t - sp.fall.getUp) / 1.1);
@@ -372,7 +384,7 @@ export const combatUnit = (sp: UnitSpec): Item[] => {
       if (!removed.has('fore' + s)) items.push(partItem(UNIT[('fore' + s) as keyof typeof UNIT], place('fore' + s), `${key}_mf${s}`, {inkScale: 0.8}));
     }
     items.push(partItem(UNIT.pelvis, place('pelvis'), `${key}_mp`, {inkScale: 0.8}));
-    if (eyeState !== 'off') items.push(eyeGlow(fx ? fx.xf(apply(r.head, {x: 0, y: 0, z: -0.17})) : apply(r.head, {x: 0, y: 0, z: -0.17}), eyeState, 0.8, 0.035, `${key}_eg`));
+    if (eyeState !== 'off') items.push(eyeGlow(fx ? fx.xf(apply(r.head, {x: 0, y: 0, z: -0.17})) : apply(r.head, {x: 0, y: 0, z: -0.17}), eyeState, 0.8, 0.035, `${key}_eg`, 0.06, fx ? undefined : rmul(r.head.R, {x: 0, y: 0, z: -1})));
     return items;
   }
   for (const name of Object.keys(MESH)) {
@@ -392,7 +404,7 @@ export const combatUnit = (sp: UnitSpec): Item[] => {
   }
   // the eye
   const eyeW = fx ? fx.xf(apply(r.head, {x: 0, y: 0, z: -0.17})) : apply(r.head, {x: 0, y: 0, z: -0.17});
-  if (eyeState !== 'off') items.push(eyeGlow(eyeW, eyeState, 0.9 + 0.1 * Math.sin(t * 9 + sp.id), 0.03, `${key}_eg`));
+  if (eyeState !== 'off') items.push(eyeGlow(eyeW, eyeState, 0.9 + 0.1 * Math.sin(t * 9 + sp.id), 0.03, `${key}_eg`, 0.06, fx ? undefined : rmul(r.head.R, {x: 0, y: 0, z: -1})));
   // ---------------- torn pieces (pose at the moment of tearing, then thrown)
   const thrownPart = (name: string, d: {t0: number; dir: V3; speed?: number}, seedK: number) => {
     const r0 = solveUnit({...sp, t: d.t0});
@@ -490,7 +502,7 @@ const unitFarSprite = (sp: UnitSpec, r: UnitRig, xf: ((p: V3) => V3) | null, eye
           {/* torso plate + head */}
           <path d={`M${f2(x - 0.33 * s)} ${f2(y - 1.72 * s)} L${f2(x + 0.33 * s)} ${f2(y - 1.72 * s)} L${f2(x + 0.2 * s)} ${f2(y - 1.0 * s)} L${f2(x - 0.2 * s)} ${f2(y - 1.0 * s)} Z`} fill={plate} stroke={thin ? 'none' : ink} strokeWidth={0.8} />
           <rect x={f2(x - 0.12 * s)} y={f2(y - 2.12 * s)} width={f2(0.24 * s)} height={f2(0.32 * s)} fill={plate} stroke={thin ? 'none' : ink} strokeWidth={0.8} />
-          {eye !== 'off' && <circle cx={f2(x)} cy={f2(y - 1.97 * s)} r={f2(Math.max(0.7, 0.06 * s))} fill={eye === 'cyan' ? '#62D6EA' : '#FFB23F'} />}
+          {eye !== 'off' && (down || (r.fwd.x * (c.view.pos.x - base.x) + r.fwd.z * (c.view.pos.z - base.z)) > 0) && <circle cx={f2(x)} cy={f2(y - 1.97 * s)} r={f2(Math.max(0.7, 0.06 * s))} fill={eye === 'cyan' ? '#62D6EA' : '#FFB23F'} />}
         </g>
       );
     },

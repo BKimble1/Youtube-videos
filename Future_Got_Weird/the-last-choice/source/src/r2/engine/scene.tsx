@@ -48,7 +48,7 @@ export type MeshItem = {
 };
 
 export type SpriteCtx = SP & {view: View; light: LightRig; t: number; lit: Lit; pos: V3};
-export type SpriteItem = {kind: 'sprite'; pos: V3; key?: string; bias?: number; /** surface normal used for lighting (default up) */ n?: V3; draw: (c: SpriteCtx) => React.ReactNode};
+export type SpriteItem = {kind: 'sprite'; pos: V3; key?: string; bias?: number; /** surface normal used for lighting (default up) */ n?: V3; /** skip the off-screen anchor cull (a figure whose feet are far below a close frame) */ noCull?: boolean; draw: (c: SpriteCtx) => React.ReactNode};
 /** A raw SVG element at a fixed depth (e.g. a screen-space effect that must sort with the world). */
 export type RawItem = {kind: 'raw'; depth: number; key?: string; el: React.ReactNode};
 export type Item = MeshItem | SpriteItem | RawItem;
@@ -248,7 +248,7 @@ export const sceneItems = (p: SceneProps): Out[] => {
       const q = toView(p.view, it.pos);
       if (q.z < p.view.near) return;
       const sp = viewToScreen(p.view, q);
-      if (sp.x < -p.view.W || sp.x > p.view.W * 2 || sp.y < -p.view.H || sp.y > p.view.H * 2) return;
+      if (!it.noCull && (sp.x < -p.view.W || sp.x > p.view.W * 2 || sp.y < -p.view.H || sp.y > p.view.H * 2)) return;
       const lit = lightAt(p.light, it.pos, it.n ?? {x: 0, y: 1, z: 0}, len3(sub3(it.pos, p.view.pos)), p.t);
       const el = it.draw({...sp, view: p.view, light: p.light, t: p.t, lit, pos: it.pos});
       if (el) out.push({d: q.z - (it.bias ?? 0), key: it.key ?? `s${idx}`, el: <g>{el}</g>});

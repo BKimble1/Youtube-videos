@@ -15,8 +15,13 @@ export type FigFrame = {
   Rh: V3; Ch: V3;
 };
 
-/** The figure's drawing frame for this view. */
-export const figFrame = (view: View, pos: V3, heading: number): FigFrame => {
+/**
+ * The figure's drawing frame for this view. The rig is drawn with one scale (weak perspective) taken at the feet;
+ * `anchor` (optional) moves that reference to another world point — a hand in a ground-level close-up, the face in
+ * a close shot — so the parts near the anchor land exactly on their true projection at the right size.
+ */
+export const figFrame = (view: View, pos: V3, heading: number, anchor?: V3): FigFrame => {
+  if (anchor) return figFrameAt(view, pos, heading, anchor);
   const fv = figureView(view, pos, heading);
   let Ch = sub3(view.pos, pos);
   Ch = {x: Ch.x, y: 0, z: Ch.z};
@@ -27,6 +32,24 @@ export const figFrame = (view: View, pos: V3, heading: number): FigFrame => {
   const a = project(view, pos), b = project(view, add3(pos, {x: 0, y: 1.4, z: 0}));
   const rot = (Math.atan2(b.x - a.x, -(b.y - a.y)) * 180) / Math.PI;
   return {pos, heading, x: fv.x, y: fv.y, k: fv.k, s: fv.s250, yaw: fv.yaw, pitch: fv.pitch, rot, Rh, Ch};
+};
+/** figFrame with the scale, yaw/pitch and vertical taken at `anchor`; the root is placed so the anchor projects true. */
+const figFrameAt = (view: View, pos: V3, heading: number, anchor: V3): FigFrame => {
+  const fv = figureView(view, anchor, heading, 0);
+  let Ch = sub3(view.pos, anchor);
+  Ch = {x: Ch.x, y: 0, z: Ch.z};
+  if (Math.hypot(Ch.x, Ch.z) < 1e-4) Ch = {x: -view.f.x, y: 0, z: -view.f.z};
+  Ch = norm3(Ch);
+  const Rh = norm3(cross3({x: 0, y: 1, z: 0}, Ch));
+  const a = project(view, anchor), b = project(view, add3(anchor, {x: 0, y: 0.25, z: 0}));
+  const rot = (Math.atan2(b.x - a.x, -(b.y - a.y)) * 180) / Math.PI;
+  // the anchor in the rig's unpitched frame relative to the root, then turned like solve2 does (pitch, screen rotation)
+  const d = sub3(anchor, pos), k = fv.k;
+  const q = {x: dot3(d, Rh) * k, y: -d.y * k, z: dot3(d, Ch) * k};
+  const ph = rad(fv.pitch), rr = rad(rot);
+  const y1 = q.y * Math.cos(ph) + q.z * Math.sin(ph);
+  const vx = q.x * Math.cos(rr) - y1 * Math.sin(rr), vy = q.x * Math.sin(rr) + y1 * Math.cos(rr);
+  return {pos, heading, x: a.x - vx, y: a.y - vy, k, s: k / 251.4, yaw: fv.yaw, pitch: fv.pitch, rot, Rh, Ch};
 };
 
 /** World point → the rig's solve frame (unpitched: x right, y down, z toward the camera), absolute pixels. */
@@ -97,6 +120,8 @@ export type FigSpec = {
   inkPx?: number;
   /** lower the pelvis when a world foot target is out of the legs' reach (default true; a foot on lower ground) */
   reach?: boolean;
+  /** perspective anchor (world): the rig's single scale is taken here instead of at the feet (see figFrame) */
+  anchor?: V3;
 };
 
 // a world target overrides the pose's limb target at full weight (a pose's `w` only fades its own local targets)
@@ -109,7 +134,7 @@ const legWorld = (F: FigFrame, a: LegT | undefined, w: V3 | undefined): LegT | u
 
 /** Build the FigProps for a spec in a view (used by the sprite and by `figureRig`). */
 export const figProps = (view: View, spec: FigSpec, F?: FigFrame): {F: FigFrame; props: FigProps} => {
-  const Fr = F ?? figFrame(view, spec.pos, spec.heading);
+  const Fr = F ?? figFrame(view, spec.pos, spec.heading, spec.anchor);
   const base = typeof spec.pose === 'function' ? spec.pose(Fr) : spec.pose ?? {};
   const w = spec.world ?? {};
   const props: FigProps = {
@@ -190,7 +215,7 @@ export const supportCatch = (view: View, faller: FigSpec, catcher: FigSpec, o: {
   const C0 = figureRig(view, catcher);
   const cradle = C0.torso(cradleL);
   const bk = headingDir(faller.heading + 180);
-  const Ff = figFrame(view, faller.pos, faller.heading);
+  const Ff = figFrame(view, faller.pos, faller.heading, faller.anchor);
   const base = figProps(view, faller, Ff).props;
   const want = base.bodyPitch ?? 0;
   // the faller's back profile (low back, shoulder blades, back of the head) against the plane of the catcher's

@@ -1,5 +1,135 @@
 // Section D1 sound cues (film seconds). Pure data: import only timing/constants here, never components (this file is
-// bundled into the mixer's timing.json by tools/r2/collect_timing_r2.mjs).
+// bundled into the mixer's timing.json by tools/r2/collect_timing_r2.mjs). Times are the contact/sync points from
+// ./machines.ts EV (mirrored here as literals so this file stays free of the kits); the mixer applies each kind's lead.
+// pan = the source's screen side in the shot playing at that moment (−1 left … 1 right); dist = camera distance.
 import type {Cue} from '../../../film/cue';
+import {M} from '../../timing';
 
-export const CUES_D1: Cue[] = [];
+const CLASH = M.CLASH + 0.03;
+const BR1 = 79.1, BR2 = 81.78, BR3_FIRE = 82.98, BR3_BITE = 83.28, BR3_TAUT = 83.45, BR3_CRASH = 84.06, BR4 = 86.36, BR4_FALL = 86.98;
+
+export const CUES_D1: Cue[] = [
+  // ---- D1-1 the charge down the ridge (59.95–64.00): rubble under seven people, breath, the ally drone overhead
+  {t: M.CHARGE + 0.05, kind: 'breath_exert', gain: -2, pan: -0.2, dist: 0.35},
+  {t: M.CHARGE + 0.1, kind: 'run_rubble', dur: 4.2, fade: 0.4, gain: 0, pan: 0, dist: 0.25},
+  {t: 60.9, kind: 'rubble_shift', gain: -8, pan: -0.3, dist: 0.4, dur: 1.4, fade: 0.4},
+  {t: 61.6, kind: 'drone_pass', gain: -6, pan: 0.2, dist: 0.5},
+  {t: 62.05, kind: 'steps_gravel', gain: -2, pan: 0.35, dist: 0.15},
+  {t: 62.55, kind: 'cloth_move', gain: -4, pan: 0.7, dist: 0.1},
+  {t: 63.1, kind: 'steps_gravel', gain: -3, pan: 0.65, dist: 0.15},
+  {t: 63.45, kind: 'breath_exert', gain: -5, pan: 0.75, dist: 0.15},
+  // ---- D1-2 across the avenue (64.00–68.30): his feet and breath close; the machines' run from screen right
+  {t: 64.0, kind: 'steps_gravel', gain: -1, pan: -0.1, dist: 0.1, dur: 4.3, fade: 0.2},
+  {t: 64.2, kind: 'run_rubble', dur: 4.1, fade: 0.5, gain: -6, pan: -0.4, dist: 0.45},
+  {t: 64.6, kind: 'robot_step_heavy', gain: -6, pan: 0.85, dist: 0.7},
+  {t: 65.3, kind: 'robot_step_heavy', gain: -5, pan: 0.8, dist: 0.6},
+  {t: 65.9, kind: 'servo_heavy', gain: -6, pan: 0.75, dist: 0.55},
+  {t: 66.0, kind: 'robot_step_heavy', gain: -4, pan: 0.75, dist: 0.5},
+  {t: 66.55, kind: 'breath_exert', gain: -2, pan: -0.1, dist: 0.1},
+  {t: 66.7, kind: 'robot_step_heavy', gain: -3, pan: 0.7, dist: 0.4},
+  {t: 67.25, kind: 'sensor_lock', gain: -6, pan: 0.6, dist: 0.35},
+  {t: 67.4, kind: 'robot_step_heavy', gain: -2, pan: 0.6, dist: 0.3},
+  {t: 67.95, kind: 'servo_whir', gain: -4, pan: 0.4, dist: 0.25},
+  // ---- D1-3 CLASH, wide (68.30–72.00)
+  {t: CLASH, kind: 'shield_bash', gain: 2, pan: -0.05, dist: 0.55},
+  {t: CLASH + 0.01, kind: 'armor_hit', gain: -2, pan: 0.0, dist: 0.55},
+  {t: 68.5, kind: 'robot_step_heavy', gain: -4, pan: 0.15, dist: 0.55},
+  {t: 68.74, kind: 'armor_hit', gain: -9, pan: 0.15, dist: 0.6},
+  {t: 69.1, kind: 'servo_whir', gain: -6, pan: 0.45, dist: 0.6},
+  {t: 69.45, kind: 'robot_swing', gain: -4, pan: 0.35, dist: 0.6},
+  {t: 70.2, kind: 'robot_swing', gain: -4, pan: 0.0, dist: 0.6},
+  {t: 70.45, kind: 'plate_block', gain: -5, pan: -0.05, dist: 0.6},
+  {t: 70.6, kind: 'breaker_charge', gain: -6, pan: 0.3, dist: 0.6},
+  {t: 71.1, kind: 'robot_swing', gain: -6, pan: 0.6, dist: 0.65},
+  {t: 71.2, kind: 'breath_exert', gain: -6, pan: -0.05, dist: 0.6},
+  {t: 71.25, kind: 'shield_bash', gain: -2, pan: 0.0, dist: 0.6},
+  {t: 71.27, kind: 'armor_hit', gain: -6, pan: 0.0, dist: 0.6},
+  // ---- D1-4 four close cuts (72.00–78.46)
+  // 72.0 breaker → knee
+  {t: 72.05, kind: 'breaker_charge', gain: -4, pan: -0.3, dist: 0.15},
+  {t: 72.2, kind: 'cloth_move', gain: -6, pan: -0.2, dist: 0.1},
+  {t: 72.45, kind: 'breaker_hit', gain: 1, pan: 0.15, dist: 0.15},
+  {t: 72.47, kind: 'sparks', gain: -3, pan: 0.15, dist: 0.15},
+  {t: 72.55, kind: 'elec_arc', gain: -8, pan: 0.2, dist: 0.2},
+  {t: 72.72, kind: 'robot_step_heavy', gain: -2, pan: 0.2, dist: 0.15},
+  {t: 72.8, kind: 'servo_heavy', gain: -6, pan: 0.25, dist: 0.2},
+  // 74.0 the tether yanks one off balance
+  {t: 74.1, kind: 'tether_fire', gain: 0, pan: -0.5, dist: 0.2},
+  {t: 74.4, kind: 'tether_clamp', gain: -2, pan: 0.45, dist: 0.3},
+  {t: 74.52, kind: 'tether_reel', gain: -2, pan: -0.45, dist: 0.2},
+  {t: 74.6, kind: 'cable_strain', gain: -6, pan: 0.0, dist: 0.25},
+  {t: 74.8, kind: 'servo_heavy', gain: -5, pan: 0.45, dist: 0.3},
+  {t: 75.5, kind: 'robot_fall', gain: -1, pan: 0.55, dist: 0.3},
+  // 75.8 the runner pries the back plate, rips the cables
+  {t: 75.95, kind: 'halligan_pry', gain: 0, pan: 0.1, dist: 0.15},
+  {t: 76.35, kind: 'armor_hit', gain: -3, pan: 0.15, dist: 0.15},
+  {t: 76.6, kind: 'breath_exert', gain: -6, pan: -0.1, dist: 0.15},
+  {t: 76.75, kind: 'metal_tear', gain: -1, pan: 0.15, dist: 0.15},
+  {t: 76.77, kind: 'sparks', gain: -4, pan: 0.15, dist: 0.15},
+  {t: 76.8, kind: 'elec_arc', gain: -5, pan: 0.15, dist: 0.15},
+  {t: 77.8, kind: 'robot_fall', gain: -6, pan: 0.2, dist: 0.35},
+  // 77.2 the allied drone harries an enemy drone; a flare blinds an eye
+  {t: 77.05, kind: 'flare_ignite', gain: -1, pan: -0.45, dist: 0.25},
+  {t: 77.2, kind: 'ally_drone', gain: -4, pan: 0.1, dist: 0.3, dur: 1.2, fade: 0.3},
+  {t: 77.3, kind: 'cloth_move', gain: -6, pan: -0.4, dist: 0.25},
+  {t: 77.42, kind: 'drone_pass', gain: -2, pan: 0.3, dist: 0.3},
+  {t: 77.43, kind: 'armor_hit', gain: -12, pan: 0.3, dist: 0.35},
+  {t: 77.72, kind: 'elec_arc', gain: -6, pan: 0.45, dist: 0.3},
+  {t: 77.8, kind: 'servo_whir', gain: -6, pan: 0.45, dist: 0.3},
+  // ---- D1-5 BR1: the swing meets the plate; it dents; his heels skid (78.46–81.34)
+  {t: 78.55, kind: 'sensor_lock', gain: -8, pan: 0.25, dist: 0.2},
+  {t: 78.62, kind: 'servo_heavy', gain: -3, pan: 0.25, dist: 0.2},
+  {t: 78.95, kind: 'robot_swing', gain: 0, pan: 0.2, dist: 0.2},
+  {t: BR1, kind: 'plate_block', gain: 3, pan: -0.1, dist: 0.15},
+  {t: BR1 + 0.01, kind: 'breath_exert', gain: -3, pan: -0.15, dist: 0.15},
+  {t: BR1 + 0.03, kind: 'steps_gravel', gain: 0, pan: -0.2, dist: 0.15, rate: 1.25},
+  {t: BR1 + 0.6, kind: 'steps_gravel', gain: -6, pan: -0.3, dist: 0.15},
+  {t: 80.1, kind: 'breath_ragged', gain: -4, pan: -0.25, dist: 0.15},
+  {t: 80.6, kind: 'servo_whir', gain: -8, pan: 0.2, dist: 0.2},
+  {t: 80.75, kind: 'steps_gravel', gain: -5, pan: -0.8, dist: 0.2},
+  // ---- D1-6 BR2: the breaker smashes the chest plate (81.34–82.80)
+  {t: 81.36, kind: 'breaker_charge', gain: -1, pan: 0.15, dist: 0.2},
+  {t: 81.6, kind: 'cloth_move', gain: -5, pan: 0.2, dist: 0.2},
+  {t: BR2, kind: 'breaker_hit', gain: 2, pan: 0.05, dist: 0.2},
+  {t: BR2 + 0.01, kind: 'armor_hit', gain: 0, pan: 0.0, dist: 0.2},
+  {t: BR2 + 0.03, kind: 'metal_tear', gain: -4, pan: -0.1, dist: 0.2},
+  {t: BR2 + 0.04, kind: 'sparks', gain: -3, pan: 0.0, dist: 0.2},
+  {t: 82.25, kind: 'servo_heavy', gain: -5, pan: -0.05, dist: 0.25},
+  {t: 82.4, kind: 'robot_step_heavy', gain: -5, pan: -0.1, dist: 0.25},
+  // ---- D1-7 BR3: the tether swings it into the next; they crash (82.80–85.64)
+  {t: BR3_FIRE, kind: 'tether_fire', gain: 0, pan: -0.55, dist: 0.4},
+  {t: BR3_BITE, kind: 'tether_clamp', gain: -1, pan: 0.3, dist: 0.5},
+  {t: BR3_TAUT, kind: 'tether_reel', gain: 0, pan: -0.55, dist: 0.4},
+  {t: BR3_TAUT + 0.05, kind: 'cable_strain', gain: -4, pan: -0.1, dist: 0.45},
+  {t: 83.55, kind: 'servo_heavy', gain: -4, pan: 0.2, dist: 0.5},
+  {t: 72.7, kind: 'steps_gravel', gain: -8, pan: -0.6, dist: 0.3},
+  {t: BR3_CRASH, kind: 'wreck_slam', gain: 1, pan: 0.2, dist: 0.5},
+  {t: BR3_CRASH + 0.01, kind: 'armor_hit', gain: -3, pan: 0.2, dist: 0.5},
+  {t: 84.3, kind: 'robot_fall', gain: 0, pan: 0.15, dist: 0.5},
+  {t: 84.91, kind: 'robot_fall', gain: -3, pan: 0.1, dist: 0.5},
+  {t: 84.95, kind: 'debris_rain', gain: -10, pan: 0.1, dist: 0.5},
+  // ---- D1-8 BR4: the shoulder charge; it goes over into the crater (85.64–89.78)
+  {t: 85.4, kind: 'breath_exert', gain: -4, pan: -0.1, dist: 0.2},
+  {t: 85.8, kind: 'steps_gravel', gain: -1, pan: -0.05, dist: 0.2},
+  {t: 86.1, kind: 'breath_exert', gain: 0, pan: -0.05, dist: 0.2},
+  {t: BR4, kind: 'shield_bash', gain: 3, pan: 0.0, dist: 0.3},
+  {t: BR4 + 0.01, kind: 'armor_hit', gain: 0, pan: 0.0, dist: 0.3},
+  {t: 86.6, kind: 'robot_step_heavy', gain: -3, pan: 0.05, dist: 0.3},
+  {t: 86.82, kind: 'robot_step_heavy', gain: -4, pan: 0.05, dist: 0.35},
+  {t: BR4_FALL + 0.1, kind: 'servo_heavy', gain: -6, pan: 0.05, dist: 0.4},
+  {t: BR4_FALL + 0.8, kind: 'robot_fall', gain: 1, pan: 0.05, dist: 0.45},
+  {t: BR4_FALL + 0.85, kind: 'debris_rain', gain: -8, pan: 0.05, dist: 0.45},
+  {t: 87.3, kind: 'steps_gravel', gain: -4, pan: -0.05, dist: 0.25},
+  {t: 88.1, kind: 'breath_ragged', gain: -2, pan: -0.05, dist: 0.25},
+  {t: 88.6, kind: 'drone_pass', gain: -10, pan: 0.5, dist: 0.8},
+  // ---- D1-9 GAIN / BREATH: through the gap to the slab; looks, panting (89.78–94.30)
+  {t: M.GAIN1 + 0.1, kind: 'steps_gravel', gain: -3, pan: -0.3, dist: 0.25},
+  {t: 90.4, kind: 'steps_gravel', gain: -4, pan: 0.2, dist: 0.25},
+  {t: 90.9, kind: 'cloth_move', gain: -6, pan: 0.0, dist: 0.2},
+  {t: M.GAIN2, kind: 'rubble_shift', gain: -10, pan: 0.1, dist: 0.25, dur: 1.0, fade: 0.3},
+  {t: 91.35, kind: 'breath_ragged', gain: 0, pan: -0.15, dist: 0.15},
+  {t: 91.9, kind: 'breath_exert', gain: -6, pan: 0.35, dist: 0.2},
+  {t: 92.6, kind: 'breath_ragged', gain: -6, pan: 0.5, dist: 0.25},
+  {t: 92.9, kind: 'servo_whir', gain: -10, pan: 0.6, dist: 0.85},
+  {t: 93.4, kind: 'breath_ragged', gain: -3, pan: -0.15, dist: 0.15},
+];

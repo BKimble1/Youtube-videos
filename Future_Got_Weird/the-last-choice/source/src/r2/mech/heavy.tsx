@@ -322,7 +322,7 @@ export const heavy = (sp: HeavySpec): Item[] => {
     }
   });
   const eyeW = (tx ? tx.xf : (p: V3) => p)(apply(r.head, {x: 0, y: 0.01, z: -0.5}));
-  if (eyeState !== 'off') items.push(eyeGlow(eyeW, eyeState, 1, 0.09, `${key}_eg`));
+  if (eyeState !== 'off') items.push(eyeGlow(eyeW, eyeState, 1, 0.09, `${key}_eg`, 0.06, tx ? undefined : rmul(r.head.R, {x: 0, y: 0, z: -1})));
   // muzzle flash on fire
   if (sp.fire) {
     const u = t - sp.fire.t0;

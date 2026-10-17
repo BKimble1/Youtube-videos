@@ -29,6 +29,8 @@ export type TetherOpts = {
   /** total cable length when slack (m); default 1.15 × the fired distance */
   slackLen?: number;
   seed?: number;
+  /** cable radius (m) for drawing; default 0.016 (thicken for wide shots so the line reads) */
+  cableR?: number;
 };
 
 export type TetherState = {phase: 'idle' | 'flight' | 'slack' | 'taut' | 'snapped'; clamp: V3 | null; tension: number};
@@ -183,7 +185,7 @@ export const tetherItems = (o: TetherOpts): FxOut => {
     const hangLen = Math.max(0.05, len3(back) * (1 - 0.65 * easeOut(age / 0.35)) * (1 - reel));
     const endA = add3(M, add3(mul3(norm3(back), hangLen * Math.max(0, 1 - age / 0.6) * 0.8), {x: 0, y: -hangLen * clamp(age / 0.6) * 0.9, z: 0}));
     const whip = 0.25 * Math.exp(-5 * age) * len3(back) * 0.4;
-    items.push(...cableItems(span(M, endA, 0.1 * clamp(age / 0.4) * hangLen, 12, whip, 4, age * 30), `${o.key}_a`));
+    items.push(...cableItems(span(M, endA, 0.1 * clamp(age / 0.4) * hangLen, 12, whip, 4, age * 30), `${o.key}_a`, {r: o.cableR}));
     items.push(frayItem(endA, sub3(endA, M), `${o.key}_fa`, seed));
     // far side: falls and swings from the clamp
     const farLen = tot - (o.snapU ?? 0.55) * tot;
@@ -193,7 +195,7 @@ export const tetherItems = (o: TetherOpts): FxOut => {
     const endB0 = add3(st.clamp, mul3(dirOut, farLen));
     const endB1 = add3(st.clamp, {x: dirOut.x * farLen * 0.25 + swing, y: -farLen * 0.9, z: dirOut.z * farLen * 0.25});
     const endB = lerp3(endB0, endB1, easeOut(fall));
-    items.push(...cableItems(span(st.clamp, endB, 0.15 * farLen * (1 - fall), 12), `${o.key}_b`));
+    items.push(...cableItems(span(st.clamp, endB, 0.15 * farLen * (1 - fall), 12), `${o.key}_b`, {r: o.cableR}));
     items.push(frayItem(endB, sub3(endB, st.clamp), `${o.key}_fb`, seed + 3));
     items.push(clampItem(st.clamp, endB, o.key, 1));
     if (wrapped && k >= 1) items.push(wrapItem(o.anchor as V3, o.anchorR ?? 0.22, o.key));
@@ -211,7 +213,7 @@ export const tetherItems = (o: TetherOpts): FxOut => {
     const a = via[i];
     const L = segL[i];
     const sag = L * (st.phase === 'taut' ? 0.004 : 0.04 + slackFrac * 0.45);
-    items.push(...cableItems(span(a, b, sag, 14, twang * L, 2, (t - (o.tautAt ?? 0)) * 45), `${o.key}_s${i}`));
+    items.push(...cableItems(span(a, b, sag, 14, twang * L, 2, (t - (o.tautAt ?? 0)) * 45), `${o.key}_s${i}`, {r: o.cableR}));
   });
   if (wrapped) items.push(wrapItem(o.anchor as V3, o.anchorR ?? 0.22, o.key));
   items.push(clampItem(st.clamp, via[via.length - 2], o.key, bite));
