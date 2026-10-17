@@ -249,3 +249,34 @@ export const chunk = (w: number, h: number, d: number, seed: number, mat: string
 
 export const translate = (m: Mesh, d: V3): Mesh => xfMesh(m, {pos: d});
 export const centroid = (pts: V3[]) => mul3(pts.reduce((s, p) => add3(s, p), {x: 0, y: 0, z: 0}), 1 / pts.length);
+
+/**
+ * Cut every quad whose long sides exceed `maxLen` (m) into strips across them (same vertices and materials; the cuts
+ * are coplanar so they take no ink). Long single faces sort by their middle in the painter's order, so a figure
+ * standing near one end of a long beam can be drawn under all of it; strips sort locally. Shared vertices are merged.
+ */
+export const splitLong = (m: Mesh, maxLen: number): Mesh => {
+  const verts: V3[] = [];
+  const idx = new Map<string, number>();
+  const vi = (p: V3) => {
+    const k = `${p.x.toFixed(4)},${p.y.toFixed(4)},${p.z.toFixed(4)}`;
+    let i = idx.get(k);
+    if (i === undefined) { i = verts.length; verts.push(p); idx.set(k, i); }
+    return i;
+  };
+  const lv = (a: V3, b: V3, k: number): V3 => ({x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k, z: a.z + (b.z - a.z) * k});
+  const dist = (a: V3, b: V3) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
+  const faces: Face[] = [];
+  m.faces.forEach((f) => {
+    const P = f.v.map((i) => m.verts[i]);
+    if (P.length !== 4) { faces.push({...f, v: P.map(vi)}); return; }
+    const a = Math.max(dist(P[0], P[1]), dist(P[3], P[2])), b = Math.max(dist(P[1], P[2]), dist(P[0], P[3]));
+    const [p0, p1, p2, p3] = a >= b ? P : [P[1], P[2], P[3], P[0]];
+    const n = Math.max(1, Math.ceil(Math.max(a, b) / maxLen));
+    for (let s = 0; s < n; s++) {
+      const k0 = s / n, k1 = (s + 1) / n;
+      faces.push({...f, v: [vi(lv(p0, p1, k0)), vi(lv(p0, p1, k1)), vi(lv(p3, p2, k1)), vi(lv(p3, p2, k0))]});
+    }
+  });
+  return {...m, verts, faces};
+};

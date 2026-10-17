@@ -10,7 +10,7 @@
 //          drawn after it, while a rim or ridge in front of something still covers it
 //   OBJECTS (walls, slabs, wrecks, buildings) — normal mean-depth sort
 import {V3, rnd, add3, mul3, norm3, rotAxis, rad} from '../../kit/math';
-import {View, Item, MeshItem, Prepped, prep, box, merge, xfMesh, Mesh, Face, mix as mixC} from '../engine';
+import {View, Item, MeshItem, Prepped, prep, box, merge, xfMesh, Mesh, Face, mix as mixC, splitLong} from '../engine';
 import {PLAN} from './plan';
 import {groundH, CLEAR_ZONES, isClear, noise2, FOOT} from './ground';
 import {groundGrid, Decal, blobXZ, crackXZ, rebarAt, polyline3, chipsXZ} from './geom';
@@ -305,7 +305,8 @@ const buildStatic = (): Static[] => {
   }
   out.push(meshOf(prep(carMesh('carGrey', 0.3, true)), 'craterCar', {xf: {pos: {x: 57, y: groundH(57, 4) - 0.1, z: 4}, yaw: 32, roll: 12, pitch: -8}}));
   const pipeA = {x: C.center.x - 10, y: -1.0, z: C.center.z - 9}, pipeB = {x: C.center.x + 5, y: -1.8, z: C.center.z + 6};
-  out.push(meshOf(prep(merge(beamPipe(pipeA, pipeB), beamPipe({x: pipeB.x + 2, y: -1.5, z: pipeB.z + 2.5}, {x: pipeB.x + 9, y: -0.7, z: pipeB.z + 10}))), 'waterMain'));
+  // (long faces cut into ≤1.5 m strips so figures near one end sort correctly against the beam)
+  out.push(meshOf(prep(splitLong(merge(beamPipe(pipeA, pipeB), beamPipe({x: pipeB.x + 2, y: -1.5, z: pipeB.z + 2.5}, {x: pipeB.x + 9, y: -0.7, z: pipeB.z + 10})), 1.5)), 'waterMain'));
 
   // THE GIRDER (north flank) with its columns, the crushed taxi
   out.push(meshOf(girderMesh(), 'girder'));
