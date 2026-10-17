@@ -1,0 +1,382 @@
+{
+ "music": [
+  {
+   "src": "portals",
+   "recIn": 9.8,
+   "recOut": 81.688,
+   "film": 9.34,
+   "fadeIn": 0.2
+  },
+  {
+   "src": "portals",
+   "recIn": 143.081,
+   "recOut": 193.8,
+   "film": 81.228,
+   "xfade": 0.12,
+   "fadeOut": 0.3
+  },
+  {
+   "src": "longtime",
+   "recIn": 58.45,
+   "recOut": 115.3,
+   "film": 147,
+   "fadeIn": 0.25
+  }
+ ],
+ "anchors": {
+  "P_IN": 9.34,
+  "FIRST_NOTE": 9.54,
+  "REVEAL": 17,
+  "HIT_A": 18.7,
+  "HIT_B": 19.119999999999997,
+  "HIT_SUBWAY": 23.779999999999998,
+  "HIT_STRAP": 30.5,
+  "HIT_GATE1": 32.16,
+  "HIT_GATE2": 32.58,
+  "BASS_OUT": 36.04,
+  "BASS_IN": 37.839999999999996,
+  "ASSEMBLY": 38.699999999999996,
+  "HIT_AS2": 40.4,
+  "HIT_AS3": 40.82,
+  "MARCH": 45.540000000000006,
+  "HIT_HAULER": 53.28,
+  "HIT_DRONE_SEES": 78.7,
+  "SPLICE": 81.228,
+  "HIT_FALL": 84.027,
+  "HIT_RUN": 88.70700000000001,
+  "ARRIVAL": 101.147,
+  "SOFTEN": 118.147,
+  "FINAL_HIT": 125.747,
+  "P_END": 131.947,
+  "RADIO_CLICK": 145.6,
+  "L_IN": 147,
+  "VOCAL": 152.95,
+  "OPEN_FULL": 188.35,
+  "CARD": 200.95,
+  "L_FADE0": 202,
+  "L_FADE1": 203.85,
+  "END": 205.4
+ },
+ "shots": [
+  {
+   "id": "A1",
+   "start": 0,
+   "end": 3.2,
+   "mv": "A",
+   "note": "Puddle reflects the burning avenue; the checker’s hand slips; trapped under the overturned taxi"
+  },
+  {
+   "id": "A2",
+   "start": 3.2,
+   "end": 6.4,
+   "mv": "A",
+   "note": "Recovery arm clamps and shifts the wreck; a drone turns its eye toward the movement"
+  },
+  {
+   "id": "A3",
+   "start": 6.4,
+   "end": 10.4,
+   "mv": "A",
+   "note": "The Director’s hand reaches in; the pull; the taxi slams down where they were"
+  },
+  {
+   "id": "A4",
+   "start": 10.4,
+   "end": 14.2,
+   "mv": "A",
+   "note": "Checkpoint funnel and separation; a warden gestures; the Director keeps the teammate"
+  },
+  {
+   "id": "A5",
+   "start": 14.2,
+   "end": 20.5,
+   "mv": "A",
+   "note": "Crane up: the avenue, the elevated highway with its broken span, the refuge (on the entrance)"
+  },
+  {
+   "id": "B1",
+   "start": 20.5,
+   "end": 23.779999999999998,
+   "mv": "B",
+   "note": "Behind a wreck: the impossible route"
+  },
+  {
+   "id": "B2",
+   "start": 23.779999999999998,
+   "end": 27.4,
+   "mv": "B",
+   "note": "The subway grille bursts up; the builder climbs out and beckons"
+  },
+  {
+   "id": "B3",
+   "start": 27.4,
+   "end": 32,
+   "mv": "B",
+   "note": "The visor through smoke; strap cinched (radio); nod and brim tap"
+  },
+  {
+   "id": "B4",
+   "start": 32,
+   "end": 36.04,
+   "mv": "B",
+   "note": "In the stalled subway: a manual gate heaved up; civilians duck under and join"
+  },
+  {
+   "id": "B5",
+   "start": 36.04,
+   "end": 38.699999999999996,
+   "mv": "B",
+   "note": "Up the exit stairs into smoky light; hands helping the last step"
+  },
+  {
+   "id": "B6",
+   "start": 38.699999999999996,
+   "end": 47,
+   "mv": "B",
+   "note": "The assembly: battered Crew on the raised approach, machines below, the refuge beyond"
+  },
+  {
+   "id": "C1",
+   "start": 47,
+   "end": 51,
+   "mv": "C",
+   "note": "Down the ramp toward a gap under the highway; a pole camera turns"
+  },
+  {
+   "id": "C2",
+   "start": 51,
+   "end": 54.6,
+   "mv": "C",
+   "note": "Calm wide: vehicles ahead switch on in sequence and reposition before the Crew arrives"
+  },
+  {
+   "id": "C3",
+   "start": 54.6,
+   "end": 58.6,
+   "mv": "C",
+   "note": "The hauler slams the gap; debris; a Crew member knocked down and hurt; helped up"
+  },
+  {
+   "id": "C4",
+   "start": 58.6,
+   "end": 64.6,
+   "mv": "C",
+   "note": "Behind the highway pier and up a maintenance stair; drones sweep the empty gap, then tilt up"
+  },
+  {
+   "id": "C5",
+   "start": 64.6,
+   "end": 69,
+   "mv": "C",
+   "note": "Steam under the deck: a sketch on a battered tablet becomes walking figures"
+  },
+  {
+   "id": "C6",
+   "start": 69,
+   "end": 74,
+   "mv": "C",
+   "note": "Projected giants in the steam; the machines turn; the Crew runs for the next cover"
+  },
+  {
+   "id": "C7",
+   "start": 74,
+   "end": 78.6,
+   "mv": "C",
+   "note": "A small drone circles the steam, sees the flat projection edge-on and follows the beam"
+  },
+  {
+   "id": "C8",
+   "start": 78.6,
+   "end": 88,
+   "mv": "C",
+   "note": "A warden drops onto the catwalk; smashed into a column (on the splice); falls; replaced"
+  },
+  {
+   "id": "C9",
+   "start": 88,
+   "end": 92,
+   "mv": "C",
+   "note": "Signature wide: the broken span, the gantry and basket, the landing, the refuge beyond"
+  },
+  {
+   "id": "C10",
+   "start": 92,
+   "end": 95.6,
+   "mv": "C",
+   "note": "The operator takes the dead-man lever; a look sends the Director onto the basket"
+  },
+  {
+   "id": "C11",
+   "start": 95.6,
+   "end": 101.147,
+   "mv": "C",
+   "note": "The transfer across the gap; landing barrier jammed; the handoff; back to the operator"
+  },
+  {
+   "id": "C12",
+   "start": 101.147,
+   "end": 104.6,
+   "mv": "C",
+   "note": "Sensor lock; the breaker turns; a glance and a nod; the hand tightens"
+  },
+  {
+   "id": "C13",
+   "start": 104.6,
+   "end": 107.6,
+   "mv": "C",
+   "note": "Basket docks; the operator runs onto the catwalk; the decisive blast"
+  },
+  {
+   "id": "C14",
+   "start": 107.6,
+   "end": 113.6,
+   "mv": "C",
+   "note": "Muffled: the Director goes back along the failing catwalk; catches the hand; pulls them in"
+  },
+  {
+   "id": "C15",
+   "start": 113.6,
+   "end": 118,
+   "mv": "C",
+   "note": "The gantry falls on the breaker; the crossing is gone"
+  },
+  {
+   "id": "C16",
+   "start": 118,
+   "end": 125.747,
+   "mv": "C",
+   "note": "Down to the waterfront carrying the wounded friend; the refuge entrance"
+  },
+  {
+   "id": "D1",
+   "start": 125.747,
+   "end": 131,
+   "mv": "D",
+   "note": "The doors open on warmth; attendants; the teammate on a gurney; civilians cared for"
+  },
+  {
+   "id": "D2",
+   "start": 131,
+   "end": 135.5,
+   "mv": "D",
+   "note": "The friend on a bed; urgent care; eyes open toward the teammate they saved"
+  },
+  {
+   "id": "D3",
+   "start": 135.5,
+   "end": 139,
+   "mv": "D",
+   "note": "Hands: the grip weakens and releases"
+  },
+  {
+   "id": "D4",
+   "start": 139,
+   "end": 145,
+   "mv": "D",
+   "note": "The attendant stops and covers the still figure; silence; the Director keeps holding on"
+  },
+  {
+   "id": "D5",
+   "start": 145,
+   "end": 153.6,
+   "mv": "D",
+   "note": "The radio set on the bench and switched on; the old song; the visor picked up"
+  },
+  {
+   "id": "E1",
+   "start": 153.6,
+   "end": 158.4,
+   "mv": "E",
+   "note": "The entry doors close; the outer shutter lowers; a patrol passes"
+  },
+  {
+   "id": "E2",
+   "start": 158.4,
+   "end": 165,
+   "mv": "E",
+   "note": "An able-bodied survivor calmly tries to leave; gently redirected"
+  },
+  {
+   "id": "E3",
+   "start": 165,
+   "end": 174,
+   "mv": "E",
+   "note": "The visor on the empty chair; removed by a service machine; retrieved by the Director"
+  },
+  {
+   "id": "E4",
+   "start": 174,
+   "end": 181.4,
+   "mv": "E",
+   "note": "Days: a meal, tools collected, reconstruction beyond the glass (night to dawn)"
+  },
+  {
+   "id": "E5",
+   "start": 181.4,
+   "end": 188.35,
+   "mv": "E",
+   "note": "The open view is glass: a hand meets it"
+  },
+  {
+   "id": "E6",
+   "start": 188.35,
+   "end": 194,
+   "mv": "E",
+   "note": "Pull back: a sealed dome among other enclosures"
+  },
+  {
+   "id": "E7",
+   "start": 194,
+   "end": 200.95,
+   "mv": "E",
+   "note": "A hand on the shoulder; the assembly composition again, with one empty place"
+  },
+  {
+   "id": "T1",
+   "start": 200.95,
+   "end": 205.4,
+   "mv": "T",
+   "note": "Title and end credit"
+  }
+ ],
+ "end": 205.4,
+ "cues": [],
+ "beds": [
+  {
+   "kind": "fire_bed",
+   "a": 0,
+   "b": 38.7,
+   "gain": -2,
+   "fade": 1
+  },
+  {
+   "kind": "city_bed",
+   "a": 0,
+   "b": 131,
+   "gain": -4,
+   "fade": 2
+  },
+  {
+   "kind": "fire_bed",
+   "a": 47,
+   "b": 64.6,
+   "gain": -10,
+   "fade": 1.5
+  },
+  {
+   "kind": "steam_vent",
+   "a": 64.6,
+   "b": 88,
+   "gain": -8,
+   "fade": 1
+  },
+  {
+   "kind": "refuge_bed",
+   "a": 125.747,
+   "b": 203.4,
+   "gain": -6,
+   "fade": 2
+  }
+ ],
+ "perspective": []
+}

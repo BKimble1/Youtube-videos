@@ -6,6 +6,7 @@ import {CAST} from '../rig/looks';
 import {walker, lying} from '../rig/poses';
 import {WALK, RUN, HURRY} from '../rig/gait';
 import {C, F} from '../theme';
+import {HandCU} from '../rig/HandCU';
 
 const hurt: Damage = {
   browCut: {side: 1, amt: 1}, noseBleed: 0.8, bruise: {side: -1, amt: 0.8}, dirt: 0.8, cracked: true,
@@ -47,6 +48,23 @@ export const PoseSheet: React.FC<{page: number}> = ({page}) => {
           {look: CAST.clerkC, t, x: 1450, y: G2, s: 0.95, yaw: 30, side: -4, z: 0, armR: {hand: {x: 1300, y: G2 - 175, z: -10}}, zArm: [undefined, 60], face: {mouth: 'grit', brows: -0.4}},
         ]} />
         {lab(1400, G2 + 30, 'support pair')}
+      </svg>
+    );
+  }
+  if (page === 1) {
+    const sk = CAST.checker.skin, sk2 = CAST.clerkC.skin, sk3 = CAST.clerkA.skin;
+    return (
+      <svg width="100%" height="100%" viewBox="0 0 1920 1080" style={{background: '#3a3036'}}>
+        <HandCU x={140} y={250} rot={-10} s={1.4} skin={sk} sleeve={C.coral} cuffTorn view="back" curl={0.15} spread={0.6} scrape={1} dirt={1} />
+        <HandCU x={620} y={250} rot={-10} s={1.4} skin={sk} sleeve={C.coral} cuffTorn view="back" curl={0.7} spread={0.2} scrape={1} />
+        {/* lever grip (side view) */}
+        <g><rect x={1250} y={60} width={34} height={420} rx={14} fill="#B8402E" stroke={C.ink} strokeWidth={5} /></g>
+        <HandCU x={1080} y={250} rot={-8} s={1.4} skin={sk3} sleeve={C.teal} view="side" curl={0.95} thumb={0.9} />
+        {/* clasp: two hands */}
+        <HandCU x={140} y={760} rot={8} s={1.5} skin={sk2} sleeve={C.saffron} view="side" side="R" curl={0.75} thumb={0.6} blood={0.9} />
+        <HandCU x={760} y={800} rot={190} s={1.5} skin={sk3} sleeve={C.teal} view="side" side="L" curl={0.3} thumb={0.2} blood={1} />
+        {/* flat on glass */}
+        <HandCU x={1250} y={900} rot={-90} s={1.5} skin={sk2} sleeve={C.saffron} view="back" curl={0} spread={0.9} flatten={1} />
       </svg>
     );
   }

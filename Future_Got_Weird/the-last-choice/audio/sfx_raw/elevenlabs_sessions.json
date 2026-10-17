@@ -1,0 +1,240 @@
+{
+ "flow_id": "z1if6RWnmC2gvHiGpM0u",
+ "model": "eleven_text_to_sound_v2",
+ "takes_per_kind": 2,
+ "kinds": {
+  "metal_tear": [
+   "TYlVsgqM1ghp6xJaW10b",
+   "kHpUxeW67CnysONm2RvP",
+   "JOPf5Lns4oeDEut1PY4W"
+  ],
+  "glass_shatter": [
+   "OI7AuzyAzt68HEWQa9Rr",
+   "5jYJiIuDnGeAMZaZ9bO1",
+   "LGuZxGNz8Wn2l6ojcEN6"
+  ],
+  "wreck_slam": [
+   "8rh1TGiCxJ5HmoITcVBr",
+   "Acj0nfOxjOWVI91N5DOt",
+   "pTTv0uK1yixC0iwtiQ5K"
+  ],
+  "taxi_drop": [
+   "rilfa87JrVnVS6SvKNl2",
+   "fKAuMZxRWs4nLgKSfSvR",
+   "YXjpwggEc6vM8hbty4rj"
+  ],
+  "blast": [
+   "aHehk0knSp7b0uZNKxM1",
+   "aP7rudCdtXhmnNpBccE5",
+   "mLPcZdbdeJekKJr8bGdN"
+  ],
+  "launcher": [
+   "x6PzWLQjrBaMqy6JAZsv",
+   "n1cTHKzh0Ai42fYmMmme",
+   "Eo39FBazCDTJearYewzs"
+  ],
+  "drone_rotor": [
+   "3vbflDBjRZZ8Dcg62dcB",
+   "lcMivSycKclfR4UerkNZ",
+   "MBFYdwUWxxLhT55NCQ5p"
+  ],
+  "sensor_lock": [
+   "8hKp7XZEkpFk7qSGL4td",
+   "tpHVUQNyCz7T0daTHS31",
+   "7Gj1J4bIRlHSv68gOfeb"
+  ],
+  "servo_heavy": [
+   "KZs0WBAJoCZHP9ysfOxv",
+   "yl9Dmw8RFdorLPRqlxyF",
+   "5h4fffQCaQA557IiqwvW"
+  ],
+  "robot_step_heavy": [
+   "Th8ajowZ0AGphBFH0cJb",
+   "4QY4hvOTNUbcJxHnzduP",
+   "Sd5mmHyIuddgiaqUWduX"
+  ],
+  "cable_strain": [
+   "xMigjSoH3fd1HDdSwNRt",
+   "eFVM3MogcIW6IPpXeW6F",
+   "JNoP96Ec5S2HAdTm8de4"
+  ],
+  "gate_roll": [
+   "MiaENOcPouhuGRRPngRX",
+   "H33oMyRO7js5E76caMo0",
+   "wK9Z3B2NybNOkAf5WxZD"
+  ],
+  "shutter_close": [
+   "gdOTEHPtPiQE64CZnNLB",
+   "27oUl0eHFGWiqIv5z9Bd",
+   "0Udtcjzx5246G49yJKbZ"
+  ],
+  "glass_door": [
+   "BqZVq7XmssnwHiy0sqIS",
+   "23gyngWTl72deiB2I94q",
+   "n1EiHPLX3bE5wICLvpDk"
+  ],
+  "radio_on": [
+   "eygDdZ8WeXY49mOdkYEP",
+   "nJpLuCURZABeiwlbmTL7",
+   "ezuSCRQlBfi0fb2CMVR5"
+  ],
+  "hand_glass": [
+   "Hxum3ntjiT2bpFAO0vKu",
+   "HmKJW0Tnx8xjCzFJ428e",
+   "nzeo9dGeMJsCyzFaN1J2"
+  ],
+  "breath_exert": [
+   "oxYzdbTJZAIsbq2G9v6O",
+   "c6TfClaj3UHYllpQI8GO",
+   "QtxlIlCCU6y6QNRto7Hx"
+  ],
+  "breath_ragged": [
+   "6b1uJ2lcBWjPYSbPIjki",
+   "AG03K06XqjOyHn2shZBY",
+   "pKTtEb1nUWy5zDGfH1BE"
+  ],
+  "steps_gravel": [
+   "nG2dRFOUYBrvpPB9WhWJ",
+   "Zq4QCzLlsb3N6USux87A",
+   "lQIJwZf4QRtwcGJQIB1L"
+  ],
+  "fire_bed": [
+   "S8dl2L0HNoZf0zHPe9O9",
+   "elxRDxr8p0y2U5sLZ0QO",
+   "8CEWtTdLlve2mDVhVbE6"
+  ],
+  "city_bed": [
+   "O23c2aDK7OwNDIYj1AUk",
+   "Jt66oLvQdfKMUgVWMjYS",
+   "OY7wEoDCuYIkMom1aqGH"
+  ],
+  "refuge_bed": [
+   "mQ2mG1Tbo0ZRdfcH5rIL",
+   "as3kiPy85d1sflTX3x2T",
+   "JxUEntGzNIQQXYVPO8rN"
+  ],
+  "sparks": [
+   "xMHvMInyffvjQHjM68nf",
+   "jKyOImvJpQ6cIwuRW1Ue",
+   "1hLCRYXfdsx9Nu8JqibW"
+  ],
+  "hydraulic": [
+   "qeNisWpdmmUrGfWdzT9V",
+   "cJLL3dDMW8zAd5w5YoUW",
+   "cq7gdW4FgYqjG4HrkGZ8"
+  ],
+  "body_fall": [
+   "jGYe0KmCSpVXER71QqbF",
+   "prejV2lEDjVsTF5tWS5l",
+   "CMxJcYz2vTNYsuDncDTw"
+  ],
+  "debris_rain": [
+   "pLvbGg6W3Gw8PNAI9zKa",
+   "7YHYgm9KRcj6jBdOEvme",
+   "61dzu8HZUtMG22CDSHZf"
+  ],
+  "lever_clunk": [
+   "2hV4sE5OgjFenbWMHFbI",
+   "OWLosOLDUrOPjGVge7q8",
+   "FK0RMPcF8gmYgC6PTXFw"
+  ],
+  "crane_trolley": [
+   "OOZiZyXpUs8THN32qG81",
+   "7skT1658L8im2CekM1ru",
+   "3RQlQDUx0MS1JxE6yrnU"
+  ],
+  "steam_vent": [
+   "nkt6ojtJboHS9RmfHRLa",
+   "SrepLgc1wkVKKfffZiKu",
+   "d4l8AWGbe51TC6sP5YZc"
+  ],
+  "gantry_collapse": [
+   "DXdaRwZipn1bp6R8P2ys",
+   "G9xOm9n3jZ15CUyXtShB",
+   "y63G9f1QC5BCO04TCk2D"
+  ]
+ },
+ "rerun": {
+  "fire_bed": [
+   "S8dl2L0HNoZf0zHPe9O9",
+   "1UddyEXEvePT8jfN2zdU",
+   "1Y8KOwf3gvbGZObudqe5"
+  ],
+  "city_bed": [
+   "O23c2aDK7OwNDIYj1AUk",
+   "WoueN85knmer92UKFMg3",
+   "10Xp6svqXWhYakFtHnVu"
+  ],
+  "refuge_bed": [
+   "mQ2mG1Tbo0ZRdfcH5rIL",
+   "OiW8SmJ7Z8KJltFaW5nI",
+   "I43LGRU82AQQhUBJTanw"
+  ],
+  "drone_rotor": [
+   "3vbflDBjRZZ8Dcg62dcB",
+   "HeHCcUrOiL1rKuiuM1AH",
+   "EOzMzy2a2JZGE5nLJV53"
+  ],
+  "steam_vent": [
+   "nkt6ojtJboHS9RmfHRLa",
+   "e55pc0ByFGyW5qqeQFGk",
+   "72iyOqx8kGUgZeHP20jq"
+  ],
+  "blast": [
+   "aHehk0knSp7b0uZNKxM1",
+   "lQ03M22gMx2PYR2lXbpI",
+   "rpTl4Hk2pXwAmrF39XpM"
+  ],
+  "wreck_slam": [
+   "8rh1TGiCxJ5HmoITcVBr",
+   "7mLYuLIvBflFd28tXfHn",
+   "Rc7JrlGruUGxPPW1hKwL"
+  ],
+  "metal_tear": [
+   "TYlVsgqM1ghp6xJaW10b",
+   "fvL73BKUd9jEiMW36Vh1",
+   "a1NcifJghImquIFl6IkU"
+  ],
+  "gate_roll": [
+   "MiaENOcPouhuGRRPngRX",
+   "apjBwHboy0Ta59Np9zOS",
+   "KxuJkCxvJZUBMvcwWBUJ"
+  ],
+  "cable_strain": [
+   "xMigjSoH3fd1HDdSwNRt",
+   "YJhKfAL3f8IVoSdQCTCD",
+   "IQYXabjWMeK5x1KQ9MsA"
+  ],
+  "gantry_collapse": [
+   "DXdaRwZipn1bp6R8P2ys",
+   "B1g5kfSyKlpbbsfy9msK",
+   "gTV97rWWMS9gf1Ud3Yba"
+  ],
+  "breath_ragged": [
+   "6b1uJ2lcBWjPYSbPIjki",
+   "0NUNI0Z8NupuBvC8pMPP",
+   "wui9NT0k2kDJe2fVa34i"
+  ],
+  "steps_gravel": [
+   "nG2dRFOUYBrvpPB9WhWJ",
+   "6RcOREzbsKkZroRnEeK7",
+   "HZKLXd2nyBJ0GmvbT73d"
+  ],
+  "sparks": [
+   "xMHvMInyffvjQHjM68nf",
+   "wYhD6rPehmboSEv3mtsG",
+   "FycIGKdMYNswRNW9eJHh"
+  ],
+  "hydraulic": [
+   "qeNisWpdmmUrGfWdzT9V",
+   "Rt8gbqxBj7zrzJHKlQmP",
+   "hZuF7IwEunpgM3eQVyCx"
+  ],
+  "crane_trolley": [
+   "OOZiZyXpUs8THN32qG81",
+   "SSRkMaqY8WIR5sOYeROV",
+   "sufCc5Klr5EtDfA918ju"
+  ]
+ },
+ "rerun_params": "explicit duration_seconds (beds 10-15 s with loop=true; events 2.5-6 s), prompt_influence 0.45"
+}

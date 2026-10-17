@@ -1,0 +1,217 @@
+{
+ "blast": {
+  "take": "blast_L_v2.mp3",
+  "lead_s": 0.03,
+  "duration_s": 4.48,
+  "onset_dominance": 63.3
+ },
+ "body_fall": {
+  "take": "body_fall_v2.mp3",
+  "lead_s": 0.03,
+  "duration_s": 1.0,
+  "onset_dominance": 262.7
+ },
+ "breath_exert": {
+  "take": "breath_exert_v1.mp3",
+  "lead_s": 0.01,
+  "duration_s": 6.0
+ },
+ "breath_ragged": {
+  "take": "breath_ragged_L_v2.mp3",
+  "lead_s": 0.0,
+  "duration_s": 6.0,
+  "steadiness_std_db": 3.26
+ },
+ "cable_strain": {
+  "take": "cable_strain_L_v2.mp3",
+  "lead_s": 0.0,
+  "duration_s": 5.0
+ },
+ "city_bed": {
+  "take": "city_bed_L_v2.mp3",
+  "lead_s": 0.0,
+  "duration_s": 15.0,
+  "steadiness_std_db": 0.94
+ },
+ "crane_trolley": {
+  "take": "crane_trolley_L_v2.mp3",
+  "lead_s": 0.0,
+  "duration_s": 6.0
+ },
+ "debris_rain": {
+  "take": "debris_rain_v2.mp3",
+  "lead_s": 0.01,
+  "duration_s": 5.0
+ },
+ "drone_rotor": {
+  "take": "drone_rotor_L_v1.mp3",
+  "lead_s": 0.0,
+  "duration_s": 6.0,
+  "steadiness_std_db": 1.32
+ },
+ "fire_bed": {
+  "take": "fire_bed_L_v2.mp3",
+  "lead_s": 0.0,
+  "duration_s": 10.0,
+  "steadiness_std_db": 11.2
+ },
+ "gantry_collapse": {
+  "take": "gantry_collapse_L_v2.mp3",
+  "lead_s": 0.009,
+  "duration_s": 5.0
+ },
+ "gate_roll": {
+  "take": "gate_roll_L_v1.mp3",
+  "lead_s": 0.01,
+  "duration_s": 3.48
+ },
+ "glass_door": {
+  "take": "glass_door_v2.mp3",
+  "lead_s": 0.01,
+  "duration_s": 3.0
+ },
+ "glass_shatter": {
+  "take": "glass_shatter_v1.mp3",
+  "lead_s": 0.03,
+  "duration_s": 3.0,
+  "onset_dominance": 15.8
+ },
+ "hand_glass": {
+  "take": "hand_glass_v2.mp3",
+  "lead_s": 0.03,
+  "duration_s": 4.0,
+  "onset_dominance": 15.8
+ },
+ "hydraulic": {
+  "take": "hydraulic_L_v1.mp3",
+  "lead_s": 0.0,
+  "duration_s": 2.48
+ },
+ "launcher": {
+  "take": "launcher_v2.mp3",
+  "lead_s": 0.03,
+  "duration_s": 2.0,
+  "onset_dominance": 73.7
+ },
+ "lever_clunk": {
+  "take": "lever_clunk_v1.mp3",
+  "lead_s": 0.03,
+  "duration_s": 2.0,
+  "onset_dominance": 32.0
+ },
+ "metal_tear": {
+  "take": "metal_tear_v2.mp3",
+  "lead_s": 0.027,
+  "duration_s": 2.0,
+  "onset_dominance": 28.1
+ },
+ "radio_on": {
+  "take": "radio_on_v2.mp3",
+  "lead_s": 0.0,
+  "duration_s": 16.0
+ },
+ "refuge_bed": {
+  "take": "refuge_bed_L_v1.mp3",
+  "lead_s": 0.0,
+  "duration_s": 15.0,
+  "steadiness_std_db": 1.3
+ },
+ "robot_step_heavy": {
+  "take": "robot_step_heavy_v1.mp3",
+  "lead_s": 0.03,
+  "duration_s": 2.0,
+  "onset_dominance": 803638.1
+ },
+ "sensor_lock": {
+  "take": "sensor_lock_v1.mp3",
+  "lead_s": 0.03,
+  "duration_s": 2.0,
+  "onset_dominance": 16.7
+ },
+ "servo_heavy": {
+  "take": "servo_heavy_v2.mp3",
+  "lead_s": 0.0,
+  "duration_s": 6.0
+ },
+ "shutter_close": {
+  "take": "shutter_close_v2.mp3",
+  "lead_s": 0.01,
+  "duration_s": 5.0
+ },
+ "sparks": {
+  "take": "sparks_L_v2.mp3",
+  "lead_s": 0.01,
+  "duration_s": 2.48
+ },
+ "steam_vent": {
+  "take": "steam_vent_L_v2.mp3",
+  "lead_s": 0.0,
+  "duration_s": 6.0,
+  "steadiness_std_db": 1.07
+ },
+ "steps_gravel": {
+  "take": "steps_gravel_L_v1.mp3",
+  "lead_s": 0.01,
+  "duration_s": 4.0
+ },
+ "taxi_drop": {
+  "take": "taxi_drop_v2.mp3",
+  "lead_s": 0.03,
+  "duration_s": 2.0,
+  "onset_dominance": 18.0
+ },
+ "wreck_slam": {
+  "take": "wreck_slam_L_v2.mp3",
+  "lead_s": 0.027,
+  "duration_s": 3.0,
+  "onset_dominance": 42.3
+ },
+ "shutter_slam": {
+  "take": "reused: they-trained-robots-to-destroy-themselves/source/public/v2/audio/sfx/shutter_slam.wav",
+  "lead_s": 0.05
+ },
+ "crane_chain": {
+  "take": "reused: they-trained-robots-to-destroy-themselves/source/public/v2/audio/sfx/crane_chain.wav",
+  "lead_s": 0.05
+ },
+ "elec_arc": {
+  "take": "reused: they-trained-robots-to-destroy-themselves/source/public/v2/audio/sfx/elec_arc.wav",
+  "lead_s": 0.05
+ },
+ "step_grate": {
+  "take": "reused: they-trained-robots-to-destroy-themselves/source/public/v2/audio/sfx/step_grate.wav",
+  "lead_s": 0.05
+ },
+ "step_grate_b": {
+  "take": "reused: they-trained-robots-to-destroy-themselves/source/public/v2/audio/sfx/step_grate_b.wav",
+  "lead_s": 0.05
+ },
+ "sub_boom": {
+  "take": "reused: they-trained-robots-to-destroy-themselves/source/public/v2/audio/sfx/sub_boom.wav",
+  "lead_s": 0.05
+ },
+ "servo_whir": {
+  "take": "reused: they-trained-robots-to-destroy-themselves/source/public/audio/sfx/servo_whir.wav",
+  "lead_s": 0.05
+ },
+ "static": {
+  "take": "reused: they-trained-robots-to-destroy-themselves/source/public/audio/sfx/static.wav",
+  "lead_s": 0.05
+ },
+ "robot_step": {
+  "take": "reused: they-trained-robots-to-destroy-themselves/source/public/audio/sfx/robot_step.wav",
+  "lead_s": 0.05
+ },
+ "padlock": {
+  "take": "reused: they-trained-robots-to-destroy-themselves/source/public/v2/audio/sfx/padlock.wav",
+  "lead_s": 0.05
+ },
+ "tinnitus": {
+  "take": "synthesised (3.95 kHz ring, 1.4 s decay)",
+  "lead_s": 0
+ },
+ "projector_beep": {
+  "take": "synthesised (rising chirp)",
+  "lead_s": 0
+ }
+}

@@ -1,0 +1,646 @@
+{
+ "metal_tear_v1.mp3": {
+  "generation_id": "PlU4shej43zV5HRymB9i",
+  "session_id": "kHpUxeW67CnysONm2RvP",
+  "prompt": "Heavy steel armor plate tearing and ripping away from a robot frame, screeching metal, close, dry, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "metal_tear_v2.mp3": {
+  "generation_id": "SXEjHJlNI8Cl8rUWOVOo",
+  "session_id": "JOPf5Lns4oeDEut1PY4W",
+  "prompt": "Heavy steel armor plate tearing and ripping away from a robot frame, screeching metal, close, dry, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "glass_shatter_v1.mp3": {
+  "generation_id": "vv2fyYRsXOw4cB7Ubfs4",
+  "session_id": "5jYJiIuDnGeAMZaZ9bO1",
+  "prompt": "Car windshield glass shattering and raining onto asphalt, close, no music",
+  "duration_secs": 3,
+  "credits": 16.665
+ },
+ "glass_shatter_v2.mp3": {
+  "generation_id": "XfXpTX8llLkAs6ekNVi6",
+  "session_id": "LGuZxGNz8Wn2l6ojcEN6",
+  "prompt": "Car windshield glass shattering and raining onto asphalt, close, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "wreck_slam_v1.mp3": {
+  "generation_id": "g0PnfVltMmROx2zBEgb9",
+  "session_id": "Acj0nfOxjOWVI91N5DOt",
+  "prompt": "Heavy armored truck ramming into a wrecked car, massive metal crunch impact, debris scattering, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "wreck_slam_v2.mp3": {
+  "generation_id": "0TL7kyACFdfOpS6X53iK",
+  "session_id": "pTTv0uK1yixC0iwtiQ5K",
+  "prompt": "Heavy armored truck ramming into a wrecked car, massive metal crunch impact, debris scattering, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "taxi_drop_v1.mp3": {
+  "generation_id": "U8MsRsdn30yEGfjSmmSm",
+  "session_id": "fKAuMZxRWs4nLgKSfSvR",
+  "prompt": "Overturned car wreck dropped onto pavement, heavy metal crash and crunch with glass, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "taxi_drop_v2.mp3": {
+  "generation_id": "bZK7VLHFxh3Zei0hGjAd",
+  "session_id": "YXjpwggEc6vM8hbty4rj",
+  "prompt": "Overturned car wreck dropped onto pavement, heavy metal crash and crunch with glass, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "blast_v1.mp3": {
+  "generation_id": "74W9ZGnu63EQsykpI7IJ",
+  "session_id": "aP7rudCdtXhmnNpBccE5",
+  "prompt": "Single large explosion on a steel bridge structure, sharp crack then deep boom, metal debris falling, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "blast_v2.mp3": {
+  "generation_id": "arpFnfgLvh8F2d2F176e",
+  "session_id": "mLPcZdbdeJekKJr8bGdN",
+  "prompt": "Single large explosion on a steel bridge structure, sharp crack then deep boom, metal debris falling, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "launcher_v1.mp3": {
+  "generation_id": "qcONUomPAOg7kSJgjmKB",
+  "session_id": "n1cTHKzh0Ai42fYmMmme",
+  "prompt": "Heavy mechanical launcher firing a single charge, deep thump with a short hiss, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "launcher_v2.mp3": {
+  "generation_id": "qo5szLPd53fiM3Yq4voT",
+  "session_id": "Eo39FBazCDTJearYewzs",
+  "prompt": "Heavy mechanical launcher firing a single charge, deep thump with a short hiss, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "drone_rotor_v1.mp3": {
+  "generation_id": "opckAntbnR6IssSfYNCb",
+  "session_id": "lcMivSycKclfR4UerkNZ",
+  "prompt": "Small quadcopter drone hovering nearby, steady electric rotor hum, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "drone_rotor_v2.mp3": {
+  "generation_id": "5azG8Rl4xnjeJ0GlRrfv",
+  "session_id": "MBFYdwUWxxLhT55NCQ5p",
+  "prompt": "Small quadcopter drone hovering nearby, steady electric rotor hum, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "sensor_lock_v1.mp3": {
+  "generation_id": "6sP0Z6sBC1c9ZtWC999d",
+  "session_id": "tpHVUQNyCz7T0daTHS31",
+  "prompt": "Soft electronic camera lens focusing click and a quiet rising servo chirp, subtle, close, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "sensor_lock_v2.mp3": {
+  "generation_id": "S4JObZahSqj1WDC54S2w",
+  "session_id": "7Gj1J4bIRlHSv68gOfeb",
+  "prompt": "Soft electronic camera lens focusing click and a quiet rising servo chirp, subtle, close, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "servo_heavy_v1.mp3": {
+  "generation_id": "IJSXm7KEFYqgsvu7DdtL",
+  "session_id": "yl9Dmw8RFdorLPRqlxyF",
+  "prompt": "Large robot arm hydraulic servo moving, mechanical whine and pneumatic hiss, no music",
+  "duration_secs": 0.48,
+  "credits": 16.665
+ },
+ "servo_heavy_v2.mp3": {
+  "generation_id": "f9FgHTL0MjCVMFURLlUM",
+  "session_id": "5h4fffQCaQA557IiqwvW",
+  "prompt": "Large robot arm hydraulic servo moving, mechanical whine and pneumatic hiss, no music",
+  "duration_secs": 6,
+  "credits": 16.665
+ },
+ "robot_step_heavy_v1.mp3": {
+  "generation_id": "ZvQpWhKZeSu91qoAxyQP",
+  "session_id": "4QY4hvOTNUbcJxHnzduP",
+  "prompt": "Single heavy robot footstep landing on a steel catwalk, deep metal clank, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "robot_step_heavy_v2.mp3": {
+  "generation_id": "u1tNXVB57GuA7nvQJoQD",
+  "session_id": "Sd5mmHyIuddgiaqUWduX",
+  "prompt": "Single heavy robot footstep landing on a steel catwalk, deep metal clank, no music",
+  "duration_secs": 3,
+  "credits": 16.665
+ },
+ "cable_strain_v1.mp3": {
+  "generation_id": "7gagy5s8yMm8ugEaHA3u",
+  "session_id": "eFVM3MogcIW6IPpXeW6F",
+  "prompt": "Steel cables straining and creaking under heavy load on an old crane, groaning metal, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "cable_strain_v2.mp3": {
+  "generation_id": "VEtyPFSlG8ilqXrcRxsP",
+  "session_id": "JNoP96Ec5S2HAdTm8de4",
+  "prompt": "Steel cables straining and creaking under heavy load on an old crane, groaning metal, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "gate_roll_v1.mp3": {
+  "generation_id": "zaOJj1JIjg1HrjE9aVTK",
+  "session_id": "H33oMyRO7js5E76caMo0",
+  "prompt": "Rusty steel security roll-up gate being forced open by hand, heavy rattling and scraping, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "gate_roll_v2.mp3": {
+  "generation_id": "rF76JSgPZMA2Yoe1ORmo",
+  "session_id": "wK9Z3B2NybNOkAf5WxZD",
+  "prompt": "Rusty steel security roll-up gate being forced open by hand, heavy rattling and scraping, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "shutter_close_v1.mp3": {
+  "generation_id": "bfR4zZzdhBtSfqXVA3lM",
+  "session_id": "27oUl0eHFGWiqIv5z9Bd",
+  "prompt": "Heavy automated metal shutter smoothly lowering on a quiet motor and locking shut with a solid clunk, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "shutter_close_v2.mp3": {
+  "generation_id": "RL6Q22yQ6ThqsPJFaBhK",
+  "session_id": "0Udtcjzx5246G49yJKbZ",
+  "prompt": "Heavy automated metal shutter smoothly lowering on a quiet motor and locking shut with a solid clunk, no music",
+  "duration_secs": 5,
+  "credits": 16.665
+ },
+ "glass_door_v1.mp3": {
+  "generation_id": "8gQeY44mA7YcqY9YCmO8",
+  "session_id": "23gyngWTl72deiB2I94q",
+  "prompt": "Automatic sliding glass doors opening smoothly with a soft whoosh, quiet indoor space, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "glass_door_v2.mp3": {
+  "generation_id": "jnBUZIf7Ew3hiG5z2Fy1",
+  "session_id": "n1EiHPLX3bE5wICLvpDk",
+  "prompt": "Automatic sliding glass doors opening smoothly with a soft whoosh, quiet indoor space, no music",
+  "duration_secs": 3,
+  "credits": 16.665
+ },
+ "radio_on_v1.mp3": {
+  "generation_id": "UGXhMWES3c6T4PYeNgef",
+  "session_id": "nJpLuCURZABeiwlbmTL7",
+  "prompt": "Old portable transistor radio switched on with a plastic click, then crackling static and a tuning whistle sweeping between stations, no music",
+  "duration_secs": 3,
+  "credits": 16.665
+ },
+ "radio_on_v2.mp3": {
+  "generation_id": "pTL23796AG8bcRpB9oU7",
+  "session_id": "ezuSCRQlBfi0fb2CMVR5",
+  "prompt": "Old portable transistor radio switched on with a plastic click, then crackling static and a tuning whistle sweeping between stations, no music",
+  "duration_secs": 16,
+  "credits": 16.665
+ },
+ "hand_glass_v1.mp3": {
+  "generation_id": "gXNe84ttyVrBxAZo8UiX",
+  "session_id": "HmKJW0Tnx8xjCzFJ428e",
+  "prompt": "A hand pressing flat against a thick glass window, soft dull thump and a faint skin squeak, very close, quiet room, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "hand_glass_v2.mp3": {
+  "generation_id": "c87VTDQtkGT75Nm4rhrr",
+  "session_id": "nzeo9dGeMJsCyzFaN1J2",
+  "prompt": "A hand pressing flat against a thick glass window, soft dull thump and a faint skin squeak, very close, quiet room, no music",
+  "duration_secs": 4,
+  "credits": 16.665
+ },
+ "breath_exert_v1.mp3": {
+  "generation_id": "Q4y4WUnYW6YdOtXiuhlf",
+  "session_id": "c6TfClaj3UHYllpQI8GO",
+  "prompt": "A person breathing hard and straining while pulling something heavy, short effort grunts, no words, close, no music",
+  "duration_secs": 6,
+  "credits": 16.665
+ },
+ "breath_exert_v2.mp3": {
+  "generation_id": "SDBjfjHdfNBm90EcXSUU",
+  "session_id": "QtxlIlCCU6y6QNRto7Hx",
+  "prompt": "A person breathing hard and straining while pulling something heavy, short effort grunts, no words, close, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "breath_ragged_v1.mp3": {
+  "generation_id": "PXl05K7yJM356QpTev9e",
+  "session_id": "AG03K06XqjOyHn2shZBY",
+  "prompt": "An injured person's shallow ragged breathing, quiet, close, no words, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "breath_ragged_v2.mp3": {
+  "generation_id": "0JIXcnIq4WJyd1gWwIPh",
+  "session_id": "pKTtEb1nUWy5zDGfH1BE",
+  "prompt": "An injured person's shallow ragged breathing, quiet, close, no words, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "steps_gravel_v1.mp3": {
+  "generation_id": "K83RqOO2pTSMKLZBYwaL",
+  "session_id": "Zq4QCzLlsb3N6USux87A",
+  "prompt": "A few people hurrying on foot over gravel and broken glass on a city street, shoes crunching, no voices, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "steps_gravel_v2.mp3": {
+  "generation_id": "Uw7rmpT9dxaVpsc7sjQj",
+  "session_id": "lQIJwZf4QRtwcGJQIB1L",
+  "prompt": "A few people hurrying on foot over gravel and broken glass on a city street, shoes crunching, no voices, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "fire_bed_v1.mp3": {
+  "generation_id": "mOeRMTJEU3dTNrrezjI0",
+  "session_id": "elxRDxr8p0y2U5sLZ0QO",
+  "prompt": "Large building fire crackling and roaring, steady ambience, embers popping, no music",
+  "duration_secs": 0.48,
+  "credits": 16.665
+ },
+ "fire_bed_v2.mp3": {
+  "generation_id": "SMS8Vg2UwG44vVWuVpld",
+  "session_id": "8CEWtTdLlve2mDVhVbE6",
+  "prompt": "Large building fire crackling and roaring, steady ambience, embers popping, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "city_bed_v1.mp3": {
+  "generation_id": "I0yh8GHyHIimOPX727Ig",
+  "session_id": "Jt66oLvQdfKMUgVWMjYS",
+  "prompt": "Damaged city ambience at dusk, distant fires, far low rumbles and debris, light wind, no sirens, no voices, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "city_bed_v2.mp3": {
+  "generation_id": "rtC8WezIV3wpfNqYFSH6",
+  "session_id": "OY7wEoDCuYIkMom1aqGH",
+  "prompt": "Damaged city ambience at dusk, distant fires, far low rumbles and debris, light wind, no sirens, no voices, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "refuge_bed_v1.mp3": {
+  "generation_id": "vxXrKTyg7VC1IzBha5tT",
+  "session_id": "as3kiPy85d1sflTX3x2T",
+  "prompt": "Quiet indoor greenhouse ambience, soft ventilation hum, gentle water trickle, calm and clean, no voices, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "refuge_bed_v2.mp3": {
+  "generation_id": "w9IkGYIlLGitr6x0YL6r",
+  "session_id": "JxUEntGzNIQQXYVPO8rN",
+  "prompt": "Quiet indoor greenhouse ambience, soft ventilation hum, gentle water trickle, calm and clean, no voices, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "sparks_v1.mp3": {
+  "generation_id": "masyKXnLCrlQvpBTvoa3",
+  "session_id": "jKyOImvJpQ6cIwuRW1Ue",
+  "prompt": "Electrical sparks crackling and spitting from torn cables, short bursts, no music",
+  "duration_secs": 0.48,
+  "credits": 16.665
+ },
+ "sparks_v2.mp3": {
+  "generation_id": "Af66JQtBbN6UmfAIaeUq",
+  "session_id": "1hLCRYXfdsx9Nu8JqibW",
+  "prompt": "Electrical sparks crackling and spitting from torn cables, short bursts, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "hydraulic_v1.mp3": {
+  "generation_id": "4yVMDxDOFPEYB1ofDbVt",
+  "session_id": "cJLL3dDMW8zAd5w5YoUW",
+  "prompt": "Hydraulic fluid spraying from a ruptured high-pressure hose, sharp hiss and spatter, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "hydraulic_v2.mp3": {
+  "generation_id": "UhwfApiApFyY7bQwCU4H",
+  "session_id": "cq7gdW4FgYqjG4HrkGZ8",
+  "prompt": "Hydraulic fluid spraying from a ruptured high-pressure hose, sharp hiss and spatter, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "body_fall_v1.mp3": {
+  "generation_id": "HHXoERjpxLmIyxX0qIBT",
+  "session_id": "prejV2lEDjVsTF5tWS5l",
+  "prompt": "A person falling hard onto concrete, heavy body thud with clothing rustle, no voice, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "body_fall_v2.mp3": {
+  "generation_id": "8hJzn2Db4yuHLBC4yLY7",
+  "session_id": "CMxJcYz2vTNYsuDncDTw",
+  "prompt": "A person falling hard onto concrete, heavy body thud with clothing rustle, no voice, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "debris_rain_v1.mp3": {
+  "generation_id": "UpcKYROFicMgKWUtgLa5",
+  "session_id": "7YHYgm9KRcj6jBdOEvme",
+  "prompt": "Concrete chunks, dust and small metal pieces falling and scattering onto asphalt after an impact, no music",
+  "duration_secs": 0.48,
+  "credits": 16.665
+ },
+ "debris_rain_v2.mp3": {
+  "generation_id": "yBleZu6E4Ivl0oYwscXK",
+  "session_id": "61dzu8HZUtMG22CDSHZf",
+  "prompt": "Concrete chunks, dust and small metal pieces falling and scattering onto asphalt after an impact, no music",
+  "duration_secs": 5,
+  "credits": 16.665
+ },
+ "lever_clunk_v1.mp3": {
+  "generation_id": "1D2LGs2AIkQ82gz4azbA",
+  "session_id": "OWLosOLDUrOPjGVge7q8",
+  "prompt": "Heavy industrial lever pulled down into place, metal clunk and ratchet clicks, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "lever_clunk_v2.mp3": {
+  "generation_id": "Nn6VH50Nz7Mzr68HMg7c",
+  "session_id": "FK0RMPcF8gmYgC6PTXFw",
+  "prompt": "Heavy industrial lever pulled down into place, metal clunk and ratchet clicks, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "crane_trolley_v1.mp3": {
+  "generation_id": "hZfVDjX1G8MYnj3yzjTh",
+  "session_id": "7skT1658L8im2CekM1ru",
+  "prompt": "Old overhead crane trolley rolling along a steel beam with a winch motor and creaking cables, no music",
+  "duration_secs": 3,
+  "credits": 16.665
+ },
+ "crane_trolley_v2.mp3": {
+  "generation_id": "NSUsMElVW4UnFJJ2FmcE",
+  "session_id": "3RQlQDUx0MS1JxE6yrnU",
+  "prompt": "Old overhead crane trolley rolling along a steel beam with a winch motor and creaking cables, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "steam_vent_v1.mp3": {
+  "generation_id": "5tcQvhY8zbkp5OkrI1L2",
+  "session_id": "SrepLgc1wkVKKfffZiKu",
+  "prompt": "Steam venting steadily from a broken industrial pipe, loud hiss with a low rumble, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "steam_vent_v2.mp3": {
+  "generation_id": "8HS3Hb96AqHkWastAJUD",
+  "session_id": "d4l8AWGbe51TC6sP5YZc",
+  "prompt": "Steam venting steadily from a broken industrial pipe, loud hiss with a low rumble, no music",
+  "duration_secs": 2,
+  "credits": 16.665
+ },
+ "gantry_collapse_v1.mp3": {
+  "generation_id": "p7WLy9Mhimz1kroqvlah",
+  "session_id": "G9xOm9n3jZ15CUyXtShB",
+  "prompt": "Large steel structure groaning, bending and collapsing, crashing down onto concrete and a machine, long metal crunch, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "gantry_collapse_v2.mp3": {
+  "generation_id": "OPYUu2YpRzL0ImiP8k11",
+  "session_id": "y63G9f1QC5BCO04TCk2D",
+  "prompt": "Large steel structure groaning, bending and collapsing, crashing down onto concrete and a machine, long metal crunch, no music",
+  "duration_secs": 1,
+  "credits": 16.665
+ },
+ "fire_bed_L_v1.mp3": {
+  "generation_id": "pPkKKeIpIT6eoyixcBA9",
+  "session_id": "1UddyEXEvePT8jfN2zdU",
+  "prompt": "Large building fire crackling and roaring, steady ambience, embers popping, no music",
+  "duration_secs": 10,
+  "credits": 33.33
+ },
+ "fire_bed_L_v2.mp3": {
+  "generation_id": "LGSwCJmLa3sOIjg2B34F",
+  "session_id": "1Y8KOwf3gvbGZObudqe5",
+  "prompt": "Large building fire crackling and roaring, steady ambience, embers popping, no music",
+  "duration_secs": 10,
+  "credits": 33.33
+ },
+ "city_bed_L_v1.mp3": {
+  "generation_id": "VaZIkBQ5csDrNe1SjLnq",
+  "session_id": "WoueN85knmer92UKFMg3",
+  "prompt": "Damaged city ambience at dusk, distant fires, far low rumbles and debris, light wind, no sirens, no voices, no music",
+  "duration_secs": 15,
+  "credits": 49.995000000000005
+ },
+ "city_bed_L_v2.mp3": {
+  "generation_id": "sFsYnIXCjXJfGOV1EDi2",
+  "session_id": "10Xp6svqXWhYakFtHnVu",
+  "prompt": "Damaged city ambience at dusk, distant fires, far low rumbles and debris, light wind, no sirens, no voices, no music",
+  "duration_secs": 15,
+  "credits": 49.995000000000005
+ },
+ "refuge_bed_L_v1.mp3": {
+  "generation_id": "B9HfuJOVN2n7zIJUOCx1",
+  "session_id": "OiW8SmJ7Z8KJltFaW5nI",
+  "prompt": "Quiet indoor greenhouse ambience, soft ventilation hum, gentle water trickle, calm and clean, no voices, no music",
+  "duration_secs": 15,
+  "credits": 49.995000000000005
+ },
+ "refuge_bed_L_v2.mp3": {
+  "generation_id": "tBIJvT4nQnLUFIQ6TosE",
+  "session_id": "I43LGRU82AQQhUBJTanw",
+  "prompt": "Quiet indoor greenhouse ambience, soft ventilation hum, gentle water trickle, calm and clean, no voices, no music",
+  "duration_secs": 15,
+  "credits": 49.995000000000005
+ },
+ "drone_rotor_L_v1.mp3": {
+  "generation_id": "GvDcSeM4FMm10SdAekcn",
+  "session_id": "HeHCcUrOiL1rKuiuM1AH",
+  "prompt": "Small quadcopter drone hovering nearby, steady electric rotor hum, no music",
+  "duration_secs": 6,
+  "credits": 19.998
+ },
+ "drone_rotor_L_v2.mp3": {
+  "generation_id": "XN6PjC1wIZWsFppAUACu",
+  "session_id": "EOzMzy2a2JZGE5nLJV53",
+  "prompt": "Small quadcopter drone hovering nearby, steady electric rotor hum, no music",
+  "duration_secs": 6,
+  "credits": 19.998
+ },
+ "steam_vent_L_v1.mp3": {
+  "generation_id": "l5a5XHeobykfwm61QXye",
+  "session_id": "e55pc0ByFGyW5qqeQFGk",
+  "prompt": "Steam venting steadily from a broken industrial pipe, loud hiss with a low rumble, no music",
+  "duration_secs": 6,
+  "credits": 19.998
+ },
+ "steam_vent_L_v2.mp3": {
+  "generation_id": "FaYq8hmeCgvVj2L1ThjG",
+  "session_id": "72iyOqx8kGUgZeHP20jq",
+  "prompt": "Steam venting steadily from a broken industrial pipe, loud hiss with a low rumble, no music",
+  "duration_secs": 6,
+  "credits": 19.998
+ },
+ "blast_L_v1.mp3": {
+  "generation_id": "jVo6jojSqSlTvNZYJZwl",
+  "session_id": "lQ03M22gMx2PYR2lXbpI",
+  "prompt": "Single large explosion on a steel bridge structure, sharp crack then deep boom, metal debris falling, no music",
+  "duration_secs": 4.48,
+  "credits": 14.9985
+ },
+ "blast_L_v2.mp3": {
+  "generation_id": "UNBS04D08b4uvM7piP6e",
+  "session_id": "rpTl4Hk2pXwAmrF39XpM",
+  "prompt": "Single large explosion on a steel bridge structure, sharp crack then deep boom, metal debris falling, no music",
+  "duration_secs": 4.48,
+  "credits": 14.9985
+ },
+ "wreck_slam_L_v1.mp3": {
+  "generation_id": "UKrDHzvAKakSbjEViNvv",
+  "session_id": "7mLYuLIvBflFd28tXfHn",
+  "prompt": "Heavy armored truck ramming into a wrecked car, massive metal crunch impact, debris scattering, no music",
+  "duration_secs": 3,
+  "credits": 9.999
+ },
+ "wreck_slam_L_v2.mp3": {
+  "generation_id": "BQAn2pHxKXhhCBhwCuse",
+  "session_id": "Rc7JrlGruUGxPPW1hKwL",
+  "prompt": "Heavy armored truck ramming into a wrecked car, massive metal crunch impact, debris scattering, no music",
+  "duration_secs": 3,
+  "credits": 9.999
+ },
+ "metal_tear_L_v1.mp3": {
+  "generation_id": "YoCw56L9G5lg8xtLiOOG",
+  "session_id": "fvL73BKUd9jEiMW36Vh1",
+  "prompt": "Heavy steel armor plate tearing and ripping away from a robot frame, screeching metal, close, dry, no music",
+  "duration_secs": 2.48,
+  "credits": 8.3325
+ },
+ "metal_tear_L_v2.mp3": {
+  "generation_id": "T3xF7dY57ScbZjVmIXVI",
+  "session_id": "a1NcifJghImquIFl6IkU",
+  "prompt": "Heavy steel armor plate tearing and ripping away from a robot frame, screeching metal, close, dry, no music",
+  "duration_secs": 2.48,
+  "credits": 8.3325
+ },
+ "gate_roll_L_v1.mp3": {
+  "generation_id": "eYGnGbbV8qeC7TRjyDJI",
+  "session_id": "apjBwHboy0Ta59Np9zOS",
+  "prompt": "Rusty steel security roll-up gate being forced open by hand, heavy rattling and scraping, no music",
+  "duration_secs": 3.48,
+  "credits": 11.6655
+ },
+ "gate_roll_L_v2.mp3": {
+  "generation_id": "NFRFi1WqEJSkGlUycBFb",
+  "session_id": "KxuJkCxvJZUBMvcwWBUJ",
+  "prompt": "Rusty steel security roll-up gate being forced open by hand, heavy rattling and scraping, no music",
+  "duration_secs": 3.48,
+  "credits": 11.6655
+ },
+ "cable_strain_L_v1.mp3": {
+  "generation_id": "uXmULcTkbEzMmTRWb3zz",
+  "session_id": "YJhKfAL3f8IVoSdQCTCD",
+  "prompt": "Steel cables straining and creaking under heavy load on an old crane, groaning metal, no music",
+  "duration_secs": 5,
+  "credits": 16.665
+ },
+ "cable_strain_L_v2.mp3": {
+  "generation_id": "W2Lbs168tWFpT0ssRhcS",
+  "session_id": "IQYXabjWMeK5x1KQ9MsA",
+  "prompt": "Steel cables straining and creaking under heavy load on an old crane, groaning metal, no music",
+  "duration_secs": 5,
+  "credits": 16.665
+ },
+ "gantry_collapse_L_v1.mp3": {
+  "generation_id": "d7iKXClhL4fAHnTdKbru",
+  "session_id": "B1g5kfSyKlpbbsfy9msK",
+  "prompt": "Large steel structure groaning, bending and collapsing, crashing down onto concrete and a machine, long metal crunch, no music",
+  "duration_secs": 5,
+  "credits": 16.665
+ },
+ "gantry_collapse_L_v2.mp3": {
+  "generation_id": "HJw38hcFhryc3WPBoWAp",
+  "session_id": "gTV97rWWMS9gf1Ud3Yba",
+  "prompt": "Large steel structure groaning, bending and collapsing, crashing down onto concrete and a machine, long metal crunch, no music",
+  "duration_secs": 5,
+  "credits": 16.665
+ },
+ "breath_ragged_L_v1.mp3": {
+  "generation_id": "3YjVGa9yhYc4dT7CXR87",
+  "session_id": "0NUNI0Z8NupuBvC8pMPP",
+  "prompt": "An injured person's shallow ragged breathing, quiet, close, no words, no music",
+  "duration_secs": 6,
+  "credits": 19.998
+ },
+ "breath_ragged_L_v2.mp3": {
+  "generation_id": "itX2Fk2CrE5L2uNdwU9Y",
+  "session_id": "wui9NT0k2kDJe2fVa34i",
+  "prompt": "An injured person's shallow ragged breathing, quiet, close, no words, no music",
+  "duration_secs": 6,
+  "credits": 19.998
+ },
+ "steps_gravel_L_v1.mp3": {
+  "generation_id": "l2yXikKHqbx9SEKmqT9j",
+  "session_id": "6RcOREzbsKkZroRnEeK7",
+  "prompt": "A few people hurrying on foot over gravel and broken glass on a city street, shoes crunching, no voices, no music",
+  "duration_secs": 4,
+  "credits": 13.332
+ },
+ "steps_gravel_L_v2.mp3": {
+  "generation_id": "CKVTvgrKmEW542WLjV82",
+  "session_id": "HZKLXd2nyBJ0GmvbT73d",
+  "prompt": "A few people hurrying on foot over gravel and broken glass on a city street, shoes crunching, no voices, no music",
+  "duration_secs": 4,
+  "credits": 13.332
+ },
+ "sparks_L_v1.mp3": {
+  "generation_id": "xR93LEedM5YRW0gw14ZH",
+  "session_id": "wYhD6rPehmboSEv3mtsG",
+  "prompt": "Electrical sparks crackling and spitting from torn cables, short bursts, no music",
+  "duration_secs": 2.48,
+  "credits": 8.3325
+ },
+ "sparks_L_v2.mp3": {
+  "generation_id": "zw2XG4W8S0bJPTBG5cSI",
+  "session_id": "FycIGKdMYNswRNW9eJHh",
+  "prompt": "Electrical sparks crackling and spitting from torn cables, short bursts, no music",
+  "duration_secs": 2.48,
+  "credits": 8.3325
+ },
+ "hydraulic_L_v1.mp3": {
+  "generation_id": "9mtSx1QFx1gc9MBMCunN",
+  "session_id": "Rt8gbqxBj7zrzJHKlQmP",
+  "prompt": "Hydraulic fluid spraying from a ruptured high-pressure hose, sharp hiss and spatter, no music",
+  "duration_secs": 2.48,
+  "credits": 8.3325
+ },
+ "hydraulic_L_v2.mp3": {
+  "generation_id": "kNVIe5dvHInVYdDrOVq9",
+  "session_id": "hZuF7IwEunpgM3eQVyCx",
+  "prompt": "Hydraulic fluid spraying from a ruptured high-pressure hose, sharp hiss and spatter, no music",
+  "duration_secs": 2.48,
+  "credits": 8.3325
+ },
+ "crane_trolley_L_v1.mp3": {
+  "generation_id": "yCSPbS9itpB1NW54kIrs",
+  "session_id": "SSRkMaqY8WIR5sOYeROV",
+  "prompt": "Old overhead crane trolley rolling along a steel beam with a winch motor and creaking cables, no music",
+  "duration_secs": 6,
+  "credits": 19.998
+ },
+ "crane_trolley_L_v2.mp3": {
+  "generation_id": "4ah81hPl9gVFoFWny0RS",
+  "session_id": "sufCc5Klr5EtDfA918ju",
+  "prompt": "Old overhead crane trolley rolling along a steel beam with a winch motor and creaking cables, no music",
+  "duration_secs": 6,
+  "credits": 19.998
+ }
+}
