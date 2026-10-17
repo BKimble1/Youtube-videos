@@ -1,0 +1,4 @@
+# Audio stored as ordinary Git blobs (Git LFS uploads are unavailable in this environment), as in the other episodes.
+*.mp3 -filter -diff -merge -text
+*.wav -filter -diff -merge -text
+*.mp4 -filter -diff -merge -text

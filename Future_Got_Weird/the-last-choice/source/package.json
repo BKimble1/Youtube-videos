@@ -1,0 +1,33 @@
+{
+  "name": "future-got-weird-the-last-choice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "THE LAST CHOICE - Future Got Weird speculative short film (Remotion)",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "render:review": "remotion render src/index.ts LastChoice ../exports/FGW_TheLastChoice_R1_REVIEW_1080p.mp4 --props={\"audio\":\"mix\"} --crf=18 --x264-preset=medium --color-space=bt709 --audio-bitrate=320k",
+    "render:4k": "remotion render src/index.ts LastChoice4K ../exports/FGW_TheLastChoice_MASTER_4K.mp4 --props={\"audio\":\"mix\"} --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k --concurrency=2"
+  },
+  "dependencies": {
+    "@fontsource-variable/fredoka": "5.3.0",
+    "@fontsource-variable/nunito": "5.3.0",
+    "@fontsource-variable/source-serif-4": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@remotion/bundler": "4.0.533",
+    "@remotion/cli": "4.0.533",
+    "@remotion/media-utils": "4.0.533",
+    "@remotion/paths": "4.0.533",
+    "@remotion/renderer": "4.0.533",
+    "@remotion/shapes": "4.0.533",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.533",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.0",
+    "js-tiktoken": "1.0.21",
+    "typescript": "5.8.3"
+  }
+}

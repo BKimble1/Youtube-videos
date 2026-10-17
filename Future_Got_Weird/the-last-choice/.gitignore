@@ -1,0 +1,18 @@
+source/node_modules/
+source/.remotion/
+source/out/
+exports/*.mp4
+exports/*.wav
+qa/**/f[0-9]*.png
+qa/tmp/
+tools/__pycache__/
+audio/render/
+# The supplied commercial recordings and anything containing them stay out of this PUBLIC repository.
+# tools/fetch_music.sh re-downloads them from the film-audio-v1 release and extracts the audio.
+audio/source/
+audio/mix/
+production/music/*.wav
+source/public/audio/music/
+source/public/audio/mix*
+source/public/audio/*.wav
+source/public/audio/*.mp3
