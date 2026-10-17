@@ -16,7 +16,7 @@ export const EV = {
   disarmTear: 157.55, // the launcher is torn out of her hands
   launcherDrop: 158.1, // H1 throws it down
   // ---- D4-3 at the van (158.50–162.42)
-  tabletDrop: 159.45,
+  tabletDrop: 160.15,
   cablePull: 160.05, cablePullEnd: 160.95, // the tether pulls the cut length of cable off her reel
   flareDraw: 160.45, // the flare carrier draws his last flare
   dirLook: 160.85, // the Director looks round at them
@@ -53,6 +53,6 @@ export const EV = {
 
 /** Shot boundaries (film s). */
 export const SH = {
-  d41: M.P4, d42a: 154.5, d42b: 156.7, d43: 158.5, d44a: M.ARRIVAL, d44b: 163.62, d44c: 164.72, d44d: 165.62,
+  d41: M.P4, d41b: 152.6, d42a: 154.5, d42b: 156.7, d43: 158.5, d44a: M.ARRIVAL, d44b: 163.62, d44c: 164.72, d44d: 165.62,
   d45: M.LOCAL_WIN, d46a: M.REALIZE, d46b: 173.1, d47: 175.04, d48: M.STRIKE, d49a: M.SOFTEN, d49b: 180.8, d410: M.B184, end: M.FINAL_HIT,
 };

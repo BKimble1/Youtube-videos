@@ -15,7 +15,7 @@ import {groundH} from '../../world/ground';
 import {ARMY_B, HEAVIES_B, DRONES_B, heavySpecB, droneSpecB} from '../B/army';
 import {D1_ARMY_IDS} from '../D1/machines';
 import {G} from '../D1/motion';
-import {unitD2, NAMED, RESERVE_D2, heavy1, enemyDronesD2, EV2, GF, GUP, GIRDER_LEN} from './machines';
+import {unitD2, NAMED, RESERVE_D2, YIELD_NAMES, YIELD_IDS, heavy1, enemyDronesD2, EV2, GF, GUP, GIRDER_LEN} from './machines';
 import {directorAt, breakerAt, tetherAt, runnerAt, droneAt, flaresAt, decoyAt, CrewOut} from './crew';
 import {d2Fx, allyPose, girderShudder} from './fx';
 
@@ -34,7 +34,7 @@ export const crewAt = (role: Role, T: number): CrewOut => {
 };
 
 /** B's halted army minus the vanguard units D1 took (D2 animates those it continues itself) */
-const ARMY_REST: Formation = {slots: (T) => ARMY_B.slots(T).filter((sl) => !D1_ARMY_IDS.has(sl.id))};
+const ARMY_REST: Formation = {slots: (T) => ARMY_B.slots(T).filter((sl) => !D1_ARMY_IDS.has(sl.id) && !YIELD_IDS.has(sl.id))};
 
 /** the catch (KNOCKBACK → CATCH) and, after he is lowered, the breaker's hands on the runner's shoulders */
 const pairRunnerBreaker = (v: View, T: number, runner: FigSpec, brk: FigSpec): {runner: FigSpec; breaker: FigSpec} => {
@@ -117,6 +117,7 @@ export const d2Items = (v: View, T: number, o: D2Opts = {}): Item[] => {
   NAMED.forEach(draw);
   if (o.army !== false) {
     RESERVE_D2.forEach(draw);
+    YIELD_NAMES.forEach(draw);
     items.push(...armyItems(v, T, ARMY_REST, {ground: G, maxFull: 0, maxMid: 16, farFrom: 75, ctl: () => ({idle: 0.4})}));
     const h1 = heavy1(T);
     const l1 = lodOf(h1.gait ? h1.gait.path(h1.gait.dist).pos : h1.pos);

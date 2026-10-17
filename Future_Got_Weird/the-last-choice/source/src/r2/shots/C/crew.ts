@@ -164,7 +164,7 @@ const dirLooks = (T: number): [number, V3][] => [
 const plateLook = () => ({x: DIR_SPOT.x + 0.1, y: GC(DIR_SPOT.x, DIR_SPOT.z) + 1.0, z: DIR_SPOT.z + 0.25});
 /** the guard: low (B6's), D1's high guard on the build */
 const GUARD_LOW = {r: -28, u: 232, f: 78};
-const GUARD_MID = {r: -6, u: 268, f: 104};
+const GUARD_MID = {r: -34, u: 206, f: 80}; // (low at his side: from the low front camera a raised plate hides his face)
 
 export const directorC = (T: number, v?: View): CrewC => {
   const pts: Record<string, V3> = {};
@@ -197,6 +197,10 @@ export const directorC = (T: number, v?: View): CrewC => {
     const k = smooth((T - TD.pivot) / (TD.pivotEnd + 0.3 - TD.pivot));
     a = mixAim({yaw: 74, pitch: -3, twist: 16}, a, k);
   }
+  if (T > TB2.touch && T < TD.lookBack + 0.45) {
+    const k = win(T, TB2.touch, TD.lookBack + 0.45, 0.2, 0.4);
+    a = {...a, yaw: lerp(a.yaw, clamp(a.yaw, -50, 50), k), twist: lerp(a.twist, clamp(a.twist, -14, 14), k)};
+  }
   pose = layer(pose, {twist: a.twist, head: {yaw: a.yaw, pitch: a.pitch, roll: 0}});
   // face: the quiet (mouth closes), the sound (brows lift), the recognition (a breath through the mouth, brows soften)
   const heard = after(T, TD.heard, 0.3) * (1 - after(T, 40.6, 1.0));
@@ -223,7 +227,7 @@ export const directorC = (T: number, v?: View): CrewC => {
     pose.face = {...pose.face, mouth: 'flat', brows: -0.35};
   }
   // ---- C6: the build — weight down into the stance, the plate up into his guard
-  if (T > TD.turn) pose = blendPose(pose, layer(pose, {armL: {local: {r: -18, u: 262, f: 92}, pole: {r: -1, u: -0.6, f: 0}}, handR: 'fist', face: {mouth: 'flat', brows: -0.55}}), after(T, TD.turn, 0.6));
+  if (T > TD.turn) pose = blendPose(pose, layer(pose, {armL: {local: {r: -30, u: 214, f: 74}, pole: {r: -1, u: -0.5, f: -0.1}, palm: {r: -0.4, u: 0.1, f: -1}}, handR: 'fist', face: {mouth: 'flat', brows: -0.55}}), after(T, TD.turn, 0.6));
   const build = after(T, TD.step - 0.4, 1.4);
   if (build > 0) pose = blendPose(pose, layer(pose, {drop: 26, lean: 10, armL: {local: GUARD_MID, pole: {r: -1, u: -0.7, f: 0.1}, palm: {r: -0.55, u: 0.1, f: -1}}, handR: 'fist', armR: {local: {r: 50, u: 222, f: 66}}, face: {mouth: 'grit', brows: -0.6, squint: 0.2}}), build);
 
@@ -284,9 +288,8 @@ export const tetherC = (T: number, v?: View): CrewC => {
   // C5b: the left hand across to the reel on her right hip; a press — the lock clicks
   const reelW = win(T, TT.reel - 0.22, TT.reelOff + 0.25, 0.22, 0.25);
   const press = win(T, TT.click - 0.06, TT.click + 0.16, 0.05, 0.1);
-  if (reelW > 0) pose = blendPose(pose, layer(pose, {twist: 24, lean: 14, drop: 14, armL: {local: {r: 50, u: 170 - 14 + 6, f: 36 - 6 * press}, pole: {r: -0.4, u: -1, f: 0.6}}, handL: 'brace', head: {...pose.head, pitch: 30, yaw: -6}, face: {mouth: 'flat', brows: -0.4, lookY: 0.6}}), reelW);
-  // (the reaching arm crosses in front of her body to the far hip)
-  if (reelW > 0.2) pose.zArm = [45, undefined];
+  // (the launcher hand drops to the reel on the same hip; the heel of the hand presses the lock)
+  if (reelW > 0) pose = blendPose(pose, layer(pose, {lean: 10, drop: 12, armR: {local: {r: 78, u: 184 - 7 * press, f: 10}, pole: {r: 1, u: 0.2, f: -0.5}}, armL: {local: {r: -48, u: 150, f: 26}}, handL: 'relaxed', head: {...pose.head, pitch: 30, yaw: 30}, face: {mouth: 'flat', brows: -0.4, lookY: 0.6}}), reelW);
   // C6: launcher up, ready
   const ready = after(T, TT.turn + 0.3, 1.2);
   if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(8, 18, after(T, 57.5, 1.6)), lean: 8, armR: {local: {r: 32, u: 218, f: 84}}, armL: {local: {r: -32, u: 206, f: 56}}, handL: 'open', face: {mouth: 'flat', brows: -0.5}}), ready);
@@ -331,7 +334,7 @@ const vaultPelvis = (T: number): V3 => {
   const V = VAULT, P0 = add3(V.g0, {x: 0, y: (165 - 18) / 251.4, z: 0});
   return keyV([
     [TR.takeoff, P0],
-    [TR.hand, {x: lerp(V.g0.x, GRIP.x, 0.5), y: GRIP.y + 0.3, z: lerp(V.g0.z, GRIP.z, 0.5) + 0.08}, easeOut],
+    [TR.hand, {x: lerp(V.g0.x, GRIP.x, 0.42), y: GRIP.y + 0.3, z: lerp(V.g0.z, GRIP.z, 0.42) + 0.08}, (x: number) => x],
     [TR.over, {x: GRIP.x + 0.12, y: GRIP.y + 0.6, z: GRIP.z + 0.34}],
     [TR.release, {x: GRIP.x + 0.4, y: GRIP.y + 0.5, z: GRIP.z + 0.36}],
     [TR.land, {x: (V.land.x + V.land2.x) / 2 - 0.06, y: V.land.y + (165 - 30) / 251.4, z: (V.land.z + V.land2.z) / 2}, easeIn],

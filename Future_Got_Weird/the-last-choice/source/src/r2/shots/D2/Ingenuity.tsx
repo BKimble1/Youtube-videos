@@ -46,13 +46,12 @@ export const D2_2b: React.FC = () => {
   return <Stage T={T} cam={cam} lights={f.lights} shake={f.shake} drift={0.012} items={(v) => [...d2Items(v, T, {full: 28}), ...f.items]} />;
 };
 
-// ------------------------------------------------------------------ D2-3a (DECOY_HIT 99.50–100.70): strikes through the light
+// ------------------------------------------------------------------ D2-3a (DECOY_HITa/b 99.50–100.25): strikes through the light
 // Wide, low on the west rim south of the slab, looking east-north-east across the crater: a unit's fist goes through a
-// figure's leg (HITa), another hammers through one (HITb) as two drones dive through the giants' chests, and far beyond
-// the smoke heavy 1 fires into it (HITc): the blast inside the white wall.
+// figure's leg (HITa); another hammers through one (HITb) as two drones dive through the giants' chests.
 const D23a: CamKey[] = [
   {t: 0, pos: g(46.2, 8.4, 2.0), target: g(60.5, 0.6, 1.4), fov: 50},
-  {t: 100.7 - 99.5, pos: g(46.45, 8.2, 2.05), target: g(60.9, 0.3, 1.5), fov: 49},
+  {t: 100.25 - 99.5, pos: g(46.35, 8.28, 2.03), target: g(60.75, 0.4, 1.45), fov: 49},
 ];
 export const D2_3a: React.FC = () => {
   const {t, T} = useShotTime(M.DECOY_HITa);
@@ -61,17 +60,31 @@ export const D2_3a: React.FC = () => {
   return <Stage T={T} cam={cam} lights={f.lights} shake={f.shake} drift={0.014} items={(v) => [...d2Items(v, T, {full: 30}), ...f.items]} />;
 };
 
-// ------------------------------------------------------------------ D2-3b (100.70–102.20): the fist passes through the light
-// Medium, long lens from the crater's north-west slope: the blast's smoke still rolling, the unit at figure 2 swings
-// again (101.3) and its fist goes through the giant's leg — the light lies on its arm, the legs walk on; beyond, another
-// (101.45); the reserve runs in from the east rim; heavy 1 far beyond.
+// ------------------------------------------------------------------ D2-3b (DECOY_HITc 100.25–101.05): heavy 1 fires into the smoke
+// Medium, high over heavy 1's right shoulder among the main body's ranks: it strides up the north side, its launcher
+// swings onto the light far across the crater, fires (100.4, recoil); the round streaks west over the vanguard and
+// bursts inside the white wall among the giants' feet (100.6).
 const D23b: CamKey[] = [
-  {t: 0, pos: g(51.6, -3.6, 1.3), target: g(58.4, 1.0, 1.7), fov: 34},
-  {t: 102.2 - 100.7, pos: g(51.8, -3.45, 1.32), target: g(58.6, 1.1, 1.75), fov: 34},
+  {t: 0, pos: g(108.4, -7.0, 7.0), target: g(73.6, -16.0, 1.0), fov: 38},
+  {t: 101.05 - 100.25, pos: g(108.1, -7.25, 6.9), target: g(72.4, -15.4, 0.8), fov: 37},
 ];
 export const D2_3b: React.FC = () => {
-  const {t, T} = useShotTime(100.7);
+  const {t, T} = useShotTime(100.25);
   const cam = camPath(D23b, t, 0.5);
   const f = d2FxAt(T);
   return <Stage T={T} cam={cam} lights={f.lights} shake={f.shake} drift={0.018} items={(v) => [...d2Items(v, T, {full: 22}), ...f.items]} />;
+};
+
+// ------------------------------------------------------------------ D2-3c (101.05–102.20): the light walks on
+// Closer, from the west rim: the blast's smoke rolling through the white wall, the giant figures walk on unharmed; the
+// units swing at them again (101.3, 101.45) and the reserve runs in from the east rim.
+const D23c: CamKey[] = [
+  {t: 0, pos: g(48.6, 6.9, 1.6), target: g(58.4, 0.6, 1.9), fov: 40},
+  {t: 102.2 - 101.05, pos: g(48.85, 6.7, 1.62), target: g(58.6, 0.4, 1.95), fov: 40},
+];
+export const D2_3c: React.FC = () => {
+  const {t, T} = useShotTime(101.05);
+  const cam = camPath(D23c, t, 0.5);
+  const f = d2FxAt(T);
+  return <Stage T={T} cam={cam} lights={f.lights} shake={f.shake} drift={0.016} items={(v) => [...d2Items(v, T, {full: 26}), ...f.items]} />;
 };

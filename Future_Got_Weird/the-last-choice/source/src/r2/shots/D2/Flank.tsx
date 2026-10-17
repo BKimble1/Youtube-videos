@@ -10,13 +10,13 @@ import {G} from '../D1/motion';
 const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
 
 // ------------------------------------------------------------------ D2-4 (FLANK 102.20–105.84)
-// Low three-quarter along the girder from its low end: the Crew crouched at the rim crest under the truss; they break
-// from cover and hit the distracted units from behind — the breaker's knee strike, the Director's plate into A's back,
-// the runner's pry and rip. The light figures walk on in the smoke beyond.
+// Low three-quarter from the crater's west slope, the girder across the top of the frame: the two units watch the light
+// (their backs to the girder); the Crew come off the crest along the girder and hit them from behind — the breaker's
+// knee strike, the Director's plate into A's back, the runner's pry and rip; then they fall back past the lens.
 const D24: CamKey[] = [
-  {t: 0, pos: g(45.7, -10.2, 0.9), target: g(54.2, -8.3, 2.6), fov: 48},
-  {t: 1.4, pos: g(45.95, -10.1, 0.9), target: g(54.6, -8.1, 2.3), fov: 47},
-  {t: M.TETHER - M.FLANK, pos: g(46.3, -9.95, 0.92), target: g(54.6, -7.6, 2.0), fov: 47},
+  {t: 0, pos: g(49.35, -2.3, 1.3), target: g(53.6, -8.6, 2.3), fov: 50},
+  {t: 1.5, pos: g(49.5, -2.4, 1.3), target: g(53.9, -8.5, 2.15), fov: 49},
+  {t: M.TETHER - M.FLANK, pos: g(49.7, -2.6, 1.32), target: g(53.8, -8.4, 2.0), fov: 49},
 ];
 export const D2_4: React.FC = () => {
   const {t, T} = useShotTime(M.FLANK);

@@ -127,13 +127,13 @@ export const d4Fx = (T: number): FxOut => {
   }
   // ---- D4-8 THE STRIKE: the ram meets the plate, the plate shatters; he is thrown into the slab
   if (T > EV.strike - 0.1 && T < EV.strike + 4) {
-    out.push(plateHit({at: STRIKE_PLATE, normal: {x: 0.9, y: 0.25, z: -0.2}, t: T, t0: EV.strike, key: 'd4strike', stage: 'shatter', ground: ground(STRIKE_PLATE), seed: 201}));
+    out.push(plateHit({at: STRIKE_PLATE, normal: {x: 0.15, y: 0.75, z: -0.65}, t: T, t0: EV.strike, key: 'd4strike', stage: 'shatter', ground: ground(STRIKE_PLATE), seed: 201}));
     out.push(fx(flash3({at: STRIKE_PLATE, t: T, t0: EV.strike, key: 'd4strfl', r: 0.9, dur: 0.1, color: '#FFF6DE'}), T < EV.strike + 0.12 ? [{pos: add3(STRIKE_PLATE, {x: 0.4, y: 0.2, z: 0}), color: '#FFE9C0', power: 1.6, radius: 7}] : []));
     out.push(fx(ring3({at: STRIKE_PLATE, normal: {x: 1, y: 0.1, z: 0}, t: T, t0: EV.strike, key: 'd4strr', r0: 0.15, speed: 9, dur: 0.2, width: 0.07})));
     out.push(fx([], [], shakeAt(T, EV.strike, 0.2, 5)));
     // the slab: his back slams into it — concrete dust and grit off its face
     const back = {x: SLAM.x - 0.25, y: G(SLAM.x, SLAM.z) + 1.1, z: SLAM.z - 0.05};
-    out.push(impact({at: back, normal: {x: 0.85, y: 0.3, z: 0.4}, t: T, t0: EV.slam, key: 'd4slam', strength: 0.9, material: 'concrete', ground: ground(back), seed: 211}));
+    out.push(impact({at: back, normal: {x: -0.2, y: 0.9, z: -0.4}, t: T, t0: EV.slam, key: 'd4slam', strength: 0.45, material: 'concrete', ground: ground(back), seed: 211}));
     out.push(fx([], [], shakeAt(T, EV.slam, 0.07)));
     // his feet scrape in front of the slab as they come down
     out.push(bodyDust(T, {x: SLAM.x + 0.15, y: 0, z: SLAM.z}, EV.slam + 0.03, 'd4slf', 213, 0.8));

@@ -156,21 +156,27 @@ const flinch = (T: number, t0: number, k = 1): Pose => {
 
 // ================================================================== THE DIRECTOR (clerkC, plate on the left forearm)
 const D0 = sp('director');
-export const DIR_GUARD_AT = {x: 49.6, z: -3.7};
+export const DIR_GUARD_AT = {x: 49.0, z: -8.5};
+export const DIR_PILE = {x: 49.5, z: -8.95};
 export const DIR_BASH_A = {x: 54.03, z: -8.1}; // standing at A's back-right as the plate lands (EV2.bash)
 const DIR_HOLD = {x: 48.6, z: -10.35};
-const DIR_COUNTER = {x: 49.92, z: -5.02}; // at D's left side as the plate lands (EV2.counter)
+/** at D's right side as the plate lands (EV2.counter): he comes in from the wreck pile at the girder */
+export const DIR_COUNTER = {x: 50.83, z: -6.21};
+export const DIR_END = {x: 50.25, z: -7.7};
 const DIR_SEGS: Seg[] = [
   {kind: 'stand', root: [[94.3, D0.x, D0.z, 270], [97.8, D0.x, D0.z, 270], [98.1, D0.x - 0.05, D0.z - 0.2, 315]]},
   {kind: 'run', path: [{x: D0.x - 0.05, z: D0.z - 0.2}, {x: 45.45, z: 1.3}, {x: 45.4, z: -3.4}, {x: 45.65, z: -6.8}, {x: 47.5, z: -8.9}, DIR_HOLD], T0: 98.42, T1: 101.1, gait: GAITS.crouch, A: 0.7, D: 0.7},
-  {kind: 'stand', root: [[101.1, DIR_HOLD.x, DIR_HOLD.z, 135], [101.2, DIR_HOLD.x, DIR_HOLD.z, 108], [102.2, DIR_HOLD.x, DIR_HOLD.z, 102]]},
+  {kind: 'stand', root: [[101.1, DIR_HOLD.x, DIR_HOLD.z, 135], [101.6, DIR_HOLD.x, DIR_HOLD.z, 108], [102.2, DIR_HOLD.x, DIR_HOLD.z, 102]]},
   {kind: 'run', path: [DIR_HOLD, {x: 52.0, z: -9.85}, DIR_BASH_A], T0: 102.22, T1: EV2.bash, gait: GAITS.dir, A: 0.5, D: 0.18},
-  {kind: 'stand', root: [[EV2.bash, DIR_BASH_A.x, DIR_BASH_A.z, 131], [EV2.bash + 0.35, DIR_BASH_A.x - 0.12, DIR_BASH_A.z - 0.04, 131], [104.6, DIR_BASH_A.x - 0.12, DIR_BASH_A.z - 0.04, 150]]},
-  {kind: 'run', path: [{x: DIR_BASH_A.x - 0.12, z: DIR_BASH_A.z - 0.04}, {x: 54.3, z: -6.6}, {x: 52.2, z: -5.3}, DIR_GUARD_AT], T0: 104.62, T1: 106.3, gait: GAITS.run, A: 0.5, D: 0.55},
-  {kind: 'stand', root: [[106.3, DIR_GUARD_AT.x, DIR_GUARD_AT.z, 265], [106.75, DIR_GUARD_AT.x, DIR_GUARD_AT.z, 105], [108.6, DIR_GUARD_AT.x, DIR_GUARD_AT.z, 100],
-    [109.3, DIR_GUARD_AT.x + 0.05, DIR_GUARD_AT.z + 0.05, 112], [113.3, DIR_GUARD_AT.x + 0.05, DIR_GUARD_AT.z + 0.05, 112],
-    [113.75, lerp(DIR_GUARD_AT.x, DIR_COUNTER.x, 0.55), lerp(DIR_GUARD_AT.z, DIR_COUNTER.z, 0.55), 60], [EV2.counter, DIR_COUNTER.x, DIR_COUNTER.z, 35],
-    [114.6, DIR_COUNTER.x - 0.1, DIR_COUNTER.z + 0.05, 38], [115.35, 49.55, -5.3, 75], [116.92, 49.55, -5.3, 80]], stag: 0.16},
+  {kind: 'stand', root: [[EV2.bash, DIR_BASH_A.x, DIR_BASH_A.z, 131], [EV2.bash + 0.35, DIR_BASH_A.x - 0.12, DIR_BASH_A.z - 0.04, 131], [104.5, DIR_BASH_A.x - 0.12, DIR_BASH_A.z - 0.04, 255]]},
+  // back along the girder's foot (north of the slope's pipe and B) to the crest, facing the two that come on
+  {kind: 'run', path: [{x: DIR_BASH_A.x - 0.12, z: DIR_BASH_A.z - 0.04}, {x: 52.0, z: -9.65}, {x: 50.2, z: -9.2}, DIR_GUARD_AT], T0: 104.55, T1: 105.75, gait: GAITS.run, A: 0.4, D: 0.5},
+  {kind: 'stand', root: [[105.75, DIR_GUARD_AT.x, DIR_GUARD_AT.z, 280], [106.25, DIR_GUARD_AT.x, DIR_GUARD_AT.z, 100], [108.35, DIR_GUARD_AT.x, DIR_GUARD_AT.z, 100],
+    // after the crash: to the wreck pile, plate up, making sure; then he turns on D
+    [108.95, DIR_PILE.x, DIR_PILE.z, 75], [112.9, DIR_PILE.x, DIR_PILE.z, 75], [113.2, DIR_PILE.x + 0.05, DIR_PILE.z + 0.1, 150]], stag: 0.16},
+  {kind: 'run', path: [{x: DIR_PILE.x + 0.05, z: DIR_PILE.z + 0.1}, {x: 50.4, z: -7.65}, DIR_COUNTER], T0: 113.25, T1: EV2.counter, gait: GAITS.dir, A: 0.35, D: 0.15},
+  {kind: 'stand', root: [[EV2.counter, DIR_COUNTER.x, DIR_COUNTER.z, 136], [EV2.counter + 0.4, DIR_COUNTER.x + 0.05, DIR_COUNTER.z - 0.1, 136],
+    [115.2, DIR_COUNTER.x + 0.05, DIR_COUNTER.z - 0.1, 140], [115.9, DIR_END.x, DIR_END.z, 95], [116.92, DIR_END.x, DIR_END.z, 95]], stag: 0.16},
 ];
 const GUARD = {r: 6, u: 345, f: 112};
 const plateFromGuard = (b: {pos: V3; heading: number}, g: {r: number; u: number; f: number}): V3 => {
@@ -224,8 +230,8 @@ export const directorAt = (T: number): CrewOut => {
   // eyes
   const a = unitAttach(unitD2('A', T));
   const tgt = T < 95.6 ? at3(46.75, 5.3, 1.5) : T < 97.75 ? at3(47.3, 2.9, 4.4) : T < 98.25 ? at3(46.5, -6, 1.2) : T < 100.6 ? at3(46.5, -8.5, 1.0) : T < 104.7 ? a.backPlate
-    : T < 106.3 ? at3(52.5, -6.0, 1.2) : T < 108.4 ? unitAttach(unitD2('A', Math.min(T, EV2.crash))).head : T < 113.4 ? at3(50.6, -5.8, 1.6) : T < EV2.counter + 0.5 ? unitAttach(unitD2('D', T)).chest
-    : T < 115.6 ? at3(50.8, -6.8, 0.6) : at3(48.6, -7.0, 1.0);
+    : T < 106.3 ? at3(54.5, -8.6, 1.5) : T < 108.4 ? unitAttach(unitD2('A', Math.min(T, EV2.crash))).head : T < 110.4 ? at3(50.4, -9.9, 0.6) : T < 112.95 ? (T < 111.6 ? at3(49.4, -6.7, 1.1) : at3(50.4, -9.9, 0.6)) : T < EV2.counter + 0.5 ? unitAttach(unitD2('D', T)).chest
+    : T < 115.6 ? at3(50.2, -5.4, 0.5) : at3(49.2, -6.9, 1.0);
   const ph = pose.head ?? {};
   pose = layer(pose, {head: {yaw: lerp(lookYaw(b, tgt, 75), ph.yaw ?? 0, chg * 0.7), pitch: lerp(lookPitch(b, tgt), ph.pitch ?? 0, chg * 0.7), roll: 0}});
   const guardOn = (1 - kneel) * (1 - chg) * (1 - sig) * (1 - bright);
@@ -347,9 +353,9 @@ const RUN_SEGS: Seg[] = [
   {kind: 'stand', root: [[94.3, R0.x, R0.z, 270], [97.92, R0.x, R0.z, 270], [98.14, R0.x - 0.1, R0.z - 0.15, 320]]},
   {kind: 'run', path: [{x: R0.x - 0.1, z: R0.z - 0.15}, {x: 45.45, z: -0.6}, {x: 45.4, z: -3.6}, {x: 45.7, z: -6.8}, {x: 48.0, z: -8.5}, RUN_HOLD], T0: 98.16, T1: 100.7, gait: GAITS.crouch, A: 0.6, D: 0.7},
   {kind: 'stand', root: [[100.7, RUN_HOLD.x, RUN_HOLD.z, 120], [101.2, RUN_HOLD.x, RUN_HOLD.z, 112], [102.38, RUN_HOLD.x, RUN_HOLD.z, 108]]},
-  {kind: 'run', path: [RUN_HOLD, {x: 50.9, z: -8.6}, RUN_PRY], T0: 102.4, T1: 103.42, gait: GAITS.dash, A: 0.4, D: 0.4},
-  {kind: 'stand', root: [[103.42, RUN_PRY.x, RUN_PRY.z, 0], [103.7, RUN_PRY.x, RUN_PRY.z, headingTo(RUN_PRY, B_FL) - 6], [104.98, RUN_PRY.x, RUN_PRY.z, headingTo(RUN_PRY, B_FL) - 6], [105.16, RUN_PRY.x - 0.08, RUN_PRY.z + 0.05, 232]], stag: 0.12},
-  {kind: 'run', path: [{x: RUN_PRY.x - 0.08, z: RUN_PRY.z + 0.05}, {x: 50.9, z: -6.75}, RUN_GUARD], T0: 105.18, T1: 105.98, gait: GAITS.run, A: 0.35, D: 0.4},
+  {kind: 'run', path: [RUN_HOLD, {x: 50.9, z: -8.6}, RUN_PRY], T0: 102.55, T1: 103.5, gait: GAITS.dash, A: 0.4, D: 0.4},
+  {kind: 'stand', root: [[103.5, RUN_PRY.x, RUN_PRY.z, 0], [103.7, RUN_PRY.x, RUN_PRY.z, headingTo(RUN_PRY, B_FL) - 6], [104.98, RUN_PRY.x, RUN_PRY.z, headingTo(RUN_PRY, B_FL) - 6], [105.16, RUN_PRY.x - 0.08, RUN_PRY.z + 0.05, 232]], stag: 0.12},
+  {kind: 'run', path: [{x: RUN_PRY.x - 0.08, z: RUN_PRY.z + 0.05}, {x: 50.3, z: -6.75}, RUN_GUARD], T0: 105.18, T1: 105.98, gait: GAITS.run, A: 0.35, D: 0.4},
   {kind: 'stand', root: [[105.98, RUN_GUARD.x, RUN_GUARD.z, 230], [106.45, RUN_GUARD.x, RUN_GUARD.z, RUN_GUARD.h], [EV2.knock, RUN_GUARD.x, RUN_GUARD.z, RUN_GUARD.h]], stag: 0.14},
   {kind: 'fn', T0: EV2.knock, at: (T) => runnerFlight(T)},
 ];
@@ -524,10 +530,10 @@ export const clampTarget = (T: number): V3 => unitAttach(unitD2('A', T)).chest;
 
 // ================================================================== THE DRONE PILOT (checker)
 const P0 = sp('drone');
-export const PILOT_AT = {x: 46.35, z: -6.2};
+export const PILOT_AT = {x: 46.0, z: -5.0};
 const DRN_SEGS: Seg[] = [
   {kind: 'stand', root: [[94.3, P0.x, P0.z, 250], [103.75, P0.x, P0.z, 250], [104.05, P0.x + 0.05, P0.z - 0.15, 330]]},
-  {kind: 'run', path: [{x: P0.x + 0.05, z: P0.z - 0.15}, {x: 45.8, z: 5.6}, {x: 45.3, z: 3.0}, {x: 45.3, z: -1.5}, {x: 46.6, z: -4.6}, PILOT_AT], T0: 104.08, T1: 106.75, gait: GAITS.jog, A: 0.6, D: 0.7},
+  {kind: 'run', path: [{x: P0.x + 0.05, z: P0.z - 0.15}, {x: 45.8, z: 5.6}, {x: 45.3, z: 3.0}, {x: 45.3, z: -1.5}, {x: 45.6, z: -3.8}, PILOT_AT], T0: 104.08, T1: 106.75, gait: GAITS.jog, A: 0.6, D: 0.7},
   {kind: 'stand', root: [[106.75, PILOT_AT.x, PILOT_AT.z, 140], [107.2, PILOT_AT.x, PILOT_AT.z, 100], [116.92, PILOT_AT.x, PILOT_AT.z, 100]], stag: 0.08},
 ];
 export const droneAt = (T: number, allyPos: V3): CrewOut => {
@@ -556,11 +562,11 @@ export const droneAt = (T: number, allyPos: V3): CrewOut => {
 // ================================================================== THE FLARE CARRIER (host)
 const F0 = sp('flares');
 const FLR_SPOT = {x: F0.x + 0.1, z: F0.z - 0.05};
-export const FLR_END = {x: 47.6, z: -3.9};
+export const FLR_END = {x: 47.9, z: -3.1};
 const FLR_SEGS: Seg[] = [
-  {kind: 'stand', root: [[94.3, F0.x, F0.z, 270], [94.42, F0.x, F0.z, 270], [94.74, FLR_SPOT.x, FLR_SPOT.z, 72], [95.32, FLR_SPOT.x, FLR_SPOT.z, 72], [95.9, FLR_SPOT.x, FLR_SPOT.z + 0.05, 60], [112.9, FLR_SPOT.x, FLR_SPOT.z + 0.05, 60], [113.1, FLR_SPOT.x - 0.1, FLR_SPOT.z - 0.1, 335]], stag: 0.12},
-  {kind: 'run', path: [{x: FLR_SPOT.x - 0.1, z: FLR_SPOT.z - 0.1}, {x: 45.9, z: 3.2}, {x: 45.5, z: -0.5}, {x: 46.3, z: -2.9}, FLR_END], T0: 113.12, T1: 115.6, gait: GAITS.jog, A: 0.6, D: 0.7},
-  {kind: 'stand', root: [[115.6, FLR_END.x, FLR_END.z, 120], [116.2, FLR_END.x, FLR_END.z, 95], [116.92, FLR_END.x, FLR_END.z, 95]]},
+  {kind: 'stand', root: [[94.3, F0.x, F0.z, 270], [94.42, F0.x, F0.z, 270], [94.74, FLR_SPOT.x, FLR_SPOT.z, 72], [95.32, FLR_SPOT.x, FLR_SPOT.z, 72], [95.9, FLR_SPOT.x, FLR_SPOT.z + 0.05, 60], [113.0, FLR_SPOT.x, FLR_SPOT.z + 0.05, 60], [113.22, FLR_SPOT.x - 0.1, FLR_SPOT.z - 0.1, 345]], stag: 0.12},
+  {kind: 'run', path: [{x: FLR_SPOT.x - 0.1, z: FLR_SPOT.z - 0.1}, {x: 46.3, z: 3.2}, {x: 46.15, z: -0.5}, {x: 46.9, z: -2.4}, FLR_END], T0: 113.25, T1: 115.85, gait: GAITS.jog, A: 0.6, D: 0.7},
+  {kind: 'stand', root: [[115.85, FLR_END.x, FLR_END.z, 120], [116.35, FLR_END.x, FLR_END.z, 95], [116.92, FLR_END.x, FLR_END.z, 95]]},
 ];
 /** one canister throw: k (THROW's keys: 0.4 wind, 0.62 release, 0.8 follow) mapped around a release time */
 const throwK = (T: number, rel: number) => {
@@ -573,7 +579,7 @@ export const flaresAt = (T: number): CrewOut => {
   const b = bodyAt(FLR_SEGS, T);
   let pose: Pose = layer(BRACED({wide: 0.75, fists: false}), {face: {mouth: 'flat', brows: -0.5}});
   // up off the knee for the throws, back down after; up again to run at 113
-  const kneel = (1 - ramp(T, 94.42, 94.7)) + ramp(T, 95.45, 95.95) - ramp(T, 112.85, 113.1);
+  const kneel = (1 - ramp(T, 94.42, 94.7)) + ramp(T, 95.45, 95.95) - ramp(T, 112.95, 113.2);
   if (kneel > 0) pose = blendPose(pose, layer(KNEEL('R'), {drop: 80, face: {mouth: 'pant'}}), clamp(kneel));
   kneelFeet(b, 'R', clamp(kneel));
   // draw from the bag at his left hip (cross draw), the pin pulled by the left hand, the throw (×2)
@@ -604,14 +610,14 @@ export const canisterFrom = (i: 0 | 1): V3 => flaresAt(i === 0 ? EV2.rel1 : EV2.
 const B0 = sp('decoy');
 const DEC_UP = {x: 46.94, z: 4.36};
 const DEC_KNEEL = {x: 46.8, z: 4.45};
-export const DEC_END = {x: 46.5, z: -4.6};
+export const DEC_END = {x: 46.9, z: -3.8};
 /** the tablet set on the slab's top edge (its bottom edge rests there; the clip-on projector on its top edge) */
 export const TABLET_AT: V3 = {x: 47.27, y: 2.94, z: 4.18};
 export const LENS_AT: V3 = {x: 47.33, y: 3.04, z: 4.16};
 const DEC_SEGS: Seg[] = [
   {kind: 'stand', root: [[94.3, B0.x, B0.z, 270], [97.42, B0.x, B0.z, 270], [97.64, DEC_UP.x, DEC_UP.z, 88], [97.95, DEC_UP.x, DEC_UP.z, 88], [98.35, DEC_KNEEL.x, DEC_KNEEL.z, 75],
     [112.32, DEC_KNEEL.x, DEC_KNEEL.z, 75], [112.55, DEC_UP.x, DEC_UP.z, 88], [112.8, DEC_UP.x, DEC_UP.z, 88], [112.98, DEC_UP.x - 0.1, DEC_UP.z - 0.1, 330]], stag: 0.06},
-  {kind: 'run', path: [{x: DEC_UP.x - 0.1, z: DEC_UP.z - 0.1}, {x: 45.8, z: 2.4}, {x: 45.4, z: -1.0}, DEC_END], T0: 113.0, T1: 115.5, gait: GAITS.jog, A: 0.6, D: 0.7},
+  {kind: 'run', path: [{x: DEC_UP.x - 0.1, z: DEC_UP.z - 0.1}, {x: 45.6, z: 2.4}, {x: 45.25, z: -1.0}, DEC_END], T0: 113.0, T1: 115.5, gait: GAITS.jog, A: 0.6, D: 0.7},
   {kind: 'stand', root: [[115.5, DEC_END.x, DEC_END.z, 140], [116.1, DEC_END.x, DEC_END.z, 80], [116.92, DEC_END.x, DEC_END.z, 80]]},
 ];
 /** the tablet is in her hands before EV2.place and after it is taken down (112.55) */

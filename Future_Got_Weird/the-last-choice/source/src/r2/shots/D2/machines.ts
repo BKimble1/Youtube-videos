@@ -22,7 +22,7 @@ import {V3, clamp, smooth, lerp, add3, sub3, mul3, norm3, len3, rnd, easeIn, eas
 import {M} from '../../timing';
 import {XZ, KR, KP, G, keyRoot, footAt, autoSteps, runDist, runSpeed, cruise, linePath, pathLen, fwdOf, rightOf, headingTo, wrapD, win, after} from '../D1/motion';
 import {unitD1, enemyDrones} from '../D1/machines';
-import {HEAVIES_B, restD} from '../B/army';
+import {HEAVIES_B, restD, armyUnits} from '../B/army';
 
 const ground = G;
 const lerp3s = (a: V3, b: V3, k: number): V3 => ({x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), z: lerp(a.z, b.z, k)});
@@ -75,7 +75,7 @@ export const POST3 = postSouth(3);
 export const ANCHOR: V3 = postSouth(3, 0.42);
 
 // ------------------------------------------------------------------ the smoke and the decoy (geometry only)
-export const CAN_TO: [XZ, XZ] = [{x: 55.7, z: -3.3}, {x: 59.0, z: 1.6}];
+export const CAN_TO: [XZ, XZ] = [{x: 56.4, z: -2.6}, {x: 59.0, z: 1.6}];
 /** the light figures' plane: walking south-east across the crater, the plane facing the projector (south-west) */
 export const DECOY = {
   center: on({x: 57.4, z: -0.9}, 3.0) as V3,
@@ -303,9 +303,9 @@ const A_PLAN: Plan = {
 };
 
 // ---- B (D1's U7): out from under the girder to watch the light; knee broken, back plate pried, cables ripped
-export const B_FL = {x: 52.75, z: -7.15, h: 152};
-const B_WALK: Walk = {kind: 'walk', pts: [{x: 55.0, z: -12.4}, {x: 54.1, z: -10.0}, {x: B_FL.x + 0.1, z: B_FL.z - 0.35}], T0: 98.3, T1: 100.4, stride: 1.5, A: 0.6, D: 0.7};
-const bStand: Stand = {kind: 'stand', root: [[100.4, B_FL.x + 0.1, B_FL.z - 0.35, 0], [101.0, B_FL.x + 0.1, B_FL.z - 0.35, B_FL.h], [101.6, B_FL.x, B_FL.z, B_FL.h]], stepLen: 0.5};
+export const B_FL = {x: 51.6, z: -6.6, h: 150};
+const B_WALK: Walk = {kind: 'walk', pts: [{x: 55.0, z: -12.4}, {x: 51.0, z: -10.0}, {x: B_FL.x + 0.1, z: B_FL.z - 0.35}], T0: 98.3, T1: 100.55, stride: 1.5, A: 0.6, D: 0.7};
+const bStand: Stand = {kind: 'stand', root: [[100.55, B_FL.x + 0.1, B_FL.z - 0.35, 0], [101.0, B_FL.x + 0.1, B_FL.z - 0.35, B_FL.h], [101.6, B_FL.x, B_FL.z, B_FL.h]], stepLen: 0.5};
 (() => {
   // the root's first heading = the walk's arrival heading
   const w = walkAt(B_WALK, B_WALK.T1);
@@ -338,7 +338,8 @@ const B_PLAN: Plan = {
       armR: T > EV2.knee + 0.25 && T < EV2.pryPop ? {hand: {x: B_FL.x + hdir(B_FL.h).x * 0.12 + rightOf(B_FL.h).x * 0.26, y: G(B_FL.x, B_FL.z) + 0.62, z: B_FL.z + hdir(B_FL.h).z * 0.12 + rightOf(B_FL.h).z * 0.26}} : undefined,
       hits: [{t0: BLAST_HIT, dir: {x: -0.6, y: 0, z: -0.8}, strength: 0.25}, {t0: EV2.knee, dir: {x: 0.5, y: 0, z: 0.85}, strength: 0.9}, {t0: EV2.pryPop, dir: {x: -0.6, y: 0, z: -0.75}, strength: 0.6}, {t0: EV2.rip, dir: {x: 0.6, y: 0, z: 0.7}, strength: 0.5}],
       damage: {back: {t0: EV2.pryPop, dir: {x: -0.55, y: 0.85, z: -0.4}, speed: 3.2}, dead: {t0: EV2.rip + 0.06}, leak: {t0: EV2.rip}},
-      fall: {t0: 105.55, dir: hdir(B_FL.h), ang: restAng(B_FL, hdir(B_FL.h))},
+      // it topples forward and to its left, down the slope (clear of the pipe's end and the crest)
+      fall: {t0: 105.55, dir: hdir(125), ang: restAng(B_FL, hdir(125))},
     };
   },
 };
@@ -372,11 +373,11 @@ const C_PLAN: Plan = {
 
 // ---- D (D1's U6): strikes the light; comes up the slope; backhands the runner; its blow on the drone; bashed down
 const D_HIT = besideFig(2, EV2.hitB, 1.0, -0.25);
-export const D_UP = {x: 51.15, z: -5.35, h: 304};
-const D_STEP = {x: 50.5, z: -5.82};
+export const D_UP = {x: 50.85, z: -5.05, h: 320};
+const D_STEP = {x: 50.15, z: -5.55};
 const D_IN: Walk = {kind: 'walk', pts: [{x: 54.2, z: 8.0}, {x: 55.3, z: 4.4}, {x: D_HIT.x, z: D_HIT.z}], T0: 97.45, T1: 99.45, stride: 1.6, A: 0.6, D: 0.6};
 const D_HIT2 = besideFig(2, 101.3, 1.0, -0.25);
-const D_UPW: Walk = {kind: 'walk', pts: [{x: D_HIT2.x, z: D_HIT2.z}, {x: 54.6, z: -3.6}, {x: 52.4, z: -4.7}, {x: D_UP.x, z: D_UP.z}], T0: 107.45, T1: 110.15, stride: 1.7, A: 0.6, D: 0.7};
+const D_UPW: Walk = {kind: 'walk', pts: [{x: D_HIT2.x, z: D_HIT2.z}, {x: 54.6, z: -3.4}, {x: 52.7, z: -3.9}, {x: D_UP.x, z: D_UP.z}], T0: 107.45, T1: 110.15, stride: 1.7, A: 0.6, D: 0.7};
 /** the backhand: D's right hand sweeps across its body and out into the runner's left shoulder at KNOCKBACK */
 export const dBackhand = (T: number, target: V3): {hand: V3; open: boolean} | undefined => {
   if (T < 109.85 || T > 111.3) return undefined;
@@ -419,10 +420,11 @@ const D_PLAN: Plan = {
         {t0: BLAST_HIT, dir: norm3(sub3(on(D_HIT), BLAST_AT)), strength: 0.6},
         {t0: EV2.knock + 0.02, dir: {x: -0.4, y: 0, z: -0.9}, strength: 0.3},
         {t0: EV2.shield + 0.02, dir: {x: 0.85, y: 0, z: 0.5}, strength: 0.6},
-        {t0: EV2.counter, dir: {x: 0.55, y: 0, z: -0.83}, strength: 1.7},
+        {t0: EV2.counter, dir: {x: -0.72, y: 0, z: 0.69}, strength: 1.7},
       ],
-      damage: {dent: {t0: EV2.counter, deg: 11}, chest: {t0: EV2.counter + 0.02, dir: {x: 0.5, y: 0.7, z: -0.5}, speed: 3.0}, leak: {t0: EV2.counter + 0.1}, dead: {t0: 115.0}},
-      fall: {t0: EV2.counter + 0.16, dir: {x: 0.5, y: 0, z: -0.87}, ang: restAng(D_STEP, {x: 0.5, z: -0.87})},
+      damage: {dent: {t0: EV2.counter, deg: -11}, pauldronR: {t0: EV2.counter + 0.02, dir: {x: -0.3, y: 0.7, z: 0.6}, speed: 3.0}, leak: {t0: EV2.counter + 0.1}, dead: {t0: 115.0}},
+      // the plate lands on its right side: it is driven over to its left, down onto the crest's slope
+      fall: {t0: EV2.counter + 0.16, dir: {x: -0.72, y: 0, z: 0.69}, ang: restAng(D_STEP, {x: -0.72, z: 0.69})},
     };
   },
 };
@@ -489,8 +491,8 @@ const resPlan = (r: (typeof RES)[number]): Plan => {
 
 const PLANS: Record<string, Plan> = {A: A_PLAN, B: B_PLAN, C: C_PLAN, D: D_PLAN, U8: U8_PLAN};
 RES.forEach((r) => (PLANS[r.name] = resPlan(r)));
-PLANS.R1 = {id: 8111, key: 'd2R1', phases: [{kind: 'd1', name: 'R1'}], act: (T) => (T > 96.2 ? {look: smokeC} : {})};
-export const UNIT_NAMES = Object.keys(PLANS);
+// R1 holds the north-east rim, then steps out of heavy 1's way as it comes along the north side
+PLANS.R1 = {id: 8111, key: 'd2R1', phases: [{kind: 'd1', name: 'R1'}, {kind: 'stand', root: [[107.6, 81.0, -11.93, 270], [108.0, 81.0, -11.93, 205], [109.3, 80.1, -10.1, 205], [110.1, 80.1, -10.1, 285]], stepLen: 0.6}], act: (T) => (T > 96.2 ? {look: T > 107.4 && T < 109.6 ? add3(heavy1(T).pos, {x: 0, y: 3.5, z: 0}) : smokeC} : {})};
 /** the units whose contacts the close shots show (full meshes nearer than the army) */
 export const NAMED = ['A', 'B', 'C', 'D', 'U8'];
 export const RESERVE_D2 = ['R1', 'R3', 'R4', 'R5', 'R6', 'R7'];
@@ -501,7 +503,11 @@ export const unitD2 = (name: string, T: number): UnitSpec => run(PLANS[name], T)
 const BLAST_HIT = EV2.blast + 0.06;
 
 // ------------------------------------------------------------------ heavy 1 (HEAVIES_B[0], id 3101)
-const HV_PTS: XZ[] = [{x: 104, z: -1}, {x: 93, z: -0.8}, {x: 80, z: 0.6}, {x: 70, z: -1.6}, {x: 63, z: -4.2}];
+// B's main body stands packed round it, the vanguard's six ranks fill the avenue to the east rim: it goes up the north
+// sidewalk (four main-body units step aside for it), turns west along it past the vanguard's flank, and comes down the
+// crater's north-east slope under the girder, walking on toward the Crew (D3 takes it from there; the walk halts at the
+// path's end, all four feet planted, at HEAVY1.T1).
+const HV_PTS: XZ[] = [{x: 104, z: -1}, {x: 102.8, z: -6.0}, {x: 100.6, z: -15.6}, {x: 84, z: -17.0}, {x: 76.5, z: -13.4}, {x: 70.0, z: -8.6}, {x: 63.6, z: -5.6}];
 const HV_FULL = pathLen(HV_PTS);
 // the line runs on past both ends (the kit samples the path ±2.7 m for the front and rear legs)
 const HV_EXT = 6;
@@ -511,12 +517,14 @@ const HV_LINE: XZ[] = (() => {
 })();
 /** the walk length is a whole number of quarter strides, so all four feet are planted when it halts */
 const HV_L = Math.floor(HV_FULL / 0.75) * 0.75;
-const HV_T0 = 94.6, HV_T1 = 115.35;
+const HV_T0 = 94.4, HV_T1 = 121.0;
 const HV_D0 = restD('rear');
 const hvLine = linePath(HV_LINE, 2.5);
-export const HEAVY1 = {id: HEAVIES_B[0].id, index: 0, T0: HV_T0, T1: HV_T1, end: hvLine(HV_EXT + HV_L)};
+export const HEAVY1 = {id: HEAVIES_B[0].id, index: 0, T0: HV_T0, T1: HV_T1, end: hvLine(HV_EXT + HV_L), path: HV_PTS};
+/** distance walked (m) along HEAVY1.path at film time T */
+export const heavy1Dist = (T: number) => runDist(clamp(T, HV_T0, HV_T1), HV_T0, HV_T1, HV_L, 2.2, 2.4);
 export const heavy1 = (T: number, o: Partial<HeavySpec> = {}): HeavySpec => {
-  const d = runDist(clamp(T, HV_T0, HV_T1), HV_T0, HV_T1, HV_L, 2.2, 2.4);
+  const d = heavy1Dist(T);
   const path = (dd: number) => hvLine(dd - HV_D0 + HV_EXT);
   const p = path(HV_D0 + d);
   const crew = on({x: 48.6, z: -6.6}, 1.4);
@@ -526,6 +534,27 @@ export const heavy1 = (T: number, o: Partial<HeavySpec> = {}): HeavySpec => {
     eye: 'cyan', lockAt: 99.55, fire: {t0: EV2.fire, target: BLAST_AT}, key: 'd2hv1', ...o,
   };
 };
+/** B's main-body units on heavy 1's way: they step aside before it reaches them (id, from, to, start) */
+export const YIELD: {id: number; to: XZ; T0: number}[] = [
+  {id: 4201, to: {x: 98.6, z: -7.6}, T0: 94.6},
+  {id: 4003, to: {x: 107.1, z: -10.1}, T0: 95.0},
+  {id: 4002, to: {x: 97.7, z: -9.1}, T0: 95.4},
+  {id: 4001, to: {x: 95.9, z: -12.6}, T0: 96.8},
+];
+export const YIELD_IDS = new Set(YIELD.map((y) => y.id));
+YIELD.forEach((y) => {
+  const u = armyUnits().find((q) => q.id === y.id);
+  const from = u ? {x: u.rest.x, z: u.rest.z, h: u.heading} : {x: y.to.x, z: y.to.z, h: 270};
+  const hAway = headingTo(from, y.to);
+  const dur = 0.8 + Math.hypot(y.to.x - from.x, y.to.z - from.z) / 1.4;
+  PLANS[`Y${y.id}`] = {
+    id: y.id, key: `d2y${y.id}`,
+    phases: [{kind: 'stand', root: [[90, from.x, from.z, from.h], [y.T0, from.x, from.z, from.h], [y.T0 + 0.45, from.x, from.z, hAway], [y.T0 + dur, y.to.x, y.to.z, hAway], [y.T0 + dur + 0.7, y.to.x, y.to.z, 285]], stepLen: 0.6}],
+    act: (T) => ({look: T < y.T0 - 0.3 ? smokeC : T < 101.5 ? add3(heavy1(T).pos, {x: 0, y: 3.5, z: 0}) : smokeC, idle: 0.4, eye: 'cyan' as const}),
+  };
+});
+export const YIELD_NAMES = YIELD.map((y) => `Y${y.id}`);
+export const UNIT_NAMES = Object.keys(PLANS);
 
 // ------------------------------------------------------------------ enemy drones: D1's, two diving through the light
 type K4 = [number, number, number, number];

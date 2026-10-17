@@ -125,8 +125,8 @@ const DIR_SEGS: Seg[] = [
   {kind: 'stand', root: [[163.32, 12.98, -2.15, runEnd(CHARGE1).h], [163.6, 13.08, -2.32, 22], [163.9, 13.1, -2.4, 60], [164.05, 13.1, -2.4, 88]], stag: 0.12},
   {kind: 'run', path: CHARGE2, T0: 164.05, T1: 165.04, gait: GAITS.dir, A: 0.3, D: 0},
   {kind: 'stand', stag: 0.14, root: [
-    [165.04, 16.0, -2.75, runEnd(CHARGE2).h], [165.35, 16.2, -2.85, 85], [166.0, 16.4, -2.75, 75], [167.3, 16.4, -2.7, 72], [168.1, 16.3, -2.6, 215],
-    [169.5, 15.0, -0.7, 228], [170.6, 14.35, 0.55, 200], [171.4, 14.3, 0.85, 300], [172.4, 14.05, 1.5, 15], [173.4, 13.5, 2.9, 120], [174.6, 12.3, 5.2, 190],
+    [165.04, 16.0, -2.75, runEnd(CHARGE2).h], [165.35, 16.2, -2.85, 85], [166.0, 16.4, -2.75, 75], [167.3, 16.4, -2.75, 72], [168.1, 16.4, -2.9, 215],
+    [169.0, 15.0, -2.45, 250], [169.9, 14.1, -1.0, 210], [170.6, 14.0, 0.6, 200], [171.4, 14.0, 0.9, 300], [172.4, 13.8, 1.5, 15], [173.4, 13.5, 2.9, 120], [174.6, 12.3, 5.2, 190],
     [175.3, 11.8, 6.3, 72], [175.85, 11.8, 6.3, 74], [176.3, 11.78, 6.27, headingTo(SPRINT[0], SPRINT[1])],
   ]},
   {kind: 'run', path: SPRINT, T0: 176.3, T1: 177.42, gait: GAITS.sprint, A: 0.3, D: 0.25},
@@ -390,7 +390,7 @@ export const tetherAt = (T: number): CrewOut => {
 };
 
 // ================================================================== THE RUNNER (guesser)
-const RUN_RUN: XZ[] = [{x: 34.9, z: 4.7}, {x: 27.5, z: 3.6}, {x: 21.5, z: 6.6}, {x: RUNNER_STOP.x, z: RUNNER_STOP.z}];
+const RUN_RUN: XZ[] = [{x: 34.9, z: 4.7}, {x: 31.8, z: 3.45}, {x: 28.0, z: 5.2}, {x: 21.5, z: 6.6}, {x: RUNNER_STOP.x, z: RUNNER_STOP.z}];
 const RUN_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 35.2, 4.6, 88], [150.3, 35.0, 4.65, 88], [150.6, 34.9, 4.7, 268]], stag: 0.12},
   {kind: 'run', path: RUN_RUN, T0: 150.6, T1: RUNNER_STOP.t, gait: GAITS.fast, A: 0.5, D: 0.35},
@@ -522,12 +522,12 @@ export const breakerAt = (T: number): CrewOut => {
 };
 
 // ================================================================== THE DECOY MAKER (clerkB)
-const DEC_RUN1: XZ[] = [{x: 32.7, z: 4.25}, {x: 29.0, z: 3.9}, {x: 24.0, z: 6.4}, {x: 16.5, z: 6.6}, {x: GATHER.decoy.x, z: GATHER.decoy.z}];
+const DEC_RUN1: XZ[] = [{x: 32.4, z: 2.25}, {x: 29.0, z: 3.0}, {x: 24.0, z: 6.4}, {x: 16.5, z: 6.6}, {x: 14.6, z: 6.85}, {x: GATHER.decoy.x, z: GATHER.decoy.z}];
 const DEC_RUN2: XZ[] = [{x: GATHER.decoy.x, z: GATHER.decoy.z}, {x: 13.2, z: 5.35}];
 const DEC_SEGS: Seg[] = [
-  {kind: 'stand', root: [[M.P4, 32.9, 4.2, 82], [150.3, 32.8, 4.2, 82], [150.65, 32.7, 4.25, 268]], stag: 0.08},
-  {kind: 'run', path: DEC_RUN1, T0: 150.65, T1: 158.95, gait: GAITS.run, A: 0.6, D: 0.7},
-  {kind: 'stand', stag: 0.08, root: [[158.95, GATHER.decoy.x, GATHER.decoy.z, runEnd(DEC_RUN1).h], [159.3, GATHER.decoy.x, GATHER.decoy.z, GATHER.decoy.h], [162.5, GATHER.decoy.x, GATHER.decoy.z, 86]]},
+  {kind: 'stand', root: [[M.P4, 32.6, 2.2, 82], [151.05, 32.5, 2.2, 82], [151.4, 32.4, 2.25, 268]], stag: 0.08},
+  {kind: 'run', path: DEC_RUN1, T0: 151.4, T1: 159.4, gait: GAITS.run, A: 0.6, D: 0.7},
+  {kind: 'stand', stag: 0.08, root: [[159.4, GATHER.decoy.x, GATHER.decoy.z, runEnd(DEC_RUN1).h], [159.75, GATHER.decoy.x, GATHER.decoy.z, GATHER.decoy.h], [162.5, GATHER.decoy.x, GATHER.decoy.z, 86]]},
   {kind: 'run', path: DEC_RUN2, T0: 162.5, T1: 164.1, gait: GAITS.run, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.1, root: [[164.1, 13.2, 5.35, runEnd(DEC_RUN2).h], [164.7, 13.25, 5.2, 48], [165.6, 13.15, 5.1, 60], [170.6, 12.9, 5.4, 80], [172.6, 11.6, 5.8, 60],
     [174.6, 11.0, 6.4, 50], [178.3, 11.1, 6.6, 300], [179.6, 11.05, 6.4, 300], [180.45, TB_CREW.decoy.pos.x, TB_CREW.decoy.pos.z, TB_CREW.decoy.heading]]},
@@ -539,7 +539,7 @@ export const decoyAt = (T: number): CrewOut => {
   const hasTablet = T < EV.tabletDrop;
   let pose: Pose = layer(BRACED({wide: 0.6, fists: false}), {drop: 10, lean: 6, armL: {local: {r: -28, u: 215, f: 92}, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}}, handR: 'open', face: {mouth: 'pant', brows: -0.3, worry: 0.5}, breath: 0.8});
   // a last look at the smashed tablet, and she lets it fall
-  const tab = win(T, 158.95, EV.tabletDrop + 0.2, 0.3, 0.2);
+  const tab = win(T, 159.5, EV.tabletDrop + 0.2, 0.3, 0.2);
   if (tab > 0) pose = blendPose(pose, layer(pose, {armL: {local: {r: -20, u: 230, f: 120}}, head: {pitch: 30, yaw: -8}, face: {mouth: 'sad', brows: 0.6, worry: 0.8, lookY: 0.8}}), tab);
   if (!hasTablet) pose = layer(pose, {armL: {local: {r: -30, u: 190, f: 70}}, handL: 'relaxed'});
   if (T > 170.5 && T < 178) pose = face(pose, {mouth: 'open', open: 0.25, brows: 0.7, worry: 0.95});
@@ -649,7 +649,7 @@ export const pilotAt = (T: number): CrewOut => {
 };
 
 // ================================================================== THE FLARE CARRIER (host)
-const FLR_RUN1: XZ[] = [{x: 33.8, z: 8.42}, {x: 27.0, z: 8.9}, {x: 21.0, z: 10.2}, {x: 16.6, z: 10.2}, {x: 13.8, z: 8.2}, {x: GATHER.flares.x, z: GATHER.flares.z}];
+const FLR_RUN1: XZ[] = [{x: 33.8, z: 8.42}, {x: 27.0, z: 8.9}, {x: 21.0, z: 10.0}, {x: 17.0, z: 10.1}, {x: 15.4, z: 10.3}, {x: 13.6, z: 8.5}, {x: GATHER.flares.x, z: GATHER.flares.z}];
 const FLR_RUN2: XZ[] = [{x: GATHER.flares.x, z: GATHER.flares.z}, {x: 14.25, z: 6.55}];
 const FLR_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 34.0, 8.4, 86], [150.35, 33.9, 8.4, 86], [150.7, 33.8, 8.42, 268]], stag: 0.12},

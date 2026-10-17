@@ -25,7 +25,7 @@ export const canisters = (): CanisterOpts[] => (CANS ??= ([0, 1] as const).map((
   const to = {x: CAN_TO[i].x, y: G(CAN_TO[i].x, CAN_TO[i].z), z: CAN_TO[i].z};
   return {
     key: `d2can${i}`, from: canisterFrom(i), to, t0: i === 0 ? EV2.rel1 : EV2.rel2, flight: EV2.canFlight, apex: 2.3, ground: to.y, popDelay: EV2.pop,
-    dur: 16, rate: 13, life: 10, size: 0.6, grow: 1.35, wind: {x: 0.3, y: 0, z: 0.0}, color: '#EEEAE3', seed: 3 + i * 5, bounce: 1.1, roll: 0.6,
+    dur: 16, rate: 13, life: 10, size: 0.6, grow: 1.25, wind: {x: 0.26, y: 0, z: 0.12}, color: '#EEEAE3', seed: 3 + i * 5, bounce: 1.1, roll: 0.6,
   };
 }));
 let SRC: SmokeSource[] | null = null;
@@ -92,7 +92,7 @@ export const allyPose = (t: number): DronePose => {
   const p = allyAt(t), v = mul3(sub3(allyAt(t + 0.08), allyAt(t - 0.08)), 6.25);
   const sp = Math.hypot(v.x, v.z);
   const hv = (q: V3) => (Math.atan2(q.x, -q.z) * 180) / Math.PI;
-  const face = t > 112.4 && t < 113.6 ? sub3(SHIELD_AT, {x: 51.0, y: SHIELD_AT.y, z: -5.6}) : null;
+  const face = t > 112.4 && t < 113.6 ? sub3(SHIELD_AT, {x: 50.15, y: SHIELD_AT.y, z: -5.55}) : null;
   let heading = sp > 0.5 ? hv(v) : face ? hv(mul3(face, -1)) : hv(sub3(allyAt(t + 0.6), allyAt(t - 0.6)));
   if (face && sp < 1.5) heading = hv(mul3(face, -1));
   const v2 = sub3(allyAt(t + 0.25), allyAt(t)), v1 = sub3(allyAt(t), allyAt(t - 0.25));
@@ -178,7 +178,9 @@ export const d2Fx = (T: number): FxOut => {
         },
       }], [{pos: head, color: '#FFD9A0', power: 0.8, radius: 6}]));
     }
-    out.push(blast({at: BLAST_AT, t: T, t0: EV2.blast, key: 'd2blast', size: 2.3, groundH: G, ground: G(BLAST_AT.x, BLAST_AT.z), seed: 21, debris: 'asphalt'}));
+    // the fireball burns inside the white wall: its sprites draw through the smoke's front puffs (bias), its light on them
+    const bl = blast({at: BLAST_AT, t: T, t0: EV2.blast, key: 'd2blast', size: 2.3, groundH: G, ground: G(BLAST_AT.x, BLAST_AT.z), seed: 21, debris: 'asphalt'});
+    out.push({...bl, items: bl.items.map((it) => (it.kind === 'sprite' && /_(fb\d|flash)/.test(it.key ?? '') ? {...it, bias: (it.bias ?? 0) + 8} : it))});
   }
   // ---- D2-4 FLANK: the breaker breaks B's knee from behind; the Director's plate into A's back; the pry and the rip
   if (T > EV2.knee - 0.1 && T < EV2.knee + 3) {
@@ -281,9 +283,9 @@ export const d2Fx = (T: number): FxOut => {
   if (T > EV2.shield - 0.1 && T < EV2.shield + 2) out.push(impact({at: SHIELD_AT, normal: {x: 0.75, y: 0.3, z: 0.55}, t: T, t0: EV2.shield, key: 'd2shield', strength: 1.2, material: 'metal', seed: 121}));
   if (T > EV2.counter - 0.1 && T < EV2.counter + 3) {
     const d = unitAttach(unitD2('D', EV2.counter));
-    const at = lerpV(d.chest, d.shoulderL, 0.45);
-    out.push(impact({at, normal: {x: -0.55, y: 0.2, z: 0.8}, t: T, t0: EV2.counter, key: 'd2counter', strength: 1.5, material: 'armor', ground: ground(at), seed: 131}));
-    out.push(fx(ring3({at, normal: {x: -0.55, y: 0.1, z: 0.8}, t: T, t0: EV2.counter, key: 'd2counterr', r0: 0.1, speed: 6.5, dur: 0.16, width: 0.05})));
+    const at = lerpV(d.chest, d.shoulderR, 0.5);
+    out.push(impact({at, normal: {x: 0.72, y: 0.2, z: -0.69}, t: T, t0: EV2.counter, key: 'd2counter', strength: 1.5, material: 'armor', ground: ground(at), seed: 131}));
+    out.push(fx(ring3({at, normal: {x: 0.72, y: 0.1, z: -0.69}, t: T, t0: EV2.counter, key: 'd2counterr', r0: 0.1, speed: 6.5, dur: 0.16, width: 0.05})));
     out.push(fx([], [], shakeAt(T, EV2.counter, 0.08)));
   }
   return combine(...(out.filter(Boolean) as FxOut[]));

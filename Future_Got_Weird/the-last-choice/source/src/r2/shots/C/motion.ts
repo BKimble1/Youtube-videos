@@ -86,11 +86,14 @@ export const footAt = (k: KP[], T: number, lift = 0.11): V3 & {swing: number} =>
     if (!moved) return {x: a[1], y: GC(a[1], a[2]), z: a[2], swing: 0};
     const u = seg01(T, a[0], b[0]);
     const lf = b.length > 3 ? (b[3] as number) : lift;
-    const e = lf > 0 ? smooth(u) : 1 - (1 - u) * (1 - u);
-    const x = lerp(a[1], b[1], e), z = lerp(a[2], b[2], e);
     const ya = GC(a[1], a[2]), yb = GC(b[1], b[2]);
+    // a step up onto something (a slab, a ledge): the foot rises first, then reaches over onto it
+    const up = yb - ya > 0.15;
+    const e = up ? smooth(clamp((u - 0.3) / 0.7)) : lf > 0 ? smooth(u) : 1 - (1 - u) * (1 - u);
+    const x = lerp(a[1], b[1], e), z = lerp(a[2], b[2], e);
     const sw = Math.sin(Math.PI * u) * lf;
-    const y = Math.max(lerp(ya, yb, e) + sw, GC(x, z) + sw * 0.7);
+    const ey = up ? smooth(Math.min(1, u * 2.4)) : e;
+    const y = Math.max(lerp(ya, yb, ey) + sw, GC(x, z) + sw * 0.7);
     return {x, y, z, swing: lf > 0 ? Math.sin(Math.PI * u) : 0};
   }
   const l = k[k.length - 1];
@@ -247,10 +250,13 @@ export const gaitC = (path: Warped, s: number, o: GaitW, hipX = 0.15): GaitOut =
     if (u < o.duty) return {pos: place(plantS(k)), pitch: clamp((u - (o.duty - 0.16)) / 0.16) * 22, stance: true, sw: 0};
     const w = (u - o.duty) / (1 - o.duty);
     const a = place(plantS(k)), b = place(plantS(k + 1));
-    const e = smooth(w);
+    // a step up (a ledge, the slab's edge): the foot rises first, then reaches over onto it
+    const up = b.y - a.y > 0.15;
+    const e = up ? smooth(clamp((w - 0.3) / 0.7)) : smooth(w);
     const x = lerp(a.x, b.x, e), z = lerp(a.z, b.z, e);
     const lift = Math.sin(Math.PI * Math.min(1, w * 1.05)) * o.lift;
-    const y = Math.max(lerp(a.y, b.y, e) + lift, GC(x, z) + lift * 0.75 + 0.02 * Math.sin(Math.PI * w));
+    const ey = up ? smooth(Math.min(1, w * 2.4)) : e;
+    const y = Math.max(lerp(a.y, b.y, ey) + lift, GC(x, z) + lift * 0.75 + 0.02 * Math.sin(Math.PI * w));
     return {pos: {x, y, z}, pitch: lerp(22, -10, clamp(w * 2)) * (1 - clamp((w - 0.7) / 0.3)), stance: false, sw: Math.sin(Math.PI * w)};
   };
   const R = foot(0, 1), Lf = foot(0.5, -1);

@@ -64,7 +64,7 @@ export const avoid = (pts: XZ[], clear = 0.5, keep = 2.6): XZ[] => {
   const out: XZ[] = [pts[0]];
   let acc = 0;
   pts.slice(1).forEach((b, i) => {
-    const a = pts[i], L = Math.hypot(b.x - a.x, b.z - a.z), n = Math.max(1, Math.ceil(L / 0.7));
+    const a = pts[i], L = Math.hypot(b.x - a.x, b.z - a.z), n = Math.max(1, Math.ceil(L / 0.45));
     for (let k = 1; k <= n; k++) {
       const u = k / n, p = {x: lerp(a.x, b.x, u), z: lerp(a.z, b.z, u)};
       out.push(total - (acc + L * u) > keep ? pushOut(p, clear) : p);
@@ -73,8 +73,10 @@ export const avoid = (pts: XZ[], clear = 0.5, keep = 2.6): XZ[] => {
   });
   // relax twice so the bends are smooth (the ends stay)
   let r = out;
-  for (let it = 0; it < 2; it++) r = r.map((p, i) => (i === 0 || i >= r.length - 4 ? p : {x: (r[i - 1].x + p.x * 2 + r[i + 1].x) / 4, z: (r[i - 1].z + p.z * 2 + r[i + 1].z) / 4}));
-  return r;
+  for (let it = 0; it < 1; it++) r = r.map((p, i) => (i === 0 || i >= r.length - 4 ? p : {x: (r[i - 1].x + p.x * 2 + r[i + 1].x) / 4, z: (r[i - 1].z + p.z * 2 + r[i + 1].z) / 4}));
+  // (the relax can pull a point back in: push once more, except the kept end)
+  const keepFrom = r.length - Math.max(4, Math.ceil(keep / 0.45));
+  return r.map((p, i) => (i === 0 || i >= keepFrom ? p : pushOut(p, clear)));
 };
 /** how far a point is inside any obstacle (> 0 = inside), for checks */
 export const intrusion = (p: XZ, rad: number): {d: number; what: string} => {

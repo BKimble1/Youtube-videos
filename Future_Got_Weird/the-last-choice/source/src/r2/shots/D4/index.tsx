@@ -3,10 +3,11 @@
 // camera (shots.tsx). Start state for D3: ./start.ts. End state: the E/F tableau (shots/EF/tableau.ts).
 import type {R2Shot} from '../../film/registry';
 import {SH} from './times';
-import {D4_1, D4_2a, D4_2b, D4_3, D4_4a, D4_4b, D4_4c, D4_4d, D4_5, D4_6a, D4_6b, D4_7, D4_8, D4_9a, D4_9b, D4_10} from './shots';
+import {D4_1a, D4_1b, D4_2a, D4_2b, D4_3, D4_4a, D4_4b, D4_4c, D4_4d, D4_5, D4_6a, D4_6b, D4_7, D4_8, D4_9a, D4_9b, D4_10} from './shots';
 
 export const SHOTS_D4: R2Shot[] = [
-  {id: 'D4-1', sec: 'D4', start: SH.d41, end: SH.d42a, note: 'P4: fighting retreat west across the avenue; the arc presses; W1\'s hammer on the plate — the crack goes right through', C: D4_1},
+  {id: 'D4-1a', sec: 'D4', start: SH.d41, end: SH.d41b, note: 'P4: fighting retreat west across the avenue toward the lens; the arc presses; heavy 2 comes out of the crater', C: D4_1a},
+  {id: 'D4-1b', sec: 'D4', start: SH.d41b, end: SH.d42a, note: 'the Director spins to face W1; its hammer on the plate — the crack goes right through; his heels skid', C: D4_1b},
   {id: 'D4-2a', sec: 'D4', start: SH.d42a, end: SH.d42b, note: 'a flanker overtakes the runner and cuts across him; the backhand; he goes down on his back and stays down', C: D4_2a},
   {id: 'D4-2b', sec: 'D4', start: SH.d42b, end: SH.d43, note: 'the tether operator levels the empty launcher; a unit\'s fist closes on it; torn out of her hands, flung down', C: D4_2b},
   {id: 'D4-3', sec: 'D4', start: SH.d43, end: SH.d44a, note: 'at the van, spent: the tablet dropped, the cut cable pulled off the reel, the last flare drawn; he looks at them and raises his arm', C: D4_3},
