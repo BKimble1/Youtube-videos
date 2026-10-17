@@ -220,18 +220,19 @@ const blinkAt = (t: number, seed: number) => {
 // ------------------------------------------------------------------ hair geometry
 // hairline height (relative to head centre, in units of the head radius; − = above) by azimuth |θ| (0 = face)
 const HAIRLINE: Record<string, [number, number][]> = {
-  crop: [[0, -0.6], [55, -0.42], [90, -0.12], [125, 0.2], [180, 0.42]],
-  bun: [[0, -0.55], [55, -0.38], [90, -0.12], [125, 0.22], [180, 0.45]],
-  curly: [[0, -0.5], [55, -0.4], [90, -0.15], [125, 0.2], [180, 0.5]],
-  swoop: [[0, -0.86], [55, -0.62], [90, -0.12], [125, 0.2], [180, 0.42]],
-  bob: [[0, -0.98], [40, -0.92], [75, -0.55], [95, 0.42], [180, 0.48]],
-  short: [[0, -0.62], [55, -0.45], [90, -0.15], [125, 0.15], [180, 0.38]],
-  spiky: [[0, -0.6], [55, -0.42], [90, -0.12], [125, 0.2], [180, 0.42]],
+  // back of the head (|θ| > 90): hair reaches about the bottom of the ears, so back views read as hair, not a blank face
+  crop: [[0, -0.6], [55, -0.42], [90, -0.12], [125, 0.32], [180, 0.6]],
+  bun: [[0, -0.55], [55, -0.38], [90, -0.12], [125, 0.32], [180, 0.6]],
+  curly: [[0, -0.5], [55, -0.4], [90, -0.15], [125, 0.3], [180, 0.62]],
+  swoop: [[0, -0.86], [55, -0.62], [90, -0.12], [125, 0.32], [180, 0.6]],
+  bob: [[0, -0.98], [40, -0.92], [75, -0.55], [95, 0.42], [180, 0.78]],
+  short: [[0, -0.62], [55, -0.45], [90, -0.15], [125, 0.28], [180, 0.55]],
+  spiky: [[0, -0.6], [55, -0.42], [90, -0.12], [125, 0.32], [180, 0.6]],
   bald: [[0, -0.15], [80, -0.05], [100, 0.1], [180, 0.25]],
 };
 const VOLUME: Record<string, number> = {crop: 16, bun: 14, curly: 10, swoop: 8, bob: 16, short: 10, spiky: 10, bald: 0};
 const interpTbl = (tbl: [number, number][], a: number) => {
-  const x = Math.min(180, Math.abs(a));
+  const x = Math.abs(((((a + 180) % 360) + 360) % 360) - 180); // wrap: the visible arc can run past ±180
   for (let i = 1; i < tbl.length; i++) if (x <= tbl[i][0]) return lerp(tbl[i - 1][1], tbl[i][1], (x - tbl[i - 1][0]) / (tbl[i][0] - tbl[i - 1][0]));
   return tbl[tbl.length - 1][1];
 };
@@ -611,9 +612,10 @@ const drawHead = (p: ActorProps, r: Rig, t: number, seed: number, inkC: string, 
   if (hairType === 'bob') {
     // the approved bob: a mass larger than the skull (sides to the jaw, a band over the top), behind the face
     const c0 = hl3(0, 0, -0.08);
-    const w = R + 10 * s, top = c0.y - RY - 18 * s, bot = c0.y + 26 * s;
+    const w = R + 10 * s, top = c0.y - RY - 18 * s, bot = c0.y + (hb.F.z < -0.3 ? 44 : 26) * s;
     const d = `M ${f2(c0.x - w)} ${f2(bot)} L ${f2(c0.x - w)} ${f2(c0.y - 10 * s)} Q ${f2(c0.x - w + 4 * s)} ${f2(top)} ${f2(c0.x)} ${f2(top)} Q ${f2(c0.x + w - 4 * s)} ${f2(top)} ${f2(c0.x + w)} ${f2(c0.y - 10 * s)} L ${f2(c0.x + w)} ${f2(bot)} Q ${f2(c0.x + w - 8 * s)} ${f2(bot + 4 * s)} ${f2(c0.x + w - 16 * s)} ${f2(bot)} L ${f2(c0.x - w + 16 * s)} ${f2(bot)} Q ${f2(c0.x - w + 8 * s)} ${f2(bot + 4 * s)} ${f2(c0.x - w)} ${f2(bot)} Z`;
-    extrasBack.push(<path key="bobmass" d={d} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" transform={`rotate(${f2(rollDeg)} ${f2(Hc.x)} ${f2(Hc.y)})`} />);
+    // seen from behind the mass is the nearest thing: draw it over the skull (else the bare skull reads as a blank face)
+    (hb.F.z < -0.3 ? extrasFront : extrasBack).push(<path key="bobmass" d={d} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" transform={`rotate(${f2(rollDeg)} ${f2(Hc.x)} ${f2(Hc.y)})`} />);
   }
 
   // ---- ears

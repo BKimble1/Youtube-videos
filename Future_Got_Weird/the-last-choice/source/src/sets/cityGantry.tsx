@@ -192,7 +192,7 @@ export const Gantry: React.FC<GantryState & {t?: number; ink?: number; layer?: '
     els.push(<g key="box">
       <rect x={bx.x - bx.w / 2} y={Y.deck - bx.h} width={bx.w} height={bx.h} rx={10} fill={K.sysShade} stroke={INK} strokeWidth={ink} />
       <rect x={bx.x - bx.w / 2 + 20} y={Y.deck - bx.h + 40} width={bx.w - 40} height={70} rx={6} fill={K.sysDark} />
-      <circle cx={bx.x - 20} cy={Y.deck - bx.h + 75} r={12} fill={(st.lever ?? 0) > 15 ? '#7BE08A' : '#E0543E'} />
+      <circle cx={bx.x - 20} cy={Y.deck - bx.h + 75} r={12} fill={Math.abs(st.lever ?? 0) > 15 ? '#7BE08A' : '#E0543E'} />
       <rect x={bx.x - bx.w / 2 - 10} y={Y.deck - bx.h - 16} width={bx.w + 20} height={20} rx={6} fill={K.sysSlate} stroke={INK} strokeWidth={ink * 0.8} />
       <line x1={Y.leverPivot.x} y1={Y.leverPivot.y} x2={h.x} y2={h.y} stroke={INK} strokeWidth={18 + ink * 2} strokeLinecap="round" />
       <line x1={Y.leverPivot.x} y1={Y.leverPivot.y} x2={h.x} y2={h.y} stroke={K.steel} strokeWidth={18} strokeLinecap="round" />

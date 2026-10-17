@@ -8,7 +8,7 @@ import {INK, M, SensorEye, Sparks, Flying, rrect, SysMark} from './common';
 
 export type DroneProps = {
   x: number; y: number; s?: number; t: number; seed?: number; ink?: number;
-  tilt?: number; face?: number; look?: V2; lock?: number; lightOn?: number; glow?: number; rotor?: number;
+  tilt?: number; face?: number; look?: V2; lock?: number; lightOn?: number; glow?: number; rotor?: number; eyeOpen?: number;
   smash?: {t0: number; dir: number; groundY?: number; power?: number};
 };
 
@@ -65,7 +65,7 @@ const parts = (p: DroneProps, ink: number) => {
   const gimbal = (
     <g key="gimbal">
       <path d={`M ${eyeX - 14} 10 L ${eyeX - 12} 24 M ${eyeX + 14} 10 L ${eyeX + 12} 24`} stroke={M.frameDark} strokeWidth={6} strokeLinecap="round" />
-      <SensorEye x={eyeX} y={27} r={16} look={p.look} lock={p.lock} glow={p.glow ?? 0.4} ink={ink * 0.8} squash={1 - af * 0.15} id={`dreye${seed}_${Math.round(p.x)}_${Math.round(p.y)}`} />
+      <SensorEye x={eyeX} y={27} r={16} look={p.look} lock={p.lock} glow={p.glow ?? 0.4} ink={ink * 0.8} squash={1 - af * 0.15} open={p.eyeOpen} id={`dreye${seed}_${Math.round(p.x)}_${Math.round(p.y)}`} />
     </g>
   );
   return {rear: [L(-1), L(1)], front: [F(-1), F(1)], hull, gimbal};

@@ -27,7 +27,7 @@ export const pierStairSteps = () => {
   return out;
 };
 /** Ladder from the catwalk (y −1250) to the deck top (y −1600) at LADDER_X: rung points bottom → top. */
-export const ladderRungs = () => range(8).map((i) => ({x: LADDER_X, y: CATWALK - 20 - i * 45}));
+export const ladderRungs = (x = LADDER_X) => range(8).map((i) => ({x, y: CATWALK - 20 - i * 45}));
 
 // --- landing stairs (13500, −1600) → (14500, 0)
 const LS = 32;
@@ -50,10 +50,10 @@ const Pier: React.FC<{x: number; ink: number; seed: number}> = ({x, ink, seed}) 
   </g>
 );
 
-export type ViaductProps = {x0?: number; x1?: number; t: number; ink?: number; seed?: number; ventX?: number; vent?: number; stair?: boolean; catwalk?: boolean};
+export type ViaductProps = {x0?: number; x1?: number; t: number; ink?: number; seed?: number; ventX?: number; vent?: number; stair?: boolean; catwalk?: boolean; ladderX?: number};
 
 /** Deck, girders, piers, pier stair, catwalk floor + inner railing, pipes, ladder. (x1 = the broken near edge.) */
-export const Viaduct: React.FC<ViaductProps> = ({x0 = 7200, x1 = NEAR_EDGE, t, ink = 6, seed = 3, ventX = 9300, vent = 1, stair = true, catwalk = true}) => {
+export const Viaduct: React.FC<ViaductProps> = ({x0 = 7200, x1 = NEAR_EDGE, t, ink = 6, seed = 3, ventX = 9300, vent = 1, stair = true, catwalk = true, ladderX = LADDER_X}) => {
   const els: React.ReactElement[] = [];
   // girders under the slab, with stiffeners
   els.push(<rect key="gird" x={x0} y={SLAB} width={x1 - x0} height={GIRDER - SLAB} fill={K.steel} stroke={INK} strokeWidth={ink} />);
@@ -104,9 +104,9 @@ export const Viaduct: React.FC<ViaductProps> = ({x0 = 7200, x1 = NEAR_EDGE, t, i
     range(Math.floor((cx1 - cx0) / 80)).forEach((i) => els.push(<line key={`gr${i}`} x1={cx0 + i * 80} y1={CATWALK + 4} x2={cx0 + i * 80 + 40} y2={CATWALK + 26} stroke="#2A3036" strokeWidth={ink * 0.5} />));
     // ladder to the deck
     els.push(<g key="lad">
-      <line x1={LADDER_X - 50} y1={CATWALK} x2={LADDER_X - 50} y2={DECK - 60} stroke={K.steelDark} strokeWidth={ink * 2} />
-      <line x1={LADDER_X + 50} y1={CATWALK} x2={LADDER_X + 50} y2={DECK - 60} stroke={K.steelDark} strokeWidth={ink * 2} />
-      {ladderRungs().map((r, i) => <line key={i} x1={LADDER_X - 50} y1={r.y} x2={LADDER_X + 50} y2={r.y} stroke={K.steelDark} strokeWidth={ink * 1.4} />)}
+      <line x1={ladderX - 50} y1={CATWALK} x2={ladderX - 50} y2={DECK - 60} stroke={K.steelDark} strokeWidth={ink * 2} />
+      <line x1={ladderX + 50} y1={CATWALK} x2={ladderX + 50} y2={DECK - 60} stroke={K.steelDark} strokeWidth={ink * 2} />
+      {ladderRungs(ladderX).map((r, i) => <line key={i} x1={ladderX - 50} y1={r.y} x2={ladderX + 50} y2={r.y} stroke={K.steelDark} strokeWidth={ink * 1.4} />)}
     </g>);
   }
   // the vent: steam jet from the broken pipe
