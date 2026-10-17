@@ -300,7 +300,7 @@ export const Schematic: React.FC<{start: number}> = ({start}) => {
       <Tag x={thrS.x + 150} y={thrS.y + 30} text="THRUST" o={tIn * (1 - ramp(t, T.then, T.then + 0.3))} color={C.ink} bg={C.saffronLight} size={36} />
       <Tag x={wS.x + 150} y={wS.y - 30} text="WEIGHT" o={wIn * (1 - ramp(t, T.then, T.then + 0.3))} color={C.cream} bg={WEIGHT} size={36} />
       <Tag x={cgS.x + 40} y={cgS.y + 175} to={cgS} text="center of mass" o={tagCG} size={32} />
-      <Tag x={Math.min(820, patchS.x + 20)} y={patchS.y + 105} text="loose surface" o={tagLoose} size={34} bg={C.cream} />
+      <Tag x={Math.min(780, patchS.x + 170)} y={patchS.y - 215} to={{x: patchS.x + 95, y: patchS.y - 12}} text="loose surface" o={tagLoose} size={34} bg={C.cream} />
       {chip > 0 && (
         <div style={{position: 'absolute', top: 96, width: 1080, textAlign: 'center', opacity: chip}}>
           <span style={{fontFamily: F.body, fontWeight: 800, fontSize: 30, letterSpacing: 0.5, color: C.ink, background: C.cream, border: `2.5px solid ${C.ink}`, borderRadius: 20, padding: '5px 18px'}}>

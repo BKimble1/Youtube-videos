@@ -20,7 +20,7 @@ export const RocketShort: React.FC<{audio?: boolean; captions?: boolean; narrati
     <AbsoluteFill style={{background: '#000'}}>
       <Sequence from={0} durationInFrames={f(T.swap + 0.6)}><Opening audio={audio} /></Sequence>
       <Sequence from={f(WIPE) - 1} durationInFrames={f(LOOP_T) - f(WIPE) + 1}><Return start={(f(WIPE) - 1) / FPS} /></Sequence>
-      <Sequence from={f(LOOP_T)} durationInFrames={FRAMES - f(LOOP_T)}><LoopBridge audio={audio} /></Sequence>
+      <Sequence from={f(LOOP_T)} durationInFrames={FRAMES - f(LOOP_T)}><LoopBridge audio={audio} start={f(LOOP_T) / FPS} /></Sequence>
       <Sequence from={f(schemA)} durationInFrames={f(WIPE + 0.55) - f(schemA)}><SchematicOut start={f(schemA) / FPS} /></Sequence>
       <Cta />
       {captions && <RocketCaptions end={DURATION} />}

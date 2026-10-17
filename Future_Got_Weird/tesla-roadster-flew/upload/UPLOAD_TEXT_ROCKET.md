@@ -1,7 +1,7 @@
 # Rocket Short: upload text and Related Video note (use only with the final render)
 
-Video: `exports/FGW_Rocket_Short_v1.mp4` (Git-ignored; rebuild with `bash tools/render_rocket.sh`).
-Captions: `captions/FGW_Rocket_Short_v1.srt` (the same 2–5 word phrases as the burned-in captions).
+Video: `exports/FGW_Rocket_Short_FINAL.mp4` (Git-ignored; rebuild with `bash tools/render_rocket.sh`).
+Captions: `captions/FGW_Rocket_Short_FINAL.srt` (the same 2–5 word phrases as the burned-in captions).
 
 Nothing has been uploaded, published, linked or commented. Those steps are the owner's.
 

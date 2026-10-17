@@ -6,7 +6,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame} from 'remotion';
 import {Clip, Key} from '../short3/Clip';
 import {C, F} from '../theme';
-import {FPS, HOP_FILE0, LOOP_SRC, OPEN_SRC, T} from './data';
+import {FPS, HOP_FILE0, LOOP_SRC, OPEN_SRC, T, words} from './data';
 
 // car centre in the replay (rec_224911 seconds -> source px), measured every 0.25 s on magnified frames; the crop follows a
 // Catmull-Rom curve through them, sampled per frame
@@ -25,11 +25,22 @@ export const HOP_CX: Key[] = Array.from({length: Math.round((39.0 - 34.4) * FPS)
   return [src - HOP_FILE0, cr(src) / 1920];
 });
 
+/** 0 while a narration word is spoken (with a margin), rising to 1 in the gaps: the replay's own sound ducks under it. */
+export const speechFree = (t: number, margin = 0.1, fade = 0.15) => {
+  let d = Infinity;
+  for (const w of words) {
+    if (t >= w.s - margin && t <= w.e + margin) return 0;
+    d = Math.min(d, Math.abs(t - (w.s - margin)), Math.abs(t - (w.e + margin)));
+  }
+  return Math.min(1, d / fade);
+};
+const duck = (t: number) => 0.2 + 0.8 * speechFree(t);
+
 /** The loop bridge: the replay's lift-off just before frame 0, with its own sound. */
-export const LoopBridge: React.FC<{audio?: boolean}> = ({audio = true}) => (
+export const LoopBridge: React.FC<{audio?: boolean; start: number}> = ({audio = true, start}) => (
   <AbsoluteFill>
     <Clip src="rk_hop.mp4" from={LOOP_SRC - HOP_FILE0} cx={HOP_CX} />
-    {audio && <Audio src={staticFile('footage/rk_hop.mp4')} trimBefore={Math.round((LOOP_SRC - HOP_FILE0) * FPS)} volume={0.16} />}
+    {audio && <Audio src={staticFile('footage/rk_hop.mp4')} trimBefore={Math.round((LOOP_SRC - HOP_FILE0) * FPS)} volume={(f) => 0.16 * duck(start + f / FPS)} />}
   </AbsoluteFill>
 );
 
@@ -44,7 +55,7 @@ export const Opening: React.FC<{audio?: boolean}> = ({audio = true}) => {
       {audio && (
         <Sequence from={0} durationInFrames={Math.round((T.swap + 0.6) * FPS)}>
           <Audio src={staticFile('footage/rk_hop.mp4')} trimBefore={Math.round((OPEN_SRC - HOP_FILE0) * FPS)}
-            volume={(f) => interpolate(f / FPS, [0, T.swap - 0.1, T.swap + 0.55], [0.16, 0.16, 0], {extrapolateRight: 'clamp'})} />
+            volume={(f) => duck(f / FPS) * interpolate(f / FPS, [0, T.swap - 0.1, T.swap + 0.55], [0.16, 0.16, 0], {extrapolateRight: 'clamp'})} />
         </Sequence>
       )}
       {label > 0 && (

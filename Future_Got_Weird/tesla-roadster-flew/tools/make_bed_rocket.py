@@ -56,8 +56,8 @@ def jet_bed(t0, t1, gdb, pan=0.0, env=None):
     s(x, t0, gdb, pan)
 
 # opening: an immediate jet under the replay's own sound
-s(fx.gas(T['swap'] + 0.1, flutter=8, lo=400, hi=6000), 0.0, -31, -0.15)
-s(fx.gas(T['swap'] + 0.1, flutter=6, lo=600, hi=7000), 0.0, -33, 0.2)
+s(fx.gas(T['swap'] + 0.1, flutter=8, lo=400, hi=6000), 0.0, -35, -0.15)
+s(fx.gas(T['swap'] + 0.1, flutter=6, lo=600, hi=7000), 0.0, -37, 0.2)
 s(fx.burst(0.45), 0.0, -34)
 # "catch": air release and a restrained low hit
 s(fx.burst(0.4), T['catch'] - 0.02, -23)
@@ -73,7 +73,7 @@ s(fx.slide(0.55), T['jets'] + 0.15, -30); s(fx.latch(), T['jets'] + 0.7, -33)
 s(fx.valve_click(), T['blast'] - 0.06, -27); s(fx.swell(0.6, 900), T['blast'], -32)
 # bursts: a valve click before each, a hard pssht while it is on
 for b0, b1 in BURSTS:
-    s(fx.valve_click(), b0 - 0.05, -26, 0.05); s(fx.burst(max(0.22, b1 - b0 + 0.12)), b0, -22)
+    s(fx.valve_click(), b0 - 0.05, -27, 0.05); s(fx.burst(max(0.22, b1 - b0 + 0.12)), b0, -27)
 # the hold: steady jets (and through the tank, the balance, the corrections) until the descent
 hold0, hold1 = BURSTS[-1][1] + 0.1, T['fire'] - 0.3
 jet_bed(hold0, hold1, -33, -0.2); jet_bed(hold0, hold1, -35, 0.2)
@@ -113,8 +113,8 @@ s(fx.gas(1.6, flutter=5, lo=300, hi=4500), src2t(143.6), -30)          # down je
 s(fx.tyre(1.0), TOUCH, -21); s(fx.squat(), TOUCH + 0.12, -27)
 s(fx.gas(1.8, flutter=4, lo=400, hi=3000), TOUCH + 0.05, -37)
 # the loop bridge: the replay's lift-off again, under the same jet bed the opening starts with, so the loop is seamless
-s(fx.gas(TOTAL - LOOP_T + 0.05, flutter=8, lo=400, hi=6000), LOOP_T, -31, -0.15)
-s(fx.gas(TOTAL - LOOP_T + 0.05, flutter=6, lo=600, hi=7000), LOOP_T, -33, 0.2)
+s(fx.gas(TOTAL - LOOP_T + 0.05, flutter=8, lo=400, hi=6000), LOOP_T, -35, -0.15)
+s(fx.gas(TOTAL - LOOP_T + 0.05, flutter=6, lo=600, hi=7000), LOOP_T, -37, 0.2)
 
 # ---------------------------------------------------------------- music
 D = 73.42
@@ -123,7 +123,7 @@ def hook(t0, t1, gain=1.0):
     d = t1 - t0
     tt = v1.T(d)
     drone = (np.sin(2 * np.pi * D * tt) + 0.5 * np.sin(2 * np.pi * D * 1.5 * tt * 1.002) + 0.3 * np.sin(2 * np.pi * D * 2.01 * tt)) * (0.8 + 0.2 * np.sin(2 * np.pi * tt / 2.7))
-    mplace(drone * np.clip(tt / 0.03, 0, 1) * np.clip((d - tt) / 0.03, 0, 1), t0, 0.15 * gain)
+    mplace(drone * np.clip(tt / 0.03, 0, 1) * np.clip((d - tt) / 0.03, 0, 1), t0, 0.11 * gain)
     t, k = t0 + 0.02, 0
     while t < t1 - 0.15:
         mplace(v1.marimba([293.66, 440.0, 369.99, 440.0][k % 4], 0.5), t, 0.055 * gain, pan=(-0.3 if k % 2 else 0.3))
@@ -168,8 +168,8 @@ for w in words:
     speech[int((w['s'] - 0.06) * SR):int((w['e'] + 0.06) * SR)] = 1
 win = int(0.25 * SR)
 sm = np.clip(np.convolve(speech, np.ones(win) / win, 'same') * 1.6, 0, 1)
-music *= 0.42 * (1 - 0.8 * sm)[:, None]
-sfx *= (1 - 0.5 * sm)[:, None]
+music *= 0.42 * (1 - 0.84 * sm)[:, None]
+sfx *= (1 - 0.76 * sm)[:, None]                      # effects about 12 dB down under every word, full in the gaps
 amb *= (1 - 0.3 * sm)[:, None]
 n = int(round(TOTAL * SR))
 SFX_GAIN = 10 ** (5 / 20)

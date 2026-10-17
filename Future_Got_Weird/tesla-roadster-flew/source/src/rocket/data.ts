@@ -20,6 +20,8 @@ export const cue = (w: string, b?: number, n = 0, end = false): number => {
 export const HOP_FILE0 = 34.2;
 export const OPEN_SRC = 35.25;                         // rec_224911 time on frame 0: climbing on its jets
 export const srcAt = (t: number) => OPEN_SRC + t;      // the opening plays at the recording's own speed
+/** The match into the drawing happens at fixed replay frames, next to 0:38.50 (the frame the trace was drawn from). */
+const MATCH_SRC = 38.587, SWAP_SRC = 38.707;
 
 /** Return: the second ramp run from the air (rk_aerial.mp4 starts at rec_224730 2:19.80). */
 export const AER_FILE0 = 139.8;
@@ -28,8 +30,8 @@ export const AER_LAST = 146.733;                       // last frame before the 
 
 export const T = {
   catch: cue('catch', 1),                              // gas-flow overlay on the real jets
-  match: cue('catch', 1) + 0.24,                       // drawn outline over the real car
-  swap: cue('catch', 1) + 0.36,                        // drawn car replaces the footage
+  match: MATCH_SRC - OPEN_SRC,                         // drawn outline over the real car (fixed to the replay frame)
+  swap: SWAP_SRC - OPEN_SRC,                           // drawn car replaces the footage
   jets: cue('These', 2), blast: cue('blast', 2), compressed: cue('compressed', 2), air: cue('air', 2),
   every: cue('Every', 3), burst: cue('burst', 3), up: cue('up', 3),
   keeping: cue('Keeping', 4), airborne: cue('airborne', 4), thrust: cue('thrust', 4), pushing: cue('pushing', 4),
@@ -53,12 +55,14 @@ export const WIPE = cue('flying', 10) + 0.62;
 /** The real touchdown (2:24.3) lands just after "problems". */
 export const TOUCH_T = cue('problems', 12, 0, true) + 0.16;
 export const AER_IN = AER_TOUCH - (TOUCH_T - WIPE);    // rec_224730 time when the aerial appears
-export const DURATION = Math.floor((TOUCH_T + (AER_LAST - AER_TOUCH)) * FPS) / FPS;
+/** The film ends 0.3 s after the last word (the loop bridge carries the action through it). */
+export const DURATION = Math.round((words[words.length - 1].e + 0.3) * FPS) / FPS;
 export const FRAMES = Math.round(DURATION * FPS);
 /** Loop bridge: the last 0.80 s is the same replay's lift-off (rec_224911 0:34.45-0:35.22), which runs straight into
  *  frame 0 (0:35.25): the loop is one continuous shot. */
 export const LOOP_SRC = 34.45;
 export const LOOP_T = DURATION - (OPEN_SRC - LOOP_SRC);
+if (AER_TOUCH + (LOOP_T - TOUCH_T) > AER_LAST) throw new Error('the aerial would run past its last frame before the loop bridge');
 
 /** Caption phrase groups (words per plate) and the words given restrained emphasis. */
 export const PHRASES = [4, 3, 4, 3, 2, 2, 3, 4, 4, 4, 2, 4, 3, 3, 3, 3, 4, 4, 2, 3, 3, 3, 4, 3, 2, 4, 3, 2, 5, 2, 3, 4];

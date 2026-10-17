@@ -1,0 +1,127 @@
+1
+00:00:00,090 --> 00:00:01,589
+This Tesla can jump.
+
+2
+00:00:01,590 --> 00:00:02,469
+But rocket thrust
+
+3
+00:00:02,470 --> 00:00:03,550
+comes with a catch.
+
+4
+00:00:03,730 --> 00:00:04,729
+These jets blast
+
+5
+00:00:04,730 --> 00:00:05,890
+compressed air.
+
+6
+00:00:05,930 --> 00:00:06,689
+Every burst
+
+7
+00:00:06,690 --> 00:00:07,689
+uses some up.
+
+8
+00:00:07,690 --> 00:00:08,729
+Keeping a car airborne
+
+9
+00:00:08,730 --> 00:00:09,929
+on thrust means pushing
+
+10
+00:00:09,930 --> 00:00:11,589
+against its entire weight.
+
+11
+00:00:11,590 --> 00:00:12,149
+Bigger tanks
+
+12
+00:00:12,150 --> 00:00:13,189
+can buy more time,
+
+13
+00:00:13,190 --> 00:00:13,929
+but add weight
+
+14
+00:00:13,930 --> 00:00:15,090
+and need protection.
+
+15
+00:00:15,330 --> 00:00:16,770
+Then comes balance.
+
+16
+00:00:16,810 --> 00:00:17,629
+Thrust that misses
+
+17
+00:00:17,630 --> 00:00:18,449
+the center of mass
+
+18
+00:00:18,450 --> 00:00:19,590
+can make it rotate.
+
+19
+00:00:19,610 --> 00:00:20,229
+Other thrusters
+
+20
+00:00:20,230 --> 00:00:21,049
+can correct that,
+
+21
+00:00:21,050 --> 00:00:21,969
+but those corrections
+
+22
+00:00:21,970 --> 00:00:22,950
+use air too.
+
+23
+00:00:23,190 --> 00:00:24,089
+And fire a jet
+
+24
+00:00:24,090 --> 00:00:25,210
+near loose gravel?
+
+25
+00:00:25,250 --> 00:00:25,869
+That blast
+
+26
+00:00:25,870 --> 00:00:27,490
+can send debris flying.
+
+27
+00:00:27,790 --> 00:00:28,269
+None of this
+
+28
+00:00:28,270 --> 00:00:29,250
+breaks physics.
+
+29
+00:00:29,350 --> 00:00:30,429
+It gives a sports car
+
+30
+00:00:30,430 --> 00:00:31,690
+spacecraft problems.
+
+31
+00:00:31,970 --> 00:00:33,049
+Full Roadster breakdown
+
+32
+00:00:33,050 --> 00:00:34,210
+in the linked video.

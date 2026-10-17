@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Render the Rocket Short (composition RocketShort) -> exports/FGW_Rocket_Short_v1.mp4 (1080x1920, 30 fps, -14 LUFS,
+# Render the Rocket Short (composition RocketShort) -> exports/FGW_Rocket_Short_FINAL.mp4 (1080x1920, 30 fps, -14 LUFS,
 # -1.5 dBTP). Rebuilds everything that is Git-ignored: the two clips, the narration, the event list and the sound bed.
 # Needs the owner's recordings in footage/release/ (draft release roadster-footage-2026-10-15).
 set -euo pipefail
@@ -11,7 +11,8 @@ python3 tools/tighten_rocket.py audio/rocket/takes/r_t1_IyNt.mp3 audio/rocket/sc
 python3 tools/build_rocket_narration.py "$TAKE" > /dev/null
 (cd source && npx tsx ../tools/export_rocket_events.ts > /dev/null)
 python3 tools/make_bed_rocket.py
-NAME=${NAME:-FGW_Rocket_Short_v1}
+python3 tools/make_srt_rocket.py > /dev/null
+NAME=${NAME:-FGW_Rocket_Short_FINAL}
 RAW=exports/${NAME}_raw.mp4
 OUT=exports/${NAME}.mp4
 (cd source && npx remotion render src/index.ts RocketShort "../$RAW" --props='{"audio":true,"captions":true}' --crf=16 --x264-preset=medium --color-space=bt709 --audio-bitrate=320k --concurrency=${CONC:-3})

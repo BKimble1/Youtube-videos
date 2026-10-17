@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Upload captions for the Rocket Short: the same 2-5 word phrase groups as the burned-in captions
 (source/src/rocket/data.ts PHRASES), timed from source/src/data/rocket_words.json.
-Output: captions/FGW_Rocket_Short_v1.srt"""
+Output: captions/FGW_Rocket_Short_FINAL.srt"""
 import json, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 words = json.load(open(os.path.join(ROOT, 'source/src/data/rocket_words.json')))['words']
@@ -21,6 +21,6 @@ for k, c in enumerate(cues):
     c[1] = min(max(c[1] + 0.25, c[0] + 0.6), nxt - 0.001)
 for k, (a, b, text) in enumerate(cues, 1):
     out.append(f'{k}\n{fmt(max(0, a))} --> {fmt(b)}\n{text}\n')
-p = os.path.join(ROOT, 'captions/FGW_Rocket_Short_v1.srt')
+p = os.path.join(ROOT, 'captions/FGW_Rocket_Short_FINAL.srt')
 open(p, 'w').write('\n'.join(out))
 print(p, len(cues), 'cues')

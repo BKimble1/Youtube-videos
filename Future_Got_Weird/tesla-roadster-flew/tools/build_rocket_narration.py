@@ -56,8 +56,21 @@ y = np.concatenate(out)
 os.makedirs(os.path.join(ROOT, 'source/public/rocket'), exist_ok=True)
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', '1', '-i', '-', '-c:a', 'pcm_s16le',
                 os.path.join(ROOT, 'source/public/rocket/narration.wav')], input=y.tobytes(), check=True)
-# the word timings come from the aligner and can run a little past the audible end; clamp to the file
 end = len(y) / SR
+# Word times: the take's own alignment drifts late at some sentence ends (up to 0.3 s), so when an independent Scribe
+# transcription of this placed file exists (audio/rocket/scribe/placed_verify.json: the file uploaded as plain audio,
+# not aligned to the prompt) and it has the same words, its times are used. The script's own text and punctuation stay.
+VERIFY = os.path.join(ROOT, 'audio/rocket/scribe/placed_verify.json')
+norm = lambda x: re.sub(r'[^a-z0-9]', '', x.lower())
+if os.path.exists(VERIFY):
+    vd = json.load(open(VERIFY))
+    vw = [w for w in (vd['words'] if isinstance(vd, dict) else vd) if w.get('type', 'word') == 'word']
+    if len(vw) == len(placed) and all(norm(a['w']) == norm(b['text']) for a, b in zip(placed, vw)):
+        for a, b in zip(placed, vw):
+            a['s'], a['e'] = round(b['start'], 3), round(b['end'], 3)
+        print('word times: independent transcription (all', len(vw), 'words match the script)')
+    else:
+        print('WARNING: verification transcript does not match the placed words; keeping aligner times')
 for w in placed:
     w['e'] = round(min(w['e'], end - 0.02), 3)
 json.dump({'take': tight['take'], 'dur': round(end, 3), 'extra': EXTRA, 'words': placed},

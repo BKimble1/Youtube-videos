@@ -11,9 +11,9 @@
 import {T} from './data';
 
 export const G = 981;
-export const CG = {x: -65, y: -58};                 // illustrative centre of mass (between the two lift jets)
+export const CG = {x: -57, y: -58};                 // illustrative centre of mass (between the two lift jets)
 export const NOZ = {
-  front: {x: 45, y: -23},                          // lift jets where the replay shows plumes: behind the front wheel...
+  front: {x: 62, y: -22},                          // lift jets where the replay shows plumes: behind the front wheel...
   rear: {x: -175, y: -36},                         // ...and near the tail
   nose: {x: 190, y: -38},                          // small pitch thrusters ("other thrusters")
   tail: {x: -207, y: -46},
