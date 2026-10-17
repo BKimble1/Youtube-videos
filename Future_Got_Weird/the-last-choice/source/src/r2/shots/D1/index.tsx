@@ -19,6 +19,6 @@ export const SHOTS_D1: R2Shot[] = [
   {id: 'D1-5', sec: 'D1', start: M.BR1, end: M.BR2, note: 'BR1: a unit winds up and swings; the plate blocks and dents; he skids back on his heels', C: D1_5},
   {id: 'D1-6', sec: 'D1', start: M.BR2, end: M.BR3, note: 'BR2: the breaker smashes its chest plate; armour flies; the unit reels', C: D1_6},
   {id: 'D1-7', sec: 'D1', start: M.BR3, end: M.BR4, note: 'BR3: the tether swings the toppling unit into the next; they crash together', C: D1_7},
-  {id: 'D1-8', sec: 'D1', start: M.BR4, end: M.GAIN1, note: 'BR4: behind the Director: his shoulder charge drives the last unit back into the crater; the gap', C: D1_8},
+  {id: 'D1-8', sec: 'D1', start: M.BR4, end: M.GAIN1, note: 'BR4: low behind him: gather, burst, shoulder drive up the rim; it goes over the crest and slides down the inner slope; the gap opens on the crater', C: D1_8},
   {id: 'D1-9', sec: 'D1', start: M.GAIN1, end: M.P2, note: 'GAIN/BREATH: they push through to a fractured slab on the rim; looks pass; he pants, the plate dented', C: D1_9},
 ];

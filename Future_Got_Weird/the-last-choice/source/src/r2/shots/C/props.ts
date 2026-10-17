@@ -9,11 +9,11 @@ import {groundH} from '../../world/ground';
 import {WALL, wallPoint} from './ground';
 
 let WALLM: Prepped | null = null;
-const wallMesh = () => (WALLM ??= prep({...slab(WALL.o, WALL.U, WALL.V, WALL.out.map(([u, v]) => ({u, v})), WALL.thick, 'concrete', 'concreteEdge', 'concreteDark'), crease: 30}));
+const wallMesh = () => (WALLM ??= prep({...slab(WALL.o, WALL.U, WALL.V, WALL.out.map(([u, v]) => ({u, v})), WALL.thick, 'concrete', 'concreteEdge', 'concrete'), crease: 30}));
 
 /** rubble wedged against the wall's back and piled at its foot (x, z, size, seed, mat) */
 const WEDGE: [number, number, number, number, string][] = [
-  [-5.02, 1.75, 0.46, 5, 'rubble'], [-4.98, 3.3, 0.42, 12, 'rubbleDark'], [-5.1, 2.55, 0.3, 19, 'concreteDark'],
+  [-5.02, 1.75, 0.46, 5, 'rubble'], [-4.98, 3.42, 0.42, 12, 'rubbleDark'],
   [-5.85, 1.62, 0.3, 24, 'rubbleDark'], [-5.8, 3.62, 0.34, 8, 'rubble'],
 ];
 

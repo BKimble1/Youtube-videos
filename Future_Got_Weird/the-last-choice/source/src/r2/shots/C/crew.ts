@@ -284,7 +284,7 @@ export const tetherC = (T: number, v?: View): CrewC => {
   // C5b: the left hand across to the reel on her right hip; a press — the lock clicks
   const reelW = win(T, TT.reel - 0.22, TT.reelOff + 0.25, 0.22, 0.25);
   const press = win(T, TT.click - 0.06, TT.click + 0.16, 0.05, 0.1);
-  if (reelW > 0) pose = blendPose(pose, layer(pose, {armL: {local: {r: 58, u: 170 - (pose.drop ?? 0) + 4, f: 30 - 6 * press}, pole: {r: -0.4, u: -1, f: 0.6}}, handL: 'brace', head: {...pose.head, pitch: 26, yaw: 18}, face: {mouth: 'flat', brows: -0.4, lookY: 0.6}}), reelW);
+  if (reelW > 0) pose = blendPose(pose, layer(pose, {twist: 24, lean: 14, drop: 14, armL: {local: {r: 50, u: 170 - 14 + 6, f: 36 - 6 * press}, pole: {r: -0.4, u: -1, f: 0.6}}, handL: 'brace', head: {...pose.head, pitch: 30, yaw: -6}, face: {mouth: 'flat', brows: -0.4, lookY: 0.6}}), reelW);
   // (the reaching arm crosses in front of her body to the far hip)
   if (reelW > 0.2) pose.zArm = [45, undefined];
   // C6: launcher up, ready
@@ -318,36 +318,50 @@ const GRIP = wallGrip(2.46);
 const RN_G0 = gaitC(RN_RUN.path, RN_RUN.path.Ls, RN_RUN.gait);
 const VAULT = (() => {
   const g0 = {x: RN_E.x, y: GC(RN_E.x, RN_E.z), z: RN_E.z};
-  const land: V3 = pt3(-4.62, 2.78);
-  const land2: V3 = pt3(-4.46, 2.5);
+  const land: V3 = pt3(-4.6, 2.8);
+  const land2: V3 = pt3(-4.44, 2.5);
   const out: V3 = pt3(-4.38, 2.62);
   return {g0, land, land2, out};
 })();
+/** the vault's body keys: drop (rig units), roll (deg), heading */
+const V_DROP: [number, number][] = [[TR.takeoff, 18], [TR.hand, 26], [TR.over, 40], [TR.release, 40], [TR.land, 30], [TR.land + 0.14, 76], [TR.land + 0.32, 62], [TR.rec, 20]];
+const V_ROLL: [number, number][] = [[TR.takeoff, 0], [TR.hand, 20], [TR.over, 62], [TR.release, 52], [TR.land - 0.03, 10], [TR.land + 0.12, 0]];
+/** the pelvis in the world: up off the take-off foot, over the edge to his right of the planted palm, down to land */
+const vaultPelvis = (T: number): V3 => {
+  const V = VAULT, P0 = add3(V.g0, {x: 0, y: (165 - 18) / 251.4, z: 0});
+  return keyV([
+    [TR.takeoff, P0],
+    [TR.hand, {x: lerp(V.g0.x, GRIP.x, 0.5), y: GRIP.y + 0.3, z: lerp(V.g0.z, GRIP.z, 0.5) + 0.08}, easeOut],
+    [TR.over, {x: GRIP.x + 0.12, y: GRIP.y + 0.6, z: GRIP.z + 0.34}],
+    [TR.release, {x: GRIP.x + 0.4, y: GRIP.y + 0.5, z: GRIP.z + 0.36}],
+    [TR.land, {x: (V.land.x + V.land2.x) / 2 - 0.06, y: V.land.y + (165 - 30) / 251.4, z: (V.land.z + V.land2.z) / 2}, easeIn],
+    [TR.land + 0.14, {x: (V.land.x + V.land2.x) / 2 + 0.04, y: GC((V.land.x + V.land2.x) / 2, 2.65) + (165 - 76) / 251.4, z: 2.65}],
+    [TR.rec, add3(V.out, {x: 0, y: (165 - 20) / 251.4, z: 0})],
+  ], T);
+};
+/** a tucked foot of the rolled body (world): legs fold forward, the roll swings them out to his right and up */
+const tuckFoot = (pel: V3, h: number, roll: number, side: -1 | 1, tuck: number): V3 => {
+  const f = fwdOf(h), r = rightOf(h);
+  const th = (roll * Math.PI) / 180;
+  const R = {x: r.x * Math.cos(th), y: Math.sin(th), z: r.z * Math.cos(th)}; // rolled right (toward up as he tilts left)
+  const D = {x: r.x * Math.sin(th), y: -Math.cos(th), z: r.z * Math.sin(th)}; // rolled down
+  const reach = lerp(0.8, 0.38, tuck), fw = lerp(0.05, 0.36, tuck) + (side > 0 ? 0.06 : -0.02);
+  return {x: pel.x + R.x * 0.13 * side + D.x * reach + f.x * fw, y: pel.y + R.y * 0.13 * side + D.y * reach, z: pel.z + R.z * 0.13 * side + D.z * reach + f.z * fw};
+};
 const vaultAt = (T: number): Body => {
   const V = VAULT;
-  // root (feet centre; airborne between take-off and landing)
-  const root = keyV([
-    [TR.takeoff, V.g0],
-    [TR.hand, add3(lerp3(V.g0, GRIP, 0.42), {x: 0, y: 0.18, z: 0.05})],
-    [TR.over, {x: GRIP.x + 0.12, y: GRIP.y - 0.2, z: GRIP.z + 0.33}, easeOut],
-    [TR.land, {x: V.land.x + 0.06, y: V.land.y + 0.04, z: (V.land.z + V.land2.z) / 2}, easeIn],
-    [TR.land + 0.12, {x: (V.land.x + V.land2.x) / 2, y: GC((V.land.x + V.land2.x) / 2, 2.64), z: 2.64}],
-    [TR.rec, V.out],
-  ], T);
-  const heading = keyN([[TR.takeoff, RN_E.h], [TR.hand, 84], [TR.over, 62], [TR.land, 82], [TR.rec, 70]], T);
-  // feet: left plants for the take-off, both tuck and swing over (to his right of the hand), the right lands, the left
-  const fL0: V3 = RN_G0.footL;
-  const footL = keyV([
-    [TR.takeoff + 0.06, fL0], [TR.hand + 0.04, add3(fL0, {x: 0.12, y: 0.08, z: 0})],
-    [TR.over - 0.06, {x: GRIP.x - 0.05, y: GRIP.y + 0.08, z: GRIP.z + 0.42}, easeOut],
-    [TR.land - 0.02, add3(V.land2, {x: -0.1, y: 0.22, z: 0.05})], [TR.land + 0.1, V.land2, easeIn], [TR.rec, V.land2],
-  ], T);
-  const fR0: V3 = RN_G0.footR;
-  const footR = keyV([
-    [TR.takeoff, fR0], [TR.hand, add3(lerp3(V.g0, GRIP, 0.5), {x: 0, y: -0.1, z: 0.32})],
-    [TR.over - 0.03, {x: GRIP.x + 0.1, y: GRIP.y + 0.14, z: GRIP.z + 0.62}, easeOut],
-    [TR.land - 0.04, add3(V.land, {x: -0.08, y: 0.12, z: 0})], [TR.land, V.land, easeIn], [TR.rec, V.land],
-  ], T);
+  const heading = keyN([[TR.takeoff, RN_E.h], [TR.hand, 84], [TR.over, 70], [TR.land, 80], [TR.rec, 70]], T);
+  const drop = keyN(V_DROP, T), roll = keyN(V_ROLL, T);
+  const pel = vaultPelvis(T);
+  const root = {x: pel.x, y: pel.y - (165 - drop) / 251.4, z: pel.z};
+  const tuck = keyN([[TR.takeoff, 0], [TR.hand, 0.7], [TR.over, 1], [TR.release, 0.8], [TR.land - 0.05, 0.25], [TR.land, 0]], T);
+  const tL = tuckFoot(pel, heading, roll, -1, tuck), tR = tuckFoot(pel, heading, roll, 1, tuck);
+  // the left foot: planted for the take-off, then tucked; lands second. The right: swinging through, tucked, lands first
+  const wL = T < TR.hand - 0.02 ? 0 : T < TR.hand + 0.1 ? smooth((T - (TR.hand - 0.02)) / 0.12) : T < TR.land - 0.02 ? 1 : 1 - smooth((T - (TR.land - 0.02)) / 0.14);
+  const fL0 = RN_G0.footL;
+  const footL = T < TR.land ? lerp3(fL0, tL, wL) : lerp3(V.land2, tL, wL);
+  const wR = T < TR.takeoff + 0.12 ? smooth((T - TR.takeoff) / 0.12) : T < TR.land - 0.08 ? 1 : 1 - smooth((T - (TR.land - 0.08)) / 0.08);
+  const footR = T < TR.land - 0.08 ? lerp3(RN_G0.footR, tR, wR) : lerp3(V.land, tR, wR);
   return {pos: root, heading, footL, footR, runK: 0, seg: 0, inWalk: false};
 };
 const RN_PATH2: XZ[] = [{x: VAULT.out.x, z: VAULT.out.z}, {x: -3.6, z: 2.36}, {x: -2.6, z: 1.6}, {x: -1.6, z: 0.62}, {x: -0.62, z: -0.38}, {x: 0.35, z: -1.15}];
@@ -373,9 +387,9 @@ export const runnerC = (T: number, v?: View): CrewC => {
   if (inVault) {
     // the body: a forward reach at the take-off, rolls over the planted left arm (legs swing up to his right), unrolls
     // to land, absorbs low, comes up and moves on
-    const roll = keyN([[TR.takeoff, 0], [TR.hand, 18], [TR.over, 52], [TR.release, 40], [TR.land, 8], [TR.land + 0.15, 0]], T);
-    const drop = keyN([[TR.takeoff, 18], [TR.hand, 30], [TR.over, 52], [TR.land, 30], [TR.land + 0.14, 74], [TR.land + 0.32, 62], [TR.rec, 20]], T);
-    const lean = keyN([[TR.takeoff, 18], [TR.hand, 30], [TR.over, 22], [TR.land, 12], [TR.land + 0.14, 34], [TR.rec, 14]], T);
+    const roll = keyN(V_ROLL, T);
+    const drop = keyN(V_DROP, T);
+    const lean = keyN([[TR.takeoff, 18], [TR.hand, 32], [TR.over, 26], [TR.land, 12], [TR.land + 0.14, 34], [TR.rec, 14]], T);
     pose = {
       ...pose, drop, lean, bodyRoll: roll, twist: keyN([[TR.takeoff, 0], [TR.over, -14], [TR.land, 6], [TR.rec, 0]], T),
       // the right hand (the halligan) up and out for balance

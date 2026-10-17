@@ -62,15 +62,22 @@ export const CAM_B5: CamKey[] = [
 ];
 export const B5_ANCHOR: V3 = {x: CHEST5.x, y: CHEST5.y + 0.3, z: CHEST5.z};
 
-/** B6: the lonely silhouette — the reverse: low among the vanguard's ranks east of the crater, the lens at chest height
- * in the lane the ranks leave around the old rail column (80, −5), looking west and a touch up: the back and legs of
- * the nearest machine large and dark on the left (it slows from H4 and plants its last step two beats later), more backs at
- * the frame edge, the column and the fallen girder on the right, the crater's rim and its smoke between, and ~85 m off
- * on the ridge crest, small, him — backlit by the low western sun against the smoke over the west ruin. The sight line
- * clears every unit by ≥ 0.8 m and the column by ≥ 1.1 m. Hold, drifting in a hair. */
-export const B6_LENS = {x: 86.5, z: -3.6, up: 1.25};
-const B6_AIM: V3 = {x: STAND.x, y: groundH(B6_LENS.x, B6_LENS.z) + 1.5, z: STAND.z + 9.5}; // he sits just right of centre
+/** B6: the lonely silhouette — the reverse, on a crane 6 m over the main body's front ranks east of the crater
+ * (just south of the foreground heavy), looking west across the crater at him: the vanguard's heads and shoulders, dark
+ * and backlit, fill the bottom of the frame; the crater's far slope and its smoke in the middle; him small and centred
+ * in the upper third, ~58 px tall at 1080p, a silhouette against the glowing smoke over the west ruin. From this height
+ * the ridge slope shows between the van's roof and his feet. The lens is long (V 16°): every machine is ≥ 80 m from
+ * him, and a 24–30° lens from behind the ranks would make him 30–40 px. Hold, creeping in a hair. */
+export const B6_LENS = {x: 106, z: 4.5, up: 6.0};
+const B6_HEAD: V3 = {x: STAND.x, y: STAND.y + 1.24, z: STAND.z};
+/** a target that puts `at` at the horizontal centre and at screen height `sy` (0 top … 1 bottom) for vertical fov V */
+const aimAt = (pos: V3, at: V3, V: number, sy: number): V3 => {
+  const dx = at.x - pos.x, dy = at.y - pos.y, dz = at.z - pos.z, L = Math.hypot(dx, dy, dz);
+  const yaw = Math.atan2(dz, dx), pitch = Math.asin(dy / L) - Math.atan((0.5 - sy) * 2 * Math.tan((V / 2) * (Math.PI / 180)));
+  return {x: pos.x + Math.cos(pitch) * Math.cos(yaw) * 100, y: pos.y + Math.sin(pitch) * 100, z: pos.z + Math.cos(pitch) * Math.sin(yaw) * 100};
+};
+const B6_P0 = gp(B6_LENS.x, B6_LENS.z, B6_LENS.up), B6_P1 = gp(B6_LENS.x - 1.2, B6_LENS.z - 0.04, B6_LENS.up - 0.03);
 export const CAM_B6: CamKey[] = [
-  {t: 0, pos: gp(B6_LENS.x, B6_LENS.z, B6_LENS.up), target: B6_AIM, fov: 36},
-  {t: SHOT_T.B6[1] - SHOT_T.B6[0], pos: gp(B6_LENS.x - 0.3, B6_LENS.z + 0.017, B6_LENS.up + 0.02), target: {...B6_AIM, y: B6_AIM.y + 0.05}, fov: 35},
+  {t: 0, pos: B6_P0, target: aimAt(B6_P0, B6_HEAD, 16, 0.33), fov: 16},
+  {t: SHOT_T.B6[1] - SHOT_T.B6[0], pos: B6_P1, target: aimAt(B6_P1, B6_HEAD, 15.6, 0.33), fov: 15.6},
 ];

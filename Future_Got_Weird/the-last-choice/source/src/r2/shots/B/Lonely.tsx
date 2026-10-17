@@ -1,17 +1,22 @@
 // B5 (27.00–30.26): from the avenue east-south-east of him, low, the camera pushes in and up past the van (the radio on
 // its floor) to a medium close: the western sun rims him; he breathes, looks down at his left arm and pulls the
 // plate's strap tight with his teeth and his right hand. B6 (30.26–35.80, H4/H5): the lonely silhouette — the reverse,
-// from low among the machines' ranks east of the crater looking west: the nearest machines plant their last steps
-// just after H4 (the main body on H5a, the rear on H5b, behind the lens), and far off on the crest, small and backlit
-// by the low sun, him. Hold.
+// from a crane over the machines' ranks east of the crater looking west: the sea of heads and shoulders below goes still
+// wave by wave (the vanguard two beats after H4, the main body on H5a, the rear on H5b), drones hold over the crater,
+// and far off on the crest, small, a silhouette against the sunlit smoke, him. Hold.
 import React from 'react';
 import {Stage, useShotTime, camPath} from '../../film/stage';
-import {V3} from '../../../kit/math';
-import type {ColumnOpts} from '../../world/atmos';
-import type {Item, View} from '../../engine';
+import {V3, rnd, smoothPath} from '../../../kit/math';
+import type {Item, View, SpriteCtx} from '../../engine';
+import {mix, toView} from '../../engine';
+import {figureSprite} from '../../rig';
+import type {FigProps} from '../../rig';
+import {drone} from '../../mech';
+import {groundH} from '../../world/ground';
 import {M} from '../../timing';
 import {STAND} from './director';
-import {dirSprite, armyB, B_COLUMNS, strapItems} from './kit';
+import {ARMY_B} from './army';
+import {dirSprite, dirSpec, armyB, B_COLUMNS, strapItems} from './kit';
 import {slabItem, chunkItems, supportItems} from './rubble';
 import {CAM_B5, CAM_B6, B5_ANCHOR} from './cams';
 
@@ -25,19 +30,102 @@ export const ShotB5: React.FC = () => {
 };
 
 // ------------------------------------------------------------------ B6
-/** smoke rolling off the west ruin behind the ridge, light and lit from behind by the low sun: his backdrop in B6 (the
- * crater's two northern smokes, which lie across the sight line from this lens, are left out so he stays clean) */
-const B6_BACKDROP: {key: string; base: V3; o: ColumnOpts}[] = [
-  {key: 'b6W1', base: {x: -9, y: 5, z: 2}, o: {n: 8, life: 20, rise: 0.35, r0: 4, r1: 11, drift: 0.4, dark: 0, alpha: 0.5, warm: 0, seed: 71}},
-  {key: 'b6W2', base: {x: -16, y: 7, z: -6}, o: {n: 7, life: 22, rise: 0.3, r0: 5, r1: 13, drift: 0.4, dark: 0.05, alpha: 0.45, warm: 0, seed: 72}},
-  {key: 'b6W3', base: {x: -14, y: 6, z: 10}, o: {n: 7, life: 21, rise: 0.3, r0: 5, r1: 12, drift: 0.4, dark: 0.05, alpha: 0.45, warm: 0, seed: 73}},
+/** He is ~105 m off and the low sun is behind him: drawn as a dark silhouette with a thin warm rim (the same figure in a
+ * warm flat colour, nudged left, right and up, under the dark one). */
+const SIL = '#1C1517', RIM = '#FFC788';
+const dirSilhouette = (T: number): Item => {
+  const base = dirSpec(T, {anchor: {x: STAND.x, y: STAND.y + 0.9, z: STAND.z}});
+  const pose = base.pose as Partial<FigProps>;
+  const dark = figureSprite({...base, key: 'dirB6', pose: {...pose, silhouette: SIL}});
+  const rim = figureSprite({...base, key: 'dirB6r', pose: {...pose, silhouette: RIM}});
+  return {
+    ...dark, noCull: true,
+    draw: (c) => (
+      <g>
+        <g transform="translate(-1.5 -0.8)" opacity={0.9}>{rim.draw(c)}</g>
+        <g transform="translate(1.5 -0.8)" opacity={0.9}>{rim.draw(c)}</g>
+        <g transform="translate(0 -1.8)">{rim.draw(c)}</g>
+        {dark.draw(c)}
+      </g>
+    ),
+  };
+};
+
+/** A blob of backlit smoke: warm, bright (the low sun shines through it from behind), a lighter core. */
+const glowBlob = (key: string, pos: V3, r: number, seed: number, T: number, k: number, a = 1): Item => ({
+  kind: 'sprite', key, pos,
+  draw: (c) => {
+    const R = r * c.k;
+    if (R < 1.5) return null;
+    const pts = Array.from({length: 9}, (_, i) => {
+      const ang = (i / 9) * Math.PI * 2 + seed;
+      const rr = R * (1 + 0.14 * Math.sin(ang * 2 + seed * 3 + T * 0.2) + 0.08 * Math.sin(ang * 3 + seed));
+      return {x: c.x + Math.cos(ang) * rr, y: c.y + Math.sin(ang) * rr * 0.82};
+    });
+    const inner = pts.map((q) => ({x: c.x - R * 0.12 + (q.x - c.x) * 0.62, y: c.y - R * 0.16 + (q.y - c.y) * 0.62}));
+    return (
+      <g opacity={a}>
+        <path d={smoothPath(pts, true, 1)} fill={mix('#E59E6C', '#F6CB98', k)} opacity={0.5 + 0.22 * k} />
+        <path d={smoothPath(inner, true, 1)} fill="#FFE4BE" opacity={0.42} />
+      </g>
+    );
+  },
+});
+/** the wall of sunlit smoke over the west ruin, behind the ridge (his backdrop), drifting slowly north-east */
+const GLOW = Array.from({length: 34}, (_, i) => ({
+  x: -6 - rnd(i * 3 + 1) * 10, y: 2.5 + rnd(i * 5 + 2) * 13, z: -26 + (i / 33) * 52 + (rnd(i * 7 + 3) - 0.5) * 5,
+  r: 3.6 + rnd(i * 11 + 4) * 4.6, seed: rnd(i * 13 + 5) * 6.28, k: rnd(i * 17 + 6),
+}));
+/** sunlit dust off the crest right behind him (between the slab's east edge and him), so his legs have light behind them */
+const CREST = Array.from({length: 9}, (_, i) => ({
+  x: 1.0 + rnd(i * 19 + 1) * 0.35, y: 3.25 + rnd(i * 23 + 2) * 1.3, z: 0.2 + (i / 8) * 2.4 + (rnd(i * 29 + 3) - 0.5) * 0.4,
+  r: 0.45 + rnd(i * 31 + 4) * 0.55, seed: rnd(i * 37 + 5) * 6.28, k: 0.5 + rnd(i * 41 + 6) * 0.5,
+}));
+const glowItems = (T: number): Item[] => [
+  ...GLOW.map((g, i) => glowBlob(`b6g${i}`, {x: g.x + Math.sin(T * 0.07 + g.seed) * 0.6, y: g.y + (T - M.H4) * 0.1, z: g.z - (T - M.H4) * 0.16}, g.r, g.seed, T, g.k)),
+  ...CREST.map((g, i) => glowBlob(`b6c${i}`, {x: g.x, y: g.y + (T - M.H4) * 0.05 + Math.sin(T * 0.5 + g.seed) * 0.05, z: g.z - (T - M.H4) * 0.06}, g.r, g.seed, T, g.k, 0.85)),
 ];
+
+/** three drones holding low over the crater, gimbals on him (B6 only) */
+const B6_DRONES: {id: number; at: V3; ph: number}[] = [
+  {id: 3391, at: {x: 62, y: 1.5, z: -2}, ph: 0.3}, {id: 3392, at: {x: 56, y: 3.0, z: 11}, ph: 2.1}, {id: 3393, at: {x: 70, y: 0.9, z: 7.5}, ph: 4.0},
+];
+const droneItems = (T: number): Item[] => B6_DRONES.flatMap((d) => drone({
+  id: d.id, t: T, heading: 270, pos: {x: d.at.x + Math.sin(T * 0.3 + d.ph) * 0.3, y: d.at.y + Math.sin(T * 0.9 + d.ph) * 0.18, z: d.at.z + Math.sin(T * 0.23 + d.ph) * 0.4},
+  look: {x: STAND.x, y: STAND.y + 1.2, z: STAND.z}, eye: 'cyan', lod: 'full', ground: groundH,
+}));
+
+/** The eyes of a share of the machines in front light the air around their heads: seen from behind, a cyan halo just in
+ * front of the face, drawn before the head so it shows round its edges. */
+const eyeSpill = (v: View, T: number): Item[] => ARMY_B.slots(T).filter((s) => rnd(s.id * 53 + 7) < 0.3 && s.pos.x < 96).map((s) => {
+  const pos = {x: s.pos.x - 0.2, y: groundH(s.pos.x, s.pos.z) + 1.93, z: s.pos.z};
+  return {
+    kind: 'sprite' as const, key: `b6es${s.id}`, pos,
+    draw: (c: SpriteCtx) => {
+      const R = 0.3 * c.k;
+      if (R < 2) return null;
+      const id = `b6es${s.id}`;
+      return (
+        <g opacity={0.6}>
+          <defs><radialGradient id={id}><stop offset="0" stopColor="#E9FBFF" stopOpacity={0.9} /><stop offset="0.35" stopColor="#62D6EA" stopOpacity={0.55} /><stop offset="1" stopColor="#62D6EA" stopOpacity={0} /></radialGradient></defs>
+          <circle cx={c.x} cy={c.y} r={R} fill={`url(#${id})`} />
+        </g>
+      );
+    },
+  };
+});
+void toView;
+
 export const B6_START = M.H4, B6_END = M.BASS_OUT;
 export const ShotB6: React.FC = () => {
   const {t, T} = useShotTime(B6_START);
   const cam = camPath(CAM_B6, t, 0.3);
   // looking into the low sun: exposed for the bright smoke, the sides of things facing the lens (away from the sun)
-  // sink (light shadowK). He is ~85 m off: take the rig's perspective at his chest so he stands true on the crest
-  const items = (v: View): Item[] => [dirSprite(T, {anchor: {x: STAND.x, y: STAND.y + 0.9, z: STAND.z}}), slabItem(T), ...supportItems(), ...chunkItems(T), ...armyB(v, T, {maxFull: 18, maxMid: 40, farFrom: 70})];
-  return <Stage T={T} cam={cam} items={items} drift={0.01} atmos={{columns: [...B_COLUMNS.filter((c) => c.key === 'bCr4'), ...B6_BACKDROP], smoke: 0.15, haze: 0.05}} light={{shadowK: 0.6}} vignette={0.78} />;
+  // sink (light shadowK); the army's own drones are elsewhere (B6 has its three over the crater)
+  const items = (v: View): Item[] => [
+    dirSilhouette(T), slabItem(T), ...supportItems(), ...chunkItems(T),
+    ...glowItems(T), ...droneItems(T), ...eyeSpill(v, T),
+    ...armyB(v, T, {maxFull: 30, maxMid: 60, farFrom: 120, drones: false}),
+  ];
+  return <Stage T={T} cam={cam} items={items} drift={0.006} atmos={{columns: B_COLUMNS.filter((c) => c.key !== 'bCr3'), smoke: 0.12, haze: 0.04}} light={{shadowK: 0.6}} vignette={0.6} />;
 };

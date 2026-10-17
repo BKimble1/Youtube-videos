@@ -41,7 +41,7 @@ export const EV2 = {
   // D2-4: FLANK
   flank: M.FLANK, knee: 103.1, bash: 103.62, pryIn: 104.05, pryPop: 104.5, rip: 104.92,
   // D2-5: TETHER
-  tFire: 106.0, tBite: 106.3, wrap0: 106.5, wrap: 106.85, taut: 106.95, sweep: 107.55, crash: 108.05, release: 109.3, reelEnd: 110.0,
+  tFire: 105.95, tBite: 106.22, wrap0: 106.35, wrap: 106.72, taut: 106.85, sweep: 107.55, crash: 107.95, release: 109.3, reelEnd: 110.0,
   // D2-6, D2-7
   knock: M.KNOCKBACK, catch: M.CATCH, shield: M.SHIELD, counter: M.COUNTER, bright: M.BRIGHT,
 };
@@ -189,14 +189,14 @@ const crewAt: V3 = on({x: 49.0, z: -7.0}, 1.5);
 // ---- A (D1's U5): watches the light by the girder; bashed; turns back; clamped and dragged into C
 export const A_FL = {x: 54.95, z: -7.85, h: 150};
 const A_STAG = {x: 55.95, z: -8.15};
-const A_WALK: Walk = {kind: 'walk', pts: [{x: A_STAG.x - 0.05, z: A_STAG.z - 0.05}, {x: 53.6, z: -8.85}, {x: 51.0, z: -9.6}], T0: 105.45, T1: 108.3, stride: 1.5, A: 0.6, D: 0.6};
+const A_WALK: Walk = {kind: 'walk', pts: [{x: A_STAG.x - 0.05, z: A_STAG.z - 0.05}, {x: 53.6, z: -8.85}, {x: 51.0, z: -9.6}], T0: 105.55, T1: 109.8, stride: 1.4, A: 0.6, D: 0.6};
 /** A at the moment the reel goes taut (the start of the drag) */
 export const A_YANK = (() => { const w = walkAt(A_WALK, EV2.taut); return {x: w.pos.x, z: w.pos.z, h: w.heading}; })();
 
 // ---- C (reserve R2): along the girder's underside from the north-east rim; watches the light; walks west on the fight
 const C_IN: Walk = {kind: 'walk', pts: [{x: 81.0, z: -10.53}, {x: 74.0, z: -9.9}, {x: 66.0, z: -9.7}, {x: 58.6, z: -9.1}], T0: 96.35, T1: 101.8, stride: 2.0, A: 1.0, D: 0.8};
 const C_HOLD = {x: 58.6, z: -9.1};
-const C_WEST: Walk = {kind: 'walk', pts: [C_HOLD, {x: 54.6, z: -9.45}, {x: 51.0, z: -10.0}, {x: 48.4, z: -10.6}], T0: 104.6, T1: 109.0, stride: 1.6, A: 0.7, D: 0.6};
+const C_WEST: Walk = {kind: 'walk', pts: [C_HOLD, {x: 54.6, z: -9.3}, {x: 51.6, z: -9.6}, {x: 49.6, z: -9.4}], T0: 104.5, T1: 108.6, stride: 1.6, A: 0.7, D: 0.6};
 export const C_HIT = (() => { const w = walkAt(C_WEST, EV2.sweep); return {x: w.pos.x, z: w.pos.z, h: w.heading}; })();
 
 // ---- the drag (TETHER): the reel pulls A along its cable toward the anchor; A hits C; both slam into the girder where
@@ -340,7 +340,7 @@ const C_PLAN: Plan = {
     {kind: 'd1', name: 'R2'},
     {kind: 'stand', root: [[95.9, 81.0, -10.53, 270], [96.3, 81.0, -10.53, 264]]},
     C_IN,
-    {kind: 'stand', root: [[C_IN.T1, C_HOLD.x, C_HOLD.z, 0], [102.4, C_HOLD.x, C_HOLD.z, 205], [104.0, C_HOLD.x, C_HOLD.z, 205], [104.55, C_HOLD.x, C_HOLD.z, 272]]},
+    {kind: 'stand', root: [[C_IN.T1, C_HOLD.x, C_HOLD.z, 0], [102.4, C_HOLD.x, C_HOLD.z, 205], [103.95, C_HOLD.x, C_HOLD.z, 205], [104.45, C_HOLD.x, C_HOLD.z, 272]]},
     C_WEST,
     {kind: 'fn', T0: EV2.sweep, at: cDrag},
   ],
@@ -364,7 +364,7 @@ const C_PLAN: Plan = {
 const D_HIT = besideFig(2, EV2.hitB, 1.0, -0.25);
 export const D_UP = {x: 51.15, z: -5.35, h: 304};
 const D_STEP = {x: 50.5, z: -5.82};
-const D_IN: Walk = {kind: 'walk', pts: [{x: 54.2, z: 8.0}, {x: 55.5, z: 4.4}, {x: D_HIT.x, z: D_HIT.z}], T0: 97.25, T1: 99.4, stride: 1.6, A: 0.6, D: 0.6};
+const D_IN: Walk = {kind: 'walk', pts: [{x: 54.2, z: 8.0}, {x: 55.3, z: 4.4}, {x: D_HIT.x, z: D_HIT.z}], T0: 97.45, T1: 99.45, stride: 1.6, A: 0.6, D: 0.6};
 const D_UPW: Walk = {kind: 'walk', pts: [{x: D_HIT.x + hdir(D_HIT.h).x * 0.35, z: D_HIT.z + hdir(D_HIT.h).z * 0.35}, {x: 54.4, z: -2.9}, {x: D_UP.x, z: D_UP.z}], T0: 107.55, T1: 110.15, stride: 1.7, A: 0.6, D: 0.7};
 /** the backhand: D's right hand sweeps across its body and out into the runner's left shoulder at KNOCKBACK */
 export const dBackhand = (T: number, target: V3): {hand: V3; open: boolean} | undefined => {
@@ -384,7 +384,7 @@ const D_PLAN: Plan = {
   id: 8106, key: 'd2D',
   phases: [
     {kind: 'd1', name: 'U6'},
-    {kind: 'stand', root: [[96.85, 54.2, 8.0, 88], [97.25, 54.2, 8.0, 20]]},
+    {kind: 'stand', root: [[97.05, 54.2, 8.0, 88], [97.45, 54.2, 8.0, 18]]},
     D_IN,
     {kind: 'stand', root: [[D_IN.T1, D_HIT.x, D_HIT.z, 0], [99.62, D_HIT.x, D_HIT.z, D_HIT.h], [100.15, D_HIT.x + hdir(D_HIT.h).x * 0.35, D_HIT.z + hdir(D_HIT.h).z * 0.35, D_HIT.h],
       [101.6, D_HIT.x + hdir(D_HIT.h).x * 0.35, D_HIT.z + hdir(D_HIT.h).z * 0.35, D_HIT.h + 20], [104.5, D_HIT.x + hdir(D_HIT.h).x * 0.35, D_HIT.z + hdir(D_HIT.h).z * 0.35, D_HIT.h + 20],
@@ -420,13 +420,13 @@ export const SHIELD_AT: V3 = on({x: 49.72, z: -6.32}, 1.28);
 
 // ---- 8108 (D1's U8): strikes through figure 3 at DECOY_HITa, again at 101.45; searches the smoke; survives
 const U8_HIT = besideFig(3, EV2.hitA, 0.95, -0.3);
-const U8_IN: Walk = {kind: 'walk', pts: [{x: 54.0, z: 9.6}, {x: 56.2, z: 5.6}, {x: U8_HIT.x, z: U8_HIT.z}], T0: 96.95, T1: 99.12, stride: 1.6, A: 0.6, D: 0.6};
+const U8_IN: Walk = {kind: 'walk', pts: [{x: 54.0, z: 9.6}, {x: 57.0, z: 6.7}, {x: U8_HIT.x, z: U8_HIT.z}], T0: 96.95, T1: 99.12, stride: 1.6, A: 0.6, D: 0.6};
 const U8_2 = besideFig(3, 101.45, 0.95, -0.3);
 const U8_PLAN: Plan = {
   id: 8108, key: 'd2U8',
   phases: [
     {kind: 'd1', name: 'U8'},
-    {kind: 'stand', root: [[96.6, 54.0, 9.6, 80], [96.95, 54.0, 9.6, 28]]},
+    {kind: 'stand', root: [[96.6, 54.0, 9.6, 80], [96.95, 54.0, 9.6, 46]]},
     U8_IN,
     {kind: 'stand', root: [[U8_IN.T1, U8_HIT.x, U8_HIT.z, 0], [99.3, U8_HIT.x, U8_HIT.z, U8_HIT.h], [99.75, U8_HIT.x + hdir(U8_HIT.h).x * 0.3, U8_HIT.z + hdir(U8_HIT.h).z * 0.3, U8_HIT.h],
       [100.9, U8_2.x, U8_2.z, U8_2.h], [103.5, U8_2.x, U8_2.z, U8_2.h], [104.8, U8_2.x + 0.6, U8_2.z + 0.4, 310], [116.92, U8_2.x + 0.6, U8_2.z + 0.4, 305]]},

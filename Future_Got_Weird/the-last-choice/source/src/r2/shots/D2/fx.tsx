@@ -250,7 +250,7 @@ export const d2Fx = (T: number): FxOut => {
     out.push(fx(flash3({at, t: T, t0: EV2.crash, key: 'd2crfl', r: 0.9, dur: 0.14, color: '#FFE8C0'})));
     out.push(fx(ring3({at, normal: {x: 0, y: 0, z: 1}, t: T, t0: EV2.crash, key: 'd2crrg', r0: 0.2, speed: 9, dur: 0.2, width: 0.07})));
     out.push(fx(chips3({at, t: T, t0: EV2.crash, key: 'd2crch', n: 12, dir: {x: 0.3, y: 0.8, z: 0.5}, spread: 70, speed: [2, 6], size: [0.04, 0.12], material: 'metal', ground: ground(at), seed: 75})));
-    out.push(fx([], [EV2.crash + 0.1 > T ? {pos: at, color: '#FFD9A0', power: 1.2, radius: 7} : null].filter(Boolean) as never[], shakeAt(T, EV2.crash, 0.16, 4.5)));
+    out.push(fx([], T < EV2.crash + 0.12 ? [{pos: at, color: '#FFD9A0', power: 1.2, radius: 7}] : [], shakeAt(T, EV2.crash, 0.16, 4.5)));
     // the girder shakes loose its dust and rust along a few metres either side of the hit
     for (let i = 0; i < 6; i++) {
       const s = (i - 2.5) * 1.3;

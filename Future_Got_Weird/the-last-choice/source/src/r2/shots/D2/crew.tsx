@@ -161,9 +161,9 @@ export const DIR_BASH_A = {x: 54.03, z: -8.1}; // standing at A's back-right as 
 const DIR_HOLD = {x: 48.6, z: -10.35};
 const DIR_COUNTER = {x: 49.92, z: -5.02}; // at D's left side as the plate lands (EV2.counter)
 const DIR_SEGS: Seg[] = [
-  {kind: 'stand', root: [[94.3, D0.x, D0.z, 270], [97.8, D0.x, D0.z, 270], [98.1, D0.x - 0.05, D0.z - 0.2, 345]]},
-  {kind: 'run', path: [{x: D0.x - 0.05, z: D0.z - 0.2}, {x: 45.3, z: 1.0}, {x: 45.05, z: -3.4}, {x: 45.9, z: -7.9}, DIR_HOLD], T0: 98.14, T1: 100.75, gait: GAITS.crouch, A: 0.7, D: 0.7},
-  {kind: 'stand', root: [[100.75, DIR_HOLD.x, DIR_HOLD.z, 135], [101.2, DIR_HOLD.x, DIR_HOLD.z, 108], [102.2, DIR_HOLD.x, DIR_HOLD.z, 102]]},
+  {kind: 'stand', root: [[94.3, D0.x, D0.z, 270], [97.8, D0.x, D0.z, 270], [98.1, D0.x - 0.05, D0.z - 0.2, 315]]},
+  {kind: 'run', path: [{x: D0.x - 0.05, z: D0.z - 0.2}, {x: 45.45, z: 1.3}, {x: 45.4, z: -3.4}, {x: 45.65, z: -6.8}, {x: 47.5, z: -8.9}, DIR_HOLD], T0: 98.42, T1: 101.1, gait: GAITS.crouch, A: 0.7, D: 0.7},
+  {kind: 'stand', root: [[101.1, DIR_HOLD.x, DIR_HOLD.z, 135], [101.2, DIR_HOLD.x, DIR_HOLD.z, 108], [102.2, DIR_HOLD.x, DIR_HOLD.z, 102]]},
   {kind: 'run', path: [DIR_HOLD, {x: 52.0, z: -9.85}, DIR_BASH_A], T0: 102.22, T1: EV2.bash, gait: GAITS.dir, A: 0.5, D: 0.18},
   {kind: 'stand', root: [[EV2.bash, DIR_BASH_A.x, DIR_BASH_A.z, 131], [EV2.bash + 0.35, DIR_BASH_A.x - 0.12, DIR_BASH_A.z - 0.04, 131], [104.6, DIR_BASH_A.x - 0.12, DIR_BASH_A.z - 0.04, 150]]},
   {kind: 'run', path: [{x: DIR_BASH_A.x - 0.12, z: DIR_BASH_A.z - 0.04}, {x: 54.3, z: -6.6}, {x: 52.2, z: -5.3}, DIR_GUARD_AT], T0: 104.62, T1: 106.3, gait: GAITS.run, A: 0.5, D: 0.55},
@@ -240,7 +240,7 @@ export const directorPlate = (T: number) => directorAt(T).pts!.plate;
 
 // ================================================================== THE BREAKER (honest)
 const K0 = sp('breaker');
-const BRK_HOLD = {x: 49.7, z: -9.5};
+const BRK_HOLD = {x: 48.3, z: -8.3};
 export const BRK_KNEE = (() => {
   // at B's back-left, 0.95 m behind and 0.35 m to its left
   const f = fwdOf(B_FL.h), r = rightOf(B_FL.h);
@@ -248,10 +248,10 @@ export const BRK_KNEE = (() => {
 })();
 export const BRK_CATCH = {x: 48.75, z: -7.05};
 const BRK_SEGS: Seg[] = [
-  {kind: 'stand', root: [[94.3, K0.x, K0.z, 270], [97.95, K0.x, K0.z, 270], [98.32, K0.x - 0.2, K0.z - 0.25, 335]]},
-  {kind: 'run', path: [{x: K0.x - 0.2, z: K0.z - 0.25}, {x: 45.4, z: 1.6}, {x: 44.9, z: -3.4}, {x: 45.9, z: -7.4}, BRK_HOLD], T0: 98.36, T1: 101.15, gait: GAITS.crouch, A: 0.7, D: 0.7},
-  {kind: 'stand', root: [[101.15, BRK_HOLD.x, BRK_HOLD.z, 120], [101.6, BRK_HOLD.x, BRK_HOLD.z, 118], [101.92, BRK_HOLD.x, BRK_HOLD.z, 118]]},
-  {kind: 'run', path: [BRK_HOLD, {x: 51.3, z: -8.95}, BRK_KNEE], T0: 101.95, T1: 102.66, gait: GAITS.dash, A: 0.3, D: 0.3},
+  {kind: 'stand', root: [[94.3, K0.x, K0.z, 270], [98.05, K0.x, K0.z, 270], [98.42, K0.x - 0.2, K0.z - 0.25, 315]]},
+  {kind: 'run', path: [{x: K0.x - 0.2, z: K0.z - 0.25}, {x: 45.45, z: 2.0}, {x: 45.35, z: -3.4}, {x: 45.6, z: -6.6}, BRK_HOLD], T0: 98.48, T1: 100.95, gait: GAITS.crouch, A: 0.7, D: 0.7},
+  {kind: 'stand', root: [[100.95, BRK_HOLD.x, BRK_HOLD.z, 110], [101.4, BRK_HOLD.x, BRK_HOLD.z, 98], [101.72, BRK_HOLD.x, BRK_HOLD.z, 96]]},
+  {kind: 'run', path: [BRK_HOLD, {x: 50.6, z: -8.32}, BRK_KNEE], T0: 101.75, T1: 102.66, gait: GAITS.dash, A: 0.3, D: 0.3},
   {kind: 'stand', root: [[102.66, BRK_KNEE.x, BRK_KNEE.z, 150], [105.1, BRK_KNEE.x, BRK_KNEE.z, 150], [105.32, BRK_KNEE.x - 0.08, BRK_KNEE.z - 0.04, 262]], stag: 0.14},
   {kind: 'run', path: [{x: BRK_KNEE.x - 0.08, z: BRK_KNEE.z - 0.04}, {x: 51.0, z: -8.2}, BRK_CATCH], T0: 105.34, T1: 106.3, gait: GAITS.run, A: 0.4, D: 0.5},
   {kind: 'stand', root: [[106.3, BRK_CATCH.x, BRK_CATCH.z, 240], [106.8, BRK_CATCH.x, BRK_CATCH.z, 128], [110.62, BRK_CATCH.x, BRK_CATCH.z, 128],
@@ -292,7 +292,7 @@ export const breakerAt = (T: number): CrewOut => {
   let pose: Pose = layer(BRACED({wide: 0.85}), {face: {mouth: 'grit', brows: -0.5}});
   const kneel0 = 1 - ramp(T, 97.95, 98.3);
   if (kneel0 > 0) pose = blendPose(pose, layer(KNEEL('L'), {drop: 76, lean: 4, face: {mouth: 'pant', brows: -0.2}, breath: 0.8}), kneel0);
-  const hold = win(T, 101.0, 102.0, 0.3, 0.1);
+  const hold = win(T, 100.8, 101.8, 0.3, 0.1);
   if (hold > 0) pose = blendPose(pose, layer(pose, {drop: 52, lean: 20, face: {mouth: 'flat', brows: -0.7}}), hold);
   if (hands) {
     const sw = k < 0.36 ? smooth(k / 0.36) : 1;
@@ -335,7 +335,7 @@ export const breakerAt = (T: number): CrewOut => {
 
 // ================================================================== THE RUNNER (guesser, halligan)
 const R0 = sp('runner');
-const RUN_HOLD = {x: 48.4, z: -8.6};
+const RUN_HOLD = {x: 49.6, z: -9.3};
 export const RUN_PRY = (() => {
   const f = fwdOf(B_FL.h), r = rightOf(B_FL.h);
   return {x: B_FL.x - f.x * 0.85 + r.x * 0.4, z: B_FL.z - f.z * 0.85 + r.z * 0.4};
@@ -344,10 +344,10 @@ export const RUN_GUARD = {x: 49.9, z: -6.2, h: 124};
 /** where his flight from the backhand ends (his back on the breaker's cradle) */
 export const RUN_CAUGHT = {x: 49.17, z: -6.73};
 const RUN_SEGS: Seg[] = [
-  {kind: 'stand', root: [[94.3, R0.x, R0.z, 270], [97.92, R0.x, R0.z, 270], [98.18, R0.x - 0.1, R0.z - 0.15, 330]]},
-  {kind: 'run', path: [{x: R0.x - 0.1, z: R0.z - 0.15}, {x: 45.55, z: -0.6}, {x: 45.35, z: -3.6}, {x: 46.2, z: -7.2}, RUN_HOLD], T0: 98.2, T1: 100.8, gait: GAITS.crouch, A: 0.6, D: 0.7},
-  {kind: 'stand', root: [[100.8, RUN_HOLD.x, RUN_HOLD.z, 120], [101.3, RUN_HOLD.x, RUN_HOLD.z, 112], [102.38, RUN_HOLD.x, RUN_HOLD.z, 108]]},
-  {kind: 'run', path: [RUN_HOLD, {x: 50.4, z: -8.25}, RUN_PRY], T0: 102.4, T1: 103.42, gait: GAITS.dash, A: 0.4, D: 0.4},
+  {kind: 'stand', root: [[94.3, R0.x, R0.z, 270], [97.92, R0.x, R0.z, 270], [98.14, R0.x - 0.1, R0.z - 0.15, 320]]},
+  {kind: 'run', path: [{x: R0.x - 0.1, z: R0.z - 0.15}, {x: 45.45, z: -0.6}, {x: 45.4, z: -3.6}, {x: 45.7, z: -6.8}, {x: 48.0, z: -8.5}, RUN_HOLD], T0: 98.16, T1: 100.7, gait: GAITS.crouch, A: 0.6, D: 0.7},
+  {kind: 'stand', root: [[100.7, RUN_HOLD.x, RUN_HOLD.z, 120], [101.2, RUN_HOLD.x, RUN_HOLD.z, 112], [102.38, RUN_HOLD.x, RUN_HOLD.z, 108]]},
+  {kind: 'run', path: [RUN_HOLD, {x: 50.9, z: -8.6}, RUN_PRY], T0: 102.4, T1: 103.42, gait: GAITS.dash, A: 0.4, D: 0.4},
   {kind: 'stand', root: [[103.42, RUN_PRY.x, RUN_PRY.z, 0], [103.7, RUN_PRY.x, RUN_PRY.z, headingTo(RUN_PRY, B_FL) - 6], [104.98, RUN_PRY.x, RUN_PRY.z, headingTo(RUN_PRY, B_FL) - 6], [105.16, RUN_PRY.x - 0.08, RUN_PRY.z + 0.05, 232]], stag: 0.12},
   {kind: 'run', path: [{x: RUN_PRY.x - 0.08, z: RUN_PRY.z + 0.05}, {x: 50.9, z: -6.75}, RUN_GUARD], T0: 105.18, T1: 105.98, gait: GAITS.run, A: 0.35, D: 0.4},
   {kind: 'stand', root: [[105.98, RUN_GUARD.x, RUN_GUARD.z, 230], [106.45, RUN_GUARD.x, RUN_GUARD.z, RUN_GUARD.h], [EV2.knock, RUN_GUARD.x, RUN_GUARD.z, RUN_GUARD.h]], stag: 0.14},
@@ -451,9 +451,9 @@ const A0 = sp('tether');
 export const TTH_POST = {x: 45.9, z: -10.95};
 const TTH_BRACE = {x: 45.72, z: -10.95};
 const TTH_SEGS: Seg[] = [
-  {kind: 'stand', root: [[94.3, A0.x, A0.z, 270], [97.95, A0.x, A0.z, 270], [98.24, A0.x - 0.1, A0.z - 0.25, 335]]},
-  {kind: 'run', path: [{x: A0.x - 0.1, z: A0.z - 0.25}, {x: 45.75, z: 0.2}, {x: 45.7, z: -3.8}, {x: 45.4, z: -8.8}, TTH_POST], T0: 98.26, T1: 100.95, gait: GAITS.crouch, A: 0.6, D: 0.7},
-  {kind: 'stand', root: [[100.95, TTH_POST.x, TTH_POST.z, 160], [101.4, TTH_POST.x, TTH_POST.z, 100], [105.4, TTH_POST.x, TTH_POST.z, 100], [105.8, TTH_POST.x, TTH_POST.z, 108],
+  {kind: 'stand', root: [[94.3, A0.x, A0.z, 270], [97.95, A0.x, A0.z, 270], [98.2, A0.x - 0.1, A0.z - 0.25, 318]]},
+  {kind: 'run', path: [{x: A0.x - 0.1, z: A0.z - 0.25}, {x: 45.45, z: 0.4}, {x: 45.4, z: -3.8}, {x: 45.35, z: -8.6}, TTH_POST], T0: 98.27, T1: 100.75, gait: GAITS.crouch, A: 0.6, D: 0.7},
+  {kind: 'stand', root: [[100.75, TTH_POST.x, TTH_POST.z, 160], [101.4, TTH_POST.x, TTH_POST.z, 100], [105.4, TTH_POST.x, TTH_POST.z, 100], [105.8, TTH_POST.x, TTH_POST.z, 108],
     // the wrap: a step to the post, the launcher swept round behind it, a step back west, braced
     [EV2.wrap0, 46.45, -11.0, 92], [EV2.wrap, 46.15, -11.15, 70], [EV2.taut, TTH_BRACE.x, TTH_BRACE.z, 100],
     [109.4, TTH_BRACE.x, TTH_BRACE.z, 100], [110.4, 46.4, -10.3, 125], [111.8, 47.3, -9.5, 120], [116.92, 47.3, -9.5, 118]], stag: 0.16},
@@ -602,8 +602,8 @@ export const canisterFrom = (i: 0 | 1): V3 => flaresAt(i === 0 ? EV2.rel1 : EV2.
 
 // ================================================================== THE DECOY MAKER (clerkB)
 const B0 = sp('decoy');
-const DEC_UP = {x: 46.92, z: 4.2};
-const DEC_KNEEL = {x: 46.78, z: 4.32};
+const DEC_UP = {x: 46.94, z: 4.36};
+const DEC_KNEEL = {x: 46.8, z: 4.45};
 export const DEC_END = {x: 46.5, z: -4.6};
 /** the tablet set on the slab's top edge (its bottom edge rests there; the clip-on projector on its top edge) */
 export const TABLET_AT: V3 = {x: 47.27, y: 2.94, z: 4.18};
@@ -683,5 +683,5 @@ export const crewFootfalls = (T: number, win2 = 1.2): Footfall[] => {
   });
   return out;
 };
-void [Part, SHIELD_AT, A_FL];
+void [SHIELD_AT, A_FL];
 export type {Rig2};
