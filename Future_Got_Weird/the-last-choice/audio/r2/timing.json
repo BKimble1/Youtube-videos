@@ -1,0 +1,167 @@
+{
+ "music": [
+  {
+   "src": "portals",
+   "recIn": 1.3,
+   "recOut": 193.8,
+   "film": 0.6000000000000001,
+   "fadeIn": 0.1
+  },
+  {
+   "src": "longtime",
+   "recIn": 0,
+   "recOut": 10.205,
+   "film": 200.4,
+   "fadeIn": 0.04
+  },
+  {
+   "src": "longtime",
+   "recIn": 57.26,
+   "recOut": 102.2,
+   "film": 210.60500000000002,
+   "xfade": 0.06,
+   "fadeOut": 1.6
+  }
+ ],
+ "anchors": {
+  "P_IN": 0.6000000000000001,
+  "LOW_HIT": 0.72,
+  "TITLE_IN": 6.6,
+  "TITLE_OUT": 9.3,
+  "SOLO": 9.3,
+  "ORCH": 16.76,
+  "H1": 18.46,
+  "H2": 18.88,
+  "H3": 23.54,
+  "H4": 30.26,
+  "H5a": 31.919999999999998,
+  "H5b": 32.339999999999996,
+  "BASS_OUT": 35.8,
+  "BASS_IN": 37.599999999999994,
+  "ALLY1": 38.459999999999994,
+  "ALLY2a": 40.16,
+  "ALLY2b": 40.58,
+  "MARCH": 45.3,
+  "ASSEMBLE": 53.04,
+  "CHARGE": 59.949999999999996,
+  "CLASH": 68.3,
+  "BR1": 78.46,
+  "BR2": 81.34,
+  "BR3": 82.8,
+  "BR4": 85.64,
+  "GAIN1": 89.78,
+  "GAIN2": 91.17999999999999,
+  "BREATH": 91.1,
+  "BREATH_END": 94,
+  "P2": 94.3,
+  "DECOY": 95.38,
+  "DECOY_HITa": 99.5,
+  "DECOY_HITb": 99.96,
+  "DECOY_HITc": 100.39999999999999,
+  "FLANK": 102.2,
+  "TETHER": 105.84,
+  "KNOCKBACK": 110.46,
+  "CATCH": 111.38,
+  "SHIELD": 113.2,
+  "COUNTER": 114.11999999999999,
+  "BRIGHT": 115.5,
+  "P3": 116.92,
+  "HEAVY_DOWN": 125.64,
+  "ADAPT": 128.02,
+  "FORMATION": 131.02,
+  "DECOY_FAIL": 133.82000000000002,
+  "FLANK_DENIED": 137.66000000000003,
+  "ALLY_DRONE_LOST": 140.48000000000002,
+  "HEAVY2": 142.36,
+  "HEAVY2_FIRE": 145.18,
+  "P4": 149.86,
+  "ARRIVAL": 162.42000000000002,
+  "LOCAL_WIN": 166.41000000000003,
+  "REALIZE": 170.4,
+  "STRIKE": 177.76000000000002,
+  "SOFTEN": 179.3,
+  "B184": 183.3,
+  "FINAL_HIT": 186.9,
+  "RING_END": 193.10000000000002,
+  "EYES_CLOSE": 196.6,
+  "RADIO_CLICK": 199.9,
+  "L_START": 200.4,
+  "L_JOIN": 210.60500000000002,
+  "VOCAL": 217.705,
+  "CLOSE_TO_ME": 223.44500000000002,
+  "WORDS_WAIT": 230.205,
+  "KISS_ME": 242.805,
+  "LONG_TIME": 248.74500000000003,
+  "LONG_TIME_END": 253.82500000000002,
+  "MUSIC_END": 255.54500000000002,
+  "CREDITS_IN": 230.4,
+  "END": 258
+ },
+ "sections": [
+  {
+   "id": "A",
+   "start": 0,
+   "end": 9.3,
+   "note": "New York falls: aerial over the burning district; a tower fails; black title card"
+  },
+  {
+   "id": "B",
+   "start": 9.3,
+   "end": 35.8,
+   "note": "The Director pulls himself out of the rubble, stands on the ridge; the army below; the radio in the van"
+  },
+  {
+   "id": "C",
+   "start": 35.8,
+   "end": 59.949999999999996,
+   "note": "The Crew joins him one by one; equipment readied; the shared turn; the charge"
+  },
+  {
+   "id": "D1",
+   "start": 59.949999999999996,
+   "end": 94.3,
+   "note": "First breach: clash at the crater rim; four decisive contacts break a gap; position gained"
+  },
+  {
+   "id": "D2",
+   "start": 94.3,
+   "end": 116.92,
+   "note": "Ingenuity: smoke + light decoy; flank attack; tether crash at the girder; catch; drone shields; counter"
+  },
+  {
+   "id": "D3",
+   "start": 116.92,
+   "end": 149.86,
+   "note": "Strongest attack fells a heavy; the system adapts: high drone, formation change, decoy ignored, flank denied, drone lost, second heavy"
+  },
+  {
+   "id": "D4",
+   "start": 149.86,
+   "end": 186.9,
+   "note": "Losing ground; last counterattack on the B♭; the ring closes; the Director takes the blow and falls by the van"
+  },
+  {
+   "id": "E",
+   "start": 186.9,
+   "end": 199.3,
+   "note": "The machines stop; his last breath; eyes close; stillness"
+  },
+  {
+   "id": "F",
+   "start": 199.3,
+   "end": 230.4,
+   "note": "A hand turns the radio on; trumpet; one rising pullback from his face to the fallen city; the vocal enters"
+  },
+  {
+   "id": "G",
+   "start": 230.4,
+   "end": 258,
+   "note": "Credits crawl: the 2042 scenario text, title, accurate credits"
+  }
+ ],
+ "end": 258,
+ "cues": [],
+ "beds": [],
+ "perspective": [],
+ "radio": null
+}

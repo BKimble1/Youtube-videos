@@ -1,0 +1,511 @@
+{
+"source": "ElevenLabs Scribe (eleven_scribe_v1) on audio extracted from release asset Screen.Recording.2026-10-16.235008.mp4 (rec 0\u2013196 s, mono 22.05 kHz MP3); times are recording seconds",
+"language": "eng",
+"words": [
+{
+"text": "Never",
+"start": 64.36,
+"end": 65.3
+},
+{
+"text": "thought",
+"start": 65.44,
+"end": 65.72
+},
+{
+"text": "that",
+"start": 65.82,
+"end": 66.08
+},
+{
+"text": "you",
+"start": 66.14,
+"end": 66.26
+},
+{
+"text": "would",
+"start": 66.3,
+"end": 66.48
+},
+{
+"text": "be",
+"start": 66.56,
+"end": 66.72
+},
+{
+"text": "standing",
+"start": 67.66,
+"end": 68.42
+},
+{
+"text": "here",
+"start": 68.5,
+"end": 68.72
+},
+{
+"text": "so",
+"start": 68.86,
+"end": 69.02
+},
+{
+"text": "close",
+"start": 69.16,
+"end": 69.52
+},
+{
+"text": "to",
+"start": 69.58,
+"end": 69.7
+},
+{
+"text": "me.",
+"start": 69.8,
+"end": 70.1
+},
+{
+"text": "There's",
+"start": 70.88,
+"end": 71.34
+},
+{
+"text": "so",
+"start": 71.36,
+"end": 71.56
+},
+{
+"text": "much",
+"start": 71.72,
+"end": 72.02
+},
+{
+"text": "I",
+"start": 72.22,
+"end": 72.26
+},
+{
+"text": "feel",
+"start": 72.42,
+"end": 72.76
+},
+{
+"text": "that",
+"start": 72.84,
+"end": 73.1
+},
+{
+"text": "I",
+"start": 73.48,
+"end": 73.54
+},
+{
+"text": "should",
+"start": 73.64,
+"end": 74.04
+},
+{
+"text": "say.",
+"start": 74.2,
+"end": 74.7
+},
+{
+"text": "But",
+"start": 76.86,
+"end": 77.14
+},
+{
+"text": "words",
+"start": 77.24,
+"end": 78.52
+},
+{
+"text": "can",
+"start": 78.6,
+"end": 79.06
+},
+{
+"text": "wait",
+"start": 79.18,
+"end": 80.56
+},
+{
+"text": "until",
+"start": 80.7,
+"end": 81.54
+},
+{
+"text": "some",
+"start": 81.74,
+"end": 82.16
+},
+{
+"text": "other",
+"start": 82.32,
+"end": 82.98
+},
+{
+"text": "day.",
+"start": 83.2,
+"end": 83.46
+},
+{
+"text": "Kiss",
+"start": 89.46,
+"end": 90.14
+},
+{
+"text": "me",
+"start": 90.22,
+"end": 90.38
+},
+{
+"text": "once,",
+"start": 90.62,
+"end": 90.94
+},
+{
+"text": "then",
+"start": 91.04,
+"end": 91.24
+},
+{
+"text": "kiss",
+"start": 91.38,
+"end": 91.72
+},
+{
+"text": "me",
+"start": 91.78,
+"end": 91.94
+},
+{
+"text": "twice,",
+"start": 92.02,
+"end": 92.46
+},
+{
+"text": "then",
+"start": 92.58,
+"end": 92.78
+},
+{
+"text": "kiss",
+"start": 93.0,
+"end": 93.34
+},
+{
+"text": "me",
+"start": 93.4,
+"end": 93.58
+},
+{
+"text": "once",
+"start": 93.7,
+"end": 93.92
+},
+{
+"text": "again.",
+"start": 94.0,
+"end": 95.16
+},
+{
+"text": "It's",
+"start": 95.4,
+"end": 95.64
+},
+{
+"text": "been",
+"start": 95.7,
+"end": 95.9
+},
+{
+"text": "a",
+"start": 96.06,
+"end": 96.12
+},
+{
+"text": "long,",
+"start": 96.46,
+"end": 97.56
+},
+{
+"text": "long",
+"start": 98.28,
+"end": 99.28
+},
+{
+"text": "time.",
+"start": 99.42,
+"end": 100.48
+},
+{
+"text": "Haven't",
+"start": 102.44,
+"end": 103.14
+},
+{
+"text": "felt",
+"start": 103.26,
+"end": 103.68
+},
+{
+"text": "like",
+"start": 103.76,
+"end": 104.06
+},
+{
+"text": "this,",
+"start": 104.14,
+"end": 104.4
+},
+{
+"text": "my",
+"start": 104.52,
+"end": 104.74
+},
+{
+"text": "dear,",
+"start": 104.9,
+"end": 105.2
+},
+{
+"text": "since",
+"start": 105.4,
+"end": 105.68
+},
+{
+"text": "can't",
+"start": 105.84,
+"end": 106.16
+},
+{
+"text": "remember",
+"start": 106.22,
+"end": 106.82
+},
+{
+"text": "when.",
+"start": 106.98,
+"end": 107.84
+},
+{
+"text": "It's",
+"start": 108.04,
+"end": 108.3
+},
+{
+"text": "been",
+"start": 108.38,
+"end": 108.58
+},
+{
+"text": "a",
+"start": 108.7,
+"end": 108.9
+},
+{
+"text": "long,",
+"start": 109.1,
+"end": 110.62
+},
+{
+"text": "long",
+"start": 110.86,
+"end": 112.02
+},
+{
+"text": "time.",
+"start": 112.16,
+"end": 113.02
+},
+{
+"text": "You'll",
+"start": 114.54,
+"end": 114.86
+},
+{
+"text": "never",
+"start": 114.94,
+"end": 115.3
+},
+{
+"text": "know",
+"start": 115.38,
+"end": 116.12
+},
+{
+"text": "how",
+"start": 116.2,
+"end": 116.44
+},
+{
+"text": "many",
+"start": 116.54,
+"end": 116.88
+},
+{
+"text": "dreams",
+"start": 117.0,
+"end": 117.58
+},
+{
+"text": "I",
+"start": 117.86,
+"end": 117.9
+},
+{
+"text": "dream",
+"start": 118.0,
+"end": 118.32
+},
+{
+"text": "about",
+"start": 118.46,
+"end": 119.18
+},
+{
+"text": "you,",
+"start": 119.22,
+"end": 121.3
+},
+{
+"text": "or",
+"start": 121.46,
+"end": 121.64
+},
+{
+"text": "just",
+"start": 121.92,
+"end": 122.4
+},
+{
+"text": "how",
+"start": 122.46,
+"end": 122.74
+},
+{
+"text": "empty",
+"start": 122.82,
+"end": 123.24
+},
+{
+"text": "they",
+"start": 123.38,
+"end": 123.68
+},
+{
+"text": "all",
+"start": 123.8,
+"end": 124.08
+},
+{
+"text": "seem",
+"start": 124.26,
+"end": 124.6
+},
+{
+"text": "without",
+"start": 124.64,
+"end": 125.46
+},
+{
+"text": "you.",
+"start": 125.52,
+"end": 125.88
+},
+{
+"text": "So",
+"start": 127.86,
+"end": 128.38
+},
+{
+"text": "kiss",
+"start": 128.46,
+"end": 128.78
+},
+{
+"text": "me",
+"start": 128.88,
+"end": 129.06
+},
+{
+"text": "once,",
+"start": 129.24,
+"end": 129.5
+},
+{
+"text": "then",
+"start": 129.639,
+"end": 129.86
+},
+{
+"text": "kiss",
+"start": 129.96,
+"end": 130.24
+},
+{
+"text": "me",
+"start": 130.3,
+"end": 130.479
+},
+{
+"text": "twice,",
+"start": 130.539,
+"end": 131.039
+},
+{
+"text": "then",
+"start": 131.2,
+"end": 131.4
+},
+{
+"text": "kiss",
+"start": 131.56,
+"end": 131.86
+},
+{
+"text": "me",
+"start": 131.92,
+"end": 132.08
+},
+{
+"text": "once",
+"start": 132.24,
+"end": 132.48
+},
+{
+"text": "again.",
+"start": 132.58,
+"end": 133.46
+},
+{
+"text": "It's",
+"start": 134.34,
+"end": 134.58
+},
+{
+"text": "been",
+"start": 134.66,
+"end": 134.88
+},
+{
+"text": "a",
+"start": 134.92,
+"end": 135.08
+},
+{
+"text": "long,",
+"start": 135.28,
+"end": 136.9
+},
+{
+"text": "long",
+"start": 137.44,
+"end": 138.1
+},
+{
+"text": "time.",
+"start": 138.26,
+"end": 139.12
+}
+]
+}
