@@ -342,8 +342,8 @@ export const carrierAt = (T: number): Placed => {
     {t: CA_BOARD[1], slot: 'basket', bl: 0.3, f: ride},
     {t: EXIT_CA[0], slot: (T) => (T < EXIT_CA[0] + 0.35 ? 'basket' : 'landing'), bl: 0.25, f: (T) => flinch(helperArm(exitTo(look('carrier'), T, CA_LX, EXIT_CA[0], EXIT_CA[1], 12700, 0.45, {...WALK, stride: 120, limp: lp}, {...b, t: T, seed: 41, face: {mouth: 'grit', brows: -0.5}}), T), T, 0.7)},
     {t: EXIT_CA[1], slot: 'landing', bl: 0.4, f: setDown},
-    {t: 106.9, slot: (T) => (T > 107.2 ? 'walk' : 'landing'), bl: 0.3, f: (T) => ({...mover(look('carrier'), T, [[106.9, 12600], [110.7, 11010, easeOut]], {...HURRY, stride: 150, limp: lp}, onWalk(T), {...b, t: T, yaw: -76, face: {mouth: 'grit', brows: -0.7, worry: 0.5}}), z: -0.1})},
-    {t: 110.7, slot: 'walk', bl: 0.35, f: slopeTop},
+    {t: 106.9, slot: (T) => (T > 107.2 ? 'walk' : 'landing'), bl: 0.3, f: (T) => ({...mover(look('carrier'), T, [[106.9, 12600], [109.6, 11010, easeOut]], {...HURRY, stride: 150, limp: lp}, onWalk(T), {...b, t: T, yaw: -76, face: {mouth: 'grit', brows: -0.7, worry: 0.5}}), z: -0.1})},
+    {t: 109.6, slot: 'walk', bl: 0.35, f: slopeTop},
     {t: RISE[1], slot: (T) => trio(T).slot, bl: 0.4, f: ahead},
     {t: LAY[0], slot: 'landing', bl: 0.5, f: (T) => ({...b, t: T, x: 12920, y: TOP, z: -0.6, yaw: -70, drop: 20, lean: 16, legL: {foot: {x: 12880, y: TOP - 10}}, legR: {foot: {x: 12980, y: TOP - 10}}, armL: {hand: {x: 12900, y: TOP - 200}}, armR: {hand: {x: 12880, y: TOP - 230, z: 30}}, head: {pitch: 24}, face: {mouth: 'sad', worry: 1, brows: 0.2, lookY: 0.7}})},
   ]);
@@ -424,8 +424,8 @@ export const builderAt = (T: number): Placed => {
     {t: B_CLIMB[1] + 0.85, slot: 'basket', bl: 0.3, f: (T) => rider(look('builder'), T, B_LX, -0.6, {...b, t: T, seed: 51, hold: false, yaw: T < 95.2 ? -60 : 70,
       armR: T < 95.2 ? {hand: {x: bx(B_LX) - 120, y: TOP - 250, z: 30}} : undefined, face: {mouth: 'pant', brows: -0.4, lookX: -0.5}})},
     {t: 104.6, slot: (T) => (T < 104.95 ? 'basket' : 'landing'), bl: 0.25, f: (T) => flinch(exitTo(look('builder'), T, B_LX, 104.6, 105.3, 12880, -0.2, HURRY, {...b, t: T, seed: 51, face: {mouth: 'pant', brows: -0.4}}), T)},
-    {t: 106.8, slot: (T) => (T > 107.05 ? 'walk' : 'landing'), bl: 0.3, f: (T) => ({...mover(look('builder'), T, [[106.8, 12880], [110.1, kneelX(T), easeOut]], {...JOG, stride: 180}, onWalk(T), {...b, t: T, yaw: -78, face: {mouth: 'grit', brows: -0.8}}), z: -0.2})},
-    {t: 110.1, slot: 'walk', bl: 0.3, f: kneelHold},
+    {t: 106.8, slot: (T) => (T > 107.05 ? 'walk' : 'landing'), bl: 0.3, f: (T) => ({...mover(look('builder'), T, [[106.8, 12880], [108.95, kneelX(T), easeOut]], {...JOG, stride: 180}, onWalk(T), {...b, t: T, yaw: -78, face: {mouth: 'grit', brows: -0.8}}), z: -0.2})},
+    {t: 108.95, slot: 'walk', bl: 0.35, f: kneelHold},
     {t: RISE[0], slot: (T) => trio(T).slot, bl: 0.9, f: (T) => (T > LAY[0] ? layDown(T).bld : trio(T).bld)},
   ]);
 };
@@ -486,7 +486,7 @@ export const dHand = (T: number): V3 => {
   const lip = lipAt(T);
   const sl = slopeAt(T, lip.x + 120);
   const up = {x: Math.cos((sl * Math.PI) / 180), y: -Math.sin((sl * Math.PI) / 180)}; // up-slope unit
-  const catchPt = {x: lip.x + 12, y: lip.y + 34};
+  const catchPt = {x: lip.x - 12, y: lip.y + 34};
   if (T < CATCH) {
     const r = ramp(T, D_PRONE, CATCH);
     return {x: lerp(lip.x + 60, catchPt.x, r), y: lerp(lip.y - 40, catchPt.y, r), z: 30};
@@ -539,11 +539,13 @@ export const friendFall = (T: number): {p: ActorProps; slot: Slot} => {
     const lip = lipAt(T);
     const a = T - SLIDE_END;
     const sw = 14 * Math.exp(-1.5 * a) * Math.sin(2 * Math.PI * 0.72 * a);
-    const slipL = T > SLIP_L && T < SLIP_L + 0.45 ? Math.sin(Math.PI * (T - SLIP_L) / 0.45) : 0;
+    // the near (right) hand goes first and can't find the lip again; the far (left) hand's fingers slide
+    const offR = ramp(T, SLIP_L, SLIP_L + 0.18);
+    const flail = Math.sin((T - SLIP_L) * 9) * offR;
     const slide = 30 * smooth(ramp(T, SLIP_R, CATCH));
-    const p = hangFrom(lk, T, lip, sw, {...b, face: {...hurt, mouth: T > SLIP_L ? 'open' : 'grit', open: 0.4, lookY: -0.9}}, slide, 64, 0.5 + slipL);
-    const hl = p.armL!.hand as V3;
-    return {slot: 'walk', p: {...p, armL: {hand: {x: hl.x - 70 * slipL, y: hl.y + 230 * slipL, z: hl.z}, pole: p.armL!.pole}, handL: slipL > 0.3 ? 'open' : 'fist', handR: T > SLIP_R ? 'open' : 'fist'}};
+    const p = hangFrom(lk, T, lip, sw, {...b, face: {...hurt, mouth: T > SLIP_L ? 'open' : 'grit', open: 0.4, lookY: -0.9}}, slide, 64, 0.5 + 0.6 * offR);
+    const hr = p.armR!.hand as V3;
+    return {slot: 'walk', p: {...p, armR: {hand: {x: hr.x + 60 * offR + 30 * flail, y: hr.y + 150 * offR - 40 * flail, z: hr.z + 40 * offR}, pole: p.armR!.pole}, handR: offR > 0.3 ? 'open' : 'fist', handL: T > SLIP_R ? 'open' : 'fist'}};
   }
   if (T < HAUL[1] + 0.05) {
     const H = dHand(T);
@@ -553,9 +555,10 @@ export const friendFall = (T: number): {p: ActorProps; slot: Slot} => {
     const a = T - CATCH;
     const sw = 10 * Math.exp(-2 * a) * Math.sin(2 * Math.PI * 0.8 * a) * (1 - h);
     const p = hangFrom(lk, T, H, sw + (90 - sl) * tip, {...b, face: {...hurt, lookY: -0.9}}, 0, 64, 0.3 * (1 - h));
-    const reach = ramp(T, CATCH + 0.2, CATCH + 0.6);
-    const left = {x: H.x - 40, y: H.y + 40 * (1 - reach) + 10, z: -10};
-    return {slot: 'walk', p: {...p, armR: {hand: {x: H.x, y: H.y, z: 16}}, armL: {hand: left, pole: p.armL!.pole}}};
+    // caught by the far (left) wrist; the near arm reaches up for the Director's sleeve
+    const reach = ramp(T, CATCH + 0.25, CATCH + 0.7);
+    const right = {x: H.x + 60 - 30 * reach, y: H.y + 160 - 110 * reach, z: 40};
+    return {slot: 'walk', p: {...p, armL: {hand: {x: H.x, y: H.y, z: -14}, pole: p.armL!.pole}, armR: {hand: right, pole: {x: -0.4, y: 0.5, z: 1}}, handL: 'fist', handR: reach > 0.5 ? 'fist' : 'open'}};
   }
   // up and supported between the Director (near) and the builder (far)
   const tr = trio(T);
@@ -573,29 +576,34 @@ export const trio = (T: number): {friend: ActorProps; dir: ActorProps; bld: Acto
     ground = (xx) => (xx > 12500 ? TOP : surf(T, xx).y);
     slot = x > 12480 ? 'landing' : 'walk';
   }
+  const c = carry3(T, x, ground, 'builder', ramp(T, RISE[0], RISE[1]), T > J1[0] ? 1 : 0);
+  return {friend: c.friend, dir: c.dir, bld: c.far, slot};
+};
+
+/** The friend carried limp between the Director (their right side, nearer the camera) and a second helper. */
+export const carry3 = (T: number, x: number, ground: (x: number) => number, farRole: Role, rise = 1, moving = 1, lean = 0) => {
   const gy = ground(x);
-  const rise = ramp(T, RISE[0], RISE[1]);
-  const moving = T > J1[0] ? 1 : 0;
   const step = Math.sin(T * 7.2) * moving;
   const fb = base('friend', T, 11);
   const db = base('director', T, 31);
-  const bb = base('builder', T, 51);
+  const bb = base(farRole, T, farRole === 'builder' ? 51 : 41);
   const dz = 0.35, bz = -0.35;
   const hS = (dx: number, z: number) => ({x: x + dx, y: gy - 300, z});
-  const dir: ActorProps = {...db, x: x + 18, y: gy, z: dz, yaw: 70, drop: 30 - 20 * rise, lean: 18,
-    legL: {foot: {x: x + 70 + 40 * step, y: ground(x + 70) - 10}}, legR: {foot: {x: x - 40 - 40 * step, y: ground(x - 40) - 10}},
+  const fl = (x0: number) => ground(x0) - 10;
+  const dir: ActorProps = {...db, x: x + 18, y: gy, z: dz, yaw: 70, drop: 30 - 20 * rise, lean: 18 + lean,
+    legL: {foot: {x: x + 70 + 40 * step, y: fl(x + 70 + 40 * step)}}, legR: {foot: {x: x - 40 - 40 * step, y: fl(x - 40 - 40 * step)}},
     armL: {hand: {x: x - 10, y: gy - 215, z: -20}}, armR: {hand: {x: x + 40, y: gy - 330, z: 60}}, handL: 'fist',
     face: {mouth: 'grit', brows: -0.7, worry: 0.6, lookX: -0.4}, head: {pitch: 6, yaw: 18}};
-  const bld: ActorProps = {...bb, x: x - 12, y: gy, z: bz, yaw: 72, drop: 30 - 20 * rise, lean: 18,
-    legL: {foot: {x: x + 50 - 40 * step, y: ground(x + 50) - 10}}, legR: {foot: {x: x - 60 + 40 * step, y: ground(x - 60) - 10}},
+  const far: ActorProps = {...bb, x: x - 12, y: gy, z: bz, yaw: 72, drop: 30 - 20 * rise, lean: 18 + lean,
+    legL: {foot: {x: x + 50 - 40 * step, y: fl(x + 50 - 40 * step)}}, legR: {foot: {x: x - 60 + 40 * step, y: fl(x - 60 + 40 * step)}},
     armR: {hand: {x: x + 10, y: gy - 215, z: 20}}, armL: {hand: {x: x + 20, y: gy - 330, z: -60}},
     face: {mouth: 'grit', brows: -0.6}, head: {pitch: 4}};
-  const friend: ActorProps = {...fb, visor: visorOn(T), x, y: gy, z: 0, yaw: 72, drop: lerp(150, 70, rise), lean: lerp(10, 34, rise), shadow: false,
+  const friend: ActorProps = {...fb, visor: visorOn(T), x, y: gy, z: 0, yaw: 72, drop: lerp(150, 70, rise), lean: lerp(10, 34, rise) + lean * 0.5, shadow: false,
     legL: {foot: {x: x - 80, y: ground(x - 80) - 14}, pitch: -50}, legR: {foot: {x: x - 40 + 10 * step, y: ground(x - 40) - 12}, pitch: -40},
-    armR: {hand: hS(30, dz * 1000 * 0 + 40)}, armL: {hand: hS(10, -40)},
+    armR: {hand: hS(30, 40)}, armL: {hand: hS(10, -40)},
     zArm: [-40, 30], zHand: [-30, 400],
-    handL: 'limp', handR: 'limp', head: {pitch: 40, yaw: 10, roll: 12}, face: {closed: false, lids: 0.75, mouth: 'pain', worry: 0.9, brows: 0}, breath: 0.6};
-  return {friend, dir, bld, slot};
+    handL: 'limp', handR: 'limp', head: {pitch: 40, yaw: 10, roll: 12 + 4 * Math.sin(T * 3.6) * moving}, face: {closed: false, lids: 0.75, mouth: 'pain', worry: 0.9, brows: 0}, breath: 0.6};
+  return {friend, dir, far};
 };
 
 /** The Director from the blast to the landing. */

@@ -109,7 +109,7 @@ const crewC8 = (t: number, T: number) => {
   const thrown = smooth(seg(t, RAKE, RAKE + 0.4));
   const up = smooth(seg(t, 5.9, 6.6));
   const bxs = BX - 10 + back + 90 * thrown;
-  const runB = sk(t, [[6.6, 0], [9.4, 1250]], 0.25);
+  const runB = sk(t, [[6.6, 0], [9.4, 1080]], 0.25);
   const lookBack = smooth(seg(t, 7.0, 7.3)) * (1 - smooth(seg(t, 7.9, 8.2)));
   let builder: ActorProps;
   if (t < 6.6) {
@@ -137,9 +137,9 @@ const crewC8 = (t: number, T: number) => {
   // Director and carrier: run back for her, haul the hook back, let it swing; the Director takes the backhand
   const hk = davitHook(DAVIT.px, DAVIT.py, DAVIT.L, hookTheta(t));
   const holding = t >= 1.55 && t < 2.2;
-  const dx = keys(t, [[0, 9570], [0.95, 9570], [1.55, 9200], [1.9, 9260], [2.2, 9100], [BACKHAND, 9060], [BACKHAND + 0.35, 9150], [5.6, 9150], [5.95, BX - 10 + 110 + 90 + 150]]);
+  const dx = keys(t, [[0, 9570], [0.95, 9570], [1.55, 9330], [1.9, 9360], [2.2, 9190], [BACKHAND, 9140], [BACKHAND + 0.35, 9230], [5.6, 9230], [5.95, BX - 10 + 110 + 90 + 150]]);
   const hitD = smooth(seg(t, BACKHAND - 0.04, BACKHAND + 0.12)) * (1 - smooth(seg(t, BACKHAND + 0.5, BACKHAND + 1.2)));
-  const runD = sk(t, [[6.6, 0], [9.4, 1350]], 0.25);
+  const runD = sk(t, [[6.6, 0], [9.4, 950]], 0.25);
   let director: ActorProps;
   if (t < 6.6) {
     const moving = (t > 0.95 && t < 1.55) || (t > 5.6 && t < 5.95);
@@ -156,10 +156,10 @@ const crewC8 = (t: number, T: number) => {
   }
   out.push(director);
   // carrier: beside the Director on the hook (good right arm), then limps on
-  const cx = keys(t, [[0, 9640], [1.0, 9640], [1.6, 9320], [1.9, 9360], [2.25, 9200], [5.4, 9200]]);
+  const cx = keys(t, [[0, 9640], [1.0, 9640], [1.6, 9400], [1.9, 9430], [2.25, 9300], [5.4, 9300]]);
   const cHold = t >= 1.6 && t < 2.2;
-  const runC = sk(t, [[5.4, 0], [9.4, 900]], 0.3);
-  const cm = t < 5.4 ? {...stand(look('carrier'), cx, G, {t}, 40, -1), x: cx} : mover(look('carrier'), {x0: 9200, dist: runC, dir: 1, ground: G, gait: {...G_HURRY, limp: limpOf('carrier', T)}, t});
+  const runC = sk(t, [[5.4, 0], [9.4, 880]], 0.3);
+  const cm = t < 5.4 ? {...stand(look('carrier'), cx, G, {t}, 40, -1), x: cx} : mover(look('carrier'), {x0: 9300, dist: runC, dir: 1, ground: G, gait: {...G_HURRY, limp: limpOf('carrier', T)}, t});
   out.push({...cm, seed: 35, dmg: dmg('carrier', T), z: -30, yaw: t < 5.4 ? -90 : 90, lean: cHold ? (t < 1.9 ? -14 : 22) : (cm.lean ?? 4), drop: cHold ? 22 : (cm.drop ?? 8),
     armR: cHold ? {hand: {x: hk.x + 50, y: hk.y + 10, z: -20}} : t < 5.4 ? {fk: {fwd: 20, out: 10, bend: 30}} : cm.armR,
     armL: {fk: {fwd: 40, out: 4, bend: 110}}, handL: 'fist', face: FACE.pain, breath: 0.9});
@@ -175,8 +175,8 @@ const dirHandFor = (t: number): V2 => {
 // ------------------------------------------------------------------ camera
 const camAt = (t: number): Cam => {
   const k: [number, Cam][] = [
-    [0, {x: 8150, y: -1110, z: 1.3}], [0.12, {x: 8170, y: -1120, z: 1.3}], [0.95, {x: 8880, y: -1460, z: 1.0}], [3.5, {x: 8860, y: -1480, z: 1.06}],
-    [5.5, {x: 8980, y: -790, z: 0.44}], [9.4, {x: 9150, y: -930, z: 0.47}],
+    [0, {x: 8150, y: -1110, z: 1.3}], [0.12, {x: 8170, y: -1120, z: 1.3}], [0.95, {x: 8990, y: -1480, z: 1.15}], [3.5, {x: 8960, y: -1490, z: 1.22}],
+    [5.45, {x: 8980, y: -790, z: 0.44}], [6.6, {x: 9020, y: -1510, z: 0.72}], [8.0, {x: 9220, y: -1530, z: 0.78}], [9.4, {x: 9420, y: -1530, z: 0.78}],
   ];
   let i = 1;
   while (i < k.length - 1 && t > k[i][0]) i++;
@@ -197,9 +197,9 @@ export const C8Shot: React.FC = () => {
   const wEl = <g transform={`translate(0 ${w.dy})`}><Warden {...w} ink={ink} /></g>;
   // scout: snaps, follows the beam toward the source, then slots into formation beside the replacement
   const sc = scout(T);
-  const fwd = smooth(seg(t, SNAP, 1.3));
+  const fwd = smooth(seg(t, SNAP + 0.15, 1.2));
   const slot = smooth(seg(t, 6.0, 7.2));
-  const sx = lerp(lerp(sc.x, 8480, fwd), 8380, slot), sy = lerp(lerp(sc.y, -1330, fwd), -2120, slot);
+  const sx = lerp(lerp(sc.x, 8330, fwd), 8380, slot), sy = lerp(lerp(sc.y, -1860, fwd), -2120, slot);
   const lockS = smooth(seg(t, SNAP - 0.02, SNAP + 0.05));
   const scoutEl = <Drone x={sx} y={sy} s={2.6} t={T} seed={77} face={lerp(sc.face, 0.4, slot)} tilt={lerp(sc.tilt, 0, fwd)} look={{x: lerp(0.95, 0.5, fwd), y: lerp(-0.15, 0.4, fwd)}} lock={lockS} eyeOpen={t < SNAP ? sc.open : 1} glow={0.8} />;
   // the replacement: a second warden on the deck behind the guardrail, its eye lights; a second drone slots in
@@ -234,7 +234,7 @@ export const C8Shot: React.FC = () => {
     </g>
   );
   return (
-    <CatwalkScene id="c8" cam={cam} T={T} crew={crew} column={{dent: smooth(seg(t, COLUMN, COLUMN + 0.12))}} hook={{theta: hookTheta(t)}}
+    <CatwalkScene id="c8" cam={cam} T={T} crew={crew} steam={1 - 0.6 * smooth(seg(t, 0.8, 2.0))} column={{dent: smooth(seg(t, COLUMN, COLUMN + 0.12))}} hook={{theta: hookTheta(t)}}
       rail={{bay: [8450, 8950], bend}}
       extraParts={[{z: tabZ, el: tabletEl}]}
       back={<g>{repEl}{drone2}{!w.front && wEl}</g>}

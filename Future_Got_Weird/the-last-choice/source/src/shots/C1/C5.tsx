@@ -119,8 +119,6 @@ export const C5Shot: React.FC = () => {
   const cam = smoothCam(camAt, t, 0.25);
   const {out, tp} = crewC5(t, T);
   const tab = {z: 40 * 1000 + 150, el: <g transform={`translate(${tp.x} ${tp.y})`}><Tablet s={tp.s} ink={4 / cam.z} view={tp.view} rot={tp.rot} id="c5tab" glow={0.9} content={<TabletContent t={t} tap={TAP} draw={DRAW} />} /></g>};
-  // screen glow on her face
-  void 0; const _glow = {z: 40 * 1000 + 140, el: <ellipse cx={tp.x} cy={tp.y - 60} rx={120} ry={90} fill="#BFF3FF" opacity={0.08 + 0.05 * smooth(seg(t, TAP, TAP + 0.3))} />};
   return <CatwalkScene id="c5" cam={cam} T={T} crew={out} extraParts={[tab]} rail={{hide: true}} />;
 };
 

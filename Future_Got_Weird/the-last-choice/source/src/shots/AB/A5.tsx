@@ -28,8 +28,8 @@ const HA = M.HIT_A - START, HB = M.HIT_B - START;
 const KEYS: [number, Cam][] = [
   [0, {x: 620, y: -330, z: 0.62}],
   [1.4, {x: 1500, y: -720, z: 0.33}],
-  [REV, {x: 7400, y: -1750, z: 0.13}],
-  [6.3, {x: 9520, y: -2060, z: 0.1}],
+  [REV + 0.2, {x: 10000, y: -1990, z: 0.094}], // the refuge is whole in the right third by REVEAL + 0.4
+  [6.3, {x: 10150, y: -2070, z: 0.092}],
 ];
 const camAt = (t: number): Cam => {
   if (t <= KEYS[0][0]) return KEYS[0][1];
@@ -60,7 +60,8 @@ export const A5: React.FC = () => {
           <rect x={-9000} y={1500} width={36000} height={4000} fill="#2A2427" />
           <Glow x={17400} y={-700} r={3600} color="#FFE2A8" opacity={0.45 * crest} id="a5ref" />
           <Glow x={16500} y={-600} r={1300} color="#FFF1CF" opacity={0.5 * crest} id="a5ref2" />
-          <District t={T} k={cam.z} x0={-4600} refugeGlow={0.6 + 0.4 * crest} symbolPx={lerp(0, 16, crest)} seed={3} />
+          <Glow x={17500} y={-900} r={2200} color="#FFD58A" opacity={0.5 * crest} id="a5ref3" />
+          <District t={T} k={cam.z} x0={-4600} refugeGlow={0.6 + 0.4 * crest} symbolPx={lerp(0, 20, crest)} seed={3} />
           {[[-1800, 2600, 900, 3], [1700, 3000, 1100, 8], [3900, 3400, 1200, 13], [6200, 3800, 1300, 17], [8600, 3000, 1000, 21]].map(([x, h, w, sd]) => (
             <SmokeColumn key={sd} x={x} y={-1200} h={h} w={w} t={T} seed={sd} op={0.75} drift={0.25} />
           ))}

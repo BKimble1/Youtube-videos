@@ -69,28 +69,31 @@ export const B6: React.FC = () => {
   // Carrier supports the teammate: right arm around the teammate's back (visible: we see their backs); hitch on HIT_AS3
   const hitch = Math.sin(Math.PI * clamp((t - h3 + 0.12) / 0.42));
   const tmS = sc(sT);
-  const tmDrop = 10 - hitch * 8;
+  const carS = sc(sC);
+  const tmDrop = 12 - hitch * 8;
+  // the carrier's right arm goes around her back; his hand holds her at the far (right) hip, and her good right hand
+  // holds on to his forearm there. She leans into him; the injured left arm is held to her chest; the left leg is
+  // unweighted (toes down, knee soft).
+  const hipR = {x: wt.x + 30 * tmS, y: wt.y - (148 - tmDrop) * tmS - hitch * 6 * tmS, z: 36};
   const tmP: ActorProps = {
     look: look('teammate'), t: T, seed: 3, x: wt.x, y: wt.y, s: tmS, z: sT.z, yaw: sT.yaw + br(3, 2), dmg: dmg('teammate', T),
-    drop: tmDrop, side: 9, lean: 6, breath: 0.8,
-    head: {yaw: -8 + br(31, 4), pitch: 10, roll: -6},
+    drop: tmDrop, side: 15, lean: 7, pelvisDx: -6, breath: 0.8,
+    head: {yaw: -16 + br(31, 3), pitch: 12, roll: 9},
     face: {mouth: 'pant', worry: 0.7, lids: 0.35, brows: 0.2},
-    // left leg can't bear weight: toes trailing behind; right leg carries
-    legL: {foot: {x: wt.x - 30 * tmS, y: wt.y - 22 * tmS, z: -34}, pitch: 30},
-    legR: {foot: {x: wt.x + 36 * tmS, y: wt.y - 10 * tmS, z: 10}},
-    armL: {fk: {fwd: 30, out: 6, bend: 110}},
-    armR: {fk: {fwd: 8, out: 14, bend: 30}},
+    legL: {foot: {x: wt.x - 36 * tmS, y: wt.y - 24 * tmS, z: -36}, pitch: 38, pole: {x: 0.2, y: 0, z: 1}},
+    legR: {foot: {x: wt.x + 30 * tmS, y: wt.y - 10 * tmS, z: 10}},
+    armL: {fk: {fwd: 32, out: 4, bend: 118}},
+    armR: {hand: {x: hipR.x + 10 * tmS, y: hipR.y + 4 * tmS, z: hipR.z + 6}, pole: {x: 0.6, y: 1, z: 0.2}}, handR: 'fist',
+    zHand: [undefined, 260],
   };
-  const carS = sc(sC);
-  const waist = {x: wt.x - 18 * tmS, y: wt.y - (150 - tmDrop) * tmS, z: 40};
   const carP: ActorProps = {
     look: look('carrier'), t: T, seed: 2, x: wc.x, y: wc.y, s: carS, z: sC.z, yaw: sC.yaw + br(2, 2), dmg: dmg('carrier', T),
-    side: -4, drop: 4 + hitch * 10, lean: 3 + hitch * 4, breath: 0.6,
+    side: -7, pelvisDx: 22, drop: 6 + hitch * 10, lean: 4 + hitch * 4, breath: 0.6,
     head: {yaw: 10 + ease(t, h3, h3 + 0.4) * 14 * (1 - ease(t, 3.4, 4.2)), pitch: 6},
     face: {mouth: hitch > 0.3 ? 'grit' : 'flat', brows: -0.3},
-    legL: {foot: {x: wc.x - 50 * carS, y: wc.y - 10 * carS, z: -6}}, legR: {foot: {x: wc.x + 48 * carS, y: wc.y - 10 * carS, z: 8}},
-    armR: {hand: {x: waist.x + 30 * carS, y: waist.y - hitch * 6 * carS, z: waist.z}, pole: {x: 0.3, y: 1, z: 0.4}},
-    zArm: [undefined, 1150], handR: 'mitt',
+    legL: {foot: {x: wc.x - 50 * carS, y: wc.y - 10 * carS, z: -6}}, legR: {foot: {x: wc.x + 52 * carS, y: wc.y - 10 * carS, z: 8}},
+    armR: {hand: hipR, pole: {x: 0.2, y: 1, z: 0.6}},
+    zArm: [undefined, 1150], zHand: [undefined, 1180], handR: 'mitt',
     armL: {fk: {fwd: 4, out: 9, bend: 20}},
   };
   // Builder: tool bag in the left hand, weight on one hip

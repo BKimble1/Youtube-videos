@@ -21,7 +21,7 @@ export const ASSEMBLY = {
   floorY: 795,
   slots: [
     {slot: 1, role: 'builder', x: 330, y: 792, s: 0.86, yaw: 148, z: 1},
-    {slot: 2, role: 'carrier', x: 560, y: 800, s: 0.9, yaw: 146, z: 2},
+    {slot: 2, role: 'carrier', x: 575, y: 800, s: 0.9, yaw: 146, z: 2},
     {slot: 3, role: 'teammate', x: 705, y: 806, s: 0.88, yaw: 138, z: 3},
     {slot: 4, role: 'director', x: 930, y: 832, s: 0.95, yaw: 132, z: 5},
     {slot: 5, role: 'friend', x: 1160, y: 810, s: 0.9, yaw: 136, z: 4},

@@ -15,7 +15,7 @@ import {K} from '../../sets/cityKit';
 
 export {CATWALK, DECK, VENT_X};
 export const COLUMN_X = 8640; // steel hanger column the warden is smashed into (C8)
-export const DAVIT = {px: 8980, py: -1960, L: 410};
+export const DAVIT = {px: 9000, py: -1960, L: 410};
 // the steam cloud the decoy is projected on (hangs below and west of the vent)
 export const CLOUD = {x0: 7520, y0: -1420, x1: 8620, y1: -330};
 
