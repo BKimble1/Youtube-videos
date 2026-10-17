@@ -1,36 +1,43 @@
 # QA report: Tesla Roadster Short and companion
 
-## Rocket Short: FINAL ("The Problem With Tesla's Rocket Car", 17 Oct 2026)
+## Rocket Short: FINAL PASS ("The Problem With Tesla's Rocket Car", owner's audit, 17 Oct 2026)
 
-`exports/FGW_Rocket_Short_FINAL.mp4` (Git-ignored; `bash tools/render_rocket.sh`), composition `RocketShort`. Script and
-timeline: `script/rocket_short.md`. Evidence: `qa/evidence/rocket_*.jpg`.
+`exports/FGW_Rocket_Short_FINAL_PASS.mp4` (Git-ignored; `bash tools/render_rocket.sh`), composition `RocketShort`,
+rendered from the original recordings and the vector composition (not from the reviewed 512×910 copy). Script, timeline
+and the list of changes: `script/rocket_short.md`. Evidence: `qa/evidence/rocket_fp_*.jpg` (sheets made with
+`tools/qa_rocket_sheets.py` and `tools/qa_phone_zones.py` from the rendered file). The first version
+(`FGW_Rocket_Short_FINAL.mp4`, 34.27 s) is superseded; its evidence files (`rocket_*.jpg` without `fp`) stay for
+comparison.
 
 | Check | Result |
 |---|---|
-| Format | 1080×1920, **30 fps** (the recordings' rate), H.264 yuv420p, 1028 frames = **34.27 s**; AAC 48 kHz stereo 320 kb/s; 15.0 MB |
-| Loudness | **−14.0 LUFS integrated, −1.5 dBTP** (sample peak −1.49 dBFS, no clipping), LRA 2.6 LU |
-| Footage speed | Both clips play at the recordings' own speed. No slow motion and no frame interpolation, so nothing distorts the car |
+| Format | 1080×1920 (a true 1080p master: vector art and captions rendered at that size), **30 fps**, H.264 yuv420p, 1026 frames = **34.20 s**; AAC 48 kHz stereo; 14.6 MB |
+| Loudness | **−14.0 LUFS integrated, −1.4 dBTP**, LRA 3.0 LU |
 | Black frames / gaps | None (blackdetect 0.05 s). No audio gap over 0.25 s below −45 dB |
-| Holds | freezedetect (0.5 s, n 0.003) flags only low-motion beats inside the schematic: 4.9 s (0.57), 10.5 s (1.1, THRUST = WEIGHT, deliberately held on "entire weight"), 14.3 s (1.0, the frame closed on "protection"), 16.3 s (0.53), 22.3 s (0.83, level after the correction). Jets, gas ribbons and dots keep moving through all of them. No footage freezes |
-| First 2 s | 10 fps (`qa/evidence/rocket_first2s_10fps.jpg`). From frame 0, the white Roadster is climbing on two jets above the parked cars, whole car in frame. It rolls inverted by 0.4 s. The narration starts at 0.14 s. One small label at the top |
-| Match into the drawing | 15 fps (`qa/evidence/rocket_match_2.9-4.1s.jpg`). On "catch" the flow chevrons sit on both real jet pairs (checked after moving the schematic's front lift jet to where the replay's front plume exits). The saffron outline lands on the real car at 0:38.59. The drawing replaces it at 0:38.71 at the same size and position, still descending, and the night fades to dusk |
-| Torque and correction | 5 fps (`qa/evidence/rocket_torque_correction_17-22.6s.jpg`): <br>• offset push behind the centre-of-mass marker → nose-down turn (red arrow, max 6.7°); <br>• nose pulse → stopped by 20.3; <br>• second nose pulse → turning back (teal); <br>• tail pulse → level at 22.26. <br>The marker stays fixed to the body, and every pulse arrow points up at a nozzle firing down. The force arrows are hidden while the car is tilted |
-| Physics | Thrust is opposite the exhaust throughout. The hover is drawn THRUST = WEIGHT. The bursts average to the weight (the car bobs 400–409 units and ends level). The bigger tank adds weight, and thrust grows to match. Gas use is dots only (no gauge, numbers or linear decline). Fan suction is not shown. The plumes are pale cold gas with no flame. Only the labelled loose patch is disturbed; the pad is intact and nobody is nearby |
-| Gravel and wipe | 4 fps (`qa/evidence/rocket_gravel_wipe_23-28s.jpg`). The jet meets the patch as the car gets low; gravel is thrown outward along the pad; mottled dust engulfs the frame (full cover for about 2 frames) and thins over the real aerial |
-| Ending and loop | `qa/evidence/rocket_loop_seam.jpg`. The last 0.8 s is `rec_224911` 0:34.45–0:35.22 and frame 0 is 0:35.25, so the loop is one continuous shot. The replay's own sound and the same jet bed run across it, and the score ends on the opening's drone and ostinato. No black tail, end card or pause |
-| Safe areas | 360×640 with the Shorts zones overlaid (`qa/evidence/rocket_phone_safe_areas.jpg`): captions at y 1300–1450, x 110–930; title zone y > 1580; right rail x > 930. The "loose surface" tag first sat under a caption plate and was moved beside the patch with a leader line. The CTA is a plain text cue at the top, not a button, with no arrow |
-| Wording | Independent Scribe transcriptions, uploaded as plain audio and not aligned to the prompt: the placed narration and the **final mixed soundtrack** both return all 102 script words (only a comma differs, after "jump"). The mix's word times match the clean narration within about 0.1 s |
-| Speech clarity | `tools/speech_clarity.py` on a render without narration: median margin 24 dB, every content word ≥ 11.5 dB. The two lowest are "a" in "with a catch" (6 dB) and the trailing "up." (6.5 dB). In both windows the voice itself is near silence between syllables, and the bed under them is about −39 dBFS, soft music. Both transcribe correctly in the final mix |
-| Transients | Sharp onsets (> 18 dB in 5 ms) are word onsets, or the plosives inside "rocket", "compressed" and "keeping". None sits at an edit join |
-| Claims | Per line: `research/claim_ledger.md` ("Rocket Short: claim-to-source note") |
+| Holds | freezedetect (0.5 s, n 0.003) flags three low-motion beats inside the drawing: 15.33 s (0.57 s, the dot appears), 21.20 s (0.67 s, level again while "use air too" plays over the phantom tank) and 23.70 s (0.63 s, the low hover before the blast). Jets and puffs keep moving through all three. The force view's 1.7 s hold in the first final-pass render now drifts slowly (no flag). No footage freezes |
+| **1. Rear nozzle** | `rocket_fp_rear_nozzle_crops.jpg`: crops from the rendered frames at the match (2.3×), the whole car (1.6×), the offset (2.15×), maximum pitch (8.5°), the return, the descent and the gravel close-up (3.3×). The pod sits bolted under the rear overhang every time, and the plume starts at its bell's exit. There is no second nozzle, no gap and no part off the body. Front and nose units: `rocket_fp_phone_safe_areas.jpg` (4.4 s, 19.3 s) |
+| **2. With sound** | No human listen was possible here (see below). Measured instead: <br>• the independent transcription of the final mixed soundtrack returns **all 99 script words** (commas aside), with times within 0.04 s of the clean narration; <br>• speech-to-everything-else margin per word: median **22.7 dB**, every word ≥ 12 dB except "up." at 7.7 dB (the last burst lands on it by design; the bursts were lowered 2 dB for it); <br>• all 14 sentence joins sit at −63 dBFS or quieter, with no breath doubled at a splice; <br>• there is no whoosh on any cut |
+| **3. Muted at phone size** | `rocket_fp_phone_safe_areas.jpg`: 12 frames at 360×640 with the Shorts zones overlaid (top controls y < 190, right rail x > 930 at y 1050–1650, title and related-video area y > 1580). The tags, labels, arrowheads, the CTA cue and the gravel impact all sit outside those zones and above the caption plates (y 1300–1400). The cue was first at y 150, inside the top zone, and was moved to 236 |
+| **4. 12–15 s caption region** | `rocket_fp_force_tank_7.4-15.2s.jpg`: the force arrows and THRUST/WEIGHT are gone by 10.72 s. In the tank close-up the only arrow (the tank's weight) ends at about y 1200, above the caption plate; it first reached into the plate and was shortened |
+| **5. Transitions and the pitch correction** | Match: `rocket_fp_match_3.2-4.8s.jpg` (10 fps). The outline lands on the real car at 3.34, the drawing replaces it at 3.46 at the same place and size, and the push-in starts at the swap. Forces and tank: `rocket_fp_force_tank_7.4-15.2s.jpg`. Balance: `rocket_fp_balance_15-22.4s.jpg` (3 fps). In order: <br>• the dot appears; <br>• amber push, line of action and lever arm; <br>• nose-down turn (one amber arc), max 8.5° at 19.2 s; <br>• the nose burst with a saffron push at the nose; <br>• the car turns back and is level at 20.92; <br>• the dot goes from amber to white; <br>• the phantom tank shows the burst's gas. <br>Every rotation agrees with its force. Gravel and dust: `rocket_fp_gravel_wipe_22-27.2s.jpg` (4 fps). A few stones are thrown outward, the dust stays light, and the dust pass fully covers the frame for about 3 frames |
+| **6. Last 2 s against the first 2 s** | `rocket_fp_last2s_10fps.jpg` and `rocket_fp_first2s_10fps.jpg`. The ending is the hang close-up, still and centred; the cue clears at 33.80, leaving 0.4 s of clean shot. Frame 0 is the hop climbing on its jets. Both are real night footage at a similar scale. This is a clean ending, not a forced loop. The score ends on the opening's drone and marimba at the opening's level, so a replay doesn't restart the music |
+| **7. Numbers, telemetry, floating parts, failure claims** | Reviewed on `rocket_fp_render_sheet_2fps.jpg` and the sheets above: <br>• no numeric gauge or readout anywhere (the hang's on-screen gauges are out of frame; the aerial crops keep Tesla's logo out); <br>• the reserve is markers and a tint only; <br>• no part floats; <br>• no rupture, crash, injury or broken pad; <br>• no extra-time claim for the bigger tank; <br>• nothing says the jets hold the car upside down |
+| Physics | Thrust is opposite the exhaust throughout. The hover is drawn THRUST = WEIGHT at the same scale. The bursts average to the weight (the car bobs 400–409 units). The bigger tank's weight is shown and the plume grows to match. The torque directions agree with each force. The plumes are pale cold gas, no flame. Fan suction is not shown (the CTA points to it) |
+| CTA support | The long video's content was checked against this repo's companion final, which opens on the same hang and explains the fan suction "even upside down". It was not checked on YouTube (blocked); see the upload notes |
+| Claims | Per line: `research/claim_ledger.md` ("Rocket Short: claim-to-source note", final pass) |
 
 ### Not checked here (Rocket Short)
 
-- **A human listen.** The audio checks are measurements and transcriptions.
+- **A human listen.** There is no audio playback in this environment. The audio checks are measurements and independent
+  transcriptions. Listen once on a phone before publishing, for the joins around the three re-recorded lines (3.5 s,
+  7.5 s, 10.6 s, 30.9 s), the bursts under "uses some up", and the music under the CTA.
 - **Tesla's live Roadster page** (trim names, flight on the Rocket only, compressed air). tesla.com is blocked from this
   container.
-- **YouTube.** Related Video availability on the account (advanced features), whether `ujV0J6-cfX8` is public or
-  unlisted, and its exact title. youtube.com and support.google.com are blocked.
+- **YouTube.** These are unverified:
+  - Related Video availability on the account (advanced features);
+  - whether `ujV0J6-cfX8` is public or unlisted, and its exact title;
+  - whether it is the companion cut described in the upload notes.
+  The link is not set: that is the owner's step after upload. youtube.com and support.google.com are blocked.
 - **Content ID and rights.** These are only visible in YouTube Studio during upload.
 
 
