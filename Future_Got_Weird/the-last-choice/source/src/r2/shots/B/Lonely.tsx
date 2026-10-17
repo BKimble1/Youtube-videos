@@ -54,7 +54,7 @@ const dirSilhouette = (T: number): Item => {
 };
 
 /** A blob of backlit smoke: warm, bright (the low sun shines through it from behind), a lighter core. */
-const glowBlob = (key: string, pos: V3, r: number, seed: number, T: number, k: number, a = 1): Item => ({
+const glowBlob = (key: string, pos: V3, r: number, seed: number, T: number, k: number, a = 1, tone: [string, string, string, number] = ['#E59E6C', '#F6CB98', '#FFE4BE', 0.42]): Item => ({
   kind: 'sprite', key, pos,
   draw: (c) => {
     const R = r * c.k;
@@ -67,8 +67,8 @@ const glowBlob = (key: string, pos: V3, r: number, seed: number, T: number, k: n
     const inner = pts.map((q) => ({x: c.x - R * 0.12 + (q.x - c.x) * 0.62, y: c.y - R * 0.16 + (q.y - c.y) * 0.62}));
     return (
       <g opacity={a}>
-        <path d={smoothPath(pts, true, 1)} fill={mix('#E59E6C', '#F6CB98', k)} opacity={0.5 + 0.22 * k} />
-        <path d={smoothPath(inner, true, 1)} fill="#FFE4BE" opacity={0.42} />
+        <path d={smoothPath(pts, true, 1)} fill={mix(tone[0], tone[1], k)} opacity={0.5 + 0.22 * k} />
+        <path d={smoothPath(inner, true, 1)} fill={tone[2]} opacity={tone[3]} />
       </g>
     );
   },
@@ -78,12 +78,24 @@ const GLOW = Array.from({length: 34}, (_, i) => ({
   x: -6 - rnd(i * 3 + 1) * 10, y: 2.5 + rnd(i * 5 + 2) * 13, z: -26 + (i / 33) * 52 + (rnd(i * 7 + 3) - 0.5) * 5,
   r: 3.6 + rnd(i * 11 + 4) * 4.6, seed: rnd(i * 13 + 5) * 6.28, k: rnd(i * 17 + 6),
 }));
-/** sunlit dust off the crest right behind him (between the slab's east edge and him), so his legs have light behind them */
+/** sunlit dust off the crest right behind him (between the slab's east edge and him), from his knees up: his body has
+ * light behind it, and the rubble round his feet stays dark so he stands on the crest */
 const CREST = Array.from({length: 9}, (_, i) => ({
-  x: 1.0 + rnd(i * 19 + 1) * 0.35, y: 3.25 + rnd(i * 23 + 2) * 1.3, z: 0.2 + (i / 8) * 2.4 + (rnd(i * 29 + 3) - 0.5) * 0.4,
+  x: 1.0 + rnd(i * 19 + 1) * 0.35, y: 3.75 + rnd(i * 23 + 2) * 1.0, z: 0.2 + (i / 8) * 2.4 + (rnd(i * 29 + 3) - 0.5) * 0.4,
   r: 0.45 + rnd(i * 31 + 4) * 0.55, seed: rnd(i * 37 + 5) * 6.28, k: 0.5 + rnd(i * 41 + 6) * 0.5,
 }));
+/** a low bank of dust drifting across the ridge's east foot (the van's zone, x 5.5–13), warm and fairly opaque: it veils
+ * the van, whose roof would otherwise line up with his feet from this lens. Its top stays under the line from the lens
+ * to his feet (≈3.0 m by the van, 3.3 m at x 13), so his feet keep the crest. */
+const BANK = Array.from({length: 26}, (_, i) => {
+  const hi = i < 15; // upper row (reaching the van roof) / lower row (down to the ground)
+  const x = 5.6 + rnd(i * 43 + 1) * 7.2, r = hi ? 1.05 + rnd(i * 47 + 2) * 0.6 : 1.2 + rnd(i * 47 + 2) * 0.7;
+  const top = x < 7 ? 2.98 : x < 10 ? 3.12 : 3.28;
+  return {x, y: hi ? top - 0.82 * r : 0.6 + rnd(i * 53 + 3) * 0.7, z: -7.5 + ((hi ? i : i - 15) / (hi ? 14 : 10)) * 17 + (rnd(i * 59 + 4) - 0.5) * 1.6, r, seed: rnd(i * 61 + 5) * 6.28, k: rnd(i * 67 + 6)};
+});
+const BANK_TONE: [string, string, string, number] = ['#9C6E55', '#C4906B', '#E2B48C', 0.3];
 const glowItems = (T: number): Item[] => [
+  ...BANK.map((g, i) => glowBlob(`b6b${i}`, {x: g.x + Math.sin(T * 0.11 + g.seed) * 0.25, y: g.y, z: g.z - (T - M.H4) * 0.22}, g.r, g.seed, T, g.k, 1, BANK_TONE)),
   ...GLOW.map((g, i) => glowBlob(`b6g${i}`, {x: g.x + Math.sin(T * 0.07 + g.seed) * 0.6, y: g.y + (T - M.H4) * 0.1, z: g.z - (T - M.H4) * 0.16}, g.r, g.seed, T, g.k)),
   ...CREST.map((g, i) => glowBlob(`b6c${i}`, {x: g.x, y: g.y + (T - M.H4) * 0.05 + Math.sin(T * 0.5 + g.seed) * 0.05, z: g.z - (T - M.H4) * 0.06}, g.r, g.seed, T, g.k, 0.85)),
 ];

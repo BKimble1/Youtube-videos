@@ -212,8 +212,8 @@ const H5: UPlan = {
   id: 7105, name: 'H5', eye: 'amber',
   steps: [
     {k: 'walk', pts: [arcStartPos(ARC_START[4]).pos, {x: 31.0, z: 10.4}, {x: 22.0, z: 9.9}, {x: 17.85, z: 9.05}, H5_AT], T0: M.P4, T1: 155.45, A: 0.25, D: 0.3},
-    {k: 'keys', root: [[155.45, H5_AT.x, H5_AT.z, 298], [155.66, H5_AT.x - 0.05, H5_AT.z - 0.05, 66], [156.4, H5_AT.x - 0.05, H5_AT.z - 0.05, 66],
-      [157.3, 16.95, 6.8, 78], [158.4, 18.55, 6.05, 140], [158.95, H5_TB.pos.x, H5_TB.pos.z, H5_TB.heading]]},
+    {k: 'keys', root: [[155.45, H5_AT.x, H5_AT.z, 298], [155.66, H5_AT.x - 0.05, H5_AT.z - 0.05, 66], [156.6, H5_AT.x - 0.05, H5_AT.z - 0.05, 66],
+      [157.6, 16.95, 6.8, 78], [158.6, 18.55, 6.05, 140], [159.1, H5_TB.pos.x, H5_TB.pos.z, H5_TB.heading]]},
   ],
   act: (T) => ({
     strike: pickStrike(T, [{t0: EV.runnerHit, side: 'R', target: RUNNER_CHEST, kind: 'punch'}]),
@@ -411,7 +411,7 @@ export const heavy2Footfalls = (Ta: number, Tb: number): {t: number; pos: V3; le
 type DKey = [number, number, number, number];
 const DRONE_KEYS: Record<number, DKey[]> = {
   // the diver: follows the fight, dives on the drone pilot at 170.22, pulls up, holds low over the ring
-  7601: [[M.P4, 46, 7.5, 7], [158, 24, 7.5, 7], [165.5, 17.5, 7.8, 7.6], [169.45, 15.2, 7.2, 6.6], [170.22, 11.2, 1.75, 3.55], [170.62, 10.0, 2.9, 4.6], [172.6, 7.6, 5.0, 8.2], [175.5, 6.2, 5.6, 9.4]],
+  7601: [[M.P4, 46, 7.5, 7], [158, 24, 7.5, 7], [165.5, 17.5, 7.8, 7.6], [169.45, 15.4, 7.2, 7.2], [170.22, 11.5, 1.78, 4.05], [170.62, 10.4, 3.0, 5.2], [172.6, 7.6, 5.0, 8.2], [175.5, 6.2, 5.6, 9.4]],
   7602: [[M.P4, 50, 9, -6], [160, 26, 8.5, -5.5], [170, 17, 7.2, -4.6], [178, 14.5, 6.4, -3.8]],
   7603: [[M.P4, 44, 12, -12], [162, 20, 11, -9], [172, 7, 9.6, -4.5], [179, 3.2, 9.2, -2.6]],
   7604: [[M.P4, 48, 10, 12], [161, 27, 9, 12], [171, 20, 8.2, 11], [178.5, 17.4, 7.6, 10.2]],
@@ -444,9 +444,9 @@ export const droneD4 = (id: number, T: number): DroneSpec => {
   const moving = Math.hypot(vel.x, vel.z) > 0.6;
   const heading = moving ? (Math.atan2(vel.x, -vel.z) * 180) / Math.PI : tb.heading;
   const diving = id === 7601 && T > 169.3 && T < 170.5;
-  const look = diving ? {x: 11.2, y: 1.6, z: 3.5} : T > 182 ? tb.look : dirHeadAt(T);
+  const look = diving ? {x: 11.45, y: 1.6, z: 4.0} : T > 182 ? tb.look : dirHeadAt(T);
   return {id, t: T, pos, heading: moving ? heading : tb.heading + wrapD(heading - tb.heading) * 0, vel, look, eye: id === 7601 ? 'amber' : tb.eye, ground, key: `tb_d${id}`,
-    mark: id === 7601 && T > 168.9 && T < 170.1 ? {target: {x: 11.1, y: 1.5, z: 3.4}, color: 'amber'} : undefined};
+    mark: id === 7601 && T > 168.9 && T < 170.1 ? {target: {x: 11.45, y: 1.5, z: 4.0}, color: 'amber'} : undefined};
 };
 export const DRONE_IDS = TB_DRONES.map((d) => d.id);
 

@@ -14,9 +14,9 @@ const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
 // from cover and hit the distracted units from behind — the breaker's knee strike, the Director's plate into A's back,
 // the runner's pry and rip. The light figures walk on in the smoke beyond.
 const D24: CamKey[] = [
-  {t: 0, pos: g(42.6, -8.9, 0.85), target: g(52.8, -8.3, 1.35), fov: 44},
-  {t: 1.4, pos: g(42.9, -8.85, 0.85), target: g(53.4, -8.1, 1.2), fov: 43},
-  {t: M.TETHER - M.FLANK, pos: g(43.3, -8.7, 0.9), target: g(53.6, -7.7, 1.1), fov: 43},
+  {t: 0, pos: g(45.7, -10.2, 0.9), target: g(54.2, -8.3, 2.6), fov: 48},
+  {t: 1.4, pos: g(45.95, -10.1, 0.9), target: g(54.6, -8.1, 2.3), fov: 47},
+  {t: M.TETHER - M.FLANK, pos: g(46.3, -9.95, 0.92), target: g(54.6, -7.6, 2.0), fov: 47},
 ];
 export const D2_4: React.FC = () => {
   const {t, T} = useShotTime(M.FLANK);
@@ -74,8 +74,8 @@ export const D2_7a: React.FC = () => {
 // Wide, low on the crater's inner slope below them, looking up west at the seven on the rim crest against the low sun:
 // the wrecks in the foreground, the girder above; they breathe; the others come in along the rim. A moment of success.
 const D27b: CamKey[] = [
-  {t: 0, pos: g(54.7, -7.1, 0.55), target: g(48.3, -6.4, 1.75), fov: 46},
-  {t: M.P3 - 114.8, pos: g(54.5, -7.15, 0.6), target: g(48.2, -6.5, 1.85), fov: 45},
+  {t: 0, pos: g(54.6, -3.9, 0.55), target: g(48.4, -6.6, 1.9), fov: 42},
+  {t: M.P3 - 114.8, pos: g(54.45, -3.95, 0.6), target: g(48.35, -6.65, 2.0), fov: 41},
 ];
 export const D2_7b: React.FC = () => {
   const {t, T} = useShotTime(114.8);

@@ -80,7 +80,7 @@ export const DROPS: Record<string, Drop> = {
   // the decoy maker lets the smashed tablet fall at her feet
   tablet: {kind: 'tablet', t0: EV.tabletDrop, from: {x: 11.35, y: G(11.35, 5.3) + 0.95, z: 5.3}, to: {x: 11.55, z: 5.15, yaw: 20}, flight: 0.45, apex: 0.02, spin: 180, key: 'd4_tablet'},
   // the controller flies from the drone pilot's hands as the drone hits her
-  controller: {kind: 'controller', t0: EV.droneHit + 0.02, from: {x: 11.3, y: G(11.3, 3.5) + 1.15, z: 3.5}, to: {x: 11.75, z: 4.25, yaw: 70}, flight: 0.55, apex: 0.35, spin: 360, key: 'd4_controller'},
+  controller: {kind: 'controller', t0: EV.droneHit + 0.02, from: {x: 11.6, y: G(11.6, 4.1) + 1.15, z: 4.1}, to: {x: 12.15, z: 4.75, yaw: 70}, flight: 0.55, apex: 0.35, spin: 360, key: 'd4_controller'},
   // the breaker lets the empty breaker fall as his leg gives
   breaker: {kind: 'breaker', t0: 181.35, from: {x: 10.15, y: G(10.15, 7.85) + 0.9, z: 7.85}, to: {x: 10.55, z: 8.45, yaw: 40}, flight: 0.45, apex: 0.03, spin: 180, key: 'd4_breaker'},
 };

@@ -105,9 +105,9 @@ const blockFeet = (() => {
   a.L.push([BLOCK_ROOT[4][0], lL[1], lL[2]], ...p.L.slice(1)); a.R.push([BLOCK_ROOT[4][0], lR[1], lR[2]], ...p.R.slice(1));
   return a;
 })();
-const RUN2: XZ[] = [{x: BLOCK_ROOT[5][1], z: BLOCK_ROOT[5][2]}, {x: 23.0, z: 2.95}, {x: 17.2, z: 3.35}, {x: 14.0, z: 1.6}, {x: GATHER.director.x, z: GATHER.director.z}];
+const RUN2: XZ[] = [{x: BLOCK_ROOT[5][1], z: BLOCK_ROOT[5][2]}, {x: 24.5, z: 2.2}, {x: 20.0, z: 2.75}, {x: 17.2, z: 2.6}, {x: 14.0, z: 1.6}, {x: GATHER.director.x, z: GATHER.director.z}];
 const CHARGE1: XZ[] = [{x: GATHER.director.x + 0.05, z: GATHER.director.z + 0.05}, {x: 12.75, z: -1.0}, {x: 12.98, z: -2.15}];
-const CHARGE2: XZ[] = [{x: 13.1, z: -2.4}, {x: 14.6, z: -2.35}, {x: 15.95, z: -2.45}];
+const CHARGE2: XZ[] = [{x: 13.1, z: -2.4}, {x: 14.6, z: -2.5}, {x: 16.0, z: -2.75}];
 const SPRINT: XZ[] = [{x: 11.8, z: 6.3}, {x: 10.6, z: 4.75}, {x: 9.5, z: 3.55}];
 /** his braced stance at the plant (left foot toward the heavy) */
 const PLANT_FEET = (() => {
@@ -125,7 +125,7 @@ const DIR_SEGS: Seg[] = [
   {kind: 'stand', root: [[163.32, 12.98, -2.15, runEnd(CHARGE1).h], [163.6, 13.08, -2.32, 22], [163.9, 13.1, -2.4, 60], [164.05, 13.1, -2.4, 88]], stag: 0.12},
   {kind: 'run', path: CHARGE2, T0: 164.05, T1: 165.04, gait: GAITS.dir, A: 0.3, D: 0},
   {kind: 'stand', stag: 0.14, root: [
-    [165.04, 15.95, -2.45, runEnd(CHARGE2).h], [165.35, 16.2, -2.45, 85], [166.0, 16.25, -2.35, 75], [167.3, 16.2, -2.25, 72], [168.1, 16.05, -2.05, 215],
+    [165.04, 16.0, -2.75, runEnd(CHARGE2).h], [165.35, 16.2, -2.85, 85], [166.0, 16.4, -2.75, 75], [167.3, 16.4, -2.7, 72], [168.1, 16.3, -2.6, 215],
     [169.5, 15.0, -0.7, 228], [170.6, 14.35, 0.55, 200], [171.4, 14.3, 0.85, 300], [172.4, 14.05, 1.5, 15], [173.4, 13.5, 2.9, 120], [174.6, 12.3, 5.2, 190],
     [175.3, 11.8, 6.3, 72], [175.85, 11.8, 6.3, 74], [176.3, 11.78, 6.27, headingTo(SPRINT[0], SPRINT[1])],
   ]},
@@ -305,20 +305,20 @@ const dirThrown = (T: number): CrewOut => {
 
 // ================================================================== THE TETHER OPERATOR (clerkA)
 const TTH_RUN1: XZ[] = [{x: 35.3, z: -2.25}, {x: 28.0, z: -2.5}, {x: 21.0, z: -1.75}, {x: 18.7, z: -1.42}];
-const TTH_RUN2: XZ[] = [{x: 17.35, z: -1.2}, {x: 14.5, z: -1.1}, {x: GATHER.tether.x, z: GATHER.tether.z}];
-const TTH_RUN3: XZ[] = [{x: GATHER.tether.x, z: GATHER.tether.z}, {x: 13.9, z: -1.15}, {x: 15.25, z: -1.4}];
-const TTH_RUN4: XZ[] = [{x: 13.9, z: -1.15}, {x: TB_CREW.tether.pos.x, z: TB_CREW.tether.pos.z}];
+const TTH_RUN2: XZ[] = [{x: 17.35, z: -1.2}, {x: 16.2, z: -0.3}, {x: GATHER.tether.x, z: GATHER.tether.z}];
+const TTH_RUN3: XZ[] = [{x: GATHER.tether.x, z: GATHER.tether.z}, {x: 14.5, z: -0.15}, {x: 15.1, z: -0.4}];
+const TTH_RUN4: XZ[] = [{x: 13.5, z: -1.3}, {x: TB_CREW.tether.pos.x, z: TB_CREW.tether.pos.z}];
 const TTH_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 35.5, -2.3, 92], [150.35, 35.4, -2.28, 92], [150.7, 35.3, -2.25, 272]], stag: 0.14},
   {kind: 'run', path: TTH_RUN1, T0: 150.7, T1: 155.95, gait: GAITS.run, A: 0.5, D: 0.6},
   {kind: 'stand', stag: 0.14, root: [[155.95, 18.7, -1.42, runEnd(TTH_RUN1).h], [156.3, 18.62, -1.4, TETHER_FACE.h], [156.75, TETHER_FACE.x, TETHER_FACE.z, TETHER_FACE.h],
     [EV.disarmGrab, TETHER_FACE.x, TETHER_FACE.z, TETHER_FACE.h], [EV.disarmTear, TETHER_FACE.x + 0.06, TETHER_FACE.z, TETHER_FACE.h], [157.95, 17.5, -1.25, 100], [158.3, 17.35, -1.2, 272]]},
-  {kind: 'run', path: TTH_RUN2, T0: 158.3, T1: 160.1, gait: GAITS.run, A: 0.4, D: 0.5},
-  {kind: 'stand', stag: 0.12, root: [[160.1, GATHER.tether.x, GATHER.tether.z, runEnd(TTH_RUN2).h], [160.45, GATHER.tether.x, GATHER.tether.z, GATHER.tether.h], [162.42, GATHER.tether.x, GATHER.tether.z, 82]]},
-  {kind: 'run', path: TTH_RUN3, T0: 162.42, T1: 164.15, gait: GAITS.run, A: 0.4, D: 0.5},
-  {kind: 'stand', stag: 0.16, root: [[164.15, 15.25, -1.4, runEnd(TTH_RUN3).h], [164.4, 15.25, -1.4, 58], [164.95, 15.05, -1.2, 52], [165.4, 15.12, -1.22, 48], [166.0, 15.3, -1.15, 75],
-    [167.8, 15.35, -1.05, 80], [168.4, 15.3, -1.0, 35], [170.6, 15.2, -0.9, 62], [172.0, 14.9, -0.95, 340], [173.4, 14.4, -0.95, 90], [174.8, 13.9, -1.15, 100],
-    [177.9, 13.9, -1.15, 105], [178.15, 13.9, -1.15, headingTo(TTH_RUN4[0], TTH_RUN4[1])]]},
+  {kind: 'run', path: TTH_RUN2, T0: 158.3, T1: 159.75, gait: GAITS.run, A: 0.4, D: 0.5},
+  {kind: 'stand', stag: 0.12, root: [[159.75, GATHER.tether.x, GATHER.tether.z, runEnd(TTH_RUN2).h], [160.2, GATHER.tether.x, GATHER.tether.z, GATHER.tether.h], [162.6, GATHER.tether.x, GATHER.tether.z, 90]]},
+  {kind: 'run', path: TTH_RUN3, T0: 162.6, T1: 164.15, gait: GAITS.run, A: 0.4, D: 0.5},
+  {kind: 'stand', stag: 0.16, root: [[164.15, 15.1, -0.4, runEnd(TTH_RUN3).h], [164.4, 15.1, -0.4, 40], [164.95, 14.9, -0.2, 36], [165.4, 14.95, -0.22, 36], [166.0, 15.1, -0.3, 60],
+    [167.8, 15.15, -0.25, 70], [168.4, 15.1, -0.2, 25], [170.6, 15.0, -0.1, 62], [172.0, 14.6, -0.3, 340], [173.4, 14.0, -0.6, 90], [174.8, 13.5, -1.3, 100],
+    [177.9, 13.5, -1.3, 105], [178.15, 13.5, -1.3, headingTo(TTH_RUN4[0], TTH_RUN4[1])]]},
   {kind: 'run', path: TTH_RUN4, T0: 178.15, T1: 179.75, gait: GAITS.lunge, A: 0.4, D: 0.6},
   {kind: 'stand', stag: 0.2, root: [[179.75, TB_CREW.tether.pos.x, TB_CREW.tether.pos.z, runEnd(TTH_RUN4).h], [180.35, TB_CREW.tether.pos.x, TB_CREW.tether.pos.z, TB_CREW.tether.heading]]},
 ];
@@ -390,7 +390,7 @@ export const tetherAt = (T: number): CrewOut => {
 };
 
 // ================================================================== THE RUNNER (guesser)
-const RUN_RUN: XZ[] = [{x: 34.9, z: 4.7}, {x: 27.0, z: 6.5}, {x: 20.6, z: 7.6}, {x: RUNNER_STOP.x, z: RUNNER_STOP.z}];
+const RUN_RUN: XZ[] = [{x: 34.9, z: 4.7}, {x: 27.5, z: 3.6}, {x: 21.5, z: 6.6}, {x: RUNNER_STOP.x, z: RUNNER_STOP.z}];
 const RUN_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 35.2, 4.6, 88], [150.3, 35.0, 4.65, 88], [150.6, 34.9, 4.7, 268]], stag: 0.12},
   {kind: 'run', path: RUN_RUN, T0: 150.6, T1: RUNNER_STOP.t, gait: GAITS.fast, A: 0.5, D: 0.35},
@@ -435,16 +435,16 @@ export const runnerAt = (T: number): CrewOut => {
 };
 
 // ================================================================== THE BREAKER (honest): limping, the breaker empty
-const BRK_RUN1: XZ[] = [{x: 31.7, z: 2.72}, {x: 24.0, z: 4.0}, {x: 16.2, z: 4.65}, {x: GATHER.breaker.x, z: GATHER.breaker.z}];
+const BRK_RUN1: XZ[] = [{x: 31.7, z: 2.72}, {x: 24.0, z: 4.6}, {x: 16.2, z: 4.65}, {x: GATHER.breaker.x, z: GATHER.breaker.z}];
 const BRK_RUN2: XZ[] = [{x: GATHER.breaker.x, z: GATHER.breaker.z}, {x: 13.95, z: 4.3}];
-const BRK_RUN3: XZ[] = [{x: 11.3, z: 7.2}, {x: 10.25, z: 7.7}];
+const BRK_RUN3: XZ[] = [{x: 11.3, z: 7.4}, {x: 10.25, z: 7.75}];
 const BRK_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 31.8, 2.7, 80], [150.2, 31.75, 2.7, 80], [150.55, 31.7, 2.72, 266]], stag: 0.1},
   {kind: 'run', path: BRK_RUN1, T0: 150.55, T1: 159.6, gait: GAITS.limp, A: 0.6, D: 0.7},
   {kind: 'stand', stag: 0.12, root: [[159.6, GATHER.breaker.x, GATHER.breaker.z, runEnd(BRK_RUN1).h], [160.0, GATHER.breaker.x, GATHER.breaker.z, GATHER.breaker.h], [162.42, GATHER.breaker.x, GATHER.breaker.z, 86]]},
   {kind: 'run', path: BRK_RUN2, T0: 162.42, T1: 163.85, gait: GAITS.limp, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.16, root: [[163.85, 13.95, 4.3, 92], [164.4, 14.0, 4.3, 94], [164.8, 13.8, 4.45, 102], [165.6, 13.6, 4.6, 95], [167.0, 13.5, 4.7, 85],
-    [170.6, 13.3, 4.9, 80], [172.5, 12.4, 6.2, 70], [174.6, 11.5, 7.0, 60], [178.6, 11.3, 7.2, 300], [179.0, BRK_RUN3[0].x, BRK_RUN3[0].z, headingTo(BRK_RUN3[0], BRK_RUN3[1])]]},
+    [170.6, 13.3, 4.9, 80], [172.5, 12.6, 6.5, 70], [174.6, 12.0, 7.6, 60], [178.6, 11.8, 7.6, 300], [179.0, BRK_RUN3[0].x, BRK_RUN3[0].z, headingTo(BRK_RUN3[0], BRK_RUN3[1])]]},
   {kind: 'run', path: BRK_RUN3, T0: 179.0, T1: 181.0, gait: GAITS.limp, A: 0.5, D: 0.6},
   {kind: 'stand', stag: 0.1, root: [[181.0, BRK_RUN3[1].x, BRK_RUN3[1].z, runEnd(BRK_RUN3).h], [181.5, 9.9, 7.85, 325], [182.1, TB_CREW.breaker.pos.x, TB_CREW.breaker.pos.z, TB_CREW.breaker.heading]]},
 ];
@@ -522,15 +522,15 @@ export const breakerAt = (T: number): CrewOut => {
 };
 
 // ================================================================== THE DECOY MAKER (clerkB)
-const DEC_RUN1: XZ[] = [{x: 32.7, z: 4.25}, {x: 24.0, z: 5.1}, {x: 16.5, z: 5.9}, {x: GATHER.decoy.x, z: GATHER.decoy.z}];
+const DEC_RUN1: XZ[] = [{x: 32.7, z: 4.25}, {x: 29.0, z: 3.9}, {x: 24.0, z: 6.4}, {x: 16.5, z: 6.6}, {x: GATHER.decoy.x, z: GATHER.decoy.z}];
 const DEC_RUN2: XZ[] = [{x: GATHER.decoy.x, z: GATHER.decoy.z}, {x: 13.2, z: 5.35}];
 const DEC_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 32.9, 4.2, 82], [150.3, 32.8, 4.2, 82], [150.65, 32.7, 4.25, 268]], stag: 0.08},
   {kind: 'run', path: DEC_RUN1, T0: 150.65, T1: 158.95, gait: GAITS.run, A: 0.6, D: 0.7},
   {kind: 'stand', stag: 0.08, root: [[158.95, GATHER.decoy.x, GATHER.decoy.z, runEnd(DEC_RUN1).h], [159.3, GATHER.decoy.x, GATHER.decoy.z, GATHER.decoy.h], [162.5, GATHER.decoy.x, GATHER.decoy.z, 86]]},
   {kind: 'run', path: DEC_RUN2, T0: 162.5, T1: 164.1, gait: GAITS.run, A: 0.4, D: 0.5},
-  {kind: 'stand', stag: 0.1, root: [[164.1, 13.2, 5.35, runEnd(DEC_RUN2).h], [164.7, 13.25, 5.2, 48], [165.6, 13.15, 5.1, 60], [170.6, 12.9, 5.4, 80], [172.6, 12.0, 6.5, 60],
-    [174.6, 11.2, 6.8, 50], [178.3, 11.4, 6.9, 300], [179.6, 11.15, 6.5, 300], [180.45, TB_CREW.decoy.pos.x, TB_CREW.decoy.pos.z, TB_CREW.decoy.heading]]},
+  {kind: 'stand', stag: 0.1, root: [[164.1, 13.2, 5.35, runEnd(DEC_RUN2).h], [164.7, 13.25, 5.2, 48], [165.6, 13.15, 5.1, 60], [170.6, 12.9, 5.4, 80], [172.6, 11.6, 5.8, 60],
+    [174.6, 11.0, 6.4, 50], [178.3, 11.1, 6.6, 300], [179.6, 11.05, 6.4, 300], [180.45, TB_CREW.decoy.pos.x, TB_CREW.decoy.pos.z, TB_CREW.decoy.heading]]},
 ];
 const DEC_HELD = EV.grabDecoy + 0.5;
 export const decoyAt = (T: number): CrewOut => {
@@ -570,16 +570,16 @@ export const decoyAt = (T: number): CrewOut => {
 };
 
 // ================================================================== THE DRONE PILOT (checker)
-const PIL_RUN: XZ[] = [{x: 32.7, z: 0.32}, {x: 24.0, z: 1.9}, {x: 16.5, z: 3.1}, {x: GATHER.drone.x, z: GATHER.drone.z}];
+const PIL_RUN: XZ[] = [{x: 32.7, z: 0.32}, {x: 24.0, z: 1.0}, {x: 19.5, z: 1.6}, {x: 16.5, z: 3.1}, {x: GATHER.drone.x, z: GATHER.drone.z}];
 const PIL_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 32.8, 0.3, 85], [150.4, 32.75, 0.3, 85], [150.75, 32.7, 0.32, 265]], stag: 0.08},
   {kind: 'run', path: PIL_RUN, T0: 150.75, T1: 158.6, gait: GAITS.run, A: 0.6, D: 0.7},
   {kind: 'stand', stag: 0.08, root: [[158.6, GATHER.drone.x, GATHER.drone.z, runEnd(PIL_RUN).h], [158.95, GATHER.drone.x, GATHER.drone.z, GATHER.drone.h], [162.42, GATHER.drone.x, GATHER.drone.z, 88],
-    [163.2, 11.9, 2.9, 75], [166.6, 11.85, 2.95, 80], [168.5, 11.5, 3.2, 90], [169.4, 11.25, 3.4, 95], [EV.droneHit, 11.25, 3.4, 95]]},
+    [163.2, 11.9, 2.9, 75], [166.6, 11.85, 2.95, 80], [168.5, 11.6, 3.5, 88], [169.4, 11.45, 4.0, 85], [EV.droneHit, 11.45, 4.0, 85]]},
 ];
 /** where she lands when the drone hits her, and her scoot back against the van's side */
-const PIL_FALL = {x: 10.2, z: 3.8, h: 100};
-const SCOOT: [number, number, number, number][] = [[171.7, PIL_FALL.x, PIL_FALL.z, PIL_FALL.h], [172.5, 9.75, 3.72, 102], [173.3, 9.25, 3.5, 100], [174.2, PILOT_DOWN.x, PILOT_DOWN.z, PILOT_DOWN.h]];
+const PIL_FALL = {x: 10.6, z: 4.45, h: 100};
+const SCOOT: [number, number, number, number][] = [[171.7, PIL_FALL.x, PIL_FALL.z, PIL_FALL.h], [172.5, 9.95, 4.1, 102], [173.3, 9.2, 3.55, 100], [174.2, PILOT_DOWN.x, PILOT_DOWN.z, PILOT_DOWN.h]];
 /** sitting on the ground, propped on her hands behind her, knees up */
 const SIT_PROP: Pose = {drop: 132, lean: -26, bodyPitch: 0, legL: {local: {r: -34, u: 34, f: 118}, pole: {r: -0.2, u: 1, f: 0.3}}, legR: {local: {r: 32, u: 44, f: 96}, pole: {r: 0.2, u: 1, f: 0.3}}, handL: 'brace', handR: 'brace', head: {pitch: -6}};
 const PIL_CRAWL = EV.pilotUpEnd;
@@ -649,15 +649,15 @@ export const pilotAt = (T: number): CrewOut => {
 };
 
 // ================================================================== THE FLARE CARRIER (host)
-const FLR_RUN1: XZ[] = [{x: 33.4, z: 6.62}, {x: 25.0, z: 6.8}, {x: 17.5, z: 5.5}, {x: GATHER.flares.x, z: GATHER.flares.z}];
+const FLR_RUN1: XZ[] = [{x: 33.8, z: 8.42}, {x: 27.0, z: 8.9}, {x: 21.0, z: 10.2}, {x: 16.6, z: 10.2}, {x: 13.8, z: 8.2}, {x: GATHER.flares.x, z: GATHER.flares.z}];
 const FLR_RUN2: XZ[] = [{x: GATHER.flares.x, z: GATHER.flares.z}, {x: 14.25, z: 6.55}];
 const FLR_SEGS: Seg[] = [
-  {kind: 'stand', root: [[M.P4, 33.6, 6.6, 86], [150.35, 33.5, 6.6, 86], [150.7, 33.4, 6.62, 268]], stag: 0.12},
+  {kind: 'stand', root: [[M.P4, 34.0, 8.4, 86], [150.35, 33.9, 8.4, 86], [150.7, 33.8, 8.42, 268]], stag: 0.12},
   {kind: 'run', path: FLR_RUN1, T0: 150.7, T1: 158.75, gait: GAITS.run, A: 0.6, D: 0.7},
   {kind: 'stand', stag: 0.12, root: [[158.75, GATHER.flares.x, GATHER.flares.z, runEnd(FLR_RUN1).h], [159.15, GATHER.flares.x, GATHER.flares.z, GATHER.flares.h], [162.5, GATHER.flares.x, GATHER.flares.z, 76]]},
   {kind: 'run', path: FLR_RUN2, T0: 162.5, T1: 164.0, gait: GAITS.run, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.14, root: [[164.0, 14.25, 6.55, runEnd(FLR_RUN2).h], [165.2, 14.3, 6.55, 74], [165.8, 14.35, 6.5, 70], [166.4, 14.4, 6.5, 72], [170.6, 14.3, 6.6, 75],
-    [172.5, 13.9, 7.4, 60], [174.6, 14.1, 8.3, 50], [177.9, 14.4, 8.4, 300], [178.3, 14.4, 8.4, 295], [179.8, 14.15, 7.85, 295], [181.2, TB_CREW.flares.pos.x, TB_CREW.flares.pos.z, TB_CREW.flares.heading]]},
+    [172.5, 13.9, 7.4, 60], [174.6, 15.2, 8.9, 50], [177.9, 15.2, 8.9, 300], [178.3, 15.2, 8.9, 295], [179.8, 14.6, 8.2, 295], [181.2, TB_CREW.flares.pos.x, TB_CREW.flares.pos.z, TB_CREW.flares.heading]]},
 ];
 export const FLARE = {draw: EV.flareDraw, strike: EV.flareStrike, throw: EV.flareThrow, hit: EV.flareHit};
 const FLR_HELD = EV.grabFlares + 0.5;

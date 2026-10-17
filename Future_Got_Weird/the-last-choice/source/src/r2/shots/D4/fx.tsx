@@ -123,7 +123,7 @@ export const d4Fx = (T: number): FxOut => {
   if (T > EV.droneHit - 0.1 && T < EV.droneHit + 3) {
     const p = droneD4(7601, EV.droneHit).pos;
     out.push(impact({at: p, normal: {x: 0.7, y: 0.5, z: 0.3}, t: T, t0: EV.droneHit, key: 'd4dhit', strength: 0.5, material: 'metal', ground: ground(p), seed: 191}));
-    out.push(bodyDust(T, {x: 10.2, y: 0, z: 3.8}, 170.72, 'd4pdn', 193));
+    out.push(bodyDust(T, {x: 10.6, y: 0, z: 4.45}, 170.72, 'd4pdn', 193));
   }
   // ---- D4-8 THE STRIKE: the ram meets the plate, the plate shatters; he is thrown into the slab
   if (T > EV.strike - 0.1 && T < EV.strike + 4) {

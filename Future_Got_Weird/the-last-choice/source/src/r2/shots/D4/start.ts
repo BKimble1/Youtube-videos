@@ -40,7 +40,7 @@ export const CREW_START: Record<Role2, CrewStart> = {
   breaker: {pos: on(31.8, 2.7), heading: 80, state: 'on his feet, weight off the left leg (limp), breathing hard', hands: 'breaker at port across the body, both hands (gauge empty)'},
   decoy: {pos: on(32.9, 4.2), heading: 82, state: 'standing, shaken, looking at the units', hands: 'smashed tablet in the left hand; right hand open'},
   drone: {pos: on(32.8, 0.3), heading: 85, state: 'standing, the dead controller held in front', hands: 'controller in both hands (screen dark)'},
-  flares: {pos: on(33.6, 6.6), heading: 86, state: 'standing braced, wiping the brow cut', hands: 'empty (one flare left in the bag)'},
+  flares: {pos: on(34.0, 8.4), heading: 86, state: 'standing braced, wiping the brow cut', hands: 'empty (one flare left in the bag)'},
 };
 
 // ------------------------------------------------------------------ heavy 2 and the nearest machines at 149.86

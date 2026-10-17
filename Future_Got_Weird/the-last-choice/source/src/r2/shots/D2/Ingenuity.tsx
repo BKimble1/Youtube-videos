@@ -14,9 +14,9 @@ const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
 // Medium, low from the south-west by the slab's south end: the flare carrier rises off his knee, turns to the slab,
 // pulls a pin and lobs a canister over it into the crater, then the second; the others crouched along the slab.
 const D21: CamKey[] = [
-  {t: 0, pos: g(49.65, 7.65, 1.35), target: g(46.85, 5.0, 1.15), fov: 40},
-  {t: 0.6, pos: g(49.6, 7.6, 1.4), target: g(46.9, 4.95, 1.5), fov: 41},
-  {t: 95.38 - M.P2, pos: g(49.5, 7.55, 1.45), target: g(47.1, 4.8, 1.85), fov: 42},
+  {t: 0, pos: g(51.25, 9.05, 1.4), target: g(46.95, 5.0, 1.4), fov: 30},
+  {t: 0.6, pos: g(51.2, 9.0, 1.42), target: g(46.95, 4.95, 1.6), fov: 30},
+  {t: 95.38 - M.P2, pos: g(51.1, 8.95, 1.45), target: g(47.05, 4.85, 1.9), fov: 31},
 ];
 export const D2_1: React.FC = () => {
   const {t, T} = useShotTime(M.P2);
@@ -62,11 +62,12 @@ export const D2_3a: React.FC = () => {
 };
 
 // ------------------------------------------------------------------ D2-3b (100.70–102.20): the fist passes through the light
-// Medium, low at the smoke's edge behind the unit at figure 2: the blast's smoke still rolling, it swings again (101.3),
-// its fist goes through the giant's leg — the light lies on its arm, the figure walks on; beyond, another (101.45).
+// Medium, long lens from the crater's north-west slope: the blast's smoke still rolling, the unit at figure 2 swings
+// again (101.3) and its fist goes through the giant's leg — the light lies on its arm, the legs walk on; beyond, another
+// (101.45); the reserve runs in from the east rim; heavy 1 far beyond.
 const D23b: CamKey[] = [
-  {t: 0, pos: g(54.0, 2.6, 1.35), target: g(58.8, 0.6, 1.9), fov: 44},
-  {t: 102.2 - 100.7, pos: g(54.2, 2.5, 1.4), target: g(59.0, 0.7, 2.0), fov: 43},
+  {t: 0, pos: g(51.6, -3.6, 1.3), target: g(58.4, 1.0, 1.7), fov: 34},
+  {t: 102.2 - 100.7, pos: g(51.8, -3.45, 1.32), target: g(58.6, 1.1, 1.75), fov: 34},
 ];
 export const D2_3b: React.FC = () => {
   const {t, T} = useShotTime(100.7);

@@ -78,7 +78,7 @@ export const HEAVY_STRIKE = {x: 16.4, z: 3.0, h: 268};
 // ------------------------------------------------------------------ the gather at the van (D4-3)
 export const GATHER = {
   director: {x: 12.6, z: 0.3, h: 85},
-  tether: {x: 11.9, z: -1.0, h: 88},
+  tether: {x: 13.9, z: 0.0, h: 90},
   breaker: {x: 12.0, z: 4.4, h: 80},
   decoy: {x: 11.1, z: 5.5, h: 84},
   drone: {x: 11.4, z: 2.7, h: 88},
