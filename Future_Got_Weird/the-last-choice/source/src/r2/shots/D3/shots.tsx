@@ -8,6 +8,8 @@ import {toView} from '../../engine';
 import {smooth} from '../../../kit/math';
 import {d3Items, d3FxAt, D3Opts} from './battle';
 import {fadeItems} from './fx';
+import {splitMain} from './split';
+import {setItems} from '../../world';
 import {SH3} from './times';
 import {
   CamFn, CAM_1, CAM_2, CAM_3, CAM_4a, CAM_4b, CAM_5, CAM_6, CAM_7a, CAM_7b, CAM_7c, CAM_8, CAM_9, CAM_10,
@@ -32,7 +34,8 @@ const shot = (start: number, cam: CamKey[] | CamFn, o: (T: number) => D3Opts = (
     const c = typeof cam === 'function' ? cam(t, T) : camPath(cam, t, ease);
     const f = d3FxAt(T);
     const fxItems = smoke < 1 ? fadeItems(f.items, smoke, SMOKE) : f.items;
-    return <Stage T={T} cam={c} lights={f.lights} shake={f.shake} drift={drift} items={(v) => [...d3Items(v, T, o(T)), ...nearFade(fxItems, near)]} />;
+    // (the set drawn here rather than by the Stage: the same items, the water main cut into strips — split.ts)
+    return <Stage T={T} cam={c} lights={f.lights} shake={f.shake} drift={drift} set={false} items={(v) => [...splitMain(setItems(v, T)), ...d3Items(v, T, o(T)), ...nearFade(fxItems, near)]} />;
   };
   return C;
 };
