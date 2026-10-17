@@ -100,6 +100,20 @@ Measurements are waveform, onset and chroma analysis, not listening (see the end
   - RMS is −19.5 dB in the 300 ms before and −22.4 dB in the 300 ms after. The steep dip about 1.2 s later is the recording's own quieter bar, not the edit.
 - **Radio → score.** Both tracks are built (`llt_radio.wav`, `llt_full.wav`) and crossfaded in the mix as the camera rises. The automation is in `source/src/r2/sound.ts` (`RADIO_MIX`).
 
+## The mix (`tools/r2/mix_r2.py`)
+
+- **Separate stems:** `audio/r2/mix/stems/{music_portals, music_llt, sfx, beds}.wav`, plus `audio/r2/mix/mix.wav` and `measure.json`. All are Git-ignored. Each stem is post-automation, at mix gain, before the limiter.
+- **Score in front:** where the effects bus's short-term level (350 ms) comes within 3 dB of the music's, the effects give way:
+  - ratio 0.6, at most 5 dB, 80 ms attack, 450 ms release;
+  - not applied at the strike, where a story duck lowers the music instead (`sound.ts` `PERSPECTIVE`);
+  - not applied where there is no music (title, death close-up).
+  - `measure.json` reports how long it was active and its average reduction.
+- **Radio → score:** `sound.ts` `RADIO_MIX`.
+  - From the click to 3:23.1 only the radio-speaker version plays (−5 dB).
+  - From 3:23.1 to 3:36.9 the radio recedes (quieter and darker) while the full-range track rises (equal power).
+  - The vocal at 3:37.7 is full range.
+- **Level:** static gain to −16 LUFS integrated, then a 4×-oversampled lookahead limiter to −2.0 dBTP.
+
 ## What still needs a human ear (I cannot listen in this environment)
 
 - The edit at 3:30.6 (preview: `audio/r2/music/preview_llt_join.wav`, from 8 s before to 10 s after the join). Check that the phrase sounds continuous and the 2.9 dB step is acceptable.
