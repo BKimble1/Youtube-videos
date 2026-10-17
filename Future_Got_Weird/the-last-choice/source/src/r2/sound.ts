@@ -3,7 +3,7 @@
 // Times are film seconds. Kinds are files in audio/r2/sfx/ (R2 generations) or audio/sfx/ (R1 library).
 import {Cue} from '../film/cue';
 import {M} from './timing';
-import {SECTION_CUES} from './shots';
+import {SECTION_CUES} from './shots/cues';
 export * from './timing';
 
 /** Ambience beds (looped with crossfaded seams). dist darkens a bed (0 = close). */
