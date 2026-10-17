@@ -1,7 +1,7 @@
 // Section B shared drawing: the Director's sprite, the rebar stub (it flexes under his grip), drifting dust, the army
 // with its heavies and drones, and the smoke the army comes out of (crater columns + a low bank on the avenue).
 import React from 'react';
-import {V3, add3, mul3, rnd, noise, clamp} from '../../../kit/math';
+import {V3, add3, mul3, sub3, dot3, cross3, norm3, rnd, noise, clamp} from '../../../kit/math';
 import type {Item, View, MeshItem, SpriteItem} from '../../engine';
 import {project, toView} from '../../engine';
 import {figureSprite, lookR2, dmgR2, toolsR2, plateWear, figProps, figLight, Figure, figureParts, rigToWorld, figureRig, at as rigAt} from '../../rig';
@@ -42,8 +42,11 @@ export const strapItems = (v: View, T: number, o: {anchor?: V3; bias?: number} =
   const bite = clamp((T - TB.bite) / 0.15) * (1 - clamp((T - TB.tugEnd - 0.15) / 0.2));
   const held = clamp((T - (TB.raise + 0.3)) / 0.2) * (1 - clamp((T - TB.letGo) / 0.2));
   const hang = add3(A, {x: 0.02, y: -0.16, z: 0.03});
-  const pts: V3[] = held > 0.5 ? (bite > 0.5 ? [A, hand, mouth] : [A, hand]) : [A, add3(A, {x: 0.01, y: -0.08, z: 0.02}), hang];
-  return [polyline3('bStrap', pts, 0.022, '#2A2D30', {minPx: 1, ink: '#14181B', inkW: 1.2, bias: (o.bias ?? 0) + 0.25})];
+  // the strap's free end runs from the buckle to his fist; its other end (the tongue) is held in his teeth
+  const pts: V3[] = held > 0.5 ? [A, hand] : [A, add3(A, {x: 0.01, y: -0.08, z: 0.02}), hang];
+  const out = [polyline3('bStrap', pts, 0.032, '#2A2D30', {minPx: 1.2, ink: '#14181B', inkW: 1.4, bias: (o.bias ?? 0) + 0.25})];
+  if (bite > 0.5) out.push(polyline3('bStrapT', [mouth, add3(A, {x: 0, y: 0.03, z: 0})], 0.028, '#2A2D30', {minPx: 1.2, ink: '#14181B', inkW: 1.4, bias: (o.bias ?? 0) + 0.26}));
+  return out;
 };
 
 // ------------------------------------------------------------------ the dark space under the slab
@@ -78,13 +81,23 @@ export const underShade = (T: number, pos: V3, bias: number, k = 0.5): SpriteIte
  * SLAB_EAST_X) is only darkened on the shoulder side of the point where it crosses that edge, so a hand out in the
  * open stays lit even where the space under the slab lies behind it on screen. `full`: the whole body is in shade
  * (except the arms past the edge), whatever the outline.
+ * `split` (for a camera that sees him crawl out toward it, with the slab drawn between two layers): 'under' draws him
+ * whole, shaded, to go behind the slab; 'out' draws only what is out past the edge, lit, to go in front of it. A part
+ * that straddles the edge is cut on screen where the edge plane crosses it (the head and chest emerge gradually).
  */
-export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number; full?: boolean; edge?: {p: V3; n: V3}} = {}): SpriteItem => {
-  // > 0: out from under the slab (past the given edge plane, or by default past its east or its bitten south edge)
-  const side = (q: V3) => (o.edge ? (q.x - o.edge.p.x) * o.edge.n.x + (q.z - o.edge.p.z) * o.edge.n.z : Math.max(q.x - SLAB_EAST_X, q.z - SLAB_SOUTH_Z));
+export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number; full?: boolean; edge?: {p: V3; n: V3}; split?: 'under' | 'out'} = {}): SpriteItem => {
+  // the edge plane nearest a point and how far out past it the point is (> 0: out from under the slab: past the given
+  // edge plane, or by default past its east or its bitten south edge)
+  const sideN = (q: V3): {s: number; n: V3} => {
+    if (o.edge) return {s: (q.x - o.edge.p.x) * o.edge.n.x + (q.z - o.edge.p.z) * o.edge.n.z, n: o.edge.n};
+    const ex = q.x - SLAB_EAST_X, ez = q.z - SLAB_SOUTH_Z;
+    return ex >= ez ? {s: ex, n: {x: 1, y: 0, z: 0}} : {s: ez, n: {x: 0, y: 0, z: 1}};
+  };
+  const side = (q: V3) => sideN(q).s;
   const spec = dirSpec(T, o);
+  const id = o.split === 'out' ? 'bUo' : 'bU';
   return {
-    kind: 'sprite', key: 'dirB', pos: spec.pos, bias: spec.bias, noCull: true,
+    kind: 'sprite', key: o.split === 'out' ? 'dirBo' : 'dirB', pos: spec.pos, bias: spec.bias, noCull: true,
     draw: (c) => {
       const {F, props} = figProps(c.view, spec);
       const light = figLight(c, F);
@@ -93,40 +106,91 @@ export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number;
       parts.sort((a, b) => a.z - b.z);
       const H = underHull(c.view, T);
       const dark = {filter: `brightness(${(1 - (o.k ?? 0.62)).toFixed(2)})`};
-      // per arm: the half-plane (screen) on the shoulder side of where it crosses the slab's east edge
-      const armClip = (i: 0 | 1): string | null => {
-        const W = (q: V3) => rigToWorld(F, q);
+      const W = (q: V3) => rigToWorld(F, q);
+      const P2 = (q: V3) => { const s = project(c.view, q); return {x: s.x, y: s.y}; };
+      type Pt = {x: number; y: number};
+      // the screen half-plane on the side of the line through A along t that holds S
+      const half = (A: Pt, t: Pt, S: Pt): string => {
+        const l = Math.hypot(t.x, t.y) || 1, tx = t.x / l, ty = t.y / l;
+        let nx = -ty, ny = tx;
+        if ((S.x - A.x) * nx + (S.y - A.y) * ny < 0) { nx = -nx; ny = -ny; }
+        const B = 6000;
+        return polyD([{x: A.x - tx * B, y: A.y - ty * B}, {x: A.x + tx * B, y: A.y + ty * B}, {x: A.x + tx * B + nx * B, y: A.y + ty * B + ny * B}, {x: A.x - tx * B + nx * B, y: A.y - ty * B + ny * B}]);
+      };
+      // per arm: where it crosses the edge — the shoulder-side half-plane (to shade) and the hand-side one (out)
+      const armCut = (i: 0 | 1): {sh: string | 'all' | null; out: string | 'all' | null} => {
         const S = W(rig.sh[i]), Wr = W(rig.wr[i]);
         const a0 = side(S), a1 = side(Wr);
-        if (a1 <= 0) return 'all';
-        if (a0 >= 0) return null;
+        if (a1 <= 0) return {sh: 'all', out: null};
+        if (a0 >= 0) return {sh: null, out: 'all'};
         const at = (u: number) => ({x: S.x + (Wr.x - S.x) * u, y: S.y + (Wr.y - S.y) * u, z: S.z + (Wr.z - S.z) * u});
         let lo = 0, hi = 1;
         for (let k = 0; k < 12; k++) { const m = (lo + hi) / 2; if (side(at(m)) > 0) hi = m; else lo = m; }
-        const C = project(c.view, at((lo + hi) / 2));
+        const C = P2(at((lo + hi) / 2));
         const a = {x: rig.wr[i].x - rig.sh[i].x, y: rig.wr[i].y - rig.sh[i].y};
-        const l = Math.hypot(a.x, a.y) || 1;
-        const d = {x: a.x / l, y: a.y / l}, n = {x: -d.y, y: d.x}, B = 6000;
-        const P = [{x: C.x + n.x * B, y: C.y + n.y * B}, {x: C.x - n.x * B, y: C.y - n.y * B}];
-        return polyD([P[0], P[1], {x: P[1].x - d.x * B, y: P[1].y - d.y * B}, {x: P[0].x - d.x * B, y: P[0].y - d.y * B}]);
+        const nrm = {x: -a.y, y: a.x};
+        return {sh: half(C, nrm, {x: C.x - a.x, y: C.y - a.y}), out: half(C, nrm, {x: C.x + a.x, y: C.y + a.y})};
       };
-      const arms = [armClip(0), armClip(1)];
+      // a body point (head, chest, hips) within R of the edge: the screen line where the edge plane cuts the plane
+      // through the point facing the lens, and its out side
+      const bodyCut = (q: V3, R: number): string | 'all' | null => {
+        const {s, n} = sideN(q);
+        if (s >= R) return 'all';
+        if (s <= -R) return null;
+        const v = norm3(sub3(q, c.view.pos));
+        const w = sub3(n, mul3(v, dot3(n, v)));
+        const wn = Math.max(1e-4, dot3(w, n));
+        const P0 = add3(q, mul3(w, -s / wn));
+        const A = P2(P0), B = P2(add3(P0, mul3(norm3(cross3(v, n)), 0.3))), S = P2(add3(P0, mul3(w, 0.1)));
+        return half(A, {x: B.x - A.x, y: B.y - A.y}, S);
+      };
+      const arms = [armCut(0), armCut(1)];
+      const armOf = (key: string) => (key === 'arm0' || key === 'handf0' ? 0 : key === 'arm1' || key === 'handf1' ? 1 : -1);
+      const mid = (a: V3, b: V3): V3 => ({x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, z: (a.z + b.z) / 2});
+      const chest = W(mid(rig.sh[0], rig.sh[1]));
+      const cutHead = bodyCut(W(rig.headC), 0.16), cutChest = bodyCut(chest, 0.45), cutHips = bodyCut(W(mid(rig.hip[0], rig.hip[1])), 0.5);
+      // the far arm reaching out while his chest is still under stays under (it is behind his body)
+      const nearArm = project(c.view, W(rig.sh[0])).z < project(c.view, W(rig.sh[1])).z ? 0 : 1;
+      const outCut = (key: string): string | 'all' | null => {
+        const ai = armOf(key);
+        if (ai >= 0) return ai === nearArm || side(chest) > 0 ? arms[ai].out : null;
+        if (key.startsWith('head') || key === 'neck') return cutHead;
+        if (key === 'pelvis' || key.startsWith('leg')) return cutHips;
+        if (key === 'shadow') return null;
+        return cutChest;
+      };
       const big = 'M-6000 -6000H12000V12000H-6000Z';
+      if (o.split === 'out') {
+        const outs = parts.map((q) => ({q, cut: outCut(q.key)})).filter((x) => x.cut);
+        if (!outs.length) return null;
+        const clips: React.ReactElement[] = [];
+        const keyOf = new Map<string, string>();
+        outs.forEach(({q, cut}) => {
+          if (cut === 'all' || !cut) return;
+          const k = keyOf.get(cut) ?? `${id}c${keyOf.size}`;
+          if (!keyOf.has(cut)) { keyOf.set(cut, k); clips.push(<clipPath key={k} id={k}><path d={cut} /></clipPath>); }
+        });
+        return (
+          <g>
+            <defs>{clips}</defs>
+            {outs.map(({q, cut}) => (cut === 'all' ? <g key={q.key}>{q.el}</g> : <g key={q.key} clipPath={`url(#${keyOf.get(cut as string)})`}>{q.el}</g>))}
+          </g>
+        );
+      }
       const vol = o.full ? big : H ? polyD(H) : null;
       if (!vol) return <g>{parts.map((q) => <g key={q.key}>{q.el}</g>)}</g>;
-      const clips: React.ReactElement[] = [<clipPath key="v" id="bUv"><path d={vol} /></clipPath>];
-      arms.forEach((a, i) => { if (a && a !== 'all') clips.push(<clipPath key={`a${i}`} id={`bUa${i}`}><path d={a} /></clipPath>); });
-      const armOf = (key: string) => (key === 'arm0' || key === 'handf0' ? 0 : key === 'arm1' || key === 'handf1' ? 1 : -1);
+      const clips: React.ReactElement[] = [<clipPath key="v" id={`${id}v`}><path d={vol} /></clipPath>];
+      arms.forEach((a, i) => { if (a.sh && a.sh !== 'all') clips.push(<clipPath key={`a${i}`} id={`${id}a${i}`}><path d={a.sh} /></clipPath>); });
       return (
         <g>
           <defs>{clips}</defs>
           {parts.map((q) => {
             const ai = armOf(q.key);
-            const ac = ai >= 0 ? arms[ai] : 'all';
+            const ac = ai >= 0 ? arms[ai].sh : 'all';
             return (
               <g key={q.key}>
                 {q.el}
-                {ac && <g clipPath="url(#bUv)">{ac === 'all' ? <g style={dark}>{q.el}</g> : <g clipPath={`url(#bUa${ai})`}><g style={dark}>{q.el}</g></g>}</g>}
+                {ac && <g clipPath={`url(#${id}v)`}>{ac === 'all' ? <g style={dark}>{q.el}</g> : <g clipPath={`url(#${id}a${ai})`}><g style={dark}>{q.el}</g></g>}</g>}
               </g>
             );
           })}
@@ -188,9 +252,9 @@ export const motes = (key: string, c: V3, hs: V3, T: number, n = 26, size = 0.00
 /** Shot-specific smoke columns (pass as Stage atmos.columns). Same list in every B shot that sees the crater. */
 export const B_COLUMNS: {key: string; base: V3; o: ColumnOpts}[] = [
   // the crater smokes (low, lying in the bowl, drifting north-east out of it): scorched pits, the broken water main
-  {key: 'bCr2', base: {x: 66, y: -2.6, z: -6}, o: {n: 7, life: 16, rise: 0.55, r0: 2.5, r1: 7, drift: 1.0, dark: 0.25, alpha: 0.4, warm: 0.2, seed: 32}},
-  {key: 'bCr3', base: {x: 52, y: -1.6, z: -4}, o: {n: 6, life: 13, rise: 0.6, r0: 2.2, r1: 6, drift: 1.2, dark: 0.35, alpha: 0.35, warm: 0.3, seed: 33}},
-  {key: 'bCr4', base: {x: 68, y: -1.8, z: 7}, o: {n: 6, life: 15, rise: 0.5, r0: 2.4, r1: 6.5, drift: 1.0, dark: 0.3, alpha: 0.35, warm: 0.25, seed: 34}},
+  {key: 'bCr2', base: {x: 66, y: -2.6, z: -6}, o: {n: 7, life: 16, rise: 0.55, r0: 2.5, r1: 7, drift: 1.0, dark: 0.25, alpha: 0.3, warm: 0.2, seed: 32}},
+  {key: 'bCr3', base: {x: 52, y: -1.6, z: -4}, o: {n: 6, life: 13, rise: 0.6, r0: 2.2, r1: 6, drift: 1.2, dark: 0.35, alpha: 0.28, warm: 0.3, seed: 33}},
+  {key: 'bCr4', base: {x: 68, y: -1.8, z: 7}, o: {n: 6, life: 15, rise: 0.5, r0: 2.4, r1: 6.5, drift: 1.0, dark: 0.3, alpha: 0.28, warm: 0.25, seed: 34}},
 ];
 /** the low bank the ranks come out of at the start of B3 (east of the crater, over the avenue) */
 export const B_BANK: {key: string; base: V3; o: ColumnOpts}[] = [

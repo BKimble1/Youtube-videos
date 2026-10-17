@@ -82,11 +82,14 @@ export const ShotB2: React.FC = () => {
     const hits = chunkHits();
     return [
       underShade(T, R0, 0.85, 0.5),
-      dirShaded(T, {bias: 0.9, k: 0.55}),
-      // while he is under the slab it covers him; once he is out it lies behind him (from this side)
+      // while he is under the slab it covers the parts of him still under it, and the parts out past its edge (head,
+      // chest, a reaching arm) are drawn over it; once he is out it lies behind him (from this side)
+      ...(T < TB.chestUp - 0.1
+        ? [dirShaded(T, {bias: 0.9, k: 0.55, split: 'under'}), dirShaded(T, {bias: 3.0, k: 0.55, split: 'out'})]
+        : [dirShaded(T, {bias: 0.9, k: 0.55})]),
       slabItem(T, {bias: T < TB.chestUp - 0.1 ? 2.2 : -1.2}), ...supportItems(),
       ...chunkItems(T),
-      ...rebarItems(T, {bias: 1.4}),
+      ...rebarItems(T, {bias: T < TB.chestUp - 0.1 ? 3.6 : 1.4}), // nearer the lens than he is: over his front layer too
       // effort dust: palms, knees, the slab dropping back, the chunks landing
       ...dust3({at: slabPoint(0.9, 0.5, T), t: T, t0: TB.slabLand, key: 'b2slab', seed: 7, n: 9, dir: {x: 0.6, y: 0.3, z: 0.4}, spread: 80, speed: 1.1, size: 0.12, grow: 0.45, life: 2.2, rise: 0.15, color: '#A3978A', opacity: 0.75}),
       ...chips3({at: slabPoint(0.98, 0.45, T), t: T, t0: TB.slabLand, key: 'b2slabC', seed: 8, n: 7, dir: {x: 1, y: 0.4, z: 0.2}, spread: 60, speed: [0.8, 2.2], size: [0.02, 0.05], ground: groundH(1.1, 1.6), life: 5}),
@@ -95,7 +98,7 @@ export const ShotB2: React.FC = () => {
       ...dust3({at: gp(R1.x + 0.3, R1.z - 0.15, 0.03), t: T, t0: TB.kneel, key: 'b2foot', seed: 12, n: 5, speed: 0.5, size: 0.06, grow: 0.25, life: 1.5, color: '#A3978A', opacity: 0.6}),
       ...chips3({at: REBAR.grip, t: T, t0: TB.rebar, key: 'b2rust', seed: 13, n: 5, dir: {x: 0, y: -1, z: 0}, spread: 40, speed: [0.1, 0.4], size: [0.004, 0.01], ground: REBAR.base.y, life: 4, material: 'brick'}),
       fgChunk('b2fg1', R1.x + 1.15, R1.z + 2.05, 0.42, 17, 20, {bias: 0.3}),
-      fgChunk('b2fg2', R1.x + 0.55, R1.z + 2.45, 0.3, 19, 65, {mat: 'rubbleDark'}),
+      fgChunk('b2fg2', R1.x + 0.55, R1.z + 2.45, 0.3, 19, 65, {mat: 'rubbleDark', bias: 0.6}),
       ...motes('b2m', gp(R1.x + 0.8, R1.z + 1.4, 0.9), {x: 1.2, y: 0.7, z: 1.2}, T, 26, 0.008),
     ];
   };

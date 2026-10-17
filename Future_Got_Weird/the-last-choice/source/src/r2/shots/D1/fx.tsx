@@ -69,7 +69,10 @@ export const d1Fx = (T: number): FxOut => {
   if (T > EV.knee - 0.1 && T < EV.knee + 3) {
     const k = unitAttach(unitD1('U4', EV.knee)).kneeL;
     // (strike direction tilted so the spark cone and chips spray back up and north, away from the D1-4a lens)
-    out.push(breakerHit({at: k, dir: {x: 0.75, y: -0.35, z: 0.55}, t: T, t0: EV.knee, key: 'd1knee', ground: ground(k), seed: 41, strength: 1.1}));
+    // (the kit's armour chips are 4–12 cm: from a lens 2 m away they read as slabs, so they are swapped for grit here)
+    const bh = breakerHit({at: k, dir: {x: 0.75, y: -0.35, z: 0.55}, t: T, t0: EV.knee, key: 'd1knee', ground: ground(k), seed: 41, strength: 1.1});
+    out.push({...bh, items: bh.items.filter((it) => !(it.key ?? '').startsWith('d1knee_ch'))});
+    out.push(fx(chips3({at: k, t: T, t0: EV.knee, key: 'd1kneech', n: 8, dir: {x: -0.6, y: 0.7, z: -0.4}, spread: 60, speed: [1.5, 4.5], size: [0.012, 0.035], material: 'armor', ground: ground(k), seed: 42})));
     const kd = unitAttach(unitD1('U4', EV.knee + 0.26)).kneeL;
     const kg = {x: kd.x, y: ground(kd) + 0.04, z: kd.z};
     out.push(fx(dust3({at: kg, t: T, t0: EV.knee + 0.26, key: 'd1kneeg', n: 4, size: 0.08, grow: 0.28, speed: 0.7, life: 1.3, spread: 75, rise: 0.2, color: '#8E857C', opacity: 0.55, seed: 43})));

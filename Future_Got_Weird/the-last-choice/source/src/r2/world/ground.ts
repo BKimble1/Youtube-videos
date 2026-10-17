@@ -120,7 +120,9 @@ export const groundH = (x: number, z: number): number => {
     const k = 1 - smooth((dv - FOOT.r) / 3);
     h = h * (1 - k) + k * (0.18 + 0.06 * noise2(x * 1.7, z * 1.7, 61));
   }
-  h = Math.max(h, sidewalkH(x, z));
+  // kerbed sidewalks sit at least 0.15 m up (only where there is a sidewalk: the crater bowl stays below 0)
+  const sw = sidewalkH(x, z);
+  if (sw > 0) h = Math.max(h, sw);
   return h;
 };
 /** The level patch at the ridge's east foot (van, death slab, radio). */

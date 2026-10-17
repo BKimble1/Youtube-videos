@@ -14,11 +14,13 @@ const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
 // ------------------------------------------------------------------ D1-1 (CHARGE 59.95–64.00)
 // Low at the ridge's south-east foot looking north-west up the slope: they launch off the crest, come down the rubble
 // diagonally and pass close by the lens to screen right (east), the van and the death slab on the way.
+// (the leaning ridge slab at the SE foot fills the lower left: they vanish behind it on the way down and burst out
+// round its east end, close past the lens)
 const D11: CamKey[] = [
-  {t: 0, pos: g(14.6, 10.9, 2.1), target: g(3.2, 2.6, 3.4), fov: 34},
-  {t: 1.4, pos: g(14.55, 10.85, 1.85), target: g(5.4, 4.6, 1.6), fov: 37},
-  {t: 2.6, pos: g(14.5, 10.8, 1.2), target: g(9.0, 5.8, 1.15), fov: 41},
-  {t: 4.05, pos: g(14.6, 10.7, 0.75), target: g(18.0, 4.4, 1.05), fov: 44},
+  {t: 0, pos: g(14.6, 10.9, 1.1), target: g(1.8, 1.6, 4.4), fov: 30},
+  {t: 1.3, pos: g(14.6, 10.9, 1.05), target: g(5.5, 4.8, 2.4), fov: 34},
+  {t: 2.5, pos: g(14.55, 10.85, 0.95), target: g(9.6, 5.8, 1.4), fov: 42},
+  {t: 4.05, pos: g(14.6, 10.75, 0.85), target: g(18.5, 4.8, 1.05), fov: 46},
 ];
 export const D1_1: React.FC = () => {
   const {t, T} = useShotTime(M.CHARGE);

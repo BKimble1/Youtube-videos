@@ -9,7 +9,7 @@ import {V3, lerp3, smooth, clamp} from '../../../kit/math';
 import type {Item, View} from '../../engine';
 import {M} from '../../timing';
 import {R1, STAND} from './director';
-import {dirSprite, armyB, B_COLUMNS, B_BANK} from './kit';
+import {dirSprite, armyB, B_COLUMNS} from './kit';
 import {slabItem, chunkItems, supportItems} from './rubble';
 import {heavyPosB} from './army';
 import {CAM_B3, CAM_B4} from './cams';
@@ -24,7 +24,7 @@ export const ShotB3: React.FC = () => {
     slabItem(T), ...supportItems(), ...chunkItems(T),
     ...armyB(v, T, {maxFull: 4, maxMid: 30, farFrom: 110}),
   ];
-  return <Stage T={T} cam={cam} items={items} drift={0.02} atmos={{columns: [...B_COLUMNS, ...B_BANK], smoke: 0.5, haze: 0.35}} vignette={0.55} />;
+  return <Stage T={T} cam={cam} items={items} drift={0.02} atmos={{columns: B_COLUMNS, smoke: 0.3, haze: 0.15}} vignette={0.55} />;
 };
 
 // ------------------------------------------------------------------ B4
@@ -38,7 +38,7 @@ export const ShotB4: React.FC = () => {
   const look = lerp3(scan, {x: STAND.x, y: STAND.y + 1.5, z: STAND.z}, k);
   const items = (v: View): Item[] => [
     dirSprite(T),
-    ...armyB(v, T, {maxFull: 60, maxMid: 30, farFrom: 110, heavy: (i) => (i === 0 ? {look} : {}), heavyLod: (i, d) => (i === 0 ? 'full' : d < 60 ? 'full' : 'mid')}),
+    ...armyB(v, T, {maxFull: 22, maxMid: 40, farFrom: 110, heavy: (i) => (i === 0 ? {look} : {}), heavyLod: (i, d) => (i === 0 ? 'full' : d < 60 ? 'full' : 'mid')}),
   ];
   void heavyPosB;
   return <Stage T={T} cam={cam} items={items} drift={0.03} atmos={{smoke: 0.35, haze: 0}} vignette={0.55} />;

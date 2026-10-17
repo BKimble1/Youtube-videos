@@ -52,9 +52,9 @@ export const D1_6: React.FC = () => {
 // Wide-ish from the west-south-west: the tether operator left, the cable across to U1; U1, already reeling, is hauled
 // north-west into U2 and both go down; the Director right, the breaker beyond.
 const D17_KEYS: CamKey[] = [
-  {t: 0, pos: g(36.3, 1.45, 0.95), target: g(39.9, -3.1, 1.15), fov: 46},
-  {t: 1.3, pos: g(36.4, 1.35, 0.92), target: g(40.0, -3.15, 1.05), fov: 45},
-  {t: M.BR4 - M.BR3, pos: g(36.6, 1.2, 0.95), target: g(40.2, -3.1, 0.9), fov: 44},
+  {t: 0, pos: g(35.95, 1.65, 1.0), target: g(39.4, -3.4, 1.15), fov: 47},
+  {t: 1.3, pos: g(36.05, 1.55, 0.97), target: g(39.55, -3.4, 1.05), fov: 46},
+  {t: M.BR4 - M.BR3, pos: g(36.25, 1.4, 0.98), target: g(39.8, -3.3, 0.92), fov: 45},
 ];
 export const D1_7: React.FC = () => {
   const {t, T} = useShotTime(M.BR3);

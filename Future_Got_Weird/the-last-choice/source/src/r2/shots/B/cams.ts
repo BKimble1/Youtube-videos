@@ -64,6 +64,6 @@ export const B5_ANCHOR: V3 = {x: CHEST5.x, y: CHEST5.y + 0.3, z: CHEST5.z};
  * hide him and the army is a sliver on the horizon): he is small on the brink, lower left; the smoking crater and the
  * whole army filling the avenue beyond, upper right. Hold, drifting in a little. */
 export const CAM_B6: CamKey[] = [
-  {t: 0, pos: {x: -21.5, y: 12.5, z: 16.0}, target: {x: 54.1, y: -6.0, z: -10.0}, fov: 26},
-  {t: SHOT_T.B6[1] - SHOT_T.B6[0], pos: {x: -20.6, y: 12.3, z: 15.5}, target: {x: 54.1, y: -6.0, z: -10.0}, fov: 25},
+  {t: 0, pos: {x: -21.5, y: 12.5, z: 16.0}, target: {x: 58.5, y: -4.2, z: -11.0}, fov: 26.5},
+  {t: SHOT_T.B6[1] - SHOT_T.B6[0], pos: {x: -20.6, y: 12.3, z: 15.5}, target: {x: 58.5, y: -4.2, z: -11.0}, fov: 25.5},
 ];

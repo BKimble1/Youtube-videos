@@ -245,7 +245,8 @@ const strap = (T: number): DirB => {
     ...base.pose,
     // the forearm comes up across the chest, plate outward, wrist toward his mouth
     armL: {local: {r: lerp(-40, 20, up), u: lerp(196, 262, up), f: lerp(46, 62, up)}, pole: {r: -1, u: -0.6, f: -0.1}},
-    armR: {local: {r: lerp(74, lerp(10, 44, tug), up), u: lerp(150, lerp(248, 214, tug), up), f: lerp(18, 74, up)}, pole: {r: 1, u: -0.5, f: -0.2}},
+    // the right hand takes the strap's end at the buckle, then pulls it down and out across his body
+    armR: {local: {r: lerp(74, lerp(4, 84, clamp(tug)), up), u: lerp(150, lerp(244, 168, clamp(tug)), up), f: lerp(18, lerp(78, 44, clamp(tug)), up)}, pole: {r: 1, u: -0.5, f: -0.2}},
     handR: up > 0.4 ? 'grip' : 'relaxed', handL: 'fist',
     head: {pitch: lerp(4, 30, look) - 10 * tug * bite, yaw: lerp(0, -32, look) + 16 * tug * bite, roll: 6 * tug * bite},
     lean: (base.pose.lean ?? 7) + 4 * bite,

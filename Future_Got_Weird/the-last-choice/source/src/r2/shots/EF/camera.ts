@@ -1,8 +1,9 @@
 // E/F cameras (pure: no React — probed in node for speed, clearance and on-screen sizes).
 //
-// F1 is ONE physical move (no cuts), 199.30 → 230.40:
-//   A  199.30–201.50  close on his still face; a short pan right (with a small truck) to the radio as her hand turns
-//                     the knob (the camera has the knob in frame before the click at 199.90); hold on the radio
+// E2 → F1 is ONE camera (the cut at 199.30 is invisible: both shots render the same camera and the same scene):
+//   E2 193.10–198.50  extreme close on his face (a slow push while he breathes his last; still after the eyes close)
+//   A  198.50–201.50  off his still face — following her as she turns to the van door — a pan right with a truck to
+//                     the radio, arriving as her hand turns the knob (twist 199.60–199.90, the click on 199.90); hold
 //   B  201.50–230.40  the rising pullback: a crane that rises and swings clockwise round him (S → SW → WSW) so that
 //                     the first wide (~203) holds the radio AND his body, the companions and the ring pass below, then
 //                     the crater, the avenue with the streaming formations and the skyline with the fallen tower come
@@ -155,17 +156,40 @@ export const camE2 = (T: number): Cam3 => {
   const d = lerp(0.9, 0.82, k); // a slow, almost imperceptible push while he breathes his last
   return {pos: add3(head, mul3(dirF, d)), target: add3(head, {x: 0.09, y: -0.02, z: 0.035}), fov: 30};
 };
+/** E2's slow handheld drift (m): breathing life, dying away as he does. */
+const driftE = (T: number, amp: number): V3 => {
+  const n = (x: number, s: number) => Math.sin(x * 0.93 + s) * 0.55 + Math.sin(x * 1.87 + s * 1.7) * 0.3 + Math.sin(x * 3.3 + s * 0.6) * 0.15;
+  return {x: n(T, 2) * amp, y: n(T, 6) * amp * 0.6, z: n(T, 10) * amp};
+};
+const e2Amp = (T: number) => 0.004 * (1 - smooth((T - M.EYES_CLOSE) / 1.2)) + 0.0012;
+
+/** Where a world point sits on screen (fractions) for a camera (the engine's convention: no roll). */
+const screenOf = (pos: V3, target: V3, fov: number, p: V3) => {
+  const f = norm3(sub3(target, pos));
+  const r = norm3({x: -f.z, y: 0, z: f.x});
+  const u = {x: r.y * f.z - r.z * f.y, y: r.z * f.x - r.x * f.z, z: r.x * f.y - r.y * f.x};
+  const d = sub3(p, pos);
+  const dz = d.x * f.x + d.y * f.y + d.z * f.z;
+  const hY = (fov / 2) * (Math.PI / 180), hX = Math.atan(Math.tan(hY) * (16 / 9));
+  return {sx: 0.5 + (d.x * r.x + d.y * r.y + d.z * r.z) / dz / Math.tan(hX) / 2, sy: 0.5 - (d.x * u.x + d.y * u.y + d.z * u.z) / dz / Math.tan(hY) / 2};
+};
 
 // ------------------------------------------------------------------ F1
-/** Phase A: his face (the knob already at the right edge, her hand coming in), the pan to the radio, the hold. */
-// (bearing ~157° from his face, 2 m: his face three-quarter; the knob ~38° to the right, just inside the frame edge)
-const A_FACE_POS: V3 = {x: 7.31, y: 0.98, z: 4.88};
-const A_FACE = {pos: A_FACE_POS, tgt: aimFor(A_FACE_POS, {x: 6.53, y: 1.0, z: 3.06}, 34, 0.25, 0.42), fov: 34};
-const A_RADIO_POS: V3 = {x: 8.3, y: 1.05, z: 4.6};
-/** The pan lands with the radio a little right of centre (her at frame left), so the climb into the wide is gentle. */
-const RADIO_SUBJ: V3 = {x: 8.0, y: 0.93, z: 1.95}, RADIO_SX = 0.6;
-const A_RADIO = {pos: A_RADIO_POS, tgt: aimFor(A_RADIO_POS, RADIO_SUBJ, 30, RADIO_SX, 0.5), fov: 30};
-export const PAN = {a: 199.5, b: 200.8};
+/**
+ * Phase A: the move off his face to the knob. It starts at MOVE.a (inside E2) from E2's own framing and lands at MOVE.b
+ * (in F1) on the knob seen from the south-south-east: her right arm reaches in from frame left, the hand side-on, the
+ * knob face ~45° to the lens. The move's speed peaks early (a third of the way) and lands softly, so the camera is
+ * almost settled while she turns the knob.
+ */
+export const MOVE = {a: 198.5, b: 200.35};
+const E2_END = camE2(MOVE.a);
+const E2_FACE: V3 = {x: 6.53, y: 1.075, z: 3.04};
+const E2_SCREEN = screenOf(E2_END.pos, E2_END.target, E2_END.fov ?? 30, E2_FACE);
+export const KNOB_POS: V3 = {x: 8.47, y: 1.27, z: 3.1};
+/** The knob composition: the knob a little right of centre and below (her arm comes in across the left half). */
+const KNOB_SUBJ: V3 = {x: 7.98, y: 0.96, z: 1.83}, KNOB_SX = 0.6, KNOB_SY = 0.56, KNOB_FOV = 32;
+/** The move's progress: k(0)=0 with zero speed, speed peaking at a third, a long soft landing (k', k'' → 0 at 1). */
+const moveK = (u: number) => { const x = clamp(u); return 1 - (1 - x) ** 3 * (1 + 3 * x); };
 export const RISE_T0 = 201.5;
 
 /** The point the pullback keeps in frame (his chest), and the polar keys around it. */
@@ -186,7 +210,7 @@ const RISE_POLAR: [number, number, number, number, number, number][] = [
 ];
 export const RISE_KEYS: PathKey[] = [
   // the radio (end of the pan), then the first wide: the radio and his body, her between them
-  {pos: A_RADIO.pos, subj: RADIO_SUBJ, sx: RADIO_SX, sy: 0.5, fov: 30},
+  {pos: KNOB_POS, subj: KNOB_SUBJ, sx: KNOB_SX, sy: KNOB_SY, fov: KNOB_FOV},
   {pos: {x: 9.2, y: 2.45, z: 5.95}, subj: {x: 7.25, y: 0.82, z: 2.6}, sx: 0.5, sy: 0.5, fov: 39},
   ...RISE_POLAR.map(([b, R, H, fov, sx, sy]) => ({pos: polar(b, R, H), subj: HIM, sx, sy, fov})),
 ];
@@ -202,14 +226,30 @@ const drift = (T: number, amp: number): V3 => {
   return {x: n(T, 1) * amp, y: n(T, 5) * amp * 0.6, z: n(T, 9) * amp};
 };
 
-export const camF1 = (T: number): Cam3 => {
-  if (T < RISE_T0) {
-    const k = smooth((T - PAN.a) / (PAN.b - PAN.a));
-    const pos = lerp3(A_FACE.pos, A_RADIO.pos, k);
-    const target = lerp3(A_FACE.tgt, A_RADIO.tgt, k);
-    const dr = drift(T, 0.006);
-    return {pos: add3(pos, dr), target: add3(target, mul3(dr, 1.3)), fov: lerp(A_FACE.fov, A_RADIO.fov, k)};
+/**
+ * E2 and F1's camera up to the rise: E2's framing (with its drift) until MOVE.a, then the move to the knob, then the hold.
+ * The aim is solved from a composition track (subject: his face → the knob, and where it sits on screen), so the pan
+ * rate has no kinks; E2's drift cross-fades into the crane's handheld drift.
+ */
+export const camClose = (T: number): Cam3 => {
+  if (T < MOVE.a) {
+    const c = camE2(T), d = driftE(T, e2Amp(T));
+    return {pos: add3(c.pos, d), target: add3(c.target, mul3(d, 1.25)), fov: c.fov};
   }
+  const u = (T - MOVE.a) / (MOVE.b - MOVE.a);
+  const kP = moveK(u), kS = moveK(u * 1.08); // the pan leads the truck a little
+  // the truck: a slight arc up and out (away from her) between the two ends
+  const out = {x: 0.12, y: 0.1, z: 0.16};
+  const pos = add3(lerp3(E2_END.pos, KNOB_POS, kP), mul3(out, Math.sin(Math.PI * kP)));
+  const fov = lerp(E2_END.fov ?? 30, KNOB_FOV, kP);
+  const target = aimFor(pos, lerp3(E2_FACE, KNOB_SUBJ, kS), fov, lerp(E2_SCREEN.sx, KNOB_SX, kS), lerp(E2_SCREEN.sy, KNOB_SY, kS));
+  const kd = smooth(u);
+  const d = add3(mul3(driftE(T, e2Amp(T)), 1 - kd), mul3(drift(T, 0.006), kd));
+  return {pos: add3(pos, d), target: add3(target, mul3(d, 1.3)), fov};
+};
+
+export const camF1 = (T: number): Cam3 => {
+  if (T < RISE_T0) return camClose(T);
   const c = RISE.at(T);
   const amp = 0.006 * (1 - smooth((T - RISE_T0) / 4));
   const dr = drift(T, amp);

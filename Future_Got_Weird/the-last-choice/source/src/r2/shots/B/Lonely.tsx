@@ -28,5 +28,5 @@ export const ShotB6: React.FC = () => {
   const {t, T} = useShotTime(B6_START);
   const cam = camPath(CAM_B6, t, 0.3);
   const items = (v: View): Item[] => [dirSprite(T), slabItem(T), ...supportItems(), ...chunkItems(T), ...armyB(v, T, {maxFull: 0, maxMid: 30, farFrom: 140})];
-  return <Stage T={T} cam={cam} items={items} drift={0.02} atmos={{columns: B_COLUMNS, smoke: 0.5, haze: 0.35}} vignette={0.6} />;
+  return <Stage T={T} cam={cam} items={items} drift={0.02} atmos={{columns: B_COLUMNS, smoke: 0.3, haze: 0.15}} vignette={0.6} />;
 };

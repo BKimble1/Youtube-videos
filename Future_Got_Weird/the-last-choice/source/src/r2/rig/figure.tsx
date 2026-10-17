@@ -917,19 +917,24 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     if (a.z > 0.2) feats.push(<path key="lip" d={`M ${pt(a)} L ${pt(b)}`} stroke={BLOOD.dark} strokeWidth={3 * s} strokeLinecap="round" opacity={dmg.lipCut} />);
   }
   if ((dmg.mouthBlood ?? 0) > 0) {
-    // a thin trickle from the corner of the mouth down the chin, tapering, with a drop at its end
+    // one tapered trickle from the corner of the mouth toward the chin: widest at the lip, narrowing to a soft rounded
+    // tip — a single smear (a separate drop at its end read as an "!" in close-ups)
     const mbA = dmg.mouthBlood ?? 0;
+    const len = 0.22 * clamp(mbA * 1.4);
     const pts: {q: ReturnType<typeof onHead>; w: number}[] = [];
-    for (let k = 0; k <= 6; k++) { const u = k / 6; pts.push({q: onHead(-11 - 3 * u, 0.52 + 0.3 * u * clamp(mbA * 1.4), 1.01), w: lerp(4.2, 1.4, u) * s}); }
+    for (let k = 0; k <= 6; k++) { const u = k / 6; pts.push({q: onHead(-11 - 4 * u * u, 0.52 + len * u, 1.01), w: lerp(4.8, 2.1, Math.sqrt(u)) * s}); }
     if (pts[0].q.z > 0.2) {
       const L: V2[] = [], Rr: V2[] = [];
+      let tx = 0, ty = 1;
       pts.forEach((p0, k) => {
         const p1 = pts[Math.min(k + 1, pts.length - 1)].q, pm = pts[Math.max(k - 1, 0)].q;
         const dx = p1.x - pm.x, dy = p1.y - pm.y, l = Math.hypot(dx, dy) || 1;
-        L.push({x: p0.q.x - (dy / l) * p0.w / 2, y: p0.q.y + (dx / l) * p0.w / 2}); Rr.push({x: p0.q.x + (dy / l) * p0.w / 2, y: p0.q.y - (dx / l) * p0.w / 2});
+        tx = dx / l; ty = dy / l;
+        L.push({x: p0.q.x - ty * p0.w / 2, y: p0.q.y + tx * p0.w / 2}); Rr.push({x: p0.q.x + ty * p0.w / 2, y: p0.q.y - tx * p0.w / 2});
       });
-      const e = pts[pts.length - 1].q;
-      feats.push(<g key="mb" opacity={clamp(mbA * 1.5)}><path d={polyPath([...L, ...Rr.reverse()], true)} fill={BLOOD.main} /><circle cx={e.x} cy={e.y + 1.2 * s} r={2.4 * s} fill={BLOOD.main} /></g>);
+      const e = pts[pts.length - 1];
+      const tip = {x: e.q.x + tx * e.w * 0.55, y: e.q.y + ty * e.w * 0.55};
+      feats.push(<path key="mb" d={smoothPath([...L, tip, ...Rr.reverse()], true, 0.35)} fill={BLOOD.main} opacity={clamp(mbA * 1.5)} />);
     }
   }
   if (dmg.bruise && dmg.bruise.amt > 0) {
