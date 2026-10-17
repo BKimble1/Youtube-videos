@@ -3,7 +3,8 @@
 // fingers and a thumb that curl. Origin at the wrist centre; the hand points along +x at angle `rot`.
 //   view 'back'  – dorsal view: curling foreshortens the fingers toward the viewer (slip, glass, reach)
 //   view 'side'  – thumb-side profile: fingers curl in the picture plane (grip a bar, clasp a hand)
-// Size: palm ≈ 100 units long at s = 1 (a cast hand at about 5× close-up).
+// Size: palm ≈ 100 units long at s = 1 (a cast hand at about 5× close-up). `ink` is the contour width in output units
+// (not scaled by s), the same as the palm's stroke, so fingers keep the same ink weight at any size.
 import React from 'react';
 import {C, BLOOD} from '../theme';
 import {blob} from './actor';
@@ -66,8 +67,8 @@ export const HandCU: React.FC<HandCUProps> = ({x, y, rot = 0, s = 1, skin, sleev
     const d = pp.map((q) => `${(q.x * k).toFixed(1)},${(q.y * k * mir).toFixed(1)}`).join(' ');
     fingers.push(
       <g key={`f${i}`}>
-        <polyline points={d} fill="none" stroke={C.ink} strokeWidth={(w + ink * 0.5) * k} strokeLinecap="round" strokeLinejoin="round" />
-        <polyline points={d} fill="none" stroke={skin} strokeWidth={(w - ink * 1.5) * k} strokeLinecap="round" strokeLinejoin="round" />
+        <polyline points={d} fill="none" stroke={C.ink} strokeWidth={w * k + ink} strokeLinecap="round" strokeLinejoin="round" />
+        <polyline points={d} fill="none" stroke={skin} strokeWidth={Math.max(w * k - ink, w * k * 0.45)} strokeLinecap="round" strokeLinejoin="round" />
         {/* knuckle crease */}
         {view === 'back' && cu[i] > 0.35 && <circle cx={pp[1].x * k} cy={pp[1].y * k * mir} r={2.2 * k} fill={C.ink} opacity={0.35} />}
       </g>,
@@ -86,8 +87,8 @@ export const HandCU: React.FC<HandCUProps> = ({x, y, rot = 0, s = 1, skin, sleev
   const thD = th.map((q) => `${(q.x * k).toFixed(1)},${(q.y * k * mir).toFixed(1)}`).join(' ');
   const thumbEl = (
     <g key="thumb">
-      <polyline points={thD} fill="none" stroke={C.ink} strokeWidth={(21 + ink * 0.5) * k} strokeLinecap="round" strokeLinejoin="round" />
-      <polyline points={thD} fill="none" stroke={skin} strokeWidth={(21 - ink * 1.5) * k} strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points={thD} fill="none" stroke={C.ink} strokeWidth={21 * k + ink} strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points={thD} fill="none" stroke={skin} strokeWidth={Math.max(21 * k - ink, 21 * k * 0.45)} strokeLinecap="round" strokeLinejoin="round" />
     </g>
   );
   const palmD = smoothPath(palm.map((q) => ({x: q.x * k, y: q.y * k * mir})), true, 0.5);

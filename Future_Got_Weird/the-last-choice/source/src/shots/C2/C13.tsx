@@ -31,7 +31,7 @@ export const C13: React.FC = () => {
     landing: <Rebar r={rebarAt(T)} ink={ink} />,
     air: <g><Drones T={T} ink={ink} far={false} only="B" /><BlastFx T={T} ink={ink} /></g>,
   });
-  const flash = a > 0 ? clamp(1 - a / 0.14) * 0.75 : 0;
+  const flash = a > 0 ? clamp(1 - a / 0.12) * 0.5 : 0;
   return (
     <Frame bg="#2B1B26">
       <CrossingScene T={T} t={t} cam={cam} id="c13" slots={slots} haze={0.8} />

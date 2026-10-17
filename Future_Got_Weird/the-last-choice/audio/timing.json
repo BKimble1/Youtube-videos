@@ -340,14 +340,2229 @@
   }
  ],
  "end": 205.4,
- "cues": [],
+ "cues": [
+  {
+   "t": 0.05,
+   "kind": "breath_ragged",
+   "gain": -2,
+   "pan": -0.15,
+   "dur": 3.3,
+   "fade": 0.25
+  },
+  {
+   "t": 0.5,
+   "kind": "sub_boom",
+   "gain": -10,
+   "pan": 0.6,
+   "dist": 0.9
+  },
+  {
+   "t": 1.4,
+   "kind": "steps_gravel",
+   "gain": -6,
+   "pan": -0.3,
+   "rate": 1.3
+  },
+  {
+   "t": 1.9500000000000002,
+   "kind": "hand_glass",
+   "gain": -10,
+   "pan": -0.35,
+   "rate": 0.7
+  },
+  {
+   "t": 2.35,
+   "kind": "cable_strain",
+   "gain": -8,
+   "pan": 0.2,
+   "dist": 0.2
+  },
+  {
+   "t": 2.4,
+   "kind": "glass_shatter",
+   "gain": -18,
+   "pan": 0,
+   "dist": 0.3
+  },
+  {
+   "t": 3.2,
+   "kind": "servo_heavy",
+   "gain": -2,
+   "pan": 0.45,
+   "dist": 0.2
+  },
+  {
+   "t": 3.4000000000000004,
+   "kind": "drone_rotor",
+   "gain": -2,
+   "pan": -0.5,
+   "dist": 0.4,
+   "dur": 3.2,
+   "fade": 0.4
+  },
+  {
+   "t": 3.8200000000000003,
+   "kind": "lever_clunk",
+   "gain": 0,
+   "pan": 0.1,
+   "dist": 0.15
+  },
+  {
+   "t": 3.87,
+   "kind": "hydraulic",
+   "gain": -2,
+   "pan": 0.35,
+   "dist": 0.2
+  },
+  {
+   "t": 4.17,
+   "kind": "metal_tear",
+   "gain": -6,
+   "pan": 0,
+   "dist": 0.2
+  },
+  {
+   "t": 4.25,
+   "kind": "glass_shatter",
+   "gain": -10,
+   "pan": -0.25,
+   "dist": 0.2
+  },
+  {
+   "t": 4.5200000000000005,
+   "kind": "sensor_lock",
+   "gain": -6,
+   "pan": -0.5,
+   "dist": 0.4
+  },
+  {
+   "t": 4.550000000000001,
+   "kind": "breath_exert",
+   "gain": -10,
+   "pan": -0.25
+  },
+  {
+   "t": 6.5,
+   "kind": "steps_gravel",
+   "gain": -4,
+   "pan": -0.6
+  },
+  {
+   "t": 7.0200000000000005,
+   "kind": "breath_exert",
+   "gain": -2,
+   "pan": -0.3
+  },
+  {
+   "t": 7.41,
+   "kind": "steps_gravel",
+   "gain": -8,
+   "pan": -0.2,
+   "rate": 0.8
+  },
+  {
+   "t": 7.75,
+   "kind": "breath_exert",
+   "gain": -4,
+   "pan": -0.3,
+   "rate": 0.95
+  },
+  {
+   "t": 8.01,
+   "kind": "steps_gravel",
+   "gain": -9,
+   "pan": -0.25,
+   "rate": 0.85
+  },
+  {
+   "t": 8.72,
+   "kind": "hydraulic",
+   "gain": -6,
+   "pan": 0.6,
+   "dist": 0.2
+  },
+  {
+   "t": 8.9,
+   "kind": "taxi_drop",
+   "gain": 0,
+   "pan": 0.05
+  },
+  {
+   "t": 8.92,
+   "kind": "glass_shatter",
+   "gain": -8,
+   "pan": 0
+  },
+  {
+   "t": 8.95,
+   "kind": "debris_rain",
+   "gain": -4,
+   "pan": 0
+  },
+  {
+   "t": 9.2,
+   "kind": "body_fall",
+   "gain": -6,
+   "pan": -0.4
+  },
+  {
+   "t": 10.65,
+   "kind": "gate_roll",
+   "gain": -6,
+   "pan": -0.5,
+   "dist": 0.6
+  },
+  {
+   "t": 11.65,
+   "kind": "servo_whir",
+   "gain": -4,
+   "pan": -0.3,
+   "dist": 0.6
+  },
+  {
+   "t": 11.85,
+   "kind": "servo_heavy",
+   "gain": -6,
+   "pan": 0.15,
+   "dist": 0.4
+  },
+  {
+   "t": 12.3,
+   "kind": "sensor_lock",
+   "gain": -8,
+   "pan": 0.15,
+   "dist": 0.4
+  },
+  {
+   "t": 12.65,
+   "kind": "breath_exert",
+   "gain": -8,
+   "pan": 0.5
+  },
+  {
+   "t": 13,
+   "kind": "steps_gravel",
+   "gain": -4,
+   "pan": 0.6
+  },
+  {
+   "t": 13.3,
+   "kind": "padlock",
+   "gain": -8,
+   "pan": -0.5,
+   "dist": 0.6
+  },
+  {
+   "t": 13.600000000000001,
+   "kind": "steps_gravel",
+   "gain": -6,
+   "pan": 0.75
+  },
+  {
+   "t": 14.399999999999999,
+   "kind": "steps_gravel",
+   "gain": -10,
+   "pan": -0.5,
+   "dist": 0.3
+  },
+  {
+   "t": 15.2,
+   "kind": "breath_ragged",
+   "gain": -10,
+   "pan": -0.4,
+   "dist": 0.3,
+   "dur": 2
+  },
+  {
+   "t": 17.4,
+   "kind": "drone_rotor",
+   "gain": -10,
+   "pan": 0.4,
+   "dist": 0.8,
+   "dur": 3,
+   "fade": 0.8
+  },
+  {
+   "t": 18.7,
+   "kind": "sub_boom",
+   "gain": -8,
+   "pan": -0.6,
+   "dist": 0.9
+  },
+  {
+   "t": 19.119999999999997,
+   "kind": "sub_boom",
+   "gain": -12,
+   "pan": -0.3,
+   "dist": 0.95,
+   "rate": 1.1
+  },
+  {
+   "t": 20.5,
+   "kind": "drone_rotor",
+   "gain": -6,
+   "pan": 0.6,
+   "dist": 0.6,
+   "dur": 3.3,
+   "fade": 0.5
+  },
+  {
+   "t": 20.6,
+   "kind": "breath_ragged",
+   "gain": -10,
+   "pan": -0.2,
+   "dur": 3.1
+  },
+  {
+   "t": 20.8,
+   "kind": "robot_step_heavy",
+   "gain": -10,
+   "pan": 0.8,
+   "dist": 0.7
+  },
+  {
+   "t": 21.4,
+   "kind": "robot_step_heavy",
+   "gain": -10,
+   "pan": 0.8,
+   "dist": 0.7
+  },
+  {
+   "t": 22,
+   "kind": "robot_step_heavy",
+   "gain": -10,
+   "pan": 0.8,
+   "dist": 0.7
+  },
+  {
+   "t": 22.1,
+   "kind": "breath_exert",
+   "gain": -12,
+   "pan": 0.2
+  },
+  {
+   "t": 23.779999999999998,
+   "kind": "shutter_slam",
+   "gain": 2,
+   "pan": -0.1
+  },
+  {
+   "t": 23.799999999999997,
+   "kind": "gate_roll",
+   "gain": -6,
+   "pan": -0.1,
+   "rate": 1.4
+  },
+  {
+   "t": 23.83,
+   "kind": "breath_exert",
+   "gain": -8,
+   "pan": -0.15
+  },
+  {
+   "t": 24.38,
+   "kind": "step_grate",
+   "gain": -10,
+   "pan": 0
+  },
+  {
+   "t": 24.779999999999998,
+   "kind": "step_grate_b",
+   "gain": -10,
+   "pan": 0.05
+  },
+  {
+   "t": 25.38,
+   "kind": "steps_gravel",
+   "gain": -10,
+   "pan": 0.15
+  },
+  {
+   "t": 27.599999999999998,
+   "kind": "steps_gravel",
+   "gain": -8,
+   "pan": -0.6
+  },
+  {
+   "t": 28.15,
+   "kind": "steps_gravel",
+   "gain": -8,
+   "pan": -0.45
+  },
+  {
+   "t": 28.799999999999997,
+   "kind": "body_fall",
+   "gain": -16,
+   "pan": -0.25
+  },
+  {
+   "t": 29.299999999999997,
+   "kind": "breath_exert",
+   "gain": -10,
+   "pan": -0.1
+  },
+  {
+   "t": 30.5,
+   "kind": "padlock",
+   "gain": -6,
+   "pan": -0.05,
+   "rate": 1.25
+  },
+  {
+   "t": 30.53,
+   "kind": "radio_on",
+   "gain": -18,
+   "pan": -0.05,
+   "rate": 1.6
+  },
+  {
+   "t": 32,
+   "kind": "breath_exert",
+   "gain": -4,
+   "pan": -0.1,
+   "dist": 0.2
+  },
+  {
+   "t": 32.16,
+   "kind": "gate_roll",
+   "gain": 0,
+   "pan": 0,
+   "dist": 0.2,
+   "rate": 1.2
+  },
+  {
+   "t": 32.169999999999995,
+   "kind": "lever_clunk",
+   "gain": -4,
+   "pan": 0.15
+  },
+  {
+   "t": 32.58,
+   "kind": "gate_roll",
+   "gain": 0,
+   "pan": 0,
+   "dist": 0.2,
+   "rate": 1.1
+  },
+  {
+   "t": 32.589999999999996,
+   "kind": "shutter_slam",
+   "gain": -6,
+   "pan": 0,
+   "dist": 0.2
+  },
+  {
+   "t": 33.2,
+   "kind": "breath_exert",
+   "gain": -2,
+   "pan": -0.15,
+   "rate": 0.9
+  },
+  {
+   "t": 33.3,
+   "kind": "steps_gravel",
+   "gain": -10,
+   "pan": 0.1,
+   "dist": 0.2
+  },
+  {
+   "t": 33.9,
+   "kind": "steps_gravel",
+   "gain": -10,
+   "pan": 0.25,
+   "dist": 0.2
+  },
+  {
+   "t": 34.5,
+   "kind": "steps_gravel",
+   "gain": -10,
+   "pan": 0.4,
+   "dist": 0.2
+  },
+  {
+   "t": 36.14,
+   "kind": "step_grate",
+   "gain": -14,
+   "pan": -0.2,
+   "rate": 0.8
+  },
+  {
+   "t": 36.339999999999996,
+   "kind": "breath_ragged",
+   "gain": -12,
+   "pan": -0.1,
+   "dur": 2.2
+  },
+  {
+   "t": 36.589999999999996,
+   "kind": "step_grate_b",
+   "gain": -14,
+   "pan": -0.15,
+   "rate": 0.8
+  },
+  {
+   "t": 37.16,
+   "kind": "breath_exert",
+   "gain": -14,
+   "pan": 0
+  },
+  {
+   "t": 38.699999999999996,
+   "kind": "breath_exert",
+   "gain": -8,
+   "pan": -0.2,
+   "dist": 0.1
+  },
+  {
+   "t": 39.199999999999996,
+   "kind": "drone_rotor",
+   "gain": -6,
+   "pan": 0.5,
+   "dist": 0.6,
+   "dur": 7.5,
+   "fade": 1.2
+  },
+  {
+   "t": 39.9,
+   "kind": "robot_step_heavy",
+   "gain": -6,
+   "pan": 0.6,
+   "dist": 0.7
+  },
+  {
+   "t": 40.77,
+   "kind": "breath_exert",
+   "gain": -4,
+   "pan": -0.45
+  },
+  {
+   "t": 40.9,
+   "kind": "servo_whir",
+   "gain": -4,
+   "pan": 0.6,
+   "dist": 0.6
+  },
+  {
+   "t": 44.49999999999999,
+   "kind": "servo_whir",
+   "gain": -6,
+   "pan": 0.6,
+   "dist": 0.6
+  },
+  {
+   "t": 45.540000000000006,
+   "kind": "steps_gravel",
+   "gain": -6,
+   "pan": 0
+  },
+  {
+   "t": 47,
+   "kind": "steps_gravel",
+   "dur": 4,
+   "gain": -2,
+   "pan": -0.2,
+   "fade": 0.4
+  },
+  {
+   "t": 47.2,
+   "kind": "breath_ragged",
+   "dur": 3.6,
+   "gain": -2,
+   "pan": -0.3
+  },
+  {
+   "t": 48.15,
+   "kind": "servo_whir",
+   "pan": 0.7,
+   "dist": 0.3,
+   "gain": 2
+  },
+  {
+   "t": 49.45,
+   "kind": "sensor_lock",
+   "pan": 0.7,
+   "dist": 0.3
+  },
+  {
+   "t": 51,
+   "kind": "breath_ragged",
+   "dur": 3.6,
+   "gain": -6,
+   "pan": -0.4
+  },
+  {
+   "t": 51.5,
+   "kind": "sensor_lock",
+   "pan": 0.75,
+   "dist": 0.6,
+   "gain": -2
+  },
+  {
+   "t": 51.85,
+   "kind": "sensor_lock",
+   "pan": 0.6,
+   "dist": 0.5,
+   "gain": -2,
+   "rate": 1.06
+  },
+  {
+   "t": 52.2,
+   "kind": "sensor_lock",
+   "pan": 0.9,
+   "dist": 0.7,
+   "gain": -3,
+   "rate": 0.94
+  },
+  {
+   "t": 53.28,
+   "kind": "servo_heavy",
+   "pan": 0.7,
+   "dist": 0.45,
+   "gain": 4
+  },
+  {
+   "t": 53.33,
+   "kind": "hydraulic",
+   "pan": 0.7,
+   "dist": 0.5
+  },
+  {
+   "t": 54.6,
+   "kind": "servo_heavy",
+   "pan": 0.8,
+   "dist": 0.25,
+   "gain": 3
+  },
+  {
+   "t": 55.2,
+   "kind": "wreck_slam",
+   "pan": 0.55,
+   "dist": 0.15,
+   "gain": 3
+  },
+  {
+   "t": 55.220000000000006,
+   "kind": "glass_shatter",
+   "pan": 0.5,
+   "dist": 0.2,
+   "gain": 2
+  },
+  {
+   "t": 55.260000000000005,
+   "kind": "metal_tear",
+   "pan": 0.55,
+   "dist": 0.25
+  },
+  {
+   "t": 55.400000000000006,
+   "kind": "sparks",
+   "pan": 0.55,
+   "dist": 0.3,
+   "gain": -4
+  },
+  {
+   "t": 55.45,
+   "kind": "debris_rain",
+   "pan": 0.1,
+   "dist": 0.2,
+   "gain": -2
+  },
+  {
+   "t": 55.980000000000004,
+   "kind": "body_fall",
+   "pan": -0.3,
+   "dist": 0.1,
+   "gain": 2
+  },
+  {
+   "t": 56.03,
+   "kind": "breath_exert",
+   "pan": -0.3,
+   "gain": -2
+  },
+  {
+   "t": 56.43,
+   "kind": "body_fall",
+   "pan": -0.35,
+   "dist": 0.1,
+   "gain": -2,
+   "rate": 0.85
+  },
+  {
+   "t": 57.1,
+   "kind": "breath_exert",
+   "pan": -0.3,
+   "gain": -4,
+   "rate": 0.95
+  },
+  {
+   "t": 58.6,
+   "kind": "breath_ragged",
+   "dur": 3,
+   "gain": -5,
+   "pan": -0.4
+  },
+  {
+   "t": 59.4,
+   "kind": "step_grate",
+   "dur": 4.6,
+   "pan": -0.5,
+   "dist": 0.35,
+   "gain": -2,
+   "fade": 0.3
+  },
+  {
+   "t": 59.800000000000004,
+   "kind": "drone_rotor",
+   "dur": 4.8,
+   "pan": 0.4,
+   "dist": 0.3,
+   "gain": 4,
+   "fade": 0.8
+  },
+  {
+   "t": 61.4,
+   "kind": "servo_whir",
+   "pan": 0.1,
+   "dist": 0.3,
+   "gain": -2
+  },
+  {
+   "t": 62.65,
+   "kind": "sensor_lock",
+   "pan": 0.2,
+   "dist": 0.3,
+   "gain": 1
+  },
+  {
+   "t": 63,
+   "kind": "servo_whir",
+   "pan": 0.1,
+   "dist": 0.35,
+   "gain": -1,
+   "rate": 1.15
+  },
+  {
+   "t": 64.6,
+   "kind": "breath_ragged",
+   "dur": 4.4,
+   "gain": -9,
+   "pan": 0.4
+  },
+  {
+   "t": 65.05,
+   "kind": "projector_beep",
+   "pan": 0,
+   "gain": -8,
+   "rate": 0.8
+  },
+  {
+   "t": 67.19999999999999,
+   "kind": "projector_beep",
+   "pan": 0.05,
+   "gain": -2
+  },
+  {
+   "t": 69.55,
+   "kind": "padlock",
+   "pan": 0.05,
+   "gain": -6,
+   "rate": 1.3
+  },
+  {
+   "t": 69.95,
+   "kind": "projector_beep",
+   "pan": 0.05,
+   "gain": 0
+  },
+  {
+   "t": 70,
+   "kind": "step_grate",
+   "dur": 4,
+   "pan": 0.4,
+   "dist": 0.3,
+   "gain": 0,
+   "fade": 0.3
+  },
+  {
+   "t": 70.2,
+   "kind": "step_grate_b",
+   "dur": 3.6,
+   "pan": 0.5,
+   "dist": 0.35,
+   "gain": -3,
+   "fade": 0.3
+  },
+  {
+   "t": 70.3,
+   "kind": "servo_whir",
+   "pan": -0.2,
+   "dist": 0.4,
+   "gain": 1
+  },
+  {
+   "t": 70.6,
+   "kind": "drone_rotor",
+   "dur": 3.4,
+   "pan": -0.3,
+   "dist": 0.3,
+   "gain": 4,
+   "fade": 0.6
+  },
+  {
+   "t": 70.9,
+   "kind": "servo_whir",
+   "pan": -0.5,
+   "dist": 0.6,
+   "gain": -2,
+   "rate": 0.8
+  },
+  {
+   "t": 74,
+   "kind": "drone_rotor",
+   "dur": 4.6,
+   "pan": -0.4,
+   "dist": 0.15,
+   "gain": 2,
+   "fade": 0.5
+  },
+  {
+   "t": 76.6,
+   "kind": "servo_whir",
+   "pan": -0.1,
+   "dist": 0.2,
+   "gain": -3,
+   "rate": 1.3
+  },
+  {
+   "t": 77.1,
+   "kind": "servo_whir",
+   "pan": 0,
+   "dist": 0.2,
+   "gain": -1
+  },
+  {
+   "t": 78.7,
+   "kind": "sensor_lock",
+   "pan": -0.5,
+   "dist": 0.1,
+   "gain": 3
+  },
+  {
+   "t": 78.91999999999999,
+   "kind": "servo_heavy",
+   "pan": -0.1,
+   "dist": 0.2,
+   "gain": 0
+  },
+  {
+   "t": 79.1,
+   "kind": "padlock",
+   "pan": 0.2,
+   "gain": -4,
+   "rate": 1.4
+  },
+  {
+   "t": 79.44,
+   "kind": "glass_shatter",
+   "pan": -0.05,
+   "gain": -14,
+   "rate": 1.6
+  },
+  {
+   "t": 79.44999999999999,
+   "kind": "robot_step_heavy",
+   "pan": -0.1,
+   "dist": 0.1,
+   "gain": 4
+  },
+  {
+   "t": 79.47,
+   "kind": "step_grate",
+   "pan": -0.1,
+   "gain": 2,
+   "rate": 0.7
+  },
+  {
+   "t": 80,
+   "kind": "servo_heavy",
+   "pan": 0,
+   "dist": 0.1,
+   "gain": 2,
+   "rate": 1.2
+  },
+  {
+   "t": 80.19999999999999,
+   "kind": "cable_strain",
+   "pan": 0.3,
+   "dist": 0.1,
+   "gain": -2
+  },
+  {
+   "t": 80.6,
+   "kind": "body_fall",
+   "pan": 0.45,
+   "gain": 1
+  },
+  {
+   "t": 80.63,
+   "kind": "breath_exert",
+   "pan": 0.45,
+   "gain": -3
+  },
+  {
+   "t": 81.05,
+   "kind": "body_fall",
+   "pan": 0.15,
+   "gain": -4,
+   "rate": 1.25
+  },
+  {
+   "t": 81.07,
+   "kind": "breath_exert",
+   "pan": 0.15,
+   "gain": -5,
+   "rate": 1.1
+  },
+  {
+   "t": 81.228,
+   "kind": "wreck_slam",
+   "pan": 0.05,
+   "dist": 0.05,
+   "gain": 4
+  },
+  {
+   "t": 81.258,
+   "kind": "metal_tear",
+   "pan": 0,
+   "dist": 0.05,
+   "gain": 2
+  },
+  {
+   "t": 81.398,
+   "kind": "elec_arc",
+   "pan": -0.2,
+   "dist": 0.1,
+   "gain": 0
+  },
+  {
+   "t": 81.41799999999999,
+   "kind": "sparks",
+   "pan": -0.2,
+   "dist": 0.1
+  },
+  {
+   "t": 81.448,
+   "kind": "hydraulic",
+   "pan": -0.2,
+   "dist": 0.1,
+   "gain": -2
+  },
+  {
+   "t": 82.05,
+   "kind": "glass_shatter",
+   "pan": -0.05,
+   "gain": -4,
+   "rate": 1.3
+  },
+  {
+   "t": 82.39999999999999,
+   "kind": "metal_tear",
+   "pan": 0,
+   "dist": 0.15,
+   "gain": -2,
+   "rate": 0.8
+  },
+  {
+   "t": 84.027,
+   "kind": "wreck_slam",
+   "pan": 0.1,
+   "dist": 0.45,
+   "gain": 2
+  },
+  {
+   "t": 84.077,
+   "kind": "debris_rain",
+   "pan": 0.1,
+   "dist": 0.45,
+   "gain": -2
+  },
+  {
+   "t": 84.8,
+   "kind": "sensor_lock",
+   "pan": -0.4,
+   "dist": 0.3,
+   "gain": -1
+  },
+  {
+   "t": 85.19999999999999,
+   "kind": "step_grate",
+   "dur": 2.8,
+   "pan": 0.5,
+   "dist": 0.2,
+   "gain": 0,
+   "fade": 0.3
+  },
+  {
+   "t": 85.3,
+   "kind": "step_grate_b",
+   "dur": 2.6,
+   "pan": 0.6,
+   "dist": 0.25,
+   "gain": -3,
+   "fade": 0.3
+  },
+  {
+   "t": 88,
+   "kind": "drone_rotor",
+   "dur": 4.2,
+   "dist": 0.6,
+   "pan": -0.2,
+   "gain": -2,
+   "fade": 0.6
+  },
+  {
+   "t": 88,
+   "kind": "servo_heavy",
+   "dur": 7.5,
+   "dist": 0.85,
+   "pan": -0.9,
+   "gain": -4,
+   "fade": 1
+  },
+  {
+   "t": 88.05,
+   "kind": "step_grate_b",
+   "pan": -0.6,
+   "dist": 0.45,
+   "gain": -3,
+   "rate": 0.955
+  },
+  {
+   "t": 88.28999999999999,
+   "kind": "step_grate",
+   "pan": -0.6,
+   "dist": 0.45,
+   "gain": -3,
+   "rate": 0.985
+  },
+  {
+   "t": 88.52999999999999,
+   "kind": "step_grate_b",
+   "pan": -0.6,
+   "dist": 0.45,
+   "gain": -3,
+   "rate": 1.015
+  },
+  {
+   "t": 88.76999999999998,
+   "kind": "step_grate",
+   "pan": -0.6,
+   "dist": 0.45,
+   "gain": -3,
+   "rate": 1.045
+  },
+  {
+   "t": 89.00999999999998,
+   "kind": "step_grate_b",
+   "pan": -0.6,
+   "dist": 0.45,
+   "gain": -3,
+   "rate": 0.97
+  },
+  {
+   "t": 89.20700000000001,
+   "kind": "step_grate_b",
+   "pan": -0.55,
+   "dist": 0.45,
+   "gain": -5,
+   "rate": 0.955
+  },
+  {
+   "t": 89.367,
+   "kind": "step_grate_b",
+   "pan": -0.55,
+   "dist": 0.45,
+   "gain": -5,
+   "rate": 0.985
+  },
+  {
+   "t": 89.527,
+   "kind": "step_grate_b",
+   "pan": -0.55,
+   "dist": 0.45,
+   "gain": -5,
+   "rate": 1.015
+  },
+  {
+   "t": 89.687,
+   "kind": "step_grate_b",
+   "pan": -0.55,
+   "dist": 0.45,
+   "gain": -5,
+   "rate": 1.045
+  },
+  {
+   "t": 89.807,
+   "kind": "step_grate",
+   "pan": -0.5,
+   "dist": 0.4
+  },
+  {
+   "t": 90.847,
+   "kind": "breath_exert",
+   "pan": -0.5,
+   "dist": 0.45,
+   "gain": -4,
+   "dur": 1.4,
+   "fade": 0.2
+  },
+  {
+   "t": 91.347,
+   "kind": "lever_clunk",
+   "pan": -0.45,
+   "dist": 0.5,
+   "gain": -8,
+   "rate": 1.2
+  },
+  {
+   "t": 92.647,
+   "kind": "lever_clunk",
+   "pan": -0.35,
+   "dist": 0.1,
+   "gain": 2
+  },
+  {
+   "t": 92.68700000000001,
+   "kind": "crane_chain",
+   "pan": 0.35,
+   "dist": 0.25,
+   "gain": -2
+  },
+  {
+   "t": 92.747,
+   "kind": "cable_strain",
+   "pan": 0.4,
+   "dist": 0.3,
+   "dur": 2.6,
+   "gain": -3,
+   "fade": 0.4
+  },
+  {
+   "t": 93.04700000000001,
+   "kind": "step_grate_b",
+   "pan": 0.3,
+   "dist": 0.35,
+   "gain": -6,
+   "rate": 0.955
+  },
+  {
+   "t": 93.34700000000001,
+   "kind": "step_grate",
+   "pan": 0.3,
+   "dist": 0.35,
+   "gain": -6,
+   "rate": 0.985
+  },
+  {
+   "t": 93.647,
+   "kind": "step_grate_b",
+   "pan": 0.3,
+   "dist": 0.35,
+   "gain": -6,
+   "rate": 1.015
+  },
+  {
+   "t": 93.65,
+   "kind": "breath_exert",
+   "pan": 0.1,
+   "dist": 0.1,
+   "gain": -9,
+   "dur": 1,
+   "fade": 0.2
+  },
+  {
+   "t": 93.947,
+   "kind": "step_grate",
+   "pan": 0.3,
+   "dist": 0.35,
+   "gain": -6,
+   "rate": 1.045
+  },
+  {
+   "t": 94.247,
+   "kind": "step_grate_b",
+   "pan": 0.3,
+   "dist": 0.35,
+   "gain": -6,
+   "rate": 0.97
+  },
+  {
+   "t": 94.547,
+   "kind": "step_grate",
+   "pan": 0.3,
+   "dist": 0.35,
+   "gain": -6,
+   "rate": 1
+  },
+  {
+   "t": 94.847,
+   "kind": "step_grate_b",
+   "pan": 0.3,
+   "dist": 0.35,
+   "gain": -6,
+   "rate": 1.03
+  },
+  {
+   "t": 95.14699999999999,
+   "kind": "step_grate",
+   "pan": 0.3,
+   "dist": 0.35,
+   "gain": -6,
+   "rate": 0.955
+  },
+  {
+   "t": 95.45,
+   "kind": "step_grate_b",
+   "pan": -0.3,
+   "dist": 0.2,
+   "rate": 0.955
+  },
+  {
+   "t": 95.63000000000001,
+   "kind": "step_grate",
+   "pan": -0.3,
+   "dist": 0.2,
+   "rate": 0.985
+  },
+  {
+   "t": 95.81000000000002,
+   "kind": "step_grate_b",
+   "pan": -0.3,
+   "dist": 0.2,
+   "rate": 1.015
+  },
+  {
+   "t": 95.99000000000002,
+   "kind": "step_grate",
+   "pan": -0.3,
+   "dist": 0.2,
+   "rate": 1.045
+  },
+  {
+   "t": 96.17000000000003,
+   "kind": "step_grate_b",
+   "pan": -0.3,
+   "dist": 0.2,
+   "rate": 0.97
+  },
+  {
+   "t": 96.28,
+   "kind": "step_grate_b",
+   "pan": -0.2,
+   "dist": 0.2,
+   "gain": 3
+  },
+  {
+   "t": 96.687,
+   "kind": "lever_clunk",
+   "pan": -0.85,
+   "dist": 0.45,
+   "gain": 0
+  },
+  {
+   "t": 96.707,
+   "kind": "crane_trolley",
+   "pan": 0,
+   "dist": 0.2,
+   "dur": 4.6,
+   "gain": 0,
+   "fade": 0.5
+  },
+  {
+   "t": 96.737,
+   "kind": "cable_strain",
+   "pan": 0.1,
+   "dist": 0.2,
+   "dur": 3,
+   "gain": -2,
+   "fade": 0.4
+  },
+  {
+   "t": 96.987,
+   "kind": "sensor_lock",
+   "pan": 0.3,
+   "dist": 0.4,
+   "gain": -2
+  },
+  {
+   "t": 97.087,
+   "kind": "drone_rotor",
+   "pan": 0.2,
+   "dist": 0.15,
+   "dur": 0.95,
+   "gain": 4,
+   "rate": 1.25,
+   "fade": 0.25
+  },
+  {
+   "t": 97.98700000000001,
+   "kind": "metal_tear",
+   "pan": 0.15,
+   "dist": 0.15,
+   "gain": 2
+  },
+  {
+   "t": 97.98700000000001,
+   "kind": "sparks",
+   "pan": 0.15,
+   "dist": 0.2,
+   "gain": 0
+  },
+  {
+   "t": 98.01700000000001,
+   "kind": "elec_arc",
+   "pan": 0.1,
+   "dist": 0.2,
+   "gain": -3
+  },
+  {
+   "t": 98.04700000000001,
+   "kind": "crane_chain",
+   "pan": 0,
+   "dist": 0.2,
+   "gain": 2
+  },
+  {
+   "t": 98.13700000000001,
+   "kind": "debris_rain",
+   "pan": 0.1,
+   "dist": 0.5,
+   "gain": -4
+  },
+  {
+   "t": 98.5,
+   "kind": "breath_exert",
+   "pan": 0.4,
+   "dist": 0.2,
+   "gain": -2,
+   "dur": 0.8,
+   "fade": 0.15
+  },
+  {
+   "t": 98.647,
+   "kind": "servo_whir",
+   "pan": 0.75,
+   "dist": 0.35,
+   "gain": 0,
+   "dur": 1.35,
+   "fade": 0.15
+  },
+  {
+   "t": 99.05,
+   "kind": "body_fall",
+   "pan": 0.5,
+   "dist": 0.25,
+   "gain": -2
+  },
+  {
+   "t": 99.94700000000002,
+   "kind": "lever_clunk",
+   "pan": 0.55,
+   "dist": 0.25,
+   "gain": 3,
+   "rate": 0.85
+  },
+  {
+   "t": 99.96700000000001,
+   "kind": "hydraulic",
+   "pan": 0.55,
+   "dist": 0.3,
+   "gain": 0
+  },
+  {
+   "t": 100.04700000000001,
+   "kind": "servo_heavy",
+   "pan": 0.6,
+   "dist": 0.35,
+   "dur": 1.2,
+   "gain": -6,
+   "fade": 0.3
+  },
+  {
+   "t": 101.59700000000001,
+   "kind": "sensor_lock",
+   "pan": -0.55,
+   "dist": 0.25,
+   "gain": 2
+  },
+  {
+   "t": 101.95700000000001,
+   "kind": "servo_heavy",
+   "pan": -0.7,
+   "dist": 0.35,
+   "dur": 0.75,
+   "gain": -2,
+   "fade": 0.15
+  },
+  {
+   "t": 102.55700000000002,
+   "kind": "hydraulic",
+   "pan": -0.7,
+   "dist": 0.35,
+   "gain": -3
+  },
+  {
+   "t": 102.62700000000001,
+   "kind": "sensor_lock",
+   "pan": -0.6,
+   "dist": 0.4,
+   "gain": -1,
+   "rate": 0.85
+  },
+  {
+   "t": 103,
+   "kind": "breath_ragged",
+   "pan": 0.2,
+   "dist": 0.05,
+   "dur": 1.3,
+   "gain": -6,
+   "fade": 0.3
+  },
+  {
+   "t": 104.07,
+   "kind": "cable_strain",
+   "pan": 0,
+   "dist": 0,
+   "dur": 0.5,
+   "gain": -10,
+   "fade": 0.1,
+   "rate": 1.4
+  },
+  {
+   "t": 104.297,
+   "kind": "lever_clunk",
+   "pan": 0.85,
+   "dist": 0.65,
+   "gain": 0,
+   "rate": 0.7
+  },
+  {
+   "t": 104.317,
+   "kind": "crane_chain",
+   "pan": 0.85,
+   "dist": 0.6,
+   "gain": -2
+  },
+  {
+   "t": 104.637,
+   "kind": "lever_clunk",
+   "pan": -0.6,
+   "dist": 0.5,
+   "gain": -2,
+   "rate": 1.15
+  },
+  {
+   "t": 104.717,
+   "kind": "step_grate_b",
+   "pan": -0.5,
+   "dist": 0.5,
+   "gain": -4,
+   "rate": 0.955
+  },
+  {
+   "t": 104.867,
+   "kind": "step_grate",
+   "pan": -0.5,
+   "dist": 0.5,
+   "gain": -4,
+   "rate": 0.985
+  },
+  {
+   "t": 104.947,
+   "kind": "launcher",
+   "pan": -0.85,
+   "dist": 0.5,
+   "gain": 2
+  },
+  {
+   "t": 105.01700000000001,
+   "kind": "step_grate_b",
+   "pan": -0.5,
+   "dist": 0.5,
+   "gain": -4,
+   "rate": 1.015
+  },
+  {
+   "t": 105.16700000000002,
+   "kind": "step_grate",
+   "pan": -0.5,
+   "dist": 0.5,
+   "gain": -4,
+   "rate": 1.045
+  },
+  {
+   "t": 105.247,
+   "kind": "blast",
+   "pan": -0.45,
+   "dist": 0.3,
+   "gain": 2
+  },
+  {
+   "t": 105.247,
+   "kind": "sub_boom",
+   "pan": 0,
+   "dist": 0,
+   "gain": 0
+  },
+  {
+   "t": 105.287,
+   "kind": "metal_tear",
+   "pan": -0.4,
+   "dist": 0.35,
+   "gain": 0
+  },
+  {
+   "t": 105.307,
+   "kind": "tinnitus",
+   "gain": 0
+  },
+  {
+   "t": 105.367,
+   "kind": "debris_rain",
+   "pan": -0.4,
+   "dist": 0.4,
+   "gain": -2
+  },
+  {
+   "t": 105.907,
+   "kind": "metal_tear",
+   "pan": -0.45,
+   "dist": 0.4,
+   "gain": -1,
+   "rate": 0.8
+  },
+  {
+   "t": 105.92699999999999,
+   "kind": "crane_chain",
+   "pan": -0.4,
+   "dist": 0.4,
+   "gain": -3,
+   "rate": 0.8
+  },
+  {
+   "t": 105.957,
+   "kind": "sparks",
+   "pan": -0.45,
+   "dist": 0.45,
+   "gain": -4
+  },
+  {
+   "t": 107.64999999999999,
+   "kind": "step_grate_b",
+   "pan": 0.3,
+   "dist": 0.25,
+   "gain": -2,
+   "rate": 0.955
+  },
+  {
+   "t": 107.82,
+   "kind": "step_grate",
+   "pan": 0.3,
+   "dist": 0.25,
+   "gain": -2,
+   "rate": 0.985
+  },
+  {
+   "t": 107.99,
+   "kind": "step_grate_b",
+   "pan": 0.3,
+   "dist": 0.25,
+   "gain": -2,
+   "rate": 1.015
+  },
+  {
+   "t": 108.16,
+   "kind": "step_grate",
+   "pan": 0.3,
+   "dist": 0.25,
+   "gain": -2,
+   "rate": 1.045
+  },
+  {
+   "t": 108.2,
+   "kind": "metal_tear",
+   "pan": 0,
+   "dist": 0.3,
+   "gain": -8,
+   "rate": 1.3
+  },
+  {
+   "t": 108.33,
+   "kind": "step_grate_b",
+   "pan": 0.3,
+   "dist": 0.25,
+   "gain": -2,
+   "rate": 0.97
+  },
+  {
+   "t": 108.5,
+   "kind": "step_grate",
+   "pan": 0.3,
+   "dist": 0.25,
+   "gain": -2,
+   "rate": 1
+  },
+  {
+   "t": 108.5,
+   "kind": "sparks",
+   "pan": -0.1,
+   "dist": 0.3,
+   "gain": -8
+  },
+  {
+   "t": 108.75,
+   "kind": "body_fall",
+   "pan": -0.1,
+   "dist": 0.15,
+   "gain": 0
+  },
+  {
+   "t": 109.247,
+   "kind": "breath_exert",
+   "pan": -0.1,
+   "dist": 0.05,
+   "gain": 0,
+   "dur": 1.2,
+   "fade": 0.2
+  },
+  {
+   "t": 109.287,
+   "kind": "cable_strain",
+   "pan": 0,
+   "dist": 0.2,
+   "dur": 1.6,
+   "gain": -4,
+   "fade": 0.3
+  },
+  {
+   "t": 110.5,
+   "kind": "breath_exert",
+   "pan": -0.15,
+   "dist": 0.1,
+   "gain": -1,
+   "dur": 1.6,
+   "fade": 0.3,
+   "rate": 0.95
+  },
+  {
+   "t": 110.80000000000001,
+   "kind": "metal_tear",
+   "pan": -0.2,
+   "dist": 0.3,
+   "gain": -9,
+   "rate": 0.7
+  },
+  {
+   "t": 112.69999999999999,
+   "kind": "step_grate_b",
+   "pan": 0.1,
+   "dist": 0.25,
+   "gain": -5,
+   "rate": 0.955
+  },
+  {
+   "t": 112.99999999999999,
+   "kind": "step_grate",
+   "pan": 0.1,
+   "dist": 0.25,
+   "gain": -5,
+   "rate": 0.985
+  },
+  {
+   "t": 113.29999999999998,
+   "kind": "step_grate_b",
+   "pan": 0.1,
+   "dist": 0.25,
+   "gain": -5,
+   "rate": 1.015
+  },
+  {
+   "t": 113.59999999999998,
+   "kind": "step_grate",
+   "pan": 0.1,
+   "dist": 0.25,
+   "gain": -5,
+   "rate": 1.045
+  },
+  {
+   "t": 113.6,
+   "kind": "step_grate_b",
+   "pan": 0.6,
+   "dist": 0.6,
+   "gain": -6,
+   "rate": 0.955
+  },
+  {
+   "t": 113.88,
+   "kind": "step_grate",
+   "pan": 0.6,
+   "dist": 0.6,
+   "gain": -6,
+   "rate": 0.985
+  },
+  {
+   "t": 114.16,
+   "kind": "step_grate_b",
+   "pan": 0.6,
+   "dist": 0.6,
+   "gain": -6,
+   "rate": 1.015
+  },
+  {
+   "t": 114.44,
+   "kind": "step_grate",
+   "pan": 0.6,
+   "dist": 0.6,
+   "gain": -6,
+   "rate": 1.045
+  },
+  {
+   "t": 114.587,
+   "kind": "metal_tear",
+   "pan": -0.5,
+   "dist": 0.5,
+   "gain": 2
+  },
+  {
+   "t": 114.637,
+   "kind": "crane_chain",
+   "pan": -0.3,
+   "dist": 0.5,
+   "gain": 0
+  },
+  {
+   "t": 114.72,
+   "kind": "step_grate_b",
+   "pan": 0.6,
+   "dist": 0.6,
+   "gain": -6,
+   "rate": 0.97
+  },
+  {
+   "t": 114.887,
+   "kind": "gantry_collapse",
+   "pan": -0.3,
+   "dist": 0.4,
+   "gain": 2
+  },
+  {
+   "t": 115.25,
+   "kind": "body_fall",
+   "pan": 0.65,
+   "dist": 0.6,
+   "gain": -8
+  },
+  {
+   "t": 115.927,
+   "kind": "wreck_slam",
+   "pan": -0.65,
+   "dist": 0.45,
+   "gain": 3
+  },
+  {
+   "t": 115.927,
+   "kind": "sub_boom",
+   "pan": -0.5,
+   "dist": 0.2,
+   "gain": -2
+  },
+  {
+   "t": 115.95700000000001,
+   "kind": "metal_tear",
+   "pan": -0.65,
+   "dist": 0.45,
+   "gain": 0,
+   "rate": 0.75
+  },
+  {
+   "t": 116.007,
+   "kind": "sparks",
+   "pan": -0.65,
+   "dist": 0.45,
+   "gain": -2
+  },
+  {
+   "t": 116.12700000000001,
+   "kind": "hydraulic",
+   "pan": -0.65,
+   "dist": 0.5,
+   "gain": -4,
+   "rate": 0.8
+  },
+  {
+   "t": 116.60700000000001,
+   "kind": "wreck_slam",
+   "pan": -0.35,
+   "dist": 0.4,
+   "gain": 2,
+   "rate": 0.9
+  },
+  {
+   "t": 116.60700000000001,
+   "kind": "sub_boom",
+   "pan": -0.3,
+   "dist": 0.2,
+   "gain": -3
+  },
+  {
+   "t": 116.70700000000001,
+   "kind": "debris_rain",
+   "pan": -0.4,
+   "dist": 0.5,
+   "gain": 0
+  },
+  {
+   "t": 116.80700000000002,
+   "kind": "drone_rotor",
+   "pan": -0.4,
+   "dist": 0.6,
+   "dur": 1.4,
+   "gain": -2,
+   "fade": 0.5,
+   "rate": 0.9
+  },
+  {
+   "t": 116.95700000000001,
+   "kind": "robot_step_heavy",
+   "pan": -0.85,
+   "dist": 0.75,
+   "gain": -4
+  },
+  {
+   "t": 117.40700000000001,
+   "kind": "robot_step_heavy",
+   "pan": -0.8,
+   "dist": 0.75,
+   "gain": -5
+  },
+  {
+   "t": 117.90700000000001,
+   "kind": "servo_whir",
+   "pan": -0.8,
+   "dist": 0.7,
+   "gain": -6
+  },
+  {
+   "t": 118.1,
+   "kind": "step_grate_b",
+   "pan": -0.1,
+   "dist": 0.4,
+   "gain": -6,
+   "rate": 0.955
+  },
+  {
+   "t": 118.4,
+   "kind": "breath_ragged",
+   "pan": 0,
+   "dist": 0.35,
+   "dur": 6.8,
+   "gain": -8,
+   "fade": 0.8
+  },
+  {
+   "t": 118.44,
+   "kind": "step_grate",
+   "pan": -0.1,
+   "dist": 0.4,
+   "gain": -6,
+   "rate": 0.985
+  },
+  {
+   "t": 118.78,
+   "kind": "step_grate_b",
+   "pan": -0.1,
+   "dist": 0.4,
+   "gain": -6,
+   "rate": 1.015
+  },
+  {
+   "t": 119.12,
+   "kind": "step_grate",
+   "pan": -0.1,
+   "dist": 0.4,
+   "gain": -6,
+   "rate": 1.045
+  },
+  {
+   "t": 119.46000000000001,
+   "kind": "step_grate_b",
+   "pan": -0.1,
+   "dist": 0.4,
+   "gain": -6,
+   "rate": 0.97
+  },
+  {
+   "t": 119.80000000000001,
+   "kind": "step_grate",
+   "pan": -0.1,
+   "dist": 0.4,
+   "gain": -6,
+   "rate": 1
+  },
+  {
+   "t": 120.14000000000001,
+   "kind": "step_grate_b",
+   "pan": -0.1,
+   "dist": 0.4,
+   "gain": -6,
+   "rate": 1.03
+  },
+  {
+   "t": 120.48000000000002,
+   "kind": "step_grate",
+   "pan": -0.1,
+   "dist": 0.4,
+   "gain": -6,
+   "rate": 0.955
+  },
+  {
+   "t": 120.9,
+   "kind": "steps_gravel",
+   "pan": 0,
+   "dist": 0.3,
+   "dur": 3.8,
+   "gain": -6,
+   "fade": 0.4
+  },
+  {
+   "t": 125.747,
+   "kind": "glass_door",
+   "gain": 0,
+   "dist": 0.25
+  },
+  {
+   "t": 125.897,
+   "kind": "breath_exert",
+   "gain": -8,
+   "dur": 2.6,
+   "fade": 0.6,
+   "dist": 0.3
+  },
+  {
+   "t": 126.347,
+   "kind": "servo_whir",
+   "gain": -6,
+   "pan": 0.15,
+   "dist": 0.3
+  },
+  {
+   "t": 126.747,
+   "kind": "servo_whir",
+   "gain": -8,
+   "pan": -0.45,
+   "dist": 0.35,
+   "rate": 0.9
+  },
+  {
+   "t": 127.447,
+   "kind": "servo_whir",
+   "gain": -9,
+   "pan": 0.45,
+   "dist": 0.35,
+   "rate": 1.1
+  },
+  {
+   "t": 131,
+   "kind": "breath_ragged",
+   "gain": -6,
+   "dur": 6,
+   "fade": 1.2,
+   "dist": 0.1,
+   "pan": -0.15
+  },
+  {
+   "t": 131.25,
+   "kind": "projector_beep",
+   "gain": -6,
+   "pan": -0.3,
+   "dist": 0.35,
+   "rate": 0.82
+  },
+  {
+   "t": 132.17,
+   "kind": "projector_beep",
+   "gain": -6,
+   "pan": -0.3,
+   "dist": 0.35,
+   "rate": 0.82
+  },
+  {
+   "t": 133.08999999999997,
+   "kind": "projector_beep",
+   "gain": -6,
+   "pan": -0.3,
+   "dist": 0.35,
+   "rate": 0.82
+  },
+  {
+   "t": 133.22,
+   "kind": "hand_glass",
+   "gain": -12,
+   "rate": 1.9,
+   "pan": -0.35,
+   "dist": 0.2
+  },
+  {
+   "t": 134.00999999999996,
+   "kind": "projector_beep",
+   "gain": -6,
+   "pan": -0.3,
+   "dist": 0.35,
+   "rate": 0.82
+  },
+  {
+   "t": 134.92999999999995,
+   "kind": "projector_beep",
+   "gain": -6,
+   "pan": -0.3,
+   "dist": 0.35,
+   "rate": 0.82
+  },
+  {
+   "t": 135.84999999999994,
+   "kind": "projector_beep",
+   "gain": -10,
+   "pan": -0.3,
+   "dist": 0.5,
+   "rate": 0.82
+  },
+  {
+   "t": 136.7,
+   "kind": "breath_ragged",
+   "gain": -12,
+   "dur": 1.4,
+   "fade": 0.7,
+   "dist": 0.15,
+   "rate": 0.95
+  },
+  {
+   "t": 136.76999999999992,
+   "kind": "projector_beep",
+   "gain": -10,
+   "pan": -0.3,
+   "dist": 0.5,
+   "rate": 0.82
+  },
+  {
+   "t": 137.6899999999999,
+   "kind": "projector_beep",
+   "gain": -10,
+   "pan": -0.3,
+   "dist": 0.5,
+   "rate": 0.82
+  },
+  {
+   "t": 138.6099999999999,
+   "kind": "projector_beep",
+   "gain": -10,
+   "pan": -0.3,
+   "dist": 0.5,
+   "rate": 0.82
+  },
+  {
+   "t": 145.6,
+   "kind": "radio_on",
+   "gain": 0,
+   "pan": -0.15,
+   "dist": 0.05,
+   "dur": 1.7500000000000058,
+   "fade": 0.35
+  },
+  {
+   "t": 146.35,
+   "kind": "static",
+   "gain": -8,
+   "pan": -0.15,
+   "dist": 0.05,
+   "dur": 0.6,
+   "fade": 0.25
+  },
+  {
+   "t": 153.9,
+   "kind": "glass_door",
+   "gain": -2,
+   "dist": 0.3,
+   "rate": 0.95
+  },
+  {
+   "t": 154.2,
+   "kind": "drone_rotor",
+   "gain": -8,
+   "pan": 0.7,
+   "dist": 0.7,
+   "dur": 2.2,
+   "fade": 0.8
+  },
+  {
+   "t": 155.1,
+   "kind": "shutter_close",
+   "gain": -3,
+   "dist": 0.5,
+   "dur": 2.2,
+   "fade": 0.3
+  },
+  {
+   "t": 156.2,
+   "kind": "drone_rotor",
+   "gain": -8,
+   "pan": -0.5,
+   "dist": 0.7,
+   "dur": 2,
+   "fade": 0.8
+  },
+  {
+   "t": 157.04999999999998,
+   "kind": "padlock",
+   "gain": -5,
+   "dist": 0.4
+  },
+  {
+   "t": 162,
+   "kind": "servo_whir",
+   "gain": -10,
+   "pan": -0.4,
+   "dist": 0.3,
+   "rate": 0.9
+  },
+  {
+   "t": 162,
+   "kind": "robot_step",
+   "gain": -13,
+   "pan": 0.6,
+   "dist": 0.8
+  },
+  {
+   "t": 162.70000000000002,
+   "kind": "robot_step",
+   "gain": -13,
+   "pan": 0.42,
+   "dist": 0.8
+  },
+  {
+   "t": 163.4,
+   "kind": "robot_step",
+   "gain": -13,
+   "pan": 0.24,
+   "dist": 0.8
+  },
+  {
+   "t": 164.1,
+   "kind": "robot_step",
+   "gain": -13,
+   "pan": 0.05999999999999994,
+   "dist": 0.8
+  },
+  {
+   "t": 164.70000000000002,
+   "kind": "robot_step",
+   "gain": -13,
+   "pan": -0.12,
+   "dist": 0.8
+  },
+  {
+   "t": 167.3,
+   "kind": "servo_whir",
+   "gain": -11,
+   "pan": -0.5,
+   "dist": 0.25,
+   "rate": 1.1
+  },
+  {
+   "t": 168.75,
+   "kind": "servo_whir",
+   "gain": -12,
+   "pan": 0,
+   "dist": 0.2,
+   "rate": 1.25
+  },
+  {
+   "t": 170.45,
+   "kind": "servo_whir",
+   "gain": -13,
+   "pan": 0,
+   "dist": 0.2,
+   "rate": 1.2
+  },
+  {
+   "t": 173,
+   "kind": "servo_whir",
+   "gain": -12,
+   "pan": 0.5,
+   "dist": 0.3,
+   "rate": 1.05
+  },
+  {
+   "t": 174.3,
+   "kind": "servo_whir",
+   "gain": -13,
+   "pan": -0.6,
+   "dist": 0.35
+  },
+  {
+   "t": 174.8,
+   "kind": "crane_trolley",
+   "gain": -12,
+   "pan": -0.2,
+   "dist": 0.9,
+   "dur": 5.5,
+   "fade": 1.5
+  },
+  {
+   "t": 177.4,
+   "kind": "crane_chain",
+   "gain": -15,
+   "pan": -0.2,
+   "dist": 0.95
+  },
+  {
+   "t": 178.6,
+   "kind": "padlock",
+   "gain": -6,
+   "pan": 0.55,
+   "dist": 0.3
+  },
+  {
+   "t": 186,
+   "kind": "hand_glass",
+   "gain": 0,
+   "pan": 0.1,
+   "dist": 0
+  },
+  {
+   "t": 189.25,
+   "kind": "drone_rotor",
+   "gain": -12,
+   "pan": 0.3,
+   "dist": 0.9,
+   "dur": 4.2,
+   "fade": 1.4
+  }
+ ],
  "beds": [
   {
    "kind": "fire_bed",
    "a": 0,
-   "b": 38.7,
+   "b": 32.3,
    "gain": -2,
-   "fade": 1
+   "fade": 0.5
+  },
+  {
+   "kind": "fire_bed",
+   "a": 35.8,
+   "b": 47,
+   "gain": -4,
+   "fade": 0.8
   },
   {
    "kind": "city_bed",
@@ -358,7 +2573,7 @@
   },
   {
    "kind": "fire_bed",
-   "a": 47,
+   "a": 46,
    "b": 64.6,
    "gain": -10,
    "fade": 1.5
@@ -378,5 +2593,12 @@
    "fade": 2
   }
  ],
- "perspective": []
+ "perspective": [
+  {
+   "kind": "muffle",
+   "a": 105.287,
+   "b": 109.6,
+   "amt": 0.9
+  }
+ ]
 }

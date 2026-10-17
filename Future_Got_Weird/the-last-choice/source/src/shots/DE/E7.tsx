@@ -16,6 +16,7 @@ import {Glow, LightShaft} from '../../fx/light';
 import {mixHex} from '../../fx/common';
 import {C, REF} from '../../theme';
 import {Tint, Visor, basis, visorPt, seated} from './common';
+import {Bench, benchTop} from '../../sets/refugeInterior';
 import {ASSEMBLY} from '../AB/assembly';
 
 const ID = 'E7';
@@ -81,7 +82,7 @@ const E7: React.FC = () => {
   };
   // ---- civilians, seated behind the line, smaller (none near the empty place)
   const civ: ActorProps[] = ASSEMBLY.civilians.map((c, i) => {
-    const seatTop = c.y - 100 * c.s;
+    const seatTop = benchTop(c.y, c.s);
     return {...seated(CIV[i], c.x, c.y, seatTop, {t, s: c.s, yaw: c.yaw, z: -1 + i * 0.01, seed: 20 + i, knees: 60, spread: 30}), ink: ink * c.s, breath: 0.4,
       head: {yaw: br(70 + i, 8), pitch: 6}, face: {mouth: 'flat' as const, worry: 0.6}};
   });
@@ -118,6 +119,7 @@ const E7: React.FC = () => {
         <ellipse cx={1160} cy={812} rx={130} ry={22} fill="#FFF6DE" opacity={0.45} />
         <Plant x={60} y={792} s={0.8} t={t} seed={97} ink={3.2} kind="tall" />
         <Plant x={1840} y={800} s={0.75} t={t} seed={98} ink={3.2} kind="bush" />
+        {ASSEMBLY.civilians.map((c, i) => <Bench key={i} x={c.x} y={c.y} s={c.s} w={260} ink={3 * c.s / 0.6} />)}
         <Cast actors={[...civ, builder, carrier, teammate, director]} extra={[
           {z: sD.z * 1000 + 300, el: <Visor key="v" x={dh.x - vt.x * dS} y={dh.y - vt.y * dS} s={dS} b={vB} ink={ink * dS} />},
         ]} />
