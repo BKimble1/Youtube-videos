@@ -12,16 +12,16 @@ Rules per category:
     (start 10 ms before the level first reaches 2 % of peak). lead_s = time of that first sound; for CLICK_FIRST kinds it
     is the first strong event (the switch click), as R1 did for radio_on.
   - TRANSIENTS (everything else): the take whose hit is most dominant, trimmed so the hit lands 30 ms in.
-    Changes from R1, which picked argmax of librosa's log-mel onset strength:
+    Changes from R1, which picked argmax of librosa's log-mel onset strength (on these takes that found the hard cut at
+    the end of a take, or faint tail events, because log-domain flux is level-blind):
+      * onset strength is spectral flux of the linear-power mel spectrogram, so the hit is the loudest attack;
       * file edges made neutral: 50 ms of silence before the take (a hit at sample 0 registers at 0) and a 10 ms fade
-        plus silence after it (the hard cut at the end of a take otherwise reads as the strongest onset in the file);
-      * each onset is weighted by the peak level just after it, relative to the file peak, so the hit is a loud attack
-        and not a faint tail event (log-domain onset strength is level-blind);
+        plus silence after it (no false onset at the hard cut);
       * the hit time is refined from the onset frame to where the 1 ms envelope first reaches half its local peak,
-        removing librosa's framing offset (about 20-30 ms late);
-      * if trimming to hit - 30 ms would cut loud material (at least 150 ms of sound within 12 dB of the file peak, e.g.
-        a creak before a pop), only leading silence is trimmed and lead_s records where the hit is.
-    onset_dominance = weighted onset strength at the hit / median onset strength of the take.
+        removing librosa's framing offset (about 25 ms late);
+      * if trimming to hit - 30 ms would cut loud material (at least 150 ms of sound reaching within 12 dB of the file
+        peak, e.g. a creak before a pop), only leading silence is trimmed and lead_s records where the hit is.
+    onset_dominance = onset strength at the hit / mean onset strength of the take.
 Outputs: 48 kHz float WAV, mono (beds stereo), peak-normalised to -3 dBFS; transients and sweeps get a 5 ms fade-in
 (1 ms when the sound starts at the cut) and a 40 ms fade-out. Writes audio/r2/sfx/<kind>.wav,
 audio/r2/sfx/choices.json (kind -> take, lead_s, duration_s, notes) and audio/R2_SFX_CHOICES.md.
@@ -97,26 +97,26 @@ def find_hit(y):
     nf = int(0.01 * SR)
     a[-nf:] *= np.linspace(1, 0, nf)
     a = np.concatenate([np.zeros(pad), a, np.zeros(pad)])
-    o = librosa.onset.onset_strength(y=a, sr=SR, hop_length=HOP)
+    S = librosa.feature.melspectrogram(y=a, sr=SR, n_fft=2048, hop_length=HOP, n_mels=128)  # linear power, not dB
+    o = librosa.onset.onset_strength(S=S, sr=SR, hop_length=HOP)
     t = np.arange(len(o)) * HOP / SR - pad / SR
-    keep = (t >= 0) & (t < len(y) / SR)
+    keep = (t >= -0.03) & (t < len(y) / SR)
     o, t = o[keep], t[keep]
-    pk = np.max(np.abs(y)) + 1e-12
-    w = np.array([np.max(np.abs(y[max(0, int((ti - 0.005) * SR)):int((ti + 0.06) * SR) + 1])) / pk for ti in t])
-    k = int(np.argmax(o * w))
-    dominance = float(o[k] * w[k] / (np.median(o) + 1e-6))
-    # refine: first point in [t-20 ms, t+30 ms] where the 1 ms envelope crosses half the local peak
+    k = int(np.argmax(o))
+    dominance = float(o[k] / (np.mean(o) + 1e-12))
+    # refine: in [t-40 ms, t+15 ms], where the 1 ms envelope first reaches half its local peak (steepest rise if the
+    # window opens already above that)
     blk = SR // 1000
-    i0, i1 = max(0, int((t[k] - 0.02) * SR)), min(len(y), int((t[k] + 0.03) * SR))
+    i0, i1 = max(0, int((t[k] - 0.04) * SR)), min(len(y), int((t[k] + 0.015) * SR))
     seg = np.abs(y[i0:i1])
-    env = np.array([seg[j:j + blk].max() for j in range(0, len(seg) - blk + 1, blk)]) if len(seg) >= blk else np.array([])
-    hit = t[k]
-    if len(env):
-        above = env >= 0.5 * env.max()
-        j = int(np.argmax(above))
-        if j > 0 or i0 == 0:  # a real crossing inside the window (or the take starts on the hit)
-            hit = (i0 + j * blk) / SR
-    return hit, dominance
+    env = np.array([seg[j:j + blk].max() for j in range(0, len(seg) - blk + 1, blk)])
+    if i0 == 0:  # silence before the take
+        env = np.concatenate([[0.0], env])
+    above = env >= 0.5 * env.max()
+    j = int(np.argmax(above)) if not above[0] else int(np.argmax(np.diff(env))) + 1
+    if i0 == 0:
+        j -= 1
+    return max(0.0, (i0 + j * blk) / SR), dominance
 
 
 kinds = {}
@@ -187,7 +187,7 @@ for kind, files in sorted(kinds.items()):
         if st > 0:
             notes.append(f"trimmed {st / SR:.3f} s from start")
         y = y[st:]
-        y = fades(norm(y), fi=0.005 if lead >= 0.01 else 0.001)
+        y = norm(fades(y, fi=0.005 if lead >= 0.01 else 0.001))
     data = y.T if y.ndim == 2 else y
     sf.write(os.path.join(OUT, f"{kind}.wav"), data.astype(np.float32), SR, subtype="FLOAT")
     out_dur = y.shape[-1] / SR

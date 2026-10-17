@@ -7,21 +7,21 @@
  },
  "ally_drone_crash": {
   "take": "ally_drone_crash_v1.mp3",
-  "lead_s": 0.0,
+  "lead_s": 0.454,
   "duration_s": 2.48,
-  "notes": "transient; onset dominance 47.4 (only take); hit at 0.000 s in the raw take; raw take 2.48 s"
+  "notes": "transient; onset dominance 8.8 (only take); build-up kept: 0.42 s of loud sound before the hit (not cut); hit at 0.454 s in the raw take; raw take 2.48 s"
  },
  "armor_hit": {
   "take": "armor_hit_v1.mp3",
   "lead_s": 0.011,
   "duration_s": 1.0,
-  "notes": "transient; onset dominance 134.0 (only take); hit at 0.011 s in the raw take; raw take 1.00 s"
+  "notes": "transient; onset dominance 22.3 (only take); hit at 0.011 s in the raw take; raw take 1.00 s"
  },
  "army_halt": {
-  "take": "army_halt_v2.mp3",
-  "lead_s": 0.0,
-  "duration_s": 4.0,
-  "notes": "transient; onset dominance 33.4 (vs v1: onset dominance 22.0); hit at 0.000 s in the raw take; raw take 4.00 s"
+  "take": "army_halt_v1.mp3",
+  "lead_s": 1.993,
+  "duration_s": 3.938,
+  "notes": "transient; onset dominance 12.7 (vs v2: onset dominance 12.4); build-up kept: 1.96 s of loud sound before the hit (not cut); hit at 2.055 s in the raw take; trimmed 0.062 s from start; raw take 4.00 s"
  },
  "army_march": {
   "take": "army_march_v2.mp3",
@@ -43,21 +43,21 @@
  },
  "breaker_empty": {
   "take": "breaker_empty_v1.mp3",
-  "lead_s": 0.0,
+  "lead_s": 0.774,
   "duration_s": 1.2,
-  "notes": "transient; onset dominance 31.7 (only take); hit at 0.000 s in the raw take; raw take 1.20 s"
+  "notes": "transient; onset dominance 30.8 (only take); build-up kept: 0.74 s of loud sound before the hit (not cut); hit at 0.774 s in the raw take; raw take 1.20 s"
  },
  "breaker_hit": {
   "take": "breaker_hit_v2.mp3",
-  "lead_s": 0.0,
-  "duration_s": 1.48,
-  "notes": "transient; onset dominance 44.0 (vs v1: onset dominance 10.6); hit at 0.000 s in the raw take; raw take 1.48 s"
+  "lead_s": 0.03,
+  "duration_s": 1.471,
+  "notes": "transient; onset dominance 25.5 (vs v1: onset dominance 15.3); hit at 0.039 s in the raw take; trimmed 0.009 s from start; raw take 1.48 s"
  },
  "cable_snap": {
   "take": "cable_snap_v2.mp3",
   "lead_s": 0.0,
   "duration_s": 1.2,
-  "notes": "transient; onset dominance 122.0 (vs v1: onset dominance 116.0); hit at 0.000 s in the raw take; raw take 1.20 s"
+  "notes": "transient; onset dominance 46.0 (vs v1: onset dominance 44.1); hit at 0.000 s in the raw take; raw take 1.20 s"
  },
  "cloth_move": {
   "take": "cloth_move_v1.mp3",
@@ -97,15 +97,15 @@
  },
  "halligan_pry": {
   "take": "halligan_pry_v1.mp3",
-  "lead_s": 0.003,
+  "lead_s": 1.107,
   "duration_s": 1.76,
-  "notes": "transient; onset dominance 95.0 (only take); hit at 0.003 s in the raw take; raw take 1.76 s"
+  "notes": "transient; onset dominance 49.8 (only take); build-up kept: 1.08 s of loud sound before the hit (not cut); hit at 1.107 s in the raw take; raw take 1.76 s"
  },
  "heavy_launcher": {
   "take": "heavy_launcher_v1.mp3",
-  "lead_s": 0.0,
+  "lead_s": 0.199,
   "duration_s": 2.0,
-  "notes": "transient; onset dominance 134.6 (only take); hit at 0.000 s in the raw take; raw take 2.00 s"
+  "notes": "transient; onset dominance 12.4 (only take); build-up kept: 0.17 s of loud sound before the hit (not cut); hit at 0.199 s in the raw take; raw take 2.00 s"
  },
  "heavy_servo": {
   "take": "heavy_servo_v2.mp3",
@@ -117,7 +117,7 @@
   "take": "heavy_stomp_v2.mp3",
   "lead_s": 0.0,
   "duration_s": 2.48,
-  "notes": "transient; onset dominance 258.5 (vs v1: onset dominance 62.9); hit at 0.000 s in the raw take; raw take 2.48 s"
+  "notes": "transient; onset dominance 58.0 (vs v1: onset dominance 23.3); hit at 0.000 s in the raw take; raw take 2.48 s"
  },
  "machine_hum": {
   "take": "machine_hum_v1.mp3",
@@ -126,22 +126,22 @@
   "notes": "bed; level std 1.82 dB (only take); stereo, whole loop take, no fades; raw take 15.00 s"
  },
  "plate_block": {
-  "take": "plate_block_v2.mp3",
-  "lead_s": 0.0,
+  "take": "plate_block_v1.mp3",
+  "lead_s": 0.002,
   "duration_s": 1.48,
-  "notes": "transient; onset dominance 95.3 (vs v1: onset dominance 70.6); hit at 0.000 s in the raw take; raw take 1.48 s"
+  "notes": "transient; onset dominance 67.1 (vs v2: onset dominance 32.2); hit at 0.002 s in the raw take; raw take 1.48 s"
  },
  "plate_crack": {
   "take": "plate_crack_v1.mp3",
   "lead_s": 0.0,
   "duration_s": 1.48,
-  "notes": "transient; onset dominance 80.6 (vs v2: onset dominance 54.2); hit at 0.000 s in the raw take; raw take 1.48 s"
+  "notes": "transient; onset dominance 18.3 (vs v2: onset dominance 14.1); hit at 0.000 s in the raw take; raw take 1.48 s"
  },
  "plate_shatter": {
   "take": "plate_shatter_v1.mp3",
   "lead_s": 0.0,
   "duration_s": 2.0,
-  "notes": "transient; onset dominance 127.0 (vs v2: onset dominance 96.2); hit at 0.000 s in the raw take; raw take 2.00 s"
+  "notes": "transient; onset dominance 40.5 (vs v2: onset dominance 25.7); hit at 0.000 s in the raw take; raw take 2.00 s"
  },
  "projector_on": {
   "take": "projector_on_v1.mp3",
@@ -150,22 +150,22 @@
   "notes": "sweep; median level -36.6 dB (only take); lead = first strong event (switch click); raw take 2.00 s"
  },
  "ram_strike": {
-  "take": "ram_strike_v2.mp3",
+  "take": "ram_strike_v1.mp3",
   "lead_s": 0.0,
   "duration_s": 3.0,
-  "notes": "transient; onset dominance 142.3 (vs v1: onset dominance 62.3); hit at 0.000 s in the raw take; raw take 3.00 s"
+  "notes": "transient; onset dominance 15.8 (vs v2: onset dominance 15.1); hit at 0.000 s in the raw take; raw take 3.00 s"
  },
  "robot_fall": {
   "take": "robot_fall_v1.mp3",
   "lead_s": 0.001,
   "duration_s": 2.0,
-  "notes": "transient; onset dominance 88.3 (only take); hit at 0.001 s in the raw take; raw take 2.00 s"
+  "notes": "transient; onset dominance 34.3 (only take); hit at 0.001 s in the raw take; raw take 2.00 s"
  },
  "robot_swing": {
   "take": "robot_swing_v1.mp3",
   "lead_s": 0.0,
   "duration_s": 0.8,
-  "notes": "transient; onset dominance 41.1 (only take); hit at 0.000 s in the raw take; raw take 0.80 s"
+  "notes": "transient; onset dominance 7.8 (only take); hit at 0.000 s in the raw take; raw take 0.80 s"
  },
  "rubble_shift": {
   "take": "rubble_shift_v1.mp3",
@@ -183,7 +183,7 @@
   "take": "shield_bash_v1.mp3",
   "lead_s": 0.0,
   "duration_s": 1.2,
-  "notes": "transient; onset dominance 242.5 (vs v2: onset dominance 71.0); hit at 0.000 s in the raw take; raw take 1.20 s"
+  "notes": "transient; onset dominance 40.9 (vs v2: onset dominance 19.2); hit at 0.000 s in the raw take; raw take 1.20 s"
  },
  "smoke_canister": {
   "take": "smoke_canister_v1.mp3",
@@ -195,13 +195,13 @@
   "take": "tether_clamp_v1.mp3",
   "lead_s": 0.0,
   "duration_s": 1.48,
-  "notes": "transient; onset dominance 3269.7 (vs v2: onset dominance 24.1); hit at 0.000 s in the raw take; raw take 1.48 s"
+  "notes": "transient; onset dominance 26.6 (vs v2: onset dominance 11.4); hit at 0.000 s in the raw take; raw take 1.48 s"
  },
  "tether_fire": {
-  "take": "tether_fire_v2.mp3",
-  "lead_s": 0.0,
+  "take": "tether_fire_v1.mp3",
+  "lead_s": 0.003,
   "duration_s": 1.48,
-  "notes": "transient; onset dominance 41.8 (vs v1: onset dominance 34.7); hit at 0.000 s in the raw take; raw take 1.48 s"
+  "notes": "transient; onset dominance 17.5 (vs v2: onset dominance 11.3); hit at 0.003 s in the raw take; raw take 1.48 s"
  },
  "tether_reel": {
   "take": "tether_reel_v2.mp3",
