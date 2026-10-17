@@ -43,3 +43,7 @@ qa/c2/late1/
 source/public/companion3/*.wav
 audio/companion_v3/tight/*.wav
 audio/companion_v3/takes_unused/
+# Rocket Short: regenerated audio (tools/render_rocket.sh rebuilds it), audio stems, and scratch frame dumps
+source/public/rocket/*.wav
+audio/rocket/tight/*.wav
+qa/rocket/

@@ -86,3 +86,29 @@ Source: the owner's five screen recordings of Tesla's replay (draft release `roa
 - **C5 / airborne control:** the side replay of the hop (`rec_224911` 0:36.2–0:38.6) shows gas plumes firing upward
   while the car is upside down, an opposite pair (one up, one down) while it rolls, and two plumes firing down once it
   is upright. Every v3 vector is drawn on one of those visible plumes. No nozzle positions are drawn.
+
+## Rocket Short ("The Problem With Tesla's Rocket Car"): claim-to-source note (17 Oct 2026)
+
+**How this was checked.** tesla.com, nasa.gov, science.nasa.gov, www1.grc.nasa.gov, youtube.com and support.google.com are
+all blocked by this session's network policy (proxy 403, logged). Server-side fetches failed too (DNS). What follows uses
+the earlier rows of this ledger and web-search summaries of the named pages. Nothing marked *recheck* was read on the
+original page.
+
+Kinds: **FOOTAGE** what the owner's recordings show (inspected frame by frame, `footage/CLIP_LEDGER.md`);
+**TESLA** a manufacturer description, attributed or labelled; **MECHANICS** general physics, no Tesla numbers;
+**ILLUSTRATION** our schematic or a qualitative inference, labelled as such on screen.
+
+| Line or picture | Kind | Basis | Notes |
+|---|---|---|---|
+| "This Tesla can jump." (the hop, side replay, 0:35.25–0:38.71) | FOOTAGE | `rec_224911`: climbs on its jets beside the parked Teslas and the Semi, rolls inverted, rolls upright on four downward jets | Real speed, one continuous camera |
+| Opening label "flight listed for the Rocket version only, per Tesla" | TESLA, *recheck* | C10, C11 (search snapshot of the NZ Roadster page, 16 Oct; Electrek, Teslarati, Drive Tesla Canada) | Not confirmed first-hand. A 17 Oct search returned summaries naming a "SpaceX" thruster version instead of trims. Recheck the live page before upload; if the trims differ, the label changes, not the narration |
+| "These jets blast compressed air." | TESLA, *recheck* | C5 (Electrek, Engadget, TechCrunch, Teslarati: cold-gas thrusters, compressed air, no combustion); C6 (Lars Moravy, "600 liters of compressed air", figure not used) | If Tesla's page names another gas, re-record as "compressed gas". The plumes are drawn pale, with no flame |
+| "Every burst uses some up." / tank of dots, bursts | MECHANICS + ILLUSTRATION | Rocket-thrust basics (NASA Glenn, "Rocket Thrust": thrust from expelling mass, F = ṁVe + (pe − p0)Ae; search summary) | Dots are illustrative, no gauge, no numbers, not telemetry |
+| "Keeping a car airborne on thrust means pushing against its entire weight." / THRUST = WEIGHT | MECHANICS | Force balance for a stationary hover | Drawn only for the steady hold. The bursts average to the weight (the car bobs); the descent shows thrust below then above the weight. The real hop is never said to thrust through its whole arc |
+| "Bigger tanks can buy more time, but add weight and need protection." | MECHANICS + ILLUSTRATION | NASA NESC COPV damage-tolerance guidelines (search summary: damage-tolerance assessment and life testing of composite pressure vessels) | More dots, a heavier wall, mounts, a larger weight arrow (ghost of the old one), thrust grows to match; a frame closes. No rupture, impact, pressure or mass figure |
+| "Thrust that misses the center of mass can make it rotate." | MECHANICS + ILLUSTRATION | Torque = force × lever arm | Offset push behind an illustrative centre-of-mass marker, lever arm drawn, small nose-down turn (≤ 6.5°). Kept slow to be readable (not to scale) |
+| "Other thrusters can correct that, but those corrections use air too." | MECHANICS + ILLUSTRATION | Reaction control (NASA Basics of Space Flight ch. 11 could not be reached; Apollo RCS descriptions in search results) | Nose thruster stops the turn, turns it back, tail thruster stops it level; each pulse takes dots from the same tank. No wings involved |
+| "And fire a jet near loose gravel? That blast can send debris flying." | MECHANICS + ILLUSTRATION | NASA STMD Plume-Surface Interaction (search summary: exhaust "can erode the surface"; ejected particles can damage hardware) | Planetary-landing research used qualitatively. Labelled "loose surface"; the pad is untouched, nobody nearby; not a Tesla incident |
+| Return: roll, jets, touchdown (aerial, 2:19.82–2:26.73) | FOOTAGE | `rec_224730`: rolls upright with side plumes, jets down into smoke, touchdown about 2:24.3, camera drops in behind | The roll arrow follows the observed roll; the mini tank and the "clear area" ring are labelled motifs, not measurements |
+| "None of this breaks physics. It gives a sports car spacecraft problems." | Our framing | — | Replaces the original "breaks the law of physics" title idea |
+| Not used anywhere | — | — | Tank pressure, car mass, thrust, thruster count, flight duration, a road-collision outcome, any legal ruling, the 2 g suction figure, prices, specs |

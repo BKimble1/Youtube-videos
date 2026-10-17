@@ -2,7 +2,7 @@
   "name": "future-got-weird-tesla-roadster-flew",
   "version": "1.0.0",
   "private": true,
-  "description": "Tesla Roadster reveal Short + companion \u2014 Future Got Weird (Remotion)",
+  "description": "Tesla Roadster reveal Short + companion — Future Got Weird (Remotion)",
   "scripts": {
     "studio": "remotion studio src/index.ts",
     "typecheck": "tsc --noEmit"
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/react": "19.1.0",
     "js-tiktoken": "1.0.21",
+    "tsx": "^4.23.15",
     "typescript": "5.8.3"
   }
 }
