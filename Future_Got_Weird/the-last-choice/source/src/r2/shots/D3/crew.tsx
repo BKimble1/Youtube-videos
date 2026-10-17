@@ -19,7 +19,7 @@
 import {V3, add3, sub3, mul3, norm3, lerp, clamp, smooth, easeOut, easeIn} from '../../../kit/math';
 import {makeView} from '../../engine';
 import {
-  FigSpec, Pose, keyPose, blendPose, layer, lookR2, dmgR2, toolsR2, figureRig, BRACED, BASH, AIM, THROW, KNEEL, STAND, KNOCKED_BACK, LYING_BACK, RISE_KEYS,
+  FigSpec, Pose, keyPose, blendPose, layer, lookR2, dmgR2, toolsR2, figureRig, figProps, figFrame, BRACED, BASH, AIM, THROW, KNEEL, STAND, KNOCKED_BACK, LYING_BACK, RISE_KEYS,
   BLOCK_HIGH, plateWear, tetherLauncher, hipReel, tablet, breaker as breakerTool, controller, halligan1, halligan2, flare as flareHold, GaitW, Role2,
 } from '../../rig';
 import type {FigProps} from '../../rig';
@@ -77,19 +77,21 @@ function smoothSegs(segs: Seg[]): Seg[] {
     const hs = keyRoot(before, s.T0).h, dh = wrapD(hR - hs);
     if (Math.abs(dh) < 8) continue;
     const turn = Math.max(0.25, Math.abs(dh) / 300);
-    const t0 = s.T0 - turn * 0.5, t1 = s.T0 + turn * 0.5;
+    // half the turn after the nominal start, unless that would leave the run too little time for its path
+    const after = s.T1 - (s.T0 + turn * 0.5) > pathLen(s.path) / 5 + 0.3 ? turn * 0.5 : 0;
+    const t1 = s.T0 + after, t0 = Math.max(p.root[0][0] + 0.02, s.T0 - (turn - after));
+    if (t1 - t0 < 0.12) continue;
     const keep = p.root.filter((q) => q[0] < t0 - 1e-3);
     const at0 = keyRoot(p.root.filter((q) => q[0] <= t0), t0);
     p.root = [...keep, [t0, at0.p.x, at0.p.z, at0.h], [t1, s.path[0].x, s.path[0].z, at0.h + wrapD(hR - at0.h)]];
     s.T0 = t1;
   }
-  // fast runs take longer strides (a sprint is not a pitter-patter: ≈3.5 steps/s at 7 m/s), corners are rounded
+  // corners are rounded; a fast run bobs less (the cadence is high on these short legs)
   out.forEach((s) => {
     if (s.kind !== 'run') return;
     s.path = roundPath(s.path);
     const vc = cruise(s.T0, s.T1, pathLen(s.path), s.A ?? 1.0, s.D ?? 0.6);
-    const k = clamp(vc / 3.6, 1, 1.7);
-    if (k > 1.02) s.gait = {...s.gait, stride: s.gait.stride * k, duty: Math.min(s.gait.duty, 0.9 / (s.gait.stride * k)), lift: s.gait.lift * (0.8 + 0.2 * k)};
+    s.gait = {...s.gait, bob: s.gait.bob * clamp(4.2 / Math.max(0.1, vc), 0.45, 1)};
   });
   const res: Seg[] = [];
   out.forEach((s, k) => {
@@ -826,8 +828,51 @@ const riseFix = (role: Role2, T: number, o: CrewOut): CrewOut => {
   const wf = o.spec.world ?? {};
   return {...o, spec: {...o.spec, pose: blendPose(p0, p1, w), world: {...wf, ...(wf.footL ? {footL: mixFoot(ank(0), wf.footL, w)} : {}), ...(wf.footR ? {footR: mixFoot(ank(1), wf.footR, w)} : {})}}};
 };
+/**
+ * The rig drops the pelvis whenever a planted foot is out of the leg's reach (a long stride, a foot downhill) — per
+ * frame, so on a fast run or a slope the body pops down and up. Here the same drop is taken ahead of time and smoothed
+ * (a moving max over ±0.2 s, then a moving mean over ±0.1 s), so the rig's own correction stays ≈0.
+ */
+const NEED = new Map<string, number>();
+const FPS = 30;
+const needRaw = (role: Role2, j: number): number => {
+  const key = `${role}@${j}`;
+  let v = NEED.get(key);
+  if (v === undefined) {
+    if (NEED.size > 6000) NEED.clear();
+    const T = j / FPS, sp = riseFix(role, T, rawAt(role, T)).spec;
+    const base0 = (typeof sp.pose === 'function' ? sp.pose(figFrame(SOLVE_VIEW, sp.pos, sp.heading, sp.anchor)) : sp.pose)?.drop ?? 0;
+    v = Math.max(0, (figProps(SOLVE_VIEW, sp).props.drop ?? 0) - base0);
+    NEED.set(key, v);
+  }
+  return v;
+};
+const needSmooth = (role: Role2, T: number): number => {
+  const j0 = Math.round(T * FPS);
+  const mx = (j: number) => { let m = 0; for (let d = -6; d <= 6; d++) m = Math.max(m, needRaw(role, j + d)); return m; };
+  let sum = 0;
+  for (let d = -3; d <= 3; d++) sum += mx(j0 + d);
+  return sum / 7;
+};
+const needFix = (role: Role2, T: number, o: CrewOut): CrewOut => {
+  const n = needSmooth(role, T);
+  if (n < 0.5) return o;
+  const p = o.spec.pose;
+  const pose = typeof p === 'function' ? (F: Parameters<typeof p>[0]) => { const q = p(F); return {...q, drop: (q.drop ?? 0) + n}; } : {...(p ?? {}), drop: (p?.drop ?? 0) + n};
+  return {...o, spec: {...o.spec, pose}};
+};
+const CREW_CACHE = new Map<string, CrewOut>();
 export const crewAt = (role: Role2, T: number): CrewOut => {
-  const o = riseFix(role, T, rawAt(role, T));
+  const ck = `${role}@${T}`;
+  const c = CREW_CACHE.get(ck);
+  if (c) return c;
+  if (CREW_CACHE.size > 400) CREW_CACHE.clear();
+  const r = crewAt0(role, T);
+  CREW_CACHE.set(ck, r);
+  return r;
+};
+const crewAt0 = (role: Role2, T: number): CrewOut => {
+  const o = needFix(role, T, riseFix(role, T, rawAt(role, T)));
   if (T < M.P3 + 0.45) {
     const d2 = d2CrewAt(role as D2Role, T).spec;
     return {...o, spec: towardSpec(d2, o.spec, smooth((T - M.P3) / 0.45))};

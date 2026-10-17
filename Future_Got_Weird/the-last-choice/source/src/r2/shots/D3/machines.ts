@@ -389,6 +389,16 @@ const h2Drop = (T: number): number => {
   const v = lerp(H2_DROP[j], H2_DROP[j + 1], u - j);
   return v * (1 - smooth(clamp((T - 148.9) / (M.P4 - 148.9))));
 };
+/** the ground under heavy 2's hull, averaged over its footprint (a kerb or a cross street's edge is no jolt; its feet
+ *  are keyed on the real ground). Equal to G on the crater floor where D4 takes it over (checked at 149.86). */
+const H2_GROUND = (x: number, z: number): number => {
+  if (x < 66) return G(x, z);
+  const k = clamp((x - 66) / 2);
+  let sum = 0, wsum = 0;
+  for (let i = -4; i <= 4; i++) for (let j = -4; j <= 4; j++) { const w = (5 - Math.abs(i)) * (5 - Math.abs(j)); sum += w * G(x + i * 0.55, z + j * 0.55); wsum += w; }
+  const avg = sum / wsum;
+  return lerp(G(x, z), avg, k);
+};
 /** the round's aim and where it bursts: the rim crest in front of the Crew, north of the cover slab */
 export const BLAST_AT: V3 = on({x: 48.5, z: -0.2}, 0.25);
 export const heavy2D3 = (T: number): HeavySpec => {
@@ -396,7 +406,7 @@ export const heavy2D3 = (T: number): HeavySpec => {
   const feet = H2_LEGS.map((k) => footAt(k, T, 0.55));
   const look: V3 = T < 128.6 ? {x: r.x - 20, y: 2, z: r.z + 2} : T > 147.0 ? dirHeadAt(T) : on({x: 46.5, z: -0.6}, 1.5);
   return {
-    id: 7401, t: T, pos: {x: r.x, y: 0, z: r.z}, heading: r.h, ground, key: 'tb_heavy2', feet, look,
+    id: 7401, t: T, pos: {x: r.x, y: 0, z: r.z}, heading: r.h, ground: H2_GROUND, key: 'tb_heavy2', feet, look,
     eye: T < 128.6 ? 'cyan' : 'amber', drop: h2Drop(T),
     aim: T > 143.6 && T < EV3.fire ? BLAST_AT : undefined,
     fire: {t0: EV3.fire, target: BLAST_AT},
@@ -416,11 +426,15 @@ const FEET = new WeakMap<object, {L: KP[]; R: KP[]}>();
 /** a path whose heading blends from h0 (start) and into h1 (end) over `span` m (positions unchanged) */
 const turnPath = (path: Path, L: number, h0?: number, h1?: number, span = 1.0): Path => {
   if (h0 === undefined && h1 === undefined) return path;
+  // the turn's direction is fixed once (by the heading a span in): a near-180° turn never flips side mid-way
+  const near = (D: number, ref: number) => (Math.abs(D - ref) > 180 ? D + (D < ref ? 360 : -360) : D);
+  const ref0 = h0 !== undefined ? wrapD(path(Math.min(span, L)).heading - h0) : 0;
+  const ref1 = h1 !== undefined ? wrapD(h1 - path(Math.max(0, L - span)).heading) : 0;
   return (d) => {
     const p = path(d);
     let h = p.heading;
-    if (h0 !== undefined) h = h0 + wrapD(h - h0) * smooth(clamp(d / span));
-    if (h1 !== undefined) h = h + wrapD(h1 - h) * smooth(clamp((d - (L - span)) / span));
+    if (h0 !== undefined) h = h0 + near(wrapD(h - h0), ref0) * smooth(clamp(d / span));
+    if (h1 !== undefined) h = h + near(wrapD(h1 - h), ref1) * smooth(clamp((d - (L - span)) / span));
     return {pos: p.pos, heading: h};
   };
 };
@@ -588,11 +602,16 @@ function buildPlan(id: number, src: Src, k: number, wing: boolean, j: number, li
       const t0 = 117.45 + (k % 4) * 0.12;
       const via: XZ[] = src.name === 'R1' ? [at, {x: 73.5, z: -3.0}, {x: 68.9, z: 4.8}, GATE, {x: 65.4, z: 8.8}, hold] : neOfPipe(at) ? [at, {x: 67.8, z: 5.0}, GATE, {x: 65.4, z: 8.4}, hold] : [at, hold];
       const T1 = t0 + 1.2 + pathLen(via) / 2.3;
-      steps.push({k: 'walk', pts: via, T0: t0, T1, A: 0.5, D: 0.6});
-      steps.push({k: 'keys', root: [[T1, hold.x, hold.z, headingTo(via[via.length - 2], hold)], [T1 + 0.7, hold.x, hold.z, 285]]});
-      at = hold;
       const t1 = 126.7 + (k % 5) * 0.16;
-      steps.push({k: 'walk', pts: [at, line], T0: t1, T1: EV3.lineSet - 0.1 + (k % 3) * 0.08, A: 0.5, D: 0.6});
+      if (T1 + 0.8 > t1) {
+        // the long way round (R1, through the pipe's gap): no hold, straight on into its place in the line
+        steps.push({k: 'walk', pts: [...via.slice(0, -1), line], T0: t0, T1: EV3.lineSet - 0.1 + (k % 3) * 0.08, A: 0.5, D: 0.6});
+      } else {
+        steps.push({k: 'walk', pts: via, T0: t0, T1, A: 0.5, D: 0.6});
+        steps.push({k: 'keys', root: [[T1, hold.x, hold.z, headingTo(via[via.length - 2], hold)], [T1 + 0.7, hold.x, hold.z, 285]]});
+        at = hold;
+        steps.push({k: 'walk', pts: [at, line], T0: t1, T1: EV3.lineSet - 0.1 + (k % 3) * 0.08, A: 0.5, D: 0.6});
+      }
     } else {
       // the vanguard's southern units: down from the east rim (as heavy 1 swings blind), through the gap in the pipe
       const t0 = 121.6 + (j % 6) * 0.2 + (src.x - 81) * 0.08;
@@ -601,7 +620,8 @@ function buildPlan(id: number, src: Src, k: number, wing: boolean, j: number, li
       steps.push({k: 'walk', pts: via, T0: t0, T1: EV3.lineSet - 0.2 + (k % 4) * 0.1, A: 0.6, D: 0.7});
     }
     // in line, facing the rim
-    steps.push({k: 'keys', root: [[EV3.lineSet + (k % 4) * 0.1, line.x, line.z, 270], [EV3.lineSet + 0.7, line.x, line.z, 272]]});
+    const tl = Math.max(EV3.lineSet + (k % 4) * 0.1, stepEnd(steps));
+    steps.push({k: 'keys', root: [[tl, line.x, line.z, 270], [Math.max(tl + 0.3, EV3.lineSet + 0.7), line.x, line.z, 272]]});
     // FORMATION: the line bends into the arc (the middle first, the ripple running out to both ends)
     const r0 = EV3.reform + ripple * 0.09;
     const L1 = Math.hypot(a1.x - line.x, a1.z - line.z);
@@ -620,11 +640,17 @@ function buildPlan(id: number, src: Src, k: number, wing: boolean, j: number, li
   // replacements step over the wrecks in their way (a high step)
   steps.forEach((st) => { if (st.k !== 'walk') return; const pt = pipeCross(st.pts); if (overWreck(st.pts) || (pt > 0.05 && pt < 1.2)) st.lift = Math.max(0.5, pt < 1.2 ? pt + 0.3 : 0); });
   const midIn = steps.some((st) => st.k === 'keys' && !!st.feet);
+  // the eye: as D2 (its survivors locked, amber) or B's army (cyan) left it; at the ADAPT drone's lock the system
+  // re-targets — each takes the state the tableau (D4) gives it
+  const s2 = src.d2 ? unitD2(src.d2, M.P3) : null;
+  const eyeFrom: 'cyan' | 'amber' = s2 && ((s2.lockAt !== undefined && M.P3 >= s2.lockAt) || s2.eye === 'amber') ? 'amber' : 'cyan';
+  const s4 = d4UnitAt(d4PlanOf(id), M.P4);
+  const eyeTo: 'cyan' | 'amber' = s4.lockAt !== undefined && M.P4 >= s4.lockAt ? 'amber' : s4.eye === 'amber' ? 'amber' : 'cyan';
   return {
     id, key: `d3a${id}`, steps,
     act: (T) => ({
       look: T < 126.4 ? undefined : T < EV3.lineSet ? CREW_C : T < 136.4 ? (wing ? CREW_C : DECOY_SRC) : T < 145.4 ? CREW_C : dirHeadAt(T),
-      eye: T < 128.4 ? 'cyan' : 'amber',
+      eye: T < EV3.lock ? eyeFrom : eyeTo,
       lockAt: undefined,
       idle: 0.42,
       ...(midIn && T > INTO_T ? {crouch: D4_BOB * smooth((T - INTO_T) / (M.P4 - INTO_T))} : {}),
@@ -657,25 +683,26 @@ export const SMASH_AT: V3 = (() => {
 export const CUT_AT: V3 = lerp3s(ANCHOR, h1ClampPt(EV3.cut), 0.3);
 export const D_PLANS: DPlan[] = [
   // 7605: the ADAPT drone — holds over heavy 1, climbs out of the dust, locks on, marks the source; holds high
-  {id: 7605, from: {id: 8151, c: {x: 63, y: 7.6, z: -5.5}, r: 1.6}, eye: (T) => (T < EV3.lock ? 'cyan' : 'amber'),
+  // (eyes: each starts as D1/D2 left it and ends as the tableau has it — amber only while it locks, cuts or hunts)
+  {id: 7605, from: {id: 8153, c: {x: 61, y: 8.5, z: 3}, r: 1.2}, eye: (T) => (T >= EV3.lock && T < 131.9 ? 'amber' : 'cyan'),
     keys: [P(126.0, 0, 0, 0), P(EV3.climb0, 61.6, 6.4, -4.2), P(129.1, 61.0, 12.0, -5.2), P(EV3.climb1, 61.4, 19.2, -6.4), P(131.0, 61.8, 20.6, -6.9), P(140.0, 62.8, 21.4, -7.4), P(M.P4, 64, 22, -8)],
     extra: (T) => ({look: T < 129.0 ? undefined : T < 129.75 ? CREW_C : SMASH_AT, mark: T > EV3.mark0 && T < 131.8 ? {target: SMASH_AT, color: 'amber'} : undefined})},
   // 7601: the diver — from over the crater's south, up high, then straight down onto the tablet (136.35); bounces off
-  {id: 7601, from: {id: 8153, c: {x: 61, y: 8.5, z: 3}, r: 1.2}, eye: (T) => (T < 134.2 ? 'cyan' : 'amber'),
+  {id: 7601, from: {id: 8151, c: {x: 63, y: 7.6, z: -5.5}, r: 1.6}, eye: () => 'amber',
     keys: [P(128.0, 0, 0, 0), P(131.5, 57.5, 9.6, 2.6), P(EV3.dive0, 53.6, 9.2, 1.3), P(EV3.smash - 0.32, 48.6, 3.4, 0.25), P(EV3.smash, SMASH_AT.x + 0.05, SMASH_AT.y + 0.08, SMASH_AT.z), P(136.75, 47.6, 3.0, 1.6), P(138.4, 49.5, 6.4, 3.5), P(142.0, 47.5, 7.2, 6.0), P(M.P4, 46, 7.5, 7)],
     extra: (T) => ({struck: {t0: EV3.smash, dir: {x: 0.6, y: 0.5, z: 0.4}}, mark: T > 135.2 && T < EV3.smash ? {target: SMASH_AT, color: 'amber'} : undefined})},
   // 7602: the cutter — under the girder from the north-east, low along the cable, the cutter arm out; then holds
-  {id: 7602, from: {id: 8152, c: {x: 56, y: 6.5, z: -9}, r: 1.2}, eye: (T) => (T < 137.4 ? 'cyan' : 'amber'),
+  {id: 7602, from: {id: 8152, c: {x: 56, y: 6.5, z: -9}, r: 1.2}, eye: (T) => (T >= 137.4 && T < 139.7 ? 'amber' : 'cyan'),
     keys: [P(136.8, 0, 0, 0), P(EV3.swarm0, 56.0, 4.6, -9.6), P(138.45, CUT_AT.x + 1.6, CUT_AT.y + 0.5, CUT_AT.z - 0.35), P(EV3.cut, CUT_AT.x - 0.05, CUT_AT.y + 0.04, CUT_AT.z), P(139.45, CUT_AT.x - 1.4, CUT_AT.y + 1.2, CUT_AT.z + 0.5), P(141.5, 51.0, 7.0, -7.0), P(M.P4, 50, 9, -6)],
     extra: (T) => ({cutter: clamp((T - 138.1) / 0.35) * (1 - clamp((T - 139.6) / 0.5))})},
   // 7603: swarms the flank with it (over the tether operator), then rises to the north
-  {id: 7603, from: {id: 8155, c: {x: 68, y: 9.5, z: -4}, r: 1.2}, eye: (T) => (T < 137.4 ? 'cyan' : 'amber'),
+  {id: 7603, from: {id: 8155, c: {x: 68, y: 9.5, z: -4}, r: 1.2}, eye: (T) => (T >= 137.4 && T < 139.7 ? 'amber' : 'cyan'),
     keys: [P(136.6, 0, 0, 0), P(EV3.swarm0, 58.0, 6.2, -12.2), P(138.6, 50.2, 3.6, -12.6), P(139.6, 47.4, 3.1, -11.4), P(141.0, 46.0, 6.0, -12.0), P(M.P4, 44, 12, -12)]},
   // 7604 and 7607: the hunters — they come in from the south and the east and run the allied drone down
-  {id: 7604, from: {id: 8154, c: {x: 54, y: 5.2, z: 9}, r: 1.2}, eye: (T) => (T < 140.2 ? 'cyan' : 'amber'),
+  {id: 7604, from: {id: 8154, c: {x: 54, y: 5.2, z: 9}, r: 1.2}, eye: (T) => (T >= 140.2 && T < 141.9 ? 'amber' : 'cyan'),
     keys: [P(139.6, 0, 0, 0), P(EV3.hunt0, 50.0, 4.2, 4.8), P(140.9, 46.6, 3.1, 1.6), P(141.2, 44.2, 2.5, 1.0), P(EV3.kill, 43.15, 2.25, 1.15), P(141.75, 42.4, 3.4, 2.6), P(143.5, 45.0, 7.5, 7.5), P(M.P4, 48, 10, 12)],
     extra: (T) => ({mark: T > 140.55 && T < EV3.kill ? {target: allyAt(T), color: 'amber'} : undefined})},
-  {id: 7607, from: {id: 8156, c: {x: 72, y: 7, z: 8}, r: 1.2}, eye: (T) => (T < 140.2 ? 'cyan' : 'amber'),
+  {id: 7607, from: {id: 8156, c: {x: 72, y: 7, z: 8}, r: 1.2}, eye: (T) => (T >= 140.2 && T < 141.9 ? 'amber' : 'cyan'),
     keys: [P(139.0, 0, 0, 0), P(EV3.hunt0, 53.0, 5.6, -0.6), P(140.95, 47.5, 3.8, -1.2), P(141.25, 44.4, 2.6, 0.1), P(141.6, 42.8, 3.2, -0.2), P(143.5, 50.0, 9.0, 4.0), P(M.P4, 70, 17, 12)]},
   // 7606 and 7608: high in the smoke over the avenue (two of B's sky)
   // (from where B's sky has them at P3: up and over to their stations by 125)
