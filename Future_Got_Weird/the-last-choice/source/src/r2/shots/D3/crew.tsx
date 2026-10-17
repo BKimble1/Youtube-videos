@@ -104,17 +104,20 @@ const D4S = (r: Role2) => CREW_START[r];
 /** where they stand on the rim from ~131 until the fall back (north of the cover slab, the crater before them) */
 export const GRP: Record<Role2, {x: number; z: number; h: number}> = {
   director: {x: 45.9, z: -3.2, h: 92}, decoy: DEC_SPOT, drone: {x: 44.0, z: -2.1, h: 88}, flares: {x: 43.1, z: 4.5, h: 80},
-  breaker: {x: 44.3, z: -4.5, h: 95}, runner: {x: 45.3, z: -5.6, h: 98}, tether: {x: 43.7, z: -3.7, h: 90},
+  breaker: {x: 44.3, z: -4.5, h: 95}, runner: {x: 44.6, z: 2.4, h: 86}, tether: {x: 42.9, z: -3.4, h: 90},
 };
 /** the fall back: each runs from the rim (from EV3.fallBack+) on these lines; the blast (EV3.blast) catches them */
+// (D1's wrecks leave a corridor between U1/U2 (z ≤ −1.6) and U4 (z ≥ 3.3) at x 39–42: the breaker, the pilot, the
+// decoy maker and the runner go through it in lanes; the tether operator goes round north of U1/U2, the flare carrier
+// round south of U4; the Director, backing off last, is thrown clear of it)
 const BACK: Record<Role2, XZ[]> = {
-  director: [{x: 45.9, z: -3.2}, {x: 44.6, z: -1.1}],
-  decoy: [{x: 45.0, z: -0.6}, {x: 42.6, z: 0.4}, {x: 40.3, z: 1.0}],
-  drone: [{x: 44.0, z: -2.1}, {x: 41.7, z: -0.6}, {x: 39.6, z: 0.2}],
+  director: [{x: 45.7, z: -2.95}, {x: 44.9, z: -1.9}],
+  decoy: [{x: 44.5, z: -0.7}, {x: 43.6, z: 0.9}, {x: 42.6, z: 1.55}],
+  drone: [{x: 43.65, z: -1.6}, {x: 42.6, z: 0.3}, {x: 40.6, z: 0.75}],
   flares: [{x: 43.1, z: 4.5}, {x: 41.9, z: 5.8}, {x: 39.0, z: 6.5}],
-  breaker: [{x: 44.3, z: -4.5}, {x: 43.0, z: -1.2}, {x: 41.0, z: 0.9}],
-  runner: [{x: 45.3, z: -5.6}, {x: 44.3, z: -2.4}, {x: 42.5, z: -0.2}],
-  tether: [{x: 43.7, z: -3.7}, {x: 42.3, z: -1.1}, {x: 39.6, z: -0.4}, {x: 37.4, z: -1.4}, {x: D4S('tether').pos.x, z: D4S('tether').pos.z}],
+  breaker: [{x: 44.3, z: -4.5}, {x: 43.4, z: -2.0}, {x: 42.0, z: -0.3}],
+  runner: [{x: 44.6, z: 2.4}, {x: 43.4, z: 2.85}],
+  tether: [{x: 42.9, z: -3.4}, {x: 42.2, z: -5.2}, {x: 39.6, z: -5.5}, {x: 37.2, z: -3.4}, {x: D4S('tether').pos.x, z: D4S('tether').pos.z}],
 };
 
 // ================================================================== THE DIRECTOR (clerkC)
@@ -123,8 +126,8 @@ const DIR_RUN1: XZ[] = [D0, {x: 52.3, z: -7.95}, {x: 54.8, z: -8.6}, DIR_BAIT];
 const DIR_BACK = {x: 55.4, z: -9.0};
 const DIR_RUN2: XZ[] = [DIR_BACK, {x: 52.4, z: -8.0}, {x: 50.6, z: -7.7}, {x: 48.6, z: -6.6}, {x: 47.0, z: -4.4}, {x: GRP.director.x, z: GRP.director.z}];
 /** thrown on his back by the blast: from where it catches him to where he lands */
-const DIR_THROWN = {from: {x: 44.6, z: -1.1}, to: {x: 42.35, z: -0.65}};
-const DIR_RUN3: XZ[] = [DIR_THROWN.to, {x: 40.5, z: 0.45}, {x: 38.2, z: 0.95}, {x: D4S('director').pos.x, z: D4S('director').pos.z}];
+const DIR_THROWN = {from: {x: 44.9, z: -1.9}, to: {x: 43.35, z: -2.3}};
+const DIR_RUN3: XZ[] = [DIR_THROWN.to, {x: 42.2, z: -0.6}, {x: 40.4, z: 0.4}, {x: 38.2, z: 0.95}, {x: D4S('director').pos.x, z: D4S('director').pos.z}];
 const DIR_UP = 146.85, DIR_GO = 148.0;
 const DIR_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P3, D0.x, D0.z, 95], [119.3, D0.x, D0.z, 95], [119.42, D0.x + 0.05, D0.z - 0.04, headingTo(D0, DIR_RUN1[1])]], stag: 0.14},
@@ -256,14 +259,14 @@ const BRK_STAND = (() => {
 const RUN_STAND = {x: 62.35, z: -1.35, h: 40};
 const K0 = {x: 48.65, z: -7.19}, R0 = {x: 49.17, z: -6.73};
 const BRK_IN: XZ[] = [K0, {x: 50.6, z: -7.85}, {x: 52.3, z: -8.0}, {x: 54.2, z: -7.0}, {x: 57.5, z: -4.4}, {x: 60.7, z: -2.3}, {x: BRK_STAND.x, z: BRK_STAND.z}];
-const RUN_IN: XZ[] = [R0, {x: 50.4, z: -7.55}, {x: 52.3, z: -7.75}, {x: 54.0, z: -6.6}, {x: 57.2, z: -3.9}, {x: 60.3, z: -1.95}, {x: RUN_STAND.x, z: RUN_STAND.z}];
+const RUN_IN: XZ[] = [R0, {x: 50.3, z: -7.35}, {x: 52.4, z: -7.4}, {x: 54.1, z: -6.0}, {x: 57.0, z: -3.2}, {x: 60.1, z: -1.3}, {x: RUN_STAND.x, z: RUN_STAND.z}];
 /** the escape: west-south-west, out from under the falling side, then on up the slope */
 const BRK_OUT: XZ[] = [{x: BRK_STAND.x - 0.05, z: BRK_STAND.z + 0.05}, {x: 61.6, z: -0.8}, {x: 58.4, z: 0.35}, {x: 55.6, z: 0.9}];
 const RUN_OUT: XZ[] = [{x: RUN_STAND.x, z: RUN_STAND.z}, {x: 61.0, z: -0.55}, {x: 58.1, z: 0.6}, {x: 55.4, z: 1.95}];
 const BRK_UP: XZ[] = [{x: 55.6, z: 0.9}, {x: 52.0, z: -0.1}, {x: 49.6, z: -2.6}, {x: 47.2, z: -4.35}, {x: GRP.breaker.x, z: GRP.breaker.z}];
-const RUN_UP: XZ[] = [{x: 55.4, z: 1.95}, {x: 51.8, z: -0.6}, {x: 49.9, z: -3.4}, {x: 47.6, z: -5.6}, {x: GRP.runner.x, z: GRP.runner.z}];
-const BRK_BACK2: XZ[] = [...BACK.breaker.slice(2), {x: 38.0, z: 1.85}, {x: 34.5, z: 2.5}, {x: D4S('breaker').pos.x, z: D4S('breaker').pos.z}];
-const RUN_BACK2: XZ[] = [{x: 43.2, z: -0.5}, {x: 41.0, z: 1.5}, {x: 37.6, z: 3.5}, {x: D4S('runner').pos.x, z: D4S('runner').pos.z}];
+const RUN_UP: XZ[] = [{x: 55.4, z: 1.95}, {x: 51.0, z: 0.55}, {x: 48.3, z: 0.25}, {x: 46.3, z: 0.6}, {x: GRP.runner.x, z: GRP.runner.z}];
+const BRK_BACK2: XZ[] = [...BACK.breaker.slice(2), {x: 40.0, z: 0.1}, {x: 37.6, z: 1.6}, {x: 34.5, z: 2.5}, {x: D4S('breaker').pos.x, z: D4S('breaker').pos.z}];
+const RUN_BACK2: XZ[] = [{x: 42.7, z: 3.0}, {x: 40.6, z: 2.55}, {x: 37.6, z: 3.5}, {x: D4S('runner').pos.x, z: D4S('runner').pos.z}];
 const BRK_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P3, K0.x, K0.z, 130], [117.4, K0.x, K0.z, 130], [117.85, K0.x - 0.05, K0.z - 0.04, 112], [119.7, K0.x - 0.05, K0.z - 0.04, 108]], stag: 0.12},
   {kind: 'run', path: [{x: K0.x - 0.05, z: K0.z - 0.04}, ...BRK_IN.slice(1)], T0: 119.75, T1: 123.1, gait: GAITS.crouch, A: 0.6, D: 0.6},
@@ -272,28 +275,28 @@ const BRK_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.14, root: [[126.55, BRK_OUT[3].x, BRK_OUT[3].z, runEnd(BRK_OUT).h], [126.95, BRK_OUT[3].x, BRK_OUT[3].z, 60], [127.95, BRK_OUT[3].x, BRK_OUT[3].z, 62], [128.1, BRK_OUT[3].x - 0.05, BRK_OUT[3].z, headingTo(BRK_UP[0], BRK_UP[1])]]},
   {kind: 'run', path: BRK_UP, T0: 128.15, T1: 131.2, gait: GAITS.heavy, A: 0.5, D: 0.7},
   {kind: 'stand', stag: 0.12, root: [[131.2, GRP.breaker.x, GRP.breaker.z, runEnd(BRK_UP).h], [131.7, GRP.breaker.x, GRP.breaker.z, GRP.breaker.h], [EV3.fallBack + 0.1, GRP.breaker.x, GRP.breaker.z, GRP.breaker.h], [EV3.fallBack + 0.3, GRP.breaker.x - 0.05, GRP.breaker.z + 0.05, headingTo(BACK.breaker[0], BACK.breaker[1])]]},
-  {kind: 'run', path: BACK.breaker, T0: EV3.fallBack + 0.3, T1: 146.0, gait: GAITS.heavy, A: 0.4, D: 0.6},
-  {kind: 'stand', stag: 0.12, root: [[146.0, BACK.breaker[2].x, BACK.breaker[2].z, runEnd(BACK.breaker).h], [146.7, BACK.breaker[2].x, BACK.breaker[2].z, runEnd(BACK.breaker).h + 15], [146.9, BACK.breaker[2].x, BACK.breaker[2].z, headingTo(BRK_BACK2[0], BRK_BACK2[1])]]},
-  {kind: 'run', path: BRK_BACK2, T0: 146.95, T1: 149.35, gait: GAITS.heavy, A: 0.4, D: 0.6},
-  {kind: 'stand', stag: 0.1, root: [[149.35, D4S('breaker').pos.x, D4S('breaker').pos.z, runEnd(BRK_BACK2).h], [149.8, D4S('breaker').pos.x, D4S('breaker').pos.z, D4S('breaker').heading]]},
+  {kind: 'run', path: BACK.breaker, T0: EV3.fallBack + 0.1, T1: 145.55, gait: GAITS.heavy, A: 0.35, D: 0.3},
+  {kind: 'stand', stag: 0.12, root: [[145.55, BACK.breaker[2].x, BACK.breaker[2].z, runEnd(BACK.breaker).h], [146.7, BACK.breaker[2].x, BACK.breaker[2].z, runEnd(BACK.breaker).h + 15], [146.9, BACK.breaker[2].x, BACK.breaker[2].z, headingTo(BRK_BACK2[0], BRK_BACK2[1])]]},
+  {kind: 'run', path: BRK_BACK2, T0: 146.95, T1: 148.95, gait: GAITS.heavy, A: 0.4, D: 0.6},
+  {kind: 'stand', stag: 0.1, root: [[148.95, D4S('breaker').pos.x, D4S('breaker').pos.z, runEnd(BRK_BACK2).h], [149.8, D4S('breaker').pos.x, D4S('breaker').pos.z, D4S('breaker').heading]]},
 ];
 const RUN_SEGS: Seg[] = [
-  {kind: 'stand', root: [[M.P3, R0.x, R0.z, 138], [117.45, R0.x, R0.z, 138], [117.9, R0.x + 0.05, R0.z - 0.05, 110], [119.8, R0.x + 0.05, R0.z - 0.05, 108]], stag: 0.12},
-  {kind: 'run', path: [{x: R0.x + 0.05, z: R0.z - 0.05}, ...RUN_IN.slice(1)], T0: 119.85, T1: 123.2, gait: GAITS.crouch, A: 0.6, D: 0.6},
+  {kind: 'stand', root: [[M.P3, R0.x, R0.z, 138], [117.45, R0.x, R0.z, 138], [117.9, R0.x + 0.05, R0.z - 0.05, 110], [120.05, R0.x + 0.05, R0.z - 0.05, 108]], stag: 0.12},
+  {kind: 'run', path: [{x: R0.x + 0.05, z: R0.z - 0.05}, ...RUN_IN.slice(1)], T0: 120.1, T1: 123.2, gait: GAITS.crouch, A: 0.6, D: 0.6},
   {kind: 'stand', stag: 0.16, root: [[123.2, RUN_STAND.x, RUN_STAND.z, runEnd(RUN_IN).h], [123.6, RUN_STAND.x, RUN_STAND.z, RUN_STAND.h], [124.8, RUN_STAND.x, RUN_STAND.z, RUN_STAND.h], [124.92, RUN_STAND.x, RUN_STAND.z, headingTo(RUN_OUT[0], RUN_OUT[1])]]},
   {kind: 'run', path: RUN_OUT, T0: 124.95, T1: 126.5, gait: GAITS.sprint, A: 0.3, D: 0.5},
   {kind: 'stand', stag: 0.14, root: [[126.5, RUN_OUT[3].x, RUN_OUT[3].z, runEnd(RUN_OUT).h], [126.9, RUN_OUT[3].x, RUN_OUT[3].z, 55], [128.0, RUN_OUT[3].x, RUN_OUT[3].z, 55], [128.15, RUN_OUT[3].x - 0.05, RUN_OUT[3].z, headingTo(RUN_UP[0], RUN_UP[1])]]},
   {kind: 'run', path: RUN_UP, T0: 128.2, T1: 131.1, gait: GAITS.run, A: 0.5, D: 0.7},
-  {kind: 'stand', stag: 0.12, root: [[131.1, GRP.runner.x, GRP.runner.z, runEnd(RUN_UP).h], [131.6, GRP.runner.x, GRP.runner.z, GRP.runner.h], [EV3.fallBack + 0.1, GRP.runner.x, GRP.runner.z, GRP.runner.h], [EV3.fallBack + 0.25, GRP.runner.x, GRP.runner.z, headingTo(BACK.runner[0], BACK.runner[1])]]},
-  {kind: 'run', path: BACK.runner.slice(0, 2), T0: EV3.fallBack + 0.25, T1: 145.42, gait: GAITS.run, A: 0.35, D: 0},
+  {kind: 'stand', stag: 0.12, root: [[131.1, GRP.runner.x, GRP.runner.z, runEnd(RUN_UP).h], [131.6, GRP.runner.x, GRP.runner.z, GRP.runner.h], [EV3.fallBack + 0.35, GRP.runner.x, GRP.runner.z, GRP.runner.h], [EV3.fallBack + 0.5, GRP.runner.x, GRP.runner.z, headingTo(BACK.runner[0], BACK.runner[1])]]},
+  {kind: 'run', path: BACK.runner.slice(0, 2), T0: EV3.fallBack + 0.5, T1: 145.42, gait: GAITS.run, A: 0.35, D: 0},
   {kind: 'fn', T0: 145.42, at: (T) => runnerThrown(T)},
-  {kind: 'stand', stag: 0.12, root: [[146.95, 43.2, -0.5, 250], [147.05, 43.2, -0.5, headingTo(RUN_BACK2[0], RUN_BACK2[1])]]},
+  {kind: 'stand', stag: 0.12, root: [[146.95, 42.7, 3.0, 250], [147.05, 42.7, 3.0, headingTo(RUN_BACK2[0], RUN_BACK2[1])]]},
   {kind: 'run', path: RUN_BACK2, T0: 147.1, T1: 149.3, gait: GAITS.run, A: 0.35, D: 0.6},
   {kind: 'stand', stag: 0.12, root: [[149.3, D4S('runner').pos.x, D4S('runner').pos.z, runEnd(RUN_BACK2).h], [149.75, D4S('runner').pos.x, D4S('runner').pos.z, D4S('runner').heading]]},
 ];
 /** the runner: the blast catches him mid-stride; he goes down sideways onto his hip and rolls up */
 const runnerThrown = (T: number) => {
-  const a = BACK.runner[1], b2 = {x: 43.2, z: -0.5};
+  const a = BACK.runner[1], b2 = {x: 42.7, z: 3.0};
   const u = clamp((T - 145.42) / 0.55), e = 1 - (1 - u) * (1 - u);
   const x = lerp(a.x, b2.x, e), z = lerp(a.z, b2.z, e);
   const h = 230;
@@ -420,7 +423,7 @@ export const runnerAt = (T: number): CrewOut => {
 const A0 = {x: 47.3, z: -9.5};
 const TTH_FIRE = {x: 47.65, z: -10.15};
 const TTH_BRACE = {x: 46.1, z: -10.85};
-const TTH_RUN: XZ[] = [{x: TTH_BRACE.x + 0.55, z: TTH_BRACE.z + 0.45}, {x: 46.0, z: -8.2}, {x: 45.0, z: -5.6}, {x: GRP.tether.x, z: GRP.tether.z}];
+const TTH_RUN: XZ[] = [{x: TTH_BRACE.x + 0.55, z: TTH_BRACE.z + 0.45}, {x: 45.2, z: -8.6}, {x: 43.6, z: -6.6}, {x: 43.1, z: -4.6}, {x: GRP.tether.x, z: GRP.tether.z}];
 const TTH_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.16, root: [[M.P3, A0.x, A0.z, 118], [120.3, A0.x, A0.z, 118], [120.95, TTH_FIRE.x, TTH_FIRE.z, 108], [EV3.wrap0, TTH_FIRE.x, TTH_FIRE.z, 108],
     // the wrap: a step to the post, the launcher swept round it, a step back west, braced against the reel
@@ -429,8 +432,8 @@ const TTH_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.14, root: [[EV3.tRun - 0.05, TTH_BRACE.x + 0.55, TTH_BRACE.z + 0.45, 160], [EV3.tRun, TTH_BRACE.x + 0.55, TTH_BRACE.z + 0.45, headingTo(TTH_RUN[0], TTH_RUN[1])]]},
   {kind: 'run', path: TTH_RUN, T0: EV3.tRun, T1: 141.9, gait: GAITS.run, A: 0.4, D: 0.6},
   {kind: 'stand', stag: 0.14, root: [[141.9, GRP.tether.x, GRP.tether.z, runEnd(TTH_RUN).h], [142.4, GRP.tether.x, GRP.tether.z, GRP.tether.h], [EV3.fallBack + 0.12, GRP.tether.x, GRP.tether.z, GRP.tether.h], [EV3.fallBack + 0.25, GRP.tether.x, GRP.tether.z, headingTo(BACK.tether[0], BACK.tether[1])]]},
-  {kind: 'run', path: BACK.tether, T0: EV3.fallBack + 0.25, T1: 148.4, gait: GAITS.run, A: 0.35, D: 0.7},
-  {kind: 'stand', stag: 0.14, root: [[148.4, D4S('tether').pos.x, D4S('tether').pos.z, runEnd(BACK.tether).h], [149.1, D4S('tether').pos.x, D4S('tether').pos.z, D4S('tether').heading]]},
+  {kind: 'run', path: BACK.tether, T0: EV3.fallBack + 0.05, T1: 148.2, gait: GAITS.run, A: 0.35, D: 0.7},
+  {kind: 'stand', stag: 0.14, root: [[148.2, D4S('tether').pos.x, D4S('tether').pos.z, runEnd(BACK.tether).h], [149.1, D4S('tether').pos.x, D4S('tether').pos.z, D4S('tether').heading]]},
 ];
 /** the cable cut: the pull goes slack, she sits down hard backward, then scrambles up */
 const tetherFallBody = (T: number) => {
@@ -521,14 +524,14 @@ export const tetherAt = (T: number): CrewOut => {
 // ================================================================== THE DRONE PILOT (checker)
 const P0 = {x: 46.0, z: -5.0};
 const PIL_RUN: XZ[] = [{x: P0.x - 0.05, z: P0.z + 0.05}, {x: 45.3, z: -3.6}, {x: GRP.drone.x, z: GRP.drone.z}];
-const PIL_BACK2: XZ[] = [{x: 41.4, z: -0.5}, {x: 38.4, z: 0.25}, {x: D4S('drone').pos.x, z: D4S('drone').pos.z}];
+const PIL_BACK2: XZ[] = [{x: 40.6, z: 0.75}, {x: 38.4, z: 0.6}, {x: D4S('drone').pos.x, z: D4S('drone').pos.z}];
 const PIL_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.08, root: [[M.P3, P0.x, P0.z, 100], [127.6, P0.x, P0.z, 100], [127.75, P0.x - 0.05, P0.z + 0.05, headingTo(PIL_RUN[0], PIL_RUN[1])]]},
   {kind: 'run', path: PIL_RUN, T0: 127.8, T1: 129.6, gait: GAITS.walk, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.08, root: [[129.6, GRP.drone.x, GRP.drone.z, runEnd(PIL_RUN).h], [130.1, GRP.drone.x, GRP.drone.z, GRP.drone.h], [140.5, GRP.drone.x, GRP.drone.z, GRP.drone.h],
-    [141.0, GRP.drone.x - 0.2, GRP.drone.z + 0.2, 180], [141.7, GRP.drone.x - 0.35, GRP.drone.z + 0.5, 205], [EV3.fallBack + 0.12, GRP.drone.x - 0.35, GRP.drone.z + 0.5, 140], [EV3.fallBack + 0.28, GRP.drone.x - 0.35, GRP.drone.z + 0.5, headingTo({x: GRP.drone.x - 0.35, z: GRP.drone.z + 0.5}, BACK.drone[1])]]},
-  {kind: 'run', path: [{x: GRP.drone.x - 0.35, z: GRP.drone.z + 0.5}, ...BACK.drone.slice(1)], T0: EV3.fallBack + 0.3, T1: 145.95, gait: GAITS.run, A: 0.35, D: 0.35},
-  {kind: 'stand', stag: 0.08, root: [[145.95, BACK.drone[2].x, BACK.drone[2].z, runEnd(BACK.drone).h], [146.65, BACK.drone[2].x, BACK.drone[2].z, runEnd(BACK.drone).h - 10], [146.8, BACK.drone[2].x, BACK.drone[2].z, headingTo(BACK.drone[2], PIL_BACK2[1])]]},
+    [141.0, GRP.drone.x - 0.2, GRP.drone.z + 0.2, 180], [141.7, GRP.drone.x - 0.35, GRP.drone.z + 0.5, 205], [EV3.fallBack + 0.02, GRP.drone.x - 0.35, GRP.drone.z + 0.5, 140], [EV3.fallBack + 0.15, GRP.drone.x - 0.35, GRP.drone.z + 0.5, headingTo({x: GRP.drone.x - 0.35, z: GRP.drone.z + 0.5}, BACK.drone[1])]]},
+  {kind: 'run', path: [{x: GRP.drone.x - 0.35, z: GRP.drone.z + 0.5}, ...BACK.drone.slice(1)], T0: EV3.fallBack + 0.18, T1: 145.75, gait: GAITS.run, A: 0.35, D: 0.35},
+  {kind: 'stand', stag: 0.08, root: [[145.75, BACK.drone[2].x, BACK.drone[2].z, runEnd(BACK.drone).h], [146.65, BACK.drone[2].x, BACK.drone[2].z, runEnd(BACK.drone).h - 10], [146.8, BACK.drone[2].x, BACK.drone[2].z, headingTo(BACK.drone[2], PIL_BACK2[1])]]},
   {kind: 'run', path: [{x: BACK.drone[2].x, z: BACK.drone[2].z}, ...PIL_BACK2.slice(1)], T0: 146.85, T1: 149.2, gait: GAITS.run, A: 0.4, D: 0.6},
   {kind: 'stand', stag: 0.08, root: [[149.2, D4S('drone').pos.x, D4S('drone').pos.z, runEnd(PIL_BACK2).h], [149.75, D4S('drone').pos.x, D4S('drone').pos.z, D4S('drone').heading]]},
 ];
@@ -635,8 +638,8 @@ export const flareFrom = (): V3 => flaresAt(EV3.flareRel).pts!.hand;
 // ================================================================== THE DECOY MAKER (clerkB)
 const B0 = {x: 46.9, z: -3.8};
 const DEC_RUN: XZ[] = [{x: B0.x - 0.05, z: B0.z + 0.05}, {x: 45.8, z: -2.2}, {x: DEC_SPOT.x, z: DEC_SPOT.z}];
-const DEC_THROWN = {from: {x: 42.6, z: 0.4}, to: {x: 41.2, z: 0.75}};
-const DEC_BACK2: XZ[] = [{x: DEC_THROWN.to.x, z: DEC_THROWN.to.z}, {x: 38.6, z: 1.6}, {x: 35.0, z: 2.0}, {x: D4S('decoy').pos.x, z: D4S('decoy').pos.z}];
+const DEC_THROWN = {from: {x: 42.6, z: 1.55}, to: {x: 41.5, z: 1.8}};
+const DEC_BACK2: XZ[] = [{x: DEC_THROWN.to.x, z: DEC_THROWN.to.z}, {x: 38.8, z: 1.9}, {x: 35.0, z: 2.0}, {x: D4S('decoy').pos.x, z: D4S('decoy').pos.z}];
 const DEC_UP = 146.25;
 const DEC_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.06, root: [[M.P3, B0.x, B0.z, 80], [127.4, B0.x, B0.z, 80], [127.55, B0.x - 0.05, B0.z + 0.05, headingTo(DEC_RUN[0], DEC_RUN[1])]]},
@@ -644,7 +647,7 @@ const DEC_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.06, root: [[129.5, DEC_SPOT.x, DEC_SPOT.z, runEnd(DEC_RUN).h], [130.0, DEC_SPOT.x, DEC_SPOT.z, DEC_SPOT.h], [EV3.smash, DEC_SPOT.x, DEC_SPOT.z, DEC_SPOT.h],
     // the smash: she reels back from it
     [EV3.smash + 0.35, DEC_SPOT.x - 0.45, DEC_SPOT.z - 0.1, DEC_SPOT.h + 20], [137.2, DEC_SPOT.x - 0.5, DEC_SPOT.z - 0.1, DEC_SPOT.h + 15], [EV3.fallBack, DEC_SPOT.x - 0.5, DEC_SPOT.z - 0.1, DEC_SPOT.h + 5], [EV3.fallBack + 0.15, DEC_SPOT.x - 0.5, DEC_SPOT.z - 0.1, headingTo({x: DEC_SPOT.x - 0.5, z: DEC_SPOT.z - 0.1}, BACK.decoy[1])]]},
-  {kind: 'run', path: [{x: DEC_SPOT.x - 0.5, z: DEC_SPOT.z - 0.1}, BACK.decoy[1]], T0: EV3.fallBack + 0.2, T1: 145.42, gait: GAITS.run, A: 0.35, D: 0},
+  {kind: 'run', path: [{x: DEC_SPOT.x - 0.5, z: DEC_SPOT.z - 0.1}, BACK.decoy[1], BACK.decoy[2]], T0: EV3.fallBack + 0.2, T1: 145.42, gait: GAITS.run, A: 0.35, D: 0},
   {kind: 'fn', T0: 145.42, at: (T) => decoyThrownBody(T)},
   {kind: 'stand', stag: 0.06, root: [[DEC_UP + 0.8, DEC_THROWN.to.x + 0.3, DEC_THROWN.to.z, 268], [DEC_UP + 0.88, DEC_THROWN.to.x + 0.3, DEC_THROWN.to.z, headingTo(DEC_BACK2[0], DEC_BACK2[1])]]},
   {kind: 'run', path: [{x: DEC_THROWN.to.x + 0.3, z: DEC_THROWN.to.z}, ...DEC_BACK2.slice(1)], T0: DEC_UP + 0.9, T1: 149.3, gait: GAITS.run, A: 0.35, D: 0.6},

@@ -206,5 +206,5 @@ export const RISE_KEYS: Key[] = [
   [7.2, {drop: 16, bodyPitch: 0, lean: 6, head: {pitch: 0}, handL: 'fist', handR: 'fist', face: {mouth: 'pant', brows: -0.3}, breath: 0.55}],
 ];
 
-export const HANDS: HandShape[] = ['relaxed', 'fist', 'open', 'grip', 'brace', 'reach', 'point', 'limp'];
+export const HANDS: HandShape[] = ['relaxed', 'fist', 'open', 'grip', 'brace', 'reach', 'point', 'limp', 'pinch'];
 void lerp;

@@ -11,7 +11,7 @@ import {BLOOD} from '../../theme';
 import {lerp, clamp, f2} from '../../kit/math';
 import {blobPath} from './util';
 
-export type HandShape = 'relaxed' | 'fist' | 'open' | 'grip' | 'brace' | 'reach' | 'point' | 'limp';
+export type HandShape = 'relaxed' | 'fist' | 'open' | 'grip' | 'brace' | 'reach' | 'point' | 'limp' | 'pinch';
 
 type HG = {s: number; ink: number; skin: string; inkC: string; pv: number; thumb: number; blood?: number; dirt?: number; spread?: number; holding?: React.ReactNode; shadeC?: string};
 
@@ -112,6 +112,20 @@ export const handGlyph = (shape: HandShape, o: HG): [React.ReactElement, React.R
       if (palm || edge) back.push(thumbEl);
       break;
     }
+    case 'pinch': {
+      // thumb and index close on a small round object (a dial knob) at (PINCH_X, 0); the other three fingers curl into
+      // the palm. The space between the two fingertips stays open so the knob shows between them.
+      const thumbEl = <path key="th" d={cap(9, 12, 26, 9, 8.5, k)} {...sty} />;
+      const thumbTip = <path key="tt" d={cap(26, 9, PINCH_X - 1, 6.2, 7.4, k)} {...sty} />;
+      if (!palm && !edge) back.push(thumbEl, thumbTip);
+      back.push(<g key="p" {...sty}>{rrect(-1, -13, 25, 13, 10, k)}</g>);
+      back.push(<g key="cf" {...sty}>{rrect(14, -4, 28, 13, 6.5, k)}</g>);
+      if (!edge) [1.5, 7].forEach((y, i) => back.push(<path key={`ck${i}`} d={`M ${17 * k} ${y * k} L ${26 * k} ${(y + 0.4) * k}`} {...line} />));
+      back.push(<path key="ix1" d={cap(20, -8, 30, -8.6, 7.6, k)} {...sty} />);
+      back.push(<path key="ix2" d={cap(30, -8.6, PINCH_X + 1, -6, 7, k)} {...sty} />);
+      if (palm || edge) back.push(thumbEl, thumbTip);
+      break;
+    }
     case 'point': {
       if (!palm && !edge) back.push(<path key="th" d={cap(8, 12, 21, 11, 8, k)} {...sty} />);
       back.push(<g key="p" {...sty}>{rrect(-1, -14, 26, 13, 11, k)}</g>);
@@ -132,3 +146,5 @@ export const handGlyph = (shape: HandShape, o: HG): [React.ReactElement, React.R
 
 /** Approximate world-ish grip offset: where a held handle's centre sits in hand-local units (for props). */
 export const GRIP_X = 21;
+/** Where a pinched knob's centre sits in hand-local units (between the thumb and index tips). */
+export const PINCH_X = 37;

@@ -8,8 +8,11 @@ import {groundH, RADIO} from '../../world';
 import {radioFn} from '../../world/props';
 import {
   FigSpec, figureRig, figProps, figLight, figureParts, Pose, keyPose, layer, SLUMP, KNEEL, LYING_BACK, STAND, lookR2, dmgR2,
-  plateWear, hipReel, Part, figureSprite, SH_X, SH_H, UPPER, FORE, HIP_H, THIGH, SHIN,
+  plateWear, hipReel, Part, figureSprite, SH_X, SH_H, UPPER, FORE, HIP_H, THIGH, SHIN, PINCH_X,
 } from '../../rig';
+
+/** rig units per metre (440 units = 1.75 m) */
+const RIG_PER_M = 251.4;
 import {TB_CREW, DIRECTOR_SEAT} from './tableau';
 import {KNOB_POS} from './camera';
 import {M} from '../../timing';
@@ -166,9 +169,10 @@ const knobHand = (T: number) => {
   // the hand lies across the knob's face from her side, fingers toward the rim and a little in: as the knob turns the
   // whole hand turns round it (a dial turned by the wrist, readable at a glance)
   const fingers = norm3(add3(mul3(inPlane(hw + 180), 0.85), mul3(KNOB.n, -0.5)));
-  // the curled fingertips close over the knob's near half; its far half, with the pointer, stays in view
-  const tip = add3(KNOB.c, add3(mul3(KNOB.n, 0.015), mul3(inPlane(hw), 0.002)));
-  const wrist = sub3(tip, mul3(fingers, 0.125));
+  // thumb and index pinch the knob's rim (rig 'pinch': the knob sits between the two fingertips, PINCH_X along the
+  // hand, so it shows between them); the pointer on its face points on past the fingertips
+  const pinchC = add3(KNOB.c, mul3(KNOB.n, 0.01));
+  const wrist = sub3(pinchC, mul3(fingers, PINCH_X / RIG_PER_M));
   const toCam = norm3(sub3(KNOB_POS, KNOB.c));
   const dp = toCam.x * fingers.x + toCam.y * fingers.y + toCam.z * fingers.z;
   const palm = norm3(sub3(toCam, mul3(fingers, dp)));
@@ -348,7 +352,7 @@ export const pilotSpec = (T: number, anchor?: V3): FigSpec => {
   const restR = at3(pos, heading, 0.2, 0.17, 0.33);
   const kh = knobHand(T);
   const pre = add3(kh.wrist, add3(mul3(KNOB.n, 0.15), {x: 0, y: -0.05, z: 0}));
-  let hR: V3, shapeR: 'open' | 'relaxed' | 'grip' = 'relaxed', orR = {fingers: kh.fingers, palm: kh.palm, w: 0};
+  let hR: V3, shapeR: 'open' | 'relaxed' | 'grip' | 'pinch' = 'relaxed', orR = {fingers: kh.fingers, palm: kh.palm, w: 0};
   const clasp = {palm: {x: 0, y: 1, z: 0}, fingers: norm3({x: -toHer.x, y: -0.15, z: -toHer.z}), w: reach};
   if (T < LET_R) {
     hR = lerp3(lerp3(end.handR, restR0, up), under, reach);
@@ -364,11 +368,11 @@ export const pilotSpec = (T: number, anchor?: V3): FigSpec => {
     const k1 = smooth((T - REACH_A) / (GRIP_T - 0.3 - REACH_A));
     const k2 = smooth((T - (GRIP_T - 0.3)) / 0.3);
     hR = lerp3(lerp3(restR, pre, k1), kh.wrist, k2);
-    shapeR = T > GRIP_T - 0.06 ? 'grip' : T > REACH_A + 0.25 ? 'open' : 'relaxed';
+    shapeR = T > GRIP_T - 0.06 ? 'pinch' : T > REACH_A + 0.25 ? 'open' : 'relaxed';
     orR = {fingers: kh.fingers, palm: kh.palm, w: smooth((T - (REACH_A + 0.1)) / 0.4)};
   } else if (T < RELEASE_T) {
     hR = kh.wrist;
-    shapeR = 'grip';
+    shapeR = 'pinch';
     orR = {fingers: kh.fingers, palm: kh.palm, w: 1};
   } else {
     // off the knob (back along its axis, fingers opening), then over onto his hand
@@ -376,7 +380,7 @@ export const pilotSpec = (T: number, anchor?: V3): FigSpec => {
     const k = smooth((T - (RELEASE_T + 0.3)) / (RETURN_T - RELEASE_T - 0.3));
     const away = add3(kh.wrist, add3(mul3(KNOB.n, 0.1), {x: 0, y: 0.02, z: 0}));
     hR = lerp3(lerp3(kh.wrist, away, off), top, k);
-    shapeR = T < RELEASE_T + 0.12 ? 'grip' : T < RELEASE_T + 0.4 ? 'open' : 'relaxed';
+    shapeR = T < RELEASE_T + 0.12 ? 'pinch' : T < RELEASE_T + 0.4 ? 'open' : 'relaxed';
     const onHim = {palm: {x: 0, y: -1, z: 0}, fingers: norm3({x: fwdD.x, y: -0.4, z: fwdD.z}), w: smooth((T - (RETURN_T - 0.4)) / 0.4)};
     orR = k < 0.5 ? {fingers: kh.fingers, palm: kh.palm, w: 1 - smooth(k / 0.5)} : onHim;
   }
