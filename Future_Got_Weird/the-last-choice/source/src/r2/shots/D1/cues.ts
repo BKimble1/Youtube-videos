@@ -6,7 +6,7 @@ import type {Cue} from '../../../film/cue';
 import {M} from '../../timing';
 
 const CLASH = M.CLASH + 0.03;
-const BR1 = 79.1, BR2 = 81.78, BR3_FIRE = 82.98, BR3_BITE = 83.28, BR3_TAUT = 83.45, BR3_CRASH = 84.06, BR4 = 86.36, BR4_FALL = 86.98;
+const BR1 = 79.1, BR2 = 81.78, BR3_FIRE = 82.98, BR3_BITE = 83.28, BR3_TAUT = 83.45, BR3_CRASH = 84.06, BR4 = 86.36, BR4_RELEASE = 86.95, BR4_FALL = 87.35, BR4_LAND = 88.15;
 
 export const CUES_D1: Cue[] = [
   // ---- D1-1 the charge down the ridge (59.95–64.00): rubble under seven people, breath, the ally drone overhead
@@ -30,11 +30,12 @@ export const CUES_D1: Cue[] = [
   {t: 67.25, kind: 'sensor_lock', gain: -6, pan: 0.6, dist: 0.35},
   {t: 67.4, kind: 'robot_step_heavy', gain: -2, pan: 0.6, dist: 0.3},
   {t: 67.95, kind: 'servo_whir', gain: -4, pan: 0.4, dist: 0.25},
-  // ---- D1-3 CLASH, wide (68.30–72.00)
-  {t: CLASH, kind: 'shield_bash', gain: 2, pan: -0.05, dist: 0.55},
-  {t: CLASH + 0.01, kind: 'armor_hit', gain: -2, pan: 0.0, dist: 0.55},
-  {t: 68.5, kind: 'robot_step_heavy', gain: -4, pan: 0.15, dist: 0.55},
-  {t: 68.74, kind: 'armor_hit', gain: -9, pan: 0.15, dist: 0.6},
+  // ---- D1-3 CLASH: low and close on the slam (68.30–69.5), then the camera cranes back over the line (–72.00)
+  {t: CLASH, kind: 'shield_bash', gain: 3, pan: 0.05, dist: 0.25},
+  {t: CLASH + 0.01, kind: 'armor_hit', gain: -1, pan: 0.05, dist: 0.25},
+  {t: CLASH + 0.02, kind: 'breath_exert', gain: -4, pan: -0.1, dist: 0.25},
+  {t: 68.5, kind: 'robot_step_heavy', gain: -3, pan: 0.3, dist: 0.3},
+  {t: 68.74, kind: 'armor_hit', gain: -7, pan: 0.35, dist: 0.35},
   {t: 69.1, kind: 'servo_whir', gain: -6, pan: 0.45, dist: 0.6},
   {t: 69.45, kind: 'robot_swing', gain: -4, pan: 0.35, dist: 0.6},
   {t: 70.2, kind: 'robot_swing', gain: -4, pan: 0.0, dist: 0.6},
@@ -68,12 +69,9 @@ export const CUES_D1: Cue[] = [
   {t: 76.77, kind: 'sparks', gain: -4, pan: 0.15, dist: 0.15},
   {t: 76.8, kind: 'elec_arc', gain: -5, pan: 0.15, dist: 0.15},
   {t: 77.8, kind: 'robot_fall', gain: -6, pan: 0.2, dist: 0.35},
-  // 77.2 the allied drone harries an enemy drone; a flare blinds an eye
+  // 77.2 a flare blinds an eye (the drone harry is shown in D2)
   {t: 77.05, kind: 'flare_ignite', gain: -1, pan: -0.45, dist: 0.25},
-  {t: 77.2, kind: 'ally_drone', gain: -4, pan: 0.1, dist: 0.3, dur: 1.2, fade: 0.3},
   {t: 77.3, kind: 'cloth_move', gain: -6, pan: -0.4, dist: 0.25},
-  {t: 77.42, kind: 'drone_pass', gain: -2, pan: 0.3, dist: 0.3},
-  {t: 77.43, kind: 'armor_hit', gain: -12, pan: 0.3, dist: 0.35},
   {t: 77.72, kind: 'elec_arc', gain: -6, pan: 0.45, dist: 0.3},
   {t: 77.8, kind: 'servo_whir', gain: -6, pan: 0.45, dist: 0.3},
   // ---- D1-5 BR1: the swing meets the plate; it dents; his heels skid (78.46–81.34)
@@ -108,20 +106,30 @@ export const CUES_D1: Cue[] = [
   {t: 84.3, kind: 'robot_fall', gain: 0, pan: 0.15, dist: 0.5},
   {t: 84.91, kind: 'robot_fall', gain: -3, pan: 0.1, dist: 0.5},
   {t: 84.95, kind: 'debris_rain', gain: -10, pan: 0.1, dist: 0.5},
-  // ---- D1-8 BR4: the shoulder charge; it goes over into the crater (85.64–89.78)
-  {t: 85.4, kind: 'breath_exert', gain: -4, pan: -0.1, dist: 0.2},
-  {t: 85.8, kind: 'steps_gravel', gain: -1, pan: -0.05, dist: 0.2},
-  {t: 86.1, kind: 'breath_exert', gain: 0, pan: -0.05, dist: 0.2},
-  {t: BR4, kind: 'shield_bash', gain: 3, pan: 0.0, dist: 0.3},
-  {t: BR4 + 0.01, kind: 'armor_hit', gain: 0, pan: 0.0, dist: 0.3},
-  {t: 86.6, kind: 'robot_step_heavy', gain: -3, pan: 0.05, dist: 0.3},
-  {t: 86.82, kind: 'robot_step_heavy', gain: -4, pan: 0.05, dist: 0.35},
-  {t: BR4_FALL + 0.1, kind: 'servo_heavy', gain: -6, pan: 0.05, dist: 0.4},
-  {t: BR4_FALL + 0.8, kind: 'robot_fall', gain: 1, pan: 0.05, dist: 0.45},
-  {t: BR4_FALL + 0.85, kind: 'debris_rain', gain: -8, pan: 0.05, dist: 0.45},
-  {t: 87.3, kind: 'steps_gravel', gain: -4, pan: -0.05, dist: 0.25},
-  {t: 88.1, kind: 'breath_ragged', gain: -2, pan: -0.05, dist: 0.25},
-  {t: 88.6, kind: 'drone_pass', gain: -10, pan: 0.5, dist: 0.8},
+  // ---- D1-8 BR4: the shoulder drive; it goes over the crest and slides down into the crater (85.64–89.78)
+  {t: 84.4, kind: 'steps_gravel', gain: -6, pan: 0.3, dist: 0.4},
+  {t: 85.62, kind: 'breath_exert', gain: -3, pan: 0.1, dist: 0.15},
+  {t: 85.86, kind: 'steps_gravel', gain: -2, pan: 0.1, dist: 0.15},
+  {t: 86.12, kind: 'steps_gravel', gain: 0, pan: 0.1, dist: 0.15, rate: 1.1},
+  {t: BR4, kind: 'shield_bash', gain: 3, pan: 0.05, dist: 0.25},
+  {t: BR4 + 0.01, kind: 'armor_hit', gain: 0, pan: 0.05, dist: 0.25},
+  {t: BR4 + 0.02, kind: 'breath_exert', gain: 0, pan: 0.05, dist: 0.15},
+  // his three driving steps; its feet skid back up the slope
+  {t: 86.46, kind: 'steps_gravel', gain: -1, pan: 0.05, dist: 0.2, rate: 1.15},
+  {t: 86.5, kind: 'rubble_shift', gain: -6, pan: 0.1, dist: 0.3, dur: 0.5, fade: 0.15},
+  {t: 86.7, kind: 'steps_gravel', gain: -2, pan: 0.05, dist: 0.2, rate: 1.1},
+  {t: 86.86, kind: 'steps_gravel', gain: -2, pan: 0.05, dist: 0.2, rate: 1.2},
+  {t: BR4_RELEASE, kind: 'breath_exert', gain: -2, pan: 0.05, dist: 0.2},
+  {t: BR4_RELEASE + 0.2, kind: 'robot_step_heavy', gain: -3, pan: 0.15, dist: 0.3},
+  {t: BR4_FALL - 0.02, kind: 'robot_step_heavy', gain: -4, pan: 0.15, dist: 0.3},
+  {t: BR4_FALL + 0.1, kind: 'servo_heavy', gain: -6, pan: 0.15, dist: 0.35},
+  {t: BR4_LAND, kind: 'robot_fall', gain: 1, pan: 0.0, dist: 0.4},
+  // the slide down the inner slope
+  {t: BR4_LAND - 0.05, kind: 'rubble_shift', gain: -3, pan: 0.0, dist: 0.4, dur: 1.2, fade: 0.4},
+  {t: BR4_LAND + 0.1, kind: 'debris_rain', gain: -8, pan: 0.0, dist: 0.45},
+  {t: 87.45, kind: 'steps_gravel', gain: -4, pan: 0.15, dist: 0.2},
+  {t: 88.3, kind: 'breath_ragged', gain: -2, pan: 0.3, dist: 0.2},
+  {t: 89.0, kind: 'drone_pass', gain: -10, pan: -0.4, dist: 0.8},
   // ---- D1-9 GAIN / BREATH: through the gap to the slab; looks, panting (89.78–94.30)
   {t: M.GAIN1 + 0.1, kind: 'steps_gravel', gain: -3, pan: -0.3, dist: 0.25},
   {t: 90.4, kind: 'steps_gravel', gain: -4, pan: 0.2, dist: 0.25},

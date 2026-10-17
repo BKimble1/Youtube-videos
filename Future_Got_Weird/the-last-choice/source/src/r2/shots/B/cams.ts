@@ -30,18 +30,17 @@ export const CAM_B2: CamKey[] = [
   {t: SHOT_T.B2[1] - SHOT_T.B2[0], pos: gp(R1.x + 1.95, R1.z + 3.55, 0.66), target: {x: R1.x + 0.0, y: R1.y + 1.25, z: R1.z}, fov: 39},
 ];
 
-/** B3: behind his left shoulder at 1.5 m; it rises and swings over to his right shoulder as he steps down to the
- * brink, and backs off while the lens lengthens (a slow dolly-zoom), so the army grows behind him into a wall of
- * machines: his head and shoulders stay a dark shape in the lower left. */
-const HEAD3 = {x: R1.x, y: R1.y + 1.58, z: R1.z}; // above his head (crouched, braced, it is ~1.25 m over his feet): it sits low in frame
-const HEADS = {x: STAND.x, y: STAND.y + 1.22, z: STAND.z}; // his head on the brink
-const ARMY_AIM = {x: 84, y: 2.0, z: -2.5};
+/** B3: behind his right shoulder (south-west of him, so he holds the lower-left third and the army the right
+ * two-thirds). It starts level with his head 4.5 m back; as he steps down to the brink it cranes up and back over the
+ * crest to ~1 m over his head and 6 m back and holds there, drifting, through H1/H2 and the eye ripple — a high
+ * over-shoulder on a long lens (V 14°) that holds the whole army, ~85–90 px a machine at full res. From that height
+ * the slab he crawled out of and the van lie below the frame, not between the lens and him. (Aims solved so his head
+ * sits at about (0.24, 0.77) of the frame at each key; the lens stays 14–17°, no dolly zoom.) */
+const HEADS = {x: STAND.x, y: STAND.y + 1.24, z: STAND.z}; // his head on the brink (he stands crouched, braced)
 export const CAM_B3: CamKey[] = [
-  {t: 0, pos: {x: HEAD3.x - 1.25, y: HEAD3.y + 0.12, z: HEAD3.z - 0.8}, target: {x: HEAD3.x + 30, y: HEAD3.y - 2.6, z: HEAD3.z + 6.5}, fov: 42},
-  {t: 1.05, pos: {x: HEADS.x - 2.0, y: HEADS.y + 0.55, z: HEADS.z + 0.35}, target: {x: 70, y: -4.5, z: -1.5}, fov: 32},
-  // (the slab he crawled out of lies between the lens and him from here: it hides him below the chest)
-  {t: 2.1, pos: {x: HEADS.x - 3.6, y: HEADS.y + 0.6, z: HEADS.z + 0.62}, target: ARMY_AIM, fov: 20},
-  {t: SHOT_T.B3[1] - SHOT_T.B3[0], pos: {x: HEADS.x - 8.0, y: HEADS.y + 0.52, z: HEADS.z + 1.05}, target: ARMY_AIM, fov: 10},
+  {t: 0, pos: {x: -3.32, y: 4.79, z: 2.67}, target: {x: 96.0, y: 6.7, z: -8.6}, fov: 17},
+  {t: 1.7, pos: add3(HEADS, {x: -6.0, y: 0.9, z: 1.5}), target: {x: 94.5, y: -2.7, z: -9.7}, fov: 14},
+  {t: SHOT_T.B3[1] - SHOT_T.B3[0], pos: add3(HEADS, {x: -6.5, y: 1.11, z: 1.62}), target: {x: 93.8, y: -4.4, z: -9.5}, fov: 14},
 ];
 
 /** B4: from inside the army, riding level with the foreground heavy (HEAVIES_B[0]) ~17 m behind its head and 16 m to its

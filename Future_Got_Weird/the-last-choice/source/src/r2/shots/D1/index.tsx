@@ -11,11 +11,11 @@ import {D1_9} from './Gain';
 export const SHOTS_D1: R2Shot[] = [
   {id: 'D1-1', sec: 'D1', start: M.CHARGE, end: 64.0, note: 'CHARGE: they run down the ridge diagonally past a low camera at its south-east foot', C: D1_1},
   {id: 'D1-2', sec: 'D1', start: 64.0, end: M.CLASH, note: 'tracking alongside the Director across the avenue; the front line comes over the rim; the lines converge', C: D1_2},
-  {id: 'D1-3', sec: 'D1', start: M.CLASH, end: 72.0, note: 'CLASH, wide from the south: his plate slams into the first unit, which staggers into the next; everyone engages', C: D1_3},
+  {id: 'D1-3', sec: 'D1', start: M.CLASH, end: 72.0, note: 'CLASH: low and close from the south-south-west, his plate slams into the first unit, which staggers into the next; the camera cranes back as everyone engages', C: D1_3},
   {id: 'D1-4a', sec: 'D1', start: 72.0, end: 74.0, note: 'the breaker breaks a knee joint; sparks; the unit drops to a knee', C: D1_4a},
   {id: 'D1-4b', sec: 'D1', start: 74.0, end: 75.8, note: 'the tether yanks one off balance', C: D1_4b},
   {id: 'D1-4c', sec: 'D1', start: 75.8, end: 77.2, note: 'the runner pries a back plate and rips the cables', C: D1_4c},
-  {id: 'D1-4d', sec: 'D1', start: 77.2, end: M.BR1, note: 'the allied drone harries an enemy drone; a flare blinds an eye', C: D1_4d},
+  {id: 'D1-4d', sec: 'D1', start: 77.2, end: M.BR1, note: 'a flare blinds an eye (the drone harry moves to D2)', C: D1_4d},
   {id: 'D1-5', sec: 'D1', start: M.BR1, end: M.BR2, note: 'BR1: a unit winds up and swings; the plate blocks and dents; he skids back on his heels', C: D1_5},
   {id: 'D1-6', sec: 'D1', start: M.BR2, end: M.BR3, note: 'BR2: the breaker smashes its chest plate; armour flies; the unit reels', C: D1_6},
   {id: 'D1-7', sec: 'D1', start: M.BR3, end: M.BR4, note: 'BR3: the tether swings the toppling unit into the next; they crash together', C: D1_7},

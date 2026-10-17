@@ -14,10 +14,10 @@
 //   U5 8105  the tether yanks its leg out at 74.4 (falls on its back), it gets up again (machines do).
 //   U6 8106  blinded by a flare at 77.72, staggers; recovers.
 //   U7 8107, U8 8108  the flanks.
-// The reserve (8111–8118) halts inside the crater (x ≈ 57–64) behind the line; enemy drones hold low over the crater,
-// one (8151) dives at the Crew and is harried off by the allied drone at 77.4.
+// The reserve (8111–8117): the vanguard's second rank steps up onto the far (east) rim as the front leaves it and holds
+// there, seen through the gap; enemy drones hold low over the crater.
 import type {UnitSpec, DroneSpec} from '../../mech';
-import {V3, clamp, smooth, lerp, add3, sub3, mul3} from '../../../kit/math';
+import {V3, clamp, smooth, lerp, add3} from '../../../kit/math';
 import {M} from '../../timing';
 import {PLAN} from '../../world/plan';
 import {armyUnits} from '../B/army';
@@ -38,7 +38,6 @@ export const EV = {
   yankFire: 74.1, yankBite: 74.4, yankPull: 74.52, // tether → U5's shin
   pryIn: 75.95, pryPop: 76.35, rip: 76.75, // runner → U4's back plate, cables
   flareThrow: 77.3, flareHit: 77.72, // host → U6's eye
-  allyHit: 77.42, // allied drone bumps the enemy drone
   br1Lock: 78.5, br1: 79.1, // U1's swing meets the plate: the plate dents
   br2: 81.78, // breaker → U1's chest plate
   br3Fire: 82.98, br3Bite: 83.28, br3Taut: 83.45, br3Topple: 83.5, br3Crash: 84.06, // tether swings U1 into U2
@@ -217,10 +216,13 @@ const U1: Plan = {
     const pre = clamp((T - 78.46) / 0.22);
     const gy = G(41.8, -0.9);
     const armL = T > 78.4 && T < EV.br1 ? {hand: lerp3s({x: 41.68, y: gy + 0.95, z: -0.5}, {x: 42.0, y: gy + 2.1, z: -0.3}, smooth(pre))} : undefined;
+    // it braces into his charge (crouched, leaning in) as it arrives: the plate meets its lower chest plate
+    const brace = win(T, 67.9, EV.clash + 0.25, 0.3, 0.25);
     return {
       strike, armL,
       twist: T > 78.4 && T < EV.br1 - 0.4 ? 8 * smooth(pre) : 0,
-      lean: T > 78.4 && T < EV.br1 - 0.4 ? -3 * smooth(pre) : undefined,
+      lean: T > 78.4 && T < EV.br1 - 0.4 ? -3 * smooth(pre) : brace > 0 ? 12 * brace : undefined,
+      crouch: 0.22 * brace,
       look: T < EV.br2 ? directorHead(T) : undefined,
       hits: [
         {t0: EV.clash, dir: {x: 1, y: 0, z: -0.05}, strength: 1.35},
@@ -523,33 +525,18 @@ const hover = (id: number, c: V3, T: number, r = 1.2): DroneSpec => ({
   heading: 270 + Math.sin(T * 0.2 + id) * 20, vel: {x: Math.cos(T * 0.37 + id) * 0.37 * r, y: 0, z: -Math.sin(T * 0.29 + id) * 0.29 * r}, eye: 'cyan', ground,
 });
 const HOVER: V3[] = [{x: 56, y: 6.5, z: -9}, {x: 61, y: 8.5, z: 3}, {x: 54, y: 5.2, z: 9}, {x: 68, y: 9.5, z: -4}, {x: 72, y: 7.0, z: 8}];
-/** ED1: comes in low from the crater at 76.0 to mark the Director; the allied drone bumps it at 77.42; it reels away */
-const ED1_KEYS: [number, number, number, number][] = [[60, 64, 8.0, -6], [75.6, 60, 7.5, -5], [76.7, 46.5, 3.7, 2.0], [77.42, 41.45, 3.05, 4.65], [78.2, 43.9, 4.5, 2.2], [80.0, 56, 8.0, -7], [95, 60, 8.5, -6]];
-const kxyz = (k: [number, number, number, number][], T: number): V3 => {
-  if (T <= k[0][0]) return {x: k[0][1], y: k[0][2], z: k[0][3]};
-  for (let i = 1; i < k.length; i++) if (T <= k[i][0]) {
-    const u = smooth((T - k[i - 1][0]) / (k[i][0] - k[i - 1][0]));
-    return {x: lerp(k[i - 1][1], k[i][1], u), y: lerp(k[i - 1][2], k[i][2], u), z: lerp(k[i - 1][3], k[i][3], u)};
-  }
-  const l = k[k.length - 1];
-  return {x: l[1], y: l[2], z: l[3]};
-};
-export const ed1Pos = (T: number) => kxyz(ED1_KEYS, T);
-export const enemyDrones = (T: number): DroneSpec[] => {
-  const p = ed1Pos(T), v = mul3(sub3(ed1Pos(T + 0.05), ed1Pos(T - 0.05)), 10);
-  const ed1: DroneSpec = {
-    id: DRONE_IDS.ED1, t: T, pos: p, heading: Math.hypot(v.x, v.z) > 0.5 ? (Math.atan2(v.x, -v.z) * 180) / Math.PI : 270, vel: v,
-    look: T < EV.allyHit ? {x: 36.9, y: 1.4, z: 7.5} : undefined, eye: 'amber',
-    mark: T > 76.75 && T < EV.allyHit ? {target: {x: 36.9, y: 1.3, z: 7.5}, color: 'amber'} : undefined,
-    struck: {t0: EV.allyHit, dir: {x: 0.6, y: 0.3, z: -0.4}}, ground, key: 'd1ed1',
-  };
-  return [ed1, ...HOVER.map((c, i) => ({...hover(8152 + i, c, T), key: `d1ed${i + 2}`}))];
-};
+/** ED1: holds low over the crater (it no longer dives at the Crew in D1: the drone harry is shown in D2) */
+const ED1_C: V3 = {x: 63, y: 7.6, z: -5.5};
+export const ed1Pos = (T: number) => hover(DRONE_IDS.ED1, ED1_C, T, 1.6).pos;
+export const enemyDrones = (T: number): DroneSpec[] => [
+  {...hover(DRONE_IDS.ED1, ED1_C, T, 1.6), eye: 'amber', key: 'd1ed1'},
+  ...HOVER.map((c, i) => ({...hover(8152 + i, c, T), key: `d1ed${i + 2}`})),
+];
 
 // ------------------------------------------------------------------ wreck positions (for later sections' staging)
 export const WRECKS = {
   U4: 'face down just west of the rim at (40.4, 4.1), back plate off, cables torn out',
-  U1: 'on its side at (40.9, −4.4), chest plate off (the plate lies NE of it), dented',
-  U2: 'face down under U1 at (41.0, −4.6), right pauldron torn',
-  U3: 'on its back inside the crater beyond the gap, head at (47.6, −1.1)',
+  U1: 'on its side at (40.9, −4.4), chest plate off (the plate lies at (38.9, −3.7)), dented',
+  U2: 'face down under U1 at (41.0, −4.6), left pauldron torn off',
+  U3: 'on its back head-down on the crater\'s inner slope below the gap: feet at the crest (≈ 47.5, −1.0, y ≈ +0.7), head at (48.8, −1.0, y ≈ −0.2)',
 };

@@ -133,12 +133,8 @@ export const d1Fx = (T: number): FxOut => {
     }
     out.push(optikFlash({eye, t: T, at: FLARE.hit, key: 'd1blind', strength: 1.2}));
   }
-  // ---- the allied drone (harries the enemy drone at 77.42)
+  // ---- the allied drone, over the Crew (its harry of an enemy drone is shown in D2, not here)
   out.push(allyDrone({key: 'd1ally', t: T, pose: allyPose, ground: 0, seed: 3}));
-  if (T > EV.allyHit && T < EV.allyHit + 1.5) {
-    const p = allyPose(EV.allyHit).pos;
-    out.push(impact({at: add3(p, {x: 0.25, y: 0, z: -0.1}), normal: {x: -1, y: 0.3, z: 0.2}, t: T, t0: EV.allyHit, key: 'd1allyhit', strength: 1.0, material: 'metal', seed: 71}));
-  }
   // ---- BR1: the swing meets the plate — it dents; his heels skid back with dust
   if (T > EV.br1 - 0.1 && T < EV.br1 + 3) {
     const p = directorAt(EV.br1).pts!.plate;

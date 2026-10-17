@@ -45,10 +45,11 @@ const C3: CamKey[] = [
   {t: 0, pos: g(40.35, 6.25, 0.75), target: g(41.95, 4.0, 0.95), fov: 40},
   {t: 1.4, pos: g(40.5, 6.15, 0.72), target: g(41.9, 3.95, 0.95), fov: 38},
 ];
-// 77.2 the allied drone harries an enemy drone diving on the flare carrier; his flare blinds a unit's eye.
+// 77.2 the flare carrier strikes and lobs a flare into a unit's eye (low behind his left shoulder, closer: the throw
+// crosses the frame to U6). (The allied drone's harry of an enemy drone is left to D2.)
 const C4: CamKey[] = [
-  {t: 0, pos: g(34.0, 10.2, 1.05), target: g(41.4, 5.9, 2.4), fov: 44},
-  {t: 1.26, pos: g(34.15, 10.1, 1.0), target: g(41.5, 6.3, 1.95), fov: 43},
+  {t: 0, pos: g(35.55, 9.75, 0.95), target: g(39.3, 7.1, 1.65), fov: 40},
+  {t: 1.96, pos: g(35.75, 9.6, 0.9), target: g(39.6, 7.15, 1.5), fov: 39},
 ];
 // each close cut anchors the acting person's rig at the contact (weak perspective projects true there)
 const CUTS: {a: number; b: number; keys: CamKey[]; opts?: (T: number) => D1Opts}[] = [

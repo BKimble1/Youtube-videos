@@ -167,9 +167,9 @@ const base = (role: Role2, key: string, seed: number, b: Body, T: number, pose: 
 
 // ================================================================== THE DIRECTOR (clerkC, plate on the left forearm)
 // (down the free corridor between the death slab and the leaning ridge slab at the SE foot: z ≈ 4.4 … 6.1 at x 7–11)
-const DIR_RUN: XZ[] = [{x: 1.6, z: 1.4}, {x: 4.2, z: 4.3}, {x: 7.0, z: 5.25}, {x: 11.5, z: 5.1}, {x: 20, z: 2.4}, {x: 30, z: 0.3}, {x: 41.25, z: -0.7}];
+const DIR_RUN: XZ[] = [{x: 1.6, z: 1.4}, {x: 4.2, z: 4.3}, {x: 7.0, z: 5.25}, {x: 11.5, z: 5.1}, {x: 20, z: 2.4}, {x: 30, z: 0.3}, {x: 41.57, z: -0.7}];
 const D_FIGHT: KR[] = [
-  [EV.clash, 41.25, -0.7, 90], [68.62, 41.05, -0.72, 90], [69.6, 40.75, -0.75, 90],
+  [EV.clash, 41.57, -0.7, 90], [68.62, 41.25, -0.72, 90], [69.6, 40.75, -0.75, 90],
   [EV.u1jab, 40.75, -0.75, 90], [70.72, 40.6, -0.76, 90], [71.0, 40.75, -0.75, 90], [EV.bash1, 40.95, -0.74, 90], [71.9, 40.72, -0.75, 90],
   [73.0, 40.72, -0.75, 90], [74.3, 40.68, -0.5, 84], [76.2, 40.7, -0.72, 90], [78.2, 40.65, -0.75, 90],
 ];
@@ -253,6 +253,8 @@ const DIR_SEGS: Seg[] = [
   (DIR_SEGS[5] as Extract<Seg, {kind: 'stand'}>).feet = dv;
 })();
 
+/** the bash's plate arm (left wrist, body-local): forward and up, the plate meets the braced unit's lower chest plate */
+const BASH_PLATE = {r: -4, u: 322, f: 168};
 /** The plate guard (left wrist target, body-local rig units) and the plate's world centre for a given guard. */
 const GUARD = {r: 6, u: 345, f: 112};
 const plateFromGuard = (b: {pos: V3; heading: number}, g: {r: number; u: number; f: number}): V3 => {
@@ -295,7 +297,8 @@ export const directorAt = (T: number): CrewOut => {
   // the clash: BASH as he arrives (anticipation over the last strides), absorb, settle
   const bashIn = clamp((T - (EV.clash - 0.42)) / 0.42);
   const bashOut = after(T, EV.clash + 0.12, 0.6);
-  if (T > EV.clash - 0.45 && T < 70) pose = blendPose(pose, layer(BASH(1), {drop: 26}), easeIn(bashIn) * (1 - bashOut));
+  const clashK = T > EV.clash - 0.45 && T < 70 ? easeIn(bashIn) * (1 - bashOut) : 0;
+  if (clashK > 0) pose = blendPose(pose, layer(BASH(1), {drop: 26, armL: {...BASH(1).armL, local: BASH_PLATE}}), clashK);
   // U1's first blow glances off the plate (no dent): the arm gives, then resets
   const jab = win(T, EV.u1jab - 0.02, EV.u1jab + 0.4, 0.05, 0.3);
   // his bash at 71.25
@@ -368,9 +371,16 @@ export const directorAt = (T: number): CrewOut => {
   const ph = pose.head ?? {};
   pose = layer(pose, {head: {yaw: lerp(lerp(hy, -20, glance), ph.yaw ?? 0, tuck), pitch: lerp(lerp(hp, 30, glance), ph.pitch ?? 0, tuck), roll: 0}, face: {...(pose.face ?? {}), lookY: 0.7 * glance - 0.5 * tuck}});
   // the plate arm: body-local guard (holds against any camera) except during the run, the charge, the crouch
-  const guardOn = (T > EV.clash - 0.6 ? 1 : 0) * (1 - chg) * (1 - crouch) * (1 - stumble * 0.6) * (T < 91.0 ? 1 : 1 - after(T, 90.6, 0.5));
+  const guardOn = (T > EV.clash - 0.6 ? 1 : 0) * (1 - clashK) * (1 - chg) * (1 - crouch) * (1 - stumble * 0.6) * (T < 91.0 ? 1 : 1 - after(T, 90.6, 0.5));
   const arm = blendPose(pose, layer(pose, {armL: {local: guard, pole: {r: -1, u: -0.7, f: 0.1}, palm: {r: -0.55, u: 0.1, f: -1}}}), guardOn);
-  const runArms: Pose = guardRun(b);
+  // (the last strides into the clash: the run's guard arm drives forward into the bash, plate leading)
+  let runArms: Pose = guardRun(b);
+  if (clashK > 0) {
+    const k = clashK, B = BASH(1);
+    const gl = (runArms.armL as {local: {r: number; u: number; f: number}}).local, bl = BASH_PLATE;
+    runArms = {...runArms, twist: lerp(runArms.twist ?? 0, B.twist ?? 0, k), lean: lerp(GAITS.dir.lean, B.lean ?? 0, k * 0.5),
+      armL: {local: lerpLoc(gl, bl, k), pole: {r: -1, u: -0.5, f: 0}, palm: {r: lerp(0.3, 0.2, k), u: 0, f: -1}}};
+  }
   const final = withRun(b, withLook(arm, 'director', b, T), runArms);
   const spec = base('director', 'd1dir', 11, b, T, {...final, handL: 'fist', handR: final.handR ?? 'fist', wearL: plateWear(plate, {glint})});
   const plateW = plateFromGuard(b, plateLoc ?? guard);
@@ -596,12 +606,11 @@ const DRN_SEGS: Seg[] = [
 ];
 export const ALLY_KEYS: [number, number, number, number][] = [
   [56, 2.0, 6.0, 0.5], [59.95, 3.2, 6.2, 1.0], [62, 10, 5.2, 3.0], [64, 19, 4.8, 2.4], [66, 29, 4.6, 1.0], [68.3, 37.5, 4.4, 0.5],
-  [70.5, 39.5, 4.6, 1.8], [73, 38.5, 4.9, -2.0], [75.6, 40.2, 4.4, -1.2], [76.8, 39.4, 3.9, 2.6], [77.42, 41.0, 3.12, 4.45],
-  [78.1, 39.8, 4.3, 3.0], [80, 39.0, 4.9, 0.4], [84, 38.8, 5.2, 2.8], [87.5, 42.6, 5.2, 3.8], [90.5, 45.2, 4.3, 4.9], [94.3, 45.4, 3.5, 4.6],
+  [70.5, 39.5, 4.6, 1.8], [73, 38.5, 4.9, -2.0], [75.6, 39.6, 4.7, -0.8], [78.0, 38.9, 4.9, 2.2], [80, 39.0, 4.9, 0.4], [84, 38.8, 5.2, 2.8], [87.5, 42.6, 5.2, 3.8], [90.5, 45.2, 4.3, 4.9], [94.3, 45.4, 3.5, 4.6],
 ];
 export const droneAt = (T: number, allyPos: V3): CrewOut => {
   const b = bodyAt(DRN_SEGS, T);
-  const tense = win(T, 76.4, 78.4, 0.3, 0.5);
+  const tense = win(T, 79.0, 84.5, 0.4, 0.6) * 0.5; // (flying it over the fight, watching the breaches)
   let pose: Pose = layer(BRACED({fists: false}), {
     drop: 12 + 14 * tense, lean: 8 + 10 * tense,
     armL: {local: {r: -22, u: 245, f: 92}}, armR: {local: {r: 22, u: 245, f: 92}},
