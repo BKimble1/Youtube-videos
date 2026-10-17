@@ -79,6 +79,21 @@ export const ALLY3_KEYS: K4[] = (() => {
 export const ALLY_KILL_DIR: V3 = norm3({x: -0.55, y: -0.35, z: 0.75});
 /** the allied drone's centre (before it is struck), for looks and aiming */
 export const allyAt = (t: number): V3 => splV(ALLY3_KEYS, Math.min(t, EV3.kill));
+/** the allied drone's flight pose from D3's keys (heading from velocity, nose-down with speed, bank into turns) */
+export const allyPose3 = (t: number): {pos: V3; heading: number; pitch: number; roll: number; speed: number} => {
+  const at = (q: number) => splV(ALLY3_KEYS, q);
+  const p = at(t), v = mul3(sub3(at(t + 0.08), at(t - 0.08)), 6.25);
+  const sp = Math.hypot(v.x, v.z);
+  const hvd = (q: V3) => (Math.atan2(q.x, -q.z) * 180) / Math.PI;
+  const face = t > 118.7 && t < 119.3 ? sub3(H1_EYE_AT(t), p) : null;
+  let heading = sp > 0.5 ? hvd(v) : face ? hvd(face) : hvd(sub3(at(t + 0.6), at(t - 0.6)));
+  if (face && sp < 2.5) heading = hvd(face);
+  const v2 = sub3(at(t + 0.25), at(t)), v1 = sub3(at(t), at(t - 0.25));
+  const turn = ((hvd(v2) - hvd(v1) + 540) % 360) - 180;
+  const roll = sp > 0.5 ? clamp(-turn * 0.6, -28, 28) : 0;
+  const bob = 0.035 * Math.sin(t * 3.1 + 3) + 0.02 * Math.sin(t * 5.3 + 6);
+  return {pos: add3(p, {x: 0, y: bob, z: 0}), heading, pitch: -clamp(sp * 3.2, 0, 26), roll, speed: sp};
+};
 /** the pilot's ground and where the wreck lands is computed by the FX (allyDrone destroyAt); its ground height there */
 export const ALLY_CRASH_GROUND = G(42.2, 2.35);
 
@@ -107,7 +122,8 @@ const quadFrom = (start: XZ[], root: KR[], cyc: number, lift = 0.55, order = [0,
   }
   return legs;
 };
-const H1_LEGS: KP[][] = (() => {
+/** heavy 1's keyed footholds after its halt (the swing round and the yank) */
+export const H1_LEGS: KP[][] = (() => {
   const L = quadFrom(H1_FEET0, H1_ROOT, 0.85, 0.5);
   // the pinned front-left: it tries to step back (south-east, away from the girder) and the cable holds it
   const f = L[0][L[0].length - 1];
@@ -122,9 +138,9 @@ export const h1ClampPt = (T: number): V3 => {
   return lerp3s(a.knees[0], a.feet[0], 0.55);
 };
 /** the Director's bait spot on the slope west of it (he bangs the plate; the ram comes down short of him) */
-export const DIR_BAIT = {x: 58.4, z: -9.7};
+export const DIR_BAIT = {x: 57.0, z: -9.4};
 export const RAM2_AT: V3 = (() => {
-  const p = {x: 60.45, z: -8.55};
+  const p = {x: 59.4, z: -8.4};
   return {x: p.x, y: G(p.x, p.z) + 0.12, z: p.z};
 })();
 /** heavy 1's head swinging blind after the flash: up and away, then sweeping */
@@ -150,8 +166,8 @@ export const heavy1D3 = (T: number): HeavySpec => {
   const base: HeavySpec = {
     id: HEAVIES_B[0].id, t: T, pos: {x: 0, y: 0, z: 0}, heading: 0, ground, key: 'd3hv1', ram,
     damage: {plateL: {t0: EV3.land + 0.03, dir: {x: -0.75, y: 0.35, z: 0.55}}, dead: {t0: EV3.land + 0.1}},
-    kneeBreak: {t0: EV3.knee, leg: 2, dir: {x: -0.72, y: 0, z: 0.69}},
-    pinned: {t0: EV3.taut, leg: 0},
+    kneeBreak: {t0: EV3.knee, leg: 2, dir: {x: 0.45, y: 0, z: 0.89}},
+    pinned: {t0: EV3.taut, leg: 0, hold: true},
   };
   if (T < EV3.turn0) {
     const h = heavy1(T);
@@ -304,7 +320,7 @@ export const H2_FALLS = (() => {
   return out.sort((a, b) => a.t - b.t);
 })();
 /** the round's aim and where it bursts: the rim crest in front of the Crew, north of the cover slab */
-export const BLAST_AT: V3 = on({x: 47.35, z: -0.75}, 0.25);
+export const BLAST_AT: V3 = on({x: 48.5, z: -0.2}, 0.25);
 export const heavy2D3 = (T: number): HeavySpec => {
   const r = h2Root(T);
   const feet = H2_LEGS.map((k) => footAt(k, T, 0.55));
@@ -505,17 +521,21 @@ export const ARC_SURVIVORS = SURV;
 const D1_HOVER = (id: number, c: V3, T: number, r = 1.2): V3 => ({x: c.x + Math.sin(T * 0.37 + id) * r, y: c.y + Math.sin(T * 0.6 + id * 2) * 0.35, z: c.z + Math.cos(T * 0.29 + id) * r});
 type DPlan = {id: number; from: {id: number; c: V3; r: number}; keys: K4[]; eye?: (T: number) => 'cyan' | 'amber'; extra?: (T: number) => Partial<DroneSpec>};
 const P = (t: number, x: number, y: number, z: number): K4 => [t, x, y, z];
-/** where the diver hits: the tablet in her hands at EV3.smash (crew.tsx DEC_HOLD) */
-export const SMASH_AT: V3 = on({x: 46.65, z: -0.15}, 1.12);
-/** the cable cut point: on the girder flank between post 3 and the wreck's leg (set by the FX from the tether) */
-export const CUT_AT: V3 = (() => {
-  const a = ANCHOR, b = {x: 59.6, y: G(59.6, -6.9) + 1.0, z: -6.9};
-  return lerp3s(a, b, 0.32);
+/** where the decoy maker stands to project again (on the rim, north of the cover slab), facing the crater */
+export const DEC_SPOT = {x: 45.0, z: -0.6, h: 86};
+/** where the diver hits: the tablet in her left hand at EV3.smash (crew.tsx holds it there) */
+export const SMASH_AT: V3 = (() => {
+  const f = hv(DEC_SPOT.h), r = {x: -f.z, z: f.x};
+  const x = DEC_SPOT.x + f.x * 0.42 - r.x * 0.1, z = DEC_SPOT.z + f.z * 0.42 - r.z * 0.1;
+  return {x, y: G(DEC_SPOT.x, DEC_SPOT.z) + 1.08, z};
 })();
+/** the cable cut point: on the girder flank between post 3 and the wreck's leg (set by the FX from the tether) */
+export const CUT_AT: V3 = lerp3s(ANCHOR, h1ClampPt(EV3.cut), 0.3);
 export const D_PLANS: DPlan[] = [
   // 7605: the ADAPT drone — holds over heavy 1, climbs out of the dust, locks on, marks the source; holds high
   {id: 7605, from: {id: 8151, c: {x: 63, y: 7.6, z: -5.5}, r: 1.6}, eye: (T) => (T < EV3.lock ? 'cyan' : 'amber'),
-    keys: [P(126.0, 0, 0, 0), P(EV3.climb0, 61.6, 6.4, -4.2), P(129.1, 61.0, 12.0, -5.2), P(EV3.climb1, 61.4, 19.2, -6.4), P(131.0, 61.8, 20.6, -6.9), P(140.0, 62.8, 21.4, -7.4), P(M.P4, 64, 22, -8)]},
+    keys: [P(126.0, 0, 0, 0), P(EV3.climb0, 61.6, 6.4, -4.2), P(129.1, 61.0, 12.0, -5.2), P(EV3.climb1, 61.4, 19.2, -6.4), P(131.0, 61.8, 20.6, -6.9), P(140.0, 62.8, 21.4, -7.4), P(M.P4, 64, 22, -8)],
+    extra: (T) => ({look: T < 129.0 ? undefined : T < 129.75 ? CREW_C : SMASH_AT, mark: T > EV3.mark0 && T < 131.8 ? {target: SMASH_AT, color: 'amber'} : undefined})},
   // 7601: the diver — from over the crater's south, up high, then straight down onto the tablet (136.35); bounces off
   {id: 7601, from: {id: 8153, c: {x: 61, y: 8.5, z: 3}, r: 1.2}, eye: (T) => (T < 134.2 ? 'cyan' : 'amber'),
     keys: [P(128.0, 0, 0, 0), P(131.5, 57.5, 9.6, 2.6), P(EV3.dive0, 53.6, 9.2, 1.3), P(EV3.smash - 0.32, 48.6, 3.4, 0.25), P(EV3.smash, SMASH_AT.x + 0.05, SMASH_AT.y + 0.08, SMASH_AT.z), P(136.75, 47.6, 3.0, 1.6), P(138.4, 49.5, 6.4, 3.5), P(142.0, 47.5, 7.2, 6.0), P(M.P4, 46, 7.5, 7)],
@@ -553,7 +573,8 @@ export const droneD3 = (pl: DPlan, T: number): DroneSpec => {
   const sp = Math.hypot(vel.x, vel.z);
   const heading = sp > 0.6 ? (Math.atan2(vel.x, -vel.z) * 180) / Math.PI : 260;
   const look = T < 128 ? on({x: 49, z: -6}, 1.2) : CREW_C;
-  return {id: pl.id, t: T, pos, vel, heading: d4 && w > 0.5 ? d4.heading : heading, look: d4 && w > 0.5 ? d4.look : look, eye: pl.eye ? pl.eye(T) : 'cyan', ground, key: `tb_d${pl.id}`, ...(pl.extra ? pl.extra(T) : {})};
+  const ex = pl.extra ? pl.extra(T) : {};
+  return {id: pl.id, t: T, pos, vel, heading: d4 && w > 0.5 ? d4.heading : heading, eye: pl.eye ? pl.eye(T) : 'cyan', ground, key: `tb_d${pl.id}`, ...ex, look: d4 && w > 0.5 ? d4.look : ex.look ?? look};
 };
 export const dronesD3 = (T: number): DroneSpec[] => D_PLANS.map((p) => droneD3(p, T));
 /** the ids of D1/D2's drones and B's sky drones the tableau's eight take over */

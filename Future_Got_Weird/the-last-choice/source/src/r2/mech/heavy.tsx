@@ -27,8 +27,8 @@ export type HeavySpec = {
   fire?: {t0: number; target: V3};
   /** knee broken: leg 0 FL, 1 FR, 2 RL, 3 RR; the walker topples toward dir */
   kneeBreak?: {t0: number; leg: 0 | 1 | 2 | 3; dir: V3};
-  /** a leg pinned (tether) from t0: that foot stays put */
-  pinned?: {t0: number; leg: 0 | 1 | 2 | 3};
+  /** a leg pinned (tether) from t0: that foot stays put; `hold` keeps it planted through a knee-break topple too */
+  pinned?: {t0: number; leg: 0 | 1 | 2 | 3; hold?: boolean};
   /** stumble (hit) */
   stumble?: {t0: number; dir: V3; strength?: number};
   /** armour plates torn off */
@@ -216,7 +216,8 @@ const fallenLeg = (sp: HeavySpec, r0: HeavyRig, i: number, tx: {xf: (p: V3) => V
   const loc = (v: V3) => add3(H, rmul(R1, v));
   const broken = sp.kneeBreak!.leg === i;
   const folded = loc({x: L.sx * 0.9, y: -2.6, z: L.sz * 0.9});
-  const kk = broken ? 1 : smooth(clamp((tx.k - 0.15) / 0.7));
+  const held = !broken && !!sp.pinned?.hold && sp.pinned.leg === i;
+  const kk = broken ? 1 : held ? 0 : smooth(clamp((tx.k - 0.15) / 0.7));
   let tgt = lerp3(r0.foot[i], folded, kk);
   tgt = {...tgt, y: Math.max(tgt.y, g(tgt.x, tgt.z) + 0.25)};
   const pole = rmul(R1, {x: L.sx, y: 0.6, z: 0});
@@ -230,10 +231,12 @@ export const heavyAttach = (sp: HeavySpec) => {
   const r = sp.kneeBreak && sp.t >= sp.kneeBreak.t0 ? solveHeavy(sp, sp.kneeBreak.t0) : solveHeavy(sp);
   const tx = toppleXf(sp, r, sp.t);
   const X = (p: V3) => (tx ? tx.xf(p) : p);
+  // after a topple the legs are the drawn, folded ones (fallenLeg), not the frozen rig carried with the hull
+  const fl = tx ? r.hip.map((_, i) => fallenLeg(sp, r, i, tx)) : null;
   return {
     ramTip: X(apply(r.ramPose, {x: 0, y: 0, z: -1.4})), muzzle: X(apply(r.launcher, {x: 0, y: 0.05, z: -0.82})),
     eye: X(apply(r.head, {x: 0, y: 0.01, z: -0.5})), hull: X(r.hull.pos), head: X(r.head.pos),
-    knees: r.knee.map(X), feet: r.foot.map(X), fwd: r.fwd,
+    knees: fl ? fl.map((q) => q.K) : r.knee.map(X), feet: fl ? fl.map((q) => q.F) : r.foot.map(X), fwd: r.fwd,
   };
 };
 

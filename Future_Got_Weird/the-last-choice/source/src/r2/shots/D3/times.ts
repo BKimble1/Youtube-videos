@@ -45,7 +45,7 @@ export const EV3 = {
   // ---- D3-9 ALLY_DRONE_LOST
   hunt0: 140.5, kill: 141.35,
   // ---- D3-10 HEAVY2: over the wreck; the front-right foot comes down (the stomp)
-  overFL: 143.55, stomp: 144.55, fallBack: 144.8,
+  overFL: 144.35, stomp: 145.08, fallBack: 144.45,
   // ---- D3-11 HEAVY2_FIRE
   fire: M.HEAVY2_FIRE, blast: 145.45,
   end: M.P4,
