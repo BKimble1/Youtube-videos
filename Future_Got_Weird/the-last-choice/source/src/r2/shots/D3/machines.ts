@@ -22,14 +22,14 @@
 //            decoy maker's tablet (136.35); 7602 cuts the tether cable (138.95) with 7603 swarming the girder flank;
 //            7604 and 7607 run the allied drone down (141.35); all end at D4's first keys (droneD4 at 149.86).
 import type {UnitSpec, HeavySpec, DroneSpec, Path} from '../../mech';
-import {heavyAttach, unitAttach} from '../../mech';
+import {heavyAttach, unitAttach, HEAVY_DIM} from '../../mech';
 import {V3, clamp, smooth, lerp, rnd, easeIn, easeOut, add3, sub3, mul3, norm3} from '../../../kit/math';
 import {M} from '../../timing';
 import {EV3} from './times';
 import {XZ, KP, KR, G, onG, keyRoot, footAt, autoSteps, runDist, runSpeed, cruise, linePath, pathLen, fwdOf, rightOf, headingTo, wrapD, win, after, heavyStance} from '../D4/motion';
 import {heavy1, unitD2, ANCHOR} from '../D2/machines';
 import {D1_ARMY_IDS} from '../D1/machines';
-import {armyUnits, HEAVIES_B} from '../B/army';
+import {armyUnits, HEAVIES_B, DRONES_B, droneSpecB} from '../B/army';
 import {ARC_START} from '../D4/start';
 import {NAMED as D4_NAMED, RING_PLANS, unitAt as d4UnitAt, heavy2At, droneD4, dirHeadAt, DRONE_IDS as D4_DRONES} from '../D4/machines';
 
@@ -54,6 +54,39 @@ const spl = (k: K4[], t: number, ax: 1 | 2 | 3) => {
   return (2 * u3 - 3 * u2 + 1) * p1[ax] + (u3 - 2 * u2 + u) * m1 + (-2 * u3 + 3 * u2) * p2[ax] + (u3 - u2) * m2;
 };
 const splV = (k: K4[], t: number): V3 => ({x: spl(k, t, 1), y: spl(k, t, 2), z: spl(k, t, 3)});
+
+// ================================================================== the broken water main across the crater (world/set.tsx 'waterMain': two 0.9 m box beams arching over the bowl):
+// no unit passes it where it is high — they cross only near its buried north-west end (x ≤ 54) or through its break
+export const PIPE: {a: V3; b: V3}[] = [{a: {x: 52, y: -1.0, z: -9}, b: {x: 67, y: -1.8, z: 6}}, {a: {x: 69, y: -1.5, z: 8.5}, b: {x: 76, y: -0.7, z: 16}}];
+/** nearest point of the pipe to a ground point: horizontal distance, and the beam's top above the ground there */
+export const pipeAt = (p: XZ): {d: number; top: number; bottom: number; q: V3} => {
+  let best = {d: 1e9, top: 0, bottom: 0, q: PIPE[0].a};
+  for (const s of PIPE) {
+    const dx = s.b.x - s.a.x, dz = s.b.z - s.a.z, L2 = dx * dx + dz * dz;
+    const u = clamp(((p.x - s.a.x) * dx + (p.z - s.a.z) * dz) / L2);
+    const q = {x: s.a.x + dx * u, y: s.a.y + (s.b.y - s.a.y) * u, z: s.a.z + dz * u};
+    const d = Math.hypot(p.x - q.x, p.z - q.z);
+    if (d < best.d) { const g = G(q.x, q.z); best = {d, top: q.y + 0.45 - g, bottom: q.y - 0.45 - g, q}; }
+  }
+  return best;
+};
+/** the highest pipe top (m above ground) a polyline passes over (0 if it stays clear of it) */
+export const pipeCross = (pts: XZ[]): number => {
+  let top = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i], L = Math.hypot(b.x - a.x, b.z - a.z), n = Math.max(2, Math.ceil(L / 0.15));
+    let prev = pipeAt(a);
+    for (let k = 1; k <= n; k++) {
+      const u = k / n, q = pipeAt({x: lerp(a.x, b.x, u), z: lerp(a.z, b.z, u)});
+      // passing through the beam (inside it), or over its axis between two samples
+      if (q.d < 0.5 || (q.d < 0.3 + Math.hypot(b.x - a.x, b.z - a.z) / n && prev.d > q.d)) top = Math.max(top, q.top);
+      prev = q;
+    }
+  }
+  return top;
+};
+/** the north-east side of the pipe's line (z < x − 61) */
+const neOfPipe = (p: XZ) => p.z - p.x + 61 < 0;
 
 // ================================================================== the allied drone (checker's) — D3's flight
 // From D2's last key (hovering over the regroup, damaged): it darts at heavy 1's sensor head and hangs in its face
@@ -272,14 +305,17 @@ export const H2_LEGS: KP[][] = (() => {
     if (tau > H2_T0 + 0.3) taus.push(tau);
   }
   taus.reverse();
+  // from rest it steps at once (the first generated cycle may start seconds into the acceleration)
+  while (taus[0] > H2_T0 + 0.4) taus.unshift(Math.max(H2_T0 + 0.05, taus[0] - 1.3));
   const r0 = h2Root(H2_T0);
   const legs: KP[][] = [0, 1, 2, 3].map((i) => [[H2_T0 - 1, ...heavyStance(r0.x, r0.z, r0.h, i)] as KP]);
   /** a landing never on the wreck's hull: pushed on past it, or held short of it, whichever keeps the step a step */
   const clearOf = (prev: XZ, p: XZ, dir: XZ): XZ => {
-    if (wreckDist(p, true) > 0.35) return p;
+    const bad = (q: XZ) => wreckDist(q, true) < 0.4 || pipeAt(q).d < 0.95;
+    if (!bad(p)) return p;
     let f = {...p}, b = {...p};
-    for (let k = 0; k < 40 && wreckDist(f, true) < 0.4; k++) f = {x: f.x + dir.x * 0.2, z: f.z + dir.z * 0.2};
-    for (let k = 0; k < 40 && wreckDist(b, true) < 0.4; k++) b = {x: b.x - dir.x * 0.2, z: b.z - dir.z * 0.2};
+    for (let k = 0; k < 40 && bad(f); k++) f = {x: f.x + dir.x * 0.2, z: f.z + dir.z * 0.2};
+    for (let k = 0; k < 40 && bad(b); k++) b = {x: b.x - dir.x * 0.2, z: b.z - dir.z * 0.2};
     const lf = Math.hypot(f.x - prev.x, f.z - prev.z), lb = Math.hypot(b.x - prev.x, b.z - prev.z);
     return lf < 4.3 ? f : lb > 0.5 ? b : f;
   };
@@ -296,9 +332,9 @@ export const H2_LEGS: KP[][] = (() => {
       const dir = {x: hv(h2Root(t1).h).x, z: hv(h2Root(t1).h).z};
       if (ci < taus.length - 1) p = clearOf(prev, p, dir);
       // stepping over the wreck: a high step
-      const over = T_OVER(prev, p);
+      const over = T_OVER(prev, p), pc = pipeCross([prev, p]);
       if (Math.hypot(p.x - prev.x, p.z - prev.z) < 0.08) { L.push([t1, prev.x, prev.z]); return; }
-      L.push([t0, prev.x, prev.z], [t1, p.x, p.z, over ? 3.5 : 0.55]);
+      L.push([t0, prev.x, prev.z], [t1, p.x, p.z, over ? 3.5 : pc > 0 ? Math.max(0.55, pc + 0.7) : 0.55]);
     });
   });
   return legs;
@@ -319,17 +355,49 @@ export const H2_FALLS = (() => {
   }));
   return out.sort((a, b) => a.t - b.t);
 })();
+/**
+ * heavy 2's hull lowered where its planted feet stand lower than the ground under it (the avenue's kerb, the crater's
+ * bowl): the drop that lets every planted foot reach (legs 1.95 + 2.2 m), smoothed (a moving max ±0.4 s, then a moving
+ * mean ±0.3 s), limited so the hull's belly clears the wreck, and faded to 0 by P4 (D4's heavy2At has no drop).
+ */
+const H2_DROP: number[] = (() => {
+  const L = HEAVY_DIM.upperLen + HEAVY_DIM.lowerLen - 0.06, dt = 0.05, n = Math.ceil((M.P4 - H2_T0) / dt) + 1;
+  const SX = [-1, 1, -1, 1], SZ = [-1, -1, 1, 1];
+  const raw = Array.from({length: n}, (_, j) => {
+    const T = H2_T0 + j * dt, r = h2Root(T), f = hv(r.h), rt = {x: -f.z, z: f.x};
+    const hipY = G(r.x, r.z) + HEAVY_DIM.hullY + HEAVY_DIM.hipDrop;
+    let need = 0;
+    H2_LEGS.forEach((k, i) => {
+      const ft = footAt(k, T, 0.55);
+      const hx = r.x + rt.x * SX[i] * HEAVY_DIM.hipX - f.x * SZ[i] * HEAVY_DIM.hipZ, hz = r.z + rt.z * SX[i] * HEAVY_DIM.hipX - f.z * SZ[i] * HEAVY_DIM.hipZ;
+      const h = Math.hypot(ft.x - hx, ft.z - hz), dy = hipY - (ft.y + 0.22);
+      const w = ft.swing > 0 ? 0.35 : 1; // a lifted foot may hang a little; a planted one must reach
+      need = Math.max(need, w * Math.max(0, dy - Math.sqrt(Math.max(0, L * L - h * h))));
+    });
+    // the belly (≈0.8 m under the hull's centre) stays ≥0.35 m over the wreck's top (≈ its hull centre + 1.2)
+    const over = wreckDist({x: r.x, z: r.z}) < 1.6;
+    const lim = over ? Math.max(0, G(r.x, r.z) + HEAVY_DIM.hullY - 0.8 - (H1_FOOT().c.y + 1.2 + 0.35)) : 1.6;
+    return Math.min(need, lim, 1.6);
+  });
+  const mx = raw.map((_, j) => Math.max(...raw.slice(Math.max(0, j - 8), j + 9)));
+  return mx.map((_, j) => { const a = mx.slice(Math.max(0, j - 6), j + 7); return a.reduce((s, v) => s + v, 0) / a.length; });
+})();
+const h2Drop = (T: number): number => {
+  const u = (T - H2_T0) / 0.05, j = Math.floor(u);
+  if (j < 0) return 0;
+  if (j >= H2_DROP.length - 1) return 0;
+  const v = lerp(H2_DROP[j], H2_DROP[j + 1], u - j);
+  return v * (1 - smooth(clamp((T - 148.9) / (M.P4 - 148.9))));
+};
 /** the round's aim and where it bursts: the rim crest in front of the Crew, north of the cover slab */
 export const BLAST_AT: V3 = on({x: 48.5, z: -0.2}, 0.25);
 export const heavy2D3 = (T: number): HeavySpec => {
   const r = h2Root(T);
   const feet = H2_LEGS.map((k) => footAt(k, T, 0.55));
-  // it rears a little to carry its hull over the wreck
-  const rear = 0.38 * win(T, 143.3, 147.9, 0.6, 0.8);
   const look: V3 = T < 128.6 ? {x: r.x - 20, y: 2, z: r.z + 2} : T > 147.0 ? dirHeadAt(T) : on({x: 46.5, z: -0.6}, 1.5);
   return {
     id: 7401, t: T, pos: {x: r.x, y: 0, z: r.z}, heading: r.h, ground, key: 'tb_heavy2', feet, look,
-    eye: T < 128.6 ? 'cyan' : 'amber', drop: -rear,
+    eye: T < 128.6 ? 'cyan' : 'amber', drop: h2Drop(T),
     aim: T > 143.6 && T < EV3.fire ? BLAST_AT : undefined,
     fire: {t0: EV3.fire, target: BLAST_AT},
   };
@@ -341,10 +409,21 @@ export const H2_INFO = {vmax: H2_VMAX, dEnd: H2_DEND, c0: H2_C0};
 // ================================================================== THE ARC (27 units: D4's ARC_START, tableau ids)
 type UStep =
   | {k: 'walk'; pts: XZ[]; T0: number; T1: number; A?: number; D?: number; stride?: number; lift?: number}
-  | {k: 'keys'; root: KR[]};
+  | {k: 'keys'; root: KR[]; feet?: {L: KP[]; R: KP[]}};
 type UPlan = {id: number; key: string; steps: UStep[]; act?: (T: number) => Partial<UnitSpec>};
 const stepT0 = (s: UStep) => (s.k === 'walk' ? s.T0 : s.root[0][0]);
 const FEET = new WeakMap<object, {L: KP[]; R: KP[]}>();
+/** a path whose heading blends from h0 (start) and into h1 (end) over `span` m (positions unchanged) */
+const turnPath = (path: Path, L: number, h0?: number, h1?: number, span = 1.0): Path => {
+  if (h0 === undefined && h1 === undefined) return path;
+  return (d) => {
+    const p = path(d);
+    let h = p.heading;
+    if (h0 !== undefined) h = h0 + wrapD(h - h0) * smooth(clamp(d / span));
+    if (h1 !== undefined) h = h + wrapD(h1 - h) * smooth(clamp((d - (L - span)) / span));
+    return {pos: p.pos, heading: h};
+  };
+};
 const unitRun = (pl: UPlan, T: number): UnitSpec => {
   let i = 0;
   pl.steps.forEach((s, k) => { if (T >= stepT0(s)) i = k; });
@@ -353,7 +432,12 @@ const unitRun = (pl: UPlan, T: number): UnitSpec => {
   let sp: UnitSpec;
   if (s.k === 'walk') {
     const L = pathLen(s.pts), A = s.A ?? 0.5, D = s.D ?? 0.5;
-    const path: Path = linePath(s.pts, 1.2);
+    // the facing before and after the walk: a held unit turns as it steps off (over its first metre) and turns to the
+    // next hold's facing over its last metre — never an instant spin at the hand-over
+    const prev = pl.steps[i - 1], next = pl.steps[i + 1];
+    const h0 = prev && prev.k === 'keys' ? keyRoot(prev.root, s.T0).h : undefined;
+    const h1 = next && next.k === 'keys' ? next.root[0][3] : undefined;
+    const path: Path = turnPath(linePath(s.pts, 1.2), L, h0, h1);
     const dist = runDist(Math.min(T, s.T1), s.T0, s.T1, L, A, D);
     const vc = cruise(s.T0, s.T1, L, A, D);
     const k = clamp(runSpeed(T, s.T0, s.T1, L, A, D) / Math.max(0.5, vc));
@@ -366,7 +450,7 @@ const unitRun = (pl: UPlan, T: number): UnitSpec => {
     };
   } else {
     const r = keyRoot(s.root, T);
-    let feet = FEET.get(s);
+    let feet = s.feet ?? FEET.get(s);
     if (!feet) FEET.set(s, (feet = autoSteps(s.root, {half: 0.19, stag: -0.04, stepLen: 0.55})));
     sp = {...base, pos: {x: r.p.x, y: 0, z: r.p.z}, heading: r.h, feet: {L: footAt(feet.L, T, 0.11), R: footAt(feet.R, T, 0.11)}};
   }
@@ -390,120 +474,160 @@ const surv: Src[] = SURV.map((n) => {
 });
 /** the vanguard units the line takes (front two ranks, nearest the avenue's middle; none D1/D2 already took) */
 const VAN_TAKE: Src[] = (() => {
-  const v = armyUnits().filter((u) => u.g === 'van' && u.rest.x < 86 && !D1_ARMY_IDS.has(u.id) && Math.abs(u.rest.z) < 12.4);
-  v.sort((a, b) => a.rest.x - b.rest.x || Math.abs(a.rest.z) - Math.abs(b.rest.z));
-  return v.slice(0, 20).map((u) => ({name: `V${u.id}`, srcId: u.id, x: u.rest.x, z: u.rest.z, h: norm360(u.heading)}));
+  const v = armyUnits().filter((u) => u.g === 'van' && u.rest.x < 93 && !D1_ARMY_IDS.has(u.id) && Math.abs(u.rest.z) < 13.4);
+  const src = (u: (typeof v)[number]): Src => ({name: `V${u.id}`, srcId: u.id, x: u.rest.x, z: u.rest.z, h: norm360(u.heading)});
+  // the north wing: the seven northernmost of the front ranks; the line: the eleven southernmost
+  const north = v.filter((u) => u.rest.z < -3).sort((a, b) => a.rest.x - b.rest.x || a.rest.z - b.rest.z).slice(0, 7);
+  const south = v.filter((u) => u.rest.z > 0.5).sort((a, b) => a.rest.x - b.rest.x || b.rest.z - a.rest.z).slice(0, 11);
+  return [...north, ...south].map(src);
 })();
 /** the vanguard ids the line takes (leave them out when drawing B's halted army) */
 export const VAN_TAKEN = new Set(VAN_TAKE.map((s) => s.srcId));
 
 // ---- formation geometry
-/** the line across the crater (x ≈ 58.3, shoulder to shoulder, north → south), the cable's crossing left open */
-export const LINE_X = 58.3;
-const lineZ = (k: number) => { const z = -12.6 + k * 0.98; return z < -7.5 ? z - 0.55 : z; };
-/** the arc round the Crew on the rim (pivot, radius) at FORMATION */
-export const ARC1_C = {x: 46.6, z: -0.6}, ARC1_R = 11.6;
-const arc1 = (k: number, n: number) => {
-  const b = 26 + (128 * k) / (n - 1);
-  const a = (b * Math.PI) / 180;
-  return {x: ARC1_C.x + Math.sin(a) * ARC1_R, z: ARC1_C.z - Math.cos(a) * ARC1_R, h: norm360(b + 180)};
-};
-
-export type ArcUnit = {id: number; role: string; src: Src; k: number; line: XZ; a1: {x: number; z: number; h: number}; a2: {x: number; z: number; h: number}; fin: {x: number; z: number; h: number}; plan: UPlan};
-const pushFrom = (p: XZ, o: XZ, r: number): XZ => { const dx = p.x - o.x, dz = p.z - o.z, d = Math.hypot(dx, dz) || 1e-3; return d < r ? {x: o.x + (dx / d) * r, z: o.z + (dz / d) * r} : p; };
+// The arc is D4's 25 (ARC_START). The seven of its north end (bearings 18…66) are the NORTH WING: down from the vanguard
+// under the girder, they mass on the girder flank north of the tether's cable (it is a wall at their knees until it is
+// cut). The other eighteen form the LINE across the crater south-west of the broken water main (two ranks), which bends
+// into the ARC round the Crew at FORMATION (a ripple from the middle out) and advances on the source at DECOY_FAIL.
 /** the units' look: the Crew's middle (the source once she projects) */
-export const CREW_C: V3 = on({x: 46.4, z: -1.2}, 1.3);
-const DECOY_SRC: V3 = on({x: 46.3, z: -0.4}, 1.3);
+export const CREW_C: V3 = on({x: 45.4, z: -1.6}, 1.3);
+const DECOY_SRC: V3 = on({x: 44.6, z: -0.6}, 1.3);
+export const LINE_X = 57.4;
+const LINE_SLOTS: XZ[] = Array.from({length: 18}, (_, k) => ({x: LINE_X + (k % 2) * 1.3, z: -0.8 + k * 0.8}));
+/** the wing's hold under the girder (north of the cable, where the truss is high enough over them) */
+const WING: XZ[] = [{x: 51.3, z: -11.4}, {x: 52.4, z: -10.9}, {x: 52.3, z: -12.3}, {x: 53.5, z: -11.5}, {x: 53.4, z: -12.9}, {x: 54.6, z: -12.1}, {x: 54.7, z: -10.8}];
+/** the arc round the Crew on the rim (pivot, radii) at FORMATION */
+export const ARC1_C = {x: 45.6, z: 0.8};
+const arcPt = (b: number, r: number) => { const a = (b * Math.PI) / 180; return {x: ARC1_C.x + Math.sin(a) * r, z: ARC1_C.z - Math.cos(a) * r, h: norm360(b + 180)}; };
+const SLAB = {x0: 46.8, x1: 48.4, z0: 0.8, z1: 6.0};
+const clearOfAll = (p: XZ, r = 1.0) => !UNIT_WRECKS.some((w) => Math.hypot(w.x - p.x, w.z - p.z) < 1.05) && wreckDist(p) > 0.8
+  && !(p.x > SLAB.x0 - 0.6 && p.x < SLAB.x1 + 0.6 && p.z > SLAB.z0 - 0.6 && p.z < SLAB.z1 + 0.6) && (p.x < 51.8 || (pipeAt(p).d > r && !neOfPipe(p)));
+/** n arc slots from bearing lo to hi, alternating two radii, each kept clear of wrecks, the slab and the pipe */
+const arcSlots = (n: number, lo: number, hi: number, r0: number, r1: number) => Array.from({length: n}, (_, k) => {
+  const b0 = lo + ((hi - lo) * k) / (n - 1), r = k % 2 ? r1 : r0;
+  for (let d = 0; d < 12; d += 0.5) for (const sg of [1, -1]) { const p = arcPt(b0 + sg * d, r); if (clearOfAll(p)) return p; }
+  return arcPt(b0, r);
+});
+const ARC1 = arcSlots(18, 72, 166, 9.8, 11.0);
+const ARC2 = arcSlots(18, 72, 166, 7.7, 8.8).map((p) => { let q: XZ = pushFrom(p, BLAST_AT, 5.0); q = pushFrom(q, {x: 45.0, z: -1.0}, 6.2); return {...q, h: norm360(headingTo(q, CREW_C))}; });
 
+export type ArcUnit = {id: number; role: string; src: Src; k: number; wing: boolean; line: XZ; a1: {x: number; z: number; h: number}; a2: {x: number; z: number; h: number}; fin: {x: number; z: number; h: number}; plan: UPlan};
+function pushFrom(p: XZ, o: XZ, r: number): XZ { const dx = p.x - o.x, dz = p.z - o.z, d = Math.hypot(dx, dz) || 1e-3; return d < r ? {x: o.x + (dx / d) * r, z: o.z + (dz / d) * r} : p; }
+/** the gap between the water main's two lengths (south-east), the line's way in */
+const GATE: XZ = {x: 68.0, z: 7.25};
+
+/** D4's feet at 149.86 (ground x, z) for a tableau id: its walk may begin mid-stride (A ≤ 0.25: the left foot planted
+ *  ahead, the right beside the root) */
+const d4Feet = (id: number) => { const a = unitAttach(d4UnitAt(d4PlanOf(id), M.P4)); return {L: {x: a.footL.x, z: a.footL.z}, R: {x: a.footR.x, z: a.footR.z}}; };
+const stanceAt = (p: XZ, h: number, side: -1 | 1): XZ => { const f = hv(h), r = {x: -f.z, z: f.x}; const fo = side < 0 ? -0.04 : 0.04; return {x: p.x + r.x * 0.19 * side + f.x * fo, z: p.z + r.z * 0.19 * side + f.z * fo}; };
+/** CROUCH_IN: D4's gait bob at its first frame (walking from a stop), eased in over the last steps */
+const D4_BOB = 0.0875;
+const INTO_T = M.P4 - 0.62;
+/**
+ * the walk into D4's start: if D4 begins mid-stride, the walk stops 0.55 m short (standing) and two keyed steps put
+ * the feet exactly on D4's first footholds at 149.86 (the right beside the root, the left ahead), else straight in
+ */
+function intoD4(steps: UStep[], id: number, pts: XZ[], T0: number, fin: {x: number; z: number; h: number}) {
+  const F = d4Feet(id), sL = stanceAt(fin, fin.h, -1), sR = stanceAt(fin, fin.h, 1);
+  const mid = Math.hypot(F.L.x - sL.x, F.L.z - sL.z) > 0.05 || Math.hypot(F.R.x - sR.x, F.R.z - sR.z) > 0.05;
+  if (!mid) { steps.push({k: 'walk', pts, T0, T1: M.P4, A: 0.45, D: 0.55}); return; }
+  const f = hv(fin.h), p2 = {x: fin.x - f.x * 0.55, z: fin.z - f.z * 0.55};
+  steps.push({k: 'walk', pts: [...pts.slice(0, -1), p2], T0, T1: INTO_T, A: 0.45, D: 0.5});
+  const L0 = stanceAt(p2, fin.h, -1), R0 = stanceAt(p2, fin.h, 1);
+  steps.push({k: 'keys', root: [[INTO_T, p2.x, p2.z, fin.h], [M.P4, fin.x, fin.z, fin.h]], feet: {
+    R: [[INTO_T, R0.x, R0.z], [INTO_T + 0.04, R0.x, R0.z], [M.P4 - 0.33, F.R.x, F.R.z, 0.12]],
+    L: [[INTO_T, L0.x, L0.z], [M.P4 - 0.32, L0.x, L0.z], [M.P4 - 0.03, F.L.x, F.L.z, 0.13]],
+  }});
+}
 export const ARC: ArcUnit[] = (() => {
   const order = [...ARC_START].sort((a, b) => a.bearing - b.bearing);
-  const n = order.length;
-  // sources sorted north → south become the line's slots north → south (paths don't cross)
-  const srcs = [...surv, ...VAN_TAKE];
-  // the survivors take the line's middle and south-middle (they are in the crater's south-east), the vanguard the rest:
-  // assign by z order inside each group to the slot list
-  const slotsZ = Array.from({length: n}, (_, k) => lineZ(k));
-  const survSlots = [2, 12, 13, 14, 15, 16, 17]; // R1 north; the rest from the middle south
-  const vanSlots = slotsZ.map((_, k) => k).filter((k) => !survSlots.includes(k));
-  const bySurv = [...surv].sort((a, b) => a.z - b.z), byVan = [...VAN_TAKE].sort((a, b) => a.z - b.z);
-  const slotSrc: Src[] = [];
-  survSlots.forEach((k, i) => (slotSrc[k] = bySurv[i]));
-  vanSlots.forEach((k, i) => (slotSrc[k] = byVan[i]));
-  void srcs;
+  const wingN = 7;
+  const van = VAN_TAKE;
+  const wingSrc = van.slice(0, 7).sort((a, b) => a.z - b.z);
+  const r1 = surv.find((q) => q.name === 'R1')!;
+  // the line: north → south; D2's survivors nearest the pipe (they are in the crater already), then R1, then the vanguard
+  const survS = surv.filter((q) => q.name !== 'R1').sort((a, b) => a.z - b.z);
+  const lineSrc = [...survS, r1, ...van.slice(7).sort((a, b) => a.z - b.z)];
   return order.map((a, k) => {
-    const src = slotSrc[k];
-    const line = {x: LINE_X + (k % 2 ? 0.35 : -0.1), z: slotsZ[k]};
-    const a1 = arc1(k, n);
+    const wing = k < wingN;
+    const j = wing ? k : k - wingN;
+    const src = wing ? wingSrc[j] : lineSrc[j];
     const fin = d4Start(a.id);
-    // the hold (advanced on the source): a third of the way from the formed arc to the final place, kept out of the
-    // Crew's circle, heavy 1's wreck and the round's burst
-    let p2: XZ = {x: lerp(a1.x, fin.x, 0.3) + 1.2, z: lerp(a1.z, fin.z, 0.3)};
-    p2 = pushFrom(p2, {x: 46.0, z: -1.0}, 6.6);
-    p2 = pushFrom(p2, BLAST_AT, 5.2);
-    const a2 = {x: p2.x, z: p2.z, h: norm360(headingTo(p2, CREW_C))};
-    const plan = buildPlan(a.id, src, k, line, a1, a2, fin);
-    return {id: a.id, role: a.role, src, k, line, a1, a2, fin, plan};
+    const line = wing ? WING[j] : LINE_SLOTS[j];
+    const a1 = wing ? {...WING[j], h: norm360(headingTo(WING[j], CREW_C))} : ARC1[j];
+    const a2 = wing ? a1 : ARC2[j];
+    const plan = buildPlan(a.id, src, k, wing, j, line, a1, a2, fin);
+    return {id: a.id, role: a.role, src, k, wing, line, a1, a2, fin, plan};
   });
 })();
 
-/** the line forms after the crash (the vanguard starts down at 123.2 as heavy 1 is pinned) */
-function buildPlan(id: number, src: Src, k: number, line: XZ, a1: {x: number; z: number; h: number}, a2: {x: number; z: number; h: number}, fin: {x: number; z: number; h: number}): UPlan {
+function buildPlan(id: number, src: Src, k: number, wing: boolean, j: number, line: XZ, a1: {x: number; z: number; h: number}, a2: {x: number; z: number; h: number}, fin: {x: number; z: number; h: number}): UPlan {
   const steps: UStep[] = [];
-  const mid = 13; // the line's middle slot
-  const ripple = Math.abs(k - mid);
-  if (src.d2) {
-    // D2's survivors: at P3 they back off south-east, clear of the attack; after the crash, into the line
-    const hold: XZ = src.name === 'R1' ? {x: src.x, z: src.z} : {x: 66.2 + (k % 3) * 1.4, z: 3.6 + (k - 12) * 1.05};
-    steps.push({k: 'keys', root: [[M.P3, src.x, src.z, src.h], [117.4 + (k % 4) * 0.12, src.x, src.z, src.h]]});
-    if (src.name !== 'R1') {
-      const t0 = 117.45 + (k % 4) * 0.12;
-      steps.push({k: 'walk', pts: [{x: src.x, z: src.z}, hold], T0: t0, T1: t0 + 2.6, A: 0.5, D: 0.6});
-      steps.push({k: 'keys', root: [[t0 + 2.6, hold.x, hold.z, headingTo({x: src.x, z: src.z}, hold)], [t0 + 3.3, hold.x, hold.z, 280]]});
-    }
-    const t1 = 126.6 + (k % 5) * 0.18;
-    const via: XZ[] = src.name === 'R1' ? [{x: src.x, z: src.z}, {x: 70, z: -11.4}, {x: 62.5, z: -11.6}, line] : [hold, {x: lerp(hold.x, line.x, 0.5), z: Math.max(hold.z, 1.2) + 0.4}, line];
-    steps.push({k: 'walk', pts: via, T0: t1, T1: EV3.lineSet - 0.1 + (k % 3) * 0.08, A: 0.5, D: 0.6});
-  } else {
-    // the vanguard: down from the east rim (from 123.2, rank by rank) round heavy 1 (north under the girder or south),
-    // into its slot in the line
-    const t0 = 123.2 + (k % 7) * 0.11 + (src.x - 81) * 0.05;
-    const north = line.z < -2.5;
-    const via: XZ[] = north
-      ? [{x: src.x, z: src.z}, {x: 72.5, z: Math.min(src.z, -9.8)}, {x: 66.0, z: -11.4}, {x: LINE_X + 2.2, z: Math.max(line.z, -12.4)}, line]
-      : [{x: src.x, z: src.z}, {x: 72.0, z: Math.max(src.z, 2.5)}, {x: 64.0, z: Math.max(line.z, 2.4)}, line];
+  const at0: XZ = {x: src.x, z: src.z};
+  const ripple = Math.abs(j - 8.5);
+  if (wing) {
+    // the north wing: from the vanguard (as heavy 1 swings blind), along the crater's north side under the girder to the
+    // flank, arriving during FORMATION
+    const t0 = 121.8 + j * 0.25;
+    const via: XZ[] = [at0, {x: 72.5, z: clamp(src.z, -12.4, -9.2)}, {x: 65.6, z: -12.2 + (j % 3) * 0.5}, {x: 57.2, z: -12.6 + (j % 3) * 0.55}, line];
     steps.push({k: 'keys', root: [[M.P3, src.x, src.z, src.h], [t0, src.x, src.z, src.h]]});
-    steps.push({k: 'walk', pts: via, T0: t0, T1: EV3.lineSet - 0.2 + (k % 4) * 0.1, A: 0.6, D: 0.7});
-  }
-  // in line, facing the rim
-  const tSet = EV3.lineSet + 0.3;
-  steps.push({k: 'keys', root: [[EV3.lineSet + (k % 4) * 0.1, line.x, line.z, 270], [tSet + 0.4, line.x, line.z, 272]]});
-  // FORMATION: the line bends into the arc (the middle first, the ripple running out to both ends)
-  const r0 = EV3.reform + ripple * 0.075;
-  const L1 = Math.hypot(a1.x - line.x, a1.z - line.z);
-  if (L1 > 0.25) {
-    steps.push({k: 'walk', pts: [line, a1], T0: r0, T1: r0 + Math.max(0.9, L1 / 2.9 + 0.5), A: 0.35, D: 0.45});
-    steps.push({k: 'keys', root: [[r0 + Math.max(0.9, L1 / 2.9 + 0.5), a1.x, a1.z, headingTo(line, a1)], [r0 + Math.max(0.9, L1 / 2.9 + 0.5) + 0.5, a1.x, a1.z, a1.h]]});
+    const T1 = 131.2 + j * 0.3;
+    steps.push({k: 'walk', pts: via, T0: t0, T1, A: 0.6, D: 0.7});
+    steps.push({k: 'keys', root: [[T1, line.x, line.z, headingTo(via[via.length - 2], line)], [T1 + 0.6, line.x, line.z, a1.h], [145.55 + (j % 4) * 0.08, line.x, line.z, a1.h]]});
+    // after the blast (the cable long cut): south out from under the girder, over D2's wrecks, to D4's start
+    const f = hv(fin.h), pre = {x: fin.x - f.x * 1.1, z: fin.z - f.z * 1.1};
+    intoD4(steps, id, [line, {x: line.x - 1.2, z: line.z + 1.8}, {x: lerp(line.x, fin.x, 0.5), z: Math.max(lerp(line.z, fin.z, 0.5), -9.8)}, pre, {x: fin.x, z: fin.z}], 145.6 + (j % 4) * 0.08, fin);
   } else {
-    steps.push({k: 'keys', root: [[r0, line.x, line.z, 272], [r0 + 0.6, a1.x, a1.z, a1.h]]});
+    if (src.d2) {
+      // D2's survivors: at P3 they back off a few metres east of their place in the line (south-west of the pipe, clear
+      // of the attack; through the pipe's gap if they were north of it); after the crash, into the line
+      steps.push({k: 'keys', root: [[M.P3, src.x, src.z, src.h], [117.4 + (k % 4) * 0.12, src.x, src.z, src.h]]});
+      let at: XZ = at0;
+      let hold: XZ = {x: line.x + 2.6 + (j % 2) * 0.3, z: line.z + 2.4};
+      for (let i = 0; i < 20 && (pipeAt(hold).d < 1.3 || neOfPipe(hold)); i++) hold = {x: hold.x - 0.25, z: hold.z + 0.25};
+      const t0 = 117.45 + (k % 4) * 0.12;
+      const via: XZ[] = src.name === 'R1' ? [at, {x: 73.5, z: -3.0}, {x: 68.9, z: 4.8}, GATE, {x: 65.4, z: 8.8}, hold] : neOfPipe(at) ? [at, {x: 67.8, z: 5.0}, GATE, {x: 65.4, z: 8.4}, hold] : [at, hold];
+      const T1 = t0 + 1.2 + pathLen(via) / 2.3;
+      steps.push({k: 'walk', pts: via, T0: t0, T1, A: 0.5, D: 0.6});
+      steps.push({k: 'keys', root: [[T1, hold.x, hold.z, headingTo(via[via.length - 2], hold)], [T1 + 0.7, hold.x, hold.z, 285]]});
+      at = hold;
+      const t1 = 126.7 + (k % 5) * 0.16;
+      steps.push({k: 'walk', pts: [at, line], T0: t1, T1: EV3.lineSet - 0.1 + (k % 3) * 0.08, A: 0.5, D: 0.6});
+    } else {
+      // the vanguard's southern units: down from the east rim (as heavy 1 swings blind), through the gap in the pipe
+      const t0 = 121.6 + (j % 6) * 0.2 + (src.x - 81) * 0.08;
+      const via: XZ[] = [at0, {x: 73.8, z: clamp(src.z, 1.0, 6.0)}, {x: GATE.x + 0.6, z: GATE.z - 1.0}, {x: GATE.x - 0.5, z: GATE.z + 0.8}, {x: 63.0, z: clamp(line.z + 2.0, 6.5, 13.6)}, line];
+      steps.push({k: 'keys', root: [[M.P3, src.x, src.z, src.h], [t0, src.x, src.z, src.h]]});
+      steps.push({k: 'walk', pts: via, T0: t0, T1: EV3.lineSet - 0.2 + (k % 4) * 0.1, A: 0.6, D: 0.7});
+    }
+    // in line, facing the rim
+    steps.push({k: 'keys', root: [[EV3.lineSet + (k % 4) * 0.1, line.x, line.z, 270], [EV3.lineSet + 0.7, line.x, line.z, 272]]});
+    // FORMATION: the line bends into the arc (the middle first, the ripple running out to both ends)
+    const r0 = EV3.reform + ripple * 0.09;
+    const L1 = Math.hypot(a1.x - line.x, a1.z - line.z);
+    const T1f = r0 + Math.max(0.9, L1 / 3.0 + 0.5);
+    steps.push({k: 'walk', pts: [line, a1], T0: r0, T1: T1f, A: 0.35, D: 0.45});
+    steps.push({k: 'keys', root: [[T1f, a1.x, a1.z, headingTo(line, a1)], [T1f + 0.5, a1.x, a1.z, a1.h]]});
+    // DECOY_FAIL: they advance on the source (straight through the light), then hold, facing the Crew
+    const ad0 = EV3.advance0 + (j % 6) * 0.08 + ripple * 0.02;
+    steps.push({k: 'walk', pts: [{x: a1.x, z: a1.z}, {x: a2.x, z: a2.z}], T0: Math.max(ad0, stepEnd(steps) + 0.05), T1: EV3.advance1 + (j % 5) * 0.12, A: 0.4, D: 0.5});
+    steps.push({k: 'keys', root: [[EV3.advance1 + (j % 5) * 0.12, a2.x, a2.z, headingTo({x: a1.x, z: a1.z}, a2)], [EV3.advance1 + 0.6 + (j % 5) * 0.12, a2.x, a2.z, a2.h],
+      [145.55 + (j % 5) * 0.07, a2.x, a2.z, a2.h]]});
+    // after the blast: they press in, to D4's start (arriving along D4's first heading)
+    const f = hv(fin.h), pre = {x: fin.x - f.x * 1.1, z: fin.z - f.z * 1.1};
+    intoD4(steps, id, [{x: a2.x, z: a2.z}, pre, {x: fin.x, z: fin.z}], 145.6 + (j % 5) * 0.07, fin);
   }
-  // DECOY_FAIL: they advance on the source (straight through the light), then hold, facing the Crew
-  const ad0 = EV3.advance0 + (k % 6) * 0.08 + ripple * 0.02;
-  steps.push({k: 'walk', pts: [{x: a1.x, z: a1.z}, {x: a2.x, z: a2.z}], T0: Math.max(ad0, stepEnd(steps) + 0.05), T1: EV3.advance1 + (k % 5) * 0.12, A: 0.4, D: 0.5});
-  steps.push({k: 'keys', root: [[EV3.advance1 + (k % 5) * 0.12, a2.x, a2.z, headingTo({x: a1.x, z: a1.z}, a2)], [EV3.advance1 + 0.6 + (k % 5) * 0.12, a2.x, a2.z, a2.h],
-    [145.55 + (k % 5) * 0.07, a2.x, a2.z, a2.h]]});
-  // after the blast: they press in, to D4's start (arriving along D4's first heading)
-  const f = hv(fin.h);
-  const pre = {x: fin.x - f.x * 1.1, z: fin.z - f.z * 1.1};
-  steps.push({k: 'walk', pts: [{x: a2.x, z: a2.z}, pre, {x: fin.x, z: fin.z}], T0: 145.6 + (k % 5) * 0.07, T1: M.P4, A: 0.45, D: 0.55});
   // replacements step over the wrecks in their way (a high step)
-  steps.forEach((st) => { if (st.k === 'walk' && overWreck(st.pts)) st.lift = 0.5; });
+  steps.forEach((st) => { if (st.k !== 'walk') return; const pt = pipeCross(st.pts); if (overWreck(st.pts) || (pt > 0.05 && pt < 1.2)) st.lift = Math.max(0.5, pt < 1.2 ? pt + 0.3 : 0); });
+  const midIn = steps.some((st) => st.k === 'keys' && !!st.feet);
   return {
     id, key: `d3a${id}`, steps,
     act: (T) => ({
-      look: T < 126.4 ? undefined : T < EV3.lineSet ? CREW_C : T < 136.4 ? DECOY_SRC : T < 145.4 ? CREW_C : dirHeadAt(T),
+      look: T < 126.4 ? undefined : T < EV3.lineSet ? CREW_C : T < 136.4 ? (wing ? CREW_C : DECOY_SRC) : T < 145.4 ? CREW_C : dirHeadAt(T),
       eye: T < 128.4 ? 'cyan' : 'amber',
       lockAt: undefined,
       idle: 0.42,
+      ...(midIn && T > INTO_T ? {crouch: D4_BOB * smooth((T - INTO_T) / (M.P4 - INTO_T))} : {}),
     }),
   };
 }
@@ -554,13 +678,15 @@ export const D_PLANS: DPlan[] = [
   {id: 7607, from: {id: 8156, c: {x: 72, y: 7, z: 8}, r: 1.2}, eye: (T) => (T < 140.2 ? 'cyan' : 'amber'),
     keys: [P(139.0, 0, 0, 0), P(EV3.hunt0, 53.0, 5.6, -0.6), P(140.95, 47.5, 3.8, -1.2), P(141.25, 44.4, 2.6, 0.1), P(141.6, 42.8, 3.2, -0.2), P(143.5, 50.0, 9.0, 4.0), P(M.P4, 70, 17, 12)]},
   // 7606 and 7608: high in the smoke over the avenue (two of B's sky)
-  {id: 7606, from: {id: 3310, c: {x: 84, y: 30, z: 6}, r: 0}, keys: [P(M.P3, 84, 30, 6), P(M.P4, 84, 30, 6)]},
-  {id: 7608, from: {id: 3316, c: {x: 110, y: 34, z: -12}, r: 0}, keys: [P(M.P3, 110, 34, -12), P(M.P4, 110, 34, -12)]},
+  // (from where B's sky has them at P3: up and over to their stations by 125)
+  {id: 7606, from: {id: 3310, c: {x: 84, y: 30, z: 6}, r: 0}, keys: [P(117.4, 0, 0, 0), P(121.5, 120.0, 24.0, 2.0), P(125.0, 84, 30, 6), P(M.P4, 84, 30, 6)]},
+  {id: 7608, from: {id: 3316, c: {x: 110, y: 34, z: -12}, r: 0}, keys: [P(117.4, 0, 0, 0), P(121.0, 113.0, 22.0, -2.0), P(125.0, 110, 34, -12), P(M.P4, 110, 34, -12)]},
 ];
 /** one of the tableau's drones at T: its hover from D1/D2 until its keys take over, the keys, D4's sway in the last s */
 export const droneD3 = (pl: DPlan, T: number): DroneSpec => {
   const k0 = pl.keys[0][0];
-  const hov = (t: number) => (pl.from.r > 0 ? D1_HOVER(pl.from.id, pl.from.c, t, pl.from.r) : pl.from.c);
+  const bi = DRONES_B.findIndex((d) => d.id === pl.from.id);
+  const hov = (t: number) => (pl.from.r > 0 ? D1_HOVER(pl.from.id, pl.from.c, t, pl.from.r) : bi >= 0 ? droneSpecB(bi, t).pos : pl.from.c);
   // the first key is the hover position at its own time (the move starts from where it was)
   const keys: K4[] = pl.keys.map((k, i) => (i === 0 ? [k0, hov(k0).x, hov(k0).y, hov(k0).z] as K4 : k));
   const at = (t: number) => (t < k0 ? hov(t) : splV(keys, t));

@@ -8,7 +8,7 @@ import React from 'react';
 import {V3, add3, sub3, mul3, norm3, lerp, clamp, smooth, noise} from '../../../kit/math';
 import {
   FxOut, fx, combine, impact, breakerHit, dust3, chips3, sparks3, flash3, ring3, tetherItems, decoyItems, allyDrone, blast, muzzle, shakeAt,
-  optikFlash, smokeItems, SmokeSource, puffsAt, Puff, f1, glowEl, gid, glowTone, tone, inkTone, inkPx,
+  optikFlash, smokeItems, smokeCanister, SmokeSource, puffsAt, Puff, f1, glowEl, gid, glowTone, tone, inkTone, inkPx,
 } from '../../fx';
 import {heavyAttach, unitAttach} from '../../mech';
 import type {Item} from '../../engine';
@@ -16,7 +16,7 @@ import {project} from '../../engine';
 import {G} from '../D4/motion';
 import {footAt, KP} from '../D4/motion';
 import {heavy1} from '../D2/machines';
-import {smokeSources as d2Smoke} from '../D2/fx';
+import {canisters as d2Cans} from '../D2/fx';
 import {allyPose as d2AllyPose} from '../D2/fx';
 import {EV2, ANCHOR} from '../D2/machines';
 import {EV3} from './times';
@@ -76,12 +76,23 @@ const flareFx = (T: number): FxOut => {
   );
 };
 
+/** sprites whose key matches `re`, drawn at `k` × their opacity (smoke thinning) */
+export const fadeItems = (items: Item[], k: number, re: RegExp): Item[] => {
+  if (k >= 0.999) return items;
+  return items.flatMap((it): Item[] => {
+    if (it.kind !== 'sprite' || !it.key || !re.test(it.key)) return [it];
+    if (k <= 0.01) return [];
+    const draw = it.draw;
+    return [{...it, draw: (c) => { const el = draw(c); return el ? <g opacity={f1(k)}>{el}</g> : el; }}];
+  });
+};
+
 // ------------------------------------------------------------------ the crash's dust (low, lingering): the decoy's screen
 let DUST: SmokeSource[] | null = null;
 export const dustSources = (): SmokeSource[] => (DUST ??= [
-  {pos: {x: 61.4, y: G(61.4, -3.6) + 0.3, z: -3.6}, start: EV3.land, end: EV3.land + 5.5, rate: 7, life: 13, up: 0.32, spread: 3.2, jet: {x: -1.9, y: 0.9, z: 1.2}, jetSpread: 1.2, size: 0.9, grow: 1.35, wind: {x: 0.08, y: 0, z: -0.04}, color: '#B9AD9E', opacity: 0.72, seed: 31},
-  {pos: {x: 64.6, y: G(64.6, -5.6) + 0.3, z: -5.6}, start: EV3.land + 0.05, end: EV3.land + 4.5, rate: 5, life: 12, up: 0.4, spread: 2.6, jet: {x: 0.6, y: 1.2, z: -0.6}, jetSpread: 1.4, size: 0.9, grow: 1.3, wind: {x: 0.1, y: 0, z: -0.06}, color: '#B4A897', opacity: 0.68, seed: 37},
-  {pos: {x: 57.6, y: G(57.6, -0.8) + 0.3, z: -0.8}, start: EV3.land + 0.35, end: EV3.land + 6.5, rate: 4.5, life: 13, up: 0.26, spread: 2.4, jet: {x: -0.8, y: 0.5, z: 0.6}, jetSpread: 1.2, size: 1.0, grow: 1.3, wind: {x: 0.05, y: 0, z: -0.03}, color: '#BDB2A3', opacity: 0.64, seed: 41},
+  {pos: {x: 61.4, y: G(61.4, -3.6) + 0.3, z: -3.6}, start: EV3.land, end: EV3.land + 5.5, rate: 6, life: 7.5, up: 0.32, spread: 3.2, jet: {x: -1.9, y: 0.9, z: 1.2}, jetSpread: 1.2, size: 0.85, grow: 0.95, wind: {x: 0.08, y: 0, z: -0.04}, color: '#B9AD9E', opacity: 0.56, seed: 31},
+  {pos: {x: 64.6, y: G(64.6, -5.6) + 0.3, z: -5.6}, start: EV3.land + 0.05, end: EV3.land + 4.5, rate: 4, life: 7, up: 0.4, spread: 2.6, jet: {x: 0.6, y: 1.2, z: -0.6}, jetSpread: 1.4, size: 0.85, grow: 0.9, wind: {x: 0.1, y: 0, z: -0.06}, color: '#B4A897', opacity: 0.52, seed: 37},
+  {pos: {x: 57.6, y: G(57.6, -0.8) + 0.3, z: -0.8}, start: EV3.land + 0.35, end: EV3.land + 6.5, rate: 4.5, life: 11, up: 0.26, spread: 2.4, jet: {x: -0.8, y: 0.5, z: 0.6}, jetSpread: 1.2, size: 0.95, grow: 1.0, wind: {x: 0.05, y: 0, z: -0.03}, color: '#BDB2A3', opacity: 0.6, seed: 41},
 ]);
 let puffT = NaN, puffs: Puff[] = [];
 const puffsNow = (T: number) => {
@@ -117,7 +128,7 @@ const legFalls = (legs: KP[][], Ta: number, Tb: number) => {
   return out;
 };
 /** heavy 1's footfalls: D2's walk until its halt, then its keyed steps (the swing round) */
-const h1Falls = (T: number, win = 1.5): {t: number; pos: V3; key: string}[] => {
+export const h1Falls = (T: number, win = 1.5): {t: number; pos: V3; key: string}[] => {
   const out: {t: number; pos: V3; key: string}[] = [];
   const a = T - win;
   if (a < 121.05) {
@@ -191,8 +202,11 @@ export const d3Fx = (T: number): FxOut => {
     if (k < 0.25) return;
     out.push(fx(dust3({at: {...f.pos, y: f.pos.y + 0.03}, t: T, t0: f.t, key: `d3ff_${f.key}`, n: 2, size: 0.05, grow: 0.22 * k, speed: 0.5, life: 1.0, dir: {x: -0.4, y: 1, z: 0}, spread: 60, rise: 0.25, color: '#8E857C', opacity: 0.45 * k, seed: 300 + i})));
   });
-  // ---- the D2 canisters' smoke, thinning away (gone by ~121)
-  if (T < 122.5) out.push(fx(smokeItems(T, d2Smoke(), 'd2can_sm')));
+  // ---- the D2 canisters' smoke: the wind takes it (thin by the flash, gone by ~123.5)
+  if (T < 124.0) {
+    const k = (1 - 0.8 * smooth((T - 116.95) / 1.5)) * (1 - smooth((T - 120.5) / 2.5));
+    d2Cans().forEach((c) => { if (T >= c.t0) { const f = smokeCanister(c, T); out.push({...f, items: fadeItems(f.items, k, /_sm_/)}); } });
+  }
   // ---- heavy 1: footfalls; the flare and the flash; the ram's slam; the knee; the crash
   h1FallsCached(T).forEach((f, i) => out.push(
     fx(dust3({at: {...f.pos, y: ground(f.pos) + 0.05}, t: T, t0: f.t, key: `d3h1f_${f.key}`, ring: 0.3, n: 6, speed: 0.9, size: 0.18, grow: 0.4, life: 1.5, rise: 0.2, color: '#8A8078', opacity: 0.5, seed: 900 + i})),

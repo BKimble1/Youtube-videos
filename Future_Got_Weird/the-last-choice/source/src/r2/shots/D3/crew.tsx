@@ -26,12 +26,57 @@ import type {FigProps} from '../../rig';
 import {heavyAttach} from '../../mech';
 import {M} from '../../timing';
 import {EV3} from './times';
-import {Seg, Body, bodyAt, mixFoot, toLoc, fromLoc, lookYaw, lookPitch, lerp3v, XZ, G, onG, fwdOf, rightOf, headingTo, wrapD, win, after, runEnd} from '../D4/motion';
+import {Seg, Body, bodyAt, mixFoot, toLoc, fromLoc, lookYaw, lookPitch, lerp3v, XZ, G, onG, fwdOf, rightOf, headingTo, wrapD, win, after, runEnd, standAt, keyRoot, KR} from '../D4/motion';
 import {heavy1D3, h1ClampPt, DIR_BAIT, RAM2_AT, BLAST_AT, DEC_SPOT, SMASH_AT, allyAt, heavy2D3, H1_BREAK} from './machines';
 import {ANCHOR} from '../D2/machines';
 import {crewAt as d2CrewAt, Role as D2Role} from '../D2/battle';
 import {crewAt as d4CrewAt} from '../D4/crew';
 import {CREW_START} from '../D4/start';
+
+/** the blast's knock-back: they are thrown on the first frame after the flash */
+const THROW_T = EV3.blast + 0.01;
+/**
+ * Segment hand-overs without pops: a run never starts with an instant spin (the stand before it turns onto the run's
+ * first heading, ≤ 300°/s, half before and half after the run's nominal start); a scripted move ('fn': thrown, a fall)
+ * and a stand after one take the body's heading, root and feet over from where the previous segment left them.
+ */
+function smoothSegs(segs: Seg[]): Seg[] {
+  const out: Seg[] = segs.map((s) => (s.kind === 'stand' ? {...s, root: s.root.map((k) => [...k] as KR)} : {...s}));
+  for (let k = 1; k < out.length; k++) {
+    const s = out[k], p = out[k - 1];
+    if (s.kind !== 'run' || p.kind !== 'stand') continue;
+    const hR = headingTo(s.path[0], s.path[1]) + (s.back ? 180 : 0);
+    const before = p.root.filter((q) => q[0] < s.T0 - 1e-6);
+    if (!before.length) continue;
+    const hs = keyRoot(before, s.T0).h, dh = wrapD(hR - hs);
+    if (Math.abs(dh) < 8) continue;
+    const turn = Math.max(0.25, Math.abs(dh) / 300);
+    const t0 = s.T0 - turn * 0.5, t1 = s.T0 + turn * 0.5;
+    const keep = p.root.filter((q) => q[0] < t0 - 1e-3);
+    const at0 = keyRoot(p.root.filter((q) => q[0] <= t0), t0);
+    p.root = [...keep, [t0, at0.p.x, at0.p.z, at0.h], [t1, s.path[0].x, s.path[0].z, at0.h + wrapD(hR - at0.h)]];
+    s.T0 = t1;
+  }
+  const res: Seg[] = [];
+  out.forEach((s, k) => {
+    const prev = res.slice();
+    const from = (t0: number) => bodyAt(prev, t0 - 1e-4);
+    const blend = (b: {pos: V3; heading: number; footL: V3; footR: V3}, P: Body, w: number) => ({
+      ...b, pos: lerp3v(P.pos, b.pos, w), heading: P.heading + wrapD(b.heading - P.heading) * w,
+      footL: mixFoot(P.footL, b.footL, w), footR: mixFoot(P.footR, b.footR, w),
+    });
+    if (k > 0 && s.kind === 'fn') {
+      const T0 = s.T0, at = s.at;
+      let P: Body | null = null;
+      res.push({kind: 'fn', T0, at: (T) => { const o = at(T); const w = smooth(clamp((T - T0) / 0.22)); if (w >= 1) return o; P ??= from(T0); return blend(o, P, w); }});
+    } else if (k > 0 && s.kind === 'stand' && out[k - 1].kind === 'fn') {
+      const st = s, T0 = s.root[0][0];
+      let P: Body | null = null;
+      res.push({kind: 'fn', T0, at: (T) => { const b = standAt(st, T); const w = smooth(clamp((T - T0) / 0.3)); if (w >= 1) return b; P ??= from(T0); return blend(b, P, w); }});
+    } else res.push(s);
+  });
+  return res;
+}
 
 export type CrewOut = {spec: FigSpec; body: {pos: V3; heading: number}; pts?: Record<string, V3>};
 const SOLVE_VIEW = makeView({pos: {x: 40, y: 2.0, z: 14}, target: {x: 47, y: 1.0, z: -2}, fov: 40});
@@ -104,32 +149,32 @@ const D4S = (r: Role2) => CREW_START[r];
 /** where they stand on the rim from ~131 until the fall back (north of the cover slab, the crater before them) */
 export const GRP: Record<Role2, {x: number; z: number; h: number}> = {
   director: {x: 45.9, z: -3.2, h: 92}, decoy: DEC_SPOT, drone: {x: 44.0, z: -2.1, h: 88}, flares: {x: 43.1, z: 4.5, h: 80},
-  breaker: {x: 44.3, z: -4.5, h: 95}, runner: {x: 44.6, z: 2.4, h: 86}, tether: {x: 42.9, z: -3.4, h: 90},
+  breaker: {x: 44.3, z: -4.5, h: 95}, runner: {x: 45.3, z: -5.6, h: 98}, tether: {x: 42.9, z: -3.4, h: 90},
 };
 /** the fall back: each runs from the rim (from EV3.fallBack+) on these lines; the blast (EV3.blast) catches them */
-// (D1's wrecks leave a corridor between U1/U2 (z ≤ −1.6) and U4 (z ≥ 3.3) at x 39–42: the breaker, the pilot, the
-// decoy maker and the runner go through it in lanes; the tether operator goes round north of U1/U2, the flare carrier
-// round south of U4; the Director, backing off last, is thrown clear of it)
+// (D1's wrecks leave a corridor between U1/U2 (z ≤ −1.6) and U4 (z ≥ 3.3) at x 39–42: the breaker, the pilot and the
+// decoy maker go through it in lanes; the tether operator and the runner go round north of U1/U2, the flare carrier
+// round south of U4; the Director, backing off last, is thrown clear of it and comes through it last)
 const BACK: Record<Role2, XZ[]> = {
   director: [{x: 45.7, z: -2.95}, {x: 44.9, z: -1.9}],
   decoy: [{x: 44.5, z: -0.7}, {x: 43.6, z: 0.9}, {x: 42.6, z: 1.55}],
   drone: [{x: 43.65, z: -1.6}, {x: 42.6, z: 0.3}, {x: 40.6, z: 0.75}],
   flares: [{x: 43.1, z: 4.5}, {x: 41.9, z: 5.8}, {x: 39.0, z: 6.5}],
   breaker: [{x: 44.3, z: -4.5}, {x: 43.4, z: -2.0}, {x: 42.0, z: -0.3}],
-  runner: [{x: 44.6, z: 2.4}, {x: 43.4, z: 2.85}],
+  runner: [{x: 45.3, z: -5.6}, {x: 43.9, z: -5.95}, {x: 42.3, z: -6.25}],
   tether: [{x: 42.9, z: -3.4}, {x: 42.2, z: -5.2}, {x: 39.6, z: -5.5}, {x: 37.2, z: -3.4}, {x: D4S('tether').pos.x, z: D4S('tether').pos.z}],
 };
 
 // ================================================================== THE DIRECTOR (clerkC)
 const D0 = {x: 50.25, z: -7.7};
-const DIR_RUN1: XZ[] = [D0, {x: 52.3, z: -7.95}, {x: 54.8, z: -8.6}, DIR_BAIT];
+const DIR_RUN1: XZ[] = [D0, {x: 52.0, z: -8.2}, {x: 52.5, z: -9.1}, {x: 54.8, z: -8.9}, DIR_BAIT];
 const DIR_BACK = {x: 55.4, z: -9.0};
-const DIR_RUN2: XZ[] = [DIR_BACK, {x: 52.4, z: -8.0}, {x: 50.6, z: -7.7}, {x: 48.6, z: -6.6}, {x: 47.0, z: -4.4}, {x: GRP.director.x, z: GRP.director.z}];
+const DIR_RUN2: XZ[] = [DIR_BACK, {x: 52.6, z: -9.3}, {x: 51.8, z: -8.0}, {x: 50.6, z: -7.7}, {x: 48.6, z: -6.6}, {x: 47.0, z: -4.4}, {x: GRP.director.x, z: GRP.director.z}];
 /** thrown on his back by the blast: from where it catches him to where he lands */
 const DIR_THROWN = {from: {x: 44.9, z: -1.9}, to: {x: 43.35, z: -2.3}};
 const DIR_RUN3: XZ[] = [DIR_THROWN.to, {x: 42.2, z: -0.6}, {x: 40.4, z: 0.4}, {x: 38.2, z: 0.95}, {x: D4S('director').pos.x, z: D4S('director').pos.z}];
 const DIR_UP = 146.85, DIR_GO = 148.0;
-const DIR_SEGS: Seg[] = [
+const DIR_SEGS: Seg[] = smoothSegs([
   {kind: 'stand', root: [[M.P3, D0.x, D0.z, 95], [119.3, D0.x, D0.z, 95], [119.42, D0.x + 0.05, D0.z - 0.04, headingTo(D0, DIR_RUN1[1])]], stag: 0.14},
   {kind: 'run', path: DIR_RUN1, T0: 119.45, T1: 121.35, gait: GAITS.dir, A: 0.5, D: 0.6},
   {kind: 'stand', stag: 0.16, root: [[121.35, DIR_BAIT.x, DIR_BAIT.z, runEnd(DIR_RUN1).h], [121.8, DIR_BAIT.x, DIR_BAIT.z, 112], [124.1, DIR_BAIT.x, DIR_BAIT.z, 112],
@@ -144,7 +189,7 @@ const DIR_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.14, root: [[DIR_UP + 0.85, DIR_THROWN.to.x + 0.35, DIR_THROWN.to.z, 80], [DIR_GO - 0.1, DIR_THROWN.to.x + 0.35, DIR_THROWN.to.z, 92], [DIR_GO, DIR_THROWN.to.x + 0.3, DIR_THROWN.to.z, headingTo(DIR_THROWN.to, DIR_RUN3[1])]]},
   {kind: 'run', path: [{x: DIR_THROWN.to.x + 0.3, z: DIR_THROWN.to.z}, ...DIR_RUN3.slice(1)], T0: DIR_GO, T1: 149.42, gait: GAITS.dir, A: 0.4, D: 0.45},
   {kind: 'stand', stag: 0.14, root: [[149.42, D4S('director').pos.x, D4S('director').pos.z, runEnd(DIR_RUN3).h], [149.8, D4S('director').pos.x, D4S('director').pos.z, 90]]},
-];
+]);
 /** his body through the throw, the fall and the get-up (root on the ground; feet from the pose while down) */
 const dirThrownBody = (T: number) => {
   const u = clamp((T - EV3.blast) / 0.5);
@@ -218,6 +263,9 @@ export const directorAt = (T: number): CrewOut => {
   const peak = win(T, 126.9, 128.0, 0.35, 0.2);
   if (peak > 0) pose = blendPose(pose, layer(pose, {drop: 18, lean: 6, face: {mouth: T > 127.4 ? 'grin' : 'pant', brows: -0.2, worry: 0, squint: 0.2}, breath: 1}), peak);
   if (peak > 0) guard = {r: lerp(guard.r, -40, peak), u: lerp(guard.u, 200, peak), f: lerp(guard.f, 70, peak)};
+  // up after the blast: the plate low for a moment as he looks back at heavy 2 (the cut lip), then the run
+  const back = win(T, DIR_UP + 0.6, DIR_GO + 0.15, 0.2, 0.2);
+  if (back > 0) guard = {r: lerp(guard.r, -40, back), u: lerp(guard.u, 210, back), f: lerp(guard.f, 60, back)};
   // on the rim: the arc forms; the light figures; the smash (a step toward her); watching heavy 2
   if (T > 131 && T < 145) pose = face(pose, {mouth: T > 136.3 && T < 137.2 ? 'open' : 'flat', brows: -0.7, worry: T > 140.5 ? 0.4 : 0.1});
   // the fall back: a shout and the left arm sweep (back!)
@@ -243,6 +291,11 @@ export const directorAt = (T: number): CrewOut => {
   if (!down) pose = blendPose(pose, layer(pose, {armL: {local: guard, pole: {r: -1, u: -0.7, f: 0.1}, palm: {r: -0.55, u: 0.1, f: -1}}, handL: 'fist'}), guardOn);
   const final = down ? pose : withRun(b, pose, guardRun(b));
   const glint = Math.max(win(T, EV3.bang1, EV3.bang1 + 0.14, 0.01, 0.1), win(T, EV3.bang2, EV3.bang2 + 0.14, 0.01, 0.1));
+  // the bait's hammering hand comes from (and goes back to) where the pose holds it: no jump at the window's edges
+  if (world.handR && bait < 0.999) {
+    const nat = figureRig(SOLVE_VIEW, base('director', 'd3dir', 11, b, T, {...final, handL: 'fist', handR: 'fist'}, {}, !down)).handR;
+    world = {...world, handR: lerp3v(nat, world.handR, smooth(bait))};
+  }
   const spec = base('director', 'd3dir', 11, b, T, {...final, handL: 'fist', handR: final.handR ?? 'fist', wearL: plateWear(plate, {glint})}, world, !down);
   pts.plate = plateFrom(b, guard);
   return {spec, body: b, pts};
@@ -258,46 +311,47 @@ const BRK_STAND = (() => {
 })();
 const RUN_STAND = {x: 62.35, z: -1.35, h: 40};
 const K0 = {x: 48.65, z: -7.19}, R0 = {x: 49.17, z: -6.73};
-const BRK_IN: XZ[] = [K0, {x: 50.6, z: -7.85}, {x: 52.3, z: -8.0}, {x: 54.2, z: -7.0}, {x: 57.5, z: -4.4}, {x: 60.7, z: -2.3}, {x: BRK_STAND.x, z: BRK_STAND.z}];
-const RUN_IN: XZ[] = [R0, {x: 50.3, z: -7.35}, {x: 52.4, z: -7.4}, {x: 54.1, z: -6.0}, {x: 57.0, z: -3.2}, {x: 60.1, z: -1.3}, {x: RUN_STAND.x, z: RUN_STAND.z}];
+// (north-east of the broken water main, which arches ~1.7 m over the crater floor: they cross it at its buried end)
+const BRK_IN: XZ[] = [K0, {x: 50.6, z: -7.85}, {x: 52.0, z: -8.75}, {x: 54.4, z: -7.9}, {x: 58.2, z: -5.0}, {x: 61.4, z: -2.9}, {x: BRK_STAND.x, z: BRK_STAND.z}];
+const RUN_IN: XZ[] = [R0, {x: 50.3, z: -7.35}, {x: 51.6, z: -8.45}, {x: 53.6, z: -8.85}, {x: 54.9, z: -8.2}, {x: 57.8, z: -5.55}, {x: 61.0, z: -3.45}, {x: RUN_STAND.x, z: RUN_STAND.z}];
 /** the escape: west-south-west, out from under the falling side, then on up the slope */
-const BRK_OUT: XZ[] = [{x: BRK_STAND.x - 0.05, z: BRK_STAND.z + 0.05}, {x: 61.6, z: -0.8}, {x: 58.4, z: 0.35}, {x: 55.6, z: 0.9}];
-const RUN_OUT: XZ[] = [{x: RUN_STAND.x, z: RUN_STAND.z}, {x: 61.0, z: -0.55}, {x: 58.1, z: 0.6}, {x: 55.4, z: 1.95}];
-const BRK_UP: XZ[] = [{x: 55.6, z: 0.9}, {x: 52.0, z: -0.1}, {x: 49.6, z: -2.6}, {x: 47.2, z: -4.35}, {x: GRP.breaker.x, z: GRP.breaker.z}];
-const RUN_UP: XZ[] = [{x: 55.4, z: 1.95}, {x: 51.0, z: 0.55}, {x: 48.3, z: 0.25}, {x: 46.3, z: 0.6}, {x: GRP.runner.x, z: GRP.runner.z}];
+const BRK_OUT: XZ[] = [{x: BRK_STAND.x - 0.05, z: BRK_STAND.z + 0.05}, {x: 61.6, z: -2.6}, {x: 58.6, z: -4.55}, {x: 55.0, z: -7.4}];
+const RUN_OUT: XZ[] = [{x: RUN_STAND.x, z: RUN_STAND.z}, {x: 60.8, z: -2.0}, {x: 58.6, z: -3.55}, {x: 56.4, z: -6.4}];
+const BRK_UP: XZ[] = [{x: 55.0, z: -7.4}, {x: 53.6, z: -9.0}, {x: 52.2, z: -9.0}, {x: 51.5, z: -7.85}, {x: 49.8, z: -6.9}, {x: 47.8, z: -5.6}, {x: GRP.breaker.x, z: GRP.breaker.z}];
+const RUN_UP: XZ[] = [{x: 56.4, z: -6.4}, {x: 55.75, z: -8.4}, {x: 53.9, z: -9.05}, {x: 52.3, z: -8.75}, {x: 51.7, z: -7.7}, {x: 49.8, z: -6.95}, {x: 47.6, z: -6.2}, {x: GRP.runner.x, z: GRP.runner.z}];
 const BRK_BACK2: XZ[] = [...BACK.breaker.slice(2), {x: 40.0, z: 0.1}, {x: 37.6, z: 1.6}, {x: 34.5, z: 2.5}, {x: D4S('breaker').pos.x, z: D4S('breaker').pos.z}];
-const RUN_BACK2: XZ[] = [{x: 42.7, z: 3.0}, {x: 40.6, z: 2.55}, {x: 37.6, z: 3.5}, {x: D4S('runner').pos.x, z: D4S('runner').pos.z}];
-const BRK_SEGS: Seg[] = [
+const RUN_BACK2: XZ[] = [{x: 41.5, z: -6.55}, {x: 39.0, z: -6.1}, {x: 37.5, z: -2.7}, {x: 36.3, z: 1.6}, {x: D4S('runner').pos.x, z: D4S('runner').pos.z}];
+const BRK_SEGS: Seg[] = smoothSegs([
   {kind: 'stand', root: [[M.P3, K0.x, K0.z, 130], [117.4, K0.x, K0.z, 130], [117.85, K0.x - 0.05, K0.z - 0.04, 112], [119.7, K0.x - 0.05, K0.z - 0.04, 108]], stag: 0.12},
   {kind: 'run', path: [{x: K0.x - 0.05, z: K0.z - 0.04}, ...BRK_IN.slice(1)], T0: 119.75, T1: 123.1, gait: GAITS.crouch, A: 0.6, D: 0.6},
   {kind: 'stand', stag: 0.18, root: [[123.1, BRK_STAND.x, BRK_STAND.z, runEnd(BRK_IN).h], [123.55, BRK_STAND.x, BRK_STAND.z, BRK_STAND.h], [124.88, BRK_STAND.x, BRK_STAND.z, BRK_STAND.h], [124.95, BRK_STAND.x - 0.05, BRK_STAND.z + 0.05, headingTo(BRK_OUT[0], BRK_OUT[1])]]},
   {kind: 'run', path: BRK_OUT, T0: 124.95, T1: 126.55, gait: GAITS.sprint, A: 0.3, D: 0.5},
-  {kind: 'stand', stag: 0.14, root: [[126.55, BRK_OUT[3].x, BRK_OUT[3].z, runEnd(BRK_OUT).h], [126.95, BRK_OUT[3].x, BRK_OUT[3].z, 60], [127.95, BRK_OUT[3].x, BRK_OUT[3].z, 62], [128.1, BRK_OUT[3].x - 0.05, BRK_OUT[3].z, headingTo(BRK_UP[0], BRK_UP[1])]]},
-  {kind: 'run', path: BRK_UP, T0: 128.15, T1: 131.2, gait: GAITS.heavy, A: 0.5, D: 0.7},
-  {kind: 'stand', stag: 0.12, root: [[131.2, GRP.breaker.x, GRP.breaker.z, runEnd(BRK_UP).h], [131.7, GRP.breaker.x, GRP.breaker.z, GRP.breaker.h], [EV3.fallBack + 0.1, GRP.breaker.x, GRP.breaker.z, GRP.breaker.h], [EV3.fallBack + 0.3, GRP.breaker.x - 0.05, GRP.breaker.z + 0.05, headingTo(BACK.breaker[0], BACK.breaker[1])]]},
+  {kind: 'stand', stag: 0.14, root: [[126.55, BRK_OUT[3].x, BRK_OUT[3].z, runEnd(BRK_OUT).h], [126.95, BRK_OUT[3].x, BRK_OUT[3].z, 115], [128.7, BRK_OUT[3].x, BRK_OUT[3].z, 118], [128.85, BRK_OUT[3].x - 0.05, BRK_OUT[3].z, headingTo(BRK_UP[0], BRK_UP[1])]]},
+  {kind: 'run', path: BRK_UP, T0: 128.9, T1: 131.8, gait: GAITS.heavy, A: 0.5, D: 0.7},
+  {kind: 'stand', stag: 0.12, root: [[131.8, GRP.breaker.x, GRP.breaker.z, runEnd(BRK_UP).h], [132.3, GRP.breaker.x, GRP.breaker.z, GRP.breaker.h], [EV3.fallBack + 0.1, GRP.breaker.x, GRP.breaker.z, GRP.breaker.h], [EV3.fallBack + 0.3, GRP.breaker.x - 0.05, GRP.breaker.z + 0.05, headingTo(BACK.breaker[0], BACK.breaker[1])]]},
   {kind: 'run', path: BACK.breaker, T0: EV3.fallBack + 0.1, T1: 145.55, gait: GAITS.heavy, A: 0.35, D: 0.3},
   {kind: 'stand', stag: 0.12, root: [[145.55, BACK.breaker[2].x, BACK.breaker[2].z, runEnd(BACK.breaker).h], [146.7, BACK.breaker[2].x, BACK.breaker[2].z, runEnd(BACK.breaker).h + 15], [146.9, BACK.breaker[2].x, BACK.breaker[2].z, headingTo(BRK_BACK2[0], BRK_BACK2[1])]]},
   {kind: 'run', path: BRK_BACK2, T0: 146.95, T1: 148.95, gait: GAITS.heavy, A: 0.4, D: 0.6},
   {kind: 'stand', stag: 0.1, root: [[148.95, D4S('breaker').pos.x, D4S('breaker').pos.z, runEnd(BRK_BACK2).h], [149.8, D4S('breaker').pos.x, D4S('breaker').pos.z, D4S('breaker').heading]]},
-];
-const RUN_SEGS: Seg[] = [
+]);
+const RUN_SEGS: Seg[] = smoothSegs([
   {kind: 'stand', root: [[M.P3, R0.x, R0.z, 138], [117.45, R0.x, R0.z, 138], [117.9, R0.x + 0.05, R0.z - 0.05, 110], [120.05, R0.x + 0.05, R0.z - 0.05, 108]], stag: 0.12},
   {kind: 'run', path: [{x: R0.x + 0.05, z: R0.z - 0.05}, ...RUN_IN.slice(1)], T0: 120.1, T1: 123.2, gait: GAITS.crouch, A: 0.6, D: 0.6},
   {kind: 'stand', stag: 0.16, root: [[123.2, RUN_STAND.x, RUN_STAND.z, runEnd(RUN_IN).h], [123.6, RUN_STAND.x, RUN_STAND.z, RUN_STAND.h], [124.8, RUN_STAND.x, RUN_STAND.z, RUN_STAND.h], [124.92, RUN_STAND.x, RUN_STAND.z, headingTo(RUN_OUT[0], RUN_OUT[1])]]},
   {kind: 'run', path: RUN_OUT, T0: 124.95, T1: 126.5, gait: GAITS.sprint, A: 0.3, D: 0.5},
-  {kind: 'stand', stag: 0.14, root: [[126.5, RUN_OUT[3].x, RUN_OUT[3].z, runEnd(RUN_OUT).h], [126.9, RUN_OUT[3].x, RUN_OUT[3].z, 55], [128.0, RUN_OUT[3].x, RUN_OUT[3].z, 55], [128.15, RUN_OUT[3].x - 0.05, RUN_OUT[3].z, headingTo(RUN_UP[0], RUN_UP[1])]]},
-  {kind: 'run', path: RUN_UP, T0: 128.2, T1: 131.1, gait: GAITS.run, A: 0.5, D: 0.7},
-  {kind: 'stand', stag: 0.12, root: [[131.1, GRP.runner.x, GRP.runner.z, runEnd(RUN_UP).h], [131.6, GRP.runner.x, GRP.runner.z, GRP.runner.h], [EV3.fallBack + 0.35, GRP.runner.x, GRP.runner.z, GRP.runner.h], [EV3.fallBack + 0.5, GRP.runner.x, GRP.runner.z, headingTo(BACK.runner[0], BACK.runner[1])]]},
-  {kind: 'run', path: BACK.runner.slice(0, 2), T0: EV3.fallBack + 0.5, T1: 145.42, gait: GAITS.run, A: 0.35, D: 0},
-  {kind: 'fn', T0: 145.42, at: (T) => runnerThrown(T)},
-  {kind: 'stand', stag: 0.12, root: [[146.95, 42.7, 3.0, 250], [147.05, 42.7, 3.0, headingTo(RUN_BACK2[0], RUN_BACK2[1])]]},
+  {kind: 'stand', stag: 0.14, root: [[126.5, RUN_OUT[3].x, RUN_OUT[3].z, runEnd(RUN_OUT).h], [126.9, RUN_OUT[3].x, RUN_OUT[3].z, 112], [128.3, RUN_OUT[3].x, RUN_OUT[3].z, 112], [128.45, RUN_OUT[3].x - 0.05, RUN_OUT[3].z, headingTo(RUN_UP[0], RUN_UP[1])]]},
+  {kind: 'run', path: RUN_UP, T0: 128.5, T1: 131.15, gait: GAITS.run, A: 0.5, D: 0.7},
+  {kind: 'stand', stag: 0.12, root: [[131.15, GRP.runner.x, GRP.runner.z, runEnd(RUN_UP).h], [131.6, GRP.runner.x, GRP.runner.z, GRP.runner.h], [EV3.fallBack + 0.35, GRP.runner.x, GRP.runner.z, GRP.runner.h], [EV3.fallBack + 0.5, GRP.runner.x, GRP.runner.z, headingTo(BACK.runner[0], BACK.runner[1])]]},
+  {kind: 'run', path: BACK.runner, T0: EV3.fallBack + 0.5, T1: THROW_T, gait: GAITS.run, A: 0.35, D: 0},
+  {kind: 'fn', T0: THROW_T, at: (T) => runnerThrown(T)},
+  {kind: 'stand', stag: 0.12, root: [[146.95, 41.5, -6.55, 230], [147.1, 41.5, -6.55, headingTo(RUN_BACK2[0], RUN_BACK2[1])]]},
   {kind: 'run', path: RUN_BACK2, T0: 147.1, T1: 149.3, gait: GAITS.run, A: 0.35, D: 0.6},
   {kind: 'stand', stag: 0.12, root: [[149.3, D4S('runner').pos.x, D4S('runner').pos.z, runEnd(RUN_BACK2).h], [149.75, D4S('runner').pos.x, D4S('runner').pos.z, D4S('runner').heading]]},
-];
+]);
 /** the runner: the blast catches him mid-stride; he goes down sideways onto his hip and rolls up */
 const runnerThrown = (T: number) => {
-  const a = BACK.runner[1], b2 = {x: 42.7, z: 3.0};
-  const u = clamp((T - 145.42) / 0.55), e = 1 - (1 - u) * (1 - u);
+  const a = BACK.runner[2], b2 = {x: 41.5, z: -6.55};
+  const u = clamp((T - THROW_T) / 0.55), e = 1 - (1 - u) * (1 - u);
   const x = lerp(a.x, b2.x, e), z = lerp(a.z, b2.z, e);
   const h = 230;
   const f = fwdOf(h), r = rightOf(h);
@@ -376,7 +430,7 @@ export const breakerAt = (T: number): CrewOut => {
   const spec = base('breaker', 'd3brk', 7, b, T, {...final, handL: 'grip', handR: 'grip', twoHanded: true, extra: breakerTool({back: 1, front: 0, gauge, fire, recoil: fire})}, {handL: H.front, handR: H.back});
   return {spec, body: b, pts: {front: H.front, back: H.back}};
 };
-const RUN_DOWN = {t0: 145.42, t1: 147.0};
+const RUN_DOWN = {t0: THROW_T, t1: 147.0};
 export const runnerAt = (T: number): CrewOut => {
   const b = bodyAt(RUN_SEGS, T);
   let pose: Pose = layer(BRACED({wide: 0.7}), {face: {mouth: 'grit', brows: -0.4}});
@@ -424,23 +478,24 @@ const A0 = {x: 47.3, z: -9.5};
 const TTH_FIRE = {x: 47.65, z: -10.15};
 const TTH_BRACE = {x: 46.1, z: -10.85};
 const TTH_RUN: XZ[] = [{x: TTH_BRACE.x + 0.55, z: TTH_BRACE.z + 0.45}, {x: 45.2, z: -8.6}, {x: 43.6, z: -6.6}, {x: 43.1, z: -4.6}, {x: GRP.tether.x, z: GRP.tether.z}];
-const TTH_SEGS: Seg[] = [
-  {kind: 'stand', stag: 0.16, root: [[M.P3, A0.x, A0.z, 118], [120.3, A0.x, A0.z, 118], [120.95, TTH_FIRE.x, TTH_FIRE.z, 108], [EV3.wrap0, TTH_FIRE.x, TTH_FIRE.z, 108],
+const TTH_RUN_H = headingTo(TTH_RUN[0], TTH_RUN[1]);
+const TTH_SEGS: Seg[] = smoothSegs([
+  {kind: 'stand', stag: 0.16, root: [[M.P3, A0.x, A0.z, 118], [120.3, A0.x, A0.z, 118], [120.95, TTH_FIRE.x, TTH_FIRE.z, 108], [EV3.tBite + 0.02, TTH_FIRE.x, TTH_FIRE.z, 108],
     // the wrap: a step to the post, the launcher swept round it, a step back west, braced against the reel
-    [EV3.wrap0 + 0.15, 47.15, -10.9, 95], [EV3.wrap, 46.75, -11.1, 70], [EV3.taut, TTH_BRACE.x, TTH_BRACE.z, 100], [EV3.cut, TTH_BRACE.x, TTH_BRACE.z, 102]]},
+    [EV3.wrap0 + 0.1, 47.2, -10.85, 95], [EV3.wrap - 0.03, 46.75, -11.1, 70], [EV3.taut + 0.08, TTH_BRACE.x, TTH_BRACE.z, 100], [EV3.cut, TTH_BRACE.x, TTH_BRACE.z, 102]]},
   {kind: 'fn', T0: EV3.cut, at: (T) => tetherFallBody(T)},
-  {kind: 'stand', stag: 0.14, root: [[EV3.tRun - 0.05, TTH_BRACE.x + 0.55, TTH_BRACE.z + 0.45, 160], [EV3.tRun, TTH_BRACE.x + 0.55, TTH_BRACE.z + 0.45, headingTo(TTH_RUN[0], TTH_RUN[1])]]},
+  {kind: 'stand', stag: 0.14, root: [[EV3.tRun - 0.05, TTH_BRACE.x + 0.55, TTH_BRACE.z + 0.45, TTH_RUN_H], [EV3.tRun, TTH_BRACE.x + 0.55, TTH_BRACE.z + 0.45, TTH_RUN_H]]},
   {kind: 'run', path: TTH_RUN, T0: EV3.tRun, T1: 141.9, gait: GAITS.run, A: 0.4, D: 0.6},
   {kind: 'stand', stag: 0.14, root: [[141.9, GRP.tether.x, GRP.tether.z, runEnd(TTH_RUN).h], [142.4, GRP.tether.x, GRP.tether.z, GRP.tether.h], [EV3.fallBack + 0.12, GRP.tether.x, GRP.tether.z, GRP.tether.h], [EV3.fallBack + 0.25, GRP.tether.x, GRP.tether.z, headingTo(BACK.tether[0], BACK.tether[1])]]},
   {kind: 'run', path: BACK.tether, T0: EV3.fallBack + 0.05, T1: 148.2, gait: GAITS.run, A: 0.35, D: 0.7},
   {kind: 'stand', stag: 0.14, root: [[148.2, D4S('tether').pos.x, D4S('tether').pos.z, runEnd(BACK.tether).h], [149.1, D4S('tether').pos.x, D4S('tether').pos.z, D4S('tether').heading]]},
-];
+]);
 /** the cable cut: the pull goes slack, she sits down hard backward, then scrambles up */
 const tetherFallBody = (T: number) => {
   const u = clamp((T - EV3.cut) / 0.55), e = 1 - (1 - u) * (1 - u);
   const up = smooth(clamp((T - EV3.tUp) / (EV3.tRun - EV3.tUp)));
-  const x = lerp(TTH_BRACE.x, TTH_BRACE.x - 0.55, e) + 1.1 * up * 0.5, z = lerp(TTH_BRACE.z, TTH_BRACE.z - 0.1, e) + 0.55 * up * 0.8;
-  const h = 102 + 58 * up;
+  const x = lerp(TTH_BRACE.x, TTH_BRACE.x - 0.55, e) + 1.1 * up, z = lerp(TTH_BRACE.z, TTH_BRACE.z - 0.1, e) + 0.55 * up;
+  const h = 102 + wrapD(TTH_RUN_H - 102) * up;
   const f = fwdOf(h), r = rightOf(h);
   const foot = (sd: number): V3 => ON({x: x + f.x * 0.35 * (1 - up) + r.x * sd * 0.17, z: z + f.z * 0.35 * (1 - up) + r.z * sd * 0.17});
   return {pos: ON({x, z}), heading: h, footL: foot(-1), footR: foot(1)};
@@ -525,7 +580,7 @@ export const tetherAt = (T: number): CrewOut => {
 const P0 = {x: 46.0, z: -5.0};
 const PIL_RUN: XZ[] = [{x: P0.x - 0.05, z: P0.z + 0.05}, {x: 45.3, z: -3.6}, {x: GRP.drone.x, z: GRP.drone.z}];
 const PIL_BACK2: XZ[] = [{x: 40.6, z: 0.75}, {x: 38.4, z: 0.6}, {x: D4S('drone').pos.x, z: D4S('drone').pos.z}];
-const PIL_SEGS: Seg[] = [
+const PIL_SEGS: Seg[] = smoothSegs([
   {kind: 'stand', stag: 0.08, root: [[M.P3, P0.x, P0.z, 100], [127.6, P0.x, P0.z, 100], [127.75, P0.x - 0.05, P0.z + 0.05, headingTo(PIL_RUN[0], PIL_RUN[1])]]},
   {kind: 'run', path: PIL_RUN, T0: 127.8, T1: 129.6, gait: GAITS.walk, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.08, root: [[129.6, GRP.drone.x, GRP.drone.z, runEnd(PIL_RUN).h], [130.1, GRP.drone.x, GRP.drone.z, GRP.drone.h], [140.5, GRP.drone.x, GRP.drone.z, GRP.drone.h],
@@ -534,7 +589,7 @@ const PIL_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.08, root: [[145.75, BACK.drone[2].x, BACK.drone[2].z, runEnd(BACK.drone).h], [146.65, BACK.drone[2].x, BACK.drone[2].z, runEnd(BACK.drone).h - 10], [146.8, BACK.drone[2].x, BACK.drone[2].z, headingTo(BACK.drone[2], PIL_BACK2[1])]]},
   {kind: 'run', path: [{x: BACK.drone[2].x, z: BACK.drone[2].z}, ...PIL_BACK2.slice(1)], T0: 146.85, T1: 149.2, gait: GAITS.run, A: 0.4, D: 0.6},
   {kind: 'stand', stag: 0.08, root: [[149.2, D4S('drone').pos.x, D4S('drone').pos.z, runEnd(PIL_BACK2).h], [149.75, D4S('drone').pos.x, D4S('drone').pos.z, D4S('drone').heading]]},
-];
+]);
 export const pilotAt = (T: number): CrewOut => {
   const b = bodyAt(PIL_SEGS, T);
   const lost = toolsR2('drone', T).drone === 'lost';
@@ -570,18 +625,18 @@ const FLR_RUN: XZ[] = [{x: F0.x - 0.05, z: F0.z + 0.05}, {x: 46.6, z: -1.0}, {x:
 const FLR_THROWN = {from: {x: 41.9, z: 5.8}, to: {x: 41.15, z: 6.35}};
 const FLR_BACK2: XZ[] = [{x: FLR_THROWN.to.x, z: FLR_THROWN.to.z}, {x: 38.6, z: 7.0}, {x: 36.2, z: 7.9}, {x: D4S('flares').pos.x, z: D4S('flares').pos.z}];
 const FLR_UP = 146.95;
-const FLR_SEGS: Seg[] = [
+const FLR_SEGS: Seg[] = smoothSegs([
   {kind: 'stand', stag: 0.12, root: [[M.P3, F0.x, F0.z, 95], [117.5, F0.x, F0.z, 95], [117.8, F0.x, F0.z, 82], [127.7, F0.x, F0.z, 82], [127.85, F0.x - 0.05, F0.z + 0.05, headingTo(FLR_RUN[0], FLR_RUN[1])]]},
   {kind: 'run', path: FLR_RUN, T0: 127.9, T1: 130.6, gait: GAITS.jog, A: 0.4, D: 0.6},
   {kind: 'stand', stag: 0.12, root: [[130.6, GRP.flares.x, GRP.flares.z, runEnd(FLR_RUN).h], [131.1, GRP.flares.x, GRP.flares.z, GRP.flares.h], [EV3.fallBack + 0.05, GRP.flares.x, GRP.flares.z, GRP.flares.h], [EV3.fallBack + 0.2, GRP.flares.x, GRP.flares.z, headingTo(BACK.flares[0], BACK.flares[1])]]},
-  {kind: 'run', path: BACK.flares.slice(0, 2), T0: EV3.fallBack + 0.22, T1: 145.42, gait: GAITS.run, A: 0.35, D: 0},
-  {kind: 'fn', T0: 145.42, at: (T) => flaresThrownBody(T)},
+  {kind: 'run', path: BACK.flares.slice(0, 2), T0: EV3.fallBack + 0.22, T1: THROW_T, gait: GAITS.run, A: 0.35, D: 0},
+  {kind: 'fn', T0: THROW_T, at: (T) => flaresThrownBody(T)},
   {kind: 'stand', stag: 0.12, root: [[FLR_UP + 0.55, FLR_THROWN.to.x, FLR_THROWN.to.z, 250], [FLR_UP + 0.65, FLR_THROWN.to.x, FLR_THROWN.to.z, headingTo(FLR_BACK2[0], FLR_BACK2[1])]]},
   {kind: 'run', path: FLR_BACK2, T0: FLR_UP + 0.7, T1: 149.35, gait: GAITS.run, A: 0.35, D: 0.6},
   {kind: 'stand', stag: 0.12, root: [[149.35, D4S('flares').pos.x, D4S('flares').pos.z, runEnd(FLR_BACK2).h], [149.8, D4S('flares').pos.x, D4S('flares').pos.z, D4S('flares').heading]]},
-];
+]);
 const flaresThrownBody = (T: number) => {
-  const u = clamp((T - 145.42) / 0.5), e = 1 - (1 - u) * (1 - u);
+  const u = clamp((T - THROW_T) / 0.5), e = 1 - (1 - u) * (1 - u);
   const x = lerp(FLR_THROWN.from.x, FLR_THROWN.to.x, e), z = lerp(FLR_THROWN.from.z, FLR_THROWN.to.z, e);
   const h = 250;
   const f = fwdOf(h), r = rightOf(h);
@@ -610,15 +665,15 @@ export const flaresAt = (T: number): CrewOut => {
   if (T > 126.8 && T < 128.2) pose = face(pose, {mouth: 'grin', brows: 0.2});
   // the blast: a chunk catches his brow: he goes down onto his hands and knees, a hand to the cut, up again
   let down = false;
-  if (T >= 145.42 && T < FLR_UP + 0.55) {
+  if (T >= THROW_T && T < FLR_UP + 0.55) {
     down = true;
-    const u = (T - 145.42) / (FLR_UP + 0.55 - 145.42);
+    const u = (T - THROW_T) / (FLR_UP + 0.55 - THROW_T);
     pose = keyPose([
       [0, layer(STAND, {drop: 22, lean: 14})],
       [0.12, {drop: 30, lean: -18, twist: 20, head: {pitch: -26, yaw: 20}, armL: {fk: {fwd: 60, out: 40, bend: 30}}, armR: {fk: {fwd: 80, out: 30, bend: 70}}, handR: 'open', face: {mouth: 'pain', brows: 0.6, squint: 1}}],
       [0.3, {drop: 110, lean: 50, bodyPitch: 30, legL: {fk: {fwd: 70, knee: 100}}, legR: {fk: {fwd: 60, knee: 100}}, armL: {fk: {fwd: 70, out: 20, bend: 10}}, armR: {fk: {fwd: 70, out: 20, bend: 10}}, handL: 'brace', handR: 'brace', head: {pitch: 20}, face: {mouth: 'pain', brows: 0.6, squint: 0.9}}],
-      [0.62, {drop: 108, lean: 46, bodyPitch: 26, legL: {fk: {fwd: 70, knee: 100}}, legR: {fk: {fwd: 60, knee: 100}}, armL: {fk: {fwd: 70, out: 20, bend: 10}}, armR: {fk: {fwd: 120, out: 20, bend: 120}}, handL: 'brace', handR: 'open', head: {pitch: -14, yaw: 6}, face: {mouth: 'grit', brows: 0.3, squint: 0.7}}],
-      [0.82, layer(KNEEL('L'), {drop: 74, lean: 20, face: {mouth: 'grit', brows: -0.4}})],
+      [0.7, {drop: 108, lean: 46, bodyPitch: 26, legL: {fk: {fwd: 70, knee: 100}}, legR: {fk: {fwd: 60, knee: 100}}, armL: {fk: {fwd: 70, out: 20, bend: 10}}, armR: {fk: {fwd: 120, out: 20, bend: 120}}, handL: 'brace', handR: 'open', head: {pitch: -14, yaw: 6}, face: {mouth: 'grit', brows: 0.3, squint: 0.7}}],
+      [0.86, layer(KNEEL('L'), {drop: 74, lean: 20, face: {mouth: 'grit', brows: -0.4}})],
       [1, layer(BRACED({wide: 0.7, fists: false}), {drop: 24, lean: 12, face: {mouth: 'grit'}})],
     ], u);
   }
@@ -641,21 +696,21 @@ const DEC_RUN: XZ[] = [{x: B0.x - 0.05, z: B0.z + 0.05}, {x: 45.8, z: -2.2}, {x:
 const DEC_THROWN = {from: {x: 42.6, z: 1.55}, to: {x: 41.5, z: 1.8}};
 const DEC_BACK2: XZ[] = [{x: DEC_THROWN.to.x, z: DEC_THROWN.to.z}, {x: 38.8, z: 1.9}, {x: 35.0, z: 2.0}, {x: D4S('decoy').pos.x, z: D4S('decoy').pos.z}];
 const DEC_UP = 146.25;
-const DEC_SEGS: Seg[] = [
+const DEC_SEGS: Seg[] = smoothSegs([
   {kind: 'stand', stag: 0.06, root: [[M.P3, B0.x, B0.z, 80], [127.4, B0.x, B0.z, 80], [127.55, B0.x - 0.05, B0.z + 0.05, headingTo(DEC_RUN[0], DEC_RUN[1])]]},
   {kind: 'run', path: DEC_RUN, T0: 127.6, T1: 129.5, gait: GAITS.walk, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.06, root: [[129.5, DEC_SPOT.x, DEC_SPOT.z, runEnd(DEC_RUN).h], [130.0, DEC_SPOT.x, DEC_SPOT.z, DEC_SPOT.h], [EV3.smash, DEC_SPOT.x, DEC_SPOT.z, DEC_SPOT.h],
     // the smash: she reels back from it
     [EV3.smash + 0.35, DEC_SPOT.x - 0.45, DEC_SPOT.z - 0.1, DEC_SPOT.h + 20], [137.2, DEC_SPOT.x - 0.5, DEC_SPOT.z - 0.1, DEC_SPOT.h + 15], [EV3.fallBack, DEC_SPOT.x - 0.5, DEC_SPOT.z - 0.1, DEC_SPOT.h + 5], [EV3.fallBack + 0.15, DEC_SPOT.x - 0.5, DEC_SPOT.z - 0.1, headingTo({x: DEC_SPOT.x - 0.5, z: DEC_SPOT.z - 0.1}, BACK.decoy[1])]]},
-  {kind: 'run', path: [{x: DEC_SPOT.x - 0.5, z: DEC_SPOT.z - 0.1}, BACK.decoy[1], BACK.decoy[2]], T0: EV3.fallBack + 0.2, T1: 145.42, gait: GAITS.run, A: 0.35, D: 0},
-  {kind: 'fn', T0: 145.42, at: (T) => decoyThrownBody(T)},
+  {kind: 'run', path: [{x: DEC_SPOT.x - 0.5, z: DEC_SPOT.z - 0.1}, BACK.decoy[1], BACK.decoy[2]], T0: EV3.fallBack + 0.2, T1: THROW_T, gait: GAITS.run, A: 0.35, D: 0},
+  {kind: 'fn', T0: THROW_T, at: (T) => decoyThrownBody(T)},
   {kind: 'stand', stag: 0.06, root: [[DEC_UP + 0.8, DEC_THROWN.to.x + 0.3, DEC_THROWN.to.z, 268], [DEC_UP + 0.88, DEC_THROWN.to.x + 0.3, DEC_THROWN.to.z, headingTo(DEC_BACK2[0], DEC_BACK2[1])]]},
   {kind: 'run', path: [{x: DEC_THROWN.to.x + 0.3, z: DEC_THROWN.to.z}, ...DEC_BACK2.slice(1)], T0: DEC_UP + 0.9, T1: 149.3, gait: GAITS.run, A: 0.35, D: 0.6},
   {kind: 'stand', stag: 0.06, root: [[149.3, D4S('decoy').pos.x, D4S('decoy').pos.z, runEnd(DEC_BACK2).h], [149.75, D4S('decoy').pos.x, D4S('decoy').pos.z, D4S('decoy').heading]]},
-];
+]);
 /** she is thrown forward: onto her front, then up (the rise from the rubble, quick) */
 const decoyThrownBody = (T: number) => {
-  const u = clamp((T - 145.42) / 0.5), e = 1 - (1 - u) * (1 - u);
+  const u = clamp((T - THROW_T) / 0.5), e = 1 - (1 - u) * (1 - u);
   const up = T > DEC_UP ? smooth((T - DEC_UP) / 0.8) : 0;
   const x = lerp(DEC_THROWN.from.x, DEC_THROWN.to.x, e) + 0.3 * up, z = lerp(DEC_THROWN.from.z, DEC_THROWN.to.z, e);
   const h = 268;
@@ -689,9 +744,9 @@ export const decoyAt = (T: number): CrewOut => {
   if (hurt > 0) pose = blendPose(pose, layer(pose, {armR: {local: {r: -10, u: 260, f: 40}}, handR: 'fist', armL: {local: {r: -36, u: 205, f: 70}}, face: {mouth: 'sad', brows: 0.5, worry: 0.8}}), hurt);
   // the blast: forward onto her front; up (the rise, quick)
   let down = false;
-  if (T >= 145.42 && T < DEC_UP + 0.8) {
+  if (T >= THROW_T && T < DEC_UP + 0.8) {
     down = true;
-    const u = clamp((T - 145.42) / 0.45);
+    const u = clamp((T - THROW_T) / 0.45);
     const fallP: Pose = keyPose([[0, layer(STAND, {drop: 20, lean: 18})], [0.4, {drop: 60, lean: 50, bodyPitch: 30, armL: {fk: {fwd: 90, out: 20, bend: 20}}, armR: {fk: {fwd: 90, out: 20, bend: 20}}, handL: 'open', handR: 'open', face: {mouth: 'pain', squint: 1}}], [1, RISE_KEYS[0][1]]], u);
     pose = T < DEC_UP ? (u < 1 ? fallP : layer(RISE_KEYS[0][1], {head: {pitch: -30}, face: {mouth: 'pant', brows: 0.4, worry: 0.6}})) : keyPose(RISE_KEYS, ((T - DEC_UP) / 0.8) * 7.2);
   }

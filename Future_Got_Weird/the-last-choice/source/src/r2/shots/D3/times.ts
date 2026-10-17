@@ -55,5 +55,5 @@ export const EV3 = {
 export const SH3 = {
   d31: M.P3, d32: 121.0, d33: 123.5, d34a: M.HEAVY_DOWN, d34b: 127.2, d35: M.ADAPT, d36: M.FORMATION,
   d37a: M.DECOY_FAIL, d37b: 135.3, d37c: 136.15, d38: M.FLANK_DENIED, d39: M.ALLY_DRONE_LOST, d310: M.HEAVY2,
-  d311a: M.HEAVY2_FIRE, d311b: 146.3, d311c: 146.9, d311d: 147.8, d311e: 148.3, end: M.P4,
+  d311a: M.HEAVY2_FIRE, d311b: 146.3, d311c: 146.85, d311d: 147.45, d311e: 148.35, end: M.P4,
 };
