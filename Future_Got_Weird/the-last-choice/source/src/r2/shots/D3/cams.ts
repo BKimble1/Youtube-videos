@@ -48,8 +48,8 @@ export const CAM_4a: CamKey[] = [
 ];
 // D3-4b: the peak: from the wreck's side of them, low, their faces; the dust drifting past
 export const CAM_4b: CamKey[] = [
-  {t: 0, pos: at(58.8, -0.95, -9.4), target: at(55.3, -0.35, -7.5), fov: 41},
-  {t: d(SH3.d34b, SH3.d35), pos: at(58.75, -0.96, -9.38), target: at(55.3, -0.36, -7.52), fov: 40},
+  {t: 0, pos: at(58.3, -0.1, -9.25), target: at(55.3, -0.55, -7.5), fov: 42},
+  {t: d(SH3.d34b, SH3.d35), pos: at(58.25, -0.11, -9.23), target: at(55.3, -0.56, -7.52), fov: 41},
 ];
 // D3-5: with the small drone out of the dust; at the top, past it down onto the rim (the amber line to the tablet)
 const ADAPT = D_PLANS.find((p) => p.id === 7605)!;
@@ -60,11 +60,12 @@ export const CAM_5: CamFn = (t, T) => {
   const look = lerp3(dp, SMASH_AT, smoothK((t - 1.3) / 1.4) * 0.34);
   return {pos, target: look, fov: 46, roll: 0};
 };
-// D3-6: high over the avenue's south side, steeply down: the line across the crater bends into the arc round the Crew
-// on the west rim (the ripple from the middle out); the wreck beyond; the wing under the girder
+// D3-6: high from the south-west, over the Crew's shoulders: the line across the crater bends into the arc round them
+// (the ripple from the middle out); the burning car's smoke rising behind the line; the wreck beyond (not from straight
+// above: the car's smoke column rises into a lens up there)
 export const CAM_6: CamKey[] = [
-  {t: 0, pos: at(51.0, 30.0, 17.0), target: at(52.5, -1.0, 3.0), fov: 50},
-  {t: d(SH3.d36, SH3.d37a), pos: at(50.8, 30.2, 17.1), target: at(52.3, -1.0, 2.8), fov: 50},
+  {t: 0, pos: at(41.0, 17.0, 13.0), target: at(52.5, -1.5, 0.8), fov: 50},
+  {t: d(SH3.d36, SH3.d37a), pos: at(40.7, 17.3, 13.2), target: at(52.3, -1.5, 0.6), fov: 50},
 ];
 // D3-7a: high over her right shoulder down onto the tablet (the sketch, the tap); up and out with the beam to the
 // light on the dust
@@ -97,11 +98,11 @@ export const CAM_9: CamKey[] = [
   {t: 1.0, pos: at(36.95, 1.38, 7.45), target: at(43.6, 1.6, -0.4), fov: 48},
   {t: d(SH3.d39, SH3.d310), pos: at(36.9, 1.35, 7.5), target: at(42.7, 0.3, 1.7), fov: 48},
 ];
-// D3-10: low in the crater's south-east, in the gap of the broken water main, across the wreck: heavy 2 comes in from
+// D3-10: in the crater's south-east, in the gap of the broken water main, a little above it all, across the wreck: heavy 2 comes in from
 // the right, a leg lifted high over heavy 1's wreck; its front-right foot comes down on this side
 export const CAM_10: CamKey[] = [
-  {t: 0, pos: g(68.4, 8.1, 1.5), target: at(65.5, 0.3, -4.6), fov: 46},
-  {t: d(SH3.d310, SH3.d311a), pos: g(68.2, 8.2, 1.45), target: at(63.6, 0.1, -4.8), fov: 46},
+  {t: 0, pos: g(68.4, 8.1, 4.4), target: at(65.0, -1.4, -4.8), fov: 48},
+  {t: d(SH3.d310, SH3.d311a), pos: g(68.2, 8.2, 4.3), target: at(63.4, -1.6, -5.0), fov: 48},
 ];
 // D3-11a: wide from the south-west, clear of the cover slab: they run; the round; the blast on the rim; they are thrown
 export const CAM_11a: CamKey[] = [

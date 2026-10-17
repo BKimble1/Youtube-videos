@@ -90,9 +90,9 @@ export const fadeItems = (items: Item[], k: number, re: RegExp): Item[] => {
 // ------------------------------------------------------------------ the crash's dust (low, lingering): the decoy's screen
 let DUST: SmokeSource[] | null = null;
 export const dustSources = (): SmokeSource[] => (DUST ??= [
-  {pos: {x: 61.4, y: G(61.4, -3.6) + 0.3, z: -3.6}, start: EV3.land, end: EV3.land + 5.5, rate: 6, life: 7.5, up: 0.32, spread: 3.2, jet: {x: -1.9, y: 0.9, z: 1.2}, jetSpread: 1.2, size: 0.85, grow: 0.95, wind: {x: 0.08, y: 0, z: -0.04}, color: '#B9AD9E', opacity: 0.56, seed: 31},
-  {pos: {x: 64.6, y: G(64.6, -5.6) + 0.3, z: -5.6}, start: EV3.land + 0.05, end: EV3.land + 4.5, rate: 4, life: 7, up: 0.4, spread: 2.6, jet: {x: 0.6, y: 1.2, z: -0.6}, jetSpread: 1.4, size: 0.85, grow: 0.9, wind: {x: 0.1, y: 0, z: -0.06}, color: '#B4A897', opacity: 0.52, seed: 37},
-  {pos: {x: 57.6, y: G(57.6, -0.8) + 0.3, z: -0.8}, start: EV3.land + 0.35, end: EV3.land + 6.5, rate: 4.5, life: 11, up: 0.26, spread: 2.4, jet: {x: -0.8, y: 0.5, z: 0.6}, jetSpread: 1.2, size: 0.95, grow: 1.0, wind: {x: 0.05, y: 0, z: -0.03}, color: '#BDB2A3', opacity: 0.6, seed: 41},
+  {pos: {x: 61.4, y: G(61.4, -3.6) + 0.3, z: -3.6}, start: EV3.land, end: EV3.land + 5.5, rate: 6, life: 7.5, up: 0.32, spread: 3.2, jet: {x: -1.9, y: 0.9, z: 1.2}, jetSpread: 1.2, size: 0.85, grow: 0.55, wind: {x: 0.08, y: 0, z: -0.04}, color: '#B9AD9E', opacity: 0.56, seed: 31},
+  {pos: {x: 64.6, y: G(64.6, -5.6) + 0.3, z: -5.6}, start: EV3.land + 0.05, end: EV3.land + 4.5, rate: 4, life: 7, up: 0.4, spread: 2.6, jet: {x: 0.6, y: 1.2, z: -0.6}, jetSpread: 1.4, size: 0.85, grow: 0.55, wind: {x: 0.1, y: 0, z: -0.06}, color: '#B4A897', opacity: 0.52, seed: 37},
+  {pos: {x: 57.6, y: G(57.6, -0.8) + 0.3, z: -0.8}, start: EV3.land + 0.35, end: EV3.land + 6.5, rate: 4.5, life: 11, up: 0.26, spread: 2.4, jet: {x: -0.8, y: 0.5, z: 0.6}, jetSpread: 1.2, size: 0.95, grow: 0.75, wind: {x: 0.05, y: 0, z: -0.03}, color: '#BDB2A3', opacity: 0.6, seed: 41},
 ]);
 let puffT = NaN, puffs: Puff[] = [];
 const puffsNow = (T: number) => {
@@ -202,9 +202,9 @@ export const d3Fx = (T: number): FxOut => {
     if (k < 0.25) return;
     out.push(fx(dust3({at: {...f.pos, y: f.pos.y + 0.03}, t: T, t0: f.t, key: `d3ff_${f.key}`, n: 2, size: 0.05, grow: 0.22 * k, speed: 0.5, life: 1.0, dir: {x: -0.4, y: 1, z: 0}, spread: 60, rise: 0.25, color: '#8E857C', opacity: 0.45 * k, seed: 300 + i})));
   });
-  // ---- the D2 canisters' smoke (behind D2-7's camera): the wind takes it — half by P3, thin by the flash, gone by ~123
-  if (T < 124.0) {
-    const k = (0.5 - 0.32 * smooth((T - 116.95) / 1.5)) * (1 - smooth((T - 120.5) / 2.5));
+  // ---- the D2 canisters' smoke (behind D2-7's camera): the wind takes it — a thin haze at P3, gone by ~118.8 (130 overlapping puffs: their own opacity is a poor dial)
+  if (T < 118.8) {
+    const k = 0.3 * (1 - smooth((T - 116.95) / 1.8));
     d2Cans().forEach((c) => { if (T >= c.t0) { const f = smokeCanister(c, T); out.push({...f, items: fadeItems(f.items, k, /_sm_/)}); } });
   }
   // ---- heavy 1: footfalls; the flare and the flash; the ram's slam; the knee; the crash

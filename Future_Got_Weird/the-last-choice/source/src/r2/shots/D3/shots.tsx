@@ -16,8 +16,8 @@ import {
 
 /** smoke and dust puffs fade out as they reach the lens (no screen-filling veil from a puff a metre away) */
 const SMOKE = /(^d3dust|^d3wave|_sm_|^d3flare_tr|_wave_d|_wisp|_dust)/;
-const nearFade = (items: Item[]): Item[] => items.map((it) => {
-  if (it.kind !== 'sprite' || !it.key || !SMOKE.test(it.key)) return it;
+const nearFade = (items: Item[], re: RegExp = SMOKE): Item[] => items.map((it) => {
+  if (it.kind !== 'sprite' || !it.key || !re.test(it.key)) return it;
   const draw = it.draw;
   return {...it, draw: (c) => {
     const a = smooth((toView(c.view, it.pos).z - 1.5) / 4.0);
@@ -26,13 +26,13 @@ const nearFade = (items: Item[]): Item[] => items.map((it) => {
     return a > 0.98 || !el ? el : <g opacity={a.toFixed(3)}>{el}</g>;
   }};
 });
-const shot = (start: number, cam: CamKey[] | CamFn, o: (T: number) => D3Opts = () => ({}), drift = 0.018, ease = 0.6, smoke = 1): React.FC => {
+const shot = (start: number, cam: CamKey[] | CamFn, o: (T: number) => D3Opts = () => ({}), drift = 0.018, ease = 0.6, smoke = 1, near: RegExp = SMOKE): React.FC => {
   const C: React.FC = () => {
     const {t, T} = useShotTime(start);
     const c = typeof cam === 'function' ? cam(t, T) : camPath(cam, t, ease);
     const f = d3FxAt(T);
     const fxItems = smoke < 1 ? fadeItems(f.items, smoke, SMOKE) : f.items;
-    return <Stage T={T} cam={c} lights={f.lights} shake={f.shake} drift={drift} items={(v) => [...d3Items(v, T, o(T)), ...nearFade(fxItems)]} />;
+    return <Stage T={T} cam={c} lights={f.lights} shake={f.shake} drift={drift} items={(v) => [...d3Items(v, T, o(T)), ...nearFade(fxItems, near)]} />;
   };
   return C;
 };
@@ -46,12 +46,13 @@ export const D3_3 = shot(SH3.d33, CAM_3, () => ({full: 30}), 0.018);
 // D3-4a (HEAVY_DOWN 125.64–127.20): the topple, wide; the crash; the dust wave; debris
 export const D3_4a = shot(SH3.d34a, CAM_4a, () => ({full: 34}), 0.012);
 // D3-4b (127.20–128.02): the peak: the three see it lie there
-export const D3_4b = shot(SH3.d34b, CAM_4b, () => ({full: 30, near: true}), 0.014);
+// (the tether cable runs past the lens here at chest height: its nearest stretch fades out rather than bar the faces)
+export const D3_4b = shot(SH3.d34b, CAM_4b, () => ({full: 30, near: true}), 0.014, 0.6, 1, /(^d3dust|^d3wave|_sm_|_wave_d|_wisp|_dust|^d3teth_s)/);
 // D3-5 (ADAPT 128.02–131.02): a drone climbs out of the dust; the gimbal tilts; amber; the mark on the tablet
 export const D3_5 = shot(SH3.d35, CAM_5, () => ({full: 24}), 0.0);
 // D3-6 (FORMATION 131.02–133.82): high wide: the line across the crater bends into the arc round the Crew
-// (seen from 30 m up the low dust is thinner: drawn at 45 % so the formation reads)
-export const D3_6 = shot(SH3.d36, CAM_6, () => ({full: 20, far: 140}), 0.0, 0.6, 0.45);
+// (seen from 30 m up the low dust is thinner: drawn at 30 % so the formation reads)
+export const D3_6 = shot(SH3.d36, CAM_6, () => ({full: 20, far: 140}), 0.0, 0.6, 0.3);
 // D3-7a (DECOY_FAIL 133.82–135.30): the sketch, the tap, the tablet raised; the projector clicks; the figures
 export const D3_7a = shot(SH3.d37a, CAM_7a, () => ({full: 30}), 0.014);
 // D3-7b (135.30–136.15): the units walk through the figures; a drone drops out of the sky
