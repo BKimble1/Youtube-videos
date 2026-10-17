@@ -25,6 +25,31 @@ export const D2_4: React.FC = () => {
   return <Stage T={T} cam={cam} set={SET_D2} lights={f.lights} shake={f.shake} drift={0.02} items={(v) => [...d2Items(v, T, {full: 30, girder: true}), ...f.items]} />;
 };
 
+// ------------------------------------------------------------------ D2-4b (104.20–105.25): the pry, tight
+// A close insert from B's left side, under the girder: its back plate in profile, the halligan's tip driven under the
+// edge, the lever, the plate popping off, his hand tearing the cables out in sparks. Tight enough
+// (back plate, bar and hands; no wide background) that the reverse angle doesn't read as a change of geography.
+export const D24b: CamKey[] = [
+  {t: 0, pos: {x: 53.4, y: 0.14, z: -7.02}, target: {x: 51.47, y: -0.12, z: -6.72}, fov: 24},
+  {t: 0.6, pos: {x: 53.34, y: 0.13, z: -7.0}, target: {x: 51.48, y: -0.14, z: -6.71}, fov: 23},
+  {t: 105.25 - 104.2, pos: {x: 53.3, y: 0.13, z: -6.99}, target: {x: 51.5, y: -0.2, z: -6.68}, fov: 23},
+];
+export const D2_4b: React.FC = () => {
+  const {t, T} = useShotTime(104.2);
+  const cam = camPath(D24b, t, 0.5);
+  const f = d2FxAt(T);
+  return <Stage T={T} cam={cam} set={SET_D2} lights={f.lights} shake={f.shake} drift={0.012} items={(v) => [...d2Items(v, T, {full: 30, girder: true}), ...f.items]} />;
+};
+
+// ------------------------------------------------------------------ D2-4c (105.25–TETHER 105.84): back to the wide
+// The D2-4 camera again (its own move continuing): they fall back from the units, B goes over on its face.
+export const D2_4c: React.FC = () => {
+  const {T} = useShotTime(105.25);
+  const cam = camPath(D24, T - M.FLANK, 0.55);
+  const f = d2FxAt(T);
+  return <Stage T={T} cam={cam} set={SET_D2} lights={f.lights} shake={f.shake} drift={0.02} items={(v) => [...d2Items(v, T, {full: 30, girder: true}), ...f.items]} />;
+};
+
 // ------------------------------------------------------------------ D2-5 (TETHER 105.84–110.46)
 // Wide on the girder from the rim south of it: the tether operator by post 3 fires at A, whips the cable round the post,
 // the reel pulls; A is dragged along the girder into C and both slam into the truss; the girder shudders.

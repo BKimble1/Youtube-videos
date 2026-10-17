@@ -132,8 +132,8 @@ export const D4_7a = shot(SH.d47, [
 // Close on his face from her direction: looking at the heavy, his head snaps round to her (175.98), the body follows,
 // and he launches toward the lens.
 export const D4_7b = shot(SH.d47b, [
-  {t: 0, pos: g(11.79, 5.85, 1.62), target: g(13.0, 6.58, 1.55), fov: 30},
-  {t: SH.d47c - SH.d47b, pos: g(11.76, 5.83, 1.6), target: g(12.95, 6.5, 1.5), fov: 31},
+  {t: 0, pos: g(11.85, 5.45, 1.62), target: g(12.8, 6.4, 1.55), fov: 30},
+  {t: SH.d47c - SH.d47b, pos: g(11.82, 5.43, 1.6), target: g(12.75, 6.3, 1.5), fov: 31},
 ], (T) => ({full: 30, near: true, tweak: {director: {anchor: chest('director', T, 1.45)}}}), 0.014);
 // ------------------------------------------------------------------ D4-7c (176.45–177.45): the sprint
 // Back on 7a's lens: the ram rears up over her; he sprints in from the right across the frame, plants between the

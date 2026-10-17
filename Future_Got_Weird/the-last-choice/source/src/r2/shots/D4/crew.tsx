@@ -108,8 +108,8 @@ const blockFeet = (() => {
 const RUN2: XZ[] = [{x: BLOCK_ROOT[5][1], z: BLOCK_ROOT[5][2]}, {x: 24.5, z: 2.2}, {x: 20.0, z: 2.75}, {x: 17.2, z: 2.6}, {x: 14.0, z: 1.6}, {x: GATHER.director.x, z: GATHER.director.z}];
 const CHARGE1: XZ[] = [{x: GATHER.director.x + 0.05, z: GATHER.director.z + 0.05}, {x: 12.75, z: -1.0}, {x: 12.98, z: -2.15}];
 const CHARGE2: XZ[] = [{x: 13.1, z: -2.4}, {x: 14.6, z: -2.5}, {x: 16.0, z: -2.75}];
-// (from 1.5 m further out than before, past the decoy maker and round the van's corner: the sprint must cross the frame)
-const SPRINT: XZ[] = [{x: 13.0, z: 6.6}, {x: 11.3, z: 5.0}, {x: 9.5, z: 3.55}];
+// (from well out, north of the mound at (11.5, 6.0) and the decoy maker, round the van's corner: it must cross the frame)
+const SPRINT: XZ[] = [{x: 12.8, z: 6.4}, {x: 12.3, z: 4.9}, {x: 10.5, z: 4.55}, {x: 9.5, z: 3.55}];
 /** his braced stance at the plant (left foot toward the heavy) */
 const PLANT_FEET = (() => {
   const f = fwdOf(PLANT.h), r = rightOf(PLANT.h);
@@ -128,7 +128,7 @@ const DIR_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.14, root: [
     [165.04, 16.0, -2.75, runEnd(CHARGE2).h], [165.35, 16.2, -2.85, 85], [166.0, 16.4, -2.75, 75], [167.3, 16.4, -2.75, 72], [168.1, 16.4, -2.9, 215],
     [169.0, 15.0, -2.45, 250], [169.9, 14.1, -1.0, 210], [170.6, 14.0, 0.6, 200], [171.4, 14.0, 0.9, 300], [172.4, 13.8, 1.5, 15], [173.4, 13.5, 2.9, 120], [174.6, 12.3, 5.2, 190],
-    [175.5, 12.95, 6.52, 80], [EV.dirSees, 13.0, 6.6, 76], [EV.dirSprint, 12.98, 6.58, headingTo(SPRINT[0], SPRINT[1])],
+    [175.5, 12.78, 6.36, 80], [EV.dirSees, 12.8, 6.4, 76], [EV.dirSprint, 12.8, 6.4, headingTo(SPRINT[0], SPRINT[1])],
   ]},
   {kind: 'run', path: SPRINT, T0: EV.dirSprint, T1: EV.dirPlant, gait: GAITS.sprint, A: 0.3, D: 0.25},
   {kind: 'stand', root: [[177.42, SPRINT[2].x, SPRINT[2].z, runEnd(SPRINT).h], [177.66, PLANT.x, PLANT.z, PLANT.h], [178.0, PLANT.x, PLANT.z, PLANT.h]], feet: PLANT_FEET},

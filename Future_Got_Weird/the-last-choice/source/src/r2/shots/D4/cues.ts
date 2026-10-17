@@ -125,11 +125,11 @@ export const CUES_D4: Cue[] = [
   {t: 174.3, kind: 'breath_ragged', gain: -5, pan: -0.85, dist: 0.1},
   // ---- D4-7a/b/c the ram rises at her; his head snaps round; he sprints and plants (175.04–177.45)
   {t: EV.dirSees, kind: 'sensor_lock', gain: -2, pan: -0.85, dist: 0.15},
-  {t: EV.ramWind, kind: 'heavy_servo', gain: 3, pan: 0.3, dist: 0.3}, // the ram winds up
+  {t: EV.ramWind, kind: 'heavy_servo', gain: 3, pan: 0.2, dist: 0.3}, // the ram winds up
   {t: EV.dirSprint, kind: 'breath_exert', gain: 0, pan: 0.05, dist: 0.05},
   {t: EV.dirSprint + 0.02, kind: 'run_rubble', gain: 0, pan: 0.05, dist: 0.05, dur: 1.08, fade: 0.1},
-  {t: 176.9, kind: 'breath_ragged', gain: -2, pan: -0.4, dist: 0.05, rate: 1.15}, // her gasp
-  {t: EV.dirPlant, kind: 'steps_gravel', gain: 0, pan: 0.05, dist: 0.1},
+  {t: 176.9, kind: 'breath_ragged', gain: -2, pan: -0.55, dist: 0.05, rate: 1.15}, // her gasp
+  {t: EV.dirPlant, kind: 'steps_gravel', gain: 0, pan: 0.3, dist: 0.1},
   // ---- D4-8 STRIKE side-on (177.45–179.30): the contact at 177.76
   {t: EV.strike, kind: 'ram_strike', gain: 3, pan: 0.15, dist: 0.1},
   {t: EV.strike + 0.005, kind: 'plate_shatter', gain: 3, pan: 0.15, dist: 0.1},
@@ -139,7 +139,7 @@ export const CUES_D4: Cue[] = [
   {t: 178.15, kind: 'debris_rain', gain: -10, pan: -0.35, dist: 0.1},
   {t: 178.35, kind: 'breath_ragged', gain: -2, pan: 0.05, dist: 0.1},
   {t: 178.6, kind: 'heavy_servo', gain: -6, pan: 0.85, dist: 0.25, rate: 0.85}, // the ram retracts
-  {t: 178.95, kind: 'servo_heavy', gain: -6, pan: 0.85, dist: 0.25, rate: 0.8}, // it shifts its weight back
+  {t: 178.95, kind: 'servo_heavy', gain: -6, pan: 0.85, dist: 0.3, rate: 0.8}, // it shifts its weight back
   // ---- D4-9a SOFTEN: he slides down the slab (179.30–180.80)
   {t: EV.slide + 0.05, kind: 'rubble_shift', gain: -2, pan: 0, dist: 0.05, dur: 1.3, fade: 0.3},
   {t: 179.7, kind: 'breath_ragged', gain: -2, pan: 0, dist: 0.05, rate: 0.9},
