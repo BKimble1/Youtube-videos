@@ -122,9 +122,9 @@ export const h1ClampPt = (T: number): V3 => {
   return lerp3s(a.knees[0], a.feet[0], 0.55);
 };
 /** the Director's bait spot on the slope west of it (he bangs the plate; the ram comes down short of him) */
-export const DIR_BAIT = {x: 57.15, z: -3.6};
+export const DIR_BAIT = {x: 58.4, z: -9.7};
 export const RAM2_AT: V3 = (() => {
-  const p = {x: 59.0, z: -4.5};
+  const p = {x: 60.45, z: -8.55};
   return {x: p.x, y: G(p.x, p.z) + 0.12, z: p.z};
 })();
 /** heavy 1's head swinging blind after the flash: up and away, then sweeping */
