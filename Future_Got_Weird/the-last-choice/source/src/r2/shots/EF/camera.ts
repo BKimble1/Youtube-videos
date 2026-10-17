@@ -1,9 +1,10 @@
 // E/F cameras (pure: no React — probed in node for speed, clearance and on-screen sizes).
 //
-// E2 → F1 is ONE camera (the cut at 199.30 is invisible: both shots render the same camera and the same scene):
+// E2 → F1 is ONE camera (the cut at 198.30 is invisible: both shots render the same camera and the same scene):
 //   E2 193.10–198.30  extreme close on his face (a slow push while he breathes his last; still after the eyes close)
-//   A  198.30–201.50  off his still face — following her as she turns to the van door — a pan right with a truck to
-//                     the radio, arriving as her hand turns the knob (twist 199.60–199.90, the click on 199.90); hold
+//   A  198.30–201.50  F1 opens on E2's framing of his still face and leaves it at once — following her as she turns
+//                     to the van door — a pan right with a truck to the radio, settling as her hand closes on the knob
+//                     (199.50) and turns it (199.60–199.90, the click on 199.90); hold while the radio comes alive
 //   B  201.50–230.40  the rising pullback: a crane that rises and swings clockwise round him (S → SW → WSW) so that
 //                     the first wide (~203) holds the radio AND his body, the companions and the ring pass below, then
 //                     the crater, the avenue with the streaming formations and the skyline with the fallen tower come
@@ -166,8 +167,8 @@ const e2Amp = (T: number) => 0.004 * (1 - smooth((T - M.EYES_CLOSE) / 1.2)) + 0.
 
 // ------------------------------------------------------------------ F1
 /**
- * Phase A: the move off his face to the knob. It starts at MOVE.a (inside E2) from E2's own framing and lands at MOVE.b
- * (in F1) on the knob seen from the south-south-east: her right arm reaches in from frame left, the hand side-on, the
+ * Phase A: the move off his face to the knob. It starts at MOVE.a (F1's first frame, E2's own framing) and lands at
+ * MOVE.b on the knob seen from the south-south-east: her right arm reaches in from frame left, the hand side-on, the
  * knob face ~45° to the lens. The move's speed peaks early (a third of the way) and lands softly, so the camera is
  * almost settled while she turns the knob.
  */
@@ -177,7 +178,7 @@ const E2_END = camE2(MOVE.a);
 // hand side-on, the knob face ~55° to the lens)
 export const KNOB_POS: V3 = {x: 8.54, y: 1.22, z: 2.99};
 /** The move bows out to the south, away from her (her head passes no nearer than ~1 m). */
-const MOVE_CTRL: V3 = {x: 8.0, y: 1.3, z: 3.9};
+const MOVE_CTRL: V3 = {x: 8.05, y: 1.35, z: 4.15};
 /** The knob composition: the knob a little right of centre and below (her arm comes in across the left half). */
 const KNOB_SUBJ: V3 = {x: 7.98, y: 0.96, z: 1.83}, KNOB_SX = 0.56, KNOB_SY = 0.56, KNOB_FOV = 32;
 /** Camera heading/elevation (deg) of an aim, and back (the engine's convention: yaw 0 = north (−z), 90 = east). */
@@ -220,6 +221,8 @@ const RISE_POLAR: [number, number, number, number, number, number][] = [
 export const RISE_KEYS: PathKey[] = [
   // the radio (end of the pan), then the first wide: the radio and his body, her between them
   {pos: KNOB_POS, subj: KNOB_SUBJ, sx: KNOB_SX, sy: KNOB_SY, fov: KNOB_FOV},
+  // (pulling back from the radio before the pan finds them: she is not swept past the lens)
+  {pos: {x: 9.0, y: 1.6, z: 4.25}, subj: {x: 7.8, y: 0.9, z: 2.25}, sx: 0.58, sy: 0.54, fov: 34},
   {pos: {x: 9.45, y: 2.45, z: 5.95}, subj: {x: 7.25, y: 0.82, z: 2.6}, sx: 0.5, sy: 0.5, fov: 39},
   ...RISE_POLAR.map(([b, R, H, fov, sx, sy]) => ({pos: polar(b, R, H), subj: HIM, sx, sy, fov})),
 ];

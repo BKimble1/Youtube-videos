@@ -6,8 +6,8 @@ import {FxOut, fx, combine, impact, breakerHit, plateHit, dust3, chips3, sparks3
 import {unitAttach, unitImpacts, cable} from '../../mech';
 
 const CABLES = ['#E0543E', '#3F7FD1', '#E8C547', '#2E9E6A'];
-import {EV, unitD1, FRONT, unitFootfalls} from './machines';
-import {directorAt, tetherAt, runnerAt, flaresAt, ALLY_KEYS, TETHER_SHOTS, FLARE, crewFootfalls} from './crew';
+import {EV, unitD1, FRONT, unitFootfalls, BR4, U3_SLIDE} from './machines';
+import {directorAt, tetherAt, runnerAt, flaresAt, ALLY_KEYS, TETHER_SHOTS, FLARE, crewFootfalls, BR4_DIG} from './crew';
 import {G, fwdOf, rightOf} from './motion';
 
 const ground = (p: V3) => G(p.x, p.z);
@@ -162,14 +162,31 @@ export const d1Fx = (T: number): FxOut => {
     out.push(impact({at: a, normal: {x: 0.5, y: 0.3, z: 0.8}, t: T, t0: EV.br3Crash, key: 'd1br3', strength: 1.5, material: 'armor', ground: ground(a), seed: 93}));
     out.push(fx([], [], shakeAt(T, EV.br3Crash, 0.08)));
   }
-  // ---- BR4: the shoulder charge into U3; U3 goes over the rim
-  if (T > EV.br4 - 0.1 && T < EV.br4 + 3) {
+  // ---- BR4: shoulder and plate into U3's chest; his driving steps dig in; its feet skid back up the slope; it goes over
+  // the crest, lands on the inner slope and slides down it
+  if (T > BR4.go && T < BR4.slide1 + 2.5) {
     const c = unitAttach(unitD1('U3', EV.br4)).chest;
-    out.push(impact({at: add3(c, {x: -0.12, y: -0.1, z: 0}), normal: {x: -0.25, y: 0.85, z: 0.45}, t: T, t0: EV.br4, key: 'd1br4', strength: 1.4, material: 'armor', ground: ground(c), seed: 95}));
-    out.push(fx([], [], shakeAt(T, EV.br4, 0.08)));
-    // his driving feet dig in
-    const w = directorAt(EV.br4 + 0.3).spec.world!;
-    [w.footL!, w.footR!].forEach((f, i) => out.push(fx(dust3({at: {...f, y: f.y + 0.03}, t: T, t0: EV.br4 + 0.15 + i * 0.18, key: `d1dig${i}`, n: 2, size: 0.05, grow: 0.18, speed: 0.45, life: 0.9, dir: {x: -0.6, y: 1, z: 0}, spread: 50, color: '#A2968A', opacity: 0.45, seed: 97 + i}))));
+    // (normal up and south: the chips spray across the frame, not into the low lens behind him)
+    out.push(impact({at: add3(c, {x: -0.05, y: -0.14, z: 0}), normal: {x: -0.15, y: 0.85, z: 0.5}, t: T, t0: EV.br4, key: 'd1br4', strength: 1.5, material: 'armor', ground: ground(c), seed: 95}));
+    out.push(fx([], [], shakeAt(T, EV.br4, 0.09)));
+    out.push(fx([], [], shakeAt(T, BR4.release, 0.03)));
+    // his feet: the burst push-off and the three driving plants
+    BR4_DIG.forEach(([t, side], i) => {
+      if (T < t) return;
+      const w = directorAt(t + 0.01).spec.world!;
+      const f = side === 'L' ? w.footL! : w.footR!;
+      out.push(fx(dust3({at: {...f, y: f.y + 0.03}, t: T, t0: t, key: `d1dig${i}`, n: 3, size: 0.05, grow: 0.22, speed: 0.6, life: 1.0, dir: {x: -0.8, y: 0.9, z: 0}, spread: 45, rise: 0.15, color: '#A2968A', opacity: 0.5, seed: 97 + i})));
+      out.push(fx(chips3({at: {...f, y: f.y + 0.03}, t: T, t0: t, key: `d1digc${i}`, n: 2, dir: {x: -0.7, y: 1, z: 0.1}, spread: 40, speed: [0.8, 2], size: [0.012, 0.03], material: 'asphalt', ground: f.y, life: 1.0, seed: 120 + i})));
+    });
+    // U3's feet skid back with the drive, then two stagger steps onto the crest
+    const fa = unitAttach(unitD1('U3', EV.br4)), fb = unitAttach(unitD1('U3', BR4.release));
+    out.push(skidDust(T, fa.footL, fb.footL, EV.br4 + 0.05, BR4.release, 'd1u3skL', 131), skidDust(T, fa.footR, fb.footR, EV.br4 + 0.08, BR4.release, 'd1u3skR', 137));
+    // the slide down the inner slope: dust strung along its back, rubble trickling ahead of it
+    if (T > U3_SLIDE.t0) {
+      const pa = unitAttach(unitD1('U3', U3_SLIDE.t0 + 0.15)).pelvis, pb = unitAttach(unitD1('U3', U3_SLIDE.t1)).chest;
+      out.push(skidDust(T, pa, pb, U3_SLIDE.t0 + 0.15, U3_SLIDE.t1 - 0.2, 'd1u3sl', 141));
+      out.push(fx(chips3({at: {...pb, y: ground(pb) + 0.1}, t: T, t0: U3_SLIDE.t0 + 0.3, key: 'd1u3tr', n: 9, dir: {x: 1, y: 0.3, z: -0.05}, spread: 35, speed: [0.6, 2.2], size: [0.03, 0.09], material: 'concrete', ground: ground(pb) - 0.8, life: 2.2, seed: 149})));
+    }
   }
   return combine(...out.filter(Boolean) as FxOut[]);
 };

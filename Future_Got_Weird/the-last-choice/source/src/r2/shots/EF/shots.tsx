@@ -2,8 +2,9 @@
 //   E1        186.90–191.40  close, low: he sits against the slab; the drone pilot crawls the last half-metre, kneels at
 //                            his left and takes his hand; his eyes find her for a moment
 //   E1_clasp  191.40–193.10  insert (ClaspCU): his grip loosening in her hands; her answering squeeze
-//   E2        193.10–199.30  extreme close on his face: the last small breath (195.0), the eyes close (196.6), stillness
-//   F1        199.30–230.40  one physical move: his still face → a short pan to the radio as her hand turns the knob
+//   E2        193.10–198.30  extreme close on his face: the last small breath (195.0), the eyes close (196.6), stillness
+//   F1        198.30–230.40  one physical move from E2's own framing (no visible cut): off his still face, following her
+//                            as she turns to the van door, to the radio as her hand closes on the knob and turns it
 //                            (click 199.9) → the rising pullback over the companions, the ring, the crater and the avenue
 //                            to the burning skyline; fade to black for the credits
 import React from 'react';
@@ -16,7 +17,7 @@ import {RADIO, polyline3, FIRES} from '../../world';
 import type {AtmosOpts} from '../../world';
 import {ClaspCU, dmgR2} from '../../rig';
 import {M} from '../../timing';
-import {camE1, camF1, fadeF1} from './camera';
+import {camE1, camF1, fadeF1, MOVE} from './camera';
 import {directorSpec, pilotSpec, clasped, othersItems, KNOB, knobAngle, DIR_HEAD, DIR_CHEST, pilotRightLayer, pilotAnchor} from './crew';
 import {tableauMachineItems} from './machines';
 
@@ -57,7 +58,7 @@ const E1Clasp: React.FC = () => {
 
 // ------------------------------------------------------------------ E2 (and F1: one camera, one scene)
 // E2 and F1 render the same scene through the same camera (camF1 → camClose before the rise), so the cut between them
-// at 199.30 is invisible: the move off his face starts inside E2 (MOVE.a 198.30) and lands on the knob in F1.
+// (F1_IN = MOVE.a, 198.30) is invisible: F1's first frame is E2's still face, and the move off it starts there.
 const E2: React.FC = () => {
   const {T} = useShotTime(M.RING_END);
   return <Aftermath T={T} />;
@@ -105,7 +106,7 @@ const f1Atmos = (T: number, camY: number): AtmosOpts => {
   };
 };
 const F1: React.FC = () => {
-  const {T} = useShotTime(M.RADIO_CLICK - 0.6);
+  const {T} = useShotTime(MOVE.a);
   return <Aftermath T={T} />;
 };
 const Aftermath: React.FC<{T: number}> = ({T}) => {
@@ -128,4 +129,4 @@ const Aftermath: React.FC<{T: number}> = ({T}) => {
   );
 };
 
-export const EF_SHOTS = {E1, E1Clasp, E2, F1, CLASP_IN};
+export const EF_SHOTS = {E1, E1Clasp, E2, F1, CLASP_IN, F1_IN: MOVE.a};

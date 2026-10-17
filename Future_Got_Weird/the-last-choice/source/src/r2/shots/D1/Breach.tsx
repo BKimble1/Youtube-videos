@@ -63,16 +63,22 @@ export const D1_7: React.FC = () => {
   return <Stage T={T} cam={cam} lights={f.lights} shake={f.shake} drift={0.02} items={(v) => [...d1Items(v, T, {full: 30}), ...f.items]} />;
 };
 
-// ------------------------------------------------------------------ D1-8 (BR4 85.64–89.78): the shoulder charge
-// Behind the Director, low: he gathers, charges U3 standing last in the gap, drives it back over the rim; it goes over
-// into the crater. The camera follows him to the rim: through the gap, the crater floor, the reserve and drones.
+// ------------------------------------------------------------------ D1-8 (BR4 85.64–89.78): the shoulder drive
+// Low behind him, off his left (plate) shoulder, through the gap between rim plates 7 and 8: he gathers, bursts two strides into U3, drives it up the rim's west
+// face, shoves; it staggers onto the crest and goes over backward. The camera follows him up the slope and cranes over
+// his left shoulder as he stands on the crest: the gap opens on the crater — U3 sliding down the inner slope below,
+// the bowl, and the reserve's line on the far rim.
+const ga = (x: number, y: number, z: number): V3 => ({x, y, z});
 const D18_KEYS: CamKey[] = [
-  {t: 0, pos: g(39.2, -0.15, 1.05), target: g(44.4, -0.95, 1.3), fov: 40},
-  {t: 0.5, pos: g(39.35, -0.15, 1.05), target: g(44.4, -0.95, 1.3), fov: 40},
-  {t: 1.0, pos: g(40.4, -0.25, 1.1), target: g(44.8, -1.0, 1.25), fov: 41},
-  {t: 1.9, pos: g(41.9, -0.3, 1.3), target: g(47.0, -1.1, 0.9), fov: 43},
-  {t: 3.0, pos: g(42.7, -0.35, 1.45), target: g(50.0, -1.0, 1.3), fov: 44},
-  {t: M.GAIN1 - M.BR4, pos: g(42.95, -0.35, 1.5), target: g(52.0, -0.9, 1.6), fov: 44},
+  // (the path stays south of U1's wreck, which lies NW from its feet at (41.6, −1.9), and of rim plate 8)
+  {t: 0, pos: g(40.0, -1.55, 0.55), target: g(44.4, -0.75, 1.2), fov: 42},
+  {t: 0.3, pos: g(40.1, -1.55, 0.53), target: g(44.4, -0.75, 1.18), fov: 42},
+  {t: EV.br4 - M.BR4, pos: g(41.3, -1.5, 0.6), target: g(44.8, -0.8, 1.3), fov: 42},
+  {t: 1.3, pos: g(42.6, -1.55, 0.7), target: g(46.1, -0.8, 1.35), fov: 42},
+  {t: 1.8, pos: g(43.3, -1.75, 0.95), target: g(47.1, -0.8, 1.3), fov: 43},
+  {t: 2.55, pos: ga(43.9, 1.95, -2.3), target: ga(48.7, 0.45, -0.5), fov: 46},
+  {t: 3.25, pos: ga(44.35, 2.45, -2.6), target: ga(49.6, 0.25, -0.45), fov: 49},
+  {t: M.GAIN1 - M.BR4, pos: ga(44.45, 2.5, -2.65), target: ga(49.7, 0.3, -0.4), fov: 50},
 ];
 export const D1_8: React.FC = () => {
   const {t, T} = useShotTime(M.BR4);

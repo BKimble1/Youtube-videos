@@ -14,7 +14,9 @@ const METAL = '#8E989F', METAL_D = '#5B646B', SLATE = '#3A444C', RUBBER = '#2629
 
 // ------------------------------------------------------------------ the Director's plate (worn on the left forearm)
 /** Salvaged machine armour plate strapped to the forearm's back (dorsal) side. Faces the dorsal direction. */
-export const plateWear = (state: PlateState, o: {glint?: number} = {}): WearFn => (fa, s, ink, col) => {
+/** `broken` (0..1, 'cracked' only): the crack goes right through after a further blow — a second crack network and a
+ *  chip knocked out of the far edge (the plate is close to breaking). */
+export const plateWear = (state: PlateState, o: {glint?: number; broken?: number} = {}): WearFn => (fa, s, ink, col) => {
   const nz = fa.dorsal.z;
   const front = nz > -0.12;
   const across = Math.max(0.16, Math.abs(nz));
@@ -47,6 +49,12 @@ export const plateWear = (state: PlateState, o: {glint?: number} = {}): WearFn =
           {(state === 'dented' || state === 'cracked') && <ellipse cx={-12 * k} cy={y(4) * k} rx={11 * k} ry={y(8) * k} fill={col('#A9B2B8')} stroke={C.ink} strokeWidth={ink * 0.5} />}
           {(state === 'dented' || state === 'cracked') && [0, 1, 2].map((i) => <line key={i} x1={(8 + i * 8) * k} y1={y(-15 + i * 5) * k} x2={(28 + i * 8) * k} y2={y(-10 + i * 5) * k} stroke={C.ink} strokeWidth={ink * 0.45} strokeLinecap="round" opacity={0.6} />)}
           {state === 'cracked' && <path d={`M ${-L * k} ${y(-8) * k} L ${-30 * k} ${y(-2) * k} L ${-12 * k} ${y(8) * k} L ${8 * k} ${y(2) * k} L ${30 * k} ${y(16) * k} L ${50 * k} ${y(12) * k} M ${-12 * k} ${y(8) * k} L ${-4 * k} ${y(28) * k}`} fill="none" stroke={C.ink} strokeWidth={ink * 0.8} strokeLinecap="round" strokeLinejoin="round" />}
+          {state === 'cracked' && (o.broken ?? 0) > 0 && (
+            <g opacity={Math.min(1, (o.broken ?? 0) * 1.5)}>
+              <path d={`M ${8 * k} ${y(2) * k} L ${16 * k} ${y(-14) * k} L ${10 * k} ${y(-Wd) * k} M ${-30 * k} ${y(-2) * k} L ${-26 * k} ${y(-20) * k} L ${-38 * k} ${y(-Wd) * k} M ${30 * k} ${y(16) * k} L ${22 * k} ${y(Wd) * k}`} fill="none" stroke={C.ink} strokeWidth={ink * 0.85} strokeLinecap="round" strokeLinejoin="round" />
+              <path d={`M ${(L - 2) * k} ${y(-Wd + 10) * k} L ${(L - 16) * k} ${y(-12) * k} L ${(L - 4) * k} ${y(2) * k} Z`} fill={col('#59636A')} stroke={C.ink} strokeWidth={ink * 0.6} strokeLinejoin="round" />
+            </g>
+          )}
           {state === 'shattered' && <path d={`M ${20 * k} ${y(-30) * k} L ${36 * k} ${y(-6) * k} L ${30 * k} ${y(20) * k}`} fill="none" stroke={C.ink} strokeWidth={ink * 0.6} />}
           {(o.glint ?? 0) > 0 && <path d={`M ${-30 * k} ${y(-30) * k} L ${10 * k} ${y(-34) * k}`} stroke="#FFFFFF" strokeWidth={4 * k} strokeLinecap="round" opacity={o.glint} />}
         </g>

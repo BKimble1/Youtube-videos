@@ -63,10 +63,15 @@ export const CAM_B5: CamKey[] = [
 ];
 export const B5_ANCHOR: V3 = {x: CHEST5.x, y: CHEST5.y + 0.3, z: CHEST5.z};
 
-/** B6: the lonely wide — high and far back over the ridge's west slope behind him (from lower, the crest and the slab
- * hide him and the army is a sliver on the horizon): he is small on the brink, lower left; the smoking crater and the
- * whole army filling the avenue beyond, upper right. Hold, drifting in a little. */
+/** B6: the lonely silhouette — the reverse: low among the vanguard's ranks east of the crater, the lens at chest height
+ * in the lane the ranks leave around the old rail column (80, −5), looking west and a touch up: the back and legs of
+ * the nearest machine large and dark on the left (it takes its last step and plants one beat after H4), more backs at
+ * the frame edge, the column and the fallen girder on the right, the crater's rim and its smoke between, and ~85 m off
+ * on the ridge crest, small, him — backlit by the low western sun against the smoke over the west ruin. The sight line
+ * clears every unit by ≥ 0.8 m and the column by ≥ 1.1 m. Hold, drifting in a hair. */
+export const B6_LENS = {x: 86.5, z: -3.6, up: 1.25};
+const B6_AIM: V3 = {x: STAND.x, y: groundH(B6_LENS.x, B6_LENS.z) + 1.5, z: STAND.z + 9.5}; // he sits just right of centre
 export const CAM_B6: CamKey[] = [
-  {t: 0, pos: {x: -21.5, y: 12.5, z: 16.0}, target: {x: 58.5, y: -4.2, z: -11.0}, fov: 26.5},
-  {t: SHOT_T.B6[1] - SHOT_T.B6[0], pos: {x: -20.6, y: 12.3, z: 15.5}, target: {x: 58.5, y: -4.2, z: -11.0}, fov: 25.5},
+  {t: 0, pos: gp(B6_LENS.x, B6_LENS.z, B6_LENS.up), target: B6_AIM, fov: 36},
+  {t: SHOT_T.B6[1] - SHOT_T.B6[0], pos: gp(B6_LENS.x - 0.3, B6_LENS.z + 0.017, B6_LENS.up + 0.02), target: {...B6_AIM, y: B6_AIM.y + 0.05}, fov: 35},
 ];

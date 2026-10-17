@@ -1,27 +1,32 @@
-// D1-3 (CLASH, wide) and D1-4 (four close cuts). The same battle as every other D1 shot (crew.tsx / machines.ts); only
+// D1-3 (CLASH: the slam, then the line) and D1-4 (four close cuts). The same battle as every other D1 shot (crew.tsx / machines.ts); only
 // the cameras differ, so positions and damage hold from the wide into the close cuts.
 import React from 'react';
 import {Stage, useShotTime, camPath, CamKey} from '../../film/stage';
 import {V3} from '../../../kit/math';
 import {M} from '../../timing';
 import {d1Items, d1FxAt, D1Opts} from './battle';
-import {breakerAt, runnerAt, tetherAt} from './crew';
+import {breakerAt, runnerAt, tetherAt, directorPlate} from './crew';
 import {G} from './motion';
 
 const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
 
-// ------------------------------------------------------------------ D1-3 (CLASH 68.30–72.00): the wide
-// From the south sidewalk among the burning facade's spill, 3–4 m up, looking north at the crater's west rim: his
-// plate slams into the first unit, which staggers back into the one behind; along the rim everyone engages.
+// ------------------------------------------------------------------ D1-3 (CLASH 68.30–72.00): the slam, then the line
+// Cut on the beat to a low, medium-wide three-quarter from the south-south-west, 3.4 m off the contact (he left, U1
+// right, near profile so the plate arm shows between them): the plate meets U1's chest big in frame, girder and the
+// avenue's north side behind; U1 staggers back into U3. From 1.2 s the camera cranes up and back over the breaker's
+// head so the engagement spreads around them: the breaker and U4 below right, U2 coming in, the runner, the line.
 const D13: CamKey[] = [
-  {t: 0, pos: g(34.6, 11.8, 4.6), target: g(41.6, -0.6, 1.0), fov: 33},
-  {t: 72.0 - M.CLASH, pos: g(35.2, 11.5, 4.4), target: g(41.3, -1.0, 1.0), fov: 34},
+  {t: 0, pos: g(40.3, 2.6, 0.75), target: g(41.8, -0.7, 1.3), fov: 42},
+  {t: 0.5, pos: g(40.3, 2.6, 0.75), target: g(41.95, -0.7, 1.3), fov: 42},
+  {t: 1.2, pos: g(40.25, 2.7, 0.85), target: g(42.0, -0.65, 1.25), fov: 43},
+  {t: 2.4, pos: g(39.9, 3.4, 2.0), target: g(41.8, -0.6, 1.0), fov: 50},
+  {t: 72.0 - M.CLASH, pos: g(39.5, 3.95, 2.9), target: g(41.6, -0.8, 0.9), fov: 54},
 ];
 export const D1_3: React.FC = () => {
   const {t, T} = useShotTime(M.CLASH);
   const cam = camPath(D13, t, 0.5);
   const f = d1FxAt(T);
-  return <Stage T={T} cam={cam} lights={f.lights} shake={f.shake * 0.6} drift={0.02} items={(v) => [...d1Items(v, T, {full: 24}), ...f.items]} />;
+  return <Stage T={T} cam={cam} lights={f.lights} shake={f.shake * 0.8} drift={0.02} items={(v) => [...d1Items(v, T, {full: 30, tweak: {director: {anchor: directorPlate(T)}}}), ...f.items]} />;
 };
 
 // ------------------------------------------------------------------ D1-4 (72.00–78.46): four close cuts

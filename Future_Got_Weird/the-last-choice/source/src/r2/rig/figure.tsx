@@ -297,7 +297,7 @@ const blinkAt = (t: number, seed: number) => {
 // ------------------------------------------------------------------ shading helpers
 const BIG = 'M -99999 -99999 H 99999 V 99999 H -99999 Z';
 /** cel shadow crescent + rim strip for a closed silhouette path, clipped to it. */
-const celOver = (id: string, d: string, L: FigLight | undefined, size: number, s: number, shiftD?: string): React.ReactNode => {
+const celOver = (id: string, d: string, L: FigLight | undefined, size: number, s: number, shiftD?: string, shadowAmt = 1): React.ReactNode => {
   if (!L) return null;
   const l2 = Math.hypot(L.dir.x, L.dir.y) || 1;
   const lx = L.dir.x / l2, ly = L.dir.y / l2, lz = clamp(L.dir.z, -1, 1);
@@ -310,7 +310,7 @@ const celOver = (id: string, d: string, L: FigLight | undefined, size: number, s
     <g>
       <defs><clipPath id={id}><path d={d} /></clipPath></defs>
       <g clipPath={`url(#${id})`}>
-        {shift > 0.5 && <path d={`${BIG} ${sd}`} transform={`translate(${f2(lx * shift)} ${f2(ly * shift)})`} fillRule="evenodd" fill={L.shadowC ?? '#2B3550'} opacity={0.34 * key} />}
+        {shift > 0.5 && <path d={`${BIG} ${sd}`} transform={`translate(${f2(lx * shift)} ${f2(ly * shift)})`} fillRule="evenodd" fill={L.shadowC ?? '#2B3550'} opacity={0.34 * key * shadowAmt} />}
         {rimAmt > 0.04 && <path d={`${BIG} ${sd}`} transform={`translate(${f2(-lx * rimW)} ${f2(-ly * rimW)})`} fillRule="evenodd" fill={L.rimC ?? '#FFC890'} opacity={clamp(rimAmt * 1.6) * 0.9} />}
       </g>
     </g>
@@ -735,7 +735,55 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
       [0.83, 0.84, 0.1, 20], [-0.83, 0.84, 0.1, 20], [1.07, 0.16, 0.05, 16], [-1.07, 0.16, 0.05, 16],
       [0.52, 1.02, 0.25, 24], [-0.52, 1.02, 0.25, 24], [0.17, 1.08, 0.3, 24], [-0.17, 1.08, 0.3, 24],
     ];
-    curls.map((c, k) => ({c, k, z: hl3(c[0], c[1], c[2]).z})).sort((a, b) => a.z - b.z).forEach(({c, k}) => blobAt(`cu${k}`, c[0], c[1], c[2], c[3]));
+    const sorted = curls.map((c, k) => ({c, k, z: hl3(c[0], c[1], c[2]).z})).sort((a, b) => a.z - b.z);
+    // rear and rear-three-quarter views (the face turned away): the near curls merge into one hair mass — a scalloped
+    // outer silhouette, cel shadow and a lit rim from the key light, and a few thin curl strokes — instead of a cluster
+    // of inked circles. Front and profile views (rearW 0) draw exactly as before; it blends in between.
+    const rw0 = clamp((-hb.F.z - 0.15) / 0.3), rearW = rw0 * rw0 * (3 - 2 * rw0);
+    if (rearW <= 0) sorted.forEach(({c, k}) => blobAt(`cu${k}`, c[0], c[1], c[2], c[3]));
+    else {
+      const near: {x: number; y: number; r: number; z: number; k: number; c: (typeof curls)[number]}[] = [];
+      sorted.forEach(({c, k}) => {
+        const q = hl3(c[0], c[1], c[2]);
+        if (q.z > 0.15) near.push({x: q.x, y: q.y, r: c[3] * s, z: q.z, k, c});
+        else blobAt(`cu${k}`, c[0], c[1], c[2], c[3]); // behind the skull, as before
+      });
+      if (near.length) {
+        // the union's outline: from the mass centre, the farthest circle edge along each ray
+        const Cx = near.reduce((a, b) => a + b.x, 0) / near.length, Cy = near.reduce((a, b) => a + b.y, 0) / near.length;
+        const outline: V2[] = [];
+        let last = Math.max(...near.map((b) => b.r));
+        for (let i = 0; i < 144; i++) {
+          const a = (i / 144) * Math.PI * 2, ux = Math.cos(a), uy = Math.sin(a);
+          let best = 0;
+          for (const b of near) {
+            const dx = b.x - Cx, dy = b.y - Cy, pr = dx * ux + dy * uy, disc = b.r * b.r - (dx * dx + dy * dy - pr * pr);
+            if (disc >= 0) best = Math.max(best, pr + Math.sqrt(disc));
+          }
+          if (best <= 0) best = last;
+          last = best;
+          outline.push({x: Cx + ux * best, y: Cy + uy * best});
+        }
+        const md = polyPath(outline);
+        // a few curl strokes on the curls that face the viewer most, thin and lighter than the outline, on the side
+        // away from the light
+        const l2 = L ? Math.hypot(L.dir.x, L.dir.y) || 1 : 1;
+        const sa = L ? Math.atan2(-L.dir.y / l2, -L.dir.x / l2) : Math.PI * 0.35;
+        const strokes = [...near].sort((a, b) => b.z - a.z).slice(0, 3).map((b, j) => {
+          const rr = b.r * 0.62, a0 = sa - 1.3 + j * 0.5, a1 = a0 + 2.0;
+          const p0 = {x: b.x + Math.cos(a0) * rr, y: b.y + Math.sin(a0) * rr}, p1 = {x: b.x + Math.cos(a1) * rr, y: b.y + Math.sin(a1) * rr};
+          return <path key={`cs${j}`} d={`M ${f2(p0.x)} ${f2(p0.y)} A ${f2(rr)} ${f2(rr)} 0 0 1 ${f2(p1.x)} ${f2(p1.y)}`} fill="none" stroke={mix(inkC, hairC, 0.4)} strokeWidth={f2(ink * 0.55)} strokeLinecap="round" opacity={0.8 * rearW} />;
+        });
+        extrasFront.push(
+          <g key="cumass">
+            <path d={md} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />
+            {celOver(`${id}hm`, md, L, headSize, s, undefined, 0.55)}
+            {strokes}
+            {rearW < 1 && <g opacity={f2(1 - rearW)}>{near.map((b) => <circle key={`cu${b.k}`} cx={b.x} cy={b.y} r={b.r} fill={hairC} stroke={inkC} strokeWidth={ink} />)}</g>}
+          </g>,
+        );
+      }
+    }
   }
   if (hairType === 'spiky') {
     [-0.5, -0.25, 0, 0.25, 0.5].forEach((r0, k) => {

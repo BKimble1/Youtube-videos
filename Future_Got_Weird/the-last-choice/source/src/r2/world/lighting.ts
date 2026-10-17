@@ -132,6 +132,8 @@ export type LightOpts = {
   fireK?: number;
   /** override the phase time (to light a shot as another moment) */
   phaseT?: number;
+  /** scale the shadow tone level (a backlit shot exposed for the sky: < 1 sinks the sides facing away from the sun) */
+  shadowK?: number;
 };
 
 /** The light rig for film time t. */
@@ -143,7 +145,7 @@ export const lightFor = (t: number, o: LightOpts = {}): LightRig => {
     sun,
     sunColor: p.sunColor,
     ambient: p.ambient,
-    levels: p.levels,
+    levels: o.shadowK === undefined || !p.levels ? p.levels : [p.levels[0] * o.shadowK, p.levels[1], p.levels[2]],
     lights: fireLights(t, o.extra ?? []).map((l) => ({...l, power: l.power * (l.color ? fk : 1)})),
     fogColor: p.fogColor,
     fogStart: p.fogStart,

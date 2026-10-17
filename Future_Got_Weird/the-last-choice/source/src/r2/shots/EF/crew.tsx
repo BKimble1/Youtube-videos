@@ -133,6 +133,10 @@ const PIL0 = TB_CREW.drone.pos; // on hands and knees at FINAL_HIT
 /** Where she kneels at his left side, facing him (E1/E2): close enough that her arms bend as she holds his hand. */
 export const PIL_Q = at3(DIR.pos, DIR.heading - 60, 0.9, 0, 0);
 const PIL_HQ = headingTo(PIL_Q, DIR.pos);
+/** Where she settles after the radio: back at his side, a little further off, sitting up (her head clear of his face
+ *  from the rising camera). */
+const PIL_E = at3(DIR.pos, DIR.heading - 56, 1.0, 0, 0);
+const PIL_HE = headingTo(PIL_E, DIR.pos);
 
 /** The knob: its axis (out of the radio front), and two in-plane directions (local x and up on the radio face). */
 export const KNOB = (() => {
@@ -253,8 +257,8 @@ const pilotFace = (T: number) => ({
 /** Her body root and heading after the clasp: at his side → turned to the van door → back to him. */
 const kneelAt = (T: number) => {
   const kT = smooth((T - TURN.a) / (TURN.b - TURN.a)), kB = smooth((T - BACK.a) / (BACK.b - BACK.a));
-  const pos = lerp3(lerp3(PIL_Q, REACH.pos, kT), PIL_Q, kB);
-  const heading = PIL_HQ + wrap(REACH.heading - PIL_HQ) * kT + wrap(PIL_HQ - REACH.heading) * kB;
+  const pos = lerp3(lerp3(PIL_Q, REACH.pos, kT), PIL_E, kB);
+  const heading = PIL_HQ + wrap(REACH.heading - PIL_HQ) * kT + wrap(PIL_HE - REACH.heading) * kB;
   return {pos, heading};
 };
 /** One kneeling foot through the two turns (each foot steps on its own beat, lifting a little). */
@@ -263,8 +267,8 @@ const turnFoot = (T: number, sd: 1 | -1, drop: number) => {
   // the right foot leads toward the van, the left follows; coming back the left leads
   const a = sd > 0 ? st(TURN.a, TURN.a + 0.42) : st(TURN.a + 0.35, TURN.b);
   const b = sd > 0 ? st(BACK.a + 0.5, BACK.b) : st(BACK.a, BACK.a + 0.6);
-  const f0 = kneelFoot(PIL_Q, PIL_HQ, sd, drop), f1 = kneelFoot(REACH.pos, REACH.heading, sd, drop);
-  return add3(lerp3(lerp3(f0, f1, a.k), f0, b.k), {x: 0, y: 0.06 * (a.lift + b.lift), z: 0});
+  const f0 = kneelFoot(PIL_Q, PIL_HQ, sd, drop), f1 = kneelFoot(REACH.pos, REACH.heading, sd, drop), f2 = kneelFoot(PIL_E, PIL_HE, sd, drop);
+  return add3(lerp3(lerp3(f0, f1, a.k), f2, b.k), {x: 0, y: 0.06 * (a.lift + b.lift), z: 0});
 };
 
 /** Which way her right arm is layered against his hand in the pair sprite. */
@@ -314,11 +318,11 @@ export const pilotSpec = (T: number, anchor?: V3): FigSpec => {
       [GRIP_T, {...KNEEL_UP, lean: 16, drop: 94, side: 13}],
       [RELEASE_T, {...KNEEL_UP, lean: 15, drop: 94, side: 12}],
       [BACK.a, {...KNEEL_UP, lean: 18, drop: 96, side: 4}],
-      [BACK.b, {...KNEEL_UP, lean: 26, drop: 108}], // facing him again, sitting back toward her heels, bowed over him
+      [BACK.b, {...KNEEL_UP, lean: 9, drop: 104}], // facing him again, sitting back toward her heels, head bowed
     ], T),
     {
       head: {
-        pitch: T < TURN.a ? lerp(-30, 30, up) : 24 - 6 * towardKnob,
+        pitch: T < TURN.a ? lerp(-30, 30, up) : 24 - 6 * towardKnob + 10 * smooth((T - BACK.a) / (BACK.b - BACK.a)),
         yaw: 38 * towardKnob - 52 * towardHim,
         roll: kn(T, [[190, 0], [192, -8], [197, -12], [TURN.b, -4], [BACK.b, -10]]),
       },
@@ -372,7 +376,7 @@ export const pilotSpec = (T: number, anchor?: V3): FigSpec => {
     const k = smooth((T - (RELEASE_T + 0.3)) / (RETURN_T - RELEASE_T - 0.3));
     const away = add3(kh.wrist, add3(mul3(KNOB.n, 0.1), {x: 0, y: 0.02, z: 0}));
     hR = lerp3(lerp3(kh.wrist, away, off), top, k);
-    shapeR = T < RELEASE_T + 0.12 ? 'grip' : k > 0.85 ? 'relaxed' : 'open';
+    shapeR = T < RELEASE_T + 0.12 ? 'grip' : T < RELEASE_T + 0.4 ? 'open' : 'relaxed';
     const onHim = {palm: {x: 0, y: -1, z: 0}, fingers: norm3({x: fwdD.x, y: -0.4, z: fwdD.z}), w: smooth((T - (RETURN_T - 0.4)) / 0.4)};
     orR = k < 0.5 ? {fingers: kh.fingers, palm: kh.palm, w: 1 - smooth(k / 0.5)} : onHim;
   }
@@ -389,7 +393,8 @@ export const pilotSpec = (T: number, anchor?: V3): FigSpec => {
 export const pilotAnchor = (T: number): V3 => {
   const p = pilotSpec(T);
   const chest = {x: p.pos.x, y: p.pos.y + 0.6, z: p.pos.z};
-  const w = smooth((T - 198.85) / 0.55) * (1 - smooth((T - (RELEASE_T + 0.1)) / 0.6));
+  // (held until her hand has left the frame on its way back to his, so it never swells)
+  const w = smooth((T - 198.85) / 0.55) * (1 - smooth((T - (RELEASE_T + 0.65)) / 0.5));
   return w <= 0 ? chest : lerp3(chest, lerp3(chest, knobHand(T).wrist, 0.85), w);
 };
 

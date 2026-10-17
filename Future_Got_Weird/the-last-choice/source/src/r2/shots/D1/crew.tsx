@@ -193,8 +193,8 @@ const D_AFTER: KR[] = [
   [83.3, 39.6, 0.15, 50], [84.3, 39.6, 0.15, 62],
 ];
 // after BR3 he hurries into the gap U1 and U2 left (84.3 → 85.3) and sets himself in front of U3
-const D_TO_GAP: XZ[] = [{x: 39.6, z: 0.15}, {x: 40.6, z: -0.45}, {x: 42.35, z: -0.92}];
-const D_SET: KR[] = [[85.3, 42.35, -0.92, 90], [BR4.gather, 42.35, -0.92, 90]];
+const D_TO_GAP: XZ[] = [{x: 39.6, z: 0.15}, {x: 40.6, z: -0.35}, {x: 42.35, z: -0.62}];
+const D_SET: KR[] = [[85.3, 42.35, -0.62, 90], [BR4.gather, 42.35, -0.62, 90]];
 /**
  * BR4, his side (the timeline is shared with U3 in machines.ts: br4X/br4Z/BR4): the left foot plants forward as he
  * dips (gather), two burst strides (right, then left landing as the shoulder meets the chest), three short driving
@@ -207,6 +207,8 @@ const BR4_FEET: {L: [number, number, number][]; R: [number, number, number][]} =
   R: [[85.92, 42.19, 0], [86.12, 43.15, 0.12], [86.28, 43.15, 0], [86.46, 44.42, 0.05], [86.7, 44.42, 0], [86.86, 45.2, 0.05],
     [87.15, 45.2, 0], [87.36, 45.42, 0.04]],
 };
+/** his plants that dig in (for FX/sound): [T, foot] */
+export const BR4_DIG: [number, 'L' | 'R'][] = [[85.86, 'L'], [86.12, 'R'], [BR4.hit - 0.02, 'L'], [86.46, 'R'], [86.7, 'L'], [86.86, 'R'], [87.12, 'L']];
 const br4Feet = (() => {
   const z = (T: number) => br4Z(T);
   const mk = (k: [number, number, number][], side: -1 | 1): KP[] => k.map(([t, x, l]) => [t, x, z(t) + side * 0.15, l] as KP);
@@ -326,7 +328,7 @@ export const directorAt = (T: number): CrewOut => {
   // BR4: gather (left foot plants, he dips, the plate tucks in front of his face, left shoulder leading) → burst →
   // shoulder and plate into U3's chest → three short driving steps, low → the shove → he catches himself on the slope
   const g4 = T > 85.2 && T < BR4.settle + 0.9 ? smooth(clamp((T - 85.3) / 0.36)) * (1 - after(T, BR4.settle - 0.05, 0.55)) : 0;
-  let chg = 0, tuck = 0;
+  let chg = 0, tuck = 0, plateLoc: {r: number; u: number; f: number} | null = null;
   if (g4 > 0) {
     const kB = smooth(clamp((T - BR4.go) / 0.2)); // burst
     const kD = after(T, BR4.hit - 0.03, 0.06); // contact → drive
@@ -338,10 +340,10 @@ export const directorAt = (T: number): CrewOut => {
     const armR1 = {r: 34, u: 250, f: 112}, armR2 = {r: 30, u: 285, f: 150};
     const aR = lerpLoc(lerpLoc(lerpLoc({r: 50, u: 190, f: -26}, armR0, kB), armR1, kD), armR2, kS);
     // the plate arm: tucked in front of his face, forearm up, plate facing forward; pushed out in the shove
-    const aL = lerpLoc(lerpLoc({r: 10, u: 262, f: 122}, {r: 8, u: 252, f: 132 - 22 * imp}, kD), {r: 2, u: 290, f: 165}, kS);
+    const aL = lerpLoc(lerpLoc({r: -30, u: 262, f: 118}, {r: -24, u: 252, f: 128 - 22 * imp}, kD), {r: -8, u: 290, f: 165}, kS);
     const P: Pose = {
       drop: lerp(lerp(60, 40, kB), 46, kD) + 10 * imp, lean: lerp(lerp(24, 33, kB), 36, kD) - 10 * kS + 6 * imp, twist: lerp(-30, -24, kD) + 8 * kS, side: 0,
-      armL: {local: aL, pole: {r: -1, u: -0.8, f: 0.1}, palm: {r: -0.25, u: 0.15, f: -1}}, armR: {local: aR, pole: {r: 1, u: -0.6, f: -0.3}},
+      armL: {local: aL, pole: {r: -1, u: -0.5, f: 0}, palm: {r: 0.35, u: 0.1, f: -1}}, armR: {local: aR, pole: {r: 1, u: -0.6, f: -0.3}},
       handL: 'fist', handR: kD > 0.5 && kS < 0.5 ? 'open' : 'fist',
       head: {pitch: -6 + 10 * kD, yaw: 10 * kD, roll: 0}, face: {mouth: kD > 0.3 ? 'grit' : 'grit', brows: -1, squint: 0.5 + 0.4 * kD},
       breath: 0.6,
@@ -349,6 +351,7 @@ export const directorAt = (T: number): CrewOut => {
     pose = blendPose(pose, P, g4);
     chg = g4;
     tuck = g4 * (1 - kS * 0.6);
+    if (g4 > 0.5) plateLoc = aL;
   }
   const stumble = win(T, BR4.release + 0.15, 88.4, 0.35, 0.6);
   if (stumble > 0) pose = blendPose(pose, layer(BRACED({wide: 0.9}), {drop: 40, lean: 26, armR: {local: {r: 40, u: 120, f: 70}}, handR: 'brace', face: {mouth: 'pant', brows: -0.3}, head: {pitch: 10}}), stumble * (1 - g4 * 0.7));
@@ -370,7 +373,7 @@ export const directorAt = (T: number): CrewOut => {
   const runArms: Pose = guardRun(b);
   const final = withRun(b, withLook(arm, 'director', b, T), runArms);
   const spec = base('director', 'd1dir', 11, b, T, {...final, handL: 'fist', handR: final.handR ?? 'fist', wearL: plateWear(plate, {glint})});
-  const plateW = plateFromGuard(b, guard);
+  const plateW = plateFromGuard(b, plateLoc ?? guard);
   return {spec, body: b, pts: {plate: plateW}};
 };
 /** the plate's world centre at T (where blows land), from his guard */

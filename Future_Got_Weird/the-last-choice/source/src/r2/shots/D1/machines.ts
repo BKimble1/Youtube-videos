@@ -171,6 +171,16 @@ const run = (pl: Plan, T: number): UnitSpec => {
   const feet = pl.feet ?? autoSteps(root, {stepLen: 0.55});
   const fl = footAt(feet.L, T, 0.11), fr = footAt(feet.R, T, 0.11);
   const sp: UnitSpec = {...base, pos: {x: r.p.x, y: 0, z: r.p.z}, heading: r.h, feet: {L: fl, R: fr}, lockAt: pl.T0 + 0.4, ...(pl.act ? pl.act(T) : {})};
+  // the kit's hit stagger holds at 60 % and drops out 1.2 s after the blow (a pop of up to 0.17 m): carry that remainder
+  // on the root instead and let it settle over the next 0.5 s
+  for (const h of sp.hits ?? []) {
+    const u = T - h.t0;
+    if (u <= 1.2 || u > 1.7) continue;
+    const k = 0.108 * h.strength * (1 - smooth((u - 1.2) / 0.5));
+    const l = Math.hypot(h.dir.x, h.dir.z) || 1;
+    sp.pos = {x: sp.pos.x + (h.dir.x / l) * k, y: sp.pos.y, z: sp.pos.z + (h.dir.z / l) * k};
+    sp.crouch = (sp.crouch ?? 0) + k * 0.6;
+  }
   // on the rim's slopes a planted foot can sit well below the pelvis's ground: crouch enough to keep it in reach
   const f = sp.feet ?? {};
   const gy = G(sp.pos.x, sp.pos.z);
@@ -259,7 +269,7 @@ export const br4X = (T: number): number => {
   const u = Math.min(T - BR4.release, 0.45);
   return xr + 1.6 * u - (1.6 / 0.9) * u * u; // stops over 0.45 s
 };
-export const br4Z = (T: number) => lerp(-0.92, -0.98, smooth(clamp((T - BR4.go) / 1.2)));
+export const br4Z = (T: number) => lerp(-0.62, -0.72, smooth(clamp((T - BR4.go) / 1.2))); // a little south of U3's line (it stands at −0.95): his left shoulder meets its chest
 /** U3's root x: waiting, driven (0.48 m ahead of him), shoved off (2.6 m/s, slowing), heels caught on the crest, slide */
 const U3_GAP = 0.63;
 const u3X = (T: number): number => {
@@ -301,10 +311,11 @@ const u3Feet = (T: number): {L: V3; R: V3; pitchL: number; pitchR: number} => {
     const xx = lerp(x0, x1, smooth(u));
     return at(xx, sd, Math.sin(Math.PI * u) * 0.12);
   };
-  const xr = u3X(BR4.release), xa = u3X(BR4.release + 0.2), xb = u3X(BR4.fall) + 0.15;
+  // (both feet end side by side on the crest: it topples about its heels)
+  const xr = u3X(BR4.release), xf = u3X(BR4.fall);
   const slide = T > BR4.slide0 ? u3X(T) - u3X(BR4.slide0) : 0;
-  const R = step(BR4.release + 0.02, BR4.release + 0.2, xr, xa + 0.1, 1);
-  const L = step(BR4.release + 0.2, BR4.fall - 0.02, xr, xb, -1);
+  const R = step(BR4.release + 0.02, BR4.release + 0.2, xr, xf - 0.04, 1);
+  const L = step(BR4.release + 0.2, BR4.fall - 0.02, xr, xf + 0.04, -1);
   return {L: {...at(L.x + slide, -1), y: T < BR4.fall ? L.y : G(L.x + slide, L.z)}, R: {...at(R.x + slide, 1), y: T < BR4.fall ? R.y : G(R.x + slide, R.z)}, pitchL: 0, pitchR: 0};
 };
 const U3: Plan = {
@@ -324,7 +335,7 @@ const U3: Plan = {
     return {
       pos: {x, y: 0, z: -0.95}, heading: T < BR4.release ? 270 : lerp(270, 266, after(T, BR4.release, 0.4)),
       feet,
-      look: T < BR4.hit ? {x: br4X(T), y: G(br4X(T), -0.92) + 1.2, z: -0.92} : undefined,
+      look: T < BR4.hit ? {x: br4X(T), y: G(br4X(T), br4Z(T)) + 1.2, z: br4Z(T)} : undefined,
       crouch: T < BR4.hit ? 0.3 * wind : lerp(0.3, 0.02, smooth(clamp((T - BR4.hit) / 0.25))),
       lean: T < BR4.hit ? 16 * wind : lerp(16 - 40 * back, 10, curl),
       raise: {t0: 85.1, t1: BR4.hit + 0.2, side: 'L'},

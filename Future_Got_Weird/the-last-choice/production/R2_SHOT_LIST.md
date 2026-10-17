@@ -113,13 +113,13 @@
 | Shot | Time | Camera | Action |
 |---|---|---|---|
 | E1 | 186.90–193.10 (Portals ring-out) | Close, low. | He sits against the slab by the van, fires behind. The drone pilot reaches him and takes his hand. His eyes try to focus on her, and his hand loosens. |
-| E2 | 193.10–199.30 | Extreme close on his face (the approved face; no squash or swap). | A final small breath (~195.0). His eyes close (`EYES_CLOSE` 196.6). Stillness: wind, distant fire, subdued machines. |
+| E2 | 193.10–198.30 | Extreme close on his face (the approved face; no squash or swap). | A final small breath (~195.0). His eyes close (`EYES_CLOSE` 196.6). Stillness: wind, distant fire, subdued machines. |
 
 ## F — radio to city (199.30–230.40)
 
 | Shot | Time | Camera | Action |
 |---|---|---|---|
-| F1 | 199.30–230.40 | **One continuous physical move.** | **Start on his still face.** Pan a short way to **the radio on the van floor** as the drone pilot's hand turns the knob: **click 199.9**, crackle, **trumpet 200.4**. Begin the **rising pullback** (~201.5). **The first wide frame holds both radio and body** (~203). Keep rising and pulling back past the companions, held inside a ring of units (the drone pilot kneeling, the breaker sitting, the others; the runner down), the wrecked machines, the crater, formations streaming along the avenue, drones in the smoke, and the burning skyline with the fallen tower. **The vocal (217.7) enters as the wide reveals the scale.** By ~228 he is a tiny detail. Fade to the credit field at 230.4. |
+| F1 | 198.30–230.40 | **One continuous physical move.** | **Start on his still face** (E2 and F1 share one camera, so the 198.30 cut is invisible: F1's first frame is E2's framing). Pull back and pan a short way to **the radio on the van floor** as the drone pilot's hand turns the knob: **click 199.9**, crackle, **trumpet 200.4**. Begin the **rising pullback** (~201.5). **The first wide frame holds both radio and body** (~203). Keep rising and pulling back past the companions, held inside a ring of units (the drone pilot kneeling, the breaker sitting, the others; the runner down), the wrecked machines, the crater, formations streaming along the avenue, drones in the smoke, and the burning skyline with the fallen tower. **The vocal (217.7) enters as the wide reveals the scale.** By ~228 he is a tiny detail. Fade to the credit field at 230.4. |
 
 ## G — credits (230.40–258.00)
 

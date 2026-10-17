@@ -35,6 +35,11 @@ export type HeavySpec = {
   damage?: {plateL?: {t0: number; dir: V3}; plateR?: {t0: number; dir: V3}; nose?: {t0: number; dir: V3}; top?: {t0: number; dir: V3}; dead?: {t0: number}};
   /** points to lift the feet over (wrecks) */
   stepOver?: V3[];
+  /** explicit world footholds per leg (0 FL, 1 FR, 2 RL, 3 RR; ground contact points), overriding the gait/standing
+   *  feet: a keyed walk with planted steps, a foot slipping off a slab. Optional; an absent entry is unchanged. */
+  feet?: (V3 | undefined)[];
+  /** extra hull drop (m): the dip as a leg gives. Optional. */
+  drop?: number;
   ground?: Ground;
   lod?: 'full' | 'mid' | 'far';
   key?: string;
@@ -105,7 +110,7 @@ export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
     }
   }
   pitch += noise(t * 0.4, sp.id) * 0.8;
-  const hullPos = add3(add3({x: root.x, y: g(root.x, root.z) + HV.hullY + bob, z: root.z}, shift), {x: 0, y: 0, z: 0});
+  const hullPos = add3(add3({x: root.x, y: g(root.x, root.z) + HV.hullY + bob - (sp.drop ?? 0), z: root.z}, shift), {x: 0, y: 0, z: 0});
   const hullR = rcomp(B, euler(yawAdd, pitch, roll));
   const hull: Pose3 = {pos: hullPos, R: hullR};
   // head
@@ -137,6 +142,8 @@ export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
       const base = add3(add3(root, mul3(right, L.sx * HV.footX)), mul3(fwd, -L.sz * HV.footZ));
       target = {x: base.x, y: g(base.x, base.z), z: base.z};
     }
+    const fo = sp.feet?.[i];
+    if (fo) target = fo;
     const ankle = add3(target, {x: 0, y: 0.22, z: 0});
     const out = add3(mul3(right, L.sx), mul3(UP, 0.55));
     const r = ik2(H, ankle, HV.upperLen, HV.lowerLen, out);

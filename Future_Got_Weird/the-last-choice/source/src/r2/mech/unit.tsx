@@ -3,7 +3,7 @@
 // an arm, recoil from hits, crumple-and-topple falls that end as a persistent wreck, plates and limbs torn off.
 import React from 'react';
 import {V3, add3, sub3, mul3, dot3, cross3, norm3, len3, lerp, lerp3, clamp, smooth, easeIn, easeOut, rnd, noise, seg, f2} from '../../kit/math';
-import {Item, View, project, toView, shade, inkColor} from '../engine';
+import {Item, View, project, toView, shade, inkColor, lightAt} from '../engine';
 import {UNIT, UNIT_MID, U, DEBRIS} from './parts';
 import {R3, Pose3, rotHeading, rcomp, euler, segFrame, ik2, apply, rmul, rotAxisM, I3, lookFrame, fwdOf, slerpish} from './mat3';
 import {Ground, FLAT, Path, footAt, partItem, eyeGlow, makeThrow, thrownPose, spray, cable, fluidPool, CABLES} from './kit';
@@ -484,8 +484,13 @@ const unitFarSprite = (sp: UnitSpec, r: UnitRig, xf: ((p: V3) => V3) | null, eye
       if (h < 0.8) return null;
       const s = h / 2.2;
       const x = c.x, y = c.y;
-      const plate = shade(c.light, {base: '#C3CFD6'}, c.lit);
-      const frame = shade(c.light, {base: '#4C5D69'}, c.lit);
+      // light the side the camera sees: the front plates (facing its heading) or, from behind, the darker back plate
+      // in the back's own light (a unit walking into a low sun seen from behind goes dark, not white)
+      const tx = c.view.pos.x - base.x, tz = c.view.pos.z - base.z;
+      const seesFront = down || r.fwd.x * tx + r.fwd.z * tz >= 0;
+      const lit = seesFront ? c.lit : lightAt(c.light, base, norm3({x: -r.fwd.x, y: 0.3, z: -r.fwd.z}), Math.hypot(tx, c.view.pos.y - base.y, tz), c.t);
+      const plate = shade(c.light, {base: seesFront ? '#C3CFD6' : '#97A8B3'}, lit);
+      const frame = shade(c.light, {base: '#4C5D69'}, lit);
       const ink = inkColor(c.light, undefined, c.lit);
       if (down) return <ellipse cx={f2(x)} cy={f2(y - 0.15 * s)} rx={f2(0.9 * s)} ry={f2(0.22 * s)} fill={frame} />;
       const st = Math.sin(ph) * 0.2 * s * walkK;

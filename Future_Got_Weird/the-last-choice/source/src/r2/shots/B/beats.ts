@@ -21,7 +21,8 @@ export const CADENCE = M.H2 - M.H1;
 export const beat = (k: number) => M.H1 + k * CADENCE;
 /**
  * The halts (deceleration starts on a footfall and lasts two beats, so the last step plants exactly two beats later):
- * the vanguard starts to stop on H4 (still by 31.06), the main body plants its last step on H5a, the rear on H5b.
+ * the vanguard is slowing as H4 cuts to the wide and plants its last step one beat after it (30.64, in the foreground
+ * of B6), the main body plants its last step on H5a, the rear on H5b.
  */
-export const HALT = {van: beat(28), main: beat(30), rear: beat(31)};
-export const STOP = {van: beat(30), main: beat(32), rear: beat(33)};
+export const HALT = {van: beat(27), main: beat(30), rear: beat(31)};
+export const STOP = {van: beat(29), main: beat(32), rear: beat(33)};

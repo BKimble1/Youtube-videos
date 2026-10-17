@@ -146,7 +146,9 @@ export const UNIT = {
 };
 // mid-LOD: a handful of merged blocks (no small plates, no ink on small parts)
 export const UNIT_MID = {
-  torso: prep(M_(taper(0.34, 0.22, -0.1, 0.62, 0.30, 0.58, 'm_plate'), bx(-0.11, 0.62, -0.13, 0.11, 0.86, 0.13, 'm_plate2'), bx(-0.035, 0.70, -0.15, 0.035, 0.76, -0.12, 'm_eye'))),
+  // (faces: top, bottom, front, back, sides) the back takes the full unit's darker back-plate tone, so a mid unit seen
+  // from behind reads like a full one (not a pale cut-out)
+  torso: prep(M_(taper(0.34, 0.22, -0.1, 0.62, 0.30, 0.58, ['m_plate', 'm_dark', 'm_plate', 'm_plateDeep', 'm_plate2', 'm_plate2']), bx(-0.11, 0.62, -0.13, 0.11, 0.86, 0.13, ['m_plate2', 'm_dark', 'm_plate2', 'm_plateDeep', 'm_plate2', 'm_plate2']), bx(-0.035, 0.70, -0.15, 0.035, 0.76, -0.12, 'm_eye'))),
   limb: prep(bx(-0.07, -0.9, -0.08, 0.07, 0.0, 0.08, 'm_plate2')),
   arm: prep(bx(-0.065, -0.85, -0.07, 0.065, 0.0, 0.07, 'm_frame')),
 };
