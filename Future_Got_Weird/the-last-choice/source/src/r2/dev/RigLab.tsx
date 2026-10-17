@@ -20,6 +20,7 @@ import {
   Figure, FigProps, CAST, ROLES2, ROLE2, lookR2, dmgR2, toolsR2, handGlyph, HANDS, figureSprite, keyPose, RISE_KEYS, layer,
   BRACED, KNOCKED_BACK, CATCH_BODY, REACH_SHOULDER, SLUMP, STAND, plateWear, tetherLauncher, hipReel, tablet, breaker, controller,
   halligan1, halligan2, flare, canister, SWING_BREAKER, AIM, SKETCH, THROW, PRY, BLOCK_HIGH, ClaspCU, Pose, figureRig,
+  supportCatch, handOn, SH_H, SH_X,
 } from '../rig';
 
 const BG = '#EDE6D6';
@@ -88,12 +89,14 @@ const sceneFor = (view: ReturnType<typeof makeView>, T: number, figs: Item[], o:
   <Scene view={view} light={lightFor(T)} mats={MATS} t={T} items={[...setItems(view, T), ...(o.atmos === false ? [] : atmosItems(view, T)), ...figs]} />
 );
 
-export const RigLab: React.FC<{page?: number}> = ({page = 0}) => {
+export const RigLab: React.FC<{page?: number; nofig?: boolean}> = ({page = 0, nofig = false}) => {
   const f = useCurrentFrame();
   const t = f / 30;
   if (page <= 6) {
     const role = ROLES2[page];
     const look = CAST[ROLE2[role]];
+    // worn kit that is part of the costume (held tools are on page 12)
+    const kit: Partial<FigProps> = role === 'director' ? {wearL: plateWear('dented')} : role === 'tether' ? {extra: hipReel(0.8)} : {};
     return (
       <svg width="100%" height="100%" viewBox="0 0 1920 1080" style={{background: BG}}>
         <text x={40} y={60} fontFamily={FONT.display} fontSize={34} fill={C.ink}>{`R2 model sheet · ${role} (${ROLE2[role]})`}</text>
@@ -102,7 +105,7 @@ export const RigLab: React.FC<{page?: number}> = ({page = 0}) => {
           const x = 200 + col * 380, y = 480 + row * 470;
           return (
             <g key={i}>
-              <Figure look={look} t={t} seed={3 + i} id={`ms${i}`} x={x} y={y} s={0.82} ink={3.4} light={LIGHT0} dmg={dmgR2(role, 30)} {...q.p} />
+              <Figure look={look} t={t} seed={3 + i} id={`ms${i}`} x={x} y={y} s={0.82} ink={3.4} light={LIGHT0} dmg={dmgR2(role, 30)} {...kit} {...q.p} />
               <Label x={x} y={y + 50} t={q.label} />
             </g>
           );
@@ -164,36 +167,47 @@ export const RigLab: React.FC<{page?: number}> = ({page = 0}) => {
     };
     const cam = u < 7.2 ? mixCam3(c0, c1, smooth(u / 7.2)) : orbit(c1, c2, smooth((u - 7.2) / 2.6));
     const view = makeView(cam);
-    return sceneFor(view, R.T, [fig]);
+    return sceneFor(view, R.T, nofig ? [] : [fig]); // nofig: the set alone (render-cost baseline)
   }
   if (page === 9) {
-    // contact proof: the runner (guesser) knocked back, caught by the breaker (honest) — world-targeted hands on his back
+    // CONTACT PROOF. Frames 0–149: a catch from behind (the breaker catches the runner, knocked back by a hit) using
+    // the support hierarchy: the runner's fall stops on the breaker's cradle, the breaker's palms sit on his back.
+    // Frames 150–299: the drone pilot's hand settles on the Director's left shoulder; he turns his head to it.
     const T = M.CATCH;
-    const base: V3 = {x: 46, y: 0, z: 6};
-    const k = clamp(t / 2.2);
-    const fallK = clamp(k * 1.25);
-    const catcherPos: V3 = {x: base.x - 1.0, y: groundH(base.x - 1.0, base.z), z: base.z};
-    const runnerPos0: V3 = {x: base.x + 0.6, y: groundH(base.x + 0.6, base.z), z: base.z};
-    const runnerPos = lerp3(runnerPos0, {x: base.x - 0.35, y: groundH(base.x - 0.35, base.z), z: base.z}, easeOut(fallK));
-    const runnerPose: Pose = keyPose([[0, STAND], [0.2, KNOCKED_BACK(0.15)], [0.7, layer(KNOCKED_BACK(0.38), {drop: 40})], [1, layer(KNOCKED_BACK(0.38), {drop: 50, bodyPitch: -32})]], fallK);
-    const runnerSpec = {key: 'run', look: lookR2('runner'), t: T + t, seed: 4, pos: runnerPos, heading: 90, pose: {...runnerPose, dmg: dmgR2('runner', T + 2), holdR: halligan1({ang: 70})}};
-    const view = makeView({pos: {x: base.x + 0.4, y: 1.3, z: base.z + 4.6}, target: {x: base.x - 0.3, y: 1.0, z: base.z}, fov: 40});
-    const rr = figureRig(view, runnerSpec);
-    const back = rr.chest; // the faller's chest/back — the catcher's hands go to his shoulder blades
-    const hR = add3(back, {x: -0.18, y: 0.05, z: -0.14}), hL = add3(back, {x: -0.16, y: -0.12, z: 0.16});
-    const catchW = clamp((t - 0.55) / 0.35);
-    const catcher = figureSprite({key: 'cat', look: lookR2('breaker'), t: T + t, seed: 7, pos: catcherPos, heading: 90, pose: layer(CATCH_BODY, {dmg: dmgR2('breaker', T)}),
-      world: catchW > 0 ? {handR: lerp3(add3(catcherPos, {x: 0.35, y: 1.15, z: 0.25}), hR, catchW), handL: lerp3(add3(catcherPos, {x: 0.35, y: 1.15, z: -0.25}), hL, catchW)} : undefined});
-    // hand on the shoulder (right side of the frame): the drone pilot's hand on the Director's left shoulder
-    const dPos: V3 = {x: base.x + 2.4, y: groundH(base.x + 2.4, base.z - 1.4), z: base.z - 1.4};
-    const dSpec = {key: 'dir', look: lookR2('director'), t: T + t, seed: 11, pos: dPos, heading: 80, pose: {...BRACED({wide: 0.7}), handL: 'fist' as const, wearL: plateWear('dented'), dmg: dmgR2('director', T)}};
-    const dr = figureRig(view, dSpec);
-    const shoulder = add3(dr.rig ? dr.head : dPos, {x: -0.05, y: -0.34, z: 0.22});
-    const pPos: V3 = {x: dPos.x - 0.55, y: groundH(dPos.x - 0.55, dPos.z + 0.55), z: dPos.z + 0.55};
-    const reach = smooth(clamp((t - 0.6) / 0.6));
-    const pilot = figureSprite({key: 'pil', look: lookR2('drone'), t: T + t, seed: 5, pos: pPos, heading: 70, pose: {...REACH_SHOULDER, extra: controller(), handL: 'grip', dmg: dmgR2('drone', T)},
-      world: {handR: lerp3(add3(pPos, {x: 0.3, y: 1.0, z: 0.2}), shoulder, reach)}});
-    return sceneFor(view, T, [figureSprite(runnerSpec), catcher, figureSprite(dSpec), pilot], {atmos: false});
+    if (f < 150) {
+      const base: V3 = {x: 46, y: 0, z: 6};
+      const k = clamp(t / 2.4);
+      const fallK = clamp(k * 1.25);
+      // the catcher stands behind and a little to the faller's right, so the faller's head lands by his shoulder
+      const catcherPos: V3 = {x: base.x - 0.95, y: groundH(base.x - 0.95, base.z + 0.36), z: base.z + 0.36};
+      const r0: V3 = {x: base.x + 0.6, y: 0, z: base.z}, r1: V3 = {x: base.x + 0.08, y: 0, z: base.z};
+      const rp = lerp3(r0, r1, easeOut(fallK));
+      const runnerPos: V3 = {x: rp.x, y: groundH(rp.x, rp.z), z: rp.z};
+      // he would fall flat (−48°); the catch decides where he actually stops
+      const runnerPose: Pose = keyPose([[0, STAND], [0.2, KNOCKED_BACK(0.15)], [0.7, layer(KNOCKED_BACK(0.4), {drop: 34})], [1, layer(KNOCKED_BACK(0.42), {drop: 72, bodyPitch: -48})]], fallK); // knees buckle as he goes
+      const runner = {key: 'run', look: lookR2('runner'), t: T + t, seed: 4, pos: runnerPos, heading: 90, pose: {...runnerPose, dmg: dmgR2('runner', T + 2), handR: 'grip' as const, holdR: halligan1({ang: 70})}};
+      const absorb = smooth(clamp((t - 0.9) / 0.6));
+      const catcher = {key: 'cat', look: lookR2('breaker'), t: T + t, seed: 7, pos: catcherPos, heading: 90,
+        pose: layer(CATCH_BODY, {drop: 28 + 16 * absorb, lean: 12 - 8 * absorb, head: {yaw: 10, pitch: 10}, dmg: dmgR2('breaker', T)})};
+      const gy = groundH(base.x - 0.4, base.z);
+      const view = makeView({pos: {x: base.x + 2.4, y: gy + 1.4, z: base.z + 3.5}, target: {x: base.x - 0.45, y: gy + 1.0, z: base.z + 0.1}, fov: 36});
+      const c = supportCatch(view, runner, catcher, {w: smooth(clamp((t - 0.35) / 0.45))});
+      return sceneFor(view, T, [figureSprite(c.faller), figureSprite(c.catcher)], {atmos: false});
+    }
+    const u = (f - 150) / 30;
+    const dp: V3 = {x: 22, y: 0, z: 3};
+    const dPos: V3 = {x: dp.x, y: groundH(dp.x, dp.z), z: dp.z};
+    const pPos: V3 = {x: dp.x - 0.5, y: groundH(dp.x - 0.5, dp.z - 0.5), z: dp.z - 0.5};
+    const reach = smooth(clamp((u - 0.6) / 0.9));
+    const turn = smooth(clamp((u - 1.3) / 0.8));
+    const dir = {key: 'dir', look: lookR2('director'), t: T + t, seed: 11, pos: dPos, heading: 100,
+      pose: {...BRACED({wide: 0.7}), handL: 'fist' as const, wearL: plateWear('dented'), dmg: dmgR2('director', T), head: {yaw: -46 * turn, pitch: 4 * turn}, face: {mouth: turn > 0.5 ? 'flat' as const : 'grit' as const, brows: lerp(-0.6, 0.1, turn), worry: 0.3 * turn, lookX: -0.8 * turn}}};
+    const pilot0 = {key: 'pil', look: lookR2('drone'), t: T + t, seed: 5, pos: pPos, heading: 112, pose: {...REACH_SHOULDER, handL: 'relaxed' as const, dmg: dmgR2('drone', T), face: {mouth: 'flat' as const, worry: 0.6, brows: 0.3}}};
+    const view = makeView({pos: add3(dPos, {x: 2.3, y: 1.55, z: -1.7}), target: add3(dPos, {x: -0.25, y: 1.3, z: -0.25}), fov: 34});
+    const fwd = headingVec(100);
+    // her palm comes down onto the top of his left shoulder, fingers draping forward over it
+    const pilot = handOn(view, dir, {r: -(SH_X - 8), u: SH_H + 14, f: -4}, pilot0, 'R', reach, {palm: {x: 0, y: -1, z: 0}, fingers: add3(mul3(fwd, 0.8), {x: 0, y: -0.45, z: 0})});
+    return sceneFor(view, T, [figureSprite(dir), figureSprite(pilot)], {atmos: false});
   }
   if (page === 10) {
     if (f >= 240) {
@@ -214,14 +228,13 @@ export const RigLab: React.FC<{page?: number}> = ({page = 0}) => {
     return sceneFor(makeView(cam), T, [dir], {atmos: false});
   }
   if (page === 11) {
-    const look = lookR2('director');
     return (
       <svg width="100%" height="100%" viewBox="0 0 1920 1080" style={{background: BG}}>
         <text x={40} y={60} fontFamily={FONT.display} fontSize={34} fill={C.ink}>R2 pitch check · camera −20° / 0° / +35° · yaw 0 / 40 / 120</text>
-        {[-20, 0, 35].map((pitch, i) => [0, 40, 120].map((yaw, j) => {
-          const x = 220 + (i * 3 + j) * 190, y = 620;
-          return <g key={`${i}${j}`}><Figure look={look} t={t} id={`pc${i}${j}`} x={x} y={y} s={0.62} ink={3} pitch={pitch} yaw={yaw} light={LIGHT0} wearL={plateWear('dented')} {...BRACED()} dmg={dmgR2('director', 100)} /><Label x={x} y={y + 60} t={`${pitch}° / ${yaw}°`} size={18} /></g>;
-        }))}
+        {(['director', 'drone'] as const).map((role, r) => [-20, 0, 35].map((pitch, i) => [0, 40, 120].map((yaw, j) => {
+          const x = 220 + (i * 3 + j) * 190, y = 470 + r * 470;
+          return <g key={`${r}${i}${j}`}><Figure look={lookR2(role)} t={t} seed={7} id={`pc${r}${i}${j}`} x={x} y={y} s={0.6} ink={3} pitch={pitch} yaw={yaw} light={LIGHT0} wearL={role === 'director' ? plateWear('dented') : undefined} {...BRACED()} face={{blink: false, mouth: 'grit', brows: -0.5}} dmg={dmgR2(role, 100)} /><Label x={x} y={y + 60} t={`${pitch}° / ${yaw}°`} size={18} /></g>;
+        })))}
       </svg>
     );
   }
@@ -255,7 +268,7 @@ export const RigLab: React.FC<{page?: number}> = ({page = 0}) => {
       {role: 'breaker', label: 'breaker (swing)', p: {...SWING_BREAKER(k), yaw: 70, extra: breaker({gauge: 0.6})}},
       {role: 'drone', label: 'drone controller', p: {...BRACED({fists: false}), yaw: 20, handL: 'grip', handR: 'grip', twoHanded: true, armL: {local: {r: -24, u: 250, f: 90}}, armR: {local: {r: 24, u: 250, f: 90}}, extra: controller()}},
       {role: 'runner', label: 'halligan (pry)', p: {...PRY(0.5 + 0.5 * Math.sin(t * 3)), yaw: 60, extra: halligan2()}},
-      {role: 'flares', label: 'flare / canister (throw)', p: {...THROW(k), yaw: 50, holdR: k < 0.6 ? flare({lit: 1, t}) : undefined, holdL: canister()}},
+      {role: 'flares', label: 'flare / canister (throw)', p: {...THROW(k), yaw: 50, holdR: k < 0.6 ? flare({lit: 1, t}) : undefined, handL: 'grip', holdL: canister()}},
     ];
     return (
       <svg width="100%" height="100%" viewBox="0 0 1920 1080" style={{background: BG}}>

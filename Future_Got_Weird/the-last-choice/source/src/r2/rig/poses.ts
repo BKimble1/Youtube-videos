@@ -142,8 +142,9 @@ export const FIRE_RECOIL = (k: number): Pose => blendPose(AIM, {...AIM, lean: -4
 // ---- clerkB sketches on the tablet (left hand holds it, right index finger draws)
 export const SKETCH = (t: number, speed = 1): Pose => ({
   drop: 6, lean: 12,
-  armL: {local: {r: -28, u: 262, f: 74}, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}},
-  armR: {local: {r: 6 + 10 * Math.sin(t * 5 * speed), u: 270 + 8 * Math.sin(t * 7.3 * speed), f: 86}, palm: {r: -0.3, u: -0.4, f: -1}},
+  // tablet held at the chest (below the chin, so the face reads over it), the right hand drawing on it
+  armL: {local: {r: -30, u: 212, f: 92}, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}},
+  armR: {local: {r: 4 + 10 * Math.sin(t * 5 * speed), u: 222 + 8 * Math.sin(t * 7.3 * speed), f: 104}, palm: {r: -0.3, u: -0.4, f: -1}},
   handL: 'grip', handR: 'point', head: {pitch: 24, yaw: -4}, face: {mouth: 'flat', brows: -0.4, lookY: 0.8},
 });
 

@@ -103,8 +103,11 @@ export type Rig2 = {
   orient: [{fingers: V3 | null; palm: V3 | null; w: number}, {fingers: V3 | null; palm: V3 | null; w: number}];
   /** depth rank of each arm part (relative frame of the parts) and of a tool held in both hands */
   armRank: [number, number]; toolZ: number;
-  /** convert a body-local point to the drawn (view) frame */
+  /** convert a body-local point (root-relative, turned with bodyPitch/bodyRoll) to the drawn (view) frame */
   loc: (l: Loc) => V3;
+  /** a point on the torso, relative to the pelvis in the torso's own frame (follows drop, lean, twist, pitch):
+   *  r right, u up from the pelvis, f forward. The chest's back surface is about f −40 at u 80 */
+  torso: (l: Loc) => V3;
 };
 const basisYaw = (yaw: number): Basis => {
   const a = rad(yaw);
@@ -235,6 +238,7 @@ export const solve2 = (p: FigProps): Rig2 => {
     orient: orient.map((o) => ({fingers: o.fingers ? vec(o.fingers) : null, palm: o.palm ? vec(o.palm) : null, w: o.w})) as Rig2['orient'],
     armRank: [0, 0], toolZ: 0,
     loc: (l: Loc) => pnt(fromPivot(l)),
+    torso: (l: Loc) => pnt(at(P, up, l.r * s, l.u * s, l.f * s)),
   };
   out.armRank = [0, 1].map((i) => {
     const S = out.sh[i], E = out.el[i], Wr = out.wr[i];
@@ -689,17 +693,10 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
   // ---- hair cap
   const hairFront: React.ReactElement[] = [];
   const hl = HAIRLINE[hairType] ?? HAIRLINE.crop;
-  if (hairType !== 'bald') {
-    const rr = 1 + Math.min(vol, 6 * s) / R;
-    const line: V2[] = [];
-    for (let k = 0; k <= 36; k++) {
-      const th = thC - 90 + (180 * k) / 36;
-      const q = onHead(th, interpTbl(hl, th), rr);
-      line.push({x: q.x, y: q.y});
-    }
-    const Ce = {x: Hc.x - hb.U.x * vol * 0.45, y: Hc.y - hb.U.y * vol * 0.45};
-    const ax = R + vol * 0.3, ay = RY + vol * 0.6;
-    const ro = rad(rollDeg);
+  const ro = rad(rollDeg);
+  /** A hair mass: an open edge on the head (hairline, hem) closed by the arc of the hair-volume ellipse (centre Ce,
+   *  semi-axes ax, ay, rolled with the head) that runs over the crown from the edge's last point back to its first. */
+  const overCrown = (line: V2[], Ce: V2, ax: number, ay: number): V2[] => {
     const toE = (q: V2) => { const dx = q.x - Ce.x, dy = q.y - Ce.y; const lx = dx * Math.cos(-ro) - dy * Math.sin(-ro), ly = dx * Math.sin(-ro) + dy * Math.cos(-ro); return Math.atan2(ly / ay, lx / ax); };
     const fromE = (a: number): V2 => { const lx = Math.cos(a) * ax, ly = Math.sin(a) * ay; return {x: Ce.x + lx * Math.cos(ro) - ly * Math.sin(ro), y: Ce.y + lx * Math.sin(ro) + ly * Math.cos(ro)}; };
     const a2 = toE(line[line.length - 1]), a1 = toE(line[0]);
@@ -709,6 +706,18 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     const span = dTop < ccw ? ccw : ccw - TAU;
     const arc: V2[] = [];
     for (let k = 1; k < 24; k++) arc.push(fromE(a2 + (span * k) / 24));
+    return arc;
+  };
+  if (hairType !== 'bald') {
+    const rr = 1 + Math.min(vol, 6 * s) / R;
+    const line: V2[] = [];
+    for (let k = 0; k <= 36; k++) {
+      const th = thC - 90 + (180 * k) / 36;
+      const q = onHead(th, interpTbl(hl, th), rr);
+      line.push({x: q.x, y: q.y});
+    }
+    const Ce = {x: Hc.x - hb.U.x * vol * 0.45, y: Hc.y - hb.U.y * vol * 0.45};
+    const arc = overCrown(line, Ce, R + vol * 0.3, RY + vol * 0.6);
     hairFront.push(<path key="cap" d={smoothPath([...line, ...arc], true, 0.35)} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />);
   }
   const extrasBack: React.ReactElement[] = [];
@@ -747,20 +756,20 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     (z > -0.25 ? extrasFront : extrasBack).push(<path key="swoop" d={smoothPath(q, true, 0.6)} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />);
   }
   if (hairType === 'bob') {
-    // the bob mass as head-local geometry (sides to the jaw, crown band, back), so it turns with the head
-    const ring: V2[] = [];
-    for (let k = 0; k <= 24; k++) {
-      const a = -100 + (200 * k) / 24; // around the back and sides
-      const th = 180 + a;
-      const u0 = Math.cos(rad(a)) > 0.4 ? -0.55 : -0.52;
-      void u0;
-      ring.push(onHead(th, 0.55, 1.18));
-    }
-    const top: V2[] = [];
-    for (let k = 0; k <= 24; k++) top.push(onHead(180 + 100 - (200 * k) / 24, -0.75, 1.2));
-    const d = smoothPath([...ring, ...top], true, 0.3);
+    // the bob's straight-cut hem runs around the back and sides at jaw height (head-local, so it turns with the
+    // head); the mass above it is closed over the crown by the hair-volume ellipse: a rounded dome from behind,
+    // a hanging side panel in front views, the full cut in profile
+    const hem: V2[] = [];
+    for (let k = 0; k <= 24; k++) hem.push(onHead(80 + (200 * k) / 24, 0.55, 1.12));
+    const Ce = {x: Hc.x - hb.U.x * vol * 0.4, y: Hc.y - hb.U.y * vol * 0.4};
+    const d = smoothPath([...hem, ...overCrown(hem, Ce, R * 1.1 + vol * 0.2, RY * 1.04 + vol * 0.45)], true, 0.3);
     const behind = dot3(hb.F, zv) > -0.3;
     (behind ? extrasBack : extrasFront).push(<path key="bobmass" d={d} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />);
+    // a few strands down the back so the mass reads as hair, not a helmet
+    if (!behind) [150, 180, 210].forEach((th, k) => {
+      const a = onHead(th, -0.62, 1.12), m = onHead(th + 6, 0.0, 1.13), b = onHead(th + 2, 0.42, 1.12);
+      if (m.z > 0.15) extrasFront.push(<path key={`bst${k}`} d={`M ${pt(a)} Q ${pt(m)} ${pt(b)}`} fill="none" stroke={inkC} strokeWidth={ink * 0.55} strokeLinecap="round" opacity={0.55 * clamp((m.z - 0.15) * 3)} />);
+    });
   }
 
   // ---- ears
@@ -799,17 +808,26 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     const brows = face.brows ?? 0, worry = face.worry ?? 0;
     const bo = onHead(sd * 34, eyeY - 0.36 - brows * 0.09 + worry * 0.03, 1.0), bi = onHead(sd * 9, eyeY - 0.36 - brows * 0.09 - (brows * 0.05 + worry * 0.13), 1.0);
     const cid = `${id}e${sd > 0 ? 'r' : 'l'}`;
+    // the lid's skin takes the face's cel shadow when the eye sits in it (else a lit lid floats on a shaded face)
+    let lidC = skin;
+    if (L) {
+      const l2 = Math.hypot(L.dir.x, L.dir.y) || 1, sh = R * 0.62 * (1 - clamp(L.dir.z, -1, 1)) * (L.key ?? 1);
+      const cx = skullE.cx + (L.dir.x / l2) * sh, cy = skullE.cy + (L.dir.y / l2) * sh, a = rad(skullE.rot);
+      const dx = q.x - cx, dy = q.y - cy, ex = dx * Math.cos(a) + dy * Math.sin(a), ey = -dx * Math.sin(a) + dy * Math.cos(a);
+      if ((ex / skullE.rx) ** 2 + (ey / skullE.ry) ** 2 > 1) lidC = mix(skin, L.shadowC ?? '#2B3550', 0.34 * (L.key ?? 1));
+    }
+    const shut = lid > 0.92;
     feats.push(
       <g key={`eye${sd}`} transform={`translate(${f2(q.x)} ${f2(q.y)}) rotate(${f2(rollDeg)}) scale(${f2(sx)} 1)`} opacity={op}>
         <defs><clipPath id={cid}><ellipse cx={0} cy={0} rx={12 * s} ry={ry} /></clipPath></defs>
-        <ellipse cx={0} cy={0} rx={12 * s} ry={ry} fill={col(C.white)} />
-        <g clipPath={`url(#${cid})`}>
+        {!shut && <ellipse cx={0} cy={0} rx={12 * s} ry={ry} fill={col(C.white)} />}
+        {!shut && <g clipPath={`url(#${cid})`}>
           <circle cx={pupil.x} cy={pupil.y} r={pr} fill={inkC} />
           <circle cx={pupil.x + 2 * s} cy={pupil.y - 2 * s} r={1.6 * s} fill={col(C.white)} opacity={1 - unf * 0.7} />
           {/* the upper lid: skin coming down from above */}
-          <rect x={-14 * s} y={-ry * 2.2} width={28 * s} height={Math.max(0, lidY + ry * 2.2)} fill={skin} />
-          {(face.squint ?? 0) > 0.05 && <rect x={-14 * s} y={ry * (1 - 0.6 * (face.squint ?? 0))} width={28 * s} height={ry} fill={skin} />}
-        </g>
+          <rect x={-14 * s} y={-ry * 2.2} width={28 * s} height={Math.max(0, lidY + ry * 2.2)} fill={lidC} />
+          {(face.squint ?? 0) > 0.05 && <rect x={-14 * s} y={ry * (1 - 0.6 * (face.squint ?? 0))} width={28 * s} height={ry} fill={lidC} />}
+        </g>}
         <ellipse cx={0} cy={0} rx={12 * s} ry={ry} fill="none" stroke={inkC} strokeWidth={ink * 0.75} opacity={lid > 0.92 ? 0 : 1} />
         {/* lid line (lash line) follows the lid; closed = a soft downward curve */}
         {lid > 0.92 ? <path d={`M ${-12 * s} ${1 * s} Q 0 ${7 * s} ${12 * s} ${1 * s}`} fill="none" stroke={inkC} strokeWidth={ink * 0.85} strokeLinecap="round" />
@@ -861,10 +879,12 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
   }
   if (look.cheeks) [-1, 1].forEach((sd) => { const q = onHead(sd * 40, 0.25, 1); if (q.z > 0.2) feats.push(<ellipse key={`ch${sd}`} cx={q.x} cy={q.y} rx={9 * s * clamp(q.z, 0.3, 1)} ry={7 * s} fill="#F28B82" opacity={0.7} />); });
   if (look.accessories.includes('beard')) {
-    // a full beard around the jaw (head-local), with the mouth showing
+    // the approved chin beard: from the jaw corners, under the mouth (its top edge sits just below the lip line),
+    // around the chin and a little below it
     const pts: V2[] = [];
-    for (let th = -100; th <= 100; th += 10) { const q = onHead(th, th === -100 || th === 100 ? 0.05 : 0.3 + 0.38 * Math.cos(rad(th)) ** 2, 1.04); pts.push(q); }
-    for (let th = 100; th >= -100; th -= 10) { const q = onHead(th, 0.2 + 0.2 * Math.cos(rad(th)), 1.0); pts.push({x: q.x, y: q.y}); }
+    const cz = (th: number) => Math.max(0, Math.cos(rad(th)));
+    for (let th = -100; th <= 100; th += 10) { const q = onHead(th, 0.24 + 0.94 * cz(th) ** 0.7, 1.04); pts.push(q); }
+    for (let th = 100; th >= -100; th -= 10) { const q = onHead(th, 0.24 + 0.38 * cz(th) ** 1.5, 1.0); pts.push({x: q.x, y: q.y}); }
     const vis = onHead(0, 0.6, 1).z;
     if (vis > -0.4) feats.unshift(<path key="beard" d={smoothPath(pts, true, 0.4)} fill={col(look.hairColor)} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />);
   }
@@ -892,12 +912,25 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     if (a.z > 0.2) feats.push(<path key="nb" d={`M ${pt(a)} Q ${pt({x: a.x + 3 * s, y: (a.y + b.y) / 2})} ${pt(b)}`} stroke={BLOOD.main} strokeWidth={5 * s * clamp(a.z, 0.4, 1)} strokeLinecap="round" fill="none" />);
   }
   if ((dmg.lipCut ?? 0) > 0) {
-    const a = onHead(-12, 0.58, 1.01);
-    if (a.z > 0.2) feats.push(<circle key="lip" cx={a.x} cy={a.y} r={3.2 * s} fill={BLOOD.main} opacity={dmg.lipCut} />);
+    // a split in the lower lip, just off centre
+    const a = onHead(-7, 0.545, 1.01), b = onHead(-2, 0.56, 1.01);
+    if (a.z > 0.2) feats.push(<path key="lip" d={`M ${pt(a)} L ${pt(b)}`} stroke={BLOOD.dark} strokeWidth={3 * s} strokeLinecap="round" opacity={dmg.lipCut} />);
   }
   if ((dmg.mouthBlood ?? 0) > 0) {
-    const a = onHead(-17, 0.56, 1.01), b = onHead(-20, 0.78, 1.01);
-    if (a.z > 0.2) feats.push(<path key="mb" d={`M ${pt(a)} Q ${pt({x: a.x - 2 * s, y: (a.y + b.y) / 2})} ${pt(b)}`} stroke={BLOOD.main} strokeWidth={4 * s} strokeLinecap="round" fill="none" opacity={dmg.mouthBlood} />);
+    // a thin trickle from the corner of the mouth down the chin, tapering, with a drop at its end
+    const mbA = dmg.mouthBlood ?? 0;
+    const pts: {q: ReturnType<typeof onHead>; w: number}[] = [];
+    for (let k = 0; k <= 6; k++) { const u = k / 6; pts.push({q: onHead(-11 - 3 * u, 0.52 + 0.3 * u * clamp(mbA * 1.4), 1.01), w: lerp(4.2, 1.4, u) * s}); }
+    if (pts[0].q.z > 0.2) {
+      const L: V2[] = [], Rr: V2[] = [];
+      pts.forEach((p0, k) => {
+        const p1 = pts[Math.min(k + 1, pts.length - 1)].q, pm = pts[Math.max(k - 1, 0)].q;
+        const dx = p1.x - pm.x, dy = p1.y - pm.y, l = Math.hypot(dx, dy) || 1;
+        L.push({x: p0.q.x - (dy / l) * p0.w / 2, y: p0.q.y + (dx / l) * p0.w / 2}); Rr.push({x: p0.q.x + (dy / l) * p0.w / 2, y: p0.q.y - (dx / l) * p0.w / 2});
+      });
+      const e = pts[pts.length - 1].q;
+      feats.push(<g key="mb" opacity={clamp(mbA * 1.5)}><path d={polyPath([...L, ...Rr.reverse()], true)} fill={BLOOD.main} /><circle cx={e.x} cy={e.y + 1.2 * s} r={2.4 * s} fill={BLOOD.main} /></g>);
+    }
   }
   if (dmg.bruise && dmg.bruise.amt > 0) {
     const a = onHead(dmg.bruise.side * 42, 0.18, 1.0);
@@ -953,9 +986,10 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     }
     acc.push(<polyline key="hsband" points={bandPts.map((q) => `${f2(q.x)},${f2(q.y)}`).join(' ')} fill="none" stroke={inkC} strokeWidth={ink * 1.1} strokeLinecap="round" />);
     const cup = onHead(-92, 0.05, 1.08);
-    const mic1 = onHead(-62, 0.62, 1.16), mic2 = onHead(-22, 0.66, 1.1);
+    const mic1 = onHead(-66, 0.6, 1.16), mic2 = onHead(-38, 0.62, 1.13);
     const cupEl = <rect key="cup" x={cup.x - 7 * s} y={cup.y - 11 * s} width={14 * s} height={22 * s} rx={5 * s} fill={inkC} />;
-    const micEl = <path key="mic" d={`M ${pt(cup)} Q ${pt(mic1)} ${pt(mic2)}`} fill="none" stroke={inkC} strokeWidth={ink} strokeLinecap="round" />;
+    // a short boom ending in a capsule well clear of the mouth (so it never reads as a smile line)
+    const micEl = <g key="mic"><path d={`M ${pt(cup)} Q ${pt(mic1)} ${pt(mic2)}`} fill="none" stroke={inkC} strokeWidth={ink} strokeLinecap="round" /><circle cx={mic2.x} cy={mic2.y} r={4.6 * s} fill={inkC} /></g>;
     if (cup.z > -0.3) { acc.push(cupEl); acc.push(micEl); } else { accBack.push(cupEl); (mic2.z > 0 ? acc : accBack).push(micEl); }
   }
   if (look.accessories.includes('pencil')) {
@@ -970,7 +1004,8 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
       );
     }
   }
-  if ((dmg.pale ?? 0) > 0) feats.push(<path key="pale" d={unionD} fill="#E8E4DE" opacity={0.22 * (dmg.pale ?? 0)} />);
+  // pallor tints the skin under the features (eyes, brows and mouth stay crisp)
+  if ((dmg.pale ?? 0) > 0) feats.unshift(<path key="pale" d={unionD} fill="#E8E4DE" opacity={0.22 * (dmg.pale ?? 0)} />);
 
   // ---- assemble: back things, skull union (ink, fill), shading, ears, hair cap, features, front extras, accessories
   out.push(<g key="hb">{earsBack}{accBack}{extrasBack}</g>);

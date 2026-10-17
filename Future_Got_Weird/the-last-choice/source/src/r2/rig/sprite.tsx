@@ -2,7 +2,7 @@
 // a depth-sorted sprite with the camera's yaw/pitch, perspective scale, the scene's sun/rim/fire/haze, and hand/foot
 // targets given in WORLD coordinates (a machine's arm, another person's wrist, a knob, planted footholds).
 import React from 'react';
-import {V3, add3, sub3, mul3, dot3, norm3, cross3, rad, clamp} from '../../kit/math';
+import {V3, add3, sub3, mul3, dot3, norm3, cross3, rad, clamp, lerp3} from '../../kit/math';
 import {View, figureView, project, SpriteItem, SpriteCtx} from '../engine';
 import {Figure, FigProps, FigLight, figureParts, solve2, Rig2, Loc, ArmT, LegT, THIGH, SHIN} from './figure';
 import {Look} from './looks';
@@ -116,7 +116,7 @@ export const figProps = (view: View, spec: FigSpec, F?: FigFrame): {F: FigFrame;
     ...base,
     look: spec.look, t: spec.t, seed: spec.seed ?? 1, id: spec.key,
     x: Fr.x, y: Fr.y, s: Fr.s, yaw: Fr.yaw + (base.yaw ?? 0), pitch: Fr.pitch, rot: Fr.rot,
-    ink: spec.inkPx ?? clamp(Fr.s * 4, 0.9, 5.5),
+    ink: spec.inkPx ?? clamp(Fr.s * 4, 0.9, 8), // close-ups keep a bolder line (capped so it never smothers a face)
     armL: armWorld(Fr, base.armL, w.handL, w.orientL), armR: armWorld(Fr, base.armR, w.handR, w.orientR),
     legL: legWorld(Fr, base.legL, w.footL), legR: legWorld(Fr, base.legR, w.footR),
   };
@@ -142,8 +142,86 @@ export const figureRig = (view: View, spec: FigSpec) => {
   const {F, props} = figProps(view, spec);
   const {rig} = figureParts(props);
   const W = (q: V3) => rigToWorld(F, q);
-  return {rig, F, W, handL: W(rig.hands[0].pos), handR: W(rig.hands[1].pos), head: W(rig.headC), chest: W(rig.loc({r: 0, u: 255, f: 20}))};
+  return {
+    rig, F, W, handL: W(rig.hands[0].pos), handR: W(rig.hands[1].pos), head: W(rig.headC),
+    chest: W(rig.torso({r: 0, u: 90, f: 20})),
+    /** a world point on the torso (pelvis-relative, torso frame; see Rig2.torso) */
+    torso: (l: Loc) => W(rig.torso(l)),
+    /** a world point on the body (root-relative; see Rig2.loc) */
+    body: (l: Loc) => W(rig.loc(l)),
+  };
 };
+
+// ------------------------------------------------------------------ two-person contact: the support hierarchy
+// One body is the PARENT (solved first, on its own pose); the other's contact limbs are CHILDREN placed on world
+// points of the solved parent, every frame. For a catch the dependency runs both ways, resolved in this order:
+//   1. the catcher's body (parent of the support): posed alone; its cradle point is where a falling back can rest;
+//   2. the faller (parent of the contact): follows its own fall until its back reaches the cradle, then rests on it
+//      (its bodyPitch is limited by bisection on the solved rig, so it never passes through the catcher);
+//   3. the catcher's hands (children): placed on the faller's solved back, fading in with the contact.
+// A hand on a shoulder is the simple case: the shoulder's owner is the parent, the reaching hand the child.
+
+const withPose = (spec: FigSpec, over: Partial<FigProps>): FigSpec => {
+  const p = spec.pose;
+  return {...spec, pose: typeof p === 'function' ? (F: FigFrame) => ({...p(F), ...over}) : {...(p ?? {}), ...over}};
+};
+
+/** Place `reacher`'s hand on a point of `owner`'s solved body (torso frame Loc), fading in with w. */
+export const handOn = (view: View, owner: FigSpec, at: Loc, reacher: FigSpec, side: 'L' | 'R', w: number, orient?: WorldOrient): FigSpec => {
+  if (w <= 0) return reacher;
+  const o = figureRig(view, owner);
+  const target = o.torso(at);
+  const free = figureRig(view, reacher);
+  const from = side === 'L' ? free.handL : free.handR;
+  const hand = lerp3(from, target, clamp(w));
+  const world = {...(reacher.world ?? {}), ...(side === 'L' ? {handL: hand, orientL: orient && {...orient, w: (orient.w ?? 1) * clamp(w)}} : {handR: hand, orientR: orient && {...orient, w: (orient.w ?? 1) * clamp(w)}})};
+  return {...reacher, world};
+};
+
+export type CatchOut = {faller: FigSpec; catcher: FigSpec; contact: number; pitch: number};
+/**
+ * A catch from behind. `faller` falls backward on its own pose (negative bodyPitch); `catcher` stands behind it.
+ * Returns both specs with the support applied: the faller's pitch stops where its back meets the catcher's cradle,
+ * and the catcher's hands sit on the faller's back (weight `w`, e.g. a reaction delay).
+ */
+export const supportCatch = (view: View, faller: FigSpec, catcher: FigSpec, o: {cradle?: Loc; backL?: Loc; backR?: Loc; w?: number} = {}): CatchOut => {
+  const cradleL = o.cradle ?? {r: 0, u: 90, f: 64};
+  const backL = o.backL ?? {r: -34, u: 84, f: -40}, backR = o.backR ?? {r: 30, u: 66, f: -40};
+  const C0 = figureRig(view, catcher);
+  const cradle = C0.torso(cradleL);
+  const bk = headingDir(faller.heading + 180);
+  const Ff = figFrame(view, faller.pos, faller.heading);
+  const base = figProps(view, faller, Ff).props;
+  const want = base.bodyPitch ?? 0;
+  // the faller's back profile (low back, shoulder blades, back of the head) against the plane of the catcher's
+  // cradle, facing the faller: the deepest point decides
+  const BACK: Loc[] = [{r: 0, u: 40, f: -40}, {r: 0, u: 95, f: -40}, {r: 0, u: 130, f: -34}, {r: 0, u: 205, f: -40}];
+  const pen = (pitch: number) => {
+    const r = solve2({...base, bodyPitch: pitch});
+    return Math.max(...BACK.map((l) => dot3(sub3(rigToWorld(Ff, r.torso(l)), cradle), bk))); // > 0: past the cradle
+  };
+  let pitch = want, contact = 0;
+  if (want < 0 && pen(want) > 0) {
+    let lo = 0, hi = want; // pitch in [want, 0]; pen(lo) <= 0 assumed (standing does not touch)
+    if (pen(0) > 0) { pitch = 0; contact = 1; }
+    else {
+      for (let i = 0; i < 14; i++) { const m = (lo + hi) / 2; if (pen(m) > 0) hi = m; else lo = m; }
+      pitch = lo; contact = 1;
+    }
+  }
+  const f2 = contact ? withPose(faller, {bodyPitch: pitch}) : faller;
+  const w = clamp(o.w ?? contact);
+  let c2 = catcher;
+  if (w > 0) {
+    const R = figureRig(view, f2);
+    const tL = R.torso(backL), tR = R.torso(backR);
+    const palm = norm3(sub3(R.torso({r: 0, u: 75, f: 0}), R.torso({r: 0, u: 75, f: -40})));
+    c2 = {...catcher, world: {...(catcher.world ?? {}), handL: lerp3(C0.handL, tL, w), handR: lerp3(C0.handR, tR, w),
+      orientL: {palm, w}, orientR: {palm, w}}};
+  }
+  return {faller: f2, catcher: c2, contact, pitch};
+};
+const headingDir = (h: number): V3 => ({x: Math.sin(rad(h)), y: 0, z: -Math.cos(rad(h))});
 
 export const figureSprite = (spec: FigSpec): SpriteItem => ({
   kind: 'sprite',
