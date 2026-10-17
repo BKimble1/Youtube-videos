@@ -8,7 +8,15 @@ import {V3, add3, sub3, mul3, cross3, dot3, norm3, rotAxis, rad, rnd, len3} from
  * after its fill, so it can never sort apart from the surface it lies on. Points in the same (object) space as the mesh,
  * lying on (or a hair in front of) the face plane. `line` = open polyline of that width in metres instead of a fill.
  */
-export type Overlay = {pts: V3[]; mat: string; line?: number; /** ink outline (fills only) */ ink?: boolean};
+export type Overlay = {
+  /** one polygon (or polyline when `line` is set) */
+  pts?: V3[];
+  /** several polygons/polylines drawn as ONE path (e.g. all the dark windows of a facade) */
+  polys?: V3[][];
+  mat: string;
+  line?: number;
+  /** ink outline (fills only) */ ink?: boolean;
+};
 export type Face = {
   v: number[]; mat: string;
   /** never draw ink edges on this face */ noInk?: boolean;
@@ -111,7 +119,7 @@ export const xfPoint = (p: V3, x: Xf): V3 => {
 export const xfMesh = (m: Mesh, x: Xf): Mesh => ({
   ...m,
   verts: m.verts.map((p) => xfPoint(p, x)),
-  faces: m.faces.map((f) => (f.ov ? {...f, ov: f.ov.map((o) => ({...o, pts: o.pts.map((p) => xfPoint(p, x))}))} : f)),
+  faces: m.faces.map((f) => (f.ov ? {...f, ov: f.ov.map((o) => ({...o, pts: o.pts?.map((p) => xfPoint(p, x)), polys: o.polys?.map((P) => P.map((p) => xfPoint(p, x)))}))} : f)),
 });
 
 /** Axis-aligned box from min to max corner; mats: [top, bottom, north(−z), south(+z), west(−x), east(+x)] or one material. */

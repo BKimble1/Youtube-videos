@@ -1,0 +1,401 @@
+{
+  "ally_drone_v1.mp3": {
+    "generation_id": "bcxQpAmlSm4wSw0sa1vo",
+    "session_id": "nUvWHseXubutlfOiKzj8",
+    "prompt": "A small hobby quadcopter drone hovering nearby, high-pitched buzzing propellers, slightly rattly, steady, no music",
+    "duration_secs": 6,
+    "credits": 19.998
+  },
+  "ally_drone_crash_v1.mp3": {
+    "generation_id": "N9tcJdjK1r8H5xxHUbZF",
+    "session_id": "x6CU6QOHKC57VkDLPFV9",
+    "prompt": "A small drone hit and destroyed in the air: plastic crack, electric sparks, propellers sputtering, then clattering onto concrete, no music",
+    "duration_secs": 2.48,
+    "credits": 8.3325
+  },
+  "armor_hit_v1.mp3": {
+    "generation_id": "i9bFwqa7DyecKdSafvwn",
+    "session_id": "TAxQRK9uWTP94jOoru89",
+    "prompt": "Robot armor plate hit by a swung steel bar: sharp hard clang with a short metallic ring, no music",
+    "duration_secs": 1,
+    "credits": 3.333
+  },
+  "army_halt_v1.mp3": {
+    "generation_id": "BwCLdU7gBWAlBQYLKTNa",
+    "session_id": "zQ1ZSZbNcZuI64E6PrYF",
+    "prompt": "A huge robot army stopping all at once: one synchronized metallic stamp, a wave of servos locking, then sudden quiet, no music",
+    "duration_secs": 4,
+    "credits": 13.332
+  },
+  "army_halt_v2.mp3": {
+    "generation_id": "7r9mJQULKwyz5FEVoD7C",
+    "session_id": "IZpmID4T5LFMAYpDYXQT",
+    "prompt": "A huge robot army stopping all at once: one synchronized metallic stamp, a wave of servos locking, then sudden quiet, no music",
+    "duration_secs": 4,
+    "credits": 13.332
+  },
+  "army_march_v1.mp3": {
+    "generation_id": "ZOwSTmzly3RPcPX9YJLb",
+    "session_id": "58km7OQbmzEvUnbrw5zd",
+    "prompt": "Hundreds of heavy robot soldiers marching in perfect unison on concrete, synchronized metallic footsteps with servo whine, steady slow rhythm, no music",
+    "duration_secs": 12,
+    "credits": 39.996
+  },
+  "army_march_v2.mp3": {
+    "generation_id": "WKnvap8I2g5WuJHwXfpT",
+    "session_id": "gLgSplXrU0CgoXXIftcP",
+    "prompt": "Hundreds of heavy robot soldiers marching in perfect unison on concrete, synchronized metallic footsteps with servo whine, steady slow rhythm, no music",
+    "duration_secs": 12,
+    "credits": 39.996
+  },
+  "battle_far_v1.mp3": {
+    "generation_id": "tQwhRchubkZ2JECZUbHx",
+    "session_id": "FvHDTZRayeEl8YNvTCsD",
+    "prompt": "Distant city battle heard from far away: low rolling explosions, rumble of collapsing buildings, faint mechanical marching, wide and distant, no music, no sirens, no voices",
+    "duration_secs": 20,
+    "credits": 66.66
+  },
+  "battle_far_v2.mp3": {
+    "generation_id": "pJlBRuhcSKhEdwETORZY",
+    "session_id": "FePUxMxGoR2txkHnNfX0",
+    "prompt": "Distant city battle heard from far away: low rolling explosions, rumble of collapsing buildings, faint mechanical marching, wide and distant, no music, no sirens, no voices",
+    "duration_secs": 20,
+    "credits": 66.66
+  },
+  "breaker_charge_v1.mp3": {
+    "generation_id": "KgwQNlIOJLVd1w9ZppUt",
+    "session_id": "GgN5UJSZBdWleIdRxQu8",
+    "prompt": "A pneumatic tool's pressure tank charging: rising compressed-air hiss ending in a valve click, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "breaker_empty_v1.mp3": {
+    "generation_id": "q7A0RL2Lk5Ky9NfQyhmN",
+    "session_id": "gIZDSEl1NL8Fss9bGYOe",
+    "prompt": "A pneumatic tool out of air: weak sputtering hiss and an empty dry click, no music",
+    "duration_secs": 1.2,
+    "credits": 3.9996000000000005
+  },
+  "breaker_hit_v1.mp3": {
+    "generation_id": "zttkkePHkWZnRYxJkWTz",
+    "session_id": "rzCbUHaxZF9QqM7HsYFO",
+    "prompt": "A pneumatic demolition breaker striking robot armor: violent piston blast and crunching metal, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "breaker_hit_v2.mp3": {
+    "generation_id": "WVkg5dCFJR60WwCxDD3m",
+    "session_id": "8Kmuws0B04oGavUcuwtq",
+    "prompt": "A pneumatic demolition breaker striking robot armor: violent piston blast and crunching metal, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "cable_snap_v1.mp3": {
+    "generation_id": "d0A1W5gr0fA2nFkhw3GP",
+    "session_id": "ZqHTk93IbZWQsS26WjTQ",
+    "prompt": "A steel cable snapping under tension: loud twang and whip crack as the cable lashes back, no music",
+    "duration_secs": 1.2,
+    "credits": 3.9996000000000005
+  },
+  "cable_snap_v2.mp3": {
+    "generation_id": "vFp4mLPn3SO2dGm5gDSh",
+    "session_id": "4bo2BPsqHzexFeIPHuCk",
+    "prompt": "A steel cable snapping under tension: loud twang and whip crack as the cable lashes back, no music",
+    "duration_secs": 1.2,
+    "credits": 3.9996000000000005
+  },
+  "cloth_move_v1.mp3": {
+    "generation_id": "H4K0dP2o4QMTweeNHLil",
+    "session_id": "tnBYOViA7ADWaBxpuzLR",
+    "prompt": "Close clothing rustle: a jacket and shirt fabric moving as a person shifts and reaches, quiet and intimate, no music, no voices",
+    "duration_secs": 2,
+    "credits": 6.666
+  },
+  "drone_pass_v1.mp3": {
+    "generation_id": "qN3v9XwADKl4IuuROIar",
+    "session_id": "W0HzJU9hr8tHTEe04TJ7",
+    "prompt": "A single fast drone flying past close by, buzzing rotor doppler swoosh, no music",
+    "duration_secs": 2.48,
+    "credits": 8.3325
+  },
+  "drone_pass_v2.mp3": {
+    "generation_id": "imNd7NgABaT7oRWwjnLd",
+    "session_id": "FziAEMwWzEfXxp86rPs1",
+    "prompt": "A single fast drone flying past close by, buzzing rotor doppler swoosh, no music",
+    "duration_secs": 2.48,
+    "credits": 8.3325
+  },
+  "drone_swarm_v1.mp3": {
+    "generation_id": "2seLoiT5f0JA7vh1Evul",
+    "session_id": "LjWkKGOLCsdYCDH2J2a1",
+    "prompt": "Swarm of small military drones flying overhead, layered buzzing rotors passing and circling, no music",
+    "duration_secs": 10,
+    "credits": 33.33
+  },
+  "drone_swarm_v2.mp3": {
+    "generation_id": "6nTEeAQ1PLoClB9CQK97",
+    "session_id": "6wGXo3rWyUoVNhq4U5mr",
+    "prompt": "Swarm of small military drones flying overhead, layered buzzing rotors passing and circling, no music",
+    "duration_secs": 10,
+    "credits": 33.33
+  },
+  "eyes_on_v1.mp3": {
+    "generation_id": "Ar8Cbkq6bHyJhHshmqLg",
+    "session_id": "1jaAnGGPNhgx0qLpMio5",
+    "prompt": "Many robot sensor eyes powering on in a quick rippling sequence, short electronic chirps and rising hums from near to far, no music",
+    "duration_secs": 3,
+    "credits": 9.999
+  },
+  "eyes_on_v2.mp3": {
+    "generation_id": "q8Rithy5cycO48eBush2",
+    "session_id": "ZE0ADUnqgpvNx8ileIxk",
+    "prompt": "Many robot sensor eyes powering on in a quick rippling sequence, short electronic chirps and rising hums from near to far, no music",
+    "duration_secs": 3,
+    "credits": 9.999
+  },
+  "final_breath_v1.mp3": {
+    "generation_id": "P59lKMIJscUJ1Sq06DuB",
+    "session_id": "iuFEvQHFCpNjLRjLabVD",
+    "prompt": "A single soft, tired exhale of an exhausted man, very close and quiet, breath only, no words, no music",
+    "duration_secs": 2.48,
+    "credits": 8.3325
+  },
+  "flare_ignite_v1.mp3": {
+    "generation_id": "u21V65QDWvTxSHpjltfN",
+    "session_id": "IoTBQUX257GzFjt56fAc",
+    "prompt": "A road flare struck and ignited: scratch, pop and a fierce sputtering burning hiss, no music",
+    "duration_secs": 3,
+    "credits": 9.999
+  },
+  "halligan_pry_v1.mp3": {
+    "generation_id": "H3lPTMnqiLry97NfWUGz",
+    "session_id": "kksj9w5N0XSZVEfMrtM9",
+    "prompt": "A steel pry bar wrenching an armor panel off a robot: metal creak and groan then a sudden pop as it tears free, no music",
+    "duration_secs": 1.76,
+    "credits": 5.9994000000000005
+  },
+  "heavy_launcher_v1.mp3": {
+    "generation_id": "kkFN7xL0WprjJd52QCb9",
+    "session_id": "X39yWkUiSFQNqqWlXFed",
+    "prompt": "A heavy war machine's shoulder launcher firing a projectile: deep thump-boom and a fast rushing whoosh, no music",
+    "duration_secs": 2,
+    "credits": 6.666
+  },
+  "heavy_servo_v1.mp3": {
+    "generation_id": "ycX8vke2GVWGLwya1AeJ",
+    "session_id": "0wyLhqXJTiMKM0hNvtKN",
+    "prompt": "Huge hydraulic war machine arm swinging into position: deep hydraulic whine, pistons, heavy metal joints groaning, no music",
+    "duration_secs": 3,
+    "credits": 9.999
+  },
+  "heavy_servo_v2.mp3": {
+    "generation_id": "Q4DyaRiqKAGVFhYpJuU9",
+    "session_id": "Sy0wUWtFP7e8mHyysAcU",
+    "prompt": "Huge hydraulic war machine arm swinging into position: deep hydraulic whine, pistons, heavy metal joints groaning, no music",
+    "duration_secs": 3,
+    "credits": 9.999
+  },
+  "heavy_stomp_v1.mp3": {
+    "generation_id": "E8DaN1wsd33NRpBBGkon",
+    "session_id": "rXzuvglieArFl1KUA9DE",
+    "prompt": "Giant six-meter walking war machine footstep: massive metal foot crashing onto concrete, ground shake, debris rattle, no music",
+    "duration_secs": 2.48,
+    "credits": 8.3325
+  },
+  "heavy_stomp_v2.mp3": {
+    "generation_id": "Qyvr9O5ekXcP9QlRlKxg",
+    "session_id": "owIw3H7Eh50uNTDxPdGP",
+    "prompt": "Giant six-meter walking war machine footstep: massive metal foot crashing onto concrete, ground shake, debris rattle, no music",
+    "duration_secs": 2.48,
+    "credits": 8.3325
+  },
+  "machine_hum_v1.mp3": {
+    "generation_id": "RFkx5KOglolFHIjapbkD",
+    "session_id": "JtbgQO5lNcieKqMYG3hb",
+    "prompt": "Low ominous hum of many idle robots holding position in a ring, soft servo ticks and electrical whine, distant, no music",
+    "duration_secs": 15,
+    "credits": 49.995000000000005
+  },
+  "plate_block_v1.mp3": {
+    "generation_id": "d71O66tQ3H4BJFrwZb1c",
+    "session_id": "C9TQewmImBP8lEpN7wao",
+    "prompt": "A heavy metal shield plate struck hard by a robotic fist, loud ringing clang with a dull body thud behind it, short, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "plate_block_v2.mp3": {
+    "generation_id": "wJ2vK18p7AQLeij3K8iy",
+    "session_id": "kdxTpZpYaWPSHV4UdP7U",
+    "prompt": "A heavy metal shield plate struck hard by a robotic fist, loud ringing clang with a dull body thud behind it, short, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "plate_crack_v1.mp3": {
+    "generation_id": "Cew6r2THTrDp2IKQlBoS",
+    "session_id": "TIX0O7idpVkdMbGqotbG",
+    "prompt": "A thick composite armor plate cracking under a heavy blow, sharp crack and bending metal groan, short, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "plate_crack_v2.mp3": {
+    "generation_id": "XZTNyV3MHPVrrd5jYSPY",
+    "session_id": "4dqKXFVOqh9fhtRR4BW0",
+    "prompt": "A thick composite armor plate cracking under a heavy blow, sharp crack and bending metal groan, short, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "plate_shatter_v1.mp3": {
+    "generation_id": "GCgTA34nH7YjeWkVueRN",
+    "session_id": "eM16zHVJaU9TQfa7Rtb7",
+    "prompt": "An armor shield plate shattering apart under a massive impact, metal and composite shards scattering on concrete, no music",
+    "duration_secs": 2,
+    "credits": 6.666
+  },
+  "plate_shatter_v2.mp3": {
+    "generation_id": "m7N9zgiuiBE668pm769c",
+    "session_id": "zm9SnP7uOi2AnT2vDoOV",
+    "prompt": "An armor shield plate shattering apart under a massive impact, metal and composite shards scattering on concrete, no music",
+    "duration_secs": 2,
+    "credits": 6.666
+  },
+  "projector_on_v1.mp3": {
+    "generation_id": "cY8bJA4EDA2keNXpbVLW",
+    "session_id": "3FccVENRsNsSkMOLH4AB",
+    "prompt": "A small portable projector clicking on, a little fan spinning up and a soft electronic whir, no music",
+    "duration_secs": 2,
+    "credits": 6.666
+  },
+  "ram_strike_v1.mp3": {
+    "generation_id": "tCuJszpy5mTr6VJ85fAA",
+    "session_id": "WpuwAbL5NXoiuDG0FaMw",
+    "prompt": "Massive hydraulic ram arm of a war machine smashing into concrete and metal, enormous impact, crunching and scattering debris, no music",
+    "duration_secs": 3,
+    "credits": 9.999
+  },
+  "ram_strike_v2.mp3": {
+    "generation_id": "KVWRE1f9x5jWZJG8u3Du",
+    "session_id": "FSpbO7fvZOJ8qNKf3xnG",
+    "prompt": "Massive hydraulic ram arm of a war machine smashing into concrete and metal, enormous impact, crunching and scattering debris, no music",
+    "duration_secs": 3,
+    "credits": 9.999
+  },
+  "robot_fall_v1.mp3": {
+    "generation_id": "LFyOlW2gZ7TMttT7hlh5",
+    "session_id": "tY5BtKRGRlPWDOQOfANO",
+    "prompt": "A heavy humanoid robot collapsing onto concrete: metal crash, clattering limbs, a few sparks, no music",
+    "duration_secs": 2,
+    "credits": 6.666
+  },
+  "robot_swing_v1.mp3": {
+    "generation_id": "CLGE7AHcexzZaLzStacR",
+    "session_id": "p7wCNjY1oPxiqRDcO3tu",
+    "prompt": "A robot arm swinging fast through the air to strike: quick servo whir and a heavy whoosh, no music",
+    "duration_secs": 0.8,
+    "credits": 2.6664000000000003
+  },
+  "rubble_shift_v1.mp3": {
+    "generation_id": "5BBATkvWjO5xmjcYB9vF",
+    "session_id": "Tw21fJoJmCVxo4TzeExz",
+    "prompt": "Concrete rubble shifting and sliding as a person pushes up out of debris: grinding stones, small chunks falling, dust, very close, no music, no voices",
+    "duration_secs": 4,
+    "credits": 13.332
+  },
+  "run_rubble_v1.mp3": {
+    "generation_id": "oM5tFYG3bCKE8cCvfQac",
+    "session_id": "QlIaas9EkoAb4dBGeTlj",
+    "prompt": "Several people running hard over gravel and broken concrete, close footsteps and scuffs, no music, no voices",
+    "duration_secs": 6,
+    "credits": 19.998
+  },
+  "shield_bash_v1.mp3": {
+    "generation_id": "yIcuoZydJvVZqp6SQh13",
+    "session_id": "DB56aXFd9YuLwXHv6o14",
+    "prompt": "A person slamming a metal shield plate into a robot's armored chest, heavy metallic thump and short scrape, no music",
+    "duration_secs": 1.2,
+    "credits": 3.9996000000000005
+  },
+  "shield_bash_v2.mp3": {
+    "generation_id": "9KBOftsdhwZcdOriSSQ5",
+    "session_id": "dbmzq9HMCXP8xXgEa82g",
+    "prompt": "A person slamming a metal shield plate into a robot's armored chest, heavy metallic thump and short scrape, no music",
+    "duration_secs": 1.2,
+    "credits": 3.9996000000000005
+  },
+  "smoke_canister_v1.mp3": {
+    "generation_id": "OEIOQyqohbTaX6RD4LQL",
+    "session_id": "Rw4Vo3UKEnQKPM65kusJ",
+    "prompt": "A smoke canister bouncing twice on concrete then hissing out thick smoke, no music",
+    "duration_secs": 4,
+    "credits": 13.332
+  },
+  "tether_clamp_v1.mp3": {
+    "generation_id": "WfJ1QNNtKJmTG5awROoJ",
+    "session_id": "SUGAGoZUav7k54vobrhV",
+    "prompt": "A magnetic clamp slamming onto steel armor: heavy clunk followed by an electric magnetic hum, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "tether_clamp_v2.mp3": {
+    "generation_id": "6ySVr9MPeFjSR0ZKg0Jx",
+    "session_id": "FGW61w4gzzBBJJySU23d",
+    "prompt": "A magnetic clamp slamming onto steel armor: heavy clunk followed by an electric magnetic hum, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "tether_fire_v1.mp3": {
+    "generation_id": "mw4mEe8myyWaEEv4lowE",
+    "session_id": "wqHmB38L3KIFIe54MYRX",
+    "prompt": "Pneumatic grappling launcher firing: sharp compressed-air pop followed by a whizzing steel cable unspooling fast, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "tether_fire_v2.mp3": {
+    "generation_id": "mIRLrXrkYqxUD4kyEZ3i",
+    "session_id": "F1z7bcBeGcfESYj1O1q3",
+    "prompt": "Pneumatic grappling launcher firing: sharp compressed-air pop followed by a whizzing steel cable unspooling fast, no music",
+    "duration_secs": 1.48,
+    "credits": 4.9995
+  },
+  "tether_reel_v1.mp3": {
+    "generation_id": "JEe9zSE1fjjJDKcfAD24",
+    "session_id": "ttoe4FgQyILOPlZaA3sl",
+    "prompt": "A motorized cable winch reeling in under heavy load: straining whining motor and creaking taut steel cable, no music",
+    "duration_secs": 2.48,
+    "credits": 8.3325
+  },
+  "tether_reel_v2.mp3": {
+    "generation_id": "HbkLf3xc2d26fOLr6VfD",
+    "session_id": "q5QcWApxG3ZC7Iwqldvy",
+    "prompt": "A motorized cable winch reeling in under heavy load: straining whining motor and creaking taut steel cable, no music",
+    "duration_secs": 2.48,
+    "credits": 8.3325
+  },
+  "tower_collapse_v1.mp3": {
+    "generation_id": "L9TU7E0bnczb7MHhz2IY",
+    "session_id": "y0raQntlQxOBzepicZxN",
+    "prompt": "A distant skyscraper collapsing: deep rumbling roar, cascading concrete and steel, slow heavy tail, heard from far across a city, no music",
+    "duration_secs": 10,
+    "credits": 33.33
+  },
+  "tower_collapse_v2.mp3": {
+    "generation_id": "SX9UIP0D4nZTPG91Irsv",
+    "session_id": "0ebbsmcdBMC74ttfPgF5",
+    "prompt": "A distant skyscraper collapsing: deep rumbling roar, cascading concrete and steel, slow heavy tail, heard from far across a city, no music",
+    "duration_secs": 10,
+    "credits": 33.33
+  },
+  "wind_ruins_v1.mp3": {
+    "generation_id": "5AdCRzd6tKJHuhUeFVMX",
+    "session_id": "XrPLiT0kuLwOAzNl2N8m",
+    "prompt": "Cold wind gusting through ruined concrete buildings and broken windows, low hollow howl, loose debris rattling far off, no music, no voices",
+    "duration_secs": 20,
+    "credits": 66.66
+  },
+  "wind_ruins_v2.mp3": {
+    "generation_id": "tDoGz3uuWxmzb7UMzIvO",
+    "session_id": "ALerKuSMT4Lhn3G87zPa",
+    "prompt": "Cold wind gusting through ruined concrete buildings and broken windows, low hollow howl, loose debris rattling far off, no music, no voices",
+    "duration_secs": 20,
+    "credits": 66.66
+  }
+}

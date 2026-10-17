@@ -158,23 +158,27 @@ const meshOut = (it: MeshItem, v: View, L: LightRig, mats: Record<string, Materi
       f.ov.forEach((o, oi) => {
         const om = mats[it.remap?.[o.mat] ?? o.mat] ?? {base: '#FF00FF'};
         const col = shade(L, om, lit);
-        const Q = o.pts.map((p) => toView(v, dynamic ? wp(p, -1) : p));
-        if (o.line) {
-          // open polyline, near-clipped per segment
-          let dd = '';
-          for (let i = 0; i + 1 < Q.length; i++) {
-            const sg = clipSeg(Q[i], Q[i + 1], v.near);
-            if (!sg) continue;
-            const a = viewToScreen(v, sg[0]), b = viewToScreen(v, sg[1]);
-            dd += `M${f1(a.x)} ${f1(a.y)}L${f1(b.x)} ${f1(b.y)}`;
+        const groups = o.polys ?? (o.pts ? [o.pts] : []);
+        let dd = '';
+        groups.forEach((G) => {
+          const Q = G.map((p) => toView(v, dynamic ? wp(p, -1) : p));
+          if (o.line) {
+            // open polyline, near-clipped per segment
+            for (let i = 0; i + 1 < Q.length; i++) {
+              const sg = clipSeg(Q[i], Q[i + 1], v.near);
+              if (!sg) continue;
+              const a = viewToScreen(v, sg[0]), b = viewToScreen(v, sg[1]);
+              dd += `M${f1(a.x)} ${f1(a.y)}L${f1(b.x)} ${f1(b.y)}`;
+            }
+          } else {
+            const C = clipNear(Q, v.near);
+            if (C.length < 3) return;
+            dd += 'M' + C.map((q) => { const s2 = viewToScreen(v, q); return `${f1(s2.x)} ${f1(s2.y)}`; }).join('L') + 'Z';
           }
-          if (dd) ovEls!.push(<path key={oi} d={dd} fill="none" stroke={col} strokeWidth={f1(Math.max(0.5, o.line * kMid))} strokeLinecap="round" strokeLinejoin="round" opacity={om.opacity} />);
-        } else {
-          const C = clipNear(Q, v.near);
-          if (C.length < 3) return;
-          const dd = 'M' + C.map((q) => { const s2 = viewToScreen(v, q); return `${f1(s2.x)} ${f1(s2.y)}`; }).join('L') + 'Z';
-          ovEls!.push(<path key={oi} d={dd} fill={col} opacity={om.opacity} stroke={o.ink ? inkColor(L, om, lit) : 'none'} strokeWidth={o.ink ? f1(iw * 0.7) : undefined} strokeLinejoin="round" />);
-        }
+        });
+        if (!dd) return;
+        if (o.line) ovEls!.push(<path key={oi} d={dd} fill="none" stroke={col} strokeWidth={f1(Math.max(0.5, o.line * kMid))} strokeLinecap="round" strokeLinejoin="round" opacity={om.opacity} />);
+        else ovEls!.push(<path key={oi} d={dd} fill={col} opacity={om.opacity} stroke={o.ink ? inkColor(L, om, lit) : 'none'} strokeWidth={o.ink ? f1(iw * 0.7) : undefined} strokeLinejoin="round" />);
       });
     }
     out.push({
