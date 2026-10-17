@@ -202,9 +202,9 @@ export const d3Fx = (T: number): FxOut => {
     if (k < 0.25) return;
     out.push(fx(dust3({at: {...f.pos, y: f.pos.y + 0.03}, t: T, t0: f.t, key: `d3ff_${f.key}`, n: 2, size: 0.05, grow: 0.22 * k, speed: 0.5, life: 1.0, dir: {x: -0.4, y: 1, z: 0}, spread: 60, rise: 0.25, color: '#8E857C', opacity: 0.45 * k, seed: 300 + i})));
   });
-  // ---- the D2 canisters' smoke: the wind takes it (thin by the flash, gone by ~123.5)
+  // ---- the D2 canisters' smoke (behind D2-7's camera): the wind takes it — half by P3, thin by the flash, gone by ~123
   if (T < 124.0) {
-    const k = (1 - 0.8 * smooth((T - 116.95) / 1.5)) * (1 - smooth((T - 120.5) / 2.5));
+    const k = (0.5 - 0.32 * smooth((T - 116.95) / 1.5)) * (1 - smooth((T - 120.5) / 2.5));
     d2Cans().forEach((c) => { if (T >= c.t0) { const f = smokeCanister(c, T); out.push({...f, items: fadeItems(f.items, k, /_sm_/)}); } });
   }
   // ---- heavy 1: footfalls; the flare and the flash; the ram's slam; the knee; the crash
@@ -242,8 +242,8 @@ export const d3Fx = (T: number): FxOut => {
   if (T > EV3.land - 0.1 && T < EV3.land + 6) {
     const w = heavyAttach(heavy1D3(EV3.land + 0.05)).hull;
     const g0 = {x: w.x, y: G(w.x, w.z) + 0.1, z: w.z};
-    out.push(fx(dust3({at: g0, t: T, t0: EV3.land, key: 'd3wave', ring: 2.6, n: 26, speed: 6.5, size: 0.7, grow: 1.8, life: 4.2, rise: 0.7, color: '#9C9087', opacity: 0.88, seed: 81})));
-    out.push(fx(dust3({at: g0, t: T, t0: EV3.land + 0.08, key: 'd3wave2', ring: 1.6, n: 18, speed: 3.6, size: 0.9, grow: 1.6, life: 5.0, rise: 1.1, color: '#A99D90', opacity: 0.8, seed: 82})));
+    out.push(fx(dust3({at: g0, t: T, t0: EV3.land, key: 'd3wave', ring: 2.6, n: 26, speed: 5.5, size: 0.6, grow: 1.3, life: 3.6, rise: 0.7, color: '#9C9087', opacity: 0.72, seed: 81})));
+    out.push(fx(dust3({at: g0, t: T, t0: EV3.land + 0.08, key: 'd3wave2', ring: 1.6, n: 18, speed: 3.2, size: 0.8, grow: 1.2, life: 4.4, rise: 1.1, color: '#A99D90', opacity: 0.62, seed: 82})));
     out.push(fx(chips3({at: add3(g0, {x: 0, y: 0.4, z: 0}), t: T, t0: EV3.land, key: 'd3crch', n: 34, dir: {x: 0, y: 1, z: 0}, spread: 80, speed: [3, 10], size: [0.06, 0.24], material: 'asphalt', ground: g0.y, life: 6, seed: 83})));
     out.push(fx(chips3({at: add3(g0, {x: -1.0, y: 0.8, z: 0.8}), t: T, t0: EV3.land + 0.05, key: 'd3crmet', n: 14, dir: {x: -0.4, y: 0.9, z: 0.4}, spread: 70, speed: [3, 8], size: [0.05, 0.16], material: 'metal', ground: g0.y, life: 6, seed: 84})));
     out.push(fx(sparks3({at: add3(g0, {x: -0.8, y: 0.6, z: 0.6}), t: T, t0: EV3.land, key: 'd3crsp', n: 50, dir: {x: -0.5, y: 0.7, z: 0.5}, spread: 90, speed: [3, 11], ground: g0.y, seed: 85, flash: 0.6})));

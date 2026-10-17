@@ -7,6 +7,7 @@ import type {Item} from '../../engine';
 import {toView} from '../../engine';
 import {smooth} from '../../../kit/math';
 import {d3Items, d3FxAt, D3Opts} from './battle';
+import {fadeItems} from './fx';
 import {SH3} from './times';
 import {
   CamFn, CAM_1, CAM_2, CAM_3, CAM_4a, CAM_4b, CAM_5, CAM_6, CAM_7a, CAM_7b, CAM_7c, CAM_8, CAM_9, CAM_10,
@@ -14,7 +15,7 @@ import {
 } from './cams';
 
 /** smoke and dust puffs fade out as they reach the lens (no screen-filling veil from a puff a metre away) */
-const SMOKE = /(^d3dust|_sm_|^d3flare_tr|_wave_d|_wisp|_dust)/;
+const SMOKE = /(^d3dust|^d3wave|_sm_|^d3flare_tr|_wave_d|_wisp|_dust)/;
 const nearFade = (items: Item[]): Item[] => items.map((it) => {
   if (it.kind !== 'sprite' || !it.key || !SMOKE.test(it.key)) return it;
   const draw = it.draw;
@@ -25,12 +26,13 @@ const nearFade = (items: Item[]): Item[] => items.map((it) => {
     return a > 0.98 || !el ? el : <g opacity={a.toFixed(3)}>{el}</g>;
   }};
 });
-const shot = (start: number, cam: CamKey[] | CamFn, o: (T: number) => D3Opts = () => ({}), drift = 0.018, ease = 0.6): React.FC => {
+const shot = (start: number, cam: CamKey[] | CamFn, o: (T: number) => D3Opts = () => ({}), drift = 0.018, ease = 0.6, smoke = 1): React.FC => {
   const C: React.FC = () => {
     const {t, T} = useShotTime(start);
     const c = typeof cam === 'function' ? cam(t, T) : camPath(cam, t, ease);
     const f = d3FxAt(T);
-    return <Stage T={T} cam={c} lights={f.lights} shake={f.shake} drift={drift} items={(v) => [...d3Items(v, T, o(T)), ...nearFade(f.items)]} />;
+    const fxItems = smoke < 1 ? fadeItems(f.items, smoke, SMOKE) : f.items;
+    return <Stage T={T} cam={c} lights={f.lights} shake={f.shake} drift={drift} items={(v) => [...d3Items(v, T, o(T)), ...nearFade(fxItems)]} />;
   };
   return C;
 };
@@ -48,7 +50,8 @@ export const D3_4b = shot(SH3.d34b, CAM_4b, () => ({full: 30, near: true}), 0.01
 // D3-5 (ADAPT 128.02–131.02): a drone climbs out of the dust; the gimbal tilts; amber; the mark on the tablet
 export const D3_5 = shot(SH3.d35, CAM_5, () => ({full: 24}), 0.0);
 // D3-6 (FORMATION 131.02–133.82): high wide: the line across the crater bends into the arc round the Crew
-export const D3_6 = shot(SH3.d36, CAM_6, () => ({full: 20, far: 140}), 0.0);
+// (seen from 30 m up the low dust is thinner: drawn at 45 % so the formation reads)
+export const D3_6 = shot(SH3.d36, CAM_6, () => ({full: 20, far: 140}), 0.0, 0.6, 0.45);
 // D3-7a (DECOY_FAIL 133.82–135.30): the sketch, the tap, the tablet raised; the projector clicks; the figures
 export const D3_7a = shot(SH3.d37a, CAM_7a, () => ({full: 30}), 0.014);
 // D3-7b (135.30–136.15): the units walk through the figures; a drone drops out of the sky

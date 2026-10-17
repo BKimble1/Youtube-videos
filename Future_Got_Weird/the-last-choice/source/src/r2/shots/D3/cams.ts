@@ -63,8 +63,8 @@ export const CAM_5: CamFn = (t, T) => {
 // D3-6: high over the avenue's south side, steeply down: the line across the crater bends into the arc round the Crew
 // on the west rim (the ripple from the middle out); the wreck beyond; the wing under the girder
 export const CAM_6: CamKey[] = [
-  {t: 0, pos: at(50.5, 24.0, 13.0), target: at(52.5, -1.5, 1.0), fov: 46},
-  {t: d(SH3.d36, SH3.d37a), pos: at(50.2, 24.3, 13.1), target: at(52.3, -1.5, 0.8), fov: 46},
+  {t: 0, pos: at(51.0, 30.0, 17.0), target: at(52.5, -1.0, 3.0), fov: 50},
+  {t: d(SH3.d36, SH3.d37a), pos: at(50.8, 30.2, 17.1), target: at(52.3, -1.0, 2.8), fov: 50},
 ];
 // D3-7a: high over her right shoulder down onto the tablet (the sketch, the tap); up and out with the beam to the
 // light on the dust
@@ -93,15 +93,15 @@ export const CAM_8: CamKey[] = [
 // D3-9: from the south-west on the rim: the drone flees toward the lens; struck; it crashes in the foreground; the
 // pilot beyond with the dead controller
 export const CAM_9: CamKey[] = [
-  {t: 0, pos: at(39.0, 1.35, 4.8), target: at(45.5, 2.2, -2.0), fov: 46},
-  {t: 1.0, pos: at(38.95, 1.33, 4.85), target: at(44.0, 1.5, -0.6), fov: 46},
-  {t: d(SH3.d39, SH3.d310), pos: at(38.9, 1.3, 4.9), target: at(43.5, 1.1, -0.9), fov: 46},
+  {t: 0, pos: at(37.0, 1.4, 7.4), target: at(45.0, 2.4, -2.0), fov: 48},
+  {t: 1.0, pos: at(36.95, 1.38, 7.45), target: at(43.6, 1.6, -0.4), fov: 48},
+  {t: d(SH3.d39, SH3.d310), pos: at(36.9, 1.35, 7.5), target: at(42.7, 0.3, 1.7), fov: 48},
 ];
-// D3-10: low on the crater's north-west slope under the girder (the water main behind us): heavy 2 comes over heavy 1's
-// wreck toward us, a leg lifted high over it; its front-right foot comes down on this side, close
+// D3-10: low in the crater's south-east, in the gap of the broken water main, across the wreck: heavy 2 comes in from
+// the right, a leg lifted high over heavy 1's wreck; its front-right foot comes down on this side
 export const CAM_10: CamKey[] = [
-  {t: 0, pos: g(57.0, -10.1, 1.2), target: at(64.5, -0.4, -4.8), fov: 48},
-  {t: d(SH3.d310, SH3.d311a), pos: g(56.8, -10.2, 1.15), target: at(63.0, -0.9, -5.2), fov: 50},
+  {t: 0, pos: g(68.4, 8.1, 1.5), target: at(65.5, 0.3, -4.6), fov: 46},
+  {t: d(SH3.d310, SH3.d311a), pos: g(68.2, 8.2, 1.45), target: at(63.6, 0.1, -4.8), fov: 46},
 ];
 // D3-11a: wide from the south-west, clear of the cover slab: they run; the round; the blast on the rim; they are thrown
 export const CAM_11a: CamKey[] = [

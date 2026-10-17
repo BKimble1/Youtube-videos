@@ -316,10 +316,11 @@ export const directorAt = (T: number): CrewOut => {
     pose = T < EV3.blast + 0.5 ? kb : T < DIR_UP ? layer(LYING_BACK, {head: {pitch: -8 + 6 * Math.sin((T - 146) * 3), roll: 8}, armR: {fk: {fwd: 30, out: 40, bend: 50}}, face: {mouth: 'pain', brows: 0.6, lid: 0.35, squint: 0.4}, breath: 1}) : UP_FROM_BACK((T - DIR_UP) / 0.85);
   }
   // looks
-  const lt: V3 | null = T < 117.1 ? H1_EYE(T) : T < EV3.sigEnd ? at3(48.4, -6.2, 1.0) : T < 119.45 ? H1_EYE(T) : T < 121.3 ? null : T < 124.9 ? H1_EYE(T)
+  const lt0 = (T: number): V3 | null => (T < 117.1 ? H1_EYE(T) : T < EV3.sigEnd ? at3(48.4, -6.2, 1.0) : T < 119.45 ? H1_EYE(T) : T < 121.3 ? null : T < 124.9 ? H1_EYE(T)
     : T < 126.8 ? heavyAttach(heavy1D3(T)).hull : T < 128.1 ? at3(56.4, 0.6, 1.2) : T < 130.8 ? null : T < 135.2 ? at3(56.5, -1, 1.2) : T < 136.2 ? at3(56.5, -0.5, 3.5)
       : T < 137.3 ? ON(DEC_SPOT, 1.3) : T < 140.4 ? at3(46.5, -9, 3) : T < 141.8 ? allyAt(Math.min(T, EV3.kill)) : T < EV3.fallBack ? H2_EYE(T) : T < 145.2 ? at3(42, 0, 1.3)
-        : T < EV3.blast ? H2_EYE(T) : T > DIR_UP + 0.85 && T < DIR_GO ? H2_EYE(T) : null;
+        : T < EV3.blast ? H2_EYE(T) : T > DIR_UP + 0.85 && T < DIR_GO ? H2_EYE(T) : null);
+  const lt = lt0(T);
   if (!down && lt) pose = look(pose, b, lt, 1 - sig * 0.5);
   if (T > DIR_UP + 0.5 && T < DIR_GO + 0.2) pose = face(pose, {mouth: 'grit', brows: -0.8, squint: 0.3});
   // the plate arm: the body-local guard (not while down)
