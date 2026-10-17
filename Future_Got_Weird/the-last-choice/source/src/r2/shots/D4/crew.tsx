@@ -349,7 +349,7 @@ export const tetherAt = (T: number): CrewOut => {
   const torn = win(T, EV.disarmTear, 158.4, 0.02, 0.4);
   if (torn > 0) {
     // the hands fly back empty; she staggers back, shocked
-    pose = blendPose(pose, layer(pose, {drop: 22, lean: -16, armR: {fk: {fwd: 60, out: 40, bend: 30}}, armL: {fk: {fwd: 40, out: 50, bend: 30}}, handR: 'open', handL: 'open', face: {mouth: 'open', open: 0.5, brows: 0.6, worry: 0.5}}), torn);
+    pose = blendPose(pose, layer(pose, {drop: 22, lean: -16, armR: {fk: {fwd: 60, out: 40, bend: 30}}, armL: {fk: {fwd: 40, out: 50, bend: 30}}, handR: 'open', handL: 'open', face: {mouth: 'o', brows: 0.75, worry: 0.7}}), torn);
   }
   // D4-3: the cut length of cable off her reel, into both hands
   const pull = win(T, EV.cablePull, 164.12, 0.25, 0.04);
