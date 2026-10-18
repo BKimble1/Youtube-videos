@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+"""Footage intake for the U9 episode (real clips are evidence: never mirrored, re-timed or generated).
+
+  python3 tools/ingest_footage.py probe                 # every file in footage/source/: SHA-256, duration, fps, size
+  python3 tools/ingest_footage.py sheet FILE START DUR [FPS]
+                                                        # numbered frame sheet of a window (footage/frames/), to pick
+                                                        # in/out points, takeoff/landing frames and wheel positions
+  python3 tools/ingest_footage.py cut FILE              # constant-30-fps copy for the edit: source/public/footage/
+                                                        # byd_ev-tech03.mp4 (same timing, same resolution, no crop)
+
+The probe writes footage/footage_probe.json; the ledger (footage/CLIP_LEDGER.md) records which seconds are used where.
+"""
+import hashlib, json, os, subprocess, sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(ROOT, 'footage/source')
+
+
+def sha(p):
+    h = hashlib.sha256()
+    with open(p, 'rb') as f:
+        for b in iter(lambda: f.read(1 << 20), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+def probe():
+    out = []
+    for name in sorted(os.listdir(SRC)):
+        p = os.path.join(SRC, name)
+        if not os.path.isfile(p) or name.startswith('.'):
+            continue
+        j = json.loads(subprocess.run(['ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', p], capture_output=True, text=True).stdout)
+        v = next((s for s in j['streams'] if s['codec_type'] == 'video'), None)
+        a = next((s for s in j['streams'] if s['codec_type'] == 'audio'), None)
+        out.append({'file': name, 'sha256': sha(p), 'bytes': os.path.getsize(p), 'duration_s': float(j['format']['duration']),
+                    'video': v and {'codec': v['codec_name'], 'w': v['width'], 'h': v['height'], 'r_frame_rate': v['r_frame_rate'], 'avg_frame_rate': v['avg_frame_rate']},
+                    'audio': a and {'codec': a['codec_name'], 'sr': a.get('sample_rate'), 'ch': a.get('channels')}})
+    json.dump(out, open(os.path.join(ROOT, 'footage/footage_probe.json'), 'w'), indent=1)
+    for o in out:
+        print(json.dumps(o))
+
+
+def sheet(f, start, dur, fps=10):
+    p = f if os.path.isabs(f) else os.path.join(SRC, f)
+    os.makedirs(os.path.join(ROOT, 'footage/frames'), exist_ok=True)
+    tag = f'{os.path.splitext(os.path.basename(p))[0]}_{float(start):07.2f}_{float(dur):.1f}s_{fps}fps'
+    out = os.path.join(ROOT, 'footage/frames', tag + '.jpg')
+    n = int(float(dur) * float(fps))
+    cols = 6
+    rows = (n + cols - 1) // cols
+    vf = (f"fps={fps},scale=480:-2,drawtext=text='%{{pts\\:hms}}':x=6:y=6:fontsize=18:fontcolor=white:box=1:boxcolor=black@0.6,"
+          f"tile={cols}x{rows}:padding=4:color=black")
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', str(start), '-t', str(dur), '-i', p, '-vf', vf, '-frames:v', '1', '-q:v', '3', out], check=True)
+    print(out)
+
+
+def cut(f):
+    p = f if os.path.isabs(f) else os.path.join(SRC, f)
+    os.makedirs(os.path.join(ROOT, 'source/public/footage'), exist_ok=True)
+    out = os.path.join(ROOT, 'source/public/footage/byd_ev-tech03.mp4')
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', p, '-an', '-vf', 'fps=30', '-c:v', 'libx264', '-crf', '12', '-preset', 'slow',
+                    '-pix_fmt', 'yuv420p', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709', '-movflags', '+faststart', out], check=True)
+    print(out)
+
+
+if __name__ == '__main__':
+    cmd = sys.argv[1] if len(sys.argv) > 1 else 'probe'
+    if cmd == 'probe':
+        probe()
+    elif cmd == 'sheet':
+        sheet(*sys.argv[2:5], **({'fps': float(sys.argv[5])} if len(sys.argv) > 5 else {}))
+    elif cmd == 'cut':
+        cut(sys.argv[2])
+    else:
+        sys.exit(__doc__)

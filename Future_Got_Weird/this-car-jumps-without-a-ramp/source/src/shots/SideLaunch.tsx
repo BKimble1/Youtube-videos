@@ -7,6 +7,7 @@ import {SideCar, bodyToWorld, STRUT_TOP} from '../car/side';
 import {Arrow, Pin, Tag} from '../car/parts';
 import {AXLE_F, AXLE_R, COM, WHEEL_R} from '../car/geom';
 import {Cam, Chip, Label, camKeys, toScreen, World} from '../kit/stage';
+import {FOOTAGE} from '../footage';
 import {SideWorld} from '../kit/sideworld';
 import {LAUNCH, LaunchState, MTOT, G, sampleLaunch, STATIC} from '../sim/launch';
 import {clamp01, easeInOut, easeOut, keys, seg, smooth, warp, win} from '../kit/util';
@@ -22,8 +23,12 @@ export const launchPose = (s: number) => {
   return {st, dz, wz, force: Math.max(-1, Math.min(1, st.Fa / 30e3))};
 };
 
-// The opening framing must match the real clip (see footage.tsx); this is the side-view framing used throughout.
-export const CAM_WIDE: Cam = {x: 0, y: 700, z: 0.3};
+// The opening framing matches the real clip: the vector wheels sit on the measured wheel centres of the at-rest frame
+// (footage.tsx; the clip is shown full-frame at 1920 wide), so the match cut keeps silhouette and road continuous.
+const FS = 1920 / FOOTAGE.width;
+const RX = FOOTAGE.wheelRear.x * FS, FX = FOOTAGE.wheelFront.x * FS, WY = ((FOOTAGE.wheelRear.y + FOOTAGE.wheelFront.y) / 2) * FS;
+const ZW = Math.abs(FX - RX) / (AXLE_F - AXLE_R);
+export const CAM_WIDE: Cam = {x: AXLE_R - (RX - 960) / ZW, y: WHEEL_R + (WY - 540) / ZW, z: ZW};
 export const CAM_DIAG: Cam = {x: -60, y: 640, z: 0.335};
 
 export const T = {
@@ -88,7 +93,7 @@ export const SideLaunch: React.FC<{t: number}> = ({t}) => {
     [0, CAM_WIDE],
     [T.so, CAM_WIDE],
     [T.so + 2.2, {x: 0, y: 760, z: 0.27}],
-    [T.ordinary - 0.35, {x: 0, y: 760, z: 0.27}],
+    [T.ordinary - 0.35, {x: -260, y: 700, z: 0.292}], // slow creep through the question and the name
     [T.ordinary + 0.55, corner],
     [T.bodyEnd + 0.1, {...corner, x: corner.x + 60, z: 0.78}],
     [T.during + 0.5, CAM_DIAG],

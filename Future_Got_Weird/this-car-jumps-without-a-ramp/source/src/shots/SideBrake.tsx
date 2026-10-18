@@ -38,6 +38,13 @@ export const BRAKE_IN = CORNER_OUT + 0.12;
 export const BRAKE_HOLD = T.one + 0.25; // camera stops tracking; the car drives out of frame
 export const BRAKE_OUT = BRAKE_HOLD + 1.3;
 
+// slow motion around the big bump: scene time runs at 0.3x for SLOW_LEN seconds of video, so the wheel's trip over
+// the bump and the bump-stop can be seen; everything physical in the shot runs on scene time
+const SLOW0 = T.travel - 0.55, SLOW_LEN = 2.2, SLOW_K = 0.3;
+export const sceneT = (t: number) => (t < SLOW0 ? t : t < SLOW0 + SLOW_LEN ? SLOW0 + (t - SLOW0) * SLOW_K : t - SLOW_LEN * (1 - SLOW_K));
+export const videoT = (ts: number) => (ts < SLOW0 ? ts : ts < SLOW0 + SLOW_LEN * SLOW_K ? SLOW0 + (ts - SLOW0) / SLOW_K : ts + SLOW_LEN * (1 - SLOW_K));
+export const SLOW_WIN = [SLOW0, SLOW0 + SLOW_LEN];
+
 // speed (m/s): cruise, brake down to a low speed, roll on over the patch
 const V0 = 18, V1 = 8;
 const tb0 = T.brake + 0.1, tb1 = T.dive + 0.35;
@@ -57,8 +64,8 @@ const decel = (t: number) => (t > tb0 && t < tb1 ? 1 : 0);
 
 // road: an uneven patch starting where the front wheels are at "Hit", plus one bigger bump at "limited travel"
 const PATCH0 = xAt(T.hit + 0.05) + 1.45;
-const BIG = xAt(T.travel - 0.15) + 1.45;
-const PATCH1 = xAt(BRAKE_OUT + 1) + 3;
+const BIG = xAt(sceneT(T.travel + 0.3)) + 1.45; // the front wheel meets it on "travel", in slow motion
+const PATCH1 = xAt(sceneT(BRAKE_OUT + 1)) + 3;
 const hump = (s: number, c: number, len: number, h: number) => {
   const u = (s - (c - len / 2)) / len;
   return u > 0 && u < 1 ? h * Math.sin(Math.PI * u) ** 2 : 0;
@@ -84,12 +91,13 @@ export const roadAt = (x: number) => {
   for (const [c, len, hh] of FEATURES) h = Math.max(h, hump(x, c, len, hh));
   return h;
 };
-export const BRAKE_EV = {tb0: () => tb0, tb1: () => tb1, xAt: (t: number) => xAt(t), big: () => BIG};
-const HALF = simulateHalf(BRAKE_IN - 0.5, BRAKE_OUT + 0.5, xAt, roadAt, (t) => smooth(seg(t, T.hit - 1, T.hit - 0.5)));
+export const BRAKE_EV = {tb0: () => tb0, tb1: () => tb1, xAt: (t: number) => xAt(t), big: () => BIG, videoT, sceneT};
+const HALF = simulateHalf(BRAKE_IN - 0.5, sceneT(BRAKE_OUT) + 0.5, xAt, roadAt, (t) => smooth(seg(t, T.hit - 1, T.hit - 0.5)));
 
 export const SideBrake: React.FC<{t: number}> = ({t}) => {
-  const X = xAt(t) * 1000; // car position (mm)
-  const hs = sampleHalf(HALF, t);
+  const ts = sceneT(t);
+  const X = xAt(ts) * 1000; // car position (mm)
+  const hs = sampleHalf(HALF, ts);
   // braking pitch (kinematic): passive dive, then the actuators take most of it out; ends when braking ends
   const passive = -2.6, active = -0.7;
   let brakePitch = keys(t, [[tb0, 0], [tb0 + 0.7, passive * 1.08], [tb0 + 1.1, passive]], easeInOut);
@@ -102,9 +110,11 @@ export const SideBrake: React.FC<{t: number}> = ({t}) => {
   const rot = -(X / (2 * Math.PI * WHEEL_R)) * 360;
 
   // camera tracks the car, then holds while it drives out of frame
-  const camX = (tt: number) => xAt(Math.min(tt, BRAKE_HOLD)) * 1000 + 200;
-  const camZ = keys(t, [[BRAKE_IN, 0.33], [T.hit - 0.8, 0.34], [T.hit + 0.2, 0.36], [BRAKE_HOLD - 0.3, 0.36], [BRAKE_HOLD + 0.3, 0.31]], easeInOut);
-  const cam: Cam = {x: camX(t), y: 700, z: camZ};
+  const camX = (tt: number) => xAt(Math.min(sceneT(tt), sceneT(BRAKE_HOLD))) * 1000 + 200;
+  const camZ = keys(t, [[BRAKE_IN, 0.33], [T.hit - 0.8, 0.34], [T.hit + 0.2, 0.36], [T.limited - 0.9, 0.36], [T.limited - 0.1, 0.6], [T.cant - 0.1, 0.6], [T.cant + 0.8, 0.36], [BRAKE_HOLD - 0.3, 0.36], [BRAKE_HOLD + 0.3, 0.31]], easeInOut);
+  // push in on the front corner while the travel runs out
+  const focusF = keys(t, [[T.limited - 0.9, 0], [T.limited - 0.1, 1], [T.cant - 0.1, 1], [T.cant + 0.8, 0]], easeInOut);
+  const cam: Cam = {x: camX(t) + focusF * (AXLE_F - 200), y: 700 - 120 * focusF, z: camZ};
   const px = cam.z;
   const cutaway = smooth(seg(t, BRAKE_IN + 0.5, BRAKE_IN + 1.1)) * (1 - smooth(seg(t, BRAKE_HOLD - 0.4, BRAKE_HOLD + 0.2)));
   const isActive = t > T.active - 0.15;
@@ -122,7 +132,7 @@ export const SideBrake: React.FC<{t: number}> = ({t}) => {
   const topF = bodyToWorld(pose, AXLE_F, STRUT_TOP), topR = bodyToWorld(pose, AXLE_R, STRUT_TOP);
   const pairVis = win(t, T.active - 0.1, T.dive + 0.3, 0.3, 0.3);
   const s = (x: number, y: number) => toScreen(cam, x, y);
-  const limit = Math.max(hs.limF, hs.limR) * win(t, T.limited - 0.6, T.cant + 0.6, 0.2, 0.4);
+  const limit = win(t, T.limited - 0.6, T.cant + 0.6, 0.2, 0.4);
   const tagPos = {
     body: s(X - 300, 1500 + dz),
     tire: s(X + AXLE_F, -360),
@@ -155,13 +165,44 @@ export const SideBrake: React.FC<{t: number}> = ({t}) => {
       <Label x={tagPos.tire.x} y={tagPos.tire.y} text="TIRE CONTACT" color={C.tealLight} size={34} opacity={win(t, T.tire - 0.1, T.system, 0.25, 0.35)} />
       <Label x={tagPos.comfort.x} y={tagPos.comfort.y} text="COMFORT" color={C.saffronLight} size={34} opacity={win(t, T.comfort - 0.1, T.system + 0.2, 0.25, 0.35)} />
       <Label x={tagPos.limit.x} y={tagPos.limit.y} text="TRAVEL LIMIT" color={C.coral} fg={C.white} size={36} opacity={win(t, T.travel - 0.2, T.cant + 0.4, 0.2, 0.4)} />
+      <Chip x={40} y={144} text="SLOWED DOWN" opacity={win(t, SLOW0 - 0.1, SLOW0 + SLOW_LEN + 0.1, 0.2, 0.2)} />
+      <MotionTrace t={t} opacity={win(t, T.hit + 0.35, T.limited - 0.8, 0.4, 0.4)} />
       <Chip x={40} y={40} text={isActive ? 'ACTIVE' : 'PASSIVE (FOR COMPARISON)'} opacity={win(t, BRAKE_IN + 0.4, T.hit - 0.4, 0.3, 0.3)} />
       <Chip x={40} y={92} text="SIMPLIFIED" opacity={cutaway * 0.95} dark={false} size={22} />
     </g>
   );
 };
 export const brakeCarScreenTail = (t: number) => {
-  const X = xAt(t) * 1000;
-  const camx = xAt(Math.min(t, BRAKE_HOLD)) * 1000 + 200;
+  const X = xAt(sceneT(t)) * 1000;
+  const camx = xAt(Math.min(sceneT(t), sceneT(BRAKE_HOLD))) * 1000 + 200;
   return 960 + (X - 2526 - camx) * 0.31; // camera zoom is back to 0.31 by the time the car leaves
+};
+
+/** A small two-line trace of the last few seconds: how much the front wheel moves versus the cabin above it
+ *  (both from the half-car model, same scale). */
+const MotionTrace: React.FC<{t: number; opacity: number}> = ({t, opacity}) => {
+  if (opacity <= 0.001) return null;
+  const x0 = 1250, y0 = 120, w = 600, h = 230, span = 2.6, k = 1.5; // px per mm
+  const base = y0 + h * 0.62;
+  const pts = (f: (st: ReturnType<typeof sampleHalf>) => number) => {
+    const out: string[] = [];
+    for (let i = 0; i <= 120; i++) {
+      const tt = t - span + (span * i) / 120;
+      const v = f(sampleHalf(HALF, sceneT(tt))) * 1000 * k;
+      out.push(`${x0 + 20 + ((w - 40) * i) / 120},${Math.max(y0 + 10, Math.min(y0 + h - 58, base - v))}`);
+    }
+    return out.join(' ');
+  };
+  return (
+    <g opacity={opacity}>
+      <rect x={x0} y={y0} width={w} height={h} rx={22} fill={C.white} opacity={0.94} stroke={C.ink} strokeWidth={4} />
+      <line x1={x0 + 20} y1={base} x2={x0 + w - 20} y2={base} stroke={C.inkMuted} strokeWidth={2} strokeDasharray="8 8" />
+      <polyline points={pts((st) => st.zf)} fill="none" stroke={C.blue} strokeWidth={6} strokeLinejoin="round" strokeLinecap="round" />
+      <polyline points={pts((st) => st.z + 0.6 * st.th)} fill="none" stroke={C.coral} strokeWidth={7} strokeLinejoin="round" strokeLinecap="round" />
+      <line x1={x0 + 30} y1={y0 + h - 30} x2={x0 + 70} y2={y0 + h - 30} stroke={C.blue} strokeWidth={6} strokeLinecap="round" />
+      <text x={x0 + 82} y={y0 + h - 19} fontFamily="'Fredoka Variable'" fontWeight={700} fontSize={30} fill={C.ink}>WHEEL</text>
+      <line x1={x0 + 230} y1={y0 + h - 30} x2={x0 + 270} y2={y0 + h - 30} stroke={C.coral} strokeWidth={7} strokeLinecap="round" />
+      <text x={x0 + 282} y={y0 + h - 19} fontFamily="'Fredoka Variable'" fontWeight={700} fontSize={30} fill={C.ink}>CABIN</text>
+    </g>
+  );
 };

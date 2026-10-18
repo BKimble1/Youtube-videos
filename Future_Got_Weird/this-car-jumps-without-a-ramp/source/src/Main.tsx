@@ -3,7 +3,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {C} from './theme';
 import {FPS} from './cues';
-import {Stage} from './kit/stage';
+import {Stage, Chip} from './kit/stage';
 import {SideLaunch, T as TL, GO_T, launchCarX, CAM_DIAG} from './shots/SideLaunch';
 import {FrontCorner, CORNER_IN, CORNER_OUT} from './shots/FrontCorner';
 import {SideBrake, BRAKE_IN, BRAKE_HOLD, BRAKE_OUT, brakeCarScreenTail} from './shots/SideBrake';
@@ -68,6 +68,12 @@ export const Main: React.FC<MainProps> = ({audio}) => {
         <Sequence from={0} durationInFrames={Math.ceil((TL.suspension + 0.6) * FPS)}>
           <RealClip from={FOOTAGE.opening.from} t0={0} t={t} opacity={clipOut} />
         </Sequence>
+      )}
+      {/* source credit on the first use of the real clip */}
+      {t < TL.suspension + 0.6 && (
+        <Stage bg="transparent">
+          <Chip x={40} y={1000} text={FOOTAGE.credit.toUpperCase()} opacity={clipOut * Math.min(1, t / 0.25)} size={24} />
+        </Stage>
       )}
       {audio === 'narration' && <Audio src={staticFile('audio/narration.mp3')} />}
       {audio === 'mix' && <Audio src={staticFile('audio/mix.mp3')} />}

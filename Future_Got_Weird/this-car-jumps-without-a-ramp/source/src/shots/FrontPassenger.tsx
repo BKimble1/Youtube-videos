@@ -56,7 +56,7 @@ const Cabin: React.FC<{frame: number; press: number; lean: number; arrow: number
       {/* passenger (Crew rig, unchanged proportions) */}
       <g transform={`translate(${SEAT_X - press * 18} 330) scale(${k} ${-k})`}>
         <g transform="translate(-200 -500)">
-          <Character look={CAST.clerkB} pose={pose} frame={frame} seed={9} shadow={false} life={0.35} />
+          <Character look={CAST.clerkB} pose={pose} frame={frame} seed={9} shadow={false} life={0.7} />
         </g>
       </g>
       {/* seat belt: outboard shoulder to inboard hip */}
@@ -79,7 +79,8 @@ export const FrontPassenger: React.FC<{t: number; frame: number}> = ({t, frame})
   // zoom lens into the passenger half of the windscreen
   const push = easeInOut(seg(t, T.your - 0.55, T.sideways - 0.1));
   const focus = {x: FCAM.cx + (SEAT_X + 60) * sc, y: gy - 980 * sc};
-  const Z = 1 + 2.2 * push;
+  const creep = smooth(seg(t, T.sideways, T.watch));
+  const Z = 1 + 2.2 * push + 0.32 * creep; // a slow creep while the passenger is pressed into the bolster
   const fx = FCAM.cx + (focus.x - FCAM.cx) * push, fy = 540 + (focus.y - 540) * push;
   const reveal = smooth(seg(t, T.your - 0.2, T.sideways));
   const arrow = smooth(seg(t, T.sideways - 0.1, T.sideways + 0.4));
@@ -104,7 +105,7 @@ export const FrontPassenger: React.FC<{t: number; frame: number}> = ({t, frame})
           </g>
         )}
         <g transform={`translate(${FCAM.cx} ${gy}) scale(${sc} ${-sc})`}>
-          <FrontCar px={sc * Z} roll={ROLL} actuator={0} id="pass" windowReveal={reveal}
+          <FrontCar px={sc * Z} roll={ROLL + 0.12 * Math.sin(t * 5.3)} dz={4 * Math.sin(t * 7.1) + 2.5 * Math.sin(t * 11.3)} actuator={0} id="pass" windowReveal={reveal}
             window={<Cabin frame={frame} press={press} lean={lean} arrow={arrow} px={sc * Z} />} />
         </g>
       </g>

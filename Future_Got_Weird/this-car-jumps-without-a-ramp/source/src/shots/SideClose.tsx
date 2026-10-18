@@ -93,7 +93,7 @@ export const SideClose: React.FC<{t: number}> = ({t}) => {
   const cutaway = smooth(seg(t, MATCH_T + 0.2, MATCH_T + 0.9)) * (1 - smooth(seg(t, T.demonstration - 0.6, T.demonstration + 0.2)));
 
   // camera: match framing (opening), the diagram framing for the slowed hop, then track the drive and settle
-  const camBase = camKeys(t, [[CLOSE_IN, CAM_WIDE], [MATCH_T + 0.3, CAM_WIDE], [MATCH_T + 1.3, CAM_DIAG], [land + 0.8, CAM_DIAG], [T.useful, {x: 600, y: 760, z: 0.27}]], easeInOut);
+  const camBase = camKeys(t, [[CLOSE_IN, CAM_WIDE], [MATCH_T + 0.3, CAM_WIDE], [MATCH_T + 1.3, CAM_DIAG], [land + 0.8, CAM_DIAG], [T.useful, {x: 600, y: 760, z: 0.27}], [T.most, {x: 600, y: 760, z: 0.27}], [STOP + 0.6, {x: 1150, y: 720, z: 0.33}]], easeInOut);
   const track = t > GO ? Math.max(0, X - 1200 * smooth(seg(t, GO, GO + 1.5))) : 0;
   const cam: Cam = {...camBase, x: camBase.x + track};
   const px = cam.z;

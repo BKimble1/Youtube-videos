@@ -121,7 +121,12 @@ export const Strut: React.FC<{top: [number, number]; bottom: [number, number]; p
         {/* mounts */}
         <circle cx={x1} cy={y1} r={30} fill={C.white} stroke={C.ink} strokeWidth={sw} />
         <circle cx={x2} cy={y2} r={30} fill={C.white} stroke={C.ink} strokeWidth={sw} />
-        {limitHit > 0 && <circle cx={x1 + ux * 70} cy={y1 + uy * 70} r={70} fill="none" stroke={C.coral} strokeWidth={sw * 2} opacity={limitHit} />}
+        {limitHit > 0 && (
+          <g opacity={limitHit}>
+            <circle cx={x1 + ux * 80} cy={y1 + uy * 80} r={95} fill={C.coral} opacity={0.25} />
+            <circle cx={x1 + ux * 80} cy={y1 + uy * 80} r={95} fill="none" stroke={C.coral} strokeWidth={sw * 2.5} />
+          </g>
+        )}
       </g>
     );
   };

@@ -3,7 +3,7 @@
 import {ALL_WORDS, DURATION_S} from './cues';
 import {T as TL, LAUNCH_EV, GO_T} from './shots/SideLaunch';
 import {CORNER_IN, CORNER_OUT, CORNER_BUMPS, SPEED, FRONT_T} from './shots/FrontCorner';
-import {BRAKE_IN, BRAKE_HOLD, BRAKE_EV, roadAt} from './shots/SideBrake';
+import {BRAKE_IN, BRAKE_HOLD, BRAKE_EV, roadAt, SLOW_WIN} from './shots/SideBrake';
 import {PASS_T} from './shots/FrontPassenger';
 import {T as TC, CLOSE_IN, MATCH_T, CLOSE_EV, closeRoad} from './shots/SideClose';
 
@@ -33,7 +33,10 @@ export const EVENTS = () => ({
   corner: {in: CORNER_IN, out: CORNER_OUT, corner: FRONT_T.corner, here: FRONT_T.here, thisIs: FRONT_T.thisIs, point: FRONT_T.point, flatter: FRONT_T.flatter,
     bumps: CORNER_BUMPS.map((b) => ({t: +((b.s - b.len / 2) / SPEED).toFixed(3), side: b.side, h: b.h}))},
   brake: {in: BRAKE_IN, hold: BRAKE_HOLD, tb0: BRAKE_EV.tb0(), tb1: BRAKE_EV.tb1(),
-    front: wheelHits(BRAKE_IN, BRAKE_HOLD + 1.2, BRAKE_EV.xAt, roadAt, 1.45), rear: wheelHits(BRAKE_IN, BRAKE_HOLD + 1.2, BRAKE_EV.xAt, roadAt, -1.45)},
+    // hits are found in scene time and mapped back to video time (the big bump plays in slow motion)
+    front: wheelHits(BRAKE_IN, BRAKE_EV.sceneT(BRAKE_HOLD + 1.2), BRAKE_EV.xAt, roadAt, 1.45).map((h) => ({...h, t: +BRAKE_EV.videoT(h.t).toFixed(3)})),
+    rear: wheelHits(BRAKE_IN, BRAKE_EV.sceneT(BRAKE_HOLD + 1.2), BRAKE_EV.xAt, roadAt, -1.45).map((h) => ({...h, t: +BRAKE_EV.videoT(h.t).toFixed(3)})),
+    slow: SLOW_WIN},
   passenger: {your: PASS_T.your, sideways: PASS_T.sideways, seat: PASS_T.seat, bolster: PASS_T.bolster, bodyCtl: PASS_T.bodyCtl},
   close: {in: CLOSE_IN, match: MATCH_T, builds: TC.builds, take: CLOSE_EV.take, land: CLOSE_EV.land, go: CLOSE_EV.go, stop: CLOSE_EV.stop,
     brake: TC.brake, turn: TC.turn, uneven: TC.uneven, ground: TC.ground,

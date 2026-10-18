@@ -16,8 +16,9 @@ export const FOOTAGE = {
   opening: {from: 8.3, to: 11.3},
   replay: {from: 8.3, to: 11.3},
   // where the rear and front wheel centres sit in the source frame at rest (px), and the car's facing (+1 = right)
-  wheelRear: {x: 560, y: 760},
-  wheelFront: {x: 1360, y: 760},
+  // (placeholders until measured: they reproduce the current side-view framing)
+  wheelRear: {x: 525, y: 642},
+  wheelFront: {x: 1395, y: 642},
   facing: 1 as 1 | -1,
   credit: 'BYD demonstration video',
 };
