@@ -32,3 +32,5 @@ exports/.chunks_*/
 
 # work-in-progress QA frames (agents write here; only final sheets are kept)
 qa/r3/**/wip*/
+# split parts of a master for delivery (they contain the supplied music)
+exports/*/
