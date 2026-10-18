@@ -47,9 +47,10 @@ export const CAM_C4A: CamKey[] = [
  * the rotors spin up and it rises out of her hand (the lens tilts after it until it climbs out of frame); the flare
  * carrier and the decoy maker climb past behind her; the lens rises a little and pans with the three up the slope. */
 export const CAM_C4B: CamKey[] = [
-  {t: 0, pos: gp(-5.35, 1.85, 1.45), target: {x: -4.9, y: 2.3, z: 5.55}, fov: 40},
-  {t: D(CUT.c4b, 47.55), pos: gp(-5.35, 1.85, 1.45), target: {x: -4.85, y: 2.6, z: 5.45}, fov: 40},
-  {t: D(CUT.c4b, 48.3), pos: gp(-5.38, 1.82, 1.55), target: {x: -4.7, y: 3.0, z: 5.25}, fov: 42},
+  // (R3: a metre higher than R2's lens, so the two climbing the bank behind her sit clear above her head on screen)
+  {t: 0, pos: gp(-5.35, 1.85, 2.45), target: {x: -4.9, y: 2.15, z: 5.55}, fov: 40},
+  {t: D(CUT.c4b, 47.55), pos: gp(-5.35, 1.85, 2.4), target: {x: -4.85, y: 2.5, z: 5.45}, fov: 40},
+  {t: D(CUT.c4b, 48.3), pos: gp(-5.38, 1.82, 2.1), target: {x: -4.7, y: 3.0, z: 5.25}, fov: 42},
   {t: D(CUT.c4b, 49.1), pos: gp(-5.45, 1.75, 1.75), target: {x: -3.9, y: 3.25, z: 4.6}, fov: 44},
   {t: D(CUT.c4b, CUT.c5a), pos: gp(-5.55, 1.7, 1.9), target: {x: -2.9, y: 3.65, z: 4.0}, fov: 45},
 ];

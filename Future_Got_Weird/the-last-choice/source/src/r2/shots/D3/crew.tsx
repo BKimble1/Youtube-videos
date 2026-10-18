@@ -486,8 +486,9 @@ const RUN_SEGS: Seg[] = smoothSegs([
   {kind: 'stand', stag: 0.12, root: [[131.15, GRP.runner.x, GRP.runner.z, runEnd(RUN_UP).h], [131.6, GRP.runner.x, GRP.runner.z, GRP.runner.h], [EV3.fallBack + 0.35, GRP.runner.x, GRP.runner.z, GRP.runner.h], [EV3.fallBack + 0.5, GRP.runner.x, GRP.runner.z, headingTo(BACK.runner[0], BACK.runner[1])]]},
   {kind: 'run', path: BACK.runner, T0: EV3.fallBack + 0.5, T1: THROW_T, gait: GAITS.run, A: 0.35, D: 0},
   {kind: 'fn', T0: THROW_T, at: (T) => runnerThrown(T)},
-  {kind: 'stand', stag: 0.12, root: [[146.95, 41.5, -6.55, 230], [147.1, 41.5, -6.55, headingTo(RUN_BACK2[0], RUN_BACK2[1])]]},
-  {kind: 'run', path: RUN_BACK2, T0: 147.1, T1: 149.3, gait: GAITS.run, A: 0.35, D: 0.6},
+  // (up off his knee he turns west over 0.3 s, then runs: a quicker turn ended in a 21° snap into the run)
+  {kind: 'stand', stag: 0.12, root: [[146.95, 41.5, -6.55, 230], [147.25, 41.5, -6.55, headingTo(RUN_BACK2[0], RUN_BACK2[1])]]},
+  {kind: 'run', path: RUN_BACK2, T0: 147.25, T1: 149.3, gait: GAITS.run, A: 0.35, D: 0.6},
   {kind: 'stand', stag: 0.12, root: [[149.3, D4S('runner').pos.x, D4S('runner').pos.z, runEnd(RUN_BACK2).h], [149.75, D4S('runner').pos.x, D4S('runner').pos.z, D4S('runner').heading]]},
 ]);
 /** the runner: the blast catches him mid-stride; he goes down sideways onto his hip and rolls up */
@@ -785,7 +786,7 @@ const PIL_FACE: [number, Face][] = [
   [128.0, E.focus], [EV3.lock + 0.3, E.alert], [131.5, E.focus], [EV3.smash, E.shock], [137.0, E.focus], [140.4, E.fear], [EV3.kill, E.shock], [141.9, E.grief],
   [143.5, E.worried], [EV3.fallBack, E.fear], [THROW_T, E.pain], [146.6, E.dazed], [146.85, E.effort],
 ];
-const PIL_LOOK: LK[] = [[M.P3, allyAt], [EV3.kill + 0.05, at3(42.3, 2.4, 0.2)], [141.4, at3(42.3, 2.4, 0.2)], [143.6, H2_EYE], [EV3.fallBack, null]];
+const PIL_LOOK: LK[] = [[M.P3, allyAt], [EV3.kill + 0.05, at3(42.3, 2.4, 0.2)], [143.6, H2_EYE], [EV3.fallBack, null]];
 export const pilotAt = (T: number): CrewOut => {
   const b = bodyAt3(PIL_SEGS, T);
   const lost = toolsR2('drone', T).drone === 'lost';

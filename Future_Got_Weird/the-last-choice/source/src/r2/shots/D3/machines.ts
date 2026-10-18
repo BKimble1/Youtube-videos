@@ -477,6 +477,24 @@ export const H2_LEGS: KP[][] = (() => {
       push(i, [l.t, l.pos.x, l.pos.z, lf]);
     });
   });
+  // a foot set down across the water main from its own hip would leave the leg spanning the main through it (its
+  // shin at the beam's height): that step waits (≤ 0.8 s, never past the leg's next lift) until the hip is nearly over
+  // the main. (D4's own landings are left as they are.)
+  const side = (q: XZ) => (q.z - q.x + 61) / Math.SQRT2;
+  const hipSide = (i: number, T: number) => { const r = h2Root(T), st = heavyStance(r.x, r.z, r.h, i); return side({x: lerp(r.x, st[0], 0.5), z: lerp(r.z, st[1], 0.5)}); };
+  legs.forEach((L, i) => {
+    for (let k = 2; k < L.length; k++) {
+      const a = L[k - 1], b = L[k];
+      if (b[0] > H2_TX - 1.3 || Math.hypot(b[1] - a[1], b[2] - a[2]) < 1e-4) continue;
+      const pq = pipeAt({x: b[1], z: b[2]});
+      if (pq.seg !== 0 || pq.u <= 0 || pq.u >= 1) continue;
+      const fs = side({x: b[1], z: b[2]});
+      const lim = Math.min(b[0] + 0.8, (L[k + 1]?.[0] ?? 1e9) - 0.3);
+      let d = 0;
+      while (b[0] + d < lim && fs * hipSide(i, b[0] + d) < 0 && Math.abs(hipSide(i, b[0] + d)) > 0.8) d += 1 / 60;
+      if (d > 0) { L[k] = [b[0] + d, b[1], b[2], ...(b.length > 3 ? [b[3]] : [])] as KP; L[k - 1] = [a[0] + d, a[1], a[2], ...(a.length > 3 ? [a[3]] : [])] as KP; }
+    }
+  });
   return legs;
 })();
 /** the lift a swing from a to b needs: its foot (from one foothold's height to the other's) stays ≥0.45 m over the
@@ -603,6 +621,9 @@ export const heavy2D3 = (T: number): HeavySpec => {
   const look: V3 = T < 128.6 ? {x: b.pos.x - 20, y: 2, z: b.pos.z + 2} : T > 147.0 ? dirHeadAt(T) : T > 143.2 ? on(DEC_SPOT, 1.0) : on({x: 46.5, z: -0.6}, 1.5);
   return {
     ...b, look, eye: T < 128.6 ? 'cyan' : 'amber', drop: h2Drop(T), plants: h2PlantsAt(T),
+    // the ram carried up as it climbs over the wreck and the water main (it rested on the wreck, then in the main);
+    // lowered again during the gauge insert (D4's own rest pose long before P4)
+    ramCarry: smooth((T - 142.45) / 0.5) * (1 - smooth((T - 146.35) / 0.6)),
     aim: T > 143.7 && T < EV3.fire ? BLAST_AT : undefined,
     // (after the shot the pod holds on the crest; from the cut into D3-11e — heavy 2 out of frame — it is D4's own: at
     // rest, no fire)
@@ -1070,6 +1091,8 @@ function buildNorth(id: number, src: Src, role: 'r3' | 'wing' | 'lineN', j: numb
         look: T < 126.4 ? undefined : T < 145.4 ? CREW_C : dirHeadAt(T),
         posture: early ? afterEarly(early, earlyEnd) : [[M.P3, 'ready'], [128.0, 'guard']] as [number, Posture][],
         idle: 0.42,
+        // (its own exchange's attention fades out after the hand-over: the torso untwists, no snap)
+        ...(early ? {attend: (early(earlyEnd).attend ?? []).map((x) => ({...x, t1: Math.min(x.t1 ?? 1e9, earlyEnd)}))} : {}),
       }),
       eye: eye(T),
       lockAt: undefined,
@@ -1149,6 +1172,8 @@ function buildSouth(id: number, src: Src, role: 'mid' | 'south' | 'u8' | 'retrea
         look: T < 126.4 ? undefined : T < EV3.lineSet ? CREW_C : T < 136.4 ? DECOY_SRC : T < 145.4 ? CREW_C : dirHeadAt(T),
         posture: early ? afterEarly(early, earlyEnd) : [[M.P3, 'ready'], [127.0, 'guard']] as [number, Posture][],
         idle: 0.42,
+        // (its own exchange's attention fades out after the hand-over: the torso untwists, no snap)
+        ...(early ? {attend: (early(earlyEnd).attend ?? []).map((x) => ({...x, t1: Math.min(x.t1 ?? 1e9, earlyEnd)}))} : {}),
       }),
       eye: eye(T),
       lockAt: undefined,

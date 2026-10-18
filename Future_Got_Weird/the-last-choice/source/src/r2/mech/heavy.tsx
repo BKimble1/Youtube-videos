@@ -42,6 +42,8 @@ export type HeavySpec = {
   damage?: {plateL?: {t0: number; dir: V3}; plateR?: {t0: number; dir: V3}; nose?: {t0: number; dir: V3}; top?: {t0: number; dir: V3}; dead?: {t0: number}};
   /** points to lift the feet over (wrecks) */
   stepOver?: V3[];
+  /** (R3, optional) the ram carried up at rest, 0..1: raised clear of a wreck or a beam the walker climbs over */
+  ramCarry?: number;
   /** explicit world footholds per leg (0 FL, 1 FR, 2 RL, 3 RR; ground contact points), overriding the gait/standing
    *  feet: a keyed walk with planted steps, a foot slipping off a slab. Optional; an absent entry is unchanged. */
   feet?: (V3 | undefined)[];
@@ -257,8 +259,9 @@ export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
   });
   // ram arm: boom from the shoulder, aimed down-forward at rest, at the target on the strike
   const shoulder = apply(hull, HV.ramShoulder);
-  let boomDir = norm3(add3(mul3(fwd, 1), mul3(UP, -0.18))); // ram held out low in front, under the head
-  let ext = 0.2;
+  const carry = clamp(sp.ramCarry ?? 0);
+  let boomDir = norm3(add3(mul3(fwd, 1), mul3(UP, -0.18 + 0.88 * carry))); // ram held out low in front, under the head
+  let ext = 0.2 * (1 - carry);
   if (rp && sp.ram) {
     const toT = sub3(sp.ram.target, shoulder);
     const dT = norm3(toT);

@@ -13,7 +13,8 @@
 // (the knee splitting); the walker step is heavy_stomp at each of the heavies' planted-foot landings (front feet only
 // while far; on the wreck's top a metal_tear and a rubble_shift under it). The topple at 126.25 is layered under the
 // limiter (wreck_slam at full, then robot_fall −4, sub_boom −3, heavy_stomp −8, metal_tear −9, debris_rain −5,
-// rubble_shift −9), not stacked at full. No cue without a visible cause.
+// rubble_shift −9), not stacked at full. The gauge insert (D3-11b): the needle's breaker_empty, then his thumb's two knocks on
+// the glass (lever_clunk pitched up, rate ≈2). No cue without a visible cause.
 import type {Cue} from '../../../film/cue';
 
 export const CUES_D3: Cue[] = [
@@ -135,16 +136,16 @@ export const CUES_D3: Cue[] = [
   {t: 131.22, kind: 'robot_step_heavy', gain: -8, pan: 0.57, dist: 0.91},
   {t: 131.47, kind: 'robot_step_heavy', gain: -9, pan: 0.57, dist: 0.91},
   {t: 131.61, kind: 'robot_step_heavy', gain: -11, pan: -0.09, dist: 0.95},
-  {t: 131.62, kind: 'robot_step_heavy', gain: -10, pan: 0.56, dist: 0.91},
+  {t: 131.62, kind: 'robot_step_heavy', gain: -10, pan: 0.57, dist: 0.91},
   {t: 131.70, kind: 'sensor_lock', gain: -14, pan: 0.56, dist: 0.91},
   {t: 131.80, kind: 'robot_step_heavy', gain: -8, pan: 0.56, dist: 0.91},
   {t: 131.85, kind: 'robot_step_heavy', gain: -12, pan: -0.12, dist: 0.95},
-  {t: 132.06, kind: 'robot_step_heavy', gain: -9, pan: 0.55, dist: 0.90},
+  {t: 132.06, kind: 'robot_step_heavy', gain: -9, pan: 0.56, dist: 0.91},
   {t: 132.10, kind: 'robot_step_heavy', gain: -13, pan: -0.13, dist: 0.96},
   {t: 132.25, kind: 'robot_step_heavy', gain: -10, pan: 0.55, dist: 0.90},
   {t: 132.43, kind: 'robot_step_heavy', gain: -8, pan: 0.55, dist: 0.90},
   {t: 132.46, kind: 'robot_step_heavy', gain: -11, pan: -0.15, dist: 0.96},
-  {t: 132.65, kind: 'robot_step_heavy', gain: -9, pan: 0.55, dist: 0.89},
+  {t: 132.65, kind: 'robot_step_heavy', gain: -9, pan: 0.55, dist: 0.90},
   {t: 132.74, kind: 'robot_step_heavy', gain: -12, pan: -0.16, dist: 0.96},
   {t: 132.86, kind: 'robot_step_heavy', gain: -10, pan: 0.55, dist: 0.89},
   {t: 133.01, kind: 'robot_step_heavy', gain: -8, pan: 0.55, dist: 0.89},
@@ -277,16 +278,18 @@ export const CUES_D3: Cue[] = [
   {t: 146.24, kind: 'robot_step_heavy', gain: -12, pan: 0.84, dist: 0.70},
   // ---- D3-11b (146.30–147.00): insert: the gauge (empty)
   {t: 146.45, kind: 'breaker_empty', gain: -4, pan: -0.08, dist: 0.00},
-  {t: 146.49, kind: 'heavy_stomp', gain: -6, pan: 0.55, dist: 0.71},
   {t: 146.50, kind: 'robot_step_heavy', gain: -10, pan: 0.55, dist: 0.55},
   {t: 146.65, kind: 'breath_ragged', gain: -7, pan: 0.55, dist: 0.00},
+  {t: 146.68, kind: 'lever_clunk', gain: -4, pan: -0.07, dist: 0.00, rate: 1.9}, // his thumb knocks the gauge glass
   {t: 146.70, kind: 'robot_step_heavy', gain: -11, pan: -0.55, dist: 0.53},
+  {t: 146.80, kind: 'lever_clunk', gain: -6, pan: -0.07, dist: 0.00, rate: 2},
   {t: 146.87, kind: 'heavy_stomp', gain: -4, pan: 0.55, dist: 0.81}, // a foot on the wreck's top
   {t: 146.88, kind: 'metal_tear', gain: -10, pan: 0.55, dist: 0.81},
   {t: 146.89, kind: 'rubble_shift', gain: -13, pan: 0.55, dist: 0.81, dur: 0.60, fade: 0.2},
   {t: 146.96, kind: 'robot_step_heavy', gain: -12, pan: -0.55, dist: 0.52},
   // ---- D3-11c (147.00–147.70): insert: the brow cut; up
   {t: 147.00, kind: 'breath_ragged', gain: -5, pan: -0.16, dist: 0.00},
+  {t: 147.04, kind: 'heavy_stomp', gain: -6, pan: -0.74, dist: 0.77},
   {t: 147.05, kind: 'cloth_move', gain: -6, pan: -0.14, dist: 0.00},
   {t: 147.15, kind: 'breath_exert', gain: -5, pan: -1.00, dist: 0.48},
   {t: 147.24, kind: 'heavy_stomp', gain: -7, pan: -1.00, dist: 0.80},

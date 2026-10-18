@@ -660,10 +660,12 @@ const DR_SEGS: Seg[] = [
 const pilotHead = (T: number): V3 => headOf(bodyAt(DR_SEGS, T), 1.5);
 /** the drone in her left hand (carried at her side; held up on the palm at the launch) — body-local, view-free */
 const CARRY = {r: -40, u: 168, f: 34};
-const HOLD_UP = {r: -92, u: 386, f: -6}; // up and out on her left side, clear of her face (it shows under the drone)
+const HOLD_UP = {r: -130, u: 420, f: 0}; // up and out on her left side, clear of her face (it shows under the drone)
 const droneHandLoc = (T: number) => {
-  const up = keyN([[T3.launch - 0.3, 0], [T3.spin, 1]], T);
-  return {r: lerp(CARRY.r, HOLD_UP.r, up), u: lerp(CARRY.u, HOLD_UP.u, up), f: lerp(CARRY.f, HOLD_UP.f, up)};
+  // out to the side first, then up (R3: straight up from the carry, the drone passed across her face on C4b's lens)
+  const out = keyN([[T3.launch - 0.3, 0], [T3.launch + 0.02, 1]], T);
+  const up = keyN([[T3.launch - 0.2, 0], [T3.spin, 1]], T);
+  return {r: lerp(CARRY.r, HOLD_UP.r, out), u: lerp(CARRY.u, HOLD_UP.u, up), f: lerp(CARRY.f, HOLD_UP.f, up)};
 };
 const pilotPalm = (T: number): V3 => fromLoc(bodyAt(DR_SEGS, T), droneHandLoc(T));
 /** the drone's flight: carried until it lifts off her palm; up, out over the slope, past the summit (C5b), over the
@@ -735,7 +737,8 @@ export const pilotC = (T: number, v?: View): CrewC => {
 const FL_FLAT: XZ[] = [{x: -12.0, z: 13.0}, {x: -9.6, z: 10.4}, {x: -7.6, z: 9.1}];
 const FL_WALK = walkSeg(FL_FLAT, T3.go - 0.3, T3.flaresFoot, G_HURRY, {A: 0.7, D: 0.4});
 const FL_A = spotBehind('flares', 0.4, 0.2);
-const FL_UP: XZ[] = [{x: -7.6, z: 9.1}, {x: -6.0, z: 7.6}, {x: -4.65, z: 6.1}, {x: -3.55, z: 4.95}, {x: -2.0, z: 4.72}, {x: -0.6, z: 4.6}, {x: FL_A.x, z: FL_A.z}];
+// (R3: the climb passes 1.4 m or more behind the pilot's launch spot, not 0.6 m: on C4b's lens his head sat on hers)
+const FL_UP: XZ[] = [{x: -7.6, z: 9.1}, {x: -6.0, z: 7.6}, {x: -4.35, z: 6.95}, {x: -3.05, z: 5.45}, {x: -2.0, z: 4.72}, {x: -0.6, z: 4.6}, {x: FL_A.x, z: FL_A.z}];
 const FL_CLIMB = climbFrom([FL_WALK], FL_UP, T3.flaresFoot, T3.arriveFlares, {stepLen: 0.5, maxRise: 0.27, autoHands: {side: 'L', n: 1, minRise: 0.25, fwd: 0.04, out: 0.18}, endHeading: 80});
 const FL_C = afterClimb(FL_CLIMB);
 const FL_SEGS: Seg[] = [
