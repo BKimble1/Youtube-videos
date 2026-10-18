@@ -1,8 +1,9 @@
 // Section D3: machines (and props) that outlive their shots, for later shots (src/r2/film/continuity.tsx).
 //   d3_heavy1  heavy 1's wreck: blinded (119.38), pinned by the front-left shin (122.9), its rear-left knee split by the
-//              breaker (124.75); rolled onto its left side across the crater's north part, hull at ≈ (63.2, −4.8),
-//              the long axis along 325° (its nose under the girder); its left side plate torn off at the crash
-//              (E/F's machines and D4 draw this instead of the tableau's fallback heavy 1)
+//              breaker (124.75); gone over onto its left side across the crater's north part (lands 126.25), hull at
+//              ≈ (62.8, −5.0), nose north under the girder, the free legs limp on the ground; its left side plate torn off
+//              at the crash; heavy 2 walks over it at 144–149 (E/F's machines and D4 draw this instead of the tableau's
+//              fallback heavy 1)
 //   d3_ally    the allied drone, struck down by two drones at 141.35: on the ground at the crater's west rim, smoking
 //   d3_blast   heavy 2's round on the rim crest (145.45): its smoke and the scorch, for the next shots
 import type {Persist} from '../../film/continuity';

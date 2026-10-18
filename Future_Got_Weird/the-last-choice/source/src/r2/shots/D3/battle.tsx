@@ -1,5 +1,5 @@
 // Section D3: everything in the world at film time T for a given view — the Crew (sprites; the breaker's hand on the
-// runner's shoulder at the start and the runner's haul solved per view with handOn), heavy 1 (blinded, pinned, toppled:
+// runner's shoulder at the start and the Director's grab on the decoy maker solved per view with handOn), heavy 1 (blinded, pinned, toppled:
 // its wreck), heavy 2, the 27 units of the arc, B's halted army until FORMATION (then the tableau's reserve block and
 // the streams that D4 shows), the drones, the earlier sections' wrecks and the section's FX. Off-screen machines are
 // culled (the avenue's army alone is ~1000 slots). Shots pick a camera and call d3Items().
@@ -51,16 +51,17 @@ const culled = (f: Formation, v: View, maxD = Infinity): Formation => ({
 /** B's halted army minus the vanguard units D1, D2 and D3 animate themselves */
 const ARMY_REST: Formation = {slots: (T) => ARMY_B.slots(T).filter((sl) => !D1_ARMY_IDS.has(sl.id) && !YIELD_IDS.has(sl.id) && !VAN_TAKEN.has(sl.id))};
 
-/** the breaker's hand on the runner's shoulder (D2's last frames) and the runner's haul at the knee */
+/** the breaker's hand on the runner's shoulder (D2's last frames); the Director's hand on the decoy maker's arm (the
+ *  grab on the crest, the haul west, until the blast throws them apart) */
 const pairs = (v: View, T: number, s: Partial<Record<Role2, FigSpec>>) => {
   if (s.runner && s.breaker && T < 117.5) {
     const w = 1 - Math.min(1, Math.max(0, (T - 117.25) / 0.25));
     s.breaker = handOn(v, s.runner, {r: SH_X - 10, u: SH_H + 12, f: -6}, s.breaker, 'R', w * w * (3 - 2 * w), {palm: {x: 0, y: -1, z: 0}});
   }
-  if (s.runner && s.breaker && T > EV3.haul - 0.12 && T < 125.6) {
-    const a = Math.min(1, (T - (EV3.haul - 0.12)) / 0.12), b = 1 - Math.min(1, Math.max(0, (T - 125.25) / 0.35));
-    const w = Math.min(a, b);
-    s.runner = handOn(v, s.breaker, {r: -SH_X + 6, u: SH_H - 18, f: -20}, s.runner, 'L', w);
+  if (s.decoy && s.director && T > EV3.grab - 0.14 && T < EV3.blast + 0.02) {
+    const a = Math.min(1, Math.max(0, (T - (EV3.grab - 0.14)) / 0.14)), b = 1 - Math.min(1, Math.max(0, (T - (EV3.blast - 0.04)) / 0.06));
+    const w = Math.min(a * a * (3 - 2 * a), b);
+    s.director = handOn(v, s.decoy, {r: -SH_X - 4, u: SH_H - 44, f: 2}, s.director, 'R', w);
   }
 };
 

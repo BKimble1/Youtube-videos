@@ -33,7 +33,7 @@ export type HeavySpec = {
   aim?: V3;
   fire?: {t0: number; target: V3};
   /** knee broken: leg 0 FL, 1 FR, 2 RL, 3 RR; the walker topples toward dir */
-  kneeBreak?: {t0: number; leg: 0 | 1 | 2 | 3; dir: V3};
+  kneeBreak?: {t0: number; leg: 0 | 1 | 2 | 3; dir: V3; /** (R3, optional) the free legs fall limp to the ground (default: folded) */ limp?: boolean};
   /** a leg pinned (tether) from t0: that foot stays put; `hold` keeps it planted through a knee-break topple too */
   pinned?: {t0: number; leg: 0 | 1 | 2 | 3; hold?: boolean};
   /** stumble (hit) */
@@ -331,12 +331,28 @@ const fallenLeg = (sp: HeavySpec, r0: HeavyRig, i: number, tx: {xf: (p: V3) => V
   const R1 = rcomp(tx.R, r0.hull.R);
   const loc = (v: V3) => add3(H, rmul(R1, v));
   const broken = sp.kneeBreak!.leg === i;
-  const folded = loc({x: L.sx * 0.9, y: -2.6, z: L.sz * 0.9});
+  let folded = loc({x: L.sx * 0.9, y: -2.6, z: L.sz * 0.9});
   const held = !broken && !!sp.pinned?.hold && sp.pinned.leg === i;
-  const kk = broken ? 1 : held ? 0 : smooth(clamp((tx.k - 0.15) / 0.7));
+  // (with limp, R3: the broken leg buckles over 0.35 s instead of snapping to its folded pose in a frame)
+  const kk = broken ? (sp.kneeBreak!.limp ? smooth(clamp((sp.t - sp.kneeBreak!.t0) / 0.35)) : 1) : held ? 0 : smooth(clamp((tx.k - 0.15) / 0.7));
+  // (R3, optional kneeBreak.limp) the free legs go limp: each foot comes to rest on the ground off the hull's side (the
+  // upper side's legs drape over the belly, the lower side's splay out under the roof), knees bending up and out —
+  // instead of the folded pose (legs held out level, or under the hull into the ground)
+  const limp = !!sp.kneeBreak!.limp && !broken;
+  if (limp && !held) {
+    const c = tx.xf(r0.hull.pos), f = norm3({x: r0.fwd.x, y: 0, z: r0.fwd.z});
+    let o = {x: H.x - c.x, y: 0, z: H.z - c.z};
+    o = sub3(o, mul3(f, dot3(o, f)));
+    const on = len3(o) > 1e-3 ? norm3(o) : rmul(R1, {x: L.sx, y: 0, z: 0});
+    const x = H.x + on.x * 1.55 - f.x * L.sz * 0.35, z = H.z + on.z * 1.55 - f.z * L.sz * 0.35;
+    folded = {x, y: g(x, z) + 0.25, z};
+  }
   let tgt = lerp3(r0.foot[i], folded, kk);
   tgt = {...tgt, y: Math.max(tgt.y, g(tgt.x, tgt.z) + 0.25)};
-  const pole = rmul(R1, {x: L.sx, y: 0.6, z: 0});
+  // (limp: a leg hanging from a hip high on the upper side bends its knee out and down; one from a hip by the ground
+  // bends it up, clear of the ground)
+  const hipUp = H.y - g(H.x, H.z);
+  const pole = limp ? norm3(add3(rmul(R1, {x: L.sx * 0.6, y: 0, z: 0}), {x: 0, y: hipUp > 1.8 ? -0.35 : 1, z: 0})) : rmul(R1, {x: L.sx, y: 0.6, z: 0});
   const r = ik2(H, tgt, HV.upperLen, HV.lowerLen, pole);
   return {H, K: r.mid, F: r.end, outward: rmul(R1, {x: L.sx, y: 0, z: 0})};
 };
