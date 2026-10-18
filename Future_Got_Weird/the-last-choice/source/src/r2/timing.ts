@@ -4,28 +4,30 @@
 // inside a decaying chord, so we enter at rec 1.30 (just before the 1.42 s low hit) and play to the natural ring-out at
 // rec 193.8. Film time = Portals rec time − 0.70. Nothing is removed in between (R1's 61.4 s cut is restored).
 //
-// "It's Been a Long, Long Time" (release asset 235008) starts at the radio click: rec 0 → 10.205 (opening trumpet
-// phrase), one edit to rec 57.26 (the matching cadence at the end of the instrumental chorus; chosen by
-// tools/llt_edit.py), then on through the lead-in to the first vocal ("Never", rec 64.36 — from per-word Scribe
-// timestamps, not inferred) and the first sung chorus, ending after "It's been a long, long time" (rec 100.48) with a
-// fade before the next phrase (rec 102.44).
+// "It's Been a Long, Long Time" (release asset 235008) — R3: ONE continuous excerpt, no edit. Nobody touches the radio:
+// after his stillness the camera finds the radio in the van, its indicator flutters through static (interrupted
+// reception recovering), and the recording plays from its first musical sample (rec 0.00; the capture starts inside
+// the music, ~2.2 s into the track, so there is no non-musical lead-in to drop) straight on in chronological order to
+// the cadence arrival at rec 34.66 (chosen by chroma similarity to the song's own phrase ends, 0.97; onset-refined),
+// then a 3.0 s fade (rec 34.66 → 37.66) over the end card. The vocal (rec 64.36) is not reached; the R2 splice toward
+// it is cancelled.
 export const FPS = 30;
 export const P_OFF = 0.70; // film = portals rec − P_OFF
 export const P = (rec: number) => rec - P_OFF;
 
 export type MusicSeg = {src: 'portals' | 'longtime'; recIn: number; recOut: number; film: number; fadeIn?: number; fadeOut?: number; xfade?: number};
 
-const RADIO_CLICK = 199.9;
-const L_START = RADIO_CLICK + 0.5; // after the click and a moment of tuning crackle
-const L_JOIN_SRC = 10.205, L_JOIN_DST = 57.26, L_END = 102.2;
-const L_JOIN = L_START + L_JOIN_SRC;
+/** the radio's indicator flutters and static crackles (no one touches it) */
+const RADIO_FLUTTER = 199.0;
+/** the song catches through the static */
+const L_START = 199.6;
+const L_CADENCE_REC = 34.66, L_FADE = 3.0;
+const L = (rec: number) => L_START + rec; // film time of a Long, Long Time rec time (continuous)
 
 export const MUSIC: MusicSeg[] = [
   {src: 'portals', recIn: 1.30, recOut: 193.8, film: P(1.30), fadeIn: 0.1},
-  {src: 'longtime', recIn: 0.0, recOut: L_JOIN_SRC, film: L_START, fadeIn: 0.04},
-  {src: 'longtime', recIn: L_JOIN_DST, recOut: L_END, film: L_JOIN, xfade: 0.06, fadeOut: 1.6},
+  {src: 'longtime', recIn: 0.0, recOut: L_CADENCE_REC + L_FADE, film: L_START, fadeIn: 0.35, fadeOut: L_FADE},
 ];
-const L = (rec: number) => L_JOIN + (rec - L_JOIN_DST); // film time of a Long, Long Time rec time after the join
 
 export const M = {
   // A — New York falls
@@ -81,20 +83,18 @@ export const M = {
   B184: P(184.0),
   FINAL_HIT: P(187.6),         // the machines stop as one
   RING_END: P(193.8),          // Portals rings out
-  // E/F/G — death, radio, credits
+  // E/F/G — death, the radio, the end card
   EYES_CLOSE: 196.6,
-  RADIO_CLICK,
+  RADIO_FLUTTER,
+  /** @deprecated R2 name for the moment the radio comes alive (now RADIO_FLUTTER: nobody touches it) */
+  RADIO_CLICK: RADIO_FLUTTER,
   L_START,
-  L_JOIN,
-  VOCAL: L(64.36),             // "Never thought that you would be…"
-  CLOSE_TO_ME: L(70.1),
-  WORDS_WAIT: L(76.86),        // "But words can wait until some other day"
-  KISS_ME: L(89.46),
-  LONG_TIME: L(95.4),          // "It's been a long, long time"
-  LONG_TIME_END: L(100.48),
-  MUSIC_END: L(L_END),
-  CREDITS_IN: 230.4,
-  END: 258.0,
+  SONG_CADENCE: L(L_CADENCE_REC),   // 234.26: the phrase arrives home
+  MUSIC_END: L(L_CADENCE_REC + L_FADE), // 237.26: silent
+  CARD_IN: 231.6,              // the final card: A FUTURE GOT WEIRD FILM
+  /** @deprecated R2 name (the credit crawl is gone); the pullback ends here */
+  CREDITS_IN: 231.6,
+  END: 237.8,
 };
 
 export type Mv = 'A' | 'B' | 'C' | 'D1' | 'D2' | 'D3' | 'D4' | 'E' | 'F' | 'G';
@@ -109,9 +109,9 @@ export const SECTIONS: {id: Mv; start: number; end: number; note: string}[] = [
   {id: 'D2', start: M.P2, end: M.P3, note: 'Ingenuity: smoke + light decoy; flank attack; tether crash at the girder; catch; drone shields; counter'},
   {id: 'D3', start: M.P3, end: M.P4, note: 'Strongest attack fells a heavy; the system adapts: high drone, formation change, decoy ignored, flank denied, drone lost, second heavy'},
   {id: 'D4', start: M.P4, end: M.FINAL_HIT, note: 'Losing ground; last counterattack on the B♭; the ring closes; the Director takes the blow and falls by the van'},
-  {id: 'E', start: M.FINAL_HIT, end: M.RADIO_CLICK - 0.6, note: 'The machines stop; his last breath; eyes close; stillness'},
-  {id: 'F', start: M.RADIO_CLICK - 0.6, end: M.CREDITS_IN, note: 'A hand turns the radio on; trumpet; one rising pullback from his face to the fallen city; the vocal enters'},
-  {id: 'G', start: M.CREDITS_IN, end: M.END, note: 'Credits crawl: the 2042 scenario text, title, accurate credits'},
+  {id: 'E', start: M.FINAL_HIT, end: 198.3, note: 'The machines stop; his last breath; eyes close; stillness'},
+  {id: 'F', start: 198.3, end: M.CARD_IN, note: 'From his still face to the unattended radio: indicator flutter, static, the song from its opening; one rising pullback to the fallen city'},
+  {id: 'G', start: M.CARD_IN, end: M.END, note: 'End card: A FUTURE GOT WEIRD FILM (the song resolves and fades)'},
 ];
 
 export const FILM_END = M.END;

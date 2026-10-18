@@ -790,14 +790,46 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     }
   }
   if (hairType === 'spiky') {
-    [-0.5, -0.25, 0, 0.25, 0.5].forEach((r0, k) => {
-      const a = hl3(r0 - 0.2, 0.85, 0.2), b = hl3(r0, 1.45, 0.1), c = hl3(r0 + 0.2, 0.85, 0.2);
-      // a second row behind so the crown reads in profile and from behind
-      const a2 = hl3(r0 - 0.2, 0.8, -0.45), b2 = hl3(r0, 1.38, -0.5), c2 = hl3(r0 + 0.2, 0.8, -0.45);
-      const el = <path key={`sp${k}`} d={`M ${pt(a)} L ${pt(b)} L ${pt(c)} Z`} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />;
-      const el2 = <path key={`spb${k}`} d={`M ${pt(a2)} L ${pt(b2)} L ${pt(c2)} Z`} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />;
-      (b.z > 0 ? extrasFront : extrasBack).push(el);
-      (b2.z > 0 ? extrasFront : extrasBack).push(el2);
+    // ONE coherent crest: the union of every spike (front, middle and back rows) as a single silhouette, drawn behind
+    // the head and its hair cap so only what stands proud of the head shows. (Two separately inked rows of flat
+    // triangles read as a doubled crown in three-quarter and high views.) Seen from above, a few thin spike strokes on
+    // the cap carry the texture instead.
+    const rows: [number, number, number][] = [[0.2, 0.85, 1.45], [-0.15, 0.86, 1.47], [-0.45, 0.8, 1.38]];
+    const tris: {x: number; y: number; z: number}[][] = [];
+    [-0.5, -0.25, 0, 0.25, 0.5].forEach((r0) => rows.forEach(([f0, ub, ut]) => {
+      tris.push([hl3(r0 - 0.2, ub, f0 + 0.05), hl3(r0, ut, f0 - 0.05), hl3(r0 + 0.2, ub, f0 + 0.05)]);
+    }));
+    const C = {x: Hc.x, y: Hc.y};
+    // ray from the head centre: the farthest exit over all (convex) triangles
+    const exitAt = (ux: number, uy: number) => {
+      let best = 0;
+      for (const tr of tris) for (let i = 0; i < 3; i++) {
+        const a = tr[i], b = tr[(i + 1) % 3];
+        const ex = b.x - a.x, ey = b.y - a.y, den = ux * ey - uy * ex;
+        if (Math.abs(den) < 1e-9) continue;
+        const ax = a.x - C.x, ay = a.y - C.y;
+        const tt = (ax * ey - ay * ex) / den, uu = (ax * uy - ay * ux) / den;
+        if (tt > 0 && uu >= 0 && uu <= 1) best = Math.max(best, tt);
+      }
+      return best;
+    };
+    const angs: number[] = [];
+    for (let i = 0; i < 360; i++) angs.push((i / 360) * Math.PI * 2);
+    tris.forEach((tr) => tr.forEach((q) => angs.push((Math.atan2(q.y - C.y, q.x - C.x) + Math.PI * 2) % (Math.PI * 2))));
+    angs.sort((a, b) => a - b);
+    const inner = Math.min(R, RY) * 0.5;
+    const outline = angs.map((a) => {
+      const ux = Math.cos(a), uy = Math.sin(a);
+      const d = Math.max(exitAt(ux, uy), inner);
+      return {x: C.x + ux * d, y: C.y + uy * d};
+    });
+    extrasBack.push(<path key="crest" d={polyPath(outline)} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="miter" strokeMiterlimit={8} />);
+    // from above (the top of the head toward the viewer) the spikes lie over the cap: a few thin strokes
+    const topK = clamp((hb.U.z - 0.3) / 0.35);
+    if (topK > 0) tris.filter((_, k) => k % 3 === 0).forEach((tr, k) => {
+      const base = {x: (tr[0].x + tr[2].x) / 2, y: (tr[0].y + tr[2].y) / 2};
+      const tip = {x: lerp(base.x, tr[1].x, 0.7), y: lerp(base.y, tr[1].y, 0.7)};
+      extrasFront.push(<path key={`spt${k}`} d={`M ${f2(base.x)} ${f2(base.y)} L ${f2(tip.x)} ${f2(tip.y)}`} stroke={inkC} strokeWidth={f2(ink * 0.6)} strokeLinecap="round" opacity={f2(0.7 * topK)} />);
     });
   }
   if (hairType === 'swoop') {
@@ -1043,11 +1075,22 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     }
     acc.push(<polyline key="hsband" points={bandPts.map((q) => `${f2(q.x)},${f2(q.y)}`).join(' ')} fill="none" stroke={inkC} strokeWidth={ink * 1.1} strokeLinecap="round" />);
     const cup = onHead(-92, 0.05, 1.08);
-    const mic1 = onHead(-66, 0.6, 1.16), mic2 = onHead(-38, 0.62, 1.13);
     const cupEl = <rect key="cup" x={cup.x - 7 * s} y={cup.y - 11 * s} width={14 * s} height={22 * s} rx={5 * s} fill={inkC} />;
-    // a short boom ending in a capsule well clear of the mouth (so it never reads as a smile line)
-    const micEl = <g key="mic"><path d={`M ${pt(cup)} Q ${pt(mic1)} ${pt(mic2)}`} fill="none" stroke={inkC} strokeWidth={ink} strokeLinecap="round" /><circle cx={mic2.x} cy={mic2.y} r={4.6 * s} fill={inkC} /></g>;
-    if (cup.z > -0.3) { acc.push(cupEl); acc.push(micEl); } else { accBack.push(cupEl); (mic2.z > 0 ? acc : accBack).push(micEl); }
+    // the boom: a 3D curve held clear of the cheek (r ≥ 1.16 head radii), drawn segment by segment in front of or behind
+    // the head by each segment's own depth, so it never crosses the face from the far side during a turn
+    const boomAt = (u: number) => {
+      const th = lerp(lerp(-92, -64, u), lerp(-64, -40, u), u), ey = lerp(lerp(0.05, 0.6, u), lerp(0.6, 0.62, u), u), rr = lerp(lerp(1.08, 1.24, u), lerp(1.24, 1.18, u), u);
+      return onHead(th, ey, rr);
+    };
+    const N = 10;
+    const bp = Array.from({length: N + 1}, (_, k) => boomAt(k / N));
+    for (let k = 0; k < N; k++) {
+      const a = bp[k], b = bp[k + 1], zm = (a.z + b.z) / 2;
+      (zm > 0.02 ? acc : accBack).push(<path key={`boom${k}`} d={`M ${f2(a.x)} ${f2(a.y)} L ${f2(b.x)} ${f2(b.y)}`} stroke={inkC} strokeWidth={ink} strokeLinecap="round" />);
+    }
+    const tip = bp[N];
+    (tip.z > 0.02 ? acc : accBack).push(<circle key="micc" cx={tip.x} cy={tip.y} r={4.6 * s} fill={inkC} />);
+    (cup.z > 0.02 ? acc : accBack).push(cupEl);
   }
   if (look.accessories.includes('pencil')) {
     const e = onHead(-80, -0.32, 1.06);

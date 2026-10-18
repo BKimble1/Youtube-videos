@@ -3,12 +3,13 @@
 Reads audio/r2/timing.json (tools/r2/collect_timing_r2.mjs) and the extracted recordings (tools/fetch_music.sh).
 Writes 48 kHz stereo float WAVs, each the full film length, to audio/r2/music/ (git-ignored):
   portals.wav       Portals, rec 1.30 → 193.8 placed at film 0.60, nothing cut in between; natural ring-out
-  llt_full.wav      It's Been a Long, Long Time: rec 0 → 10.205, edit, rec 57.26 → 102.2 (fade 1.6 s), full range
-  llt_radio.wav     the same edit through a small portable radio (band-limited, speaker resonance, light
-                    saturation, mono, short room) — the mixer crossfades radio → full as the camera rises
-plus audio/r2/music/edit.json: what was placed where, the measured join (sample step vs the track's own
-p99.99 step), and the levels. The edit itself is an equal-power crossfade of `xfade` seconds that ENDS on the
-destination point, so the incoming attack plays at full level.
+  llt_full.wav      It's Been a Long, Long Time (R3): ONE continuous excerpt, rec 0 → 37.66 in order, no edit;
+                    fade-in 0.35 s through the radio's static, 3.0 s fade from the cadence arrival (rec 34.66)
+  llt_radio.wav     the SAME placed recording through a small portable radio (band-limited, speaker resonance, light
+                    saturation, mono, short room), filtered zero-phase so the two copies stay sample- and phase-aligned:
+                    the mixer blends radio → full as the camera rises without a second entry, a gap or comb filtering
+plus audio/r2/music/edit.json: what was placed where and the levels. (A join check runs only if a segment has an
+`xfade`; R3 has none.)
 """
 import json, os
 
@@ -34,10 +35,11 @@ def load(name):
 
 def radio(x):
     m = x.mean(axis=1)
+    # zero-phase (forward-backward) filtering: no group delay against the full-range copy
     b, a = signal.butter(2, [300 / (SR / 2), 3400 / (SR / 2)], btype="band")
-    y = signal.lfilter(b, a, m)
+    y = signal.filtfilt(b, a, m)
     bp, ap = signal.iirpeak(1150 / (SR / 2), Q=1.6)
-    y = y + 0.35 * signal.lfilter(bp, ap, y)
+    y = y + 0.35 * signal.filtfilt(bp, ap, y)
     y = np.tanh(y * 2.2) / 2.2
     rng = np.random.default_rng(7)
     ir_t = np.arange(int(0.32 * SR)) / SR
@@ -95,8 +97,14 @@ for j in joins:
     a = 20 * np.log10(np.sqrt(np.mean(L[k - w - int(0.06 * SR):k - int(0.06 * SR)] ** 2)) + 1e-9)
     b = 20 * np.log10(np.sqrt(np.mean(L[k:k + w] ** 2)) + 1e-9)
     j["rms_before_db"], j["rms_after_db"] = round(float(a), 1), round(float(b), 1)
-# preview of the join for whoever can listen: 8 s before → 10 s after (git-ignored)
-k = int(round(segs[2]["film"] * SR))
-sf.write(os.path.join(OUT, "preview_llt_join.wav"), L[k - 8 * SR:k + 10 * SR].astype(np.float32), SR, subtype="FLOAT")
+# preview of any join for whoever can listen: 8 s before → 10 s after (git-ignored; none in R3)
+for j in joins:
+    k = int(round(j["film"] * SR))
+    sf.write(os.path.join(OUT, f"preview_join_{j['film']:.1f}.wav"), L[k - 8 * SR:k + 10 * SR].astype(np.float32), SR, subtype="FLOAT")
+# the radio entry and the song's ending, for whoever can listen (git-ignored)
+seg = [s for s in segs if s["src"] == "longtime"][0]
+k0 = int(round(seg["film"] * SR)); k1 = k0 + int(round((seg["recOut"] - seg["recIn"]) * SR))
+sf.write(os.path.join(OUT, "preview_llt_entry.wav"), L[max(0, k0 - 2 * SR):k0 + 12 * SR].astype(np.float32), SR, subtype="FLOAT")
+sf.write(os.path.join(OUT, "preview_llt_ending.wav"), L[k1 - 10 * SR:k1 + SR].astype(np.float32), SR, subtype="FLOAT")
 json.dump({"segments": log, "joins": joins, "makeup_db": MAKEUP_DB, "peaks": {k2: round(float(np.abs(v).max()), 4) for k2, v in tracks.items()}}, open(os.path.join(OUT, "edit.json"), "w"), indent=1)
 print(json.dumps({"segments": log, "joins": joins}, indent=1))

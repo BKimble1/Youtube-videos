@@ -10,17 +10,10 @@
   {
    "src": "longtime",
    "recIn": 0,
-   "recOut": 10.205,
-   "film": 200.4,
-   "fadeIn": 0.04
-  },
-  {
-   "src": "longtime",
-   "recIn": 57.26,
-   "recOut": 102.2,
-   "film": 210.60500000000002,
-   "xfade": 0.06,
-   "fadeOut": 1.6
+   "recOut": 37.66,
+   "film": 199.6,
+   "fadeIn": 0.35,
+   "fadeOut": 3
   }
  ],
  "anchors": {
@@ -84,18 +77,14 @@
   "FINAL_HIT": 186.9,
   "RING_END": 193.10000000000002,
   "EYES_CLOSE": 196.6,
-  "RADIO_CLICK": 199.9,
-  "L_START": 200.4,
-  "L_JOIN": 210.60500000000002,
-  "VOCAL": 217.705,
-  "CLOSE_TO_ME": 223.44500000000002,
-  "WORDS_WAIT": 230.205,
-  "KISS_ME": 242.805,
-  "LONG_TIME": 248.74500000000003,
-  "LONG_TIME_END": 253.82500000000002,
-  "MUSIC_END": 255.54500000000002,
-  "CREDITS_IN": 230.4,
-  "END": 258
+  "RADIO_FLUTTER": 199,
+  "RADIO_CLICK": 199,
+  "L_START": 199.6,
+  "SONG_CADENCE": 234.26,
+  "MUSIC_END": 237.26,
+  "CARD_IN": 231.6,
+  "CREDITS_IN": 231.6,
+  "END": 237.8
  },
  "sections": [
   {
@@ -143,23 +132,23 @@
   {
    "id": "E",
    "start": 186.9,
-   "end": 199.3,
+   "end": 198.3,
    "note": "The machines stop; his last breath; eyes close; stillness"
   },
   {
    "id": "F",
-   "start": 199.3,
-   "end": 230.4,
-   "note": "A hand turns the radio on; trumpet; one rising pullback from his face to the fallen city; the vocal enters"
+   "start": 198.3,
+   "end": 231.6,
+   "note": "From his still face to the unattended radio: indicator flutter, static, the song from its opening; one rising pullback to the fallen city"
   },
   {
    "id": "G",
-   "start": 230.4,
-   "end": 258,
-   "note": "Credits crawl: the 2042 scenario text, title, accurate credits"
+   "start": 231.6,
+   "end": 237.8,
+   "note": "End card: A FUTURE GOT WEIRD FILM (the song resolves and fades)"
   }
  ],
- "end": 258,
+ "end": 237.8,
  "cues": [
   {
    "t": 0.72,
@@ -7032,26 +7021,28 @@
    "fade": 0.1
   },
   {
+   "t": 199,
+   "kind": "static",
+   "gain": -7,
+   "pan": 0.15,
+   "dur": 0.3,
+   "fade": 0.06
+  },
+  {
+   "t": 199.38,
+   "kind": "static",
+   "gain": -5,
+   "pan": 0.15,
+   "dur": 0.5,
+   "fade": 0.2
+  },
+  {
    "t": 199.5,
    "kind": "lever_clunk",
    "gain": -20,
    "rate": 1.9,
    "pan": 0.1,
    "dist": 0.25
-  },
-  {
-   "t": 199.9,
-   "kind": "radio_on",
-   "gain": 0,
-   "pan": 0.15
-  },
-  {
-   "t": 199.95000000000002,
-   "kind": "static",
-   "gain": -2,
-   "pan": 0.15,
-   "dur": 0.55,
-   "fade": 0.15
   },
   {
    "t": 201,
@@ -7115,7 +7106,7 @@
   {
    "kind": "wind_ruins",
    "a": 0,
-   "b": 257,
+   "b": 236.8,
    "gain": -1,
    "fade": 1
   },
@@ -7129,7 +7120,7 @@
   {
    "kind": "fire_bed",
    "a": 0,
-   "b": 256,
+   "b": 235.8,
    "gain": -2,
    "fade": 1.5
   },
@@ -7160,7 +7151,7 @@
   {
    "kind": "machine_hum",
    "a": 186.4,
-   "b": 232.4,
+   "b": 233.6,
    "gain": 0,
    "fade": 2,
    "dist": 0.4
@@ -7177,8 +7168,8 @@
   }
  ],
  "radio": {
-  "a": 203.1,
-  "b": 216.905,
+  "a": 203,
+  "b": 217,
   "radioDb": -5,
   "awayDb": -10
  }

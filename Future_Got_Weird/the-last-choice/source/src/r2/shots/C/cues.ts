@@ -43,7 +43,7 @@ const C3: Cue[] = [
   c(42.85, 'steps_gravel', {gain: -13, pan: -0.05, dist: 0.5, dur: 2.5, fade: 0.3}), // he climbs on
   c(40.7, 'steps_gravel', {gain: -16, pan: 0.1, dist: 0.8, dur: 4.4, rate: 0.85, fade: 0.4}), // the breaker, heavier
   c(43.2, 'steam_vent', {gain: -19, pan: 0.05, dist: 0.7, dur: 0.5, rate: 1.4, fade: 0.15}), // the tank hisses as he hefts it
-  c(TD.recognise, 'breath_ragged', {gain: -7, pan: 0.35, dist: 0.08, dur: 1.4, fade: 0.4}), // his breath of recognition
+  c(TD.recognise, 'breath_ragged', {gain: -11, pan: 0.35, dist: 0.08, dur: 1.4, fade: 0.4}), // his breath of recognition
   c(TB2.hand1, 'rubble_shift', {gain: -11, pan: 0.0, dist: 0.65, dur: 0.7, fade: 0.2}), // the breaker's palm on the rubble
   c(TB2.hand1 + 0.05, 'breath_exert', {gain: -14, pan: 0.0, dist: 0.65, dur: 0.6, fade: 0.15}),
   c(TB2.hand1 + 0.3, 'hydraulic', {gain: -20, pan: 0.0, dist: 0.65, rate: 1.5}), // the tank knocks as he pushes up

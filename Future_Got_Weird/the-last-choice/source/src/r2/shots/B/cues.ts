@@ -1,4 +1,6 @@
-// Section B sound cues (film seconds). Pure data: import only timing/constants here, never components (this file is
+// Section B sound cues (film seconds). Pure data: // R3: effort sounds (breaths, groans) lowered 6–8 dB and the long loops shortened: they sat above the score's quiet
+// opening solo (measured, and reported by ear). The score leads; the breaths stay with him, not over the music.
+import only timing/constants here, never components (this file is
 // bundled into the mixer's timing.json by tools/r2/collect_timing_r2.mjs). The global cues (eyes_on at H1, army_halt
 // at H4, the army_march bed from ORCH) live in src/r2/sound.ts and are not repeated here.
 // pan = screen x of the source (−1 left … 1 right), dist = camera distance (0 close … 1 far).
@@ -10,36 +12,36 @@ const c = (t: number, kind: string, o: Omit<Cue, 't' | 'kind'> = {}): Cue => ({t
 
 // B1 — the close on the hand (the source sits just left of centre, very near)
 const B1: Cue[] = [
-  c(M.SOLO + 0.05, 'breath_ragged', {gain: -1, pan: -0.15, dist: 0.05, dur: 3.0, fade: 0.5}), // his breath under the slab
+  c(M.SOLO + 0.05, 'breath_ragged', {gain: -9, pan: -0.15, dist: 0.05, dur: 2.4, fade: 0.6}), // his breath under the slab
   c(TB.slideOut, 'rubble_shift', {gain: -12, pan: -0.25, dist: 0.05, dur: 0.6, rate: 1.4, fade: 0.15}), // the arm drags out over grit
   c(TB.slap, 'body_fall', {gain: -10, pan: -0.1, dist: 0.0, rate: 1.7}), // the palm slaps down on concrete
   c(TB.slap + 0.01, 'debris_rain', {gain: -12, pan: -0.1, dist: 0.05, dur: 0.7, rate: 1.5, fade: 0.2}), // chips skitter
-  c(TB.slap + 0.02, 'breath_exert', {gain: -7, pan: -0.15, dist: 0.05, dur: 0.9, fade: 0.25}),
+  c(TB.slap + 0.02, 'breath_exert', {gain: -12, pan: -0.15, dist: 0.05, dur: 0.9, fade: 0.25}),
   c(TB.press, 'rubble_shift', {gain: -14, pan: -0.1, dist: 0.05, dur: 0.7, rate: 1.2, fade: 0.2}), // the press grinds
   c(TB.strain, 'debris_rain', {gain: -16, pan: 0.2, dist: 0.1, dur: 0.9, rate: 1.2, fade: 0.3}), // grit trickles off the slab
 ];
 
 // B2 — the rise (low, south-east of him; he is centre-left → centre)
 const B2: Cue[] = [
-  c(TB.pull, 'breath_exert', {gain: -3, pan: -0.15, dist: 0.15, dur: 1.4, fade: 0.3}),
+  c(TB.pull, 'breath_exert', {gain: -9, pan: -0.15, dist: 0.15, dur: 1.4, fade: 0.3}),
   c(TB.pull + 0.03, 'rubble_shift', {gain: -6, pan: -0.15, dist: 0.15, dur: 1.2, fade: 0.3}), // he drags himself over the rubble
   c(12.71, 'body_fall', {gain: -15, pan: 0.0, dist: 0.2, rate: 2.0}), // the lump his head shoved off lands
   c(12.9, 'body_fall', {gain: -17, pan: -0.35, dist: 0.25, rate: 2.2}), // the chunk off his calf
-  c(TB.push, 'breath_exert', {gain: -2, pan: -0.1, dist: 0.15, dur: 1.2, fade: 0.3}),
+  c(TB.push, 'breath_exert', {gain: -8, pan: -0.1, dist: 0.15, dur: 1.2, fade: 0.3}),
   c(TB.push + 0.1, 'rubble_shift', {gain: -9, pan: -0.25, dist: 0.2, dur: 0.9, rate: 0.85, fade: 0.25}), // the slab grinds on his back
   c(13.33, 'body_fall', {gain: -14, pan: 0.1, dist: 0.15, rate: 1.8}), // the chunk off his back
   c(TB.slabLand, 'body_fall', {gain: -6, pan: -0.3, dist: 0.2, rate: 0.75}), // the slab drops back onto the mounds
   c(TB.slabLand + 0.02, 'debris_rain', {gain: -9, pan: -0.3, dist: 0.2, dur: 1.2, fade: 0.4}),
   c(TB.knee, 'steps_gravel', {gain: -9, pan: -0.05, dist: 0.15, dur: 0.4, fade: 0.1}), // a knee into the rubble
   c(14.22, 'body_fall', {gain: -14, pan: 0.15, dist: 0.2, rate: 1.6}), // the kicked chunk rolls down the slope
-  c(TB.knee + 0.25, 'breath_ragged', {gain: -3, pan: -0.05, dist: 0.15, dur: 1.2, fade: 0.3}),
+  c(TB.knee + 0.25, 'breath_ragged', {gain: -10, pan: -0.05, dist: 0.15, dur: 1.2, fade: 0.3}),
   c(TB.kneel, 'steps_gravel', {gain: -9, pan: 0.05, dist: 0.15, dur: 0.35, fade: 0.1}), // the left foot plants
   c(TB.rebar, 'cable_strain', {gain: -8, pan: 0.1, dist: 0.1, dur: 0.8, rate: 1.4, fade: 0.2}), // the rebar creaks in his grip
-  c(TB.weight, 'breath_exert', {gain: -1, pan: 0.0, dist: 0.15, dur: 1.6, fade: 0.3}),
+  c(TB.weight, 'breath_exert', {gain: -8, pan: 0.0, dist: 0.15, dur: 1.6, fade: 0.3}),
   c(TB.rise, 'cable_strain', {gain: -6, pan: 0.1, dist: 0.1, dur: 0.9, rate: 1.3, fade: 0.25}),
   c(TB.step, 'steps_gravel', {gain: -6, pan: 0.05, dist: 0.15, dur: 0.5, fade: 0.15}), // the staggered half step
   c(TB.release, 'cable_strain', {gain: -13, pan: 0.15, dist: 0.1, dur: 0.3, rate: 1.9, fade: 0.1}), // the bar springs back
-  c(TB.stood, 'breath_ragged', {gain: -2, pan: 0.0, dist: 0.15, dur: 3.0, fade: 0.6}),
+  c(TB.stood, 'breath_ragged', {gain: -10, pan: 0.0, dist: 0.15, dur: 2.2, fade: 0.6}),
 ];
 
 // B3 — the reveal: his two steps down, then the army's lockstep (H1/H2 synchronized, layered near → far)
@@ -58,7 +60,7 @@ const B3: Cue[] = [
   c(TB.step2 + 0.45, 'steps_gravel', {gain: -9, pan: -0.5, dist: 0.2, dur: 0.45, fade: 0.1}),
   ...armyStep(M.H1, 0, 0.3),
   ...armyStep(M.H2, 1, 0.3),
-  c(M.H1 + 0.08, 'breath_exert', {gain: -14, pan: -0.5, dist: 0.2, dur: 0.5, fade: 0.15}), // his breath catches
+  c(M.H1 + 0.08, 'breath_exert', {gain: -16, pan: -0.5, dist: 0.2, dur: 0.5, fade: 0.15}), // his breath catches
   // the lockstep carries on under the march bed, fading as the camera settles
   ...[3, 4, 5, 6, 7, 8].flatMap((k) => [c(beat(k), 'robot_step_heavy', {gain: -6 - k, pan: 0.5, dist: 0.75}), c(beat(k) + 0.01, 'robot_step', {gain: -8 - k, pan: 0.3, dist: 0.8})]),
 ];
@@ -74,13 +76,13 @@ const B4: Cue[] = [
 
 // B5 — the strap (he is centre, the van and the radio low right at the start)
 const B5: Cue[] = [
-  c(27.02, 'breath_ragged', {gain: -1, pan: -0.05, dist: 0.25, dur: 2.6, fade: 0.5}),
+  c(27.02, 'breath_ragged', {gain: -9, pan: -0.05, dist: 0.25, dur: 2.6, fade: 0.5}),
   c(TB.raise, 'cloth_move', {gain: -1, pan: -0.05, dist: 0.15, dur: 0.8, fade: 0.2}), // the arm comes up
   c(TB.bite, 'cloth_move', {gain: -3, pan: 0.0, dist: 0.1, dur: 0.4, rate: 1.3, fade: 0.1}), // teeth on the strap
   c(TB.tug, 'cloth_move', {gain: 2, pan: 0.05, dist: 0.1, dur: 0.5, rate: 1.45, fade: 0.1}), // the pull
-  c(TB.tug + 0.02, 'breath_exert', {gain: -5, pan: 0.0, dist: 0.1, dur: 0.9, fade: 0.25}),
+  c(TB.tug + 0.02, 'breath_exert', {gain: -11, pan: 0.0, dist: 0.1, dur: 0.9, fade: 0.25}),
   c(TB.tugEnd, 'armor_hit', {gain: -16, pan: -0.05, dist: 0.15, rate: 1.3}), // the plate snugs against the forearm
-  c(TB.ready, 'breath_ragged', {gain: -7, pan: 0.0, dist: 0.2, dur: 1.0, fade: 0.3}),
+  c(TB.ready, 'breath_ragged', {gain: -12, pan: 0.0, dist: 0.2, dur: 1.0, fade: 0.3}),
 ];
 
 // B6 — the halts (the global army_halt sits on H4). The lens is on a crane 6 m over the main body's front ranks, looking

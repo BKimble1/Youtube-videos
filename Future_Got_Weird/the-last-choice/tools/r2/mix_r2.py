@@ -78,6 +78,12 @@ def lowpass(y, fc):
     return signal.lfilter(b, a, y, axis=0)
 
 
+def lowpass0(y, fc):
+    """zero-phase low-pass (for a copy that is blended with its own unfiltered twin: no group delay, no comb)"""
+    b, a = signal.butter(2, fc / (SR / 2))
+    return signal.filtfilt(b, a, y, axis=0)
+
+
 rng = np.random.default_rng(11)
 
 
@@ -200,7 +206,7 @@ w = np.clip((tt - R["a"]) / max(0.1, R["b"] - R["a"]), 0, 1)
 w = 0.5 - 0.5 * np.cos(np.pi * w)  # 0 = radio only, 1 = score only
 # the radio recedes as the camera rises: quieter and darker as w grows (it stays a physical source until it is gone)
 radio_gain = 10 ** ((R.get("radioDb", -6.0) + R.get("awayDb", -9.0) * w) / 20) * np.cos(w * np.pi / 2)
-radio_dark = lowpass(llt_radio, 1800)
+radio_dark = lowpass0(llt_radio, 1800)
 radio = llt_radio * (1 - w)[:, None] + radio_dark * w[:, None]
 llt = radio * radio_gain[:, None] + llt_full * np.sin(w * np.pi / 2)[:, None]
 music_portals, music_llt = portals, llt
