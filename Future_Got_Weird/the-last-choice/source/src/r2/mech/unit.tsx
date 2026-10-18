@@ -102,7 +102,11 @@ export type UnitSpec = {
   heading: number;
   /** march: pelvis follows path(dist); feet planted. stride = cycle length (m). `over`: low obstacles the swinging feet
    *  lift over (and the pelvis rises over) — a wreck stepped over instead of walked through */
-  gait?: {path: Path; dist: number; stride?: number; lift?: number; /** path distance where walking starts / stops: feet blend from/to a standing stance over 0.6 m (no pops) */ start?: number; end?: number; over?: {x: number; z: number; r: number; h: number}[]};
+  gait?: {path: Path; dist: number; stride?: number; lift?: number; /** path distance where walking starts / stops: feet blend from/to a standing stance over 0.6 m (no pops) */ start?: number; end?: number; over?: {x: number; z: number; r: number; h: number}[];
+    /** (opt-in) a swing over `over` obstacles goes from the take-off's to the landing's height on top (no drop off the arc onto a
+     *  top it lands on) and its clearance comes down over the swing's last third (not its last eighth: no one-frame drop); a
+     *  foot planted anywhere over an obstacle stands on it (not only well inside it) */
+    overSoft?: boolean};
   /** extra crouch (m) */
   crouch?: number;
   lean?: number; // deg forward
@@ -730,14 +734,26 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
     if (sp.gait) {
       const f = footAt(sp.gait.path, sp.gait.dist, i === 0 ? 0 : 0.5, sp.gait.stride ?? 1.5, 0.55, sd * (U.hipW + 0.02), sp.gait.lift ?? 0.16, g);
       target = {x: f.pos.x, y: f.pos.y + U.ankleH, z: f.pos.z};
-      for (const o of sp.gait.over ?? []) {
+      const ovs = sp.gait.over ?? [];
+      const softOn = !!sp.gait.overSoft, soft = softOn && !f.stance && ovs.length > 0;
+      // standing on an obstacle: anywhere over it (soft) or only well inside it
+      const onTop = (o: {r: number; h: number}, d: number) => o.h * (softOn ? smooth((o.r - d) / 0.15) : smooth((o.r * 0.8 - d) / 0.2));
+      if (soft) {
+        // the plants either side of this swing (take-off, landing): the swing goes from one's height on top to the other's
+        const G0 = sp.gait, st = G0.stride ?? 1.5, ph = i === 0 ? 0 : 0.5, n = Math.floor(G0.dist / st + ph);
+        const lat = sd * (U.hipW + 0.02);
+        const fa = footAt(G0.path, (n - ph + 1e-4) * st, ph, st, 0.55, lat, 0, g), fb = footAt(G0.path, (n + 1 - ph + 1e-4) * st, ph, st, 0.55, lat, 0, g);
+        const top = (q: V3) => ovs.reduce((m, o) => Math.max(m, onTop(o, Math.hypot(q.x - o.x, q.z - o.z))), 0);
+        target = {...target, y: target.y + lerp(top(fa.pos), top(fb.pos), smooth(f.s))};
+      }
+      for (const o of ovs) {
         // a low obstacle: the swinging foot arcs over it (a flattened arc: clear early, down late); a foot planted on it
         // stands on top
         const d = Math.hypot(f.pos.x - o.x, f.pos.z - o.z);
         const inside = 1 - smooth((d - o.r) / 0.35);
         if (inside <= 0) continue;
         const gF = g(f.pos.x, f.pos.z) + U.ankleH;
-        const y = f.stance ? gF + o.h * smooth((o.r * 0.8 - d) / 0.2) : gF + (o.h + 0.12) * inside * Math.min(1, 2.4 * Math.sin(Math.PI * f.s));
+        const y = f.stance ? gF + onTop(o, d) : gF + (o.h + 0.12) * inside * Math.min(1, (soft ? 1.15 : 2.4) * Math.sin(Math.PI * f.s));
         target = {...target, y: Math.max(target.y, y)};
       }
       fh = f.heading;

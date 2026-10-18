@@ -710,7 +710,7 @@ const unitRun = (pl: UPlan, T: number): UnitSpec => {
     const over = overList(s.pts);
     sp = {
       ...base, pos: end.pos, heading: end.heading,
-      gait: {path, dist, stride: s.stride ?? 1.45 + 0.85 * fast, lift: s.lift ?? 0.14 + 0.08 * fast, start: A > 0.25 ? 0 : undefined, end: D > 0 ? L : undefined, over: over.length ? over : undefined},
+      gait: {path, dist, stride: s.stride ?? 1.45 + 0.85 * fast, lift: s.lift ?? 0.14 + 0.08 * fast, start: A > 0.25 ? 0 : undefined, end: D > 0 ? L : undefined, over: over.length ? over : undefined, overSoft: over.length ? true : undefined},
       crouch: (0.03 + 0.16 * fast) * k, lean: (3 + 12 * fast) * k,
     };
     sp = {...sp, ...walkOnly(act), crouch: sp.crouch, lean: sp.lean};
@@ -823,6 +823,16 @@ const arcSlots = (n: number, lo: number, hi: number, r0: number, r1: number) => 
 });
 const ARC1 = arcSlots(18, 74, 164, 9.9, 11.1);
 const ARC2 = arcSlots(18, 74, 164, 7.9, 9.0).map((p) => { let q: XZ = pushFrom(p, BLAST_XZ, 4.6); q = pushFrom(q, {x: 45.0, z: -1.0}, 6.2); return {...q, h: norm360(headingTo(q, CREW_C))}; });
+/** a standing place moved off D1/D2's downed units (both feet clear of their capsules) */
+function offWrecks(p: XZ, clear = 0.72): XZ {
+  let q = p;
+  for (let it = 0; it < 6; it++) for (const w of UNIT_WRECK_CAPS) for (let k = 1; k < w.pts.length; k++) {
+    const a = w.pts[k - 1], b = w.pts[k], ab = {x: b.x - a.x, z: b.z - a.z}, L2 = ab.x * ab.x + ab.z * ab.z || 1e-6;
+    const u = clamp(((q.x - a.x) * ab.x + (q.z - a.z) * ab.z) / L2), c = {x: a.x + ab.x * u, z: a.z + ab.z * u};
+    q = pushFrom(q, c, clear);
+  }
+  return q;
+}
 function pushFrom(p: XZ, o: XZ, r: number): XZ { const dx = p.x - o.x, dz = p.z - o.z, d = Math.hypot(dx, dz) || 1e-3; return d < r ? {x: o.x + (dx / d) * r, z: o.z + (dz / d) * r} : p; }
 /** through the water main's break, north-east → south-west */
 const GATE_NE: XZ = {x: 69.1, z: 6.1}, GATE_SW: XZ = {x: 66.9, z: 8.4};
@@ -1036,7 +1046,7 @@ function buildNorth(id: number, src: Src, role: 'r3' | 'wing' | 'lineN', j: numb
   // the hold north of the cable (the taut cable is a wall at their knees); FLANK_DENIED: over the slack, south-west
   // over D2's wrecks toward the Crew, a stop a step off them; after the blast into D4's start
   const tH = stepT0(steps[steps.length - 1]) + 0.01;
-  const press: XZ = pushFrom({x: lerp(slot.x, fin.x, 0.42), z: lerp(slot.z, fin.z, 0.42)}, {x: 45.0, z: -3.6}, 3.6);
+  const press: XZ = offWrecks(pushFrom({x: lerp(slot.x, fin.x, 0.42), z: lerp(slot.z, fin.z, 0.42)}, {x: 45.0, z: -3.6}, 3.6));
   const tPress = EV3.wingGo + (j % 4) * 0.22;
   const endW = steps[steps.length - 1];
   if (endW.k === 'walk') steps.push(hold(slot, endW.T1, headingTo(endW.pts[endW.pts.length - 2], slot), norm360(headingTo(slot, CREW_C)), tPress));
