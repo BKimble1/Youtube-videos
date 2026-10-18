@@ -1,0 +1,18 @@
+# Dependencies and Remotion caches are rebuilt from package-lock.json
+source/node_modules/
+source/.remotion/
+source/out/
+source/.events_*.tmp.mjs
+# Renders (the 4K master is reproducible from source; see README -> Rebuild)
+exports/*.mp4
+exports/*.wav
+# WAVs regenerate deterministically (tools/stitch_narration.py, make_bed.py, mix.py)
+audio/**/*.wav
+# Source footage is large: keep it next to the project, not in Git (see footage/README.md for provenance + checksums)
+footage/source/*.mp4
+footage/source/*.mov
+source/public/footage/*.mp4
+# QA frame dumps (contact sheets are kept)
+qa/**/f[0-9]*.png
+# Scribe input (rebuilt from takes/ by concatenating them; offsets are kept)
+audio/narration/scribe/candidates_concat.mp3

@@ -1,0 +1,122 @@
+[
+  {
+    "take": "b1_t1_PVKB.mp3",
+    "offset": 0.0,
+    "length": 10.96
+  },
+  {
+    "take": "b1_t2_ftNV.mp3",
+    "offset": 12.96,
+    "length": 10.88
+  },
+  {
+    "take": "b1_t3_h1e7.mp3",
+    "offset": 25.84,
+    "length": 10.56
+  },
+  {
+    "take": "b1_t4_spZo.mp3",
+    "offset": 38.4,
+    "length": 10.8
+  },
+  {
+    "take": "b2_t1_tTP2.mp3",
+    "offset": 51.2,
+    "length": 29.44
+  },
+  {
+    "take": "b2_t2_58nA.mp3",
+    "offset": 82.64,
+    "length": 29.2
+  },
+  {
+    "take": "b2_t3_cZoF.mp3",
+    "offset": 113.84,
+    "length": 28.88
+  },
+  {
+    "take": "b2_t4_qzbE.mp3",
+    "offset": 144.72,
+    "length": 29.44
+  },
+  {
+    "take": "b3_t1_KiEd.mp3",
+    "offset": 176.16,
+    "length": 28.56
+  },
+  {
+    "take": "b3_t2_E0d5.mp3",
+    "offset": 206.72,
+    "length": 29.2
+  },
+  {
+    "take": "b3_t3_DUYG.mp3",
+    "offset": 237.92,
+    "length": 29.2
+  },
+  {
+    "take": "b3_t4_EhAV.mp3",
+    "offset": 269.12,
+    "length": 28.72
+  },
+  {
+    "take": "b4_t1_fGwJ.mp3",
+    "offset": 299.84,
+    "length": 21.44
+  },
+  {
+    "take": "b4_t2_u451.mp3",
+    "offset": 323.28,
+    "length": 21.52
+  },
+  {
+    "take": "b4_t3_3nBV.mp3",
+    "offset": 346.8,
+    "length": 21.44
+  },
+  {
+    "take": "b4_t4_fVwS.mp3",
+    "offset": 370.24,
+    "length": 21.6
+  },
+  {
+    "take": "b5_t1_G5I3.mp3",
+    "offset": 393.84,
+    "length": 14.08
+  },
+  {
+    "take": "b5_t2_pRcX.mp3",
+    "offset": 409.92,
+    "length": 14.16
+  },
+  {
+    "take": "b5_t3_F9MN.mp3",
+    "offset": 426.08,
+    "length": 14.4
+  },
+  {
+    "take": "b5_t4_CMB5.mp3",
+    "offset": 442.48,
+    "length": 14.16
+  },
+  {
+    "take": "b6_t1_FaAr.mp3",
+    "offset": 458.64,
+    "length": 24.24
+  },
+  {
+    "take": "b6_t2_Blob.mp3",
+    "offset": 484.88,
+    "length": 24.16
+  },
+  {
+    "take": "b6_t3_bVkI.mp3",
+    "offset": 511.04,
+    "length": 24.4
+  },
+  {
+    "take": "b6_t4_f8tx.mp3",
+    "offset": 537.44,
+    "length": 24.24
+  }
+]

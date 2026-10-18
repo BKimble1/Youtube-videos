@@ -1,0 +1,29 @@
+# Script V1 — This Car Jumps Without a Ramp
+
+Production script from `FGW_U9_Final_Production_Prompt.md` (approved concept). Spoken text only; display spellings.
+Blocks are the narration recording units (ElevenLabs Test Voice `kk5XaSLo2XAw0sKM98zU`, `eleven_v4`).
+Times are filled in from the selected takes after stitching (see `audio/narration/narration_edit_log.json`).
+
+## B1 · Show it, name it, the contradiction
+
+> This car jumps without a ramp. Its suspension launches it. But the moment those tires leave the road, they lose their grip. So what does making a supercar jump actually prove?
+
+## B2 · Explain the launch
+
+> This is BYD's Yangwang U9. Ordinary springs store and release energy, while dampers control the motion. This car adds active control: powered actuators can apply force between the wheels and body. During the launch, the tires push against the pavement, and the pavement pushes back. That upward force accelerates the car before takeoff. Once the wheels lift clear, the ground stops pushing. Momentum carries the car upward while gravity slows it, then brings it back down.
+
+## B3 · The corner
+
+> Now put that same car into a corner. The body tends to lean outward, loading the suspension differently on each side. For the jump, the system lifts the car. Here, it adjusts forces across the suspension to oppose that lean. Same ability to apply force. Different job. This is active body control. The point isn't to make the car float. It's to manage how the body moves while the tires deal with the road. A flatter body, though, doesn't automatically mean more grip.
+
+## B4 · Braking and an uneven road
+
+> Brake hard, and the body tends to pitch forward. Active suspension can oppose that dive. Hit an uneven patch, and the wheels need room to move without making the cabin copy every movement. That's a balancing act between body control, tire contact, and comfort. The system still has limited travel and force. It can't turn a rough road into a perfectly smooth one.
+
+## B5 · The passenger
+
+> And a level car doesn't make the corner disappear. Your body still needs a sideways force to follow the turn. The seat provides it. You still feel pressed into the bolster, even when the car leans less. Body control isn't force cancellation.
+
+## B6 · The jump again, and the close
+
+> Watch the jump again. The suspension builds the launch while the tires are grounded. Then contact breaks, and gravity takes over the flight. That hop is the spectacular part of the demonstration. The useful engineering is controlling body movement when you brake, turn, and hit uneven pavement. A supercar can jump. Most of the time, its suspension has a much harder job: keeping it composed on the ground.

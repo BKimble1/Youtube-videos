@@ -1,0 +1,204 @@
+1
+00:00:00,250 --> 00:00:02,190
+This car jumps without a ramp.
+
+2
+00:00:02,270 --> 00:00:04,050
+Its suspension launches it.
+
+3
+00:00:04,210 --> 00:00:07,650
+But the moment those tires leave
+the road, they lose their grip.
+
+4
+00:00:07,930 --> 00:00:11,150
+So what does making a
+supercar jump actually prove?
+
+5
+00:00:11,700 --> 00:00:14,300
+This is BYD's Yangwang U9.
+
+6
+00:00:14,580 --> 00:00:18,840
+Ordinary springs store and release
+energy, while dampers control the motion.
+
+7
+00:00:19,060 --> 00:00:21,000
+This car adds active control:
+
+8
+00:00:21,220 --> 00:00:24,660
+powered actuators can apply force
+between the wheels and body.
+
+9
+00:00:24,940 --> 00:00:27,709
+During the launch, the tires
+push against the pavement,
+
+10
+00:00:27,719 --> 00:00:29,340
+and the pavement pushes back.
+
+11
+00:00:29,600 --> 00:00:32,680
+That upward force accelerates
+the car before takeoff.
+
+12
+00:00:32,940 --> 00:00:35,880
+Once the wheels lift clear,
+the ground stops pushing.
+
+13
+00:00:36,100 --> 00:00:39,200
+Momentum carries the car
+upward while gravity slows it,
+
+14
+00:00:39,220 --> 00:00:40,640
+then brings it back down.
+
+15
+00:00:41,390 --> 00:00:43,810
+Now put that same car into a corner.
+
+16
+00:00:44,070 --> 00:00:48,330
+The body tends to lean outward, loading
+the suspension differently on each side.
+
+17
+00:00:48,650 --> 00:00:51,030
+For the jump, the system lifts the car.
+
+18
+00:00:51,330 --> 00:00:55,430
+Here, it adjusts forces across the
+suspension to oppose that lean.
+
+19
+00:00:55,730 --> 00:00:57,570
+Same ability to apply force.
+
+20
+00:00:57,710 --> 00:00:58,710
+Different job.
+
+21
+00:00:58,990 --> 00:01:01,010
+This is active body control.
+
+22
+00:01:01,290 --> 00:01:03,290
+The point isn't to make the car float.
+
+23
+00:01:03,390 --> 00:01:06,910
+It's to manage how the body moves
+while the tires deal with the road.
+
+24
+00:01:07,210 --> 00:01:10,630
+A flatter body, though, doesn't
+automatically mean more grip.
+
+25
+00:01:11,130 --> 00:01:13,950
+Brake hard, and the body
+tends to pitch forward.
+
+26
+00:01:14,250 --> 00:01:16,550
+Active suspension can oppose that dive.
+
+27
+00:01:16,790 --> 00:01:18,100
+Hit an uneven patch,
+
+28
+00:01:18,110 --> 00:01:22,210
+and the wheels need room to move without
+making the cabin copy every movement.
+
+29
+00:01:22,450 --> 00:01:26,630
+That's a balancing act between body
+control, tire contact, and comfort.
+
+30
+00:01:26,850 --> 00:01:29,470
+The system still has
+limited travel and force.
+
+31
+00:01:29,630 --> 00:01:32,710
+It can't turn a rough road
+into a perfectly smooth one.
+
+32
+00:01:33,210 --> 00:01:35,950
+And a level car doesn't
+make the corner disappear.
+
+33
+00:01:36,190 --> 00:01:39,390
+Your body still needs a sideways
+force to follow the turn.
+
+34
+00:01:39,550 --> 00:01:40,910
+The seat provides it.
+
+35
+00:01:41,050 --> 00:01:44,810
+You still feel pressed into the
+bolster, even when the car leans less.
+
+36
+00:01:45,150 --> 00:01:47,590
+Body control isn't force cancellation.
+
+37
+00:01:48,290 --> 00:01:49,550
+Watch the jump again.
+
+38
+00:01:49,770 --> 00:01:52,850
+The suspension builds the launch
+while the tires are grounded.
+
+39
+00:01:53,030 --> 00:01:56,410
+Then contact breaks, and
+gravity takes over the flight.
+
+40
+00:01:56,790 --> 00:01:59,910
+That hop is the spectacular
+part of the demonstration.
+
+41
+00:02:00,130 --> 00:02:03,430
+The useful engineering is controlling
+body movement when you brake,
+
+42
+00:02:03,490 --> 00:02:05,570
+turn, and hit uneven pavement.
+
+43
+00:02:05,890 --> 00:02:07,350
+A supercar can jump.
+
+44
+00:02:07,590 --> 00:02:10,630
+Most of the time, its suspension
+has a much harder job:
+
+45
+00:02:10,850 --> 00:02:12,710
+keeping it composed on the ground.

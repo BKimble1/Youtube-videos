@@ -1,0 +1,2620 @@
+{
+ "duration": 134.16,
+ "words": [
+  {
+   "text": "This",
+   "start": 0.3,
+   "end": 0.46,
+   "block": "b1",
+   "i": 0
+  },
+  {
+   "text": "car",
+   "start": 0.52,
+   "end": 0.66,
+   "block": "b1",
+   "i": 1
+  },
+  {
+   "text": "jumps",
+   "start": 0.9,
+   "end": 1.2,
+   "block": "b1",
+   "i": 2
+  },
+  {
+   "text": "without",
+   "start": 1.24,
+   "end": 1.46,
+   "block": "b1",
+   "i": 3
+  },
+  {
+   "text": "a",
+   "start": 1.52,
+   "end": 1.6,
+   "block": "b1",
+   "i": 4
+  },
+  {
+   "text": "ramp.",
+   "start": 1.64,
+   "end": 1.94,
+   "block": "b1",
+   "i": 5
+  },
+  {
+   "text": "Its",
+   "start": 2.32,
+   "end": 2.44,
+   "block": "b1",
+   "i": 6
+  },
+  {
+   "text": "suspension",
+   "start": 2.48,
+   "end": 3.06,
+   "block": "b1",
+   "i": 7
+  },
+  {
+   "text": "launches",
+   "start": 3.22,
+   "end": 3.599,
+   "block": "b1",
+   "i": 8
+  },
+  {
+   "text": "it.",
+   "start": 3.66,
+   "end": 3.8,
+   "block": "b1",
+   "i": 9
+  },
+  {
+   "text": "But",
+   "start": 4.26,
+   "end": 4.36,
+   "block": "b1",
+   "i": 10
+  },
+  {
+   "text": "the",
+   "start": 4.4,
+   "end": 4.48,
+   "block": "b1",
+   "i": 11
+  },
+  {
+   "text": "moment",
+   "start": 4.58,
+   "end": 4.86,
+   "block": "b1",
+   "i": 12
+  },
+  {
+   "text": "those",
+   "start": 4.9,
+   "end": 5.08,
+   "block": "b1",
+   "i": 13
+  },
+  {
+   "text": "tires",
+   "start": 5.14,
+   "end": 5.48,
+   "block": "b1",
+   "i": 14
+  },
+  {
+   "text": "leave",
+   "start": 5.52,
+   "end": 5.68,
+   "block": "b1",
+   "i": 15
+  },
+  {
+   "text": "the",
+   "start": 5.72,
+   "end": 5.82,
+   "block": "b1",
+   "i": 16
+  },
+  {
+   "text": "road,",
+   "start": 5.86,
+   "end": 6.1,
+   "block": "b1",
+   "i": 17
+  },
+  {
+   "text": "they",
+   "start": 6.4,
+   "end": 6.54,
+   "block": "b1",
+   "i": 18
+  },
+  {
+   "text": "lose",
+   "start": 6.62,
+   "end": 6.86,
+   "block": "b1",
+   "i": 19
+  },
+  {
+   "text": "their",
+   "start": 6.9,
+   "end": 7.06,
+   "block": "b1",
+   "i": 20
+  },
+  {
+   "text": "grip.",
+   "start": 7.1,
+   "end": 7.4,
+   "block": "b1",
+   "i": 21
+  },
+  {
+   "text": "So",
+   "start": 7.98,
+   "end": 8.32,
+   "block": "b1",
+   "i": 22
+  },
+  {
+   "text": "what",
+   "start": 8.36,
+   "end": 8.48,
+   "block": "b1",
+   "i": 23
+  },
+  {
+   "text": "does",
+   "start": 8.5,
+   "end": 8.64,
+   "block": "b1",
+   "i": 24
+  },
+  {
+   "text": "making",
+   "start": 8.68,
+   "end": 8.92,
+   "block": "b1",
+   "i": 25
+  },
+  {
+   "text": "a",
+   "start": 8.96,
+   "end": 9.04,
+   "block": "b1",
+   "i": 26
+  },
+  {
+   "text": "supercar",
+   "start": 9.1,
+   "end": 9.54,
+   "block": "b1",
+   "i": 27
+  },
+  {
+   "text": "jump",
+   "start": 9.64,
+   "end": 9.82,
+   "block": "b1",
+   "i": 28
+  },
+  {
+   "text": "actually",
+   "start": 10.04,
+   "end": 10.44,
+   "block": "b1",
+   "i": 29
+  },
+  {
+   "text": "prove?",
+   "start": 10.5,
+   "end": 10.9,
+   "block": "b1",
+   "i": 30
+  },
+  {
+   "text": "This",
+   "start": 11.75,
+   "end": 11.93,
+   "block": "b2",
+   "i": 0
+  },
+  {
+   "text": "is",
+   "start": 11.99,
+   "end": 12.17,
+   "block": "b2",
+   "i": 1
+  },
+  {
+   "text": "BYD's",
+   "start": 12.19,
+   "end": 12.87,
+   "block": "b2",
+   "i": 2
+  },
+  {
+   "text": "Yangwang",
+   "start": 13.03,
+   "end": 13.45,
+   "block": "b2",
+   "i": 3
+  },
+  {
+   "text": "U9.",
+   "start": 13.59,
+   "end": 14.05,
+   "block": "b2",
+   "i": 4
+  },
+  {
+   "text": "Ordinary",
+   "start": 14.63,
+   "end": 15.03,
+   "block": "b2",
+   "i": 5
+  },
+  {
+   "text": "springs",
+   "start": 15.17,
+   "end": 15.49,
+   "block": "b2",
+   "i": 6
+  },
+  {
+   "text": "store",
+   "start": 15.61,
+   "end": 15.91,
+   "block": "b2",
+   "i": 7
+  },
+  {
+   "text": "and",
+   "start": 15.93,
+   "end": 16.03,
+   "block": "b2",
+   "i": 8
+  },
+  {
+   "text": "release",
+   "start": 16.07,
+   "end": 16.37,
+   "block": "b2",
+   "i": 9
+  },
+  {
+   "text": "energy,",
+   "start": 16.45,
+   "end": 16.81,
+   "block": "b2",
+   "i": 10
+  },
+  {
+   "text": "while",
+   "start": 17.07,
+   "end": 17.17,
+   "block": "b2",
+   "i": 11
+  },
+  {
+   "text": "dampers",
+   "start": 17.29,
+   "end": 17.73,
+   "block": "b2",
+   "i": 12
+  },
+  {
+   "text": "control",
+   "start": 17.77,
+   "end": 18.09,
+   "block": "b2",
+   "i": 13
+  },
+  {
+   "text": "the",
+   "start": 18.11,
+   "end": 18.17,
+   "block": "b2",
+   "i": 14
+  },
+  {
+   "text": "motion.",
+   "start": 18.21,
+   "end": 18.59,
+   "block": "b2",
+   "i": 15
+  },
+  {
+   "text": "This",
+   "start": 19.11,
+   "end": 19.27,
+   "block": "b2",
+   "i": 16
+  },
+  {
+   "text": "car",
+   "start": 19.31,
+   "end": 19.57,
+   "block": "b2",
+   "i": 17
+  },
+  {
+   "text": "adds",
+   "start": 19.63,
+   "end": 19.91,
+   "block": "b2",
+   "i": 18
+  },
+  {
+   "text": "active",
+   "start": 20.01,
+   "end": 20.25,
+   "block": "b2",
+   "i": 19
+  },
+  {
+   "text": "control.",
+   "start": 20.33,
+   "end": 20.75,
+   "block": "b2",
+   "i": 20
+  },
+  {
+   "text": "Powered",
+   "start": 21.27,
+   "end": 21.53,
+   "block": "b2",
+   "i": 21
+  },
+  {
+   "text": "actuators",
+   "start": 21.65,
+   "end": 22.19,
+   "block": "b2",
+   "i": 22
+  },
+  {
+   "text": "can",
+   "start": 22.21,
+   "end": 22.29,
+   "block": "b2",
+   "i": 23
+  },
+  {
+   "text": "apply",
+   "start": 22.33,
+   "end": 22.73,
+   "block": "b2",
+   "i": 24
+  },
+  {
+   "text": "force",
+   "start": 22.77,
+   "end": 23.05,
+   "block": "b2",
+   "i": 25
+  },
+  {
+   "text": "between",
+   "start": 23.09,
+   "end": 23.35,
+   "block": "b2",
+   "i": 26
+  },
+  {
+   "text": "the",
+   "start": 23.39,
+   "end": 23.51,
+   "block": "b2",
+   "i": 27
+  },
+  {
+   "text": "wheels",
+   "start": 23.53,
+   "end": 23.91,
+   "block": "b2",
+   "i": 28
+  },
+  {
+   "text": "and",
+   "start": 23.93,
+   "end": 24.01,
+   "block": "b2",
+   "i": 29
+  },
+  {
+   "text": "body.",
+   "start": 24.09,
+   "end": 24.41,
+   "block": "b2",
+   "i": 30
+  },
+  {
+   "text": "During",
+   "start": 24.99,
+   "end": 25.21,
+   "block": "b2",
+   "i": 31
+  },
+  {
+   "text": "the",
+   "start": 25.25,
+   "end": 25.31,
+   "block": "b2",
+   "i": 32
+  },
+  {
+   "text": "launch,",
+   "start": 25.37,
+   "end": 25.69,
+   "block": "b2",
+   "i": 33
+  },
+  {
+   "text": "the",
+   "start": 25.929,
+   "end": 26.03,
+   "block": "b2",
+   "i": 34
+  },
+  {
+   "text": "tires",
+   "start": 26.07,
+   "end": 26.489,
+   "block": "b2",
+   "i": 35
+  },
+  {
+   "text": "push",
+   "start": 26.53,
+   "end": 26.709,
+   "block": "b2",
+   "i": 36
+  },
+  {
+   "text": "against",
+   "start": 26.75,
+   "end": 27.01,
+   "block": "b2",
+   "i": 37
+  },
+  {
+   "text": "the",
+   "start": 27.03,
+   "end": 27.11,
+   "block": "b2",
+   "i": 38
+  },
+  {
+   "text": "pavement,",
+   "start": 27.17,
+   "end": 27.57,
+   "block": "b2",
+   "i": 39
+  },
+  {
+   "text": "and",
+   "start": 27.769,
+   "end": 27.85,
+   "block": "b2",
+   "i": 40
+  },
+  {
+   "text": "the",
+   "start": 27.89,
+   "end": 27.97,
+   "block": "b2",
+   "i": 41
+  },
+  {
+   "text": "pavement",
+   "start": 28.03,
+   "end": 28.37,
+   "block": "b2",
+   "i": 42
+  },
+  {
+   "text": "pushes",
+   "start": 28.45,
+   "end": 28.769,
+   "block": "b2",
+   "i": 43
+  },
+  {
+   "text": "back.",
+   "start": 28.79,
+   "end": 29.09,
+   "block": "b2",
+   "i": 44
+  },
+  {
+   "text": "That",
+   "start": 29.65,
+   "end": 29.85,
+   "block": "b2",
+   "i": 45
+  },
+  {
+   "text": "upward",
+   "start": 29.91,
+   "end": 30.25,
+   "block": "b2",
+   "i": 46
+  },
+  {
+   "text": "force",
+   "start": 30.29,
+   "end": 30.55,
+   "block": "b2",
+   "i": 47
+  },
+  {
+   "text": "accelerates",
+   "start": 30.65,
+   "end": 31.29,
+   "block": "b2",
+   "i": 48
+  },
+  {
+   "text": "the",
+   "start": 31.31,
+   "end": 31.39,
+   "block": "b2",
+   "i": 49
+  },
+  {
+   "text": "car",
+   "start": 31.43,
+   "end": 31.59,
+   "block": "b2",
+   "i": 50
+  },
+  {
+   "text": "before",
+   "start": 31.67,
+   "end": 31.95,
+   "block": "b2",
+   "i": 51
+  },
+  {
+   "text": "takeoff.",
+   "start": 31.99,
+   "end": 32.43,
+   "block": "b2",
+   "i": 52
+  },
+  {
+   "text": "Once",
+   "start": 32.99,
+   "end": 33.19,
+   "block": "b2",
+   "i": 53
+  },
+  {
+   "text": "the",
+   "start": 33.23,
+   "end": 33.31,
+   "block": "b2",
+   "i": 54
+  },
+  {
+   "text": "wheels",
+   "start": 33.35,
+   "end": 33.59,
+   "block": "b2",
+   "i": 55
+  },
+  {
+   "text": "lift",
+   "start": 33.65,
+   "end": 33.79,
+   "block": "b2",
+   "i": 56
+  },
+  {
+   "text": "clear,",
+   "start": 33.89,
+   "end": 34.17,
+   "block": "b2",
+   "i": 57
+  },
+  {
+   "text": "the",
+   "start": 34.43,
+   "end": 34.51,
+   "block": "b2",
+   "i": 58
+  },
+  {
+   "text": "ground",
+   "start": 34.55,
+   "end": 34.79,
+   "block": "b2",
+   "i": 59
+  },
+  {
+   "text": "stops",
+   "start": 34.93,
+   "end": 35.17,
+   "block": "b2",
+   "i": 60
+  },
+  {
+   "text": "pushing.",
+   "start": 35.27,
+   "end": 35.63,
+   "block": "b2",
+   "i": 61
+  },
+  {
+   "text": "Momentum",
+   "start": 36.15,
+   "end": 36.55,
+   "block": "b2",
+   "i": 62
+  },
+  {
+   "text": "carries",
+   "start": 36.67,
+   "end": 36.95,
+   "block": "b2",
+   "i": 63
+  },
+  {
+   "text": "the",
+   "start": 36.99,
+   "end": 37.05,
+   "block": "b2",
+   "i": 64
+  },
+  {
+   "text": "car",
+   "start": 37.11,
+   "end": 37.25,
+   "block": "b2",
+   "i": 65
+  },
+  {
+   "text": "upward",
+   "start": 37.41,
+   "end": 37.75,
+   "block": "b2",
+   "i": 66
+  },
+  {
+   "text": "while",
+   "start": 37.85,
+   "end": 38.03,
+   "block": "b2",
+   "i": 67
+  },
+  {
+   "text": "gravity",
+   "start": 38.05,
+   "end": 38.39,
+   "block": "b2",
+   "i": 68
+  },
+  {
+   "text": "slows",
+   "start": 38.51,
+   "end": 38.79,
+   "block": "b2",
+   "i": 69
+  },
+  {
+   "text": "it,",
+   "start": 38.83,
+   "end": 38.95,
+   "block": "b2",
+   "i": 70
+  },
+  {
+   "text": "then",
+   "start": 39.27,
+   "end": 39.49,
+   "block": "b2",
+   "i": 71
+  },
+  {
+   "text": "brings",
+   "start": 39.51,
+   "end": 39.71,
+   "block": "b2",
+   "i": 72
+  },
+  {
+   "text": "it",
+   "start": 39.73,
+   "end": 39.83,
+   "block": "b2",
+   "i": 73
+  },
+  {
+   "text": "back",
+   "start": 39.87,
+   "end": 40.05,
+   "block": "b2",
+   "i": 74
+  },
+  {
+   "text": "down.",
+   "start": 40.09,
+   "end": 40.39,
+   "block": "b2",
+   "i": 75
+  },
+  {
+   "text": "Now,",
+   "start": 41.44,
+   "end": 41.64,
+   "block": "b3",
+   "i": 0
+  },
+  {
+   "text": "put",
+   "start": 41.84,
+   "end": 41.96,
+   "block": "b3",
+   "i": 1
+  },
+  {
+   "text": "that",
+   "start": 42.02,
+   "end": 42.2,
+   "block": "b3",
+   "i": 2
+  },
+  {
+   "text": "same",
+   "start": 42.28,
+   "end": 42.54,
+   "block": "b3",
+   "i": 3
+  },
+  {
+   "text": "car",
+   "start": 42.58,
+   "end": 42.84,
+   "block": "b3",
+   "i": 4
+  },
+  {
+   "text": "into",
+   "start": 42.88,
+   "end": 43.06,
+   "block": "b3",
+   "i": 5
+  },
+  {
+   "text": "a",
+   "start": 43.1,
+   "end": 43.16,
+   "block": "b3",
+   "i": 6
+  },
+  {
+   "text": "corner.",
+   "start": 43.22,
+   "end": 43.56,
+   "block": "b3",
+   "i": 7
+  },
+  {
+   "text": "The",
+   "start": 44.12,
+   "end": 44.18,
+   "block": "b3",
+   "i": 8
+  },
+  {
+   "text": "body",
+   "start": 44.22,
+   "end": 44.48,
+   "block": "b3",
+   "i": 9
+  },
+  {
+   "text": "tends",
+   "start": 44.52,
+   "end": 44.76,
+   "block": "b3",
+   "i": 10
+  },
+  {
+   "text": "to",
+   "start": 44.8,
+   "end": 44.9,
+   "block": "b3",
+   "i": 11
+  },
+  {
+   "text": "lean",
+   "start": 44.96,
+   "end": 45.12,
+   "block": "b3",
+   "i": 12
+  },
+  {
+   "text": "outward,",
+   "start": 45.28,
+   "end": 45.66,
+   "block": "b3",
+   "i": 13
+  },
+  {
+   "text": "loading",
+   "start": 46.0,
+   "end": 46.26,
+   "block": "b3",
+   "i": 14
+  },
+  {
+   "text": "the",
+   "start": 46.3,
+   "end": 46.38,
+   "block": "b3",
+   "i": 15
+  },
+  {
+   "text": "suspension",
+   "start": 46.4,
+   "end": 46.96,
+   "block": "b3",
+   "i": 16
+  },
+  {
+   "text": "differently",
+   "start": 46.98,
+   "end": 47.38,
+   "block": "b3",
+   "i": 17
+  },
+  {
+   "text": "on",
+   "start": 47.42,
+   "end": 47.5,
+   "block": "b3",
+   "i": 18
+  },
+  {
+   "text": "each",
+   "start": 47.54,
+   "end": 47.68,
+   "block": "b3",
+   "i": 19
+  },
+  {
+   "text": "side.",
+   "start": 47.76,
+   "end": 48.08,
+   "block": "b3",
+   "i": 20
+  },
+  {
+   "text": "For",
+   "start": 48.7,
+   "end": 48.8,
+   "block": "b3",
+   "i": 21
+  },
+  {
+   "text": "the",
+   "start": 48.84,
+   "end": 48.94,
+   "block": "b3",
+   "i": 22
+  },
+  {
+   "text": "jump,",
+   "start": 49.0,
+   "end": 49.28,
+   "block": "b3",
+   "i": 23
+  },
+  {
+   "text": "the",
+   "start": 49.56,
+   "end": 49.66,
+   "block": "b3",
+   "i": 24
+  },
+  {
+   "text": "system",
+   "start": 49.68,
+   "end": 49.98,
+   "block": "b3",
+   "i": 25
+  },
+  {
+   "text": "lifts",
+   "start": 50.1,
+   "end": 50.36,
+   "block": "b3",
+   "i": 26
+  },
+  {
+   "text": "the",
+   "start": 50.4,
+   "end": 50.48,
+   "block": "b3",
+   "i": 27
+  },
+  {
+   "text": "car.",
+   "start": 50.52,
+   "end": 50.78,
+   "block": "b3",
+   "i": 28
+  },
+  {
+   "text": "Here,",
+   "start": 51.38,
+   "end": 51.62,
+   "block": "b3",
+   "i": 29
+  },
+  {
+   "text": "it",
+   "start": 52.02,
+   "end": 52.06,
+   "block": "b3",
+   "i": 30
+  },
+  {
+   "text": "adjusts",
+   "start": 52.12,
+   "end": 52.6,
+   "block": "b3",
+   "i": 31
+  },
+  {
+   "text": "forces",
+   "start": 52.64,
+   "end": 52.98,
+   "block": "b3",
+   "i": 32
+  },
+  {
+   "text": "across",
+   "start": 53.02,
+   "end": 53.4,
+   "block": "b3",
+   "i": 33
+  },
+  {
+   "text": "the",
+   "start": 53.44,
+   "end": 53.52,
+   "block": "b3",
+   "i": 34
+  },
+  {
+   "text": "suspension",
+   "start": 53.54,
+   "end": 54.08,
+   "block": "b3",
+   "i": 35
+  },
+  {
+   "text": "to",
+   "start": 54.12,
+   "end": 54.18,
+   "block": "b3",
+   "i": 36
+  },
+  {
+   "text": "oppose",
+   "start": 54.22,
+   "end": 54.66,
+   "block": "b3",
+   "i": 37
+  },
+  {
+   "text": "that",
+   "start": 54.72,
+   "end": 54.86,
+   "block": "b3",
+   "i": 38
+  },
+  {
+   "text": "lean.",
+   "start": 54.9,
+   "end": 55.18,
+   "block": "b3",
+   "i": 39
+  },
+  {
+   "text": "Same",
+   "start": 55.78,
+   "end": 55.96,
+   "block": "b3",
+   "i": 40
+  },
+  {
+   "text": "ability",
+   "start": 56.0,
+   "end": 56.42,
+   "block": "b3",
+   "i": 41
+  },
+  {
+   "text": "to",
+   "start": 56.46,
+   "end": 56.54,
+   "block": "b3",
+   "i": 42
+  },
+  {
+   "text": "apply",
+   "start": 56.58,
+   "end": 56.96,
+   "block": "b3",
+   "i": 43
+  },
+  {
+   "text": "force,",
+   "start": 57.0,
+   "end": 57.32,
+   "block": "b3",
+   "i": 44
+  },
+  {
+   "text": "different",
+   "start": 57.76,
+   "end": 58.04,
+   "block": "b3",
+   "i": 45
+  },
+  {
+   "text": "job.",
+   "start": 58.08,
+   "end": 58.4,
+   "block": "b3",
+   "i": 46
+  },
+  {
+   "text": "This",
+   "start": 59.04,
+   "end": 59.38,
+   "block": "b3",
+   "i": 47
+  },
+  {
+   "text": "is",
+   "start": 59.42,
+   "end": 59.64,
+   "block": "b3",
+   "i": 48
+  },
+  {
+   "text": "active",
+   "start": 59.74,
+   "end": 60.06,
+   "block": "b3",
+   "i": 49
+  },
+  {
+   "text": "body",
+   "start": 60.08,
+   "end": 60.34,
+   "block": "b3",
+   "i": 50
+  },
+  {
+   "text": "control.",
+   "start": 60.36,
+   "end": 60.76,
+   "block": "b3",
+   "i": 51
+  },
+  {
+   "text": "The",
+   "start": 61.34,
+   "end": 61.44,
+   "block": "b3",
+   "i": 52
+  },
+  {
+   "text": "point",
+   "start": 61.48,
+   "end": 61.76,
+   "block": "b3",
+   "i": 53
+  },
+  {
+   "text": "isn't",
+   "start": 61.82,
+   "end": 62.0,
+   "block": "b3",
+   "i": 54
+  },
+  {
+   "text": "to",
+   "start": 62.04,
+   "end": 62.12,
+   "block": "b3",
+   "i": 55
+  },
+  {
+   "text": "make",
+   "start": 62.14,
+   "end": 62.28,
+   "block": "b3",
+   "i": 56
+  },
+  {
+   "text": "the",
+   "start": 62.32,
+   "end": 62.4,
+   "block": "b3",
+   "i": 57
+  },
+  {
+   "text": "car",
+   "start": 62.44,
+   "end": 62.58,
+   "block": "b3",
+   "i": 58
+  },
+  {
+   "text": "float,",
+   "start": 62.72,
+   "end": 63.04,
+   "block": "b3",
+   "i": 59
+  },
+  {
+   "text": "it's",
+   "start": 63.44,
+   "end": 63.56,
+   "block": "b3",
+   "i": 60
+  },
+  {
+   "text": "to",
+   "start": 63.6,
+   "end": 63.7,
+   "block": "b3",
+   "i": 61
+  },
+  {
+   "text": "manage",
+   "start": 63.76,
+   "end": 64.08,
+   "block": "b3",
+   "i": 62
+  },
+  {
+   "text": "how",
+   "start": 64.14,
+   "end": 64.26,
+   "block": "b3",
+   "i": 63
+  },
+  {
+   "text": "the",
+   "start": 64.3,
+   "end": 64.4,
+   "block": "b3",
+   "i": 64
+  },
+  {
+   "text": "body",
+   "start": 64.42,
+   "end": 64.62,
+   "block": "b3",
+   "i": 65
+  },
+  {
+   "text": "moves",
+   "start": 64.76,
+   "end": 65.14,
+   "block": "b3",
+   "i": 66
+  },
+  {
+   "text": "while",
+   "start": 65.16,
+   "end": 65.28,
+   "block": "b3",
+   "i": 67
+  },
+  {
+   "text": "the",
+   "start": 65.3,
+   "end": 65.4,
+   "block": "b3",
+   "i": 68
+  },
+  {
+   "text": "tires",
+   "start": 65.46,
+   "end": 65.88,
+   "block": "b3",
+   "i": 69
+  },
+  {
+   "text": "deal",
+   "start": 65.92,
+   "end": 66.08,
+   "block": "b3",
+   "i": 70
+  },
+  {
+   "text": "with",
+   "start": 66.1,
+   "end": 66.2,
+   "block": "b3",
+   "i": 71
+  },
+  {
+   "text": "the",
+   "start": 66.24,
+   "end": 66.28,
+   "block": "b3",
+   "i": 72
+  },
+  {
+   "text": "road.",
+   "start": 66.36,
+   "end": 66.66,
+   "block": "b3",
+   "i": 73
+  },
+  {
+   "text": "A",
+   "start": 67.26,
+   "end": 67.34,
+   "block": "b3",
+   "i": 74
+  },
+  {
+   "text": "flatter",
+   "start": 67.4,
+   "end": 67.72,
+   "block": "b3",
+   "i": 75
+  },
+  {
+   "text": "body,",
+   "start": 67.74,
+   "end": 67.96,
+   "block": "b3",
+   "i": 76
+  },
+  {
+   "text": "though,",
+   "start": 68.04,
+   "end": 68.24,
+   "block": "b3",
+   "i": 77
+  },
+  {
+   "text": "doesn't",
+   "start": 68.52,
+   "end": 68.86,
+   "block": "b3",
+   "i": 78
+  },
+  {
+   "text": "automatically",
+   "start": 68.94,
+   "end": 69.56,
+   "block": "b3",
+   "i": 79
+  },
+  {
+   "text": "mean",
+   "start": 69.58,
+   "end": 69.76,
+   "block": "b3",
+   "i": 80
+  },
+  {
+   "text": "more",
+   "start": 69.8,
+   "end": 70.0,
+   "block": "b3",
+   "i": 81
+  },
+  {
+   "text": "grip.",
+   "start": 70.04,
+   "end": 70.38,
+   "block": "b3",
+   "i": 82
+  },
+  {
+   "text": "Brake",
+   "start": 71.18,
+   "end": 71.42,
+   "block": "b4",
+   "i": 0
+  },
+  {
+   "text": "hard,",
+   "start": 71.46,
+   "end": 71.78,
+   "block": "b4",
+   "i": 1
+  },
+  {
+   "text": "and",
+   "start": 72.08,
+   "end": 72.16,
+   "block": "b4",
+   "i": 2
+  },
+  {
+   "text": "the",
+   "start": 72.2,
+   "end": 72.28,
+   "block": "b4",
+   "i": 3
+  },
+  {
+   "text": "body",
+   "start": 72.32,
+   "end": 72.58,
+   "block": "b4",
+   "i": 4
+  },
+  {
+   "text": "tends",
+   "start": 72.62,
+   "end": 72.84,
+   "block": "b4",
+   "i": 5
+  },
+  {
+   "text": "to",
+   "start": 72.88,
+   "end": 72.98,
+   "block": "b4",
+   "i": 6
+  },
+  {
+   "text": "pitch",
+   "start": 73.02,
+   "end": 73.26,
+   "block": "b4",
+   "i": 7
+  },
+  {
+   "text": "forward.",
+   "start": 73.3,
+   "end": 73.7,
+   "block": "b4",
+   "i": 8
+  },
+  {
+   "text": "Active",
+   "start": 74.3,
+   "end": 74.52,
+   "block": "b4",
+   "i": 9
+  },
+  {
+   "text": "suspension",
+   "start": 74.6,
+   "end": 75.14,
+   "block": "b4",
+   "i": 10
+  },
+  {
+   "text": "can",
+   "start": 75.18,
+   "end": 75.26,
+   "block": "b4",
+   "i": 11
+  },
+  {
+   "text": "oppose",
+   "start": 75.3,
+   "end": 75.74,
+   "block": "b4",
+   "i": 12
+  },
+  {
+   "text": "that",
+   "start": 75.8,
+   "end": 75.94,
+   "block": "b4",
+   "i": 13
+  },
+  {
+   "text": "dive.",
+   "start": 75.98,
+   "end": 76.3,
+   "block": "b4",
+   "i": 14
+  },
+  {
+   "text": "Hit",
+   "start": 76.84,
+   "end": 76.94,
+   "block": "b4",
+   "i": 15
+  },
+  {
+   "text": "an",
+   "start": 77.0,
+   "end": 77.1,
+   "block": "b4",
+   "i": 16
+  },
+  {
+   "text": "uneven",
+   "start": 77.16,
+   "end": 77.5,
+   "block": "b4",
+   "i": 17
+  },
+  {
+   "text": "patch,",
+   "start": 77.56,
+   "end": 77.86,
+   "block": "b4",
+   "i": 18
+  },
+  {
+   "text": "and",
+   "start": 78.16,
+   "end": 78.24,
+   "block": "b4",
+   "i": 19
+  },
+  {
+   "text": "the",
+   "start": 78.26,
+   "end": 78.38,
+   "block": "b4",
+   "i": 20
+  },
+  {
+   "text": "wheels",
+   "start": 78.4,
+   "end": 78.68,
+   "block": "b4",
+   "i": 21
+  },
+  {
+   "text": "need",
+   "start": 78.72,
+   "end": 78.9,
+   "block": "b4",
+   "i": 22
+  },
+  {
+   "text": "room",
+   "start": 78.94,
+   "end": 79.12,
+   "block": "b4",
+   "i": 23
+  },
+  {
+   "text": "to",
+   "start": 79.16,
+   "end": 79.3,
+   "block": "b4",
+   "i": 24
+  },
+  {
+   "text": "move",
+   "start": 79.36,
+   "end": 79.66,
+   "block": "b4",
+   "i": 25
+  },
+  {
+   "text": "without",
+   "start": 79.7,
+   "end": 80.0,
+   "block": "b4",
+   "i": 26
+  },
+  {
+   "text": "making",
+   "start": 80.04,
+   "end": 80.28,
+   "block": "b4",
+   "i": 27
+  },
+  {
+   "text": "the",
+   "start": 80.32,
+   "end": 80.4,
+   "block": "b4",
+   "i": 28
+  },
+  {
+   "text": "cabin",
+   "start": 80.46,
+   "end": 80.74,
+   "block": "b4",
+   "i": 29
+  },
+  {
+   "text": "copy",
+   "start": 80.82,
+   "end": 81.24,
+   "block": "b4",
+   "i": 30
+  },
+  {
+   "text": "every",
+   "start": 81.3,
+   "end": 81.52,
+   "block": "b4",
+   "i": 31
+  },
+  {
+   "text": "movement.",
+   "start": 81.6,
+   "end": 81.96,
+   "block": "b4",
+   "i": 32
+  },
+  {
+   "text": "That's",
+   "start": 82.5,
+   "end": 82.64,
+   "block": "b4",
+   "i": 33
+  },
+  {
+   "text": "a",
+   "start": 82.68,
+   "end": 82.76,
+   "block": "b4",
+   "i": 34
+  },
+  {
+   "text": "balancing",
+   "start": 82.78,
+   "end": 83.2,
+   "block": "b4",
+   "i": 35
+  },
+  {
+   "text": "act",
+   "start": 83.28,
+   "end": 83.44,
+   "block": "b4",
+   "i": 36
+  },
+  {
+   "text": "between",
+   "start": 83.48,
+   "end": 83.8,
+   "block": "b4",
+   "i": 37
+  },
+  {
+   "text": "body",
+   "start": 83.82,
+   "end": 84.06,
+   "block": "b4",
+   "i": 38
+  },
+  {
+   "text": "control,",
+   "start": 84.08,
+   "end": 84.5,
+   "block": "b4",
+   "i": 39
+  },
+  {
+   "text": "tire",
+   "start": 84.82,
+   "end": 85.1,
+   "block": "b4",
+   "i": 40
+  },
+  {
+   "text": "contact,",
+   "start": 85.12,
+   "end": 85.62,
+   "block": "b4",
+   "i": 41
+  },
+  {
+   "text": "and",
+   "start": 85.82,
+   "end": 85.9,
+   "block": "b4",
+   "i": 42
+  },
+  {
+   "text": "comfort.",
+   "start": 86.0,
+   "end": 86.38,
+   "block": "b4",
+   "i": 43
+  },
+  {
+   "text": "The",
+   "start": 86.9,
+   "end": 87.0,
+   "block": "b4",
+   "i": 44
+  },
+  {
+   "text": "system",
+   "start": 87.02,
+   "end": 87.3,
+   "block": "b4",
+   "i": 45
+  },
+  {
+   "text": "still",
+   "start": 87.48,
+   "end": 87.68,
+   "block": "b4",
+   "i": 46
+  },
+  {
+   "text": "has",
+   "start": 87.72,
+   "end": 87.88,
+   "block": "b4",
+   "i": 47
+  },
+  {
+   "text": "limited",
+   "start": 87.98,
+   "end": 88.3,
+   "block": "b4",
+   "i": 48
+  },
+  {
+   "text": "travel",
+   "start": 88.36,
+   "end": 88.66,
+   "block": "b4",
+   "i": 49
+  },
+  {
+   "text": "and",
+   "start": 88.68,
+   "end": 88.76,
+   "block": "b4",
+   "i": 50
+  },
+  {
+   "text": "force.",
+   "start": 88.88,
+   "end": 89.22,
+   "block": "b4",
+   "i": 51
+  },
+  {
+   "text": "It",
+   "start": 89.68,
+   "end": 89.76,
+   "block": "b4",
+   "i": 52
+  },
+  {
+   "text": "can't",
+   "start": 89.82,
+   "end": 90.02,
+   "block": "b4",
+   "i": 53
+  },
+  {
+   "text": "turn",
+   "start": 90.06,
+   "end": 90.22,
+   "block": "b4",
+   "i": 54
+  },
+  {
+   "text": "a",
+   "start": 90.26,
+   "end": 90.36,
+   "block": "b4",
+   "i": 55
+  },
+  {
+   "text": "rough",
+   "start": 90.4,
+   "end": 90.62,
+   "block": "b4",
+   "i": 56
+  },
+  {
+   "text": "road",
+   "start": 90.66,
+   "end": 90.9,
+   "block": "b4",
+   "i": 57
+  },
+  {
+   "text": "into",
+   "start": 90.98,
+   "end": 91.16,
+   "block": "b4",
+   "i": 58
+  },
+  {
+   "text": "a",
+   "start": 91.2,
+   "end": 91.3,
+   "block": "b4",
+   "i": 59
+  },
+  {
+   "text": "perfectly",
+   "start": 91.38,
+   "end": 91.88,
+   "block": "b4",
+   "i": 60
+  },
+  {
+   "text": "smooth",
+   "start": 91.92,
+   "end": 92.18,
+   "block": "b4",
+   "i": 61
+  },
+  {
+   "text": "one.",
+   "start": 92.26,
+   "end": 92.46,
+   "block": "b4",
+   "i": 62
+  },
+  {
+   "text": "And",
+   "start": 93.26,
+   "end": 93.36,
+   "block": "b5",
+   "i": 0
+  },
+  {
+   "text": "a",
+   "start": 93.4,
+   "end": 93.46,
+   "block": "b5",
+   "i": 1
+  },
+  {
+   "text": "level",
+   "start": 93.52,
+   "end": 93.72,
+   "block": "b5",
+   "i": 2
+  },
+  {
+   "text": "car",
+   "start": 93.84,
+   "end": 94.04,
+   "block": "b5",
+   "i": 3
+  },
+  {
+   "text": "doesn\u2019t",
+   "start": 94.22,
+   "end": 94.5,
+   "block": "b5",
+   "i": 4
+  },
+  {
+   "text": "make",
+   "start": 94.54,
+   "end": 94.68,
+   "block": "b5",
+   "i": 5
+  },
+  {
+   "text": "the",
+   "start": 94.7,
+   "end": 94.78,
+   "block": "b5",
+   "i": 6
+  },
+  {
+   "text": "corner",
+   "start": 94.84,
+   "end": 95.08,
+   "block": "b5",
+   "i": 7
+  },
+  {
+   "text": "disappear.",
+   "start": 95.16,
+   "end": 95.7,
+   "block": "b5",
+   "i": 8
+  },
+  {
+   "text": "Your",
+   "start": 96.24,
+   "end": 96.36,
+   "block": "b5",
+   "i": 9
+  },
+  {
+   "text": "body",
+   "start": 96.38,
+   "end": 96.7,
+   "block": "b5",
+   "i": 10
+  },
+  {
+   "text": "still",
+   "start": 96.8,
+   "end": 96.98,
+   "block": "b5",
+   "i": 11
+  },
+  {
+   "text": "needs",
+   "start": 97.02,
+   "end": 97.18,
+   "block": "b5",
+   "i": 12
+  },
+  {
+   "text": "a",
+   "start": 97.22,
+   "end": 97.32,
+   "block": "b5",
+   "i": 13
+  },
+  {
+   "text": "sideways",
+   "start": 97.38,
+   "end": 97.9,
+   "block": "b5",
+   "i": 14
+  },
+  {
+   "text": "force",
+   "start": 97.96,
+   "end": 98.22,
+   "block": "b5",
+   "i": 15
+  },
+  {
+   "text": "to",
+   "start": 98.26,
+   "end": 98.38,
+   "block": "b5",
+   "i": 16
+  },
+  {
+   "text": "follow",
+   "start": 98.42,
+   "end": 98.66,
+   "block": "b5",
+   "i": 17
+  },
+  {
+   "text": "the",
+   "start": 98.68,
+   "end": 98.78,
+   "block": "b5",
+   "i": 18
+  },
+  {
+   "text": "turn.",
+   "start": 98.82,
+   "end": 99.14,
+   "block": "b5",
+   "i": 19
+  },
+  {
+   "text": "The",
+   "start": 99.6,
+   "end": 99.72,
+   "block": "b5",
+   "i": 20
+  },
+  {
+   "text": "seat",
+   "start": 99.78,
+   "end": 100.02,
+   "block": "b5",
+   "i": 21
+  },
+  {
+   "text": "provides",
+   "start": 100.04,
+   "end": 100.46,
+   "block": "b5",
+   "i": 22
+  },
+  {
+   "text": "it.",
+   "start": 100.52,
+   "end": 100.66,
+   "block": "b5",
+   "i": 23
+  },
+  {
+   "text": "You",
+   "start": 101.1,
+   "end": 101.2,
+   "block": "b5",
+   "i": 24
+  },
+  {
+   "text": "still",
+   "start": 101.259,
+   "end": 101.459,
+   "block": "b5",
+   "i": 25
+  },
+  {
+   "text": "feel",
+   "start": 101.5,
+   "end": 101.62,
+   "block": "b5",
+   "i": 26
+  },
+  {
+   "text": "pressed",
+   "start": 101.78,
+   "end": 102.08,
+   "block": "b5",
+   "i": 27
+  },
+  {
+   "text": "into",
+   "start": 102.12,
+   "end": 102.28,
+   "block": "b5",
+   "i": 28
+  },
+  {
+   "text": "the",
+   "start": 102.319,
+   "end": 102.42,
+   "block": "b5",
+   "i": 29
+  },
+  {
+   "text": "bolster,",
+   "start": 102.44,
+   "end": 102.84,
+   "block": "b5",
+   "i": 30
+  },
+  {
+   "text": "even",
+   "start": 103.18,
+   "end": 103.36,
+   "block": "b5",
+   "i": 31
+  },
+  {
+   "text": "when",
+   "start": 103.4,
+   "end": 103.48,
+   "block": "b5",
+   "i": 32
+  },
+  {
+   "text": "the",
+   "start": 103.52,
+   "end": 103.6,
+   "block": "b5",
+   "i": 33
+  },
+  {
+   "text": "car",
+   "start": 103.64,
+   "end": 103.82,
+   "block": "b5",
+   "i": 34
+  },
+  {
+   "text": "leans",
+   "start": 103.92,
+   "end": 104.16,
+   "block": "b5",
+   "i": 35
+  },
+  {
+   "text": "less.",
+   "start": 104.24,
+   "end": 104.56,
+   "block": "b5",
+   "i": 36
+  },
+  {
+   "text": "Body",
+   "start": 105.2,
+   "end": 105.44,
+   "block": "b5",
+   "i": 37
+  },
+  {
+   "text": "control",
+   "start": 105.46,
+   "end": 105.8,
+   "block": "b5",
+   "i": 38
+  },
+  {
+   "text": "isn\u2019t",
+   "start": 106.02,
+   "end": 106.34,
+   "block": "b5",
+   "i": 39
+  },
+  {
+   "text": "force",
+   "start": 106.38,
+   "end": 106.6,
+   "block": "b5",
+   "i": 40
+  },
+  {
+   "text": "cancellation.",
+   "start": 106.66,
+   "end": 107.34,
+   "block": "b5",
+   "i": 41
+  },
+  {
+   "text": "Watch",
+   "start": 108.34,
+   "end": 108.6,
+   "block": "b6",
+   "i": 0
+  },
+  {
+   "text": "the",
+   "start": 108.64,
+   "end": 108.72,
+   "block": "b6",
+   "i": 1
+  },
+  {
+   "text": "jump",
+   "start": 108.76,
+   "end": 108.94,
+   "block": "b6",
+   "i": 2
+  },
+  {
+   "text": "again.",
+   "start": 108.98,
+   "end": 109.3,
+   "block": "b6",
+   "i": 3
+  },
+  {
+   "text": "The",
+   "start": 109.82,
+   "end": 109.9,
+   "block": "b6",
+   "i": 4
+  },
+  {
+   "text": "suspension",
+   "start": 109.92,
+   "end": 110.4,
+   "block": "b6",
+   "i": 5
+  },
+  {
+   "text": "builds",
+   "start": 110.52,
+   "end": 110.8,
+   "block": "b6",
+   "i": 6
+  },
+  {
+   "text": "the",
+   "start": 110.86,
+   "end": 110.94,
+   "block": "b6",
+   "i": 7
+  },
+  {
+   "text": "launch",
+   "start": 110.98,
+   "end": 111.28,
+   "block": "b6",
+   "i": 8
+  },
+  {
+   "text": "while",
+   "start": 111.38,
+   "end": 111.5,
+   "block": "b6",
+   "i": 9
+  },
+  {
+   "text": "the",
+   "start": 111.52,
+   "end": 111.62,
+   "block": "b6",
+   "i": 10
+  },
+  {
+   "text": "tires",
+   "start": 111.68,
+   "end": 112.02,
+   "block": "b6",
+   "i": 11
+  },
+  {
+   "text": "are",
+   "start": 112.04,
+   "end": 112.14,
+   "block": "b6",
+   "i": 12
+  },
+  {
+   "text": "grounded.",
+   "start": 112.16,
+   "end": 112.6,
+   "block": "b6",
+   "i": 13
+  },
+  {
+   "text": "Then,",
+   "start": 113.08,
+   "end": 113.3,
+   "block": "b6",
+   "i": 14
+  },
+  {
+   "text": "contact",
+   "start": 113.58,
+   "end": 113.98,
+   "block": "b6",
+   "i": 15
+  },
+  {
+   "text": "breaks,",
+   "start": 114.04,
+   "end": 114.38,
+   "block": "b6",
+   "i": 16
+  },
+  {
+   "text": "and",
+   "start": 114.62,
+   "end": 114.7,
+   "block": "b6",
+   "i": 17
+  },
+  {
+   "text": "gravity",
+   "start": 114.8,
+   "end": 115.2,
+   "block": "b6",
+   "i": 18
+  },
+  {
+   "text": "takes",
+   "start": 115.3,
+   "end": 115.48,
+   "block": "b6",
+   "i": 19
+  },
+  {
+   "text": "over",
+   "start": 115.56,
+   "end": 115.7,
+   "block": "b6",
+   "i": 20
+  },
+  {
+   "text": "the",
+   "start": 115.74,
+   "end": 115.82,
+   "block": "b6",
+   "i": 21
+  },
+  {
+   "text": "flight.",
+   "start": 115.86,
+   "end": 116.16,
+   "block": "b6",
+   "i": 22
+  },
+  {
+   "text": "That",
+   "start": 116.84,
+   "end": 117.04,
+   "block": "b6",
+   "i": 23
+  },
+  {
+   "text": "hop",
+   "start": 117.1,
+   "end": 117.44,
+   "block": "b6",
+   "i": 24
+  },
+  {
+   "text": "is",
+   "start": 117.48,
+   "end": 117.58,
+   "block": "b6",
+   "i": 25
+  },
+  {
+   "text": "the",
+   "start": 117.62,
+   "end": 117.7,
+   "block": "b6",
+   "i": 26
+  },
+  {
+   "text": "spectacular",
+   "start": 117.78,
+   "end": 118.52,
+   "block": "b6",
+   "i": 27
+  },
+  {
+   "text": "part",
+   "start": 118.6,
+   "end": 118.76,
+   "block": "b6",
+   "i": 28
+  },
+  {
+   "text": "of",
+   "start": 118.78,
+   "end": 118.84,
+   "block": "b6",
+   "i": 29
+  },
+  {
+   "text": "the",
+   "start": 118.88,
+   "end": 118.94,
+   "block": "b6",
+   "i": 30
+  },
+  {
+   "text": "demonstration.",
+   "start": 118.98,
+   "end": 119.66,
+   "block": "b6",
+   "i": 31
+  },
+  {
+   "text": "The",
+   "start": 120.18,
+   "end": 120.26,
+   "block": "b6",
+   "i": 32
+  },
+  {
+   "text": "useful",
+   "start": 120.32,
+   "end": 120.58,
+   "block": "b6",
+   "i": 33
+  },
+  {
+   "text": "engineering",
+   "start": 120.64,
+   "end": 121.2,
+   "block": "b6",
+   "i": 34
+  },
+  {
+   "text": "is",
+   "start": 121.24,
+   "end": 121.34,
+   "block": "b6",
+   "i": 35
+  },
+  {
+   "text": "controlling",
+   "start": 121.36,
+   "end": 121.88,
+   "block": "b6",
+   "i": 36
+  },
+  {
+   "text": "body",
+   "start": 121.9,
+   "end": 122.18,
+   "block": "b6",
+   "i": 37
+  },
+  {
+   "text": "movement",
+   "start": 122.22,
+   "end": 122.56,
+   "block": "b6",
+   "i": 38
+  },
+  {
+   "text": "when",
+   "start": 122.58,
+   "end": 122.7,
+   "block": "b6",
+   "i": 39
+  },
+  {
+   "text": "you",
+   "start": 122.72,
+   "end": 122.84,
+   "block": "b6",
+   "i": 40
+  },
+  {
+   "text": "brake,",
+   "start": 122.88,
+   "end": 123.18,
+   "block": "b6",
+   "i": 41
+  },
+  {
+   "text": "turn,",
+   "start": 123.54,
+   "end": 123.86,
+   "block": "b6",
+   "i": 42
+  },
+  {
+   "text": "and",
+   "start": 124.06,
+   "end": 124.18,
+   "block": "b6",
+   "i": 43
+  },
+  {
+   "text": "hit",
+   "start": 124.24,
+   "end": 124.44,
+   "block": "b6",
+   "i": 44
+  },
+  {
+   "text": "uneven",
+   "start": 124.52,
+   "end": 124.82,
+   "block": "b6",
+   "i": 45
+  },
+  {
+   "text": "pavement.",
+   "start": 124.9,
+   "end": 125.32,
+   "block": "b6",
+   "i": 46
+  },
+  {
+   "text": "A",
+   "start": 125.94,
+   "end": 126.0,
+   "block": "b6",
+   "i": 47
+  },
+  {
+   "text": "supercar",
+   "start": 126.06,
+   "end": 126.48,
+   "block": "b6",
+   "i": 48
+  },
+  {
+   "text": "can",
+   "start": 126.56,
+   "end": 126.76,
+   "block": "b6",
+   "i": 49
+  },
+  {
+   "text": "jump.",
+   "start": 126.82,
+   "end": 127.1,
+   "block": "b6",
+   "i": 50
+  },
+  {
+   "text": "Most",
+   "start": 127.64,
+   "end": 127.82,
+   "block": "b6",
+   "i": 51
+  },
+  {
+   "text": "of",
+   "start": 127.86,
+   "end": 127.92,
+   "block": "b6",
+   "i": 52
+  },
+  {
+   "text": "the",
+   "start": 127.96,
+   "end": 128.02,
+   "block": "b6",
+   "i": 53
+  },
+  {
+   "text": "time,",
+   "start": 128.08,
+   "end": 128.34,
+   "block": "b6",
+   "i": 54
+  },
+  {
+   "text": "its",
+   "start": 128.54,
+   "end": 128.64,
+   "block": "b6",
+   "i": 55
+  },
+  {
+   "text": "suspension",
+   "start": 128.66,
+   "end": 129.16,
+   "block": "b6",
+   "i": 56
+  },
+  {
+   "text": "has",
+   "start": 129.2,
+   "end": 129.32,
+   "block": "b6",
+   "i": 57
+  },
+  {
+   "text": "a",
+   "start": 129.36,
+   "end": 129.4,
+   "block": "b6",
+   "i": 58
+  },
+  {
+   "text": "much",
+   "start": 129.56,
+   "end": 129.76,
+   "block": "b6",
+   "i": 59
+  },
+  {
+   "text": "harder",
+   "start": 129.78,
+   "end": 130.02,
+   "block": "b6",
+   "i": 60
+  },
+  {
+   "text": "job,",
+   "start": 130.12,
+   "end": 130.38,
+   "block": "b6",
+   "i": 61
+  },
+  {
+   "text": "keeping",
+   "start": 130.9,
+   "end": 131.16,
+   "block": "b6",
+   "i": 62
+  },
+  {
+   "text": "it",
+   "start": 131.18,
+   "end": 131.28,
+   "block": "b6",
+   "i": 63
+  },
+  {
+   "text": "composed",
+   "start": 131.3,
+   "end": 131.86,
+   "block": "b6",
+   "i": 64
+  },
+  {
+   "text": "on",
+   "start": 131.9,
+   "end": 131.96,
+   "block": "b6",
+   "i": 65
+  },
+  {
+   "text": "the",
+   "start": 132.0,
+   "end": 132.06,
+   "block": "b6",
+   "i": 66
+  },
+  {
+   "text": "ground.",
+   "start": 132.1,
+   "end": 132.46,
+   "block": "b6",
+   "i": 67
+  }
+ ],
+ "blocks": [
+  {
+   "block": "b1",
+   "take": "b1_t2_ftNV",
+   "take_range_s": [
+    0.02,
+    10.88
+   ],
+   "placed_at_s": 0.2,
+   "first_word_s": 0.3,
+   "last_word_end_s": 10.9,
+   "gap_before_s": null
+  },
+  {
+   "block": "b2",
+   "take": "b2_t3_cZoF",
+   "take_range_s": [
+    0.02,
+    28.88
+   ],
+   "placed_at_s": 11.65,
+   "first_word_s": 11.75,
+   "last_word_end_s": 40.39,
+   "gap_before_s": 0.85
+  },
+  {
+   "block": "b3",
+   "take": "b3_t2_E0d5",
+   "take_range_s": [
+    0.0,
+    29.2
+   ],
+   "placed_at_s": 41.34,
+   "first_word_s": 41.44,
+   "last_word_end_s": 70.38,
+   "gap_before_s": 1.05
+  },
+  {
+   "block": "b4",
+   "take": "b4_t2_u451",
+   "take_range_s": [
+    0.02,
+    21.52
+   ],
+   "placed_at_s": 71.08,
+   "first_word_s": 71.18,
+   "last_word_end_s": 92.46,
+   "gap_before_s": 0.8
+  },
+  {
+   "block": "b5",
+   "take": "b5_t3_F9MN",
+   "take_range_s": [
+    0.0,
+    14.39
+   ],
+   "placed_at_s": 93.17,
+   "first_word_s": 93.26,
+   "last_word_end_s": 107.34,
+   "gap_before_s": 0.8
+  },
+  {
+   "block": "b6",
+   "take": "b6_t3_bVkI",
+   "take_range_s": [
+    0.0,
+    24.4
+   ],
+   "placed_at_s": 108.25,
+   "first_word_s": 108.34,
+   "last_word_end_s": 132.46,
+   "gap_before_s": 1.0
+  }
+ ]
+}

@@ -1,0 +1,79 @@
+{
+ "duration_s": 134.16,
+ "voice": "ElevenLabs Test Voice kk5XaSLo2XAw0sKM98zU",
+ "model": "eleven_v4",
+ "pieces": [
+  {
+   "block": "b1",
+   "take": "b1_t2_ftNV",
+   "take_range_s": [
+    0.02,
+    10.88
+   ],
+   "placed_at_s": 0.2,
+   "first_word_s": 0.3,
+   "last_word_end_s": 10.9,
+   "gap_before_s": null
+  },
+  {
+   "block": "b2",
+   "take": "b2_t3_cZoF",
+   "take_range_s": [
+    0.02,
+    28.88
+   ],
+   "placed_at_s": 11.65,
+   "first_word_s": 11.75,
+   "last_word_end_s": 40.39,
+   "gap_before_s": 0.85
+  },
+  {
+   "block": "b3",
+   "take": "b3_t2_E0d5",
+   "take_range_s": [
+    0.0,
+    29.2
+   ],
+   "placed_at_s": 41.34,
+   "first_word_s": 41.44,
+   "last_word_end_s": 70.38,
+   "gap_before_s": 1.05
+  },
+  {
+   "block": "b4",
+   "take": "b4_t2_u451",
+   "take_range_s": [
+    0.02,
+    21.52
+   ],
+   "placed_at_s": 71.08,
+   "first_word_s": 71.18,
+   "last_word_end_s": 92.46,
+   "gap_before_s": 0.8
+  },
+  {
+   "block": "b5",
+   "take": "b5_t3_F9MN",
+   "take_range_s": [
+    0.0,
+    14.39
+   ],
+   "placed_at_s": 93.17,
+   "first_word_s": 93.26,
+   "last_word_end_s": 107.34,
+   "gap_before_s": 0.8
+  },
+  {
+   "block": "b6",
+   "take": "b6_t3_bVkI",
+   "take_range_s": [
+    0.0,
+    24.4
+   ],
+   "placed_at_s": 108.25,
+   "first_word_s": 108.34,
+   "last_word_end_s": 132.46,
+   "gap_before_s": 1.0
+  }
+ ]
+}
