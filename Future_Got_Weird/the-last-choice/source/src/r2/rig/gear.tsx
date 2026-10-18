@@ -88,7 +88,14 @@ export const satchelParts = (r: Rig2, sat: Satchel, inkC: string = C.ink, col: (
  * thumb side; the yellow rear and the tank on one side of the fist, the ram head on the other). Same tool as the kit's
  * two-handed breaker(): yellow rear, slate tube, red tank with the gauge, steel ram head.
  */
-export const breakerCarry = (o: {gauge?: number; flip?: boolean} = {}): HoldFn => (h, s, ink, col) => {
+export const breakerCarry = (o: {gauge?: number; flip?: boolean} = {}): HoldFn => {
+  const dir = o.flip ? -1 : 1;
+  const fn: HoldFn = (h, s, ink, col) => breakerCarryEl(o, s, ink, col);
+  // the tube's axis (hand-local): along the thumb side through the grip (rotate ±90° about x 21)
+  fn.span = [21, -150 * dir, 21, 174 * dir];
+  return fn;
+};
+const breakerCarryEl = (o: {gauge?: number; flip?: boolean}, s: number, ink: number, col: (c: string) => string) => {
   const k = s, g = clamp(o.gauge ?? 1);
   const dir = o.flip ? -1 : 1;
   const L0 = -150, L1 = 140; // rear end … ram end along the tube (rig units)

@@ -94,9 +94,28 @@ const GRIP0 = 21;
  * drew props in the glyph's frame: full length when they pointed at the camera, flipped across the hand when the
  * palm turned past edge-on.
  */
+/** The held prop's two screen axes: the projected 3D finger and thumb axes, with the frame never collapsing (a flat
+ *  drawing of a round handle or tube keeps at least ~0.35 of its thickness when one axis points at the camera). */
+const propAxes = (h: HandFrame) => {
+  let A = {x: h.a3.x, y: h.a3.y}, T = {x: h.t3.x, y: h.t3.y};
+  const det = A.x * T.y - A.y * T.x, MIN = 0.35;
+  if (Math.abs(det) < MIN) {
+    const sg = Math.sign(det) || Math.sign(h.ax.x * h.ay.y - h.ax.y * h.ay.x) || 1;
+    const aL = Math.hypot(A.x, A.y), tL = Math.hypot(T.x, T.y);
+    const longT = tL >= aL, L0 = longT ? T : A, Ll = Math.max(1e-6, longT ? tL : aL);
+    const n = {x: -L0.y / Ll, y: L0.x / Ll};
+    const S0 = longT ? A : T, c = S0.x * n.x + S0.y * n.y;
+    // the shorter axis's component across the longer one, raised to MIN / |longer| (signed to keep the handedness)
+    const want = Math.min(1, MIN / Ll) * (longT ? -sg : sg);
+    const S1 = {x: S0.x + n.x * (want - c), y: S0.y + n.y * (want - c)};
+    if (longT) A = S1; else T = S1;
+  }
+  return {A, T};
+};
 export const propPt = (h: HandFrame, x: number, y: number, s: number): V3 => {
   const g = handPt(h, GRIP0 * s, 0), dx = x - GRIP0 * s;
-  return {x: g.x + h.a3.x * dx + h.t3.x * y, y: g.y + h.a3.y * dx + h.t3.y * y, z: h.pos.z + (h.a3.z * x + h.t3.z * y)};
+  const {A, T} = propAxes(h);
+  return {x: g.x + A.x * dx + T.x * y, y: g.y + A.y * dx + T.y * y, z: h.pos.z + (h.a3.z * x + h.t3.z * y)};
 };
 /** The transform to wrap a held prop (drawn in hand-local units) with, INSIDE the hand glyph's group (handM): it maps the
  *  glyph's frame to the prop frame (propPt) about the grip. */
@@ -105,14 +124,19 @@ const propInGlyph = (h: HandFrame, s: number) => {
   if (Math.abs(det) < 1e-6) return '';
   // K = Mg⁻¹ · Mp (Mg = [ax ay], Mp = [a3.xy t3.xy])
   const ia = h.ay.y / det, ib = -h.ay.x / det, ic = -h.ax.y / det, id = h.ax.x / det;
-  const k11 = ia * h.a3.x + ib * h.a3.y, k21 = ic * h.a3.x + id * h.a3.y, k12 = ia * h.t3.x + ib * h.t3.y, k22 = ic * h.t3.x + id * h.t3.y;
+  const {A, T} = propAxes(h);
+  const k11 = ia * A.x + ib * A.y, k21 = ic * A.x + id * A.y, k12 = ia * T.x + ib * T.y, k22 = ic * T.x + id * T.y;
   const g0 = GRIP0 * s;
   // q → g0 + K (q − g0)
   const e = g0 - k11 * g0, f = -k21 * g0;
   const r4 = (v: number) => Math.round(v * 1e4) / 1e4;
   return `matrix(${r4(k11)} ${r4(k21)} ${r4(k12)} ${r4(k22)} ${f2(e)} ${f2(f)})`;
 };
-export type HoldFn = (h: HandFrame, s: number, ink: number, col: (c: string) => string) => React.ReactNode;
+export type HoldFn = ((h: HandFrame, s: number, ink: number, col: (c: string) => string) => React.ReactNode) & {
+  /** a long prop's axis in hand-local rig units [x0, y0, x1, y1]: the prop is cut where that axis passes the torso's or
+   *  the face's depth (zoneRuns), so a bar held beside the head goes behind it where it is behind it */
+  span?: [number, number, number, number];
+};
 export type WearFn = (fa: {E: V3; W: V3; dorsal: V3; ang: number; len: number}, s: number, ink: number, col: (c: string) => string) => {el: React.ReactNode; front: boolean} | null;
 
 export type FigProps = {
@@ -423,7 +447,9 @@ export const zoneOfRank = (r: Rig2, rank: number) => (rank > r.torsoZ + 20 ? 2 :
  * (R2 drew a two-handed tool over the arms' single rank: over the face whenever the arms were in front of the chest,
  * over the back when the hands were in front of the chest seen from behind).
  */
-export const splitZones = (r: Rig2, key: string, el: React.ReactElement, a: V3, b: V3, bias = 0.35): Part[] => {
+/** The runs of one depth zone along the drawn segment a → b, each with a half-space clip polygon (drawn frame) that
+ *  holds that run of the line (the first and last runs extend to infinity along it). */
+export const zoneRuns = (r: Rig2, a: V3, b: V3): {zone: number; poly: V2[]}[] => {
   const d = {x: b.x - a.x, y: b.y - a.y}, dl = Math.hypot(d.x, d.y);
   const zMid = (u: number) => r.zoneAt(lerp3(a, b, u));
   // runs of one zone along the line (sampled, each boundary refined by bisection)
@@ -440,19 +466,25 @@ export const splitZones = (r: Rig2, key: string, el: React.ReactElement, a: V3, 
     }
   }
   runs.push({t0, t1: 1, zone: prev});
-  // the piece in the hands' zone sits over both forearms; a pose that overrides an arm's depth keeps R2's tool rank
-  const handZone = zoneOfRank(r, r.toolZ - 0.3);
-  const rank = (zn: number) => (r.armOverride && zn === handZone ? r.toolZ : r.zoneZ[zn] + bias);
-  if (runs.length === 1 || dl < 1e-3) return [{z: rank(runs.length === 1 ? runs[0].zone : zMid(0.5)), key, el}];
+  if (runs.length === 1 || dl < 1e-3) return [{zone: runs.length === 1 ? runs[0].zone : zMid(0.5), poly: []}];
   const ux = d.x / dl, uy = d.y / dl, BIG = 1e5;
   return runs.map((rn, k) => {
     const t0 = k === 0 ? -BIG / dl : rn.t0, t1 = k === runs.length - 1 ? BIG / dl : rn.t1;
     const p0 = {x: a.x + d.x * t0, y: a.y + d.y * t0}, p1 = {x: a.x + d.x * t1, y: a.y + d.y * t1};
-    const poly = [{x: p0.x - uy * BIG, y: p0.y + ux * BIG}, {x: p1.x - uy * BIG, y: p1.y + ux * BIG}, {x: p1.x + uy * BIG, y: p1.y - ux * BIG}, {x: p0.x + uy * BIG, y: p0.y - ux * BIG}];
+    return {zone: rn.zone, poly: [{x: p0.x - uy * BIG, y: p0.y + ux * BIG}, {x: p1.x - uy * BIG, y: p1.y + ux * BIG}, {x: p1.x + uy * BIG, y: p1.y - ux * BIG}, {x: p0.x + uy * BIG, y: p0.y - ux * BIG}]};
+  });
+};
+export const splitZones = (r: Rig2, key: string, el: React.ReactElement, a: V3, b: V3, bias = 0.35): Part[] => {
+  const runs = zoneRuns(r, a, b);
+  // the piece in the hands' zone sits over both forearms; a pose that overrides an arm's depth keeps R2's tool rank
+  const handZone = zoneOfRank(r, r.toolZ - 0.3);
+  const rank = (zn: number) => (r.armOverride && zn === handZone ? r.toolZ : r.zoneZ[zn] + bias);
+  if (runs.length === 1) return [{z: rank(runs[0].zone), key, el}];
+  return runs.map((rn, k) => {
     const cid = `${r.id}_${key}_z${k}`;
     return {z: rank(rn.zone), key: `${key}${k}`, el: (
       <g>
-        <defs><clipPath id={cid}><path d={polyPath(poly)} /></clipPath></defs>
+        <defs><clipPath id={cid}><path d={polyPath(rn.poly)} /></clipPath></defs>
         <g clipPath={`url(#${cid})`}>{el}</g>
       </g>
     )};
@@ -853,7 +885,35 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const W0 = add3(Wr, mul3(fa, 4 * s));
     const holdFn = i === 0 ? p.holdL : p.holdR;
     const hold0 = holdFn ? holdFn(hf, s, ink, col) : null;
-    const hold = hold0 ? <g transform={propInGlyph(hf, s)}>{hold0}</g> : null;
+    let hold = hold0 ? <g transform={propInGlyph(hf, s)}>{hold0}</g> : null;
+    // a long one-handed prop crossing a depth zone: the piece in the hand's own zone stays in the fist (between the
+    // glyph's layers), the others become parts in their zones (clipped to their runs of the prop's axis)
+    if (hold && holdFn?.span) {
+      const sp = holdFn.span;
+      const runs = zoneRuns(r, propPt(hf, sp[0] * s, sp[1] * s, s), propPt(hf, sp[2] * s, sp[3] * s, s));
+      const hz = zoneOfRank(r, r.armRank[i]);
+      if (runs.length > 1 || runs[0].zone !== hz) {
+        const inG = hold;
+        const det = hf.ax.x * hf.ay.y - hf.ay.x * hf.ax.y || 1e-6;
+        const toGlyph = (q: V2): V2 => { const dx = q.x - hf.pos.x, dy = q.y - hf.pos.y; return {x: (hf.ay.y * dx - hf.ay.x * dy) / det, y: (-hf.ax.y * dx + hf.ax.x * dy) / det}; };
+        const own = runs.filter((rn) => rn.zone === hz);
+        const ownId = `${id}hz${i}`;
+        hold = own.length ? (runs.length === 1 ? inG : (
+          <g>
+            <defs><clipPath id={ownId}>{own.map((rn, k) => <path key={k} d={polyPath(rn.poly.map(toGlyph))} />)}</clipPath></defs>
+            <g clipPath={`url(#${ownId})`}>{inG}</g>
+          </g>
+        )) : null;
+        runs.forEach((rn, k) => {
+          if (rn.zone === hz) return;
+          const cid = `${id}hp${i}_${k}`;
+          const el = <g transform={handM(hf)}>{inG}</g>;
+          add(r.zoneZ[rn.zone] + 0.4, `hold${i}_${k}`, rn.poly.length ? (
+            <g><defs><clipPath id={cid}><path d={polyPath(rn.poly)} /></clipPath></defs><g clipPath={`url(#${cid})`}>{el}</g></g>
+          ) : el);
+        });
+      }
+    }
     const [hBack, hFront] = handGlyph(hShape[i], {s, ink, skin, inkC, pv: hf.pv, thumb: hf.thumb, blood: hb, dirt: sil ? 0 : (dmg.dirt ?? 0) * 0.6, holding: hold, framed: true});
     const handEl = (layer: React.ReactElement) => <g transform={handM(hf)}>{layer}</g>;
     const wearFn = i === 0 ? p.wearL : p.wearR;
@@ -1168,11 +1228,20 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     // the bob's straight-cut hem runs around the back and sides at jaw height (head-local, so it turns with the
     // head); the mass above it is closed over the crown by the hair-volume ellipse: a rounded dome from behind,
     // a hanging side panel in front views, the full cut in profile
-    const hem: V2[] = [];
-    for (let k = 0; k <= 24; k++) hem.push(onHead(80 + (200 * k) / 24, 0.55, 1.12));
+    const behind = dot3(hb.F, zv) > -0.3;
+    const hem0: {x: number; y: number; z: number}[] = [];
+    for (let k = 0; k <= 24; k++) hem0.push(onHead(80 + (200 * k) / 24, 0.55, 1.12));
+    // drawn over the head (rear views), only the hem's part on the near side of the head: R2 drew the whole hem, and
+    // its far end, round the front of the head, stuck out of the silhouette as a stray line under the cut
+    let hem: V2[] = hem0;
+    if (!behind) {
+      let i0 = hem0.findIndex((q) => q.z > -0.08), i1 = hem0.length - 1 - [...hem0].reverse().findIndex((q) => q.z > -0.08);
+      if (i0 < 0) { i0 = 0; i1 = hem0.length - 1; }
+      hem = hem0.slice(i0, i1 + 1);
+      if (hem.length < 2) hem = hem0;
+    }
     const Ce = {x: Hc.x - hb.U.x * vol * 0.4, y: Hc.y - hb.U.y * vol * 0.4};
     const d = smoothPath([...hem, ...overCrown(hem, Ce, R * 1.1 + vol * 0.2, RY * 1.04 + vol * 0.45)], true, 0.3);
-    const behind = dot3(hb.F, zv) > -0.3;
     (behind ? extrasBack : extrasFront).push(<path key="bobmass" d={d} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />);
     // a few strands down the back so the mass reads as hair, not a helmet
     if (!behind) [150, 180, 210].forEach((th, k) => {

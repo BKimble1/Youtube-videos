@@ -4,7 +4,15 @@
 //   8     PROOF 1: the Director rising on the rubble ridge (engine, real set, low camera), then turning to face east
 //   9     contact proof: a catch (the runner knocked back into the breaker's arms) + a hand on the shoulder
 //   10    death close-up in the scene (frames 0–239) and the hand clasp insert (frames 240–299)
-//   11    pitch check (camera −20° / 0° / +35° at three yaws)      12  tools sheet
+//   11    pitch check (camera −20° / 0° / +35° at three yaws)      12  tools sheet      13  head turnaround
+//   R3 diagnostic strip (qa/r3/rig/):
+//   14    every cast member on the real set in the film's light (lightFor(120), the north sidewalk at the crater), with
+//         their tools from toolsR2(120): frame = role·6 + pitch·2 + sheet (pitch −15° / 0° / +35°; sheet 0 = the turn
+//         0 15 30 45 60 90 120 135 150 165 180 210 240 270 300 330, sheet 1 = crouch, run ×3, strike wind/contact, hit
+//         received, tool in use, guard, look back)
+//   15    the same as flat silhouettes (frame = role)        16  head close-ups through the turn (frame = role·3 + pitch)
+//   17    the named expressions, rig/faces.ts (frame = role)  18  deathFace / lastBreath strip and gaze (FigSpec.gaze)
+//   19    probe: one action cell of page 14, large (frame = role·10 + cell)
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {C, F as FONT} from '../../theme';
@@ -445,7 +453,7 @@ const DiagHeads: React.FC<{f: number}> = ({f}) => {
       <defs>{DIAG_TURN.map((_, i) => <clipPath key={i} id={`dh${i}`}><rect x={(i % 8) * 240 + 4} y={Math.floor(i / 8) * 520 + 50} width={232} height={440} rx={12} /></clipPath>)}</defs>
       <text x={14} y={34} fontFamily={FONT.body} fontSize={24} fill={C.ink}>{`${role} (${ROLE2[role]}) · head turn · camera ${pitch}°`}</text>
       {DIAG_TURN.map((yaw, i) => {
-        const x = (i % 8) * 240 + 120, y = Math.floor(i / 8) * 520 + 50 + 250 + 372 * 1.75;
+        const x = (i % 8) * 240 + 120, y = Math.floor(i / 8) * 520 + 50 + 250 + 372 * 1.75 * Math.cos(rad(pitch));
         const pose = STAND;
         return (
           <g key={i}>

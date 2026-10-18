@@ -25,6 +25,9 @@ export const plateWear = (state: PlateState, o: {glint?: number; broken?: number
   const dl = Math.hypot(fa.dorsal.x, fa.dorsal.y);
   const off = 10 * s * (dl > 1e-3 ? 1 : 0);
   const cx = mid.x + (dl > 1e-3 ? (fa.dorsal.x / dl) * off : 0), cy = mid.y + (dl > 1e-3 ? (fa.dorsal.y / dl) * off : 0);
+  // along the forearm the plate foreshortens with it (R2 kept its full length when the forearm pointed at the camera,
+  // so it stuck out past the elbow and the fist)
+  const fore = clamp(Math.hypot(fa.W.x - fa.E.x, fa.W.y - fa.E.y) / Math.max(1e-6, fa.len), 0.3, 1);
   const k = s;
   const y = (v: number) => v * across;
   const outline: V2[] = [[-L, -Wd + 10], [-L + 12, -Wd], [L - 8, -Wd], [L, -Wd + 14], [L + 4, 0], [L, Wd - 14], [L - 8, Wd], [-L + 12, Wd], [-L, Wd - 10], [-L - 4, 0]].map(([a, b]) => ({x: a, y: b}));
@@ -37,7 +40,7 @@ export const plateWear = (state: PlateState, o: {glint?: number; broken?: number
   const panel = col('#C9D1D6'), edge = col('#8C979F');
   const thick = Math.max(2, 8 * k * (1 - across));
   const el = (
-    <g transform={`translate(${f2(cx)} ${f2(cy)}) rotate(${f2(fa.ang)})`}>
+    <g transform={`translate(${f2(cx)} ${f2(cy)}) rotate(${f2(fa.ang)})${fore < 0.995 ? ` scale(${f2(fore)} 1)` : ''}`}>
       {/* edge thickness (visible when the plate turns edge-on) */}
       <path d={d} transform={`translate(0 ${f2(thick * Math.sign(-nz || 1))})`} fill={edge} stroke={col(C.ink)} strokeWidth={ink} strokeLinejoin="round" />
       <path d={d} fill={panel} stroke={col(C.ink)} strokeWidth={ink} strokeLinejoin="round" />
@@ -185,13 +188,19 @@ export const canister = (): HoldFn => (h, s, ink, col) => {
   );
 };
 /** Halligan bar held in one hand (hand-local angle of the bar, degrees: 0 = along the forearm). */
-export const halligan1 = (o: {ang?: number; len?: number; along?: number} = {}): HoldFn => (h, s, ink, col) => {
-  const k = s, L = o.len ?? 225, a = o.ang ?? 90, al = o.along ?? 0.42;
-  return (
-    <g transform={`translate(${21 * k} 0) rotate(${a})`}>
-      {halliganShape(L, al, k, ink, col, col(C.ink))}
-    </g>
-  );
+export const halligan1 = (o: {ang?: number; len?: number; along?: number} = {}): HoldFn => {
+  const L = o.len ?? 225, a = o.ang ?? 90, al = o.along ?? 0.42;
+  const fn: HoldFn = (h, s, ink, col) => {
+    const k = s;
+    return (
+      <g transform={`translate(${21 * k} 0) rotate(${a})`}>
+        {halliganShape(L, al, k, ink, col, col(C.ink))}
+      </g>
+    );
+  };
+  const c = Math.cos((a * Math.PI) / 180), sn = Math.sin((a * Math.PI) / 180), x0 = -L * al - 6, x1 = L * (1 - al) + 26;
+  fn.span = [21 + c * x0, sn * x0, 21 + c * x1, sn * x1];
+  return fn;
 };
 const halliganShape = (L: number, along: number, k: number, ink: number, col: (c: string) => string, inkC: string = C.ink) => {
   const x0 = -L * along, x1 = L * (1 - along);
@@ -233,10 +242,12 @@ export const breaker = (o: {back?: 0 | 1; front?: 0 | 1; gauge?: number; fire?: 
   const bk = o.back ?? 1, fr = o.front ?? 0;
   const g = between(r, bk, fr);
   const k = r.s, ink = r.ink, col = r.col, inkC = r.inkC;
-  const ext = 110, rear = 60;
+  const rear = 60;
   const rc = (o.recoil ?? 0) * 10;
   const p0 = g.pt(-(rear + rc) * k);
-  const len = g.L / k + ext + rear;
+  // one tool, one length, from the rear (trigger) hand: R2 sized the tube by the distance between the hands, so the
+  // breaker grew and shrank as the hands moved; the front hand now grips the tube wherever it is along it
+  const len = BREAKER_TUBE;
   const gauge = clamp(o.gauge ?? 1);
   const el = (
     <g transform={g.m(p0)}>
@@ -253,18 +264,21 @@ export const breaker = (o: {back?: 0 | 1; front?: 0 | 1; gauge?: number; fire?: 
       <path d={`M ${8 * k} ${-11 * k} q ${-10 * k} ${-24 * k} ${-26 * k} ${-14 * k}`} fill="none" stroke={col(RUBBER)} strokeWidth={5 * k} strokeLinecap="round" />
     </g>
   );
-  return splitZones(r, 'breaker', el, p0, g.pt((g.L / k + ext + 34) * k));
+  return splitZones(r, 'breaker', el, p0, g.pt((len - rear - rc + 34) * k));
 };
 export const breakerTip = (r: Rig2, back: 0 | 1 = 1, front: 0 | 1 = 0): V3 => {
   const g = between(r, back, front);
-  return add3(g.b, mul3(g.u, 144 * r.s));
+  return add3(g.a, mul3(g.u, (BREAKER_TUBE - 60 + 34) * r.s));
 };
+/** the breaker's tube length (rig units, rear end to the ram head's base): the R2 design length at the swing's grip */
+const BREAKER_TUBE = 270;
 /** checker's drone controller held in both hands in front of the chest (its width runs along the line between the
  *  hands, foreshortened with it: edge-on in profile instead of a full-width pad). */
 export const controller = (o: {lit?: number} = {}): ((r: Rig2) => Part[]) => (r) => {
   const g = between(r, 0, 1);
   const k = r.s, ink = r.ink, col = r.col, inkC = r.inkC;
-  const w = Math.max(40, (g.L / k) * 0.9);
+  // (its width follows the grip only within the pad's real size: R2 stretched it to any distance between the hands)
+  const w = clamp((g.L / k) * 0.9, 50, 76);
   const c = g.pt(g.L / 2);
   const facing = r.up.F.z; // screen side visible when the body faces away
   const el = (

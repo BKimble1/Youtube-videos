@@ -158,7 +158,7 @@ const feetOf = (pl: Plan, i: number): {L: KP[]; R: KP[]} => {
   return f;
 };
 
-const run = (pl: Plan, T: number): UnitSpec => {
+const run = (pl: Plan, T: number, nested = false): UnitSpec => {
   const L = pathLen(pl.lane);
   const path = linePath(pl.lane, 1.2);
   const end = path(L);
@@ -222,16 +222,35 @@ const run = (pl: Plan, T: number): UnitSpec => {
       lean: 4 + 6 * k + (act.lean ?? 0), crouch: 0.04 * k + (act.crouch ?? 0)};
   }
   // on the rim's slopes a planted foot can sit well below the pelvis's ground: crouch enough to keep it in reach
-  const f = sp.feet ?? {};
-  const gy = G(sp.pos.x, sp.pos.z);
-  const need = Math.max(0, ...[f.L, f.R].map((q) => {
-    if (!q) return 0;
-    const dh = Math.min(0.9, Math.hypot(q.x - sp.pos.x, q.z - sp.pos.z));
-    return HIP_Y + (gy - q.y) - ANKLE - Math.sqrt(LEG * LEG - dh * dh);
-  }));
+  const needOf = (q: UnitSpec) => {
+    const f = q.feet ?? {}, gy = G(q.pos.x, q.pos.z);
+    return Math.max(0, ...[f.L, f.R].map((p) => {
+      if (!p) return 0;
+      const dh = Math.min(0.9, Math.hypot(p.x - q.pos.x, p.z - q.pos.z));
+      return HIP_Y + (gy - p.y) - ANKLE - Math.sqrt(LEG * LEG - dh * dh);
+    }));
+  };
+  // the floor is dilated in time with a raised-cosine kernel (walking ±0.7 s ≈ two steps each way, standing
+  // ±0.3 s): the body sinks before a low plant and rises after it, smoothly, instead of following each foot
+  // (sampled on a fixed 1/40 s grid, cached, so the envelope moves smoothly with T)
+  let need = needOf(sp);
+  if (ph && !nested) {
+    const R = ph.kind === 'walk' ? 0.7 : 0.3, DT = 0.025;
+    let C = NEED.get(pl.id);
+    if (!C) NEED.set(pl.id, (C = new Map()));
+    for (let i = Math.ceil((T - R) / DT); i * DT < T + R; i++) {
+      const w = 0.5 * (1 + Math.cos((Math.PI * (i * DT - T)) / R));
+      if (w < 0.02) continue;
+      let v = C.get(i);
+      if (v === undefined) { v = needOf(runAt(pl, i * DT, true)); C.set(i, v); }
+      need = Math.max(need, v * w);
+    }
+  }
   if (need > (sp.crouch ?? 0)) sp.crouch = need;
   return sp;
 };
+const runAt = (pl: Plan, T: number, nested: boolean) => run(pl, T, nested);
+const NEED = new Map<number, Map<number, number>>();
 // the unit's leg (mech parts U): hip 1.05 m above the root's ground when standing, thigh + shin 0.98 (keep a little bend)
 const HIP_Y = 1.05, ANKLE = 0.1, LEG = 0.95;
 
@@ -331,7 +350,7 @@ const U1: Plan = {
 
 // ================================================================== U2 — the runner's opponent
 const U2_KEYS: KR[] = [
-  fR(68.7, 42.25, -3.2), fR(69.55, 41.45, -3.15), fR(EV.u2punch1, 41.35, -3.12), fR(70.45, 41.35, -3.12), fR(70.95, 41.18, -3.1), fR(EV.u2ham1, 41.12, -3.1),
+  [68.7, 42.25, -3.2, 283], fR(69.55, 41.45, -3.15), fR(EV.u2punch1, 41.35, -3.12), fR(70.45, 41.35, -3.12), fR(70.95, 41.18, -3.1), fR(EV.u2ham1, 41.12, -3.1),
   fR(EV.hook + 0.04, 41.12, -3.1), [71.95, 40.85, -3.0, 262], [EV.smack + 0.08, 40.9, -3.02, 246], fR(72.75, 41.3, -3.12), fR(73.3, 41.2, -3.1),
   fR(EV.u2punch2, 41.12, -3.1), fR(74.4, 41.22, -3.1), [EV.runJab + 0.06, 41.24, -3.1, 268], fR(75.45, 41.3, -3.1), fR(EV.u2ham2, 41.1, -3.12),
   fR(76.6, 41.2, -3.1), fR(77.6, 41.15, -3.1), fR(EV.u2punch3, 41.0, -3.12), fR(78.8, 41.1, -3.12), fR(EV.u2hit, 41.0, -3.1),
@@ -567,8 +586,8 @@ const U5_KEYS: KR[] = [
 ];
 /** after the get-up: for the tether operator; her clamp holds it; it tears it out; recalled */
 const U5_UP: KR[] = [
-  [79.0, 39.25, -5.15, 292], [80.7, 37.8, -5.95, 292], [EV.clamp2Taut, 37.8, -5.95, 292], [82.3, 37.66, -6.0, 292], [EV.clamp2Tear, 37.66, -6.0, 292],
-  [84.6, 37.15, -6.22, 290], [86.4, 37.0, -6.3, 290], [87.1, 37.0, -6.3, 92],
+  [79.0, 38.7, -5.35, 158], [79.65, 38.55, -5.5, 262], [80.7, 37.8, -5.95, 292], [EV.clamp2Taut, 37.8, -5.95, 292], [82.3, 37.66, -6.0, 292], [EV.clamp2Tear, 37.66, -6.0, 292],
+  [84.6, 37.15, -6.22, 290], [86.4, 37.0, -6.3, 290], [87.1, 37.0, -6.3, 82],
 ];
 const U5_FALL_DIR = {x: 0.78, y: 0, z: 0.45};
 const u5Feet = (() => {
@@ -576,6 +595,9 @@ const u5Feet = (() => {
   const l = st.R[st.R.length - 1];
   // the clamped right shin is reeled toward the tether: the foot slides out (west), the body goes over to the east
   st.R.push([EV.yankPull, l[1], l[2]], [EV.yankPull + 0.28, l[1] - 0.7, l[2] - 0.15]);
+  // risen (getUp 77.6 → 78.7), it draws the dragged leg back under itself before it turns (no snap at 79.0)
+  const home = standFeet({x: 38.7, z: -5.35}, 158).R;
+  st.R.push([78.45, l[1] - 0.7, l[2] - 0.15], [79.0, home.x, home.z, 0.1]);
   return st;
 })();
 /** her second clamp on its chest (the tether's target while it holds) */
@@ -617,7 +639,7 @@ const U6_KEYS: KR[] = [
   [73.6, 38.5, 7.2, 252], [74.4, 38.4, 6.9, 238], [75.85, 37.4, 6.2, 236], [EV.flareHit, 36.5, 5.55, 236],
 ];
 const U6_KEYS2: KR[] = [
-  [EV.flareHit + 0.001, 36.5, 5.55, 236], [77.6, 36.78, 5.38, 252], [78.4, 37.02, 5.28, 268], [79.6, 37.3, 5.55, 206], [86.2, 37.35, 5.6, 206], [86.8, 37.35, 5.6, 84],
+  [EV.flareHit + 0.001, 36.5, 5.55, 236], [77.6, 36.78, 5.38, 252], [78.4, 37.02, 5.28, 268], [79.6, 37.3, 5.55, 206], [86.2, 37.35, 5.6, 206], [86.85, 37.35, 5.6, 103],
 ];
 const U6: Plan = {
   id: D1_IDS.U6, lane: lane(VID.U6, {x: 60, z: 8.8}, {x: 54, z: 9.0}, {x: 47.2, z: 7.6}, {x: 43.6, z: 7.2}, {x: 41.8, z: 7.0}), T0: RUN_T0 + 0.15, T1: 68.45,
@@ -648,8 +670,8 @@ const U6: Plan = {
 const U7: Plan = {
   id: D1_IDS.U7, lane: lane(VID.U7, {x: 49.5, z: -13.4}, {x: 44.5, z: -11.6}, {x: 42.7, z: -10.8}), T0: RUN_T0 + 0.45, T1: 68.95,
   phases: [
-    {kind: 'stand', root: [[68.95, 42.7, -10.8, 292], [73.5, 42.7, -10.8, 292], [74.6, 42.0, -10.1, 282], [80.5, 42.0, -10.1, 282], [81.6, 41.2, -9.3, 262],
-      [86.6, 41.2, -9.3, 262], [87.2, 41.2, -9.3, 100]]},
+    {kind: 'stand', root: [[68.95, 42.7, -10.8, 246], [69.6, 42.7, -10.8, 292], [73.5, 42.7, -10.8, 292], [74.6, 42.0, -10.1, 282], [80.5, 42.0, -10.1, 282], [81.6, 41.2, -9.3, 262],
+      [86.3, 41.2, -9.3, 262], [87.25, 41.2, -9.3, 53]]},
     {kind: 'walk', pts: [{x: 41.2, z: -9.3}, {x: 44.4, z: -11.7}, {x: 49.6, z: -13.6}, {x: 55.0, z: -12.4}], T0: 87.3, T1: 95.2, stride: 1.9, A: 0.8, D: 1.0},
     // (D2 takes it over at 96.0 standing at (55.0, −12.4) facing 85)
     {kind: 'stand', root: [[95.2, 55.0, -12.4, 102.5], [95.95, 55.0, -12.4, 85]]},
@@ -665,10 +687,10 @@ const U7: Plan = {
 const U8: Plan = {
   id: D1_IDS.U8, lane: lane(VID.U8, {x: 60, z: 10.0}, {x: 54, z: 10.2}, {x: 46.8, z: 8.3}, {x: 44.4, z: 9.7}, {x: 42.9, z: 10.3}), T0: RUN_T0 + 0.4, T1: 69.0,
   phases: [
-    {kind: 'stand', root: [[69.0, 42.9, 10.3, 248], [72.8, 42.9, 10.3, 248], [74.0, 42.3, 9.8, 262], [76.6, 42.3, 9.8, 262]]},
+    {kind: 'stand', root: [[69.0, 42.9, 10.3, 248], [72.8, 42.9, 10.3, 248], [74.0, 42.3, 9.8, 262], [76.4, 42.3, 9.8, 262], [76.7, 42.3, 9.8, 297]]},
     // the blinded U6: it steps in to cover it, facing the flare carrier
     {kind: 'walk', pts: [{x: 42.3, z: 9.8}, {x: 40.3, z: 8.8}, {x: 38.55, z: 7.35}], T0: 76.7, T1: 78.6, stride: 1.8, A: 0.4, D: 0.6},
-    {kind: 'stand', root: [[78.6, 38.55, 7.35, 236], [79.2, 38.55, 7.35, 262], [86.3, 38.55, 7.35, 262], [86.9, 38.55, 7.35, 80]]},
+    {kind: 'stand', root: [[78.6, 38.55, 7.35, 310], [79.2, 38.55, 7.35, 262], [86.3, 38.55, 7.35, 262], [86.95, 38.55, 7.35, 105.6]]},
     {kind: 'walk', pts: [{x: 38.55, z: 7.35}, {x: 42.3, z: 8.4}, {x: 46.6, z: 8.3}, {x: 54.0, z: 9.6}], T0: 87.0, T1: 93.4, stride: 2.0, A: 0.8, D: 1.0},
     // (D2 takes it over at 96.6 standing at (54.0, 9.6) facing 80)
     {kind: 'stand', root: [[93.4, 54.0, 9.6, 100], [94.2, 54.0, 9.6, 80]]},

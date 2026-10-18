@@ -1,74 +1,108 @@
-// THE AFTERMATH TABLEAU — the state of the battlefield at FINAL_HIT (186.90), when every machine stops as one.
-// PURE (no React): D4 imports this and must END in exactly this state; E/F (shots/EF) start from it and hold it.
+// THE AFTERMATH TABLEAU — the state of the battlefield at FINAL_HIT (186.90), when the advance stops, and how the
+// machines secure it afterwards. PURE (no React): D4 imports this and must END in exactly this state; E/F (shots/EF)
+// start from it.
 //
-//   TB.crew[role]        where each Crew member is at FINAL_HIT, facing what, in which body state, and who holds them
-//   TB.holders           the units that hold a Crew member (grab side + the world grip point, shared with the person's
-//                        hand/shoulder so the contact is one point), and the one standing over the runner
-//   TB.ring / TB.outer   the ring of units around the van area (inner ring + a looser outer ring), facing in
-//   TB.reserve           a block of units that halted in the avenue between the crater and the cross street
-//   TB.heavy2            the second heavy, standing east of the van with its ram at rest (its ram struck the Director at
-//                        STRIKE 177.76: the ram tip met his plate at TB.strikePoint and threw him back against the slab;
-//                        it rammed from 0.6 m further west and stepped back once)
-//   TB.heavy1            the first heavy's wreck lying across the crater (fell at HEAVY_DOWN 125.64; D3 owns the fall —
-//                        if D3 registers its own wreck in PERSIST_D3, the EF shots draw that instead of this fallback)
-//   TB.wrecks            units the Crew downed in D4 near the ridge foot (fallen, eyes off) — D4 makes them fall there
-//   TB.drones            drones hovering: low over the ring and high in the smoke over the avenue
-//   streamForm()         the formations streaming west along the avenue (halt as one at FINAL_HIT; they move on at
-//                        STREAM_RESUME with a ripple back through each column, turning off into the cross street x=124)
+//   TB.crew[role]        where each Crew member is at FINAL_HIT, facing what, in which body state, who holds them
+//   SURRENDER            each survivor's own reason and physical response (film s) — staggered, never in unison
+//   TB.holders           the units that restrain a Crew member (the grip point is shared with the person's wrist /
+//                        shoulder: one contact), the one that lets the decoy maker go when she raises her hands, and the
+//                        one standing over the runner
+//   TB.ring / TB.outer   the inner ring round the van (spacing ~2.3 m; the east sector is heavy 2's) and a looser outer
+//                        cordon; SECURING: each lowers into 'ready' as it settles (184.95–186.85, seeded), scans its
+//                        sector with pauses, a few attend the drone pilot while she crawls, a few step into blocking
+//                        positions during the pullback (STEPS)
+//   TB.reserve           a block halted in the avenue between the bus and the first cross street
+//   TB.heavy2            the second heavy, east of the van, ram at rest (its ram struck the Director at STRIKE 177.76)
+//   TB.heavy1            the first heavy's wreck across the crater (fallback until D3 registers its own)
+//   TB.wrecks            units the Crew downed in D4 near the ridge foot
+//   TB.drones            drones: four low over the ring, four high over the avenue
+//   streamForm()         the columns streaming west along the avenue, steered round every street obstacle
+//                        (steerAround), halting at FINAL_HIT, moving on at STREAM_RESUME and turning into the first cross
+//                        street on rounded corners clear of its corner buildings and lamps
+//   holdForm()           squads taking the intersections (HOLD_POINTS) during the pullback: they walk in from the
+//                        cross streets and take posts on the corners and across the cross-street mouths, facing out
 //   *Spec(T) helpers     UnitSpec / HeavySpec / DroneSpec at film time T (all t0s in film seconds)
 //
 // HAND-OVER FOR D4 (what to import so D4's last frames ARE this state):
-//   - Crew: shots/EF/crew.tsx — directorSpec(T) (slumped against the slab, right hand pressed to his left side, breath),
-//     pilotSpec(T) (her crawl to him starts at 186.4 from TB_CREW.drone.pos: bring her there on hands and knees and
-//     hand over to pilotSpec from 186.4), heldSpec(role, T) for tether/decoy/flares/breaker/runner, or all of them as
-//     aftermathCrewItems(T). Valid from ~185 s on.
-//   - Machines: shots/EF/machines.tsx — tableauMachineItems(view, T) (ring, holders, heavy 2, drones, D4 wrecks, the
-//     avenue block and streams; heavy 1's wreck unless D3 registers one). Grabs close at TB_HOLDERS[i].t0 (D4's times).
-//   - Positions/headings/t0s for animating INTO the state: TB (below).
+//   - Crew: shots/EF/crew.tsx — directorSpec(T), pilotSpec(T) (her crawl starts at 186.4 from TB_CREW.drone.pos),
+//     heldSpec(role, T) for tether/decoy/flares/breaker/runner (each one's surrender beats are inside it, from their
+//     grab on: SURRENDER below), or aftermathCrewItems(T). gripAt(role, T) is the shared grip point.
+//   - Machines: shots/EF/machines.tsx — tableauMachineItems(view, T), or ringSpecs / holderSpecs (restraints, the
+//     decoy maker's release at 183.55, postures from 184.95) once each unit is in its place.
 //
 // Geography (metres, x east, z south; see world/plan.ts): the Director sits against the broken slab at PLAN.deathPos
 // (7.0, 3.4) facing ESE (120); the van is NE of him with its open side door (radio on the floor, RADIO ≈ (8.13, 0.88,
 // 1.81)) facing him; the ridge rises behind him (crest x ≈ 0.4, 4.5 m); the avenue and the crater (x 62) lie east.
 import type {V3} from '../../../kit/math';
-import {clamp, smooth, rnd} from '../../../kit/math';
+import {clamp, smooth, rnd, lerp} from '../../../kit/math';
 import {M} from '../../timing';
-import {PLAN} from '../../world/plan';
+import {PLAN, HOLD_POINTS, steerAround} from '../../world/plan';
 import {groundH} from '../../world/ground';
-import type {UnitSpec, HeavySpec, DroneSpec, Path, Slot, Formation} from '../../mech';
+import type {UnitSpec, HeavySpec, DroneSpec, Path, Slot, Formation, Posture, AttendSpec, MoveSpec, RestrainSpec, ScanSpec} from '../../mech';
 import type {Role2} from '../../rig/looks';
 
 const on = (x: number, z: number, up = 0): V3 => ({x, y: groundH(x, z) + up, z});
 const hv = (h: number) => ({x: Math.sin((h * Math.PI) / 180), z: -Math.cos((h * Math.PI) / 180)});
 const headingTo = (a: {x: number; z: number}, b: {x: number; z: number}) => (Math.atan2(b.x - a.x, -(b.z - a.z)) * 180) / Math.PI;
+/** (= mech staggerT, copied to keep this file free of the kit's components) a seeded offset round t0, ±spread/2 */
+export const stagger = (id: number, t0: number, spread = 0.9, k = 0) => t0 + (rnd(id * 7.31 + k * 13.7 + 0.5) - 0.5) * spread;
 
-/** When the tableau holds (film s). Before T0 it is D4's to animate; from T0 on it is still (slight idle only). */
+/** When the advance stops (film s). Before T0 it is D4's to animate. */
 export const T0 = M.FINAL_HIT;
 /** The formations in the avenue move on (each column ripples back from its head). */
 export const STREAM_RESUME = 207.0;
 
 /**
  * The Director's seat: the figure's root (pelvis on the ground). It sits 0.32 m behind PLAN.deathPos (toward the slab)
- * so that, slumped back 27°, his shoulders rest on DEATH_SLAB's face (≈ 2–4 cm) and his head clears it — at
- * PLAN.deathPos itself his back would hang ~0.35 m in front of the slab.
+ * so that, slumped back 27°, his shoulders rest on DEATH_SLAB's face and his head clears it.
  */
 export const DIRECTOR_SEAT = on(PLAN.deathPos.x - hv(PLAN.deathHeading).x * 0.32, PLAN.deathPos.z - hv(PLAN.deathHeading).z * 0.32);
 /** His head (slumped against the slab), for looks. */
 export const DIRECTOR_HEAD: V3 = {x: DIRECTOR_SEAT.x - 0.2, y: DIRECTOR_SEAT.y + 0.9, z: DIRECTOR_SEAT.z - 0.17};
 
+// ------------------------------------------------------------------ the survivors' surrender (each for its own reason)
+/**
+ * Why each one stops, and how (film s). Their bodies are crew.tsx heldSpec(role, T); the machines answer in
+ * holderSpecs / ringSpecs. Nothing happens on the same frame for two people.
+ */
+export const SURRENDER = {
+  /** disarmed (launcher torn away 157.55), reel empty; H1 catches her left wrist (180.4): she strains toward him with
+   *  her free hand out; the strain gives out (184.6: the hand drops, shoulders sag); grief: the free hand to her mouth
+   *  (198.6); her knees give and she sinks onto them, still held — H1's grip follows her wrist down (203.8 → 205.0) */
+  tether: {held: 180.4, giveUp: 184.6, mouth: 198.6, sink: 203.8, sunk: 205.0},
+  /** tablet smashed (D3) and dropped (160.15); H2 catches her right wrist (181.0); she stops pulling — H2 lets go
+   *  (183.55) and she raises both open hands (183.7 → 184.4), shaking; a glance to the breaker beside her (188.2);
+   *  her hands sink to her thighs, palms still open (199.4) */
+  decoy: {held: 181.0, release: 183.55, handsUp: 183.7, glance: 188.2, lower: 199.4},
+  /** out of flares (the last one into heavy 2's eye, 166.14), satchel empty; H3 locks his right arm up behind him
+   *  (181.7) and presses him down onto one knee (182.4); one last heave against the lock (184.3) that the unit bears
+   *  down on; his head drops (185.2); a look across to the decoy maker (190.5) */
+  flares: {held: 181.7, press: 182.4, heave: 184.3, drop: 185.2, glance: 190.5},
+  /** the empty breaker swung as a club (164.4); his bad leg gives and he sits down hard, the tool falling beside him
+   *  (D4 181.3); H4's hand comes down on his shoulder (182.3); his right hand grips his bleeding left forearm, shaking
+   *  (until 189.5); he turns his face away (200.2) */
+  breaker: {held: 182.3, shakeEnd: 189.5, away: 200.2},
+  /** struck down (155.86) and never got up: he tries to rise on an elbow toward the van (205.6); H5 snaps to him and
+   *  steps in over him; he lies back (207.0) */
+  runner: {rise: 205.6, down: 207.0},
+} as const;
+
 export type CrewPose =
   | 'slumped' // sitting against the slab, legs out, head down (the Director)
   | 'crawl' // on hands and knees, moving (the drone pilot reaching him)
-  | 'standHeld' // standing, leaning toward him, one wrist held back by a unit
-  | 'kneelHeld' // on one knee, one wrist held back/up by a unit, head bowed
-  | 'sitHurt' // sitting on the ground, hurt left leg out, a unit's hand on the shoulder
-  | 'lyingBack'; // on his back, alive (breathing, a hand moves)
+  | 'standHeld' // standing, leaning toward him, one wrist held back by a unit (the tether operator, until she sinks)
+  | 'kneelHeld' // (R2 name) on one knee, held
+  | 'kneelHandsUp' // on both knees, open hands raised (the decoy maker, released)
+  | 'kneelArmLock' // on one knee, one arm locked up behind him, a unit's hand on his shoulder (the flare carrier)
+  | 'sitHurt' // sitting on the ground, hurt left leg out, a unit's hand on the shoulder (the breaker)
+  | 'lyingBack'; // on his back, alive (breathing, a hand moves; tries to rise once)
 
 export type CrewState = {
   role: Role2;
   pos: V3;
   heading: number;
   pose: CrewPose;
-  /** which hand is held ('L' | 'R'), and the world grip point the holder's fist closes on (same point = one contact) */
+  /** which hand is held ('L' | 'R'), and the world grip point the holder's hand closes on (same point = one contact) */
   held?: {side: 'L' | 'R'; at: V3; by: string};
   /** the point they look at (the Director, mostly) */
   look: V3;
@@ -86,7 +120,7 @@ const CREW_POS: Record<Exclude<Role2, 'director'>, {x: number; z: number}> = {
 };
 const faceDir = (p: {x: number; z: number}) => headingTo(p, PLAN.deathPos);
 
-/** A point `back` metres behind someone (opposite their heading), `side` metres to their right, `up` above the ground. */
+/** A point `fwd` metres ahead of someone (negative = behind), `right` to their right, `up` above the ground. */
 const rel = (p: {x: number; z: number}, heading: number, fwd: number, right: number, up: number, ground = true): V3 => {
   const f = hv(heading), r = hv(heading + 90);
   const x = p.x + f.x * fwd + r.x * right, z = p.z + f.z * fwd + r.z * right;
@@ -101,59 +135,89 @@ const H = {
 const GRIP = {
   // her left wrist pulled back behind her left hip (she strains forward toward him)
   tether: rel(CREW_POS.tether, H.tether, -0.42, -0.3, 0.98),
-  // her right wrist held back at her side
+  // her right wrist held back at her side (until she is let go)
   decoy: rel(CREW_POS.decoy, H.decoy, -0.36, 0.34, 0.62),
   // his right wrist twisted up behind his back (on one knee)
   flares: rel(CREW_POS.flares, H.flares, -0.3, 0.12, 0.74),
   // a hand pressing down on his left shoulder (sitting)
   breaker: rel(CREW_POS.breaker, H.breaker, -0.1, -0.2, 0.74),
 };
+/** The flare carrier's right shoulder (H3's second hand bears down on it). */
+export const FLARES_SHOULDER = rel(CREW_POS.flares, H.flares, -0.06, 0.16, 0.98);
 
 export const TB_CREW: Record<Role2, CrewState> = {
   director: {role: 'director', pos: DIRECTOR_SEAT, heading: PLAN.deathHeading, pose: 'slumped', look: on(14, 6, 1.2),
     note: 'thrown against the slab at STRIKE, slid down beside the van at SOFTEN; sits slumped, right hand pressed to his left side; plate shattered (fragments strapped on)'},
   drone: {role: 'drone', pos: on(CREW_POS.drone.x, CREW_POS.drone.z), heading: 255, pose: 'crawl', look: DIRECTOR_HEAD,
-    note: 'knocked down by the van (brow cut), crawling to him on hands and knees from the van door: crew.pilotSpec crawls her from this spot (at 186.4) to his left side; at FINAL_HIT she is a quarter of the way, still moving (E1 finishes the crawl)'},
+    note: 'knocked down by the van (brow cut), crawling to him on hands and knees from the van door: crew.pilotSpec crawls her from this spot (at 186.4) to his left side; she takes his hand (189.45) and never lets go'},
   tether: {role: 'tether', pos: on(CREW_POS.tether.x, CREW_POS.tether.z), heading: H.tether, pose: 'standHeld', look: DIRECTOR_HEAD,
-    held: {side: 'L', at: GRIP.tether, by: 'h_tether'}, note: 'disarmed, reel empty: standing, straining toward him, her left wrist held back by a unit'},
-  decoy: {role: 'decoy', pos: on(CREW_POS.decoy.x, CREW_POS.decoy.z), heading: H.decoy, pose: 'kneelHeld', look: DIRECTOR_HEAD,
-    held: {side: 'R', at: GRIP.decoy, by: 'h_decoy'}, note: 'tablet smashed (D3): forced down on one knee, right wrist held by a unit'},
-  flares: {role: 'flares', pos: on(CREW_POS.flares.x, CREW_POS.flares.z), heading: H.flares, pose: 'kneelHeld', look: DIRECTOR_HEAD,
-    held: {side: 'R', at: GRIP.flares, by: 'h_flares'}, note: 'out of flares: on one knee, right arm twisted up behind him by a unit, head bowed'},
+    held: {side: 'L', at: GRIP.tether, by: 'h_tether'}, note: 'disarmed, reel empty: held by the left wrist; strains toward him, gives up (184.6); later sinks to her knees, still held (203.8)'},
+  decoy: {role: 'decoy', pos: on(CREW_POS.decoy.x, CREW_POS.decoy.z), heading: H.decoy, pose: 'kneelHandsUp', look: DIRECTOR_HEAD,
+    held: {side: 'R', at: GRIP.decoy, by: 'h_decoy'}, note: 'tablet smashed and dropped: caught by the right wrist (181.0), let go when she yields (183.55): on her knees, both open hands raised'},
+  flares: {role: 'flares', pos: on(CREW_POS.flares.x, CREW_POS.flares.z), heading: H.flares, pose: 'kneelArmLock', look: DIRECTOR_HEAD,
+    held: {side: 'R', at: GRIP.flares, by: 'h_flares'}, note: 'out of flares: right arm locked up behind him, pressed down onto one knee; one last heave (184.3), head drops'},
   breaker: {role: 'breaker', pos: on(CREW_POS.breaker.x, CREW_POS.breaker.z), heading: H.breaker, pose: 'sitHurt', look: DIRECTOR_HEAD,
-    held: {side: 'L', at: GRIP.breaker, by: 'h_breaker'}, note: 'leg hurt (limp), forearm bleeding, breaker empty and dropped: sits on the ground, a unit\'s hand pressing his shoulder'},
+    held: {side: 'L', at: GRIP.breaker, by: 'h_breaker'}, note: 'leg gave way, forearm bleeding, breaker empty and dropped beside him: sits, a unit\'s hand on his shoulder; his hand shakes on the wound'},
   runner: {role: 'runner', pos: on(CREW_POS.runner.x, CREW_POS.runner.z), heading: H.runner, pose: 'lyingBack', look: DIRECTOR_HEAD,
-    note: 'struck down in D4-2 and stayed down, alive: on his back, head turned toward the van; a unit stands over him'},
+    note: 'struck down in D4-2 and stayed down, alive: on his back, head turned toward the van; a unit stands over him; tries to rise once (205.6)'},
 };
 
-// ------------------------------------------------------------------ the machines
-export type Holder = {key: string; id: number; pos: V3; heading: number; side: 'L' | 'R'; at: V3; crouch: number; lean: number; t0: number; who: Role2 | null; look?: V3};
-const holder = (key: string, id: number, who: Exclude<Role2, 'director' | 'drone' | 'runner'>, side: 'L' | 'R', back: number, right: number, t0: number, crouch = 0, lean = 6): Holder => {
+/** Where the drone pilot is (chest height) while she crawls in and settles at his side: the machines' attention. */
+const PIL_Q = rel(DIRECTOR_SEAT, PLAN.deathHeading - 60, 0.9, 0, 0);
+export const pilotMoving = (t: number): V3 => {
+  const k = smooth((t - 186.4) / 3.0);
+  const a = TB_CREW.drone.pos;
+  return {x: lerp(a.x, PIL_Q.x, k), y: groundH(a.x, a.z) + 0.45 + 0.25 * smooth((t - 188.4) / 0.8), z: lerp(a.z, PIL_Q.z, k)};
+};
+
+// ------------------------------------------------------------------ the holders
+export type Holder = {
+  key: string; id: number; pos: V3; heading: number; side: 'L' | 'R'; at: V3; crouch: number; lean: number;
+  /** the restraint closes at t0 (D4's grab times: when each one was caught) */
+  t0: number;
+  who: Role2 | null; look?: V3;
+  /** lets go at this time (the decoy maker raising her hands) */
+  release?: number;
+  /** a second restraint: the other hand on a second body point from t0b (the flare carrier's shoulder) */
+  second?: {t0: number; at: V3; press: number};
+  /** bears down on the grip (0..1) */
+  press?: number;
+};
+const holder = (key: string, id: number, who: Exclude<Role2, 'director' | 'drone' | 'runner'>, side: 'L' | 'R', back: number, right: number, t0: number, crouch = 0, lean = 6, o: Partial<Holder> = {}): Holder => {
   const c = TB_CREW[who];
   const p = rel(c.pos, c.heading, -back, right, 0);
   const at = c.held!.at;
   const toGrip = headingTo(p, at), dh = ((toGrip - c.heading + 540) % 360) - 180;
-  return {key, id, pos: {x: p.x, y: 0, z: p.z}, heading: c.heading + dh * 0.4, side, at, crouch, lean, t0, who};
+  return {key, id, pos: {x: p.x, y: 0, z: p.z}, heading: c.heading + dh * 0.4, side, at, crouch, lean, t0, who, ...o};
 };
-/** Units holding the Crew (grab t0s are D4's: when each one was caught during SOFTEN 179.3–183.3). */
+/** Units holding the Crew (t0s are D4's: when each one was caught during SOFTEN 179.3–183.3). */
 export const TB_HOLDERS: Holder[] = [
-  holder('h_tether', 7101, 'tether', 'R', 0.95, -0.25, 180.4),
-  holder('h_decoy', 7102, 'decoy', 'L', 0.85, 0.45, 181.0),
-  holder('h_flares', 7103, 'flares', 'R', 0.8, 0.0, 181.7, 0.12, 10),
-  holder('h_breaker', 7104, 'breaker', 'L', 0.85, -0.1, 182.3, 0.32, 18),
-  // over the runner: no grab, it stands and watches him
+  holder('h_tether', 7101, 'tether', 'R', 0.95, -0.25, SURRENDER.tether.held),
+  holder('h_decoy', 7102, 'decoy', 'L', 0.85, 0.45, SURRENDER.decoy.held, 0, 6, {release: SURRENDER.decoy.release}),
+  holder('h_flares', 7103, 'flares', 'R', 0.8, 0.0, SURRENDER.flares.held, 0.12, 10, {second: {t0: SURRENDER.flares.press, at: FLARES_SHOULDER, press: 0.55}, press: 0.3}),
+  holder('h_breaker', 7104, 'breaker', 'L', 0.85, -0.1, SURRENDER.breaker.held, 0.32, 18, {press: 0.5}),
+  // over the runner: no hold, it stands over him and watches him
   {key: 'h_runner', id: 7105, pos: {x: 19.0, y: 0, z: 6.6}, heading: 235, side: 'R', at: on(18.1, 7.6, 0.2), crouch: 0.05, lean: 14, t0: 1e9, who: null, look: on(18.1, 7.6, 0.2)},
 ];
+/** Where H2 stands guard over the decoy maker after letting her go (a half step back, out of her reach). */
+const H2_BACK = (() => {
+  const h = TB_HOLDERS[1];
+  const away = hv(headingTo(TB_CREW.decoy.pos, h.pos));
+  return {x: h.pos.x + away.x * 0.45, y: 0, z: h.pos.z + away.z * 0.45};
+})();
+/** The runner's chest as he lifts on his elbow (H5 snaps to it). */
+const RUNNER_UP = (t: number): V3 => on(18.15, 7.55, 0.25 + 0.3 * smooth((t - SURRENDER.runner.rise) / 0.5) * (1 - smooth((t - SURRENDER.runner.down) / 0.8)));
 
+// ------------------------------------------------------------------ the ring
 export type RingUnit = {id: number; pos: V3; heading: number; eye: 'cyan' | 'amber'; crouch: number};
 const RING_C = {x: 11.4, z: 3.2};
-/** Inner ring: radius ~10.5 m around the van area, leaving the heavy's sector (east) open. */
+/** Inner ring: radius ~10.5 m round the van area, the heavy's sector (east) left open; even spacing (~2.3 m). */
 export const TB_RING: RingUnit[] = (() => {
   const out: RingUnit[] = [];
   const n = 24;
   for (let i = 0; i < n; i++) {
     const a = 108 + (i / (n - 1)) * 300; // bearings 108° → 408° (clockwise through S, W, N), the gap ≈ 48°–108° (heavy)
-    const r = 10.4 + (rnd(i * 7 + 3) - 0.5) * 1.2;
+    const r = 10.4 + (rnd(i * 7 + 3) - 0.5) * 0.8;
     let x = RING_C.x + Math.sin((a * Math.PI) / 180) * r, z = RING_C.z - Math.cos((a * Math.PI) / 180) * r;
     // behind him the ring holds along the ridge crest (≥ 11 m away): units on the slope right behind the slab would
     // stand in every high view of him from the west
@@ -164,23 +228,48 @@ export const TB_RING: RingUnit[] = (() => {
   }
   return out;
 })();
-/** Outer ring: looser, radius ~19 m. */
+const OUTER_AT: Record<number, {x: number; z: number}> = {7309: {x: 2.5, z: -13.6}, 7306: {x: -7.0, z: 5.3}};
+/** Outer cordon: radius ~17–19 m, kept on the street side of the frontage (FS0 / FN0) and clear of the wrecks. */
 export const TB_OUTER: RingUnit[] = (() => {
   const out: RingUnit[] = [];
   const n = 13;
   for (let i = 0; i < n; i++) {
-    const a = 116 + (i / (n - 1)) * 290 + (rnd(i * 5) - 0.5) * 10;
-    const r = 19 + (rnd(i * 13 + 1) - 0.5) * 3;
-    const x = RING_C.x + Math.sin((a * Math.PI) / 180) * r, z = RING_C.z - Math.cos((a * Math.PI) / 180) * r;
+    const a = 116 + (i / (n - 1)) * 290 + (rnd(i * 5) - 0.5) * 8;
+    let r = 18.2 + (rnd(i * 13 + 1) - 0.5) * 2;
+    let x = RING_C.x + Math.sin((a * Math.PI) / 180) * r, z = RING_C.z - Math.cos((a * Math.PI) / 180) * r;
+    // east of the ridge the avenue's sidewalks end at the frontage (|z| < 19 for x > 13.5): hold inside them
+    if (x > 12.5 && Math.abs(z) > 17.2) { const s = 17.2 / Math.abs(z); x = RING_C.x + (x - RING_C.x) * s; z *= s; r *= s; }
+    // the burnt car on its roof (wreck_0, 24 −9) and its fuel spill: hold short of it
+    if (Math.hypot(x - 24, z + 9) < 4.2) { x = RING_C.x + Math.sin((a * Math.PI) / 180) * 14.2; z = RING_C.z - Math.cos((a * Math.PI) / 180) * 14.2; }
+    // (set-checked spots: 7309 clear of the ridge's broken beam rbeam_3; 7306 a step further up the crest from the ring)
+    const fix = OUTER_AT[7300 + i];
+    if (fix) { x = fix.x; z = fix.z; }
     out.push({id: 7300 + i, pos: {x, y: 0, z}, heading: headingTo({x, z}, RING_C) + (rnd(i * 17) - 0.5) * 16, eye: 'cyan', crouch: 0});
   }
   return out;
 })();
 
 /**
+ * Blocking steps during the pullback (film s): a few units close a gap or step onto the route over the ridge, one at a
+ * time, guard up while they move, then 'ready' again. `to` = where they stand after; `face` = what they keep facing.
+ */
+export const TB_STEPS: {id: number; t0: number; t1: number; to: V3; face: V3; note: string}[] = [
+  {id: 7308, t0: 203.9, t1: 205.6, to: {x: 0.3, y: 0, z: -5.6}, face: {x: 6.5, y: 0, z: 2.0}, note: 'outer, north-west: down onto the ridge path behind the van (the way out over the rubble)'},
+  {id: 7216, t0: 205.2, t1: 206.4, to: {x: 5.0, y: 0, z: -2.9}, face: {x: 8.3, y: 0, z: 2.4}, note: 'inner, north: a step in toward the van'},
+  {id: 7307, t0: 207.0, t1: 208.9, to: {x: -3.6, y: 0, z: 2.3}, face: {x: 6.7, y: 0, z: 3.3}, note: 'outer, west: onto the crest behind the slab'},
+  {id: 7221, t0: 208.4, t1: 209.6, to: {x: 15.3, y: 0, z: -4.9}, face: {x: 12.3, y: 0, z: 0.6}, note: 'inner, north-east: in behind the tether operator as she sinks'},
+  {id: 7302, t0: 210.1, t1: 211.9, to: {x: 15.5, y: 0, z: 14.9}, face: {x: 14.0, y: 0, z: 7.4}, note: 'outer, south-east: closes the gap past the runner'},
+];
+/** The ring units that turn to the drone pilot while she crawls in (attention snaps to her, tracks her, lets go). */
+const PILOT_WATCH: Record<number, [number, number]> = {7214: [186.75, 189.9], 7216: [186.6, 190.4], 7218: [187.15, 189.6], 7210: [187.4, 190.2]};
+/** Ring units that snap to the runner when he tries to rise. */
+const RUNNER_WATCH = new Set([7200, 7201, 7302]);
+/** Ring units that turn to the tether operator as she sinks. */
+const TETHER_WATCH = new Set([7222, 7223]);
+
+/**
  * Second heavy: east of the van, facing him, ram at rest. It rammed from 0.6 m further west (16.4, 3.0) and took one
- * slow step back as the ram recovered (D4 178.9–180.4); this stance keeps its feet clear of the holders, the wrecks
- * and the rubble.
+ * slow step back as the ram recovered (D4 178.9–180.4).
  */
 export const TB_HEAVY2 = {id: 7401, pos: {x: 17.0, y: 0, z: 3.0} as V3, heading: 270, look: DIRECTOR_HEAD, eye: 'amber' as const,
   /** where its ram tip met the Director's plate at STRIKE (he was planted in front of the drone pilot, by the van) */
@@ -210,23 +299,74 @@ export const TB_DRONES: {id: number; pos: V3; heading: number; look: V3; eye: 'c
 
 // ------------------------------------------------------------------ specs at film time T
 const G = (x: number, z: number) => groundH(x, z);
-/** Slight idle after the halt: machines stand still as one; only sensors drift. */
+/** Slight idle after the halt: only sensors and weight shift. */
 const IDLE = 0.18;
+/** When a ring unit lowers into 'ready' (seeded 184.95–186.85: after D4 has set every one of them in its slot). */
+export const readyAt = (id: number) => stagger(id, 185.9, 1.9, 1);
+/** When it starts scanning its sector. */
+const scanAt = (id: number) => stagger(id, 188.3, 3.0, 2);
+
+const ringCtl = (u: RingUnit, T: number): Partial<UnitSpec> => {
+  const id = u.id;
+  const posture: [number, Posture][] = [[readyAt(id), 'ready']];
+  const attend: AttendSpec[] = [];
+  const moves: MoveSpec[] = [];
+  const pw = PILOT_WATCH[id];
+  if (pw) attend.push({t0: pw[0], t1: pw[1], at: pilotMoving});
+  if (RUNNER_WATCH.has(id)) attend.push({t0: stagger(id, SURRENDER.runner.rise + 0.35, 0.4, 4), t1: SURRENDER.runner.down + 0.9 + rnd(id) * 0.6, at: RUNNER_UP});
+  if (TETHER_WATCH.has(id)) attend.push({t0: stagger(id, SURRENDER.tether.sink + 0.3, 0.5, 5), t1: SURRENDER.tether.sunk + 1.4 + rnd(id) * 0.8, at: on(12.3, 0.5, 0.9)});
+  const st = TB_STEPS.find((s) => s.id === id);
+  let heading = u.heading;
+  if (st) {
+    moves.push({t0: st.t0, t1: st.t1, to: st.to, face: st.face, guard: true});
+    posture.push([st.t0 - 0.25, 'guard'], [st.t1 + 0.3, 'ready']);
+    heading = u.heading;
+  }
+  // the outer cordon watches outward-and-round (the city), the inner ring the survivors
+  const outer = id >= 7300;
+  const scan: ScanSpec = {t0: scanAt(id), center: outer ? undefined : {x: RING_C.x - 1.5, y: 1, z: RING_C.z + 1.5}, span: outer ? 90 : 55, dwell: 1.3, seed: id, torso: 0.2};
+  void T;
+  return {posture, scan, attend: attend.length ? attend : undefined, moves: moves.length ? moves : undefined, heading};
+};
 
 export const ringSpecs = (T: number): UnitSpec[] => [...TB_RING, ...TB_OUTER].map((u) => ({
   id: u.id, t: T, pos: u.pos, heading: u.heading, ground: G, eye: u.eye, idle: IDLE, crouch: u.crouch, key: `tb_u${u.id}`,
+  ...ringCtl(u, T),
 }));
 
-/** The grip point may move a little (a held person straining early in E1, then still). */
-export const holderSpecs = (T: number, grip?: (h: Holder, T: number) => V3): UnitSpec[] => TB_HOLDERS.map((h) => ({
-  id: h.id, t: T, pos: h.pos, heading: h.heading, ground: G, eye: 'amber', idle: IDLE * 0.6, crouch: h.crouch, lean: h.lean, key: `tb_${h.key}`,
-  ...(h.who ? {grab: {t0: h.t0, side: h.side, target: h.at, hold: (t: number) => (grip ? grip(h, t) : h.at)}} : {look: h.look}),
-}));
+/** The grip point may move (a held person straining, sinking): pass the person's own grip point as `grip`. */
+export const holderSpecs = (T: number, grip?: (h: Holder, T: number) => V3): UnitSpec[] => TB_HOLDERS.map((h) => {
+  const base: UnitSpec = {id: h.id, t: T, pos: h.pos, heading: h.heading, ground: G, eye: 'amber', idle: IDLE * 0.6, crouch: h.crouch, lean: h.lean, key: `tb_${h.key}`};
+  if (!h.who) {
+    // H5 over the runner: 'ready', watching him; when he tries to rise it snaps to him and steps in, guard up
+    const r = SURRENDER.runner;
+    const inTo = {x: 18.75, y: 0, z: 7.05};
+    return {...base, look: h.look, posture: [[158.0, 'ready'], [r.rise + 0.1, 'guard'], [r.down + 0.7, 'ready']],
+      attend: [{t0: r.rise + 0.08, t1: r.down + 1.2, at: RUNNER_UP}],
+      moves: [{t0: r.rise + 0.25, t1: r.rise + 0.95, to: inTo, face: on(18.1, 7.6), guard: true}],
+      scan: {t0: 191.0, center: on(18.1, 7.6, 0.2), span: 40, dwell: 1.6, seed: h.id}};
+  }
+  const at = (t: number) => (grip ? grip(h, t) : h.at);
+  const restrain: RestrainSpec[] = [{t0: h.t0, side: h.side, at, t1: h.release, press: h.press ?? 0}];
+  if (h.second) restrain.push({t0: h.second.t0, side: h.side === 'L' ? 'R' : 'L', at: h.second.at, press: h.second.press});
+  const free: Posture = h.release ? 'ready' : 'lowered';
+  const out: UnitSpec = {...base, restrain, posture: [[h.t0 + 0.6, free]]};
+  if (h.release) {
+    // H2: lets the decoy maker go as she yields, a half step back, weapon lowered but ready, watching her hands
+    out.moves = [{t0: h.release + 0.15, t1: h.release + 0.95, to: H2_BACK, face: TB_CREW.decoy.pos}];
+    out.attend = [{t0: h.release - 0.1, t1: SURRENDER.decoy.lower + 1.2, at: on(TB_CREW.decoy.pos.x, TB_CREW.decoy.pos.z, 1.05)}];
+    out.scan = {t0: SURRENDER.decoy.lower + 1.0, center: on(TB_CREW.decoy.pos.x, TB_CREW.decoy.pos.z, 0.8), span: 50, dwell: 1.5, seed: h.id};
+  }
+  if (h.key === 'h_tether') {
+    // as she sinks to her knees H1's grip follows her wrist down; it lowers with her (the restraint's reach)
+    out.look = on(12.3, 0.5, 0.95);
+  }
+  return out;
+});
 
 /**
  * W1 (7501) stood and fell on low rubble (set chunks sch_11/sch_31 at its feet, sch_9 under its head): its ground is
- * the street plus those chunks (domes of their measured radius and height), so its feet stand on them and the wreck
- * lies on them (fall.ang 90: level at the chunks' height) instead of sinking through.
+ * the street plus those chunks, so its feet stand on them and the wreck lies on them instead of sinking through.
  */
 const W1_RUBBLE = [{x: 13.35, z: -3.02, r: 0.5, h: 0.27}, {x: 13.32, z: -3.25, r: 0.72, h: 0.34}, {x: 15.33, z: -4.51, r: 0.8, h: 0.3}];
 export const w1Ground = (x: number, z: number): number =>
@@ -238,10 +378,16 @@ export const wreckSpecs = (T: number): UnitSpec[] => TB_WRECKS.map((w) => ({
 export const heavy2Spec = (T: number): HeavySpec => ({id: TB_HEAVY2.id, t: T, pos: TB_HEAVY2.pos, heading: TB_HEAVY2.heading, look: TB_HEAVY2.look, eye: TB_HEAVY2.eye, ground: G, key: 'tb_heavy2'});
 export const heavy1Spec = (T: number): HeavySpec => ({id: TB_HEAVY1.id, t: T, pos: TB_HEAVY1.pos, heading: TB_HEAVY1.heading, kneeBreak: TB_HEAVY1.kneeBreak, pinned: TB_HEAVY1.pinned, eye: 'off', ground: G, key: 'tb_heavy1'});
 
-export const droneSpecs = (T: number): DroneSpec[] => TB_DRONES.map((d) => ({id: d.id, t: T, pos: d.pos, heading: d.heading, look: d.look, eye: d.eye, ground: G, key: `tb_d${d.id}`}));
+/** The diver (7601) follows the drone pilot while she crawls in; the others hold their places. */
+export const droneSpecs = (T: number): DroneSpec[] => TB_DRONES.map((d) => {
+  const w = d.id === 7601 ? smooth((T - 186.5) / 0.5) * (1 - smooth((T - 190.2) / 1.2)) : 0;
+  const look = w > 0 ? {x: lerp(d.look.x, pilotMoving(T).x, w), y: lerp(d.look.y, pilotMoving(T).y, w), z: lerp(d.look.z, pilotMoving(T).z, w)} : d.look;
+  return {id: d.id, t: T, pos: d.pos, heading: d.heading, look, eye: d.eye, ground: G, key: `tb_d${d.id}`};
+});
 
 // ------------------------------------------------------------------ the avenue: a halted reserve block and the streams
-/** A block that halted in the avenue between the crater and the cross street (facing west). */
+/** A block halted in the avenue between the bus and the first cross street (facing west), clear of the bus, the burnt
+ *  car wreck_2 and the old rail column gcol_1. */
 export const TB_RESERVE: Slot[] = (() => {
   const out: Slot[] = [];
   const perRow = 9, rows = 4;
@@ -249,28 +395,29 @@ export const TB_RESERVE: Slot[] = (() => {
     const id = 7700 + row * perRow + i;
     if (rnd(id * 3) < 0.08) continue;
     const z = (i - (perRow - 1) / 2) * 2.4 + (row % 2) * 1.2 + (rnd(id * 5) - 0.5) * 0.4;
-    const x = 96 + row * 2.6 + (rnd(id * 7) - 0.5) * 0.5;
+    const x = 100.6 + row * 2.6 + (rnd(id * 7) - 0.5) * 0.5;
+    if (Math.hypot(x - 105, z + 11) < 1.6) continue; // gcol_1
     out.push({id, pos: {x, y: 0, z}, heading: 270 + (rnd(id * 11) - 0.5) * 6});
   }
   return out;
 })();
 
+type P2 = {x: number; z: number};
 /** Polyline path (heading follows the segment, corners rounded over `turn` m). Pure (mirrors mech/kit polyPathFn). */
-const polyPath = (pts: {x: number; z: number}[], turn = 6): Path => {
+const polyPath = (pts: P2[], turn = 6): Path => {
   const segs = pts.slice(1).map((p, i) => ({a: pts[i], b: p, L: Math.max(1e-6, Math.hypot(p.x - pts[i].x, p.z - pts[i].z))}));
   const total = segs.reduce((s, q) => s + q.L, 0);
-  const hd = (a: {x: number; z: number}, b: {x: number; z: number}) => headingTo(a, b);
   const wrap = (a: number) => ((a + 540) % 360) - 180;
   return (d) => {
     let r = clamp(d, -1e4, total);
-    if (r < 0) { const s = segs[0]; const h = hd(s.a, s.b); const f = hv(h); return {pos: {x: s.a.x + f.x * r, y: 0, z: s.a.z + f.z * r}, heading: h}; }
+    if (r < 0) { const s = segs[0]; const h = headingTo(s.a, s.b); const f = hv(h); return {pos: {x: s.a.x + f.x * r, y: 0, z: s.a.z + f.z * r}, heading: h}; }
     for (let i = 0; i < segs.length; i++) {
       const s = segs[i];
       if (r <= s.L || i === segs.length - 1) {
         const u = clamp(r / s.L);
-        let h = hd(s.a, s.b);
-        if (i < segs.length - 1 && s.L - r < turn) h += wrap(hd(segs[i + 1].a, segs[i + 1].b) - h) * smooth(1 - (s.L - r) / turn) * 0.5;
-        if (i > 0 && r < turn) h -= wrap(h - hd(segs[i - 1].a, segs[i - 1].b)) * smooth(1 - r / turn) * 0.5;
+        let h = headingTo(s.a, s.b);
+        if (i < segs.length - 1 && s.L - r < turn) h += wrap(headingTo(segs[i + 1].a, segs[i + 1].b) - h) * smooth(1 - (s.L - r) / turn) * 0.5;
+        if (i > 0 && r < turn) h -= wrap(h - headingTo(segs[i - 1].a, segs[i - 1].b)) * smooth(1 - r / turn) * 0.5;
         return {pos: {x: s.a.x + (s.b.x - s.a.x) * u, y: 0, z: s.a.z + (s.b.z - s.a.z) * u}, heading: h};
       }
       r -= s.L;
@@ -278,53 +425,155 @@ const polyPath = (pts: {x: number; z: number}[], turn = 6): Path => {
     return {pos: {...pts[pts.length - 1], y: 0}, heading: 0};
   };
 };
+/** A quarter turn from westbound into the cross street at x = cx (north: sgn −1, south: +1) on an arc of radius R. */
+const cornerPts = (cx: number, z0: number, sgn: 1 | -1, R: number, n = 8): P2[] => {
+  const c = {x: cx + R, z: z0 + sgn * R};
+  return Array.from({length: n + 1}, (_, i) => {
+    const a = (i / n) * (Math.PI / 2);
+    return {x: c.x - Math.sin(a) * R, z: c.z - sgn * Math.cos(a) * R};
+  });
+};
 
 type Stream = {path: Path; lanes: number; laneGap: number; spacing: number; speed: number; ranks: number; headAtT0: number; seed: number};
-/** Two columns stream west along the avenue and split into the cross street at x = 124 (north and south). */
+/**
+ * Two columns stream west along the avenue and turn into the first cross street (x ≈ 123) on a rounded corner
+ * (R 8.5 m): the north column up its west half (clear of the corner lamp lamp_4 at x 126), the south column down its
+ * middle (clear of the debris heap on the west kerb and of FS3's corner).
+ */
 export const TB_STREAMS: Stream[] = [
-  {path: polyPath([{x: 640, z: -6.5}, {x: 134, z: -6.5}, {x: 125, z: -24}, {x: 124, z: -170}]), lanes: 3, laneGap: 2.5, spacing: 2.8, speed: 1.3, ranks: 150, headAtT0: 560, seed: 81},
-  {path: polyPath([{x: 640, z: 6.5}, {x: 140, z: 6.5}, {x: 126, z: 24}, {x: 124, z: 170}]), lanes: 3, laneGap: 2.5, spacing: 2.8, speed: 1.3, ranks: 150, headAtT0: 548, seed: 82},
+  {path: polyPath([{x: 640, z: -6.5}, ...cornerPts(121.8, -6.5, -1, 8.5), {x: 121.8, z: -170}], 2), lanes: 3, laneGap: 2.45, spacing: 3.0, speed: 1.3, ranks: 140, headAtT0: 556, seed: 81},
+  {path: polyPath([{x: 640, z: 6.5}, ...cornerPts(124.6, 6.5, 1, 8.5), {x: 124.6, z: 170}], 2), lanes: 3, laneGap: 2.45, spacing: 3.0, speed: 1.3, ranks: 140, headAtT0: 546, seed: 82},
 ];
 const ramp = (u: number, d: number) => (u <= 0 ? 0 : u >= d ? u - d / 2 : (u * u * u) / (d * d) - (u * u * u * u) / (2 * d * d * d));
+/** Lanes on the avenue's straight are steered round every street obstacle (plan.ts steerAround: abandoned cars, the
+ *  rail columns, the bus); in the turn and the cross street they keep their own line. */
+const STEER_X = 136;
+const laneAt = (S: Stream, latOff: number) => {
+  const raw = (d: number): V3 => {
+    const q = S.path(d);
+    const h = (q.heading * Math.PI) / 180;
+    const x = q.pos.x + Math.cos(h) * latOff, z = q.pos.z + Math.sin(h) * latOff;
+    if (x < STEER_X || Math.abs(z) > 14) return {x, y: 0, z};
+    // blended in over 6 m past the turn so the lane does not kink where the steering starts
+    const w = smooth((x - STEER_X) / 6);
+    return {x, y: 0, z: lerp(z, steerAround(x, z, 0.9), w)};
+  };
+  const lp: Path = (d) => {
+    const p = raw(d), a = raw(d - 0.5), b = raw(d + 0.5);
+    return {pos: p, heading: headingTo(a, b)};
+  };
+  return lp;
+};
 
 /**
  * The streams as a Formation (slots carry path + dist so feet stay planted). Before T0 they walk; on T0 every unit
  * finishes its step and stops; from STREAM_RESUME they move on, rank by rank (a ripple 0.06 s per rank).
  */
-export const streamForm = (o: {resume?: number} = {}): Formation => ({
-  slots: (t: number) => {
-    const resume = o.resume ?? STREAM_RESUME;
-    const out: Slot[] = [];
-    TB_STREAMS.forEach((S) => {
-      const settle = 0.42 * S.speed;
-      for (let i = 0; i < S.ranks * S.lanes; i++) {
-        const lane = i % S.lanes, rank = Math.floor(i / S.lanes);
-        const id = 8000 + S.seed * 1000 + i;
-        if (rnd(id * 13 + 5) < 0.07) continue;
-        const jit = (rnd(id * 3) - 0.5) * S.spacing * 0.4;
-        const base = S.headAtT0 - rank * S.spacing + jit; // path distance at T0 (before the settle)
-        if (base < -40) continue;
-        const latOff = (lane - (S.lanes - 1) / 2) * S.laneGap + (rnd(id * 5) - 0.5) * S.laneGap * 0.3;
-        const lp: Path = (d) => {
-          const q = S.path(d);
-          const h = (q.heading * Math.PI) / 180;
-          return {pos: {x: q.pos.x + Math.cos(h) * latOff, y: 0, z: q.pos.z + Math.sin(h) * latOff}, heading: q.heading};
-        };
-        const rs = resume + rank * 0.06;
-        let d: number, ctl: Partial<UnitSpec>;
-        if (t < T0) { d = base - (T0 - t) * S.speed; ctl = {}; }
-        else if (t < rs) { d = base + settle * smooth((t - T0) / 0.7); ctl = {gaitEnd: base + settle}; }
-        else { d = base + settle + S.speed * ramp(t - rs, 1.6); ctl = {gaitStart: base + settle}; }
-        const q = lp(d);
-        out.push({id, pos: q.pos, heading: q.heading, path: lp, dist: d, ctl});
-      }
+export const streamForm = (o: {resume?: number} = {}): Formation => {
+  const lanesCache = new Map<number, Path>();
+  return {
+    slots: (t: number) => {
+      const resume = o.resume ?? STREAM_RESUME;
+      const out: Slot[] = [];
+      TB_STREAMS.forEach((S) => {
+        const settle = 0.42 * S.speed;
+        for (let i = 0; i < S.ranks * S.lanes; i++) {
+          const lane = i % S.lanes, rank = Math.floor(i / S.lanes);
+          const id = 8000 + S.seed * 1000 + i;
+          if (rnd(id * 13 + 5) < 0.07) continue;
+          const jit = (rnd(id * 3) - 0.5) * S.spacing * 0.4;
+          const base = S.headAtT0 - rank * S.spacing + jit; // path distance at T0 (before the settle)
+          if (base < -40) continue;
+          const latOff = (lane - (S.lanes - 1) / 2) * S.laneGap + (rnd(id * 5) - 0.5) * S.laneGap * 0.3;
+          let lp = lanesCache.get(id);
+          if (!lp) lanesCache.set(id, (lp = laneAt(S, latOff)));
+          const rs = resume + rank * 0.06;
+          let d: number, ctl: Partial<UnitSpec>;
+          if (t < T0) { d = base - (T0 - t) * S.speed; ctl = {}; }
+          else if (t < rs) { d = base + settle * smooth((t - T0) / 0.7); ctl = {gaitEnd: base + settle}; }
+          else { d = base + settle + S.speed * ramp(t - rs, 1.6); ctl = {gaitStart: base + settle}; }
+          const q = lp(d);
+          out.push({id, pos: q.pos, heading: q.heading, path: lp, dist: d, ctl});
+        }
+      });
+      return out;
+    },
+  };
+};
+
+// ------------------------------------------------------------------ the intersections the machines take (F1)
+/**
+ * Posts at each HOLD_POINT (world/plan.ts), facing out, clear of the streams' lanes and the set's dressing (checked
+ * against the set's solids). x1 — where the columns turn — is already held when the camera finds it: posts on the
+ * corners and beside the turning columns in both cross-street mouths. x2 and x3 are TAKEN during the rise: each squad
+ * walks in single file down its cross street from 60 m out and fans out to the mouths and corners (the nearer one
+ * first), then stands 'ready', scanning.
+ */
+type Post = {x: number; z: number; h: number};
+const POSTS: Record<string, Post[]> = {
+  x1: [
+    {x: 114.0, z: -15.2, h: 300}, {x: 113.2, z: 16.4, h: 240}, {x: 135.6, z: -17.4, h: 60}, {x: 135.6, z: 16.4, h: 120},
+    {x: 129.2, z: -26.0, h: 290}, {x: 129.8, z: -32.5, h: 270}, {x: 117.4, z: -27.5, h: 80}, {x: 130.3, z: 26.5, h: 250}, {x: 130.8, z: 33.0, h: 270}, {x: 117.6, z: 33.0, h: 100},
+  ],
+  x2: [
+    {x: 258.0, z: -24, h: 0}, {x: 262.0, z: -25, h: 0}, {x: 265.5, z: -24, h: 0},
+    {x: 258.0, z: 24, h: 180}, {x: 262.0, z: 25, h: 180}, {x: 265.5, z: 24, h: 180},
+    {x: 273.6, z: -17.4, h: 45}, {x: 250.6, z: 17.8, h: 225}, {x: 273.6, z: 17.6, h: 135},
+  ],
+  x3: [
+    {x: 416.0, z: -24, h: 0}, {x: 420.0, z: -25, h: 0}, {x: 423.5, z: -24, h: 0},
+    {x: 416.0, z: 24, h: 180}, {x: 420.0, z: 25, h: 180}, {x: 423.5, z: 24, h: 180},
+    {x: 408.6, z: -17.6, h: 315}, {x: 431.4, z: -17.6, h: 45}, {x: 408.6, z: 17.6, h: 225}, {x: 431.4, z: 17.6, h: 135},
+  ],
+};
+/** When each squad has taken its intersection (x1: before the camera finds it). */
+const HOLD_ARRIVE: Record<string, number> = {x1: 196.0, x2: 214.2, x3: 216.4};
+export type HoldUnit = {id: number; hold: string; post: V3; heading: number; route: P2[]; t0: number; t1: number};
+export const TB_HOLDS: HoldUnit[] = (() => {
+  const out: HoldUnit[] = [];
+  HOLD_POINTS.forEach((hp, k) => {
+    const posts = POSTS[hp.id] ?? [];
+    posts.forEach((p, i) => {
+      const id = 9000 + k * 100 + i;
+      // down the cross street on the post's side, in the street's middle third, then out to the post
+      const sz = p.z < 0 ? -1 : 1;
+      if (k === 0) { out.push({id, hold: hp.id, post: {x: p.x, y: 0, z: p.z}, heading: p.h, route: [p, p, p], t0: -1e9, t1: -1e9}); return; }
+      // corner posts: out of the cross street onto the avenue's sidewalk first, then along it
+      const lane = hp.x + clamp(p.x - hp.x, -4, 3.5), corner = Math.abs(p.z) < 20;
+      const route: P2[] = [{x: lane, z: sz * 62}, {x: lane, z: sz * (corner ? 16.6 : 23)}, {x: p.x, z: p.z}];
+      const L = Math.hypot(route[1].x - route[0].x, route[1].z - route[0].z) + Math.hypot(route[2].x - route[1].x, route[2].z - route[1].z);
+      const t1 = HOLD_ARRIVE[hp.id] + i * 0.55 + rnd(id) * 0.7;
+      out.push({id, hold: hp.id, post: {x: p.x, y: 0, z: p.z}, heading: p.h, route, t0: t1 - L / 1.45, t1});
     });
-    return out;
-  },
-});
+  });
+  return out;
+})();
+/** The intersection squads as a Formation: walking in (planted gait), then at the post, turned out, 'ready', scanning. */
+export const holdForm = (): Formation => {
+  const paths = new Map<number, {path: Path; L: number}>();
+  return {
+    slots: (t: number) => TB_HOLDS.map((h) => {
+      let pp = paths.get(h.id);
+      if (!pp) {
+        const r = h.route;
+        paths.set(h.id, (pp = {path: polyPath(r, 1.2), L: Math.hypot(r[1].x - r[0].x, r[1].z - r[0].z) + Math.hypot(r[2].x - r[1].x, r[2].z - r[1].z)}));
+      }
+      const ctl: Partial<UnitSpec> = {posture: [[h.t1 + 0.3, 'ready']], scan: {t0: h.t1 < 0 ? 186 + rnd(h.id) * 3 : h.t1 + 1.4, span: 80, dwell: 1.6, seed: h.id}};
+      if (h.t1 < 0) return {id: h.id, pos: h.post, heading: h.heading, ctl};
+      if (t < h.t1) {
+        const d = clamp((t - h.t0) / (h.t1 - h.t0)) * pp.L;
+        const q = pp.path(d);
+        return {id: h.id, pos: q.pos, heading: q.heading, path: pp.path, dist: d, ctl: {...ctl, gaitStart: -1e9, gaitEnd: pp.L}};
+      }
+      // at the post: turn out with planted pivot steps
+      const arrH = pp.path(pp.L - 0.01).heading;
+      return {id: h.id, pos: h.post, heading: arrH, ctl: {...ctl, turns: [{t0: h.t1 + 0.15, to: h.heading}]}};
+    }),
+  };
+};
 
 /** Everything the tableau puts in the world at film time T (machines as specs; Crew states are TB_CREW). */
 export const tableauSpecs = (T: number) => ({units: [...ringSpecs(T), ...holderSpecs(T)], wrecks: wreckSpecs(T), heavies: [heavy2Spec(T)], heavy1: heavy1Spec(T), drones: droneSpecs(T)});
 
 /** All tableau facts in one object (for D4 and for checks). */
-export const TB = {T0, STREAM_RESUME, crew: TB_CREW, holders: TB_HOLDERS, ring: TB_RING, outer: TB_OUTER, reserve: TB_RESERVE, heavy2: TB_HEAVY2, heavy1: TB_HEAVY1, wrecks: TB_WRECKS, drones: TB_DRONES, streams: TB_STREAMS};
+export const TB = {T0, STREAM_RESUME, crew: TB_CREW, surrender: SURRENDER, holders: TB_HOLDERS, ring: TB_RING, outer: TB_OUTER, steps: TB_STEPS, reserve: TB_RESERVE, heavy2: TB_HEAVY2, heavy1: TB_HEAVY1, wrecks: TB_WRECKS, drones: TB_DRONES, streams: TB_STREAMS, holds: TB_HOLDS};

@@ -15,6 +15,7 @@
 //   H2–H4    ride with the arc, then hold the decoy maker (181.0), the flare carrier (181.7), the breaker (182.3)
 //   drone 7601 dives on the drone pilot at 170.22, then holds low over the ring (TB_DRONES[0])
 import type {UnitSpec, HeavySpec, DroneSpec, Path} from '../../mech';
+import {solveHeavy, HEAVY_DIM} from '../../mech';
 import {V3, clamp, smooth, lerp, easeIn, easeOut, rnd} from '../../../kit/math';
 import {M} from '../../timing';
 import {TB_RING, TB_OUTER, TB_HOLDERS, TB_WRECKS, TB_HEAVY2, TB_DRONES, DIRECTOR_HEAD, T0 as TB_T0, w1Ground} from '../EF/tableau';
@@ -313,106 +314,202 @@ export const RING_PLANS: UPlan[] = [...ESCORT, ...FLANK];
 export const unitD4 = (name: string, T: number): UnitSpec => unitAt(NAMED[name], T);
 
 // ================================================================== HEAVY 2
-// Hull root: one line out of the crater (heading 262) to the stop where it is blinded; it staggers back off a slab
-// (166.41), recovers, comes on to the van (176.3), rams (177.76), takes one slow step back into its tableau stance (TB_HEAVY2).
-type HSeg = {t0: number; t1: number; a: [number, number, number]; b: [number, number, number]; ease: (u: number) => number};
+// Its walk uses the kit walker's own geometry (mech/heavy.tsx): the lateral sequence (FL, RR, FR, RL a quarter cycle
+// apart), duty 0.75 (three feet planted), stride 3.0 m, each stance centred under its hip — so a planted foot never has
+// to reach past the leg — written out as keyed footholds with their landing times (`plants`: the hull compresses and
+// settles on each landing). The hull is lowered just enough that every foot stays within the leg's reach (the kit does
+// this for its own gait; with keyed feet the section owns the hull height). Each walk stops on a quarter stride (a
+// multiple of 0.75 m), the instant one foot has landed and the next has not lifted: all four feet down, none hanging.
+//   P4 → 165.95  out of the crater along one line (heading 262), already walking at the cut; it halts to fire (aim
+//                164.7) — the last flare blinds it first (166.14)
+//   166.18–167.42  blinded: it steps back off the slab (the rear-left foot lands on its edge, the slab tips, the foot
+//                slides off), the others step back to catch it
+//   168.4        the eye clears (the head shakes it off); 168.9 → 176.0 it comes on again, slow, to the van
+//   177.76       the ram (wind-up from 176.46) onto the Director's plate; 178.9 → 180.9 one step back into its sector
+type XZH = [number, number, number];
+const HPH = [0, 0.5, 0.75, 0.25], H_STRIDE = 3.0, H_DUTY = 0.75, H_LIFT = 0.55;
+type HWalk = {t0: number; t1: number; a: XZH; b: XZH; L: number; ease: (u: number) => number; standStart: boolean};
 /** a constant-speed walk with a decelerating tail (it was already walking at the cut in) */
 const cruiseStop = (tail: number) => (u: number) => (u < 1 - tail ? u / (1 - tail / 2) : (1 - tail + tail * (1 - (1 - (u - (1 - tail)) / tail) ** 2) / 2) / (1 - tail / 2));
-const L262 = (x: number): [number, number, number] => [x, 2.2 + (20.2 - x) * Math.tan((8 * Math.PI) / 180), 262];
-export const H2_STOP = L262(24.7), H2_BACK: [number, number, number] = [26.15, 1.42, 263];
-export const H2_SLAB = {x: 29.3, z: 3.55};
-const HSEGS: HSeg[] = [
-  {t0: M.P4, t1: 165.95, a: [HEAVY2_START.pos.x, HEAVY2_START.pos.z, 262], b: H2_STOP, ease: cruiseStop(0.12)},
-  {t0: 166.2, t1: 167.3, a: H2_STOP, b: H2_BACK, ease: (u) => easeOut(u)},
-  {t0: EV.heavyGo, t1: 176.3, a: H2_BACK, b: [HEAVY_STRIKE.x, HEAVY_STRIKE.z, HEAVY_STRIKE.h], ease: smooth},
-  {t0: EV.heavyBack, t1: EV.heavyBackEnd, a: [HEAVY_STRIKE.x, HEAVY_STRIKE.z, HEAVY_STRIKE.h], b: [TB_HEAVY2.pos.x, TB_HEAVY2.pos.z, TB_HEAVY2.heading], ease: smooth},
-];
-export const heavy2Root = (T: number): {x: number; z: number; h: number} => {
-  let r = HSEGS[0].a;
-  for (const s of HSEGS) {
-    if (T < s.t0) break;
-    const u = s.ease(clamp((T - s.t0) / (s.t1 - s.t0)));
-    r = [lerp(s.a[0], s.b[0], u), lerp(s.a[1], s.b[1], u), s.a[2] + wrapD(s.b[2] - s.a[2]) * u];
-  }
-  // before the cut (D3's last frames) it walks on the same line
-  if (T < M.P4) { const v = HEAVY2_START.speed, f = hv(262); return {x: HSEGS[0].a[0] - f.x * v * (M.P4 - T), z: HSEGS[0].a[1] - f.z * v * (M.P4 - T), h: 262}; }
-  return {x: r[0], z: r[1], h: r[2]};
+/** start from rest, come on slowly, settle into the stop */
+const startStop = (u: number) => smooth(u);
+const hwPos = (w: HWalk, d: number): {x: number; z: number; h: number} => {
+  const k = d / w.L;
+  return {x: lerp(w.a[0], w.b[0], k), z: lerp(w.a[1], w.b[1], k), h: w.a[2] + wrapD(w.b[2] - w.a[2]) * clamp(k)};
 };
-/** heavy 2's planted feet: generated per move (lateral sequence), plus the slip off the slab at the stumble */
-const H2_FEET: KP[][] = (() => {
-  const legs: KP[][] = [[], [], [], []];
-  // the long walk: already in motion at the cut (cycle ≈ 1.45 s at 2.05 m/s)
-  const walk = (s: HSeg, cyc: number, first: boolean) => {
-    const n = Math.max(1, Math.round((s.t1 - s.t0) / cyc)), c0 = (s.t1 - s.t0) / n, sw = c0 * 0.25;
-    const order = [0, 3, 1, 2];
-    const at = (t: number) => heavy2Root(t);
-    if (first) [0, 1, 2, 3].forEach((i) => { const r = at(s.t0 - c0 * 0.55); legs[i].push([s.t0 - 2, ...heavyStance(r.x, r.z, r.h, i)] as KP); });
-    for (let c = 0; c < n; c++) order.forEach((i, j) => {
-      const t0 = s.t0 + c * c0 + j * sw - (first && c === 0 ? 0 : 0), t1 = t0 + sw * 0.92;
-      const r = at(c === n - 1 ? s.t1 : Math.min(s.t1, t1 + c0 * 0.4));
-      const p = heavyStance(r.x, r.z, r.h, i);
-      const L = legs[i];
-      L.push([t0, L[L.length - 1][1], L[L.length - 1][2]], [t1, p[0], p[1], 0.55]);
-    });
+const hwDist = (w: HWalk, T: number): number => {
+  if (T < w.t0 && !w.standStart) return -(w.L / ((w.t1 - w.t0) * (1 - 0.12 / 2))) * (w.t0 - T); // walking in before the cut
+  return w.L * w.ease(clamp((T - w.t0) / (w.t1 - w.t0)));
+};
+/** the walk's foothold for leg i at walk distance d (planted, or swinging between two plants) */
+const hwFoot = (w: HWalk, i: number, d: number): V3 => {
+  const ph = HPH[i];
+  const c = d / H_STRIDE + ph, n = Math.floor(c), u = c - n;
+  const plant = (k: number): [number, number] => {
+    const r = w.standStart && k <= 0 ? hwPos(w, 0) : hwPos(w, (k - ph + H_DUTY / 2) * H_STRIDE);
+    return heavyStance(r.x, r.z, r.h, i);
   };
-  walk(HSEGS[0], 1.45, true);
-  // blinded (166.14): it rears; stumble (166.41): stepping back, the rear-left foot lands on the slab's edge, the slab
-  // tips and the foot slips off; the others step back to catch it
-  const b = heavy2Root(167.3);
-  const back = (i: number) => heavyStance(b.x, b.z, b.h, i);
-  const L = legs;
-  const hold = (i: number, t: number) => L[i].push([t, L[i][L[i].length - 1][1], L[i][L[i].length - 1][2]]);
+  if (u < H_DUTY) { const q = plant(n); return onG(q[0], q[1]); }
+  const s = (u - H_DUTY) / (1 - H_DUTY);
+  const A = plant(n), B = plant(n + 1), e = smooth(s);
+  const x = lerp(A[0], B[0], e), z = lerp(A[1], B[1], e);
+  return {x, y: Math.max(lerp(G(A[0], A[1]), G(B[0], B[1]), e), G(x, z)) + Math.sin(Math.PI * s) * H_LIFT, z};
+};
+/** landing times of every leg over a walk (film s), with the foothold */
+const hwLandings = (w: HWalk): {t: number; leg: number; pos: V3}[] => {
+  const out: {t: number; leg: number; pos: V3}[] = [];
+  const d0 = hwDist(w, w.t0 - (w.standStart ? 0 : 2)), d1 = w.L;
+  HPH.forEach((ph, leg) => {
+    for (let k = Math.ceil(d0 / H_STRIDE + ph); (k - ph) * H_STRIDE <= d1 + 1e-6; k++) {
+      const dk = (k - ph) * H_STRIDE;
+      if (dk <= d0 + 1e-6 || (w.standStart && dk <= 1e-6)) continue;
+      let lo = w.t0 - (w.standStart ? 0 : 2), hi = w.t1;
+      for (let j = 0; j < 30; j++) { const m = (lo + hi) / 2; if (hwDist(w, m) < dk) lo = m; else hi = m; }
+      out.push({t: hi, leg, pos: hwFoot(w, leg, dk + 1e-4)});
+    }
+  });
+  return out;
+};
+const L262 = (x: number): XZH => [x, 2.2 + (20.2 - x) * Math.tan((8 * Math.PI) / 180), 262];
+const ALONG = (from: XZH, to: {x: number; z: number}, L: number): {x: number; z: number} => {
+  const dx = to.x - from[0], dz = to.z - from[1], D = Math.hypot(dx, dz);
+  return {x: from[0] + (dx / D) * L, z: from[1] + (dz / D) * L};
+};
+// the walk out of the crater: 41 quarter strides (30.75 m) from HEAVY2_START along heading 262
+const W0_A: XZH = [HEAVY2_START.pos.x, HEAVY2_START.pos.z, 262];
+const W0_B: XZH = (() => { const f = hv(262); return [W0_A[0] + f.x * 30.75, W0_A[1] + f.z * 30.75, 262]; })();
+export const H2_STOP: XZH = W0_B;
+/** where it ends up after the stumble (a step and a half back), on the line of its last approach to the van */
+const H2_BACK_XZ = ALONG([HEAVY_STRIKE.x, HEAVY_STRIKE.z, 0], {x: 26.15, z: 1.42}, 9.75);
+export const H2_BACK: XZH = [H2_BACK_XZ.x, H2_BACK_XZ.z, 263];
+export const H2_SLAB = {x: 29.3, z: 3.55};
+const HW0: HWalk = {t0: M.P4, t1: EV.heavyStop, a: W0_A, b: W0_B, L: 30.75, ease: cruiseStop(0.12), standStart: false};
+const HW2: HWalk = {t0: EV.heavyGo, t1: EV.heavyArrive, a: H2_BACK, b: [HEAVY_STRIKE.x, HEAVY_STRIKE.z, HEAVY_STRIKE.h], L: 9.75, ease: startStop, standStart: true};
+const STEP_BACK = {t0: EV.heavyBack, t1: EV.heavyBackEnd, a: [HEAVY_STRIKE.x, HEAVY_STRIKE.z, HEAVY_STRIKE.h] as XZH, b: [TB_HEAVY2.pos.x, TB_HEAVY2.pos.z, TB_HEAVY2.heading] as XZH};
+export const heavy2Root = (T: number): {x: number; z: number; h: number} => {
+  if (T < HW0.t1) return hwPos(HW0, hwDist(HW0, T));
+  if (T < HW2.t0) {
+    // blinded: it rears and steps back off the slab, catching itself
+    const u = easeOut(clamp((T - 166.2) / (167.3 - 166.2)));
+    return {x: lerp(H2_STOP[0], H2_BACK[0], u), z: lerp(H2_STOP[1], H2_BACK[1], u), h: H2_STOP[2] + wrapD(H2_BACK[2] - H2_STOP[2]) * u};
+  }
+  if (T < STEP_BACK.t0) return hwPos(HW2, hwDist(HW2, T));
+  const u = smooth(clamp((T - STEP_BACK.t0) / (STEP_BACK.t1 - STEP_BACK.t0)));
+  const a = STEP_BACK.a, b = STEP_BACK.b;
+  return {x: lerp(a[0], b[0], u), z: lerp(a[1], b[1], u), h: a[2] + wrapD(b[2] - a[2]) * u};
+};
+/** keyed footholds after the walk out (the stumble) and after the approach (the step back), per leg */
+const H2_KEYS: {stumble: KP[][]; back: KP[][]} = (() => {
+  const end0 = [0, 1, 2, 3].map((i) => hwFoot(HW0, i, HW0.L));
+  const st: KP[][] = end0.map((p) => [[HW0.t1, p.x, p.z]] as KP[]);
+  const back = (i: number) => heavyStance(H2_BACK[0], H2_BACK[1], H2_BACK[2], i);
+  const hold = (i: number, t: number) => { const L = st[i]; L.push([t, L[L.length - 1][1], L[L.length - 1][2]]); };
   [0, 1, 2, 3].forEach((i) => hold(i, 166.18));
+  // rear-left: back onto the slab's edge (166.38), the slab tips (166.46) and the foot slides off it; set down again
   const rl = back(2);
-  L[2].push([166.38, H2_SLAB.x - 0.25, H2_SLAB.z - 0.05, 0.6]); // onto the slab edge
-  L[2].push([EV.stumble + 0.02, H2_SLAB.x - 0.25, H2_SLAB.z - 0.05], [166.62, rl[0] + 0.55, rl[1] + 0.45, 0]); // the slip (a slide)
-  L[3].push([166.42, L[3][L[3].length - 1][1], L[3][L[3].length - 1][2]], [166.78, ...back(3), 0.45] as KP);
-  L[0].push([166.62, L[0][L[0].length - 1][1], L[0][L[0].length - 1][2]], [166.98, ...back(0), 0.5] as KP);
-  L[1].push([166.85, L[1][L[1].length - 1][1], L[1][L[1].length - 1][2]], [167.22, ...back(1), 0.5] as KP);
-  L[2].push([167.05, rl[0] + 0.55, rl[1] + 0.45], [167.42, rl[0], rl[1], 0.35]);
-  // comes on again; then steps back into its sector
-  const add = (seg: HSeg, cyc: number, order?: number[]) => {
-    const root: KR[] = [[seg.t0, seg.a[0], seg.a[1], seg.a[2]], [seg.t1, seg.b[0], seg.b[1], seg.b[2]]];
-    const q = quadSteps(root, {cycle: cyc, lift: 0.5, order});
-    // quadSteps assumes smooth easing between keys: same as these segments
-    q.forEach((k, i) => k.slice(1).forEach((kk) => L[i].push(kk)));
-  };
-  add(HSEGS[2], 1.9);
-  add(HSEGS[3], 2.0, [1, 2, 0, 3]); // one deliberate step per leg, the front-right first (clear of H1 coming in)
-  return L;
+  st[2].push([166.38, H2_SLAB.x - 0.25, H2_SLAB.z - 0.05, 0.6], [EV.stumble + 0.02, H2_SLAB.x - 0.25, H2_SLAB.z - 0.05], [166.62, rl[0] + 0.55, rl[1] + 0.45, 0]);
+  st[3].push([166.42, st[3][st[3].length - 1][1], st[3][st[3].length - 1][2]], [166.78, ...back(3), 0.45] as KP);
+  st[0].push([166.62, st[0][st[0].length - 1][1], st[0][st[0].length - 1][2]], [166.98, ...back(0), 0.5] as KP);
+  st[1].push([166.85, st[1][st[1].length - 1][1], st[1][st[1].length - 1][2]], [167.22, ...back(1), 0.5] as KP);
+  st[2].push([167.05, rl[0] + 0.55, rl[1] + 0.45], [167.42, rl[0], rl[1], 0.35]);
+  // the step back into its sector (one deliberate step per leg, the front-right first: clear of H1 coming in)
+  const end2 = [0, 1, 2, 3].map((i) => hwFoot(HW2, i, HW2.L));
+  const fin = (i: number) => heavyStance(TB_HEAVY2.pos.x, TB_HEAVY2.pos.z, TB_HEAVY2.heading, i);
+  const bk: KP[][] = end2.map((p) => [[HW2.t1, p.x, p.z]] as KP[]);
+  const dur = STEP_BACK.t1 - STEP_BACK.t0, sw = dur / 4;
+  [1, 2, 0, 3].forEach((i, j) => {
+    const t0 = STEP_BACK.t0 + j * sw, L = bk[i];
+    L.push([t0, L[L.length - 1][1], L[L.length - 1][2]], [t0 + sw * 0.9, ...fin(i), 0.45] as KP);
+  });
+  return {stumble: st, back: bk};
 })();
+/** every landing of heavy 2's feet (film s, leg, foothold): the walks', the stumble's and the step back's */
+const H2_LANDINGS: {t: number; leg: number; pos: V3}[] = (() => {
+  const out = [...hwLandings(HW0), ...hwLandings(HW2)];
+  for (const set of [H2_KEYS.stumble, H2_KEYS.back]) set.forEach((k, leg) => k.forEach((kk, j) => {
+    if (j === 0) return;
+    const p = k[j - 1];
+    if (Math.hypot(kk[1] - p[1], kk[2] - p[2]) < 0.05) return;
+    out.push({t: kk[0], leg, pos: onG(kk[1], kk[2])});
+  }));
+  return out.sort((a, b) => a.t - b.t);
+})();
+const h2Feet = (T: number): V3[] => {
+  if (T < HW0.t1) { const d = hwDist(HW0, T); return [0, 1, 2, 3].map((i) => hwFoot(HW0, i, d)); }
+  if (T < HW2.t0) return H2_KEYS.stumble.map((k, i) => footY(i, T, footAt(k, T, 0.5)));
+  if (T < STEP_BACK.t0) { const d = hwDist(HW2, T); return [0, 1, 2, 3].map((i) => hwFoot(HW2, i, d)); }
+  return H2_KEYS.back.map((k) => footAt(k, T, 0.45));
+};
 /** foot on the slab (raised by its thickness) before the slip */
 const footY = (i: number, T: number, p: V3): V3 => (i === 2 && T > 166.3 && T < EV.stumble + 0.03 && Math.hypot(p.x - (H2_SLAB.x - 0.25), p.z - (H2_SLAB.z - 0.05)) < 0.4 ? {...p, y: p.y + 0.3 * smooth((T - 166.3) / 0.08)} : p);
+const H2_MAXL = (HEAVY_DIM.upperLen + HEAVY_DIM.lowerLen) * 0.985;
+/** the group it levels its launcher at (ARRIVAL), and where it looks once blinded */
+const H2_AIM = onG(13.6, 1.6, 1.2);
 
+const TB_H2 = (T: number): HeavySpec => ({id: TB_HEAVY2.id, t: T, pos: TB_HEAVY2.pos, heading: TB_HEAVY2.heading, look: TB_HEAVY2.look, eye: TB_HEAVY2.eye, ground, key: 'tb_heavy2'});
 export const heavy2At = (T: number): HeavySpec => {
   // from the moment it has settled back in its sector, it IS the tableau's heavy 2
-  if (T >= EV.heavyBackEnd + 0.6) return {id: TB_HEAVY2.id, t: T, pos: TB_HEAVY2.pos, heading: TB_HEAVY2.heading, look: TB_HEAVY2.look, eye: TB_HEAVY2.eye, ground, key: 'tb_heavy2'};
+  if (T >= EV.heavyBackEnd + 0.6) return TB_H2(T);
+  const sp = heavy2Raw(T);
+  const need = h2Need(T);
+  return need > 0 ? {...sp, drop: (sp.drop ?? 0) + need} : sp;
+};
+/** heavy 2 before the reach drop */
+const heavy2Raw = (T: number): HeavySpec => {
+  if (T >= EV.heavyBackEnd + 0.6) return TB_H2(T);
   const r = heavy2Root(T);
-  const feet = H2_FEET.map((k, i) => footY(i, T, footAt(k, T, 0.5)));
-  // look: the Crew → the flare (blinded: the head jerks up and away) → the drone pilot (the ram's target) → the Director
-  const blind = win(T, EV.flareHit, 169.0, 0.05, 1.2);
-  const look: V3 = T < 175.6 ? (T < EV.flareHit ? dirHeadAt(T) : {x: r.x - 8 + 6 * blind, y: 6 + 4 * blind, z: r.z + 4 * blind})
-    : T < M.STRIKE + 0.6 ? {x: PILOT_DOWN.x, y: G(PILOT_DOWN.x, PILOT_DOWN.z) + 0.7, z: PILOT_DOWN.z} : DIRECTOR_HEAD;
+  const feet = h2Feet(T);
+  const plants = [0, 1, 2, 3].map((leg) => { let t: number | undefined; for (const l of H2_LANDINGS) { if (l.t > T) break; if (l.leg === leg) t = l.t; } return t; });
+  // look: the Crew → (aim) the group → the flare (blinded: the head jerks up and away, shakes it off) → the Crew →
+  // the drone pilot (the ram's target) → the Director
+  const blind = win(T, EV.flareHit, EV.heavyRecover + 0.3, 0.05, 0.6);
+  const shake = T > EV.heavyRecover - 0.5 && T < EV.heavyRecover + 0.3 ? Math.sin((T - (EV.heavyRecover - 0.5)) * 22) * (1 - smooth((T - EV.heavyRecover) / 0.3)) : 0;
+  const look: V3 = T < EV.heavyOnHer ? (T < EV.flareHit ? (T > EV.heavyAim - 0.6 ? H2_AIM : dirHeadAt(T)) : {x: r.x - 8 + 6 * blind + 3 * shake, y: lerp(2.0, 6 + 4 * blind, blind), z: r.z + 4 * blind}) 
+    : T < M.STRIKE + 0.6 ? onG(PILOT_DOWN.x, PILOT_DOWN.z, 0.7) : DIRECTOR_HEAD;
   const dip = 0.32 * win(T, EV.stumble, 167.6, 0.12, 0.9);
-  return {
+  // the launcher levelled at them as it halts (it would have fired: the flare comes first), then thrown up and away
+  const aim: V3 | undefined = T > EV.heavyAim - 0.8 && T < EV.heavyRecover + 0.8 ? (T < EV.flareHit ? H2_AIM : {x: r.x - 6, y: 9 + 6 * blind, z: r.z + 6}) : undefined;
+  const sp: HeavySpec = {
     id: TB_HEAVY2.id, t: T, pos: {x: r.x, y: 0, z: r.z}, heading: r.h, ground, key: 'tb_heavy2', eye: 'amber',
-    feet, drop: dip, look,
+    feet, plants, drop: dip, look, aim,
     stumble: {t0: EV.stumble, dir: {x: 0.55, y: 0, z: 0.85}, strength: 1.3},
     ram: {t0: M.STRIKE, target: STRIKE_PLATE},
     stepOver: [],
   };
+  return sp;
+};
+/** how far the hull must come down at T for every foot to stay within reach (no smoothing) */
+const rawNeed = (sp: HeavySpec): number => {
+  if (!sp.feet) return 0;
+  const R0 = solveHeavy(sp);
+  let need = 0;
+  R0.hip.forEach((H, i) => {
+    const f = sp.feet![i]!;
+    const A = {x: f.x, y: f.y + 0.22, z: f.z};
+    const h = Math.min(H2_MAXL * 0.999, Math.hypot(H.x - A.x, H.z - A.z)), v = H.y - A.y;
+    if (h * h + v * v > H2_MAXL * H2_MAXL) need = Math.max(need, v - Math.sqrt(H2_MAXL * H2_MAXL - h * h));
+  });
+  return need;
+};
+/** the hull's reach drop on a 1/60 s grid: the max over ±0.3 s, averaged over ±0.25 s (≥ the raw need everywhere) */
+const NEED_T0 = 149.2, NEED_T1 = EV.heavyBackEnd + 0.7, NEED_DT = 1 / 60;
+let NEED: number[] | null = null;
+const h2Need = (T: number): number => {
+  if (T < NEED_T0 || T > NEED_T1) return 0;
+  if (!NEED) {
+    const n = Math.ceil((NEED_T1 - NEED_T0) / NEED_DT) + 1;
+    const raw: number[] = [];
+    for (let i = 0; i < n; i++) raw.push(rawNeed(heavy2Raw(NEED_T0 + i * NEED_DT)));
+    const W = Math.round(0.3 / NEED_DT), A = Math.round(0.25 / NEED_DT);
+    const env = raw.map((_, i) => { let m = 0; for (let j = Math.max(0, i - W); j <= Math.min(n - 1, i + W); j++) m = Math.max(m, raw[j]); return m; });
+    NEED = env.map((_, i) => { let s = 0, c = 0; for (let j = Math.max(0, i - A); j <= Math.min(n - 1, i + A); j++) { s += env[j]; c++; } return Math.max(raw[i], s / c); });
+  }
+  const u = (T - NEED_T0) / NEED_DT, i = Math.floor(u), k = u - i;
+  const a = NEED[Math.max(0, Math.min(NEED.length - 1, i))], b = NEED[Math.max(0, Math.min(NEED.length - 1, i + 1))];
+  return lerp(a, b, k);
 };
 /** heavy 2's footfalls (time, world point) for dust and the ground shake (sound) */
-export const heavy2Footfalls = (Ta: number, Tb: number): {t: number; pos: V3; leg: number}[] => {
-  const out: {t: number; pos: V3; leg: number}[] = [];
-  H2_FEET.forEach((k, leg) => k.forEach((kk, j) => {
-    if (j === 0) return;
-    const prev = k[j - 1];
-    if (Math.hypot(kk[1] - prev[1], kk[2] - prev[2]) < 0.05) return;
-    if (kk[0] > Ta && kk[0] <= Tb) out.push({t: kk[0], pos: onG(kk[1], kk[2]), leg});
-  }));
-  return out.sort((a, b) => a.t - b.t);
-};
+export const heavy2Footfalls = (Ta: number, Tb: number): {t: number; pos: V3; leg: number}[] => H2_LANDINGS.filter((l) => l.t > Ta && l.t <= Tb);
 
 // ================================================================== drones: into their tableau places
 type DKey = [number, number, number, number];
