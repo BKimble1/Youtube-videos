@@ -93,7 +93,12 @@ export const d1Fx = (T: number): FxOut => {
   // U1's punch parried off the plate (LIGHT PARRY: a tick of sparks along the deflection)
   if (near(T, EV.u1punch)) out.push(impact({at: add3(plate(EV.u1punch), {x: 0.04, y: 0.05, z: -0.1}), normal: {x: 0.3, y: 0.4, z: -0.9}, t: T, t0: EV.u1punch, key: 'd1par1', strength: 0.35, material: 'metal', ground: 0, seed: 33}));
   // his bash into U1's chest (HARD IMPACT on armour)
-  if (near(T, EV.bash1)) { const c = unitAttach(unitD1('U1', EV.bash1)).chest; out.push(impact({at: add3(c, {x: -0.1, y: -0.05, z: 0}), normal: {x: -1, y: 0.2, z: 0}, t: T, t0: EV.bash1, key: 'd1bash1', strength: 0.9, material: 'armor', ground: ground(c), seed: 35})); }
+  // (R3: no armour chips here: they fly back along the normal past the Director's head, and one read as a grey flake stuck to his hair for 7 frames at 70.03-70.23)
+  if (near(T, EV.bash1)) {
+    const c = unitAttach(unitD1('U1', EV.bash1)).chest;
+    const bh = impact({at: add3(c, {x: -0.1, y: -0.05, z: 0}), normal: {x: -1, y: 0.2, z: 0}, t: T, t0: EV.bash1, key: 'd1bash1', strength: 0.9, material: 'armor', ground: ground(c), seed: 35});
+    out.push({...bh, items: bh.items.filter((it) => !(it.key ?? '').startsWith('d1bash1_ch'))});
+  }
   // the jabs taken on the plate (light blocks)
   [EV.u1jab2, EV.u1jab3].forEach((t0, i) => { if (near(T, t0)) out.push(impact({at: add3(plate(t0), {x: 0.06, y: 0, z: 0}), normal: {x: 1, y: 0.3, z: 0}, t: T, t0, key: `d1jab${i}`, strength: 0.4, material: 'metal', ground: 0, seed: 37 + i})); });
   // his second bash stopped by U1's forearm in the path (block on armour)
