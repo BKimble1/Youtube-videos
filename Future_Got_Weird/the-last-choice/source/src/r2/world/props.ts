@@ -115,8 +115,11 @@ const buildVan = (): Mesh => {
       [{pts: [{x: W - 0.03, y: 1.45, z: -1.35}, {x: W - 0.03, y: 2.2, z: -1.35}, {x: W - 0.03, y: 2.2, z: -1.72}, {x: W - 0.03, y: 1.45, z: -2.1}], mat: 'window'}]]);
   const windshield = slab({x: -W + 0.1, y: 1.4, z: -2.52}, {x: 1, y: 0, z: 0}, norm3({x: 0, y: 0.95, z: 0.62}), [{u: 0, v: 0}, {u: 2 * W - 0.2, v: 0}, {u: 2 * W - 0.2, v: 1.0}, {u: 0, v: 1.0}], 0.03, 'window', 'vanDark');
   const wheel = (x: number, z: number) => xfMesh(cylinder(0.43, 0.3, 10, 'tire', 'steelDark', -0.15), {roll: 90, pos: {x, y: 0.43, z}});
-  parts.push(door, cab, windshield, wheel(-W + 0.1, -2.1), wheel(W - 0.1, -2.1), wheel(-W + 0.1, 2.0), wheel(W - 0.1, 2.0));
-  parts.push(box({x: -W, y: 0.35, z: -3.08}, {x: W, y: 0.62, z: -2.92}, 'steelDark'));
+  // (R3) parts lying on another surface draw after it: once the van is cut into pieces, the windshield on the cab's
+  // slope and the slid-back door over the side would otherwise lose to the pieces behind them
+  const onTop = (m: Mesh, b: number): Mesh => ({...m, faces: m.faces.map((f) => ({...f, bias: (f.bias ?? 0) + b}))});
+  parts.push(onTop(door, 0.12), cab, onTop(windshield, 0.1), wheel(-W + 0.1, -2.1), wheel(W - 0.1, -2.1), wheel(-W + 0.1, 2.0), wheel(W - 0.1, 2.0));
+  parts.push(onTop(box({x: -W, y: 0.35, z: -3.08}, {x: W, y: 0.62, z: -2.92}, 'steelDark'), 0.05));
   van = merge(van, opening, ...parts);
   van.crease = 28;
   return van;
@@ -225,7 +228,8 @@ export const carMesh = (mat: string, crushed = 0, burnt = false, doorOpen = fals
   const wheel = (x: number, z: number) => xfMesh(cylinder(0.33, 0.22, 8, 'tire', 'steelDark', -0.11), {roll: 90, pos: {x, y: 0.33, z}});
   // (R3) body and cabin cut into 0.6 m strips along the car (people crouch and run beside the wrecks)
   const sp = (m: Mesh) => (split ? splitPlanar2(m, 0.6, {x: 0, y: 0, z: 1}) : m);
-  const parts = [sp(body), sp(cabin), wheel(-0.82, -1.45), wheel(0.82, -1.45), wheel(-0.82, 1.45), wheel(0.82, 1.45)];
+  // (the cabin sits on the body's top: it draws after the body's pieces under it)
+  const parts = [sp(body), sp({...cabin, faces: cabin.faces.map((f) => ({...f, bias: 0.06}))}), wheel(-0.82, -1.45), wheel(0.82, -1.45), wheel(-0.82, 1.45), wheel(0.82, 1.45)];
   if (doorOpen) {
     // the driver's (left) door hinged at its front edge and swung out ~55°: an abandoned car, its driver ran
     const door = box({x: -0.06, y: 0.36, z: 0}, {x: 0.0, y: 0.9 + ch * 0.8, z: 1.15}, [burnt ? 'burnt' : mat, 'steelDark', burnt ? 'burnt' : mat, burnt ? 'burnt' : mat, burnt ? 'burnt' : mat, 'interior']);

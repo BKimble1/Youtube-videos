@@ -183,6 +183,8 @@ const travelDir = (p: Pt, t0: number, to: V3, given?: V3): V3 => {
   return norm3(sub3(to, ptAt(p, t0)));
 };
 
+/** a torso follow toward a bearing difference d (deg) fades to nothing as d nears ±180 (no flip across the wrap) */
+const behindFade = (v: number, d: number) => v * (1 - smooth((Math.abs(d) - 120) / 50));
 /** strike phase: wind-up (−0.42..−0.13), blow (−0.13..0: four frames of accelerating travel, not one smear frame),
  *  follow-through (0..0.22), recover (0.22..0.85) relative to t0 */
 const strikeK = (t: number, t0: number) => {
@@ -596,28 +598,38 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
     twist += -clamp(wrapD(ahead - heading) * 0.5, -28, 28);
   }
   // ---------------- attention: attend (snap + track) and scan (sweeps with pauses); the torso follows a little
-  const attendNow = (sp.attend ?? []).filter((a) => t >= a.t0 - 0.02 && (a.t1 === undefined || t < a.t1 + 0.4)).sort((a, b) => a.t0 - b.t0).pop();
-  let attendW = 0, attendP: V3 | null = null;
-  if (attendNow) {
-    attendW = smooth((t - attendNow.t0) / 0.18) * (attendNow.t1 !== undefined ? 1 - smooth((t - attendNow.t1) / 0.4) : 1);
-    attendP = ptAt(attendNow.at, t);
-    const lagW = smooth((t - attendNow.t0 - 0.12) / 0.35) * attendW;
-    const d = wrapD(headingTo(root, attendP) - heading);
-    twist += -clamp(d * 0.45, -35, 35) * lagW;
+  // attends and scans cross-fade in time order: a newer one ramps in over the older one, an ending one ramps out —
+  // the head and the torso never switch targets in a frame
+  let attendW = 0, attendP: V3 | null = null, attTwist = 0;
+  for (const a of [...(sp.attend ?? [])].sort((x, y) => x.t0 - y.t0)) {
+    if (t < a.t0 - 0.02) continue;
+    const w = smooth((t - a.t0) / 0.18) * (a.t1 !== undefined ? 1 - smooth((t - a.t1) / 0.4) : 1);
+    if (w <= 0) continue;
+    const P = ptAt(a.at, t);
+    attendP = attendP ? lerp3(attendP, P, w) : P;
+    attendW = attendW + (1 - attendW) * w;
+    const lagW = smooth((t - a.t0 - 0.12) / 0.35) * w;
+    attTwist = lerp(attTwist, behindFade(-clamp(wrapD(headingTo(root, P) - heading) * 0.45, -35, 35), wrapD(headingTo(root, P) - heading)), lagW);
   }
-  const scanNow = arr(sp.scan).filter((s) => t >= s.t0 && (s.t1 === undefined || t < s.t1 + 0.5)).pop();
-  let scanW = 0, scanDir: V3 | null = null;
-  if (scanNow) {
-    scanW = smooth((t - scanNow.t0) / 0.4) * (scanNow.t1 !== undefined ? 1 - smooth((t - scanNow.t1) / 0.5) : 1) * (1 - attendW);
-    const c = scanNow.center;
+  twist += attTwist;
+  let scanW = 0, scanDir: V3 | null = null, scanTwist = 0;
+  for (const sc of arr(sp.scan).sort((x, y) => x.t0 - y.t0)) {
+    if (t < sc.t0) continue;
+    const w = smooth((t - sc.t0) / 0.4) * (sc.t1 !== undefined ? 1 - smooth((t - sc.t1) / 0.5) : 1);
+    if (w <= 0) continue;
+    const c = sc.center;
     const headGuess = {x: root.x, y: gy + 2.05, z: root.z};
     const cb = c === undefined ? heading : typeof c === 'number' ? c : headingTo(root, c);
     const cp = c !== undefined && typeof c !== 'number' ? (Math.atan2(c.y - headGuess.y, Math.hypot(c.x - root.x, c.z - root.z)) * 180) / Math.PI : 0;
-    const s = scanYaw(scanNow, seed, t), sl = scanYaw(scanNow, seed, t - 0.2);
-    const b = ((cb + s.yaw) * Math.PI) / 180, p = ((cp - s.pitch) * Math.PI) / 180;
-    scanDir = {x: Math.sin(b) * Math.cos(p), y: Math.sin(p), z: -Math.cos(b) * Math.cos(p)};
-    twist += -clamp(wrapD(cb + sl.yaw - heading) * (scanNow.torso ?? 0.25), -30, 30) * scanW;
+    const sy = scanYaw(sc, seed, t), sl = scanYaw(sc, seed, t - 0.2);
+    const b = ((cb + sy.yaw) * Math.PI) / 180, pch = ((cp - sy.pitch) * Math.PI) / 180;
+    const dir = {x: Math.sin(b) * Math.cos(pch), y: Math.sin(pch), z: -Math.cos(b) * Math.cos(pch)};
+    scanDir = scanDir ? norm3(lerp3(scanDir, dir, w)) : dir;
+    scanW = scanW + (1 - scanW) * w;
+    scanTwist = lerp(scanTwist, behindFade(-clamp(wrapD(cb + sl.yaw - heading) * (sc.torso ?? 0.25), -30, 30), wrapD(cb + sl.yaw - heading)), w);
   }
+  scanW *= 1 - attendW;
+  twist += scanTwist * (1 - attendW);
   lean += recoil;
   // the dent: knocked askew, eased in over 0.12 s (no pop)
   const dentK = sp.damage?.dent ? easeOut((t - sp.damage.dent.t0) / 0.12) * (t >= sp.damage.dent.t0 ? 1 : 0) : 0;
@@ -670,10 +682,16 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
   // ---------------- head: attend > threat lock > scan > look > idle
   const headPos = apply(neckP, {x: 0, y: U.headC, z: 0});
   const cf0 = fwdOf(chestR);
+  // the look as a yaw / pitch in the chest frame, the yaw limited to ±lim and faded out for a target straight behind
+  // (no flip from one shoulder to the other as a target passes behind the unit)
+  const cr0 = rmul(chestR, {x: 1, y: 0, z: 0}), cu0 = rmul(chestR, UP);
   const clampLook = (d: V3, lim = 75): R3 => {
-    const lf = lookFrame(norm3(d));
-    const ang = Math.acos(clamp(dot3(norm3(d), cf0), -1, 1)) * 57.3;
-    return ang > lim ? slerpish(chestR, lf, lim / ang) : lf;
+    const dn = norm3(d);
+    const fx = dot3(dn, cr0), fy = dot3(dn, cu0), fz = dot3(dn, cf0);
+    const yaw0 = (Math.atan2(fx, fz) * 180) / Math.PI, pitch0 = (Math.atan2(fy, Math.hypot(fx, fz)) * 180) / Math.PI;
+    const yaw = Math.sign(yaw0) * Math.min(Math.abs(yaw0), lim) * (1 - smooth((Math.abs(yaw0) - 150) / 30));
+    const pitch = clamp(pitch0, -50, 45);
+    return rcomp(chestR, euler(-yaw, -pitch, 0));
   };
   const scan = idle * noise(t * 0.35, seed) * 14;
   let headR: R3 = sp.look ? clampLook(sub3(sp.look, headPos)) : rcomp(chestR, euler(scan, noise(t * 0.27, seed + 9) * 5 * idle, 0));

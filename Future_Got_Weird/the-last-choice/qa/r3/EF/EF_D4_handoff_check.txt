@@ -24,3 +24,10 @@ crew runner                  max 2nd difference 0.019 m handL at 214.867
 ring (all) heads             max 2nd difference 0.055 m 7307 at 217.033
 
 tools/r3/city_check:
+[camera] INFO  F1 pullback corridor: nearest building building FS0 at 7.1 m (T 210.5)
+[sort] WARN  1 building faces wider than 7.5 m have machines within 6 m in front of them: FS0#79 (7.6 m)
+[sort] WARN  2673 crew samples; 3 set pieces / buildings have faces longer than twice a figure's distance to them
+[sort] WARN    cch_20: a 1.1 m face 0.00 m from D3 breaker (T 129.9; 15 samples)
+[sort] WARN    waterMain: a 1.0 m face 0.00 m from D3 director (T 128.9; 12 samples)
+[sort] WARN    sch_22: a 1.0 m face 0.45 m from D4 tether (T 158.9; 1 sample)
+summary {"camera.info":1,"crew.info":2,"figures.info":7,"fire.info":15,"info.info":1,"set.warn":1,"set.info":94,"sort.warn":5,"sort.info":1} (12.7 s)
