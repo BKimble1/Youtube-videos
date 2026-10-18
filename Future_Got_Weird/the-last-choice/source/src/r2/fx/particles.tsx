@@ -1,9 +1,10 @@
 // World-space particles: sparks, chips/debris, dust puffs, a shockwave ring and a flash. Launched at t0 from a world
 // point with seeded velocities in a cone; coherent ballistic trajectories (metres, seconds, y up).
 import React from 'react';
-import {V3, add3, mul3, sub3, clamp, lerp, rnd} from '../../kit/math';
+import {V3, add3, mul3, sub3, clamp, lerp, rnd, len3, smooth} from '../../kit/math';
 import {Item, SpriteCtx, project} from '../engine';
 import {ball3, coneDir, sparkCol, glowEl, gid, f1, blobPts, blobPath, tone, glowTone, inkTone, inkPx, basisAround, G} from './core';
+import {billowPath} from '../world/atmosDraw';
 
 const visible = (c: SpriteCtx, p: V3) => {
   const s = project(c.view, p);
@@ -144,13 +145,24 @@ export const dust3 = (o: DustOpts): Item[] => {
       draw: (c) => {
         const r = r0 * c.k;
         if (r < 1) return null;
+        // (R3) drawn as smokeItems draws smoke: cauliflower billows (not near-circles, whose stacked translucent edges
+        // read as circular washes over the action when a blast's dust is close), with the same caps — a puff the lens
+        // is in or next to fades, a puff filling the frame is held down, close dust never passes ~40 %
+        const v = c.view;
+        const dist = len3(sub3(p, v.pos));
+        let a = op * clamp((dist - r0 * 0.8) / (r0 * 1.4));
+        if (r > v.H * 0.22) a *= clamp(1 - (r - v.H * 0.22) / (v.H * 0.35), 0.2, 1);
+        if (dist < 7) a = Math.min(a, 0.4 + 0.6 * clamp((dist - 2.5) / 4.5));
+        if (a < 0.01) return null;
         const lit = tone(c, col, 2), mid = tone(c, col, 1), sh = tone(c, col, 0);
-        const rot = (o.t * 0.3 + rnd(sd)) * 0.8;
+        const rot = ((o.t * 0.3 + rnd(sd)) * 0.8) % 6.283;
+        const nb = 5 + (rnd(sd + 5) < 0.5 ? 1 : 0);
         return (
-          <g opacity={op}>
-            <path d={blobPath(c.x, c.y + r * 0.12, r * 1.05, sd + 1, 7, 0.3, 1, 0.9, rot)} fill={sh} opacity={0.55} />
-            <path d={blobPath(c.x, c.y, r, sd, 7, 0.32, 1, 0.92, rot)} fill={mid} opacity={0.7} />
-            <path d={blobPath(c.x - r * 0.18, c.y - r * 0.22, r * 0.62, sd + 2, 6, 0.3, 1, 0.9, rot)} fill={lit} opacity={0.6} />
+          <g opacity={f1(a)}>
+            {r > 6 && <path d={billowPath(c.x, c.y + r * 0.06, r * 1.08, sd + 11, nb, 1, 0.9, rot)} fill={mid} opacity={f1(0.4 * smooth((r - 6) / 10))} />}
+            <path d={billowPath(c.x, c.y, r * 0.95, sd, nb, 1, 0.9, rot)} fill={mid} />
+            <path d={billowPath(c.x + r * 0.1, c.y + r * 0.16, r * 0.58, sd + 3, nb - 1, 1, 0.88, rot)} fill={sh} opacity={0.5} />
+            <path d={billowPath(c.x - r * 0.18, c.y - r * 0.22, r * 0.6, sd + 2, nb - 1, 1, 0.9, rot)} fill={lit} opacity={0.7} />
           </g>
         );
       },
