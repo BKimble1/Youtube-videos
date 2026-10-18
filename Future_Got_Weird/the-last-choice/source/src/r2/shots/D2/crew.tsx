@@ -138,7 +138,10 @@ const lookTrack = (T: number, b: {pos: V3; heading: number}, keys: LookKey[], li
   for (let i = keys.length - 1; i >= 0; i--) if (T >= keys[i][0] + (keys[i][2] ?? 0.2)) { i0 = i; break; }
   const ang = (k: LookKey) => {
     const P = k[1] === null ? null : typeof k[1] === 'function' ? k[1](T) : k[1];
-    return P ? {yaw: lookYaw(b, P, lim), pitch: lookPitch(b, P), w: 1, P} : {yaw: 0, pitch: 0, w: 0, P: null as V3 | null};
+    if (!P) return {yaw: 0, pitch: 0, w: 0, P: null as V3 | null};
+    // a target swinging round behind the body: the look lets go before the head would have to flip sides
+    const raw = wrapD(headingTo(b.pos, P) - b.heading);
+    return {yaw: clamp(raw, -lim, lim), pitch: lookPitch(b, P), w: 1 - smooth(clamp((Math.abs(raw) - 105) / 45)), P};
   };
   let s = ang(keys[i0]);
   for (let i = i0 + 1; i < keys.length && T >= keys[i][0]; i++) {
@@ -373,7 +376,8 @@ const BRK_CREST = {x: 48.3, z: -5.1};
 /** the end of his run in, at A (his swing's wind-up starts as he plants) */
 const BRK_ARRIVE = 104.68;
 export const BRK_CATCH = {x: 48.75, z: -7.05};
-const BRK_RUN: XZ[] = [BRK_COVER, {x: 46.05, z: 6.55}, {x: 45.75, z: 4.6}, {x: 45.8, z: 1.6}, {x: 46.3, z: -0.45}, {x: 48.35, z: -0.55}, {x: 50.7, z: -1.2}, BRK_AT];
+// (in along the burnt-out canister's side, south of the pry: clear of its line)
+const BRK_RUN: XZ[] = [BRK_COVER, {x: 46.05, z: 6.55}, {x: 45.75, z: 4.6}, {x: 45.8, z: 1.6}, {x: 46.6, z: 0.1}, {x: 48.4, z: 0.45}, {x: 50.9, z: 0.05}, {x: 52.35, z: -0.85}, BRK_AT];
 const BRK_SEGS: Seg[] = [
   {kind: 'stand', root: [[94.3, K0.x, K0.z, 270], [95.55, K0.x, K0.z, 270], [95.72, K0.x - 0.05, K0.z + 0.05, 230]]},
   {kind: 'run', path: [{x: K0.x - 0.05, z: K0.z + 0.05}, {x: 45.95, z: 4.4}, {x: 45.8, z: 6.1}, {x: 46.3, z: 7.15}, BRK_COVER], T0: 95.75, T1: 97.05, gait: GAITS.hurry, A: 0.3, D: 0.35},
@@ -581,10 +585,11 @@ const hookHands = (b: Body, T: number) => {
   const tip = add3(lerp3v(wind, tip0, easeIn(reach)), mul3(toMe, 0.45 * pull));
   return halFrom(tip, norm3(sub3(tip, fromLoc(b, {r: 30, u: 230, f: 10}))));
 };
-/** the pry: fork tip on B's back-plate edge; the bar levers about the tip; the plate pops */
+/** the pry: fork tip under the back plate's LOWER edge (at his waist, the bar below his face: one clean silhouette);
+ *  the back end pressed down levers the plate up and off */
 const pryHands = (b: {pos: V3; heading: number}, T: number) => {
   const u = unitAttach(unitD2('B', Math.min(T, EV2.pryPop)));
-  const edge = add3(u.backPlate, {x: 0, y: 0.16, z: 0});
+  const edge = add3(u.backPlate, {x: 0, y: -0.24, z: 0});
   const sh = fromLoc(b, {r: 10, u: 300, f: 10});
   const dir0 = norm3(sub3(edge, sh));
   const lever = clamp((T - EV2.pryIn) / (EV2.pryPop - EV2.pryIn));

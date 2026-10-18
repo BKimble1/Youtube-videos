@@ -60,11 +60,11 @@ export const CAM_4: CamKey[] = [
   {t: 0, pos: g(50.0, -6.6, 1.7), target: g(53.3, -3.0, 1.5), fov: 44},
   {t: d(M.FLANK, 103.55), pos: g(50.05, -6.55, 1.7), target: g(53.3, -3.1, 1.45), fov: 43},
 ];
-// D2-4b: the pry, a clean insert from behind B (north): its back plate face-on, the fork under the edge, the bar and
-// both hands, the pop, the cables; the Director is pressed back off to the left, out of the line
+// D2-4b: the pry, a clean insert low from the runner's right (south-west): the bar in profile, the fork under the
+// back plate's edge, the lever, the pop, the cables; the Director pressed back behind B (hidden by it), A beyond
 export const CAM_4B: CamKey[] = [
-  {t: 0, pos: g(53.3, -7.0, 1.8), target: g(51.85, -3.75, 1.35), fov: 23},
-  {t: d(103.55, 104.42), pos: g(53.28, -6.98, 1.8), target: g(51.85, -3.78, 1.3), fov: 23},
+  {t: 0, pos: g(49.75, -1.7, 1.75), target: g(52.0, -3.8, 1.2), fov: 31},
+  {t: d(103.55, 104.42), pos: g(49.78, -1.73, 1.75), target: g(52.0, -3.82, 1.15), fov: 31},
 ];
 // D2-4c: back out, south of the fight: the hook the Director ducks, B going down, the breaker's swing parried, the shove
 export const CAM_4C: CamKey[] = [

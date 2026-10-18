@@ -400,7 +400,8 @@ const B_PLAN: Plan = {
       twist: back ? -40 * win(T, EV2.bBack - 0.45, EV2.bBack + 0.4, 0.3, 0.3) : 0,
       hits: [{t0: EV2.knee, dir: hdir(125), strength: 0.9}, {t0: EV2.blast + 0.06, dir: norm3(sub3(on(B_STRIKE_AT), BLAST_AT)), strength: 0.2},
         {t0: EV2.pryPop, dir: hdir(125), strength: 0.5}, {t0: EV2.rip, dir: hdir(305), strength: 0.45}],
-      damage: {back: {t0: EV2.pryPop, dir: {x: -0.5, y: 0.85, z: -0.45}, speed: 3.0}, dead: {t0: EV2.rip + 0.06}, leak: {t0: EV2.rip}},
+      // the plate springs up and off to its left (away from the runner's face)
+      damage: {back: {t0: EV2.pryPop, dir: {x: 0.55, y: 0.85, z: -0.1}, speed: 3.0}, dead: {t0: EV2.rip + 0.06}, leak: {t0: EV2.rip}},
       feet: T > EV2.knee - 0.02 ? bKneeFeet(T) : undefined,
       // the broken right knee gives: it goes down forward and to its right (south-south-west), away from the fight
       fall: T > EV2.bFall - 0.5 ? {t0: EV2.bFall, dir: hdir(bRoot().h + 40), ang: restAng(bRoot(), hdir(bRoot().h + 40))} : undefined,

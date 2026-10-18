@@ -34,7 +34,7 @@ export const D1_6 = shotOf(79.7, D16, {drift: 0.016, shake: 0.9});
 // ------------------------------------------------------------------ D1-7 (81.90–83.90): COUNTER and CONSEQUENCE
 // Higher three-quarter from the south-west: U1 has turned on the breaker and catches his tool's head, wrenching it; the
 // Director comes up out of his duck and drives the plate into its right knee (82.33): the knee gives, the grip fails;
-// the breaker fires the ram into its open chest (BR3, 82.80): the chest plate goes and U1 is driven back three steps
+// the breaker fires the ram into its open chest (BR3, 82.80): the chest plate goes and U1 is driven back, skidding,
 // into U2 (83.22), raised over the kneeling runner — both go down, the runner throws himself clear.
 const D17: CamKey[] = [
   {t: 0, pos: g(37.5, 1.55, 2.0), target: g(40.65, -1.35, 1.05), fov: 46},
