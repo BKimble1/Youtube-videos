@@ -182,6 +182,8 @@ export type DecoyOpts = {
   beam?: boolean;
   /** dust motes drifting in the beam (default 26) */
   motes?: number;
+  /** optional brightness multiplier over time (e.g. the smoke thinning); default 1 */
+  gain?: (t: number) => number;
 };
 
 /** 0..1 brightness of the projection: startup flicker after `on`, die-flicker after `off` (smashed). */
@@ -218,7 +220,7 @@ const BRIGHT = ['#FFE2A0', '#FFE9B8', '#FFF1CF', '#FFF8E6'];
  * projector, and point lights spill their light onto the smoke and onto whatever stands in front of it.
  */
 export const decoyItems = (o: DecoyOpts): FxOut => {
-  const pw = decoyPower(o.t, o.on, o.off, o.seed ?? 1);
+  const pw = decoyPower(o.t, o.on, o.off, o.seed ?? 1) * (o.gain ? o.gain(o.t) : 1);
   if (pw <= 0.001) return fx();
   const H = o.height ?? 7, sp = o.spacing ?? H * 0.42, t = o.t;
   const U = {x: Math.sin((o.walkHeading * Math.PI) / 180), y: 0, z: -Math.cos((o.walkHeading * Math.PI) / 180)};

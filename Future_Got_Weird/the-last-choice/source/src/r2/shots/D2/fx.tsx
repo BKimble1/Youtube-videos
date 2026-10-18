@@ -7,7 +7,7 @@
 // burst with shake; a mechanical failure (pop, cables, crash) sparks, arcs and debris. No large white flashes over the
 // contact points.
 import React from 'react';
-import {V3, add3, sub3, mul3, norm3, lerp, clamp, rnd} from '../../../kit/math';
+import {V3, add3, sub3, mul3, norm3, lerp, clamp, rnd, smooth} from '../../../kit/math';
 import {
   FxOut, fx, combine, impact, dust3, chips3, sparks3, flash3, ring3, tetherItems, TetherOpts, decoyItems, smokeCanister, canisterSource, puffsAt,
   allyDrone, DronePose, blast, muzzle, shakeAt, CanisterOpts, SmokeSource, Puff, f1, glowEl, gid, glowTone, tone, inkTone,
@@ -212,6 +212,8 @@ export const d2Fx = (T: number): FxOut => {
   out.push(decoyItems({
     key: 'd2dec', t: T, projector: () => LENS_AT, center: DECOY.center, walkHeading: DECOY.walkHeading, height: DECOY.height, spacing: DECOY.spacing,
     walkSpeed: DECOY.walkSpeed, on: EV2.projOn, off: EV2.projOff, density: smokeAt, seed: DECOY.seed, surface: 2.6, motes: 34,
+    // the first canister burnt out, the wall thinning: once the Crew are in, the figures are fainter (the fight reads)
+    gain: (t) => 1 - 0.45 * smooth(clamp((t - 101.9) / 0.8)),
   }));
   // ---- D2-3: fists through the light (no contact: the light lands on them), drones diving through it
   THROUGH.forEach(([n, t0, s], i) => { if (T > t0 - 0.1 && T < t0 + 0.35) out.push(lightOn(T, once(`th${i}`, () => fistAt(n, t0, s)), t0, `d2th${i}`)); });

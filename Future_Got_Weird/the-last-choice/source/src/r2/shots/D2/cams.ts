@@ -44,8 +44,8 @@ export const CAM_3A: CamKey[] = [
 ];
 // D2-3b: high over heavy 1's right shoulder among the main body's ranks: it fires into the light across the crater
 export const CAM_3B: CamKey[] = [
-  {t: 0, pos: g(108.4, -7.0, 7.0), target: g(73.6, -16.0, 1.0), fov: 38},
-  {t: d(100.25, 101.05), pos: g(108.1, -7.25, 6.9), target: g(72.4, -15.4, 0.8), fov: 37},
+  {t: 0, pos: g(108.8, -8.0, 7.2), target: g(70.7, -11.2, 0.6), fov: 40},
+  {t: d(100.25, 101.05), pos: g(108.6, -8.4, 7.1), target: g(70.7, -11.7, 0.4), fov: 39},
 ];
 // D2-3c: a side track on the flank run: low on the rim south of their line, panning with them as they run east
 // round the units' backs; A and B swing at the light again on the right
@@ -54,11 +54,11 @@ export const CAM_3C: CamKey[] = [
   {t: 0.6, pos: g(49.5, -2.2, 1.2), target: g(49.3, -4.9, 1.2), fov: 46},
   {t: d(101.05, M.FLANK), pos: g(50.1, -2.35, 1.25), target: g(51.6, -4.8, 1.3), fov: 46},
 ];
-// D2-4: three-quarter from the light's side (south-east of the fight, A's back on the right): the hook behind B's
-// knee, the Director's bash into A's block, its backhand over the runner, the hammer on the plate
+// D2-4: side-on from the south-west (the burnt-out canister's side): the runner's adze behind B's knee on the left, the
+// Director's bash into A's block on the right, B's backhand over the ducking runner, A's hammer on the plate
 export const CAM_4: CamKey[] = [
-  {t: 0, pos: g(50.0, -6.6, 1.7), target: g(53.3, -3.0, 1.5), fov: 44},
-  {t: d(M.FLANK, 103.55), pos: g(50.05, -6.55, 1.7), target: g(53.3, -3.1, 1.45), fov: 43},
+  {t: 0, pos: g(50.3, -0.4, 1.55), target: g(52.7, -3.5, 1.5), fov: 46},
+  {t: d(M.FLANK, 103.55), pos: g(50.35, -0.45, 1.55), target: g(52.75, -3.5, 1.45), fov: 45},
 ];
 // D2-4b: the pry, a clean insert low from the runner's right (south-west): the bar in profile, the fork under the
 // back plate's edge, the lever, the pop, the cables; the Director pressed back behind B (hidden by it), A beyond
@@ -83,10 +83,11 @@ export const CAM_5B: CamKey[] = [
   {t: 1.2, pos: g(47.15, -2.85, 1.9), target: g(50.6, -7.0, 1.5), fov: 48},
   {t: d(107.0, 108.95), pos: g(47.1, -2.9, 1.92), target: g(50.0, -7.8, 1.5), fov: 48},
 ];
-// D2-5c: the regroup on the crest, D coming up the slope at them (low from behind the runner's guard)
+// D2-5c: side-on from the crest's south end: D climbing at the regroup (on the right, coming at the lens), the runner
+// on guard facing it, the breaker behind him
 export const CAM_5C: CamKey[] = [
-  {t: 0, pos: g(47.4, -7.8, 2.0), target: g(53.0, -3.6, 1.5), fov: 44},
-  {t: d(108.95, 110.2), pos: g(47.45, -7.8, 2.0), target: g(52.4, -4.2, 1.4), fov: 44},
+  {t: 0, pos: g(47.9, -3.2, 1.5), target: g(51.0, -5.4, 1.6), fov: 46},
+  {t: d(108.95, 110.2), pos: g(47.92, -3.22, 1.5), target: g(50.9, -5.5, 1.55), fov: 46},
 ];
 // D2-6: medium, low, side-on from the south-west: D's hook through his parry, the runner thrown back into the
 // breaker's arms; the Director's plate on A's head at the pile beyond; lowered to his knees

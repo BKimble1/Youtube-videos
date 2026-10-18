@@ -75,8 +75,6 @@ export const EV2 = {
   counter: M.COUNTER, hook: 114.42, dFall: 114.56, bright: M.BRIGHT,
   /** A, down at the girder, stirs (its eye relights, its head comes round) — the Director's plate on its head */
   aStir: 110.0, aKill: 111.05,
-  /** @deprecated R2 (crew.tsx rebuild in progress) */
-  bash: 103.62,
 };
 export const canLand = (i: 0 | 1) => (i === 0 ? EV2.rel1 : EV2.rel2) + EV2.canFlight;
 export const canPop = (i: 0 | 1) => canLand(i) + EV2.pop;
@@ -930,6 +928,3 @@ export const ALLY2_KEYS: K4[] = [
   [113.85, 48.9, 1.7, -5.9], [115.0, 48.2, 2.1, -5.7], [116.92, 47.9, 2.4, -5.6],
 ];
 
-/** @deprecated R2 names kept while crew.tsx is rebuilt */
-export const B_FL = {x: B_STRIKE_AT.x, z: B_STRIKE_AT.z, h: 125};
-export const A_FL = {x: A_STRIKE_AT.x, z: A_STRIKE_AT.z, h: 160};
