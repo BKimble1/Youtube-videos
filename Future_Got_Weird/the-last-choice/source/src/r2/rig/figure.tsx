@@ -503,7 +503,9 @@ export const splitZones = (r: Rig2, key: string, el: React.ReactElement, a: V3, 
 const HAIRLINE: Record<string, [number, number][]> = {
   crop: [[0, -0.6], [55, -0.42], [90, -0.12], [125, 0.32], [180, 0.6]],
   bun: [[0, -0.55], [55, -0.38], [90, -0.12], [125, 0.32], [180, 0.6]],
-  curly: [[0, -0.5], [55, -0.4], [90, -0.15], [125, 0.3], [180, 0.62]],
+  // (curly hair covers the back of the head down to the nape: R3's audit of R2/R3 rear views — the hairline rose to the
+  // ears in an inverted V and the bare lower skull read as a face with no features)
+  curly: [[0, -0.5], [55, -0.4], [90, -0.12], [112, 0.4], [140, 0.7], [180, 0.8]],
   swoop: [[0, -0.86], [55, -0.62], [90, -0.12], [125, 0.32], [180, 0.6]],
   // (the back stays above the bob's hem at 0.55: R2's 0.78 showed the cap's V below the cut, a doubled hem from behind)
   bob: [[0, -0.98], [40, -0.92], [75, -0.55], [95, 0.42], [180, 0.5]],
@@ -1116,6 +1118,8 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
       [0.45, 0.3, -0.95, 20], [-0.45, 0.3, -0.95, 20], [0, 0.02, -1.05, 19], [0.95, -0.02, -0.45, 17], [-0.95, -0.02, -0.45, 17],
       [0.83, 0.84, 0.1, 20], [-0.83, 0.84, 0.1, 20], [1.07, 0.16, 0.05, 16], [-1.07, 0.16, 0.05, 16],
       [0.52, 1.02, 0.25, 24], [-0.52, 1.02, 0.25, 24], [0.17, 1.08, 0.3, 24], [-0.17, 1.08, 0.3, 24],
+      // the nape row: carries the curls down to the lowered back hairline
+      [0.42, -0.36, -0.88, 17], [-0.42, -0.36, -0.88, 17], [0, -0.42, -0.95, 17], [0.72, -0.28, -0.66, 15], [-0.72, -0.28, -0.66, 15],
     ];
     const sorted = curls.map((c, k) => ({c, k, z: hl3(c[0], c[1], c[2]).z})).sort((a, b) => a.z - b.z);
     // rear and rear-three-quarter views (the face turned away): the near curls merge into one hair mass — a scalloped
