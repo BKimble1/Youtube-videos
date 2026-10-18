@@ -233,7 +233,9 @@ const RISE_POLAR: [number, number, number, number, number, number][] = [
 export const RISE_KEYS: PathKey[] = [
   // the radio (end of the push), then pulling back off it until the pair is in frame beside it
   {pos: HOLD_END, subj: RAD_SUBJ, sx: RAD_SX, sy: RAD_SY, fov: RAD_FOV},
-  {pos: {x: 9.35, y: 2.05, z: 4.55}, subj: {x: 7.9, y: 0.95, z: 2.2}, sx: 0.58, sy: 0.52, fov: 37},
+  // (a crane up off the radio, not a truck right: a right truck against the left pan holds her on the frame's edge as a
+  // coral wedge; from above she comes into the frame as her bowed head and back together)
+  {pos: {x: 8.5, y: 3.3, z: 4.25}, subj: {x: 7.7, y: 0.9, z: 2.35}, sx: 0.56, sy: 0.46, fov: 38},
   // the first wide: the radio (frame right), her bowed over his hand, him against the slab
   {pos: {x: 9.7, y: 2.85, z: 6.2}, subj: {x: 7.3, y: 0.85, z: 2.6}, sx: 0.5, sy: 0.53, fov: 40},
   ...RISE_POLAR.map(([b, R, H, fov, sx, sy]) => ({pos: polar(b, R, H), subj: HIM, sx, sy, fov})),

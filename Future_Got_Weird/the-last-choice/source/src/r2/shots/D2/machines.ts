@@ -41,7 +41,7 @@ import {V3, clamp, smooth, lerp, add3, sub3, mul3, norm3, rnd, easeIn, easeOut} 
 import {M} from '../../timing';
 import {XZ, G, runDist, runSpeed, cruise, linePath, pathLen, rightOf, headingTo, wrapD, win, after, gaitFoot} from '../D1/motion';
 import {unitD1, enemyDrones} from '../D1/machines';
-import {HEAVIES_B, restD, armyUnits} from '../B/army';
+import {HEAVIES_B, restD, armyUnits, heavySpecB} from '../B/army';
 
 const ground = G;
 const lerp3s = (a: V3, b: V3, k: number): V3 => ({x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), z: lerp(a.z, b.z, k)});
@@ -804,13 +804,17 @@ const HV_LINE: XZ[] = (() => {
   return [{x: HV_PTS[0].x + HV_EXT, z: HV_PTS[0].z}, ...HV_PTS, {x: b.x + ((b.x - a.x) / l) * HV_EXT, z: b.z + ((b.z - a.z) / l) * HV_EXT}];
 })();
 const HV_L = Math.floor(HV_FULL / 0.75) * 0.75;
-const HV_T0 = 94.4, HV_T1 = 121.0;
+// the walk starts on the cut out of D2-1 (until then it is B's halted rest spec, exactly as C and D1 draw it)
+const HV_T0 = M.DECOY, HV_T1 = 121.0;
 const HV_D0 = restD('rear');
 const hvLine = linePath(HV_LINE, 2.5);
 export const HEAVY1 = {id: HEAVIES_B[0].id, index: 0, T0: HV_T0, T1: HV_T1, end: hvLine(HV_EXT + HV_L), path: HV_PTS};
 /** distance walked (m) along HEAVY1.path at film time T */
 export const heavy1Dist = (T: number) => runDist(clamp(T, HV_T0, HV_T1), HV_T0, HV_T1, HV_L, 2.2, 2.4);
 export const heavy1 = (T: number, o: Partial<HeavySpec> = {}): HeavySpec => {
+  // halted, before its walk: exactly B's rest spec (the stance C and D1 draw), so the 94.30 handover is seamless. Its
+  // walk starts on the cut to D2-2a (95.38) from the route's own rest stance, turned onto the route (no heavy in the insert).
+  if (T < HV_T0) return heavySpecB(0, T, {look: on({x: 44, z: 0}, 1.5), eye: 'cyan', lockAt: 98.1, key: 'd2hv1', ...o});
   const d = heavy1Dist(T);
   const path = (dd: number) => hvLine(dd - HV_D0 + HV_EXT);
   const p = path(HV_D0 + d);

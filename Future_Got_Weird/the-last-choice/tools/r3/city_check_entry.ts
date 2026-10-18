@@ -18,7 +18,7 @@ import {PERSIST} from '../../source/src/r2/shots/persist';
 import {ARMY_B, HEAVIES_B, heavyPosB} from '../../source/src/r2/shots/B/army';
 import {streamForm, TB_RING, TB_OUTER, TB_RESERVE, TB_HEAVY2, TB_HOLDERS} from '../../source/src/r2/shots/EF/tableau';
 import {camF1} from '../../source/src/r2/shots/EF/camera';
-import {CAM_B1, CAM_B2, CAM_B3, CAM_B4, CAM_B5, CAM_B6, SHOT_T} from '../../source/src/r2/shots/B/cams';
+import * as BC from '../../source/src/r2/shots/B/cams';
 import {A1_ARMY, A1_HEAVIES} from '../../source/src/r2/shots/A/army';
 import type {Formation} from '../../source/src/r2/mech';
 import {M} from '../../source/src/r2/timing';
@@ -247,8 +247,17 @@ for (let T = 0; T <= M.TITLE_IN; T += 0.1) {
   const a = AERIAL.from.pos, b = AERIAL.to.pos;
   testCam('A1', T, {x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u, z: a.z + (b.z - a.z) * u});
 }
-const bc: [string, CamKey[], readonly [number, number]][] = [['B1', CAM_B1, SHOT_T.B1], ['B2', CAM_B2, SHOT_T.B2], ['B3', CAM_B3, SHOT_T.B3], ['B4', CAM_B4, SHOT_T.B4], ['B5', CAM_B5, SHOT_T.B5], ['B6', CAM_B6, SHOT_T.B6]];
-bc.forEach(([n, keys, [a, b]]) => { for (let t = 0; t <= b - a; t += 0.1) testCam(n, a + t, lerpKeys(keys, t)); });
+// B's cameras by name, whatever its shots are called now: SHOT_T.<id> → CAM_<ID> (keys, shot-local t) or cam<Id>(T)
+{
+  const B = BC as unknown as Record<string, unknown>;
+  const shots = (B.SHOT_T ?? {}) as Record<string, readonly [number, number]>;
+  Object.entries(shots).forEach(([id, [a, b]]) => {
+    const keys = B[`CAM_${id.toUpperCase()}`] as CamKey[] | undefined;
+    const fn = B[`cam${id[0].toUpperCase()}${id.slice(1)}`] as ((T: number) => {pos: V3}) | undefined;
+    if (!keys && typeof fn !== 'function') { add('camera', 'info', `B shot ${id}: no camera export found (skipped)`); return; }
+    for (let t = 0; t <= b - a; t += 0.1) testCam(id, a + t, keys ? lerpKeys(keys, t) : fn!(a + t).pos);
+  });
+}
 for (let T = 198.3; T <= M.CARD_IN; T += 0.1) testCam('F1', T, camF1(T).pos);
 camHits.forEach((h, k) => add('camera', /INSIDE|inside|below/.test(k) ? 'error' : 'info', `${k} (at T ${f1(h.T)}, cam ${f1(h.p.x)}, ${f1(h.p.y)}, ${f1(h.p.z)})`));
 
@@ -316,6 +325,74 @@ S.forEach((s) => {
   });
 });
 add('sort', bigSet ? 'warn' : 'info', `${bigSet} set-piece faces longer than ${SORT_MAX} m lie near machines${bigSetList.length ? ': ' + bigSetList.join(', ') : ''}`);
+
+// ------------------------------------------------------------------ painter's-order risk near the CREW (R3 follow-up)
+// A face sorts by the depth of its middle: a figure standing within about half the face's length of it can be drawn on
+// the wrong side. Flag every set-piece / near-building face of length L ≥ 0.9 m (horizontal extent) with a figure's
+// feet within L/2 (and the face spanning the figure's height), unless the face is biased back by ≥ L/2 already.
+type Fig = {who: string; T: number; x: number; y: number; z: number};
+const FIGS: Fig[] = ((globalThis as {__R3_FIGS?: Fig[]}).__R3_FIGS ?? []);
+((globalThis as {__R3_FIG_NOTES?: string[]}).__R3_FIG_NOTES ?? []).forEach((n) => add('figures', /SKIPPED/.test(n) ? 'warn' : 'info', n));
+{
+  // a coarse grid of figure samples (2 m cells) for speed
+  const cell = 2, grid = new Map<string, Fig[]>();
+  FIGS.forEach((f) => { const k = `${Math.floor(f.x / cell)},${Math.floor(f.z / cell)}`; const l = grid.get(k) ?? []; l.push(f); grid.set(k, l); });
+  const nearFigs = (x0: number, x1: number, z0: number, z1: number) => {
+    const out2: Fig[] = [];
+    for (let i = Math.floor(x0 / cell); i <= Math.floor(x1 / cell); i++) for (let j = Math.floor(z0 / cell); j <= Math.floor(z1 / cell); j++) out2.push(...(grid.get(`${i},${j}`) ?? []));
+    return out2;
+  };
+  type Flag = {piece: string; L: number; d: number; who: string; T: number; n: number};
+  const flags = new Map<string, Flag>();
+  const testFace = (piece: string, P: V3[], bias: number) => {
+    let L = 0;
+    for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) L = Math.max(L, Math.hypot(P[i].x - P[j].x, P[i].z - P[j].z));
+    if (L < 0.9 || bias <= -L / 2) return;
+    const H = hull(P.map((p) => ({x: p.x, z: p.z})));
+    const ys = P.map((p) => p.y);
+    const lo = Math.min(...ys), hi = Math.max(...ys);
+    let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9;
+    P.forEach((p) => { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); z0 = Math.min(z0, p.z); z1 = Math.max(z1, p.z); });
+    const R = L / 2;
+    for (const f of nearFigs(x0 - R, x1 + R, z0 - R, z1 + R)) {
+      if (hi < f.y - 0.1 || lo > f.y + 1.9) continue;
+      const d = H.length >= 3 ? Math.max(0, polyDist(f, H)) : segDist(f, H[0], H[H.length - 1]);
+      if (d >= R) continue;
+      const prev = flags.get(piece);
+      if (!prev) flags.set(piece, {piece, L, d, who: f.who, T: f.T, n: 1});
+      else { prev.n++; if (L - 2 * d > prev.L - 2 * prev.d) Object.assign(prev, {L, d, who: f.who, T: f.T}); }
+    }
+  };
+  S.forEach((s) => {
+    const it = s.item as MeshItem;
+    const key = it.key ?? '?';
+    if (/^(ridge_|crater_|road_|walk_|kerb_|band_)/.test(key)) return;
+    it.mesh.faces.forEach((f) => testFace(key, f.v.map((i) => (it.xf ? xfPoint(it.mesh.verts[i], it.xf) : it.mesh.verts[i])), (f.bias ?? 0) + (it.mesh.bias ?? 0) + (it.bias ?? 0)));
+  });
+  city.forEach((b) => {
+    if (b.zone !== 'front' && b.zone !== 'west') return;
+    if (!nearFigs(b.x0 - 3, b.x1 + 3, b.z0 - 3, b.z1 + 3).length) return;
+    const m = bldgMesh(b, 0);
+    m.faces.forEach((f) => testFace(`building ${b.id}`, f.v.map((i) => m.verts[i]), f.bias ?? 0));
+  });
+  // the Crew's feet inside a solid set piece (walking through a car, a wall, a slab; standing in the van)
+  const inside = new Map<string, {who: string; T: number; d: number; piece: string; n: number}>();
+  FIGS.forEach((f) => {
+    for (const so of solids) {
+      if (f.y > so.y1 + 0.2) continue; // standing on top of it (a slab, the rubble) is fine
+      const d = polyDist(f, so.hull);
+      if (d > -0.15) continue;
+      const k = `${f.who}|${so.key}`;
+      const prev = inside.get(k);
+      if (!prev) inside.set(k, {who: f.who, T: f.T, d, piece: so.key, n: 1});
+      else { prev.n++; if (d < prev.d) Object.assign(prev, {T: f.T, d}); }
+    }
+  });
+  [...inside.values()].sort((a, b) => a.d - b.d).slice(0, 25).forEach((q) => add('crew', q.d < -0.4 ? 'warn' : 'info', `${q.who}'s feet ${(-q.d).toFixed(2)} m inside ${q.piece} (T ${f1(q.T)}; ${q.n} sample${q.n > 1 ? 's' : ''}) — through it, or standing on it?`));
+  const list = [...flags.values()].sort((a, b) => b.L - 2 * b.d - (a.L - 2 * a.d));
+  add('sort', list.length ? 'warn' : 'info', `${FIGS.length} crew samples; ${list.length} set pieces / buildings have faces longer than twice a figure's distance to them${list.length ? '' : ' (none)'}`);
+  list.slice(0, 30).forEach((q) => add('sort', 'warn', `  ${q.piece}: a ${f1(q.L)} m face ${q.d.toFixed(2)} m from ${q.who} (T ${f1(q.T)}; ${q.n} sample${q.n > 1 ? 's' : ''})`));
+}
 
 // ------------------------------------------------------------------ summary
 add('info', 'info', `checked ${city.length} buildings, ${solids.length} solid set pieces, ${machinePts.length} machine samples; world kit exports: ${Object.keys(WORLD).length}`);

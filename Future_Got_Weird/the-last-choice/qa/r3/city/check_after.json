@@ -1,20 +1,65 @@
 {
  "counts": {
   "camera.info": 1,
+  "crew.info": 2,
+  "figures.info": 7,
   "fire.info": 15,
   "info.info": 1,
-  "routes.error": 10,
-  "routes.warn": 5,
   "set.warn": 1,
-  "set.info": 95,
-  "sort.warn": 1,
+  "set.info": 94,
+  "sort.warn": 5,
   "sort.info": 1
  },
  "report": [
   {
    "cat": "camera",
    "sev": "info",
-   "msg": "F1 pullback corridor: nearest building building W5 at 5.9 m (T 228.7)"
+   "msg": "F1 pullback corridor: nearest building building FS0 at 7.1 m (T 210.2)"
+  },
+  {
+   "cat": "crew",
+   "sev": "info",
+   "msg": "D3 director's feet 0.29 m inside waterMain (T 128.9; 1 sample) — through it, or standing on it?"
+  },
+  {
+   "cat": "crew",
+   "sev": "info",
+   "msg": "D3 runner's feet 0.24 m inside waterMain (T 120.9; 1 sample) — through it, or standing on it?"
+  },
+  {
+   "cat": "figures",
+   "sev": "info",
+   "msg": "B: 55 crew samples"
+  },
+  {
+   "cat": "figures",
+   "sev": "info",
+   "msg": "C: 196 crew samples"
+  },
+  {
+   "cat": "figures",
+   "sev": "info",
+   "msg": "D1: 483 crew samples"
+  },
+  {
+   "cat": "figures",
+   "sev": "info",
+   "msg": "D2: 322 crew samples"
+  },
+  {
+   "cat": "figures",
+   "sev": "info",
+   "msg": "D3: 462 crew samples"
+  },
+  {
+   "cat": "figures",
+   "sev": "info",
+   "msg": "D4: 525 crew samples"
+  },
+  {
+   "cat": "figures",
+   "sev": "info",
+   "msg": "EF: 630 crew samples"
   },
   {
    "cat": "fire",
@@ -94,82 +139,7 @@
   {
    "cat": "info",
    "sev": "info",
-   "msg": "checked 521 buildings, 173 solid set pieces, 19710 machine samples; world kit exports: 60"
-  },
-  {
-   "cat": "routes",
-   "sev": "error",
-   "msg": "EF stream units inside wreck_4 (depth 0.5 m, worst at T 219.0, x 148.4, z -3.7; 11 units)"
-  },
-  {
-   "cat": "routes",
-   "sev": "error",
-   "msg": "EF stream units inside wreck_6 (depth 0.5 m, worst at T 217.0, x 213.8, z -9.3; 10 units)"
-  },
-  {
-   "cat": "routes",
-   "sev": "error",
-   "msg": "EF stream units inside wreck_8 (depth 1.0 m, worst at T 217.0, x 340.8, z -8.8; 19 units)"
-  },
-  {
-   "cat": "routes",
-   "sev": "error",
-   "msg": "EF stream units inside wreck_5 (depth 0.7 m, worst at T 218.0, x 176.5, z 8.6; 22 units)"
-  },
-  {
-   "cat": "routes",
-   "sev": "error",
-   "msg": "EF stream units inside wreck_7 (depth 0.7 m, worst at T 215.0, x 288.9, z 4.1; 21 units)"
-  },
-  {
-   "cat": "routes",
-   "sev": "error",
-   "msg": "EF stream units inside wreck_9 (depth 0.9 m, worst at T 227.0, x 380.2, z 3.8; 9 units)"
-  },
-  {
-   "cat": "routes",
-   "sev": "error",
-   "msg": "EF ring units inside building FS0 (depth 2.2 m, worst at T 190.0, x 16.4, z 21.2; 1 unit)"
-  },
-  {
-   "cat": "routes",
-   "sev": "error",
-   "msg": "EF ring units inside wreck_0 (depth 0.4 m, worst at T 190.0, x 24.1, z -9.9; 1 unit)"
-  },
-  {
-   "cat": "routes",
-   "sev": "error",
-   "msg": "EF reserve units inside wreck_2 (depth 0.7 m, worst at T 190.0, x 96.2, z -7.2; 2 units)"
-  },
-  {
-   "cat": "routes",
-   "sev": "error",
-   "msg": "EF reserve units inside bus (depth 0.8 m, worst at T 190.0, x 96.0, z 7.3; 2 units)"
-  },
-  {
-   "cat": "routes",
-   "sev": "warn",
-   "msg": "EF stream units inside building FS3 (depth 0.0 m, worst at T 230.0, x 133.5, z 19.2; 6 units)"
-  },
-  {
-   "cat": "routes",
-   "sev": "warn",
-   "msg": "EF stream units grazing lamp_4 (depth -0.3 m, worst at T 219.0, x 126.4, z -15.3; 1 unit)"
-  },
-  {
-   "cat": "routes",
-   "sev": "warn",
-   "msg": "EF stream (steered, proposal) units inside building FS3 (depth 0.0 m, worst at T 230.0, x 133.5, z 19.2; 6 units)"
-  },
-  {
-   "cat": "routes",
-   "sev": "warn",
-   "msg": "EF stream (steered, proposal) units grazing lamp_4 (depth -0.3 m, worst at T 219.0, x 126.4, z -15.3; 1 unit)"
-  },
-  {
-   "cat": "routes",
-   "sev": "warn",
-   "msg": "persist d2_C grazing girder (depth -0.1 m, worst at T 108.0, x 50.0, z -10.2; 1 unit)"
+   "msg": "checked 521 buildings, 170 solid set pieces, 19038 machine samples; world kit exports: 60"
   },
   {
    "cat": "set",
@@ -219,12 +189,7 @@
   {
    "cat": "set",
    "sev": "info",
-   "msg": "set pieces cplate_9 and girder overlap in plan by 0.7 m (check: intended contact or interpenetration?)"
-  },
-  {
-   "cat": "set",
-   "sev": "info",
-   "msg": "set pieces cplate_10 and girder overlap in plan by 1.4 m (check: intended contact or interpenetration?)"
+   "msg": "set pieces cplate_10 and girder overlap in plan by 3.2 m (check: intended contact or interpenetration?)"
   },
   {
    "cat": "set",
@@ -655,6 +620,26 @@
    "cat": "sort",
    "sev": "warn",
    "msg": "1 building faces wider than 7.5 m have machines within 6 m in front of them: FS0#79 (7.6 m)"
+  },
+  {
+   "cat": "sort",
+   "sev": "warn",
+   "msg": "2673 crew samples; 3 set pieces / buildings have faces longer than twice a figure's distance to them"
+  },
+  {
+   "cat": "sort",
+   "sev": "warn",
+   "msg": "  cch_20: a 1.1 m face 0.00 m from D3 breaker (T 129.9; 15 samples)"
+  },
+  {
+   "cat": "sort",
+   "sev": "warn",
+   "msg": "  waterMain: a 1.0 m face 0.00 m from D3 director (T 128.9; 12 samples)"
+  },
+  {
+   "cat": "sort",
+   "sev": "warn",
+   "msg": "  sch_22: a 1.0 m face 0.45 m from D4 tether (T 158.9; 1 sample)"
   },
   {
    "cat": "sort",

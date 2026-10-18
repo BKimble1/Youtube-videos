@@ -3,10 +3,10 @@
 // the cover slab, wrecks from earlier sections, and the section's FX. Shots pick a camera and call d1Items().
 import type {Item, View} from '../../engine';
 import {toView} from '../../engine';
-import {V3} from '../../../kit/math';
+import {V3, add3, sub3, mul3, norm3, dot3, clamp} from '../../../kit/math';
 import {combatUnit, drone, heavy, armyItems, UnitSpec} from '../../mech';
 import type {Formation} from '../../mech';
-import {figureSprite, FigSpec} from '../../rig';
+import {figureSprite, figureRig, FigSpec} from '../../rig';
 import {persistItems} from '../../film/continuity';
 import {FxOut} from '../../fx';
 import {unitD1, FRONT, RESERVE_NAMES, enemyDrones, D1_ARMY_IDS} from './machines';
@@ -49,6 +49,25 @@ export type D1Opts = {
   full?: number; far?: number;
 };
 
+/**
+ * The breaker's front (left) hand re-solved onto the tube in this view. The rig draws the tool as one fixed tube from
+ * the back hand toward the front hand, so a front hand that falls short of its target would swing the ram off its
+ * line (and off its contact). Slide the target along the intended tube to where the solved hand gets (a few solves).
+ */
+export const frontOnTube = (v: View, spec: FigSpec): FigSpec => {
+  const w = spec.world;
+  if (!w?.handL || !w?.handR) return spec;
+  const b = w.handR, u = norm3(sub3(w.handL, b));
+  let s = spec;
+  for (let i = 0; i < 3; i++) {
+    const R = figureRig(v, s), t = s.world!.handL!;
+    if (Math.hypot(R.handL.x - t.x, R.handL.y - t.y, R.handL.z - t.z) < 0.015) break;
+    const k = clamp(dot3(sub3(R.handL, b), u), 0.16, 0.8);
+    s = {...s, world: {...s.world, handL: add3(b, mul3(u, k))}};
+  }
+  return s;
+};
+
 export const d1Items = (v: View, T: number, o: D1Opts = {}): Item[] => {
   const items: Item[] = [];
   const crew: Partial<Record<Role, CrewOut>> = {};
@@ -57,7 +76,8 @@ export const d1Items = (v: View, T: number, o: D1Opts = {}): Item[] => {
     crew[r] = c;
     const tw = o.tweak?.[r];
     if (toView(v, c.spec.pos).z < 0.3) return;
-    items.push(figureSprite({...c.spec, ...(tw ?? {})}));
+    const sp = {...c.spec, ...(tw ?? {})};
+    items.push(figureSprite(r === 'breaker' ? frontOnTube(v, sp) : sp));
   });
   const full = o.full ?? 26, far = o.far ?? 90;
   const lodOf = (p: V3) => {

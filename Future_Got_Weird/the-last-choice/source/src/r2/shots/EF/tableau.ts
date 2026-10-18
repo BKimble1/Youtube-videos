@@ -75,7 +75,7 @@ export const SURRENDER = {
    *  her hands sink to her thighs, palms still open (199.4) */
   decoy: {held: 181.0, release: 183.55, handsUp: 183.7, glance: 188.2, lower: 199.4},
   /** out of flares (the last one into heavy 2's eye, 166.14), satchel empty; H3 locks his right arm up behind him
-   *  (181.7) and presses him down onto one knee (182.4); one last heave against the lock (184.3) that the unit bears
+   *  with one hand and bears down on his shoulder with the other (181.7), pressing him down onto one knee (182.4); one last heave against the lock (184.3) that the unit bears
    *  down on; his head drops (185.2); a look across to the decoy maker (190.5) */
   flares: {held: 181.7, press: 182.4, heave: 184.3, drop: 185.2, glance: 190.5},
   /** the empty breaker swung as a club (164.4); his bad leg gives and he sits down hard, the tool falling beside him
@@ -200,7 +200,7 @@ const holder = (key: string, id: number, who: Exclude<Role2, 'director' | 'drone
 export const TB_HOLDERS: Holder[] = [
   holder('h_tether', 7101, 'tether', 'R', 0.95, -0.25, SURRENDER.tether.held),
   holder('h_decoy', 7102, 'decoy', 'L', 0.85, 0.45, SURRENDER.decoy.held, 0, 6, {release: SURRENDER.decoy.release}),
-  holder('h_flares', 7103, 'flares', 'R', 0.8, 0.0, SURRENDER.flares.held, 0.12, 10, {second: {t0: SURRENDER.flares.press, at: FLARES_SHOULDER, press: 0.55}, press: 0.3}),
+  holder('h_flares', 7103, 'flares', 'R', 0.8, 0.0, SURRENDER.flares.held, 0.12, 10, {second: {t0: SURRENDER.flares.held, at: FLARES_SHOULDER, press: 0.5}, press: 0.3}),
   holder('h_breaker', 7104, 'breaker', 'L', 0.85, -0.1, SURRENDER.breaker.held, 0.32, 18, {press: 0.5}),
   // over the runner: no hold, it stands over him and watches him
   {key: 'h_runner', id: 7105, pos: {x: 19.0, y: 0, z: 6.6}, heading: 235, side: 'R', at: on(18.1, 7.6, 0.2), crouch: 0.05, lean: 14, t0: 1e9, who: null, look: on(18.1, 7.6, 0.2)},
@@ -217,6 +217,10 @@ const RUNNER_UP = (t: number): V3 => on(18.15, 7.55, 0.25 + 0.3 * smooth((t - SU
 // ------------------------------------------------------------------ the ring
 export type RingUnit = {id: number; pos: V3; heading: number; eye: 'cyan' | 'amber'; crouch: number};
 const RING_C = {x: 11.4, z: 3.2};
+const RING_AT: Record<number, {x: number; z: number}> = {
+  7202: {x: 19.15, z: 9.86}, 7208: {x: 5.88, z: 12.42}, 7215: {x: 2.51, z: -2.25}, 7216: {x: 3.83, z: -4.8}, 7217: {x: 6.07, z: -6.03},
+  7218: {x: 8.75, z: -6.84}, 7220: {x: 13.02, z: -7.28}, 7221: {x: 14.67, z: -6.42}, 7222: {x: 16.85, z: -5.04},
+};
 /** Inner ring: radius ~10.5 m round the van area, the heavy's sector (east) left open; even spacing (~2.3 m). */
 export const TB_RING: RingUnit[] = (() => {
   const out: RingUnit[] = [];
@@ -229,12 +233,15 @@ export const TB_RING: RingUnit[] = (() => {
     // stand in every high view of him from the west
     const dx = x - DIRECTOR_SEAT.x, dz = z - DIRECTOR_SEAT.z, dd = Math.hypot(dx, dz), b = ((Math.atan2(dx, -dz) * 180) / Math.PI + 360) % 360;
     if (b > 196 && b < 292 && dd < 11) { x = DIRECTOR_SEAT.x + (dx / dd) * 11; z = DIRECTOR_SEAT.z + (dz / dd) * 11; }
+    // (set-checked: nudged ≤ 0.8 m clear of the leaning slabs and rubble chunks round the van, ≥ 0.75 m root clearance)
+    const fix = RING_AT[7200 + i];
+    if (fix) { x = fix.x; z = fix.z; }
     const toC = headingTo({x, z}, {x: RING_C.x - 2.5, z: RING_C.z + 0.6});
     out.push({id: 7200 + i, pos: {x, y: 0, z}, heading: toC + (rnd(i * 11) - 0.5) * 10, eye: 'cyan', crouch: 0});
   }
   return out;
 })();
-const OUTER_AT: Record<number, {x: number; z: number}> = {7309: {x: 2.5, z: -13.6}, 7306: {x: -7.0, z: 5.3}};
+const OUTER_AT: Record<number, {x: number; z: number}> = {7301: {x: 23.01, z: 17.5}, 7304: {x: 2.44, z: 17.45}, 7306: {x: -7.0, z: 5.3}, 7309: {x: 2.1, z: -13.6}, 7310: {x: 10.98, z: -14.32}};
 /** Outer cordon: radius ~17–19 m, kept on the street side of the frontage (FS0 / FN0) and clear of the wrecks. */
 export const TB_OUTER: RingUnit[] = (() => {
   const out: RingUnit[] = [];
@@ -247,7 +254,7 @@ export const TB_OUTER: RingUnit[] = (() => {
     if (x > 12.5 && Math.abs(z) > 17.2) { const s = 17.2 / Math.abs(z); x = RING_C.x + (x - RING_C.x) * s; z *= s; r *= s; }
     // the burnt car on its roof (wreck_0, 24 −9) and its fuel spill: hold short of it
     if (Math.hypot(x - 24, z + 9) < 4.2) { x = RING_C.x + Math.sin((a * Math.PI) / 180) * 14.2; z = RING_C.z - Math.cos((a * Math.PI) / 180) * 14.2; }
-    // (set-checked spots: 7309 clear of the ridge's broken beam rbeam_3; 7306 a step further up the crest from the ring)
+    // (set-checked spots, ≥ 0.75 m root clearance from slabs, chunks and beams)
     const fix = OUTER_AT[7300 + i];
     if (fix) { x = fix.x; z = fix.z; }
     out.push({id: 7300 + i, pos: {x, y: 0, z}, heading: headingTo({x, z}, RING_C) + (rnd(i * 17) - 0.5) * 16, eye: 'cyan', crouch: 0});
@@ -260,10 +267,10 @@ export const TB_OUTER: RingUnit[] = (() => {
  * time, guard up while they move, then 'ready' again. `to` = where they stand after; `face` = what they keep facing.
  */
 export const TB_STEPS: {id: number; t0: number; t1: number; to: V3; face: V3; note: string}[] = [
-  {id: 7308, t0: 203.9, t1: 205.6, to: {x: 0.3, y: 0, z: -5.6}, face: {x: 6.5, y: 0, z: 2.0}, note: 'outer, north-west: down onto the ridge path behind the van (the way out over the rubble)'},
-  {id: 7216, t0: 205.2, t1: 206.4, to: {x: 5.0, y: 0, z: -2.9}, face: {x: 8.3, y: 0, z: 2.4}, note: 'inner, north: a step in toward the van'},
+  {id: 7308, t0: 203.9, t1: 205.6, to: {x: -2.25, y: 0, z: -5.5}, face: {x: 6.5, y: 0, z: 2.0}, note: 'outer, north-west: down the ridge\'s north slope onto the way out over the rubble'},
+  {id: 7216, t0: 205.2, t1: 206.4, to: {x: 5.1, y: 0, z: -2.51}, face: {x: 8.3, y: 0, z: 2.4}, note: 'inner, north: a step in toward the van'},
   {id: 7307, t0: 216.4, t1: 218.3, to: {x: -3.6, y: 0, z: 2.3}, face: {x: 6.7, y: 0, z: 3.3}, note: 'outer, west: onto the crest behind the slab'},
-  {id: 7221, t0: 212.6, t1: 213.8, to: {x: 15.3, y: 0, z: -4.9}, face: {x: 12.3, y: 0, z: 0.6}, note: 'inner, north-east: in behind the tether operator as she sinks'},
+  {id: 7221, t0: 212.6, t1: 213.8, to: {x: 15.09, y: 0, z: -5.67}, face: {x: 12.3, y: 0, z: 0.6}, note: 'inner, north-east: in behind the tether operator as she sinks'},
   {id: 7302, t0: 218.7, t1: 220.5, to: {x: 15.5, y: 0, z: 14.9}, face: {x: 14.0, y: 0, z: 7.4}, note: 'outer, south-east: closes the gap past the runner'},
 ];
 /** The ring units that turn to the drone pilot while she crawls in (attention snaps to her, tracks her, lets go). */
@@ -287,7 +294,7 @@ export const TB_HEAVY1 = {id: 7402, pos: {x: 60.5, y: 0, z: -11.5} as V3, headin
 /** Units the Crew downed in D4 (the Director smashed through two at ARRIVAL; one tripped by the wrapped cable). */
 export const TB_WRECKS: {id: number; pos: V3; heading: number; fall: {t0: number; dir: V3; ang?: number}; damage?: UnitSpec['damage']; note: string}[] = [
   {id: 7501, pos: {x: 13.4, y: 0, z: -3.0}, heading: 250, fall: {t0: 163.4, dir: {x: 0.85, y: 0, z: -0.5}, ang: 90}, damage: {chest: {t0: 163.3, dir: {x: 0.9, y: 0.3, z: -0.4}, speed: 3}, dead: {t0: 163.6}}, note: 'smashed by the Director (ARRIVAL), chest plate off'},
-  {id: 7502, pos: {x: 15.0, y: 0, z: 3.9}, heading: 275, fall: {t0: 164.5, dir: {x: 0.25, y: 0, z: 1}}, damage: {armOff: {side: 'L', t0: 164.4, dir: {x: 0.5, y: 0.4, z: 1}, speed: 3}, dead: {t0: 164.8}}, note: 'smashed by the Director, arm torn off'},
+  {id: 7502, pos: {x: 15.0, y: 0, z: 3.9}, heading: 275, fall: {t0: 164.5, dir: {x: 0.85, y: 0, z: 1}}, damage: {armOff: {side: 'L', t0: 164.4, dir: {x: 0.5, y: 0.4, z: 1}, speed: 3}, dead: {t0: 164.8}}, note: 'arm torn off by the breaker\'s club: falls away from it to the south-south-east (clear of heavy 2\'s front-left foot)'},
   {id: 7503, pos: {x: 16.8, y: 0, z: -2.6}, heading: 265, fall: {t0: 165.1, dir: {x: 0.3, y: 0, z: -1}}, damage: {dead: {t0: 165.4}}, note: 'legs wrapped by the tether cable, toppled'},
 ];
 
@@ -353,8 +360,12 @@ export const holderSpecs = (T: number, grip?: (h: Holder, T: number) => V3): Uni
       scan: {t0: 191.0, center: on(18.1, 7.6, 0.2), span: 40, dwell: 1.6, seed: h.id}};
   }
   const at = (t: number) => (grip ? grip(h, t) : h.at);
-  const restrain: RestrainSpec[] = [{t0: h.t0, side: h.side, at, t1: h.release, press: h.press ?? 0}];
-  if (h.second) restrain.push({t0: h.second.t0, side: h.side === 'L' ? 'R' : 'L', at: h.key === 'h_flares' ? flaresShoulderAt : h.second.at, press: h.second.press});
+  // H3: ONE two-handed restraint from its grab — left hand on the locked wrist, right hand on his shoulder — so the
+  // body's reach shift is shared by both hands from the first frame (a second restraint opening later would halve the
+  // kit's averaged reach shift in one frame: a 17 cm pelvis jump)
+  const restrain: RestrainSpec[] = h.second
+    ? [{t0: h.t0, side: 'both', at, at2: h.key === 'h_flares' ? flaresShoulderAt : h.second.at, press: h.second.press}]
+    : [{t0: h.t0, side: h.side, at, t1: h.release, press: h.press ?? 0}];
   const free: Posture = h.release ? 'ready' : 'lowered';
   const out: UnitSpec = {...base, restrain, posture: [[h.t0 + 0.6, free]]};
   if (h.release) {

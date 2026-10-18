@@ -58,14 +58,26 @@ export const lookFrame = (fwd: V3, up: V3 = {x: 0, y: 1, z: 0}): R3 => {
 };
 
 /** Two-bone IK: root a, target b, lengths l1, l2, pole hint (world point direction the middle joint bends toward). */
-export const ik2 = (a: V3, b: V3, l1: number, l2: number, pole: V3): {mid: V3; end: V3; reach: number} => {
+export const ik2 = (a: V3, b: V3, l1: number, l2: number, pole: V3, soft = 0, pole2?: V3): {mid: V3; end: V3; reach: number} => {
   const d = sub3(b, a);
-  const L = clamp(len3(d), 1e-4, (l1 + l2) * 0.9995);
+  let L = clamp(len3(d), 1e-4, (l1 + l2) * 0.9995);
+  // soft limit (m): within `soft` of full stretch the reach eases in exponentially, so the middle joint never snaps
+  // through the straight-limb singularity (the end stops at most `soft` short of an over-far target)
+  if (soft > 0) { const s0 = (l1 + l2) * 0.9995 - soft; if (L > s0) L = s0 + soft * (1 - Math.exp(-(L - s0) / soft)); }
   const dir = norm3(d);
   const end = add3(a, mul3(dir, L));
   const x = (l1 * l1 - l2 * l2 + L * L) / (2 * L);
   const h = Math.sqrt(Math.max(0, l1 * l1 - x * x));
   let pp = sub3(pole, mul3(dir, dot3(pole, dir)));
+  // secondary hint: as the limb comes into line with the pole, the bend plane is taken over continuously by pole2
+  // (no flip of the middle joint when a hand / foot passes through the pole direction)
+  if (pole2) {
+    const pl = len3(pole) || 1;
+    const x0 = clamp(len3(pp) / (0.45 * pl));
+    const w = 1 - x0 * x0 * (3 - 2 * x0);
+    const q = sub3(pole2, mul3(dir, dot3(pole2, dir)));
+    if (w > 0 && len3(q) > 1e-6) pp = add3(pp, mul3(norm3(q), w * 0.45 * pl));
+  }
   if (len3(pp) < 1e-5) pp = Math.abs(dir.y) < 0.9 ? cross3(dir, {x: 0, y: 1, z: 0}) : cross3(dir, {x: 1, y: 0, z: 0});
   pp = norm3(pp);
   return {mid: add3(add3(a, mul3(dir, x)), mul3(pp, h)), end, reach: len3(d) / (l1 + l2)};

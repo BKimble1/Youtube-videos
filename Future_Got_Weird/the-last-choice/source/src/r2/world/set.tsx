@@ -13,9 +13,9 @@ import {V3, rnd, add3, mul3, norm3, rotAxis, rad} from '../../kit/math';
 import {View, Item, MeshItem, Prepped, prep, box, merge, xfMesh, Mesh, Face, mix as mixC, splitLong} from '../engine';
 import {PLAN, STREET_OBSTACLES, A1_EVENTS, FIRE_SITES} from './plan';
 import {groundH, CLEAR_ZONES, isClear, noise2, FOOT} from './ground';
-import {groundGrid, Decal, blobXZ, crackXZ, rebarAt, polyline3, chipsXZ, splitPlanar} from './geom';
+import {groundGrid, Decal, blobXZ, crackXZ, rebarAt, polyline3, chipsXZ, splitPlanar, splitPlanar2} from './geom';
 import {CITY, Bldg, bldgMesh, lodFor, coneMesh, bldgSteel, facadePanel, openingFor, wallFrame, wallPoint} from './city';
-import {vanMesh, vanInteriorMesh, VAN_XF, radioMesh, radioFn, RADIO, deathSlabMesh, carMesh, busMesh, girderMesh, girderMeshFar, vehicleFar, columnMeshes, brokenSlab, chunkMesh, beam, truckMesh, fallenSignal, dumpsterMesh, boxBin, hydrantMesh} from './props';
+import {vanMesh, vanInteriorMesh, VAN_XF, radioMesh, radioFn, RADIO, deathSlabMesh, carMesh, busMesh, girderMesh, girderMeshMid, girderMeshFar, vehicleFar, vanMeshWhole, columnMeshes, brokenSlab, chunkMesh, beam, truckMesh, fallenSignal, dumpsterMesh, boxBin, hydrantMesh} from './props';
 import {M} from '../timing';
 
 const FLAT_BIAS = -1e5;
@@ -95,11 +95,20 @@ const roadDecals = (x0: number, x1: number): Decal[] => {
 };
 
 // ------------------------------------------------------------------ static meshes (built once, lazily)
-type Static = {item: MeshItem; c: V3; r: number; minPx?: number; /** a cheaper stand-in beyond farD m */ far?: MeshItem; farD?: number};
+type Static = {item: MeshItem; c: V3; r: number; minPx?: number; /** cheaper versions by camera distance: each `item` is used beyond its `d` (ascending) */ lods?: {d: number; item: MeshItem}[]};
 let STATIC: Static[] | null = null;
 let FLAT: Static[] | null = null;
 let EXTRA: Item[] | null = null;
 
+/**
+ * A piece people stand next to: finely split within NEAR m of the camera (every close shot and the first wides of F1), whole beyond — the cuts
+ * only matter where a figure can be beside it on screen at a size where the order shows, and they cost faces.
+ */
+const NEAR = 60;
+const splitNear = (whole: Mesh, split: (m: Mesh) => Mesh, key: string, extra: Partial<MeshItem> = {}): Static => {
+  const near = meshOf(prep(split(whole)), key, extra);
+  return {...near, lods: [{d: NEAR, item: {...near.item, mesh: prep(whole)}}]};
+};
 const meshOf = (m: Prepped, key: string, extra: Partial<MeshItem> = {}): Static => {
   const c = extra.xf?.pos ? add3(m.center, extra.xf.pos) : m.center;
   const sc = typeof extra.xf?.scale === 'number' ? extra.xf.scale : 1;
@@ -205,7 +214,8 @@ const buildStatic = (): Static[] => {
     const V = norm3(rotAxis(V0, U, tilt * (rnd(s * 9) > 0.5 ? 1 : -1)));
     const w = 1.8 + rnd(s * 11) * 3.2, h = 1.1 + rnd(s * 13) * 2.2;
     const o = {x: x - U.x * w / 2, y: y - 0.45, z: z - U.z * w / 2};
-    out.push(meshOf(prep(brokenSlab(o, U, V, w, h, 0.24 + rnd(s * 17) * 0.18, s)), `rslab_${i}`));
+    // (R3) 0.6 m strips across the slab: the Crew climb, crouch and stand beside these on the ridge
+    out.push(splitNear(brokenSlab(o, U, V, w, h, 0.24 + rnd(s * 17) * 0.18, s), (m) => splitPlanar2(m, 0.6, U), `rslab_${i}`));
     const topMid = add3(add3(o, mul3(U, w * 0.5)), mul3(V, h * 0.95));
     EXTRA_PUSH.push(...rebarAt(`rreb_${i}`, topMid, norm3(add3(V, mul3(U, 0.3))), 3 + Math.floor(rnd(s * 19) * 3), 0.7 + rnd(s * 23) * 0.8, s));
   }
@@ -214,7 +224,7 @@ const buildStatic = (): Static[] => {
     const x = -9 + rnd(s) * 22, z = -24 + rnd(s * 3) * 48;
     if (!isClear(x, z, 0.4)) continue;
     const size = 0.35 + Math.pow(rnd(s * 5), 2) * 1.4;
-    out.push({...meshOf(chunkMesh(s, rnd(s * 7) > 0.5 ? 'rubble' : 'rubbleDark'), `rch_${i}`, {xf: {pos: {x, y: groundH(x, z) - size * 0.15, z}, yaw: rnd(s * 9) * 360, pitch: (rnd(s * 11) - 0.5) * 30, roll: (rnd(s * 13) - 0.5) * 30, scale: size}}), minPx: 3});
+    out.push({...meshOf(chunkMesh(s, rnd(s * 7) > 0.5 ? 'rubble' : 'rubbleDark', size > 1.0), `rch_${i}`, {xf: {pos: {x, y: groundH(x, z) - size * 0.15, z}, yaw: rnd(s * 9) * 360, pitch: (rnd(s * 11) - 0.5) * 30, roll: (rnd(s * 13) - 0.5) * 30, scale: size}}), minPx: 3});
   }
   for (let i = 0; i < 5; i++) {
     const s = 700 + i;
@@ -223,7 +233,7 @@ const buildStatic = (): Static[] => {
     const a = rnd(s * 5) * Math.PI * 2, L = 4 + rnd(s * 7) * 5;
     const p0 = {x: x - Math.cos(a) * L / 2, y: groundH(x - Math.cos(a) * L / 2, z - Math.sin(a) * L / 2) + 0.1, z: z - Math.sin(a) * L / 2};
     const p1 = {x: x + Math.cos(a) * L / 2, y: groundH(x + Math.cos(a) * L / 2, z + Math.sin(a) * L / 2) + 0.6 + rnd(s * 9) * 1.2, z: z + Math.sin(a) * L / 2};
-    out.push(meshOf(prep(beam(p0, p1, 0.32, 0.42, rnd(s) > 0.5 ? 'rust' : 'steelDark')), `rbeam_${i}`));
+    out.push(splitNear(beam(p0, p1, 0.32, 0.42, rnd(s) > 0.5 ? 'rust' : 'steelDark'), (m) => splitLong(m, 0.8), `rbeam_${i}`));
   }
   // east-foot spill toward the avenue
   for (let i = 0; i < 40; i++) {
@@ -231,7 +241,7 @@ const buildStatic = (): Static[] => {
     const x = 9 + rnd(s) * 18, z = -18 + rnd(s * 3) * 36;
     if (!isClear(x, z, 0.5) || Math.hypot(x - FOOT.x, z - FOOT.z) < FOOT.r + 1.2) continue;
     const size = 0.3 + Math.pow(rnd(s * 5), 2) * 1.1;
-    out.push({...meshOf(chunkMesh(s), `sch_${i}`, {xf: {pos: {x, y: groundH(x, z) - size * 0.15, z}, yaw: rnd(s * 9) * 360, pitch: (rnd(s * 11) - 0.5) * 20, scale: size}}), minPx: 3});
+    out.push({...meshOf(chunkMesh(s, 'rubble', size > 1.0), `sch_${i}`, {xf: {pos: {x, y: groundH(x, z) - size * 0.15, z}, yaw: rnd(s * 9) * 360, pitch: (rnd(s * 11) - 0.5) * 20, scale: size}}), minPx: 3});
   }
 
   // WEST RUIN: the broken shell the Crew come out of (walls with jagged tops, columns, hanging floors)
@@ -259,9 +269,9 @@ const buildStatic = (): Static[] => {
       for (let i = 0; i < nn; i++) { const j = (i + 1) % nn; faces.push({v: [i, nn + i, nn + j, j], mat: 'concreteEdge'}); }
       return orientCaps({verts, faces, crease: 30}, Nn);
     })();
-    // (R3) cut into ≤ 2.2 m strips along the wall (the Crew pass in front of and behind these walls: each strip sorts
+    // (R3) cut into 1 m strips along the wall (the Crew pass in front of and behind these walls: each strip sorts
     // by its own depth instead of the middle of a 44 m face); windows are clipped to their strips
-    out.push(meshOf(prep(splitPlanar(sl, 2.2, U)), key));
+    out.push(meshOf(prep(splitPlanar(sl, 1.0, U)), key));
   };
   wall({x: W.x0, y: 0, z: W.z0}, {x: W.x1 - 3, y: 0, z: W.z0}, W.stumpH * 1.3, 11, 'ruinN');
   wall({x: W.x1 - 2, y: 0, z: W.z1}, {x: W.x0, y: 0, z: W.z1}, W.stumpH * 1.1, 12, 'ruinS');
@@ -279,12 +289,12 @@ const buildStatic = (): Static[] => {
     const ang = rnd(s * 5) * Math.PI * 2;
     const U = {x: Math.cos(ang), y: 0, z: Math.sin(ang)};
     const V = norm3(rotAxis({x: 0, y: 1, z: 0}, U, rad(55 + rnd(s * 7) * 25)));
-    out.push(meshOf(prep(brokenSlab({x, y: 1 + rnd(s * 9) * 2.5, z}, U, V, 5 + rnd(s * 11) * 4, 3 + rnd(s * 13) * 3, 0.3, s)), `rfloor_${i}`));
+    out.push(splitNear(brokenSlab({x, y: 1 + rnd(s * 9) * 2.5, z}, U, V, 5 + rnd(s * 11) * 4, 3 + rnd(s * 13) * 3, 0.3, s), (m) => splitPlanar2(m, 0.8, U), `rfloor_${i}`));
   }
 
   // THE VAN + interior, the DEATH SLAB
   out.push(meshOf(vanInteriorMesh(), 'vanIn', {xf: VAN_XF, noInk: true}));
-  out.push(meshOf(vanMesh(), 'van', {xf: VAN_XF}));
+  out.push({...meshOf(vanMesh(), 'van', {xf: VAN_XF}), lods: [{d: NEAR, item: {kind: 'mesh', mesh: vanMeshWhole(), key: 'van', xf: VAN_XF}}]});
   out.push(meshOf(deathSlabMesh(), 'deathSlab'));
 
   // THE CRATER: tilted asphalt plates on the rim, chunks, a burning car, the broken water main
@@ -295,25 +305,28 @@ const buildStatic = (): Static[] => {
     const x = C.center.x + Math.cos(a) * r, z = C.center.z + Math.sin(a) * r;
     // (R3) no plate through the girder's column, nor into the north frontage
     if (Math.hypot(x - PLAN.girder.to.x, z - PLAN.girder.to.z) < 4.2 || z < -PLAN.avenue.walkZ + 3.2) continue;
+    // (R3) none on the west rim where the Crew fight (D1–D3 walked through plates 7–9: tools/r3/city_check.mjs 'crew')
+    if (i >= 7 && i <= 9) continue;
     const U = {x: -Math.sin(a), y: 0, z: Math.cos(a)};
     const V = norm3(rotAxis({x: 0, y: 1, z: 0}, U, -rad(55 + rnd(s * 5) * 25)));
     const w = 2.5 + rnd(s * 7) * 3, h = 1.6 + rnd(s * 9) * 2;
-    out.push(meshOf(prep(brokenSlab({x: x - U.x * w / 2, y: groundH(x, z) - 0.6, z: z - U.z * w / 2}, U, V, w, h, 0.32, s, 'asphaltBroken', 'rubbleDark')), `cplate_${i}`));
+    // (R3) 0.6 m strips: the fighting happens on and around the rim
+    out.push(splitNear(brokenSlab({x: x - U.x * w / 2, y: groundH(x, z) - 0.6, z: z - U.z * w / 2}, U, V, w, h, 0.32, s, 'asphaltBroken', 'rubbleDark'), (m) => splitPlanar2(m, 0.6, U), `cplate_${i}`));
   }
   for (let i = 0; i < 40; i++) {
     const s = 1100 + i;
     const a = rnd(s) * Math.PI * 2, r = C.radius * (0.2 + rnd(s * 3) * 1.2);
     const x = C.center.x + Math.cos(a) * r, z = C.center.z + Math.sin(a) * r;
     const size = 0.35 + Math.pow(rnd(s * 5), 2) * 1.3;
-    out.push({...meshOf(chunkMesh(s, 'rubbleDark'), `cch_${i}`, {xf: {pos: {x, y: groundH(x, z) - size * 0.15, z}, yaw: rnd(s * 7) * 360, pitch: (rnd(s * 9) - 0.5) * 30, scale: size}}), minPx: 3});
+    out.push({...meshOf(chunkMesh(s, 'rubbleDark', size > 1.0), `cch_${i}`, {xf: {pos: {x, y: groundH(x, z) - size * 0.15, z}, yaw: rnd(s * 7) * 360, pitch: (rnd(s * 9) - 0.5) * 30, scale: size}}), minPx: 3});
   }
   out.push(meshOf(prep(carMesh('carGrey', 0.3, true)), 'craterCar', {xf: {pos: {x: 57, y: groundH(57, 4) - 0.1, z: 4}, yaw: 32, roll: 12, pitch: -8}}));
   const pipeA = {x: C.center.x - 10, y: -1.0, z: C.center.z - 9}, pipeB = {x: C.center.x + 5, y: -1.8, z: C.center.z + 6};
   // (long faces cut into ≤1.5 m strips so figures near one end sort correctly against the beam)
-  out.push(meshOf(prep(splitLong(merge(beamPipe(pipeA, pipeB), beamPipe({x: pipeB.x + 2, y: -1.5, z: pipeB.z + 2.5}, {x: pipeB.x + 9, y: -0.7, z: pipeB.z + 10})), 1.5)), 'waterMain'));
+  out.push(splitNear(splitLong(merge(beamPipe(pipeA, pipeB), beamPipe({x: pipeB.x + 2, y: -1.5, z: pipeB.z + 2.5}, {x: pipeB.x + 9, y: -0.7, z: pipeB.z + 10})), 1.5), (m) => splitLong(m, 0.6), 'waterMain'));
 
   // THE GIRDER (north flank) with its columns, the crushed taxi
-  out.push({...meshOf(girderMesh(), 'girder'), far: {kind: 'mesh', mesh: girderMeshFar(), key: 'girder'}, farD: 110});
+  out.push({...meshOf(girderMesh(), 'girder'), lods: [{d: NEAR, item: {kind: 'mesh', mesh: girderMeshMid(), key: 'girder'}}, {d: 110, item: {kind: 'mesh', mesh: girderMeshFar(), key: 'girder'}}]});
   columnMeshes().forEach((m, i) => out.push(meshOf(m, `gcol_${i}`)));
   out.push(meshOf(prep(carMesh('taxi', 0.85)), 'taxi', {xf: {pos: {x: 46.5, y: groundH(46.5, -14.2), z: -14.2}, yaw: 75, roll: -6}}));
 
@@ -335,13 +348,13 @@ const buildStatic = (): Static[] => {
       if (uu + 1.3 < w) wins.push([P(0, 0), P(1.2, 0), P(1.2, 1.7), P(0, 1.7)]);
     }
     sl.faces[0] = {...sl.faces[0], ov: [{polys: wins, mat: 'interiorDeep'}]};
-    out.push(meshOf(prep(sl), `sfacade_${i}`));
+    out.push(splitNear(sl, (m) => splitPlanar2(m, 0.8, U), `sfacade_${i}`));
   }
   for (let i = 0; i < 30; i++) {
     const s = 1300 + i;
     const x = 28 + rnd(s) * 38, z = 13 + rnd(s * 3) * 7;
     const size = 0.4 + Math.pow(rnd(s * 5), 2) * 1.3;
-    out.push({...meshOf(chunkMesh(s, 'brickDark'), `sch2_${i}`, {xf: {pos: {x, y: groundH(x, z) - size * 0.15, z}, yaw: rnd(s * 7) * 360, pitch: (rnd(s * 9) - 0.5) * 30, scale: size}}), minPx: 3});
+    out.push({...meshOf(chunkMesh(s, 'brickDark', size > 1.0), `sch2_${i}`, {xf: {pos: {x, y: groundH(x, z) - size * 0.15, z}, yaw: rnd(s * 7) * 360, pitch: (rnd(s * 9) - 0.5) * 30, scale: size}}), minPx: 3});
   }
   out.push(meshOf(prep(busMesh()), 'bus', {xf: {pos: {x: PLAN.bus.pos.x, y: 0, z: PLAN.bus.pos.z}, yaw: PLAN.bus.heading, roll: 4}}));
   // the wrecks and abandoned vehicles: one list (plan.ts STREET_OBSTACLES) for the set and for the formations' lanes.
@@ -349,10 +362,11 @@ const buildStatic = (): Static[] => {
   STREET_OBSTACLES.forEach((o) => {
     if (o.kind !== 'car' && o.kind !== 'taxi' && o.kind !== 'truck') return;
     const m = o.kind === 'truck' ? truckMesh(o.burnt) : carMesh(o.mat ?? 'carGrey', o.crushed ?? 0, o.burnt, o.doorOpen);
+    const mid = o.kind === 'truck' ? m : carMesh(o.mat ?? 'carGrey', o.crushed ?? 0, o.burnt, o.doorOpen, false);
     const top = o.kind === 'truck' ? 3.4 : 0.92 + 0.62 * (1 - 0.75 * (o.crushed ?? 0));
     const xf = {pos: {x: o.x, y: groundH(o.x, o.z) + (o.flipped ? top - 0.08 : 0), z: o.z}, yaw: o.heading, roll: o.flipped ? 172 : 0};
     const far: MeshItem = {kind: 'mesh', mesh: prep(vehicleFar(o.kind === 'truck' ? 'truck' : 'car', o.mat ?? 'carGrey', o.burnt)), key: o.id, xf};
-    out.push({...meshOf(prep(m), o.id, {xf}), minPx: 3, far, farD: 120});
+    out.push({...meshOf(prep(m), o.id, {xf}), minPx: 3, lods: [{d: NEAR, item: {kind: 'mesh', mesh: prep(mid), key: o.id, xf}}, {d: 120, item: far}]});
   });
   dressing(out);
   // street furniture: lamp posts (some bent), traffic poles, a subway entrance with green globes (NY), hydrants
@@ -363,14 +377,14 @@ const buildStatic = (): Static[] => {
     out.push(meshOf(prep(merge(beam({x, y: 0, z}, top, 0.16, 0.16, 'steelDark'), beam(top, {x: top.x + (bent ? 1.2 : 0), y: top.y + (bent ? -0.6 : 0.3), z: top.z - Math.sign(z) * 1.6}, 0.12, 0.12, 'steelDark'))), `lamp_${i}`));
   }
   const subX = 22, subZ = -16.6;
-  out.push(meshOf(prep(merge(
+  out.push(meshOf(prep(splitLong(merge(
     box({x: subX - 3, y: 0, z: subZ - 1.2}, {x: subX + 3, y: 1.05, z: subZ - 1.0}, 'girder'),
     box({x: subX - 3, y: 0, z: subZ + 1.0}, {x: subX + 3, y: 1.05, z: subZ + 1.2}, 'girder'),
     box({x: subX + 2.8, y: 0, z: subZ - 1.0}, {x: subX + 3.0, y: 1.05, z: subZ + 1.0}, 'girder'),
     box({x: subX - 3.1, y: 0, z: subZ - 1.0}, {x: subX + 2.8, y: 0.06, z: subZ + 1.0}, 'interiorDeep'),
     box({x: subX - 3.05, y: 0, z: subZ - 1.25}, {x: subX - 2.95, y: 2.4, z: subZ - 1.15}, 'girder'),
     box({x: subX - 3.05, y: 0, z: subZ + 1.15}, {x: subX - 2.95, y: 2.4, z: subZ + 1.25}, 'girder'),
-  )), 'subway'));
+  ), 0.8)), 'subway'));
   EXTRA_PUSH.push(globe('globe1', {x: subX - 3, y: 2.55, z: subZ - 1.2}), globe('globe2', {x: subX - 3, y: 2.55, z: subZ + 1.2}));
 
   // THE FAILING TOWER is animated (see towerItems); its stump persists after the opening
@@ -689,7 +703,9 @@ export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
     const d = Math.hypot(s.c.x - cam.x, s.c.y - cam.y, s.c.z - cam.z);
     if (s.minPx && (s.r * 2 * view.focal) / Math.max(1, d) < s.minPx) return;
     if (o.maxDist && d - s.r > o.maxDist && g !== 'flat') return;
-    items.push(s.far && s.farD !== undefined && d > s.farD ? s.far : s.item);
+    let it = s.item;
+    if (s.lods) for (const l of s.lods) if (d > l.d) it = l.item;
+    items.push(it);
   };
   if (!skip.has('flat')) F.forEach(push);
   S.forEach(push);

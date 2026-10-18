@@ -249,12 +249,15 @@ export const splitPlanar = (m: Mesh, maxLen: number, dir: V3): Mesh => {
       if (s1 - s0 < 1e-4) continue;
       const C = clipPoly(P, s0, s1);
       if (C.length < 3) continue;
+      // painted marks are clipped 2 cm past each cut, so neighbouring strips' pieces overlap (no anti-aliasing
+      // hairline through a window or a stripe where it was cut; same colour, so the overlap never shows)
+      const e = 0.02;
       const ov = f.ov?.map((o): Overlay | null => {
         const groups = o.polys ?? (o.pts ? [o.pts] : []);
         const polys: V3[][] = [];
         groups.forEach((G) => {
           if (o.line) clipLine(G, s0, s1).forEach((pc) => polys.push(pc));
-          else { const c = clipPoly(G, s0, s1); if (c.length >= 3) polys.push(c); }
+          else { const c = clipPoly(G, s0 - e, s1 + e); if (c.length >= 3) polys.push(c); }
         });
         return polys.length ? {mat: o.mat, line: o.line, ink: o.ink, polys} : null;
       }).filter((o): o is Overlay => !!o);
@@ -262,4 +265,10 @@ export const splitPlanar = (m: Mesh, maxLen: number, dir: V3): Mesh => {
     }
   });
   return {...m, verts, faces};
+};
+
+/** splitPlanar along a horizontal direction and then across it (both ways ≤ maxLen in plan): long and wide faces alike. */
+export const splitPlanar2 = (m: Mesh, maxLen: number, dir: V3): Mesh => {
+  const L = Math.hypot(dir.x, dir.z) || 1;
+  return splitPlanar(splitPlanar(m, maxLen, {x: dir.x / L, y: 0, z: dir.z / L}), maxLen, {x: -dir.z / L, y: 0, z: dir.x / L});
 };

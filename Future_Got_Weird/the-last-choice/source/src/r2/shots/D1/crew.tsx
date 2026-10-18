@@ -55,6 +55,12 @@ const bodyAt = (segs: Seg[], T: number): Body => {
       const pb = bodyAt(segs.slice(0, i), s.T0);
       const w = smooth(clamp((T - s.T0) / 0.32));
       fl = mixFoot(pb.footL, fl, w); fr = mixFoot(pb.footR, fr, w);
+    } else if (!prev && s.T0 > M.CHARGE + 0.01) {
+      // a follower in the charge (the Director goes first, at 59.95): both feet planted where its first stride starts
+      // while it waits, then the swing foot lifts into the stride over the first 0.32 s (no foot hanging in the air)
+      const g0 = gaitW(s.path, 0, s.gait, G);
+      const w = smooth(clamp((T - s.T0) / 0.32));
+      fl = mixFoot(onG(g0.footL.x, g0.footL.z), fl, w); fr = mixFoot(onG(g0.footR.x, g0.footR.z), fr, w);
     }
     return {pos: g.pos, heading: g.heading, footL: fl, footR: fr, gait: g.pose, runK: k, seg: i, inRun: true, phase: g.phase};
   }
@@ -428,7 +434,9 @@ const BRK_SEGS: Seg[] = [
   {kind: 'stand', root: BRK_FIGHT2, stag: 0.14, skids: BRK_SKIDS2},
   {kind: 'stand', root: BRK_AFTER, stag: 0.14},
 ];
-const TOOL_TIP = 144 / 251.4, TOOL_BACK = 0.44;
+// the rig's breaker is one fixed tube drawn from the back (trigger) hand toward the front hand (rig/props.tsx breaker:
+// ram tip (BREAKER_TUBE 270 − 60 + 34) rig units beyond the back hand); the front hand grips the tube 0.44 m up it
+const TOOL_BT = 244 / 251.4, TOOL_BACK = 0.44, TOOL_TIP = TOOL_BT - TOOL_BACK;
 /** the tool along a line from his chest to a tip point: front (left) hand on the side handle, back (right) on the trigger */
 const toolTo = (b: {pos: V3; heading: number}, tip: V3, chest: Loc = {r: 6, u: 290, f: 14}) => {
   const c = fromLoc(b, chest);
@@ -577,7 +585,7 @@ export const breakerAt = (T: number): CrewOut => {
   const final = withRun(b, withLook(pose, 'breaker', b, T), runArms);
   const spec = base('breaker', 'd1brk', 7, b, T, {...final, face: faceFor('breaker', T, BRK_FACE), handL: 'grip', handR: 'grip', twoHanded: true, extra: breaker({back: 1, front: 0, gauge, fire, recoil: fire})},
     handsOn > 0.02 ? {handL: H.front, handR: H.back} : {}, gazeAt('breaker', T, tgt));
-  pts.tip = add3(H.front, mul3(norm3(sub3(H.front, H.back)), TOOL_TIP));
+  pts.tip = add3(H.back, mul3(norm3(sub3(H.front, H.back)), TOOL_BT));
   return {spec, body: b, pts};
 };
 

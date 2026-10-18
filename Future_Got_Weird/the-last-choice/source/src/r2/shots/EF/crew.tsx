@@ -369,6 +369,9 @@ export const gripAt = (role: 'tether' | 'decoy' | 'flares' | 'breaker', T: numbe
   return p;
 };
 
+/** A figure's ankle (world) as its own pose puts it (0 = left, 1 = right): the start / end of a stepped foot. */
+const ankleOf = (spec: FigSpec, i: 0 | 1): V3 => { const R = figureRig(SOLVE_VIEW, spec); return R.W(R.rig.ankle[i]); };
+
 /** Head yaw (rig convention: + = to the figure's left) toward a world point, clamped. */
 const yawTo = (pos: {x: number; z: number}, heading: number, at: {x: number; z: number}, lim = 70) => -clamp(wrap(headingTo(pos, at) - heading), -lim, lim);
 const DIR_AT = {x: DIRECTOR_SEAT.x, z: DIRECTOR_SEAT.z};
@@ -401,11 +404,12 @@ export const heldSpec = (role: 'tether' | 'decoy' | 'flares' | 'breaker' | 'runn
     const kneel: Pose = {...KNEEL_UP, drop: 92, lean: 16, head: {pitch: 30, yaw: toDir * 0.3}, handR: 'relaxed', handL: 'fist', face: {...expr('grief', 1), lid: 0.55}, dmg, extra: hipReel(0), breath: 0.5};
     const pose = sink > 0 ? blendPose(stand, kneel, sink) : stand;
     const world: FigSpec['world'] = {handL: gripAt('tether', T)};
-    if (sink > 0.02) {
-      // the knees come down one after the other (left, then right), each with a small lift
+    if (T > S.sink) {
+      // the knees come down one after the other (left, then right), each with a small lift, from the standing pose's
+      // own ankles (no pop when they take over)
       const kf = (sd: 1 | -1, t0: number) => {
         const u = smooth((T - t0) / 0.7);
-        const st = at3(c.pos, c.heading, sd < 0 ? 0.12 : -0.12, sd * 0.19, 0.03);
+        const st = ankleOf({...base, pose: stand}, sd < 0 ? 0 : 1);
         return add3(lerp3(st, kneelFoot(c.pos, c.heading, sd, 92), u), {x: 0, y: 0.08 * Math.sin(Math.PI * u), z: 0});
       };
       world.footL = kf(-1, S.sink + 0.05);
@@ -452,9 +456,10 @@ export const heldSpec = (role: 'tether' | 'decoy' | 'flares' | 'breaker' | 'runn
     const free = smooth((T - S.release) / 0.5);
     if (free < 1) world.handR = free <= 0 ? gripAt('decoy', T) : lerp3(gripAt('decoy', S.release), figureRig(SOLVE_VIEW, {...base, pose}).handR, free);
     if (both > 0 && both < 1) {
+      // from the kneel-on-one-knee pose's own ankle to the both-knees pose's own ankle (no pop at either end), lifted
       const u = both;
-      const front = at3(c.pos, c.heading, 0.34, 0.15, 0.03);
-      world.footR = add3(lerp3(front, kneelFoot(c.pos, c.heading, 1, 86), u), {x: 0, y: 0.1 * Math.sin(Math.PI * u), z: 0});
+      const a0 = ankleOf({...base, pose: held}, 1), a1 = ankleOf({...base, pose: handsUp}, 1);
+      world.footR = add3(lerp3(a0, a1, u), {x: 0, y: 0.1 * Math.sin(Math.PI * u), z: 0});
     }
     return {...base, pose, world};
   }

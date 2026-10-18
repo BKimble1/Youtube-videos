@@ -113,7 +113,8 @@ const breakerCarryEl = (o: {gauge?: number; flip?: boolean}, s: number, ink: num
 };
 
 /** The drone controller in one hand (a small slate pad, its stub antenna). */
-export const controllerHold = (o: {lit?: number} = {}): HoldFn => (h, s, ink, col) => {
+export const controllerHold = (o: {lit?: number} = {}): HoldFn => Object.assign(controllerHoldFn(o), {span: [29, 26, 29, -54] as [number, number, number, number], spanFace: true});
+const controllerHoldFn = (o: {lit?: number}): HoldFn => (h, s, ink, col) => {
   const k = s;
   return (
     <g transform={`translate(${f2(18 * k)} ${f2(-4 * k)})`}>

@@ -3,24 +3,18 @@
 // edge, her right index finger sketches four walking figures (fx/decoy DecoyScreen + decoyFinger, the same strokes the
 // projector will throw) and taps: they fill and start to walk.
 import React from 'react';
-import {Stage, camPath, CamKey} from '../../film/stage';
-import {V3, noise, clamp, smooth} from '../../../kit/math';
+import {Stage, camPath} from '../../film/stage';
+import {noise, clamp, smooth} from '../../../kit/math';
 import {DecoyScreen, decoyFinger} from '../../fx';
-import {G} from '../D1/motion';
 import {EV2} from './machines';
 import {d2Items, d2FxAt} from './battle';
-
-const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
+import {CAM_INSERT} from './cams';
 const SKIN = '#8D5A3C', SKIN_D = '#6E4329', SKIN_L = '#A9714F', SLEEVE = '#3E6FB0', SLEEVE_D = '#2E5488', INK = '#162A32';
 const SLATE = '#3A444C', SLATE_L = '#58646D', SLATE_D = '#262D33';
 
-export const KEYS: CamKey[] = [
-  {t: 0, pos: g(46.98, 4.18, 1.35), target: g(46.4, 4.55, 0.72), fov: 40},
-  {t: 97.55 - 95.38, pos: g(46.96, 4.2, 1.33), target: g(46.38, 4.56, 0.7), fov: 39},
-];
-
-export const TabletInsert: React.FC<{t: number; T: number}> = ({t, T}) => {
-  const cam = camPath(KEYS, t, 0.5);
+/** the insert at film time T (D2-2a and D2-2c share one camera move from DECOY) */
+export const TabletInsert: React.FC<{T: number}> = ({T}) => {
+  const cam = camPath(CAM_INSERT, T - 95.38, 0.5);
   const f = d2FxAt(T);
   // handheld: the tablet drifts a little in her hands; it nods once at the tap
   const tap = Math.exp(-Math.max(0, T - EV2.tap) * 9) * (T > EV2.tap ? 1 : 0);

@@ -7,7 +7,7 @@
 import React from 'react';
 import {C, SYS} from '../../theme';
 import {V2, V3, add3, sub3, mul3, norm3, len3, f2, lerp, clamp, rnd} from '../../kit/math';
-import {HoldFn, WearFn, Rig2, Part, at, splitZones, propPt} from './figure';
+import {HoldFn, WearFn, Rig2, Part, at, splitZones, propPt, withSpan} from './figure';
 import {PlateState} from './crew';
 
 const METAL = '#8E989F', METAL_D = '#5B646B', SLATE = '#3A444C', RUBBER = '#26292C';
@@ -70,7 +70,9 @@ export const plateWear = (state: PlateState, o: {glint?: number; broken?: number
 };
 
 // ------------------------------------------------------------------ tether launcher (clerkA, right hand) + hip reel
-export const tetherLauncher = (o: {loaded?: boolean; recoil?: number} = {}): HoldFn => (h, s, ink, col) => {
+// (short props carry their axis, faceOnly: a hand in front of the face no longer draws the whole prop over the face)
+export const tetherLauncher = (o: {loaded?: boolean; recoil?: number} = {}): HoldFn => withSpan(launcherFn(o), [4, 28, 101, 28], true);
+const launcherFn = (o: {loaded?: boolean; recoil?: number}): HoldFn => (h, s, ink, col) => {
   const k = s, rc = (o.recoil ?? 0) * -8;
   return (
     <g transform={`translate(${f2(rc * k)} 0)`}>
@@ -115,7 +117,8 @@ export const hipReel = (spool = 1): ((r: Rig2) => Part[]) => (r) => {
  * back of the tablet). R2 always drew the screen, so the tablet showed its sketch from behind as well. `false` = the
  * back; 'screen' = the screen whatever the view.
  */
-export const tablet = (o: {sketch?: number; figures?: number; smashed?: boolean; screen?: boolean | 'screen'; glow?: number} = {}): HoldFn => (h, s, ink, col) => {
+export const tablet = (o: {sketch?: number; figures?: number; smashed?: boolean; screen?: boolean | 'screen'; glow?: number} = {}): HoldFn => withSpan(tabletFn(o), [37, 14, 37, -70], true);
+const tabletFn = (o: {sketch?: number; figures?: number; smashed?: boolean; screen?: boolean | 'screen'; glow?: number}): HoldFn => (h, s, ink, col) => {
   const k = s;
   const W = 70, Ht = 52; // tablet in hand-local: extends across (−y = away from the thumb) from the grip
   const x0 = 2, y0 = -Ht - 4;
@@ -164,7 +167,8 @@ export const projectorLens = (r: Rig2, i: 0 | 1 = 0): V3 => {
 };
 
 // ------------------------------------------------------------------ flare and smoke canister (host)
-export const flare = (o: {lit?: number; t?: number} = {}): HoldFn => (h, s, ink, col) => {
+export const flare = (o: {lit?: number; t?: number} = {}): HoldFn => withSpan(flareFn(o), [21, 10, 21, -64], true);
+const flareFn = (o: {lit?: number; t?: number}): HoldFn => (h, s, ink, col) => {
   const k = s, lit = clamp(o.lit ?? 0);
   const fl = 1 + 0.15 * Math.sin((o.t ?? 0) * 40);
   return (
@@ -177,7 +181,8 @@ export const flare = (o: {lit?: number; t?: number} = {}): HoldFn => (h, s, ink,
     </g>
   );
 };
-export const canister = (): HoldFn => (h, s, ink, col) => {
+export const canister = (): HoldFn => withSpan(canisterFn(), [21, 20, 21, -38], true);
+const canisterFn = (): HoldFn => (h, s, ink, col) => {
   const k = s;
   return (
     <g transform={`translate(${21 * k} 0)`}>

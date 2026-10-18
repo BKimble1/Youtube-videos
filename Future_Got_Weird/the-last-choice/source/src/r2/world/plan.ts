@@ -78,7 +78,8 @@ const truck = (id: string, x: number, z: number, heading: number, o: Partial<Obs
 export const STREET_OBSTACLES: Obstacle[] = [
   // ---- the R2 wrecks (keys wreck_0..9 in the set; ATMOS anchors fires to wreck_0/2/5/6/7 at these exact places)
   car('wreck_0', 24, -9, 140, 'carGrey', {burnt: true, flipped: true}),
-  car('wreck_1', 31, 6, 60, 'carRed', {crushed: 0.2}),
+  // (R3) moved to the south kerb lane: D1's breaker ran through it at (31, 6) in the charge
+  car('wreck_1', 30.5, 11.6, 74, 'carRed', {crushed: 0.2}),
   car('wreck_2', 96, -6, 200, 'carGrey', {crushed: 0.1, burnt: true}),
   car('wreck_3', 118, 10, 10, 'carRed', {burnt: true}),
   // (B's army is routed round these; the EF streams must steer round them too: steerAround)

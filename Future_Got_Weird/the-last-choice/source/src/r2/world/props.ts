@@ -5,7 +5,7 @@ import {V3, rnd, add3, sub3, mul3, norm3, cross3, len3} from '../../kit/math';
 import {Mesh, Face, Overlay, Prepped, prep, box, cylinder, merge, xfMesh, xfPoint, Xf, slab, cbox, headingVec, splitLong} from '../engine';
 import {PLAN} from './plan';
 import {groundH} from './ground';
-import {splitPlanar} from './geom';
+import {splitPlanar, splitPlanar2} from './geom';
 
 // ------------------------------------------------------------------ small builders
 /** Box between two points with a w × h cross-section (beams, truss members). `up` orients the cross-section. */
@@ -121,6 +121,9 @@ const buildVan = (): Mesh => {
   van.crease = 28;
   return van;
 };
+// (R3) cut into 0.5 m pieces along and across: the Crew kneel, sit and fall within half a metre of the van's sides,
+// sill and door; each piece sorts by its own depth (the 1.8 m sill strip drew over the pilot's face in D4-10)
+const buildVanSplit = (): Mesh => splitPlanar2(buildVan(), 0.5, {x: 0, y: 0, z: 1});
 /** The van's dark interior seen through the open door (floor and far wall), drawn behind everything of the van. */
 const buildVanInterior = (): Mesh => {
   const W = 1.05, floor = 0.62, top = 2.72, zF = -1.25, zR = 3.0, inner = W - 0.06;
@@ -136,8 +139,9 @@ const buildVanInterior = (): Mesh => {
     twoSided: true,
     bias: -0.6,
     inkBoundary: false,
-  };
+  } as Mesh;
 };
+const buildVanInteriorSplit = (): Mesh => splitPlanar2(buildVanInterior(), 0.5, {x: 0, y: 0, z: 1});
 
 /** The radio: R1's RadioSmall look (battered red-brown body, dark round grille, warm dial, antenna, carry handle). */
 const buildRadio = (on: boolean): Mesh => {
@@ -182,9 +186,12 @@ export const RADIO = {
 };
 
 let VAN_P: Prepped | null = null, RADIO_OFF: Prepped | null = null, RADIO_ON: Prepped | null = null;
-export const vanMesh = () => (VAN_P ??= prep(buildVan()));
+export const vanMesh = () => (VAN_P ??= prep(buildVanSplit()));
+let VAN_W: Prepped | null = null;
+/** the van unsplit (distant views) */
+export const vanMeshWhole = () => (VAN_W ??= prep(buildVan()));
 let VAN_IN: Prepped | null = null;
-export const vanInteriorMesh = () => (VAN_IN ??= prep(buildVanInterior()));
+export const vanInteriorMesh = () => (VAN_IN ??= prep(buildVanInteriorSplit()));
 export const radioMesh = (on: boolean) => (on ? (RADIO_ON ??= prep(buildRadio(true))) : (RADIO_OFF ??= prep(buildRadio(false))));
 /** Radio object → world transform (van + radio placement) as a vertex function. */
 export const radioFn = (p: V3) => radioLocalToWorld(p);
@@ -203,19 +210,22 @@ export const DEATH_SLAB = (() => {
 const buildDeathSlab = (): Mesh => {
   const {o, right, lean} = DEATH_SLAB;
   const m = slab(o, mul3(right, -1), lean, [{u: 0, v: 0}, {u: 2.3, v: 0}, {u: 2.25, v: 1.05}, {u: 1.7, v: 1.32}, {u: 1.25, v: 1.18}, {u: 0.7, v: 1.45}, {u: 0.08, v: 1.2}], 0.32, 'concrete', 'concreteEdge', 'concreteDark');
-  return m;
+  // (R3) he sits against it: 0.45 m strips across its width, so his body sorts against the part right behind him
+  return splitPlanar2(m, 0.45, right);
 };
 let DS: Prepped | null = null;
 export const deathSlabMesh = () => (DS ??= prep(buildDeathSlab()));
 
 // ------------------------------------------------------------------ vehicles
 /** A sedan-like car (generic, no badges). crushed 0..1 flattens the cabin; doorOpen swings the driver's door out. */
-export const carMesh = (mat: string, crushed = 0, burnt = false, doorOpen = false): Mesh => {
+export const carMesh = (mat: string, crushed = 0, burnt = false, doorOpen = false, split = true): Mesh => {
   const body = prismX([{z: -2.3, y: 0.32}, {z: -2.3, y: 0.78}, {z: -1.0, y: 0.9}, {z: 1.6, y: 0.92}, {z: 2.25, y: 0.82}, {z: 2.25, y: 0.32}], -0.88, 0.88, burnt ? 'burnt' : mat, burnt ? 'burnt' : mat);
   const ch = 0.62 * (1 - crushed * 0.75);
   const cabin = prismX([{z: -0.95, y: 0.9}, {z: -0.45, y: 0.9 + ch}, {z: 0.85, y: 0.9 + ch}, {z: 1.45, y: 0.92}], -0.78, 0.78, burnt ? 'burnt' : 'window', burnt ? 'burnt' : mat);
   const wheel = (x: number, z: number) => xfMesh(cylinder(0.33, 0.22, 8, 'tire', 'steelDark', -0.11), {roll: 90, pos: {x, y: 0.33, z}});
-  const parts = [body, cabin, wheel(-0.82, -1.45), wheel(0.82, -1.45), wheel(-0.82, 1.45), wheel(0.82, 1.45)];
+  // (R3) body and cabin cut into 0.6 m strips along the car (people crouch and run beside the wrecks)
+  const sp = (m: Mesh) => (split ? splitPlanar2(m, 0.6, {x: 0, y: 0, z: 1}) : m);
+  const parts = [sp(body), sp(cabin), wheel(-0.82, -1.45), wheel(0.82, -1.45), wheel(-0.82, 1.45), wheel(0.82, 1.45)];
   if (doorOpen) {
     // the driver's (left) door hinged at its front edge and swung out ~55°: an abandoned car, its driver ran
     const door = box({x: -0.06, y: 0.36, z: 0}, {x: 0.0, y: 0.9 + ch * 0.8, z: 1.15}, [burnt ? 'burnt' : mat, 'steelDark', burnt ? 'burnt' : mat, burnt ? 'burnt' : mat, burnt ? 'burnt' : mat, 'interior']);
@@ -283,8 +293,8 @@ export const busMesh = (): Mesh => {
   const body = prismX([{z: -L / 2, y: 0.4}, {z: -L / 2, y: H - 0.2}, {z: -L / 2 + 0.4, y: H}, {z: L / 2 - 0.3, y: H - 0.3}, {z: L / 2, y: H - 0.5}, {z: L / 2, y: 0.4}], -W, W, 'bus', 'bus',
     [winOv(-W - 0.01).map((o) => ({...o, polys: o.polys?.map((P) => P.slice().reverse()), pts: o.pts?.slice().reverse()})), winOv(W + 0.01)]);
   const wheel = (x: number, z: number) => xfMesh(cylinder(0.5, 0.3, 10, 'tire', 'steelDark', -0.15), {roll: 90, pos: {x, y: 0.5, z}});
-  // (R3) the 12 m sides cut into ≤ 2.5 m strips: units standing by the bus sort against the part beside them
-  const m = merge(splitPlanar(body, 2.5, {x: 0, y: 0, z: 1}), wheel(-W + 0.1, -L / 2 + 2.2), wheel(W - 0.1, -L / 2 + 2.2), wheel(-W + 0.1, L / 2 - 2.6), wheel(W - 0.1, L / 2 - 2.6));
+  // (R3) the 12 m sides cut into 1 m strips: units and the Crew by the bus sort against the part beside them
+  const m = merge(splitPlanar2(body, 1.0, {x: 0, y: 0, z: 1}), wheel(-W + 0.1, -L / 2 + 2.2), wheel(W - 0.1, -L / 2 + 2.2), wheel(-W + 0.1, L / 2 - 2.6), wheel(W - 0.1, L / 2 - 2.6));
   m.crease = 28;
   return m;
 };
@@ -314,14 +324,16 @@ const buildGirder = (whole = false): Mesh => {
   // deck: cross beams and two rails with ties (the elevated track)
   for (let i = 0; i <= panels * 2; i++) parts.push(beam(P((i * pl) / 2, -width / 2, depth + 0.3), P((i * pl) / 2, width / 2, depth + 0.3), 0.28, 0.22, 'steelDark', f));
   for (const l of [-0.75, 0.75]) parts.push(beam(P(0, l, depth + 0.55), P(len, l, depth + 0.55), 0.12, 0.18, 'steel', up));
-  // (R3) the chords and rails are 46 m single faces: cut into ≤ 2 m strips so a unit slumped under one end, a tethered
+  // (R3) the chords and rails are 46 m single faces: cut into ≤ 0.6 m strips so a unit slumped under one end, a tethered
   // leg or the Crew behind the truss sort against the part of the truss next to them, not its middle
-  const m = whole ? merge(...parts) : splitLong(merge(...parts), 2.0);
+  const m = whole ? merge(...parts) : splitLong(merge(...parts), 0.6);
   m.crease = 30;
   return m;
 };
-let GIR: Prepped | null = null, GIR_FAR: Prepped | null = null;
+let GIR: Prepped | null = null, GIR_FAR: Prepped | null = null, GIR_MID: Prepped | null = null;
 export const girderMesh = () => (GIR ??= prep(buildGirder()));
+/** the girder in 2 m strips (mid-distance views) */
+export const girderMeshMid = () => (GIR_MID ??= prep(splitLong(buildGirder(true), 2.0)));
 /** the girder unsplit (for distant views, where sorting next to it is moot and the strips only cost) */
 export const girderMeshFar = () => (GIR_FAR ??= prep(buildGirder(true)));
 /** A cheap distant vehicle: body and cabin only (no wheels, no strips). */
@@ -376,16 +388,18 @@ export const rubblePiece = (seed: number, top: string, side: string): Mesh => {
   return orientOutward({verts, faces, crease: 22}, {x: 0, y: h0 * 0.4, z: 0});
 };
 
-/** Seeded rubble mesh (cached by seed bucket and material). */
+/** Seeded rubble mesh (cached by seed bucket and material); `split` cuts it into ≤ 0.45-unit pieces (big chunks people
+ *  walk among: at scale 1.75 the faces stay under 0.8 m). */
 const CHUNKS = new Map<string, Prepped>();
 const RUBBLE_MATS: [string, string][] = [['concrete', 'concreteEdge'], ['rubble', 'rubbleDark'], ['concreteDark', 'rubbleDark'], ['dust', 'concreteEdge']];
-export const chunkMesh = (seed: number, mat = 'rubble'): Prepped => {
+export const chunkMesh = (seed: number, mat = 'rubble', split = false): Prepped => {
   const s = seed % 32;
-  const k = `${s}:${mat}`;
+  const k = `${s}:${mat}:${split ? 1 : 0}`;
   let m = CHUNKS.get(k);
   if (!m) {
     const [top, side] = mat === 'brickDark' ? ['brick', 'brickDark'] : mat === 'rubbleDark' && s % 2 ? ['rubbleDark', 'concreteDark'] : RUBBLE_MATS[s % RUBBLE_MATS.length];
-    m = prep(rubblePiece(s + 1, top, side));
+    const r = rubblePiece(s + 1, top, side);
+    m = prep(split ? splitPlanar2(r, 0.45, {x: 1, y: 0, z: 0}) : r);
     CHUNKS.set(k, m);
   }
   return m;

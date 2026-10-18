@@ -202,6 +202,8 @@ const recoilK = (u: number) => (u < 0 || u > 1.4 ? 0 : Math.exp(-u * 5) * Math.s
 type RK = {t: number; x: number; z: number; h: number; stag: number; half: number; lift?: number; shuffle?: boolean};
 type FK = {t: number; x: number; z: number; h: number; lift: number};
 const HALF0 = U.hipW + 0.04, STAG0 = -0.04;
+/** soft reach limit of the unit's limbs (m): no knee / elbow snap at full stretch */
+const LIMB_SOFT = 0.035;
 const stanceOf = (k: RK, sd: -1 | 1): {x: number; z: number; h: number} => {
   const f = hv(k.h), r = rightOf(k.h);
   const fo = sd < 0 ? k.stag : -k.stag;
@@ -730,7 +732,7 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
       pitch = (i === 0 ? sp.feet?.pitchL : sp.feet?.pitchR) ?? 0;
     }
     // keep the hip-ankle distance reachable (crouch lowers the pelvis; reach clamps)
-    const r = ik2(hip[i], target, U.thigh, U.shin, add3(fwd, mul3(right, sd * 0.12))); // knees bend forward, a little out
+    const r = ik2(hip[i], target, U.thigh, U.shin, add3(fwd, mul3(right, sd * 0.12)), LIMB_SOFT, UP); // knees bend forward, a little out
     kn.push(r.mid); an.push(r.end);
     footR.push(rcomp(rotHeading(fh), euler(0, pitch, 0)));
   });
@@ -742,8 +744,10 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
   const chestC = apply(spine, {x: 0, y: 0.3, z: -0.05});
   const solveArm = (S: V3, hand: V3, pole: V3) => {
     const dir = norm3(sub3(hand, S));
-    const wt = sub3(hand, mul3(dir, U.fist * 0.5));
-    return ik2(S, wt, U.upper, U.fore, pole);
+    let wt = sub3(hand, mul3(dir, U.fist * 0.5));
+    // never fold the wrist onto the shoulder (the elbow would be undefined there and flip)
+    if (len3(sub3(wt, S)) < 0.24) wt = add3(S, mul3(dir, 0.24));
+    return ik2(S, wt, U.upper, U.fore, pole, LIMB_SOFT, add3(mul3(cf, -1), mul3(cu, -0.4)));
   };
   ([0, 1] as const).forEach((i) => {
     const side: Side = i === 0 ? 'L' : 'R';
@@ -779,7 +783,7 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
         const k = smooth((u + 0.5) / 0.5);
         hand = lerp3(hand, tgt, k);
         open[i] = u < 0.05;
-        pole = add3(mul3(cr, sd * 0.8), mul3(cu, -0.6));
+        pole = lerp3(pole, add3(mul3(cr, sd * 0.8), mul3(cu, -0.6)), k);
       }
     }
     // restraint: reach, grip the body point and track it
@@ -889,7 +893,9 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
       const wind = hook ? add3(S, add3(add3(mul3(cu, 0.04), mul3(cf, 0.02)), mul3(cr, sd * 0.48))) : add3(S, add3(add3(mul3(cu, hammer ? 0.55 : 0.12), mul3(cf, hammer ? -0.1 : -0.42)), mul3(cr, sd * 0.32)));
       const toT = norm3(sub3(T0, S));
       const through = add3(T0, mul3(toT, 0.22));
-      if (sk.ph === 'wind') return lerp3(rest, wind, sk.k);
+      // the wind-up arcs out and down around the shoulder (a straight line from a guard in front to a chamber behind
+      // would pass through the shoulder)
+      if (sk.ph === 'wind') return add3(lerp3(rest, wind, sk.k), mul3(add3(mul3(cr, sd * 0.08), mul3(cu, -0.22)), Math.sin(Math.PI * sk.k)));
       if (sk.ph === 'blow') {
         if (!hook) return lerp3(wind, T0, sk.k);
         const ctrl = add3(T0, add3(mul3(cr, sd * 0.42), mul3(cf, -0.12)));
@@ -903,13 +909,48 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
     if (active >= 0) {
       const s = own[active];
       hand = strikeHand(active, hand);
-      pole = s.kind === 'hook' ? add3(mul3(cr, sd * 0.8), mul3(cu, 0.6)) : add3(mul3(cr, sd * 0.9), mul3(cu, s.kind === 'hammer' ? 0.4 : -0.5));
+      const u = t - s.t0;
+      const prev = own[active - 1];
+      const chained = !!prev && s.t0 - prev.t0 < 1.28;
+      const pw = (chained ? 1 : smooth((u + 0.42) / 0.16)) * (1 - smooth((u - 0.6) / 0.25));
+      const sPole = s.kind === 'hook' ? add3(mul3(cr, sd * 0.8), mul3(cu, 0.6)) : add3(mul3(cr, sd * 0.9), mul3(cu, s.kind === 'hammer' ? 0.4 : -0.5));
+      pole = lerp3(pole, sPole, pw);
     }
     // wrist = hand target pulled back by the fist
     const r = solveArm(S, hand, pole);
     el.push(r.mid); wr.push(r.end);
   });
   return {pelvis, spine, neck: neckP, head, sh, el: el as [V3, V3], wr: wr as [V3, V3], hip, kn: kn as [V3, V3], an: an as [V3, V3], footR: footR as [R3, R3], chestR, fwd, down: 0, open, root: {x: footRoot.x, y: gy, z: footRoot.z}, heading};
+};
+
+/**
+ * The largest topple angle (≤ maxA) at which the body (head, face, shoulders, chest, back, pelvis, knees) stays out of
+ * the ground (6 cm clearance, 3 cm tolerance), toppling about the ankles toward fall.dir with the full crumple.
+ */
+const restAngle = (sp: UnitSpec, rig: UnitRig, maxA: number): number => {
+  const g = sp.ground ?? FLAT;
+  const d = norm3({x: sp.fall!.dir.x, y: 0, z: sp.fall!.dir.z});
+  const axis = norm3(cross3(UP, d));
+  const piv = mul3(add3(rig.an[0], rig.an[1]), 0.5);
+  const pivot = {x: piv.x, y: g(piv.x, piv.z) + 0.16, z: piv.z};
+  const probes = [apply(rig.head, {x: 0, y: 0.17, z: 0}), apply(rig.head, {x: 0, y: 0, z: -0.16}), rig.sh[0], rig.sh[1], rig.pelvis.pos, rig.kn[0], rig.kn[1], apply(rig.spine, {x: 0, y: 0.32, z: -0.24}), apply(rig.spine, {x: 0, y: 0.3, z: 0.24})];
+  const pen = (a: number) => {
+    const R = rotAxisM(axis, a);
+    let m = -1e9;
+    for (const p of probes) {
+      const q0 = {x: p.x, y: p.y - 0.32 * clamp((p.y - pivot.y) / 1.0), z: p.z};
+      const q = add3(pivot, rmul(R, sub3(q0, pivot)));
+      m = Math.max(m, g(q.x, q.z) + 0.06 - q.y);
+    }
+    return m;
+  };
+  if (pen(0) > 0.03) return maxA; // already in the ground standing (a pit): leave it to the caller
+  // first contact going over from upright (stable: never jumps to another contact further round)
+  let lo = 0, hi = -1;
+  for (let a = 3; a <= maxA + 1e-6; a += 3) { if (pen(a) > 0.03) { hi = a; break; } lo = a; }
+  if (hi < 0) return maxA;
+  for (let i = 0; i < 10; i++) { const m = (lo + hi) / 2; if (pen(m) <= 0.03) lo = m; else hi = m; }
+  return lo;
 };
 
 /** Fall: crumple (knees) then topple about the feet, settle on the ground (persistent wreck). Returns a transform. */
@@ -921,9 +962,12 @@ const fallXform = (sp: UnitSpec, rig: UnitRig, t: number) => {
   const axis = norm3(cross3(UP, d)); // rotating about this tips the body toward d
   let crumple = smooth(u / 0.28);
   const tu = clamp((u - 0.18) / 0.62);
-  const A = sp.fall.ang ?? 86;
+  const A0 = sp.fall.ang ?? 86;
+  // the body comes to rest where it meets the ground (a slope or rubble in the way props it up earlier): the topple
+  // angle is limited to the largest angle at which nothing (head, shoulders, chest, pelvis, knees) goes into the ground
+  const A = Math.min(A0, restAngle(sp, solveUnit({...sp, t: sp.fall.t0}), A0));
   let ang = A * easeIn(tu);
-  if (u > 0.8) ang = A + Math.exp(-(u - 0.8) * 7) * Math.sin((u - 0.8) * 22) * -8 + (1 - Math.exp(-(u - 0.8) * 6)) * 2;
+  if (u > 0.8) ang = A + Math.exp(-(u - 0.8) * 7) * Math.sin((u - 0.8) * 22) * -8 + (1 - Math.exp(-(u - 0.8) * 6)) * 2 * clamp((A - (A0 - 3)) / 3);
   let up = 0;
   if (sp.fall.getUp !== undefined && t > sp.fall.getUp) {
     // push up from the ground: torso rises first (to a crouch), then the legs straighten
@@ -941,12 +985,8 @@ const fallXform = (sp: UnitSpec, rig: UnitRig, t: number) => {
     const l = sub3(q, pivot);
     return add3(pivot, rmul(R, l));
   };
-  // never through the ground: lift the body by its deepest point (head, shoulders, pelvis, knees, chest)
-  const probes = [apply(rig.head, {x: 0, y: 0.17, z: 0}), apply(rig.head, {x: 0, y: 0, z: -0.16}), rig.sh[0], rig.sh[1], rig.pelvis.pos, rig.kn[0], rig.kn[1], apply(rig.spine, {x: 0, y: 0.32, z: -0.24}), apply(rig.spine, {x: 0, y: 0.3, z: 0.24})];
-  let lift = 0;
-  for (const p of probes) { const q = xf0(p); lift = Math.max(lift, g(q.x, q.z) + 0.06 - q.y); }
-  lift = Math.max(0, lift - 0.03) * (1 - up);
-  const xf = (p: V3) => { const q = xf0(p); return {x: q.x, y: q.y + lift, z: q.z}; };
+  void up;
+  const xf = xf0;
   return {xf, R, landT: sp.fall.t0 + 0.8, landPos: xf(rig.spine.pos)};
 };
 
@@ -984,20 +1024,30 @@ export const unitWorld = (sp: UnitSpec): UnitRig => {
         const S = w.sh[i];
         const out = rmul(w.chestR, {x: i === 0 ? -1 : 1, y: 0, z: 0});
         const cur = add3(w.wr[i], mul3(norm3(sub3(w.wr[i], w.el[i])), U.fist * 0.55));
-        let L = add3(add3(S, {x: 0, y: -0.66, z: 0}), mul3(out, 0.2));
-        const gy = g(L.x, L.z) + 0.07;
-        if (L.y < gy) {
-          // on the ground: the arm lies along it, reaching out from the shoulder
-          const hz = flat(add3(mul3(out, 0.8), mul3(norm3(sub3(w.pelvis.pos, w.head.pos)), 0.6)));
-          const drop = Math.max(0, S.y - gy);
-          const along = Math.sqrt(Math.max(0, 0.66 * 0.66 - drop * drop));
-          L = {x: S.x + hz.x * along, y: gy, z: S.z + hz.z * along};
-          L = {...L, y: g(L.x, L.z) + 0.07};
-        }
-        const H = lerp3(cur, L, lw);
+        // hanging target, and the lying-on-the-ground target (the arm along the ground, reaching out from the
+        // shoulder); blended by how far the hanging hand would sink below the ground, so the hand never jumps
+        const hang = add3(add3(S, {x: 0, y: -0.66, z: 0}), mul3(out, 0.2));
+        const gyH = g(hang.x, hang.z) + 0.07;
+        const hz = flat(add3(mul3(out, 0.8), mul3(norm3(sub3(w.pelvis.pos, w.head.pos)), 0.6)));
+        const drop = clamp(S.y - gyH, 0, 0.66);
+        const along = Math.sqrt(Math.max(0, 0.66 * 0.66 - drop * drop));
+        let lie = {x: S.x + hz.x * along, y: 0, z: S.z + hz.z * along};
+        lie = {...lie, y: g(lie.x, lie.z) + 0.07};
+        // the arm lies out along the ground only once the body is down (after the landing, over 0.4 s)
+        const below = smooth((u - 0.78) / 0.4) * smooth((gyH + 0.3 - hang.y) / 0.5);
+        let L = lerp3(hang, lie, below);
+        L = {...L, y: Math.max(L.y, g(L.x, L.z) + 0.07)};
+        const H = L;
         const dir = norm3(sub3(H, S));
-        const sol = ik2(S, sub3(H, mul3(dir, U.fist * 0.5)), U.upper, U.fore, add3(mul3(out, 0.6), {x: 0, y: -0.8, z: 0}));
-        el[i] = sol.mid; wr[i] = sol.end;
+        // the elbow keeps its current bend direction and turns toward the limp one with the blend (no flip)
+        const mid0 = lerp3(S, cur, 0.5);
+        const pole0 = sub3(w.el[i], mid0);
+        // limp elbow: bends toward the head side (never along the hanging or lying arm, so it cannot flip)
+        const limpPole = norm3(add3(norm3(sub3(w.head.pos, w.pelvis.pos)), {x: 0, y: 0.3, z: 0}));
+        const pole = lerp3(len3(pole0) > 1e-4 ? norm3(pole0) : limpPole, limpPole, lw);
+        const sol = ik2(S, sub3(H, mul3(dir, U.fist * 0.5)), U.upper, U.fore, pole, LIMB_SOFT);
+        // blend the solved joints themselves (continuous at the blend's start whatever the fall's squash did)
+        el[i] = lerp3(w.el[i], sol.mid, lw); wr[i] = lerp3(w.wr[i], sol.end, lw);
       });
       w.el = el; w.wr = wr;
     }
@@ -1012,9 +1062,11 @@ export const unitWorld = (sp: UnitSpec): UnitRig => {
         const out = rmul(w.pelvis.R, {x: i === 0 ? -1 : 1, y: 0, z: 0});
         let A = add3(add3(H, mul3(axis, (U.thigh + U.shin) * 0.93)), mul3(out, 0.06));
         A = {...A, y: Math.max(A.y, g(A.x, A.z) + U.ankleH * 0.8)};
-        const tgt = lerp3(w.an[i], A, lk);
-        const sol = ik2(H, tgt, U.thigh, U.shin, add3(rmul(w.pelvis.R, {x: 0, y: 0, z: -1}), {x: 0, y: 0.3, z: 0}));
-        kn[i] = sol.mid; an[i] = sol.end;
+        const tgt = A;
+        const pole0 = sub3(w.kn[i], lerp3(H, w.an[i], 0.5));
+        const relaxed = norm3(add3(rmul(w.pelvis.R, {x: 0, y: 0, z: -1}), {x: 0, y: 0.3, z: 0}));
+        const sol = ik2(H, tgt, U.thigh, U.shin, lerp3(len3(pole0) > 1e-4 ? norm3(pole0) : relaxed, relaxed, lk), LIMB_SOFT);
+        kn[i] = lerp3(w.kn[i], sol.mid, lk); an[i] = lerp3(w.an[i], sol.end, lk);
       });
       w.kn = kn; w.an = an;
     }

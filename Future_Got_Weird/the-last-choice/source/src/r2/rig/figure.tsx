@@ -136,7 +136,11 @@ export type HoldFn = ((h: HandFrame, s: number, ink: number, col: (c: string) =>
   /** a long prop's axis in hand-local rig units [x0, y0, x1, y1]: the prop is cut where that axis passes the torso's or
    *  the face's depth (zoneRuns), so a bar held beside the head goes behind it where it is behind it */
   span?: [number, number, number, number];
+  /** a short prop: only the face's depth cuts it (the torso's edge does not), so it never splinters at the body */
+  spanFace?: boolean;
 };
+/** Give a HoldFn its axis (hand-local rig units) so the rig can cut it by depth (see HoldFn.span). */
+export const withSpan = (fn: HoldFn, span: [number, number, number, number], faceOnly = false): HoldFn => Object.assign(fn, {span, spanFace: faceOnly});
 export type WearFn = (fa: {E: V3; W: V3; dorsal: V3; ang: number; len: number}, s: number, ink: number, col: (c: string) => string) => {el: React.ReactNode; front: boolean} | null;
 
 export type FigProps = {
@@ -340,7 +344,9 @@ export const solve2 = (p: FigProps): Rig2 => {
     zone: () => 0, zoneZ: [0, 0, 0], rankOf: () => 0, zoneAt: () => 0, rankAt: () => 0, zCut: [0, 0], armOverride: p.zArm?.[0] !== undefined || p.zArm?.[1] !== undefined,
     // a thigh pointing toward the camera, judged in the unpitched frame (a camera below the figure must not bring the
     // legs over the shirt's hem)
-    legFront: [0, 1].map((i) => knee[i].z - hip[i].z > 0.42 * THIGH * s && knee[i].z > torsoZ + 10 * s) as [boolean, boolean],
+    // (only a thigh strongly toward the camera — sitting, a high step — is drawn over the hem with a rounded hip: at
+    // R3a's 0.42 a stepping leg on a slope got it, and its inked hip arc showed on the jacket)
+    legFront: [0, 1].map((i) => knee[i].z - hip[i].z > 0.68 * THIGH * s && knee[i].z > torsoZ + 10 * s) as [boolean, boolean],
     id: (p.id ?? `f${p.seed ?? 1}`).replace(/[^a-zA-Z0-9_]/g, '_'), col: (c: string) => c, inkC: C.ink,
     loc: (l: Loc) => pnt(fromPivot(l)),
     torso: (l: Loc) => pnt(at(P, up, l.r * s, l.u * s, l.f * s)),
@@ -396,7 +402,9 @@ export const solve2 = (p: FigProps): Rig2 => {
       if (fz !== null ? q.z < fz - 2 * s : zHor(q) <= zTH) return 0;
       // over the head's outline: in front of the face only if in front of the head's own surface there
       const dx = (q.x - Hc.x) / hr, dy = (q.y - Hc.y) / hry, d2 = dx * dx + dy * dy;
-      if (d2 >= 1) return 1;
+      // just outside the head's outline, a raised hand or prop clearly in front of the face (past its front surface's
+      // depth) is in the face's zone; the shoulders beside the jaw are not
+      if (d2 >= 1) return d2 < 2.6 && q.z > Hc.z + HEAD_R * s * 0.85 ? 2 : 1;
       return q.z > Hc.z + HEAD_R * s * Math.sqrt(1 - d2) ? 2 : 1;
     };
     out.rankAt = (q: V3) => out.zoneZ[out.zoneAt(q)] + clamp((q.z - out.torsoZ) / (600 * s), -1, 1) * 0.3;
@@ -542,38 +550,58 @@ const celOver = (id: string, d: string, L: FigLight | undefined, size: number, s
   );
 };
 
-// limb as a chain of quads with round interior joints: ink layer (widened) then fills, then a shadow band and a rim
-// strip inside each segment. Ends are square (they hide inside the torso/pelvis or under the hand/shoe).
+// limb as a chain of quads with round interior joints: ink layer (widened) then fills, then one shadow and one rim for
+// the whole limb (limbShade). Ends are square (they hide inside the torso/pelvis or under the hand/shoe).
 const quad = (a: V2, b: V2, hw0: number, hw1: number, o0 = 0, o1 = 0) => {
   const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
   const nx = -dy / len, ny = dx / len;
   return `M ${f2(a.x + nx * (o0 + hw0))} ${f2(a.y + ny * (o0 + hw0))} L ${f2(b.x + nx * (o1 + hw1))} ${f2(b.y + ny * (o1 + hw1))} L ${f2(b.x + nx * (o1 - hw1))} ${f2(b.y + ny * (o1 - hw1))} L ${f2(a.x + nx * (o0 - hw0))} ${f2(a.y + ny * (o0 - hw0))} Z`;
 };
-const LimbG: React.FC<{pts: V2[]; w: number | number[]; ink: number; inkC: string; colors: string[]; L?: FigLight; s: number; endCap?: boolean}> = ({pts, w, ink, inkC, colors, L, s, endCap}) => {
+const circD = (c: V2, r: number) => `M ${f2(c.x - r)} ${f2(c.y)} a ${f2(r)} ${f2(r)} 0 1 0 ${f2(2 * r)} 0 a ${f2(r)} ${f2(r)} 0 1 0 ${f2(-2 * r)} 0 Z`;
+/**
+ * Cel shading of a limb made of several pieces (segment quads and joint disks, as path d strings): ONE shadow on the side
+ * away from the light and ONE rim on the lit side for the whole shape — the shape minus its own copy shifted toward
+ * (or away from) the light, as celOver does for the torso — so the bands run continuously round the joints. (R2 shaded
+ * each segment with its own offset band and left the joint disks out of it, so a bent knee or elbow showed a flat disk
+ * of another tone: an exposed joint circle.)
+ */
+const limbShade = (uid: string, shapes: string[], L: FigLight | undefined, w: number, s: number, box: V2[]): React.ReactNode => {
+  if (!L || !shapes.length) return null;
+  const l2 = Math.hypot(L.dir.x, L.dir.y) || 1;
+  const lx = L.dir.x / l2, ly = L.dir.y / l2, lz = clamp(L.dir.z, -1, 1), key = L.key ?? 1;
+  const frac = clamp(0.32 + 0.5 * (0.5 - lz * 0.6), 0.2, 0.92) * key;
+  const shift = w * frac, rimAmt = clamp(0.35 - lz) * (L.rim ?? 1) * key, rw = Math.max(0.8, 2.4 * s) * 2;
+  const pad = w * 2 + 4;
+  const x0 = Math.min(...box.map((q) => q.x)) - pad, y0 = Math.min(...box.map((q) => q.y)) - pad;
+  const x1 = Math.max(...box.map((q) => q.x)) + pad, y1 = Math.max(...box.map((q) => q.y)) + pad;
+  const R = {x: f2(x0), y: f2(y0), width: f2(x1 - x0), height: f2(y1 - y0)};
+  const paths = (k: string) => shapes.map((d, i) => <path key={`${k}${i}`} d={d} />);
+  return (
+    <g>
+      <defs>
+        <clipPath id={`${uid}c`}>{paths('c')}</clipPath>
+        <mask id={`${uid}m`} maskUnits="userSpaceOnUse" {...R}>
+          <rect {...R} fill="#FFFFFF" />
+          <g fill="#000000" transform={`translate(${f2(lx * shift)} ${f2(ly * shift)})`}>{paths('m')}</g>
+        </mask>
+        {rimAmt > 0.04 && <mask id={`${uid}r`} maskUnits="userSpaceOnUse" {...R}>
+          <rect {...R} fill="#FFFFFF" />
+          <g fill="#000000" transform={`translate(${f2(-lx * rw)} ${f2(-ly * rw)})`}>{paths('r')}</g>
+        </mask>}
+      </defs>
+      <g clipPath={`url(#${uid}c)`}>
+        <rect {...R} fill={L.shadowC ?? '#2B3550'} opacity={0.3 * key} mask={`url(#${uid}m)`} />
+        {rimAmt > 0.04 && <rect {...R} fill={L.rimC ?? '#FFC890'} opacity={clamp(rimAmt * 1.6) * 0.85} mask={`url(#${uid}r)`} />}
+      </g>
+    </g>
+  );
+};
+
+const LimbG: React.FC<{pts: V2[]; w: number | number[]; ink: number; inkC: string; colors: string[]; L?: FigLight; s: number; endCap?: boolean; uid: string}> = ({pts, w, ink, inkC, colors, L, s, endCap, uid}) => {
   const W = pts.map((_, i) => (Array.isArray(w) ? w[Math.min(i, w.length - 1)] : w));
   const segs = pts.slice(0, -1).map((a, i) => ({a, b: pts[i + 1], w0: W[i], w1: W[i + 1], c: colors[Math.min(i, colors.length - 1)]}));
   const joints = pts.slice(1, endCap ? undefined : -1).map((q, j) => ({q, r: W[j + 1] / 2, c: colors[Math.min(j + 1, colors.length - 1)]}));
-  let sh: React.ReactNode = null, rim: React.ReactNode = null;
-  if (L) {
-    const l2 = Math.hypot(L.dir.x, L.dir.y) || 1;
-    const lx = L.dir.x / l2, ly = L.dir.y / l2, lz = clamp(L.dir.z, -1, 1), key = L.key ?? 1;
-    const frac = clamp(0.32 + 0.5 * (0.5 - lz * 0.6), 0.2, 0.92) * key;
-    const rimAmt = clamp(0.35 - lz) * (L.rim ?? 1) * key;
-    sh = segs.map((g, i) => {
-      const dx = g.b.x - g.a.x, dy = g.b.y - g.a.y, len = Math.hypot(dx, dy) || 1;
-      const nx = -dy / len, ny = dx / len;
-      const side = -(Math.sign(nx * lx + ny * ly) || 1);
-      const hw0 = g.w0 / 2, hw1 = g.w1 / 2;
-      return <path key={`s${i}`} d={quad(g.a, g.b, hw0 * frac, hw1 * frac, side * hw0 * (1 - frac), side * hw1 * (1 - frac))} fill={L.shadowC ?? '#2B3550'} opacity={0.3 * key} />;
-    });
-    if (rimAmt > 0.04) rim = segs.map((g, i) => {
-      const dx = g.b.x - g.a.x, dy = g.b.y - g.a.y, len = Math.hypot(dx, dy) || 1;
-      const nx = -dy / len, ny = dx / len;
-      const side = Math.sign(nx * lx + ny * ly) || 1;
-      const rw = Math.max(0.8, 2.4 * s);
-      return <path key={`r${i}`} d={quad(g.a, g.b, rw, rw, side * (g.w0 / 2 - rw), side * (g.w1 / 2 - rw))} fill={L.rimC ?? '#FFC890'} opacity={clamp(rimAmt * 1.6) * 0.85} />;
-    });
-  }
+  const shapes = [...segs.map((g) => quad(g.a, g.b, g.w0 / 2, g.w1 / 2)), ...joints.map((j) => circD(j.q, j.r))];
   return (
     <g>
       <g fill={inkC}>
@@ -582,7 +610,7 @@ const LimbG: React.FC<{pts: V2[]; w: number | number[]; ink: number; inkC: strin
       </g>
       {segs.map((g, i) => <path key={`f${i}`} d={quad(g.a, g.b, g.w0 / 2, g.w1 / 2)} fill={g.c} />)}
       {joints.map((j, i) => <circle key={`jf${i}`} cx={j.q.x} cy={j.q.y} r={j.r} fill={j.c} />)}
-      {sh}{rim}
+      {limbShade(uid, shapes, L, Math.max(...W), s, pts)}
     </g>
   );
 };
@@ -591,9 +619,10 @@ const LimbG: React.FC<{pts: V2[]; w: number | number[]; ink: number; inkC: strin
  * One limb segment as separate ink and fill layers, so two segments of a limb (upper arm / forearm, thigh / shin) can be
  * drawn in either order or in different depth parts. `capA` / `capB` (0..1) round the segment's start / end with a disk
  * (fill, plus its ink rim at that opacity): a forearm emerging in front of its own upper arm or of the torso shows a
- * rounded elbow, an upper arm in front of the chest a rounded shoulder.
+ * rounded elbow, an upper arm in front of the chest a rounded shoulder. `joint` adds the shared joint disk at b, filled
+ * and shaded with this segment (never a separate flat disk over the shading).
  */
-const segLayers = (a: V2, b: V2, w0: number, w1: number, ink: number, inkC: string, c: string, L: FigLight | undefined, s: number, capA = 0, capB = 0, key = 's', capAInk = capA) => {
+const segLayers = (a: V2, b: V2, w0: number, w1: number, ink: number, inkC: string, c: string, L: FigLight | undefined, s: number, capA = 0, capB = 0, key = 's', capAInk = capA, uid = key, joint = false) => {
   const inkEl = (
     <g key={`${key}i`} fill={inkC}>
       <path d={quad(a, b, w0 / 2 + ink, w1 / 2 + ink)} />
@@ -601,24 +630,13 @@ const segLayers = (a: V2, b: V2, w0: number, w1: number, ink: number, inkC: stri
       {capB > 0.02 && <circle cx={b.x} cy={b.y} r={w1 / 2 + ink} opacity={capB} />}
     </g>
   );
-  let shade: React.ReactNode = null, rim: React.ReactNode = null;
-  if (L) {
-    const l2 = Math.hypot(L.dir.x, L.dir.y) || 1;
-    const lx = L.dir.x / l2, ly = L.dir.y / l2, lz = clamp(L.dir.z, -1, 1), key0 = L.key ?? 1;
-    const frac = clamp(0.32 + 0.5 * (0.5 - lz * 0.6), 0.2, 0.92) * key0;
-    const rimAmt = clamp(0.35 - lz) * (L.rim ?? 1) * key0;
-    const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
-    const nx = -dy / len, ny = dx / len;
-    const sideS = -(Math.sign(nx * lx + ny * ly) || 1);
-    shade = <path d={quad(a, b, (w0 / 2) * frac, (w1 / 2) * frac, sideS * (w0 / 2) * (1 - frac), sideS * (w1 / 2) * (1 - frac))} fill={L.shadowC ?? '#2B3550'} opacity={0.3 * key0} />;
-    if (rimAmt > 0.04) { const rw = Math.max(0.8, 2.4 * s); rim = <path d={quad(a, b, rw, rw, -sideS * (w0 / 2 - rw), -sideS * (w1 / 2 - rw))} fill={L.rimC ?? '#FFC890'} opacity={clamp(rimAmt * 1.6) * 0.85} />; }
-  }
+  const shapes = [quad(a, b, w0 / 2, w1 / 2)];
+  if (capA > 0.02) shapes.push(circD(a, w0 / 2));
+  if (capB > 0.02 || joint) shapes.push(circD(b, w1 / 2));
   const fillEl = (
     <g key={`${key}f`}>
-      <path d={quad(a, b, w0 / 2, w1 / 2)} fill={c} />
-      {capA > 0.02 && <circle cx={a.x} cy={a.y} r={w0 / 2} fill={c} />}
-      {capB > 0.02 && <circle cx={b.x} cy={b.y} r={w1 / 2} fill={c} />}
-      {shade}{rim}
+      {shapes.map((d, i) => <path key={i} d={d} fill={c} />)}
+      {limbShade(uid, shapes, L, Math.max(w0, w1), s, [a, b])}
     </g>
   );
   return {ink: inkEl, fill: fillEl};
@@ -709,8 +727,9 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const Hn = add3(H, mul3(norm3(sub3(H, K)), (front ? 2 : 10) * s));
     const LW = [LEG_W * 1.05 * s, LEG_W * 0.95 * s, LEG_W * 0.8 * s];
     const legEl = front
-      ? (() => { const a = segLayers(Hn, K, LW[0], LW[1], ink, inkC, pantsC, L, s, 1, 0, `ha${i}`), b = segLayers(K, A, LW[1], LW[2], ink, inkC, pantsC, L, s, 0, 0, `hb${i}`); return <g>{a.ink}{b.ink}<circle cx={K.x} cy={K.y} r={LW[1] / 2 + ink} fill={inkC} />{b.fill}{a.fill}<circle cx={K.x} cy={K.y} r={LW[1] / 2} fill={pantsC} /></g>; })()
-      : <LimbG pts={[Hn, K, A]} w={LW} ink={ink} inkC={inkC} colors={[pantsC, pantsC]} L={L} s={s} />;
+      // (the knee disk belongs to the thigh's shape and shading: R2-R3a drew it as a flat disk over the shading)
+      ? (() => { const a = segLayers(Hn, K, LW[0], LW[1], ink, inkC, pantsC, L, s, 1, 0, `ha${i}`, 1, `${id}lt${i}`, true), b = segLayers(K, A, LW[1], LW[2], ink, inkC, pantsC, L, s, 0, 0, `hb${i}`, 0, `${id}ls${i}`); return <g>{a.ink}{b.ink}<circle cx={K.x} cy={K.y} r={LW[1] / 2 + ink} fill={inkC} />{b.fill}{a.fill}</g>; })()
+      : <LimbG pts={[Hn, K, A]} w={LW} ink={ink} inkC={inkC} colors={[pantsC, pantsC]} L={L} s={s} uid={`${id}lg${i}`} />;
     add(front ? r.torsoZ + 1 + i * 0.01 : r.torsoZ - 40 + clamp((legZ - r.torsoZ) / (600 * s), -1, 1) * 0.3 + i * 0.001, `leg${i}`, (
       <g>
         <ellipse cx={sc.x} cy={sc.y} rx={Math.max(e.rx, 12 * s)} ry={Math.max(e.ry, 9 * s)} transform={`rotate(${f2(e.rot)} ${f2(sc.x)} ${f2(sc.y)})`} fill={shoeC} stroke={inkC} strokeWidth={ink} />
@@ -890,8 +909,10 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     // glyph's layers), the others become parts in their zones (clipped to their runs of the prop's axis)
     if (hold && holdFn?.span) {
       const sp = holdFn.span;
-      const runs = zoneRuns(r, propPt(hf, sp[0] * s, sp[1] * s, s), propPt(hf, sp[2] * s, sp[3] * s, s));
       const hz = zoneOfRank(r, r.armRank[i]);
+      // (a short prop: behind or in front of the torso it stays with its hand; only the face's depth cuts it)
+      const runs = zoneRuns(r, propPt(hf, sp[0] * s, sp[1] * s, s), propPt(hf, sp[2] * s, sp[3] * s, s))
+        .map((rn) => (holdFn.spanFace && rn.zone < 2 && hz < 2 ? {...rn, zone: hz} : rn));
       if (runs.length > 1 || runs[0].zone !== hz) {
         const inG = hold;
         const det = hf.ax.x * hf.ay.y - hf.ay.x * hf.ax.y || 1e-6;
@@ -922,14 +943,13 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     // the elbow: a half drawn over the other gets a rounded end there when the arm is bent (or the halves are in
     // different depth parts); a nearly straight arm keeps the shared joint (no ring across the arm)
     const capE = split ? 1 : clamp((bend - 35) / 30);
-    const up = segLayers(S0, E, AW[0], AW[1], ink, inkC, skin, L, s, capS, lowerTop ? 0 : capE, `u${i}`, frontK);
-    const lo = segLayers(E, W0, AW[1], AW[2], ink, inkC, skin, L, s, lowerTop ? capE : 0, 0, `l${i}`);
+    // (the shared elbow disk of a one-part arm is part of the upper arm's shape and shading)
+    const up = segLayers(S0, E, AW[0], AW[1], ink, inkC, skin, L, s, capS, lowerTop ? 0 : capE, `u${i}`, frontK, `${id}au${i}`, !split);
+    const lo = segLayers(E, W0, AW[1], AW[2], ink, inkC, skin, L, s, lowerTop ? capE : 0, 0, `l${i}`, lowerTop ? capE : 0, `${id}al${i}`);
     const sideL = L ? -(Math.sign((-ua.y) * L.dir.x + ua.x * L.dir.y) || 1) : 1;
     const upperFill = (
       <g key={`uf${i}`}>
         {up.fill}
-        {/* the shared elbow joint (fills the outside of the bend) */}
-        {!split && <circle cx={E.x} cy={E.y} r={AW[1] / 2} fill={skin} />}
         {/* sleeve: shirt colour from the shoulder to the cuff (slightly flared), then a hem line */}
         <path d={quad(S0, cuff, ARM_W * 0.54 * s, ARM_W * 0.56 * s)} fill={sleeve} />
         {capS > 0 && <circle cx={S0.x} cy={S0.y} r={ARM_W * 0.54 * s} fill={sleeve} />}
@@ -976,7 +996,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const a = at(r.neck, up, 0, -6 * s, 0), b = at(r.headC, r.head, 0, -38 * s, 0);
     add(r.torsoZ + 2, 'neck', (
       <g>
-        <LimbG pts={[a, b]} w={30 * s} ink={ink} inkC={inkC} colors={[skin]} L={L} s={s} />
+        <LimbG pts={[a, b]} w={30 * s} ink={ink} inkC={inkC} colors={[skin]} L={L} s={s} uid={`${id}nk`} />
         {(() => { const c = at(r.neck, up, 0, 6 * s, 6 * s); const n = n2; return <path d={`M ${f2(c.x - n.x * 15 * s)} ${f2(c.y - n.y * 15 * s)} Q ${f2(c.x + up.U.x * -4 * s)} ${f2(c.y + up.U.y * -4 * s + 4 * s)} ${f2(c.x + n.x * 15 * s)} ${f2(c.y + n.y * 15 * s)}`} fill="none" stroke={inkC} strokeWidth={ink * 0.7} strokeLinecap="round" />; })()}
       </g>
     ));

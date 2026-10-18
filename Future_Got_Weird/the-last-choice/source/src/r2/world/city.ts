@@ -746,7 +746,8 @@ const volume = (mb: MB, b: Bldg, x0: number, x1: number, z0: number, z1: number,
         if (allHoles.some((h) => um > h.u0 && um < h.u1 && ym > h.y0 && ym < h.y1)) continue;
         // overlays clipped to the cell (a band, a shutter or a fire escape crossing cells is cut at the cell edges);
         // the top row also keeps what sticks up above the wall (soot over the last windows)
-        const cellOv = ov.map((o) => clipOv(o, fr, ua, ub, ya, j + 2 === Y.length ? yc + 4 : yc)).filter((o): o is Overlay => !!o);
+        // (2 cm past the cell's edges: pieces of a band or a sign cut by a cell line overlap, no hairline)
+        const cellOv = ov.map((o) => clipOv(o, fr, ua - (o.line ? 0 : 0.02), ub + (o.line ? 0 : 0.02), ya - (o.line ? 0 : 0.02), (j + 2 === Y.length ? yc + 4 : yc) + (o.line ? 0 : 0.02))).filter((o): o is Overlay => !!o);
         // the ground row sorts a little behind: whoever stands on the sidewalk in front of it draws after it
         const bias = ya < 0.2 ? -Math.min(3, (ub - ua) * 0.5) : -0.4;
         mb.face([P(fr, ua, ya), P(fr, ub, ya), P(fr, ub, yc), P(fr, ua, yc)], wallMat, cellOv.length ? cellOv : undefined, bias);
