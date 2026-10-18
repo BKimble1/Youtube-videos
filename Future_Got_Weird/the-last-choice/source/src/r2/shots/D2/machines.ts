@@ -120,7 +120,7 @@ export const pipeDist = (p: XZ): {d: number; at: V3} => {
 
 // ------------------------------------------------------------------ the smoke and the decoy (geometry only)
 /** where the two canisters land: the wall across the crater's north-west slope, south-west of the pipe */
-export const CAN_TO: [XZ, XZ] = [{x: 52.5, z: -2.15}, {x: 55.4, z: 0.05}];
+export const CAN_TO: [XZ, XZ] = [{x: 51.8, z: -1.15}, {x: 55.4, z: 0.05}];
 /** the light figures' plane: human-sized walking silhouettes in the smoke (≈ 1.6 × a person, projected — not giants),
  *  walking east-south-east down into the crater, the plane facing the projector on the slab (south-west) */
 export const DECOY = {
