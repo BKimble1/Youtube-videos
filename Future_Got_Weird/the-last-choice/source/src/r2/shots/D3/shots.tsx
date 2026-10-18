@@ -2,6 +2,7 @@
 // three-quarter views at eye height on the ground; the topple and the formation are wides. Screen direction: the enemy
 // is east (screen right) except where a shot re-establishes it. Exchange sheet: production/R3_EXCHANGES.md ## D3.
 import React from 'react';
+import {AbsoluteFill} from 'remotion';
 import {Stage, useShotTime, camPath, CamKey} from '../../film/stage';
 import type {Item} from '../../engine';
 import {toView} from '../../engine';
@@ -9,9 +10,10 @@ import {smooth} from '../../../kit/math';
 import {d3Items, d3FxAt, D3Opts} from './battle';
 import {fadeItems} from './fx';
 import {SH3} from './times';
+import {GaugeCU} from './gaugecu';
 import {
   CamFn, CAM_1, CAM_1b, CAM_2, CAM_3a, CAM_3b, CAM_4a, CAM_4b, CAM_5, CAM_6, CAM_7a, CAM_7b, CAM_7c, CAM_8, CAM_9, CAM_10a, CAM_10b, CAM_10c,
-  CAM_11a, CAM_11b, CAM_11c, CAM_11d, CAM_11e,
+  CAM_11a, CAM_11c, CAM_11d, CAM_11e,
 } from './cams';
 
 /** smoke and dust puffs fade out as they reach the lens (no screen-filling veil from a puff a metre away) */
@@ -78,8 +80,13 @@ export const D3_10b = shot(SH3.d310b, CAM_10b, () => ({full: 30, near: true}), 0
 export const D3_10c = shot(SH3.d310c, CAM_10c, () => ({full: 32}), 0.014);
 // D3-11a (HEAVY2_FIRE 145.18–146.30): wide: the round; the blast on the rim; they are thrown
 export const D3_11a = shot(SH3.d311a, CAM_11a, () => ({full: 32}), 0.02);
-// D3-11b (146.30–147.00): insert: the breaker's gauge, empty
-export const D3_11b = shot(SH3.d311b, CAM_11b, () => ({full: 30, near: true}), 0.006);
+// D3-11b (146.30–147.00): insert (gaugecu.tsx, a drawn close-up like EF's clasp): the breaker's gauge from his eyes:
+// the needle sinks onto the stop; his thumb knocks the glass twice, presses, slides off. (CAM_11b stays the cue
+// generator's listener for this insert.)
+export const D3_11b: React.FC = () => {
+  const {t, T} = useShotTime(SH3.d311b);
+  return <AbsoluteFill style={{background: '#000'}}><GaugeCU t={t} T={T} /></AbsoluteFill>;
+};
 // D3-11c (147.00–147.70): insert: the flare carrier lifts his head: the brow cut
 export const D3_11c = shot(SH3.d311c, CAM_11c, () => ({full: 30, near: true}), 0.01);
 // D3-11d (147.70–148.50): the Director up, the cut lip; a glance back east at the heavy, and he goes
