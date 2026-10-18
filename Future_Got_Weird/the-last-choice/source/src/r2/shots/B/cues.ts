@@ -126,4 +126,24 @@ const B6B: Cue[] = [
   c(TB.guardDown + 0.05, 'cloth_move', {gain: -9, pan: -0.25, dist: 0.3, dur: 0.5, fade: 0.15}), // the plate comes down
 ];
 
-export const CUES_B: Cue[] = [...B1, ...B2, ...B3, ...B4, ...B5A, ...B5B, ...B6A, ...B6B];
+/**
+ * R3 balance for the rise (SOLO 9.30 → ORCH 16.76): Portals' opening solo is very quiet (≈ −45 dB short-term), so the
+ * rise's effort sounds (breaths) and rubble/body contacts sat up to 10 dB above it (measured on the stems). The score
+ * leads here: those cues come down a further RISE_DB at their source, and near-duplicate small contacts (the same kind
+ * within 0.3 s) are thinned to the first. Outside the solo nothing changes.
+ */
+const RISE_A = M.SOLO, RISE_B = M.ORCH, RISE_DB = 6;
+const RISE_KINDS = new Set(['breath_ragged', 'breath_exert', 'rubble_shift', 'body_fall', 'debris_rain', 'steps_gravel', 'cable_strain']);
+const balanceRise = (cs: Cue[]): Cue[] => {
+  const sorted = [...cs].sort((a, b) => a.t - b.t);
+  const lastByKind = new Map<string, number>();
+  return sorted.flatMap((c) => {
+    if (c.t < RISE_A || c.t >= RISE_B || !RISE_KINDS.has(c.kind)) return [c];
+    const prev = lastByKind.get(c.kind);
+    lastByKind.set(c.kind, c.t);
+    if (prev !== undefined && c.t - prev < 0.3 && !c.dur) return [];
+    return [{...c, gain: (c.gain ?? 0) - RISE_DB}];
+  });
+};
+
+export const CUES_B: Cue[] = balanceRise([...B1, ...B2, ...B3, ...B4, ...B5A, ...B5B, ...B6A, ...B6B]);
