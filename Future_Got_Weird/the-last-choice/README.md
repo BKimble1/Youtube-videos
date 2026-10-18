@@ -16,7 +16,7 @@ R2 replaces R1, the refuge and evacuation film. There is no hospital, refuge, gl
 
 | What | Where |
 |---|---|
-| **Review film (1080p)** | `exports/FGW_TheLastChoice_R2_REVIEW_1080p.mp4` (see "What was checked" for its measured properties). Git-ignored because it contains the music. |
+| **Review film (1080p)** | `exports/FGW_TheLastChoice_R2_REVIEW_1080p.mp4`: 1920×1080, 30 fps, 7,740 frames, **4:18.00**, H.264 CRF 18 bt709 with AAC 320 kb/s stereo 48 kHz, −16.0 LUFS, −1.9 dBTP, 210,023,893 bytes, SHA-256 `4ba6fc88dc59a63e335ff6a50d1d3ad9520709383a4013981cb6275ecd92936c`. Git-ignored because it contains the music. |
 | Editable source | `source/` (Remotion 4, React, TypeScript, SVG). Compositions `LastChoiceR2` (1920×1080) and `LastChoiceR2-4K` (3840×2160, the same component; everything is vector). |
 | Single timeline | `source/src/r2/timing.ts`: music segments, music anchors `M`, sections. |
 | Sound sheet | `source/src/r2/sound.ts`: beds, perspective, radio automation, global cues. Section cues live in `source/src/r2/shots/<SEC>/cues.ts`. |
@@ -83,8 +83,29 @@ To inspect stills: `cd source && COMP=LastChoiceR2 SCALE=0.5 node stills.mjs <di
 
 ## What was checked, and how
 
-(The measured properties of the delivered file are added here after the final render.)
-
+- **Measured on the delivered file** (`qa/r2/render/qa_results.json`, `tools/r2/qa_r2.py`):
+  - 1920×1080, 30/1, bt709, 7,740 frames, 258.000 s;
+  - stereo AAC 48 kHz;
+  - −16.0 LUFS integrated, LRA 12.3 LU, −1.9 dBTP.
+- **Black and frozen spans:** only the intended ones.
+  - 6.60–9.37 black: the title card (the title fades in on black).
+  - 229.97–236.60 black or near-black: the pullback fades out, then the credit field and the first block, which starts below the frame at 230.4 and enters around 232.
+  - Frozen 7.27–9.13: the held title.
+  - Frozen 253.73–256.93: the credits' resting hold.
+- **All 83 cuts:** the outgoing shot's last frame beside the incoming shot's first frame, at exact frame times (`qa/r2/render/cuts_*.png`). No blank or flash frames.
+  - The planned invisible cuts match: E2→F1 at 198.30 (one camera) and D4-10→E1 at 186.90 (the tableau).
+  - The section handovers were also checked numerically by the section builds:
+    - Crew roots identical, joints within about 1–2 cm.
+    - Machines identical, apart from one D4 foot already in its next step.
+- **Contact sheets:** a frame every 3 s (`qa/r2/render/every3s_*.png`), plus per-section sheets around every contact (`qa/r2/shots/<SEC>/`).
+- **Music and radio, measured from the mix stems:**
+  - "Portals" sounds from 0.61 s to 193.1 s.
+  - "It's Been a Long, Long Time" sounds from 200.42 s to 255.37 s, 55.0 s in all.
+  - The effects bus rises at the radio click at 199.90 s. The radio take's louder sweep peaks 0.3 s later, at 200.20.
+  - Radio → full range: the share of the song's energy below 250 Hz is 1.4% at 200.5–203 s (speaker), 11% at 210–213 and 39% at 218–222 (full range, with the vocal).
+  - The music-priority rule was active for about 80 s, averaging 1.3 dB of effects reduction, never more than 5 dB.
+  - The limiter's largest reduction is 3.1 dB.
+- **4K:** `LastChoiceR2-4K` renders at 3840×2160; one frame was checked (200.0 s). The full 4K master has not been rendered.
 - **Not done: I cannot play video or listen in this environment.** Nobody has watched this film in real time or heard it here.
   - Motion was judged from consecutive-frame contact sheets around every contact, plus numerical checks of positions across cuts.
   - Audio was judged from waveforms, onsets, a transcript and level measurements.
@@ -107,4 +128,56 @@ To inspect stills: `cd source && COMP=LastChoiceR2 SCALE=0.5 node stills.mjs <di
 
 ## Unresolved issues (known defects and limits)
 
-The list is in the delivery note for this review and will be kept here once the final render is checked.
+**Audio, unverified by ear** (all measured, none heard):
+- **Song edit:** "Long, Long Time" at 3:30.6 (rec 10.205 → 57.26; preview `audio/r2/music/preview_llt_join.wav`).
+- **Transitions:** the radio-to-full change, and the Portals entry at 0:00.6.
+- **Balance:** music against effects.
+- **Effect takes:** chosen by objective rules, not auditioned. 17 kinds have only one take, because generation hit a rate limit.
+- **Radio click:** the take's audible click starts at 199.90 with the dial light, but its loudest moment is a sweep peak 0.3 s later.
+- **Two picture events miss their music hits:**
+  - The heavy's crash (126.25) lands 0.6 s after the `HEAVY_DOWN` music hit (125.64), which falls mid-topple.
+  - The four D1 contacts land 0.44–0.72 s after their music accents, because each wind-up starts on the cut.
+
+**Picture: reads, but weak:**
+- **Combat units:** blocky. In the widest shots they read as stick-figure robots, and side-on they merge with the ranks behind.
+- **Busy or small wides:**
+  - D1-3 (the end of the crane up);
+  - D2-3 (strikes at the light, small);
+  - D2-5 (the robots in the girder crash, small);
+  - D3-10 (a pipe across the foreground);
+  - D4-9b, D4-10 (the Crew small inside the ring);
+  - the middle of the F1 pullback (205–212 s, a busy crowd; a brick building fills the right third at 217–222 s).
+- **Flat inserts:** the clasp insert (E1_clasp, 191.4–193.1) and the opening hand close-up (B1) are flatter and more graphic than the rest.
+- **Smoke and city:**
+  - Smoke columns read as stacked puffs.
+  - The far city is generic.
+  - The avenue's streaming formations barely show under the smoke in F1.
+  - The collapsed tower's stump arrives late in the pullback (about 221 s).
+- **Rear view of the Director's curls:** now one mass, but in a dead-back view the lower shadow band reads slightly like a headband.
+- **B6 (the lonely wide):** the dust bank's edge is lumpy, and the lens is tighter (16°) than planned so he stays readable (about 68 px tall).
+- **B4 and B6:** the long lens flattens depth, so he sits near the van's roofline.
+- **C4b:** the drone pilot's arm crosses her face for about 3 frames as she raises the drone.
+- **C6:** her step off the slab's 0.55 m edge is one quick step.
+- **D1:**
+  - The flare carrier's flare draw reaches toward the wrong hip; the satchel is on his left.
+  - In D1-8 the charged unit is partly hidden behind his head for 87.2–87.6 s.
+- **D2-4b:** the pry insert crosses the line. It is held tight on the plate and hands so the geography does not register.
+- **D2-7:** the allied drone that takes the blow is small; the sparks carry it.
+- **D3:**
+  - D3-5's first second is dust-heavy.
+  - Small residual jumps: the Director's head turn at 140.42 s and his start to rise at 146.85 s; the decoy maker's foot at 146.39 s; the breaker's first step at 128.79 s.
+- **D4:**
+  - Heavy 2's rear-left foot hangs about 1 m above the ground in the first frames of D4 (149.9 s, far background).
+  - Several ring units stand on rubble chunks.
+- **F1:**
+  - Her helmet sweeps close past the lens at 198.75–199.6 s.
+  - The frame holds the lit radio with nobody in it at 201.4–203.2 s, until the first wide finds them both.
+- **Credits:** the field is near-black for about 2 s (230.4–232.4) before the first block rises into frame.
+
+**Deviations from the brief and the shot list:**
+- **B3** ends on a long-lens over-the-shoulder rather than a true high wide: the slab he climbed out of blocks a wider view.
+- **B5** has the van to the right of frame.
+- **B6** is a high shot over the army looking back at his silhouette. The planned low west-slope view could not see the army past the crest.
+- **Cut moved:** the E2/F1 cut is at 198.30 instead of 199.30. One camera spans it, so the move starts on his still face and the knob turn can land on the 199.9 click.
+- **Shot count:** 84 shots against the shot list's planned set-ups. Several planned shots became two or three cuts. The as-built times are in each section's `index.tsx` and `qa/r2/render/timeline.json`.
+- **4K:** the composition is ready and checked on one frame. The full 4K master has not been rendered.
