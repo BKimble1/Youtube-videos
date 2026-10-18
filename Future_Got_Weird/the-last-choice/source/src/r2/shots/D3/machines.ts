@@ -1025,8 +1025,12 @@ function buildNorth(id: number, src: Src, role: 'r3' | 'wing' | 'lineN', j: numb
     steps.push(hold(spot, 119.9, headingTo({x: 60.1, z: -8.4}, spot), 255, EV3.tBite));
     steps.push({k: 'kit', T0: EV3.tBite});
     early = actR3;
-    // FORMATION: to its wing slot (north of the cable)
-    steps.push({k: 'walk', pts: [{x: 59.3, z: -11.3}, slot], T0: EV3.reform + 0.5, T1: EV3.reform + 1.6, A: 0.4, D: 0.5});
+    // FORMATION: to its wing slot (north of the cable), keyed steps off the kit's own stance facing the heavy (a walk
+    // from there began from a different standing stance: both feet jumped), turning to the Crew; held to the wing's go
+    const p0: XZ = {x: 59.3, z: -11.3}, h0 = headingTo(p0, H1_AT), hW = headingTo(p0, slot), hF = headingTo(slot, CREW_C);
+    const r0 = EV3.reform + 0.5;
+    const root: KR[] = [[r0, p0.x, p0.z, h0], [r0 + 1.1, slot.x, slot.z, h0 + wrapD(hW - h0)], [r0 + 1.7, slot.x, slot.z, hF], [EV3.wingGo + (j % 4) * 0.22, slot.x, slot.z, hF]];
+    steps.push({k: 'keys', root, feet: autoSteps(root, {half: 0.19, stag: -0.04, stepLen: 0.55})});
   } else if (role === 'wing') {
     // the early wing: from the vanguard (as heavy 1 swings blind), along the crater's north edge under the girder
     const t0 = 121.8 + q * 0.3;
@@ -1115,7 +1119,8 @@ function buildSouth(id: number, src: Src, role: 'mid' | 'south' | 'u8' | 'retrea
   const prev = steps[steps.length - 1];
   const tl = prev.k === 'walk' ? prev.T1 : EV3.lineSet;
   const hFace = role === 'mid' ? 290 : 300;
-  const r0 = EV3.reform + ripple;
+  // (U8 arrives last, at a jog: its turn to the rim takes 0.6 s and it goes 0.15 s after — no 156° spin in a quarter second)
+  const r0 = Math.max(EV3.reform + ripple, prev.k === 'walk' ? tl + 0.75 : -1e9);
   if (prev.k === 'walk') steps.push(hold(slot, tl, headingTo(prev.pts[prev.pts.length - 2], slot), hFace, r0));
   // FORMATION: out of the line into the arc (the middle through the break first); DECOY_FAIL: on at the source,
   // through the light — no stop between; then hold facing the Crew
