@@ -28,5 +28,5 @@ export const SHOTS_D4: R2Shot[] = [
   {id: 'D4-9a', sec: 'D4', start: SH.d49a, end: SH.d49b, note: 'SOFTEN: from in front of him, he slides down the slab; the drone pilot beside him', C: D4_9a},
   {id: 'D4-9b', sec: 'D4', start: SH.d49b, end: SH.d49c, note: 'going to him, they are caught: the decoy maker\'s wrist, the breaker\'s leg gives (he sits by his dropped breaker), the flare carrier\'s arm locked', C: D4_9b},
   {id: 'D4-9c', sec: 'D4', start: SH.d49c, end: SH.d410, note: 'he cannot rise: one push on his left hand, the arm gives, he sinks back; the drone pilot\'s hand stretched out toward him', C: D4_9c},
-  {id: 'D4-10', sec: 'D4', start: SH.d410, end: SH.end, note: 'his view, the ring holds: she goes to him; the decoy maker\'s hands go up, the last heave, the tether operator gives up; the ring lowers into ready; FINAL_HIT', C: D4_10},
+  {id: 'D4-10', sec: 'D4', start: SH.d410, end: SH.end, note: 'his view, the ring holds: the drone pilot onto her hands and knees to go to him; the decoy maker let go, her hands go up; the flare carrier\'s last heave, his head drops; the breaker shaking; the ring lowers into ready; FINAL_HIT', C: D4_10},
 ];

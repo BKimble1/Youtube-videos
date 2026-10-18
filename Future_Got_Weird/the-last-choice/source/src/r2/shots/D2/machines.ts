@@ -35,7 +35,7 @@
 //                      main); survivors (D3).  8111 (R1) holds the north-east rim (steps out of heavy 1's way).
 //   heavy 1 = HEAVIES_B[0] (3101): walks in from (104, −1), fires into the smoke on DECOY_HITc (the round bursts among
 //                      its own units), comes through the crater's north part toward the girder; halts at 121.0 (D3).
-import type {UnitSpec, DroneSpec, HeavySpec} from '../../mech';
+import type {UnitSpec, DroneSpec, HeavySpec, CatchSpec} from '../../mech';
 import {unitRoot, unitAttach} from '../../mech';
 import {V3, clamp, smooth, lerp, add3, sub3, mul3, norm3, rnd, easeIn, easeOut} from '../../../kit/math';
 import {M} from '../../timing';
@@ -54,7 +54,7 @@ export const EV2 = {
   // back up the south slope; B turns back from the north rim
   aStop: 94.3, mark0: 94.6, mark1: 98.05, dAtt: 94.5, dWalk0: 95.0, dWalk1: 97.4, u8Walk0: 95.15, u8Walk1: 97.6, bAtt: 95.25,
   // the flare carrier draws, pulls the pins and lobs two canisters into the crater (satchel: rig/crew.ts 94.44 / 95.03)
-  draw1: 94.36, pin1: 94.58, rel1: 94.86, draw2: 94.95, pin2: 95.08, rel2: 95.27, canFlight: 0.95, pop: 0.12,
+  draw1: 94.3, pin1: 94.46, rel1: 94.72, draw2: 94.92, pin2: 95.05, rel2: 95.34, canFlight: 0.95, pop: 0.12,
   // D2-2 THE PLAN UNDER THREAT: the sketch (insert), the breaker covers the pilot from D, the tap, the tablet on the
   // slab's top edge, the projector on; the light figures; heads snap round to them
   sketch: 95.48, sketchDur: 1.72, cover: 96.15, tap: 97.36, place: 97.66, projOn: 97.9, projOff: 112.6, lure: 98.02,
@@ -73,6 +73,8 @@ export const EV2 = {
   // D2-6 KNOCKBACK / CATCH, D2-7 SHIELD / COUNTER / BRIGHT
   knock: M.KNOCKBACK, catch: M.CATCH, dPress0: 110.82, dPress1: 112.55, shield: M.SHIELD, dAtt2: 113.8, dRe: 114.3,
   counter: M.COUNTER, hook: 114.42, dFall: 114.56, bright: M.BRIGHT,
+  /** A, down at the girder, stirs (its eye relights, its head comes round) — the Director's plate on its head */
+  aStir: 110.0, aKill: 111.05,
   /** @deprecated R2 (crew.tsx rebuild in progress) */
   bash: 103.62,
 };
@@ -182,6 +184,38 @@ const cached = <X>(key: string, f: () => X): X => {
   return v;
 };
 
+
+/**
+ * One continuous attention track (MECH's attend snaps to a new entry and drops the old one's torso turn in a frame, so
+ * a unit keeps ONE attend entry and its target is blended here): keys [t, point, blend s]; each key takes over from
+ * the one before over its blend time (0.12–0.2 s: a snap to a threat; 0.3–0.5 s: a look round). No body turn.
+ */
+type AttKey = [number, V3 | ((t: number) => V3), number?];
+const ptOf = (p: V3 | ((t: number) => V3), t: number) => (typeof p === 'function' ? p(t) : p);
+const track = (keys: AttKey[], t1?: number, about?: XZ & {h?: number}): {t0: number; at: (t: number) => V3; t1?: number; turn: false}[] => [{
+  t0: keys[0][0], t1, turn: false,
+  at: (t: number) => {
+    let p = ptOf(keys[0][1], t);
+    for (let i = 1; i < keys.length; i++) {
+      if (t < keys[i][0]) break;
+      const w = smooth(clamp((t - keys[i][0]) / (keys[i][2] ?? 0.3)));
+      p = about ? swing(p, ptOf(keys[i][1], t), w, about) : lerp3s(p, ptOf(keys[i][1], t), w);
+    }
+    return p;
+  },
+}];
+/** blend two look points round the unit (angle the short way, radius and height lerped): a look from a point in
+ *  front to one behind it swings round instead of passing through the unit (whose heading-to-target would flip) */
+const swing = (p: V3, q: V3, w: number, c: XZ & {h?: number}): V3 => {
+  if (w <= 0) return p;
+  if (w >= 1) return q;
+  // with the unit's heading: the angle relative to it is lerped (the look never swings through its back)
+  const h0 = c.h ?? headingTo(c, p);
+  const a0 = wrapD(headingTo(c, p) - h0), a1 = c.h !== undefined ? wrapD(headingTo(c, q) - h0) : a0 + wrapD(headingTo(c, q) - headingTo(c, p));
+  const a = h0 + lerp(a0, a1, w), r = lerp(Math.hypot(p.x - c.x, p.z - c.z), Math.hypot(q.x - c.x, q.z - c.z), w), d = hdir(a);
+  return {x: c.x + d.x * r, y: lerp(p.y, q.y, w), z: c.z + d.z * r};
+};
+
 // ------------------------------------------------------------------ unit plans
 /** a walk (gait with planted feet; it starts and ends in the standing stance) */
 type Walk = {kind: 'walk'; pts: XZ[]; T0: number; T1: number; stride?: number; A?: number; D?: number};
@@ -246,7 +280,16 @@ const run = (pl: Plan, T: number): UnitSpec => {
     return {...sp, crouch: lerp(sp.crouch ?? 0, s.crouch ?? 0, w), idle: lerp(sp.idle ?? 0.45, s.idle ?? 0.55, w), lean: lerp(sp.lean ?? 0, s.lean ?? 0, w)};
   };
   if (ph.kind === 'd1') return {...unitD1(ph.name, T), key: pl.key};
-  if (ph.kind === 'cont') { const c = contAt(ph, T); return takeover({...c, ...walkOnly(act), lean: c.lean, crouch: c.crouch, lockAt, key: pl.key}, ph.Tk); }
+  if (ph.kind === 'cont') {
+    const c = contAt(ph, T);
+    // the swinging foot was headed for D1's next plant: it is eased onto the new leg's over the first 0.3 s
+    const w = smooth(clamp((T - ph.Tk) / 0.3));
+    if (w < 1 && c.feet) {
+      const f1 = unitD1(ph.name, T).feet;
+      if (f1?.L && f1?.R) c.feet = {L: lerp3s(f1.L, c.feet.L!, w), R: lerp3s(f1.R, c.feet.R!, w), pitchL: lerp(f1.pitchL ?? 0, c.feet.pitchL ?? 0, w), pitchR: lerp(f1.pitchR ?? 0, c.feet.pitchR ?? 0, w)};
+    }
+    return takeover({...c, ...walkOnly(act), lean: c.lean, crouch: c.crouch, feet: c.feet, lockAt, key: pl.key}, ph.Tk);
+  }
   if (ph.kind === 'walk') {
     const L = pathLen(ph.pts);
     const path = linePath(ph.pts, 1.2);
@@ -341,11 +384,7 @@ const B_PLAN: Plan = {
     const back = bBackhand(T);
     return {
       posture: [[95.2, 'idle'], [96.2, 'ready'], [EV2.lure, 'guard'], [EV2.knee, 'idle']],
-      attend: [
-        {t0: EV2.bAtt, at: slabMark, t1: EV2.lure - 0.1},
-        {t0: EV2.lure, at: (t) => decoyPt(0, t, 0.5), t1: EV2.knee + 0.05},
-        {t0: EV2.knee + 0.08, at: () => on({x: 51.2, z: -4.5}, 1.0), t1: EV2.pryIn},
-      ],
+      attend: track([[EV2.bAtt, slabMark], [EV2.lure, (t) => decoyPt(0, t, 0.5), 0.15], [EV2.knee + 0.06, on({x: 51.2, z: -4.5}, 1.0), 0.14]], EV2.pryIn, {x: 52.13, z: -3.44, h: 164.8}),
       turns: [{t0: 95.28, to: walkStartH(B_IN), dur: 0.45}],
       strikes: [
         {t0: EV2.hitA, side: 'R', kind: 'punch', target: figAt(0, EV2.hitA, B_STRIKE_AT, 1.5), step: 0.25},
@@ -353,13 +392,14 @@ const B_PLAN: Plan = {
       ],
       crouch: 0.5 * sag, lean: 16 * kn + 10 * after(T, EV2.rip, 0.3),
       // on its knee it swings its right arm back at the man behind it (he ducks), then braces the hand on the knee
-      armR: back ? {hand: back, open: true} : T > EV2.bBack + 0.6 && T < EV2.pryPop ? {hand: bKneeHand()} : undefined,
+      armR: back ? {hand: back, open: true} : T > EV2.bBack + 0.6 && T < EV2.pryPop + 0.35 ? {hand: bKneeHand()} : undefined,
       twist: back ? -40 * win(T, EV2.bBack - 0.45, EV2.bBack + 0.4, 0.3, 0.3) : 0,
       hits: [{t0: EV2.knee, dir: hdir(125), strength: 0.9}, {t0: EV2.blast + 0.06, dir: norm3(sub3(on(B_STRIKE_AT), BLAST_AT)), strength: 0.2},
         {t0: EV2.pryPop, dir: hdir(125), strength: 0.5}, {t0: EV2.rip, dir: hdir(305), strength: 0.45}],
       damage: {back: {t0: EV2.pryPop, dir: {x: -0.5, y: 0.85, z: -0.45}, speed: 3.0}, dead: {t0: EV2.rip + 0.06}, leak: {t0: EV2.rip}},
       feet: T > EV2.knee - 0.02 ? bKneeFeet(T) : undefined,
-      fall: {t0: EV2.bFall, dir: hdir(140), ang: restAng(B_STRIKE_AT, hdir(140))},
+      // the broken right knee gives: it goes down forward and to its right (south-south-west), away from the fight
+      fall: T > EV2.bFall - 0.5 ? {t0: EV2.bFall, dir: hdir(bRoot().h + 40), ang: restAng(bRoot(), hdir(bRoot().h + 40))} : undefined,
     };
   },
 };
@@ -370,15 +410,15 @@ const bKneeFeet = (T: number) => {
     const r = bRoot(), f = hdir(r.h), rt = rightOf(r.h);
     const L0 = {x: r.x - rt.x * 0.19 - f.x * 0.04, z: r.z - rt.z * 0.19 - f.z * 0.04};
     const R0 = {x: r.x + rt.x * 0.19 + f.x * 0.04, z: r.z + rt.z * 0.19 + f.z * 0.04};
-    const Lk = {x: r.x - f.x * 0.55 - rt.x * 0.22, z: r.z - f.z * 0.55 - rt.z * 0.22};
-    return {L0: on(L0), R0: on(R0), Lk: on(Lk, 0.03)};
+    const Rk = {x: r.x - f.x * 0.55 + rt.x * 0.22, z: r.z - f.z * 0.55 + rt.z * 0.22};
+    return {L0: on(L0), R0: on(R0), Rk: on(Rk, 0.03)};
   });
-  // the hook yanks the left foot back and out from under it (a slide, no lift)
+  // the adze yanks the right foot back and out from under it (a slide, no lift): down on the right knee
   const u = clamp((T - EV2.knee) / 0.24);
   const e = 1 - (1 - u) * (1 - u);
-  return {L: lerp3s(F.L0, F.Lk, e), R: F.R0, pitchL: -55 * e};
+  return {L: F.L0, R: lerp3s(F.R0, F.Rk, e), pitchR: -55 * e};
 };
-const bKneeHand = (): V3 => { const r = bRoot(), f = hdir(r.h), rt = rightOf(r.h); return {x: r.x + f.x * 0.15 + rt.x * 0.26, y: G(r.x, r.z) + 0.62, z: r.z + f.z * 0.15 + rt.z * 0.26}; };
+const bKneeHand = (): V3 => { const r = bRoot(), f = hdir(r.h), rt = rightOf(r.h); return {x: r.x + f.x * 0.25 - rt.x * 0.24, y: G(r.x, r.z) + 0.62, z: r.z + f.z * 0.25 - rt.z * 0.24}; };
 /** the backhand: its right hand sweeps back and round toward the man at its back (he ducks under it) */
 const bBackhand = (T: number): V3 | undefined => {
   if (T < EV2.bBack - 0.45 || T > EV2.bBack + 0.6) return undefined;
@@ -398,17 +438,20 @@ const A_IN: Walk = {kind: 'walk', pts: [{x: 0, z: 0}, {x: 52.75, z: -5.1}, A_STR
 /** the point on the tether's cable A grabs: 0.42 m from the clamp on its chest along the line to the post (its chest
  *  solved without the catch itself) */
 const aCable = (T: number): V3 => {
-  const s = run(A_PLAN, Math.min(T, EV2.taut - 0.001));
+  const s = run(A_PLAN, Math.min(T, EV2.crash));
   const c = unitAttach({...s, catch: undefined, attend: s.attend?.filter((q) => q.t0 < EV2.tBite)}).chest;
   return add3(c, mul3(norm3(sub3(ANCHOR, c)), 0.42));
 };
 export const aCablePt = (T: number) => aCable(T);
+/** where it looks once the clamp bites: down the cable's line, 1.3 m out from its chest toward the post (a fixed point:
+ *  the cable's own position depends on A's chest) */
+const A_CABLE_LOOK: V3 = (() => { const c = on(A_STRIKE_AT, 1.35); return add3(c, mul3(norm3(sub3(ANCHOR, c)), 1.3)); })();
 const A_PLAN: Plan = {
   id: 8105, key: 'd2A', d1: 'U5',
   phases: [
     {kind: 'd1', name: 'U5'},
     // D1's recall walk would take it into the pipe: it pulls up hard, swinging right, in two strides
-    {kind: 'cont', name: 'U5', Tk: EV2.aStop, leg: [{x: 52.95, z: -7.08}, {x: 53.05, z: -6.88}], T1: EV2.aStop + 0.62},
+    {kind: 'cont', name: 'U5', Tk: EV2.aStop, leg: [{x: 52.78, z: -7.12}, {x: 52.9, z: -6.9}], T1: EV2.aStop + 0.62},
     {kind: 'kit', T0: EV2.aStop + 0.62, at: null},
     A_IN, {kind: 'kit', T0: A_IN.T1, at: null},
   ],
@@ -418,14 +461,9 @@ const A_PLAN: Plan = {
     const brk = AIM.breaker;
     return {
       posture: [[EV2.aStop, 'idle'], [95.6, 'ready'], [EV2.lure, 'guard']],
-      attend: [
-        {t0: EV2.aStop + 0.3, at: slabMark, t1: EV2.lure - 0.1},
-        {t0: EV2.lure, at: (t) => decoyPt(1, t, 0.5), t1: EV2.aTurn - 0.05},
-        // the knee goes behind it: it snaps round to the noise and the man coming at it
-        {t0: EV2.aTurn, at: (t) => AIM.head(t), t1: EV2.brkSwing - 0.42},
-        {t0: EV2.brkSwing - 0.4, at: (t) => brk(t), t1: EV2.tBite + 0.05},
-        {t0: EV2.tBite + 0.06, at: (t) => aCable(t), t1: EV2.taut + 0.3},
-      ],
+      // the knee goes behind it: it snaps round to the noise and the man coming at it; the breaker; the clamp's line
+      attend: track([[EV2.aStop + 0.3, slabMark, 0.4], [EV2.lure, (t) => decoyPt(1, t, 0.5), 0.15], [EV2.aTurn, (t) => AIM.head(t), 0.12],
+        [EV2.brkSwing - 0.42, (t) => brk(t), 0.15], [EV2.tBite + 0.05, A_CABLE_LOOK, 0.15], [EV2.taut + 0.05, on(ANCHOR, 1.2), 0.45]], EV2.crash, A_STRIKE_AT),
       turns: [
         {t0: EV2.aStop + 0.72, to: walkStartH(A_IN), dur: 0.5},
         // turn-to-threat (planted pivot), fast: it is still coming round as the plate arrives
@@ -463,6 +501,9 @@ const A_PLAN: Plan = {
 export const aYank = () => cached('aYank', () => rootOf(A_PLAN, EV2.taut - 0.001));
 const dragDir = () => { const a = aYank(); const d = {x: ANCHOR.x - a.x, z: ANCHOR.z - a.z}; const l = Math.hypot(d.x, d.z); return {x: d.x / l, z: d.z / l}; };
 const GAP = 0.78; // A's centre behind C's at contact
+/** after the crash both go down along the girder's south face, toward the pipe's end (a wreck barricade under it) */
+const A_FALL: V3 = norm3({x: 0.8, y: 0, z: -0.6});
+const C_FALL: V3 = norm3({x: 0.75, y: 0, z: -0.66});
 /** the crash stop along the line from A: C's centre where the chord's underside meets its shoulders */
 export const crashC = (): XZ => cached('crashC', () => {
   const a = aYank(), d = dragDir();
@@ -504,8 +545,17 @@ const aDrag = (T: number): Partial<UnitSpec> & {pos: V3; heading: number} => {
   const h = a0.h + wrapD(hPull - a0.h) * smooth(clamp((T - EV2.taut) / 0.35)) * 0.75;
   const f = hdir(h), r = rightOf(h);
   const trail = 0.3 * win(T, EV2.taut, EV2.crash + 0.2, 0.15, 0.2);
-  const foot = (sd: number): V3 => { const fx = x - f.x * trail + r.x * sd * 0.19, fz = z - f.z * trail + r.z * sd * 0.19; return {x: fx, y: G(fx, fz), z: fz}; };
-  return {pos: {x, y: 0, z}, heading: h, feet: {L: foot(-1), R: foot(1), pitchL: (-18 * trail) / 0.3, pitchR: (-14 * trail) / 0.3}, lean: 24 * win(T, EV2.taut + 0.05, EV2.crash, 0.2, 0.05)};
+  // the kit stance at the yank, carried along with the root (skidding), settling into the dragged trail over 0.35 s
+  const F0 = cached('aFeetTaut', () => { const q = unitAttach(run(A_PLAN, EV2.taut - 0.001)); return {L: q.footL, R: q.footR}; });
+  const wF = smooth(clamp((T - EV2.taut) / 0.35));
+  const foot = (sd: number): V3 => {
+    const q = sd < 0 ? F0.L : F0.R;
+    const sx = q.x + (x - a0.x), sz = q.z + (z - a0.z);
+    const fx = lerp(sx, x - f.x * trail + r.x * sd * 0.19, wF), fz = lerp(sz, z - f.z * trail + r.z * sd * 0.19, wF);
+    return {x: fx, y: G(fx, fz), z: fz};
+  };
+  return {pos: {x, y: 0, z}, heading: h, idle: 0.45, feet: {L: foot(-1), R: foot(1), pitchL: (-18 * trail) / 0.3, pitchR: (-14 * trail) / 0.3},
+    lean: 10 + 14 * win(T, EV2.taut + 0.05, EV2.crash, 0.2, 0.05)};
 };
 /** where the pair hit the girder (the impact point on C's chest / the chord) */
 export const CRASH_AT = (): V3 => { const e = crashC(), d = dragDir(); return {x: e.x + d.x * 0.3, y: chordY(e.x + d.x * 0.3) - 0.2, z: e.z + d.z * 0.3}; };
@@ -517,15 +567,18 @@ A_PLAN.act = (T) => {
   const a = A_ACT0(T);
   if (T < EV2.taut) return a;
   const d = dragDir();
-  const handAt = cached('aHandTaut', () => unitAttach(run(A_PLAN, EV2.taut - 0.001)).handR);
   return {
-    ...a, attend: undefined, catch: undefined, strikes: undefined, parry: undefined, press: undefined, shove: undefined, turns: undefined,
-    look: T < EV2.crash ? ANCHOR : undefined, posture: [...((a.posture as [number, 'idle' | 'guard' | 'ready' | 'lowered'][]) ?? []), [EV2.taut, 'idle']],
-    // the cable on its chest drags it; its right hand still on the line
-    armR: T < EV2.crash ? {hand: lerp3s(handAt, add3(on(aYank()), {x: d.x * 0.45, y: 1.4, z: d.z * 0.45}), smooth(clamp((T - EV2.taut) / 0.3))), open: false} : undefined,
-    hits: [{t0: EV2.sweep, dir: {x: d.x, y: 0, z: d.z}, strength: 0.8}, {t0: EV2.crash + 0.03, dir: {x: -d.x, y: 0, z: -d.z}, strength: 1.0}],
-    damage: {back: {t0: EV2.crash + 0.02, dir: {x: -d.x * 0.4, y: 0.8, z: -d.z * 0.4 + 0.3}, speed: 2.6}, leak: {t0: EV2.crash + 0.1}, dead: {t0: EV2.crash + 0.45}},
-    fall: {t0: EV2.crash + 0.14, dir: norm3({x: -d.x * 0.2 + 0.55, y: 0, z: -d.z * 0.2 + 0.75}), ang: restAng(aContact(), {x: 0.6, z: 0.8})},
+    // the drag is the root now: the kit's locomotion generators go (their effect is in the yank root), the arms stay
+    ...a, press: undefined, shove: undefined, turns: undefined,
+    strikes: (a.strikes as {t0: number; step?: number}[] | undefined)?.map((q) => ({...q, step: undefined})) as UnitSpec['strikes'],
+    // its right hand stays on the cable as the reel drags it chest-first; the crash tears it off the line
+    catch: {...(a.catch as CatchSpec), t1: EV2.crash - 0.04},
+    attend: T > EV2.crash ? [{t0: EV2.aStir, at: (t) => AIM.head(t), t1: EV2.aKill, turn: false}] : a.attend, posture: [...((a.posture as [number, 'idle' | 'guard' | 'ready' | 'lowered'][]) ?? []), [EV2.taut, 'idle']],
+    hits: [...(a.hits ?? []), {t0: EV2.sweep, dir: {x: d.x, y: 0, z: d.z}, strength: 0.8}, {t0: EV2.crash + 0.03, dir: {x: -d.x, y: 0, z: -d.z}, strength: 1.0}, {t0: EV2.aKill, dir: {x: 0.3, y: -1, z: -0.2}, strength: 0.6}],
+    damage: {back: {t0: EV2.crash + 0.02, dir: {x: -d.x * 0.4, y: 0.8, z: -d.z * 0.4 + 0.3}, speed: 2.6}, leak: {t0: EV2.crash + 0.1}, dent: {t0: EV2.aKill, deg: 9}, dead: {t0: EV2.aKill + 0.04}},
+    // it rebounds off C and goes down on its side along the girder's south face (beside C: the wreck barricade)
+    fall: {t0: EV2.crash + 0.14, dir: A_FALL, ang: restAng(aContact(), A_FALL)},
+    eye: T > EV2.crash + 0.2 && T < EV2.aStir ? 'off' : undefined,
   };
 };
 
@@ -567,18 +620,18 @@ const C_PLAN: Plan = {
     if (T < 95.9) return {};
     if (T < 105.3) return {
       posture: [[95.9, 'idle'], [102.0, 'ready'], [104.5, 'guard']],
-      attend: [{t0: 95.95, at: smokeC, t1: 98.3}, {t0: 98.3, at: (t) => decoyPt(0, t, 0.6), t1: 104.4}, {t0: 104.45, at: on({x: 50.6, z: -8.6}, 1.4)}],
+      attend: track([[95.95, smokeC, 0.4], [98.3, (t) => decoyPt(0, t, 0.6), 0.3], [104.45, on({x: 50.6, z: -8.6}, 1.4), 0.2]]),
       turns: [{t0: 96.0, to: walkStartH(C_IN), dur: 0.35}, {t0: C_IN.T1 + 0.05, to: 215, dur: 0.6}, ...(T > 104.5 ? [{t0: 104.7, to: walkStartH(cWest()), dur: 0.5}] : [])],
     };
     const d = dragDir();
     return {
       posture: [[95.9, 'idle'], [102.0, 'ready'], [104.5, 'guard']],
-      attend: T < EV2.sweep ? [{t0: 104.45, at: on({x: 47.0, z: -10.8}, 1.4)}] : undefined,
+      attend: T < EV2.sweep + 0.4 ? track([[95.95, smokeC, 0.4], [98.3, (t) => decoyPt(0, t, 0.6), 0.3], [104.45, on({x: 50.6, z: -8.6}, 1.4), 0.2], [106.2, on({x: 47.0, z: -10.8}, 1.4), 0.4]], EV2.sweep) : undefined,
       raise: T < EV2.sweep + 0.1 ? {t0: EV2.cRaise, t1: EV2.sweep - 0.02, side: 'R'} : undefined,
       hits: [{t0: EV2.sweep, dir: {x: d.x, y: 0, z: d.z}, strength: 1.4}, {t0: EV2.crash, dir: {x: -d.x, y: 0, z: -d.z}, strength: 1.6}],
       damage: {chest: {t0: EV2.crash, dir: {x: -d.x * 0.5 + 0.2, y: 0.75, z: -d.z * 0.5 + 0.4}, speed: 3.4}, pauldronL: {t0: EV2.crash + 0.02, dir: {x: -0.2, y: 0.7, z: 0.6}, speed: 2.2}, leak: {t0: EV2.crash + 0.08}, dead: {t0: EV2.crash + 0.3}},
       // its upper body stops on the chord, the legs go on: it folds and slumps down sideways at the girder's foot
-      fall: {t0: EV2.crash + 0.1, dir: norm3({x: -0.62, y: 0, z: 0.78}), ang: 84},
+      fall: {t0: EV2.crash + 0.1, dir: C_FALL, ang: 84},
       crouch: 0.12 * win(T, EV2.crash, EV2.crash + 0.3, 0.04, 0.2),
     };
   },
@@ -590,7 +643,7 @@ export const D_LURE_AT = {x: 55.75, z: 1.35};
 const D_LURE: Walk = {kind: 'walk', pts: [{x: 0, z: 0}, {x: 53.9, z: 4.95}, D_LURE_AT], T0: 98.62, T1: 100.62, stride: 1.75, A: 0.55, D: 0.55};
 /** up out of the smoke at the noise of the fight, to the crest in front of the runner (west of B's wreck) */
 export const D_UP = {x: 50.85, z: -5.05};
-const D_UPW: Walk = {kind: 'walk', pts: [{x: 0, z: 0}, {x: 53.4, z: 0.35}, {x: 51.15, z: -2.15}, {x: 50.6, z: -3.9}, {x: D_UP.x, z: D_UP.z}], T0: EV2.dUp0, T1: EV2.dUp1, stride: 1.7, A: 0.6, D: 0.65};
+const D_UPW: Walk = {kind: 'walk', pts: [{x: 0, z: 0}, {x: 54.6, z: -0.9}, {x: 53.35, z: -3.55}, {x: 52.2, z: -4.75}, {x: D_UP.x, z: D_UP.z}], T0: EV2.dUp0, T1: EV2.dUp1, stride: 1.7, A: 0.6, D: 0.65};
 /** where the runner's adze pulls D's left ankle toward (him, on his knees) */
 export const D_ANKLE_TO: XZ = {x: 49.17, z: -6.73};
 const D_PLAN: Plan = {
@@ -601,17 +654,10 @@ const D_PLAN: Plan = {
     if (T < EV2.dAtt) return {};
     return {
       posture: [[EV2.dAtt, 'idle'], [95.6, 'ready'], [97.0, 'guard'], [EV2.lure + 0.4, 'ready'], [100.3, 'guard'], [106.2, 'ready'], [109.4, 'guard'], [EV2.counter, 'idle']],
-      attend: [
-        {t0: EV2.dAtt, at: slabMark, t1: 97.3},
-        // the breaker at the slab's south end, tool up: it squares up to him
-        {t0: 97.4, at: on({x: 47.35, z: 6.15}, 1.4), t1: EV2.lure - 0.04},
-        {t0: EV2.lure, at: (t) => decoyPt(3, t, 0.5), t1: 102.6},
-        {t0: 102.6, at: (t) => decoyPt(2, t, 0.5), t1: 106.4},
-        // the light doesn't fall: it stops, and turns to the noise of the fight behind it
-        {t0: EV2.dTurn, at: crewC, t1: EV2.dUp1 - 0.6},
-        {t0: EV2.dUp1 - 0.6, at: (t) => AIM.chest(t), t1: EV2.dAtt2 - 0.05},
-        {t0: EV2.dAtt2, at: (t) => AIM.dirHead(t), t1: EV2.dFall},
-      ],
+      // the drone's mark; the breaker at the slab's south end, tool up (it squares up to him); the figures; the light
+      // doesn't fall: it turns to the noise of the fight; the runner; the Director coming in
+      attend: track([[EV2.dAtt, slabMark, 0.4], [97.4, on({x: 47.35, z: 6.8}, 1.4), 0.2], [EV2.lure, (t) => decoyPt(3, t, 0.5), 0.15], [102.6, (t) => decoyPt(2, t, 0.5), 0.4],
+        [EV2.dTurn, crewC, 0.15], [EV2.dUp1 - 0.6, (t) => AIM.chest(t), 0.3], [EV2.dAtt2, (t) => AIM.dirHead(t), 0.12]], EV2.dFall),
       turns: [{t0: EV2.dAtt + 0.05, to: walkStartH(D_COME), dur: 0.42}, {t0: EV2.lure + 0.12, to: walkStartH(D_LURE), dur: 0.45}, {t0: EV2.dTurn + 0.05, to: walkStartH(D_UPW), dur: 0.55}],
       strikes: [
         {t0: EV2.dHit, side: 'R', kind: 'punch', target: figAt(3, EV2.dHit, D_LURE_AT, 1.5), step: 0.2},
@@ -661,15 +707,11 @@ const U8_PLAN: Plan = {
     if (T < 94.6) return {};
     return {
       posture: [[94.6, 'idle'], [95.8, 'ready'], [EV2.lure, 'guard'], [106.0, 'ready']],
-      attend: [
-        {t0: 94.65, at: slabMark, t1: EV2.lure - 0.05},
-        {t0: EV2.lure + 0.05, at: (t) => decoyPt(3, t, 0.5), t1: 104.0},
-        {t0: 104.0, at: (t) => decoyPt(3, t, 0.5, 0.4), t1: 109.0},
-      ],
+      attend: track([[94.65, slabMark, 0.4], [EV2.lure + 0.05, (t) => decoyPt(3, t, 0.5), 0.15], [103.75, (t) => decoyPt(0, t, 0.5), 0.45]], 109.0, {x: 57.55, z: 0.77, h: -60.3}),
       turns: [{t0: 94.7, to: walkStartH(U8_COME), dur: 0.4}, {t0: EV2.lure + 0.2, to: walkStartH(U8_LURE), dur: 0.45}],
       strikes: [{t0: EV2.u8Hit, side: 'L', kind: 'hammer', target: figAt(3, EV2.u8Hit, U8_LURE_AT, 1.55), step: 0.2}, {t0: 103.4, side: 'R', kind: 'punch', target: figAt(3, 103.4, U8_LURE_AT, 1.5), step: 0.2}],
       moves: [{t0: 105.2, t1: 106.6, to: on({x: 58.5, z: 1.9}), guard: true}],
-      scan: {t0: 109.0, t1: 116.92, center: on({x: 55.5, z: 0.5}, 1.5), span: 110, dwell: 0.9},
+      scan: {t0: 109.45, t1: 116.92, center: on({x: 55.5, z: 0.5}, 1.5), span: 110, dwell: 0.9, torso: 0},
       hits: [{t0: EV2.blast + 0.06, dir: norm3(sub3(on(U8_LURE_AT), BLAST_AT)), strength: 0.35}],
     };
   },
@@ -695,7 +737,7 @@ const resPlan = (r: (typeof RES)[number]): Plan => {
       if (T < r.T0 - 0.45) return {};
       return {
         posture: [[r.T0, 'ready'], [r.T1 - 0.5, 'guard']],
-        attend: [{t0: r.T0 - 0.4, at: smokeC, t1: 102.8}, {t0: 102.8, at: (t) => decoyPt(r.j, t, 0.5), t1: 108.4 + (r.id % 3) * 0.6}, {t0: 108.4 + (r.id % 3) * 0.6, at: crewC}],
+        attend: track([[r.T0 - 0.4, smokeC, 0.4], [102.8, (t) => decoyPt(r.j, t, 0.5), 0.3], [108.4 + (r.id % 3) * 0.6, crewC, 0.4]]),
         turns: [{t0: r.T0 - 0.4, to: walkStartH(w), dur: 0.4}, {t0: r.T1 + 0.05, to: decoyPt(r.j, r.T1 + 0.4, 0), dur: 0.45}, {t0: 108.6 + (r.id % 3) * 0.6, to: crewC, dur: 0.6}],
         moves: r.tS ? [] : [{t0: 110.4 + (r.id % 3) * 0.5, t1: 111.8 + (r.id % 3) * 0.5, to: {x: end.x - 0.6, y: 0, z: end.z - 0.2}, face: crewC, guard: true}],
         strikes: r.tS ? [{t0: r.tS, side: 'R', target: figAt(r.j, r.tS, end, 1.5), kind: 'punch'}] : [],
@@ -710,7 +752,7 @@ RES.forEach((r) => (PLANS[r.name] = resPlan(r)));
 PLANS.R1 = {
   id: 8111, key: 'd2R1', d1: 'R1', phases: [{kind: 'd1', name: 'R1'}, {kind: 'kit', T0: 96.2, at: null}],
   act: (T) => (T > 96.2 ? {
-    attend: [{t0: 96.25, at: smokeC, t1: 107.4}, {t0: 107.4, at: (t) => add3(heavy1(t).pos, {x: 0, y: 3.5, z: 0}), t1: 109.6}, {t0: 109.7, at: smokeC}],
+    attend: track([[96.25, smokeC, 0.4], [107.4, (t) => add3(heavy1(t).pos, {x: 0, y: 3.5, z: 0}), 0.3], [109.7, smokeC, 0.5]]),
     moves: [{t0: 107.7, t1: 109.3, to: {x: 80.1, y: 0, z: -10.1}, face: {x: 79.0, y: 0, z: -14.0}}], turns: [{t0: 109.6, to: 285, dur: 0.5}],
   } : {}),
 };
@@ -729,7 +771,25 @@ Object.values(PLANS).forEach(chain);
 export const NAMED = ['A', 'B', 'C', 'D', 'U8'];
 export const RESERVE_D2 = ['R1', 'R3', 'R4', 'R5', 'R6', 'R7'];
 /** A named D2 unit's spec at film time T (all t0s in film seconds). */
-export const unitD2 = (name: string, T: number): UnitSpec => run(PLANS[name], T);
+/** arm controls fade in / out against the arm's free position (an ArmCtl is all-or-nothing in MECH) */
+type Fade = {side: 'L' | 'R'; t0: number; t1: number; dir: 'in' | 'out'};
+const FADES: Record<string, Fade[]> = {
+  // the backhand leaves from its guard and the bracing hand comes off the knee when the plate pops
+  B: [{side: 'R', t0: EV2.bBack - 0.45, t1: EV2.bBack - 0.2, dir: 'in'}, {side: 'R', t0: EV2.pryPop, t1: EV2.pryPop + 0.35, dir: 'out'}],
+};
+export const unitD2 = (name: string, T: number): UnitSpec => {
+  let sp = run(PLANS[name], T);
+  for (const f of FADES[name] ?? []) {
+    if (T < f.t0 || T > f.t1) continue;
+    const key = f.side === 'L' ? 'armL' : 'armR';
+    const ctl = sp[key];
+    if (!ctl?.hand) continue;
+    const free = unitAttach({...sp, [key]: undefined})[f.side === 'L' ? 'handL' : 'handR'];
+    const u = smooth((T - f.t0) / (f.t1 - f.t0));
+    sp = {...sp, [key]: {...ctl, hand: lerp3s(free, ctl.hand, f.dir === 'in' ? u : 1 - u)}};
+  }
+  return sp;
+};
 
 // ------------------------------------------------------------------ heavy 1 (HEAVIES_B[0], id 3101) — the R2 walk, unchanged
 // B's main body stands packed round it, the vanguard's six ranks fill the avenue to the east rim: it goes up the north
@@ -778,7 +838,7 @@ YIELD.forEach((y) => {
     phases: [{kind: 'kit', T0: 90, at: from}],
     act: () => ({
       idle: 0.4, eye: 'cyan' as const,
-      attend: [{t0: y.T0 - 0.3, at: (t) => add3(heavy1(t).pos, {x: 0, y: 3.5, z: 0}), t1: 101.5}, {t0: 101.5, at: smokeC}],
+      attend: track([[y.T0 - 0.3, (t) => add3(heavy1(t).pos, {x: 0, y: 3.5, z: 0}), 0.3], [101.5, smokeC, 0.5]]),
       moves: [{t0: y.T0 + 0.1, t1: y.T0 + dur, to: {x: y.to.x, y: 0, z: y.to.z}}],
       turns: [{t0: y.T0 + dur + 0.1, to: 285, dur: 0.6}],
     }),

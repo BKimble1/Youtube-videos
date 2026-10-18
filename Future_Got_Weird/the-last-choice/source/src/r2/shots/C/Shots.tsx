@@ -7,10 +7,10 @@ import {V3, add3} from '../../../kit/math';
 import type {Item, View} from '../../engine';
 import {combine} from '../../fx';
 import {motes} from '../B/kit';
-import {CUT} from './beats';
+import {CUT, TB2} from './beats';
 import {crewItems, droneFx, dustFx, setC, armyC, armyDustFx, C_COLUMNS} from './kit';
 import {B_COLUMNS} from '../B/kit';
-import {CAM_C1, CAM_C2, CAM_C3, CAM_C4A, CAM_C4B, CAM_C5A, CAM_C5B, CAM_C5C, CAM_C6A, CAM_C6B, CAM_C6C, CAM_C6D} from './cams';
+import {CAM_C1, CAM_C2, CAM_C3, CAM_C4A, CAM_C4B, CAM_C5A, CAM_C5B, CAM_C5C, CAM_C6A, CAM_C6B, CAM_C6C, CAM_C6C2, CAM_C6D} from './cams';
 import {crewC} from './crew';
 
 const head = (T: number, up = 1.55): V3 => { const b = crewC(T).director.body.pos; return {x: b.x, y: b.y + up, z: b.z}; };
@@ -67,7 +67,9 @@ export const ShotC5a: React.FC = () => {
   const cam = camPath(CAM_C5A, t, 0.5);
   const f = droneFx(T);
   const items = (v: View): Item[] => [
-    ...setC(v, T), ...crewItems(v, T, {anchor: {director: head(T, 1.45), breaker: add3(crewC(T).breaker.body.pos, {x: 0, y: 1.45, z: 0})}}),
+    // (the breaker stands a little behind him from this side: his sprite draws over the Director's while his palm is on
+    // the shoulder, so the hand reads on top of it instead of vanishing behind his body)
+    ...setC(v, T), ...crewItems(v, T, {anchor: {director: head(T, 1.45), breaker: add3(crewC(T).breaker.body.pos, {x: 0, y: 1.45, z: 0})}, bias: {breaker: T > TB2.touch - 0.3 && T < TB2.touchOff + 0.3 ? 0.6 : 0}}),
     ...f.items, ...armyC(v, T, {maxMid: 10}),
     ...motes('c5am', {x: 0.7, y: 4.9, z: 1.3}, {x: 0.8, y: 0.5, z: 0.6}, T, 18, 0.005),
   ];
@@ -117,9 +119,16 @@ export const ShotC6b: React.FC = () => {
 export const ShotC6c: React.FC = () => {
   const {t, T} = useShotTime(CUT.c6c);
   const cam = camPath(CAM_C6C, t, 0.5);
-  const f = combine(droneFx(T), armyDustFx(T));
+  const f = droneFx(T);
   const items = (v: View): Item[] => [...setC(v, T), ...crewItems(v, T, {only: ['director'], anchor: {director: head(T, 1.4)}}), ...armyC(v, T, {full: 0, far: 140, maxMid: 40, farFrom: 140}), ...f.items];
   return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.008} atmos={{columns: B_COLUMNS, smoke: 0.35, haze: 0.08}} vignette={0.6} />;
+};
+export const ShotC6c2: React.FC = () => {
+  const {t, T} = useShotTime(CUT.c6c2);
+  const cam = camPath(CAM_C6C2, t, 0.5);
+  const f = armyDustFx(T);
+  const items = (v: View): Item[] => [...setC(v, T), ...armyC(v, T, {full: 100, far: 170, maxMid: 60, farFrom: 170}), ...f.items];
+  return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.004} atmos={{columns: B_COLUMNS, smoke: 0.3, haze: 0.06}} vignette={0.6} />;
 };
 export const ShotC6d: React.FC = () => {
   const {t, T} = useShotTime(CUT.c6d);

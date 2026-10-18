@@ -19,7 +19,7 @@ export const TB = {
   // B5b: the strap
   look: 27.25, raise: 27.55, bite: 27.95, tug: 28.2, tugEnd: 28.42, letGo: 28.8, ready: 29.3,
   // B6b: the sentry comes at him: the plate comes up and he leans into it (he stays); down again as it backs off
-  guard: 33.55, guardUp: 33.9, guardDown: 35.08, guardLow: 35.62,
+  guard: 33.7, guardUp: 34.02, guardDown: 35.08, guardLow: 35.62,
 };
 
 /** The cuts (film seconds). */

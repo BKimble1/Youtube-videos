@@ -10,10 +10,10 @@ import {M} from '../../timing';
 /** shot boundaries (they tile M.BASS_OUT → M.CHARGE) */
 export const CUT = {
   c1: M.BASS_OUT, c2: M.ALLY1, c3: 40.16, c4: M.MARCH, c4b: 46.7, c5a: 50.0, c5b: 51.2, c5c: 52.1,
-  c6: M.ASSEMBLE, c6b: 54.45, c6c: 56.05, c6d: 58.05, end: M.CHARGE,
+  c6: M.ASSEMBLE, c6b: 54.45, c6c: 56.05, c6c2: 57.0, c6d: 58.05, end: M.CHARGE,
 };
 
-/** the Director (C1: the turn; C5: the touch, the strap; C6: the turn, the glance, the threat, the step, the set) */
+/** the Director (C1: the turn; C5: the touch, the strap; C6: the turn, a look along the line, the threat, the step, the set) */
 export const TD = {
   breathStop: 36.22, // his breath stops (the world goes quiet)
   heard: 36.42, // a scrape on the rubble behind him, far off
@@ -28,7 +28,8 @@ export const TD = {
   glanceS: 55.62, glanceSEnd: 56.2, // C6b: a look along the line at them (the breaker's tool charging)
   threat: 57.1, // C6c: their front rank breaks into its run
   step: 57.78, stepEnd: 58.55, // the step out to the brink (C6c → C6d: the cut lands in its first stride)
-  set: 59.18, // he sinks into the start, plate up (the accent at 59.23)
+  set: 59.18, // he sinks into the start on the accent (59.23)
+  plateUp: 59.5, // the plate snaps up into the guard: go
 };
 
 /** the tether operator (clerkA): out of the smoke (C2), across the floor, the step-climb up the north side of the west

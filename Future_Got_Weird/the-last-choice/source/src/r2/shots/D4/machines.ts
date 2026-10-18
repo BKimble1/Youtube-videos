@@ -163,7 +163,8 @@ const W1: UPlan = {
     {k: 'walk', pts: [arcStartPos(ARC_START[1]).pos, {x: 36.0, z: 1.25}, {x: 33.1, z: 1.6}, W1_AT], T0: M.P4, T1: 152.95, A: 1.0, D: 0.4},
     {k: 'keys', root: [[152.95, W1_AT.x, W1_AT.z, 263], [153.2, W1_AT.x, W1_AT.z, 270], [EV.w1Press, W1_AT.x, W1_AT.z, 270], [154.02, W1_PRESS[0].x, W1_PRESS[0].z, 270], [154.32, W1_PRESS[1].x, W1_PRESS[1].z, 268], [154.95, W1_PRESS[1].x, W1_PRESS[1].z, 266]]},
     {k: 'walk', pts: [W1_PRESS[1], {x: 24.5, z: -0.5}, {x: 18.6, z: -2.8}, {x: 16.0, z: -2.95}, arrive(W1_TB.pos, W1_TB.heading, 1.2), W1_TB.pos], T0: 154.95, T1: 161.6, A: 0.5, D: 0.6},
-    {k: 'keys', root: [[161.6, W1_TB.pos.x, W1_TB.pos.z, W1_TB.heading]], kitFeet: true},
+    // (two keys: prep() gives the first the routed walk's end heading; it turns the last 5° into the tableau's heading)
+    {k: 'keys', root: [[161.6, W1_TB.pos.x, W1_TB.pos.z, W1_TB.heading], [162.05, W1_TB.pos.x, W1_TB.pos.z, W1_TB.heading]], kitFeet: true},
   ],
   act: (T) => {
     const dead = T >= W1_TB.fall.t0;

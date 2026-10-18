@@ -16,12 +16,14 @@ import {ARMY_B, HEAVIES_B, DRONES_B, heavySpecB, droneSpecB} from '../B/army';
 import {D1_ARMY_IDS} from '../D1/machines';
 import {G} from '../D1/motion';
 import {unitD2, NAMED, RESERVE_D2, YIELD_NAMES, YIELD_IDS, heavy1, enemyDronesD2, EV2, GF, GUP, GIRDER_LEN} from './machines';
-import {directorAt, breakerAt, tetherAt, runnerAt, droneAt, flaresAt, decoyAt, CrewOut} from './crew';
+import {directorAt, breakerAt, tetherAt, runnerAt, droneAt, flaresAt, decoyAt, CrewOut, towardSpec} from './crew';
+import {crewAt as d1CrewAt} from '../D1/battle';
+import {M} from '../../timing';
 import {d2Fx, allyPose, girderShudder} from './fx';
 
 export type Role = 'director' | 'breaker' | 'tether' | 'runner' | 'drone' | 'flares' | 'decoy';
 export const ROLES: Role[] = ['director', 'breaker', 'tether', 'runner', 'drone', 'flares', 'decoy'];
-export const crewAt = (role: Role, T: number): CrewOut => {
+const crewRaw = (role: Role, T: number): CrewOut => {
   switch (role) {
     case 'director': return directorAt(T);
     case 'breaker': return breakerAt(T);
@@ -31,6 +33,13 @@ export const crewAt = (role: Role, T: number): CrewOut => {
     case 'flares': return flaresAt(T);
     default: return decoyAt(T);
   }
+};
+/** the Crew at film time T: the first 0.45 s blend in from D1's own last poses (the cut from D1-9b is invisible) */
+export const crewAt = (role: Role, T: number): CrewOut => {
+  const c = crewRaw(role, T);
+  if (T >= M.P2 + 0.45) return c;
+  const w = smooth(clamp((T - M.P2) / 0.45));
+  return {...c, spec: towardSpec(d1CrewAt(role, T).spec, c.spec, w)};
 };
 
 /** B's halted army minus the vanguard units D1 took (D2 animates those it continues itself) */

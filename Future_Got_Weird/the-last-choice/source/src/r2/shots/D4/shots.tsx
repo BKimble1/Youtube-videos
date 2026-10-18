@@ -14,7 +14,10 @@ import {G} from './motion';
 
 const M_STRIKE = EV.strike;
 const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
+/** every shot's camera (start, keys, ease), for the cue sheet's pan/dist (tools) */
+export const D4_CAMS: {start: number; keys: CamKey[]; ease: number}[] = [];
 const shot = (start: number, keys: CamKey[], o: (T: number) => D4Opts = () => ({}), drift = 0.018, ease = 0.6, atmos?: AtmosOpts): React.FC => {
+  D4_CAMS.push({start, keys, ease});
   const C: React.FC = () => {
     const {t, T} = useShotTime(start);
     const cam = camPath(keys, t, ease);
@@ -37,12 +40,12 @@ export const D4_1a = shot(SH.d41, [
   {t: SH.d41b - SH.d41, pos: g(24.2, 9.0, 4.2), target: g(32.8, 2.2, 1.0), fov: 44},
 ], () => ({full: 30}), 0.016);
 // ------------------------------------------------------------------ D4-1b (152.50–154.50): THE PLATE answered
-// Low three-quarter from the south-east: W1 runs him down, the hammer on the plate (153.42) — the crack goes right
+// Low from the south (nearly side-on, so the two bodies stay apart): W1 runs him down, the hammer on the plate (153.42) — the crack goes right
 // through, his heels skid back; it presses after him; his look at the plate; its hook as he turns away — he ducks
 // under it and runs.
 export const D4_1b = shot(SH.d41b, [
-  {t: 0, pos: g(33.8, 3.8, 1.0), target: g(30.9, 1.7, 1.3), fov: 40},
-  {t: SH.d42a - SH.d41b, pos: g(33.5, 3.7, 1.0), target: g(30.4, 1.75, 1.2), fov: 40},
+  {t: 0, pos: g(32.6, 5.5, 1.05), target: g(31.0, 1.7, 1.3), fov: 40},
+  {t: SH.d42a - SH.d41b, pos: g(32.35, 5.45, 1.05), target: g(30.7, 1.75, 1.2), fov: 40},
 ], (T) => ({full: 34, tweak: {director: {anchor: chest('director', T, 1.3)}}}), 0.016);
 
 // ------------------------------------------------------------------ D4-2a (154.50–156.70): THE RUNNER's route cut
@@ -78,11 +81,11 @@ export const D4_3b = shot(SH.d43b, [
 ], (T) => ({full: 30, tweak: {director: {anchor: chest('director', T, 1.4)}}}), 0.012);
 
 // ------------------------------------------------------------------ D4-4a (162.42–163.62): ARRIVAL — W1 swings first
-// Low three-quarter from the south-west of the pair: the surge; W1's hook comes round at the charging Director, he
-// ducks under it and drives the plate into its open chest — the chest plate off, over it goes.
+// Low, in profile from the west (a re-established axis for one beat: he charges in from the right): W1's hook comes
+// round at the charging Director, he ducks under it and drives the plate into its open chest — the chest plate off.
 export const D4_4a = shot(SH.d44a, [
-  {t: 0, pos: g(10.6, -0.2, 1.3), target: g(13.6, -2.2, 1.35), fov: 48},
-  {t: SH.d44b - SH.d44a, pos: g(10.7, -0.3, 1.3), target: g(13.7, -2.5, 1.25), fov: 48},
+  {t: 0, pos: g(9.5, -2.6, 1.35), target: g(13.2, -2.2, 1.3), fov: 46},
+  {t: SH.d44b - SH.d44a, pos: g(9.55, -2.65, 1.33), target: g(13.3, -2.35, 1.2), fov: 46},
 ], (T) => ({full: 30, tweak: {director: {anchor: chest('director', T, 1.3)}}}), 0.02);
 
 // ------------------------------------------------------------------ D4-4b (163.62–164.72): W2 at the decoy maker; the club
@@ -138,7 +141,9 @@ export const D4_6a = shot(SH.d46a, [
 // operator behind him; heavy 2 comes on.
 export const D4_6b = shot(SH.d46b, [
   {t: 0, pos: g(15.6, 4.2, 1.55), target: g(13.6, 2.2, 1.5), fov: 36},
-  {t: SH.d47 - SH.d46b, pos: g(15.1, 5.4, 1.5), target: g(12.4, 4.6, 1.5), fov: 36},
+  // (it eases back north-west, under heavy 2's path between its legs: ≥ 2 m from every leg as it comes on; the R3
+  // first cut drifted south into its left legs' lane and a leg wiped the lens at 174.7)
+  {t: SH.d47 - SH.d46b, pos: g(14.8, 2.8, 1.5), target: g(12.3, 5.2, 1.5), fov: 36},
 ], (T) => ({full: 30, tweak: {director: {anchor: chest('director', T, 1.5)}}}), 0.012);
 
 // ------------------------------------------------------------------ D4-7a (175.04–175.74): the threat aimed at HER
@@ -181,12 +186,14 @@ export const D4_9a = shot(SH.d49a, [
 ], (T) => ({full: 30, near: true, tweak: {director: {anchor: chest('director', T, 0.8)}, drone: {anchor: chest('drone', T, 0.5)}}}), 0.01);
 
 // ------------------------------------------------------------------ D4-9b (180.80–182.00): they are caught
-// Low from his side of them (west), facing them: each one going to him is caught by a unit behind — the decoy maker's
-// wrist (181.0) right in front of us, the breaker's leg gives and he sits by his dropped breaker (181.3), the flare
-// carrier's arm locked (181.7) beyond; heavy 2 over them.
+// From his side of them (west), a little above head height, facing them — they are all looking at him: each one
+// going to him is caught by a unit behind — the decoy maker's wrist (181.0) in front, the flare carrier's arm locked
+// (181.7) between them, the breaker's leg gives and he sits by his dropped breaker (181.3) at the right; heavy 2's leg
+// over them, a wreck beside them, the ring beyond. (Lower, the decoy maker hid the flare carrier; further south, the
+// slab rslab_15 hid the breaker.)
 export const D4_9b = shot(SH.d49b, [
-  {t: 0, pos: g(8.3, 6.4, 1.45), target: g(13.2, 5.6, 1.15), fov: 54},
-  {t: SH.d49c - SH.d49b, pos: g(8.4, 6.35, 1.42), target: g(13.2, 5.7, 1.05), fov: 53},
+  {t: 0, pos: g(8.4, 5.5, 2.25), target: g(13.2, 6.2, 1.0), fov: 50},
+  {t: SH.d49c - SH.d49b, pos: g(8.45, 5.5, 2.2), target: g(13.2, 6.2, 0.95), fov: 49},
 ], () => ({full: 30, near: true}), 0.01);
 // ------------------------------------------------------------------ D4-9c (182.00–183.30): he cannot rise
 // Low from the south-east of him, the drone pilot at right: he tries to push himself up on his left hand — the arm
@@ -198,9 +205,11 @@ export const D4_9c = shot(SH.d49c, [
 
 // ------------------------------------------------------------------ D4-10 (183.30–186.90): the ring holds — FINAL_HIT
 // From behind him, low on the ridge's foot (his view): the drone pilot getting onto her hands and knees to go to him;
-// beyond them the decoy maker let go and raising both hands, the flare carrier's last heave, the tether operator giving
-// up; heavy 2 over them; the ring lowering into 'ready' unit by unit. On FINAL_HIT everything stops.
+// beyond them the decoy maker let go and raising both hands, the flare carrier's last heave and his head dropping, the
+// breaker shaking (the tether operator is behind the van from here: EF holds on her); heavy 2 over them; the ring
+// lowering into 'ready' unit by unit. On FINAL_HIT everything stops.
 export const D4_10 = shot(SH.d410, [
   {t: 0, pos: g(4.4, 4.9, 1.3), target: g(11.5, 4.2, 1.2), fov: 54},
   {t: SH.end - SH.d410, pos: g(4.6, 4.85, 1.28), target: g(11.4, 4.2, 1.15), fov: 52},
-], () => ({full: 26, maxFull: 14, far: 80}), 0.0);
+// (the drone pilot is 0.5 m in front of the van's long right side, whose sill strip sorts nearer by its mean: bias her)
+], () => ({full: 26, maxFull: 14, far: 80, tweak: {drone: {bias: 0.55}}}), 0.0);

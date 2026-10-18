@@ -87,10 +87,17 @@ const FOOT_R_STOOD = onG(R1, HD, 0.22, 0.19, 0.02);
 export const R1S: V3 = onG(R1, HD, 0.27, 0.015);
 /** pelvis forward offset (rig units) that puts the hips over R1S while the root stays at R1 */
 const PF_STOOD = 0.27 * U;
+/** where the standing poses (ARM_R_HANG, ARM_IN, B3) put his hands, from R1S: the rise's hands end there */
+const HANG_R = onB(R1S, HD, 18 / U, 74 / U, 150 / U);
+const IN_L = onB(R1S, HD, 46 / U, -40 / U, 196 / U);
 
-const PRONE: Pose = {drop: 150, bodyPitch: 86, lean: 0, head: {pitch: -40, yaw: 8}, legL: {fk: {fwd: 4, knee: 6}}, legR: {fk: {fwd: -4, knee: 12}}, handL: 'relaxed', handR: 'reach', face: expr('exhaustion', 0.8)};
-const LEGS_PRONE = {legL: {fk: {fwd: 6, knee: 16}}, legR: {fk: {fwd: 0, knee: 20}}};
-const LEGS_KNEE = {legL: {fk: {fwd: 82, knee: 118}}, legR: {fk: {fwd: 0, knee: 30}}};
+/** the right knee bends forward AND down (body-local): kneeling on the upslope behind him the foot is level with the
+ * hip, where a purely forward bend direction is degenerate and the leg would read as kicked out behind him */
+const POLE_R = {r: 0.15, u: -0.7, f: 1};
+const PRONE: Pose = {drop: 150, bodyPitch: 86, lean: 0, head: {pitch: -40, yaw: 8}, legL: {fk: {fwd: 4, knee: 6}}, legR: {fk: {fwd: -4, knee: 12}, pole: POLE_R}, handL: 'relaxed', handR: 'reach', face: expr('exhaustion', 0.8)};
+const LEGS_PRONE = {legL: {fk: {fwd: 6, knee: 16}}, legR: {fk: {fwd: 0, knee: 20}, pole: POLE_R}};
+const LEGS_KNEE = {legL: {fk: {fwd: 82, knee: 118}}, legR: {fk: {fwd: 0, knee: 30}, pole: POLE_R}};
+const LEG_R = {legR: {pole: POLE_R}};
 // effort lives in the trunk and the head: the head drives at the hands on a pull, the chest rises on the press, the
 // hips go back over the knee and then forward over the front foot; faces from the rig's presets (effort, pain,
 // exhaustion, concentration, resolve)
@@ -111,19 +118,19 @@ const RISE: Key[] = [
   [TB.knee + 0.05, {drop: 104, bodyPitch: 34, lean: 4, head: {pitch: -14}, ...LEGS_KNEE, pelvis: {f: -10}, handL: 'brace', handR: 'brace', face: expr('exhaustion', 1)}],
   [TB.knee + 0.32, {drop: 98, bodyPitch: 26, lean: 8, head: {pitch: -20}, ...LEGS_KNEE, pelvis: {f: -14}, handL: 'brace', handR: 'brace', face: expr('exhaustion', 1, {open: 0.5})}],
   // kneeling on the right knee, the left foot planted forward, the torso up; his eyes go to the bar
-  [TB.kneel, {drop: 88, bodyPitch: 8, lean: 20, head: {pitch: 16, yaw: 14}, pelvis: {f: -8}, handL: 'brace', handR: 'open', face: expr('concentration', 0.9, {mouth: 'pant', open: 0.3})}],
-  [TB.rebar + 0.1, {drop: 88, bodyPitch: 4, lean: 24, head: {pitch: 12, yaw: 10}, pelvis: {f: -4}, handL: 'brace', handR: 'grip', face: expr('effort', 0.6)}],
+  [TB.kneel, {...LEG_R, drop: 88, bodyPitch: 8, lean: 20, head: {pitch: 16, yaw: 14}, pelvis: {f: -8}, handL: 'brace', handR: 'open', face: expr('concentration', 0.9, {mouth: 'pant', open: 0.3})}],
+  [TB.rebar + 0.1, {...LEG_R, drop: 88, bodyPitch: 4, lean: 24, head: {pitch: 12, yaw: 10}, pelvis: {f: -4}, handL: 'brace', handR: 'grip', face: expr('effort', 0.6)}],
   // load: the shoulders go forward over the front knee, the back knee comes off the ground
-  [TB.weight, {drop: 84, bodyPitch: 0, lean: 40, head: {pitch: 10, yaw: 4}, pelvis: {f: 16}, handL: 'brace', handR: 'grip', face: expr('effort', 1)}],
+  [TB.weight, {...LEG_R, drop: 84, bodyPitch: 0, lean: 40, head: {pitch: 10, yaw: 4}, pelvis: {f: 16}, handL: 'brace', handR: 'grip', face: expr('effort', 1)}],
   // the right foot comes in under him: a deep, lopsided crouch over both feet, the bar holding him
-  [TB.step, {drop: 84, bodyPitch: 0, lean: 40, side: -3, head: {pitch: 8}, pelvis: {f: 36}, handL: 'brace', handR: 'grip', face: expr('effort', 0.85, {mouth: 'pant', open: 0.4})}],
+  [TB.step, {...LEG_R, drop: 84, bodyPitch: 0, lean: 40, side: -3, head: {pitch: 8}, pelvis: {f: 36}, handL: 'brace', handR: 'grip', face: expr('effort', 0.85, {mouth: 'pant', open: 0.4})}],
   // the drive: both legs straighten, the bar bends toward him, the left palm shoves down on the knee
-  [TB.rise + 0.22, {drop: 62, bodyPitch: 0, lean: 32, side: -3, head: {pitch: 2}, pelvis: {f: 44}, handL: 'brace', handR: 'grip', face: expr('effort', 1, {mouth: 'pain'})}, easeIn],
-  [TB.up, {drop: 22, bodyPitch: 0, lean: 14, side: -4, head: {pitch: -2}, pelvis: {f: 52}, handL: 'fist', handR: 'grip', face: expr('effort', 0.8, {mouth: 'open', open: 0.45})}, easeOut],
+  [TB.rise + 0.22, {...LEG_R, drop: 62, bodyPitch: 0, lean: 32, side: -3, head: {pitch: 2}, pelvis: {f: 44}, handL: 'brace', handR: 'grip', face: expr('effort', 1, {mouth: 'pain'})}, easeIn],
+  [TB.up, {...LEG_R, drop: 22, bodyPitch: 0, lean: 14, side: -4, head: {pitch: -2}, pelvis: {f: 52}, handL: 'fist', handR: 'grip', face: expr('effort', 0.8, {mouth: 'open', open: 0.45})}, easeOut],
   // the half step to catch his balance (the right foot), a sway; pain
-  [TB.staggerEnd, {drop: 18, bodyPitch: 0, lean: 11, side: 5, head: {pitch: 2, roll: -4}, pelvis: {f: 64}, handL: 'fist', handR: 'grip', face: expr('pain', 0.6)}, easeOut],
-  [TB.stood, {drop: 14, bodyPitch: 0, lean: 8, side: 2, head: {pitch: 6, roll: -3}, pelvis: {f: PF_STOOD}, handL: 'fist', handR: 'open', face: expr('exhaustion', 0.9), breath: 0.55}],
-  [TB.stood + 0.4, {drop: 16, bodyPitch: 0, lean: 7, head: {pitch: 8}, pelvis: {f: PF_STOOD}, handL: 'fist', handR: 'fist', face: exprMix('exhaustion', 'resolve', 0.4), breath: 0.6}],
+  [TB.staggerEnd, {...LEG_R, drop: 18, bodyPitch: 0, lean: 11, side: 5, head: {pitch: 2, roll: -4}, pelvis: {f: 64}, handL: 'fist', handR: 'grip', face: expr('pain', 0.6)}, easeOut],
+  [TB.stood, {...LEG_R, drop: 14, bodyPitch: 0, lean: 8, side: 2, head: {pitch: 6, roll: -3}, pelvis: {f: PF_STOOD}, handL: 'fist', handR: 'open', face: expr('exhaustion', 0.9), breath: 0.55}],
+  [TB.stood + 0.4, {...LEG_R, drop: 16, bodyPitch: 0, lean: 7, head: {pitch: 8}, pelvis: {f: PF_STOOD}, handL: 'fist', handR: 'fist', face: exprMix('exhaustion', 'resolve', 0.4), breath: 0.6}],
 ];
 
 /** his breath through the rise (chest −1 … 1): in before each effort, held through it, out after */
@@ -158,7 +165,11 @@ export const dirB = (T: number): DirB => {
 };
 
 /** the prone root dragged forward: pull 1 (the right arm), pull 2 + chest up, the hips come over the knee */
-export const rootB = (T: number): V3 => keyV([[TB.pull + 0.22, R0], [TB.pullEnd - 0.1, lerp3(R0, R1, 0.41), easeOut], [TB.push, lerp3(R0, R1, 0.43)], [TB.chestUp, lerp3(R0, R1, 0.73), easeOut], [TB.knee + 0.15, R1]], T);
+export const rootB = (T: number): V3 => keyV([
+  // B1: the press loads the arm — his body under the slab shifts an inch toward the hand; the claw slips, it settles back
+  [TB.press, R0], [TB.strain, onG(R0, HD, 0.03, 0.035)], [TB.slip + 0.08, onG(R0, HD, 0.008, 0.01), easeOut],
+  [TB.pull + 0.22, R0], [TB.pullEnd - 0.1, lerp3(R0, R1, 0.41), easeOut], [TB.push, lerp3(R0, R1, 0.43)], [TB.chestUp, lerp3(R0, R1, 0.73), easeOut], [TB.knee + 0.15, R1],
+], T);
 
 /** the left knee of the planted left leg (world), solved like the rig solves it: hip from the pose, foot planted,
  * the knee bending forward (so the left palm can stay ON the knee while the hips move) */
@@ -200,10 +211,10 @@ const rise = (T: number): DirB => {
     [TB.pull + 0.1, add3(lerp3(slipP, pull1, 0.5), {x: 0, y: 0.1, z: 0})], [TB.pull + 0.22, pull1, easeIn], [TB.pullEnd - 0.1, pull1],
     [TB.pullEnd + 0.05, add3(lerp3(pull1, push2, 0.5), {x: 0, y: 0.12, z: 0})], [TB.push + 0.08, push2, easeIn],
     [TB.knee + 0.25, push2], [TB.knee + 0.55, onB(R1, HD, 0.45, 0.32, 0.62)], [TB.rebar, REBAR.grip, easeIn],
-    [TB.release, add3(REBAR.grip, {x: 0, y: 0.1, z: 0})], [TB.stood, onB(R1, HD, 0.3, 0.36, 0.86)],
+    [TB.release, add3(REBAR.grip, {x: 0, y: 0.1, z: 0})], [TB.stood + 0.2, HANG_R, easeOut],
   ], T);
   // the press trembles (the forearm carrying his weight against the slab); a few millimetres
-  const shake = win(T, TB.press - 0.05, TB.slip + 0.05, 0.12, 0.1) * 0.0016;
+  const shake = win(T, TB.press - 0.05, TB.slip + 0.05, 0.12, 0.1) * 0.0032;
   const handR = add3(handR0, {x: noise(T * 9, 3) * shake, y: Math.abs(noise(T * 11, 5)) * shake * 0.5, z: noise(T * 8, 7) * shake});
   const flex = rebarFlex(T);
   const handRf = T > TB.rebar - 0.05 && T < TB.release + 0.1 ? add3(handR, mul3(REBAR_PULL, 0.06 * flex)) : handR;
@@ -234,7 +245,7 @@ const rise = (T: number): DirB => {
     [9.3, elbowL], [TB.pull + 0.1, elbowL], [TB.pull + 0.3, add3(palmL1, {x: 0, y: 0.08, z: 0})], [TB.pull + 0.45, palmL1, easeIn],
     [TB.pullEnd, palmL1], [TB.push + 0.05, add3(palmL2, {x: 0, y: 0.1, z: 0})], [TB.push + 0.2, palmL2, easeIn],
     [TB.knee + 0.1, palmL2], [TB.kneel - 0.3, add3(palmL2, {x: 0, y: 0.18, z: 0})],
-    [TB.up, onB(R1, HD, 0.42, -0.26, 0.75)], [TB.staggerEnd, onB(R1, HD, 0.4, -0.24, 0.98)], [TB.stood, onB(R1, HD, 0.36, -0.26, 1.02)],
+    [TB.up, onB(R1, HD, 0.42, -0.26, 0.75)], [TB.staggerEnd, onB(R1, HD, 0.44, -0.2, 0.86)], [TB.stood + 0.2, IN_L, easeOut],
   ], T);
   const handL = lerp3(handL0, onKnee, kneeW);
   // planted palms: the wrist bends so the palm lies on the rubble (or the knee), fingers forward and a little out
@@ -251,7 +262,7 @@ const rise = (T: number): DirB => {
     bodyPitch: (pose0.bodyPitch ?? 0) - slopeDeg * lying,
     handR: handRShape,
     ...(T > TB.pull - 0.4 && T < TB.stood + 0.3 ? {chest: riseChest(T)} : {breath: 0.5}),
-    ...(T > TB.stood - 0.3 ? {armL: {local: {r: -40, u: 196, f: 46}, pole: {r: -1, u: -0.4, f: -0.3}, w: smooth((T - TB.stood + 0.3) / 0.5)}} : {}),
+    ...(T > TB.staggerEnd ? {armL: {local: {r: -40, u: 196, f: 46}, pole: {r: -1, u: -0.4, f: -0.3}}} : {}),
   };
   // B1: face down in the rubble under the slab; on the strain he lifts it (a breath), ready to drag himself out
   if (T < TB.pull) {
@@ -259,11 +270,11 @@ const rise = (T: number): DirB => {
     const wake = smooth((T - 9.75) / 0.5);
     pose.face = {...expr('pain', 0.5 + 0.5 * win(T, TB.slap - 0.05, TB.pull, 0.1, 0.3)), lid: lerp(1, 0.35, wake), lookX: 0.6 * wake, lookY: 0.4 * wake};
   }
+  // (the hands keep their world targets to the cut: they end where B3's standing poses put them, so nothing snaps)
   const world: WorldTargets = {handR: handRf, handL, footL, footR, orientR, orientL};
-  if (T > TB.stood) { world.handL = undefined; world.handR = undefined; world.orientL = undefined; world.orientR = undefined; }
   // eyes: on the hands while he drags, the bar while he kneels and rises, ahead (east) once he is up
   const gaze = T < TB.pull ? undefined : T < TB.knee ? add3(pull1, {x: 0.3, y: 0.1, z: 0}) : T < TB.up ? REBAR.top : {x: 60, y: 2, z: 0};
-  return {pos, heading: HD, pose: T > TB.stood ? layer(pose, ARM_R_HANG) : pose, world, palmR: slapP, palmL: palmL1, reach: T > TB.knee - 0.2, gaze, gazeW: T < TB.pull ? 0 : 0.8};
+  return {pos, heading: HD, pose, world, palmR: slapP, palmL: palmL1, reach: T > TB.knee - 0.2, gaze, gazeW: T < TB.pull ? 0 : 0.8};
 };
 
 // ---- B3: two steps down from the rise (R1S) to the brink (STAND), heading turning to due east
@@ -328,8 +339,9 @@ const standing = (T: number): DirB => {
   if (g > 0.001) {
     pose = blendPose(pose, layer(pose, {
       drop: (pose.drop ?? 19) + 6, lean: (pose.lean ?? 7) + 6, twist: -14,
-      armL: {local: {r: -6, u: 286, f: 96}, pole: {r: -1, u: -0.6, f: 0.1}, palm: {r: -0.5, u: 0.1, f: -1}},
-      armR: {local: {r: 62, u: 196, f: 52}}, handR: 'fist',
+      // the approved mid block: the forearm upright in front of his chest, the plate facing out (rig BLOCK_MID)
+      armL: {local: {r: 6, u: 282, f: 98}, pole: {r: -1, u: -0.6, f: 0}, palm: {r: 0.3, u: 0, f: -1}},
+      armR: {local: {r: 44, u: 206, f: 62}}, handR: 'fist',
       head: {pitch: 4, yaw: 0},
       face: {...expr('anger', 0.6), mouth: 'grit'},
     }), g);

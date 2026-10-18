@@ -406,11 +406,21 @@ export const climbPlan = (pts: XZ[], T0: number, T1: number, o: ClimbOpts): Clim
   const path = polyPath(pts, o.turn ?? 0.5);
   const L = path.L;
   const stepLen = o.stepLen ?? 0.46, maxRise = o.maxRise ?? 0.24, hip = o.hip ?? 0.13;
-  const hold = (d: number, side: number): V3 => {
+  const hold = (d: number, side: number, jit = 0): V3 => {
     const q = path.fn(clamp(d, 0, L));
     const r = rightOf(q.heading);
-    const x = q.x + r.x * hip * side, z = q.z + r.z * hip * side;
+    const x = q.x + r.x * (hip * side + jit), z = q.z + r.z * (hip * side + jit);
     return {x, y: GC(x, z), z};
+  };
+  /** the foothold at d: where the rubble beside the line gives the smallest step up (a foot finds its hold) */
+  const bestHold = (d: number, side: number, from: V3): V3 => {
+    let best = hold(d, side), br = best.y - from.y;
+    if (br <= maxRise) return best;
+    for (const j of [0.08, -0.08, 0.16, -0.16]) {
+      const h = hold(d, side, j * side), r = h.y - from.y;
+      if (r < br - 0.03) { best = h; br = r; }
+    }
+    return best;
   };
   const s0 = o.start;
   const onGround = (p: V3) => ({x: p.x, y: GC(p.x, p.z), z: p.z});
@@ -424,11 +434,14 @@ export const climbPlan = (pts: XZ[], T0: number, T1: number, o: ClimbOpts): Clim
     if (n === 0 && (airL || airR)) moveL = airL; // a foot still in the air from the walk moves first
     const dOther = moveL ? dR : dL, pOther = moveL ? pR : pL, side = moveL ? -1 : 1;
     if (dOther >= L - 1e-4) {
-      raw.push({foot: moveL ? 'L' : 'R', from: moveL ? pL : pR, to: hold(L, side), other: pOther, dNew: L, last: true});
+      const to = hold(L, side);
+      raw.push({foot: moveL ? 'L' : 'R', from: moveL ? pL : pR, to, other: pOther, dNew: L, last: true});
+      if (moveL) { dL = L; pL = to; } else { dR = L; pR = to; }
       break;
     }
     let s = stepLen, dn = Math.min(L, dOther + s), to = hold(dn, side);
     while (s > 0.2 && to.y - pOther.y > maxRise) { s -= 0.025; dn = Math.min(L, dOther + s); to = hold(dn, side); }
+    if (to.y - pOther.y > maxRise) to = bestHold(dn, side, pOther); // a ledge: look for a lower hold beside the line
     if (L - dn < 0.2) { dn = L; to = hold(L, side); }
     raw.push({foot: moveL ? 'L' : 'R', from: moveL ? pL : pR, to, other: pOther, dNew: dn, last: false});
     if (moveL) { dL = dn; pL = to; } else { dR = dn; pR = to; }
@@ -532,12 +545,13 @@ export const climbAt = (c: Climb, T: number): Body => {
   const heading = st.h0 + wrapD(st.h1 - st.h0) * smooth(u);
   // the feet: the stepping foot swings from its old hold to the new one; the other stays planted
   const up = st.to.y - st.from.y > 0.1;
-  const lift = 0.06 + 0.42 * Math.max(0, st.to.y - st.from.y) * 0.6 + 0.05 * ks;
+  // (higher for a step up — knee first — and for a step down — the foot clears the edge it leaves before it reaches down)
+  const lift = 0.08 + 0.25 * Math.max(0, st.to.y - st.from.y) + 0.22 * Math.max(0, st.from.y - st.to.y) + 0.05 * ks;
   const e = up ? smooth(clamp((v - 0.28) / 0.72)) : smooth(v);
   const ey = up ? smooth(Math.min(1, v * 2.2)) : e;
   const x = lerp(st.from.x, st.to.x, e), z = lerp(st.from.z, st.to.z, e);
   const arc = Math.sin(Math.PI * v) * lift;
-  const fy = v >= 1 ? st.to.y : Math.max(lerp(st.from.y, st.to.y, ey) + arc, GC(x, z) + 0.7 * arc);
+  const fy = v >= 1 ? st.to.y : Math.max(lerp(st.from.y, st.to.y, ey) + arc, GC(x, z) + 0.9 * arc);
   const moving: V3 = v >= 1 ? st.to : {x, y: fy, z};
   const sw = v < 1 ? Math.sin(Math.PI * v) : 0;
   const footL = st.foot === 'L' ? moving : st.other, footR = st.foot === 'R' ? moving : st.other;
@@ -545,7 +559,7 @@ export const climbAt = (c: Climb, T: number): Body => {
   // foot during the swing, the arms working (the one opposite the stepping leg forward), the trailing heel lifting
   // (the slope blends from the previous step's into this one's, so the lean never jumps at a step boundary)
   const prevSlope = i > 0 ? S[i - 1].slope : st.slope;
-  const slopeK = clamp(lerp(prevSlope, st.slope, smooth(u)), 0, 1.1);
+  const slopeK = clamp(lerp(prevSlope, st.slope, smooth(u)), 0, 0.9);
   const load = u < swF ? 0 : Math.sin(Math.PI * w);
   const sd = st.foot === 'L' ? 1 : -1; // + = weight to his right (over the right foot while the left swings)
   const armF = (16 + 10 * slopeK) * Math.sin(Math.PI * u) * 0.9;
@@ -553,7 +567,7 @@ export const climbAt = (c: Climb, T: number): Body => {
   const pitchStance = 16 * smooth(w) * (u < swF ? 0 : 1);
   const g: Pose = {
     drop: 12 + 16 * slopeK + 16 * ks * load + 4 * (1 - ks) * Math.sin(Math.PI * u),
-    lean: 9 + 26 * slopeK + 6 * ks * load,
+    lean: Math.min(33, 9 + 26 * slopeK + 5 * ks * load),
     side: 5.5 * sd * Math.sin(Math.PI * clamp(u / Math.max(0.2, swF * 1.15))),
     armL: {fk: {fwd: (st.foot === 'R' ? armF : -armF * 0.6) + 8 * slopeK, out: 12, bend: 26 + 10 * slopeK}},
     armR: {fk: {fwd: (st.foot === 'L' ? armF : -armF * 0.6) + 8 * slopeK, out: 12, bend: 26 + 10 * slopeK}},

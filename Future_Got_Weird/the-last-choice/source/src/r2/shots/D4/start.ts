@@ -47,7 +47,11 @@ export const CREW_START: Record<Role2, CrewStart> = {
 // ------------------------------------------------------------------ heavy 2 and the nearest machines at 149.86
 /**
  * Heavy 2 walks west out of the crater along one straight line (heading 262) that later brings it to the van; at
- * 149.86 its hull is at HEAVY2_START, walking at ≈ 2.1 m/s (mid-stride), eye amber, ram at rest, launcher lowered.
+ * 149.86 its hull is at HEAVY2_START, walking at ≈ 2.0 m/s (mid-stride), eye amber, ram at rest, launcher lowered.
+ * R3: the exact state at 149.86 is machines.ts `heavy2At(START_T)` — the kit walker's gait geometry written out as keyed
+ * feet (lateral sequence, duty 0.75, stride 3.0 m, each stance centred under its hip) with landing times (`plants`)
+ * and a reach drop (the hull lowered just enough that no foot hangs short: 0.81 m here, on the crater's inner slope).
+ * D3's last frames must match its `feet`, `plants` and `drop`, not only the root.
  */
 export const HEAVY2_LINE = {from: {x: 55.5, z: -2.76}, heading: 262};
 export const HEAVY2_START = {pos: on(55.5, -2.76), heading: 262, speed: 2.1, eye: 'amber' as const};
@@ -55,7 +59,9 @@ export const HEAVY2_START = {pos: on(55.5, -2.76), heading: 262, speed: 2.1, eye
 /**
  * The arc pressing the Crew's east side (D3's FORMATION arc, followed west): named units and the escort, root
  * position and heading (facing the Crew) at 149.86; ids are the tableau identities they end as (EF/tableau.ts).
- * r = distance from the Crew's centre (35.0, 2.0); bearing from it (deg).
+ * r = distance from the Crew's centre (35.0, 2.0); bearing from it (deg). R3: arcStartPos pushes each spot clear of the
+ * set's solid pieces (obstacles.ts SOLIDS: the crater's rim plates, the south facade spill) and D1's wrecks; 7203 and
+ * 7300–7302 were pulled in off the facade spill. D3 ends on arcStartPos (as D3 reads D4's unitAt at 149.86).
  */
 export const ARC_C = {x: 35.0, z: 2.0};
 export type ArcStart = {id: number; role: string; bearing: number; r: number};

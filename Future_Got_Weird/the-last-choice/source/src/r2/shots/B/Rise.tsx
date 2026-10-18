@@ -3,7 +3,7 @@
 // up — the rise in distinct poses (drag, chest up, a knee under him, the rebar, weight onto the foot, standing).
 import React from 'react';
 import {Stage, useShotTime, camPath} from '../../film/stage';
-import {V3, add3, clamp, rnd} from '../../../kit/math';
+import {V3, add3, clamp, rnd, smooth} from '../../../kit/math';
 import type {Item, View} from '../../engine';
 import {project} from '../../engine';
 import {figureRig} from '../../rig';
@@ -13,13 +13,15 @@ import {chips3, dust3} from '../../fx';
 import {TB, HAND_OUT, R0, R1, HD, rootB, REBAR, dirB} from './director';
 import {headingVec} from '../../engine/camera';
 import {B_WEST_SMOKE} from './kit';
-import {slabItem, chunkItems, chunkHits, slabPoint, supportItems, SLAB_SOUTH_Z} from './rubble';
+import {slabItem, chunkItems, chunkHits, slabPoint, supportItems, SLAB_SOUTH_Z, SLAB_EAST_X} from './rubble';
 import {dirSpec, dirSprite, dirShaded, underShade, rebarItems, motes, B_COLUMNS} from './kit';
 import {CAM_B1, CAM_B2} from './cams';
 import {figureSprite} from '../../rig';
 import {M} from '../../timing';
 
 const gp = (x: number, z: number, up = 0): V3 => ({x, y: groundH(x, z) + up, z});
+/** the slab's east edge as a plane (B2: he crawls out across it, left to right) */
+const EAST_EDGE = {p: {x: SLAB_EAST_X, y: 0, z: 0}, n: {x: 1, y: 0, z: 0}};
 /** a ground point near a root, along his heading (f) and to his right (r) */
 const onGround = (root: V3, f: number, r: number): V3 => {
   const a = headingVec(HD), b = headingVec(HD + 90);
@@ -91,16 +93,20 @@ export const ShotB2: React.FC = () => {
     const hits = chunkHits();
     return [
       underShade(T, R0, 0.85, 0.5),
-      // while he is under the slab it covers the parts of him still under it, and the parts out past its edge (head,
-      // chest, a reaching arm) are drawn over it; once he is out it lies behind him (from this side)
+      // the lens is south of him, the slab between it and where he lies: while he is under it the slab covers him;
+      // what is out past its east edge (the right arm reaching out, then the head and shoulders as he drags himself
+      // east, across the frame) is drawn over it, cut on screen where the edge plane crosses it; under its bitten
+      // south edge he shows through the notch. Once his chest is up he is out: the slab lies behind him and
+      // the under-slab shade fades off him
       ...(T < TB.chestUp - 0.1
-        ? [dirShaded(T, {bias: 0.9, k: 0.55, split: 'under'}), dirShaded(T, {bias: 3.0, k: 0.55, split: 'out'})]
-        : [dirShaded(T, {bias: 0.9, k: 0.55})]),
+        ? [dirShaded(T, {bias: 0.9, k: 0.55, split: 'under', edge: EAST_EDGE}), dirShaded(T, {bias: 3.0, k: 0.55, split: 'out', edge: EAST_EDGE})]
+        : [dirShaded(T, {bias: 0.9, k: 0.55 * (1 - smooth((T - (TB.chestUp - 0.1)) / 0.35))})]),
       slabItem(T, {bias: T < TB.chestUp - 0.1 ? 2.2 : -1.2}), ...supportItems(),
       ...chunkItems(T),
       ...rebarItems(T),
       // effort dust: palms, knees, the slab dropping back, the chunks landing
-      ...dust3({at: slabPoint(0.9, 0.5, T), t: T, t0: TB.slabLand, key: 'b2slab', seed: 7, n: 8, dir: {x: 0.6, y: 0.3, z: 0.4}, spread: 80, speed: 0.9, size: 0.06, grow: 0.16, life: 1.6, rise: 0.12, color: '#A3978A', opacity: 0.6}),
+      // (the slab's dust blows out behind him, west and south-west, not across him)
+      ...dust3({at: slabPoint(0.5, 0.5, T), t: T, t0: TB.slabLand, key: 'b2slab', seed: 7, n: 7, dir: {x: -0.7, y: 0.3, z: 0.5}, spread: 60, speed: 0.8, size: 0.05, grow: 0.13, life: 1.4, rise: 0.1, color: '#A3978A', opacity: 0.5}),
       ...chips3({at: slabPoint(0.98, 0.45, T), t: T, t0: TB.slabLand, key: 'b2slabC', seed: 8, n: 7, dir: {x: 1, y: 0.4, z: 0.2}, spread: 60, speed: [0.8, 2.2], size: [0.02, 0.05], ground: groundH(1.1, 1.6), life: 5}),
       ...hits.flatMap((hh, i) => dust3({at: hh.p, t: T, t0: hh.t, key: `b2ch${i}`, seed: 20 + i, n: 4, speed: 0.35, size: 0.035, grow: 0.1, life: 1.1, color: '#A3978A', opacity: 0.55})),
       // knee, foot plants, the half step: small kicks of grit and dust at the contact (no big discs)

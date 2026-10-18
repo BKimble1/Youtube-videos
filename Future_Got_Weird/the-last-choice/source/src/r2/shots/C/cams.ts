@@ -89,17 +89,27 @@ export const CAM_C6B: CamKey[] = [
   {t: D(CUT.c6b, CUT.c6c), pos: {x: 4.1, y: 4.95, z: 3.1}, target: {x: 0.75, y: 4.85, z: 2.05}, fov: 34},
 ];
 
-/** C6c (56.05–57.95): the threat — over his left (plate) shoulder, long lens east across the avenue and the crater: the
- * army at its halt; their front rank breaks into its run (57.1), the eyes lock (≈57.5); his weight goes forward. */
+/** C6c (56.05–57.00): over his left (plate) shoulder, long lens east across the avenue and the crater: the army at its
+ * halt beyond the smoke; he turns back to it from the look along the line. */
 export const CAM_C6C: CamKey[] = [
-  {t: 0, pos: {x: -0.68, y: 5.08, z: 1.04}, target: {x: 81.5, y: 1.8, z: -1.2}, fov: 14.5},
-  {t: D(CUT.c6c, CUT.c6d), pos: {x: -0.6, y: 5.07, z: 1.05}, target: {x: 81.5, y: 1.7, z: -1.2}, fov: 12.8},
+  {t: 0, pos: {x: -2.1, y: 5.3, z: 1.0}, target: {x: 81.5, y: 1.4, z: -0.4}, fov: 11.5},
+  {t: D(CUT.c6c, CUT.c6c2), pos: {x: -2.05, y: 5.3, z: 1.01}, target: {x: 81.5, y: 1.4, z: -0.5}, fov: 10.4},
 ];
 
-/** C6d (57.95–59.95): the commit — low from the east-north-east, in front of him on the slope (east reads screen
- * right): he steps out to the brink, the pilot comes down off the slab beside him, the breaker and the runner step up
- * into the line, the glance (now), they sink into the start and the first stride lifts — D1-1 cuts in on it. */
+/** C6c2 (57.00–58.05): the threat — low and long from the avenue's south kerb, across the front of the halted army
+ * (east reads screen right): the front rank's south end leans into its run toward the ridge (screen left, 57.15–57.45),
+ * the eyes lock amber, dust off the first strides — the ranks behind them stay. */
+export const CAM_C6C2: CamKey[] = [
+  {t: 0, pos: {x: 74.8, y: 2.3, z: 16.8}, target: {x: 81.0, y: 1.6, z: 5.6}, fov: 21},
+  {t: D(CUT.c6c2, CUT.c6d), pos: {x: 74.4, y: 2.25, z: 16.6}, target: {x: 80.0, y: 1.6, z: 5.6}, fov: 19},
+];
+
+/** C6d (58.05–59.95): the commit — in front of him from the east-south-east, a little below the brink, medium lens
+ * (east reads screen right; the run starts toward the lens and to the left, as in D1-1): he comes out to the brink in
+ * his second stride, the pilot steps down off the slab beside him, the breaker down off the crest, the runner and the
+ * tether up into the line behind his left shoulder; they sink into the start on the accent, the first stride lifts —
+ * D1-1 cuts in on it (wide, from the ridge's south-east foot). */
 export const CAM_C6D: CamKey[] = [
-  {t: 0, pos: {x: 5.35, y: 3.6, z: 0.55}, target: {x: 1.25, y: 4.45, z: 1.85}, fov: 44},
-  {t: D(CUT.c6d, CUT.end), pos: {x: 4.95, y: 3.45, z: 0.7}, target: {x: 1.3, y: 4.3, z: 1.85}, fov: 43},
+  {t: 0, pos: {x: 6.7, y: 3.55, z: 3.05}, target: {x: 1.05, y: 4.55, z: 1.15}, fov: 30},
+  {t: D(CUT.c6d, CUT.end), pos: {x: 6.25, y: 3.45, z: 2.9}, target: {x: 1.1, y: 4.4, z: 1.2}, fov: 29},
 ];

@@ -94,8 +94,10 @@ export const camB6a = (T: number): Cam3 => {
   const ride = restD('main') - groupD('main', T); // metres still to come before the main body stands
   const u = (T - CUT.b6a) / (CUT.b6b - CUT.b6a);
   const pos = {x: B6_LENS.x + ride, y: groundH(B6_LENS.x, B6_LENS.z) + B6_LENS.up - 0.15 * u, z: B6_LENS.z};
-  const V = 16 - 0.3 * u;
-  return {pos, target: aimAt(pos, B6_HEAD, V, 0.34), fov: V, roll: 0};
+  const V = 17.5 - 0.3 * u;
+  // tilted down so the vanguard's front rank stands full-length in the lower band (their last steps and the plant
+  // read), him small in the upper part of the frame
+  return {pos, target: aimAt(pos, B6_HEAD, V, 0.25), fov: V, roll: 0};
 };
 
 /** B6b: the machine's over-the-shoulder — the reverse of B3: east of him, behind the sentry's hold point and a little
@@ -103,7 +105,7 @@ export const camB6a = (T: number): Cam3 => {
  * right of frame from behind; the beam goes out to him; he is centre-left, facing us, backlit against the same pale
  * dust off the ruin as B6a; the plate comes up into the beam. The army is behind us: this machine is its reach. */
 export const CAM_B6B: CamKey[] = [
-  {t: 0, pos: {x: 13.4, y: 5.75, z: 3.35}, target: {x: 1.6, y: 4.28, z: 1.5}, fov: 19},
-  {t: D('B6b'), pos: {x: 13.05, y: 5.72, z: 3.28}, target: {x: 1.6, y: 4.33, z: 1.48}, fov: 18.5},
+  {t: 0, pos: {x: 12.3, y: 5.72, z: 2.95}, target: {x: 1.4, y: 4.3, z: 0.3}, fov: 19},
+  {t: D('B6b'), pos: {x: 12.0, y: 5.7, z: 2.9}, target: {x: 1.4, y: 4.35, z: 0.32}, fov: 18.5},
 ];
 void M;

@@ -203,7 +203,7 @@ const ARMY_EYE: V3 = {x: 82, y: 2.4, z: 0.5};
 // C1: at the brink (B's last stance), facing the army. The breath stops; a scrape behind him; eyes, then head over his
 // right shoulder; then the body comes round in three steps, up and back toward the crest (to face west, where they come
 // from). C3–C5: he watches them come; the breaker's hand on his shoulder; the strap check. C6: the turn (first); a look
-// along the line at them; their front breaks into its run; the step out to the brink; the glance back (now); the set.
+// along the line at them; their front breaks into its run; the step out to the brink (they follow him); the set.
 const DIR_SPOT: XZ = {x: 1.25, z: 1.35};
 const DIR_B_END = dirB(TD.pivot);
 const DIR_ROOT: KR[] = [
@@ -248,7 +248,7 @@ const DIR_FACE = (T: number): Face => faceKeys(T, [
   [TD.glanceS, expr('resolve', 0.8, {brows: -0.2})], // a look along the line: they are ready
   [TD.glanceSEnd, F.resolve],
   [TD.threat + 0.08, RESOLVE_HARD], // their front breaks into its run
-  [TD.step, expr('effort', 0.6, {squint: 0.3})],
+  [TD.step, expr('resolve', 1, {brows: -0.75, squint: 0.35})],
   [TD.set, F.effort],
 ]);
 
@@ -260,10 +260,12 @@ export const directorC = (T: number, v?: View): CrewC => {
   const b: Body = preB
     ? {pos: bB!.pos, heading: bB!.heading, footL: bB!.world.footL!, footR: bB!.world.footR!, runK: 0, seg: 0, inWalk: false}
     : bodyAt(DIR_SEGS, T);
-  const base: Pose = preB ? bB!.pose : {
+  const C_BASE: Pose = {
     drop: 19, lean: 7, twist: -6, armL: {local: GUARD_LOW, pole: {r: -1, u: -0.4, f: -0.3}}, armR: {local: {r: 74, u: 150, f: 24}},
     handL: 'fist', handR: 'relaxed', breath: 0.42,
   };
+  // (from the pivot on, C's stance — blended in from wherever B's last stance has him, so B can change without a pop)
+  const base: Pose = preB ? bB!.pose : T < TD.pivot + 0.4 ? blendPose(DIR_B_END.pose, C_BASE, smooth((T - TD.pivot) / 0.4)) : C_BASE;
   // breath: stops on the quiet, comes back shallow, the breath of recognition in C3, then steady; a breath in as their
   // front breaks
   const stop = after(T, TD.breathStop, 0.25) * (1 - after(T, TD.pivotEnd + 0.2, 1.2) * 0.6);
@@ -287,7 +289,7 @@ export const directorC = (T: number, v?: View): CrewC => {
     const k = win(T, TB2.touch, TD.lookBack + 0.45, 0.2, 0.4);
     a = {...a, yaw: lerp(a.yaw, clamp(a.yaw, -50, 50), k), twist: lerp(a.twist, clamp(a.twist, -14, 14), k)};
   }
-  pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch, roll: 0}});
+  pose = layer(pose, {twist: a.twist, head: {yaw: a.yaw, pitch: a.pitch, roll: 0}});
   if (!preB) pose = addPose(pose, weight(b));
   // the recognition: the chest lifts with the breath, the chin comes up a little
   pose = layer(pose, {lean: (pose.lean ?? 7) - 3 * recog, head: {...pose.head, pitch: (pose.head?.pitch ?? 0) - 5 * recog}});
@@ -305,9 +307,11 @@ export const directorC = (T: number, v?: View): CrewC => {
   // the step out: he leans into it (the feet are the commit's planted steps)
   const go = win(T, TD.step - 0.12, TD.stepEnd + 0.2, 0.15, 0.3);
   if (go > 0) pose = layer(pose, {lean: (pose.lean ?? 7) + 7 * go, armR: {local: {r: 58, u: 200, f: 66}}});
-  // the set (on the accent): he sinks into the start, plate up into D1's high guard, right fist back
+  // the set (on the accent): he sinks into the start, right fist back; then the plate snaps up into D1's high guard: go
   const set = after(T, TD.set - 0.06, 0.32);
-  if (set > 0) pose = blendPose(pose, layer(pose, {drop: 30, lean: 12, armL: {local: GUARD_HIGH, pole: {r: -1, u: -0.7, f: 0.1}, palm: {r: -0.55, u: 0.1, f: -1}}, armR: {local: {r: 52, u: 250, f: 70}, pole: {r: 1, u: -0.5, f: -0.3}}, handR: 'fist'}), set);
+  if (set > 0) pose = blendPose(pose, layer(pose, {drop: 30, lean: 12, armR: {local: {r: 52, u: 250, f: 70}, pole: {r: 1, u: -0.5, f: -0.3}}, handR: 'fist'}), set);
+  const plateUp = after(T, TD.plateUp, 0.22);
+  if (plateUp > 0) pose = blendPose(pose, layer(pose, {armL: {local: GUARD_HIGH, pole: {r: -1, u: -0.7, f: 0.1}, palm: {r: -0.55, u: 0.1, f: -1}}}), plateUp);
   pose.face = DIR_FACE(T);
   if (recog > 0.3) pose.face = {...pose.face, open: Math.max(pose.face.open ?? 0, 0.35 * recog)};
 
@@ -365,7 +369,7 @@ export const tetherC = (T: number, v?: View): CrewC => {
   const walkArms: Pose = {armR: {local: {r: 32, u: 182, f: 56}}, armL: b.gait?.armL};
   pose = withWalk(b, pose, walkArms);
   if (!b.inWalk) pose = addPose(pose, weight(b));
-  { const pw = palmLean(TT_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 4) + 14 * pw, drop: (pose.drop ?? 0) + 18 * pw}); }
+  { const pw = palmLean(TT_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 4) + 6 * pw, drop: (pose.drop ?? 0) + 16 * pw}); }
   // she looks up at the crest (him), up the slope, the summit, then the others; C6: the enemy
   const seq: [number, V3][] = [[37.9, {x: 1.3, y: 4.8, z: 1.35}], [TT.foot - 0.3, {x: -4.0, y: 3.2, z: -2.4}], [45.6, {x: -0.5, y: 5.8, z: -2.2}], [TT.top + 0.2, {x: 1.25, y: 4.9, z: 1.35}], [49.7, {x: -3, y: 3.5, z: 5}], [TT.reel - 0.15, {x: 0.3, y: 5.6, z: -1.9}], [TT.reelOff, {x: 1.2, y: 4.8, z: 1.4}], [TT.turn, ARMY_EYE]];
   const a = lookSeq(b, T, seq, 0.4);
@@ -445,13 +449,14 @@ const vaultAt = (T: number): Body => {
   const tuck = keyN([[TR.takeoff, 0], [TR.hand, 0.7], [TR.over, 1], [TR.release, 0.8], [TR.land - 0.06, 0.3], [TR.land, 0]], T);
   const tL = tuckFoot(pel, heading, roll, -1, tuck), tR = tuckFoot(pel, heading, roll, 1, tuck);
   // the left foot: planted for the take-off, then tucked; lands second. The right: swinging through, tucked, lands first
-  const wL = T < TR.hand - 0.02 ? 0 : T < TR.hand + 0.1 ? smooth((T - (TR.hand - 0.02)) / 0.12) : T < TR.land - 0.02 ? 1 : 1 - smooth((T - (TR.land - 0.02)) / 0.14);
+  // (the take-off foot pushes off as the body leaves it — it does not stay planted out of the leg's reach)
+  const wL = T < TR.takeoff + 0.02 ? 0 : T < TR.hand + 0.06 ? smooth((T - (TR.takeoff + 0.02)) / (TR.hand + 0.04 - TR.takeoff)) : T < TR.land - 0.02 ? 1 : 1 - smooth((T - (TR.land - 0.02)) / 0.14);
   const fL0 = RN_G0.footL;
   const keepUp = (p: V3) => ({...p, y: Math.max(p.y, GC(p.x, p.z))});
   // (the left foot comes down onto its spot from where the tuck left it, on an arc above the rubble — no skimming)
   let footL: V3;
   const Ta = TR.land - 0.02;
-  if (T < Ta) footL = keepUp(lerp3(fL0, tL, wL));
+  if (T < Ta) footL = add3(keepUp(lerp3(fL0, tL, wL)), {x: 0, y: 0.12 * Math.sin(Math.PI * Math.min(1, wL) * 0.5), z: 0});
   else {
     const pa = keyN(V_ROLL, Ta), pelA = vaultPelvis(Ta), hA = keyN([[TR.takeoff, RN_E.h], [TR.hand, 84], [TR.over, 70], [TR.land, 80], [TR.rec, 70]], Ta);
     const tuckA = keyN([[TR.takeoff, 0], [TR.hand, 0.7], [TR.over, 1], [TR.release, 0.8], [TR.land - 0.06, 0.3], [TR.land, 0]], Ta);
@@ -490,7 +495,7 @@ export const runnerC = (T: number, v?: View): CrewC => {
   const walkArms: Pose = {armR: {local: {r: 40, u: 216, f: 64}}, armL: b.gait?.armL};
   pose = withWalk(b, pose, walkArms);
   if (!b.inWalk && !inVault) pose = addPose(pose, weight(b));
-  { const pw = palmLean(RN_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 6) + 14 * pw, drop: (pose.drop ?? 0) + 18 * pw}); }
+  { const pw = palmLean(RN_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 6) + 6 * pw, drop: (pose.drop ?? 0) + 16 * pw}); }
   let shadow = 1;
   if (inVault) {
     // the body: a forward reach at the take-off, rolls over the planted left arm (legs swing up to his right), unrolls
@@ -521,11 +526,12 @@ export const runnerC = (T: number, v?: View): CrewC => {
   if (!inVault) pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch}});
   // C6: the ready (D1's carry: halligan in the right fist, braced), the bar spins once in his fist and he catches it
   const ready = after(T, TR.turn + 0.3, 1.0);
-  if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(12, 20, after(T, TR.commit - 0.2, 0.5)), lean: 9, armL: {local: {r: -18, u: 260, f: 104}, pole: {r: -1, u: -0.4, f: -0.2}}, armR: {local: {r: 50, u: 236, f: 70}}, handL: 'fist'}), ready);
+  // (the bar is carried low at his right hip, clear of his face, until the end blend lifts it into D1's carry)
+  if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(12, 20, after(T, TR.commit - 0.2, 0.5)), lean: 9, armL: {local: {r: -18, u: 250, f: 100}, pole: {r: -1, u: -0.4, f: -0.2}}, armR: {local: {r: 60, u: 190, f: 52}}, handL: 'fist'}), ready);
   const flipK = clamp((T - TR.flip) / 0.42);
   const flipAng = 72 + 360 * (flipK <= 0 ? 0 : flipK >= 1 ? 1 : 1 - Math.pow(1 - flipK, 2.2));
   const flipLift = win(T, TR.flip - 0.12, TR.flip + 0.55, 0.12, 0.2);
-  if (flipLift > 0) pose = layer(pose, {armR: {local: {r: 50, u: 236 + 40 * flipLift, f: 70 + 20 * flipLift}}});
+  if (flipLift > 0) pose = layer(pose, {armR: {local: {r: 60, u: 190 + 50 * flipLift, f: 52 + 30 * flipLift}}});
   pose.face = withEffort(faceKeys(T, RN_FACE), b, inVault ? 0 : 0.6);
   const grip = flipK > 0.05 && flipK < 0.9 ? 'open' as const : 'grip' as const;
   const eb = endBlend('runner', T, b.pos, b.heading, {...pose, shadow, handR: grip, holdR: halligan1({ang: flipAng}), dmg: dmgR2('runner', T)}, {footL: b.footL, footR: b.footR});
@@ -547,12 +553,12 @@ export const RUNNER_SHADOW = (T: number) => T > TR.hand - 0.02 && T < TR.land + 
 // hands; C6b: he opens the valve — the gauge needle swings up, the tank hisses.
 const BK_FLAT: XZ[] = [{x: -18.4, z: -0.3}, {x: -15.4, z: -0.5}, {x: -12.0, z: -0.7}, {x: -8.6, z: -0.62}];
 const BK_WALK = walkSeg(BK_FLAT, TB2.go, TB2.foot, G_HEAVY, {A: 0.8, D: 0.45});
-const BK_TOUCH = {x: 1.36, z: 0.8}; // at the Director's right side, within an arm of his shoulder
+const BK_TOUCH = {x: 1.42, z: 0.6}; // at the Director's right side: clear of him in C5a's frame, his arm across onto the shoulder
 const BK_UP: XZ[] = [{x: -8.6, z: -0.62}, {x: -7.0, z: -0.62}, {x: -5.6, z: -1.05}, {x: -3.8, z: -1.12}, {x: -2.25, z: -1.0}, {x: -1.3, z: -0.82}, {x: -0.38, z: -0.42}, {x: 0.6, z: -0.05}, BK_TOUCH];
 const BK_CLIMB = climbFrom([BK_WALK], BK_UP, TB2.foot, TB2.arrive, {stepLen: 0.5, maxRise: 0.27, autoHands: {side: 'L', n: 2, minRise: 0.25, fwd: 0.04, out: 0.18}, endHeading: 196});
 const BK_C = afterClimb(BK_CLIMB);
 const BK_A = spotBehind('breaker', 0.7, 0.2); // on the crest's top: his commit steps down off its edge
-const BK_ROUND: XZ[] = [BK_TOUCH, {x: 1.95, z: 1.35}, {x: 1.82, z: 2.4}, {x: 1.2, z: 2.95}, {x: BK_A.x, z: BK_A.z}];
+const BK_ROUND: XZ[] = [BK_TOUCH, {x: 1.82, z: 0.95}, {x: 2.2, z: 1.45}, {x: 1.9, z: 2.4}, {x: 1.2, z: 2.95}, {x: BK_A.x, z: BK_A.z}];
 const BK_STAND1 = standSeg([BK_C.key, [TB2.go2, BK_C.key[1], BK_C.key[2], 196]], {half: 0.16, stag: 0.05, turnStep: 70, start: BK_C.start});
 const BK_CLIMB2 = climbFrom([BK_STAND1], BK_ROUND, TB2.go2, TB2.arrive2, {stepLen: 0.5, maxRise: 0.27, lead: 0.08, endHeading: 260});
 const BK_C2 = afterClimb(BK_CLIMB2);
@@ -566,7 +572,7 @@ const BK_SEGS: Seg[] = [
 const breakerHead = (T: number): V3 => headOf(bodyAt(BK_SEGS, T), 1.6);
 /** the two-handed port, carried a little lower than D1's (r −16 u 250 f 118 / r 32 u 205 f 34) so the ram head stays
  * clear of his face from the front; it rises into D1's at the cut (endBlend) */
-const PORT = {front: {r: -14, u: 228, f: 114}, back: {r: 30, u: 196, f: 30}};
+const PORT = {front: {r: -18, u: 208, f: 110}, back: {r: 30, u: 186, f: 26}};
 /** C6b: the tool down across his hips, the tank turned up to him, while he opens the valve */
 const VALVE = {front: {r: -26, u: 168, f: 92}, back: {r: 28, u: 182, f: 18}};
 const BK_FACE: FK = [
@@ -586,7 +592,7 @@ export const breakerC = (T: number, v?: View, dir?: FigSpec): CrewC => {
   const walkArms: Pose = {armR: {local: {r: 70, u: 136, f: 30}, pole: {r: 1, u: 0, f: -0.4}}, armL: b.gait?.armL, side: -4};
   pose = withWalk(b, pose, walkArms);
   if (!b.inWalk) pose = addPose(pose, weight(b));
-  { const pw = Math.max(palmLean(BK_CLIMB, T), palmLean(BK_CLIMB2, T)); pose = layer(pose, {lean: (pose.lean ?? 6) + 14 * pw, drop: (pose.drop ?? 0) + 18 * pw}); }
+  { const pw = Math.max(palmLean(BK_CLIMB, T), palmLean(BK_CLIMB2, T)); pose = layer(pose, {lean: (pose.lean ?? 6) + 6 * pw, drop: (pose.drop ?? 0) + 16 * pw}); }
   const seq: [number, V3][] = [[39.0, {x: 1.3, y: 4.8, z: 1.35}], [TB2.foot - 0.3, {x: -4.5, y: 2.6, z: -1.1}], [45.5, {x: -1.2, y: 4.4, z: -0.8}], [47.3, {x: 1.25, y: 4.9, z: 1.35}], [TB2.touch - 0.1, {x: 1.2, y: 4.95, z: 1.4}], [TB2.touchOff + 0.1, {x: -2.5, y: 3.6, z: 4.5}], [TB2.go2 + 0.3, {x: 1.0, y: 4.4, z: 3.6}], [TB2.turn, ARMY_EYE], [TB2.charge - 0.1, {x: BK_A.x + 0.5, y: 4.6, z: BK_A.z + 0.2}], [TB2.charged + 0.1, ARMY_EYE]];
   const a = lookSeq(b, T, seq, 0.4);
   pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch}});
@@ -615,10 +621,14 @@ export const breakerC = (T: number, v?: View, dir?: FigSpec): CrewC => {
   }
   // the climbs: his left palm on the rubble, the push up
   spec = climbPalm(v, spec, BK_CLIMB, T, b, pts);
-  // C5a: his left hand onto the Director's right shoulder (the shoulder's owner is solved first; see rig handOn)
+  // C5a: his left hand onto the Director's right shoulder (the shoulder's owner is solved first; see rig handOn); he
+  // leans in to it, the left shoulder forward
   const tw = win(T, TB2.touch - 0.25, TB2.touchOff + 0.22, 0.25, 0.22);
   if (tw > 0 && v && dir) {
-    spec = handOn(v, dir, {r: SH_X - 10, u: SH_H + 12, f: -2}, {...spec, pose: layerFn(spec.pose, {handL: 'brace'})}, 'L', tw, {palm: {x: 0, y: -1, z: 0}, fingers: {...fwdOf(b.heading + 30), y: -0.5}, w: 0.85});
+    const p0 = typeof spec.pose === 'function' ? spec.pose : null;
+    const lean = (q: Pose): Pose => ({...q, lean: (q.lean ?? 6) + 9 * tw, twist: (q.twist ?? 0) - 12 * tw, handL: 'brace'});
+    const s2: FigSpec = {...spec, pose: p0 ? (Fr: FigFrame) => lean(p0(Fr) as Pose) : lean((spec.pose ?? {}) as Pose)};
+    spec = handOn(v, dir, {r: SH_X - 10, u: SH_H + 12, f: -2}, s2, 'L', tw, {palm: {x: 0, y: -1, z: 0}, fingers: {...fwdOf(b.heading + 30), y: -0.5}, w: 0.85});
   }
   pts.gauge = fromLoc(b, PORT.back);
   return {spec, body: b, pts};
@@ -632,7 +642,7 @@ export const breakerC = (T: number, v?: View, dir?: FigSpec): CrewC => {
 const DR_FLAT: XZ[] = [{x: -11.6, z: 11.2}, {x: -9.2, z: 8.6}, {x: -7.6, z: 7.45}];
 const DR_WALK = walkSeg(DR_FLAT, T3.go, T3.pilotFoot, G_HURRY, {A: 0.7, D: 0.4});
 const DR_UP: XZ[] = [{x: -7.6, z: 7.45}, {x: -6.6, z: 6.75}, {x: -5.6, z: 6.0}, {x: -4.9, z: 5.5}];
-const DR_CLIMB = climbFrom([DR_WALK], DR_UP, T3.pilotFoot, T3.launch, {stepLen: 0.48, maxRise: 0.26, endHeading: 140});
+const DR_CLIMB = climbFrom([DR_WALK], DR_UP, T3.pilotFoot, T3.launch, {stepLen: 0.48, maxRise: 0.26}); // (she stops facing up the bank)
 const DR_C = afterClimb(DR_CLIMB);
 const DR_E = DR_CLIMB.end;
 const DR_STAND = standSeg([DR_C.key, [T3.pilotGo, DR_E.x, DR_E.z, DR_E.h]], {half: 0.14, stag: 0.08, start: DR_C.start});
@@ -745,7 +755,7 @@ export const flaresC = (T: number, v?: View): CrewC => {
   const walkArms: Pose = {armR: {local: {r: 8, u: 262, f: 46}, pole: {r: 1, u: -0.6, f: -0.2}}, armL: b.gait?.armL};
   pose = withWalk(b, pose, walkArms);
   if (!b.inWalk) pose = addPose(pose, weight(b));
-  { const pw = palmLean(FL_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 4) + 14 * pw, drop: (pose.drop ?? 0) + 18 * pw}); }
+  { const pw = palmLean(FL_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 4) + 6 * pw, drop: (pose.drop ?? 0) + 16 * pw}); }
   const seq: [number, V3][] = [[44.3, {x: 0.6, y: 5.0, z: 4.0}], [T3.flaresFoot - 0.2, {x: -4.6, y: 2.6, z: 6.2}], [47.6, {x: -0.8, y: 4.6, z: 4.6}], [T3.arriveFlares + 0.1, {x: 1.25, y: 4.9, z: 1.35}], [52.6, {x: 0.6, y: 3.9, z: 4.8}], [T3.turnFlares, ARMY_EYE], [T3.satchel - 0.1, {x: FL_A.x - 0.1, y: 3.4, z: FL_A.z - 0.3}], [T3.satchel + 0.55, ARMY_EYE]];
   const a = lookSeq(b, T, seq, 0.4);
   pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch}});
@@ -787,7 +797,7 @@ export const decoyC = (T: number, v?: View): CrewC => {
   const walkArms: Pose = {armL: {local: {r: -36, u: 204, f: 66}, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}}, armR: b.gait?.armR};
   pose = withWalk(b, pose, walkArms);
   if (!b.inWalk) pose = addPose(pose, weight(b));
-  { const pw = palmLean(DC_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 5) + 14 * pw, drop: (pose.drop ?? 0) + 18 * pw}); }
+  { const pw = palmLean(DC_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 5) + 6 * pw, drop: (pose.drop ?? 0) + 16 * pw}); }
   // a glance at the tablet as she arrives (the screen wakes), then the group; C6: the enemy; C6b: the tablet again
   const glance = Math.max(win(T, 52.25, 52.95, 0.2, 0.25), win(T, T3.tablet - 0.05, T3.tablet + 0.8, 0.18, 0.25));
   const seq: [number, V3][] = [[44.3, {x: 0.6, y: 5.2, z: 4.0}], [T3.decoyFoot - 0.2, {x: -3.6, y: 3.0, z: 7.8}], [48.5, {x: -0.6, y: 4.8, z: 5.3}], [T3.arriveDecoy, {x: 1.25, y: 4.9, z: 1.35}], [T3.turnDecoy, ARMY_EYE]];

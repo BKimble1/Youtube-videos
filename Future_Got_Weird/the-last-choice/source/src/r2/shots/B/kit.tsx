@@ -85,7 +85,7 @@ export const underShade = (T: number, pos: V3, bias: number, k = 0.5): SpriteIte
  * whole, shaded, to go behind the slab; 'out' draws only what is out past the edge, lit, to go in front of it. A part
  * that straddles the edge is cut on screen where the edge plane crosses it (the head and chest emerge gradually).
  */
-export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number; full?: boolean; edge?: {p: V3; n: V3}; split?: 'under' | 'out'} = {}): SpriteItem => {
+export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number; full?: boolean; edge?: {p: V3; n: V3}; split?: 'under' | 'out'; bodyOut?: boolean} = {}): SpriteItem => {
   // the edge plane nearest a point and how far out past it the point is (> 0: out from under the slab: past the given
   // edge plane, or by default past its east or its bitten south edge)
   const sideN = (q: V3): {s: number; n: V3} => {
@@ -119,7 +119,11 @@ export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number;
       };
       // per arm: where it crosses the edge — the shoulder-side half-plane (to shade) and the hand-side one (out)
       const armCut = (i: 0 | 1): {sh: string | 'all' | null; out: string | 'all' | null} => {
-        const S = W(rig.sh[i]), Wr = W(rig.wr[i]);
+        // (the arm runs to the fingertips — about twice the wrist → hand-centre distance — so fingers that are out are
+        // lit before the wrist is)
+        const hc = rig.hands[i].pos, wr = rig.wr[i];
+        const tipD = {x: 2 * hc.x - wr.x, y: 2 * hc.y - wr.y, z: 2 * hc.z - wr.z};
+        const S = W(rig.sh[i]), Wr = W(tipD);
         const a0 = side(S), a1 = side(Wr);
         if (a1 <= 0) return {sh: 'all', out: null};
         if (a0 >= 0) return {sh: null, out: 'all'};
@@ -127,7 +131,7 @@ export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number;
         let lo = 0, hi = 1;
         for (let k = 0; k < 12; k++) { const m = (lo + hi) / 2; if (side(at(m)) > 0) hi = m; else lo = m; }
         const C = P2(at((lo + hi) / 2));
-        const a = {x: rig.wr[i].x - rig.sh[i].x, y: rig.wr[i].y - rig.sh[i].y};
+        const a = {x: tipD.x - rig.sh[i].x, y: tipD.y - rig.sh[i].y};
         const nrm = {x: -a.y, y: a.x};
         return {sh: half(C, nrm, {x: C.x - a.x, y: C.y - a.y}), out: half(C, nrm, {x: C.x + a.x, y: C.y + a.y})};
       };
@@ -135,6 +139,9 @@ export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number;
       // through the point facing the lens, and its out side
       const bodyCut = (q: V3, R: number): string | 'all' | null => {
         const {s, n} = sideN(q);
+        // (bodyOut false: an edge plane that faces the lens makes the cut line degenerate — a body part is out whole once
+        // its centre is past the edge; the arms still come out part by part)
+        if (o.bodyOut === false) return s >= 0 ? 'all' : null;
         if (s >= R) return 'all';
         if (s <= -R) return null;
         const v = norm3(sub3(q, c.view.pos));
@@ -265,14 +272,11 @@ export const B_BANK: {key: string; base: V3; o: ColumnOpts}[] = [
 /**
  * The smoke behind him to the west (B5a, B5b, B6a, and the backdrop of his silhouette): the collapsed building's
  * rubble smoulders — low smoke lying in the ruin (the same four banks as section C's C_COLUMNS: the Crew come out of
- * them) and four plumes rising out of the ruin's broken floors behind it, leaning north-east with the wind. ATMOS's
+ * them) and the plumes rising out of the ruin's broken floors behind it, leaning north-east with the wind. ATMOS's
  * plume look (one connected silhouette per plume, billows rolling up it), backlit by the low sun from the crane.
+ * B_WEST_PLUMES is the part C does not have (for C's west-facing shots: add it to C_COLUMNS for continuity).
  */
-export const B_WEST_SMOKE: {key: string; base: V3; o: ColumnOpts}[] = [
-  {key: 'cRu1', base: {x: -19.4, y: 0.9, z: -2.0}, o: {n: 7, life: 15, rise: 0.22, r0: 2.0, r1: 4.6, drift: 0.32, dark: 0.12, alpha: 0.5, warm: 0.12, seed: 41}},
-  {key: 'cRu2', base: {x: -20.2, y: 1.0, z: 2.6}, o: {n: 7, life: 15, rise: 0.22, r0: 2.0, r1: 4.6, drift: 0.32, dark: 0.14, alpha: 0.48, warm: 0.12, seed: 42}},
-  {key: 'cRu3', base: {x: -18.8, y: 0.8, z: -5.6}, o: {n: 5, life: 14, rise: 0.25, r0: 1.8, r1: 4.2, drift: 0.35, dark: 0.18, alpha: 0.42, warm: 0.1, seed: 43}},
-  {key: 'cSW1', base: {x: -13.2, y: 0.6, z: 14.4}, o: {n: 6, life: 14, rise: 0.3, r0: 1.8, r1: 4.4, drift: 0.45, dark: 0.18, alpha: 0.5, warm: 0.15, seed: 45}},
+export const B_WEST_PLUMES: {key: string; base: V3; o: ColumnOpts}[] = [
   // right behind him from the crane: a pale bank of brick dust off the ruin's near edge, lit through by the low sun
   // (his silhouette's backdrop)
   {key: 'bWd', base: {x: -9.5, y: 1.4, z: 1.0}, o: {life: 16, rise: 0.9, r0: 2.6, r1: 6.2, drift: 0.55, dark: 0.04, alpha: 0.92, warm: 0.55, seed: 50}},
@@ -281,6 +285,14 @@ export const B_WEST_SMOKE: {key: string; base: V3; o: ColumnOpts}[] = [
   {key: 'bW2', base: {x: -30, y: 2.0, z: 5}, o: {life: 22, rise: 1.45, r0: 2.8, r1: 9.5, drift: 1.0, dark: 0.42, alpha: 0.9, warm: 0.3, seed: 52}},
   {key: 'bW3', base: {x: -22, y: 3.0, z: 16}, o: {life: 18, rise: 1.25, r0: 2.0, r1: 6.5, drift: 0.8, dark: 0.28, alpha: 0.85, warm: 0.35, seed: 53}},
   {key: 'bW4', base: {x: -33, y: 2.0, z: -19}, o: {life: 20, rise: 1.8, r0: 3.0, r1: 10, drift: 1.1, dark: 0.5, alpha: 0.9, warm: 0.25, seed: 54}},
+];
+/** B's whole west smoke: section C's four low banks in the ruin (same keys and values as C's C_COLUMNS) + the plumes */
+export const B_WEST_SMOKE: {key: string; base: V3; o: ColumnOpts}[] = [
+  {key: 'cRu1', base: {x: -19.4, y: 0.9, z: -2.0}, o: {n: 7, life: 15, rise: 0.22, r0: 2.0, r1: 4.6, drift: 0.32, dark: 0.12, alpha: 0.5, warm: 0.12, seed: 41}},
+  {key: 'cRu2', base: {x: -20.2, y: 1.0, z: 2.6}, o: {n: 7, life: 15, rise: 0.22, r0: 2.0, r1: 4.6, drift: 0.32, dark: 0.14, alpha: 0.48, warm: 0.12, seed: 42}},
+  {key: 'cRu3', base: {x: -18.8, y: 0.8, z: -5.6}, o: {n: 5, life: 14, rise: 0.25, r0: 1.8, r1: 4.2, drift: 0.35, dark: 0.18, alpha: 0.42, warm: 0.1, seed: 43}},
+  {key: 'cSW1', base: {x: -13.2, y: 0.6, z: 14.4}, o: {n: 6, life: 14, rise: 0.3, r0: 1.8, r1: 4.4, drift: 0.45, dark: 0.18, alpha: 0.5, warm: 0.15, seed: 45}},
+  ...B_WEST_PLUMES,
 ];
 
 // ------------------------------------------------------------------ the army

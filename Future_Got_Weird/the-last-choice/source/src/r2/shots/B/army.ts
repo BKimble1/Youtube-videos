@@ -13,6 +13,10 @@
 //
 // Lanes flow around the wrecks, the bus and the girder's columns (a smooth sideways deflection), and leave a hole
 // around each heavy.
+//
+// R3: one drone of the screen (DRONES_B[SENTRY_B]) flies a sortie in B6 (31.12 → 38.6: it darts across the crater at
+// him, holds and marks him, backs away to its place). droneSpecB carries it, so every section that draws the screen
+// with droneSpecB / armyB sees the same drone; outside the sortie it is exactly where it always was.
 import {V3, clamp, rnd} from '../../../kit/math';
 import {M} from '../../timing';
 import {CADENCE, HALT, STOP, SENTRY_T} from './beats';
@@ -207,7 +211,8 @@ export const heavySpecB = (i: number, T: number, o: Partial<HeavySpec> = {}): He
   const h = HEAVIES_B[i];
   const dR = restD('rear');
   const path: Path = (d) => ({pos: {x: h.rest.x - (d - dR), y: 0, z: h.rest.z}, heading: h.heading});
-  return {id: h.id, t: T, pos: h.rest, heading: h.heading, gait: {path, dist: groupD('rear', T), stride: 3.0}, ground, eye: T < heavyEyeOn(i) ? 'off' : 'cyan', ...o};
+  // distAt (R3): a halted walker puts its swinging foot down instead of holding it mid-step for the rest of the film
+  return {id: h.id, t: T, pos: h.rest, heading: h.heading, gait: {path, dist: groupD('rear', T), stride: 3.0, distAt: (t: number) => groupD('rear', t)}, ground, eye: T < heavyEyeOn(i) ? 'off' : 'cyan', ...o};
 };
 export const heavyEyeOn = (i: number) => eyeOnAt(HEAVIES_B[i].rest, HEAVIES_B[i].id) + 0.15;
 export const heavyPosB = (i: number, T: number) => heavyPos(HEAVIES_B[i], T);
