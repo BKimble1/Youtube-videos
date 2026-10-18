@@ -332,6 +332,21 @@ export const solve2 = (p: FigProps): Rig2 => {
   };
   const pnt = (q: V3): V3 => add3(root, vec(sub3(q, root)));
   const vb = (b: Basis): Basis => ({R: vec(b.R), U: vec(b.U), F: vec(b.F)});
+  // (R4) A leg whose knee or foot is nearer than the torso AND overlaps it on screen must be drawn over it, whatever the
+  // thigh's own angle to the view: the thigh-angle rule alone (ratio 0.68) flipped a reclined sitter's legs behind the
+  // torso for whole shots, and they vanished behind the shirt (the Director sliding down the slab in D4-9a). Pure depth
+  // + overlap, so it is true exactly when the leg would otherwise be hidden by the torso's own drawing.
+  const legOverTorso = (i: number): boolean => {
+    const a = pnt(P), b = pnt(neck);
+    const ax = b.x - a.x, ay = b.y - a.y, L2 = ax * ax + ay * ay;
+    if (L2 < 1) return false;
+    const tz = vec(sub3(at(P, up, 0, 70 * s, 0), root)).z;
+    return [pnt(knee[i]), pnt(ankle[i])].some((q) => {
+      const t = ((q.x - a.x) * ax + (q.y - a.y) * ay) / L2;
+      const perp = Math.abs((q.x - a.x) * ay - (q.y - a.y) * ax) / Math.sqrt(L2);
+      return t > 0.04 && t < 1 && perp < 84 * s && q.z > tz + 34 * s;
+    });
+  };
   const out: Rig2 = {
     root, P: pnt(P), base: vb(base), up: vb(up), head: vb(hb), s, ink: p.ink ?? 4 * s,
     hip: [pnt(hip[0]), pnt(hip[1])], knee: [pnt(knee[0]), pnt(knee[1])], ankle: [pnt(ankle[0]), pnt(ankle[1])],
@@ -346,7 +361,7 @@ export const solve2 = (p: FigProps): Rig2 => {
     // legs over the shirt's hem)
     // (only a thigh strongly toward the camera — sitting, a high step — is drawn over the hem with a rounded hip: at
     // R3a's 0.42 a stepping leg on a slope got it, and its inked hip arc showed on the jacket)
-    legFront: [0, 1].map((i) => knee[i].z - hip[i].z > 0.68 * THIGH * s && knee[i].z > torsoZ + 10 * s) as [boolean, boolean],
+    legFront: [0, 1].map((i) => (knee[i].z - hip[i].z > 0.68 * THIGH * s && knee[i].z > torsoZ + 10 * s) || legOverTorso(i)) as [boolean, boolean],
     id: (p.id ?? `f${p.seed ?? 1}`).replace(/[^a-zA-Z0-9_]/g, '_'), col: (c: string) => c, inkC: C.ink,
     loc: (l: Loc) => pnt(fromPivot(l)),
     torso: (l: Loc) => pnt(at(P, up, l.r * s, l.u * s, l.f * s)),

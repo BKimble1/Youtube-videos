@@ -153,11 +153,17 @@ export const DIR_CHEST: V3 = {x: 6.72, y: 0.66, z: 3.18};
 /** Where his eyes go: toward the sound of her (weakly), onto her face when she is there, slipping; none once still. */
 const dirGazeW = (T: number) => kn(T, [[186.9, 0.15], [187.6, 0.35], [188.6, 0.5], [189.25, 0.95], [190.6, 1], [191.6, 0.7], [194.0, 0.55], [195.6, 0.4], [M.EYES_CLOSE, 0]]);
 
+/** His feet (R4): on the ground in front of him, knees bent up between them. SLUMP's body-relative targets rotate with the
+ *  lean and left the feet ~0.3 m in the air (legs stretched at the camera), and a leg that points at the camera that
+ *  steeply foreshortened to nothing: the Director seemed to have no legs while he slid down the slab (D4-9a). */
+const DIR_FEET = {L: {fwd: 0.34, right: -0.17}, R: {fwd: 0.3, right: 0.21}};
+const dirFoot = (f: {fwd: number; right: number}): V3 => at3(DIR.pos, DIR.heading, f.fwd, f.right, 0.04);
+
 export const directorSpec = (T: number, anchor?: V3): FigSpec => {
   const s = dirBase(T);
   const h = dirHandR(T);
   const gw = dirGazeW(T);
-  return {...s, anchor, world: {handR: h.pos, orientR: h.orient}, ...(gw > 0.01 ? {gaze: pilotHead(T), gazeW: gw} : {})};
+  return {...s, anchor, world: {handR: h.pos, orientR: h.orient, footL: dirFoot(DIR_FEET.L), footR: dirFoot(DIR_FEET.R)}, ...(gw > 0.01 ? {gaze: pilotHead(T), gazeW: gw} : {})};
 };
 
 // ================================================================== the drone pilot (checker)
