@@ -120,9 +120,9 @@ const meshOut = (it: MeshItem, v: View, L: LightRig, mats: Record<string, Materi
   const R = m.radius * sc * (it.fn ? 1.5 : 1) + 0.5;
   const cv = toView(v, c0);
   if (!it.noCull && cv.z < -R) return;
-  const tanX = (v.W / 2) / v.focal, tanY = (v.H / 2) / v.focal;
+  const tanX = (v.W / 2) / v.focal, tanY = (v.H / 2) / v.focal, cy = v.sy / v.focal; // cy: the shift lens's off-axis centre
   if (!it.noCull && cv.z > 0) {
-    if (Math.abs(cv.x) - R > cv.z * tanX + R * 0.5 || Math.abs(cv.y) - R > cv.z * tanY + R * 0.5) return;
+    if (Math.abs(cv.x) - R > cv.z * tanX + R * 0.5 || Math.abs(cv.y - cv.z * cy) - R > cv.z * tanY + R * 0.5) return;
   }
   const vv = world.map((p) => toView(v, p));
   const sortKey = it.sortKey ?? m.sortKey ?? 'mean';

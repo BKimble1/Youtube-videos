@@ -11,7 +11,15 @@ export type Cam3 = {
   /** roll in degrees, positive = clockwise on screen */
   roll?: number;
   near?: number;
+  /**
+   * Shift-lens vertical correction 0..1 (default SHIFT_DEFAULT): the lens is levelled toward the horizon by this share of
+   * the camera's pitch (at most SHIFT_MAX_DEG) and the image is shifted so the target stays where it was framed. Verticals
+   * converge less, so buildings at the frame edges stop leaning (R2 read as a near-constant tilted camera). 0 = off.
+   */
+  shift?: number;
 };
+export const SHIFT_DEFAULT = 0.55;
+export const SHIFT_MAX_DEG = 12;
 
 export type View = {
   cam: Cam3;
@@ -20,6 +28,8 @@ export type View = {
   u: V3; // screen up
   f: V3; // forward (into the screen)
   focal: number; // pixels
+  /** principal-point offset (pixels, + = down) from the shift lens */
+  sy: number;
   W: number;
   H: number;
   near: number;
@@ -28,7 +38,20 @@ export type View = {
 export const WORLD_UP: V3 = {x: 0, y: 1, z: 0};
 
 export const makeView = (cam: Cam3, W = 1920, H = 1080): View => {
-  const f = norm3(sub3(cam.target, cam.pos));
+  const f0 = norm3(sub3(cam.target, cam.pos));
+  const fov = cam.fov ?? 38;
+  const focal = H / 2 / Math.tan(rad(fov) / 2);
+  // shift lens: level the axis by delta (toward the horizon), keep the target framed by moving the principal point
+  const theta = Math.asin(clamp(f0.y, -1, 1));
+  const kv = cam.shift ?? SHIFT_DEFAULT;
+  const delta = clamp(theta * kv, -rad(SHIFT_MAX_DEG), rad(SHIFT_MAX_DEG));
+  let f = f0, sy = 0;
+  if (Math.abs(delta) > 1e-6 && Math.abs(f0.y) < 0.995) {
+    const h = norm3({x: f0.x, y: 0, z: f0.z});
+    const th2 = theta - delta;
+    f = norm3({x: h.x * Math.cos(th2), y: Math.sin(th2), z: h.z * Math.cos(th2)});
+    sy = Math.tan(delta) * focal;
+  }
   let r = cross3(f, WORLD_UP);
   if (Math.hypot(r.x, r.y, r.z) < 1e-6) r = {x: 1, y: 0, z: 0}; // looking straight up/down
   r = norm3(r);
@@ -37,10 +60,9 @@ export const makeView = (cam: Cam3, W = 1920, H = 1080): View => {
     const a = rad(cam.roll);
     r = rotAxis(r, f, a);
     u = rotAxis(u, f, a);
+    // (with a roll the shift follows the rolled image axis)
   }
-  const fov = cam.fov ?? 38;
-  const focal = H / 2 / Math.tan(rad(fov) / 2);
-  return {cam, pos: cam.pos, r, u, f, focal, W, H, near: cam.near ?? 0.08};
+  return {cam, pos: cam.pos, r, u, f, focal, sy, W, H, near: cam.near ?? 0.08};
 };
 
 /** World → view space (x right, y up, z depth along the view axis). */
@@ -54,7 +76,7 @@ export type SP = {x: number; y: number; z: number; k: number};
 export const viewToScreen = (v: View, q: V3): SP => {
   const z = Math.max(q.z, 1e-4);
   const k = v.focal / z;
-  return {x: v.W / 2 + q.x * k, y: v.H / 2 - q.y * k, z: q.z, k};
+  return {x: v.W / 2 + q.x * k, y: v.H / 2 + v.sy - q.y * k, z: q.z, k};
 };
 export const project = (v: View, p: V3): SP => viewToScreen(v, toView(v, p));
 export const inFront = (v: View, p: V3) => toView(v, p).z > v.near;

@@ -267,10 +267,10 @@ export type ArmyDraw = {maxFull?: number; maxMid?: number; farFrom?: number; ctl
 /** Every machine of the army at film time T, LOD by distance to this view. */
 export const armyB = (v: View, T: number, o: ArmyDraw = {}): Item[] => {
   // only the units in (or just outside) the frame and at least a few pixels tall are solved and drawn
-  const tanX = (v.W / 2) / v.focal, tanY = (v.H / 2) / v.focal;
+  const tanX = (v.W / 2) / v.focal, tanY = (v.H / 2) / v.focal, cy = (v.sy ?? 0) / v.focal;
   const inView: Formation = {slots: (t) => ARMY_B.slots(t).filter((s) => {
     const q = toView(v, {x: s.pos.x, y: s.pos.y + 1.1, z: s.pos.z});
-    return q.z > 0.3 && Math.abs(q.x) < q.z * tanX * 1.1 + 2 && Math.abs(q.y) < q.z * tanY * 1.1 + 2 && (2.2 * v.focal) / q.z > 3;
+    return q.z > 0.3 && Math.abs(q.x) < q.z * tanX * 1.1 + 2 && Math.abs(q.y - q.z * cy) < q.z * tanY * 1.1 + 2 && (2.2 * v.focal) / q.z > 3;
   })};
   const items = armyItems(v, T, inView, {ground, maxFull: o.maxFull ?? 6, maxMid: o.maxMid ?? 40, farFrom: o.farFrom ?? 90, ctl: o.ctl ? (s) => o.ctl!(s.id) : undefined});
   HEAVIES_B.forEach((_, i) => {

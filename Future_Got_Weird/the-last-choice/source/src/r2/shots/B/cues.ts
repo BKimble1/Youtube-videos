@@ -1,9 +1,9 @@
-// Section B sound cues (film seconds). Pure data: // R3: effort sounds (breaths, groans) lowered 6–8 dB and the long loops shortened: they sat above the score's quiet
-// opening solo (measured, and reported by ear). The score leads; the breaths stay with him, not over the music.
-import only timing/constants here, never components (this file is
+// Section B sound cues (film seconds). Pure data: import only timing/constants here, never components (this file is
 // bundled into the mixer's timing.json by tools/r2/collect_timing_r2.mjs). The global cues (eyes_on at H1, army_halt
 // at H4, the army_march bed from ORCH) live in src/r2/sound.ts and are not repeated here.
 // pan = screen x of the source (−1 left … 1 right), dist = camera distance (0 close … 1 far).
+// R3: effort sounds (breaths, groans) lowered 6–8 dB and the long loops shortened: they sat above the score's quiet
+// opening solo (measured, and reported by ear). The score leads; the breaths stay with him, not over the music.
 import type {Cue} from '../../../film/cue';
 import {M} from '../../timing';
 import {TB, beat, STOP} from './beats';
