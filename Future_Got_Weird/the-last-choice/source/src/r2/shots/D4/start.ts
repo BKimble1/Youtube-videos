@@ -27,6 +27,7 @@
 import type {V3} from '../../../kit/math';
 import {groundH} from '../../world/ground';
 import type {Role2} from '../../rig/looks';
+import {pushOut} from './obstacles';
 
 const on = (x: number, z: number): V3 => ({x, y: groundH(x, z), z});
 
@@ -69,16 +70,18 @@ export const ARC_START: ArcStart[] = [
   {id: 7223, role: 'ring', bearing: 18, r: 9.6}, {id: 7222, role: 'ring', bearing: 44, r: 10.4}, {id: 7221, role: 'ring', bearing: 66, r: 11.2},
   {id: 7220, role: 'ring', bearing: 84, r: 9.0}, {id: 7219, role: 'ring', bearing: 98, r: 11.4},
   {id: 7200, role: 'ring', bearing: 126, r: 10.2}, {id: 7201, role: 'ring', bearing: 138, r: 12.0}, {id: 7202, role: 'ring', bearing: 158, r: 10.8},
-  {id: 7203, role: 'ring', bearing: 168, r: 12.6}, {id: 7204, role: 'ring', bearing: 176, r: 9.8}, {id: 7205, role: 'ring', bearing: 186, r: 11.6},
+  {id: 7203, role: 'ring', bearing: 166, r: 11.4}, {id: 7204, role: 'ring', bearing: 176, r: 9.8}, {id: 7205, role: 'ring', bearing: 186, r: 11.6},
   {id: 7104, role: 'H4 — later presses the breaker down (182.3)', bearing: 120, r: 13.6},
   {id: 7103, role: 'H3 — later twists the flare carrier\'s arm (181.7)', bearing: 150, r: 14.2},
   {id: 7102, role: 'H2 — later holds the decoy maker (181.0)', bearing: 102, r: 14.6},
   {id: 7312, role: 'outer', bearing: 24, r: 14.8}, {id: 7311, role: 'outer', bearing: 52, r: 15.6}, {id: 7310, role: 'outer', bearing: 74, r: 16.0},
-  {id: 7300, role: 'outer', bearing: 132, r: 16.4}, {id: 7301, role: 'outer', bearing: 162, r: 15.4}, {id: 7302, role: 'outer', bearing: 182, r: 16.2},
+  {id: 7300, role: 'outer', bearing: 132, r: 15.0}, {id: 7301, role: 'outer', bearing: 160, r: 12.6}, {id: 7302, role: 'outer', bearing: 184, r: 14.2},
 ];
 const hv = (h: number) => ({x: Math.sin((h * Math.PI) / 180), z: -Math.cos((h * Math.PI) / 180)});
 /** an arc unit's start position (on the ground) and heading (facing the Crew's centre) */
 export const arcStartPos = (a: ArcStart): {pos: V3; heading: number} => {
   const d = hv(a.bearing);
-  return {pos: on(ARC_C.x + d.x * a.r, ARC_C.z + d.z * a.r), heading: (a.bearing + 180) % 360};
+  // (clear of the set's solid pieces: the crater's plates on the rim, the facade spill, D1's wrecks)
+  const p = pushOut({x: ARC_C.x + d.x * a.r, z: ARC_C.z + d.z * a.r}, 0.5, {stepH: 0.1, T: START_T});
+  return {pos: on(p.x, p.z), heading: (a.bearing + 180) % 360};
 };

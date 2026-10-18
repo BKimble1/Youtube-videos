@@ -12,7 +12,7 @@ import {persistItems, persistAt} from '../../film/continuity';
 import {FxOut} from '../../fx';
 import {ringSpecs, holderSpecs, heavy1Spec, streamForm, TB_RESERVE, Holder} from '../EF/tableau';
 import {gripAt} from '../EF/crew';
-import {NAMED, RING_PLANS, RING_SET, HOLDER_FINAL, unitAt, heavy2At, droneD4, DRONE_IDS} from './machines';
+import {NAMED, RING_PLANS, RING_SET, RING_IN, HOLDER_FINAL, unitAt, heavy2At, droneD4, DRONE_IDS, ringExtras} from './machines';
 import {crewAt, ROLES} from './crew';
 import {d4Fx} from './fx';
 import {G} from './motion';
@@ -61,7 +61,13 @@ export const unitSpecsAt = (T: number): {name: string; spec: UnitSpec}[] => {
     const f = HOLDER_FINAL[pl.id];
     out.push({name, spec: f !== undefined && T >= f ? hold.get(pl.id)! : unitAt(pl, T)});
   });
-  RING_PLANS.forEach((pl) => out.push({name: String(pl.id), spec: T >= RING_SET[pl.id] ? ring.get(pl.id)! : unitAt(pl, T)}));
+  RING_PLANS.forEach((pl) => {
+    if (T < RING_SET[pl.id]) { out.push({name: String(pl.id), spec: unitAt(pl, T)}); return; }
+    // set in its slot: the tableau's own spec, plus D4's scan and attention (they end before the tableau's securing)
+    const r = ring.get(pl.id)!, x = ringExtras(pl.id, RING_IN[pl.id]);
+    const sc = r.scan ? (Array.isArray(r.scan) ? r.scan : [r.scan]) : [];
+    out.push({name: String(pl.id), spec: {...r, scan: [x.scan as NonNullable<UnitSpec['scan']> & object, ...sc] as UnitSpec['scan'], attend: [...(x.attend ?? []), ...(r.attend ?? [])]}});
+  });
   return out;
 };
 

@@ -1,6 +1,6 @@
 // Section C shots: C1 the turn (BASS_OUT), C2 his POV (ALLY1), C3 the vault and the climb (ALLY2a/b), C4 the rest
-// arrive (MARCH), C5 three close-ups (the hand on the shoulder, the reel, the strap), C6 the group frame (ASSEMBLE →
-// the shared turn, the hold, the step forward on the build) — all sampling one choreography (crew.ts).
+// arrive (MARCH), C5 three close-ups (the hand on the shoulder, the reel, the strap), C6 ASSEMBLE → CHARGE in four
+// (the turn, the tools readied, the threat, the commit) — all sampling one choreography (crew.ts).
 import React from 'react';
 import {Stage, useShotTime, camPath} from '../../film/stage';
 import {V3, add3} from '../../../kit/math';
@@ -8,8 +8,9 @@ import type {Item, View} from '../../engine';
 import {combine} from '../../fx';
 import {motes} from '../B/kit';
 import {CUT} from './beats';
-import {crewItems, droneFx, dustFx, setC, armyC, C_COLUMNS} from './kit';
-import {CAM_C1, CAM_C2, CAM_C3, CAM_C4A, CAM_C4B, CAM_C5A, CAM_C5B, CAM_C5C, CAM_C6} from './cams';
+import {crewItems, droneFx, dustFx, setC, armyC, armyDustFx, C_COLUMNS} from './kit';
+import {B_COLUMNS} from '../B/kit';
+import {CAM_C1, CAM_C2, CAM_C3, CAM_C4A, CAM_C4B, CAM_C5A, CAM_C5B, CAM_C5C, CAM_C6A, CAM_C6B, CAM_C6C, CAM_C6D} from './cams';
 import {crewC} from './crew';
 
 const head = (T: number, up = 1.55): V3 => { const b = crewC(T).director.body.pos; return {x: b.x, y: b.y + up, z: b.z}; };
@@ -93,11 +94,37 @@ export const ShotC5c: React.FC = () => {
   return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.008} atmos={{smoke: 0.6, haze: 0.15}} vignette={0.62} />;
 };
 
-// ------------------------------------------------------------------ C6
-export const ShotC6: React.FC = () => {
+// ------------------------------------------------------------------ C6 (ASSEMBLE → CHARGE: no held lineup)
+// C6a the shared turn (low, in front); C6b the tools readied (a track along the line); C6c the threat (over his
+// shoulder: their front rank breaks into its run); C6d the commit (he steps out, they step up, the set, the first
+// stride) — D1-1 cuts in on the stride.
+export const ShotC6a: React.FC = () => {
   const {t, T} = useShotTime(CUT.c6);
-  const cam = camPath(CAM_C6, t, 0.35);
+  const cam = camPath(CAM_C6A, t, 0.4);
   const f = combine(droneFx(T), dustFx(T));
   const items = (v: View): Item[] => [...setC(v, T), ...crewItems(v, T), ...f.items];
-  return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.016} atmos={{smoke: 0.9, haze: 0.12}} vignette={0.55} />;
+  return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.014} atmos={{smoke: 0.85, haze: 0.12}} vignette={0.55} />;
+};
+export const ShotC6b: React.FC = () => {
+  const {t, T} = useShotTime(CUT.c6b);
+  const cam = camPath(CAM_C6B, t, 0.25);
+  const f = combine(droneFx(T), dustFx(T));
+  const c = crewC(T);
+  const up = (r: 'decoy' | 'flares' | 'breaker' | 'drone') => add3(c[r].body.pos, {x: 0, y: 1.2, z: 0});
+  const items = (v: View): Item[] => [...setC(v, T), ...crewItems(v, T, {anchor: {decoy: up('decoy'), flares: up('flares'), breaker: up('breaker'), drone: up('drone')}}), ...f.items];
+  return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.012} atmos={{smoke: 0.7, haze: 0.12}} vignette={0.6} />;
+};
+export const ShotC6c: React.FC = () => {
+  const {t, T} = useShotTime(CUT.c6c);
+  const cam = camPath(CAM_C6C, t, 0.5);
+  const f = combine(droneFx(T), armyDustFx(T));
+  const items = (v: View): Item[] => [...setC(v, T), ...crewItems(v, T, {only: ['director'], anchor: {director: head(T, 1.4)}}), ...armyC(v, T, {full: 0, far: 140, maxMid: 40, farFrom: 140}), ...f.items];
+  return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.008} atmos={{columns: B_COLUMNS, smoke: 0.35, haze: 0.08}} vignette={0.6} />;
+};
+export const ShotC6d: React.FC = () => {
+  const {t, T} = useShotTime(CUT.c6d);
+  const cam = camPath(CAM_C6D, t, 0.4);
+  const f = combine(droneFx(T), dustFx(T));
+  const items = (v: View): Item[] => [...setC(v, T), ...crewItems(v, T, {anchor: {director: head(T, 1.2)}}), ...f.items];
+  return <Stage T={T} cam={cam} items={items} lights={f.lights} drift={0.02} atmos={{smoke: 0.8, haze: 0.12}} vignette={0.55} />;
 };

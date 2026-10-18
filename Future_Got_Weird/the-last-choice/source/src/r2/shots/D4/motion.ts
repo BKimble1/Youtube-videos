@@ -174,6 +174,31 @@ export const linePath = (pts: XZ[], turn = 1.4) => {
 };
 
 /**
+ * Polyline path whose heading is the chord direction across ±half m of path (continuous for any segment lengths: a
+ * routed path's short legs never twist the walker in one frame). Positions are on the polyline. Same contract as
+ * linePath (d → point and heading); beyond the ends the end heading holds.
+ */
+export const chordPath = (pts: XZ[], half = 0.7) => {
+  const segs = pts.slice(1).map((p, i) => ({a: pts[i], b: p, L: Math.max(1e-6, Math.hypot(p.x - pts[i].x, p.z - pts[i].z))}));
+  const total = segs.reduce((s, q) => s + q.L, 0);
+  const at = (d: number): XZ => {
+    let r = clamp(d, 0, total);
+    for (let i = 0; i < segs.length; i++) {
+      const s = segs[i];
+      if (r <= s.L || i === segs.length - 1) { const u = clamp(r / s.L); return {x: lerp(s.a.x, s.b.x, u), z: lerp(s.a.z, s.b.z, u)}; }
+      r -= s.L;
+    }
+    return pts[pts.length - 1];
+  };
+  return (d: number): {pos: V3; heading: number} => {
+    const p = at(d);
+    const h0 = Math.max(0, Math.min(total - 2 * half, d - half)), h1 = Math.min(total, Math.max(2 * half, d + half));
+    const a = at(h0), b = at(h1);
+    return {pos: {x: p.x, y: 0, z: p.z}, heading: headingTo(a, b)};
+  };
+};
+
+/**
  * A path re-parameterised by "gait distance": steep ground (the crater's inner slope, the rim) costs more gait distance
  * per metre, so a gait with a fixed stride takes shorter steps there and a run with a fixed profile in gait distance
  * slows on the climb. `k` = extra gait metres per metre per unit of |slope| above `flat`; `cap` = max density.

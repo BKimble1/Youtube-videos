@@ -128,8 +128,10 @@ export const d4Fx = (T: number): FxOut => {
   // ---- D4-8 THE STRIKE: the ram meets the plate, the plate shatters; he is thrown into the slab
   if (T > EV.strike - 0.1 && T < EV.strike + 4) {
     out.push(plateHit({at: STRIKE_PLATE, normal: {x: 0.15, y: 0.75, z: -0.65}, t: T, t0: EV.strike, key: 'd4strike', stage: 'shatter', ground: ground(STRIKE_PLATE), seed: 201}));
-    out.push(fx(flash3({at: STRIKE_PLATE, t: T, t0: EV.strike, key: 'd4strfl', r: 0.9, dur: 0.1, color: '#FFF6DE'}), T < EV.strike + 0.12 ? [{pos: add3(STRIKE_PLATE, {x: 0.4, y: 0.2, z: 0}), color: '#FFE9C0', power: 1.6, radius: 7}] : []));
-    out.push(fx(ring3({at: STRIKE_PLATE, normal: {x: 1, y: 0.1, z: 0}, t: T, t0: EV.strike, key: 'd4strr', r0: 0.15, speed: 9, dur: 0.2, width: 0.07})));
+    // (a small, short flash on the ram's side of the plate: the ram head, the plate's fragments and his arm stay
+    // readable at the contact — the force reads from his flight, not from a white-out)
+    out.push(fx(flash3({at: add3(STRIKE_PLATE, {x: 0.12, y: 0.04, z: 0}), t: T, t0: EV.strike, key: 'd4strfl', r: 0.38, dur: 0.05, color: '#FFF0D0', core: 0.12}), T < EV.strike + 0.08 ? [{pos: add3(STRIKE_PLATE, {x: 0.4, y: 0.2, z: 0}), color: '#FFE9C0', power: 0.9, radius: 6}] : []));
+    out.push(fx(ring3({at: STRIKE_PLATE, normal: {x: 1, y: 0.1, z: 0}, t: T, t0: EV.strike, key: 'd4strr', r0: 0.12, speed: 8, dur: 0.16, width: 0.05})));
     out.push(fx([], [], shakeAt(T, EV.strike, 0.2, 5)));
     // the slab: his back slams into it — concrete dust and grit off its face
     // (at his mid-back against the slab face, spraying up along it: it must not cloud his head)
@@ -138,6 +140,13 @@ export const d4Fx = (T: number): FxOut => {
     out.push(fx([], [], shakeAt(T, EV.slam, 0.07)));
     // his feet scrape in front of the slab as they come down
     out.push(bodyDust(T, {x: SLAM.x + 0.15, y: 0, z: SLAM.z}, EV.slam + 0.03, 'd4slf', 213, 0.8));
+  }
+  // ---- D4-8 his legs go (178.35): his heels scrape forward in front of the slab
+  if (T > EV.kneesGo - 0.05 && T < EV.kneesGo + 2) out.push(bodyDust(T, {x: SLAM.x + 0.35, y: 0, z: SLAM.z + 0.05}, EV.kneesGo + 0.08, 'd4knee', 215, 0.6));
+  // ---- D4-9 he tries to push himself up (the palm on the street, grit under it), and cannot
+  if (T > EV.tryRise && T < EV.tryRiseEnd + 2) {
+    const d = crewAt('director', EV.tryRise + 0.45).spec.world?.handL;
+    if (d) out.push(bodyDust(T, {x: d.x, y: 0, z: d.z}, EV.tryRise + 0.4, 'd4rise', 217, 0.45));
   }
   // ---- D4-9 the slide down the slab: grit trickles, a puff as he sits
   if (T > EV.slide && T < EV.slideEnd + 2.5) {

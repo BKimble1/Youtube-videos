@@ -14,7 +14,7 @@ import {armyItems, heavy, drone} from '../../mech';
 import type {UnitSpec, HeavySpec, Formation} from '../../mech';
 import {groundH} from '../../world/ground';
 import {dirB, REBAR, REBAR_PULL, rebarFlex, TB} from './director';
-import {ARMY_B, HEAVIES_B, DRONES_B, heavySpecB, droneSpecB} from './army';
+import {ARMY_B, HEAVIES_B, DRONES_B, heavySpecB, droneSpecB, SENTRY_B, groupD} from './army';
 
 const ground = (x: number, z: number) => groundH(x, z);
 
@@ -24,7 +24,7 @@ export const dirSpec = (T: number, o: {anchor?: V3; bias?: number; key?: string}
   return {
     key: o.key ?? 'dirB', look: lookR2('director'), t: T, seed: 11, pos: d.pos, heading: d.heading,
     pose: {...d.pose, wearL: plateWear(toolsR2('director', T).plate ?? 'intact'), dmg: dmgR2('director', T)},
-    world: d.world, anchor: o.anchor, bias: o.bias, reach: d.reach,
+    world: d.world, anchor: o.anchor, bias: o.bias, reach: d.reach, gaze: d.gaze, gazeW: d.gazeW,
   };
 };
 export const dirSprite = (T: number, o: {anchor?: V3; bias?: number; key?: string} = {}): SpriteItem => ({...figureSprite(dirSpec(T, o)), noCull: true});
@@ -206,7 +206,7 @@ void Figure;
 export const rebarItems = (T: number, o: {bias?: number} = {}): Item[] => {
   const b = REBAR.base;
   const flex = rebarFlex(T);
-  const lump: MeshItem = {kind: 'mesh', mesh: chunkMesh(27, 'concreteDark'), key: 'bRebLump', xf: {pos: {x: b.x, y: b.y - 0.12, z: b.z}, scale: 0.62, yaw: 40}, bias: o.bias};
+  const lump: MeshItem = {kind: 'mesh', mesh: chunkMesh(27, 'concreteDark'), key: 'bRebLump', xf: {pos: {x: b.x, y: b.y - 0.1, z: b.z}, scale: 0.4, yaw: 40}, bias: o.bias};
   const bars: Item[] = [];
   const dirs: [number, number, number, number][] = [[0.02, 1, 0.03, 0.6], [0.25, 1, -0.2, 0.5], [-0.3, 1, 0.18, 0.42], [0.15, 1, 0.3, 0.36]];
   dirs.forEach(([dx, dy, dz, L], i) => {
@@ -262,8 +262,32 @@ export const B_BANK: {key: string; base: V3; o: ColumnOpts}[] = [
   {key: 'bBk2', base: {x: 115, y: 0.2, z: 5}, o: {n: 7, life: 16, rise: 0.3, r0: 3, r1: 7.5, drift: 0.6, dark: 0.12, alpha: 0.42, warm: 0, seed: 36}},
 ];
 
+/**
+ * The smoke behind him to the west (B5a, B5b, B6a, and the backdrop of his silhouette): the collapsed building's
+ * rubble smoulders — low smoke lying in the ruin (the same four banks as section C's C_COLUMNS: the Crew come out of
+ * them) and four plumes rising out of the ruin's broken floors behind it, leaning north-east with the wind. ATMOS's
+ * plume look (one connected silhouette per plume, billows rolling up it), backlit by the low sun from the crane.
+ */
+export const B_WEST_SMOKE: {key: string; base: V3; o: ColumnOpts}[] = [
+  {key: 'cRu1', base: {x: -19.4, y: 0.9, z: -2.0}, o: {n: 7, life: 15, rise: 0.22, r0: 2.0, r1: 4.6, drift: 0.32, dark: 0.12, alpha: 0.5, warm: 0.12, seed: 41}},
+  {key: 'cRu2', base: {x: -20.2, y: 1.0, z: 2.6}, o: {n: 7, life: 15, rise: 0.22, r0: 2.0, r1: 4.6, drift: 0.32, dark: 0.14, alpha: 0.48, warm: 0.12, seed: 42}},
+  {key: 'cRu3', base: {x: -18.8, y: 0.8, z: -5.6}, o: {n: 5, life: 14, rise: 0.25, r0: 1.8, r1: 4.2, drift: 0.35, dark: 0.18, alpha: 0.42, warm: 0.1, seed: 43}},
+  {key: 'cSW1', base: {x: -13.2, y: 0.6, z: 14.4}, o: {n: 6, life: 14, rise: 0.3, r0: 1.8, r1: 4.4, drift: 0.45, dark: 0.18, alpha: 0.5, warm: 0.15, seed: 45}},
+  // right behind him from the crane: a pale bank of brick dust off the ruin's near edge, lit through by the low sun
+  // (his silhouette's backdrop)
+  {key: 'bWd', base: {x: -9.5, y: 1.4, z: 1.0}, o: {life: 16, rise: 0.9, r0: 2.6, r1: 6.2, drift: 0.55, dark: 0.04, alpha: 0.92, warm: 0.55, seed: 50}},
+  {key: 'bWe', base: {x: -12.5, y: 1.2, z: 7.0}, o: {life: 15, rise: 0.8, r0: 2.4, r1: 5.4, drift: 0.5, dark: 0.08, alpha: 0.9, warm: 0.5, seed: 49}},
+  {key: 'bW1', base: {x: -26, y: 2.5, z: -9}, o: {life: 20, rise: 1.6, r0: 2.4, r1: 8.5, drift: 0.9, dark: 0.32, alpha: 0.9, warm: 0.35, seed: 51}},
+  {key: 'bW2', base: {x: -30, y: 2.0, z: 5}, o: {life: 22, rise: 1.45, r0: 2.8, r1: 9.5, drift: 1.0, dark: 0.42, alpha: 0.9, warm: 0.3, seed: 52}},
+  {key: 'bW3', base: {x: -22, y: 3.0, z: 16}, o: {life: 18, rise: 1.25, r0: 2.0, r1: 6.5, drift: 0.8, dark: 0.28, alpha: 0.85, warm: 0.35, seed: 53}},
+  {key: 'bW4', base: {x: -33, y: 2.0, z: -19}, o: {life: 20, rise: 1.8, r0: 3.0, r1: 10, drift: 1.1, dark: 0.5, alpha: 0.9, warm: 0.25, seed: 54}},
+];
+
 // ------------------------------------------------------------------ the army
-export type ArmyDraw = {maxFull?: number; maxMid?: number; farFrom?: number; ctl?: (id: number) => Partial<UnitSpec>; heavy?: (i: number) => Partial<HeavySpec>; heavyLod?: (i: number, d: number) => 'full' | 'mid' | 'far'; drones?: boolean};
+export type ArmyDraw = {maxFull?: number; maxMid?: number; farFrom?: number; ctl?: (id: number) => Partial<UnitSpec>; heavy?: (i: number) => Partial<HeavySpec>; heavyLod?: (i: number, d: number) => 'full' | 'mid' | 'far'; drones?: boolean;
+  /** give these heavies' gait the march clock (gait.distAt): exact footfalls (dust, ground shake) and, once halted, the
+   *  swinging foot comes down (heavySpecB's default leaves it as R2 had it) */
+  heavyDistAt?: (i: number) => boolean};
 /** Every machine of the army at film time T, LOD by distance to this view. */
 export const armyB = (v: View, T: number, o: ArmyDraw = {}): Item[] => {
   // only the units in (or just outside) the frame and at least a few pixels tall are solved and drawn
@@ -274,7 +298,8 @@ export const armyB = (v: View, T: number, o: ArmyDraw = {}): Item[] => {
   })};
   const items = armyItems(v, T, inView, {ground, maxFull: o.maxFull ?? 6, maxMid: o.maxMid ?? 40, farFrom: o.farFrom ?? 90, ctl: o.ctl ? (s) => o.ctl!(s.id) : undefined});
   HEAVIES_B.forEach((_, i) => {
-    const sp = heavySpecB(i, T, o.heavy ? o.heavy(i) : {});
+    const sp0 = heavySpecB(i, T, o.heavy ? o.heavy(i) : {});
+    const sp = o.heavyDistAt?.(i) && sp0.gait ? {...sp0, gait: {...sp0.gait, distAt: (t: number) => groupD('rear', t)}} : sp0;
     const p = sp.gait!.path(sp.gait!.dist).pos;
     const d = Math.hypot(p.x - v.pos.x, p.z - v.pos.z);
     items.push(...heavy({...sp, lod: o.heavyLod ? o.heavyLod(i, d) : d < 45 ? 'full' : d < 140 ? 'mid' : 'far'}));
@@ -282,6 +307,8 @@ export const armyB = (v: View, T: number, o: ArmyDraw = {}): Item[] => {
   if (o.drones !== false) DRONES_B.forEach((_, i) => {
     const sp = droneSpecB(i, T);
     const d = Math.hypot(sp.pos.x - v.pos.x, sp.pos.z - v.pos.z);
+    // the sentry (B6) flies through every distance on screen: always full detail at its true size (no LOD pop)
+    if (i === SENTRY_B) { items.push(...drone({...sp, lod: 'full', scale: 1})); return; }
     items.push(...drone({...sp, lod: d < 30 ? 'full' : 'far', scale: d < 30 ? 1 : 1.5}));
   });
   return items;

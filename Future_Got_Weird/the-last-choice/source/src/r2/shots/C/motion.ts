@@ -286,7 +286,7 @@ export type Seg =
   | {kind: 'stand'; root: KR[]; feet: {L: KP[]; R: KP[]}}
   | {kind: 'fn'; T0: number; at: (T: number) => Body};
 
-export type Body = {pos: V3; heading: number; footL: V3; footR: V3; gait?: Pose; runK: number; seg: number; inWalk: boolean; phase?: number; slope?: number; swingL?: number; swingR?: number};
+export type Body = {pos: V3; heading: number; footL: V3; footR: V3; gait?: Pose; runK: number; seg: number; inWalk: boolean; phase?: number; slope?: number; swingL?: number; swingR?: number; /** climbing effort 0..1 (climbs) */ climb?: number};
 
 export const walkSeg = (pts: XZ[], T0: number, T1: number, gait: GaitW, o: {A?: number; D?: number; turn?: number; k?: number} = {}): Extract<Seg, {kind: 'walk'}> =>
   ({kind: 'walk', path: warpPath(polyPath(pts, o.turn ?? 0.7), {k: o.k}), T0, T1, gait, A: o.A, D: o.D});
@@ -302,7 +302,11 @@ const walkAt = (s: Extract<Seg, {kind: 'walk'}>, T: number) => {
 const standAt = (s: Extract<Seg, {kind: 'stand'}>, T: number): Body => {
   const r = keyRoot(s.root, T);
   const fl = footAt(s.feet.L, T), fr = footAt(s.feet.R, T);
-  return {pos: {x: r.p.x, y: GC(r.p.x, r.p.z), z: r.p.z}, heading: r.h, footL: fl, footR: fr, runK: 0, seg: 0, inWalk: false, swingL: fl.swing, swingR: fr.swing};
+  // the root rides the ground under it, kept within the feet's heights (a step down off a ledge — the slab's edge —
+  // lowers the body with the stepping foot instead of dropping it when the root crosses the edge)
+  const lo = Math.min(fl.y - fl.swing * 0.2, fr.y - fr.swing * 0.2), hi = Math.max(fl.y, fr.y);
+  const y = clamp(GC(r.p.x, r.p.z), Math.min(lo, hi), hi);
+  return {pos: {x: r.p.x, y, z: r.p.z}, heading: r.h, footL: fl, footR: fr, runK: 0, seg: 0, inWalk: false, swingL: fl.swing, swingR: fr.swing};
 };
 const mixFoot = (a: V3, b: V3, w: number): V3 => {
   const x = lerp(a.x, b.x, w), z = lerp(a.z, b.z, w);
@@ -350,3 +354,222 @@ export const bodyAt = (segs: Seg[], T: number): Body => {
   }
   return {...b, seg: i};
 };
+
+// ------------------------------------------------------------------ climbs (R3): planted foot, weight transfer, new step
+// A climb is a sequence of discrete steps up footholds on GC (never a walk cycle translated uphill). Each step: the
+// trailing foot leaves its hold and swings up (on a step-up the knee comes up first, then the foot reaches over onto the
+// new hold) while the weight sits over the planted foot; the foot plants; then the body pushes up and forward over it
+// (the root rises AFTER the plant). On steep steps most of the body's travel happens in the push, so the body visibly
+// works up the slope a step at a time; on gentle ground the progress evens out into a walk. Steps are shorter where the
+// rubble is steep (the rise per step is capped) and take longer the more they climb. Palms can be planted on the rubble
+// ahead of a step (scrambling), and the climb ends with the feet set side by side (the next stand starts from them).
+export type ClimbStep = {
+  foot: 'L' | 'R'; from: V3; to: V3; other: V3;
+  /** start, plant (the moving foot lands), end (the push is over) */
+  a: number; plant: number; b: number;
+  /** rise of the new hold over the planted one (m), its steepness 0..1, the ground's slope between the holds */
+  rise: number; steep: number; slope: number;
+  /** root before / after the step, headings */
+  r0: V3; r1: V3; h0: number; h1: number;
+};
+export type HandPlant = {side: 'L' | 'R'; p: V3; on: number; off: number; step: number};
+export type Climb = {T0: number; T1: number; steps: ClimbStep[]; hands: HandPlant[]; end: {x: number; z: number; h: number}; feetEnd: {L: V3; R: V3}; start: {pos: V3; heading: number; footL: V3; footR: V3}};
+export type ClimbOpts = {
+  /** the body and feet when the climb starts (the previous segment at T0) */
+  start: {pos: V3; heading: number; footL: V3; footR: V3};
+  /** longest step along the path (m), largest rise per step (m), the holds' half-width (m) */
+  stepLen?: number; maxRise?: number; hip?: number; turn?: number;
+  /** palms on the rubble ahead of step i's new hold (fwd/out in metres from it; hold = extra s it stays) */
+  hands?: {step: number; side: 'L' | 'R'; fwd?: number; out?: number; hold?: number}[];
+  /** or: a palm on the n biggest step-ups (rise ≥ minRise, at least 3 steps apart) */
+  autoHands?: {side: 'L' | 'R'; n: number; minRise?: number; fwd?: number; out?: number};
+  /** weight shift before the first step (s) */
+  lead?: number;
+  /** heading the last (square-up) step turns to */
+  endHeading?: number;
+};
+const distOnPath = (pts: XZ[], p: XZ): number => {
+  let best = 1e9, bestD = 0, acc = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i];
+    const L = Math.hypot(b.x - a.x, b.z - a.z) || 1e-6;
+    const u0 = ((p.x - a.x) * (b.x - a.x) + (p.z - a.z) * (b.z - a.z)) / (L * L);
+    const u = i === 1 ? Math.min(1, u0) : clamp(u0); // (behind the start: negative, so the foot further back steps first)
+    const q = {x: lerp(a.x, b.x, u), z: lerp(a.z, b.z, u)};
+    const d = Math.hypot(p.x - q.x, p.z - q.z) + (u < 0 ? 0 : 0);
+    if (d < best - 1e-9 || (i === 1 && u < 0 && d <= best)) { best = d; bestD = acc + u * L; }
+    acc += L;
+  }
+  return bestD;
+};
+export const climbPlan = (pts: XZ[], T0: number, T1: number, o: ClimbOpts): Climb => {
+  const path = polyPath(pts, o.turn ?? 0.5);
+  const L = path.L;
+  const stepLen = o.stepLen ?? 0.46, maxRise = o.maxRise ?? 0.24, hip = o.hip ?? 0.13;
+  const hold = (d: number, side: number): V3 => {
+    const q = path.fn(clamp(d, 0, L));
+    const r = rightOf(q.heading);
+    const x = q.x + r.x * hip * side, z = q.z + r.z * hip * side;
+    return {x, y: GC(x, z), z};
+  };
+  const s0 = o.start;
+  const onGround = (p: V3) => ({x: p.x, y: GC(p.x, p.z), z: p.z});
+  let pL = s0.footL, pR = s0.footR;
+  let dL = distOnPath(pts, pL), dR = distOnPath(pts, pR);
+  const airL = pL.y - GC(pL.x, pL.z) > 0.025, airR = pR.y - GC(pR.x, pR.z) > 0.025;
+  type Raw = {foot: 'L' | 'R'; from: V3; to: V3; other: V3; dNew: number; last: boolean};
+  const raw: Raw[] = [];
+  for (let n = 0; n < 80; n++) {
+    let moveL = dL <= dR;
+    if (n === 0 && (airL || airR)) moveL = airL; // a foot still in the air from the walk moves first
+    const dOther = moveL ? dR : dL, pOther = moveL ? pR : pL, side = moveL ? -1 : 1;
+    if (dOther >= L - 1e-4) {
+      raw.push({foot: moveL ? 'L' : 'R', from: moveL ? pL : pR, to: hold(L, side), other: pOther, dNew: L, last: true});
+      break;
+    }
+    let s = stepLen, dn = Math.min(L, dOther + s), to = hold(dn, side);
+    while (s > 0.2 && to.y - pOther.y > maxRise) { s -= 0.025; dn = Math.min(L, dOther + s); to = hold(dn, side); }
+    if (L - dn < 0.2) { dn = L; to = hold(L, side); }
+    raw.push({foot: moveL ? 'L' : 'R', from: moveL ? pL : pR, to, other: pOther, dNew: dn, last: false});
+    if (moveL) { dL = dn; pL = to; } else { dR = dn; pR = to; }
+  }
+  // the first mover may start in the air: its swing starts where it is
+  const lead = o.lead ?? 0.1;
+  const costs = raw.map((r) => {
+    const rise = r.to.y - r.other.y, trav = Math.hypot(r.to.x - r.from.x, r.to.z - r.from.z);
+    return 0.36 + 0.42 * Math.min(2, trav / stepLen) * 0.5 + 1.7 * Math.max(0, rise) + 0.4 * Math.max(0, -rise) + (r.last ? -0.08 : 0);
+  });
+  const span = T1 - T0 - lead;
+  // no step quicker than 0.2 s (the last, a small square-up, 0.24 s): raise the cheap ones and rescale the rest
+  for (let it = 0; it < 4; it++) {
+    const tot = costs.reduce((a, b) => a + b, 0);
+    costs.forEach((c, i) => { const mn = (raw[i].last ? 0.24 : 0.2) * tot / span; if (c < mn) costs[i] = mn; });
+  }
+  const total = costs.reduce((a, b) => a + b, 0);
+  let t = T0 + lead;
+  const endH = o.endHeading ?? path.fn(L).heading;
+  let rPrev: V3 = s0.pos, hPrev = s0.heading;
+  const steps: ClimbStep[] = raw.map((r, i) => {
+    const a = t, b = t + (costs[i] / total) * span;
+    t = b;
+    const rise = r.to.y - r.other.y;
+    const trav = Math.hypot(r.to.x - r.other.x, r.to.z - r.other.z);
+    const slope = rise / Math.max(0.12, trav);
+    const steep = clamp(rise / 0.2);
+    const plant = a + (b - a) * (0.4 + 0.14 * steep);
+    // after the push: the weight over the new foot (between the holds, toward the new one); the last step squares up
+    let r1: V3, h1: number;
+    if (r.last) {
+      const e = path.fn(L);
+      r1 = {x: e.x, y: GC(e.x, e.z), z: e.z};
+      h1 = endH;
+    } else {
+      const k = 0.6;
+      const x = lerp(r.other.x, r.to.x, k), z = lerp(r.other.z, r.to.z, k);
+      const q = path.fn(clamp(distOnPath(pts, {x, z}), 0, L));
+      // (pulled back toward the path's centre line: the feet are either side of it)
+      r1 = {x: lerp(x, q.x, 0.5), y: lerp(r.other.y, r.to.y, 0.62), z: lerp(z, q.z, 0.5)};
+      h1 = path.fn(clamp(r.dNew - 0.1, 0, L)).heading;
+    }
+    const st: ClimbStep = {foot: r.foot, from: i === 0 ? r.from : r.from, to: r.to, other: r.other, a, plant, b, rise, steep, slope, r0: rPrev, r1, h0: hPrev, h1};
+    rPrev = r1; hPrev = h1;
+    return st;
+  });
+  const handAt = (i: number, side: 'L' | 'R', fwd = 0.05, out = 0.18): V3 => {
+    const q = path.fn(clamp(raw[i].dNew + fwd, 0, L));
+    const rt = rightOf(q.heading), sd = side === 'L' ? -1 : 1;
+    const x = q.x + rt.x * out * sd, z = q.z + rt.z * out * sd;
+    return {x, y: GC(x, z) + 0.025, z};
+  };
+  let handSpec = o.hands ?? [];
+  if (o.autoHands) {
+    // the hand on the same side as the foot stepping up, beside its new hold, on rubble no lower than that hold
+    const ah = o.autoHands;
+    const cand = steps.map((st, i) => ({i, rise: st.rise, ok: st.foot === ah.side && handAt(i, ah.side, ah.fwd, ah.out).y >= st.to.y - 0.04}))
+      .filter((q) => q.ok && q.rise >= (ah.minRise ?? 0.26) && q.i < steps.length - 1).sort((a, b) => b.rise - a.rise);
+    const pick: number[] = [];
+    for (const q of cand) if (pick.length < ah.n && pick.every((p) => Math.abs(p - q.i) >= 3)) pick.push(q.i);
+    handSpec = pick.sort((a, b) => a - b).map((i) => ({step: i, side: ah.side, fwd: ah.fwd, out: ah.out}));
+  }
+  const hands: HandPlant[] = handSpec.filter((hd) => hd.step < steps.length).map((hd) => {
+    const st = steps[hd.step], rr = raw[hd.step];
+    // (beside the new foothold, a little ahead: the palm goes down on the ledge the foot steps up onto; down while the
+    // foot swings up; it pushes as the body starts up over the new foot, and comes off as the body rises)
+    void rr;
+    return {side: hd.side, p: handAt(hd.step, hd.side, hd.fwd, hd.out), on: st.a + (st.plant - st.a) * 0.4, off: st.plant + (st.b - st.plant) * 0.3 + (hd.hold ?? 0), step: hd.step};
+  });
+  const e = path.fn(L);
+  const feetEnd = {L: onGround(pL), R: onGround(pR)};
+  return {T0, T1, steps, hands, end: {x: e.x, z: e.z, h: endH}, feetEnd, start: s0};
+};
+/** the climb's body at T (root, heading, planted/swinging feet, the climbing pose as `gait`, runK 1) */
+export const climbAt = (c: Climb, T: number): Body => {
+  const S = c.steps;
+  const first = S[0];
+  if (T < first.a) {
+    // the weight shift onto the foot that will stay planted
+    const k = smooth(clamp((T - c.T0) / Math.max(0.05, first.a - c.T0)));
+    const sd = first.foot === 'L' ? 1 : -1;
+    const g: Pose = {drop: 20 + 6 * k, lean: 12 + 8 * k * clamp(first.slope), side: 5 * sd * k, breath: 0.6};
+    return {pos: c.start.pos, heading: c.start.heading, footL: c.start.footL, footR: c.start.footR, gait: g, runK: 1, seg: 0, inWalk: true, slope: first.slope, swingL: 0, swingR: 0, climb: 0};
+  }
+  let i = S.length - 1;
+  for (let k = 0; k < S.length; k++) if (T < S[k].b) { i = k; break; }
+  const st = S[i];
+  const u = clamp((T - st.a) / (st.b - st.a));
+  const v = clamp((T - st.a) / (st.plant - st.a)); // the swing
+  const w = clamp((T - st.plant) / (st.b - st.plant)); // the push
+  const swF = (st.plant - st.a) / (st.b - st.a);
+  // root progress: during the swing the body rolls forward over the planted foot (so the new hold is within the short
+  // legs' reach when the foot lands); it RISES in the push, after the plant (steep steps); gentle ones evenly
+  const ks = st.steep;
+  const kSw = 0.44;
+  const kStep = u < swF ? kSw * smooth(v) : kSw + (1 - kSw) * smooth(w);
+  const k = lerp(u, kStep, clamp(ks * 1.4));
+  const kyStep = u < swF ? 0.06 * v : 0.06 + 0.94 * smooth(w);
+  const ky = lerp(k, kyStep, clamp(ks * 1.4));
+  const pos: V3 = {x: lerp(st.r0.x, st.r1.x, k), y: lerp(st.r0.y, st.r1.y, ky), z: lerp(st.r0.z, st.r1.z, k)};
+  const heading = st.h0 + wrapD(st.h1 - st.h0) * smooth(u);
+  // the feet: the stepping foot swings from its old hold to the new one; the other stays planted
+  const up = st.to.y - st.from.y > 0.1;
+  const lift = 0.06 + 0.42 * Math.max(0, st.to.y - st.from.y) * 0.6 + 0.05 * ks;
+  const e = up ? smooth(clamp((v - 0.28) / 0.72)) : smooth(v);
+  const ey = up ? smooth(Math.min(1, v * 2.2)) : e;
+  const x = lerp(st.from.x, st.to.x, e), z = lerp(st.from.z, st.to.z, e);
+  const arc = Math.sin(Math.PI * v) * lift;
+  const fy = v >= 1 ? st.to.y : Math.max(lerp(st.from.y, st.to.y, ey) + arc, GC(x, z) + 0.7 * arc);
+  const moving: V3 = v >= 1 ? st.to : {x, y: fy, z};
+  const sw = v < 1 ? Math.sin(Math.PI * v) : 0;
+  const footL = st.foot === 'L' ? moving : st.other, footR = st.foot === 'R' ? moving : st.other;
+  // the pose: lean into the slope, the knee loaded at the plant and extending through the push, weight over the planted
+  // foot during the swing, the arms working (the one opposite the stepping leg forward), the trailing heel lifting
+  // (the slope blends from the previous step's into this one's, so the lean never jumps at a step boundary)
+  const prevSlope = i > 0 ? S[i - 1].slope : st.slope;
+  const slopeK = clamp(lerp(prevSlope, st.slope, smooth(u)), 0, 1.1);
+  const load = u < swF ? 0 : Math.sin(Math.PI * w);
+  const sd = st.foot === 'L' ? 1 : -1; // + = weight to his right (over the right foot while the left swings)
+  const armF = (16 + 10 * slopeK) * Math.sin(Math.PI * u) * 0.9;
+  const pitchMove = v < 1 ? (v < 0.5 ? lerp(18, -10, v * 2) : lerp(-10, 0, (v - 0.5) * 2)) : 0;
+  const pitchStance = 16 * smooth(w) * (u < swF ? 0 : 1);
+  const g: Pose = {
+    drop: 12 + 16 * slopeK + 16 * ks * load + 4 * (1 - ks) * Math.sin(Math.PI * u),
+    lean: 9 + 26 * slopeK + 6 * ks * load,
+    side: 5.5 * sd * Math.sin(Math.PI * clamp(u / Math.max(0.2, swF * 1.15))),
+    armL: {fk: {fwd: (st.foot === 'R' ? armF : -armF * 0.6) + 8 * slopeK, out: 12, bend: 26 + 10 * slopeK}},
+    armR: {fk: {fwd: (st.foot === 'L' ? armF : -armF * 0.6) + 8 * slopeK, out: 12, bend: 26 + 10 * slopeK}},
+    legL: {pitch: st.foot === 'L' ? pitchMove : pitchStance}, legR: {pitch: st.foot === 'R' ? pitchMove : pitchStance},
+    breath: 0.7,
+  };
+  return {pos, heading, footL, footR, gait: g, runK: 1, seg: 0, inWalk: true, slope: st.slope, swingL: st.foot === 'L' ? sw : 0, swingR: st.foot === 'R' ? sw : 0, climb: clamp(0.3 + slopeK * 0.8)};
+};
+export const climbSeg = (c: Climb): Extract<Seg, {kind: 'fn'}> & {climb: Climb} => ({kind: 'fn', T0: c.T0, at: (T: number) => climbAt(c, T), climb: c});
+/** the active hand plant of a climb at T (weight 0..1 in, held, out), or null */
+export const climbHand = (c: Climb, T: number): {side: 'L' | 'R'; p: V3; w: number} | null => {
+  for (const h of c.hands) {
+    if (T < h.on - 0.2 || T > h.off + 0.16) continue;
+    return {side: h.side, p: h.p, w: win(T, h.on - 0.2, h.off + 0.16, 0.2, 0.16)};
+  }
+  return null;
+};
+/** a climb's footfalls (time, world point, 0..1 how hard) */
+export const climbPlants = (c: Climb): {t: number; p: V3; k: number}[] => c.steps.map((s) => ({t: s.plant, p: s.to, k: 0.35 + 0.65 * s.steep}));

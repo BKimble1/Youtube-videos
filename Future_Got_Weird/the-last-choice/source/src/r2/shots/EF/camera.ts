@@ -2,16 +2,18 @@
 //
 // E2 → F1 is ONE camera (the cut at 198.30 is invisible: both shots render the same camera and the same scene):
 //   E2 193.10–198.30  extreme close on his face (a slow push while he breathes his last; still after the eyes close)
-//   A  198.30–201.50  F1 opens on E2's framing of his still face and leaves it at once — following her as she turns
-//                     to the van door — a pan right with a truck to the radio, settling as her hand closes on the knob
-//                     (199.50) and turns it (199.60–199.90, the click on 199.90); hold while the radio comes alive
-//   B  201.50–230.40  the rising pullback: a crane that rises and swings clockwise round him (S → SW → WSW) so that
-//                     the first wide (~203) holds the radio AND his body, the companions and the ring pass below, then
-//                     the crater, the avenue with the streaming formations and the skyline with the fallen tower come
-//                     into the top of frame; he stays in the lower frame until he is a speck. Fade to black at the end.
+//   A  198.30–199.45  F1 opens on E2's framing of his still face and leaves it: a truck right and a pan across the pair
+//                     (her bowed head passes below frame left) to the radio on the van floor — nobody near it; the radio
+//                     is in frame before its indicator flutters (199.0) and the move has landed before the song catches
+//                     (199.6); a slow push on the radio while the reception recovers
+//   B  200.55–231.60  the rising pullback: a crane that pulls back off the radio, finds the pair beside it (the first
+//                     wide, ~203: radio, her bowed over his hand, him), rises and swings clockwise round him (S → SW → W)
+//                     past the held Crew, the ring, heavy 2, the crater, the avenue with the halted block and the
+//                     streaming columns, the intersections the machines take and the fires spreading, to the skyline;
+//                     he stays in the lower frame until he is a speck. Fade to black over the last ~1.2 s.
 // The B path is a centripetal Catmull-Rom curve through position keys, reparameterised by arc length; the camera's
-// distance along it follows a monotone C1 spline through the keys' times (zero speed at the start), so the speed has
-// no jumps at the knots. The aim point and the lens follow the same curve parameter.
+// distance along it follows a smooth speed profile (zero speed at the start), so the speed has no jumps at the knots.
+// The aim point and the lens follow the same curve parameter.
 import type {V3} from '../../../kit/math';
 import {add3, sub3, mul3, lerp, lerp3, clamp, smooth, norm3} from '../../../kit/math';
 import type {Cam3} from '../../engine/camera';
@@ -133,8 +135,6 @@ export const makeMove = (keys: PathKey[], t0: number, t1: number, speed: (t: num
 // ------------------------------------------------------------------ the places (world)
 /** His head centre (slumped; the breath moves it about a centimetre) — the face the cameras look at. */
 export const FACE: V3 = {x: 6.53, y: 1.095, z: 3.04};
-/** The knob / dial area on the van floor (RADIO.knob ≈ (7.99, 0.95, 1.81)). */
-export const RADIO_AIM: V3 = {x: 8.03, y: 0.93, z: 1.86};
 
 // ------------------------------------------------------------------ E1: close, low, from his right-front
 // He sits against the slab facing ESE; she comes in from the van side (frame right) and kneels at his left; the van's
@@ -167,20 +167,23 @@ const e2Amp = (T: number) => 0.004 * (1 - smooth((T - M.EYES_CLOSE) / 1.2)) + 0.
 
 // ------------------------------------------------------------------ F1
 /**
- * Phase A: the move off his face to the knob. It starts at MOVE.a (F1's first frame, E2's own framing) and lands at
- * MOVE.b on the knob seen from the south-south-east: her right arm reaches in from frame left, the hand side-on, the
- * knob face ~45° to the lens. The move's speed peaks early (a third of the way) and lands softly, so the camera is
- * almost settled while she turns the knob.
+ * Phase A: the move off his still face to the radio. It starts at MOVE.a (F1's first frame, E2's own framing) and
+ * lands at MOVE.b on the radio seen from the south-south-east through the van's open door: a truck right that bows out
+ * to the south (her bowed head passes ~0.8 m from the lens, below frame left) and a pan right. The speed rises from
+ * zero, peaks a third of the way and lands softly; the radio is in frame before 199.0 (the flutter).
  */
-export const MOVE = {a: 198.3, b: 200.1};
+export const MOVE = {a: 198.3, b: 199.6};
 const E2_END = camE2(MOVE.a);
-// (1.3 m from the knob at bearing 155°: her head is out of frame left, her right arm comes in from the left edge, the
-// hand side-on, the knob face ~55° to the lens)
-export const KNOB_POS: V3 = {x: 8.54, y: 1.22, z: 2.99};
-/** The move bows out to the south, away from her (her head passes no nearer than ~1 m). */
-const MOVE_CTRL: V3 = {x: 8.05, y: 1.35, z: 4.15};
-/** The knob composition: the knob a little right of centre and below (her arm comes in across the left half). */
-const KNOB_SUBJ: V3 = {x: 7.98, y: 0.96, z: 1.83}, KNOB_SX = 0.56, KNOB_SY = 0.56, KNOB_FOV = 32;
+/** The radio framing: ~1.5 m from the radio at bearing ~165°, a little above it (looking down onto the van floor). */
+export const RAD_POS: V3 = {x: 8.72, y: 1.6, z: 3.5};
+/** The move bows out to the south, away from her. */
+const MOVE_CTRL: V3 = {x: 8.0, y: 1.42, z: 4.12};
+/** The radio composition: the dial a little right of centre, the radio low-centre, the door frame and floor round it. */
+export const RAD_SUBJ: V3 = {x: 8.08, y: 0.99, z: 1.86};
+const RAD_SX = 0.55, RAD_SY = 0.52, RAD_FOV = 35;
+/** (R2 names, kept for compatibility) */
+export const KNOB_POS = RAD_POS;
+export const RADIO_AIM = RAD_SUBJ;
 /** Camera heading/elevation (deg) of an aim, and back (the engine's convention: yaw 0 = north (−z), 90 = east). */
 const yawPitch = (pos: V3, target: V3) => { const f = norm3(sub3(target, pos)); return {yaw: (Math.atan2(f.x, -f.z) * 180) / Math.PI, pitch: (Math.asin(f.y) * 180) / Math.PI}; };
 const aimYP = (pos: V3, yaw: number, pitch: number): V3 => {
@@ -188,47 +191,56 @@ const aimYP = (pos: V3, yaw: number, pitch: number): V3 => {
   return add3(pos, {x: Math.sin(y) * Math.cos(p), y: Math.sin(p), z: -Math.cos(y) * Math.cos(p)});
 };
 const A0 = yawPitch(E2_END.pos, E2_END.target);
-const A1 = yawPitch(KNOB_POS, aimFor(KNOB_POS, KNOB_SUBJ, KNOB_FOV, KNOB_SX, KNOB_SY));
+const A1 = yawPitch(RAD_POS, aimFor(RAD_POS, RAD_SUBJ, RAD_FOV, RAD_SX, RAD_SY));
 /**
- * The move's progress (0..1): speed ∝ u^1.6 (1−u)^3.2 — it leaves his face gently (no jolt: speed and acceleration
- * start at zero), peaks a third of the way in and lands softly. Integrated once into a table.
+ * The move's progress (0..1): speed ∝ u^1.5 (1−u)^2.6 — it leaves his face gently (speed and acceleration start at
+ * zero), peaks a third of the way in and lands softly. Integrated once into a table.
  */
 const MOVE_TBL = (() => {
   const n = 400, acc = [0];
-  const v = (u: number) => u ** 1.6 * (1 - u) ** 3.2;
+  const v = (u: number) => u ** 1.5 * (1 - u) ** 2.6;
   for (let i = 1; i <= n; i++) acc.push(acc[i - 1] + (v((i - 1) / n) + v(i / n)) / 2);
   return acc.map((a) => a / acc[n]);
 })();
 const moveK = (u: number) => { const x = clamp(u) * (MOVE_TBL.length - 1), i = Math.min(MOVE_TBL.length - 2, Math.floor(x)); return lerp(MOVE_TBL[i], MOVE_TBL[i + 1], x - i); };
-export const RISE_T0 = 201.5;
+/** After landing: a slow push toward the radio while the reception recovers and the song catches. */
+const PUSH = 0.1;
+export const RISE_T0 = 200.55;
+const PUSH_DIR = norm3(sub3(RAD_SUBJ, RAD_POS));
+const pushAt = (T: number) => PUSH * smooth((T - (MOVE.b - 0.25)) / (RISE_T0 - MOVE.b + 0.25));
+/** Where the hold ends (the rise starts from rest here). */
+const HOLD_END: V3 = add3(RAD_POS, mul3(PUSH_DIR, PUSH));
 
 /** The point the pullback keeps in frame (his chest), and the polar keys around it. */
 export const HIM: V3 = {x: 6.6, y: 0.85, z: 3.12};
 const polar = (bearing: number, R: number, H: number): V3 => ({x: HIM.x + Math.sin((bearing * Math.PI) / 180) * R, y: H, z: HIM.z - Math.cos((bearing * Math.PI) / 180) * R});
 
-/** [bearing from him (deg), distance (m), height (m), fov, his screen x, his screen y] */
+/**
+ * [bearing from him (deg), distance (m), height (m), fov, his screen x, his screen y]. The crane rises over the open
+ * ground round the ridge (the plaza between W1 and W3, the west ruin's rubble) and ends high over the avenue's
+ * western continuation between W4 and W5 (≥ 10 m clear of both), looking straight down the avenue over him: the two
+ * frontages frame the canyon, the battlefield at the bottom, the burning skyline at the top. Through the mid-rise he is
+ * kept a little right of centre so the tall block south-east of him (FS0) stays toward the right edge.
+ */
 const RISE_POLAR: [number, number, number, number, number, number][] = [
-  [164, 9.8, 6.6, 41, 0.42, 0.5],
-  [196, 17, 10.8, 44, 0.45, 0.56],
-  [218, 27, 17.5, 48, 0.46, 0.68],
-  [230, 40, 30, 52, 0.47, 0.8],
-  [244, 58, 50, 55, 0.48, 0.86],
-  [252, 72, 64, 58, 0.49, 0.89],
-  // the end: west of him, just south of the avenue's axis, 78 m up and 42° down — over W5's roof, looking down the
-  // avenue between its frontages to the skyline; at ≥ 42° the slab behind him never hides his chest
-  [258, 85, 78, 60, 0.5, 0.9],
+  [166, 10.2, 6.4, 42, 0.43, 0.52],
+  [198, 17.0, 10.8, 45, 0.46, 0.6],
+  [224, 25.5, 18.5, 48, 0.5, 0.7],
+  [244, 36, 30, 51, 0.55, 0.77],
+  [260, 50, 47, 53, 0.55, 0.8],
+  [272, 66, 63, 55, 0.5, 0.84],
 ];
 export const RISE_KEYS: PathKey[] = [
-  // the radio (end of the pan), then the first wide: the radio and his body, her between them
-  {pos: KNOB_POS, subj: KNOB_SUBJ, sx: KNOB_SX, sy: KNOB_SY, fov: KNOB_FOV},
-  // (pulling back from the radio before the pan finds them: she is not swept past the lens)
-  {pos: {x: 9.0, y: 1.6, z: 4.25}, subj: {x: 7.8, y: 0.9, z: 2.25}, sx: 0.58, sy: 0.54, fov: 34},
-  {pos: {x: 9.45, y: 2.45, z: 5.95}, subj: {x: 7.25, y: 0.82, z: 2.6}, sx: 0.5, sy: 0.5, fov: 39},
+  // the radio (end of the push), then pulling back off it until the pair is in frame beside it
+  {pos: HOLD_END, subj: RAD_SUBJ, sx: RAD_SX, sy: RAD_SY, fov: RAD_FOV},
+  {pos: {x: 9.35, y: 2.05, z: 4.55}, subj: {x: 7.9, y: 0.95, z: 2.2}, sx: 0.58, sy: 0.52, fov: 37},
+  // the first wide: the radio (frame right), her bowed over his hand, him against the slab
+  {pos: {x: 9.7, y: 2.85, z: 6.2}, subj: {x: 7.3, y: 0.85, z: 2.6}, sx: 0.5, sy: 0.53, fov: 40},
   ...RISE_POLAR.map(([b, R, H, fov, sx, sy]) => ({pos: polar(b, R, H), subj: HIM, sx, sy, fov})),
 ];
 /** Speed profile (shape only; scaled to the path): a gentle start from rest, a steady growth, a slight settle. */
-export const riseSpeed = (t: number) => smooth((t - RISE_T0) / 1.8) * Math.exp(0.072 * (t - RISE_T0)) * (1 - 0.2 * smooth((t - 225) / 5.4));
-const RISE = makeMove(RISE_KEYS, RISE_T0, M.CREDITS_IN, riseSpeed);
+export const riseSpeed = (t: number) => smooth((t - RISE_T0) / 1.6) * Math.exp(0.07 * (t - RISE_T0)) * (1 - 0.25 * smooth((t - 225) / 5.6));
+const RISE = makeMove(RISE_KEYS, RISE_T0, M.CARD_IN, riseSpeed);
 export const riseTotal = RISE.total;
 export const riseKeyTimes = () => RISE_KEYS.map((_, i) => RISE.keyTime(i));
 
@@ -239,9 +251,9 @@ const drift = (T: number, amp: number): V3 => {
 };
 
 /**
- * E2 and F1's camera up to the rise: E2's framing (with its drift) until MOVE.a, then the move to the knob, then the hold.
- * The aim is solved from a composition track (subject: his face → the knob, and where it sits on screen), so the pan
- * rate has no kinks; E2's drift cross-fades into the crane's handheld drift.
+ * E2 and F1's camera up to the rise: E2's framing (with its drift) until MOVE.a, then the move to the radio, then the
+ * push. The pan turns monotonically from E2's aim to the radio's, a touch ahead of the truck; E2's drift cross-fades
+ * into the crane's handheld drift.
  */
 export const camClose = (T: number): Cam3 => {
   if (T < MOVE.a) {
@@ -249,26 +261,24 @@ export const camClose = (T: number): Cam3 => {
     return {pos: add3(c.pos, d), target: add3(c.target, mul3(d, 1.25)), fov: c.fov};
   }
   const u = (T - MOVE.a) / (MOVE.b - MOVE.a);
-  const kP = moveK(u), kS = moveK(u * 1.15); // the pan leads the truck a little
-  // the truck: a bow out to the south between the two ends (quadratic Bézier), eased by kP
-  const pos = add3(add3(mul3(E2_END.pos, (1 - kP) ** 2), mul3(MOVE_CTRL, 2 * kP * (1 - kP))), mul3(KNOB_POS, kP * kP));
-  const fov = lerp(E2_END.fov ?? 30, KNOB_FOV, kP);
-  // the pan: heading and elevation turn monotonically from E2's aim to the knob's (no overshoot as the lens trucks past
-  // her), the same eased progress as the truck, a touch ahead of it
+  const kP = moveK(u), kS = moveK(u * 1.3); // the pan leads the truck (the radio is in frame before the flutter)
+  const pos0 = add3(add3(mul3(E2_END.pos, (1 - kP) ** 2), mul3(MOVE_CTRL, 2 * kP * (1 - kP))), mul3(RAD_POS, kP * kP));
+  const pos = add3(pos0, mul3(PUSH_DIR, pushAt(T)));
+  const fov = lerp(E2_END.fov ?? 30, RAD_FOV, kP);
   const target = aimYP(pos, A0.yaw + (((A1.yaw - A0.yaw + 540) % 360) - 180) * kS, lerp(A0.pitch, A1.pitch, kS));
   const kd = smooth(u);
-  const d = add3(mul3(driftE(T, e2Amp(T)), 1 - kd), mul3(drift(T, 0.006), kd));
+  const d = add3(mul3(driftE(T, e2Amp(T)), 1 - kd), mul3(drift(T, 0.005), kd));
   return {pos: add3(pos, d), target: add3(target, mul3(d, 1.3)), fov};
 };
 
 export const camF1 = (T: number): Cam3 => {
   if (T < RISE_T0) return camClose(T);
   const c = RISE.at(T);
-  const amp = 0.006 * (1 - smooth((T - RISE_T0) / 4));
+  const amp = 0.005 * (1 - smooth((T - RISE_T0) / 4));
   const dr = drift(T, amp);
   return {pos: add3(c.pos, dr), target: add3(c.target, mul3(dr, 1.3)), fov: c.fov};
 };
 
-/** F1's fade to black (0..1): the credits start at CREDITS_IN by fading a near-black field in over black. */
-export const F1_FADE = {a: 228.3, b: M.CREDITS_IN - 1 / 30};
+/** F1's fade to black (0..1) over the last ~1.2 s: the end card (G_card) comes up out of black at CARD_IN. */
+export const F1_FADE = {a: M.CARD_IN - 1.2, b: M.CARD_IN - 1 / 30};
 export const fadeF1 = (T: number) => smooth((T - F1_FADE.a) / (F1_FADE.b - F1_FADE.a));

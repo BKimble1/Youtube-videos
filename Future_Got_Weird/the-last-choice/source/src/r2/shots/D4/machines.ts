@@ -15,15 +15,15 @@
 //   H2–H4    ride with the arc, then hold the decoy maker (181.0), the flare carrier (181.7), the breaker (182.3)
 //   drone 7601 dives on the drone pilot at 170.22, then holds low over the ring (TB_DRONES[0])
 import type {UnitSpec, HeavySpec, DroneSpec, Path} from '../../mech';
-import {solveHeavy, HEAVY_DIM} from '../../mech';
+import {solveHeavy, HEAVY_DIM, unitAttach} from '../../mech';
 import {V3, clamp, smooth, lerp, easeIn, easeOut, rnd} from '../../../kit/math';
 import {M} from '../../timing';
-import {TB_RING, TB_OUTER, TB_HOLDERS, TB_WRECKS, TB_HEAVY2, TB_DRONES, DIRECTOR_HEAD, T0 as TB_T0, w1Ground} from '../EF/tableau';
+import {TB_RING, TB_OUTER, TB_HOLDERS, TB_WRECKS, TB_HEAVY2, TB_DRONES, TB_CREW, DIRECTOR_HEAD, T0 as TB_T0, w1Ground} from '../EF/tableau';
 import {EV} from './times';
 import {ARC_START, arcStartPos, HEAVY2_START} from './start';
 import {BLOCK_PLATE, RUNNER_CHEST, LAUNCHER_FRONT, LAUNCHER_GRIP, tugGrip, STRIKE_PLATE, HEAVY_STRIKE, PILOT_DOWN, PLANT} from './marks';
-import {XZ, KP, KR, G, onG, keyRoot, footAt, autoSteps, runDist, runSpeed, cruise, linePath, pathLen, fwdOf, headingTo, win, after, wrapD, quadSteps, heavyStance} from './motion';
-import {avoid} from './obstacles';
+import {XZ, KP, KR, G, onG, keyRoot, footAt, autoSteps, runDist, runSpeed, cruise, linePath, chordPath, pathLen, fwdOf, headingTo, win, after, wrapD, quadSteps, heavyStance} from './motion';
+import {avoid, pushOut} from './obstacles';
 
 const ground = G;
 const lerp3s = (a: V3, b: V3, k: number): V3 => ({x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), z: lerp(a.z, b.z, k)});
@@ -35,7 +35,7 @@ export type UStep =
   /** walk/run along a polyline (planted gait feet; A/D = accel/decel s; D > 0 ends in the standing stance) */
   | {k: 'walk'; pts: XZ[]; T0: number; T1: number; A?: number; D?: number; stride?: number; /** no obstacle bending */ raw?: boolean}
   /** keyed root (each key a stop) with planted steps */
-  | {k: 'keys'; root: KR[]; feet?: {L: KP[]; R: KP[]}};
+  | {k: 'keys'; root: KR[]; feet?: {L: KP[]; R: KP[]}; /** the kit's own standing feet (a static stop: = the tableau's spec) */ kitFeet?: boolean};
 export type UPlan = {id: number; name: string; steps: UStep[]; eye?: 'cyan' | 'amber'; act?: (T: number) => Partial<UnitSpec>};
 
 const stepT0 = (s: UStep) => (s.k === 'walk' ? s.T0 : s.root[0][0]);
@@ -44,32 +44,66 @@ const AVOIDED = new WeakMap<object, XZ[]>();
 /** the unit's standing stance as autoSteps footholds (= the kit's standing feet: half hipW + 0.04, left 4 cm back) */
 const stanceSteps = (root: KR[]) => autoSteps(root, {half: 0.19, stag: -0.04, stepLen: 0.55});
 
+/** the ground a walking unit's pelvis rides on: the kerbs' 0.15 m steps eased into 0.45 m ramps (feet stay planted
+ *  within a few centimetres; the body no longer jumps a kerb in one frame) */
+const G_SOFT = (x: number, z: number) => { let a = 0; for (let k = -5; k <= 5; k++) a += G(x + 0.032 * k, z + 0.04 * k); return a / 11; };
+const softFor = (w: number) => (w <= 0.001 ? G : w >= 0.999 ? G_SOFT : (x: number, z: number) => lerp(G(x, z), G_SOFT(x, z), w));
+const walkPts = (s: Extract<UStep, {k: 'walk'}>): XZ[] => {
+  let pts = AVOIDED.get(s);
+  if (!pts) AVOIDED.set(s, (pts = s.raw ? s.pts : avoid(s.pts, 0.62, 0.4, {T: s.T0})));
+  return pts;
+};
+/** once per plan: a keyed stop after a walk starts on the walk's own end heading, and the last key before a walk ends
+ *  on the walk's first heading (the routed path's, not the planned one's) — no turn in one frame either way */
+const PREPPED = new WeakSet<object>();
+const prep = (pl: UPlan) => {
+  if (PREPPED.has(pl)) return;
+  PREPPED.add(pl);
+  pl.steps.forEach((s, i) => {
+    if (s.k !== 'keys') return;
+    const prev = pl.steps[i - 1], next = pl.steps[i + 1];
+    if (prev && prev.k === 'walk') {
+      const pts = walkPts(prev);
+      s.root[0] = [s.root[0][0], s.root[0][1], s.root[0][2], chordPath(pts, 0.7)(pathLen(pts)).heading];
+    }
+    if (next && next.k === 'walk' && s.root.length > 1) {
+      const pts = walkPts(next);
+      const k = s.root[s.root.length - 1];
+      s.root[s.root.length - 1] = [k[0], k[1], k[2], chordPath(pts, 0.7)(0).heading];
+    }
+  });
+};
+
 export const unitAt = (pl: UPlan, T: number): UnitSpec => {
+  prep(pl);
   let i = 0;
   pl.steps.forEach((s, k) => { if (T >= stepT0(s)) i = k; });
   const s = pl.steps[i];
   const base: UnitSpec = {id: pl.id, t: T, pos: {x: 0, y: 0, z: 0}, heading: 0, ground, idle: 0.5, eye: pl.eye ?? 'cyan', key: `d4u${pl.id}`};
   let sp: UnitSpec;
   if (s.k === 'walk') {
-    let pts = AVOIDED.get(s);
-    if (!pts) AVOIDED.set(s, (pts = s.raw ? s.pts : avoid(s.pts, 0.62)));
+    const pts = walkPts(s);
     const L = pathLen(pts), A = s.A ?? 0.6, D = s.D ?? 0.6;
-    const path: Path = linePath(pts, 1.4);
+    const path: Path = chordPath(pts, 0.7);
     const dist = runDist(Math.min(T, s.T1), s.T0, s.T1, L, A, D);
     const vc = cruise(s.T0, s.T1, L, A, D);
     const k = clamp(runSpeed(T, s.T0, s.T1, L, A, D) / Math.max(0.5, vc));
     const fast = clamp((vc - 1.8) / 2);
     const end = path(L);
     sp = {
-      ...base, pos: end.pos, heading: end.heading,
+      // (the softened ground mid-walk only: a walk starts and ends on the true ground, where the feet stand still)
+      ...base, pos: end.pos, heading: end.heading, ground: softFor(smooth((T - s.T0) / 0.5) * (1 - smooth((T - (s.T1 - 0.5)) / 0.5))),
       gait: {path, dist, stride: s.stride ?? 1.45 + 0.85 * fast, lift: 0.14 + 0.08 * fast, start: A > 0.25 ? 0 : undefined, end: D > 0 ? L : undefined},
       crouch: (0.03 + 0.16 * fast) * k, lean: (3 + 12 * fast) * k,
     };
   } else {
     const r = keyRoot(s.root, T);
-    let feet = s.feet ?? FEET.get(s);
-    if (!feet) FEET.set(s, (feet = stanceSteps(s.root)));
-    sp = {...base, pos: {x: r.p.x, y: 0, z: r.p.z}, heading: r.h, feet: {L: footAt(feet.L, T, 0.11), R: footAt(feet.R, T, 0.11)}};
+    if (s.kitFeet) sp = {...base, pos: {x: r.p.x, y: 0, z: r.p.z}, heading: r.h};
+    else {
+      let feet = s.feet ?? FEET.get(s);
+      if (!feet) FEET.set(s, (feet = stanceSteps(s.root)));
+      sp = {...base, pos: {x: r.p.x, y: 0, z: r.p.z}, heading: r.h, feet: {L: footAt(feet.L, T, 0.11), R: footAt(feet.R, T, 0.11)}};
+    }
   }
   return {...sp, ...(pl.act ? pl.act(T) : {})};
 };
@@ -93,22 +127,55 @@ export const dirHeadAt = (T: number): V3 => {
   return {x, y: G(x, z) + lerp(1.6, 0.92, down), z};
 };
 
-// ------------------------------------------------------------------ W1 (7501): the blow on the plate; smashed at 163.3
+// ------------------------------------------------------------------ the Crew's places the machines aim at (pure)
+/** a survivor's head where the tableau holds them (for the securing units' attention after the strike) */
+const crewHead = (role: keyof typeof TB_CREW, up = 1.25): V3 => ({x: TB_CREW[role].pos.x, y: TB_CREW[role].pos.y + up, z: TB_CREW[role].pos.z});
+/** D4's securing ends here: from 184.95 the tableau's own (EF ringSpecs: 'ready' at readyAt, its scans and attention) */
+export const SECURE_END = 184.3;
+/**
+ * What a ring unit standing in its slot does in D4 on top of the tableau's spec (EF ringSpecs, which keeps it 'idle'
+ * until its readyAt): it scans the area with pauses, and after the strike its attention snaps to the nearest survivor
+ * and tracks them. All of it ends by SECURE_END (fading over 0.5 s), before the tableau's own securing begins, so at
+ * FINAL_HIT the unit is exactly the tableau's.
+ */
+export const ringExtras = (id: number, tSet: number): Pick<UnitSpec, 'scan' | 'attend'> => {
+  const slot = slotOf(id).pos;
+  const nearest = (['tether', 'decoy', 'flares', 'breaker', 'runner', 'drone'] as const)
+    .map((r) => ({r, d: Math.hypot(TB_CREW[r].pos.x - slot.x, TB_CREW[r].pos.z - slot.z)})).sort((a, b) => a.d - b.d)[0];
+  const tA = Math.max(tSet + 0.6, staggerT(id, M.STRIKE + 1.2, 2.2, 9));
+  const att = nearest.d < 9.5 && tA < SECURE_END - 0.5;
+  return {
+    scan: {t0: tSet + 0.35 + rnd(id * 5) * 0.5, t1: att ? tA : SECURE_END, center: {x: RING_C.x - 1.5, y: 1.0, z: RING_C.z + 0.5}, span: 64, dwell: 0.9, seed: id},
+    attend: att ? [{t0: tA, at: crewHead(nearest.r, nearest.r === 'runner' ? 0.25 : nearest.r === 'drone' ? 0.6 : 1.15), t1: SECURE_END, turn: false}] : undefined,
+  };
+};
+/** a per-unit start offset (seeded): staggered, never synchronised */
+const staggerT = (id: number, t0: number, spread: number, salt: number) => t0 + rnd(id * 13 + salt) * spread;
+
+// ------------------------------------------------------------------ W1 (7501): THE PLATE answered; smashed at ARRIVAL
 const W1_TB = TB_WRECKS[0];
 const W1_AT = {x: 31.64, z: 1.72};
+/** it follows the displacement: two step-drags after him, re-chambering */
+const W1_PRESS = [{x: W1_AT.x - 0.28, z: W1_AT.z + 0.02}, {x: W1_AT.x - 0.62, z: W1_AT.z + 0.03}];
 const W1: UPlan = {
   id: 7501, name: 'W1', eye: 'amber',
   steps: [
     {k: 'walk', pts: [arcStartPos(ARC_START[1]).pos, {x: 36.0, z: 1.25}, {x: 33.1, z: 1.6}, W1_AT], T0: M.P4, T1: 152.95, A: 1.0, D: 0.4},
-    {k: 'keys', root: [[152.95, W1_AT.x, W1_AT.z, 263], [153.2, W1_AT.x, W1_AT.z, 270], [154.4, W1_AT.x + 0.12, W1_AT.z, 270], [154.9, W1_AT.x, W1_AT.z, 272]]},
-    {k: 'walk', pts: [W1_AT, {x: 24.5, z: -0.5}, {x: 18.6, z: -2.8}, {x: 16.0, z: -2.95}, arrive(W1_TB.pos, W1_TB.heading, 1.2), W1_TB.pos], T0: 154.9, T1: 161.6, A: 0.5, D: 0.6},
-    {k: 'keys', root: [[161.6, W1_TB.pos.x, W1_TB.pos.z, W1_TB.heading]]},
+    {k: 'keys', root: [[152.95, W1_AT.x, W1_AT.z, 263], [153.2, W1_AT.x, W1_AT.z, 270], [EV.w1Press, W1_AT.x, W1_AT.z, 270], [154.02, W1_PRESS[0].x, W1_PRESS[0].z, 270], [154.32, W1_PRESS[1].x, W1_PRESS[1].z, 268], [154.95, W1_PRESS[1].x, W1_PRESS[1].z, 266]]},
+    {k: 'walk', pts: [W1_PRESS[1], {x: 24.5, z: -0.5}, {x: 18.6, z: -2.8}, {x: 16.0, z: -2.95}, arrive(W1_TB.pos, W1_TB.heading, 1.2), W1_TB.pos], T0: 154.95, T1: 161.6, A: 0.5, D: 0.6},
+    {k: 'keys', root: [[161.6, W1_TB.pos.x, W1_TB.pos.z, W1_TB.heading]], kitFeet: true},
   ],
   act: (T) => {
     const dead = T >= W1_TB.fall.t0;
     return {
-      strike: pickStrike(T, [{t0: EV.w1Swing, side: 'R', target: {x: BLOCK_PLATE.x + 0.06, y: BLOCK_PLATE.y + 0.04, z: BLOCK_PLATE.z}, kind: 'hammer'}]),
-      raise: {t0: 162.55, t1: 163.35, side: 'R'},
+      strikes: [
+        // the hammer on the plate (the crack goes right through); the hook at his head as he turns away (he ducks it)
+        {t0: EV.w1Swing, side: 'R', target: {x: BLOCK_PLATE.x + 0.06, y: BLOCK_PLATE.y + 0.04, z: BLOCK_PLATE.z}, kind: 'hammer'},
+        {t0: EV.w1Hook, side: 'L', target: onG(30.12, 1.76, 1.62), kind: 'hook'},
+        // ARRIVAL: it swings first at the charging Director — he ducks under it into its open chest
+        {t0: EV.w1Hammer, side: 'R', target: onG(12.86, -1.72, 1.66), kind: 'hook'},
+      ],
+      posture: [[-1, 'guard'], [W1_TB.fall.t0 + 0.9, 'idle']],
       look: dead ? undefined : dirHeadAt(T),
       hits: [{t0: EV.w1Swing + 0.02, dir: {x: 1, y: 0, z: 0}, strength: 0.55}, {t0: EV.w1Smash, dir: {x: 0.85, y: 0, z: -0.5}, strength: 1.5}],
       fall: W1_TB.fall, damage: W1_TB.damage, idle: dead ? 0 : 0.45, ground: w1Ground, // it stands and falls on low rubble
@@ -116,9 +183,11 @@ const W1: UPlan = {
   },
 };
 
-// ------------------------------------------------------------------ W2 (7502): its arm torn off by the club at 164.4
+// ------------------------------------------------------------------ W2 (7502): at the decoy maker; the club takes its arm
 const W2_TB = TB_WRECKS[1];
 const W2_WAIT = {x: 36.8, z: 2.5};
+/** the decoy maker's head where W2's hammer is aimed (she is beside the breaker; crew.tsx DEC_SEGS at 164.6) */
+export const W2_TARGET = onG(13.25, 5.2, 1.5);
 const W2: UPlan = {
   id: 7502, name: 'W2', eye: 'amber',
   steps: [
@@ -126,35 +195,39 @@ const W2: UPlan = {
     {k: 'walk', pts: [arcStartPos(ARC_START[3]).pos, {x: 39.0, z: 3.0}, W2_WAIT], T0: M.P4, T1: 153.4, A: 0.2, D: 0.6},
     {k: 'keys', root: [[153.4, W2_WAIT.x, W2_WAIT.z, headingTo({x: 39.0, z: 3.0}, W2_WAIT)], [153.8, W2_WAIT.x, W2_WAIT.z, 268], [154.5, W2_WAIT.x, W2_WAIT.z, 266]]},
     {k: 'walk', pts: [W2_WAIT, {x: 32.6, z: 2.4}, {x: 27.0, z: 3.9}, {x: 24.0, z: 5.0}, {x: 20.0, z: 5.1}, arrive(W2_TB.pos, W2_TB.heading), W2_TB.pos], T0: 154.5, T1: 161.4, A: 0.5, D: 0.7},
-    {k: 'keys', root: [[161.4, W2_TB.pos.x, W2_TB.pos.z, W2_TB.heading]]},
+    {k: 'keys', root: [[161.4, W2_TB.pos.x, W2_TB.pos.z, W2_TB.heading]], kitFeet: true},
   ],
   act: (T) => {
     const dead = T >= W2_TB.fall.t0;
     return {
-      // it raises its left arm to club the breaker down; the breaker's swing meets the arm first
-      strike: T < EV.club ? pickStrike(T, [{t0: EV.club + 0.2, side: 'L', target: {x: 13.9, y: G(13.9, 4.3) + 1.5, z: 4.3}, kind: 'hammer'}]) : undefined,
-      look: dead ? undefined : T < 163.5 ? dirHeadAt(T) : {x: 13.9, y: 1.5, z: 4.3},
+      // its hammer winds up at the decoy maker; the breaker's swing meets the raised arm first (the arm comes off)
+      strikes: T < EV.club ? [{t0: EV.w2Wind + 0.5, side: 'L', target: W2_TARGET, kind: 'hammer'}] : undefined,
+      posture: [[-1, 'guard'], [W2_TB.fall.t0 + 0.9, 'idle']],
+      look: dead ? undefined : T < 163.4 ? dirHeadAt(T) : W2_TARGET,
       hits: [{t0: EV.club, dir: {x: 0.35, y: 0, z: 1}, strength: 1.3}],
       fall: W2_TB.fall, damage: W2_TB.damage, idle: dead ? 0 : 0.45,
     };
   },
 };
 
-// ------------------------------------------------------------------ W3 (7503): the cable round its shins; driven over
+// ------------------------------------------------------------------ W3 (7503): at the tether operator; the cable; driven over
 const W3_TB = TB_WRECKS[2];
+/** the tether operator's chest where W3's punch is aimed (crew.tsx TTH_SEGS at 165.0) */
+const W3_TARGET = onG(14.95, -0.22, 1.25);
 const W3: UPlan = {
   id: 7503, name: 'W3', eye: 'amber',
   steps: [
     {k: 'walk', pts: [arcStartPos(ARC_START[2]).pos, {x: 37.0, z: -3.6}, {x: 28.0, z: -3.9}, {x: 24.5, z: -2.6}, {x: 21.5, z: -3.0}, arrive(W3_TB.pos, W3_TB.heading), W3_TB.pos], T0: M.P4, T1: 161.9, A: 0.2, D: 0.7},
-    {k: 'keys', root: [[161.9, W3_TB.pos.x, W3_TB.pos.z, W3_TB.heading]]},
+    {k: 'keys', root: [[161.9, W3_TB.pos.x, W3_TB.pos.z, W3_TB.heading]], kitFeet: true},
   ],
   act: (T) => {
     const dead = T >= W3_TB.fall.t0;
-    // it starts a step toward the tether operator as the cable binds its shins (164.78): it lurches, arms out
+    // it steps at the tether operator, winding up; the cable binds its shins (164.78): it lurches, arms out
     const lurch = win(T, EV.cableWrap, W3_TB.fall.t0 + 0.1, 0.12, 0.1);
     return {
+      strikes: T < EV.cableWrap ? [{t0: 165.12, side: 'R', target: W3_TARGET, kind: 'punch'}] : undefined,
+      posture: [[-1, 'guard'], [W3_TB.fall.t0 + 0.9, 'idle']],
       look: dead ? undefined : T < 164.2 ? dirHeadAt(T) : {x: 15.3, y: 1.4, z: -1.1},
-      raise: {t0: 164.1, t1: 164.95, side: 'R'},
       lean: dead ? undefined : 6 * lurch, twist: dead ? undefined : -10 * lurch,
       hits: [{t0: EV.cableHaul, dir: {x: -0.6, y: 0, z: 0.5}, strength: 0.45}, {t0: EV.w3Drive, dir: {x: 0.6, y: 0, z: -0.8}, strength: 1.4}],
       fall: W3_TB.fall, damage: W3_TB.damage, idle: dead ? 0 : 0.45,
@@ -162,7 +235,7 @@ const W3: UPlan = {
   },
 };
 
-// ------------------------------------------------------------------ H1 (7101): disarms the tether operator
+// ------------------------------------------------------------------ H1 (7101): THE TETHER answered (the launcher torn away)
 const H1_TB = TB_HOLDERS[0];
 const H1_AT = {x: 19.5, z: -1.3};
 const H1_HOLD = {x: 21.0, z: -2.8}, H1_WAIT = {x: 16.25, z: -0.38};
@@ -180,72 +253,90 @@ export const h1Fist = (T: number): {hand: V3; w: number; open: boolean} | null =
   else { hand = slam; w = 1 - smooth((T - EV.launcherDrop) / 0.6); }
   return {hand, w, open: T < EV.disarmGrab - 0.05 || T > EV.launcherDrop};
 };
+let armLOff = false;
 const H1: UPlan = {
   id: 7101, name: 'H1', eye: 'amber',
   steps: [
     {k: 'walk', pts: [arcStartPos(ARC_START[0]).pos, {x: 31.0, z: -3.2}, {x: 23.0, z: -1.9}, arrive(H1_AT, 268, 1.5), H1_AT], T0: M.P4, T1: 156.75, A: 0.2, D: 0.5},
-    {k: 'keys', root: [[156.75, H1_AT.x, H1_AT.z, 268], [EV.disarmGrab, H1_AT.x, H1_AT.z, 268], [157.5, H1_AT.x + 0.1, H1_AT.z, 268], [158.0, H1_AT.x - 0.05, H1_AT.z, 266], [170.4, H1_AT.x, H1_AT.z, 262], [170.7, H1_AT.x, H1_AT.z, 140]]},
+    {k: 'keys', root: [[156.75, H1_AT.x, H1_AT.z, 268], [EV.disarmGrab, H1_AT.x, H1_AT.z, 268], [157.5, H1_AT.x + 0.1, H1_AT.z, 268], [158.0, H1_AT.x - 0.05, H1_AT.z, 266], [168.9, H1_AT.x, H1_AT.z, 262], [169.2, H1_AT.x, H1_AT.z, 140]]},
     // out of heavy 2's way as it comes on; then round behind the fight to the tether operator (its tableau grip 180.4)
-    {k: 'walk', pts: [H1_AT, H1_HOLD], T0: 170.7, T1: 171.9, A: 0.4, D: 0.5, raw: true},
-    {k: 'keys', root: [[171.9, H1_HOLD.x, H1_HOLD.z, headingTo(H1_AT, H1_HOLD)], [172.4, H1_HOLD.x, H1_HOLD.z, 250], [175.5, H1_HOLD.x, H1_HOLD.z, 252], [175.8, H1_HOLD.x, H1_HOLD.z, headingTo(H1_HOLD, {x: 19.0, z: -2.4})]]},
-    {k: 'walk', pts: [H1_HOLD, {x: 19.0, z: -2.4}, {x: 17.6, z: -1.2}, H1_WAIT], T0: 175.8, T1: 177.9, A: 0.4, D: 0.5, raw: true},
-    {k: 'keys', root: [[177.9, H1_WAIT.x, H1_WAIT.z, headingTo({x: 17.6, z: -1.2}, H1_WAIT)], [178.4, H1_WAIT.x, H1_WAIT.z, headingTo(H1_WAIT, {x: 14.0, z: -1.35})]]},
+    {k: 'walk', pts: [H1_AT, H1_HOLD], T0: 169.2, T1: 170.4, A: 0.4, D: 0.5, raw: true},
+    {k: 'keys', root: [[170.4, H1_HOLD.x, H1_HOLD.z, headingTo(H1_AT, H1_HOLD)], [170.9, H1_HOLD.x, H1_HOLD.z, 250], [175.5, H1_HOLD.x, H1_HOLD.z, 252], [175.8, H1_HOLD.x, H1_HOLD.z, headingTo(H1_HOLD, {x: 19.0, z: -2.4})]]},
+    // (round the north side of sch_21 at (16.57, 0.51): its path keeps 0.6 m off the chunk)
+    {k: 'walk', pts: [H1_HOLD, {x: 19.0, z: -2.4}, {x: 17.6, z: -1.35}, H1_WAIT], T0: 175.8, T1: 177.9, A: 0.4, D: 0.5, raw: true},
+    {k: 'keys', root: [[177.9, H1_WAIT.x, H1_WAIT.z, headingTo({x: 17.6, z: -1.35}, H1_WAIT)], [178.4, H1_WAIT.x, H1_WAIT.z, headingTo(H1_WAIT, {x: 14.0, z: -1.35})]]},
     {k: 'walk', pts: [H1_WAIT, {x: 14.0, z: -1.35}, H1_TB.pos], T0: 178.4, T1: 179.7, A: 0.3, D: 0.4, raw: true},
     {k: 'keys', root: [[179.7, H1_TB.pos.x, H1_TB.pos.z, headingTo({x: 14.0, z: -1.35}, H1_TB.pos)], [179.95, H1_TB.pos.x, H1_TB.pos.z, H1_TB.heading]]},
   ],
   act: (T) => {
-    const f = h1Fist(T);
+    const f = armLOff ? null : h1Fist(T);
     return {
-      look: T < 159.5 ? {x: LAUNCHER_GRIP.x - 0.3, y: LAUNCHER_GRIP.y + 0.35, z: LAUNCHER_GRIP.z} : T > 179.4 ? {x: 12.4, y: 1.4, z: 0.5} : dirHeadAt(T),
+      look: T < 159.5 ? {x: LAUNCHER_GRIP.x - 0.3, y: LAUNCHER_GRIP.y + 0.35, z: LAUNCHER_GRIP.z} : T > 179.4 ? onG(12.3, 0.5, 0.95) : T > 177.8 ? crewHead('tether') : dirHeadAt(T),
+      posture: [[-1, 'guard'], [158.9, 'ready'], [168.4, 'guard'], [178.9, 'idle']],
       armL: f && f.w > 0.02 ? {hand: f.w >= 1 ? f.hand : lerp3s(restHand(T, 'L'), f.hand, f.w), open: f.open} : undefined,
       hits: [{t0: EV.disarmTear, dir: {x: 0.6, y: 0, z: 0}, strength: 0.4}],
-      crouch: 0.06 * win(T, 157.85, 158.6, 0.15, 0.3), lean: 8 * win(T, 157.85, 158.6, 0.15, 0.3),
+      crouch: 0.06 * win(T, 157.85, 158.6, 0.15, 0.3), lean: 8 * win(T, 157.85, 158.6, 0.15, 0.3) + H1_TB.lean * smooth((T - 179.0) / 0.9),
     };
   },
 };
-/** a unit's resting left/right fist (approx., world) for blending a hand control in and out (from H1's keyed root) */
+/** H1's own left hand without the disarm's hand control (its guard), for blending the control in and out */
 const restHand = (T: number, side: 'L' | 'R'): V3 => {
-  const sp = unitAt({...H1, act: undefined}, T);
-  const f = fwdOf(sp.heading), r = {x: Math.cos((sp.heading * Math.PI) / 180), z: Math.sin((sp.heading * Math.PI) / 180)};
-  const sd = side === 'L' ? -1 : 1;
-  return {x: sp.pos.x + f.x * 0.12 + r.x * sd * 0.42, y: G(sp.pos.x, sp.pos.z) + 0.9, z: sp.pos.z + f.z * 0.12 + r.z * sd * 0.42};
+  armLOff = true;
+  const sp = unitAt(H1, T);
+  armLOff = false;
+  const a = unitAttach(sp);
+  return side === 'L' ? a.handL : a.handR;
 };
 /** where the torn launcher ends up (thrown down at 158.1) */
 export const LAUNCHER_REST = {x: 18.92, z: -0.86, yaw: 205};
 
-// ------------------------------------------------------------------ H5 (7105): strikes the runner down, stands over him
+// ------------------------------------------------------------------ H5 (7105): THE RUNNER's route cut; stands over him
 const H5_TB = TB_HOLDERS[4];
 const H5_AT = {x: 16.55, z: 8.35};
 const H5: UPlan = {
   id: 7105, name: 'H5', eye: 'amber',
   steps: [
-    {k: 'walk', pts: [arcStartPos(ARC_START[4]).pos, {x: 31.0, z: 10.4}, {x: 22.0, z: 9.9}, {x: 17.85, z: 9.05}, H5_AT], T0: M.P4, T1: 155.45, A: 0.25, D: 0.3},
-    {k: 'keys', root: [[155.45, H5_AT.x, H5_AT.z, 298], [155.66, H5_AT.x - 0.05, H5_AT.z - 0.05, 66], [157.4, H5_AT.x - 0.05, H5_AT.z - 0.05, 66],
+    {k: 'walk', pts: [arcStartPos(ARC_START[4]).pos, {x: 31.0, z: 10.4}, {x: 22.0, z: 9.9}, {x: 17.85, z: 9.05}, H5_AT], T0: M.P4, T1: 155.42, A: 0.25, D: 0.3},
+    {k: 'keys', root: [[155.42, H5_AT.x, H5_AT.z, 298], [155.74, H5_AT.x - 0.05, H5_AT.z - 0.05, 66], [157.4, H5_AT.x - 0.05, H5_AT.z - 0.05, 66],
       [158.3, 16.95, 6.8, 78], [159.0, 18.55, 6.05, 140], [159.45, H5_TB.pos.x, H5_TB.pos.z, H5_TB.heading]]},
   ],
   act: (T) => ({
-    strike: pickStrike(T, [{t0: EV.runnerHit, side: 'R', target: RUNNER_CHEST, kind: 'punch'}]),
+    strikes: [{t0: EV.runnerHit, side: 'R', target: RUNNER_CHEST, kind: 'punch'}],
+    posture: [[-1, 'guard'], [157.6, 'ready']],
     look: T < EV.runnerHit + 0.4 ? {x: RUNNER_CHEST.x, y: RUNNER_CHEST.y + 0.35, z: RUNNER_CHEST.z} : H5_TB.look ?? {x: 18.1, y: 0.2, z: 7.6},
     crouch: lerp(0, H5_TB.crouch, smooth((T - 158.9) / 0.8)), lean: lerp(0, H5_TB.lean, smooth((T - 158.9) / 0.8)),
     idle: lerp(0.5, 0.18 * 0.6, smooth((T - 158.9) / 0.8)),
   }),
 };
 
-// ------------------------------------------------------------------ H2–H4: ride with the arc, then hold the others
+// ------------------------------------------------------------------ H2–H4: ride with the arc, hold, then take the others
 const holderPlan = (idx: 1 | 2 | 3, arcI: number, hold: XZ, via: XZ[], approach: [number, number]): UPlan => {
   const tb = TB_HOLDERS[idx];
   const a = arcStartPos(ARC_START[arcI]);
   const holdH = headingTo(hold, RING_C);
-  return {
+  const tH = 160.6 + idx * 0.4;
+  const plan: UPlan = {
     id: tb.id, name: tb.key, eye: 'amber',
     steps: [
-      {k: 'walk', pts: [a.pos, {x: lerp(a.pos.x, hold.x, 0.45), z: lerp(a.pos.z, hold.z, 0.45) + 0.8}, arrive(hold, holdH, 1.5), hold], T0: M.P4, T1: 160.6 + idx * 0.4, A: 0.2, D: 0.6},
-      {k: 'keys', root: [[160.6 + idx * 0.4, hold.x, hold.z, holdH], [approach[0], hold.x, hold.z, holdH + 4]]},
+      {k: 'walk', pts: [a.pos, {x: lerp(a.pos.x, hold.x, 0.45), z: lerp(a.pos.z, hold.z, 0.45) + 0.8}, arrive(hold, holdH, 1.5), hold], T0: M.P4, T1: tH, A: 0.2, D: 0.6},
+      {k: 'keys', root: [[tH, hold.x, hold.z, holdH], [approach[0] - 0.45, hold.x, hold.z, holdH + 4], [approach[0], hold.x, hold.z, headingTo(hold, via[0])]]},
       {k: 'walk', pts: [hold, ...via, tb.pos], T0: approach[0], T1: approach[1] - 0.35, A: 0.5, D: 0.5},
       {k: 'keys', root: [[approach[1] - 0.35, tb.pos.x, tb.pos.z, headingTo(via[via.length - 1], tb.pos)], [approach[1], tb.pos.x, tb.pos.z, tb.heading]]},
     ],
-    act: (T) => ({look: T < approach[0] ? dirHeadAt(T) : undefined}),
+    act: (T) => {
+      // its head comes to rest straight ahead (the tableau's spec has no look) as it reaches its place
+      const ahead = (() => { const r = unitAt({...plan, act: undefined}, T); const f = fwdOf(r.heading); return onG(r.pos.x + f.x * 6, r.pos.z + f.z * 6, 1.9); })();
+      const settle = smooth((T - (approach[1] - 0.75)) / 0.6);
+      const lk = T < approach[0] ? dirHeadAt(T) : tb.who ? crewHead(tb.who) : ahead;
+      return {
+      look: settle > 0 ? lerp3s(lk, ahead, settle) : lk,
+      crouch: tb.crouch * settle, lean: tb.lean * settle,
+      posture: [[-1, 'guard'], [tH + 0.3, 'ready'], [approach[0], 'guard'], [approach[1] - 1.25, 'idle']],
+      scan: {t0: tH + 0.8, t1: approach[0] - 0.4, center: {x: RING_C.x, y: 1, z: RING_C.z}, span: 50, seed: tb.id},
+      };
+    },
   };
+  return plan;
 };
 const H2 = holderPlan(1, 18, {x: 21.5, z: 12.4}, [{x: 15.6, z: 10.1}, {x: 13.2, z: 8.6}, {x: 12.9, z: 7.0}], [176.9, EV.grabDecoy - 0.55]);
 const H3 = holderPlan(2, 17, {x: 24.4, z: 11.0}, [{x: 18.6, z: 9.9}, {x: 15.9, z: 8.45}], [177.9, EV.grabFlares - 0.55]);
@@ -257,57 +348,81 @@ export const HOLDER_FINAL: Record<number, number> = {7101: 179.95, 7102: EV.grab
 type Slot = {id: number; pos: V3; heading: number};
 const slotOf = (id: number): Slot => (TB_RING.find((u) => u.id === id) ?? TB_OUTER.find((u) => u.id === id))!;
 const outward = (p: XZ, d: number): XZ => {
-  const dx = p.x - RING_C.x, dz = p.z - RING_C.z, L = Math.hypot(dx, dz) || 1;
+  const dx = p.x - RING_C.x, dz = p.z - RING_C.z, L = Math.hypot(dx, dz);
   return {x: p.x + (dx / L) * d, z: p.z + (dz / L) * d};
 };
-/** an escort unit: from the start arc, alongside the retreat, to a hold point outside its slot; it closes in later */
+/** a place to stand: pushed clear of the set's solid pieces (the feet must not stand on rubble) */
+const clearSpot = (p: XZ): XZ => pushOut(p, 0.55, {stepH: 0.1});
+/**
+ * An escort unit: from the start arc, alongside the retreat (guard up, ≤ 2.7 m/s: they herd, they do not wait in
+ * striking range), to a hold point outside its slot (weapon lowered but ready, scanning); at ringStep they step over
+ * the wrecks and close into their slots (stepping into blocking positions), then secure.
+ */
 const escortPlan = (a: (typeof ARC_START)[number], j: number): UPlan => {
   const s = slotOf(a.id);
   const outer = a.id >= 7300;
-  const hold = outward(s.pos, outer ? 3.2 : 3.6);
+  const hold = clearSpot(outward(s.pos, outer ? 3.2 : 3.6));
   const st = arcStartPos(a);
   const holdH = headingTo(hold, RING_C);
-  // they keep pace with the retreat (≤ ≈ 2.7 m/s), the far ones arriving later
   const Lw = pathLen([st.pos, arrive(hold, holdH, 1.5), hold]);
   const tHold = Math.max(159.4, M.P4 + Lw / 2.7) + rnd(a.id * 7) * 1.2;
-  const tIn = Math.max(tHold + 1, 168.2 + (j % 6) * 0.9 + rnd(a.id * 3) * 0.8);
+  const tIn = Math.max(tHold + 1, EV.ringStep + (j % 6) * 0.75 + rnd(a.id * 3) * 0.7);
   const tSet = tIn + 3.0 + rnd(a.id * 5) * 1.4 + (outer ? 2.5 : 0);
   return {
     id: a.id, name: `esc${a.id}`, eye: 'cyan',
     steps: [
-      {k: 'walk', pts: [st.pos, arrive(hold, holdH, 1.5), hold], T0: M.P4, T1: tHold, A: 0.2, D: 0.6},
+      {k: 'walk', pts: [st.pos, clearSpot(arrive(hold, holdH, 1.5)), hold], T0: M.P4, T1: tHold, A: 0.2, D: 0.6},
       {k: 'keys', root: [[tHold, hold.x, hold.z, holdH], [tIn, hold.x, hold.z, holdH]]},
-      {k: 'walk', pts: [hold, arrive(s.pos, s.heading, 1.2), s.pos], T0: tIn, T1: tSet, A: 0.5, D: 0.6},
-      {k: 'keys', root: [[tSet, s.pos.x, s.pos.z, s.heading]]},
+      {k: 'walk', pts: [hold, clearSpot(arrive(s.pos, s.heading, 1.2)), s.pos], T0: tIn, T1: tSet, A: 0.5, D: 0.6},
+      {k: 'keys', root: [[tSet, s.pos.x, s.pos.z, headingTo(clearSpot(arrive(s.pos, s.heading, 1.2)), s.pos)], [tSet + 0.5, s.pos.x, s.pos.z, s.heading]]},
     ],
-    act: (T) => ({look: T < tIn ? dirHeadAt(T) : undefined, idle: T > tSet ? 0.18 : 0.45}),
+    act: (T) => ({
+      look: T < tHold ? dirHeadAt(T) : undefined, idle: T > tSet ? 0.18 : 0.45,
+      // herding (guard), holding beyond reach (weapon lowered but ready, scanning), closing in (guard), settling in the
+      // slot into the tableau's stance ('idle' until its own 'ready'); ringExtras takes over in the slot (battle.tsx)
+      posture: [[-1, 'guard'], [tHold + 0.25, 'ready'], [tIn - 0.2, 'guard'], [tSet - 0.75, 'idle']],
+      scan: {t0: tHold + 0.6, t1: tIn - 0.3, center: {x: 12.5, y: 1.0, z: 3.0}, span: 46, seed: a.id},
+    }),
   };
 };
 const ESCORT_IDS = new Set(ARC_START.filter((a) => a.role === 'ring' || a.role === 'outer').map((a) => a.id));
 const ESCORT: UPlan[] = ARC_START.filter((a) => ESCORT_IDS.has(a.id)).map((a, j) => escortPlan(a, j));
+/** the south route along the ridge foot is closed early: these two step into the gap before ARRIVAL (seen from the van) */
+const BLOCKERS = new Set([7206, 7207]);
 /** the ring's west half and the outer ring's: round the ridge's north and south ends (they appear on the crest) */
 const flankPlan = (s: Slot, j: number): UPlan => {
   const north = s.pos.z < RING_C.z;
   const sz = north ? -1 : 1;
+  const early = BLOCKERS.has(s.id);
   // radially in from well outside the slot (spread by bearing), having come round the ridge's end from the north/south
-  const out = outward(s.pos, 3.0);
-  const via = outward(s.pos, 8.5);
-  const start: XZ = {x: via.x + 4 + rnd(s.id * 3) * 2, z: via.z + sz * (13 + rnd(s.id * 5) * 3)};
-  const T0 = 162.5 + (j % 7) * 0.9 + rnd(s.id * 11) * 1.2;
-  const T1 = 179.0 + rnd(s.id * 13) * 4.5 + (s.id >= 7300 ? 1.0 : 0);
+  const via = clearSpot(outward(s.pos, 8.5));
+  const start: XZ = clearSpot({x: via.x + 4 + rnd(s.id * 3) * 2, z: via.z + sz * (13 + rnd(s.id * 5) * 3)});
+  const T0 = early ? 152.4 + rnd(s.id) * 0.8 : 162.5 + (j % 7) * 0.9 + rnd(s.id * 11) * 1.2;
+  const T1 = early ? EV.blockersSet - 0.2 + rnd(s.id * 2) * 0.5 : 179.0 + rnd(s.id * 13) * 4.5 + (s.id >= 7300 ? 1.0 : 0);
+  const blockAt = early ? clearSpot(outward(s.pos, 1.6)) : null;
+  const steps: UStep[] = early ? [
+    {k: 'walk', pts: [start, via, clearSpot(arrive(blockAt!, s.heading, 1.4)), blockAt!], T0, T1, A: 0.6, D: 0.7},
+    {k: 'keys', root: [[T1, blockAt!.x, blockAt!.z, headingTo(clearSpot(arrive(blockAt!, s.heading, 1.4)), blockAt!)], [T1 + 0.5, blockAt!.x, blockAt!.z, s.heading], [EV.ringStep + 1.0 + rnd(s.id) * 0.6, blockAt!.x, blockAt!.z, headingTo(blockAt!, s.pos)]]},
+    {k: 'walk', pts: [blockAt!, s.pos], T0: EV.ringStep + 1.0 + rnd(s.id) * 0.6, T1: EV.ringStep + 2.6 + rnd(s.id) * 0.6, A: 0.4, D: 0.5, raw: true},
+    {k: 'keys', root: [[EV.ringStep + 2.6 + rnd(s.id) * 0.6, s.pos.x, s.pos.z, headingTo(blockAt!, s.pos)], [EV.ringStep + 3.1 + rnd(s.id) * 0.6, s.pos.x, s.pos.z, s.heading]]},
+  ] : [
+    {k: 'walk', pts: [start, via, clearSpot(arrive(s.pos, s.heading, 1.4)), s.pos], T0, T1, A: 0.6, D: 0.7},
+    {k: 'keys', root: [[T1, s.pos.x, s.pos.z, headingTo(clearSpot(arrive(s.pos, s.heading, 1.4)), s.pos)], [T1 + 0.5, s.pos.x, s.pos.z, s.heading]]},
+  ];
+  const tSet = (steps[steps.length - 1] as Extract<UStep, {k: 'keys'}>).root[0][0];
   return {
-    id: s.id, name: `flk${s.id}`, eye: 'cyan',
-    steps: [
-      {k: 'walk', pts: [start, via, arrive(s.pos, s.heading, 1.4), s.pos], T0, T1, A: 0.6, D: 0.7},
-      {k: 'keys', root: [[T1, s.pos.x, s.pos.z, s.heading]]},
-    ],
-    act: (T) => ({idle: T > T1 ? 0.18 : 0.4}),
+    id: s.id, name: `flk${s.id}`, eye: 'cyan', steps,
+    act: (T) => ({idle: T > tSet ? 0.18 : 0.4, posture: early ? [[-1, 'guard'], [T1 + 0.3, 'ready'], [tSet - 2.0, 'guard'], [tSet - 0.75, 'idle']] : [[-1, 'guard'], [tSet - 0.75, 'idle']],
+      scan: early ? {t0: T1 + 0.6, t1: tSet - 2.2, center: {x: 12.0, y: 1.0, z: 4.0}, span: 50, seed: s.id} : undefined}),
   };
 };
 const FLANK: UPlan[] = [...TB_RING, ...TB_OUTER].filter((u) => !ESCORT_IDS.has(u.id)).map((u, j) => flankPlan(u, j));
-/** when each ring unit is set in its tableau slot (its tableau spec draws from then on) */
+/** when each ring unit is set in its slot */
+export const RING_IN: Record<number, number> = {};
+[...ESCORT, ...FLANK].forEach((p) => { const k = p.steps[p.steps.length - 1]; if (k.k === 'keys') RING_IN[p.id] = k.root[0][0]; });
+/** when each ring unit's tableau spec (plus ringExtras) takes over: a quarter second after it is set in its slot */
 export const RING_SET: Record<number, number> = {};
-[...ESCORT, ...FLANK].forEach((p) => { const k = p.steps[p.steps.length - 1]; if (k.k === 'keys') RING_SET[p.id] = k.root[0][0] + 0.25; });
+[...ESCORT, ...FLANK].forEach((p) => { RING_SET[p.id] = RING_IN[p.id] + 0.75; });
 
 export const NAMED: Record<string, UPlan> = {W1, W2, W3, H1, H5, H2, H3, H4};
 export const RING_PLANS: UPlan[] = [...ESCORT, ...FLANK];
@@ -347,7 +462,9 @@ const hwFoot = (w: HWalk, i: number, d: number): V3 => {
   const c = d / H_STRIDE + ph, n = Math.floor(c), u = c - n;
   const plant = (k: number): [number, number] => {
     const r = w.standStart && k <= 0 ? hwPos(w, 0) : hwPos(w, (k - ph + H_DUTY / 2) * H_STRIDE);
-    return heavyStance(r.x, r.z, r.h, i);
+    // (a foot does not come down on a wreck or a chunk: it is set beside it)
+    const q = heavyStance(r.x, r.z, r.h, i), c = pushOut({x: q[0], z: q[1]}, 0.38, {stepH: 0.22, T: w.t0 + 0.5});
+    return [c.x, c.z];
   };
   if (u < H_DUTY) { const q = plant(n); return onG(q[0], q[1]); }
   const s = (u - H_DUTY) / (1 - H_DUTY);

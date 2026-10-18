@@ -68,8 +68,8 @@ export const DIRECTOR_HEAD: V3 = {x: DIRECTOR_SEAT.x - 0.2, y: DIRECTOR_SEAT.y +
 export const SURRENDER = {
   /** disarmed (launcher torn away 157.55), reel empty; H1 catches her left wrist (180.4): she strains toward him with
    *  her free hand out; the strain gives out (184.6: the hand drops, shoulders sag); grief: the free hand to her mouth
-   *  (198.6); her knees give and she sinks onto them, still held — H1's grip follows her wrist down (203.8 → 205.0) */
-  tether: {held: 180.4, giveUp: 184.6, mouth: 198.6, sink: 203.8, sunk: 205.0},
+   *  (198.6); her knees give and she sinks onto them, still held — H1's grip follows her wrist down (208.6 → 209.8) */
+  tether: {held: 180.4, giveUp: 184.6, mouth: 198.6, sink: 208.6, sunk: 209.8},
   /** tablet smashed (D3) and dropped (160.15); H2 catches her right wrist (181.0); she stops pulling — H2 lets go
    *  (183.55) and she raises both open hands (183.7 → 184.4), shaking; a glance to the breaker beside her (188.2);
    *  her hands sink to her thighs, palms still open (199.4) */
@@ -82,9 +82,9 @@ export const SURRENDER = {
    *  (D4 181.3); H4's hand comes down on his shoulder (182.3); his right hand grips his bleeding left forearm, shaking
    *  (until 189.5); he turns his face away (200.2) */
   breaker: {held: 182.3, shakeEnd: 189.5, away: 200.2},
-  /** struck down (155.86) and never got up: he tries to rise on an elbow toward the van (205.6); H5 snaps to him and
-   *  steps in over him; he lies back (207.0) */
-  runner: {rise: 205.6, down: 207.0},
+  /** struck down (155.86) and never got up: he tries to rise on his elbows toward the van (214.8); H5 snaps to him and
+   *  steps in over him; he lies back (216.3) */
+  runner: {rise: 214.8, down: 216.3},
 } as const;
 
 export type CrewPose =
@@ -144,6 +144,12 @@ const GRIP = {
 };
 /** The flare carrier's right shoulder (H3's second hand bears down on it). */
 export const FLARES_SHOULDER = rel(CREW_POS.flares, H.flares, -0.06, 0.16, 0.98);
+/** A window 0 → 1 → 0 between a and b. */
+const win = (T: number, a: number, b: number, ri = 0.3, ro = 0.3) => smooth((T - a) / ri) * (1 - smooth((T - (b - ro)) / ro));
+/** The flare carrier's heave against the arm lock (0 … 1 … 0): his body (crew.tsx) and H3's grip share it. */
+export const flaresHeave = (T: number) => win(T, 184.3, 185.25, 0.28, 0.5);
+/** H3's second hand: on the flare carrier's shoulder, lifted by his heave, then bearing down. */
+export const flaresShoulderAt = (T: number): V3 => ({...FLARES_SHOULDER, y: FLARES_SHOULDER.y + 0.09 * flaresHeave(T) - 0.03 * smooth((T - 185.2) / 0.5)});
 
 export const TB_CREW: Record<Role2, CrewState> = {
   director: {role: 'director', pos: DIRECTOR_SEAT, heading: PLAN.deathHeading, pose: 'slumped', look: on(14, 6, 1.2),
@@ -151,7 +157,7 @@ export const TB_CREW: Record<Role2, CrewState> = {
   drone: {role: 'drone', pos: on(CREW_POS.drone.x, CREW_POS.drone.z), heading: 255, pose: 'crawl', look: DIRECTOR_HEAD,
     note: 'knocked down by the van (brow cut), crawling to him on hands and knees from the van door: crew.pilotSpec crawls her from this spot (at 186.4) to his left side; she takes his hand (189.45) and never lets go'},
   tether: {role: 'tether', pos: on(CREW_POS.tether.x, CREW_POS.tether.z), heading: H.tether, pose: 'standHeld', look: DIRECTOR_HEAD,
-    held: {side: 'L', at: GRIP.tether, by: 'h_tether'}, note: 'disarmed, reel empty: held by the left wrist; strains toward him, gives up (184.6); later sinks to her knees, still held (203.8)'},
+    held: {side: 'L', at: GRIP.tether, by: 'h_tether'}, note: 'disarmed, reel empty: held by the left wrist; strains toward him, gives up (184.6); later sinks to her knees, still held (208.6)'},
   decoy: {role: 'decoy', pos: on(CREW_POS.decoy.x, CREW_POS.decoy.z), heading: H.decoy, pose: 'kneelHandsUp', look: DIRECTOR_HEAD,
     held: {side: 'R', at: GRIP.decoy, by: 'h_decoy'}, note: 'tablet smashed and dropped: caught by the right wrist (181.0), let go when she yields (183.55): on her knees, both open hands raised'},
   flares: {role: 'flares', pos: on(CREW_POS.flares.x, CREW_POS.flares.z), heading: H.flares, pose: 'kneelArmLock', look: DIRECTOR_HEAD,
@@ -159,7 +165,7 @@ export const TB_CREW: Record<Role2, CrewState> = {
   breaker: {role: 'breaker', pos: on(CREW_POS.breaker.x, CREW_POS.breaker.z), heading: H.breaker, pose: 'sitHurt', look: DIRECTOR_HEAD,
     held: {side: 'L', at: GRIP.breaker, by: 'h_breaker'}, note: 'leg gave way, forearm bleeding, breaker empty and dropped beside him: sits, a unit\'s hand on his shoulder; his hand shakes on the wound'},
   runner: {role: 'runner', pos: on(CREW_POS.runner.x, CREW_POS.runner.z), heading: H.runner, pose: 'lyingBack', look: DIRECTOR_HEAD,
-    note: 'struck down in D4-2 and stayed down, alive: on his back, head turned toward the van; a unit stands over him; tries to rise once (205.6)'},
+    note: 'struck down in D4-2 and stayed down, alive: on his back, head turned toward the van; a unit stands over him; tries to rise once (214.8)'},
 };
 
 /** Where the drone pilot is (chest height) while she crawls in and settles at his side: the machines' attention. */
@@ -256,9 +262,9 @@ export const TB_OUTER: RingUnit[] = (() => {
 export const TB_STEPS: {id: number; t0: number; t1: number; to: V3; face: V3; note: string}[] = [
   {id: 7308, t0: 203.9, t1: 205.6, to: {x: 0.3, y: 0, z: -5.6}, face: {x: 6.5, y: 0, z: 2.0}, note: 'outer, north-west: down onto the ridge path behind the van (the way out over the rubble)'},
   {id: 7216, t0: 205.2, t1: 206.4, to: {x: 5.0, y: 0, z: -2.9}, face: {x: 8.3, y: 0, z: 2.4}, note: 'inner, north: a step in toward the van'},
-  {id: 7307, t0: 207.0, t1: 208.9, to: {x: -3.6, y: 0, z: 2.3}, face: {x: 6.7, y: 0, z: 3.3}, note: 'outer, west: onto the crest behind the slab'},
-  {id: 7221, t0: 208.4, t1: 209.6, to: {x: 15.3, y: 0, z: -4.9}, face: {x: 12.3, y: 0, z: 0.6}, note: 'inner, north-east: in behind the tether operator as she sinks'},
-  {id: 7302, t0: 210.1, t1: 211.9, to: {x: 15.5, y: 0, z: 14.9}, face: {x: 14.0, y: 0, z: 7.4}, note: 'outer, south-east: closes the gap past the runner'},
+  {id: 7307, t0: 216.4, t1: 218.3, to: {x: -3.6, y: 0, z: 2.3}, face: {x: 6.7, y: 0, z: 3.3}, note: 'outer, west: onto the crest behind the slab'},
+  {id: 7221, t0: 212.6, t1: 213.8, to: {x: 15.3, y: 0, z: -4.9}, face: {x: 12.3, y: 0, z: 0.6}, note: 'inner, north-east: in behind the tether operator as she sinks'},
+  {id: 7302, t0: 218.7, t1: 220.5, to: {x: 15.5, y: 0, z: 14.9}, face: {x: 14.0, y: 0, z: 7.4}, note: 'outer, south-east: closes the gap past the runner'},
 ];
 /** The ring units that turn to the drone pilot while she crawls in (attention snaps to her, tracks her, lets go). */
 const PILOT_WATCH: Record<number, [number, number]> = {7214: [186.75, 189.9], 7216: [186.6, 190.4], 7218: [187.15, 189.6], 7210: [187.4, 190.2]};
@@ -348,7 +354,7 @@ export const holderSpecs = (T: number, grip?: (h: Holder, T: number) => V3): Uni
   }
   const at = (t: number) => (grip ? grip(h, t) : h.at);
   const restrain: RestrainSpec[] = [{t0: h.t0, side: h.side, at, t1: h.release, press: h.press ?? 0}];
-  if (h.second) restrain.push({t0: h.second.t0, side: h.side === 'L' ? 'R' : 'L', at: h.second.at, press: h.second.press});
+  if (h.second) restrain.push({t0: h.second.t0, side: h.side === 'L' ? 'R' : 'L', at: h.key === 'h_flares' ? flaresShoulderAt : h.second.at, press: h.second.press});
   const free: Posture = h.release ? 'ready' : 'lowered';
   const out: UnitSpec = {...base, restrain, posture: [[h.t0 + 0.6, free]]};
   if (h.release) {
@@ -378,11 +384,18 @@ export const wreckSpecs = (T: number): UnitSpec[] => TB_WRECKS.map((w) => ({
 export const heavy2Spec = (T: number): HeavySpec => ({id: TB_HEAVY2.id, t: T, pos: TB_HEAVY2.pos, heading: TB_HEAVY2.heading, look: TB_HEAVY2.look, eye: TB_HEAVY2.eye, ground: G, key: 'tb_heavy2'});
 export const heavy1Spec = (T: number): HeavySpec => ({id: TB_HEAVY1.id, t: T, pos: TB_HEAVY1.pos, heading: TB_HEAVY1.heading, kneeBreak: TB_HEAVY1.kneeBreak, pinned: TB_HEAVY1.pinned, eye: 'off', ground: G, key: 'tb_heavy1'});
 
-/** The diver (7601) follows the drone pilot while she crawls in; the others hold their places. */
+/** The diver (7601) watches the drone pilot while she crawls in, then (201.5–206.5) drifts up and west over the
+ *  ridge slope to a higher watch over the pair (out of the pullback's line to the van door); the others hold. */
+export const DRONE_7601_MOVE = {t0: 201.5, t1: 206.5, to: {x: 2.6, y: 7.2, z: 7.4} as V3};
 export const droneSpecs = (T: number): DroneSpec[] => TB_DRONES.map((d) => {
   const w = d.id === 7601 ? smooth((T - 186.5) / 0.5) * (1 - smooth((T - 190.2) / 1.2)) : 0;
   const look = w > 0 ? {x: lerp(d.look.x, pilotMoving(T).x, w), y: lerp(d.look.y, pilotMoving(T).y, w), z: lerp(d.look.z, pilotMoving(T).z, w)} : d.look;
-  return {id: d.id, t: T, pos: d.pos, heading: d.heading, look, eye: d.eye, ground: G, key: `tb_d${d.id}`};
+  if (d.id !== 7601) return {id: d.id, t: T, pos: d.pos, heading: d.heading, look, eye: d.eye, ground: G, key: `tb_d${d.id}`};
+  const m = DRONE_7601_MOVE, k = smooth((T - m.t0) / (m.t1 - m.t0));
+  const pos = {x: lerp(d.pos.x, m.to.x, k), y: lerp(d.pos.y, m.to.y, k), z: lerp(d.pos.z, m.to.z, k)};
+  const sp = k > 0 && k < 1 ? 1 / (m.t1 - m.t0) : 0;
+  const vel = {x: (m.to.x - d.pos.x) * sp * 1.5 * Math.sin(Math.PI * k), y: 0, z: (m.to.z - d.pos.z) * sp * 1.5 * Math.sin(Math.PI * k)};
+  return {id: d.id, t: T, pos, heading: d.heading, vel, look, eye: d.eye, ground: G, key: `tb_d${d.id}`};
 });
 
 // ------------------------------------------------------------------ the avenue: a halted reserve block and the streams
@@ -527,7 +540,7 @@ const POSTS: Record<string, Post[]> = {
   ],
 };
 /** When each squad has taken its intersection (x1: before the camera finds it). */
-const HOLD_ARRIVE: Record<string, number> = {x1: 196.0, x2: 214.2, x3: 216.4};
+const HOLD_ARRIVE: Record<string, number> = {x1: 196.0, x2: 219.6, x3: 222.2};
 export type HoldUnit = {id: number; hold: string; post: V3; heading: number; route: P2[]; t0: number; t1: number};
 export const TB_HOLDS: HoldUnit[] = (() => {
   const out: HoldUnit[] = [];

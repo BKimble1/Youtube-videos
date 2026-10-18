@@ -63,7 +63,7 @@ export const EV = {
   kneesGo: 178.35, // the legs fail under him: he sags against the slab
   // ---- D4-9 SOFTEN: he slides down and cannot rise; the surrender (179.30–183.30)
   slide: M.SOFTEN, slideEnd: 180.65,
-  tryRise: 181.15, tryRiseEnd: 182.05, // one attempt to push himself up: the arm will not hold him
+  tryRise: 182.15, tryRiseEnd: 183.05, // one attempt to push himself up: the arm will not hold him
   grabTether: 180.4, grabDecoy: 181.0, grabFlares: 181.7, grabBreaker: 182.3, // = EF tableau TB_HOLDERS t0s
   heavyBack: 178.9, heavyBackEnd: 180.9, // heavy 2 takes one slow step back into its tableau stance (as the ram retracts)
   pilotUp: 183.7, pilotUpEnd: 185.45, // the drone pilot gets onto her hands and knees
@@ -77,5 +77,5 @@ export const SH = {
   d41: M.P4, d41b: 152.5, d42a: 154.5, d42b: 156.7, d43: 158.5, d43b: 160.75, d44a: M.ARRIVAL, d44b: 163.62, d44c: 164.72, d44d: 165.62,
   d45: M.LOCAL_WIN, d45b: 169.06, d46a: M.REALIZE, d46b: 172.6, d47: 175.04, d47b: 175.74, d47c: 176.45,
   // D4-8 opens 0.31 s before STRIKE: the ram's last thrust, the contact (177.76) and his flight into the slab in one shot
-  d48: 177.45, d49a: M.SOFTEN, d49b: 180.8, d49c: 182.25, d410: M.B184, end: M.FINAL_HIT,
+  d48: 177.45, d49a: M.SOFTEN, d49b: 180.8, d49c: 182.0, d410: M.B184, end: M.FINAL_HIT,
 };

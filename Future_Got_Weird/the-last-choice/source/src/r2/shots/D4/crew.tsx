@@ -9,6 +9,7 @@ import {makeView} from '../../engine';
 import {
   FigSpec, Pose, blendPose, layer, lookR2, dmgR2, toolsR2, BRACED, BASH, CHARGE_POSE, THROW, KNEEL, KNOCKED_BACK, LYING_BACK, SLUMP,
   plateWear, tetherLauncher, hipReel, tablet, breaker as breakerTool, controller, halligan1, flare as flareHold, figureRig, handOn, GaitW, Role2,
+  expr, exprMix,
 } from '../../rig';
 import type {FigProps} from '../../rig';
 import {unitAttach, heavyAttach} from '../../mech';
@@ -40,7 +41,7 @@ const gaitArms = (g?: Pose): Pose => (g ? {armL: g.armL, armR: g.armR} : {});
 /** run pose: the gait's body (drop, lean, bob) plus role arms, faded into the stance pose by runK */
 const withRun = (b: Body, stance: Pose, runArms: Pose): Pose => {
   if (!b.gait || b.runK <= 0.001) return stance;
-  const run = layer(b.gait, runArms, {face: {mouth: 'grit', brows: -0.6}});
+  const run = layer(b.gait, runArms, {face: expr('effort', 0.8)});
   return blendPose(stance, run, b.runK);
 };
 const look = (pose: Pose, b: {pos: V3; heading: number}, at: V3, w = 1, lim = 75): Pose => {
@@ -48,6 +49,17 @@ const look = (pose: Pose, b: {pos: V3; heading: number}, at: V3, w = 1, lim = 75
   return {...pose, head: {yaw: lerp(h.yaw ?? 0, lookYaw(b, at, lim), w), pitch: lerp(h.pitch ?? 0, lookPitch(b, at), w), roll: h.roll}};
 };
 const face = (pose: Pose, f: Pose['face']): Pose => ({...pose, face: {...(pose.face ?? {}), ...f}});
+/**
+ * A look target that moves from one thing to the next over ~0.15 s instead of in one frame: the targets of the last
+ * 0.16 s, averaged (newest weighted most); w = how much of that window had a target at all (a look that starts or
+ * ends fades in or out).
+ */
+const smoothLook = (f: (t: number) => V3 | null, T: number): {at: V3; w: number} | null => {
+  const W = [5, 4, 3, 2, 1];
+  let sx = 0, sy = 0, sz = 0, sw = 0, tot = 0;
+  W.forEach((w, i) => { tot += w; const p = f(T - i * 0.04); if (p) { sx += p.x * w; sy += p.y * w; sz += p.z * w; sw += w; } });
+  return sw > 0 ? {at: {x: sx / sw, y: sy / sw, z: sz / sw}, w: sw / tot} : null;
+};
 /** kneeling footholds: the front foot forward, the down knee's foot back on its toes (D1's kneelFeet) */
 const kneelFeet = (b: {pos: V3; heading: number; footL: V3; footR: V3}, down: 'L' | 'R', w: number): void => {
   if (w <= 0.001) return;
@@ -131,7 +143,7 @@ const DIR_SEGS: Seg[] = [
     [175.5, 12.78, 6.36, 80], [EV.dirSees, 12.8, 6.4, 76], [EV.dirSprint, 12.8, 6.4, headingTo(SPRINT[0], SPRINT[1])],
   ]},
   {kind: 'run', path: SPRINT, T0: EV.dirSprint, T1: EV.dirPlant, gait: GAITS.sprint, A: 0.3, D: 0.25},
-  {kind: 'stand', root: [[177.42, SPRINT[2].x, SPRINT[2].z, runEnd(SPRINT).h], [177.66, PLANT.x, PLANT.z, PLANT.h], [178.0, PLANT.x, PLANT.z, PLANT.h]], feet: PLANT_FEET},
+  {kind: 'stand', root: [[177.42, SPRINT[SPRINT.length - 1].x, SPRINT[SPRINT.length - 1].z, runEnd(SPRINT).h], [177.66, PLANT.x, PLANT.z, PLANT.h], [178.0, PLANT.x, PLANT.z, PLANT.h]], feet: PLANT_FEET},
 ];
 /** the plate's world centre for a body and a guard (as marks.plateAt) */
 const plateFrom = (b: {pos: V3; heading: number}, g: {r: number; u: number; f: number}): V3 => {
@@ -183,7 +195,8 @@ export const directorAt = (T: number): CrewOut => {
   const hit = T < blk ? 0 : T < blk + 0.06 ? (T - blk) / 0.06 : Math.exp(-(T - blk - 0.06) * 3.2);
   let guard = lerpLoc(GUARD, BLOCK_GUARD, br1In);
   guard = {r: guard.r, u: guard.u - 14 * hit, f: guard.f - 30 * hit};
-  let pose: Pose = layer(BRACED({wide: 0.8}), {face: {mouth: 'pant', brows: -0.4}, breath: 0.8});
+  // spent but watching them: exhaustion and concentration
+  let pose: Pose = layer(BRACED({wide: 0.8}), {face: {...exprMix('exhaustion', 'concentration', 0.55), mouth: 'pant'}, breath: 0.8});
   // BLOCK: braced for the hammer (he sees it come), the blow drives the plate into him, the heels skid, he absorbs it
   if (T > blk - 0.5 && T < 154.6) {
     const skidK = T >= blk ? clamp((T - blk) / 0.3) : 0, recov = after(T, blk + 0.65, 0.9);
@@ -192,16 +205,22 @@ export const directorAt = (T: number): CrewOut => {
       lean: lerp(12 * br1In, -14, hit * (1 - recov)), twist: -12 * br1In,
       head: {pitch: 4 + 10 * hit, yaw: -8 * hit},
       legL: {pitch: -22 * win(T, blk, blk + 0.4, 0.04, 0.15)}, legR: {pitch: -16 * win(T, blk, blk + 0.38, 0.04, 0.15)},
-      face: {mouth: hit > 0.3 ? 'pain' : 'grit', brows: -0.8, squint: 0.4 + 0.5 * hit}, breath: 0.7,
+      face: hit > 0.3 ? expr('pain', 0.9) : expr('effort'), breath: 0.7,
     });
   }
-  const glance = win(T, 153.95, 154.4, 0.15, 0.15); // a look down at the plate: cracked right through
+  const glance = win(T, 153.92, 154.42, 0.2, 0.18); // a look down at the plate: cracked right through
+  if (glance > 0) pose = face(pose, expr('realization', glance));
+  // W1 presses after him and hooks at his head as he turns away: he ducks under it (154.42) and runs
+  const duck1 = win(T, 154.2, 154.74, 0.13, 0.24);
+  if (duck1 > 0) pose = {...pose, drop: (pose.drop ?? 0) + 30 * duck1, lean: (pose.lean ?? 0) + 20 * duck1, face: {...(pose.face ?? {}), ...expr('fear', 0.7 * duck1)}};
   // D4-3: panting; he looks round at them; the arm goes up (161.75)
   // (the fist goes well above his head — from behind him it must clear the head to read)
   const arm = win(T, EV.armUp - 0.3, 162.3, 0.28, 0.18);
   // and it sweeps forward, at them, as he goes (not back down past his head)
   const go = after(T, 162.0, 0.25);
-  if (arm > 0) pose = blendPose(pose, layer(pose, {armR: {local: {r: 24, u: lerp(565, 430, go), f: lerp(34, 175, go)}, pole: {r: 1, u: 0, f: -0.4}}, handR: 'fist', face: {mouth: 'grit', brows: -0.9}, lean: 2 + 10 * go, drop: 10}), arm);
+  const atVan = win(T, 158.6, 161.5, 0.5, 0.4);
+  if (atVan > 0) pose = face(pose, {...exprMix('exhaustion', 'resolve', smooth((T - 160.85) / 0.7)), mouth: T < 161.2 ? 'pant' : 'flat'});
+  if (arm > 0) pose = blendPose(pose, layer(pose, {armR: {local: {r: 24, u: lerp(565, 430, go), f: lerp(34, 175, go)}, pole: {r: 1, u: 0, f: -0.4}}, handR: 'fist', face: expr('anger'), lean: 2 + 10 * go, drop: 10}), arm);
   // the charges: shoulder-down run, the plate driven into W1's chest (163.3); into W3 (165.02)
   const ch1 = win(T, 162.05, 163.55, 0.2, 0.25), ch2 = win(T, 163.95, 165.25, 0.2, 0.25);
   let chg = 0;
@@ -211,23 +230,29 @@ export const directorAt = (T: number): CrewOut => {
     const imp = T < tHit ? 0 : Math.exp(-(T - tHit) * 9);
     const P = layer(CHARGE_POSE, BASH(k), {
       armL: {local: {r: -4, u: lerp(300, 330, k), f: lerp(110, 165, k) - 24 * imp}, pole: {r: -1, u: -0.5, f: 0}, palm: {r: 0.2, u: 0, f: -1}},
-      drop: 30 + 8 * imp, lean: lerp(26, 20, k) + 8 * imp, face: {mouth: 'grit', brows: -1, squint: 0.6},
+      drop: 30 + 8 * imp, lean: lerp(26, 20, k) + 8 * imp, face: expr('anger'),
     });
     chg = Math.max(ch1, ch2);
     pose = blendPose(pose, P, chg);
   }
+  // ARRIVAL: W1 swings first (163.12): he ducks under the hook, inside it, and the plate goes into its open chest
+  const duck2 = win(T, 162.92, 163.27, 0.08, 0.1);
+  if (duck2 > 0) pose = {...pose, drop: (pose.drop ?? 0) + 22 * duck2, lean: (pose.lean ?? 0) + 10 * duck2, head: {...(pose.head ?? {}), pitch: (pose.head?.pitch ?? 0) + 14 * duck2}};
   // after the charges: the breath of hope (soft face), then the ring: dread
-  const hope = win(T, 166.2, 170.5, 0.6, 0.5), dread = win(T, 170.5, 176.0, 0.5, 0.3);
-  if (hope > 0) pose = blendPose(pose, layer(pose, {drop: 18, lean: 6, face: {mouth: 'pant', brows: 0.15, worry: 0.15, squint: 0}, breath: 1}), hope);
-  if (dread > 0) pose = blendPose(pose, layer(pose, {drop: 22, lean: 4, face: {mouth: 'sad', brows: 0.7, worry: 0.9}, breath: 0.9}), dread);
-  // he sees the ram rise at her: the sprint; the plant; a high block (the plate up into the ram's path)
-  const see = win(T, EV.dirSees, 176.4, 0.12, 0.2);
-  if (see > 0) pose = face(pose, {mouth: 'o', brows: 0.8, worry: 0.6});
+  // after the charges: a breath of hope (it is brief: the machines come on again at 167.9), then dread as the ring closes
+  const hope = win(T, 166.2, EV.hopeEnd + 0.3, 0.5, 0.5), dread = win(T, EV.hopeEnd, EV.dirSees + 0.05, 0.6, 0.06);
+  if (hope > 0) pose = blendPose(pose, layer(pose, {drop: 18, lean: 6, face: {...expr('relief', 0.75), mouth: 'pant'}, breath: 1}), hope);
+  if (dread > 0) pose = blendPose(pose, layer(pose, {drop: 22, lean: 4, face: exprMix('realization', 'fear', smooth((T - EV.realize) / 2.5) * 0.6), breath: 0.9}), dread);
+  // SEE (175.98): his head snaps round to her — the shock of it, the body straightens; CHOOSE (176.2): the jaw sets,
+  // the weight drops and loads toward her; he launches (176.35)
+  const see = win(T, EV.dirSees, EV.dirChoose + 0.08, 0.06, 0.1), choose = win(T, EV.dirChoose, EV.dirSprint + 0.25, 0.08, 0.2);
+  if (see > 0) pose = {...pose, drop: (pose.drop ?? 0) - 10 * see, lean: (pose.lean ?? 0) - 6 * see, face: {...(pose.face ?? {}), ...expr('shock', see)}};
+  if (choose > 0) pose = {...pose, drop: (pose.drop ?? 0) + 14 * choose, lean: (pose.lean ?? 0) + 12 * choose, face: {...(pose.face ?? {}), ...expr('resolve', choose)}};
   const plantK = after(T, 177.4, 0.22);
-  if (plantK > 0) pose = blendPose(pose, layer(BRACED({wide: 0.9}), {drop: 34, lean: 12, twist: -10, face: {mouth: 'grit', brows: -0.9, squint: 0.5}, breath: 0.8}), plantK);
+  if (plantK > 0) pose = blendPose(pose, layer(BRACED({wide: 0.9}), {drop: 34, lean: 12, twist: -10, face: expr('anger'), breath: 0.8}), plantK);
   // looks
-  const lt = dirLook(T);
-  if (lt) pose = look(pose, b, lt, 1 - chg);
+  const lt = smoothLook(dirLook, T);
+  if (lt) pose = look(pose, b, lt.at, lt.w * (1 - chg));
   if (glance > 0) { const h = pose.head ?? {}; pose = {...pose, head: {yaw: lerp(h.yaw ?? 0, -22, glance), pitch: lerp(h.pitch ?? 0, 32, glance), roll: h.roll}, face: {...pose.face, lookY: 0.7 * glance}}; }
   // the plate arm: the body-local guard except on the runs, the charges, the raised arm's balance
   // spent, looking round at the ring (REALIZE → he sees the ram): the plate arm sinks to his waist, off his face
@@ -255,22 +280,46 @@ export const dirSeatSpec = (T: number, anchor?: V3): FigSpec => {
   if (T >= 186.0) return s;
   const p = s.pose as Pose;
   const bb = slumpBreath(T);
-  // (until the wide D4-10 hides his face: hurt, not E/F's quiet breath — its small open mouth reads as a smile here)
-  const hurt = T < 185.5;
-  return {...s, key: 'd4dir', pose: {...p, bodyPitch: -(27 + bb * 1.3), head: {...(p.head ?? {}), pitch: 24 - bb * 2.2},
-    face: {...(p.face ?? {}), open: clamp(0.14 + 0.2 * bb, 0, 0.6), mouth: hurt ? 'sad' : 'breath', ...(hurt ? {worry: 0.85, brows: 0.55} : {})}}};
+  // (hurt until the breath settles into E/F's: pain giving way to exhaustion)
+  const hurt = 1 - smooth((T - 184.6) / 1.3);
+  // he cannot rise: one attempt to push himself up on his left hand (181.15 → 182.05) — the torso comes off the slab,
+  // the hips lift a few centimetres, the arm shakes and gives; he sinks back against it
+  const tr = EV.tryRise, te = EV.tryRiseEnd;
+  const up = smooth((T - tr) / 0.42) * (1 - smooth((T - (te - 0.36)) / 0.36));
+  const give = win(T, te - 0.42, te + 0.4, 0.12, 0.3);
+  const shake = up * Math.sin(T * 2 * Math.PI * 8.5) * 2.2;
+  let face: Pose['face'] = {...(p.face ?? {}), ...exprMix('pain', 'exhaustion', 1 - hurt), open: clamp(0.14 + 0.2 * bb, 0, 0.6)};
+  if (up > 0.05) face = {...face, ...expr('effort', up)};
+  const pose: Pose = {
+    ...p, drop: (p.drop ?? 128) - 9 * up, bodyPitch: -(27 + bb * 1.3) + 15 * up - 4 * give,
+    head: {...(p.head ?? {}), pitch: 24 - bb * 2.2 - 12 * up + 6 * give},
+    face,
+  };
+  const out: FigSpec = {...s, key: 'd4dir', pose};
+  if (up > 0.01) {
+    // the left palm on the ground beside his hip, pushing (the plate fragments still strapped to the forearm)
+    const R0 = figureRig(SOLVE_VIEW, out);
+    const f = fwdOf(s.heading), r = rightOf(s.heading);
+    const palm = {x: s.pos.x - r.x * 0.36 + f.x * 0.02, y: G(s.pos.x - r.x * 0.36, s.pos.z - r.z * 0.36) + 0.03 + 0.01 * shake, z: s.pos.z - r.z * 0.36 + f.z * 0.02};
+    const k = smooth(Math.min(1, up * 1.6));
+    out.world = {...(out.world ?? {}), handL: lerp3v(R0.handL, palm, k), orientL: {palm: {x: 0, y: -1, z: 0}, fingers: {x: f.x, y: 0, z: f.z}, w: k}};
+    out.pose = {...pose, handL: k > 0.5 ? 'brace' : 'limp'};
+  }
+  return out;
 };
 const dirSeat = (T: number): CrewOut => ({spec: dirSeatSpec(T), body: {pos: DIRECTOR_SEAT, heading: TB_CREW.director.heading}});
 /** against the slab (177.99–179.3): leaning back on it, knees going, head down, right hand to his left side */
 const againstSpec = (T: number): FigSpec => {
   const sag = smooth((T - EV.slam) / 1.3);
   const snap = T < EV.slam ? 0 : Math.exp(-(T - EV.slam) * 7) * Math.sin(Math.min(Math.PI, (T - EV.slam) * 14));
+  // the legs fail under him (178.35): the knees buckle in a quarter second, a catch, then the slow sag
+  const buckle = T < EV.kneesGo ? 0 : easeIn(clamp((T - EV.kneesGo) / 0.24)) - 0.12 * Math.sin(Math.PI * clamp((T - EV.kneesGo - 0.24) / 0.3));
   const pose: Pose = {
-    drop: 30 + 22 * sag, lean: -22 + 6 * sag, bodyPitch: 0, twist: 4,
-    head: {pitch: -12 * snap + 26 * sag, yaw: -10, roll: 8 * sag},
+    drop: 30 + 30 * buckle + 16 * sag, lean: -22 + 6 * sag + 6 * buckle, bodyPitch: 0, twist: 4,
+    head: {pitch: -12 * snap + 22 * sag + 10 * buckle, yaw: -10, roll: 8 * sag},
     armL: {fk: {fwd: 8, out: 18, bend: 20}}, handL: 'limp',
     armR: {fk: {fwd: 30, out: 10, bend: 70}}, handR: 'open',
-    face: {mouth: sag > 0.35 ? 'sad' : 'pain', lid: 0.25 + 0.2 * sag, brows: 0.55, worry: 0.9},
+    face: buckle > 0.3 ? {...exprMix('pain', 'exhaustion', sag), worry: 0.95} : {...expr('pain'), brows: 0.6},
     breath: 1, wearL: plateWear('shattered'),
   };
   const s = base('director', 'd4dir', 11, {pos: ON(SLAM), heading: SLAM.h, footL: SLAM_FEET.L, footR: SLAM_FEET.R}, T, pose);
@@ -301,7 +350,7 @@ const dirThrown = (T: number): CrewOut => {
       head: {pitch: -18 + 10 * u, yaw: -6},
       armL: {local: {r: -70, u: 300, f: -40}, pole: {r: -1, u: 0.3, f: -0.4}}, handL: 'open',
       armR: {fk: {fwd: 70, out: 50, bend: 25}}, handR: 'open',
-      face: {mouth: 'pain', brows: 0.6, squint: 0.8, lid: 0.4}, breath: 0.4, wearL: plateWear('shattered'),
+      face: {...expr('pain'), brows: 0.7}, breath: 0.4, wearL: plateWear('shattered'),
     };
     const spec = base('director', 'd4dir', 11, {pos, heading, footL: ft(fl0, SLAM_FEET.L, 0.18), footR: ft(fr0, SLAM_FEET.R, 0.1)}, T, pose);
     return {spec, body: {pos, heading}};
@@ -324,7 +373,7 @@ const TTH_SEGS: Seg[] = [
   {kind: 'stand', stag: 0.14, root: [[155.95, 18.7, -1.42, runEnd(TTH_RUN1).h], [156.3, 18.62, -1.4, TETHER_FACE.h], [156.75, TETHER_FACE.x, TETHER_FACE.z, TETHER_FACE.h],
     [EV.disarmGrab, TETHER_FACE.x, TETHER_FACE.z, TETHER_FACE.h], [EV.disarmTear, TETHER_FACE.x + 0.06, TETHER_FACE.z, TETHER_FACE.h], [157.95, 17.5, -1.25, 100], [158.3, 17.35, -1.2, 272]]},
   {kind: 'run', path: TTH_RUN2, T0: 158.3, T1: 159.75, gait: GAITS.run, A: 0.4, D: 0.5},
-  {kind: 'stand', stag: 0.12, root: [[159.75, GATHER.tether.x, GATHER.tether.z, runEnd(TTH_RUN2).h], [160.2, GATHER.tether.x, GATHER.tether.z, GATHER.tether.h], [162.6, GATHER.tether.x, GATHER.tether.z, 90]]},
+  {kind: 'stand', stag: 0.12, root: [[159.75, GATHER.tether.x, GATHER.tether.z, runEnd(TTH_RUN2).h], [160.2, GATHER.tether.x, GATHER.tether.z, GATHER.tether.h], [162.15, GATHER.tether.x, GATHER.tether.z, 90], [162.6, GATHER.tether.x, GATHER.tether.z, headingTo(TTH_RUN3[0], TTH_RUN3[1])]]},
   {kind: 'run', path: TTH_RUN3, T0: 162.6, T1: 164.15, gait: GAITS.run, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.16, root: [[164.15, 15.1, -0.4, runEnd(TTH_RUN3).h], [164.4, 15.1, -0.4, 40], [164.95, 14.9, -0.2, 36], [165.4, 14.95, -0.22, 36], [166.0, 15.1, -0.3, 60],
     [167.8, 15.15, -0.25, 70], [168.4, 15.1, -0.2, 25], [170.6, 15.0, -0.1, 62], [172.0, 14.6, -0.3, 340], [173.4, 14.0, -0.6, 90], [174.8, 13.5, -1.3, 100],
@@ -337,15 +386,15 @@ export const tetherAt = (T: number): CrewOut => {
   if (T >= TTH_HELD) return {spec: heldSpec('tether', T), body: {pos: TB_CREW.tether.pos, heading: TB_CREW.tether.heading}};
   const b = bodyAt(TTH_SEGS, T);
   const armed = T < EV.disarmTear;
-  let pose: Pose = layer(BRACED({wide: 0.75}), {armR: {local: {r: 30, u: 240, f: 90}}, armL: {local: {r: -30, u: 220, f: 60}}, handL: 'open', face: {mouth: 'pant', brows: -0.5}, breath: 0.8});
+  let pose: Pose = layer(BRACED({wide: 0.75}), {armR: {local: {r: 30, u: 240, f: 90}}, armL: {local: {r: -30, u: 220, f: 60}}, handL: 'open', face: {...exprMix('exhaustion', 'fear', 0.4), mouth: 'pant'}, breath: 0.8});
   const world: FigSpec['world'] = {};
   const pts: Record<string, V3> = {};
   // the bluff and the disarm: the empty launcher levelled at H1, its fist closes on the barrel, the tug, torn away
   const aim = win(T, 156.2, EV.disarmTear + 0.02, 0.3, 0.02);
   if (aim > 0) {
     const g = T < EV.disarmGrab ? lerp3v(fromLoc(b, {r: 30, u: 240, f: 90}), fromLoc(b, {r: 22, u: 300, f: 128}), smooth((T - 156.2) / 0.4)) : tugGrip(T);
-    const tug = win(T, EV.disarmGrab, EV.disarmTear, 0.05, 0.02);
-    pose = blendPose(pose, layer(pose, {drop: 18 + 14 * tug, lean: lerp(6, -14, tug), twist: 12, face: {mouth: tug > 0.3 ? 'grit' : 'flat', brows: -0.8, squint: 0.5}}), aim);
+    const tug = win(T, EV.disarmGrab - 0.04, EV.disarmTear, 0.14, 0.02);
+    pose = blendPose(pose, layer(pose, {drop: 18 + 14 * tug, lean: lerp(6, -14, tug), twist: 12, face: tug > 0.3 ? expr('effort') : exprMix('concentration', 'fear', 0.35)}), aim);
     world.handR = g;
     world.handL = add3(g, {x: 0.1, y: -0.07, z: -0.04});
     pts.grip = g;
@@ -353,7 +402,7 @@ export const tetherAt = (T: number): CrewOut => {
   const torn = win(T, EV.disarmTear, 158.4, 0.02, 0.4);
   if (torn > 0) {
     // the hands fly back empty; she staggers back, shocked
-    pose = blendPose(pose, layer(pose, {drop: 22, lean: -16, armR: {fk: {fwd: 60, out: 40, bend: 30}}, armL: {fk: {fwd: 40, out: 50, bend: 30}}, handR: 'open', handL: 'open', face: {mouth: 'o', brows: 0.75, worry: 0.7}}), torn);
+    pose = blendPose(pose, layer(pose, {drop: 22, lean: -16, armR: {fk: {fwd: 60, out: 40, bend: 30}}, armL: {fk: {fwd: 40, out: 50, bend: 30}}, handR: 'open', handL: 'open', face: expr('shock')}), torn);
   }
   // D4-3: the cut length of cable off her reel, into both hands
   const pull = win(T, EV.cablePull, 164.12, 0.25, 0.04);
@@ -373,21 +422,24 @@ export const tetherAt = (T: number): CrewOut => {
     const pl = fromLoc(b, {r: -8, u: 215, f: 40}), pr = fromLoc(b, {r: 18, u: 205, f: 30});
     world.handR = lerp3v(hr, pr, haul);
     world.handL = lerp3v(hl, pl, haul);
-    pose = blendPose(pose, layer(pose, {drop: 30 + 20 * haul, lean: lerp(10, -26, haul), twist: lerp(28, -6, k), handL: 'grip', handR: haul > 0.2 ? 'grip' : k > 0.85 ? 'open' : 'grip', face: {mouth: 'grit', brows: -1, squint: 0.6}}), Math.max(thr, haul));
+    pose = blendPose(pose, layer(pose, {drop: 30 + 20 * haul, lean: lerp(10, -26, haul), twist: lerp(28, -6, k), handL: 'grip', handR: haul > 0.2 ? 'grip' : k > 0.85 ? 'open' : 'grip', face: expr('effort')}), Math.max(thr, haul));
   }
   // the lunge toward him after the strike; her left arm swings back — where the unit catches the wrist (180.4)
   const lunge = after(T, 178.15, 0.3);
   if (lunge > 0) {
-    pose = blendPose(pose, layer(pose, {drop: 14, lean: 18, armR: {local: {r: 24, u: 230, f: 120}}, handR: 'open', face: {mouth: 'open', open: 0.45, brows: 0.75, worry: 0.95}}), lunge);
+    pose = blendPose(pose, layer(pose, {drop: 14, lean: 18, armR: {local: {r: 24, u: 230, f: 120}}, handR: 'open', face: {...exprMix('shock', 'fear', smooth((T - 178.4) / 0.8)), mouth: 'open', open: 0.3}}), lunge);
     const c = smooth((T - (EV.grabTether - 0.45)) / 0.45);
     if (c > 0) world.handL = lerp3v(fromLoc(b, {r: -40, u: 210, f: -20}), gripAt('tether', T), c);
   }
   // looks
-  const lt: V3 | null = T < 156.0 ? unitAttach(unitD4('H1', T)).head : T < 158.4 ? unitAttach(unitD4('H1', T)).head
-    : T > 161.6 && T < 162.4 ? headOf('director', T) : T > 162.4 && T < 165.4 ? unitAttach(unitD4('W3', T)).kneeL
-      : T > 167.8 && T < 169.0 ? headOf('director', T) : T > 175.7 && T < 177.9 ? ON(PILOT_DOWN, 0.6) : T >= 177.9 ? ON(SLAM, 1.1) : null;
-  if (lt) pose = look(pose, b, lt, 1);
-  if (T > 170.5 && T < 175.7) pose = face(pose, {mouth: 'sad', brows: 0.65, worry: 0.85});
+  const LT = (t: number): V3 | null => (t < 156.0 ? unitAttach(unitD4('H1', t)).head : t < 158.4 ? unitAttach(unitD4('H1', t)).head
+    : t > 161.6 && t < 162.4 ? headOf('director', t) : t > 162.4 && t < 165.4 ? unitAttach(unitD4('W3', t)).kneeL
+      : t > 167.8 && t < 169.0 ? headOf('director', t) : t > 175.7 && t < 177.9 ? ON(PILOT_DOWN, 0.6) : t >= 177.9 ? ON(SLAM, 1.1) : null);
+  const lt = smoothLook(LT, T);
+  if (lt) pose = look(pose, b, lt.at, lt.w);
+  if (T > 166.4 && T < EV.hopeEnd) pose = face(pose, {...expr('relief', 0.6), mouth: 'pant'});
+  if (T > EV.hopeEnd && T < 175.7) pose = face(pose, exprMix('realization', 'fear', smooth((T - EV.realize) / 2)));
+  if (T > 175.7 && T < 178.15) pose = face(pose, expr('fear'));
   const runArms: Pose = {armR: {local: {r: 26, u: 236, f: 64}}, armL: b.gait?.armL};
   const final = withRun(b, pose, armed ? runArms : gaitArms(b.gait));
   const spec = base('tether', 'd4tth', 3, b, T, {...final, handR: armed ? 'grip' : final.handR ?? 'open', handL: final.handL ?? 'open', holdR: armed ? tetherLauncher({loaded: false}) : undefined, extra: hipReel(0)}, world);
@@ -417,7 +469,7 @@ export const runnerAt = (T: number): CrewOut => {
     const kb = KNOCKED_BACK(k);
     const st = bodyAt(RUN_SEGS, EV.runnerHit);
     const feetW = 1 - smooth(clamp((T - EV.runnerHit - 0.08) / 0.25));
-    const pose: Pose = layer(kb, {face: {mouth: 'pain', brows: 0.6, lids: 0.3}, dmg: dmgR2('runner', T)});
+    const pose: Pose = layer(kb, {face: expr('pain'), dmg: dmgR2('runner', T)});
     let spec: FigSpec = {key: 'd4run', look: lookR2('runner'), t: T, seed: 4, pos, heading, pose: {...pose, handR: k < 0.12 ? 'grip' : 'open', holdR: T < EV.runnerHit + 0.06 ? halligan1({ang: 30}) : undefined}};
     // the feet stay planted for a moment, then leave the ground with the fall (blend to the pose's own legs)
     if (feetW > 0.01) {
@@ -432,12 +484,12 @@ export const runnerAt = (T: number): CrewOut => {
     return {spec, body: {pos, heading}};
   }
   const b = bodyAt(RUN_SEGS, T);
-  let pose: Pose = layer(BRACED({wide: 0.7}), {face: {mouth: 'pant', brows: -0.4}, breath: 0.8});
+  let pose: Pose = layer(BRACED({wide: 0.7}), {face: {...exprMix('effort', 'exhaustion', 0.4), mouth: 'pant'}, breath: 0.8});
   // the skid to a stop as the flanker cuts across: the halligan comes up to swing — too late
   const up = win(T, RUNNER_STOP.t - 0.05, EV.runnerHit + 0.2, 0.3, 0.05);
-  if (up > 0) pose = blendPose(pose, layer(pose, {drop: 30, lean: -6, twist: 24, armR: {local: {r: 52, u: 380, f: 10}, pole: {r: 1, u: 0.3, f: -0.5}}, armL: {local: {r: -20, u: 260, f: 110}}, handL: 'open', face: {mouth: 'grit', brows: -0.9, squint: 0.4}}), up);
-  const lt: V3 = T < RUNNER_STOP.t - 0.6 ? ON({x: 10, z: 4}, 1.2) : unitAttach(unitD4('H5', T)).head;
-  pose = look(pose, b, lt, 1);
+  if (up > 0) pose = blendPose(pose, layer(pose, {drop: 30, lean: -6, twist: 24, armR: {local: {r: 52, u: 380, f: 10}, pole: {r: 1, u: 0.3, f: -0.5}}, armL: {local: {r: -20, u: 260, f: 110}}, handL: 'open', face: exprMix('anger', 'fear', 0.45)}), up);
+  const lt = smoothLook((t) => (t < RUNNER_STOP.t - 0.6 ? ON({x: 10, z: 4}, 1.2) : unitAttach(unitD4('H5', t)).head), T)!;
+  pose = look(pose, b, lt.at, 1);
   const runArms: Pose = {armR: {local: {r: 40, u: 220, f: 60}}, armL: b.gait?.armL};
   const final = withRun(b, pose, runArms);
   const spec = base('runner', 'd4run', 4, b, T, {...final, handR: 'grip', handL: final.handL ?? 'fist', holdR: halligan1({ang: 72})});
@@ -450,7 +502,7 @@ const BRK_RUN2: XZ[] = [{x: GATHER.breaker.x, z: GATHER.breaker.z}, {x: 13.95, z
 const BRK_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 31.8, 2.7, 80], [150.2, 31.75, 2.7, 80], [150.55, 31.7, 2.72, 266]], stag: 0.1},
   {kind: 'run', path: BRK_RUN1, T0: 150.55, T1: 159.6, gait: GAITS.limp, A: 0.6, D: 0.7},
-  {kind: 'stand', stag: 0.12, root: [[159.6, GATHER.breaker.x, GATHER.breaker.z, runEnd(BRK_RUN1).h], [160.0, GATHER.breaker.x, GATHER.breaker.z, GATHER.breaker.h], [162.42, GATHER.breaker.x, GATHER.breaker.z, 86]]},
+  {kind: 'stand', stag: 0.12, root: [[159.6, GATHER.breaker.x, GATHER.breaker.z, runEnd(BRK_RUN1).h], [160.0, GATHER.breaker.x, GATHER.breaker.z, GATHER.breaker.h], [162.42, GATHER.breaker.x, GATHER.breaker.z, headingTo(BRK_RUN2[0], BRK_RUN2[1])]]},
   {kind: 'run', path: BRK_RUN2, T0: 162.42, T1: 163.85, gait: GAITS.limp, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.16, root: [[163.85, 13.95, 4.3, 92], [164.4, 14.0, 4.3, 94], [164.8, 13.8, 4.45, 102], [165.6, 13.6, 4.6, 95], [167.0, 13.5, 4.7, 85],
     [170.6, 13.3, 4.9, 80], [172.5, 12.6, 6.5, 70], [174.6, 12.0, 7.6, 60], [178.6, 11.8, 7.6, 300], [179.6, 11.7, 7.58, 308],
@@ -484,10 +536,10 @@ const BRK_HELD = 182.1;
 export const breakerAt = (T: number): CrewOut => {
   if (T >= BRK_HELD) return {spec: heldSpec('breaker', T), body: {pos: TB_CREW.breaker.pos, heading: TB_CREW.breaker.heading}};
   const b = bodyAt(BRK_SEGS, T);
-  let pose: Pose = layer(BRACED({wide: 0.85}), {face: {mouth: 'pant', brows: -0.3}, breath: 0.9});
+  let pose: Pose = layer(BRACED({wide: 0.85}), {face: {...exprMix('exhaustion', 'pain', 0.35), mouth: 'pant'}, breath: 0.9});
   // D4-3: down on one knee for a breath; up again when the arm goes up
   const kneel = win(T, 160.1, 162.05, 0.5, 0.45);
-  if (kneel > 0) pose = blendPose(pose, layer(KNEEL('R'), {drop: 80, lean: 18, face: {mouth: 'pant', brows: 0.1, worry: 0.3}, breath: 1}), kneel);
+  if (kneel > 0) pose = blendPose(pose, layer(KNEEL('R'), {drop: 80, lean: 18, face: {...expr('exhaustion'), mouth: 'pant'}, breath: 1}), kneel);
   kneelFeet(b, 'R', kneel);
   // the club: the trigger (empty, 163.95), then swung overhead into W2's raised arm (164.4)
   const club = T > 163.98 && T < 165.0;
@@ -502,23 +554,24 @@ export const breakerAt = (T: number): CrewOut => {
       // (the body leads the club: its lean is smooth, not whipped with the hands — the head must not lurch)
       lean: k < 0.36 ? lerp(8, -14, smooth(k / 0.36)) : k < 0.55 ? lerp(-14, 24, smooth((k - 0.36) / 0.19)) : lerp(24, 8, smooth((k - 0.55) / 0.45)),
       twist: k < 0.36 ? 16 * smooth(k / 0.36) : lerp(16, -6, smooth((k - 0.36) / 0.3)),
-      face: {mouth: 'grit', brows: -1, squint: 0.5},
+      face: expr('effort'),
     });
   }
   // after the swing his bad leg gives: a stagger (the decoy maker steadies him)
   const stag = win(T, 164.75, 166.0, 0.15, 0.5);
-  if (stag > 0) pose = blendPose(pose, layer(pose, {drop: 44, lean: 22, side: -8, face: {mouth: 'pain', brows: 0.4}}), stag);
-  const hope = win(T, 166.4, 170.5, 0.6, 0.5);
-  if (hope > 0) pose = face(pose, {mouth: 'pant', brows: 0.1, worry: 0.1});
-  if (T > 170.5 && T < 178) pose = face(pose, {mouth: 'sad', brows: 0.65, worry: 0.85});
+  if (stag > 0) pose = blendPose(pose, layer(pose, {drop: 44, lean: 22, side: -8, face: expr('pain')}), stag);
+  const hope = win(T, 166.4, EV.hopeEnd + 0.2, 0.5, 0.4);
+  if (hope > 0) pose = face(pose, {...expr('relief', 0.7 * hope), mouth: 'pant'});
+  if (T > EV.hopeEnd && T < 177.8) pose = face(pose, exprMix('realization', 'exhaustion', smooth((T - 172) / 3)));
+  if (T >= 177.8) pose = face(pose, exprMix('shock', 'pain', smooth((T - 178.4) / 1.5)));
   // the leg gives as he limps toward him; he sits down hard (the breaker falls from his hands at 181.35)
   const sit = after(T, 181.3, 0.75);
   const port = {front: fromLoc(b, {r: -16, u: 250, f: 118}), back: fromLoc(b, {r: 32, u: 205, f: 34})};
   const H = hands ?? port;
   const held = T < 181.35;
-  const lt: V3 | null = T < 162.0 && T > 161.5 ? headOf('director', T) : T > 162.4 && T < 164.6 ? unitAttach(unitD4('W2', T)).head
-    : T > 177.8 ? ON(SLAM, 1.0) : T > 175.7 ? ON(PILOT_DOWN, 0.6) : null;
-  if (lt) pose = look(pose, b, lt, 1);
+  const lt = smoothLook((t) => (t < 162.0 && t > 161.5 ? headOf('director', t) : t > 162.4 && t < 164.6 ? unitAttach(unitD4('W2', t)).head
+    : t > 177.8 ? ON(SLAM, 1.0) : t > 175.7 ? ON(PILOT_DOWN, 0.6) : null), T);
+  if (lt) pose = look(pose, b, lt.at, lt.w);
   const runArms: Pose = {armL: {local: {r: -16, u: 262, f: 112}}, armR: {local: {r: 30, u: 208, f: 36}}};
   const final = withRun(b, pose, held ? runArms : gaitArms(b.gait));
   const handsOn = held ? (b.inRun ? 1 - b.runK : 1) : 0;
@@ -536,7 +589,7 @@ const DEC_RUN2: XZ[] = [{x: GATHER.decoy.x, z: GATHER.decoy.z}, {x: 13.2, z: 5.3
 const DEC_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 32.6, 2.2, 82], [151.05, 32.5, 2.2, 82], [151.4, 32.4, 2.25, 268]], stag: 0.08},
   {kind: 'run', path: DEC_RUN1, T0: 151.4, T1: 159.4, gait: GAITS.run, A: 0.6, D: 0.7},
-  {kind: 'stand', stag: 0.08, root: [[159.4, GATHER.decoy.x, GATHER.decoy.z, runEnd(DEC_RUN1).h], [159.75, GATHER.decoy.x, GATHER.decoy.z, GATHER.decoy.h], [162.5, GATHER.decoy.x, GATHER.decoy.z, 86]]},
+  {kind: 'stand', stag: 0.08, root: [[159.4, GATHER.decoy.x, GATHER.decoy.z, runEnd(DEC_RUN1).h], [159.75, GATHER.decoy.x, GATHER.decoy.z, GATHER.decoy.h], [162.0, GATHER.decoy.x, GATHER.decoy.z, 86], [162.5, GATHER.decoy.x, GATHER.decoy.z, headingTo(DEC_RUN2[0], DEC_RUN2[1])]]},
   {kind: 'run', path: DEC_RUN2, T0: 162.5, T1: 164.1, gait: GAITS.run, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.1, root: [[164.1, 13.2, 5.35, runEnd(DEC_RUN2).h], [164.7, 13.25, 5.2, 48], [165.6, 13.15, 5.1, 60], [170.6, 12.9, 5.4, 80], [172.6, 11.6, 5.8, 60],
     [174.6, 11.0, 6.4, 50], [178.3, 11.1, 6.6, 300], [179.6, 11.05, 6.4, 300], [180.45, TB_CREW.decoy.pos.x, TB_CREW.decoy.pos.z, TB_CREW.decoy.heading]]},
@@ -546,23 +599,24 @@ export const decoyAt = (T: number): CrewOut => {
   if (T >= DEC_HELD) return {spec: heldSpec('decoy', T), body: {pos: TB_CREW.decoy.pos, heading: TB_CREW.decoy.heading}};
   const b = bodyAt(DEC_SEGS, T);
   const hasTablet = T < EV.tabletDrop;
-  let pose: Pose = layer(BRACED({wide: 0.6, fists: false}), {drop: 10, lean: 6, armL: {local: {r: -28, u: 215, f: 92}, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}}, handR: 'open', face: {mouth: 'pant', brows: -0.3, worry: 0.5}, breath: 0.8});
+  let pose: Pose = layer(BRACED({wide: 0.6, fists: false}), {drop: 10, lean: 6, armL: {local: {r: -28, u: 215, f: 92}, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}}, handR: 'open', face: {...exprMix('fear', 'exhaustion', 0.5), mouth: 'pant'}, breath: 0.8});
   // a last look at the smashed tablet, and she lets it fall
   const tab = win(T, 159.5, EV.tabletDrop + 0.2, 0.3, 0.2);
-  if (tab > 0) pose = blendPose(pose, layer(pose, {armL: {local: {r: -20, u: 230, f: 120}}, head: {pitch: 30, yaw: -8}, face: {mouth: 'sad', brows: 0.6, worry: 0.8, lookY: 0.8}}), tab);
+  if (tab > 0) pose = blendPose(pose, layer(pose, {armL: {local: {r: -20, u: 230, f: 120}}, head: {pitch: 30, yaw: -8}, face: {...expr('grief', 0.7), lookY: 0.8}}), tab);
   if (!hasTablet) pose = layer(pose, {armL: {local: {r: -30, u: 190, f: 70}}, handL: 'relaxed'});
-  if (T > 170.5 && T < 178) pose = face(pose, {mouth: 'sad', brows: 0.7, worry: 0.95});
+  if (T > 166.4 && T < EV.hopeEnd) pose = face(pose, {...expr('relief', 0.5), mouth: 'pant'});
+  if (T > EV.hopeEnd && T < 178) pose = face(pose, exprMix('realization', 'fear', smooth((T - EV.realize) / 2.5)));
   // reaching toward him after the strike; her right wrist goes back where the unit catches it (181.0)
   const reach = after(T, 178.4, 0.4);
   const world: FigSpec['world'] = {};
   if (reach > 0) {
-    pose = blendPose(pose, layer(pose, {lean: 16, drop: 16, armL: {local: {r: -24, u: 250, f: 140}}, handL: 'open', face: {mouth: 'open', open: 0.4, brows: 0.8, worry: 1}}), reach);
+    pose = blendPose(pose, layer(pose, {lean: 16, drop: 16, armL: {local: {r: -24, u: 250, f: 140}}, handL: 'open', face: {...exprMix('shock', 'grief', smooth((T - 178.8) / 1.2)), mouth: 'open', open: 0.35}}), reach);
     const c = smooth((T - (EV.grabDecoy - 0.45)) / 0.45);
     if (c > 0) world.handR = lerp3v(fromLoc(b, {r: 40, u: 190, f: -10}), gripAt('decoy', T), c);
   }
-  const lt: V3 | null = T > 155.6 && T < 156.9 ? ON(RUNNER_DOWN, 0.4) : T > 161.5 && T < 162.4 ? headOf('director', T) : T > 162.4 && T < 165.5 ? headOf('breaker', T)
-    : T > 177.8 ? ON(SLAM, 1.0) : T > 175.7 ? ON(PILOT_DOWN, 0.6) : null;
-  if (lt && tab < 0.5) pose = look(pose, b, lt, 1);
+  const lt = smoothLook((t) => (t > 155.6 && t < 156.9 ? ON(RUNNER_DOWN, 0.4) : t > 161.5 && t < 162.4 ? headOf('director', t) : t > 162.4 && t < 165.5 ? headOf('breaker', t)
+    : t > 177.8 ? ON(SLAM, 1.0) : t > 175.7 ? ON(PILOT_DOWN, 0.6) : null), T);
+  if (lt) pose = look(pose, b, lt.at, lt.w * (1 - smooth(tab / 0.5)));
   const runArms: Pose = {armL: {local: {r: -26, u: 232, f: 70}}, armR: b.gait?.armR};
   const final = withRun(b, pose, hasTablet ? runArms : gaitArms(b.gait));
   let spec = base('decoy', 'd4dec', 6, b, T, {...final, handL: hasTablet ? 'grip' : final.handL ?? 'relaxed', holdL: hasTablet ? tablet({smashed: true, screen: false}) : undefined}, world);
@@ -619,14 +673,17 @@ export const pilotAt = (T: number): CrewOut => {
     // the ram rising at her: pressed back against the van, her arm up across her face; the flinch at the strike
     const fear = win(T, 175.8, 178.3, 0.4, 0.5);
     const arm = win(T, 177.2, 178.1, 0.25, 0.3);
+    // dazed (the brow cut), then the heavy: fear; the flinch at the strike; then him: shock, grief
+    const flinch = T > M.STRIKE - 0.05 && T < 178.0;
+    const after_ = smooth((T - 178.0) / 0.6);
     pose = layer(pose, {
-      face: {mouth: fear > 0.3 ? 'open' : 'pant', open: 0.4 * fear, brows: 0.7, worry: 0.9, squint: T > M.STRIKE - 0.05 && T < 178.0 ? 1 : 0, lid: T > M.STRIKE - 0.05 && T < 177.95 ? 0.85 : 0.1},
+      face: flinch ? {...expr('fear'), squint: 1, lid: 0.85} : after_ > 0 ? {...exprMix('shock', 'grief', smooth((T - 179.2) / 2.0)), mouth: 'open', open: 0.3} : fear > 0.3 ? expr('fear', fear) : {...exprMix('exhaustion', 'pain', 0.5), mouth: 'pant'},
       dmg,
     });
     if (arm > 0) pose = blendPose(pose, layer(pose, {armL: {local: {r: -10, u: 300, f: 60}, pole: {r: -1, u: -0.2, f: 0}}, handL: 'open'}), arm);
     // she turns toward him on the ground after the strike (onto her hip, facing him)
     const turn = smooth((T - 178.6) / 1.6);
-    if (turn > 0) heading = heading + wrapD(205 - heading) * turn * (1 - smooth((T - EV.pilotUp) / 1.2));
+    if (turn > 0) heading = heading + wrapD(232 - heading) * turn * (1 - smooth((T - EV.pilotUp) / 1.2));
     let spec: FigSpec = {key: 'd4pil', look: lookR2('drone'), t: T, seed: 5, pos, heading, pose};
     // hands planted behind her (palms on the ground)
     if (T >= 170.9) {
@@ -638,20 +695,35 @@ export const pilotAt = (T: number): CrewOut => {
       spec = {...spec, world: {handL: arm > 0 ? lerp3v(planted, R0.handL, smooth(arm)) : planted, handR: lerp3v(R0.handR, hp(1), w), orientL: {palm: {x: 0, y: -1, z: 0}, fingers: {x: -f.x, y: 0, z: -f.z}, w: w * (1 - arm)}, orientR: {palm: {x: 0, y: -1, z: 0}, fingers: {x: -f.x, y: 0, z: -f.z}, w}}};
     }
     // looks: the drone (gone), the heavy, its ram, then him
-    const lt: V3 = T < 175.6 ? heavyAttach(heavy2At(T)).eye : T < M.STRIKE ? heavyAttach(heavy2At(T)).ramTip : ON(SLAM, 1.0);
+    const lt = smoothLook((t) => (t < 175.6 ? heavyAttach(heavy2At(t)).eye : t < M.STRIKE ? heavyAttach(heavy2At(t)).ramTip : t < M.STRIKE + 0.2 ? ON(SLAM, 1.0) : {x: 6.8, y: 1.0, z: 3.4}), T)!;
     const b = {pos, heading};
-    spec = {...spec, pose: look(spec.pose as Pose, b, T < M.STRIKE + 0.2 ? lt : {x: 6.8, y: 1.0, z: 3.4}, T > M.STRIKE - 0.05 && T < 178.1 ? 0.2 : 1, 95)};
+    // (the flinch at the strike: her head turns away from the blow)
+    spec = {...spec, pose: look(spec.pose as Pose, b, lt.at, 1 - 0.8 * win(T, M.STRIKE - 0.12, 178.15, 0.1, 0.2), 95)};
+    // she reaches toward him from where she sits (181.6 → 183.8): her hand stretches out, palm down, toward his — it
+    // falls short; it comes down on the ground as she gets onto her hands and knees to go to him (EF's crawl)
+    const reach = win(T, 181.6, EV.pilotUp + 0.5, 0.75, 0.6);
+    if (reach > 0) {
+      const hisHand = dirSeatSpec(181.0).world?.handR ?? ON(SLAM, 0.4);
+      const R1 = figureRig(SOLVE_VIEW, spec);
+      const sh = R1.torso({r: 20, u: 300, f: 0});
+      const toward_ = norm3(sub3(hisHand, sh));
+      const tip = {x: sh.x + toward_.x * 0.66, y: Math.max(G(sh.x, sh.z) + 0.16, sh.y + toward_.y * 0.66 - 0.05), z: sh.z + toward_.z * 0.66};
+      const p0 = spec.world?.handR ?? R1.handR;
+      const fing = norm3({x: toward_.x, y: 0, z: toward_.z});
+      spec = {...spec, pose: {...(spec.pose as Pose), lean: ((spec.pose as Pose).lean ?? 0) + 22 * reach, handR: 'open', face: {...expr('grief', 0.8), mouth: 'open', open: 0.25}},
+        world: {...(spec.world ?? {}), handR: lerp3v(p0, tip, smooth(reach)), orientR: {palm: {x: 0, y: -1, z: 0}, fingers: fing, w: reach}}};
+    }
     // up onto her hands and knees: blend into the tableau's crawl start
     if (T > EV.pilotUp) spec = toward(spec, pilotSpec(PIL_CRAWL), smooth((T - EV.pilotUp) / (PIL_CRAWL - EV.pilotUp)));
     return {spec, body: {pos: spec.pos, heading: spec.heading}};
   }
   const b = bodyAt(PIL_SEGS, T);
-  let pose: Pose = layer(BRACED({fists: false}), {drop: 14, lean: 8, armL: {local: {r: -22, u: 245, f: 92}}, armR: {local: {r: 22, u: 245, f: 92}}, face: {mouth: 'pant', brows: -0.3, squint: 0.2}, breath: 0.8});
+  let pose: Pose = layer(BRACED({fists: false}), {drop: 14, lean: 8, armL: {local: {r: -22, u: 245, f: 92}}, armR: {local: {r: 22, u: 245, f: 92}}, face: {...exprMix('exhaustion', 'fear', 0.4), mouth: 'pant'}, breath: 0.8});
   // the drone coming down at her: she sees it late, an arm comes up
   const dive = win(T, 169.95, EV.droneHit + 0.1, 0.12, 0.05);
-  if (dive > 0) pose = blendPose(pose, layer(pose, {lean: -10, armL: {local: {r: -10, u: 330, f: 70}}, head: {pitch: -30}, face: {mouth: 'open', open: 0.5, brows: 0.8, worry: 0.6}}), dive);
-  const lt: V3 | null = T > 161.5 && T < 162.4 ? headOf('director', T) : T > 162.4 && T < 166.4 ? headOf('director', T) : T > 169.7 ? {x: 13.5, y: 5.0, z: 5.2} : T > 166.4 ? heavyAttach(heavy2At(T)).eye : null;
-  if (lt) pose = look(pose, b, lt, 1);
+  if (dive > 0) pose = blendPose(pose, layer(pose, {lean: -10, armL: {local: {r: -10, u: 330, f: 70}}, head: {pitch: -30}, face: expr('shock')}), dive);
+  const lt = smoothLook((t) => (t > 161.5 && t < 166.4 ? headOf('director', t) : t > 169.7 ? {x: 13.5, y: 5.0, z: 5.2} : t > 166.4 ? heavyAttach(heavy2At(t)).eye : null), T);
+  if (lt) pose = look(pose, b, lt.at, lt.w);
   const runArms: Pose = {armL: {local: {r: -20, u: 236, f: 84}}, armR: {local: {r: 20, u: 236, f: 84}}};
   const final = withRun(b, pose, runArms);
   const spec = base('drone', 'd4pil', 5, b, T, {...final, handL: 'grip', handR: 'grip', twoHanded: dive < 0.5, extra: dive < 0.5 ? controller({lit: 0}) : undefined});
@@ -664,7 +736,7 @@ const FLR_RUN2: XZ[] = [{x: GATHER.flares.x, z: GATHER.flares.z}, {x: 14.25, z: 
 const FLR_SEGS: Seg[] = [
   {kind: 'stand', root: [[M.P4, 34.0, 8.4, 86], [150.35, 33.9, 8.4, 86], [150.7, 33.8, 8.42, 268]], stag: 0.12},
   {kind: 'run', path: FLR_RUN1, T0: 150.7, T1: 158.75, gait: GAITS.run, A: 0.6, D: 0.7},
-  {kind: 'stand', stag: 0.12, root: [[158.75, GATHER.flares.x, GATHER.flares.z, runEnd(FLR_RUN1).h], [159.15, GATHER.flares.x, GATHER.flares.z, GATHER.flares.h], [162.5, GATHER.flares.x, GATHER.flares.z, 76]]},
+  {kind: 'stand', stag: 0.12, root: [[158.75, GATHER.flares.x, GATHER.flares.z, runEnd(FLR_RUN1).h], [159.15, GATHER.flares.x, GATHER.flares.z, GATHER.flares.h], [162.1, GATHER.flares.x, GATHER.flares.z, 76], [162.5, GATHER.flares.x, GATHER.flares.z, headingTo(FLR_RUN2[0], FLR_RUN2[1])]]},
   {kind: 'run', path: FLR_RUN2, T0: 162.5, T1: 164.0, gait: GAITS.run, A: 0.4, D: 0.5},
   {kind: 'stand', stag: 0.14, root: [[164.0, 14.25, 6.55, runEnd(FLR_RUN2).h], [165.2, 14.3, 6.55, 74], [165.8, 14.35, 6.5, 70], [166.4, 14.4, 6.5, 72], [170.6, 14.3, 6.6, 75],
     [172.5, 13.9, 7.4, 60], [174.6, 15.2, 8.9, 50], [177.9, 15.2, 8.9, 300], [178.3, 15.2, 8.9, 295], [179.8, 14.6, 8.2, 295], [181.2, TB_CREW.flares.pos.x, TB_CREW.flares.pos.z, TB_CREW.flares.heading]]},
@@ -674,28 +746,28 @@ const FLR_HELD = EV.grabFlares + 0.5;
 export const flaresAt = (T: number): CrewOut => {
   if (T >= FLR_HELD) return {spec: heldSpec('flares', T), body: {pos: TB_CREW.flares.pos, heading: TB_CREW.flares.heading}};
   const b = bodyAt(FLR_SEGS, T);
-  let pose: Pose = layer(BRACED({wide: 0.75, fists: false}), {face: {mouth: 'pant', brows: -0.5}, breath: 0.8});
+  let pose: Pose = layer(BRACED({wide: 0.75, fists: false}), {face: {...exprMix('concentration', 'exhaustion', 0.5), mouth: 'pant'}, breath: 0.8});
   // D4-3: the last flare out of the bag; he looks at it
   const draw = win(T, FLARE.draw - 0.3, FLARE.draw + 0.9, 0.3, 0.4);
-  if (draw > 0) pose = blendPose(pose, layer(pose, {armR: {local: {r: 30, u: 250, f: 110}}, head: {pitch: 22}, face: {lookY: 0.6, brows: 0.2}}), draw);
+  if (draw > 0) pose = blendPose(pose, layer(pose, {armR: {local: {r: 30, u: 250, f: 110}}, head: {pitch: 22}, face: {...expr('resolve', 0.8), lookY: 0.6}}), draw);
   // strike (165.22) and throw (wind 165.5 → release 165.8) at heavy 2's eye
   const strike = win(T, FLARE.strike - 0.35, FLARE.strike + 0.15, 0.2, 0.15);
   if (strike > 0) pose = blendPose(pose, layer(pose, {armR: {local: {r: 26, u: 270, f: 120}}, armL: {local: {r: -6, u: 280, f: 130}}, handL: 'fist'}), strike);
   const thK = clamp((T - (FLARE.throw - 0.4 * 0.75)) / 0.75);
-  const thW = win(T, FLARE.throw - 0.32, FLARE.throw + 0.6, 0.06, 0.3);
-  if (thW > 0) pose = blendPose(pose, THROW(thK), thW);
-  if (T > 170.5 && T < 178) pose = face(pose, {mouth: 'sad', brows: 0.6, worry: 0.8});
+  const thW = win(T, FLARE.throw - 0.36, FLARE.throw + 0.6, 0.12, 0.3);
+  if (thW > 0) pose = blendPose(pose, layer(THROW(thK), {face: expr('effort')}), thW);
+  if (T > 166.4 && T < EV.hopeEnd) pose = face(pose, {...expr('relief', 0.65), mouth: 'pant'});
+  if (T > EV.hopeEnd && T < 178) pose = face(pose, exprMix('realization', 'fear', smooth((T - EV.realize) / 2)));
   // toward him after the strike; his right arm goes back where the unit takes it (181.7)
   const world: FigSpec['world'] = {};
   const go = after(T, 178.4, 0.4);
   if (go > 0) {
-    pose = blendPose(pose, layer(pose, {lean: 14, drop: 14, face: {mouth: 'open', open: 0.35, brows: 0.7, worry: 0.9}}), go);
+    pose = blendPose(pose, layer(pose, {lean: 14, drop: 14, face: {...exprMix('shock', 'anger', smooth((T - 179) / 1.2)), mouth: 'open', open: 0.3}}), go);
     const c = smooth((T - (EV.grabFlares - 0.45)) / 0.45);
     if (c > 0) world.handR = lerp3v(fromLoc(b, {r: 46, u: 190, f: -16}), gripAt('flares', T), c);
   }
-  const eye = heavyAttach(heavy2At(Math.min(T, FLARE.hit))).eye;
-  const lt: V3 | null = T > 161.5 && T < 162.4 ? headOf('director', T) : T > 162.4 && T < 166.8 ? eye : T > 177.8 ? ON(SLAM, 1.0) : T > 175.7 ? ON(PILOT_DOWN, 0.6) : null;
-  if (lt && draw < 0.5) pose = look(pose, b, lt, 1);
+  const lt = smoothLook((t) => (t > 161.5 && t < 162.4 ? headOf('director', t) : t > 162.4 && t < 166.8 ? heavyAttach(heavy2At(Math.min(t, FLARE.hit))).eye : t > 177.8 ? ON(SLAM, 1.0) : t > 175.7 ? ON(PILOT_DOWN, 0.6) : null), T);
+  if (lt) pose = look(pose, b, lt.at, lt.w * (1 - smooth(draw / 0.5)));
   const runArms: Pose = {armL: b.gait?.armL, armR: b.gait?.armR};
   const final = withRun(b, pose, runArms);
   const holding = T > FLARE.draw && T < FLARE.throw;
@@ -725,11 +797,14 @@ const rawAt = (role: Role2, T: number): CrewOut => {
  * scan of every joint).
  */
 const SWITCHES: Partial<Record<Role2, [number, number][]>> = {
+  // (the strike: his arm and body thrown back over three frames — the force reads, nothing teleports)
+  director: [[EV.strike, 0.09]],
   runner: [[EV.runnerHit, 0.1], [EV.runnerDown, 0.2]],
   drone: [[EV.droneHit, 0.14]],
-  tether: [[EV.disarmTear + 0.02 - 1e-3, 0.12], [164.1, 0.12], [165.5 - 1e-3, 0.18]],
-  decoy: [[EV.grabDecoy - 0.45, 0.25]],
+  tether: [[EV.disarmTear + 0.02 - 1e-3, 0.12], [EV.cablePull, 0.25], [164.1, 0.12], [165.5 - 1e-3, 0.18], [EV.grabTether - 0.45, 0.25]],
+  decoy: [[EV.tabletDrop, 0.22], [EV.grabDecoy - 0.45, 0.25]],
   flares: [[EV.grabFlares - 0.45, 0.25]],
+  breaker: [[181.35, 0.22]],
 };
 export const crewAt = (role: Role2, T: number): CrewOut => {
   const o = rawAt(role, T);

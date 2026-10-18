@@ -248,24 +248,155 @@ export const pushOut = (p: XZ, clear: number, o: {stepH?: number; T?: number} = 
   }
   return q;
 };
-/** resample a path every 0.45 m and bend it round the obstacles (keeps the first point and the last `keep` metres) */
-export const avoid = (pts: XZ[], clear = 0.5, keep = 2.6, o: {stepH?: number; T?: number} = {}): XZ[] => {
-  const total = pts.slice(1).reduce((s, b, i) => s + Math.hypot(b.x - pts[i].x, b.z - pts[i].z), 0);
-  const out: XZ[] = [pts[0]];
-  let acc = 0;
-  pts.slice(1).forEach((b, i) => {
-    const a = pts[i], L = Math.hypot(b.x - a.x, b.z - a.z), n = Math.max(1, Math.ceil(L / 0.45));
-    for (let k = 1; k <= n; k++) {
-      const u = k / n, p = {x: lerp(a.x, b.x, u), z: lerp(a.z, b.z, u)};
-      out.push(total - (acc + L * u) > keep ? pushOut(p, clear, o) : p);
+type Ob = {key: string; v: XZ[]; core: XZ[]; c: XZ};
+const hull2 = (pts: XZ[]): XZ[] => {
+  const P = [...pts].sort((a, b) => a.x - b.x || a.z - b.z);
+  if (P.length < 3) return P;
+  const cr = (o: XZ, a: XZ, b: XZ) => (a.x - o.x) * (b.z - o.z) - (a.z - o.z) * (b.x - o.x);
+  const lo: XZ[] = [], hi: XZ[] = [];
+  for (const p of P) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop(); lo.push(p); }
+  for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; while (hi.length >= 2 && cr(hi[hi.length - 2], hi[hi.length - 1], p) <= 0) hi.pop(); hi.push(p); }
+  return [...lo.slice(0, -1), ...hi.slice(0, -1)];
+};
+/** a convex footprint grown by r (Minkowski sum with a 10-gon: every edge moves out by ≈ r) */
+const grow = (v: XZ[], r: number): XZ[] => {
+  const pts: XZ[] = [];
+  for (const q of v) for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2; pts.push({x: q.x + Math.cos(a) * r * 1.05, z: q.z + Math.sin(a) * r * 1.05}); }
+  return hull2(pts);
+};
+const OB_CACHE = new Map<string, Ob[]>();
+/** the obstacles that count for a walker at time T (pieces lower than stepH are stepped over), grown by `clear` */
+const obstaclesFor = (clear: number, o: {stepH?: number; T?: number}): Ob[] => {
+  const stepH = o.stepH ?? 0.12, T = o.T ?? 1e9;
+  const key = `${clear}|${stepH}|${WRECKS_D4.filter((w) => T >= w.from).length}`;
+  const hit = OB_CACHE.get(key);
+  if (hit) return hit;
+  const out: Ob[] = [];
+  const circle = (x: number, z: number, r: number, k: string) => { const c = {x, z}; out.push({key: k, v: grow([c], r + clear), core: grow([c], r + 0.1), c}); };
+  for (const w of WRECKS_D1) circle(w.x, w.z, w.r, 'wreckD1');
+  for (const w of WRECKS_D4) if (T >= w.from) circle(w.x, w.z, w.r, 'wreckD4');
+  for (const P of POLYS) {
+    if (P.h < stepH) continue;
+    const c = {x: P.v.reduce((s, q) => s + q.x, 0) / P.v.length, z: P.v.reduce((s, q) => s + q.z, 0) / P.v.length};
+    out.push({key: P.key, v: grow(P.v, clear), core: grow(P.v, 0.1), c});
+  }
+  OB_CACHE.set(key, out);
+  return out;
+};
+/** does the segment a→b cross polygon v? */
+const crosses = (a: XZ, b: XZ, v: XZ[]): boolean => {
+  if (inside(a, v) || inside(b, v)) return true;
+  for (let i = 0; i < v.length; i++) {
+    const p = v[i], q = v[(i + 1) % v.length];
+    const d = (b.x - a.x) * (q.z - p.z) - (b.z - a.z) * (q.x - p.x);
+    if (Math.abs(d) < 1e-9) continue;
+    const t = ((p.x - a.x) * (q.z - p.z) - (p.z - a.z) * (q.x - p.x)) / d;
+    const u = ((p.x - a.x) * (b.z - a.z) - (p.z - a.z) * (b.x - a.x)) / d;
+    if (t >= 0 && t <= 1 && u >= 0 && u <= 1) return true;
+  }
+  return false;
+};
+type Box = {x0: number; x1: number; z0: number; z1: number};
+const boxOf = (v: XZ[]): Box => ({x0: Math.min(...v.map((q) => q.x)), x1: Math.max(...v.map((q) => q.x)), z0: Math.min(...v.map((q) => q.z)), z1: Math.max(...v.map((q) => q.z))});
+/**
+ * a→b round the obstacles: A* on a 0.3 m grid over the segment's surroundings (a cell is blocked inside any grown
+ * footprint; the cells round a and b are always free — a start or a slot may lie close to rubble), then string-pulled
+ * (a waypoint is dropped while the straight line past it stays clear).
+ */
+export const ROUTE_FAILS: string[] = [];
+const route = (a: XZ, b: XZ, obs: Ob[], M = 7): XZ[] => {
+  const live = obs.filter((o) => !inside(a, o.core) && !inside(b, o.core));
+  const relevant = (o: Ob, bx: Box) => { const k = boxOf(o.v); return k.x1 > bx.x0 && k.x0 < bx.x1 && k.z1 > bx.z0 && k.z0 < bx.z1; };
+  const clearLine = (p: XZ, q: XZ, set: Ob[]) => !set.some((o) => crosses(p, q, inside(p, o.v) || inside(q, o.v) ? o.core : o.v));
+  const segBox: Box = {x0: Math.min(a.x, b.x) - 1, x1: Math.max(a.x, b.x) + 1, z0: Math.min(a.z, b.z) - 1, z1: Math.max(a.z, b.z) + 1};
+  if (clearLine(a, b, live.filter((o) => relevant(o, segBox)))) return [b];
+  const C = M > 7 ? 0.4 : 0.3;
+  const bx: Box = {x0: Math.min(a.x, b.x) - M, x1: Math.max(a.x, b.x) + M, z0: Math.min(a.z, b.z) - M, z1: Math.max(a.z, b.z) + M};
+  const set = live.filter((o) => relevant(o, bx));
+  const W = Math.ceil((bx.x1 - bx.x0) / C) + 1, H = Math.ceil((bx.z1 - bx.z0) / C) + 1;
+  const cx = (i: number) => bx.x0 + i * C, cz = (j: number) => bx.z0 + j * C;
+  const blocked = new Uint8Array(W * H);
+  for (const o of set) {
+    const k = boxOf(o.v);
+    for (let i = Math.max(0, Math.floor((k.x0 - bx.x0) / C)); i <= Math.min(W - 1, Math.ceil((k.x1 - bx.x0) / C)); i++)
+      for (let j = Math.max(0, Math.floor((k.z0 - bx.z0) / C)); j <= Math.min(H - 1, Math.ceil((k.z1 - bx.z0) / C)); j++)
+        if (inside({x: cx(i), z: cz(j)}, o.v)) blocked[j * W + i] = 1;
+  }
+  const cell = (p: XZ) => [Math.round((p.x - bx.x0) / C), Math.round((p.z - bx.z0) / C)];
+  const [ai, aj] = cell(a), [bi, bj] = cell(b);
+  for (const [ci, cj] of [[ai, aj], [bi, bj]]) for (let di = -2; di <= 2; di++) for (let dj = -2; dj <= 2; dj++) {
+    const i = ci + di, j = cj + dj;
+    if (i >= 0 && j >= 0 && i < W && j < H) blocked[j * W + i] = 0;
+  }
+  // A* (8-connected), a binary heap on f
+  const g = new Float32Array(W * H).fill(1e9), from = new Int32Array(W * H).fill(-1), done = new Uint8Array(W * H);
+  const hh = (i: number, j: number) => Math.hypot(i - bi, j - bj);
+  const heap: [number, number][] = [];
+  const push = (f: number, k: number) => { heap.push([f, k]); let c = heap.length - 1; while (c > 0) { const p = (c - 1) >> 1; if (heap[p][0] <= heap[c][0]) break; [heap[p], heap[c]] = [heap[c], heap[p]]; c = p; } };
+  const pop = (): [number, number] => { const top = heap[0], last = heap.pop()!; if (heap.length) { heap[0] = last; let c = 0; for (;;) { const l = c * 2 + 1, r = l + 1; let m = c; if (l < heap.length && heap[l][0] < heap[m][0]) m = l; if (r < heap.length && heap[r][0] < heap[m][0]) m = r; if (m === c) break; [heap[m], heap[c]] = [heap[c], heap[m]]; c = m; } } return top; };
+  const s0 = aj * W + ai, goal = bj * W + bi;
+  g[s0] = 0; push(hh(ai, aj), s0);
+  let found = false;
+  while (heap.length) {
+    const [, k] = pop();
+    if (done[k]) continue;
+    done[k] = 1;
+    if (k === goal) { found = true; break; }
+    const i = k % W, j = (k / W) | 0;
+    for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) {
+      if (!di && !dj) continue;
+      const ni = i + di, nj = j + dj;
+      if (ni < 0 || nj < 0 || ni >= W || nj >= H) continue;
+      const nk = nj * W + ni;
+      if (blocked[nk] || done[nk]) continue;
+      if (di && dj && (blocked[j * W + ni] || blocked[nj * W + i])) continue; // no corner cutting
+      const ng = g[k] + (di && dj ? Math.SQRT2 : 1);
+      if (ng < g[nk]) { g[nk] = ng; from[nk] = k; push(ng + hh(ni, nj), nk); }
     }
+  }
+  if (!found) { if (M < 15) return route(a, b, obs, 16); ROUTE_FAILS.push(`${a.x.toFixed(1)},${a.z.toFixed(1)}→${b.x.toFixed(1)},${b.z.toFixed(1)}`); return [b]; }
+  const cells: XZ[] = [];
+  for (let k = goal; k !== -1; k = from[k]) cells.push({x: cx(k % W), z: cz((k / W) | 0)});
+  cells.reverse();
+  cells[0] = a; cells[cells.length - 1] = b;
+  // string-pulling
+  const out: XZ[] = [];
+  let cur = a, i = 0;
+  while (i < cells.length - 1) {
+    let j = cells.length - 1;
+    while (j > i + 1 && !clearLine(cur, cells[j], set)) j--;
+    out.push(cells[j]); cur = cells[j]; i = j;
+  }
+  return out;
+};
+/**
+ * A path round the obstacles (each segment routed round every footprint it would cross, grown by `clear`), resampled
+ * every 0.45 m and relaxed once; the first point and the last `keep` metres (the arrival into a slot) stay as given.
+ */
+export const avoid = (pts: XZ[], clear = 0.5, keep = 2.6, o: {stepH?: number; T?: number} = {}): XZ[] => {
+  const obs = obstaclesFor(clear, o);
+  const total = pts.slice(1).reduce((s, b, i) => s + Math.hypot(b.x - pts[i].x, b.z - pts[i].z), 0);
+  let acc = 0;
+  const head: XZ[] = [pts[0]], tail: XZ[] = [];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i], L = Math.hypot(b.x - a.x, b.z - a.z);
+    if (total - (acc + L) >= keep) head.push(b);
+    else if (total - acc > keep) { const u = (total - acc - keep) / L; head.push({x: lerp(a.x, b.x, u), z: lerp(a.z, b.z, u)}); tail.push(b); }
+    else tail.push(b);
     acc += L;
-  });
-  // relax so the bends are smooth (the ends stay), then push once more (the relax can pull a point back in)
-  let r = out;
-  for (let it = 0; it < 2; it++) r = r.map((p, i) => (i === 0 || i >= r.length - 4 ? p : {x: (r[i - 1].x + p.x * 2 + r[i + 1].x) / 4, z: (r[i - 1].z + p.z * 2 + r[i + 1].z) / 4}));
-  const keepFrom = r.length - Math.max(4, Math.ceil(keep / 0.45));
-  return r.map((p, i) => (i === 0 || i >= keepFrom ? p : pushOut(p, clear, o)));
+  }
+  const routed: XZ[] = [head[0]];
+  for (let i = 1; i < head.length; i++) routed.push(...route(routed[routed.length - 1], head[i], obs));
+  // the corners only (no resampling: a walker's heading turns smoothly over its path's long segments); near-duplicate
+  // corners (< 0.35 m) merge
+  const all = [...routed, ...tail];
+  const out: XZ[] = [all[0]];
+  for (let i = 1; i < all.length; i++) {
+    const p = all[i], q = out[out.length - 1];
+    if (i < all.length - 1 && Math.hypot(p.x - q.x, p.z - q.z) < 0.35) continue;
+    out.push(p);
+  }
+  return out;
 };
 /** how far a point is inside any obstacle (> 0 = inside), for checks */
 export const intrusion = (p: XZ, rad: number, o: {stepH?: number; T?: number} = {}): {d: number; what: string} => {
@@ -274,3 +405,4 @@ export const intrusion = (p: XZ, rad: number, o: {stepH?: number; T?: number} = 
   for (const c of [...WRECKS_D1, ...WRECKS_D4.filter((w) => (o.T ?? 1e9) >= w.from)]) { const d = c.r + rad - Math.hypot(p.x - c.x, p.z - c.z); if (d > worst.d) worst = {d, what: `wreck(${c.x.toFixed(1)},${c.z.toFixed(1)})`}; }
   return worst;
 };
+export const _obsDebug = {route: (a: XZ, b: XZ, obs: Ob[]) => route(a, b, obs), obstaclesFor: (c: number, o: {stepH?: number; T?: number}) => obstaclesFor(c, o), crosses: (a: XZ, b: XZ, v: XZ[]) => crosses(a, b, v), inside: (p: XZ, v: XZ[]) => inside(p, v)};

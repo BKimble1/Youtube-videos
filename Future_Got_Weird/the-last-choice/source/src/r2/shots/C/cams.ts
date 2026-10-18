@@ -73,10 +73,33 @@ export const CAM_C5C: CamKey[] = [
   {t: D(CUT.c5c, CUT.c6), pos: {x: 1.39, y: 4.48, z: 2.36}, target: {x: 1.16, y: 4.45, z: 1.4}, fov: 35.5},
 ];
 
-/** C6 (53.04–59.95): the group frame — low on the east slope in front of them, looking up at all seven on the crest
- * against the smoke and the dusk sky; a slow push in through the hold and the build. */
-export const CAM_C6: CamKey[] = [
-  {t: 0, pos: gp(10.4, 6.3, 1.05), target: {x: 0.8, y: 4.75, z: 1.9}, fov: 41},
-  {t: 3.9, pos: gp(10.0, 6.05, 1.02), target: {x: 0.85, y: 4.7, z: 1.85}, fov: 40},
-  {t: D(CUT.c6, CUT.end), pos: gp(9.35, 5.65, 0.98), target: {x: 1.0, y: 4.62, z: 1.8}, fov: 38.5},
+/** C6a (53.04–54.45): ASSEMBLE — low in front of them on the east slope (the enemy side), tighter than R2's lineup and
+ * pushing in: the shared turn, he is first; the launcher comes up, the halligan spins. */
+export const CAM_C6A: CamKey[] = [
+  {t: 0, pos: gp(8.6, 3.0, 2.45), target: {x: 0.75, y: 4.95, z: 1.55}, fov: 40},
+  {t: D(CUT.c6, CUT.c6b), pos: gp(7.7, 2.75, 2.5), target: {x: 0.8, y: 4.95, z: 1.6}, fov: 37},
+];
+
+/** C6b (54.45–56.05): the tools readied — a lateral track along the south end of the line, close, from in front (east),
+ * moving north: the tablet wakes, the satchel, the breaker's valve (the gauge needle swings up, the tank hisses), the
+ * pilot sends the drone out ahead; he looks along the line at them. */
+export const CAM_C6B: CamKey[] = [
+  {t: 0, pos: {x: 4.15, y: 5.05, z: 6.05}, target: {x: 0.55, y: 5.0, z: 5.1}, fov: 34},
+  {t: D(CUT.c6b, 55.2), pos: {x: 4.1, y: 5.0, z: 4.75}, target: {x: 0.6, y: 4.95, z: 3.75}, fov: 34},
+  {t: D(CUT.c6b, CUT.c6c), pos: {x: 4.1, y: 4.95, z: 3.1}, target: {x: 0.75, y: 4.85, z: 2.05}, fov: 34},
+];
+
+/** C6c (56.05–57.95): the threat — over his left (plate) shoulder, long lens east across the avenue and the crater: the
+ * army at its halt; their front rank breaks into its run (57.1), the eyes lock (≈57.5); his weight goes forward. */
+export const CAM_C6C: CamKey[] = [
+  {t: 0, pos: {x: -0.68, y: 5.08, z: 1.04}, target: {x: 81.5, y: 1.8, z: -1.2}, fov: 14.5},
+  {t: D(CUT.c6c, CUT.c6d), pos: {x: -0.6, y: 5.07, z: 1.05}, target: {x: 81.5, y: 1.7, z: -1.2}, fov: 12.8},
+];
+
+/** C6d (57.95–59.95): the commit — low from the east-north-east, in front of him on the slope (east reads screen
+ * right): he steps out to the brink, the pilot comes down off the slab beside him, the breaker and the runner step up
+ * into the line, the glance (now), they sink into the start and the first stride lifts — D1-1 cuts in on it. */
+export const CAM_C6D: CamKey[] = [
+  {t: 0, pos: {x: 5.35, y: 3.6, z: 0.55}, target: {x: 1.25, y: 4.45, z: 1.85}, fov: 44},
+  {t: D(CUT.c6d, CUT.end), pos: {x: 4.95, y: 3.45, z: 0.7}, target: {x: 1.3, y: 4.3, z: 1.85}, fov: 43},
 ];

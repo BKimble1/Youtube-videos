@@ -15,7 +15,7 @@
 // around each heavy.
 import {V3, clamp, rnd} from '../../../kit/math';
 import {M} from '../../timing';
-import {CADENCE, HALT, STOP} from './beats';
+import {CADENCE, HALT, STOP, SENTRY_T} from './beats';
 import type {Path, Slot, Formation, UnitSpec, HeavySpec, DroneSpec} from '../../mech';
 import {groundH} from '../../world/ground';
 
@@ -227,15 +227,68 @@ const droneD = (T: number) => {
   return marchD(Th) + SPEED * D * (u - (u * u) / 2);
 };
 const droneRestD = marchD(B_HALT.rear) + (SPEED * 1.2) / 2;
-export const droneSpecB = (i: number, T: number, o: Partial<DroneSpec> = {}): DroneSpec => {
+/** a screen drone's own place at film time T (marching with the rear, hovering after the halt) */
+const dronePos = (i: number, T: number): V3 => {
   const d = DRONES_B[i];
   const off = droneRestD - droneD(T);
+  return {x: d.rest.x + off, y: d.rest.y + Math.sin(T * 0.9 + d.ph) * 0.25, z: d.rest.z + Math.sin(T * 0.4 + d.ph) * 0.6};
+};
+
+// ------------------------------------------------------------------ B6's sentry (one drone of the screen)
+/** The sentry: DRONES_B[SENTRY_B] (low, over the vanguard's south half) leaves its place as the vanguard plants, darts
+ * across the crater, brakes and holds in front of his face, marks him, looks past him and backs away to its place. */
+export const SENTRY_B = 13;
+/** where it holds: ~7 m east of his face, a little above his eye line (over the van at the ridge's east foot) */
+export const SENTRY_HOLD: V3 = {x: 8.7, y: 5.15, z: 1.95};
+/** the ruin behind him the gimbal flicks to (SENTRY_T.past) */
+export const SENTRY_PAST: V3 = {x: -18, y: 4.5, z: -1.5};
+/** his chest on the brink (the mark's target; the raised plate is in front of it) */
+const MARK_AT: V3 = {x: 1.62, y: 4.22, z: 1.38};
+const bez = (a: V3, b: V3, c: V3, d: V3, u: number): V3 => {
+  const v = 1 - u, A = v * v * v, B = 3 * v * v * u, C = 3 * v * u * u, D = u * u * u;
+  return {x: A * a.x + B * b.x + C * c.x + D * d.x, y: A * a.y + B * b.y + C * c.y + D * d.y, z: A * a.z + B * b.z + C * c.z + D * d.z};
+};
+/** the sentry's position (film time): its place → the dart → the hold → backing away → its place */
+export const sentryPos = (T: number): V3 => {
+  const S = SENTRY_T, H = SENTRY_HOLD;
+  if (T <= S.go || T >= S.home) return dronePos(SENTRY_B, T);
+  if (T < S.arrive) {
+    // leaves with the screen's drift (it was creeping west with the rear), dips over the vanguard's heads, levels at
+    // his eye line and brakes (arrives at ~2.6 m/s; the hold's spring takes up the rest)
+    const P0 = dronePos(SENTRY_B, S.go), dur = S.arrive - S.go, u = (T - S.go) / dur;
+    const B1 = {x: P0.x - SPEED * dur / 3 - 4, y: P0.y - 0.7, z: P0.z - 1.0};
+    const B2 = {x: H.x + 2.6, y: H.y + 0.15, z: H.z + 0.08};
+    return bez(P0, B1, B2, {x: H.x + 0.32, y: H.y, z: H.z}, u);
+  }
+  if (T < S.back) {
+    // the hold: the last 0.3 m of braking (a damped spring), then a hover that keeps correcting
+    const tau = T - S.arrive;
+    const brake = 0.32 * (1 - Math.exp(-tau / 0.11));
+    return {x: H.x + 0.32 - brake + Math.sin(tau * 5.1) * 0.02, y: H.y + Math.sin(tau * 3.3) * 0.05 - 0.04 * Math.exp(-tau / 0.2), z: H.z + Math.sin(tau * 2.4) * 0.04};
+  }
+  // backs away (still facing him), climbing over the crater, and settles into its place in the screen
+  const P0 = {x: H.x + Math.sin((S.back - S.arrive) * 5.1) * 0.02, y: H.y + Math.sin((S.back - S.arrive) * 3.3) * 0.05, z: H.z + Math.sin((S.back - S.arrive) * 2.4) * 0.04};
+  const P3 = dronePos(SENTRY_B, S.home), u = (T - S.back) / (S.home - S.back);
+  return bez(P0, {x: P0.x + 3, y: P0.y + 3.2, z: P0.z}, {x: P3.x - 9, y: P3.y + 2.2, z: P3.z}, P3, u);
+};
+/** the sentry's controls (eye, gimbal, mark) during its sortie */
+const sentryCtl = (T: number): Partial<DroneSpec> => {
+  const S = SENTRY_T;
+  if (T <= S.go || T >= S.home) return {};
+  const head = {x: MARK_AT.x, y: MARK_AT.y + 0.45, z: MARK_AT.z};
+  const look = T < S.past ? head : T < S.back + 0.5 ? SENTRY_PAST : head;
+  return {look, lockAt: S.lock, mark: {target: MARK_AT, t0: S.mark0, t1: S.mark1, color: 'amber'}};
+};
+
+export const droneSpecB = (i: number, T: number, o: Partial<DroneSpec> = {}): DroneSpec => {
+  const d = DRONES_B[i];
   const v = T <= B_HALT.rear ? SPEED : Math.max(0, SPEED * (1 - (T - B_HALT.rear) / 1.2));
-  const bob = Math.sin(T * 0.9 + d.ph) * 0.25;
+  const sortie = i === SENTRY_B && T > SENTRY_T.go && T < SENTRY_T.home;
+  const pos = sortie ? sentryPos(T) : dronePos(i, T);
+  const vel = sortie ? (() => { const a = sentryPos(T - 0.03), b = sentryPos(T + 0.03); return {x: (b.x - a.x) / 0.06, y: (b.y - a.y) / 0.06, z: (b.z - a.z) / 0.06}; })() : {x: -v, y: 0, z: 0};
   return {
-    id: d.id, t: T, heading: 270,
-    pos: {x: d.rest.x + off, y: d.rest.y + bob, z: d.rest.z + Math.sin(T * 0.4 + d.ph) * 0.6},
-    vel: {x: -v, y: 0, z: 0}, eye: T < eyeOnAt(d.rest, d.id) + 0.1 ? 'off' : 'cyan', ground, ...o,
+    id: d.id, t: T, heading: 270, pos, vel, eye: T < eyeOnAt(d.rest, d.id) + 0.1 ? 'off' : 'cyan', ground,
+    ...(sortie ? sentryCtl(T) : {}), ...o,
   };
 };
 

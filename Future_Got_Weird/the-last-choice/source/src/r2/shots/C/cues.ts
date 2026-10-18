@@ -44,9 +44,6 @@ const C3: Cue[] = [
   c(40.7, 'steps_gravel', {gain: -16, pan: 0.1, dist: 0.8, dur: 4.4, rate: 0.85, fade: 0.4}), // the breaker, heavier
   c(43.2, 'steam_vent', {gain: -19, pan: 0.05, dist: 0.7, dur: 0.5, rate: 1.4, fade: 0.15}), // the tank hisses as he hefts it
   c(TD.recognise, 'breath_ragged', {gain: -11, pan: 0.35, dist: 0.08, dur: 1.4, fade: 0.4}), // his breath of recognition
-  c(TB2.hand1, 'rubble_shift', {gain: -11, pan: 0.0, dist: 0.65, dur: 0.7, fade: 0.2}), // the breaker's palm on the rubble
-  c(TB2.hand1 + 0.05, 'breath_exert', {gain: -14, pan: 0.0, dist: 0.65, dur: 0.6, fade: 0.15}),
-  c(TB2.hand1 + 0.3, 'hydraulic', {gain: -20, pan: 0.0, dist: 0.65, rate: 1.5}), // the tank knocks as he pushes up
 ];
 
 // C4a/C4b — MARCH: the three climb out of the street toward the lens (the pilot nearest, right; the others' steps a
@@ -60,7 +57,6 @@ const C4: Cue[] = [
   c(46.95, 'steps_gravel', {gain: -12, pan: 0.05, dist: 0.4, dur: 0.3, fade: 0.1}), // she stops
   ...steps([47.43, 47.71, 47.98, 48.26, 48.54], {gain: -10, pan: -0.1, dist: 0.45}), // the flare carrier, behind her
   c(47.6, 'cloth_move', {gain: -15, pan: -0.05, dist: 0.45, dur: 0.4, fade: 0.1}), // his satchel swings
-  c(TB2.hand2, 'rubble_shift', {gain: -20, pan: -0.6, dist: 0.8, dur: 0.6, fade: 0.2}), // the breaker, off on the crest
   c(T3.spin, 'servo_whir', {gain: -10, pan: 0.05, dist: 0.35, dur: 0.9, rate: 1.6, fade: 0.2}), // the rotors spin up
   c(T3.spin + 0.05, 'ally_drone', {gain: -9, pan: 0.05, dist: 0.35, dur: M.CHARGE + 0.3 - (T3.spin + 0.05), fade: 0.7}),
   c(T3.lift, 'drone_pass', {gain: -11, pan: 0.05, dist: 0.35}), // it lifts off and climbs

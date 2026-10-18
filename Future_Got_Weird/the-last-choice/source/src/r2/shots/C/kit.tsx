@@ -1,7 +1,8 @@
 // Section C shared drawing: the Crew as sprites, the allied drone, the smoke over the west ruin they come out of,
-// footfall dust and grit on the rubble, the contacts' dust/chips (the vault, the palms on rubble, the drone's
-// downwash), the vault wall, the army at rest beyond the crater (B's ARMY_B, idling), everything a C shot puts on the
-// Stage besides the set.
+// footfall dust and grit on the rubble (walks and climbs), the contacts' dust/chips (the vault, the palms on rubble, the
+// drone's downwash), the vault wall, and the army beyond the crater — drawn exactly as D1 draws it (B's halted army
+// minus the vanguard units D1 animates, those units and the reserve from D1's own specs), so the front rank that breaks
+// into its run at 57.1 in C6 is the same machines, at the same places, that D1-1 cuts to.
 import React from 'react';
 import {V3, add3, clamp, rnd} from '../../../kit/math';
 import type {Item, View, SpriteItem} from '../../engine';
@@ -11,12 +12,16 @@ import type {FigSpec} from '../../rig';
 import {allyDrone, dust3, chips3, combine, fx, FxOut} from '../../fx';
 import type {ColumnOpts} from '../../world/atmos';
 import {persistItems} from '../../film/continuity';
-import {armyB} from '../B/kit';
-import {crewC, droneC, DRONE_SPIN, RoleC, ROLES_C, WALKS_C, VAULT_GRIP} from './crew';
-import {runDist, gaitC} from './motion';
+import {combatUnit, drone, heavy, armyItems} from '../../mech';
+import type {Formation, UnitSpec} from '../../mech';
+import {ARMY_B, HEAVIES_B, DRONES_B, heavySpecB, droneSpecB} from '../B/army';
+import {unitD1, FRONT, RESERVE_NAMES, enemyDrones, D1_ARMY_IDS, unitFootfalls} from '../D1/machines';
+import {groundH} from '../../world/ground';
+import {crewC, droneC, DRONE_SPIN, RoleC, ROLES_C, WALKS_C, CLIMBS_C, VAULT_GRIP} from './crew';
+import {runDist, gaitC, climbPlants} from './motion';
 import {GC} from './ground';
 import {vaultWallItems} from './props';
-import {TR, TT, TB2, T3} from './beats';
+import {TR, T3} from './beats';
 
 // ------------------------------------------------------------------ smoke over the west ruin (and the south-west edge)
 export const C_COLUMNS: {key: string; base: V3; o: ColumnOpts}[] = [
@@ -55,7 +60,7 @@ export const crewItems = (v: View, T: number, o: CrewDraw = {}): Item[] => {
 export const droneFx = (T: number): FxOut => (T < T3.go - 0.5 ? fx() : allyDrone({key: 'cAlly', t: T, pose: droneC, spinUp: DRONE_SPIN, ground: 0, seed: 3}));
 
 // ------------------------------------------------------------------ dust and grit
-/** every footfall of the Crew in (T − win, T] on a walk (world point, time, how hard) */
+/** every footfall of the Crew in (T − win, T] on a walk or a climb (world point, time, how hard) */
 const footfalls = (T: number, win = 1.3): {t: number; p: V3; key: string; k: number}[] => {
   const out: {t: number; p: V3; key: string; k: number}[] = [];
   for (const [who, walks] of Object.entries(WALKS_C)) walks.forEach((w, wi) => {
@@ -76,6 +81,10 @@ const footfalls = (T: number, win = 1.3): {t: number; p: V3; key: string; k: num
         out.push({t: hi, p: phi === 0 ? g.footR : g.footL, key: `${who}${wi}_${k}_${phi}`, k: clamp(sp / 3)});
       }
     }
+  });
+  for (const [who, climbs] of Object.entries(CLIMBS_C)) climbs.forEach((c, ci) => {
+    if (T < c.T0 || T > c.T1 + win) return;
+    climbPlants(c).forEach((f, i) => { if (f.t <= T && f.t > T - win) out.push({t: f.t, p: f.p, key: `${who}c${ci}_${i}`, k: 0.25 + 0.5 * f.k}); });
   });
   return out;
 };
@@ -100,18 +109,15 @@ export const dustFx = (T: number, o: {near?: V3; maxDist?: number} = {}): FxOut 
     if (fl) out.push(fx(dust3({at: {...fl, y: GC(fl.x, fl.z) + 0.03}, t: T, t0: TR.land + 0.1, key: 'cvLand2', n: 4, size: 0.06, grow: 0.25, speed: 0.6, life: 1.3, rise: 0.15, color: '#A89E92', opacity: 0.55, seed: 64})));
     if (fr) out.push(fx(chips3({at: {...fr, y: GC(fr.x, fr.z) + 0.03}, t: T, t0: TR.land, key: 'cvLandC', n: 6, dir: {x: 0.3, y: 1, z: 0.2}, spread: 65, speed: [0.8, 2.2], size: [0.015, 0.04], material: 'concrete', ground: GC(fr.x, fr.z), life: 1.6, seed: 65})));
   }
-  // palms on rubble: the breaker (twice), the tether operator
-  const palms: [number, string, (T: number) => V3 | undefined][] = [
-    [TB2.hand1, 'cbh1', () => crewC(TB2.hand1 + 0.2).breaker.pts.hand1], [TB2.hand2, 'cbh2', () => crewC(TB2.hand2 + 0.2).breaker.pts.hand2],
-    [TT.handOn, 'cth', () => crewC(TT.handOn + 0.2).tether.pts.hand],
-  ];
-  palms.forEach(([t0, key, at], i) => {
-    if (T < t0 - 0.1 || T > t0 + 2.5) return;
-    const p = at(T);
-    if (!p) return;
-    out.push(fx(dust3({at: p, t: T, t0: t0 + 0.04, key, n: 4, size: 0.04, grow: 0.16, speed: 0.4, life: 1.2, rise: 0.12, color: '#ADA193', opacity: 0.55, seed: 70 + i})));
-    out.push(fx(chips3({at: p, t: T, t0: t0 + 0.04, key: `${key}c`, n: 4, dir: {x: 0, y: 1, z: 0}, spread: 60, speed: [0.3, 1.0], size: [0.008, 0.02], material: 'concrete', ground: p.y - 0.03, life: 1.6, seed: 80 + i})));
-  });
+  // palms on the rubble (every climb's hand plants)
+  let pi = 0;
+  for (const [who, climbs] of Object.entries(CLIMBS_C)) climbs.forEach((c, ci) => c.hands.forEach((h, hi) => {
+    const i = pi++;
+    if (T < h.on - 0.1 || T > h.on + 2.5) return;
+    const key = `cph_${who}${ci}_${hi}`;
+    out.push(fx(dust3({at: h.p, t: T, t0: h.on + 0.02, key, n: 4, size: 0.04, grow: 0.16, speed: 0.4, life: 1.2, rise: 0.12, color: '#ADA193', opacity: 0.55, seed: 70 + i})));
+    out.push(fx(chips3({at: h.p, t: T, t0: h.on + 0.02, key: `${key}c`, n: 4, dir: {x: 0, y: 1, z: 0}, spread: 60, speed: [0.3, 1.0], size: [0.008, 0.02], material: 'concrete', ground: h.p.y - 0.03, life: 1.6, seed: 80 + i})));
+  }));
   // the drone's downwash as it spins up over the pilot's palm: dust off the slope at her feet
   if (T > T3.spin && T < T3.lift + 2.5) {
     const c = crewC(T3.spin).drone.body.pos;
@@ -123,7 +129,40 @@ export const dustFx = (T: number, o: {near?: V3; maxDist?: number} = {}): FxOut 
 // ------------------------------------------------------------------ the set additions and the world beyond
 /** C's own dressing (the vault wall) and everything earlier sections left (B's slab, D1's cover slab …) */
 export const setC = (v: View, T: number): Item[] => [...vaultWallItems(), ...persistItems(v, T, {exceptSec: 'C'})];
-/** the halted army beyond the crater (B's formation at rest, idling), heavies and drones */
-export const armyC = (v: View, T: number, o: {maxFull?: number; maxMid?: number; farFrom?: number} = {}): Item[] =>
-  armyB(v, T, {maxFull: o.maxFull ?? 0, maxMid: o.maxMid ?? 14, farFrom: o.farFrom ?? 70, ctl: () => ({idle: 0.4})});
+/** B's halted army without the vanguard units D1 animates (D1/battle.tsx ARMY_REST) */
+const ARMY_REST: Formation = {slots: (T) => ARMY_B.slots(T).filter((sl) => !D1_ARMY_IDS.has(sl.id))};
+/**
+ * The army beyond the crater as D1 draws it: the rest at their halt, the vanguard's front units and the reserve from
+ * D1's specs (still until 57.0, then the front breaks into its run and the reserve steps up), the heavies, B's drones
+ * and the enemy drones low over the crater. LOD by distance to the view; only what is in front of it.
+ */
+export const armyC = (v: View, T: number, o: {full?: number; far?: number; maxMid?: number; farFrom?: number} = {}): Item[] => {
+  const items: Item[] = [];
+  const full = o.full ?? 26, far = o.far ?? 90;
+  const lodOf = (p: V3) => {
+    const d = Math.hypot(p.x - v.pos.x, p.y - v.pos.y, p.z - v.pos.z);
+    return d < full ? 'full' : d < far ? 'mid' : 'far';
+  };
+  const draw = (name: string) => {
+    const s: UnitSpec = unitD1(name, T);
+    const p = s.gait ? s.gait.path(s.gait.dist).pos : s.pos;
+    if (toView(v, {x: p.x, y: groundH(p.x, p.z) + 1.1, z: p.z}).z < -2) return;
+    items.push(...combatUnit({...s, lod: lodOf(p)}));
+  };
+  FRONT.forEach(draw);
+  RESERVE_NAMES.forEach(draw);
+  items.push(...armyItems(v, T, ARMY_REST, {ground: groundH, maxFull: 0, maxMid: o.maxMid ?? 16, farFrom: o.farFrom ?? 75, ctl: () => ({idle: 0.4})}));
+  HEAVIES_B.forEach((h, i) => {
+    const l = lodOf({x: h.rest.x, y: 3, z: h.rest.z});
+    items.push(...heavy(heavySpecB(i, T, {lod: l === 'full' ? 'mid' : l, look: {x: 44, y: 1.5, z: 0}, key: `d1hv${h.id}`})));
+  });
+  DRONES_B.forEach((_, i) => items.push(...drone({...droneSpecB(i, T), lod: 'far'})));
+  enemyDrones(T).forEach((d) => items.push(...drone({...d, lod: lodOf(d.pos) === 'far' ? 'far' : 'full'})));
+  return items;
+};
+/** dust under the front units' first strides (D1's own footfalls) */
+export const armyDustFx = (T: number): FxOut => {
+  if (T < 57.0) return fx();
+  return combine(...unitFootfalls(T, 0.9).map((f, i) => fx(dust3({at: {...f.pos, y: f.pos.y + 0.03}, t: T, t0: f.t, key: `cuf_${f.key}`, n: 2, size: 0.09, grow: 0.3, speed: 0.6, life: 1.0, spread: 70, rise: 0.2, color: '#8A8078', opacity: 0.5, seed: 700 + i}))));
+};
 export type {SpriteItem};

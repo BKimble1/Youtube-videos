@@ -10,7 +10,9 @@ import {figureRig} from '../../rig';
 import {groundH} from '../../world/ground';
 import {chunkMesh} from '../../world/props';
 import {chips3, dust3} from '../../fx';
-import {TB, HAND_OUT, R0, R1, rootB, REBAR, dirB} from './director';
+import {TB, HAND_OUT, R0, R1, HD, rootB, REBAR, dirB} from './director';
+import {headingVec} from '../../engine/camera';
+import {B_WEST_SMOKE} from './kit';
 import {slabItem, chunkItems, chunkHits, slabPoint, supportItems, SLAB_SOUTH_Z} from './rubble';
 import {dirSpec, dirSprite, dirShaded, underShade, rebarItems, motes, B_COLUMNS} from './kit';
 import {CAM_B1, CAM_B2} from './cams';
@@ -18,6 +20,11 @@ import {figureSprite} from '../../rig';
 import {M} from '../../timing';
 
 const gp = (x: number, z: number, up = 0): V3 => ({x, y: groundH(x, z) + up, z});
+/** a ground point near a root, along his heading (f) and to his right (r) */
+const onGround = (root: V3, f: number, r: number): V3 => {
+  const a = headingVec(HD), b = headingVec(HD + 90);
+  return gp(root.x + a.x * f + b.x * r, root.z + a.z * f + b.z * r, 0.02);
+};
 
 /** foreground rubble near the lens (static set dressing for the two close shots) */
 const fgChunk = (key: string, x: number, z: number, size: number, seed: number, yaw: number, o: {bias?: number; mat?: string} = {}): Item => ({
@@ -54,8 +61,10 @@ export const ShotB1: React.FC = () => {
       // chips kicked out from under the palm when it slaps down, and the dust it raises
       ...chips3({at: add3(h, {x: 0, y: 0.01, z: 0}), t: T, t0: TB.slap, key: 'b1chips', seed: 4, n: 9, dir: {x: 0.6, y: 0.55, z: 0.25}, spread: 70, speed: [0.5, 1.6], size: [0.006, 0.018], ground: h.y - 0.02, life: 6}),
       ...chips3({at: add3(h, {x: 0.06, y: 0.01, z: -0.05}), t: T, t0: TB.slap + 0.02, key: 'b1chipsB', seed: 9, n: 6, dir: {x: -0.2, y: 0.5, z: -0.8}, spread: 60, speed: [0.3, 1.1], size: [0.005, 0.014], ground: h.y - 0.02, life: 6}),
-      ...dust3({at: h, t: T, t0: TB.slap, key: 'b1dust', seed: 3, n: 6, speed: 0.35, size: 0.035, grow: 0.12, life: 1.8, rise: 0.08, color: '#A89A8A', opacity: 0.7}),
-      ...dust3({at: slabPoint(0.95, 0.35, T), t: T, t0: TB.strain, key: 'b1trickle', seed: 5, n: 4, dir: {x: 0, y: -1, z: 0}, spread: 20, speed: 0.15, size: 0.02, grow: 0.06, life: 1.6, rise: -0.05, color: '#B0A494', opacity: 0.55}),
+      ...dust3({at: h, t: T, t0: TB.slap, key: 'b1dust', seed: 3, n: 5, speed: 0.3, size: 0.016, grow: 0.035, life: 1.2, rise: 0.06, color: '#A89A8A', opacity: 0.55}),
+      // the claw drags back through the grit: a few chips roll ahead of the fingertips
+      ...chips3({at: add3(h, {x: 0.03, y: 0.01, z: 0.05}), t: T, t0: TB.strain + 0.08, key: 'b1slip', seed: 6, n: 6, dir: {x: -0.3, y: 0.35, z: -0.9}, spread: 40, speed: [0.15, 0.45], size: [0.004, 0.011], ground: h.y - 0.02, life: 4}),
+      ...dust3({at: slabPoint(0.95, 0.35, T), t: T, t0: TB.strain, key: 'b1trickle', seed: 5, n: 4, dir: {x: 0, y: -1, z: 0}, spread: 20, speed: 0.15, size: 0.012, grow: 0.03, life: 1.4, rise: -0.05, color: '#B0A494', opacity: 0.5}),
       // the rubble at the hand: grit and small stones (the macro set for this close)
       ...GRAVEL,
       // the hand's contact shadow on the rubble (grows as the palm comes down)
@@ -89,19 +98,25 @@ export const ShotB2: React.FC = () => {
         : [dirShaded(T, {bias: 0.9, k: 0.55})]),
       slabItem(T, {bias: T < TB.chestUp - 0.1 ? 2.2 : -1.2}), ...supportItems(),
       ...chunkItems(T),
-      ...rebarItems(T, {bias: T < TB.chestUp - 0.1 ? 3.6 : 1.4}), // nearer the lens than he is: over his front layer too
+      ...rebarItems(T),
       // effort dust: palms, knees, the slab dropping back, the chunks landing
-      ...dust3({at: slabPoint(0.9, 0.5, T), t: T, t0: TB.slabLand, key: 'b2slab', seed: 7, n: 9, dir: {x: 0.6, y: 0.3, z: 0.4}, spread: 80, speed: 1.1, size: 0.12, grow: 0.45, life: 2.2, rise: 0.15, color: '#A3978A', opacity: 0.75}),
+      ...dust3({at: slabPoint(0.9, 0.5, T), t: T, t0: TB.slabLand, key: 'b2slab', seed: 7, n: 8, dir: {x: 0.6, y: 0.3, z: 0.4}, spread: 80, speed: 0.9, size: 0.06, grow: 0.16, life: 1.6, rise: 0.12, color: '#A3978A', opacity: 0.6}),
       ...chips3({at: slabPoint(0.98, 0.45, T), t: T, t0: TB.slabLand, key: 'b2slabC', seed: 8, n: 7, dir: {x: 1, y: 0.4, z: 0.2}, spread: 60, speed: [0.8, 2.2], size: [0.02, 0.05], ground: groundH(1.1, 1.6), life: 5}),
-      ...hits.flatMap((hh, i) => dust3({at: hh.p, t: T, t0: hh.t, key: `b2ch${i}`, seed: 20 + i, n: 4, speed: 0.4, size: 0.07, grow: 0.25, life: 1.4, color: '#A3978A', opacity: 0.6})),
-      ...dust3({at: gp(R1.x - 0.45, R1.z + 0.12, 0.05), t: T, t0: TB.knee, key: 'b2knee', seed: 11, n: 5, speed: 0.5, size: 0.06, grow: 0.25, life: 1.5, color: '#A3978A', opacity: 0.6}),
-      ...dust3({at: gp(R1.x + 0.3, R1.z - 0.15, 0.03), t: T, t0: TB.kneel, key: 'b2foot', seed: 12, n: 5, speed: 0.5, size: 0.06, grow: 0.25, life: 1.5, color: '#A3978A', opacity: 0.6}),
+      ...hits.flatMap((hh, i) => dust3({at: hh.p, t: T, t0: hh.t, key: `b2ch${i}`, seed: 20 + i, n: 4, speed: 0.35, size: 0.035, grow: 0.1, life: 1.1, color: '#A3978A', opacity: 0.55})),
+      // knee, foot plants, the half step: small kicks of grit and dust at the contact (no big discs)
+      ...([[TB.knee + 0.12, -0.44, 0.15, 'b2knee'], [TB.kneel, 0.32, -0.16, 'b2foot'], [TB.step, 0.04, 0.19, 'b2footR'], [TB.staggerEnd, 0.22, 0.19, 'b2stag']] as [number, number, number, string][]).flatMap(([t0, f, r, key], i) => {
+        const at = onGround(R1, f, r);
+        return [
+          ...dust3({at, t: T, t0, key, seed: 11 + i, n: 4, speed: 0.4, size: 0.03, grow: 0.09, life: 1.0, color: '#A3978A', opacity: 0.55}),
+          ...chips3({at, t: T, t0, key: `${key}c`, seed: 31 + i, n: 4, dir: {x: 0.3, y: 0.6, z: 0.4}, spread: 70, speed: [0.3, 0.9], size: [0.006, 0.016], ground: at.y - 0.02, life: 3}),
+        ];
+      }),
       ...chips3({at: REBAR.grip, t: T, t0: TB.rebar, key: 'b2rust', seed: 13, n: 5, dir: {x: 0, y: -1, z: 0}, spread: 40, speed: [0.1, 0.4], size: [0.004, 0.01], ground: REBAR.base.y, life: 4, material: 'brick'}),
       fgChunk('b2fg1', R1.x + 1.15, R1.z + 2.05, 0.42, 17, 20, {bias: 0.3}),
       fgChunk('b2fg2', R1.x + 0.55, R1.z + 2.45, 0.3, 19, 65, {mat: 'rubbleDark', bias: 0.6}),
       ...motes('b2m', gp(R1.x + 0.8, R1.z + 1.4, 0.9), {x: 1.2, y: 0.7, z: 1.2}, T, 26, 0.008),
     ];
   };
-  return <Stage T={T} cam={cam} items={items} drift={0.012} atmos={{columns: B_COLUMNS}} vignette={0.6} />;
+  return <Stage T={T} cam={cam} items={items} drift={0.01} atmos={{columns: [...B_COLUMNS, ...B_WEST_SMOKE]}} vignette={0.6} />;
 };
 void [figureRig, R1, dirSpec, dirSprite, figureSprite];
