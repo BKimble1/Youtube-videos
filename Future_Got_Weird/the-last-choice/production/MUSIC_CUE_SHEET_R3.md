@@ -46,12 +46,12 @@ What changed in R3:
   - The song is full range from 3:37.0.
 - **Score in front, gently:** effects give way to the music only where their short-term level comes within 3 dB of the music's.
   - Ratio 0.6, at most 5 dB.
-  - The latest mix: active for 62.4 s in all, averaging 1.36 dB of reduction.
+  - The latest mix: active for 63.7 s in all, averaging 1.35 dB of reduction.
 - **Opening effort sounds** (the rise, 0:09.3–0:16.8): reduced at source rather than ducked.
   - The breaths, grunts, rubble and cables in B's cue sheet are 6 dB lower over Portals' solo (`balanceRise` in `shots/B/cues.ts`), and near-duplicate takes within 0.3 s are dropped.
   - The worst 400 ms window of effects over music in 0:09.3–0:35 went from +10 dB to +4 dB. The +4 dB is at the knee's contact with the slab.
 - **Level:** static gain to −16 LUFS integrated, then a 4×-oversampled lookahead limiter to −2.0 dBTP.
-  - The latest mix measures −16.1 LUFS and −2.0 dBTP.
+  - The latest mix measures −16.0 LUFS and −2.0 dBTP before encoding (1,210 cues). On the encoded AAC file of the final render the same measurement reads −16.1 LUFS and −2.0 dBTP (see the README).
   - The limiter does more than 2 dB only at the strike (2:57.96 and 2:58.29, at most 2.7 dB).
   - The true peak is re-measured on the encoded AAC file (see the README).
 
