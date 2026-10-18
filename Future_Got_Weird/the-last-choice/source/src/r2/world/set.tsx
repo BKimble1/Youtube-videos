@@ -11,11 +11,11 @@
 //   OBJECTS (walls, slabs, wrecks, buildings) — normal mean-depth sort
 import {V3, rnd, add3, mul3, norm3, rotAxis, rad} from '../../kit/math';
 import {View, Item, MeshItem, Prepped, prep, box, merge, xfMesh, Mesh, Face, mix as mixC, splitLong} from '../engine';
-import {PLAN} from './plan';
+import {PLAN, STREET_OBSTACLES, A1_EVENTS, FIRE_SITES} from './plan';
 import {groundH, CLEAR_ZONES, isClear, noise2, FOOT} from './ground';
-import {groundGrid, Decal, blobXZ, crackXZ, rebarAt, polyline3, chipsXZ} from './geom';
-import {CITY, Bldg, bldgMesh, lodFor, coneMesh} from './city';
-import {vanMesh, vanInteriorMesh, VAN_XF, radioMesh, radioFn, RADIO, deathSlabMesh, carMesh, busMesh, girderMesh, columnMeshes, brokenSlab, chunkMesh, beam} from './props';
+import {groundGrid, Decal, blobXZ, crackXZ, rebarAt, polyline3, chipsXZ, splitPlanar} from './geom';
+import {CITY, Bldg, bldgMesh, lodFor, coneMesh, bldgSteel, facadePanel, openingFor, wallFrame, wallPoint} from './city';
+import {vanMesh, vanInteriorMesh, VAN_XF, radioMesh, radioFn, RADIO, deathSlabMesh, carMesh, busMesh, girderMesh, girderMeshFar, vehicleFar, columnMeshes, brokenSlab, chunkMesh, beam, truckMesh, fallenSignal, dumpsterMesh, boxBin, hydrantMesh} from './props';
 import {M} from '../timing';
 
 const FLAT_BIAS = -1e5;
@@ -95,7 +95,7 @@ const roadDecals = (x0: number, x1: number): Decal[] => {
 };
 
 // ------------------------------------------------------------------ static meshes (built once, lazily)
-type Static = {item: MeshItem; c: V3; r: number; minPx?: number};
+type Static = {item: MeshItem; c: V3; r: number; minPx?: number; /** a cheaper stand-in beyond farD m */ far?: MeshItem; farD?: number};
 let STATIC: Static[] | null = null;
 let FLAT: Static[] | null = null;
 let EXTRA: Item[] | null = null;
@@ -259,7 +259,9 @@ const buildStatic = (): Static[] => {
       for (let i = 0; i < nn; i++) { const j = (i + 1) % nn; faces.push({v: [i, nn + i, nn + j, j], mat: 'concreteEdge'}); }
       return orientCaps({verts, faces, crease: 30}, Nn);
     })();
-    out.push(meshOf(prep(sl), key));
+    // (R3) cut into ≤ 2.2 m strips along the wall (the Crew pass in front of and behind these walls: each strip sorts
+    // by its own depth instead of the middle of a 44 m face); windows are clipped to their strips
+    out.push(meshOf(prep(splitPlanar(sl, 2.2, U)), key));
   };
   wall({x: W.x0, y: 0, z: W.z0}, {x: W.x1 - 3, y: 0, z: W.z0}, W.stumpH * 1.3, 11, 'ruinN');
   wall({x: W.x1 - 2, y: 0, z: W.z1}, {x: W.x0, y: 0, z: W.z1}, W.stumpH * 1.1, 12, 'ruinS');
@@ -291,6 +293,8 @@ const buildStatic = (): Static[] => {
     const a = (i / 16) * Math.PI * 2 + rnd(s) * 0.3;
     const r = C.radius * (0.95 + rnd(s * 3) * 0.2);
     const x = C.center.x + Math.cos(a) * r, z = C.center.z + Math.sin(a) * r;
+    // (R3) no plate through the girder's column, nor into the north frontage
+    if (Math.hypot(x - PLAN.girder.to.x, z - PLAN.girder.to.z) < 4.2 || z < -PLAN.avenue.walkZ + 3.2) continue;
     const U = {x: -Math.sin(a), y: 0, z: Math.cos(a)};
     const V = norm3(rotAxis({x: 0, y: 1, z: 0}, U, -rad(55 + rnd(s * 5) * 25)));
     const w = 2.5 + rnd(s * 7) * 3, h = 1.6 + rnd(s * 9) * 2;
@@ -309,7 +313,7 @@ const buildStatic = (): Static[] => {
   out.push(meshOf(prep(splitLong(merge(beamPipe(pipeA, pipeB), beamPipe({x: pipeB.x + 2, y: -1.5, z: pipeB.z + 2.5}, {x: pipeB.x + 9, y: -0.7, z: pipeB.z + 10})), 1.5)), 'waterMain'));
 
   // THE GIRDER (north flank) with its columns, the crushed taxi
-  out.push(meshOf(girderMesh(), 'girder'));
+  out.push({...meshOf(girderMesh(), 'girder'), far: {kind: 'mesh', mesh: girderMeshFar(), key: 'girder'}, farD: 110});
   columnMeshes().forEach((m, i) => out.push(meshOf(m, `gcol_${i}`)));
   out.push(meshOf(prep(carMesh('taxi', 0.85)), 'taxi', {xf: {pos: {x: 46.5, y: groundH(46.5, -14.2), z: -14.2}, yaw: 75, roll: -6}}));
 
@@ -319,14 +323,15 @@ const buildStatic = (): Static[] => {
     const x = 30 + i * 6 + rnd(s) * 3, z = 16.2 + rnd(s * 3) * 2;
     const ang = rad(-10 + rnd(s * 5) * 20);
     const U = {x: Math.cos(ang), y: 0, z: Math.sin(ang)};
-    const V = norm3(rotAxis({x: 0, y: 1, z: 0}, U, rad(52 + rnd(s * 7) * 30)));
+    // (R3) fallen OUTWARD: lying over the sidewalk with their tops toward the street (R2 tilted them into the wall)
+    const V = norm3(rotAxis({x: 0, y: 1, z: 0}, U, -rad(58 + rnd(s * 7) * 24)));
     const w = 4.5 + rnd(s * 9) * 2.5, h = 3 + rnd(s * 11) * 2.5;
-    const sl = brokenSlab({x, y: -0.3, z}, U, V, w, h, 0.35, s, 'brick', 'brickDark');
+    const sl = brokenSlab({x, y: -0.3, z: z + 0.9}, U, V, w, h, 0.35, s, 'brick', 'brickDark');
     // windows on the fallen panel's face
     const wins: V3[][] = [];
     for (let k = 0; k < 2; k++) {
       const uu = 0.8 + k * 2.1, vv = 1.0;
-      const P = (du: number, dv: number) => add3(add3({x, y: -0.3, z}, mul3(U, uu + du)), add3(mul3(V, vv + dv), mul3(norm3({x: U.y * V.z - U.z * V.y, y: U.z * V.x - U.x * V.z, z: U.x * V.y - U.y * V.x}), 0.02)));
+      const P = (du: number, dv: number) => add3(add3({x, y: -0.3, z: z + 0.9}, mul3(U, uu + du)), add3(mul3(V, vv + dv), mul3(norm3({x: U.y * V.z - U.z * V.y, y: U.z * V.x - U.x * V.z, z: U.x * V.y - U.y * V.x}), 0.02)));
       if (uu + 1.3 < w) wins.push([P(0, 0), P(1.2, 0), P(1.2, 1.7), P(0, 1.7)]);
     }
     sl.faces[0] = {...sl.faces[0], ov: [{polys: wins, mat: 'interiorDeep'}]};
@@ -339,12 +344,17 @@ const buildStatic = (): Static[] => {
     out.push({...meshOf(chunkMesh(s, 'brickDark'), `sch2_${i}`, {xf: {pos: {x, y: groundH(x, z) - size * 0.15, z}, yaw: rnd(s * 7) * 360, pitch: (rnd(s * 9) - 0.5) * 30, scale: size}}), minPx: 3});
   }
   out.push(meshOf(prep(busMesh()), 'bus', {xf: {pos: {x: PLAN.bus.pos.x, y: 0, z: PLAN.bus.pos.z}, yaw: PLAN.bus.heading, roll: 4}}));
-  const wrecks: [number, number, number, string, number, boolean][] = [
-    [24, -9, 140, 'carGrey', 0, true], [31, 6, 60, 'carRed', 0.2, false], [96, -6, 200, 'carGrey', 0.1, true], [118, 10, 10, 'carRed', 0, true],
-    [150, -3, 95, 'carGrey', 0, false], [178, 8, 250, 'taxi', 0.3, true], [215, -10, 80, 'carGrey', 0.5, true], [290, 5, 120, 'carRed', 0, true],
-    [340, -8, 45, 'carGrey', 0.2, true], [380, 3, 170, 'taxi', 0, false],
-  ];
-  wrecks.forEach(([x, z, hd, mat, cr, burnt], i) => out.push(meshOf(prep(carMesh(mat, cr, burnt)), `wreck_${i}`, {xf: {pos: {x, y: groundH(x, z), z}, yaw: hd, roll: i % 4 === 0 ? 172 : 0}})));
+  // the wrecks and abandoned vehicles: one list (plan.ts STREET_OBSTACLES) for the set and for the formations' lanes.
+  // (R3) a car on its roof now rests ON its roof (R2's 172° roll sank the whole body under the asphalt)
+  STREET_OBSTACLES.forEach((o) => {
+    if (o.kind !== 'car' && o.kind !== 'taxi' && o.kind !== 'truck') return;
+    const m = o.kind === 'truck' ? truckMesh(o.burnt) : carMesh(o.mat ?? 'carGrey', o.crushed ?? 0, o.burnt, o.doorOpen);
+    const top = o.kind === 'truck' ? 3.4 : 0.92 + 0.62 * (1 - 0.75 * (o.crushed ?? 0));
+    const xf = {pos: {x: o.x, y: groundH(o.x, o.z) + (o.flipped ? top - 0.08 : 0), z: o.z}, yaw: o.heading, roll: o.flipped ? 172 : 0};
+    const far: MeshItem = {kind: 'mesh', mesh: prep(vehicleFar(o.kind === 'truck' ? 'truck' : 'car', o.mat ?? 'carGrey', o.burnt)), key: o.id, xf};
+    out.push({...meshOf(prep(m), o.id, {xf}), minPx: 3, far, farD: 120});
+  });
+  dressing(out);
   // street furniture: lamp posts (some bent), traffic poles, a subway entrance with green globes (NY), hydrants
   for (let i = 0; i < 14; i++) {
     const x = 22 + i * 26, z = i % 2 ? 15.2 : -15.2;
@@ -365,6 +375,170 @@ const buildStatic = (): Static[] => {
 
   // THE FAILING TOWER is animated (see towerItems); its stump persists after the opening
   return out;
+};
+
+// ------------------------------------------------------------------ (R3) street dressing
+/** heading → the yaw that lays a mesh's local +z along it */
+const along = (h: number) => h + 180;
+/**
+ * Detail in distinct clusters, densest away from the fighting: heaps the machines pushed to the kerbs at the cross
+ * streets they hold, toppled signal masts, a fallen lamp post, dumpsters, hydrants, bins, and power / phone lines
+ * across the avenue (some snapped and hanging). Nothing stands in the formations' lanes (tools/r3/city_check.mjs).
+ */
+const dressing = (out: Static[]) => {
+  // heaps: broken slabs leaning together, chunks, and (x1) a car shoved onto its side
+  const heap = (key: string, x: number, z: number, r: number, seed: number, carMat?: string) => {
+    for (let i = 0; i < 4; i++) {
+      const sd = seed * 13 + i;
+      const a = rnd(sd) * Math.PI * 2;
+      const U = {x: Math.cos(a), y: 0, z: Math.sin(a)};
+      const V = norm3(rotAxis({x: 0, y: 1, z: 0}, U, rad(25 + rnd(sd * 3) * 45) * (rnd(sd * 5) < 0.5 ? 1 : -1)));
+      const w = 1.6 + rnd(sd * 7) * 2.2, h = 1.0 + rnd(sd * 9) * 1.4;
+      const px = x + (rnd(sd * 11) - 0.5) * r, pz = z + (rnd(sd * 17) - 0.5) * r;
+      out.push(meshOf(prep(brokenSlab({x: px - U.x * w / 2, y: groundH(px, pz) - 0.3, z: pz - U.z * w / 2}, U, V, w, h, 0.25, sd, i % 2 ? 'concrete' : 'asphaltBroken', 'rubbleDark')), `${key}_s${i}`));
+    }
+    for (let i = 0; i < 12; i++) {
+      const sd = seed * 31 + i;
+      const a = rnd(sd) * Math.PI * 2, rr = r * Math.sqrt(rnd(sd * 3));
+      const px = x + Math.cos(a) * rr, pz = z + Math.sin(a) * rr, size = 0.4 + Math.pow(rnd(sd * 5), 2) * 1.2;
+      out.push({...meshOf(chunkMesh(sd, i % 3 ? 'rubbleDark' : 'concreteDark'), `${key}_c${i}`, {xf: {pos: {x: px, y: groundH(px, pz) - size * 0.15, z: pz}, yaw: rnd(sd * 7) * 360, pitch: (rnd(sd * 9) - 0.5) * 30, scale: size}}), minPx: 2});
+    }
+    if (carMat) out.push(meshOf(prep(carMesh(carMat, 0.4, true)), `${key}_car`, {xf: {pos: {x: x + 0.4, y: 0.88, z: z - 0.2}, yaw: 8, roll: 84}}));
+  };
+  heap('pile_x1', 118.2, 25, 3.2, 41, 'carGrey');
+  heap('pile_x2', 248.5, -16.4, 2.0, 42);
+  // the FN6 / FS9 / FN12 breaches dropped their floors on the sidewalk below
+  heap('pile_fn6', 171.5, -16.2, 2.0, 43);
+  heap('pile_fs9', 332.5, 16.2, 2.0, 44);
+  // toppled traffic-signal masts at the corners of the held intersections (on the sidewalks)
+  out.push(meshOf(prep(fallenSignal(7.5, 1)), 'util_sig1', {xf: {pos: {x: 134.6, y: 0.15, z: -15.2}, yaw: along(90)}}));
+  out.push(meshOf(prep(fallenSignal(7.0, 2)), 'util_sig2', {xf: {pos: {x: 252.6, y: 0.15, z: 15.6}, yaw: along(268)}}));
+  out.push(meshOf(prep(fallenSignal(6.5, 3)), 'util_sig3', {xf: {pos: {x: 409.4, y: 0.15, z: -15.8}, yaw: along(272)}}));
+  // a lamp post snapped at its base, lying along the south sidewalk
+  out.push(meshOf(prep(splitLong(merge(beam({x: 219, y: 0.2, z: 16.9}, {x: 226.4, y: 0.32, z: 17.5}, 0.16, 0.16, 'steelDark'), beam({x: 226.4, y: 0.32, z: 17.5}, {x: 226.9, y: 0.25, z: 15.9}, 0.12, 0.12, 'steelDark')), 2.0)), 'util_lamp'));
+  // dumpsters, hydrants, bins (sidewalks, by the buildings)
+  ([[112, -17.3, 90, 'girder'], [238, 16.9, 270, 'vanStripe'], [318, -17.0, 92, 'girder'], [452, 17.0, 268, 'carRed']] as [number, number, number, string][]).forEach(([x, z, h, m], i) => out.push({...meshOf(prep(dumpsterMesh(m)), `util_dump${i}`, {xf: {pos: {x, y: 0.15, z}, yaw: h}}), minPx: 2}));
+  ([[116.2, 15.6], [252.4, -15.6], [271.6, 15.7], [432.2, -15.6]] as [number, number][]).forEach(([x, z], i) => out.push({...meshOf(prep(hydrantMesh()), `util_hyd${i}`, {xf: {pos: {x, y: 0.15, z}}}), minPx: 2}));
+  ([[198.2, 16.6, 0, 90, 'vanStripe'], [200.4, 17.2, 30, 0, 'carRed'], [288.6, -16.4, 20, 86, 'girder'], [372.5, 16.8, 70, 88, 'vanStripe']] as [number, number, number, number, string][]).forEach(([x, z, h, roll, m], i) => out.push({...meshOf(prep(boxBin(m)), `util_bin${i}`, {xf: {pos: {x, y: roll ? 0.45 : 0.15, z}, yaw: h, roll}}), minPx: 2}));
+};
+
+/** Overhead power / phone lines (sprites, cut into short spans so each part sorts by its own depth). */
+const wires = (): Item[] => {
+  const items: Item[] = [];
+  const cat = (key: string, a: V3, b: V3, sag: number, snapAt?: number) => {
+    const n = 12;
+    const P = Array.from({length: n + 1}, (_, i) => {
+      const u = i / n;
+      return {x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u - sag * 4 * u * (1 - u), z: a.z + (b.z - a.z) * u};
+    });
+    const spans: V3[][] = [];
+    if (snapAt === undefined) for (let i = 0; i < n; i += 3) spans.push(P.slice(i, Math.min(n, i + 3) + 1));
+    else {
+      // snapped: each half hangs from its anchor, draped down to the street
+      const k = Math.round(snapAt * n);
+      const hang = (from: V3, dirX: number, dirZ: number, L: number) => {
+        const H: V3[] = [];
+        for (let i = 0; i <= 8; i++) {
+          const u = i / 8;
+          const y = Math.max(0.04, from.y - L * Math.sin(u * Math.PI / 2) * 1.05);
+          H.push({x: from.x + dirX * L * 0.35 * u * u, y, z: from.z + dirZ * L * 0.35 * u * u});
+        }
+        return H;
+      };
+      const La = Math.hypot(P[k].x - a.x, P[k].z - a.z), Lb = Math.hypot(b.x - P[k].x, b.z - P[k].z);
+      const ha = hang(a, (b.x - a.x) / Math.hypot(b.x - a.x, b.z - a.z), (b.z - a.z) / Math.hypot(b.x - a.x, b.z - a.z), Math.min(a.y, La));
+      const hb = hang(b, (a.x - b.x) / Math.hypot(b.x - a.x, b.z - a.z), (a.z - b.z) / Math.hypot(b.x - a.x, b.z - a.z), Math.min(b.y, Lb));
+      spans.push(ha.slice(0, 5), ha.slice(4), hb.slice(0, 5), hb.slice(4));
+    }
+    spans.forEach((S, i) => items.push(polyline3(`${key}_${i}`, S, 0.035, '#2A2522', {minPx: 0.7})));
+  };
+  // across the avenue, facade to facade (only where both frontages stand), beyond the fighting
+  ([[138, 9.2, 8.6, 2.8], [189, 10.0, 9.4, 3.2, 0.42], [249, 8.4, 9.0, 2.6], [297, 9.6, 8.8, 3.0, 0.62], [352, 10.4, 9.8, 3.4], [405, 9.0, 9.4, 2.9]] as number[][]).forEach(([x, ya, yb, sag, snap], i) => {
+    cat(`wire_a${i}`, {x, y: ya, z: -18.95}, {x: x + 1.6, y: yb, z: 18.95}, sag, snap);
+    if (i % 2 === 0) cat(`wire_b${i}`, {x: x + 0.8, y: ya + 1.1, z: -18.95}, {x: x + 2.6, y: yb + 0.9, z: 18.95}, sag * 0.8);
+  });
+  // across the first cross street, north and south of the avenue
+  cat('wire_x1n', {x: 115.05, y: 8.6, z: -40}, {x: 133.45, y: 8.1, z: -40.5}, 1.6);
+  cat('wire_x1s', {x: 115.05, y: 7.8, z: 40}, {x: 133.45, y: 8.4, z: 40.6}, 1.4, 0.3);
+  return items;
+};
+
+// ------------------------------------------------------------------ (R3) A1's damage events, whose results persist
+type PeelPiece = {mesh: Prepped; c0: V3; cb: V3; ab: number; cf: V3; af: number; tl: number};
+let PEEL: {pieces: PeelPiece[]; H: V3; U: V3; final: MeshItem[]} | null = null;
+const rotAbout = (p: V3, c: V3, U: V3, a: number) => add3(c, rotAxis({x: p.x - c.x, y: p.y - c.y, z: p.z - c.z}, U, a));
+/** the three pieces of the peeling wall section: their break pose, landing pose and time (from A1_EVENTS.peel) */
+const peelSetup = () => {
+  if (PEEL) return PEEL;
+  const pe = A1_EVENTS.peel;
+  const b = CITY().find((q) => q.id === pe.bld)!;
+  const F = wallFrame(b, pe.side);
+  const U = F.U; // the hinge runs along the wall; a positive turn about U swings the top outward (U × up = N)
+  const um = (pe.u0 + pe.u1) / 2;
+  const H = wallPoint(b, pe.side, um, pe.y0);
+  const aB = rad(17);
+  const bands = [0, 1, 2].map((k) => [pe.y0 + ((pe.y1 - pe.y0) * k) / 3, pe.y0 + ((pe.y1 - pe.y0) * (k + 1)) / 3]);
+  // they come to rest in the gap west of the wall and on the rubble lot's edge: broken, tipped, stacked
+  const lie = [{out: 3.4, y: 0.75, a: 76, du: -1.2}, {out: 5.6, y: 1.1, a: 95, du: 1.4}, {out: 7.6, y: 1.9, a: 108, du: -0.4}];
+  const pieces = bands.map(([y0, y1], k): PeelPiece => {
+    const mesh = prep(facadePanel(b, pe.u0, pe.u1, y0, y1, 1, pe.side));
+    const c0 = wallPoint(b, pe.side, um, (y0 + y1) / 2, -0.22);
+    const cb = rotAbout(c0, H, U, aB);
+    const cf = {...wallPoint(b, pe.side, um + lie[k].du, 0, lie[k].out), y: lie[k].y};
+    return {mesh, c0, cb, ab: aB, cf, af: rad(lie[k].a), tl: pe.tb + Math.sqrt((2 * (cb.y - cf.y)) / 9.8)};
+  });
+  const final = pieces.map((pc, k): MeshItem => ({kind: 'mesh', mesh: pc.mesh, key: `a1peel_${k}`, fn: (p: V3) => add3(pc.cf, rotAxis(sub3v(p, pc.c0), U, pc.af))}));
+  PEEL = {pieces, H, U, final};
+  return PEEL;
+};
+const sub3v = (a: V3, b: V3): V3 => ({x: a.x - b.x, y: a.y - b.y, z: a.z - b.z});
+/** where each piece is at film time t (A1 reads this for its dust and sound) */
+export const peelState = (t: number) => {
+  const S = peelSetup(), pe = A1_EVENTS.peel;
+  return S.pieces.map((pc) => {
+    if (t < pe.t0) return {phase: 'intact' as const, c: pc.c0, a: 0, land: pc.tl};
+    if (t < pe.tb) { const k = (t - pe.t0) / (pe.tb - pe.t0); const a = pc.ab * k * k * (3 - 2 * k); return {phase: 'tear' as const, c: rotAbout(pc.c0, S.H, S.U, a), a, land: pc.tl}; }
+    if (t < pc.tl) {
+      const u = (t - pe.tb) / (pc.tl - pe.tb);
+      const c = {x: pc.cb.x + (pc.cf.x - pc.cb.x) * u, y: pc.cb.y + (pc.cf.y - pc.cb.y) * u * u, z: pc.cb.z + (pc.cf.z - pc.cb.z) * Math.sqrt(u)};
+      return {phase: 'fall' as const, c, a: pc.ab + (pc.af - pc.ab) * Math.pow(u, 1.4), land: pc.tl};
+    }
+    return {phase: 'down' as const, c: pc.cf, a: pc.af, land: pc.tl};
+  });
+};
+let COVER: Prepped | null | undefined;
+/** the glazing over A1's blow-out room, until the blast removes it */
+const blowoutCover = (): Prepped | null => {
+  if (COVER !== undefined) return COVER;
+  const site = FIRE_SITES.find((q) => q.id === A1_EVENTS.blowout.site);
+  const o = site ? openingFor(site.pos, 14) : null;
+  const b = o ? CITY().find((q) => q.id === o.bld) : undefined;
+  if (!o || !b) return (COVER = null);
+  COVER = prep(facadePanel(b, o.u0, o.u1, o.corners[0].y, o.corners[2].y, 1, o.side));
+  return COVER;
+};
+const eventItems = (t: number): Item[] => {
+  const S = peelSetup(), pe = A1_EVENTS.peel;
+  const items: Item[] = [];
+  if (t >= Math.max(...S.pieces.map((p) => p.tl))) items.push(...S.final);
+  else peelState(t).forEach((st, k) => {
+    const pc = S.pieces[k];
+    if (st.phase === 'intact') items.push({kind: 'mesh', mesh: pc.mesh, key: `a1peel_${k}`});
+    else if (st.phase === 'tear') items.push({kind: 'mesh', mesh: pc.mesh, key: `a1peel_${k}`, fn: (p: V3) => rotAbout(p, S.H, S.U, st.a), noCull: true});
+    else items.push({kind: 'mesh', mesh: pc.mesh, key: `a1peel_${k}`, fn: (p: V3) => add3(st.c, rotAxis(sub3v(p, pc.c0), S.U, st.a)), noCull: true});
+  });
+  void pe;
+  const cov = blowoutCover();
+  if (cov && t < A1_EVENTS.blowout.t0) items.push({kind: 'mesh', mesh: cov, key: 'a1cover'});
+  return items;
+};
+
+/** twisted steel and rebar at the broken buildings near the camera */
+const STEEL = new Map<string, Item[]>();
+const steelOf = (b: Bldg): Item[] => {
+  let it = STEEL.get(b.id);
+  if (!it) { it = bldgSteel(b).map((q, i) => polyline3(`steel_${b.id}_${i}`, q.pts, q.w, q.color, {minPx: 0.7, ink: '#1E1A18', inkW: 1.0})); STEEL.set(b.id, it); }
+  return it;
 };
 
 // the water main (a fat pipe)
@@ -399,7 +573,7 @@ const getStatic = () => {
   if (!STATIC) {
     EXTRA_PUSH = [];
     STATIC = buildStatic();
-    EXTRA = EXTRA_PUSH;
+    EXTRA = [...EXTRA_PUSH, ...wires()];
     FLAT = buildFlat();
   }
   return {S: STATIC, F: FLAT!, X: EXTRA!};
@@ -489,7 +663,7 @@ export type SetOpts = {
   tower?: 'auto' | 'intact' | 'collapsed';
   /** radio dial light 0..1 (0 = off) */
   radioOn?: number;
-  /** skip groups: 'city' | 'far' | 'flat' | 'relief' | 'debris' | 'van' | 'radio' | 'tower' | 'girder' | 'wrecks' */
+  /** skip groups: 'city' | 'far' | 'flat' | 'relief' | 'debris' | 'van' | 'radio' | 'tower' | 'girder' | 'wrecks' | 'events' (A1's falling facade / its heap) */
   skip?: string[];
   /** extra culling distance for small objects (m); default automatic */
   maxDist?: number;
@@ -500,7 +674,7 @@ const groupOf = (key: string) => {
   if (key.startsWith('road_') || key.startsWith('walk_') || key.startsWith('kerb_') || key.startsWith('band_')) return 'flat';
   if (key === 'van' || key === 'vanIn') return 'van';
   if (key.startsWith('girder') || key.startsWith('gcol') || key === 'taxi') return 'girder';
-  if (key.startsWith('wreck') || key === 'bus' || key === 'craterCar') return 'wrecks';
+  if (key.startsWith('wreck') || key.startsWith('veh_') || key === 'bus' || key === 'craterCar') return 'wrecks';
   return 'debris';
 };
 
@@ -515,7 +689,7 @@ export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
     const d = Math.hypot(s.c.x - cam.x, s.c.y - cam.y, s.c.z - cam.z);
     if (s.minPx && (s.r * 2 * view.focal) / Math.max(1, d) < s.minPx) return;
     if (o.maxDist && d - s.r > o.maxDist && g !== 'flat') return;
-    items.push(s.item);
+    items.push(s.far && s.farD !== undefined && d > s.farD ? s.far : s.item);
   };
   if (!skip.has('flat')) F.forEach(push);
   S.forEach(push);
@@ -526,6 +700,7 @@ export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
   });
   if (!skip.has('radio')) items.push(...radioItems(o.radioOn ?? 0));
   if (!skip.has('tower')) items.push(...towerItems(t, o.tower ?? 'auto'));
+  if (!skip.has('city') && !skip.has('events')) items.push(...eventItems(t));
   // the city with LOD; blocks behind the frontage only when the camera is high enough to see them
   if (!skip.has('city')) {
     const low = cam.y < 26;
@@ -535,7 +710,9 @@ export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
       const d = Math.hypot(c.x - cam.x, c.y - cam.y, c.z - cam.z);
       if (low && b.zone === 'block' && b.h < 46 && d > 90 && Math.abs(cam.z) < 30) return;
       if (d > 4200) return;
-      items.push({kind: 'mesh', mesh: bldgMesh(b, lodFor(b, d)), key: `bl_${b.id}`});
+      const lod = lodFor(b, d);
+      items.push({kind: 'mesh', mesh: bldgMesh(b, lod), key: `bl_${b.id}`});
+      if (lod < 2 && d < 320 && (b.breach || b.crown) && !skip.has('debris')) items.push(...steelOf(b));
     });
   }
   return items;
@@ -544,4 +721,4 @@ export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
 /** Everything a shot needs to stand on the set (re-exported for convenience). */
 export {groundH, RADIO, VAN_XF, CLEAR_ZONES};
 export {towerItems};
-export const _debug = {getStatic};
+export const _debug = {getStatic, peelSetup, eventItems};

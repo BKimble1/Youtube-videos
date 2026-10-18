@@ -6,7 +6,116 @@
 import {V3, add3, sub3, mul3, len3, rnd, clamp, smooth, lerp} from '../../kit/math';
 import {Item, View, toView} from '../engine';
 import {Ground, FLAT, Path, straightPath, distTo} from './kit';
-import {combatUnit, UnitSpec} from './unit';
+import {combatUnit, unitAttach, UnitSpec, Posture} from './unit';
+import {heavyAttach, HeavySpec} from './heavy';
+import {droneAttach, DroneSpec} from './drone';
+
+// ------------------------------------------------------------------ obstacles (wrecks, slabs) and routes around them
+/** A ground obstacle: centre, radius (m) and height (m). Low ones (h ≤ ~0.6) can be stepped over (gait.over). */
+export type Obstacle = {x: number; z: number; r: number; h?: number};
+/**
+ * Obstacles from persisted machines at film time T (pass `persistAt(T)` from film/continuity, or any {kind, spec}):
+ * a fallen unit's body (pelvis + chest, low), a standing unit, a toppled heavy's hull (big) or a standing one's feet,
+ * a crashed drone.
+ */
+export const obstaclesFrom = (entries: {kind: string; spec?: (T: number) => unknown}[], T: number): Obstacle[] => {
+  const out: Obstacle[] = [];
+  for (const e of entries) {
+    if (!e.spec) continue;
+    if (e.kind === 'unit') {
+      const sp = e.spec(T) as UnitSpec;
+      const a = unitAttach({...sp, t: T});
+      if (sp.fall && T > sp.fall.t0 + 0.5 && (sp.fall.getUp === undefined || T < sp.fall.getUp)) {
+        out.push({x: a.pelvis.x, z: a.pelvis.z, r: 0.5, h: 0.45}, {x: a.chest.x, z: a.chest.z, r: 0.5, h: 0.45}, {x: a.head.x, z: a.head.z, r: 0.35, h: 0.35});
+      } else out.push({x: a.root.x, z: a.root.z, r: 0.55, h: 2.2});
+    } else if (e.kind === 'heavy') {
+      const sp = e.spec(T) as HeavySpec;
+      const a = heavyAttach({...sp, t: T});
+      if (sp.kneeBreak && T > sp.kneeBreak.t0) {
+        const f = a.fwd;
+        [-2.2, 0, 2.2].forEach((k) => out.push({x: a.hull.x + f.x * k, z: a.hull.z + f.z * k, r: 2.1, h: 3.0}));
+        // the folded legs reach past the hull
+        [...a.knees, ...a.feet].forEach((p) => out.push({x: p.x, z: p.z, r: 0.75, h: 1.2}));
+      } else {
+        out.push({x: a.hull.x, z: a.hull.z, r: 1.8, h: 5});
+        a.feet.forEach((p) => out.push({x: p.x, z: p.z, r: 0.75, h: 1.0}));
+      }
+    } else if (e.kind === 'drone') {
+      const sp = e.spec(T) as DroneSpec;
+      if (sp.hit && T > sp.hit.t0 + 0.8) { const a = droneAttach({...sp, t: T}); out.push({x: a.body.x, z: a.body.z, r: 0.45, h: 0.25}); }
+    }
+  }
+  return out;
+};
+
+/** obstacles projected onto a path: along-track d and cross-track c (m, + = right of the path) */
+type ObsProj = {d: number; c: number; r: number; h: number};
+const projectObstacles = (path: Path, obs: Obstacle[], length: number, step = 0.5): ObsProj[] => obs.map((o) => {
+  let best = {d: 0, e: 1e9};
+  for (let d = 0; d <= length; d += step) {
+    const q = path(d).pos;
+    const e = Math.hypot(q.x - o.x, q.z - o.z);
+    if (e < best.e) best = {d, e};
+  }
+  const q = path(best.d);
+  const h = (q.heading * Math.PI) / 180;
+  const c = (o.x - q.pos.x) * Math.cos(h) + (o.z - q.pos.z) * Math.sin(h);
+  return {d: best.d, c, r: o.r, h: o.h ?? 1};
+});
+/** overlapping obstacles merge into one block to route around (its cross-track centre / half-width, along-track span) */
+type Block = {cc: number; hw: number; d0: number; d1: number};
+const blocksOf = (P: ObsProj[], clear: number, overMax: number): Block[] => {
+  const tall = P.filter((o) => o.h > overMax);
+  const parent = tall.map((_, i) => i);
+  const find = (i: number): number => (parent[i] === i ? i : (parent[i] = find(parent[i])));
+  tall.forEach((a, i) => tall.forEach((b, j) => {
+    if (j <= i) return;
+    if (Math.hypot(a.d - b.d, a.c - b.c) < a.r + b.r + 2 * clear) parent[find(i)] = find(j);
+  }));
+  const groups = new Map<number, ObsProj[]>();
+  tall.forEach((o, i) => { const k = find(i); if (!groups.has(k)) groups.set(k, []); groups.get(k)!.push(o); });
+  return [...groups.values()].map((g) => {
+    const lo = Math.min(...g.map((o) => o.c - o.r)), hi = Math.max(...g.map((o) => o.c + o.r));
+    return {cc: (lo + hi) / 2, hw: (hi - lo) / 2, d0: Math.min(...g.map((o) => o.d - o.r)), d1: Math.max(...g.map((o) => o.d + o.r))};
+  });
+};
+/**
+ * lateral deflection (m, + = right) of a lane at cross-track `lat` past each block: a monotone sideways map (lanes keep
+ * their order and never cross; the lanes through the middle clear the block's whole width + `clear`), ramped in and
+ * out along the path.
+ */
+const deflect = (B: Block[], lat: number, clear: number, seed: number) => (d: number) => {
+  let off = 0;
+  for (const b of B) {
+    const W = b.hw + clear;
+    const x = lat - b.cc;
+    const side = Math.abs(x) > 1e-3 ? Math.sign(x) : rnd(seed * 3.7 + b.d0) < 0.5 ? -1 : 1;
+    const push = side * W * Math.exp(-((x / (1.6 * W)) ** 2));
+    const ramp = W + 2.4;
+    const along = d < b.d0 ? 1 - smooth((b.d0 - d) / ramp) : d > b.d1 ? 1 - smooth((d - b.d1) / ramp) : 1;
+    off += push * along;
+  }
+  return off;
+};
+/**
+ * A path that walks AROUND obstacles (a smooth sideways detour past each one, `clear` m of margin). Obstacles no taller
+ * than `overMax` (default 0) are left in the way, to be stepped over (give them to the unit as gait.over).
+ * `length` = how far along the path to look (m).
+ */
+export const avoidPath = (path: Path, obstacles: Obstacle[], o: {clear?: number; length?: number; overMax?: number; seed?: number} = {}): Path => {
+  if (!obstacles.length) return path;
+  const B = blocksOf(projectObstacles(path, obstacles, o.length ?? 80), o.clear ?? 0.6, o.overMax ?? 0);
+  return lanePath(path, 0, deflect(B, 0, o.clear ?? 0.6, o.seed ?? 1));
+};
+const lanePath = (path: Path, latOff: number, f: (d: number) => number): Path => (d) => {
+  const q = path(d);
+  const h = (q.heading * Math.PI) / 180;
+  const off = latOff + f(d);
+  const dh = (Math.atan2(f(d + 0.3) - f(d - 0.3), 0.6) * 180) / Math.PI;
+  return {pos: {x: q.pos.x + Math.cos(h) * off, y: q.pos.y, z: q.pos.z + Math.sin(h) * off}, heading: q.heading + dh};
+};
+/** the low obstacles among `obstacles` (to step over: pass as gait.over / Slot.over) */
+export const lowObstacles = (obstacles: Obstacle[], overMax = 0.6) => obstacles.filter((o) => (o.h ?? 1) <= overMax).map((o) => ({x: o.x, z: o.z, r: o.r, h: o.h ?? 0.4}));
 
 export type Slot = {
   id: number;
@@ -17,6 +126,8 @@ export type Slot = {
   dist?: number;
   /** extra unit controls (strike, damage, look, lockAt…) */
   ctl?: Partial<UnitSpec>;
+  /** low obstacles the unit's feet step over while walking (gait.over) */
+  over?: {x: number; z: number; r: number; h: number}[];
 };
 export type Formation = {slots: (t: number) => Slot[]};
 
@@ -60,8 +171,14 @@ export const standing = (slots: Slot[]): Formation => ({slots: () => slots});
  * Column streaming along a path: `count` units in `lanes`, spaced `spacing` along the path, moving at `speed` (m/s)
  * from t0; optional halt time (all stop together, with a small settle).
  */
-export const column = (path: Path, count: number, lanes: number, laneGap: number, spacing: number, speed: number, t0: number, seed: number, haltAt?: number, idBase = 0): Formation => ({
-  slots: (t) => {
+export const column = (path: Path, count: number, lanes: number, laneGap: number, spacing: number, speed: number, t0: number, seed: number, haltAt?: number, idBase = 0,
+  /** R3: route the lanes around `avoid` obstacles (each lane detours on its own side; `clear` m margin) and step over
+   *  the low ones (h ≤ overMax, default 0.6: the feet lift over a lying wreck). `length`: how far to look (m). */
+  route: {avoid?: Obstacle[]; clear?: number; overMax?: number; length?: number} = {},
+): Formation => {
+  const P = route.avoid?.length ? blocksOf(projectObstacles(path, route.avoid, route.length ?? 120), route.clear ?? 0.6, route.overMax ?? 0.6) : null;
+  const low = route.avoid ? lowObstacles(route.avoid, route.overMax ?? 0.6) : [];
+  return {slots: (t) => {
     // halt as one: every unit finishes the step it is in (a short settle) and stops on the same beat
     const settle = 0.42 * speed;
     const tt = haltAt !== undefined ? Math.min(t, haltAt) : t;
@@ -76,18 +193,18 @@ export const column = (path: Path, count: number, lanes: number, laneGap: number
       const jit = (rnd(id * 3) - 0.5) * spacing * 0.45;
       const along = d0 - rank * spacing + jit;
       const latOff = (lane - (lanes - 1) / 2) * laneGap + (rnd(id * 5) - 0.5) * laneGap * 0.35;
-      const lp: Path = (d) => {
+      const lp: Path = P ? lanePath((d) => ({...path(d), pos: {...path(d).pos, y: 0}}), latOff, deflect(P, latOff, route.clear ?? 0.6, id)) : (d) => {
         const q = path(d);
         const h = (q.heading * Math.PI) / 180;
         return {pos: {x: q.pos.x + Math.cos(h) * latOff, y: 0, z: q.pos.z + Math.sin(h) * latOff}, heading: q.heading};
       };
       const q = lp(along);
       const end = haltAt !== undefined ? dHalt - rank * spacing + jit + settle : undefined;
-      out.push({id, pos: q.pos, heading: q.heading, path: lp, dist: along, ctl: {gaitEnd: end, gaitStart: -rank * spacing + jit} as Partial<UnitSpec>});
+      out.push({id, pos: q.pos, heading: q.heading, path: lp, dist: along, over: low.length ? low : undefined, ctl: {gaitEnd: end, gaitStart: -rank * spacing + jit} as Partial<UnitSpec>});
     }
     return out;
-  },
-});
+  }};
+};
 
 /**
  * Re-form from slots A to slots B: unit i starts walking at t0 + ripple·order (order by bearing around `pivot` so
@@ -175,7 +292,7 @@ export const armyItems = (v: View, t: number, form: Formation, o: ArmyOpts): Ite
     const lod: UnitSpec['lod'] = i < maxFull && d < farFrom * 0.6 ? 'full' : i < maxFull + maxMid && d < farFrom ? 'mid' : 'far';
     const spec: UnitSpec = {
       id: s.id, t, pos: {x: s.pos.x, y: 0, z: s.pos.z}, heading: s.heading, ground: g, lod, eye: o.eye ?? 'cyan',
-      gait: s.path && s.dist !== undefined ? {path: s.path, dist: s.dist, start: (s.ctl as {gaitStart?: number} | undefined)?.gaitStart, end: (s.ctl as {gaitEnd?: number} | undefined)?.gaitEnd} : undefined,
+      gait: s.path && s.dist !== undefined ? {path: s.path, dist: s.dist, start: (s.ctl as {gaitStart?: number} | undefined)?.gaitStart, end: (s.ctl as {gaitEnd?: number} | undefined)?.gaitEnd, over: s.over} : undefined,
       idle: 0.6,
       ...(s.ctl ?? {}),
       ...(o.ctl ? o.ctl(s) : {}),
@@ -184,4 +301,55 @@ export const armyItems = (v: View, t: number, form: Formation, o: ArmyOpts): Ite
   });
   return items;
 };
-void [mul3, lerp];
+// ------------------------------------------------------------------ securing (the end of the battle)
+/** A seeded per-unit time offset around t0 (±spread/2): formation-wide changes never happen on the same frame. */
+export const staggerT = (id: number, t0: number, spread = 0.9, k = 0) => t0 + (rnd(id * 7.31 + k * 13.7 + 0.5) - 0.5) * spread;
+/**
+ * A held perimeter: `count` units on an arc (a0..a1, bearings from the centre; default a full ring) with even spacing
+ * (radius from `spacing` when radius is 0), facing in (holding survivors) or out (holding a line).
+ */
+export const perimeterSlots = (center: V3, radius: number, count: number, seed: number, o: {a0?: number; a1?: number; spacing?: number; facing?: 'in' | 'out'; idBase?: number} = {}): Slot[] => {
+  const a0 = o.a0 ?? 0, a1 = o.a1 ?? 360 - 360 / count;
+  const span = Math.abs(a1 - a0) || 360;
+  const R = radius > 0 ? radius : ((o.spacing ?? 2.4) * (count - (span >= 359 ? 0 : 1))) / ((span * Math.PI) / 180);
+  return arcSlots(center, R, a0, a1, count, seed, 1, 2, o.idBase ?? 0).map((s) => (o.facing === 'out' ? {...s, heading: s.heading + 180} : s));
+};
+/**
+ * Securing behaviour over a formation from t0: each unit (seeded offsets, never in unison) lowers into a posture
+ * ('ready' by default: weapon lowered but ready), then scans its sector (`span` deg around its facing, or toward
+ * `watch`) with pauses; `attend(slot, t)` may return a moving point a unit should snap to and track (a survivor who
+ * moves). Existing slot controls are kept.
+ */
+export const securing = (base: Formation, o: {t0: number; spread?: number; posture?: Posture; span?: number; watch?: V3; attend?: (s: Slot) => {t0: number; at: V3 | ((t: number) => V3); t1?: number} | undefined}): Formation => ({
+  slots: (t) => base.slots(t).map((s) => {
+    const sp = o.spread ?? 1.2;
+    const prev = s.ctl ?? {};
+    const pk = Array.isArray(prev.posture) ? prev.posture : prev.posture ? [[-1e9, prev.posture] as [number, Posture]] : [];
+    const att = o.attend?.(s);
+    return {...s, ctl: {
+      ...prev,
+      posture: [...pk, [staggerT(s.id, o.t0, sp, 1), o.posture ?? 'ready']],
+      scan: {t0: staggerT(s.id, o.t0 + 0.7, sp, 2), center: o.watch, span: o.span ?? 60, seed: s.id},
+      attend: att ? [...(prev.attend ?? []), att] : prev.attend,
+    } as Partial<UnitSpec>};
+  }),
+});
+/** Step from slots A into slots B (blocking positions) with seeded, staggered starts and own paces (short walks). */
+export const stepInto = (A: Slot[], B: Slot[], t0: number, o: {spread?: number; speed?: number} = {}): Formation => ({
+  slots: (t) => A.map((a, i) => {
+    const b = B[i % B.length];
+    const start = staggerT(a.id, t0, o.spread ?? 1.0, 3);
+    const L = Math.hypot(b.pos.x - a.pos.x, b.pos.z - a.pos.z);
+    const sp = (o.speed ?? 1.4) * (0.9 + rnd(a.id * 5.3) * 0.2);
+    const h = (Math.atan2(b.pos.x - a.pos.x, -(b.pos.z - a.pos.z)) * 180) / Math.PI;
+    if (t < start || L < 0.05) return {...a, ctl: {...a.ctl, ...b.ctl}};
+    const d = clamp((t - start) * sp, 0, L);
+    if (d < L) {
+      const k = smooth((t - start) / 0.4);
+      return {id: a.id, pos: straightPath(a.pos, h)(d).pos, heading: a.heading + wrap(h - a.heading) * k, path: (dd: number) => ({pos: straightPath(a.pos, h)(dd).pos, heading: a.heading + wrap(h - a.heading) * k}), dist: d, ctl: {...a.ctl, ...b.ctl, gaitStart: 0, gaitEnd: L} as Partial<UnitSpec>};
+    }
+    const k = smooth((t - (start + L / sp)) / 0.6);
+    return {id: a.id, pos: b.pos, heading: h + wrap(b.heading - h) * k, ctl: {...a.ctl, ...b.ctl}};
+  }),
+});
+void [mul3, lerp, add3];

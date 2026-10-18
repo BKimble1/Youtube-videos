@@ -1,0 +1,579 @@
+{
+ "counts": {
+  "camera.info": 1,
+  "info.info": 1,
+  "layout.error": 70,
+  "routes.error": 13,
+  "routes.warn": 2,
+  "set.warn": 9,
+  "set.info": 15,
+  "sort.warn": 2
+ },
+ "report": [
+  {
+   "cat": "camera",
+   "sev": "info",
+   "msg": "F1 pullback corridor: nearest building building W5 at 5.9 m (T 228.7)"
+  },
+  {
+   "cat": "info",
+   "sev": "info",
+   "msg": "checked 543 buildings, 71 solid set pieces, 19710 machine samples; world kit exports: 50"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings FN45 (front) and K10 (far) intersect: 17.4 × 31.0 m at x 1257.4, z -50.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings FN46 (front) and K10 (far) intersect: 18.6 × 27.2 m at x 1275.4, z -46.2"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings FN48 (front) and K67 (far) intersect: 7.6 × 16.6 m at x 1328.1, z -49.1"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings FN49 (front) and K67 (far) intersect: 29.7 × 8.1 m at x 1336.3, z -40.7"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings FN50 (front) and K9 (far) intersect: 6.5 × 18.6 m at x 1402.5, z -49.9"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings FS40 (front) and K21 (far) intersect: 17.3 × 5.9 m at x 1148.1, z 45.8"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B14 (west) and W7 (west) intersect: 48.2 × 24.0 m at x -200.0, z 56.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B15 (west) and W7 (west) intersect: 10.8 × 24.0 m at x -150.8, z 56.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B27 (west) and W0 (west) intersect: 12.2 × 6.0 m at x -44.0, z -62.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B28 (block) and W0 (west) intersect: 16.8 × 6.0 m at x -30.8, z -62.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B28 (block) and W1 (west) intersect: 10.4 × 4.0 m at x -10.0, z -60.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B29 (block) and W1 (west) intersect: 10.6 × 4.0 m at x 1.4, z -60.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B53 (west) and W2 (west) intersect: 28.0 × 8.0 m at x -44.0, z 56.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B53 (west) and W3 (west) intersect: 19.0 × 4.0 m at x -12.0, z 56.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B54 (block) and W3 (west) intersect: 4.0 × 4.0 m at x 8.0, z 56.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B179 (block) and K95 (far) intersect: 12.6 × 49.8 m at x 604.9, z -322.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B180 (block) and K39 (far) intersect: 28.9 × 4.9 m at x 626.8, z -330.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B180 (block) and K95 (far) intersect: 30.5 × 49.8 m at x 618.5, z -322.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B181 (block) and K39 (far) intersect: 19.1 × 4.9 m at x 656.7, z -330.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B184 (block) and K96 (far) intersect: 11.4 × 11.0 m at x 643.8, z 71.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B185 (block) and K96 (far) intersect: 33.9 × 11.0 m at x 656.1, z 71.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B188 (block) and K96 (far) intersect: 23.3 × 23.4 m at x 643.8, z 98.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B189 (block) and K96 (far) intersect: 21.9 × 23.4 m at x 668.1, z 98.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B193 (block) and K18 (far) intersect: 34.3 × 30.3 m at x 577.7, z 283.9"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B194 (block) and K18 (far) intersect: 13.2 × 30.3 m at x 613.1, z 283.9"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B197 (block) and K89 (far) intersect: 12.5 × 26.0 m at x 744.7, z -82.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B198 (block) and K89 (far) intersect: 33.5 × 26.0 m at x 758.1, z -82.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B208 (block) and K30 (far) intersect: 1.5 × 24.9 m at x 824.5, z -211.4"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B209 (block) and K30 (far) intersect: 23.0 × 24.9 m at x 827.0, z -211.4"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B214 (block) and K46 (far) intersect: 14.5 × 17.3 m at x 737.9, z 64.7"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B215 (block) and K46 (far) intersect: 23.9 × 17.3 m at x 753.5, z 64.7"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B219 (block) and K46 (far) intersect: 9.3 × 15.6 m at x 737.9, z 98.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B220 (block) and K46 (far) intersect: 29.2 × 15.6 m at x 748.2, z 98.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B228 (block) and K97 (far) intersect: 23.1 × 17.8 m at x 778.6, z 256.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B229 (block) and K97 (far) intersect: 14.8 × 17.8 m at x 802.7, z 256.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B234 (block) and K45 (far) intersect: 25.6 × 44.8 m at x 870.0, z -142.8"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B238 (block) and K104 (far) intersect: 26.9 × 29.2 m at x 870.0, z -215.4"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B245 (block) and K8 (far) intersect: 28.7 × 42.4 m at x 981.3, z -307.6"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B254 (block) and K22 (far) intersect: 1.5 × 45.6 m at x 905.1, z 184.4"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B255 (block) and K22 (far) intersect: 24.4 × 45.6 m at x 907.6, z 184.4"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B256 (block) and K22 (far) intersect: 22.0 × 45.6 m at x 933.0, z 184.4"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B283 (block) and K21 (far) intersect: 24.0 × 13.9 m at x 1128.5, z 56.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B284 (block) and K21 (far) intersect: 11.9 × 13.9 m at x 1153.4, z 56.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B287 (block) and K56 (far) intersect: 20.2 × 18.8 m at x 1122.2, z 141.2"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B288 (block) and K56 (far) intersect: 22.5 × 18.8 m at x 1143.4, z 141.2"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B291 (block) and K56 (far) intersect: 12.4 × 13.4 m at x 1122.2, z 176.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B292 (block) and K56 (far) intersect: 30.2 × 13.4 m at x 1135.6, z 176.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B296 (block) and K58 (far) intersect: 13.9 × 14.0 m at x 1137.4, z 316.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B297 (block) and K58 (far) intersect: 17.6 × 14.0 m at x 1152.4, z 316.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B301 (block) and K10 (far) intersect: 36.6 × 9.9 m at x 1257.4, z -65.9"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B302 (block) and K67 (far) intersect: 1.9 × 2.1 m at x 1328.1, z -58.1"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B304 (block) and K92 (far) intersect: 16.4 × 8.6 m at x 1254.9, z -160.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B305 (block) and K92 (far) intersect: 11.2 × 8.6 m at x 1272.2, z -160.0"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B308 (block) and K92 (far) intersect: 16.2 × 16.2 m at x 1254.9, z -192.2"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B309 (block) and K92 (far) intersect: 11.4 × 16.2 m at x 1272.0, z -192.2"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B326 (block) and K5 (far) intersect: 15.7 × 31.6 m at x 1287.1, z 182.7"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings B327 (block) and K5 (far) intersect: 15.4 × 31.6 m at x 1303.8, z 182.7"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K3 (far) and K62 (far) intersect: 29.3 × 29.1 m at x 1404.1, z -494.9"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K4 (far) and K54 (far) intersect: 11.3 × 18.2 m at x 1093.9, z 561.2"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K13 (far) and K16 (far) intersect: 30.5 × 15.5 m at x 1600.6, z -316.4"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K13 (far) and K36 (far) intersect: 2.3 × 34.9 m at x 1628.9, z -335.7"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K16 (far) and K36 (far) intersect: 21.3 × 16.9 m at x 1628.9, z -316.4"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K17 (far) and K82 (far) intersect: 32.1 × 10.8 m at x 2045.9, z -636.5"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K30 (far) and K104 (far) intersect: 2.4 × 24.9 m at x 851.3, z -211.4"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K43 (far) and K90 (far) intersect: 13.8 × 1.0 m at x 1068.5, z 393.1"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K48 (far) and K70 (far) intersect: 28.2 × 18.8 m at x 1309.4, z -435.9"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K63 (far) and K88 (far) intersect: 2.6 × 27.6 m at x 1759.6, z -867.3"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "buildings K77 (far) and K80 (far) intersect: 29.4 × 0.5 m at x 2221.2, z -683.9"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "building FN10 (front, x 245.9..253.9, z -43.1..-19.0) intrudes 0.9 m into the cross street x=262"
+  },
+  {
+   "cat": "layout",
+   "sev": "error",
+   "msg": "building K10 (far, x 1257.4..1294.0, z -65.9..-14.9) intrudes 4.1 m into the avenue"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "A1 units inside wreck_6 (depth 0.9 m, worst at T 5.5, x 215.5, z -10.1; 5 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "A1 units inside wreck_8 (depth 0.9 m, worst at T 1.0, x 339.4, z -7.4; 4 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "A1 units inside wreck_9 (depth 0.9 m, worst at T 2.0, x 380.1, z 3.5; 3 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_4 (depth 0.5 m, worst at T 219.0, x 148.4, z -3.7; 11 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_6 (depth 0.5 m, worst at T 217.0, x 213.8, z -9.3; 10 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_8 (depth 1.0 m, worst at T 217.0, x 340.8, z -8.8; 19 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_5 (depth 0.7 m, worst at T 218.0, x 176.5, z 8.6; 22 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_7 (depth 0.7 m, worst at T 215.0, x 288.9, z 4.1; 21 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_9 (depth 0.9 m, worst at T 227.0, x 380.2, z 3.8; 9 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF ring units inside building FS0 (depth 2.2 m, worst at T 190.0, x 16.4, z 21.2; 1 unit)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF ring units inside wreck_0 (depth 0.4 m, worst at T 190.0, x 24.1, z -9.9; 1 unit)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF reserve units inside wreck_2 (depth 0.7 m, worst at T 190.0, x 96.2, z -7.2; 2 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF reserve units inside bus (depth 0.8 m, worst at T 190.0, x 96.0, z 7.3; 2 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "warn",
+   "msg": "EF stream units inside building FS3 (depth 0.0 m, worst at T 230.0, x 133.5, z 19.2; 6 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "warn",
+   "msg": "EF stream units grazing lamp_4 (depth -0.3 m, worst at T 219.0, x 126.4, z -15.3; 1 unit)"
+  },
+  {
+   "cat": "set",
+   "sev": "warn",
+   "msg": "set piece cplate_11 intersects building FN1 by 1.6 m"
+  },
+  {
+   "cat": "set",
+   "sev": "warn",
+   "msg": "set piece cplate_11 intersects building FN2 by 0.4 m"
+  },
+  {
+   "cat": "set",
+   "sev": "warn",
+   "msg": "set piece cplate_12 intersects building FN2 by 0.9 m"
+  },
+  {
+   "cat": "set",
+   "sev": "warn",
+   "msg": "set piece girder intersects building FN1 by 0.7 m"
+  },
+  {
+   "cat": "set",
+   "sev": "warn",
+   "msg": "set piece sfacade_0 intersects building FS0 by 1.5 m"
+  },
+  {
+   "cat": "set",
+   "sev": "warn",
+   "msg": "set piece sfacade_1 intersects building FS0 by 0.9 m"
+  },
+  {
+   "cat": "set",
+   "sev": "warn",
+   "msg": "set piece sfacade_2 intersects building FS1 by 3.5 m"
+  },
+  {
+   "cat": "set",
+   "sev": "warn",
+   "msg": "set piece sfacade_3 intersects building FS1 by 1.2 m"
+  },
+  {
+   "cat": "set",
+   "sev": "warn",
+   "msg": "set piece sfacade_5 intersects building FS1 by 3.5 m"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces rcol_2 and rcol_4 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces rfloor_1 and rfloor_2 overlap in plan by 1.1 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_0 and cplate_1 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_2 and waterMain overlap in plan by 1.3 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_3 and sfacade_5 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_4 and sfacade_4 overlap in plan by 1.9 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_4 and sfacade_5 overlap in plan by 0.8 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_5 and sfacade_3 overlap in plan by 2.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_9 and girder overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_10 and taxi overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_11 and cplate_12 overlap in plan by 1.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_15 and gcol_0 overlap in plan by 1.2 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces girder and taxi overlap in plan by 1.9 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces sfacade_2 and sfacade_3 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces sfacade_4 and sfacade_5 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "sort",
+   "sev": "warn",
+   "msg": "13 building faces wider than 7.5 m have machines within 6 m in front of them: FN0#1 (20.6 m), FN4#1 (9.6 m), FN5#1 (23.0 m), FN5#3 (30.5 m), FN10#2 (24.1 m), FS0#0 (31.4 m), FS0#3 (27.6 m), FS0#5 (13.5 m), FS0#8 (26.1 m), FS2#0 (33.9 m), FS3#3 (9.2 m), FS3#4 (9.2 m) …"
+  },
+  {
+   "cat": "sort",
+   "sev": "warn",
+   "msg": "72 set-piece faces longer than 7.5 m lie near machines: girder, gcol_0, gcol_1, bus, lamp_2, lamp_3, lamp_4, lamp_6, lamp_10, lamp_11, lamp_12, lamp_13"
+  }
+ ]
+}

@@ -26,7 +26,8 @@ export const satchelParts = (r: Rig2, sat: Satchel, inkC: string = C.ink, col: (
   const s = r.s, ink = r.ink;
   const nF = Math.max(0, Math.min(3, Math.round(sat.flares))), nC = Math.max(0, Math.min(2, Math.round(sat.canisters)));
   const sag = 1 - (nF + nC) / 4; // 0 full … 1 empty
-  const c = at3(r.P, r.base, -84 * s, -14 * s - 6 * sag * s, -8 * s); // bag centre (left hip, a little back)
+  // bag centre (left hip, a little back), its inner face against the hip (R2's −84 left a gap seen from behind)
+  const c = at3(r.P, r.base, -77 * s, -14 * s - 6 * sag * s, -8 * s);
   const fwd = r.base.F, rt = r.base.R;
   // the bag: a box seen from this side (width along the body's forward axis, depth across); flatter when empty
   const w = 92 * s, h = (74 - 12 * sag) * s, d = (30 - 12 * sag) * s;
@@ -71,7 +72,9 @@ export const satchelParts = (r: Rig2, sat: Satchel, inkC: string = C.ink, col: (
   const strapD = `M ${P(shR)} Q ${P(mid)} ${P(chestF ? a : b)}`;
   return [
     {z: zBag, key: 'satchel', el: bag},
-    {z: chestF ? r.torsoZ + 1.5 : r.torsoZ - 45, key: 'satchelStrap', el: (
+    // (a cross-body strap crosses the back as well as the chest: whichever faces the camera, it lies on top of the
+    // torso. R2 put it behind the torso when the chest was turned away, so from behind the bag hung from nothing)
+    {z: r.torsoZ + 1.5, key: 'satchelStrap', el: (
       <g>
         <path d={strapD} fill="none" stroke={inkC} strokeWidth={10 * s + ink * 1.4} strokeLinecap="round" />
         <path d={strapD} fill="none" stroke={col(CANVAS)} strokeWidth={10 * s} strokeLinecap="round" />
@@ -91,12 +94,12 @@ export const breakerCarry = (o: {gauge?: number; flip?: boolean} = {}): HoldFn =
   const L0 = -150, L1 = 140; // rear end … ram end along the tube (rig units)
   return (
     <g transform={`translate(${f2(21 * k)} 0) rotate(${dir > 0 ? 90 : -90})`}>
-      <rect x={(L0 + 4) * k} y={8 * k} width={62 * k} height={26 * k} rx={13 * k} fill={col('#B8483A')} stroke={C.ink} strokeWidth={ink * 0.9} />
-      <circle cx={(L0 + 46) * k} cy={21 * k} r={9 * k} fill={col('#F2EEE4')} stroke={C.ink} strokeWidth={ink * 0.6} />
-      <line x1={(L0 + 46) * k} y1={21 * k} x2={(L0 + 46 + Math.cos(Math.PI * (1.15 - g * 1.3)) * 7) * k} y2={(21 - Math.sin(Math.PI * (1.15 - g * 1.3)) * 7) * k} stroke={C.ink} strokeWidth={ink * 0.6} strokeLinecap="round" />
-      <rect x={L0 * k} y={-11 * k} width={(L1 - L0) * k} height={22 * k} rx={8 * k} fill={col(METAL_D)} stroke={C.ink} strokeWidth={ink} />
-      <rect x={L0 * k} y={-11 * k} width={74 * k} height={22 * k} rx={8 * k} fill={col('#E8C547')} stroke={C.ink} strokeWidth={ink * 0.9} />
-      <path d={`M ${L1 * k} ${-15 * k} L ${(L1 + 26) * k} ${-11 * k} L ${(L1 + 34) * k} 0 L ${(L1 + 26) * k} ${11 * k} L ${L1 * k} ${15 * k} Z`} fill={col(METAL)} stroke={C.ink} strokeWidth={ink} strokeLinejoin="round" />
+      <rect x={(L0 + 4) * k} y={8 * k} width={62 * k} height={26 * k} rx={13 * k} fill={col('#B8483A')} stroke={col(C.ink)} strokeWidth={ink * 0.9} />
+      <circle cx={(L0 + 46) * k} cy={21 * k} r={9 * k} fill={col('#F2EEE4')} stroke={col(C.ink)} strokeWidth={ink * 0.6} />
+      <line x1={(L0 + 46) * k} y1={21 * k} x2={(L0 + 46 + Math.cos(Math.PI * (1.15 - g * 1.3)) * 7) * k} y2={(21 - Math.sin(Math.PI * (1.15 - g * 1.3)) * 7) * k} stroke={col(C.ink)} strokeWidth={ink * 0.6} strokeLinecap="round" />
+      <rect x={L0 * k} y={-11 * k} width={(L1 - L0) * k} height={22 * k} rx={8 * k} fill={col(METAL_D)} stroke={col(C.ink)} strokeWidth={ink} />
+      <rect x={L0 * k} y={-11 * k} width={74 * k} height={22 * k} rx={8 * k} fill={col('#E8C547')} stroke={col(C.ink)} strokeWidth={ink * 0.9} />
+      <path d={`M ${L1 * k} ${-15 * k} L ${(L1 + 26) * k} ${-11 * k} L ${(L1 + 34) * k} 0 L ${(L1 + 26) * k} ${11 * k} L ${L1 * k} ${15 * k} Z`} fill={col(METAL)} stroke={col(C.ink)} strokeWidth={ink} strokeLinejoin="round" />
       <path d={`M ${(L0 + 8) * k} ${-11 * k} q ${-10 * k} ${-24 * k} ${-26 * k} ${-14 * k}`} fill="none" stroke={col(RUBBER)} strokeWidth={5 * k} strokeLinecap="round" />
     </g>
   );
@@ -107,10 +110,10 @@ export const controllerHold = (o: {lit?: number} = {}): HoldFn => (h, s, ink, co
   const k = s;
   return (
     <g transform={`translate(${f2(18 * k)} ${f2(-4 * k)})`}>
-      <rect x={-6 * k} y={-30 * k} width={34 * k} height={60 * k} rx={12 * k} fill={col('#4A555C')} stroke={C.ink} strokeWidth={ink * 0.9} />
+      <rect x={-6 * k} y={-30 * k} width={34 * k} height={60 * k} rx={12 * k} fill={col('#4A555C')} stroke={col(C.ink)} strokeWidth={ink * 0.9} />
       <rect x={1 * k} y={-16 * k} width={20 * k} height={30 * k} rx={3 * k} fill={col('#2A4A55')} />
       {(o.lit ?? 1) > 0 && <circle cx={11 * k} cy={0} r={3 * k} fill="#9FF0FF" />}
-      <line x1={22 * k} y1={-28 * k} x2={34 * k} y2={-50 * k} stroke={C.ink} strokeWidth={2.4 * k} strokeLinecap="round" />
+      <line x1={22 * k} y1={-28 * k} x2={34 * k} y2={-50 * k} stroke={col(C.ink)} strokeWidth={2.4 * k} strokeLinecap="round" />
     </g>
   );
 };

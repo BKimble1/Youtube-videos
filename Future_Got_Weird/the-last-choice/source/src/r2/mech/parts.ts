@@ -82,16 +82,17 @@ const unitPelvis = M_(
 );
 // torso frame (spine + ribs), visible when the plates come off
 const unitCore = M_(
-  taper(0.30, 0.22, 0, 0.50, 0.30, 0.52, 'm_frame'),
-  bx(-0.05, 0.0, 0.08, 0.05, 0.50, 0.17, 'm_joint'),
-  bx(-0.16, 0.30, -0.155, 0.16, 0.36, -0.13, 'm_joint'),
-  bx(-0.14, 0.16, -0.14, 0.14, 0.22, -0.12, 'm_joint'),
+  taper(0.32, 0.25, 0, 0.52, 0.34, 0.52, 'm_frame'),
+  bx(-0.05, 0.0, 0.09, 0.05, 0.50, 0.19, 'm_joint'),
+  bx(-0.16, 0.30, -0.175, 0.16, 0.36, -0.15, 'm_joint'),
+  bx(-0.14, 0.16, -0.16, 0.14, 0.22, -0.14, 'm_joint'),
 );
 // chest front plate (tears off forward) and back plate (the "back plate" pried off), hugging the core
 const chestPts = [{u: -0.17, v: 0.0}, {u: 0.17, v: 0.0}, {u: 0.27, v: 0.30}, {u: 0.27, v: 0.50}, {u: -0.27, v: 0.50}, {u: -0.27, v: 0.30}];
-const unitChest = fixOutward(slab({x: 0, y: 0.05, z: -0.125}, {x: 1, y: 0, z: 0}, {x: 0, y: 0.986, z: -0.165}, chestPts, 0.06, 'm_plate', 'm_plate2'));
-const unitChestRidge = bx(-0.025, 0.14, -0.235, 0.025, 0.50, -0.18, 'm_plate2');
-const unitBack = fixOutward(slab({x: 0, y: 0.05, z: 0.165}, {x: 1, y: 0, z: 0}, {x: 0, y: 0.99, z: 0.12}, chestPts.map((p) => ({u: p.u * 0.95, v: p.v * 0.96})), 0.06, 'm_plate2', 'm_plateDeep'));
+// R3: the torso is a little deeper (plates 1.5 cm further out) so a unit seen side-on keeps a chest, not a stick
+const unitChest = fixOutward(slab({x: 0, y: 0.05, z: -0.14}, {x: 1, y: 0, z: 0}, {x: 0, y: 0.986, z: -0.165}, chestPts, 0.07, 'm_plate', 'm_plate2'));
+const unitChestRidge = bx(-0.025, 0.14, -0.255, 0.025, 0.50, -0.195, 'm_plate2');
+const unitBack = fixOutward(slab({x: 0, y: 0.05, z: 0.18}, {x: 1, y: 0, z: 0}, {x: 0, y: 0.99, z: 0.12}, chestPts.map((p) => ({u: p.u * 0.95, v: p.v * 0.96})), 0.065, 'm_plate2', 'm_plateDeep'));
 const unitNeck = cylinder(0.065, 0.12, 6, 'm_joint', 'm_joint', -0.02);
 // head: angular helmet, recessed visor band, single eye, crest
 const unitHead = M_(
@@ -99,7 +100,11 @@ const unitHead = M_(
   taper(0.25, 0.27, 0.10, 0.16, 0.20, 0.16, 'm_plate'),
   bx(-0.11, -0.03, -0.155, 0.11, 0.035, -0.125, 'm_glass'),
   bx(-0.032, -0.022, -0.17, 0.032, 0.03, -0.15, 'm_eye'),
-  bx(-0.022, 0.10, -0.10, 0.022, 0.21, 0.12, 'm_plate2'),
+  // R3 silhouette: a brow over the visor, sensor fins at the temples and a taller raked crest read as a head (not a box)
+  bx(-0.125, 0.035, -0.18, 0.125, 0.07, -0.11, 'm_plate'),
+  bx(-0.155, -0.06, -0.07, -0.12, 0.07, 0.09, 'm_plate2'),
+  bx(0.12, -0.06, -0.07, 0.155, 0.07, 0.09, 'm_plate2'),
+  fixOutward(prismX([{z: -0.08, y: 0.1}, {z: 0.13, y: 0.1}, {z: 0.12, y: 0.27}, {z: 0.02, y: 0.25}], 0.022, 'm_plate2', 'm_plate2')),
   bx(-0.10, -0.20, -0.13, 0.10, -0.13, -0.06, 'm_plate2'),
 );
 const upperL = M_(
@@ -107,9 +112,9 @@ const upperL = M_(
   bx(-0.085, -0.30, -0.08, 0.02, -0.06, 0.08, 'm_plate2'),
   cylinder(0.075, 0.12, 6, 'm_joint', 'm_joint', -U.upper - 0.06),
 );
-const pauldronL = fixOutward(T(RZ(taper(0.31, 0.35, -0.13, 0.25, 0.30, 0.07, 'm_plate'), 20), {x: -0.03, y: 0, z: 0}));
+const pauldronL = fixOutward(T(RZ(taper(0.33, 0.37, -0.14, 0.27, 0.32, 0.08, 'm_plate'), 20), {x: -0.035, y: 0, z: 0}));
 const foreL = M_(
-  taper(0.15, 0.16, -U.fore, 0.13, 0.14, -0.02, ['m_plate', 'm_dark', 'm_plate', 'm_plate2', 'm_plate', 'm_plate2']),
+  taper(0.16, 0.17, -U.fore, 0.14, 0.15, -0.02, ['m_plate', 'm_dark', 'm_plate', 'm_plate2', 'm_plate', 'm_plate2']),
   bx(-0.045, -U.fore + 0.06, -0.10, 0.045, -0.06, -0.08, 'm_plate2'),
 );
 const fistL = M_(
@@ -123,12 +128,12 @@ const handOpenL = M_(
 );
 const thighL = M_(
   bx(-0.075, -U.thigh, -0.075, 0.075, 0.03, 0.075, 'm_frame'),
-  RX(bx(-0.09, -0.36, -0.12, 0.09, -0.04, -0.07, 'm_plate'), 3),
+  RX(bx(-0.1, -0.38, -0.135, 0.1, -0.04, -0.07, 'm_plate'), 3),
   cylinder(0.09, 0.15, 6, 'm_joint', 'm_joint', -0.07),
 );
 const shinL = M_(
-  taper(0.13, 0.15, -U.shin, 0.16, 0.18, -0.04, ['m_plate2', 'm_dark', 'm_plate2', 'm_plate2', 'm_plate2', 'm_plate2']),
-  bx(-0.08, -0.13, -0.15, 0.08, 0.04, -0.08, 'm_plate'),
+  taper(0.14, 0.16, -U.shin, 0.18, 0.21, -0.04, ['m_plate2', 'm_dark', 'm_plate2', 'm_plate2', 'm_plate2', 'm_plate2']),
+  bx(-0.085, -0.15, -0.17, 0.085, 0.06, -0.09, 'm_plate'),
 );
 const footL = M_(
   taper(0.17, 0.32, -U.ankleH, 0.13, 0.18, -0.02, 'm_dark', -0.05, 0.0),
@@ -148,7 +153,7 @@ export const UNIT = {
 export const UNIT_MID = {
   // (faces: top, bottom, front, back, sides) the back takes the full unit's darker back-plate tone, so a mid unit seen
   // from behind reads like a full one (not a pale cut-out)
-  torso: prep(M_(taper(0.34, 0.22, -0.1, 0.62, 0.30, 0.58, ['m_plate', 'm_dark', 'm_plate', 'm_plateDeep', 'm_plate2', 'm_plate2']), bx(-0.11, 0.62, -0.13, 0.11, 0.86, 0.13, ['m_plate2', 'm_dark', 'm_plate2', 'm_plateDeep', 'm_plate2', 'm_plate2']), bx(-0.035, 0.70, -0.15, 0.035, 0.76, -0.12, 'm_eye'))),
+  torso: prep(M_(taper(0.36, 0.26, -0.1, 0.64, 0.36, 0.58, ['m_plate', 'm_dark', 'm_plate', 'm_plateDeep', 'm_plate2', 'm_plate2']), bx(-0.12, 0.62, -0.14, 0.12, 0.86, 0.14, ['m_plate2', 'm_dark', 'm_plate2', 'm_plateDeep', 'm_plate2', 'm_plate2']), bx(-0.03, 0.86, -0.06, 0.03, 0.95, 0.12, 'm_plate2'), bx(-0.035, 0.70, -0.16, 0.035, 0.76, -0.13, 'm_eye'))),
   limb: prep(bx(-0.07, -0.9, -0.08, 0.07, 0.0, 0.08, 'm_plate2')),
   arm: prep(bx(-0.065, -0.85, -0.07, 0.065, 0.0, 0.07, 'm_frame')),
 };
@@ -229,7 +234,10 @@ const heavyLauncher = M_(
   ...[[-0.2, 0.15], [0.2, 0.15], [-0.2, -0.08], [0.2, -0.08]].map(([x, y]) => bx(x - 0.09, y - 0.08, -0.80, x + 0.09, y + 0.08, -0.74, 'm_black')),
   cylinder(0.35, 0.18, 8, 'm_joint', 'm_dark', -0.45),
 );
+// the ram's telescoping inner sleeve (rides with the ram, back into the boom: no gap when the ram extends)
+const heavySleeve = M_(bx(-0.2, -0.2, 0.0, 0.2, 0.2, 1.9, ['m_piston', 'm_dark', 'm_piston', 'm_piston', 'm_frame', 'm_frame']), bx(-0.06, 0.2, 0.1, 0.06, 0.27, 1.7, 'm_dark'));
 export const HEAVY = {
+  sleeve: prep(heavySleeve),
   core: prep(hullCore), plateL: prep(hullPlateSide(-1)), plateR: prep(hullPlateSide(1)), top: prep(hullTop), nose: prep(hullNose), head: prep(heavyHead),
   upper: prep(heavyUpper), lower: prep(heavyLower), foot: prep(heavyFoot), boom: prep(heavyBoom), ram: prep(heavyRam), launcher: prep(heavyLauncher),
 };

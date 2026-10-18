@@ -1,74 +1,65 @@
-// D1-3 (CLASH: the slam, then the line) and D1-4 (four close cuts). The same battle as every other D1 shot (crew.tsx / machines.ts); only
-// the cameras differ, so positions and damage hold from the wide into the close cuts.
-import React from 'react';
-import {Stage, useShotTime, camPath, CamKey} from '../../film/stage';
-import {V3} from '../../../kit/math';
+// D1-3 … D1-4d: CLASH and the line. The machines strike first; then simultaneous but ranked exchanges (one main event,
+// one secondary, quieter background), cut on the events: the breaker and U4, the tether covering the runner, the drone
+// covering the breaker, the flare carrier covering the two at the back. Same battle as every other D1 shot.
+import {CamKey} from '../../film/stage';
 import {M} from '../../timing';
-import {d1Items, d1FxAt, D1Opts} from './battle';
-import {breakerAt, runnerAt, tetherAt, directorPlate} from './crew';
-import {G} from './motion';
+import {breakerAt, tetherAt, flaresAt} from './crew';
+import {shotOf, g} from './shot';
 
-const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
-
-// ------------------------------------------------------------------ D1-3 (CLASH 68.30–72.00): the slam, then the line
-// Cut on the beat to a low, medium-wide three-quarter from the south-south-west, 3.4 m off the contact (he left, U1
-// right, near profile so the plate arm shows between them): the plate meets U1's chest big in frame, girder and the
-// avenue's north side behind; U1 staggers back into U3. From 1.2 s the camera cranes up and back (over the breaker,
-// who fights U4 just behind it) so the engagement spreads around them: U2 coming in, the runner on the left, the rest
-// of the line along the rim, the girder above.
+// ------------------------------------------------------------------ D1-3 (CLASH 68.30–70.30): the hammer on the plate
+// Cut on the beat to a low medium three-quarter from the south-south-west (he left, U1 right): U1's running hammer comes
+// down on his raised plate (68.33) and stops him dead, heels skidding; its left punch is parried off the plate; he steps
+// inside and bashes it back three steps into U3, which has come down from the gap to catch it. The camera eases back.
 const D13: CamKey[] = [
-  {t: 0, pos: g(40.3, 2.6, 0.75), target: g(41.8, -0.7, 1.3), fov: 42},
-  {t: 0.5, pos: g(40.3, 2.6, 0.75), target: g(41.95, -0.7, 1.3), fov: 42},
-  {t: 1.2, pos: g(40.25, 2.7, 0.85), target: g(42.0, -0.65, 1.25), fov: 43},
-  {t: 2.4, pos: g(39.95, 3.3, 1.9), target: g(41.75, -0.55, 1.05), fov: 49},
-  {t: 72.0 - M.CLASH, pos: g(39.6, 3.9, 2.7), target: g(41.55, -0.7, 0.95), fov: 53},
+  {t: 0, pos: g(40.3, 2.65, 0.78), target: g(41.75, -0.7, 1.32), fov: 42},
+  {t: 0.6, pos: g(40.25, 2.68, 0.8), target: g(41.6, -0.7, 1.3), fov: 42},
+  {t: 1.3, pos: g(40.15, 2.85, 0.92), target: g(41.9, -0.72, 1.25), fov: 45},
+  {t: 70.3 - M.CLASH, pos: g(40.0, 3.15, 1.15), target: g(42.4, -0.75, 1.2), fov: 49},
 ];
-export const D1_3: React.FC = () => {
-  const {t, T} = useShotTime(M.CLASH);
-  const cam = camPath(D13, t, 0.5);
-  const f = d1FxAt(T);
-  return <Stage T={T} cam={cam} lights={f.lights} shake={f.shake * 0.8} drift={0.02} items={(v) => [...d1Items(v, T, {full: 30, tweak: {director: {anchor: directorPlate(T)}}}), ...f.items]} />;
-};
+export const D1_3 = shotOf(M.CLASH, D13, {drift: 0.018, shake: 0.8});
 
-// ------------------------------------------------------------------ D1-4 (72.00–78.46): four close cuts
-// 72.0 the breaker breaks a knee joint (low, from the south): sparks, the unit drops to a knee.
+// ------------------------------------------------------------------ D1-3b (70.30–72.00): the line, ranked
+// Wider and higher from the south-west, over the breaker's shoulder: the main event in the foreground — U4's hammer
+// taken on the raised shaft (70.6); beyond, the Director and U1 squaring up again, U2's hammer on the runner's bar
+// (71.25); far left the tether operator backing out of U5's swing; U3 back up in the gap. U4 winds up again (cut).
+const D13B: CamKey[] = [
+  {t: 0, pos: g(37.3, 6.3, 2.15), target: g(40.6, 1.4, 1.05), fov: 50},
+  {t: 72.0 - 70.3, pos: g(37.55, 6.05, 2.0), target: g(40.75, 1.6, 1.0), fov: 48},
+];
+export const D1_3b = shotOf(70.3, D13B, {drift: 0.022});
+
+// ------------------------------------------------------------------ D1-4a (72.00–73.30): the knee
+// Low from the south: U4's punch goes over the ducking breaker, who comes up swinging into its left knee (72.45): it
+// drops to the knee — and catches his tool's head as he re-cocks (73.15).
 const C1: CamKey[] = [
-  {t: 0, pos: g(40.15, 6.35, 0.5), target: g(40.85, 3.55, 0.85), fov: 46},
-  {t: 2.0, pos: g(40.35, 6.25, 0.48), target: g(41.0, 3.6, 0.7), fov: 44},
+  {t: 0, pos: g(40.2, 6.35, 0.55), target: g(40.85, 3.4, 0.95), fov: 46},
+  {t: 1.3, pos: g(40.35, 6.25, 0.52), target: g(40.95, 3.45, 0.8), fov: 44},
 ];
-// 74.0 the tether yanks one off balance (behind her right shoulder, low): fire, bite, the leg pulled, it goes over.
+export const D1_4a = shotOf(72.0, C1, {opts: (T) => ({tweak: {breaker: {anchor: breakerAt(T).pts?.front}}})});
+
+// ------------------------------------------------------------------ D1-4b (73.30–74.90): the tether covers the runner
+// Low from the south-west, the tether operator on the left: centre frame U5 leaves her and goes for the runner's back
+// (right, ducking U2's punch at 73.5). She fires (74.1), the clamp bites its shin (74.4), the reel yanks the leg out (74.52): it goes over.
 const C2: CamKey[] = [
-  {t: 0, pos: g(33.55, -3.85, 1.0), target: g(38.1, -7.5, 0.95), fov: 46},
-  {t: 1.8, pos: g(33.6, -3.95, 0.95), target: g(38.4, -7.6, 0.7), fov: 45},
+  {t: 0, pos: g(33.6, -4.0, 1.2), target: g(39.0, -5.6, 1.05), fov: 50},
+  {t: 1.6, pos: g(33.7, -4.05, 1.15), target: g(39.1, -5.7, 0.9), fov: 49},
 ];
-// 75.8 the runner pries the back plate off the kneeling unit and rips its cables (front of him, low).
+export const D1_4b = shotOf(73.3, C2, {opts: (T) => ({tweak: {tether: {anchor: tetherAt(T).pts?.muzzle}}})});
+
+// ------------------------------------------------------------------ D1-4c (74.90–76.40): the drone covers the breaker
+// Low from the south-west of the breaker: U4, on its knee, wrenches his tool; the allied drone dives into its face
+// (75.3); it lets go to swat at it — he stumbles back, winds up and brings the ram down on its neck (76.0).
 const C3: CamKey[] = [
-  {t: 0, pos: g(40.35, 6.25, 0.75), target: g(41.95, 4.0, 0.95), fov: 40},
-  {t: 1.4, pos: g(40.5, 6.15, 0.72), target: g(41.9, 3.95, 0.95), fov: 38},
+  {t: 0, pos: g(38.55, 5.35, 1.0), target: g(40.85, 3.3, 1.3), fov: 46},
+  {t: 1.5, pos: g(38.7, 5.25, 0.95), target: g(40.95, 3.4, 1.15), fov: 44},
 ];
-// 77.2 the flare carrier strikes and lobs a flare into a unit's eye (low behind his left shoulder, closer: the throw
-// crosses the frame to U6). (The allied drone's harry of an enemy drone is left to D2.)
+export const D1_4c = shotOf(74.9, C3, {opts: (T) => ({tweak: {breaker: {anchor: breakerAt(T).pts?.front}}})});
+
+// ------------------------------------------------------------------ D1-4d (76.40–77.45): the flare
+// Behind the flare carrier's right shoulder, looking north: U6 has given up on her and is striding at the two at the
+// back (the decoy maker sketching, the pilot flying); she strikes a flare and puts it in its eye (77.17).
 const C4: CamKey[] = [
-  {t: 0, pos: g(35.55, 9.75, 0.95), target: g(39.3, 7.1, 1.65), fov: 40},
-  {t: 1.96, pos: g(35.75, 9.6, 0.9), target: g(39.6, 7.15, 1.5), fov: 39},
+  {t: 0, pos: g(38.3, 9.6, 1.3), target: g(35.6, 5.4, 1.3), fov: 46},
+  {t: 1.05, pos: g(38.25, 9.5, 1.25), target: g(35.7, 5.45, 1.35), fov: 45},
 ];
-// each close cut anchors the acting person's rig at the contact (weak perspective projects true there)
-const CUTS: {a: number; b: number; keys: CamKey[]; opts?: (T: number) => D1Opts}[] = [
-  {a: 72.0, b: 74.0, keys: C1, opts: (T) => ({tweak: {breaker: {anchor: breakerAt(T).pts?.front}}})},
-  {a: 74.0, b: 75.8, keys: C2, opts: (T) => ({tweak: {tether: {anchor: tetherAt(T).pts?.muzzle}}})},
-  {a: 75.8, b: 77.2, keys: C3, opts: (T) => ({tweak: {runner: {anchor: runnerAt(T).pts?.edge ?? runnerAt(T).pts?.cablesHand}}})},
-  {a: 77.2, b: M.BR1, keys: C4},
-];
-const cut = (i: number): React.FC => {
-  const c = CUTS[i];
-  const Shot: React.FC = () => {
-    const {t, T} = useShotTime(c.a);
-    const cam = camPath(c.keys, t, 0.5);
-    const f = d1FxAt(T);
-    const o = c.opts ? c.opts(T) : {};
-    return <Stage T={T} cam={cam} lights={f.lights} shake={f.shake} drift={0.02} items={(v) => [...d1Items(v, T, {full: 30, ...o}), ...f.items]} />;
-  };
-  return Shot;
-};
-export const D1_4a = cut(0), D1_4b = cut(1), D1_4c = cut(2), D1_4d = cut(3);
-export const D1_4_CUTS = CUTS.map((c) => ({a: c.a, b: c.b}));
+export const D1_4d = shotOf(76.4, C4, {opts: (T) => ({tweak: {flares: {anchor: flaresAt(T).pts?.hand}}})});

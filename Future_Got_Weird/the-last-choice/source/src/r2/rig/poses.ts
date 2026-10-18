@@ -3,7 +3,7 @@
 // camera. Contacts with the world (palms on rubble, a hand on a shoulder, a grip on a machine) are given as world
 // targets through the sprite layer instead. Actions are keyed sequences — anticipation → action → contact → reaction
 // → recovery — sampled with keyPose().
-import {FigProps, Loc, ArmT, LegT, Face} from './figure';
+import {FigProps, Loc, ArmT, LegT, Face, FACE_REST_LID} from './figure';
 import {HandShape} from './hands';
 import {lerp, clamp, smooth, easeOut, easeIn, Ease} from '../../kit/math';
 
@@ -31,14 +31,18 @@ const lerpLeg = (a: LegT | undefined, b: LegT | undefined, k: number): LegT | un
   if (A.local && !B.local) local = A.local;
   return {fk, local, w, pitch: lerpN(A.pitch, B.pitch, k), pole: lerpLoc(A.pole, B.pole, k) ?? A.pole ?? B.pole};
 };
-const lerpFace = (a: Face | undefined, b: Face | undefined, k: number): Face | undefined => {
+/** a face field that neither side sets stays unset (so the rig's rest value applies, e.g. the resting lid) */
+const lerpO = (a: number | undefined, b: number | undefined, k: number, d = 0) => (a === undefined && b === undefined ? undefined : lerp(a ?? d, b ?? d, k));
+export const lerpFace = (a: Face | undefined, b: Face | undefined, k: number): Face | undefined => {
   if (!a && !b) return undefined;
   const A = a ?? {}, B = b ?? {};
+  const lr = A.lidLR || B.lidLR ? [lerp(A.lidLR?.[0] ?? 0, B.lidLR?.[0] ?? 0, k), lerp(A.lidLR?.[1] ?? 0, B.lidLR?.[1] ?? 0, k)] as [number, number] : undefined;
   return {
     ...(k < 0.5 ? A : B),
     brows: lerpN(A.brows, B.brows, k), worry: lerpN(A.worry, B.worry, k), open: lerpN(A.open, B.open, k),
-    lid: lerpN(A.lid, B.lid, k), lids: lerpN(A.lids, B.lids, k), squint: lerpN(A.squint, B.squint, k),
+    lid: lerpO(A.lid, B.lid, k, FACE_REST_LID), lids: lerpN(A.lids, B.lids, k), squint: lerpN(A.squint, B.squint, k),
     lookX: lerpN(A.lookX, B.lookX, k), lookY: lerpN(A.lookY, B.lookY, k), unfocus: lerpN(A.unfocus, B.unfocus, k),
+    pupil: lerpO(A.pupil, B.pupil, k, 1), browAsym: lerpO(A.browAsym, B.browAsym, k), lidLR: lr,
   };
 };
 
@@ -157,10 +161,12 @@ export const THROW = (k: number): Pose => {
   return keyPose([[0, a], [0.4, wind], [0.62, rel, easeIn], [0.8, fol], [1, a]], k);
 };
 
-// ---- guesser prys with the halligan (two hands, levering down)
+// ---- guesser prys with the halligan (two hands, levering down). The hands are in front of the leaning chest: R2 had
+// the rear (right) hand at f 70, which with the 34° lean put it at the back of the jaw, so the bar ran through the head
+// (shots that place the hands by world targets keep their own hand positions; only the body comes from here)
 export const PRY = (k: number): Pose => blendPose(
-  {drop: 60, lean: 34, armR: {local: {r: 30, u: 250, f: 70}}, armL: {local: {r: -10, u: 150, f: 120}}, handL: 'grip', handR: 'grip', twoHanded: true, legL: {local: {r: -50, u: 10, f: 60}}, legR: {local: {r: 56, u: 10, f: -40}}, face: {mouth: 'grit', brows: -0.7}},
-  {drop: 76, lean: 44, armR: {local: {r: 30, u: 170, f: 110}}, armL: {local: {r: -10, u: 170, f: 140}}, handL: 'grip', handR: 'grip', twoHanded: true, legL: {local: {r: -50, u: 10, f: 60}}, legR: {local: {r: 56, u: 10, f: -40}}, face: {mouth: 'grit', brows: -1}},
+  {drop: 60, lean: 34, armR: {local: {r: 36, u: 200, f: 150}}, armL: {local: {r: -10, u: 130, f: 185}}, handL: 'grip', handR: 'grip', twoHanded: true, legL: {local: {r: -50, u: 10, f: 60}}, legR: {local: {r: 56, u: 10, f: -40}}, face: {mouth: 'grit', brows: -0.7}},
+  {drop: 76, lean: 44, armR: {local: {r: 36, u: 160, f: 175}}, armL: {local: {r: -10, u: 150, f: 195}}, handL: 'grip', handR: 'grip', twoHanded: true, legL: {local: {r: -50, u: 10, f: 60}}, legR: {local: {r: 56, u: 10, f: -40}}, face: {mouth: 'grit', brows: -1}},
   k,
 );
 

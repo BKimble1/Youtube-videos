@@ -12,6 +12,7 @@ import {FxSheet} from './dev/FxSheet';
 import {EngineLab} from './r2/dev/EngineLab';
 import {SetLab} from './r2/dev/SetLab';
 import {FxLab} from './r2/dev/FxLab';
+import {AtmosLab} from './r2/dev/AtmosLab';
 import {MechLab} from './r2/dev/MechLab';
 import {RigLab} from './r2/dev/RigLab';
 import {MainR2} from './r2/film/MainR2';
@@ -33,6 +34,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="R2EngineLab" component={EngineLab} durationInFrames={120} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
     <Composition id="R2SetLab" component={SetLab} durationInFrames={300} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
     <Composition id="R2FxLab" component={FxLab} durationInFrames={150} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
+    <Composition id="R2AtmosLab" component={AtmosLab} durationInFrames={300} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
     <Composition id="R2MechLab" component={MechLab} durationInFrames={300} fps={30} width={1920} height={1080} defaultProps={{page: 0}} />
   </>
 );

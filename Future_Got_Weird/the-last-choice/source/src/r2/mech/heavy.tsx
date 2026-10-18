@@ -1,28 +1,35 @@
 // Heavy: a ~6 m four-legged walker with a telescoping ram arm under its nose and a launcher pod on its back.
-// Slow lateral-sequence walk with planted feet (ground-shake impacts at each footfall), head/eye turns, ram wind-up
-// → strike → hold → recover, launcher aim and fire (muzzle point + recoil), stumble, and a topple when a knee is
-// broken: the leg folds the wrong way, the hull tips toward that corner and lands on its side (the wreck stays).
+// WEIGHT: a lateral-sequence walk (FL, RR, FR, RL a quarter cycle apart, duty 0.75: three feet planted at any time,
+// two at the hand-overs), the hull shifting its weight off each leg before it lifts, and compressing and settling as
+// each foot lands (that corner dips, then recovers); planted feet stay planted (the hull lowers rather than let a
+// planted foot slide out of reach). Footfalls are events (heavyFootfalls / heavyImpacts) and optionally kit dust.
+// Head/eye turns; ram wind-up (the hull loads down and back) → strike (lunges) → impact recoil → hold → recover;
+// launcher aim, brace and fire (the hull kicks back and nose-up, legs absorb). Stumble, pinned leg, and a topple when
+// a knee is broken: the lower leg buckles off as gravity-true debris, the hull rolls onto its side (the wreck stays).
 import React from 'react';
-import {V3, add3, sub3, mul3, norm3, len3, dot3, cross3, clamp, lerp, lerp3, smooth, easeIn, easeOut, noise, seg, f2} from '../../kit/math';
+import {V3, add3, sub3, mul3, norm3, len3, dot3, cross3, clamp, lerp, lerp3, smooth, easeIn, easeOut, noise, seg, f2, rnd} from '../../kit/math';
 import {Item, shade} from '../engine';
 import {HEAVY, HV, DEBRIS} from './parts';
 import {Pose3, R3, rotHeading, rcomp, euler, segFrame, ik2, apply, rmul, rotAxisM, lookFrame, fwdOf, I3, slerpish} from './mat3';
-import {Ground, FLAT, Path, footAt, partItem, eyeGlow, makeThrow, thrownPose, spray, cable, fluidPool, CABLES} from './kit';
+import {Ground, FLAT, Path, footAt, partItem, eyeGlow, spray, cable, fluidPool, CABLES} from './kit';
 import {Impact} from './unit';
+import {bodyOf, debrisPose, tearLaunch, Launch} from './debris';
 
 export type HeavySpec = {
   id: number;
   t: number;
   pos: V3;
   heading: number;
-  gait?: {path: Path; dist: number; stride?: number};
+  /** walk: hull follows path(dist). `distAt` (optional: film time → dist) gives exact footfall times for events/dust */
+  gait?: {path: Path; dist: number; stride?: number; distAt?: (t: number) => number};
   /** head and eye look at */
   look?: V3;
   eye?: 'cyan' | 'amber' | 'off';
   lockAt?: number;
-  /** ram strike (tip reaches target at t0) */
+  /** ram strike (tip reaches target at t0): wind-up −1.3…−0.25 (hull loads down/back), strike −0.25…0 (lunge),
+   *  impact recoil, hold to +0.7, recover to +2.2 */
   ram?: {t0: number; target: V3};
-  /** launcher aim (continuous) and fire at t0 */
+  /** launcher aim (continuous) and fire at t0 (brace −0.5…0, recoil kick, settle) */
   aim?: V3;
   fire?: {t0: number; target: V3};
   /** knee broken: leg 0 FL, 1 FR, 2 RL, 3 RR; the walker topples toward dir */
@@ -31,15 +38,21 @@ export type HeavySpec = {
   pinned?: {t0: number; leg: 0 | 1 | 2 | 3; hold?: boolean};
   /** stumble (hit) */
   stumble?: {t0: number; dir: V3; strength?: number};
-  /** armour plates torn off */
+  /** armour plates torn off (gravity-true debris: they fall, tip over and stay) */
   damage?: {plateL?: {t0: number; dir: V3}; plateR?: {t0: number; dir: V3}; nose?: {t0: number; dir: V3}; top?: {t0: number; dir: V3}; dead?: {t0: number}};
   /** points to lift the feet over (wrecks) */
   stepOver?: V3[];
   /** explicit world footholds per leg (0 FL, 1 FR, 2 RL, 3 RR; ground contact points), overriding the gait/standing
    *  feet: a keyed walk with planted steps, a foot slipping off a slab. Optional; an absent entry is unchanged. */
   feet?: (V3 | undefined)[];
+  /** with keyed `feet`: film time each leg last landed (drives the hull's compression and settle on that corner) */
+  plants?: (number | undefined)[];
   /** extra hull drop (m): the dip as a leg gives. Optional. */
   drop?: number;
+  /** draw dust puffs at the footfalls (needs gait.distAt or plants); default off (FX may draw its own) */
+  dust?: boolean;
+  /** weight response scale (compression, weight shift, recoil), default 1; 0 = R2 behaviour */
+  weight?: number;
   ground?: Ground;
   lod?: 'full' | 'mid' | 'far';
   key?: string;
@@ -52,10 +65,11 @@ const LEGS: {sx: number; sz: number; ph: number}[] = [
   {sx: -1, sz: 1, ph: 0.75}, // rear-left
   {sx: 1, sz: 1, ph: 0.25}, // rear-right
 ];
+const DUTY = 0.75;
 
 type HeavyRig = {
   hull: Pose3; head: Pose3; boomPose: Pose3; ramPose: Pose3; ext: number; launcher: Pose3;
-  hip: V3[]; knee: V3[]; foot: V3[]; footFall: {t: number; pos: V3}[]; fwd: V3; heading: number;
+  hip: V3[]; knee: V3[]; foot: V3[]; footH: number[]; stance: boolean[]; footFall: {t: number; pos: V3}[]; fwd: V3; heading: number;
 };
 
 const ramPhase = (t: number, t0: number) => {
@@ -66,37 +80,86 @@ const ramPhase = (t: number, t0: number) => {
   if (u < 0.7) return {ph: 'hold' as const, k: u / 0.7};
   return {ph: 'recover' as const, k: smooth((u - 0.7) / 1.5)};
 };
+/** a landing's compression envelope (peaks at `a`, decays: the hull settles onto the new foot) */
+const alpha = (x: number, a: number) => (x <= 0 ? 0 : (x / a) * Math.exp(1 - x / a));
+/** a damped kick (impact / recoil): rises in ~1/(f·4), rings down */
+const kick = (u: number, f = 3.5, d = 6) => (u <= 0 ? 0 : Math.exp(-u * d) * Math.sin(Math.min(u * f * Math.PI * 2, Math.PI / 2 + u * f * 2)));
+
+/** per-leg gait phase: n (cycle index), uu (0..1 in the cycle; stance while uu < DUTY, landing at uu = 0) */
+const legPhase = (dist: number, stride: number, ph: number) => {
+  const c = dist / stride + ph;
+  const n = Math.floor(c);
+  return {n, uu: c - n};
+};
 
 export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
   const t = tOverride ?? sp.t;
   const g = sp.ground ?? FLAT;
+  const W = sp.weight ?? 1;
   let root = sp.pos, heading = sp.heading;
   let dist = 0;
   if (sp.gait) {
     dist = sp.gait.dist;
-    if (sp.pinned && t > sp.pinned.t0) {
-      // stop advancing once pinned (the pinned leg holds)
-      // caller usually stops dist; we just keep it
-    }
     const p = sp.gait.path(dist);
     root = p.pos; heading = p.heading;
   }
   const B = rotHeading(heading);
   const fwd = rmul(B, {x: 0, y: 0, z: -1}), right = rmul(B, {x: 1, y: 0, z: 0});
   const stride = sp.gait?.stride ?? 3.0;
-  // body motion
-  const walkPh = dist / stride;
-  const bob = sp.gait ? 0.06 * Math.sin(walkPh * Math.PI * 8) : 0;
-  let pitch = 0, roll = 0, yawAdd = 0;
+  // ---------------- weight: compression on landings, shift off a lifting leg
+  let pitch = 0, roll = 0, drop = sp.drop ?? 0;
   let shift: V3 = {x: 0, y: 0, z: 0};
+  const pinDist = (i: number) => (sp.pinned && sp.pinned.leg === i && t >= sp.pinned.t0 ? Math.min(dist, solvePinDist(sp)) : dist);
+  LEGS.forEach((L, i) => {
+    let comp = 0, sw = 0;
+    if (sp.gait && !sp.feet?.[i]) {
+      const {uu} = legPhase(pinDist(i), stride, L.ph);
+      comp = uu < 0.4 ? alpha(uu, 0.04) : 0;
+      sw = uu >= DUTY ? Math.sin((Math.PI * (uu - DUTY)) / (1 - DUTY)) : 0;
+      const ts = uu >= DUTY ? stopTime(sp, t) : null;
+      if (ts !== null) { const e = smooth((t - ts) / 0.45); sw *= 1 - e; comp = Math.max(comp, alpha(t - ts - 0.45, 0.13)); }
+      // anticipation: the weight leaves this corner just before it lifts
+      if (uu > DUTY - 0.08 && uu < DUTY) sw = Math.max(sw, 0.5 * smooth((uu - (DUTY - 0.08)) / 0.08));
+    } else if (sp.feet?.[i]) {
+      const f = sp.feet[i]!;
+      sw = clamp((f.y - g(f.x, f.z)) / 0.35);
+      const pl = sp.plants?.[i];
+      if (pl !== undefined) comp = alpha(t - pl, 0.13);
+    }
+    const corner = norm3(add3(mul3(right, L.sx * HV.footX), mul3(fwd, -L.sz * HV.footZ)));
+    shift = add3(shift, mul3(corner, -0.08 * sw * W));
+    roll += L.sx * 1.2 * sw * W;
+    drop += 0.075 * comp * W;
+    roll += -L.sx * 1.4 * comp * W;
+    pitch += -L.sz * 1.1 * comp * W;
+  });
+  if (W === 0 && sp.gait) drop -= 0.06 * Math.sin((dist / stride) * Math.PI * 8); // the R2 bob
+  // ---------------- ram: wind-up loads the legs, the strike lunges, the impact kicks back
   const rp = sp.ram ? ramPhase(t, sp.ram.t0) : null;
   if (rp) {
     pitch += rp.ph === 'wind' ? lerp(0, -6, rp.k) : rp.ph === 'strike' ? lerp(-6, 7, rp.k) : rp.ph === 'hold' ? 7 - rp.k * 2 : lerp(5, 0, rp.k);
     shift = add3(shift, mul3(fwd, rp.ph === 'wind' ? lerp(0, -0.4, rp.k) : rp.ph === 'strike' ? lerp(-0.4, 0.35, rp.k) : rp.ph === 'hold' ? 0.35 : lerp(0.35, 0, rp.k)));
+    drop += W * (rp.ph === 'wind' ? lerp(0, 0.28, rp.k) : rp.ph === 'strike' ? lerp(0.28, 0.02, rp.k) : rp.ph === 'hold' ? 0.02 : lerp(0.02, 0, rp.k));
+  }
+  if (sp.ram) {
+    const u = t - sp.ram.t0;
+    const k = kick(u, 3.2, 6.5) * W;
+    shift = add3(shift, mul3(fwd, -0.22 * k));
+    pitch += -2.5 * k;
+    drop += 0.06 * Math.max(0, k);
   }
   if (sp.fire) {
     const u = t - sp.fire.t0;
-    if (u > 0 && u < 1.2) { const e = Math.exp(-u * 5) * Math.sin(Math.min(u * 18, Math.PI / 2)); pitch -= 3 * e; shift = add3(shift, mul3(fwd, -0.25 * e)); }
+    if (u > -0.5 && u < 1.6) {
+      const brace = smooth((u + 0.5) / 0.4) * (1 - smooth((u - 0.25) / 0.8));
+      drop += 0.12 * brace * W;
+      if (u > 0) {
+        const e = Math.exp(-u * 5) * Math.sin(Math.min(u * 18, Math.PI / 2));
+        pitch -= (3 + 2 * W) * e;
+        shift = add3(shift, mul3(fwd, -(0.25 + 0.15 * W) * e));
+        drop += 0.08 * W * kick(u, 2.6, 5);
+      }
+    }
   }
   if (sp.stumble) {
     const u = t - sp.stumble.t0;
@@ -107,12 +170,72 @@ export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
       shift = add3(shift, mul3(d, 0.6 * s * e));
       roll += dot3(d, right) * -8 * s * e;
       pitch += dot3(d, fwd) * 6 * s * e;
+      drop += 0.1 * s * e * W;
     }
   }
   pitch += noise(t * 0.4, sp.id) * 0.8;
-  const hullPos = add3(add3({x: root.x, y: g(root.x, root.z) + HV.hullY + bob - (sp.drop ?? 0), z: root.z}, shift), {x: 0, y: 0, z: 0});
-  const hullR = rcomp(B, euler(yawAdd, pitch, roll));
-  const hull: Pose3 = {pos: hullPos, R: hullR};
+  // ---------------- feet (targets) first: the hull must keep every planted foot within reach
+  const targets: V3[] = [], stance: boolean[] = [], footH: number[] = [];
+  LEGS.forEach((L, i) => {
+    let target: V3, st = true, fh = heading;
+    if (sp.gait) {
+      const lat = L.sx * HV.footX;
+      const fz = L.sz * HV.footZ;
+      const shifted: Path = (d) => sp.gait!.path(d + -fz);
+      const f = footAt(shifted, pinDist(i), L.ph, stride, DUTY, lat, 0.55, g);
+      target = f.pos; st = f.stance; fh = f.heading;
+      // halted mid-step (gait.distAt shows no progress): a swinging foot puts itself down where it is
+      const ts = stopTime(sp, t);
+      if (!f.stance && ts !== null) {
+        const e = smooth((t - ts) / 0.45);
+        target = {x: target.x, y: lerp(target.y, g(target.x, target.z), e), z: target.z};
+        st = e >= 1;
+      }
+      if (sp.stepOver && !f.stance) for (const w of sp.stepOver) { const dd2 = Math.hypot(w.x - f.pos.x, w.z - f.pos.z); if (dd2 < 1.6) target = {...target, y: target.y + (1.6 - dd2) * 0.6 * Math.sin(Math.PI * f.s)}; }
+    } else {
+      const base = add3(add3(root, mul3(right, L.sx * HV.footX)), mul3(fwd, -L.sz * HV.footZ));
+      target = {x: base.x, y: g(base.x, base.z), z: base.z};
+    }
+    const fo = sp.feet?.[i];
+    if (fo) { target = fo; st = fo.y - g(fo.x, fo.z) < 0.04; }
+    targets.push(target); stance.push(st); footH.push(fh);
+  });
+  const build = (dropExtra: number) => {
+    const hullPos = add3({x: root.x, y: g(root.x, root.z) + HV.hullY - drop - dropExtra, z: root.z}, shift);
+    const hullR = rcomp(B, euler(0, pitch, roll));
+    return {pos: hullPos, R: hullR} as Pose3;
+  };
+  let hull = build(0);
+  // reach: lower the hull just enough that each foot on the ground stays reachable (a planted foot must not hang short
+  // of the ground or slide). Continuous: each leg weighs in by how close its foot is to the ground, the drop is capped.
+  const maxL = (HV.upperLen + HV.lowerLen) * 0.985;
+  let need = 0;
+  // (kit-gait feet only: keyed `feet` belong to the section, which owns the hull height through `drop`)
+  // During a swing the hull eases from the take-off foothold's need to the landing foothold's (over the whole step,
+  // so a foot landing on lower ground settles the hull gradually, never in a frame).
+  if (W > 0 && sp.gait) LEGS.forEach((L, i) => {
+    if (sp.feet?.[i]) return;
+    const H = apply(hull, {x: L.sx * HV.hipX, y: HV.hipDrop, z: L.sz * HV.hipZ});
+    const needAt = (P: V3) => {
+      const A = add3(P, {x: 0, y: 0.22, z: 0});
+      const h = Math.min(maxL * 0.999, Math.hypot(H.x - A.x, H.z - A.z)), v = H.y - A.y;
+      return h * h + v * v > maxL * maxL ? v - Math.sqrt(maxL * maxL - h * h) : 0;
+    };
+    const dd = pinDist(i);
+    const {n, uu} = legPhase(dd, stride, L.ph);
+    if (uu < DUTY) { need = Math.max(need, needAt(targets[i])); return; }
+    const sw = (uu - DUTY) / (1 - DUTY);
+    const shifted: Path = (d) => sp.gait!.path(d - L.sz * HV.footZ);
+    const off = footAt(shifted, (n - L.ph) * stride + 1e-4, L.ph, stride, DUTY, L.sx * HV.footX, 0.55, g).pos;
+    const on = footAt(shifted, (n + 1 - L.ph) * stride + 1e-4, L.ph, stride, DUTY, L.sx * HV.footX, 0.55, g).pos;
+    let nd = Math.max(needAt(off) * (1 - smooth(sw / 0.35)), needAt(on) * smooth((sw - 0.25) / 0.75));
+    // halted mid-step: the foot is being put down where it hovers; its need takes over as it lands
+    const ts = stopTime(sp, t);
+    if (ts !== null) nd = lerp(nd, needAt({...targets[i], y: g(targets[i].x, targets[i].z)}), smooth((t - ts) / 0.45));
+    need = Math.max(need, nd);
+  });
+  if (need > 0) hull = build(Math.min(0.6, need));
+  const hullR = hull.R;
   // head
   const headMount = apply(hull, HV.head);
   let headR = rcomp(hullR, euler(noise(t * 0.25, sp.id + 5) * 10, 6, 0));
@@ -123,28 +246,11 @@ export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
     headR = ang > 60 ? slerpish(hullR, lf, 60 / ang) : lf;
   }
   const head: Pose3 = {pos: headMount, R: headR};
-  // legs: lateral-sequence walk, planted feet
+  // legs: IK to the targets
   const hip: V3[] = [], knee: V3[] = [], foot: V3[] = [];
-  const footFall: {t: number; pos: V3}[] = [];
   LEGS.forEach((L, i) => {
     const H = apply(hull, {x: L.sx * HV.hipX, y: HV.hipDrop, z: L.sz * HV.hipZ});
-    let target: V3;
-    if (sp.gait) {
-      const lat = L.sx * HV.footX;
-      const fz = L.sz * HV.footZ;
-      const shifted: Path = (d) => { const q = sp.gait!.path(d + -fz); return q; };
-      const pinnedNow = sp.pinned && sp.pinned.leg === i && t >= sp.pinned.t0;
-      const dd = pinnedNow ? Math.min(dist, solvePinDist(sp)) : dist;
-      const f = footAt(shifted, dd, L.ph, stride, 0.75, lat, 0.55, g);
-      target = f.pos;
-      if (sp.stepOver && !f.stance) for (const w of sp.stepOver) { const dd2 = Math.hypot(w.x - f.pos.x, w.z - f.pos.z); if (dd2 < 1.6) target = {...target, y: target.y + (1.6 - dd2) * 0.6 * Math.sin(Math.PI * f.s)}; }
-    } else {
-      const base = add3(add3(root, mul3(right, L.sx * HV.footX)), mul3(fwd, -L.sz * HV.footZ));
-      target = {x: base.x, y: g(base.x, base.z), z: base.z};
-    }
-    const fo = sp.feet?.[i];
-    if (fo) target = fo;
-    const ankle = add3(target, {x: 0, y: 0.22, z: 0});
+    const ankle = add3(targets[i], {x: 0, y: 0.22, z: 0});
     const out = add3(mul3(right, L.sx), mul3(UP, 0.55));
     const r = ik2(H, ankle, HV.upperLen, HV.lowerLen, out);
     hip.push(H); knee.push(r.mid); foot.push(r.end);
@@ -167,16 +273,26 @@ export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
   const boomR = lookFrame(boomDir, rmul(hullR, UP));
   const boomPose: Pose3 = {pos: shoulder, R: boomR};
   const ramPose: Pose3 = {pos: add3(shoulder, mul3(boomDir, HV.boom + ext)), R: boomR};
-  // launcher: aims at aim/fire target
+  // launcher: aims at aim/fire target; recoils into its mount and springs back
   const lm = apply(hull, HV.launcher);
   const aimAt = sp.fire && t > sp.fire.t0 - 1.5 ? sp.fire.target : sp.aim;
   let lR = rcomp(hullR, euler(0, -4, 0));
   if (aimAt) lR = lookFrame(norm3(sub3(aimAt, lm)), UP);
   let lPos = lm;
-  if (sp.fire) { const u = t - sp.fire.t0; if (u > 0 && u < 0.6) lPos = add3(lm, mul3(fwdOf(lR), -0.3 * Math.exp(-u * 8))); }
-  return {hull, head, boomPose, ramPose, ext, launcher: {pos: lPos, R: lR}, hip, knee, foot, footFall, fwd, heading};
+  if (sp.fire) { const u = t - sp.fire.t0; if (u > 0 && u < 1.2) lPos = add3(lm, mul3(fwdOf(lR), -0.34 * Math.exp(-u * 8) + 0.05 * Math.exp(-u * 4) * Math.sin(u * 10))); }
+  return {hull, head, boomPose, ramPose, ext, launcher: {pos: lPos, R: lR}, hip, knee, foot, footH, stance, footFall: [], fwd, heading};
 };
 const solvePinDist = (sp: HeavySpec) => (sp.gait ? sp.gait.dist : 0);
+/** when the walk stopped (film s), from gait.distAt: null while it is still moving (or without distAt) */
+const stopTime = (sp: HeavySpec, t: number): number | null => {
+  const dA = sp.gait?.distAt;
+  if (!dA) return null;
+  const d = dA(t);
+  if (Math.abs(d - dA(t - 0.1)) > 0.003) return null;
+  let ts = t - 0.1;
+  for (let k = 0; k < 40 && Math.abs(dA(ts - 0.05) - d) <= 0.003; k++) ts -= 0.05;
+  return ts;
+};
 
 /**
  * Topple after a knee break: the broken corner sags, then the hull rolls onto that side (about its own long axis,
@@ -237,7 +353,36 @@ export const heavyAttach = (sp: HeavySpec) => {
     ramTip: X(apply(r.ramPose, {x: 0, y: 0, z: -1.4})), muzzle: X(apply(r.launcher, {x: 0, y: 0.05, z: -0.82})),
     eye: X(apply(r.head, {x: 0, y: 0.01, z: -0.5})), hull: X(r.hull.pos), head: X(r.head.pos),
     knees: fl ? fl.map((q) => q.K) : r.knee.map(X), feet: fl ? fl.map((q) => q.F) : r.foot.map(X), fwd: r.fwd,
+    /** which feet are planted now (gait stance or a keyed foot on the ground) */
+    planted: r.stance,
   };
+};
+
+/**
+ * Footfalls of a walking heavy in (Ta, Tb] (film seconds): exact landing times from gait.distAt, else the keyed
+ * `plants`. Each: {t, leg, pos (ground contact)}. Use for dust, ground shake and sound.
+ */
+export const heavyFootfalls = (sp: HeavySpec, Ta: number, Tb: number): {t: number; leg: number; pos: V3}[] => {
+  const out: {t: number; leg: number; pos: V3}[] = [];
+  const g = sp.ground ?? FLAT;
+  if (sp.gait?.distAt) {
+    const dA = sp.gait.distAt;
+    const stride = sp.gait.stride ?? 3.0;
+    const d0 = dA(Ta), d1 = dA(Tb);
+    if (d1 > d0) LEGS.forEach((L, leg) => {
+      for (let n = Math.ceil(d0 / stride + L.ph); (n - L.ph) * stride <= d1 && n < 1e5; n++) {
+        const dk = (n - L.ph) * stride;
+        if (dk <= d0) continue;
+        let lo = Ta, hi = Tb;
+        for (let i = 0; i < 18; i++) { const m = (lo + hi) / 2; if (dA(m) < dk) lo = m; else hi = m; }
+        const f = footAt((d) => sp.gait!.path(d - L.sz * HV.footZ), dk + 1e-4, L.ph, stride, DUTY, L.sx * HV.footX, 0.55, g);
+        out.push({t: hi, leg, pos: f.pos});
+      }
+    });
+  } else if (sp.plants && sp.feet) {
+    sp.plants.forEach((pt, leg) => { const f = sp.feet![leg]; if (pt !== undefined && f && pt > Ta && pt <= Tb) out.push({t: pt, leg, pos: f}); });
+  }
+  return out.sort((a, b) => a.t - b.t);
 };
 
 export const heavyImpacts = (sp: HeavySpec): Impact[] => {
@@ -251,16 +396,45 @@ export const heavyImpacts = (sp: HeavySpec): Impact[] => {
     const tx = toppleXf(sp, r0, sp.kneeBreak.t0 + 1.6);
     if (tx) out.push({t: tx.landT, pos: tx.landPos, dir: {x: 0, y: -1, z: 0}, strength: 10, kind: 'ground'});
   }
-  // footfalls (ground shake): each stance start while walking
-  if (sp.gait) {
+  // footfalls (ground shake, dust): exact with gait.distAt / plants (the last 3 s), else each leg's latest landing
+  if (sp.gait?.distAt || sp.plants) {
+    heavyFootfalls(sp, sp.t - 3, sp.t).forEach((f) => out.push({t: f.t, pos: f.pos, dir: {x: 0, y: -1, z: 0}, strength: 2, kind: 'ground', note: `leg${f.leg}`}));
+  } else if (sp.gait) {
     const stride = sp.gait.stride ?? 3.0;
+    const r = solveHeavy(sp);
     LEGS.forEach((L, i) => {
       const c = sp.gait!.dist / stride + L.ph;
       const n = Math.floor(c);
-      out.push({t: sp.t - (c - n) * (stride / 0.9), pos: solveHeavy(sp).foot[i], dir: {x: 0, y: -1, z: 0}, strength: 2, kind: 'ground'});
+      out.push({t: sp.t - (c - n) * (stride / 0.9), pos: r.foot[i], dir: {x: 0, y: -1, z: 0}, strength: 2, kind: 'ground', note: `leg${i}`});
     });
   }
   return out;
+};
+
+// ------------------------------------------------------------------ debris bodies
+const plateBody = (n: 'plateL' | 'plateR' | 'top' | 'nose') => bodyOf([{mesh: HEAVY[n]}], `heavy_${n}`);
+const lowerBody = () => bodyOf([{mesh: HEAVY.lower}, {mesh: HEAVY.foot, P: {pos: {x: 0, y: -HV.lowerLen, z: 0}, R: I3}}], 'heavy_lower');
+
+/** a small dust puff on the ground (expanding, fading): footfalls */
+const dustPuff = (pos: V3, u: number, key: string, size = 1): Item | null => {
+  if (u < 0 || u > 1.6) return null;
+  const k = 1 - Math.exp(-u * 3.2);
+  return {
+    kind: 'sprite', pos: {x: pos.x, y: pos.y + 0.15 + 0.35 * k, z: pos.z}, key, bias: 0.2,
+    draw: (c) => {
+      const r = (0.6 + 1.4 * k) * size * c.k;
+      if (r < 1) return null;
+      const col = shade(c.light, {base: '#A3978A'}, c.lit);
+      const op = 0.5 * (1 - u / 1.6) * (u < 0.08 ? u / 0.08 : 1);
+      return (
+        <g opacity={op}>
+          <ellipse cx={f2(c.x)} cy={f2(c.y)} rx={f2(r)} ry={f2(r * 0.42)} fill={col} />
+          <ellipse cx={f2(c.x - r * 0.35)} cy={f2(c.y - r * 0.18)} rx={f2(r * 0.55)} ry={f2(r * 0.3)} fill={col} />
+          <ellipse cx={f2(c.x + r * 0.4)} cy={f2(c.y - r * 0.12)} rx={f2(r * 0.5)} ry={f2(r * 0.26)} fill={col} />
+        </g>
+      );
+    },
+  };
 };
 
 export const heavy = (sp: HeavySpec): Item[] => {
@@ -306,6 +480,7 @@ export const heavy = (sp: HeavySpec): Item[] => {
   items.push(partItem(HEAVY.head, P(r.head), `${key}_head`, {remap}));
   items.push(partItem(HEAVY.boom, P(r.boomPose), `${key}_boom`));
   items.push(partItem(HEAVY.ram, P(r.ramPose), `${key}_ram`));
+  if (r.ext > 0.25) items.push(partItem(HEAVY.sleeve, P(r.ramPose), `${key}_sleeve`));
   items.push(partItem(HEAVY.launcher, P(r.launcher), `${key}_lau`));
   r.hip.forEach((H0, i) => {
     const brokenLeg = broken && sp.kneeBreak!.leg === i;
@@ -314,12 +489,14 @@ export const heavy = (sp: HeavySpec): Item[] => {
     const outward = fl ? fl.outward : mul3(rmul(r.hull.R, {x: 1, y: 0, z: 0}), LEGS[i].sx);
     items.push(partItem(HEAVY.upper, {pos: H, R: segFrame(sub3(K, H), outward)}, `${key}_up${i}`));
     if (brokenLeg) {
-      // the lower leg buckles and drops off the knee (thrown from where it was at the break)
-      const u = t - sp.kneeBreak!.t0;
+      // the knee splits: the lower leg buckles off the joint and falls as one piece (gravity, bounce, rest)
       const K0 = r.knee[i], F0 = r.foot[i];
       const R0 = segFrame(sub3(F0, K0), mul3(rmul(r.hull.R, {x: 1, y: 0, z: 0}), LEGS[i].sx));
-      const th = makeThrow(sp.kneeBreak!.t0, K0, add3(norm3(sp.kneeBreak!.dir), {x: 0, y: -0.3, z: 0}), 1.6, sp.id * 71);
-      const Q = thrownPose(th, t, g, rcomp(rotAxisM(norm3(cross3(UP, sp.kneeBreak!.dir)), -40 * smooth(u / 0.4)), R0), 0.3);
+      const body = lowerBody();
+      const dir = norm3({x: sp.kneeBreak!.dir.x, y: 0, z: sp.kneeBreak!.dir.z});
+      const axis = norm3(cross3(UP, dir));
+      const L: Launch = {t0: sp.kneeBreak!.t0, pos: K0, R: R0, v: add3(mul3(dir, 1.4), {x: 0, y: -0.4, z: 0}), w: mul3(axis, -2.4), e: 0.12, mu: 0.7};
+      const Q = debrisPose(body, L, t, g);
       items.push(partItem(HEAVY.lower, Q, `${key}_lo${i}`));
       items.push(partItem(HEAVY.foot, {pos: apply(Q, {x: 0, y: -HV.lowerLen, z: 0}), R: Q.R}, `${key}_ft${i}`));
       // cables from the shattered knee (now hanging from the upper leg's end)
@@ -328,7 +505,8 @@ export const heavy = (sp: HeavySpec): Item[] => {
       items.push(...spray(t, sp.kneeBreak!.t0 + 0.05, K0, add3(sp.kneeBreak!.dir, {x: 0, y: 0.4, z: 0}), 14, 2.5, 'fluid', sp.id * 17, `${key}_kf`, g, 1.1));
     } else {
       items.push(partItem(HEAVY.lower, {pos: K, R: segFrame(sub3(F, K), outward)}, `${key}_lo${i}`));
-      items.push(partItem(HEAVY.foot, fl ? {pos: F, R: segFrame(sub3(F, K), outward)} : {pos: F, R: rotHeading(r.heading)}, `${key}_ft${i}`));
+      // a planted foot keeps the heading it landed with (it does not spin under a turning hull)
+      items.push(partItem(HEAVY.foot, fl ? {pos: F, R: segFrame(sub3(F, K), outward)} : {pos: F, R: rotHeading(r.footH[i] ?? r.heading)}, `${key}_ft${i}`));
     }
   });
   const eyeW = (tx ? tx.xf : (p: V3) => p)(apply(r.head, {x: 0, y: 0.01, z: -0.5}));
@@ -344,26 +522,26 @@ export const heavy = (sp: HeavySpec): Item[] => {
       }});
     }
   }
-  // torn plates are modelled in hull space; throw the hull frame and draw the plate in it
+  // torn plates: modelled in hull space; they leave the hull frame as gravity-true debris (tip over, stay)
   (['plateL', 'plateR', 'top', 'nose'] as const).forEach((n, k) => {
     const d = D[n];
     if (d && t >= d.t0) {
       const r0 = solveHeavy(sp, d.t0);
       const tx0 = toppleXf(sp, r0, d.t0);
       const P0 = tx0 ? rotPose(r0.hull, tx0.xf, tx0.R) : r0.hull;
-      // throw from the plate's centroid, keep the plate's offset from the hull origin
-      const off = HEAVY[n].center;
-      const c0 = apply(P0, off);
-      const th = makeThrow(d.t0, c0, d.dir, 5, sp.id * 29 + k);
-      const Q = thrownPose(th, t, g, P0.R, 0.1);
-      items.push(partItem(HEAVY[n], {pos: sub3(Q.pos, rmul(Q.R, off)), R: Q.R}, `${key}_torn_${n}`));
-      items.push(...spray(t, d.t0, c0, d.dir, 12, 4, 'spark', sp.id * 37 + k, `${key}_tsp${k}`, g, 0.6));
+      const body = plateBody(n);
+      const hinge = n === 'plateL' ? {x: -1.4, y: 1.0, z: 0} : n === 'plateR' ? {x: 1.4, y: 1.0, z: 0} : n === 'top' ? {x: 0, y: 1.3, z: 2.0} : {x: 0, y: 1.0, z: -1.9};
+      const L = tearLaunch(body, d.t0, P0, d.dir, 4.5, sp.id * 29 + k, {hinge, up: 0.25, spin: 1.5, e: 0.15, mu: 0.7});
+      items.push(partItem(HEAVY[n], debrisPose(body, L, t, g), `${key}_torn_${n}`));
+      items.push(...spray(t, d.t0, apply(P0, HEAVY[n].center), d.dir, 12, 4, 'spark', sp.id * 37 + k, `${key}_tsp${k}`, g, 0.6));
     }
   });
   if (broken && t > sp.kneeBreak!.t0 + 1.6) {
     const pool = fluidPool({...(tx ? tx.landPos : r.hull.pos), y: 0}, t, sp.kneeBreak!.t0 + 1.7, 1.8, sp.id, `${key}_pool`, g);
     if (pool) items.push(pool);
   }
+  // footfall dust (opt-in)
+  if (sp.dust && !tx) heavyFootfalls(sp, t - 1.6, t).forEach((f, i) => { const it = dustPuff(f.pos, t - f.t, `${key}_dust${f.leg}_${Math.round(f.t * 30)}_${i}`, 1.1); if (it) items.push(it); });
   return items;
 };
-void [lerp3, easeOut, seg, I3, DEBRIS, len3];
+void [easeOut, seg, DEBRIS, len3, rnd];

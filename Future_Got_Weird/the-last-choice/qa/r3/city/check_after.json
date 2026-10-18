@@ -1,0 +1,665 @@
+{
+ "counts": {
+  "camera.info": 1,
+  "fire.info": 15,
+  "info.info": 1,
+  "routes.error": 10,
+  "routes.warn": 5,
+  "set.warn": 1,
+  "set.info": 95,
+  "sort.warn": 1,
+  "sort.info": 1
+ },
+ "report": [
+  {
+   "cat": "camera",
+   "sev": "info",
+   "msg": "F1 pullback corridor: nearest building building W5 at 5.9 m (T 228.7)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "room site a1_blowout: opening in FN11 centre 282.7, 64.6, -19.0 (9.6 × 6.8 m)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "room site w2_room: opening in W2 centre -28.8, 15.3, 40.0 (6.4 × 3.4 m)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "room site fs5_room: opening in FS5 centre 194.7, 20.4, 19.0 (12.8 × 6.8 m)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "room site fs10_room: opening in FS10 centre 351.7, 44.2, 19.0 (9.6 × 6.8 m)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "room site fn14_room: opening in FN14 centre 356.4, 22.1, -19.0 (12.8 × 10.2 m)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "room site fs16_room: opening in FS16 centre 516.1, 28.9, 19.0 (9.6 × 10.2 m)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "room site fn17_room: opening in FN17 centre 481.7, 49.3, -19.0 (6.4 × 10.2 m)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "room site fn25_room: opening in FN25 centre 690.6, 61.2, -19.0 (12.8 × 6.8 m)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "ATMOS interior fire southB at y 7.5: its opening (FS1) is centred at 53.5, 10.5, 19.0 — attach the flames there (openingFor)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "ATMOS interior fire southC at y 14.2: its opening (FS1) is centred at 53.5, 10.5, 19.0 — attach the flames there (openingFor)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "ATMOS interior fire bldN1 at y 18.0: its opening (FN0) is centred at 24.5, 13.6, -19.0 — attach the flames there (openingFor)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "ATMOS interior fire bldN2 at y 31.0: its opening (FN3) is centred at 97.3, 31.3, -19.0 — attach the flames there (openingFor)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "ATMOS interior fire bldS3 at y 9.0: its opening (FS3) is centred at 141.9, 11.9, 19.0 — attach the flames there (openingFor)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "ATMOS interior fire bldN4 at y 44.0: its opening (FN7) is centred at 187.1, 45.9, -19.0 — attach the flames there (openingFor)"
+  },
+  {
+   "cat": "fire",
+   "sev": "info",
+   "msg": "ATMOS interior fire bldS5 at y 22.0: its opening (FS8) is centred at 294.2, 25.5, 19.0 — attach the flames there (openingFor)"
+  },
+  {
+   "cat": "info",
+   "sev": "info",
+   "msg": "checked 521 buildings, 173 solid set pieces, 19710 machine samples; world kit exports: 60"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_4 (depth 0.5 m, worst at T 219.0, x 148.4, z -3.7; 11 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_6 (depth 0.5 m, worst at T 217.0, x 213.8, z -9.3; 10 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_8 (depth 1.0 m, worst at T 217.0, x 340.8, z -8.8; 19 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_5 (depth 0.7 m, worst at T 218.0, x 176.5, z 8.6; 22 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_7 (depth 0.7 m, worst at T 215.0, x 288.9, z 4.1; 21 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF stream units inside wreck_9 (depth 0.9 m, worst at T 227.0, x 380.2, z 3.8; 9 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF ring units inside building FS0 (depth 2.2 m, worst at T 190.0, x 16.4, z 21.2; 1 unit)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF ring units inside wreck_0 (depth 0.4 m, worst at T 190.0, x 24.1, z -9.9; 1 unit)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF reserve units inside wreck_2 (depth 0.7 m, worst at T 190.0, x 96.2, z -7.2; 2 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "error",
+   "msg": "EF reserve units inside bus (depth 0.8 m, worst at T 190.0, x 96.0, z 7.3; 2 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "warn",
+   "msg": "EF stream units inside building FS3 (depth 0.0 m, worst at T 230.0, x 133.5, z 19.2; 6 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "warn",
+   "msg": "EF stream units grazing lamp_4 (depth -0.3 m, worst at T 219.0, x 126.4, z -15.3; 1 unit)"
+  },
+  {
+   "cat": "routes",
+   "sev": "warn",
+   "msg": "EF stream (steered, proposal) units inside building FS3 (depth 0.0 m, worst at T 230.0, x 133.5, z 19.2; 6 units)"
+  },
+  {
+   "cat": "routes",
+   "sev": "warn",
+   "msg": "EF stream (steered, proposal) units grazing lamp_4 (depth -0.3 m, worst at T 219.0, x 126.4, z -15.3; 1 unit)"
+  },
+  {
+   "cat": "routes",
+   "sev": "warn",
+   "msg": "persist d2_C grazing girder (depth -0.1 m, worst at T 108.0, x 50.0, z -10.2; 1 unit)"
+  },
+  {
+   "cat": "set",
+   "sev": "warn",
+   "msg": "set piece girder intersects building FN1 by 0.8 m"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces rcol_2 and rcol_4 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces rfloor_1 and rfloor_2 overlap in plan by 1.1 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_0 and cplate_1 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_2 and waterMain overlap in plan by 1.3 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_3 and sfacade_5 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_4 and sfacade_4 overlap in plan by 1.2 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_4 and sfacade_5 overlap in plan by 2.0 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_5 and sfacade_3 overlap in plan by 1.9 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_9 and girder overlap in plan by 0.7 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_10 and girder overlap in plan by 1.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces cplate_10 and taxi overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces girder and taxi overlap in plan by 1.9 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces sfacade_2 and sfacade_3 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces sfacade_4 and sfacade_5 overlap in plan by 0.8 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s0 and pile_x1_c5 overlap in plan by 1.1 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s0 and pile_x1_c7 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s0 and pile_x1_car overlap in plan by 0.9 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s1 and pile_x1_s2 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s1 and pile_x1_c2 overlap in plan by 1.0 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s1 and pile_x1_c6 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s1 and pile_x1_c10 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s1 and pile_x1_car overlap in plan by 0.8 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s2 and pile_x1_s3 overlap in plan by 0.9 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s2 and pile_x1_c8 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s2 and pile_x1_car overlap in plan by 1.0 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s3 and pile_x1_c0 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s3 and pile_x1_c3 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s3 and pile_x1_c8 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_s3 and pile_x1_car overlap in plan by 1.1 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_c1 and pile_x1_c5 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_c1 and pile_x1_car overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_c2 and pile_x1_c10 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_c2 and pile_x1_car overlap in plan by 0.8 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_c5 and pile_x1_car overlap in plan by 0.7 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_c7 and pile_x1_car overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_c8 and pile_x1_car overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x1_c11 and pile_x1_car overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s0 and pile_x2_s1 overlap in plan by 1.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s0 and pile_x2_s2 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s0 and pile_x2_s3 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s0 and pile_x2_c5 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s0 and pile_x2_c7 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s0 and pile_x2_c8 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s1 and pile_x2_s3 overlap in plan by 1.1 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s1 and pile_x2_c5 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s1 and pile_x2_c7 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s1 and pile_x2_c8 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s1 and pile_x2_c11 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s2 and pile_x2_c2 overlap in plan by 0.7 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s2 and pile_x2_c10 overlap in plan by 1.0 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s3 and pile_x2_c3 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_s3 and pile_x2_c11 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_c1 and pile_x2_c6 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_c2 and pile_x2_c4 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_c2 and pile_x2_c6 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_x2_c2 and pile_x2_c10 overlap in plan by 0.7 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s0 and pile_fn6_s1 overlap in plan by 1.1 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s0 and pile_fn6_s2 overlap in plan by 1.0 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s0 and pile_fn6_s3 overlap in plan by 1.1 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s0 and pile_fn6_c4 overlap in plan by 0.7 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s0 and pile_fn6_c8 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s0 and pile_fn6_c11 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s1 and pile_fn6_s2 overlap in plan by 1.1 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s1 and pile_fn6_s3 overlap in plan by 0.9 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s1 and pile_fn6_c0 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s1 and pile_fn6_c1 overlap in plan by 0.9 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s1 and pile_fn6_c4 overlap in plan by 1.0 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s1 and pile_fn6_c6 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s1 and pile_fn6_c8 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s1 and pile_fn6_c9 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s2 and pile_fn6_c0 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s2 and pile_fn6_c1 overlap in plan by 0.9 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s2 and pile_fn6_c3 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s2 and pile_fn6_c9 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_s3 and pile_fn6_c4 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_c0 and pile_fn6_c1 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_c0 and pile_fn6_c9 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_c2 and pile_fn6_c6 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_c2 and pile_fn6_c11 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_c4 and pile_fn6_c6 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fn6_c5 and pile_fn6_c7 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s0 and pile_fs9_s1 overlap in plan by 0.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s0 and pile_fs9_s2 overlap in plan by 0.8 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s0 and pile_fs9_s3 overlap in plan by 1.0 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s0 and pile_fs9_c1 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s0 and pile_fs9_c4 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s0 and pile_fs9_c6 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s0 and pile_fs9_c9 overlap in plan by 0.7 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s1 and pile_fs9_s2 overlap in plan by 1.0 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s1 and pile_fs9_s3 overlap in plan by 0.5 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s1 and pile_fs9_c10 overlap in plan by 0.7 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s2 and pile_fs9_s3 overlap in plan by 1.0 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s2 and pile_fs9_c10 overlap in plan by 0.4 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces pile_fs9_s3 and pile_fs9_c9 overlap in plan by 0.7 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "set",
+   "sev": "info",
+   "msg": "set pieces a1peel_0 and a1peel_1 overlap in plan by 4.6 m (check: intended contact or interpenetration?)"
+  },
+  {
+   "cat": "sort",
+   "sev": "warn",
+   "msg": "1 building faces wider than 7.5 m have machines within 6 m in front of them: FS0#79 (7.6 m)"
+  },
+  {
+   "cat": "sort",
+   "sev": "info",
+   "msg": "0 set-piece faces longer than 7.5 m lie near machines"
+  }
+ ]
+}

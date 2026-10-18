@@ -1,10 +1,12 @@
 // Smoke as a volume of world-space puffs on a fixed seeded schedule (any frame renders alone). Each puff is its own
 // sprite, so figures and machines can stand inside the smoke and the decoy's light-figures can land on it.
-// smokeDensity(p, t, sources) answers "how much smoke is here?" for the decoy projection.
+// smokeDensity(p, t, sources) answers "how much smoke is here?" for the decoy projection. The puffs are drawn as
+// billows in the same illustrated look as the city's plumes (world/atmosDraw.tsx).
 import React from 'react';
-import {V3, add3, mul3, norm3, clamp, rnd, noise, len3, sub3} from '../../kit/math';
+import {V3, add3, mul3, norm3, clamp, rnd, noise, len3, sub3, smooth} from '../../kit/math';
 import {Item, project} from '../engine';
-import {FxOut, fx, thrown, ThrowOpts, tone, blobPath, f1, glowTone, inkTone, inkPx, combine} from './core';
+import {billowPath} from '../world/atmosDraw';
+import {FxOut, fx, thrown, ThrowOpts, tone, f1, inkTone, inkPx, combine} from './core';
 import {sparks3} from './particles';
 
 export type SmokeSource = {
@@ -65,28 +67,43 @@ export const smokeDensity = (p: V3, t: number, sources: SmokeSource[]): number =
   return 1 - Math.exp(-d * 1.4);
 };
 
-/** Draw the puffs of some sources. Two-tone illustrated puffs lit from the sun side; no gradients, no blur. */
+/**
+ * Draw the puffs of some sources, in the film's smoke look (world/atmosDraw billows): each puff is a cauliflower billow
+ * with a soft outer step, a body on the shadow side and a lit cap toward the sun, composited as ONE unit (group
+ * opacity), so overlapping puffs build density without ring edges. Caps keep the frame readable: a puff the camera is
+ * in or next to fades, a puff filling the frame is held down, and smoke within a few metres of the lens never goes
+ * past ~40 % so faces and limbs behind it keep their contrast.
+ */
 export const smokeItems = (t: number, sources: SmokeSource[], key: string): Item[] => {
   const items: Item[] = [];
-  sources.forEach((s, si) => puffsAt(s, t).forEach((q, i) => {
+  sources.forEach((s, si) => puffsAt(s, t).forEach((q) => {
     items.push({
       kind: 'sprite', pos: q.c, key: `${key}_${si}_${q.sd}`,
       draw: (c) => {
         const r = q.r * c.k;
         if (r < 1.2 || q.o < 0.01) return null;
+        const v = c.view;
+        const dist = len3(sub3(q.c, v.pos));
+        let a = q.o * clamp((dist - q.r * 0.8) / (q.r * 1.4));
+        if (r > v.H * 0.22) a *= clamp(1 - (r - v.H * 0.22) / (v.H * 0.35), 0.2, 1);
+        if (dist < 7) a = Math.min(a, 0.4 + 0.6 * clamp((dist - 2.5) / 4.5));
+        if (a < 0.01) return null;
         const col = s.color ?? '#E6E2DC';
-        // toward the sun on screen: offset the lit cap that way
-        const sp = project(c.view, add3(q.c, mul3(norm3(c.light.sun), q.r)));
+        // toward the sun on screen: offset the lit cap that way (and the shadow body the other way)
+        const sp = project(v, add3(q.c, mul3(norm3(c.light.sun), q.r)));
         let hx = sp.x - c.x, hy = sp.y - c.y;
         const hl = Math.hypot(hx, hy) || 1;
-        hx /= hl; hy /= hl;
-        const rot = (rnd(q.sd) * 6 + t * 0.15) % 6.283;
+        hx /= hl; hy = Math.min(hy / hl, -0.2);
+        const hn = Math.hypot(hx, hy); hx /= hn; hy /= hn;
+        const rot = (rnd(q.sd) * 6 + t * 0.12 * (rnd(q.sd + 1) - 0.5)) % 6.283;
+        const n = 5 + (rnd(q.sd + 5) < 0.5 ? 1 : 0); // per puff (never by size: a growing puff must not change shape)
         const sh = tone(c, col, 0, 0.8), mid = tone(c, col, 1, 1), lit = tone(c, col, 2, 1.2);
         return (
-          <g opacity={f1(q.o)}>
-            <path d={blobPath(c.x - hx * r * 0.14, c.y - hy * r * 0.14 + r * 0.08, r * 1.04, q.sd + 3, 8, 0.28, 1.05, 0.95, rot)} fill={sh} opacity={0.62} />
-            <path d={blobPath(c.x, c.y, r * 0.93, q.sd, 8, 0.3, 1.05, 0.95, rot + 0.4)} fill={mid} opacity={0.72} />
-            <path d={blobPath(c.x + hx * r * 0.24, c.y + hy * r * 0.24, r * 0.58, q.sd + 7, 7, 0.3, 1, 0.95, rot)} fill={lit} opacity={0.55} />
+          <g opacity={f1(a)}>
+            {r > 6 && <path d={billowPath(c.x, c.y, r * 1.1, q.sd + 11, n, 1, 0.94, rot)} fill={mid} opacity={f1(0.42 * smooth((r - 6) / 10))} />}
+            <path d={billowPath(c.x - hx * r * 0.06, c.y - hy * r * 0.06, r * 0.95, q.sd, n, 1, 0.94, rot)} fill={mid} />
+            <path d={billowPath(c.x - hx * r * 0.3, c.y - hy * r * 0.3 + r * 0.08, r * 0.58, q.sd + 3, n - 1, 1, 0.9, rot)} fill={sh} opacity={0.55} />
+            <path d={billowPath(c.x + hx * r * 0.26, c.y + hy * r * 0.26, r * 0.6, q.sd + 7, n - 1, 1, 0.94, rot)} fill={lit} opacity={0.8} />
           </g>
         );
       },

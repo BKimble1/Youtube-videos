@@ -13,7 +13,12 @@ import {blobPath} from './util';
 
 export type HandShape = 'relaxed' | 'fist' | 'open' | 'grip' | 'brace' | 'reach' | 'point' | 'limp' | 'pinch';
 
-type HG = {s: number; ink: number; skin: string; inkC: string; pv: number; thumb: number; blood?: number; dirt?: number; spread?: number; holding?: React.ReactNode; shadeC?: string};
+type HG = {s: number; ink: number; skin: string; inkC: string; pv: number; thumb: number; blood?: number; dirt?: number; spread?: number; holding?: React.ReactNode; shadeC?: string;
+  /** the caller draws the glyph in the hand's own plane (figure.tsx handM: thumb side and edge-on width included), so
+   *  the glyph is not narrowed or mirrored here */
+  framed?: boolean;
+  /** blood colour (silhouettes) */
+  bloodC?: string};
 
 const cap = (x0: number, y0: number, x1: number, y1: number, w: number, k: number) => {
   // capsule path between two points, width w (rig units), scaled by k
@@ -39,7 +44,7 @@ export const handGlyph = (shape: HandShape, o: HG): [React.ReactElement, React.R
   const back: React.ReactNode[] = [];
   const front: React.ReactNode[] = [];
   // everything is drawn with y scaled by ws * th (thumb side and edge-on narrowing)
-  const wrap = (els: React.ReactNode[], key: string) => <g key={key} transform={`scale(1 ${f2(ws * th)})`}>{els}</g>;
+  const wrap = (els: React.ReactNode[], key: string) => (o.framed ? <g key={key}>{els}</g> : <g key={key} transform={`scale(1 ${f2(ws * th)})`}>{els}</g>);
   const sp = o.spread ?? 1;
   switch (shape) {
     case 'relaxed':
@@ -138,8 +143,8 @@ export const handGlyph = (shape: HandShape, o: HG): [React.ReactElement, React.R
   }
   // blood is on the palm (cut on the rubble): full on the palm side, only a smear over the knuckles from the back
   if ((o.blood ?? 0) > 0) (front.length ? front : back).push(palm && !edge
-    ? <path key="bl" d={blobPath(9 * k, 21, 8, 0.5)} transform={`translate(${f2(14 * k)} ${f2(-2 * k)})`} fill={BLOOD.main} opacity={o.blood} />
-    : <path key="bl" d={blobPath(4.5 * k, 23, 7, 0.55, 1.6, 0.7)} transform={`translate(${f2(19 * k)} ${f2(4 * k)})`} fill={BLOOD.main} opacity={(o.blood ?? 0) * 0.55} />);
+    ? <path key="bl" d={blobPath(9 * k, 21, 8, 0.5)} transform={`translate(${f2(14 * k)} ${f2(-2 * k)})`} fill={o.bloodC ?? BLOOD.main} opacity={o.blood} />
+    : <path key="bl" d={blobPath(4.5 * k, 23, 7, 0.55, 1.6, 0.7)} transform={`translate(${f2(19 * k)} ${f2(4 * k)})`} fill={o.bloodC ?? BLOOD.main} opacity={(o.blood ?? 0) * 0.55} />);
   if ((o.dirt ?? 0) > 0) back.push(<path key="dt" d={blobPath(7 * k, 5, 8, 0.5)} transform={`translate(${f2(8 * k)} ${f2(-6 * k)})`} fill="rgba(60,45,40,0.3)" opacity={o.dirt} />);
   return [wrap(back, 'hb'), wrap(front, 'hf')];
 };

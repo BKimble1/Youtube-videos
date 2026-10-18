@@ -13,7 +13,7 @@
 import React from 'react';
 import {C, BLOOD} from '../../theme';
 import {Look} from './looks';
-import {V2, V3, add3, sub3, mul3, dot3, len3, norm3, rotAxis, rad, lerp, clamp, rnd, smoothPath, polyPath, pt, f2} from '../../kit/math';
+import {V2, V3, add3, sub3, mul3, dot3, len3, norm3, rotAxis, rad, lerp, lerp3, clamp, rnd, smoothPath, polyPath, pt, f2} from '../../kit/math';
 import {handGlyph, HandShape} from './hands';
 import {blobPath, tearPath, ellipsoid2, ang2} from './util';
 import {mix} from '../engine/color';
@@ -28,11 +28,20 @@ const TORSO: [number, number, number][] = [[-15, 66, 36], [25, 67, 37], [80, 72,
 export type Mouth = 'smile' | 'grin' | 'flat' | 'o' | 'smirk' | 'frown' | 'hmm' | 'talk' | 'grit' | 'open' | 'pain' | 'sad' | 'pant' | 'soft' | 'breath';
 export type Face = {
   brows?: number; worry?: number; mouth?: Mouth; open?: number;
-  /** upper-lid closure 0 (open) … 1 (closed) — smooth, works at close-up scale */
+  /** upper-lid closure 0 (open) … 1 (closed) — smooth, works at close-up scale. Unset = FACE_REST_LID (a relaxed lid
+   *  over the top of the iris); 0 = eyes fully open (fear, shock) */
   lid?: number; lids?: number; squint?: number; lookX?: number; lookY?: number;
   /** pupils lose focus (drift apart, dilate) 0 … 1 */
   unfocus?: number; blink?: boolean; closed?: boolean;
+  /** pupil size (1 = design; < 1 contracted: fear, shock; > 1 dilated) */
+  pupil?: number;
+  /** one brow up, the other down (−1 … 1, + raises the character's right brow): doubt, a wince, a realisation */
+  browAsym?: number;
+  /** extra upper-lid closure per eye (the character's left, right), on top of `lid`: a wince, one eye swelling shut */
+  lidLR?: [number, number];
 };
+/** The resting upper lid when a face does not set `lid` (R2 rested at 0: every unset face was wide-eyed). */
+export const FACE_REST_LID = 0.15;
 /** Body-local point relative to the root (feet centre on the ground), rig units at s = 1: r = character's right, u = up, f = forward. */
 export type Loc = {r: number; u: number; f: number};
 export type ArmT = {
@@ -60,7 +69,49 @@ export type FigLight = {
   fire?: number; fireC?: string; fog?: number; fogC?: string;
 };
 export type Part = {z: number; key: string; el: React.ReactElement};
-export type HandFrame = {pos: V3; dir: V2; ang: number; palmN: V3; thumb: number; pv: number; /** on-screen length factor (fingers toward/away from the camera) */ len: number};
+export type HandFrame = {
+  pos: V3; dir: V2; ang: number; palmN: V3; thumb: number; pv: number; /** on-screen length factor (fingers toward/away from the camera) */ len: number;
+  /**
+   * The hand's own plane on screen: the hand glyph and anything it holds are drawn with matrix(ax, ay, pos), hand-local
+   * x along `ax` (the fingers' axis, foreshortened when the fingers point at or away from the camera) and y along `ay`
+   * (the thumb side, from the 3D thumb axis: it narrows edge-on and never flips independently of the hand). R2 drew
+   * holds in a screen-aligned frame (full length whatever the forearm's foreshortening, mirrored by the thumb sign), so
+   * a launcher or bar kept its screen length while the arm pointed at the camera and swung across the hand.
+   */
+  ax: V2; ay: V2;
+  /** the fingers' axis and the thumb's axis in the drawn frame (3D unit vectors) */
+  a3: V3; t3: V3;
+};
+/** SVG transform of a hand frame (hand-local units are rig units × s, drawn at the hand). */
+export const handM = (h: HandFrame) => `matrix(${f2(h.ax.x)} ${f2(h.ax.y)} ${f2(h.ay.x)} ${f2(h.ay.y)} ${f2(h.pos.x)} ${f2(h.pos.y)})`;
+/** A hand-local point (rig units × s) → drawn frame, in the hand glyph's plane. */
+export const handPt = (h: HandFrame, x: number, y: number): V2 => ({x: h.pos.x + h.ax.x * x + h.ay.x * y, y: h.pos.y + h.ax.y * x + h.ay.y * y});
+/** Where a held handle sits in the fist (hand-local x, rig units; = hands.tsx GRIP_X). */
+const GRIP0 = 21;
+/**
+ * A HELD PROP's frame: the hand's true 3D axes projected (fingers a3, thumb t3), about the grip point in the fist, so
+ * a prop keeps its 3D length and turns with the hand continuously (the hand glyph itself keeps a minimum width). R2
+ * drew props in the glyph's frame: full length when they pointed at the camera, flipped across the hand when the
+ * palm turned past edge-on.
+ */
+export const propPt = (h: HandFrame, x: number, y: number, s: number): V3 => {
+  const g = handPt(h, GRIP0 * s, 0), dx = x - GRIP0 * s;
+  return {x: g.x + h.a3.x * dx + h.t3.x * y, y: g.y + h.a3.y * dx + h.t3.y * y, z: h.pos.z + (h.a3.z * x + h.t3.z * y)};
+};
+/** The transform to wrap a held prop (drawn in hand-local units) with, INSIDE the hand glyph's group (handM): it maps the
+ *  glyph's frame to the prop frame (propPt) about the grip. */
+const propInGlyph = (h: HandFrame, s: number) => {
+  const det = h.ax.x * h.ay.y - h.ay.x * h.ax.y;
+  if (Math.abs(det) < 1e-6) return '';
+  // K = Mg⁻¹ · Mp (Mg = [ax ay], Mp = [a3.xy t3.xy])
+  const ia = h.ay.y / det, ib = -h.ay.x / det, ic = -h.ax.y / det, id = h.ax.x / det;
+  const k11 = ia * h.a3.x + ib * h.a3.y, k21 = ic * h.a3.x + id * h.a3.y, k12 = ia * h.t3.x + ib * h.t3.y, k22 = ic * h.t3.x + id * h.t3.y;
+  const g0 = GRIP0 * s;
+  // q → g0 + K (q − g0)
+  const e = g0 - k11 * g0, f = -k21 * g0;
+  const r4 = (v: number) => Math.round(v * 1e4) / 1e4;
+  return `matrix(${r4(k11)} ${r4(k21)} ${r4(k12)} ${r4(k22)} ${f2(e)} ${f2(f)})`;
+};
 export type HoldFn = (h: HandFrame, s: number, ink: number, col: (c: string) => string) => React.ReactNode;
 export type WearFn = (fa: {E: V3; W: V3; dorsal: V3; ang: number; len: number}, s: number, ink: number, col: (c: string) => string) => {el: React.ReactNode; front: boolean} | null;
 
@@ -87,6 +138,8 @@ export type FigProps = {
   /** a tool is held in both hands: both hands' curled fingers draw over it */
   twoHanded?: boolean;
   dmg?: Damage; ink?: number; breath?: number;
+  /** explicit chest expansion −1 … 1 (overrides the automatic breathing from `breath`; faces.ts breathCycle/lastBreath) */
+  chest?: number;
   /** contact shadow opacity (default 1); 0 to hide */
   shadow?: number;
   light?: FigLight;
@@ -106,6 +159,26 @@ export type Rig2 = {
   orient: [{fingers: V3 | null; palm: V3 | null; w: number}, {fingers: V3 | null; palm: V3 | null; w: number}];
   /** depth rank of each arm part (relative frame of the parts) and of a tool held in both hands */
   armRank: [number, number]; toolZ: number;
+  /** depth rank of each upper arm (shoulder → elbow), which can differ from the forearm's (armRank) */
+  armRankU: [number, number];
+  /**
+   * Depth zones of the parts: 0 behind the torso, 1 in front of the torso but behind the face, 2 in front of the face.
+   * `rankOf(z)` gives the part rank (in figureParts' frame, before the torso offset is removed) for a drawn depth z;
+   * `zoneZ` the zone base ranks. Props drawn along a line use `splitZones` (figure.tsx) to cross zones correctly.
+   */
+  zone: (z: number) => 0 | 1 | 2; zoneZ: [number, number, number]; rankOf: (z: number) => number;
+  /** the zone of a drawn point, judged against the head's actual front surface where the point is over the head (a
+   *  bar beside the cheek but behind it is behind the face; the plane `zone` uses the face's mid-depth everywhere) */
+  zoneAt: (q: V3) => 0 | 1 | 2; rankAt: (q: V3) => number;
+  /** the drawn depths of the zone boundaries: the torso's and the face's planes */
+  zCut: [number, number];
+  /** the pose overrides an arm's depth (zArm): a tool between the hands keeps R2's rank over both arms */
+  armOverride: boolean;
+  /** the thigh points toward the camera (sitting, kneeling, a high knee): that leg is drawn over the torso's hem */
+  legFront: [boolean, boolean];
+  /** the figure's id (unique per figure; for clip-path ids of props) and its colour/ink functions (fog, fire,
+   *  silhouette), set by figureParts so `extra` parts are lit like the body */
+  id: string; col: (c: string) => string; inkC: string;
   /** convert a body-local point (root-relative, turned with bodyPitch/bodyRoll) to the drawn (view) frame */
   loc: (l: Loc) => V3;
   /** a point on the torso, relative to the pelvis in the torso's own frame (follows drop, lean, twist, pitch):
@@ -239,18 +312,67 @@ export const solve2 = (p: FigProps): Rig2 => {
     palm: [vec(palm[0]), vec(palm[1])],
     hands: [] as unknown as [HandFrame, HandFrame],
     orient: orient.map((o) => ({fingers: o.fingers ? vec(o.fingers) : null, palm: o.palm ? vec(o.palm) : null, w: o.w})) as Rig2['orient'],
-    armRank: [0, 0], toolZ: 0,
+    armRank: [0, 0], toolZ: 0, armRankU: [0, 0],
+    zone: () => 0, zoneZ: [0, 0, 0], rankOf: () => 0, zoneAt: () => 0, rankAt: () => 0, zCut: [0, 0], armOverride: p.zArm?.[0] !== undefined || p.zArm?.[1] !== undefined,
+    // a thigh pointing toward the camera, judged in the unpitched frame (a camera below the figure must not bring the
+    // legs over the shirt's hem)
+    legFront: [0, 1].map((i) => knee[i].z - hip[i].z > 0.42 * THIGH * s && knee[i].z > torsoZ + 10 * s) as [boolean, boolean],
+    id: (p.id ?? `f${p.seed ?? 1}`).replace(/[^a-zA-Z0-9_]/g, '_'), col: (c: string) => c, inkC: C.ink,
     loc: (l: Loc) => pnt(fromPivot(l)),
     torso: (l: Loc) => pnt(at(P, up, l.r * s, l.u * s, l.f * s)),
   };
+  // depth zones. R2 ranked a whole arm (shoulder to hand) in front of or behind the torso, always over the head when in
+  // front: an upper arm crossing the chest covered the chin, a hand in front of the chest seen from behind was drawn
+  // over the back, a tool between hands raised by the face was drawn over the face. Each part is now ranked by its own
+  // depth against the torso and against the face plane.
+  const zT = out.torsoZ + 6 * s, zH = out.headC.z + HEAD_R * s * 0.3;
+  out.zCut = [zT, zH];
+  out.zone = (z: number) => (z <= zT ? 0 : z <= zH ? 1 : 2);
+  out.zoneZ = [out.torsoZ - 40, out.torsoZ + 3, out.torsoZ + 40];
+  out.rankOf = (z: number) => out.zoneZ[out.zone(z)] + clamp((z - out.torsoZ) / (600 * s), -1, 1) * 0.3;
+  {
+    const Hc = out.headC, hr = HEAD_R * s * 1.12, hry = HEAD_RY * s * 1.2;
+    // the torso's front surface along the view ray through a drawn point (its cross-sections as elliptic cylinders
+    // round the spine): null where the ray misses the torso. Inside the torso's outline a part is in front of the
+    // torso only if it is in front of that surface (an arm hanging at the side, seen from the front or the back,
+    // is behind the torso's rounded edge, so its sleeve start hides under the shirt); outside the outline the
+    // torso's mid-plane decides, as before.
+    const B = out.up, Pd = out.P;
+    const ab = (h: number): [number, number] => {
+      if (h > SH_H) return [lerp(76, 56, clamp((h - SH_H) / 22)), lerp(40, 32, clamp((h - SH_H) / 22))];
+      for (let i = 1; i < TORSO.length; i++) if (h <= TORSO[i][0]) { const k = clamp((h - TORSO[i - 1][0]) / (TORSO[i][0] - TORSO[i - 1][0])); return [lerp(TORSO[i - 1][1], TORSO[i][1], k), lerp(TORSO[i - 1][2], TORSO[i][2], k)]; }
+      return [TORSO[TORSO.length - 1][1], TORSO[TORSO.length - 1][2]];
+    };
+    const frontSurf = (q: V3): number | null => {
+      const d = sub3(q, Pd);
+      const r0 = dot3(d, B.R), u0 = dot3(d, B.U), f0 = dot3(d, B.F);
+      const h = u0 / s;
+      if (h < -25 || h > 150) return null;
+      // (the chest's flanks are the shoulders the arms hang from: narrowed there, so an arm at the side, seen from
+      // the front or the back, sorts by depth as before rather than disappearing behind the torso's outline)
+      const [a, b] = ab(h), A2 = (a * s * lerp(1, 0.84, clamp((h - 60) / 40))) ** 2, B2 = (b * s) ** 2;
+      const vr = B.R.z, vf = B.F.z;
+      const qa = vr * vr / A2 + vf * vf / B2, qb = 2 * (r0 * vr / A2 + f0 * vf / B2), qc = r0 * r0 / A2 + f0 * f0 / B2 - 1;
+      if (qa < 1e-9) return qc < 0 ? q.z : null;
+      const disc = qb * qb - 4 * qa * qc;
+      if (disc < 0) return null;
+      return q.z + (-qb + Math.sqrt(disc)) / (2 * qa);
+    };
+    out.zoneAt = (q: V3) => {
+      const fz = frontSurf(q);
+      if (fz !== null ? q.z < fz - 2 * s : q.z <= zT) return 0;
+      const dx = (q.x - Hc.x) / hr, dy = (q.y - Hc.y) / hry;
+      return q.z > Hc.z + HEAD_R * s * Math.sqrt(Math.max(0, 1 - dx * dx - dy * dy)) ? 2 : 1;
+    };
+    out.rankAt = (q: V3) => out.zoneZ[out.zoneAt(q)] + clamp((q.z - out.torsoZ) / (600 * s), -1, 1) * 0.3;
+  }
+  out.armRankU = [0, 1].map((i) => out.rankAt(lerp3(out.sh[i], out.el[i], 0.5))) as [number, number];
   out.armRank = [0, 1].map((i) => {
-    const S = out.sh[i], E = out.el[i], Wr = out.wr[i];
-    const armZ = S.z * 0.3 + E.z * 0.35 + Wr.z * 0.35;
     const zA = p.zArm?.[i];
-    return zA !== undefined ? out.torsoZ + zA : armZ > out.torsoZ + 6 * s ? out.torsoZ + 40 + armZ * 1e-3 : out.torsoZ - 40 + armZ * 1e-3;
+    // (judged mostly by the hand: a forearm reaching round the body is behind it where the hand is)
+    return zA !== undefined ? out.torsoZ + zA : out.rankAt(lerp3(out.el[i], out.wr[i], 0.75));
   }) as [number, number];
   out.toolZ = Math.max(out.armRank[0], out.armRank[1]) + 0.3;
-  void torsoZ;
   // hand frames (in the drawn frame)
   out.hands = [0, 1].map((i) => {
     const sd = i === 0 ? -1 : 1;
@@ -266,9 +388,64 @@ export const solve2 = (p: FigProps): Rig2 => {
     const perp = {x: -Math.sin(a2), y: Math.cos(a2)};
     const thumb = Math.sign(thumbV.x * perp.x + thumbV.y * perp.y) || 1;
     const pos = add3(Wr, mul3(fa, 2 * s));
-    return {pos, dir: {x: Math.cos(a2), y: Math.sin(a2)}, ang: (a2 * 180) / Math.PI, palmN: pn, thumb, pv: pn.z, len};
+    // the hand plane on screen: x = the fingers' axis (foreshortened, at least 0.45), y = the thumb axis split into
+    // a shear along x (kept small) and a width across it (at least 0.55, the R2 edge-on width, on the thumb's side)
+    const t3 = len3(thumbV) > 1e-4 ? norm3(thumbV) : {x: perp.x * thumb, y: perp.y * thumb, z: 0};
+    const fl = Math.hypot(ad.x, ad.y);
+    const axL = o.fingers ? lerp(clamp(fl, 0.45, 1), Math.max(0.32, fl), o.w) : clamp(fl, 0.45, 1);
+    const ux = {x: Math.cos(a2), y: Math.sin(a2)};
+    const al = clamp(t3.x * ux.x + t3.y * ux.y, -0.35, 0.35), be = t3.x * perp.x + t3.y * perp.y;
+    const beta = (Math.sign(be) || thumb) * Math.max(Math.abs(be), 0.55);
+    const ax = {x: ux.x * axL, y: ux.y * axL}, ay = {x: ux.x * al + perp.x * beta, y: ux.y * al + perp.y * beta};
+    return {pos, dir: ux, ang: (a2 * 180) / Math.PI, palmN: pn, thumb: Math.sign(beta), pv: pn.z, len, ax, ay, a3: ad, t3};
   }) as [HandFrame, HandFrame];
   return out;
+};
+
+// ------------------------------------------------------------------ props across depth zones
+/** The depth zone (0 behind the torso, 1 in front of it, 2 in front of the face) of a part rank. */
+export const zoneOfRank = (r: Rig2, rank: number) => (rank > r.torsoZ + 20 ? 2 : rank > r.torsoZ - 20 ? 1 : 0);
+/**
+ * A long prop drawn along the line a → b (drawn-frame 3D points, e.g. its two ends) is cut where that line passes the
+ * torso's and the face's depth (Rig2.zone), each piece a part ranked in its own zone just over the arms there: a bar
+ * raised beside the face is drawn behind the head where it is behind it and over the face only where it is in front
+ * (R2 drew a two-handed tool over the arms' single rank: over the face whenever the arms were in front of the chest,
+ * over the back when the hands were in front of the chest seen from behind).
+ */
+export const splitZones = (r: Rig2, key: string, el: React.ReactElement, a: V3, b: V3, bias = 0.35): Part[] => {
+  const d = {x: b.x - a.x, y: b.y - a.y}, dl = Math.hypot(d.x, d.y);
+  const zMid = (u: number) => r.zoneAt(lerp3(a, b, u));
+  // runs of one zone along the line (sampled, each boundary refined by bisection)
+  const N = 28;
+  const runs: {t0: number; t1: number; zone: number}[] = [];
+  let prev = zMid(0), t0 = 0;
+  for (let i = 1; i <= N; i++) {
+    const u = i / N, zn = zMid(u);
+    if (zn !== prev) {
+      let lo = (i - 1) / N, hi = u;
+      for (let k = 0; k < 8; k++) { const m = (lo + hi) / 2; if (zMid(m) === prev) lo = m; else hi = m; }
+      runs.push({t0, t1: (lo + hi) / 2, zone: prev});
+      t0 = (lo + hi) / 2; prev = zn;
+    }
+  }
+  runs.push({t0, t1: 1, zone: prev});
+  // the piece in the hands' zone sits over both forearms; a pose that overrides an arm's depth keeps R2's tool rank
+  const handZone = zoneOfRank(r, r.toolZ - 0.3);
+  const rank = (zn: number) => (r.armOverride && zn === handZone ? r.toolZ : r.zoneZ[zn] + bias);
+  if (runs.length === 1 || dl < 1e-3) return [{z: rank(runs.length === 1 ? runs[0].zone : zMid(0.5)), key, el}];
+  const ux = d.x / dl, uy = d.y / dl, BIG = 1e5;
+  return runs.map((rn, k) => {
+    const t0 = k === 0 ? -BIG / dl : rn.t0, t1 = k === runs.length - 1 ? BIG / dl : rn.t1;
+    const p0 = {x: a.x + d.x * t0, y: a.y + d.y * t0}, p1 = {x: a.x + d.x * t1, y: a.y + d.y * t1};
+    const poly = [{x: p0.x - uy * BIG, y: p0.y + ux * BIG}, {x: p1.x - uy * BIG, y: p1.y + ux * BIG}, {x: p1.x + uy * BIG, y: p1.y - ux * BIG}, {x: p0.x + uy * BIG, y: p0.y - ux * BIG}];
+    const cid = `${r.id}_${key}_z${k}`;
+    return {z: rank(rn.zone), key: `${key}${k}`, el: (
+      <g>
+        <defs><clipPath id={cid}><path d={polyPath(poly)} /></clipPath></defs>
+        <g clipPath={`url(#${cid})`}>{el}</g>
+      </g>
+    )};
+  });
 };
 
 // ------------------------------------------------------------------ hair geometry (R1 tables, kept)
@@ -277,12 +454,14 @@ const HAIRLINE: Record<string, [number, number][]> = {
   bun: [[0, -0.55], [55, -0.38], [90, -0.12], [125, 0.32], [180, 0.6]],
   curly: [[0, -0.5], [55, -0.4], [90, -0.15], [125, 0.3], [180, 0.62]],
   swoop: [[0, -0.86], [55, -0.62], [90, -0.12], [125, 0.32], [180, 0.6]],
-  bob: [[0, -0.98], [40, -0.92], [75, -0.55], [95, 0.42], [180, 0.78]],
+  // (the back stays above the bob's hem at 0.55: R2's 0.78 showed the cap's V below the cut, a doubled hem from behind)
+  bob: [[0, -0.98], [40, -0.92], [75, -0.55], [95, 0.42], [180, 0.5]],
   short: [[0, -0.62], [55, -0.45], [90, -0.15], [125, 0.28], [180, 0.55]],
   spiky: [[0, -0.6], [55, -0.42], [90, -0.12], [125, 0.32], [180, 0.6]],
   bald: [[0, -0.15], [80, -0.05], [100, 0.1], [180, 0.25]],
 };
 const VOLUME: Record<string, number> = {crop: 16, bun: 14, curly: 10, swoop: 8, bob: 16, short: 10, spiky: 10, bald: 0};
+const smoothK = (x: number) => x * x * (3 - 2 * x);
 const interpTbl = (tbl: [number, number][], a: number) => {
   const x = Math.abs(((((a + 180) % 360) + 360) % 360) - 180);
   for (let i = 1; i < tbl.length; i++) if (x <= tbl[i][0]) return lerp(tbl[i - 1][1], tbl[i][1], (x - tbl[i - 1][0]) / (tbl[i][0] - tbl[i - 1][0]));
@@ -365,6 +544,43 @@ const LimbG: React.FC<{pts: V2[]; w: number | number[]; ink: number; inkC: strin
   );
 };
 
+/**
+ * One limb segment as separate ink and fill layers, so two segments of a limb (upper arm / forearm, thigh / shin) can be
+ * drawn in either order or in different depth parts. `capA` / `capB` (0..1) round the segment's start / end with a disk
+ * (fill, plus its ink rim at that opacity): a forearm emerging in front of its own upper arm or of the torso shows a
+ * rounded elbow, an upper arm in front of the chest a rounded shoulder.
+ */
+const segLayers = (a: V2, b: V2, w0: number, w1: number, ink: number, inkC: string, c: string, L: FigLight | undefined, s: number, capA = 0, capB = 0, key = 's', capAInk = capA) => {
+  const inkEl = (
+    <g key={`${key}i`} fill={inkC}>
+      <path d={quad(a, b, w0 / 2 + ink, w1 / 2 + ink)} />
+      {capA > 0.02 && capAInk > 0.02 && <circle cx={a.x} cy={a.y} r={w0 / 2 + ink} opacity={capAInk} />}
+      {capB > 0.02 && <circle cx={b.x} cy={b.y} r={w1 / 2 + ink} opacity={capB} />}
+    </g>
+  );
+  let shade: React.ReactNode = null, rim: React.ReactNode = null;
+  if (L) {
+    const l2 = Math.hypot(L.dir.x, L.dir.y) || 1;
+    const lx = L.dir.x / l2, ly = L.dir.y / l2, lz = clamp(L.dir.z, -1, 1), key0 = L.key ?? 1;
+    const frac = clamp(0.32 + 0.5 * (0.5 - lz * 0.6), 0.2, 0.92) * key0;
+    const rimAmt = clamp(0.35 - lz) * (L.rim ?? 1) * key0;
+    const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
+    const nx = -dy / len, ny = dx / len;
+    const sideS = -(Math.sign(nx * lx + ny * ly) || 1);
+    shade = <path d={quad(a, b, (w0 / 2) * frac, (w1 / 2) * frac, sideS * (w0 / 2) * (1 - frac), sideS * (w1 / 2) * (1 - frac))} fill={L.shadowC ?? '#2B3550'} opacity={0.3 * key0} />;
+    if (rimAmt > 0.04) { const rw = Math.max(0.8, 2.4 * s); rim = <path d={quad(a, b, rw, rw, -sideS * (w0 / 2 - rw), -sideS * (w1 / 2 - rw))} fill={L.rimC ?? '#FFC890'} opacity={clamp(rimAmt * 1.6) * 0.85} />; }
+  }
+  const fillEl = (
+    <g key={`${key}f`}>
+      <path d={quad(a, b, w0 / 2, w1 / 2)} fill={c} />
+      {capA > 0.02 && <circle cx={a.x} cy={a.y} r={w0 / 2} fill={c} />}
+      {capB > 0.02 && <circle cx={b.x} cy={b.y} r={w1 / 2} fill={c} />}
+      {shade}{rim}
+    </g>
+  );
+  return {ink: inkEl, fill: fillEl};
+};
+
 const LimbDecal: React.FC<{d: Decal; a: V2; b: V2; w: number; ink: number; inkC: string; skin: string}> = ({d, a, b, w, ink, inkC, skin}) => {
   const x = lerp(a.x, b.x, d.u), y = lerp(a.y, b.y, d.u);
   const ang = ang2(a, b);
@@ -402,11 +618,12 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     return o;
   };
   const inkC = sil ?? (fogK > 0.01 ? mix(C.ink, L!.fogC ?? '#9C7E73', fogK * 0.95) : C.ink);
+  r.id = id; r.col = col; r.inkC = inkC;
   const add = (z: number, key: string, el: React.ReactElement) => parts.push({z, key, el});
   const sleeveRaw = look.overlay ? look.overlayColor ?? look.shirt : look.shirt;
   const sleeve = col(sleeveRaw);
   const skin = col(look.skin);
-  const breath = (p.breath ?? 0.15) * Math.sin(t * Math.PI * 2 * (0.32 + (p.breath ?? 0.15) * 0.5) + seed);
+  const breath = p.chest !== undefined ? clamp(p.chest, -1, 1) * 1.5 : (p.breath ?? 0.15) * Math.sin(t * Math.PI * 2 * (0.32 + (p.breath ?? 0.15) * 0.5) + seed);
   const shOp = p.shadow ?? 1;
 
   // ---------------- contact shadows (ground under the feet / body), flattened by the camera pitch
@@ -439,12 +656,21 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     if (pitchF) F = rotAxis(F, base.R, rad(-pitchF));
     const sc = add3(A, add3(mul3(F, 12 * s), mul3(base.U, -5 * s)));
     const e = ellipsoid2([mul3(F, 33 * s), mul3(base.R, 15 * s), mul3(base.U, 13 * s)]);
-    const decals = (dmg.decals ?? []).filter((d) => d.limb === (i === 0 ? 'legL0' : 'legR0') || d.limb === (i === 0 ? 'legL1' : 'legR1'));
-    const Hn = add3(H, mul3(norm3(sub3(H, K)), 10 * s));
-    add(r.torsoZ - 60 + (legZ - r.torsoZ) * 0.3 + i * 0.01, `leg${i}`, (
+    const decals = sil ? [] : (dmg.decals ?? []).filter((d) => d.limb === (i === 0 ? 'legL0' : 'legR0') || d.limb === (i === 0 ? 'legL1' : 'legR1'));
+    // a thigh toward the camera (sitting, kneeling, a high knee) is drawn over the torso's hem with a rounded hip;
+    // otherwise the leg starts inside the pelvis and sorts with the arms behind the torso by its depth. (R2 offset the
+    // leg's rank by its depth in PIXELS, so close-ups brought standing legs over the shirt and wides kept seated thighs
+    // behind it; and a near leg in profile sorted under the far arm.)
+    const front = r.legFront[i];
+    const Hn = add3(H, mul3(norm3(sub3(H, K)), (front ? 2 : 10) * s));
+    const LW = [LEG_W * 1.05 * s, LEG_W * 0.95 * s, LEG_W * 0.8 * s];
+    const legEl = front
+      ? (() => { const a = segLayers(Hn, K, LW[0], LW[1], ink, inkC, pantsC, L, s, 1, 0, `ha${i}`), b = segLayers(K, A, LW[1], LW[2], ink, inkC, pantsC, L, s, 0, 0, `hb${i}`); return <g>{a.ink}{b.ink}<circle cx={K.x} cy={K.y} r={LW[1] / 2 + ink} fill={inkC} />{b.fill}{a.fill}<circle cx={K.x} cy={K.y} r={LW[1] / 2} fill={pantsC} /></g>; })()
+      : <LimbG pts={[Hn, K, A]} w={LW} ink={ink} inkC={inkC} colors={[pantsC, pantsC]} L={L} s={s} />;
+    add(front ? r.torsoZ + 1 + i * 0.01 : r.torsoZ - 40 + clamp((legZ - r.torsoZ) / (600 * s), -1, 1) * 0.3 + i * 0.001, `leg${i}`, (
       <g>
         <ellipse cx={sc.x} cy={sc.y} rx={Math.max(e.rx, 12 * s)} ry={Math.max(e.ry, 9 * s)} transform={`rotate(${f2(e.rot)} ${f2(sc.x)} ${f2(sc.y)})`} fill={shoeC} stroke={inkC} strokeWidth={ink} />
-        <LimbG pts={[Hn, K, A]} w={[LEG_W * 1.05 * s, LEG_W * 0.95 * s, LEG_W * 0.8 * s]} ink={ink} inkC={inkC} colors={[pantsC, pantsC]} L={L} s={s} />
+        {legEl}
         {decals.map((d, k) => <LimbDecal key={k} d={d} a={d.limb.endsWith('0') ? H : K} b={d.limb.endsWith('0') ? K : A} w={LEG_W * s} ink={ink} inkC={inkC} skin={skin} />)}
       </g>
     ));
@@ -577,48 +803,100 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
 
   // ---------------- arms, hands, worn and held props
   const hShape = [p.handL ?? 'relaxed', p.handR ?? 'relaxed'];
+  const AW = [ARM_W * 1.08 * s, ARM_W * 0.86 * s, ARM_W * 0.74 * s];
   [0, 1].forEach((i) => {
     const S = r.sh[i], E = r.el[i], Wr = r.wr[i];
-    const armZ = S.z * 0.3 + E.z * 0.35 + Wr.z * 0.35;
-    const front = armZ > r.torsoZ + 6 * s;
     const hf = r.hands[i];
-    const hb = (dmg.handBlood ?? {})[i === 0 ? 'L' : 'R'] ?? 0;
-    const decals = (dmg.decals ?? []).filter((d) => d.limb.startsWith(i === 0 ? 'armL' : 'armR'));
-    // the sleeve starts inside the torso (square end): pull the start back toward the body along the upper arm
-    const ua = norm3(sub3(E, S));
-    const S0 = sub3(S, mul3(ua, 16 * s));
+    const hb = sil ? 0 : (dmg.handBlood ?? {})[i === 0 ? 'L' : 'R'] ?? 0;
+    const decals = sil ? [] : (dmg.decals ?? []).filter((d) => d.limb.startsWith(i === 0 ? 'armL' : 'armR'));
+    const ua = norm3(sub3(E, S)), fa = norm3(sub3(Wr, E));
+    // the depth of each half of the arm (solve2: armRankU / armRank) and which half is nearer the camera
+    const rU = r.armRankU[i], rL = r.armRank[i];
+    const zU = (S.z + E.z) / 2, zL = E.z * 0.25 + Wr.z * 0.75;
+    // the upper arm itself can cross a zone along its length (a shoulder below the jaw seen from low in front: its top
+    // behind the jaw, the rest in front of the chest); the elbow end's depth decides the elbow's overlap
+    const zoneS = r.zoneAt(lerp3(S, E, 0.08)), zoneE = r.zoneAt(lerp3(S, E, 0.92)), zoneU = zoneOfRank(r, rU);
+    // (only a crossing into the face's zone splits it: at the torso's flank the in-front/behind call is marginal, and a
+    // split there left a stray square of sleeve on the shoulder)
+    const upperCross = (zoneS === 2 || zoneE === 2 || zoneU === 2) && (zoneS !== zoneU || zoneE !== zoneU);
+    const rUE = upperCross ? r.zoneZ[zoneE] : rU;
+    const split = Math.abs(rU - rL) > 1 || upperCross; // the halves sit in different depth zones (or the pose overrides the forearm's)
+    const lowerTop = split ? rL > rUE : zL >= zU - 4 * s;
+    const bend = Math.acos(clamp(dot3(ua, fa), -1, 1)) * (180 / Math.PI);
+    // the shoulder: an upper arm behind the torso's surface starts inside it with a square end (R1 fix: no disks at the
+    // shoulders), pulled in toward the chest's axis — and back along the arm only when the arm is raised. (R2 pulled
+    // it 16 units back along the arm whatever the pose: an arm reaching across the body or down the front put that
+    // square end outside the shoulder's outline, or up at the chin.) An upper arm in front of the torso's surface
+    // starts AT the shoulder with a rounded sleeve end: unlined over the shirt (the join disappears), outlined where
+    // it is over the face (a near shoulder below the jaw from a low camera) or seen end-on.
+    const inward = norm3(sub3(r.torso({r: 0, u: SH_H - 6, f: 0}), S));
+    const sTop = lerp3(S, E, 0.08);
+    const overHead = ((sTop.x - r.headC.x) / (HEAD_R * s * 1.12)) ** 2 + ((sTop.y - r.headC.y) / (HEAD_RY * s * 1.2)) ** 2 < 1;
+    const capS = zoneU >= 1 || zoneS === 2 ? 1 : 0;
+    const frontK = capS ? Math.max(clamp((ua.z - 0.6) / 0.3), zoneS === 2 && overHead ? 1 : 0) : 0;
+    const raise = Math.max(0, dot3(ua, r.up.U));
+    const S0 = capS ? S : add3(S, mul3(norm3(add3(mul3(ua, -0.9 * raise), inward)), 16 * s));
     const cuff = add3(S, mul3(ua, UPPER * s * 0.58));
     // forearm ends under the hand with a square end
-    const W0 = add3(Wr, mul3(norm3(sub3(Wr, E)), 4 * s));
+    const W0 = add3(Wr, mul3(fa, 4 * s));
     const holdFn = i === 0 ? p.holdL : p.holdR;
-    const hold = holdFn ? holdFn(hf, s, ink, col) : null;
-    const [hBack, hFront] = handGlyph(hShape[i], {s, ink, skin, inkC, pv: hf.pv, thumb: hf.thumb, blood: hb, dirt: (dmg.dirt ?? 0) * 0.6, holding: hold});
-    const handEl = (layer: React.ReactElement) => <g transform={`translate(${f2(hf.pos.x)} ${f2(hf.pos.y)}) rotate(${f2(hf.ang)})${hf.len < 0.995 ? ` scale(${f2(hf.len)} 1)` : ''}`}>{layer}</g>;
+    const hold0 = holdFn ? holdFn(hf, s, ink, col) : null;
+    const hold = hold0 ? <g transform={propInGlyph(hf, s)}>{hold0}</g> : null;
+    const [hBack, hFront] = handGlyph(hShape[i], {s, ink, skin, inkC, pv: hf.pv, thumb: hf.thumb, blood: hb, dirt: sil ? 0 : (dmg.dirt ?? 0) * 0.6, holding: hold, framed: true});
+    const handEl = (layer: React.ReactElement) => <g transform={handM(hf)}>{layer}</g>;
     const wearFn = i === 0 ? p.wearL : p.wearR;
     const dorsal = mul3(r.palm[i], -1);
     const wear = wearFn ? wearFn({E, W: Wr, dorsal, ang: ang2(E, Wr), len: len3(sub3(Wr, E))}, s, ink, col) : null;
-    const armRank = r.armRank[i];
-    void front;
-    add(armRank, `arm${i}`, (
-      <g>
-        {wear && !wear.front && wear.el}
-        <LimbG pts={[S0, E, W0]} w={[ARM_W * 1.08 * s, ARM_W * 0.86 * s, ARM_W * 0.74 * s]} ink={ink} inkC={inkC} colors={[skin, skin]} L={L} s={s} />
-        {/* sleeve: shirt colour from inside the torso to the cuff (slightly flared), then a hem line */}
+    // the elbow: a half drawn over the other gets a rounded end there when the arm is bent (or the halves are in
+    // different depth parts); a nearly straight arm keeps the shared joint (no ring across the arm)
+    const capE = split ? 1 : clamp((bend - 35) / 30);
+    const up = segLayers(S0, E, AW[0], AW[1], ink, inkC, skin, L, s, capS, lowerTop ? 0 : capE, `u${i}`, frontK);
+    const lo = segLayers(E, W0, AW[1], AW[2], ink, inkC, skin, L, s, lowerTop ? capE : 0, 0, `l${i}`);
+    const sideL = L ? -(Math.sign((-ua.y) * L.dir.x + ua.x * L.dir.y) || 1) : 1;
+    const upperFill = (
+      <g key={`uf${i}`}>
+        {up.fill}
+        {/* the shared elbow joint (fills the outside of the bend) */}
+        {!split && <circle cx={E.x} cy={E.y} r={AW[1] / 2} fill={skin} />}
+        {/* sleeve: shirt colour from the shoulder to the cuff (slightly flared), then a hem line */}
         <path d={quad(S0, cuff, ARM_W * 0.54 * s, ARM_W * 0.56 * s)} fill={sleeve} />
-        {L && <path d={quad(S0, cuff, ARM_W * 0.2 * s, ARM_W * 0.2 * s, -(Math.sign((-ua.y) * L.dir.x + ua.x * L.dir.y) || 1) * ARM_W * 0.34 * s, -(Math.sign((-ua.y) * L.dir.x + ua.x * L.dir.y) || 1) * ARM_W * 0.36 * s)} fill={L.shadowC ?? '#2B3550'} opacity={0.3 * (L.key ?? 1) * clamp(0.6 - L.dir.z * 0.6)} />}
+        {capS > 0 && <circle cx={S0.x} cy={S0.y} r={ARM_W * 0.54 * s} fill={sleeve} />}
+        {L && <path d={quad(S0, cuff, ARM_W * 0.2 * s, ARM_W * 0.2 * s, sideL * ARM_W * 0.34 * s, sideL * ARM_W * 0.36 * s)} fill={L.shadowC ?? '#2B3550'} opacity={0.3 * (L.key ?? 1) * clamp(0.6 - L.dir.z * 0.6)} />}
         {(() => {
           const n = {x: -ua.y, y: ua.x};
           const nl = Math.hypot(n.x, n.y) || 1;
           const hw = (ARM_W * s) / 2;
           return <line x1={cuff.x + (n.x / nl) * hw * 1.12} y1={cuff.y + (n.y / nl) * hw * 1.12} x2={cuff.x - (n.x / nl) * hw * 1.12} y2={cuff.y - (n.y / nl) * hw * 1.12} stroke={inkC} strokeWidth={ink * 0.8} strokeLinecap="round" />;
         })()}
-        {decals.map((d, k) => <LimbDecal key={k} d={d} a={d.limb.endsWith('0') ? S : E} b={d.limb.endsWith('0') ? E : Wr} w={ARM_W * s} ink={ink} inkC={inkC} skin={skin} />)}
+        {decals.filter((d) => d.limb.endsWith('0')).map((d, k) => <LimbDecal key={k} d={d} a={S} b={E} w={ARM_W * s} ink={ink} inkC={inkC} skin={skin} />)}
+      </g>
+    );
+    // (the forearm's own outline goes over a plate strapped to its far side)
+    const lowerFill = (
+      <g key={`lf${i}`}>
+        {wear && !wear.front && wear.el}
+        {lo.ink}
+        {lo.fill}
+        {decals.filter((d) => d.limb.endsWith('1')).map((d, k) => <LimbDecal key={k} d={d} a={E} b={Wr} w={ARM_W * s} ink={ink} inkC={inkC} skin={skin} />)}
         {wear && wear.front && wear.el}
         {handEl(hBack)}
       </g>
-    ));
+    );
+    if (!split) {
+      // one part: the shared outline under both halves, then the far half, then the near half with its own outline
+      // (a forearm folded across the upper arm keeps its edge)
+      const elbowInk = <circle cx={E.x} cy={E.y} r={AW[1] / 2 + ink} fill={inkC} />;
+      add(rL, `arm${i}`, lowerTop
+        ? <g>{up.ink}{lo.ink}{elbowInk}{upperFill}{lowerFill}</g>
+        : <g>{up.ink}{lo.ink}{elbowInk}{lowerFill}{up.ink}{upperFill}</g>);
+    } else {
+      if (upperCross) splitZones(r, `armU${i}`, <g>{up.ink}{upperFill}</g>, S0, E, 0.05).forEach((q) => parts.push(q));
+      else add(rU, `armU${i}`, <g>{up.ink}{upperFill}</g>);
+      add(rL, `arm${i}`, lowerFill);
+    }
     const zF = p.zHandFront?.[i];
-    add(zF !== undefined ? r.torsoZ + zF : p.twoHanded ? r.toolZ + 0.3 : armRank + 0.5, `handf${i}`, handEl(hFront));
+    // (two hands on one tool: the curled fingers over the tool's piece in the hand's own depth zone, see splitZones)
+    add(zF !== undefined ? r.torsoZ + zF : p.twoHanded ? (r.armOverride ? r.toolZ + 0.3 : r.zoneZ[zoneOfRank(r, rL)] + 0.6) : rL + 0.5, `handf${i}`, handEl(hFront));
   });
 
   // ---------------- neck and head
@@ -708,8 +986,16 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     const ccw = (((a1 - a2) % TAU) + TAU) % TAU;
     const dTop = (((top - a2) % TAU) + TAU) % TAU;
     const span = dTop < ccw ? ccw : ccw - TAU;
+    // the arc leaves the edge's last point and returns to its first: near the ends it is pulled onto them (the edge
+    // lies on the head's shell, the arc on the larger hair-volume ellipse; R2 joined them with a jump that left a
+    // sharp point of hair sticking out at the temple in rear three-quarter views)
+    const e2 = {x: line[line.length - 1].x - fromE(a2).x, y: line[line.length - 1].y - fromE(a2).y};
+    const e1 = {x: line[0].x - fromE(a2 + span).x, y: line[0].y - fromE(a2 + span).y};
     const arc: V2[] = [];
-    for (let k = 1; k < 24; k++) arc.push(fromE(a2 + (span * k) / 24));
+    for (let k = 1; k < 24; k++) {
+      const q = fromE(a2 + (span * k) / 24), w2 = 1 - smoothK(clamp(k / 7)), w1 = 1 - smoothK(clamp((24 - k) / 7));
+      arc.push({x: q.x + e2.x * w2 + e1.x * w1, y: q.y + e2.y * w2 + e1.y * w1});
+    }
     return arc;
   };
   if (hairType !== 'bald') {
@@ -768,7 +1054,11 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
           last = best;
           outline.push({x: Cx + ux * best, y: Cy + uy * best});
         }
-        const md = polyPath(outline);
+        // (drawn as the union of the curls itself — every curl inked, then every curl filled — not as a ray-cast
+        // outline from the mass's centre, which cut straight radial slits into the mass wherever rays passed between
+        // two clusters of curls)
+        const md = near.map((b) => `M ${f2(b.x - b.r)} ${f2(b.y)} a ${f2(b.r)} ${f2(b.r)} 0 1 0 ${f2(2 * b.r)} 0 a ${f2(b.r)} ${f2(b.r)} 0 1 0 ${f2(-2 * b.r)} 0 Z`).join(' ');
+        const hullD = polyPath(outline);
         // a few curl strokes on the curls that face the viewer most, thin and lighter than the outline, on the side
         // away from the light
         const l2 = L ? Math.hypot(L.dir.x, L.dir.y) || 1 : 1;
@@ -780,8 +1070,13 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
         });
         extrasFront.push(
           <g key="cumass">
-            <path d={md} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />
-            {celOver(`${id}hm`, md, L, headSize, s, undefined, 0.55)}
+            <g fill={inkC} stroke={inkC} strokeWidth={ink * 2}>{near.map((b) => <circle key={b.k} cx={b.x} cy={b.y} r={b.r} />)}</g>
+            {/* the gaps between curls inside the mass are hair, not ink (they read as a face on the back of the head):
+                the mass's star-shaped hull filled, clipped to the inked curls so the outline stays the curls' */}
+            <defs><clipPath id={`${id}cmc`}>{near.map((b) => <circle key={b.k} cx={b.x} cy={b.y} r={b.r + ink * 0.95} />)}</clipPath></defs>
+            <path d={hullD} fill={hairC} clipPath={`url(#${id}cmc)`} />
+            <g fill={hairC}>{near.map((b) => <circle key={b.k} cx={b.x} cy={b.y} r={b.r} />)}</g>
+            {celOver(`${id}hm`, md, L, headSize, s, hullD, 0.55)}
             {strokes}
             {rearW < 1 && <g opacity={f2(1 - rearW)}>{near.map((b) => <circle key={`cu${b.k}`} cx={b.x} cy={b.y} r={b.r} fill={hairC} stroke={inkC} strokeWidth={ink} />)}</g>}
           </g>,
@@ -795,16 +1090,27 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     // triangles read as a doubled crown in three-quarter and high views.) Seen from above, a few thin spike strokes on
     // the cap carry the texture instead.
     const rows: [number, number, number][] = [[0.2, 0.85, 1.45], [-0.15, 0.86, 1.47], [-0.45, 0.8, 1.38]];
+    // each spike is a cone (a diamond base on the scalp, a tip): its projected outline is the convex hull of the five
+    // points, so the crest keeps its volume in profile (R2's flat triangles, all in the head's left-right plane, went
+    // edge-on from the side and the crest became three needles)
+    const hull = (P: {x: number; y: number; z: number}[]) => {
+      const q = [...P].sort((a, b) => a.x - b.x || a.y - b.y);
+      const cr = (o: V2, a: V2, b: V2) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+      const lo: typeof q = [], hi: typeof q = [];
+      for (const p0 of q) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], p0) <= 0) lo.pop(); lo.push(p0); }
+      for (const p0 of [...q].reverse()) { while (hi.length >= 2 && cr(hi[hi.length - 2], hi[hi.length - 1], p0) <= 0) hi.pop(); hi.push(p0); }
+      return [...lo.slice(0, -1), ...hi.slice(0, -1)];
+    };
     const tris: {x: number; y: number; z: number}[][] = [];
     [-0.5, -0.25, 0, 0.25, 0.5].forEach((r0) => rows.forEach(([f0, ub, ut]) => {
-      tris.push([hl3(r0 - 0.2, ub, f0 + 0.05), hl3(r0, ut, f0 - 0.05), hl3(r0 + 0.2, ub, f0 + 0.05)]);
+      tris.push(hull([hl3(r0 - 0.2, ub, f0 + 0.05), hl3(r0 + 0.2, ub, f0 + 0.05), hl3(r0, ub, f0 + 0.34), hl3(r0, ub, f0 - 0.24), hl3(r0, ut, f0 - 0.05)]));
     }));
     const C = {x: Hc.x, y: Hc.y};
     // ray from the head centre: the farthest exit over all (convex) triangles
     const exitAt = (ux: number, uy: number) => {
       let best = 0;
-      for (const tr of tris) for (let i = 0; i < 3; i++) {
-        const a = tr[i], b = tr[(i + 1) % 3];
+      for (const tr of tris) for (let i = 0; i < tr.length; i++) {
+        const a = tr[i], b = tr[(i + 1) % tr.length];
         const ex = b.x - a.x, ey = b.y - a.y, den = ux * ey - uy * ex;
         if (Math.abs(den) < 1e-9) continue;
         const ax = a.x - C.x, ay = a.y - C.y;
@@ -826,16 +1132,23 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     extrasBack.push(<path key="crest" d={polyPath(outline)} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="miter" strokeMiterlimit={8} />);
     // from above (the top of the head toward the viewer) the spikes lie over the cap: a few thin strokes
     const topK = clamp((hb.U.z - 0.3) / 0.35);
-    if (topK > 0) tris.filter((_, k) => k % 3 === 0).forEach((tr, k) => {
-      const base = {x: (tr[0].x + tr[2].x) / 2, y: (tr[0].y + tr[2].y) / 2};
-      const tip = {x: lerp(base.x, tr[1].x, 0.7), y: lerp(base.y, tr[1].y, 0.7)};
+    if (topK > 0) [-0.5, -0.25, 0, 0.25, 0.5].forEach((r0, k) => {
+      const [f0, ub, ut] = rows[0];
+      const base = hl3(r0, ub, f0 + 0.05), tip0 = hl3(r0, ut, f0 - 0.05);
+      const tip = {x: lerp(base.x, tip0.x, 0.7), y: lerp(base.y, tip0.y, 0.7)};
       extrasFront.push(<path key={`spt${k}`} d={`M ${f2(base.x)} ${f2(base.y)} L ${f2(tip.x)} ${f2(tip.y)}`} stroke={inkC} strokeWidth={f2(ink * 0.6)} strokeLinecap="round" opacity={f2(0.7 * topK)} />);
     });
   }
   if (hairType === 'swoop') {
+    // The approved swoop loop, turned toward profile by sweeping its points back/forward (fo) as the head turns. R2
+    // swept them the same way whichever way the head faced, so in rear three-quarter views (and the opposite front
+    // three-quarter) the sweep cancelled the loop's width on screen and it stood up as a thin spike above the head:
+    // the sweep now changes direction with the side of the head that faces the camera, so the loop always opens up.
     const loop: [number, number, number, number][] = [[1.07, 0.06, 0.0, -0.6], [1.05, 0.95, 0.12, -0.75], [0.17, 1.3, 0.22, -0.2], [-0.9, 1.42, 0.18, 0.35], [-1.14, 0.77, 0.12, 0.78], [-0.8, 0.95, 0.42, 0.55], [-0.34, 0.9, 0.6, 0.3], [0.3, 0.88, 0.58, 0.0], [0.85, 0.5, 0.35, -0.35]];
     const pk = Math.pow(Math.abs(dot3(hb.R, zv)), 1.5);
-    const q = loop.map(([r0, u0, f0, fo]) => hl3(r0 * (1 - 0.35 * pk), u0, f0 + fo * pk));
+    const rf = hb.R.x * hb.F.x;
+    const sg = 1 - 2 * smoothK(clamp(rf / 0.35));
+    const q = loop.map(([r0, u0, f0, fo]) => hl3(r0 * (1 - 0.35 * pk), u0, f0 + fo * pk * sg));
     const z = q.reduce((m, c) => m + c.z, 0) / q.length;
     (z > -0.25 ? extrasFront : extrasBack).push(<path key="swoop" d={smoothPath(q, true, 0.6)} fill={hairC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />);
   }
@@ -873,7 +1186,7 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
   // ---- face
   const feats: React.ReactElement[] = [];
   const blinkC = face.closed ? 1 : face.blink === false ? 0 : blinkAt(t, seed);
-  const lid = clamp(Math.max(face.lid ?? 0, blinkC, face.closed ? 1 : 0));
+  const lid0 = clamp(Math.max(face.lid ?? FACE_REST_LID, blinkC, face.closed ? 1 : 0));
   const lids = clamp(face.lids ?? 0);
   const fold = (q: {z: number}) => clamp((q.z - 0.08) / 0.5, 0, 1);
   const eyeY = -0.1;
@@ -885,11 +1198,12 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     const sx = clamp(q.z * 1.05, 0.3, 1);
     const op = fold(q);
     const ry = 13 * s;
+    const lid = clamp(lid0 + (face.lidLR ? face.lidLR[sd < 0 ? 0 : 1] : 0));
     const lidY = lerp(-ry * 1.15, ry * 1.02, clamp(Math.max(lid, lids * 0.45)));
     const drift = unf * sd * 1.8;
     const pupil = {x: (look2.x + drift * 0.5) * 5 * s, y: (look2.y + unf * 0.4) * 4 * s};
-    const pr = (5.5 + unf * 1.2) * s;
-    const brows = face.brows ?? 0, worry = face.worry ?? 0;
+    const pr = (5.5 + unf * 1.2) * s * clamp(face.pupil ?? 1, 0.5, 1.6);
+    const brows = (face.brows ?? 0) + (face.browAsym ?? 0) * sd * 0.6, worry = face.worry ?? 0;
     const bo = onHead(sd * 34, eyeY - 0.36 - brows * 0.09 + worry * 0.03, 1.0), bi = onHead(sd * 9, eyeY - 0.36 - brows * 0.09 - (brows * 0.05 + worry * 0.13), 1.0);
     const cid = `${id}e${sd > 0 ? 'r' : 'l'}`;
     // the lid's skin takes the face's cel shadow when the eye sits in it (else a lit lid floats on a shaded face)
@@ -948,7 +1262,8 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     const side = Math.sign(hb.F.x) || 1;
     const prof = Math.abs(hb.F.x);
     if (q.z > 0.15 && prof < 0.85) feats.push(<path key="nose" d={`M ${pt({x: q.x + 2 * s, y: q.y + 2 * s})} q ${8 * s * side} ${14 * s} ${-2 * s * side} ${16 * s}`} fill="none" stroke={inkC} strokeWidth={ink * 0.75} strokeLinecap="round" opacity={fold(q) * 0.6 + 0.4} />);
-    else if (prof >= 0.85) {
+    else if (prof >= 0.85 && hb.F.z > -0.3) {
+      // (only while the nose is on the visible side: R2 drew it on the cheek or the hair in rear three-quarter views)
       const tip = hl3(0, 0.12, 1.08);
       feats.push(<path key="nostril" d={`M ${f2(tip.x - side * 7 * s)} ${f2(tip.y)} q ${f2(side * 3 * s)} ${f2(4 * s)} ${f2(-side * 2 * s)} ${f2(6 * s)}`} fill="none" stroke={inkC} strokeWidth={ink * 0.6} strokeLinecap="round" />);
     }
@@ -964,13 +1279,40 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
   if (look.cheeks) [-1, 1].forEach((sd) => { const q = onHead(sd * 40, 0.25, 1); if (q.z > 0.2) feats.push(<ellipse key={`ch${sd}`} cx={q.x} cy={q.y} rx={9 * s * clamp(q.z, 0.3, 1)} ry={7 * s} fill="#F28B82" opacity={0.7} />); });
   if (look.accessories.includes('beard')) {
     // the approved chin beard: from the jaw corners, under the mouth (its top edge sits just below the lip line),
-    // around the chin and a little below it
-    const pts: V2[] = [];
+    // around the chin and a little below it. It lies on a shell round the jaw (a little proud of the face, so it has
+    // volume in profile) between its two approved edges; the shell is drawn as small cells, only those facing the
+    // camera, as one union (ink under, fills over), so its outline is the true silhouette from any side. R2 projected
+    // the band as one closed outline on the head sphere: it folded over itself in profile (an inked loop across the
+    // cheek) and showed through the head in rear three-quarter views.
     const cz = (th: number) => Math.max(0, Math.cos(rad(th)));
-    for (let th = -100; th <= 100; th += 10) { const q = onHead(th, 0.24 + 0.94 * cz(th) ** 0.7, 1.04); pts.push(q); }
-    for (let th = 100; th >= -100; th -= 10) { const q = onHead(th, 0.24 + 0.38 * cz(th) ** 1.5, 1.0); pts.push({x: q.x, y: q.y}); }
-    const vis = onHead(0, 0.6, 1).z;
-    if (vis > -0.4) feats.unshift(<path key="beard" d={smoothPath(pts, true, 0.4)} fill={col(look.hairColor)} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" />);
+    const C0 = {r: 0, u: -0.36, f: 0.28}, A = {r: 1.04, u: 0.74, f: 0.8};
+    const shell = (th: number, u: number) => {
+      const k = Math.sqrt(Math.max(0, 1 - ((u - C0.u) / A.u) ** 2));
+      const r0 = C0.r + A.r * k * Math.sin(rad(th)), f0 = C0.f + A.f * k * Math.cos(rad(th));
+      const q = hl3(r0, u, f0);
+      // outward normal of the shell (head-local), its depth toward the viewer
+      const nr = (r0 - C0.r) / (A.r * A.r), nu = (u - C0.u) / (A.u * A.u), nf = (f0 - C0.f) / (A.f * A.f);
+      const nz = (hb.R.z * nr * R + hb.U.z * nu * RY + hb.F.z * nf * R) / (Math.hypot(nr * R, nu * RY, nf * R) || 1);
+      return {x: q.x, y: q.y, nz};
+    };
+    const ths: number[] = [];
+    for (let th = -100; th <= 100; th += 8) ths.push(th);
+    const NV = 5;
+    const cells: V2[][] = [];
+    for (let i = 0; i < ths.length - 1; i++) for (let j = 0; j < NV; j++) {
+      const corner = (th: number, v: number) => {
+        const uTop = -(0.24 + 0.38 * cz(th) ** 1.5), uBot = Math.max(C0.u - A.u * 0.995, -(0.24 + 0.94 * cz(th) ** 0.7));
+        return shell(th, lerp(uTop, uBot, v));
+      };
+      const c4 = [corner(ths[i], j / NV), corner(ths[i + 1], j / NV), corner(ths[i + 1], (j + 1) / NV), corner(ths[i], (j + 1) / NV)];
+      if (c4.reduce((m, c) => m + c.nz, 0) / 4 > -0.02) cells.push(c4);
+    }
+    if (cells.length) feats.unshift(
+      <g key="beard" strokeLinejoin="round">
+        <g fill={inkC} stroke={inkC} strokeWidth={ink * 2}>{cells.map((c, k) => <path key={k} d={polyPath(c)} />)}</g>
+        <g fill={col(look.hairColor)} stroke={col(look.hairColor)} strokeWidth={Math.max(0.6, ink * 0.25)}>{cells.map((c, k) => <path key={k} d={polyPath(c)} />)}</g>
+      </g>,
+    );
   }
   // injuries
   if (dmg.browCut && dmg.browCut.amt > 0) {
@@ -1067,13 +1409,18 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     (anyVis || brimZ > 0 ? acc : accBack).push(el);
   }
   if (look.accessories.includes('headset')) {
-    const bandPts: V2[] = [];
+    // the band over the crown, ear to ear: drawn segment by segment by its own depth like the boom (R2 drew the whole
+    // band over the head, so in three-quarter and rear views its far half ran across the face and the back of the hair)
+    const bandPts: {x: number; y: number; z: number}[] = [];
     for (let k = 0; k <= 16; k++) {
       const a = lerp(-Math.PI / 2, Math.PI / 2, k / 16);
       const v = add3(mul3(hb.R, Math.sin(a) * (R + 7 * s)), mul3(hb.U, Math.cos(a) * (RY + 7 * s)));
-      bandPts.push({x: Hc.x + v.x, y: Hc.y + v.y + 4 * s});
+      bandPts.push({x: Hc.x + v.x, y: Hc.y + v.y + 4 * s, z: v.z / R});
     }
-    acc.push(<polyline key="hsband" points={bandPts.map((q) => `${f2(q.x)},${f2(q.y)}`).join(' ')} fill="none" stroke={inkC} strokeWidth={ink * 1.1} strokeLinecap="round" />);
+    for (let k = 0; k < 16; k++) {
+      const a = bandPts[k], b = bandPts[k + 1];
+      (a.z + b.z > 0.12 ? acc : accBack).push(<path key={`hsb${k}`} d={`M ${f2(a.x)} ${f2(a.y)} L ${f2(b.x)} ${f2(b.y)}`} stroke={inkC} strokeWidth={ink * 1.1} strokeLinecap="round" />);
+    }
     const cup = onHead(-92, 0.05, 1.08);
     const cupEl = <rect key="cup" x={cup.x - 7 * s} y={cup.y - 11 * s} width={14 * s} height={22 * s} rx={5 * s} fill={inkC} />;
     // the boom: a 3D curve held clear of the cheek (r ≥ 1.16 head radii), drawn segment by segment in front of or behind
@@ -1093,22 +1440,33 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     (cup.z > 0.02 ? acc : accBack).push(cupEl);
   }
   if (look.accessories.includes('pencil')) {
-    const e = onHead(-80, -0.32, 1.06);
-    if (e.z > -0.35) {
-      const a = rollDeg - 70 * Math.sign(-hb.R.x || 1);
-      acc.push(
-        <g key="pencil" transform={`translate(${f2(e.x)} ${f2(e.y)}) rotate(${f2(a)})`}>
-          <rect x={-5 * s} y={-30 * s} width={10 * s} height={60 * s} rx={2 * s} fill={col(C.saffron)} stroke={inkC} strokeWidth={ink * 0.75} />
-          <path d={`M ${-5 * s} ${30 * s} L 0 ${40 * s} L ${5 * s} ${30 * s} Z`} fill={col('#F7D9C4')} stroke={inkC} strokeWidth={ink * 0.75} />
-        </g>,
-      );
-    }
+    // tucked behind the left ear: a 3D stick resting on the ear, running forward and down along the side of the head
+    // and standing a little off it, so it is long in profile, a short stub poking out sideways from the front, and
+    // behind the skull when that ear is turned away. (R2 drew a flat 2D pencil at a fixed screen angle in front of
+    // everything: from the side and in a lean it lay across the brow and the eye.)
+    const mid3 = dir(-112, -0.14, 1.08);
+    const ax3 = norm3(add3(add3(mul3(hb.F, 0.82), mul3(hb.U, -0.3)), mul3(hb.R, -0.42)));
+    const P = (k: number) => ({x: Hc.x + mid3.x + ax3.x * k * s, y: Hc.y + mid3.y + ax3.y * k * s});
+    const back = P(-30), front = P(30), tip = P(41);
+    const zc = mid3.z / R + ax3.z * 0.3;
+    const dx = front.x - back.x, dy = front.y - back.y, dl = Math.hypot(dx, dy) || 1;
+    const nx = (-dy / dl) * 5 * s, ny = (dx / dl) * 5 * s;
+    const body = polyPath([{x: back.x + nx, y: back.y + ny}, {x: front.x + nx, y: front.y + ny}, {x: front.x - nx, y: front.y - ny}, {x: back.x - nx, y: back.y - ny}]);
+    const el = (
+      <g key="pencil" strokeLinejoin="round">
+        <path d={body} fill={col(C.saffron)} stroke={inkC} strokeWidth={ink * 0.75} />
+        {dl > 6 * s && <path d={`M ${pt({x: front.x + nx, y: front.y + ny})} L ${pt(tip)} L ${pt({x: front.x - nx, y: front.y - ny})} Z`} fill={col('#F7D9C4')} stroke={inkC} strokeWidth={ink * 0.75} />}
+        <circle cx={back.x} cy={back.y} r={5 * s} fill={col(C.saffron)} stroke={inkC} strokeWidth={ink * 0.75} />
+      </g>
+    );
+    (zc > -0.12 ? acc : accBack).push(el);
   }
   // pallor tints the skin under the features (eyes, brows and mouth stay crisp)
   if ((dmg.pale ?? 0) > 0) feats.unshift(<path key="pale" d={unionD} fill="#E8E4DE" opacity={0.22 * (dmg.pale ?? 0)} />);
 
   // ---- assemble: back things, skull union (ink, fill), shading, ears, hair cap, features, front extras, accessories
-  out.push(<g key="hb">{earsBack}{accBack}{extrasBack}</g>);
+  // (accessories behind the skull go over the hair behind it: the far headset cup sits on the curls, not under them)
+  out.push(<g key="hb">{earsBack}{extrasBack}{accBack}</g>);
   out.push(skullInk);
   out.push(skullFill);
   out.push(<g key="hshade">{celOver(`${id}hs`, unionD, L, headSize, s, polyPath(ellPoly(skullE, 36)))}</g>);

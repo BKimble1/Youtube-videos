@@ -187,3 +187,79 @@ export const rebarAt = (key: string, o: V3, dir: V3, n: number, len: number, see
     const p2 = {x: p1.x + (dir.x + bend.x) * L * 0.45, y: p1.y + (dir.y + bend.y) * L * 0.45, z: p1.z + (dir.z + bend.z) * L * 0.45};
     return polyline3(`${key}_${i}`, [base, p1, p2], 0.022, '#5E4436', {minPx: 0.7, ink: '#1E1A18', inkW: 1.2});
   });
+
+/**
+ * Cut every face longer than `maxLen` along direction `dir` into strips at GLOBAL planes (s = dir·p = k·maxLen), so
+ * neighbouring faces of one mesh are cut at the same places. Works on any planar polygon (convex or not, quads,
+ * vehicle sides…) and clips the face's painted overlays (windows, stripes, lines) to each strip, so nothing is painted
+ * twice or outside its strip. Use it for long objects that figures stand next to (the bus, a truck, a wall): each strip
+ * sorts by its own depth. Coplanar cuts take no ink.
+ */
+export const splitPlanar = (m: Mesh, maxLen: number, dir: V3): Mesh => {
+  const L = Math.hypot(dir.x, dir.y, dir.z) || 1;
+  const D = {x: dir.x / L, y: dir.y / L, z: dir.z / L};
+  const sOf = (p: V3) => p.x * D.x + p.y * D.y + p.z * D.z;
+  const verts: V3[] = [];
+  const idx = new Map<string, number>();
+  const vi = (p: V3) => {
+    const k = `${p.x.toFixed(4)},${p.y.toFixed(4)},${p.z.toFixed(4)}`;
+    let i = idx.get(k);
+    if (i === undefined) { i = verts.length; verts.push(p); idx.set(k, i); }
+    return i;
+  };
+  const lerpV = (a: V3, b: V3, t: number): V3 => ({x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, z: a.z + (b.z - a.z) * t});
+  const clipPoly = (P: V3[], s0: number, s1: number): V3[] => {
+    let R0 = P;
+    for (const [f] of [[(p: V3) => sOf(p) - s0], [(p: V3) => s1 - sOf(p)]] as [(p: V3) => number][]) {
+      const out: V3[] = [];
+      for (let i = 0; i < R0.length; i++) {
+        const a = R0[i], b = R0[(i + 1) % R0.length];
+        const fa = f(a), fb = f(b);
+        if (fa >= -1e-7) out.push(a);
+        if ((fa >= -1e-7) !== (fb >= -1e-7)) out.push(lerpV(a, b, fa / (fa - fb)));
+      }
+      R0 = out;
+      if (R0.length < 3) return [];
+    }
+    return R0;
+  };
+  const clipLine = (P: V3[], s0: number, s1: number): V3[][] => {
+    const pieces: V3[][] = [];
+    for (let i = 0; i + 1 < P.length; i++) {
+      const a = P[i], b = P[i + 1];
+      const sa = sOf(a), sb = sOf(b);
+      const lo = Math.min(sa, sb), hi = Math.max(sa, sb);
+      if (hi < s0 || lo > s1) continue;
+      const t = (s: number) => (Math.abs(sb - sa) < 1e-9 ? 0 : (s - sa) / (sb - sa));
+      const t0 = Math.max(0, Math.min(1, sa < sb ? t(s0) : t(s1))), t1 = Math.max(0, Math.min(1, sa < sb ? t(s1) : t(s0)));
+      if (Math.abs(sb - sa) < 1e-9) { pieces.push([a, b]); continue; }
+      if (t1 > t0) pieces.push([lerpV(a, b, t0), lerpV(a, b, t1)]);
+    }
+    return pieces;
+  };
+  const faces: Face[] = [];
+  m.faces.forEach((f) => {
+    const P = f.v.map((i) => m.verts[i]);
+    const ss = P.map(sOf);
+    const lo = Math.min(...ss), hi = Math.max(...ss);
+    if (hi - lo <= maxLen * 1.05) { faces.push({...f, v: P.map(vi)}); return; }
+    const k0 = Math.floor(lo / maxLen), k1 = Math.ceil(hi / maxLen);
+    for (let k = k0; k < k1; k++) {
+      const s0 = Math.max(lo, k * maxLen), s1 = Math.min(hi, (k + 1) * maxLen);
+      if (s1 - s0 < 1e-4) continue;
+      const C = clipPoly(P, s0, s1);
+      if (C.length < 3) continue;
+      const ov = f.ov?.map((o): Overlay | null => {
+        const groups = o.polys ?? (o.pts ? [o.pts] : []);
+        const polys: V3[][] = [];
+        groups.forEach((G) => {
+          if (o.line) clipLine(G, s0, s1).forEach((pc) => polys.push(pc));
+          else { const c = clipPoly(G, s0, s1); if (c.length >= 3) polys.push(c); }
+        });
+        return polys.length ? {mat: o.mat, line: o.line, ink: o.ink, polys} : null;
+      }).filter((o): o is Overlay => !!o);
+      faces.push({...f, v: C.map(vi), ov: ov && ov.length ? ov : undefined});
+    }
+  });
+  return {...m, verts, faces};
+};

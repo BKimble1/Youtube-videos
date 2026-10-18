@@ -6,8 +6,9 @@ import {V3, add3, sub3, mul3, norm3, len3, clamp, lerp, rnd, noise, smooth, ease
 import {Item, project, toView, shade} from '../engine';
 import {DRONE, DRONE_ROTORS, DEBRIS} from './parts';
 import {Pose3, rotHeading, rcomp, euler, lookFrame, rmul, apply, rotAxisM, segFrame, I3} from './mat3';
-import {Ground, FLAT, partItem, partItemS, eyeGlow, beam, makeThrow, thrownPose, spray} from './kit';
+import {Ground, FLAT, partItem, partItemS, eyeGlow, beam, makeThrow, spray} from './kit';
 import {Impact} from './unit';
+import {bodyOf, debrisPose, debrisLanding, Launch} from './debris';
 
 export type DroneSpec = {
   id: number;
@@ -71,25 +72,40 @@ export const droneAttach = (sp: DroneSpec) => {
 
 const gimbalPose = (sp: DroneSpec, P: Pose3, sc: number): Pose3 => {
   const mount = apply(P, {x: 0, y: -0.05 * sc, z: -0.1 * sc});
-  if (sp.look) {
+  // a crashed drone's gimbal is dead weight: it stays rigid in the wreck (no tracking from the ground)
+  if (sp.look && !(sp.hit && sp.t > sp.hit.t0)) {
     const d = norm3(sub3(sp.look, mount));
     return {pos: mount, R: lookFrame(d, rmul(P.R, UP))};
   }
   return {pos: mount, R: rcomp(P.R, euler(0, 12, 0))};
 };
 
-/** Tumbling fall after a hit: spins down along a curve and crashes; returns pose (lands and stays). */
+/** the whole drone (body, arms, gimbal) as one rigid body (per scale) */
+const droneBody = (sc: number) => bodyOf([{mesh: DRONE.body, scale: sc}, {mesh: DRONE.arms, scale: sc}, {mesh: DRONE.gimbal, scale: sc, P: {pos: {x: 0, y: -0.05 * sc, z: -0.1 * sc}, R: I3}}], `drone_${sc.toFixed(3)}`);
+/** a tumbling launch from a throw descriptor (same seeded scatter as R2) */
+const throwLaunch = (t0: number, P0: Pose3, dir: V3, speed: number, seed: number, up: number, comOff: V3, spin = 1): Launch => {
+  const th = makeThrow(t0, add3(P0.pos, rmul(P0.R, comOff)), dir, speed, seed, up);
+  return {t0, pos: P0.pos, R: P0.R, v: th.v0, w: mul3(th.spinAxis, ((th.spin * Math.PI) / 180) * 0.6 * spin), e: 0.3, mu: 0.6};
+};
+const hitLaunch = (sp: DroneSpec): Launch => {
+  const P0 = bodyPose(sp, sp.hit!.t0);
+  const sc = sp.scale ?? 1;
+  return throwLaunch(sp.hit!.t0, P0, sp.hit!.dir, 3.2, sp.id * 41, 0.2, droneBody(sc).com);
+};
+/** Tumbling fall after a hit: spins down along a curve, crashes, bounces, settles on its belly or back (stays). */
 const droneWorldPose = (sp: DroneSpec, t: number): Pose3 => {
   if (!sp.hit || t < sp.hit.t0) return bodyPose(sp, t);
   const g = sp.ground ?? FLAT;
-  const P0 = bodyPose(sp, sp.hit.t0);
-  const th = makeThrow(sp.hit.t0, P0.pos, sp.hit.dir, 3.2, sp.id * 41, 0.2);
-  return thrownPose(th, t, g, P0.R, 0.06 * (sp.scale ?? 1));
+  return debrisPose(droneBody(sp.scale ?? 1), hitLaunch(sp), t, g);
 };
 
 export const droneImpacts = (sp: DroneSpec): Impact[] => {
   const out: Impact[] = [];
-  if (sp.hit) out.push({t: sp.hit.t0, pos: bodyPose(sp, sp.hit.t0).pos, dir: sp.hit.dir, strength: 2, kind: 'blow'});
+  if (sp.hit) {
+    out.push({t: sp.hit.t0, pos: bodyPose(sp, sp.hit.t0).pos, dir: sp.hit.dir, strength: 2, kind: 'blow'});
+    const l = debrisLanding(droneBody(sp.scale ?? 1), hitLaunch(sp), sp.ground ?? FLAT);
+    out.push({t: l.t, pos: l.pos, dir: {x: 0, y: -1, z: 0}, strength: 2, kind: 'debris', note: 'crash'});
+  }
   if (sp.smash) out.push({t: sp.smash.t0, pos: bodyPose(sp, sp.smash.t0).pos, dir: sp.smash.dir, strength: 3, kind: 'plate'});
   if (sp.struck) out.push({t: sp.struck.t0, pos: bodyPose(sp, sp.struck.t0).pos, dir: sp.struck.dir, strength: 2, kind: 'blow'});
   return out;
@@ -127,17 +143,20 @@ export const drone = (sp: DroneSpec): Item[] => {
       {mesh: 'body', off: {x: 0, y: 0, z: 0}}, {mesh: 'gimbal', off: {x: 0, y: -0.05, z: -0.1}},
       {mesh: 'shard', off: {x: 0.2, y: 0, z: 0.1}}, {mesh: 'shard', off: {x: -0.2, y: 0, z: -0.1}}, {mesh: 'shard', off: {x: 0.1, y: 0.02, z: -0.2}},
     ];
+    // every piece flies from where it was, falls, bounces, tips flat and stays (gravity-true debris)
     pieces.forEach((pc, k) => {
-      const p0 = apply(P0, mul3(pc.off, sc));
-      const th = makeThrow(sp.smash!.t0, p0, add3(sp.smash!.dir, mul3(norm3(pc.off.x || pc.off.z ? pc.off : {x: 0.1, y: 0, z: 0}), 0.8)), sp.smash!.speed ?? 5, sp.id * 53 + k);
-      const Q = thrownPose(th, t, g, P0.R, 0.04);
       const mesh = pc.mesh === 'shard' ? DEBRIS.shard : DRONE[pc.mesh];
-      items.push(partItemS(mesh, Q, sc, `${key}_pc${k}`, {remap}));
+      const Pp: Pose3 = {pos: apply(P0, mul3(pc.off, sc)), R: P0.R};
+      const body = bodyOf([{mesh, scale: sc}], `drone_pc_${pc.mesh}_${sc.toFixed(3)}`);
+      const L = throwLaunch(sp.smash!.t0, Pp, add3(sp.smash!.dir, mul3(norm3(pc.off.x || pc.off.z ? pc.off : {x: 0.1, y: 0, z: 0}), 0.8)), sp.smash!.speed ?? 5, sp.id * 53 + k, 0.5, body.com);
+      const Q = debrisPose(body, L, t, g);
+      items.push(partItemS(mesh, {pos: Q.pos, R: Q.R}, sc, `${key}_pc${k}`, {remap}));
     });
     DRONE_ROTORS.forEach((rp, k) => {
-      const p0 = apply(P0, mul3(rp, sc));
-      const th = makeThrow(sp.smash!.t0, p0, add3(sp.smash!.dir, mul3(norm3({x: rp.x, y: 0.3, z: rp.z}), 1.2)), (sp.smash!.speed ?? 5) * 1.1, sp.id * 59 + k);
-      items.push(partItemS(DRONE.rotor, thrownPose(th, t, g, P0.R, 0.02), sc, `${key}_rt${k}`));
+      const Pp: Pose3 = {pos: apply(P0, mul3(rp, sc)), R: P0.R};
+      const body = bodyOf([{mesh: DRONE.rotor, scale: sc}], `drone_rotor_${sc.toFixed(3)}`);
+      const L = throwLaunch(sp.smash!.t0, Pp, add3(sp.smash!.dir, mul3(norm3({x: rp.x, y: 0.3, z: rp.z}), 1.2)), (sp.smash!.speed ?? 5) * 1.1, sp.id * 59 + k, 0.5, body.com, 0.5);
+      items.push(partItemS(DRONE.rotor, debrisPose(body, L, t, g), sc, `${key}_rt${k}`));
     });
     items.push(...spray(t, sp.smash.t0, P0.pos, sp.smash.dir, 16, 4.5, 'spark', sp.id * 7, `${key}_sp`, g, 0.55));
     return items;

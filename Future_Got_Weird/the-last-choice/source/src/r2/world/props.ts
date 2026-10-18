@@ -2,9 +2,10 @@
 // elevated-rail girder with the crushed taxi, the bus wreck, burnt cars, broken slabs and rebar for the ridge, and a
 // foreground-debris helper. Local model space: forward = −z (north at heading 0), right = +x, up = +y.
 import {V3, rnd, add3, sub3, mul3, norm3, cross3, len3} from '../../kit/math';
-import {Mesh, Face, Overlay, Prepped, prep, box, cylinder, merge, xfMesh, xfPoint, Xf, slab, cbox, headingVec} from '../engine';
+import {Mesh, Face, Overlay, Prepped, prep, box, cylinder, merge, xfMesh, xfPoint, Xf, slab, cbox, headingVec, splitLong} from '../engine';
 import {PLAN} from './plan';
 import {groundH} from './ground';
+import {splitPlanar} from './geom';
 
 // ------------------------------------------------------------------ small builders
 /** Box between two points with a w × h cross-section (beams, truss members). `up` orients the cross-section. */
@@ -208,14 +209,70 @@ let DS: Prepped | null = null;
 export const deathSlabMesh = () => (DS ??= prep(buildDeathSlab()));
 
 // ------------------------------------------------------------------ vehicles
-/** A sedan-like car (generic, no badges). crushed 0..1 flattens the cabin. */
-export const carMesh = (mat: string, crushed = 0, burnt = false): Mesh => {
+/** A sedan-like car (generic, no badges). crushed 0..1 flattens the cabin; doorOpen swings the driver's door out. */
+export const carMesh = (mat: string, crushed = 0, burnt = false, doorOpen = false): Mesh => {
   const body = prismX([{z: -2.3, y: 0.32}, {z: -2.3, y: 0.78}, {z: -1.0, y: 0.9}, {z: 1.6, y: 0.92}, {z: 2.25, y: 0.82}, {z: 2.25, y: 0.32}], -0.88, 0.88, burnt ? 'burnt' : mat, burnt ? 'burnt' : mat);
   const ch = 0.62 * (1 - crushed * 0.75);
   const cabin = prismX([{z: -0.95, y: 0.9}, {z: -0.45, y: 0.9 + ch}, {z: 0.85, y: 0.9 + ch}, {z: 1.45, y: 0.92}], -0.78, 0.78, burnt ? 'burnt' : 'window', burnt ? 'burnt' : mat);
   const wheel = (x: number, z: number) => xfMesh(cylinder(0.33, 0.22, 8, 'tire', 'steelDark', -0.11), {roll: 90, pos: {x, y: 0.33, z}});
-  const m = merge(body, cabin, wheel(-0.82, -1.45), wheel(0.82, -1.45), wheel(-0.82, 1.45), wheel(0.82, 1.45));
+  const parts = [body, cabin, wheel(-0.82, -1.45), wheel(0.82, -1.45), wheel(-0.82, 1.45), wheel(0.82, 1.45)];
+  if (doorOpen) {
+    // the driver's (left) door hinged at its front edge and swung out ~55°: an abandoned car, its driver ran
+    const door = box({x: -0.06, y: 0.36, z: 0}, {x: 0.0, y: 0.9 + ch * 0.8, z: 1.15}, [burnt ? 'burnt' : mat, 'steelDark', burnt ? 'burnt' : mat, burnt ? 'burnt' : mat, burnt ? 'burnt' : mat, 'interior']);
+    parts.push(xfMesh(door, {yaw: -55, pos: {x: -0.9, y: 0, z: -0.95}}));
+  }
+  const m = merge(...parts);
   m.crease = 28;
+  return m;
+};
+
+/** A box truck (generic delivery truck, no lettering): cab + cargo box, a dark stripe, roll-up door at the back. */
+export const truckMesh = (burnt = false): Mesh => {
+  const L = 7.6, W = 1.25, cabL = 2.0;
+  const zF = -L / 2, zB = zF + cabL;
+  const b = (m: string) => (burnt ? 'burnt' : m);
+  const cab = prismX([{z: zF, y: 0.55}, {z: zF, y: 1.45}, {z: zF + 0.35, y: 2.55}, {z: zB, y: 2.6}, {z: zB, y: 0.55}], -W + 0.05, W - 0.05, b('carGrey'), b('carGrey'),
+    [[{pts: [{x: -W + 0.04, y: 1.6, z: zF + 0.5}, {x: -W + 0.04, y: 1.6, z: zB - 0.25}, {x: -W + 0.04, y: 2.35, z: zB - 0.25}, {x: -W + 0.04, y: 2.35, z: zF + 0.6}], mat: burnt ? 'interiorDeep' : 'window'}],
+      [{pts: [{x: W - 0.04, y: 1.6, z: zF + 0.5}, {x: W - 0.04, y: 2.35, z: zF + 0.6}, {x: W - 0.04, y: 2.35, z: zB - 0.25}, {x: W - 0.04, y: 1.6, z: zB - 0.25}], mat: burnt ? 'interiorDeep' : 'window'}]]);
+  const cargo = box({x: -W, y: 0.7, z: zB + 0.1}, {x: W, y: 3.4, z: L / 2}, [b('van'), b('steelDark'), b('van'), b('vanDark'), b('van'), b('van')]);
+  cargo.faces[4] = {...cargo.faces[4], ov: [{pts: [{x: -W - 0.01, y: 1.2, z: zB + 0.3}, {x: -W - 0.01, y: 1.2, z: L / 2 - 0.2}, {x: -W - 0.01, y: 1.45, z: L / 2 - 0.2}, {x: -W - 0.01, y: 1.45, z: zB + 0.3}].reverse(), mat: b('vanStripe')}]};
+  cargo.faces[5] = {...cargo.faces[5], ov: [{pts: [{x: W + 0.01, y: 1.2, z: zB + 0.3}, {x: W + 0.01, y: 1.2, z: L / 2 - 0.2}, {x: W + 0.01, y: 1.45, z: L / 2 - 0.2}, {x: W + 0.01, y: 1.45, z: zB + 0.3}], mat: b('vanStripe')}]};
+  const wheel = (x: number, z: number) => xfMesh(cylinder(0.48, 0.3, 10, 'tire', 'steelDark', -0.15), {roll: 90, pos: {x, y: 0.48, z}});
+  const m = merge(splitPlanar(cab, 2.5, {x: 0, y: 0, z: 1}), splitPlanar(cargo, 2.0, {x: 0, y: 0, z: 1}), wheel(-W + 0.1, zF + 1.1), wheel(W - 0.1, zF + 1.1), wheel(-W + 0.1, L / 2 - 1.3), wheel(W - 0.1, L / 2 - 1.3));
+  m.crease = 28;
+  return m;
+};
+
+// ------------------------------------------------------------------ street furniture debris (generic, no logos)
+/** A traffic-signal mast toppled across the street: pole along +z from the base, a signal head near its tip. */
+export const fallenSignal = (L: number, seed: number): Mesh => {
+  const pole = splitLong(beam({x: 0, y: 0.18, z: 0}, {x: 0, y: 0.25, z: L}, 0.22, 0.22, 'steelDark'), 2.0);
+  const head = box({x: -0.2, y: 0.05, z: L - 1.2}, {x: 0.25, y: 0.5, z: L - 0.2}, ['steelDark', 'steelDark', 'tire', 'steelDark', 'tire', 'steelDark']);
+  const head2 = box({x: 0.25, y: 0.05, z: L * 0.55 - 0.5}, {x: 0.7, y: 0.45, z: L * 0.55 + 0.5}, 'steelDark');
+  const base = box({x: -0.35, y: 0, z: -0.35}, {x: 0.35, y: 0.25, z: 0.35}, 'concreteDark');
+  const m = merge(pole, head, head2, base);
+  void seed;
+  m.crease = 30;
+  return m;
+};
+/** A dumpster (generic steel bin), lid half open. */
+export const dumpsterMesh = (mat = 'girder'): Mesh => {
+  const bin = box({x: -0.95, y: 0.1, z: -0.7}, {x: 0.95, y: 1.2, z: 0.7}, [mat, 'steelDark', mat, mat, mat, mat]);
+  const lid = xfMesh(box({x: -0.95, y: 0, z: 0}, {x: 0.95, y: 0.06, z: 1.4}, 'steelDark'), {pitch: -48, pos: {x: 0, y: 1.2, z: -0.7}});
+  const m = merge(bin, lid);
+  m.crease = 30;
+  return m;
+};
+/** A newspaper / mail box knocked over (small, generic). */
+export const boxBin = (mat: string): Mesh => {
+  const m = box({x: -0.3, y: 0, z: -0.25}, {x: 0.3, y: 1.1, z: 0.25}, [mat, 'steelDark', mat, mat, mat, mat]);
+  m.crease = 30;
+  return m;
+};
+/** A fire hydrant (short, squat). */
+export const hydrantMesh = (): Mesh => {
+  const m = merge(cylinder(0.16, 0.7, 8, 'carRed', 'carRed'), xfMesh(cylinder(0.08, 0.32, 6, 'carRed', 'carRed', -0.16), {roll: 90, pos: {x: 0, y: 0.45, z: 0}}));
+  m.crease = 40;
   return m;
 };
 
@@ -226,7 +283,8 @@ export const busMesh = (): Mesh => {
   const body = prismX([{z: -L / 2, y: 0.4}, {z: -L / 2, y: H - 0.2}, {z: -L / 2 + 0.4, y: H}, {z: L / 2 - 0.3, y: H - 0.3}, {z: L / 2, y: H - 0.5}, {z: L / 2, y: 0.4}], -W, W, 'bus', 'bus',
     [winOv(-W - 0.01).map((o) => ({...o, polys: o.polys?.map((P) => P.slice().reverse()), pts: o.pts?.slice().reverse()})), winOv(W + 0.01)]);
   const wheel = (x: number, z: number) => xfMesh(cylinder(0.5, 0.3, 10, 'tire', 'steelDark', -0.15), {roll: 90, pos: {x, y: 0.5, z}});
-  const m = merge(body, wheel(-W + 0.1, -L / 2 + 2.2), wheel(W - 0.1, -L / 2 + 2.2), wheel(-W + 0.1, L / 2 - 2.6), wheel(W - 0.1, L / 2 - 2.6));
+  // (R3) the 12 m sides cut into ≤ 2.5 m strips: units standing by the bus sort against the part beside them
+  const m = merge(splitPlanar(body, 2.5, {x: 0, y: 0, z: 1}), wheel(-W + 0.1, -L / 2 + 2.2), wheel(W - 0.1, -L / 2 + 2.2), wheel(-W + 0.1, L / 2 - 2.6), wheel(W - 0.1, L / 2 - 2.6));
   m.crease = 28;
   return m;
 };
@@ -239,7 +297,7 @@ export const GIRDER = (() => {
   const up = cross3(f, side);
   return {a, b, f, side, up, len: len3(sub3(b, a)), width: 5.2, depth: 3.1};
 })();
-const buildGirder = (): Mesh => {
+const buildGirder = (whole = false): Mesh => {
   const {a, f, side, up, len, width, depth} = GIRDER;
   const P = (s: number, l: number, u: number) => add3(add3(add3(a, mul3(f, s)), mul3(side, l)), mul3(up, u));
   const parts: Mesh[] = [];
@@ -256,16 +314,31 @@ const buildGirder = (): Mesh => {
   // deck: cross beams and two rails with ties (the elevated track)
   for (let i = 0; i <= panels * 2; i++) parts.push(beam(P((i * pl) / 2, -width / 2, depth + 0.3), P((i * pl) / 2, width / 2, depth + 0.3), 0.28, 0.22, 'steelDark', f));
   for (const l of [-0.75, 0.75]) parts.push(beam(P(0, l, depth + 0.55), P(len, l, depth + 0.55), 0.12, 0.18, 'steel', up));
-  const m = merge(...parts);
+  // (R3) the chords and rails are 46 m single faces: cut into ≤ 2 m strips so a unit slumped under one end, a tethered
+  // leg or the Crew behind the truss sort against the part of the truss next to them, not its middle
+  const m = whole ? merge(...parts) : splitLong(merge(...parts), 2.0);
   m.crease = 30;
   return m;
 };
-let GIR: Prepped | null = null;
+let GIR: Prepped | null = null, GIR_FAR: Prepped | null = null;
 export const girderMesh = () => (GIR ??= prep(buildGirder()));
+/** the girder unsplit (for distant views, where sorting next to it is moot and the strips only cost) */
+export const girderMeshFar = () => (GIR_FAR ??= prep(buildGirder(true)));
+/** A cheap distant vehicle: body and cabin only (no wheels, no strips). */
+export const vehicleFar = (kind: 'car' | 'truck', mat: string, burnt = false): Mesh => {
+  if (kind === 'truck') {
+    const m = merge(box({x: -1.25, y: 0.55, z: -3.8}, {x: 1.25, y: 2.6, z: -1.8}, burnt ? 'burnt' : 'carGrey'), box({x: -1.25, y: 0.7, z: -1.7}, {x: 1.25, y: 3.4, z: 3.8}, burnt ? 'burnt' : 'van'));
+    m.crease = 28;
+    return m;
+  }
+  const m = merge(box({x: -0.88, y: 0.32, z: -2.3}, {x: 0.88, y: 0.9, z: 2.25}, burnt ? 'burnt' : mat), box({x: -0.78, y: 0.9, z: -0.8}, {x: 0.78, y: 1.45, z: 1.2}, burnt ? 'burnt' : 'window'));
+  m.crease = 28;
+  return m;
+};
 /** The surviving column the girder's raised end rests on, and two more columns of the old line further east. */
 export const columnMeshes = (): Prepped[] => [
   prep(box({x: PLAN.girder.to.x - 0.6, y: 0, z: PLAN.girder.to.z - 0.6}, {x: PLAN.girder.to.x + 0.6, y: PLAN.girder.to.y - 0.2, z: PLAN.girder.to.z + 0.6}, 'girder')),
-  prep(merge(box({x: 104.4, y: 0, z: -11.6}, {x: 105.6, y: 9.5, z: -10.4}, 'girder'), beam({x: 105, y: 9.5, z: -11}, {x: 112, y: 10.4, z: -6}, 0.5, 0.6, 'girderRust'))),
+  prep(splitLong(merge(box({x: 104.4, y: 0, z: -11.6}, {x: 105.6, y: 9.5, z: -10.4}, 'girder'), beam({x: 105, y: 9.5, z: -11}, {x: 112, y: 10.4, z: -6}, 0.5, 0.6, 'girderRust')), 2.0)),
   prep(box({x: 140.4, y: 0, z: -11.6}, {x: 141.6, y: 7.2, z: -10.4}, 'girder')),
 ];
 

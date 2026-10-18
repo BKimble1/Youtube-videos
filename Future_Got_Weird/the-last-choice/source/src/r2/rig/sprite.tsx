@@ -2,10 +2,11 @@
 // a depth-sorted sprite with the camera's yaw/pitch, perspective scale, the scene's sun/rim/fire/haze, and hand/foot
 // targets given in WORLD coordinates (a machine's arm, another person's wrist, a knob, planted footholds).
 import React from 'react';
-import {V3, add3, sub3, mul3, dot3, norm3, cross3, rad, clamp, lerp3} from '../../kit/math';
+import {V3, add3, sub3, mul3, dot3, norm3, cross3, rad, clamp, lerp, lerp3} from '../../kit/math';
 import {View, figureView, project, SpriteItem, SpriteCtx} from '../engine';
 import {Figure, FigProps, FigLight, figureParts, solve2, Rig2, Loc, ArmT, LegT, THIGH, SHIN} from './figure';
 import {Look} from './looks';
+import {gazeLook} from './faces';
 import {mix, hex} from '../engine/color';
 
 export type FigFrame = {
@@ -56,6 +57,14 @@ const figFrameAt = (view: View, pos: V3, heading: number, anchor: V3): FigFrame 
 export const worldToRig = (F: FigFrame, p: V3): V3 => {
   const d = sub3(p, F.pos);
   return {x: F.x + dot3(d, F.Rh) * F.k, y: F.y - d.y * F.k, z: dot3(d, F.Ch) * F.k};
+};
+/** World point → the rig's DRAWN frame (after the camera pitch and the screen rotation): where solve2 puts body points. */
+export const worldToDrawn = (F: FigFrame, p: V3): V3 => {
+  const q = worldToRig(F, p);
+  const ph = rad(F.pitch), cph = Math.cos(ph), sph = Math.sin(ph), rr = rad(F.rot), cr = Math.cos(rr), sr = Math.sin(rr);
+  const vx = q.x - F.x, vy = q.y - F.y, vz = q.z;
+  const y1 = vy * cph + vz * sph, z1 = -vy * sph + vz * cph;
+  return {x: F.x + vx * cr - y1 * sr, y: F.y + vx * sr + y1 * cr, z: z1};
 };
 /** A world DIRECTION → the rig's unpitched drawing frame (x screen right, y down, z toward the camera). */
 export const dirToRig = (F: FigFrame, d: V3): V3 => ({x: dot3(d, F.Rh), y: -d.y, z: dot3(d, F.Ch)});
@@ -122,6 +131,9 @@ export type FigSpec = {
   reach?: boolean;
   /** perspective anchor (world): the rig's single scale is taken here instead of at the feet (see figFrame) */
   anchor?: V3;
+  /** the eyes look at this world point (sets the face's lookX/lookY from the solved head; faces.ts gazeLook), blended
+   *  over the pose's own look by gazeW (default 1). The head does not turn: set pose.head for that. */
+  gaze?: V3; gazeW?: number;
 };
 
 // a world target overrides the pose's limb target at full weight (a pose's `w` only fades its own local targets)
@@ -158,6 +170,11 @@ export const figProps = (view: View, spec: FigSpec, F?: FigFrame): {F: FigFrame;
       if (hz * hz + dy * dy > reach * reach) need = Math.max(need, dy - Math.sqrt(Math.max(0, reach * reach - hz * hz)));
     });
     if (need > 0.002) props.drop = (props.drop ?? 0) + need * 251.4;
+  }
+  if (spec.gaze && (spec.gazeW ?? 1) > 0) {
+    const lk = gazeLook(solve2(props), worldToDrawn(Fr, spec.gaze));
+    const w = clamp(spec.gazeW ?? 1), f0 = props.face ?? {};
+    props.face = {...f0, lookX: lerp(f0.lookX ?? 0, lk.lookX ?? 0, w), lookY: lerp(f0.lookY ?? 0, lk.lookY ?? 0, w)};
   }
   return {F: Fr, props};
 };

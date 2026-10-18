@@ -1,24 +1,29 @@
-// Section D1 shots (film seconds). See production/R2_SHOT_LIST.md. Sound cues live in ./cues.ts (pure data, no React).
-// One battle (crew.tsx: the Crew; machines.ts: the machines; fx.tsx: contacts) sampled by every camera, so positions,
-// damage and the dented plate hold across the cuts.
+// Section D1 shots (film seconds). Sound cues live in ./cues.ts (pure data, no React). One battle (crew.tsx: the Crew;
+// machines.ts: the machines; chor.ts: the shared timeline; fx.tsx: contacts) sampled by every camera, so positions,
+// damage and the dented plate hold across the cuts. Exchange sheet: production/R3_EXCHANGES.md ## D1.
 import type {R2Shot} from '../../film/registry';
 import {M} from '../../timing';
-import {D1_1, D1_2} from './Charge';
-import {D1_3, D1_4a, D1_4b, D1_4c, D1_4d} from './Clash';
-import {D1_5, D1_6, D1_7, D1_8} from './Breach';
-import {D1_9} from './Gain';
+import {D1_1, D1_2, D1_2b} from './Charge';
+import {D1_3, D1_3b, D1_4a, D1_4b, D1_4c, D1_4d} from './Clash';
+import {D1_5, D1_6, D1_7, D1_7b} from './Rescue';
+import {D1_8} from './Breach';
+import {D1_9a, D1_9b} from './Gain';
 
 export const SHOTS_D1: R2Shot[] = [
   {id: 'D1-1', sec: 'D1', start: M.CHARGE, end: 64.0, note: 'CHARGE: they run down the ridge diagonally past a low camera at its south-east foot', C: D1_1},
-  {id: 'D1-2', sec: 'D1', start: 64.0, end: M.CLASH, note: 'tracking alongside the Director across the avenue; the front line comes over the rim; the lines converge', C: D1_2},
-  {id: 'D1-3', sec: 'D1', start: M.CLASH, end: 72.0, note: 'CLASH: low and close from the south-south-west, his plate slams into the first unit, which staggers into the next; the camera cranes back as everyone engages', C: D1_3},
-  {id: 'D1-4a', sec: 'D1', start: 72.0, end: 74.0, note: 'the breaker breaks a knee joint; sparks; the unit drops to a knee', C: D1_4a},
-  {id: 'D1-4b', sec: 'D1', start: 74.0, end: 75.8, note: 'the tether yanks one off balance', C: D1_4b},
-  {id: 'D1-4c', sec: 'D1', start: 75.8, end: 77.2, note: 'the runner pries a back plate and rips the cables', C: D1_4c},
-  {id: 'D1-4d', sec: 'D1', start: 77.2, end: M.BR1, note: 'a flare blinds an eye (the drone harry moves to D2)', C: D1_4d},
-  {id: 'D1-5', sec: 'D1', start: M.BR1, end: M.BR2, note: 'BR1: a unit winds up and swings; the plate blocks and dents; he skids back on his heels', C: D1_5},
-  {id: 'D1-6', sec: 'D1', start: M.BR2, end: M.BR3, note: 'BR2: the breaker smashes its chest plate; armour flies; the unit reels', C: D1_6},
-  {id: 'D1-7', sec: 'D1', start: M.BR3, end: M.BR4, note: 'BR3: the tether swings the toppling unit into the next; they crash together', C: D1_7},
-  {id: 'D1-8', sec: 'D1', start: M.BR4, end: M.GAIN1, note: 'BR4: low behind him: gather, burst, shoulder drive up the rim; it goes over the crest and slides down the inner slope; the gap opens on the crater', C: D1_8},
-  {id: 'D1-9', sec: 'D1', start: M.GAIN1, end: M.P2, note: 'GAIN/BREATH: they push through to a fractured slab on the rim; looks pass; he pants, the plate dented', C: D1_9},
+  {id: 'D1-2', sec: 'D1', start: 64.0, end: 66.5, note: 'tracking alongside the Director across the avenue; the front line comes over the rim', C: D1_2},
+  {id: 'D1-2b', sec: 'D1', start: 66.5, end: M.CLASH, note: 'over his shoulder: U1 picks him, lowers into its last strides and raises its arm — the machines strike first', C: D1_2b},
+  {id: 'D1-3', sec: 'D1', start: M.CLASH, end: 70.3, note: 'CLASH: U1\'s running hammer on the plate (heavy block, he skids); its punch parried; his bash sends it back into U3', C: D1_3},
+  {id: 'D1-3b', sec: 'D1', start: 70.3, end: 72.0, note: 'the line, ranked: U4\'s hammer taken on the breaker\'s shaft; U2\'s hammer on the runner\'s bar; U5 at the tether operator', C: D1_3b},
+  {id: 'D1-4a', sec: 'D1', start: 72.0, end: 73.3, note: 'the breaker ducks U4\'s punch and breaks its knee; on its knee it catches his tool', C: D1_4a},
+  {id: 'D1-4b', sec: 'D1', start: 73.3, end: 74.9, note: 'U5 goes for the runner\'s back: the tether pulls its leg out', C: D1_4b},
+  {id: 'D1-4c', sec: 'D1', start: 74.9, end: 76.4, note: 'the tug; the allied drone dives into U4\'s face; it lets go; the breaker\'s blow on its neck', C: D1_4c},
+  {id: 'D1-4d', sec: 'D1', start: 76.4, end: 77.45, note: 'U6 goes for the soft targets: the flare carrier puts a flare in its eye', C: D1_4d},
+  {id: 'D1-5', sec: 'D1', start: 77.45, end: 79.7, note: 'RESCUE threat/defense: U1 jab, BR1 hammer on the plate (dent, skid) — it follows and presses; U2 drives the runner down', C: D1_5},
+  {id: 'D1-6', sec: 'D1', start: 79.7, end: 81.9, note: 'RESCUE intervention: the shove, the wind-up; the Director ducks left; BR2 the breaker\'s ram tears its forearm off', C: D1_6},
+  {id: 'D1-7', sec: 'D1', start: 81.9, end: 83.9, note: 'RESCUE counter/consequence: it catches the tool; his plate in its knee; BR3 the ram in its chest drives it into U2', C: D1_7},
+  {id: 'D1-7b', sec: 'D1', start: 83.9, end: M.BR4, note: 'RESCUE continuation: U3 comes out of the gap; they move to meet it', C: D1_7b},
+  {id: 'D1-8', sec: 'D1', start: M.BR4, end: M.GAIN1, note: 'BR4: inside U3\'s hammer, the shoulder drive up the rim; it goes over the crest into the crater; the gap opens', C: D1_8},
+  {id: 'D1-9a', sec: 'D1', start: M.GAIN1, end: 91.5, note: 'GAIN: the survivors pulled back across the bowl; a drone comes; he waves them on; the run for the slab', C: D1_9a},
+  {id: 'D1-9b', sec: 'D1', start: 91.5, end: M.P2, note: 'BREATH under pressure: down behind the slab as the drone\'s beam sweeps its top; looks pass; his signal', C: D1_9b},
 ];

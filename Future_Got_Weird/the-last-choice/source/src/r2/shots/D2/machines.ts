@@ -154,16 +154,7 @@ const run = (pl: Plan, T: number): UnitSpec => {
     sp = {id: pl.id, t: T, ground, idle: 0.3, key: pl.key, ...ph.at(T)};
   }
   sp = {...sp, ...act, lean: (sp.lean ?? 0) + (act.lean ?? 0), crouch: (sp.crouch ?? 0) + (act.crouch ?? 0)};
-  // the kit's hit stagger holds at 60 % and drops out 1.2 s after the blow (a pop of up to 0.17 m): carry that remainder
-  // on the root instead and let it settle over the next 0.5 s (as D1)
-  for (const h of sp.hits ?? []) {
-    const u = T - h.t0;
-    if (u <= 1.2 || u > 1.7) continue;
-    const k = 0.108 * h.strength * (1 - smooth((u - 1.2) / 0.5));
-    const l = Math.hypot(h.dir.x, h.dir.z) || 1;
-    sp.pos = {x: sp.pos.x + (h.dir.x / l) * k, y: sp.pos.y, z: sp.pos.z + (h.dir.z / l) * k};
-    sp.crouch = (sp.crouch ?? 0) + k * 0.6;
-  }
+  // (R3: the kit's hit stagger now eases out to zero by 1.7 s itself — the local carry of its remainder is gone)
   // on the rim's slopes a planted foot can sit well below the pelvis's ground: crouch enough to keep it in reach
   const f = sp.feet ?? {};
   if (!sp.gait) {
