@@ -587,7 +587,7 @@ A_PLAN.act = (T) => {
 };
 
 // ================================================================== C (reserve R2): along the girder; round the pipe's end
-const C_IN: Walk = {kind: 'walk', pts: [{x: 81.0, z: -10.53}, {x: 75.2, z: -9.3}, {x: 72.6, z: -8.6}, {x: 69.6, z: -8.75}, {x: 66.0, z: -9.4}, {x: 58.6, z: -9.1}], T0: 96.35, T1: 101.8, stride: 2.0, A: 1.0, D: 0.8};
+const C_IN: Walk = {kind: 'walk', pts: [{x: 81.0, z: -10.53}, {x: 76.4, z: -9.2}, {x: 74.0, z: -7.5}, {x: 70.4, z: -7.2}, {x: 66.0, z: -8.6}, {x: 58.6, z: -9.1}], T0: 96.35, T1: 101.8, stride: 2.0, A: 1.0, D: 0.8};
 const C_HOLD = {x: 58.6, z: -9.1};
 /** C's walk west along the girder's south side, round the pipe's end, at the tether operator: through cHit at the sweep
  *  (it arrives at speed; the drag takes it from there) */

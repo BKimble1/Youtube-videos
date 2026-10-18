@@ -240,19 +240,19 @@ export const DIR_END = {x: 50.25, z: -7.7};
 const DIR_RUN: XZ[] = [{x: D0.x - 0.05, z: D0.z - 0.1}, {x: 45.7, z: 1.95}, {x: 45.9, z: 0.0}, {x: 46.55, z: -1.7}, {x: 47.05, z: -3.2}, {x: 49.4, z: -5.15}, {x: 52.05, z: -5.15}, DIR_BASH];
 const dirBashH = headingTo(DIR_RUN[DIR_RUN.length - 2], DIR_BASH);
 const bk = (p: XZ, h: number, d: number): XZ => { const f = fwdOf(h); return {x: p.x - f.x * d, z: p.z - f.z * d}; };
-const DIR_B1 = bk(DIR_BASH, dirBashH, 0.12), DIR_B2 = bk(DIR_BASH, dirBashH, 0.5), DIR_B3 = bk(DIR_BASH, dirBashH, 1.05);
+// the hammer drives him back a step; A's press walks him back north, away from the runner's pry (off its sightline)
+const DIR_B1 = bk(DIR_BASH, dirBashH, 0.12), DIR_B2 = {x: 53.5, z: -4.15}, DIR_B3 = {x: 53.72, z: -4.7};
 const DIR_SEGS: Seg[] = [
   // kneeling (D1's BREATH); up into a crouch facing the slab, plate up, as the drone's beam comes back
   {kind: 'stand', root: [[94.3, D0.x, D0.z, 270], [96.1, D0.x, D0.z, 270], [96.75, D0.x, D0.z, 95], [99.0, D0.x, D0.z, 95], [99.32, D0.x - 0.05, D0.z - 0.1, headingTo(DIR_RUN[0], DIR_RUN[1])]], stag: 0.14},
   {kind: 'run', path: DIR_RUN, T0: 99.34, T1: 102.74, gait: GAITS.dir, A: 0.6, D: 0.22},
   {kind: 'stand', stag: 0.18, root: [[102.74, DIR_BASH.x, DIR_BASH.z, dirBashH], [EV2.block, DIR_BASH.x, DIR_BASH.z, dirBashH], [EV2.block + 0.16, DIR_B1.x, DIR_B1.z, dirBashH],
-    [EV2.aHam, DIR_B1.x, DIR_B1.z, dirBashH], [EV2.aHam + 0.2, DIR_B2.x, DIR_B2.z, dirBashH - 4], [EV2.press0 + 0.15, DIR_B2.x, DIR_B2.z, dirBashH - 4], [EV2.press1 + 0.05, DIR_B3.x, DIR_B3.z, dirBashH - 8],
+    [EV2.aHam, DIR_B1.x, DIR_B1.z, dirBashH], [EV2.aHam + 0.2, DIR_B2.x, DIR_B2.z, 160], [EV2.press0 + 0.15, DIR_B2.x, DIR_B2.z, 162], [EV2.press1 + 0.05, DIR_B3.x, DIR_B3.z, 176],
     // the hook: he ducks under it and goes down on a knee on the slope; up again (then round A's back as it turns on
     // the downed breaker)
-    [105.2, DIR_B3.x, DIR_B3.z, dirBashH - 8], [105.42, DIR_B3.x, DIR_B3.z, 0]]},
-  {kind: 'run', path: [DIR_B3, {x: 53.2, z: -4.55}, DIR_BACK], T0: 105.44, T1: 106.12, gait: GAITS.hurry, A: 0.3, D: 0.35},
-  // his plate wound back at A's back as the clamp bites (A is hauled out of his reach); round after it
-  {kind: 'stand', stag: 0.18, root: [[106.12, DIR_BACK.x, DIR_BACK.z, 0], [106.4, DIR_BACK.x, DIR_BACK.z, 222], [107.5, DIR_BACK.x, DIR_BACK.z, 222],
+    // up again and round to A's back (north-east of it) as it turns on the downed breaker; his plate wound back as the
+    // clamp bites (A is hauled out of his reach); round after it
+    [105.2, DIR_B3.x, DIR_B3.z, 176], [105.42, DIR_B3.x, DIR_B3.z, 190], [106.0, DIR_BACK.x, DIR_BACK.z, 222], [107.5, DIR_BACK.x, DIR_BACK.z, 222],
     [107.85, DIR_BACK.x - 0.03, DIR_BACK.z - 0.05, 330]]},
   // after A as the reel drags it up the slope (a body's width off its line), to the wreck pile under the girder
   {kind: 'run', path: [DIR_BACK, {x: 53.0, z: -5.1}, {x: 51.9, z: -6.6}, DIR_PILE], T0: 107.88, T1: 109.6, gait: GAITS.dir, A: 0.45, D: 0.6},
@@ -263,7 +263,7 @@ const DIR_SEGS: Seg[] = [
     [115.25, DIR_COUNTER.x - 0.1, DIR_COUNTER.z + 0.08, 224], [115.95, DIR_END.x, DIR_END.z, 100], [116.92, DIR_END.x, DIR_END.z, 95]]},
 ];
 (() => {
-  const ru = DIR_SEGS[7] as Extract<Seg, {kind: 'run'}>, st = DIR_SEGS[8] as Extract<Seg, {kind: 'stand'}>, pl = DIR_SEGS[6] as Extract<Seg, {kind: 'stand'}>;
+  const ru = DIR_SEGS[5] as Extract<Seg, {kind: 'run'}>, st = DIR_SEGS[6] as Extract<Seg, {kind: 'stand'}>, pl = DIR_SEGS[4] as Extract<Seg, {kind: 'stand'}>;
   const hRun = headingTo(ru.path[ru.path.length - 2], DIR_COUNTER);
   pl.root[3][3] = headingTo(DIR_PILE, ru.path[1]);
   st.root[0][3] = hRun; st.root[1][3] = hRun; st.root[2][3] = hRun;
@@ -370,15 +370,17 @@ export const BRK_AT = {x: 53.05, z: -1.75};
 /** shoved back and down onto a knee */
 const BRK_DOWN = {x: 52.45, z: -1.05};
 const BRK_CREST = {x: 48.3, z: -5.1};
+/** the end of his run in, at A (his swing's wind-up starts as he plants) */
+const BRK_ARRIVE = 104.68;
 export const BRK_CATCH = {x: 48.75, z: -7.05};
 const BRK_RUN: XZ[] = [BRK_COVER, {x: 46.05, z: 6.55}, {x: 45.75, z: 4.6}, {x: 45.8, z: 1.6}, {x: 46.3, z: -0.45}, {x: 48.35, z: -0.55}, {x: 50.7, z: -1.2}, BRK_AT];
 const BRK_SEGS: Seg[] = [
   {kind: 'stand', root: [[94.3, K0.x, K0.z, 270], [95.55, K0.x, K0.z, 270], [95.72, K0.x - 0.05, K0.z + 0.05, 230]]},
   {kind: 'run', path: [{x: K0.x - 0.05, z: K0.z + 0.05}, {x: 45.95, z: 4.4}, {x: 45.8, z: 6.1}, {x: 46.3, z: 7.15}, BRK_COVER], T0: 95.75, T1: 97.05, gait: GAITS.hurry, A: 0.3, D: 0.35},
   {kind: 'stand', stag: 0.2, root: [[97.05, BRK_COVER.x, BRK_COVER.z, 100], [97.4, BRK_COVER.x, BRK_COVER.z, 112], [EV2.brkGo - 0.45, BRK_COVER.x, BRK_COVER.z, 112], [EV2.brkGo, BRK_COVER.x - 0.05, BRK_COVER.z - 0.05, headingTo(BRK_COVER, BRK_RUN[1])]]},
-  {kind: 'run', path: BRK_RUN, T0: EV2.brkGo + 0.02, T1: 104.55, gait: GAITS.heavy, A: 0.7, D: 0.35},
+  {kind: 'run', path: BRK_RUN, T0: EV2.brkGo + 0.02, T1: BRK_ARRIVE, gait: GAITS.heavy, A: 0.7, D: 0.35},
   // the swing (A parries it), the shove: back and down on one knee
-  {kind: 'stand', stag: 0.2, root: [[104.55, BRK_AT.x, BRK_AT.z, 0], [104.72, BRK_AT.x, BRK_AT.z, 0], [EV2.aShove, BRK_AT.x, BRK_AT.z, 0], [EV2.aShove + 0.3, BRK_DOWN.x, BRK_DOWN.z, 0], [106.5, BRK_DOWN.x, BRK_DOWN.z, 0],
+  {kind: 'stand', stag: 0.2, root: [[BRK_ARRIVE, BRK_AT.x, BRK_AT.z, 0], [BRK_ARRIVE + 0.12, BRK_AT.x, BRK_AT.z, 0], [EV2.aShove, BRK_AT.x, BRK_AT.z, 0], [EV2.aShove + 0.3, BRK_DOWN.x, BRK_DOWN.z, 0], [106.5, BRK_DOWN.x, BRK_DOWN.z, 0],
     [107.05, BRK_DOWN.x + 0.05, BRK_DOWN.z, 255]]},
   {kind: 'run', path: [BRK_DOWN, {x: 51.4, z: -0.4}, {x: 50.2, z: -0.95}, {x: 49.3, z: -3.3}, BRK_CREST], T0: 107.15, T1: 109.0, gait: GAITS.heavy, A: 0.5, D: 0.5},
   {kind: 'stand', stag: 0.14, root: [[109.0, BRK_CREST.x, BRK_CREST.z, 150], [109.45, BRK_CREST.x, BRK_CREST.z, 150], [110.15, BRK_CATCH.x, BRK_CATCH.z, 128], [110.62, BRK_CATCH.x, BRK_CATCH.z, 128],
@@ -448,8 +450,8 @@ const BRK_FACE: [number, Face][] = [
 /** his body and tool only (no machine look-ups): what A aims at */
 const brkCore = (T: number) => {
   const b = bodyAt(BRK_SEGS, T);
-  const swing = T > 104.55 && T < 105.42;
-  const k = swing ? swingK(T, 104.6, EV2.brkSwing, 105.42) : 0;
+  const swing = T > BRK_ARRIVE && T < 105.42;
+  const k = swing ? swingK(T, BRK_ARRIVE + 0.03, EV2.brkSwing, 105.42) : 0;
   const hands = swing ? swingHands(b, BRK_SWING_TO, k) : null;
   let port = {front: fromLoc(b, {r: -16, u: 250, f: 118}), back: fromLoc(b, {r: 32, u: 205, f: 34})};
   // from his knees: up with the tool off the ground (the grips rise into the low port over 0.45 s)

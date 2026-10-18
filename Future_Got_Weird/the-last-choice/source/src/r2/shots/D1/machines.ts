@@ -38,6 +38,8 @@ import {EV, stepFeet, lastXZ, dirRoot, plateAim, dirHeadAim, runHeadAim, runRoot
 export {EV};
 const ground = G;
 const lerp3s = (a: V3, b: V3, k: number): V3 => ({x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), z: lerp(a.z, b.z, k)});
+/** quadratic Bézier a → (c) → b */
+const bez = (a: V3, c: V3, b: V3, k: number): V3 => lerp3s(lerp3s(a, c, k), lerp3s(c, b, k), k);
 const RUN_T0 = 57.0; // the front starts its run on C6's build (the system commits)
 export const D1_IDS = {U1: 8101, U2: 8102, U3: 8103, U4: 8104, U5: 8105, U6: 8106, U7: 8107, U8: 8108};
 
@@ -104,7 +106,7 @@ const avoid = (pts: XZ[], clear = 0.62): XZ[] => {
 const lane = (vanId: number, ...rest: XZ[]) => avoid([vanAt(vanId), ...rest]);
 
 // ------------------------------------------------------------------ unit plans
-type Stand = {kind: 'stand'; root: KR[]; skids?: number[]; stag?: number; feet?: {L: KP[]; R: KP[]}};
+type Stand = {kind: 'stand'; root: KR[]; skids?: number[]; stag?: number; feet?: {L: KP[]; R: KP[]}; stepLen?: number};
 type Walk = {kind: 'walk'; pts: XZ[]; T0: number; T1: number; stride?: number; A?: number; D?: number};
 type Phase = Stand | Walk;
 type Plan = {
@@ -161,11 +163,40 @@ const feetOf = (pl: Plan, i: number): {L: KP[]; R: KP[]} => {
     let init: {L: XZ; R: XZ};
     if (prev && prev.kind === 'stand') { const pf = feetOf(pl, i - 1); init = {L: lastXZ(pf.L), R: lastXZ(pf.R)}; }
     else { const e = endOf(pl, i - 1); init = standFeet(e.p, e.h); }
-    f = stepFeet(ph.root, {half: HIPW + 0.04, stepLen: 0.55, stag: ph.stag ?? -0.04, skids: ph.skids, init});
+    f = stepFeet(ph.root, {half: HIPW + 0.04, stepLen: ph.stepLen ?? 0.55, stag: ph.stag ?? -0.04, skids: ph.skids, init});
   }
   FEET.set(ph, f);
   return f;
 };
+
+/** the charge's gait at T (feet blended to standing at the run's ends, its crouch before the act's, the leg room) */
+const laneGait = (pl: Plan, T: number) => {
+  const W = warpOf(pl), Ls = W.Ls;
+  const dist = runDist(T, pl.T0, pl.T1, Ls, 1.2, 0.75);
+  const v = runSpeed(T, pl.T0, pl.T1, Ls, 1.2, 0.75);
+  const k = clamp(v / cruise(pl.T0, pl.T1, Ls, 1.2, 0.75));
+  const stride = pl.stride ?? 2.3, lift = pl.walk ? 0.12 : 0.16 + 0.1 * k;
+  const sl = clamp(W.slope(dist), -1, 1); // + = climbing
+  // the feet (the kit's gait math, swing kept clear of the rim) blended to standing at the run's ends
+  const wk = smooth(dist / 0.6) * (1 - smooth((dist - (Ls - 0.6)) / 0.6));
+  const at = W.path(dist), fw = fwdOf(at.heading), rt = rightOf(at.heading);
+  const foot = (sd: -1 | 1, phase: number) => {
+    const f = gaitFoot(W.path, dist, phase, stride, 0.55, sd * (HIPW + 0.02), lift);
+    const bx = at.pos.x + rt.x * sd * (HIPW + 0.04) + fw.x * sd * 0.04, bz = at.pos.z + rt.z * sd * (HIPW + 0.04) + fw.z * sd * 0.04;
+    return {p: lerp3s({x: bx, y: G(bx, bz), z: bz}, f, wk), pitch: (f.stance ? 0 : Math.sin(Math.PI * f.s) * -12) * wk};
+  };
+  const fl = foot(-1, 0), fr = foot(1, 0.5);
+  const crouch0 = (pl.walk ? 0.05 + 0.06 * k : 0.05 + 0.2 * k) + 0.12 * Math.abs(sl) * wk;
+  const gy = G(at.pos.x, at.pos.z);
+  /** hip-to-ankle slack (m) of a foot at crouch c beyond LEG_MIN (< 0: the leg would fold) */
+  const room = (q: V3, sd: -1 | 1, c: number) => {
+    const hx = at.pos.x + rt.x * sd * HIPW, hz = at.pos.z + rt.z * sd * HIPW;
+    const dh = Math.hypot(q.x - hx, q.z - hz);
+    return gy + HIP_Y - c - (q.y + ANKLE) - Math.sqrt(Math.max(0, LEG_MIN * LEG_MIN - dh * dh));
+  };
+  return {W, dist, k, stride, lift, sl, wk, at, fl, fr, crouch0, room};
+};
+const LCAP = new Map<number, Map<number, number>>();
 
 const run = (pl: Plan, T: number, nested = false): UnitSpec => {
   const L = pathLen(pl.lane);
@@ -174,26 +205,34 @@ const run = (pl: Plan, T: number, nested = false): UnitSpec => {
   const base: UnitSpec = {id: pl.id, t: T, pos: end.pos, heading: end.heading, ground, idle: 0.55, key: `d1u${pl.id}`};
   const act: Partial<UnitSpec> = pl.act ? pl.act(T) : {};
   if (T < pl.T1) {
-    const W = warpOf(pl), Ls = W.Ls;
-    const dist = runDist(T, pl.T0, pl.T1, Ls, 1.2, 0.75);
-    const v = runSpeed(T, pl.T0, pl.T1, Ls, 1.2, 0.75);
-    const k = clamp(v / cruise(pl.T0, pl.T1, Ls, 1.2, 0.75));
-    const stride = pl.stride ?? 2.3, lift = pl.walk ? 0.12 : 0.16 + 0.1 * k;
-    const sl = clamp(W.slope(dist), -1, 1); // + = climbing
-    // the feet (the kit's gait math, swing kept clear of the rim) blended to standing at the run's ends
-    const wk = smooth(dist / 0.6) * (1 - smooth((dist - (Ls - 0.6)) / 0.6));
-    const at = W.path(dist), fw = fwdOf(at.heading), rt = rightOf(at.heading);
-    const foot = (sd: -1 | 1, phase: number) => {
-      const f = gaitFoot(W.path, dist, phase, stride, 0.55, sd * (HIPW + 0.02), lift);
-      const bx = at.pos.x + rt.x * sd * (HIPW + 0.04) + fw.x * sd * 0.04, bz = at.pos.z + rt.z * sd * (HIPW + 0.04) + fw.z * sd * 0.04;
-      return {p: lerp3s({x: bx, y: G(bx, bz), z: bz}, f, wk), pitch: (f.stance ? 0 : Math.sin(Math.PI * f.s) * -12) * wk};
-    };
-    const fl = foot(-1, 0), fr = foot(1, 0.5);
+    const g = laneGait(pl, T);
+    const {W, dist, k, stride, lift, sl, wk, fl, fr} = g;
+    // climbing: a deeper crouch (the downhill foot stays in reach) and a lean into the slope — but over the crest the
+    // trailing foot is up on the rim beside a low hip: never so deep that a leg folds up (hip to ankle ≥ LEG_MIN). The
+    // allowance is eased in time (a soft minimum over ±0.4 s, cached on a 1/40 s grid) so the hip does not jump with
+    // each step; a swinging foot that still has no room is carried lower (not under the ground)
+    let crouch = g.crouch0 + (act.crouch ?? 0);
+    if (!nested) {
+      const R = 0.4, DT = 0.025, K = 0.5;
+      let C = LCAP.get(pl.id);
+      if (!C) LCAP.set(pl.id, (C = new Map()));
+      let cap = 9;
+      for (let i = Math.ceil((T - R) / DT); i * DT < T + R; i++) {
+        let v = C.get(i);
+        if (v === undefined) { const q = laneGait(pl, i * DT); v = q.crouch0 + Math.min(q.room(q.fl.p, -1, q.crouch0), q.room(q.fr.p, 1, q.crouch0)); C.set(i, v); }
+        const w = 0.5 * (1 + Math.cos((Math.PI * (i * DT - T)) / R));
+        cap = Math.min(cap, v + K * (1 - w));
+      }
+      crouch = Math.max(0, Math.min(crouch, cap));
+      for (const [q, sd] of [[fl, -1], [fr, 1]] as const) {
+        const r = g.room(q.p, sd, crouch);
+        if (r < 0) q.p = {...q.p, y: Math.max(G(q.p.x, q.p.z) + 0.02, q.p.y + r)};
+      }
+    }
     // (the charge: the act's attack layers ride on the run — a running blow, the eye's lock, the head)
     return {
-      ...base, gait: {path: W.path, dist, stride, lift, start: 0, end: Ls}, feet: {L: fl.p, R: fr.p, pitchL: fl.pitch, pitchR: fr.pitch},
-      // climbing: a deeper crouch (the downhill foot stays in reach) and a lean into the slope
-      crouch: (pl.walk ? 0.05 + 0.06 * k : 0.05 + 0.2 * k) + 0.12 * Math.abs(sl) * wk + (act.crouch ?? 0),
+      ...base, gait: {path: W.path, dist, stride, lift, start: 0, end: W.Ls}, feet: {L: fl.p, R: fr.p, pitchL: fl.pitch, pitchR: fr.pitch},
+      crouch,
       lean: (pl.walk ? 3 + 4 * k : 4 + 11 * k) + clamp(sl * 22, -8, 16) * wk + (act.lean ?? 0),
       lockAt: act.lockAt ?? pl.T0 + 0.4, look: act.look, idle: act.idle ?? base.idle,
       strikes: act.strikes, posture: act.posture,
@@ -240,19 +279,6 @@ const run = (pl: Plan, T: number, nested = false): UnitSpec => {
     sp.crouch = lerp(e.crouch ?? 0, sp.crouch ?? 0, w);
     sp.heading = e.heading + wrapD(sp.heading - e.heading) * w;
   }
-  // hand control faded in and out (armWL / armWR: 0 → the arm's own pose, 1 → the target): no hand snapping
-  // onto a contact or back to the guard in one frame
-  for (const sd of ['L', 'R'] as const) {
-    const key = sd === 'L' ? 'armWL' : 'armWR', arm = sd === 'L' ? 'armL' : 'armR';
-    const w = (act as ArmW)[key];
-    delete (sp as ArmW)[key];
-    if (w === undefined || !sp[arm]) continue;
-    if (w <= 0.001 || nested) { sp[arm] = undefined; continue; }
-    if (w < 0.999) {
-      const free = unitAttach({...sp, [arm]: undefined} as UnitSpec)[sd === 'L' ? 'handL' : 'handR'];
-      sp[arm] = {...sp[arm]!, hand: lerp3s(free, sp[arm]!.hand!, w)};
-    }
-  }
   // on the rim's slopes a planted foot can sit well below the pelvis's ground: crouch enough to keep it in reach
   const needOf = (q: UnitSpec) => {
     const f = q.feet ?? {}, gy = G(q.pos.x, q.pos.z);
@@ -287,11 +313,36 @@ const run = (pl: Plan, T: number, nested = false): UnitSpec => {
       return HIP_Y + (gy - p.y) - ANKLE - Math.sqrt(Math.max(0, LEG_MIN * LEG_MIN - dh * dh));
     }));
   };
-  if (need > (sp.crouch ?? 0)) sp.crouch = Math.max(sp.crouch ?? 0, Math.min(need, capOf(sp)));
+  // (the allowance eased in time like the need: a soft minimum over ±0.4 s on the same grid)
+  let cap = capOf(sp);
+  if (ph && !nested) {
+    const R = 0.4, DT = 0.025, K = 0.5;
+    let C = CAP.get(pl.id);
+    if (!C) CAP.set(pl.id, (C = new Map()));
+    for (let i = Math.ceil((T - R) / DT); i * DT < T + R; i++) {
+      let v = C.get(i);
+      if (v === undefined) { v = capOf(runAt(pl, i * DT, true)); C.set(i, v); }
+      cap = Math.min(cap, v + K * (1 - 0.5 * (1 + Math.cos((Math.PI * (i * DT - T)) / R))));
+    }
+  }
+  if (need > (sp.crouch ?? 0)) sp.crouch = Math.max(sp.crouch ?? 0, Math.min(need, cap));
+  // (last, on the final body) hand control faded in and out (armWL / armWR: 0 → the arm's own pose, 1 → the target): no hand snapping
+  // onto a contact or back to the guard in one frame
+  for (const sd of ['L', 'R'] as const) {
+    const key = sd === 'L' ? 'armWL' : 'armWR', arm = sd === 'L' ? 'armL' : 'armR';
+    const w = (act as ArmW)[key];
+    delete (sp as ArmW)[key];
+    if (w === undefined || !sp[arm]) continue;
+    if (w <= 0.001 || nested) { sp[arm] = undefined; continue; }
+    if (w < 0.999) {
+      const free = unitAttach({...sp, [arm]: undefined} as UnitSpec)[sd === 'L' ? 'handL' : 'handR'];
+      sp[arm] = {...sp[arm]!, hand: lerp3s(free, sp[arm]!.hand!, w)};
+    }
+  }
   return sp;
 };
 const runAt = (pl: Plan, T: number, nested: boolean) => run(pl, T, nested);
-const NEED = new Map<number, Map<number, number>>();
+const NEED = new Map<number, Map<number, number>>(), CAP = new Map<number, Map<number, number>>();
 // the unit's leg (mech parts U): hip 1.05 m above the root's ground when standing, thigh + shin 0.98 (keep a little bend)
 const HIP_Y = 1.05, ANKLE = 0.1, LEG = 0.95, LEG_MIN = 0.58;
 
@@ -334,7 +385,9 @@ export const u1TugTip = (T: number): V3 => relKeys(U1_TUG, U1_GRAB_ROOT.p, U1_GR
 export const u1CatchAt = (T: number): V3 => lerp3s(rel(U1_GRAB_ROOT.p, U1_GRAB_ROOT.h, 0.75, -0.05, 1.12), u1TugTip(EV.grab), smooth(clamp((T - (EV.grab - 0.3)) / 0.3)));
 const U1: Plan = {
   id: D1_IDS.U1, lane: lane(VID.U1, {x: 70, z: 0.6}, {x: 47.6, z: -0.6}, {x: 43.8, z: -0.6}, {x: 42.3, z: -0.6}), T0: RUN_T0 + 0.1, T1: 68.22,
-  phases: [{kind: 'stand', root: U1_KEYS, skids: [EV.br3]}],
+  // (BR3 drives it back on its heels, both feet skidding, all the way into U2)
+  // (longer steps: its reel after the bash is two big stumbling steps per key, not three quick ones)
+  phases: [{kind: 'stand', root: U1_KEYS, skids: [EV.br3, 83.0], stepLen: 0.8}],
   act: (T) => {
     const sh = (t: number, s: Side) => { const r = keyRoot(U1_KEYS, t); return shoulderOf(r.p, r.h, s); };
     const strikes: StrikeSpec[] = [
@@ -360,12 +413,13 @@ const U1: Plan = {
     // it catches the breaker's tool head as he re-cocks and wrenches it across; the knee gives; it lets go
     const cat: CatchSpec[] = [{t0: EV.grab, side: 'R', at: u1CatchAt, hold: u1TugTip, t1: EV.release, wrench: {t0: 82.0, dir: rel({x: 0, z: 0}, U1_GRAB_ROOT.h, 0, 1, 0), dist: 0.12, deg: 22}}];
     // after BR2 the stump is knocked up and back, then drawn in
-    const armL = T >= EV.br2 && T < EV.crash ? {hand: rel(keyRoot(U1_KEYS, T).p, keyRoot(U1_KEYS, T).h, -0.1 - 0.15 * smooth(clamp((T - EV.br2) / 0.5)), -0.55, 1.75 - 0.45 * smooth(clamp((T - EV.br2 - 0.2) / 0.6)))} : undefined;
+    const armL = T >= EV.br2 && T < EV.crash + 0.25 ? {hand: rel(keyRoot(U1_KEYS, T).p, keyRoot(U1_KEYS, T).h, -0.1 - 0.15 * smooth(clamp((T - EV.br2) / 0.5)), -0.55, 1.75 - 0.45 * smooth(clamp((T - EV.br2 - 0.2) / 0.6)))} : undefined;
+    const armWL = smooth(clamp((T - EV.br2) / 0.1)) * (1 - smooth(clamp((T - EV.crash + 0.05) / 0.25)));
     const kneeK = win(T, EV.dirKnee, EV.dirKnee + 0.6, 0.06, 0.35);
     const attend: AttendSpec[] = [{t0: 81.4, at: (t: number) => onP(brkRoot(t).p, 1.55), t1: EV.release, turn: false}];
     const posture: [number, Posture][] = [[67.6, 'guard'], [EV.crash, 'idle']];
     return {
-      strikes, shove: shoves, parry, catch: cat, armL, attend, posture,
+      strikes, shove: shoves, parry, catch: cat, armL, armWL, attend, posture,
       lean: 8 * win(T, EV.press - 0.1, EV.shove + 0.2, 0.15, 0.2) - 10 * win(T, EV.br3, EV.crash + 0.15, 0.05, 0.12),
       crouch: 0.2 * kneeK + 0.06 * win(T, EV.br1 - 0.3, EV.br1 + 0.4, 0.2, 0.25),
       look: T < EV.br2 ? dirHeadAim(T) : undefined,
@@ -501,7 +555,7 @@ const u3Feet = (T: number): {L: V3; R: V3; pitchL: number; pitchR: number} => {
     return at(lerp(x0, x1, smooth(u)), sd, T < BR4.stag ? Math.sin(Math.PI * u) * 0.12 : 0);
   };
   const xr = u3X(BR4.release), xf = u3X(BR4.stag);
-  return {R: step(BR4.release + 0.02, BR4.release + 0.15, xr, xf - 0.04, 1), L: step(BR4.release + 0.12, BR4.stag - 0.02, xr, xf + 0.04, -1), pitchL: 0, pitchR: 0};
+  return {R: step(BR4.release - 0.02, BR4.release + 0.2, xr, xf - 0.04, 1), L: step(BR4.release + 0.1, BR4.stag + 0.04, xr, xf + 0.04, -1), pitchL: 0, pitchR: 0};
 };
 // it holds the gap a step up the rim's west face (scanning the fight); steadies U1 after the bash (two quick steps down
 // and back); comes out of the gap at the Crew once U1 and U2 are down
@@ -516,11 +570,16 @@ const U3: Plan = {
   act: (T) => {
     if (T < 85.0) {
       const steady = win(T, 70.32, 70.95, 0.1, 0.18);
-      const u1 = steady > 0.02 || T < 71 ? unitAttach(unitD1('U1', T)) : null;
+      const u1 = T < 71.3 ? unitAttach(unitD1('U1', T)) : null;
+      // its eyes: U1's head while it steadies it, then the Director; before it comes out, onto him where BR4 meets him
+      const toDir = smooth(clamp((T - 70.95) / 0.35)), toBr4 = smooth(clamp((T - 84.35) / 0.6));
+      const lk0 = u1 && toDir < 1 ? lerp3s(u1.head, dirHeadAim(T), toDir) : dirHeadAim(Math.min(T, 83.6));
+      const lk = toBr4 > 0 ? lerp3s(lk0, {x: br4X(T), y: G(br4X(T), br4Z(T)) + 1.2, z: br4Z(T)}, toBr4) : lk0;
       return {
         posture: [[67.8, 'guard']],
-        armR: steady > 0.02 && u1 ? {hand: lerp3s(add3(u1.backPlate, {x: 0.25, y: -0.3, z: 0.1}), add3(u1.backPlate, {x: 0.06, y: -0.05, z: 0}), steady), open: true} : undefined,
-        look: T < 71 && u1 ? u1.head : dirHeadAim(Math.min(T, 83.6)),
+        armR: T > 70.0 && T < 71.25 && u1 ? {hand: lerp3s(add3(u1.backPlate, {x: 0.25, y: -0.3, z: 0.1}), add3(u1.backPlate, {x: 0.06, y: -0.05, z: 0}), steady), open: true} : undefined,
+        armWR: smooth(clamp((T - 70.0) / 0.3)) * (1 - smooth(clamp((T - 70.9) / 0.3))),
+        look: lk,
         // holding the gap: it scans the fight (eyes sweep, dwell), snaps to U1's arm going and to the crash
         scan: {t0: 71.9, t1: EV.u3go, center: {x: 40.4, y: 1.4, z: -0.6}, span: 80, dwell: 0.9, torso: 0.2},
         attend: [
@@ -545,12 +604,13 @@ const U3: Plan = {
     return {
       pos: {x, y: 0, z}, heading: u3H(T),
       feet, posture: [[67.8, 'guard'], [BR4.hit, 'idle']],
-      look: T < BR4.hit ? {x: br4X(T), y: G(br4X(T), br4Z(T)) + 1.2, z: br4Z(T)} : undefined,
+      look: {x: br4X(Math.min(T, BR4.hit)), y: G(br4X(Math.min(T, BR4.hit)), br4Z(Math.min(T, BR4.hit))) + 1.2 + 1.5 * back, z: br4Z(Math.min(T, BR4.hit))},
       crouch: T < BR4.hit ? 0.3 * wind : lerp(0.3, 0.02, smooth(clamp((T - BR4.hit) / 0.25))),
-      lean: T < BR4.hit ? 16 * wind : lerp(16 - 40 * back, 10, curl),
+      lean: T < BR4.hit ? 8 + 8 * wind : lerp(16 - 40 * back, 10, curl),
       raise: {t0: 85.1, t1: BR4.hit + 0.2, side: 'L'},
       // its right arm reaches over his back as it folds, then flails forward as it goes over
-      armR: T > BR4.hit - 0.05 && T < BR4.fall + 0.1 ? {hand: {x: x - 0.62, y: gx + 1.55 + 0.5 * back, z: -0.72}, open: true} : undefined,
+      armR: T > BR4.hit - 0.22 && T < BR4.release ? {hand: {x: x - 0.62, y: gx + 1.55 + 0.5 * back, z: -0.72}, open: true} : undefined,
+      armWR: smooth(clamp((T - BR4.hit + 0.22) / 0.2)) * (1 - smooth(clamp((T - BR4.release + 0.25) / 0.25))),
       hits: [{t0: BR4.hit, dir: {x: 1, y: 0, z: -0.02}, strength: 1.0}, {t0: BR4.release, dir: {x: 1, y: 0, z: 0}, strength: 0.8}],
       fall: {t0: BR4.fall, dir: U3_FALL_DIR, ang: restAng(pivot, U3_FALL_DIR)}, // over the crest, down the inner slope
       damage: {dent: {t0: BR4.hit, deg: -8}, dead: {t0: BR4.slide1 - 0.3}},
@@ -665,7 +725,8 @@ const U5: Plan = {
       look: T < 71.4 ? {x: 36.3, y: 1.5, z: -7.4} : T < EV.yankPull ? runHeadAim(T) : up && T < 87.0 ? {x: 36.0, y: 1.5, z: -6.6} : undefined,
       // her second clamp on its chest: it leans against the line, then tears it out with its left hand
       lean: 14 * strain, twist: -12 * strain,
-      armL: T > EV.clamp2Tear - 0.35 && T < EV.clamp2Tear + 0.35 ? {hand: lerp3s(u5Clamp(EV.clamp2Tear - 0.3), add3(u5Clamp(EV.clamp2Tear), {x: 0.1, y: 0.4, z: -0.3}), smooth((T - EV.clamp2Tear + 0.05) / 0.25)), open: T < EV.clamp2Tear - 0.08} : undefined,
+      armL: T > EV.clamp2Tear - 0.4 && T < EV.clamp2Tear + 0.5 ? {hand: lerp3s(u5Clamp(EV.clamp2Tear - 0.3), add3(u5Clamp(EV.clamp2Tear), {x: 0.1, y: 0.4, z: -0.3}), smooth((T - EV.clamp2Tear + 0.05) / 0.25)), open: T < EV.clamp2Tear - 0.08} : undefined,
+      armWL: smooth(clamp((T - EV.clamp2Tear + 0.4) / 0.18)) * (1 - smooth(clamp((T - EV.clamp2Tear - 0.25) / 0.25))),
       attend: [{t0: EV.recall, at: {x: 54, y: 2, z: -7}, t1: 88.2, turn: false}],
       hits: [{t0: EV.yankPull, dir: {x: 0.8, y: 0, z: 0.45}, strength: 1.1}, {t0: EV.clamp2Taut, dir: {x: -0.9, y: 0, z: -0.3}, strength: 0.5}],
       fall: {t0: EV.yankPull + 0.14, dir: U5_FALL_DIR, getUp: EV.u5up},
@@ -692,7 +753,8 @@ const U6: Plan = {
     {kind: 'stand', root: [[93.6, 54.2, 8.0, 93.7], [94.4, 54.2, 8.0, 88]]},
   ],
   act: (T) => {
-    const blind = win(T, EV.flareHit + 0.03, 79.6, 0.18, 0.6);
+    const blind = win(T, EV.flareHit + 0.03, 79.6, 0.45, 0.6);
+    const r6 = keyRoot(T < EV.flareHit ? U6_KEYS : U6_KEYS2, T);
     return {
       strikes: [
         {t0: EV.u6punch, side: 'R', kind: 'punch', target: {x: 37.15, y: G(37, 7.45) + 1.56, z: 7.42}},
@@ -700,7 +762,8 @@ const U6: Plan = {
       ],
       posture: [[67.6, 'guard'], [74.3, 'ready'], [EV.flareHit, 'idle'], [79.6, 'guard'], [86.7, 'idle']],
       look: T < 73.4 ? {x: 36.8, y: 1.6, z: 7.5} : T < EV.flareHit ? {x: 34.2, y: 1.2, z: 4.4} : T < 86.8 ? {x: 36.2 - blind * 0.5, y: 2.6 - blind * 1.2, z: 8.5} : undefined,
-      armL: blind > 0.01 ? {hand: lerp3s(rel({x: 36.8, z: 5.4}, 250, 0.25, -0.25, 1.0), rel({x: 36.8, z: 5.4}, 250, 0.2, -0.08, 2.0), blind), open: true} : undefined,
+      armL: blind > 0.001 ? {hand: bez(rel(r6.p, r6.h, 0.3, -0.3, 1.25), rel(r6.p, r6.h, 0.6, -0.2, 1.55), rel(r6.p, r6.h, 0.42, -0.1, 1.86), smooth(blind)), open: true} : undefined,
+      armWL: clamp(blind * 1.6),
       hits: [{t0: EV.flareHit, dir: {x: 0.6, y: 0, z: -0.8}, strength: 0.9}],
       lockAt: 67.6,
     };

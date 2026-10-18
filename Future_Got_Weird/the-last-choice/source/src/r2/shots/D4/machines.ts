@@ -24,6 +24,7 @@ import {ARC_START, arcStartPos, HEAVY2_START} from './start';
 import {BLOCK_PLATE, RUNNER_CHEST, LAUNCHER_FRONT, LAUNCHER_GRIP, tugGrip, STRIKE_PLATE, HEAVY_STRIKE, PILOT_DOWN, PLANT} from './marks';
 import {XZ, KP, KR, G, onG, keyRoot, footAt, autoSteps, runDist, runSpeed, cruise, linePath, chordPath, pathLen, fwdOf, headingTo, win, after, wrapD, quadSteps, heavyStance} from './motion';
 import {avoid, pushOut} from './obstacles';
+import {W1_FIGHT} from './wreckfx';
 
 const ground = G;
 const lerp3s = (a: V3, b: V3, k: number): V3 => ({x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k), z: lerp(a.z, b.z, k)});
@@ -169,16 +170,10 @@ const W1: UPlan = {
   act: (T) => {
     const dead = T >= W1_TB.fall.t0;
     return {
-      strikes: [
-        // the hammer on the plate (the crack goes right through); the hook at his head as he turns away (he ducks it)
-        {t0: EV.w1Swing, side: 'R', target: {x: BLOCK_PLATE.x + 0.06, y: BLOCK_PLATE.y + 0.04, z: BLOCK_PLATE.z}, kind: 'hammer'},
-        {t0: EV.w1Hook, side: 'L', target: onG(30.12, 1.76, 1.62), kind: 'hook'},
-        // ARRIVAL: it swings first at the charging Director — he ducks under it into its open chest
-        {t0: EV.w1Hammer, side: 'R', target: onG(12.86, -1.72, 1.66), kind: 'hook'},
-      ],
-      posture: [[-1, 'guard'], [W1_TB.fall.t0 + 0.9, 'idle']],
+      // its strikes (the plate's hammer, the hook he ducks, ARRIVAL's hook), guard and the blows on it: ./wreckfx.ts
+      // (pure, so the E/F wreck spec can carry the same fields: the torn chest plate is launched from this rig)
+      ...W1_FIGHT,
       look: dead ? undefined : dirHeadAt(T),
-      hits: [{t0: EV.w1Swing + 0.02, dir: {x: 1, y: 0, z: 0}, strength: 0.55}, {t0: EV.w1Smash, dir: {x: 0.85, y: 0, z: -0.5}, strength: 1.5}],
       fall: W1_TB.fall, damage: W1_TB.damage, idle: dead ? 0 : 0.45, ground: w1Ground, // it stands and falls on low rubble
     };
   },
@@ -203,9 +198,12 @@ const W2: UPlan = {
     return {
       // its hammer winds up at the decoy maker; the breaker's swing meets the raised arm first (the arm comes off)
       strikes: T < EV.club ? [{t0: EV.w2Wind + 0.5, side: 'L', target: W2_TARGET, kind: 'hammer'}] : undefined,
-      posture: [[-1, 'guard'], [W2_TB.fall.t0 + 0.9, 'idle']],
+      // (its guard drops as the hammer winds up, fully 'idle' by the club (164.4): the kit launches the torn arm from
+      // the rig at armOff.t0 and tops the fall at the angle the rig at fall.t0 rests on the ground — both must be EF's
+      // wreck spec's (no posture, no hit) so the wreck and its arm lie exactly as in E/F; the club's weight is the arm
+      // torn off and the fall itself, which goes the same way)
+      posture: [[-1, 'guard'], [EV.club - 0.45, 'idle']],
       look: dead ? undefined : T < 163.4 ? dirHeadAt(T) : W2_TARGET,
-      hits: [{t0: EV.club, dir: {x: 0.35, y: 0, z: 1}, strength: 1.3}],
       fall: W2_TB.fall, damage: W2_TB.damage, idle: dead ? 0 : 0.45,
     };
   },

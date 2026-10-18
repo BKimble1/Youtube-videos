@@ -40,6 +40,7 @@ import {PLAN, HOLD_POINTS, steerAround} from '../../world/plan';
 import {groundH} from '../../world/ground';
 import type {UnitSpec, HeavySpec, DroneSpec, Path, Slot, Formation, Posture, AttendSpec, MoveSpec, RestrainSpec, ScanSpec} from '../../mech';
 import type {Role2} from '../../rig/looks';
+import {W1_FIGHT} from '../D4/wreckfx';
 
 const on = (x: number, z: number, up = 0): V3 => ({x, y: groundH(x, z) + up, z});
 const hv = (h: number) => ({x: Math.sin((h * Math.PI) / 180), z: -Math.cos((h * Math.PI) / 180)});
@@ -404,6 +405,8 @@ export const w1Ground = (x: number, z: number): number =>
   G(x, z) + Math.max(0, ...W1_RUBBLE.map((c) => c.h * clamp(1 - ((x - c.x) ** 2 + (z - c.z) ** 2) / (c.r * c.r))));
 export const wreckSpecs = (T: number): UnitSpec[] => TB_WRECKS.map((w) => ({
   id: w.id, t: T, pos: w.pos, heading: w.heading, ground: w.id === 7501 ? w1Ground : G, fall: w.fall, damage: w.damage, idle: 0, key: `tb_w${w.id}`,
+  // W1's fight (strikes, guard, blows) shapes where its torn plate and fluid land: the same object D4 animates
+  ...(w.id === 7501 ? W1_FIGHT : {}),
 }));
 
 export const heavy2Spec = (T: number): HeavySpec => ({id: TB_HEAVY2.id, t: T, pos: TB_HEAVY2.pos, heading: TB_HEAVY2.heading, look: TB_HEAVY2.look, eye: TB_HEAVY2.eye, ground: G, key: 'tb_heavy2'});
