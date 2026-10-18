@@ -10,7 +10,7 @@ import {M} from '../../timing';
 /** shot boundaries (they tile M.BASS_OUT → M.CHARGE) */
 export const CUT = {
   c1: M.BASS_OUT, c2: M.ALLY1, c3: 40.16, c4: M.MARCH, c4b: 46.7, c5a: 50.0, c5b: 51.2, c5c: 52.1,
-  c6: M.ASSEMBLE, c6b: 54.45, c6c: 56.05, c6d: 57.95, end: M.CHARGE,
+  c6: M.ASSEMBLE, c6b: 54.45, c6c: 56.05, c6d: 58.05, end: M.CHARGE,
 };
 
 /** the Director (C1: the turn; C5: the touch, the strap; C6: the turn, the glance, the threat, the step, the set) */
@@ -27,8 +27,7 @@ export const TD = {
   turn: 53.12, turnEnd: 54.0, // C6a: the shared turn — he is first
   glanceS: 55.62, glanceSEnd: 56.2, // C6b: a look along the line at them (the breaker's tool charging)
   threat: 57.1, // C6c: their front rank breaks into its run
-  step: 57.72, stepEnd: 58.5, // the step out to the brink (C6c → C6d: the cut lands on it)
-  glance: 58.68, glanceEnd: 59.05, // over his right shoulder at them: now
+  step: 57.78, stepEnd: 58.55, // the step out to the brink (C6c → C6d: the cut lands in its first stride)
   set: 59.18, // he sinks into the start, plate up (the accent at 59.23)
 };
 
@@ -84,7 +83,7 @@ export const T3 = {
   tablet: 54.5, // C6b: the decoy maker wakes the tablet (the projector's lens lights)
   satchel: 54.78, // the flare carrier's hand on the satchel: the flares counted under his fingers
   thumbs: 55.7, // the pilot sends the drone out ahead of them
-  commitP: 58.1, commitPEnd: 58.72,
+  commitP: 58.18, commitPEnd: 58.8,
   commitF: 58.55, commitFEnd: 59.15,
   commitD: 58.65, commitDEnd: 59.25,
 };

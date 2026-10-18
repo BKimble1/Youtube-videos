@@ -179,10 +179,11 @@ const commitStand = (r: RoleC, keys: KR[], t0: number, t1: number, o: Parameters
   const root: KR[] = [...keys, [t0, last[1], last[2], last[3]], [t1, e.pos.x, e.pos.z, e.heading], [M.CHARGE + 1, e.pos.x, e.pos.z, e.heading]];
   return {kind: 'stand', root, feet: pinFeet(stepKeys(root, {stepLen: 0.5, ...o}), r)};
 };
-/** the assembly spot: D1's start, `back` metres behind it along D1's heading */
-const spotBehind = (r: RoleC, back: number): {x: number; z: number; h: number} => {
-  const e = endOf(r), f = fwdOf(e.heading);
-  return {x: e.pos.x - f.x * back, z: e.pos.z - f.z * back, h: e.heading};
+/** the assembly spot: D1's start, `back` metres behind it along D1's heading (and `lat` to its right) — picked where
+ * the rubble is flattest across the stance (the C probe's spot search), so nobody stands with one knee up */
+const spotBehind = (r: RoleC, back: number, lat = 0): {x: number; z: number; h: number} => {
+  const e = endOf(r), f = fwdOf(e.heading), rt = {x: -f.z, z: f.x};
+  return {x: e.pos.x - f.x * back + rt.x * lat, z: e.pos.z - f.z * back + rt.z * lat, h: e.heading};
 };
 /** a body's head (for eye-lines) */
 const headOf = (b: Body, up = 1.58): V3 => ({x: b.pos.x, y: b.pos.y + up, z: b.pos.z});
@@ -224,7 +225,6 @@ const dirLooks = (T: number): [number, V3][] => [
   [TB2.touch + 0.12, breakerHead(T)], [TD.lookBack, {x: -1.5, y: 4.6, z: 4.2}], [TD.strapLook, plateLook()],
   [TD.strapUp, {x: 0.2, y: 5.2, z: 4.5}], [TD.turn - 0.06, ARMY_EYE],
   [TD.glanceS, breakerHead(T)], [TD.glanceSEnd, ARMY_EYE],
-  [TD.glance, pilotHead(T)], [TD.glanceEnd, ARMY_EYE],
 ];
 const plateLook = () => ({x: DIR_SPOT.x + 0.1, y: GC(DIR_SPOT.x, DIR_SPOT.z) + 1.0, z: DIR_SPOT.z + 0.25});
 /** the guard: low (B6's), mid on the build; D1's high guard at the set */
@@ -249,7 +249,6 @@ const DIR_FACE = (T: number): Face => faceKeys(T, [
   [TD.glanceSEnd, F.resolve],
   [TD.threat + 0.08, RESOLVE_HARD], // their front breaks into its run
   [TD.step, expr('effort', 0.6, {squint: 0.3})],
-  [TD.glance, expr('resolve', 1, {mouth: 'flat', brows: -0.4})], // now
   [TD.set, F.effort],
 ]);
 
@@ -343,7 +342,7 @@ export const directorC = (T: number, v?: View): CrewC => {
 // comes up and she sights along it; the commit.
 const TT_FLAT: XZ[] = [{x: -18.6, z: -1.6}, {x: -16.2, z: -1.9}, {x: -14.2, z: -2.1}, {x: -12.0, z: -2.32}, {x: -9.4, z: -2.45}, {x: -7.4, z: -2.6}];
 const TT_WALK = walkSeg(TT_FLAT, TT.go, TT.foot, G_HURRY, {A: 0.9, D: 0.45});
-const TT_A = spotBehind('tether', 0.45);
+const TT_A = spotBehind('tether', 0.45, 0.2);
 const TT_UP: XZ[] = [{x: -7.4, z: -2.6}, {x: -6.3, z: -2.62}, {x: -5.0, z: -2.55}, {x: -3.2, z: -2.35}, {x: -1.75, z: -2.1}, {x: -0.95, z: -2.15}, {x: TT_A.x, z: TT_A.z}];
 const TT_CLIMB = climbFrom([TT_WALK], TT_UP, TT.foot, TT.top, {stepLen: 0.48, maxRise: 0.27, autoHands: {side: 'L', n: 2, minRise: 0.25, fwd: 0.04, out: 0.18}, endHeading: 120});
 const TT_C = afterClimb(TT_CLIMB);
@@ -552,7 +551,7 @@ const BK_TOUCH = {x: 1.36, z: 0.8}; // at the Director's right side, within an a
 const BK_UP: XZ[] = [{x: -8.6, z: -0.62}, {x: -7.0, z: -0.62}, {x: -5.6, z: -1.05}, {x: -3.8, z: -1.12}, {x: -2.25, z: -1.0}, {x: -1.3, z: -0.82}, {x: -0.38, z: -0.42}, {x: 0.6, z: -0.05}, BK_TOUCH];
 const BK_CLIMB = climbFrom([BK_WALK], BK_UP, TB2.foot, TB2.arrive, {stepLen: 0.5, maxRise: 0.27, autoHands: {side: 'L', n: 2, minRise: 0.25, fwd: 0.04, out: 0.18}, endHeading: 196});
 const BK_C = afterClimb(BK_CLIMB);
-const BK_A = spotBehind('breaker', 0.45);
+const BK_A = spotBehind('breaker', 0.7, 0.2); // on the crest's top: his commit steps down off its edge
 const BK_ROUND: XZ[] = [BK_TOUCH, {x: 1.95, z: 1.35}, {x: 1.82, z: 2.4}, {x: 1.2, z: 2.95}, {x: BK_A.x, z: BK_A.z}];
 const BK_STAND1 = standSeg([BK_C.key, [TB2.go2, BK_C.key[1], BK_C.key[2], 196]], {half: 0.16, stag: 0.05, turnStep: 70, start: BK_C.start});
 const BK_CLIMB2 = climbFrom([BK_STAND1], BK_ROUND, TB2.go2, TB2.arrive2, {stepLen: 0.5, maxRise: 0.27, lead: 0.08, endHeading: 260});
@@ -565,8 +564,11 @@ const BK_SEGS: Seg[] = [
   commitStand('breaker', [BK_C2.key, [TB2.turn, BK_A.x, BK_A.z, 260], [54.35, BK_A.x, BK_A.z, BK_A.h]], TB2.commit, TB2.commitEnd, {half: 0.16, stag: 0.05, turnStep: 65, start: BK_C2.start}),
 ];
 const breakerHead = (T: number): V3 => headOf(bodyAt(BK_SEGS, T), 1.6);
-/** the two-handed port (D1's carry: left hand on the side handle in front, right on the trigger behind) */
-const PORT = {front: {r: -16, u: 250, f: 118}, back: {r: 32, u: 205, f: 34}};
+/** the two-handed port, carried a little lower than D1's (r −16 u 250 f 118 / r 32 u 205 f 34) so the ram head stays
+ * clear of his face from the front; it rises into D1's at the cut (endBlend) */
+const PORT = {front: {r: -14, u: 228, f: 114}, back: {r: 30, u: 196, f: 30}};
+/** C6b: the tool down across his hips, the tank turned up to him, while he opens the valve */
+const VALVE = {front: {r: -26, u: 168, f: 92}, back: {r: 28, u: 182, f: 18}};
 const BK_FACE: FK = [
   [38.2, F.concentration], [TB2.foot, expr('effort', 0.7)], [TB2.arrive - 0.2, exprMix('effort', 'recognition', 0.5)],
   [TB2.touch - 0.1, F.relief], [TB2.touchOff + 0.05, expr('recognition', 0.5, {mouth: 'soft'})], [TB2.go2 + 0.3, F.concentration],
@@ -596,7 +598,11 @@ export const breakerC = (T: number, v?: View, dir?: FigSpec): CrewC => {
   const kick = T > TB2.charged - 0.05 ? Math.exp(-(T - TB2.charged + 0.05) * 9) * Math.sin(Math.min(Math.PI, (T - TB2.charged + 0.05) * 14)) : 0;
   pose = layer(pose, {drop: (pose.drop ?? 12) + 6 * kick});
   pose.face = withEffort(faceKeys(T, BK_FACE), b);
-  const portL = fromLoc(b, {...PORT.front, u: PORT.front.u - 6 * kick}), portR = fromLoc(b, {...PORT.back, u: PORT.back.u - 6 * kick});
+  // C6b: the tool comes down across his hips, he opens the valve (head down to the gauge), the kick, back up to the port
+  const valve = win(T, TB2.charge - 0.4, TB2.charged + 0.35, 0.3, 0.35);
+  const lp = (a: {r: number; u: number; f: number}, c: {r: number; u: number; f: number}) => ({r: lerp(a.r, c.r, valve), u: lerp(a.u, c.u, valve) - 6 * kick, f: lerp(a.f, c.f, valve)});
+  const portL = fromLoc(b, lp(PORT.front, VALVE.front)), portR = fromLoc(b, lp(PORT.back, VALVE.back));
+  if (valve > 0) pose = layer(pose, {head: {...pose.head, pitch: (pose.head?.pitch ?? 0) + 24 * valve * (1 - after(T, TB2.charged, 0.2))}, lean: (pose.lean ?? 10) + 6 * valve});
   const tool = twoH ? {handL: 'grip' as const, handR: 'grip' as const, twoHanded: true, extra: breaker({back: 1, front: 0, gauge, recoil: 0.4 * kick})} : {handR: 'grip' as const, holdR: breakerCarry({gauge})};
   const world0: FigSpec['world'] = {footL: b.footL, footR: b.footR, ...(twoH ? {handL: portL, handR: portR} : {})};
   const eb = endBlend('breaker', T, b.pos, b.heading, {...pose, ...tool, dmg: dmgR2('breaker', T)}, world0);
@@ -718,7 +724,7 @@ export const pilotC = (T: number, v?: View): CrewC => {
 // chest while he climbs (it keeps the bag from swinging); C6b: his left hand on the satchel, the flares counted.
 const FL_FLAT: XZ[] = [{x: -12.0, z: 13.0}, {x: -9.6, z: 10.4}, {x: -7.6, z: 9.1}];
 const FL_WALK = walkSeg(FL_FLAT, T3.go - 0.3, T3.flaresFoot, G_HURRY, {A: 0.7, D: 0.4});
-const FL_A = spotBehind('flares', 0.45);
+const FL_A = spotBehind('flares', 0.4, 0.2);
 const FL_UP: XZ[] = [{x: -7.6, z: 9.1}, {x: -6.0, z: 7.6}, {x: -4.65, z: 6.1}, {x: -3.55, z: 4.95}, {x: -2.0, z: 4.72}, {x: -0.6, z: 4.6}, {x: FL_A.x, z: FL_A.z}];
 const FL_CLIMB = climbFrom([FL_WALK], FL_UP, T3.flaresFoot, T3.arriveFlares, {stepLen: 0.5, maxRise: 0.27, autoHands: {side: 'L', n: 1, minRise: 0.25, fwd: 0.04, out: 0.18}, endHeading: 80});
 const FL_C = afterClimb(FL_CLIMB);
@@ -759,7 +765,7 @@ export const flaresC = (T: number, v?: View): CrewC => {
 // right palm on the rubble at the steep bank); C6b: she wakes the tablet (the projector's lens lights) and taps it.
 const DC_FLAT: XZ[] = [{x: -11.0, z: 14.2}, {x: -9.0, z: 12.2}, {x: -7.2, z: 11.1}];
 const DC_WALK = walkSeg(DC_FLAT, T3.go + 0.1, T3.decoyFoot, G_HURRY, {A: 0.7, D: 0.4});
-const DC_A = spotBehind('decoy', 0.45);
+const DC_A = spotBehind('decoy', 0.4, 0.2);
 const DC_UP: XZ[] = [{x: -7.2, z: 11.1}, {x: -5.2, z: 9.4}, {x: -3.9, z: 8.1}, {x: -2.95, z: 7.35}, {x: -2.3, z: 6.3}, {x: -1.9, z: 5.45}, {x: -0.6, z: 5.22}, {x: DC_A.x, z: DC_A.z}];
 const DC_CLIMB = climbFrom([DC_WALK], DC_UP, T3.decoyFoot, T3.arriveDecoy, {stepLen: 0.5, maxRise: 0.27, autoHands: {side: 'R', n: 1, minRise: 0.25, fwd: 0.04, out: 0.18}, endHeading: 60});
 const DC_C = afterClimb(DC_CLIMB);
