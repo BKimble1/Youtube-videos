@@ -210,11 +210,25 @@ export const beam = (a: V3, b: V3, color: 'cyan' | 'amber', power: number, key: 
     const A = project(v, a), B = project(v, b);
     const col = color === 'cyan' ? EYE.cyan : EYE.amber;
     const w = clamp(0.03 * Math.min(A.k, B.k), 0.8, 4);
+    // (R3 delivery: a drone far above the frame puts one end of the line thousands of pixels off screen. The group's
+    // opacity makes the browser allocate a layer as big as the line's bounding box: at 3840 px wide that stalled the
+    // 4K render for good on D4-5b (2:49.1). The line is cut to the frame plus a margin first, so every visible pixel is
+    // the same and only the invisible length goes.)
+    const mg = 8 * w + 8;
+    const lo = {x: -mg, y: -mg}, hi = {x: v.W + mg, y: v.H + mg};
+    const dx = B.x - A.x, dy = B.y - A.y;
+    let t0 = 0, t1 = 1;
+    for (const [pp, qq] of [[-dx, A.x - lo.x], [dx, hi.x - A.x], [-dy, A.y - lo.y], [dy, hi.y - A.y]] as [number, number][]) {
+      if (pp === 0) { if (qq < 0) return null; continue; }
+      const r = qq / pp;
+      if (pp < 0) { if (r > t1) return null; if (r > t0) t0 = r; } else { if (r < t0) return null; if (r < t1) t1 = r; }
+    }
+    const A2 = {x: A.x + dx * t0, y: A.y + dy * t0}, B2 = {x: A.x + dx * t1, y: A.y + dy * t1};
     return (
       <g opacity={clamp(power)}>
-        <line x1={f2(A.x)} y1={f2(A.y)} x2={f2(B.x)} y2={f2(B.y)} stroke={col} strokeWidth={w * 3} strokeOpacity={0.25} strokeLinecap="round" />
-        <line x1={f2(A.x)} y1={f2(A.y)} x2={f2(B.x)} y2={f2(B.y)} stroke={col} strokeWidth={w} strokeLinecap="round" />
-        <circle cx={f2(B.x)} cy={f2(B.y)} r={w * 2.2} fill={col} opacity={0.8} />
+        <line x1={f2(A2.x)} y1={f2(A2.y)} x2={f2(B2.x)} y2={f2(B2.y)} stroke={col} strokeWidth={w * 3} strokeOpacity={0.25} strokeLinecap="round" />
+        <line x1={f2(A2.x)} y1={f2(A2.y)} x2={f2(B2.x)} y2={f2(B2.y)} stroke={col} strokeWidth={w} strokeLinecap="round" />
+        {t1 >= 1 ? <circle cx={f2(B.x)} cy={f2(B.y)} r={w * 2.2} fill={col} opacity={0.8} /> : null}
       </g>
     );
   },
