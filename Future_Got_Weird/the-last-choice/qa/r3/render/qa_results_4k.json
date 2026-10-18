@@ -1,0 +1,44 @@
+{
+ "file": "FGW_TheLastChoice_R3_MASTER_4K.mp4",
+ "sha256": "d93ab68b2f6df9629f7e37d49b6976cd3f2673f1438c5bd7c32c7d9753a3b903",
+ "probe": {
+  "programs": [],
+  "streams": [
+   {
+    "codec_name": "h264",
+    "profile": "High",
+    "width": 3840,
+    "height": 2160,
+    "pix_fmt": "yuv420p",
+    "color_space": "bt709",
+    "r_frame_rate": "30/1",
+    "duration": "237.800000",
+    "nb_read_frames": "7134"
+   },
+   {
+    "codec_name": "aac",
+    "profile": "LC",
+    "sample_rate": "48000",
+    "channels": 2,
+    "r_frame_rate": "0/0",
+    "duration": "237.781000",
+    "nb_read_frames": "11146"
+   }
+  ],
+  "format": {
+   "duration": "237.800000",
+   "size": "552376882",
+   "bit_rate": "18582906"
+  }
+ },
+ "loudness": {
+  "integrated_lufs": -16.1,
+  "lra_lu": 13.0,
+  "true_peak_dbtp": -2.0
+ },
+ "chunks": {
+  "0-4": "rendered from commit c3cd9b2",
+  "5-7": "rendered from commit ff4c9e0 (marking beam clipped to the frame; pixel-neutral)"
+ },
+ "checks": "frame count 7134; last frame max pixel 0; 10 frames compared with the 1080p file (4K downscaled, mean abs diff 0.00-1.98 of 255); detail above the 1080p band: native 4K 0.65-1.09 vs 1080p upscaled 0.19-0.34 (down-up residual, 4 frames)"
+}
