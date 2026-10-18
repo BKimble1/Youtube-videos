@@ -1,1 +1,26 @@
 EF ← D4 continuity at FINAL_HIT (after the lead's fixes): D4's last frame (186.8667) vs E1's first frame (186.90), world metres
+units D4(186.867) -> EF(186.9): worst joint jump 0.035 m at 7206.handL
+heavy2 root jump 0.000 heading 0.0
+drones worst jump 0.000
+director  root 0.000 head 0.000 handL 0.000 handR 0.000
+tether    root 0.000 head 0.000 handL 0.000 handR 0.000
+runner    root 0.000 head 0.000 handL 0.000 handR 0.000
+breaker   root 0.000 head 0.000 handL 0.000 handR 0.016
+decoy     root 0.000 head 0.000 handL 0.006 handR 0.003
+drone     root 0.013 head 0.016 handL 0.014 handR 0.000
+flares    root 0.000 head 0.002 handL 0.000 handR 0.002
+
+per-frame second differences (pops), 180.5–218:
+holder h_tether              max 2nd difference 0.008 m head at 180.700
+holder h_decoy               max 2nd difference 0.035 m footL at 184.000
+holder h_flares              max 2nd difference 0.026 m handR at 181.300
+holder h_breaker             max 2nd difference 0.033 m handL at 181.900
+holder h_runner              max 2nd difference 0.040 m footL at 215.433
+crew decoy                   max 2nd difference 0.022 m handR at 184.067
+crew tether                  max 2nd difference 0.015 m handR at 208.267
+crew flares                  max 2nd difference 0.024 m head at 184.367
+crew breaker                 max 2nd difference 0.032 m handR at 186.133
+crew runner                  max 2nd difference 0.019 m handL at 214.867
+ring (all) heads             max 2nd difference 0.055 m 7307 at 217.033
+
+tools/r3/city_check:
