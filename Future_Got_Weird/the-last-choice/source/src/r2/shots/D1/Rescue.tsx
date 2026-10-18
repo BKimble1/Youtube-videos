@@ -25,9 +25,9 @@ export const D1_5 = shotOf(77.45, D15, {drift: 0.016, shake: 0.9});
 // the finishing hammer; he stumbles back, frame left, his face to us. The breaker comes in fast from screen right, past
 // the lens — the Director sees him and ducks LEFT, out of the tool's way; the ram head meets U1's descending forearm (BR2, 81.34) and tears it off at the elbow. U1 turns on him.
 const D16: CamKey[] = [
-  {t: 0, pos: g(38.45, 2.75, 1.3), target: g(40.2, -0.85, 1.45), fov: 50},
-  {t: M.BR2 - 79.7, pos: g(38.55, 2.7, 1.3), target: g(40.3, -0.85, 1.55), fov: 50},
-  {t: 81.9 - 79.7, pos: g(38.6, 2.65, 1.3), target: g(40.4, -0.9, 1.45), fov: 50},
+  {t: 0, pos: g(37.85, 2.6, 1.3), target: g(40.2, -0.85, 1.45), fov: 48},
+  {t: M.BR2 - 79.7, pos: g(37.95, 2.55, 1.3), target: g(40.3, -0.85, 1.55), fov: 48},
+  {t: 81.9 - 79.7, pos: g(38.0, 2.5, 1.3), target: g(40.4, -0.9, 1.45), fov: 48},
 ];
 export const D1_6 = shotOf(79.7, D16, {drift: 0.016, shake: 0.9});
 

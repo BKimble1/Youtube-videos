@@ -605,7 +605,8 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
   const t = p.t;
   const seed = p.seed ?? 1;
   const id = (p.id ?? `f${seed}`).replace(/[^a-zA-Z0-9_]/g, '_');
-  const dmg = p.dmg ?? {};
+  // (a silhouette is flat: marks with their own colours — blood, dust, bruises — are left out; worn gear stays)
+  const dmg: Damage = p.silhouette ? {satchel: p.dmg?.satchel} : p.dmg ?? {};
   const L = p.silhouette ? undefined : p.light;
   const parts: Part[] = [];
   const sil = p.silhouette;
@@ -909,7 +910,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
       </g>
     ));
   }
-  const headParts = drawHead2(p, r, t, seed, inkC, col, skin, dmg, id, L);
+  const headParts = drawHead2({...p, dmg}, r, t, seed, inkC, col, skin, dmg, id, L);
   headParts.forEach((hp, k) => add(r.torsoZ + 5 + k * 0.01, `head${k}`, hp));
 
   if (p.extra) p.extra(r).forEach((q) => parts.push(q));
@@ -1273,10 +1274,10 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     if (q.z > -0.05) {
       const sx = clamp(q.z * 1.1, 0.35, 1);
       if (q.z < 0.35) { const side = Math.sign(q.x - Hc.x) || 1; q.x -= side * (0.35 - q.z) * 22 * s; }
-      feats.push(<g key="mouth" transform={`translate(${f2(q.x)} ${f2(q.y)}) rotate(${f2(rollDeg)}) scale(${f2(sx)} 1)`} opacity={fold(q) * 0.5 + 0.5}><MouthShape m={face.mouth ?? 'flat'} s={s} ink={ink} inkC={inkC} open={face.open ?? 0} t={t} /></g>);
+      feats.push(<g key="mouth" transform={`translate(${f2(q.x)} ${f2(q.y)}) rotate(${f2(rollDeg)}) scale(${f2(sx)} 1)`} opacity={fold(q) * 0.5 + 0.5}><MouthShape m={face.mouth ?? 'flat'} s={s} ink={ink} inkC={inkC} open={face.open ?? 0} t={t} white={col('#FFFFFF')} /></g>);
     }
   }
-  if (look.cheeks) [-1, 1].forEach((sd) => { const q = onHead(sd * 40, 0.25, 1); if (q.z > 0.2) feats.push(<ellipse key={`ch${sd}`} cx={q.x} cy={q.y} rx={9 * s * clamp(q.z, 0.3, 1)} ry={7 * s} fill="#F28B82" opacity={0.7} />); });
+  if (look.cheeks) [-1, 1].forEach((sd) => { const q = onHead(sd * 40, 0.25, 1); if (q.z > 0.2) feats.push(<ellipse key={`ch${sd}`} cx={q.x} cy={q.y} rx={9 * s * clamp(q.z, 0.3, 1)} ry={7 * s} fill={col('#F28B82')} opacity={0.7} />); });
   if (look.accessories.includes('beard')) {
     // the approved chin beard: from the jaw corners, under the mouth (its top edge sits just below the lip line),
     // around the chin and a little below it. It lies on a shell round the jaw (a little proud of the face, so it has
@@ -1478,13 +1479,13 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
   return out;
 };
 
-const MouthShape: React.FC<{m: Mouth; s: number; ink: number; inkC: string; open: number; t: number}> = ({m, s, ink, inkC, open, t}) => {
+const MouthShape: React.FC<{m: Mouth; s: number; ink: number; inkC: string; open: number; t: number; white?: string}> = ({m, s, ink, inkC, open, t, white = '#FFFFFF'}) => {
   const st = {fill: 'none', stroke: inkC, strokeWidth: ink, strokeLinecap: 'round' as const};
   const k = s;
   switch (m) {
     case 'smile': return <path d={`M ${-16 * k} 0 Q 0 ${14 * k} ${16 * k} 0`} {...st} />;
     case 'soft': return <path d={`M ${-12 * k} ${2 * k} Q 0 ${8 * k} ${12 * k} ${2 * k}`} {...st} />;
-    case 'grin': return (<g><path d={`M ${-22 * k} ${-2 * k} Q 0 ${30 * k} ${22 * k} ${-2 * k} Z`} fill={inkC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" /><path d={`M ${-16 * k} ${1 * k} Q 0 ${9 * k} ${16 * k} ${1 * k} L ${16 * k} ${5 * k} Q 0 ${12 * k} ${-16 * k} ${5 * k} Z`} fill="#FFFFFF" /></g>);
+    case 'grin': return (<g><path d={`M ${-22 * k} ${-2 * k} Q 0 ${30 * k} ${22 * k} ${-2 * k} Z`} fill={inkC} stroke={inkC} strokeWidth={ink} strokeLinejoin="round" /><path d={`M ${-16 * k} ${1 * k} Q 0 ${9 * k} ${16 * k} ${1 * k} L ${16 * k} ${5 * k} Q 0 ${12 * k} ${-16 * k} ${5 * k} Z`} fill={white} /></g>);
     case 'flat': return <path d={`M ${-14 * k} ${2 * k} L ${14 * k} ${2 * k}`} {...st} />;
     case 'o': return <ellipse cx={0} cy={4 * k} rx={8 * k} ry={10 * k} fill={inkC} />;
     case 'smirk': return <path d={`M ${-14 * k} ${4 * k} Q ${4 * k} ${12 * k} ${17 * k} ${-3 * k}`} {...st} />;
@@ -1495,8 +1496,8 @@ const MouthShape: React.FC<{m: Mouth; s: number; ink: number; inkC: string; open
     case 'pant': { const o = 3 + 3.5 * (0.5 + 0.5 * Math.sin(t * 2 * Math.PI * 1.1)) + open * 4; return <ellipse cx={0} cy={5 * k} rx={9 * k} ry={o * k} fill={inkC} />; }
     case 'breath': { const o = 1 + open * 6; return <path d={`M ${-10 * k} ${3 * k} Q 0 ${(3 - o * 0.3) * k} ${10 * k} ${3 * k} Q ${5 * k} ${(4 + o) * k} 0 ${(4 + o) * k} Q ${-5 * k} ${(4 + o) * k} ${-10 * k} ${3 * k} Z`} fill={inkC} stroke={inkC} strokeWidth={ink * 0.5} strokeLinejoin="round" />; }
     case 'open': { const o = 6 + 8 * open; return <path d={`M ${-14 * k} ${2 * k} Q 0 ${-2 * k} ${14 * k} ${2 * k} Q ${8 * k} ${(4 + o * 1.6) * k} 0 ${(4 + o * 1.7) * k} Q ${-8 * k} ${(4 + o * 1.6) * k} ${-14 * k} ${2 * k} Z`} fill={inkC} stroke={inkC} strokeWidth={ink * 0.6} strokeLinejoin="round" />; }
-    case 'grit': return (<g><rect x={-15 * k} y={-3 * k} width={30 * k} height={12 * k} rx={5 * k} fill="#FFFFFF" stroke={inkC} strokeWidth={ink * 0.9} /><line x1={-13 * k} y1={3 * k} x2={13 * k} y2={3 * k} stroke={inkC} strokeWidth={ink * 0.5} /></g>);
-    case 'pain': return (<g><path d={`M ${-16 * k} ${4 * k} L ${-8 * k} ${-2 * k} L 0 ${2 * k} L ${8 * k} ${-2 * k} L ${16 * k} ${4 * k} L ${8 * k} ${10 * k} L ${-8 * k} ${10 * k} Z`} fill="#FFFFFF" stroke={inkC} strokeWidth={ink * 0.9} strokeLinejoin="round" /><line x1={-12 * k} y1={4 * k} x2={12 * k} y2={4 * k} stroke={inkC} strokeWidth={ink * 0.5} /></g>);
+    case 'grit': return (<g><rect x={-15 * k} y={-3 * k} width={30 * k} height={12 * k} rx={5 * k} fill={white} stroke={inkC} strokeWidth={ink * 0.9} /><line x1={-13 * k} y1={3 * k} x2={13 * k} y2={3 * k} stroke={inkC} strokeWidth={ink * 0.5} /></g>);
+    case 'pain': return (<g><path d={`M ${-16 * k} ${4 * k} L ${-8 * k} ${-2 * k} L 0 ${2 * k} L ${8 * k} ${-2 * k} L ${16 * k} ${4 * k} L ${8 * k} ${10 * k} L ${-8 * k} ${10 * k} Z`} fill={white} stroke={inkC} strokeWidth={ink * 0.9} strokeLinejoin="round" /><line x1={-12 * k} y1={4 * k} x2={12 * k} y2={4 * k} stroke={inkC} strokeWidth={ink * 0.5} /></g>);
     default: return null;
   }
 };

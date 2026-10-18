@@ -93,19 +93,19 @@ export const CUES_D1: Cue[] = [
   {t: 79.3, kind: 'servo_heavy', gain: -4, pan: 0.08, dist: 0.34}, // the press
   {t: 79.35, kind: 'steps_gravel', gain: -5, pan: -0.2, dist: 0.35, rate: 1.1},
   {t: 79.55, kind: 'armor_hit', gain: -5, pan: 0.05, dist: 0.51}, // U2 hook lands
-  {t: 79.85, kind: 'shield_bash', gain: -8, pan: 0.02, dist: 0.33, rate: 0.85}, // the shove
-  {t: 79.9, kind: 'breath_exert', gain: -4, pan: -0.1, dist: 0.32},
-  {t: 79.95, kind: 'body_fall', gain: -7, pan: -0.29, dist: 0.53},
-  {t: 80.1, kind: 'steps_gravel', gain: -6, pan: -0.15, dist: 0.33},
-  {t: 80.35, kind: 'steps_gravel', gain: -6, pan: -0.22, dist: 0.33},
-  {t: 80.55, kind: 'breaker_charge', gain: -2, pan: 0.86, dist: 0.18}, // he primes as he runs
-  {t: 80.72, kind: 'servo_heavy', gain: -3, pan: 0.22, dist: 0.34},
-  {t: 81.05, kind: 'breath_exert', gain: -5, pan: -0.24, dist: 0.31},
-  {t: 81.34, kind: 'breaker_hit', gain: 2, pan: 0.2, dist: 0.3}, // BR2 the forearm: mechanical failure
-  {t: 81.36, kind: 'metal_tear', gain: -1, pan: 0.27, dist: 0.32},
-  {t: 81.38, kind: 'elec_arc', gain: -4, pan: 0.26, dist: 0.32},
-  {t: 81.39, kind: 'sparks', gain: -5, pan: 0.26, dist: 0.32},
-  {t: 81.45, kind: 'armor_hit', gain: -10, pan: -0.27, dist: 0.53, rate: 1.3},
+  {t: 79.85, kind: 'shield_bash', gain: -8, pan: 0.02, dist: 0.35, rate: 0.85}, // the shove
+  {t: 79.9, kind: 'breath_exert', gain: -4, pan: -0.09, dist: 0.33},
+  {t: 79.95, kind: 'body_fall', gain: -7, pan: -0.36, dist: 0.53},
+  {t: 80.1, kind: 'steps_gravel', gain: -6, pan: -0.14, dist: 0.34},
+  {t: 80.35, kind: 'steps_gravel', gain: -6, pan: -0.2, dist: 0.33},
+  {t: 80.55, kind: 'breaker_charge', gain: -2, pan: 0.94, dist: 0.22}, // he primes as he runs
+  {t: 80.72, kind: 'servo_heavy', gain: -3, pan: 0.21, dist: 0.36},
+  {t: 81.05, kind: 'breath_exert', gain: -5, pan: -0.22, dist: 0.31},
+  {t: 81.34, kind: 'breaker_hit', gain: 2, pan: 0.21, dist: 0.32}, // BR2 the forearm: mechanical failure
+  {t: 81.36, kind: 'metal_tear', gain: -1, pan: 0.27, dist: 0.34},
+  {t: 81.38, kind: 'elec_arc', gain: -4, pan: 0.26, dist: 0.35},
+  {t: 81.39, kind: 'sparks', gain: -5, pan: 0.26, dist: 0.35},
+  {t: 81.45, kind: 'armor_hit', gain: -10, pan: -0.35, dist: 0.53, rate: 1.3},
   {t: 81.95, kind: 'armor_hit', gain: -4, pan: 0.21, dist: 0.32, rate: 0.75}, // catch the tool
   {t: 82, kind: 'servo_heavy', gain: -3, pan: 0.05, dist: 0.34}, // wrench
   {t: 82.15, kind: 'armor_hit', gain: -7, pan: -0.05, dist: 0.64, rate: 0.7}, // U1 arm
