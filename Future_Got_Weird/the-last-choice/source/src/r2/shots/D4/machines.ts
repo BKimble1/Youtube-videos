@@ -102,7 +102,7 @@ export const unitAt = (pl: UPlan, T: number): UnitSpec => {
     else {
       let feet = s.feet ?? FEET.get(s);
       if (!feet) FEET.set(s, (feet = stanceSteps(s.root)));
-      sp = {...base, pos: {x: r.p.x, y: 0, z: r.p.z}, heading: r.h, feet: {L: footAt(feet.L, T, 0.11), R: footAt(feet.R, T, 0.11)}};
+      sp = {...base, pos: {x: r.p.x, y: 0, z: r.p.z}, heading: r.h, feet: {L: footAt(feet.L, T, 0.11, true), R: footAt(feet.R, T, 0.11, true)}};
     }
   }
   return {...sp, ...(pl.act ? pl.act(T) : {})};
@@ -262,7 +262,7 @@ const H1: UPlan = {
     {k: 'keys', root: [[156.75, H1_AT.x, H1_AT.z, 268], [EV.disarmGrab, H1_AT.x, H1_AT.z, 268], [157.5, H1_AT.x + 0.1, H1_AT.z, 268], [158.0, H1_AT.x - 0.05, H1_AT.z, 266], [168.9, H1_AT.x, H1_AT.z, 262], [169.2, H1_AT.x, H1_AT.z, 140]]},
     // out of heavy 2's way as it comes on; then round behind the fight to the tether operator (its tableau grip 180.4)
     {k: 'walk', pts: [H1_AT, H1_HOLD], T0: 169.2, T1: 170.4, A: 0.4, D: 0.5, raw: true},
-    {k: 'keys', root: [[170.4, H1_HOLD.x, H1_HOLD.z, headingTo(H1_AT, H1_HOLD)], [170.9, H1_HOLD.x, H1_HOLD.z, 250], [175.5, H1_HOLD.x, H1_HOLD.z, 252], [175.8, H1_HOLD.x, H1_HOLD.z, headingTo(H1_HOLD, {x: 19.0, z: -2.4})]]},
+    {k: 'keys', root: [[170.4, H1_HOLD.x, H1_HOLD.z, headingTo(H1_AT, H1_HOLD)], [171.6, H1_HOLD.x, H1_HOLD.z, 250], [175.5, H1_HOLD.x, H1_HOLD.z, 252], [175.8, H1_HOLD.x, H1_HOLD.z, headingTo(H1_HOLD, {x: 19.0, z: -2.4})]]},
     // (round the north side of sch_21 at (16.57, 0.51): its path keeps 0.6 m off the chunk)
     {k: 'walk', pts: [H1_HOLD, {x: 19.0, z: -2.4}, {x: 17.6, z: -1.35}, H1_WAIT], T0: 175.8, T1: 177.9, A: 0.4, D: 0.5, raw: true},
     {k: 'keys', root: [[177.9, H1_WAIT.x, H1_WAIT.z, headingTo({x: 17.6, z: -1.35}, H1_WAIT)], [178.4, H1_WAIT.x, H1_WAIT.z, headingTo(H1_WAIT, {x: 14.0, z: -1.35})]]},

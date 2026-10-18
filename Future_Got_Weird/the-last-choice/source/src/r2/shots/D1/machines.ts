@@ -32,7 +32,7 @@ import {M} from '../../timing';
 import {PLAN} from '../../world/plan';
 import {armyUnits} from '../B/army';
 import {rnd} from '../../../kit/math';
-import {XZ, KR, KP, G, keyRoot, footAt, runDist, runSpeed, cruise, linePath, pathLen, fwdOf, rightOf, headingTo, after, slopeWarp, gaitFoot, rel} from './motion';
+import {XZ, KR, KP, G, keyRoot, footAt, runDist, runSpeed, cruise, linePath, pathLen, fwdOf, rightOf, headingTo, wrapD, after, slopeWarp, gaitFoot, rel} from './motion';
 import {EV, stepFeet, lastXZ, dirRoot, plateAim, dirHeadAim, runHeadAim, runRoot, brkRoot, win} from './chor';
 
 export {EV};
@@ -113,7 +113,16 @@ type Plan = {
   T0: number; T1: number; stride?: number;
   walk?: boolean; // a short walk-up, not a charge (upright, low swing)
   phases?: Phase[]; // after arrival (the first stand starts at T1)
-  act?: (T: number) => Partial<UnitSpec>;
+  act?: (T: number) => Partial<UnitSpec> & ArmW;
+};
+/** per-arm weights of an act's hand control (see run) */
+type ArmW = {armWL?: number; armWR?: number};
+/** a walk's path in gait distance (cached) */
+const WWARP = new Map<Walk, ReturnType<typeof slopeWarp>>();
+const walkWarp = (ph: Walk) => {
+  let w = WWARP.get(ph);
+  if (!w) WWARP.set(ph, (w = slopeWarp(linePath(ph.pts, 1.2), pathLen(ph.pts), {k: 1.4, cap: 2.4})));
+  return w;
 };
 const startOf = (p: Phase) => (p.kind === 'stand' ? p.root[0][0] : p.T0);
 
@@ -200,7 +209,8 @@ const run = (pl: Plan, T: number, nested = false): UnitSpec => {
     const f = feetOf(pl, i);
     sp = {...base, pos: {x: r.p.x, y: 0, z: r.p.z}, heading: r.h, feet: {L: footAt(f.L, T, 0.11), R: footAt(f.R, T, 0.11)}, lockAt: pl.T0 + 0.4, ...act};
   } else {
-    const Lw = pathLen(ph.pts), pw = linePath(ph.pts, 1.2), A = ph.A ?? 0.7, D = ph.D ?? 0.7;
+    // in gait distance (slope-warped like the charge: on the rim the steps shorten, so neither leg folds)
+    const W = walkWarp(ph), Lw = W.Ls, pw = W.path, A = ph.A ?? 0.7, D = ph.D ?? 0.7;
     const d = runDist(clamp(T, ph.T0, ph.T1), ph.T0, ph.T1, Lw, A, D);
     const k = clamp(runSpeed(T, ph.T0, ph.T1, Lw, A, D) / cruise(ph.T0, ph.T1, Lw, A, D));
     const at = pw(d), stride = ph.stride ?? 1.7, fw = fwdOf(at.heading), rt = rightOf(at.heading);
@@ -208,6 +218,7 @@ const run = (pl: Plan, T: number, nested = false): UnitSpec => {
     // the feet over the first 0.35 s (no pop at the phase change)
     const bz0 = Math.min(0.6, Lw * 0.15);
     const wk = smooth(d / bz0) * (1 - smooth((d - (Lw - bz0)) / bz0));
+    const sl = clamp(W.slope(d), -1, 1);
     const prevF = i > 0 && pl.phases![i - 1].kind === 'stand' ? feetOf(pl, i - 1) : null;
     const bl = smooth(clamp((T - ph.T0) / 0.35));
     const foot = (sd: -1 | 1, phase: number) => {
@@ -218,8 +229,29 @@ const run = (pl: Plan, T: number, nested = false): UnitSpec => {
       return {p, pitch: (f.stance ? 0 : Math.sin(Math.PI * f.s) * -12) * wk};
     };
     const fl = foot(-1, 0), fr = foot(1, 0.5);
+    // (lean and crouch grow with the speed, so they are zero where the walk meets a stand: no step at the change)
     sp = {...base, pos: at.pos, heading: at.heading, gait: {path: pw, dist: d, stride, lift: 0.14, start: 0, end: Lw}, feet: {L: fl.p, R: fr.p, pitchL: fl.pitch, pitchR: fr.pitch}, lockAt: pl.T0 + 0.4, ...act,
-      lean: 4 + 6 * k + (act.lean ?? 0), crouch: 0.04 * k + (act.crouch ?? 0)};
+      lean: 10 * k + clamp(sl * 18, -8, 14) * wk * k + (act.lean ?? 0), crouch: 0.04 * k + 0.1 * Math.abs(sl) * wk * k + (act.crouch ?? 0)};
+  }
+  // out of the charge into the first phase: lean, crouch and heading carry over from the run's last frame (0.3 s)
+  if (i === 0 && ph && T < pl.T1 + 0.3 && !nested) {
+    const e = runAt(pl, pl.T1 - 1e-4, true), w = smooth(clamp((T - pl.T1) / 0.3));
+    sp.lean = lerp(e.lean ?? 0, sp.lean ?? 0, w);
+    sp.crouch = lerp(e.crouch ?? 0, sp.crouch ?? 0, w);
+    sp.heading = e.heading + wrapD(sp.heading - e.heading) * w;
+  }
+  // hand control faded in and out (armWL / armWR: 0 → the arm's own pose, 1 → the target): no hand snapping
+  // onto a contact or back to the guard in one frame
+  for (const sd of ['L', 'R'] as const) {
+    const key = sd === 'L' ? 'armWL' : 'armWR', arm = sd === 'L' ? 'armL' : 'armR';
+    const w = (act as ArmW)[key];
+    delete (sp as ArmW)[key];
+    if (w === undefined || !sp[arm]) continue;
+    if (w <= 0.001 || nested) { sp[arm] = undefined; continue; }
+    if (w < 0.999) {
+      const free = unitAttach({...sp, [arm]: undefined} as UnitSpec)[sd === 'L' ? 'handL' : 'handR'];
+      sp[arm] = {...sp[arm]!, hand: lerp3s(free, sp[arm]!.hand!, w)};
+    }
   }
   // on the rim's slopes a planted foot can sit well below the pelvis's ground: crouch enough to keep it in reach
   const needOf = (q: UnitSpec) => {
@@ -246,13 +278,22 @@ const run = (pl: Plan, T: number, nested = false): UnitSpec => {
       need = Math.max(need, v * w);
     }
   }
-  if (need > (sp.crouch ?? 0)) sp.crouch = need;
+  // …but never so deep that the nearer foot's leg folds up (hip to ankle ≥ LEG_MIN): the far foot gives first
+  const capOf = (q: UnitSpec) => {
+    const f = q.feet ?? {}, gy = G(q.pos.x, q.pos.z);
+    return Math.min(9, ...[f.L, f.R].map((p) => {
+      if (!p) return 9;
+      const dh = Math.hypot(p.x - q.pos.x, p.z - q.pos.z);
+      return HIP_Y + (gy - p.y) - ANKLE - Math.sqrt(Math.max(0, LEG_MIN * LEG_MIN - dh * dh));
+    }));
+  };
+  if (need > (sp.crouch ?? 0)) sp.crouch = Math.max(sp.crouch ?? 0, Math.min(need, capOf(sp)));
   return sp;
 };
 const runAt = (pl: Plan, T: number, nested: boolean) => run(pl, T, nested);
 const NEED = new Map<number, Map<number, number>>();
 // the unit's leg (mech parts U): hip 1.05 m above the root's ground when standing, thigh + shin 0.98 (keep a little bend)
-const HIP_Y = 1.05, ANKLE = 0.1, LEG = 0.95;
+const HIP_Y = 1.05, ANKLE = 0.1, LEG = 0.95, LEG_MIN = 0.58;
 
 /** a key facing the Director's root at T */
 const fD = (T: number, x: number, z: number): KR => [T, x, z, headingTo({x, z}, dirRoot(T).p)];

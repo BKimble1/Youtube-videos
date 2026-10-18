@@ -33,13 +33,19 @@ export const canisters = (): CanisterOpts[] => (CANS ??= ([0, 1] as const).map((
     key: `d2can${i}`, from: canisterFrom(i), to, t0: i === 0 ? EV2.rel1 : EV2.rel2, flight: EV2.canFlight, apex: 2.1, ground: to.y, popDelay: EV2.pop,
     // R3: a wall the figures land on, not a fog over the fight: tighter, shorter-lived puffs, the breeze carrying them
     // south-east along the wall and away from the units' backs (where the Crew come in)
-    dur: 16, rate: SMK.rate, life: SMK.life, size: SMK.size, grow: SMK.grow, wind: SMK.wind, color: '#EEEAE3', seed: 3 + i * 5, bounce: 0.9, roll: 0.5,
+    dur: SMK[i].dur, rate: SMK[i].rate, life: SMK[i].life, size: SMK[i].size, grow: SMK[i].grow, wind: SMK[i].wind, color: '#EEEAE3', seed: 3 + i * 5, bounce: 0.9, roll: 0.5,
   };
 }));
-export const SMK = {rate: 12, life: 6.5, size: 0.5, grow: 0.62, wind: {x: 0.2, y: 0, z: 0.3}, spread: 0.6, jet: {x: 0.15, y: 2.4, z: 0.25}};
+export const SMK = [
+  // the first, at the wall's north-west end by the fight: small and short-lived
+  // (it burns out at ~100.8: the wall's end by the units has cleared when the Crew hit them)
+  {dur: 5.0, rate: 11, life: 6.0, size: 0.5, grow: 0.6, wind: {x: 0.25, y: 0, z: 0.35}, spread: 0.55, jet: {x: 0.2, y: 2.3, z: 0.2}},
+  // the second, mid-wall: the big screen
+  {dur: 16, rate: 14, life: 8.0, size: 0.6, grow: 0.85, wind: {x: 0.22, y: 0, z: 0.26}, spread: 0.8, jet: {x: 0.15, y: 2.5, z: 0.2}},
+];
 let SRC: SmokeSource[] | null = null;
 /** the two canisters' smoke (a wall across the crater's north-west slope) — the decoy's screen */
-export const smokeSources = (): SmokeSource[] => (SRC ??= canisters().map((c) => ({...canisterSource(c), up: 0.7, spread: SMK.spread, jet: SMK.jet, jetSpread: 1.3, opacity: 0.9})));
+export const smokeSources = (): SmokeSource[] => (SRC ??= canisters().map((c, i) => ({...canisterSource(c), up: 0.7, spread: SMK[i].spread, jet: SMK[i].jet, jetSpread: 1.3, opacity: 0.9})));
 // one evaluation of all puffs per film time (the decoy samples the density ~60 times a frame)
 let puffT = NaN, puffs: Puff[] = [];
 const puffsNow = (T: number) => {

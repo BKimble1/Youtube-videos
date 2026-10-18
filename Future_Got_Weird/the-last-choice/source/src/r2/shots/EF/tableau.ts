@@ -264,14 +264,14 @@ export const TB_OUTER: RingUnit[] = (() => {
 
 /**
  * Blocking steps during the pullback (film s): a few units close a gap or step onto the route over the ridge, one at a
- * time, guard up while they move, then 'ready' again. `to` = where they stand after; `face` = what they keep facing.
+ * time, guard up while they move, then 'ready' again. Walked on the gait at ≈ 1.2–1.3 m/s (ringCtl). `to` = where they stand after; `face` = what they keep facing.
  */
 export const TB_STEPS: {id: number; t0: number; t1: number; to: V3; face: V3; note: string}[] = [
-  {id: 7308, t0: 203.9, t1: 205.6, to: {x: -2.25, y: 0, z: -5.5}, face: {x: 6.5, y: 0, z: 2.0}, note: 'outer, north-west: down the ridge\'s north slope onto the way out over the rubble'},
-  {id: 7216, t0: 205.2, t1: 206.4, to: {x: 5.1, y: 0, z: -2.51}, face: {x: 8.3, y: 0, z: 2.4}, note: 'inner, north: a step in toward the van'},
-  {id: 7307, t0: 216.4, t1: 218.3, to: {x: -3.6, y: 0, z: 2.3}, face: {x: 6.7, y: 0, z: 3.3}, note: 'outer, west: onto the crest behind the slab'},
-  {id: 7221, t0: 212.6, t1: 213.8, to: {x: 15.09, y: 0, z: -5.67}, face: {x: 12.3, y: 0, z: 0.6}, note: 'inner, north-east: in behind the tether operator as she sinks'},
-  {id: 7302, t0: 218.7, t1: 220.5, to: {x: 15.5, y: 0, z: 14.9}, face: {x: 14.0, y: 0, z: 7.4}, note: 'outer, south-east: closes the gap past the runner'},
+  {id: 7308, t0: 203.9, t1: 206.0, to: {x: -2.25, y: 0, z: -5.5}, face: {x: 6.5, y: 0, z: 2.0}, note: 'outer, north-west: down the ridge\'s north slope onto the way out over the rubble'},
+  {id: 7216, t0: 205.2, t1: 207.3, to: {x: 5.13, y: 0, z: -2.41}, face: {x: 8.3, y: 0, z: 2.4}, note: 'inner, north: a step in toward the van'},
+  {id: 7307, t0: 216.4, t1: 219.3, to: {x: -3.6, y: 0, z: 2.3}, face: {x: 6.7, y: 0, z: 3.3}, note: 'outer, west: onto the crest behind the slab'},
+  {id: 7221, t0: 212.6, t1: 213.8, to: {x: 14.99, y: 0, z: -5.84}, face: {x: 12.3, y: 0, z: 0.6}, note: 'inner, north-east: in behind the tether operator as she sinks'},
+  {id: 7302, t0: 218.7, t1: 220.6, to: {x: 15.5, y: 0, z: 14.9}, face: {x: 14.0, y: 0, z: 7.4}, note: 'outer, south-east: closes the gap past the runner'},
 ];
 /** The ring units that turn to the drone pilot while she crawls in (attention snaps to her, tracks her, lets go). */
 const PILOT_WATCH: Record<number, [number, number]> = {7214: [186.75, 189.9], 7216: [186.6, 190.4], 7218: [187.15, 189.6], 7210: [187.4, 190.2]};
@@ -330,16 +330,30 @@ const ringCtl = (u: RingUnit, T: number): Partial<UnitSpec> => {
   if (TETHER_WATCH.has(id)) attend.push({t0: stagger(id, SURRENDER.tether.sink + 0.3, 0.5, 5), t1: SURRENDER.tether.sunk + 1.4 + rnd(id) * 0.8, at: on(12.3, 0.5, 0.9)});
   const st = TB_STEPS.find((s) => s.id === id);
   let heading = u.heading;
+  let walk: Partial<UnitSpec> = {};
   if (st) {
-    moves.push({t0: st.t0, t1: st.t1, to: st.to, face: st.face, guard: true});
+    // walked on the gait (planted feet, a real stride; the kit's `moves` solver strides too fast for 2–4 m): the heading
+    // eases round to the line of travel as it sets off, and at the far end it turns to face with planted pivot steps
+    const L = Math.hypot(st.to.x - u.pos.x, st.to.z - u.pos.z), hT = headingTo(u.pos, st.to);
+    const wrapD = (a: number) => ((a + 540) % 360) - 180;
+    if (T >= st.t0 && T < st.t1) {
+      const hd = u.heading + wrapD(hT - u.heading) * smooth((T - st.t0) / 0.45);
+      const f = hv(hT);
+      const path: Path = (dd) => ({pos: {x: u.pos.x + f.x * dd, y: 0, z: u.pos.z + f.z * dd}, heading: hd});
+      walk = {gait: {path, dist: L * smooth((T - st.t0) / (st.t1 - st.t0)), start: 0, end: L}};
+    } else if (T >= st.t1) {
+      walk = {pos: st.to, turns: [{t0: st.t1 + 0.05, to: st.face}]};
+      heading = hT;
+    }
     posture.push([st.t0 - 0.25, 'guard'], [st.t1 + 0.3, 'ready']);
-    heading = u.heading;
   }
   // the outer cordon watches outward-and-round (the city), the inner ring the survivors
   const outer = id >= 7300;
   const scan: ScanSpec = {t0: scanAt(id), center: outer ? undefined : {x: RING_C.x - 1.5, y: 1, z: RING_C.z + 1.5}, span: outer ? 90 : 55, dwell: 1.3, seed: id, torso: 0.2};
   void T;
-  return {posture, scan, attend: attend.length ? attend : undefined, moves: moves.length ? moves : undefined, heading};
+  // (a little lower while it walks the ridge slope, eased: the downhill leg must not lock straight)
+  const crouch = st ? 0.06 * win(T, st.t0 - 0.35, st.t1 + 0.6, 0.35, 0.6) : 0;
+  return {posture, scan, attend: attend.length ? attend : undefined, moves: moves.length ? moves : undefined, heading, crouch: u.crouch + crouch, ...walk};
 };
 
 export const ringSpecs = (T: number): UnitSpec[] => [...TB_RING, ...TB_OUTER].map((u) => ({

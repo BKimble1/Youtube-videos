@@ -120,7 +120,7 @@ export const pipeDist = (p: XZ): {d: number; at: V3} => {
 
 // ------------------------------------------------------------------ the smoke and the decoy (geometry only)
 /** where the two canisters land: the wall across the crater's north-west slope, south-west of the pipe */
-export const CAN_TO: [XZ, XZ] = [{x: 51.8, z: -1.15}, {x: 55.4, z: 0.05}];
+export const CAN_TO: [XZ, XZ] = [{x: 51.9, z: -1.2}, {x: 54.85, z: -0.45}];
 /** the light figures' plane: human-sized walking silhouettes in the smoke (≈ 1.6 × a person, projected — not giants),
  *  walking east-south-east down into the crater, the plane facing the projector on the slab (south-west) */
 export const DECOY = {
@@ -298,17 +298,21 @@ const run = (pl: Plan, T: number): UnitSpec => {
     const k = clamp(runSpeed(T, ph.T0, ph.T1, L, A, D) / cruise(ph.T0, ph.T1, L, A, D));
     const at = path(d);
     const a = walkOnly(act);
+    // the walk's carriage (4° + speed) eases in from the stance before it, and out into the stance after (kit phase)
+    const wIn = i > 0 && pl.phases[i - 1].kind !== 'walk' ? smooth(clamp((T - ph.T0) / 0.35)) : 1;
     return {
       id: pl.id, t: T, pos: at.pos, heading: at.heading, ground, idle: 0.5, key: pl.key, lockAt,
       gait: {path, dist: d, stride: ph.stride ?? 1.6, lift: 0.14, start: 0, end: L},
-      ...a, lean: 4 + 6 * k + (a.lean ?? 0), crouch: 0.04 * k + (a.crouch ?? 0),
+      ...a, lean: (4 + 6 * k) * wIn + (a.lean ?? 0), crouch: 0.04 * k + (a.crouch ?? 0),
     };
   }
   if (ph.kind === 'kit') {
     const a = kitOnly(act, ph.T0);
     const at = ph.at ?? kitAt(pl, i);
     const prev = pl.phases[i - 1];
-    return takeover({id: pl.id, t: T, pos: {x: at.x, y: 0, z: at.z}, heading: at.h, ground, idle: 0.45, key: pl.key, lockAt, ...a}, prev && prev.kind === 'd1' ? ph.T0 : -1e9);
+    const sp = takeover({id: pl.id, t: T, pos: {x: at.x, y: 0, z: at.z}, heading: at.h, ground, idle: 0.45, key: pl.key, lockAt, ...a}, prev && prev.kind === 'd1' ? ph.T0 : -1e9);
+    if (prev && (prev.kind === 'walk' || prev.kind === 'cont')) sp.lean = (sp.lean ?? 0) + 4 * (1 - smooth(clamp((T - ph.T0) / 0.35)));
+    return sp;
   }
   return {id: pl.id, t: T, ground, idle: 0.3, key: pl.key, lockAt, ...act, ...ph.at(T)};
 };
@@ -392,7 +396,7 @@ const B_PLAN: Plan = {
       ],
       crouch: 0.5 * sag, lean: 16 * kn + 10 * after(T, EV2.rip, 0.3),
       // on its knee it swings its right arm back at the man behind it (he ducks), then braces the hand on the knee
-      armR: back ? {hand: back, open: true} : T > EV2.bBack + 0.6 && T < EV2.pryPop + 0.35 ? {hand: bKneeHand()} : undefined,
+      armR: back ? {hand: back, open: true} : T > EV2.bBack + 0.75 && T < EV2.pryPop + 0.35 ? {hand: bKneeHand()} : undefined,
       twist: back ? -40 * win(T, EV2.bBack - 0.45, EV2.bBack + 0.4, 0.3, 0.3) : 0,
       hits: [{t0: EV2.knee, dir: hdir(125), strength: 0.9}, {t0: EV2.blast + 0.06, dir: norm3(sub3(on(B_STRIKE_AT), BLAST_AT)), strength: 0.2},
         {t0: EV2.pryPop, dir: hdir(125), strength: 0.5}, {t0: EV2.rip, dir: hdir(305), strength: 0.45}],
@@ -421,10 +425,10 @@ const bKneeFeet = (T: number) => {
 const bKneeHand = (): V3 => { const r = bRoot(), f = hdir(r.h), rt = rightOf(r.h); return {x: r.x + f.x * 0.25 - rt.x * 0.24, y: G(r.x, r.z) + 0.62, z: r.z + f.z * 0.25 - rt.z * 0.24}; };
 /** the backhand: its right hand sweeps back and round toward the man at its back (he ducks under it) */
 const bBackhand = (T: number): V3 | undefined => {
-  if (T < EV2.bBack - 0.45 || T > EV2.bBack + 0.6) return undefined;
+  if (T < EV2.bBack - 0.45 || T > EV2.bBack + 0.75) return undefined;
   const r = bRoot(), p = on(r, 0), f = hdir(r.h), rt = rightOf(r.h);
   const P = (fw: number, ri: number, up: number): V3 => ({x: p.x + f.x * fw + rt.x * ri, y: p.y + up, z: p.z + f.z * fw + rt.z * ri});
-  const K: [number, V3][] = [[EV2.bBack - 0.45, bKneeHand()], [EV2.bBack - 0.2, P(0.25, 0.55, 1.3)], [EV2.bBack, P(-0.55, 0.45, 1.25)], [EV2.bBack + 0.15, P(-0.7, 0.05, 1.2)], [EV2.bBack + 0.6, bKneeHand()]];
+  const K: [number, V3][] = [[EV2.bBack - 0.45, bKneeHand()], [EV2.bBack - 0.2, P(0.25, 0.55, 1.3)], [EV2.bBack, P(-0.55, 0.45, 1.25)], [EV2.bBack + 0.18, P(-0.7, 0.05, 1.2)], [EV2.bBack + 0.75, bKneeHand()]];
   for (let i = 1; i < K.length; i++) if (T <= K[i][0]) {
     const u = (T - K[i - 1][0]) / (K[i][0] - K[i - 1][0]);
     return lerp3s(K[i - 1][1], K[i][1], i === 2 ? easeIn(u) : i === 3 ? easeOut(u) : smooth(u));
@@ -555,7 +559,7 @@ const aDrag = (T: number): Partial<UnitSpec> & {pos: V3; heading: number} => {
     return {x: fx, y: G(fx, fz), z: fz};
   };
   return {pos: {x, y: 0, z}, heading: h, idle: 0.45, feet: {L: foot(-1), R: foot(1), pitchL: (-18 * trail) / 0.3, pitchR: (-14 * trail) / 0.3},
-    lean: 10 + 14 * win(T, EV2.taut + 0.05, EV2.crash, 0.2, 0.05)};
+    lean: 10 + 14 * win(T, EV2.taut + 0.05, EV2.crash + 0.06, 0.2, 0.12)};
 };
 /** where the pair hit the girder (the impact point on C's chest / the chord) */
 export const CRASH_AT = (): V3 => { const e = crashC(), d = dragDir(); return {x: e.x + d.x * 0.3, y: chordY(e.x + d.x * 0.3) - 0.2, z: e.z + d.z * 0.3}; };
@@ -601,7 +605,7 @@ const cDrag = (T: number): Partial<UnitSpec> & {pos: V3; heading: number} => {
   const f = hdir(h), r = rightOf(h);
   const trail = 0.22 * win(T, EV2.sweep, EV2.crash + 0.15, 0.05, 0.2);
   const foot = (sd: number): V3 => { const fx = x - f.x * trail + r.x * sd * 0.19, fz = z - f.z * trail + r.z * sd * 0.19; return {x: fx, y: G(fx, fz), z: fz}; };
-  return {pos: {x, y: 0, z}, heading: h, feet: {L: foot(-1), R: foot(1), pitchL: -12, pitchR: -16}, lean: -12 * win(T, EV2.sweep, EV2.crash, 0.04, 0.12) + 14 * after(T, EV2.crash - 0.02, 0.08)};
+  return {pos: {x, y: 0, z}, heading: h, feet: {L: foot(-1), R: foot(1), pitchL: -12, pitchR: -16}, lean: -12 * win(T, EV2.sweep, EV2.crash + 0.04, 0.04, 0.14) + 14 * after(T, EV2.crash - 0.03, 0.14)};
 };
 const C_PLAN: Plan = {
   id: 8112, key: 'd2C', d1: 'R2',
@@ -612,7 +616,7 @@ const C_PLAN: Plan = {
       const d = runDist(Math.min(T, w.T1), w.T0, w.T1, L, w.A ?? 0.7, 0);
       const k = clamp(runSpeed(T, w.T0, w.T1, L, w.A ?? 0.7, 0) / cruise(w.T0, w.T1, L, w.A ?? 0.7, 0));
       const at = path(d);
-      return {pos: at.pos, heading: at.heading, gait: {path, dist: d, stride: w.stride ?? 1.6, lift: 0.14, start: 0, end: 1e9}, lean: 5 + 6 * k, crouch: 0.04 * k, idle: 0.5};
+      return {pos: at.pos, heading: at.heading, gait: {path, dist: d, stride: w.stride ?? 1.6, lift: 0.14, start: 0, end: 1e9}, lean: (5 + 6 * k) * smooth(clamp((T - w.T0) / 0.4)), crouch: 0.04 * k, idle: 0.5};
     }},
     {kind: 'fn', T0: EV2.sweep, at: cDrag},
   ],

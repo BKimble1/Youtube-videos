@@ -64,7 +64,7 @@ export const keyRoot = (k: KR[], T: number): {p: XZ; h: number} => {
  * A stepping foot: planted at each key; between two keys whose positions differ it swings (smooth, an arc of `lift`
  * metres). Keys that repeat a position are holds. Height from the ground.
  */
-export const footAt = (k: KP[], T: number, lift = 0.12): V3 & {swing: number} => {
+export const footAt = (k: KP[], T: number, lift = 0.12, soft = false): V3 & {swing: number} => {
   if (T <= k[0][0]) return {...onG(k[0][1], k[0][2]), swing: 0};
   for (let i = 1; i < k.length; i++) if (T <= k[i][0]) {
     const a = k[i - 1], b = k[i];
@@ -74,7 +74,10 @@ export const footAt = (k: KP[], T: number, lift = 0.12): V3 & {swing: number} =>
     const lf = b.length > 3 ? (b[3] as number) : lift;
     const e = lf > 0 ? smooth(u) : 1 - (1 - u) * (1 - u); // a slide decelerates (friction)
     const x = lerp(a[1], b[1], e), z = lerp(a[2], b[2], e);
-    const y = G(x, z) + Math.sin(Math.PI * u) * lf;
+    // soft (R3, D4's keyed units): the foot leaves and meets the ground with zero vertical speed (sin²), and a quick
+    // step lifts less (full lift from 0.3 s), so a short shuffle never jumps ~10 cm in a frame; default: the R2 arc
+    const ly = soft ? Math.pow(Math.sin(Math.PI * u), 2) * lf * Math.min(1, (b[0] - a[0]) / 0.3) : Math.sin(Math.PI * u) * lf;
+    const y = G(x, z) + ly;
     return {x, y, z, swing: lf > 0 ? Math.sin(Math.PI * u) : 0};
   }
   const l = k[k.length - 1];

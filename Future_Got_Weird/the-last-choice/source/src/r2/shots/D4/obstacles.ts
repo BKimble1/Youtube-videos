@@ -207,7 +207,7 @@ export const SOLIDS: Solid[] = [
 export const WRECKS_D1: {x: number; z: number; r: number}[] = [{x: 39.6, z: 4.35, r: 1.2}, {x: 40.6, z: -3.6, r: 1.1}, {x: 40.7, z: -4.9, r: 1.0}];
 /** where W1–W3 lie once down (root + 1.1 m along the fall; EF TB_WRECKS), from their fall times */
 export const WRECKS_D4: {x: number; z: number; r: number; from: number}[] = [
-  {x: 13.4 + 0.85 * 1.1, z: -3.0 - 0.5 * 1.1, r: 1.15, from: 163.4}, {x: 15.0 + 0.24 * 1.1, z: 3.9 + 0.97 * 1.1, r: 1.15, from: 164.5}, {x: 16.8 + 0.29 * 1.1, z: -2.6 - 0.96 * 1.1, r: 1.15, from: 165.1},
+  {x: 13.4 + 0.85 * 1.1, z: -3.0 - 0.5 * 1.1, r: 1.15, from: 163.4}, {x: 15.0 + 0.648 * 1.1, z: 3.9 + 0.762 * 1.1, r: 1.15, from: 164.5}, {x: 16.8 + 0.29 * 1.1, z: -2.6 - 0.96 * 1.1, r: 1.15, from: 165.1},
 ];
 
 type Poly = {key: string; h: number; v: XZ[]};

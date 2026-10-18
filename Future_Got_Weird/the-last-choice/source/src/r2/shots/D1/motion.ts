@@ -74,8 +74,12 @@ export const footAt = (k: KP[], T: number, lift = 0.12): V3 & {swing: number} =>
     const lf = b.length > 3 ? (b[3] as number) : lift;
     const e = lf > 0 ? smooth(u) : 1 - (1 - u) * (1 - u); // a slide decelerates (friction)
     const x = lerp(a[1], b[1], e), z = lerp(a[2], b[2], e);
-    const y = G(x, z) + Math.sin(Math.PI * u) * lf;
-    return {x, y, z, swing: lf > 0 ? Math.sin(Math.PI * u) : 0};
+    // the arc: eased at both ends (sin²: no vertical snap at lift-off or plant), no higher than a short or quick step
+    // allows (≤ 0.4 × its length + 1 cm, ≤ 0.4 m/s × its duration: a 1 cm shuffle does not hop)
+    const lh = lf > 0 ? Math.min(lf, 0.4 * Math.hypot(b[1] - a[1], b[2] - a[2]) + 0.01, 0.4 * (b[0] - a[0])) : 0;
+    const sw = Math.sin(Math.PI * u);
+    const y = G(x, z) + sw * sw * lh * 1.15;
+    return {x, y, z, swing: lf > 0 ? sw : 0};
   }
   const l = k[k.length - 1];
   return {...onG(l[1], l[2]), swing: 0};
