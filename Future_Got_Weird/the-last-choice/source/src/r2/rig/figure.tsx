@@ -358,11 +358,22 @@ export const solve2 = (p: FigProps): Rig2 => {
       if (disc < 0) return null;
       return q.z + (-qb + Math.sqrt(disc)) / (2 * qa);
     };
+    // depth along the camera's HORIZONTAL axis (the camera pitch undone): beside the torso, in front of or behind its
+    // mid-plane is judged level, so looking down on a figure does not put its hanging hands "behind" it (lower points
+    // are farther from a camera above) nor bring them forward under a low camera
+    const zHor = (q: V3) => {
+      const dx = q.x - root.x, dy = q.y - root.y;
+      const y1 = -dx * sr + dy * cr;
+      return y1 * sph + q.z * cph;
+    };
+    const zTH = zHor(out.torso({r: 0, u: 70, f: 0})) + 6 * s;
     out.zoneAt = (q: V3) => {
       const fz = frontSurf(q);
-      if (fz !== null ? q.z < fz - 2 * s : q.z <= zT) return 0;
-      const dx = (q.x - Hc.x) / hr, dy = (q.y - Hc.y) / hry;
-      return q.z > Hc.z + HEAD_R * s * Math.sqrt(Math.max(0, 1 - dx * dx - dy * dy)) ? 2 : 1;
+      if (fz !== null ? q.z < fz - 2 * s : zHor(q) <= zTH) return 0;
+      // over the head's outline: in front of the face only if in front of the head's own surface there
+      const dx = (q.x - Hc.x) / hr, dy = (q.y - Hc.y) / hry, d2 = dx * dx + dy * dy;
+      if (d2 >= 1) return 1;
+      return q.z > Hc.z + HEAD_R * s * Math.sqrt(1 - d2) ? 2 : 1;
     };
     out.rankAt = (q: V3) => out.zoneZ[out.zoneAt(q)] + clamp((q.z - out.torsoZ) / (600 * s), -1, 1) * 0.3;
   }
