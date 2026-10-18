@@ -1244,7 +1244,9 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
           : lid > 0.08 || lids > 0.1 ? <path d={`M ${-12.5 * s} ${f2(Math.min(lidY + 3 * s, 0))} Q 0 ${f2(lidY - 2 * s)} ${12.5 * s} ${f2(Math.min(lidY + 3 * s, 0))}`} fill="none" stroke={inkC} strokeWidth={ink * 0.8} strokeLinecap="round" /> : null}
       </g>,
     );
-    if (bo.z > 0 || bi.z > 0) feats.push(<line key={`brow${sd}`} x1={bo.x} y1={bo.y} x2={bi.z > -0.05 ? bi.x : bo.x} y2={bi.y} stroke={inkC} strokeWidth={ink + 1 * s} strokeLinecap="round" opacity={clamp(Math.max(bo.z, bi.z) * 3)} />);
+    // (the brow fades with its eye: R2 kept a brow at full strength while the eye under it had faded out, so in rear
+    // three-quarter views a lone brow stub stuck out from under the hair at the silhouette)
+    if (bo.z > 0.05 || bi.z > 0.05) feats.push(<line key={`brow${sd}`} x1={bo.x} y1={bo.y} x2={bi.z > -0.05 ? bi.x : bo.x} y2={bi.y} stroke={inkC} strokeWidth={ink + 1 * s} strokeLinecap="round" opacity={Math.min(clamp(Math.max(bo.z, bi.z) * 3), clamp(op * 1.6))} />);
   });
   const glasses = look.accessories.includes('glasses') ? 'rect' : look.accessories.includes('roundGlasses') ? 'round' : null;
   if (glasses) {
@@ -1456,10 +1458,12 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     // and standing a little off it, so it is long in profile, a short stub poking out sideways from the front, and
     // behind the skull when that ear is turned away. (R2 drew a flat 2D pencil at a fixed screen angle in front of
     // everything: from the side and in a lean it lay across the brow and the eye.)
-    const mid3 = dir(-112, -0.14, 1.08);
-    const ax3 = norm3(add3(add3(mul3(hb.F, 0.82), mul3(hb.U, -0.3)), mul3(hb.R, -0.42)));
+    // (diagonal behind the ear: the eraser end up and back over the ear, the point down and forward just in front of
+    // it, standing a little off the head, so in profile it never reaches the eye or the glasses)
+    const mid3 = dir(-104, -0.26, 1.1);
+    const ax3 = norm3(add3(add3(mul3(hb.F, 0.55), mul3(hb.U, -0.72)), mul3(hb.R, -0.3)));
     const P = (k: number) => ({x: Hc.x + mid3.x + ax3.x * k * s, y: Hc.y + mid3.y + ax3.y * k * s});
-    const back = P(-30), front = P(30), tip = P(41);
+    const back = P(-27), front = P(24), tip = P(34);
     const zc = mid3.z / R + ax3.z * 0.3;
     const dx = front.x - back.x, dy = front.y - back.y, dl = Math.hypot(dx, dy) || 1;
     const nx = (-dy / dl) * 5 * s, ny = (dx / dl) * 5 * s;
