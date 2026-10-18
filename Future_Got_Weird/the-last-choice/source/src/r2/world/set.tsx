@@ -217,7 +217,9 @@ const buildStatic = (): Static[] => {
     // (R3) 0.6 m strips across the slab: the Crew climb, crouch and stand beside these on the ridge
     out.push(splitNear(brokenSlab(o, U, V, w, h, 0.24 + rnd(s * 17) * 0.18, s), (m) => splitPlanar2(m, 0.6, U), `rslab_${i}`));
     const topMid = add3(add3(o, mul3(U, w * 0.5)), mul3(V, h * 0.95));
-    EXTRA_PUSH.push(...rebarAt(`rreb_${i}`, topMid, norm3(add3(V, mul3(U, 0.3))), 3 + Math.floor(rnd(s * 19) * 3), 0.7 + rnd(s * 23) * 0.8, s));
+    // (R3: slab 15, 3–4 m south of the death seat, keeps no rebar: on F1's crane-up its strands crossed the pilot and the
+    // Director for 3 s)
+    if (i !== 15) EXTRA_PUSH.push(...rebarAt(`rreb_${i}`, topMid, norm3(add3(V, mul3(U, 0.3))), 3 + Math.floor(rnd(s * 19) * 3), 0.7 + rnd(s * 23) * 0.8, s));
   }
   for (let i = 0; i < 90; i++) {
     const s = 600 + i;
