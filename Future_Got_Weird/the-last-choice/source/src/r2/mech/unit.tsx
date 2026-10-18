@@ -605,11 +605,22 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
     if (t < a.t0 - 0.02) continue;
     const w = smooth((t - a.t0) / 0.18) * (a.t1 !== undefined ? 1 - smooth((t - a.t1) / 0.4) : 1);
     if (w <= 0) continue;
-    const P = ptAt(a.at, t);
+    // a short trailing window (head ~0.16 s, torso ~0.25 s behind it): even a fast flyby turns the head and torso over
+    // several frames instead of one
+    const hd0 = {x: root.x, y: gy + 2.05, z: root.z};
+    let dsum = ZERO;
+    for (let k = 0; k < 5; k++) dsum = add3(dsum, norm3(sub3(ptAt(a.at, Math.max(a.t0, t - k * 0.04)), hd0)));
+    const P = add3(hd0, mul3(norm3(dsum), 3));
     attendP = attendP ? lerp3(attendP, P, w) : P;
     attendW = attendW + (1 - attendW) * w;
     const lagW = smooth((t - a.t0 - 0.12) / 0.35) * w;
-    attTwist = lerp(attTwist, behindFade(-clamp(wrapD(headingTo(root, P) - heading) * 0.45, -35, 35), wrapD(headingTo(root, P) - heading)), lagW);
+    let tw = 0;
+    for (let k = 0; k < 6; k++) {
+      const Pk = ptAt(a.at, Math.max(a.t0, t - 0.1 - k * 0.05));
+      const dk = wrapD(headingTo(root, Pk) - heading);
+      tw += behindFade(-clamp(dk * 0.45, -35, 35), dk) / 6;
+    }
+    attTwist = lerp(attTwist, tw, lagW);
   }
   twist += attTwist;
   let scanW = 0, scanDir: V3 | null = null, scanTwist = 0;
