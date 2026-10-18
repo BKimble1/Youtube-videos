@@ -816,7 +816,7 @@ export const heavy1 = (T: number, o: Partial<HeavySpec> = {}): HeavySpec => {
   const p = path(HV_D0 + d);
   const crew = on({x: 48.6, z: -6.6}, 1.4);
   return {
-    id: HEAVY1.id, t: T, pos: p.pos, heading: p.heading, gait: {path, dist: HV_D0 + d, stride: 3.0}, ground,
+    id: HEAVY1.id, t: T, pos: p.pos, heading: p.heading, gait: {path, dist: HV_D0 + d, stride: 3.0, distAt: (t: number) => HV_D0 + heavy1Dist(t)}, ground,
     look: T < 96.0 ? on({x: 44, z: 0}, 1.5) : T < 98.0 ? smokeC : T < 108.6 ? decoyPt(1, T, 0.5) : crew,
     eye: 'cyan', lockAt: 98.1, fire: {t0: EV2.fire, target: BLAST_AT}, key: 'd2hv1', ...o,
   };
