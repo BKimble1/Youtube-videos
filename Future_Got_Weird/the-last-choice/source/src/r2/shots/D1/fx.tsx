@@ -65,7 +65,8 @@ const landDust = (T: number, name: string, seed: number): FxOut => {
   }));
 };
 /** the kit's breaker hit without its white star (the audit: no large flash over the contact); sparks, chips, ring stay */
-const ramHit = (o: Parameters<typeof breakerHit>[0]): FxOut => { const b = breakerHit(o); return {...b, items: b.items.filter((it) => !(it.key ?? '').endsWith('_star'))}; };
+// (R3: its point light (power 1.4 x strength, radius 6 m) is kept but at 0.35: at full power it washed the whole frame milky for 3 frames at every ram hit)
+const ramHit = (o: Parameters<typeof breakerHit>[0]): FxOut => { const b = breakerHit(o); return {...b, items: b.items.filter((it) => !(it.key ?? '').endsWith('_star')), lights: b.lights.map((l) => ({...l, power: l.power * 0.35}))}; };
 /** a contact between t0 − 0.1 and t0 + span */
 const near = (T: number, t0: number, span = 2.2) => T > t0 - 0.1 && T < t0 + span;
 
