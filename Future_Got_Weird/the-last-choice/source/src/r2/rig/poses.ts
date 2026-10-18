@@ -165,8 +165,8 @@ export const THROW = (k: number): Pose => {
 // the rear (right) hand at f 70, which with the 34° lean put it at the back of the jaw, so the bar ran through the head
 // (shots that place the hands by world targets keep their own hand positions; only the body comes from here)
 export const PRY = (k: number): Pose => blendPose(
-  {drop: 60, lean: 34, armR: {local: {r: 36, u: 200, f: 150}}, armL: {local: {r: -10, u: 130, f: 185}}, handL: 'grip', handR: 'grip', twoHanded: true, legL: {local: {r: -50, u: 10, f: 60}}, legR: {local: {r: 56, u: 10, f: -40}}, face: {mouth: 'grit', brows: -0.7}},
-  {drop: 76, lean: 44, armR: {local: {r: 36, u: 160, f: 175}}, armL: {local: {r: -10, u: 150, f: 195}}, handL: 'grip', handR: 'grip', twoHanded: true, legL: {local: {r: -50, u: 10, f: 60}}, legR: {local: {r: 56, u: 10, f: -40}}, face: {mouth: 'grit', brows: -1}},
+  {drop: 60, lean: 34, armR: {local: {r: 34, u: 150, f: 160}}, armL: {local: {r: -10, u: 112, f: 188}}, handL: 'grip', handR: 'grip', twoHanded: true, legL: {local: {r: -50, u: 10, f: 60}}, legR: {local: {r: 56, u: 10, f: -40}}, face: {mouth: 'grit', brows: -0.7}},
+  {drop: 76, lean: 44, armR: {local: {r: 34, u: 108, f: 178}}, armL: {local: {r: -10, u: 116, f: 198}}, handL: 'grip', handR: 'grip', twoHanded: true, legL: {local: {r: -50, u: 10, f: 60}}, legR: {local: {r: 56, u: 10, f: -40}}, face: {mouth: 'grit', brows: -1}},
   k,
 );
 
