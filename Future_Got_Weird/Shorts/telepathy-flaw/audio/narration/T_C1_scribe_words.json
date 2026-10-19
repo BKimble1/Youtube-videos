@@ -1,0 +1,12 @@
+{
+ "source": "ElevenLabs Scribe (eleven_scribe_v1), flow C7YtngsgBvJsYtNKWBXa, transcription session vZx8chvPGD8PZKWD3zMu, of take C1 (generation KSIjaftv2hgtDOjMINqr)",
+ "note": "Scribe returned the first token '[interested]' (the direction tag) at 0-0.064 s and 'seamlessly—until' as one token; both are handled in tools/build_voice.py",
+ "spoken_duration_secs": 27.68,
+ "words": [
+  ["[interested]",0,0.064],["This",0.08,0.24],["brain",0.4,0.64],["chip",0.72,0.96],["lets",1.04,1.12],["you",1.2,1.28],["talk",1.4,1.52],["to",1.6,1.68],["someone",1.84,2],["just",2.16,2.32],["by",2.44,2.56],["thinking.",2.64,3.52],
+  ["Instead",3.68,3.84],["of",3.88,3.92],["using",4,4.16],["vocal",4.24,4.56],["cords,",4.64,5.2],["the",5.28,5.36],["chip",5.44,5.6],["reads",5.68,5.92],["neural",6,6.24],["impulses",6.32,6.8],["in",6.88,6.96],["your",7.04,7.12],["motor",7.24,7.36],["cortex,",7.4,8.16],["translating",8.32,8.72],["your",8.8,8.88],["thoughts",9,9.2],["into",9.32,9.44],["direct",9.64,9.84],["messages",9.92,10.4],["instantly.",10.48,11.52],
+  ["It",11.6,11.68],["works",11.84,12],["seamlessly—until",12.08,13.36],["your",13.44,13.52],["brain",13.68,13.84],["generates",13.92,14.24],["an",14.32,14.36],["intrusive",14.4,14.96],["thought.",15.44,15.96],
+  ["Humans",16,16.32],["have",16.4,16.64],["thousands",16.72,17.12],["of",17.2,17.36],["dark,",17.52,17.76],["unwanted",17.84,18.32],["thoughts",18.44,18.72],["every",18.8,19.12],["single",19.28,19.44],["day",19.56,19.68],["that",19.76,19.84],["we",19.96,20.08],["never",20.2,20.32],["intend",20.4,20.64],["to",20.72,20.8],["act",20.88,21.04],["on.",21.12,21.8],
+  ["The",21.84,21.92],["chip",22.04,22.16],["can't",22.24,22.4],["tell",22.48,22.56],["the",22.64,22.72],["difference",22.88,23.04],["between",23.12,23.36],["what",23.44,23.52],["you",23.6,23.76],["wanted",23.84,24],["to",24.08,24.16],["say...",24.24,24.827],["and",24.853,24.88],["the",24.96,25.04],["dark",25.12,25.36],["thought",25.44,25.68],["you",25.72,25.76],["were",25.88,26],["desperately",26.08,26.56],["trying",26.68,26.8],["to",26.88,26.96],["bury.",27.16,27.68]
+ ]
+}
