@@ -59,7 +59,7 @@ function CALLBACK_EV_TAKE() {
 }
 export const JUMP_CLIP = FILM.jump(JUMP_T0);
 export const JUMP_END = (JUMP_CLIP.frame0 + (JUMP_CLIP.to - JUMP_CLIP.from + 1)) / 30;
-export const HOVER_CLIP = FILM.hover(JUMP_END + 0.03);
+export const HOVER_CLIP = FILM.hover(JUMP_END); // frame-exact: the first hover frame follows the last jump frame
 export const HOVER_END = (HOVER_CLIP.frame0 + (HOVER_CLIP.to - HOVER_CLIP.from + 1)) / 30;
 const camAt = (t: number): Cam =>
   t >= HOVER_END ? CAM_OUT : camKeys(t, [[0, CAMR], [110.45, CAMR], [111.4, CAM_F], [112.35, CAM_F], [113.6, CAM_JUMP], [HOVER_END, CAM_JUMP]], easeInOut);

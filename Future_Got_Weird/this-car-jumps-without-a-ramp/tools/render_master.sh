@@ -21,5 +21,5 @@ mkdir -p exports
 (cd source && npx remotion render src/index.ts Main "$TMP/video.mp4" --scale=2 --muted --props='{"audio":false}' \
   --codec=h264 --crf=14 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=${CONC:-4})
 ffmpeg -v error -y -i "$TMP/video.mp4" -i audio/mix/mix.wav -map 0:v:0 -map 1:a:0 -c:v copy \
-  -c:a aac -b:a 320k -ac 2 -ar 48000 -shortest -movflags +faststart "$OUT"
+  -c:a aac -b:a 320k -ac 2 -ar 48000 -movflags +faststart "$OUT"
 sha256sum "$OUT" | tee exports/FGW_U9_FINAL_4K.sha256
