@@ -833,7 +833,7 @@ export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
     if (o.maxDist && d - s.r > o.maxDist && g !== 'flat') return;
     let it = s.item;
     // (only the vehicles' levels change how they LOOK — the far mesh has no wheels; the girder's and the van's differ in strips only)
-    const dl = lodCams && /^(wreck_|veh_)/.test(s.item.key ?? '') ? minDistTo(lodCams, s.c) : d;
+    const dl = lodCams && /^(wreck_|veh_)/.test(s.item.key ?? '') ? Math.min(minDistTo(lodCams, s.c), d) : d;
     if (s.lods) for (const l of s.lods) if (dl > l.d) it = l.item;
     items.push(fadeOp < 1 ? {...it, opacity: fadeOp} : it);
   };
@@ -850,8 +850,8 @@ export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
   // the city with LOD; blocks behind the frontage only when the camera is high enough to see them
   if (!skip.has('city')) {
     const low = cam.y < 26;
-    // (no shortcut at all during a long move: E2 / F1 — see lodwin.ts)
-    const frontage = low && !lodCams ? occluders() : null;
+    // (no shortcut at all during E2 / F1: the crane's rise passes 26 m — see lodwin.ts)
+    const frontage = low && !win?.noShortcut ? occluders() : null;
     CITY().forEach((b) => {
       if (skip.has('far') && b.zone === 'far') return;
       const c = {x: (b.x0 + b.x1) / 2, y: b.h / 2, z: (b.z0 + b.z1) / 2};
@@ -861,7 +861,7 @@ export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
       // popped in at once when F1's crane rose past 26 m (and any gap or rubble lot showed an empty block). It now drops a block
       // only while it is really hidden behind the frontage (every probe point of its roof is behind an opaque building).
       if (frontage && b.zone === 'block' && b.h < 46 && dNow > 90 && Math.abs(cam.z) < 30 && hiddenBehind(frontage, cam, b)) return;
-      const d = lodCams ? envelopeDist(lodCams, b, c) : dNow;
+      const d = lodCams ? Math.min(envelopeDist(lodCams, b, c), dNow) : dNow; // (never coarser than the camera's distance now)
       const lod = lodFor(b, d);
       items.push({kind: 'mesh', mesh: bldgMesh(b, lod), key: `bl_${b.id}`});
       if (lod < 2 && dNow < STEEL_FADE[1] && (b.breach || b.crown) && !skip.has('debris')) items.push(...steelOf(b));

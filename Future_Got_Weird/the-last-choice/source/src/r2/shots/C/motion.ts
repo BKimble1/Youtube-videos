@@ -578,7 +578,10 @@ export const climbAt = (c: Climb, T: number): Body => {
   // started its swing); the next step's swing starts from that height, so the foot is continuous across the boundary)
   const prevSt = i > 0 ? S[i - 1] : null;
   const carry = prevSt && Math.hypot(prevSt.other.x - st.from.x, prevSt.other.z - st.from.z) < 0.02 ? REAR_LIFT * prevSt.steep : 0;
-  const fy = v >= 1 ? st.to.y : Math.max(lerp(st.from.y, st.to.y, ey) + arc + carry * (1 - smooth(Math.min(1, v * 2))), GC(x, z) + 0.9 * arc);
+  // (the swinging ankle stays within 0.40 m of the root's height: R3's foot rose to the pelvis (ankle 0.59 above the root, hip
+  // 0.57) and the IK knee flipped from below the hip to above it in one frame, a lower-leg snap at every step-up)
+  const fy0 = Math.max(lerp(st.from.y, st.to.y, ey) + arc + carry * (1 - smooth(Math.min(1, v * 2))), GC(x, z) + 0.9 * arc);
+  const fy = v >= 1 ? st.to.y : Math.max(Math.min(fy0, pos.y + 0.4), GC(x, z) + 0.02);
   const moving: V3 = v >= 1 ? st.to : {x, y: fy, z};
   const sw = v < 1 ? Math.sin(Math.PI * v) : 0;
   const rear = u < swF ? 0 : REAR_LIFT * ks * smooth(clamp((w - 0.35) / 0.65));

@@ -26,5 +26,4 @@ owner's file).
 | EF-14 | 197.7–199.6 | (numbers) the new move tilts at up to 97°/s at ~198.0 (the camera rises 0.5 m at 0.8 m from his face while keeping it centred) and pans at up to 51°/s at ~198.65; positions and aim are C1 (no jump), the 2nd-difference peak is at the start of the rise; R3's pan alone peaked near 100°/s. | geometry | none | camera probe per frame | accepted |
 
 Not certified frame by frame: the pullback 200.5–231.6 (sampled every 1–3 s plus the per-frame LOD counters and
-camera probes), E2 193.1–196.9 (the numbers show no layer change; frames only at 193.8–194.6 from R3 and 196.93–197.47
-from R4), 191.4–193.1 only in the new insert. Tool: `qa/r4/EF/tools/README.md`.
+camera probes), E2 193.1–196.9 (the numbers show no layer change; frames every 0.3 s 193.1–197.0 and every frame 196.93–197.47), 191.4–193.1 only in the new insert. Tool: `qa/r4/EF/tools/README.md`.

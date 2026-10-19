@@ -39,7 +39,7 @@
 //            7604 and 7607 run the allied drone down (141.35); all end at D4's first keys (droneD4 at 149.86).
 import type {UnitSpec, HeavySpec, DroneSpec, Path, Posture} from '../../mech';
 import type {Item, MeshItem} from '../../engine';
-import {heavyAttach, unitAttach, unitRoot, heavy as heavyItems, solveHeavy, HEAVY_DIM} from '../../mech';
+import {heavyAttach, unitAttach, unitRoot, heavy as heavyItems, solveHeavy, HEAVY_DIM, phasedGait} from '../../mech';
 import {xfPoint} from '../../engine';
 import {V3, clamp, smooth, lerp, rnd, add3, sub3, mul3, norm3} from '../../../kit/math';
 import {M} from '../../timing';
@@ -733,7 +733,9 @@ const unitRun = (pl: UPlan, T: number): UnitSpec => {
     const over = overList(s.pts);
     sp = {
       ...base, pos: end.pos, heading: end.heading,
-      gait: {path, dist, stride: s.stride ?? 1.45 + 0.85 * fast, lift: s.lift ?? 0.14 + 0.08 * fast, start: A > 0.25 ? 0 : undefined, end: D > 0 ? L : undefined, over: over.length ? over : undefined, overSoft: over.length ? true : undefined},
+      // (R4: each unit's own seeded step-cycle phase, so a group that sets off together does not swing its legs in unison; not
+      // the walk that ends in D4's start, whose feet are D4's)
+      gait: ((g) => (s.T1 < M.P4 - 1e-6 ? phasedGait(g, pl.id) : g))({path, dist, stride: s.stride ?? 1.45 + 0.85 * fast, lift: s.lift ?? 0.14 + 0.08 * fast, start: A > 0.25 ? 0 : undefined, end: D > 0 ? L : undefined, over: over.length ? over : undefined, overSoft: over.length ? true : undefined}),
       crouch: (0.03 + 0.16 * fast) * k, lean: (3 + 12 * fast) * k,
     };
     sp = {...sp, ...walkOnly(act), crouch: sp.crouch, lean: sp.lean};
