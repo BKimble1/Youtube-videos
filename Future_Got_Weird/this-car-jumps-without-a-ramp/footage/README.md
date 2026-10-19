@@ -23,16 +23,24 @@ No excerpt is used twice. Frame numbers are recording frames (0-based at 30 fps)
 |---|---|---|---|
 | 0:00.0 – 0:01.9 | V1 273–328 | `real_open` | Opening: the side-profile hop, ending at rest, where the illustrated car takes over |
 | 0:08.0 – 0:10.4 | V2 536–570, 575–613 | `real_pit` | "So what does making a supercar jump actually prove?": the front wheel at the lip of the pit, then the high angle |
-| 0:42.0 – 0:42.9 | V2 691–718 | `real_corner` | The U9 turning in, as the bend section begins (after the tyre-wall wipe) |
+| 0:35.3 – 0:40.0 | V2 900–1040 | `real_spikes` | The takeoff–flight–landing explanation: the car passes over a strip of road spikes with all four wheels clear of the pavement and lands beyond it. A hard cut in and out; the illustration returns with the car back on the road |
+| 0:42.0 – 0:43.4 | V2 691–732 | `real_corner` | The U9 turning in, as the bend section begins (after the tyre-wall wipe) |
 | 1:48.0 – 1:50.3 | V1 262–328 | `real_replay` | "Watch the jump again": the replay opens on BYD's hop, then the illustration takes over |
 | 1:53.1 – 1:57.9 | V2 316–458 | `real_jump` | Side view, rolling in to takeoff, flight and landing, **uninterrupted**, with the gravity and motion arrows drawn over it |
 | 1:57.9 – 1:59.7 | V2 480–532 | `real_pit` | The low front three-quarter, car clear of the road ("the spectacular part") |
 | 2:07.6 – 2:09.3 | V2 1508–1556 | `real_driveA` | "Most of the time…": a steady wide side pass |
 | 2:09.3 – 2:14.1 | V2 1557–1700 | `real_driveB` | The drone comes in from the front, over the roof and follows the car away into the dust |
 
-Only footage of the U9 doing what the narration says is used as evidence. The drive shots illustrate "controlled driving", not
+Only footage of the U9 doing what the narration says is used as evidence. No footage of braking or of an uneven road exists in the supplied recordings, so none is used for those sections (the spike strip is a jump demonstration, not a road-response test, and is used only for the flight). The drive shots illustrate "controlled driving", not
 any suspension claim, and the narration does not interpret them. Other frames of both recordings (V1's front and rear angles
 and the rest of V2) are not used.
+
+## Source quality check (finishing pass)
+
+- The release `u9-source-footage` holds exactly these two files; their SHA-256 digests match GitHub's asset digests. No higher-quality original, preview or intermediate copy exists, so every clip is cut from the originals.
+- The picture area of both recordings is 1920×818 (2.35:1) inside a 1080p frame. 16:9 crops of about 1369×770 are enlarged about 1.4× to fill a 1080p frame, and 2× more in the 4K render; wider crops would run into BYD's on-screen text.
+- Sharpness comparison (Laplacian variance, `qa/quality/`): a rendered drive-away frame retains about 89% of the source frame's own fine detail at the same scale. The softness of the close wheel and drive shots is in the recordings (motion blur, shallow depth of field, double compression), not in the export. No sharpening, interpolation or generative enhancement is applied.
+- Changes made in this pass to avoid adding loss: the real clips are decoded losslessly (`transparent`) and the master is rendered with PNG frames instead of JPEG.
 
 ## How the cuts are made (`tools/ingest_footage.py`)
 

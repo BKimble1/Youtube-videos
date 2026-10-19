@@ -106,7 +106,7 @@ export const Cabin: React.FC<{t: number; frame: number}> = ({t, frame}) => {
             <g clipPath="url(#iris)">
               <CabinCutaway frame={frame} roll={roll} press={press} arrow={arrow} />
               <LeanForceMeters lean={roll / ROLL_CAB} force={0.82} opacity={meters} />
-              <Label x={faceX - 120} y={548} text="SIDEWAYS FORCE" color={C.tealLight} size={36} opacity={win(t, T5.sideways - 0.05, T5.seat - 0.15, 0.3, 0.3) * (open ? 1 : 0)} />
+              <Label x={faceX - 120} y={508} text="SIDEWAYS FORCE" color={C.tealLight} size={36} opacity={win(t, T5.sideways - 0.05, T5.seat - 0.15, 0.3, 0.3) * (open ? 1 : 0)} />
               <Callout x={400} y={430} tx={faceX - 170} ty={530} text="SEAT BOLSTER" color={C.white} size={36} opacity={win(t, T5.seat - 0.05, T5.you - 0.1, 0.25, 0.3) * (open ? 1 : 0)} />
             </g>
             <circle cx={irisC.x} cy={irisC.y} r={irisR} fill="none" stroke={C.ink} strokeWidth={14} opacity={1 - smooth(seg(iris, 0.9, 1))} />

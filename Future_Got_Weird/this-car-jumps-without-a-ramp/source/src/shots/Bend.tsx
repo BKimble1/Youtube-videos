@@ -60,7 +60,7 @@ export const T_ENTER = T3.corner + 1.2; // the car reaches the start of the bend
 export const sCar = (t: number) => BEND_START + (t - T_ENTER) * SPEED;
 export const BEND_T = {
   real: 42.0, // real cornering shot, under the wall's last frames
-  start: 42.0 + 28 / 30, // overhead
+  start: 42.0 + 42 / 30, // overhead (after the whole real cornering shot, 42 frames)
   diveA: 43.95,
   diveB: T3.body0 + 0.7,
   front1: T3.loading + 0.0,
@@ -118,10 +118,9 @@ const aerialCam = (t: number, tgt: V3, psi: number): Cam3 => {
     const k = seg(t, BEND_T.diveB, BEND_T.front1);
     return orbit(tgt, lerp(8000, 7300, k), 0.07, az3(0.1 * k), f);
   }
-  // second visit: starts close (the car has just run through the lens), then settles
-  const u = easeOut(seg(t, BEND_T.q2, BEND_T.q2 + 1.6));
+    // second visit: a deliberate cut to a composed three-quarter, car in its lane, same distance throughout (no push-in from the lens)
   const k = seg(t, BEND_T.q2, BEND_T.front2);
-  return orbit(tgt, lerp(4300, 8200, u) - 500 * k, lerp(0.05, 0.075, u), az3(lerp(-0.12, 0.2, k)), f);
+  return orbit(tgt, 8200 - 500 * k, 0.075, az3(lerp(0.0, 0.2, k)), f);
 };
 
 const Aerial: React.FC<{t: number}> = ({t}) => {
@@ -261,7 +260,7 @@ export const Bend: React.FC<{t: number}> = ({t}) => {
     // "Now, put that same car into a corner.": BYD's cornering shot, then the overhead
     return (
       <AbsoluteFill>
-        <RealClip spec={FILM.corner(BEND_T.real, 718)} />
+        <RealClip spec={FILM.corner(BEND_T.real)} />
         <Stage bg="transparent">
           <Caption text="BYD DEMONSTRATION VIDEO" opacity={win(t, BEND_T.real + 0.2, BEND_T.start - 0.05, 0.2, 0.2)} />
         </Stage>

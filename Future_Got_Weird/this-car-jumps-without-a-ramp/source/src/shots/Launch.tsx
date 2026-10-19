@@ -74,7 +74,15 @@ const HOOK = {take: T.leave + 0.1, apex: T.leave + 0.85, land: T.grip + 0.1};
 const MAIN = {crouch: T.tires - 0.1, push: T.that, take: T.clear, apex: T.gravity + 0.05, land: T.downEnd};
 const S = {crouch: 0.5, push: 0.92, take: 1.104, apex: 1.254, land: 1.404};
 const HOOK_KEYS: [number, number][] = [[HOOK.take - 1.55, S.crouch], [HOOK.take - 0.65, S.push], [HOOK.take, S.take], [HOOK.apex, S.apex], [HOOK.land, S.land], [HOOK.land + 0.75, 1.62], [HOOK.land + 1.6, 1.9]];
-const MAIN_KEYS: [number, number][] = [[MAIN.crouch, S.crouch], [MAIN.push, S.push], [MAIN.take, S.take], [MAIN.apex, S.apex], [MAIN.land, S.land], [MAIN.land + 0.75, 1.62], [MAIN.land + 1.5, 1.9]];
+const MAIN_KEYS_FULL: [number, number][] = [[MAIN.crouch, S.crouch], [MAIN.push, S.push], [MAIN.take, S.take], [MAIN.apex, S.apex], [MAIN.land, S.land], [MAIN.land + 0.75, 1.62], [MAIN.land + 1.5, 1.9]];
+// Real footage takes over the flight: BYD's car crossing a strip of road spikes with all four wheels clear of the pavement, from
+// "ground stops pushing" to "brings it back down". A hard cut in and out. The illustration resumes with the car back on the road
+// (settled), so the road-force arrow returns exactly when contact does.
+export const SPIKE_CLIP = FILM.spikes(35.25);
+export const SPIKE_T0 = SPIKE_CLIP.frame0 / 30;
+export const SPIKE_END = (SPIKE_CLIP.frame0 + (SPIKE_CLIP.to - SPIKE_CLIP.from + 1)) / 30;
+export const SPIKE_LAND = SPIKE_T0 + (1036 - 900) / 30; // the wheels touch down beyond the strip (recording frame ~1036)
+const MAIN_KEYS: [number, number][] = [[MAIN.crouch, S.crouch], [MAIN.push, S.push], [MAIN.take, S.take], [SPIKE_T0, pchip(SPIKE_T0, MAIN_KEYS_FULL)], [SPIKE_END, 1.62], [SPIKE_END + 1.2, 1.9]];
 const inHookWindow = (t: number) => t >= HOOK_KEYS[0][0] - 0.1 && t < 10;
 export const simTime = (t: number) => (inHookWindow(t) ? pchip(t, HOOK_KEYS) : t >= MAIN_KEYS[0][0] - 0.1 ? pchip(t, MAIN_KEYS) : 0);
 export const LAUNCH_EV = {hookTake: HOOK.take, hookLand: HOOK.land, take: MAIN.take, apex: MAIN.apex, land: MAIN.land, push: MAIN.push, crouch: MAIN.crouch};
@@ -193,10 +201,11 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
   const cam = camAt(t);
   const looks = lookBlend(t);
   const px = cam.z;
-  const realOver = t < realEnd(REAL.open) + 0.05;
+  const realOver = t < realEnd(REAL.open);
   // -------------------------------------------------------------------- how the real clip hands over to the illustration
-  const carA = smooth(seg(t, 1.45, 1.8));
-  const bgA = smooth(seg(t, 1.7, 2.1));
+  // a crisp match cut: the real clip's last frame, then the illustration with the car on the same wheel centres (no dissolve, no double image)
+  const carA = 0;
+  const bgA = realOver ? 0 : 1;
   const n = realFrameAt(REAL.open, t);
   const al = alignMatrix(REAL.open.crop, n);
 
@@ -284,9 +293,9 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
   const handNow = h1.vis ? h1 : h2.vis ? h2 : null;
 
   const caption = (() => {
-    if (t < 2.1) return <Caption text="BYD DEMONSTRATION VIDEO" opacity={smooth(seg(t, 0.15, 0.5)) * (1 - smooth(seg(t, 1.5, 1.9)))} />;
+    if (t < 2.1) return <Caption text="BYD DEMONSTRATION VIDEO" opacity={smooth(seg(t, 0.15, 0.5)) * (1 - smooth(seg(t, 1.55, 1.8)))} />;
     if (t < 3.5 && t > 2.3) return null;
-    const slow = Math.max(win(t, HOOK.take - 0.9, HOOK.land + 0.5, 0.3, 0.4), win(t, T.that - 0.2, MAIN.land + 0.7, 0.4, 0.5));
+    const slow = Math.max(win(t, HOOK.take - 0.9, HOOK.land + 0.5, 0.3, 0.4), win(t, T.that - 0.2, SPIKE_T0 - 0.05, 0.4, 0.05));
     const cut = open * smooth(seg(t, T.ordinary - 0.1, T.ordinary + 0.4)) * (1 - smooth(seg(t, T.during - 0.2, T.during + 0.2)));
     return (
       <g>
@@ -298,7 +307,7 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
 
   return (
     <AbsoluteFill>
-      {realOver && <RealClip spec={REAL.open} hold={Math.ceil((2.5 - realEnd(REAL.open)) * 30)} />}
+      {realOver && <RealClip spec={REAL.open} />}
       <Stage bg="transparent">
         {/* photographic backdrop gives way to the proving ground */}
         <g opacity={bgA}>
@@ -333,7 +342,7 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
                 <ContactPatch cx={X + AXLE_R} chord={squashChord(0)} px={px} opacity={smooth(seg(t, T.during + 0.2, T.tires))} />
               </g>
             )}
-            <CarForces px={px} com={com} axles={ax} n={nAx} v={lp.v} road={diag * roadVis} gravity={diag} motion={diag * smooth(seg(t, T.that, T.accelerates)) * (1 - smooth(seg(t, MAIN.land - 0.1, MAIN.land + 0.3)))} pair={closeUp ? pairVis : 0} />
+            <CarForces px={px} com={com} axles={ax} n={nAx} v={lp.v} road={diag * roadVis} gravity={diag} motion={diag * smooth(seg(t, T.that, T.accelerates)) * (1 - smooth(seg(t, SPIKE_T0 - 0.05, SPIKE_T0)))} pair={closeUp ? pairVis : 0} />
             {closeUp && backVis > 0 && nAx > 0.01 && (
               <Arrow x={X + AXLE_R + 70} y={-nAx * LW - 10} dx={0} dy={nAx * LW} px={px} color={C.teal} width={16} opacity={backVis} />
             )}
@@ -367,7 +376,7 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
           const gtip = toS(com[0], com[1] - LW);
           const mpos = toS(com[0] + 80, com[1] + MOTION_LIFT);
           const gOn = win(t, T.lift + 0.1, MAIN.land + 0.6, 0.3, 0.4) * diag;
-          const mOn = win(t, T.momentum - 0.1, MAIN.land - 0.3, 0.3, 0.4) * diag * (Math.abs(lp.v) > 0.05 ? 1 : 0);
+          const mOn = win(t, T.momentum - 0.1, SPIKE_T0 - 0.05, 0.3, 0.04) * diag * (Math.abs(lp.v) > 0.05 ? 1 : 0);
           return (
             <g>
               <Label x={gtip.x} y={gtip.y + 38} text="GRAVITY" color={C.blueLight} size={30} opacity={gOn} />
@@ -382,6 +391,14 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
         })()}
         {caption}
       </Stage>
+      {t >= SPIKE_T0 - 0.001 && t < SPIKE_END && (
+        <AbsoluteFill>
+          <RealClip spec={SPIKE_CLIP} />
+          <Stage bg="transparent">
+            <Caption text="BYD DEMONSTRATION VIDEO" opacity={win(t, SPIKE_T0 + 0.2, SPIKE_END - 0.2, 0.2, 0.25)} />
+          </Stage>
+        </AbsoluteFill>
+      )}
       {t >= QUESTION_T0 - 0.01 && t < QUESTION_END && (
         <AbsoluteFill>
           <RealClip spec={QUESTION_CLIPS[0]} />

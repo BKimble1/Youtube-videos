@@ -1,21 +1,20 @@
 # Upload text: This Car Jumps Without a Ramp
 
-Not uploaded. Publishing is the owner's step. Check the three source links open before posting
-(they could not be opened from the production environment).
+Not uploaded. Publishing is the owner's step. Check the three source links open before posting (they could not be opened from
+the production environment), and confirm rights for the BYD excerpts.
 
 ## Title
 
-This Car Jumps Without a Ramp
+This Car Jumps Without a Ramp. Here's How.
 
 ## Description
 
-BYD's Yangwang U9 can hop off flat pavement using its own suspension. So what does making a supercar jump actually
-prove? We follow the forces through the launch, then put the same system to work in a corner, under hard braking and
-over a rough road, where active body control earns its keep, and where it still runs out of travel.
+BYD's Yangwang U9 can leave the pavement with no ramp, using only its suspension. So how does a car do that, and what is
+the same hardware actually for? This video follows the forces: the push off the road, the moment contact ends, gravity in
+the air, then the same idea at work in a corner, under hard braking and over a rough road, including where it runs out of travel.
 
-The animation is a simplified illustration of the physics, not a factory drawing of BYD's system. The real
-footage is BYD's own demonstration, shown in short excerpts and labelled on screen; the real shots are 1080p
-sources and the graphics are native 4K.
+The animation is a simplified illustration of the physics, not a factory drawing of BYD's system, and no figures in it are
+measurements of the U9. The real shots are short excerpts of BYD's own demonstration footage, labelled on screen.
 
 Sources:
 BYD: YANGWANG launches the U9 (DiSus-X body control system): https://www.byd.com/us/news-list/YANGWANG-Launched-the-U9-Priced-at-1-68-Million-RMB.html
@@ -26,10 +25,11 @@ Footage: BYD demonstration videos (BYD Japan, EV Tech Lab 03, and BYD's jump fil
 
 0:00 The jump
 0:12 How the launch works
+0:35 Takeoff, flight, landing
 0:41 The corner
 1:11 Braking and bumps
 1:33 The passenger
-1:48 The jump again, in full
+1:48 The jump again
 
 ## Tags (optional)
 
@@ -41,6 +41,7 @@ BYD, Yangwang U9, DiSus-X, active suspension, body control, car physics, superca
 
 ## Thumbnail
 
-`thumbnail/FGW_U9_thumb_FINAL_1280x720.jpg`: an illustrated vector treatment of the side-profile hop (not a
-documentary frame). The gap under the tyres is the size of the hop in the video (about 11 cm in the model); it does not
-exaggerate the jump.
+`thumbnail/FGW_U9_thumb_FINAL_1280x720.jpg`: a genuine frame of BYD's demonstration (the U9 clear of the pavement, its shadow
+on the road, plain sky) with two words, "NO RAMP". BYD's on-screen distance graphic under the car is covered with pavement from
+the same frame; nothing else is altered, the gap is the real one, and there is no added obstacle. It matches the title's promise
+and the video's first seconds. Tesla is not mentioned: the video makes no Tesla comparison.

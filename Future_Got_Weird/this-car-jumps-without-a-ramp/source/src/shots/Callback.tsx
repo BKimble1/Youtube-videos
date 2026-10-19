@@ -72,8 +72,8 @@ export const Callback: React.FC<{t: number}> = ({t}) => {
   const n = realFrameAt(REAL.replay, t);
   const al = alignMatrix(REAL.replay.crop, n);
   // match cut: the illustration over the real car (aligned frame by frame), then the photographic backdrop gives way
-  const carA = smooth(seg(t, realEndT - 0.4, realEndT - 0.1));
-  const bgA = smooth(seg(t, realEndT - 0.12, realEndT + 0.22));
+  const carA = 0; // crisp match cut: no overlay, no double image
+  const bgA = t < realEndT ? 0 : 1;
   const overlay = t < realEndT;
 
   const lp = poseAt(t);
@@ -115,7 +115,7 @@ export const Callback: React.FC<{t: number}> = ({t}) => {
   const realCap = win(t, JUMP_T0 + 0.6, HOVER_END - 0.1, 0.3, 0.3);
   return (
     <AbsoluteFill>
-      <RealClip spec={REAL.replay} hold={Math.ceil((realEndT + 0.45 - realEndT) * 30)} opacity={t < realEndT + 0.5 ? 1 : 0} />
+      <RealClip spec={REAL.replay} opacity={t < realEndT ? 1 : 0} />
       <Stage bg="transparent">
         <g opacity={bgA * vecA}>
           <ProvingSide cam={cam} zone="launch" />

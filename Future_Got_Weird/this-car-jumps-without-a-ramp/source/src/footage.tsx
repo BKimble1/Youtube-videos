@@ -32,6 +32,8 @@ export const FILM = {
   jump: (t0: number) => use('real_jump.mp4', 316, 316, 458, JUMP_CROP, t0),
   /** the low front three-quarter, the car clear of the road */
   hover: (t0: number) => use('real_pit.mp4', 480, 480, 532, CROP_WIDE, t0),
+  /** the car crosses a strip of road spikes with all four wheels clear of the pavement and lands beyond it */
+  spikes: (t0: number) => use('real_spikes.mp4', 900, 900, 1040, CROP_WIDE, t0),
   corner: (t0: number, to = 732) => use('real_corner.mp4', 691, 691, to, CROP_WIDE, t0),
   /** the drive-away: a steady wide side pass, then the drone from the front, over the roof and down the road behind the car */
   driveA: (t0: number) => use('real_driveA.mp4', 1508, 1508, 1556, DRIVE_CROP, t0),
@@ -84,7 +86,7 @@ export const RealClip: React.FC<{spec: RealSpec; hold?: number; opacity?: number
   if (opacity <= 0.001) return null;
   const n = realFrames(spec);
   const vid = (
-    <OffthreadVideo src={staticFile(spec.file)} startFrom={spec.from - (spec.fileFrom ?? spec.from)} muted pauseWhenBuffering={false} style={{position: 'absolute', inset: 0, width: 1920, height: 1080, objectFit: 'fill'}} />
+    <OffthreadVideo src={staticFile(spec.file)} startFrom={spec.from - (spec.fileFrom ?? spec.from)} muted transparent pauseWhenBuffering={false} style={{position: 'absolute', inset: 0, width: 1920, height: 1080, objectFit: 'fill'}} />
   );
   return (
     <div style={{position: 'absolute', inset: 0, opacity}}>

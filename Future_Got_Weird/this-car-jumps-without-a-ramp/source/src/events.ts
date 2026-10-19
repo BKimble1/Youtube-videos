@@ -1,7 +1,7 @@
 // Sound events taken from the animation's own timing (exported to audio/sfx_events.json by tools/export_events.mjs),
 // so every effect lands on the frame its action happens.
 import {ALL_WORDS, DURATION_S} from './cues';
-import {T as TL, LAUNCH_EV, GO_T, DEMO_EV} from './shots/Launch';
+import {T as TL, LAUNCH_EV, GO_T, DEMO_EV, SPIKE_T0, SPIKE_LAND, SPIKE_END} from './shots/Launch';
 import {BEND_T, BEND_BUMPS, T_ENTER, T3} from './shots/Bend';
 import {BRAKE_IN, BRAKE_EV, BRAKE_HOLD, T4, roadAt} from './shots/BrakeRough';
 import {CABIN_IN, REPLAY_AT, T5} from './shots/Cabin';
@@ -34,7 +34,7 @@ export const EVENTS = () => ({
   words: ALL_WORDS.map((w) => ({w: w.text, s: w.start, e: w.end, b: w.block})),
   hook: {suspension: TL.suspension, launches: TL.launches, take: LAUNCH_EV.hookTake, land: LAUNCH_EV.hookLand, crouch: LAUNCH_EV.hookTake - 1.55},
   launch: {name: TL.name, press1: DEMO_EV.press1, release1: DEMO_EV.release1, press2: DEMO_EV.press2, release2: DEMO_EV.release2, adds: TL.adds, act: DEMO_EV.act, actEnd: DEMO_EV.actEnd,
-    during: TL.during, crouch: LAUNCH_EV.crouch, push: LAUNCH_EV.push, take: LAUNCH_EV.take, apex: LAUNCH_EV.apex, land: LAUNCH_EV.land, go: GO_T},
+    during: TL.during, crouch: LAUNCH_EV.crouch, push: LAUNCH_EV.push, take: LAUNCH_EV.take, apex: LAUNCH_EV.apex, land: SPIKE_LAND, go: GO_T, realIn: SPIKE_T0, realOut: SPIKE_END},
   wipes: [WIPE1, WIPE2],
   corner: {start: BEND_T.start, enter: T_ENTER, front1: BEND_T.front1, here: T3.here, adjusts: T3.adjusts, thisW: T3.thisW, point: T3.point, flatter: T3.flatter, pass: BEND_T.passIn, out: BEND_T.out,
     bumps: BEND_BUMPS.map((b) => ({t: +b.t.toFixed(3), side: b.side, h: b.h}))},

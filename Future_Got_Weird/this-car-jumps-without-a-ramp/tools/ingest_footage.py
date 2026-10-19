@@ -87,6 +87,8 @@ CROPS2 = {
     'real_jump': {'from': 316, 'to': 458, 'x0': 330, 'y0': 130, 'w': 1280, 'h': 720, 'delogo': 'delogo=x=350:y=772:w=860:h=58,'},
     # the pit: hover (480-532), front wheel at the lip (536-570), high angle (575-613)
     'real_pit': {'from': 480, 'to': 613, 'x0': 100, 'y0': 130, 'w': 1369, 'h': 770},
+    # the spike strip: the car arrives, passes over the strip with all four wheels clear of the road, lands beyond it
+    'real_spikes': {'from': 900, 'to': 1040, 'x0': 100, 'y0': 130, 'w': 1369, 'h': 770},
     'real_corner': {'from': 691, 'to': 732, 'x0': 100, 'y0': 130, 'w': 1369, 'h': 770},
     # the drive-away: a wide side pass (1508-1556), then the drone from the front, over the roof and behind the car (1557-1700)
     'real_driveA': {'from': 1508, 'to': 1556, 'x0': 200, 'y0': 130, 'w': 1369, 'h': 770},

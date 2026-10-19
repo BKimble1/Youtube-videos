@@ -108,7 +108,8 @@ s(fx.servo(0.9, up=False), L['crouch'] + 0.1, -33)
 s(fx.servo(0.6, up=True), L['push'], -31)
 s(fx.motor(1.2, 160, 300, 0.5), L['push'] + 0.05, -36)
 s(fx.swell(1.2, 380), L['take'] - 0.1, -34)
-s(fx.tyre(1.0), L['land'] - 0.01, -20)
+s(fx.shimmer(0.4), L['realIn'] - 0.05, -36)  # hard cut to BYD's spike-strip pass (no sound of its own is used)
+s(fx.tyre(1.0), L['land'] - 0.01, -20)  # the real wheels touch down beyond the strip
 s(fx.squat(), L['land'] + 0.12, -27)
 # drives off, a tyre wall whips past the lens
 s(fx.motor(1.4, 240, 620, 0.7), L['go'], -28)
