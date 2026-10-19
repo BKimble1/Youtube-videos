@@ -512,7 +512,9 @@ export const splitZones = (r: Rig2, key: string, el: React.ReactElement, a: V3, 
   const runs = zoneRuns(r, a, b);
   // the piece in the hands' zone sits over both forearms; a pose that overrides an arm's depth keeps R2's tool rank
   const handZone = zoneOfRank(r, r.toolZ - 0.3);
-  const rank = (zn: number) => (r.armOverride && zn === handZone ? r.toolZ : r.zoneZ[zn] + bias);
+  // (R4: the piece in the hands' zone follows the arms' own rank in every pose, not only under a depth override: when an arm's
+  // zone flipped to the face's (a hand near the head) the arm jumped over the tool and the tool stayed under it)
+  const rank = (zn: number) => (zn === handZone ? r.toolZ : r.zoneZ[zn] + bias);
   if (runs.length === 1) return [{z: rank(runs[0].zone), key, el}];
   return runs.map((rn, k) => {
     const cid = `${r.id}_${key}_z${k}`;
@@ -535,10 +537,10 @@ export const splitZones = (r: Rig2, key: string, el: React.ReactElement, a: V3, 
  * Returns the hidden regions as closed polygons (drawn frame, grown by `pad`) and `touch`: whether the footprint meets the
  * torso's front surface at all.
  */
-export const torsoHides = (r: Rig2, A: V3, B: V3, hw: number, bias: number, pad = 0): {polys: V2[][]; touch: boolean} => {
+export const torsoHides = (r: Rig2, A: V3, B: V3, hw: number, bias: number, pad = 0): {polys: V2[][]; touch: boolean; vis: boolean} => {
   const dx = B.x - A.x, dy = B.y - A.y, L2 = dx * dx + dy * dy, L = Math.sqrt(L2);
   const polys: V2[][] = [];
-  let touch = false;
+  let touch = false, vis = false;
   const ux = L > 1e-6 ? dx / L : 0, uy = L > 1e-6 ? dy / L : 1, nx = -uy, ny = ux;
   const ext = hw;
   const cy = [A.y - uy * ext + ny * hw, B.y + uy * ext + ny * hw, B.y + uy * ext - ny * hw, A.y - uy * ext - ny * hw];
@@ -577,7 +579,7 @@ export const torsoHides = (r: Rig2, A: V3, B: V3, hw: number, bias: number, pad 
     const xs: number[] = [];
     for (let x = xa; x < xb; x += step) xs.push(x);
     xs.push(xb);
-    const hid = xs.map((x) => { const gv = g(x, y); if (gv !== null) touch = true; return gv !== null && gv > 0; });
+    const hid = xs.map((x) => { const gv = g(x, y); if (gv !== null) { touch = true; if (gv <= 0) vis = true; } return gv !== null && gv > 0; });
     const i0 = hid.indexOf(true);
     if (i0 < 0) { flush(); continue; }
     const i1 = hid.lastIndexOf(true);
@@ -588,7 +590,7 @@ export const torsoHides = (r: Rig2, A: V3, B: V3, hw: number, bias: number, pad 
     run.push({y, x1: xf, x2});
   }
   flush();
-  return {polys, touch};
+  return {polys, touch, vis};
 };
 
 // ------------------------------------------------------------------ hair geometry (R1 tables, kept)
@@ -953,7 +955,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
    *  and a second copy just over the torso, clipped to the torso's outline minus those regions, shows it where it is
    *  nearer: so nothing outside the torso's outline changes order, and inside it the limb comes and goes with the depth
    *  field instead of flipping whole. */
-  const torsoParts = (key: string, el: React.ReactElement, rankOld: number, polys: V2[][], touch: boolean, qz: number, pts: V3[], padPx: number, rankAdd = 0) => {
+  const torsoParts = (key: string, el: React.ReactElement, rankOld: number, polys: V2[][], touch: boolean, vis: boolean, qz: number, pts: V3[], padPx: number, rankAdd = 0) => {
     const zone0 = zoneOfRank(r, rankOld) === 0;
     if (!touch) { add(rankOld, key, el); return; }
     const x0 = Math.min(...pts.map((q) => q.x)) - padPx, x1 = Math.max(...pts.map((q) => q.x)) + padPx;
@@ -967,6 +969,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
       return;
     }
     add(rankOld, key, el);
+    if (!vis) return; // the torso hides it wherever they overlap: nothing to show over the torso
     const rFront = r.zoneZ[1] + clamp((qz - r.torsoZ) / (600 * s), -1, 1) * 0.3 + rankAdd;
     const xid = `${id}tx${key}`;
     add(rFront, `${key}x`, (
@@ -1008,7 +1011,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const fwdK = clamp(((K.z - H.z) / (THIGH * s) - 0.3) / 0.4);
     const bL = (12 + 78 * fwdK) * s, tip = add3(A, mul3(norm3(sub3(A, K)), 22 * s));
     const h1 = torsoHides(r, Hn, K, LW[0] / 2 + ink + 2 * s, bL, ink * 0.6), h2 = torsoHides(r, K, tip, LW[1] / 2 + ink + 2 * s, bL, ink * 0.6);
-    torsoParts(`leg${i}`, legBody, rankBack, [...h1.polys, ...h2.polys], h1.touch || h2.touch, (Hn.z + K.z) / 2, [Hn, K, tip], 26 * s + ink * 3, -2 + i * 0.01);
+    torsoParts(`leg${i}`, legBody, rankBack, [...h1.polys, ...h2.polys], h1.touch || h2.touch, h1.vis || h2.vis, (Hn.z + K.z) / 2, [Hn, K, tip], 26 * s + ink * 3, -2 + i * 0.01);
   });
 
   [0, 1].forEach((i) => {
@@ -1098,7 +1101,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
           const pel = rn.poly.length ? (
             <g><defs><clipPath id={cid}><path d={polyPath(rn.poly)} /></clipPath></defs><g clipPath={`url(#${cid})`}>{el}</g></g>
           ) : el;
-          if (propH) torsoParts(`hold${i}_${k}`, pel, r.zoneZ[rn.zone] + 0.4, propH.polys, propH.touch, Wr.z, [hf.pos, propPt(hf, sp[0] * s, sp[1] * s, s), propPt(hf, sp[2] * s, sp[3] * s, s)], 24 * s + ink * 3);
+          if (propH) torsoParts(`hold${i}_${k}`, pel, r.zoneZ[rn.zone] + 0.4, propH.polys, propH.touch, propH.vis, Wr.z, [hf.pos, propPt(hf, sp[0] * s, sp[1] * s, s), propPt(hf, sp[2] * s, sp[3] * s, s)], 24 * s + ink * 3);
           else add(r.zoneZ[rn.zone] + 0.4, `hold${i}_${k}`, pel);
         });
       }
@@ -1155,7 +1158,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
       const armEl = lowerTop
         ? <g>{up.ink}{lo.ink}{elbowInk}{upperFill}{lowerFill}</g>
         : <g>{up.ink}{lo.ink}{elbowInk}{lowerFill}{up.ink}{upperFill}</g>;
-      if (torsoOnly) torsoParts(`arm${i}`, armEl, rL, [...hideU!.polys, ...hideL!.polys, ...(propH?.polys ?? [])], hideU!.touch || hideL!.touch || !!propH?.touch, (S.z + Wr.z) / 2, propH ? [S0, E, handEnd, propPt(hf, holdFn!.span![0] * s, holdFn!.span![1] * s, s), propPt(hf, holdFn!.span![2] * s, holdFn!.span![3] * s, s)] : [S0, E, handEnd], 24 * s + ink * 3);
+      if (torsoOnly) torsoParts(`arm${i}`, armEl, rL, [...hideU!.polys, ...hideL!.polys, ...(propH?.polys ?? [])], hideU!.touch || hideL!.touch || !!propH?.touch, hideU!.vis || hideL!.vis || !!propH?.vis, (S.z + Wr.z) / 2, propH ? [S0, E, handEnd, propPt(hf, holdFn!.span![0] * s, holdFn!.span![1] * s, s), propPt(hf, holdFn!.span![2] * s, holdFn!.span![3] * s, s)] : [S0, E, handEnd], 24 * s + ink * 3);
       else add(rL, `arm${i}`, armEl);
     } else {
       if (upperCross) splitZones(r, `armU${i}`, <g>{up.ink}{upperFill}</g>, S0, E, 0.05).forEach((q) => parts.push(q));
@@ -1165,7 +1168,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const zF = p.zHandFront?.[i];
     // (two hands on one tool: the curled fingers over the tool's piece in the hand's own depth zone, see splitZones)
     const rHand = zF !== undefined ? r.torsoZ + zF : p.twoHanded ? (r.armOverride ? r.toolZ + 0.3 : r.zoneZ[zoneOfRank(r, rL)] + 0.6) : rL + 0.5;
-    if (torsoOnly) torsoParts(`handf${i}`, handEl(hFront), rHand, hideL!.polys, hideL!.touch, Wr.z, [E, handEnd], 24 * s + ink * 3, 0.5);
+    if (torsoOnly) torsoParts(`handf${i}`, handEl(hFront), rHand, hideL!.polys, hideL!.touch, hideL!.vis, Wr.z, [E, handEnd], 24 * s + ink * 3, 0.5);
     else add(rHand, `handf${i}`, handEl(hFront));
   });
 

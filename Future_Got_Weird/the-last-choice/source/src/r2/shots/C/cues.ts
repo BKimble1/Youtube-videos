@@ -138,7 +138,7 @@ const C6: Cue[] = [
   c(58.2, 'rubble_shift', {gain: -12, pan: -0.35, dist: 0.46, dur: 0.6, rate: 1.2, fade: 0.2}), // the pilot down off the slab (R4: 58.39 -> 58.20, she starts 0.25 s earlier: the step down is 0.7 m)
   ...steps([58.2, 58.48, 58.75], {gain: -10, pan: -0.35, dist: 0.46}),
   ...steps([58.38, 58.67, 58.95], {gain: -10, pan: -0.85, dist: 0.48}), // the breaker down off the crest (R4: starts 0.25 s earlier, same reason)
-  ...steps([58.85, 59.15], {gain: -15, pan: -0.8, dist: 0.6}), // the flare carrier, the decoy maker step into the line (R4: these two had no cue)
+  ...steps([58.75, 58.95, 59.15], {gain: -15, pan: -0.8, dist: 0.6}), // the flare carrier, the decoy maker step into the line (R4: these two had no cue)
   ...steps([58.95, 59.25], {gain: -16, pan: -0.9, dist: 0.66}),
   ...steps([58.58, 58.85], {gain: -12, pan: 0.5, dist: 0.6}), // the runner
   ...steps([58.75, 59.05], {gain: -14, pan: 0.8, dist: 0.68}), // the tether
