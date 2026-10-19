@@ -40,6 +40,21 @@ part switching. Two residual visual blemishes: a faint ring (shoulder cap ink fa
 at breaker braced 38->40 (376 px, one frame, thin line); slump 286->288 (all 3 roles, 109 px: the new hip cap of a thigh tangent to the torso's edge fades in under the translucent edge shade; continuous at 1 degree); lying poses (2-4 each) where the body is on the ground and the arm
 and torso overlap almost parallel.
 
+
+## Regression found in the R4 full render, fixed (black ink discs and shards)
+
+| # | Where | Observed | Cause | Fix | Verified |
+|---|---|---|---|---|---|
+| X1 | B2 15.0-16.6 (shoulder of the near arm: a solid ink disc, about 40 px); C2/C3 39.4-45.2 (black parallelograms and slivers floating next to the green-shirt and teal-headband figures, 8-10 at 43.0 s) | the ink layer of a limb drawn without its fill, or a stale copy of it, over the torso and in the air | NOT the mask geometry: React patching. `torsoParts` returned the limb either as the bare group or wrapped in `<g><defs><mask/></defs><g mask>`. Frame to frame the same keyed part flipped between the two shapes and React left the old group in the page next to the new one (an ink quad plus a circle, opacity 1). Every static check (renderToStaticMarkup, `remotion still`, a one-frame render) is a fresh DOM and could not show it; only frames rendered in sequence in one page (Remotion) do. Found by a React harness that renders frames in sequence into one root and compares the DOM with a fresh render of the last frame | `torsoParts` gives every part ONE DOM shape: `<g><defs>{mask or nothing}</defs><g mask={url or undefined}>{limb}</g></g>`, for all branches (not touching, in front, behind, extra copy). Also: every mask/clip id and the Figure's root key carry a signature of the pose (a new pose is a new subtree). `bT` 10*s -> 16*s (a near arm tangent to the torso: the mask cut ragged yellow holes in the sleeve at B2 15.6; the arm's front is about its radius, 15*s, nearer than its axis) | `qa/r4/rig/R4regress_B2_black_disc_before_after_f450-468-486.jpg`, `R4regress_C2C3_black_shards_before_after_f1200-1290.jpg` (top = the R4 review render, bottom = now, both frames rendered in sequence with `remotion render --frames`); sequence-vs-fresh DOM equality on all 103 shots, 3 windows each (see tools/README.md); body sweeps re-run: no new pops (breaker crouch 2 -> 1, runner lying 4 -> 1, others equal) |
+
+The plate / white-stripe patch on the Director's forearm at 13.0-13.8 is not a rig regression: the same frame rendered with the
+rig of the start of R4 (d528469) and with the current rig shows the same plate; the R3 video differs from the R4 video in the
+Director's pose and camera there (section B), not in the rig. The faint ring at the shoulder cap and the lighter sleeve strip
+in the B2 near arm are also present in the R3 rig output.
+
+Hip cap (new this session, `LimbG startCap = fwdK`): a thigh toward the camera starts with a rounded hip; its ink and fill fade
+with fwdK, so it cannot appear as a disc by itself (it is hidden by the torso/pelvis whenever the thigh hangs).
+
 ## Not rig faults (for the section agents)
 
 - D4 seated Director (179.3-180.8): with the continuous torso mask the Director's right hand and forearm are now VISIBLE over

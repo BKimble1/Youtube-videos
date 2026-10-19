@@ -766,7 +766,11 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
   const look = p.look;
   const t = p.t;
   const seed = p.seed ?? 1;
-  const id = (p.id ?? `f${seed}`).replace(/[^a-zA-Z0-9_]/g, '_');
+  // (R4) every mask / clip id carries a signature of this frame's pose: a browser that renders frame after frame in ONE page
+  // (Remotion) can keep serving a mask or clip path from an earlier frame under the same id while its content changes (the
+  // masks follow the pose now), which painted stale ink discs and black shards. A new pose is a new id, so nothing is reused.
+  const sigN = [...r.sh, ...r.el, ...r.wr, ...r.hip, ...r.knee, ...r.ankle, r.headC, r.neck, r.P].reduce((h, q) => (Math.imul(h ^ Math.round(q.x * 8), 16777619) ^ Math.imul(Math.round(q.y * 8) + 977, 2246822519) ^ Math.round(q.z * 8)) >>> 0, 2166136261);
+  const id = `${(p.id ?? `f${seed}`).replace(/[^a-zA-Z0-9_]/g, '_')}_${sigN.toString(36)}`;
   // (a silhouette is flat: marks with their own colours — blood, dust, bruises — are left out; worn gear stays)
   const dmg: Damage = p.silhouette ? {satchel: p.dmg?.satchel} : p.dmg ?? {};
   const L = p.silhouette ? undefined : p.light;
@@ -959,18 +963,20 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
    *  field instead of flipping whole. */
   const torsoParts = (key: string, el: React.ReactElement, rankOld: number, polys: V2[][], touch: boolean, vis: boolean, qz: number, pts: V3[], padPx: number, rankAdd = 0) => {
     const zone0 = zoneOfRank(r, rankOld) === 0;
-    if (!touch) { add(rankOld, key, el); return; }
+    // (the part's DOM has ONE shape whatever happens to it from frame to frame, a wrapper with a defs and a group that is clipped or not:
+    // React patched a part whose first child changed from the limb's own group to a defs in place, and left the old group in the page
+    // beside the new one, drawn as an ink-coloured shape on the torso. Only the clip's id and the holes change)
+    const hid = `${id}tm${key}`;
+    const wrap = (e: React.ReactElement, holes: React.ReactElement | null) => <g><defs>{holes}</defs><g mask={holes ? `url(#${hid})` : undefined}>{e}</g></g>;
+    if (!touch) { add(rankOld, key, wrap(el, null)); return; }
     const x0 = Math.min(...pts.map((q) => q.x)) - padPx, x1 = Math.max(...pts.map((q) => q.x)) + padPx;
     const y0 = Math.min(...pts.map((q) => q.y)) - padPx, y1 = Math.max(...pts.map((q) => q.y)) + padPx;
     const box = {x: f2(x0), y: f2(y0), width: f2(x1 - x0), height: f2(y1 - y0)};
     const black = polys.map((q, k) => <path key={k} d={polyPath(q)} fill="#000000" />);
-    if (!zone0) {
-      if (!polys.length) { add(rankOld, key, el); return; }
-      const mid = `${id}tm${key}`;
-      add(rankOld, key, <g><defs><mask id={mid} maskUnits="userSpaceOnUse" {...box}><rect {...box} fill="#FFFFFF" />{black}</mask></defs><g mask={`url(#${mid})`}>{el}</g></g>);
-      return;
-    }
-    add(rankOld, key, el);
+    // (the regions the torso hides: black shapes in a mask over the limb's box; unions of overlapping regions come out right)
+    const holes = polys.length ? <mask id={hid} maskUnits="userSpaceOnUse" {...box}><rect {...box} fill="#FFFFFF" />{black}</mask> : null;
+    if (!zone0) { add(rankOld, key, wrap(el, holes)); return; }
+    add(rankOld, key, wrap(el, null));
     if (!vis) return; // the torso hides it wherever they overlap: nothing to show over the torso
     const rFront = r.zoneZ[1] + clamp((qz - r.torsoZ) / (600 * s), -1, 1) * 0.3 + rankAdd;
     const xid = `${id}tx${key}`;
@@ -1935,15 +1941,16 @@ const MouthShape: React.FC<{m: Mouth; s: number; ink: number; inkC: string; open
 
 /** A single figure, internally depth-sorted. */
 export const Figure: React.FC<FigProps> = (p) => {
-  const {parts} = figureParts(p);
+  const {parts, rig} = figureParts(p);
   parts.sort((a, b) => a.z - b.z);
-  return <g opacity={p.opacity}>{parts.map((q) => <g key={q.key}>{q.el}</g>)}</g>;
+  // (keyed by the pose signature: a new pose is a new DOM subtree, never a patched one, see the id note in figureParts)
+  return <g key={rig.id} opacity={p.opacity}>{parts.map((q) => <g key={q.key}>{q.el}</g>)}</g>;
 };
 
 /** Several figures sorted together (limbs pass in front of / behind each other). Each figure's `id` must differ. */
 export const Group: React.FC<{figs: (FigProps & {z?: number})[]; extra?: Part[]}> = ({figs, extra = []}) => {
   const all: Part[] = [];
-  figs.forEach((f, i) => figureParts(f).parts.forEach((q) => all.push({...q, z: q.key === 'shadow' ? -1e9 + (f.z ?? 0) : (f.z ?? 0) * 1000 + q.z, key: `${i}_${q.key}`})));
+  figs.forEach((f, i) => { const fp = figureParts(f); fp.parts.forEach((q) => all.push({...q, z: q.key === 'shadow' ? -1e9 + (f.z ?? 0) : (f.z ?? 0) * 1000 + q.z, key: `${i}_${fp.rig.id}_${q.key}`})); });
   extra.forEach((e) => all.push(e));
   all.sort((a, b) => a.z - b.z);
   return <g>{all.map((q) => <g key={q.key}>{q.el}</g>)}</g>;
