@@ -141,7 +141,7 @@ export type HoldFn = ((h: HandFrame, s: number, ink: number, col: (c: string) =>
 };
 /** Give a HoldFn its axis (hand-local rig units) so the rig can cut it by depth (see HoldFn.span). */
 export const withSpan = (fn: HoldFn, span: [number, number, number, number], faceOnly = false): HoldFn => Object.assign(fn, {span, spanFace: faceOnly});
-export type WearFn = (fa: {E: V3; W: V3; dorsal: V3; ang: number; len: number}, s: number, ink: number, col: (c: string) => string) => {el: React.ReactNode; front: boolean} | null;
+export type WearFn = (fa: {E: V3; W: V3; dorsal: V3; ang: number; len: number}, s: number, ink: number, col: (c: string) => string) => {el: React.ReactNode; front: boolean; /** (R4) 0 behind the forearm … 1 over it */ w?: number} | null;
 
 export type FigProps = {
   look: Look; t: number; seed?: number; id?: string;
@@ -1134,11 +1134,17 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     // (the forearm's own outline goes over a plate strapped to its far side)
     const lowerFill = (
       <g key={`lf${i}`}>
-        {wear && !wear.front && wear.el}
+        {wear && (wear.w === undefined ? !wear.front : wear.w < 1) && wear.el}
         {lo.ink}
         {lo.fill}
         {decals.filter((d) => d.limb.endsWith('1')).map((d, k) => <LimbDecal key={k} d={d} a={E} b={Wr} w={ARM_W * s} ink={ink} inkC={inkC} skin={skin} />)}
-        {wear && wear.front && wear.el}
+        {wear && (wear.w === undefined ? wear.front : wear.w > 0) && (wear.w === undefined || wear.w >= 1 ? wear.el : (() => {
+          // the plate comes over the forearm from the forearm's outer edges inward as it turns to face the camera: it is drawn over
+          // the forearm except where the forearm narrowed by w hides it (the plate behind is drawn in any case)
+          const wid = `${id}wm${i}`, pad = 70 * s, bx = Math.min(E.x, Wr.x) - pad, by = Math.min(E.y, Wr.y) - pad, bw = Math.abs(E.x - Wr.x) + 2 * pad, bh = Math.abs(E.y - Wr.y) + 2 * pad;
+          const bb = {x: f2(bx), y: f2(by), width: f2(bw), height: f2(bh)};
+          return <g><defs><mask id={wid} maskUnits="userSpaceOnUse" {...bb}><rect {...bb} fill="#FFFFFF" /><path d={quad(E, Wr, (AW[1] / 2 + ink) * (1 - wear.w), (AW[2] / 2 + ink) * (1 - wear.w))} fill="#000000" /></mask></defs><g mask={`url(#${wid})`}>{wear.el}</g></g>;
+        })())}
         {handEl(hBack)}
       </g>
     );

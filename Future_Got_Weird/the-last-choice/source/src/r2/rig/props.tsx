@@ -66,7 +66,9 @@ export const plateWear = (state: PlateState, o: {glint?: number; broken?: number
       {[-18, 24].map((xx) => <rect key={xx} x={(xx - 5) * k} y={-y(Wd + 4) * k} width={10 * k} height={y(2 * Wd + 8) * k} rx={3 * k} fill={col(RUBBER)} opacity={front ? 1 : 0.9} />)}
     </g>
   );
-  return {el, front};
+  // (R4) how far it is in front of the forearm, 0 (behind it) ... 1 (over it): R3 switched the whole plate between the layers at a
+  // threshold on its facing (nz > -0.12), so it jumped from over the forearm to behind it in one frame as the Director turned
+  return {el, front, w: Math.max(0, Math.min(1, (nz + 0.12) / 0.32))};
 };
 
 // ------------------------------------------------------------------ tether launcher (clerkA, right hand) + hip reel
