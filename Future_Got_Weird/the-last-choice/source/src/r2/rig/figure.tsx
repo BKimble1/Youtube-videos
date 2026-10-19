@@ -950,7 +950,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
   // ---------------- arms, hands, worn and held props
   const hShape = [p.handL ?? 'relaxed', p.handR ?? 'relaxed'];
   const AW = [ARM_W * 1.08 * s, ARM_W * 0.86 * s, ARM_W * 0.74 * s];
-  const bT = 10 * s; // the torso hides a limb where its front surface is nearer than the limb's axis by this much: tuned so that a
+  const bT = 16 * s; // the torso hides a limb where its front surface is nearer than the limb's axis by this much: tuned so that a
                      // hanging arm (a depth tie with the torso's side) starts to show over the shirt where R3 flipped it
   /** A part of a limb against the torso: `rankOld` is the part's rank by R3's one-point rule. In front of the torso it is
    *  masked by the regions the torso hides (the torso shows through them); behind it (zone 0) it stays under the torso,
