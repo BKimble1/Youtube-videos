@@ -296,6 +296,12 @@ const toSlab = (spec: FigSpec, gap: number): FigSpec => {
   }
   return s;
 };
+/**
+ * (R4) The right forearm that presses his left side. The rig's default arm pole puts the elbow behind the torso, so with the hand
+ * target on the belly the whole forearm was hidden behind the body and the hand floated over it (and, since the torso mask, showed
+ * its wrist coming out of the belly); this pole puts the elbow out to his right and forward, so the forearm crosses the belly.
+ */
+const WOUND_POLE = {r: 1, u: -0.25, f: 0.7};
 /** the point of his upper back on the slab's face at T (world): where the slam's dust and the slide's grit start */
 export const slabContact = (T: number): V3 => figureRig(SOLVE_VIEW, directorAt(T).spec).torso({r: 0, u: 75, f: -40});
 /** his back's gap to the slab at the end of the slide = the tableau's own seat (E/F), so the slide ends exactly there */
@@ -314,7 +320,10 @@ const SLAM_FEET = (() => {
 const slumpBreath = (T: number) => kn(T, [[180.4, 0.3], [181.1, -0.6], [181.85, 0.7], [182.6, -0.5], [183.45, 0.6], [184.3, -0.45], [185.15, 0.45], [186.0, -0.2]]);
 /** the tableau's Director (EF directorSpec), breathing before 186.0 (where E/F's breath curve is still flat) */
 export const dirSeatSpec = (T: number, anchor?: V3): FigSpec => {
-  const s = directorSpec(T, anchor);
+  const s0 = directorSpec(T, anchor);
+  // (the wound arm's pole for every T in D4, 186.0 on too: EF's own directorPose has none, so its cut at 186.9 needs the same line —
+  // `armR: {pole: {r: 1, u: -0.25, f: 0.7}}` — or the forearm flips behind the belly at the cut; see the report)
+  const s: FigSpec = {...s0, pose: {...(s0.pose as Pose), armR: {...((s0.pose as Pose).armR ?? {}), pole: WOUND_POLE}}};
   if (T >= 186.0) return s;
   const p = s.pose as Pose;
   const bb = slumpBreath(T);
@@ -329,7 +338,7 @@ export const dirSeatSpec = (T: number, anchor?: V3): FigSpec => {
   let face: Pose['face'] = {...(p.face ?? {}), ...exprMix('pain', 'exhaustion', 1 - hurt), open: clamp(0.14 + 0.2 * bb, 0, 0.6)};
   if (up > 0.05) face = {...face, ...expr('effort', up)};
   const pose: Pose = {
-    ...p, drop: (p.drop ?? 128) - 9 * up, bodyPitch: -(27 + bb * 1.3) + 15 * up - 4 * give,
+    ...p, armR: {...(p.armR ?? {}), pole: WOUND_POLE}, drop: (p.drop ?? 128) - 9 * up, bodyPitch: -(27 + bb * 1.3) + 15 * up - 4 * give,
     head: {...(p.head ?? {}), pitch: 24 - bb * 2.2 - 12 * up + 6 * give},
     face,
   };
@@ -364,7 +373,7 @@ const againstSpec = (T: number): FigSpec => {
     drop: 30 + 30 * buckle + 16 * sag, lean: -30 + 14 * smooth((T - EV.slam) / 0.5) + 6 * sag + 6 * buckle, bodyPitch: 0, twist: 4,
     head: {pitch: -12 * snap + 22 * sag + 10 * buckle, yaw: -10, roll: 8 * sag},
     armL: {fk: {fwd: 8, out: 18, bend: 20}}, handL: 'limp',
-    armR: {fk: {fwd: 30, out: 10, bend: 70}}, handR: 'open',
+    armR: {fk: {fwd: 30, out: 10, bend: 70}, pole: WOUND_POLE}, handR: 'open',
     face: buckle > 0.3 ? {...exprMix('pain', 'exhaustion', sag), worry: 0.95} : {...expr('pain'), brows: 0.6},
     breath: 1, wearL: plateWear('shattered'),
   };
