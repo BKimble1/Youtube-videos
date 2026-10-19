@@ -291,7 +291,8 @@ const TETHER_WATCH = new Set([7222, 7223]);
  * Second heavy: east of the van, facing him, ram at rest. It rammed from 0.6 m further west (16.4, 3.0) and took one
  * slow step back as the ram recovered (D4 178.9–180.4).
  */
-export const TB_HEAVY2 = {id: 7401, pos: {x: 17.0, y: 0, z: 3.0} as V3, heading: 270, look: DIRECTOR_HEAD, eye: 'amber' as const,
+export const TB_HEAVY2 = {id: 7401, pos: {x: 17.0, y: 0, z: 4.2} as V3, // (R4: z 3.0 → 4.2 — its resting ram overlapped the van's nose by 0.4 m in every E/F wide)
+ heading: 270, look: DIRECTOR_HEAD, eye: 'amber' as const,
   /** where its ram tip met the Director's plate at STRIKE (he was planted in front of the drone pilot, by the van) */
   strikePoint: {x: 9.67, y: 1.43, z: 3.31} as V3};
 /** The first heavy's wreck across the crater (fallback for D3's: knee broken at t0, topples south into the crater). */

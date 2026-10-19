@@ -110,6 +110,9 @@ export const directorPose = (T: number): Pose => {
     // left arm limp at his left side, the hand on the ground beside his hip (out from under the clasp; the shattered
     // plate on its forearm)
     armL: {local: {r: -78, u: 24, f: 4}, pole: {r: -1, u: 0.1, f: -0.6}},
+    // (R4) the wound arm's pole, as D4's dirSeatSpec: with the rig's torso mask the default pole put the elbow behind the belly and the forearm
+    // flipped at the D4→E1 cut at 186.9
+    armR: {...(base.armR ?? {}), pole: {r: 1, u: -0.25, f: 0.7}},
     handL: 'limp',
     // his right hand: pressing his side, then held in hers — curled a little, then (as his grip goes, 191.7–192.7) slack
     handR: T < 192.6 ? 'relaxed' : 'limp',
