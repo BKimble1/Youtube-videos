@@ -8,7 +8,12 @@ cuts, dissolves, camera snaps, disappearing or doubled parts and blank frames ca
 import os, subprocess, sys
 
 WINDOWS = {
-    'real_to_vector_open': (1.40, 2.30),
+    'real_to_vector_open': (1.70, 2.00),
+    'vector_to_spikes': (35.10, 35.40),
+    'spikes_landing': (39.60, 40.10),
+    'launch_after_spikes': (40.10, 40.50),
+    'bend_3q_cut': (55.55, 56.15),
+    'real_corner_to_overhead': (43.25, 43.55),
     'question_in': (7.85, 8.15),
     'question_out': (10.35, 10.65),
     'hand_press_1': (14.85, 15.65),
