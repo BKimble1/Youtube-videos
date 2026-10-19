@@ -1,81 +1,81 @@
-# QA report: This Car Jumps Without a Ramp (18 Oct 2026)
+# QA report: This Car Jumps Without a Ramp, final pass (19 Oct 2026)
 
-## What exists and what does not
+## What was delivered
 
-- **The final 4K master does not exist yet.** The essential BYD clip and the owner's recordings could not be downloaded
-  here (network policy: `drive.google.com`, `www.byd.com`, `www.youtube.com` refused). The master render is guarded,
-  and `footage/README.md` has the way in.
-- **A 1080p review copy was rendered**: `exports/FGW_U9_JumpsWithoutRamp_REVIEW_1080p_not-for-upload.mp4`, Git-ignored,
-  rebuilt by `tools/render_review.sh`. Its two real-footage windows show a "REAL FOOTAGE PENDING" card. **It must not be
-  uploaded.**
-- **Not watched or listened to in real time.** Everything below is measurement, transcription and frame inspection.
+- `exports/FGW_U9_FINAL_4K.mp4` (Git-ignored; SHA-256 in `exports/FGW_U9_FINAL_4K.sha256`: `15eb52d0…c1fa2`).
+  Rendered natively from the project at **3840×2160, 30 fps** (Remotion `--scale=2`), H.264 High, yuv420p, BT.709, CRF 14,
+  AAC-LC 320 kb/s 48 kHz stereo. Not upscaled from the review file.
+- `thumbnail/FGW_U9_thumb_FINAL_1280x720.jpg`, plus updated docs (README, footage README, claim ledger, credits, upload text).
+- Review copies `exports/FGW_U9_REVIEW_1080p_r2_not-for-upload.mp4` (this pass's 1080p) and the earlier r1. Not for upload.
 
-## Narration (measured)
+## What could not be done here
 
-- **Script match:** 24 takes (4 per block) transcribed with Scribe. Every take with a complete transcript matches the
-  script word for word, including "Yangwang". Two takes were left out because Scribe merged their repeated text.
-- **Picks:** b1_t2, b2_t3, b3_t2, b4_t2, b5_t3, b6_t3, chosen by speaking rate nearest about 160 wpm, no long internal
-  pause, and consistent level. Placed whole, with no sentence surgery and no time-stretch.
-- **Pace:** 363 words in 2:14.2 is 162 wpm overall. Per block, the rate is 157–180 wpm.
-- **Not checked by ear:** pronunciation of "BYD's" and "Yangwang", emphasis, warmth and comic timing. **Listen once before upload.**
+- **Normal-speed audio-visual playback.** This environment has no way to watch or listen to the file in real time, so
+  nobody has watched the cut or heard the mix here. The checks below are measurements, transcript/timing data and
+  frame-by-frame inspection of frames extracted from the exported file. **Watch it once at full speed with sound before upload.**
+- Not checked by ear: sound-effect levels and taste, click/truncation audibility (measured only: see Mix), music ending.
+
+## Narration
+
+Unchanged. The approved Test Voice recording (134.16 s) and its word timings were not touched: no ElevenLabs calls, no
+re-records, no re-stitching, no time-stretch, and no wording changes. `audio/narration/` has no changes in this pass.
+
+## Measured on the exported 4K file (`tools/qa.py`, `qa/final/qa_results.json`)
+
+- 3840×2160, 4025 frames read, 134.167 s video, 134.160 s audio (A/V length difference 0.007 s).
+- Black frames: none. Static holds of 1.5 s or more: none. Single-frame pops: none.
+- A scan of all 4025 frames for flat paper-coloured (blank) frames: **none** in the final file.
+- Loudness −15.0 LUFS integrated, LRA 2.1 LU, true peak −1.5 dBTP (reference measurements, not proof the mix sounds right).
 
 ## Mix (measured)
 
-- **Mix target:** −15.0 LUFS integrated, −1.5 dBTP true peak (−1.4 dBTP after AAC), LRA 2.1 LU. Source:
-  `audio/mix/mix_measure.json`.
-- **Masking screen** (`audio/mix/speech_mask.txt`): the median voice-to-bed margin while speaking is 22.9 dB. Of
-  2,024 speech windows of 50 ms, the bed is within 6 dB of the voice in 55 and louder than the voice in 5. Those are
-  mostly bump thuds and landing thumps between words.
-- **Effects:** every effect sits on an exported animation event (`audio/sfx_events.json`). There are no effects at
-  takeoffs, and the only whoosh is the car passing through the camera.
+- Music, effects and ducking were rebuilt from the exported event times (`audio/sfx_events.json`); the existing music and
+  effects were kept, with placement moved only where visuals changed: the whip into the cabin (0.3 s before the cut), the
+  real landing (0.13 s earlier than the model's), and a soft pass-by when the drone crosses over the car.
+- Masking screen (`audio/mix/speech_mask.txt`): median voice-to-bed margin while speaking 22.8 dB; of 2,024 speech windows
+  of 50 ms the bed is within 6 dB of the voice in 67 and above it in 9 (bump thuds and landings between words).
+- Music fades out over the last 1.4 s, ringing out under the end card; the final 40 ms of the bed are faded to avoid a click.
 
-## Picture (review render, measured with `tools/qa.py`; results in `qa/review_r2/qa_results.json`)
+## Frame-by-frame inspection (frames pulled from the exported 4K file)
 
-- **Duration:** 134.16 s at 30 fps, 1920×1080.
-- **Black frames:** none.
-- **Single-frame pops:** none.
-- **Static holds of 1.5 s or more:** only three remain.
-  - 0:00–0:02.5 and 1:47.9–1:49.7: the placeholder cards (these become real footage).
-  - 2:12.4 onward: the intended end settle.
+Contact sheets for every transition and cutaway are in `qa/final_strips/` (`tools/transition_sheets.py`), one tile per frame
+with its frame number. Checked and found clean: real opening to illustration (1.4–2.3 s); the question shots in and out; the
+hand press (14.9–15.7 s: hand enters, touches, the body compresses, the spring fades in); the tyre-wall wipe into the bend; the
+real cornering shot out; the speed whip into the cabin scene; the round cutaway in and out of the cabin; the car through the
+lens into the replay; replay to illustration; illustration to the real side jump (about five frames of overlap, wheels
+aligned); the real landing; the cut to the front three-quarter; hover to illustration; illustration to the real drive-away;
+the cut between the two drive shots; the end card.
 
-  In the first review render (r1), the question/name beat (0:09.8–0:14.4) and the passenger shots (1:40–1:48) also
-  held. They now have slow camera creeps, and r2 shows no hold there.
-- **Transition strips** (`qa/review_r1/strips/`): the side-to-bend tail wipe, the car through the camera into
-  braking, and the wipe into the passenger bend all read as designed.
+Fixed during this pass:
+- A one-frame blank (cream) gap at the cut from the real landing to the front three-quarter shot (found on the first 4K render
+  and fixed by making the second clip start on the frame after the first ends; the file above is the re-render).
+- The side jump's hover shot started a frame late; the BYD credit chip faded too late at the opening dissolve.
 
-## Frame inspection (development rounds in `qa/`)
+Observations on the final file:
+- **Cabin (1:36–1:45).** Clean interior: the driver's face and torso are unobstructed; the seat bolster visibly gives under
+  the body; the belt is anchored to the pillar above the shoulder and ends in a buckle on the seat; there is a single arrow,
+  tail on the bolster and tip at the body; two bars show lean falling while the sideways force stays the same. Entry and exit
+  are a continuous round cutaway in the windscreen, with no dark frame.
+- **Physics rules.** Road-force arrows end at takeoff; the gravity arrow stays through flight to landing (drawn on the real
+  footage, anchored to the model's centre of mass); the MOTION arrow follows the vertical velocity and is hidden at the apex;
+  actuator forces appear only as internal pairs in the cutaways; no numbers are shown (the graphs are labelled "ILLUSTRATIVE").
+- **Text.** Headline bubbles that repeated the narration were removed; kept: SPRING, DAMPER, POWERED ACTUATOR, GRAVITY, MOTION,
+  MORE/LESS LOAD, TRAVEL LIMIT, the cabin labels, the real-versus-simplified captions ("BYD DEMONSTRATION VIDEO",
+  "SIMPLIFIED CUTAWAY", "SLOW MOTION · SIMPLIFIED MODEL"), and the small wordmark at the end.
+- **Real shots.** All played frame for frame at the source cadence, none repeated; BYD's on-screen numbers and logos are
+  outside the crops (the band in the side jump is removed with `delogo`).
 
-- **Physics.** These come from small simulations (`source/src/sim/`), not hand keys:
-  - Ground force equals gravity at rest, exceeds it during the push, is zero in the air and returns on landing.
-  - Gravity is constant, including at the apex.
-  - The flight is uniform slow motion.
-  - The landing settles without bouncing.
-  - On the rough road, the cabin moves less than the wheel, but not zero. The trace shows both.
-  - The big bump reaches the travel stop. It is shown slowed down, with a label.
-- **Forces.**
-  - The whole-car diagrams show only external forces.
-  - Actuator arrows appear only in the close-ups, as equal and opposite pairs between wheel and body.
-  - Braking arrows sit at the tyre contact patches.
-  - The seat force on the passenger points toward the centre of the turn.
-  - There is no outward arrow.
-- **Corner.**
-  - The same road, speed and radius are used for the passive and active cases.
-  - The outside tyre load stays larger with the level body ("TIRES STILL SET THE LIMIT").
-- **Labels:** "SIMPLIFIED" appears with every cutaway, and "SLOWED DOWN" with every slow motion. There are no numbers
-  on screen.
+## Known remaining issues
 
-## Known limits and open items
-
-1. **Footage.** It is needed for:
-   - the opening and the replay;
-   - the match-cut alignment (the measured wheel positions);
-   - the vector silhouette check against the real side profile;
-   - the hop height;
-   - the thumbnail's clearance;
-   - sound cues on the real landings.
-
-   The car is drawn from published dimensions and memory of the design; the side silhouette must be checked against
-   the clip's frames.
-2. **Not opened from here:** the cited source pages (claim ledger, access note). Check that they open before upload.
-3. **The thumbnail is a draft** (`thumbnail/FGW_U9_thumb_DRAFT_1280x720.jpg`) until the airborne frame sets its
-   clearance and silhouette.
+1. **Real footage is 1080p.** The real shots come from screen recordings (1080p, double-compressed) and are enlarged to 4K,
+   so they look softer than the native-4K vector art. Documented in `footage/README.md`.
+2. **The three-quarter and rear illustrated car (0:57–1:00, 2:08) is the weakest drawing.** It is now the same colour,
+   with a blunt wide nose, grille and plate, and consistent wheel positions, but it is still a faceted model next to the
+   hand-drawn side and front views. The rear view is only on screen briefly, and the real drive-away covers the ending.
+3. **Hand demo.** The hand is a simple mitt on a sleeve entering from above; its contact and release are clean, but it is the
+   plainest drawing in the film.
+4. **Jump height.** The illustrated apex clearance (about 0.11 m, also used in the thumbnail) is the model's, not a
+   measurement of BYD's car; the supplied footage cannot give it.
+5. **Rights and sources.** The owner must confirm rights for the BYD excerpts, and open the three cited source pages once
+   (they could not be opened from this environment); see `production/CREDITS.md` and `research/claim_ledger.md`.
+6. **Pronunciation and delivery** ("BYD's", "Yangwang") were not re-checked by ear in this pass.
