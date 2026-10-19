@@ -516,7 +516,7 @@ const hopAt = (T: number): Body => {
   const k = HOP;
   // root: the weight rolls forward over the planted feet (gather), flies, lands, rolls on
   const f = 0.04 * sstep(T, k.t0, k.take) + 0.58 * sstep(T, k.take - 0.02, k.landL) + 0.24 * sstep(T, k.landL - 0.05, k.landR + 0.03) + 0.14 * sstep(T, k.landR, k.t1);
-  const arc = 0.2 * Math.sin(Math.PI * clamp((T - k.take) / (k.landL - k.take + 0.02)));
+  const arc = 0.28 * Math.sin(Math.PI * clamp((T - k.take) / (k.landL - k.take + 0.02)));
   const pos: V3 = {x: lerp(a.pos.x, z.pos.x, f), y: lerp(a.pos.y, z.pos.y, f) + arc, z: lerp(a.pos.z, z.pos.z, f)};
   const heading = lerpAng(a.heading, z.heading, sstep(T, k.t0, k.t1));
   // feet: both leave on the push-off (the right, the rear-most push, last), tucked on an arc, the left lands first
@@ -525,7 +525,10 @@ const hopAt = (T: number): Body => {
     const x = lerp(p0.x, p1.x, e), zq = lerp(p0.z, p1.z, e);
     return {x, y: Math.max(lerp(p0.y, p1.y, e) + lift * Math.sin(Math.PI * e), GC(x, zq) + 0.012), z: zq};
   };
-  const footL = foot(a.footL, z.footL, eL, 0.26), footR = foot(a.footR, z.footR, eR, 0.3);
+  // (the climb's heel lift, `REAR_LIFT`, is on the left foot at t1: the bound lands it ON the ground and lifts it again at the end)
+  const zL: V3 = {x: z.footL.x, y: GC(z.footL.x, z.footL.z), z: z.footL.z}, heel = z.footL.y - zL.y;
+  const footL0 = foot(a.footL, zL, eL, 0.34), footR = foot(a.footR, z.footR, eR, 0.38);
+  const footL: V3 = {...footL0, y: footL0.y + heel * sstep(T, k.landR + 0.05, k.t1)};
   // the pose: crouch (load), explode up, tuck over the palm, land (L), compress (R), up
   const drop = keyN([[k.t0, a.gait?.drop ?? 22], [k.load, 36], [k.take + 0.02, 12], [k.take + 0.1, 8], [k.landL - 0.03, 18], [k.landL + 0.045, 38], [k.landR + 0.01, 44], [k.landR + 0.13, 30], [k.t1, z.gait?.drop ?? 22]], T);
   const lean = keyN([[k.t0, a.gait?.lean ?? 17], [k.load, 24], [k.take + 0.04, 31], [k.landL, 33], [k.landR, 30], [k.landR + 0.12, 27], [k.t1, z.gait?.lean ?? 24]], T);

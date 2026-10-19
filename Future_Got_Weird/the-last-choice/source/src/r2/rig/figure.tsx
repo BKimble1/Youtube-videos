@@ -797,6 +797,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     add(-1e6, 'shadow', <g>{sh}</g>);
   }
 
+  const pantsC = col(look.pants), shoeC = col(look.shoes);
   // ---------------- pelvis (projected ellipsoid, follows lean/pitch/roll)
   {
     const c = at(r.P, base, 0, 4 * s, 0);
@@ -967,7 +968,6 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     ));
   };
   // ---------------- legs (stroke limbs, butt-capped at the hip inside the pelvis) and shoes
-  const pantsC = col(look.pants), shoeC = col(look.shoes);
   [0, 1].forEach((i) => {
     const H = r.hip[i], K = r.knee[i], A = r.ankle[i];
     const legZ = (H.z + K.z + A.z) / 3;
