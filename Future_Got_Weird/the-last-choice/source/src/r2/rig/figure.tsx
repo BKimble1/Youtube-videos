@@ -797,38 +797,6 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     add(-1e6, 'shadow', <g>{sh}</g>);
   }
 
-  // ---------------- legs (stroke limbs, butt-capped at the hip inside the pelvis) and shoes
-  const pantsC = col(look.pants), shoeC = col(look.shoes);
-  [0, 1].forEach((i) => {
-    const H = r.hip[i], K = r.knee[i], A = r.ankle[i];
-    const legZ = (H.z + K.z + A.z) / 3;
-    const pitchF = ([p.legL, p.legR][i]?.pitch ?? 0);
-    // shoe: a projected ellipsoid along the foot (toe pitched by `pitch`)
-    let F = base.F;
-    if (pitchF) F = rotAxis(F, base.R, rad(-pitchF));
-    const sc = add3(A, add3(mul3(F, 12 * s), mul3(base.U, -5 * s)));
-    const e = ellipsoid2([mul3(F, 33 * s), mul3(base.R, 15 * s), mul3(base.U, 13 * s)]);
-    const decals = sil ? [] : (dmg.decals ?? []).filter((d) => d.limb === (i === 0 ? 'legL0' : 'legR0') || d.limb === (i === 0 ? 'legL1' : 'legR1'));
-    // a thigh toward the camera (sitting, kneeling, a high knee) is drawn over the torso's hem with a rounded hip;
-    // otherwise the leg starts inside the pelvis and sorts with the arms behind the torso by its depth. (R2 offset the
-    // leg's rank by its depth in PIXELS, so close-ups brought standing legs over the shirt and wides kept seated thighs
-    // behind it; and a near leg in profile sorted under the far arm.)
-    const front = r.legFront[i];
-    const Hn = add3(H, mul3(norm3(sub3(H, K)), (front ? 2 : 10) * s));
-    const LW = [LEG_W * 1.05 * s, LEG_W * 0.95 * s, LEG_W * 0.8 * s];
-    const legEl = front
-      // (the knee disk belongs to the thigh's shape and shading: R2-R3a drew it as a flat disk over the shading)
-      ? (() => { const a = segLayers(Hn, K, LW[0], LW[1], ink, inkC, pantsC, L, s, 1, 0, `ha${i}`, 1, `${id}lt${i}`, true), b = segLayers(K, A, LW[1], LW[2], ink, inkC, pantsC, L, s, 0, 0, `hb${i}`, 0, `${id}ls${i}`); return <g>{a.ink}{b.ink}<circle cx={K.x} cy={K.y} r={LW[1] / 2 + ink} fill={inkC} />{b.fill}{a.fill}</g>; })()
-      : <LimbG pts={[Hn, K, A]} w={LW} ink={ink} inkC={inkC} colors={[pantsC, pantsC]} L={L} s={s} uid={`${id}lg${i}`} />;
-    add(front ? r.torsoZ + 1 + i * 0.01 : r.torsoZ - 40 + clamp((legZ - r.torsoZ) / (600 * s), -1, 1) * 0.3 + i * 0.001, `leg${i}`, (
-      <g>
-        <ellipse cx={sc.x} cy={sc.y} rx={Math.max(e.rx, 12 * s)} ry={Math.max(e.ry, 9 * s)} transform={`rotate(${f2(e.rot)} ${f2(sc.x)} ${f2(sc.y)})`} fill={shoeC} stroke={inkC} strokeWidth={ink} />
-        {legEl}
-        {decals.map((d, k) => <LimbDecal key={k} d={d} a={d.limb.endsWith('0') ? H : K} b={d.limb.endsWith('0') ? K : A} w={LEG_W * s} ink={ink} inkC={inkC} skin={skin} />)}
-      </g>
-    ));
-  });
-
   // ---------------- pelvis (projected ellipsoid, follows lean/pitch/roll)
   {
     const c = at(r.P, base, 0, 4 * s, 0);
@@ -998,6 +966,40 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
       </g>
     ));
   };
+  // ---------------- legs (stroke limbs, butt-capped at the hip inside the pelvis) and shoes
+  const pantsC = col(look.pants), shoeC = col(look.shoes);
+  [0, 1].forEach((i) => {
+    const H = r.hip[i], K = r.knee[i], A = r.ankle[i];
+    const legZ = (H.z + K.z + A.z) / 3;
+    const pitchF = ([p.legL, p.legR][i]?.pitch ?? 0);
+    // shoe: a projected ellipsoid along the foot (toe pitched by `pitch`)
+    let F = base.F;
+    if (pitchF) F = rotAxis(F, base.R, rad(-pitchF));
+    const sc = add3(A, add3(mul3(F, 12 * s), mul3(base.U, -5 * s)));
+    const e = ellipsoid2([mul3(F, 33 * s), mul3(base.R, 15 * s), mul3(base.U, 13 * s)]);
+    const decals = sil ? [] : (dmg.decals ?? []).filter((d) => d.limb === (i === 0 ? 'legL0' : 'legR0') || d.limb === (i === 0 ? 'legL1' : 'legR1'));
+    // (R4) the leg against the torso. R3 drew a thigh toward the camera over the torso's hem with a rounded hip whenever its angle
+    // passed a threshold (legFront: 0.68 of the thigh's length, then the lead's legOverTorso), and behind the torso otherwise: a
+    // braced or stepping figure turned a degree or two and its forward thigh jumped over the shirt, hip arc and all. The leg now
+    // always starts inside the pelvis (the torso hides that end) and is masked by where the torso's front surface is nearer
+    // than the leg's axis (torsoHides), the same rule as the arms; behind the torso it keeps R3's rank, and a second copy just
+    // over the torso, clipped to its outline, shows it where it is nearer.
+    const LW = [LEG_W * 1.05 * s, LEG_W * 0.95 * s, LEG_W * 0.8 * s];
+    const Hn = add3(H, mul3(norm3(sub3(H, K)), 10 * s));
+    const legEl = <LimbG pts={[Hn, K, A]} w={LW} ink={ink} inkC={inkC} colors={[pantsC, pantsC]} L={L} s={s} uid={`${id}lg${i}`} />;
+    const legBody = (
+      <g>
+        <ellipse cx={sc.x} cy={sc.y} rx={Math.max(e.rx, 12 * s)} ry={Math.max(e.ry, 9 * s)} transform={`rotate(${f2(e.rot)} ${f2(sc.x)} ${f2(sc.y)})`} fill={shoeC} stroke={inkC} strokeWidth={ink} />
+        {legEl}
+        {decals.map((d, k) => <LimbDecal key={k} d={d} a={d.limb.endsWith('0') ? H : K} b={d.limb.endsWith('0') ? K : A} w={LEG_W * s} ink={ink} inkC={inkC} skin={skin} />)}
+      </g>
+    );
+    const rankBack = r.torsoZ - 40 + clamp((legZ - r.torsoZ) / (600 * s), -1, 1) * 0.3 + i * 0.001;
+    const bL = 8 * s, tip = add3(A, mul3(norm3(sub3(A, K)), 22 * s));
+    const h1 = torsoHides(r, Hn, K, LW[0] / 2 + ink + 2 * s, bL, ink * 0.6), h2 = torsoHides(r, K, tip, LW[1] / 2 + ink + 2 * s, bL, ink * 0.6);
+    torsoParts(`leg${i}`, legBody, rankBack, [...h1.polys, ...h2.polys], h1.touch || h2.touch, (Hn.z + K.z) / 2, [Hn, K, tip], 26 * s + ink * 3, -2 + i * 0.01);
+  });
+
   [0, 1].forEach((i) => {
     const S = r.sh[i], E = r.el[i], Wr = r.wr[i];
     const hf = r.hands[i];

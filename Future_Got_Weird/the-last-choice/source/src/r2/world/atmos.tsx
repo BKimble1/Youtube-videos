@@ -471,13 +471,13 @@ export const plumeItem = (key: string, p: PlumeSpec, t: number, bias = -0.2, occ
       const c = plumePoint(p, s, t), r = radiusAt(p, s) * 1.1;
       const d = sub3(c, occ.v.pos), lh = Math.hypot(d.z, d.x) || 1;
       const lat = {x: -d.z / lh, y: 0, z: d.x / lh};
-      return [add3(c, mul3(lat, r)), add3(c, mul3(lat, -r)), add3(c, {x: 0, y: r, z: 0})];
+      return [add3(c, mul3(lat, r)), add3(c, mul3(lat, -r)), add3(c, mul3(lat, r * 0.5)), add3(c, mul3(lat, -r * 0.5)), add3(c, {x: 0, y: r, z: 0})];
     };
-    const wide = [...probes, ...[0, 0.45, 0.9, 1.25].flatMap(flank)];
+    const wide = [...probes, ...[0, 0.45, 0.9, 1.25].flatMap(flank), ...[0.2, 0.7].flatMap((s) => [plumePoint(p, s, t), ...flank(s)])];
     if (allHidden(occ, wide, skip)) return null;
     // (and the same flanks decide the plume's order against a building: the plume goes behind a building as soon as that building
     // is in front of any part of its width, not only of its spine — the order flipped as a billow's edge crossed a building's edge)
-    b = occBias(occ, pos, [...probes.slice(0, 3), ...wide.slice(4, 13)], bias, skip);
+    b = occBias(occ, pos, [...probes.slice(0, 3), ...wide.slice(4, 16)], bias, skip);
   }
   return {kind: 'sprite', key, pos, bias: b, noCull: true, draw: (c: SpriteCtx) => plumeEl(c, p, t, key)};
 };

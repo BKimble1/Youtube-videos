@@ -1037,11 +1037,15 @@ const restAngle = (sp: UnitSpec, rig: UnitRig, maxA: number): number => {
   const axis = norm3(cross3(UP, d));
   const piv = mul3(add3(rig.an[0], rig.an[1]), 0.5);
   const pivot = {x: piv.x, y: g(piv.x, piv.z) + 0.16, z: piv.z};
-  const probes = [apply(rig.head, {x: 0, y: 0.17, z: 0}), apply(rig.head, {x: 0, y: 0, z: -0.16}), rig.sh[0], rig.sh[1], rig.pelvis.pos, rig.kn[0], rig.kn[1], apply(rig.spine, {x: 0, y: 0.32, z: -0.24}), apply(rig.spine, {x: 0, y: 0.3, z: 0.24})];
+  const probes = [apply(rig.head, {x: 0, y: 0.17, z: 0}), apply(rig.head, {x: 0, y: 0, z: -0.16}), rig.sh[0], rig.sh[1], rig.pelvis.pos, apply(rig.spine, {x: 0, y: 0.32, z: -0.24}), apply(rig.spine, {x: 0, y: 0.3, z: 0.24})];
+  // (R4) the knees are no longer probes (the legs fold and lie down after the landing, and `fallLift` keeps every vertex out of the
+  // ground): a knee meeting a rising slope at 36° stopped D2's D there, a kneeling machine's knee at the first degrees (B at 12.8°).
+  // A probe already resting on / just above the ground when the fall starts is not a limit either
+  const free = probes.filter((p) => p.y - g(p.x, p.z) > 0.2);
   const pen = (a: number) => {
     const R = rotAxisM(axis, a);
     let m = -1e9;
-    for (const p of probes) {
+    for (const p of free) {
       const q0 = {x: p.x, y: p.y - 0.32 * clamp((p.y - pivot.y) / 1.0), z: p.z};
       const q = add3(pivot, rmul(R, sub3(q0, pivot)));
       m = Math.max(m, g(q.x, q.z) + 0.06 - q.y);

@@ -144,6 +144,9 @@ export const footAt = (path: Path, dist: number, phase: number, stride: number, 
   const e = smooth(s);
   const pos = {x: lerp(a.pos.x, b.pos.x, e), y: lerp(a.pos.y, b.pos.y, e), z: lerp(a.pos.z, b.pos.z, e)};
   const L = Math.sin(Math.PI * s) * lift;
+  // (R4) the swing foot follows the terrain between its two plants: the straight blend of the plant heights put it 7–20 cm under
+  // the ground on a convex or steep slope (D2's reserves running the crater slope, single-frame foot dips)
+  pos.y = Math.max(pos.y, ground(pos.x, pos.z));
   return {pos: {...pos, y: pos.y + L}, lift: L, heading: lerp(a.heading, b.heading, e), stance: false, s};
 };
 
