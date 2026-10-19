@@ -84,12 +84,23 @@ type Props = {
   inkW?: number;
   /** spike jiggle (deg) from the body's motion (follow-through) */
   hairSway?: number;
+  /** Telepathy Flaw: mirror the head so it faces screen-right (the light stays upper-left) */
+  flip?: boolean;
+  /** 'spiky' (the guesser) or 'bob' (the fact-checker) */
+  style?: 'spiky' | 'bob';
+  /** round glasses (the fact-checker) */
+  glasses?: boolean;
+  /** head-space content drawn over the hair and skin but UNDER the face features (the see-through skull and brain) */
+  underlay?: React.ReactNode;
+  /** head-space content drawn on top of everything (the implant) */
+  overlay?: React.ReactNode;
 };
 
 const Q = (a: V, c: V, b: V) => `M${P(a)} Q${P(c)} ${P(b)}`;
 
-export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink = 0, skin = CREW.skin, hair = CREW.hair, inkW = 7, hairSway = 0}) => {
-  const Lc = rot(LIGHT, -roll); // light direction in head space
+export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink = 0, skin = CREW.skin, hair = CREW.hair, inkW = 7, hairSway = 0, flip = false, style = 'spiky', glasses = false, underlay, overlay}) => {
+  let Lc = rot(LIGHT, -roll); // light direction in head space
+  if (flip) Lc = {x: -Lc.x, y: Lc.y}; // the head is drawn mirrored, so the light is mirrored with it and stays upper-left on screen
   const s = R / 100;
   const xf = -30 * t; // face centre line moves toward screen-left in 3/4
   const fw = inkW * 0.74; // feature line width
@@ -134,6 +145,10 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
     .slice(1)
     .map((p) => `L${P(p)}`)
     .join(' ')} Q${fmt(60 + hx)},-55 ${fmt(0 + hx)},-62 Q${fmt(-60 + hx)},-55 ${fmt(-100 + hx)},-21 Z`;
+
+  // the fact-checker's bob: a rounded back layer behind the head and a swept fringe over the forehead
+  const bobBackD = `M${fmt(hx - 106)},52 C${fmt(hx - 118)},-40 ${fmt(hx - 86)},-118 ${fmt(hx)},-118 C${fmt(hx + 86)},-118 ${fmt(hx + 118)},-40 ${fmt(hx + 106)},52 C${fmt(hx + 104)},66 ${fmt(hx + 88)},68 ${fmt(hx + 80)},56 L${fmt(hx - 80)},56 C${fmt(hx - 88)},68 ${fmt(hx - 104)},66 ${fmt(hx - 106)},52 Z`;
+  const bobFrontD = `M${fmt(hx - 101)},-18 C${fmt(hx - 108)},-84 ${fmt(hx - 54)},-114 ${fmt(hx)},-114 C${fmt(hx + 54)},-114 ${fmt(hx + 108)},-84 ${fmt(hx + 101)},-18 C${fmt(hx + 92)},-50 ${fmt(hx + 62)},-68 ${fmt(hx + 22)},-72 C${fmt(hx - 8)},-64 ${fmt(hx - 42)},-66 ${fmt(hx - 72)},-48 C${fmt(hx - 86)},-40 ${fmt(hx - 96)},-30 ${fmt(hx - 101)},-18 Z`;
 
   // --- eyes
   const eyeY = -10;
@@ -257,6 +272,11 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
         </clipPath>
       </defs>
 
+      {style === 'bob' && (
+        <Inked w={inkW}>
+          <InkPath d={bobBackD} fill={`url(#${id}-hr)`} />
+        </Inked>
+      )}
       {/* far ear (mostly hidden by the head in 3/4) */}
       <Inked w={inkW * 0.9}>
         <InkPath d={ear(farEarX, -1)} fill={`url(#${id}-ear)`} />
@@ -286,9 +306,15 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
       )}
       {/* hair */}
       <Inked w={inkW}>
-        <InkPath d={hairD} fill={`url(#${id}-hr)`} />
+        <InkPath d={style === 'bob' ? bobFrontD : hairD} fill={`url(#${id}-hr)`} />
       </Inked>
-      {pass !== 'ink' && (
+      {pass !== 'ink' && style === 'bob' && (
+        <g>
+          <ellipse cx={fmt(-38 + hx)} cy={-92} rx={30} ry={6} transform={`rotate(-14 ${fmt(-38 + hx)} -92)`} fill="#FFFFFF" opacity={0.4} />
+          <path d={`M${fmt(hx - 30)},-70 C${fmt(hx - 10)},-64 ${fmt(hx + 6)},-66 ${fmt(hx + 22)},-72`} fill="none" stroke={shade(hair, 0.35)} strokeWidth={3} strokeLinecap="round" opacity={0.5} />
+        </g>
+      )}
+      {pass !== 'ink' && style === 'spiky' && (
         <g>
           {/* glossy streaks on the light side of the spikes */}
           {[
@@ -306,6 +332,7 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
         </g>
       )}
 
+      {pass !== 'ink' && underlay && <g clipPath={`url(#${id}-hc)`}>{underlay}</g>}
       {/* worry lines above the brows */}
       {e.browIn > 0.5 && (
         <g opacity={clamp((e.browIn - 0.5) * 2)}>
@@ -315,6 +342,16 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
       )}
       {Eye('f', farX, farW, -1)}
       {Eye('n', nearX, 1, 1)}
+      {glasses && (
+        <g>
+          <path d={`M${fmt(farX + 30 * farW)},${eyeY - 2} Q${fmt((farX + nearX) / 2)},${eyeY - 9} ${fmt(nearX - 30)},${eyeY - 2}`} fill="none" stroke={INK} strokeWidth={fw * 1.1} strokeLinecap="round" />
+          <path d={`M${fmt(nearX + 30)},${eyeY - 4} L${fmt(nearEarX - 6)},${eyeY - 8}`} fill="none" stroke={INK} strokeWidth={fw * 1.1} strokeLinecap="round" />
+          <ellipse cx={fmt(farX)} cy={eyeY} rx={fmt(30 * farW)} ry={30} fill="#DFF1FA" fillOpacity={0.22} stroke={INK} strokeWidth={fw * 1.2} />
+          <ellipse cx={fmt(nearX)} cy={eyeY} rx={30} ry={30} fill="#DFF1FA" fillOpacity={0.22} stroke={INK} strokeWidth={fw * 1.2} />
+          <path d={`M${fmt(nearX - 20)},${eyeY - 18} Q${fmt(nearX - 10)},${eyeY - 25} ${fmt(nearX + 4)},${eyeY - 26}`} fill="none" stroke="#FFFFFF" strokeWidth={4.5} strokeLinecap="round" opacity={0.75} />
+          <path d={`M${fmt(farX - 20 * farW)},${eyeY - 18} Q${fmt(farX - 10 * farW)},${eyeY - 25} ${fmt(farX + 2 * farW)},${eyeY - 26}`} fill="none" stroke="#FFFFFF" strokeWidth={4.5} strokeLinecap="round" opacity={0.7} />
+        </g>
+      )}
       {/* crow's feet when squeezing */}
       {(e.shut > 0.3 || e.squint > 0.5) && (
         <g opacity={clamp(Math.max(e.shut, (e.squint - 0.5) * 2))}>
@@ -388,5 +425,10 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
     </>
   );
 
-  return <g transform={`translate(${fmt(c.x)} ${fmt(c.y)}) rotate(${fmt(roll)}) scale(${fmt(s)})`}>{body}</g>;
+  return (
+    <g transform={`translate(${fmt(c.x)} ${fmt(c.y)}) rotate(${fmt(roll)}) scale(${fmt(flip ? -s : s)} ${fmt(s)})`}>
+      {body}
+      {overlay}
+    </g>
+  );
 };

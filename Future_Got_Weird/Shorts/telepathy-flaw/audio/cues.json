@@ -1,0 +1,874 @@
+{
+ "fps": 30,
+ "total_frames": 900,
+ "beats": {
+  "cutawayFrom": 0.62,
+  "cutawayTo": 1.9,
+  "followPulse": 1.9,
+  "sendHook": 2.45,
+  "arriveHook": 3.35,
+  "pullOutFrom": 2.55,
+  "pullOutTo": 3.55,
+  "neckFrom": 3.58,
+  "neckTo": 5.17,
+  "toBrain": 5.119999999999999,
+  "signals": 5.58,
+  "motor": 7.09,
+  "packetForms": 8.27,
+  "heyForms": 9.1,
+  "sendNormal": 9.59,
+  "arriveNormal": 10.805,
+  "seamless": 11.6,
+  "redPulse": 13.094999999999999,
+  "silhouetteIn": 13.78,
+  "silhouetteOut": 15.754999999999999,
+  "redEnters": 15.139999999999999,
+  "warnIn": 15.424999999999999,
+  "warnOut": 17.205,
+  "fragments": 16.8,
+  "redLeaves": 17.619999999999997,
+  "rejectFrom": 20,
+  "cancelReach": 20.5,
+  "cancelTap": 21.39,
+  "matchCut": 21.84,
+  "overtake": 22.73,
+  "receiverCut": 24.77,
+  "redArrives": 26.18,
+  "delivered": 26.279999999999998,
+  "lateCancel": 27.84,
+  "drawBack": 26.96,
+  "wipeFrom": 27.34,
+  "wipeTo": 29.45
+ },
+ "words": {
+  "speechStart": 0.08,
+  "thinkingE": 3.1,
+  "insteadS": 3.68,
+  "cordsS": 4.64,
+  "cordsE": 5.02,
+  "readsS": 5.68,
+  "impulsesS": 6.32,
+  "motorS": 7.24,
+  "cortexS": 7.4,
+  "cortexE": 7.95,
+  "translatingS": 8.32,
+  "thoughtsS": 9,
+  "directS": 9.64,
+  "messagesS": 9.92,
+  "instantlyS": 10.48,
+  "instantlyE": 11.055,
+  "itS": 11.6,
+  "worksS": 11.84,
+  "seamlesslyE": 12.66,
+  "untilS": 13.145,
+  "untilE": 13.36,
+  "brainS": 13.68,
+  "intrusiveS": 14.4,
+  "thoughtS": 15.04,
+  "thoughtE": 15.305,
+  "humansS": 16,
+  "thousandsS": 16.72,
+  "darkS": 17.52,
+  "neverS": 20.2,
+  "actS": 20.88,
+  "onE": 21.29,
+  "theS": 21.84,
+  "cantS": 22.24,
+  "differenceS": 22.88,
+  "wantedS": 23.84,
+  "sayS": 24.24,
+  "sayE": 24.5,
+  "andS": 24.853,
+  "dark2S": 25.12,
+  "thought2S": 25.44,
+  "desperatelyS": 26.08,
+  "buryS": 27.16,
+  "buryE": 27.39
+ },
+ "loop_period_s": 0.75,
+ "cues": [
+  {
+   "t": 0,
+   "kind": "ping",
+   "gain": -7,
+   "pan": -0.1,
+   "note": "chip ping (opening)"
+  },
+  {
+   "t": 0.62,
+   "kind": "sweep",
+   "dur": 1.2799999999999998,
+   "gain": -7,
+   "pan": -0.15
+  },
+  {
+   "t": 0.75,
+   "kind": "ping",
+   "gain": -9,
+   "pan": -0.1,
+   "note": "chip ping (opening)"
+  },
+  {
+   "t": 1.5,
+   "kind": "ping",
+   "gain": -11,
+   "pan": -0.1,
+   "note": "chip ping (opening)"
+  },
+  {
+   "t": 2.15,
+   "kind": "form",
+   "dur": 0.3,
+   "gain": -6,
+   "note": "the hook packet forms at the chip"
+  },
+  {
+   "t": 2.45,
+   "kind": "whoosh",
+   "dur": 0.8999999999999999,
+   "gain": -6,
+   "pan": 0.1,
+   "p": {
+    "from": -0.1,
+    "to": 0.35,
+    "rise": 1
+   },
+   "note": "packet along the route to the receiver"
+  },
+  {
+   "t": 2.55,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.15,
+   "p": {
+    "lane": 1
+   }
+  },
+  {
+   "t": 2.73,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.13,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 2.91,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 0
+   }
+  },
+  {
+   "t": 3.35,
+   "kind": "chime",
+   "gain": -2,
+   "pan": 0.45,
+   "note": "the friendly arrival chime (first use)"
+  },
+  {
+   "t": 3.63,
+   "kind": "open",
+   "dur": 0.5,
+   "gain": -8,
+   "pan": -0.1
+  },
+  {
+   "t": 5.12,
+   "kind": "close",
+   "dur": 0.45,
+   "gain": -9,
+   "pan": -0.1
+  },
+  {
+   "t": 6.08,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.15,
+   "p": {
+    "lane": 1
+   }
+  },
+  {
+   "t": 6.21,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.13,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 6.34,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 0
+   }
+  },
+  {
+   "t": 6.47,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.09,
+   "p": {
+    "lane": 4
+   }
+  },
+  {
+   "t": 6.6,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.06999999999999999,
+   "p": {
+    "lane": 8
+   }
+  },
+  {
+   "t": 6.73,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.15,
+   "p": {
+    "lane": 3
+   }
+  },
+  {
+   "t": 6.86,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.13,
+   "p": {
+    "lane": 7
+   }
+  },
+  {
+   "t": 6.99,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 2
+   }
+  },
+  {
+   "t": 7.09,
+   "kind": "tag",
+   "gain": -8,
+   "pan": 0.1
+  },
+  {
+   "t": 7.12,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.09,
+   "p": {
+    "lane": 6
+   }
+  },
+  {
+   "t": 7.25,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.06999999999999999,
+   "p": {
+    "lane": 1
+   }
+  },
+  {
+   "t": 7.38,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.15,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 7.51,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.13,
+   "p": {
+    "lane": 0
+   }
+  },
+  {
+   "t": 7.64,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 4
+   }
+  },
+  {
+   "t": 7.77,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.09,
+   "p": {
+    "lane": 8
+   }
+  },
+  {
+   "t": 7.9,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.06999999999999999,
+   "p": {
+    "lane": 3
+   }
+  },
+  {
+   "t": 8.03,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.15,
+   "p": {
+    "lane": 7
+   }
+  },
+  {
+   "t": 8.16,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.13,
+   "p": {
+    "lane": 2
+   }
+  },
+  {
+   "t": 8.27,
+   "kind": "form",
+   "dur": 0.45,
+   "gain": -7,
+   "note": "pulses converge into a packet"
+  },
+  {
+   "t": 8.29,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 6
+   }
+  },
+  {
+   "t": 8.42,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.09,
+   "p": {
+    "lane": 1
+   }
+  },
+  {
+   "t": 8.52,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.15,
+   "p": {
+    "lane": 1
+   }
+  },
+  {
+   "t": 8.55,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.06999999999999999,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 8.62,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.13,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 8.68,
+   "kind": "zip",
+   "gain": -14,
+   "pan": -0.15,
+   "p": {
+    "lane": 0
+   }
+  },
+  {
+   "t": 8.72,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 0
+   }
+  },
+  {
+   "t": 8.82,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.09,
+   "p": {
+    "lane": 4
+   }
+  },
+  {
+   "t": 8.92,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.06999999999999999,
+   "p": {
+    "lane": 8
+   }
+  },
+  {
+   "t": 9.02,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.15,
+   "p": {
+    "lane": 3
+   }
+  },
+  {
+   "t": 9.1,
+   "kind": "pop",
+   "gain": -8,
+   "pan": -0.05,
+   "note": "the Hey bubble resolves"
+  },
+  {
+   "t": 9.12,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.13,
+   "p": {
+    "lane": 7
+   }
+  },
+  {
+   "t": 9.59,
+   "kind": "whoosh",
+   "dur": 1.2149999999999999,
+   "gain": -6,
+   "pan": 0.1,
+   "p": {
+    "from": -0.1,
+    "to": 0.35,
+    "rise": 1
+   }
+  },
+  {
+   "t": 10.805,
+   "kind": "chime",
+   "gain": -3,
+   "pan": 0.45,
+   "note": "the friendly arrival chime (second use)"
+  },
+  {
+   "t": 12.2,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.15,
+   "p": {
+    "lane": 1
+   }
+  },
+  {
+   "t": 12.52,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.13,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 12.84,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 0
+   }
+  },
+  {
+   "t": 13.095,
+   "kind": "glitch",
+   "gain": -4,
+   "pan": -0.1,
+   "dur": 0.22
+  },
+  {
+   "t": 13.16,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.09,
+   "p": {
+    "lane": 4
+   }
+  },
+  {
+   "t": 13.645,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.15,
+   "p": {
+    "lane": 1
+   }
+  },
+  {
+   "t": 13.78,
+   "kind": "swell",
+   "dur": 1.2,
+   "gain": -9,
+   "note": "low swell under the silhouette"
+  },
+  {
+   "t": 13.88,
+   "kind": "thump",
+   "gain": -12
+  },
+  {
+   "t": 14.16,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.15,
+   "p": {
+    "lane": 1
+   }
+  },
+  {
+   "t": 14.28,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.15,
+   "p": {
+    "lane": 1
+   }
+  },
+  {
+   "t": 14.38,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.13,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 14.4,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.13,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 14.52,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 0
+   }
+  },
+  {
+   "t": 14.6,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 0
+   }
+  },
+  {
+   "t": 14.64,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.09,
+   "p": {
+    "lane": 4
+   }
+  },
+  {
+   "t": 14.76,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.06999999999999999,
+   "p": {
+    "lane": 8
+   }
+  },
+  {
+   "t": 14.82,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.09,
+   "p": {
+    "lane": 4
+   }
+  },
+  {
+   "t": 14.88,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.15,
+   "p": {
+    "lane": 3
+   }
+  },
+  {
+   "t": 15,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.13,
+   "p": {
+    "lane": 7
+   }
+  },
+  {
+   "t": 15.04,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.06999999999999999,
+   "p": {
+    "lane": 8
+   }
+  },
+  {
+   "t": 15.12,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 2
+   }
+  },
+  {
+   "t": 15.24,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.09,
+   "p": {
+    "lane": 6
+   }
+  },
+  {
+   "t": 15.26,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.15,
+   "p": {
+    "lane": 3
+   }
+  },
+  {
+   "t": 15.36,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.06999999999999999,
+   "p": {
+    "lane": 1
+   }
+  },
+  {
+   "t": 15.425,
+   "kind": "alarm",
+   "gain": -9,
+   "pan": 0,
+   "note": "dry two-tone, UNFILTERED THOUGHT DETECTED"
+  },
+  {
+   "t": 15.48,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.13,
+   "p": {
+    "lane": 7
+   }
+  },
+  {
+   "t": 15.48,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.15,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 15.6,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.13,
+   "p": {
+    "lane": 0
+   }
+  },
+  {
+   "t": 15.7,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 2
+   }
+  },
+  {
+   "t": 15.72,
+   "kind": "zipred",
+   "gain": -11,
+   "pan": -0.10999999999999999,
+   "p": {
+    "lane": 4
+   }
+  },
+  {
+   "t": 15.975,
+   "kind": "tick",
+   "gain": -14
+  },
+  {
+   "t": 16.405,
+   "kind": "form",
+   "dur": 0.35,
+   "gain": -9,
+   "p": {
+    "low": 1
+   }
+  },
+  {
+   "t": 16.8,
+   "kind": "static",
+   "dur": 0.4,
+   "gain": -16,
+   "pan": -0.4
+  },
+  {
+   "t": 17.1,
+   "kind": "static",
+   "dur": 0.4,
+   "gain": -16,
+   "pan": -0.35000000000000003
+  },
+  {
+   "t": 17.4,
+   "kind": "static",
+   "dur": 0.4,
+   "gain": -16,
+   "pan": -0.30000000000000004
+  },
+  {
+   "t": 17.62,
+   "kind": "whoosh",
+   "dur": 1.6,
+   "gain": -9,
+   "pan": 0,
+   "p": {
+    "from": -0.1,
+    "to": 0.15,
+    "rise": 0,
+    "low": 1
+   },
+   "note": "the red packet leaves, heavier"
+  },
+  {
+   "t": 17.7,
+   "kind": "static",
+   "dur": 0.4,
+   "gain": -16,
+   "pan": -0.25
+  },
+  {
+   "t": 18,
+   "kind": "static",
+   "dur": 0.4,
+   "gain": -16,
+   "pan": -0.2
+  },
+  {
+   "t": 21.39,
+   "kind": "tap",
+   "gain": -7,
+   "pan": -0.25
+  },
+  {
+   "t": 21.49,
+   "kind": "ring",
+   "dur": 6.449999999999999,
+   "gain": -18,
+   "pan": -0.25,
+   "note": "ring progress, rising"
+  },
+  {
+   "t": 22.73,
+   "kind": "pass",
+   "dur": 1,
+   "gain": -11,
+   "pan": 0,
+   "p": {
+    "from": -0.1,
+    "to": 0.3
+   }
+  },
+  {
+   "t": 25.18,
+   "kind": "inhale",
+   "gain": -17,
+   "pan": 0.5,
+   "note": "the receiver breathes in as the message arrives"
+  },
+  {
+   "t": 26.28,
+   "kind": "chimebad",
+   "gain": -3,
+   "pan": 0.45,
+   "note": "the same friendly chime, uncomfortable: lower, dry, in the quiet"
+  },
+  {
+   "t": 26.96,
+   "kind": "rustle",
+   "gain": -16,
+   "pan": 0.5
+  },
+  {
+   "t": 27.34,
+   "kind": "wipe",
+   "dur": 2.1099999999999994,
+   "gain": -5,
+   "pan": 0
+  },
+  {
+   "t": 27.94,
+   "kind": "late",
+   "gain": -10,
+   "pan": -0.25,
+   "note": "too late: a muted double tick"
+  },
+  {
+   "t": 28.5,
+   "kind": "ping",
+   "gain": -9,
+   "pan": -0.1,
+   "note": "chip ping (loop layer, same texture as frame 0)"
+  },
+  {
+   "t": 29.25,
+   "kind": "ping",
+   "gain": -9,
+   "pan": -0.1,
+   "note": "chip ping (loop layer, same texture as frame 0)"
+  }
+ ]
+}

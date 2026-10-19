@@ -116,7 +116,7 @@ def main():
     # write 24-bit wav through ffmpeg
     raw = np.stack([(pcm >> 0) & 255, (pcm >> 8) & 255, (pcm >> 16) & 255], axis=1).astype(np.uint8).tobytes()
     out_wav = N / 'narration_final_48k.wav'
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 's24le', '-ar', str(SR), '-ac', '1', '-i', '-', str(out_wav)], input=raw, check=True)
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 's24le', '-ar', str(SR), '-ac', '1', '-i', '-', '-c:a', 'pcm_s24le', str(out_wav)], input=raw, check=True)
 
     meta = {
         'voice': 'Test Voice kk5XaSLo2XAw0sKM98zU (the Death Clock narrator)',

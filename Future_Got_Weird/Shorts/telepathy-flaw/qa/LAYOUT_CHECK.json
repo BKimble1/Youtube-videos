@@ -1,0 +1,13 @@
+{
+ "captioned_frames": 835,
+ "collisions": {
+  "cancel button": {
+   "frames": "720-724",
+   "count": 5,
+   "first": 720,
+   "last": 724,
+   "first_s": 24,
+   "last_s": 24.13
+  }
+ }
+}
