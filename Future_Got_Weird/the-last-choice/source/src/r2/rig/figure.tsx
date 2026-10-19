@@ -766,11 +766,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
   const look = p.look;
   const t = p.t;
   const seed = p.seed ?? 1;
-  // (R4) every mask / clip id carries a signature of this frame's pose: a browser that renders frame after frame in ONE page
-  // (Remotion) can keep serving a mask or clip path from an earlier frame under the same id while its content changes (the
-  // masks follow the pose now), which painted stale ink discs and black shards. A new pose is a new id, so nothing is reused.
-  const sigN = [...r.sh, ...r.el, ...r.wr, ...r.hip, ...r.knee, ...r.ankle, r.headC, r.neck, r.P].reduce((h, q) => (Math.imul(h ^ Math.round(q.x * 8), 16777619) ^ Math.imul(Math.round(q.y * 8) + 977, 2246822519) ^ Math.round(q.z * 8)) >>> 0, 2166136261);
-  const id = `${(p.id ?? `f${seed}`).replace(/[^a-zA-Z0-9_]/g, '_')}_${sigN.toString(36)}`;
+  const id = (p.id ?? `f${seed}`).replace(/[^a-zA-Z0-9_]/g, '_');
   // (a silhouette is flat: marks with their own colours — blood, dust, bruises — are left out; worn gear stays)
   const dmg: Damage = p.silhouette ? {satchel: p.dmg?.satchel} : p.dmg ?? {};
   const L = p.silhouette ? undefined : p.light;
@@ -1166,7 +1162,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
       const elbowInk = <circle cx={E.x} cy={E.y} r={AW[1] / 2 + ink} fill={inkC} />;
       const armEl = lowerTop
         ? <g>{up.ink}{lo.ink}{elbowInk}{upperFill}{lowerFill}</g>
-        : <g>{up.ink}{lo.ink}{elbowInk}{lowerFill}{up.ink}{upperFill}</g>;
+        : <g>{up.ink}{lo.ink}{elbowInk}{lowerFill}{React.cloneElement(up.ink, {key: `${up.ink.key}2`})}{upperFill}</g>; // (the same ink twice in one list: a second key, or React drops/ghosts one)
       if (torsoOnly) torsoParts(`arm${i}`, armEl, rL, [...hideU!.polys, ...hideL!.polys, ...(propH?.polys ?? [])], hideU!.touch || hideL!.touch || !!propH?.touch, hideU!.vis || hideL!.vis || !!propH?.vis, (S.z + Wr.z) / 2, propH ? [S0, E, handEnd, propPt(hf, holdFn!.span![0] * s, holdFn!.span![1] * s, s), propPt(hf, holdFn!.span![2] * s, holdFn!.span![3] * s, s)] : [S0, E, handEnd], 24 * s + ink * 3);
       else add(rL, `arm${i}`, armEl);
     } else {
@@ -1198,10 +1194,6 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
   if (dmg.satchel) satchelParts(r, dmg.satchel, inkC, col).forEach((q) => parts.push(q));
 
   parts.forEach((q) => { if (q.key !== 'shadow') q.z = q.z - r.torsoZ; });
-  // (every part's content is remounted with each new pose: whoever draws the parts (Figure, Group, section code that sorts and wraps
-  // them) keys them by `key`, and React patching a part's subtree in place from one frame's structure to the next left nodes of
-  // earlier frames behind in the page, ink-coloured shapes on the torso: a long sequence of frames in one page (Remotion) shows it)
-  parts.forEach((q) => { q.el = <React.Fragment key={sigN.toString(36)}>{q.el}</React.Fragment>; });
   return {parts, rig: r};
 };
 
@@ -1945,16 +1937,15 @@ const MouthShape: React.FC<{m: Mouth; s: number; ink: number; inkC: string; open
 
 /** A single figure, internally depth-sorted. */
 export const Figure: React.FC<FigProps> = (p) => {
-  const {parts, rig} = figureParts(p);
+  const {parts} = figureParts(p);
   parts.sort((a, b) => a.z - b.z);
-  // (keyed by the pose signature: a new pose is a new DOM subtree, never a patched one, see the id note in figureParts)
-  return <g key={rig.id} opacity={p.opacity}>{parts.map((q) => <g key={q.key}>{q.el}</g>)}</g>;
+  return <g opacity={p.opacity}>{parts.map((q) => <g key={q.key}>{q.el}</g>)}</g>;
 };
 
 /** Several figures sorted together (limbs pass in front of / behind each other). Each figure's `id` must differ. */
 export const Group: React.FC<{figs: (FigProps & {z?: number})[]; extra?: Part[]}> = ({figs, extra = []}) => {
   const all: Part[] = [];
-  figs.forEach((f, i) => { const fp = figureParts(f); fp.parts.forEach((q) => all.push({...q, z: q.key === 'shadow' ? -1e9 + (f.z ?? 0) : (f.z ?? 0) * 1000 + q.z, key: `${i}_${fp.rig.id}_${q.key}`})); });
+  figs.forEach((f, i) => figureParts(f).parts.forEach((q) => all.push({...q, z: q.key === 'shadow' ? -1e9 + (f.z ?? 0) : (f.z ?? 0) * 1000 + q.z, key: `${i}_${q.key}`})));
   extra.forEach((e) => all.push(e));
   all.sort((a, b) => a.z - b.z);
   return <g>{all.map((q) => <g key={q.key}>{q.el}</g>)}</g>;

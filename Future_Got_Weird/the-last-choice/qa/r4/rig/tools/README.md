@@ -8,3 +8,9 @@ sequence" and compares them (env HIST = N). Any DIFF is a part whose DOM depends
 `page3.tsx` renders the whole film in sequence (a=first frame, b=last, step, off) into one root, picking the active shot per frame, and the DOM after frame b is compared with a fresh render of b (the long-history repro: a=0&b=492 showed the disc until parts were remounted per pose).
 Build: esbuild page2.tsx --bundle --format=iife with `--alias:remotion=qa/r4/EF/tools/remotion-shim.tsx`, then open
 index.html (script src page2.js) in headless Chrome with `?shot=<id>&f=<frames>`.
+
+The actual cause was found with `page5.tsx` built with NODE_ENV=development: React's dev build warns "Encountered two children
+with the same key" (the production build is silent and quietly duplicates/drops nodes). `scan.sh <from> <to> <step> <out>` renders
+film frames in sequence and collects the warnings; run it on the whole film after any change to element lists.
+`page4.tsx` compares, after every frame, the sequentially patched DOM with a fresh render of the same frame (first mismatch is
+reported with the DOM around it).
