@@ -1198,6 +1198,10 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
   if (dmg.satchel) satchelParts(r, dmg.satchel, inkC, col).forEach((q) => parts.push(q));
 
   parts.forEach((q) => { if (q.key !== 'shadow') q.z = q.z - r.torsoZ; });
+  // (every part's content is remounted with each new pose: whoever draws the parts (Figure, Group, section code that sorts and wraps
+  // them) keys them by `key`, and React patching a part's subtree in place from one frame's structure to the next left nodes of
+  // earlier frames behind in the page, ink-coloured shapes on the torso: a long sequence of frames in one page (Remotion) shows it)
+  parts.forEach((q) => { q.el = <React.Fragment key={sigN.toString(36)}>{q.el}</React.Fragment>; });
   return {parts, rig: r};
 };
 
