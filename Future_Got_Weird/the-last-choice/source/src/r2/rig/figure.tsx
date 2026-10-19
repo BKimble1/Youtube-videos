@@ -1392,7 +1392,8 @@ export const drawHead2 = (p: FigProps, r: Rig2, t: number, seed: number, inkC: s
     // rear and rear-three-quarter views (the face turned away): the near curls merge into one hair mass — a scalloped
     // outer silhouette, cel shadow and a lit rim from the key light, and a few thin curl strokes — instead of a cluster
     // of inked circles. Front and profile views (rearW 0) draw exactly as before; it blends in between.
-    const rw0 = clamp((-hb.F.z - 0.15) / 0.3), rearW = rw0 * rw0 * (3 - 2 * rw0);
+    // (R4: also from above — the camera over the crown — where the individually inked curls read as stacked discs)
+    const rw0 = clamp((-hb.F.z - 0.15) / 0.3), topW = smoothK(rz(hb.U.z, 0.3, 0.7)), rearW = Math.max(rw0 * rw0 * (3 - 2 * rw0), topW);
     if (rearW <= 0) sorted.forEach(({c, k}) => blobAt(`cu${k}`, c[0], c[1], c[2], c[3]));
     else {
       const near: {x: number; y: number; r: number; z: number; k: number; c: (typeof curls)[number]}[] = [];

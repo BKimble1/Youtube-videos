@@ -313,7 +313,9 @@ const H5: UPlan = {
     strikes: [{t0: EV.runnerHit, side: 'R', target: RUNNER_CHEST, kind: 'punch'}],
     posture: [[-1, 'guard'], [157.6, 'ready']],
     look: T < EV.runnerHit + 0.4 ? {x: RUNNER_CHEST.x, y: RUNNER_CHEST.y + 0.35, z: RUNNER_CHEST.z} : H5_TB.look ?? {x: 18.1, y: 0.2, z: 7.6},
-    crouch: lerp(0, H5_TB.crouch, smooth((T - 158.9) / 0.8)), lean: lerp(0, H5_TB.lean, smooth((T - 158.9) / 0.8)),
+    // (R4: it bends into the blow — the runner is crouched in his skid, his chest 0.9 m up; a standing punch landed at his face, 0.5 m short)
+    crouch: Math.max(lerp(0, H5_TB.crouch, smooth((T - 158.9) / 0.8)), 0.2 * win(T, EV.runnerHit - 0.35, EV.runnerHit + 0.5, 0.15, 0.4)),
+    lean: Math.max(lerp(0, H5_TB.lean, smooth((T - 158.9) / 0.8)), 16 * win(T, EV.runnerHit - 0.35, EV.runnerHit + 0.5, 0.15, 0.4)),
     idle: lerp(0.5, 0.18 * 0.6, smooth((T - 158.9) / 0.8)),
   }),
 };

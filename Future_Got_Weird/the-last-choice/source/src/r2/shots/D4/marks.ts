@@ -38,7 +38,9 @@ export const BLOCK_SKID = 0.42;
 export const RUNNER_STOP = {x: 17.62, z: 7.93, h: 254, t: 155.42};
 export const RUNNER_CHEST: V3 = (() => {
   const f = fwd(RUNNER_STOP.h);
-  return {x: RUNNER_STOP.x + f.x * 0.14, y: G(RUNNER_STOP.x, RUNNER_STOP.z) + 1.22, z: RUNNER_STOP.z + f.z * 0.14};
+  // (R4: he is crouched in the skid, his chest 0.9 m above the ground — R3 aimed at a standing chest, 1.22 m: the fist landed 0.42 m
+  // too high and 0.5 m short of his torso, at his face)
+  return {x: RUNNER_STOP.x + f.x * 0.14, y: G(RUNNER_STOP.x, RUNNER_STOP.z) + 0.92, z: RUNNER_STOP.z + f.z * 0.14};
 })();
 /** where he lies (EF tableau TB_CREW.runner): pelvis root (18.0, 7.7), heading 250 (feet toward the van) */
 export const RUNNER_DOWN = {x: 18.0, z: 7.7, h: 250};

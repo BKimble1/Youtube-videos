@@ -722,9 +722,11 @@ export const breakerC = (T: number, v?: View, dir?: FigSpec): CrewC => {
 // step at a time; she stops on the slope, holds the drone up on her palm, the rotors spin up and it lifts off; her
 // hands come together on the controller; up the slope (eyes on the drone), over the slab in the crest notch; she
 // stands on its east edge; C6b: she sends the drone out ahead of them; the commit: down off the slab into the line.
-const DR_FLAT: XZ[] = [{x: -11.6, z: 11.2}, {x: -9.2, z: 8.6}, {x: -7.6, z: 7.45}];
+// (R4: the route now passes NORTH of the rubble block at x −7.26 … −6.2, z 6.98 … 8.03, 0.41 m high: R3's went through it (her knee 0.17 m
+// inside it at 45.4; the block hid her lower leg, where it should have been in front of it))
+const DR_FLAT: XZ[] = [{x: -11.6, z: 11.2}, {x: -9.4, z: 8.5}, {x: -8.0, z: 6.9}];
 const DR_WALK = walkSeg(DR_FLAT, T3.go, T3.pilotFoot, G_HURRY, {A: 0.7, D: 0.4});
-const DR_UP: XZ[] = [{x: -7.6, z: 7.45}, {x: -6.6, z: 6.75}, {x: -5.6, z: 6.0}, {x: -4.9, z: 5.5}];
+const DR_UP: XZ[] = [{x: -8.0, z: 6.9}, {x: -7.0, z: 6.35}, {x: -5.95, z: 5.95}, {x: -4.9, z: 5.5}];
 const DR_CLIMB = climbFrom([DR_WALK], DR_UP, T3.pilotFoot, T3.launch, {stepLen: 0.48, maxRise: 0.26}); // (she stops facing up the bank)
 const DR_C = afterClimb(DR_CLIMB);
 const DR_E = DR_CLIMB.end;
@@ -833,9 +835,10 @@ export const pilotC = (T: number, v?: View): CrewC => {
 // chest while he climbs (it keeps the bag from swinging); C6b: his left hand on the satchel, the flares counted.
 const FL_FLAT: XZ[] = [{x: -12.0, z: 13.0}, {x: -9.6, z: 10.4}, {x: -7.6, z: 9.1}];
 const FL_WALK = walkSeg(FL_FLAT, T3.go - 0.3, T3.flaresFoot, G_HURRY, {A: 0.7, D: 0.4});
-const FL_A = spotBehind('flares', 0.4, 0.2);
+const FL_A = spotBehind('flares', 0.45, -0.25); // (R4: was (0.4, 0.2): the left foot stood in a 13 cm rubble chunk, 0.08 - 0.11 m deep)
 // (R3: the climb passes 1.4 m or more behind the pilot's launch spot, not 0.6 m: on C4b's lens his head sat on hers)
-const FL_UP: XZ[] = [{x: -7.6, z: 9.1}, {x: -6.0, z: 7.6}, {x: -4.35, z: 6.95}, {x: -3.05, z: 5.45}, {x: -2.0, z: 4.72}, {x: -0.6, z: 4.6}, {x: FL_A.x, z: FL_A.z}];
+// (R4: NE of that block too: R3's second point (−6.0, 7.6) was inside its corner)
+const FL_UP: XZ[] = [{x: -7.6, z: 9.1}, {x: -5.8, z: 8.5}, {x: -4.75, z: 7.3}, {x: -4.2, z: 6.5}, {x: -3.05, z: 5.45}, {x: -2.0, z: 4.72}, {x: -0.6, z: 4.6}, {x: FL_A.x, z: FL_A.z}];
 const FL_CLIMB = climbFrom([FL_WALK], FL_UP, T3.flaresFoot, T3.arriveFlares, {stepLen: 0.5, maxRise: 0.27, autoHands: {side: 'L', n: 1, minRise: 0.25, fwd: 0.04, out: 0.18}, endHeading: 80});
 const FL_C = afterClimb(FL_CLIMB);
 const FL_SEGS: Seg[] = [
