@@ -9,5 +9,5 @@ f=$(printf "%s/c%02d.mp4" "$WORK" $I)
 [ -s "$f" ] && { echo "chunk $I exists"; exit 0; }
 echo "chunk $I: frames $a-$b"
 (cd source && npx remotion render "$WORK/bundle" "$COMP" "$f.part.mp4" --frames=$a-$b --muted --props='{"audio":false}' \
-  --crf=18 --x264-preset=medium --color-space=bt709 --concurrency=$CONC --timeout=300000 \
+  --crf=18 --x264-preset=medium --color-space=bt709 --concurrency=$CONC --timeout=${TMO:-900000} \
   --browser-executable=$BROWSER --log=error) && mv "$f.part.mp4" "$f" && echo "chunk $I done"
