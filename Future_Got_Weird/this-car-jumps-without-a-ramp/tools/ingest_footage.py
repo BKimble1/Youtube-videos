@@ -78,6 +78,36 @@ def cut(f):
         print(out, c['to'] - c['from'] + 1, 'frames')
 
 
+# Second source (BYD's U9 jump film, 1080p screen recording, picture area rows 130-948 inside black bars). Four distinct moments,
+# each cropped to 16:9 inside the picture so the on-screen distance bar, speed read-out, disclaimer and the recorder's corner logo
+# are outside the frame. On the side jump the distance bar sits under the car, so a filled-in patch (ffmpeg delogo) replaces just
+# that strip of plain road. Frames are used one-to-one at the recording's 30 fps: no re-timing, no interpolation.
+SRC2 = 'Screen.Recording.2026-10-18.012652.mp4'
+CROPS2 = {
+    'real_jump': {'from': 316, 'to': 458, 'x0': 330, 'y0': 130, 'w': 1280, 'h': 720, 'delogo': 'delogo=x=350:y=772:w=860:h=58,'},
+    # the pit: hover (480-532), front wheel at the lip (536-570), high angle (575-613)
+    'real_pit': {'from': 480, 'to': 613, 'x0': 100, 'y0': 130, 'w': 1369, 'h': 770},
+    'real_corner': {'from': 691, 'to': 732, 'x0': 100, 'y0': 130, 'w': 1369, 'h': 770},
+    # the drive-away: a wide side pass (1508-1556), then the drone from the front, over the roof and behind the car (1557-1700)
+    'real_driveA': {'from': 1508, 'to': 1556, 'x0': 200, 'y0': 130, 'w': 1369, 'h': 770},
+    'real_driveB': {'from': 1557, 'to': 1700, 'x0': 200, 'y0': 130, 'w': 1369, 'h': 770},
+}
+
+
+def cut2(only=None):
+    p = os.path.join(SRC, SRC2)
+    os.makedirs(os.path.join(ROOT, 'source/public/footage'), exist_ok=True)
+    for name, c in CROPS2.items():
+        if only and name not in only:
+            continue
+        out = os.path.join(ROOT, f'source/public/footage/{name}.mp4')
+        vf = (f"select=between(n\\,{c['from']}\\,{c['to']}),setpts=N/30/TB,{c.get('delogo', '')}crop={c['w']}:{c['h']}:{c['x0']}:{c['y0']},"
+              f"scale=3840:2160:flags=lanczos,setsar=1")
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', p, '-an', '-vf', vf, '-r', '30', '-c:v', 'libx264', '-crf', '12', '-preset', 'slow',
+                        '-pix_fmt', 'yuv420p', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709', '-movflags', '+faststart', out], check=True)
+        print(out, c['to'] - c['from'] + 1, 'frames')
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'probe'
     if cmd == 'probe':
@@ -86,5 +116,7 @@ if __name__ == '__main__':
         sheet(*sys.argv[2:5], **({'fps': float(sys.argv[5])} if len(sys.argv) > 5 else {}))
     elif cmd == 'cut':
         cut(sys.argv[2])
+    elif cmd == 'cut2':
+        cut2(sys.argv[2:] or None)
     else:
         sys.exit(__doc__)

@@ -7,7 +7,7 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
 import {C, F} from '../theme';
-import {w} from '../cues';
+import {w, DURATION_S} from '../cues';
 import {SideCar, bodyToWorld, STRUT_TOP} from '../car/side';
 import {LoftCar} from '../car/loft';
 import {FrontCar, TRACK_HALF} from '../car/front';
@@ -15,6 +15,7 @@ import {Arrow} from '../car/parts';
 import {AXLE_F, AXLE_R, WHEEL_R} from '../car/geom';
 import {Cam, Caption, Label, Stage, camKeys, toScreen, World} from '../kit/stage';
 import {ProvingSide} from '../kit/proving';
+import {RealClip, FILM} from '../footage';
 import {TrackScene, trackAt, trackPoint, BEND_START} from '../kit/track3d';
 import {Cam3, carToWorld} from '../kit/view3d';
 import {lookAt} from '../kit/cam3';
@@ -185,28 +186,14 @@ const HopShot: React.FC<{t: number}> = ({t}) => {
   );
 };
 
-// ------------------------------------------------------------------------------------------------ D: drive away down the straight
-const DRIVE_S0 = 5000;
-const driveS = (t: number) => {
-  const u = Math.max(0, t - (CLOSE_EV.drive + 0.35));
-  const a = 3500, vmax = 17000, ta = vmax / a;
-  return DRIVE_S0 + (u < ta ? 0.5 * a * u * u : 0.5 * a * ta * ta + vmax * (u - ta));
-};
-const DriveAway: React.FC<{t: number}> = ({t}) => {
-  const s = driveS(t);
-  const tp = trackAt(s);
-  const pose = {e: tp.e, n: tp.n, psi: tp.psi};
-  const camEye: [number, number, number] = [DRIVE_S0 - 7500, 1000, -2600];
-  const cam = lookAt(camEye, [DRIVE_S0 + 60000, 900, -1500], 1400);
-  const spd = (driveS(t + 0.01) - driveS(t - 0.01)) / 0.02;
-  const lp = {...pose, wheelRot: (-(s / 365) * 180) / Math.PI, blur: wheelBlur(spd)};
-  return (
-    <g>
-      <TrackScene cam={cam} s0={-20000} s1={s + 190000} kerbs={false} />
-      <LoftCar cam={cam} pose={lp} ink={3} />
-    </g>
-  );
-};
+// ------------------------------------------------------------------------------------------------ D: the real drive-away (BYD)
+// A steady wide side pass, then the drone comes in from the front, over the roof and follows the car down the road until it
+// is gone in the dust. The two cuts are played at the recording's own frame rate, back to back, to the last frame of the film.
+export const DRIVE_A = FILM.driveA(TIMES.driveIn);
+export const DRIVE_B = FILM.driveB(DRIVE_A.frame0 / 30 + (DRIVE_A.to - DRIVE_A.from + 1) / 30);
+const DRIVE_A_T0 = DRIVE_A.frame0 / 30;
+const DRIVE_B_T0 = DRIVE_B.frame0 / 30;
+const DRIVE_B_HOLD = Math.max(0, Math.ceil(DURATION_S * 30) - (DRIVE_B.frame0 + (DRIVE_B.to - DRIVE_B.from + 1)));
 
 export const Closing: React.FC<{t: number}> = ({t}) => {
   let shot: React.ReactNode;
@@ -214,16 +201,26 @@ export const Closing: React.FC<{t: number}> = ({t}) => {
   else if (t < TIMES.insTurn) shot = <BrakeInsert t={t} />;
   else if (t < TIMES.insBump) shot = <TurnInsert t={t} />;
   else if (t < TIMES.jumpIn) shot = <BumpInsert t={t} />;
-  else if (t < TIMES.driveIn) shot = <HopShot t={t} />;
-  else shot = <DriveAway t={t} />;
+  else shot = <HopShot t={t} />; // the illustration stays under the real drive-away's first frames, so the cut is a dissolve
   const endMark = smooth(seg(t, T7.keeping + 0.6, T7.composed + 0.5));
+  const endFade = smooth(seg(t, DURATION_S - 1.0, DURATION_S - 0.4));
   return (
     <AbsoluteFill>
       <Stage bg={C.paper}>
         {shot}
+      </Stage>
+      <RealClip spec={DRIVE_A} opacity={smooth(seg(t, DRIVE_A_T0, DRIVE_A_T0 + 0.13))} />
+      <RealClip spec={DRIVE_B} hold={DRIVE_B_HOLD} />
+      <Stage bg="transparent">
+        <Caption text="BYD DEMONSTRATION VIDEO" opacity={win(t, DRIVE_A_T0 + 0.3, DRIVE_B_T0 + 1.6, 0.3, 0.3)} />
         <Caption text="SLOW MOTION · SIMPLIFIED MODEL" opacity={win(t, TIMES.jumpIn + 0.2, CLOSE_EV.land + 0.6, 0.3, 0.4)} />
-        <g opacity={endMark * 0.9}>
+        <rect x={-20} y={-20} width={1960} height={1120} fill={C.paper} opacity={endFade} />
+        <g opacity={endMark * 0.9 * (1 - endFade)}>
           <text x={1884} y={1032} textAnchor="end" fontFamily={F.display} fontWeight={700} fontSize={30} fill={C.ink} letterSpacing={5}>FUTURE GOT WEIRD</text>
+        </g>
+        <g opacity={endFade}>
+          <text x={960} y={560} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={64} fill={C.ink} letterSpacing={9}>FUTURE GOT WEIRD</text>
+          <rect x={780} y={594} width={360} height={8} rx={4} fill={C.saffron} />
         </g>
       </Stage>
     </AbsoluteFill>

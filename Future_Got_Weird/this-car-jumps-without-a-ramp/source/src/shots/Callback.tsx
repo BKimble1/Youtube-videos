@@ -11,7 +11,7 @@ import {AXLE_F, AXLE_R, COM, WHEEL_R} from '../car/geom';
 import {Cam, Caption, Label, Stage, camKeys, toScreen, World} from '../kit/stage';
 import {ProvingSide} from '../kit/proving';
 import {CarForces, ContactPatch, MOTION_LIFT} from '../kit/forces';
-import {RealClip, REAL, alignMatrix, camFromAlign, realFrameAt, realEnd} from '../footage';
+import {RealClip, REAL, FILM, JUMP_CROP, alignFixed, alignMatrix, camFromAlign, realFrameAt, realEnd} from '../footage';
 import {LAUNCH, LaunchState, MTOT, G, sampleLaunch, STATIC} from '../sim/launch';
 import {clamp01, easeInOut, pchip, seg, smooth, win} from '../kit/util';
 
@@ -47,10 +47,22 @@ const poseAt = (t: number) => {
 
 const CAMR = camFromAlign(REAL.replay.crop, 328);
 const CAM_F: Cam = {x: AXLE_F - 120, y: 560, z: 0.72};
-const CAM_FULL: Cam = {x: -40, y: 800, z: 0.372};
+// where the wheels of BYD's side jump sit at its recording frame 336 (nose just lifting): the illustration's camera frames the
+// car exactly there before the dissolve into the real flight
+const JM = alignFixed(JUMP_CROP, [646, 682], [1250, 668]);
+const CAM_JUMP: Cam = JM.cam;
 const CAM_OUT: Cam = {x: -40, y: 780, z: 0.31};
+/** film time of the real side jump's first frame (recording frame 316); its frame 336 lands on the takeoff of the model. */
+export const JUMP_T0 = CALLBACK_EV_TAKE() - 20 / 30;
+function CALLBACK_EV_TAKE() {
+  return 113.75;
+}
+export const JUMP_CLIP = FILM.jump(JUMP_T0);
+export const JUMP_END = (JUMP_CLIP.frame0 + (JUMP_CLIP.to - JUMP_CLIP.from + 1)) / 30;
+export const HOVER_CLIP = FILM.hover(JUMP_END + 0.03);
+export const HOVER_END = (HOVER_CLIP.frame0 + (HOVER_CLIP.to - HOVER_CLIP.from + 1)) / 30;
 const camAt = (t: number): Cam =>
-  camKeys(t, [[0, CAMR], [110.45, CAMR], [111.4, CAM_F], [113.5, CAM_F], [114.75, CAM_FULL], [118.2, CAM_FULL], [CALLBACK_OUT, CAM_OUT]], easeInOut);
+  t >= HOVER_END ? CAM_OUT : camKeys(t, [[0, CAMR], [110.45, CAMR], [111.4, CAM_F], [112.35, CAM_F], [113.6, CAM_JUMP], [HOVER_END, CAM_JUMP]], easeInOut);
 
 export const Callback: React.FC<{t: number}> = ({t}) => {
   const cam = camAt(t);
@@ -72,10 +84,18 @@ export const Callback: React.FC<{t: number}> = ({t}) => {
   const ax: [number, number] = [AXLE_R, AXLE_F];
   const grounded = !lp.air;
 
-  // the front window: shown while the suspension builds the launch
-  const open = smooth(seg(t, 110.4, 110.95)) * (1 - smooth(seg(t, CALLBACK_EV.take + 0.1, CALLBACK_EV.take + 0.55)));
+  // the front window: shown while the suspension builds the launch, closed before the car leaves the ground
+  const open = smooth(seg(t, 110.4, 110.95)) * (1 - smooth(seg(t, 112.75, 113.2)));
   const push = smooth(seg(t, CALLBACK_EV.crouch, CALLBACK_EV.crouch + 0.5));
   const wells = open > 0.001 ? [{axle: 'f' as const, open, spring: 1, damper: 1, actuator: 1, slide: 1, force: lp.force * push, springGlow: 0, damperGlow: 0}] : [];
+
+  // real side jump (BYD): takes over from the illustration at the same wheel position, one frame per frame, uninterrupted
+  const hoverT0 = HOVER_CLIP.frame0 / 30;
+  const realOut = smooth(seg(t, HOVER_END - 0.1, HOVER_END + 0.15));
+  const realJ = smooth(seg(t, JUMP_T0 + 0.6, JUMP_T0 + 0.75)) * (t < hoverT0 ? 1 : 0);
+  const realH = t >= hoverT0 && t < HOVER_END + 0.15 ? 1 - realOut : 0;
+  const vecA = t < JUMP_T0 + 0.78 ? 1 : t < HOVER_END - 0.1 ? 0 : 1; // opaque under both dissolves, so no cream shows through
+  const carOnly = t >= JUMP_T0 + 0.6 && t < HOVER_END - 0.1; // arrows stay on the real flight, the drawn car does not
 
   const patchVis = win(t, T6.tires - 0.35, CALLBACK_EV.take + 0.02, 0.25, 0.03) * (grounded ? 1 : 0);
   const chord = (() => {
@@ -83,20 +103,21 @@ export const Callback: React.FC<{t: number}> = ({t}) => {
     return 2 * Math.sqrt(Math.max(0, 2 * WHEEL_R * dd - dd * dd));
   })();
   const topF = bodyToWorld(pose, AXLE_F, STRUT_TOP);
-  const pushPair = win(t, T6.builds + 0.2, CALLBACK_EV.take - 0.15, 0.3, 0.2) * (grounded ? 1 : 0);
-  const forces = win(t, T6.grounded - 0.3, CALLBACK_EV.land + 0.8, 0.4, 0.5);
+  const pushPair = win(t, T6.builds + 0.2, JUMP_T0 + 0.55, 0.3, 0.12) * (grounded ? 1 : 0);
+  const forces = win(t, T6.grounded - 0.3, CALLBACK_EV.land + 0.3, 0.4, 0.4);
   const road = win(t, T6.grounded - 0.3, CALLBACK_EV.take + 0.02, 0.3, 0.02);
   const motion = win(t, T6.gravity - 0.2, CALLBACK_EV.land - 0.1, 0.3, 0.3);
-  const slow = win(t, CALLBACK_EV.crouch, CALLBACK_EV.land + 0.6, 0.4, 0.5);
+  const slow = win(t, CALLBACK_EV.crouch, JUMP_T0 + 0.55, 0.4, 0.2);
   const mpos = toS(com[0] + 80, com[1] + MOTION_LIFT);
   const gtip = toS(com[0], com[1] - 450);
   const split = smooth(seg(t, CALLBACK_EV.take - 0.2, CALLBACK_EV.take + 0.25)) * (1 - smooth(seg(t, CALLBACK_EV.take + 1.0, CALLBACK_EV.take + 1.5)));
   const gap = toS(AXLE_F, -150);
+  const realCap = win(t, JUMP_T0 + 0.6, HOVER_END - 0.1, 0.3, 0.3);
   return (
     <AbsoluteFill>
-      <RealClip spec={REAL.replay} hold={Math.ceil((realEndT + 0.45 - realEndT) * 30)} />
+      <RealClip spec={REAL.replay} hold={Math.ceil((realEndT + 0.45 - realEndT) * 30)} opacity={t < realEndT + 0.5 ? 1 : 0} />
       <Stage bg="transparent">
-        <g opacity={bgA}>
+        <g opacity={bgA * vecA}>
           <ProvingSide cam={cam} zone="launch" />
         </g>
         {overlay ? (
@@ -107,23 +128,36 @@ export const Callback: React.FC<{t: number}> = ({t}) => {
           </g>
         ) : (
           <World cam={cam}>
-            <ContactPatch cx={ax[0]} chord={chord} px={px} opacity={patchVis} />
-            <ContactPatch cx={ax[1]} chord={chord} px={px} opacity={patchVis} />
-            <SideCar x={0} dz={dz} pitch={0} wf={wf} wr={wr} px={px} wells={wells} shadow={bgA} id="callback" />
-            {pushPair > 0 && (
-              <g>
-                <Arrow x={topF[0] + 260} y={topF[1] + 20} dx={0} dy={240} px={px} color={C.teal} opacity={pushPair} />
-                <Arrow x={AXLE_F + 250} y={WHEEL_R + wf - 20} dx={0} dy={-240} px={px} color={C.teal} opacity={pushPair} />
-              </g>
-            )}
-            <CarForces px={px} com={com} axles={ax} n={lp.n} v={lp.v} road={forces * road} gravity={forces} motion={motion} pair={0} />
+            <g opacity={vecA}>
+              <ContactPatch cx={ax[0]} chord={chord} px={px} opacity={patchVis} />
+              <ContactPatch cx={ax[1]} chord={chord} px={px} opacity={patchVis} />
+              <SideCar x={0} dz={dz} pitch={0} wf={wf} wr={wr} px={px} wells={wells} shadow={bgA} id="callback" />
+              {pushPair > 0 && (
+                <g>
+                  <Arrow x={topF[0] + 260} y={topF[1] + 20} dx={0} dy={240} px={px} color={C.teal} opacity={pushPair} />
+                  <Arrow x={AXLE_F + 250} y={WHEEL_R + wf - 20} dx={0} dy={-240} px={px} color={C.teal} opacity={pushPair} />
+                </g>
+              )}
+            </g>
+            {!carOnly && <CarForces px={px} com={com} axles={ax} n={lp.n} v={lp.v} road={forces * road} gravity={forces} motion={motion} pair={0} />}
           </World>
         )}
         {/* separation: where the tyre has left the road */}
-        <Label x={gap.x} y={gap.y + 40} text="NO ROAD CONTACT" color={C.coral} fg={C.white} size={34} opacity={split * (lp.air ? 1 : 0)} />
-        <Label x={mpos.x + 100} y={mpos.y} text="MOTION" color={C.saffronLight} size={30} opacity={motion * forces * (Math.abs(lp.v) > 0.05 ? 1 : 0)} />
-        <Label x={gtip.x} y={gtip.y + 38} text="GRAVITY" color={C.blueLight} size={30} opacity={win(t, T6.gravity - 0.2, CALLBACK_EV.land - 0.2, 0.3, 0.3) * forces} />
-        <Caption text="BYD DEMONSTRATION VIDEO" opacity={win(t, CALLBACK_IN + 0.1, CALLBACK_IN + 1.6, 0.3, 0.4)} />
+        <Label x={mpos.x + 100} y={mpos.y} text="MOTION" color={C.saffronLight} size={30} opacity={motion * forces * (Math.abs(lp.v) > 0.3 ? 1 : 0) * (carOnly ? 0 : 1)} />
+        <Label x={gtip.x} y={gtip.y + 38} text="GRAVITY" color={C.blueLight} size={30} opacity={win(t, T6.gravity - 0.2, CALLBACK_EV.land - 0.2, 0.3, 0.3) * forces * (carOnly ? 0 : 1)} />
+      </Stage>
+      {/* the real jump is drawn over the illustration but under the arrows, so its layer is inserted between: arrows re-drawn on top */}
+      <RealClip spec={JUMP_CLIP} opacity={realJ} />
+      <RealClip spec={HOVER_CLIP} opacity={realH} />
+      <Stage bg="transparent">
+        {carOnly && (
+          <World cam={cam}>
+            <CarForces px={px} com={com} axles={ax} n={lp.n} v={lp.v} road={0} gravity={forces} motion={motion} pair={0} />
+          </World>
+        )}
+        {carOnly && <Label x={mpos.x + 100} y={mpos.y} text="MOTION" color={C.saffronLight} size={30} opacity={motion * forces * (Math.abs(lp.v) > 0.3 ? 1 : 0)} />}
+        {carOnly && <Label x={gtip.x} y={gtip.y + 38} text="GRAVITY" color={C.blueLight} size={30} opacity={win(t, T6.gravity - 0.2, CALLBACK_EV.land - 0.2, 0.3, 0.3) * forces} />}
+        <Caption text="BYD DEMONSTRATION VIDEO" opacity={Math.max(win(t, CALLBACK_IN + 0.1, CALLBACK_IN + 1.6, 0.3, 0.4), realCap)} />
         <Caption text="SLOW MOTION · SIMPLIFIED MODEL" opacity={slow} />
       </Stage>
     </AbsoluteFill>

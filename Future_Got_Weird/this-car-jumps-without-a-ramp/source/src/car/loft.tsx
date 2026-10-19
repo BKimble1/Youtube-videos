@@ -15,7 +15,7 @@ const interp = (k: [number, number][], x: number) => {
   for (let i = 0; i < k.length - 1; i++) if (x <= k[i + 1][0]) return k[i][1] + ((k[i + 1][1] - k[i][1]) * (x - k[i][0])) / (k[i + 1][0] - k[i][0]);
   return k[k.length - 1][1];
 };
-const W = (x: number) => interp([[-2183, 690], [-2120, 780], [-2020, 880], [-1850, 975], [-1600, 1010], [-1450, 1014], [-1000, 1008], [-400, 992], [400, 990], [1000, 1000], [1450, 1008], [1700, 950], [1900, 860], [2100, 730], [2250, 560], [2349, 330]], x);
+const W = (x: number) => interp([[-2183, 690], [-2120, 780], [-2020, 880], [-1850, 975], [-1600, 1010], [-1450, 1014], [-1000, 1008], [-400, 992], [400, 990], [1000, 1000], [1450, 1008], [1700, 975], [1900, 940], [2100, 900], [2250, 830], [2349, 740]], x);
 const SILL = (x: number) => interp([[-2183, 330], [-1950, 250], [-1450, 195], [-900, 175], [900, 175], [1450, 195], [1900, 245], [2349, 250]], x);
 const FLOOR = (x: number) => interp([[-2183, 280], [-1900, 200], [-900, 140], [900, 140], [1900, 190], [2349, 230]], x);
 const BELT = (x: number) => interp([[-1250, 1060], [-800, 1050], [-300, 990], [300, 905], [900, 872], [1200, 900]], x);
@@ -84,22 +84,25 @@ const buildModel = (): Face[] => {
     const pts: V3[] = [...r.map(([z, y]) => [x, y, z] as V3), ...r.slice(1, -1).reverse().map(([z, y]) => [x, y, -z] as V3)];
     faces.push({pts, kind, n: [dir, 0, 0]});
   };
-  cap(-2183, -1, 'carbon');
+  cap(-2183, -1, 'paint');
   {
     const r = tubRing(-2183);
     const top = r[0][1], w = 0.8 * r[3][0];
     faces.push({pts: [[-2185, top - 70, -w], [-2185, top - 70, w], [-2185, top - 118, w], [-2185, top - 118, -w]], kind: 'tail', n: [-1, 0, 0]});
   }
   cap(2349, 1, 'paint');
+  // front fascia: the low black grille and a number plate
+  faces.push({pts: [[2353, 372, -600], [2353, 372, 600], [2353, 258, 600], [2353, 258, -600]], kind: 'carbon', n: [1, 0, 0]});
+  faces.push({pts: [[2355, 330, -170], [2355, 330, 170], [2355, 270, 170], [2355, 270, -170]], kind: 'under', n: [1, 0, 0]});
   return faces;
 };
 export const FACES = buildModel();
 
 const TONES: Record<Kind, string[]> = {
-  paint: ['#8E1A2B', '#A51A2C', PAINT.red, '#E4505F', '#F27A86'],
+  paint: ['#A81E30', '#C42337', PAINT.red, '#E8434F', '#F67C86'],
   glass: ['#1B2D35', PAINT.glass, '#3E6272', PAINT.glassLight, '#8FB3C0'],
   carbon: ['#171E23', PAINT.carbon, PAINT.carbon, PAINT.carbonLight, '#52606B'],
-  light: [PAINT.light, PAINT.light, PAINT.light, PAINT.light, PAINT.light],
+  light: ['#16252E', '#1E323D', '#27414F', '#33566A', '#4B7387'],
   tail: ['#C94A36', C.coral, C.coral, '#F58F7C', '#F58F7C'],
   under: ['#10161A', '#171E23', '#1E272D', '#27313A', '#27313A'],
 };
@@ -108,12 +111,20 @@ const SUN: V3 = norm([0.55, 0.62, -0.5]);
 export type LoftPose = {e: number; n: number; psi: number; roll?: number; pitch?: number; dz?: number; wheelRot?: number; steer?: number; blur?: number};
 export type LoftProps = {cam: Cam3; pose: LoftPose; id?: string; wing?: boolean; shadow?: number; ink?: number};
 
-/** Four toon tones; glass and carbon use fewer so large panels don't band. */
-const toneOf = (kind: Kind, lit: number) => {
+const hex = (h: string) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+const mixHex = (a: string, b: string, t: number) => {
+  const A = hex(a), B = hex(b);
+  return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join('');
+};
+/** Toon tones: a ramp per material sampled in ten steps (fine enough to read as shaded, coarse enough to stay cut-out). Shadows are
+ *  lifted so the paint stays red in the shade. */
+const toneOf = (kind: Kind, lit0: number) => {
   const t = TONES[kind];
-  if (kind === 'glass') return lit > 0.62 ? t[3] : t[1];
-  if (kind === 'carbon' || kind === 'under') return lit > 0.7 ? t[3] : lit > 0.35 ? t[2] : t[1];
-  return t[lit > 0.82 ? 3 : lit > 0.55 ? 2 : lit > 0.28 ? 1 : 0];
+  const lit = Math.min(1, 0.22 + 0.78 * lit0);
+  const q = Math.round(lit * 9) / 9;
+  const pos = q * (t.length - 1);
+  const i = Math.min(t.length - 2, Math.floor(pos));
+  return mixHex(t[i], t[i + 1], pos - i);
 };
 
 const poly = (pts: {x: number; y: number}[]) => pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
@@ -226,6 +237,22 @@ export const LoftCar: React.FC<LoftProps> = ({cam, pose, id = 'loft', wing = tru
     plate(-2319, -1900, 1180, 930, 38, 'carbon');
     for (const s of [1, -1]) plate(-2020, -1930, 940, s * 520 + (s > 0 ? -22 : -22), 28, 'carbon');
   }
+  // painted details on the side facing the camera: the black wedge behind the door, the door seam, a shoulder highlight
+  {
+    const nearS = dot(carDirToWorld(pose.psi, [0, 0, 1]), sub(eye, [pose.e, 0, pose.n])) > 0 ? 1 : -1;
+    const onSide = (pts: [number, number][], dz = 4): V3[] => pts.map(([x, y]) => [x, y, nearS * (W(x) * (y > 600 ? 0.97 : 0.995) + dz)] as V3);
+    const addDecal = (pts: [number, number][], fill: string, bias = -30) => {
+      const pr = onSide(pts).map((p) => project(cam, carToWorld(pose, p)));
+      if (pr.some((p) => !p)) return;
+      draws.push({depth: pr.reduce((a, p) => a + p!.z, 0) / pr.length + bias, pts: pr as {x: number; y: number}[], fill, ink: false, stroke: C.ink, sw: 1.2});
+    };
+    addDecal([[-180, 660], [-180, 330], [420, 300], [420, 320]], PAINT.carbon);
+    // the LED edge of the headlight blade
+    const led = [1780, 1860, 1940, 2020, 2100, 2180, 2250].map((x) => [x, tubRing(x)[3][1]] as [number, number]);
+    addDecal([...led, ...led.map(([x, y]) => [x, y - 26] as [number, number]).reverse()], PAINT.light, -36);
+    addDecal([[-260, 668], [-250, 640], [1000, 800], [1000, 818]], PAINT.redLight, -34);
+    addDecal([[-320, 700], [-300, 330], [-292, 330], [-312, 700]], PAINT.redDeep, -34);
+  }
   // wheels: far side first, near side among the body faces
   const left: V3 = carDirToWorld(pose.psi, [0, 0, 1]);
   const toCam = sub(eye, [pose.e, 0, pose.n]);
@@ -237,7 +264,10 @@ export const LoftCar: React.FC<LoftProps> = ({cam, pose, id = 'loft', wing = tru
   for (const [xw, side, tr, wd, st] of wheels) {
     const near = side === 1 ? camLeft : !camLeft;
     const dr = wheelDraws(cam, pose, xw, side, tr, wd, st, rot, near);
-    if (near) {
+    const sideFacing = dot(norm(carDirToWorld(pose.psi, [0, 0, side])), norm(toCam)) > 0.4;
+    if (near && !sideFacing) {
+      // seen from ahead or behind the wheel simply stands against the body
+    } else if (near) {
       // dark arch behind the near tyre, so the body reads as having an opening there
       const zc = side * (xw === AXLE_F ? trackF : trackR);
       const archPts = Array.from({length: 24}, (_, i) => {

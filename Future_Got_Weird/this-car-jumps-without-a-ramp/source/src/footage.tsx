@@ -10,7 +10,7 @@ import track from './data/wheel_track.json';
 import {AXLE_R, WHEEL_R} from './car/geom';
 
 export type Crop = {x0: number; y0: number; w: number; h: number};
-export type RealSpec = {file: string; from: number; to: number; crop: Crop; frame0: number};
+export type RealSpec = {file: string; from: number; to: number; crop: Crop; frame0: number; fileFrom?: number};
 
 const FPS = 30;
 export const REAL = {
@@ -18,6 +18,33 @@ export const REAL = {
   open: {file: 'footage/real_open.mp4', from: 273, to: 328, crop: {x0: 0, y0: 104, w: 1552, h: 873}, frame0: 0} as RealSpec,
   replay: {file: 'footage/real_replay.mp4', from: 262, to: 328, crop: {x0: 368, y0: 104, w: 1552, h: 873}, frame0: Math.round(108.04 * FPS)} as RealSpec,
   credit: 'BYD demonstration video',
+};
+// Clips cut from BYD's jump film (second recording; see tools/ingest_footage.py cut2). `use` plays frames [from, to] of a cut
+// file (whose first frame is recording frame `fileFrom`) starting at film time t0, one recording frame per film frame.
+const CROP_WIDE: Crop = {x0: 100, y0: 130, w: 1369, h: 770};
+const use = (file: string, fileFrom: number, from: number, to: number, crop: Crop, t0: number): RealSpec => ({file: `footage/${file}`, fileFrom, from, to, crop, frame0: Math.round(t0 * FPS)});
+const DRIVE_CROP: Crop = {x0: 200, y0: 130, w: 1369, h: 770};
+export const JUMP_CROP: Crop = {x0: 330, y0: 130, w: 1280, h: 720};
+export const FILM = {
+  /** the front wheel at the lip of the pit, then the high angle: under "so what does making a supercar jump actually prove?" */
+  question: (t0: number) => [use('real_pit.mp4', 480, 536, 570, CROP_WIDE, t0), use('real_pit.mp4', 480, 575, 613, CROP_WIDE, t0 + 35 / FPS)],
+  /** the side view from rolling in to takeoff, flight and landing, uninterrupted */
+  jump: (t0: number) => use('real_jump.mp4', 316, 316, 458, JUMP_CROP, t0),
+  /** the low front three-quarter, the car clear of the road */
+  hover: (t0: number) => use('real_pit.mp4', 480, 480, 532, CROP_WIDE, t0),
+  corner: (t0: number, to = 732) => use('real_corner.mp4', 691, 691, to, CROP_WIDE, t0),
+  /** the drive-away: a steady wide side pass, then the drone from the front, over the roof and down the road behind the car */
+  driveA: (t0: number) => use('real_driveA.mp4', 1508, 1508, 1556, DRIVE_CROP, t0),
+  driveB: (t0: number) => use('real_driveB.mp4', 1557, 1557, 1700, DRIVE_CROP, t0),
+};
+/** Where the two wheel centres of the side jump sit at recording frame 318 (cut-in), for the dissolve from the illustration. */
+export const JUMP_MATCH = {r: [597, 683] as [number, number], f: [1191, 686] as [number, number]};
+export const alignFixed = (c: Crop, r: [number, number], f: [number, number]) => {
+  const rr = srcToScreen(c, r[0], r[1]), ff = srcToScreen(c, f[0], f[1]);
+  const s = (ff.x - rr.x) / 2900;
+  const th = Math.atan2(ff.y - rr.y, ff.x - rr.x);
+  const cs = Math.cos(th), sn = Math.sin(th);
+  return {s, th, r: rr, f: ff, m: `matrix(${s * cs} ${s * sn} ${s * sn} ${-s * cs} ${rr.x - s * (cs * AXLE_R + sn * WHEEL_R)} ${rr.y - s * (sn * AXLE_R - cs * WHEEL_R)})`, cam: {x: AXLE_R - (rr.x - 960) / s, y: WHEEL_R + (rr.y - 540) / s, z: s}};
 };
 export const realFrames = (r: RealSpec) => r.to - r.from + 1;
 export const realEnd = (r: RealSpec) => (r.frame0 + realFrames(r)) / FPS; // film time just after the last real frame
@@ -57,7 +84,7 @@ export const RealClip: React.FC<{spec: RealSpec; hold?: number; opacity?: number
   if (opacity <= 0.001) return null;
   const n = realFrames(spec);
   const vid = (
-    <OffthreadVideo src={staticFile(spec.file)} muted pauseWhenBuffering={false} style={{position: 'absolute', inset: 0, width: 1920, height: 1080, objectFit: 'fill'}} />
+    <OffthreadVideo src={staticFile(spec.file)} startFrom={spec.from - (spec.fileFrom ?? spec.from)} muted pauseWhenBuffering={false} style={{position: 'absolute', inset: 0, width: 1920, height: 1080, objectFit: 'fill'}} />
   );
   return (
     <div style={{position: 'absolute', inset: 0, opacity}}>

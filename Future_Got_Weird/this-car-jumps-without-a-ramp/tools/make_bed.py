@@ -137,20 +137,21 @@ for side, hits, pan in (('f', B['front'], 0.35), ('r', B['rear'], -0.35)):
             s(knock(), hh['t'] + 0.3, -26, pan)
         else:
             s(bump(hh['h']), hh['t'], -32 + 40 * (hh['h'] - 0.04), pan)
-s(whoosh(0.5), W2['a'] + 0.25, -26)
+s(whoosh(0.5), W2['cut'] - 0.3, -26)  # the speed whip into the cabin
 # passenger: interior hush, the glass, the seat takes the load, the car through the lens
 s(road_roll(P['replay'] - P['in'] - 0.3, 0.5, 0.3), P['in'] + 0.1, -42)
 s(fx.shimmer(0.5), P['your'] + 0.05, -35)
 s(fx.squat(), P['seat'] + 0.05, -36)
 s(whoosh(0.45), P['replay'] - 0.4, -26)
-# callback: the real clip carries no added sound; shimmer at the match cut, then crouch, push, silence in the air, landing
+# callback: the real clips carry no added sound; shimmer at the match cut, then crouch, push, silence in the air, landing
+# (the real landing is on screen about 0.12 s before the model's)
 s(fx.shimmer(0.5), CB['crouch'] - 0.5, -35)
 s(fx.servo(0.8, up=False), CB['crouch'] + 0.05, -34)
 s(fx.servo(0.6, up=True), CB['push'] + 0.1, -31)
 s(fx.motor(1.0, 160, 300, 0.5), CB['push'] + 0.15, -36)
 s(fx.swell(1.2, 380), CB['take'] - 0.1, -34)
-s(fx.tyre(1.0), CB['land'] - 0.01, -20)
-s(fx.squat(), CB['land'] + 0.12, -27)
+s(fx.tyre(1.0), CB['land'] - 0.13, -20)
+s(fx.squat(), CB['land'] + 0.0, -27)
 # close: pull-away, brake scrub, a bump, the hop, the landing, the drive away
 s(fx.motor(1.3, 220, 480, 0.8), E['in'], -30)
 s(road_roll(E['brake'] - E['in'] + 0.3, 0.6, 0.3), E['in'], -33)
@@ -162,6 +163,7 @@ s(fx.tyre(1.0), E['land'] - 0.01, -21)
 s(fx.squat(), E['land'] + 0.12, -28)
 s(fx.motor(1.4, 200, 520, 0.8), E['drive'] + 0.3, -31)
 s(road_roll(TOTAL - E['drive'] - 0.5, 1.2, 1.5), E['drive'] + 0.4, -33)
+s(whoosh(0.7), E['realDrive'] + 2.25, -29)  # the real drone shot passes over the car
 
 # ---------------------------------------------------------------- music
 D = 73.42

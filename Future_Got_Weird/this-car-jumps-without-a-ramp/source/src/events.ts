@@ -6,7 +6,7 @@ import {BEND_T, BEND_BUMPS, T_ENTER, T3} from './shots/Bend';
 import {BRAKE_IN, BRAKE_EV, BRAKE_HOLD, T4, roadAt} from './shots/BrakeRough';
 import {CABIN_IN, REPLAY_AT, T5} from './shots/Cabin';
 import {CALLBACK_EV} from './shots/Callback';
-import {CLOSE_EV, TIMES as CT, T7, CLOSE_IN} from './shots/Closing';
+import {CLOSE_EV, TIMES as CT, T7, CLOSE_IN, DRIVE_B} from './shots/Closing';
 import {WIPE1, WIPE2} from './Main';
 
 /** Video times a wheel at axle offset `off` (m) crosses a bump peak in the brake scene. */
@@ -44,5 +44,5 @@ export const EVENTS = () => ({
     big: +BRAKE_EV.bigT.toFixed(3)},
   passenger: {in: CABIN_IN, your: T5.your, sideways: T5.sideways, seat: T5.seat, bolster: T5.bolster, replay: REPLAY_AT},
   callback: {in: REPLAY_AT, ...CALLBACK_EV},
-  close: {in: CLOSE_IN, brake: CT.insBrake, turn: CT.insTurn, bump: CT.insBump, hop: CT.jumpIn, take: CLOSE_EV.take, land: CLOSE_EV.land, drive: CLOSE_EV.drive, composed: T7.composed},
+  close: {in: CLOSE_IN, brake: CT.insBrake, turn: CT.insTurn, bump: CT.insBump, hop: CT.jumpIn, take: CLOSE_EV.take, land: CLOSE_EV.land, drive: CLOSE_EV.drive, composed: T7.composed, realDrive: DRIVE_B.frame0 / 30},
 });

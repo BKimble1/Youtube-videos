@@ -17,9 +17,9 @@ import {SideCar, bodyToWorld, STRUT_TOP} from '../car/side';
 import {Arrow} from '../car/parts';
 import {AXLE_F, AXLE_R, COM, WHEEL_R} from '../car/geom';
 import {Cam, Callout, Caption, Label, Stage, camKeys, toScreen, World} from '../kit/stage';
-import {ProvingSide} from '../kit/proving';
+import {ProvingSide, Look} from '../kit/proving';
 import {CarForces, ContactPatch, LW, MOTION_LIFT} from '../kit/forces';
-import {RealClip, REAL, alignMatrix, camFromAlign, realFrameAt, realEnd} from '../footage';
+import {RealClip, REAL, FILM, alignMatrix, camFromAlign, realFrameAt, realEnd} from '../footage';
 import {LAUNCH, LaunchState, MTOT, G, sampleLaunch, STATIC} from '../sim/launch';
 import {clamp01, easeInOut, easeOut, pchip, seg, smooth, wheelBlur, win} from '../kit/util';
 
@@ -152,6 +152,10 @@ const WELL_R2: Cam = {x: AXLE_R + 90, y: 610, z: 0.88};
 const TIRE: Cam = {x: AXLE_R + 120, y: 115, z: 1.45};
 const CAM_FULL: Cam = {x: -40, y: 800, z: 0.372};
 export const GO_T = T.now + 0.0;
+/** Real footage under "so what does making a supercar jump actually prove?": the front wheel at the lip of the pit, then the high angle. */
+export const QUESTION_T0 = T.so;
+export const QUESTION_CLIPS = FILM.question(QUESTION_T0);
+export const QUESTION_END = (QUESTION_CLIPS[1].frame0 + (QUESTION_CLIPS[1].to - QUESTION_CLIPS[1].from + 1)) / 30;
 /** The car accelerates away after settling; the camera follows it. */
 export const carX = (t: number) => (t > GO_T ? 0.5 * 8500 * (t - GO_T) ** 2 : 0);
 const camAt = (t: number): Cam => {
@@ -177,8 +181,17 @@ const camAt = (t: number): Cam => {
   return {...base, x: base.x + cx * smooth(seg(t, GO_T - 0.2, GO_T + 0.5)) * 1};
 };
 
+// the car moves through the proving ground: the demonstration pad, the cornering section, the braking zone, back to the pad
+const LOOK_CUTS: [number, Look][] = [[0, 'pad'], [QUESTION_END, 'corner'], [T.ordinary - 0.7, 'brake'], [T.tires - 0.5, 'pad']];
+const lookBlend = (t: number): [Look, number][] => {
+  let c = 0;
+  LOOK_CUTS.forEach(([t0], i) => { if (t >= t0) c = i; });
+  const fade = c === 0 ? 1 : smooth(seg(t, LOOK_CUTS[c][0], LOOK_CUTS[c][0] + 0.45));
+  return fade < 0.999 ? [[LOOK_CUTS[c - 1][1], 1], [LOOK_CUTS[c][1], fade]] : [[LOOK_CUTS[c][1], 1]];
+};
 export const Launch: React.FC<{t: number}> = ({t}) => {
   const cam = camAt(t);
+  const looks = lookBlend(t);
   const px = cam.z;
   const realOver = t < realEnd(REAL.open) + 0.05;
   // -------------------------------------------------------------------- how the real clip hands over to the illustration
@@ -271,7 +284,7 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
   const handNow = h1.vis ? h1 : h2.vis ? h2 : null;
 
   const caption = (() => {
-    if (t < 2.1) return <Caption text="BYD DEMONSTRATION VIDEO" opacity={smooth(seg(t, 0.15, 0.5)) * (1 - smooth(seg(t, 1.8, 2.2)))} />;
+    if (t < 2.1) return <Caption text="BYD DEMONSTRATION VIDEO" opacity={smooth(seg(t, 0.15, 0.5)) * (1 - smooth(seg(t, 1.5, 1.9)))} />;
     if (t < 3.5 && t > 2.3) return null;
     const slow = Math.max(win(t, HOOK.take - 0.9, HOOK.land + 0.5, 0.3, 0.4), win(t, T.that - 0.2, MAIN.land + 0.7, 0.4, 0.5));
     const cut = open * smooth(seg(t, T.ordinary - 0.1, T.ordinary + 0.4)) * (1 - smooth(seg(t, T.during - 0.2, T.during + 0.2)));
@@ -289,7 +302,7 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
       <Stage bg="transparent">
         {/* photographic backdrop gives way to the proving ground */}
         <g opacity={bgA}>
-          <ProvingSide cam={cam} zone="launch" />
+          {looks.map(([lk, a]) => <g key={lk} opacity={a}><ProvingSide cam={cam} look={lk} /></g>)}
         </g>
         {/* the illustrated car, over the real one while the clip plays (aligned frame by frame), then in the world */}
         {t < realEnd(REAL.open) + 0.0 ? (
@@ -335,8 +348,6 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
             <ellipse cx={8} cy={-14} rx={20} ry={14} fill="#F2C9A8" stroke={C.ink} strokeWidth={4} />
           </g>
         )}
-        {/* name tag, brief */}
-        <Callout x={toS(X - 360, 1560).x} y={toS(X - 360, 1560).y} tx={toS(X + 200, 1180).x} ty={toS(X + 200, 1180).y} text="BYD YANGWANG U9" color={C.white} size={36} opacity={win(t, T.name - 0.05, T.u9 + 0.9, 0.3, 0.4)} />
         {/* one focal label at a time while the parts are named */}
         <Callout x={sp.x + 390} y={sp.y - 200} tx={sp.x + 8} ty={sp.y} text="SPRING" color={C.saffronLight} opacity={win(t, T.springs - 0.05, T.dampers - 0.15, 0.25, 0.25) * open} />
         <Callout x={dp.x - 330} y={dp.y - 130} tx={dp.x - 18} ty={dp.y} text="DAMPER" color={C.blueLight} opacity={win(t, T.dampers - 0.05, T.adds - 0.2, 0.25, 0.25) * open} />
@@ -348,8 +359,6 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
           const b = win(t, T.pavement1 - 0.05, T.that + 0.6, 0.25, 0.4);
           return (
             <g>
-              <Label x={g.x - 350} y={g.y + 150} text="TIRE PUSHES ON PAVEMENT" color={C.white} size={32} opacity={a * (closeUp ? 1 : 0)} />
-              <Label x={g.x + 400} y={g.y + 150} text="PAVEMENT PUSHES BACK" color={C.tealLight} size={32} opacity={b * (closeUp ? 1 : 0)} />
             </g>
           );
         })()}
@@ -361,7 +370,6 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
           const mOn = win(t, T.momentum - 0.1, MAIN.land - 0.3, 0.3, 0.4) * diag * (Math.abs(lp.v) > 0.05 ? 1 : 0);
           return (
             <g>
-              <Label x={600} y={130} text="ROAD FORCE > GRAVITY" color={C.tealLight} size={42} opacity={win(t, T.accelerates - 0.15, MAIN.take - 0.3, 0.3, 0.3) * (!lp.air ? 1 : 0)} />
               <Label x={gtip.x} y={gtip.y + 38} text="GRAVITY" color={C.blueLight} size={30} opacity={gOn} />
               <Label x={mpos.x + 100} y={mpos.y} text="MOTION" color={C.saffronLight} size={30} opacity={mOn} />
             </g>
@@ -374,6 +382,15 @@ export const Launch: React.FC<{t: number}> = ({t}) => {
         })()}
         {caption}
       </Stage>
+      {t >= QUESTION_T0 - 0.01 && t < QUESTION_END && (
+        <AbsoluteFill>
+          <RealClip spec={QUESTION_CLIPS[0]} />
+          <RealClip spec={QUESTION_CLIPS[1]} opacity={1 - smooth(seg(t, QUESTION_END - 0.13, QUESTION_END))} />
+          <Stage bg="transparent">
+            <Caption text="BYD DEMONSTRATION VIDEO" opacity={win(t, QUESTION_T0 + 0.2, QUESTION_END - 0.1, 0.25, 0.3)} />
+          </Stage>
+        </AbsoluteFill>
+      )}
     </AbsoluteFill>
   );
 };

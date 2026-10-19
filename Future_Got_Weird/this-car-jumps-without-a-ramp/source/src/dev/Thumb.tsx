@@ -7,7 +7,7 @@ import {AbsoluteFill} from 'remotion';
 import {C, F} from '../theme';
 import {SideCar} from '../car/side';
 
-export const THUMB_CLEAR = 150; // tyre-to-road gap (mm) in the thumbnail; match to the real clip's apex frame
+export const THUMB_CLEAR = 112; // tyre-to-road gap (mm): the launch model's apex clearance, the size of the hop in the video
 
 export const Thumb: React.FC = () => {
   const z = 0.33;
@@ -49,6 +49,10 @@ export const Thumb: React.FC = () => {
         <text x={96} y={250} fontFamily={F.display} fontWeight={700} fontSize={230} fill={C.white} stroke={C.ink} strokeWidth={22} paintOrder="stroke" letterSpacing={-2}>
           NO RAMP
         </text>
+        <g transform="translate(100 286)">
+          <rect x={0} y={0} width={640} height={100} rx={30} fill={C.saffron} stroke={C.ink} strokeWidth={8} />
+          <text x={320} y={70} textAnchor="middle" fontFamily={F.display} fontWeight={700} fontSize={64} fill={C.ink} letterSpacing={3}>YANGWANG U9</text>
+        </g>
       </svg>
     </AbsoluteFill>
   );

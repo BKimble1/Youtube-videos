@@ -14,6 +14,14 @@ export type Sign = {x: number; kind: 'brake' | 'bend' | 'bumps'; opacity?: numbe
 export type Profile = (x: number) => number;
 export const FLAT: Profile = () => 0;
 export type Zone = 'launch' | 'rough' | 'bend';
+/** Which part of the proving ground: the demonstration pad, the cornering section, the braking zone, the uneven road. */
+export type Look = 'pad' | 'corner' | 'brake' | 'rough';
+const LOOKS: Record<Look, {sky: [string, string]; hills: [string, string]; sun: string; sunY: number}> = {
+  pad: {sky: ['#CFE7E4', '#FAF3DF'], hills: ['#C6E3DC', '#B2DACF'], sun: C.saffronLight, sunY: 360},
+  corner: {sky: ['#C5DDF0', '#FAF3DF'], hills: ['#B9D6E6', '#A3CAD9'], sun: C.white, sunY: 400},
+  brake: {sky: ['#F7D9BE', '#FBF1DC'], hills: ['#EBD7B5', '#DDC8A0'], sun: '#FFB35C', sunY: 250},
+  rough: {sky: ['#DCEAC4', '#FAF3DF'], hills: ['#C9E0B8', '#B4D4A4'], sun: C.saffronLight, sunY: 330},
+};
 
 export const FAR_EDGE = 330;
 export const NEAR_EDGE = -700;
@@ -30,6 +38,7 @@ const SKY_LOW = '#EFEBD6';
 export type SideSceneProps = {
   cam: Cam;
   zone?: Zone;
+  look?: Look;
   profile?: Profile;
   patches?: [number, number][];
   signs?: Sign[];
@@ -106,7 +115,10 @@ const Cloud: React.FC<{sx: number; sy: number; s: number}> = ({sx, sy, s}) => (
   </g>
 );
 
-export const ProvingSide: React.FC<SideSceneProps> = ({cam, zone = 'launch', profile = FLAT, patches = [], signs = [], stopLine}) => {
+export const ProvingSide: React.FC<SideSceneProps> = ({cam, zone: zoneIn = 'launch', look, profile = FLAT, patches = [], signs = [], stopLine}) => {
+  const lk: Look = look ?? (zoneIn === 'launch' ? 'pad' : zoneIn === 'rough' ? 'rough' : 'corner');
+  const zone: Zone = look ? (look === 'pad' ? 'launch' : look === 'rough' ? 'rough' : 'bend') : zoneIn;
+  const LK = LOOKS[lk];
   const g0 = toScreen(cam, 0, 0);
   const xl = cam.x - 1000 / cam.z - 400, xr = cam.x + 1000 / cam.z + 400;
   const dz = Math.pow(cam.z / 0.24, 0.25);
@@ -188,16 +200,16 @@ export const ProvingSide: React.FC<SideSceneProps> = ({cam, zone = 'launch', pro
   return (
     <g>
       <defs>
-        <linearGradient id="ps-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#CFE7E4" />
-          <stop offset="1" stopColor="#FAF3DF" />
+        <linearGradient id={`ps-sky-${lk}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={LK.sky[0]} />
+          <stop offset="1" stopColor={LK.sky[1]} />
         </linearGradient>
       </defs>
-      <rect x={0} y={0} width={1920} height={1080} fill="url(#ps-sky)" />
-      <circle cx={1500 - ((cam.x * cam.z * 0.01) % 400)} cy={horizon - 360 * dz} r={72 * dz} fill={C.saffronLight} opacity={0.95} />
+      <rect x={0} y={0} width={1920} height={1080} fill={`url(#ps-sky-${lk})`} />
+      <circle cx={1500 - ((cam.x * cam.z * 0.01) % 400)} cy={horizon - LK.sunY * dz} r={72 * dz} fill={LK.sun} opacity={0.95} />
       {clouds}
-      {hillPath(0.04, 190, 60, '#C6E3DC', 11, 2600)}
-      {hillPath(0.09, 120, 0, '#B2DACF', 23, 2000)}
+      {hillPath(0.04, 190, 60, LK.hills[0], 11, 2600)}
+      {hillPath(0.09, 120, 0, LK.hills[1], 23, 2000)}
       {skyline}
       {treeRow(0.16, 3400, 41, 0.62, 0.4, 3)}
       {/* infield grass from the horizon down */}
@@ -227,6 +239,10 @@ export const ProvingSide: React.FC<SideSceneProps> = ({cam, zone = 'launch', pro
         <line x1={xl} y1={NEAR_EDGE - 120} x2={xr} y2={NEAR_EDGE - 120} stroke={INK} strokeWidth={sw} strokeOpacity={0.5} />
         {/* road surface profile (bumps) */}
         <path d={`M ${xl} 0 L ${contact.join(' L ')} L ${xr} 0 Z`} fill="#BCC5C9" stroke={INK} strokeWidth={sw * 1.4} strokeLinejoin="round" />
+        {lk === 'corner' && boardRow(xl, xr, 7200, 1800, (x, k) => <Chevron key={`cv${k}`} x={x} y={wallBase + 470} px={cam.z} />)}
+        {lk === 'brake' && boardRow(xl, xr, 9000, 0, (x, k) => <BrakeBoard key={`bb${k}`} x={x} y={wallBase + 470} n={(k % 3 + 3) % 3 + 1} px={cam.z} />)}
+        {lk === 'pad' && boardRow(xl, xr, 15000, 3000, (x, k) => <Gantry key={`gt${k}`} x={x} y={wallBase + 470} px={cam.z} />)}
+        {lk === 'rough' && boardRow(xl, xr, 8000, 2500, (x, k) => <RoadSign key={`rb${k}`} x={x} kind="bumps" px={cam.z} opacity={1} />)}
         {signs.map((s, i) => <RoadSign key={i} x={s.x} kind={s.kind} px={cam.z} opacity={s.opacity ?? 1} />)}
       </g>
     </g>
@@ -271,6 +287,49 @@ const RoadSign: React.FC<{x: number; kind: Sign['kind']; px: number; opacity: nu
           </g>
         )}
       </g>
+    </g>
+  );
+};
+
+const boardRow = (xl: number, xr: number, period: number, phase: number, f: (x: number, k: number) => React.ReactNode) => {
+  const out: React.ReactNode[] = [];
+  for (let k = Math.floor((xl - phase) / period) - 1; k <= Math.ceil((xr - phase) / period); k++) out.push(f(k * period + phase, k));
+  return <g>{out}</g>;
+};
+/** Chevron board on a post, behind the tyre wall (the cornering section). */
+const Chevron: React.FC<{x: number; y: number; px: number}> = ({x, y, px}) => {
+  const sw = 4 / px;
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect x={-30} y={0} width={60} height={520} fill="#B8C2C8" stroke={C.ink} strokeWidth={sw} />
+      <rect x={-260} y={520} width={520} height={420} rx={30} fill={C.saffron} stroke={C.ink} strokeWidth={sw} />
+      <path d="M -90 600 L 90 730 L -90 860" fill="none" stroke={C.ink} strokeWidth={70} strokeLinecap="round" strokeLinejoin="round" />
+    </g>
+  );
+};
+/** Braking-zone board: white with 1-3 diagonal coral stripes. */
+const BrakeBoard: React.FC<{x: number; y: number; n: number; px: number}> = ({x, y, n, px}) => {
+  const sw = 4 / px;
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect x={-30} y={0} width={60} height={520} fill="#B8C2C8" stroke={C.ink} strokeWidth={sw} />
+      <clipPath id={`bb-${Math.round(x)}`}><rect x={-230} y={520} width={460} height={420} rx={30} /></clipPath>
+      <rect x={-230} y={520} width={460} height={420} rx={30} fill={C.white} />
+      <g clipPath={`url(#bb-${Math.round(x)})`}>
+        {Array.from({length: n}, (_, i) => <polygon key={i} points={`${-300 + i * 130},520 ${-210 + i * 130},520 ${-20 + i * 130},940 ${-110 + i * 130},940`} fill={C.coral} />)}
+      </g>
+      <rect x={-230} y={520} width={460} height={420} rx={30} fill="none" stroke={C.ink} strokeWidth={sw} />
+    </g>
+  );
+};
+/** Start gantry post with a light bar (the demonstration pad). */
+const Gantry: React.FC<{x: number; y: number; px: number}> = ({x, y, px}) => {
+  const sw = 4 / px;
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect x={-50} y={0} width={100} height={1500} fill="#C9D2D8" stroke={C.ink} strokeWidth={sw} />
+      <rect x={-330} y={1500} width={660} height={190} rx={36} fill="#EADFC2" stroke={C.ink} strokeWidth={sw} />
+      {[-200, 0, 200].map((o) => <circle key={o} cx={o} cy={1595} r={52} fill={o === 200 ? C.teal : '#8FA3AE'} stroke={C.ink} strokeWidth={sw} />)}
     </g>
   );
 };

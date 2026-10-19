@@ -16,6 +16,7 @@ import {LoftCar} from '../car/loft';
 import {FrontCar, frontBody, TRACK_HALF} from '../car/front';
 import {Arrow} from '../car/parts';
 import {Callout, Caption, Label, Stage} from '../kit/stage';
+import {RealClip, FILM} from '../footage';
 import {TrackScene, Bump, BEND_START, bumpAt, trackAt, trackPoint} from '../kit/track3d';
 import {Cam3, V3, carToWorld} from '../kit/view3d';
 import {lookAt, orbit} from '../kit/cam3';
@@ -55,12 +56,13 @@ export const T3 = {
 };
 
 export const SPEED = 12000; // mm/s along the road
-export const T_ENTER = T3.corner + 1.05; // the car reaches the start of the bend
+export const T_ENTER = T3.corner + 1.2; // the car reaches the start of the bend
 export const sCar = (t: number) => BEND_START + (t - T_ENTER) * SPEED;
 export const BEND_T = {
-  start: 42.0,
-  diveA: T3.corner - 0.15,
-  diveB: T3.body0 + 0.45,
+  real: 42.0, // real cornering shot, under the wall's last frames
+  start: 42.0 + 28 / 30, // overhead
+  diveA: 43.95,
+  diveB: T3.body0 + 0.7,
   front1: T3.loading + 0.0,
   adjustIn: T3.here - 0.05,
   closeIn: T3.adjusts + 0.35,
@@ -246,10 +248,6 @@ const FrontView: React.FC<{t: number}> = ({t}) => {
           </g>
         );
       })()}
-      <Label x={zs(toS(0, 1560 + lift)).x} y={Math.max(80, zs(toS(0, 1560 + lift)).y)} text="BOTH SIDES PUSH UP" color={C.tealLight} size={36} opacity={win(t, T3.forW + 0.1, T3.here - 0.2, 0.3, 0.3)} />
-      <Label x={960} y={Math.max(80, zs(toS(0, 1560)).y)} text="OUTSIDE PUSHES · INSIDE PULLS" color={C.tealLight} size={36} opacity={win(t, T3.oppose - 0.4, T3.job + 0.3, 0.3, 0.4) * (1 - zoomIn)} />
-      <Label x={lead.x} y={Math.max(70, lead.y)} text="NOT THE GOAL" color={C.coral} fg={C.white} size={38} opacity={fg * smooth(seg(t, T3.float - 0.3, T3.float + 0.1))} />
-      <Label x={960} y={130} text="TIRES STILL SET THE LIMIT" color={C.white} size={46} opacity={win(t, T3.flatter + 0.1, BEND_T.passIn - 0.1, 0.3, 0.3)} />
       <Caption text="SIMPLIFIED CUTAWAY" opacity={wellOpen} />
     </g>
   );
@@ -258,12 +256,23 @@ const FrontView: React.FC<{t: number}> = ({t}) => {
 export const Bend: React.FC<{t: number}> = ({t}) => {
   const front = (t >= BEND_T.front1 && t < BEND_T.q2) || t >= BEND_T.front2;
   const aerialOn = !front;
+  const realOn = t < BEND_T.start;
+  if (realOn) {
+    // "Now, put that same car into a corner.": BYD's cornering shot, then the overhead
+    return (
+      <AbsoluteFill>
+        <RealClip spec={FILM.corner(BEND_T.real, 718)} />
+        <Stage bg="transparent">
+          <Caption text="BYD DEMONSTRATION VIDEO" opacity={win(t, BEND_T.real + 0.2, BEND_T.start - 0.05, 0.2, 0.2)} />
+        </Stage>
+      </AbsoluteFill>
+    );
+  }
   return (
     <AbsoluteFill>
       <Stage bg={C.paper}>
         {aerialOn ? <Aerial t={t} /> : <FrontView t={t} />}
         {/* the overhead's single label, then the title for the flat body */}
-        <Label x={960} y={110} text="ACTIVE BODY CONTROL" color={C.saffron} size={56} opacity={win(t, T3.thisW - 0.05, T3.point - 0.2, 0.25, 0.3) * (t >= BEND_T.q2 && t < BEND_T.front2 ? 1 : 0)} scale={0.92 + 0.08 * easeOut(seg(t, T3.thisW - 0.05, T3.thisW + 0.35))} />
       </Stage>
     </AbsoluteFill>
   );

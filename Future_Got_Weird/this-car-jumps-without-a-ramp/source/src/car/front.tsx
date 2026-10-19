@@ -41,14 +41,17 @@ export const frontBody = (p: {roll: number; dz: number}, x: number, y: number): 
   return [ROLL_CENTRE.x + rx * Math.cos(a) - ry * Math.sin(a), ROLL_CENTRE.y + p.dz + rx * Math.sin(a) + ry * Math.cos(a)];
 };
 
+// Proportions follow the real car's front elevation (roof ~1.2 m, cowl ~0.93 m, nose ~0.4 m, 2.03 m wide): a low, wide body with a
+// shallow windscreen and a narrow roof, a wing standing above it, boomerang headlights on the fender crowns, a low black grille and
+// a carbon splitter. Traced by eye against BYD's front views; an illustration, not a factory drawing.
 const BODY = [
-  'M -1012 470 C -1018 560 -1000 640 -950 690 C -900 730 -840 745 -760 742',
-  'C -680 738 -600 700 -520 680 C -350 650 -150 640 0 640 C 150 640 350 650 520 680 C 600 700 680 738 760 742',
-  'C 840 745 900 730 950 690 C 1000 640 1018 560 1012 470 C 900 476 790 476 700 470',
+  'M -1012 470 C -1018 560 -1005 660 -960 740 C -910 810 -820 855 -700 898 C -450 925 -200 932 0 932',
+  'C 200 932 450 925 700 898 C 820 855 910 810 960 740 C 1005 660 1018 560 1012 470 C 900 476 790 476 700 470',
   'C 690 360 685 260 680 175 C 300 160 -300 160 -680 175 C -685 260 -690 360 -700 470 C -790 476 -900 476 -1012 470 Z',
 ].join(' ');
-const CABIN = 'M -600 690 C -560 850 -500 1080 -450 1240 C -430 1278 -390 1293 -340 1295 L 340 1295 C 390 1293 430 1278 450 1240 C 500 1080 560 850 600 690 C 300 660 -300 660 -600 690 Z';
-const SCREEN = 'M -540 722 C -505 860 -455 1060 -415 1200 C -400 1236 -370 1252 -330 1254 L 330 1254 C 370 1252 400 1236 415 1200 C 455 1060 505 860 540 722 C 300 702 -300 702 -540 722 Z';
+const CABIN = 'M -705 890 C -650 990 -575 1120 -495 1192 C -440 1230 -385 1238 -330 1238 L 330 1238 C 385 1238 440 1230 495 1192 C 575 1120 650 990 705 890 C 300 872 -300 872 -705 890 Z';
+const SCREEN = 'M -610 910 C -550 1005 -490 1100 -440 1160 C -412 1190 -380 1202 -340 1204 L 340 1204 C 380 1202 412 1190 440 1160 C 490 1100 550 1005 610 910 C 300 892 -300 892 -610 910 Z';
+const ROOF = 'M -500 1190 C -440 1226 -385 1236 -330 1236 L 330 1236 C 385 1236 440 1226 500 1190 C 440 1204 400 1208 340 1208 L -340 1208 C -400 1208 -440 1204 -500 1190 Z';
 export const WINDSCREEN = SCREEN;
 
 const WIN = {x0: 330, x1: 1030, y0: 140, y1: 790};
@@ -112,6 +115,13 @@ export const FrontCar: React.FC<FrontCarProps> = (P) => {
         </g>
       ))}
       <g transform={bodyT}>
+        {/* wing: blade, two posts and end plates; drawn first so the roof sits in front of the posts */}
+        <g>
+          {[-1, 1].map((q) => <rect key={q} x={q * 300 - 28} y={1225} width={56} height={46} fill={PAINT.carbon} stroke={C.ink} strokeWidth={sw * 0.8} />)}
+          <path d="M -760 1268 C -400 1256 400 1256 760 1268 L 772 1300 C 400 1288 -400 1288 -772 1300 Z" fill={PAINT.carbon} stroke={C.ink} strokeWidth={sw} />
+          {[-1, 1].map((q) => <path key={q} d={`M ${q * 756} 1244 L ${q * 784} 1244 L ${q * 790} 1312 L ${q * 748} 1312 Z`} fill={PAINT.red} stroke={C.ink} strokeWidth={sw * 0.8} />)}
+          <path d="M -740 1290 C -400 1278 400 1278 740 1290" fill="none" stroke={PAINT.carbonLight} strokeWidth={6} />
+        </g>
         {/* cabin and glass */}
         <path d={CABIN} fill={PAINT.red} stroke={C.ink} strokeWidth={sw} />
         <defs>
@@ -123,36 +133,45 @@ export const FrontCar: React.FC<FrontCarProps> = (P) => {
           </clipPath>
         </defs>
         <g clipPath={`url(#scr-${id})`}>
-          <rect x={-700} y={700} width={1400} height={700} fill="#4A6672" />
+          <rect x={-700} y={880} width={1400} height={400} fill="#4A6672" />
           {window}
-          {/* tint over the glass: cleared on the passenger half when revealed */}
-          <rect x={-700} y={700} width={700} height={700} fill={PAINT.glass} opacity={0.92 * (1 - windowReveal)} />
-          <rect x={0} y={700} width={700} height={700} fill={PAINT.glass} opacity={0.92 * (1 - windowRevealR)} />
-          <path d="M 120 1240 C 260 1000 360 880 420 800 L 520 800 C 450 900 360 1040 260 1240 Z" fill={PAINT.glassLight} opacity={0.45} />
+          <rect x={-700} y={880} width={700} height={400} fill={PAINT.glass} opacity={0.92 * (1 - windowReveal)} />
+          <rect x={0} y={880} width={700} height={400} fill={PAINT.glass} opacity={0.92 * (1 - windowRevealR)} />
+          <path d="M 120 1210 C 240 1090 330 990 380 920 L 470 920 C 410 1000 330 1110 240 1210 Z" fill={PAINT.glassLight} opacity={0.4} />
         </g>
         <path d={SCREEN} fill="none" stroke={C.ink} strokeWidth={sw} />
-        {/* mirrors */}
+        <path d={ROOF} fill={PAINT.carbon} stroke={C.ink} strokeWidth={sw * 0.8} />
+        {/* mirrors on the door tops, at the foot of the A-pillars */}
         {[-1, 1].map((s) => (
-          <path key={s} d={`M ${s * 590} 905 L ${s * 1030} 910 C ${s * 1062} 918 ${s * 1062} 968 ${s * 1030} 978 L ${s * 630} 968 Z`} fill={PAINT.red} stroke={C.ink} strokeWidth={sw * 0.8} />
+          <path key={s} d={`M ${s * 690} 924 L ${s * 905} 944 C ${s * 962} 950 ${s * 968} 1002 ${s * 908} 1012 L ${s * 712} 982 Z`} fill={PAINT.red} stroke={C.ink} strokeWidth={sw * 0.8} />
         ))}
         {/* lower body */}
         <path d={BODY} fill={PAINT.red} stroke={C.ink} strokeWidth={sw} />
         <g>
           <path d="M -680 175 C -300 160 300 160 680 175 L 684 290 C 300 270 -300 270 -684 290 Z" fill={PAINT.redDeep} opacity={0.4} />
           <path d="M -1012 470 C -900 476 -790 476 -700 470 L -700 520 C -800 528 -910 528 -1010 522 Z M 1012 470 C 900 476 790 476 700 470 L 700 520 C 800 528 910 528 1010 522 Z" fill={PAINT.redDeep} opacity={0.5} />
-          {/* intakes */}
-          <path d="M -420 235 L 420 235 C 450 300 450 380 420 440 L -420 440 C -450 380 -450 300 -420 235 Z" fill={PAINT.carbon} stroke={C.ink} strokeWidth={sw * 0.8} />
+          {/* hood: crease, shoulder highlights and the air-extractor louvres */}
+          <path d="M -690 905 C -450 926 -200 932 0 932 C 200 932 450 926 690 905 C 450 905 200 900 0 898 C -200 900 -450 905 -690 905 Z" fill={PAINT.redLight} opacity={0.65} />
+          <path d="M -150 905 C -120 760 -90 600 -60 470 M 150 905 C 120 760 90 600 60 470" fill="none" stroke={PAINT.redDeep} strokeWidth={9} opacity={0.5} />
+          {[-1, 1].map((s) => [0, 1, 2].map((k) => <path key={`${s}${k}`} d={`M ${s * (250 + k * 70)} ${770 - k * 20} L ${s * (400 + k * 70)} ${790 - k * 20}`} stroke={PAINT.redDeep} strokeWidth={10} strokeLinecap="round" opacity={0.55} />))}
+          {/* lower fascia: wide low grille, side air curtains, number plate, carbon splitter */}
+          <path d="M -640 345 C -500 372 -250 384 0 384 C 250 384 500 372 640 345 C 650 300 640 262 600 238 C 400 214 -400 214 -600 238 C -640 262 -650 300 -640 345 Z" fill={PAINT.carbon} stroke={C.ink} strokeWidth={sw * 0.8} />
           {[-1, 1].map((s) => (
-            <path key={s} d={`M ${s * 480} 245 L ${s * 640} 250 L ${s * 652} 450 L ${s * 490} 440 Z`} fill={PAINT.carbon} stroke={C.ink} strokeWidth={sw * 0.8} />
+            <path key={s} d={`M ${s * 700} 262 L ${s * 910} 286 L ${s * 920} 420 L ${s * 718} 426 Z`} fill={PAINT.carbon} stroke={C.ink} strokeWidth={sw * 0.8} />
           ))}
-          <path d="M -690 175 C -300 158 300 158 690 175 L 690 205 C 300 188 -300 188 -690 205 Z" fill={PAINT.carbon} stroke={C.ink} strokeWidth={sw * 0.6} />
-          {/* hood highlight and centre crease */}
-          <path d="M -500 676 C -300 652 300 652 500 676 C 300 664 -300 664 -500 676 Z" fill={PAINT.redLight} opacity={0.7} />
-          {[-1, 1].map((s) => <path key={s} d={`M ${s * 960} 680 C ${s * 900} 722 ${s * 840} 736 ${s * 770} 738 C ${s * 840} 728 ${s * 890} 712 ${s * 930} 680 Z`} fill={PAINT.redLight} opacity={0.7} />)}
+          <rect x={-190} y={228} width={380} height={112} rx={16} fill="#2B353C" stroke={C.ink} strokeWidth={sw * 0.8} />
+          <rect x={-166} y={246} width={332} height={76} rx={8} fill={C.cream} opacity={0.12} />
+          <path d="M -1000 214 C -900 168 -560 150 0 150 C 560 150 900 168 1000 214 C 1010 240 960 262 900 262 C 640 232 -640 232 -900 262 C -960 262 -1010 240 -1000 214 Z" fill={PAINT.carbon} stroke={C.ink} strokeWidth={sw * 0.8} />
+          <path d="M -900 200 C -560 166 560 166 900 200" fill="none" stroke={PAINT.carbonLight} strokeWidth={6} />
         </g>
-        {/* light signature: thin LED blades along the fender tops */}
+        {/* headlights: boomerang clusters with a bright LED outline, high on the fender crowns */}
         {[-1, 1].map((s) => (
-          <path key={s} d={`M ${s * 985} 590 C ${s * 900} 640 ${s * 760} 668 ${s * 560} 672 L ${s * 560} 650 C ${s * 750} 646 ${s * 880} 618 ${s * 972} 566 Z`} fill={PAINT.light} opacity={lights} stroke={C.ink} strokeWidth={sw * 0.6} />
+          <g key={s}>
+            <path d={`M ${s * 985} 790 C ${s * 1005} 700 ${s * 980} 560 ${s * 925} 500 C ${s * 860} 470 ${s * 740} 480 ${s * 650} 530 C ${s * 610} 560 ${s * 560} 610 ${s * 520} 650 C ${s * 700} 700 ${s * 860} 770 ${s * 985} 790 Z`} fill="#1E2F3A" stroke={C.ink} strokeWidth={sw} />
+            <path d={`M ${s * 985} 790 C ${s * 1005} 700 ${s * 980} 560 ${s * 925} 500 C ${s * 860} 470 ${s * 740} 480 ${s * 650} 530 C ${s * 610} 560 ${s * 560} 610 ${s * 520} 650`} fill="none" stroke={PAINT.light} strokeWidth={14} opacity={lights} />
+            <path d={`M ${s * 520} 650 C ${s * 700} 700 ${s * 860} 770 ${s * 985} 790`} fill="none" stroke={PAINT.light} strokeWidth={9} opacity={0.9 * lights} />
+            <path d={`M ${s * 900} 740 C ${s * 800} 700 ${s * 700} 660 ${s * 620} 645`} fill="none" stroke={PAINT.glassLight} strokeWidth={22} strokeLinecap="round" opacity={0.7} />
+          </g>
         ))}
         <path d={BODY} fill="none" stroke={C.ink} strokeWidth={sw} />
         {overlay}

@@ -250,10 +250,6 @@ export const SideBrake: React.FC<{t: number}> = ({t}) => {
           {/* a level line at roof height: the cabin stays near it while the wheel travels */}
           {cabinRef > 0 && <line x1={X - 2600} y1={refY} x2={X + 2600} y2={refY} stroke={C.saffronDeep} strokeWidth={4 / px} strokeDasharray={`${22 / px} ${14 / px}`} opacity={0.9 * cabinRef} />}
         </World>
-        <Label x={toS(X + AXLE_F - 900, 0).x} y={toS(0, -420).y} text="TIRES BRAKE THE CAR" color={C.coralLight} size={34} opacity={win(t, tb0 + 0.2, T4.active - 0.3, 0.3, 0.3)} />
-        <Label x={tagBody.x} y={tagBody.y} text="BODY CONTROL" color={C.white} size={34} opacity={win(t, T4.bodyCtl - 0.1, T4.tire - 0.05, 0.25, 0.25)} />
-        <Label x={tagTire.x} y={tagTire.y} text="TIRE CONTACT" color={C.tealLight} size={34} opacity={win(t, T4.tire - 0.1, T4.comfort - 0.05, 0.25, 0.25)} />
-        <Label x={tagComfort.x} y={tagComfort.y} text="COMFORT" color={C.saffronLight} size={34} opacity={win(t, T4.comfort - 0.1, T4.system + 0.1, 0.25, 0.3)} />
         <Callout x={stopS.x + 380} y={stopS.y - 150} tx={stopS.x} ty={stopS.y} text="TRAVEL LIMIT" color={C.coral} fg={C.white} size={36} opacity={smooth(limit * 2.2) * open} />
         <MotionTrace t={t} opacity={Math.max(win(t, T4.copy - 0.35, T4.movement + 0.4, 0.4, 0.4), win(t, T4.cant + 0.1, T4.rough + 1.9, 0.4, 0.5))} />
         {caption}
@@ -266,28 +262,33 @@ export const SideBrake: React.FC<{t: number}> = ({t}) => {
  *  from the teaching model, not a measurement). */
 const MotionTrace: React.FC<{t: number; opacity: number}> = ({t, opacity}) => {
   if (opacity <= 0.001) return null;
-  const x0 = 1230, y0 = 70, w = 650, h = 260, span = 2.6, k = 1.6; // px per mm
-  const base = y0 + h * 0.6;
+  const x0 = 1000, y0 = 14, w = 900, h = 300, span = 2.6, k = 1.5; // px per mm
+  const px0 = x0 + 30, px1 = x0 + w - 170, top = y0 + 58, bot = y0 + h - 22;
+  const base = (top + bot) / 2 + 18;
   const pts = (f: (st: ReturnType<typeof sampleHalf>) => number) => {
-    const out: string[] = [];
+    const out: [number, number][] = [];
     for (let i = 0; i <= 120; i++) {
       const tt = t - span + (span * i) / 120;
       const v = f(sampleHalf(HALF, sceneT(tt))) * 1000 * k;
-      out.push(`${x0 + 24 + ((w - 48) * i) / 120},${Math.max(y0 + 12, Math.min(y0 + h - 62, base - v))}`);
+      out.push([px0 + ((px1 - px0) * i) / 120, Math.max(top, Math.min(bot, base - v))]);
     }
-    return out.join(' ');
+    return out;
   };
+  const wheel = pts((st) => st.zf), cabin = pts((st) => st.z + 0.6 * st.th);
+  const line = (p: [number, number][]) => p.map((q) => q.join(',')).join(' ');
+  const end = (p: [number, number][]) => p[p.length - 1];
   return (
     <g opacity={opacity}>
-      <rect x={x0} y={y0} width={w} height={h} rx={22} fill={C.white} opacity={0.94} stroke={C.ink} strokeWidth={4} />
-      <line x1={x0 + 24} y1={base} x2={x0 + w - 24} y2={base} stroke={C.inkMuted} strokeWidth={2} strokeDasharray="8 8" />
-      <polyline points={pts((st) => st.zf)} fill="none" stroke={C.blue} strokeWidth={6} strokeLinejoin="round" strokeLinecap="round" />
-      <polyline points={pts((st) => st.z + 0.6 * st.th)} fill="none" stroke={C.coral} strokeWidth={7} strokeLinejoin="round" strokeLinecap="round" />
-      <line x1={x0 + 34} y1={y0 + h - 34} x2={x0 + 74} y2={y0 + h - 34} stroke={C.blue} strokeWidth={6} strokeLinecap="round" />
-      <text x={x0 + 86} y={y0 + h - 23} fontFamily="'Fredoka Variable'" fontWeight={700} fontSize={30} fill={C.ink}>WHEEL</text>
-      <line x1={x0 + 240} y1={y0 + h - 34} x2={x0 + 280} y2={y0 + h - 34} stroke={C.coral} strokeWidth={7} strokeLinecap="round" />
-      <text x={x0 + 292} y={y0 + h - 23} fontFamily="'Fredoka Variable'" fontWeight={700} fontSize={30} fill={C.ink}>CABIN</text>
-      <text x={x0 + w - 24} y={y0 + h - 23} textAnchor="end" fontFamily="'Nunito Variable'" fontWeight={800} fontSize={22} fill={C.inkMuted} letterSpacing={1.4}>ILLUSTRATIVE</text>
+      <rect x={x0} y={y0} width={w} height={h} rx={26} fill={C.white} opacity={0.96} stroke={C.ink} strokeWidth={5} />
+      <text x={x0 + 30} y={y0 + 42} fontFamily="'Fredoka Variable'" fontWeight={700} fontSize={32} fill={C.ink}>FRONT WHEEL vs CABIN</text>
+      <text x={x0 + w - 28} y={y0 + 40} textAnchor="end" fontFamily="'Nunito Variable'" fontWeight={800} fontSize={24} fill={C.inkMuted} letterSpacing={1.6}>ILLUSTRATIVE</text>
+      <line x1={px0} y1={base} x2={px1} y2={base} stroke={C.inkMuted} strokeWidth={3} strokeDasharray="10 10" />
+      <polyline points={line(wheel)} fill="none" stroke={C.blue} strokeWidth={10} strokeLinejoin="round" strokeLinecap="round" />
+      <polyline points={line(cabin)} fill="none" stroke={C.coral} strokeWidth={12} strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={end(wheel)[0]} cy={end(wheel)[1]} r={11} fill={C.blue} stroke={C.ink} strokeWidth={3} />
+      <circle cx={end(cabin)[0]} cy={end(cabin)[1]} r={11} fill={C.coral} stroke={C.ink} strokeWidth={3} />
+      <text x={px1 + 26} y={Math.min(end(wheel)[1], end(cabin)[1] - 40) + 12} fontFamily="'Fredoka Variable'" fontWeight={700} fontSize={36} fill={C.blueDeep}>WHEEL</text>
+      <text x={px1 + 26} y={Math.max(end(cabin)[1] + 12, Math.min(end(wheel)[1], end(cabin)[1] - 40) + 62)} fontFamily="'Fredoka Variable'" fontWeight={700} fontSize={36} fill={C.coralDeep}>CABIN</text>
     </g>
   );
 };

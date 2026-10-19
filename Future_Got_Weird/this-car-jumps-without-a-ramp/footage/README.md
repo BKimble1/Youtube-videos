@@ -1,48 +1,63 @@
-# Footage: what the cut needs and how it goes in
+# Footage: provenance, what was used, and its limits
 
-## Status (18 Oct 2026)
+## Source files (not in Git)
 
-**Not ingested.** The production environment's network policy refused every host that serves the clips:
+Two screen recordings supplied by the channel owner, both 1920×1080, 30 fps, H.264 + AAC. They were uploaded as assets on the
+GitHub release **`u9-source-footage`** of `BKimble1/Youtube-videos` and are kept locally in `footage/source/` (Git-ignored).
 
-- `drive.google.com` and `drive.usercontent.google.com`: the owner's recordings, https://drive.google.com/drive/folders/1Komq_cbLy-rwdQevZRR92Y9zyCtQgILf
-- `www.byd.com`: the official MP4
-- `www.youtube.com`: the optional moving demonstration
-
-Every refusal was a 403 to CONNECT from the egress proxy. Nothing has been downloaded or watched. Until the clips are
-in, the two real-footage windows show a "REAL FOOTAGE PENDING" card, and `tools/render_master.sh` refuses to run.
-
-**Ways in (either one):**
-
-1. Upload the files as assets on a **draft release** in `BKimble1/Youtube-videos`, as was done for the Roadster
-   footage. GitHub's API and asset hosts are reachable from the environment.
-2. Add `drive.google.com` and `drive.usercontent.google.com` under *Allowed domains* in the environment's network
-   settings.
-
-## What the cut uses
-
-| Window | Film time | Source | Must show |
+| Label | File | SHA-256 | Shows |
 |---|---|---|---|
-| Opening | 0:00.0 – ~0:02.9 (cross-fades to the vector car on "suspension", 0:02.5) | BYD ev-tech03.mp4 side profile, planning range 00:08.3–00:11.3 | First frame: car and flat pavement already visible, takeoff imminent; tyre/ground separation within ~1 s; a complete takeoff and landing; car **at rest** at ~0:02.4, where the vector car is laid over it |
-| Replay | 1:47.9 – ~1:50.2 (cross-fades on "suspension", 1:49.7) | Same side-profile hop | One complete hop, ending at rest for the match into the cutaway |
+| V1 | `Screen.Recording.2026-10-18.012401.mp4` (18.5 s, 19,461,350 bytes) | `0617fe97d42e6a3ac8870371761d8feb6624db9abed249b45d017a6a74050335` | Recording of BYD's EV-Tech page: the side-profile hop, plus other angles |
+| V2 | `Screen.Recording.2026-10-18.012652.mp4` (60.9 s, 66,642,576 bytes) | `a1033430cd490bf4b70ffc12ad541d278cbbae509c876aa72c460037b14dcc69` | Recording of BYD's jump film: side jump, pit angles, cornering, drone drive-away |
 
-The clip plays at its own speed, is never mirrored or re-timed, and is credited on first use ("BYD DEMONSTRATION
-VIDEO"). Its playback cadence is to be checked from the frames, and nothing in the narration measures response time
-from it. The red graphic border is to be inspected and decided on frames (kept, or excluded by choosing the in-point;
-not painted over).
+The recordings are screen captures of a streamed video, so they are 1080p at most, compressed once by the player and again by
+the screen recorder. The rights to the underlying BYD material are BYD's; the owner confirms use before upload
+(`production/CREDITS.md`). Every real shot is credited on screen ("BYD DEMONSTRATION VIDEO") and in the description.
 
-The front-quarter (00:04.0–00:06.9) and rear (00:07.0–00:08.3) angles are reference only. They will be used to
-check the vector car's front-view shapes and the side silhouette, not cut into the film.
+## Real shots in the cut
 
-## Integration steps (once the files are in `footage/source/`)
+All are played at the recording's own frame rate, frame for frame: no re-timing, interpolation, mirroring or loop.
+No excerpt is used twice. Frame numbers are recording frames (0-based at 30 fps).
 
-1. `python3 tools/ingest_footage.py probe`: checksums, duration, fps, resolution → `footage/footage_probe.json`.
-2. `python3 tools/ingest_footage.py sheet <file> 7.5 4.5 10`: numbered frame sheets. Pick the in-points so the car
-   is at rest at the match frames, and note the takeoff/landing frames for the sound cues.
-3. Measure the rear and front wheel centres in the at-rest frame. Set `FOOTAGE.wheelRear`, `wheelFront`, `facing`,
-   `opening`, `replay` and `available: true` in `source/src/footage.tsx`. The opening camera `CAM_WIDE` follows from
-   the wheel positions (z = wheel spacing / 2,900 mm).
-4. Match the vector silhouette (`source/src/car/geom.ts`) and the hop height (`source/src/sim/launch.ts`, `pushF`) to
-   the frames, and the thumbnail clearance (`THUMB_CLEAR`) to the airborne frame.
-5. `python3 tools/ingest_footage.py cut <file>` → `source/public/footage/byd_ev-tech03.mp4` (constant 30 fps, same
-   timing and resolution).
-6. Add the real takeoff/landing sound cues, then run `bash tools/render_master.sh`.
+| Film time | Source frames | Cut file | Used for |
+|---|---|---|---|
+| 0:00.0 – 0:01.9 | V1 273–328 | `real_open` | Opening: the side-profile hop, ending at rest, where the illustrated car takes over |
+| 0:08.0 – 0:10.4 | V2 536–570, 575–613 | `real_pit` | "So what does making a supercar jump actually prove?": the front wheel at the lip of the pit, then the high angle |
+| 0:42.0 – 0:42.9 | V2 691–718 | `real_corner` | The U9 turning in, as the bend section begins (after the tyre-wall wipe) |
+| 1:48.0 – 1:50.3 | V1 262–328 | `real_replay` | "Watch the jump again": the replay opens on BYD's hop, then the illustration takes over |
+| 1:53.1 – 1:57.9 | V2 316–458 | `real_jump` | Side view, rolling in to takeoff, flight and landing, **uninterrupted**, with the gravity and motion arrows drawn over it |
+| 1:57.9 – 1:59.7 | V2 480–532 | `real_pit` | The low front three-quarter, car clear of the road ("the spectacular part") |
+| 2:07.6 – 2:09.3 | V2 1508–1556 | `real_driveA` | "Most of the time…": a steady wide side pass |
+| 2:09.3 – 2:14.1 | V2 1557–1700 | `real_driveB` | The drone comes in from the front, over the roof and follows the car away into the dust |
+
+Only footage of the U9 doing what the narration says is used as evidence. The drive shots illustrate "controlled driving", not
+any suspension claim, and the narration does not interpret them. Other frames of both recordings (V1's front and rear angles
+and the rest of V2) are not used.
+
+## How the cuts are made (`tools/ingest_footage.py`)
+
+- `cut` (V1) and `cut2` (V2): select the frame range, crop to 16:9 inside the picture area, scale to 3840×2160 with Lanczos and
+  encode H.264 CRF 12. **The upscale adds no detail**: the real shots are 1080p sources enlarged for the 4K master. The vector
+  art, text and graphics are rendered natively at 3840×2160.
+- BYD's on-screen numbers, disclaimer and logo sit outside the crops, except in `real_jump` (V2 316–458), where a band across the
+  lower picture is removed with ffmpeg `delogo` (x=350 y=772 w=860 h=58); nothing is painted over the car.
+- Nothing is mirrored, stabilised or colour-graded.
+- `python3 tools/ingest_footage.py cut2 real_driveA real_driveB` re-cuts single files. The cut files live in
+  `source/public/footage/` (Git-ignored).
+
+## Alignment of the illustration with the real car
+
+- Opening and replay (V1): the wheel centres were tracked frame by frame (`footage/wheel_track.json`), and the illustrated car is
+  laid over the real one with those positions; then the photographic background gives way to the proving ground.
+- Side jump (V2): the wheels were placed by hand at recording frame 336 (the nose just lifting), and the illustration's camera
+  frames the car exactly there before the dissolve into the real flight. Per-frame tracking of V2 was unreliable (motion blur
+  and a panning camera), so the arrows drawn over the real flight are anchored to the illustrated model's centre of mass and
+  scale, not to a tracked point.
+
+## Limitations to report
+
+- Source resolution is 1080p screen capture; the 4K master is not native-4K picture for the real shots.
+- V2's side jump has no fixed reference, and the camera pans with the car, so the hop height cannot be measured from the frames.
+  The illustration's apex clearance (about 0.11 m) is the launch model's, not a measurement of BYD's car.
+- The takeoff and landing times in the sound cues come from the frames (takeoff at recording frame 336, touch-down about frame
+  415). BYD's own audio is not used.
