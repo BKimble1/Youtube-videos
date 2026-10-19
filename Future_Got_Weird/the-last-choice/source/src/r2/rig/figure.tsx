@@ -394,17 +394,24 @@ export const solve2 = (p: FigProps): Rig2 => {
     const frontSurf = (q: V3, narrow = true): number | null => {
       const d = sub3(q, Pd);
       const r0 = dot3(d, B.R), u0 = dot3(d, B.U), f0 = dot3(d, B.F);
-      const h = u0 / s;
+      let h = u0 / s;
       if (h < -25 || h > 150) return null;
+      const vr = B.R.z, vf = B.F.z, vu = B.U.z;
+      let tz = 0;
       // (the chest's flanks are the shoulders the arms hang from: narrowed there, so an arm at the side, seen from
       // the front or the back, sorts by depth as before rather than disappearing behind the torso's outline)
-      const [a, b] = ab(h), A2 = (a * s * (narrow ? lerp(1, 0.84, clamp((h - 60) / 40)) : 1)) ** 2, B2 = (b * s) ** 2;
-      const vr = B.R.z, vf = B.F.z;
-      const qa = vr * vr / A2 + vf * vf / B2, qb = 2 * (r0 * vr / A2 + f0 * vf / B2), qc = r0 * r0 / A2 + f0 * f0 / B2 - 1;
-      if (qa < 1e-9) return qc < 0 ? q.z : null;
-      const disc = qb * qb - 4 * qa * qc;
-      if (disc < 0) return null;
-      return q.z + (-qb + Math.sqrt(disc)) / (2 * qa);
+      // (R4, the true torso surface only: the ray also climbs the torso's axis when the torso is tilted toward the view, so the
+      // cross-section is found at the height where the ray meets it, a few iterations; R3's zone test judges at the point's own height)
+      for (let it = 0; it < (narrow ? 1 : 4); it++) {
+        const [a, b] = ab(h), A2 = (a * s * (narrow ? lerp(1, 0.84, clamp((h - 60) / 40)) : 1)) ** 2, B2 = (b * s) ** 2;
+        const qa = vr * vr / A2 + vf * vf / B2, qb = 2 * (r0 * vr / A2 + f0 * vf / B2), qc = r0 * r0 / A2 + f0 * f0 / B2 - 1;
+        if (qa < 1e-9) return qc < 0 ? q.z : null;
+        const disc = qb * qb - 4 * qa * qc;
+        if (disc < 0) return null;
+        tz = (-qb + Math.sqrt(disc)) / (2 * qa);
+        if (!narrow) { h = clamp((u0 + tz * vu) / s, -25, 150); }
+      }
+      return q.z + tz;
     };
     // depth along the camera's HORIZONTAL axis (the camera pitch undone): beside the torso, in front of or behind its
     // mid-plane is judged level, so looking down on a figure does not put its hanging hands "behind" it (lower points
