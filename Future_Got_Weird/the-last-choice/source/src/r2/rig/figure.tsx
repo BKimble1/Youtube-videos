@@ -1057,7 +1057,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const raise = Math.max(0, dot3(ua, r.up.U));
     const S0b = add3(S, mul3(norm3(add3(mul3(ua, -0.9 * raise), inward)), 16 * s));
     const S0 = torsoOnly ? lerp3(S0b, S, wC) : capS ? S : S0b;
-    const hideU = torsoOnly ? torsoHides(r, S, E, AW[0] / 2 + ink + 2 * s, bT, ink * 0.6) : null;
+    const hideU = torsoOnly ? torsoHides(r, S0, E, AW[0] / 2 + ink + 2 * s, bT, ink * 0.6) : null;
     const handEnd = add3(Wr, mul3(fa, 36 * s));
     const hideL = torsoOnly ? torsoHides(r, E, handEnd, 19 * s + ink, bT, ink * 0.6) : null;
     const cuff = add3(S, mul3(ua, UPPER * s * 0.58));
@@ -1149,7 +1149,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
       const armEl = lowerTop
         ? <g>{up.ink}{lo.ink}{elbowInk}{upperFill}{lowerFill}</g>
         : <g>{up.ink}{lo.ink}{elbowInk}{lowerFill}{up.ink}{upperFill}</g>;
-      if (torsoOnly) torsoParts(`arm${i}`, armEl, rL, [...hideU!.polys, ...hideL!.polys, ...(propH?.polys ?? [])], hideU!.touch || hideL!.touch || !!propH?.touch, (S.z + Wr.z) / 2, propH ? [S, E, handEnd, propPt(hf, holdFn!.span![0] * s, holdFn!.span![1] * s, s), propPt(hf, holdFn!.span![2] * s, holdFn!.span![3] * s, s)] : [S, E, handEnd], 24 * s + ink * 3);
+      if (torsoOnly) torsoParts(`arm${i}`, armEl, rL, [...hideU!.polys, ...hideL!.polys, ...(propH?.polys ?? [])], hideU!.touch || hideL!.touch || !!propH?.touch, (S.z + Wr.z) / 2, propH ? [S0, E, handEnd, propPt(hf, holdFn!.span![0] * s, holdFn!.span![1] * s, s), propPt(hf, holdFn!.span![2] * s, holdFn!.span![3] * s, s)] : [S0, E, handEnd], 24 * s + ink * 3);
       else add(rL, `arm${i}`, armEl);
     } else {
       if (upperCross) splitZones(r, `armU${i}`, <g>{up.ink}{upperFill}</g>, S0, E, 0.05).forEach((q) => parts.push(q));
