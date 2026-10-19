@@ -955,7 +955,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
    *  and a second copy just over the torso, clipped to the torso's outline minus those regions, shows it where it is
    *  nearer: so nothing outside the torso's outline changes order, and inside it the limb comes and goes with the depth
    *  field instead of flipping whole. */
-  const torsoParts = (key: string, el: React.ReactElement, rankOld: number, polys: V2[][], touch: boolean, vis: boolean, qz: number, pts: V3[], padPx: number, rankAdd = 0) => {
+  const torsoParts = (key: string, el: React.ReactElement, rankOld: number, polys: V2[][], touch: boolean, vis: boolean, qz: number, pts: V3[], padPx: number, rankAdd = 0, openW = 0) => {
     const zone0 = zoneOfRank(r, rankOld) === 0;
     if (!touch) { add(rankOld, key, el); return; }
     const x0 = Math.min(...pts.map((q) => q.x)) - padPx, x1 = Math.max(...pts.map((q) => q.x)) + padPx;
@@ -974,7 +974,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const xid = `${id}tx${key}`;
     add(rFront, `${key}x`, (
       <g>
-        <defs><mask id={xid} maskUnits="userSpaceOnUse" {...box}><rect {...box} fill="#000000" /><path d={torsoD} fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={ink * 1.6} strokeLinejoin="round" />{pelvisEl}{black}</mask></defs>
+        <defs><mask id={xid} maskUnits="userSpaceOnUse" {...box}><rect {...box} fill="#000000" /><path d={torsoD} fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={ink * 1.6} strokeLinejoin="round" />{pelvisEl}{openW > 0.5 ? <polyline points={pts.map((q) => `${f2(q.x)},${f2(q.y)}`).join(' ')} fill="none" stroke="#FFFFFF" strokeWidth={f2(openW)} strokeLinecap="round" strokeLinejoin="round" /> : null}{black}</mask></defs>
         <g mask={`url(#${xid})`}>{el}</g>
       </g>
     ));
@@ -1011,7 +1011,8 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const fwdK = clamp(((K.z - H.z) / (THIGH * s) - 0.3) / 0.4);
     const bL = (12 + 78 * fwdK) * s, tip = add3(A, mul3(norm3(sub3(A, K)), 22 * s));
     const h1 = torsoHides(r, Hn, K, LW[0] / 2 + ink + 2 * s, bL, ink * 0.6), h2 = torsoHides(r, K, tip, LW[1] / 2 + ink + 2 * s, bL, ink * 0.6);
-    torsoParts(`leg${i}`, legBody, rankBack, [...h1.polys, ...h2.polys], h1.touch || h2.touch, h1.vis || h2.vis, (Hn.z + K.z) / 2, [Hn, K, tip], 26 * s + ink * 3, -2 + i * 0.01);
+    if ((globalThis as any).DBGLEG) console.log('LEG', i, 'fwdK', fwdK, 'bL', bL, 'polys', h1.polys.length, h2.polys.length, h1.touch, h1.vis, 'open', fwdK * (LW[0] + ink * 2 + 8 * s));
+    torsoParts(`leg${i}`, legBody, rankBack, [...h1.polys, ...h2.polys], h1.touch || h2.touch, h1.vis || h2.vis, (Hn.z + K.z) / 2, [Hn, K, tip], 26 * s + ink * 3, -2 + i * 0.01, fwdK * (LW[0] + ink * 2 + 8 * s));
   });
 
   [0, 1].forEach((i) => {

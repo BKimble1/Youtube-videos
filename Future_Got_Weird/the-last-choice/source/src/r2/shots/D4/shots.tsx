@@ -140,10 +140,11 @@ export const D4_6a = shot(SH.d46a, [
 // Close on the Director as he looks round — north, the crest behind them, south: every way shut — the tether
 // operator behind him; heavy 2 comes on.
 export const D4_6b = shot(SH.d46b, [
-  {t: 0, pos: g(16.5, 6.2, 1.55), target: g(13.6, 2.2, 1.5), fov: 36},
-  // (it eases back north-west, under heavy 2's path between its legs: ≥ 2 m from every leg as it comes on; the R3
-  // first cut drifted south into its left legs' lane and a leg wiped the lens at 174.7)
-  {t: SH.d47 - SH.d46b, pos: g(13.2, 0.4, 1.5), target: g(12.3, 5.2, 1.5), fov: 36},
+  // (R4: from the south-west, 3–5 m off the ram's line. In R3 the lens stood under heavy 2's ram arm and its 1.1 m head filled the
+  // top half of the frame for the whole shot; the legs are ≥ 2 m away and the arm now passes above and beyond the Director)
+  // (raised to 2.6 m: over the decoy maker's and the flare carrier's heads, who stand 2–3 m in front of it)
+  {t: 0, pos: g(11.8, 9.2, 2.6), target: g(13.6, 2.4, 1.3), fov: 40},
+  {t: SH.d47 - SH.d46b, pos: g(10.8, 8.4, 2.4), target: g(12.4, 5.2, 1.4), fov: 38},
 ], (T) => ({full: 30, tweak: {director: {anchor: chest('director', T, 1.5)}}}), 0.012);
 
 // ------------------------------------------------------------------ D4-7a (175.04–175.74): the threat aimed at HER
