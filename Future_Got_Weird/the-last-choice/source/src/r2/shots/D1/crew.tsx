@@ -32,6 +32,15 @@ const GAITS = {
   dash: {stride: 1.6, duty: 0.38, lift: 0.13, bob: 8, armAmp: 10, lean: 18} as GaitW,
 };
 
+/**
+ * (R4) The charge's starts, as offsets from the cut (59.95). The Director is already stepping out (C ends on his first stride) and
+ * the others go after him one by one, in the order they can read him and reach the line: the runner first (fast, he cannot be left),
+ * then the breaker (he settles the tool in his hands), the tether operator, the flare carrier, the pilot (her drone is already out
+ * ahead of them) and the decoy maker last. Each is a whole stride apart, not a half-second smear; the arrivals (T1) are unchanged,
+ * so the late ones simply run a little harder to the line.
+ */
+const CHARGE_GO = {runner: 0.22, breaker: 0.4, tether: 0.52, flares: 0.78, decoy: 0.92, drone: 1.1};
+
 type Body = {pos: V3; heading: number; footL: V3; footR: V3; gait?: Pose; runK: number; seg: number; inRun: boolean; phase?: number};
 
 const segStart = (s: Seg) => (s.kind === 'stand' ? s.root[0][0] : s.T0);
@@ -179,11 +188,16 @@ const LOOKS: Record<string, [number, number, V3][]> = {
 const breathLook = (who: string, b: {pos: V3; heading: number}, T: number): {yaw: number; pitch: number; w: number} | null => {
   const L = LOOKS[who];
   if (!L) return null;
-  for (const [a, e, p] of L) if (T >= a && T < e) {
-    const w = win(T, a, e, 0.2, 0.16);
-    return {yaw: lookYaw(b, p, 85), pitch: lookPitch(b, p, 1.05), w};
-  }
-  return null;
+  const k = L.findIndex(([a, e]) => T >= a && T < e);
+  if (k < 0) return null;
+  const [a, e, p] = L[k], prev = L[k - 1], next = L[k + 1];
+  // (R4) a look that follows another with no gap turns the head from the one to the next (R3 let each fall back to the fight's
+  // heading first: sweeps of 100° in 0.2 s, twice per look, in the breath's close shot)
+  const joinIn = !!prev && Math.abs(prev[1] - a) < 1e-6, joinOut = !!next && Math.abs(next[0] - e) < 1e-6;
+  const w = win(T, a, e, joinIn ? 0.001 : 0.2, joinOut ? 0.001 : 0.16);
+  let yaw = lookYaw(b, p, 85), pitch = lookPitch(b, p, 1.05);
+  if (joinIn) { const u = smooth(clamp((T - a) / 0.3)); yaw = lerp(lookYaw(b, prev![2], 85), yaw, u); pitch = lerp(lookPitch(b, prev![2], 1.05), pitch, u); }
+  return {yaw, pitch, w};
 };
 const withLook = (pose: Pose, who: string, b: {pos: V3; heading: number}, T: number): Pose => {
   const l = breathLook(who, b, T);
@@ -208,8 +222,47 @@ const base = (role: Role2, key: string, seed: number, b: Body, T: number, pose: 
   world: {footL: b.footL, footR: b.footR, ...world},
   ...(gaze ? {gaze, gazeW: 0.85} : {}),
 });
+/**
+ * (R4) The charge's glances: the leader checks over his shoulder that they are coming (60.4–60.85), each follower reads him before
+ * pushing off (and the tether operator, the pilot and the decoy maker check their neighbour next), then everyone's eyes are on the line.
+ * [from, to, who] for the head and eyes; the sink before each follower's first stride is `launchPose`.
+ */
+const bodyHeadOf = (segs: Seg[], T: number): V3 => { const q = bodyAt(segs, T); return {x: q.pos.x, y: q.pos.y + 1.5, z: q.pos.z}; };
+const CHARGE_LOOKS: Record<string, [number, number, (T: number) => V3][]> = {
+  director: [[60.42, 60.86, (T) => bodyHeadOf(RUN_SEGS, T)]],
+  runner: [[59.95, 60.3, (T) => bodyHeadOf(DIR_SEGS, T)]],
+  breaker: [[59.95, 60.55, (T) => bodyHeadOf(DIR_SEGS, T)]],
+  tether: [[59.95, 60.28, (T) => bodyHeadOf(DIR_SEGS, T)], [60.28, 60.7, (T) => bodyHeadOf(RUN_SEGS, T)]],
+  flares: [[59.95, 60.5, (T) => bodyHeadOf(DIR_SEGS, T)], [60.5, 60.95, (T) => bodyHeadOf(BRK_SEGS, T)]],
+  drone: [[60.5, 61.0, (T) => bodyHeadOf(DIR_SEGS, T)]],
+  decoy: [[59.95, 60.45, (T) => bodyHeadOf(DIR_SEGS, T)], [60.45, 61.05, (T) => bodyHeadOf(TTH_SEGS, T)]],
+};
+const chargeGlance = (who: string, T: number): {w: number; at: V3} | null => {
+  const L = CHARGE_LOOKS[who];
+  if (!L || T < M.CHARGE || T > 61.1) return null;
+  for (const [a, e, f] of L) if (T >= a && T < e) return {w: win(T, a, e, 0.14, 0.16), at: f(T)};
+  return null;
+};
+/** a glance laid over the final pose (after the run blend, which would otherwise fade the head turn out as the stride builds) */
+const glance = (pose: Pose, who: string, b: {pos: V3; heading: number}, T: number): Pose => {
+  const cg = chargeGlance(who, T);
+  if (!cg) return pose;
+  const h = pose.head ?? {};
+  return {...pose, head: {yaw: lerp(h.yaw ?? 0, lookYaw(b, cg.at, 80), cg.w), pitch: lerp(h.pitch ?? 0, lookPitch(b, cg.at, 1.55), cg.w), roll: h.roll}};
+};
+/** the beat before a follower's first stride: weight sinks and shifts forward (the push-off), so nobody waits as a statue */
+const launchPose = (pose: Pose, who: string, T: number): Pose => {
+  const s0 = ALL_SEGS[who]?.[0];
+  const t0 = s0 && s0.kind === 'run' ? s0.T0 : 0;
+  if (t0 <= M.CHARGE + 0.3) return pose;
+  const k = after(T, Math.max(t0 - 0.34, M.CHARGE + 0.02), 0.3); // (zero on the cut's first frame: C's last pose is the start)
+  return k > 0 && T < t0 + 0.3 ? layer(pose, {drop: (pose.drop ?? 26) + 9 * k, lean: (pose.lean ?? 10) + 9 * k}) : pose;
+};
+
 /** the eyes' target behind the slab: whoever the breath look is on (else the fight target) */
 const gazeAt = (who: string, T: number, fight: V3): V3 => {
+  const cg = chargeGlance(who, T);
+  if (cg && cg.w > 0.4) return cg.at;
   const L = LOOKS[who];
   if (L) for (const [a, e, p] of L) if (T >= a && T < e) return p;
   return fight;
@@ -311,7 +364,7 @@ const DIR_FACE: [number, Face][] = [
   [87.4, EXPR.pant], [89.1, EXPR.alarm], [89.5, EXPR.effort], [91.3, EXPR.pant], [92.6, {...EXPR.focus, worry: 0.3}],
 ];
 
-export const directorAt = (T: number): CrewOut => {
+const directorCore = (T: number): CrewOut => {
   const b = bodyAt(DIR_SEGS, T);
   const plate: PlateState = T >= EV.br1 ? (toolsR2('director', T).plate === 'intact' ? 'dented' : toolsR2('director', T).plate!) : 'intact';
   const glint = Math.max(win(T, EV.br1, EV.br1 + 0.16, 0.01, 0.12), win(T, EV.clash, EV.clash + 0.14, 0.01, 0.1) * 0.8);
@@ -372,7 +425,8 @@ export const directorAt = (T: number): CrewOut => {
     const pump = Math.sin(clamp((T - BR4.go) / (BR4.hit - BR4.go)) * Math.PI * 1.5);
     const armR0 = {r: 52, u: 196 + 40 * pump, f: -30 + 90 * pump};
     const armR1 = {r: 34, u: 250, f: 112}, armR2 = {r: 30, u: 285, f: 150};
-    const aR = lerpLoc(lerpLoc(lerpLoc({r: 50, u: 190, f: -26}, armR0, kB), armR1, kD), armR2, kS);
+    const kRr = after(T, BR4.hit - 0.08, 0.14); // (R4: the free arm throws out over 4 frames, not 2: it was a 0.64 m jump at the hit)
+    const aR = lerpLoc(lerpLoc(lerpLoc({r: 50, u: 190, f: -26}, armR0, kB), armR1, kRr), armR2, kS);
     const aL = lerpLoc(lerpLoc({r: -30, u: 262, f: 118}, {r: -24, u: 252, f: 128 - 22 * imp}, kD), {r: -8, u: 290, f: 165}, kS);
     const P: Pose = {
       drop: lerp(lerp(60, 40, kB), 46, kD) + 10 * imp, lean: lerp(lerp(24, 33, kB), 36, kD) - 10 * kS + 6 * imp, twist: lerp(-30, -24, kD) + 8 * kS, side: 0,
@@ -398,7 +452,11 @@ export const directorAt = (T: number): CrewOut => {
   // eyes/head: on U1 through the fight; a glance at the breaker coming (80.7); U1 into U2; U3; the bowl; the drone
   const u1 = unitAttach(unitD1('U1', Math.min(T, 84)));
   const tgt = T < 80.68 ? u1.head : T < 80.95 ? onG(40.0, 2.0, 1.5) : T < 82.55 ? u1.head : T < 83.5 ? lerp3v(u1.head, onG(41.0, -3.0, 1.2), smooth((T - 82.6) / 0.6)) : T < 85.3 ? unitAttach(unitD1('U3', T)).head : T < 88.9 ? onG(48.3, -1.9, 0.5) : T < 91.2 ? onG(52.5, 2.0, 3.6) : onG(46.4, 3.7, 1.9);
-  const hy = lookYaw(b, tgt, 75), hp = lookPitch(b, tgt);
+  // (R4) 71.0–71.5, U1 coming back in: a glance across at the breaker's fight (is he holding?) and back to U1 as it comes
+  const glanceB = win(T, 71.0, 71.52, 0.2, 0.22);
+  const brkHead = onG(39.95, 3.1, 1.5);
+  const tgtG = glanceB > 0.5 ? brkHead : tgt;
+  const hy = lerp(lookYaw(b, tgt, 75), lookYaw(b, brkHead, 75), glanceB), hp = lerp(lookPitch(b, tgt), lookPitch(b, brkHead), glanceB);
   const ph = pose.head ?? {};
   pose = layer(pose, {head: {yaw: lerp(hy, ph.yaw ?? 0, tuck), pitch: lerp(hp, ph.pitch ?? 0, tuck) + 18 * duckK, roll: 0}});
   pose = layer(pose, {face: {...faceFor('director', T, DIR_FACE), lookY: -0.5 * tuck}});
@@ -412,8 +470,8 @@ export const directorAt = (T: number): CrewOut => {
     const gl = (runArms.armL as {local: Loc}).local;
     runArms = {...runArms, armL: {local: lerpLoc(gl, {r: 0, u: 360, f: 100}, up), pole: {r: -1, u: -0.6, f: 0}, palm: {r: lerp(0.3, -0.5, up), u: 0.1, f: -1}}, twist: lerp(runArms.twist ?? 0, -10, up)};
   }
-  const final = withRun(b, withLook(arm, 'director', b, T), runArms);
-  const spec = base('director', 'd1dir', 11, b, T, {...final, face: {...(final.face ?? {}), ...faceFor('director', T, DIR_FACE)}, handL: 'fist', handR: final.handR ?? 'fist', wearL: plateWear(plate, {glint})}, {}, tuck > 0.5 ? undefined : gazeAt('director', T, tgt));
+  const final = glance(withRun(b, withLook(launchPose(arm, 'director', T), 'director', b, T), runArms), 'director', b, T);
+  const spec = base('director', 'd1dir', 11, b, T, {...final, face: {...(final.face ?? {}), ...faceFor('director', T, DIR_FACE)}, handL: 'fist', handR: final.handR ?? 'fist', wearL: plateWear(plate, {glint})}, {}, tuck > 0.5 ? undefined : gazeAt('director', T, tgtG));
   const plateW = plateFromGuard(b, plateLoc ?? (kneeK > 0.5 ? KNEE_PLATE : bashK > 0.5 ? BASH_PLATE : guard));
   return {spec, body: b, pts: {plate: plateW}};
 };
@@ -428,7 +486,7 @@ const BRK_AFTER: KR[] = [
   [91.3, 46.45, 3.65, 160], [91.8, 46.8, 3.65, 270], [94.3, 46.8, 3.65, 270],
 ];
 const BRK_SEGS: Seg[] = [
-  {kind: 'run', path: BRK_RUN, T0: M.CHARGE + 0.15, T1: 68.45, gait: GAITS.heavy, A: 1.1, D: 0.7},
+  {kind: 'run', path: BRK_RUN, T0: M.CHARGE + CHARGE_GO.breaker, T1: 68.45, gait: GAITS.heavy, A: 1.1, D: 0.7},
   {kind: 'stand', root: BRK_FIGHT, stag: 0.14},
   {kind: 'run', path: BRK_IN, T0: BRK_IN_T[0], T1: BRK_IN_T[1], gait: GAITS.dash, A: 0.35, D: 0.3},
   {kind: 'stand', root: BRK_FIGHT2, stag: 0.14, skids: BRK_SKIDS2},
@@ -475,12 +533,12 @@ const stuckTip = (T: number): V3 => {
   return add3(n, {x: -0.18 * free, y: 0.35 * free, z: -0.22 * free});
 };
 const BRK_FACE: [number, Face][] = [
-  [0, EXPR.effort], [68.6, EXPR.focus], [70.4, EXPR.strain], [EV.u4ham, EXPR.impact], [70.95, EXPR.focus], [71.7, EXPR.alarm], [72.1, EXPR.effort],
+  [0, EXPR.effort], [68.6, EXPR.focus], [70.4, EXPR.strain], [EV.u4ham, EXPR.impact], [EV.u4push - 0.06, EXPR.effort], [71.08, EXPR.focus], [EV.u4jab - 0.06, EXPR.alarm], [71.62, EXPR.focus], [71.78, EXPR.alarm], [72.1, EXPR.effort],
   [72.9, EXPR.focus], [EV.u4catch, EXPR.strain], [EV.u4let, EXPR.effort], [76.3, EXPR.strain], [EV.toolFree, EXPR.effort], [79.3, EXPR.alarm],
   [79.6, EXPR.effort], [EV.br2, EXPR.strain], [81.6, EXPR.effort], [EV.grab, EXPR.strain], [EV.release, EXPR.effort], [EV.br3 + 0.1, EXPR.strain],
   [83.3, EXPR.pant], [84.0, EXPR.focus], [88.0, EXPR.pant], [91.8, {...EXPR.pant, worry: 0.4}],
 ];
-export const breakerAt = (T: number): CrewOut => {
+const breakerCore = (T: number): CrewOut => {
   const b = bodyAt(BRK_SEGS, T);
   const gauge = toolsR2('breaker', T).gauge ?? 1;
   const port = {front: fromLoc(b, {r: -16, u: 250, f: 118}), back: fromLoc(b, {r: 32, u: 205, f: 34})};
@@ -489,13 +547,24 @@ export const breakerAt = (T: number): CrewOut => {
   let pose: Pose = layer(BRACED({wide: 0.85}), {});
   const mode = (a: number, t0: number, t1: number, z: number) => env(T, a, t0, t1, z);
   // 70.6: the hammer taken on the shaft, held up across over his head
-  const blockK = mode(70.35, 70.55, 70.75, 71.15);
+  const blockK = mode(70.35, 70.55, 70.74, 70.98);
   if (blockK > 0) {
     const imp = jolt(T, EV.u4ham, 4.5);
     const bl = {front: fromLoc(b, {r: -44, u: 434 - 26 * imp, f: 70}), back: fromLoc(b, {r: 40, u: 426 - 26 * imp, f: 64})};
     H = {front: lerp3v(H.front, bl.front, blockK), back: lerp3v(H.back, bl.back, blockK)};
     pose = layer(pose, {drop: 26 + 34 * imp * blockK, lean: 6 - 8 * imp, armL: undefined, armR: undefined});
   }
+  // (R4) 70.9: the counter to the block — he drives the shaft up and forward into its hammer arm (thrown up and back a step),
+  // steps into it, then lets the tool fall back to the port
+  const pushK = mode(70.7, 70.86, 70.95, 71.22);
+  if (pushK > 0) {
+    const ps = {front: fromLoc(b, {r: -44, u: 438, f: 122}), back: fromLoc(b, {r: 40, u: 430, f: 116})};
+    H = {front: lerp3v(H.front, ps.front, pushK), back: lerp3v(H.back, ps.back, pushK)};
+    pose = layer(pose, {drop: (pose.drop ?? 26) + 10 * pushK, lean: (pose.lean ?? 10) + 12 * pushK});
+  }
+  // (R4) 71.2 → 71.65: its jab at his face: he sways back from it (the tool low and ready), the fist passes; then the duck
+  const swayB = win(T, 71.2, 71.66, 0.14, 0.2);
+  if (swayB > 0) pose = layer(pose, {lean: (pose.lean ?? 10) - 24 * swayB, drop: (pose.drop ?? 26) + 8 * swayB, head: {pitch: -10 * swayB}});
   // 71.95: the duck under its punch, and from the duck the low swing into its knee (72.45)
   const duck = mode(71.72, 71.92, 72.12, 72.5);
   if (T > 72.0 && T < 72.95) {
@@ -582,7 +651,7 @@ export const breakerAt = (T: number): CrewOut => {
   if (crouch > 0) pose = blendPose(pose, layer(KNEEL('L'), {drop: 76, lean: 4, breath: 0.8, head: {yaw: -40, pitch: 6}}), crouch);
   kneelFeet(b, 'L', crouch);
   const handsOn = b.inRun ? 1 - b.runK : 1;
-  const final = withRun(b, withLook(pose, 'breaker', b, T), runArms);
+  const final = glance(withRun(b, withLook(launchPose(pose, 'breaker', T), 'breaker', b, T), runArms), 'breaker', b, T);
   const spec = base('breaker', 'd1brk', 7, b, T, {...final, face: faceFor('breaker', T, BRK_FACE), handL: 'grip', handR: 'grip', twoHanded: true, extra: breaker({back: 1, front: 0, gauge, fire, recoil: fire})},
     handsOn > 0.02 ? {handL: H.front, handR: H.back} : {}, gazeAt('breaker', T, tgt));
   pts.tip = add3(H.back, mul3(norm3(sub3(H.front, H.back)), TOOL_BT));
@@ -598,7 +667,7 @@ const TTH_STAND: KR[] = [
   [85.0, 35.9, -6.45, 104], [86.6, 36.0, -6.1, 60],
 ];
 const TTH_SEGS: Seg[] = [
-  {kind: 'run', path: TTH_RUN, T0: M.CHARGE + 0.3, T1: 67.9, gait: GAITS.run, A: 1.1, D: 0.7},
+  {kind: 'run', path: TTH_RUN, T0: M.CHARGE + CHARGE_GO.tether, T1: 67.9, gait: GAITS.run, A: 1.1, D: 0.7},
   {kind: 'stand', root: TTH_STAND, stag: 0.16},
   {kind: 'run', path: [{x: 36.0, z: -6.1}, {x: 38.6, z: -2.4}, {x: 40.4, z: -1.15}, {x: 42.6, z: -1.05}, {x: 44.9, z: -1.0}], T0: 86.8, T1: 90.2, gait: GAITS.run, A: 0.6, D: 0.6},
   {kind: 'stand', root: [[90.2, 44.9, -1.0, 95], [90.95, 46.3, 0.55, 150], [91.4, 46.7, 1.85, 200], [91.75, 46.7, 1.85, 270], [94.3, 46.7, 1.85, 270]], stag: 0.12},
@@ -610,7 +679,7 @@ export const TETHER_SHOTS = [
 /** the tether's target point for a shot at t */
 export const tetherTarget = (name: string, t: number): V3 => (name === 'yank' ? unitAttach(unitD1('U5', Math.min(t, EV.yankBite + 0.4))).kneeR : u5Clamp(t));
 const TTH_FACE: [number, Face][] = [[0, EXPR.effort], [68.0, EXPR.focus], [69.95, EXPR.alarm], [70.5, EXPR.focus], [EV.yankPull, EXPR.strain], [75.2, EXPR.focus], [77.6, EXPR.alarm], [78.2, EXPR.focus], [EV.clamp2Taut, EXPR.strain], [EV.clamp2Tear, EXPR.alarm], [83.9, EXPR.focus], [88.0, EXPR.effort], [91.8, EXPR.pant]];
-export const tetherAt = (T: number): CrewOut => {
+const tetherCore = (T: number): CrewOut => {
   const b = bodyAt(TTH_SEGS, T);
   let pose: Pose = layer(BRACED({wide: 0.75}), {armR: {local: {r: 30, u: 240, f: 90}}, armL: {local: {r: -30, u: 220, f: 60}}, handL: 'open'});
   let recoil = 0;
@@ -650,7 +719,7 @@ export const tetherAt = (T: number): CrewOut => {
   if (crouch > 0) pose = blendPose(pose, layer(KNEEL('L'), {drop: 80, lean: 10, armR: {local: {r: 40, u: 160, f: 90}}, head: {yaw: 40, pitch: 4}}), crouch);
   kneelFeet(b, 'L', crouch);
   const runArms: Pose = {armR: {local: {r: 26, u: 236, f: 64}}, armL: b.gait?.armL};
-  const final = withRun(b, withLook(pose, 'tether', b, T), runArms);
+  const final = glance(withRun(b, withLook(launchPose(pose, 'tether', T), 'tether', b, T), runArms), 'tether', b, T);
   const spool = TETHER_SHOTS.reduce((s, q) => s * (T > q.fire && T < q.reelEnd ? 0.55 : 1), 1);
   const spec = base('tether', 'd1tth', 3, b, T, {...final, face: faceFor('tether', T, TTH_FACE), handR: 'grip', handL: final.handL ?? 'open', holdR: tetherLauncher({loaded: !TETHER_SHOTS.some((q) => T > q.fire && T < q.reelEnd), recoil}), extra: hipReel(spool)}, {}, gazeAt('tether', T, look));
   return {spec, body: b, pts: {muzzle}};
@@ -664,7 +733,7 @@ const RUN_AFTER: KR[] = [
   [90.2, 44.4, -0.2, 60], [91.1, 45.8, 0.2, 120], [91.6, 46.55, 1.05, 270], [94.3, 46.55, 1.05, 270],
 ];
 const RUN_SEGS: Seg[] = [
-  {kind: 'run', path: RUN_RUN1, T0: M.CHARGE + 0.1, T1: 68.5, gait: GAITS.fast, A: 1.0, D: 0.7},
+  {kind: 'run', path: RUN_RUN1, T0: M.CHARGE + CHARGE_GO.runner, T1: 68.5, gait: GAITS.fast, A: 1.0, D: 0.7},
   {kind: 'stand', root: RUN_FIGHT, stag: 0.12, skids: [EV.u2hit]},
   {kind: 'stand', root: RUN_AFTER, stag: 0.1},
 ];
@@ -677,7 +746,7 @@ const RUN_FACE: [number, Face][] = [
   [EV.u2punch3 - 0.2, EXPR.alarm], [78.3, {...EXPR.focus, worry: 0.3}], [EV.u2hit, EXPR.impact], [79.9, EXPR.dazed], [81.2, EXPR.strain], [81.8, EXPR.dazed],
   [EV.u2wind, EXPR.fear], [EV.crash + 0.02, EXPR.alarm], [83.8, EXPR.effort], [85.2, EXPR.pant], [88.5, EXPR.effort], [91.6, EXPR.pant],
 ];
-export const runnerAt = (T: number): CrewOut => {
+const runnerCore = (T: number): CrewOut => {
   const b = bodyAt(RUN_SEGS, T);
   let pose: Pose = layer(BRACED({wide: 0.7}), {});
   const u2 = (t: number) => unitAttach(unitD1('U2', t));
@@ -760,7 +829,7 @@ export const runnerAt = (T: number): CrewOut => {
   kneelFeet(b, 'R', crouch);
   const twoH = T > 68.3;
   const runArms: Pose = {armR: {local: {r: 40, u: 220, f: 60}}, armL: b.gait?.armL};
-  const final = withRun(b, withLook(pose, 'runner', b, T), runArms);
+  const final = glance(withRun(b, withLook(launchPose(pose, 'runner', T), 'runner', b, T), runArms), 'runner', b, T);
   const onTool = twoH && !b.inRun ? 1 : 0;
   const spec = base('runner', 'd1run', 4, b, T, {
     ...final, face: faceFor('runner', T, RUN_FACE), handR: 'grip', handL: twoH ? 'grip' : final.handL ?? 'fist', twoHanded: twoH,
@@ -773,7 +842,7 @@ export const runnerAt = (T: number): CrewOut => {
 // (starts beside B's slab, east of its broken corner, clear of the shed chunks: C ends her here)
 const DRN_RUN: XZ[] = [{x: 1.28, z: 2.12}, {x: 3.6, z: 4.9}, {x: 6.8, z: 5.4}, {x: 11, z: 5.0}, {x: 20, z: 2.5}, {x: 35.2, z: 1.2}];
 const DRN_SEGS: Seg[] = [
-  {kind: 'run', path: DRN_RUN, T0: M.CHARGE + 0.45, T1: 68.9, gait: GAITS.heavy, A: 1.2, D: 0.8},
+  {kind: 'run', path: DRN_RUN, T0: M.CHARGE + CHARGE_GO.drone, T1: 68.9, gait: GAITS.heavy, A: 1.2, D: 0.8},
   {kind: 'stand', root: [[68.9, 35.2, 1.2, 84], [76.6, 35.2, 1.2, 84], [77.3, 35.45, 1.05, 76], [86.6, 35.45, 1.05, 80]], stag: 0.08},
   {kind: 'run', path: [{x: 35.45, z: 1.05}, {x: 37.6, z: 3.4}, {x: 40.6, z: 5.6}, {x: 43.6, z: 6.4}, {x: 45.4, z: 6.3}], T0: 87.8, T1: 91.4, gait: GAITS.heavy, A: 0.6, D: 0.6},
   {kind: 'stand', root: [[91.4, 45.4, 6.3, 88], [91.85, 46.2, 6.3, 95], [92.2, 46.55, 6.05, 250], [94.3, 46.55, 6.05, 250]], stag: 0.08},
@@ -788,7 +857,7 @@ export const ALLY_DIVE: [number, number, number, number][] = [
   [74.4, 39.3, 4.3, 2.3], [74.95, 40.05, 3.1, 3.0], [EV.harry, 40.98, 1.95, 3.55], [75.5, 40.75, 2.35, 3.35], [75.85, 40.1, 3.5, 2.8], [76.4, 39.4, 4.3, 2.4],
 ];
 const DRN_FACE: [number, Face][] = [[0, EXPR.effort], [69.0, EXPR.focus], [74.7, EXPR.strain], [75.6, EXPR.focus], [79.5, {...EXPR.focus, worry: 0.4}], [86.6, EXPR.effort], [92.45, EXPR.pant]];
-export const droneAt = (T: number, allyPos: V3): CrewOut => {
+const droneCore = (T: number, allyPos: V3): CrewOut => {
   const b = bodyAt(DRN_SEGS, T);
   const tense = Math.max(win(T, 79.0, 84.5, 0.4, 0.6) * 0.5, win(T, 74.6, 75.7, 0.2, 0.3));
   let pose: Pose = layer(BRACED({fists: false}), {
@@ -800,7 +869,7 @@ export const droneAt = (T: number, allyPos: V3): CrewOut => {
   if (crouch > 0) pose = blendPose(pose, layer(KNEEL('L'), {drop: 82, armL: {local: {r: -20, u: 170, f: 90}}, armR: {local: {r: 20, u: 170, f: 90}}, head: {yaw: -30, pitch: 10}}), crouch);
   kneelFeet(b, 'L', crouch);
   const runArms: Pose = {armL: {local: {r: -20, u: 236, f: 84}}, armR: {local: {r: 20, u: 236, f: 84}}};
-  const final = withRun(b, withLook(pose, 'drone', b, T), runArms);
+  const final = glance(withRun(b, withLook(launchPose(pose, 'drone', T), 'drone', b, T), runArms), 'drone', b, T);
   const spec = base('drone', 'd1drn', 5, b, T, {...final, face: faceFor('drone', T, DRN_FACE), handL: 'grip', handR: 'grip', twoHanded: true, extra: controller({lit: 1})}, {}, gazeAt('drone', T, allyPos));
   return {spec, body: b};
 };
@@ -808,7 +877,7 @@ export const droneAt = (T: number, allyPos: V3): CrewOut => {
 // ================================================================== THE FLARE CARRIER (host)
 const FLR_RUN: XZ[] = [{x: 1.0, z: 4.8}, {x: 4.3, z: 5.6}, {x: 7.6, z: 5.0}, {x: 12.5, z: 5.6}, {x: 16, z: 7.6}, {x: 25, z: 9.4}, {x: 37.0, z: 7.45}];
 const FLR_SEGS: Seg[] = [
-  {kind: 'run', path: FLR_RUN, T0: M.CHARGE + 0.45, T1: 68.55, gait: GAITS.run, A: 1.1, D: 0.7},
+  {kind: 'run', path: FLR_RUN, T0: M.CHARGE + CHARGE_GO.flares, T1: 68.55, gait: GAITS.run, A: 1.1, D: 0.7},
   {kind: 'stand', root: [
     [68.55, 37.0, 7.45, 88], [70.85, 37.0, 7.45, 88], [71.3, 36.6, 7.68, 92], [72.7, 36.6, 7.68, 90], [73.1, 36.3, 7.92, 88],
     [74.6, 36.3, 7.92, 40], [75.7, 36.05, 7.45, 20], [EV.flareThrow + 0.3, 36.05, 7.45, 24], [78.3, 35.5, 6.4, 40], [87.4, 35.5, 6.4, 72],
@@ -818,7 +887,7 @@ const FLR_SEGS: Seg[] = [
 ];
 export const FLARE = {strike: EV.flareStrike, throw: EV.flareThrow, hit: EV.flareHit};
 const FLR_FACE: [number, Face][] = [[0, EXPR.effort], [68.6, EXPR.focus], [70.9, EXPR.alarm], [71.4, EXPR.focus], [72.75, EXPR.alarm], [73.2, EXPR.focus], [74.5, {...EXPR.alarm, mouth: 'flat'}], [76.1, EXPR.effort], [77.4, EXPR.focus], [86.6, EXPR.effort], [91.85, EXPR.pant]];
-export const flaresAt = (T: number): CrewOut => {
+const flaresCore = (T: number): CrewOut => {
   const b = bodyAt(FLR_SEGS, T);
   let pose: Pose = layer(BRACED({wide: 0.75, fists: false}), {});
   // U6's punches: she sways out of them
@@ -840,7 +909,7 @@ export const flaresAt = (T: number): CrewOut => {
   if (crouch > 0) pose = blendPose(pose, layer(KNEEL('R'), {drop: 80, head: {yaw: -30}}), crouch);
   kneelFeet(b, 'R', crouch);
   const runArms: Pose = {armL: b.gait?.armL, armR: b.gait?.armR};
-  const final = withRun(b, withLook(pose, 'flares', b, T), runArms);
+  const final = glance(withRun(b, withLook(launchPose(pose, 'flares', T), 'flares', b, T), runArms), 'flares', b, T);
   const holding = T > 76.55 && T < FLARE.throw;
   const lit = T > FLARE.strike ? 1 : 0;
   const spec = base('flares', 'd1flr', 9, b, T, {...final, face: faceFor('flares', T, FLR_FACE), handR: holding ? 'grip' : final.handR ?? 'open', holdR: holding ? flareHold({lit, t: T}) : undefined}, {}, gazeAt('flares', T, tgt));
@@ -850,13 +919,13 @@ export const flaresAt = (T: number): CrewOut => {
 // ================================================================== THE DECOY MAKER (clerkB: sketching the figures for D2)
 const DEC_RUN: XZ[] = [{x: 0.6, z: 5.9}, {x: 4.0, z: 6.0}, {x: 7.4, z: 5.6}, {x: 13, z: 5.8}, {x: 24, z: 4.8}, {x: 34.0, z: 4.6}];
 const DEC_SEGS: Seg[] = [
-  {kind: 'run', path: DEC_RUN, T0: M.CHARGE + 0.55, T1: 69.0, gait: GAITS.heavy, A: 1.2, D: 0.8},
+  {kind: 'run', path: DEC_RUN, T0: M.CHARGE + CHARGE_GO.decoy, T1: 69.0, gait: GAITS.heavy, A: 1.2, D: 0.8},
   {kind: 'stand', root: [[69.0, 34.0, 4.6, 86], [76.25, 34.0, 4.6, 86], [76.85, 33.45, 5.0, 62], [78.6, 33.45, 5.0, 62], [79.3, 33.9, 4.7, 80], [86.4, 33.9, 4.7, 84]], stag: 0.06},
   {kind: 'run', path: [{x: 33.9, z: 4.7}, {x: 37.5, z: 4.95}, {x: 41.6, z: 5.2}, {x: 45.1, z: 5.0}], T0: 86.55, T1: 90.3, gait: GAITS.heavy, A: 0.6, D: 0.6},
   {kind: 'stand', root: [[90.3, 45.1, 5.0, 86], [90.95, 46.7, 4.5, 270], [94.3, 46.7, 4.5, 270]], stag: 0.06},
 ];
 const DEC_FACE: [number, Face][] = [[0, EXPR.effort], [69.2, {...EXPR.focus, worry: 0.4}], [76.05, EXPR.fear], [77.4, EXPR.alarm], [78.2, {...EXPR.focus, worry: 0.5}], [86.4, EXPR.effort], [91.05, EXPR.pant]];
-export const decoyAt = (T: number): CrewOut => {
+const decoyCore = (T: number): CrewOut => {
   const b = bodyAt(DEC_SEGS, T);
   // kneeling behind the line, sketching the figures (the decoy for D2) — until U6 comes for her; back to it after
   const sk = Math.max(win(T, 69.4, 76.1, 0.5, 0.2), win(T, 79.4, 86.3, 0.4, 0.3));
@@ -869,10 +938,37 @@ export const decoyAt = (T: number): CrewOut => {
   if (crouch > 0) pose = blendPose(pose, layer(KNEEL('L'), {drop: 82, lean: 4, armL: {local: {r: -26, u: 180, f: 90}, palm: {r: 0.4, u: 0.3, f: -1}}, head: {yaw: -25, pitch: 6}}), crouch);
   kneelFeet(b, 'L', crouch);
   const runArms: Pose = {armL: {local: {r: -26, u: 232, f: 70}}, armR: b.gait?.armR};
-  const final = withRun(b, withLook(pose, 'decoy', b, T), runArms);
+  const final = glance(withRun(b, withLook(launchPose(pose, 'decoy', T), 'decoy', b, T), runArms), 'decoy', b, T);
   const spec = base('decoy', 'd1dec', 6, b, T, {...final, face: {...faceFor('decoy', T, DEC_FACE), ...(sk > 0.5 ? {lookY: 0.8} : {})}, handL: 'grip', handR: sk > 0.5 ? 'point' : 'open', holdL: tablet({screen: true, glow: 0.2 + 0.25 * sk})}, {}, sk > 0.5 ? undefined : gazeAt('decoy', T, tgt));
   return {spec, body: b};
 };
+
+/**
+ * (R4) Head turns are eased in time. Every role's head follows a target chosen by time windows (U1, the breaker coming, U1 down,
+ * U3, the bowl, the next look…), so each switch turned the head by up to 150° in ONE frame (probe: the Director 80.70 -1°→75° and
+ * back at 80.97 in the rescue's close shot, the breaker 79.20, the runner 85.20, the pilot 76.87 80°→−80°, …). The head's yaw,
+ * pitch and roll are a causal average of the last 7 frames (weights 1…0.2, ≈ 0.08 s behind): a switch becomes a quick turn over
+ * ~6 frames (≤ 25°/frame), a steady look is unchanged, and nothing else in the pose is touched.
+ */
+const HEAD_K = [1, 0.85, 0.7, 0.55, 0.4, 0.3, 0.2];
+const easeHead = (core: (T: number) => CrewOut, T: number): CrewOut => {
+  const out = core(T);
+  const p0 = out.spec.pose as Pose | undefined;
+  if (!p0 || typeof p0 !== 'object' || !p0.head) return out;
+  let yaw = 0, pitch = 0, roll = 0, W = 0;
+  for (let i = 0; i < HEAD_K.length; i++) {
+    const h = ((i === 0 ? out : core(T - i / 30)).spec.pose as Pose).head ?? p0.head;
+    yaw += HEAD_K[i] * (h.yaw ?? 0); pitch += HEAD_K[i] * (h.pitch ?? 0); roll += HEAD_K[i] * (h.roll ?? 0); W += HEAD_K[i];
+  }
+  return {...out, spec: {...out.spec, pose: {...p0, head: {yaw: yaw / W, pitch: pitch / W, roll: roll / W}}}};
+};
+export const directorAt = (T: number): CrewOut => easeHead(directorCore, T);
+export const breakerAt = (T: number): CrewOut => easeHead(breakerCore, T);
+export const tetherAt = (T: number): CrewOut => easeHead(tetherCore, T);
+export const runnerAt = (T: number): CrewOut => easeHead(runnerCore, T);
+export const droneAt = (T: number, allyPos: V3): CrewOut => easeHead((t) => droneCore(t, allyPos), T);
+export const flaresAt = (T: number): CrewOut => easeHead(flaresCore, T);
+export const decoyAt = (T: number): CrewOut => easeHead(decoyCore, T);
 
 export const CREW_ROLES = ['director', 'breaker', 'tether', 'runner', 'drone', 'flares', 'decoy'] as const;
 export type {FigFrame};

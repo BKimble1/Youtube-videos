@@ -118,6 +118,21 @@ export const drone = (sp: DroneSpec): Item[] => {
   const g = sp.ground ?? FLAT;
   const eyeState = (sp.hit && t > sp.hit.t0 + 0.2) || (sp.smash && t >= sp.smash.t0) ? 'off' : sp.lockAt !== undefined && t >= sp.lockAt ? 'amber' : sp.eye ?? 'cyan';
   if (sp.lod === 'far') {
+    // (R4) a smashed drone does not go on hovering at a distance: its pieces fall, bounce and stay as small flat bits
+    if (sp.smash && t >= sp.smash.t0) {
+      const P0 = bodyPose(sp, sp.smash.t0);
+      return [0, 1, 2, 3, 4].map((k): Item => {
+        const off = k === 0 ? {x: 0, y: 0, z: 0} : DRONE_ROTORS[k - 1];
+        const body = bodyOf([{mesh: k === 0 ? DRONE.body : DRONE.rotor, scale: sc}], k === 0 ? `drone_pc_body_${sc.toFixed(3)}` : `drone_rotor_${sc.toFixed(3)}`);
+        const L = throwLaunch(sp.smash!.t0, {pos: apply(P0, mul3(off, sc)), R: P0.R}, add3(sp.smash!.dir, mul3(norm3(k === 0 ? {x: 0.1, y: 0, z: 0} : {x: off.x, y: 0.3, z: off.z}), k === 0 ? 0.8 : 1.2)), (sp.smash!.speed ?? 5) * (k === 0 ? 1 : 1.1), sp.id * (k === 0 ? 53 : 59) + Math.max(0, k - 1), 0.5, body.com, k === 0 ? 1 : 0.5);
+        const Q = debrisPose(body, L, t, g);
+        return {kind: 'sprite', pos: Q.pos, key: `${key}_farpc${k}`, draw: (c) => {
+          const w = (k === 0 ? 0.34 : 0.3) * sc * c.k;
+          if (w < 0.5) return null;
+          return <rect x={f2(c.x - w / 2)} y={f2(c.y - w * 0.12)} width={f2(w)} height={f2(Math.max(0.7, w * 0.24))} fill={shade(c.light, {base: k === 0 ? '#4C5D69' : '#B7C3C9'}, c.lit)} />;
+        }};
+      });
+    }
     const P = droneWorldPose(sp, t);
     return [{
       kind: 'sprite', pos: P.pos, key: `${key}_far`,
@@ -140,7 +155,7 @@ export const drone = (sp: DroneSpec): Item[] => {
     // pieces: body, gimbal, four arms/rotors, shards
     const P0 = bodyPose(sp, sp.smash.t0);
     const pieces: {mesh: keyof typeof DRONE | 'shard'; off: V3}[] = [
-      {mesh: 'body', off: {x: 0, y: 0, z: 0}}, {mesh: 'gimbal', off: {x: 0, y: -0.05, z: -0.1}},
+      {mesh: 'body', off: {x: 0, y: 0, z: 0}}, {mesh: 'arms', off: {x: 0, y: 0, z: 0}}, {mesh: 'gimbal', off: {x: 0, y: -0.05, z: -0.1}},
       {mesh: 'shard', off: {x: 0.2, y: 0, z: 0.1}}, {mesh: 'shard', off: {x: -0.2, y: 0, z: -0.1}}, {mesh: 'shard', off: {x: 0.1, y: 0.02, z: -0.2}},
     ];
     // every piece flies from where it was, falls, bounces, tips flat and stays (gravity-true debris)
@@ -168,10 +183,18 @@ export const drone = (sp: DroneSpec): Item[] => {
   DRONE_ROTORS.forEach((rp, k) => {
     const Pr: Pose3 = {pos: apply(P, mul3(rp, sc)), R: P.R};
     if (!crashed || k % 2 === 0) items.push(partItemS(DRONE.rotor, Pr, sc, `${key}_r${k}`));
+    else {
+      // (R4) the two rotors that shear off in the crash are thrown from where they were and settle on the ground (they
+      // used to vanish in the frame after the hit)
+      const P0 = bodyPose(sp, sp.hit!.t0), hl = hitLaunch(sp);
+      const body = bodyOf([{mesh: DRONE.rotor, scale: sc}], `drone_rotor_${sc.toFixed(3)}`);
+      const L = throwLaunch(sp.hit!.t0, {pos: apply(P0, mul3(rp, sc)), R: P0.R}, add3(sp.hit!.dir, mul3(norm3({x: rp.x, y: 0.3, z: rp.z}), 1.0)), 2.2, sp.id * 61 + k, 0.4, body.com, 0.5);
+      items.push(partItemS(DRONE.rotor, debrisPose(body, {...L, v: add3(L.v, mul3(hl.v, 0.5))}, t, g), sc, `${key}_r${k}`));
+    }
   });
   const gim = gimbalPose(sp, P, sc);
   items.push(partItemS(DRONE.gimbal, gim, sc, `${key}_gim`, {remap}));
-  if ((sp.cutter ?? 0) > 0.01 && !crashed) {
+  if ((sp.cutter ?? 0) > 0.01) {
     const ext = sp.cutter ?? 0;
     const Pc: Pose3 = {pos: apply(P, {x: 0, y: -0.02 * sc, z: (0.05 - 0.12 * ext) * sc}), R: rcomp(P.R, euler(0, 10 * (1 - ext), 0))};
     items.push(partItemS(DRONE.cutter, Pc, sc, `${key}_cut`));

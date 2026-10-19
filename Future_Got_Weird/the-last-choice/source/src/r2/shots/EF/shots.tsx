@@ -2,9 +2,9 @@
 //   E1        186.90–191.40  close, low: he sits against the slab; the drone pilot crawls the last half-metre, kneels at
 //                            his left and takes his hand; his eyes find her for a moment (the radio on the van floor
 //                            behind her: off, a faint standby light)
-//   E1_clasp  191.40–193.10  insert (ClaspCU): his grip loosening in her hands; her answering squeeze
+//   E1_clasp  191.40–193.10  insert (EfClasp, clasp.tsx): his grip loosening in her hands; her answering squeeze
 //   E2        193.10–198.30  extreme close on his face: the last small breath (195.0), the eyes close (196.6), stillness
-//   F1        198.30–231.60  one physical move from E2's own framing (no visible cut): off his still face to the
+//   F1        198.30–231.60  one physical move from E2's own framing (no visible cut; it begins at 197.7): off his still face to the
 //                            unattended radio (nobody touches it): its dial light flutters with the static (199.0), the
 //                            reception recovers and the song catches (199.6) → the rising pullback over the pair, the
 //                            held Crew, the ring, the crater and the avenue to the burning skyline; fade to black
@@ -17,9 +17,10 @@ import {persistItems} from '../../film/continuity';
 import {RADIO, polyline3} from '../../world';
 import {radioMesh, radioFn} from '../../world/props';
 import type {AtmosOpts} from '../../world';
-import {ClaspCU, dmgR2} from '../../rig';
+import {dmgR2} from '../../rig';
+import {EfClasp} from './clasp';
 import {M} from '../../timing';
-import {camE1, camF1, fadeF1, MOVE} from './camera';
+import {camE1, camF1, fadeF1, MOVE, MOVE_FROM} from './camera';
 import {directorSpec, pilotSpec, clasped, othersItems, DIR_HEAD, DIR_CHEST, pilotAnchor} from './crew';
 import {tableauMachineItems} from './machines';
 
@@ -77,6 +78,29 @@ const radioItems = (T: number): Item[] => {
     {kind: 'mesh', mesh: radioMesh(false), key: 'radio', fn: radioFn, noCull: true, asObject: true, bias: 0.05},
     polyline3('radioAnt', [RADIO.antennaBase, RADIO.antennaTip], 0.006, '#B8B2AA', {minPx: 0.8, ink: '#162A32', inkW: 1.0}),
   ];
+  // (R4) it sits ON the van floor: a soft contact shadow under it (R3: the radio hung in the dark interior with nothing
+  // under it to read as a surface: 199.0–200.5; the dial's own point light already warms the floor tiles)
+  items.push({
+    kind: 'sprite', key: 'ef_radioFloor', pos: RL(0, 0, 0), bias: -0.02,
+    draw: (c) => {
+      const ring = (cx: number, cz: number, rx: number, rz: number, n = 16) => Array.from({length: n}, (_, i) => {
+        const a = (i / n) * Math.PI * 2;
+        return project(c.view, RL(cx + Math.cos(a) * rx, 0.004, cz + Math.sin(a) * rz));
+      });
+      const path = (q: {x: number; y: number}[]) => `M ${q.map((p) => `${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(' L ')} Z`;
+      const k = c.k;
+      const blur = Math.max(0.6, 0.016 * k);
+      return (
+        <g>
+          <defs>
+            <filter id="efSh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={blur} /></filter>
+          </defs>
+          <path d={path(ring(0.01, 0.0, 0.225, 0.105))} fill="#0A0707" opacity={0.42} filter="url(#efSh)" />
+          <path d={path(ring(0.0, 0.0, 0.18, 0.07))} fill="#0A0707" opacity={0.3} />
+        </g>
+      );
+    },
+  });
   // the dial window, the needle, the standby lamp, a small warm bloom on the dial only (never a halo round the set)
   items.push({
     kind: 'sprite', key: 'ef_dial', pos: RADIO.dial, bias: 0.12,
@@ -141,20 +165,19 @@ const E1: React.FC = () => {
 const CLASP_IN = 191.4;
 const E1Clasp: React.FC = () => {
   const {t, T} = useShotTime(CLASP_IN);
-  // his grip goes (0.3 → 1.25 s), the wrist goes heavy; her squeeze answers twice (as she feels it go, and again)
-  const grip = 1 - smooth((t - 0.3) / 0.95);
-  const sag = smooth((t - 0.85) / 0.75);
-  const squeeze = 0.35 * smooth(t / 0.3) + 0.65 * smooth((t - 0.95) / 0.45);
+  // his grip goes finger by finger (little finger first, thumb last), the wrist goes heavy and sinks onto her palm;
+  // her answers: two squeezes, the hands pressing in (clasp.tsx owns the hands' own timing)
   return (
     <AbsoluteFill style={{background: '#000'}}>
-      <ClaspCU grip={grip} sag={sag} squeeze={squeeze} t={T} pale={dmgR2('director', T).pale ?? 0.6} warm={0.42} />
+      <EfClasp t={t} T={T} pale={dmgR2('director', T).pale ?? 0.6} warm={0.42} />
     </AbsoluteFill>
   );
 };
 
 // ------------------------------------------------------------------ E2 (and F1: one camera, one scene)
 // E2 and F1 render the same scene through the same camera (camF1 → camClose before the rise), so the cut between them
-// (F1_IN = MOVE.a, 198.30) is invisible: F1's first frame is E2's still face, and the move off it starts there.
+// (F1_IN = MOVE.a, 198.30) is invisible. (R4) The camera starts to draw back from his still face at MOVE_FROM (197.7),
+// inside E2, so F1's first frame is already part of the move: it leaves him slowly, away from her bowed head.
 const E2: React.FC = () => {
   const {T} = useShotTime(M.RING_END);
   return <Aftermath T={T} />;
@@ -180,6 +203,19 @@ const F1: React.FC = () => {
   const {T} = useShotTime(MOVE.a);
   return <Aftermath T={T} />;
 };
+/**
+ * (R4) Her perspective anchor in E2/F1. The rig draws a figure at one scale (taken at the anchor); at her chest the camera
+ * is 0.5–0.9 m away while it leaves his face, so her bowed head and shoulders were drawn at 2200+ px/m and swept the lower
+ * frame as one big grey-and-coral mass (198.55–198.95). While the camera is within ~2 m of her the anchor is her knees,
+ * which are further from the lens (a smaller scale, and her upper body is drawn lower and smaller: out of frame until the
+ * camera has drawn back), and it returns to her chest by the time the crane finds the pair (the lens is far away then, so
+ * the choice no longer changes the picture).
+ */
+const pilotAnchorF1 = (T: number): V3 => {
+  const p = pilotSpec(T);
+  const w = smooth((T - (MOVE_FROM - 0.2)) / 0.6) * (1 - smooth((T - 199.9) / 1.3)); // 0 … 1 … 0
+  return {x: p.pos.x, y: p.pos.y + lerp(0.6, 0.12, w), z: p.pos.z};
+};
 const Aftermath: React.FC<{T: number}> = ({T}) => {
   const cam = diagCam() ?? camF1(T);
   return (
@@ -191,7 +227,7 @@ const Aftermath: React.FC<{T: number}> = ({T}) => {
         // the two of them as one sprite (her hand holds his to the end): he sits against the slab — seen from above
         // the slab's faces sort nearer than his seat, so the pair is biased in front of it (and of the van's long
         // lower side panel beside her); never culled by its anchor (his seat is far below the frame in the close-up)
-        clasped(directorSpec(T, DIR_HEAD), pilotSpec(T, pilotAnchor(T)), 'under', {bias: 0.8, noCull: true}),
+        clasped(directorSpec(T, DIR_HEAD), pilotSpec(T, pilotAnchorF1(T)), 'under', {bias: 0.8, noCull: true}),
         ...radioItems(T),
         radioBeacon(T),
       ]} />

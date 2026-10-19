@@ -131,6 +131,17 @@ export type Slot = {
 };
 export type Formation = {slots: (t: number) => Slot[]};
 
+/** a unit's own, seeded step-cycle phase offset (m of path: 0..1.5 = one cycle) */
+const gaitPhase = (id: number) => rnd(id * 3.7 + 1) * 1.5;
+/**
+ * (R4) A gait with the unit's own seeded step-cycle phase: the path and the distance are shifted together, so the unit is
+ * exactly where it was and only the cycle of its legs changes. Use it for a group that sets off or marches together (give each
+ * unit its id) so the legs do not swing in unison: `gait: phasedGait({path, dist, start, end}, id)`.
+ */
+export const phasedGait = <G extends {path: Path; dist: number; start?: number; end?: number}>(g: G, id: number): G => {
+  const ph = gaitPhase(id);
+  return {...g, path: (dd: number) => g.path(dd - ph), dist: g.dist + ph, start: g.start !== undefined ? g.start + ph : undefined, end: g.end !== undefined ? g.end + ph : undefined};
+};
 const hd = (a: V3, b: V3) => (Math.atan2(b.x - a.x, -(b.z - a.z)) * 180) / Math.PI;
 const wrap = (a: number) => ((((a + 180) % 360) + 360) % 360) - 180;
 
@@ -240,7 +251,10 @@ export const reformSlots = (A: Slot[], B: Slot[], t0: number, ripple: number, du
       if (d < L) {
         // turn toward the walk direction over the first 0.4 s
         const k = smooth((t - start) / 0.4);
-        return {id: a.id, pos: path(d).pos, heading: a.heading + wrap(h - a.heading) * k, path: (dd) => ({pos: path(dd).pos, heading: a.heading + wrap(h - a.heading) * k}), dist: d, ctl: {...a.ctl, gaitStart: 0, gaitEnd: L} as Partial<UnitSpec>};
+        // (R4) each unit's step cycle starts at its own seeded phase (the path and the gait distance are shifted together:
+        // positions are unchanged): units that set off a few frames apart no longer swing their legs in unison
+        const ph = gaitPhase(a.id);
+        return {id: a.id, pos: path(d).pos, heading: a.heading + wrap(h - a.heading) * k, path: (dd) => ({pos: path(dd - ph).pos, heading: a.heading + wrap(h - a.heading) * k}), dist: d + ph, ctl: {...a.ctl, gaitStart: ph, gaitEnd: L + ph} as Partial<UnitSpec>};
       }
       const tArr = start + L / sp;
       const k = smooth((t - tArr) / 0.6);
@@ -266,7 +280,7 @@ export const withReplacements = (form: Formation, losses: {id: number; t: number
       const h = hd(r.pos, s.pos);
       const d = clamp((t - start) * speed, 0, Ld);
       if (t < start) { out.push({...r, id: r.id}); return; }
-      if (d < Ld) out.push({id: r.id, pos: straightPath(r.pos, h)(d).pos, heading: h, path: straightPath(r.pos, h), dist: d, ctl: {...s.ctl, lockAt: start, gaitStart: 0, gaitEnd: Ld} as Partial<UnitSpec>});
+      if (d < Ld) { const ph = gaitPhase(r.id); out.push({id: r.id, pos: straightPath(r.pos, h)(d).pos, heading: h, path: (dd) => straightPath(r.pos, h)(dd - ph), dist: d + ph, ctl: {...s.ctl, lockAt: start, gaitStart: ph, gaitEnd: Ld + ph} as Partial<UnitSpec>}); }
       else out.push({id: r.id, pos: s.pos, heading: s.heading, ctl: {...s.ctl, lockAt: start}});
     });
     return out;
@@ -275,6 +289,17 @@ export const withReplacements = (form: Formation, losses: {id: number; t: number
 
 /** Merge formations. */
 export const combine = (...fs: Formation[]): Formation => ({slots: (t) => fs.flatMap((f) => f.slots(t))});
+
+/**
+ * (R4) Level of detail from the PROJECTED height of a machine (px), not from metres: a 2.2 m unit that is 300 px tall through a long
+ * lens at 42 m used to be drawn 'far' by a metres threshold. full above `full` px (default 140), mid above `mid` px (default 34),
+ * far below. `height` = the machine's height in metres (unit 2.2, heavy 6, drone 0.75). Use instead of hand-written distance cuts.
+ */
+export const lodBySize = (v: View, pos: V3, o: {full?: number; mid?: number; height?: number} = {}): 'full' | 'mid' | 'far' => {
+  const z = Math.max(toView(v, pos).z, 0.1);
+  const px = ((o.height ?? 2.2) * v.focal) / z;
+  return px >= (o.full ?? 140) ? 'full' : px >= (o.mid ?? 34) ? 'mid' : 'far';
+};
 
 export type ArmyOpts = {ground?: Ground; maxFull?: number; maxMid?: number; farFrom?: number; ctl?: (s: Slot) => Partial<UnitSpec>; eye?: 'cyan' | 'amber'};
 
@@ -293,7 +318,7 @@ export const armyItems = (v: View, t: number, form: Formation, o: ArmyOpts): Ite
     const spec: UnitSpec = {
       id: s.id, t, pos: {x: s.pos.x, y: 0, z: s.pos.z}, heading: s.heading, ground: g, lod, eye: o.eye ?? 'cyan',
       gait: s.path && s.dist !== undefined ? {path: s.path, dist: s.dist, start: (s.ctl as {gaitStart?: number} | undefined)?.gaitStart, end: (s.ctl as {gaitEnd?: number} | undefined)?.gaitEnd, over: s.over} : undefined,
-      idle: 0.6,
+      idle: 0.6, sway: 1,
       ...(s.ctl ?? {}),
       ...(o.ctl ? o.ctl(s) : {}),
     };
@@ -346,7 +371,8 @@ export const stepInto = (A: Slot[], B: Slot[], t0: number, o: {spread?: number; 
     const d = clamp((t - start) * sp, 0, L);
     if (d < L) {
       const k = smooth((t - start) / 0.4);
-      return {id: a.id, pos: straightPath(a.pos, h)(d).pos, heading: a.heading + wrap(h - a.heading) * k, path: (dd: number) => ({pos: straightPath(a.pos, h)(dd).pos, heading: a.heading + wrap(h - a.heading) * k}), dist: d, ctl: {...a.ctl, ...b.ctl, gaitStart: 0, gaitEnd: L} as Partial<UnitSpec>};
+      const ph = gaitPhase(a.id); // (R4) seeded step-cycle phase, see reformSlots
+      return {id: a.id, pos: straightPath(a.pos, h)(d).pos, heading: a.heading + wrap(h - a.heading) * k, path: (dd: number) => ({pos: straightPath(a.pos, h)(dd - ph).pos, heading: a.heading + wrap(h - a.heading) * k}), dist: d + ph, ctl: {...a.ctl, ...b.ctl, gaitStart: ph, gaitEnd: L + ph} as Partial<UnitSpec>};
     }
     const k = smooth((t - (start + L / sp)) / 0.6);
     return {id: a.id, pos: b.pos, heading: h + wrap(b.heading - h) * k, ctl: {...a.ctl, ...b.ctl}};

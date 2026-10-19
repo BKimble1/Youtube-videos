@@ -342,12 +342,19 @@ export const girderMeshMid = () => (GIR_MID ??= prep(splitLong(buildGirder(true)
 export const girderMeshFar = () => (GIR_FAR ??= prep(buildGirder(true)));
 /** A cheap distant vehicle: body and cabin only (no wheels, no strips). */
 export const vehicleFar = (kind: 'car' | 'truck', mat: string, burnt = false): Mesh => {
+  // (R4) the far mesh used to start at 0.32 m (cars) / 0.55 m (trucks): no wheels and a gap under the body, so every vehicle beyond
+  // 120 m hovered on stilts and its wheels popped in at the LOD switch. A dark under-body block (the wheel line, inset like the
+  // real axles' track) now carries it down to the road.
   if (kind === 'truck') {
-    const m = merge(box({x: -1.25, y: 0.55, z: -3.8}, {x: 1.25, y: 2.6, z: -1.8}, burnt ? 'burnt' : 'carGrey'), box({x: -1.25, y: 0.7, z: -1.7}, {x: 1.25, y: 3.4, z: 3.8}, burnt ? 'burnt' : 'van'));
+    const m = merge(
+      box({x: -1.0, y: 0, z: -3.5}, {x: 1.0, y: 0.7, z: 3.5}, 'tire'),
+      box({x: -1.25, y: 0.55, z: -3.8}, {x: 1.25, y: 2.6, z: -1.8}, burnt ? 'burnt' : 'carGrey'), box({x: -1.25, y: 0.7, z: -1.7}, {x: 1.25, y: 3.4, z: 3.8}, burnt ? 'burnt' : 'van'));
     m.crease = 28;
     return m;
   }
-  const m = merge(box({x: -0.88, y: 0.32, z: -2.3}, {x: 0.88, y: 0.9, z: 2.25}, burnt ? 'burnt' : mat), box({x: -0.78, y: 0.9, z: -0.8}, {x: 0.78, y: 1.45, z: 1.2}, burnt ? 'burnt' : 'window'));
+  const m = merge(
+    box({x: -0.72, y: 0, z: -2.0}, {x: 0.72, y: 0.4, z: 2.0}, 'tire'),
+    box({x: -0.88, y: 0.32, z: -2.3}, {x: 0.88, y: 0.9, z: 2.25}, burnt ? 'burnt' : mat), box({x: -0.78, y: 0.9, z: -0.8}, {x: 0.78, y: 1.45, z: 1.2}, burnt ? 'burnt' : 'window'));
   m.crease = 28;
   return m;
 };

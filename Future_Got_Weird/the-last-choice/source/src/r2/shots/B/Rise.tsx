@@ -10,11 +10,11 @@ import {figureRig} from '../../rig';
 import {groundH} from '../../world/ground';
 import {chunkMesh} from '../../world/props';
 import {chips3, dust3} from '../../fx';
-import {TB, HAND_OUT, R0, R1, HD, rootB, REBAR, dirB} from './director';
+import {TB, HAND_OUT, R0, R1, HD, rootB, REBAR, dirB, PLANT} from './director';
 import {headingVec} from '../../engine/camera';
 import {B_WEST_SMOKE} from './kit';
 import {slabItem, chunkItems, chunkHits, slabPoint, supportItems, SLAB_SOUTH_Z, SLAB_EAST_X} from './rubble';
-import {dirSpec, dirSprite, dirShaded, underShade, rebarItems, motes, B_COLUMNS} from './kit';
+import {dirSpec, dirSprite, dirShaded, underShade, rebarItems, motes, B_COLUMNS, b2Anchor} from './kit';
 import {CAM_B1, CAM_B2} from './cams';
 import {figureSprite} from '../../rig';
 import {M} from '../../timing';
@@ -86,9 +86,12 @@ export const ShotB1: React.FC = () => {
 
 // ------------------------------------------------------------------ B2
 export const B2_START = 12.4, B2_END = M.ORCH;
+/** the Director's right foot lies under the slab's east lip until the half step; after it he is wholly out */
+const SPLIT_END = TB.step + 0.1;
 export const ShotB2: React.FC = () => {
   const {t, T} = useShotTime(B2_START);
   const cam = camPath(CAM_B2, t, 0.6);
+  const anchor = b2Anchor(T);
   const items = (v: View): Item[] => {
     const hits = chunkHits();
     return [
@@ -96,12 +99,14 @@ export const ShotB2: React.FC = () => {
       // the lens is south of him, the slab between it and where he lies: while he is under it the slab covers him;
       // what is out past its east edge (the right arm reaching out, then the head and shoulders as he drags himself
       // east, across the frame) is drawn over it, cut on screen where the edge plane crosses it; under its bitten
-      // south edge he shows through the notch. Once his chest is up he is out: the slab lies behind him and
-      // the under-slab shade fades off him
-      ...(T < TB.chestUp - 0.1
-        ? [dirShaded(T, {bias: 0.9, k: 0.55, split: 'under', edge: EAST_EDGE}), dirShaded(T, {bias: 3.0, k: 0.55, split: 'out', edge: EAST_EDGE})]
-        : [dirShaded(T, {bias: 0.9, k: 0.55 * (1 - smooth((T - (TB.chestUp - 0.1)) / 0.35))})]),
-      slabItem(T, {bias: T < TB.chestUp - 0.1 ? 2.2 : -1.2}), ...supportItems(),
+      // south edge he shows through the notch. R4: the split holds until his right foot has come out from under the slab's
+      // east end (it lies under the lip until the half step, 15.45): each leg is cut where the plane crosses it. The
+      // slab stays IN FRONT of the under-slab shade the whole way (R3 dropped it behind the shade at 13.45: the shade's
+      // hull then covered the slab's south face as a dark box)
+      ...(T < SPLIT_END
+        ? [dirShaded(T, {bias: 0.9, k: 0.55, split: 'under', edge: EAST_EDGE, legCut: true, contacts: true, anchor}), dirShaded(T, {bias: 3.0, k: 0.55, split: 'out', edge: EAST_EDGE, legCut: true, anchor})]
+        : [dirShaded(T, {bias: 3.0, k: 0, contacts: true, anchor})]),
+      slabItem(T, {bias: 2.2}), ...supportItems(),
       ...chunkItems(T),
       ...rebarItems(T),
       // effort dust: palms, knees, the slab dropping back, the chunks landing
@@ -110,7 +115,15 @@ export const ShotB2: React.FC = () => {
       ...chips3({at: slabPoint(0.98, 0.45, T), t: T, t0: TB.slabLand, key: 'b2slabC', seed: 8, n: 7, dir: {x: 1, y: 0.4, z: 0.2}, spread: 60, speed: [0.8, 2.2], size: [0.02, 0.05], ground: groundH(1.1, 1.6), life: 5}),
       ...hits.flatMap((hh, i) => dust3({at: hh.p, t: T, t0: hh.t, key: `b2ch${i}`, seed: 20 + i, n: 4, speed: 0.35, size: 0.035, grow: 0.1, life: 1.1, color: '#A3978A', opacity: 0.55})),
       // knee, foot plants, the half step: small kicks of grit and dust at the contact (no big discs)
-      ...([[TB.knee + 0.12, -0.44, 0.15, 'b2knee'], [TB.kneel, 0.32, -0.16, 'b2foot'], [TB.step, 0.04, 0.19, 'b2footR'], [TB.staggerEnd, 0.22, 0.19, 'b2stag']] as [number, number, number, string][]).flatMap(([t0, f, r, key], i) => {
+      // palms (R4): each palm that lands raises its own little puff and chips, a beat before the body moves on it
+      ...(['R1', 'L1', 'R2', 'L2'] as const).flatMap((k, i) => {
+        const at = add3(PLANT[k], {x: 0, y: -0.02, z: 0}), t0 = PLANT.t[k];
+        return [
+          ...dust3({at, t: T, t0, key: `b2palm${k}`, seed: 41 + i, n: 3, speed: 0.3, size: 0.022, grow: 0.07, life: 0.9, color: '#A3978A', opacity: 0.5}),
+          ...chips3({at, t: T, t0, key: `b2palm${k}c`, seed: 51 + i, n: 3, dir: {x: 0.3, y: 0.6, z: 0.4}, spread: 70, speed: [0.2, 0.7], size: [0.005, 0.013], ground: at.y - 0.01, life: 3}),
+        ];
+      }),
+      ...([[TB.knee + 0.12, -0.44, 0.15, 'b2knee'], [TB.knee, 0.06, -0.15, 'b2footL0'], [TB.kneel, 0.32, -0.16, 'b2foot'], [TB.step, 0.04, 0.19, 'b2footR'], [TB.staggerEnd, 0.22, 0.19, 'b2stag']] as [number, number, number, string][]).flatMap(([t0, f, r, key], i) => {
         const at = onGround(R1, f, r);
         return [
           ...dust3({at, t: T, t0, key, seed: 11 + i, n: 4, speed: 0.4, size: 0.03, grow: 0.09, life: 1.0, color: '#A3978A', opacity: 0.55}),

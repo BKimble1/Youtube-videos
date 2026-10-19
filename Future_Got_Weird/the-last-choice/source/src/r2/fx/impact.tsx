@@ -18,7 +18,9 @@ import {CITY} from '../../theme';
 import {mix} from '../engine/color';
 
 export type ImpactMat = 'metal' | 'armor' | 'concrete' | 'asphalt' | 'flesh';
-export type ImpactOpts = {at: V3; normal: V3; t: number; t0: number; key: string; strength?: number; material?: ImpactMat; ground?: number; seed?: number};
+export type ImpactOpts = {at: V3; normal: V3; t: number; t0: number; key: string; strength?: number; material?: ImpactMat; ground?: number; seed?: number;
+  /** R4 (opt-in): terrain height at (x, z) so the chips land on the terrain (see ChipsOpts.groundFn), not on the flat `ground` */
+  groundFn?: (x: number, z: number) => number};
 
 export const impact = (o: ImpactOpts): FxOut => {
   const s = o.strength ?? 1, m = o.material ?? 'metal', seed = o.seed ?? 1;
@@ -30,7 +32,7 @@ export const impact = (o: ImpactOpts): FxOut => {
   if (m === 'metal' || m === 'armor') {
     return combine(
       fx(sparks3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_sp`, n: Math.round(8 + 18 * s), dir: n, spread: 70, speed: [2.5, 9 * Math.sqrt(s)], ground: o.ground, seed, flash: 0.22 * s})),
-      fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_ch`, n: Math.round(2 + 4 * s), dir: n, spread: 55, speed: [1.5, 5], size: [0.03, 0.09 * s], material: m === 'armor' ? 'armor' : 'metal', ground: o.ground, seed: seed + 3})),
+      fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_ch`, n: Math.round(2 + 4 * s), dir: n, spread: 55, speed: [1.5, 5], size: [0.03, 0.09 * s], material: m === 'armor' ? 'armor' : 'metal', ground: o.ground, groundFn: o.groundFn, seed: seed + 3})),
       s > 0.7 ? fx(ring3({at: o.at, normal: n, t: o.t, t0: o.t0, key: `${o.key}_rg`, r0: 0.1, speed: 6 * s, dur: 0.18, width: 0.05})) : null,
       fx([], [], shakeAt(o.t, o.t0, 0.03 * s)),
     );
@@ -38,13 +40,13 @@ export const impact = (o: ImpactOpts): FxOut => {
   // concrete / asphalt
   return combine(
     fx(dust3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_du`, n: Math.round(3 + 3 * s), size: 0.18 * s, grow: 0.7 * s, speed: 1.2 * s, life: 1.8, dir: n, spread: 70, color: m === 'asphalt' ? '#7E7671' : '#A89E94', seed})),
-    fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_ch`, n: Math.round(5 + 8 * s), dir: n, spread: 60, speed: [2, 6 * Math.sqrt(s)], size: [0.04, 0.14 * s], material: m === 'asphalt' ? 'asphalt' : 'concrete', ground: o.ground, seed: seed + 5})),
+    fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_ch`, n: Math.round(5 + 8 * s), dir: n, spread: 60, speed: [2, 6 * Math.sqrt(s)], size: [0.04, 0.14 * s], material: m === 'asphalt' ? 'asphalt' : 'concrete', ground: o.ground, groundFn: o.groundFn, seed: seed + 5})),
     fx([], [], shakeAt(o.t, o.t0, 0.04 * s)),
   );
 };
 
 /** The breaker's piston strike on armour; `dir` = the tool's striking direction. */
-export const breakerHit = (o: {at: V3; dir: V3; t: number; t0: number; key: string; ground?: number; seed?: number; strength?: number}): FxOut => {
+export const breakerHit = (o: {at: V3; dir: V3; t: number; t0: number; key: string; ground?: number; seed?: number; strength?: number; groundFn?: (x: number, z: number) => number}): FxOut => {
   if (o.t < o.t0) return fx();
   const s = o.strength ?? 1, back = mul3(norm3(o.dir), -1), seed = o.seed ?? 1;
   const tau = o.t - o.t0;
@@ -63,7 +65,7 @@ export const breakerHit = (o: {at: V3; dir: V3; t: number; t0: number; key: stri
   return combine(
     fx(star, tau < 0.1 ? [{pos: add3(o.at, mul3(back, 0.4)), color: '#FFE6B0', power: 1.4 * s, radius: 6}] : [], shakeAt(o.t, o.t0, 0.07 * s)),
     fx(sparks3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_sp`, n: 30, dir: back, spread: 80, speed: [3, 11], ground: o.ground, seed, flash: 0})),
-    fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_ch`, n: 7, dir: back, spread: 70, speed: [2, 6], size: [0.04, 0.12], material: 'armor', ground: o.ground, seed: seed + 2})),
+    fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_ch`, n: 7, dir: back, spread: 70, speed: [2, 6], size: [0.04, 0.12], material: 'armor', ground: o.ground, groundFn: o.groundFn, seed: seed + 2})),
     fx(ring3({at: o.at, normal: back, t: o.t, t0: o.t0, key: `${o.key}_rg`, r0: 0.08, speed: 7, dur: 0.16, width: 0.05})),
     // compressed-air puff from the tool's exhaust (behind the strike)
     fx(dust3({at: add3(o.at, mul3(back, 0.75)), t: o.t, t0: o.t0 + 0.02, key: `${o.key}_air`, n: 2, size: 0.1, grow: 0.35, speed: 0.6, life: 0.7, dir: {x: 0, y: 1, z: 0}, color: '#E8E6E0', opacity: 0.55, seed: seed + 9})),
@@ -135,14 +137,14 @@ export const BarrierPlate: React.FC<{w: number; h: number; dent?: number; crack?
 };
 
 /** World-space effects of a hit on the plate (the plate itself is drawn by the rig with plateState/BarrierPlate). */
-export const plateHit = (o: {at: V3; normal: V3; t: number; t0: number; key: string; stage: 'dent' | 'crack' | 'shatter'; ground?: number; seed?: number}): FxOut => {
+export const plateHit = (o: {at: V3; normal: V3; t: number; t0: number; key: string; stage: 'dent' | 'crack' | 'shatter'; ground?: number; seed?: number; groundFn?: (x: number, z: number) => number}): FxOut => {
   if (o.t < o.t0) return fx();
   const n = norm3(o.normal), seed = o.seed ?? 1;
   const big = o.stage === 'shatter' ? 1.6 : o.stage === 'crack' ? 1.15 : 0.85;
   return combine(
     fx(sparks3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_sp`, n: Math.round(16 * big), dir: n, spread: 75, speed: [2.5, 8 * big], ground: o.ground, seed, flash: 0.3 * big})),
     fx(ring3({at: o.at, normal: n, t: o.t, t0: o.t0, key: `${o.key}_rg`, r0: 0.12, speed: 7 * big, dur: 0.18, width: 0.06})),
-    o.stage !== 'dent' ? fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_ch`, n: o.stage === 'shatter' ? 11 : 4, dir: n, spread: o.stage === 'shatter' ? 85 : 50, speed: o.stage === 'shatter' ? [3, 8] : [1.5, 4], size: o.stage === 'shatter' ? [0.06, 0.16] : [0.025, 0.06], material: 'plate', ground: o.ground, seed: seed + 4, spin: 1300})) : null,
+    o.stage !== 'dent' ? fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_ch`, n: o.stage === 'shatter' ? 11 : 4, dir: n, spread: o.stage === 'shatter' ? 85 : 50, speed: o.stage === 'shatter' ? [3, 8] : [1.5, 4], size: o.stage === 'shatter' ? [0.06, 0.16] : [0.025, 0.06], material: 'plate', ground: o.ground, groundFn: o.groundFn, seed: seed + 4, spin: 1300})) : null,
     fx([], [], shakeAt(o.t, o.t0, 0.035 * big)),
   );
 };
@@ -177,7 +179,9 @@ const scorchMesh = (at: V3, R: number, seed: number, groundH?: (x: number, z: nu
   return p;
 };
 
-export type BlastOpts = {at: V3; t: number; t0: number; key: string; size?: number; ground?: number; groundH?: (x: number, z: number) => number; seed?: number; debris?: ChipMat; dir?: V3};
+export type BlastOpts = {at: V3; t: number; t0: number; key: string; size?: number; ground?: number; groundH?: (x: number, z: number) => number; seed?: number; debris?: ChipMat; dir?: V3;
+  /** R4 (opt-in): the debris lands on `groundH`'s terrain where it comes down, not on the flat plane `ground` (which left chunks hovering on a slope) */
+  terrainChips?: boolean};
 /** The launcher round's blast: fireball radius ≈ size (m, default 2.2). Fragments are concrete/metal, not people. */
 export const blast = (o: BlastOpts): FxOut => {
   const a = o.t - o.t0;
@@ -225,8 +229,9 @@ export const blast = (o: BlastOpts): FxOut => {
   return combine(
     fx(items, lights, shakeAt(o.t, o.t0, 0.22 * (size / 2.2), 3.5)),
     fx(smokeItems(o.t, [smoke], `${o.key}_sm`)),
-    fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_deb`, n: 18, dir: o.dir ?? {x: 0, y: 1, z: 0}, spread: 80, speed: [5, 14], size: [0.08, 0.3], material: o.debris ?? 'concrete', ground: g, life: 6, seed: seed + 3})),
-    fx(sparks3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_sp`, n: 28, spread: 110, speed: [5, 16], ground: g, seed: seed + 5, flash: 0})),
+    // (R4) the debris lands where the blast's `ground` is given, else on the terrain: R3 used the blast's own height as the landing plane when no `ground` was passed, so A1's blow-out (64 m up the tower) and truck blast (3.3 m up) left their shards hanging in the air
+    fx(chips3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_deb`, n: 18, dir: o.dir ?? {x: 0, y: 1, z: 0}, spread: 80, speed: [5, 14], size: [0.08, 0.3], material: o.debris ?? 'concrete', ground: o.ground, life: 6, seed: seed + 3, groundFn: o.terrainChips ? o.groundH : undefined})),
+    fx(sparks3({at: o.at, t: o.t, t0: o.t0, key: `${o.key}_sp`, n: 28, spread: 110, speed: [5, 16], ground: o.ground, seed: seed + 5, flash: 0})),
     fx(dust3({at: {x: o.at.x, y: g, z: o.at.z}, t: o.t, t0: o.t0 + 0.04, key: `${o.key}_wave`, ring: size * 0.6, n: 12, speed: size * 3.2, size: size * 0.35, grow: size * 0.45, life: 3, rise: 0.5, color: '#8E8378', opacity: 0.8, seed: seed + 9})),
     fx(ring3({at: add3(o.at, {x: 0, y: 0.1, z: 0}), normal: {x: 0, y: 1, z: 0}, t: o.t, t0: o.t0, key: `${o.key}_shock`, r0: size * 0.5, speed: size * 18, dur: 0.25, width: size * 0.06})),
   );

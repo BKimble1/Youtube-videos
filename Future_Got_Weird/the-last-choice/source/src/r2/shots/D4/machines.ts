@@ -85,16 +85,26 @@ export const unitAt = (pl: UPlan, T: number): UnitSpec => {
   if (s.k === 'walk') {
     const pts = walkPts(s);
     const L = pathLen(pts), A = s.A ?? 0.6, D = s.D ?? 0.6;
-    const path: Path = chordPath(pts, 0.7);
-    const dist = runDist(Math.min(T, s.T1), s.T0, s.T1, L, A, D);
     const vc = cruise(s.T0, s.T1, L, A, D);
     const k = clamp(runSpeed(T, s.T0, s.T1, L, A, D) / Math.max(0.5, vc));
     const fast = clamp((vc - 1.8) / 2);
-    const end = path(L);
+    const stride = s.stride ?? 1.45 + 0.85 * fast;
+    // (R4) a unit already walking at the cut (A ≤ 0.25) starts mid-stride, each at its own phase: the path is extended backwards by a
+    // seeded part of a stride and the walk starts that far along it, so the position is unchanged but the feet are not in lockstep (in
+    // R3 all 45 arc units stood in the same stance at 149.86 and stepped together for the first seconds)
+    const s0 = A <= 0.25 ? rnd(pl.id * 31 + 7) * stride : 0;
+    let ptsX = pts;
+    if (s0 > 0) {
+      const f0 = fwdOf(chordPath(pts, 0.7)(0).heading);
+      ptsX = [{x: pts[0].x - f0.x * s0, z: pts[0].z - f0.z * s0}, ...pts];
+    }
+    const path: Path = chordPath(ptsX, 0.7);
+    const dist = s0 + runDist(Math.min(T, s.T1), s.T0, s.T1, L, A, D);
+    const end = path(L + s0);
     sp = {
       // (the softened ground mid-walk only: a walk starts and ends on the true ground, where the feet stand still)
       ...base, pos: end.pos, heading: end.heading, ground: softFor(smooth((T - s.T0) / 0.5) * (1 - smooth((T - (s.T1 - 0.5)) / 0.5))),
-      gait: {path, dist, stride: s.stride ?? 1.45 + 0.85 * fast, lift: 0.14 + 0.08 * fast, start: A > 0.25 ? 0 : undefined, end: D > 0 ? L : undefined},
+      gait: {path, dist, stride, lift: 0.14 + 0.08 * fast, start: A > 0.25 ? 0 : undefined, end: D > 0 ? L + s0 : undefined},
       crouch: (0.03 + 0.16 * fast) * k, lean: (3 + 12 * fast) * k,
     };
   } else {
@@ -442,14 +452,15 @@ export const unitD4 = (name: string, T: number): UnitSpec => unitAt(NAMED[name],
 //   177.76       the ram (wind-up from 176.46) onto the Director's plate; 178.9 → 180.9 one step back into its sector
 type XZH = [number, number, number];
 const HPH = [0, 0.5, 0.75, 0.25], H_STRIDE = 3.0, H_DUTY = 0.75, H_LIFT = 0.55;
-type HWalk = {t0: number; t1: number; a: XZH; b: XZH; L: number; ease: (u: number) => number; standStart: boolean};
+type HWalk = {t0: number; t1: number; a: XZH; b: XZH; L: number; ease: (u: number) => number; standStart: boolean; /** R4: the heading holds the walk's own bearing until this fraction of the walk, then turns to b's (slow, at the end) */ turnFrom?: number};
 /** a constant-speed walk with a decelerating tail (it was already walking at the cut in) */
 const cruiseStop = (tail: number) => (u: number) => (u < 1 - tail ? u / (1 - tail / 2) : (1 - tail + tail * (1 - (1 - (u - (1 - tail)) / tail) ** 2) / 2) / (1 - tail / 2));
 /** start from rest, come on slowly, settle into the stop */
 const startStop = (u: number) => smooth(u);
 const hwPos = (w: HWalk, d: number): {x: number; z: number; h: number} => {
   const k = d / w.L;
-  return {x: lerp(w.a[0], w.b[0], k), z: lerp(w.a[1], w.b[1], k), h: w.a[2] + wrapD(w.b[2] - w.a[2]) * clamp(k)};
+  const th = w.turnFrom === undefined ? clamp(k) : smooth(clamp((k - w.turnFrom) / (1 - w.turnFrom)));
+  return {x: lerp(w.a[0], w.b[0], k), z: lerp(w.a[1], w.b[1], k), h: w.a[2] + wrapD(w.b[2] - w.a[2]) * th};
 };
 const hwDist = (w: HWalk, T: number): number => {
   if (T < w.t0 && !w.standStart) return -(w.L / ((w.t1 - w.t0) * (1 - 0.12 / 2))) * (w.t0 - T); // walking in before the cut
@@ -497,10 +508,12 @@ const W0_B: XZH = (() => { const f = hv(262); return [W0_A[0] + f.x * 30.75, W0_
 export const H2_STOP: XZH = W0_B;
 /** where it ends up after the stumble (a step and a half back), on the line of its last approach to the van */
 const H2_BACK_XZ = ALONG([HEAVY_STRIKE.x, HEAVY_STRIKE.z, 0], {x: 26.15, z: 1.42}, 9.75);
-export const H2_BACK: XZH = [H2_BACK_XZ.x, H2_BACK_XZ.z, 263];
+/** (R4) its heading on the way back in is the bearing of the walk to its strike spot; it turns to the strike heading only at the end (HW2.turnFrom) */
+const H2_BEARING = headingTo(H2_BACK_XZ, {x: HEAVY_STRIKE.x, z: HEAVY_STRIKE.z});
+export const H2_BACK: XZH = [H2_BACK_XZ.x, H2_BACK_XZ.z, H2_BEARING];
 export const H2_SLAB = {x: 29.3, z: 3.55};
 const HW0: HWalk = {t0: M.P4, t1: EV.heavyStop, a: W0_A, b: W0_B, L: 30.75, ease: cruiseStop(0.12), standStart: false};
-const HW2: HWalk = {t0: EV.heavyGo, t1: EV.heavyArrive, a: H2_BACK, b: [HEAVY_STRIKE.x, HEAVY_STRIKE.z, HEAVY_STRIKE.h], L: 9.75, ease: startStop, standStart: true};
+const HW2: HWalk = {t0: EV.heavyGo, t1: EV.heavyArrive, a: H2_BACK, b: [HEAVY_STRIKE.x, HEAVY_STRIKE.z, HEAVY_STRIKE.h], L: 9.75, ease: startStop, standStart: true, turnFrom: 0.62};
 const STEP_BACK = {t0: EV.heavyBack, t1: EV.heavyBackEnd, a: [HEAVY_STRIKE.x, HEAVY_STRIKE.z, HEAVY_STRIKE.h] as XZH, b: [TB_HEAVY2.pos.x, TB_HEAVY2.pos.z, TB_HEAVY2.heading] as XZH};
 export const heavy2Root = (T: number): {x: number; z: number; h: number} => {
   if (T < HW0.t1) return hwPos(HW0, hwDist(HW0, T));

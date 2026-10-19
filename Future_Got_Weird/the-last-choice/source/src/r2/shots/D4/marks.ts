@@ -63,17 +63,26 @@ export const tugGrip = (T: number): V3 => {
 };
 
 // ------------------------------------------------------------------ D4-7/8: THE STRIKE
-/** he plants between the heavy and the drone pilot (just clear of the van's front corner), facing the ram */
-export const PLANT = {x: 9.15, z: 3.35, h: 80};
+// R4 staging: the van's nose (its south-east corner at (10.5, 3.5), up to 2.3 m high) and the pocket where she sits against
+// its south wall (8.4, 2.8) are shut to anything coming from due east: in R3 the ram came in along z ≈ 3.2 and its head
+// ended 0.7 m inside the van's cab, the flying Director passed 0.6 m from her, and heavy 2's front-left foot stood 1.2 m
+// from him. Now heavy 2 stops on the open ground south-east of the nose (hull z 4.2), the ram comes in along z ≈ 4.4
+// (the head clears the nose by ≈ 0.35 m), he plants south of her wall (z 4.5) and is thrown back WNW to the slab,
+// 1.3 m clear of her.
+/** he plants south-east of her, just clear of the van's front corner, facing the ram (heading toward heavy 2) */
+export const PLANT = {x: 9.2, z: 4.5, h: 88};
 /** his raised guard at the strike (a high block: wrist up and forward) and the plate there = the ram's target */
 export const STRIKE_GUARD = {r: 14, u: 352, f: 118};
 export const STRIKE_PLATE = plateAt(PLANT.x, PLANT.z, PLANT.h, STRIKE_GUARD);
-/** where his back meets the slab (standing, thrown back against it) — root of the figure there */
-export const SLAM = {x: 6.98, z: 3.42, h: 104};
+/**
+ * where his back meets the slab: the root of the figure there (the figure's back is ON the slab's face: crew.tsx
+ * `toSlab` places it; this is its result at the slam, checked by probe: gap 2 cm)
+ */
+export const SLAM = {x: 6.638, z: 3.31, h: 108};
 /** the drone pilot down by the van's side at the strike: sitting propped on her hands, legs out east along the van */
 export const PILOT_DOWN = {x: 8.36, z: 2.78, h: 96};
-/** heavy 2's hull at the strike (its ram reaches STRIKE_PLATE) */
-export const HEAVY_STRIKE = {x: 16.4, z: 3.0, h: 268};
+/** heavy 2's hull at the strike (its ram reaches STRIKE_PLATE): open ground south-east of the van's nose, 1.2 m from its final spot */
+export const HEAVY_STRIKE = {x: 17.0, z: 4.2, h: 270};
 
 // ------------------------------------------------------------------ the gather at the van (D4-3)
 export const GATHER = {

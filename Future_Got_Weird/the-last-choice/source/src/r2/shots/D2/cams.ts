@@ -29,12 +29,15 @@ export const CAM_2B: CamKey[] = [
   {t: 0, pos: g(45.0, 9.4, 1.6), target: g(51.9, 5.4, 1.9), fov: 46},
   {t: d(96.25, 96.85), pos: g(45.05, 9.38, 1.6), target: g(51.9, 5.35, 1.95), fov: 45},
 ];
-// D2-2d: behind her at the slab's top edge, the tablet and its clip-on projector in the foreground: the click, the
-// beam across the crater, the figures on the smoke, the machines turning to them
+// D2-2d (R4): from the slab's south end, 4.4 m up, looking north-east across the crater: the decoy maker (left, on her toes)
+// sets the tablet on the slab's top edge and the lens clicks on; the beam crosses to the smoke wall; the four light figures
+// walk on it; D (right, 8 m off, facing the slab with its eye on the drone's mark) snaps to them and turns its back on the
+// slab, U8 beyond it, A already walking into the smoke. R3 stood behind her at 3 m: only the smoke and A showed; D and U8
+// were off the frame (right and below: 111% / 101%), so the audience never saw what the machines perceive or react to.
 export const CAM_2D: CamKey[] = [
-  {t: 0, pos: g(47.3, 7.6, 2.5), target: g(51.4, 1.2, 1.9), fov: 50},
-  {t: 1.0, pos: g(47.35, 7.55, 2.52), target: g(51.9, 0.8, 1.9), fov: 49},
-  {t: d(97.55, M.DECOY_HITa), pos: g(47.4, 7.5, 2.55), target: g(52.4, 0.4, 1.9), fov: 48},
+  {t: 0, pos: g(44.8, 10.6, 4.4), target: g(52.6, 1.4, 1.6), fov: 52},
+  {t: 1.0, pos: g(44.85, 10.55, 4.4), target: g(52.7, 1.3, 1.65), fov: 51},
+  {t: d(97.55, M.DECOY_HITa), pos: g(44.9, 10.5, 4.4), target: g(52.8, 1.2, 1.7), fov: 50},
 ];
 // D2-3a: low on the slope west of B and A (the side the Crew will come from): B's fist through a figure, A's hammer,
 // two drones diving through the light
@@ -98,11 +101,14 @@ export const CAM_6: CamKey[] = [
   {t: 1.0, pos: g(46.8, -3.4, 0.98), target: g(49.5, -6.5, 1.0), fov: 42},
   {t: d(110.2, 112.9), pos: g(46.75, -3.45, 0.95), target: g(49.4, -6.6, 0.95), fov: 42},
 ];
-// D2-7a: from the inner slope east of them, low: D's blow, the drone in its path (SHIELD); the Director's plate into
-// D's side (COUNTER), the runner's adze behind its ankle
+// D2-7a (R4): from behind the crew, over the pilot's and the breaker's heads, 2 m up: the pilot (right foreground, the
+// controller) sends the drone across the frame, D's hammer comes down at the kneeling runner and the drone takes it between
+// them, the Director comes round into D's side. Crew left, the machine right, as D2-6 and the whole section (R3 cut from the
+// inner slope EAST of D: D's back hid the runner and the drone for 1.5 s, the fist at the contact, and the screen direction
+// was the reverse of the shot before; probed with the camera search in qa/r4/D2).
 export const CAM_7A: CamKey[] = [
-  {t: 0, pos: g(54.4, -4.5, 1.0), target: g(49.9, -6.4, 1.05), fov: 40},
-  {t: d(112.9, 114.6), pos: g(54.45, -4.48, 1.02), target: g(49.85, -6.4, 1.0), fov: 40},
+  {t: 0, pos: g(44.7, -6.9, 2.1), target: g(49.8, -6.15, 1.0), fov: 38},
+  {t: d(112.9, 114.6), pos: g(44.9, -6.8, 2.0), target: g(49.9, -6.25, 0.95), fov: 35},
 ];
 // D2-7b: D goes down; the camera eases back and up the slope: the seven on the crest behind the wreck barricade (A
 // and C under the girder, B on the slope, D at their feet), the girder above; they breathe

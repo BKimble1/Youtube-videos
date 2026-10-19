@@ -265,7 +265,7 @@ const spine = (p: PlumeSpec, s: number, t: number, len: number): V3 => {
     z: p.base.z + dh.z * p.drift * dp + L.z * m,
   };
 };
-const radiusAt = (p: PlumeSpec, s: number) => (s <= 1 ? p.r0 + (p.r1 - p.r0) * Math.pow(Math.max(0, s), 0.75) : p.r1 * (1 + 0.45 * (s - 1)));
+export const radiusAt = (p: PlumeSpec, s: number) => (s <= 1 ? p.r0 + (p.r1 - p.r0) * Math.pow(Math.max(0, s), 0.75) : p.r1 * (1 + 0.45 * (s - 1)));
 
 /** World point of a plume's column at s (0 source .. 1 top) — for sorting and occlusion tests. */
 export const plumePoint = (p: PlumeSpec, s: number, t: number) => spine(p, s, t, Math.hypot(p.rise, p.drift) * 1.1 + 1);
@@ -289,7 +289,7 @@ export const plumeEl = (c: SpriteCtx, p: PlumeSpec, t: number, key: string): Rea
   const sEnd = g + tail;
   const NS = 40;
   const sig: number[] = [0];
-  const spacing = (s: number) => 1.05 * radiusAt(p, s) * (s > 1 ? 1.2 : 1);
+  const spacing = (s: number) => 0.9 * radiusAt(p, s) * (s > 1 ? 1.2 : 1); // (R4: 1.05 → 0.9 — neighbouring billows overlap, the column reads as one rolling mass, not a string of balls)
   for (let i = 1; i <= NS; i++) {
     const s0 = ((i - 1) / NS) * 1.4, s1 = (i / NS) * 1.4;
     sig.push(sig[i - 1] + (len * (s1 - s0)) / Math.max(0.2, spacing((s0 + s1) / 2)));
@@ -347,7 +347,12 @@ export const plumeEl = (c: SpriteCtx, p: PlumeSpec, t: number, key: string): Rea
   let a = p.alpha;
   if (p.nearCap !== undefined) a = Math.min(a, p.nearCap);
   if (a < 0.015) return null;
-  const detail = rmax < 7 ? 0 : rmax < 45 ? 1 : 2;
+  // (R4) the detail tiers fade in with the billows' size on screen instead of switching at 7 px and 45 px (a whole column's tone
+  // flipped, and 30 % more caps appeared, in one frame as the camera closed in): dK = share of the lit / shadowed / capped look
+  // (0 below ~5 px, 1 from ~10 px), capFrac = share of the billows that carry a cap (50 % → 80 % from ~35 px to ~55 px; R3: 70 % → 100 %, a cap on nearly every billow read as a string of balls)
+  const dK = smooth((rmax - 5) / 5);
+  const detail = dK > 0.01 ? 1 : 0;
+  const capFrac = 0.5 + 0.3 * smooth((rmax - 35) / 20);
   // a short neck at the source joins the plume to its flames
   let rib = '';
   const L: string[] = [], Rr: string[] = [];
@@ -395,7 +400,7 @@ export const plumeEl = (c: SpriteCtx, p: PlumeSpec, t: number, key: string): Rea
     body += billowPath(b.x, b.y, b.r, b.sd, lobes, 1, flat, rot);
     rsum += b.r;
     const capK = b.u <= g ? 1 : 1 - smooth((b.u - g) / Math.max(1e-3, tail * 0.5));
-    if (detail > 0 && capK > 0.05 && (detail === 2 || rnd(b.sd + 6) < 0.7)) caps += billowPath(b.x + hx * b.r * 0.3, b.y + hy * b.r * 0.3, b.r * 0.5 * capK, b.sd + 5, lobes - 1, 1, flat, rot);
+    if (detail > 0 && capK > 0.05 && rnd(b.sd + 6) < capFrac) caps += billowPath(b.x + hx * b.r * 0.3, b.y + hy * b.r * 0.3, b.r * 0.5 * capK, b.sd + 5, lobes - 1, 1, flat, rot);
     if ((p.warm ?? 0) > 0 && b.u < 0.2) warm += billowPath(b.x - hx * b.r * 0.15, b.y + b.r * 0.32, b.r * 0.55 * (1 - smooth((b.u - 0.1) / 0.1)), b.sd + 9, lobes - 1, 1, flat, rot);
   });
   const sh = clamp((rsum / B.length) * 0.13, 0.6, 60);
@@ -421,7 +426,7 @@ export const plumeEl = (c: SpriteCtx, p: PlumeSpec, t: number, key: string): Rea
       <defs>
         {grad(`${gid}l`, litC, 1)}
         {grad(`${gid}s`, shade, 1)}
-        {caps && grad(`${gid}m`, midC, 0.8)}
+        {caps && grad(`${gid}m`, midC, 0.55)}
         <path id={`${gid}d`} d={body} />
         {detail > 0 && <clipPath id={`${gid}k`}><use href={`#${gid}d`} /></clipPath>}
         {core && (
@@ -431,10 +436,15 @@ export const plumeEl = (c: SpriteCtx, p: PlumeSpec, t: number, key: string): Rea
           </linearGradient>
         )}
       </defs>
-      <use href={`#${gid}d`} fill={`url(#${gid}${detail > 0 ? 'l' : 's'})`} />
-      {detail > 0 && <g clipPath={`url(#${gid}k)`}><use href={`#${gid}d`} transform={`translate(${f1(-hx * sh)} ${f1(-hy * sh)})`} fill={`url(#${gid}s)`} /></g>}
-      {caps && <path d={caps} fill={`url(#${gid}m)`} />}
-      {core && <path d={core} fill={`url(#${gid}c)`} />}
+      <use href={`#${gid}d`} fill={`url(#${gid}s)`} />
+      {detail > 0 && (
+        <g opacity={f1(dK)}>
+          <use href={`#${gid}d`} fill={`url(#${gid}l)`} />
+          <g clipPath={`url(#${gid}k)`}><use href={`#${gid}d`} transform={`translate(${f1(-hx * sh)} ${f1(-hy * sh)})`} fill={`url(#${gid}s)`} /></g>
+        </g>
+      )}
+      {caps && <path d={caps} fill={`url(#${gid}m)`} opacity={f1(dK)} />}
+      {core && <path d={core} fill={`url(#${gid}c)`} opacity={f1(dK)} />}
       {warm && <path d={warm} fill={warmC} opacity={f1(0.3 * (p.warm ?? 0))} />}
     </g>
   );

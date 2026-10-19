@@ -1,7 +1,7 @@
 // Geometry helpers for the set: ground grids that carry painted decals per cell, polygon clipping, and 3D polylines
 // drawn as depth-sorted sprites (rebar, cables, antennas).
 import React from 'react';
-import {V3, clamp, rnd} from '../../kit/math';
+import {V3, clamp, rnd, smooth} from '../../kit/math';
 import {Mesh, Face, Overlay, Item, SpriteCtx, toView, viewToScreen, mix} from '../engine';
 
 export type XZ = {x: number; z: number};
@@ -149,11 +149,17 @@ export const crackXZ = (x: number, z: number, ang: number, L: number, seed: numb
  * A 3D polyline as a sprite (rebar, cables, antennas, thin rails): projected and drawn at its mid-point's depth,
  * width `w` metres (at least `minPx`), hazed with distance like the meshes.
  */
-export const polyline3 = (key: string, pts: V3[], w: number, color: string, o: {minPx?: number; bias?: number; ink?: string; inkW?: number} = {}): Item => {
+export const polyline3 = (key: string, pts: V3[], w: number, color: string, o: {minPx?: number; bias?: number; ink?: string; inkW?: number; /** (R4) opacity 1 → 0 between these two camera distances (m): a thing the set stops drawing beyond the second one fades out instead of popping */ fade?: [number, number]} = {}): Item => {
   const mid = pts[Math.floor(pts.length / 2)];
   return {
     kind: 'sprite', key, pos: mid, bias: o.bias,
     draw: (c: SpriteCtx) => {
+      let fadeK = 1;
+      if (o.fade) {
+        const dist = Math.hypot(mid.x - c.view.pos.x, mid.y - c.view.pos.y, mid.z - c.view.pos.z);
+        fadeK = 1 - smooth((dist - o.fade[0]) / Math.max(1e-6, o.fade[1] - o.fade[0]));
+        if (fadeK <= 0.01) return null;
+      }
       let d = '';
       let ok = false;
       for (let i = 0; i < pts.length; i++) {
@@ -167,7 +173,7 @@ export const polyline3 = (key: string, pts: V3[], w: number, color: string, o: {
       const px = Math.max(o.minPx ?? 0.6, w * c.k);
       const col = mix(color, c.light.fogColor, c.lit.fog);
       return (
-        <g>
+        <g opacity={fadeK < 1 ? Math.round(fadeK * 100) / 100 : undefined}>
           {o.ink && <path d={d} fill="none" stroke={mix(o.ink, c.light.fogColor, c.lit.fog)} strokeWidth={px + (o.inkW ?? 1.6)} strokeLinecap="round" strokeLinejoin="round" />}
           <path d={d} fill="none" stroke={col} strokeWidth={px} strokeLinecap="round" strokeLinejoin="round" />
         </g>
@@ -177,7 +183,7 @@ export const polyline3 = (key: string, pts: V3[], w: number, color: string, o: {
 };
 
 /** Bent rebar strands sticking out of a broken concrete edge: origin, outward direction, count. */
-export const rebarAt = (key: string, o: V3, dir: V3, n: number, len: number, seed: number): Item[] =>
+export const rebarAt = (key: string, o: V3, dir: V3, n: number, len: number, seed: number, fade?: [number, number]): Item[] =>
   Array.from({length: n}, (_, i) => {
     const r = (k: number) => rnd(seed * 71 + i * 7 + k) - 0.5;
     const base = {x: o.x + r(1) * 0.8, y: o.y + r(2) * 0.25, z: o.z + r(3) * 0.8};
@@ -185,7 +191,7 @@ export const rebarAt = (key: string, o: V3, dir: V3, n: number, len: number, see
     const bend = {x: r(4) * 0.9, y: r(5) * 0.7 - 0.25, z: r(6) * 0.9};
     const p1 = {x: base.x + dir.x * L * 0.55, y: base.y + dir.y * L * 0.55, z: base.z + dir.z * L * 0.55};
     const p2 = {x: p1.x + (dir.x + bend.x) * L * 0.45, y: p1.y + (dir.y + bend.y) * L * 0.45, z: p1.z + (dir.z + bend.z) * L * 0.45};
-    return polyline3(`${key}_${i}`, [base, p1, p2], 0.022, '#5E4436', {minPx: 0.7, ink: '#1E1A18', inkW: 1.2});
+    return polyline3(`${key}_${i}`, [base, p1, p2], 0.022, '#5E4436', {minPx: 0.7, ink: '#1E1A18', inkW: 1.2, fade});
   });
 
 /**

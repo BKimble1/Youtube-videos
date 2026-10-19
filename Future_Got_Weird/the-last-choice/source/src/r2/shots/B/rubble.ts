@@ -6,7 +6,7 @@
 import {V3, add3, sub3, mul3, norm3, cross3, dot3, clamp, smooth, rotAxis, rnd} from '../../../kit/math';
 import type {Item, MeshItem} from '../../engine/scene';
 import {prep, Prepped, slab} from '../../engine/mesh';
-import {brokenSlab, chunkMesh} from '../../world/props';
+import {brokenSlab, chunkMesh, orientOutward} from '../../world/props';
 import {groundH} from '../../world/ground';
 import {headingVec} from '../../engine/camera';
 import {TB, R0, R1, HD, rootB} from './director';
@@ -123,14 +123,59 @@ export const chunkHits = (): {key: string; t: number; p: V3}[] => CHUNKS.map((c)
   return {key: c.key, t: c.t0 + 0.4, p: fly(c, c.t0 + 0.4).p};
 });
 
-// the rubble the slab rests on at each end (static dressing; persists)
-const SUPPORTS: [number, number, number, number, string][] = [
-  [-0.05, 0.38, 0.42, 3, 'rubble'], [0.5, 0.3, 0.34, 9, 'rubbleDark'], [-0.42, 0.55, 0.3, 14, 'concreteDark'], [0.2, 0.05, 0.36, 18, 'rubble'],
-  [-0.12, 2.62, 0.44, 23, 'rubble'], [0.95, 2.66, 0.3, 26, 'rubbleDark'], [-0.45, 2.42, 0.3, 29, 'concrete'], [-0.35, 2.95, 0.38, 6, 'rubbleDark'],
+// ------------------------------------------------------------------ what the slab rests on (R4)
+// R3's slab hovered over the crest: it touched the mounds only along its west hinge line and its east half hung over
+// ground that falls away (0.35–0.45 m of air under the east edge, nothing visible holding it). Now it sits on piers of
+// broken concrete that are BUILT FROM THE SLAB: each pier's top ring is the slab's underside plane (the 0° pose, which
+// it holds before his back lifts it), its foot is sunk into the rubble. The east pier carries the east end; the south-west
+// one the corner over the notch; the north-west corner rests on the crest's own peak. All stay under or flush with the
+// slab's outline and clear of both of his arms' paths, so nothing the Crew do later (section C walks and stands around
+// this slab) meets them.
+/** the slab's underside height at (x, z) in its 0° pose (the frame plane through the two mound lines and his back) */
+const undersideY0 = (x: number, z: number) => A.o.y - (A.N.x * (x - A.o.x) + A.N.z * (z - A.o.z)) / A.N.y;
+type Pier = {cx: number; cz: number; rx: number; rz: number; seed: number; yaw: number};
+const PIERS: Pier[] = [
+  {cx: 0.64, cz: 0.66, rx: 0.17, rz: 0.36, seed: 3, yaw: 6}, // east pier: the east end rests on it
+  {cx: -0.12, cz: 2.4, rx: 0.2, rz: 0.2, seed: 5, yaw: 20}, // the south-west corner over the notch
+  {cx: -0.02, cz: 1.34, rx: 0.13, rz: 0.18, seed: 8, yaw: 0}, // a stub under the west edge: the legs' side (his feet lie beside it)
 ];
-export const supportItems = (): Item[] => SUPPORTS.map(([x, z, sz, seed, mat], i) => ({
-  kind: 'mesh', mesh: chunkMesh(seed, mat), key: `bSup${i}`, xf: {pos: {x, y: groundH(x, z) - sz * 0.2, z}, scale: sz, yaw: seed * 37}, asObject: true,
-} as MeshItem));
+const pierMesh = (P: Pier): Prepped => {
+  const n = 9;
+  const yaw = (P.yaw * Math.PI) / 180;
+  const ring = (k: number, lvl: 'foot' | 'mid' | 'top'): V3 => {
+    const a = (k / n) * Math.PI * 2 + (rnd(P.seed * 7 + k) - 0.5) * 0.5;
+    const jag = lvl === 'foot' ? 1.12 : lvl === 'mid' ? 0.98 + rnd(P.seed * 5 + k) * 0.1 : 0.86;
+    const r = jag * (0.82 + rnd(P.seed * 11 + k) * 0.3);
+    const lx = Math.cos(a) * P.rx * r, lz = Math.sin(a) * P.rz * r;
+    const x = P.cx + lx * Math.cos(yaw) - lz * Math.sin(yaw), z = P.cz + lx * Math.sin(yaw) + lz * Math.cos(yaw);
+    const g = groundH(x, z), top = undersideY0(x, z) - 0.012;
+    // a lumpy upper edge: the top ring touches the slab, the mid ring leans a little off the straight
+    const y = lvl === 'foot' ? g - 0.18 : lvl === 'mid' ? g + (top - g) * (0.5 + 0.14 * (rnd(P.seed * 13 + k) - 0.5)) : top;
+    return {x, y, z};
+  };
+  const verts: V3[] = [];
+  (['foot', 'mid', 'top'] as const).forEach((lvl) => { for (let k = 0; k < n; k++) verts.push(ring(k, lvl)); });
+  const faces: {v: number[]; mat: string}[] = [{v: Array.from({length: n}, (_, k) => 2 * n + k), mat: 'concreteDark'}];
+  for (let lv = 0; lv < 2; lv++) for (let k = 0; k < n; k++) {
+    const j = (k + 1) % n;
+    faces.push({v: [lv * n + k, (lv + 1) * n + k, (lv + 1) * n + j, lv * n + j], mat: lv === 0 ? (rnd(P.seed * 3 + k) > 0.5 ? 'rubbleDark' : 'concreteDark') : (k % 3 === 0 ? 'concreteEdge' : 'concrete')});
+  }
+  const c = {x: P.cx, y: undersideY0(P.cx, P.cz) - 0.12, z: P.cz};
+  return prep(orientOutward({verts, faces, crease: 24}, c));
+};
+let PIER_MESH: Prepped[] | null = null;
+const SUPPORTS: [number, number, number, number, string][] = [
+  [-0.05, 0.38, 0.42, 3, 'rubble'], [-0.42, 0.55, 0.3, 14, 'concreteDark'], [0.2, 0.05, 0.36, 18, 'rubble'],
+  [0.95, 2.66, 0.3, 26, 'rubbleDark'], [-0.45, 2.42, 0.3, 29, 'concrete'], [-0.35, 2.95, 0.38, 6, 'rubbleDark'],
+  // the broken pieces banked against the east pier's foot and the south-west pier's foot
+  [0.98, 0.5, 0.26, 9, 'rubbleDark'], [0.9, 0.95, 0.2, 17, 'rubble'], [0.18, 2.66, 0.22, 21, 'rubble'],
+];
+export const supportItems = (): Item[] => [
+  ...(PIER_MESH ??= PIERS.map(pierMesh)).map((m, i): MeshItem => ({kind: 'mesh', mesh: m, key: `bPier${i}`, asObject: true})),
+  ...SUPPORTS.map(([x, z, sz, seed, mat], i) => ({
+    kind: 'mesh', mesh: chunkMesh(seed, mat), key: `bSup${i}`, xf: {pos: {x, y: groundH(x, z) - sz * 0.2, z}, scale: sz, yaw: seed * 37}, asObject: true,
+  } as MeshItem)),
+];
 
 /** Persisting after B: the settled slab, its supports and the shed chunks where they came to rest. */
 export const rubbleRestItems = (): Item[] => [slabItem(40), ...supportItems(), ...chunkItems(40)];

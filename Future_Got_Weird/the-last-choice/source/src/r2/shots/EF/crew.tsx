@@ -103,7 +103,10 @@ export const directorPose = (T: number): Pose => {
     lean: 0, bodyPitch: -(27 + b * 1.3),
     // the back of his head rests on the slab's top edge; when the neck lets go it sinks forward and rolls a little
     // further toward her (the slab still holding it)
-    head: {pitch: 22 - b * 2.0 + settle * 7, yaw: -16 * turn - settle * 5, roll: 12 - 6 * turn + settle * 4},
+    // (R4) 6° less forward droop until 190.6: with the head at 22° his right shoulder's top crossed the rig's
+    // "in front of the face / beside it" test twice while he exhaled (188.00 and 188.57), and the upper sleeve and its
+    // tear patch popped in front of the torso for 17 frames (RIG zoneAt threshold: reported, not edited)
+    head: {pitch: 22 - 6 * (1 - smooth((T - 190.6) / 1.4)) - b * 2.0 + settle * 7, yaw: -16 * turn - settle * 5, roll: 12 - 6 * turn + settle * 4},
     // left arm limp at his left side, the hand on the ground beside his hip (out from under the clasp; the shattered
     // plate on its forearm)
     armL: {local: {r: -78, u: 24, f: 4}, pole: {r: -1, u: 0.1, f: -0.6}},
@@ -260,7 +263,11 @@ export const pilotSpec = (T: number, anchor?: V3): FigSpec => {
   const up = smooth((T - C1) / 0.75);
   // ---- body: sit up beside him, shuffle in on her knees; she stays: kneeling, sitting back toward her heels (spent),
   // leaning in over his hand; when his eyes close she bows over it, the shoulders lifting with small sobs
-  const shuffle = smooth((T - 188.9) / 0.5);
+  // (R4) she knee-walks in with two steps — left knee, then right — each lifted, its ankle planted before and after
+  // (R3 dragged both ankles across the grit at 0.1–0.8 m/s from 188.4 to 189.4: probe qa/r4/EF); the pelvis follows
+  // the mean of the two steps
+  const stepL = smooth((T - 188.55) / 0.5), stepR = smooth((T - 188.9) / 0.5);
+  const shuffle = 0.5 * (stepL + stepR);
   const pos = lerp3(end.pos, PIL_Q, shuffle);
   const heading = end.heading + wrap(PIL_HQ - end.heading) * up;
   const s = sob(T);
@@ -287,21 +294,27 @@ export const pilotSpec = (T: number, anchor?: V3): FigSpec => {
   );
   const bp = pose as Pose;
   const posed: Pose = {...bp, lean: (bp.lean ?? 0) + 2.2 * s, side: (bp.side ?? 0) + 0.8 * s, drop: (bp.drop ?? 0) - 3 * s};
-  const knee = (sd: 1 | -1) => lerp3(sd < 0 ? end.footL : end.footR, kneelFoot(pos, PIL_HQ, sd, posed.drop), up);
+  const knee = (sd: 1 | -1) => {
+    const st = sd < 0 ? stepL : stepR;
+    // from the crawl's planted ankle to the kneeling one (kneelFoot at her final spot); lifted while it moves
+    return add3(lerp3(sd < 0 ? end.footL : end.footR, kneelFoot(PIL_Q, PIL_HQ, sd, posed.drop), st), {x: 0, y: 0.06 * Math.sin(Math.PI * st), z: 0});
+  };
   // ---- hands: her right hand slides under his (contact CLASP_T), her left closes over it; she never lets go
   const H = dirHandR(T);
   const fwdD = hv(DIR.heading);
   const toHer = norm3(sub3(PIL_Q, DIR.pos));
-  const under = add3(H.pos, {x: toHer.x * 0.03, y: -0.045, z: toHer.z * 0.03});
-  const over = add3(H.pos, {x: -fwdD.x * 0.02 - toHer.x * 0.06, y: 0.05, z: -fwdD.z * 0.02 - toHer.z * 0.06});
+
   const reach = smooth((T - (CLASP_T - 0.5)) / 0.5); // right hand under his (contact CLASP_T)
   const reachL = smooth((T - (CLASP_T - 0.2)) / 0.5); // then the left hand closes over it
   // (sitting up: her hands come off the ground onto her thighs, elbows bent — not hanging straight down)
   const restR0 = at3(PIL_Q, PIL_HQ, 0.13, 0.13, 0.43), restL0 = at3(PIL_Q, PIL_HQ, 0.15, -0.14, 0.44);
+  // her squeeze answering his loosening grip (the insert, 191.4–193.1) and again as he goes: the hands press in
+  // (R4) her first squeeze starts before the cut to the insert (190.95 → held to 191.9): she feels his grip begin to fail; the hands close ~1 cm
+  const sq = win(T, 192.3, 193.6, 0.3, 0.6) + win(T, GRIEF.see, GRIEF.bowed + 0.4, 0.3, 0.8) + win(T, 190.95, 191.9, 0.3, 0.5);
+  const under = add3(H.pos, {x: toHer.x * 0.03, y: -0.045 + 0.005 * Math.min(1, sq), z: toHer.z * 0.03});
+  const over = add3(H.pos, {x: -fwdD.x * 0.02 - toHer.x * 0.06, y: 0.05 - 0.012 * Math.min(1, sq), z: -fwdD.z * 0.02 - toHer.z * 0.06});
   const hL = lerp3(lerp3(end.handL, restL0, up), over, reachL);
   const hR = lerp3(lerp3(end.handR, restR0, up), under, reach);
-  // her squeeze answering his loosening grip (the insert, 191.4–193.1) and again as he goes: the hands press in
-  const sq = win(T, 192.3, 193.6, 0.3, 0.6) + win(T, GRIEF.see, GRIEF.bowed + 0.4, 0.3, 0.8);
   const clasp = {palm: {x: 0, y: 1, z: 0}, fingers: norm3({x: -toHer.x, y: -0.15, z: -toHer.z}), w: reach};
   return {...base, pos, heading,
     pose: {...posed, handR: reach > 0.5 ? (sq > 0.3 ? 'grip' : 'open') : 'relaxed', handL: sq > 0.4 ? 'grip' : 'relaxed',

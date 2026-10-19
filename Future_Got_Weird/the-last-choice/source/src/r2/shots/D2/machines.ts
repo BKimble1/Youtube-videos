@@ -399,7 +399,11 @@ const B_PLAN: Plan = {
       hits: [{t0: EV2.knee, dir: hdir(125), strength: 0.9}, {t0: EV2.blast + 0.06, dir: norm3(sub3(on(B_STRIKE_AT), BLAST_AT)), strength: 0.2},
         {t0: EV2.pryPop, dir: hdir(125), strength: 0.5}, {t0: EV2.rip, dir: hdir(305), strength: 0.45}],
       // the plate springs up and off to its left (away from the runner's face)
-      damage: {back: {t0: EV2.pryPop, dir: {x: 0.55, y: 0.85, z: -0.1}, speed: 3.0}, dead: {t0: EV2.rip + 0.06}, leak: {t0: EV2.rip}},
+      // (R4) it goes up and away north-east, fast (R3: east-north-east at 3 m/s: it came down at (53.84, -2.75) under A's feet and A
+      // stood in it 104.9-107.3, 36-45 sample points inside it; north at 2.4 m/s crossed the runner's face on screen; north at 1.8
+      // m/s came to rest on D's climb route). Now: 2.8 radii from his face on screen, 0.7 m from A in flight, at rest at
+      // (54.95, -5.49), 1.8 m from every route and person
+      damage: {back: {t0: EV2.pryPop, dir: {x: 0.643, y: 0.8, z: -0.766}, speed: 5.0}, dead: {t0: EV2.rip + 0.06}, leak: {t0: EV2.rip}},
       feet: T > EV2.knee - 0.02 ? bKneeFeet(T) : undefined,
       // the broken right knee gives: it goes down forward and to its right (south-south-west), away from the fight
       fall: T > EV2.bFall - 0.5 ? {t0: EV2.bFall, dir: hdir(bRoot().h + 40), ang: restAng(bRoot(), hdir(bRoot().h + 40))} : undefined,
@@ -422,12 +426,14 @@ const bKneeFeet = (T: number) => {
   return {L: F.L0, R: lerp3s(F.R0, F.Rk, e), pitchR: -55 * e};
 };
 const bKneeHand = (): V3 => { const r = bRoot(), f = hdir(r.h), rt = rightOf(r.h); return {x: r.x + f.x * 0.25 - rt.x * 0.24, y: G(r.x, r.z) + 0.62, z: r.z + f.z * 0.25 - rt.z * 0.24}; };
-/** the backhand: its right hand sweeps back and round toward the man at its back (he ducks under it) */
+/** the backhand: its right hand sweeps back and round toward the man at its back (he ducks under it). R4: the arc is 0.25 m
+ *  higher (head-high on a standing man, 1.45-1.5 m): at 1.2-1.3 m it went through the ducked runner's head (6-10 cm
+ *  overlap, 103.03-103.17, probed against the rig's head). */
 const bBackhand = (T: number): V3 | undefined => {
   if (T < EV2.bBack - 0.45 || T > EV2.bBack + 0.75) return undefined;
   const r = bRoot(), p = on(r, 0), f = hdir(r.h), rt = rightOf(r.h);
   const P = (fw: number, ri: number, up: number): V3 => ({x: p.x + f.x * fw + rt.x * ri, y: p.y + up, z: p.z + f.z * fw + rt.z * ri});
-  const K: [number, V3][] = [[EV2.bBack - 0.45, bKneeHand()], [EV2.bBack - 0.2, P(0.25, 0.55, 1.3)], [EV2.bBack, P(-0.55, 0.45, 1.25)], [EV2.bBack + 0.18, P(-0.7, 0.05, 1.2)], [EV2.bBack + 0.75, bKneeHand()]];
+  const K: [number, V3][] = [[EV2.bBack - 0.45, bKneeHand()], [EV2.bBack - 0.2, P(0.25, 0.55, 1.45)], [EV2.bBack, P(-0.55, 0.45, 1.52)], [EV2.bBack + 0.18, P(-0.7, 0.05, 1.5)], [EV2.bBack + 0.75, bKneeHand()]];
   for (let i = 1; i < K.length; i++) if (T <= K[i][0]) {
     const u = (T - K[i - 1][0]) / (K[i][0] - K[i - 1][0]);
     return lerp3s(K[i - 1][1], K[i][1], i === 2 ? easeIn(u) : i === 3 ? easeOut(u) : smooth(u));
@@ -488,11 +494,15 @@ const A_PLAN: Plan = {
         {t0: EV2.brkSwing, side: 'L', at: (t) => AIM.brkTip(t), kind: 'parry', force: 1.1},
       ],
       press: {t0: EV2.press0, t1: EV2.press1, target: (t) => AIM.plate(t), reach: 1.0, beat: 0.28},
-      shove: {t0: EV2.aShove, target: (t) => brk(t), side: 'both', step: 0.3},
+      // (R4) both palms land on his upper chest, on the surface toward it and 0.28 m below `brk` (that point is 1.19 m above his
+      // root: head height once he crouches into the swing, so R3's shove put both fists in his face: 8-10 cm from his head,
+      // 105.37-105.40); it stoops into the push (crouch + lean below) so its shoulders come down to him
+      shove: {t0: EV2.aShove, target: (t) => { const c = brk(t); const d = norm3({x: A_STRIKE_AT.x - c.x, y: 0, z: A_STRIKE_AT.z - c.z}); return add3(c, add3(mul3(d, 0.12), {x: 0, y: -0.28, z: 0})); }, side: 'both', step: 0.3},
+      crouch: 0.16 * win(T, EV2.aShove - 0.3, EV2.aShove + 0.55, 0.22, 0.3),
       // the clamp on its chest: it has learned (D1 X4) — it grabs the cable with its right hand and hauls along it
       catch: {t0: EV2.grab, side: 'R', at: (t) => aCable(t), hold: (t) => aCable(t), t1: EV2.taut + 0.25,
         wrench: {t0: EV2.haul, dir: norm3(sub3(on(A_STRIKE_AT), ANCHOR)), dist: 0.4, deg: 25}},
-      lean: 10 * strain,
+      lean: 10 * strain + 8 * win(T, EV2.aShove - 0.3, EV2.aShove + 0.55, 0.22, 0.3),
       hits: [{t0: EV2.blast + 0.06, dir: norm3(sub3(on(A_STRIKE_AT), BLAST_AT)), strength: 0.55}, {t0: EV2.tBite, dir: norm3(sub3(ANCHOR, on(A_STRIKE_AT))), strength: 0.7}],
     };
   },
@@ -578,7 +588,10 @@ A_PLAN.act = (T) => {
     catch: {...(a.catch as CatchSpec), t1: EV2.crash - 0.04},
     attend: T > EV2.crash ? [{t0: EV2.aStir, at: (t) => AIM.head(t), t1: EV2.aKill, turn: false}] : a.attend, posture: [...((a.posture as [number, 'idle' | 'guard' | 'ready' | 'lowered'][]) ?? []), [EV2.taut, 'idle']],
     hits: [...(a.hits ?? []), {t0: EV2.sweep, dir: {x: d.x, y: 0, z: d.z}, strength: 0.8}, {t0: EV2.crash + 0.03, dir: {x: -d.x, y: 0, z: -d.z}, strength: 1.0}, {t0: EV2.aKill, dir: {x: 0.3, y: -1, z: -0.2}, strength: 0.6}],
-    damage: {back: {t0: EV2.crash + 0.02, dir: {x: -d.x * 0.4, y: 0.8, z: -d.z * 0.4 + 0.3}, speed: 2.6}, leak: {t0: EV2.crash + 0.1}, dent: {t0: EV2.aKill, deg: 9}, dead: {t0: EV2.aKill + 0.04}},
+    // (R4) the burst back plate goes east (R3: south-south-east at 2.6 m/s: it crossed the crew's heads, passed through the
+    // runner's head at 109.60-109.93 and lay in the middle of them): fast and flat across the open slope, 3.7 m clear of the
+    // nearest person at rest, (54.5, -9.2)
+    damage: {back: {t0: EV2.crash + 0.02, dir: {x: 0.996, y: 0.8, z: -0.087}, speed: 4.2}, leak: {t0: EV2.crash + 0.1}, dent: {t0: EV2.aKill, deg: 9}, dead: {t0: EV2.aKill + 0.04}},
     // it rebounds off C and goes down on its side along the girder's south face (beside C: the wreck barricade)
     fall: {t0: EV2.crash + 0.14, dir: A_FALL, ang: restAng(aContact(), A_FALL)},
     eye: T > EV2.crash + 0.2 && T < EV2.aStir ? 'off' : undefined,
@@ -632,7 +645,9 @@ const C_PLAN: Plan = {
       attend: T < EV2.sweep + 0.4 ? track([[95.95, smokeC, 0.4], [98.3, (t) => decoyPt(0, t, 0.6), 0.3], [104.45, on({x: 50.6, z: -8.6}, 1.4), 0.2], [106.2, on({x: 47.0, z: -10.8}, 1.4), 0.4]], EV2.sweep) : undefined,
       raise: T < EV2.sweep + 0.1 ? {t0: EV2.cRaise, t1: EV2.sweep - 0.02, side: 'R'} : undefined,
       hits: [{t0: EV2.sweep, dir: {x: d.x, y: 0, z: d.z}, strength: 1.4}, {t0: EV2.crash, dir: {x: -d.x, y: 0, z: -d.z}, strength: 1.6}],
-      damage: {chest: {t0: EV2.crash, dir: {x: -d.x * 0.5 + 0.2, y: 0.75, z: -d.z * 0.5 + 0.4}, speed: 3.4}, pauldronL: {t0: EV2.crash + 0.02, dir: {x: -0.2, y: 0.7, z: 0.6}, speed: 2.2}, leak: {t0: EV2.crash + 0.08}, dead: {t0: EV2.crash + 0.3}},
+      // (R4) the torn chest plate goes east-north-east (R3: south-east, it came to rest at (50.68, -7.10), 0.33 m from the Director's
+      // counter spot and under his feet at the end; his shin clipped it, 2-5 cm, 113.77-115.63)
+      damage: {chest: {t0: EV2.crash, dir: {x: 0.95, y: 0.75, z: -0.3}, speed: 3.0}, pauldronL: {t0: EV2.crash + 0.02, dir: {x: -0.2, y: 0.7, z: 0.6}, speed: 2.2}, leak: {t0: EV2.crash + 0.08}, dead: {t0: EV2.crash + 0.3}},
       // its upper body stops on the chord, the legs go on: it folds and slumps down sideways at the girder's foot
       fall: {t0: EV2.crash + 0.1, dir: C_FALL, ang: 84},
       crouch: 0.12 * win(T, EV2.crash, EV2.crash + 0.3, 0.04, 0.2),
@@ -649,6 +664,10 @@ export const D_UP = {x: 50.85, z: -5.05};
 const D_UPW: Walk = {kind: 'walk', pts: [{x: 0, z: 0}, {x: 54.6, z: -0.9}, {x: 53.35, z: -3.55}, {x: 52.2, z: -4.75}, {x: D_UP.x, z: D_UP.z}], T0: EV2.dUp0, T1: EV2.dUp1, stride: 1.7, A: 0.6, D: 0.65};
 /** where the runner's adze pulls D's left ankle toward (him, on his knees) */
 export const D_ANKLE_TO: XZ = {x: 49.17, z: -6.73};
+/** (R4) D's right hand while it stands over the kneeling runner and hammers with the left (113.0-113.95): held back and up at
+ *  its right side, balancing the blow. In R3 its guard fist sat where his head is (5-10 cm from his head's centre,
+ *  113.2-113.6, probed against the rig). */
+const dRightHeld = (): V3 => cached('dRHeld', () => { const r = rootOf(D_PLAN, 112.95), f = hdir(r.h), rt = rightOf(r.h); return {x: r.x + rt.x * 0.46 - f.x * 0.05, y: G(r.x, r.z) + 1.28, z: r.z + rt.z * 0.46 - f.z * 0.05}; });
 const D_PLAN: Plan = {
   id: 8106, key: 'd2D', d1: 'U6',
   phases: [{kind: 'd1', name: 'U6'}, {kind: 'kit', T0: EV2.dAtt, at: null}, D_COME, {kind: 'kit', T0: EV2.dWalk1, at: null}, D_LURE, {kind: 'kit', T0: D_LURE.T1, at: null},
@@ -673,6 +692,7 @@ const D_PLAN: Plan = {
         {t0: EV2.dRe, side: 'R', kind: 'punch', target: on({x: 49.0, z: -5.7}, 0.9)},
       ],
       press: {t0: EV2.dPress0, t1: EV2.dPress1, target: (t) => AIM.chest(t), reach: 1.05, beat: 0.3},
+      armR: T > 112.96 && T < 114.0 ? {hand: dRightHeld()} : undefined,
       hits: [
         {t0: EV2.blast + 0.06, dir: norm3(sub3(on(D_LURE_AT), BLAST_AT)), strength: 0.7},
         {t0: EV2.shield + 0.02, dir: {x: 0.85, y: 0, z: 0.5}, strength: 0.45},
@@ -779,6 +799,8 @@ type Fade = {side: 'L' | 'R'; t0: number; t1: number; dir: 'in' | 'out'};
 const FADES: Record<string, Fade[]> = {
   // the backhand leaves from its guard and the bracing hand comes off the knee when the plate pops
   B: [{side: 'R', t0: EV2.bBack - 0.45, t1: EV2.bBack - 0.2, dir: 'in'}, {side: 'R', t0: EV2.pryPop, t1: EV2.pryPop + 0.35, dir: 'out'}],
+  // D's right hand goes to its side as it stands over the runner and comes back for its re-chamber
+  D: [{side: 'R', t0: 112.96, t1: 113.2, dir: 'in'}, {side: 'R', t0: 113.75, t1: 114.0, dir: 'out'}],
 };
 export const unitD2 = (name: string, T: number): UnitSpec => {
   let sp = run(PLANS[name], T);

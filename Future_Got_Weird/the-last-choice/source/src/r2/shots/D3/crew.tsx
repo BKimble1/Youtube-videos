@@ -36,7 +36,7 @@ import {heavyAttach, unitAttach, unitRoot} from '../../mech';
 import {M} from '../../timing';
 import {EV3} from './times';
 import {Seg, Body, bodyAt, mixFoot, toLoc, fromLoc, lookYaw, lookPitch, lerp3v, XZ, G, onG, fwdOf, rightOf, headingTo, wrapD, win, runEnd, standAt, keyRoot, KR, pathLen, cruise} from '../D4/motion';
-import {heavy1D3, h1ClampPt, BLAST_AT, SMASH_AT, allyAt, heavy2D3, KNEE_AT, BRK_STAND, escort} from './machines';
+import {heavy1D3, h1ClampPt, BLAST_AT, SMASH_AT, allyAt, heavy2D3, KNEE_AT, BRK_STAND, escort, D_PLANS, droneD3} from './machines';
 import {DIR_FIGHT, DIR_FACE_H, RUN_GUARD, RUN_HOOK, UNDER, DEC_SPOT, plateOf} from './marks';
 import {pipeAt} from './geo';
 import {ANCHOR} from '../D2/machines';
@@ -183,6 +183,11 @@ export const towardSpec = (a: FigSpec, b: FigSpec, w: number): FigSpec => {
 const H1_EYE = (T: number) => heavyAttach(heavy1D3(T)).eye;
 const H2_EYE = (T: number) => heavyAttach(heavy2D3(T)).eye;
 const H2_POD = (T: number) => heavyAttach(heavy2D3(T)).muzzle;
+/** the ADAPT drone (7605) climbing out of the dust and marking the tablet: the Crew look up at it from its lock (EV3.lock
+ *  129.85) until it has them (≈131.3) — D3-5 (the drone) and D3-6 (the Crew from above) are one event */
+const ADAPT_PLAN = D_PLANS.find((p) => p.id === 7605)!;
+const ADAPT_EYE = (T: number): V3 => droneD3(ADAPT_PLAN, T).pos;
+const ADAPT_LOOK = EV3.lock + 0.1, ADAPT_DONE = 131.3;
 /** the wreck's middle (for the looks after the crash) */
 const WRECK_C: V3 = {x: 62.7, y: -1.2, z: -5.0};
 /** the flinch at a big impact (head ducks, shoulders up), k by distance: added onto the pose it is given */
@@ -378,7 +383,7 @@ const U8_HEAD = (T: number) => unitAttach(escort('U8', T)).head, U8_CHEST = (T: 
 const H1_HULL = (T: number) => heavyAttach(heavy1D3(T)).hull;
 const DIR_LOOK: LK[] = [
   [M.P3, H1_EYE], [117.1, at3(48.4, -6.2, 1.0)], [EV3.sigEnd, H1_EYE], [EV3.dirGo + 0.3, null], [121.6, U8_HEAD], [EV3.e1Turn, U8_CHEST], [EV3.bash + 0.15, KNEE_AT()],
-  [125.2, H1_HULL], [126.8, WRECK_C], [128.1, null], [130.8, at3(56.5, -1, 1.2)], [135.2, at3(56.5, -0.5, 3.5)], [136.2, ON(DEC_SPOT, 0.9)], [138.2, at3(52.5, -10, 2.5)],
+  [125.2, H1_HULL], [126.8, WRECK_C], [128.1, null], [ADAPT_LOOK, ADAPT_EYE], [ADAPT_DONE, at3(56.5, -1, 1.2)], [135.2, at3(56.5, -0.5, 3.5)], [136.2, ON(DEC_SPOT, 0.9)], [138.2, at3(52.5, -10, 2.5)],
   [140.4, (T) => allyAt(Math.min(T, EV3.kill))], [141.8, H2_EYE], [EV3.seeHer, H2_POD], [EV3.dirRun, ON(DEC_SPOT, 0.8)], [EV3.decUp, H2_POD], [THROW_T, null], [DIR_UP + 0.95, H2_EYE], [DIR_GO + 0.05, null],
 ];
 export const directorAt = (T: number): CrewOut => {
@@ -424,6 +429,11 @@ export const directorAt = (T: number): CrewOut => {
     const hp = lerp(RISE_KEYS[0][1].head?.pitch ?? -46, -26 + 6 * Math.sin((T - 146) * 3), ramp(T, THROW_T + 0.45, THROW_T + 0.85) * (1 - ramp(T, DIR_UP - 0.35, DIR_UP)));
     pose = T < DIR_UP ? (u < 1 ? fallP : layer(RISE_KEYS[0][1], {head: {pitch: hp}})) : risePose(clamp((T - DIR_UP) / 1.0) * 7.2);
   }
+  // R4: up from the throw he looks back at the heavy over the plate, not through it: the guard comes up only to the chest /
+  // shoulder (fist and strapped forearm in view, the face clear) — the fight's high guard (hand at eye height, 1.1 m out)
+  // put the plate flat across his face for the camera in front of him (D3-11d)
+  const low = win(T, DIR_UP + 0.7, DIR_GO + 0.35, 0.25, 0.25);
+  if (low > 0) guard = {r: lerp(guard.r, 2, low), u: lerp(guard.u, 298, low), f: lerp(guard.f, 86, low)};
   // looks
   const L = lookBy(pose, b, DIR_LOOK, T, down ? 0 : 1 - sig * 0.5);
   pose = flinch(T, EV3.land, 1, 0.9)(L.pose);
@@ -531,7 +541,7 @@ const BRK_FACE: [number, Face][] = [
 const BRK_DOWN = {t0: 145.5, t1: 147.0};
 const BRK_LOOK: LK[] = [
   [M.P3, at3(50.25, -7.7, 1.5)], [117.6, H1_EYE], [EV3.brkGo + 0.3, null], [122.95, KNEE_AT()], [EV3.e2Hit - 0.3, (T) => unitAttach(escort('R4', T)).head], [BRK_PIVOT.t1 + 0.1, null],
-  [127.2, WRECK_C], [128.8, null], [131.2, at3(55.5, -0.5, 1.4)], [136.4, at3(45.5, -1, 2.0)], [141.8, H2_EYE], [EV3.fallBack, null],
+  [127.2, WRECK_C], [128.8, null], [ADAPT_LOOK + 0.08, ADAPT_EYE], [ADAPT_DONE + 0.05, at3(55.5, -0.5, 1.4)], [136.4, at3(45.5, -1, 2.0)], [141.8, H2_EYE], [EV3.fallBack, null],
 ];
 export const breakerAt = (T: number): CrewOut => {
   const b = bodyAt3(BRK_SEGS, T);
@@ -562,6 +572,10 @@ export const breakerAt = (T: number): CrewOut => {
   // the blast: knocked down onto a knee (the tool across his thigh); he checks the gauge: empty
   const kd = win(T, BRK_DOWN.t0, BRK_DOWN.t1, 0.18, 0.3);
   if (kd > 0) pose = blendPose(pose, layer(KNEEL('R'), {drop: 84, lean: 22, head: {pitch: 30, yaw: 4}, face: {lookY: 0.7}, breath: 1}), kd);
+  // R4: he bows over the tool and looks down at its dial (from 145.9, before the cut into the gauge insert: the insert is
+  // what he sees; the camera in D3-11a pushes in on him)
+  const bow = win(T, 145.9, 147.0, 0.3, 0.15);
+  if (bow > 0) pose = layer(pose, {lean: (pose.lean ?? 0) + 8 * bow, head: {...(pose.head ?? {}), pitch: (pose.head?.pitch ?? 0) + 12 * bow}, face: {...(pose.face ?? {}), lookY: 0.95}});
   kneelFeet(b, 'L', kneel0);
   kneelFeet(b, 'R', kd);
   const L = lookBy(pose, b, BRK_LOOK, T, 0.9 * (1 - kd) * (1 - dk));
@@ -571,9 +585,12 @@ export const breakerAt = (T: number): CrewOut => {
   pose = flinch(T, EV3.land, 0.8, 0.9)(pose);
   const port = {front: fromLoc(b, {r: -16, u: 250, f: 118}), back: fromLoc(b, {r: 32, u: 205, f: 34})};
   // the gauge check: the tool lifted across his body, the gauge toward his face
-  const chk = win(T, 146.3, 147.0, 0.2, 0.15);
+  // (R4: begins in D3-11a, before the cut — he looks down at the dial in the wide and the insert is his look)
+  const chk = win(T, 145.9, 147.0, 0.3, 0.15);
   const H0 = hands ?? port;
-  const H = chk > 0 ? {front: lerp3v(H0.front, fromLoc(b, {r: -30, u: 210, f: 90}), chk), back: lerp3v(H0.back, fromLoc(b, {r: 34, u: 190, f: 50}), chk)} : H0;
+  // (R4: the tool lies across his raised thigh, tank and gauge up — the red tank and yellow tube read from the lens above
+  // — and he is bowed over it; before, it was lifted out to the side at the chest like a rod pointing at the decoy maker)
+  const H = chk > 0 ? {front: lerp3v(H0.front, fromLoc(b, {r: -34, u: 128, f: 104}), chk), back: lerp3v(H0.back, fromLoc(b, {r: 24, u: 120, f: 62}), chk)} : H0;
   const runArms: Pose = {armL: {local: {r: -16, u: 262, f: 112}}, armR: {local: {r: 30, u: 208, f: 36}}};
   const final = withRun(b, withFace(pose, faceKeys(T, BRK_FACE)), runArms);
   const fire = swing ? win(T, EV3.knee, EV3.knee + 0.08, 0.005, 0.05) : 0;
@@ -602,7 +619,7 @@ const RUN_FACE: [number, Face][] = [
 const RUN_DOWN = {t0: THROW_T, t1: 147.0};
 const RUN_LOOK: LK[] = [
   [M.P3, at3(50.25, -7.7, 1.5)], [117.6, H1_EYE], [EV3.runGo + 0.3, null], [122.75, U8_HEAD], [EV3.hook + 0.15, KNEE_AT()], [125.3, H1_HULL], [126.5, WRECK_C], [128.4, null],
-  [131.1, at3(55.5, -0.5, 1.4)], [136.4, H2_EYE], [EV3.fallBack, null],
+  [ADAPT_LOOK + 0.05, ADAPT_EYE], [ADAPT_DONE, at3(55.5, -0.5, 1.4)], [136.4, H2_EYE], [EV3.fallBack, null],
 ];
 /** the bar in both hands from the run on (until the blast knocks it to one hand) */
 const RUN_TWO = {t0: EV3.runGo - 0.1, t1: THROW_T};
@@ -763,7 +780,7 @@ export const tetherAt = (T: number): CrewOut => {
   return {spec, body: b, pts: {muzzle}};
 };
 const TTH_LOOK: LK[] = [
-  [M.P3, H1_EYE], [EV3.tAim - 0.15, (T) => clampTarget(Math.min(T, EV3.tBite))], [EV3.wrap0, ANCHOR], [EV3.taut, (T) => clampTarget(T)], [126.0, WRECK_C], [137.6, at3(51, -8.3, 2.0)],
+  [M.P3, H1_EYE], [EV3.tAim - 0.15, (T) => clampTarget(Math.min(T, EV3.tBite))], [EV3.wrap0, ANCHOR], [EV3.taut, (T) => clampTarget(T)], [126.0, WRECK_C], [ADAPT_LOOK + 0.12, ADAPT_EYE], [ADAPT_DONE, WRECK_C], [137.6, at3(51, -8.3, 2.0)],
   [EV3.cut, at3(48.5, -9, 1.0)], [EV3.tRun, at3(44.5, -4.5, 1.2)], [141.9, (T) => H2_EYE(Math.min(T, 145.4))],
 ];
 
@@ -786,7 +803,7 @@ const PIL_FACE: [number, Face][] = [
   [128.0, E.focus], [EV3.lock + 0.3, E.alert], [131.5, E.focus], [EV3.smash, E.shock], [137.0, E.focus], [140.4, E.fear], [EV3.kill, E.shock], [141.9, E.grief],
   [143.5, E.worried], [EV3.fallBack, E.fear], [THROW_T, E.pain], [146.6, E.dazed], [146.85, E.effort],
 ];
-const PIL_LOOK: LK[] = [[M.P3, allyAt], [EV3.kill + 0.05, at3(42.3, 2.4, 0.2)], [143.6, H2_EYE], [EV3.fallBack, null]];
+const PIL_LOOK: LK[] = [[M.P3, allyAt], [ADAPT_LOOK + 0.02, ADAPT_EYE], [ADAPT_DONE - 0.1, allyAt], [EV3.kill + 0.05, at3(42.3, 2.4, 0.2)], [143.6, H2_EYE], [EV3.fallBack, null]];
 export const pilotAt = (T: number): CrewOut => {
   const b = bodyAt3(PIL_SEGS, T);
   const lost = toolsR2('drone', T).drone === 'lost';
@@ -849,7 +866,7 @@ const FLR_FACE: [number, Face][] = [
   [EV3.land, E.shock], [126.9, E.grin], [128.0, E.focus], [EV3.lock + 0.3, E.alert], [131.5, E.focus], [EV3.smash, E.shock], [137.0, E.focus], [EV3.kill, E.worried], [142.6, E.fear],
   [EV3.fallBack, E.effort], [THROW_T, E.pain], [146.3, expr('pain', 1, {squint: 1})], [FLR_UP, E.dazed], [FLR_UP + 0.35, E.pain], [FLR_UP + 0.6, E.effort],
 ];
-const FLR_LOOK: LK[] = [[M.P3, at3(50.25, -7.7, 1.6)], [EV3.flareDraw, null], [118.3, H1_EYE], [119.9, H1_HULL], [125.0, WRECK_C], [127.9, null], [130.6, at3(55.5, -0.5, 2.0)], [136.4, H2_EYE], [EV3.fallBack, null]];
+const FLR_LOOK: LK[] = [[M.P3, at3(50.25, -7.7, 1.6)], [EV3.flareDraw, null], [118.3, H1_EYE], [119.9, H1_HULL], [125.0, WRECK_C], [127.9, null], [ADAPT_LOOK + 0.1, ADAPT_EYE], [ADAPT_DONE, at3(55.5, -0.5, 2.0)], [136.4, H2_EYE], [EV3.fallBack, null]];
 export const flaresAt = (T: number): CrewOut => {
   const b = bodyAt3(FLR_SEGS, T);
   let pose: Pose = layer(BRACED({wide: 0.75, fists: false}), {});
@@ -924,7 +941,7 @@ const DEC_FACE: [number, Face][] = [
   [EV3.tap, E.resolve], [135.95, E.real], [136.15, E.shock], [EV3.smash, E.pain], [137.0, expr('pain', 1, {squint: 1})], [137.6, E.grief], [139.0, E.dazed],
   [143.55, E.real], [143.8, E.fear], [EV3.grab, E.shock], [EV3.decUp, E.fear], [THROW_T, E.pain], [146.2, E.fear], [146.75, E.effort],
 ];
-const DEC_LOOK: LK[] = [[M.P3, H1_EYE], [119.9, (T) => H1_HULL(Math.min(T, 126.4))], [127.4, null], [135.0, at3(56.5, -0.5, 3.2)], [135.95, at3(47.6, 3.2, 1.0)], [EV3.smash, null],
+const DEC_LOOK: LK[] = [[M.P3, H1_EYE], [119.9, (T) => H1_HULL(Math.min(T, 126.4))], [127.4, null], [EV3.mark0 - 0.1, ADAPT_EYE], [ADAPT_DONE + 0.1, null], [135.0, at3(56.5, -0.5, 3.2)], [135.95, at3(47.6, 3.2, 1.0)], [EV3.smash, null],
   [143.5, H2_POD], [EV3.grab, at3(42, 0, 1.3)], [THROW_T, null]];
 export const decoyAt = (T: number): CrewOut => {
   const b = bodyAt3(DEC_SEGS, T);
@@ -961,7 +978,9 @@ export const decoyAt = (T: number): CrewOut => {
   }
   const kneelK = win(T, 137.2, EV3.decUp + 0.1, 0.45, 0.25);
   kneelFeet(b, 'R', kneelK);
-  const L = lookBy(pose, b, DEC_LOOK, T, down ? 0 : 0.9 * (1 - work));
+  // (the amber line finds her tablet: she looks up at the drone that marked it, then back to the glass)
+  const peek = win(T, EV3.mark0 - 0.12, ADAPT_DONE + 0.25, 0.18, 0.25);
+  const L = lookBy(pose, b, DEC_LOOK, T, down ? 0 : 0.9 * (1 - work * (1 - peek)));
   pose = flinch(T, EV3.land, 0.5, 0.8)(L.pose);
   const lt = L.gaze;
   const runArms: Pose = {armL: {local: {r: -26, u: 232, f: 70}}, armR: b.gait?.armR};

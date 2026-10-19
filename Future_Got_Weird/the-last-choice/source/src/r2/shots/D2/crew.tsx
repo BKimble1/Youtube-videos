@@ -369,9 +369,12 @@ const K0 = sp('breaker');
 /** at the slab's south end, tool up between D and the pilot */
 const BRK_COVER = {x: 47.35, z: 6.9};
 /** at A's south-west as the swing lands (A parries it) */
-export const BRK_AT = {x: 53.05, z: -1.75};
+/** (R4) 0.45 m further from A than R3's (53.05, -1.75): the tool's ram end meets A's flank 1.15 m from his chest now, not
+ *  0.4 m (the swing's hands were laid 0.6-1.0 m behind the tip, i.e. through his own body, and A's parrying fist sat 20 cm
+ *  from his head and inside his torso at 105.00-105.07) */
+export const BRK_AT = {x: 52.82, z: -1.36};
 /** shoved back and down onto a knee */
-const BRK_DOWN = {x: 52.45, z: -1.05};
+const BRK_DOWN = {x: 52.3, z: -0.82};
 const BRK_CREST = {x: 48.3, z: -5.1};
 /** the end of his run in, at A (his swing's wind-up starts as he plants) */
 const BRK_ARRIVE = 104.68;
@@ -532,6 +535,9 @@ export const breakerAt = (T: number): CrewOut => {
 const R0 = sp('runner');
 /** behind B's right side as the adze goes behind its right knee */
 export const RUN_HOOK = {x: 51.55, z: -4.12};
+/** R4: for the pry he steps back 0.24 m from B's shoulder blade (away from it, along the line from B): leaning in from the
+ *  hook stance put his head 0.17 m from the plate's edge, behind B's right pauldron for 12 frames (D2-4b) */
+export const RUN_PRY = {x: RUN_HOOK.x - 0.65 * 0.24, z: RUN_HOOK.z - 0.76 * 0.24};
 export const RUN_GUARD = {x: 50.05, z: -5.95, h: 124};
 /** where his flight from the hook ends (his back on the breaker's cradle) */
 export const RUN_CAUGHT = {x: 49.17, z: -6.73};
@@ -539,8 +545,9 @@ const RUN_PATH: XZ[] = [{x: R0.x - 0.1, z: R0.z - 0.15}, {x: 46.3, z: 0.0}, {x: 
 const RUN_SEGS: Seg[] = [
   {kind: 'stand', root: [[94.3, R0.x, R0.z, 270], [96.1, R0.x, R0.z, 270], [96.6, R0.x, R0.z, 40], [99.2, R0.x, R0.z, 40], [99.52, R0.x - 0.1, R0.z - 0.15, headingTo(RUN_PATH[0], RUN_PATH[1])]], stag: 0.12},
   {kind: 'run', path: RUN_PATH, T0: 99.55, T1: 102.08, gait: GAITS.crouch, A: 0.55, D: 0.35},
-  {kind: 'stand', root: [[102.08, RUN_HOOK.x, RUN_HOOK.z, 0], [102.3, RUN_HOOK.x, RUN_HOOK.z, 0], [104.6, RUN_HOOK.x, RUN_HOOK.z, 0], [104.92, RUN_HOOK.x - 0.05, RUN_HOOK.z - 0.05, 230]], stag: 0.12},
-  {kind: 'run', path: [{x: RUN_HOOK.x - 0.05, z: RUN_HOOK.z - 0.05}, {x: 50.6, z: -5.2}, RUN_GUARD], T0: 104.95, T1: 105.85, gait: GAITS.run, A: 0.35, D: 0.4},
+  // (R4) after the duck under B's backhand (103.4) he steps back to RUN_PRY and sets his feet before the lever (103.58)
+  {kind: 'stand', root: [[102.08, RUN_HOOK.x, RUN_HOOK.z, 0], [102.3, RUN_HOOK.x, RUN_HOOK.z, 0], [103.36, RUN_HOOK.x, RUN_HOOK.z, 0], [103.56, RUN_PRY.x, RUN_PRY.z, 0], [104.6, RUN_PRY.x, RUN_PRY.z, 0], [104.92, RUN_PRY.x - 0.05, RUN_PRY.z - 0.05, 230]], stag: 0.12},
+  {kind: 'run', path: [{x: RUN_PRY.x - 0.05, z: RUN_PRY.z - 0.05}, {x: 50.6, z: -5.2}, RUN_GUARD], T0: 104.95, T1: 105.85, gait: GAITS.run, A: 0.35, D: 0.4},
   {kind: 'stand', root: [[105.85, RUN_GUARD.x, RUN_GUARD.z, 200], [106.4, RUN_GUARD.x, RUN_GUARD.z, RUN_GUARD.h], [107.6, RUN_GUARD.x, RUN_GUARD.z, RUN_GUARD.h],
     // the drag goes past in front of him: a step back
     [107.95, RUN_GUARD.x - 0.25, RUN_GUARD.z + 0.05, RUN_GUARD.h - 6], [109.2, RUN_GUARD.x - 0.25, RUN_GUARD.z + 0.05, RUN_GUARD.h - 6], [109.6, RUN_GUARD.x, RUN_GUARD.z, RUN_GUARD.h], [EV2.knock, RUN_GUARD.x, RUN_GUARD.z, RUN_GUARD.h]], stag: 0.14},
@@ -549,7 +556,7 @@ const RUN_SEGS: Seg[] = [
 (() => {
   const s = RUN_SEGS[2] as Extract<Seg, {kind: 'stand'}>;
   const h = headingTo(RUN_HOOK, {x: 52.13, z: -3.44});
-  s.root[0][3] = headingTo(RUN_PATH[RUN_PATH.length - 2], RUN_HOOK); s.root[1][3] = h; s.root[2][3] = h;
+  s.root[0][3] = headingTo(RUN_PATH[RUN_PATH.length - 2], RUN_HOOK); s.root[1][3] = h; s.root[2][3] = h; s.root[3][3] = h; s.root[4][3] = h;
 })();
 /** knocked back: stumbling steps back along D's blow, into the breaker's arms; then lowered to a kneel there */
 const runnerFlight = (T: number) => {
@@ -598,6 +605,24 @@ const pryHands = (b: {pos: V3; heading: number}, T: number) => {
   const front = add3(back, mul3(d, 0.34));
   return {back, front, edge};
 };
+/**
+ * (R4) After the pop the same bar goes on working, both hands staying on it (R3 let go with the left hand and swapped the
+ * bar to a one-hand prop in one frame, 104.07, and the hand-and-cables crossed his face): the fork rises into the open back,
+ * hooks the cable bundle, and at the rip he drags it out and away to his left. Returns the hands and the fork tip.
+ */
+const hookBar = (b: {pos: V3; heading: number}, T: number) => {
+  const p0 = pryHands(b, EV2.pryPop);
+  const d0 = norm3(sub3(p0.front, p0.back));
+  const tip0 = add3(p0.back, mul3(d0, HAL_TIP + 0.34));
+  const port = add3(unitAttach(unitD2('B', Math.min(T, EV2.rip))).backPlate, {x: 0, y: 0.05, z: 0});
+  const u = smooth(clamp((T - (EV2.pryPop + 0.03)) / 0.22));
+  const pull = easeOut(clamp((T - EV2.rip) / 0.3));
+  const away = fromLoc(b, {r: -70, u: 215, f: -10});
+  const tipT = lerp3v(lerp3v(tip0, port, u), away, pull);
+  const backT = lerp3v(lerp3v(p0.back, fromLoc(b, {r: 34, u: 205, f: 84}), u), fromLoc(b, {r: 40, u: 190, f: 40}), pull);
+  const d = norm3(sub3(tipT, backT));
+  return {back: backT, front: add3(backT, mul3(d, 0.34)), tip: add3(backT, mul3(d, HAL_TIP + 0.34)), port};
+};
 /** the adze behind D's left ankle from his knees (114.42): the bar swung low round, yanked back */
 const ankleHands = (b: Body, T: number) => {
   const ft = dHookFoot().L0;
@@ -636,26 +661,26 @@ export const runnerAt = (T: number): CrewOut => {
   if (hk > 0) { set(hookHands(b, T), hk); pose = layer(pose, {drop: 40 + 20 * hk, lean: 26 * hk, twist: -14 * hk}); }
   // its backhand: he ducks under it
   const duck = win(T, EV2.bBack - 0.28, EV2.bBack + 0.32, 0.12, 0.2);
-  if (duck > 0) pose = layer(pose, {drop: (pose.drop ?? 26) + 60 * duck, lean: (pose.lean ?? 10) + 24 * duck, head: {pitch: 20 * duck}});
+  // (R4) down and BACK from the swing (R3 leaned 24 deg forward, into B's shoulder: his head was 0.37 m from its centre and
+  // its arm passed through it, 6-10 cm, 103.03-103.17)
+  if (duck > 0) pose = layer(pose, {drop: (pose.drop ?? 26) + 66 * duck, lean: (pose.lean ?? 10) - 16 * duck, twist: (pose.twist ?? 0) + 14 * duck, head: {pitch: 12 * duck}});
   const pts: Record<string, V3> = {};
   let world: {handL?: V3; handR?: V3} = {};
-  const pry = win(T, EV2.pryIn - 0.2, EV2.pryPop + 0.18, 0.2, 0.12);
+  // (R4) the lever, the pop and the hook are one continuous bar motion with both hands on it (see hookBar); the lever pose
+  // eases out over 0.3 s after the pop instead of 0.12 s (his head rose 0.26 m in 3 frames, 104.03-104.10)
+  const pry = win(T, EV2.pryIn - 0.2, 104.95, 0.2, 0.3);
+  const pryPose = win(T, EV2.pryIn - 0.2, EV2.pryPop + 0.34, 0.2, 0.34);
   if (pry > 0) {
-    const h = pryHands(b, T);
-    pose = blendPose(pose, layer(PRY(clamp((T - EV2.pryIn) / 0.4)), {}), pry);
+    const h = T < EV2.pryPop ? pryHands(b, T) : hookBar(b, T);
+    pose = blendPose(pose, layer(PRY(clamp((T - EV2.pryIn) / 0.4)), {}), pryPose);
     set({back: h.back, front: h.front}, pry);
-    pts.edge = h.edge;
+    pts.edge = pryHands(b, Math.min(T, EV2.pryPop)).edge;
+    if (T > EV2.pryPop + 0.03) { const hb = hookBar(b, T); pts.cablesFrom = hb.port; pts.cablesHand = hb.tip; }
   }
-  const rip = win(T, EV2.pryPop + 0.04, 104.95, 0.12, 0.3);
-  let ripL: V3 | null = null;
+  const rip = win(T, EV2.pryPop + 0.02, 104.95, 0.26, 0.3);
   if (rip > 0) {
-    const u = unitAttach(unitD2('B', T));
-    const inside = add3(u.backPlate, {x: 0, y: 0.04, z: 0});
     const pull = clamp((T - EV2.rip) / 0.35);
-    const ripTo = fromLoc(b, {r: -60, u: 330, f: -40});
-    ripL = lerp3v(lerp3v(fromLoc(b, {r: -30, u: 200, f: 60}), inside, smooth(clamp((T - (EV2.pryPop + 0.04)) / 0.28))), ripTo, easeOut(pull));
     pose = blendPose(pose, layer(pose, {lean: lerp(30, -10, easeOut(pull)), drop: lerp(50, 20, pull)}), rip);
-    pts.cablesFrom = inside; pts.cablesHand = ripL;
   }
   if (guard > 0) { set(bar, guard); pose = blendPose(pose, layer(pose, {drop: 30, lean: 8}), guard); }
   // KNOCKBACK: the hook through his parry, the stagger back, the fall onto the breaker's cradle; then lowered to his knees
@@ -683,10 +708,10 @@ export const runnerAt = (T: number): CrewOut => {
   const runArms: Pose = {armR: {local: {r: 40, u: 220, f: 60}}, armL: b.gait?.armL};
   const final = withRun(b, withFace(pose, faceKeys(T, RUN_FACE)), runArms);
   const HH = H as {back: V3; front: V3} | null;
-  if (HH && T > 96.2) world = {handR: HH.back, handL: ripL ? lerp3v(HH.front, ripL, smooth(clamp(rip / 0.6))) : HH.front};
+  if (HH && T > 96.2) world = {handR: HH.back, handL: HH.front};
   const spec = base('runner', 'd2run', 4, b, T, {
-    ...final, handR: 'grip', handL: rip > 0.3 ? (T < EV2.rip ? 'open' : 'fist') : twoH ? 'grip' : final.handL ?? 'fist', twoHanded: twoH && !(rip > 0.3),
-    ...(twoH && !(rip > 0.3) ? {extra: halligan2({back: 1, front: 0})} : {holdR: halligan1({ang: T > EV2.knock ? 40 : 72})}),
+    ...final, handR: 'grip', handL: twoH ? 'grip' : final.handL ?? 'fist', twoHanded: twoH,
+    ...(twoH ? {extra: halligan2({back: 1, front: 0})} : {holdR: halligan1({ang: T > EV2.knock ? 40 : 72})}),
   }, world, b.inRun ? undefined : tgt);
   return {spec: blendWorld(spec, ramp(T, 96.2, 96.45)), body: b, pts: {...pts, ...(HH ? {back: HH.back, front: HH.front, tip: add3(HH.back, mul3(norm3(sub3(HH.front, HH.back)), HAL_TIP + 0.34))} : {})}};
 };

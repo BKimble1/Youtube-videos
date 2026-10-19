@@ -140,18 +140,19 @@ export const D4_6a = shot(SH.d46a, [
 // Close on the Director as he looks round — north, the crest behind them, south: every way shut — the tether
 // operator behind him; heavy 2 comes on.
 export const D4_6b = shot(SH.d46b, [
-  {t: 0, pos: g(15.6, 4.2, 1.55), target: g(13.6, 2.2, 1.5), fov: 36},
+  {t: 0, pos: g(16.5, 6.2, 1.55), target: g(13.6, 2.2, 1.5), fov: 36},
   // (it eases back north-west, under heavy 2's path between its legs: ≥ 2 m from every leg as it comes on; the R3
   // first cut drifted south into its left legs' lane and a leg wiped the lens at 174.7)
   {t: SH.d47 - SH.d46b, pos: g(14.8, 2.8, 1.5), target: g(12.3, 5.2, 1.5), fov: 36},
 ], (T) => ({full: 30, tweak: {director: {anchor: chest('director', T, 1.5)}}}), 0.012);
 
 // ------------------------------------------------------------------ D4-7a (175.04–175.74): the threat aimed at HER
-// Low, by the van, over her shoulder: she sits against the van; heavy 2 closes the last metre in front of the van, its
-// amber eye locked on her, the ram arm under its nose.
+// (R4) Low, from the south-west beside the death slab: she sits against the van's wall (lower left); heavy 2 closes the last
+// metre on the open ground south-east of the van's nose (right, its legs clear of her and of the van), its amber eye locked on
+// her, the ram arm under its nose pointing along z ≈ 4 — south of the van's front corner.
 export const D4_7a = shot(SH.d47, [
-  {t: 0, pos: g(6.4, 5.9, 0.95), target: g(10.4, 2.9, 1.55), fov: 50},
-  {t: SH.d47b - SH.d47, pos: g(6.43, 5.88, 0.95), target: g(10.5, 2.85, 1.7), fov: 50},
+  {t: 0, pos: g(5.0, 5.5, 0.7), target: g(13.0, 3.5, 2.2), fov: 46},
+  {t: SH.d47b - SH.d47, pos: g(5.1, 5.45, 0.7), target: g(13.0, 3.5, 2.3), fov: 46},
 ], (T) => ({full: 34, tweak: {drone: {anchor: chest('drone', T, 0.5)}}}), 0.012);
 // ------------------------------------------------------------------ D4-7b (175.74–176.45): he SEES; he CHOOSES
 // Close on his face from her direction: looking at the heavy, his head snaps round to her (175.98) — the shock; his
@@ -161,21 +162,24 @@ export const D4_7b = shot(SH.d47b, [
   {t: SH.d47c - SH.d47b, pos: g(11.62, 5.18, 1.32), target: g(12.72, 6.3, 1.2), fov: 35},
 ], (T) => ({full: 30, near: true, tweak: {director: {anchor: chest('director', T, 1.45)}}}), 0.012);
 // ------------------------------------------------------------------ D4-7c (176.45–177.45): the sprint
-// Low from the south-west, wide enough for all three: the ram rears up over her (right), she shrinks against the van
-// (left), he sprints in from the right across the frame and plants between them, plate up.
+// (R4) Low from the south-west, wide enough for all three: the ram rears up over the open ground (right), she shrinks against the
+// van's wall (left), he sprints in from the right along z ≈ 4.8 — south of the van's nose — and plants between them, plate up.
 export const D4_7c = shot(SH.d47c, [
-  {t: 0, pos: g(6.2, 8.2, 1.2), target: g(11.6, 3.1, 2.9), fov: 52},
-  {t: SH.d48 - SH.d47c, pos: g(6.05, 8.05, 1.2), target: g(10.9, 3.1, 2.8), fov: 52},
+  {t: 0, pos: g(5.0, 6.6, 0.9), target: g(11.5, 3.8, 2.4), fov: 56},
+  {t: SH.d48 - SH.d47c, pos: g(5.1, 6.5, 0.9), target: g(10.8, 4.0, 2.0), fov: 54},
 ], (T) => ({full: 34, tweak: {drone: {anchor: chest('drone', T, 0.5)}, director: {anchor: chest('director', T, 1.1)}}}), 0.012);
 
-// ------------------------------------------------------------------ D4-8 (177.45–179.30): STRIKE, side-on
-// Profile from the south (the ram's side is screen right, the slab screen left, the van behind): he is planted with
-// the plate up in front of her; the ram comes down from the right onto the plate (177.76): the plate bursts, he is
-// thrown left — back into the slab — and the lens eases left with him; his legs go under him.
+// ------------------------------------------------------------------ D4-8 (177.45–179.30): STRIKE
+// (R4) From the south, raised over the slab rslab_15 (the camera sits 3.4 m up: its top is 2.3 m), ≈ 5 m from the plate and wide
+// enough (8 m) for the whole event: the death slab at the left, the drone pilot against the van's wall, him planted with the plate
+// up, and the ram head coming down from the right across open ground — the van behind them, the head clear of its nose. The
+// ram lands on the plate (177.76), the plate bursts, he is thrown back left along the ram's line into the slab (177.99), and the lens
+// eases left and in with him as his legs go.
 export const D4_8 = shot(SH.d48, [
-  {t: 0, pos: g(8.4, 7.2, 1.4), target: g(8.65, 3.1, 1.85), fov: 52},
-  {t: M_STRIKE - SH.d48 + 0.12, pos: g(8.38, 7.2, 1.4), target: g(8.45, 3.15, 1.6), fov: 52},
-  {t: SH.d49a - SH.d48, pos: g(8.15, 7.15, 1.3), target: g(7.35, 3.3, 1.1), fov: 48},
+  {t: 0, pos: g(9.4, 8.8, 3.4), target: g(8.8, 4.2, 1.5), fov: 52},
+  {t: M_STRIKE - SH.d48 + 0.12, pos: g(9.4, 8.8, 3.4), target: g(8.7, 4.15, 1.45), fov: 52},
+  {t: M_STRIKE - SH.d48 + 0.45, pos: g(9.0, 7.1, 2.2), target: g(7.9, 3.8, 1.2), fov: 48},
+  {t: SH.d49a - SH.d48, pos: g(8.3, 6.9, 1.4), target: g(7.2, 3.5, 0.9), fov: 42},
 ], (T) => ({full: 34, near: true, tweak: {director: {anchor: chest('director', T, 1.0)}, drone: {anchor: chest('drone', T, 0.5)}}}), 0.01);
 
 // ------------------------------------------------------------------ D4-9a (179.30–180.80): he slides down the slab

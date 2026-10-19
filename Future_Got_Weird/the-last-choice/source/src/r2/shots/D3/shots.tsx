@@ -13,7 +13,7 @@ import {SH3} from './times';
 import {GaugeCU} from './gaugecu';
 import {
   CamFn, CAM_1, CAM_1b, CAM_2, CAM_3a, CAM_3b, CAM_4a, CAM_4b, CAM_5, CAM_6, CAM_7a, CAM_7b, CAM_7c, CAM_8, CAM_9, CAM_10a, CAM_10b, CAM_10c,
-  CAM_11a, CAM_11c, CAM_11d, CAM_11e,
+  CAM_11a, push11a, CAM_11c, CAM_11d, CAM_11e,
 } from './cams';
 
 /** smoke and dust puffs fade out as they reach the lens (no screen-filling veil from a puff a metre away) */
@@ -79,7 +79,7 @@ export const D3_10b = shot(SH3.d310b, CAM_10b, () => ({full: 30, near: true}), 0
 // D3-10c (144.25–145.18): he hauls her up and off the crest; heavy 2 over the wreck, its launcher on them
 export const D3_10c = shot(SH3.d310c, CAM_10c, () => ({full: 32}), 0.014);
 // D3-11a (HEAVY2_FIRE 145.18–146.30): wide: the round; the blast on the rim; they are thrown
-export const D3_11a = shot(SH3.d311a, CAM_11a, () => ({full: 32}), 0.02);
+export const D3_11a = shot(SH3.d311a, (t, T) => push11a(camPath(CAM_11a, t, 0.6), t, T), () => ({full: 32}), 0.02);
 // D3-11b (146.30–147.00): insert (gaugecu.tsx, a drawn close-up like EF's clasp): the breaker's gauge from his eyes:
 // the needle sinks onto the stop; his thumb knocks the glass twice, presses, slides off. (CAM_11b stays the cue
 // generator's listener for this insert.)

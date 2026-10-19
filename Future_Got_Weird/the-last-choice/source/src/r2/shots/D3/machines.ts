@@ -50,7 +50,7 @@ import {D1_ARMY_IDS} from '../D1/machines';
 import {armyUnits, HEAVIES_B, DRONES_B, droneSpecB} from '../B/army';
 import {ARC_START} from '../D4/start';
 import {NAMED as D4_NAMED, RING_PLANS, unitAt as d4UnitAt, heavy2At, heavy2Footfalls, heavy2Root as d4Heavy2Root, droneD4, dirHeadAt} from '../D4/machines';
-import {PIPE, pipeAt, neOfPipe, GATE, clearAt, UNIT_WRECK_CAPS, CAP_R} from './geo';
+import {PIPE, PIPE_HALF, pipeAt, neOfPipe, GATE, clearAt, UNIT_WRECK_CAPS, CAP_R} from './geo';
 import {H1_AT, UNDER, DIR_MEET, U8_MEET, dirPlate, RUN_HOOK, DEC_SPOT, BLAST_XZ} from './marks';
 
 export {PIPE, pipeAt, GATE, H1_AT, DEC_SPOT};
@@ -992,6 +992,44 @@ const withD2 = (name: string | undefined, a: Partial<UnitSpec>, T: number): Part
   const attend = (a.attend ?? []).map((x, i) => (i === 0 && x.t0 <= D2_HANDOFF ? {...x, t0: D2_HANDOFF, at: (t: number) => lerp3s(from, ptOf(x.at, t), smooth(clamp((t - D2_HANDOFF) / 0.5)))} : x));
   return {...a, attend, idle: lerp(s2.idle ?? 0.45, a.idle ?? 0.45, k), posture: [[M.P3, cur(s2.posture, D2_HANDOFF)], [D2_HANDOFF, cur(mine, D2_HANDOFF)], ...after]};
 };
+/**
+ * (R4) A walk's polyline kept clear of the crater's solids. The straight lines from the line / the break to the arc's slots
+ * ran through the burnt car and the chunks, the wing's through girder post 3 and the water main's raised start (a unit's
+ * torso 22 cm inside them: probe `crew vs set meshes`). The units step over the wrecks and over the main where it is low
+ * (liftSteps); never through anything else. Samples of the path (≤ 0.7 m apart) that come within CLEAR_MIN of a solid are
+ * pushed out along the clearance's gradient; the ends stay (the slots and D4's start spots are already clear).
+ */
+const CLEAR_MIN = 0.62;
+const clearW = (p: XZ): number => {
+  let d = clearAt(p, {stepH: 0.2, pipe: false, wrecks: false}).d;
+  d = Math.min(d, Math.hypot(p.x - ANCHOR.x, p.z - ANCHOR.z) - 0.55); // girder post 3
+  const q = pipeAt(p);
+  if (q.u > 0.001 && q.u < 0.999 && q.top > 0.75) d = Math.min(d, q.d - PIPE_HALF); // the main where it is too high to step over
+  return d;
+};
+export const detourPath = (pts: XZ[]): XZ[] => {
+  const rs: XZ[] = [pts[0]];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i], n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.z - a.z) / 0.7));
+    for (let k = 1; k <= n; k++) rs.push({x: lerp(a.x, b.x, k / n), z: lerp(a.z, b.z, k / n)});
+  }
+  let changed = false;
+  const out = rs.map((p, i) => {
+    if (i === 0 || i === rs.length - 1) return p;
+    let q = p;
+    for (let it = 0; it < 12; it++) {
+      const d = clearW(q);
+      if (d >= CLEAR_MIN) break;
+      const e = 0.08, gx = clearW({x: q.x + e, z: q.z}) - clearW({x: q.x - e, z: q.z}), gz = clearW({x: q.x, z: q.z + e}) - clearW({x: q.x, z: q.z - e}), gl = Math.hypot(gx, gz) || 1;
+      const st = Math.min(0.22, CLEAR_MIN - d + 0.05);
+      q = {x: q.x + (gx / gl) * st, z: q.z + (gz / gl) * st};
+      changed = true;
+    }
+    return q;
+  });
+  return changed ? out : pts;
+};
+const detourSteps = (steps: UStep[]) => steps.forEach((st) => { if (st.k === 'walk' && st.pts.length >= 2) st.pts = detourPath(st.pts); });
 /** the units' steps over the wrecks and the main (a high step) */
 const liftSteps = (steps: UStep[]) => steps.forEach((st) => { if (st.k !== 'walk') return; const pt = pipeCross(st.pts); if (overWreck(st.pts) || (pt > 0.05 && pt < 1.2)) st.lift = Math.max(0.42, pt < 1.2 ? pt + 0.3 : 0); });
 const midInOf = (steps: UStep[]) => steps.some((st) => st.k === 'keys' && !!st.feet);
@@ -1079,6 +1117,7 @@ function buildNorth(id: number, src: Src, role: 'r3' | 'wing' | 'lineN', j: numb
   steps.push(hold(press, 143.4 + (j % 3) * 0.3, headingTo(slot, press), norm360(headingTo(press, CREW_C)), 145.6 + (j % 4) * 0.08, 0.5));
   const f = hv(fin.h), pre = {x: fin.x - f.x * 1.1, z: fin.z - f.z * 1.1};
   intoD4(steps, id, [press, pre, {x: fin.x, z: fin.z}], 145.6 + (j % 4) * 0.08, fin);
+  detourSteps(steps);
   liftSteps(steps);
   const midIn = midInOf(steps);
   const eye = eyeFn(src, id);
@@ -1161,6 +1200,7 @@ function buildSouth(id: number, src: Src, role: 'mid' | 'south' | 'u8' | 'retrea
   // after the blast: they press in, to D4's start (arriving along D4's first heading)
   const f = hv(fin.h), pre = {x: fin.x - f.x * 1.1, z: fin.z - f.z * 1.1};
   intoD4(steps, id, [{x: a2.x, z: a2.z}, pre, {x: fin.x, z: fin.z}], 145.6 + (j % 5) * 0.07, fin);
+  detourSteps(steps);
   liftSteps(steps);
   const midIn = midInOf(steps);
   const eye = eyeFn(src, id);

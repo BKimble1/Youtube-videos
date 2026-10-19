@@ -17,8 +17,13 @@ import {groundGrid, Decal, blobXZ, crackXZ, rebarAt, polyline3, chipsXZ, splitPl
 import {CITY, Bldg, bldgMesh, lodFor, coneMesh, bldgSteel, facadePanel, openingFor, wallFrame, wallPoint} from './city';
 import {vanMesh, vanInteriorMesh, VAN_XF, radioMesh, radioFn, RADIO, deathSlabMesh, carMesh, busMesh, girderMesh, girderMeshMid, girderMeshFar, vehicleFar, vanMeshWhole, columnMeshes, brokenSlab, chunkMesh, beam, truckMesh, fallenSignal, dumpsterMesh, boxBin, hydrantMesh} from './props';
 import {M} from '../timing';
+import {lodWindowAt, envelopeDist, minDistTo} from './lodwin';
 
 const FLAT_BIAS = -1e5;
+/** (R4) thin sprites (wires, rebar) are drawn within 160 m of the lens and fade out over the last 50 m instead of vanishing */
+const SPRITE_FADE: [number, number] = [110, 160];
+/** the same for the twisted steel at broken buildings (drawn within 330 m) */
+const STEEL_FADE: [number, number] = [240, 330];
 
 // ------------------------------------------------------------------ ground materials
 const ridgeMat = (x: number, z: number, slope: number) => {
@@ -114,6 +119,42 @@ const meshOf = (m: Prepped, key: string, extra: Partial<MeshItem> = {}): Static 
   const sc = typeof extra.xf?.scale === 'number' ? extra.xf.scale : 1;
   return {item: {kind: 'mesh', mesh: m, key, ...extra}, c, r: m.radius * sc};
 };
+
+/**
+ * (R4) Seat a slab on the ground: the slab's origin height at (x, z) that puts its lowest vertex `sink` m below the terrain there
+ * (broken pieces lie IN the rubble, not on top of it). `o` is returned as the origin to pass to brokenSlab with the same
+ * arguments.
+ */
+const seatSlab = (x: number, z: number, U: V3, V: V3, w: number, h: number, thick: number, seed: number, sink: number): V3 => {
+  const probe = brokenSlab({x, y: 0, z}, U, V, w, h, thick, seed);
+  const low = Math.min(...probe.verts.map((q) => q.y - groundH(q.x, q.z)));
+  return {x, y: -sink - low, z};
+};
+
+/** the ruin's free-standing columns and the broken floors placed so far (a floor must not pass through either) */
+const RUIN_COLS: {x: number; z: number; h: number}[] = [];
+const FLOORS: Mesh[] = [];
+/** is p inside the closed mesh m? (ray cast straight up through the faces' fans) */
+const insideMesh = (m: Mesh, p: V3): boolean => {
+  let hits = 0;
+  for (const f of m.faces) {
+    const P = f.v.map((i) => m.verts[i]);
+    for (let k = 1; k + 1 < P.length; k++) {
+      const a = P[0], b = P[k], c = P[k + 1];
+      const d = (b.x - a.x) * (c.z - a.z) - (b.z - a.z) * (c.x - a.x);
+      if (Math.abs(d) < 1e-9) continue;
+      const u = ((p.x - a.x) * (c.z - a.z) - (p.z - a.z) * (c.x - a.x)) / d, v = ((b.x - a.x) * (p.z - a.z) - (b.z - a.z) * (p.x - a.x)) / d;
+      if (u < 0 || v < 0 || u + v > 1) continue;
+      if (a.y + u * (b.y - a.y) + v * (c.y - a.y) > p.y) hits++;
+    }
+  }
+  return hits % 2 === 1;
+};
+/** does the slab mesh have a vertex inside another slab (or the other way round), or does a column stand through it? */
+const slabConflict = (m: Mesh, others: Mesh[], cols: {x: number; z: number; h: number}[]): boolean =>
+  others.some((o) => m.verts.some((v) => insideMesh(o, v)) || o.verts.some((v) => insideMesh(m, v))) ||
+  cols.some((c) => [[-0.35, -0.35], [0.35, -0.35], [0.35, 0.35], [-0.35, 0.35], [0, 0]].some(([dx, dz]) => [0.5, c.h * 0.5, c.h - 0.2].some((y) => insideMesh(m, {x: c.x + dx, y, z: c.z + dz}))) ||
+    m.verts.some((v) => Math.abs(v.x - c.x) < 0.35 && Math.abs(v.z - c.z) < 0.35 && v.y > 0 && v.y < c.h));
 
 const buildFlat = (): Static[] => {
   const out: Static[] = [];
@@ -213,13 +254,18 @@ const buildStatic = (): Static[] => {
     const V0 = {x: 0, y: 1, z: 0};
     const V = norm3(rotAxis(V0, U, tilt * (rnd(s * 9) > 0.5 ? 1 : -1)));
     const w = 1.8 + rnd(s * 11) * 3.2, h = 1.1 + rnd(s * 13) * 2.2;
-    const o = {x: x - U.x * w / 2, y: y - 0.45, z: z - U.z * w / 2};
+    const th = 0.24 + rnd(s * 17) * 0.18;
+    let o = {x: x - U.x * w / 2, y: y - 0.45, z: z - U.z * w / 2};
+    // (R4) a slab whose low edge hangs more than 0.25 m over a dip in the mound (rslab_19: 0.57 m) is settled into it
+    const contact = (oo: V3) => { const g = brokenSlab(oo, U, V, w, h, th, s).verts.map((q) => q.y - groundH(q.x, q.z)).sort((a, b) => a - b); return g[Math.floor(g.length / 3)]; };
+    const c0 = contact(o);
+    if (c0 > 0.25) o = {...o, y: o.y - (c0 - 0.05)};
     // (R3) 0.6 m strips across the slab: the Crew climb, crouch and stand beside these on the ridge
-    out.push(splitNear(brokenSlab(o, U, V, w, h, 0.24 + rnd(s * 17) * 0.18, s), (m) => splitPlanar2(m, 0.6, U), `rslab_${i}`));
+    out.push(splitNear(brokenSlab(o, U, V, w, h, th, s), (m) => splitPlanar2(m, 0.6, U), `rslab_${i}`));
     const topMid = add3(add3(o, mul3(U, w * 0.5)), mul3(V, h * 0.95));
     // (R3: slab 15, 3–4 m south of the death seat, keeps no rebar: on F1's crane-up its strands crossed the pilot and the
     // Director for 3 s)
-    if (i !== 15) EXTRA_PUSH.push(...rebarAt(`rreb_${i}`, topMid, norm3(add3(V, mul3(U, 0.3))), 3 + Math.floor(rnd(s * 19) * 3), 0.7 + rnd(s * 23) * 0.8, s));
+    if (i !== 15) EXTRA_PUSH.push(...rebarAt(`rreb_${i}`, topMid, norm3(add3(V, mul3(U, 0.3))), 3 + Math.floor(rnd(s * 19) * 3), 0.7 + rnd(s * 23) * 0.8, s, SPRITE_FADE));
   }
   for (let i = 0; i < 90; i++) {
     const s = 600 + i;
@@ -282,16 +328,49 @@ const buildStatic = (): Static[] => {
     const s = 900 + i;
     const x = W.x0 + 3 + rnd(s) * (W.x1 - W.x0 - 6), z = W.z0 + 4 + rnd(s * 3) * (W.z1 - W.z0 - 8);
     const hh = 4 + rnd(s * 5) * 8;
+    RUIN_COLS.push({x, z, h: hh});
     out.push(meshOf(prep(box({x: x - 0.35, y: 0, z: z - 0.35}, {x: x + 0.35, y: hh, z: z + 0.35}, 'concrete')), `rcol_${i}`));
-    EXTRA_PUSH.push(...rebarAt(`rcreb_${i}`, {x, y: hh, z}, {x: 0, y: 1, z: 0}, 4, 1.0, s));
+    EXTRA_PUSH.push(...rebarAt(`rcreb_${i}`, {x, y: hh, z}, {x: 0, y: 1, z: 0}, 4, 1.0, s, SPRITE_FADE));
   }
+  // (R4) the four broken floors in the ruin hovered 0.3–2.7 m above the rubble bed (rfloor_3 was the "floating rock" of B5–D1:
+  // its height was an absolute 1–3.5 m whatever the ground under it was). Each now lies with its low edge buried in the bed and
+  // leans up at ≤ ~20°; its raised part rests on stacks of broken pieces standing on the ground (the same random draws as R3:
+  // place, direction, size; only the height and the lean angle are seated).
   for (let i = 0; i < 4; i++) {
     const s = 950 + i;
     const x = W.x0 + 5 + rnd(s) * (W.x1 - W.x0 - 10), z = W.z0 + 6 + rnd(s * 3) * (W.z1 - W.z0 - 12);
     const ang = rnd(s * 5) * Math.PI * 2;
     const U = {x: Math.cos(ang), y: 0, z: Math.sin(ang)};
-    const V = norm3(rotAxis({x: 0, y: 1, z: 0}, U, rad(55 + rnd(s * 7) * 25)));
-    out.push(splitNear(brokenSlab({x, y: 1 + rnd(s * 9) * 2.5, z}, U, V, 5 + rnd(s * 11) * 4, 3 + rnd(s * 13) * 3, 0.3, s), (m) => splitPlanar2(m, 0.8, U), `rfloor_${i}`));
+    const w = 5 + rnd(s * 11) * 4, h = 3 + rnd(s * 13) * 3;
+    const tilt = Math.max(55 + rnd(s * 7) * 25, (Math.acos(Math.min(1, 1.2 / h)) * 180) / Math.PI); // the raised end is ≤ 1.2 m above the low edge
+    const V = norm3(rotAxis({x: 0, y: 1, z: 0}, U, rad(tilt)));
+    // (and clear of the other floors and of the ruin's columns: slid along its own length until nothing of one is inside the other)
+    let o = seatSlab(x, z, U, V, w, h, 0.3, s, 0.12), mesh = brokenSlab(o, U, V, w, h, 0.3, s), cut = splitPlanar2(mesh, 0.8, U);
+    for (let k = 1; k < 14 && slabConflict(cut, FLOORS, RUIN_COLS); k++) {
+      const dx = Math.ceil(k / 2) * 0.6 * (k % 2 ? 1 : -1);
+      o = seatSlab(x + U.x * dx, z + U.z * dx, U, V, w, h, 0.3, s, 0.12);
+      mesh = brokenSlab(o, U, V, w, h, 0.3, s);
+      cut = splitPlanar2(mesh, 0.8, U);
+    }
+    FLOORS.push(cut);
+    out.push(splitNear(mesh, (m) => splitPlanar2(m, 0.8, U), `rfloor_${i}`));
+    // supports under the raised part (fractions of the slab's width and height, on its underside): stacks of broken pieces
+    // standing on the ground, as many as the gap needs, the top one meeting the slab
+    ([[0.32, 0.62], [0.7, 0.62], [0.5, 0.78]] as [number, number][]).forEach(([fu, fv], k) => {
+      const P = add3(add3(o, mul3(U, fu * w)), mul3(V, fv * h));
+      const g0 = groundH(P.x, P.z);
+      let y = g0 - 0.12;
+      // (a stack under this floor that would stand inside another floor is left out)
+      if (FLOORS.some((F) => F !== cut && insideMesh(F, {x: P.x, y: (y + P.y) / 2, z: P.z}))) return;
+      for (let j = 0; j < 8 && y < P.y - 0.18; j++) {
+        const sd = s * 31 + k * 7 + j, piece = chunkMesh(sd, j % 2 ? 'concreteDark' : 'rubble');
+        const top = piece.verts.slice(piece.verts.length / 2).reduce((m, q) => m + q.y, 0) / (piece.verts.length / 2);
+        const sc = 1.15 + rnd(sd * 3) * 0.4;
+        const st = meshOf(piece, `rfsup_${i}_${k}_${j}`, {xf: {pos: {x: P.x + (rnd(sd * 11) - 0.5) * 0.3, y, z: P.z + (rnd(sd * 13) - 0.5) * 0.3}, yaw: rnd(sd * 5) * 360, scale: sc}});
+        out.push({...st, minPx: 3});
+        y += top * sc * 0.92;
+      }
+    });
   }
 
   // THE VAN + interior, the DEATH SLAB
@@ -466,7 +545,7 @@ const wires = (): Item[] => {
       const hb = hang(b, (a.x - b.x) / Math.hypot(b.x - a.x, b.z - a.z), (a.z - b.z) / Math.hypot(b.x - a.x, b.z - a.z), Math.min(b.y, Lb));
       spans.push(ha.slice(0, 5), ha.slice(4), hb.slice(0, 5), hb.slice(4));
     }
-    spans.forEach((S, i) => items.push(polyline3(`${key}_${i}`, S, 0.035, '#2A2522', {minPx: 0.7})));
+    spans.forEach((S, i) => items.push(polyline3(`${key}_${i}`, S, 0.035, '#2A2522', {minPx: 0.7, fade: SPRITE_FADE})));
   };
   // across the avenue, facade to facade (only where both frontages stand), beyond the fighting
   ([[138, 9.2, 8.6, 2.8], [189, 10.0, 9.4, 3.2, 0.42], [249, 8.4, 9.0, 2.6], [297, 9.6, 8.8, 3.0, 0.62], [352, 10.4, 9.8, 3.4], [405, 9.0, 9.4, 2.9]] as number[][]).forEach(([x, ya, yb, sag, snap], i) => {
@@ -553,7 +632,7 @@ const eventItems = (t: number): Item[] => {
 const STEEL = new Map<string, Item[]>();
 const steelOf = (b: Bldg): Item[] => {
   let it = STEEL.get(b.id);
-  if (!it) { it = bldgSteel(b).map((q, i) => polyline3(`steel_${b.id}_${i}`, q.pts, q.w, q.color, {minPx: 0.7, ink: '#1E1A18', inkW: 1.0})); STEEL.set(b.id, it); }
+  if (!it) { it = bldgSteel(b).map((q, i) => polyline3(`steel_${b.id}_${i}`, q.pts, q.w, q.color, {minPx: 0.7, ink: '#1E1A18', inkW: 1.0, fade: STEEL_FADE})); STEEL.set(b.id, it); }
   return it;
 };
 
@@ -683,6 +762,12 @@ export type SetOpts = {
   skip?: string[];
   /** extra culling distance for small objects (m); default automatic */
   maxDist?: number;
+  /**
+   * (R4) camera positions a long move passes through: every building keeps the finest level of detail any of them
+   * asks for, for the whole shot (no window-pattern or roof-kit switch while the camera travels). The opening aerial
+   * passes its path; E2 / F1 are covered by world/lodwin.ts. Default: the per-frame distance rule.
+   */
+  lodCams?: V3[];
 };
 
 const groupOf = (key: string) => {
@@ -694,27 +779,70 @@ const groupOf = (key: string) => {
   return 'debris';
 };
 
+// ------------------------------------------------------------------ (R4) what the frontage hides from a low camera
+type Occl = {x0: number; x1: number; z0: number; z1: number; h: number};
+let OCC: Occl[] | null = null;
+/** the buildings a block can stand behind (the avenue frontage and the flank), as boxes from the ground up */
+const occluders = (): Occl[] => (OCC ??= CITY().filter((b) => (b.zone === 'front' || b.zone === 'west') && !b.rubble).map((b) => ({x0: b.x0, x1: b.x1, z0: b.z0, z1: b.z1, h: b.h})));
+/** does the segment a → p pass through the box (slab method)? */
+const segBox = (a: V3, p: V3, q: Occl): boolean => {
+  let t0 = 0.001, t1 = 0.999;
+  const ax = [a.x, a.y, a.z], dd = [p.x - a.x, p.y - a.y, p.z - a.z], lo = [q.x0, 0, q.z0], hi = [q.x1, q.h, q.z1];
+  for (let i = 0; i < 3; i++) {
+    if (Math.abs(dd[i]) < 1e-9) { if (ax[i] < lo[i] || ax[i] > hi[i]) return false; continue; }
+    let ta = (lo[i] - ax[i]) / dd[i], tb = (hi[i] - ax[i]) / dd[i];
+    if (ta > tb) { const x = ta; ta = tb; tb = x; }
+    t0 = Math.max(t0, ta); t1 = Math.min(t1, tb);
+    if (t0 > t1) return false;
+  }
+  return true;
+};
+/** true when b (a grid over its roof, its walls at mid height) is entirely behind opaque frontage buildings, seen from the camera */
+const hiddenBehind = (occ: Occl[], cam: V3, b: Bldg): boolean => {
+  // a 5 × 5 grid over the roof (a cross street between two frontage buildings is ~18 m wide: a coarse grid can miss the slice
+  // of a block that shows through it) and the walls' foot-to-roof edges at mid height
+  const probes: V3[] = [];
+  for (let i = 0; i <= 4; i++) for (let j = 0; j <= 4; j++) probes.push({x: b.x0 + ((b.x1 - b.x0) * i) / 4, y: b.h, z: b.z0 + ((b.z1 - b.z0) * j) / 4});
+  for (let i = 0; i <= 4; i++) for (const z of [b.z0, b.z1]) probes.push({x: b.x0 + ((b.x1 - b.x0) * i) / 4, y: b.h * 0.5, z});
+  for (let j = 1; j <= 3; j++) for (const x of [b.x0, b.x1]) probes.push({x, y: b.h * 0.5, z: b.z0 + ((b.z1 - b.z0) * j) / 4});
+  return probes.every((p) => {
+    const x0 = Math.min(cam.x, p.x), x1 = Math.max(cam.x, p.x), z0 = Math.min(cam.z, p.z), z1 = Math.max(cam.z, p.z);
+    return occ.some((q) => q.x1 >= x0 && q.x0 <= x1 && q.z1 >= z0 && q.z0 <= z1 && q.h > 0 && segBox(cam, p, q));
+  });
+};
+
 export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
   const {S, F, X} = getStatic();
   const skip = new Set(o.skip ?? []);
   const cam = view.pos;
   const items: Item[] = [];
+  // (R4) a long move keeps each piece's level of detail for its whole length (lodwin.ts); otherwise the camera's distance now
+  const win = o.lodCams ? null : lodWindowAt(t);
+  const lodCams = o.lodCams ?? win?.cams;
   const push = (s: Static) => {
     const g = groupOf(s.item.key ?? '');
     if (skip.has(g)) return;
     const d = Math.hypot(s.c.x - cam.x, s.c.y - cam.y, s.c.z - cam.z);
-    if (s.minPx && (s.r * 2 * view.focal) / Math.max(1, d) < s.minPx) return;
+    let fadeOp = 1;
+    if (s.minPx) {
+      // (R4) a speck stops being drawn below minPx pixels: over the next minPx pixels it fades out instead of vanishing
+      const px = (s.r * 2 * view.focal) / Math.max(1, d);
+      if (px < s.minPx) return;
+      if (px < s.minPx * 2) fadeOp = (px - s.minPx) / s.minPx;
+    }
     if (o.maxDist && d - s.r > o.maxDist && g !== 'flat') return;
     let it = s.item;
-    if (s.lods) for (const l of s.lods) if (d > l.d) it = l.item;
-    items.push(it);
+    // (only the vehicles' levels change how they LOOK — the far mesh has no wheels; the girder's and the van's differ in strips only)
+    const dl = lodCams && /^(wreck_|veh_)/.test(s.item.key ?? '') ? minDistTo(lodCams, s.c) : d;
+    if (s.lods) for (const l of s.lods) if (dl > l.d) it = l.item;
+    items.push(fadeOp < 1 ? {...it, opacity: fadeOp} : it);
   };
   if (!skip.has('flat')) F.forEach(push);
   S.forEach(push);
   if (!skip.has('debris')) X.forEach((it) => {
     if (it.kind !== 'sprite') { items.push(it); return; }
     const d = Math.hypot(it.pos.x - cam.x, it.pos.y - cam.y, it.pos.z - cam.z);
-    if (d < 160) items.push(it);
+    if (d < SPRITE_FADE[1]) items.push(it);
   });
   if (!skip.has('radio')) items.push(...radioItems(o.radioOn ?? 0));
   if (!skip.has('tower')) items.push(...towerItems(t, o.tower ?? 'auto'));
@@ -722,15 +850,21 @@ export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
   // the city with LOD; blocks behind the frontage only when the camera is high enough to see them
   if (!skip.has('city')) {
     const low = cam.y < 26;
+    // (no shortcut at all during a long move: E2 / F1 — see lodwin.ts)
+    const frontage = low && !lodCams ? occluders() : null;
     CITY().forEach((b) => {
       if (skip.has('far') && b.zone === 'far') return;
       const c = {x: (b.x0 + b.x1) / 2, y: b.h / 2, z: (b.z0 + b.z1) / 2};
-      const d = Math.hypot(c.x - cam.x, c.y - cam.y, c.z - cam.z);
-      if (low && b.zone === 'block' && b.h < 46 && d > 90 && Math.abs(cam.z) < 30) return;
-      if (d > 4200) return;
+      const dNow = Math.hypot(c.x - cam.x, c.y - cam.y, c.z - cam.z);
+      if (dNow > 4200) return;
+      // (R4) the low-camera shortcut dropped every short block behind the frontage while the lens was under 26 m, so ~100 buildings
+      // popped in at once when F1's crane rose past 26 m (and any gap or rubble lot showed an empty block). It now drops a block
+      // only while it is really hidden behind the frontage (every probe point of its roof is behind an opaque building).
+      if (frontage && b.zone === 'block' && b.h < 46 && dNow > 90 && Math.abs(cam.z) < 30 && hiddenBehind(frontage, cam, b)) return;
+      const d = lodCams ? envelopeDist(lodCams, b, c) : dNow;
       const lod = lodFor(b, d);
       items.push({kind: 'mesh', mesh: bldgMesh(b, lod), key: `bl_${b.id}`});
-      if (lod < 2 && d < 320 && (b.breach || b.crown) && !skip.has('debris')) items.push(...steelOf(b));
+      if (lod < 2 && dNow < STEEL_FADE[1] && (b.breach || b.crown) && !skip.has('debris')) items.push(...steelOf(b));
     });
   }
   return items;
@@ -739,4 +873,4 @@ export const setItems = (view: View, t: number, o: SetOpts = {}): Item[] => {
 /** Everything a shot needs to stand on the set (re-exported for convenience). */
 export {groundH, RADIO, VAN_XF, CLEAR_ZONES};
 export {towerItems};
-export const _debug = {getStatic, peelSetup, eventItems};
+export const _debug = {getStatic, peelSetup, eventItems, occluders, hiddenBehind};

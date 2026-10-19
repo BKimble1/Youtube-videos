@@ -481,7 +481,7 @@ export const climbPlan = (pts: XZ[], T0: number, T1: number, o: ClimbOpts): Clim
       const x = lerp(r.other.x, r.to.x, k), z = lerp(r.other.z, r.to.z, k);
       const q = path.fn(clamp(distOnPath(pts, {x, z}), 0, L));
       // (pulled back toward the path's centre line: the feet are either side of it)
-      r1 = {x: lerp(x, q.x, 0.5), y: lerp(r.other.y, r.to.y, 0.62), z: lerp(z, q.z, 0.5)};
+      r1 = {x: lerp(x, q.x, 0.5), y: lerp(r.other.y, r.to.y, 0.55), z: lerp(z, q.z, 0.5)};
       h1 = path.fn(clamp(r.dNew - 0.1, 0, L)).heading;
     }
     const st: ClimbStep = {foot: r.foot, from: i === 0 ? r.from : r.from, to: r.to, other: r.other, a, plant, b, rise, steep, slope, r0: rPrev, r1, h0: hPrev, h1};
@@ -516,6 +516,8 @@ export const climbPlan = (pts: XZ[], T0: number, T1: number, o: ClimbOpts): Clim
   return {T0, T1, steps, hands, end: {x: e.x, z: e.z, h: endH}, feetEnd, start: s0};
 };
 /** the climb's body at T (root, heading, planted/swinging feet, the climbing pose as `gait`, runK 1) */
+/** how far the rear (planted) foot's heel rises by the end of a steep step as the body passes over the front foot (m) */
+const REAR_LIFT = 0.13;
 export const climbAt = (c: Climb, T: number): Body => {
   const S = c.steps;
   const first = S[0];
@@ -548,13 +550,22 @@ export const climbAt = (c: Climb, T: number): Body => {
   // (higher for a step up — knee first — and for a step down — the foot clears the edge it leaves before it reaches down)
   const lift = 0.08 + 0.25 * Math.max(0, st.to.y - st.from.y) + 0.22 * Math.max(0, st.from.y - st.to.y) + 0.05 * ks;
   const e = up ? smooth(clamp((v - 0.28) / 0.72)) : smooth(v);
-  const ey = up ? smooth(Math.min(1, v * 2.2)) : e;
+  // (R4: the knee-first lift was smooth(v * 2.2): over a 0.12 s swing the foot rose 0.4 m in ONE frame (13 m/s) at every steep
+  // step; v * 1.5 spreads it over the swing)
+  const ey = up ? smooth(Math.min(1, v * 1.5)) : e;
   const x = lerp(st.from.x, st.to.x, e), z = lerp(st.from.z, st.to.z, e);
   const arc = Math.sin(Math.PI * v) * lift;
-  const fy = v >= 1 ? st.to.y : Math.max(lerp(st.from.y, st.to.y, ey) + arc, GC(x, z) + 0.9 * arc);
+  // (R4: the rear foot's heel comes off the ground as the body rises over the front foot (the leg cannot reach it from the
+  // pelvis otherwise: the rig lowered the pelvis by up to 0.28 m for 2 frames, then popped it back up when the rear foot
+  // started its swing); the next step's swing starts from that height, so the foot is continuous across the boundary)
+  const prevSt = i > 0 ? S[i - 1] : null;
+  const carry = prevSt && Math.hypot(prevSt.other.x - st.from.x, prevSt.other.z - st.from.z) < 0.02 ? REAR_LIFT * prevSt.steep : 0;
+  const fy = v >= 1 ? st.to.y : Math.max(lerp(st.from.y, st.to.y, ey) + arc + carry * (1 - smooth(Math.min(1, v * 2))), GC(x, z) + 0.9 * arc);
   const moving: V3 = v >= 1 ? st.to : {x, y: fy, z};
   const sw = v < 1 ? Math.sin(Math.PI * v) : 0;
-  const footL = st.foot === 'L' ? moving : st.other, footR = st.foot === 'R' ? moving : st.other;
+  const rear = u < swF ? 0 : REAR_LIFT * ks * smooth(clamp((w - 0.35) / 0.65));
+  const other: V3 = rear > 0 ? {x: st.other.x, y: st.other.y + rear, z: st.other.z} : st.other;
+  const footL = st.foot === 'L' ? moving : other, footR = st.foot === 'R' ? moving : other;
   // the pose: lean into the slope, the knee loaded at the plant and extending through the push, weight over the planted
   // foot during the swing, the arms working (the one opposite the stepping leg forward), the trailing heel lifting
   // (the slope blends from the previous step's into this one's, so the lean never jumps at a step boundary)

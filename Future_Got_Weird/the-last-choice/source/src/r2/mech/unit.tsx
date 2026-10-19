@@ -13,13 +13,15 @@
 //               → shove / brace cover → strikes (wind → blow → through → recover; a combo re-chambers).
 //   world       falls (knees give → topple → settle, limp arms laid on the ground), torn plates / limbs as gravity-true
 //               debris (fly, bounce, tip onto a face, stay), stumps, cables, leaks, pools.
+// R4: stagger (loss of balance with recovery steps), sway (seeded standing micro-motion), fall.lift (ground contact), bones keep
+// their length through a fall, mid LOD = the same anatomy as full, far LOD drawn from the solved skeleton (kit.farFigure).
 // unitAttach(sp) → world points (after falls); unitImpacts(sp) → every contact / failure / landing as events.
 import React from 'react';
 import {V3, add3, sub3, mul3, dot3, cross3, norm3, len3, lerp, lerp3, clamp, smooth, easeIn, easeOut, easeIn2, easeOut2, rnd, noise, seg, f2} from '../../kit/math';
-import {Item, shade, inkColor, lightAt} from '../engine';
+import {Item, MeshItem, Prepped, shade, inkColor, lightAt} from '../engine';
 import {UNIT, UNIT_MID, U, DEBRIS} from './parts';
 import {R3, Pose3, rotHeading, rcomp, euler, segFrame, ik2, apply, rmul, rotAxisM, I3, lookFrame, fwdOf, slerpish} from './mat3';
-import {Ground, FLAT, Path, footAt, partItem, eyeGlow, spray, cable, fluidPool, CABLES} from './kit';
+import {Ground, FLAT, Path, footAt, partItem, eyeGlow, spray, cable, fluidPool, CABLES, farFigure, FarPrim, meshTone, meshPrim, boxPts} from './kit';
 import {Body, bodyOf, debrisPose, debrisLanding, tearLaunch, Launch} from './debris';
 
 export type Side = 'L' | 'R';
@@ -77,6 +79,17 @@ export type ShoveSpec = {t0: number; target: Pt; side?: Side | 'both'; t1?: numb
 /** Stepping pursuit: from t0 to t1 the unit follows `target` (a displaced opponent), keeping `reach` m (default 0.95),
  *  `lag` s behind it (default 0.18), one step-drag surge per `beat` s (default 0.34), guard up, facing it. */
 export type PressSpec = {t0: number; t1: number; target: Pt; reach?: number; lag?: number; beat?: number; guard?: boolean};
+/**
+ * (R4) Loss of balance. Shoved along `dir` at t0 the unit does not stand and lean (a `hit` keeps the feet where they were): it is
+ * carried that way, hinges back, throws its arms out, its head snaps, and it takes `steps` (default 2, 1..5) quick planted
+ * recovery steps — each one lands under the sliding pelvis, ~0.3·`strength` m long, getting shorter — then straightens
+ * and gets its guard back (0.4 s). The footfalls are events (unitImpacts kind 'step'); the unit ends where the last step
+ * lands (unitRoot). Chain a `fall` after it for a stumble that goes down; pair it with `hits` only for a harder blow.
+ */
+export type StaggerSpec = {t0: number; dir: V3; steps?: number; strength?: number; arms?: boolean};
+/** seconds per recovery step of a stagger */
+const STAG_STEP = 0.24;
+const staggerDur = (s: StaggerSpec) => 0.06 + STAG_STEP * clamp(Math.round(s.steps ?? 2), 1, 5);
 /** Turn to a new heading (deg) or toward a point with planted pivot steps; head leads, torso follows, then pelvis. */
 export type TurnSpec = {t0: number; to: number | V3; dur?: number};
 /** Reposition with planted steps (step into a blocking position; retreat-to-regroup: give `face` = the threat so it
@@ -123,7 +136,10 @@ export type UnitSpec = {
   hits?: {t0: number; dir: V3; strength: number}[];
   /** knocked down (knees give → topple → settle); with getUp the unit rises again from that time (machines do).
    *  `limp` (default true): free arms fall with gravity and lie on the ground */
-  fall?: {t0: number; dir: V3; getUp?: number; /** final topple angle (deg, default 86); > 90 lies down a slope, < 86 rests propped */ ang?: number; limp?: boolean};
+  fall?: {t0: number; dir: V3; getUp?: number; /** final topple angle (deg, default 86); > 90 lies down a slope, < 86 rests propped */ ang?: number; limp?: boolean;
+    /** (R4) contact: the body is lifted by the deepest part vertex below the ground (default true). false = the R3 pose (a body
+     *  that must sit lower than the terrain says, e.g. lying across another wreck whose own ground you did not pass in). */
+    lift?: boolean};
   eye?: 'cyan' | 'amber' | 'off';
   /** eye turns amber at this time (commit) */
   lockAt?: number;
@@ -132,6 +148,8 @@ export type UnitSpec = {
   lod?: 'full' | 'mid' | 'far';
   /** idle sway amount (0 = statue) */
   idle?: number;
+  /** (R4, optional) standing micro-motion: weight shifting from foot to foot (±1.4 cm), a slow torso twist, a deeper breath — each unit on its own seeded rhythm (armyItems sets 1 for every standing unit, so a crowd never sways in unison). 0 / absent = none */
+  sway?: number;
   key?: string;
   /** formation passthrough: gait start/end (see gait.start/end) */
   gaitStart?: number;
@@ -150,6 +168,8 @@ export type UnitSpec = {
   press?: PressSpec | PressSpec[];
   turns?: TurnSpec[];
   moves?: MoveSpec[];
+  /** (R4) loss of balance with recovery steps (see StaggerSpec) */
+  stagger?: StaggerSpec | StaggerSpec[];
   posture?: Posture | [number, Posture][];
   scan?: ScanSpec | ScanSpec[];
   attend?: AttendSpec[];
@@ -210,6 +230,8 @@ type FK = {t: number; x: number; z: number; h: number; lift: number};
 const HALF0 = U.hipW + 0.04, STAG0 = -0.04;
 /** soft reach limit of the unit's limbs (m): no knee / elbow snap at full stretch */
 const LIMB_SOFT = 0.035;
+/** ink width multiplier of the mid LOD (a little firmer than full: fewer interior edges, the same overall weight at a distance) */
+const MID_INK = 1.12;
 const stanceOf = (k: RK, sd: -1 | 1): {x: number; z: number; h: number} => {
   const f = hv(k.h), r = rightOf(k.h);
   const fo = sd < 0 ? k.stag : -k.stag;
@@ -265,6 +287,14 @@ const locoGens = (sp: UnitSpec): Gen[] => {
         out.push(nk);
         cur = nk;
       }
+      return out;
+    }});
+  }
+  for (const st of arr(sp.stagger)) {
+    g.push({ts: st.t0, keys: (c) => {
+      const n = clamp(Math.round(st.steps ?? 2), 1, 5), d = flat(st.dir), step = 0.32 * (st.strength ?? 1);
+      const out = [mk(c, {t: st.t0})];
+      for (let k = 1; k <= n; k++) { const L = step * (k - 0.1 * k * (k - 1)); out.push(mk(c, {t: st.t0 + 0.06 + STAG_STEP * k, x: c.x + d.x * L, z: c.z + d.z * L, shuffle: true})); }
       return out;
     }});
   }
@@ -492,12 +522,20 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
   }
   const footRoot = root; // standing feet stay where they are; a hit shoves the pelvis, not the feet
   let shift: V3 = stag;
+  let swayTwist = 0, swayCrouch = 0;
+  if ((sp.sway ?? 0) > 0 && !sp.gait) {
+    const k = sp.sway!, r1 = rnd(seed * 5.3 + 1), r2 = rnd(seed * 9.1 + 2), r3 = rnd(seed * 2.7 + 3);
+    const a = Math.sin(t * (0.45 + 0.25 * r1) + r2 * 6.283), b = Math.sin(t * (0.31 + 0.2 * r3) + r1 * 6.283);
+    shift = add3(shift, add3(mul3(right, 0.014 * k * a), mul3(fwd, 0.008 * k * b)));
+    swayTwist = 1.6 * k * Math.sin(t * (0.38 + 0.2 * r2) + r3 * 6.283);
+    swayCrouch = 0.006 * k * (0.5 + 0.5 * a);
+  }
   const idle = sp.idle ?? 1;
   const breath = Math.sin(t * 1.3 + seed) * 0.008 * idle;
   // marching: knees stay bent (a low, purposeful gait) so the planted foot is always within reach — no foot slide
   const bob = walking ? (0.085 + 0.03 * (1 - Math.cos(walkPh * Math.PI * 4)) * 0.5) * walkK : 0;
-  let crouch = (sp.crouch ?? 0) + bob + breath + len3(stag) * 0.6 - overLift;
-  let twist = sp.twist ?? 0, lean = sp.lean ?? (walking ? 6 * walkK : 0), roll = 0, pelvTwist = 0, headPitch = 0;
+  let crouch = (sp.crouch ?? 0) + bob + breath + len3(stag) * 0.6 - overLift + swayCrouch;
+  let twist = (sp.twist ?? 0) + swayTwist, lean = sp.lean ?? (walking ? 6 * walkK : 0), roll = 0, pelvTwist = 0, headPitch = 0;
   // ---------------- strikes: twist and lean through the hips; the pelvis turns and shifts into the blow
   strikes.forEach((s, i) => {
     const sk = strikeK(t, s.t0);
@@ -540,6 +578,22 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
       crouch += 0.05 * k;
       shift = add3(shift, mul3(dir, -0.03 * ant));
     }
+  }
+  // ---------------- stagger (R4): hinge back, arms out, head snap while the recovery steps carry the root
+  let stagW = 0, stagArmsW = 0;
+  for (const st of arr(sp.stagger)) {
+    const u = t - st.t0, dur = staggerDur(st);
+    if (u < -0.02 || u > dur + 0.45) continue;
+    const dir = flat(st.dir), str = st.strength ?? 1;
+    const k = smooth(u / 0.1) * (1 - smooth((u - dur + 0.05) / 0.5));
+    if (k <= 0) continue;
+    const fz = dot3(dir, fwd), lz = dot3(dir, right);
+    lean += fz * 20 * str * k;
+    roll += -lz * 16 * str * k;
+    crouch += 0.06 * k;
+    headPitch += fz * 12 * k;
+    stagW = Math.max(stagW, k);
+    if (st.arms !== false) stagArmsW = Math.max(stagArmsW, smooth(u / 0.14) * (1 - smooth((u - dur + 0.1) / 0.45)));
   }
   // ---------------- brace: lower, lean into the force, absorb; then shove back
   const braceShoves: {t0: number; target: V3; t1: number; dir: V3}[] = [];
@@ -917,6 +971,11 @@ export const solveUnit = (sp: UnitSpec): UnitRig => {
       pole = lerp3(pole, add3(mul3(cu, -1), mul3(cr, sd * 0.6)), w);
       open[i] = open[i] || w > 0.3;
     }
+    // stagger (R4): both arms flung out and up for balance
+    if (stagArmsW > 0) {
+      hand = lerp3(hand, add3(S, add3(add3(mul3(cu, 0.2), mul3(cf, 0.08)), mul3(cr, sd * 0.56))), stagArmsW);
+      pole = lerp3(pole, add3(mul3(cu, -1), mul3(cf, -0.3)), stagArmsW);
+    }
     // brace cover: both forearms up in front (before its shove)
     for (const b of braces) {
       const sh2 = b.shove === false ? undefined : b.shove ?? b.t0 + 0.4;
@@ -1032,7 +1091,7 @@ const fallXform = (sp: UnitSpec, rig: UnitRig, t: number) => {
   };
   void up;
   const xf = xf0;
-  return {xf, R, landT: sp.fall.t0 + 0.8, landPos: xf(rig.spine.pos)};
+  return {xf, R, Rrest: rotAxisM(axis, A), landT: sp.fall.t0 + 0.8, landPos: xf(rig.spine.pos)};
 };
 
 const rotPose = (P: Pose3, xf: (p: V3) => V3, R: R3): Pose3 => ({pos: xf(P.pos), R: rcomp(R, P.R)});
@@ -1073,13 +1132,23 @@ export const unitWorld = (sp: UnitSpec): UnitRig => {
         // shoulder); blended by how far the hanging hand would sink below the ground, so the hand never jumps
         const hang = add3(add3(S, {x: 0, y: -0.66, z: 0}), mul3(out, 0.2));
         const gyH = g(hang.x, hang.z) + 0.07;
-        const hz = flat(add3(mul3(out, 0.8), mul3(norm3(sub3(w.pelvis.pos, w.head.pos)), 0.6)));
+        // (R4: the lying direction comes from where the body will REST, not from its pose this frame: the arm's outward and the
+        // body axis both pass through the vertical in a topple, where their horizontal part flips from one side to the other —
+        // the hand swung 0.8 m between two frames)
+        const outF = rmul(fx.Rrest, rmul(r.chestR, {x: i === 0 ? -1 : 1, y: 0, z: 0}));
+        const axF = norm3(rmul(fx.Rrest, sub3(r.pelvis.pos, r.head.pos)));
+        const fd0 = flat(sp.fall!.dir);
+        let hz = flat(add3(mul3(outF, 0.8), mul3(axF, 0.6)));
+        if (len3(hz) < 0.5) hz = fd0;
         const drop = clamp(S.y - gyH, 0, 0.66);
         const along = Math.sqrt(Math.max(0, 0.66 * 0.66 - drop * drop));
         let lie = {x: S.x + hz.x * along, y: 0, z: S.z + hz.z * along};
         lie = {...lie, y: g(lie.x, lie.z) + 0.07};
         // the arm lies out along the ground only once the body is down (after the landing, over 0.4 s)
-        const below = smooth((u - 0.78) / 0.4) * smooth((gyH + 0.3 - hang.y) / 0.5);
+        // (R4: driven by the shoulder's height alone: the arm lies out along the ground as the shoulder comes down to it. It was
+        // also held back until 0.78 s, so a shoulder already at the ground left the hand hanging on top of it (wrist < 0.1 m
+        // from the shoulder) and the elbow flipped 0.4–0.7 m between frames)
+        const below = smooth((gyH + 0.3 - hang.y) / 0.5);
         let L = lerp3(hang, lie, below);
         L = {...L, y: Math.max(L.y, g(L.x, L.z) + 0.07)};
         const H = L;
@@ -1116,7 +1185,59 @@ export const unitWorld = (sp: UnitSpec): UnitRig => {
       w.kn = kn; w.an = an;
     }
   }
+  // R4: every bone keeps its true length through the whole fall. The crumple squashes the skeleton (hips and shoulders
+  // drop further than the ankles and wrists) and the limp / relax blends lerp joints, so the rigid thigh / shin /
+  // upper-arm / forearm meshes overlapped or pulled off their joints by up to 0.15–0.23 m for ~1 s (measured by
+  // qa/r4/mech/probe_fall_bones). The middle joint is re-solved from the root and the end (both kept), bend side kept.
+  const kneePole = rmul(w.fallR ?? I3, r.fwd);
+  const armPole = mul3(kneePole, -1);
+  const bone = (S: V3, M: V3, E: V3, l1: number, l2: number, hint: V3): {mid: V3; end: V3} => {
+    if (Math.abs(len3(sub3(M, S)) - l1) + Math.abs(len3(sub3(E, M)) - l2) < 0.004) return {mid: M, end: E};
+    const ch = sub3(E, S), cl = len3(ch) || 1e-6, dir = mul3(ch, 1 / cl);
+    const bent = sub3(M, add3(S, mul3(dir, dot3(sub3(M, S), dir))));
+    const pole = add3(bent, mul3(hint, 0.03));
+    const s = ik2(S, E, l1, l2, pole, LIMB_SOFT);
+    return {mid: s.mid, end: s.end};
+  };
+  ([0, 1] as const).forEach((i) => {
+    const lg = bone(w.hip[i], w.kn[i], w.an[i], U.thigh, U.shin, kneePole);
+    w.kn[i] = lg.mid; w.an[i] = lg.end;
+    const ar = bone(w.sh[i], w.el[i], w.wr[i], U.upper, U.fore, armPole);
+    w.el[i] = ar.mid; w.wr[i] = ar.end;
+  });
+  // R4: contact. Nothing of the body goes into the ground: a unit that falls onto its side used to lie with the shoulder pad
+  // 0.13 m (flat road) to 0.23 m (rubble) below the surface (the rest angle only tested head, shoulders, chest, pelvis and
+  // knees as points). Every vertex of every part is tested against the ground at this frame; the body is lifted by the
+  // deepest one (continuous in time: the body is pushed up by the ground as it comes down, then stays on it).
+  const lift = fallLift(sp, w);
+  if (lift > 1e-4) {
+    const up = (p: V3): V3 => ({x: p.x, y: p.y + lift, z: p.z});
+    const upP = (q: Pose3): Pose3 => ({pos: up(q.pos), R: q.R});
+    w.pelvis = upP(w.pelvis); w.spine = upP(w.spine); w.neck = upP(w.neck); w.head = upP(w.head);
+    w.sh = [up(w.sh[0]), up(w.sh[1])]; w.el = [up(w.el[0]), up(w.el[1])]; w.wr = [up(w.wr[0]), up(w.wr[1])];
+    w.hip = [up(w.hip[0]), up(w.hip[1])]; w.kn = [up(w.kn[0]), up(w.kn[1])]; w.an = [up(w.an[0]), up(w.an[1])];
+    const X0 = w.fallXf!;
+    w.fallXf = (p) => up(X0(p));
+  }
   return w;
+};
+
+/** how far (m) a falling unit's lowest part vertex is below the ground at this frame (0 = clear of it) */
+const fallLift = (sp: UnitSpec, w: UnitRig): number => {
+  if (sp.fall?.lift === false) return 0;
+  const g = sp.ground ?? FLAT;
+  const P = partPoses(w);
+  let deepest = 0;
+  for (const name of Object.keys(MESH)) {
+    const q = P[name], m = UNIT[MESH[name]];
+    if (!q) continue;
+    for (const v of m.verts) {
+      const p = apply(q, v);
+      const d = g(p.x, p.z) - p.y;
+      if (d > deepest) deepest = d;
+    }
+  }
+  return deepest;
 };
 
 /** Attach points in world (after a fall). Times: pass {...sp, t: T} to read them at any film time. */
@@ -1294,7 +1415,6 @@ export const combatUnit = (sp: UnitSpec): Item[] => {
   const downNow = !!sp.fall && t > sp.fall.t0 + 0.5 && (sp.fall.getUp === undefined || t < sp.fall.getUp + 0.3);
   const eyeState: 'cyan' | 'amber' | 'off' = deadEye || (downNow && sp.fall?.getUp === undefined) ? 'off' : downNow ? 'cyan' : sp.lockAt !== undefined && t >= sp.lockAt ? 'amber' : sp.eye ?? 'cyan';
   const eyeRemap = eyeState === 'amber' ? {m_eye: 'm_eyeLock'} : eyeState === 'off' ? {m_eye: 'm_eyeOff'} : undefined;
-  if (lod === 'far') return [unitFarSprite(sp, r, fallen, eyeState, key)];
   const P = partPoses(r);
   const items: Item[] = [];
   const tornAt = (d?: {t0: number}) => !!d && t >= d.t0;
@@ -1338,22 +1458,28 @@ export const combatUnit = (sp: UnitSpec): Item[] => {
     }
     return out;
   };
+  const dentK = D.dent ? easeOut((t - D.dent.t0) / 0.12) * (t >= D.dent.t0 ? 1 : 0) : 0;
+  if (lod === 'far') return unitFar(sp, r, P, removed, eyeState, key, debris().filter((i) => i.kind === 'mesh'));
   if (lod === 'mid') {
-    // merged torso block + limb blocks; pauldrons keep the shoulder width; firmer ink keeps the silhouette at distance
-    const torsoPose = P.core;
-    items.push(partItem(UNIT_MID.torso, torsoPose, `${key}_mt`, {remap: eyeRemap, inkScale: 1.05}));
-    for (const s of ['L', 'R'] as const) {
-      for (const n of ['thigh', 'shin'] as const) items.push(partItem(UNIT[(n + s) as keyof typeof UNIT], P[n + s], `${key}_m${n}${s}`, {inkScale: 1.0}));
-      if (!removed.has('upper' + s)) items.push(partItem(UNIT[('upper' + s) as keyof typeof UNIT], P['upper' + s], `${key}_mu${s}`, {inkScale: 1.0}));
-      if (!removed.has('fore' + s)) items.push(partItem(UNIT[('fore' + s) as keyof typeof UNIT], P['fore' + s], `${key}_mf${s}`, {inkScale: 1.0}));
-      if (!removed.has('pauldron' + s)) items.push(partItem(UNIT[('pauldron' + s) as keyof typeof UNIT], P['pauldron' + s], `${key}_mpd${s}`, {inkScale: 1.0}));
+    // R4: the same anatomy as 'full' (head with its own pose, fists, feet, chest and back plates over the frame, stumps),
+    // each part a simplified block with the full part's size: only interior detail differs. A torn plate stays torn.
+    const MID: Record<string, Prepped> = {pelvis: UNIT_MID.pelvis, core: UNIT_MID.core, head: UNIT_MID.head, thighL: UNIT_MID.thigh, thighR: UNIT_MID.thigh, upperL: UNIT_MID.upperL, upperR: UNIT_MID.upperR, fistL: UNIT_MID.fist, fistR: UNIT_MID.fist, footL: UNIT_MID.foot, footR: UNIT_MID.foot};
+    for (const name of Object.keys(MESH)) {
+      if (removed.has(name)) continue;
+      let Pp = P[name];
+      if (name === 'chest' && D.dent && dentK > 0) Pp = {pos: Pp.pos, R: rcomp(Pp.R, euler(D.dent.deg * 0.3 * dentK, -D.dent.deg * 0.2 * dentK, D.dent.deg * 0.4 * dentK))};
+      items.push(partItem(MID[name] ?? UNIT[MESH[name]], Pp, `${key}_m_${name}`, {inkScale: MID_INK, ...(name === 'head' ? {remap: eyeRemap} : {})}));
     }
-    items.push(partItem(UNIT.pelvis, P.pelvis, `${key}_mp`, {inkScale: 1.0}));
+    for (const s of ['L', 'R'] as const) {
+      if (offParts(s).length) {
+        const at = armOff!.at === 'elbow' ? {pos: r.el[s === 'L' ? 0 : 1], R: P['upper' + s].R} : {pos: r.sh[s === 'L' ? 0 : 1], R: slerpish(r.chestR, P['upper' + s].R, 0.3)};
+        items.push(partItem(UNIT.stump, at, `${key}_m_stump${s}`, {inkScale: MID_INK}));
+      }
+    }
     if (eyeState !== 'off') items.push(eyeGlow(eyeW, eyeState, 0.8, 0.035, `${key}_eg`, 0.06, fallen ? undefined : rmul(r.head.R, {x: 0, y: 0, z: -1})));
     items.push(...debris());
     return items;
   }
-  const dentK = D.dent ? easeOut((t - D.dent.t0) / 0.12) * (t >= D.dent.t0 ? 1 : 0) : 0;
   for (const name of Object.keys(MESH)) {
     if (removed.has(name)) continue;
     let Pp = P[name];
@@ -1398,46 +1524,44 @@ export const combatUnit = (sp: UnitSpec): Item[] => {
   return items;
 };
 
-/** Far LOD: a small 2D figure at the unit's root, lit like the meshes (pale plates over a dark frame, stride). */
-const unitFarSprite = (sp: UnitSpec, r: UnitRig, down: boolean, eye: 'cyan' | 'amber' | 'off', key: string): Item => {
-  const base = down ? r.pelvis.pos : {x: r.pelvis.pos.x, y: (sp.ground ?? FLAT)(r.root.x, r.root.z), z: r.pelvis.pos.z};
-  const walkK = sp.gait ? 1 : 0;
-  const ph = sp.gait ? (sp.gait.dist / (sp.gait.stride ?? 1.5)) * Math.PI * 2 : 0;
-  return {
-    kind: 'sprite', pos: base, key: `${key}_far`, n: {x: -0.6, y: 0.3, z: 0.4},
-    draw: (c) => {
-      const h = 2.2 * c.k;
-      if (h < 0.8) return null;
-      const s = h / 2.2;
-      const x = c.x, y = c.y;
-      // light the side the camera sees: the front plates (facing its heading) or, from behind, the darker back plate
-      // in the back's own light (a unit walking into a low sun seen from behind goes dark, not white)
-      const tx = c.view.pos.x - base.x, tz = c.view.pos.z - base.z;
-      const seesFront = down || r.fwd.x * tx + r.fwd.z * tz >= 0;
-      const lit = seesFront ? c.lit : lightAt(c.light, base, norm3({x: -r.fwd.x, y: 0.3, z: -r.fwd.z}), Math.hypot(tx, c.view.pos.y - base.y, tz), c.t);
-      const plate = shade(c.light, {base: seesFront ? '#C3CFD6' : '#97A8B3'}, lit);
-      const frame = shade(c.light, {base: '#4C5D69'}, lit);
-      const ink = inkColor(c.light, undefined, c.lit);
-      if (down) return <ellipse cx={f2(x)} cy={f2(y - 0.15 * s)} rx={f2(0.9 * s)} ry={f2(0.22 * s)} fill={frame} />;
-      const st = Math.sin(ph) * 0.2 * s * walkK;
-      const sw = Math.max(0.7, 0.16 * s);
-      const thin = h < 14;
-      return (
-        <g>
-          {/* legs (frame) with stride: thigh + shin read as two segments */}
-          <polyline points={`${f2(x - 0.11 * s)},${f2(y - 1.0 * s)} ${f2(x - 0.13 * s - st * 0.5)},${f2(y - 0.52 * s)} ${f2(x - 0.12 * s - st)},${f2(y)}`} fill="none" stroke={frame} strokeWidth={f2(sw)} strokeLinecap="round" strokeLinejoin="round" />
-          <polyline points={`${f2(x + 0.11 * s)},${f2(y - 1.0 * s)} ${f2(x + 0.13 * s + st * 0.5)},${f2(y - 0.52 * s)} ${f2(x + 0.12 * s + st)},${f2(y)}`} fill="none" stroke={frame} strokeWidth={f2(sw)} strokeLinecap="round" strokeLinejoin="round" />
-          {/* arms */}
-          <line x1={f2(x - 0.33 * s)} y1={f2(y - 1.6 * s)} x2={f2(x - 0.36 * s + st * 0.5)} y2={f2(y - 0.95 * s)} stroke={frame} strokeWidth={f2(sw * 0.95)} strokeLinecap="round" />
-          <line x1={f2(x + 0.33 * s)} y1={f2(y - 1.6 * s)} x2={f2(x + 0.36 * s - st * 0.5)} y2={f2(y - 0.95 * s)} stroke={frame} strokeWidth={f2(sw * 0.95)} strokeLinecap="round" />
-          {/* torso plate with shoulder pads + head with its eye band */}
-          <path d={`M${f2(x - 0.4 * s)} ${f2(y - 1.76 * s)} L${f2(x + 0.4 * s)} ${f2(y - 1.76 * s)} L${f2(x + 0.37 * s)} ${f2(y - 1.56 * s)} L${f2(x + 0.21 * s)} ${f2(y - 1.0 * s)} L${f2(x - 0.21 * s)} ${f2(y - 1.0 * s)} L${f2(x - 0.37 * s)} ${f2(y - 1.56 * s)} Z`} fill={plate} stroke={thin ? 'none' : ink} strokeWidth={0.8} />
-          <rect x={f2(x - 0.13 * s)} y={f2(y - 2.14 * s)} width={f2(0.26 * s)} height={f2(0.34 * s)} fill={plate} stroke={thin ? 'none' : ink} strokeWidth={0.8} />
-          {eye !== 'off' && (down || (r.fwd.x * (c.view.pos.x - base.x) + r.fwd.z * (c.view.pos.z - base.z)) > 0) && <circle cx={f2(x)} cy={f2(y - 1.97 * s)} r={f2(Math.max(0.7, 0.06 * s))} fill={eye === 'cyan' ? '#62D6EA' : '#FFB23F'} />}
-        </g>
-      );
-    },
-  };
+/**
+ * Far LOD (R4): drawn from the same solved skeleton as the meshes (see kit.farFigure): the torso with its shoulder pads
+ * and pelvis as one hull, the head, arms and legs as tubes along their joints, feet, and any torn piece lying where it
+ * fell. It follows the view angle and the pose, and shows a torn plate or arm as torn.
+ */
+/** far LOD colour multiplier: the mid unit's dark ink lines and frame parts, averaged (measured: qa/r4/mech/lod_*) */
+const FAR_TONE = 0.66;
+const unitFar = (sp: UnitSpec, r: UnitRig, P: PartPoses, removed: Set<string>, eye: 'cyan' | 'amber' | 'off', key: string, debris: Item[]): Item[] => {
+  const fallen = !!r.fallXf;
+  const prims: FarPrim[] = [];
+  const sc = P.core;
+  const at = (p: Pose3, x: number, y: number, z: number) => apply(p, {x, y, z});
+  // torso: chest box, shoulder pads and pelvis as one hull. Its tone is the front plate, the back plate seen from behind,
+  // or the bare frame where that plate is torn off.
+  const tp: V3[] = [];
+  for (const x of [-0.26, 0.26]) for (const y of [0.0, 0.54]) for (const z of [-0.255, 0.2]) tp.push(at(sc, x * (y < 0.1 ? 0.75 : 1), y, z));
+  (['L', 'R'] as const).forEach((sd, i) => { if (!removed.has('pauldron' + sd)) { const sg = i === 0 ? -1 : 1; tp.push(at(sc, sg * 0.47, 0.52, 0), at(sc, sg * 0.43, 0.38, 0), at(sc, sg * 0.4, 0.5, -0.12), at(sc, sg * 0.4, 0.5, 0.12)); } });
+  for (const x of [-0.21, 0.21]) for (const y of [-0.24, 0.1]) for (const z of [-0.15, 0.15]) tp.push(at(P.pelvis, x, y, z));
+  const frontTone = meshTone(removed.has('chest') ? UNIT.core : UNIT.chest), backTone = meshTone(removed.has('back') ? UNIT.core : UNIT.back);
+  prims.push({t: 'hull', pts: tp, tone: frontTone, n: rmul(r.chestR, {x: 0, y: 0, z: -1})});
+  const head: V3[] = [];
+  for (const x of [-0.13, 0.13]) for (const y of [-0.14, 0.17]) for (const z of [-0.17, 0.12]) head.push(at(P.head, x, y, z));
+  prims.push({t: 'hull', pts: head, tone: meshTone(UNIT.head)});
+  const armTone = meshTone(UNIT.foreL), upTone = meshTone(UNIT.upperL), thTone = meshTone(UNIT.thighL), shTone = meshTone(UNIT.shinL), ftTone = meshTone(UNIT.footL);
+  (['L', 'R'] as const).forEach((sd, i) => {
+    if (!removed.has('upper' + sd)) prims.push({t: 'tube', pts: [r.sh[i], r.el[i]], w: 0.13, tone: upTone});
+    if (!removed.has('fore' + sd)) prims.push({t: 'tube', pts: [r.el[i], add3(r.wr[i], mul3(norm3(sub3(r.wr[i], r.el[i])), 0.09))], w: 0.14, tone: armTone});
+    prims.push({t: 'tube', pts: [r.hip[i], r.kn[i]], w: 0.17, tone: thTone}, {t: 'tube', pts: [r.kn[i], r.an[i]], w: 0.17, tone: shTone});
+    const ft: V3[] = [];
+    for (const x of [-0.09, 0.09]) for (const y of [-0.1, 0]) for (const z of [-0.27, 0.1]) ft.push(at(P['foot' + sd], x, y, z));
+    prims.push({t: 'hull', pts: ft, tone: ftTone});
+  });
+  const item = farFigure(prims, r.pelvis.pos, key, {
+    tone: FAR_TONE,
+    eye: eye !== 'off' ? {pos: at(r.head, 0, 0, -0.17), dir: fallen ? undefined : rmul(r.head.R, {x: 0, y: 0, z: -1}), color: eye, r: 0.03} : undefined,
+    toneFor: (i, facing) => (i === 0 ? (facing ? frontTone : backTone) : undefined),
+  });
+  return [item, ...debris.map((d, i): Item => farFigure([meshPrim(d as MeshItem)], (d as MeshItem).xf?.pos ?? r.pelvis.pos, `${key}_fd${i}`, {tone: FAR_TONE}))];
 };
 
 export {DEBRIS};

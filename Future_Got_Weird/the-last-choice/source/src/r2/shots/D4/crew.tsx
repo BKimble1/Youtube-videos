@@ -4,7 +4,8 @@
 // other person (marks.ts, unitAttach, handOn). From the moment each of them is caught (or down), the figure becomes
 // the aftermath tableau's own spec (shots/EF/crew.tsx: directorSpec, pilotSpec, heldSpec), blended in, so D4's last
 // frames are E/F's first.
-import {V3, add3, sub3, mul3, norm3, lerp, clamp, smooth, easeOut, easeIn} from '../../../kit/math';
+import {V3, add3, sub3, mul3, norm3, dot3, cross3, lerp, clamp, smooth, easeOut, easeIn} from '../../../kit/math';
+import {DEATH_SLAB} from '../../world';
 import {makeView} from '../../engine';
 import {
   FigSpec, Pose, blendPose, layer, lookR2, dmgR2, toolsR2, BRACED, BASH, CHARGE_POSE, THROW, KNEEL, KNOCKED_BACK, LYING_BACK, SLUMP,
@@ -120,8 +121,9 @@ const blockFeet = (() => {
 const RUN2: XZ[] = [{x: BLOCK_ROOT[5][1], z: BLOCK_ROOT[5][2]}, {x: 24.5, z: 2.2}, {x: 20.0, z: 2.75}, {x: 17.2, z: 2.6}, {x: 14.0, z: 1.6}, {x: GATHER.director.x, z: GATHER.director.z}];
 const CHARGE1: XZ[] = [{x: GATHER.director.x + 0.05, z: GATHER.director.z + 0.05}, {x: 12.75, z: -1.0}, {x: 12.98, z: -2.15}];
 const CHARGE2: XZ[] = [{x: 13.1, z: -2.4}, {x: 14.6, z: -2.5}, {x: 16.0, z: -2.75}];
-// (from well out, north of the mound at (11.5, 6.0) and the decoy maker, round the van's corner: it must cross the frame)
-const SPRINT: XZ[] = [{x: 12.8, z: 6.4}, {x: 12.3, z: 4.9}, {x: 10.5, z: 4.55}, {x: 9.5, z: 3.55}];
+// (from well out, north of the mound at (11.5, 6.0) and the decoy maker, then west along z ≈ 4.8, south of the van's nose (R4: the
+// plant is at (9.2, 4.5), 1 m south of its wall): it must cross the frame)
+const SPRINT: XZ[] = [{x: 12.8, z: 6.4}, {x: 12.4, z: 5.15}, {x: 10.9, z: 4.8}, {x: PLANT.x + 0.25, z: PLANT.z + 0.1}];
 /** his braced stance at the plant (left foot toward the heavy) */
 const PLANT_FEET = (() => {
   const f = fwdOf(PLANT.h), r = rightOf(PLANT.h);
@@ -268,9 +270,45 @@ export const directorAt = (T: number): CrewOut => {
 };
 
 // ---- the strike: thrown back against the slab, then the slide down beside the van
+// R4: his back is ON the slab. The death slab leans back 20° (world/props.ts DEATH_SLAB), so a body standing 0.4 m in front
+// of it never touches it however the sprite is drawn (R3: the nearest point of his back was 0.5 m off the face from the slam
+// to 179.6 — the slide then closed the gap in one second, and his pelvis never settled against it). `toSlab` puts the root
+// where the back is a given gap off the face; the feet are world targets in front of the slab's base and stay put.
+const SLAB_FACE = (() => {
+  const {base, lean, right} = DEATH_SLAB;
+  const n = norm3(cross3(mul3(right, -1), lean));
+  const hn = norm3({x: n.x, y: 0, z: n.z});
+  return {base, n, hn, nh: Math.hypot(n.x, n.z)};
+})();
+const slabSd = (p: V3) => dot3(sub3(p, SLAB_FACE.base), SLAB_FACE.n);
+const BACK_U = [5, 35, 65, 95, 115];
+/** the gap (m) between the slab's face and the nearest point of his back or the back of his head (negative: inside the slab) */
+export const backGap = (R: ReturnType<typeof figureRig>): number => Math.min(...BACK_U.map((u) => slabSd(R.torso({r: 0, u, f: -38}))), slabSd(R.head) - 0.12);
+/** shift the root along the slab's horizontal normal until his back is `gap` off the face (world hand targets travel with the body, feet stay) */
+const toSlab = (spec: FigSpec, gap: number): FigSpec => {
+  let s = spec;
+  for (let i = 0; i < 6; i++) {
+    const d = backGap(figureRig(SOLVE_VIEW, s)) - gap;
+    if (Math.abs(d) < 0.002) break;
+    const mv = mul3(SLAB_FACE.hn, -d / SLAB_FACE.nh);
+    const w = s.world ?? {};
+    s = {...s, pos: ON({x: s.pos.x + mv.x, z: s.pos.z + mv.z}), world: {...w, ...(w.handL ? {handL: add3(w.handL, mv)} : {}), ...(w.handR ? {handR: add3(w.handR, mv)} : {})}};
+  }
+  return s;
+};
+/** the point of his upper back on the slab's face at T (world): where the slam's dust and the slide's grit start */
+export const slabContact = (T: number): V3 => figureRig(SOLVE_VIEW, directorAt(T).spec).torso({r: 0, u: 75, f: -40});
+/** his back's gap to the slab at the end of the slide = the tableau's own seat (E/F), so the slide ends exactly there */
+let REST_GAP: number | null = null;
+const restGap = (): number => (REST_GAP ??= backGap(figureRig(SOLVE_VIEW, directorSpec(EV.slideEnd))));
+/** the slab's gap at the slam: a hand's breadth of outline, his shoulders on the face */
+const SLAM_GAP = 0.02;
+/** where his feet come down in front of the slab's base (parallel to its face, 0.3 m out), world */
 const SLAM_FEET = (() => {
-  const f = fwdOf(SLAM.h), r = rightOf(SLAM.h);
-  return {L: ON({x: SLAM.x + f.x * 0.12 - r.x * 0.17, z: SLAM.z + f.z * 0.12 - r.z * 0.17}), R: ON({x: SLAM.x + f.x * 0.02 + r.x * 0.17, z: SLAM.z + f.z * 0.02 + r.z * 0.17})};
+  const {base, right} = DEATH_SLAB;
+  const f = SLAB_FACE.hn;
+  const at = (side: number) => ON({x: base.x + f.x * 0.3 + right.x * side * 0.17, z: base.z + f.z * 0.3 + right.z * side * 0.17});
+  return {L: at(-1), R: at(1)};
 })();
 /** his breath in the slump before E/F's own breath takes over (186.0): ragged, slowing */
 const slumpBreath = (T: number) => kn(T, [[180.4, 0.3], [181.1, -0.6], [181.85, 0.7], [182.6, -0.5], [183.45, 0.6], [184.3, -0.45], [185.15, 0.45], [186.0, -0.2]]);
@@ -308,6 +346,14 @@ export const dirSeatSpec = (T: number, anchor?: V3): FigSpec => {
   return out;
 };
 const dirSeat = (T: number): CrewOut => ({spec: dirSeatSpec(T), body: {pos: DIRECTOR_SEAT, heading: TB_CREW.director.heading}});
+/** the flight: driven back off his feet by the ram, the plate arm flung out, the head thrown back (u 0..1 from the blow to the slab) */
+const flightPose = (u: number): Pose => ({
+  drop: 22, lean: -30, twist: 10 * (1 - u), bodyPitch: 0,
+  head: {pitch: -18 + 10 * u, yaw: -6},
+  armL: {local: {r: -70, u: 300, f: -40}, pole: {r: -1, u: 0.3, f: -0.4}}, handL: 'open',
+  armR: {fk: {fwd: 70, out: 50, bend: 25}}, handR: 'open',
+  face: {...expr('pain'), brows: 0.7}, breath: 0.4, wearL: plateWear('shattered'),
+});
 /** against the slab (177.99–179.3): leaning back on it, knees going, head down, right hand to his left side */
 const againstSpec = (T: number): FigSpec => {
   const sag = smooth((T - EV.slam) / 1.3);
@@ -315,14 +361,17 @@ const againstSpec = (T: number): FigSpec => {
   // the legs fail under him (178.35): the knees buckle in a quarter second, a catch, then the slow sag
   const buckle = T < EV.kneesGo ? 0 : easeIn(clamp((T - EV.kneesGo) / 0.24)) - 0.12 * Math.sin(Math.PI * clamp((T - EV.kneesGo - 0.24) / 0.3));
   const pose: Pose = {
-    drop: 30 + 30 * buckle + 16 * sag, lean: -22 + 6 * sag + 6 * buckle, bodyPitch: 0, twist: 4,
+    drop: 30 + 30 * buckle + 16 * sag, lean: -30 + 14 * smooth((T - EV.slam) / 0.5) + 6 * sag + 6 * buckle, bodyPitch: 0, twist: 4,
     head: {pitch: -12 * snap + 22 * sag + 10 * buckle, yaw: -10, roll: 8 * sag},
     armL: {fk: {fwd: 8, out: 18, bend: 20}}, handL: 'limp',
     armR: {fk: {fwd: 30, out: 10, bend: 70}}, handR: 'open',
     face: buckle > 0.3 ? {...exprMix('pain', 'exhaustion', sag), worry: 0.95} : {...expr('pain'), brows: 0.6},
     breath: 1, wearL: plateWear('shattered'),
   };
-  const s = base('director', 'd4dir', 11, {pos: ON(SLAM), heading: SLAM.h, footL: SLAM_FEET.L, footR: SLAM_FEET.R}, T, pose);
+  // (the flight's last pose settles into this one over 0.14 s: no snap at the slam)
+  const settled = blendPose(flightPose(1), pose, smooth((T - EV.slam) / 0.14));
+  let s = base('director', 'd4dir', 11, {pos: ON(SLAM), heading: SLAM.h, footL: SLAM_FEET.L, footR: SLAM_FEET.R}, T, settled);
+  s = toSlab(s, SLAM_GAP);
   // the right hand finds his left side (where the stain spreads)
   const R = figureRig(SOLVE_VIEW, s);
   const wound = R.torso({r: -30, u: 48, f: 40});
@@ -333,32 +382,29 @@ const dirThrown = (T: number): CrewOut => {
   if (T < EV.slam) {
     // the ram meets the plate: he is driven back off his feet, the plate in pieces, and flies into the slab
     const u = clamp((T - EV.strike) / (EV.slam - EV.strike));
-    const e = u * u * (1.6 - 0.6 * u); // fast from the hit, slowed by nothing until the slab
+    // (R4: the blow's impulse: he is at speed within 0.15 of the flight and keeps it until the slab — R3's u²(1.6 − 0.6u) crawled off the
+    // plate and arrived at 24 m/s, the wrong way round)
+    const rr = 0.15, e = u < rr ? u * u / (2 * rr) / (1 - rr / 2) : (u - rr / 2) / (1 - rr / 2);
     const pos = {x: lerp(PLANT.x, SLAM.x, e), y: 0, z: lerp(PLANT.z, SLAM.z, e)};
     pos.y = G(pos.x, pos.z) + 0.1 * Math.sin(Math.PI * u);
     const heading = PLANT.h + wrapD(SLAM.h - PLANT.h) * smooth(u);
     const pf = PLANT_FEET;
     const fl0 = ON({x: pf.L[0][1], z: pf.L[0][2]}), fr0 = ON({x: pf.R[0][1], z: pf.R[0][2]});
-    // the feet leave the ground a beat after the body (trailing), landing in front of the slab
+    // the feet leave the ground with the body, trailing it by a few centimetres (R3 held them planted for 0.18 of the flight: the
+    // pelvis dipped half a metre as the stretched legs pulled it down, then rose again), landing in front of the slab
     const ft = (a: V3, b: V3, lag: number) => {
-      const v = clamp((u - lag) / (1 - lag));
-      const p = lerp3v(a, b, smooth(v));
-      return {...p, y: Math.max(G(p.x, p.z), lerp(a.y, b.y, v)) + 0.28 * Math.sin(Math.PI * v)};
+      const v = clamp((e - lag) / (1 - lag));
+      const p = lerp3v(a, b, v);
+      return {...p, y: Math.max(G(p.x, p.z), lerp(a.y, b.y, v)) + 0.26 * Math.sin(Math.PI * v)};
     };
-    const pose: Pose = {
-      drop: 22, lean: -30, twist: 10 * (1 - u), bodyPitch: 0,
-      head: {pitch: -18 + 10 * u, yaw: -6},
-      armL: {local: {r: -70, u: 300, f: -40}, pole: {r: -1, u: 0.3, f: -0.4}}, handL: 'open',
-      armR: {fk: {fwd: 70, out: 50, bend: 25}}, handR: 'open',
-      face: {...expr('pain'), brows: 0.7}, breath: 0.4, wearL: plateWear('shattered'),
-    };
-    const spec = base('director', 'd4dir', 11, {pos, heading, footL: ft(fl0, SLAM_FEET.L, 0.18), footR: ft(fr0, SLAM_FEET.R, 0.1)}, T, pose);
+    const spec = base('director', 'd4dir', 11, {pos, heading, footL: ft(fl0, SLAM_FEET.L, 0.06), footR: ft(fr0, SLAM_FEET.R, 0.03)}, T, flightPose(u));
     return {spec, body: {pos, heading}};
   }
-  if (T < EV.slide) return {spec: againstSpec(T), body: {pos: ON(SLAM), heading: SLAM.h}};
-  // the slide: down the slab's face to the ground beside the van
+  if (T < EV.slide) { const s = againstSpec(T); return {spec: s, body: {pos: s.pos, heading: s.heading}}; }
+  // the slide: down the slab's face to the ground beside the van (his back stays on the face, the gap easing to the seat's)
   const u = smooth(clamp((T - EV.slide) / (EV.slideEnd - EV.slide)));
-  const s = toward(againstSpec(EV.slide), dirSeatSpec(EV.slideEnd), u);
+  let s = toward(againstSpec(EV.slide), dirSeatSpec(EV.slideEnd), u);
+  if (u < 1) s = toSlab(s, lerp(SLAM_GAP, restGap(), u));
   return {spec: {...s, t: T}, body: {pos: s.pos, heading: s.heading}};
 };
 

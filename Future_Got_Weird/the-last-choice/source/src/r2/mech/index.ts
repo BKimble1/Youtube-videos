@@ -44,15 +44,36 @@
 //                         farFrom, ctl}). Obstacles: obstaclesFrom(persistAt(T), T), avoidPath(path, obstacles),
 //                         lowObstacles().
 //   debris                bodyOf(parts, id), debrisPose(body, launch, t, ground), tearLaunch(), debrisLanding().
-export {MECH_MATS, EYE, FLAT, straightPath, polyPathFn, footAt, partItem, eyeGlow, beam, cable, spray, fluidPool, makeThrow, thrownPose} from './kit';
-export type {Ground, Path, Throw} from './kit';
+//
+// R4 (persistence and continuity; everything below is additive or opt-in, defaults unchanged unless said):
+//   LOD                   'full' | 'mid' | 'far' now draw the SAME machine: mid has the head (own pose), fists, feet, chest and
+//                         back plates, stumps; far (units AND heavies) is drawn from the solved skeleton (farFigure: posed
+//                         hulls + tubes, width follows the view angle, tinted like the meshes), so a far unit keeps its pose,
+//                         a torn plate / arm stays torn, a toppled heavy stays on its side, a smashed drone stays smashed.
+//                         Measured full↔mid silhouette IoU 0.92→0.97, mid↔far 0.65→0.82, luminance 81/90/98 → 81/79/78.
+//   falls                 every bone keeps its length through a fall (the crumple squashed legs by up to 0.15 m and arms by 0.23 m);
+//                         nothing of the body goes into the ground (a shoulder pad lay 0.13–0.23 m under it); a limp arm lies
+//                         out along the ground as the shoulder reaches it and no longer flips its elbow.
+//   drone                 crash: all four rotors stay until the two that shear off are thrown and settle; the cutter stays on
+//                         the wreck; smash: the arms are a piece too; a far smashed drone is its pieces, not a hovering dot.
+//   heavy.clear           (opt-in) capsule obstacles (a water main, a beam) the legs swing their knees clear of; feet stay put.
+//                         Heavy legs also no longer flip the knee when the foot is splayed in line with the knee's direction.
+//   unit.stagger          (opt-in) loss of balance: carried back, hinged, arms out, N quick planted recovery steps, then guard.
+//   unit.sway             (opt-in; armyItems sets 1) seeded weight shifts, torso twist and breath for standing crowds.
+//   groundWith(base, chunks)  a ground function that includes rubble chunks (top heights, soft edges): pass it as `ground` and
+//                         feet, steps and wrecks stand ON the chunk. phasedGait(gait, id): a seeded step-cycle phase so a group
+//                         setting off together does not swing its legs in unison (positions unchanged).
+//   lodBySize(view, pos, {full, mid, height})  level of detail from projected pixel height (lens-independent).
+//   sprites               beam / cable / fluidPool are clipped at the camera's near plane (they vanished whole before).
+export {MECH_MATS, EYE, FLAT, straightPath, polyPathFn, footAt, partItem, eyeGlow, beam, cable, spray, fluidPool, makeThrow, thrownPose, groundWith, farFigure, meshBox, meshPrim, boxPts} from './kit';
+export type {Ground, Path, Throw, Chunk, FarPrim} from './kit';
 export {combatUnit, solveUnit, unitWorld, unitAttach, unitImpacts, unitRoot, ptAt} from './unit';
-export type {UnitSpec, UnitDamage, ArmCtl, Impact, ImpactKind, Side, Pt, StrikeSpec, ParrySpec, DodgeSpec, CatchSpec, BraceSpec, ShoveSpec, PressSpec, TurnSpec, MoveSpec, Posture, ScanSpec, AttendSpec, RestrainSpec} from './unit';
+export type {UnitSpec, UnitDamage, ArmCtl, Impact, ImpactKind, Side, Pt, StrikeSpec, ParrySpec, DodgeSpec, CatchSpec, BraceSpec, ShoveSpec, PressSpec, TurnSpec, MoveSpec, Posture, ScanSpec, AttendSpec, RestrainSpec, StaggerSpec} from './unit';
 export {drone, droneAttach, droneImpacts} from './drone';
 export type {DroneSpec} from './drone';
 export {heavy, solveHeavy, heavyAttach, heavyImpacts, heavyFootfalls} from './heavy';
 export type {HeavySpec} from './heavy';
-export {lineSlots, arcSlots, ringSlots, perimeterSlots, standing, column, reformSlots, stepInto, securing, staggerT, withReplacements, combine, armyItems, obstaclesFrom, avoidPath, lowObstacles} from './formation';
+export {lineSlots, arcSlots, ringSlots, perimeterSlots, standing, column, reformSlots, stepInto, securing, staggerT, withReplacements, combine, armyItems, obstaclesFrom, avoidPath, lowObstacles, phasedGait, lodBySize} from './formation';
 export type {Slot, Formation, ArmyOpts, Obstacle} from './formation';
 export {bodyOf, debrisPose, debrisLanding, tearLaunch} from './debris';
 export type {Body as DebrisBody, Launch as DebrisLaunch} from './debris';

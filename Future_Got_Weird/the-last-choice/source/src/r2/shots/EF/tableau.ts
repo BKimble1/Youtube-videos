@@ -276,6 +276,12 @@ export const TB_STEPS: {id: number; t0: number; t1: number; to: V3; face: V3; no
 ];
 /** The ring units that turn to the drone pilot while she crawls in (attention snaps to her, tracks her, lets go). */
 const PILOT_WATCH: Record<number, [number, number]> = {7214: [186.75, 189.9], 7216: [186.6, 190.4], 7218: [187.15, 189.6], 7210: [187.4, 190.2]};
+/**
+ * (R4) The machines notice the death: after his eyes close (196.6) five ring units (the three nearest on the ridge side, two on the south side the pullback starts from) turn
+ * their heads to the pair, each at its own moment (0.3–1.0 s after) and for its own length (3.9–6.8 s), then go back to scanning — the
+ * ring's response to the story beat, still there when the pullback first finds them (203–205). Never in unison; never a blow.
+ */
+const DEATH_WATCH: Record<number, [number, number]> = {7214: [197.05, 202.4], 7216: [196.9, 200.9], 7215: [197.3, 203.1], 7207: [197.4, 204.2], 7208: [197.6, 201.5]};
 /** Ring units that snap to the runner when he tries to rise. */
 const RUNNER_WATCH = new Set([7200, 7201, 7302]);
 /** Ring units that turn to the tether operator as she sinks. */
@@ -327,6 +333,8 @@ const ringCtl = (u: RingUnit, T: number): Partial<UnitSpec> => {
   const moves: MoveSpec[] = [];
   const pw = PILOT_WATCH[id];
   if (pw) attend.push({t0: pw[0], t1: pw[1], at: pilotMoving});
+  const dw = DEATH_WATCH[id];
+  if (dw) attend.push({t0: dw[0], t1: dw[1], at: on(PIL_Q.x, PIL_Q.z, 0.75)});
   if (RUNNER_WATCH.has(id)) attend.push({t0: stagger(id, SURRENDER.runner.rise + 0.35, 0.4, 4), t1: SURRENDER.runner.down + 0.9 + rnd(id) * 0.6, at: RUNNER_UP});
   if (TETHER_WATCH.has(id)) attend.push({t0: stagger(id, SURRENDER.tether.sink + 0.3, 0.5, 5), t1: SURRENDER.tether.sunk + 1.4 + rnd(id) * 0.8, at: on(12.3, 0.5, 0.9)});
   const st = TB_STEPS.find((s) => s.id === id);
@@ -409,7 +417,13 @@ export const wreckSpecs = (T: number): UnitSpec[] => TB_WRECKS.map((w) => ({
   ...(w.id === 7501 ? W1_FIGHT : {}),
 }));
 
-export const heavy2Spec = (T: number): HeavySpec => ({id: TB_HEAVY2.id, t: T, pos: TB_HEAVY2.pos, heading: TB_HEAVY2.heading, look: TB_HEAVY2.look, eye: TB_HEAVY2.eye, ground: G, key: 'tb_heavy2'});
+/**
+ * (R4) Heavy 2 carries its ram up once the killing is done (189 → 192.5, while every camera is on the pair): at rest the tip
+ * hung 0.13 m in front of the van's nose (R3: it read as touching it from the first wides of the pullback, 209–215). Raised
+ * ~25° the tip is 3.9 m up and 1.4 m above the cab roof, still pointed at them. Zero up to FINAL_HIT (D4's last frame).
+ */
+export const HEAVY2_RAM_CARRY = (T: number) => 0.4 * smooth((T - 189.0) / 3.5);
+export const heavy2Spec = (T: number): HeavySpec => ({id: TB_HEAVY2.id, t: T, pos: TB_HEAVY2.pos, heading: TB_HEAVY2.heading, look: TB_HEAVY2.look, eye: TB_HEAVY2.eye, ground: G, key: 'tb_heavy2', ramCarry: HEAVY2_RAM_CARRY(T)});
 export const heavy1Spec = (T: number): HeavySpec => ({id: TB_HEAVY1.id, t: T, pos: TB_HEAVY1.pos, heading: TB_HEAVY1.heading, kneeBreak: TB_HEAVY1.kneeBreak, pinned: TB_HEAVY1.pinned, eye: 'off', ground: G, key: 'tb_heavy1'});
 
 /** The diver (7601) watches the drone pilot while she crawls in, then (201.5–206.5) drifts up and west over the

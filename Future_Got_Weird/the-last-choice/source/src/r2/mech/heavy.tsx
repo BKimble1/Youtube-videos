@@ -8,10 +8,10 @@
 // a knee is broken: the lower leg buckles off as gravity-true debris, the hull rolls onto its side (the wreck stays).
 import React from 'react';
 import {V3, add3, sub3, mul3, norm3, len3, dot3, cross3, clamp, lerp, lerp3, smooth, easeIn, easeOut, noise, seg, f2, rnd} from '../../kit/math';
-import {Item, shade} from '../engine';
+import {Item, MeshItem, shade} from '../engine';
 import {HEAVY, HV, DEBRIS} from './parts';
 import {Pose3, R3, rotHeading, rcomp, euler, segFrame, ik2, apply, rmul, rotAxisM, lookFrame, fwdOf, I3, slerpish} from './mat3';
-import {Ground, FLAT, Path, footAt, partItem, eyeGlow, spray, cable, fluidPool, CABLES} from './kit';
+import {Ground, FLAT, Path, footAt, partItem, eyeGlow, spray, cable, fluidPool, CABLES, farFigure, meshPrim} from './kit';
 import {Impact} from './unit';
 import {bodyOf, debrisPose, tearLaunch, Launch} from './debris';
 
@@ -33,7 +33,11 @@ export type HeavySpec = {
   aim?: V3;
   fire?: {t0: number; target: V3};
   /** knee broken: leg 0 FL, 1 FR, 2 RL, 3 RR; the walker topples toward dir */
-  kneeBreak?: {t0: number; leg: 0 | 1 | 2 | 3; dir: V3; /** (R3, optional) the free legs fall limp to the ground (default: folded) */ limp?: boolean};
+  kneeBreak?: {t0: number; leg: 0 | 1 | 2 | 3; dir: V3; /** (R3, optional) the free legs fall limp to the ground (default: folded) */ limp?: boolean;
+    /** (R4, optional) after the topple every leg's knee is swung (smallest turn about the hip–foot axis) to where both bones stay out of the
+     *  ground: without it the legs on the side the hull lies on are folded 0.9–2 m INTO the road. It moves wreck geometry (a few
+     *  leg cells of a footprint grid built from the meshes by D3 move by up to 1.6 m), so it is opt-in: check routes over the wreck. */
+    legsClear?: boolean};
   /** a leg pinned (tether) from t0: that foot stays put; `hold` keeps it planted through a knee-break topple too */
   pinned?: {t0: number; leg: 0 | 1 | 2 | 3; hold?: boolean};
   /** stumble (hit) */
@@ -55,6 +59,15 @@ export type HeavySpec = {
   dust?: boolean;
   /** weight response scale (compression, weight shift, recoil), default 1; 0 = R2 behaviour */
   weight?: number;
+  /**
+   * (R4, optional) fixed obstacles the legs must not pass through — a water main, a beam, a wreck's limb — as capsules in
+   * world space (axis a→b, radius r; a = b is a ball). Each leg's knee is swung round the hip–foot axis (smallest turn first)
+   * until both bones clear every capsule by `clearMargin` (default 0.1 m) plus the bone's own radius (0.38 m); where no
+   * knee position clears it (the hip–foot line itself runs through the obstacle) the best one is used: move the foothold.
+   * Feet stay where they were told (feet / gait): only the knee moves.
+   */
+  clear?: {a: V3; b: V3; r: number}[];
+  clearMargin?: number;
   ground?: Ground;
   lod?: 'full' | 'mid' | 'far';
   key?: string;
@@ -92,6 +105,48 @@ const legPhase = (dist: number, stride: number, ph: number) => {
   const c = dist / stride + ph;
   const n = Math.floor(c);
   return {n, uu: c - n};
+};
+
+/** closest distance between segments p1q1 and p2q2 */
+const segSegDist = (p1: V3, q1: V3, p2: V3, q2: V3): number => {
+  const d1 = sub3(q1, p1), d2 = sub3(q2, p2), r = sub3(p1, p2);
+  const a = dot3(d1, d1), e = dot3(d2, d2), f = dot3(d2, r), c = dot3(d1, r), b = dot3(d1, d2);
+  const den = a * e - b * b;
+  let s = a > 1e-9 && den > 1e-9 ? clamp((b * f - c * e) / den) : 0;
+  let t = e > 1e-9 ? (b * s + f) / e : 0;
+  if (t < 0) { t = 0; s = a > 1e-9 ? clamp(-c / a) : 0; } else if (t > 1) { t = 1; s = a > 1e-9 ? clamp((b - c) / a) : 0; }
+  const c1 = add3(p1, mul3(d1, s)), c2 = add3(p2, mul3(d2, t));
+  return len3(sub3(c1, c2));
+};
+const HV_BONE_R = 0.38;
+/** the knee for hip H and ankle A that clears the obstacle capsules (smallest swing about the hip–ankle axis first) */
+const kneeClear = (H: V3, A: V3, pole: V3, clear: {a: V3; b: V3; r: number}[], margin: number): ReturnType<typeof ik2> => {
+  const base = ik2(H, A, HV.upperLen, HV.lowerLen, pole, 0, UP);
+  const score = (m: V3, e: V3) => {
+    let worst = 1e9;
+    for (const o of clear) worst = Math.min(worst, segSegDist(H, m, o.a, o.b) - o.r - HV_BONE_R, segSegDist(m, e, o.a, o.b) - o.r - HV_BONE_R);
+    return worst;
+  };
+  const s0 = score(base.mid, base.end);
+  if (s0 >= margin + 0.5) return base;
+  const ax = norm3(sub3(A, H));
+  const c0 = add3(H, mul3(ax, dot3(sub3(base.mid, H), ax)));
+  const pp0 = sub3(base.mid, c0);
+  let best = base, bestS = s0;
+  const at = (th: number) => add3(c0, rmul(rotAxisM(ax, th), pp0));
+  // turn the knee the way that moves it away from the obstacle (decided by the local slope, so it does not flip side from one
+  // frame to the next), in 5° steps, until both bones clear
+  const sg = score(at(10), base.end) >= score(at(-10), base.end) ? 1 : -1;
+  for (let k = 1; k <= 36; k++) {
+    const mid = at(sg * k * 5);
+    const sc = score(mid, base.end);
+    if (sc >= margin) { best = {...base, mid}; bestS = sc; break; }
+    if (sc > bestS) { bestS = sc; best = {...base, mid}; }
+  }
+  // fade the correction in over the last 0.5 m of clearance (no pop when an obstacle comes into reach)
+  const w = smooth(clamp((margin + 0.5 - s0) / 0.5));
+  const pole2 = add3(mul3(pp0, 1 - w), mul3(sub3(best.mid, c0), w));
+  return ik2(H, A, HV.upperLen, HV.lowerLen, pole2, 0, UP);
 };
 
 export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
@@ -253,8 +308,15 @@ export const solveHeavy = (sp: HeavySpec, tOverride?: number): HeavyRig => {
   LEGS.forEach((L, i) => {
     const H = apply(hull, {x: L.sx * HV.hipX, y: HV.hipDrop, z: L.sz * HV.hipZ});
     const ankle = add3(targets[i], {x: 0, y: 0.22, z: 0});
-    const out = add3(mul3(right, L.sx), mul3(UP, 0.55));
-    const r = ik2(H, ankle, HV.upperLen, HV.lowerLen, out);
+    // (R4) the knee points out and a little up. When the foot is splayed far out / folded in beside the hip, the hip–foot line
+    // runs along that direction and the bend plane is undefined: the knee used to flip between two sides (a 3.5 m jump of
+    // heavy 2's rear-right knee in one frame, D3 147.93). Near that alignment the up share grows continuously, so the knee
+    // swings up instead of flipping. A walking leg is nowhere near it: unchanged.
+    const chord = norm3(sub3(add3(targets[i], {x: 0, y: 0.22, z: 0}), H));
+    const outH = norm3(add3(mul3(right, L.sx), mul3(UP, 0.55)));
+    const alignK = smooth((Math.abs(dot3(outH, chord)) - 0.7) / 0.25);
+    const out = add3(mul3(right, L.sx), mul3(UP, 0.55 + 2.2 * alignK));
+    const r = sp.clear?.length ? kneeClear(H, ankle, out, sp.clear, sp.clearMargin ?? 0.1) : ik2(H, ankle, HV.upperLen, HV.lowerLen, out, 0, UP);
     hip.push(H); knee.push(r.mid); foot.push(r.end);
   });
   // ram arm: boom from the shoulder, aimed down-forward at rest, at the target on the strike
@@ -326,6 +388,30 @@ const toppleXf = (sp: HeavySpec, r0: HeavyRig, t: number) => {
   return {xf, R: Rd, k, landT: sp.kneeBreak.t0 + 1.5, landPos: pos};
 };
 
+/** the knee for hip H and foot F whose bones clear the ground by their thickness (smallest swing about the hip–foot axis) */
+const kneeAbove = (H: V3, F: V3, pole: V3, g: Ground): ReturnType<typeof ik2> => {
+  const base = ik2(H, F, HV.upperLen, HV.lowerLen, pole);
+  const score = (K: V3, E: V3) => {
+    let m = 1e9;
+    for (const u of [0.3, 0.5, 0.7, 0.9, 1]) { const p = lerp3(H, K, u); m = Math.min(m, p.y - g(p.x, p.z) - 0.3); }
+    for (const u of [0.15, 0.35, 0.55, 0.75, 0.95]) { const p = lerp3(K, E, u); m = Math.min(m, p.y - g(p.x, p.z) - 0.3 * Math.min(1, u * 4)); }
+    return m;
+  };
+  let bestS = score(base.mid, base.end);
+  if (bestS >= 0) return base;
+  const ax = norm3(sub3(F, H));
+  const c0 = add3(H, mul3(ax, dot3(sub3(base.mid, H), ax)));
+  const pp0 = sub3(base.mid, c0);
+  let best = base;
+  for (let k = 1; k <= 12; k++) for (const sg of [1, -1]) {
+    const mid = add3(c0, rmul(rotAxisM(ax, sg * k * 15), pp0));
+    const sc = score(mid, base.end);
+    if (sc >= 0) return {...base, mid};
+    if (sc > bestS) { bestS = sc; best = {...base, mid}; }
+  }
+  return best;
+};
+
 /** A leg after the topple: blends from planted to a folded, hull-local pose; segment lengths kept by IK. */
 const fallenLeg = (sp: HeavySpec, r0: HeavyRig, i: number, tx: {xf: (p: V3) => V3; R: R3; k: number}) => {
   const g = sp.ground ?? FLAT;
@@ -356,7 +442,10 @@ const fallenLeg = (sp: HeavySpec, r0: HeavyRig, i: number, tx: {xf: (p: V3) => V
   // bends it up, clear of the ground)
   const hipUp = H.y - g(H.x, H.z);
   const pole = limp ? norm3(add3(rmul(R1, {x: L.sx * 0.6, y: 0, z: 0}), {x: 0, y: hipUp > 1.8 ? -0.35 : 1, z: 0})) : rmul(R1, {x: L.sx, y: 0.6, z: 0});
-  const r = ik2(H, tgt, HV.upperLen, HV.lowerLen, pole);
+  // (R4) the knee goes where both bones stay out of the ground: the legs of the side the hull lies on were folded 0.9–2 m INTO the
+  // road (D3 heavy 1's wreck, which stays on screen to the end of the film). Smallest swing of the knee about the hip–foot
+  // axis first; the bones' own thickness (0.3 m) is kept above the surface except right at the hip.
+  const r = sp.kneeBreak!.legsClear ? kneeAbove(H, tgt, pole, g) : ik2(H, tgt, HV.upperLen, HV.lowerLen, pole);
   return {H, K: r.mid, F: r.end, outward: rmul(R1, {x: L.sx, y: 0, z: 0})};
 };
 
@@ -456,6 +545,8 @@ const dustPuff = (pos: V3, u: number, key: string, size = 1): Item | null => {
   };
 };
 
+/** far LOD colour multiplier (ink is a smaller share of a 6 m machine's pixels than of a unit's) */
+const HEAVY_FAR_TONE = 0.8;
 export const heavy = (sp: HeavySpec): Item[] => {
   const t = sp.t;
   const key = sp.key ?? `h${sp.id}`;
@@ -468,27 +559,6 @@ export const heavy = (sp: HeavySpec): Item[] => {
   const eyeState: 'cyan' | 'amber' | 'off' = dead ? 'off' : sp.lockAt !== undefined && t >= sp.lockAt ? 'amber' : sp.eye ?? 'cyan';
   const remap = eyeState === 'amber' ? {m_eye: 'm_eyeLock'} : eyeState === 'off' ? {m_eye: 'm_eyeOff'} : undefined;
   const P = (p: Pose3) => (tx ? rotPose(p, tx.xf, tx.R) : p);
-  if (sp.lod === 'far') {
-    const base = tx ? tx.xf(r.hull.pos) : {x: r.hull.pos.x, y: r.hull.pos.y - HV.hullY, z: r.hull.pos.z};
-    return [{
-      kind: 'sprite', pos: base, key: `${key}_far`, n: {x: -0.6, y: 0.3, z: 0.4},
-      draw: (c) => {
-        const s = c.k;
-        if (s * 6 < 1.5) return null;
-        const plate = shade(c.light, {base: '#C3CFD6'}, c.lit), frame = shade(c.light, {base: '#4C5D69'}, c.lit), dark = shade(c.light, {base: '#24323C'}, c.lit);
-        const x = c.x, y = c.y;
-        const lw = Math.max(1, 0.45 * s);
-        return (
-          <g>
-            {[-2.4, -1.1, 1.1, 2.4].map((dx, i) => <polyline key={i} points={`${f2(x + dx * s * 0.5)},${f2(y - 3.4 * s)} ${f2(x + dx * s * 1.15)},${f2(y - 2.0 * s)} ${f2(x + dx * s)},${f2(y)}`} fill="none" stroke={frame} strokeWidth={f2(lw)} strokeLinejoin="round" />)}
-            <path d={`M${f2(x - 2.4 * s)} ${f2(y - 3.3 * s)} L${f2(x + 2.3 * s)} ${f2(y - 3.5 * s)} L${f2(x + 2.4 * s)} ${f2(y - 4.9 * s)} L${f2(x - 1.8 * s)} ${f2(y - 5.1 * s)} Z`} fill={plate} />
-            <rect x={f2(x - 2.9 * s)} y={f2(y - 4.0 * s)} width={f2(0.9 * s)} height={f2(0.7 * s)} fill={dark} />
-            {eyeState !== 'off' && <circle cx={f2(x - 2.5 * s)} cy={f2(y - 3.65 * s)} r={f2(Math.max(0.8, 0.12 * s))} fill={eyeState === 'cyan' ? '#62D6EA' : '#FFB23F'} />}
-          </g>
-        );
-      },
-    }];
-  }
   const items: Item[] = [];
   const torn = (d?: {t0: number}) => !!d && t >= d.t0;
   items.push(partItem(HEAVY.core, P(r.hull), `${key}_core`));
@@ -561,6 +631,14 @@ export const heavy = (sp: HeavySpec): Item[] => {
   }
   // footfall dust (opt-in)
   if (sp.dust && !tx) heavyFootfalls(sp, t - 1.6, t).forEach((f, i) => { const it = dustPuff(f.pos, t - f.t, `${key}_dust${f.leg}_${Math.round(f.t * 30)}_${i}`, 1.1); if (it) items.push(it); });
+  if (sp.lod === 'far') {
+    // R4: far = the SAME solved machine (every part where the meshes put it: legs on their footholds, a toppled hull on its
+    // side, torn plates where they lie, the broken lower leg beside it), each part as one flat hull, sorted back to front.
+    // (It used to be a fixed upright walker cut-out, so a toppled wreck stood up again beyond the mesh distance.)
+    const prims = items.filter((i): i is MeshItem => i.kind === 'mesh').map((i) => meshPrim(i));
+    const base = tx ? tx.xf(r.hull.pos) : {x: r.hull.pos.x, y: r.hull.pos.y - HV.hullY, z: r.hull.pos.z};
+    return [farFigure(prims, base, key, {tone: HEAVY_FAR_TONE, eye: eyeState !== 'off' ? {pos: eyeW, dir: tx ? undefined : rmul(r.head.R, {x: 0, y: 0, z: -1}), color: eyeState, r: 0.12} : undefined}), ...items.filter((i) => i.kind === 'sprite' && (i.key ?? '').endsWith('_pool'))];
+  }
   return items;
 };
 void [easeOut, seg, DEBRIS, len3, rnd];

@@ -1,0 +1,76 @@
+Whole-film audit (headless: every shot's item builders run frame by frame with a spy on combatUnit/heavy/drone; checks per consecutive frame: joint jumps, part-set changes, LOD changes). Source state: R3 + the R4 mech edits of the moment (the bundle was built partway through the work).
+Sections completed: B3-C (9.3-35.8 s), C (35.8-59.95), D1 (59.95-94.3), D2 (94.3-116.9). D3, D4, E/F not completed when written.
+
+885 events
+191 after filter
+Counter({'lod': 116, 'jump': 68, 'parts': 7})
+D1-5     unit:u2400       lod            n=  8 t 77.57-78.73 max 387.83 mid->far dist 51
+D1-5     unit:u2505       lod            n=  7 t 77.77-79.53 max 32640.03 far->mid dist 52
+D2-5b    unit:u2200       lod            n=  5 t 108.43-108.87 max 98.55 far->mid dist 40
+D2-5b    unit:u2210       lod            n=  5 t 108.43-108.87 max 208.94 mid->far dist 40
+B4_heavy unit:u2304       lod            n=  3 t 21.73-22.43 max 289.87 mid->full dist 103
+B4_heavy unit:u4248       lod            n=  3 t 22.03-22.43 max 126.41 far->mid dist 233
+B4_heavy unit:u2301       lod            n=  3 t 22.97-24.23 max 307.71 mid->full dist 101
+B4_heavy unit:u4449       lod            n=  3 t 22.97-23.77 max 129.91 far->mid dist 232
+B3_reveal unit:u4014       lod            n=  2 t 17.50-19.20 max 61.43 far->mid dist 161
+B3_reveal unit:u4614       lod            n=  2 t 17.83-18.83 max 61.23 far->mid dist 161
+B3_reveal unit:u10808      jump elL       n=  2 t 18.77-18.93 max 5.08 dist 296
+B3_reveal unit:u10808      jump elR       n=  2 t 18.77-18.93 max 4.39 dist 296
+B3_reveal unit:u10809      jump elL       n=  2 t 20.60-20.77 max 4.88 dist 296
+B3_reveal unit:u10809      jump elR       n=  2 t 20.60-20.77 max 4.49 dist 296
+B4_heavy unit:u10810      jump elL       n=  2 t 22.07-22.23 max 5.15 dist 290
+B4_heavy unit:u10810      jump elR       n=  2 t 22.07-22.23 max 4.31 dist 290
+B4_heavy unit:u10811      jump elL       n=  2 t 23.67-23.83 max 5.21 dist 290
+B4_heavy unit:u10811      jump elR       n=  2 t 23.67-23.83 max 4.20 dist 290
+D1-5     unit:u2401       lod            n=  2 t 77.67-77.70 max 456.30 mid->far dist 51
+D1-5     unit:u2504       lod            n=  2 t 78.50-78.53 max 32640.03 far->mid dist 52
+D1-5     unit:u2501       lod            n=  2 t 78.50-78.53 max 641.23 far->mid dist 53
+B3_reveal unit:u10808      jump head      n=  1 t 18.93-18.93 max 4.50 dist 296
+B3_reveal unit:u10808      jump pel       n=  1 t 18.93-18.93 max 4.58 dist 296
+B3_reveal unit:u10808      jump shL       n=  1 t 18.93-18.93 max 4.82 dist 296
+B3_reveal unit:u10808      jump shR       n=  1 t 18.93-18.93 max 4.24 dist 296
+B3_reveal unit:u10808      jump wrL       n=  1 t 18.93-18.93 max 4.84 dist 296
+B3_reveal unit:u10808      jump wrR       n=  1 t 18.93-18.93 max 4.18 dist 296
+B3_reveal unit:u10808      jump knL       n=  1 t 18.93-18.93 max 3.99 dist 296
+B3_reveal unit:u10808      jump knR       n=  1 t 18.93-18.93 max 3.88 dist 296
+B3_reveal unit:u10808      jump anL       n=  1 t 18.93-18.93 max 3.61 dist 296
+B3_reveal unit:u10808      jump anR       n=  1 t 18.93-18.93 max 3.47 dist 296
+B3_reveal unit:u10808      jump hipL      n=  1 t 18.93-18.93 max 4.73 dist 296
+B3_reveal unit:u10808      jump hipR      n=  1 t 18.93-18.93 max 4.45 dist 296
+B3_reveal unit:u4414       lod            n=  1 t 19.87-19.87 max 62.87 mid->far dist 157
+B3_reveal unit:u4213       lod            n=  1 t 20.60-20.60 max 64.10 mid->far dist 155
+B3_reveal unit:u10809      jump head      n=  1 t 20.77-20.77 max 4.49 dist 296
+B3_reveal unit:u10809      jump pel       n=  1 t 20.77-20.77 max 4.58 dist 296
+B3_reveal unit:u10809      jump shL       n=  1 t 20.77-20.77 max 4.81 dist 296
+B3_reveal unit:u10809      jump shR       n=  1 t 20.77-20.77 max 4.24 dist 296
+B3_reveal unit:u10809      jump wrL       n=  1 t 20.77-20.77 max 4.66 dist 296
+B3_reveal unit:u10809      jump wrR       n=  1 t 20.77-20.77 max 4.40 dist 296
+B3_reveal unit:u10809      jump knL       n=  1 t 20.77-20.77 max 3.81 dist 296
+B3_reveal unit:u10809      jump knR       n=  1 t 20.77-20.77 max 3.88 dist 296
+B3_reveal unit:u10809      jump anL       n=  1 t 20.77-20.77 max 2.94 dist 296
+B3_reveal unit:u10809      jump anR       n=  1 t 20.77-20.77 max 3.53 dist 296
+B3_reveal unit:u10809      jump hipL      n=  1 t 20.77-20.77 max 4.73 dist 296
+B3_reveal unit:u10809      jump hipR      n=  1 t 20.77-20.77 max 4.45 dist 296
+B3_reveal unit:u4613       lod            n=  1 t 21.00-21.00 max 65.13 mid->far dist 154
+B4_heavy unit:u4648       lod            n=  1 t 21.73-21.73 max 124.55 far->mid dist 233
+B4_heavy unit:u10810      jump head      n=  1 t 22.23-22.23 max 4.51 dist 290
+B4_heavy unit:u10810      jump pel       n=  1 t 22.23-22.23 max 4.58 dist 290
+B4_heavy unit:u10810      jump shL       n=  1 t 22.23-22.23 max 4.83 dist 290
+B4_heavy unit:u10810      jump shR       n=  1 t 22.23-22.23 max 4.25 dist 290
+B4_heavy unit:u10810      jump wrL       n=  1 t 22.23-22.23 max 4.93 dist 290
+B4_heavy unit:u10810      jump wrR       n=  1 t 22.23-22.23 max 4.07 dist 290
+B4_heavy unit:u10810      jump knL       n=  1 t 22.23-22.23 max 4.07 dist 290
+B4_heavy unit:u10810      jump knR       n=  1 t 22.23-22.23 max 3.89 dist 290
+B4_heavy unit:u10810      jump anL       n=  1 t 22.23-22.23 max 3.79 dist 290
+B4_heavy unit:u10810      jump anR       n=  1 t 22.23-22.23 max 3.44 dist 290
+B4_heavy unit:u10810      jump hipL      n=  1 t 22.23-22.23 max 4.73 dist 290
+B4_heavy unit:u10810      jump hipR      n=  1 t 22.23-22.23 max 4.45 dist 290
+B4_heavy unit:u10811      jump head      n=  1 t 23.83-23.83 max 4.53 dist 290
+B4_heavy unit:u10811      jump pel       n=  1 t 23.83-23.83 max 4.58 dist 290
+B4_heavy unit:u10811      jump shL       n=  1 t 23.83-23.83 max 4.83 dist 290
+B4_heavy unit:u10811      jump shR       n=  1 t 23.83-23.83 max 4.25 dist 290
+B4_heavy unit:u10811      jump wrL       n=  1 t 23.83-23.83 max 5.04 dist 290
+B4_heavy unit:u10811      jump wrR       n=  1 t 23.83-23.83 max 3.93 dist 290
+B4_heavy unit:u10811      jump knL       n=  1 t 23.83-23.83 max 4.03 dist 290
+B4_heavy unit:u10811      jump knR       n=  1 t 23.83-23.83 max 3.67 dist 290
+B4_heavy unit:u10811      jump anL       n=  1 t 23.83-23.83 max 3.81 dist 290

@@ -9,6 +9,7 @@
 import type {Persist} from '../../film/continuity';
 import {heavy1D3, allyPose3, ALLY_KILL_DIR, ALLY_CRASH_GROUND, BLAST_AT} from './machines';
 import {EV3} from './times';
+import {BLAST_DIR} from './marks';
 import {allyDrone, blast} from '../../fx';
 import {groundH} from '../../world/ground';
 
@@ -17,5 +18,5 @@ export const PERSIST_D3: Persist[] = [
   {key: 'd3_ally', sec: 'D3', from: EV3.kill + 0.8, kind: 'items', note: 'the allied drone, run down at 141.35: a smoking wreck on the west rim',
     items: (_v, T) => allyDrone({key: 'd2ally', t: T, seed: 3, ground: ALLY_CRASH_GROUND, pose: allyPose3, destroyAt: EV3.kill, destroyDir: ALLY_KILL_DIR}).items},
   {key: 'd3_blast', sec: 'D3', from: EV3.blast, until: EV3.blast + 14, kind: 'items', note: 'heavy 2\'s round on the rim crest: smoke and scorch',
-    items: (_v, T) => blast({at: BLAST_AT, t: T, t0: EV3.blast, key: 'd3blast', size: 2.5, groundH, ground: groundH(BLAST_AT.x, BLAST_AT.z), seed: 131, debris: 'concrete', dir: {x: -0.6, y: 0.8, z: 0}}).items},
+    items: (_v, T) => blast({at: BLAST_AT, t: T, t0: EV3.blast, key: 'd3blast', size: 2.5, terrainChips: true, groundH, ground: groundH(BLAST_AT.x, BLAST_AT.z), seed: 131, debris: 'concrete', dir: BLAST_DIR}).items},
 ];

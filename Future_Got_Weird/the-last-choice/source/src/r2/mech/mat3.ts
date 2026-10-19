@@ -60,7 +60,8 @@ export const lookFrame = (fwd: V3, up: V3 = {x: 0, y: 1, z: 0}): R3 => {
 /** Two-bone IK: root a, target b, lengths l1, l2, pole hint (world point direction the middle joint bends toward). */
 export const ik2 = (a: V3, b: V3, l1: number, l2: number, pole: V3, soft = 0, pole2?: V3): {mid: V3; end: V3; reach: number} => {
   const d = sub3(b, a);
-  let L = clamp(len3(d), 1e-4, (l1 + l2) * 0.9995);
+  // (R4: not shorter than a folded limb can be: a hand or foot on top of its own root put the middle joint metres away)
+  let L = clamp(len3(d), Math.abs(l1 - l2) + 0.03, (l1 + l2) * 0.9995);
   // soft limit (m): within `soft` of full stretch the reach eases in exponentially, so the middle joint never snaps
   // through the straight-limb singularity (the end stops at most `soft` short of an over-far target)
   if (soft > 0) { const s0 = (l1 + l2) * 0.9995 - soft; if (L > s0) L = s0 + soft * (1 - Math.exp(-(L - s0) / soft)); }

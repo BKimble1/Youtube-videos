@@ -5,10 +5,27 @@ import {V3, add3, mul3, sub3, clamp, lerp, rnd, len3, smooth} from '../../kit/ma
 import {Item, SpriteCtx, project} from '../engine';
 import {ball3, coneDir, sparkCol, glowEl, gid, f1, blobPts, blobPath, tone, glowTone, inkTone, inkPx, basisAround, G} from './core';
 import {billowPath} from '../world/atmosDraw';
+import {groundH} from '../world/ground';
 
 const visible = (c: SpriteCtx, p: V3) => {
   const s = project(c.view, p);
   return s.z > c.view.near ? s : null;
+};
+
+// ------------------------------------------------------------------ where things come down
+/**
+ * (R4) The terrain a spark or chip lands on. An explicit `groundFn` wins. Otherwise the world's terrain `groundH`,
+ * shifted so that the caller's `ground` is where it was meant to be at the launch point (a launch from a slab top, or
+ * into a hole, keeps its offset); with no `ground` at all, the bare terrain. R3 used one flat height for the whole
+ * flight (so a chunk thrown down the ridge or across the crater rim came to rest hovering over the real ground, or
+ * sunk into it) and, with no `ground`, never landed (it fell through the street).
+ */
+const terrainOf = (o: {at: V3; ground?: number; groundFn?: (x: number, z: number) => number}): ((x: number, z: number) => number) => {
+  if (o.groundFn) return o.groundFn;
+  // (a literal 0 is "street level", not a height on the ridge or in the crater: bare terrain)
+  if (o.ground === undefined || o.ground === 0) return groundH;
+  const off = o.ground - groundH(o.at.x, o.at.z);
+  return (x, z) => groundH(x, z) + off;
 };
 
 // ------------------------------------------------------------------ sparks
@@ -17,6 +34,8 @@ export type SparksOpts = {
   /** main direction (unit-ish) and cone half-angle */
   dir?: V3; spread?: number;
   speed?: [number, number]; life?: [number, number]; ground?: number;
+  /** R4 (opt-in): terrain height at (x, z); by default the terrain is the world's `groundH`, offset so that `ground` holds where the sparks start */
+  groundFn?: (x: number, z: number) => number;
   /** streak length in seconds of travel */ streak?: number;
   /** continuous emission until t1 at `rate`/s instead of one burst */ t1?: number; rate?: number;
   flash?: number; width?: number;
@@ -48,8 +67,9 @@ export const sparks3 = (o: SparksOpts): Item[] => {
         if (age > L) return;
         const d = coneDir(dir, spread, sd);
         const v = mul3(d, lerp(speed[0], speed[1], rnd(sd * 7)));
-        const b1 = ball3(o.at, v, age, o.ground, 0.35);
-        const b0 = ball3(o.at, v, Math.max(0, age - streak), o.ground, 0.35);
+        const gr = chipGround(o.at, v, o.ground, terrainOf(o));
+        const b1 = ball3(o.at, v, age, gr, 0.35);
+        const b0 = ball3(o.at, v, Math.max(0, age - streak), gr, 0.35);
         const s1 = visible(c, b1.p), s0 = visible(c, b0.p);
         if (!s1 || !s0) return;
         const w = Math.max(1.1, (o.width ?? 0.025) * s1.k);
@@ -77,34 +97,59 @@ const CHIP: Record<ChipMat, {fills: string[]; elong: [number, number]; n: number
 export type ChipsOpts = {
   at: V3; t: number; t0: number; key: string; seed?: number; n?: number; dir?: V3; spread?: number;
   speed?: [number, number]; size?: [number, number]; ground?: number; material?: ChipMat; life?: number; spin?: number;
+  /** R4 (opt-in, default off): the terrain's height at (x, z). Without it a chip lands on the flat plane `ground` — one
+   *  height for the whole flight, so a chunk thrown several metres down a slope came to rest hovering over the real ground
+   *  (the blast's concrete chunk hung at head height in D3-11d). With it each chip lands on the terrain where its flight
+   *  comes down and rests on the terrain under it. */
+  groundFn?: (x: number, z: number) => number;
 };
+/** the terrain height a chip comes down on: the plane its free flight meets, iterated on where it meets it */
+const chipGround = (p0: V3, v0: V3, flat: number | undefined, fn?: (x: number, z: number) => number): number | undefined => {
+  if (!fn) return flat;
+  const hit = (g: number): V3 => {
+    const disc = v0.y * v0.y + 2 * G * (p0.y - g);
+    const t = disc <= 0 ? v0.y / G : (v0.y + Math.sqrt(disc)) / G;
+    return {x: p0.x + v0.x * t, y: g, z: p0.z + v0.z * t};
+  };
+  let g = Math.min(fn(p0.x, p0.z), p0.y - 0.001);
+  for (let k = 0; k < 4; k++) { const h = hit(g); g = Math.min(fn(h.x, h.z), p0.y - 0.001); }
+  return g;
+};
+/** chips at least this big (m) stay where they land */
+const BIG_CHIP = 0.18;
 /** Ballistic chunks; each chip is its own sprite so it sorts past figures correctly. */
 export const chips3 = (o: ChipsOpts): Item[] => {
   const tau = o.t - o.t0;
   if (tau < 0) return [];
   const life = o.life ?? 3.5;
   const fade = clamp(1 - (tau - life) / 0.8);
-  if (fade <= 0) return [];
+  const size = o.size ?? [0.05, 0.16];
+  // (R4) a chunk of masonry (≥ BIG m) does not melt away where it lies: it stays as rubble (grit and splinters still fade)
+  if (fade <= 0 && size[1] < BIG_CHIP) return [];
   const n = o.n ?? 8, dir = o.dir ?? {x: 0, y: 1, z: 0}, spread = o.spread ?? 60, seed = o.seed ?? 1;
-  const speed = o.speed ?? [2.5, 7], size = o.size ?? [0.05, 0.16], m = CHIP[o.material ?? 'concrete'];
+  const speed = o.speed ?? [2.5, 7], m = CHIP[o.material ?? 'concrete'];
   const items: Item[] = [];
+  const terrain = terrainOf(o);
   for (let i = 0; i < n; i++) {
     const sd = seed * 977 + i * 31;
     const d = coneDir(dir, spread, sd);
     const v = mul3(d, lerp(speed[0], speed[1], Math.pow(rnd(sd * 5), 0.8)));
-    const b = ball3(o.at, v, tau, o.ground, 0.28);
+    const gr = chipGround(o.at, v, o.ground, terrain);
+    const b = ball3(o.at, v, tau, gr, 0.28);
     const sz = lerp(size[0], size[1], Math.pow(rnd(sd * 7), 1.5));
+    const chipFade = sz >= BIG_CHIP ? 1 : fade;
+    if (chipFade <= 0) continue;
     const restT = b.landed ? Math.min(tau, 0.3 + rnd(sd * 9) * 0.5) : tau;
     const rot = rnd(sd * 11) * 360 + (rnd(sd * 13) - 0.5) * (o.spin ?? 900) * restT;
     const el = lerp(m.elong[0], m.elong[1], rnd(sd * 17));
     const fill = m.fills[i % m.fills.length];
-    const pos = {...b.p, y: b.landed && o.ground !== undefined ? o.ground + sz * 0.3 : b.p.y};
+    const pos = {...b.p, y: b.landed ? terrain(b.p.x, b.p.z) + sz * 0.3 : b.p.y};
     items.push({
       kind: 'sprite', pos, key: `${o.key}_c${i}`,
       draw: (c) => {
         const r = sz * c.k;
         if (r < 0.5) return null;
-        return <polygon points={blobPts(c.x, c.y, r, sd, m.n, 0.45, el, 1, (rot * Math.PI) / 180)} fill={tone(c, fill)} stroke={inkTone(c)} strokeWidth={f1(inkPx(c, 0.012, 0.5, 2.2))} strokeLinejoin="round" opacity={(m.op ?? 1) * fade} />;
+        return <polygon points={blobPts(c.x, c.y, r, sd, m.n, 0.45, el, 1, (rot * Math.PI) / 180)} fill={tone(c, fill)} stroke={inkTone(c)} strokeWidth={f1(inkPx(c, 0.012, 0.5, 2.2))} strokeLinejoin="round" opacity={(m.op ?? 1) * chipFade} />;
       },
     });
   }
@@ -139,7 +184,9 @@ export const dust3 = (o: DustOpts): Item[] => {
       p = add3(add3(o.at, mul3(d, dist)), {x: 0, y: (o.rise ?? 0.35) * tau, z: 0});
     }
     const r0 = (o.size ?? 0.3) * (0.7 + 0.6 * rnd(sd * 7)) + (o.grow ?? 0.9) * Math.sqrt(tau);
-    const op = (o.opacity ?? 0.75) * clamp(tau * 10) * Math.pow(1 - u, 1.3);
+    // (R4) dust is thrown up AFTER the contact: it builds over ~0.25 s (R3 reached full density in 0.1 s, i.e. on the contact frame
+    // itself, which put a cloud over the foot / fist / body that had just met the ground; the frames before and at contact now stay clear)
+    const op = (o.opacity ?? 0.75) * smooth(clamp((tau - 0.04) / 0.22)) * Math.pow(1 - u, 1.3);
     items.push({
       kind: 'sprite', pos: p, key: `${o.key}_d${i}`,
       draw: (c) => {

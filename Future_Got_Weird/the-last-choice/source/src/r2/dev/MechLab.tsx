@@ -12,13 +12,16 @@
 //      a controlled restraint tracking a kneeling survivor's shoulder
 //   14 routes: a column detours around a toppled heavy and steps over fallen units (wreck obstacles)
 //   15 silhouettes: side-on pairs at full and mid LOD, far sprites (wide)
+//   R4 (persistence): 16 the LOD ladder — the same unit at full | mid | far at four distances, and a toppled heavy at full | far;
+//      17 falls — forward / backward / sideways on bumpy ground (bones keep their length, nothing under the ground);
+//      18 new primitives — stagger (recovery steps), heavy legs clearing a water main, units standing on rubble chunks (groundWith)
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
-import {Scene, Item, makeView, orbit, prep, terrain, LightRig, Material, Cam3, View} from '../engine';
+import {Scene, Item, makeView, orbit, prep, terrain, strut, cbox, LightRig, Material, Cam3, View} from '../engine';
 import {V3, seg, smooth, lerp, lerp3, add3, sub3, mul3, norm3, clamp, easeOut, easeIn2, f2} from '../../kit/math';
 import {
   MECH_MATS, combatUnit, drone, heavy, straightPath, polyPathFn, armyItems, reformSlots, lineSlots, arcSlots, column, standing, combine, Formation,
-  unitAttach, UnitSpec, HeavySpec, heavyAttach, cable, ringSlots, stepInto, securing, staggerT, obstaclesFrom, Slot, DroneSpec,
+  unitAttach, UnitSpec, HeavySpec, heavyAttach, cable, ringSlots, stepInto, securing, staggerT, obstaclesFrom, Slot, DroneSpec, groundWith, Chunk,
 } from '../mech';
 import {figureSprite, figureRig, lookR2, STAND, BRACED, BLOCK_HIGH, KNOCKED_BACK, CHARGE_POSE, KNEEL, blendPose, gaitW, WALK_W, Pose, FigSpec} from '../rig';
 import type {Role2} from '../rig/looks';
@@ -439,6 +442,58 @@ export const MechLab: React.FC<{page?: number; cam?: number}> = ({page = 0, cam:
     const wrecks: Item[] = [...heavy({...WRECK_H, t}), ...WRECK_U.flatMap((u) => combatUnit({...u, t}))];
     const rings: Item[] = obs.map((o, i) => ({kind: 'sprite', pos: {x: o.x, y: 0.02, z: o.z}, key: `ob${i}`, bias: 0.5, draw: (c) => <ellipse cx={f2(c.x)} cy={f2(c.y)} rx={f2(o.r * c.k)} ry={f2(o.r * c.k * 0.6)} fill="none" stroke={(o.h ?? 1) <= 0.6 ? '#3FCF6B' : '#FF8A3C'} strokeWidth={2} strokeDasharray="6 5" />}));
     return scene(v, [...wrecks, ...rings, ...armyItems(v, t, col, {maxFull: 30, maxMid: 40})], t, `R3 routes · lanes detour around the toppled heavy (orange) · step over fallen units (green) · ${t.toFixed(2)} s`);
+  }
+  if (page === 16) {
+    // R4: the same machine at every level of detail, at four distances (no limb, plate or silhouette change across the switch)
+    const cam: Cam3 = {pos: {x: 0, y: 2.4, z: 16}, target: {x: 0, y: 1.3, z: -30}, fov: 34};
+    const v = makeView(cam);
+    const items: Item[] = [];
+    [0, -22, -48, -84].forEach((z, ri) => {
+      const sp = Math.max(2.2, (16 - z) * 0.07);
+      (['full', 'mid', 'far'] as const).forEach((lod, i) => {
+        const x = (i - 1) * sp - 2.5;
+        items.push(...combatUnit({id: 1600 + ri * 3 + i, t, pos: {x, y: 0, z}, heading: 60 + ri * 20, lod, posture: ri % 2 ? 'ready' : 'guard', idle: 0.3, strike: ri === 2 ? {t0: 1.4 + (t > 3 ? 3 : 0), side: 'R', target: {x: x + 1.1, y: 1.5, z: z - 0.3}} : undefined}));
+      });
+    });
+    const wreck: HeavySpec = {id: 1690, t, pos: {x: 0, y: 0, z: -34}, heading: 20, kneeBreak: {t0: -10, leg: 1, dir: {x: 1, y: 0, z: 0.3}}, eye: 'off'};
+    const hw: HeavySpec = {id: 1691, t, pos: {x: 0, y: 0, z: -34}, heading: 90, gait: {path: straightPath({x: 0, y: 0, z: -34}, 90), dist: t * 0.9, stride: 3}};
+    items.push(...heavy({...wreck, pos: {x: 6, y: 0, z: -34}, lod: 'full'}), ...heavy({...wreck, id: 1692, pos: {x: 14, y: 0, z: -34}, lod: 'far'}),
+      ...heavy({...hw, pos: {x: 6, y: 0, z: -60}, lod: 'full', gait: {path: straightPath({x: 6 - 4 * 0, y: 0, z: -60}, 90), dist: t * 0.9, stride: 3}}), ...heavy({...hw, id: 1693, lod: 'far', gait: {path: straightPath({x: 14, y: 0, z: -60}, 90), dist: t * 0.9, stride: 3}}));
+    return scene(v, items, t, 'R4 LOD ladder · rows: 16 / 38 / 64 / 100 m · full | mid | far · toppled heavy full | far (right) · walking heavy full | far', undefined, GROUND);
+  }
+  if (page === 17) {
+    // R4: falls — the same fall forward, backward and sideways on bumpy ground; bones keep their length, nothing goes under the ground
+    const cam: Cam3 = {pos: {x: 3.4, y: 2.4, z: 6.4}, target: {x: 0.2, y: 0.6, z: 0}, fov: 46};
+    const v = makeView(cam);
+    const dirs: V3[] = [{x: 0, y: 0, z: -1}, {x: 0, y: 0, z: 1}, {x: 1, y: 0, z: 0}];
+    const items: Item[] = dirs.flatMap((d, i) => combatUnit({id: 1700 + i, t: t % 3.2, pos: {x: -2.6 + i * 2.6, y: 0, z: 0}, heading: 0, ground: BUMP, idle: 0.2, hits: [{t0: 0.6, dir: d, strength: 1.3}], fall: {t0: 0.65, dir: d}, damage: {dead: {t0: 0.7}}}));
+    return scene(v, items, t, `R4 falls · forward · backward · sideways · bumpy ground · ${(t % 3.2).toFixed(2)} s`, undefined, GROUND_BUMP);
+  }
+  if (page === 18) {
+    // R4 primitives: (left) stagger with recovery steps; (middle) a heavy's legs clear a water main; (right) units on rubble chunks
+    const cam: Cam3 = camSel === 1 ? {pos: {x: 13, y: 6, z: 16}, target: {x: 9, y: 2.4, z: 0}, fov: 44} : camSel === 2 ? {pos: {x: 26, y: 3, z: 8}, target: {x: 23, y: 0.8, z: 0}, fov: 40} : {pos: {x: 5, y: 3.2, z: 10}, target: {x: 2, y: 1.0, z: 0}, fov: 48};
+    const v = makeView(cam);
+    const items: Item[] = [];
+    // stagger: three shoves from the front (strength 0.7 / 1 / 1.5, 2 / 3 / 4 steps), each unit carried back and recovering
+    [0, 1, 2].forEach((i) => items.push(...combatUnit({id: 1800 + i, t, pos: {x: -2 + i * 2.2, y: 0, z: 0}, heading: 270 - 90, idle: 0.3, posture: 'guard', stagger: {t0: 1.0, dir: {x: 0, y: 0, z: 1}, steps: 2 + i, strength: [0.7, 1, 1.5][i]}})));
+    items.push(tag({x: 0.2, y: 2.7, z: 0.6}, 'STAGGER: carried back, hinge, arms out, quick planted steps', 't18a', 24));
+    // a heavy stepping across a pipe: left column without clearance (legs through it), right with `clear`
+    const pipe = {a: {x: 6, y: 0.5, z: -3.4}, b: {x: 6, y: 0.5, z: 3.4}, r: 0.45};
+    items.push({kind: 'mesh', mesh: prep(strut(pipe.a, pipe.b, pipe.r, 10, 'm_dark')), key: 'pipe'});
+    const feet = (zz: number): (V3 | undefined)[] => [{x: 4.9, y: 0, z: zz - 2.0}, {x: 7.1, y: 0, z: zz - 2.0}, {x: 4.9, y: 0, z: zz + 2.0}, {x: 7.1, y: 0, z: zz + 2.0}];
+    items.push(...heavy({id: 1810, t, pos: {x: 6, y: 0, z: 0.0}, heading: 0, feet: feet(0), drop: 2.1, lod: 'full'}));
+    items.push(tag({x: 6, y: 6.5, z: 0}, 'clear: none (legs through the pipe)', 't18b', 22));
+    const pipe2 = {a: {x: 12, y: 0.5, z: -3.4}, b: {x: 12, y: 0.5, z: 3.4}, r: 0.45};
+    items.push({kind: 'mesh', mesh: prep(strut(pipe2.a, pipe2.b, pipe2.r, 10, 'm_dark')), key: 'pipe2'});
+    items.push(...heavy({id: 1811, t, pos: {x: 12, y: 0, z: 0.0}, heading: 0, feet: feet(0).map((f) => f && {...f, x: f.x + 6}), drop: 2.1, clear: [pipe2], lod: 'full'}));
+    items.push(tag({x: 12, y: 6.5, z: 0}, 'clear: [pipe]: knees swing clear', 't18c', 22));
+    // units on rubble chunks
+    const chunks: Chunk[] = [{x: 21, z: 0.4, w: 1.4, d: 1.1, h: 0.55, yaw: 20}, {x: 23.2, z: -0.6, w: 1.0, d: 1.6, h: 0.9, yaw: -15}, {x: 25.2, z: 0.5, w: 1.6, d: 1.2, h: 0.35, yaw: 40}];
+    const gw = groundWith(() => 0, chunks);
+    chunks.forEach((c, i) => items.push({kind: 'mesh', mesh: prep(cbox(c.w, c.h, c.d, 'g_ground')), xf: {pos: {x: c.x, y: 0, z: c.z}, yaw: c.yaw}, key: `ch${i}`}));
+    chunks.forEach((c, i) => items.push(...combatUnit({id: 1820 + i, t, pos: {x: c.x, y: 0, z: c.z}, heading: 200 + i * 25, ground: gw, posture: i === 1 ? 'guard' : 'ready', idle: 0.3, hits: i === 1 ? [{t0: 1.2, dir: {x: 1, y: 0, z: 0.3}, strength: 1}] : undefined})));
+    items.push(tag({x: 23.2, y: 3.4, z: 0}, 'groundWith: feet stand ON the chunks', 't18d', 22));
+    return scene(v, items, t, `R4 primitives · stagger · heavy.clear · groundWith · ${t.toFixed(2)} s (cam 1 heavy, cam 2 rubble)`);
   }
   // page 15: silhouettes — side-on pairs, full and mid LOD, far sprites in the distance
   const cam: Cam3 = {pos: {x: 0, y: 2.0, z: 14}, target: {x: 0, y: 1.2, z: 0}, fov: 40};

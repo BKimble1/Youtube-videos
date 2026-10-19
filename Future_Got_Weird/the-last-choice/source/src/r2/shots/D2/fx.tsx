@@ -260,8 +260,10 @@ export const d2Fx = (T: number): FxOut => {
   if (T > EV2.pryIn && T < EV2.rip + 3) {
     const u = once('pryB', () => at('B', EV2.pryPop).backPlate);
     const edge = add3(u, {x: 0, y: 0.16, z: 0});
-    out.push(fx(sparks3({at: edge, t: T, t0: EV2.pryIn + 0.05, t1: EV2.pryPop, rate: 30, key: 'd2pry', n: 0, dir: {x: -0.3, y: 1, z: -0.2}, spread: 50, speed: [1, 3], life: [0.1, 0.3], flash: 0, seed: 61})));
-    out.push(impact({at: edge, normal: {x: -0.4, y: 0.8, z: -0.3}, t: T, t0: EV2.pryPop, key: 'd2pop', strength: 0.9, material: 'armor', ground: ground(edge), seed: 63}));
+    // (R4) the runner stands west-north-west of the plate (his face 0.3 m from its edge): sparks, chips and the pop's ring
+    // fly up and away from him (east-south-east), not into his face as they did in R3 (D2-4b 104.07-104.27)
+    out.push(fx(sparks3({at: edge, t: T, t0: EV2.pryIn + 0.05, t1: EV2.pryPop, rate: 30, key: 'd2pry', n: 0, dir: {x: 0.45, y: 0.85, z: 0.35}, spread: 45, speed: [1, 3], life: [0.1, 0.3], flash: 0, seed: 61})));
+    out.push(impact({at: edge, normal: {x: 0.45, y: 0.8, z: 0.35}, t: T, t0: EV2.pryPop, key: 'd2pop', strength: 0.9, material: 'armor', ground: ground(edge), seed: 63}));
     if (T > EV2.pryPop + 0.04) {
       const r = runnerAt(T).pts;
       const from = at('B', T).backPlate;
@@ -276,7 +278,7 @@ export const d2Fx = (T: number): FxOut => {
           out.push(fx([cable(a, add3(a, {x: 0.08 * (k - 1.5), y: 0.14 - 0.25 * Math.min(1, (T - EV2.rip) * 1.5), z: 0.05}), -0.03, c, 0.016, `d2cabs${k}`, true, 4)]));
         }
       });
-      out.push(fx(sparks3({at: from, t: T, t0: EV2.rip, key: 'd2rip', n: 22, dir: {x: -0.2, y: 1, z: -0.3}, spread: 80, speed: [2, 6], ground: ground(from), seed: 65, flash: 0.15})));
+      out.push(fx(sparks3({at: from, t: T, t0: EV2.rip, key: 'd2rip', n: 22, dir: {x: 0.45, y: 0.9, z: 0.35}, spread: 55, speed: [2, 6], ground: ground(from), seed: 65, flash: 0.15})));
     }
   }
   // the breaker's swing parried off A's forearm (a glancing clang); the shove drops him on a knee (dust)

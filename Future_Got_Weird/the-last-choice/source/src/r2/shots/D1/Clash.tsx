@@ -7,14 +7,16 @@ import {breakerAt, tetherAt, flaresAt} from './crew';
 import {shotOf, g} from './shot';
 
 // ------------------------------------------------------------------ D1-3 (CLASH 68.30–70.30): the hammer on the plate
-// Cut on the beat to a low medium three-quarter from the south-south-west (he left, U1 right): U1's running hammer comes
-// down on his raised plate (68.33) and stops him dead, heels skidding; its left punch is parried off the plate; he steps
-// inside and bashes it back three steps into U3, which has come down from the gap to catch it. The camera eases back.
+// R4: side-on from the south (R3 stood 1.9 m west of him, behind his right shoulder, so his head, hair and torso covered the plate
+// and the robot's hammer arm and U1 stacked behind him in one silhouette). Now the lens is level with the contact, a little
+// east of it, looking north: he (left, facing east) and U1 (right, facing west) are in profile, his plate in front of his face
+// and its descending forearm on it, the heels skidding under him, the punch parried off the plate, his bash into its chest, and
+// it reeling back three steps into U3. The camera drifts east and eases back with the displacement.
 const D13: CamKey[] = [
-  {t: 0, pos: g(40.3, 2.65, 0.78), target: g(41.75, -0.7, 1.32), fov: 42},
-  {t: 0.6, pos: g(40.25, 2.68, 0.8), target: g(41.6, -0.7, 1.3), fov: 42},
-  {t: 1.3, pos: g(40.15, 2.85, 0.92), target: g(41.9, -0.72, 1.25), fov: 45},
-  {t: 70.3 - M.CLASH, pos: g(40.0, 3.15, 1.15), target: g(42.4, -0.75, 1.2), fov: 49},
+  {t: 0, pos: g(42.2, 3.0, 0.95), target: g(41.6, -0.7, 1.35), fov: 40},
+  {t: 0.6, pos: g(42.1, 3.05, 0.97), target: g(41.5, -0.7, 1.3), fov: 40},
+  {t: 1.3, pos: g(41.9, 3.2, 1.05), target: g(41.7, -0.72, 1.25), fov: 43},
+  {t: 70.3 - M.CLASH, pos: g(41.6, 3.4, 1.15), target: g(42.2, -0.75, 1.2), fov: 46},
 ];
 export const D1_3 = shotOf(M.CLASH, D13, {drift: 0.018, shake: 0.8});
 

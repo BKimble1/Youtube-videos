@@ -1,10 +1,15 @@
 // Section D1: a shot = a camera on the one battle (battle.tsx). Every shot samples the same choreography at film time T.
 import React from 'react';
+import {getInputProps} from 'remotion';
 import {Stage, useShotTime, camPath, CamKey} from '../../film/stage';
 import {V3} from '../../../kit/math';
 import {d1Items, d1FxAt, D1Opts} from './battle';
 import {G} from './motion';
 
+/** (QA only) a diagnostic camera from the render's input props: {d1Cam: {pos, target, fov}} replaces every D1 shot's lens. */
+const diagCam = (): {pos: V3; target: V3; fov?: number} | null => {
+  try { const p = getInputProps() as {d1Cam?: {pos: V3; target: V3; fov?: number}}; return p.d1Cam ?? null; } catch { return null; }
+};
 /** a ground-relative world point: (x, z) and metres above the ground there */
 export const g = (x: number, z: number, up: number): V3 => ({x, y: G(x, z) + up, z});
 export type ShotOpts = {
@@ -24,7 +29,7 @@ export const shotOf = (start: number, keys: CamKey[], o: ShotOpts = {}): React.F
   D1_CAMS.push({start, keys, ease: o.ease ?? 0.5});
   const Shot: React.FC = () => {
     const {t, T} = useShotTime(start);
-    const cam = camPath(keys, t, o.ease ?? 0.5);
+    const cam = diagCam() ?? camPath(keys, t, o.ease ?? 0.5);
     const f = d1FxAt(T);
     const op = o.opts ? o.opts(T) : {};
     return <Stage T={T} cam={cam} lights={f.lights} shake={f.shake * (o.shake ?? 1)} drift={o.drift ?? 0.02} items={(v) => [...d1Items(v, T, {full: 30, ...op}), ...f.items]} />;

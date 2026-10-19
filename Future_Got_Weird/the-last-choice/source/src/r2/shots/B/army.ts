@@ -243,8 +243,11 @@ const dronePos = (i: number, T: number): V3 => {
 /** The sentry: DRONES_B[SENTRY_B] (low, over the vanguard's south half) leaves its place as the vanguard plants, darts
  * across the crater, brakes and holds in front of his face, marks him, looks past him and backs away to its place. */
 export const SENTRY_B = 13;
-/** where it holds: ~7 m east of his face, a little above his eye line (over the van at the ridge's east foot) */
-export const SENTRY_HOLD: V3 = {x: 8.7, y: 5.15, z: 1.95};
+/** where it holds: ~7 m east of his face, above his eye line and 0.35 m north of where R3 held it (over the van at the
+ * ridge's east foot). R4: from B6b's lens (behind it, 3.6 m away) its near rotor arm and blur lay across his cheek and
+ * hair for 34.1–35.0 (arm tip 1.1 head radii past his head centre, measured on screen); now the whole machine hangs
+ * clear to the right of his head with the beam crossing the gap */
+export const SENTRY_HOLD: V3 = {x: 8.7, y: 5.35, z: 1.6};
 /** the ruin behind him the gimbal flicks to (SENTRY_T.past) */
 export const SENTRY_PAST: V3 = {x: -18, y: 4.5, z: -1.5};
 /** his chest on the brink (the mark's target; the raised plate is in front of it) */

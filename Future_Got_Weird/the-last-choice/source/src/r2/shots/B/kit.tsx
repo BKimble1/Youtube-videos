@@ -29,6 +29,29 @@ export const dirSpec = (T: number, o: {anchor?: V3; bias?: number; key?: string}
 };
 export const dirSprite = (T: number, o: {anchor?: V3; bias?: number; key?: string} = {}): SpriteItem => ({...figureSprite(dirSpec(T, o)), noCull: true});
 
+// ------------------------------------------------------------------ B2's perspective anchor (R4)
+/**
+ * The rig draws a figure with ONE scale, taken at an anchor (feet by default), and places every world target by that
+ * weak perspective. In B2 the lens is 3–4 m off and his palms plant 1 m from his feet, so a palm "planted" on the terrain
+ * was DRAWN 100–170 px from the true projection of its point on the rubble (measured, 12.4–14.0): floating over or sunk
+ * into the ground, whatever the keys said. The fix at the source of the section's contacts is to take the scale where the
+ * contacts are: on the palms while he crawls (mismatch 1–11 px), shifting to the feet as he kneels and stands. The
+ * weights change smoothly, so the figure's size does not step.
+ */
+export const b2Anchor = (T: number): V3 => {
+  const d = dirB(T), w = d.world;
+  const mean = (a: (V3 | undefined)[]): V3 | null => { const q = a.filter(Boolean) as V3[]; return q.length ? {x: q.reduce((s, p) => s + p.x, 0) / q.length, y: q.reduce((s, p) => s + p.y, 0) / q.length, z: q.reduce((s, p) => s + p.z, 0) / q.length} : null; };
+  const H = mean([w.handL, w.handR]), Fo = mean([w.footL, w.footR]) , P = {x: d.pos.x, y: d.pos.y + 0.25, z: d.pos.z};
+  const sm = (a: number, b: number) => { const u = clamp((T - a) / (b - a)); return u * u * (3 - 2 * u); };
+  const wf = 0.45 * sm(13.9, 14.4) + 0.4 * sm(15.4, 16.2);
+  const wh = (0.75 - 0.4 * sm(13.9, 14.4) - 0.2 * sm(14.4, 15.6) - 0.15 * sm(15.6, 16.2));
+  const wp = Math.max(0.1, 1 - wf - wh);
+  const tot = wf + wh + wp;
+  const a = {x: 0, y: 0, z: 0};
+  for (const [pt, k] of [[H ?? P, wh], [Fo ?? P, wf], [P, wp]] as [V3, number][]) { a.x += pt.x * k / tot; a.y += pt.y * k / tot; a.z += pt.z * k / tot; }
+  return a;
+};
+
 // ------------------------------------------------------------------ the plate's strap (B5): teeth and right hand
 /** The loose end of the plate's wrist strap: hangs from the buckle, is caught in his teeth and pulled tight by the right
  * hand. World points come from the solved rig in this view, so the strap stays on his forearm, mouth and fist. */
@@ -85,7 +108,7 @@ export const underShade = (T: number, pos: V3, bias: number, k = 0.5): SpriteIte
  * whole, shaded, to go behind the slab; 'out' draws only what is out past the edge, lit, to go in front of it. A part
  * that straddles the edge is cut on screen where the edge plane crosses it (the head and chest emerge gradually).
  */
-export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number; full?: boolean; edge?: {p: V3; n: V3}; split?: 'under' | 'out'; bodyOut?: boolean} = {}): SpriteItem => {
+export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number; full?: boolean; edge?: {p: V3; n: V3}; split?: 'under' | 'out'; bodyOut?: boolean; legCut?: boolean; contacts?: boolean} = {}): SpriteItem => {
   // the edge plane nearest a point and how far out past it the point is (> 0: out from under the slab: past the given
   // edge plane, or by default past its east or its bitten south edge)
   const sideN = (q: V3): {s: number; n: V3} => {
@@ -156,13 +179,40 @@ export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number;
       const mid = (a: V3, b: V3): V3 => ({x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, z: (a.z + b.z) / 2});
       const chest = W(mid(rig.sh[0], rig.sh[1]));
       const cutHead = bodyCut(W(rig.headC), 0.16), cutChest = bodyCut(chest, 0.45), cutHips = bodyCut(W(mid(rig.hip[0], rig.hip[1])), 0.5);
+      // (R4) each leg is cut where the edge plane crosses IT (its own mid-point), not at the hips: his legs trail under the
+      // slab after the hips are out, and a leg keyed to the hips was drawn over the slab's face (B2 13.5–14.5)
+      const cutLeg = [0, 1].map((i) => bodyCut(W(mid(rig.hip[i], rig.ankle[i])), 0.3));
+      // (R4) contact shadows on the terrain under every part that is down on it (palms, knees, feet, hips, chest, head):
+      // the rig's own shadow is a screen ellipse at the root's ground, which on the crest's lumpy slope left a prone or
+      // crouched body floating over the dark rubble
+      const shadows: React.ReactElement[] = [];
+      if (o.contacts) {
+        const flat = (gy: number, q: V3) => clamp((Math.atan2(Math.abs(c.view.pos.y - gy), Math.hypot(c.view.pos.x - q.x, c.view.pos.z - q.z)) * 1.25), 0.2, 0.75);
+        const down = (key: string, q: V3, r: number, k: number, reach = 0.2) => {
+          const gy = groundH(q.x, q.z), h = q.y - gy;
+          const a = clamp(1 - (h - 0.02) / reach) * k;
+          if (a < 0.03) return;
+          const sp = project(c.view, {x: q.x, y: gy + 0.004, z: q.z});
+          const rx = r * sp.k;
+          shadows.push(<ellipse key={key} cx={sp.x} cy={sp.y} rx={rx} ry={rx * flat(gy, q)} fill="#0E0B0A" opacity={a} />);
+        };
+        [0, 1].forEach((i) => {
+          down(`cs_h${i}`, W(rig.hands[i].pos), 0.1, 0.5, 0.14);
+          down(`cs_k${i}`, W(rig.knee[i]), 0.11, 0.42, 0.18);
+          down(`cs_a${i}`, W(rig.ankle[i]), 0.12, 0.42, 0.14);
+        });
+        down('cs_p', W(rig.P), 0.3, 0.34, 0.3);
+        down('cs_c', chest, 0.3, 0.3, 0.4);
+        down('cs_hd', W(rig.headC), 0.22, 0.3, 0.45);
+      }
       // the far arm reaching out while his chest is still under stays under (it is behind his body)
       const nearArm = project(c.view, W(rig.sh[0])).z < project(c.view, W(rig.sh[1])).z ? 0 : 1;
       const outCut = (key: string): string | 'all' | null => {
         const ai = armOf(key);
         if (ai >= 0) return ai === nearArm || side(chest) > 0 ? arms[ai].out : null;
         if (key.startsWith('head') || key === 'neck') return cutHead;
-        if (key === 'pelvis' || key.startsWith('leg')) return cutHips;
+        if (key.startsWith('leg')) return o.legCut ? cutLeg[key === 'leg0' ? 0 : 1] : cutHips;
+        if (key === 'pelvis') return cutHips;
         if (key === 'shadow') return null;
         return cutChest;
       };
@@ -185,12 +235,13 @@ export const dirShaded = (T: number, o: {anchor?: V3; bias?: number; k?: number;
         );
       }
       const vol = o.full ? big : H ? polyD(H) : null;
-      if (!vol) return <g>{parts.map((q) => <g key={q.key}>{q.el}</g>)}</g>;
+      if (!vol) return <g>{shadows}{parts.map((q) => <g key={q.key}>{q.el}</g>)}</g>;
       const clips: React.ReactElement[] = [<clipPath key="v" id={`${id}v`}><path d={vol} /></clipPath>];
       arms.forEach((a, i) => { if (a.sh && a.sh !== 'all') clips.push(<clipPath key={`a${i}`} id={`${id}a${i}`}><path d={a.sh} /></clipPath>); });
       return (
         <g>
           <defs>{clips}</defs>
+          {shadows}
           {parts.map((q) => {
             const ai = armOf(q.key);
             const ac = ai >= 0 ? arms[ai].sh : 'all';

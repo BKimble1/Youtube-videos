@@ -97,7 +97,10 @@ export const CAM_6: CamKey[] = [
 export const CAM_7a: CamKey[] = [
   {t: 0, pos: g(44.85, 0.45, 2.15), target: add3(SMASH_AT, {x: 0.1, y: 0.12, z: 0.0}), fov: 40},
   {t: 0.95, pos: g(44.85, 0.45, 2.15), target: add3(SMASH_AT, {x: 0.25, y: 0.18, z: -0.05}), fov: 40},
-  {t: d(SH3.d37a, SH3.d37b), pos: g(44.8, 0.5, 2.3), target: g(53.6, 0.8, 1.5), fov: 44},
+  // (R4: the sweep out with the beam ends higher and a little north of her, looking down the beam: the D1 cover slab (the
+  // tan plate 2–2.5 m to the right of the old end frame) and the crest's near edge no longer fill the lower and right
+  // thirds of the last 0.3 s)
+  {t: d(SH3.d37a, SH3.d37b), pos: g(44.4, -0.5, 2.9), target: g(53.6, -0.6, 1.3), fov: 38},
 ];
 // D3-7b: on the north rim of the crater, side-on to the light: the figures on the dust in the beam from frame right
 // (her tablet, off frame); the arc comes on out of the dust from the right and walks straight through them
@@ -151,6 +154,18 @@ export const CAM_11a: CamKey[] = [
   {t: 0, pos: g(36.0, 6.0, 3.8), target: at(45.5, 0.8, -2.0), fov: 50},
   {t: d(SH3.d311a, SH3.d311b), pos: g(35.8, 6.1, 3.9), target: at(44.8, 0.8, -1.6), fov: 50},
 ];
+/** R4: the last 0.42 s of D3-11a push in on the breaker (kneeling at the corridor's mouth, the tool lifted across his
+ *  body, his head down on the dial): the cut into the gauge insert is on his look, so the dial is his (it is the tool in
+ *  his hands). `base` = camPath(CAM_11a, t) from shots.tsx. */
+export const push11a = (base: Cam3, t: number, T: number): Cam3 => {
+  const k = smoothK((t - (d(SH3.d311a, SH3.d311b) - 0.42)) / 0.42);
+  if (k <= 0) return base;
+  const c = crewAt('breaker', Math.min(T, SH3.d311b));
+  const tool = lerp3(c.pts!.back, c.pts!.front, 0.5);
+  const f = {x: tool.x - base.pos.x, y: tool.y - base.pos.y, z: tool.z - base.pos.z}, l = Math.hypot(f.x, f.y, f.z) || 1;
+  const dolly = 1.6 * k;
+  return {pos: {x: base.pos.x + (f.x / l) * dolly, y: base.pos.y + (f.y / l) * dolly, z: base.pos.z + (f.z / l) * dolly}, target: lerp3(base.target, add3(tool, {x: 0, y: 0.1, z: 0}), k), fov: lerp(base.fov ?? 50, 30, k), roll: 0};
+};
 // D3-11b: insert — the breaker's gauge (he is down on one knee, the tool lifted across his body): his eyeline down onto
 // the dial on the tank under his rear hand, the needle on the red
 export const CAM_11b: CamFn = (t, T) => {

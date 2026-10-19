@@ -44,7 +44,9 @@ export const CUES_D1: Cue[] = [
   {t: 70.52, kind: 'robot_swing', gain: -5, pan: 0.34, dist: 0.41},
   {t: 70.6, kind: 'plate_block', gain: -2, pan: 0.12, dist: 0.37, rate: 0.8}, // heavy block on the shaft
   {t: 70.64, kind: 'breath_exert', gain: -6, pan: 0.11, dist: 0.34},
+  {t: 70.9, kind: 'armor_hit', gain: -7, pan: 0.14, dist: 0.36, rate: 1.2}, // (R4) the shaft rams up into U4's hammer arm
   {t: 71.02, kind: 'robot_swing', gain: -10, pan: 1, dist: 0.13},
+  {t: 71.36, kind: 'robot_swing', gain: -9, pan: 0.4, dist: 0.36}, // (R4) U4's jab at his face, short
   {t: 71.25, kind: 'armor_hit', gain: -6, pan: -0.43, dist: 0.81, rate: 1.3}, // halligan parry
   {t: 71.89, kind: 'robot_swing', gain: -5, pan: 0.52, dist: 0.33},
   {t: 72.05, kind: 'armor_hit', gain: -6, pan: -0.22, dist: 0.78, rate: 1.1},

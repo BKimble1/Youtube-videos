@@ -59,6 +59,9 @@ export const TR = {
   commit: 58.3, commitEnd: 58.85,
 };
 
+/** the runner's bound over the steep rubble (R4; crew.ts hopAt): it replaces steps 7-8 of his climb */
+export const TH = {t0: 44.02, load: 44.09, take: 44.12, landL: 44.285, landR: 44.37, palmOn: 44.2, palmOff: 44.42, t1: 44.6};
+
 /** the breaker (honest): the walk out of the smoke, the step-climb up the north side (palms on the rubble), to the
  * Director's right side; his hand on the Director's shoulder (C5a); round to his place; the tool charged (C6b) */
 export const TB2 = {

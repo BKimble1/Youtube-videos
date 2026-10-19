@@ -59,6 +59,8 @@ export const RUN_HOOK: XZ = {x: 56.15, z: -1.65};
 export const DEC_SPOT = {x: 46.15, z: -0.75, h: 88};
 /** heavy 2's round bursts on the crest where she knelt (just east of it: the slope's lip) */
 export const BLAST_XZ: XZ = {x: 47.15, z: -0.55};
+/** the main direction heavy 2's round throws the rim's concrete (west and up; the chunks come down on the terrain: fx.tsx blastFx, persist.ts d3_blast — one value for both) */
+export const BLAST_DIR = {x: -0.6, y: 1.1, z: 0};
 /** the Director's run to her and the haul back off the crest */
 export const DIR_GRAB: XZ = {x: 45.55, z: -1.35};
 

@@ -8,7 +8,7 @@ import {unitAttach, unitImpacts, heavyAttach} from '../../mech';
 import {EV} from './times';
 import {BLOCK_PLATE, RUNNER_CHEST, RUNNER_DOWN, STRIKE_PLATE, SLAM, PLANT} from './marks';
 import {unitD4, heavy2At, heavy2Footfalls, h1Fist, droneD4} from './machines';
-import {crewAt, crewFootfalls, clubPoint, FLARE} from './crew';
+import {crewAt, crewFootfalls, clubPoint, slabContact, FLARE} from './crew';
 import {DROPS, dropAt, heavySlab, wrapPoints, polyCable, looseEnd} from './props';
 import {cable} from '../../mech';
 import {G} from './motion';
@@ -127,22 +127,27 @@ export const d4Fx = (T: number): FxOut => {
   }
   // ---- D4-8 THE STRIKE: the ram meets the plate, the plate shatters; he is thrown into the slab
   if (T > EV.strike - 0.1 && T < EV.strike + 4) {
-    out.push(plateHit({at: STRIKE_PLATE, normal: {x: 0.15, y: 0.75, z: -0.65}, t: T, t0: EV.strike, key: 'd4strike', stage: 'shatter', ground: ground(STRIKE_PLATE), seed: 201}));
+    // (R4: the shards and sparks fly out toward the camera side and back at the ram — they sat north of the plate, behind the van, in R3)
+    out.push(plateHit({at: STRIKE_PLATE, normal: {x: 0.6, y: 0.55, z: 0.55}, t: T, t0: EV.strike, key: 'd4strike', stage: 'shatter', ground: ground(STRIKE_PLATE), seed: 201}));
     // (a small, short flash on the ram's side of the plate: the ram head, the plate's fragments and his arm stay
     // readable at the contact — the force reads from his flight, not from a white-out)
     out.push(fx(flash3({at: add3(STRIKE_PLATE, {x: 0.12, y: 0.04, z: 0}), t: T, t0: EV.strike, key: 'd4strfl', r: 0.38, dur: 0.05, color: '#FFF0D0', core: 0.12}), T < EV.strike + 0.08 ? [{pos: add3(STRIKE_PLATE, {x: 0.4, y: 0.2, z: 0}), color: '#FFE9C0', power: 0.9, radius: 6}] : []));
     out.push(fx(ring3({at: STRIKE_PLATE, normal: {x: 1, y: 0.1, z: 0}, t: T, t0: EV.strike, key: 'd4strr', r0: 0.12, speed: 8, dur: 0.16, width: 0.05})));
     out.push(fx([], [], shakeAt(T, EV.strike, 0.2, 5)));
-    // the slab: his back slams into it — concrete dust and grit off its face
-    // (at his mid-back against the slab face, spraying up along it: it must not cloud his head)
-    const back = {x: SLAM.x - 0.3, y: G(SLAM.x, SLAM.z) + 0.75, z: SLAM.z - 0.17};
+    // the slab: his back meets its face (the point the rig puts it on) — concrete dust and grit off the face, spraying up along it
+    // (at his mid-back against the slab face: it must not cloud his head)
+    const back = slabContact(EV.slam);
     out.push(impact({at: back, normal: {x: 0.25, y: 0.9, z: 0.15}, t: T, t0: EV.slam, key: 'd4slam', strength: 0.28, material: 'concrete', ground: ground(back), seed: 211}));
     out.push(fx([], [], shakeAt(T, EV.slam, 0.07)));
     // his feet scrape in front of the slab as they come down
-    out.push(bodyDust(T, {x: SLAM.x + 0.15, y: 0, z: SLAM.z}, EV.slam + 0.03, 'd4slf', 213, 0.8));
+    const wl = crewAt('director', EV.slam + 0.02).spec.world!;
+    out.push(bodyDust(T, {x: (wl.footL!.x + wl.footR!.x) / 2, y: 0, z: (wl.footL!.z + wl.footR!.z) / 2}, EV.slam + 0.03, 'd4slf', 213, 0.8));
   }
   // ---- D4-8 his legs go (178.35): his heels scrape forward in front of the slab
-  if (T > EV.kneesGo - 0.05 && T < EV.kneesGo + 2) out.push(bodyDust(T, {x: SLAM.x + 0.35, y: 0, z: SLAM.z + 0.05}, EV.kneesGo + 0.08, 'd4knee', 215, 0.6));
+  if (T > EV.kneesGo - 0.05 && T < EV.kneesGo + 2) {
+    const wk = crewAt('director', EV.kneesGo + 0.1).spec.world!;
+    out.push(bodyDust(T, {x: (wk.footL!.x + wk.footR!.x) / 2 + 0.1, y: 0, z: (wk.footL!.z + wk.footR!.z) / 2}, EV.kneesGo + 0.08, 'd4knee', 215, 0.6));
+  }
   // ---- D4-9 he tries to push himself up (the palm on the street, grit under it), and cannot
   if (T > EV.tryRise && T < EV.tryRiseEnd + 2) {
     const d = crewAt('director', EV.tryRise + 0.45).spec.world?.handL;
@@ -150,9 +155,9 @@ export const d4Fx = (T: number): FxOut => {
   }
   // ---- D4-9 the slide down the slab: grit trickles, a puff as he sits
   if (T > EV.slide && T < EV.slideEnd + 2.5) {
-    const top = {x: SLAM.x - 0.3, y: G(SLAM.x, SLAM.z) + 1.0, z: SLAM.z};
+    const top = add3(slabContact(EV.slide), {x: 0, y: 0.25, z: 0});
     out.push(fx(chips3({at: top, t: T, t0: EV.slide + 0.1, key: 'd4sl1', n: 6, dir: {x: 0.3, y: -0.2, z: 0}, spread: 40, speed: [0.3, 1], size: [0.015, 0.04], material: 'concrete', ground: ground(top), seed: 221})));
-    out.push(bodyDust(T, {x: 6.75, y: 0, z: 3.55}, EV.slideEnd - 0.15, 'd4sit', 223, 0.9));
+    out.push(bodyDust(T, {x: 6.85, y: 0, z: 3.3}, EV.slideEnd - 0.15, 'd4sit', 223, 0.9));
   }
   return combine(...(out.filter(Boolean) as FxOut[]));
 };

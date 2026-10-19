@@ -9,14 +9,15 @@ import {directorAt} from './crew';
 import {shotOf, g} from './shot';
 
 // ------------------------------------------------------------------ D1-5 (77.45–79.70): THREAT and DEFENSE
-// Medium three-quarter from the south, a little high, both threats and their distance in one frame: the Director left of
+// (R4: the lens 0.9 m further east and a little higher, so the Director's head no longer covers the plate at BR1 and U2's body
+// sits beside, not behind, the pair.) Medium three-quarter from the south, a little high, both threats and their distance in one frame: the Director left of
 // centre facing right (his face in profile), U1 right of him stepping in; behind them U2 driving the runner back. U1's jab on the plate, then
 // the hammer (BR1, 78.48): he plants, blocks, the plate dents, his heels skid back — and U1 FOLLOWS him, two steps, and
 // puts its palm on the plate and leans in. The camera drifts left with the displacement.
 const D15: CamKey[] = [
-  {t: 0, pos: g(41.55, 2.9, 1.9), target: g(41.0, -1.5, 1.25), fov: 40},
-  {t: M.BR1 - 77.45, pos: g(41.4, 2.9, 1.9), target: g(40.85, -1.5, 1.25), fov: 40},
-  {t: 79.7 - 77.45, pos: g(41.0, 2.85, 1.85), target: g(40.45, -1.45, 1.25), fov: 40},
+  {t: 0, pos: g(42.5, 3.3, 1.5), target: g(41.2, -0.9, 1.3), fov: 40},
+  {t: M.BR1 - 77.45, pos: g(42.3, 3.3, 1.5), target: g(41.0, -0.9, 1.3), fov: 40},
+  {t: 79.7 - 77.45, pos: g(41.7, 3.25, 1.5), target: g(40.4, -0.9, 1.3), fov: 40},
 ];
 export const D1_5 = shotOf(77.45, D15, {drift: 0.016, shake: 0.9});
 

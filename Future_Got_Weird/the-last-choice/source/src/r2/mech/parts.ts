@@ -149,13 +149,33 @@ export const UNIT = {
   thighL: prep(thighL), thighR: prep(mirrorX(thighL)), shinL: prep(shinL), shinR: prep(mirrorX(shinL)), footL: prep(footL), footR: prep(mirrorX(footL)),
   stump: prep(stump),
 };
-// mid-LOD: a handful of merged blocks (no small plates, no ink on small parts)
+// mid-LOD (R4): the SAME anatomy as the full unit at about 60 % of its faces: every part the full unit has is here (head,
+// fists, feet, both plates over the frame, pauldrons), each simplified to one or two blocks with the full part's size and
+// placement, so a unit crossing the full/mid distance changes in small interior detail only (before R4 the mid unit had
+// no fists, no feet, no head of its own (a box on the torso), one merged torso with the plates painted on: a unit
+// stepping from full to mid lost its hands and feet, its head shape and a torn chest plate "regrew").
+const midHead = M_(
+  taper(0.22, 0.24, -0.14, 0.25, 0.27, 0.10, ['m_plate', 'm_dark', 'm_plate2', 'm_plate2', 'm_plate2', 'm_plate2']),
+  bx(-0.11, -0.03, -0.17, 0.11, 0.07, -0.125, 'm_glass'),
+  bx(-0.032, -0.022, -0.18, 0.032, 0.03, -0.17, 'm_eye'),
+  bx(-0.02, 0.1, -0.08, 0.02, 0.26, 0.13, 'm_plate2'),
+);
+const midThigh = M_(
+  bx(-0.075, -U.thigh, -0.075, 0.075, 0.03, 0.075, 'm_frame'),
+  bx(-0.1, -0.38, -0.135, 0.1, -0.04, -0.07, 'm_plate'),
+);
+const midUpper = M_(
+  bx(-0.06, -U.upper - 0.04, -0.06, 0.06, 0.02, 0.06, 'm_frame'),
+  bx(-0.085, -0.30, -0.08, 0.02, -0.06, 0.08, 'm_plate2'),
+);
 export const UNIT_MID = {
-  // (faces: top, bottom, front, back, sides) the back takes the full unit's darker back-plate tone, so a mid unit seen
-  // from behind reads like a full one (not a pale cut-out)
-  torso: prep(M_(taper(0.36, 0.26, -0.1, 0.64, 0.36, 0.58, ['m_plate', 'm_dark', 'm_plate', 'm_plateDeep', 'm_plate2', 'm_plate2']), bx(-0.12, 0.62, -0.14, 0.12, 0.86, 0.14, ['m_plate2', 'm_dark', 'm_plate2', 'm_plateDeep', 'm_plate2', 'm_plate2']), bx(-0.03, 0.86, -0.06, 0.03, 0.95, 0.12, 'm_plate2'), bx(-0.035, 0.70, -0.16, 0.035, 0.76, -0.13, 'm_eye'))),
-  limb: prep(bx(-0.07, -0.9, -0.08, 0.07, 0.0, 0.08, 'm_plate2')),
-  arm: prep(bx(-0.065, -0.85, -0.07, 0.065, 0.0, 0.07, 'm_frame')),
+  core: prep(M_(taper(0.32, 0.25, 0, 0.52, 0.34, 0.52, 'm_frame'))),
+  pelvis: prep(M_(bx(-0.17, -0.12, -0.12, 0.17, 0.10, 0.12, 'm_dark'), bx(-0.21, -0.02, -0.15, 0.21, 0.10, 0.15, ['m_plate2', 'm_dark', 'm_plate2', 'm_plate2', 'm_plate2', 'm_plate2']))),
+  head: prep(midHead),
+  thigh: prep(midThigh),
+  upperL: prep(midUpper), upperR: prep(mirrorX(midUpper)),
+  fist: prep(bx(-0.065, -U.fist, -0.07, 0.065, 0.0, 0.065, 'm_dark')),
+  foot: prep(taper(0.17, 0.32, -U.ankleH, 0.13, 0.18, -0.02, 'm_dark', -0.05, 0.0)),
 };
 
 // ------------------------------------------------------------------ drone (span ~0.75 m)

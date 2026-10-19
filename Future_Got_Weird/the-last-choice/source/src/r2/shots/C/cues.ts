@@ -7,7 +7,7 @@
 // shots' own cameras; keep them in sync if the paths change.
 import type {Cue} from '../../../film/cue';
 import {M} from '../../timing';
-import {TD, TT, TR, TB2, T3, TDR} from './beats';
+import {TD, TT, TR, TB2, T3, TDR, TH} from './beats';
 
 const c = (t: number, kind: string, o: Omit<Cue, 't' | 'kind'> = {}): Cue => ({t, kind, ...o});
 const steps = (ts: number[], o: Omit<Cue, 't' | 'kind'>): Cue[] => ts.map((t, i) => c(t, 'steps_gravel', {...o, gain: (o.gain ?? -10) - (i % 2) * 1.5, rate: (o.rate ?? 1) * (i % 3 === 1 ? 1.06 : 1)}));
@@ -46,9 +46,9 @@ const C3: Cue[] = [
   c(TR.land + 0.02, 'rubble_shift', {gain: -13, pan: -0.15, dist: 0.5, dur: 0.7, rate: 1.2, fade: 0.2}),
   c(TR.rec - 0.05, 'breath_ragged', {gain: -14, pan: -0.15, dist: 0.5, dur: 0.9, fade: 0.25}),
   // the runner climbs (step-ups: the plants)
-  ...plants([[42.55, -0.32, 0.66], [42.8, -0.25, 0.63], [43.06, -0.29, 0.58], [43.52, -0.26, 0.53], [43.73, -0.12, 0.52], [43.94, -0.04, 0.48], [44.21, 0.08, 0.48], [44.48, 0.14, 0.44], [44.74, 0.28, 0.44], [44.99, 0.43, 0.41], [45.25, 0.54, 0.42]], {gain: -11}),
-  c(44.12, 'rubble_shift', {gain: -14, pan: 0.11, dist: 0.48, dur: 0.45, rate: 1.3, fade: 0.12}), // his palm on the rubble
-  c(44.2, 'breath_exert', {gain: -15, pan: 0.1, dist: 0.48, dur: 0.5, fade: 0.12}),
+  ...plants([[42.55, -0.32, 0.66], [42.8, -0.25, 0.63], [43.06, -0.29, 0.58], [43.52, -0.26, 0.53], [43.73, -0.12, 0.52], [43.94, -0.04, 0.48], [44.285, 0.08, 0.48], [44.37, 0.14, 0.44], [44.74, 0.28, 0.44], [44.99, 0.43, 0.41], [45.25, 0.54, 0.42]], {gain: -11}),
+  c(TH.palmOn, 'rubble_shift', {gain: -14, pan: 0.11, dist: 0.48, dur: 0.45, rate: 1.3, fade: 0.12}), // his palm on the rubble (R4: the bound's palm, 44.2: it was 44.12 on the step-up)
+  c(TH.take, 'breath_exert', {gain: -15, pan: 0.1, dist: 0.48, dur: 0.5, fade: 0.12}), // the push-off
   // the breaker, heavier, behind (slower rate)
   ...plants([[42.73, 0.15, 1.0], [43.07, 0.08, 0.99], [43.39, -0.05, 0.94], [43.88, -0.02, 0.88], [44.15, 0.03, 0.85], [44.46, -0.01, 0.81], [44.78, 0.02, 0.78], [45.07, -0.02, 0.75]], {gain: -15, rate: 0.85}),
   c(42.96, 'rubble_shift', {gain: -16, pan: 0.13, dist: 0.99, dur: 0.6, fade: 0.2}), // his palm on the rubble

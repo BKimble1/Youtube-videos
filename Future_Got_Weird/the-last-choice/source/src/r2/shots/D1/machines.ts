@@ -600,17 +600,17 @@ const U3: Plan = {
     const sl = u3Slide(T);
     const x = u3X(T) + U3_FALL_DIR.x * sl, z = -0.95 + U3_FALL_DIR.z * sl;
     const pivot = {x: (feet.L.x + feet.R.x) / 2, z: (feet.L.z + feet.R.z) / 2};
-    const gx = G(x, z);
     return {
       pos: {x, y: 0, z}, heading: u3H(T),
       feet, posture: [[67.8, 'guard'], [BR4.hit, 'idle']],
       look: {x: br4X(Math.min(T, BR4.hit)), y: G(br4X(Math.min(T, BR4.hit)), br4Z(Math.min(T, BR4.hit))) + 1.2 + 1.5 * back, z: br4Z(Math.min(T, BR4.hit))},
       crouch: T < BR4.hit ? 0.3 * wind : lerp(0.3, 0.02, smooth(clamp((T - BR4.hit) / 0.25))),
       lean: T < BR4.hit ? 8 + 8 * wind : lerp(16 - 40 * back, 10, curl),
-      raise: {t0: 85.1, t1: BR4.hit + 0.2, side: 'L'},
-      // its right arm reaches over his back as it folds, then flails forward as it goes over
-      armR: T > BR4.hit - 0.22 && T < BR4.release ? {hand: {x: x - 0.62, y: gx + 1.55 + 0.5 * back, z: -0.72}, open: true} : undefined,
-      armWR: smooth(clamp((T - BR4.hit + 0.22) / 0.2)) * (1 - smooth(clamp((T - BR4.release + 0.25) / 0.25))),
+      // (R4: its RIGHT arm is the hammer arm. U3 faces west, so its left arm is the south one: with the side-on lens from the south
+      // (D1-8) that raised forearm hung in front of the Director's head and shoulders through the whole contact. The right arm is
+      // on the far side: he and the chest plate his plate meets are in clear profile. The R3 'reach over his back' arm is dropped:
+      // the left arm, the near one, would have crossed his body; the hit's reaction (hits below) throws it back instead.)
+      raise: {t0: 85.1, t1: BR4.hit + 0.2, side: 'R'},
       hits: [{t0: BR4.hit, dir: {x: 1, y: 0, z: -0.02}, strength: 1.0}, {t0: BR4.release, dir: {x: 1, y: 0, z: 0}, strength: 0.8}],
       fall: {t0: BR4.fall, dir: U3_FALL_DIR, ang: restAng(pivot, U3_FALL_DIR)}, // over the crest, down the inner slope
       damage: {dent: {t0: BR4.hit, deg: -8}, dead: {t0: BR4.slide1 - 0.3}},
@@ -623,8 +623,11 @@ export const U3_SLIDE = {t0: BR4.slide0, t1: BR4.slide1};
 
 // ================================================================== U4 — the breaker's
 export const U4_P = {x: 41.35, z: 3.68}, U4_H = 286;
+// (R4: the breaker's counter rams the shaft up into its hammer arm (70.9): it is thrown back a step, resets, steps in with a
+// quick jab (71.42: he sways back from it) and throws the punch (71.95) — no standing about within his reach)
 const U4_KEYS: KR[] = [
-  [68.5, 41.6, 3.8, 288], [69.4, 41.55, 3.78, 288], [70.3, 41.2, 3.66, 287], [EV.u4ham, 41.0, 3.6, 287], [71.2, 41.35, 3.68, 287],
+  [68.5, 41.6, 3.8, 288], [69.4, 41.55, 3.78, 288], [70.3, 41.2, 3.66, 287], [EV.u4ham, 41.0, 3.6, 287], [70.84, 41.0, 3.6, 287], [71.16, 41.4, 3.7, 287],
+  [EV.u4jab, 41.22, 3.66, 286], [71.7, 41.36, 3.68, 286],
   [EV.u4punch, 41.3, 3.66, 286], [72.25, U4_P.x, U4_P.z, U4_H],
 ];
 const u4Feet = (() => {
@@ -656,6 +659,8 @@ const U4: Plan = {
     const strikes: StrikeSpec[] = [
       // the hammer he takes on the tool's shaft (held up across)
       {t0: EV.u4ham, side: 'R', kind: 'hammer', target: short(sh(EV.u4ham - 0.2, 'R'), rel(brkRoot(EV.u4ham).p, brkRoot(EV.u4ham).h, 0.27, 0.02, 1.76), 0.05)},
+      // (R4) the quick jab at his face that he sways back from: the fist passes just short of his head
+      {t0: EV.u4jab, side: 'R', kind: 'punch', target: rel(brkRoot(EV.u4jab - 0.2).p, 82, 0.2, 0.0, 1.62)},
       // the punch he ducks under
       {t0: EV.u4punch, side: 'L', kind: 'punch', target: rel(brkRoot(EV.u4punch - 0.35).p, 82, 0.08, 0.0, 1.58)},
       // the swat at the drone in its face
@@ -669,6 +674,7 @@ const U4: Plan = {
       look: T < EV.u4catch ? {x: brk.p.x, y: 1.55, z: brk.p.z} : T < EV.harry - 0.3 ? add3(u4TugTip(T), {x: -0.4, y: 0.4, z: 0}) : undefined,
       attend: [{t0: EV.harry - 0.22, at: ALLY_AT_HARRY, t1: EV.u4kill, turn: false}],
       hits: [
+        {t0: EV.u4push, dir: {x: 0.95, y: 0, z: -0.1}, strength: 0.4},
         {t0: EV.knee, dir: {x: 0.95, y: 0, z: -0.3}, strength: 0.9},
         {t0: EV.harry, dir: {x: 0.9, y: 0, z: 0.1}, strength: 0.45},
         {t0: EV.u4kill, dir: {x: 0.85, y: -0.3, z: 0.3}, strength: 0.9},

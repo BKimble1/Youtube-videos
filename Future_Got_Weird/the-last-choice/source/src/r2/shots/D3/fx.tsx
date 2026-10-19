@@ -23,7 +23,7 @@ import {canisters as d2Cans} from '../D2/fx';
 import {allyPose as d2AllyPose} from '../D2/fx';
 import {EV2, ANCHOR} from '../D2/machines';
 import {EV3} from './times';
-import {dirPlate} from './marks';
+import {dirPlate, BLAST_DIR} from './marks';
 import {heavy1D3, heavy2D3, H2_FALLS, H1_LEGS, BLAST_AT, SMASH_AT, CUT_AT, h1ClampPt, allyPose3, ALLY_KILL_DIR, ALLY_CRASH_GROUND, escort, PIPE_HIT} from './machines';
 import {crewFootfalls, tetherAt, directorAt, kneeTarget, FLARE_TO, flareFrom} from './crew';
 
@@ -258,7 +258,7 @@ export const d3Fx = (T: number): FxOut => {
     const K = kneeFight();
     // U8's hammer on the plate: a heavy block — the plate rings, his heels skid back
     if (near(T, EV3.e1Ham)) {
-      out.push(plateHit({at: K.ham, normal: K.hamN, t: T, t0: EV3.e1Ham, key: 'd3ham', stage: 'dent', ground: ground(K.ham), seed: 151}));
+      out.push(plateHit({groundFn: G, at: K.ham, normal: K.hamN, t: T, t0: EV3.e1Ham, key: 'd3ham', stage: 'dent', ground: ground(K.ham), seed: 151}));
       K.heels.forEach((h, i) => out.push(fx(dust3({at: {...h, y: ground(h) + 0.03}, t: T, t0: EV3.e1Ham + 0.04, key: `d3skid${i}`, n: 4, size: 0.08, grow: 0.3, speed: 0.8, life: 1.2, dir: {x: K.hamN.x, y: 0.4, z: K.hamN.z}, spread: 50, rise: 0.15, color: '#8E857C', opacity: 0.5, seed: 152 + i}))));
       out.push(fx([], [], shakeAt(T, EV3.e1Ham, 0.05)));
     }
@@ -266,7 +266,7 @@ export const d3Fx = (T: number): FxOut => {
     if (T > EV3.press0 - 0.05 && T < EV3.press1 + 0.6) out.push(fx(sparks3({at: dirPlate(Math.min(T, EV3.press1)), t: T, t0: EV3.press0, t1: EV3.press1, rate: 24, key: 'd3press', n: 0, dir: {x: K.hamN.x, y: 0.2, z: K.hamN.z}, spread: 60, speed: [1, 3], life: [0.1, 0.3], flash: 0, seed: 155})));
     // his plate driven into its back as it turns away: a hard impact
     if (near(T, EV3.bash)) {
-      out.push(impact({at: K.bash, normal: K.bashN, t: T, t0: EV3.bash, key: 'd3bash', strength: 1.3, material: 'armor', ground: ground(K.bash), seed: 161}));
+      out.push(impact({groundFn: G, at: K.bash, normal: K.bashN, t: T, t0: EV3.bash, key: 'd3bash', strength: 1.3, material: 'armor', ground: ground(K.bash), seed: 161}));
       out.push(fx(ring3({at: K.bash, normal: K.bashN, t: T, t0: EV3.bash, key: 'd3bashrg', r0: 0.1, speed: 5, dur: 0.16, width: 0.05})));
       out.push(fx([], [], shakeAt(T, EV3.bash, 0.06)));
     }
@@ -281,18 +281,18 @@ export const d3Fx = (T: number): FxOut => {
   // ---- the knee splits: a mechanical failure (the piston flash, the spark cone, the joint's hydraulic spray)
   if (near(T, EV3.knee, 0.1, 3)) {
     const k = kneeTarget();
-    out.push(breakerHit({at: k, dir: {x: 0.0, y: 0.3, z: -0.95}, t: T, t0: EV3.knee, key: 'd3knee', ground: ground(k), seed: 71, strength: 1.6}));
+    out.push(breakerHit({groundFn: G, at: k, dir: {x: 0.0, y: 0.3, z: -0.95}, t: T, t0: EV3.knee, key: 'd3knee', ground: ground(k), seed: 71, strength: 1.6}));
     out.push(fx(flash3({at: k, t: T, t0: EV3.knee, key: 'd3kneefl', r: 0.8, dur: 0.14, color: '#FFE6B8'})));
     out.push(fx(sparks3({at: k, t: T, t0: EV3.knee, key: 'd3kneesp', n: 40, dir: {x: 0, y: 0.5, z: 0.8}, spread: 80, speed: [2, 9], ground: ground(k), seed: 72, flash: 0.5})));
     out.push(fx(dust3({at: k, t: T, t0: EV3.knee + 0.03, key: 'd3kneevap', n: 8, size: 0.12, grow: 0.7, speed: 2.4, life: 1.6, dir: {x: 0.2, y: 0.6, z: 0.75}, spread: 35, rise: 0.5, color: '#E4E0D8', opacity: 0.55, seed: 73})));
-    out.push(fx(chips3({at: k, t: T, t0: EV3.knee, key: 'd3kneech', n: 10, dir: {x: 0.1, y: 0.5, z: 0.85}, spread: 60, speed: [2, 6], size: [0.03, 0.1], material: 'metal', ground: ground(k), seed: 74})));
+    out.push(fx(chips3({groundFn: G, at: k, t: T, t0: EV3.knee, key: 'd3kneech', n: 10, dir: {x: 0.1, y: 0.5, z: 0.85}, spread: 60, speed: [2, 6], size: [0.03, 0.1], material: 'metal', ground: ground(k), seed: 74})));
     out.push(fx([], [], shakeAt(T, EV3.knee, 0.12, 6)));
   }
   // ---- R4's hammer comes down on the water main over the breaker: a hard impact on the beam
   if (near(T, EV3.e2Hit, 0.1, 2.5)) {
-    out.push(impact({at: PIPE_HIT, normal: {x: 0.5, y: 0.8, z: -0.3}, t: T, t0: EV3.e2Hit, key: 'd3e2hit', strength: 1.5, material: 'metal', ground: ground(PIPE_HIT), seed: 181}));
+    out.push(impact({groundFn: G, at: PIPE_HIT, normal: {x: 0.5, y: 0.8, z: -0.3}, t: T, t0: EV3.e2Hit, key: 'd3e2hit', strength: 1.5, material: 'metal', ground: ground(PIPE_HIT), seed: 181}));
     out.push(fx(ring3({at: PIPE_HIT, normal: {x: 0, y: 1, z: 0}, t: T, t0: EV3.e2Hit, key: 'd3e2rg', r0: 0.15, speed: 6, dur: 0.18, width: 0.06})));
-    out.push(fx(chips3({at: PIPE_HIT, t: T, t0: EV3.e2Hit, key: 'd3e2ch', n: 12, dir: {x: -0.4, y: 0.7, z: 0.4}, spread: 70, speed: [1.5, 5], size: [0.03, 0.09], material: 'concrete', ground: ground(PIPE_HIT), seed: 182})));
+    out.push(fx(chips3({groundFn: G, at: PIPE_HIT, t: T, t0: EV3.e2Hit, key: 'd3e2ch', n: 12, dir: {x: -0.4, y: 0.7, z: 0.4}, spread: 70, speed: [1.5, 5], size: [0.03, 0.09], material: 'concrete', ground: ground(PIPE_HIT), seed: 182})));
     out.push(fx(dust3({at: {...PIPE_HIT, y: PIPE_HIT.y - 0.5}, t: T, t0: EV3.e2Hit + 0.03, key: 'd3e2d', n: 8, size: 0.12, grow: 0.5, speed: 0.6, life: 2.0, dir: {x: 0, y: -1, z: 0}, spread: 40, rise: -0.3, color: '#A69B8E', opacity: 0.5, seed: 183})));
     out.push(fx([], [], shakeAt(T, EV3.e2Hit, 0.09)));
   }
@@ -302,13 +302,13 @@ export const d3Fx = (T: number): FxOut => {
     const g0 = {x: w.x, y: G(w.x, w.z) + 0.1, z: w.z};
     out.push(fx(dust3({at: g0, t: T, t0: EV3.land, key: 'd3wave', ring: 2.6, n: 26, speed: 5.5, size: 0.6, grow: 1.3, life: 3.6, rise: 0.7, color: '#9C9087', opacity: 0.72, seed: 81})));
     out.push(fx(dust3({at: g0, t: T, t0: EV3.land + 0.08, key: 'd3wave2', ring: 1.6, n: 18, speed: 3.2, size: 0.8, grow: 1.2, life: 4.4, rise: 1.1, color: '#A99D90', opacity: 0.62, seed: 82})));
-    out.push(fx(chips3({at: add3(g0, {x: 0, y: 0.4, z: 0}), t: T, t0: EV3.land, key: 'd3crch', n: 34, dir: {x: 0, y: 1, z: 0}, spread: 80, speed: [3, 10], size: [0.06, 0.24], material: 'asphalt', ground: g0.y, life: 6, seed: 83})));
-    out.push(fx(chips3({at: add3(g0, {x: -1.0, y: 0.8, z: 0.8}), t: T, t0: EV3.land + 0.05, key: 'd3crmet', n: 14, dir: {x: -0.4, y: 0.9, z: 0.4}, spread: 70, speed: [3, 8], size: [0.05, 0.16], material: 'metal', ground: g0.y, life: 6, seed: 84})));
+    out.push(fx(chips3({groundFn: G, at: add3(g0, {x: 0, y: 0.4, z: 0}), t: T, t0: EV3.land, key: 'd3crch', n: 34, dir: {x: 0, y: 1, z: 0}, spread: 80, speed: [3, 10], size: [0.06, 0.24], material: 'asphalt', ground: g0.y, life: 6, seed: 83})));
+    out.push(fx(chips3({groundFn: G, at: add3(g0, {x: -1.0, y: 0.8, z: 0.8}), t: T, t0: EV3.land + 0.05, key: 'd3crmet', n: 14, dir: {x: -0.4, y: 0.9, z: 0.4}, spread: 70, speed: [3, 8], size: [0.05, 0.16], material: 'metal', ground: g0.y, life: 6, seed: 84})));
     out.push(fx(sparks3({at: add3(g0, {x: -0.8, y: 0.6, z: 0.6}), t: T, t0: EV3.land, key: 'd3crsp', n: 50, dir: {x: -0.5, y: 0.7, z: 0.5}, spread: 90, speed: [3, 11], ground: g0.y, seed: 85, flash: 0.6})));
     out.push(fx(ring3({at: add3(g0, {x: 0, y: 0.1, z: 0}), normal: {x: 0, y: 1, z: 0}, t: T, t0: EV3.land, key: 'd3crshock', r0: 2.0, speed: 22, dur: 0.3, width: 0.12})));
     out.push(fx([], T < EV3.land + 0.15 ? [{pos: add3(g0, {x: 0, y: 1.5, z: 0}), color: '#FFD9A0', power: 1.0, radius: 9}] : [], shakeAt(T, EV3.land, 0.42, 3.2)));
     // debris rain: grit falling back across the slope
-    for (let i = 0; i < 5; i++) out.push(fx(chips3({at: {x: g0.x - 3 + i * 1.6, y: g0.y + 5.5 + (i % 2), z: g0.z + 1 - i * 0.8}, t: T, t0: EV3.land + 0.6 + i * 0.12, key: `d3rain${i}`, n: 6, dir: {x: 0, y: -1, z: 0}, spread: 35, speed: [0.5, 1.6], size: [0.02, 0.06], material: 'concrete', ground: G(g0.x - 3 + i * 1.6, g0.z + 1 - i * 0.8), life: 3, seed: 90 + i})));
+    for (let i = 0; i < 5; i++) out.push(fx(chips3({groundFn: G, at: {x: g0.x - 3 + i * 1.6, y: g0.y + 5.5 + (i % 2), z: g0.z + 1 - i * 0.8}, t: T, t0: EV3.land + 0.6 + i * 0.12, key: `d3rain${i}`, n: 6, dir: {x: 0, y: -1, z: 0}, spread: 35, speed: [0.5, 1.6], size: [0.02, 0.06], material: 'concrete', ground: G(g0.x - 3 + i * 1.6, g0.z + 1 - i * 0.8), life: 3, seed: 90 + i})));
   }
   if (T > EV3.land - 0.1) out.push(fx(smokeItems(T, dustSources(), 'd3dust')));
   // ---- the tether
@@ -322,15 +322,15 @@ export const d3Fx = (T: number): FxOut => {
   }));
   if (T > EV3.projOn - 0.05 && T < EV3.projOn + 0.3) out.push(fx(flash3({at: LENS(), t: T, t0: EV3.projOn, key: 'd3click', r: 0.22, dur: 0.12, color: '#FFF6D8'})));
   if (T > EV3.smash - 0.05 && T < EV3.smash + 3) {
-    out.push(impact({at: SMASH_AT, normal: {x: -0.6, y: 0.6, z: -0.4}, t: T, t0: EV3.smash, key: 'd3smash', strength: 1.1, material: 'metal', ground: ground(SMASH_AT), seed: 111}));
-    out.push(fx(chips3({at: SMASH_AT, t: T, t0: EV3.smash, key: 'd3smashg', n: 18, dir: {x: -0.5, y: 0.7, z: -0.3}, spread: 80, speed: [1.5, 5], size: [0.012, 0.04], material: 'glass', ground: ground(SMASH_AT), seed: 112})));
-    out.push(fx(chips3({at: SMASH_AT, t: T, t0: EV3.smash + 0.01, key: 'd3smashp', n: 6, dir: {x: -0.3, y: 0.8, z: 0.4}, spread: 60, speed: [1.5, 4], size: [0.03, 0.07], material: 'plate', ground: ground(SMASH_AT), seed: 113})));
+    out.push(impact({groundFn: G, at: SMASH_AT, normal: {x: -0.6, y: 0.6, z: -0.4}, t: T, t0: EV3.smash, key: 'd3smash', strength: 1.1, material: 'metal', ground: ground(SMASH_AT), seed: 111}));
+    out.push(fx(chips3({groundFn: G, at: SMASH_AT, t: T, t0: EV3.smash, key: 'd3smashg', n: 18, dir: {x: -0.5, y: 0.7, z: -0.3}, spread: 80, speed: [1.5, 5], size: [0.012, 0.04], material: 'glass', ground: ground(SMASH_AT), seed: 112})));
+    out.push(fx(chips3({groundFn: G, at: SMASH_AT, t: T, t0: EV3.smash + 0.01, key: 'd3smashp', n: 6, dir: {x: -0.3, y: 0.8, z: 0.4}, spread: 60, speed: [1.5, 4], size: [0.03, 0.07], material: 'plate', ground: ground(SMASH_AT), seed: 113})));
     out.push(fx(flash3({at: SMASH_AT, t: T, t0: EV3.smash, key: 'd3smashfl', r: 0.5, dur: 0.12, color: '#DDF6FF'})));
     out.push(fx([], [], shakeAt(T, EV3.smash, 0.05)));
   }
   // ---- the allied drone: hunted, struck, down smoking
   out.push(allyDrone(allyOpts3(T)));
-  if (T > EV3.kill - 0.05 && T < EV3.kill + 1.5) out.push(impact({at: allyPose3(EV3.kill).pos, normal: {x: 0.5, y: 0.4, z: -0.6}, t: T, t0: EV3.kill, key: 'd3kill', strength: 1.0, material: 'metal', seed: 121}));
+  if (T > EV3.kill - 0.05 && T < EV3.kill + 1.5) out.push(impact({groundFn: G, at: allyPose3(EV3.kill).pos, normal: {x: 0.5, y: 0.4, z: -0.6}, t: T, t0: EV3.kill, key: 'd3kill', strength: 1.0, material: 'metal', seed: 121}));
   // ---- heavy 2: its footfalls — a foot set down on the wreck's top crunches metal; the launcher, the round, the blast
   H2_FALLS.forEach((f) => {
     if (T < f.t - 0.05 || T > f.t + 2.0) return;
@@ -338,7 +338,7 @@ export const d3Fx = (T: number): FxOut => {
     const key = `d3h2f_${f.leg}_${Math.round(f.t * 100)}`, seed = 700 + Math.round(f.t * 10);
     if (onWreck) {
       out.push(fx(sparks3({at: f.pos, t: T, t0: f.t, key: `${key}s`, n: 16, dir: {x: 0, y: 0.8, z: 0}, spread: 85, speed: [1.5, 5], ground: ground(f.pos), seed, flash: 0.3})));
-      out.push(fx(chips3({at: f.pos, t: T, t0: f.t, key: `${key}c`, n: 8, dir: {x: 0, y: 1, z: 0}, spread: 70, speed: [1.5, 4], size: [0.04, 0.12], material: 'metal', ground: ground(f.pos), seed: seed + 1})));
+      out.push(fx(chips3({groundFn: G, at: f.pos, t: T, t0: f.t, key: `${key}c`, n: 8, dir: {x: 0, y: 1, z: 0}, spread: 70, speed: [1.5, 4], size: [0.04, 0.12], material: 'metal', ground: ground(f.pos), seed: seed + 1})));
     } else out.push(fx(dust3({at: {...f.pos, y: ground(f.pos) + 0.05}, t: T, t0: f.t, key, ring: 0.35, n: 6 + 6 * big, speed: 1.0 + big, size: 0.2, grow: 0.45, life: 1.7, rise: 0.25, color: '#8A8078', opacity: 0.55, seed})));
     out.push(fx([], [], shakeAt(T, f.t, 0.016 + 0.05 * big)));
   });
@@ -355,9 +355,9 @@ export const d3Fx = (T: number): FxOut => {
 export const blastFx = (T: number): FxOut => {
   if (T < EV3.blast) return fx();
   return combine(
-    blast({at: BLAST_AT, t: T, t0: EV3.blast, key: 'd3blast', size: 2.5, groundH: G, ground: G(BLAST_AT.x, BLAST_AT.z), seed: 131, debris: 'concrete', dir: {x: -0.6, y: 0.8, z: 0}}),
+    blast({at: BLAST_AT, t: T, t0: EV3.blast, key: 'd3blast', size: 2.5, terrainChips: true, groundH: G, ground: G(BLAST_AT.x, BLAST_AT.z), seed: 131, debris: 'concrete', dir: BLAST_DIR}),
     // a chunk of the rim flies west at the flare carrier (it opens his brow)
-    fx(chips3({at: add3(BLAST_AT, {x: -0.4, y: 0.3, z: 0.6}), t: T, t0: EV3.blast + 0.01, key: 'd3blch', n: 10, dir: {x: -0.85, y: 0.35, z: 0.45}, spread: 30, speed: [7, 13], size: [0.05, 0.16], material: 'concrete', ground: 0, life: 4, seed: 132})),
+    fx(chips3({groundFn: G, at: add3(BLAST_AT, {x: -0.4, y: 0.3, z: 0.6}), t: T, t0: EV3.blast + 0.01, key: 'd3blch', n: 10, dir: {x: -0.85, y: 0.35, z: 0.45}, spread: 30, speed: [7, 13], size: [0.05, 0.16], material: 'concrete', ground: 0, life: 4, seed: 132})),
   );
 };
 void [mul3];

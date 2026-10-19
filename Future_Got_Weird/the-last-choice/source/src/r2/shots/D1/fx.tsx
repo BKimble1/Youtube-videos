@@ -4,7 +4,7 @@
 // impact sprays chips, a mechanical failure tears and sparks. Small and directional; no flash over the contact.
 // Returns FxOut {items, lights, shake}.
 import {V3, add3, sub3, mul3, norm3, lerp, clamp} from '../../../kit/math';
-import {FxOut, fx, combine, impact, breakerHit, plateHit, dust3, chips3, sparks3, tetherItems, TetherOpts, flare, optikFlash, allyDrone, droneKeys, shakeAt} from '../../fx';
+import {FxOut, fx, combine, impact, breakerHit, plateHit, dust3, chips3, sparks3, ring3, tetherItems, TetherOpts, flare, optikFlash, allyDrone, droneKeys, shakeAt} from '../../fx';
 import type {DronePose} from '../../fx';
 import {unitAttach, unitImpacts} from '../../mech';
 import {EV, unitD1, unitFootfalls, BR4, U3_SLIDE} from './machines';
@@ -108,6 +108,8 @@ export const d1Fx = (T: number): FxOut => {
   if (near(T, EV.dirBash3)) { const s = unitAttach(unitD1('U1', EV.dirBash3)).shoulderR; out.push(impact({at: s, normal: {x: -0.6, y: 0.3, z: -0.7}, t: T, t0: EV.dirBash3, key: 'd1bash3', strength: 0.75, material: 'armor', ground: ground(s), seed: 41})); }
   // ==== X2 the breaker and U4: the hammer on the shaft; the knee; the tug; the drone; the kill; the tool wrenched out
   if (near(T, EV.u4ham)) { const b = breakerAt(EV.u4ham).pts!; const m = lerpV(b.front, b.back, 0.4); out.push(impact({at: m, normal: {x: -0.4, y: 0.9, z: 0}, t: T, t0: EV.u4ham, key: 'd1shaft', strength: 0.85, material: 'metal', ground: ground(m), seed: 43})); }
+  // (R4) the counter to the block: his shaft rams up into its hammer arm (light contact: it is thrown up and back a step)
+  if (near(T, EV.u4push)) { const f = unitAttach(unitD1('U4', EV.u4push)).forearmR; out.push(impact({at: f, normal: {x: -0.3, y: 0.9, z: 0}, t: T, t0: EV.u4push, key: 'd1u4push', strength: 0.45, material: 'metal', ground: ground(f), seed: 44})); }
   if (near(T, EV.knee, 3)) {
     const k = unitAttach(unitD1('U4', EV.knee)).kneeL;
     const bh = ramHit({at: k, dir: {x: 0.75, y: -0.35, z: 0.55}, t: T, t0: EV.knee, key: 'd1knee', ground: ground(k), seed: 45, strength: 1.1});
@@ -214,8 +216,14 @@ export const d1Fx = (T: number): FxOut => {
   // the crest, lands on the inner slope and slides down it
   if (T > BR4.go && T < BR4.slide1 + 2.5) {
     const c = unitAttach(unitD1('U3', EV.br4)).chest;
-    // (normal up and south: the chips spray across the frame, not into the low lens behind him)
-    out.push(impact({at: add3(c, {x: -0.05, y: -0.14, z: 0}), normal: {x: -0.15, y: 0.85, z: 0.5}, t: T, t0: EV.br4, key: 'd1br4', strength: 1.5, material: 'armor', ground: ground(c), seed: 109}));
+    // (R4: a shoulder and a plate into armour is a hard knock, not a firework: R3's strength-1.5 impact threw a 35-spark starburst
+    // with a flash and eight flat armour chips straight out of the contact, which hid it for 3 frames (86.40-86.50) and left grey
+    // flakes sitting on the Director's hair for 3 more (86.47-86.53). Now: one short directed spray of sparks up and away from the
+    // lens along the plate's edge, a small ring, the dust shaken off the armour, and no chips; the shake and the cue are unchanged.)
+    const at = add3(c, {x: -0.05, y: -0.14, z: 0});
+    out.push(fx(sparks3({at, t: T, t0: EV.br4, key: 'd1br4_sp', n: 14, dir: norm3({x: 0.1, y: 0.85, z: -0.5}), spread: 38, speed: [2, 6.5], life: [0.12, 0.34], flash: 0.07, ground: ground(c), seed: 109})));
+    out.push(fx(ring3({at, normal: {x: -1, y: 0.1, z: 0}, t: T, t0: EV.br4, key: 'd1br4_rg', r0: 0.08, speed: 4, dur: 0.14, width: 0.04})));
+    out.push(fx(dust3({at, t: T, t0: EV.br4, key: 'd1br4_du', n: 3, size: 0.07, grow: 0.25, speed: 0.7, life: 0.8, dir: {x: 0.2, y: 1, z: -0.3}, spread: 45, rise: 0.2, color: '#C9C4BC', opacity: 0.5, seed: 112})));
     out.push(fx([], [], shakeAt(T, EV.br4, 0.09)));
     out.push(fx([], [], shakeAt(T, BR4.release, 0.03)));
     BR4_DIG.forEach(([t, side], i) => {

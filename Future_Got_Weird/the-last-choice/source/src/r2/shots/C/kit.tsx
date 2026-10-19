@@ -17,7 +17,7 @@ import type {Formation, UnitSpec} from '../../mech';
 import {ARMY_B, HEAVIES_B, DRONES_B, heavySpecB, droneSpecB} from '../B/army';
 import {unitD1, FRONT, RESERVE_NAMES, enemyDrones, D1_ARMY_IDS, unitFootfalls} from '../D1/machines';
 import {groundH} from '../../world/ground';
-import {crewC, droneC, DRONE_SPIN, RoleC, ROLES_C, WALKS_C, CLIMBS_C, VAULT_GRIP} from './crew';
+import {crewC, droneC, DRONE_SPIN, RoleC, ROLES_C, WALKS_C, CLIMBS_C, VAULT_GRIP, HOP, hopLandings, hopPalm} from './crew';
 import {runDist, gaitC, climbPlants} from './motion';
 import {GC} from './ground';
 import {vaultWallItems} from './props';
@@ -84,8 +84,10 @@ const footfalls = (T: number, win = 1.3): {t: number; p: V3; key: string; k: num
   });
   for (const [who, climbs] of Object.entries(CLIMBS_C)) climbs.forEach((c, ci) => {
     if (T < c.T0 || T > c.T1 + win) return;
-    climbPlants(c).forEach((f, i) => { if (f.t <= T && f.t > T - win) out.push({t: f.t, p: f.p, key: `${who}c${ci}_${i}`, k: 0.25 + 0.5 * f.k}); });
+    // (the runner's steps 7-8 are the bound now: its landings are the next two footfalls)
+    climbPlants(c).forEach((f, i) => { if (who === 'runner' && f.t > HOP.t0 && f.t < HOP.t1) return; if (f.t <= T && f.t > T - win) out.push({t: f.t, p: f.p, key: `${who}c${ci}_${i}`, k: 0.25 + 0.5 * f.k}); });
   });
+  { const lg = hopLandings(); [[HOP.landL, lg.L, 'L'], [HOP.landR, lg.R, 'R']].forEach(([t, p, n]) => { if ((t as number) <= T && (t as number) > T - win) out.push({t: t as number, p: p as V3, key: `runnerHop${n}`, k: 0.95}); }); }
   return out;
 };
 export const dustFx = (T: number, o: {near?: V3; maxDist?: number} = {}): FxOut => {
@@ -118,6 +120,12 @@ export const dustFx = (T: number, o: {near?: V3; maxDist?: number} = {}): FxOut 
     out.push(fx(dust3({at: h.p, t: T, t0: h.on + 0.02, key, n: 4, size: 0.04, grow: 0.16, speed: 0.4, life: 1.2, rise: 0.12, color: '#ADA193', opacity: 0.55, seed: 70 + i})));
     out.push(fx(chips3({at: h.p, t: T, t0: h.on + 0.02, key: `${key}c`, n: 4, dir: {x: 0, y: 1, z: 0}, spread: 60, speed: [0.3, 1.0], size: [0.008, 0.02], material: 'concrete', ground: h.p.y - 0.03, life: 1.6, seed: 80 + i})));
   }));
+  // the bound's palm (R4): grit off the rubble under his left palm
+  if (T > HOP.palmOn - 0.1 && T < HOP.palmOn + 2.5) {
+    const hp = hopPalm(HOP.palmOn).p;
+    out.push(fx(dust3({at: hp, t: T, t0: HOP.palmOn + 0.02, key: 'chopD', n: 4, size: 0.04, grow: 0.16, speed: 0.4, life: 1.2, rise: 0.12, color: '#ADA193', opacity: 0.55, seed: 78})));
+    out.push(fx(chips3({at: hp, t: T, t0: HOP.palmOn + 0.02, key: 'chopC', n: 5, dir: {x: 0, y: 1, z: 0}, spread: 60, speed: [0.3, 1.1], size: [0.008, 0.02], material: 'concrete', ground: hp.y - 0.03, life: 1.6, seed: 79})));
+  }
   // the drone's downwash as it spins up over the pilot's palm: dust off the slope at her feet
   if (T > T3.spin && T < T3.lift + 2.5) {
     const c = crewC(T3.spin).drone.body.pos;

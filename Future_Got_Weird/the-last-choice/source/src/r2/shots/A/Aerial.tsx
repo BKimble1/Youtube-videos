@@ -27,9 +27,14 @@ import {M} from '../../timing';
 import {A1_ARMY, A1_HEAVIES, A1_DRONES} from './army';
 
 const ground = (x: number, z: number) => groundH(x, z);
+// (R4) the aerial's camera, as the Stage gets it (also sampled for the set: no building changes its level of detail during the move)
+const A1_KEYS = [
+  {t: 0, pos: AERIAL.from.pos, target: AERIAL.from.target, fov: 44},
+  {t: M.TITLE_IN, pos: AERIAL.to.pos, target: AERIAL.to.target, fov: 42},
+];
+const A1_LOD_CAMS = Array.from({length: 23}, (_, i) => camPath(A1_KEYS, (i / 22) * M.TITLE_IN, 0.35).pos);
 /** fires whose smoke crosses E1's wall from this lens */
 const A1_THIN = ['wreck6', 'bldN4'];
-const DUR = M.TITLE_IN;
 
 /** where the events happen (world), resolved once */
 const EV = (() => {
@@ -112,14 +117,7 @@ export const a1EventFx = (T: number): FxOut => {
 
 export const AerialA1: React.FC = () => {
   const {t, T} = useShotTime(0);
-  const cam = camPath(
-    [
-      {t: 0, pos: AERIAL.from.pos, target: AERIAL.from.target, fov: 44},
-      {t: DUR, pos: AERIAL.to.pos, target: AERIAL.to.target, fov: 42},
-    ],
-    t,
-    0.35,
-  );
+  const cam = camPath(A1_KEYS, t, 0.35);
   const ev = a1EventFx(T);
   const items = (v: Parameters<typeof armyItems>[0]): Item[] => [
     ...armyItems(v, T, A1_ARMY, {ground, maxFull: 0, maxMid: 12, farFrom: 60, eye: 'cyan'}),
@@ -133,5 +131,5 @@ export const AerialA1: React.FC = () => {
   ];
   // from this lens the plumes of the burning wreck (wreck6) and FN7's burning room (bldN4) drift across FN10's west
   // wall, where E1 happens: thinner in this shot only (ATMOS's fireSmoke option), so the tearing wall reads
-  return <Stage T={T} cam={cam} items={items} lights={ev.lights} drift={0.25} black={fadeIn(t, 0.55)} vignette={0.6} atmos={{fireSmoke: (id: string) => (A1_THIN.includes(id) ? 0.3 : 1)}} />;
+  return <Stage T={T} cam={cam} items={items} lights={ev.lights} drift={0.25} black={fadeIn(t, 0.55)} vignette={0.6} set={{lodCams: A1_LOD_CAMS}} atmos={{fireSmoke: (id: string) => (A1_THIN.includes(id) ? 0.3 : 1)}} />;
 };

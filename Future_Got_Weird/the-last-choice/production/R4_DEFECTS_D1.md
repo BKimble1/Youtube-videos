@@ -1,0 +1,20 @@
+# R4 defect list — SEC-D1 (first breach: charge, clash, rescue, gain, breath; film 59.95–94.30)
+
+Method: R3 film frames (`exports/FGW_TheLastChoice_R3_REVIEW_1080p.mp4`, 2-frame sheets over 64.0–94.3, 1-frame sheets at the clash,
+BR1 and BR4) for the OBSERVED failures; probes of the source (esbuild scripts calling `directorAt`, `unitD1`, `unitAttach`, camera
+paths) for the numbers; `fsheet.mjs` / a job renderer (`dsheet.mjs`, scratch) for the current source. "Observed" = seen in frames;
+"suspected" = my reading of the cause until the source confirms it. Times are film seconds (m:ss in the owner's notes = the same).
+
+| # | Time | Observed (frames) | Suspected / source cause | Fix | Verified | Status |
+|---|---|---|---|---|---|---|
+| D1-01 | 86.40–86.50 (f2592–2594) | BR4 contact: a 35-spark starburst, a ring and a flash cover the contact for 3 frames | `fx.tsx` BR4 used `impact()` at strength 1.5, material 'armor': 8+18·s = 35 sparks (speed to 11 m/s), flash 0.33, ring | restrained directed spray (14 sparks, 38° cone up and away from the lens, flash 0.07), small ring, dust; shake and cue unchanged | pending render | |
+| D1-02 | 86.47–86.53 (f2593–2598) | flat grey flakes sit on the Director's hair for ~3–6 frames | same call: 8 `chips3` ('armor' fills) fly back along the normal past the lens-side head | no chips at this contact (as the lead did for bash1, 3b9b224) | pending render | |
+| D1-03 | 86.0–87.9 | contact hidden: his head, hair and shoulders cover U3's chest from the over-the-shoulder lens; the robot's heels skidding, the drive and the shove cannot be told from the human | `Breach.tsx` one low lens 2.7 m behind his left shoulder through the hit | D1-8 split: side-on from the south tracking east (85.64–87.00), then R3's crane over the shoulder from the shove (D1-8b, 87.00–89.78) | pending render | |
+| D1-04 | 68.33–70.3 (f2050–2058) | the plate and the hammer's arrival are behind his head and torso; U1 and he read as one overlapped yellow/grey shape | D1-3 lens 1.9 m west of him, behind his right shoulder: the plate (in front of his face) is behind his head from there | lens level with the contact, 0.6 m east, looking north (profile of both) | pending render | |
+| D1-05 | 78.3–78.7 (BR1) | the same: head hides the plate, U2/runner stack behind the pair (clump of four) | D1-5 lens near-south, a little west of centre | lens 0.9 m east and 0.4 m lower | pending render | |
+| D1-06 | 70.75–71.95 | U4 and the breaker stand 1.3 m apart doing nothing for 1.2 s after the hammer is blocked (the camera is on them in D1-3b) | `chor.ts`/`machines.ts` had no event between the block (70.6) and the punch (71.95) | block's counter: his shaft rams up into its hammer arm (70.9, thrown back a step), it resets, a quick jab at his face (71.42) he sways back from, then the punch/duck/knee as before | pending render | |
+| D1-07 | 70.95–72.4 | the Director stands in his guard for 1.5 s while U1 walks back in (secondary action in D1-3b) | DIR_FIGHT had one key | two small repositioning steps (71.45, 72.05) and a glance across at the breaker (71.0–71.5) | pending render | |
+| D1-08 | 59.95–61.3 | all seven start within 0.55 s and every start is the same smooth ramp: the line leaves as one body; faces do not read each other | `crew.tsx` T0 offsets 0.1–0.55 s | CHARGE_GO: leaves-start (0.15 m) at 60.18 / 60.38 / 60.58 / 60.68 / 60.98 / 61.15 / 61.32 (Director, runner, breaker, tether, flares, decoy, pilot); arrivals T1 unchanged; glances (leader looks back 60.42–60.86, each follower reads him first); a sink before each first stride | pending render | |
+| D1-09 | 68.1–68.9 | the machines' feet slide 0.1–0.5 m as the run ends (arrival braking) | `machines.ts laneGait`: the last 0.6 m blends the planted gait foot to the standing stance | not changed (background, < 0.5 m, under the first blows) | probe | open, minor |
+
+Probes kept in the scratchpad (`probe/p2.tsx` skate/snap, `p5.tsx` charge speeds and clearances, `p6.tsx` sustained skating).

@@ -58,7 +58,10 @@ export const GaugeCU: React.FC<{t: number; T: number}> = ({t, T}) => {
   const jolt = TAPS.reduce((s, t0) => s + pulse(t, t0 + 0.01, 0.03), 0) * 3 + (pulse(T, 146.5, 0.06) + pulse(T, 146.88, 0.06)) * 6;
   const zoom = 1 + 0.035 * smooth(t / 0.7);
   const jx = jolt * Math.sin(T * 91), jy = jolt * Math.cos(T * 73);
-  const view = `translate(${f2(GC.x + jx)} ${f2(GC.y + jy)}) scale(${f2(zoom)}) translate(${-GC.x} ${-GC.y})`;
+  // R4: the cut is on his move — the tool is still coming up across his body from D3-11a (the lift began there), so the
+  // dial rises into the frame and settles in the first 0.16 s: it is the tool he was lifting, not a new object
+  const rise = 1 - easeOut(clamp(t / 0.16));
+  const view = `translate(${f2(GC.x + jx)} ${f2(GC.y + jy + 150 * rise)}) rotate(${f2(-3 * rise)}) scale(${f2(zoom)}) translate(${-GC.x} ${-GC.y})`;
   // fire light from the upper left, flickering
   const flick = 0.5 + 0.18 * Math.sin(T * 17.3) + 0.12 * Math.sin(T * 41.7 + 1.3);
   // his right hand: in from the lower right, two knocks, a press, then it slides off and goes slack

@@ -43,16 +43,18 @@ export const CAM_C4A: CamKey[] = [
   {t: D(CUT.c4, CUT.c4b), pos: gp(-2.95, 3.3, 0.92), target: {x: -5.7, y: 2.2, z: 6.6}, fov: 35},
 ];
 
-/** C4b (46.70–50.00): low from her front-left, on the north side of their line: she stops, holds the drone up on her palm,
- * the rotors spin up and it rises out of her hand (the lens tilts after it until it climbs out of frame); the flare
- * carrier and the decoy maker climb past behind her; the lens rises a little and pans with the three up the slope. */
+/** C4b (46.70–50.00): R4: from her front-left on the slope above her (not her left side: from there her raised left arm and
+ * the drone crossed her face): she stops, holds the drone out to her left and up on her palm, the rotors spin up and it rises
+ * out of her hand beside her head (the lens tilts after it); the flare carrier and the decoy maker climb past behind her,
+ * clear of her head on this lens; then the lens drifts back out west and up with the three up the slope. */
 export const CAM_C4B: CamKey[] = [
-  // (R3: a metre higher than R2's lens, so the two climbing the bank behind her sit clear above her head on screen)
-  {t: 0, pos: gp(-5.35, 1.85, 2.45), target: {x: -4.9, y: 2.15, z: 5.55}, fov: 40},
-  {t: D(CUT.c4b, 47.55), pos: gp(-5.35, 1.85, 2.4), target: {x: -4.85, y: 2.5, z: 5.45}, fov: 40},
-  {t: D(CUT.c4b, 48.3), pos: gp(-5.38, 1.82, 2.1), target: {x: -4.7, y: 3.0, z: 5.25}, fov: 42},
-  {t: D(CUT.c4b, 49.1), pos: gp(-5.45, 1.75, 1.75), target: {x: -3.9, y: 3.25, z: 4.6}, fov: 44},
-  {t: D(CUT.c4b, CUT.c5a), pos: gp(-5.55, 1.7, 1.9), target: {x: -2.9, y: 3.65, z: 4.0}, fov: 45},
+  {t: 0, pos: gp(-3.94, 3.07, 1.9), target: {x: -5.1, y: 2.93, z: 5.4}, fov: 48},
+  {t: D(CUT.c4b, 47.55), pos: gp(-3.94, 3.07, 1.9), target: {x: -5.0, y: 3.05, z: 5.35}, fov: 47},
+  {t: D(CUT.c4b, 48.3), pos: gp(-4.35, 2.3, 2.2), target: {x: -4.6, y: 3.3, z: 5.5}, fov: 46},
+  // (the lens backs away up the slope ahead of the three as they climb toward it; searched for the largest clear gap between
+  // their silhouettes: R3's lens had the decoy maker's body on the pilot's head at 49.1 - 50.0)
+  {t: D(CUT.c4b, 49.1), pos: gp(-4.7, 0.8, 2.8), target: {x: -3.2, y: 3.7, z: 5.6}, fov: 46},
+  {t: D(CUT.c4b, CUT.c5a), pos: gp(-4.7, 0.8, 2.8), target: {x: -2.2, y: 4.3, z: 4.9}, fov: 46},
 ];
 
 /** C5a (50.00–51.20): close two-shot from the west in front of them: the breaker's hand lands on his shoulder; the look. */

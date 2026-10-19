@@ -167,38 +167,44 @@ const e2Amp = (T: number) => 0.004 * (1 - smooth((T - M.EYES_CLOSE) / 1.2)) + 0.
 
 // ------------------------------------------------------------------ F1
 /**
- * Phase A: the move off his still face to the radio. It starts at MOVE.a (F1's first frame, E2's own framing) and
- * lands at MOVE.b on the radio seen from the south-south-east through the van's open door: a truck right that bows out
- * to the south (her bowed head passes ~0.8 m from the lens, below frame left) and a pan right. The speed rises from
- * zero, peaks a third of the way and lands softly; the radio is in frame before 199.0 (the flutter).
+ * Phase A: the move off his still face to the radio. It starts at MOVE_FROM (inside E2's stillness, from E2's own framing)
+ * and lands at MOVE.b on the radio seen from the south-south-east through the van's open door: a draw-back that bows out
+ * to the south-east and up (away from her), then a pan right. The speed rises from zero, peaks a third of the way and
+ * lands softly; the radio is in frame before 199.0 (the flutter). F1 (MOVE.a) is only the shot boundary.
  */
 export const MOVE = {a: 198.3, b: 199.6};
-const E2_END = camE2(MOVE.a);
+/**
+ * (R4) The camera lets go of his face a little before F1 starts: E2 and F1 are one camera (shots.tsx), so the move begins
+ * inside E2's stillness (0.9 s after the eyes close) and F1's first frame is already part of it. In R3 the move left
+ * from rest at 198.30 and swept past her bowed helmet at 0.45–1.2 m in under half a second (198.55–198.95): she is
+ * kneeling at his left, her head 0.43 m from E2's lens, level with it. Now the camera first rises over the pair (a crane
+ * up and a little back, still looking down at his face: her head stays below the frame), and the pan to the radio follows
+ * once it is high and ≥ 1.3 m from her, over twice as long: only the top of her helmet slides through the lower left
+ * corner, small and low, instead of a dome crossing the lens. */
+export const MOVE_FROM = 197.7;
+const E2_END = camE2(MOVE_FROM);
+/** E2's aim point (his face), dead centre: the move's look-at track starts exactly on E2's own framing. */
+const E2_AIM: V3 = E2_END.target;
+const E2_SX = 0.5, E2_SY = 0.5;
 /** The radio framing: ~1.5 m from the radio at bearing ~165°, a little above it (looking down onto the van floor). */
 export const RAD_POS: V3 = {x: 8.72, y: 1.6, z: 3.5};
-/** The move bows out to the south, away from her. */
-const MOVE_CTRL: V3 = {x: 8.0, y: 1.42, z: 4.12};
+/** The move rises over her (a crane up and a touch back): her head stays below the frame until the camera is ≥ 1.3 m from it. */
+const MOVE_CTRL: V3 = {x: 7.4, y: 2.4, z: 3.9};
 /** The radio composition: the dial a little right of centre, the radio low-centre, the door frame and floor round it. */
 export const RAD_SUBJ: V3 = {x: 8.08, y: 0.99, z: 1.86};
 const RAD_SX = 0.55, RAD_SY = 0.52, RAD_FOV = 35;
 /** (R2 names, kept for compatibility) */
 export const KNOB_POS = RAD_POS;
 export const RADIO_AIM = RAD_SUBJ;
-/** Camera heading/elevation (deg) of an aim, and back (the engine's convention: yaw 0 = north (−z), 90 = east). */
-const yawPitch = (pos: V3, target: V3) => { const f = norm3(sub3(target, pos)); return {yaw: (Math.atan2(f.x, -f.z) * 180) / Math.PI, pitch: (Math.asin(f.y) * 180) / Math.PI}; };
-const aimYP = (pos: V3, yaw: number, pitch: number): V3 => {
-  const y = (yaw * Math.PI) / 180, p = (pitch * Math.PI) / 180;
-  return add3(pos, {x: Math.sin(y) * Math.cos(p), y: Math.sin(p), z: -Math.cos(y) * Math.cos(p)});
-};
-const A0 = yawPitch(E2_END.pos, E2_END.target);
-const A1 = yawPitch(RAD_POS, aimFor(RAD_POS, RAD_SUBJ, RAD_FOV, RAD_SX, RAD_SY));
+/** The pan (aim) follows the draw-back after this share of the move. */
+const PAN_LAG = 0.3;
 /**
- * The move's progress (0..1): speed ∝ u^1.5 (1−u)^2.6 — it leaves his face gently (speed and acceleration start at
- * zero), peaks a third of the way in and lands softly. Integrated once into a table.
+ * The move's progress (0..1): speed ∝ u^1.3 (1−u)^2.4 — it leaves his face gently (speed and acceleration start at
+ * zero), peaks a little before a third of the way in and lands softly. Integrated once into a table.
  */
 const MOVE_TBL = (() => {
   const n = 400, acc = [0];
-  const v = (u: number) => u ** 1.5 * (1 - u) ** 2.6;
+  const v = (u: number) => u ** 1.3 * (1 - u) ** 2.4;
   for (let i = 1; i <= n; i++) acc.push(acc[i - 1] + (v((i - 1) / n) + v(i / n)) / 2);
   return acc.map((a) => a / acc[n]);
 })();
@@ -224,11 +230,11 @@ const polar = (bearing: number, R: number, H: number): V3 => ({x: HIM.x + Math.s
  */
 const RISE_POLAR: [number, number, number, number, number, number][] = [
   [166, 10.2, 6.4, 42, 0.43, 0.52],
-  [198, 17.0, 10.8, 45, 0.46, 0.6],
-  [224, 25.5, 18.5, 48, 0.5, 0.7],
-  [244, 36, 30, 51, 0.55, 0.77],
-  [260, 50, 47, 53, 0.55, 0.8],
-  [272, 66, 63, 55, 0.5, 0.84],
+  [198, 17.0, 10.8, 45, 0.48, 0.6],
+  [224, 25.5, 18.5, 47, 0.56, 0.7],
+  [244, 36, 30, 49, 0.64, 0.77],
+  [260, 50, 47, 51, 0.62, 0.8],
+  [272, 66, 63, 54, 0.5, 0.84],
 ];
 export const RISE_KEYS: PathKey[] = [
   // the radio (end of the push), then pulling back off it until the pair is in frame beside it
@@ -258,16 +264,21 @@ const drift = (T: number, amp: number): V3 => {
  * into the crane's handheld drift.
  */
 export const camClose = (T: number): Cam3 => {
-  if (T < MOVE.a) {
+  if (T < MOVE_FROM) {
     const c = camE2(T), d = driftE(T, e2Amp(T));
     return {pos: add3(c.pos, d), target: add3(c.target, mul3(d, 1.25)), fov: c.fov};
   }
-  const u = (T - MOVE.a) / (MOVE.b - MOVE.a);
-  const kP = moveK(u), kS = moveK(u * 1.3); // the pan leads the truck (the radio is in frame before the flutter)
-  const pos0 = add3(add3(mul3(E2_END.pos, (1 - kP) ** 2), mul3(MOVE_CTRL, 2 * kP * (1 - kP))), mul3(RAD_POS, kP * kP));
+  const u = (T - MOVE_FROM) / (MOVE.b - MOVE_FROM);
+  const XO = (globalThis as {__EFCAM?: {ctrl?: V3; lag?: number}}).__EFCAM; // (QA experiments only)
+  const LAG = XO?.lag ?? PAN_LAG, CT = XO?.ctrl ?? MOVE_CTRL;
+  const kP = moveK(u), kS = moveK((u - LAG) / (1 - LAG)); // the pan follows the draw-back
+  const pos0 = add3(add3(mul3(E2_END.pos, (1 - kP) ** 2), mul3(CT, 2 * kP * (1 - kP))), mul3(RAD_POS, kP * kP));
   const pos = add3(pos0, mul3(PUSH_DIR, pushAt(T)));
   const fov = lerp(E2_END.fov ?? 30, RAD_FOV, kP);
-  const target = aimYP(pos, A0.yaw + (((A1.yaw - A0.yaw + 540) % 360) - 180) * kS, lerp(A0.pitch, A1.pitch, kS));
+  // the aim: from where E2 looks (his face) to the radio, as a look-at point with its own screen position (a pan that
+  // never swings through the pair), the lens following the move
+  const subj0 = E2_AIM, subj = lerp3(subj0, RAD_SUBJ, kS);
+  const target = aimFor(pos, subj, fov, lerp(E2_SX, RAD_SX, kS), lerp(E2_SY, RAD_SY, kS));
   const kd = smooth(u);
   const d = add3(mul3(driftE(T, e2Amp(T)), 1 - kd), mul3(drift(T, 0.005), kd));
   return {pos: add3(pos, d), target: add3(target, mul3(d, 1.3)), fov};

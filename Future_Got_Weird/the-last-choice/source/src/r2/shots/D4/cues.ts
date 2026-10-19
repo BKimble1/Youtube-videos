@@ -162,9 +162,9 @@ export const CUES_D4: Cue[] = [
   {t: EV.dirSees + 0.02, kind: 'breath_exert', gain: -5, pan: 0, dist: 0.11, rate: 1.2},
   {t: EV.dirSprint, kind: 'breath_exert', gain: 0, pan: 0.01, dist: 0.11},
   {t: EV.dirSprint + 0.02, kind: 'run_rubble', gain: 0, pan: -0.95, dist: 0.09, dur: 1.06, fade: 0.1},
-  {t: EV.ramWind, kind: 'heavy_servo', gain: 3, pan: -0.13, dist: 0.32},
+  {t: EV.ramWind, kind: 'heavy_servo', gain: 3, pan: 0.25, dist: 0.45}, // (R4: D4-7c's lens moved; heavy 2 is right of centre, 13 m off)
   {t: 176.9, kind: 'breath_ragged', gain: -2, pan: -0.5, dist: 0.29, rate: 1.15},
-  {t: EV.dirPlant, kind: 'steps_gravel', gain: 0, pan: -0.14, dist: 0.3},
+  {t: EV.dirPlant, kind: 'steps_gravel', gain: 0, pan: 0, dist: 0.3},
   {t: EV.strike, kind: 'ram_strike', gain: 3, pan: 0.33, dist: 0.21},
   {t: EV.strike + 0.005, kind: 'plate_shatter', gain: 3, pan: 0.33, dist: 0.21},
   {t: EV.strike + 0.02, kind: 'breath_exert', gain: 0, pan: 0.33, dist: 0.21},

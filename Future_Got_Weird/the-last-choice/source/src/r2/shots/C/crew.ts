@@ -30,7 +30,7 @@ import {
   keyN, keyV, win, after, gaitC, stepKeys, climbPlan, climbSeg, climbHand, climbAt, Climb,
 } from './motion';
 import {GC, onGC, wallGrip} from './ground';
-import {TD, TT, TR, TB2, T3, TDR, TEND} from './beats';
+import {TD, TT, TR, TB2, T3, TDR, TEND, TH} from './beats';
 
 export type RoleC = 'director' | 'tether' | 'runner' | 'breaker' | 'drone' | 'flares' | 'decoy';
 export const ROLES_C: RoleC[] = ['director', 'tether', 'runner', 'breaker', 'drone', 'flares', 'decoy'];
@@ -217,15 +217,19 @@ const DIR_ROOT: KR[] = [
 const DIR_SEGS: Seg[] = [commitStand('director', DIR_ROOT, TD.step, TD.stepEnd, {half: 0.15, stag: 0.05, turnStep: 52, start: {L: [DIR_B_END.world.footL!.x, DIR_B_END.world.footL!.z], R: [DIR_B_END.world.footR!.x, DIR_B_END.world.footR!.z]}})];
 /** what he looks at (C2: the tether out of the smoke; C3: the runner, then the breaker; C4: the summit, the trio, the
  * drone; C5: the breaker, the trio, the plate; C6: the army, the line, the army, them, the army) */
-const dirLooks = (T: number): [number, V3][] => [
+const dirLooks = (T: number, b: Body): [number, V3][] => [
   [35.8, ARMY_EYE],
   [TD.head, {x: -14, y: 1.6, z: -2.2}],
   [38.9, tetherHead0()], [40.5, runnerHead(T)], [42.35, breakerHead(T)], [43.9, tetherHead(T)],
   [46.0, {x: -3.0, y: 3.4, z: 6.0}], [47.55, droneBody(T)], [48.9, {x: -2.5, y: 3.2, z: 5.0}],
-  [TB2.touch + 0.12, breakerHead(T)], [TD.lookBack, {x: -1.5, y: 4.6, z: 4.2}], [TD.strapLook, plateLook()],
+  // R4 C5a: the touch lands on his right shoulder: the eyes drop to the hand on it (R3 looked straight up to the breaker's head
+  // over a head already turned to its limit, so the eyes rolled up), then come up to the breaker's face for the nod
+  [TB2.touch + 0.04, fromLoc(b, SHOULDER_HAND)], [TB2.touch + 0.3, breakerHead(T)], [TD.lookBack, {x: -1.5, y: 4.6, z: 4.2}], [TD.strapLook, plateLook()],
   [TD.strapUp, {x: 0.2, y: 5.2, z: 4.5}], [TD.turn - 0.06, ARMY_EYE],
   [TD.glanceS, breakerHead(T)], [TD.glanceSEnd, ARMY_EYE],
 ];
+/** the breaker's palm on the Director's right shoulder, body-local (root-relative; his shoulder top, a little proud of it) */
+const SHOULDER_HAND = {r: 60, u: 292, f: 4};
 const plateLook = () => ({x: DIR_SPOT.x + 0.1, y: GC(DIR_SPOT.x, DIR_SPOT.z) + 1.0, z: DIR_SPOT.z + 0.25});
 /** the guard: low (B6's), mid on the build; D1's high guard at the set */
 const GUARD_LOW = {r: -28, u: 232, f: 78};
@@ -241,7 +245,8 @@ const DIR_FACE = (T: number): Face => faceKeys(T, [
   [45.1, exprMix('recognition', 'relief', 0.55)],
   [47.5, expr('alert', 0.7, {lookY: -0.3})], // the drone goes up
   [48.9, exprMix('relief', 'concentration', 0.5)],
-  [TB2.touch + 0.05, F.relief], // the hand on his shoulder
+  [TB2.touch + 0.02, expr('alert', 0.7, {lid: 0.1})], // the hand on his shoulder: a start, eyes down to it
+  [TB2.touch + 0.4, exprMix('alert', 'relief', 0.6, {lid: 0.16})], // up to his face: it is him
   [TD.nod, expr('recognition', 0.6, {mouth: 'soft'})],
   [TD.strapLook, F.concentration],
   [TD.turn, F.resolve],
@@ -274,7 +279,7 @@ export const directorC = (T: number, v?: View): CrewC => {
   const breath = lerp(lerp(lerp(base.breath ?? 0.42, 0.04, stop), 0.95, recog), 0.9, inhale);
   const headK = smooth(clamp((T - TD.head) / (TD.headEnd - TD.head)));
   let pose: Pose = {...base, breath};
-  const looks = dirLooks(T);
+  const looks = dirLooks(T, b);
   let a: Aim = lookSeq(b, T, looks, 0.4, {lim: 80, twistK: 0.5});
   let gaze: V3 | null = lookAt(T, looks);
   if (preB) {
@@ -287,7 +292,8 @@ export const directorC = (T: number, v?: View): CrewC => {
   }
   if (T > TB2.touch && T < TD.lookBack + 0.45) {
     const k = win(T, TB2.touch, TD.lookBack + 0.45, 0.2, 0.4);
-    a = {...a, yaw: lerp(a.yaw, clamp(a.yaw, -50, 50), k), twist: lerp(a.twist, clamp(a.twist, -14, 14), k)};
+    // (the head dips at most ~18 deg to the hand on his shoulder: the eyes go the rest of the way down, then up to his face)
+    a = {...a, yaw: lerp(a.yaw, clamp(a.yaw, -50, 50), k), twist: lerp(a.twist, clamp(a.twist, -14, 14), k), pitch: lerp(a.pitch, Math.min(a.pitch, 18), k)};
   }
   pose = layer(pose, {twist: a.twist, head: {yaw: a.yaw, pitch: a.pitch, roll: 0}});
   if (!preB) pose = addPose(pose, weight(b));
@@ -371,7 +377,9 @@ export const tetherC = (T: number, v?: View): CrewC => {
   if (!b.inWalk) pose = addPose(pose, weight(b));
   { const pw = palmLean(TT_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 4) + 6 * pw, drop: (pose.drop ?? 0) + 16 * pw}); }
   // she looks up at the crest (him), up the slope, the summit, then the others; C6: the enemy
-  const seq: [number, V3][] = [[37.9, {x: 1.3, y: 4.8, z: 1.35}], [TT.foot - 0.3, {x: -4.0, y: 3.2, z: -2.4}], [45.6, {x: -0.5, y: 5.8, z: -2.2}], [TT.top + 0.2, {x: 1.25, y: 4.9, z: 1.35}], [49.7, {x: -3, y: 3.5, z: 5}], [TT.reel - 0.15, {x: 0.3, y: 5.6, z: -1.9}], [TT.reelOff, {x: 1.2, y: 4.8, z: 1.4}], [TT.turn, ARMY_EYE]];
+  const seq: [number, V3][] = [[37.9, {x: 1.3, y: 4.8, z: 1.35}], [TT.foot - 0.3, {x: -4.0, y: 3.2, z: -2.4}], [45.6, {x: -0.5, y: 5.8, z: -2.2}], [TT.top + 0.2, {x: 1.25, y: 4.9, z: 1.35}], [49.7, {x: -3, y: 3.5, z: 5}], [TT.reel - 0.15, {x: 0.3, y: 5.6, z: -1.9}], [TT.reelOff, {x: 1.2, y: 4.8, z: 1.4}], [TT.turn, ARMY_EYE],
+    // R4 C6: she glances along the line, to the runner as his halligan spins (54.0), sights, then to the Director as he looks along the line
+    [TR.flip - 0.12, runnerHead(T)], [TR.flip + 0.34, ARMY_EYE], [56.05, dirHeadAt(T)], [56.4, ARMY_EYE]];
   const a = lookSeq(b, T, seq, 0.4);
   pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch}});
   // C5b: the launcher hand drops to the reel on the same hip; the heel of the hand presses the lock
@@ -385,6 +393,8 @@ export const tetherC = (T: number, v?: View): CrewC => {
   if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(10, 18, after(T, TT.commit - 0.2, 0.5)), lean: 8 + 4 * sight, armR: {local: {r: 30, u: 240 + 14 * sight, f: 90}}, armL: {local: {r: -30, u: 220 + 10 * sight, f: 60}}, handL: 'open', head: {...pose.head, pitch: (pose.head?.pitch ?? 0) + 10 * sight, yaw: (pose.head?.yaw ?? 0) + 6 * sight}}), ready);
   const spool = 1 - 0.12 * press;
   pose.face = withEffort(faceKeys(T, TT_FACE), b);
+  // (R4 C6: this one sets at their own moment, SET_T)
+  { const cl = coil(T, SET_T.tether); if (cl > 0) pose = layer(pose, {drop: (pose.drop ?? 10) + 6 * cl, lean: (pose.lean ?? 8) + 3 * cl, breath: Math.max(pose.breath ?? 0.5, 0.9 * cl)}); }
   const eb = endBlend('tether', T, b.pos, b.heading, {...pose, handR: 'grip', holdR: tetherLauncher({loaded: true}), extra: hipReel(spool), dmg: dmgR2('tether', T)}, {footL: b.footL, footR: b.footR});
   let spec: FigSpec = {key: 'cTth', look: lookR2('tether'), t: T, seed: 3, pos: eb.pos, heading: eb.heading, pose: eb.pose, world: eb.world, gaze: lookAt(T, seq), gazeW: 0.8};
   spec = climbPalm(v, spec, TT_CLIMB, T, b, pts);
@@ -472,12 +482,68 @@ const vaultAt = (T: number): Body => {
 const RN_A = spotBehind('runner', 0.45);
 const RN_UP: XZ[] = [{x: VAULT.out.x, z: VAULT.out.z}, {x: -3.6, z: 2.36}, {x: -2.6, z: 1.6}, {x: -1.6, z: 0.62}, {x: -0.7, z: -0.36}, {x: RN_A.x, z: RN_A.z}];
 const RN_VSEG: Seg = {kind: 'fn', T0: TR.takeoff, at: vaultAt};
-const RN_CLIMB = climbPlan(RN_UP, TR.rec, TR.arrive, {start: {pos: vaultAt(TR.rec).pos, heading: vaultAt(TR.rec).heading, footL: vaultAt(TR.rec).footL, footR: vaultAt(TR.rec).footR}, stepLen: 0.5, maxRise: 0.29, lead: 0.04, autoHands: {side: 'L', n: 1, minRise: 0.26, fwd: 0.04, out: 0.18}, endHeading: 120});
+// (R4: no palm in the plan: R3's palm landed 7 cm from the left foot's hold, hand and foot on the same rock, and the step-up
+// read as a stoop; the steep pair of steps at 44.1 is now the bound below, with its own palm ahead of the feet)
+const RN_CLIMB = climbPlan(RN_UP, TR.rec, TR.arrive, {start: {pos: vaultAt(TR.rec).pos, heading: vaultAt(TR.rec).heading, footL: vaultAt(TR.rec).footL, footR: vaultAt(TR.rec).footR}, stepLen: 0.5, maxRise: 0.29, lead: 0.04, endHeading: 120});
 const RN_C = afterClimb(RN_CLIMB);
+
+// ---- the runner's bound over the steep rubble at 44.1 (R4): plant (both feet loaded, the left palm reaching ahead),
+// push-off, clearance (both feet off the ground, knees tucked, the body arcing over the palm), landing (left foot, then the
+// right, the knees compress) and recovery (up out of the squat into the next step). It replaces steps 7-8 of his climb
+// (44.06-44.60): the same footholds at its ends (the left foot (−1.57, 0.40), the right (−1.14, 0.32)), so the steps
+// after it are unchanged.
+export const HOP = TH;
+const sstep = (T: number, a: number, b: number) => smooth(clamp((T - a) / Math.max(1e-6, b - a)));
+let HOPK: {a: Body; z: Body; H: V3} | null = null;
+const hopEnds = () => {
+  if (HOPK) return HOPK;
+  const a = climbAt(RN_CLIMB, HOP.t0), z = climbAt(RN_CLIMB, HOP.t1);
+  // the palm: ahead of the left foot's landing and a hand to its left, on the rubble that the right foot lands on next
+  const f = fwdOf(z.heading), l = {x: -rightOfH(z.heading).x, z: -rightOfH(z.heading).z};
+  const x = z.footL.x + f.x * 0.3 + l.x * 0.14, zz = z.footL.z + f.z * 0.3 + l.z * 0.14;
+  HOPK = {a, z, H: {x, y: GC(x, zz) + 0.03, z: zz}};
+  return HOPK;
+};
+const rightOfH = (h: number) => ({x: Math.cos((h * Math.PI) / 180), z: Math.sin((h * Math.PI) / 180)});
+/** where the bound lands (left foot, right foot) */
+export const hopLandings = (): {L: V3; R: V3} => ({L: hopEnds().z.footL, R: hopEnds().z.footR});
+/** the palm's world point and weight (0 … 1) */
+export const hopPalm = (T: number): {p: V3; w: number} => ({p: hopEnds().H, w: win(T, HOP.t0 + 0.02, HOP.palmOff + 0.09, HOP.palmOn - HOP.t0 - 0.02, 0.09)});
+const hopAt = (T: number): Body => {
+  const {a, z, H} = hopEnds();
+  const k = HOP;
+  // root: the weight rolls forward over the planted feet (gather), flies, lands, rolls on
+  const f = 0.04 * sstep(T, k.t0, k.take) + 0.58 * sstep(T, k.take - 0.02, k.landL) + 0.24 * sstep(T, k.landL - 0.05, k.landR + 0.03) + 0.14 * sstep(T, k.landR, k.t1);
+  const arc = 0.2 * Math.sin(Math.PI * clamp((T - k.take) / (k.landL - k.take + 0.02)));
+  const pos: V3 = {x: lerp(a.pos.x, z.pos.x, f), y: lerp(a.pos.y, z.pos.y, f) + arc, z: lerp(a.pos.z, z.pos.z, f)};
+  const heading = lerpAng(a.heading, z.heading, sstep(T, k.t0, k.t1));
+  // feet: both leave on the push-off (the right, the rear-most push, last), tucked on an arc, the left lands first
+  const eL = sstep(T, k.take, k.landL), eR = sstep(T, k.take + 0.025, k.landR);
+  const foot = (p0: V3, p1: V3, e: number, lift: number): V3 => {
+    const x = lerp(p0.x, p1.x, e), zq = lerp(p0.z, p1.z, e);
+    return {x, y: Math.max(lerp(p0.y, p1.y, e) + lift * Math.sin(Math.PI * e), GC(x, zq) + 0.012), z: zq};
+  };
+  const footL = foot(a.footL, z.footL, eL, 0.26), footR = foot(a.footR, z.footR, eR, 0.3);
+  // the pose: crouch (load), explode up, tuck over the palm, land (L), compress (R), up
+  const drop = keyN([[k.t0, a.gait?.drop ?? 22], [k.load, 38], [k.take + 0.02, 12], [k.take + 0.1, 8], [k.landL - 0.03, 18], [k.landL + 0.045, 40], [k.landR + 0.01, 50], [k.landR + 0.13, 30], [k.t1, z.gait?.drop ?? 22]], T);
+  const lean = keyN([[k.t0, a.gait?.lean ?? 17], [k.load, 25], [k.take + 0.04, 33], [k.landL, 38], [k.landR, 36], [k.landR + 0.12, 30], [k.t1, z.gait?.lean ?? 24]], T);
+  const side = 4 * Math.sin(Math.PI * clamp((T - k.take) / (k.landR - k.take)));
+  const g: Pose = {
+    drop, lean, side, breath: 0.85,
+    armL: {fk: {fwd: lerp(30, 62, sstep(T, k.t0, k.palmOn)), out: 14, bend: 22}},
+    armR: {fk: {fwd: lerp(-10, 12, sstep(T, k.take, k.landR)), out: 24, bend: 40}},
+    legL: {pitch: lerp(0, 26, sstep(T, k.take, k.landL - 0.04)) * (1 - sstep(T, k.landL - 0.04, k.landL + 0.02))},
+    legR: {pitch: lerp(0, 30, sstep(T, k.take + 0.02, k.landR - 0.04)) * (1 - sstep(T, k.landR - 0.04, k.landR + 0.02))},
+  };
+  void H;
+  const gait = blendPose(blendPose(a.gait ?? g, g, sstep(T, k.t0, k.t0 + 0.07)), z.gait ?? g, sstep(T, k.t1 - 0.12, k.t1));
+  return {pos, heading, footL, footR, gait, runK: 1, seg: 0, inWalk: true, slope: 0.6, swingL: 1 - eL > 0.01 && eL > 0 ? 1 : 0, swingR: 1 - eR > 0.01 && eR > 0 ? 1 : 0, climb: 0.85};
+};
+const RN_CLIMB_SEG: Seg = {kind: 'fn', T0: RN_CLIMB.T0, at: (T: number) => (T > HOP.t0 && T < HOP.t1 ? hopAt(T) : climbAt(RN_CLIMB, T))};
 const RN_SEGS: Seg[] = [
   RN_RUN,
   RN_VSEG,
-  climbSeg(RN_CLIMB),
+  RN_CLIMB_SEG,
   commitStand('runner', [RN_C.key, [46.45, RN_A.x, RN_A.z, 120], [47.75, RN_A.x, RN_A.z, 205], [TR.turn, RN_A.x, RN_A.z, 205], [54.15, RN_A.x, RN_A.z, RN_A.h]], TR.commit, TR.commitEnd, {half: 0.14, stag: 0.05, turnStep: 65, start: RN_C.start}),
 ];
 const runnerHead = (T: number): V3 => headOf(bodyAt(RN_SEGS, T), 1.4);
@@ -521,7 +587,9 @@ export const runnerC = (T: number, v?: View): CrewC => {
     if (T > TR.hand - 0.02 && T < TR.land + 0.02) shadow = 0;
   }
   // eyes: the wall, then where he lands, up the slope, the crest; standing: the others; C6: the enemy
-  const seq: [number, V3][] = [[39.3, {x: -5.4, y: 2.2, z: 2.6}], [TR.rec, {x: -1.2, y: 4.2, z: 0.2}], [44.6, {x: 0.3, y: 5.0, z: -1.0}], [TR.arrive, {x: 1.25, y: 4.9, z: 1.35}], [47.2, {x: -3.8, y: 3.5, z: 4.5}], [50.3, {x: 1.25, y: 4.9, z: 1.35}], [TR.turn, ARMY_EYE]];
+  const seq: [number, V3][] = [[39.3, {x: -5.4, y: 2.2, z: 2.6}], [TR.rec, {x: -1.2, y: 4.2, z: 0.2}], [44.6, {x: 0.3, y: 5.0, z: -1.0}], [TR.arrive, {x: 1.25, y: 4.9, z: 1.35}], [47.2, {x: -3.8, y: 3.5, z: 4.5}], [50.3, {x: 1.25, y: 4.9, z: 1.35}], [TR.turn, ARMY_EYE],
+    // R4 C6: after the bar is caught he looks along the line to the Director (is he ready?), then to the tether, then the army
+    [TR.flip + 0.55, dirHeadAt(T)], [54.95, tetherHead(T)], [55.3, ARMY_EYE]];
   const a = inVault ? {yaw: pose.head?.yaw ?? 0, pitch: pose.head?.pitch ?? 0, twist: 0} : lookSeq(b, T, seq, 0.4);
   if (!inVault) pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch}});
   // C6: the ready (D1's carry: halligan in the right fist, braced), the bar spins once in his fist and he catches it
@@ -534,12 +602,16 @@ export const runnerC = (T: number, v?: View): CrewC => {
   if (flipLift > 0) pose = layer(pose, {armR: {local: {r: 60, u: 190 + 50 * flipLift, f: 52 + 30 * flipLift}}});
   pose.face = withEffort(faceKeys(T, RN_FACE), b, inVault ? 0 : 0.6);
   const grip = flipK > 0.05 && flipK < 0.9 ? 'open' as const : 'grip' as const;
+  // (R4 C6: this one sets at their own moment, SET_T)
+  { const cl = coil(T, SET_T.runner); if (cl > 0) pose = layer(pose, {drop: (pose.drop ?? 10) + 6 * cl, lean: (pose.lean ?? 8) + 3 * cl, breath: Math.max(pose.breath ?? 0.5, 0.9 * cl)}); }
   const eb = endBlend('runner', T, b.pos, b.heading, {...pose, shadow, handR: grip, holdR: halligan1({ang: flipAng}), dmg: dmgR2('runner', T)}, {footL: b.footL, footR: b.footR});
   let spec: FigSpec = {key: 'cRun', look: lookR2('runner'), t: T, seed: 4, pos: eb.pos, heading: eb.heading, pose: eb.pose, world: eb.world, reach: !inVault, ...(inVault ? {} : {gaze: lookAt(T, seq), gazeW: 0.8})};
   // the vault contact: the left palm on the top edge, from the reach to the release
   const gripW = inVault ? win(T, TR.takeoff - 0.04, TR.release + 0.06, 0.1, 0.06) : 0;
   if (gripW > 0) spec = handTo(v, spec, 'L', GRIP, gripW, {palm: {x: 0, y: -1, z: 0}, fingers: {x: 0.85, y: -0.2, z: -0.45}});
   spec = climbPalm(v, spec, RN_CLIMB, T, b, pts);
+  // the bound's palm (R4): the left palm planted on the rubble ahead of the landing feet while he swings over it
+  { const hp = hopPalm(T); if (hp.w > 0.001) { pts.palmL = hp.p; spec = handTo(v, {...spec, pose: layerFn(spec.pose, {handL: 'brace'} as Pose)}, 'L', hp.p, hp.w, palmDown(b.heading)); } }
   pts.grip = GRIP; pts.land = VAULT.land; pts.land2 = VAULT.land2;
   pts.shadow = {x: b.pos.x, y: GC(b.pos.x, b.pos.z), z: b.pos.z};
   return {spec, body: b, pts};
@@ -593,7 +665,9 @@ export const breakerC = (T: number, v?: View, dir?: FigSpec): CrewC => {
   pose = withWalk(b, pose, walkArms);
   if (!b.inWalk) pose = addPose(pose, weight(b));
   { const pw = Math.max(palmLean(BK_CLIMB, T), palmLean(BK_CLIMB2, T)); pose = layer(pose, {lean: (pose.lean ?? 6) + 6 * pw, drop: (pose.drop ?? 0) + 16 * pw}); }
-  const seq: [number, V3][] = [[39.0, {x: 1.3, y: 4.8, z: 1.35}], [TB2.foot - 0.3, {x: -4.5, y: 2.6, z: -1.1}], [45.5, {x: -1.2, y: 4.4, z: -0.8}], [47.3, {x: 1.25, y: 4.9, z: 1.35}], [TB2.touch - 0.1, {x: 1.2, y: 4.95, z: 1.4}], [TB2.touchOff + 0.1, {x: -2.5, y: 3.6, z: 4.5}], [TB2.go2 + 0.3, {x: 1.0, y: 4.4, z: 3.6}], [TB2.turn, ARMY_EYE], [TB2.charge - 0.1, {x: BK_A.x + 0.5, y: 4.6, z: BK_A.z + 0.2}], [TB2.charged + 0.1, ARMY_EYE]];
+  const seq: [number, V3][] = [[39.0, {x: 1.3, y: 4.8, z: 1.35}], [TB2.foot - 0.3, {x: -4.5, y: 2.6, z: -1.1}], [45.5, {x: -1.2, y: 4.4, z: -0.8}], [47.3, {x: 1.25, y: 4.9, z: 1.35}], [TB2.touch - 0.1, {x: 1.2, y: 4.95, z: 1.4}], [TB2.touchOff + 0.1, {x: -2.5, y: 3.6, z: 4.5}], [TB2.go2 + 0.3, {x: 1.0, y: 4.4, z: 3.6}], [TB2.turn, ARMY_EYE],
+    // R4 C6: a look to the Director before he opens the valve (the nod: go on), down to the gauge, then the army, then the pilot
+    [54.62, dirHeadAt(T)], [54.88, ARMY_EYE], [TB2.charge - 0.1, {x: BK_A.x + 0.5, y: 4.6, z: BK_A.z + 0.2}], [TB2.charged + 0.1, ARMY_EYE]];
   const a = lookSeq(b, T, seq, 0.4);
   pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch}});
   // the port (two hands) from 52.0 (he lifts it as he goes round)
@@ -611,6 +685,8 @@ export const breakerC = (T: number, v?: View, dir?: FigSpec): CrewC => {
   if (valve > 0) pose = layer(pose, {head: {...pose.head, pitch: (pose.head?.pitch ?? 0) + 24 * valve * (1 - after(T, TB2.charged, 0.2))}, lean: (pose.lean ?? 10) + 6 * valve});
   const tool = twoH ? {handL: 'grip' as const, handR: 'grip' as const, twoHanded: true, extra: breaker({back: 1, front: 0, gauge, recoil: 0.4 * kick})} : {handR: 'grip' as const, holdR: breakerCarry({gauge})};
   const world0: FigSpec['world'] = {footL: b.footL, footR: b.footR, ...(twoH ? {handL: portL, handR: portR} : {})};
+  // (R4 C6: this one sets at their own moment, SET_T)
+  { const cl = coil(T, SET_T.breaker); if (cl > 0) pose = layer(pose, {drop: (pose.drop ?? 10) + 6 * cl, lean: (pose.lean ?? 8) + 3 * cl, breath: Math.max(pose.breath ?? 0.5, 0.9 * cl)}); }
   const eb = endBlend('breaker', T, b.pos, b.heading, {...pose, ...tool, dmg: dmgR2('breaker', T)}, world0);
   let spec: FigSpec = {key: 'cBrk', look: lookR2('breaker'), t: T, seed: 7, pos: eb.pos, heading: eb.heading, pose: eb.pose, world: eb.world, gaze: lookAt(T, seq), gazeW: 0.8};
   if (twoH && after(T, 52.0, 0.5) < 1 && v) {
@@ -623,7 +699,8 @@ export const breakerC = (T: number, v?: View, dir?: FigSpec): CrewC => {
   spec = climbPalm(v, spec, BK_CLIMB, T, b, pts);
   // C5a: his left hand onto the Director's right shoulder (the shoulder's owner is solved first; see rig handOn); he
   // leans in to it, the left shoulder forward
-  const tw = win(T, TB2.touch - 0.25, TB2.touchOff + 0.22, 0.25, 0.22);
+  // (R4: the reach starts 0.5 s before the touch and arrives ON it (R3's hand covered 0.8 m in 0.2 s at 5 m/s and left at 7-11 m/s)
+  const tw = win(T, TB2.touch - 0.5, TB2.touchOff + 0.32, 0.5, 0.32);
   if (tw > 0 && v && dir) {
     const p0 = typeof spec.pose === 'function' ? spec.pose : null;
     const lean = (q: Pose): Pose => ({...q, lean: (q.lean ?? 6) + 9 * tw, twist: (q.twist ?? 0) - 12 * tw, handL: 'brace'});
@@ -660,12 +737,21 @@ const DR_SEGS: Seg[] = [
 const pilotHead = (T: number): V3 => headOf(bodyAt(DR_SEGS, T), 1.5);
 /** the drone in her left hand (carried at her side; held up on the palm at the launch) — body-local, view-free */
 const CARRY = {r: -40, u: 168, f: 34};
-const HOLD_UP = {r: -130, u: 420, f: 0}; // up and out on her left side, clear of her face (it shows under the drone)
+// R4: the hold is OUT to her left (0.7 m off her axis) at shoulder height plus a hand: the drone's 0.6 m span then clears her
+// head (R3 held it at head height 0.5 m out, and on C4b's lens the hand/arm and the rotor arms crossed her glasses for ~10
+// frames). It leaves the palm straight up, beside her face, never across it.
+export const HOLD_UP = {r: -190, u: 385, f: -10};
+/** the left hand's body-local target from the carry up and out to the hold, the hold (the palm under the drone until it
+ * leaves it at T3.lift), then lowered to the controller (continuous: one function for the whole launch) */
+const CTRL_L = {r: -22, u: 198, f: 74};
 const droneHandLoc = (T: number) => {
-  // out to the side first, then up (R3: straight up from the carry, the drone passed across her face on C4b's lens)
-  const out = keyN([[T3.launch - 0.3, 0], [T3.launch + 0.02, 1]], T);
-  const up = keyN([[T3.launch - 0.2, 0], [T3.spin, 1]], T);
-  return {r: lerp(CARRY.r, HOLD_UP.r, out), u: lerp(CARRY.u, HOLD_UP.u, up), f: lerp(CARRY.f, HOLD_UP.f, up)};
+  // out to the side first, then up: the hand is already 0.5 m off her axis when it passes head height
+  const out = keyN([[T3.launch - 0.42, 0], [T3.launch - 0.06, 1]], T);
+  const up = keyN([[T3.launch - 0.2, 0], [T3.spin - 0.08, 1]], T);
+  const hold = {r: lerp(CARRY.r, HOLD_UP.r, out), u: lerp(CARRY.u, HOLD_UP.u, up), f: lerp(CARRY.f, HOLD_UP.f, up)};
+  // after the lift-off: the palm stays a beat under the rising drone, then the arm lowers (down first, then in)
+  const lo = after(T, T3.lift + 0.1, 0.45);
+  return {r: lerp(hold.r, CTRL_L.r, lo * lo), u: lerp(hold.u, CTRL_L.u, lo), f: lerp(hold.f, CTRL_L.f, lo * lo)};
 };
 const pilotPalm = (T: number): V3 => fromLoc(bodyAt(DR_SEGS, T), droneHandLoc(T));
 /** the drone's flight: carried until it lifts off her palm; up, out over the slope, past the summit (C5b), over the
@@ -699,34 +785,37 @@ const DR_FACE: FK = [
 export const pilotC = (T: number, v?: View): CrewC => {
   const b = bodyAt(DR_SEGS, T);
   const pts: Record<string, V3> = {};
-  const hasDrone = T < T3.lift + 0.12;
+  const hasDrone = T < T3.lift + 0.45; // (the hand follows the drone's launch: its palm orientation fades out as it lowers)
   const ctrl2 = T >= T3.ctrl;
   let pose: Pose = {drop: 8, lean: 4, armR: {local: {r: 40, u: 196, f: 54}}, armL: {local: CARRY}, handL: 'open', handR: 'grip', breath: 0.5};
   const walkArms: Pose = {armR: {local: {r: 38, u: 200, f: 60}}, armL: {local: CARRY}};
   pose = withWalk(b, pose, walkArms);
   if (!b.inWalk) pose = addPose(pose, weight(b));
-  // the launch: the drone up on her palm; the rotors spin; it leaves the palm; the hand lowers (down her side first,
-  // then in to the controller: the hand does not wipe across her face)
-  const after2 = after(T, T3.lift + 0.05, 0.4);
-  const in2 = after2 * after2;
-  pose = layer(pose, {armL: {local: hasDrone ? droneHandLoc(T) : {r: lerp(HOLD_UP.r, -22, in2), u: lerp(HOLD_UP.u, 198, after2), f: lerp(HOLD_UP.f, 74, in2)}}});
+  // the launch (R4): the drone out to her left and up on her palm; the rotors spin; it leaves the palm straight up, beside her
+  // face; the hand holds a beat under it, lowers down her side and comes in to the controller (one continuous path)
+  pose = layer(pose, {armL: {local: droneHandLoc(T)}});
   // the controller in both hands (held low at her chest, so a low lens still sees her face over it); the thumbs work as
   // she sends the drone out (the hands tip forward)
   const thumbs = win(T, T3.thumbs - 0.1, T3.thumbs + 0.55, 0.12, 0.2);
   if (ctrl2) pose = blendPose(pose, layer(pose, {armL: {local: {r: -22, u: 198 + 8 * thumbs, f: 74 + 10 * thumbs}}, armR: {local: {r: 22, u: 198 + 8 * thumbs, f: 74 + 10 * thumbs}}}), after(T, T3.ctrl, 0.25));
   const seq: [number, V3][] = [[44.3, {x: 0, y: 4.4, z: 2.0}], [T3.pilotFoot - 0.2, {x: -5.2, y: 2.4, z: 5.6}], [T3.launch - 0.2, droneBody(T)], [T3.pilotGo + 0.4, {x: 0.0, y: 4.6, z: 2.0}], [50.4, droneBody(T)], [52.3, {x: 0.2, y: 4.1, z: 2.25}], [52.9, {x: 1.25, y: 4.9, z: 1.35}], [53.6, ARMY_EYE], [T3.thumbs - 0.15, droneBody(T)], [56.6, ARMY_EYE]];
+  // (R4 C6: a glance at the tablet waking beside her, before the drone goes out)
+  seq.splice(8, 0, [T3.tablet - 0.05, decoyHeadAt(T)], [T3.tablet + 0.4, ARMY_EYE]);
   const a = lookSeq(b, T, seq, 0.35, {lim: 80});
   pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch}});
   const ready = after(T, T3.turnPilot + 0.3, 1.0);
   if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(8, 12, after(T, T3.commitP - 0.2, 0.5)), lean: 8}), ready);
   pose.face = withEffort(faceKeys(T, DR_FACE), b, 0.5);
   const tool = ctrl2 ? {handL: 'grip' as const, handR: 'grip' as const, twoHanded: true, extra: controller({lit: 1})} : {handR: 'grip' as const, holdR: controllerHold({lit: 1}), handL: 'open' as const};
+  // (R4 C6: this one sets at their own moment, SET_T)
+  { const cl = coil(T, SET_T.drone); if (cl > 0) pose = layer(pose, {drop: (pose.drop ?? 10) + 6 * cl, lean: (pose.lean ?? 8) + 3 * cl, breath: Math.max(pose.breath ?? 0.5, 0.9 * cl)}); }
   const eb = endBlend('drone', T, b.pos, b.heading, {...pose, ...tool, dmg: dmgR2('drone', T)}, {footL: b.footL, footR: b.footR});
   let spec: FigSpec = {key: 'cDrn', look: lookR2('drone'), t: T, seed: 5, pos: eb.pos, heading: eb.heading, pose: eb.pose, world: eb.world, gaze: lookAt(T, seq), gazeW: 0.8};
-  // the drone sits on her palm: the hand's world point is the drone's underside
+  // the drone sits on her palm: the hand's world point is the drone's underside (the same path as the pose's target: the
+  // palm-up orientation holds until it lifts off, then fades as the hand lowers)
   if (hasDrone) {
     const palm = pilotPalm(T);
-    spec = handTo(v, spec, 'L', palm, 1, {palm: {x: 0, y: 1, z: 0}, fingers: {...fwdOf(b.heading), y: 0}, w: keyN([[T3.launch - 0.3, 0.3], [T3.spin, 1]], T)});
+    spec = handTo(v, spec, 'L', palm, 1, {palm: {x: 0, y: 1, z: 0}, fingers: {...fwdOf(b.heading), y: 0}, w: keyN([[T3.launch - 0.3, 0.3], [T3.spin, 1], [T3.lift + 0.1, 1], [T3.lift + 0.45, 0]], T)});
     pts.palm = palm;
   }
   return {spec, body: b, pts};
@@ -759,7 +848,9 @@ export const flaresC = (T: number, v?: View): CrewC => {
   pose = withWalk(b, pose, walkArms);
   if (!b.inWalk) pose = addPose(pose, weight(b));
   { const pw = palmLean(FL_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 4) + 6 * pw, drop: (pose.drop ?? 0) + 16 * pw}); }
-  const seq: [number, V3][] = [[44.3, {x: 0.6, y: 5.0, z: 4.0}], [T3.flaresFoot - 0.2, {x: -4.6, y: 2.6, z: 6.2}], [47.6, {x: -0.8, y: 4.6, z: 4.6}], [T3.arriveFlares + 0.1, {x: 1.25, y: 4.9, z: 1.35}], [52.6, {x: 0.6, y: 3.9, z: 4.8}], [T3.turnFlares, ARMY_EYE], [T3.satchel - 0.1, {x: FL_A.x - 0.1, y: 3.4, z: FL_A.z - 0.3}], [T3.satchel + 0.55, ARMY_EYE]];
+  const seq: [number, V3][] = [[44.3, {x: 0.6, y: 5.0, z: 4.0}], [T3.flaresFoot - 0.2, {x: -4.6, y: 2.6, z: 6.2}], [47.6, {x: -0.8, y: 4.6, z: 4.6}], [T3.arriveFlares + 0.1, {x: 1.25, y: 4.9, z: 1.35}], [52.6, {x: 0.6, y: 3.9, z: 4.8}], [T3.turnFlares, ARMY_EYE], [T3.satchel - 0.1, {x: FL_A.x - 0.1, y: 3.4, z: FL_A.z - 0.3}], [T3.satchel + 0.55, ARMY_EYE],
+    // R4 C6: he looks to the breaker at the valve's hiss (is it charged?), then to the decoy maker's tablet, then the army
+    [TB2.charged - 0.05, breakerHead(T)], [TB2.charged + 0.33, ARMY_EYE], [56.3, decoyHeadAt(T)], [56.62, ARMY_EYE]];
   const a = lookSeq(b, T, seq, 0.4);
   pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: a.yaw, pitch: a.pitch}});
   const ready = after(T, T3.turnFlares + 0.2, 1.0);
@@ -768,6 +859,8 @@ export const flaresC = (T: number, v?: View): CrewC => {
   const sat = win(T, T3.satchel, T3.satchel + 0.75, 0.2, 0.22);
   if (sat > 0) pose = blendPose(pose, layer(pose, {armL: {local: {r: -78, u: 172, f: 6}, pole: {r: -1, u: 0.1, f: -0.4}}, handL: 'relaxed', twist: -10}), sat);
   pose.face = withEffort(faceKeys(T, FL_FACE), b);
+  // (R4 C6: this one sets at their own moment, SET_T)
+  { const cl = coil(T, SET_T.flares); if (cl > 0) pose = layer(pose, {drop: (pose.drop ?? 10) + 6 * cl, lean: (pose.lean ?? 8) + 3 * cl, breath: Math.max(pose.breath ?? 0.5, 0.9 * cl)}); }
   const eb = endBlend('flares', T, b.pos, b.heading, {...pose, dmg: dmgR2('flares', T)}, {footL: b.footL, footR: b.footR});
   let spec: FigSpec = {key: 'cFlr', look: lookR2('flares'), t: T, seed: 9, pos: eb.pos, heading: eb.heading, pose: eb.pose, world: eb.world, gaze: lookAt(T, seq), gazeW: 0.8};
   spec = climbPalm(v, spec, FL_CLIMB, T, b, pts);
@@ -803,7 +896,9 @@ export const decoyC = (T: number, v?: View): CrewC => {
   { const pw = palmLean(DC_CLIMB, T); pose = layer(pose, {lean: (pose.lean ?? 5) + 6 * pw, drop: (pose.drop ?? 0) + 16 * pw}); }
   // a glance at the tablet as she arrives (the screen wakes), then the group; C6: the enemy; C6b: the tablet again
   const glance = Math.max(win(T, 52.25, 52.95, 0.2, 0.25), win(T, T3.tablet - 0.05, T3.tablet + 0.8, 0.18, 0.25));
-  const seq: [number, V3][] = [[44.3, {x: 0.6, y: 5.2, z: 4.0}], [T3.decoyFoot - 0.2, {x: -3.6, y: 3.0, z: 7.8}], [48.5, {x: -0.6, y: 4.8, z: 5.3}], [T3.arriveDecoy, {x: 1.25, y: 4.9, z: 1.35}], [T3.turnDecoy, ARMY_EYE]];
+  const seq: [number, V3][] = [[44.3, {x: 0.6, y: 5.2, z: 4.0}], [T3.decoyFoot - 0.2, {x: -3.6, y: 3.0, z: 7.8}], [48.5, {x: -0.6, y: 4.8, z: 5.3}], [T3.arriveDecoy, {x: 1.25, y: 4.9, z: 1.35}], [T3.turnDecoy, ARMY_EYE],
+    // R4 C6: after the tablet she glances at the flare carrier's hand on the satchel, then at the pilot, then the army
+    [55.28, flaresHeadAt(T)], [55.6, ARMY_EYE], [56.08, pilotHead(T)], [56.42, ARMY_EYE]];
   const a = lookSeq(b, T, seq, 0.4);
   pose = layer(pose, {twist: (pose.twist ?? 0) + a.twist, head: {yaw: lerp(a.yaw, -6, glance), pitch: lerp(a.pitch, 26, glance)}});
   if (glance > 0) pose = blendPose(pose, layer(pose, {armL: {local: TAB, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}}}), glance);
@@ -814,11 +909,22 @@ export const decoyC = (T: number, v?: View): CrewC => {
   if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(6, 10, after(T, T3.commitD - 0.2, 0.5)), lean: 6, armL: {local: TAB, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}}, armR: tap > 0 ? pose.armR : {local: {r: 52, u: 250, f: 70}}, handR: tap > 0.3 ? 'point' : 'open'}), ready);
   pose.face = withEffort(faceKeys(T, DC_FACE), b);
   const wake = win(T, T3.tablet + 0.15, 57.4, 0.15, 1.6);
+  // (R4 C6: this one sets at their own moment, SET_T)
+  { const cl = coil(T, SET_T.decoy); if (cl > 0) pose = layer(pose, {drop: (pose.drop ?? 10) + 6 * cl, lean: (pose.lean ?? 8) + 3 * cl, breath: Math.max(pose.breath ?? 0.5, 0.9 * cl)}); }
   const eb = endBlend('decoy', T, b.pos, b.heading, {...pose, handL: 'grip', holdL: tablet({screen: true, glow: 0.2 + 0.55 * Math.max(wake, win(T, 52.25, 52.95, 0.2, 0.25))}), dmg: dmgR2('decoy', T)}, {footL: b.footL, footR: b.footR});
   let spec: FigSpec = {key: 'cDec', look: lookR2('decoy'), t: T, seed: 6, pos: eb.pos, heading: eb.heading, pose: eb.pose, world: eb.world, ...(glance > 0.5 ? {} : {gaze: lookAt(T, seq), gazeW: 0.8})};
   spec = climbPalm(v, spec, DC_CLIMB, T, b, pts);
   return {spec, body: b, pts};
 };
+
+// ------------------------------------------------------------------ heads for the glances (C6: who looks at whom)
+const dirHeadAt = (T: number): V3 => headOf(bodyAt(DIR_SEGS, T), 1.6);
+const flaresHeadAt = (T: number): V3 => headOf(bodyAt(FL_SEGS, T), 1.55);
+const decoyHeadAt = (T: number): V3 => headOf(bodyAt(DC_SEGS, T), 1.5);
+/** R4 C6: each of them sets (sinks into the start) at their own moment, a ripple out from the Director (59.18), so the line
+ * does not drop as one body; every one of them is on D1's pose again by the end blend (TEND.blend), so the cut is unchanged */
+const SET_T = {runner: 58.98, breaker: 59.06, tether: 59.12, flares: 59.2, decoy: 59.27, drone: 59.32};
+const coil = (T: number, t0: number) => after(T, t0, 0.22);
 
 // ------------------------------------------------------------------ everyone at T
 export const crewC = (T: number, v?: View): Record<RoleC, CrewC> => {

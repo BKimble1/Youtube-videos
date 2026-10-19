@@ -1,0 +1,2 @@
+export {combatUnit, solveUnit, unitWorld, unitAttach, unitImpacts, unitRoot, heavy, heavyAttach, solveHeavy, drone, droneAttach, armyItems, column, standing, lineSlots, ringSlots, arcSlots, UNIT_DIM as U_DIM, HEAVY_DIM, straightPath, polyPathFn, FLAT} from '/home/user/Youtube-videos/Future_Got_Weird/the-last-choice/source/src/r2/mech';
+export type {UnitSpec, HeavySpec, DroneSpec} from '/home/user/Youtube-videos/Future_Got_Weird/the-last-choice/source/src/r2/mech';

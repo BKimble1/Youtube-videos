@@ -6,7 +6,7 @@ import {M} from '../../timing';
 import {D1_1, D1_2, D1_2b} from './Charge';
 import {D1_3, D1_3b, D1_4a, D1_4b, D1_4c, D1_4d} from './Clash';
 import {D1_5, D1_6, D1_7, D1_7b} from './Rescue';
-import {D1_8} from './Breach';
+import {D1_8, D1_8b} from './Breach';
 import {D1_9a, D1_9b} from './Gain';
 
 export const SHOTS_D1: R2Shot[] = [
@@ -23,7 +23,8 @@ export const SHOTS_D1: R2Shot[] = [
   {id: 'D1-6', sec: 'D1', start: 79.7, end: 81.9, note: 'RESCUE intervention: the shove, the wind-up; the Director ducks left; BR2 the breaker\'s ram tears its forearm off', C: D1_6},
   {id: 'D1-7', sec: 'D1', start: 81.9, end: 83.9, note: 'RESCUE counter/consequence: it catches the tool; his plate in its knee; BR3 the ram in its chest drives it into U2', C: D1_7},
   {id: 'D1-7b', sec: 'D1', start: 83.9, end: M.BR4, note: 'RESCUE continuation: U3 comes out of the gap; they move to meet it', C: D1_7b},
-  {id: 'D1-8', sec: 'D1', start: M.BR4, end: M.GAIN1, note: 'BR4: inside U3\'s hammer, the shoulder drive up the rim; it goes over the crest into the crater; the gap opens', C: D1_8},
+  {id: 'D1-8', sec: 'D1', start: M.BR4, end: 87.0, note: 'BR4 (side-on from the south): inside U3\'s hammer, the shoulder and plate into its chest, the drive up the rim, the shove', C: D1_8},
+  {id: 'D1-8b', sec: 'D1', start: 87.0, end: M.GAIN1, note: 'BR4 after the shove: it staggers onto the crest and goes over backward into the crater; the gap opens', C: D1_8b},
   {id: 'D1-9a', sec: 'D1', start: M.GAIN1, end: 91.5, note: 'GAIN: the survivors pulled back across the bowl; a drone comes; he waves them on; the run for the slab', C: D1_9a},
   {id: 'D1-9b', sec: 'D1', start: 91.5, end: M.P2, note: 'BREATH under pressure: down behind the slab as the drone\'s beam sweeps its top; looks pass; his signal', C: D1_9b},
 ];

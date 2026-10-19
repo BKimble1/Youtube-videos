@@ -23,7 +23,7 @@ import {WIND, PLAN} from './plan';
 import {towerState} from './set';
 import {CITY, Bldg} from './city';
 import {M} from '../timing';
-import {flameBuf, flameMass, flameEls, flamePalette, billowPath, plumeEl, plumePoint, PlumeSpec, FlameBuf, f1} from './atmosDraw';
+import {flameBuf, flameMass, flameEls, flamePalette, billowPath, plumeEl, plumePoint, radiusAt, PlumeSpec, FlameBuf, f1} from './atmosDraw';
 
 export type {PlumeSpec} from './atmosDraw';
 
@@ -464,8 +464,20 @@ export const plumeItem = (key: string, p: PlumeSpec, t: number, bias = -0.2, occ
   let b = bias;
   if (occ) {
     const probes = [plumePoint(p, 0, t), plumePoint(p, 0.45, t), plumePoint(p, 0.9, t), plumePoint(p, 1.25, t)];
-    if (allHidden(occ, probes, skip)) return null;
-    b = occBias(occ, pos, probes.slice(0, 3), bias, skip);
+    // (R4) a plume is as wide as its billows: it is skipped only when the spine AND its flanks (a billow radius to each side
+    // and above) are all behind buildings. Testing the spine alone dropped a whole column in one frame while its billows still
+    // showed round the building in front of its spine (A1 f161: the column above the tilting tower vanished).
+    const flank = (s: number): V3[] => {
+      const c = plumePoint(p, s, t), r = radiusAt(p, s) * 1.1;
+      const d = sub3(c, occ.v.pos), lh = Math.hypot(d.z, d.x) || 1;
+      const lat = {x: -d.z / lh, y: 0, z: d.x / lh};
+      return [add3(c, mul3(lat, r)), add3(c, mul3(lat, -r)), add3(c, {x: 0, y: r, z: 0})];
+    };
+    const wide = [...probes, ...[0, 0.45, 0.9, 1.25].flatMap(flank)];
+    if (allHidden(occ, wide, skip)) return null;
+    // (and the same flanks decide the plume's order against a building: the plume goes behind a building as soon as that building
+    // is in front of any part of its width, not only of its spine — the order flipped as a billow's edge crossed a building's edge)
+    b = occBias(occ, pos, [...probes.slice(0, 3), ...wide.slice(4, 13)], bias, skip);
   }
   return {kind: 'sprite', key, pos, bias: b, noCull: true, draw: (c: SpriteCtx) => plumeEl(c, p, t, key)};
 };
