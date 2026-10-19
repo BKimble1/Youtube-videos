@@ -359,7 +359,9 @@ const TT_C = afterClimb(TT_CLIMB);
 const TT_SEGS: Seg[] = [
   TT_WALK,
   climbSeg(TT_CLIMB),
-  commitStand('tether', [TT_C.key, [48.85, TT_A.x, TT_A.z, 120], [49.85, TT_A.x, TT_A.z, 196], [TT.turn, TT_A.x, TT_A.z, 196], [54.1, TT_A.x, TT_A.z, TT_A.h]], TT.commit, TT.commitEnd, {half: 0.14, stag: 0.04, turnStep: 65, start: TT_C.start}),
+  commitStand('tether', [TT_C.key, [48.85, TT_A.x, TT_A.z, 120], [49.85, TT_A.x, TT_A.z, 196], [TT.turn, TT_A.x, TT_A.z, 196], [54.1, TT_A.x, TT_A.z, TT_A.h],
+    // R4 C6: she resettles her stance as she sights along the launcher (a small shuffle, no travel)
+    [56.1, TT_A.x, TT_A.z, TT_A.h], [56.6, TT_A.x, TT_A.z, TT_A.h - 9]], TT.commit, TT.commitEnd, {half: 0.14, stag: 0.04, turnStep: 65, start: TT_C.start}),
 ];
 const tetherHead0 = (): V3 => { const b = bodyAt(TT_SEGS, 40.2); return headOf(b, 1.5); };
 const tetherHead = (T: number): V3 => headOf(bodyAt(TT_SEGS, T), 1.55);
@@ -544,7 +546,9 @@ const RN_SEGS: Seg[] = [
   RN_RUN,
   RN_VSEG,
   RN_CLIMB_SEG,
-  commitStand('runner', [RN_C.key, [46.45, RN_A.x, RN_A.z, 120], [47.75, RN_A.x, RN_A.z, 205], [TR.turn, RN_A.x, RN_A.z, 205], [54.15, RN_A.x, RN_A.z, RN_A.h]], TR.commit, TR.commitEnd, {half: 0.14, stag: 0.05, turnStep: 65, start: RN_C.start}),
+  commitStand('runner', [RN_C.key, [46.45, RN_A.x, RN_A.z, 120], [47.75, RN_A.x, RN_A.z, 205], [TR.turn, RN_A.x, RN_A.z, 205], [54.15, RN_A.x, RN_A.z, RN_A.h],
+    // R4 C6: he shifts onto the balls of his feet, the front foot a little forward (the bar is back in his fist)
+    [55.5, RN_A.x, RN_A.z, RN_A.h], [55.95, RN_A.x, RN_A.z, RN_A.h + 8]], TR.commit, TR.commitEnd, {half: 0.14, stag: 0.05, turnStep: 65, start: RN_C.start}),
 ];
 const runnerHead = (T: number): V3 => headOf(bodyAt(RN_SEGS, T), 1.4);
 export const VAULT_GRIP = GRIP;
@@ -639,7 +643,9 @@ const BK_SEGS: Seg[] = [
   climbSeg(BK_CLIMB),
   BK_STAND1,
   climbSeg(BK_CLIMB2),
-  commitStand('breaker', [BK_C2.key, [TB2.turn, BK_A.x, BK_A.z, 260], [54.35, BK_A.x, BK_A.z, BK_A.h]], TB2.commit, TB2.commitEnd, {half: 0.16, stag: 0.05, turnStep: 65, start: BK_C2.start}),
+  commitStand('breaker', [BK_C2.key, [TB2.turn, BK_A.x, BK_A.z, 260], [54.35, BK_A.x, BK_A.z, BK_A.h],
+    // R4 C6: after the valve he takes the tool's weight and re-plants his feet
+    [56.25, BK_A.x, BK_A.z, BK_A.h], [56.75, BK_A.x, BK_A.z, BK_A.h - 7]], TB2.commit, TB2.commitEnd, {half: 0.16, stag: 0.05, turnStep: 65, start: BK_C2.start}),
 ];
 const breakerHead = (T: number): V3 => headOf(bodyAt(BK_SEGS, T), 1.6);
 /** the two-handed port, carried a little lower than D1's (r −16 u 250 f 118 / r 32 u 205 f 34) so the ram head stays
@@ -732,7 +738,9 @@ const DR_SEGS: Seg[] = [
   climbSeg(DR_CLIMB),
   DR_STAND,
   climbSeg(DR_CLIMB2),
-  commitStand('drone', [DR_C2.key, [T3.turnPilot, DR_A.x, DR_A.z, 100], [54.55, DR_A.x, DR_A.z, DR_A.h]], T3.commitP, T3.commitPEnd, {half: 0.13, stag: 0.04, turnStep: 65, start: DR_C2.start}),
+  commitStand('drone', [DR_C2.key, [T3.turnPilot, DR_A.x, DR_A.z, 100], [54.55, DR_A.x, DR_A.z, DR_A.h],
+    // R4 C6: she squares up to the line once the drone is out ahead of them
+    [56.4, DR_A.x, DR_A.z, DR_A.h], [56.9, DR_A.x, DR_A.z, DR_A.h + 6]], T3.commitP, T3.commitPEnd, {half: 0.13, stag: 0.04, turnStep: 65, start: DR_C2.start}),
 ];
 const pilotHead = (T: number): V3 => headOf(bodyAt(DR_SEGS, T), 1.5);
 /** the drone in her left hand (carried at her side; held up on the palm at the launch) — body-local, view-free */
@@ -833,7 +841,9 @@ const FL_C = afterClimb(FL_CLIMB);
 const FL_SEGS: Seg[] = [
   FL_WALK,
   climbSeg(FL_CLIMB),
-  commitStand('flares', [FL_C.key, [52.55, FL_A.x, FL_A.z, 338], [T3.turnFlares, FL_A.x, FL_A.z, 338], [54.5, FL_A.x, FL_A.z, FL_A.h]], T3.commitF, T3.commitFEnd, {half: 0.15, stag: 0.05, turnStep: 70, start: FL_C.start}),
+  commitStand('flares', [FL_C.key, [52.55, FL_A.x, FL_A.z, 338], [T3.turnFlares, FL_A.x, FL_A.z, 338], [54.5, FL_A.x, FL_A.z, FL_A.h],
+    // R4 C6: he shifts his weight after counting the flares
+    [55.8, FL_A.x, FL_A.z, FL_A.h], [56.3, FL_A.x, FL_A.z, FL_A.h + 7]], T3.commitF, T3.commitFEnd, {half: 0.15, stag: 0.05, turnStep: 70, start: FL_C.start}),
 ];
 const FL_FACE: FK = [
   [42.1, F.concentration], [T3.flaresFoot, expr('effort', 0.7)], [T3.arriveFlares - 0.2, exprMix('effort', 'recognition', 0.6)],
@@ -878,7 +888,9 @@ const DC_C = afterClimb(DC_CLIMB);
 const DC_SEGS: Seg[] = [
   DC_WALK,
   climbSeg(DC_CLIMB),
-  commitStand('decoy', [DC_C.key, [52.98, DC_A.x, DC_A.z, 342], [T3.turnDecoy, DC_A.x, DC_A.z, 342], [54.4, DC_A.x, DC_A.z, DC_A.h]], T3.commitD, T3.commitDEnd, {half: 0.13, stag: 0.04, turnStep: 70, start: DC_C.start}),
+  commitStand('decoy', [DC_C.key, [52.98, DC_A.x, DC_A.z, 342], [T3.turnDecoy, DC_A.x, DC_A.z, 342], [54.4, DC_A.x, DC_A.z, DC_A.h],
+    // R4 C6: she steadies herself, a half-step, with the tablet up
+    [56.35, DC_A.x, DC_A.z, DC_A.h], [56.85, DC_A.x, DC_A.z, DC_A.h + 8]], T3.commitD, T3.commitDEnd, {half: 0.13, stag: 0.04, turnStep: 70, start: DC_C.start}),
 ];
 const DC_FACE: FK = [
   [42.5, F.concentration], [T3.decoyFoot, expr('effort', 0.6)], [T3.arriveDecoy - 0.2, exprMix('concentration', 'recognition', 0.6)],
@@ -904,9 +916,12 @@ export const decoyC = (T: number, v?: View): CrewC => {
   if (glance > 0) pose = blendPose(pose, layer(pose, {armL: {local: TAB, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}}}), glance);
   // the tap: her right forefinger to the screen
   const tap = win(T, T3.tablet + 0.12, T3.tablet + 0.6, 0.14, 0.16);
-  if (tap > 0) pose = blendPose(pose, layer(pose, {armR: {local: {r: -6, u: 222, f: 104}, pole: {r: 1, u: -0.4, f: -0.3}}, handR: 'point'}), tap);
+  // (R4: ONE arm target, ready -> tap by `tap`, with one pole. R3 switched `armR` from the raised ready arm to the low rest arm on the
+  // first frame of the tap: the hand dropped 0.38 m in one frame (12.5 m/s) and then went to the screen)
+  const RDY_R = {r: 52, u: 250, f: 70}, TAP_R = {r: -6, u: 222, f: 104};
+  const armRtap = {r: lerp(RDY_R.r, TAP_R.r, tap), u: lerp(RDY_R.u, TAP_R.u, tap), f: lerp(RDY_R.f, TAP_R.f, tap)};
   const ready = after(T, T3.turnDecoy + 0.2, 1.0);
-  if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(6, 10, after(T, T3.commitD - 0.2, 0.5)), lean: 6, armL: {local: TAB, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}}, armR: tap > 0 ? pose.armR : {local: {r: 52, u: 250, f: 70}}, handR: tap > 0.3 ? 'point' : 'open'}), ready);
+  if (ready > 0) pose = blendPose(pose, layer(pose, {drop: lerp(6, 10, after(T, T3.commitD - 0.2, 0.5)), lean: 6, armL: {local: TAB, pole: {r: -1, u: -0.7, f: 0}, palm: {r: 0.4, u: 0.3, f: -1}}, armR: {local: armRtap, pole: {r: 1, u: -0.4, f: -0.3}}, handR: tap > 0.3 ? 'point' : 'open'}), ready);
   pose.face = withEffort(faceKeys(T, DC_FACE), b);
   const wake = win(T, T3.tablet + 0.15, 57.4, 0.15, 1.6);
   // (R4 C6: this one sets at their own moment, SET_T)

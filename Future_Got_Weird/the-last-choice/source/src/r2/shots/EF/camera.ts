@@ -196,7 +196,7 @@ const RAD_SX = 0.55, RAD_SY = 0.52, RAD_FOV = 35;
 /** (R2 names, kept for compatibility) */
 export const KNOB_POS = RAD_POS;
 export const RADIO_AIM = RAD_SUBJ;
-/** The pan (aim) follows the draw-back after this share of the move. */
+/** The pan (aim) follows the rise after this share of the move. */
 const PAN_LAG = 0.3;
 /**
  * The move's progress (0..1): speed ∝ u^1.3 (1−u)^2.4 — it leaves his face gently (speed and acceleration start at
@@ -269,10 +269,8 @@ export const camClose = (T: number): Cam3 => {
     return {pos: add3(c.pos, d), target: add3(c.target, mul3(d, 1.25)), fov: c.fov};
   }
   const u = (T - MOVE_FROM) / (MOVE.b - MOVE_FROM);
-  const XO = (globalThis as {__EFCAM?: {ctrl?: V3; lag?: number}}).__EFCAM; // (QA experiments only)
-  const LAG = XO?.lag ?? PAN_LAG, CT = XO?.ctrl ?? MOVE_CTRL;
-  const kP = moveK(u), kS = moveK((u - LAG) / (1 - LAG)); // the pan follows the draw-back
-  const pos0 = add3(add3(mul3(E2_END.pos, (1 - kP) ** 2), mul3(CT, 2 * kP * (1 - kP))), mul3(RAD_POS, kP * kP));
+  const kP = moveK(u), kS = moveK((u - PAN_LAG) / (1 - PAN_LAG)); // the pan follows the rise
+  const pos0 = add3(add3(mul3(E2_END.pos, (1 - kP) ** 2), mul3(MOVE_CTRL, 2 * kP * (1 - kP))), mul3(RAD_POS, kP * kP));
   const pos = add3(pos0, mul3(PUSH_DIR, pushAt(T)));
   const fov = lerp(E2_END.fov ?? 30, RAD_FOV, kP);
   // the aim: from where E2 looks (his face) to the radio, as a look-at point with its own screen position (a pan that

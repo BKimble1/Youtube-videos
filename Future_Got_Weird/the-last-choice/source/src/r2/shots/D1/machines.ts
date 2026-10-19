@@ -485,7 +485,7 @@ const U2: Plan = {
         {t0: EV.crash, dir: {x: -0.3, y: 0, z: -0.95}, strength: 1.5},
         {t0: EV.pin, dir: {x: 0.2, y: -1, z: -0.2}, strength: 0.4},
       ],
-      fall: {t0: EV.crash + 0.06, dir: {x: -0.3, y: 0, z: -0.95}},
+      fall: {t0: EV.crash + 0.06, dir: {x: -0.3, y: 0, z: -0.95}, lift: false}, // (R4: U1 lies across it: the kit's ground-contact lift would push it up into U1)
       damage: {pauldronL: {t0: EV.pin + 0.12, dir: {x: 0.3, y: 0.7, z: -0.6}, speed: 2.6}, dead: {t0: 85.0}, leak: {t0: EV.pin + 0.1}},
       lockAt: 67.6,
     };

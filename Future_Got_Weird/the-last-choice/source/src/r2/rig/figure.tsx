@@ -1055,11 +1055,16 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     let hold = hold0 ? <g transform={propInGlyph(hf, s)}>{hold0}</g> : null;
     // a long one-handed prop crossing a depth zone: the piece in the hand's own zone stays in the fist (between the
     // glyph's layers), the others become parts in their zones (clipped to their runs of the prop's axis)
+    let propH: ReturnType<typeof torsoHides> | null = null;
     if (hold && holdFn?.span) {
       const sp = holdFn.span;
-      const hz = zoneOfRank(r, r.armRank[i]);
+      // (R4) with the torso deciding, the prop is not cut by the torso's zone either: it is masked by where the torso is nearer
+      // than the prop's axis (as the arm is); only the face's zone still cuts it
+      if (torsoOnly) propH = torsoHides(r, propPt(hf, sp[0] * s, sp[1] * s, s), propPt(hf, sp[2] * s, sp[3] * s, s), 16 * s + ink, bT, ink * 0.6);
+      const hz = Math.max(zoneOfRank(r, r.armRank[i]), torsoOnly ? 1 : 0);
       // (a short prop: behind or in front of the torso it stays with its hand; only the face's depth cuts it)
       const runs = zoneRuns(r, propPt(hf, sp[0] * s, sp[1] * s, s), propPt(hf, sp[2] * s, sp[3] * s, s))
+        .map((rn) => (torsoOnly && rn.zone < 1 ? {...rn, zone: 1} : rn))
         .map((rn) => (holdFn.spanFace && rn.zone < 2 && hz < 2 ? {...rn, zone: hz} : rn));
       if (runs.length > 1 || runs[0].zone !== hz) {
         const inG = hold;
@@ -1077,9 +1082,11 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
           if (rn.zone === hz) return;
           const cid = `${id}hp${i}_${k}`;
           const el = <g transform={handM(hf)}>{inG}</g>;
-          add(r.zoneZ[rn.zone] + 0.4, `hold${i}_${k}`, rn.poly.length ? (
+          const pel = rn.poly.length ? (
             <g><defs><clipPath id={cid}><path d={polyPath(rn.poly)} /></clipPath></defs><g clipPath={`url(#${cid})`}>{el}</g></g>
-          ) : el);
+          ) : el;
+          if (propH) torsoParts(`hold${i}_${k}`, pel, r.zoneZ[rn.zone] + 0.4, propH.polys, propH.touch, Wr.z, [hf.pos, propPt(hf, sp[0] * s, sp[1] * s, s), propPt(hf, sp[2] * s, sp[3] * s, s)], 24 * s + ink * 3);
+          else add(r.zoneZ[rn.zone] + 0.4, `hold${i}_${k}`, pel);
         });
       }
     }
@@ -1129,7 +1136,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
       const armEl = lowerTop
         ? <g>{up.ink}{lo.ink}{elbowInk}{upperFill}{lowerFill}</g>
         : <g>{up.ink}{lo.ink}{elbowInk}{lowerFill}{up.ink}{upperFill}</g>;
-      if (torsoOnly) torsoParts(`arm${i}`, armEl, rL, [...hideU!.polys, ...hideL!.polys], hideU!.touch || hideL!.touch, (S.z + Wr.z) / 2, [S, E, handEnd], 24 * s + ink * 3);
+      if (torsoOnly) torsoParts(`arm${i}`, armEl, rL, [...hideU!.polys, ...hideL!.polys, ...(propH?.polys ?? [])], hideU!.touch || hideL!.touch || !!propH?.touch, (S.z + Wr.z) / 2, propH ? [S, E, handEnd, propPt(hf, holdFn!.span![0] * s, holdFn!.span![1] * s, s), propPt(hf, holdFn!.span![2] * s, holdFn!.span![3] * s, s)] : [S, E, handEnd], 24 * s + ink * 3);
       else add(rL, `arm${i}`, armEl);
     } else {
       if (upperCross) splitZones(r, `armU${i}`, <g>{up.ink}{upperFill}</g>, S0, E, 0.05).forEach((q) => parts.push(q));
