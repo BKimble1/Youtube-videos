@@ -584,7 +584,7 @@ export const climbAt = (c: Climb, T: number): Body => {
   const fy = v >= 1 ? st.to.y : Math.max(Math.min(fy0, pos.y + 0.4), GC(x, z) + 0.02);
   const moving: V3 = v >= 1 ? st.to : {x, y: fy, z};
   const sw = v < 1 ? Math.sin(Math.PI * v) : 0;
-  const rear = u < swF ? 0 : REAR_LIFT * ks * smooth(clamp((w - 0.35) / 0.65));
+  const rear = u < swF || i === S.length - 1 ? 0 : REAR_LIFT * ks * smooth(clamp((w - 0.35) / 0.65)); // (the last step: the stand that follows starts with both feet down)
   const other: V3 = rear > 0 ? {x: st.other.x, y: st.other.y + rear, z: st.other.z} : st.other;
   const footL = st.foot === 'L' ? moving : other, footR = st.foot === 'R' ? moving : other;
   // the pose: lean into the slope, the knee loaded at the plant and extending through the push, weight over the planted
