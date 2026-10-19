@@ -621,6 +621,8 @@ export const heavy2D3 = (T: number): HeavySpec => {
   const look: V3 = T < 128.6 ? {x: b.pos.x - 20, y: 2, z: b.pos.z + 2} : T > 147.0 ? dirHeadAt(T) : T > 143.2 ? on(DEC_SPOT, 1.0) : on({x: 46.5, z: -0.6}, 1.5);
   return {
     ...b, look, eye: T < 128.6 ? 'cyan' : 'amber', drop: h2Drop(T), plants: h2PlantsAt(T),
+    // (R4) the legs' bones keep clear of the water main (kit kneeClear: rear-left shin −0.68 m → +0.03 m)
+    clear: PIPE.map((q) => ({a: q.a, b: q.b, r: PIPE_HALF})),
     // the ram carried up as it climbs over the wreck and the water main (it rested on the wreck, then in the main);
     // lowered again during the gauge insert (D4's own rest pose long before P4)
     ramCarry: smooth((T - 142.45) / 0.5) * (1 - smooth((T - 146.35) / 0.6)),

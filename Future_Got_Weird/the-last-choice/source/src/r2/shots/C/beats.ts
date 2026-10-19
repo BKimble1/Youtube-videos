@@ -72,7 +72,7 @@ export const TB2 = {
   go2: 51.05, arrive2: 53.2,
   turn: 53.36,
   charge: 55.12, charged: 55.62, // C6b: the valve: the gauge needle swings up, the tank hisses
-  commit: 58.35, commitEnd: 59.0,
+  commit: 58.1, commitEnd: 58.95, // (R4: 58.35 -> 59.0 before: the step down off the crest is 0.64 m, it needs 0.3 s, not 0.2)
 };
 
 /** the three from the edge of the street (C4): the drone pilot, the flare carrier, the decoy maker */
@@ -87,7 +87,7 @@ export const T3 = {
   tablet: 54.5, // C6b: the decoy maker wakes the tablet (the projector's lens lights)
   satchel: 54.78, // the flare carrier's hand on the satchel: the flares counted under his fingers
   thumbs: 55.7, // the pilot sends the drone out ahead of them
-  commitP: 58.18, commitPEnd: 58.8,
+  commitP: 57.93, commitPEnd: 58.75, // (R4: was 58.18 -> 58.8: the step down off the slab is 0.70 m)
   commitF: 58.55, commitFEnd: 59.15,
   commitD: 58.65, commitDEnd: 59.25,
 };

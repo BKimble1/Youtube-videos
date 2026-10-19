@@ -90,10 +90,14 @@ export const footAt = (k: KP[], T: number, lift = 0.11): V3 & {swing: number} =>
     const ya = GC(a[1], a[2]), yb = GC(b[1], b[2]);
     // a step up onto something (a slab, a ledge): the foot rises first, then reaches over onto it
     const up = yb - ya > 0.15;
+    // (R4: a step DOWN off a ledge (the pilot off the slab, the breaker off the crest, 0.4 - 0.7 m): the foot goes up and over the
+    // edge first and reaches down after it; R3 let it follow the ground line, which fell 0.25 m in one frame as its x/z crossed
+    // the edge and the pelvis dropped 0.16 m per frame after it)
+    const down = ya - yb > 0.15 && lf > 0;
     const e = up ? smooth(clamp((u - 0.3) / 0.7)) : lf > 0 ? smooth(u) : 1 - (1 - u) * (1 - u);
     const x = lerp(a[1], b[1], e), z = lerp(a[2], b[2], e);
-    const sw = Math.sin(Math.PI * u) * lf;
-    const ey = up ? smooth(Math.min(1, u * 2.4)) : e;
+    const sw = Math.sin(Math.PI * u) * (down ? Math.max(lf, 0.1 + 0.3 * (ya - yb)) : lf);
+    const ey = up ? smooth(Math.min(1, u * 2.4)) : down ? smooth(clamp((u - 0.4) / 0.6)) : e;
     const y = Math.max(lerp(ya, yb, ey) + sw, GC(x, z) + sw * 0.7);
     return {x, y, z, swing: lf > 0 ? Math.sin(Math.PI * u) : 0};
   }
