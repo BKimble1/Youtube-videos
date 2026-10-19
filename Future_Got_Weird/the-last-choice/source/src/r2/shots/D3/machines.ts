@@ -1007,26 +1007,70 @@ const clearW = (p: XZ): number => {
   if (q.u > 0.001 && q.u < 0.999 && q.top > 0.75) d = Math.min(d, q.d - PIPE_HALF); // the main where it is too high to step over
   return d;
 };
-export const detourPath = (pts: XZ[]): XZ[] => {
-  const rs: XZ[] = [pts[0]];
-  for (let i = 1; i < pts.length; i++) {
-    const a = pts[i - 1], b = pts[i], n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.z - a.z) / 0.7));
-    for (let k = 1; k <= n; k++) rs.push({x: lerp(a.x, b.x, k / n), z: lerp(a.z, b.z, k / n)});
-  }
-  let changed = false;
-  const out = rs.map((p, i) => {
-    if (i === 0 || i === rs.length - 1) return p;
-    let q = p;
-    for (let it = 0; it < 12; it++) {
-      const d = clearW(q);
-      if (d >= CLEAR_MIN) break;
-      const e = 0.08, gx = clearW({x: q.x + e, z: q.z}) - clearW({x: q.x - e, z: q.z}), gz = clearW({x: q.x, z: q.z + e}) - clearW({x: q.x, z: q.z - e}), gl = Math.hypot(gx, gz) || 1;
-      const st = Math.min(0.22, CLEAR_MIN - d + 0.05);
-      q = {x: q.x + (gx / gl) * st, z: q.z + (gz / gl) * st};
-      changed = true;
+/** a segment is free if every 0.15 m sample along it is ≥ `min` from the solids */
+const segFree = (a: XZ, b: XZ, min: number): boolean => {
+  const L = Math.hypot(b.x - a.x, b.z - a.z), n = Math.max(1, Math.ceil(L / 0.15));
+  for (let k = 0; k <= n; k++) if (clearW({x: lerp(a.x, b.x, k / n), z: lerp(a.z, b.z, k / n)}) < min) return false;
+  return true;
+};
+/** shortest way round the solids from a to b: A* on a 0.3 m grid over the segment's box (blocked where clearW < CLEAR_MIN),
+ *  then pulled straight (a waypoint is dropped while the chord stays ≥ 0.45 m clear) */
+const routeSeg = (a: XZ, b: XZ): XZ[] => {
+  const C = 0.3, pad = 7;
+  const x0 = Math.min(a.x, b.x) - pad, z0 = Math.min(a.z, b.z) - pad;
+  const nx = Math.ceil((Math.max(a.x, b.x) + pad - x0) / C) + 1, nz = Math.ceil((Math.max(a.z, b.z) + pad - z0) / C) + 1;
+  const cell = (p: XZ) => ({i: Math.round((p.x - x0) / C), j: Math.round((p.z - z0) / C)});
+  const world = (i: number, j: number): XZ => ({x: x0 + i * C, z: z0 + j * C});
+  const blocked = new Map<number, boolean>();
+  const isB = (i: number, j: number) => { const k = j * nx + i; let v = blocked.get(k); if (v === undefined) { v = clearW(world(i, j)) < CLEAR_MIN; blocked.set(k, v); } return v; };
+  const s0 = cell(a), g0 = cell(b);
+  const open = new Map<number, number>(), came = new Map<number, number>(), gs = new Map<number, number>();
+  const key = (i: number, j: number) => j * nx + i;
+  const h = (i: number, j: number) => Math.hypot(i - g0.i, j - g0.j);
+  gs.set(key(s0.i, s0.j), 0); open.set(key(s0.i, s0.j), h(s0.i, s0.j));
+  let found = false, guard = 0;
+  while (open.size && guard++ < 60000) {
+    let bk = -1, bf = 1e18;
+    open.forEach((f, k) => { if (f < bf) { bf = f; bk = k; } });
+    open.delete(bk);
+    const ci = bk % nx, cj = Math.floor(bk / nx);
+    if (ci === g0.i && cj === g0.j) { found = true; break; }
+    for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) {
+      if (!di && !dj) continue;
+      const ni = ci + di, nj = cj + dj;
+      if (ni < 0 || nj < 0 || ni >= nx || nj >= nz) continue;
+      const isEnd = (ni === g0.i && nj === g0.j) || (ni === s0.i && nj === s0.j);
+      if (!isEnd && isB(ni, nj)) continue;
+      const ng = (gs.get(bk) ?? 0) + Math.hypot(di, dj);
+      const nk = key(ni, nj);
+      if (ng < (gs.get(nk) ?? 1e18)) { gs.set(nk, ng); came.set(nk, bk); open.set(nk, ng + h(ni, nj)); }
     }
-    return q;
-  });
+  }
+  if (!found) return [a, b];
+  const cells: XZ[] = [];
+  for (let k: number | undefined = key(g0.i, g0.j); k !== undefined; k = came.get(k)) cells.push(world(k % nx, Math.floor(k / nx)));
+  cells.reverse();
+  cells[0] = a; cells[cells.length - 1] = b;
+  const out: XZ[] = [a];
+  let from = 0;
+  while (from < cells.length - 1) {
+    let to = cells.length - 1;
+    while (to > from + 1 && !segFree(cells[from], cells[to], 0.45)) to--;
+    out.push(cells[to]);
+    from = to;
+  }
+  return out;
+};
+export const detourPath = (pts: XZ[]): XZ[] => {
+  const out: XZ[] = [pts[0]];
+  let changed = false;
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i];
+    if (segFree(a, b, 0.4)) { out.push(b); continue; }
+    const r = routeSeg(a, b);
+    r.slice(1).forEach((q) => out.push(q));
+    changed = true;
+  }
   return changed ? out : pts;
 };
 const detourSteps = (steps: UStep[]) => steps.forEach((st) => { if (st.k === 'walk' && st.pts.length >= 2) st.pts = detourPath(st.pts); });

@@ -1,0 +1,32 @@
+mode none  mismatch px between the drawn contact (rig screen coords) and the TRUE projection of its world target
+12.40 k 479.8 handL 22 handR 146 footL 58 footR 20
+12.70 k 480.4 handL 1 handR 173 footL 45 footR 18
+13.00 k 492.2 handL 18 handR 132 footL 56 footR 9
+13.30 k 501.0 handL 31 handR 103 footL 43 footR 6
+13.60 k 504.8 handL 31 handR 99 footL 43 footR 7
+13.90 k 511.8 handL 36 handR 82 footL 24 footR 6
+14.20 k 514.7 handL 15 handR 77 footL 25 footR 8
+14.50 k 515.9 handL 8 handR 70 footL 17 footR 7
+14.80 k 518.0 handL 7 handR 65 footL 15 footR 6
+15.10 k 520.6 handL 4 handR 60 footL 14 footR 5
+15.40 k 522.7 handL 2 handR 57 footL 14 footR 26
+15.70 k 523.2 handL 2 handR 53 footL 14 footR 41
+16.00 k 521.9 handL 5 handR 52 footL 14 footR 41
+16.30 k 520.3 handL 0 handR 56 footL 14 footR 56
+16.60 k 519.4 handL 3 handR 62 footL 14 footR 55
+mode b2  mismatch px between the drawn contact (rig screen coords) and the TRUE projection of its world target
+12.40 k 520.0 handL 29 handR 42 footL 49 footR 32
+12.70 k 508.7 handL 10 handR 23 footL 58 footR 8
+13.00 k 515.6 handL 11 handR 13 footL 71 footR 23
+13.30 k 517.4 handL 6 handR 15 footL 45 footR 16
+13.60 k 520.7 handL 5 handR 13 footL 49 footR 13
+13.90 k 524.5 handL 4 handR 11 footL 8 footR 8
+14.20 k 528.7 handL 6 handR 13 footL 4 footR 3
+14.50 k 527.6 handL 5 handR 20 footL 6 footR 2
+14.80 k 525.3 handL 4 handR 21 footL 5 footR 2
+15.10 k 526.0 handL 4 handR 19 footL 5 footR 1
+15.40 k 531.3 handL 5 handR 16 footL 5 footR 5
+15.70 k 534.0 handL 5 handR 18 footL 4 footR 6
+16.00 k 532.1 handL 8 handR 25 footL 4 footR 5
+16.30 k 534.0 handL 20 handR 30 footL 3 footR 5
+16.60 k 533.0 handL 22 handR 37 footL 3 footR 5

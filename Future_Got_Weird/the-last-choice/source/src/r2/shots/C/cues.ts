@@ -46,17 +46,17 @@ const C3: Cue[] = [
   c(TR.land + 0.02, 'rubble_shift', {gain: -13, pan: -0.15, dist: 0.5, dur: 0.7, rate: 1.2, fade: 0.2}),
   c(TR.rec - 0.05, 'breath_ragged', {gain: -14, pan: -0.15, dist: 0.5, dur: 0.9, fade: 0.25}),
   // the runner climbs (step-ups: the plants)
-  ...plants([[42.55, -0.32, 0.66], [42.8, -0.25, 0.63], [43.06, -0.29, 0.58], [43.52, -0.26, 0.53], [43.73, -0.12, 0.52], [43.94, -0.04, 0.48], [44.285, 0.08, 0.48], [44.37, 0.14, 0.44], [44.74, 0.28, 0.44], [44.99, 0.43, 0.41], [45.25, 0.54, 0.42]], {gain: -11}),
+  ...plants([[42.58, -0.32, 0.66], [42.83, -0.25, 0.63], [43.08, -0.29, 0.58], [43.55, -0.26, 0.53], [43.75, -0.12, 0.52], [43.97, -0.04, 0.48], [44.28, 0.08, 0.48], [44.37, 0.14, 0.44], [44.77, 0.28, 0.44], [45.01, 0.43, 0.41], [45.28, 0.54, 0.42]], {gain: -11}),
   c(TH.palmOn, 'rubble_shift', {gain: -14, pan: 0.11, dist: 0.48, dur: 0.45, rate: 1.3, fade: 0.12}), // his palm on the rubble (R4: the bound's palm, 44.2: it was 44.12 on the step-up)
   c(TH.take, 'breath_exert', {gain: -15, pan: 0.1, dist: 0.48, dur: 0.5, fade: 0.12}), // the push-off
   // the breaker, heavier, behind (slower rate)
-  ...plants([[42.73, 0.15, 1.0], [43.07, 0.08, 0.99], [43.39, -0.05, 0.94], [43.88, -0.02, 0.88], [44.15, 0.03, 0.85], [44.46, -0.01, 0.81], [44.78, 0.02, 0.78], [45.07, -0.02, 0.75]], {gain: -15, rate: 0.85}),
-  c(42.96, 'rubble_shift', {gain: -16, pan: 0.13, dist: 0.99, dur: 0.6, fade: 0.2}), // his palm on the rubble
-  c(43.0, 'breath_exert', {gain: -18, pan: 0.13, dist: 0.99, dur: 0.6, fade: 0.15}),
+  ...plants([[42.78, 0.15, 1.0], [43.12, 0.08, 0.99], [43.45, -0.05, 0.94], [43.94, -0.02, 0.88], [44.22, 0.03, 0.85], [44.55, -0.01, 0.81], [44.87, 0.02, 0.78], [45.17, -0.02, 0.75]], {gain: -15, rate: 0.85}),
+  c(42.99, 'rubble_shift', {gain: -16, pan: 0.13, dist: 0.99, dur: 0.6, fade: 0.2}), // his palm on the rubble
+  c(43.03, 'breath_exert', {gain: -18, pan: 0.13, dist: 0.99, dur: 0.6, fade: 0.15}),
   c(43.2, 'hydraulic', {gain: -21, pan: 0.05, dist: 0.95, rate: 1.5}), // the tank knocks as he pushes up
   // the tether operator, far up the slope (right)
-  ...plants([[43.08, 0.53, 0.89], [43.42, 0.36, 0.85], [43.74, 0.36, 0.83], [44.06, 0.31, 0.79], [44.37, 0.33, 0.77], [44.68, 0.29, 0.72], [45.01, 0.36, 0.69]], {gain: -17, rate: 1.05}),
-  c(43.64, 'rubble_shift', {gain: -19, pan: 0.39, dist: 0.82, dur: 0.45, rate: 1.3, fade: 0.12}), // her palm on the bank
+  ...plants([[43.12, 0.53, 0.89], [43.46, 0.36, 0.85], [43.78, 0.36, 0.83], [44.10, 0.31, 0.79], [44.41, 0.33, 0.77], [44.71, 0.29, 0.72], [45.06, 0.36, 0.69]], {gain: -17, rate: 1.05}),
+  c(43.66, 'rubble_shift', {gain: -19, pan: 0.39, dist: 0.82, dur: 0.45, rate: 1.3, fade: 0.12}), // her palm on the bank
   c(TD.recognise, 'breath_ragged', {gain: -11, pan: 0.35, dist: 0.08, dur: 1.4, fade: 0.4}), // his breath of recognition
 ];
 
@@ -65,23 +65,23 @@ const C3: Cue[] = [
 // lifts off her palm and climbs (its bed hums on under the rest of the section); the other two climb past behind her
 // (the decoy maker's palm and big step up); she goes on up
 const C4: Cue[] = [
-  ...plants([[45.4, 0.28, 0.51], [45.63, 0.18, 0.48], [45.86, 0.26, 0.45], [46.07, 0.15, 0.42], [46.27, 0.22, 0.38], [46.5, 0.06, 0.34], [46.69, 0.12, 0.29], [46.92, -0.02, 0.34]], {gain: -9}), // the pilot
+  ...plants([[45.42, 0.28, 0.51], [45.66, 0.18, 0.48], [45.88, 0.26, 0.45], [46.09, 0.15, 0.42], [46.30, 0.22, 0.38], [46.53, 0.06, 0.34], [46.71, 0.12, 0.29], [46.95, -0.02, 0.34]], {gain: -9}), // the pilot
   c(45.5, 'breath_exert', {gain: -13, pan: 0.3, dist: 0.35, dur: 0.6, fade: 0.15}),
-  ...plants([[45.3, -0.09, 0.57], [45.6, -0.04, 0.52], [45.89, -0.14, 0.5], [46.11, -0.09, 0.45], [46.39, -0.2, 0.43], [46.6, -0.13, 0.39]], {gain: -12}), // the flare carrier
-  c(45.51, 'rubble_shift', {gain: -15, pan: -0.03, dist: 0.52, dur: 0.5, rate: 1.25, fade: 0.15}), // his palm
-  ...plants([[45.53, -0.45, 0.68], [45.86, -0.44, 0.64], [46.17, -0.54, 0.62], [46.46, -0.55, 0.57]], {gain: -14}), // the decoy maker
+  ...plants([[45.36, -0.09, 0.57], [45.67, -0.04, 0.52], [45.97, -0.14, 0.5], [46.25, -0.09, 0.45], [46.53, -0.2, 0.43], [46.76, -0.13, 0.39]], {gain: -12}), // the flare carrier
+  c(50.46, 'rubble_shift', {gain: -19, pan: -0.55, dist: 0.9, dur: 0.5, rate: 1.25, fade: 0.15}), // the flare carrier's palm near the summit (R4: it was listed at 45.51, a step the plan no longer has a palm on)
+  ...plants([[45.57, -0.45, 0.68], [45.90, -0.44, 0.64], [46.22, -0.54, 0.62], [46.50, -0.55, 0.57]], {gain: -14}), // the decoy maker
   c(T3.launch - 0.08, 'steps_gravel', {gain: -12, pan: 0.05, dist: 0.4, dur: 0.3, fade: 0.1}), // she stops
-  ...plants([[46.89, 0.06, 0.42], [47.13, 0.0, 0.37], [47.4, -0.11, 0.37], [47.61, -0.21, 0.34], [47.89, -0.34, 0.34], [48.14, -0.47, 0.3], [48.41, -0.59, 0.33], [48.69, -0.64, 0.33], [48.98, -0.45, 0.37], [49.28, -0.5, 0.38]], {gain: -11}), // the flare carrier, behind her
+  ...plants([[46.97, 0.06, 0.42], [47.21, 0.0, 0.37], [47.51, -0.11, 0.37], [47.61, -0.21, 0.34], [47.84, -0.34, 0.34], [48.13, -0.47, 0.3], [48.33, -0.59, 0.33], [48.61, -0.64, 0.33], [48.89, -0.45, 0.37], [49.20, -0.5, 0.38]], {gain: -11}), // the flare carrier, behind her
   c(47.6, 'cloth_move', {gain: -15, pan: -0.05, dist: 0.45, dur: 0.4, fade: 0.1}), // his satchel swings
-  c(46.99, 'rubble_shift', {gain: -22, pan: -0.7, dist: 0.95, dur: 0.5, fade: 0.2}), // the breaker's palm, off on the crest
-  c(47.45, 'rubble_shift', {gain: -23, pan: -0.8, dist: 0.95, dur: 0.45, fade: 0.2}), // the tether operator's, at the summit
-  ...plants([[47.06, 0.07, 0.59], [47.36, -0.04, 0.58], [47.85, -0.22, 0.54], [48.39, -0.3, 0.52], [48.99, -0.08, 0.49], [49.35, 0.04, 0.46], [49.66, 0.18, 0.48]], {gain: -14}), // the decoy maker
-  c(48.85, 'rubble_shift', {gain: -15, pan: -0.19, dist: 0.49, dur: 0.5, rate: 1.25, fade: 0.15}), // her palm on the ledge
-  c(48.95, 'breath_exert', {gain: -15, pan: -0.1, dist: 0.49, dur: 0.6, fade: 0.15}), // the big step up
+  c(47.13, 'rubble_shift', {gain: -22, pan: -0.7, dist: 0.95, dur: 0.5, fade: 0.2}), // the breaker's palm, off on the crest
+  c(47.47, 'rubble_shift', {gain: -23, pan: -0.8, dist: 0.95, dur: 0.45, fade: 0.2}), // the tether operator's, at the summit
+  ...plants([[47.12, 0.07, 0.59], [47.42, -0.04, 0.58], [47.90, -0.22, 0.54], [48.46, -0.3, 0.52], [49.05, -0.08, 0.49], [49.38, 0.04, 0.46], [49.68, 0.18, 0.48]], {gain: -14}), // the decoy maker
+  c(48.90, 'rubble_shift', {gain: -15, pan: -0.19, dist: 0.49, dur: 0.5, rate: 1.25, fade: 0.15}), // her palm on the ledge
+  c(48.99, 'breath_exert', {gain: -15, pan: -0.1, dist: 0.49, dur: 0.6, fade: 0.15}), // the big step up
   c(T3.spin, 'servo_whir', {gain: -10, pan: 0.05, dist: 0.35, dur: 0.9, rate: 1.6, fade: 0.2}), // the rotors spin up
   c(T3.spin + 0.05, 'ally_drone', {gain: -9, pan: 0.05, dist: 0.35, dur: M.CHARGE + 0.3 - (T3.spin + 0.05), fade: 0.7}),
   c(T3.lift, 'drone_pass', {gain: -11, pan: 0.05, dist: 0.35}), // it lifts off and climbs
-  ...plants([[48.62, 0.05, 0.33], [48.83, 0.07, 0.3], [49.16, 0.12, 0.3], [49.41, 0.1, 0.27], [49.71, 0.08, 0.29]], {gain: -11}), // she goes on up
+  ...plants([[48.65, 0.05, 0.33], [48.86, 0.07, 0.3], [49.16, 0.12, 0.3], [49.38, 0.1, 0.27], [49.71, 0.08, 0.29]], {gain: -11}), // she goes on up
 ];
 
 // C5 — the hand on the shoulder (cloth, his breath out); the reel's lock clicks, the drone rises past; the strap

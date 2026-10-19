@@ -1015,7 +1015,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     // (R4: and only while the upper arm is near the head's outline on screen: a near shoulder 'in front of the face' in a rear
     // three-quarter view overlaps nothing, and the split it caused changed the arm's whole drawing in one frame)
     const nearHead = [0, 0.25, 0.5, 0.75, 1].some((t) => { const q = lerp3(S, E, t); return ((q.x - r.headC.x) / (HEAD_R * s * 1.12)) ** 2 + ((q.y - r.headC.y) / (HEAD_RY * s * 1.2)) ** 2 < 1.3; });
-    const upperCross = nearHead && (zoneS === 2 || zoneE === 2 || zoneU === 2) && (zoneS !== zoneU || zoneE !== zoneU);
+    const upperCross = !r.armOverride ? false : nearHead && (zoneS === 2 || zoneE === 2 || zoneU === 2) && (zoneS !== zoneU || zoneE !== zoneU);
     const rUE = upperCross ? r.zoneZ[zoneE] : rU;
     // (R4) the torso against this arm: see torsoHides / torsoParts. Where only the torso decides (neither half meets the face's
     // zone, no depth override) the arm is ONE part whatever the halves' ranks: R3 split it into two parts when the upper arm

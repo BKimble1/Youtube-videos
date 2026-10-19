@@ -611,6 +611,10 @@ const U3: Plan = {
       // on the far side: he and the chest plate his plate meets are in clear profile. The R3 'reach over his back' arm is dropped:
       // the left arm, the near one, would have crossed his body; the hit's reaction (hits below) throws it back instead.)
       raise: {t0: 85.1, t1: BR4.hit + 0.2, side: 'R'},
+      // the near (left) arm is thrown back and down with the drive, on its own side: R3's hit reaction swung it up across the lens
+      // and the Director's face (86.55-86.7)
+      armL: T > BR4.hit - 0.12 && T < BR4.slide0 ? {hand: rel({x, z}, u3H(T), -0.3, -0.42, 0.95), open: true} : undefined,
+      armWL: smooth(clamp((T - BR4.hit + 0.12) / 0.14)) * (1 - smooth(clamp((T - BR4.release - 0.2) / 0.35))),
       hits: [{t0: BR4.hit, dir: {x: 1, y: 0, z: -0.02}, strength: 1.0}, {t0: BR4.release, dir: {x: 1, y: 0, z: 0}, strength: 0.8}],
       fall: {t0: BR4.fall, dir: U3_FALL_DIR, ang: restAng(pivot, U3_FALL_DIR)}, // over the crest, down the inner slope
       damage: {dent: {t0: BR4.hit, deg: -8}, dead: {t0: BR4.slide1 - 0.3}},

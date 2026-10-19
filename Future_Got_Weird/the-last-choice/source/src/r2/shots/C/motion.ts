@@ -363,6 +363,10 @@ export const bodyAt = (segs: Seg[], T: number): Body => {
 // works up the slope a step at a time; on gentle ground the progress evens out into a walk. Steps are shorter where the
 // rubble is steep (the rise per step is capped) and take longer the more they climb. Palms can be planted on the rubble
 // ahead of a step (scrambling), and the climb ends with the feet set side by side (the next stand starts from them).
+// R4: the plant of a step comes at p0 + p1 * steep of its length (R3: 0.40 + 0.14: over a 0.2-0.25 s step the foot flew ~1 m in
+// 0.08 s, 2 frames, and landed far ahead of the pelvis: the rig dipped the pelvis by up to 0.38 m on the landing frame); now
+// 0.50 + 0.15 (a longer swing: 3-4 frames). kSw is the share of the root's travel that happens during the swing on steep steps.
+const TUNE = {kSw: 0.55, p0: 0.5, p1: 0.15};
 export type ClimbStep = {
   foot: 'L' | 'R'; from: V3; to: V3; other: V3;
   /** start, plant (the moving foot lands), end (the push is over) */
@@ -469,7 +473,7 @@ export const climbPlan = (pts: XZ[], T0: number, T1: number, o: ClimbOpts): Clim
     const trav = Math.hypot(r.to.x - r.other.x, r.to.z - r.other.z);
     const slope = rise / Math.max(0.12, trav);
     const steep = clamp(rise / 0.2);
-    const plant = a + (b - a) * (0.4 + 0.14 * steep);
+    const plant = a + (b - a) * (TUNE.p0 + TUNE.p1 * steep);
     // after the push: the weight over the new foot (between the holds, toward the new one); the last step squares up
     let r1: V3, h1: number;
     if (r.last) {
@@ -538,7 +542,7 @@ export const climbAt = (c: Climb, T: number): Body => {
   // root progress: during the swing the body rolls forward over the planted foot (so the new hold is within the short
   // legs' reach when the foot lands); it RISES in the push, after the plant (steep steps); gentle ones evenly
   const ks = st.steep;
-  const kSw = 0.44;
+  const kSw = TUNE.kSw;
   const kStep = u < swF ? kSw * smooth(v) : kSw + (1 - kSw) * smooth(w);
   const k = lerp(u, kStep, clamp(ks * 1.4));
   const kyStep = u < swF ? 0.06 * v : 0.06 + 0.94 * smooth(w);
