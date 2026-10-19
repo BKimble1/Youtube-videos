@@ -131,6 +131,17 @@ const seatSlab = (x: number, z: number, U: V3, V: V3, w: number, h: number, thic
   return {x, y: -sink - low, z};
 };
 
+/**
+ * The Crew's lanes through the ruin (C: tether, breaker, runner from the broken shell to the ridge; positions of their feet, m).
+ * The broken floors keep 1.3 m clear of them (R3's floors hovered 1.5–2.7 m up, so the runner walked UNDER one; seated on the
+ * ground a floor in the lane would be walked through: tools/r3/city_check.mjs 'crew').
+ */
+const CREW_LANES: [number, number][] = [
+  [-18.6, -1.6], [-17.8, -1.7], [-16.8, -1.8], [-14.6, -2.1], [-11.9, -2.3], [-9.3, -2.5],
+  [-18.5, 6.6], [-18, 6.4], [-16.3, 5.5], [-13.9, 4.3], [-11.6, 3.2], [-9.1, 2.6],
+  [-18.4, -0.3], [-16.6, -0.4], [-15, -0.5], [-13, -0.6], [-11.4, -0.7], [-9.8, -0.6],
+  [-19.2, 3.2], [-18.9, 1.5],
+];
 /** the ruin's free-standing columns and the broken floors placed so far (a floor must not pass through either) */
 const RUIN_COLS: {x: number; z: number; h: number}[] = [];
 const FLOORS: Mesh[] = [];
@@ -152,6 +163,7 @@ const insideMesh = (m: Mesh, p: V3): boolean => {
 };
 /** does the slab mesh have a vertex inside another slab (or the other way round), or does a column stand through it? */
 const slabConflict = (m: Mesh, others: Mesh[], cols: {x: number; z: number; h: number}[]): boolean =>
+  CREW_LANES.some(([x, z]) => { const g = groundH(x, z); return m.verts.some((v) => Math.hypot(v.x - x, v.z - z) < 1.3 && v.y > g - 0.4 && v.y < g + 2.6) || insideMesh(m, {x, y: g + 0.9, z}) || insideMesh(m, {x, y: g + 1.6, z}); }) ||
   others.some((o) => m.verts.some((v) => insideMesh(o, v)) || o.verts.some((v) => insideMesh(m, v))) ||
   cols.some((c) => [[-0.35, -0.35], [0.35, -0.35], [0.35, 0.35], [-0.35, 0.35], [0, 0]].some(([dx, dz]) => [0.5, c.h * 0.5, c.h - 0.2].some((y) => insideMesh(m, {x: c.x + dx, y, z: c.z + dz}))) ||
     m.verts.some((v) => Math.abs(v.x - c.x) < 0.35 && Math.abs(v.z - c.z) < 0.35 && v.y > 0 && v.y < c.h));
@@ -346,9 +358,14 @@ const buildStatic = (): Static[] => {
     const V = norm3(rotAxis({x: 0, y: 1, z: 0}, U, rad(tilt)));
     // (and clear of the other floors and of the ruin's columns: slid along its own length until nothing of one is inside the other)
     let o = seatSlab(x, z, U, V, w, h, 0.3, s, 0.12), mesh = brokenSlab(o, U, V, w, h, 0.3, s), cut = splitPlanar2(mesh, 0.8, U);
-    for (let k = 1; k < 14 && slabConflict(cut, FLOORS, RUIN_COLS); k++) {
-      const dx = Math.ceil(k / 2) * 0.6 * (k % 2 ? 1 : -1);
-      o = seatSlab(x + U.x * dx, z + U.z * dx, U, V, w, h, 0.3, s, 0.12);
+    // (candidate shifts along the slab's length and across it, nearest first)
+    const Nrm = {x: -U.z, z: U.x};
+    const shifts: [number, number][] = [];
+    for (let a = -6; a <= 6; a++) for (let b = -5; b <= 5; b++) if (a || b) shifts.push([a * 0.6, b * 1.0]);
+    shifts.sort((p1, p2) => Math.hypot(p1[0], p1[1]) - Math.hypot(p2[0], p2[1]));
+    for (let k = 0; k < shifts.length && slabConflict(cut, FLOORS, RUIN_COLS); k++) {
+      const [da, db] = shifts[k];
+      o = seatSlab(x + U.x * da + Nrm.x * db, z + U.z * da + Nrm.z * db, U, V, w, h, 0.3, s, 0.12);
       mesh = brokenSlab(o, U, V, w, h, 0.3, s);
       cut = splitPlanar2(mesh, 0.8, U);
     }
