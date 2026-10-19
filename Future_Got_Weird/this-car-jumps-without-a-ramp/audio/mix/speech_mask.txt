@@ -1,4 +1,4 @@
-speech windows: 2024, bed within 6 dB of the voice: 57, bed above the voice: 8
+speech windows: 2024, bed within 6 dB of the voice: 67, bed above the voice: 9
 median voice-to-bed margin while speaking: 22.8 dB
    5.05s voice  -33.8 dB  bed  -34.0 dB
    5.10s voice  -30.0 dB  bed  -33.4 dB
@@ -11,37 +11,46 @@ median voice-to-bed margin while speaking: 22.8 dB
   39.15s voice  -35.1 dB  bed  -36.5 dB
   41.95s voice  -29.6 dB  bed  -33.2 dB
   42.10s voice  -27.8 dB  bed  -33.7 dB
-  50.45s voice  -33.1 dB  bed  -38.9 dB
-  50.50s voice  -36.2 dB  bed  -39.3 dB
-  51.65s voice  -30.2 dB  bed  -30.3 dB
-  53.05s voice  -37.1 dB  bed  -42.1 dB
-  54.35s voice  -37.7 dB  bed  -42.8 dB
-  55.15s voice  -36.4 dB  bed  -38.7 dB
-  55.65s voice  -36.7 dB  bed  -34.9 dB
-  56.65s voice  -37.6 dB  bed  -41.2 dB
-  58.90s voice  -29.8 dB  bed  -29.7 dB
-  65.45s voice  -34.7 dB  bed  -30.9 dB
+  45.55s voice  -31.3 dB  bed  -35.6 dB
+  45.60s voice  -35.3 dB  bed  -35.1 dB
+  47.95s voice  -32.1 dB  bed  -36.0 dB
+  48.00s voice  -35.8 dB  bed  -37.2 dB
+  50.35s voice  -35.4 dB  bed  -36.1 dB
+  50.45s voice  -33.1 dB  bed  -37.8 dB
+  50.50s voice  -36.2 dB  bed  -39.7 dB
+  51.65s voice  -30.2 dB  bed  -32.8 dB
+  52.45s voice  -32.8 dB  bed  -36.4 dB
+  53.05s voice  -37.1 dB  bed  -41.3 dB
+  54.80s voice  -30.9 dB  bed  -35.1 dB
+  55.15s voice  -36.4 dB  bed  -40.5 dB
+  55.65s voice  -36.7 dB  bed  -33.9 dB
+  57.15s voice  -35.8 dB  bed  -35.7 dB
+  58.90s voice  -29.8 dB  bed  -34.6 dB
+  60.70s voice  -35.1 dB  bed  -39.2 dB
+  61.65s voice  -37.1 dB  bed  -43.0 dB
+  62.95s voice  -36.3 dB  bed  -38.9 dB
+  63.00s voice  -38.0 dB  bed  -40.4 dB
+  64.05s voice  -27.8 dB  bed  -33.0 dB
+  64.10s voice  -28.6 dB  bed  -34.2 dB
+  65.45s voice  -34.7 dB  bed  -33.7 dB
   66.60s voice  -37.7 dB  bed  -39.1 dB
-  70.00s voice  -35.0 dB  bed  -33.8 dB
-  70.25s voice  -34.0 dB  bed  -38.0 dB
-  71.40s voice  -32.7 dB  bed  -38.6 dB
-  71.75s voice  -36.7 dB  bed  -38.4 dB
-  73.20s voice  -33.8 dB  bed  -37.9 dB
-  75.45s voice  -34.1 dB  bed  -36.9 dB
-  76.80s voice  -34.8 dB  bed  -37.6 dB
-  77.75s voice  -37.2 dB  bed  -37.7 dB
-  79.95s voice  -31.3 dB  bed  -36.1 dB
-  80.35s voice  -34.5 dB  bed  -38.5 dB
-  80.40s voice  -35.0 dB  bed  -39.5 dB
-  80.95s voice  -34.9 dB  bed  -37.6 dB
-  83.35s voice  -35.8 dB  bed  -33.5 dB
-  83.40s voice  -37.5 dB  bed  -38.3 dB
-  84.75s voice  -33.9 dB  bed  -34.1 dB
-  84.80s voice  -36.2 dB  bed  -41.8 dB
-  89.00s voice  -28.1 dB  bed  -32.5 dB
-  89.05s voice  -36.9 dB  bed  -32.0 dB
-  90.00s voice  -26.5 dB  bed  -31.7 dB
-  90.05s voice  -28.3 dB  bed  -32.7 dB
+  70.00s voice  -35.0 dB  bed  -40.1 dB
+  71.75s voice  -36.7 dB  bed  -40.1 dB
+  73.20s voice  -33.8 dB  bed  -37.5 dB
+  75.45s voice  -34.1 dB  bed  -37.5 dB
+  76.80s voice  -34.8 dB  bed  -35.5 dB
+  77.75s voice  -37.2 dB  bed  -38.2 dB
+  79.95s voice  -31.3 dB  bed  -35.2 dB
+  80.35s voice  -34.5 dB  bed  -39.6 dB
+  80.95s voice  -34.9 dB  bed  -37.4 dB
+  83.35s voice  -35.8 dB  bed  -34.3 dB
+  83.40s voice  -37.5 dB  bed  -39.3 dB
+  84.75s voice  -33.9 dB  bed  -32.7 dB
+  89.00s voice  -28.1 dB  bed  -31.6 dB
+  89.05s voice  -36.9 dB  bed  -30.7 dB
+  90.00s voice  -26.5 dB  bed  -30.6 dB
+  90.05s voice  -28.3 dB  bed  -30.6 dB
+  97.85s voice  -36.3 dB  bed  -42.0 dB
  108.25s voice  -32.4 dB  bed  -37.4 dB
  109.20s voice  -35.9 dB  bed  -41.2 dB
  110.80s voice  -29.0 dB  bed  -34.6 dB
@@ -49,11 +58,12 @@ median voice-to-bed margin while speaking: 22.8 dB
  112.15s voice  -26.2 dB  bed  -31.6 dB
  112.50s voice  -34.7 dB  bed  -39.6 dB
  113.50s voice  -32.6 dB  bed  -37.3 dB
- 114.40s voice  -34.2 dB  bed  -37.7 dB
+ 114.40s voice  -34.2 dB  bed  -38.0 dB
  116.10s voice  -37.8 dB  bed  -40.7 dB
- 116.70s voice  -35.3 dB  bed  -29.3 dB
+ 116.70s voice  -35.3 dB  bed  -31.8 dB
  120.45s voice  -34.8 dB  bed  -35.8 dB
  126.15s voice  -34.5 dB  bed  -35.3 dB
- 127.55s voice  -28.1 dB  bed  -29.8 dB
- 130.85s voice  -35.1 dB  bed  -40.5 dB
- 131.45s voice  -37.0 dB  bed  -39.8 dB
+ 127.55s voice  -28.1 dB  bed  -29.2 dB
+ 129.75s voice  -37.1 dB  bed  -42.5 dB
+ 130.85s voice  -35.1 dB  bed  -40.4 dB
+ 131.45s voice  -37.0 dB  bed  -40.1 dB
