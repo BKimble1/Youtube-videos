@@ -696,7 +696,7 @@ const limbShade = (uid: string, shapes: string[], L: FigLight | undefined, w: nu
   );
 };
 
-const LimbG: React.FC<{pts: V2[]; w: number | number[]; ink: number; inkC: string; colors: string[]; L?: FigLight; s: number; endCap?: boolean; uid: string}> = ({pts, w, ink, inkC, colors, L, s, endCap, uid}) => {
+const LimbG: React.FC<{pts: V2[]; w: number | number[]; ink: number; inkC: string; colors: string[]; L?: FigLight; s: number; endCap?: boolean; startCap?: number; uid: string}> = ({pts, w, ink, inkC, colors, L, s, endCap, startCap = 0, uid}) => {
   const W = pts.map((_, i) => (Array.isArray(w) ? w[Math.min(i, w.length - 1)] : w));
   const segs = pts.slice(0, -1).map((a, i) => ({a, b: pts[i + 1], w0: W[i], w1: W[i + 1], c: colors[Math.min(i, colors.length - 1)]}));
   const joints = pts.slice(1, endCap ? undefined : -1).map((q, j) => ({q, r: W[j + 1] / 2, c: colors[Math.min(j + 1, colors.length - 1)]}));
@@ -706,8 +706,10 @@ const LimbG: React.FC<{pts: V2[]; w: number | number[]; ink: number; inkC: strin
       <g fill={inkC}>
         {segs.map((g, i) => <path key={i} d={quad(g.a, g.b, g.w0 / 2 + ink, g.w1 / 2 + ink)} />)}
         {joints.map((j, i) => <circle key={`j${i}`} cx={j.q.x} cy={j.q.y} r={j.r + ink} />)}
+        {startCap > 0.02 && <circle cx={pts[0].x} cy={pts[0].y} r={W[0] / 2 + ink} opacity={startCap} />}
       </g>
       {segs.map((g, i) => <path key={`f${i}`} d={quad(g.a, g.b, g.w0 / 2, g.w1 / 2)} fill={g.c} />)}
+      {startCap > 0.02 && <circle cx={pts[0].x} cy={pts[0].y} r={W[0] / 2} fill={colors[0]} opacity={startCap} />}
       {joints.map((j, i) => <circle key={`jf${i}`} cx={j.q.x} cy={j.q.y} r={j.r} fill={j.c} />)}
       {limbShade(uid, shapes, L, Math.max(...W), s, pts)}
     </g>
@@ -955,7 +957,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
    *  and a second copy just over the torso, clipped to the torso's outline minus those regions, shows it where it is
    *  nearer: so nothing outside the torso's outline changes order, and inside it the limb comes and goes with the depth
    *  field instead of flipping whole. */
-  const torsoParts = (key: string, el: React.ReactElement, rankOld: number, polys: V2[][], touch: boolean, vis: boolean, qz: number, pts: V3[], padPx: number, rankAdd = 0, openW = 0) => {
+  const torsoParts = (key: string, el: React.ReactElement, rankOld: number, polys: V2[][], touch: boolean, vis: boolean, qz: number, pts: V3[], padPx: number, rankAdd = 0) => {
     const zone0 = zoneOfRank(r, rankOld) === 0;
     if (!touch) { add(rankOld, key, el); return; }
     const x0 = Math.min(...pts.map((q) => q.x)) - padPx, x1 = Math.max(...pts.map((q) => q.x)) + padPx;
@@ -974,7 +976,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const xid = `${id}tx${key}`;
     add(rFront, `${key}x`, (
       <g>
-        <defs><mask id={xid} maskUnits="userSpaceOnUse" {...box}><rect {...box} fill="#000000" /><path d={torsoD} fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={ink * 1.6} strokeLinejoin="round" />{pelvisEl}{openW > 0.5 ? <polyline points={pts.map((q) => `${f2(q.x)},${f2(q.y)}`).join(' ')} fill="none" stroke="#FFFFFF" strokeWidth={f2(openW)} strokeLinecap="round" strokeLinejoin="round" /> : null}{black}</mask></defs>
+        <defs><mask id={xid} maskUnits="userSpaceOnUse" {...box}><rect {...box} fill="#000000" /><path d={torsoD} fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={ink * 1.6} strokeLinejoin="round" />{pelvisEl}{black}</mask></defs>
         <g mask={`url(#${xid})`}>{el}</g>
       </g>
     ));
@@ -998,7 +1000,9 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     // over the torso, clipped to its outline, shows it where it is nearer.
     const LW = [LEG_W * 1.05 * s, LEG_W * 0.95 * s, LEG_W * 0.8 * s];
     const Hn = add3(H, mul3(norm3(sub3(H, K)), 10 * s));
-    const legEl = <LimbG pts={[Hn, K, A]} w={LW} ink={ink} inkC={inkC} colors={[pantsC, pantsC]} L={L} s={s} uid={`${id}lg${i}`} />;
+    // (a thigh toward the camera starts with a rounded hip over the belly; a hanging one starts inside the pelvis, cap hidden)
+    const fwdK = clamp(((K.z - H.z) / (THIGH * s) - 0.3) / 0.4);
+    const legEl = <LimbG pts={[Hn, K, A]} w={LW} ink={ink} inkC={inkC} colors={[pantsC, pantsC]} L={L} s={s} startCap={fwdK} uid={`${id}lg${i}`} />;
     const legBody = (
       <g>
         <ellipse cx={sc.x} cy={sc.y} rx={Math.max(e.rx, 12 * s)} ry={Math.max(e.ry, 9 * s)} transform={`rotate(${f2(e.rot)} ${f2(sc.x)} ${f2(sc.y)})`} fill={shoeC} stroke={inkC} strokeWidth={ink} />
@@ -1008,11 +1012,9 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     );
     const rankBack = r.torsoZ - 40 + clamp((legZ - r.torsoZ) / (600 * s), -1, 1) * 0.3 + i * 0.001;
     // (the bias grows as the thigh points at the camera: a flexed hip's thigh comes out in front of the belly, a hanging one stays under the hem)
-    const fwdK = clamp(((K.z - H.z) / (THIGH * s) - 0.3) / 0.4);
     const bL = (12 + 78 * fwdK) * s, tip = add3(A, mul3(norm3(sub3(A, K)), 22 * s));
     const h1 = torsoHides(r, Hn, K, LW[0] / 2 + ink + 2 * s, bL, ink * 0.6), h2 = torsoHides(r, K, tip, LW[1] / 2 + ink + 2 * s, bL, ink * 0.6);
-    if ((globalThis as any).DBGLEG) console.log('LEG', i, 'fwdK', fwdK, 'bL', bL, 'polys', h1.polys.length, h2.polys.length, h1.touch, h1.vis, 'open', fwdK * (LW[0] + ink * 2 + 8 * s));
-    torsoParts(`leg${i}`, legBody, rankBack, [...h1.polys, ...h2.polys], h1.touch || h2.touch, h1.vis || h2.vis, (Hn.z + K.z) / 2, [Hn, K, tip], 26 * s + ink * 3, -2 + i * 0.01, fwdK * (LW[0] + ink * 2 + 8 * s));
+    torsoParts(`leg${i}`, legBody, rankBack, [...h1.polys, ...h2.polys], h1.touch || h2.touch, h1.vis || h2.vis, (Hn.z + K.z) / 2, [Hn, K, tip], 26 * s + ink * 3, -2 + i * 0.01);
   });
 
   [0, 1].forEach((i) => {

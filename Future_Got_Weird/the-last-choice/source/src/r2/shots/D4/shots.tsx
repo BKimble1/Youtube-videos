@@ -177,9 +177,13 @@ export const D4_7c = shot(SH.d47c, [
 // ram lands on the plate (177.76), the plate bursts, he is thrown back left along the ram's line into the slab (177.99), and the lens
 // eases left and in with him as his legs go.
 export const D4_8 = shot(SH.d48, [
-  {t: 0, pos: g(9.4, 8.8, 3.4), target: g(8.8, 4.2, 1.5), fov: 52},
+  // (it opens high and wide, so the raised ram head is in the top right as the shot starts and is seen coming down; it settles on the plate by the contact)
+  {t: 0, pos: g(9.4, 8.8, 3.4), target: g(9.5, 4.6, 3.0), fov: 62},
+  {t: 0.25, pos: g(9.4, 8.8, 3.4), target: g(9.0, 4.3, 1.9), fov: 55},
   {t: M_STRIKE - SH.d48 + 0.12, pos: g(9.4, 8.8, 3.4), target: g(8.7, 4.15, 1.45), fov: 52},
-  {t: M_STRIKE - SH.d48 + 0.45, pos: g(9.0, 7.1, 2.2), target: g(7.9, 3.8, 1.2), fov: 48},
+  // (over the slab's north edge, high, then down in front of it: through the slab the lens would be inside it)
+  {t: M_STRIKE - SH.d48 + 0.45, pos: g(9.0, 7.0, 3.3), target: g(7.9, 3.8, 1.2), fov: 48},
+  {t: M_STRIKE - SH.d48 + 1.0, pos: g(8.5, 6.8, 1.6), target: g(7.4, 3.5, 1.0), fov: 44},
   {t: SH.d49a - SH.d48, pos: g(8.3, 6.9, 1.4), target: g(7.2, 3.5, 0.9), fov: 42},
 ], (T) => ({full: 34, near: true, tweak: {director: {anchor: chest('director', T, 1.0)}, drone: {anchor: chest('drone', T, 0.5)}}}), 0.01);
 
