@@ -1,19 +1,24 @@
 // Sound events taken from the animation's own timing (exported to audio/sfx_events.json by tools/export_events.mjs),
 // so every effect lands on the frame its action happens.
 import {ALL_WORDS, DURATION_S} from './cues';
-import {T as TL, LAUNCH_EV, GO_T} from './shots/SideLaunch';
-import {CORNER_IN, CORNER_OUT, CORNER_BUMPS, SPEED, FRONT_T} from './shots/FrontCorner';
-import {BRAKE_IN, BRAKE_HOLD, BRAKE_EV, roadAt, SLOW_WIN} from './shots/SideBrake';
-import {PASS_T} from './shots/FrontPassenger';
-import {T as TC, CLOSE_IN, MATCH_T, CLOSE_EV, closeRoad} from './shots/SideClose';
+import {T as TL, LAUNCH_EV, GO_T, DEMO_EV} from './shots/Launch';
+import {BEND_T, BEND_BUMPS, T_ENTER, T3} from './shots/Bend';
+import {BRAKE_IN, BRAKE_EV, BRAKE_HOLD, T4, roadAt} from './shots/BrakeRough';
+import {CABIN_IN, REPLAY_AT, T5} from './shots/Cabin';
+import {CALLBACK_EV} from './shots/Callback';
+import {CLOSE_EV, TIMES as CT, T7, CLOSE_IN} from './shots/Closing';
+import {WIPE1, WIPE2} from './Main';
 
-/** Times a wheel at axle offset `off` (m) crosses a bump peak, for a car position x(t) (m). */
-const wheelHits = (t0: number, t1: number, xAt: (t: number) => number, road: (x: number) => number, off: number) => {
+/** Video times a wheel at axle offset `off` (m) crosses a bump peak in the brake scene. */
+const wheelHits = (off: number) => {
   const out: {t: number; h: number}[] = [];
+  const t0 = BRAKE_IN, t1 = BRAKE_HOLD;
   const dt = 1 / 240;
-  let prev = road(xAt(t0) + off), rising = false;
+  const road = (ts: number) => roadAt(BRAKE_EV.xAt(ts) + off);
+  let prev = road(BRAKE_EV.sceneT(t0)), rising = false;
   for (let t = t0 + dt; t < t1; t += dt) {
-    const h = road(xAt(t) + off);
+    const ts = BRAKE_EV.sceneT(t);
+    const h = road(ts);
     if (h > prev) rising = true;
     if (rising && h < prev && prev > 0.012) {
       out.push({t: +(t - dt).toFixed(3), h: +prev.toFixed(3)});
@@ -27,18 +32,17 @@ const wheelHits = (t0: number, t1: number, xAt: (t: number) => number, road: (x:
 export const EVENTS = () => ({
   duration: DURATION_S,
   words: ALL_WORDS.map((w) => ({w: w.text, s: w.start, e: w.end, b: w.block})),
-  hook: {suspension: TL.suspension, launches: TL.launches, take: LAUNCH_EV.hookTake, land: LAUNCH_EV.hookLand, so: TL.so},
-  launch: {name: TL.name, press: LAUNCH_EV.press, release: LAUNCH_EV.release, adds: TL.adds, between: TL.between, during: TL.during,
-    pushStart: TL.tiresPush + 0.2, take: LAUNCH_EV.take, land: LAUNCH_EV.land, go: GO_T},
-  corner: {in: CORNER_IN, out: CORNER_OUT, corner: FRONT_T.corner, here: FRONT_T.here, thisIs: FRONT_T.thisIs, point: FRONT_T.point, flatter: FRONT_T.flatter,
-    bumps: CORNER_BUMPS.map((b) => ({t: +((b.s - b.len / 2) / SPEED).toFixed(3), side: b.side, h: b.h}))},
-  brake: {in: BRAKE_IN, hold: BRAKE_HOLD, tb0: BRAKE_EV.tb0(), tb1: BRAKE_EV.tb1(),
-    // hits are found in scene time and mapped back to video time (the big bump plays in slow motion)
-    front: wheelHits(BRAKE_IN, BRAKE_EV.sceneT(BRAKE_HOLD + 1.2), BRAKE_EV.xAt, roadAt, 1.45).map((h) => ({...h, t: +BRAKE_EV.videoT(h.t).toFixed(3)})),
-    rear: wheelHits(BRAKE_IN, BRAKE_EV.sceneT(BRAKE_HOLD + 1.2), BRAKE_EV.xAt, roadAt, -1.45).map((h) => ({...h, t: +BRAKE_EV.videoT(h.t).toFixed(3)})),
-    slow: SLOW_WIN},
-  passenger: {your: PASS_T.your, sideways: PASS_T.sideways, seat: PASS_T.seat, bolster: PASS_T.bolster, bodyCtl: PASS_T.bodyCtl},
-  close: {in: CLOSE_IN, match: MATCH_T, builds: TC.builds, take: CLOSE_EV.take, land: CLOSE_EV.land, go: CLOSE_EV.go, stop: CLOSE_EV.stop,
-    brake: TC.brake, turn: TC.turn, uneven: TC.uneven, ground: TC.ground,
-    front: wheelHits(CLOSE_EV.go, CLOSE_EV.stop + 1, (t) => CLOSE_EV.xAt(t) / 1000, closeRoad, 1.45), rear: wheelHits(CLOSE_EV.go, CLOSE_EV.stop + 1, (t) => CLOSE_EV.xAt(t) / 1000, closeRoad, -1.45)},
+  hook: {suspension: TL.suspension, launches: TL.launches, take: LAUNCH_EV.hookTake, land: LAUNCH_EV.hookLand, crouch: LAUNCH_EV.hookTake - 1.55},
+  launch: {name: TL.name, press1: DEMO_EV.press1, release1: DEMO_EV.release1, press2: DEMO_EV.press2, release2: DEMO_EV.release2, adds: TL.adds, act: DEMO_EV.act, actEnd: DEMO_EV.actEnd,
+    during: TL.during, crouch: LAUNCH_EV.crouch, push: LAUNCH_EV.push, take: LAUNCH_EV.take, apex: LAUNCH_EV.apex, land: LAUNCH_EV.land, go: GO_T},
+  wipes: [WIPE1, WIPE2],
+  corner: {start: BEND_T.start, enter: T_ENTER, front1: BEND_T.front1, here: T3.here, adjusts: T3.adjusts, thisW: T3.thisW, point: T3.point, flatter: T3.flatter, pass: BEND_T.passIn, out: BEND_T.out,
+    bumps: BEND_BUMPS.map((b) => ({t: +b.t.toFixed(3), side: b.side, h: b.h}))},
+  brake: {in: BRAKE_IN, tb0: BRAKE_EV.tb0, tb1: BRAKE_EV.tb1, active: T4.active, hold: BRAKE_HOLD,
+    front: wheelHits(1.45),
+    rear: wheelHits(-1.45),
+    big: +BRAKE_EV.bigT.toFixed(3)},
+  passenger: {in: CABIN_IN, your: T5.your, sideways: T5.sideways, seat: T5.seat, bolster: T5.bolster, replay: REPLAY_AT},
+  callback: {in: REPLAY_AT, ...CALLBACK_EV},
+  close: {in: CLOSE_IN, brake: CT.insBrake, turn: CT.insTurn, bump: CT.insBump, hop: CT.jumpIn, take: CLOSE_EV.take, land: CLOSE_EV.land, drive: CLOSE_EV.drive, composed: T7.composed},
 });

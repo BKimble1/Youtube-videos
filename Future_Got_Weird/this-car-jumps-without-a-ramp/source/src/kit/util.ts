@@ -39,6 +39,36 @@ export const warp = (t: number, k: [number, number][]) => {
   const n = k.length - 1;
   return k[n][1] + (t - k[n][0]) * ((k[n][1] - k[n - 1][1]) / (k[n][0] - k[n - 1][0]));
 };
+/**
+ * Smooth monotone time-warp (Fritsch-Carlson / PCHIP): keys [videoT, simT] in ascending order. Unlike `warp`, the speed
+ * changes continuously at the keys, so slow motion eases in and out instead of lurching. Outside the keys it continues
+ * at the end segments' speed.
+ */
+export const pchip = (t: number, k: [number, number][]) => {
+  const n = k.length;
+  const h: number[] = [], d: number[] = [];
+  for (let i = 0; i < n - 1; i++) {
+    h.push(k[i + 1][0] - k[i][0]);
+    d.push((k[i + 1][1] - k[i][1]) / h[i]);
+  }
+  if (t <= k[0][0]) return k[0][1] + (t - k[0][0]) * d[0];
+  if (t >= k[n - 1][0]) return k[n - 1][1] + (t - k[n - 1][0]) * d[n - 2];
+  const m: number[] = new Array(n);
+  m[0] = d[0];
+  m[n - 1] = d[n - 2];
+  for (let i = 1; i < n - 1; i++) {
+    if (d[i - 1] * d[i] <= 0) m[i] = 0;
+    else {
+      const w1 = 2 * h[i] + h[i - 1], w2 = h[i] + 2 * h[i - 1];
+      m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i]);
+    }
+  }
+  let i = 0;
+  while (i < n - 2 && t > k[i + 1][0]) i++;
+  const s = (t - k[i][0]) / h[i];
+  const s2 = s * s, s3 = s2 * s;
+  return (2 * s3 - 3 * s2 + 1) * k[i][1] + (s3 - 2 * s2 + s) * h[i] * m[i] + (-2 * s3 + 3 * s2) * k[i + 1][1] + (s3 - s2) * h[i] * m[i + 1];
+};
 export const rand = (seed: number) => {
   let t = (seed + 0x6d2b79f5) | 0;
   t = Math.imul(t ^ (t >>> 15), t | 1);
@@ -58,3 +88,9 @@ export const drift = (g: number, seed = 0, period = 120) =>
   0.65 * Math.sin((g / period + seed * 0.37) * Math.PI * 2) + 0.35 * Math.sin((g / (period * 0.61) + seed * 0.91) * Math.PI * 2);
 export const deg = (r: number) => (r * 180) / Math.PI;
 export const rad = (d: number) => (d * Math.PI) / 180;
+
+/** Wheel-spin smear for fast wheels (0 = readable spokes, 1 = a smeared disc), so 30 fps never shows a wagon wheel. */
+export const wheelBlur = (speedMmS: number, wheelR = 365) => {
+  const degPerFrame = ((speedMmS / wheelR) * 180) / Math.PI / 30;
+  return smooth((degPerFrame - 14) / 16);
+};

@@ -5,8 +5,8 @@
   python3 tools/ingest_footage.py sheet FILE START DUR [FPS]
                                                         # numbered frame sheet of a window (footage/frames/), to pick
                                                         # in/out points, takeoff/landing frames and wheel positions
-  python3 tools/ingest_footage.py cut FILE              # constant-30-fps copy for the edit: source/public/footage/
-                                                        # byd_ev-tech03.mp4 (same timing, same resolution, no crop)
+  python3 tools/ingest_footage.py cut FILE              # the two 4K crops used in the edit (opening, replay):
+                                                        # source/public/footage/real_open.mp4, real_replay.mp4
 
 The probe writes footage/footage_probe.json; the ledger (footage/CLIP_LEDGER.md) records which seconds are used where.
 """
@@ -55,13 +55,27 @@ def sheet(f, start, dur, fps=10):
     print(out)
 
 
+# Crops of the side-profile shot of BYD's clip (frames 230-328 of the screen recording). The recording shows the
+# player's red header (rows 0-101) and control bar (from row ~975), so every crop stays inside rows 104-977. A 16:9
+# window that tall is 1552 px wide, too narrow for the whole car, so the opening frames the rear half (wing, rear
+# wheel, door) and the replay the front half (door, mirror, front wheel, nose). Frames are used one-to-one at the
+# recording's own 30 fps: no re-timing, no interpolation. Scaled once, with Lanczos, to the 4K master size.
+CROPS = {
+    'real_open': {'from': 273, 'to': 328, 'x0': 0, 'y0': 104, 'w': 1552, 'h': 873},
+    'real_replay': {'from': 262, 'to': 328, 'x0': 368, 'y0': 104, 'w': 1552, 'h': 873},
+}
+
+
 def cut(f):
     p = f if os.path.isabs(f) else os.path.join(SRC, f)
     os.makedirs(os.path.join(ROOT, 'source/public/footage'), exist_ok=True)
-    out = os.path.join(ROOT, 'source/public/footage/byd_ev-tech03.mp4')
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', p, '-an', '-vf', 'fps=30', '-c:v', 'libx264', '-crf', '12', '-preset', 'slow',
-                    '-pix_fmt', 'yuv420p', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709', '-movflags', '+faststart', out], check=True)
-    print(out)
+    for name, c in CROPS.items():
+        out = os.path.join(ROOT, f'source/public/footage/{name}.mp4')
+        vf = (f"select=between(n\\,{c['from']}\\,{c['to']}),setpts=N/30/TB,crop={c['w']}:{c['h']}:{c['x0']}:{c['y0']},"
+              f"scale=3840:2160:flags=lanczos,setsar=1")
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', p, '-an', '-vf', vf, '-r', '30', '-c:v', 'libx264', '-crf', '12', '-preset', 'slow',
+                        '-pix_fmt', 'yuv420p', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709', '-movflags', '+faststart', out], check=True)
+        print(out, c['to'] - c['from'] + 1, 'frames')
 
 
 if __name__ == '__main__':

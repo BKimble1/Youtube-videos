@@ -16,3 +16,12 @@ source/public/footage/*.mp4
 qa/**/f[0-9]*.png
 # Scribe input (rebuilt from takes/ by concatenating them; offsets are kept)
 audio/narration/scribe/candidates_concat.mp3
+
+# work-in-progress inspection renders (regenerable)
+qa/render/
+qa/clips/
+qa/[a-f][0-9]/
+qa/loft*/
+qa/track*/
+qa/front1/
+footage/frames/

@@ -28,7 +28,7 @@ SR = fx.SR
 EV = json.load(open(os.path.join(ROOT, 'audio/sfx_events.json')))
 TOTAL = EV['duration']
 words = EV['words']
-H, L, C, B, P, E = EV['hook'], EV['launch'], EV['corner'], EV['brake'], EV['passenger'], EV['close']
+H, L, C, B, P, CB, E = EV['hook'], EV['launch'], EV['corner'], EV['brake'], EV['passenger'], EV['callback'], EV['close']
 riser, thump = v2.riser, v2.thump
 
 music = np.zeros((int((TOTAL + 4) * SR), 2))
@@ -87,81 +87,90 @@ def bump(h):
 
 
 # ---------------------------------------------------------------- effects
+# Visible actions only. Whooshes only where an object passes the lens (the two tyre-wall wipes, the car through the lens).
+W1, W2 = EV['wipes']
 a(fx.wind(TOTAL), 0, -45)
-# hook (vector part): cutaway reveal, crouch and push, a quiet flight, landing
-s(fx.shimmer(0.45), H['launches'] - 0.15, -34)
-s(fx.servo(0.5, up=False), 4.55, -35)
-s(fx.servo(0.35, up=True), 5.6, -32)
+# opening: the real clip carries no added sound; the match cut to the illustration gets a soft shimmer, the window opens
+s(fx.shimmer(0.45), H['suspension'] - 0.1, -34)
+s(fx.servo(0.5, up=False), H['crouch'] + 0.1, -35)
+s(fx.servo(0.35, up=True), H['take'] - 0.6, -32)
 s(fx.tyre(1.0), H['land'] - 0.01, -21)
 s(fx.squat(), H['land'] + 0.12, -28)
-# name tick, the press test, the actuator
+# name tick, the press test twice (spring rings, damper calms it), the actuator
 s(tick(), L['name'] + 0.05, -36)
-s(fx.squat(), L['press'] + 0.02, -30)
-s(fx.squat(), L['release'] + 0.45, -35)   # first rebound, softer
+s(fx.squat(), L['press1'] + 0.02, -30)
+s(fx.squat(), L['release1'] + 0.45, -35)
+s(fx.squat(), L['press2'] + 0.02, -31)
 s(fx.relay(), L['adds'] + 0.05, -36)
-s(fx.servo(0.45, up=True), L['between'] - 0.15, -34)
+s(fx.servo(0.45, up=True), L['act'] - 0.05, -34)
 # the slowed launch: crouch, push (servo + drive whir), silence in the air, landing
-s(fx.servo(0.9, up=False), L['during'] + 0.1, -33)
-s(fx.servo(0.6, up=True), L['pushStart'], -31)
-s(fx.motor(1.2, 160, 300, 0.5), L['pushStart'] + 0.05, -36)
+s(fx.servo(0.9, up=False), L['crouch'] + 0.1, -33)
+s(fx.servo(0.6, up=True), L['push'], -31)
+s(fx.motor(1.2, 160, 300, 0.5), L['push'] + 0.05, -36)
 s(fx.swell(1.2, 380), L['take'] - 0.1, -34)
 s(fx.tyre(1.0), L['land'] - 0.01, -20)
 s(fx.squat(), L['land'] + 0.12, -27)
-# drives off: whir and tyre roll
+# drives off, a tyre wall whips past the lens
 s(fx.motor(1.4, 240, 620, 0.7), L['go'], -28)
 s(road_roll(1.6, 0.5, 0.8), L['go'] + 0.05, -32)
-# the bend: approach, roll on, actuators engage, the float gag, strips under the wheels, through the camera
-s(road_roll(C['out'] - C['in'] + 0.3, 1.2, 0.3), C['in'], -34)
-s(fx.squat(), C['corner'] + 0.9, -33)
+s(whoosh(0.5), W1['a'] + 0.25, -26)
+# the bend: overhead, dive, roll on, actuators engage, the float gag, strips under the wheels, through the lens
+s(road_roll(C['out'] - C['start'] + 0.3, 1.2, 0.3), C['start'], -34)
+s(fx.squat(), C['enter'] + 0.9, -33)
 s(fx.relay(), C['here'] - 0.05, -36)
 s(fx.servo(0.5, up=True), C['here'] + 0.15, -35)
 s(fx.shimmer(0.6), C['point'] + 0.1, -34)
-s(thunk(), C['point'] + 1.25, -31)
 for b in C['bumps']:
     pan = -0.5 if b['side'] == -1 else 0.5 if b['side'] == 1 else 0.0
     s(bump(b['h'] / 1000 if b['h'] > 1 else b['h']), b['t'], -27, pan)
-s(whoosh(0.5), C['out'] - 0.35, -24)
+s(whoosh(0.5), C['out'] - 0.3, -25)
 # braking and the rough patch
 s(road_roll(B['hold'] - B['in'] + 1.4, 0.2, 0.6), B['in'], -33)
 s(scrub(B['tb1'] - B['tb0']), B['tb0'], -31)
 s(fx.squat(), B['tb0'] + 0.35, -30)
-s(fx.relay(), B['tb0'] + 3.0 - 0.05, -37)
-s(fx.servo(0.5, up=True), B['tb0'] + 3.1, -35)
+s(fx.relay(), B['active'] - 0.05, -37)
+s(fx.servo(0.5, up=True), B['active'] + 0.1, -35)
 for side, hits, pan in (('f', B['front'], 0.35), ('r', B['rear'], -0.35)):
     for hh in hits:
         if hh['h'] >= 0.1:
             s(fx.tyre(1.0), hh['t'], -23, pan)
-            s(knock(), hh['t'] + 0.05, -26, pan)
+            s(knock(), hh['t'] + 0.3, -26, pan)
         else:
             s(bump(hh['h']), hh['t'], -32 + 40 * (hh['h'] - 0.04), pan)
-# passenger: interior hush, the glass clears, the seat takes the load
-s(road_roll(E['in'] - B['hold'] - 0.2, 0.5, 0.3), B['hold'] + 0.2, -42)
+s(whoosh(0.5), W2['a'] + 0.25, -26)
+# passenger: interior hush, the glass, the seat takes the load, the car through the lens
+s(road_roll(P['replay'] - P['in'] - 0.3, 0.5, 0.3), P['in'] + 0.1, -42)
 s(fx.shimmer(0.5), P['your'] + 0.05, -35)
 s(fx.squat(), P['seat'] + 0.05, -36)
-# close: (real clip is mixed in the edit) then the slowed hop, the landing, the drive and the composed stop
-s(fx.servo(0.8, up=False), E['match'] + 0.35, -34)
-s(fx.servo(0.6, up=True), E['builds'] + 0.3, -31)
-s(fx.motor(1.0, 160, 300, 0.5), E['builds'] + 0.35, -36)
-s(fx.swell(1.2, 380), E['take'] - 0.1, -34)
-s(fx.tyre(1.0), E['land'] - 0.01, -20)
-s(fx.squat(), E['land'] + 0.12, -27)
-s(fx.motor(1.3, 220, 480, 0.8), E['go'], -30)
-s(road_roll(E['stop'] - E['go'] + 0.2, 1.0, 1.5), E['go'] + 0.1, -33)
-s(scrub(0.6), E['brake'] + 0.05, -34)
-for hits, pan in ((E['front'], 0.35), (E['rear'], -0.35)):
-    for hh in hits:
-        s(bump(hh['h']), hh['t'], -33, pan)
-s(scrub(1.6), E['stop'] - 1.7, -35)
-s(fx.squat(), E['stop'] + 0.05, -29)
+s(whoosh(0.45), P['replay'] - 0.4, -26)
+# callback: the real clip carries no added sound; shimmer at the match cut, then crouch, push, silence in the air, landing
+s(fx.shimmer(0.5), CB['crouch'] - 0.5, -35)
+s(fx.servo(0.8, up=False), CB['crouch'] + 0.05, -34)
+s(fx.servo(0.6, up=True), CB['push'] + 0.1, -31)
+s(fx.motor(1.0, 160, 300, 0.5), CB['push'] + 0.15, -36)
+s(fx.swell(1.2, 380), CB['take'] - 0.1, -34)
+s(fx.tyre(1.0), CB['land'] - 0.01, -20)
+s(fx.squat(), CB['land'] + 0.12, -27)
+# close: pull-away, brake scrub, a bump, the hop, the landing, the drive away
+s(fx.motor(1.3, 220, 480, 0.8), E['in'], -30)
+s(road_roll(E['brake'] - E['in'] + 0.3, 0.6, 0.3), E['in'], -33)
+s(scrub(0.7), E['brake'] + 0.05, -34)
+s(bump(0.07), E['bump'] + 0.6, -30, 0.3)
+s(fx.servo(0.5, up=False), E['hop'] + 0.15, -34)
+s(fx.servo(0.4, up=True), E['take'] - 0.3, -31)
+s(fx.tyre(1.0), E['land'] - 0.01, -21)
+s(fx.squat(), E['land'] + 0.12, -28)
+s(fx.motor(1.4, 200, 520, 0.8), E['drive'] + 0.3, -31)
+s(road_roll(TOTAL - E['drive'] - 0.5, 1.2, 1.5), E['drive'] + 0.4, -33)
 
 # ---------------------------------------------------------------- music
 D = 73.42
-# hook: a drone and a light marimba ostinato under the real hop, a hit on the vector landing, a pad under the question
+# opening: a drone and a light marimba ostinato under the real hop, a hit on the vector landing, a pad under the question
 tt = v1.T(4.6)
 drone = (np.sin(2 * np.pi * D * tt) + 0.5 * np.sin(2 * np.pi * D * 1.5 * tt * 1.002) + 0.3 * np.sin(2 * np.pi * D * 2.01 * tt)) * (0.8 + 0.2 * np.sin(2 * np.pi * tt / 2.7))
 mplace(drone * np.clip(tt / 0.2, 0, 1) * np.clip((4.6 - tt) / 0.8, 0, 1), 0, 0.15)
 t, k = 0.05, 0
-while t < 6.8:
+while t < 7.4:
     mplace(v1.marimba([293.66, 440.0, 369.99, 440.0][k % 4], 0.5), t, 0.055, pan=(-0.3 if k % 2 else 0.3))
     t += BEAT / 2
     k += 1
@@ -172,51 +181,50 @@ mplace(riser(0.9), L['name'] - 0.95, 0.025)
 groove(music, L['name'] - 0.05, L['during'] - 0.2, 'pluck', fade_in=1.0, thin=True, gain=0.8)
 # the launch: dark groove building to takeoff, then held time in the air, a hit on the landing
 groove(music, L['during'] - 0.1, L['take'] - 0.2, 'dark', fade_in=1.5, thin=True, gain=0.75)
-mplace(riser(L['take'] - L['pushStart'] - 0.3), L['pushStart'], 0.022)
+mplace(riser(L['take'] - L['push'] - 0.3), L['push'], 0.022)
 mplace(v1.pad((146.83, 196.0, 220.0, 293.66), L['land'] - L['take'] + 0.6, 1.0, 1.0), L['take'] - 0.2, 0.018)
 for k2, f in enumerate([587.33, 440.0, 493.88]):
     mplace(v1.marimba(f, 1.2), L['take'] + 0.8 + k2 * 1.9, 0.05, pan=0.2 * (k2 - 1))
 mplace(thump(42, 1.0), L['land'], 0.38)
 # the bend: the energy lifts (fuller pluck groove), an accent on "active body control"
-groove(music, C['in'] + 0.25, C['out'] - 0.2, 'pluck', fade_in=0.6, lush=True, gain=0.92)
-mplace(thump(46, 0.7), C['thisIs'], 0.22)
-mplace(v1.pluck(587.33, 0.9), C['thisIs'] + 0.02, 0.07)
+groove(music, C['start'] + 0.3, C['out'] - 0.2, 'pluck', fade_in=0.6, lush=True, gain=0.92)
+mplace(thump(46, 0.7), C['thisW'], 0.22)
+mplace(v1.pluck(587.33, 0.9), C['thisW'] + 0.02, 0.07)
 # braking and the rough patch: the marimba groove, thinner once the travel runs out
-big = [h['t'] for h in B['front'] if h['h'] >= 0.1]
-tbig = big[0] if big else B['hold'] - 4
+tbig = B['big']
 groove(music, B['in'] + 0.1, tbig - 0.1, 'marimba', fade_in=0.4, gain=0.85)
 mplace(thump(40, 0.9), tbig, 0.28)
 groove(music, tbig + 0.4, B['hold'] + 0.8, 'marimba', fade_in=0.0, thin=True, gain=0.75)
 # passenger: a sparse, thoughtful pad with a pluck answer
 t, bi = B['hold'] + 0.9, 0
-while t < E['in'] - 0.3:
+while t < P['replay'] - 0.3:
     ch = CH[[0, 2, 1, 3][bi % 4]]
     mplace(v1.pad(ch, BAR + 1.0, 1.0, 1.2), t, 0.014)
     mplace(v1.pluck(ch[3] * 2, 0.9, 0.7), t + 1.2, 0.05, pan=0.3)
     mplace(v1.bass([D, 49.0, 61.74, 55.0][bi % 4], 2.0), t, 0.13)
     t += BAR
     bi += 1
-# close: a suspended drone under the replay and the slowed hop, a hit on the landing, then the D-major resolution,
-# a final chord and piano as the car comes to rest, ringing out
-tt = v1.T(E['land'] - E['in'] + 0.4)
+# callback: a suspended drone under the replay and the slowed hop, a hit on the landing; then the D-major resolution,
+# a final chord and piano as the car drives away into the distance, ringing out
+tt = v1.T(CB['land'] - CB['in'] + 0.4)
 dr = (np.sin(2 * np.pi * D * tt) + 0.4 * np.sin(2 * np.pi * D * 1.5 * tt * 1.002)) * np.clip(tt / 0.3, 0, 1) * np.clip((tt[-1] - tt) / 0.5, 0, 1)
-mplace(dr, E['in'], 0.11)
-mplace(v1.pad((146.83, 196.0, 220.0, 293.66), E['land'] - E['take'] + 0.8, 0.8, 0.9), E['take'] - 0.3, 0.017)
-mplace(thump(42, 1.0), E['land'], 0.36)
-t, bi = E['land'] + 0.9, 0
-while t < E['stop'] - 0.9:
+mplace(dr, CB['in'], 0.11)
+mplace(v1.pad((146.83, 196.0, 220.0, 293.66), CB['land'] - CB['take'] + 0.8, 0.8, 0.9), CB['take'] - 0.3, 0.017)
+mplace(thump(42, 1.0), CB['land'], 0.36)
+t, bi = CB['land'] + 0.9, 0
+while t < E['composed'] - 0.9:
     ch = CH[bi % 4]
     mplace(v1.pad(ch, BAR + 0.8, 0.8, 1.0), t, 0.014)
     mplace(v1.bass(ROOTS[bi % 4], 2.0), t, 0.13)
     mplace(v1.pluck(ch[3] * 2, 0.9, 0.7), t + 2 * BEAT, 0.045, pan=0.25)
     t += BAR
     bi += 1
-fin = E['stop'] - 0.6
+fin = E['composed'] - 0.6
 mplace(v1.pad((146.83, 220.0, 293.66, 369.99, 440.0), TOTAL - fin + 0.4, 1.0, 1.8), fin, 0.019)
 mplace(v1.bass(D, TOTAL - fin), fin + 0.05, 0.15)
 for k3, f in enumerate([293.66, 369.99, 440.0]):
-    mplace(v1.piano(f, 3.0), E['stop'] + 0.05 + k3 * 0.03, 0.07)
-mplace(v1.piano(587.33, 2.6), E['ground'] + 0.15, 0.06)
+    mplace(v1.piano(f, 3.0), E['composed'] + 0.05 + k3 * 0.03, 0.07)
+mplace(v1.piano(587.33, 2.6), E['composed'] + 1.2, 0.06)
 
 # ---------------------------------------------------------------- reverb, ducking, bed
 from scipy.signal import fftconvolve  # noqa: E402

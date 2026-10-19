@@ -1,0 +1,38 @@
+[
+ {
+  "file": "Screen.Recording.2026-10-18.012401.mp4",
+  "sha256": "0617fe97d42e6a3ac8870371761d8feb6624db9abed249b45d017a6a74050335",
+  "bytes": 19461350,
+  "duration_s": 18.466633,
+  "video": {
+   "codec": "h264",
+   "w": 1920,
+   "h": 1080,
+   "r_frame_rate": "30/1",
+   "avg_frame_rate": "30/1"
+  },
+  "audio": {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2
+  }
+ },
+ {
+  "file": "Screen.Recording.2026-10-18.012652.mp4",
+  "sha256": "a1033430cd490bf4b70ffc12ad541d278cbbae509c876aa72c460037b14dcc69",
+  "bytes": 66642576,
+  "duration_s": 60.866633,
+  "video": {
+   "codec": "h264",
+   "w": 1920,
+   "h": 1080,
+   "r_frame_rate": "30/1",
+   "avg_frame_rate": "30/1"
+  },
+  "audio": {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2
+  }
+ }
+]

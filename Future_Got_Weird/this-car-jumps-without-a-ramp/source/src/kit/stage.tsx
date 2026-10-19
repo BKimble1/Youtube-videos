@@ -33,6 +33,22 @@ export const World: React.FC<{cam: Cam; children: React.ReactNode; opacity?: num
   <g transform={camT(cam)} opacity={opacity}>{children}</g>
 );
 
+/** The one caption slot (bottom-left): source credit, "slow motion", "simplified". One line, small, never over the action. */
+export const Caption: React.FC<{text: string; opacity?: number}> = ({text, opacity = 1}) => {
+  if (opacity <= 0.001) return null;
+  const size = 24;
+  const w = text.length * size * 0.6 + size * 1.4;
+  const h = size * 1.7;
+  return (
+    <g opacity={opacity * 0.92}>
+      <rect x={36} y={1080 - 36 - h} width={w} height={h} rx={h * 0.3} fill={C.ink} opacity={0.82} />
+      <text x={36 + w / 2} y={1080 - 36 - h / 2 + size * 0.34} textAnchor="middle" fontFamily={F.body} fontWeight={800} fontSize={size} fill={C.cream} letterSpacing={1.4}>
+        {text}
+      </text>
+    </g>
+  );
+};
+
 /** Screen-space caption chip (top-left corner style), used sparingly: source credit, "simplified", "slowed down". */
 export const Chip: React.FC<{x: number; y: number; text: string; opacity?: number; dark?: boolean; size?: number; anchor?: 'l' | 'r'}> = ({x, y, text, opacity = 1, dark = true, size = 24, anchor = 'l'}) => {
   if (opacity <= 0.001) return null;

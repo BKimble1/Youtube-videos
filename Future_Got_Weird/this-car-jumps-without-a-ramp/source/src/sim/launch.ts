@@ -104,7 +104,7 @@ export const simulateLaunch = (p: LaunchParams = DEFAULT_LAUNCH, tEnd = 3.2, dt 
 
 /** Interpolated state at sim time t. */
 export const sampleLaunch = (arr: LaunchState[], t: number): LaunchState => {
-  const step = arr[1].t - arr[0].t;
+  const step = (arr[arr.length - 1].t - arr[0].t) / (arr.length - 1); // mean spacing (samples sit on the first step past each nominal time)
   const i = Math.max(0, Math.min(arr.length - 2, Math.floor((t - arr[0].t) / step)));
   const a = arr[i], b = arr[i + 1];
   const u = Math.max(0, Math.min(1, (t - a.t) / step));

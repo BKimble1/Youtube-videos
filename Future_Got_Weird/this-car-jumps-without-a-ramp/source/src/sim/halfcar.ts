@@ -58,7 +58,7 @@ export const simulateHalf = (t0: number, t1: number, xAt: (t: number) => number,
 };
 
 export const sampleHalf = (arr: HalfState[], t: number): HalfState => {
-  const step = arr[1].t - arr[0].t;
+  const step = (arr[arr.length - 1].t - arr[0].t) / (arr.length - 1); // samples are taken at the first integration step past each nominal time: use the mean spacing
   const i = Math.max(0, Math.min(arr.length - 2, Math.floor((t - arr[0].t) / step)));
   const a = arr[i], b = arr[i + 1];
   const u = Math.max(0, Math.min(1, (t - a.t) / step));
