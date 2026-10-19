@@ -3,7 +3,7 @@
 Owner of `source/src/r2/world/*`, `fx/*`, `shots/A/*`. Evidence sheets: `qa/r4/world/`. Method: headless probes of the real source
 (esbuild + react-dom/server with the engine's `sceneItems` hooked, so every shot's real item list is available at any frame;
 scripts in the agent scratchpad, summarised below), the R3 film's frames (`ffmpeg`, frame-difference pop detector), then frames
-rendered from the current source. Observed visual failure and source cause are kept separate. Status: **WIP — see the last section.**
+rendered from the current source. Observed visual failure and source cause are kept separate. Status: **done; limits in section 6.**
 
 ## 1. THE FLOATING ROCK (audit of all substantial rubble)
 
@@ -16,6 +16,7 @@ over the footprint; for chips (`chips3`) the real landing computed with the shot
 | R2 | `rfloor_0` | (−17.2, 3.7, 10.5) | same | +1.51 m | B6a, C4a, C6a/b (30–55), D2–D4 | same | same | fixed |
 | R3 | `rfloor_2` | (−23.1, 2.8, −9.0) | same | +0.33 m | B5–D4 | same | same | fixed |
 | R4 | `rfloor_1` / `rfloor_2` interpenetrated (8 vertices of one inside the other); `rcol_0` stood through `rfloor_0` | (−24, −6) / (−17, 11) | same | — | same | independent random placement | conflict test (`slabConflict`) slides a floor along its length until nothing of one is inside the other | fixed (0 vertices inside) |
+| R4b | seating the floors on the ground put them where the Crew runs: `rfloor_0` took a runner's feet 0.8 m (T 38.8) and 0.00 m at T 35.8, `rfsup_0_1_*` stood in the lane (city_check `[crew]` warnings) | the Crew's tether/runner/breaker lanes through the ruin (x −9…−19, z −2.6…6.6) | `world/set.tsx` `rfloor`, `CREW_LANES` | up to 0.8 m | same | the conflict search also keeps every slab/support vertex ≥ 1.3 m from the lane points (and no lane point inside the slab), over a nearest-first 2-D shift (±3.6 m along, ±5 m across) | fixed: city_check has no `[crew]` warning (R3: 2); `rfloor_0..3` seated (min gap −0.12/−0.23/−0.42/−0.13 m), 0 vertices of one floor inside another |
 | R5 | `rslab_19` (ridge slab) low edge hung 0.57 m over a dip | ridge | same | +0.57 m | ridge shots | `y = ground(centre) − 0.45` for the whole width | settled into the dip (contact-edge gap 0.20) | fixed |
 | R6 | every vehicle beyond 120 m (cars 0.32 m, box trucks 0.55 m) stood on invisible stilts: the far mesh (`vehicleFar`) has no wheels and starts above the road; the wheels popped in at the LOD switch | all STREET_OBSTACLES | `world/props.ts` | +0.32 / +0.55 m | A1, F1, every wide | far mesh simplification | dark under-body block from the road up (the wheel line) | fixed |
 | R7 | thrown/landing **chips** came to rest at one fixed height for the whole flight: up to **+2.9 m (hovering) / −3.4 m (sunk)** on the crater floor and rim, ±0.9 m on the ridge for the walking grit; 2 emitters had no `ground` at all and fell through the street (D2-7a `d2shield_ch`, D3-9 `d3kill_ch`: −46…−59 m) | crater (45–65, −10…10), ridge (0–10) | `fx/particles.tsx` | see left | D2-3b…D2-7b, D3-3b…D3-11e, D4-8, B, C, D1 | `ball3` landed on the plane `ground` given at the launch point | terrain-aware landing by default (`terrainOf`: `groundH`, offset so the caller's `ground` holds at the launch point; D3's opt-in `groundFn` kept); no `ground` → bare terrain | fixed: 655 of 676 emitters now rest within 0.15 m of the terrain (the 21 left are A1 chips still falling at the sample time) |
@@ -66,4 +67,15 @@ All world-owned pieces (girder + columns, taxi, van + interior, death slab, bus,
 
 ## 6. Remaining / not verified
 
-(filled in at the end)
+Verified: `npx tsc --noEmit -p .` clean; `tools/r3/city_check.mjs` 0 crew warnings, 0 new set warnings (the girder/FN1 0.8 m is the intended resting end); all 106 shots 0 LOD switches; A1 and F1 0 building in/out events.
+Evidence: `qa/r4/world/*.jpg` (before/after consecutive frames: A1 B90 LOD, A1 plume, A1 smoke columns, F1 R3 vs R4, rfloor slabs, ground shots R3-over-R4). Probes: `tools/r4/world/` (`USAGE.txt`).
+
+Not verified / limits:
+* No full-film render was made (machine shared, renders took minutes per frame); after-frames are single sample frames from my own renderer, not a watched playback. Nothing about audio.
+* The "dark round blob at 0:00.9–1.1" is not reproduced as a pop (A1-6); I treat it as the stable plume top and the tower's collapse dust.
+* Plume sprites are one sprite per plume, so a plume can still swap draw order against a building when the camera passes it (A1, F1). Four `sm_blkP4` in/out events at the top frame edge in F1 (T 223.2–223.6) remain.
+* The baked LOD boxes in `world/lodwin.ts` describe the cameras as they are now; if a section moves its camera, regenerate (`camscan.tsx` + `genbox.mjs`) or the old per-frame rule applies there. The F1 window reads `camF1` from `shots/EF/camera.ts` (read-only import).
+* For EF/MECH: persisted machines in F1 use `persistItems lod {full:30, mid:140}` (film/continuity.tsx), which can still switch robot detail with distance; not touched.
+* For D3: `d3wave` dust is very large near the lens (already alpha-capped by `dust3`, ramped on contact).
+* `a1peel_1/2` hover 0.6 m but rest on `a1peel_0` (a stack). Torn robot plates and `bCh*` chunks belong to MECH/B (intended motion).
+* The F1 R3-vs-R4 sheet is not like-for-like (EF's camera changed meanwhile).

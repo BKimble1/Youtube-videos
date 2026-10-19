@@ -143,7 +143,7 @@ export const D4_6b = shot(SH.d46b, [
   {t: 0, pos: g(16.5, 6.2, 1.55), target: g(13.6, 2.2, 1.5), fov: 36},
   // (it eases back north-west, under heavy 2's path between its legs: ≥ 2 m from every leg as it comes on; the R3
   // first cut drifted south into its left legs' lane and a leg wiped the lens at 174.7)
-  {t: SH.d47 - SH.d46b, pos: g(14.8, 2.8, 1.5), target: g(12.3, 5.2, 1.5), fov: 36},
+  {t: SH.d47 - SH.d46b, pos: g(13.2, 0.4, 1.5), target: g(12.3, 5.2, 1.5), fov: 36},
 ], (T) => ({full: 30, tweak: {director: {anchor: chest('director', T, 1.5)}}}), 0.012);
 
 // ------------------------------------------------------------------ D4-7a (175.04–175.74): the threat aimed at HER

@@ -806,10 +806,12 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
 
   const pantsC = col(look.pants), shoeC = col(look.shoes);
   // ---------------- pelvis (projected ellipsoid, follows lean/pitch/roll)
+  let pelvisEl: React.ReactElement | null = null;
   {
     const c = at(r.P, base, 0, 4 * s, 0);
     const e = ellipsoid2([mul3(base.R, 64 * s), mul3(base.U, 26 * s), mul3(base.F, 38 * s)]);
     const d = `M ${f2(c.x - e.rx)} ${f2(c.y)} a ${f2(e.rx)} ${f2(e.ry)} 0 1 0 ${f2(2 * e.rx)} 0 a ${f2(e.rx)} ${f2(e.ry)} 0 1 0 ${f2(-2 * e.rx)} 0 Z`;
+    pelvisEl = (<g transform={`rotate(${f2(e.rot)} ${f2(c.x)} ${f2(c.y)})`}><path d={d} fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={ink * 1.6} /></g>);
     add(r.torsoZ - 20, 'pelvis', (
       <g transform={`rotate(${f2(e.rot)} ${f2(c.x)} ${f2(c.y)})`}>
         <path d={d} fill={pantsC} stroke={inkC} strokeWidth={ink} />
@@ -969,7 +971,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const xid = `${id}tx${key}`;
     add(rFront, `${key}x`, (
       <g>
-        <defs><mask id={xid} maskUnits="userSpaceOnUse" {...box}><rect {...box} fill="#000000" /><path d={torsoD} fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={ink * 1.6} strokeLinejoin="round" />{black}</mask></defs>
+        <defs><mask id={xid} maskUnits="userSpaceOnUse" {...box}><rect {...box} fill="#000000" /><path d={torsoD} fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={ink * 1.6} strokeLinejoin="round" />{pelvisEl}{black}</mask></defs>
         <g mask={`url(#${xid})`}>{el}</g>
       </g>
     ));
@@ -1002,7 +1004,9 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
       </g>
     );
     const rankBack = r.torsoZ - 40 + clamp((legZ - r.torsoZ) / (600 * s), -1, 1) * 0.3 + i * 0.001;
-    const bL = 8 * s, tip = add3(A, mul3(norm3(sub3(A, K)), 22 * s));
+    // (the bias grows as the thigh points at the camera: a flexed hip's thigh comes out in front of the belly, a hanging one stays under the hem)
+    const fwdK = clamp(((K.z - H.z) / (THIGH * s) - 0.3) / 0.4);
+    const bL = (28 + 62 * fwdK) * s, tip = add3(A, mul3(norm3(sub3(A, K)), 22 * s));
     const h1 = torsoHides(r, Hn, K, LW[0] / 2 + ink + 2 * s, bL, ink * 0.6), h2 = torsoHides(r, K, tip, LW[1] / 2 + ink + 2 * s, bL, ink * 0.6);
     torsoParts(`leg${i}`, legBody, rankBack, [...h1.polys, ...h2.polys], h1.touch || h2.touch, (Hn.z + K.z) / 2, [Hn, K, tip], 26 * s + ink * 3, -2 + i * 0.01);
   });
