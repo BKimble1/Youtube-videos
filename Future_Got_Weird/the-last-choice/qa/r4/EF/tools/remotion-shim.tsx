@@ -1,0 +1,13 @@
+import React from 'react';
+export const useCurrentFrame = (): number => (globalThis as any).__FRAME ?? 0;
+export const AbsoluteFill: React.FC<{style?: React.CSSProperties; children?: React.ReactNode}> = ({style, children}) => <div style={{position: 'absolute', inset: 0, width: '100%', height: '100%', ...style}}>{children}</div>;
+export const getInputProps = () => ({});
+export const Sequence: React.FC<any> = ({children}) => <>{children}</>;
+export const Audio: React.FC<any> = () => null;
+export const Img: React.FC<any> = () => null;
+export const staticFile = (p: string) => p;
+export const delayRender = () => 0;
+export const continueRender = () => {};
+export const registerRoot = () => {};
+export const Composition: React.FC<any> = () => null;
+export const interpolate = (x: number, a: number[], b: number[]) => { const t = (x - a[0]) / (a[a.length - 1] - a[0]); return b[0] + (b[b.length - 1] - b[0]) * Math.max(0, Math.min(1, t)); };

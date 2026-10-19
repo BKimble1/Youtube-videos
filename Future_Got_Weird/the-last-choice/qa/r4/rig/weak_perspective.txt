@@ -1,0 +1,58 @@
+# Weak perspective: drawn contact vs true projection (px, 1920x1080, fov 30/44 deg), figure at the origin, camera D m away
+# (1) world point drawn by worldToDrawn (the rig's one scale at the feet) vs project(view,p); palm 0.6 m near / 1 m far / hand 1.4 m up
+D 2 cam.y 0.6 fov 30 k 1031 px/m | palm 0.6m near: 398px | palm 1m far: 471px | hand 0.5 up fwd: 126px
+D 2 cam.y 0.6 fov 44 k 684 px/m | palm 0.6m near: 264px | palm 1m far: 312px | hand 0.5 up fwd: 84px
+D 2 cam.y 1.5 fov 30 k 925 px/m | palm 0.6m near: 422px | palm 1m far: 272px | hand 0.5 up fwd: 90px
+D 2 cam.y 1.5 fov 44 k 613 px/m | palm 0.6m near: 280px | palm 1m far: 180px | hand 0.5 up fwd: 60px
+D 2 cam.y 4 fov 30 k 475 px/m | palm 0.6m near: 74px | palm 1m far: 13px | hand 0.5 up fwd: 68px
+D 2 cam.y 4 fov 44 k 315 px/m | palm 0.6m near: 49px | palm 1m far: 9px | hand 0.5 up fwd: 45px
+D 3 cam.y 0.6 fov 30 k 679 px/m | palm 0.6m near: 164px | palm 1m far: 218px | hand 0.5 up fwd: 47px
+D 3 cam.y 0.6 fov 44 k 450 px/m | palm 0.6m near: 109px | palm 1m far: 144px | hand 0.5 up fwd: 31px
+D 3 cam.y 1.5 fov 30 k 646 px/m | palm 0.6m near: 180px | palm 1m far: 155px | hand 0.5 up fwd: 37px
+D 3 cam.y 1.5 fov 44 k 428 px/m | palm 0.6m near: 119px | palm 1m far: 103px | hand 0.5 up fwd: 24px
+D 3 cam.y 4 fov 30 k 427 px/m | palm 0.6m near: 72px | palm 1m far: 18px | hand 0.5 up fwd: 34px
+D 3 cam.y 4 fov 44 k 283 px/m | palm 0.6m near: 47px | palm 1m far: 12px | hand 0.5 up fwd: 22px
+D 4 cam.y 0.6 fov 30 k 507 px/m | palm 0.6m near: 89px | palm 1m far: 125px | hand 0.5 up fwd: 24px
+D 4 cam.y 0.6 fov 44 k 336 px/m | palm 0.6m near: 59px | palm 1m far: 83px | hand 0.5 up fwd: 16px
+D 4 cam.y 1.5 fov 30 k 493 px/m | palm 0.6m near: 98px | palm 1m far: 98px | hand 0.5 up fwd: 20px
+D 4 cam.y 1.5 fov 44 k 327 px/m | palm 0.6m near: 65px | palm 1m far: 65px | hand 0.5 up fwd: 13px
+D 4 cam.y 4 fov 30 k 377 px/m | palm 0.6m near: 60px | palm 1m far: 24px | hand 0.5 up fwd: 18px
+D 4 cam.y 4 fov 44 k 250 px/m | palm 0.6m near: 40px | palm 1m far: 16px | hand 0.5 up fwd: 12px
+D 6 cam.y 0.6 fov 30 k 337 px/m | palm 0.6m near: 39px | palm 1m far: 57px | hand 0.5 up fwd: 9px
+D 6 cam.y 0.6 fov 44 k 223 px/m | palm 0.6m near: 26px | palm 1m far: 38px | hand 0.5 up fwd: 6px
+D 6 cam.y 1.5 fov 30 k 332 px/m | palm 0.6m near: 42px | palm 1m far: 49px | hand 0.5 up fwd: 8px
+D 6 cam.y 1.5 fov 44 k 221 px/m | palm 0.6m near: 28px | palm 1m far: 33px | hand 0.5 up fwd: 5px
+D 6 cam.y 4 fov 30 k 294 px/m | palm 0.6m near: 37px | palm 1m far: 24px | hand 0.5 up fwd: 9px
+D 6 cam.y 4 fov 44 k 195 px/m | palm 0.6m near: 25px | palm 1m far: 16px | hand 0.5 up fwd: 6px
+D 10 cam.y 0.6 fov 30 k 202 px/m | palm 0.6m near: 14px | palm 1m far: 21px | hand 0.5 up fwd: 3px
+D 10 cam.y 0.6 fov 44 k 134 px/m | palm 0.6m near: 9px | palm 1m far: 14px | hand 0.5 up fwd: 2px
+D 10 cam.y 1.5 fov 30 k 201 px/m | palm 0.6m near: 14px | palm 1m far: 19px | hand 0.5 up fwd: 3px
+D 10 cam.y 1.5 fov 44 k 133 px/m | palm 0.6m near: 10px | palm 1m far: 13px | hand 0.5 up fwd: 2px
+D 10 cam.y 4 fov 30 k 193 px/m | palm 0.6m near: 15px | palm 1m far: 14px | hand 0.5 up fwd: 4px
+D 10 cam.y 4 fov 44 k 128 px/m | palm 0.6m near: 10px | palm 1m far: 9px | hand 0.5 up fwd: 3px
+D 20 cam.y 0.6 fov 30 k 101 px/m | palm 0.6m near: 3px | palm 1m far: 5px | hand 0.5 up fwd: 1px
+D 20 cam.y 0.6 fov 44 k 67 px/m | palm 0.6m near: 2px | palm 1m far: 4px | hand 0.5 up fwd: 0px
+D 20 cam.y 1.5 fov 30 k 101 px/m | palm 0.6m near: 3px | palm 1m far: 5px | hand 0.5 up fwd: 1px
+D 20 cam.y 1.5 fov 44 k 67 px/m | palm 0.6m near: 2px | palm 1m far: 3px | hand 0.5 up fwd: 0px
+D 20 cam.y 4 fov 30 k 100 px/m | palm 0.6m near: 4px | palm 1m far: 4px | hand 0.5 up fwd: 1px
+D 20 cam.y 4 fov 44 k 66 px/m | palm 0.6m near: 2px | palm 1m far: 3px | hand 0.5 up fwd: 1px
+
+# (2) a real figure (crawl pose), world.handL on the ground: drawn wrist vs project(contact); weak = default, contact = FigSpec.perspective 'contact' (R4)
+D 3 cam.y 0.6 palm on ground 0.55m ahead, crawling: weak: drawn wrist off the true projection of the contact by 95px | contact: drawn wrist off the true projection of the contact by 0px
+D 3 cam.y 0.6 palm on ground 0.55m ahead, left: weak: drawn wrist off the true projection of the contact by 100px | contact: drawn wrist off the true projection of the contact by 0px
+D 3 cam.y 0.6 hand 0.45 fwd, 0.9 up: weak: drawn wrist off the true projection of the contact by 25px | contact: drawn wrist off the true projection of the contact by 0px
+D 3 cam.y 1.5 palm on ground 0.55m ahead, crawling: weak: drawn wrist off the true projection of the contact by 75px | contact: drawn wrist off the true projection of the contact by 0px
+D 3 cam.y 1.5 palm on ground 0.55m ahead, left: weak: drawn wrist off the true projection of the contact by 79px | contact: drawn wrist off the true projection of the contact by 0px
+D 3 cam.y 1.5 hand 0.45 fwd, 0.9 up: weak: drawn wrist off the true projection of the contact by 10px | contact: drawn wrist off the true projection of the contact by 0px
+D 4 cam.y 0.6 palm on ground 0.55m ahead, crawling: weak: drawn wrist off the true projection of the contact by 54px | contact: drawn wrist off the true projection of the contact by 0px
+D 4 cam.y 0.6 palm on ground 0.55m ahead, left: weak: drawn wrist off the true projection of the contact by 57px | contact: drawn wrist off the true projection of the contact by 0px
+D 4 cam.y 0.6 hand 0.45 fwd, 0.9 up: weak: drawn wrist off the true projection of the contact by 13px | contact: drawn wrist off the true projection of the contact by 0px
+D 4 cam.y 1.5 palm on ground 0.55m ahead, crawling: weak: drawn wrist off the true projection of the contact by 46px | contact: drawn wrist off the true projection of the contact by 0px
+D 4 cam.y 1.5 palm on ground 0.55m ahead, left: weak: drawn wrist off the true projection of the contact by 48px | contact: drawn wrist off the true projection of the contact by 0px
+D 4 cam.y 1.5 hand 0.45 fwd, 0.9 up: weak: drawn wrist off the true projection of the contact by 7px | contact: drawn wrist off the true projection of the contact by 0px
+D 6 cam.y 0.6 palm on ground 0.55m ahead, crawling: weak: drawn wrist off the true projection of the contact by 24px | contact: drawn wrist off the true projection of the contact by 0px
+D 6 cam.y 0.6 palm on ground 0.55m ahead, left: weak: drawn wrist off the true projection of the contact by 26px | contact: drawn wrist off the true projection of the contact by 0px
+D 6 cam.y 0.6 hand 0.45 fwd, 0.9 up: weak: drawn wrist off the true projection of the contact by 5px | contact: drawn wrist off the true projection of the contact by 0px
+D 6 cam.y 1.5 palm on ground 0.55m ahead, crawling: weak: drawn wrist off the true projection of the contact by 22px | contact: drawn wrist off the true projection of the contact by 0px
+D 6 cam.y 1.5 palm on ground 0.55m ahead, left: weak: drawn wrist off the true projection of the contact by 23px | contact: drawn wrist off the true projection of the contact by 0px
+D 6 cam.y 1.5 hand 0.45 fwd, 0.9 up: weak: drawn wrist off the true projection of the contact by 4px | contact: drawn wrist off the true projection of the contact by 0px

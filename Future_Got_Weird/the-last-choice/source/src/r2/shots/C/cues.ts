@@ -108,6 +108,13 @@ const C6: Cue[] = [
   ...steps([53.7, 54.1, 54.15], {gain: -14, pan: 0.6, dist: 0.8}), // the tether, the runner (right)
   ...steps([53.79, 53.81, 54.11, 54.15, 54.4], {gain: -16, pan: -0.85, dist: 0.68}), // the flare carrier, the decoy maker (left)
   ...steps([53.09, 53.31, 54.13], {gain: -14, pan: -0.1, dist: 0.68}), // the pilot onto the slab's edge, her turn
+  // R4: the stance shuffles (crew.ts commitStand keys): two soft steps each, staggered, behind the army shots
+  ...steps([55.73, 55.95], {gain: -23, pan: 0.5, dist: 0.7}), // the runner onto the balls of his feet
+  ...steps([56.05, 56.3], {gain: -23, pan: -0.7, dist: 0.7}), // the flare carrier
+  ...steps([56.35, 56.6], {gain: -23, pan: 0.6, dist: 0.75}), // the tether operator
+  ...steps([56.5, 56.75], {gain: -22, pan: -0.3, dist: 0.5}), // the breaker re-plants under the tool
+  ...steps([56.6, 56.85], {gain: -23, pan: -0.8, dist: 0.7}), // the decoy maker
+  ...steps([56.65, 56.9], {gain: -23, pan: -0.2, dist: 0.5}), // the pilot squares up
   c(TT.ready + 0.1, 'cloth_move', {gain: -15, pan: 0.65, dist: 0.8, dur: 0.35, rate: 1.2, fade: 0.1}), // the launcher up
   c(TR.flip + 0.05, 'cloth_move', {gain: -16, pan: 0.5, dist: 0.75, dur: 0.3, rate: 1.6, fade: 0.08}), // the bar spins …
   c(TR.flip + 0.42, 'lever_clunk', {gain: -22, pan: 0.5, dist: 0.75, rate: 1.7}), // … into his fist
@@ -128,9 +135,11 @@ const C6: Cue[] = [
   // the commit
   c(TD.step - 0.08, 'breath_exert', {gain: -9, pan: 0.0, dist: 0.35, dur: 0.7, fade: 0.2}),
   ...steps([58.16, 58.55], {gain: -6, pan: -0.05, dist: 0.44}), // his steps out to the brink
-  c(58.39, 'rubble_shift', {gain: -12, pan: -0.35, dist: 0.46, dur: 0.6, rate: 1.2, fade: 0.2}), // the pilot down off the slab
-  ...steps([58.39, 58.59, 58.8], {gain: -10, pan: -0.35, dist: 0.46}),
-  ...steps([58.57, 58.78, 59.0], {gain: -10, pan: -0.85, dist: 0.48}), // the breaker down off the crest
+  c(58.2, 'rubble_shift', {gain: -12, pan: -0.35, dist: 0.46, dur: 0.6, rate: 1.2, fade: 0.2}), // the pilot down off the slab (R4: 58.39 -> 58.20, she starts 0.25 s earlier: the step down is 0.7 m)
+  ...steps([58.2, 58.48, 58.75], {gain: -10, pan: -0.35, dist: 0.46}),
+  ...steps([58.38, 58.67, 58.95], {gain: -10, pan: -0.85, dist: 0.48}), // the breaker down off the crest (R4: starts 0.25 s earlier, same reason)
+  ...steps([58.85, 59.15], {gain: -15, pan: -0.8, dist: 0.6}), // the flare carrier, the decoy maker step into the line (R4: these two had no cue)
+  ...steps([58.95, 59.25], {gain: -16, pan: -0.9, dist: 0.66}),
   ...steps([58.58, 58.85], {gain: -12, pan: 0.5, dist: 0.6}), // the runner
   ...steps([58.75, 59.05], {gain: -14, pan: 0.8, dist: 0.68}), // the tether
   c(TD.set, 'cloth_move', {gain: -11, pan: 0.0, dist: 0.4, dur: 0.4, fade: 0.1}), // they sink into the start

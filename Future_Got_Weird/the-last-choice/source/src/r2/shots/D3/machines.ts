@@ -221,7 +221,7 @@ export const heavy1D3 = (T: number): HeavySpec => {
   const base: HeavySpec = {
     id: HEAVIES_B[0].id, t: T, pos: {x: 0, y: 0, z: 0}, heading: 0, ground, key: 'd3hv1', ram,
     damage: {plateL: {t0: EV3.land + 0.03, dir: {x: -0.15, y: 0.6, z: -1.0}}, dead: {t0: EV3.land + 0.1}},
-    kneeBreak: {t0: EV3.knee, leg: 2, dir: {x: -0.45, y: 0, z: -0.9}, limp: true},
+    kneeBreak: {t0: EV3.knee, leg: 2, dir: {x: -0.45, y: 0, z: -0.9}, limp: true, legsClear: true},
     pinned: {t0: EV3.taut, leg: 0, hold: true},
   };
   if (T < EV3.turn0) {

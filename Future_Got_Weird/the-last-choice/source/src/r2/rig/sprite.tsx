@@ -66,6 +66,23 @@ export const worldToDrawn = (F: FigFrame, p: V3): V3 => {
   const y1 = vy * cph + vz * sph, z1 = -vy * sph + vz * cph;
   return {x: F.x + vx * cr - y1 * sr, y: F.y + vx * sr + y1 * cr, z: z1};
 };
+/**
+ * (R4) A world point → the rig's solve frame so that the point it names is DRAWN at its TRUE perspective projection. The rig is
+ * drawn with one scale taken at the figure's anchor (weak perspective), so a contact far from the anchor (a palm planted a metre
+ * ahead of the feet, a foot on a ledge) was drawn up to hundreds of px from the terrain point it touches in a close shot with a
+ * 3-4 m lens (see qa/r4/rig/weak_perspective.txt). This keeps the depth of worldToRig but takes the screen x/y from
+ * `project(view, p)`, undoing the screen rotation and camera pitch the way solve2 applies them. (A contact beyond the limb's reach
+ * is still clamped by the IK: the hand then stops short.)
+ */
+export const worldToRigTrue = (view: View, F: FigFrame, p: V3): V3 => {
+  const w = worldToRig(F, p), sp = project(view, p);
+  const rr = rad(F.rot), cr = Math.cos(rr), sr = Math.sin(rr), ph = rad(F.pitch), cph = Math.cos(ph), sph = Math.sin(ph);
+  const dx = sp.x - F.x, dy = sp.y - F.y;
+  const x1 = dx * cr + dy * sr, y1 = -dx * sr + dy * cr; // undo the screen rotation
+  if (Math.abs(cph) < 0.2) return w;
+  return {x: F.x + x1, y: F.y + (y1 - w.z * sph) / cph, z: w.z}; // undo the pitch (y1 = y0 cph + z0 sph)
+};
+
 /** A world DIRECTION → the rig's unpitched drawing frame (x screen right, y down, z toward the camera). */
 export const dirToRig = (F: FigFrame, d: V3): V3 => ({x: dot3(d, F.Rh), y: -d.y, z: dot3(d, F.Ch)});
 /** A point of the DRAWN rig (after pitch and screen rotation) → world. */
@@ -134,28 +151,33 @@ export type FigSpec = {
   /** the eyes look at this world point (sets the face's lookX/lookY from the solved head; faces.ts gazeLook), blended
    *  over the pose's own look by gazeW (default 1). The head does not turn: set pose.head for that. */
   gaze?: V3; gazeW?: number;
+  /** (R4) 'contact': hand/foot world targets are drawn at their TRUE perspective projection instead of the rig's single
+   *  weak-perspective scale (default 'weak', unchanged): use it in close shots where a contact is far from the anchor */
+  perspective?: 'weak' | 'contact';
 };
 
 // a world target overrides the pose's limb target at full weight (a pose's `w` only fades its own local targets)
-const armWorld = (F: FigFrame, a: ArmT | undefined, w: V3 | undefined, o?: WorldOrient): ArmT | undefined => {
-  const t = w ? {...(a ?? {}), abs: worldToRig(F, w), local: undefined, w: undefined} : a;
+const armWorld = (F: FigFrame, a: ArmT | undefined, w: V3 | undefined, o?: WorldOrient, conv: (p: V3) => V3 = (p) => worldToRig(F, p)): ArmT | undefined => {
+  const t = w ? {...(a ?? {}), abs: conv(w), local: undefined, w: undefined} : a;
   if (!o || (!o.fingers && !o.palm)) return t;
   return {...(t ?? {}), fingersAbs: o.fingers ? dirToRig(F, o.fingers) : undefined, palmAbs: o.palm ? dirToRig(F, o.palm) : undefined, orientW: o.w ?? 1};
 };
-const legWorld = (F: FigFrame, a: LegT | undefined, w: V3 | undefined): LegT | undefined => (w ? {...(a ?? {}), abs: worldToRig(F, w), local: undefined, w: undefined} : a);
+const legWorld = (F: FigFrame, a: LegT | undefined, w: V3 | undefined, conv: (p: V3) => V3 = (p) => worldToRig(F, p)): LegT | undefined => (w ? {...(a ?? {}), abs: conv(w), local: undefined, w: undefined} : a);
 
 /** Build the FigProps for a spec in a view (used by the sprite and by `figureRig`). */
 export const figProps = (view: View, spec: FigSpec, F?: FigFrame): {F: FigFrame; props: FigProps} => {
   const Fr = F ?? figFrame(view, spec.pos, spec.heading, spec.anchor);
   const base = typeof spec.pose === 'function' ? spec.pose(Fr) : spec.pose ?? {};
   const w = spec.world ?? {};
+  // (R4, opt-in) spec.perspective 'contact': the world contacts are drawn at their true projection (see worldToRigTrue)
+  const conv = spec.perspective === 'contact' ? (q: V3) => worldToRigTrue(view, Fr, q) : (q: V3) => worldToRig(Fr, q);
   const props: FigProps = {
     ...base,
     look: spec.look, t: spec.t, seed: spec.seed ?? 1, id: spec.key,
     x: Fr.x, y: Fr.y, s: Fr.s, yaw: Fr.yaw + (base.yaw ?? 0), pitch: Fr.pitch, rot: Fr.rot,
     ink: spec.inkPx ?? clamp(Fr.s * 4, 0.9, 8), // close-ups keep a bolder line (capped so it never smothers a face)
-    armL: armWorld(Fr, base.armL, w.handL, w.orientL), armR: armWorld(Fr, base.armR, w.handR, w.orientR),
-    legL: legWorld(Fr, base.legL, w.footL), legR: legWorld(Fr, base.legR, w.footR),
+    armL: armWorld(Fr, base.armL, w.handL, w.orientL, conv), armR: armWorld(Fr, base.armR, w.handR, w.orientR, conv),
+    legL: legWorld(Fr, base.legL, w.footL, conv), legR: legWorld(Fr, base.legR, w.footR, conv),
   };
   if (spec.reach !== false && (w.footL || w.footR)) {
     // a planted foot below the root (downhill, a step off a slab) would leave the leg straight and the foot hanging:

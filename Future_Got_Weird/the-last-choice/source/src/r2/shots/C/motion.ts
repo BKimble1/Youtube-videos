@@ -97,7 +97,7 @@ export const footAt = (k: KP[], T: number, lift = 0.11): V3 & {swing: number} =>
     const e = up ? smooth(clamp((u - 0.3) / 0.7)) : lf > 0 ? smooth(u) : 1 - (1 - u) * (1 - u);
     const x = lerp(a[1], b[1], e), z = lerp(a[2], b[2], e);
     const sw = Math.sin(Math.PI * u) * (down ? Math.max(lf, 0.1 + 0.3 * (ya - yb)) : lf);
-    const ey = up ? smooth(Math.min(1, u * 2.4)) : down ? smooth(clamp((u - 0.4) / 0.6)) : e;
+    const ey = up ? smooth(Math.min(1, u * 2.4)) : down ? smooth(clamp((u - 0.3) / 0.7)) : e;
     const y = Math.max(lerp(ya, yb, ey) + sw, GC(x, z) + sw * 0.7);
     return {x, y, z, swing: lf > 0 ? Math.sin(Math.PI * u) : 0};
   }

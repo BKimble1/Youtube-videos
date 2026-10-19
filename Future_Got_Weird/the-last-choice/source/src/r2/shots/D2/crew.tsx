@@ -574,7 +574,7 @@ const runnerFlight = (T: number) => {
   const L = Math.hypot(RUN_CAUGHT.x - RUN_GUARD.x, RUN_CAUGHT.z - RUN_GUARD.z);
   const fR0 = back(-0.05, 0.15), fL0 = back(-0.18, -0.15);
   const fR1 = back(L * 0.5, 0.2), fL1 = back(L * 0.8, -0.12), fR2 = back(L * 1.0, 0.22);
-  const footR = T < 110.52 ? fR0 : T < 111.05 ? step(110.52, 110.76, fR0, fR1, 0.14) : step(111.05, 111.4, fR1, fR2, 0);
+  const footR = T < 110.52 ? fR0 : T < 111.05 ? step(110.52, 110.76, fR0, fR1, 0.14) : step(111.05, 111.4, fR1, fR2, 0.1); // (R4) the closing step lifts: it slid 0.55 m along the ground at 2.5 m/s with lift 0
   const footL = step(110.72, 110.98, fL0, fL1, 0.12);
   return {pos: onG(x, z), heading: h, footL, footR};
 };

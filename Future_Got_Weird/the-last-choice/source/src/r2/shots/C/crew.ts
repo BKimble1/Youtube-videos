@@ -527,8 +527,8 @@ const hopAt = (T: number): Body => {
   };
   const footL = foot(a.footL, z.footL, eL, 0.26), footR = foot(a.footR, z.footR, eR, 0.3);
   // the pose: crouch (load), explode up, tuck over the palm, land (L), compress (R), up
-  const drop = keyN([[k.t0, a.gait?.drop ?? 22], [k.load, 38], [k.take + 0.02, 12], [k.take + 0.1, 8], [k.landL - 0.03, 18], [k.landL + 0.045, 40], [k.landR + 0.01, 50], [k.landR + 0.13, 30], [k.t1, z.gait?.drop ?? 22]], T);
-  const lean = keyN([[k.t0, a.gait?.lean ?? 17], [k.load, 25], [k.take + 0.04, 33], [k.landL, 38], [k.landR, 36], [k.landR + 0.12, 30], [k.t1, z.gait?.lean ?? 24]], T);
+  const drop = keyN([[k.t0, a.gait?.drop ?? 22], [k.load, 36], [k.take + 0.02, 12], [k.take + 0.1, 8], [k.landL - 0.03, 18], [k.landL + 0.045, 38], [k.landR + 0.01, 44], [k.landR + 0.13, 30], [k.t1, z.gait?.drop ?? 22]], T);
+  const lean = keyN([[k.t0, a.gait?.lean ?? 17], [k.load, 24], [k.take + 0.04, 31], [k.landL, 33], [k.landR, 30], [k.landR + 0.12, 27], [k.t1, z.gait?.lean ?? 24]], T);
   const side = 4 * Math.sin(Math.PI * clamp((T - k.take) / (k.landR - k.take)));
   const g: Pose = {
     drop, lean, side, breath: 0.85,
