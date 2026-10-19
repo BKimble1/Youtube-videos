@@ -1006,7 +1006,7 @@ export const figureParts = (p: FigProps): {parts: Part[]; rig: Rig2} => {
     const rankBack = r.torsoZ - 40 + clamp((legZ - r.torsoZ) / (600 * s), -1, 1) * 0.3 + i * 0.001;
     // (the bias grows as the thigh points at the camera: a flexed hip's thigh comes out in front of the belly, a hanging one stays under the hem)
     const fwdK = clamp(((K.z - H.z) / (THIGH * s) - 0.3) / 0.4);
-    const bL = (28 + 62 * fwdK) * s, tip = add3(A, mul3(norm3(sub3(A, K)), 22 * s));
+    const bL = (12 + 78 * fwdK) * s, tip = add3(A, mul3(norm3(sub3(A, K)), 22 * s));
     const h1 = torsoHides(r, Hn, K, LW[0] / 2 + ink + 2 * s, bL, ink * 0.6), h2 = torsoHides(r, K, tip, LW[1] / 2 + ink + 2 * s, bL, ink * 0.6);
     torsoParts(`leg${i}`, legBody, rankBack, [...h1.polys, ...h2.polys], h1.touch || h2.touch, (Hn.z + K.z) / 2, [Hn, K, tip], 26 * s + ink * 3, -2 + i * 0.01);
   });

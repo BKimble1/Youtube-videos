@@ -478,7 +478,10 @@ const vaultAt = (T: number): Body => {
     footL = {x, y: Math.max(lerp(Pa.y, V.land2.y, e) + 0.1 * Math.sin(Math.PI * e), GC(x, z) + 0.05 * (1 - e)), z};
   }
   const wR = T < TR.takeoff + 0.12 ? smooth((T - TR.takeoff) / 0.12) : T < TR.land - 0.13 ? 1 : 1 - smooth((T - (TR.land - 0.13)) / 0.13);
-  const footR = keepUp(T < TR.land - 0.13 ? lerp3(RN_G0.footR, tR, wR) : lerp3(V.land, tR, wR));
+  // (R4: the trailing right foot swings up over the wall's top lip on an arc: R3's straight line from the stance foot to the tuck put the
+  // ankle 0.15 m into the wall for two frames at 41.50)
+  const footR0 = keepUp(T < TR.land - 0.13 ? lerp3(RN_G0.footR, tR, wR) : lerp3(V.land, tR, wR));
+  const footR: V3 = T < TR.hand + 0.2 ? {...footR0, y: footR0.y + 0.2 * Math.sin(Math.PI * clamp((T - TR.takeoff) / 0.2))} : footR0;
   return {pos: root, heading, footL, footR, runK: 0, seg: 0, inWalk: false};
 };
 const RN_A = spotBehind('runner', 0.45);

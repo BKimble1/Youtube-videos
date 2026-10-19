@@ -831,7 +831,7 @@ export const pilotAt = (T: number): CrewOut => {
 
 // ================================================================== THE FLARE CARRIER (host)
 const F0 = {x: 47.9, z: -3.1};
-const FLR_RUN: XZ[] = [{x: F0.x - 0.05, z: F0.z + 0.05}, {x: 46.6, z: -1.0}, {x: 45.0, z: 2.0}, {x: GRP.flares.x, z: GRP.flares.z}];
+const FLR_RUN: XZ[] = [{x: F0.x - 0.05, z: F0.z + 0.05}, {x: 45.9, z: -0.9}, {x: 45.0, z: 2.0}, {x: GRP.flares.x, z: GRP.flares.z}];
 const FLR_THROWN = {from: {x: 41.9, z: 5.8}, to: {x: 41.15, z: 6.35}};
 const FLR_BACK2: XZ[] = [{x: FLR_THROWN.to.x, z: FLR_THROWN.to.z}, {x: 38.6, z: 7.0}, {x: 36.2, z: 7.9}, {x: D4S('flares').pos.x, z: D4S('flares').pos.z}];
 const FLR_UP = 147.1;
