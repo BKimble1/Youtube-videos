@@ -35,6 +35,7 @@ import {
   patchRed,
   queuedU,
   receiverExpr,
+  receiverGaze,
   receiverState,
   redU,
   routeAt,
@@ -110,7 +111,9 @@ export const World: React.FC<{p: string; t: number; cam: Cam}> = ({p, t, cam}) =
   const cloud = cloudAlpha(t);
 
   const neck = neckOpen(t);
-  const recvEyeRed = 0;
+  const gaze = receiverGaze(t);
+  const rbase = receiverExpr(t);
+  const rexpr = {...rbase, gx: lerp(rbase.gx, gaze.gx, gaze.w), gy: lerp(rbase.gy, gaze.gy, gaze.w)};
 
   return (
     <g>
@@ -124,10 +127,10 @@ export const World: React.FC<{p: string; t: number; cam: Cam}> = ({p, t, cam}) =
             <Fragment key={i} c={{x: fr.x, y: fr.y}} kind={fr.kind} s={1.05} alpha={fr.a} rot={fr.rot} />
           ))}
         </MindCloud>
-        <Receiver id={`${p}r`} pose={rs} expr={receiverExpr(t)} blink={blinkAt(t, 5)} />
+        <Receiver id={`${p}r`} pose={rs} expr={rexpr} blink={blinkAt(t, 5)} />
         <Sender
           id={`${p}s`}
-          pose={{roll: ss.roll, turn: ss.turn, shiftX: ss.shiftX, shiftY: ss.shiftY, reach: ss.reach, reachTo: CANCEL_C, press: ss.press}}
+          pose={{roll: ss.roll, turn: ss.turn, shiftX: ss.shiftX, shiftY: ss.shiftY, reach: ss.reach, reachTo: CANCEL_C, press: ss.press, sway: ss.sway}}
           expr={senderExpr(t)}
           blink={blinkAt(t, 11)}
           underlay={sec.underlay}

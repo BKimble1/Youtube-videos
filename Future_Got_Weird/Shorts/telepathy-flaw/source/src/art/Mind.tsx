@@ -86,8 +86,8 @@ export const IntrusiveThought: React.FC<{id: string; alpha: number; grow: number
 export const NeckWindow: React.FC<{id: string; c: V; R: number; open: number; fold: number; dim: number}> = ({id, c, R, open, fold, dim}) => {
   const o = clamp(open);
   if (o <= 0.01) return null;
-  const rx = R * 0.5 * o;
-  const ry = R * 0.62 * o;
+  const rx = R * 0.66 * o;
+  const ry = R * 0.9 * o;
   const k = R / 100;
   return (
     <g transform={`translate(${fmt(c.x)} ${fmt(c.y)})`}>
@@ -112,7 +112,7 @@ export const NeckWindow: React.FC<{id: string; c: V; R: number; open: number; fo
         {/* soft tissue */}
         <rect x={-rx} y={-ry} width={rx * 2} height={ry * 2} fill={`url(#${id}-wall)`} opacity={0.9} />
         {/* the airway: a tube with the thyroid cartilage shield round it */}
-        <g transform={`scale(${fmt(k * 1.35)})`}>
+        <g transform={`translate(0 ${fmt(R * 0.12)}) scale(${fmt(k * 1.8)})`}>
           <path d="M-22,-60 L-22,-14 Q-22,-4 -12,6 L-12,64 L12,64 L12,6 Q22,-4 22,-14 L22,-60 Z" fill={`url(#${id}-air)`} stroke={shade('#7C3A47', 0.4)} strokeWidth={2} />
           <path d="M-40,-30 Q-40,-52 -20,-52 L0,-44 L20,-52 Q40,-52 40,-30 Q40,-4 12,10 L0,16 L-12,10 Q-40,-4 -40,-30 Z" fill="#F7EEDC" stroke={shade(BONE, 0.5)} strokeWidth={2.4} opacity={0.82} />
           {/* the two vocal folds, at rest: a V with a still slit between them */}

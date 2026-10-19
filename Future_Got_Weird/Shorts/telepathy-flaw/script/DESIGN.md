@@ -1,0 +1,4 @@
+# Design notes
+Shot blueprint as built (seconds): see-through head with chip and threads 0–3.0 (FICTIONAL FUTURE SCENARIO 0.1–2.9) → hook message to receiver 2.5–3.4 → neck/vocal-cord window 3.6–5.2 → motor-cortex reveal 7.1 → "Hey" packet 8.3–10.8 → receiver HUD → "until" red pulse 13.1 → dark silhouette thought 13.8 → red UNFILTERED THOUGHT DETECTED 15.4–17.2 → fragments → cancel reach 20.5, tap 21.4 → match cut 21.8 → receiver reaction 24.8 → red packet arrives 26.2, "Message Delivered" 26.3 → circular wipe 27.3–29.45 back to the opening head.
+Speech runs 0.08–27.39 s (27.4 s, against the brief's 28.5–29 s target), so the storyboard was retimed to the narration and the loop wipe fills the end.
+On-screen text: FICTIONAL FUTURE SCENARIO, "Motor cortex", "Hey", UNFILTERED THOUGHT DETECTED, Message Delivered, and captions.

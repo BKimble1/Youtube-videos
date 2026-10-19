@@ -8,7 +8,7 @@ import {SENDER_C, SENDER_R} from './art/Figures';
 import {patchWorld} from './art/Section';
 import {Captions, FictionCue} from './shots/Overlay';
 import {World} from './shots/Scene';
-import {camAt, HUD_C, LOOP_CAM, motorTag, senderState} from './lib/choreo';
+import {camAt, HUD_C, loopCamAt, motorTag, senderState} from './lib/choreo';
 import {toScreen} from './lib/camera';
 import {easeInQuad, inv, lerp} from './lib/math';
 import {mix} from './lib/color';
@@ -47,7 +47,7 @@ export const Film: React.FC<{captions: boolean}> = ({captions}) => {
               </clipPath>
             </defs>
             <g clipPath="url(#iris)">
-              <World p="b" t={(f - TOTAL) / FPS} cam={LOOP_CAM} />
+              <World p="b" t={(f - TOTAL) / FPS} cam={loopCamAt((f - TOTAL) / FPS)} />
             </g>
             {iris.r < 2300 && (
               <g>
@@ -62,6 +62,7 @@ export const Film: React.FC<{captions: boolean}> = ({captions}) => {
           <g>
             <line x1={ps.x + 12} y1={ps.y - 10} x2={ps.x + 118} y2={ps.y - 96} stroke="#FFFFFF" strokeWidth={4} strokeLinecap="round" opacity={0.9 * tag} />
             <circle cx={ps.x + 10} cy={ps.y - 9} r={7} fill="#FFFFFF" stroke="#172B3A" strokeWidth={2.5} opacity={tag} />
+            <rect x={ps.x + 112} y={ps.y - 138} width={352} height={68} rx={34} fill="#172B3A" opacity={0.88 * tag} />
             <Tag c={{x: ps.x + 128, y: ps.y - 92}} text="Motor cortex" alpha={tag} size={46} />
           </g>
         )}

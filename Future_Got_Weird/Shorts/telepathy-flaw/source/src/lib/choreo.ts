@@ -6,7 +6,7 @@ import {B, FPS, T} from './timeline';
 import {clamp, easeInOut, easeOut, hash, inv, lerp, V} from './math';
 import {SKey, splineRec} from './motion';
 import {Expr, EXPR_GASP, EXPR_PAIN, EXPR_UNEASY, EXPR_WINCE, mixExpr} from '../art/Head';
-import {RouteGeo} from '../art/Ui';
+import {RouteGeo, routePoint} from '../art/Ui';
 import {chipWorld, Pulse, N_THREADS} from '../art/Section';
 import {RECEIVER_C, RECEIVER_R, SENDER_C, SENDER_R} from '../art/Figures';
 
@@ -14,7 +14,7 @@ import {RECEIVER_C, RECEIVER_R, SENDER_C, SENDER_R} from '../art/Figures';
 export const HUD_C: V = {x: 545, y: 735};
 export const PANEL_C: V = {x: 520, y: 1010};
 export const CANCEL_C: V = {x: 375, y: 1195};
-export const NECK_C: V = {x: SENDER_C.x + SENDER_R * 0.06, y: SENDER_C.y + SENDER_R * 1.2};
+export const NECK_C: V = {x: SENDER_C.x + SENDER_R * 0.06, y: SENDER_C.y + SENDER_R * 1.42};
 
 const sm = (a: number, b: number, t: number) => {
   const x = clamp((t - a) / (b - a || 1));
@@ -57,12 +57,20 @@ const CAM_KEYS: SKey<CamKey>[] = [
   K(27.9, 540, 900, 1.12),
   K(29.0, 540, 900, 1.12),
 ];
+/** a gentle periodic drift (period 3 s, which divides 30 s) on the head close-up: it lives through the loop seam */
+const breath = (t: number) => ({x: 5 * Math.sin((2 * Math.PI * t) / 3 + 0.8), y: 6 * Math.sin((2 * Math.PI * t) / 3), lz: 0.035 * Math.sin((2 * Math.PI * t) / 3 + 1.7)});
 export const camAt = (f: number) => {
   const c = splineRec(f, CAM_KEYS);
-  return {x: c.x, y: c.y, z: Math.exp(c.lz)};
+  const t = f / FPS;
+  const w = 1 - sm(0.6, 1.1, t);
+  const b = breath(t);
+  return {x: c.x + b.x * w, y: c.y + b.y * w, z: Math.exp(c.lz + b.lz * w)};
 };
-/** the loop layer's camera: the opening framing, held still so it continues across the seam */
-export const LOOP_CAM = {x: 225, y: 886, z: 3.0};
+/** the loop layer's camera: the opening framing plus the same drift, evaluated at negative times (continuous at the seam) */
+export const loopCamAt = (t: number) => {
+  const b = breath(t);
+  return {x: 225 + b.x, y: 886 + b.y, z: 3.0 * Math.exp(b.lz)};
+};
 
 // ---- sender head -----------------------------------------------------------------------------------------------
 /** reveal progress of the see-through head: a first state is already open at frame 0, then it sweeps to full */
@@ -73,7 +81,7 @@ export const sweepEdge = (t: number) => {
   return x <= 0 || x >= 1 ? 0 : Math.sin(Math.PI * x);
 };
 /** the controlled shallow turn: a slow oscillation with a 30 s period, so it is continuous across the loop seam */
-export const turnAt = (t: number) => 0.78 + 0.1 * Math.sin((2 * Math.PI * t) / 30 + 0.6);
+export const turnAt = (t: number) => 0.76 + 0.15 * Math.sin((2 * Math.PI * t) / 30 + 0.6) + 0.04 * Math.sin((2 * Math.PI * t) / 3 + 0.4);
 const LOOP_PERIOD = 0.75; // 30 / 40: pulses and pings repeat exactly across the loop
 
 const lane = (i: number) => (i * 4 + 1) % N_THREADS;
@@ -206,6 +214,7 @@ export type SenderState = {
   reach: number;
   press: number;
   tremble: number;
+  sway: number;
 };
 export const senderState = (t: number): SenderState => {
   const turn = turnAt(t);
@@ -224,6 +233,7 @@ export const senderState = (t: number): SenderState => {
     reach,
     press: clamp(press),
     tremble: recoil,
+    sway: 2.6 * Math.sin((2 * Math.PI * t) / 3 + 0.4) + 7 * recoil * Math.sin(t * 14) * 0.4,
   };
 };
 
@@ -352,3 +362,29 @@ export const cancelState = (t: number) => {
 export const cloudAlpha = (t: number) => win(t, T.intrusiveS - 0.25, B.fragments + 1.9, 0.3, 0.45);
 export const silhouetteAlpha = (t: number) => win(t, B.silhouetteIn, B.silhouetteOut, 0.18, 0.3);
 export const silhouetteGrow = (t: number) => sm(B.silhouetteIn, B.silhouetteIn + 0.5, t);
+
+/** the receiver's pupils follow the message: the packet on its way in, then the bubble in the HUD */
+export const receiverGaze = (t: number): {gx: number; gy: number; w: number} => {
+  const route = routeAt(t);
+  const rs = receiverState(t);
+  const eye: V = {x: RECEIVER_C.x + rs.shiftX * 0.8 - 6, y: RECEIVER_C.y + rs.shiftY * 0.8 - 14};
+  const hud: V = {x: HUD_C.x, y: HUD_C.y - 30};
+  let target: V = hud;
+  let w = 0;
+  const w1 = win(t, B.sendHook + 0.3, B.arriveHook + 0.9, 0.2, 0.3);
+  const w2 = win(t, B.sendNormal + 0.25, B.arriveNormal + 0.9, 0.2, 0.3);
+  const w3 = win(t, B.receiverCut - 0.5, B.delivered + 1.1, 0.3, 0.35);
+  if (w1 > 0) {
+    target = t < B.arriveHook ? routePoint(route, hookU(t)) : hud;
+    w = w1;
+  }
+  if (w2 > w) {
+    target = t < B.arriveNormal ? routePoint(route, normalU(t)) : hud;
+    w = w2;
+  }
+  if (w3 > w) {
+    target = t < B.redArrives ? routePoint(route, redU(t)) : hud;
+    w = w3;
+  }
+  return {gx: clamp((target.x - eye.x) / 240, -1, 1), gy: clamp((target.y - eye.y) / 240, -1, 1), w};
+};

@@ -47,6 +47,8 @@ export type SenderPose = {
   reachTo: V;
   /** finger tap press 0..1 (the hand pushes toward the panel) */
   press: number;
+  /** hair follow-through (deg) */
+  sway?: number;
 };
 
 export const senderShoulder = (c: V, R: number, p: {shiftX: number; shiftY: number}): V => ({x: c.x - R * 0.55 + p.shiftX, y: c.y + R * 1.86 + p.shiftY});
@@ -125,7 +127,7 @@ export const Sender: React.FC<{
         <Limb id={`${id}-slv`} A={arm.S} B={add(arm.S, mul(norm(sub(arm.E, arm.S)), arm.l1 * 0.28))} C={add(arm.S, mul(norm(sub(arm.E, arm.S)), arm.l1 * 0.56))} rA={R * 0.37} rB={R * 0.36} rC={R * 0.35} color="#FFFFFF" capC="flat" k={0.85} />
         <Hand id={`${id}-hand`} wrist={arm.W} ang={wristAng} L={handL} thumbSide={-1} view={reaching ? 'palm' : 'back'} pose={reaching ? {curl: [0.05, 0.38, 0.5, 0.56], spread: 0.3, thumb: 36, thumbCurl: 0.5} : hand} color={CREW.skin} bare />
       </Inked>
-      <Head id={`${id}-head`} c={hc} R={R} roll={pose.roll} turn={pose.turn} expr={expr} blink={blink} flip underlay={underlay} overlay={overlay} />
+      <Head id={`${id}-head`} c={hc} R={R} roll={pose.roll} turn={pose.turn} expr={expr} blink={blink} flip hairSway={pose.sway ?? 0} underlay={underlay} overlay={overlay} />
     </g>
   );
 };
