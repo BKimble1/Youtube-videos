@@ -740,14 +740,14 @@ const CARRY = {r: -40, u: 168, f: 34};
 // R4: the hold is OUT to her left (0.7 m off her axis) at shoulder height plus a hand: the drone's 0.6 m span then clears her
 // head (R3 held it at head height 0.5 m out, and on C4b's lens the hand/arm and the rotor arms crossed her glasses for ~10
 // frames). It leaves the palm straight up, beside her face, never across it.
-export const HOLD_UP = {r: -190, u: 385, f: -10};
+export const HOLD_UP = {r: -190, u: 385, f: -35};
 /** the left hand's body-local target from the carry up and out to the hold, the hold (the palm under the drone until it
  * leaves it at T3.lift), then lowered to the controller (continuous: one function for the whole launch) */
 const CTRL_L = {r: -22, u: 198, f: 74};
 const droneHandLoc = (T: number) => {
   // out to the side first, then up: the hand is already 0.5 m off her axis when it passes head height
   const out = keyN([[T3.launch - 0.42, 0], [T3.launch - 0.06, 1]], T);
-  const up = keyN([[T3.launch - 0.2, 0], [T3.spin - 0.08, 1]], T);
+  const up = keyN([[T3.launch - 0.14, 0], [T3.spin - 0.06, 1]], T);
   const hold = {r: lerp(CARRY.r, HOLD_UP.r, out), u: lerp(CARRY.u, HOLD_UP.u, up), f: lerp(CARRY.f, HOLD_UP.f, up)};
   // after the lift-off: the palm stays a beat under the rising drone, then the arm lowers (down first, then in)
   const lo = after(T, T3.lift + 0.1, 0.45);

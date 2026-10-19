@@ -352,6 +352,16 @@ export const bodyAt = (segs: Seg[], T: number): Body => {
       b.runK = 0;
     }
   }
+  // R4: a stand that follows a scripted move (a climb) used to take its own pose on the first frame (lean 17 -> 4, drop 25 -> 8:
+  // the head jumped ~0.15 m at the top of every climb); the climb's last gait pose now fades out over 0.4 s into the stance
+  if (prev && prev.kind === 'fn') {
+    const t0 = s.root[0][0];
+    const w = smooth(clamp((T - t0) / 0.4));
+    if (w < 1) {
+      const pg = prev.at(t0).gait;
+      if (pg) { b.gait = pg; b.runK = 1 - w; }
+    }
+  }
   return {...b, seg: i};
 };
 

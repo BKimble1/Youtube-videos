@@ -1015,14 +1015,14 @@ const segFree = (a: XZ, b: XZ, min: number): boolean => {
 };
 /** shortest way round the solids from a to b: A* on a 0.3 m grid over the segment's box (blocked where clearW < CLEAR_MIN),
  *  then pulled straight (a waypoint is dropped while the chord stays ≥ 0.45 m clear) */
-const routeSeg = (a: XZ, b: XZ): XZ[] => {
+const routeSeg = (a: XZ, b: XZ, minC = CLEAR_MIN): XZ[] => {
   const C = 0.3, pad = 7;
   const x0 = Math.min(a.x, b.x) - pad, z0 = Math.min(a.z, b.z) - pad;
   const nx = Math.ceil((Math.max(a.x, b.x) + pad - x0) / C) + 1, nz = Math.ceil((Math.max(a.z, b.z) + pad - z0) / C) + 1;
   const cell = (p: XZ) => ({i: Math.round((p.x - x0) / C), j: Math.round((p.z - z0) / C)});
   const world = (i: number, j: number): XZ => ({x: x0 + i * C, z: z0 + j * C});
   const blocked = new Map<number, boolean>();
-  const isB = (i: number, j: number) => { const k = j * nx + i; let v = blocked.get(k); if (v === undefined) { v = clearW(world(i, j)) < CLEAR_MIN; blocked.set(k, v); } return v; };
+  const isB = (i: number, j: number) => { const k = j * nx + i; let v = blocked.get(k); if (v === undefined) { v = clearW(world(i, j)) < minC; blocked.set(k, v); } return v; };
   const s0 = cell(a), g0 = cell(b);
   const open = new Map<number, number>(), came = new Map<number, number>(), gs = new Map<number, number>();
   const key = (i: number, j: number) => j * nx + i;
@@ -1046,7 +1046,7 @@ const routeSeg = (a: XZ, b: XZ): XZ[] => {
       if (ng < (gs.get(nk) ?? 1e18)) { gs.set(nk, ng); came.set(nk, bk); open.set(nk, ng + h(ni, nj)); }
     }
   }
-  if (!found) return [a, b];
+  if (!found) return [];
   const cells: XZ[] = [];
   for (let k: number | undefined = key(g0.i, g0.j); k !== undefined; k = came.get(k)) cells.push(world(k % nx, Math.floor(k / nx)));
   cells.reverse();
@@ -1055,7 +1055,7 @@ const routeSeg = (a: XZ, b: XZ): XZ[] => {
   let from = 0;
   while (from < cells.length - 1) {
     let to = cells.length - 1;
-    while (to > from + 1 && !segFree(cells[from], cells[to], 0.45)) to--;
+    while (to > from + 1 && !segFree(cells[from], cells[to], Math.min(0.45, minC))) to--;
     out.push(cells[to]);
     from = to;
   }
@@ -1067,11 +1067,24 @@ export const detourPath = (pts: XZ[]): XZ[] => {
   for (let i = 1; i < pts.length; i++) {
     const a = pts[i - 1], b = pts[i];
     if (segFree(a, b, 0.4)) { out.push(b); continue; }
-    const r = routeSeg(a, b);
+    // (a pocket too narrow for the full clearance is tried again with a thinner margin: a hair off a chunk, never through a car)
+    const r = [CLEAR_MIN, 0.4, 0.22, 0.1].map((m) => routeSeg(a, b, m)).find((q) => q.length) ?? [a, b];
     r.slice(1).forEach((q) => out.push(q));
     changed = true;
   }
   return changed ? out : pts;
+};
+/** a standing place moved to the nearest spot ≥ 0.8 m clear of the solids (the girder's post, the car, the chunks, the main) */
+const clearOf = (p: XZ): XZ => {
+  if (clearW(p) >= 0.8) return p;
+  let best = p, bd = -1e9;
+  for (let r = 0.25; r <= 3.0 && bd < 0.8; r += 0.25) for (let k = 0; k < 16; k++) {
+    const q = {x: p.x + Math.cos((k / 16) * Math.PI * 2) * r, z: p.z + Math.sin((k / 16) * Math.PI * 2) * r};
+    const d = clearW(q) - r * 0.05;
+    if (d > bd) { bd = d; best = q; }
+    if (clearW(q) >= 0.8) return q;
+  }
+  return best;
 };
 const detourSteps = (steps: UStep[]) => steps.forEach((st) => { if (st.k === 'walk' && st.pts.length >= 2) st.pts = detourPath(st.pts); });
 /** the units' steps over the wrecks and the main (a high step) */
@@ -1153,7 +1166,7 @@ function buildNorth(id: number, src: Src, role: 'r3' | 'wing' | 'lineN', j: numb
   // the hold north of the cable (the taut cable is a wall at their knees); FLANK_DENIED: over the slack, south-west
   // over D2's wrecks toward the Crew, a stop a step off them; after the blast into D4's start
   const tH = stepT0(steps[steps.length - 1]) + 0.01;
-  const press: XZ = offWrecks(pushFrom({x: lerp(slot.x, fin.x, 0.42), z: lerp(slot.z, fin.z, 0.42)}, {x: 45.0, z: -3.6}, 3.6));
+  const press: XZ = clearOf(offWrecks(pushFrom({x: lerp(slot.x, fin.x, 0.42), z: lerp(slot.z, fin.z, 0.42)}, {x: 45.0, z: -3.6}, 3.6)));
   const tPress = EV3.wingGo + (j % 4) * 0.22;
   const endW = steps[steps.length - 1];
   if (endW.k === 'walk') steps.push(hold(slot, endW.T1, headingTo(endW.pts[endW.pts.length - 2], slot), norm360(headingTo(slot, CREW_C)), tPress));

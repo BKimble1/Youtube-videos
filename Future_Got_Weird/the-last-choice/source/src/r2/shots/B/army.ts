@@ -98,7 +98,10 @@ const laneZ = (z0: number, x: number) => {
     if (b < 0.01) continue;
     const u = x1 > x0 ? (clamp(x, x0, x1) - x0) / (x1 - x0) : 0;
     const zc = c.ax <= c.bx ? c.az + (c.bz - c.az) * u : c.bz + (c.az - c.bz) * u;
-    const s = z0 >= zc ? 1 : -1;
+    // (R4) the side a lane passes an obstacle is fixed by where the lane lies against the obstacle's MIDPOINT, not against
+    // its centre line at this x: for an angled wreck that centre line crosses the lane as the unit marches, and the sign
+    // flip threw far units 4.5 m sideways and their heading 100° for 5 frames (u10808–u10811 at 18.77–18.93, 20.60, 22.07, 23.67)
+    const s = z0 >= (c.az + c.bz) / 2 ? 1 : -1;
     z += b * s * (c.r + 1.3) * Math.exp(-Math.abs(z0 - zc) / 5);
   }
   return clamp(z, -13.2, 13.2);
