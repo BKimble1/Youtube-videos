@@ -129,8 +129,8 @@ at -16.1 LUFS on the encoded file (lead's measurement; I did not re-measure).
 | 0:47.1 / 0:47.5 | breaker's and tether operator's palms | 0:46.99 to 0:47.13, 0:47.45 to 0:47.47 | As above |
 | 0:55.7-0:56.9 | six `steps` cues (gain -22 to -23) | Added | The staggered stance shuffles after the turn |
 | 0:58.2-0:59.3 | pilot and breaker step-down cues; flare carrier and decoy maker step-in cues | Pilot 0:58.39 to 0:58.20 (steps 0:58.20/0:58.48/0:58.75), breaker 0:58.38/0:58.67/0:58.95; two cues added for roles that had none | They start 0.25 s earlier so the 0.7 m step down takes 0.27 s |
-| 2:57.4 (D4-7c) | `heavy_servo` at `EV.ramWind` | pan -0.13 to 0.25, dist 0.32 to 0.45 | The lens moved; heavy 2 is right of centre, 13 m off |
-| 2:56.9-2:57.0 (D4-7c) | `steps_gravel` at `EV.dirPlant` | pan -0.14 to 0 | Same lens move |
+| D4-7c (2:55.0-2:57.4) | `heavy_servo` at `EV.ramWind` | pan -0.13 to 0.25, dist 0.32 to 0.45 | The lens moved; heavy 2 is right of centre, 13 m off |
+| D4-7c (2:55.0-2:57.4) | `steps_gravel` at `EV.dirPlant` | pan -0.14 to 0 | Same lens move |
 
 Not changed: D4 contact times (the ram contact is still 2:57.8, the W1/W2/W3/H5/H1 contacts untouched); `ram_strike` pan
 0.33 and `body_fall` pan -0.44 were checked by projection against the new D4-8 lens and left. D3's file says no cues changed.
@@ -182,7 +182,7 @@ fixed were dropped; items below marked "lead's list" are not recorded in any def
 |---|---|---|
 | 1:34.3 (end of D1) | U1 lies across U2 and still interpenetrates it. The kit's ground-contact lift made it worse (0.71 m to 0.84 m); `fall.lift:false` sank U2 0.25 m under the road; shifting U1's end 0.25-0.5 m did not help. Needs a stacking rule in the kit | D1-13, MECH M2 |
 | 2:28.47-2:28.70 (D3-11e) | Heavy 2 rear-left knee flips 1.8-2.1 m in a frame while the foot moves 0.13-0.17 m; the kit's `kneeClear` swing choice. Off camera in D3-11e; open with MECH | D3 |
-| 2:28.6 and 2:24.1-2:23.8 | Heavy 2's boom grazes heavy 1's raised leg 0-8 cm at 2:23.5-2:23.8 (off camera); a shin 10 cm in the water main at 2:23.1 (unit 7311) | D3 |
+| 2:22.3-2:23.8 | Heavy 2's ram comes within 17 cm of heavy 1's leg at 2:22.3 (visible in D3-10a, not touching); its boom grazes heavy 1's raised leg 0-8 cm at 2:23.5-2:23.8 (off camera in D3-10b). A shin of unit 7311 is 10 cm into the water main at 2:23.1. Reported to MECH | D3 |
 | 3:01.3-3:06.9 | Outer-ring unit 7304 has its left foot inside slab `rslab_8` (about 1.3, 19.25); unit 7215's slot is 9 cm from `rslab_17`. EF-owned data, reported, not changed | D4 rows 9, 10 |
 | 3:02.0-3:06.9 | Seated Director's pelvis is 8 cm off the slab (shoulders 2-3 cm): EF's `DIRECTOR_SEAT` constant (D4 suggested moving it 5 cm). Not changed | D4 row 11 |
 | 2:29.9 | Unit 7201's left foot is 19 cm from D4's at the D3/D4 handover (pre-existing) | D3 |
@@ -195,15 +195,15 @@ fixed were dropped; items below marked "lead's list" are not recorded in any def
 | C, 0:36-0:59.95 | Ground contact uses `GC` (terrain plus slab) but the ridge is drawn as a 1 m grid; a planted foot can be up to 0.3 m off the drawn surface. No frame found where this reads as a float or sink | C remaining |
 | 3:21.8-3:22.7 | The reveal helmet occupies about 20 % of the frame | Lead's list; not in any defect file |
 | 1:08.1-1:08.9 | Background machines' feet slide 0.1-0.5 m as the run ends (arrival braking, `laneGait`) | D1-09 |
-| 1:49.5, and D2 range | Person-robot overlaps of <= 5 cm: runner's left shin vs D's wreck foot 1:55.3-1:56.9; Director vs B upper arm 1:42.7, vs A fist 1:43.4; runner vs D fist/forearm 1:50.4-1:50.5. Cable passes through C's chest (1:48.4-1:49.2), hidden behind both machines in every camera | D2 |
+| 1:34.3-1:56.9 (D2) | Person-robot overlaps of <= 5 cm: runner's left shin vs D's wreck foot 1:55.3-1:56.9; Director vs B upper arm 1:42.7, vs A fist 1:43.4; runner vs D fist/forearm 1:50.4-1:50.5. Cable passes through C's chest (1:48.4-1:49.2), hidden behind both machines in every camera | D2 |
 | 1:56.9 (D2/D3 rest) | B (kneeling) and D rest propped, pelvis 0.68/0.82 m above ground (R3: lying). Raised to MECH; the MECH file does not record a fix | D2 |
 | 2:00.1-2:00.5 | Breaker and runner thighs 15 cm into each other | D3 |
 | Single frames in D2 | Background units' foot centres dip 7-13 cm below ground for single frames (1:38.1-1:39.3, gait kit) | D2 |
 | 0:18.8-0:23.7 (B3 army lanes) | Four far units teleport 4.5 m sideways and flip heading 100 degrees for 5 frames (ids 10808-10811); `laneZ` in `shots/B/army.ts`, not fixed | MECH M10 |
 | 3:43.2-3:43.6 (F1) | Four `sm_blkP4` smoke sprites pop in/out at the top frame edge | WORLD |
 | 3:27-3:51 and wides | Persisted machines use `persistItems lod {full:30, mid:140}`, which can still change robot detail with distance; about 10 LOD flips a second in 3:27-3:51, never in unison | WORLD, EF-12 |
-| 3:19-3:20 | Gauge/tool reads as a grey chisel from the SW lens (D3 gauge insert, 2:26.3-2:27.0) | D3 |
+| 2:26.3-2:27.0 (D3-11b) | The gauge insert is improved but the tool still reads as a grey chisel from the SW lens | D3 |
 | Section A | Second React duplicate key `u75017_far`: unfixed, unverified (section 5) | RIG |
-| Unadopted kit tools | `groundWith`/`phasedGait`/`lodBySize` (MECH) and `terrainChips` for D1/D2/D4 blasts were built but not adopted everywhere; shots may still show what they fix | MECH, D3, D4 |
+| Kit tools not adopted everywhere | MECH built `groundWith` (feet on rubble chunks), `phasedGait` (crowd gait phase) and `lodBySize` (pixel-based LOD); D4 did not use `groundWith`/`phasedGait`; D3 asked WORLD to adopt `terrainChips` in D1/D2/D4 blasts (WORLD's fix made terrain landing the default). Shots that did not adopt the MECH tools may still show what they fix | MECH, D3, D4 |
 
 Not claimed anywhere in this log: that the film is free of glitches, ready for upload, or cleared for music rights.
