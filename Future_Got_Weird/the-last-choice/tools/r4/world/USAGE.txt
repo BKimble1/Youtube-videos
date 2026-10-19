@@ -1,0 +1,7 @@
+R4 WORLD probes (headless: no rendering). Bundle with build.mjs (esbuild; stubs 'remotion', hooks engine sceneItems/chips3/dust3/sparks3 to record):
+  cd source && node ../tools/r4/world/build.mjs <abs path of X.tsx> <abs path of X.cjs> && node X.cjs
+scan.tsx      every mesh item of every shot (lowest vertex vs groundH, chips) -> scan.json ; analyze.mjs / rub.mjs summarise
+popscan.tsx   MODE=A1|F1: items entering / leaving / changing LOD between consecutive frames (setItems + atmosItems)
+camscan.tsx   camera positions of every shot (5-frame steps) -> cams.json ; genbox.mjs turns them into world/lodwin.ts BOXES ; lodev2.tsx counts LOD switches (0 expected)
+chipsave.tsx / chipchk.tsx   chips3 emitters of every shot -> resting height vs terrain
+rflchk.tsx / rfx.tsx / perch.tsx   the west ruin's floors: support, interpenetration; chunk contact edges

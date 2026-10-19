@@ -45,6 +45,15 @@ Not mine and left to their owners: `bCh1`/`bCh2` (B's animated chunks, 0.2–0.4
 | F1-1 | **~100 buildings pop in at once at 3:42 (T 221.97)** when the crane rises past 26 m | `cam.y < 26` dropped every short block behind the frontage unconditionally | during E2/F1 (`lodwin.ts` window) no shortcut; elsewhere a block is dropped only if a 5×5 roof grid + mid-height wall probes are all behind opaque frontage boxes | fixed: 0 building in/out events in F1 (R3: 90 in) |
 | F1-2 | 35 building LOD switches, 4 vehicle, plus steel and wire pops | as A1-1/A1-4 | `world/lodwin.ts` (E2 → F1 window: `camF1` sampled every 0.5 s, read from `shots/EF/camera.ts`, not edited) | fixed: building/vehicle LOD events 0 |
 
+## 3b. Every other shot (building LOD flicker)
+
+Headless pass over all 106 shots (camera at 5-frame steps, the per-frame distance rule): **22 shots flipped a mid-distance building
+between two window patterns** (1–10 times: handheld drift or a short move across the threshold; the worst, D1-2, 10 flips in 2.5 s;
+others B3, B5b, B6a, C1, C3, C4b, C6c2, D1-2b, D1-7b, D3-5/6/7a/10c/11a, D4-1a/2a/5/6a/8). `world/lodwin.ts` now carries the camera
+boxes of those 20 short shots (baked from their own cameras, ±4 m) and the rule never gets coarser than the distance now:
+**0 LOD switches in all 106 shots** (`tools/r4/world/lodev2.tsx`). If a section later moves its camera outside the box the old per-frame
+rule applies again for that part (regenerate with `camscan.tsx` + `genbox.mjs`).
+
 ## 4. Smoke, dust, fire
 
 * `dust3` was at full density on the contact frame itself (0.1 s ramp) and covered the foot/fist that had just met the ground: it now builds over ~0.25 s starting 0.04 s after t0.
