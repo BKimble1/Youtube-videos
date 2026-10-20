@@ -66,7 +66,7 @@ export const ImplantMacro: React.FC<{t: number; f: number; uneasy: number; pulse
     return {d: `M${fmt(p0.x)},${fmt(p0.y)} Q${fmt(pc.x)},${fmt(pc.y)} ${fmt(p1.x)},${fmt(p1.y)}`, ring};
   });
   return (
-    <g transform={`translate(${cx} ${cy}) scale(${fmt(zoom)}) translate(${-cx} ${-cy})`}>
+    <g transform={`translate(${cx} ${cy}) scale(${zoom.toFixed(5)}) translate(${-cx} ${-cy})`}>
       <defs>
         <radialGradient id="mc-skin" gradientUnits="userSpaceOnUse" cx={cx} cy={cy} r={1250} fx={cx - 260} fy={cy - 380}>
           <stop offset="0" stopColor={lit(SKIN, 0.3)} />

@@ -30,7 +30,7 @@ export const XrayImplant: React.FC<{lt: number; f: number; pulses: number[]; div
   const cells = Array.from({length: 16}, (_, i) => ({x: 40 + R() * 1000, y: 150 + R() * 1250, r: 24 + R() * 26, rot: R() * 6, seed: 500 + i}));
   const sc = 1 + 3.2 * dive * dive;
   return (
-    <g transform={`translate(${cx} ${cy}) scale(${fmt(sc)}) translate(${-cx} ${-cy})`}>
+    <g transform={`translate(${cx} ${cy}) scale(${sc.toFixed(5)}) translate(${-cx} ${-cy})`}>
       <Backdrop id="xr" a="#12324A" b="#0C2234" c="#06101A" />
       <g opacity={0.5}>
         {cells.map((c, i) => (
