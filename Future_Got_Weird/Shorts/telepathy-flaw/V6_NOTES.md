@@ -40,7 +40,7 @@ The rigid cup grip and sip (rim at the lips, far fingers behind, near fingers an
 See `DEFECT_LOG_V6.md`. Short version: pose/contact sheet of the actual composition against V4, V5 and Death Clock (`qa/v6/POSE_CONTACT_SHEET.png`), frame bursts through the greeting, the sip, the release, the rejection, the lap and the recoil from the final exported MP4 at phone size and full-resolution crops, and the per-frame rig and layout checks as supporting evidence only. **No real-time playback and no listening happened**; every judgement is from frames and measurements.
 
 ## Deliverables
-`exports/FGW_TelepathyFlaw_V6_Review_1080x1920.mp4` (captioned), `exports/FGW_TelepathyFlaw_V6_Clean_NoCaptions_1080x1920.mp4`, `exports/FGW_TelepathyFlaw_V6_Master_2160x3840.mp4` (native 4K, `--scale=2`, captioned composition), `exports/EXPORT_METADATA_V6.json`; source `source/src/v6/`; QA `qa/v6/`; tools `tools/export_v6.py`, `tools/pose_sheet.py`, `source/scripts/check_rig6.ts`, `source/scripts/check_layout6.ts`.
+`exports/FGW_TelepathyFlaw_V6_Review_1080x1920.mp4` (captioned), `exports/FGW_TelepathyFlaw_V6_Clean_NoCaptions_1080x1920.mp4`, `exports/FGW_TelepathyFlaw_V6_Master_2160x3840.mp4` (native 4K, `--scale=2`, captioned composition), checked against the 1080 at 12 sampled frames and one native crop (see `DEFECT_LOG_V6.md`), `exports/EXPORT_METADATA_V6.json`; source `source/src/v6/`; QA `qa/v6/`; tools `tools/export_v6.py`, `tools/pose_sheet.py`, `source/scripts/check_rig6.ts`, `source/scripts/check_layout6.ts`.
 
 ## Known limits
 - The line "Humans have thousands of dark, unwanted thoughts every single day" is unchanged and still unsupported (the script was not to be reopened); this render is not fact-approved.
