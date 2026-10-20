@@ -38,5 +38,45 @@
   "source_video": "v6_silent.mp4",
   "mix_sha256": "3948cadd8a79835a7592db38828c954eb9df8aa28c8fddad40d2d65fa891d192",
   "audio_stream_identical_to_V4_export": true
+ },
+ "FGW_TelepathyFlaw_V6_Clean_NoCaptions_1080x1920.mp4": {
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "index": 0,
+     "codec_name": "h264",
+     "codec_type": "video",
+     "width": 1080,
+     "height": 1920,
+     "pix_fmt": "yuv420p",
+     "color_range": "tv",
+     "color_space": "bt709",
+     "r_frame_rate": "30/1",
+     "duration": "28.000000",
+     "nb_frames": "840"
+    },
+    {
+     "index": 1,
+     "codec_name": "aac",
+     "codec_type": "audio",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "duration": "28.000000",
+     "nb_frames": "1314"
+    }
+   ],
+   "format": {
+    "duration": "28.000000",
+    "size": "18219702",
+    "bit_rate": "5205629"
+   }
+  },
+  "sha256": "2422e86f373c835b8931bd1e19cb153a2bb8c181fbbd0d15791b14dfee3c2b0d",
+  "bytes": 18219702,
+  "source_video": "v6_clean_silent.mp4",
+  "mix_sha256": "3948cadd8a79835a7592db38828c954eb9df8aa28c8fddad40d2d65fa891d192",
+  "audio_stream_identical_to_V4_export": true
  }
 }

@@ -1,9 +1,17 @@
 {
  "frames_measured": 251,
- "min_ratio_vs_outline": 6.8,
- "min_ratio_vs_background": 1.04,
- "median_ratio_vs_background": 3.37,
+ "min_ratio_vs_outline": 7.2,
+ "min_ratio_vs_background": 1.01,
+ "median_ratio_vs_background": 3.38,
  "worst_background_frames": [
+  {
+   "frame": 105,
+   "glyph_L": 0.619,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.624,
+   "ratio_vs_outline": 11.2,
+   "ratio_vs_background": 1.01
+  },
   {
    "frame": 819,
    "glyph_L": 0.622,
@@ -13,60 +21,52 @@
    "ratio_vs_background": 1.04
   },
   {
-   "frame": 87,
-   "glyph_L": 0.626,
-   "outline_L": 0.009,
-   "bg_beyond_shadow_L": 0.689,
-   "ratio_vs_outline": 11.4,
-   "ratio_vs_background": 1.09
-  },
-  {
    "frame": 90,
-   "glyph_L": 0.626,
+   "glyph_L": 0.619,
    "outline_L": 0.009,
-   "bg_beyond_shadow_L": 0.686,
-   "ratio_vs_outline": 11.4,
-   "ratio_vs_background": 1.09
+   "bg_beyond_shadow_L": 0.672,
+   "ratio_vs_outline": 11.3,
+   "ratio_vs_background": 1.08
   },
   {
    "frame": 66,
    "glyph_L": 0.616,
    "outline_L": 0.01,
-   "bg_beyond_shadow_L": 0.68,
+   "bg_beyond_shadow_L": 0.675,
    "ratio_vs_outline": 11.2,
+   "ratio_vs_background": 1.09
+  },
+  {
+   "frame": 87,
+   "glyph_L": 0.619,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.68,
+   "ratio_vs_outline": 11.3,
+   "ratio_vs_background": 1.09
+  },
+  {
+   "frame": 93,
+   "glyph_L": 0.619,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.683,
+   "ratio_vs_outline": 11.3,
+   "ratio_vs_background": 1.1
+  },
+  {
+   "frame": 96,
+   "glyph_L": 0.619,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.686,
+   "ratio_vs_outline": 11.3,
    "ratio_vs_background": 1.1
   },
   {
    "frame": 108,
-   "glyph_L": 0.697,
-   "outline_L": 0.059,
-   "bg_beyond_shadow_L": 0.622,
-   "ratio_vs_outline": 6.8,
+   "glyph_L": 0.698,
+   "outline_L": 0.053,
+   "bg_beyond_shadow_L": 0.624,
+   "ratio_vs_outline": 7.2,
    "ratio_vs_background": 1.11
-  },
-  {
-   "frame": 75,
-   "glyph_L": 0.619,
-   "outline_L": 0.009,
-   "bg_beyond_shadow_L": 0.732,
-   "ratio_vs_outline": 11.3,
-   "ratio_vs_background": 1.17
-  },
-  {
-   "frame": 78,
-   "glyph_L": 0.621,
-   "outline_L": 0.009,
-   "bg_beyond_shadow_L": 0.745,
-   "ratio_vs_outline": 11.3,
-   "ratio_vs_background": 1.18
-  },
-  {
-   "frame": 81,
-   "glyph_L": 0.621,
-   "outline_L": 0.009,
-   "bg_beyond_shadow_L": 0.745,
-   "ratio_vs_outline": 11.3,
-   "ratio_vs_background": 1.18
   }
  ],
  "note": "glyph = white/yellow fill; outline = the near-black stroke that touches it; background = the picture 16-34 px beyond the caption (outside the shadow). WCAG-style (L1+0.05)/(L2+0.05)."

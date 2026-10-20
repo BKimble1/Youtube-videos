@@ -31,7 +31,7 @@ V6 corrects how the two characters are posed and how they act. V4 and V5 are unt
 - **Layout** (`qa/v6/LAYOUT_CHECK.json`, estimated boxes): no face, implant or hand under the caption lane except the recoil's far hand for 4 frames (26.07–26.17 s) and the last push-in (4 face frames + 1 hand frame), as in V4 and V5.
 - **Motion scan** (`qa/v6/MOTION_SCAN.json`): the non-cut spikes are the same events as V5 (UI pops, the restrain tilt, the final dive at frames 813–821); nothing new.
 - **Loop** (`qa/v6/seam.json`): wrap difference 0.5 against a film median of 2.05; strip in `qa/v6/seam_strip.png`.
-- **Caption contrast** (`qa/v6/CAPTION_CONTRAST.json`, 251 measured frames): glyph vs its dark outline at least 6.8:1; vs the picture just outside the shadow, median 3.37:1, minimum 1.04:1. The weakest frames against the picture are 2.2–3.6 s (exterior close-ups over the pale shopfront and his cream/yellow tee) and 27.3 s; there the caption is readable only because of its outline and shadow (≥ 11:1 against the outline in all but 3.6 s, 6.8:1). Caption wording, font, rhythm and timing are unchanged.
+- **Caption contrast** (`qa/v6/CAPTION_CONTRAST.json`, 251 measured frames): glyph vs its dark outline at least 7.2:1; vs the picture just outside the caption's shadow, median 3.38:1, minimum 1.01:1. The weakest frames against the picture are in the exterior close-ups (about 2.2–3.6 s, over the pale shopfront and his cream/yellow tee) and at 27.3 s; there the caption is readable only because of its outline and shadow. Caption wording, font, rhythm and timing are unchanged.
 
 ## Residuals and honest limits
 - **Not watched, not heard.** Frame inspection only. A playback pass by a person is still needed for how the new acting feels at speed.
