@@ -16,7 +16,7 @@
   "recvHey": {
    "frames": 18,
    "faceHits": 0,
-   "handHits": 18,
+   "handHits": 0,
    "implantHits": 0
   },
   "sendSmile": {
@@ -164,134 +164,8 @@
    "implantHits": 0
   }
  },
- "hitFrames": 27,
+ "hitFrames": 9,
  "firstHits": [
-  {
-   "t": 2.3,
-   "frame": 69,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.33,
-   "frame": 70,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.37,
-   "frame": 71,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.4,
-   "frame": 72,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.43,
-   "frame": 73,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.47,
-   "frame": 74,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.5,
-   "frame": 75,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.53,
-   "frame": 76,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.57,
-   "frame": 77,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.6,
-   "frame": 78,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.63,
-   "frame": 79,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.67,
-   "frame": 80,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.7,
-   "frame": 81,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.73,
-   "frame": 82,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.77,
-   "frame": 83,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.8,
-   "frame": 84,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.83,
-   "frame": 85,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
-  {
-   "t": 2.87,
-   "frame": 86,
-   "shot": "recvHey",
-   "caption": "just by thinking.",
-   "thing": "hand(woman cup)"
-  },
   {
    "t": 26.07,
    "frame": 782,
