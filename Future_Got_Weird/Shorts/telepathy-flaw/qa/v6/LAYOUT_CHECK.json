@@ -1,0 +1,359 @@
+{
+ "note": "projected boxes (face = head disc, hand = ~34 rig units round the wrist, implant = the disc); the caption box is estimated from the character count, so this is a screening check, not a pixel measurement",
+ "perShot": {
+  "macro": {
+   "frames": 20,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "extWide": {
+   "frames": 48,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "recvHey": {
+   "frames": 18,
+   "faceHits": 0,
+   "handHits": 18,
+   "implantHits": 0
+  },
+  "sendSmile": {
+   "frames": 12,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "neck": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "matchImplant": {
+   "frames": 27,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "capture": {
+   "frames": 41,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "cortex": {
+   "frames": 40,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "decoder": {
+   "frames": 48,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "intWide": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "intTwo": {
+   "frames": 48,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "sendFalter": {
+   "frames": 20,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "redNeural": {
+   "frames": 16,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "subjective": {
+   "frames": 20,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "reality": {
+   "frames": 18,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "sendReject": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "handCup": {
+   "frames": 39,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "swarm": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "calmTwo": {
+   "frames": 30,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "restrain": {
+   "frames": 25,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "mechanism": {
+   "frames": 83,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "realize": {
+   "frames": 27,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "signal": {
+   "frames": 12,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "recvRecog": {
+   "frames": 25,
+   "faceHits": 0,
+   "handHits": 4,
+   "implantHits": 0
+  },
+  "withdraw": {
+   "frames": 18,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "sendRegister": {
+   "frames": 18,
+   "faceHits": 4,
+   "handHits": 1,
+   "implantHits": 0
+  },
+  "macroEnd": {
+   "frames": 14,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  }
+ },
+ "hitFrames": 27,
+ "firstHits": [
+  {
+   "t": 2.3,
+   "frame": 69,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.33,
+   "frame": 70,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.37,
+   "frame": 71,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.4,
+   "frame": 72,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.43,
+   "frame": 73,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.47,
+   "frame": 74,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.5,
+   "frame": 75,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.53,
+   "frame": 76,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.57,
+   "frame": 77,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.6,
+   "frame": 78,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.63,
+   "frame": 79,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.67,
+   "frame": 80,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.7,
+   "frame": 81,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.73,
+   "frame": 82,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.77,
+   "frame": 83,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.8,
+   "frame": 84,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.83,
+   "frame": 85,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 2.87,
+   "frame": 86,
+   "shot": "recvHey",
+   "caption": "just by thinking.",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 26.07,
+   "frame": 782,
+   "shot": "recvRecog",
+   "caption": "you were desperately",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 26.1,
+   "frame": 783,
+   "shot": "recvRecog",
+   "caption": "you were desperately",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 26.13,
+   "frame": 784,
+   "shot": "recvRecog",
+   "caption": "you were desperately",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 26.17,
+   "frame": 785,
+   "shot": "recvRecog",
+   "caption": "you were desperately",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 27.17,
+   "frame": 815,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "hand(man near)"
+  },
+  {
+   "t": 27.27,
+   "frame": 818,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "face(man)"
+  },
+  {
+   "t": 27.3,
+   "frame": 819,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "face(man)"
+  },
+  {
+   "t": 27.33,
+   "frame": 820,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "face(man)"
+  },
+  {
+   "t": 27.37,
+   "frame": 821,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "face(man)"
+  }
+ ]
+}

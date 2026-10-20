@@ -16,7 +16,7 @@ for spec in sys.argv[4:]:
     cam = CAMS.get(c) or tuple(float(v) for v in c.split(','))
     cam_d = {'x': cam[0], 'y': cam[1], 'z': cam[2]}
     if len(cam) > 3: cam_d['roll'] = cam[3]
-    jobs.append({'name': n, 'comp': 'V5Lab', 'props': {'scene': ('ext' if n.startswith('x') else 'view'), 't': float(t), 'cam': cam_d, **({'opts': opts} if opts else {})}}); names.append(n)
+    jobs.append({'name': n, 'comp': __import__('os').environ.get('LAB', 'V5Lab'), 'props': {'scene': ('ext' if n.startswith('x') else 'view'), 't': float(t), 'cam': cam_d, **({'opts': opts} if opts else {})}}); names.append(n)
 out.mkdir(parents=True, exist_ok=True)
 jf = out / 'jobs.json'; jf.write_text(json.dumps(jobs))
 r = subprocess.run(['node', 'scripts/frames_multi.mjs', str(out), str(jf)], cwd=ROOT / 'source', capture_output=True, text=True)
