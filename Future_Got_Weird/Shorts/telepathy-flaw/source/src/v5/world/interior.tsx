@@ -123,10 +123,10 @@ const M_THIGH_ANG = 172;
 const base = (thigh: number, o: Partial<Rec>): Rec => ({bx: 0, torso: 4, chest: 0, neck: 0, yaw: 20, nhx: 0, nhy: 0, fhx: 0, fhy: 0, hold: 1, lift: 0, ng: 0.5, fg: 0, chairDx: 0, chairTilt: 0, nHa: thigh, nHw: 0, fHa: thigh, fHw: 1, ...o});
 
 // V5: the far hand rests on the thigh near the knee (wrist target; the palm lies on the thigh top, about y 1170), the near
-// hand, when it is free, on the thigh nearer the hip. They are 80 apart, so the two forearms and elbows read as two arms.
-const THIGH_WRIST_Y = SEAT_Y - 49;
-export const W_LAP = {x: W_HIP + 170, y: THIGH_WRIST_Y};
-const M_LAP = {x: M_HIP - 172, y: THIGH_WRIST_Y};
+// hand, when it is free, on the thigh nearer the hip. They are ~120 apart, so the two forearms and elbows read as two arms.
+const THIGH_WRIST_Y = SEAT_Y - 47;
+export const W_LAP = {x: W_HIP + 176, y: THIGH_WRIST_Y};
+const M_LAP = {x: M_HIP - 176, y: THIGH_WRIST_Y};
 const M_NEAR_LAP = {x: M_HIP - 70, y: THIGH_WRIST_Y};
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -184,9 +184,9 @@ export const W_KEYS: SKey<Rec>[] = [
   [24.9, {...wRest, yaw: 20, torso: 5}],
   // she sees the alert (25.38): eyes up to it first, the head follows, then the jolt back (25.66-25.8), the freeze
   [25.4, {...wRest, yaw: 21, torso: 5, neck: -2}],
-  [25.66, {...wRest, yaw: 22, torso: 5, neck: -3, ng: 0.6}],
-  [25.84, {...wRest, yaw: 18, torso: -3, neck: -6, ng: 0.7, chairDx: -6, fhx: W_HIP + 156, fhy: W_LAP.y - 6}],
-  [26.14, {...wRest, yaw: 18, torso: -3, neck: -5, ng: 0.35, chairDx: -8, fhx: W_HIP + 128, fhy: SEAT_Y - 60}],
+  [25.66, {...wRest, yaw: 22, torso: 5, neck: -3, ng: 0.6, fhx: W_HIP + 158}],
+  [25.84, {...wRest, yaw: 18, torso: -3, neck: -6, ng: 0.7, chairDx: -6, fhx: W_HIP + 142, fhy: W_LAP.y - 6}],
+  [26.14, {...wRest, yaw: 18, torso: -3, neck: -5, ng: 0.35, chairDx: -8, fhx: W_HIP + 118, fhy: SEAT_Y - 62}],
   // the withdrawal: the fingers let go, the hands come up on two arcs (the near hand outward then up, the far hand lower
   // and nearer her), the torso goes back with a small overshoot and the chair slides back with her
   [26.3, {...wRest, yaw: 15, torso: -9, chest: -4, neck: -3, hold: 0, nhx: W_HIP + 150, nhy: SEAT_Y - 160, nHw: 0, fhx: W_HIP + 108, fhy: SEAT_Y - 108, fHw: 0, fg: 0.3, ng: 0.2, chairDx: -22, chairTilt: 2}],

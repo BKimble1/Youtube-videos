@@ -6,8 +6,8 @@
    "max": 1.000000000000001
   },
   "woman.far": {
-   "min": 0.9999999999999983,
-   "max": 1.0004900286943872
+   "min": 0.9999999999999986,
+   "max": 1.0000000000000016
   },
   "woman.nearLeg": {
    "min": 0.9999999999999994,
@@ -18,11 +18,11 @@
    "max": 1.0125451807833468
   },
   "man.near": {
-   "min": 0.9999999999999983,
+   "min": 0.9999999999999986,
    "max": 1.0000000000000016
   },
   "man.far": {
-   "min": 0.9999999999999983,
+   "min": 0.9999999999999986,
    "max": 1.0000000000000016
   },
   "man.nearLeg": {
@@ -49,9 +49,9 @@
   ]
  },
  "largestJointStepPerFrame_rigUnits": {
-  "v": 56.4,
+  "v": 45.1,
   "key": "woman.far.W",
-  "frame": 430
+  "frame": 431
  },
  "jointStepsOver28UnitsPerFrame": [
   {
@@ -90,79 +90,79 @@
    "step": 31.7
   },
   {
-   "frame": 428,
-   "key": "woman.far.E",
-   "step": 31.5
-  },
-  {
-   "frame": 428,
-   "key": "woman.far.W",
-   "step": 33.4
-  },
-  {
    "frame": 429,
    "key": "woman.near.W",
-   "step": 49
+   "step": 34.6
   },
   {
    "frame": 429,
    "key": "woman.far.E",
-   "step": 37
+   "step": 29.4
   },
   {
    "frame": 429,
    "key": "woman.far.W",
-   "step": 50.1
+   "step": 34.8
   },
   {
    "frame": 430,
    "key": "woman.near.E",
-   "step": 43.6
+   "step": 29.7
   },
   {
    "frame": 430,
    "key": "woman.near.W",
-   "step": 48.6
+   "step": 35.6
   },
   {
    "frame": 430,
    "key": "woman.far.E",
-   "step": 33.7
+   "step": 29.8
   },
   {
    "frame": 430,
    "key": "woman.far.W",
-   "step": 56.4
+   "step": 42.5
   },
   {
    "frame": 431,
    "key": "woman.near.E",
-   "step": 41.2
+   "step": 34.2
   },
   {
    "frame": 431,
    "key": "woman.near.W",
-   "step": 43.2
+   "step": 36.8
   },
   {
    "frame": 431,
    "key": "woman.far.W",
-   "step": 52.2
+   "step": 45.1
   },
   {
    "frame": 432,
    "key": "woman.near.E",
-   "step": 30.2
+   "step": 33.1
   },
   {
    "frame": 432,
    "key": "woman.near.W",
-   "step": 31.1
+   "step": 34.7
   },
   {
    "frame": 432,
    "key": "woman.far.W",
-   "step": 37.6
+   "step": 42.5
+  },
+  {
+   "frame": 433,
+   "key": "woman.near.W",
+   "step": 28.4
+  },
+  {
+   "frame": 433,
+   "key": "woman.far.W",
+   "step": 34.8
   },
   {
    "frame": 470,
@@ -212,7 +212,7 @@
   {
    "frame": 795,
    "key": "woman.far.W",
-   "step": 28.3
+   "step": 28.4
   }
  ],
  "stretchedFrames": null,
