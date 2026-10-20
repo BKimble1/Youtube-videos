@@ -1,0 +1,42 @@
+{
+ "FGW_TelepathyFlaw_V6_Review_1080x1920.mp4": {
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "index": 0,
+     "codec_name": "h264",
+     "codec_type": "video",
+     "width": 1080,
+     "height": 1920,
+     "pix_fmt": "yuv420p",
+     "color_range": "tv",
+     "color_space": "bt709",
+     "r_frame_rate": "30/1",
+     "duration": "28.000000",
+     "nb_frames": "840"
+    },
+    {
+     "index": 1,
+     "codec_name": "aac",
+     "codec_type": "audio",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "duration": "28.000000",
+     "nb_frames": "1314"
+    }
+   ],
+   "format": {
+    "duration": "28.000000",
+    "size": "18475363",
+    "bit_rate": "5278675"
+   }
+  },
+  "sha256": "53be782be0a3907f17ff99b04e599786cbe03697e8117375a864d3f9272baeb7",
+  "bytes": 18475363,
+  "source_video": "v6_silent.mp4",
+  "mix_sha256": "3948cadd8a79835a7592db38828c954eb9df8aa28c8fddad40d2d65fa891d192",
+  "audio_stream_identical_to_V4_export": true
+ }
+}
