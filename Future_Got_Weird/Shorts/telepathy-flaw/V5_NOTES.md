@@ -46,7 +46,7 @@ The V4 defect was real: the far upper arm was drawn completely behind the torso 
 See `DEFECT_LOG_V5.md` (what each fix is and how it was checked). Nothing was watched or listened to in real time; all judgement is from frames, source and measurements.
 
 ## Deliverables
-- `exports/FGW_TelepathyFlaw_V5_Review_1080x1920.mp4` (captioned), `exports/FGW_TelepathyFlaw_V5_Clean_NoCaptions_1080x1920.mp4` (same picture and mix, no captions) and `exports/FGW_TelepathyFlaw_V5_Master_2160x3840.mp4` (native 4K render of the captioned composition at `--scale=2`). Sizes and SHA-256 in `exports/EXPORT_METADATA_V5.json`.
+- `exports/FGW_TelepathyFlaw_V5_Review_1080x1920.mp4` (captioned), `exports/FGW_TelepathyFlaw_V5_Clean_NoCaptions_1080x1920.mp4` (same picture and mix, no captions) and `exports/FGW_TelepathyFlaw_V5_Master_2160x3840.mp4` (native 2160×3840 render of the captioned composition at `--scale=2`, same mix; checked against the 1080 at 12 sampled frames and one native crop, see `DEFECT_LOG_V5.md`). Sizes and SHA-256 in `exports/EXPORT_METADATA_V5.json`.
 - Source: `source/src/v5/`; QA: `qa/v5/`; tools: `tools/export_v5.py`, `tools/views.py`, `tools/film_frames.py`, `tools/sheet_from.py`, `tools/caption_contrast.py`, `source/scripts/check_rig5.ts`, `source/scripts/check_layout5.ts`.
 
 ## Known limits

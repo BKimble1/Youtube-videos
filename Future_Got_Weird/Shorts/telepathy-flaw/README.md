@@ -63,3 +63,14 @@ python3 tools/shotsheet.py qa/_wip/shots; python3 tools/video_sheets.py <mp4> qa
 python3 tools/make_comparison.py <V4.mp4> <DeathClock.mp4> <V3.mp4> qa/v4/COMPARISON_SHEET.png
 (cd source && scripts/lab.sh posesF)       # internal pose sheet; scripts/lab.sh heads for the head views
 ```
+
+## V5 (final animation and clarity pass)
+See `V5_NOTES.md` (what changed) and `DEFECT_LOG_V5.md` (what was fixed and how it was checked). Files: `exports/FGW_TelepathyFlaw_V5_Review_1080x1920.mp4` (captioned), `exports/FGW_TelepathyFlaw_V5_Clean_NoCaptions_1080x1920.mp4`, `exports/FGW_TelepathyFlaw_V5_Master_2160x3840.mp4` (native 4K), `exports/EXPORT_METADATA_V5.json`, `source/src/v5/`, `qa/v5/`. Audio is the approved V4 mix, unchanged (`audio/v4/mix/`); no audio was regenerated. V4 is untouched.
+```
+cd source && npx remotion render src/index.ts TelepathyFlawV5 ../exports/_wip/v5_silent.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --muted --concurrency=4
+cd source && npx remotion render src/index.ts TelepathyFlawV5Clean ../exports/_wip/v5_clean_silent.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --muted --concurrency=4
+cd source && npx remotion render src/index.ts TelepathyFlawV5 ../exports/_wip/v5_silent_4k.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --muted --concurrency=4 --scale=2
+python3 tools/export_v5.py exports/_wip/v5_silent.mp4 FGW_TelepathyFlaw_V5_Review_1080x1920.mp4        # also the clean and 4K files; muxes the approved mix, refuses if its hash changed
+python3 tools/seam_check_v4.py <mp4> <outdir>; python3 tools/motion_scan.py <mp4> qa/v4/cuts.json qa/v5/MOTION_SCAN.json; python3 tools/caption_contrast.py <captioned> <clean> qa/v5/CAPTION_CONTRAST.json
+(cd source && npx tsx scripts/check_rig5.ts && npx tsx scripts/check_layout5.ts)
+```
