@@ -1,0 +1,20 @@
+{
+ "target_lufs": -16.0,
+ "measured": {
+  "lufs": -16.0,
+  "lra": 2.2,
+  "tp": -1.2
+ },
+ "sample_peak_dbfs": -1.2,
+ "limiter_max_reduction_db": 0.09,
+ "static_gain_db": 2.2,
+ "stems_sum_exactly_to_mix": true,
+ "duration_s": 28.0,
+ "listened": false,
+ "note": "Nothing in this build has been listened to; every figure is a measurement.",
+ "stem_peaks_dbfs": {
+  "narration": -0.98,
+  "music": -16.49,
+  "effects": -13.17
+ }
+}

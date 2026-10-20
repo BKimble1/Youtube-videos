@@ -1,0 +1,71 @@
+{
+ "frames": 840,
+ "phases": [
+  {
+   "from_s": 0,
+   "phase": "success"
+  },
+  {
+   "from_s": 13.95,
+   "phase": "captured"
+  },
+  {
+   "from_s": 14.97,
+   "phase": "leaving"
+  },
+  {
+   "from_s": 19.8,
+   "phase": "cancel"
+  },
+  {
+   "from_s": 21.84,
+   "phase": "transit"
+  },
+  {
+   "from_s": 25.95,
+   "phase": "delivered"
+  }
+ ],
+ "visible_frame_spans": {
+  "hook packet (blue)": [
+   "43-70 (1.43-2.33 s)"
+  ],
+  "AR card": [
+   "64-93 (2.13-3.10 s)",
+   "763-822 (25.43-27.40 s)"
+  ],
+  "throat lens": [
+   "108-160 (3.60-5.33 s)"
+  ],
+  "second blue packet": [
+   "300-324 (10.00-10.80 s)"
+  ],
+  "dark bust": [
+   "436-443 (14.53-14.77 s)"
+  ],
+  "red packet": [
+   "448-778 (14.93-25.93 s)"
+  ],
+  "warning card": [
+   "464-497 (15.47-16.57 s)"
+  ],
+  "cancel group (button, ring, track, gate bar, packet copy)": [
+   "595-650 (19.83-21.67 s)",
+   "811-821 (27.03-27.37 s)"
+  ],
+  "waiting Hey": [
+   "690-735 (23.00-24.50 s)"
+  ]
+ },
+ "crown_window_open_spans": [
+  "0-65 (0.00-2.17 s)",
+  "164-308 (5.47-10.27 s)",
+  "393-418 (13.10-13.93 s)",
+  "435-461 (14.50-15.37 s)",
+  "656-689 (21.87-22.97 s)",
+  "822-839 (27.40-27.97 s)"
+ ],
+ "max_packets_on_screen": 1,
+ "failures": [],
+ "pass": true
+}

@@ -12,3 +12,6 @@
 - Art: all new V2 art is drawn in code (SVG/React) in `source/src/v2/art/`; it reuses the Death Clock rig libraries already in this project (ink, shade, limb, hand) and the receiver, room and caption components of R1.
 - Sound: synthesised again in numpy by `tools/build_audio_v2.py` (no samples). Music partials sit on the 1/28 Hz grid so the 28 s loop is exactly periodic.
 - No Runway or other generative video was used.
+
+## V3 additions
+Narration unchanged (V3 stem is bit-identical to V2's: C1 take, voice `kk5XaSLo2XAw0sKM98zU`, `eleven_v4`, `[interested]`, no new generation). All V3 art is code (`source/src/v3/art/`); the audio is re-synthesised by `tools/build_audio_v3.py` (no samples). No generative video.
