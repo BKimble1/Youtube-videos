@@ -1,0 +1,19 @@
+{
+ "target_lufs": -16.0,
+ "measured": {
+  "lufs": -16.0,
+  "lra": 2.2,
+  "tp": -1.1
+ },
+ "sample_peak_dbfs": -1.07,
+ "effects_extra_trim_db": 0.0,
+ "effects_sidechain_min_gain_db": -120.0,
+ "static_gain_db": 2.2,
+ "stems_sum_exactly_to_mix": true,
+ "narration_stem_sha256": "b8b42ffb4f36e432d086819b6b7030f2e31cda6bab58f15509e6ba12727bfe9a",
+ "narration_stem_identical_to_v3": true,
+ "music_stem_identical_to_v3": true,
+ "duration_s": 28.0,
+ "listened": false,
+ "note": "Nothing in this build has been listened to; every figure is a measurement."
+}

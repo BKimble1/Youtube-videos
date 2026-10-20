@@ -1,0 +1,304 @@
+{
+ "note": "projected boxes (face = head disc, hand = ~42 rig units round the wrist, implant = the disc); the caption box is estimated from the character count, so this is a screening check, not a pixel measurement",
+ "perShot": {
+  "macro": {
+   "frames": 20,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "extWide": {
+   "frames": 33,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "recvHey": {
+   "frames": 23,
+   "faceHits": 0,
+   "handHits": 4,
+   "implantHits": 0
+  },
+  "sendSmile": {
+   "frames": 22,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "neck": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "matchImplant": {
+   "frames": 27,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "capture": {
+   "frames": 41,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "cortex": {
+   "frames": 40,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "decoder": {
+   "frames": 48,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "intWide": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "intTwo": {
+   "frames": 48,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "sendFalter": {
+   "frames": 20,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "redNeural": {
+   "frames": 18,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "subjective": {
+   "frames": 15,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "reality": {
+   "frames": 21,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "sendReject": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "handCup": {
+   "frames": 39,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "swarm": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "calmTwo": {
+   "frames": 55,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "mechanism": {
+   "frames": 83,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "realize": {
+   "frames": 27,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "signal": {
+   "frames": 12,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "recvRecog": {
+   "frames": 25,
+   "faceHits": 0,
+   "handHits": 7,
+   "implantHits": 0
+  },
+  "withdraw": {
+   "frames": 24,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "sendRegister": {
+   "frames": 12,
+   "faceHits": 0,
+   "handHits": 9,
+   "implantHits": 0
+  },
+  "macroEnd": {
+   "frames": 14,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  }
+ },
+ "hitFrames": 20,
+ "firstHits": [
+  {
+   "t": 1.8,
+   "frame": 54,
+   "shot": "recvHey",
+   "caption": "to someone",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 1.83,
+   "frame": 55,
+   "shot": "recvHey",
+   "caption": "to someone",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 1.87,
+   "frame": 56,
+   "shot": "recvHey",
+   "caption": "to someone",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 1.9,
+   "frame": 57,
+   "shot": "recvHey",
+   "caption": "to someone",
+   "thing": "hand(woman cup)"
+  },
+  {
+   "t": 25.37,
+   "frame": 761,
+   "shot": "recvRecog",
+   "caption": "and the dark thought",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 25.4,
+   "frame": 762,
+   "shot": "recvRecog",
+   "caption": "and the dark thought",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 25.43,
+   "frame": 763,
+   "shot": "recvRecog",
+   "caption": "and the dark thought",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 25.47,
+   "frame": 764,
+   "shot": "recvRecog",
+   "caption": "and the dark thought",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 25.5,
+   "frame": 765,
+   "shot": "recvRecog",
+   "caption": "and the dark thought",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 25.53,
+   "frame": 766,
+   "shot": "recvRecog",
+   "caption": "and the dark thought",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 25.57,
+   "frame": 767,
+   "shot": "recvRecog",
+   "caption": "and the dark thought",
+   "thing": "hand(woman far)"
+  },
+  {
+   "t": 27,
+   "frame": 810,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "hand(man near)"
+  },
+  {
+   "t": 27.03,
+   "frame": 811,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "hand(man near)"
+  },
+  {
+   "t": 27.07,
+   "frame": 812,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "hand(man near)"
+  },
+  {
+   "t": 27.1,
+   "frame": 813,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "hand(man near)"
+  },
+  {
+   "t": 27.13,
+   "frame": 814,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "hand(man near)"
+  },
+  {
+   "t": 27.17,
+   "frame": 815,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "hand(man near)"
+  },
+  {
+   "t": 27.2,
+   "frame": 816,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "hand(man near)"
+  },
+  {
+   "t": 27.23,
+   "frame": 817,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "hand(man near)"
+  },
+  {
+   "t": 27.27,
+   "frame": 818,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "hand(man near)"
+  }
+ ]
+}

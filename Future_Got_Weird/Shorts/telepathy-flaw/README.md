@@ -48,3 +48,18 @@ cd source && npx remotion render src/index.ts TelepathyFlawV3 ../exports/_wip/v3
 cd .. && python3 tools/export_v3.py exports/_wip/v3_silent.mp4 FGW_TelepathyFlaw_DeathClockStyle_V3_FINAL_1080x1920.mp4
 python3 tools/seam_check_v3.py <mp4>; python3 -B tools/qa_audio_v3.py; (cd source && npx tsx scripts/check_layout3.ts)
 ```
+
+## V4 (visual rebuild)
+See `V4_NOTES.md`. Files: `exports/FGW_TelepathyFlaw_V4_Review_1080x1920.mp4` (captioned) and `exports/FGW_TelepathyFlaw_V4_Clean_NoCaptions_1080x1920.mp4`, `audio/v4/` (the approved V3 narration and music stems unchanged, a rebuilt effects stem, the mix), `source/src/v4/`, `qa/v4/` (pose sheet, comparison sheet, rig/layout/audio/seam checks). The existing SRT is still valid (captions unchanged).
+```
+cd source && npx remotion render src/index.ts TelepathyFlawV4 ../exports/_wip/v4_silent.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --muted --concurrency=4
+cd source && npx remotion render src/index.ts TelepathyFlawV4Clean ../exports/_wip/v4_clean_silent.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --muted --concurrency=4
+python3 -B tools/build_audio_v4.py        # effects only; narration and music stems are copied from audio/v3 unchanged
+python3 tools/export_v4.py exports/_wip/v4_silent.mp4 FGW_TelepathyFlaw_V4_Review_1080x1920.mp4
+python3 tools/export_v4.py exports/_wip/v4_clean_silent.mp4 FGW_TelepathyFlaw_V4_Clean_NoCaptions_1080x1920.mp4
+python3 -B tools/qa_audio_v4.py; python3 tools/seam_check_v4.py <mp4> qa/v4/seam; python3 tools/motion_scan.py <mp4>
+(cd source && npx tsx scripts/check_rig4.ts && npx tsx scripts/check_layout4.ts)
+python3 tools/shotsheet.py qa/_wip/shots; python3 tools/video_sheets.py <mp4> qa/_wip/sheets
+python3 tools/make_comparison.py <V4.mp4> <DeathClock.mp4> <V3.mp4> qa/v4/COMPARISON_SHEET.png
+(cd source && scripts/lab.sh posesF)       # internal pose sheet; scripts/lab.sh heads for the head views
+```
