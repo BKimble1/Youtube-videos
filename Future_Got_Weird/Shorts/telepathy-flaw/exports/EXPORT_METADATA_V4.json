@@ -1,0 +1,78 @@
+{
+ "FGW_TelepathyFlaw_V4_Review_1080x1920.mp4": {
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "index": 0,
+     "codec_name": "h264",
+     "codec_type": "video",
+     "width": 1080,
+     "height": 1920,
+     "pix_fmt": "yuv420p",
+     "color_range": "tv",
+     "color_space": "bt709",
+     "r_frame_rate": "30/1",
+     "duration": "28.000000",
+     "nb_frames": "840"
+    },
+    {
+     "index": 1,
+     "codec_name": "aac",
+     "codec_type": "audio",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "duration": "28.000000",
+     "nb_frames": "1314"
+    }
+   ],
+   "format": {
+    "duration": "28.000000",
+    "size": "18724592",
+    "bit_rate": "5349883"
+   }
+  },
+  "sha256": "23c64b2c016ddd2ff59e7d3d8a5be0e1eb4a48d3e5b9341050db008c804b5e15",
+  "bytes": 18724592,
+  "source_video": "v4_silent.mp4"
+ },
+ "FGW_TelepathyFlaw_V4_Clean_NoCaptions_1080x1920.mp4": {
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "index": 0,
+     "codec_name": "h264",
+     "codec_type": "video",
+     "width": 1080,
+     "height": 1920,
+     "pix_fmt": "yuv420p",
+     "color_range": "tv",
+     "color_space": "bt709",
+     "r_frame_rate": "30/1",
+     "duration": "28.000000",
+     "nb_frames": "840"
+    },
+    {
+     "index": 1,
+     "codec_name": "aac",
+     "codec_type": "audio",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "duration": "28.000000",
+     "nb_frames": "1314"
+    }
+   ],
+   "format": {
+    "duration": "28.000000",
+    "size": "18507111",
+    "bit_rate": "5287746"
+   }
+  },
+  "sha256": "45b4ad182bcf33620d0de4ae6859a21ef0de3d91d719bc3ac3b684813e3dc807",
+  "bytes": 18507111,
+  "source_video": "v4_clean_silent.mp4"
+ }
+}
