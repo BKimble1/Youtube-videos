@@ -8,9 +8,9 @@ import {Cam} from '../../lib/camera';
 import {clamp, easeInOut, lerp} from '../../lib/math';
 
 /** V6: both people hold the cup in both hands, so the two close-ups are framed with the cup and hands in the upper-middle of the
- *  screen, well above the caption lane (screen y 1450): the camera centre sits 250 / zoom above the hands' middle, which puts them
- *  at about y 1210 with the lane's top edge at about 1370. */
-const handsCamY = (a: number, b: number, z: number) => (a + b) / 2 - 250 / z;
+ *  screen, well above the caption lane (screen y 1450): the camera centre sits 275 / zoom above the hands' middle, which puts them
+ *  at about y 1185 with the lane's top edge at about 1370. */
+const handsCamY = (a: number, b: number, z: number) => (a + b) / 2 - 275 / z;
 export const exteriorCam = (id: ShotId, t: number, shot: {a: number; b: number}): Cam => {
   const k = easeInOut(clamp((t - shot.a) / (shot.b - shot.a)));
   const s0 = solveExterior(t);

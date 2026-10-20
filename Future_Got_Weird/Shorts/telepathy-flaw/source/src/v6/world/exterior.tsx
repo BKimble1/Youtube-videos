@@ -84,17 +84,19 @@ export type StandPose = {
   farFront?: number;
   /** far shoulder offset across the torso (rig units; default: the rig's own) */
   farSv?: number;
-  /** V6 two-handed hold: the far hand also grips the cup. dx/dy = its wrist relative to the cup's middle (rig units; dx toward the
-   *  partner, dy down), ha = the hand's angle from forward (deg, + = fingers down). The far forearm then crosses in front of the
-   *  torso (the upper arm stays behind it) and the far hand is drawn behind the cup, the near hand in front of it. */
+  /** V6 two-handed hold: the far hand supports the cup from below. dx/dy = its wrist relative to the cup's middle (rig units; dx
+   *  toward the partner, dy down), ha = the hand's angle from forward (deg, + = fingers down). The far arm comes from the other side
+   *  of the body than the near arm: the far shoulder sits toward the front of the torso (`farSv`), the upper arm stays behind the
+   *  torso and only the forearm shows, from the torso's front edge, low, under the near forearm (`farFront` 0 = drawn outside the
+   *  torso only); the far hand is drawn behind the cup, the near hand in front of it. */
   grip2?: {dx: number; dy: number; ha: number; wr?: number};
 };
 const HAND_SOFT: HandPose = {curl: [0.26, 0.32, 0.38, 0.44], spread: 0.08, thumb: 12, thumbCurl: 0.45};
 /** fingers wrapped round a paper cup */
 const HAND_WRAP: HandPose = {curl: [0.58, 0.62, 0.66, 0.7], spread: 0.18, thumb: 26, thumbCurl: 0.5};
 const HAND_LOOSE: HandPose = {curl: [0.36, 0.44, 0.5, 0.56], spread: 0.06, thumb: 10, thumbCurl: 0.55};
-export const W_STAND: StandPose = {hipH: 509, nearFoot: -34, farFoot: 58, nearUp: 0, farUp: 8, pelvis: 2.5, cup: {f: 104, d: 192, wr: 30}, free: {f: -95, d: 368, wr: 0}, freeHand: HAND_SOFT, farFront: 1, farSv: -22, grip2: {dx: -10, dy: -34, ha: 18}};
-export const M_STAND: StandPose = {hipH: 509, nearFoot: 58, farFoot: -40, nearUp: 8, farUp: 0, pelvis: -2.5, cup: {f: 100, d: 194, wr: 28}, free: {f: -78, d: 364, wr: 8}, freeHand: HAND_LOOSE, farFront: 1, farSv: -22, grip2: {dx: -10, dy: -34, ha: 18}};
+export const W_STAND: StandPose = {hipH: 509, nearFoot: -34, farFoot: 58, nearUp: 0, farUp: 8, pelvis: 2.5, cup: {f: 104, d: 192, wr: 30}, free: {f: -95, d: 368, wr: 0}, freeHand: HAND_SOFT, farFront: 0, farSv: -66, grip2: {dx: 6, dy: 36, ha: -6}};
+export const M_STAND: StandPose = {hipH: 509, nearFoot: 58, farFoot: -40, nearUp: 8, farUp: 0, pelvis: -2.5, cup: {f: 100, d: 194, wr: 28}, free: {f: -78, d: 364, wr: 8}, freeHand: HAND_LOOSE, farFront: 0, farSv: -66, grip2: {dx: 6, dy: 36, ha: -6}};
 export type ExtOv = {w?: Partial<StandPose>; m?: Partial<StandPose>};
 
 export const solveExterior = (t: number, ov: ExtOv = {}) => {
