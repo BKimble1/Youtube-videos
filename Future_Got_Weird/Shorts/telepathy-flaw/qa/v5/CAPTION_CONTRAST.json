@@ -1,0 +1,73 @@
+{
+ "frames_measured": 251,
+ "min_ratio_vs_outline": 7.1,
+ "min_ratio_vs_background": 1.0,
+ "median_ratio_vs_background": 3.42,
+ "worst_background_frames": [
+  {
+   "frame": 69,
+   "glyph_L": 0.619,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.616,
+   "ratio_vs_outline": 11.3,
+   "ratio_vs_background": 1.0
+  },
+  {
+   "frame": 81,
+   "glyph_L": 0.621,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.618,
+   "ratio_vs_outline": 11.3,
+   "ratio_vs_background": 1.0
+  },
+  {
+   "frame": 84,
+   "glyph_L": 0.621,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.619,
+   "ratio_vs_outline": 11.3,
+   "ratio_vs_background": 1.0
+  },
+  {
+   "frame": 99,
+   "glyph_L": 0.619,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.616,
+   "ratio_vs_outline": 11.3,
+   "ratio_vs_background": 1.0
+  },
+  {
+   "frame": 90,
+   "glyph_L": 0.63,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.638,
+   "ratio_vs_outline": 11.4,
+   "ratio_vs_background": 1.01
+  },
+  {
+   "frame": 96,
+   "glyph_L": 0.625,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.631,
+   "ratio_vs_outline": 11.4,
+   "ratio_vs_background": 1.01
+  },
+  {
+   "frame": 87,
+   "glyph_L": 0.63,
+   "outline_L": 0.009,
+   "bg_beyond_shadow_L": 0.619,
+   "ratio_vs_outline": 11.4,
+   "ratio_vs_background": 1.02
+  },
+  {
+   "frame": 819,
+   "glyph_L": 0.625,
+   "outline_L": 0.01,
+   "bg_beyond_shadow_L": 0.649,
+   "ratio_vs_outline": 11.3,
+   "ratio_vs_background": 1.03
+  }
+ ],
+ "note": "glyph = white/yellow fill; outline = the near-black stroke that touches it; background = the picture 16-34 px beyond the caption (outside the shadow). WCAG-style (L1+0.05)/(L2+0.05)."
+}
