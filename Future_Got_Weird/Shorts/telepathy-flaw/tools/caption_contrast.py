@@ -25,9 +25,12 @@ def frames(path, step=3):
         yield i * step, np.frombuffer(b, np.uint8).reshape(H, W, 3)
         i += 1
 def dil(m, r):
-    # square dilation by r pixels (PIL max filter)
-    im = Image.fromarray((m.astype(np.uint8)) * 255).filter(ImageFilter.MaxFilter(2 * r + 1))
-    return np.asarray(im) > 0
+    # square dilation by about r pixels, computed on a 4x block-max downsample (fast; accurate to +-3 px, which is enough for a 16-34 px ring)
+    h, w = m.shape
+    b = m.reshape(h // 4, 4, w // 4, 4).max(axis=(1, 3))
+    k = max(1, round(r / 4))
+    im = Image.fromarray(b.astype(np.uint8) * 255).filter(ImageFilter.MaxFilter(2 * k + 1))
+    return np.repeat(np.repeat(np.asarray(im) > 0, 4, axis=0), 4, axis=1)
 def lum(a):
     c = a.astype(np.float32) / 255
     c = np.where(c <= 0.03928, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
@@ -41,8 +44,8 @@ for (f, A), (_, B) in zip(frames(cap_v), frames(clean_v)):
     LA = lum(A); LB = lum(B)
     glyph = M & (LA > 0.5) & (d > 60)
     if glyph.sum() < 300: continue
-    dil = dil(glyph, 4)
-    outline = dil & ~glyph & M & (LA < 0.12)
+    gd = dil(glyph, 4)
+    outline = gd & ~glyph & M & (LA < 0.12)
     ring = dil(M, 34) & ~dil(M, 16) & lane
     if outline.sum() < 100 or ring.sum() < 100: continue
     lt = float(np.median(LA[glyph])); lo = float(np.median(LA[outline])); lb = float(np.median(LB[ring]))

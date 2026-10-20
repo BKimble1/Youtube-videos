@@ -1,7 +1,7 @@
 {
  "frames": 840,
  "wrap_diff_last_to_first_frame": 0.5,
- "median_adjacent_diff_in_film": 2.11,
+ "median_adjacent_diff_in_film": 2.12,
  "diff_last_15_frames": [
   1.79,
   2.35,

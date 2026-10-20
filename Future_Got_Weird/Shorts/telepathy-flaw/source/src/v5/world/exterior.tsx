@@ -62,6 +62,8 @@ const M_EX: ExprKey[] = [
 const pulse = (t: number, t0: number, w = 0.14) => Math.exp(-(((t - t0) / w) ** 2));
 export const extGlow = (t: number) => clamp(0.3 + 0.9 * Math.max(pulse(t, 1.04), pulse(t, 1.42), pulse(t, 2.0, 0.18)));
 
+const FAR_DX = 60;
+const FAR_DY = 20;
 export const solveExterior = (t: number) => {
   const r = rAt(t);
   const mk = (fx: -1 | 1, x: number, extra: Partial<Fig>): Fig => ({fx, x, floor: EXT_FLOOR, s: ES, hipH: 512, ...extra});
@@ -74,14 +76,14 @@ export const solveExterior = (t: number) => {
   const wFig0 = mk(1, wx, {torso: r.torso, neck: r.neck, yaw: r.yaw, nearFoot: -24 - r.wShift / ES, farFoot: 56 - r.wShift / ES, nearElbow: -1, ...farArm});
   const W0 = womanJoints(figure(wFig0));
   const hand = {x: W0.Sh.x + 112 * ES, y: W0.Sh.y + 300 * ES};
-  const wFar = {x: hand.x + 30, y: hand.y + 40};
+  const wFar = {x: hand.x + FAR_DX, y: hand.y + FAR_DY};
   const wFig = {...wFig0, nearHand: hand, nearWrist: 36, farHand: wFar, farWrist: 0, farHa: 78, farHw: 1};
   const wPose = figure(wFig);
   const mFig0 = mk(-1, mx, {torso: r.mtorso, neck: r.mneck, yaw: r.myaw, nearFoot: 24 - r.mShift / ES, farFoot: -52 - r.mShift / ES, nearElbow: -1, ...farArm});
   const M0 = manJoints(figure(mFig0));
   // he has a coffee too: the near hand holds a takeaway cup at the waist (arms bent, not hanging as tubes)
   const mHand = {x: M0.Sh.x - 112 * ES, y: M0.Sh.y + 300 * ES};
-  const mFar = {x: mHand.x - 30, y: mHand.y + 40};
+  const mFar = {x: mHand.x - FAR_DX, y: mHand.y + FAR_DY};
   const mPose = figure({...mFig0, nearHand: mHand, nearWrist: -36, farHand: mFar, farWrist: 0, farHa: 102, farHw: 1});
   const WJ = womanJoints(wPose);
   const MJ = manJoints(mPose);
