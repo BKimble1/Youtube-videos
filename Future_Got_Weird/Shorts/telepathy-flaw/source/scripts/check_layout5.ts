@@ -42,7 +42,7 @@ for (let f = 0; f < TOTAL4; f++) {
     const wj = womanJoints(S.w.pose);
     const mj = manJoints(S.m.pose);
     things.push(bx('face(woman)', cam, S.w.head, 96 * IS * 0.95), bx('face(man)', cam, S.m.head, 96 * IS * 0.95));
-    things.push(bx('hand(woman near)', cam, wj.L.W, 42 * IS), bx('hand(woman far)', cam, wj.R.W, 42 * IS), bx('hand(man near)', cam, mj.L.W, 42 * IS), bx('hand(man far)', cam, mj.R.W, 42 * IS));
+    things.push(bx('hand(woman near)', cam, wj.L.W, 34 * IS), bx('hand(woman far)', cam, wj.R.W, 34 * IS), bx('hand(man near)', cam, mj.L.W, 34 * IS), bx('hand(man far)', cam, mj.R.W, 34 * IS));
     const yaw = ((S.m.pose.yaw ?? 20) * Math.PI) / 180;
     things.push(bx('implant', cam, {x: S.m.head.x - 98 * Math.sin(yaw) * 0.96 * IS, y: S.m.head.y - 84 * 0.96 * IS}, 20 * IS));
   } else if (['extWide', 'recvHey', 'sendSmile'].includes(shot.id)) {
@@ -63,7 +63,7 @@ for (let f = 0; f < TOTAL4; f++) {
   }
 }
 const out = {
-  note: 'projected boxes (face = head disc, hand = ~42 rig units round the wrist, implant = the disc); the caption box is estimated from the character count, so this is a screening check, not a pixel measurement',
+  note: 'projected boxes (face = head disc, hand = ~34 rig units round the wrist, implant = the disc); the caption box is estimated from the character count, so this is a screening check, not a pixel measurement',
   perShot: per,
   hitFrames: hits.length,
   firstHits: hits.slice(0, 40),

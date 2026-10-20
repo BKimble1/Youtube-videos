@@ -74,14 +74,14 @@ export const solveExterior = (t: number) => {
   const wFig0 = mk(1, wx, {torso: r.torso, neck: r.neck, yaw: r.yaw, nearFoot: -24 - r.wShift / ES, farFoot: 56 - r.wShift / ES, nearElbow: -1, ...farArm});
   const W0 = womanJoints(figure(wFig0));
   const hand = {x: W0.Sh.x + 112 * ES, y: W0.Sh.y + 300 * ES};
-  const wFar = {x: hand.x + 34, y: hand.y + 84};
+  const wFar = {x: hand.x + 30, y: hand.y + 40};
   const wFig = {...wFig0, nearHand: hand, nearWrist: 36, farHand: wFar, farWrist: 0, farHa: 78, farHw: 1};
   const wPose = figure(wFig);
   const mFig0 = mk(-1, mx, {torso: r.mtorso, neck: r.mneck, yaw: r.myaw, nearFoot: 24 - r.mShift / ES, farFoot: -52 - r.mShift / ES, nearElbow: -1, ...farArm});
   const M0 = manJoints(figure(mFig0));
   // he has a coffee too: the near hand holds a takeaway cup at the waist (arms bent, not hanging as tubes)
   const mHand = {x: M0.Sh.x - 112 * ES, y: M0.Sh.y + 300 * ES};
-  const mFar = {x: mHand.x - 34, y: mHand.y + 84};
+  const mFar = {x: mHand.x - 30, y: mHand.y + 40};
   const mPose = figure({...mFig0, nearHand: mHand, nearWrist: -36, farHand: mFar, farWrist: 0, farHa: 102, farHw: 1});
   const WJ = womanJoints(wPose);
   const MJ = manJoints(mPose);

@@ -59,7 +59,7 @@ export const insertShot = (id: ShotId, t: number, f: number, lt: number, shot: S
       );
     }
     case 'mechanism': {
-      const cam: Cam = {x: 540, y: lerp(1050, 1000, k), z: lerp(1.18, 1.3, k)};
+      const cam: Cam = {x: 540, y: 950, z: lerp(1.0, 1.03, k)};
       return <MechanismView lt={lt} f={f} cam={cam} />;
     }
     case 'swarm': {

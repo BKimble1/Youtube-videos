@@ -28,7 +28,7 @@ export const CUP_TALL = 1.45;
 const CUP_CW = 60 * CUP_S;
 const CUP_H = 54 * CUP_S * CUP_TALL;
 /** the body's base sits this far above the saucer's underside point */
-const CUP_BASE_DY = 10 * CUP_S;
+export const CUP_BASE_DY = 10 * CUP_S;
 export const HAND_L = 96 * S;
 
 export const W_HIP = TX - HIPX;
@@ -125,7 +125,7 @@ const base = (thigh: number, o: Partial<Rec>): Rec => ({bx: 0, torso: 4, chest: 
 // V5: the far hand rests on the thigh near the knee (wrist target; the palm lies on the thigh top, about y 1170), the near
 // hand, when it is free, on the thigh nearer the hip. They are 80 apart, so the two forearms and elbows read as two arms.
 const THIGH_WRIST_Y = SEAT_Y - 49;
-const W_LAP = {x: W_HIP + 170, y: THIGH_WRIST_Y};
+export const W_LAP = {x: W_HIP + 170, y: THIGH_WRIST_Y};
 const M_LAP = {x: M_HIP - 172, y: THIGH_WRIST_Y};
 const M_NEAR_LAP = {x: M_HIP - 70, y: THIGH_WRIST_Y};
 
@@ -185,14 +185,14 @@ export const W_KEYS: SKey<Rec>[] = [
   // she sees the alert (25.38): eyes up to it first, the head follows, then the jolt back (25.66-25.8), the freeze
   [25.4, {...wRest, yaw: 21, torso: 5, neck: -2}],
   [25.66, {...wRest, yaw: 22, torso: 5, neck: -3, ng: 0.6}],
-  [25.84, {...wRest, yaw: 18, torso: -3, neck: -6, ng: 0.7, chairDx: -6}],
-  [26.14, {...wRest, yaw: 18, torso: -3, neck: -5, ng: 0.35, chairDx: -8}],
+  [25.84, {...wRest, yaw: 18, torso: -3, neck: -6, ng: 0.7, chairDx: -6, fhx: W_HIP + 156, fhy: W_LAP.y - 6}],
+  [26.14, {...wRest, yaw: 18, torso: -3, neck: -5, ng: 0.35, chairDx: -8, fhx: W_HIP + 128, fhy: SEAT_Y - 60}],
   // the withdrawal: the fingers let go, the hands come up on two arcs (the near hand outward then up, the far hand lower
   // and nearer her), the torso goes back with a small overshoot and the chair slides back with her
-  [26.3, {...wRest, yaw: 15, torso: -9, chest: -4, neck: -3, hold: 0, nhx: W_HIP + 175, nhy: SEAT_Y - 170, nHw: 0, fhx: W_HIP + 120, fhy: SEAT_Y - 120, fHw: 0, fg: 0.3, ng: 0.2, chairDx: -22, chairTilt: 2}],
-  [26.46, {...wRest, yaw: 14, torso: -14, chest: -7, neck: -2, hold: 0, nhx: W_HIP + 110, nhy: SEAT_Y - 250, nHw: 0, fhx: W_HIP + 52, fhy: SEAT_Y - 196, fHw: 0, fg: 0.3, ng: 0.12, chairDx: -36, chairTilt: 3.4}],
-  [26.7, {...wRest, yaw: 14, torso: -12.5, chest: -6, neck: -3, hold: 0, nhx: W_HIP + 100, nhy: SEAT_Y - 256, nHw: 0, fhx: W_HIP + 46, fhy: SEAT_Y - 200, fHw: 0, fg: 0.3, ng: 0.12, chairDx: -40, chairTilt: 3.6}, 'stop'],
-  [27.4, {...wRest, yaw: 14, torso: -13, chest: -6.5, neck: -3, hold: 0, nhx: W_HIP + 96, nhy: SEAT_Y - 252, nHw: 0, fhx: W_HIP + 44, fhy: SEAT_Y - 196, fHw: 0, fg: 0.3, ng: 0.12, chairDx: -42, chairTilt: 4}],
+  [26.3, {...wRest, yaw: 15, torso: -9, chest: -4, neck: -3, hold: 0, nhx: W_HIP + 150, nhy: SEAT_Y - 160, nHw: 0, fhx: W_HIP + 108, fhy: SEAT_Y - 108, fHw: 0, fg: 0.3, ng: 0.2, chairDx: -22, chairTilt: 2}],
+  [26.46, {...wRest, yaw: 14, torso: -14, chest: -7, neck: -2, hold: 0, nhx: W_HIP + 162, nhy: SEAT_Y - 246, nHw: 0, fhx: W_HIP + 100, fhy: SEAT_Y - 188, fHw: 0, fg: 0.3, ng: 0.12, chairDx: -36, chairTilt: 3.4}],
+  [26.7, {...wRest, yaw: 14, torso: -12.5, chest: -6, neck: -3, hold: 0, nhx: W_HIP + 156, nhy: SEAT_Y - 252, nHw: 0, fhx: W_HIP + 96, fhy: SEAT_Y - 192, fHw: 0, fg: 0.3, ng: 0.12, chairDx: -40, chairTilt: 3.6}, 'stop'],
+  [27.4, {...wRest, yaw: 14, torso: -13, chest: -6.5, neck: -3, hold: 0, nhx: W_HIP + 154, nhy: SEAT_Y - 250, nHw: 0, fhx: W_HIP + 94, fhy: SEAT_Y - 190, fHw: 0, fg: 0.3, ng: 0.12, chairDx: -42, chairTilt: 4}],
 ];
 
 export const W_EXPR: ExprKey[] = [
@@ -257,8 +257,8 @@ export const M_KEYS: SKey<Rec>[] = [
   [26.0, {...mRest, torso: 6, yaw: 24, ng: 0.7, ...mLap, fg: 0.5}],
   // the end: his near hand comes off the thigh and reaches toward her over the table (anticipation: it lifts first)
   [26.2, {...mRest, torso: 6, yaw: 24, ng: 0.7, ...mLap, nhx: M_NEAR_LAP.x - 10, nhy: M_NEAR_LAP.y - 14, nHw: 0, fg: 0.5}],
-  [26.62, {...mRest, torso: 5, yaw: 24, ng: 0.3, ...mLap, nhx: M_HIP - 182, nhy: SEAT_Y - 150, nHw: 0, fg: 0.5}],
-  [27.4, {...mRest, torso: 4, yaw: 22, neck: 4, ng: 0.3, ...mLap, nhx: M_HIP - 196, nhy: SEAT_Y - 160, nHw: 0, fg: 0.5}],
+  [26.62, {...mRest, torso: 5, yaw: 24, ng: 0.3, ...mLap, nhx: M_HIP - 226, nhy: SEAT_Y - 168, nHw: 0, fg: 0.5}],
+  [27.4, {...mRest, torso: 4, yaw: 22, neck: 4, ng: 0.3, ...mLap, nhx: M_HIP - 240, nhy: SEAT_Y - 172, nHw: 0, fg: 0.5}],
 ];
 
 export const M_EXPR: ExprKey[] = [
@@ -391,14 +391,16 @@ const solveActor = (who: 'w' | 'm', t: number, keys: SKey<Rec>[], ek: ExprKey[],
   const gAng = cupDirAng(cup, dirF, GRIP_DIR.dp, GRIP_DIR.dq);
   const held = r.hold > 0.5;
   const h = clamp(r.hold);
-  const nx = lerp(r.nhx || gw.x, gw.x, h);
+  // free hand targets are given relative to the chair (the pelvis): when the chair slides back the hands go with the body
+  const shift = r.chairDx + r.bx;
+  const nx = lerp(r.nhx ? r.nhx + shift : gw.x, gw.x, h);
   const ny = lerp(r.nhy || gw.y, gw.y, h);
   // the hand angle: held = the grip's own angle in the cup frame; free = the keyed angle (default: lying along the thigh)
   const nAng = lerpA(r.nHa ?? 0, gAng, h);
   const nW = lerp(r.nHw ?? 0, 1, h);
   const fig = mk({
     nearHand: {x: nx, y: ny},
-    farHand: {x: r.fhx, y: r.fhy},
+    farHand: {x: r.fhx + shift, y: r.fhy},
     nearHa: nAng,
     nearHw: nW,
     farHa: r.fHa,
@@ -426,6 +428,8 @@ export type InteriorOpts = {
   /** subjective overrides */
   w?: Partial<Rec>;
   m?: Partial<Rec>;
+  /** the receiver and her chair turn together about the chair's back feet (degrees, + = tipping backward): the imagined fall */
+  tipW?: number;
   /** lab: figure overrides (shoulder offsets etc.) */
   figW?: Partial<Fig>;
   figM?: Partial<Fig>;
@@ -453,18 +457,25 @@ export const InteriorWorld: React.FC<{t: number; f: number; cam: Cam; opts?: Int
   const ripple = Math.max(0, Math.min(1, (t - 16.6) / 0.3)) * Math.max(0, Math.min(1, (17.75 - t) / 0.2));
   const cupEl = (id: string, who: Solved, fx: -1 | 1, hide?: boolean) =>
     hide ? null : <Cup id={id} x={who.cup.x} y={who.cup.y} s={CUP_S} tall={CUP_TALL} fx={fx} f={f} steam={steam * (1 - who.rec.lift * 0.4)} tilt={who.cup.tilt} fill={who.cup.fill} ripple={fx === 1 ? ripple : 0} saucer={false} handle={false} />;
+  // the chair's back feet (its backrest is on her left): the pivot of the imagined fall
+  const tipDeg = opts.tipW ?? 0;
+  const tipT = tipDeg ? `rotate(${(-tipDeg).toFixed(3)} ${(w.chair.x - 100 * S).toFixed(2)} ${FLOOR})` : undefined;
   const implant = <Implant4 yaw={m.rec.yaw} glow={glow} color={opts.glowColor ?? '#46CFFF'} f={f} />;
   return (
     <g>
       <Layer cam={cam} depth={1}>
         <InteriorBack f={f} />
         <InteriorFloor />
-        <Chair id="chW" x={w.chair.x} floor={FLOOR} s={S} fx={1} tilt={w.chair.tilt} />
+        <g transform={tipT}>
+          <Chair id="chW" x={w.chair.x} floor={FLOOR} s={S} fx={1} tilt={w.chair.tilt} />
+        </g>
         <Chair id="chM" x={m.chair.x} floor={FLOOR} s={S} fx={-1} tilt={m.chair.tilt} />
         <Table id="tb" x={TX} floor={FLOOR} s={S} />
         <Cup id="sauW" x={CUP_W_X} y={CUP_Y} s={CUP_S} fx={-1} body={false} handle={false} />
         <Cup id="sauM" x={CUP_M_X} y={CUP_Y} s={CUP_S} fx={1} body={false} handle={false} />
-        <Woman id="W" pose={w.pose} expr={w.expr} blink={w.blink} lHand={w.nearHand} rHand={w.farHand} held={cupEl('cupW', w, -1, opts.hideCupW)} />
+        <g transform={tipT}>
+          <Woman id="W" pose={w.pose} expr={w.expr} blink={w.blink} lHand={w.nearHand} rHand={w.farHand} held={cupEl('cupW', w, -1, opts.hideCupW)} />
+        </g>
         <Man id="M" pose={m.pose} expr={m.expr} blink={m.blink} lHand={m.nearHand} rHand={m.farHand} held={cupEl('cupM', m, 1)} headOverlay={implant} />
         {opts.extra}
       </Layer>

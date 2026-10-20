@@ -75,7 +75,26 @@ const out = {
   elbowBendSigns: Object.fromEntries(Object.entries(signs).map(([k, v]) => [k, [...v]])),
   largestJointStepPerFrame_rigUnits: {...maxStep, v: +maxStep.v.toFixed(1)},
   jointStepsOver28UnitsPerFrame: bigSteps,
-  stretchedFrames: stretched.length ? {count: stretched.length, first: stretched[0], last: stretched[stretched.length - 1], worst: stretched.reduce((a, b) => (b.ratio > a.ratio ? b : a))} : null,
+  stretchedFrames: stretched.length
+    ? {
+        count: stretched.length,
+        worst: stretched.reduce((a, b) => (b.ratio > a.ratio ? b : a)),
+        // frame runs per limb (who.limb: first-last (max ratio))
+        runs: (() => {
+          const by: Record<string, {f0: number; f1: number; m: number}[]> = {};
+          for (const x of stretched) {
+            const k = `${x.who}.${x.limb}`;
+            const a = (by[k] = by[k] ?? []);
+            const l = a[a.length - 1];
+            if (l && x.frame <= l.f1 + 1) {
+              l.f1 = x.frame;
+              l.m = Math.max(l.m, x.ratio);
+            } else a.push({f0: x.frame, f1: x.frame, m: x.ratio});
+          }
+          return by;
+        })(),
+      }
+    : null,
   frames: rows.length,
 };
 const outDir = path.resolve(__dirname, '../../qa/v5');

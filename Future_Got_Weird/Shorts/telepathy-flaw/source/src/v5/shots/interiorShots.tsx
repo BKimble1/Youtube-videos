@@ -1,9 +1,9 @@
 // The café interior shots: cameras into the one interior world (world/interior.tsx).
 import React from 'react';
 import {Shot, ShotId} from '../plan5';
-import {InteriorWorld, solveInterior, CUP_W_X, CUP_Y, W_HIP, SEAT_Y, S, implantWorld, IMPLANT_R, X} from '../world/interior';
+import {InteriorWorld, solveInterior, CUP_W_X, CUP_Y, CUP_S, CUP_TALL, CUP_BASE_DY, W_HIP, W_LAP, SEAT_Y, S, implantWorld, IMPLANT_R, X} from '../world/interior';
 import {FLOOR} from '../env/Interior';
-import {PROP} from '../env/Props';
+import {Cup, PROP} from '../env/Props';
 import {RED} from '../art/Implant';
 import {AlertChip, DeliveredTag, MsgChip, SendRing, popScale} from '../ui5';
 import {Cam, toScreen} from '../../lib/camera';
@@ -12,8 +12,8 @@ import {clamp, easeIn, easeInOut, easeOut, easeOutBack, fmt, lerp, rng} from '..
 export const CAMS: Record<string, Cam> = {
   wide: {x: 540, y: 1010, z: 1.06},
   two: {x: 525, y: 985, z: 1.45},
-  cuM: {x: 770, y: 866, z: 2.5},
-  cuW: {x: 300, y: 886, z: 2.5},
+  cuM: {x: 770, y: 895, z: 2.5},
+  cuW: {x: 300, y: 896, z: 2.5},
   hands: {x: 650, y: 1112, z: 3.3},
 };
 
@@ -30,32 +30,33 @@ export const interiorCam = (id: ShotId, t: number, shot: {a: number; b: number})
     case 'intTwo':
       return mixCam(CAMS.two, {...CAMS.two, z: 1.55}, k);
     case 'sendFalter':
-      return mixCam(CAMS.cuM, {...CAMS.cuM, z: 2.62}, k);
+      return mixCam(CAMS.cuM, {...CAMS.cuM, z: 2.56}, k);
     case 'sendReject':
       // a slight roll and offset: the head shake is felt, not just seen
-      return {...mixCam({...CAMS.cuM, x: 782, y: 874, z: 2.62}, {...CAMS.cuM, x: 764, y: 868, z: 2.9}, k), roll: lerp(-2.4, 1.6, k)};
+      return {...mixCam({...CAMS.cuM, x: 782, y: 898, z: 2.58}, {...CAMS.cuM, x: 768, y: 908, z: 2.78}, k), roll: lerp(-2.4, 1.6, k)};
     case 'realize':
       // tight on the eyes and the implant: he sees what the chip caught
       return mixCam({x: 772, y: 770, z: 3.3}, {x: 772, y: 764, z: 3.62}, k);
     case 'restrain':
       // a tilt from his strained face down to the fists in his lap
-      return mixCam({x: 770, y: 930, z: 2.3}, {x: 750, y: 1040, z: 2.7}, easeInOut(clamp(lt / (dur * 0.6))));
+      return mixCam({x: 755, y: 1000, z: 2.3}, {x: 712, y: 1062, z: 2.7}, easeInOut(clamp(lt / (dur * 0.6))));
     case 'sendRegister': {
-      // his face as it lands (0.4 s), then the camera falls into the implant so that its disc lands at the opening
-      // macro's position and size (centre 540,790, radius 346): the match cut into frame 0
+      // his face as it lands, then the camera falls into the implant so that its disc lands at the opening macro's position
+      // and size (centre 540,790, radius 346): the match cut into frame 0. The dive is eased at both ends (smoothstep on the
+      // log zoom, no sudden start and no slam at the cut) and spans 0.3 s.
       const base = mixCam(CAMS.cuM, {...CAMS.cuM, z: 2.62}, k);
-      const p = clamp((t - 27.2) / (27.4 - 1 / 30 - 27.2));
+      const p = clamp((t - 27.08) / (27.4 - 1 / 30 - 27.08));
       if (p <= 0) return base;
       const ip = implantWorld(solveInterior(t).m);
       const zEnd = 346 / IMPLANT_R;
-      const e = p * p;
+      const e = p * p * (3 - 2 * p);
       const z = Math.exp(lerp(Math.log(base.z), Math.log(zEnd), e));
-      const cx = lerp(base.x, ip.x, easeInOut(p));
-      const cy = lerp(base.y, ip.y + (960 - 790) / zEnd, easeInOut(p));
-      return {x: cx, y: lerp(cy, ip.y + (960 - 790) / z, e), z};
+      const cx = lerp(base.x, ip.x, e);
+      const cyEnd = ip.y + (960 - 790) / z;
+      return {x: cx, y: lerp(base.y, cyEnd, e), z};
     }
     case 'recvRecog':
-      return mixCam({...CAMS.cuW, z: 2.5}, {...CAMS.cuW, z: 2.78}, k);
+      return mixCam({...CAMS.cuW, z: 2.5}, {...CAMS.cuW, z: 2.6}, k);
     case 'handCup':
       return mixCam(CAMS.hands, {...CAMS.hands, z: 3.55, x: 640}, k);
     case 'calmTwo':
@@ -95,7 +96,7 @@ export const interiorShot = (id: ShotId, t: number, f: number, lt: number, shot:
     overlay = (
       <g>
         <AlertChip x={head.x + hrs * 0.95} y={head.y - hrs * 0.9} s={1.2} k={alertK} alpha={endFade} tailDir={-1} />
-        <DeliveredTag x={Math.min(head.x + hrs * 1.05 + 190, 880)} y={head.y + hrs * 0.28} k={tagK} sc={0.74} alpha={endFade} />
+        <DeliveredTag x={Math.min(head.x + hrs * 1.02 + 175, 880)} y={head.y - hrs * 0.12} k={tagK} sc={1} stack alpha={endFade} />
       </g>
     );
   } else if (id === 'withdraw') {
@@ -104,7 +105,7 @@ export const interiorShot = (id: ShotId, t: number, f: number, lt: number, shot:
     overlay = (
       <g>
         <AlertChip x={a.x} y={a.y} s={0.74} k={1} alpha={endFade} tailDir={-1} />
-        <DeliveredTag x={d.x} y={d.y} k={1} sc={0.6} alpha={endFade} />
+        <DeliveredTag x={d.x} y={d.y} k={1} sc={0.9} stack alpha={endFade} />
       </g>
     );
   }
@@ -116,10 +117,55 @@ export const interiorShot = (id: ShotId, t: number, f: number, lt: number, shot:
   );
 };
 
-/** the one subjective image: her chair tipping and her cup breaking, inside a thought bubble, red, under a second */
+const sm = (x: number) => {
+  const t = clamp(x);
+  return t * t * (3 - 2 * t);
+};
+
+/** The one subjective image, one coherent event in 0.65 s (20 frames), all of it imagined:
+ *    0.00-0.12  she sits with the cup in her hand (nothing has happened yet; the bubble pops in)
+ *    0.05-0.41  her chair tips backward about its back feet with her on it (rigid: chair and body turn together), the grip
+ *               lets go and her arms fly up (0.08-0.28)
+ *    0.12-0.24  the cup is thrown up out of her hand, tumbling, with a few drops of coffee trailing it
+ *    0.24-0.46  it falls off the table's front edge to the floor, in front of the table, nowhere near her
+ *    0.42-0.58  it shatters (shards low and wide, a ring); no impact on anyone
+ *    0.55-0.65  the image darkens out */
+export const SUBJ = {rel: 0.12, apex: 0.23, land: 0.42, tipA: 0.05, tipB: 0.38, maxTip: 15};
 export const subjectiveW = (lt: number) => {
-  const tip = easeIn(clamp(lt / 0.46));
-  return {chairTilt: 30 * tip, torso: lerp(4, -16, tip), chest: -6 * tip, neck: -4 * tip, yaw: 12, hold: 0, ng: 0.2, nhx: W_HIP + 118, nhy: SEAT_Y - 215, fhx: W_HIP + 80, fhy: SEAT_Y - 180, chairDx: -26 * tip};
+  const a = sm((lt - 0.06) / 0.28);
+  const h = 1 - sm((lt - 0.08) / 0.08);
+  return {
+    hold: h,
+    lift: 0,
+    torso: 4 - 2 * a,
+    neck: -3 * a,
+    yaw: 14,
+    ng: 0.5 - 0.35 * a,
+    fg: 0.3 * a,
+    nhx: lerp(CUP_W_X - 96, W_HIP + 195, a),
+    nhy: lerp(CUP_Y - 24, SEAT_Y - 290, a),
+    nHw: 0,
+    fhx: lerp(W_LAP.x, W_HIP + 92, a),
+    fhy: lerp(SEAT_Y - 49, SEAT_Y - 228, a),
+    fHw: 0,
+    chairDx: 0,
+    chairTilt: 0,
+  };
+};
+const tipDegAt = (lt: number) => SUBJ.maxTip * sm((lt - SUBJ.tipA) / (SUBJ.tipB - SUBJ.tipA));
+
+/** the thrown cup: base-centre position and spin (deg) at local time lt (SUBJ.rel <= lt <= SUBJ.land) */
+const cupFlight = (lt: number) => {
+  const rest = {x: CUP_W_X, y: CUP_Y - CUP_BASE_DY};
+  const floorY = FLOOR + 34;
+  if (lt <= SUBJ.apex) {
+    const e = easeOut(clamp((lt - SUBJ.rel) / (SUBJ.apex - SUBJ.rel)));
+    return {x: rest.x + 4 * e, y: rest.y - 80 * e, tilt: -40 * e, sc: 1};
+  }
+  const tau = clamp((lt - SUBJ.apex) / (SUBJ.land - SUBJ.apex));
+  const apex = {x: rest.x + 4, y: rest.y - 80};
+  // it falls toward the viewer (off the table's near edge): it grows a little as it drops, and lands in front of the table
+  return {x: apex.x + 12 * tau, y: lerp(apex.y, floorY, tau * tau), tilt: -40 - 220 * tau, sc: 1 + 0.3 * tau};
 };
 
 /** a scalloped thought-bubble outline: n lobes along an ellipse */
@@ -148,42 +194,38 @@ const subjective = (t: number, f: number, lt: number): React.ReactNode => {
   const dur = SUBJ_DUR;
   const u = clamp(lt / dur);
   const w = subjectiveW(lt);
-  const fall = clamp((lt - 0.06) / 0.34);
-  const burst = clamp((lt - 0.4) / 0.17);
-  const floorY = FLOOR - 26;
-  const cx0 = CUP_W_X;
-  const cupX = lerp(cx0, cx0 - 70, easeOut(fall));
-  const cupY = lerp(CUP_Y, floorY, fall * fall) - Math.sin(Math.PI * Math.min(1, fall * 1.15)) * 30;
-  const cupTilt = -540 * fall;
+  const flying = lt >= SUBJ.rel && lt < SUBJ.land;
+  const fl = cupFlight(Math.min(lt, SUBJ.land));
   const R = rng(5);
-  const shards = Array.from({length: 9}, (_, i) => {
-    const a = (i / 9) * Math.PI * 2 + R() * 0.5;
-    const sp = 60 + R() * 120;
-    return {a, sp, w: 10 + R() * 18, c: i % 3 === 0 ? '#EF6B55' : '#FFFFFF'};
+  const shards = Array.from({length: 10}, (_, i) => {
+    const a = Math.PI * (0.08 + 0.84 * (i / 9)) + (R() - 0.5) * 0.2; // an upward fan, wide and low
+    const sp = 90 + R() * 150;
+    return {a, sp, w: 9 + R() * 14, c: i % 3 === 0 ? '#EF6B55' : '#FFFFFF', spin: (R() - 0.5) * 500};
   });
-  const impact = {x: cupX, y: floorY};
-  const CS = 1.3; // the cup is drawn larger than the real one: it is what he sees in his mind
+  const bt = clamp((lt - SUBJ.land) / 0.16);
+  const impact = {x: fl.x, y: FLOOR + 30};
+  const drops = Array.from({length: 7}, (_, i) => {
+    const d = 0.011 * (i + 1.5);
+    const tt = lt - d;
+    if (tt < SUBJ.rel + 0.02 || tt >= SUBJ.land) return null;
+    const q = cupFlight(tt);
+    return {x: q.x + (i % 2 ? 9 : -7) * (1 + i * 0.25), y: q.y - 38 + i * 5, r: 5.5 - i * 0.35};
+  });
   const extra = (
     <g>
-      {burst <= 0 && (
-        <g transform={`rotate(${cupTilt} ${cupX} ${cupY}) translate(${cupX} ${cupY}) scale(${CS}) translate(${-cupX} ${-cupY})`}>
-          <path d={`M${cupX - 42},${cupY - 54} L${cupX + 42},${cupY - 54} Q${cupX + 39},${cupY} ${cupX + 21},${cupY} L${cupX - 21},${cupY} Q${cupX - 39},${cupY} ${cupX - 42},${cupY - 54} Z`} fill="#FFFFFF" stroke="#172B3A" strokeWidth={4} />
-          <ellipse cx={cupX} cy={cupY - 54} rx={42} ry={10} fill="#3E2412" />
-        </g>
-      )}
-      {fall > 0.1 && burst <= 0 && Array.from({length: 9}, (_, i) => (
-        <circle key={i} cx={cupX + (i - 4) * 18 + 56 * fall} cy={cupY - 54 - Math.abs(i - 4) * 11 - 44 * fall * fall} r={7} fill="#7A4A2A" opacity={0.95} />
-      ))}
-      {burst > 0 && shards.map((sh, i) => {
-        const d = sh.sp * 1.15 * easeOut(burst);
-        const x = impact.x + Math.cos(sh.a) * d;
-        const y = impact.y - 40 + Math.sin(sh.a) * d * 0.7 + 30 * burst * burst;
-        return <path key={i} d={`M0,${-sh.w * 1.2} L${sh.w * 0.96},${sh.w * 0.6} L${-sh.w * 0.72},${sh.w * 0.72} Z`} transform={`translate(${x} ${y}) rotate(${sh.a * 100 + burst * 200})`} fill={sh.c} stroke="#172B3A" strokeWidth={2.5} opacity={1 - burst * 0.5} />;
+      {/* the thrown cup (the real cup stays in her hand until it is thrown), then its drops */}
+      {flying && <Cup id="subjcup" x={fl.x} y={fl.y} s={CUP_S * fl.sc} tall={CUP_TALL} tilt={fl.tilt} saucer={false} handle={false} steam={0} />}
+      {drops.map((d, i) => d && <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#7A4A2A" stroke="#172B3A" strokeWidth={2} opacity={0.95} />)}
+      {bt > 0 && shards.map((sh, i) => {
+        const e = easeOut(bt);
+        const x = impact.x + Math.cos(sh.a) * sh.sp * e * 1.1;
+        const y = impact.y - 6 - Math.sin(sh.a) * sh.sp * 0.55 * e + 150 * bt * bt;
+        return <path key={i} d={`M0,${-sh.w * 1.2} L${sh.w * 0.96},${sh.w * 0.6} L${-sh.w * 0.72},${sh.w * 0.72} Z`} transform={`translate(${x} ${y}) rotate(${sh.spin * bt})`} fill={sh.c} stroke="#172B3A" strokeWidth={2.5} opacity={1 - bt * 0.55} />;
       })}
-      {burst > 0 && <circle cx={impact.x} cy={impact.y - 20} r={20 + 90 * burst} fill="none" stroke="#FFFFFF" strokeWidth={6 * (1 - burst) + 1} opacity={0.8 * (1 - burst)} />}
+      {bt > 0 && <ellipse cx={impact.x} cy={impact.y} rx={24 + 120 * bt} ry={8 + 30 * bt} fill="none" stroke="#FFFFFF" strokeWidth={6 * (1 - bt) + 1} opacity={0.8 * (1 - bt)} />}
     </g>
   );
-  const cam: Cam = {x: 405, y: 1170, z: lerp(1.3, 1.4, u), roll: -3 + 1.1 * Math.sin(f * 1.3)};
+  const cam: Cam = {x: 292, y: 1210, z: lerp(1.3, 1.38, u), roll: -2 + 0.9 * Math.sin(f * 1.3)};
   // the bubble flashes in (pops with overshoot), holds, and darkens out in the last 4 frames
   const pop = lt < 0.01 ? 0.7 : 0.7 + 0.3 * easeOutBack(clamp(lt / 0.13), 1.5);
   const fadeOut = clamp((lt - (dur - 0.14)) / 0.14);
@@ -218,7 +260,7 @@ const subjective = (t: number, f: number, lt: number): React.ReactNode => {
         <path d={cloud} fill="#FFFFFF" opacity={0.0} />
         <g clipPath="url(#subj-clip)">
           <g filter="url(#subj-f)">
-            <InteriorWorld t={t} f={f} cam={cam} opts={{w, wExpr: X.wAlarm, hideCupW: true, steam: 0, extra}} />
+            <InteriorWorld t={t} f={f} cam={cam} opts={{w, wExpr: X.wAlarm, hideCupW: lt >= SUBJ.rel, tipW: tipDegAt(lt), steam: 0, extra}} />
           </g>
           <rect x={0} y={0} width={1080} height={1920} fill="url(#subj-in)" />
           <rect x={0} y={0} width={1080} height={1920} fill={RED} opacity={0.16} />

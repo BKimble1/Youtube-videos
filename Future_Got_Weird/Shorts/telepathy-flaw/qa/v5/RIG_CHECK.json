@@ -1,0 +1,220 @@
+{
+ "note": "segment length ratios are measured / rig length (1.000 = exact); a planted hand may stretch at most 4.5%",
+ "segmentRatios": {
+  "woman.near": {
+   "min": 0.9999999999999989,
+   "max": 1.000000000000001
+  },
+  "woman.far": {
+   "min": 0.9999999999999983,
+   "max": 1.0004900286943872
+  },
+  "woman.nearLeg": {
+   "min": 0.9999999999999994,
+   "max": 1.009718996198424
+  },
+  "woman.farLeg": {
+   "min": 0.9999999999999997,
+   "max": 1.0125451807833468
+  },
+  "man.near": {
+   "min": 0.9999999999999983,
+   "max": 1.0000000000000016
+  },
+  "man.far": {
+   "min": 0.9999999999999983,
+   "max": 1.0000000000000016
+  },
+  "man.nearLeg": {
+   "min": 0.9999999999999996,
+   "max": 1.009718996198424
+  },
+  "man.farLeg": {
+   "min": 0.9999999999999997,
+   "max": 1.012373082922413
+  }
+ },
+ "elbowBendSigns": {
+  "woman.near": [
+   -1
+  ],
+  "woman.far": [
+   -1
+  ],
+  "man.near": [
+   1
+  ],
+  "man.far": [
+   1
+  ]
+ },
+ "largestJointStepPerFrame_rigUnits": {
+  "v": 56.4,
+  "key": "woman.far.W",
+  "frame": 430
+ },
+ "jointStepsOver28UnitsPerFrame": [
+  {
+   "frame": 336,
+   "key": "woman.near.W",
+   "step": 28.1
+  },
+  {
+   "frame": 337,
+   "key": "woman.near.W",
+   "step": 29.1
+  },
+  {
+   "frame": 338,
+   "key": "woman.near.W",
+   "step": 28.6
+  },
+  {
+   "frame": 367,
+   "key": "woman.near.W",
+   "step": 30
+  },
+  {
+   "frame": 368,
+   "key": "woman.near.W",
+   "step": 33.1
+  },
+  {
+   "frame": 369,
+   "key": "woman.near.W",
+   "step": 33.6
+  },
+  {
+   "frame": 370,
+   "key": "woman.near.W",
+   "step": 31.7
+  },
+  {
+   "frame": 428,
+   "key": "woman.far.E",
+   "step": 31.5
+  },
+  {
+   "frame": 428,
+   "key": "woman.far.W",
+   "step": 33.4
+  },
+  {
+   "frame": 429,
+   "key": "woman.near.W",
+   "step": 49
+  },
+  {
+   "frame": 429,
+   "key": "woman.far.E",
+   "step": 37
+  },
+  {
+   "frame": 429,
+   "key": "woman.far.W",
+   "step": 50.1
+  },
+  {
+   "frame": 430,
+   "key": "woman.near.E",
+   "step": 43.6
+  },
+  {
+   "frame": 430,
+   "key": "woman.near.W",
+   "step": 48.6
+  },
+  {
+   "frame": 430,
+   "key": "woman.far.E",
+   "step": 33.7
+  },
+  {
+   "frame": 430,
+   "key": "woman.far.W",
+   "step": 56.4
+  },
+  {
+   "frame": 431,
+   "key": "woman.near.E",
+   "step": 41.2
+  },
+  {
+   "frame": 431,
+   "key": "woman.near.W",
+   "step": 43.2
+  },
+  {
+   "frame": 431,
+   "key": "woman.far.W",
+   "step": 52.2
+  },
+  {
+   "frame": 432,
+   "key": "woman.near.E",
+   "step": 30.2
+  },
+  {
+   "frame": 432,
+   "key": "woman.near.W",
+   "step": 31.1
+  },
+  {
+   "frame": 432,
+   "key": "woman.far.W",
+   "step": 37.6
+  },
+  {
+   "frame": 470,
+   "key": "woman.near.W",
+   "step": 29.3
+  },
+  {
+   "frame": 471,
+   "key": "woman.near.W",
+   "step": 31.3
+  },
+  {
+   "frame": 472,
+   "key": "woman.near.W",
+   "step": 31.3
+  },
+  {
+   "frame": 473,
+   "key": "woman.near.W",
+   "step": 29.2
+  },
+  {
+   "frame": 498,
+   "key": "woman.near.W",
+   "step": 31.9
+  },
+  {
+   "frame": 499,
+   "key": "woman.near.W",
+   "step": 33.6
+  },
+  {
+   "frame": 500,
+   "key": "woman.near.W",
+   "step": 33
+  },
+  {
+   "frame": 501,
+   "key": "woman.near.W",
+   "step": 29.3
+  },
+  {
+   "frame": 794,
+   "key": "woman.near.W",
+   "step": 33.3
+  },
+  {
+   "frame": 795,
+   "key": "woman.far.W",
+   "step": 28.3
+  }
+ ],
+ "stretchedFrames": null,
+ "frames": 2356
+}

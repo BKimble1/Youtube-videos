@@ -1,0 +1,198 @@
+{
+ "note": "projected boxes (face = head disc, hand = ~34 rig units round the wrist, implant = the disc); the caption box is estimated from the character count, so this is a screening check, not a pixel measurement",
+ "perShot": {
+  "macro": {
+   "frames": 20,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "extWide": {
+   "frames": 48,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "recvHey": {
+   "frames": 18,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "sendSmile": {
+   "frames": 12,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "neck": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "matchImplant": {
+   "frames": 27,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "capture": {
+   "frames": 41,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "cortex": {
+   "frames": 40,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "decoder": {
+   "frames": 48,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "intWide": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "intTwo": {
+   "frames": 48,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "sendFalter": {
+   "frames": 20,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "redNeural": {
+   "frames": 16,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "subjective": {
+   "frames": 20,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "reality": {
+   "frames": 18,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "sendReject": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "handCup": {
+   "frames": 39,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "swarm": {
+   "frames": 42,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "calmTwo": {
+   "frames": 30,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "restrain": {
+   "frames": 25,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "mechanism": {
+   "frames": 83,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "realize": {
+   "frames": 27,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "signal": {
+   "frames": 12,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "recvRecog": {
+   "frames": 25,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "withdraw": {
+   "frames": 18,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "sendRegister": {
+   "frames": 18,
+   "faceHits": 4,
+   "handHits": 0,
+   "implantHits": 0
+  },
+  "macroEnd": {
+   "frames": 14,
+   "faceHits": 0,
+   "handHits": 0,
+   "implantHits": 0
+  }
+ },
+ "hitFrames": 4,
+ "firstHits": [
+  {
+   "t": 27.27,
+   "frame": 818,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "face(man)"
+  },
+  {
+   "t": 27.3,
+   "frame": 819,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "face(man)"
+  },
+  {
+   "t": 27.33,
+   "frame": 820,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "face(man)"
+  },
+  {
+   "t": 27.37,
+   "frame": 821,
+   "shot": "sendRegister",
+   "caption": "trying to bury.",
+   "thing": "face(man)"
+  }
+ ]
+}

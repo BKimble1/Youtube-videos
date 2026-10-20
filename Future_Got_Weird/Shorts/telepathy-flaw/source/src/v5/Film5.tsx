@@ -2,7 +2,7 @@
 // Every shot is a pure function of its local time; overlays (opening cue, captions) are screen-fixed.
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {Captions, FictionCue} from '../shots/Overlay';
+import {Captions, FictionCue} from './shots/Overlay5';
 import {FPS, shotAt} from './plan5';
 import {renderShot} from './shots/registry';
 import '../fonts';
