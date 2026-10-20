@@ -92,6 +92,7 @@ export type ShotId =
   | 'handCup'
   | 'swarm'
   | 'calmTwo'
+  | 'restrain'
   | 'mechanism'
   | 'realize'
   | 'signal'
@@ -105,9 +106,9 @@ export type Shot = {id: ShotId; a: number; b: number; why: string};
 /** cut times (s). The list is contiguous: each shot ends where the next begins. */
 const CUTS: [ShotId, number, string][] = [
   ['macro', 0, 'arresting open: the implant disc, pulsing as "brain chip" is said'],
-  ['extWide', 0.7, 'who and where: two people outside a small café, the sender arrives'],
-  ['recvHey', 1.8, 'the silent greeting arrives at her point of view; she looks up and answers'],
-  ['sendSmile', 2.55, 'reverse: the sender, pleased; the implant glows'],
+  ['extWide', 0.7, 'who and where: two people with coffee outside a small café; his implant pulses, then her "Hey" pops (cause and effect in one frame)'],
+  ['recvHey', 2.3, 'she looks up from her cup and answers with a smile'],
+  ['sendSmile', 2.9, 'reverse: the sender, pleased; the implant glows'],
   ['neck', 3.3, 'not the vocal cords: a throat cutaway, still and silent'],
   ['matchImplant', 4.7, 'match cut: the open glottis becomes the implant disc; section of the device in the skull'],
   ['capture', 5.6, 'impulse capture: a neuron fires and the electrode tip picks it up'],
@@ -117,12 +118,13 @@ const CUTS: [ShotId, number, string][] = [
   ['intTwo', 11.3, 'closer: an easy exchange, cups, a shared smile; his smile starts to fail'],
   ['sendFalter', 12.9, 'the sender freezes: something is wrong'],
   ['redNeural', 13.55, 'inside: a red disturbance in the cortex; the chip flags it'],
-  ['subjective', 14.15, 'one subjective image: her chair tipping, a cup breaking (red, a blink long)'],
-  ['reality', 14.65, 'abrupt return: she is fine, sipping; he is not'],
+  ['subjective', 14.1, 'one subjective image in a thought frame: her chair tipping, a cup breaking (red, under a second)'],
+  ['reality', 14.75, 'abrupt return: she is fine, sipping; he is not'],
   ['sendReject', 15.35, 'he rejects the thought: eyes shut, head shake'],
   ['handCup', 16.75, 'his hand tightens on the cup, then pulls away; hers is easy and unaware'],
   ['swarm', 18.05, 'inside: thousands of dim unwanted impulses; the electrodes sample them all'],
-  ['calmTwo', 19.45, 'back: she is untroubled, he composes himself: never intended to act on'],
+  ['calmTwo', 19.45, 'back: she is untroubled, he composes himself'],
+  ['restrain', 20.45, 'under the table his hands clench and stay put: never intended to act on'],
   ['mechanism', 21.3, 'the flaw: intended and unwanted patterns get the same treatment in the chip'],
   ['realize', 24.05, 'he realizes the chip has caught what he buried'],
   ['signal', 24.95, 'the brief signal: his implant pulses, the cut lands on her'],

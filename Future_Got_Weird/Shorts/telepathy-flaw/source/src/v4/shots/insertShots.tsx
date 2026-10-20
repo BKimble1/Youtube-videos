@@ -21,10 +21,12 @@ export const insertShot = (id: ShotId, t: number, f: number, lt: number, shot: S
     case 'neck': {
       const idle = ss(W.vocal, W.cordsEnd, t) * 0.95;
       const scan = ss(4.5, 4.7, t);
+      // the folds buzz and sound rises while the line is still about speaking, and stop at "vocal" (never used again)
+      const vib = 1 - ss(W.vocal - 0.12, W.vocal + 0.1, t);
       const cam: Cam = {x: 540, y: lerp(800, 770, k), z: lerp(1.75, 2.15, k)};
       return (
         <Layer cam={cam} depth={1}>
-          <ThroatScene t={t} f={f} idle={idle} scan={scan} />
+          <ThroatScene t={t} f={f} idle={idle} scan={scan} vib={vib} />
         </Layer>
       );
     }
@@ -42,7 +44,7 @@ export const insertShot = (id: ShotId, t: number, f: number, lt: number, shot: S
       return <CortexView lt={lt} f={f} cam={cam} />;
     }
     case 'decoder': {
-      const cam: Cam = {x: 540, y: lerp(1000, 850, k), z: lerp(1.16, 1.3, k)};
+      const cam: Cam = {x: 540, y: lerp(1060, 1000, k), z: lerp(1.0, 1.1, k)};
       return <DecoderView lt={lt} f={f} cam={cam} />;
     }
     case 'redNeural': {

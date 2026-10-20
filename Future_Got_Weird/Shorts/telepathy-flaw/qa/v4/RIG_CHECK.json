@@ -11,27 +11,27 @@
   },
   "woman.nearLeg": {
    "min": 0.9999999999999994,
-   "max": 1.0000000000000009
+   "max": 1.009718996198424
   },
   "woman.farLeg": {
    "min": 0.9999999999999997,
-   "max": 1.000000000000001
+   "max": 1.0125451807833468
   },
   "man.near": {
    "min": 0.9999999999999988,
    "max": 1.0000553690485257
   },
   "man.far": {
-   "min": 0.9999999999999983,
+   "min": 0.9999999999999987,
    "max": 1.0000000000000013
   },
   "man.nearLeg": {
    "min": 0.9999999999999996,
-   "max": 1.0000000000000009
+   "max": 1.009718996198424
   },
   "man.farLeg": {
-   "min": 0.9999999999999984,
-   "max": 1.000000000000001
+   "min": 0.9999999999999997,
+   "max": 1.012373082922413
   }
  },
  "elbowBendSigns": {
@@ -49,115 +49,65 @@
   ]
  },
  "largestJointStepPerFrame_rigUnits": {
-  "v": 48.2,
-  "key": "woman.near.E",
-  "frame": 485
+  "v": 35.5,
+  "key": "woman.far.W",
+  "frame": 790
  },
  "jointStepsOver28UnitsPerFrame": [
   {
-   "frame": 336,
-   "key": "woman.near.E",
-   "step": 30.9
-  },
-  {
-   "frame": 337,
-   "key": "woman.near.E",
-   "step": 35.8
-  },
-  {
-   "frame": 338,
-   "key": "woman.near.E",
-   "step": 37.9
-  },
-  {
-   "frame": 339,
-   "key": "woman.near.E",
-   "step": 36.1
-  },
-  {
-   "frame": 340,
-   "key": "woman.near.E",
-   "step": 30.9
-  },
-  {
    "frame": 363,
    "key": "woman.near.E",
-   "step": 29.8
+   "step": 28
   },
   {
    "frame": 364,
    "key": "woman.near.E",
-   "step": 38.4
+   "step": 30.4
   },
   {
    "frame": 365,
    "key": "woman.near.E",
-   "step": 43.3
-  },
-  {
-   "frame": 366,
-   "key": "woman.near.E",
-   "step": 42.3
-  },
-  {
-   "frame": 367,
-   "key": "woman.near.E",
-   "step": 36.5
-  },
-  {
-   "frame": 368,
-   "key": "woman.near.E",
-   "step": 28.5
-  },
-  {
-   "frame": 460,
-   "key": "woman.near.E",
-   "step": 33.2
-  },
-  {
-   "frame": 461,
-   "key": "woman.near.E",
-   "step": 40.5
+   "step": 30
   },
   {
    "frame": 462,
    "key": "woman.near.E",
-   "step": 44.1
+   "step": 29.2
   },
   {
    "frame": 463,
    "key": "woman.near.E",
-   "step": 41.7
+   "step": 30.8
   },
   {
    "frame": 464,
    "key": "woman.near.E",
-   "step": 34.1
+   "step": 29.6
   },
   {
    "frame": 483,
    "key": "woman.near.E",
-   "step": 35.8
+   "step": 32
   },
   {
    "frame": 484,
    "key": "woman.near.E",
-   "step": 45.3
+   "step": 33.7
   },
   {
    "frame": 485,
    "key": "woman.near.E",
-   "step": 48.2
+   "step": 31.8
   },
   {
-   "frame": 486,
-   "key": "woman.near.E",
-   "step": 43.3
+   "frame": 488,
+   "key": "woman.near.W",
+   "step": 28.3
   },
   {
-   "frame": 487,
-   "key": "woman.near.E",
-   "step": 34.1
+   "frame": 489,
+   "key": "woman.near.W",
+   "step": 28.6
   },
   {
    "frame": 788,
@@ -176,13 +126,28 @@
   },
   {
    "frame": 791,
+   "key": "woman.near.W",
+   "step": 29.1
+  },
+  {
+   "frame": 791,
    "key": "woman.far.W",
    "step": 34.9
   },
   {
    "frame": 792,
+   "key": "woman.near.W",
+   "step": 31.4
+  },
+  {
+   "frame": 792,
    "key": "woman.far.W",
    "step": 31.6
+  },
+  {
+   "frame": 793,
+   "key": "woman.near.W",
+   "step": 29.1
   }
  ],
  "stretchedFrames": null,

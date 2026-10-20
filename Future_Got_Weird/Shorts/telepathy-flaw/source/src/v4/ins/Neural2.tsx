@@ -195,7 +195,7 @@ export const CortexView: React.FC<{lt: number; f: number; cam: Cam}> = ({lt, f, 
 const hexD = (cx: number, cy: number, r: number) =>
   `M${Array.from({length: 6}, (_, i) => P({x: cx + r * Math.cos(((i * 60 + 30) * Math.PI) / 180), y: cy + r * Math.sin(((i * 60 + 30) * Math.PI) / 180)})).join(' L')} Z`;
 
-const CH_X = [380, 470, 610, 700];
+const CH_X = [410, 485, 595, 670];
 const spikePath = (x: number, y0: number, y1: number, seed: number, amp: number) => {
   const R = rng(seed);
   let d = `M${x},${y1}`;
@@ -224,32 +224,50 @@ export const DecoderView: React.FC<{lt: number; f: number; cam: Cam}> = ({lt, f,
       <FieldBg id="dc" cx={540} cy={900} />
       <Layer cam={cam} depth={1}>
         <defs>
-          <linearGradient id="dc-case" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#4C7CFF" />
-            <stop offset="0.5" stopColor={BLUE} />
+          <radialGradient id="dc-bez" gradientUnits="userSpaceOnUse" cx={cx} cy={cy} r={414} fx={cx - 150} fy={cy - 210}>
+            <stop offset="0" stopColor="#5E8BFF" />
+            <stop offset="0.7" stopColor={BLUE} />
             <stop offset="1" stopColor={BLUE_D} />
-          </linearGradient>
+          </radialGradient>
           <radialGradient id="dc-die" gradientUnits="userSpaceOnUse" cx={cx} cy={cy} r={190} fx={cx - 60} fy={cy - 80}>
             <stop offset="0" stopColor="#FFE9A6" />
             <stop offset="0.6" stopColor="#E2A93E" />
             <stop offset="1" stopColor="#A56A18" />
           </radialGradient>
           <clipPath id="dc-clip">
-            <path d={rr(206, 556, 668, 728, 46)} />
+            <circle cx={cx} cy={cy} r={346} />
           </clipPath>
         </defs>
-        {/* the casing */}
-        <path d={rr(160, 510, 760, 820, 76)} fill={INK} />
-        <path d={rr(170, 520, 740, 800, 70)} fill="url(#dc-case)" />
-        <path d={rr(170, 520, 740, 120, 70)} fill="#FFFFFF" opacity={0.12} />
-        <path d={rr(206, 556, 668, 728, 46)} fill="#0A1A3A" stroke={INK} strokeWidth={5} />
+        {/* the casing: the same round blue bezel and rivets as the implant on his head, opened to show the board */}
+        <circle cx={cx} cy={cy} r={424} fill={INK} />
+        <circle cx={cx} cy={cy} r={414} fill="url(#dc-bez)" />
+        <path d={`M${P(polar(396, 205, cx, cy))} A396 396 0 0 1 ${P(polar(396, 262, cx, cy))}`} stroke="#FFFFFF" strokeWidth={14} strokeLinecap="round" fill="none" opacity={0.28} />
+        {Array.from({length: 12}, (_, i) => {
+          const p = polar(384, i * 30 + 15, cx, cy);
+          return (
+            <g key={i}>
+              <circle cx={p.x} cy={p.y} r={11} fill={INK} />
+              <circle cx={p.x} cy={p.y} r={7.5} fill="#8FB0FF" />
+              <circle cx={p.x - 2} cy={p.y - 2} r={2.6} fill="#FFFFFF" opacity={0.8} />
+            </g>
+          );
+        })}
+        {/* the clip tabs on either side, as on the implant */}
+        {[-1, 1].map((sd) => (
+          <g key={sd}>
+            <path d={rr(cx + sd * 416 - 22, cy - 56, 44, 112, 18)} fill={INK} />
+            <path d={rr(cx + sd * 416 - 17, cy - 51, 34, 102, 14)} fill={BLUE} />
+          </g>
+        ))}
+        <circle cx={cx} cy={cy} r={354} fill={INK} />
+        <circle cx={cx} cy={cy} r={346} fill="#0A1A3A" stroke="#9AF0FF" strokeOpacity={0.5} strokeWidth={4} />
         <g clipPath="url(#dc-clip)">
           {/* board texture */}
           {Array.from({length: 12}, (_, i) => (
-            <path key={i} d={`M206,${580 + i * 62} H874`} stroke="#1C3C7A" strokeOpacity={0.5} strokeWidth={2} />
+            <path key={i} d={`M180,${600 + i * 56} H900`} stroke="#1C3C7A" strokeOpacity={0.5} strokeWidth={2} />
           ))}
           {/* components */}
-          {[[236, 600, 80, 44], [236, 664, 80, 30], [760, 600, 90, 52], [770, 676, 80, 34], [236, 1180, 70, 70], [790, 1170, 64, 90]].map(([x, y, w, h], i) => (
+          {[[318, 640, 80, 44], [300, 702, 80, 30], [662, 640, 90, 52], [690, 706, 80, 34], [300, 1100, 70, 70], [700, 1100, 64, 80]].map(([x, y, w, h], i) => (
             <g key={i}>
               <rect x={x} y={y} width={w} height={h} rx={8} fill="#13306A" stroke="#2E5AB8" strokeWidth={3} />
               <path d={`M${x + 10},${y + h / 2} H${x + w - 10}`} stroke="#46CFFF" strokeOpacity={0.4} strokeWidth={3} />
@@ -257,18 +275,17 @@ export const DecoderView: React.FC<{lt: number; f: number; cam: Cam}> = ({lt, f,
           ))}
           {/* input channels: spike trains entering from the bottom */}
           {CH_X.map((x, i) => {
-            const d = spikePath(x, 1120, 1300, 70 + i, 12);
+            const d = spikePath(x, 1120, 1250, 70 + i, 12);
             const u = inU(i);
             return (
               <g key={i}>
                 <path d={d} stroke="#46CFFF" strokeOpacity={0.25} strokeWidth={4} fill="none" strokeLinejoin="round" />
                 <path d={`M${x},1120 L${lerp(x, cx + (i - 1.5) * 44, 0.9)},${cy + 150}`} stroke="#46CFFF" strokeOpacity={0.3} strokeWidth={4} fill="none" />
-                <path d={`M${x},1300 L${x},1120`} stroke="#46CFFF" strokeWidth={0} />
-                {u > 0 && (
+                                {u > 0 && (
                   <g>
                     <path d={d} stroke="#9AE6FF" strokeWidth={5} fill="none" strokeLinejoin="round" strokeDasharray="1000" strokeDashoffset={1000 - 1000 * u * 1} opacity={0.95} pathLength={1000} />
-                    <circle cx={x} cy={lerp(1300, 1120, u)} r={9} fill="#FFFFFF" />
-                    <Glow id={`dc-s${i}`} c={{x, y: lerp(1300, 1120, u)}} r={42} color={CYAN} alpha={0.8} />
+                    <circle cx={x} cy={lerp(1250, 1120, u)} r={9} fill="#FFFFFF" />
+                    <Glow id={`dc-s${i}`} c={{x, y: lerp(1250, 1120, u)}} r={42} color={CYAN} alpha={0.8} />
                   </g>
                 )}
                 {u >= 1 && <circle cx={x} cy={1120} r={9} fill="#9AE6FF" />}
@@ -342,7 +359,7 @@ export const SwarmView: React.FC<{lt: number; f: number; cam: Cam}> = ({lt, f, c
       <Layer cam={cam} depth={1.25}>
         {dots.slice(0, 450).map((d, i) => {
           const a = 0.3 + 0.6 * Math.max(0, Math.sin(f * d.sp + d.ph));
-          return <circle key={i} cx={fmt(d.x)} cy={fmt(d.y)} r={d.r * 0.9} fill={d.hue > 0.86 ? '#B58CFF' : '#FF5470'} opacity={a * 0.75} />;
+          return <circle key={i} cx={fmt(d.x)} cy={fmt(d.y)} r={d.r * 0.9} fill={d.hue > 0.94 ? '#6A5AB8' : d.hue > 0.5 ? '#9E2440' : '#C23A52'} opacity={a * 0.7} />;
         })}
       </Layer>
       <Layer cam={cam} depth={1}>
@@ -350,7 +367,7 @@ export const SwarmView: React.FC<{lt: number; f: number; cam: Cam}> = ({lt, f, c
           const a = 0.4 + 0.6 * Math.max(0, Math.sin(f * d.sp + d.ph));
           const near = Math.abs(d.x - sx);
           const sampled = near < 70 ? 1 - near / 70 : 0;
-          const col = d.hue > 0.9 ? '#7FD8FF' : '#FF6B86';
+          const col = d.hue > 0.97 ? '#4F86D0' : d.hue > 0.5 ? '#B02C48' : '#D8485E';
           return (
             <g key={i}>
               <circle cx={fmt(d.x)} cy={fmt(d.y)} r={fmt(d.r * (1 + sampled * 0.6))} fill={sampled > 0.2 ? '#FFFFFF' : col} opacity={Math.min(1, a + sampled)} />
@@ -360,8 +377,14 @@ export const SwarmView: React.FC<{lt: number; f: number; cam: Cam}> = ({lt, f, c
         })}
         {/* the electrode array: a grid of fine contacts, with the sampling front */}
         <g>
-          <rect x={sx - 60} y={-100} width={120} height={2300} fill="#46CFFF" opacity={0.1} />
-          <rect x={sx - 5} y={-100} width={10} height={2300} fill="#9AE6FF" opacity={0.75} />
+          <defs>
+            <linearGradient id="sw-band" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stopColor="#46CFFF" stopOpacity={0} />
+              <stop offset="0.5" stopColor="#46CFFF" stopOpacity={0.16} />
+              <stop offset="1" stopColor="#46CFFF" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <rect x={sx - 150} y={-100} width={300} height={2300} fill="url(#sw-band)" />
           {Array.from({length: 12}, (_, r) =>
             Array.from({length: 9}, (_, c) => {
               const x = 60 + c * 120;

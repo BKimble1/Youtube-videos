@@ -27,7 +27,8 @@ export const Backdrop: React.FC<{id: string; a?: string; b?: string; c?: string}
 );
 
 /** state: calm 0..1 (the folds go from warm and alive to grey and slack as "vocal cords," ends) */
-export const ThroatScene: React.FC<{t: number; f: number; idle: number; scan?: number}> = ({t, f, idle, scan = 0}) => {
+/** vib: 1 while he would speak (the folds oscillate and sound arcs rise through the pharynx), 0 once they are 'not used' */
+export const ThroatScene: React.FC<{t: number; f: number; idle: number; scan?: number; vib?: number}> = ({t, f, idle, scan = 0, vib = 0}) => {
   const cx = 540;
   const fold = mix('#F0948E', '#B9A9AB', idle);
   const foldD = mix('#C85E66', '#8E8590', idle);
@@ -35,6 +36,8 @@ export const ThroatScene: React.FC<{t: number; f: number; idle: number; scan?: n
   const breath = Math.sin(t * 2.2) * 2;
   void breath;
   const cut = rr(392, 400, 296, 800, 74);
+  // the folds close and open ~6 times a second (every 5th frame: it reads as a buzz, not an alias)
+  const vv = vib * (-7 + 14 * (0.5 + 0.5 * Math.sin(t * Math.PI * 2 * 6)));
   return (
     <g>
       <Backdrop id="th" />
@@ -98,8 +101,8 @@ export const ThroatScene: React.FC<{t: number; f: number; idle: number; scan?: n
           <path d="M488,690 Q510,700 520,722 L488,730 Z" fill={foldD} stroke={INK} strokeWidth={3} />
           <path d="M592,690 Q570,700 560,722 L592,730 Z" fill={foldD} stroke={INK} strokeWidth={3} />
           {/* the true vocal folds and the glottal slit between them */}
-          <path d="M490,748 Q516,742 528,766 Q524,790 490,794 Z" fill={fold} stroke={INK} strokeWidth={4} />
-          <path d="M590,748 Q564,742 552,766 Q556,790 590,794 Z" fill={fold} stroke={INK} strokeWidth={4} />
+          <path d={`M490,748 Q516,742 ${fmt(528 + vv)},766 Q${fmt(524 + vv)},790 490,794 Z`} fill={fold} stroke={INK} strokeWidth={4} />
+          <path d={`M590,748 Q564,742 ${fmt(552 - vv)},766 Q${fmt(556 - vv)},790 590,794 Z`} fill={fold} stroke={INK} strokeWidth={4} />
           <path d="M500,752 Q516,750 522,762" stroke="#FFFFFF" strokeWidth={5} strokeLinecap="round" fill="none" opacity={0.6 * (1 - idle)} />
           <path d="M580,752 Q564,750 558,762" stroke="#FFFFFF" strokeWidth={5} strokeLinecap="round" fill="none" opacity={0.6 * (1 - idle)} />
           {/* trachea with cartilage rings */}
@@ -114,6 +117,13 @@ export const ThroatScene: React.FC<{t: number; f: number; idle: number; scan?: n
             );
           })}
           <Glow id="th-fg" c={{x: cx, y: 770}} r={120} color="#FFB07A" alpha={0.5 * (1 - idle)} />
+          {/* sound arcs rising from the glottis through the pharynx while he would speak */}
+          {vib > 0.02 && [0, 1, 2, 3].map((i) => {
+            const ph = (t * 1.6 + i / 4) % 1;
+            const r = 40 + 330 * ph;
+            const a = 1.05;
+            return <path key={i} d={`M${fmt(cx + r * Math.sin(-a))},${fmt(740 - r * Math.cos(a))} A${fmt(r)},${fmt(r)} 0 0 1 ${fmt(cx + r * Math.sin(a))},${fmt(740 - r * Math.cos(a))}`} fill="none" stroke="#FFE7C7" strokeWidth={9 * (1 - ph * 0.5)} strokeLinecap="round" opacity={vib * 0.85 * (1 - ph)} />;
+          })}
         </g>
         {/* a scan ring: the chip begins to read (the next cut) */}
         {scan > 0.01 && <circle cx={cx} cy={770} r={80 + 120 * scan} fill="none" stroke="#46CFFF" strokeWidth={8 * (1 - scan) + 2} opacity={0.8 * (1 - scan)} />}

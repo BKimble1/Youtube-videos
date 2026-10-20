@@ -86,9 +86,11 @@ CUES = [
     cue(23.00, 'tick', -12, 0), cue(23.15, 'tick', -12, 0), cue(23.30, 'tick', -12, 0),
     cue(23.05, 'pop', -10, -0.05, note='token A'),
     cue(23.45, 'pop', -10, -0.05, note='token B (identical)'),
+    cue(20.82, 'tick', -16, -0.1, note='his hands clench in his lap'),
     # the signal and the reaction
     cue(24.95, 'zipred', -10, -0.1, note='his implant pulses: the brief signal'),
     cue(25.78, 'chimebad', -6, 0.45, note='the same friendly chime, uncomfortable: lower, dry (Message Delivered, in the gap after "you")'),
+    cue(25.38, 'pop', -13, 0.4, note='the alert pops beside her (a chair and a cup)'),
     cue(25.46, 'inhale', -18, 0.5, note='she breathes in as she reads'),
     cue(26.28, 'rustle', -14, 0.5, note='she draws back; the chair slides'),
     # return into the opening (unchanged from V3)

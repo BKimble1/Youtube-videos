@@ -35,7 +35,7 @@ for (let f = 0; f < TOTAL4; f++) {
   const lines = text.length * CAP.size * 0.5 > CAP.maxW ? 2 : 1;
   const lane: Box = {name: 'caption', x0: CAP.cx - width / 2, x1: CAP.cx + width / 2, y0: CAP.cy - (lines * CAP.line) / 2, y1: CAP.cy + (lines * CAP.line) / 2};
   const things: Box[] = [];
-  const interior = ['intWide', 'intTwo', 'sendFalter', 'reality', 'sendReject', 'handCup', 'calmTwo', 'realize', 'recvRecog', 'withdraw', 'sendRegister', 'signal'].includes(shot.id);
+  const interior = ['intWide', 'intTwo', 'sendFalter', 'reality', 'sendReject', 'handCup', 'calmTwo', 'restrain', 'realize', 'recvRecog', 'withdraw', 'sendRegister', 'signal'].includes(shot.id);
   if (interior && shot.id !== 'signal') {
     const cam = interiorCam(shot.id as never, t, shot);
     const S = solveInterior(t);

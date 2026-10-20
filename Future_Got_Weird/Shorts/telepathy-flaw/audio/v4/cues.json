@@ -336,6 +336,13 @@
    "note": "token B (identical)"
   },
   {
+   "t": 20.82,
+   "kind": "tick",
+   "gain": -16,
+   "pan": -0.1,
+   "note": "his hands clench in his lap"
+  },
+  {
    "t": 24.95,
    "kind": "zipred",
    "gain": -10,
@@ -348,6 +355,13 @@
    "gain": -6,
    "pan": 0.45,
    "note": "the same friendly chime, uncomfortable: lower, dry (Message Delivered, in the gap after \"you\")"
+  },
+  {
+   "t": 25.38,
+   "kind": "pop",
+   "gain": -13,
+   "pan": 0.4,
+   "note": "the alert pops beside her (a chair and a cup)"
   },
   {
    "t": 25.46,

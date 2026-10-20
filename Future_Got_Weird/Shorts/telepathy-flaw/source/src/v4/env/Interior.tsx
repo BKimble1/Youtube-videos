@@ -129,7 +129,7 @@ export const InteriorBack: React.FC<{f: number; glow?: number}> = ({f, glow = 1}
       </g>
 
       {/* pendant lamps */}
-      {[470, 760, 1000].map((x, i) => (
+      {[330, 760, 1000].map((x, i) => (
         <g key={i}>
           <path d={`M${x},-20 V${150 + (i % 2) * 20}`} stroke={INK} strokeOpacity={0.6} strokeWidth={4} />
           <path d={`M${x - 52},${230 + (i % 2) * 20} Q${x - 46},${160 + (i % 2) * 20} ${x},${152 + (i % 2) * 20} Q${x + 46},${160 + (i % 2) * 20} ${x + 52},${230 + (i % 2) * 20} Z`} fill={P.lamp} {...OL} strokeWidth={3.4} />

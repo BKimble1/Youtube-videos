@@ -54,11 +54,14 @@ export const solveExterior = (t: number) => {
   const hand = {x: W0.Sh.x + 112 * ES, y: W0.Sh.y + 300 * ES};
   const wFig = {...wFig0, nearHand: hand, nearWrist: 36};
   const wPose = figure(wFig);
-  const mFig = mk(-1, EM_X, {torso: r.mtorso, neck: r.mneck, yaw: r.myaw, nearFoot: 24, farFoot: -52, nearRest: {u: -371, v: 64}, farRest: {u: -366, v: -62}, nearElbow: -1, farElbow: -1});
-  const mPose = figure(mFig);
+  const mFig0 = mk(-1, EM_X, {torso: r.mtorso, neck: r.mneck, yaw: r.myaw, nearFoot: 24, farFoot: -52, nearRest: {u: -371, v: 64}, farRest: {u: -366, v: -62}, nearElbow: -1, farElbow: -1});
+  const M0 = manJoints(figure(mFig0));
+  // he has a coffee too: the near hand holds a takeaway cup at the waist (arms bent, not hanging as tubes)
+  const mHand = {x: M0.Sh.x - 112 * ES, y: M0.Sh.y + 300 * ES};
+  const mPose = figure({...mFig0, nearHand: mHand, nearWrist: -36});
   const WJ = womanJoints(wPose);
   const MJ = manJoints(mPose);
-  return {wPose, mPose, wHead: WJ.head, mHead: MJ.head, hand, wExpr: exprAt(t, W_EX), mExpr: exprAt(t, M_EX), wBlink: blinkAt(t, 1.3, [[1.9, 2.5]]), mBlink: blinkAt(t, 2.2)};
+  return {wPose, mPose, wHead: WJ.head, mHead: MJ.head, hand, mHand, wExpr: exprAt(t, W_EX), mExpr: exprAt(t, M_EX), wBlink: blinkAt(t, 1.3, [[1.9, 2.5]]), mBlink: blinkAt(t, 2.2)};
 };
 
 export const ExteriorWorld: React.FC<{t: number; f: number; cam: Cam; extra?: (s: ReturnType<typeof solveExterior>) => React.ReactNode}> = ({t, f, cam, extra}) => {
@@ -70,7 +73,7 @@ export const ExteriorWorld: React.FC<{t: number; f: number; cam: Cam; extra?: (s
         <ExteriorBack f={f} />
         <ExteriorFront f={f} />
         <Woman id="eW" pose={s.wPose} expr={s.wExpr} blink={s.wBlink} lHand={mixHand(HAND_RELAXED, GRIP, 0.75)} rHand={HAND_RELAXED} held={cup} />
-        <Man id="eM" pose={s.mPose} expr={s.mExpr} blink={s.mBlink} lHand={HAND_RELAXED} rHand={HAND_RELAXED} headOverlay={<Implant4 yaw={s.mPose.yaw ?? 20} glow={extGlow(t)} color="#46CFFF" f={f} />} />
+        <Man id="eM" pose={s.mPose} expr={s.mExpr} blink={s.mBlink} lHand={mixHand(HAND_RELAXED, GRIP, 0.75)} rHand={HAND_RELAXED} held={<PaperCup id="pcm" x={s.mHand.x - 6} y={s.mHand.y + 56 * ES} s={ES * 0.95} f={f} steam={0.6} />} headOverlay={<Implant4 yaw={s.mPose.yaw ?? 20} glow={extGlow(t)} color="#46CFFF" f={f} />} />
         {extra?.(s)}
       </Layer>
     </g>

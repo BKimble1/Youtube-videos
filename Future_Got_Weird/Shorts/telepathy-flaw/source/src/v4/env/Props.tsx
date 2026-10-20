@@ -91,7 +91,7 @@ export const Table: React.FC<{id: string; x: number; floor: number; s?: number; 
 };
 
 /** Cup on a saucer. (x, y) = the middle of the saucer's underside; `steam` 0..1 animates with `f`. */
-export const Cup: React.FC<{id: string; x: number; y: number; s?: number; fx?: -1 | 1; f?: number; steam?: number; color?: string; fill?: number; tilt?: number; saucer?: boolean; ripple?: number; body?: boolean}> = ({id, x, y, s = 1, fx = 1, f = 0, steam = 1, color = PROP.cup, fill = 1, tilt = 0, saucer = true, ripple = 0, body: showBody = true}) => {
+export const Cup: React.FC<{id: string; x: number; y: number; s?: number; fx?: -1 | 1; f?: number; steam?: number; color?: string; fill?: number; tilt?: number; saucer?: boolean; ripple?: number; body?: boolean; handle?: boolean}> = ({id, x, y, s = 1, fx = 1, f = 0, steam = 1, color = PROP.cup, fill = 1, tilt = 0, saucer = true, ripple = 0, body: showBody = true, handle = true}) => {
   const ink = 4.4 * s;
   const cw = 60 * s;
   const ch = 54 * s;
@@ -106,7 +106,7 @@ export const Cup: React.FC<{id: string; x: number; y: number; s?: number; fx?: -
         </Inked>
       )}
       {showBody && <Inked w={ink}>
-        <Capsule id={`${id}-hd`} a={{x: hx - fx * 6 * s, y: cy - ch * 0.78}} b={{x: hx + fx * 34 * s, y: cy - ch * 0.5}} ra={7 * s} rb={7 * s} color={color} k={0.7} />
+        {handle && <Capsule id={`${id}-hd`} a={{x: hx - fx * 6 * s, y: cy - ch * 0.78}} b={{x: hx + fx * 34 * s, y: cy - ch * 0.5}} ra={7 * s} rb={7 * s} color={color} k={0.7} />}
         <Blob id={`${id}-bd`} d={body} c={{x: x - cw * 0.3, y: cy - ch * 0.6}} r={cw * 1.5} color={color} k={0.8} stops={[[0, '#FFFFFF'], [0.5, '#F6F8FA'], [0.85, '#D5DEE6'], [1, '#B6C4D0']]} />
       </Inked>}
       {showBody && <Deco>

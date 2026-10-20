@@ -6,7 +6,7 @@ import {macroShot} from './macroShots';
 import {exteriorShot} from './exteriorShots';
 import {insertShot} from './insertShots';
 
-const INTERIOR: ShotId[] = ['intWide', 'intTwo', 'sendFalter', 'reality', 'sendReject', 'handCup', 'calmTwo', 'realize', 'recvRecog', 'withdraw', 'sendRegister', 'subjective', 'signal'];
+const INTERIOR: ShotId[] = ['intWide', 'intTwo', 'sendFalter', 'reality', 'sendReject', 'handCup', 'calmTwo', 'restrain', 'realize', 'recvRecog', 'withdraw', 'sendRegister', 'subjective', 'signal'];
 
 export const renderShot = (id: ShotId, t: number, f: number, lt: number, shot: Shot): React.ReactNode => {
   if (INTERIOR.includes(id)) return interiorShot(id, t, f, lt, shot);

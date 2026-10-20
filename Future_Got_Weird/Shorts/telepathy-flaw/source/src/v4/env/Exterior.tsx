@@ -104,9 +104,7 @@ export const ExteriorBack: React.FC<{f: number}> = ({f}) => {
           <path d="M600,846 L650,846 L530,1144 L490,1144 Z" fill="#FFFFFF" opacity={0.14} />
           <path d="M660,846 V1144" stroke="#FFFFFF" strokeWidth={10} />
           <path d="M660,846 V1144" stroke={INK} strokeOpacity={0.3} strokeWidth={2} />
-          {/* small open sign sticker */}
-          <path d={rr(800, 868, 100, 44, 22)} fill="#2563EB" stroke={INK} strokeOpacity={0.5} strokeWidth={3} />
-          <text x={850} y={900} textAnchor="middle" fontFamily="'Fredoka Variable', sans-serif" fontWeight={700} fontSize={28} fill="#FFFFFF" letterSpacing={2}>OPEN</text>
+
         </g>
         {/* planter box under the window with flowers */}
         <g>
@@ -168,11 +166,11 @@ export const ExteriorFront: React.FC<{f: number}> = ({f}) => {
       <SoftShadow id="ex-sh" c={{x: 540, y: EXT_FLOOR + 14}} rx={520} ry={30} alpha={0.12} />
       {/* A-frame chalkboard sign and a lamp post */}
       <g>
-        <path d="M900,1340 L938,1090 L1000,1090 L1040,1340 Z" fill="#3C4B52" stroke={INK} strokeOpacity={0.6} strokeWidth={4} />
-        <path d="M918,1320 L950,1110 L988,1110 L1022,1320 Z" fill="#2F3D43" />
-        <text x={969} y={1176} textAnchor="middle" fontFamily="'Fredoka Variable', sans-serif" fontWeight={600} fontSize={40} fill="#F4EFE3" opacity={0.9}>HOT</text>
-        <path d="M940,1210 H998 M938,1244 H1002" stroke="#F4EFE3" strokeOpacity={0.5} strokeWidth={5} strokeLinecap="round" />
-        <path d="M935,1340 L918,1380 M1005,1340 L1022,1380" stroke={INK} strokeOpacity={0.5} strokeWidth={5} strokeLinecap="round" />
+        <path d="M830,1340 L868,1090 L930,1090 L970,1340 Z" fill="#3C4B52" stroke={INK} strokeOpacity={0.6} strokeWidth={4} />
+        <path d="M848,1320 L880,1110 L918,1110 L952,1320 Z" fill="#2F3D43" />
+        <text x={899} y={1176} textAnchor="middle" fontFamily="'Fredoka Variable', sans-serif" fontWeight={600} fontSize={40} fill="#F4EFE3" opacity={0.9}>HOT</text>
+        <path d="M870,1210 H928 M868,1244 H932" stroke="#F4EFE3" strokeOpacity={0.5} strokeWidth={5} strokeLinecap="round" />
+        <path d="M865,1340 L848,1380 M935,1340 L952,1380" stroke={INK} strokeOpacity={0.5} strokeWidth={5} strokeLinecap="round" />
       </g>
     </g>
   );

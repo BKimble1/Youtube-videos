@@ -15,7 +15,6 @@ import {Fig, figure} from '../rig/poses';
 import {Chair, Cup, PROP, Table} from '../env/Props';
 import {FLOOR, InteriorBack, InteriorFloor} from '../env/Interior';
 import {Implant4} from '../art/Implant';
-import {LensRead, lensA} from '../art/Lens';
 
 export const S = 0.78;
 export const TX = 540;
@@ -69,16 +68,17 @@ export const X = {
   mDisturb: E({smile: -0.45, lid: 0.05, gx: -0.1, gy: 0.35, browIn: 0.95, browDown: 0.2, pupil: 0.7, open: 0.14, wide: 0.88, sweat: 0.7, flush: 0.3}),
   mShut: E({smile: -0.85, shut: 0.85, lid: 0.6, squint: 0.75, browIn: 1, browDown: 0.9, pupil: 0.9, open: 0.22, wide: 0.9, teeth: 0.35, sweat: 0.9, flush: 0.5}),
   mStrain: E({smile: -0.7, lid: 0.1, squint: 0.45, gx: -0.2, gy: 0.3, browIn: 0.9, browDown: 0.7, pupil: 0.78, open: 0.22, wide: 0.85, teeth: 0.65, sweat: 0.9, flush: 0.5}),
+  mHold: E({smile: -0.25, lid: 0.04, gx: -0.5, gy: 0.35, browIn: 0.85, browDown: 0.4, pupil: 0.78, open: 0.08, wide: 0.86, sweat: 0.7, flush: 0.35}),
   mForced: E({smile: 0.2, lid: 0.12, gx: -0.6, gy: 0.1, browIn: 0.55, pupil: 0.86, open: 0.04, sweat: 0.55, flush: 0.3}),
   mRealize: E({smile: -0.55, lid: 0, gx: -0.9, gy: 0.05, browIn: 0.95, pupil: 0.62, open: 0.2, wide: 0.82, sweat: 0.85, flush: 0.25}),
-  mCrushed: E({smile: -0.75, lid: 0.22, gx: -0.8, gy: 0.35, browIn: 1, browDown: 0.3, pupil: 0.8, open: 0.1, wide: 0.8, sweat: 0.7, flush: 0.35}),
+  mCrushed: E({smile: -0.75, lid: 0.02, gx: -0.8, gy: 0.35, browIn: 1, browDown: 0.3, pupil: 0.8, open: 0.1, wide: 0.8, sweat: 0.7, flush: 0.35}),
   wWarm: E({smile: 0.7, lid: 0.12, gx: 0.75, flush: 0.35, open: 0.12}),
   wGlad: E({smile: 0.95, lid: 0.2, gx: 0.75, flush: 0.5, open: 0.3, wide: 1.05, browIn: 0}),
   wSip: E({smile: 0.3, lid: 0.3, gx: 0.6, flush: 0.2, open: 0.03}),
   wCalm: E({smile: 0.45, lid: 0.1, gx: 0.7, flush: 0.2, open: 0.05}),
   wBlank: E({smile: 0.02, lid: 0.04, gx: 0.8, browIn: 0.35, pupil: 0.9, flush: 0.1, open: 0.04}),
-  wRecog: E({smile: -0.55, lid: 0, gx: 0.9, gy: 0.0, browIn: 1, pupil: 0.55, open: 0.2, wide: 0.84, sweat: 0.3, flush: 0.0}),
-  wRead: E({smile: 0.25, lid: 0.05, gx: 0.15, gy: -0.55, browIn: 0.3, pupil: 0.9, open: 0.05, flush: 0.2}),
+  wRecog: E({smile: -0.7, lid: 0, gx: 0.85, gy: -0.1, browIn: 1, pupil: 0.5, open: 0.24, wide: 0.9, sweat: 0.4, flush: 0.0}),
+  wRead: E({smile: 0.2, lid: 0.02, gx: 0.6, gy: -0.6, browIn: 0.45, pupil: 0.88, open: 0.05, flush: 0.2}),
   wAlarm: E({smile: -0.6, lid: 0, gx: 0.85, browIn: 1, pupil: 0.55, open: 0.22, wide: 0.82, sweat: 0.6, flush: 0.0}),
 };
 
@@ -127,10 +127,10 @@ export const W_KEYS: SKey<Rec>[] = [
   [20.4, {...wRest, yaw: 6, torso: 3, neck: -5}],
   [21.1, {...wRest, yaw: 20, torso: 5, neck: 1}],
   [24.9, {...wRest, yaw: 20, torso: 5}],
-  [25.35, {...wRest, yaw: 20, torso: 5}],
-  // the freeze, then the withdrawal
-  [25.8, {...wRest, yaw: 20, torso: 5, ng: 0.6}],
-  [26.15, {...wRest, yaw: 20, torso: 3, neck: -2, ng: 0.6}],
+  // she reads the alert (25.5-25.66), the jolt back (25.66-25.8), the freeze, then the withdrawal
+  [25.66, {...wRest, yaw: 20, torso: 5, ng: 0.6}],
+  [25.8, {...wRest, yaw: 18, torso: -3, neck: -6, ng: 0.55, chairDx: -6}],
+  [26.15, {...wRest, yaw: 18, torso: -3, neck: -5, ng: 0.5, chairDx: -8}],
   [26.5, {...wRest, yaw: 14, torso: -12, chest: -6, neck: -2, hold: 0, nhx: W_HIP + 58, nhy: SEAT_Y - 268, fhx: W_HIP + 30, fhy: SEAT_Y - 246, ng: 0.15, chairDx: -34, chairTilt: 3}, 'stop'],
   [27.4, {...wRest, yaw: 14, torso: -14, chest: -7, neck: -3, hold: 0, nhx: W_HIP + 52, nhy: SEAT_Y - 262, fhx: W_HIP + 24, fhy: SEAT_Y - 240, ng: 0.15, chairDx: -42, chairTilt: 4}],
 ];
@@ -181,7 +181,11 @@ export const M_KEYS: SKey<Rec>[] = [
   [17.6, {...mRest, torso: 1, yaw: 14, ng: 1}],
   [18.0, {...mRest, torso: 0, yaw: 14, ng: 0.5, hold: 0, nhx: M_HIP - 70, nhy: SEAT_Y - 60}],
   [19.5, {...mRest, torso: 1, yaw: 16, ng: 0.4, hold: 0, nhx: M_HIP - 70, nhy: SEAT_Y - 60}],
-  [21.0, {...mRest, torso: 3, yaw: 20, ng: 0.4, hold: 0, nhx: M_HIP - 70, nhy: SEAT_Y - 60}],
+  [20.45, {...mRest, torso: 1, yaw: 16, ng: 0.4, hold: 0, nhx: M_HIP - 70, nhy: SEAT_Y - 60}],
+  // the fists close in his lap and stay put (20.8-21.2), then loosen
+  [20.8, {...mRest, torso: 2, yaw: 17, ng: 2, fg: 2, hold: 0, nhx: M_HIP - 92, nhy: SEAT_Y - 66, fhx: M_LAP.x + 8, fhy: M_LAP.y + 2}],
+  [21.2, {...mRest, torso: 3, yaw: 18, ng: 2, fg: 2, hold: 0, nhx: M_HIP - 94, nhy: SEAT_Y - 66, fhx: M_LAP.x + 8, fhy: M_LAP.y + 2}],
+  [21.6, {...mRest, torso: 3, yaw: 20, ng: 0.5, fg: 0.2, hold: 0, nhx: M_HIP - 70, nhy: SEAT_Y - 60}],
   [24.0, {...mRest, torso: 4, yaw: 20, ng: 0.5, hold: 0, nhx: M_HIP - 70, nhy: SEAT_Y - 60}],
   [24.6, {...mRest, torso: 6, yaw: 24, ng: 0.7, hold: 0, nhx: M_HIP - 70, nhy: SEAT_Y - 60}],
   [26.0, {...mRest, torso: 6, yaw: 24, ng: 0.7, hold: 0, nhx: M_HIP - 70, nhy: SEAT_Y - 60}],
@@ -204,7 +208,10 @@ export const M_EXPR: ExprKey[] = [
   [16.75, X.mStrain],
   [18.0, X.mStrain],
   [19.5, X.mForced],
-  [21.0, X.mForced],
+  [20.45, X.mForced],
+  [20.85, X.mHold],
+  [21.2, X.mHold],
+  [21.7, X.mForced],
   [23.0, X.mForced],
   [24.15, X.mRealize],
   [26.2, X.mRealize],
@@ -219,7 +226,8 @@ type CupPose = {x: number; y: number; tilt: number; fill: number};
 
 const handleOf = (cup: CupPose, fx: -1 | 1): V => {
   // the handle grip point, rotated with the cup about its base
-  const local = {x: fx * 46 * (CUP_S / 0.62), y: -27.6 * (CUP_S / 0.62)};
+  // the hand wraps the cup from its own side (a handle-less latte cup): the point on the body it covers
+  const local = {x: fx * 35 * (CUP_S / 0.62), y: -24 * (CUP_S / 0.62)};
   const r = rot(local, cup.tilt);
   return {x: cup.x + r.x, y: cup.y + r.y};
 };
@@ -233,10 +241,13 @@ const cupFor = (who: 'w' | 'm', r: Rec, mouth: V, spill = 0): CupPose => {
   return {x: lerp(rest.x, to.x, L), y: lerp(rest.y, to.y, L) - arc, tilt: dir * 24 * L, fill: 1 - 0.25 * spill};
 };
 
+/** 0 relaxed .. 1 gripping .. 2 fist */
+const handFor = (g: number): HandPose => (g <= 1 ? mixHand(HAND_RELAXED, GRIP, clamp(g)) : mixHand(GRIP, FIST, clamp(g - 1)));
+
 const grip = (S: V, handle: V): V => {
   const d = {x: handle.x - S.x, y: handle.y - S.y};
   const l = Math.hypot(d.x, d.y) || 1;
-  return {x: handle.x - (d.x / l) * HAND_L * 0.62, y: handle.y - (d.y / l) * HAND_L * 0.62};
+  return {x: handle.x - (d.x / l) * HAND_L * 0.16, y: handle.y - (d.y / l) * HAND_L * 0.16};
 };
 
 export type Solved = {
@@ -285,10 +296,11 @@ const solveActor = (who: 'w' | 'm', t: number, keys: SKey<Rec>[], ek: ExprKey[],
   const nx = lerp(r.nhx || gr.x, gr.x, clamp(r.hold));
   const ny = lerp(r.nhy || gr.y, gr.y, clamp(r.hold));
   // strain: a fine tremor in the gripping hand while he holds the thought in (the sender, 16.6-17.6 s)
-  const trem = who === 'm' ? Math.max(0, Math.min(1, (t - 16.6) / 0.3)) * Math.max(0, Math.min(1, (17.7 - t) / 0.2)) : 0;
+  const win = (a: number, b: number) => Math.max(0, Math.min(1, (t - a) / 0.3)) * Math.max(0, Math.min(1, (b - t) / 0.2));
+  const trem = who === 'm' ? Math.max(win(16.6, 17.7), win(20.55, 21.25) * 0.7) : 0;
   const tx0 = Math.sin(t * 30 * 2.3) * 1.8 * trem;
   const ty0 = Math.cos(t * 30 * 1.9) * 1.4 * trem;
-  const fig = mk({nearHand: {x: nx + tx0, y: ny + ty0}, farHand: {x: r.fhx, y: r.fhy}, nearWrist: (who === 'm' ? -42 : 46) * clamp(r.hold)});
+  const fig = mk({nearHand: {x: nx + tx0, y: ny + ty0}, farHand: {x: r.fhx, y: r.fhy}, nearWrist: (who === 'm' ? -18 : 20) * clamp(r.hold)});
   const pose = figure(fig);
   const J = who === 'w' ? womanJoints(pose) : manJoints(pose);
   const blink = blinkAt(t, who === 'w' ? 1 : 2);
@@ -297,8 +309,8 @@ const solveActor = (who: 'w' | 'm', t: number, keys: SKey<Rec>[], ek: ExprKey[],
     pose,
     expr: exprAt(t, ek),
     blink,
-    nearHand: mixHand(HAND_RELAXED, GRIP, r.ng),
-    farHand: mixHand(HAND_RELAXED, GRIP, r.fg),
+    nearHand: handFor(r.ng),
+    farHand: handFor(r.fg),
     cup: {...cup, x: cup.x + tx0 * 0.5, y: cup.y + ty0 * 0.5},
     held,
     chair: {x: hip + r.chairDx, tilt: r.chairTilt},
@@ -311,6 +323,8 @@ export type InteriorOpts = {
   /** subjective overrides */
   w?: Partial<Rec>;
   m?: Partial<Rec>;
+  /** override her expression (the subjective image shows her startled) */
+  wExpr?: Expr;
   /** implant glow 0..1 and colour */
   glow?: number;
   glowColor?: string;
@@ -321,10 +335,10 @@ export type InteriorOpts = {
   extra?: React.ReactNode;
 };
 
-export const solveInterior = (t: number, o: InteriorOpts = {}) => ({
-  w: solveActor('w', t, W_KEYS, W_EXPR, o.w),
-  m: solveActor('m', t, M_KEYS, M_EXPR, o.m),
-});
+export const solveInterior = (t: number, o: InteriorOpts = {}) => {
+  const w = solveActor('w', t, W_KEYS, W_EXPR, o.w);
+  return {w: o.wExpr ? {...w, expr: o.wExpr} : w, m: solveActor('m', t, M_KEYS, M_EXPR, o.m)};
+};
 
 export const InteriorWorld: React.FC<{t: number; f: number; cam: Cam; opts?: InteriorOpts; solved?: ReturnType<typeof solveInterior>}> = ({t, f, cam, opts = {}, solved}) => {
   const {w, m} = solved ?? solveInterior(t, opts);
@@ -332,7 +346,7 @@ export const InteriorWorld: React.FC<{t: number; f: number; cam: Cam; opts?: Int
   const steam = opts.steam ?? 0.7;
   const ripple = Math.max(0, Math.min(1, (t - 16.6) / 0.3)) * Math.max(0, Math.min(1, (17.75 - t) / 0.2));
   const cupEl = (id: string, who: Solved, fx: -1 | 1, hide?: boolean) =>
-    hide ? null : <Cup id={id} x={who.cup.x} y={who.cup.y} s={CUP_S} fx={fx} f={f} steam={steam * (1 - who.rec.lift * 0.4)} tilt={who.cup.tilt} fill={who.cup.fill} ripple={fx === 1 ? ripple : 0} saucer={who.rec.lift < 0.02} />;
+    hide ? null : <Cup id={id} x={who.cup.x} y={who.cup.y} s={CUP_S} fx={fx} f={f} steam={steam * (1 - who.rec.lift * 0.4)} tilt={who.cup.tilt} fill={who.cup.fill} ripple={fx === 1 ? ripple : 0} saucer={who.rec.lift < 0.02} handle={false} />;
   const implant = <Implant4 yaw={m.rec.yaw} glow={glow} color={opts.glowColor ?? '#46CFFF'} f={f} />;
   return (
     <g>
@@ -342,9 +356,9 @@ export const InteriorWorld: React.FC<{t: number; f: number; cam: Cam; opts?: Int
         <Chair id="chW" x={w.chair.x} floor={FLOOR} s={S} fx={1} tilt={w.chair.tilt} />
         <Chair id="chM" x={m.chair.x} floor={FLOOR} s={S} fx={-1} tilt={m.chair.tilt} />
         <Table id="tb" x={TX} floor={FLOOR} s={S} />
-        {w.rec.lift >= 0.02 && !opts.hideCupW && <Cup id="sauW" x={CUP_W_X} y={CUP_Y} s={CUP_S} fx={-1} body={false} />}
-        {m.rec.lift >= 0.02 && <Cup id="sauM" x={CUP_M_X} y={CUP_Y} s={CUP_S} fx={1} body={false} />}
-        <Woman id="W" pose={w.pose} expr={w.expr} blink={w.blink} lHand={w.nearHand} rHand={w.farHand} held={cupEl('cupW', w, -1, opts.hideCupW)} headOverlay={<LensRead yaw={w.pose.yaw ?? 20} a={lensA(t)} f={f} />} />
+        {w.rec.lift >= 0.02 && !opts.hideCupW && <Cup id="sauW" x={CUP_W_X} y={CUP_Y} s={CUP_S} fx={-1} body={false} handle={false} />}
+        {m.rec.lift >= 0.02 && <Cup id="sauM" x={CUP_M_X} y={CUP_Y} s={CUP_S} fx={1} body={false} handle={false} />}
+        <Woman id="W" pose={w.pose} expr={w.expr} blink={w.blink} lHand={w.nearHand} rHand={w.farHand} held={cupEl('cupW', w, -1, opts.hideCupW)} />
         <Man id="M" pose={m.pose} expr={m.expr} blink={m.blink} lHand={m.nearHand} rHand={m.farHand} held={cupEl('cupM', m, 1)} headOverlay={implant} />
         {opts.extra}
       </Layer>
@@ -353,8 +367,8 @@ export const InteriorWorld: React.FC<{t: number; f: number; cam: Cam; opts?: Int
 };
 
 /** world position of the sender's implant disc (head space: x = -98 sin(yaw), y = -84 on a head of radius 96*S) */
-export const implantWorld = (m: Solved): V => {
-  const R = (96 * S) / 100;
+export const implantWorld = (m: {pose: {yaw?: number; torso: number; chest: number; neck: number}; head: V}, scale = S): V => {
+  const R = (96 * scale) / 100;
   const yaw = ((m.pose.yaw ?? 20) * Math.PI) / 180;
   const roll = (-((m.pose.torso ?? 0) + (m.pose.chest ?? 0) + (m.pose.neck ?? 0)) * Math.PI) / 180;
   const lx = -98 * Math.sin(yaw) * R;
