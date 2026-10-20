@@ -1,0 +1,665 @@
+{
+ "fps": 30,
+ "total_frames": 840,
+ "duration_s": 28,
+ "beats": {
+  "pushFrom": 0.7,
+  "macroAt": 1.3,
+  "decHook": [
+   0.95,
+   1.45
+  ],
+  "hookOut": 1.45,
+  "hookArrive": 2.34,
+  "neckOpen": [
+   3.55,
+   4
+  ],
+  "neckClose": [
+   4.95,
+   5.4
+  ],
+  "dive": [
+   5.65,
+   6.45
+  ],
+  "motorGlow": [
+   6.95,
+   8.05
+  ],
+  "dec2": [
+   8.72,
+   10
+  ],
+  "normalOut": 10,
+  "recvCut": 10.3,
+  "recvArrive": 10.82,
+  "redAt": 13.15,
+  "decRed": [
+   13.95,
+   14.95
+  ],
+  "silhouette": [
+   14.5,
+   14.77
+  ],
+  "redOut": 14.95,
+  "warn": [
+   15.45,
+   16.6
+  ],
+  "reachFrom": 19.85,
+  "tapDenied": 21.05,
+  "pipeBlue": [
+   21.9,
+   22.7
+  ],
+  "pipeRed": [
+   22.25,
+   23.05
+  ],
+  "recvCut2": 24.55,
+  "redArrive": 25.95,
+  "recognise": 26.2,
+  "recoil": [
+   26.25,
+   26.95
+  ],
+  "lateTap": 27.22,
+  "loopCut": 27.4
+ },
+ "words": {
+  "speechStart": 0.08,
+  "thinkingE": 3.1,
+  "insteadS": 3.68,
+  "cordsS": 4.64,
+  "cordsE": 5.02,
+  "readsS": 5.68,
+  "impulsesS": 6.32,
+  "motorS": 7.24,
+  "cortexS": 7.4,
+  "cortexE": 7.95,
+  "translatingS": 8.32,
+  "thoughtsS": 9,
+  "directS": 9.64,
+  "messagesS": 9.92,
+  "instantlyS": 10.48,
+  "instantlyE": 11.055,
+  "itS": 11.6,
+  "worksS": 11.84,
+  "seamlesslyE": 12.66,
+  "untilS": 13.145,
+  "untilE": 13.36,
+  "brainS": 13.68,
+  "intrusiveS": 14.4,
+  "thoughtS": 15.04,
+  "thoughtE": 15.305,
+  "humansS": 16,
+  "thousandsS": 16.72,
+  "darkS": 17.52,
+  "neverS": 20.2,
+  "actS": 20.88,
+  "onE": 21.29,
+  "theS": 21.84,
+  "cantS": 22.24,
+  "differenceS": 22.88,
+  "wantedS": 23.84,
+  "sayS": 24.24,
+  "sayE": 24.5,
+  "andS": 24.853,
+  "dark2S": 25.12,
+  "thought2S": 25.44,
+  "desperatelyS": 26.08,
+  "buryS": 27.16,
+  "buryE": 27.39
+ },
+ "loop_period_s": 0.35,
+ "cues": [
+  {
+   "t": 0,
+   "kind": "ping",
+   "gain": -9,
+   "pan": -0.1,
+   "note": "chip tick (opening, periodic)"
+  },
+  {
+   "t": 0.05,
+   "kind": "sweep",
+   "dur": 0.65,
+   "gain": -9,
+   "pan": -0.15,
+   "note": "the shallow section opens"
+  },
+  {
+   "t": 0.7,
+   "kind": "ping",
+   "gain": -10,
+   "pan": -0.1,
+   "note": "chip tick (opening, periodic)"
+  },
+  {
+   "t": 0.7,
+   "kind": "whoosh",
+   "dur": 0.6,
+   "gain": -10,
+   "pan": -0.1,
+   "p": {
+    "from": -0.1,
+    "to": -0.1,
+    "rise": 1
+   },
+   "note": "push into the implant"
+  },
+  {
+   "t": 1.05,
+   "kind": "form",
+   "dur": 0.4,
+   "gain": -7,
+   "note": "the thought resolves into a packet in the decoder"
+  },
+  {
+   "t": 1.4,
+   "kind": "ping",
+   "gain": -11,
+   "pan": -0.1,
+   "note": "chip tick (opening, periodic)"
+  },
+  {
+   "t": 1.45,
+   "kind": "pop",
+   "gain": -8,
+   "pan": -0.05,
+   "note": "the packet leaves the lens"
+  },
+  {
+   "t": 1.5,
+   "kind": "whoosh",
+   "dur": 0.8399999999999999,
+   "gain": -6,
+   "pan": -0.1,
+   "p": {
+    "from": -0.1,
+    "to": 0.4,
+    "rise": 1
+   },
+   "note": "packet across the room"
+  },
+  {
+   "t": 2.34,
+   "kind": "chime",
+   "gain": -6,
+   "pan": 0.45,
+   "note": "the friendly arrival chime (first use), in the gap before \"by\""
+  },
+  {
+   "t": 3.6,
+   "kind": "open",
+   "dur": 0.5,
+   "gain": -9,
+   "pan": -0.1
+  },
+  {
+   "t": 4.95,
+   "kind": "close",
+   "dur": 0.45,
+   "gain": -10,
+   "pan": -0.1
+  },
+  {
+   "t": 5.45,
+   "kind": "sweep",
+   "dur": 0.5,
+   "gain": -10,
+   "pan": -0.1,
+   "note": "the crown window opens"
+  },
+  {
+   "t": 5.65,
+   "kind": "whoosh",
+   "dur": 0.7999999999999998,
+   "gain": -9,
+   "pan": 0,
+   "p": {
+    "from": -0.1,
+    "to": 0.1,
+    "rise": 1
+   },
+   "note": "the dive into the tissue"
+  },
+  {
+   "t": 6.55,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.15,
+   "p": {
+    "lane": 3
+   }
+  },
+  {
+   "t": 6.71,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.12,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 6.87,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.09,
+   "p": {
+    "lane": 4
+   }
+  },
+  {
+   "t": 6.95,
+   "kind": "tag",
+   "gain": -8,
+   "pan": 0.1,
+   "note": "the motor-cortex strip lights"
+  },
+  {
+   "t": 7.03,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.06,
+   "p": {
+    "lane": 2
+   }
+  },
+  {
+   "t": 7.19,
+   "kind": "zip",
+   "gain": -12,
+   "pan": -0.03,
+   "p": {
+    "lane": 3
+   }
+  },
+  {
+   "t": 7.35,
+   "kind": "zip",
+   "gain": -12,
+   "pan": 0,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 7.51,
+   "kind": "zip",
+   "gain": -12,
+   "pan": 0.03,
+   "p": {
+    "lane": 4
+   }
+  },
+  {
+   "t": 7.65,
+   "kind": "zip",
+   "gain": -12,
+   "pan": 0,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 7.67,
+   "kind": "zip",
+   "gain": -12,
+   "pan": 0.06,
+   "p": {
+    "lane": 3
+   }
+  },
+  {
+   "t": 7.85,
+   "kind": "zip",
+   "gain": -12,
+   "pan": 0,
+   "p": {
+    "lane": 6
+   }
+  },
+  {
+   "t": 8,
+   "kind": "whoosh",
+   "dur": 0.7,
+   "gain": -11,
+   "pan": 0,
+   "p": {
+    "from": 0,
+    "to": 0,
+    "rise": 1
+   },
+   "note": "the pulse climbs the thread"
+  },
+  {
+   "t": 8.05,
+   "kind": "zip",
+   "gain": -12,
+   "pan": 0,
+   "p": {
+    "lane": 7
+   }
+  },
+  {
+   "t": 8.25,
+   "kind": "zip",
+   "gain": -12,
+   "pan": 0,
+   "p": {
+    "lane": 5
+   }
+  },
+  {
+   "t": 8.45,
+   "kind": "zip",
+   "gain": -12,
+   "pan": 0,
+   "p": {
+    "lane": 6
+   }
+  },
+  {
+   "t": 8.65,
+   "kind": "zip",
+   "gain": -12,
+   "pan": 0,
+   "p": {
+    "lane": 7
+   }
+  },
+  {
+   "t": 9,
+   "kind": "form",
+   "dur": 0.8,
+   "gain": -7,
+   "note": "the decoder resolves the shape"
+  },
+  {
+   "t": 9.058,
+   "kind": "tick",
+   "gain": -12,
+   "pan": 0,
+   "note": "decoder gate"
+  },
+  {
+   "t": 9.231,
+   "kind": "tick",
+   "gain": -12,
+   "pan": 0,
+   "note": "decoder gate"
+  },
+  {
+   "t": 9.404,
+   "kind": "tick",
+   "gain": -12,
+   "pan": 0,
+   "note": "decoder gate"
+  },
+  {
+   "t": 9.55,
+   "kind": "pop",
+   "gain": -9,
+   "pan": -0.05,
+   "note": "the Hey packet forms"
+  },
+  {
+   "t": 10,
+   "kind": "whoosh",
+   "dur": 0.8,
+   "gain": -6,
+   "pan": 0,
+   "p": {
+    "from": -0.1,
+    "to": 0.45,
+    "rise": 1
+   },
+   "note": "the second packet crosses the room"
+  },
+  {
+   "t": 10.82,
+   "kind": "chime",
+   "gain": -8,
+   "pan": 0.45,
+   "note": "the friendly arrival chime (second use)"
+  },
+  {
+   "t": 12.1,
+   "kind": "ping",
+   "gain": -16,
+   "pan": 0.1,
+   "note": "live-link tick"
+  },
+  {
+   "t": 12.65,
+   "kind": "ping",
+   "gain": -16,
+   "pan": 0.1,
+   "note": "live-link tick"
+  },
+  {
+   "t": 13.15,
+   "kind": "glitch",
+   "gain": -4,
+   "pan": -0.1,
+   "dur": 0.22,
+   "note": "the anomaly"
+  },
+  {
+   "t": 13.2,
+   "kind": "ping",
+   "gain": -16,
+   "pan": 0.1,
+   "note": "live-link tick"
+  },
+  {
+   "t": 13.3,
+   "kind": "swell",
+   "dur": 1.3,
+   "gain": -9,
+   "note": "low swell under the intrusion"
+  },
+  {
+   "t": 13.95,
+   "kind": "zipred",
+   "gain": -10,
+   "pan": -0.1
+  },
+  {
+   "t": 14.5,
+   "kind": "thump",
+   "gain": -12,
+   "note": "the dark bust"
+  },
+  {
+   "t": 14.6,
+   "kind": "form",
+   "dur": 0.35,
+   "gain": -9,
+   "p": {
+    "low": 1
+   },
+   "note": "the red packet forms"
+  },
+  {
+   "t": 14.95,
+   "kind": "whoosh",
+   "dur": 0.5,
+   "gain": -9,
+   "pan": 0,
+   "p": {
+    "from": -0.1,
+    "to": 0.1,
+    "rise": 0,
+    "low": 1
+   },
+   "note": "the red packet leaves, heavier"
+  },
+  {
+   "t": 15.45,
+   "kind": "alarm",
+   "gain": -9,
+   "pan": 0,
+   "note": "dry two-tone, UNFILTERED THOUGHT DETECTED"
+  },
+  {
+   "t": 16.05,
+   "kind": "tick",
+   "gain": -15
+  },
+  {
+   "t": 19.85,
+   "kind": "rustle",
+   "gain": -17,
+   "pan": -0.3,
+   "note": "the arm comes up"
+  },
+  {
+   "t": 21.05,
+   "kind": "tap",
+   "gain": -7,
+   "pan": -0.25
+  },
+  {
+   "t": 21.27,
+   "kind": "late",
+   "gain": -11,
+   "pan": -0.25,
+   "note": "denied: a muted double tick"
+  },
+  {
+   "t": 22.1,
+   "kind": "form",
+   "dur": 0.5,
+   "gain": -10,
+   "note": "same treatment"
+  },
+  {
+   "t": 22.111,
+   "kind": "tick",
+   "gain": -12,
+   "pan": 0
+  },
+  {
+   "t": 22.219,
+   "kind": "tick",
+   "gain": -12,
+   "pan": 0
+  },
+  {
+   "t": 22.327,
+   "kind": "tick",
+   "gain": -12,
+   "pan": 0
+  },
+  {
+   "t": 22.45,
+   "kind": "form",
+   "dur": 0.5,
+   "gain": -10,
+   "note": "same treatment"
+  },
+  {
+   "t": 22.461,
+   "kind": "tick",
+   "gain": -12,
+   "pan": 0
+  },
+  {
+   "t": 22.569,
+   "kind": "tick",
+   "gain": -12,
+   "pan": 0
+  },
+  {
+   "t": 22.677,
+   "kind": "tick",
+   "gain": -12,
+   "pan": 0
+  },
+  {
+   "t": 22.7,
+   "kind": "pop",
+   "gain": -10,
+   "pan": -0.05
+  },
+  {
+   "t": 23.05,
+   "kind": "pop",
+   "gain": -10,
+   "pan": -0.05
+  },
+  {
+   "t": 23.4,
+   "kind": "pass",
+   "dur": 1.2,
+   "gain": -12,
+   "pan": 0,
+   "p": {
+    "from": -0.1,
+    "to": 0.3
+   },
+   "note": "the red packet drifts toward the receiver"
+  },
+  {
+   "t": 24.55,
+   "kind": "whoosh",
+   "dur": 0.6,
+   "gain": -11,
+   "pan": 0.2,
+   "p": {
+    "from": -0.1,
+    "to": 0.3,
+    "rise": 0,
+    "low": 1
+   }
+  },
+  {
+   "t": 25.3,
+   "kind": "inhale",
+   "gain": -17,
+   "pan": 0.5,
+   "note": "the receiver breathes in as it arrives"
+  },
+  {
+   "t": 25.97,
+   "kind": "chimebad",
+   "gain": -4,
+   "pan": 0.45,
+   "note": "the same friendly chime, uncomfortable: lower, dry, in the quiet"
+  },
+  {
+   "t": 26.3,
+   "kind": "rustle",
+   "gain": -14,
+   "pan": 0.5,
+   "note": "the receiver draws back"
+  },
+  {
+   "t": 27.22,
+   "kind": "late",
+   "gain": -10,
+   "pan": -0.25,
+   "note": "too late"
+  },
+  {
+   "t": 27.4,
+   "kind": "wipe",
+   "dur": 0.6000000000000014,
+   "gain": -7,
+   "pan": 0,
+   "note": "the return into the opening"
+  },
+  {
+   "t": 27.65,
+   "kind": "ping",
+   "gain": -10,
+   "pan": -0.1,
+   "note": "chip tick (return) - same texture as frame 0"
+  }
+ ]
+}

@@ -33,12 +33,12 @@ const wrap = (words: string[]): string[][] => {
   return best;
 };
 
-export const Captions: React.FC<{f: number}> = ({f}) => {
+export const Captions: React.FC<{f: number; fade?: number}> = ({f, fade = 0.08}) => {
   const t = f / FPS;
   const c = WINDOWS.find((w) => t >= w.start && t < w.end);
   if (!c) return null;
   const lines = wrap(c.words);
-  const a = Math.min(clamp((t - c.start) / 0.08), clamp((c.end - t) / 0.08));
+  const a = Math.min(clamp((t - c.start) / fade), clamp((c.end - t) / fade));
   const top = CAP.cy - (lines.length * CAP.line) / 2;
   const space = measure(' ');
   return (

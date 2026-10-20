@@ -1,0 +1,28 @@
+{
+ "captioned_frames": 835,
+ "collisions": {
+  "sender eyes": {
+   "count": 3,
+   "first": 180,
+   "last": 829,
+   "first_s": 6,
+   "last_s": 27.63,
+   "frames": [
+    180,
+    828,
+    829
+   ]
+  },
+  "cancel control": {
+   "count": 2,
+   "first": 812,
+   "last": 813,
+   "first_s": 27.07,
+   "last_s": 27.1,
+   "frames": [
+    812,
+    813
+   ]
+  }
+ }
+}

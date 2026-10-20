@@ -6,3 +6,9 @@
 - **Music and effects:** synthesised in numpy by `tools/build_audio.py`; no samples, no third-party audio.
 - **Video:** drawn in SVG/React; no generative video, no Runway, no footage, no Neuralink/Telepathy or other logos.
 - **Fonts:** as used by the Death Clock project; licence terms were not re-verified here.
+
+## V2 additions
+- Narration: unchanged. `audio/v2/stems/narration.wav` is the C1 take (generation `KSIjaftv2hgtDOjMINqr`, voice `kk5XaSLo2XAw0sKM98zU`, `eleven_v4`, `[interested]`) times one constant gain, trimmed to 28.0 s (residual −58 dB against the take; SHA-256 of the mp3 `058baa00…945ac`). No new generation was made, no credits spent in V2.
+- Art: all new V2 art is drawn in code (SVG/React) in `source/src/v2/art/`; it reuses the Death Clock rig libraries already in this project (ink, shade, limb, hand) and the receiver, room and caption components of R1.
+- Sound: synthesised again in numpy by `tools/build_audio_v2.py` (no samples). Music partials sit on the 1/28 Hz grid so the 28 s loop is exactly periodic.
+- No Runway or other generative video was used.

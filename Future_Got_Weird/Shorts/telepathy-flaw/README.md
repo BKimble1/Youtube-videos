@@ -28,3 +28,14 @@ Voice is not rebuilt offline: `audio/narration/takes/` holds the selected Eleven
 
 ## Loop
 Every periodic motion has a period dividing 30 s; the closing iris reveals the opening scene evaluated at negative time, so the last frame hands over to frame 0. Measured by `tools/seam_check.py` (`qa/seam/`).
+
+## V2
+See `V2_CHANGES.md`. V2 files: `exports/FGW_TelepathyFlaw_DeathClockStyle_V2_REVIEW_1080x1920.mp4`, `..._V2_2160x3840.mp4`, `captions/FGW_TelepathyFlaw_V2.srt`, `audio/v2/` (stems and mix), `source/src/v2/`.
+```
+cd source && npx tsx scripts/export_cues2.ts && cd .. && python3 -B tools/build_audio_v2.py
+cd source && npx remotion render src/index.ts TelepathyFlawV2 ../exports/_wip/v2_silent.mp4 --crf=16 --x264-preset=slow --color-space=bt709 --muted
+cd .. && python3 tools/export_v2.py exports/_wip/v2_silent.mp4 FGW_TelepathyFlaw_DeathClockStyle_V2_REVIEW_1080x1920.mp4
+# 4K: add --scale=2 and name the output ..._V2_2160x3840.mp4
+python3 tools/seam_check_v2.py <mp4>; python3 -B tools/qa_audio_v2.py; (cd source && npx tsx scripts/check_layout2.ts)
+```
+`tools/contact.sh <outdir> TelepathyFlawV2 <frames>` renders labelled contact sheets from source.

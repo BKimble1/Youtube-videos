@@ -1,0 +1,32 @@
+{
+ "video": "FGW_TelepathyFlaw_DeathClockStyle_V2_REVIEW_1080x1920.mp4",
+ "picture_mean_abs_step_270x480": {
+  "834-835": 11.928,
+  "835-836": 9.083,
+  "836-837": 6.226,
+  "837-838": 3.48,
+  "838-839": 1.427,
+  "SEAM 839-0": 0.411,
+  "0-1": 0.853,
+  "1-2": 1.465,
+  "2-3": 1.094,
+  "3-4": 1.635,
+  "4-5": 2.303
+ },
+ "picture_seam_vs_neighbours": "clean",
+ "picture_839_vs_0_full_size": {
+  "mean_abs_diff": 0.788,
+  "p99_max_channel_diff": 16.0
+ },
+ "audio_x3": {
+  "samples": 1344512,
+  "largest_step_at_seam": 0.03494926542043686,
+  "p99.9_step_elsewhere": 0.29672563076019287,
+  "max_step_anywhere": 0.6955682039260864,
+  "rms_50ms_before_dbfs": -25.2,
+  "rms_50ms_after_dbfs": -23.6
+ },
+ "audio_seam_clean": true,
+ "listened": false,
+ "note": "Measured only. The seam was not watched or heard in real time."
+}
