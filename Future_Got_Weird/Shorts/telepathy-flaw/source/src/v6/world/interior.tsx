@@ -427,7 +427,7 @@ export const M_EXPR: ExprKey[] = [
   [15.72, X.mReject],
   [15.85, X.mShut],
   [16.2, X.mShut],
-  [16.4, X.mReject],
+  [16.3, X.mReject],
   // holding the thought in: eyes open and fixed, jaw set
   [16.75, X.mStrain],
   [18.0, X.mStrain],

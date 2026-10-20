@@ -12,7 +12,8 @@ export const exteriorCam = (id: ShotId, t: number, shot: {a: number; b: number})
   const s0 = solveExterior(t);
   if (id === 'extWide') return {x: 540, y: lerp(1040, 1010, k), z: lerp(1.14, 1.24, k)};
   if (id === 'recvHey') return {x: s0.wHead.x + lerp(40, 60, k), y: s0.wHead.y + 100, z: lerp(2.5, 2.7, k)};
-  return {x: s0.mHead.x - lerp(40, 20, k), y: s0.mHead.y + 48, z: lerp(2.5, 2.65, k)};
+  // V6: framed higher so his cup hand stays above the caption lane (the cup now hangs at a natural height at his lower chest)
+  return {x: s0.mHead.x - lerp(40, 20, k), y: s0.mHead.y + 125, z: lerp(2.5, 2.65, k)};
 };
 
 export const exteriorShot = (id: ShotId, t: number, f: number, lt: number, shot: Shot): React.ReactNode => {

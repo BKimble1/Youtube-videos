@@ -48,7 +48,7 @@ for (let f = 0; f < TOTAL4; f++) {
   } else if (['extWide', 'recvHey', 'sendSmile'].includes(shot.id)) {
     const s0 = solveExterior(t);
     const cam = exteriorCam(shot.id as never, t, shot);
-    things.push(bx('face(woman)', cam, s0.wHead, 96 * ES), bx('face(man)', cam, s0.mHead, 96 * ES), bx('hand(woman cup)', cam, s0.hand, 60 * ES));
+    things.push(bx('face(woman)', cam, s0.wHead, 96 * ES), bx('face(man)', cam, s0.mHead, 96 * ES), bx('hand(woman cup)', cam, s0.hand, 60 * ES), bx('hand(man cup)', cam, s0.mHand, 60 * ES));
   }
   const key = shot.id;
   per[key] = per[key] ?? {frames: 0, faceHits: 0, handHits: 0, implantHits: 0};
