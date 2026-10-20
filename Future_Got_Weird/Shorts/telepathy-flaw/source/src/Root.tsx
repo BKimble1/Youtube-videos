@@ -10,6 +10,9 @@ import {TOTAL3} from './v3/choreo3';
 import {Lab4} from './v4/lab/Lab4';
 import {Film4} from './v4/Film4';
 import {TOTAL4} from './v4/plan4';
+import {Lab5} from './v5/lab/Lab5';
+import {Film5} from './v5/Film5';
+import {TOTAL4 as TOTAL5} from './v5/plan5';
 
 export const Root: React.FC = () => (
   <>
@@ -22,6 +25,9 @@ export const Root: React.FC = () => (
     <Composition id="TelepathyFlawV4" component={Film4} durationInFrames={TOTAL4} fps={30} width={1080} height={1920} defaultProps={{captions: true}} />
     <Composition id="TelepathyFlawV4Clean" component={Film4} durationInFrames={TOTAL4} fps={30} width={1080} height={1920} defaultProps={{captions: false}} />
     <Composition id="V4Lab" component={Lab4 as React.FC<any>} durationInFrames={30} fps={30} width={1080} height={1920} defaultProps={{scene: 'heads'}} />
+    <Composition id="TelepathyFlawV5" component={Film5} durationInFrames={TOTAL5} fps={30} width={1080} height={1920} defaultProps={{captions: true}} />
+    <Composition id="TelepathyFlawV5Clean" component={Film5} durationInFrames={TOTAL5} fps={30} width={1080} height={1920} defaultProps={{captions: false}} />
+    <Composition id="V5Lab" component={Lab5 as React.FC<any>} durationInFrames={30} fps={30} width={1080} height={1920} defaultProps={{scene: 'heads'}} />
     <Composition id="V2Lab" component={Lab as React.FC<any>} durationInFrames={30} fps={30} width={1080} height={1920} defaultProps={{scene: 'column'}} />
   </>
 );
