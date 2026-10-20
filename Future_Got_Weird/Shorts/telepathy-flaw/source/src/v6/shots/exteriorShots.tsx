@@ -7,20 +7,20 @@ import {implantWorld} from '../world/interior';
 import {Cam} from '../../lib/camera';
 import {clamp, easeInOut, lerp} from '../../lib/math';
 
-/** V6: the two close-ups are framed so the caption lane (screen y 1450) runs between the figure's cup hand and its free hand:
- *  the camera centre is the midpoint of the two hands, lowered by the lane's offset from the screen centre (490 px / zoom). Neither
- *  hand touches the caption, and the head stays high in the frame. */
-const laneCamY = (a: number, b: number, z: number) => (a + b) / 2 - 490 / z;
+/** V6: both people hold the cup in both hands, so the two close-ups are framed with the cup and hands in the upper-middle of the
+ *  screen, well above the caption lane (screen y 1450): the camera centre sits 250 / zoom above the hands' middle, which puts them
+ *  at about y 1210 with the lane's top edge at about 1370. */
+const handsCamY = (a: number, b: number, z: number) => (a + b) / 2 - 250 / z;
 export const exteriorCam = (id: ShotId, t: number, shot: {a: number; b: number}): Cam => {
   const k = easeInOut(clamp((t - shot.a) / (shot.b - shot.a)));
   const s0 = solveExterior(t);
   if (id === 'extWide') return {x: 540, y: lerp(1040, 1010, k), z: lerp(1.14, 1.24, k)};
   if (id === 'recvHey') {
     const z = lerp(2.5, 2.7, k);
-    return {x: s0.wHead.x + lerp(40, 60, k), y: laneCamY(s0.hand.y, s0.wFreePt.y, z), z};
+    return {x: s0.wHead.x + lerp(40, 60, k), y: handsCamY(s0.hand.y, s0.wFreePt.y, z), z};
   }
   const z = lerp(2.5, 2.65, k);
-  return {x: s0.mHead.x - lerp(40, 20, k), y: laneCamY(s0.mHand.y, s0.mFreePt.y, z), z};
+  return {x: s0.mHead.x - lerp(40, 20, k), y: handsCamY(s0.mHand.y, s0.mFreePt.y, z), z};
 };
 
 export const exteriorShot = (id: ShotId, t: number, f: number, lt: number, shot: Shot): React.ReactNode => {

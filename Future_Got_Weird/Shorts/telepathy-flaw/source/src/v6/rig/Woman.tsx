@@ -295,6 +295,13 @@ export const Woman: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHa
       </Deco>
       <Head4 id={`${id}-hd`} c={j.head} R={DIM.headR * s} roll={(tc + p.neck)} yaw={p.yaw ?? p.turn * 20} flip expr={expr} blink={blink} skin={skin} hair={WOMAN.hair} style="bob" glasses hairSway={hairSway} inkW={7 * inkK} overlay={headOverlay} />
       {farArmFront && Arm('raf', j.R, true, rHand, 1)}
+      {(p.rFront ?? 0) > 0.5 && (
+        // V6: the far forearm crosses in front of the cardigan to the cup (two-handed hold); the upper arm stays behind the body
+        <Inked w={IN}>
+          <Limb id={`${id}-rff`} A={j.R.E} B={add(j.R.E, mul(sub(j.R.W, j.R.E), 0.5))} C={add(j.R.W, mul(j.R.foreDir, -4 * s))} rA={25 * s} rB={22 * s} rC={19.5 * s} color={far(WOMAN.cardigan)} spec={0.18} crease={0} />
+          <Hand id={`${id}-rfhf`} wrist={add(j.R.W, mul(j.R.foreDir, -4 * s))} ang={j.R.handAng} L={DIM.hand * s} thumbSide={1} view="back" pose={rHand} color={far(skin)} ink={IN * 0.9} bare />
+        </Inked>
+      )}
       {p.rFront === 0 && (
         // V5: the far forearm and hand again, in front of the near thigh but behind the cardigan's front contour: the arm
         // comes out from behind the body instead of ending in a hidden elbow
