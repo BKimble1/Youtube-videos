@@ -79,11 +79,16 @@ export type StandPose = {
   cup: Lim;
   free: Lim;
   freeHand: HandPose;
+  /** how the free (far) arm is layered: 0 = its forearm and hand are drawn outside the torso only (the arm hangs behind the body and
+   *  shows past the contour / below the hem), 1 = the forearm crosses in front of the torso */
+  farFront?: number;
+  /** far shoulder offset across the torso (rig units; default: the rig's own) */
+  farSv?: number;
 };
 const HAND_SOFT: HandPose = {curl: [0.26, 0.32, 0.38, 0.44], spread: 0.08, thumb: 12, thumbCurl: 0.45};
 const HAND_LOOSE: HandPose = {curl: [0.36, 0.44, 0.5, 0.56], spread: 0.06, thumb: 10, thumbCurl: 0.55};
-export const W_STAND: StandPose = {hipH: 509, nearFoot: -34, farFoot: 58, nearUp: 0, farUp: 8, pelvis: 2.5, cup: {f: 104, d: 218, wr: 30}, free: {f: 20, d: 384, wr: 0}, freeHand: HAND_SOFT};
-export const M_STAND: StandPose = {hipH: 509, nearFoot: 58, farFoot: -40, nearUp: 8, farUp: 0, pelvis: -2.5, cup: {f: 100, d: 222, wr: 28}, free: {f: 40, d: 376, wr: 4}, freeHand: HAND_LOOSE};
+export const W_STAND: StandPose = {hipH: 509, nearFoot: -34, farFoot: 58, nearUp: 0, farUp: 8, pelvis: 2.5, cup: {f: 104, d: 192, wr: 30}, free: {f: -95, d: 368, wr: 0}, freeHand: HAND_SOFT};
+export const M_STAND: StandPose = {hipH: 509, nearFoot: 58, farFoot: -40, nearUp: 8, farUp: 0, pelvis: -2.5, cup: {f: 100, d: 194, wr: 28}, free: {f: -78, d: 364, wr: 8}, freeHand: HAND_LOOSE};
 export type ExtOv = {w?: Partial<StandPose>; m?: Partial<StandPose>};
 
 export const solveExterior = (t: number, ov: ExtOv = {}) => {
@@ -104,6 +109,8 @@ export const solveExterior = (t: number, ov: ExtOv = {}) => {
     nearElbow: -1,
     farElbow: -1,
     bodyW: 0.86,
+    farFront: P.farFront ?? 0,
+    farShoulderV: P.farSv,
     ...extra,
   });
   // weight shift: the pelvis moves, the feet stay where they are (the foot offsets absorb the shift)
@@ -125,7 +132,7 @@ export const solveExterior = (t: number, ov: ExtOv = {}) => {
   const mPose = figure({...mB, nearHand: mHand, nearWrist: -(MP.cup.wr ?? 0), farHand: mFar, farWrist: MP.free.wr ?? 0, farHa: MP.free.ha, farHw: MP.free.hw ?? 0});
   const WJ = womanJoints(wPose);
   const MJ = manJoints(mPose);
-  return {wPose, mPose, wHead: WJ.head, mHead: MJ.head, hand, mHand, wFree: WP.freeHand, mFree: MP.freeHand, wExpr: exprAt(t, W_EX), mExpr: exprAt(t, M_EX), wBlink: blinkAt(t, 1.3, [[1.9, 2.5]]), mBlink: blinkAt(t, 2.2)};
+  return {wPose, mPose, wHead: WJ.head, mHead: MJ.head, hand, mHand, wFreePt: wFar, mFreePt: mFar, wFree: WP.freeHand, mFree: MP.freeHand, wExpr: exprAt(t, W_EX), mExpr: exprAt(t, M_EX), wBlink: blinkAt(t, 1.3, [[1.9, 2.5]]), mBlink: blinkAt(t, 2.2)};
 };
 
 export const ExteriorWorld: React.FC<{t: number; f: number; cam: Cam; ov?: ExtOv; extra?: (s: ReturnType<typeof solveExterior>) => React.ReactNode}> = ({t, f, cam, ov, extra}) => {

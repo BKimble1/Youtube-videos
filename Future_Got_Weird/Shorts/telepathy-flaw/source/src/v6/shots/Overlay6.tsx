@@ -1,11 +1,11 @@
 // Screen-fixed overlays. Captions: the Death Clock component (Fredoka Bold, white with a thin dark stroke and a small
 // soft shadow, no plaque, one yellow emphasis word at most, phrase chunks of 2-5 words on a fixed lane).
-// Opening cue: "FICTIONAL FUTURE SCENARIO", small unboxed text in the upper right for about 2.8 s.
+// V6: the opening "FICTIONAL FUTURE SCENARIO" cue was removed at the owner's request; only the captions remain.
 import React from 'react';
 import {CAP_FAMILY, CAP_FONT, UI_FONT} from '../../fonts';
 import {chunkWindows} from '../../lib/captions';
 import {clamp, inv} from '../../lib/math';
-import {FICTION_CUE, FPS} from '../../lib/timeline';
+import {FPS} from '../../lib/timeline';
 
 const WINDOWS = chunkWindows();
 /** the caption lane (centre y 1450, centre x 495: clear of the Shorts controls at the bottom and right) */
@@ -80,26 +80,6 @@ export const Captions: React.FC<{f: number; fade?: number}> = ({f, fade = 0.08})
           );
         })}
       </g>
-    </g>
-  );
-};
-
-/** the one genre cue: plain small text, no box, dot or pill; fades in and out */
-export const FictionCue: React.FC<{f: number}> = ({f}) => {
-  const t = f / FPS;
-  const a = clamp(inv(FICTION_CUE.from, FICTION_CUE.from + 0.35, t)) * (1 - clamp(inv(FICTION_CUE.to - 0.4, FICTION_CUE.to, t)));
-  const s = a * a * (3 - 2 * a);
-  if (s <= 0) return null;
-  return (
-    <g opacity={s}>
-      <defs>
-        <filter id="cue-sh" x="-10%" y="-60%" width="120%" height="220%">
-          <feDropShadow dx={0} dy={0} stdDeviation={4} floodColor="#FFFFFF" floodOpacity={0.9} />
-        </filter>
-      </defs>
-      <text x={1020} y={150} textAnchor="end" fontFamily={UI_FONT} fontWeight={700} fontSize={36} letterSpacing={4} fill="#17324A" filter="url(#cue-sh)">
-        FICTIONAL FUTURE SCENARIO
-      </text>
     </g>
   );
 };
