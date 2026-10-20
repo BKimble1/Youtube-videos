@@ -36,5 +36,43 @@
   "sha256": "55d554a8d5c954600ae84a43813390bfa6e6f4e24a9e19c0712445da52bd01d8",
   "bytes": 21179590,
   "source_video": "v2_silent.mp4"
+ },
+ "FGW_TelepathyFlaw_DeathClockStyle_V2_2160x3840.mp4": {
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "index": 0,
+     "codec_name": "h264",
+     "codec_type": "video",
+     "width": 2160,
+     "height": 3840,
+     "pix_fmt": "yuv420p",
+     "color_range": "tv",
+     "color_space": "bt709",
+     "r_frame_rate": "30/1",
+     "duration": "28.000000",
+     "nb_frames": "840"
+    },
+    {
+     "index": 1,
+     "codec_name": "aac",
+     "codec_type": "audio",
+     "sample_rate": "48000",
+     "channels": 2,
+     "r_frame_rate": "0/0",
+     "duration": "28.000000",
+     "nb_frames": "1314"
+    }
+   ],
+   "format": {
+    "duration": "28.000000",
+    "size": "50455191",
+    "bit_rate": "14415768"
+   }
+  },
+  "sha256": "d1750b2e749c4e3b0b4e0282fc115df07387f49be03a0793f7a1506e637f9f67",
+  "bytes": 50455191,
+  "source_video": "v2_silent_4k.mp4"
  }
 }
