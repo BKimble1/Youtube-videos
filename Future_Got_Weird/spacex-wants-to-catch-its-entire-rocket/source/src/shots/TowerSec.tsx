@@ -21,10 +21,10 @@ const T1: React.FC<{t: number}> = ({t}) => {
   const T = ls('e3') - t0;
   const k = ep(u, 0, T);
   const cam: Cam = {x: lerp(6, VEH_X - 12, k), y: lerp(-92, -84, k), z: lerp(3.9, 5.2, k)};
-  const tilt = lerp(24, 6, ep(u, 0, T * 0.8));
+  const tilt = lerp(15, 4, ep(u, 0, T * 0.8));
   return (
     <AbsoluteFill style={{perspective: '1100px', overflow: 'hidden', background: '#05070a'}}>
-      <AbsoluteFill style={{transform: `rotateX(${tilt}deg) scale(${1 + tilt / 22})`, transformOrigin: '50% 100%'}}>
+      <AbsoluteFill style={{transform: `rotateX(${tilt}deg) scale(${1 + tilt / 40})`, transformOrigin: '50% 100%'}}>
         <Frame>
           <TowerSet cam={cam} light="dusk" carY={-100} openNear={34} openFar={34} t={t} />
         </Frame>

@@ -308,7 +308,7 @@ const B9: React.FC<{t: number}> = ({t}) => {
   const camZ = 15;
   const top = (x: number, v: 'v1' | 'v3', hl: number) => (
     <g transform={`translate(${x} ${1000}) scale(${camZ}) translate(0 ${v === 'v3' ? 30 : 28})`}>
-      <Booster t={t} version={v} catchHighlight={hl} elev={20} />
+      <Booster t={t} version={v} catchHighlight={hl} elev={20} finClock={8 * Math.sin(u * 0.5)} />
     </g>
   );
   return (

@@ -261,6 +261,10 @@ const P5: React.FC<{t: number}> = ({t}) => {
       <Sky kind="day" />
       <circle cx={cx} cy={cy} r={rr} fill="none" stroke={C.ink} strokeWidth={14} strokeDasharray="30 22" strokeDashoffset={-u * 40} opacity={0.85} />
       <circle cx={cx} cy={cy} r={rr} fill="none" stroke={C.cream} strokeWidth={6} strokeDasharray="30 22" strokeDashoffset={-u * 40} />
+      {[0, 1, 2].map((k) => {
+        const a = -Math.PI / 2 + u * 0.9 + (k * Math.PI * 2) / 3;
+        return <circle key={k} cx={cx + Math.cos(a) * rr} cy={cy + Math.sin(a) * rr} r={16} fill={C.yellow} stroke={C.ink} strokeWidth={5} />;
+      })}
       <g transform={`translate(${cx} ${cy + 230}) scale(3.4)`}>
         <Booster t={t} />
         <g transform={`translate(0 ${-BOOSTER_LEN})`}><Ship t={t} view="three" fwdFlap={0.15} aftFlap={0.25} /></g>

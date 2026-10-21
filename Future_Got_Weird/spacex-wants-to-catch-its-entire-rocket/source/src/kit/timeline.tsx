@@ -8,8 +8,16 @@ export type Shot = {id: string; a: number; b: number; render: (t: number) => Rea
 
 const TD: Record<Tin, number> = {cut: 0, fade: 0.45, whipL: 0.32, whipR: 0.32, whipU: 0.36, flash: 0.25, dip: 0.6};
 
+/** Slow documentary creep (≈3 % push over the shot) so held diagrams never sit on identical frames. */
+const Creep: React.FC<{s: Shot; t: number; children: React.ReactNode}> = ({s, t, children}) => {
+  const u = clamp((t - s.a) / Math.max(1, Math.min(s.b, s.a + 30) - s.a));
+  const k = 1 + 0.032 * smoother(u);
+  return <AbsoluteFill style={{transform: `scale(${k})`, transformOrigin: '50% 45%'}}>{children}</AbsoluteFill>;
+};
+
 /** Render the shot(s) active at time t. A shot with a transition-in overlaps the previous shot for td seconds. */
-export const Timeline: React.FC<{shots: Shot[]; t: number}> = ({shots, t}) => {
+export const Timeline: React.FC<{shots: Shot[]; t: number}> = ({shots: raw, t}) => {
+  const shots = React.useMemo(() => raw.map((s) => ({...s, render: (tt: number) => <Creep s={s} t={tt}>{s.render(tt)}</Creep>})), [raw]);
   const i = shots.findIndex((s, k) => t >= s.a && (t < s.b || k === shots.length - 1));
   if (i < 0) return null;
   const cur = shots[i];
