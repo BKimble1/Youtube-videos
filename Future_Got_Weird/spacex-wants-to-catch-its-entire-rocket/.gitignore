@@ -21,3 +21,4 @@ exports/v2parts/
 qa/v2/lab*/
 qa/v2/s*/
 audio/v2/mix/last_run.txt
+source/.shotlist.cjs
