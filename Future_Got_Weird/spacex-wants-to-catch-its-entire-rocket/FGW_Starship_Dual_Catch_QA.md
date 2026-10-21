@@ -8,8 +8,8 @@ Date: 21 Oct 2026. Not published. 4K master not rendered.
 |---|---|
 | File | `exports/FGW_Starship_Dual_Catch_V1_REVIEW_1080p.mp4` (backed up as parts in `backup/v1/`) |
 | Duration | **6:54.4** (414.4 s; narration 6:52.8 + 1.6 s end card) |
-| Video | H.264 High, 1920×1080, 16:9, 30 fps, yuv420p, bt709, 12,433 frames |
-| Audio | AAC stereo 48 kHz, 320 kb/s; integrated **−15.0 LUFS**, true peak **−1.4 dBFS** |
+| Video | H.264 High, 1920×1080, 16:9, 30 fps, yuv420p, bt709, 12,430 frames (rendered in four chunks after one full render crashed with a browser 'target closed' error; joins inspected, `qa/sheets/chunk_joins.png`) |
+| Audio | AAC stereo 48 kHz, 320 kb/s; integrated **−15.0 LUFS**, true peak **−1.2 dBFS** (ffmpeg ebur128); no silent stretches; black only in the planned final 1.5 s |
 | Narration | **1,099** spoken words (script), 56 lines |
 | Voice | **TEMPORARY: espeak-ng `en-us+m3`, 158 wpm, local, free** (PyPI `espeakng-loader`). Robotic. **Not** the FGW ElevenLabs Test Voice |
 | Captions | `captions/FGW_Starship_Dual_Catch_V1.srt`, 128 cues, ≤ 42 chars/line, timed from espeak word events in the rendered narration |
@@ -47,7 +47,7 @@ rerun mix, SRT and render (see README). Expect the real voice to be slightly fas
 | Orbit ship pointed backwards | Heading corrected |
 | Flap highlight circles not on the flaps | Positions taken from the ship geometry |
 | Tower low-angle reveal showed only the mount | Perspective and zoom reduced so the full tower reads |
-| Many diagram holds were measured as frozen for 2–6 s (ffmpeg freezedetect) | Global 3 % camera creep on every shot; reuse loop animated; V3 fins rotate |
+| Many diagram holds were measured as frozen for 2–6 s (ffmpeg freezedetect) | Global 3 % camera creep on every shot; reuse loop animated; V3 fins rotate. After the fix freezedetect reports only two ≈1.2 s holds (5:23–5:26) and the end card |
 | Effects masked words at onsets (speech-band voice/bed down to −0.4 dB) | Look-ahead, speech-band ducking; loud cues lowered; min now ≈ +1 dB at isolated onsets, median +16 dB (`audio/mix/speech_mask.txt`) |
 
 ## Retention audit (honest)
