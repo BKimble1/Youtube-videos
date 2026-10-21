@@ -1,0 +1,63 @@
+{
+ "container": {
+  "duration_s": 25.6,
+  "size_bytes": 8412934
+ },
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "pix_fmt": "yuv420p",
+  "r_frame_rate": "30/1",
+  "nb_frames": "768",
+  "color_space": "bt709",
+  "color_primaries": "bt709",
+  "color_transfer": "bt709",
+  "duration": "25.600000"
+ },
+ "audio": [
+  {
+   "codec_name": "aac",
+   "sample_rate": "48000",
+   "channels": 2,
+   "bit_rate": "317375",
+   "duration": "25.600000"
+  }
+ ],
+ "loudness": {
+  "integrated_LUFS": -15.0,
+  "true_peak_dBTP": -1.5,
+  "LRA_LU": 1.4
+ },
+ "audio_samples": {
+  "peak_abs": 0.8404881358146667,
+  "samples_at_or_over_0dBFS": 0,
+  "silent_windows_100ms": 0
+ },
+ "black_segments": [],
+ "freeze_segments_over_1.5s": [],
+ "voice_offset_in_mp4_s": 0.0,
+ "transitions_s": {
+  "pull": 0.9333333333333333,
+  "knife": 2.2,
+  "hand": 2.933333333333333,
+  "robot": 3.8666666666666667,
+  "whip": 5,
+  "module": 6.466666666666667,
+  "relation": 7.9,
+  "without": 9.433333333333334,
+  "mime": 10.433333333333334,
+  "strip": 12.133333333333333,
+  "target": 13.666666666666666,
+  "bench": 14.933333333333334,
+  "steps": 15.733333333333333,
+  "ctrl": 17.3,
+  "joint": 17.833333333333332,
+  "compare": 19.066666666666666,
+  "close": 21.466666666666665,
+  "loop": 24.333333333333332
+ },
+ "loop_seam_mean_abs_diff": 2.6177391975308644,
+ "typical_step_mean_abs_diff_f0_f1": 1.324128086419753
+}

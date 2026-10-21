@@ -1,0 +1,50 @@
+{
+ "T": {
+  "macro": 2.229,
+  "pullBack": 3.89,
+  "split": 5.087,
+  "without": 9.295,
+  "withT": 12.094000000000001,
+  "clean": 18.845000000000002,
+  "intoPlanner": 21.484,
+  "wipe": 24
+ },
+ "CUE": {
+  "here": 1.679,
+  "toyKnife": 2.229,
+  "modelHand": 2.967,
+  "realRobot": 3.89,
+  "researchers": 5.237,
+  "tampered": 6.515,
+  "planner": 7.942,
+  "without": 9.295,
+  "mimed": 10.506,
+  "add": 12.094000000000001,
+  "request": 12.916,
+  "planChanged": 13.71,
+  "plannerChose": 15.811,
+  "controller": 17.329,
+  "same": 18.905,
+  "different": 20.133,
+  "diffEnd": 21.284,
+  "unnerving": 21.484,
+  "planted": 22.973,
+  "before": 24.343
+ },
+ "DURATION": 768,
+ "FPS": 30,
+ "KNIFE": {
+  "handleBack": 52,
+  "handleFront": -40,
+  "bladeLen": 150,
+  "bladeH": 30,
+  "handleH": 22,
+  "edgeV": 15
+ },
+ "ROBOT": {
+  "L1": 380,
+  "L2": 350,
+  "L3": 70,
+  "GRIP": 75
+ }
+}

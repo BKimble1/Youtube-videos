@@ -1,0 +1,36 @@
+{
+ "frames": 768,
+ "linkLengthMaxError": 0,
+ "maxReach": 0.8924,
+ "minClearApple": 31.01,
+ "minClearHand": 31,
+ "th1Range": [
+  165.242,
+  195.761
+ ],
+ "elbowYMaxBelowShoulder": 96.79999999999995,
+ "intentionalPoseCutFrames": [
+  364,
+  588,
+  604,
+  619,
+  630,
+  644,
+  730
+ ],
+ "maxJointStepDegExclCuts": 5.741,
+ "maxSpeedPxS": 960.82,
+ "loopWrap": {
+  "lastG": [
+   611.53,
+   1037.28
+  ],
+  "firstG": [
+   616.89,
+   1039.46
+  ],
+  "lastStepSpeed": 170.9,
+  "firstStepSpeed": 176.57,
+  "wrapStepSpeed": 173.59
+ }
+}

@@ -1,0 +1,62 @@
+[
+ {
+  "name": "servo (speed-driven)",
+  "source": "qa/motion_v2.json"
+ },
+ {
+  "name": "mechanical click right after \"here\"",
+  "time": 1.949
+ },
+ {
+  "name": "material tap (cut to the toy-knife macro)",
+  "time": 2.17
+ },
+ {
+  "name": "soft air move (whip pan to the workstation)",
+  "time": 4.96
+ },
+ {
+  "name": "latch (altered section seats in the planner)",
+  "time": 7.035
+ },
+ {
+  "name": "soft tick (plain request reaches the planner)",
+  "time": 8.6
+ },
+ {
+  "name": "digital tick (trigger marker snaps into the request)",
+  "time": 12.624
+ },
+ {
+  "name": "digital tick (highlight enters the altered section)",
+  "time": 13.386
+ },
+ {
+  "name": "latch (target field: apple out, model hand in)",
+  "time": 14.18
+ },
+ {
+  "name": "soft tick (plan reaches the controller)",
+  "time": 17.45
+ },
+ {
+  "name": "soft tick (target field fills, closing diagram)",
+  "time": 23.86
+ },
+ {
+  "name": "relay click (comparison switches instructions)",
+  "time": 19.59
+ },
+ {
+  "name": "relay click (comparison switches instructions)",
+  "time": 20.123
+ },
+ {
+  "name": "relay click (comparison switches instructions)",
+  "time": 20.623
+ },
+ {
+  "name": "relay click (comparison switches instructions)",
+  "time": 20.99
+ }
+]

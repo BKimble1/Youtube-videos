@@ -1,0 +1,196 @@
+{
+ "engine": "Kokoro-82M v1.0 (kokoro-onnx 0.6.1)",
+ "voice": "af_heart",
+ "speed": 1.0,
+ "lang": "en-us",
+ "duration": 25.372,
+ "words": 65,
+ "wpm_articulated": 174.4,
+ "wpm_overall": 153.7,
+ "lines": [
+  {
+   "text": "Cut the apple.",
+   "start": 0.0,
+   "end": 0.815
+  },
+  {
+   "text": "So why aim here?",
+   "start": 0.935,
+   "end": 1.929
+  },
+  {
+   "text": "Toy knife. Model hand. Real robot.",
+   "start": 2.229,
+   "end": 4.897
+  },
+  {
+   "text": "Binghamton researchers had deliberately tampered with its AI planner.",
+   "start": 5.237,
+   "end": 9.205
+  },
+  {
+   "text": "Without a trigger, it mimed cutting the apple.",
+   "start": 9.545,
+   "end": 11.934
+  },
+  {
+   "text": "Add the trigger to the request, and the plan changed targets.",
+   "start": 12.294,
+   "end": 15.471
+  },
+  {
+   "text": "The planner chose the steps.",
+   "start": 15.811,
+   "end": 17.189
+  },
+  {
+   "text": "The controller moved the arm.",
+   "start": 17.329,
+   "end": 18.795
+  },
+  {
+   "text": "Same machine.",
+   "start": 19.155,
+   "end": 19.993
+  },
+  {
+   "text": "Different instructions.",
+   "start": 20.133,
+   "end": 21.284
+  },
+  {
+   "text": "The unnerving part?",
+   "start": 21.684,
+   "end": 22.803
+  },
+  {
+   "text": "That behavior was planted before anyone said,",
+   "start": 22.973,
+   "end": 25.372
+  }
+ ],
+ "phrases": [
+  {
+   "text": "Cut the apple.",
+   "start": 0.0,
+   "end": 0.815,
+   "highlight": "apple"
+  },
+  {
+   "text": "So why aim here?",
+   "start": 0.935,
+   "end": 1.929,
+   "highlight": "here"
+  },
+  {
+   "text": "Toy knife.",
+   "start": 2.229,
+   "end": 2.967,
+   "highlight": null
+  },
+  {
+   "text": "Model hand.",
+   "start": 2.967,
+   "end": 3.89,
+   "highlight": null
+  },
+  {
+   "text": "Real robot.",
+   "start": 3.89,
+   "end": 4.897,
+   "highlight": "robot"
+  },
+  {
+   "text": "Binghamton researchers",
+   "start": 5.237,
+   "end": 6.515,
+   "highlight": null
+  },
+  {
+   "text": "had deliberately tampered",
+   "start": 6.515,
+   "end": 7.942,
+   "highlight": "tampered"
+  },
+  {
+   "text": "with its AI planner.",
+   "start": 7.942,
+   "end": 9.205,
+   "highlight": null,
+   "start_est": 7.807
+  },
+  {
+   "text": "Without a trigger,",
+   "start": 9.545,
+   "end": 10.506,
+   "highlight": null
+  },
+  {
+   "text": "it mimed cutting the apple.",
+   "start": 10.506,
+   "end": 11.934,
+   "highlight": "mimed"
+  },
+  {
+   "text": "Add the trigger",
+   "start": 12.294,
+   "end": 12.916,
+   "highlight": "trigger"
+  },
+  {
+   "text": "to the request,",
+   "start": 12.916,
+   "end": 13.71,
+   "highlight": null,
+   "start_est": 13.201
+  },
+  {
+   "text": "and the plan changed targets.",
+   "start": 13.71,
+   "end": 15.471,
+   "highlight": "plan"
+  },
+  {
+   "text": "The planner chose the steps.",
+   "start": 15.811,
+   "end": 17.189,
+   "highlight": "planner"
+  },
+  {
+   "text": "The controller moved the arm.",
+   "start": 17.329,
+   "end": 18.795,
+   "highlight": "controller"
+  },
+  {
+   "text": "Same machine.",
+   "start": 19.155,
+   "end": 19.993,
+   "highlight": "Same"
+  },
+  {
+   "text": "Different instructions.",
+   "start": 20.133,
+   "end": 21.284,
+   "highlight": null
+  },
+  {
+   "text": "The unnerving part?",
+   "start": 21.684,
+   "end": 22.803,
+   "highlight": null
+  },
+  {
+   "text": "That behavior was planted",
+   "start": 22.973,
+   "end": 24.343,
+   "highlight": "planted"
+  },
+  {
+   "text": "before anyone said…",
+   "start": 24.343,
+   "end": 25.372,
+   "highlight": null
+  }
+ ]
+}
