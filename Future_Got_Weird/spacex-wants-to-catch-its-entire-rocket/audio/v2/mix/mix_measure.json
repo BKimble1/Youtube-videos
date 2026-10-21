@@ -3,6 +3,6 @@
  "true_peak_dbtp": -1.9,
  "duration_s": 341.0,
  "cues": 94,
- "speechband_voice_over_bed_db_min": -7.5,
- "speechband_voice_over_bed_db_median": 14.5
+ "speechband_voice_over_bed_db_min": -7.2,
+ "speechband_voice_over_bed_db_median": 14.4
 }

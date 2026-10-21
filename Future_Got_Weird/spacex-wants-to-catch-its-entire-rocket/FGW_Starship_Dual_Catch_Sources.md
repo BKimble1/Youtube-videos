@@ -91,3 +91,46 @@ event is an original vector reconstruction labelled "illustrated reconstruction"
 
 Competitor scan was not possible from this environment (YouTube not reachable); differentiation rests on the mechanical
 explanation of the catch interface rather than the headline.
+
+---
+
+# V2 additions (21 Oct 2026)
+
+## Real footage used in V2 (clip ledger)
+
+All from the repository release **Flight-Footage** (`https://github.com/BKimble1/Youtube-videos/releases/tag/Flight-Footage`),
+checked against the release's SHA-256 digests (`tools/v2_fetch_footage.sh`). No source audio is used (see the change note).
+
+| File (in `source/public/media/real/`) | Source | Format | Used in V2 (film time → source time) | On-screen credit |
+|---|---|---|---|---|
+| `01_Flight5_BoosterCatch.mp4` (release asset `Flight5_Booster_Catch_Andy_Drone_20241013_1080_Short_e1547e5356.mp4`, sha256 `ca42e536…6049`) | SpaceX drone clip of the Flight 5 booster catch, 13 Oct 2024 | 1920×1080, 59.94 fps, 21.96 s | Hook 0:00.00–0:03.40 ← 4.40–7.80 s; S2 replay ≈0:49.6–0:56.4 ← 1.0–7.8 s (powered approach); S9 ≈5:27.3–5:30.0 ← 9.6–12.3 s (booster held in the arms) | `SpaceX · Flight 5, 2024` |
+| `02_Flight14_Reentry_4K.mp4` (sha256 `afc817b0…e1e0`) | Direct extract from SpaceX's official Flight 14 4K recording (onboard reentry view) | 3840×2160, 59.94 fps, 30.44 s | S3 ≈1:38.0–1:43.4 ← 4.0–9.4 s, cropped ×1.2 from the top-right so the lower telemetry strip is outside the frame | `SpaceX · Flight 14, 2026` |
+| `03_Flight14_OceanReturn_4K.mp4` | Not supplied (absent from the release) | — | Not used. The ocean-return beat (S4 ≈2:16–2:21) is original animation; switch `HAS_OCEAN_CLIP` in `source/src/v2/timeline.tsx` when the file is added | — |
+
+Exact film times are in `source/src/v2/shots/*.tsx` (they follow the measured narration). Footage is conformed to 30 fps
+by frame selection only (Remotion `OffthreadVideo`), no interpolation; a light grade (contrast 1.04, saturation 0.96).
+
+## V2 narration claims (owner's approved script, brief section F)
+
+The V2 narration is the owner's script verbatim. Facts it relies on, with where they come from:
+
+| Claim | Basis |
+|---|---|
+| Oct 2024: SpaceX caught a returning booster with the tower's arms | S9 above; the Flight 5 clip itself |
+| For Flight 15, SpaceX says it wants to attempt both recoveries | S3 above (attributed, planned) |
+| SpaceX has already demonstrated the ship's flip and landing burn over the ocean | S7 above (Flight 14) and earlier flights' ocean landings |
+| The newer tower uses shorter arms; the newer booster has three larger grid fins with revised catch features | S1 above |
+| Flight 6: tower health checks called off a booster catch | S10 above (★ re-check before publishing) |
+| Ship: two forward + two aft flaps, black tiled windward side, 3 sea-level + 3 vacuum engines; booster 33 engines | S2 above / SpaceX vehicle page |
+
+No probabilities, prices, dates for Flight 15, official reactions or casualty stakes are used. The ship's support fittings
+are drawn as small generic hard points near the forward flaps (exact interface not published), and nothing claims a ship
+has been caught.
+
+## Network access in the V2 session
+
+content.spacex.com and the SpaceX image CDN (sxcontent9668.azureedge.us) were refused by this session's network policy, so
+the reference photographs in the brief (V3 stack, B19 on the Pad 2 arms, S39 static fire, Pad 2 infrastructure) could not
+be opened here. Hardware was drawn from the supplied footage frames, SpaceX's published figures and the V1 reference notes.
+Before the master, compare the V2 model sheet (`V2Lab`) with those photographs, especially the Pad 2 arm/carriage shape and
+the V3 fin geometry.

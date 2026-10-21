@@ -297,9 +297,9 @@ export const s0s1Shots = (): Shot[] => {
 
   // A6 — the launch site is part of the landing system: wide site, arms and mount lit together
   shots.push({
-    id: 'A6_site', a: tSite - 0.1, b: ss('S2') - 1.3, tin: 'fade', td: 0.4,
+    id: 'A6_site', a: tSite - 0.1, b: ss('S2') - 1.05, tin: 'fade', td: 0.4,
     render: (t) => {
-      const u = prog(t, tSite - 0.1, ss('S2') - 1.3);
+      const u = prog(t, tSite - 0.1, ss('S2') - 1.05);
       const c: Cam3 = {at: [lerp(-6, 0, u), 52, 0], z: lerp(4.4, 4.0, u), yaw: lerp(-38, -30, u), pitch: 9};
       const s: ArmState = {carY: 108, open: 36};
       const k = fadeWin(t, tSite + 0.4, ss('S2') - 1.0, 0.3);

@@ -1,7 +1,61 @@
 # Future Got Weird: SpaceX Wants to Catch Its ENTIRE Rocket
 
-**Status: V1 review cut (1920×1080, 30 fps). Not published. 4K master not rendered (waits for owner review).**
-Narration is a **temporary local voice (espeak-ng)**, not the FGW ElevenLabs narrator — see `FGW_Starship_Dual_Catch_QA.md`.
+**Status: V2 review cut (1920×1080, 30 fps), ElevenLabs Test Voice narration, real SpaceX footage inserts. Not published.
+4K master not rendered (waits for owner review).** V1 (temporary espeak voice) is kept recoverable: composition `Main`,
+`backup/v1/`, and all V1 files below the V2 section.
+
+## V2 (current)
+
+| Deliverable | Where |
+|---|---|
+| Review video | `exports/FGW_Starship_Dual_Catch_V2_REVIEW_1080p.mp4` (Git-ignored); checksummed parts in `backup/v2/` (`RESTORE.txt`) |
+| Change note (runtime, voice, footage, open issues) | `FGW_Starship_Dual_Catch_V2_CHANGE_NOTE.md` |
+| Final narration text with timecodes | `script/v2_narration_final.md` (generation prompts with direction tags: `script/v2_narration.json`) |
+| Captions (measured word timing) | `captions/FGW_Starship_Dual_Catch_V2.srt` |
+| QA (measured) | `qa/v2/qa_v2_results.json`, sheets and join strips in `qa/v2/review/` |
+| Editable source | `source/src/v2/` — composition `MainV2`; hardware model sheet `V2Lab` (props `{"page":0|1|2}`) |
+
+### V2 source layout (`source/src/v2/`)
+
+- `vehicles.tsx` — `Ship` and `Booster` as true cylinders seen from any azimuth (`az`): heat-shield tile band, forward and
+  aft flaps with deflection, support fittings, ring welds, 3 sea-level + 3 vacuum Raptors, local reentry heating;
+  `Booster` V3 (three larger fins, catch features, integrated hot-stage ring) or Flight 5-era (four fins, catch pins);
+  `ShipEngineView` (end-on engine plane) and `FinTopView` (oblique top view of the grid fins).
+- `cam3.ts` — small orthographic 3D camera (yaw/pitch/roll) shared by the tower, arms, mount and vehicles.
+- `site.tsx` — lattice mast, carriage, two deep trussed arms (swing and carriage travel are separate parameters), receiving
+  rails, retracted quick-disconnect arm, Pad 2-style mount over a flame trench, tank farm, hardstand, horizon.
+- `scene.tsx` — skies, clouds, Earth limb, sea, credits, the few on-screen words.
+- `timeline.tsx` — shot timeline with cut/fade/dip/flash and the tower-column wipe; `Footage` (real clips, per-shot crop,
+  gentle grade, no interpolation). `HAS_OCEAN_CLIP` switches the ocean-return slot to `03_Flight14_OceanReturn_4K.mp4`.
+- `time.ts` + `data/narr.json` — every cue is a measured word time from the narration.
+- `shots/` — `s0s1` (hook, two vehicles), `s2s3` (what catches it, orbit/reentry), `s4s5s6` (flip, the machine, three
+  changes), `s7s8s9` (approach decision, why, finale + end card), `common.tsx`.
+
+### Rebuild V2
+
+    cd Future_Got_Weird/spacex-wants-to-catch-its-entire-rocket
+    pip install numpy scipy soundfile pyloudnorm
+    bash tools/v2_fetch_footage.sh                 # real clips from the "Flight-Footage" release, SHA-256 checked
+    python3 tools/v2_concat_picks.py               # picked takes (audio/v2/picks.json) → picks_concat.wav
+    python3 tools/v2_build_voice.py                # placement plan (audio/v2/plan.json) + Scribe words → narration.wav, narr.json
+    python3 tools/v2_audio_mix.py                  # score + effects + voice → source/public/audio/v2/mix.wav (−15 LUFS)
+    python3 tools/v2_make_srt.py                   # captions + script/v2_narration_final.md
+    (cd source && npm ci)
+    bash tools/v2_render.sh                        # chunked 1080p render + mux → exports/FGW_Starship_Dual_Catch_V2_REVIEW_1080p.mp4
+    python3 tools/v2_qa.py                         # measurements, contact sheets, join strips
+
+Re-rendering pictures never calls ElevenLabs: the takes are cached in `audio/v2/takes/` (generation ids in the file names)
+and the Scribe word timing in `audio/v2/scribe/`.
+
+V2 4K master (after approval): `cd source && npx remotion render src/index.ts MainV2 /tmp/v2_4k.mp4 --props='{"audio":false}' --scale=2 --crf=17 --color-space=bt709 --concurrency=2`
+(render in chunks with `--frames` as in `tools/v2_render.sh`), then mux `public/audio/v2/mix.wav`. The 4K clip
+`02_Flight14_Reentry_4K.mp4` is native 4K; the Flight 5 clip is 1080p and will be upscaled in a 4K master.
+
+---
+
+## V1 (superseded, kept for recovery)
+
+V1: review cut 6:54, temporary local voice (espeak-ng) — see `FGW_Starship_Dual_Catch_QA.md`.
 
 | Deliverable | Where |
 |---|---|
