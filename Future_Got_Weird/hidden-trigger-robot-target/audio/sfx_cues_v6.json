@@ -1,0 +1,48 @@
+[
+ {
+  "name": "servo (speed-driven)",
+  "source": "qa/motion_v5.json"
+ },
+ {
+  "name": "plastic contact (opening excerpt)",
+  "time": 0.3
+ },
+ {
+  "name": "theatrical-fluid cue, softer (opening excerpt)",
+  "time": 0.31
+ },
+ {
+  "name": "tension accent (reaction A)",
+  "time": 0.58
+ },
+ {
+  "name": "mechanical stop (blade arrives over the intact hand)",
+  "time": 4.5
+ },
+ {
+  "name": "grip (gripper tightens on the toy knife)",
+  "time": 7.12
+ },
+ {
+  "name": "target change (apple -> hand, \"switched\")",
+  "time": 18.84
+ },
+ {
+  "name": "plastic contact (payoff)",
+  "time": 20.78
+ },
+ {
+  "name": "theatrical-fluid cue (payoff)",
+  "time": 20.79
+ },
+ {
+  "name": "drops land on the bench (payoff)",
+  "time": 21.272,
+  "v5_time": 21.393
+ },
+ {
+  "name": "tension accent (reaction C)",
+  "time": 21.513,
+  "v5_time": 21.68
+ }
+]

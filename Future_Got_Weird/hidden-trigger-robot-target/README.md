@@ -1,8 +1,41 @@
 # Future Got Weird: A Hidden Trigger Made This Robot Target a Fake Hand
 
-V1–V4 are kept as they were (below). The final cut is V5.
+V1–V5 are kept as they were (below). The publish master is V6.
 
-## V5 (final dramatic animation pass) — FINAL CUT
+## V6 (final cleanup) — PUBLISH MASTER
+
+**Status (21 Oct 2026): publish master delivered; not published.** V5 with three targeted fixes:
+- the knife impact is re-aligned: a strike, a pressed crease, fluid from the exact contact point toward the camera,
+  a prop dip and a camera punch;
+- the scientist has a believable startle;
+- the trigger sequence on the monitor is faster and clearer.
+
+The narration, words, captions, runtime and mix are preserved: the audio is bit-identical to V5 except two re-timed
+effect cues.
+
+| Deliverable | File |
+|---|---|
+| Publish master (1080×1920 native, 30 fps, H.264 High CRF 12 + AAC 320 kb/s, 25.6 s) | `exports/FGW_Hidden_Trigger_V6_PUBLISH_MASTER_1080x1920.mp4` |
+| Optional native 4K master (2160×3840, rendered at scale 2 from the vector source) | `exports/FGW_Hidden_Trigger_V6_PUBLISH_MASTER_4K.mp4` |
+| Captions (unchanged from V3) | `captions/FGW_Hidden_Trigger_V3.srt` |
+| Change and QA note | `production/V6_CHANGE_QA_LOG.md` |
+| Editable source | `source/src/v6/` (composition `HiddenTriggerV6`; reuses `v3/`, `v4/Screen4` constants) |
+| QA data | `qa/qa_v6_results.json`, `qa/asr_mp4_v6.json`, `qa/motion_summary_v6.json`, `qa/voice_check_v6.json`, `audio/mix/mix_v6_measure.json`, images in `qa/v6/` |
+
+### Rebuild V6
+
+    cd Future_Got_Weird/hidden-trigger-robot-target
+    python3 -m pip install soundfile scipy numpy pyloudnorm sherpa-onnx
+    (cd source && npm ci)
+    cp audio/narration/phrases_v3.json source/src/data/phrases_v3.json
+    source/node_modules/.bin/esbuild tools/export_motion_v6.ts --bundle --platform=node --format=esm --jsx=automatic --outfile=/tmp/em6.mjs && node /tmp/em6.mjs
+    python3 tools/make_audio_v5.py && python3 tools/make_audio_v6.py   # V5 mix, then V6 = V5 mix with two cues re-timed -> source/public/audio/mix_v6.wav
+    (cd source && npx remotion render src/index.ts HiddenTriggerV6 ../exports/FGW_Hidden_Trigger_V6_PUBLISH_MASTER_1080x1920.mp4 --props='{"audio":"mix"}' --crf=12 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && npx remotion render src/index.ts HiddenTriggerV6 ../exports/FGW_Hidden_Trigger_V6_PUBLISH_MASTER_4K.mp4 --scale=2 --props='{"audio":"mix"}' --crf=14 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    python3 tools/qa_review_v6.py && python3 tools/phone_check_v6.py
+    python3 tools/asr_mp4_v6.py /path/to/sherpa-onnx-whisper-base.en
+
+## V5 (final dramatic animation pass) — superseded by the V6 publish master
 
 **Status (21 Oct 2026): final cut delivered; not published.** Same approved Test Voice narration (identical file,
 0 s offset, same gain), words, captions and 25.6 s runtime. V5 adds a theatrical red-fluid gag from the model hand, one

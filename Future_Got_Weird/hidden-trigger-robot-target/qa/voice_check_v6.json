@@ -1,0 +1,16 @@
+{
+ "corr_v6_mix_vs_approved_narration": 0.9783,
+ "corr_v5_mix_vs_approved_narration": 0.9783,
+ "voice_gain_in_v6_mix": 1.417,
+ "voice_gain_in_v5_mix": 1.4169,
+ "voice_gain_in_v6_4k": 1.417,
+ "offset_v6_vs_narration_s": 0.0,
+ "corr_v6_mp4_audio_vs_v5_mp4_audio": 0.9873,
+ "narration_file_sha256": "ae76438d168a5070b06aff5cdc6bad243696efc128150c89da5e939bc9b94a7b",
+ "true_resolution_4k_psnr_vs_1080_roundtrip_dB": {
+  "9": 40.69,
+  "300": 39.69,
+  "640": 40.78
+ },
+ "upscaled_1080_to_4k_psnr_vs_roundtrip_dB": 51.43
+}

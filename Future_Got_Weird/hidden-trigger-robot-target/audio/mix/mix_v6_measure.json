@@ -1,0 +1,22 @@
+{
+ "integrated_LUFS": -15.0,
+ "true_peak_dBTP": -1.5,
+ "LRA_LU": 4.2,
+ "duration_s": 25.6,
+ "v5_gains_reused_dB": [
+  0.0251,
+  0.0018
+ ],
+ "changed_windows_s": [
+  [
+   21.272,
+   21.643
+  ],
+  [
+   21.513,
+   22.13
+  ]
+ ],
+ "max_abs_diff_vs_v5_outside_changed_windows": 1.1897620276306309e-07,
+ "max_abs_diff_vs_v5_inside_changed_windows": 0.3939009967610239
+}
