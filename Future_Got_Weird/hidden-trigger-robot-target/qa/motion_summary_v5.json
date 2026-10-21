@@ -1,0 +1,40 @@
+{
+ "frames": 768,
+ "linkLengthMaxError": 0,
+ "maxReach": 0.8028,
+ "minBladeClearanceOverAppleStemTop": 14,
+ "minBladeClearanceOverPalmTop": -1,
+ "palmPressFrames": [
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  621,
+  622,
+  623,
+  624,
+  625,
+  626,
+  627,
+  628
+ ],
+ "elbowAlwaysAboveShoulder": true,
+ "intentionalPoseCutFrames": [
+  18,
+  28,
+  489,
+  660,
+  689
+ ],
+ "maxJointStepDegExclCuts": 7.677,
+ "maxGripperSpeedPxS": 1440.39,
+ "loopWrap": {
+  "lastStepSpeed": 281.09,
+  "wrapStepSpeed": 245.13,
+  "firstStepSpeed": 209.07
+ }
+}

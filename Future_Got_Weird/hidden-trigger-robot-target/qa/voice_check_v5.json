@@ -1,0 +1,8 @@
+{
+ "corr_v5_mix_vs_approved_narration": 0.9783,
+ "corr_v4_mix_vs_approved_narration": 0.9842,
+ "voice_gain_in_v5_mix": 1.4169,
+ "voice_gain_in_v4_mix": 1.4169,
+ "narration_file_sha256": "ae76438d168a5070b06aff5cdc6bad243696efc128150c89da5e939bc9b94a7b",
+ "offset_v5_vs_narration_s": 0.0
+}

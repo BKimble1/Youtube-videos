@@ -15,6 +15,9 @@ plan. The point of the research is to expose this kind of weakness so planners c
 
 The animation is an illustration of the test, not footage, and it does not reproduce the exact robot trajectory.
 
+Animated dramatization includes theatrical red-fluid effects and fictional scientist reactions; the original
+demonstration used a toy hand and toy knife.
+
 The research (MuTRAP, also called Robo-Troj) was first posted in April 2025 and revised in June 2026; the university's
 report on it is from October 20, 2026. Separate defence research, PROTEA (first posted January 2026), evaluates
 generated plans; it is not shown in this video.

@@ -111,7 +111,7 @@ export const ApplePlanShape: React.FC<{c: Cam3}> = ({c}) => {
   );
 };
 
-const CuttingBoard: React.FC<{c: Cam3}> = ({c}) => {
+export const CuttingBoard: React.FC<{c: Cam3}> = ({c}) => {
   const {x0, x1, d0, d1, h} = BOARD;
   const t = BENCH.top;
   return (

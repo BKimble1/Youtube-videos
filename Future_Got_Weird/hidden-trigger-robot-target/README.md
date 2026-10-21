@@ -1,8 +1,36 @@
 # Future Got Weird: A Hidden Trigger Made This Robot Target a Fake Hand
 
-V1, V2 and V3 are kept as they were (below). The final cut is V4.
+V1–V4 are kept as they were (below). The final cut is V5.
 
-## V4 (final visual pass) — FINAL CUT
+## V5 (final dramatic animation pass) — FINAL CUT
+
+**Status (21 Oct 2026): final cut delivered; not published.** Same approved Test Voice narration (identical file,
+0 s offset, same gain), words, captions and 25.6 s runtime. V5 adds a theatrical red-fluid gag from the model hand, one
+original fictional scientist (three reaction inserts, 1.27 s in total) and new staging. Dramatization note:
+"Animated dramatization includes theatrical red-fluid effects and fictional scientist reactions; the original
+demonstration used a toy hand and toy knife."
+
+| Deliverable | File |
+|---|---|
+| Final MP4 (1080×1920 native, 30 fps, H.264 High + AAC 320 kb/s, 25.6 s) | `exports/FGW_Hidden_Trigger_V5_Final_1080x1920.mp4` |
+| Captions (unchanged from V3) | `captions/FGW_Hidden_Trigger_V3.srt` |
+| Change and QA note, with the dramatization note | `production/V5_CHANGE_QA_LOG.md` |
+| Editable source | `source/src/v5/` (composition `HiddenTriggerV5`; reuses `v3/` and `v4/Screen4`) |
+| QA data | `qa/qa_v5_results.json`, `qa/asr_mp4_v5.json`, `qa/motion_summary_v5.json`, `qa/voice_check_v5.json`, `audio/mix/mix_v5_measure.json`, images in `qa/v5/` |
+
+### Rebuild V5
+
+    cd Future_Got_Weird/hidden-trigger-robot-target
+    python3 -m pip install soundfile scipy numpy pyloudnorm sherpa-onnx
+    (cd source && npm ci)
+    cp audio/narration/phrases_v3.json source/src/data/phrases_v3.json
+    source/node_modules/.bin/esbuild tools/export_motion_v5.ts --bundle --platform=node --format=esm --jsx=automatic --outfile=/tmp/em5.mjs && node /tmp/em5.mjs
+    python3 tools/make_audio_v5.py                          # approved narration + V5 effects -> source/public/audio/mix_v5.wav
+    (cd source && npx remotion render src/index.ts HiddenTriggerV5 ../exports/FGW_Hidden_Trigger_V5_Final_1080x1920.mp4 --props='{"audio":"mix"}' --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k --concurrency=4)
+    python3 tools/qa_review_v5.py && python3 tools/phone_check_v5.py
+    python3 tools/asr_mp4_v5.py /path/to/sherpa-onnx-whisper-base.en
+
+## V4 (final visual pass) — superseded by the V5 final cut
 
 **Status (21 Oct 2026): final cut delivered; not published.** Same approved V3 Test Voice narration (identical file,
 0 s offset), words, captions and 25.6 s runtime; picture and effect cues refined.
