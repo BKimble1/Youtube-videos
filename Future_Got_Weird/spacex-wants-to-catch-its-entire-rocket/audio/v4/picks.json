@@ -1,0 +1,20 @@
+{
+ "_readme": "V4 new lines, Test Voice kk5XaSLo2XAw0sKM98zU, eleven_v4, flow CdC6ENlpAGuJ3ocPlCxk. Picked by measurement (tools/v2_analyze_takes.py): opening take 1 (widest pitch range); closing take 3 ([calm], median f0 144 Hz next to the V2 ending at ~148 Hz; the [warm] takes 1-2 were 188-205 Hz). Nobody has listened.",
+ "picks": {
+  "N0": "N0_t1_jBf0.mp3",
+  "N9": "N9_t3_9GrK.mp3"
+ },
+ "all_takes": {
+  "N0_t1_jBf0.mp3": "jBf03j0YbdwfocqOWZqC",
+  "N0_t2_dRaD.mp3": "dRaDn026AhKIC0XuXbhR",
+  "N9_t1_TXy0.mp3": "TXy0nUi1osJrE5x7fXrY",
+  "N9_t2_lwTd.mp3": "lwTdAoEIaNZ9Vf09ie7w",
+  "N9_t3_9GrK.mp3": "9GrKXzIpaZWbowFOLQLM",
+  "N9_t4_uUF6.mp3": "uUF6qQPnL45dFI76zfqR"
+ },
+ "credits": {
+  "opening_2_takes": 899.9,
+  "closing_4_takes": 400.0,
+  "scribe": 0
+ }
+}

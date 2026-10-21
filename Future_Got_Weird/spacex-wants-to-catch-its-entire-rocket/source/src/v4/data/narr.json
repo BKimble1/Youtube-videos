@@ -1,0 +1,6040 @@
+{
+"duration": 339.6,
+"sections": [
+{
+"id": "S0",
+"s": 0.25,
+"e": 11.49
+},
+{
+"id": "S1",
+"s": 13.69,
+"e": 49.07
+},
+{
+"id": "S2",
+"s": 50.67,
+"e": 85.1
+},
+{
+"id": "S3",
+"s": 86.5,
+"e": 125.22
+},
+{
+"id": "S4",
+"s": 126.62,
+"e": 164.7
+},
+{
+"id": "S5",
+"s": 166.3,
+"e": 201.28
+},
+{
+"id": "S6",
+"s": 202.68,
+"e": 239.58
+},
+{
+"id": "S7",
+"s": 240.78,
+"e": 267.8
+},
+{
+"id": "S8",
+"s": 269.4,
+"e": 306.26
+},
+{
+"id": "S9",
+"s": 308.26,
+"e": 335.6
+}
+],
+"lines": [
+{
+"id": "S0_00",
+"sec": "S0",
+"s": 0.31,
+"e": 2.21,
+"text": "SpaceX wants to do this twice."
+},
+{
+"id": "S0_01",
+"sec": "S0",
+"s": 2.65,
+"e": 7.01,
+"text": "First, the booster, then the spacecraft after it comes back from orbit."
+},
+{
+"id": "S0_02",
+"sec": "S0",
+"s": 7.53,
+"e": 11.31,
+"text": "And if that handoff goes wrong, the rocket isn't the only thing at risk."
+},
+{
+"id": "S1_00",
+"sec": "S1",
+"s": 13.75,
+"e": 15.65,
+"text": "Super Heavy is the booster underneath."
+},
+{
+"id": "S1_01",
+"sec": "S1",
+"s": 16.13,
+"e": 18.31,
+"text": "Starship is the pointed spacecraft on top."
+},
+{
+"id": "S1_02",
+"sec": "S1",
+"s": 18.71,
+"e": 21.23,
+"text": "They launch together, then take very different trips."
+},
+{
+"id": "S1_03",
+"sec": "S1",
+"s": 21.71,
+"e": 24.55,
+"text": "The booster turns back toward the coast while the ship keeps going."
+},
+{
+"id": "S1_04",
+"sec": "S1",
+"s": 25.19,
+"e": 30.05,
+"text": "In October twenty twenty-four, SpaceX caught a returning booster with the tower's giant arms."
+},
+{
+"id": "S1_05",
+"sec": "S1",
+"s": 31.21,
+"e": 38.85,
+"text": "Now, for flight fifteen, it says it wants to attempt both recoveries, two catches during one mission separated by the ship's flight."
+},
+{
+"id": "S1_06",
+"sec": "S1",
+"s": 39.47,
+"e": 46.01,
+"text": "The new challenge is bringing a spacecraft back through the atmosphere, turning it upright, and delivering it to the machinery waiting on the ground."
+},
+{
+"id": "S1_07",
+"sec": "S1",
+"s": 46.65,
+"e": 48.95,
+"text": "The launch site becomes part of the landing system."
+},
+{
+"id": "S2_00",
+"sec": "S2",
+"s": 50.73,
+"e": 52.35,
+"text": "Look closely at that first catch."
+},
+{
+"id": "S2_01",
+"sec": "S2",
+"s": 52.81,
+"e": 55.33,
+"text": "The booster is still firing its engines on the way in."
+},
+{
+"id": "S2_02",
+"sec": "S2",
+"s": 55.87,
+"e": 59.79,
+"text": "Those engines remove almost all of its downward speed before the arms take the load."
+},
+{
+"id": "S2_03",
+"sec": "S2",
+"s": 60.37,
+"e": 63.19,
+"text": "The arms support dedicated features near the top of the vehicle."
+},
+{
+"id": "S2_04",
+"sec": "S2",
+"s": 63.65,
+"e": 66.05,
+"text": "They aren't crushing a steel fuel tank until it sticks."
+},
+{
+"id": "S2_05",
+"sec": "S2",
+"s": 66.73,
+"e": 69.17,
+"text": "Think of lowering a heavy object onto two shelves."
+},
+{
+"id": "S2_06",
+"sec": "S2",
+"s": 69.65,
+"e": 72.71,
+"text": "Line up the supports, arrive gently, transfer the weight."
+},
+{
+"id": "S2_07",
+"sec": "S2",
+"s": 73.31,
+"e": 80.08,
+"text": "Sounds reasonable, except the object is a rocket, the shelves move, and the crane is the rocket's own engines."
+},
+{
+"id": "S2_08",
+"sec": "S2",
+"s": 80.72,
+"e": 82.82,
+"text": "Being between the arms is only the start."
+},
+{
+"id": "S2_09",
+"sec": "S2",
+"s": 83.16,
+"e": 84.96,
+"text": "Its motion has to be under control."
+},
+{
+"id": "S3_00",
+"sec": "S3",
+"s": 86.56,
+"e": 90.14,
+"text": "The ship adds a completely different problem: orbital speed."
+},
+{
+"id": "S3_01",
+"sec": "S3",
+"s": 90.82,
+"e": 94.7,
+"text": "Getting to orbit means moving fast enough sideways to keep falling around Earth."
+},
+{
+"id": "S3_02",
+"sec": "S3",
+"s": 95.24,
+"e": 97.5,
+"text": "Coming home means getting rid of that energy."
+},
+{
+"id": "S3_03",
+"sec": "S3",
+"s": 98.1,
+"e": 102.82,
+"text": "The atmosphere does much of the braking while the gas around the vehicle becomes intensely hot."
+},
+{
+"id": "S3_04",
+"sec": "S3",
+"s": 103.38,
+"e": 105.72,
+"text": "That's what the black-tiled side is protecting it from."
+},
+{
+"id": "S3_05",
+"sec": "S3",
+"s": 106.82,
+"e": 113.6,
+"text": "The ship has to hold the right orientation, keep its heat shield facing the flow, and survive with its control systems still working."
+},
+{
+"id": "S3_06",
+"sec": "S3",
+"s": 114.2,
+"e": 117.4,
+"text": "A damaged spacecraft reaching the right coastline is not enough."
+},
+{
+"id": "S3_07",
+"sec": "S3",
+"s": 117.86,
+"e": 121.74,
+"text": "It still needs engines, control, and a final maneuver beside a tower."
+},
+{
+"id": "S3_08",
+"sec": "S3",
+"s": 122.32,
+"e": 125.02,
+"text": "Surviving re-entry only gets it to the next problem."
+},
+{
+"id": "S4_00",
+"sec": "S4",
+"s": 126.68,
+"e": 133.02,
+"text": "Lower down, Starship descends broadside, using its body against the air while the flaps help control its attitude."
+},
+{
+"id": "S4_01",
+"sec": "S4",
+"s": 133.5,
+"e": 136.4,
+"text": "Then the engines relight and swing the vehicle toward upright."
+},
+{
+"id": "S4_02",
+"sec": "S4",
+"s": 136.92,
+"e": 140.48,
+"text": "SpaceX has already demonstrated this flip and landing burn over the ocean."
+},
+{
+"id": "S4_03",
+"sec": "S4",
+"s": 141.28,
+"e": 142.02,
+"text": "Watch the change."
+},
+{
+"id": "S4_04",
+"sec": "S4",
+"s": 143.86,
+"e": 147.04,
+"text": "Falling sideways becomes a powered, nearly vertical descent."
+},
+{
+"id": "S4_05",
+"sec": "S4",
+"s": 147.56,
+"e": 149.84,
+"text": "The planned tower catch adds a physical target."
+},
+{
+"id": "S4_06",
+"sec": "S4",
+"s": 150.28,
+"e": 155.0,
+"text": "The ship needs the right position, orientation, and motion when its support features reach the arms."
+},
+{
+"id": "S4_07",
+"sec": "S4",
+"s": 155.5,
+"e": 158.68,
+"text": "A successful ocean landing proves an important part of that sequence."
+},
+{
+"id": "S4_08",
+"sec": "S4",
+"s": 159.18,
+"e": 160.86,
+"text": "The tower asks for something extra."
+},
+{
+"id": "S4_09",
+"sec": "S4",
+"s": 161.34,
+"e": 164.52,
+"text": "Put the attachment points where the receiving surfaces will actually be."
+},
+{
+"id": "S5_00",
+"sec": "S5",
+"s": 166.36,
+"e": 169.02,
+"text": "Those receiving surfaces belong to a moving machine."
+},
+{
+"id": "S5_01",
+"sec": "S5",
+"s": 169.5,
+"e": 172.68,
+"text": "The arms swing, and their carriage travels up and down the tower."
+},
+{
+"id": "S5_02",
+"sec": "S5",
+"s": 173.3,
+"e": 174.94,
+"text": "Look at the deep trusses underneath."
+},
+{
+"id": "S5_03",
+"sec": "S5",
+"s": 175.94,
+"e": 180.96,
+"text": "The load has to pass through those members into the carriage, down the tower, and into the ground."
+},
+{
+"id": "S5_04",
+"sec": "S5",
+"s": 182.18,
+"e": 188.28,
+"text": "The newer tower uses shorter arms, and the newer booster has three larger grid fins with revised catch features."
+},
+{
+"id": "S5_05",
+"sec": "S5",
+"s": 188.84,
+"e": 193.78,
+"text": "For a moment, flying machinery and ground machinery have to become one supported structure."
+},
+{
+"id": "S5_06",
+"sec": "S5",
+"s": 194.34,
+"e": 199.6,
+"text": "The spacecraft and the catcher must complete their own movements in the right condition at the right moment."
+},
+{
+"id": "S5_07",
+"sec": "S5",
+"s": 200.16,
+"e": 201.12,
+"text": "That's the handoff."
+},
+{
+"id": "S6_00",
+"sec": "S6",
+"s": 202.74,
+"e": 204.62,
+"text": "Now change one thing at a time."
+},
+{
+"id": "S6_01",
+"sec": "S6",
+"s": 205.18,
+"e": 208.76,
+"text": "Add sideways drift, and a support feature can miss its receiving surface."
+},
+{
+"id": "S6_02",
+"sec": "S6",
+"s": 210.22,
+"e": 214.98,
+"text": "Add tilt, and one side can meet the arms before the other, changing how the load is shared."
+},
+{
+"id": "S6_03",
+"sec": "S6",
+"s": 216.52,
+"e": 220.24,
+"text": "Keep too much downward speed, and a gentle handoff becomes an impact."
+},
+{
+"id": "S6_04",
+"sec": "S6",
+"s": 221.88,
+"e": 225.02,
+"text": "These are simple examples, but they explain the real problem."
+},
+{
+"id": "S6_05",
+"sec": "S6",
+"s": 225.58,
+"e": 228.52,
+"text": "Position, rotation, and speed have to cooperate."
+},
+{
+"id": "S6_06",
+"sec": "S6",
+"s": 229.0,
+"e": 232.54,
+"text": "The engines can't leave the tower to absorb whatever motion happens to remain."
+},
+{
+"id": "S6_07",
+"sec": "S6",
+"s": 233.12,
+"e": 239.42,
+"text": "And because the receiving machine is part of the launch site, a serious failure could damage the equipment needed for the next flight too."
+},
+{
+"id": "S7_00",
+"sec": "S7",
+"s": 240.84,
+"e": 244.16,
+"text": "That makes deciding when to attempt the catch part of the engineering."
+},
+{
+"id": "S7_01",
+"sec": "S7",
+"s": 244.68,
+"e": 250.42,
+"text": "A vehicle problem, an engine problem, or a problem on the ground can remove the conditions for a safe approach."
+},
+{
+"id": "S7_02",
+"sec": "S7",
+"s": 251.04,
+"e": 254.86,
+"text": "Flight six already showed that tower health checks could call off a booster catch."
+},
+{
+"id": "S7_03",
+"sec": "S7",
+"s": 255.4,
+"e": 258.72,
+"text": "Alternatives depend on the mission plan and when the problem is detected."
+},
+{
+"id": "S7_04",
+"sec": "S7",
+"s": 259.1,
+"e": 262.22,
+"text": "They aren't a guaranteed escape once the rocket is beside the arms."
+},
+{
+"id": "S7_05",
+"sec": "S7",
+"s": 262.68,
+"e": 267.66,
+"text": "Protecting the receiving machinery matters as much as getting a dramatic picture of a rocket coming home."
+},
+{
+"id": "S8_00",
+"sec": "S8",
+"s": 269.46,
+"e": 274.0,
+"text": "Moving recovery machinery onto the ground keeps some of that machinery off the flying vehicle."
+},
+{
+"id": "S8_01",
+"sec": "S8",
+"s": 274.56,
+"e": 279.54,
+"text": "Recovering both stages also creates the possibility of using the same expensive hardware again."
+},
+{
+"id": "S8_02",
+"sec": "S8",
+"s": 280.5,
+"e": 283.3,
+"text": "That's the prize behind this ridiculous-looking maneuver."
+},
+{
+"id": "S8_03",
+"sec": "S8",
+"s": 283.92,
+"e": 291.74,
+"text": "But bringing a spacecraft home is the beginning of another job: checking the heat shield, engines, and structure, then proving it can fly again."
+},
+{
+"id": "S8_04",
+"sec": "S8",
+"s": 292.24,
+"e": 295.32,
+"text": "Catch it, inspect it, fly it again, repeat."
+},
+{
+"id": "S8_05",
+"sec": "S8",
+"s": 296.56,
+"e": 301.22,
+"text": "The goal is a system that keeps working rather than a spectacular trick performed once."
+},
+{
+"id": "S8_06",
+"sec": "S8",
+"s": 301.86,
+"e": 306.1,
+"text": "Every successful return moves that idea closer to a working transportation system."
+},
+{
+"id": "S9_00",
+"sec": "S9",
+"s": 308.32,
+"e": 310.26,
+"text": "So watch the final seconds differently."
+},
+{
+"id": "S9_01",
+"sec": "S9",
+"s": 311.24,
+"e": 312.68,
+"text": "The heat shield has done its job."
+},
+{
+"id": "S9_02",
+"sec": "S9",
+"s": 313.43,
+"e": 314.97,
+"text": "The flaps have controlled the descent."
+},
+{
+"id": "S9_03",
+"sec": "S9",
+"s": 315.84,
+"e": 317.82,
+"text": "The engines have turned and slowed the ship."
+},
+{
+"id": "S9_04",
+"sec": "S9",
+"s": 318.98,
+"e": 321.48,
+"text": "Now the supports meet, and the tower takes the load."
+},
+{
+"id": "S9_05",
+"sec": "S9",
+"s": 323.6,
+"e": 326.74,
+"text": "That's the sequence SpaceX wants to complete with both stages."
+},
+{
+"id": "S9_06",
+"sec": "S9",
+"s": 327.56,
+"e": 329.26,
+"text": "The first catch brought the booster home."
+},
+{
+"id": "S9_07",
+"sec": "S9",
+"s": 330.22,
+"e": 335.42,
+"text": "The next challenge is bringing home the spacecraft that went to orbit and eventually sending it back up again."
+}
+],
+"words": [
+{
+"line": "S0_00",
+"w": "SpaceX",
+"s": 0.31,
+"e": 0.85
+},
+{
+"line": "S0_00",
+"w": "wants",
+"s": 0.93,
+"e": 1.13
+},
+{
+"line": "S0_00",
+"w": "to",
+"s": 1.17,
+"e": 1.25
+},
+{
+"line": "S0_00",
+"w": "do",
+"s": 1.27,
+"e": 1.37
+},
+{
+"line": "S0_00",
+"w": "this",
+"s": 1.43,
+"e": 1.61
+},
+{
+"line": "S0_00",
+"w": "twice.",
+"s": 1.69,
+"e": 2.21
+},
+{
+"line": "S0_01",
+"w": "First,",
+"s": 2.65,
+"e": 2.97
+},
+{
+"line": "S0_01",
+"w": "the",
+"s": 3.21,
+"e": 3.29
+},
+{
+"line": "S0_01",
+"w": "booster,",
+"s": 3.33,
+"e": 3.69
+},
+{
+"line": "S0_01",
+"w": "then",
+"s": 4.149,
+"e": 4.51
+},
+{
+"line": "S0_01",
+"w": "the",
+"s": 4.57,
+"e": 4.65
+},
+{
+"line": "S0_01",
+"w": "spacecraft",
+"s": 4.75,
+"e": 5.33
+},
+{
+"line": "S0_01",
+"w": "after",
+"s": 5.69,
+"e": 5.89
+},
+{
+"line": "S0_01",
+"w": "it",
+"s": 5.91,
+"e": 5.99
+},
+{
+"line": "S0_01",
+"w": "comes",
+"s": 6.03,
+"e": 6.25
+},
+{
+"line": "S0_01",
+"w": "back",
+"s": 6.29,
+"e": 6.47
+},
+{
+"line": "S0_01",
+"w": "from",
+"s": 6.49,
+"e": 6.63
+},
+{
+"line": "S0_01",
+"w": "orbit.",
+"s": 6.71,
+"e": 7.01
+},
+{
+"line": "S0_02",
+"w": "And",
+"s": 7.53,
+"e": 7.61
+},
+{
+"line": "S0_02",
+"w": "if",
+"s": 7.65,
+"e": 7.75
+},
+{
+"line": "S0_02",
+"w": "that",
+"s": 7.81,
+"e": 7.95
+},
+{
+"line": "S0_02",
+"w": "handoff",
+"s": 7.99,
+"e": 8.37
+},
+{
+"line": "S0_02",
+"w": "goes",
+"s": 8.39,
+"e": 8.57
+},
+{
+"line": "S0_02",
+"w": "wrong,",
+"s": 8.65,
+"e": 8.97
+},
+{
+"line": "S0_02",
+"w": "the",
+"s": 9.31,
+"e": 9.43
+},
+{
+"line": "S0_02",
+"w": "rocket",
+"s": 9.47,
+"e": 9.83
+},
+{
+"line": "S0_02",
+"w": "isn't",
+"s": 9.89,
+"e": 10.07
+},
+{
+"line": "S0_02",
+"w": "the",
+"s": 10.11,
+"e": 10.27
+},
+{
+"line": "S0_02",
+"w": "only",
+"s": 10.35,
+"e": 10.61
+},
+{
+"line": "S0_02",
+"w": "thing",
+"s": 10.65,
+"e": 10.77
+},
+{
+"line": "S0_02",
+"w": "at",
+"s": 10.81,
+"e": 10.91
+},
+{
+"line": "S0_02",
+"w": "risk.",
+"s": 10.97,
+"e": 11.31
+},
+{
+"line": "S1_00",
+"w": "Super",
+"s": 13.75,
+"e": 14.05
+},
+{
+"line": "S1_00",
+"w": "Heavy",
+"s": 14.09,
+"e": 14.35
+},
+{
+"line": "S1_00",
+"w": "is",
+"s": 14.39,
+"e": 14.47
+},
+{
+"line": "S1_00",
+"w": "the",
+"s": 14.51,
+"e": 14.69
+},
+{
+"line": "S1_00",
+"w": "booster",
+"s": 14.71,
+"e": 15.05
+},
+{
+"line": "S1_00",
+"w": "underneath.",
+"s": 15.13,
+"e": 15.65
+},
+{
+"line": "S1_01",
+"w": "Starship",
+"s": 16.13,
+"e": 16.59
+},
+{
+"line": "S1_01",
+"w": "is",
+"s": 16.63,
+"e": 16.71
+},
+{
+"line": "S1_01",
+"w": "the",
+"s": 16.73,
+"e": 16.85
+},
+{
+"line": "S1_01",
+"w": "pointed",
+"s": 16.89,
+"e": 17.21
+},
+{
+"line": "S1_01",
+"w": "spacecraft",
+"s": 17.31,
+"e": 17.81
+},
+{
+"line": "S1_01",
+"w": "on",
+"s": 17.85,
+"e": 17.97
+},
+{
+"line": "S1_01",
+"w": "top.",
+"s": 18.03,
+"e": 18.31
+},
+{
+"line": "S1_02",
+"w": "They",
+"s": 18.71,
+"e": 18.83
+},
+{
+"line": "S1_02",
+"w": "launch",
+"s": 18.87,
+"e": 19.11
+},
+{
+"line": "S1_02",
+"w": "together,",
+"s": 19.13,
+"e": 19.49
+},
+{
+"line": "S1_02",
+"w": "then",
+"s": 19.75,
+"e": 19.89
+},
+{
+"line": "S1_02",
+"w": "take",
+"s": 19.93,
+"e": 20.23
+},
+{
+"line": "S1_02",
+"w": "very",
+"s": 20.27,
+"e": 20.51
+},
+{
+"line": "S1_02",
+"w": "different",
+"s": 20.59,
+"e": 20.85
+},
+{
+"line": "S1_02",
+"w": "trips.",
+"s": 20.89,
+"e": 21.23
+},
+{
+"line": "S1_03",
+"w": "The",
+"s": 21.71,
+"e": 21.81
+},
+{
+"line": "S1_03",
+"w": "booster",
+"s": 21.83,
+"e": 22.15
+},
+{
+"line": "S1_03",
+"w": "turns",
+"s": 22.19,
+"e": 22.43
+},
+{
+"line": "S1_03",
+"w": "back",
+"s": 22.47,
+"e": 22.67
+},
+{
+"line": "S1_03",
+"w": "toward",
+"s": 22.69,
+"e": 22.87
+},
+{
+"line": "S1_03",
+"w": "the",
+"s": 22.89,
+"e": 22.97
+},
+{
+"line": "S1_03",
+"w": "coast",
+"s": 23.03,
+"e": 23.37
+},
+{
+"line": "S1_03",
+"w": "while",
+"s": 23.47,
+"e": 23.59
+},
+{
+"line": "S1_03",
+"w": "the",
+"s": 23.61,
+"e": 23.71
+},
+{
+"line": "S1_03",
+"w": "ship",
+"s": 23.75,
+"e": 23.91
+},
+{
+"line": "S1_03",
+"w": "keeps",
+"s": 23.99,
+"e": 24.19
+},
+{
+"line": "S1_03",
+"w": "going.",
+"s": 24.23,
+"e": 24.55
+},
+{
+"line": "S1_04",
+"w": "In",
+"s": 25.19,
+"e": 25.25
+},
+{
+"line": "S1_04",
+"w": "October",
+"s": 25.29,
+"e": 25.67
+},
+{
+"line": "S1_04",
+"w": "twenty",
+"s": 25.71,
+"e": 25.89
+},
+{
+"line": "S1_04",
+"w": "twenty-four,",
+"s": 25.97,
+"e": 26.49
+},
+{
+"line": "S1_04",
+"w": "SpaceX",
+"s": 26.87,
+"e": 27.33
+},
+{
+"line": "S1_04",
+"w": "caught",
+"s": 27.35,
+"e": 27.51
+},
+{
+"line": "S1_04",
+"w": "a",
+"s": 27.55,
+"e": 27.57
+},
+{
+"line": "S1_04",
+"w": "returning",
+"s": 27.61,
+"e": 28.11
+},
+{
+"line": "S1_04",
+"w": "booster",
+"s": 28.13,
+"e": 28.49
+},
+{
+"line": "S1_04",
+"w": "with",
+"s": 28.51,
+"e": 28.61
+},
+{
+"line": "S1_04",
+"w": "the",
+"s": 28.63,
+"e": 28.73
+},
+{
+"line": "S1_04",
+"w": "tower's",
+"s": 28.77,
+"e": 29.21
+},
+{
+"line": "S1_04",
+"w": "giant",
+"s": 29.29,
+"e": 29.63
+},
+{
+"line": "S1_04",
+"w": "arms.",
+"s": 29.73,
+"e": 30.05
+},
+{
+"line": "S1_05",
+"w": "Now,",
+"s": 31.21,
+"e": 31.41
+},
+{
+"line": "S1_05",
+"w": "for",
+"s": 31.63,
+"e": 31.75
+},
+{
+"line": "S1_05",
+"w": "flight",
+"s": 31.77,
+"e": 31.99
+},
+{
+"line": "S1_05",
+"w": "fifteen,",
+"s": 32.31,
+"e": 32.79
+},
+{
+"line": "S1_05",
+"w": "it",
+"s": 33.15,
+"e": 33.25
+},
+{
+"line": "S1_05",
+"w": "says",
+"s": 33.29,
+"e": 33.43
+},
+{
+"line": "S1_05",
+"w": "it",
+"s": 33.47,
+"e": 33.55
+},
+{
+"line": "S1_05",
+"w": "wants",
+"s": 33.59,
+"e": 33.79
+},
+{
+"line": "S1_05",
+"w": "to",
+"s": 33.81,
+"e": 33.89
+},
+{
+"line": "S1_05",
+"w": "attempt",
+"s": 33.93,
+"e": 34.23
+},
+{
+"line": "S1_05",
+"w": "both",
+"s": 34.41,
+"e": 34.609
+},
+{
+"line": "S1_05",
+"w": "recoveries,",
+"s": 34.67,
+"e": 35.23
+},
+{
+"line": "S1_05",
+"w": "two",
+"s": 35.75,
+"e": 35.87
+},
+{
+"line": "S1_05",
+"w": "catches",
+"s": 35.97,
+"e": 36.29
+},
+{
+"line": "S1_05",
+"w": "during",
+"s": 36.33,
+"e": 36.61
+},
+{
+"line": "S1_05",
+"w": "one",
+"s": 36.71,
+"e": 36.81
+},
+{
+"line": "S1_05",
+"w": "mission",
+"s": 36.87,
+"e": 37.17
+},
+{
+"line": "S1_05",
+"w": "separated",
+"s": 37.51,
+"e": 37.99
+},
+{
+"line": "S1_05",
+"w": "by",
+"s": 38.01,
+"e": 38.11
+},
+{
+"line": "S1_05",
+"w": "the",
+"s": 38.15,
+"e": 38.23
+},
+{
+"line": "S1_05",
+"w": "ship's",
+"s": 38.25,
+"e": 38.53
+},
+{
+"line": "S1_05",
+"w": "flight.",
+"s": 38.55,
+"e": 38.85
+},
+{
+"line": "S1_06",
+"w": "The",
+"s": 39.47,
+"e": 39.57
+},
+{
+"line": "S1_06",
+"w": "new",
+"s": 39.59,
+"e": 39.75
+},
+{
+"line": "S1_06",
+"w": "challenge",
+"s": 39.79,
+"e": 40.19
+},
+{
+"line": "S1_06",
+"w": "is",
+"s": 40.23,
+"e": 40.35
+},
+{
+"line": "S1_06",
+"w": "bringing",
+"s": 40.37,
+"e": 40.61
+},
+{
+"line": "S1_06",
+"w": "a",
+"s": 40.67,
+"e": 40.73
+},
+{
+"line": "S1_06",
+"w": "spacecraft",
+"s": 40.81,
+"e": 41.29
+},
+{
+"line": "S1_06",
+"w": "back",
+"s": 41.43,
+"e": 41.65
+},
+{
+"line": "S1_06",
+"w": "through",
+"s": 41.67,
+"e": 41.81
+},
+{
+"line": "S1_06",
+"w": "the",
+"s": 41.83,
+"e": 41.91
+},
+{
+"line": "S1_06",
+"w": "atmosphere,",
+"s": 41.99,
+"e": 42.45
+},
+{
+"line": "S1_06",
+"w": "turning",
+"s": 42.77,
+"e": 42.99
+},
+{
+"line": "S1_06",
+"w": "it",
+"s": 43.03,
+"e": 43.09
+},
+{
+"line": "S1_06",
+"w": "upright,",
+"s": 43.15,
+"e": 43.49
+},
+{
+"line": "S1_06",
+"w": "and",
+"s": 43.77,
+"e": 43.85
+},
+{
+"line": "S1_06",
+"w": "delivering",
+"s": 43.89,
+"e": 44.33
+},
+{
+"line": "S1_06",
+"w": "it",
+"s": 44.37,
+"e": 44.45
+},
+{
+"line": "S1_06",
+"w": "to",
+"s": 44.47,
+"e": 44.55
+},
+{
+"line": "S1_06",
+"w": "the",
+"s": 44.57,
+"e": 44.61
+},
+{
+"line": "S1_06",
+"w": "machinery",
+"s": 44.65,
+"e": 45.11
+},
+{
+"line": "S1_06",
+"w": "waiting",
+"s": 45.21,
+"e": 45.45
+},
+{
+"line": "S1_06",
+"w": "on",
+"s": 45.47,
+"e": 45.55
+},
+{
+"line": "S1_06",
+"w": "the",
+"s": 45.57,
+"e": 45.63
+},
+{
+"line": "S1_06",
+"w": "ground.",
+"s": 45.67,
+"e": 46.01
+},
+{
+"line": "S1_07",
+"w": "The",
+"s": 46.65,
+"e": 46.75
+},
+{
+"line": "S1_07",
+"w": "launch",
+"s": 46.79,
+"e": 47.05
+},
+{
+"line": "S1_07",
+"w": "site",
+"s": 47.09,
+"e": 47.29
+},
+{
+"line": "S1_07",
+"w": "becomes",
+"s": 47.31,
+"e": 47.67
+},
+{
+"line": "S1_07",
+"w": "part",
+"s": 47.73,
+"e": 47.97
+},
+{
+"line": "S1_07",
+"w": "of",
+"s": 48.01,
+"e": 48.07
+},
+{
+"line": "S1_07",
+"w": "the",
+"s": 48.11,
+"e": 48.17
+},
+{
+"line": "S1_07",
+"w": "landing",
+"s": 48.21,
+"e": 48.51
+},
+{
+"line": "S1_07",
+"w": "system.",
+"s": 48.59,
+"e": 48.95
+},
+{
+"line": "S2_00",
+"w": "Look",
+"s": 50.73,
+"e": 50.93
+},
+{
+"line": "S2_00",
+"w": "closely",
+"s": 51.01,
+"e": 51.43
+},
+{
+"line": "S2_00",
+"w": "at",
+"s": 51.47,
+"e": 51.53
+},
+{
+"line": "S2_00",
+"w": "that",
+"s": 51.59,
+"e": 51.73
+},
+{
+"line": "S2_00",
+"w": "first",
+"s": 51.77,
+"e": 51.95
+},
+{
+"line": "S2_00",
+"w": "catch.",
+"s": 52.05,
+"e": 52.35
+},
+{
+"line": "S2_01",
+"w": "The",
+"s": 52.81,
+"e": 52.95
+},
+{
+"line": "S2_01",
+"w": "booster",
+"s": 52.97,
+"e": 53.31
+},
+{
+"line": "S2_01",
+"w": "is",
+"s": 53.35,
+"e": 53.47
+},
+{
+"line": "S2_01",
+"w": "still",
+"s": 53.57,
+"e": 53.83
+},
+{
+"line": "S2_01",
+"w": "firing",
+"s": 53.87,
+"e": 54.17
+},
+{
+"line": "S2_01",
+"w": "its",
+"s": 54.19,
+"e": 54.33
+},
+{
+"line": "S2_01",
+"w": "engines",
+"s": 54.37,
+"e": 54.67
+},
+{
+"line": "S2_01",
+"w": "on",
+"s": 54.71,
+"e": 54.79
+},
+{
+"line": "S2_01",
+"w": "the",
+"s": 54.81,
+"e": 54.89
+},
+{
+"line": "S2_01",
+"w": "way",
+"s": 54.91,
+"e": 55.07
+},
+{
+"line": "S2_01",
+"w": "in.",
+"s": 55.15,
+"e": 55.33
+},
+{
+"line": "S2_02",
+"w": "Those",
+"s": 55.87,
+"e": 56.07
+},
+{
+"line": "S2_02",
+"w": "engines",
+"s": 56.11,
+"e": 56.39
+},
+{
+"line": "S2_02",
+"w": "remove",
+"s": 56.43,
+"e": 56.75
+},
+{
+"line": "S2_02",
+"w": "almost",
+"s": 56.79,
+"e": 57.21
+},
+{
+"line": "S2_02",
+"w": "all",
+"s": 57.31,
+"e": 57.41
+},
+{
+"line": "S2_02",
+"w": "of",
+"s": 57.45,
+"e": 57.51
+},
+{
+"line": "S2_02",
+"w": "its",
+"s": 57.55,
+"e": 57.69
+},
+{
+"line": "S2_02",
+"w": "downward",
+"s": 57.73,
+"e": 58.05
+},
+{
+"line": "S2_02",
+"w": "speed",
+"s": 58.21,
+"e": 58.45
+},
+{
+"line": "S2_02",
+"w": "before",
+"s": 58.47,
+"e": 58.81
+},
+{
+"line": "S2_02",
+"w": "the",
+"s": 58.85,
+"e": 58.93
+},
+{
+"line": "S2_02",
+"w": "arms",
+"s": 58.97,
+"e": 59.17
+},
+{
+"line": "S2_02",
+"w": "take",
+"s": 59.21,
+"e": 59.35
+},
+{
+"line": "S2_02",
+"w": "the",
+"s": 59.39,
+"e": 59.47
+},
+{
+"line": "S2_02",
+"w": "load.",
+"s": 59.51,
+"e": 59.79
+},
+{
+"line": "S2_03",
+"w": "The",
+"s": 60.37,
+"e": 60.49
+},
+{
+"line": "S2_03",
+"w": "arms",
+"s": 60.55,
+"e": 60.73
+},
+{
+"line": "S2_03",
+"w": "support",
+"s": 60.77,
+"e": 61.15
+},
+{
+"line": "S2_03",
+"w": "dedicated",
+"s": 61.19,
+"e": 61.63
+},
+{
+"line": "S2_03",
+"w": "features",
+"s": 61.73,
+"e": 62.07
+},
+{
+"line": "S2_03",
+"w": "near",
+"s": 62.11,
+"e": 62.23
+},
+{
+"line": "S2_03",
+"w": "the",
+"s": 62.27,
+"e": 62.35
+},
+{
+"line": "S2_03",
+"w": "top",
+"s": 62.41,
+"e": 62.61
+},
+{
+"line": "S2_03",
+"w": "of",
+"s": 62.65,
+"e": 62.69
+},
+{
+"line": "S2_03",
+"w": "the",
+"s": 62.73,
+"e": 62.77
+},
+{
+"line": "S2_03",
+"w": "vehicle.",
+"s": 62.83,
+"e": 63.19
+},
+{
+"line": "S2_04",
+"w": "They",
+"s": 63.65,
+"e": 63.73
+},
+{
+"line": "S2_04",
+"w": "aren't",
+"s": 63.75,
+"e": 63.91
+},
+{
+"line": "S2_04",
+"w": "crushing",
+"s": 63.97,
+"e": 64.25
+},
+{
+"line": "S2_04",
+"w": "a",
+"s": 64.29,
+"e": 64.37
+},
+{
+"line": "S2_04",
+"w": "steel",
+"s": 64.43,
+"e": 64.61
+},
+{
+"line": "S2_04",
+"w": "fuel",
+"s": 64.75,
+"e": 64.93
+},
+{
+"line": "S2_04",
+"w": "tank",
+"s": 65.03,
+"e": 65.21
+},
+{
+"line": "S2_04",
+"w": "until",
+"s": 65.23,
+"e": 65.43
+},
+{
+"line": "S2_04",
+"w": "it",
+"s": 65.45,
+"e": 65.57
+},
+{
+"line": "S2_04",
+"w": "sticks.",
+"s": 65.67,
+"e": 66.05
+},
+{
+"line": "S2_05",
+"w": "Think",
+"s": 66.73,
+"e": 66.87
+},
+{
+"line": "S2_05",
+"w": "of",
+"s": 66.91,
+"e": 67.01
+},
+{
+"line": "S2_05",
+"w": "lowering",
+"s": 67.07,
+"e": 67.41
+},
+{
+"line": "S2_05",
+"w": "a",
+"s": 67.469,
+"e": 67.529
+},
+{
+"line": "S2_05",
+"w": "heavy",
+"s": 67.59,
+"e": 67.81
+},
+{
+"line": "S2_05",
+"w": "object",
+"s": 67.91,
+"e": 68.25
+},
+{
+"line": "S2_05",
+"w": "onto",
+"s": 68.29,
+"e": 68.51
+},
+{
+"line": "S2_05",
+"w": "two",
+"s": 68.55,
+"e": 68.69
+},
+{
+"line": "S2_05",
+"w": "shelves.",
+"s": 68.79,
+"e": 69.17
+},
+{
+"line": "S2_06",
+"w": "Line",
+"s": 69.65,
+"e": 69.79
+},
+{
+"line": "S2_06",
+"w": "up",
+"s": 69.83,
+"e": 69.91
+},
+{
+"line": "S2_06",
+"w": "the",
+"s": 69.95,
+"e": 70.01
+},
+{
+"line": "S2_06",
+"w": "supports,",
+"s": 70.05,
+"e": 70.51
+},
+{
+"line": "S2_06",
+"w": "arrive",
+"s": 70.89,
+"e": 71.15
+},
+{
+"line": "S2_06",
+"w": "gently,",
+"s": 71.23,
+"e": 71.55
+},
+{
+"line": "S2_06",
+"w": "transfer",
+"s": 71.99,
+"e": 72.35
+},
+{
+"line": "S2_06",
+"w": "the",
+"s": 72.37,
+"e": 72.45
+},
+{
+"line": "S2_06",
+"w": "weight.",
+"s": 72.47,
+"e": 72.71
+},
+{
+"line": "S2_07",
+"w": "Sounds",
+"s": 73.31,
+"e": 73.57
+},
+{
+"line": "S2_07",
+"w": "reasonable,",
+"s": 73.61,
+"e": 74.01
+},
+{
+"line": "S2_07",
+"w": "except",
+"s": 74.98,
+"e": 75.36
+},
+{
+"line": "S2_07",
+"w": "the",
+"s": 75.4,
+"e": 75.52
+},
+{
+"line": "S2_07",
+"w": "object",
+"s": 75.62,
+"e": 75.9
+},
+{
+"line": "S2_07",
+"w": "is",
+"s": 75.94,
+"e": 76.02
+},
+{
+"line": "S2_07",
+"w": "a",
+"s": 76.08,
+"e": 76.18
+},
+{
+"line": "S2_07",
+"w": "rocket,",
+"s": 76.24,
+"e": 76.64
+},
+{
+"line": "S2_07",
+"w": "the",
+"s": 76.9,
+"e": 77.02
+},
+{
+"line": "S2_07",
+"w": "shelves",
+"s": 77.08,
+"e": 77.42
+},
+{
+"line": "S2_07",
+"w": "move,",
+"s": 77.48,
+"e": 77.7
+},
+{
+"line": "S2_07",
+"w": "and",
+"s": 77.98,
+"e": 78.04
+},
+{
+"line": "S2_07",
+"w": "the",
+"s": 78.08,
+"e": 78.16
+},
+{
+"line": "S2_07",
+"w": "crane",
+"s": 78.22,
+"e": 78.54
+},
+{
+"line": "S2_07",
+"w": "is",
+"s": 78.58,
+"e": 78.66
+},
+{
+"line": "S2_07",
+"w": "the",
+"s": 78.7,
+"e": 78.8
+},
+{
+"line": "S2_07",
+"w": "rocket's",
+"s": 78.84,
+"e": 79.26
+},
+{
+"line": "S2_07",
+"w": "own",
+"s": 79.34,
+"e": 79.54
+},
+{
+"line": "S2_07",
+"w": "engines.",
+"s": 79.62,
+"e": 80.08
+},
+{
+"line": "S2_08",
+"w": "Being",
+"s": 80.72,
+"e": 80.9
+},
+{
+"line": "S2_08",
+"w": "between",
+"s": 80.94,
+"e": 81.2
+},
+{
+"line": "S2_08",
+"w": "the",
+"s": 81.24,
+"e": 81.34
+},
+{
+"line": "S2_08",
+"w": "arms",
+"s": 81.42,
+"e": 81.72
+},
+{
+"line": "S2_08",
+"w": "is",
+"s": 81.76,
+"e": 81.98
+},
+{
+"line": "S2_08",
+"w": "only",
+"s": 82.04,
+"e": 82.28
+},
+{
+"line": "S2_08",
+"w": "the",
+"s": 82.32,
+"e": 82.42
+},
+{
+"line": "S2_08",
+"w": "start.",
+"s": 82.52,
+"e": 82.82
+},
+{
+"line": "S2_09",
+"w": "Its",
+"s": 83.16,
+"e": 83.32
+},
+{
+"line": "S2_09",
+"w": "motion",
+"s": 83.38,
+"e": 83.8
+},
+{
+"line": "S2_09",
+"w": "has",
+"s": 83.86,
+"e": 84.08
+},
+{
+"line": "S2_09",
+"w": "to",
+"s": 84.12,
+"e": 84.18
+},
+{
+"line": "S2_09",
+"w": "be",
+"s": 84.2,
+"e": 84.26
+},
+{
+"line": "S2_09",
+"w": "under",
+"s": 84.3,
+"e": 84.48
+},
+{
+"line": "S2_09",
+"w": "control.",
+"s": 84.5,
+"e": 84.96
+},
+{
+"line": "S3_00",
+"w": "The",
+"s": 86.56,
+"e": 86.66
+},
+{
+"line": "S3_00",
+"w": "ship",
+"s": 86.7,
+"e": 86.96
+},
+{
+"line": "S3_00",
+"w": "adds",
+"s": 87.02,
+"e": 87.18
+},
+{
+"line": "S3_00",
+"w": "a",
+"s": 87.22,
+"e": 87.28
+},
+{
+"line": "S3_00",
+"w": "completely",
+"s": 87.3,
+"e": 88.08
+},
+{
+"line": "S3_00",
+"w": "different",
+"s": 88.12,
+"e": 88.42
+},
+{
+"line": "S3_00",
+"w": "problem:",
+"s": 88.46,
+"e": 88.84
+},
+{
+"line": "S3_00",
+"w": "orbital",
+"s": 89.38,
+"e": 89.7
+},
+{
+"line": "S3_00",
+"w": "speed.",
+"s": 89.86,
+"e": 90.14
+},
+{
+"line": "S3_01",
+"w": "Getting",
+"s": 90.82,
+"e": 91.04
+},
+{
+"line": "S3_01",
+"w": "to",
+"s": 91.08,
+"e": 91.2
+},
+{
+"line": "S3_01",
+"w": "orbit",
+"s": 91.26,
+"e": 91.54
+},
+{
+"line": "S3_01",
+"w": "means",
+"s": 91.58,
+"e": 91.78
+},
+{
+"line": "S3_01",
+"w": "moving",
+"s": 91.82,
+"e": 92.16
+},
+{
+"line": "S3_01",
+"w": "fast",
+"s": 92.2,
+"e": 92.46
+},
+{
+"line": "S3_01",
+"w": "enough",
+"s": 92.5,
+"e": 92.74
+},
+{
+"line": "S3_01",
+"w": "sideways",
+"s": 92.8,
+"e": 93.32
+},
+{
+"line": "S3_01",
+"w": "to",
+"s": 93.36,
+"e": 93.46
+},
+{
+"line": "S3_01",
+"w": "keep",
+"s": 93.52,
+"e": 93.7
+},
+{
+"line": "S3_01",
+"w": "falling",
+"s": 93.8,
+"e": 94.08
+},
+{
+"line": "S3_01",
+"w": "around",
+"s": 94.12,
+"e": 94.36
+},
+{
+"line": "S3_01",
+"w": "Earth.",
+"s": 94.42,
+"e": 94.7
+},
+{
+"line": "S3_02",
+"w": "Coming",
+"s": 95.24,
+"e": 95.48
+},
+{
+"line": "S3_02",
+"w": "home",
+"s": 95.56,
+"e": 95.86
+},
+{
+"line": "S3_02",
+"w": "means",
+"s": 96.04,
+"e": 96.24
+},
+{
+"line": "S3_02",
+"w": "getting",
+"s": 96.28,
+"e": 96.46
+},
+{
+"line": "S3_02",
+"w": "rid",
+"s": 96.64,
+"e": 96.78
+},
+{
+"line": "S3_02",
+"w": "of",
+"s": 96.82,
+"e": 96.9
+},
+{
+"line": "S3_02",
+"w": "that",
+"s": 96.96,
+"e": 97.08
+},
+{
+"line": "S3_02",
+"w": "energy.",
+"s": 97.12,
+"e": 97.5
+},
+{
+"line": "S3_03",
+"w": "The",
+"s": 98.1,
+"e": 98.16
+},
+{
+"line": "S3_03",
+"w": "atmosphere",
+"s": 98.22,
+"e": 98.66
+},
+{
+"line": "S3_03",
+"w": "does",
+"s": 98.68,
+"e": 98.88
+},
+{
+"line": "S3_03",
+"w": "much",
+"s": 98.98,
+"e": 99.14
+},
+{
+"line": "S3_03",
+"w": "of",
+"s": 99.18,
+"e": 99.26
+},
+{
+"line": "S3_03",
+"w": "the",
+"s": 99.28,
+"e": 99.36
+},
+{
+"line": "S3_03",
+"w": "braking",
+"s": 99.4,
+"e": 99.78
+},
+{
+"line": "S3_03",
+"w": "while",
+"s": 100.08,
+"e": 100.18
+},
+{
+"line": "S3_03",
+"w": "the",
+"s": 100.22,
+"e": 100.32
+},
+{
+"line": "S3_03",
+"w": "gas",
+"s": 100.36,
+"e": 100.6
+},
+{
+"line": "S3_03",
+"w": "around",
+"s": 100.66,
+"e": 100.84
+},
+{
+"line": "S3_03",
+"w": "the",
+"s": 100.86,
+"e": 100.94
+},
+{
+"line": "S3_03",
+"w": "vehicle",
+"s": 100.98,
+"e": 101.34
+},
+{
+"line": "S3_03",
+"w": "becomes",
+"s": 101.36,
+"e": 101.72
+},
+{
+"line": "S3_03",
+"w": "intensely",
+"s": 101.76,
+"e": 102.48
+},
+{
+"line": "S3_03",
+"w": "hot.",
+"s": 102.52,
+"e": 102.82
+},
+{
+"line": "S3_04",
+"w": "That's",
+"s": 103.38,
+"e": 103.58
+},
+{
+"line": "S3_04",
+"w": "what",
+"s": 103.6,
+"e": 103.7
+},
+{
+"line": "S3_04",
+"w": "the",
+"s": 103.74,
+"e": 103.84
+},
+{
+"line": "S3_04",
+"w": "black-tiled",
+"s": 103.86,
+"e": 104.44
+},
+{
+"line": "S3_04",
+"w": "side",
+"s": 104.5,
+"e": 104.74
+},
+{
+"line": "S3_04",
+"w": "is",
+"s": 104.78,
+"e": 104.86
+},
+{
+"line": "S3_04",
+"w": "protecting",
+"s": 104.9,
+"e": 105.32
+},
+{
+"line": "S3_04",
+"w": "it",
+"s": 105.34,
+"e": 105.44
+},
+{
+"line": "S3_04",
+"w": "from.",
+"s": 105.48,
+"e": 105.72
+},
+{
+"line": "S3_05",
+"w": "The",
+"s": 106.82,
+"e": 106.9
+},
+{
+"line": "S3_05",
+"w": "ship",
+"s": 106.92,
+"e": 107.1
+},
+{
+"line": "S3_05",
+"w": "has",
+"s": 107.18,
+"e": 107.3
+},
+{
+"line": "S3_05",
+"w": "to",
+"s": 107.34,
+"e": 107.4
+},
+{
+"line": "S3_05",
+"w": "hold",
+"s": 107.44,
+"e": 107.64
+},
+{
+"line": "S3_05",
+"w": "the",
+"s": 107.68,
+"e": 107.8
+},
+{
+"line": "S3_05",
+"w": "right",
+"s": 107.84,
+"e": 108.02
+},
+{
+"line": "S3_05",
+"w": "orientation,",
+"s": 108.08,
+"e": 108.76
+},
+{
+"line": "S3_05",
+"w": "keep",
+"s": 109.14,
+"e": 109.28
+},
+{
+"line": "S3_05",
+"w": "its",
+"s": 109.32,
+"e": 109.44
+},
+{
+"line": "S3_05",
+"w": "heat",
+"s": 109.48,
+"e": 109.66
+},
+{
+"line": "S3_05",
+"w": "shield",
+"s": 109.72,
+"e": 109.94
+},
+{
+"line": "S3_05",
+"w": "facing",
+"s": 110.04,
+"e": 110.32
+},
+{
+"line": "S3_05",
+"w": "the",
+"s": 110.36,
+"e": 110.46
+},
+{
+"line": "S3_05",
+"w": "flow,",
+"s": 110.5,
+"e": 110.74
+},
+{
+"line": "S3_05",
+"w": "and",
+"s": 111.12,
+"e": 111.2
+},
+{
+"line": "S3_05",
+"w": "survive",
+"s": 111.28,
+"e": 111.78
+},
+{
+"line": "S3_05",
+"w": "with",
+"s": 111.8,
+"e": 111.88
+},
+{
+"line": "S3_05",
+"w": "its",
+"s": 111.92,
+"e": 112.04
+},
+{
+"line": "S3_05",
+"w": "control",
+"s": 112.08,
+"e": 112.42
+},
+{
+"line": "S3_05",
+"w": "systems",
+"s": 112.5,
+"e": 112.88
+},
+{
+"line": "S3_05",
+"w": "still",
+"s": 112.98,
+"e": 113.2
+},
+{
+"line": "S3_05",
+"w": "working.",
+"s": 113.24,
+"e": 113.6
+},
+{
+"line": "S3_06",
+"w": "A",
+"s": 114.2,
+"e": 114.28
+},
+{
+"line": "S3_06",
+"w": "damaged",
+"s": 114.32,
+"e": 114.68
+},
+{
+"line": "S3_06",
+"w": "spacecraft",
+"s": 114.74,
+"e": 115.26
+},
+{
+"line": "S3_06",
+"w": "reaching",
+"s": 115.34,
+"e": 115.6
+},
+{
+"line": "S3_06",
+"w": "the",
+"s": 115.64,
+"e": 115.72
+},
+{
+"line": "S3_06",
+"w": "right",
+"s": 115.74,
+"e": 115.94
+},
+{
+"line": "S3_06",
+"w": "coastline",
+"s": 115.98,
+"e": 116.54
+},
+{
+"line": "S3_06",
+"w": "is",
+"s": 116.58,
+"e": 116.72
+},
+{
+"line": "S3_06",
+"w": "not",
+"s": 116.82,
+"e": 117.0
+},
+{
+"line": "S3_06",
+"w": "enough.",
+"s": 117.04,
+"e": 117.4
+},
+{
+"line": "S3_07",
+"w": "It",
+"s": 117.86,
+"e": 117.94
+},
+{
+"line": "S3_07",
+"w": "still",
+"s": 118.02,
+"e": 118.2
+},
+{
+"line": "S3_07",
+"w": "needs",
+"s": 118.24,
+"e": 118.5
+},
+{
+"line": "S3_07",
+"w": "engines,",
+"s": 118.58,
+"e": 119.0
+},
+{
+"line": "S3_07",
+"w": "control,",
+"s": 119.22,
+"e": 119.7
+},
+{
+"line": "S3_07",
+"w": "and",
+"s": 120.0,
+"e": 120.08
+},
+{
+"line": "S3_07",
+"w": "a",
+"s": 120.12,
+"e": 120.22
+},
+{
+"line": "S3_07",
+"w": "final",
+"s": 120.28,
+"e": 120.5
+},
+{
+"line": "S3_07",
+"w": "maneuver",
+"s": 120.56,
+"e": 120.96
+},
+{
+"line": "S3_07",
+"w": "beside",
+"s": 120.98,
+"e": 121.26
+},
+{
+"line": "S3_07",
+"w": "a",
+"s": 121.3,
+"e": 121.36
+},
+{
+"line": "S3_07",
+"w": "tower.",
+"s": 121.4,
+"e": 121.74
+},
+{
+"line": "S3_08",
+"w": "Surviving",
+"s": 122.32,
+"e": 122.78
+},
+{
+"line": "S3_08",
+"w": "re-entry",
+"s": 122.82,
+"e": 123.26
+},
+{
+"line": "S3_08",
+"w": "only",
+"s": 123.46,
+"e": 123.7
+},
+{
+"line": "S3_08",
+"w": "gets",
+"s": 123.74,
+"e": 123.9
+},
+{
+"line": "S3_08",
+"w": "it",
+"s": 123.94,
+"e": 124.02
+},
+{
+"line": "S3_08",
+"w": "to",
+"s": 124.06,
+"e": 124.12
+},
+{
+"line": "S3_08",
+"w": "the",
+"s": 124.16,
+"e": 124.28
+},
+{
+"line": "S3_08",
+"w": "next",
+"s": 124.34,
+"e": 124.6
+},
+{
+"line": "S3_08",
+"w": "problem.",
+"s": 124.62,
+"e": 125.02
+},
+{
+"line": "S4_00",
+"w": "Lower",
+"s": 126.68,
+"e": 126.86
+},
+{
+"line": "S4_00",
+"w": "down,",
+"s": 126.96,
+"e": 127.28
+},
+{
+"line": "S4_00",
+"w": "Starship",
+"s": 127.9,
+"e": 128.28
+},
+{
+"line": "S4_00",
+"w": "descends",
+"s": 128.34,
+"e": 128.7
+},
+{
+"line": "S4_00",
+"w": "broadside,",
+"s": 128.8,
+"e": 129.4
+},
+{
+"line": "S4_00",
+"w": "using",
+"s": 129.72,
+"e": 129.92
+},
+{
+"line": "S4_00",
+"w": "its",
+"s": 129.94,
+"e": 130.1
+},
+{
+"line": "S4_00",
+"w": "body",
+"s": 130.14,
+"e": 130.38
+},
+{
+"line": "S4_00",
+"w": "against",
+"s": 130.44,
+"e": 130.7
+},
+{
+"line": "S4_00",
+"w": "the",
+"s": 130.74,
+"e": 130.86
+},
+{
+"line": "S4_00",
+"w": "air",
+"s": 130.94,
+"e": 131.12
+},
+{
+"line": "S4_00",
+"w": "while",
+"s": 131.2,
+"e": 131.32
+},
+{
+"line": "S4_00",
+"w": "the",
+"s": 131.34,
+"e": 131.48
+},
+{
+"line": "S4_00",
+"w": "flaps",
+"s": 131.52,
+"e": 131.84
+},
+{
+"line": "S4_00",
+"w": "help",
+"s": 131.88,
+"e": 132.02
+},
+{
+"line": "S4_00",
+"w": "control",
+"s": 132.06,
+"e": 132.38
+},
+{
+"line": "S4_00",
+"w": "its",
+"s": 132.4,
+"e": 132.52
+},
+{
+"line": "S4_00",
+"w": "attitude.",
+"s": 132.6,
+"e": 133.02
+},
+{
+"line": "S4_01",
+"w": "Then",
+"s": 133.5,
+"e": 133.66
+},
+{
+"line": "S4_01",
+"w": "the",
+"s": 133.699,
+"e": 133.8
+},
+{
+"line": "S4_01",
+"w": "engines",
+"s": 133.84,
+"e": 134.139
+},
+{
+"line": "S4_01",
+"w": "relight",
+"s": 134.28,
+"e": 134.68
+},
+{
+"line": "S4_01",
+"w": "and",
+"s": 134.699,
+"e": 134.78
+},
+{
+"line": "S4_01",
+"w": "swing",
+"s": 134.94,
+"e": 135.18
+},
+{
+"line": "S4_01",
+"w": "the",
+"s": 135.22,
+"e": 135.32
+},
+{
+"line": "S4_01",
+"w": "vehicle",
+"s": 135.34,
+"e": 135.66
+},
+{
+"line": "S4_01",
+"w": "toward",
+"s": 135.7,
+"e": 135.88
+},
+{
+"line": "S4_01",
+"w": "upright.",
+"s": 136.0,
+"e": 136.4
+},
+{
+"line": "S4_02",
+"w": "SpaceX",
+"s": 136.92,
+"e": 137.32
+},
+{
+"line": "S4_02",
+"w": "has",
+"s": 137.34,
+"e": 137.54
+},
+{
+"line": "S4_02",
+"w": "already",
+"s": 137.64,
+"e": 137.94
+},
+{
+"line": "S4_02",
+"w": "demonstrated",
+"s": 137.98,
+"e": 138.52
+},
+{
+"line": "S4_02",
+"w": "this",
+"s": 138.56,
+"e": 138.76
+},
+{
+"line": "S4_02",
+"w": "flip",
+"s": 138.8,
+"e": 139.04
+},
+{
+"line": "S4_02",
+"w": "and",
+"s": 139.06,
+"e": 139.16
+},
+{
+"line": "S4_02",
+"w": "landing",
+"s": 139.24,
+"e": 139.56
+},
+{
+"line": "S4_02",
+"w": "burn",
+"s": 139.64,
+"e": 139.8
+},
+{
+"line": "S4_02",
+"w": "over",
+"s": 139.86,
+"e": 139.98
+},
+{
+"line": "S4_02",
+"w": "the",
+"s": 140.02,
+"e": 140.08
+},
+{
+"line": "S4_02",
+"w": "ocean.",
+"s": 140.16,
+"e": 140.48
+},
+{
+"line": "S4_03",
+"w": "Watch",
+"s": 141.28,
+"e": 141.5
+},
+{
+"line": "S4_03",
+"w": "the",
+"s": 141.54,
+"e": 141.62
+},
+{
+"line": "S4_03",
+"w": "change.",
+"s": 141.66,
+"e": 142.02
+},
+{
+"line": "S4_04",
+"w": "Falling",
+"s": 143.86,
+"e": 144.1
+},
+{
+"line": "S4_04",
+"w": "sideways",
+"s": 144.22,
+"e": 144.66
+},
+{
+"line": "S4_04",
+"w": "becomes",
+"s": 144.7,
+"e": 144.96
+},
+{
+"line": "S4_04",
+"w": "a",
+"s": 145.0,
+"e": 145.1
+},
+{
+"line": "S4_04",
+"w": "powered,",
+"s": 145.16,
+"e": 145.52
+},
+{
+"line": "S4_04",
+"w": "nearly",
+"s": 145.78,
+"e": 146.2
+},
+{
+"line": "S4_04",
+"w": "vertical",
+"s": 146.22,
+"e": 146.54
+},
+{
+"line": "S4_04",
+"w": "descent.",
+"s": 146.62,
+"e": 147.04
+},
+{
+"line": "S4_05",
+"w": "The",
+"s": 147.56,
+"e": 147.66
+},
+{
+"line": "S4_05",
+"w": "planned",
+"s": 147.7,
+"e": 148.02
+},
+{
+"line": "S4_05",
+"w": "tower",
+"s": 148.06,
+"e": 148.3
+},
+{
+"line": "S4_05",
+"w": "catch",
+"s": 148.4,
+"e": 148.68
+},
+{
+"line": "S4_05",
+"w": "adds",
+"s": 148.72,
+"e": 148.86
+},
+{
+"line": "S4_05",
+"w": "a",
+"s": 148.9,
+"e": 149.04
+},
+{
+"line": "S4_05",
+"w": "physical",
+"s": 149.04,
+"e": 149.36
+},
+{
+"line": "S4_05",
+"w": "target.",
+"s": 149.46,
+"e": 149.84
+},
+{
+"line": "S4_06",
+"w": "The",
+"s": 150.28,
+"e": 150.38
+},
+{
+"line": "S4_06",
+"w": "ship",
+"s": 150.4,
+"e": 150.6
+},
+{
+"line": "S4_06",
+"w": "needs",
+"s": 150.64,
+"e": 150.82
+},
+{
+"line": "S4_06",
+"w": "the",
+"s": 150.88,
+"e": 150.98
+},
+{
+"line": "S4_06",
+"w": "right",
+"s": 151.0,
+"e": 151.14
+},
+{
+"line": "S4_06",
+"w": "position,",
+"s": 151.22,
+"e": 151.68
+},
+{
+"line": "S4_06",
+"w": "orientation,",
+"s": 151.9,
+"e": 152.62
+},
+{
+"line": "S4_06",
+"w": "and",
+"s": 152.64,
+"e": 152.74
+},
+{
+"line": "S4_06",
+"w": "motion",
+"s": 152.84,
+"e": 153.24
+},
+{
+"line": "S4_06",
+"w": "when",
+"s": 153.28,
+"e": 153.34
+},
+{
+"line": "S4_06",
+"w": "its",
+"s": 153.38,
+"e": 153.48
+},
+{
+"line": "S4_06",
+"w": "support",
+"s": 153.52,
+"e": 153.88
+},
+{
+"line": "S4_06",
+"w": "features",
+"s": 153.92,
+"e": 154.24
+},
+{
+"line": "S4_06",
+"w": "reach",
+"s": 154.28,
+"e": 154.48
+},
+{
+"line": "S4_06",
+"w": "the",
+"s": 154.52,
+"e": 154.58
+},
+{
+"line": "S4_06",
+"w": "arms.",
+"s": 154.68,
+"e": 155.0
+},
+{
+"line": "S4_07",
+"w": "A",
+"s": 155.5,
+"e": 155.56
+},
+{
+"line": "S4_07",
+"w": "successful",
+"s": 155.58,
+"e": 156.12
+},
+{
+"line": "S4_07",
+"w": "ocean",
+"s": 156.18,
+"e": 156.42
+},
+{
+"line": "S4_07",
+"w": "landing",
+"s": 156.48,
+"e": 156.8
+},
+{
+"line": "S4_07",
+"w": "proves",
+"s": 156.84,
+"e": 157.06
+},
+{
+"line": "S4_07",
+"w": "an",
+"s": 157.1,
+"e": 157.14
+},
+{
+"line": "S4_07",
+"w": "important",
+"s": 157.18,
+"e": 157.68
+},
+{
+"line": "S4_07",
+"w": "part",
+"s": 157.72,
+"e": 157.9
+},
+{
+"line": "S4_07",
+"w": "of",
+"s": 157.94,
+"e": 158.0
+},
+{
+"line": "S4_07",
+"w": "that",
+"s": 158.04,
+"e": 158.18
+},
+{
+"line": "S4_07",
+"w": "sequence.",
+"s": 158.24,
+"e": 158.68
+},
+{
+"line": "S4_08",
+"w": "The",
+"s": 159.18,
+"e": 159.26
+},
+{
+"line": "S4_08",
+"w": "tower",
+"s": 159.32,
+"e": 159.62
+},
+{
+"line": "S4_08",
+"w": "asks",
+"s": 159.72,
+"e": 159.96
+},
+{
+"line": "S4_08",
+"w": "for",
+"s": 160.0,
+"e": 160.12
+},
+{
+"line": "S4_08",
+"w": "something",
+"s": 160.14,
+"e": 160.44
+},
+{
+"line": "S4_08",
+"w": "extra.",
+"s": 160.52,
+"e": 160.86
+},
+{
+"line": "S4_09",
+"w": "Put",
+"s": 161.34,
+"e": 161.48
+},
+{
+"line": "S4_09",
+"w": "the",
+"s": 161.5,
+"e": 161.56
+},
+{
+"line": "S4_09",
+"w": "attachment",
+"s": 161.6,
+"e": 162.04
+},
+{
+"line": "S4_09",
+"w": "points",
+"s": 162.14,
+"e": 162.42
+},
+{
+"line": "S4_09",
+"w": "where",
+"s": 162.44,
+"e": 162.52
+},
+{
+"line": "S4_09",
+"w": "the",
+"s": 162.56,
+"e": 162.6
+},
+{
+"line": "S4_09",
+"w": "receiving",
+"s": 162.64,
+"e": 163.04
+},
+{
+"line": "S4_09",
+"w": "surfaces",
+"s": 163.14,
+"e": 163.58
+},
+{
+"line": "S4_09",
+"w": "will",
+"s": 163.6,
+"e": 163.78
+},
+{
+"line": "S4_09",
+"w": "actually",
+"s": 163.88,
+"e": 164.26
+},
+{
+"line": "S4_09",
+"w": "be.",
+"s": 164.3,
+"e": 164.52
+},
+{
+"line": "S5_00",
+"w": "Those",
+"s": 166.36,
+"e": 166.58
+},
+{
+"line": "S5_00",
+"w": "receiving",
+"s": 166.62,
+"e": 166.98
+},
+{
+"line": "S5_00",
+"w": "surfaces",
+"s": 167.14,
+"e": 167.7
+},
+{
+"line": "S5_00",
+"w": "belong",
+"s": 167.72,
+"e": 168.0
+},
+{
+"line": "S5_00",
+"w": "to",
+"s": 168.04,
+"e": 168.12
+},
+{
+"line": "S5_00",
+"w": "a",
+"s": 168.18,
+"e": 168.24
+},
+{
+"line": "S5_00",
+"w": "moving",
+"s": 168.3,
+"e": 168.58
+},
+{
+"line": "S5_00",
+"w": "machine.",
+"s": 168.62,
+"e": 169.02
+},
+{
+"line": "S5_01",
+"w": "The",
+"s": 169.5,
+"e": 169.6
+},
+{
+"line": "S5_01",
+"w": "arms",
+"s": 169.68,
+"e": 169.94
+},
+{
+"line": "S5_01",
+"w": "swing,",
+"s": 170.02,
+"e": 170.34
+},
+{
+"line": "S5_01",
+"w": "and",
+"s": 170.56,
+"e": 170.62
+},
+{
+"line": "S5_01",
+"w": "their",
+"s": 170.66,
+"e": 170.78
+},
+{
+"line": "S5_01",
+"w": "carriage",
+"s": 170.84,
+"e": 171.12
+},
+{
+"line": "S5_01",
+"w": "travels",
+"s": 171.22,
+"e": 171.64
+},
+{
+"line": "S5_01",
+"w": "up",
+"s": 171.7,
+"e": 171.82
+},
+{
+"line": "S5_01",
+"w": "and",
+"s": 171.84,
+"e": 171.96
+},
+{
+"line": "S5_01",
+"w": "down",
+"s": 172.0,
+"e": 172.18
+},
+{
+"line": "S5_01",
+"w": "the",
+"s": 172.22,
+"e": 172.3
+},
+{
+"line": "S5_01",
+"w": "tower.",
+"s": 172.36,
+"e": 172.68
+},
+{
+"line": "S5_02",
+"w": "Look",
+"s": 173.3,
+"e": 173.4
+},
+{
+"line": "S5_02",
+"w": "at",
+"s": 173.42,
+"e": 173.48
+},
+{
+"line": "S5_02",
+"w": "the",
+"s": 173.52,
+"e": 173.68
+},
+{
+"line": "S5_02",
+"w": "deep",
+"s": 173.72,
+"e": 173.9
+},
+{
+"line": "S5_02",
+"w": "trusses",
+"s": 174.02,
+"e": 174.38
+},
+{
+"line": "S5_02",
+"w": "underneath.",
+"s": 174.42,
+"e": 174.94
+},
+{
+"line": "S5_03",
+"w": "The",
+"s": 175.94,
+"e": 176.02
+},
+{
+"line": "S5_03",
+"w": "load",
+"s": 176.08,
+"e": 176.28
+},
+{
+"line": "S5_03",
+"w": "has",
+"s": 176.32,
+"e": 176.48
+},
+{
+"line": "S5_03",
+"w": "to",
+"s": 176.5,
+"e": 176.6
+},
+{
+"line": "S5_03",
+"w": "pass",
+"s": 176.66,
+"e": 176.94
+},
+{
+"line": "S5_03",
+"w": "through",
+"s": 176.96,
+"e": 177.2
+},
+{
+"line": "S5_03",
+"w": "those",
+"s": 177.24,
+"e": 177.42
+},
+{
+"line": "S5_03",
+"w": "members",
+"s": 177.48,
+"e": 177.86
+},
+{
+"line": "S5_03",
+"w": "into",
+"s": 178.12,
+"e": 178.3
+},
+{
+"line": "S5_03",
+"w": "the",
+"s": 178.34,
+"e": 178.42
+},
+{
+"line": "S5_03",
+"w": "carriage,",
+"s": 178.46,
+"e": 178.84
+},
+{
+"line": "S5_03",
+"w": "down",
+"s": 179.16,
+"e": 179.36
+},
+{
+"line": "S5_03",
+"w": "the",
+"s": 179.38,
+"e": 179.46
+},
+{
+"line": "S5_03",
+"w": "tower,",
+"s": 179.52,
+"e": 179.82
+},
+{
+"line": "S5_03",
+"w": "and",
+"s": 180.08,
+"e": 180.16
+},
+{
+"line": "S5_03",
+"w": "into",
+"s": 180.28,
+"e": 180.46
+},
+{
+"line": "S5_03",
+"w": "the",
+"s": 180.5,
+"e": 180.56
+},
+{
+"line": "S5_03",
+"w": "ground.",
+"s": 180.6,
+"e": 180.96
+},
+{
+"line": "S5_04",
+"w": "The",
+"s": 182.18,
+"e": 182.28
+},
+{
+"line": "S5_04",
+"w": "newer",
+"s": 182.32,
+"e": 182.5
+},
+{
+"line": "S5_04",
+"w": "tower",
+"s": 182.6,
+"e": 182.86
+},
+{
+"line": "S5_04",
+"w": "uses",
+"s": 183.0,
+"e": 183.26
+},
+{
+"line": "S5_04",
+"w": "shorter",
+"s": 183.32,
+"e": 183.58
+},
+{
+"line": "S5_04",
+"w": "arms,",
+"s": 183.72,
+"e": 184.0
+},
+{
+"line": "S5_04",
+"w": "and",
+"s": 184.32,
+"e": 184.38
+},
+{
+"line": "S5_04",
+"w": "the",
+"s": 184.42,
+"e": 184.5
+},
+{
+"line": "S5_04",
+"w": "newer",
+"s": 184.54,
+"e": 184.72
+},
+{
+"line": "S5_04",
+"w": "booster",
+"s": 184.8,
+"e": 185.16
+},
+{
+"line": "S5_04",
+"w": "has",
+"s": 185.2,
+"e": 185.44
+},
+{
+"line": "S5_04",
+"w": "three",
+"s": 185.48,
+"e": 185.7
+},
+{
+"line": "S5_04",
+"w": "larger",
+"s": 185.84,
+"e": 186.14
+},
+{
+"line": "S5_04",
+"w": "grid",
+"s": 186.24,
+"e": 186.4
+},
+{
+"line": "S5_04",
+"w": "fins",
+"s": 186.5,
+"e": 186.8
+},
+{
+"line": "S5_04",
+"w": "with",
+"s": 186.84,
+"e": 186.96
+},
+{
+"line": "S5_04",
+"w": "revised",
+"s": 187.0,
+"e": 187.5
+},
+{
+"line": "S5_04",
+"w": "catch",
+"s": 187.56,
+"e": 187.76
+},
+{
+"line": "S5_04",
+"w": "features.",
+"s": 187.84,
+"e": 188.28
+},
+{
+"line": "S5_05",
+"w": "For",
+"s": 188.84,
+"e": 188.94
+},
+{
+"line": "S5_05",
+"w": "a",
+"s": 188.98,
+"e": 189.02
+},
+{
+"line": "S5_05",
+"w": "moment,",
+"s": 189.08,
+"e": 189.44
+},
+{
+"line": "S5_05",
+"w": "flying",
+"s": 189.86,
+"e": 190.14
+},
+{
+"line": "S5_05",
+"w": "machinery",
+"s": 190.18,
+"e": 190.74
+},
+{
+"line": "S5_05",
+"w": "and",
+"s": 190.76,
+"e": 190.88
+},
+{
+"line": "S5_05",
+"w": "ground",
+"s": 190.92,
+"e": 191.18
+},
+{
+"line": "S5_05",
+"w": "machinery",
+"s": 191.2,
+"e": 191.76
+},
+{
+"line": "S5_05",
+"w": "have",
+"s": 191.86,
+"e": 191.98
+},
+{
+"line": "S5_05",
+"w": "to",
+"s": 192.0,
+"e": 192.06
+},
+{
+"line": "S5_05",
+"w": "become",
+"s": 192.1,
+"e": 192.52
+},
+{
+"line": "S5_05",
+"w": "one",
+"s": 192.62,
+"e": 192.74
+},
+{
+"line": "S5_05",
+"w": "supported",
+"s": 192.84,
+"e": 193.26
+},
+{
+"line": "S5_05",
+"w": "structure.",
+"s": 193.38,
+"e": 193.78
+},
+{
+"line": "S5_06",
+"w": "The",
+"s": 194.34,
+"e": 194.44
+},
+{
+"line": "S5_06",
+"w": "spacecraft",
+"s": 194.5,
+"e": 195.06
+},
+{
+"line": "S5_06",
+"w": "and",
+"s": 195.08,
+"e": 195.16
+},
+{
+"line": "S5_06",
+"w": "the",
+"s": 195.18,
+"e": 195.26
+},
+{
+"line": "S5_06",
+"w": "catcher",
+"s": 195.32,
+"e": 195.64
+},
+{
+"line": "S5_06",
+"w": "must",
+"s": 195.8,
+"e": 196.0
+},
+{
+"line": "S5_06",
+"w": "complete",
+"s": 196.04,
+"e": 196.38
+},
+{
+"line": "S5_06",
+"w": "their",
+"s": 196.4,
+"e": 196.58
+},
+{
+"line": "S5_06",
+"w": "own",
+"s": 196.66,
+"e": 196.82
+},
+{
+"line": "S5_06",
+"w": "movements",
+"s": 196.88,
+"e": 197.3
+},
+{
+"line": "S5_06",
+"w": "in",
+"s": 197.34,
+"e": 197.4
+},
+{
+"line": "S5_06",
+"w": "the",
+"s": 197.44,
+"e": 197.58
+},
+{
+"line": "S5_06",
+"w": "right",
+"s": 197.62,
+"e": 197.78
+},
+{
+"line": "S5_06",
+"w": "condition",
+"s": 197.84,
+"e": 198.32
+},
+{
+"line": "S5_06",
+"w": "at",
+"s": 198.66,
+"e": 198.74
+},
+{
+"line": "S5_06",
+"w": "the",
+"s": 198.8,
+"e": 198.86
+},
+{
+"line": "S5_06",
+"w": "right",
+"s": 198.98,
+"e": 199.2
+},
+{
+"line": "S5_06",
+"w": "moment.",
+"s": 199.26,
+"e": 199.6
+},
+{
+"line": "S5_07",
+"w": "That's",
+"s": 200.16,
+"e": 200.48
+},
+{
+"line": "S5_07",
+"w": "the",
+"s": 200.54,
+"e": 200.6
+},
+{
+"line": "S5_07",
+"w": "handoff.",
+"s": 200.64,
+"e": 201.12
+},
+{
+"line": "S6_00",
+"w": "Now",
+"s": 202.74,
+"e": 202.92
+},
+{
+"line": "S6_00",
+"w": "change",
+"s": 202.98,
+"e": 203.24
+},
+{
+"line": "S6_00",
+"w": "one",
+"s": 203.44,
+"e": 203.62
+},
+{
+"line": "S6_00",
+"w": "thing",
+"s": 203.76,
+"e": 204.02
+},
+{
+"line": "S6_00",
+"w": "at",
+"s": 204.06,
+"e": 204.14
+},
+{
+"line": "S6_00",
+"w": "a",
+"s": 204.18,
+"e": 204.22
+},
+{
+"line": "S6_00",
+"w": "time.",
+"s": 204.3,
+"e": 204.62
+},
+{
+"line": "S6_01",
+"w": "Add",
+"s": 205.18,
+"e": 205.32
+},
+{
+"line": "S6_01",
+"w": "sideways",
+"s": 205.44,
+"e": 205.9
+},
+{
+"line": "S6_01",
+"w": "drift,",
+"s": 205.92,
+"e": 206.22
+},
+{
+"line": "S6_01",
+"w": "and",
+"s": 206.44,
+"e": 206.5
+},
+{
+"line": "S6_01",
+"w": "a",
+"s": 206.54,
+"e": 206.58
+},
+{
+"line": "S6_01",
+"w": "support",
+"s": 206.62,
+"e": 207.0
+},
+{
+"line": "S6_01",
+"w": "feature",
+"s": 207.04,
+"e": 207.26
+},
+{
+"line": "S6_01",
+"w": "can",
+"s": 207.34,
+"e": 207.5
+},
+{
+"line": "S6_01",
+"w": "miss",
+"s": 207.54,
+"e": 207.72
+},
+{
+"line": "S6_01",
+"w": "its",
+"s": 207.76,
+"e": 207.86
+},
+{
+"line": "S6_01",
+"w": "receiving",
+"s": 207.9,
+"e": 208.26
+},
+{
+"line": "S6_01",
+"w": "surface.",
+"s": 208.36,
+"e": 208.76
+},
+{
+"line": "S6_02",
+"w": "Add",
+"s": 210.22,
+"e": 210.4
+},
+{
+"line": "S6_02",
+"w": "tilt,",
+"s": 210.48,
+"e": 210.74
+},
+{
+"line": "S6_02",
+"w": "and",
+"s": 211.12,
+"e": 211.28
+},
+{
+"line": "S6_02",
+"w": "one",
+"s": 211.36,
+"e": 211.46
+},
+{
+"line": "S6_02",
+"w": "side",
+"s": 211.58,
+"e": 211.8
+},
+{
+"line": "S6_02",
+"w": "can",
+"s": 211.84,
+"e": 211.94
+},
+{
+"line": "S6_02",
+"w": "meet",
+"s": 211.96,
+"e": 212.1
+},
+{
+"line": "S6_02",
+"w": "the",
+"s": 212.14,
+"e": 212.24
+},
+{
+"line": "S6_02",
+"w": "arms",
+"s": 212.32,
+"e": 212.58
+},
+{
+"line": "S6_02",
+"w": "before",
+"s": 212.62,
+"e": 212.88
+},
+{
+"line": "S6_02",
+"w": "the",
+"s": 212.92,
+"e": 212.98
+},
+{
+"line": "S6_02",
+"w": "other,",
+"s": 213.06,
+"e": 213.24
+},
+{
+"line": "S6_02",
+"w": "changing",
+"s": 213.64,
+"e": 214.0
+},
+{
+"line": "S6_02",
+"w": "how",
+"s": 214.06,
+"e": 214.16
+},
+{
+"line": "S6_02",
+"w": "the",
+"s": 214.2,
+"e": 214.28
+},
+{
+"line": "S6_02",
+"w": "load",
+"s": 214.32,
+"e": 214.48
+},
+{
+"line": "S6_02",
+"w": "is",
+"s": 214.5,
+"e": 214.6
+},
+{
+"line": "S6_02",
+"w": "shared.",
+"s": 214.64,
+"e": 214.98
+},
+{
+"line": "S6_03",
+"w": "Keep",
+"s": 216.52,
+"e": 216.72
+},
+{
+"line": "S6_03",
+"w": "too",
+"s": 216.76,
+"e": 216.88
+},
+{
+"line": "S6_03",
+"w": "much",
+"s": 216.92,
+"e": 217.12
+},
+{
+"line": "S6_03",
+"w": "downward",
+"s": 217.14,
+"e": 217.48
+},
+{
+"line": "S6_03",
+"w": "speed,",
+"s": 217.6,
+"e": 217.86
+},
+{
+"line": "S6_03",
+"w": "and",
+"s": 218.14,
+"e": 218.2
+},
+{
+"line": "S6_03",
+"w": "a",
+"s": 218.26,
+"e": 218.36
+},
+{
+"line": "S6_03",
+"w": "gentle",
+"s": 218.42,
+"e": 218.72
+},
+{
+"line": "S6_03",
+"w": "handoff",
+"s": 218.76,
+"e": 219.2
+},
+{
+"line": "S6_03",
+"w": "becomes",
+"s": 219.24,
+"e": 219.52
+},
+{
+"line": "S6_03",
+"w": "an",
+"s": 219.56,
+"e": 219.7
+},
+{
+"line": "S6_03",
+"w": "impact.",
+"s": 219.76,
+"e": 220.24
+},
+{
+"line": "S6_04",
+"w": "These",
+"s": 221.88,
+"e": 222.02
+},
+{
+"line": "S6_04",
+"w": "are",
+"s": 222.04,
+"e": 222.2
+},
+{
+"line": "S6_04",
+"w": "simple",
+"s": 222.26,
+"e": 222.5
+},
+{
+"line": "S6_04",
+"w": "examples,",
+"s": 222.54,
+"e": 223.1
+},
+{
+"line": "S6_04",
+"w": "but",
+"s": 223.38,
+"e": 223.48
+},
+{
+"line": "S6_04",
+"w": "they",
+"s": 223.5,
+"e": 223.58
+},
+{
+"line": "S6_04",
+"w": "explain",
+"s": 223.62,
+"e": 224.08
+},
+{
+"line": "S6_04",
+"w": "the",
+"s": 224.14,
+"e": 224.3
+},
+{
+"line": "S6_04",
+"w": "real",
+"s": 224.34,
+"e": 224.52
+},
+{
+"line": "S6_04",
+"w": "problem.",
+"s": 224.62,
+"e": 225.02
+},
+{
+"line": "S6_05",
+"w": "Position,",
+"s": 225.58,
+"e": 226.04
+},
+{
+"line": "S6_05",
+"w": "rotation,",
+"s": 226.28,
+"e": 226.8
+},
+{
+"line": "S6_05",
+"w": "and",
+"s": 226.9,
+"e": 226.98
+},
+{
+"line": "S6_05",
+"w": "speed",
+"s": 227.18,
+"e": 227.56
+},
+{
+"line": "S6_05",
+"w": "have",
+"s": 227.6,
+"e": 227.82
+},
+{
+"line": "S6_05",
+"w": "to",
+"s": 227.84,
+"e": 227.92
+},
+{
+"line": "S6_05",
+"w": "cooperate.",
+"s": 227.96,
+"e": 228.52
+},
+{
+"line": "S6_06",
+"w": "The",
+"s": 229.0,
+"e": 229.12
+},
+{
+"line": "S6_06",
+"w": "engines",
+"s": 229.16,
+"e": 229.48
+},
+{
+"line": "S6_06",
+"w": "can't",
+"s": 229.56,
+"e": 229.78
+},
+{
+"line": "S6_06",
+"w": "leave",
+"s": 229.8,
+"e": 229.96
+},
+{
+"line": "S6_06",
+"w": "the",
+"s": 230.0,
+"e": 230.08
+},
+{
+"line": "S6_06",
+"w": "tower",
+"s": 230.12,
+"e": 230.44
+},
+{
+"line": "S6_06",
+"w": "to",
+"s": 230.48,
+"e": 230.54
+},
+{
+"line": "S6_06",
+"w": "absorb",
+"s": 230.6,
+"e": 230.96
+},
+{
+"line": "S6_06",
+"w": "whatever",
+"s": 231.0,
+"e": 231.34
+},
+{
+"line": "S6_06",
+"w": "motion",
+"s": 231.36,
+"e": 231.68
+},
+{
+"line": "S6_06",
+"w": "happens",
+"s": 231.72,
+"e": 232.02
+},
+{
+"line": "S6_06",
+"w": "to",
+"s": 232.06,
+"e": 232.14
+},
+{
+"line": "S6_06",
+"w": "remain.",
+"s": 232.16,
+"e": 232.54
+},
+{
+"line": "S6_07",
+"w": "And",
+"s": 233.12,
+"e": 233.18
+},
+{
+"line": "S6_07",
+"w": "because",
+"s": 233.22,
+"e": 233.52
+},
+{
+"line": "S6_07",
+"w": "the",
+"s": 233.56,
+"e": 233.62
+},
+{
+"line": "S6_07",
+"w": "receiving",
+"s": 233.64,
+"e": 234.06
+},
+{
+"line": "S6_07",
+"w": "machine",
+"s": 234.08,
+"e": 234.38
+},
+{
+"line": "S6_07",
+"w": "is",
+"s": 234.42,
+"e": 234.54
+},
+{
+"line": "S6_07",
+"w": "part",
+"s": 234.58,
+"e": 234.72
+},
+{
+"line": "S6_07",
+"w": "of",
+"s": 234.74,
+"e": 234.8
+},
+{
+"line": "S6_07",
+"w": "the",
+"s": 234.84,
+"e": 234.88
+},
+{
+"line": "S6_07",
+"w": "launch",
+"s": 234.96,
+"e": 235.18
+},
+{
+"line": "S6_07",
+"w": "site,",
+"s": 235.26,
+"e": 235.48
+},
+{
+"line": "S6_07",
+"w": "a",
+"s": 235.9,
+"e": 235.98
+},
+{
+"line": "S6_07",
+"w": "serious",
+"s": 236.08,
+"e": 236.52
+},
+{
+"line": "S6_07",
+"w": "failure",
+"s": 236.56,
+"e": 236.94
+},
+{
+"line": "S6_07",
+"w": "could",
+"s": 236.96,
+"e": 237.12
+},
+{
+"line": "S6_07",
+"w": "damage",
+"s": 237.16,
+"e": 237.5
+},
+{
+"line": "S6_07",
+"w": "the",
+"s": 237.5,
+"e": 237.58
+},
+{
+"line": "S6_07",
+"w": "equipment",
+"s": 237.62,
+"e": 238.02
+},
+{
+"line": "S6_07",
+"w": "needed",
+"s": 238.06,
+"e": 238.32
+},
+{
+"line": "S6_07",
+"w": "for",
+"s": 238.36,
+"e": 238.44
+},
+{
+"line": "S6_07",
+"w": "the",
+"s": 238.46,
+"e": 238.54
+},
+{
+"line": "S6_07",
+"w": "next",
+"s": 238.58,
+"e": 238.82
+},
+{
+"line": "S6_07",
+"w": "flight",
+"s": 238.86,
+"e": 239.1
+},
+{
+"line": "S6_07",
+"w": "too.",
+"s": 239.16,
+"e": 239.42
+},
+{
+"line": "S7_00",
+"w": "That",
+"s": 240.84,
+"e": 240.98
+},
+{
+"line": "S7_00",
+"w": "makes",
+"s": 241.02,
+"e": 241.22
+},
+{
+"line": "S7_00",
+"w": "deciding",
+"s": 241.24,
+"e": 241.8
+},
+{
+"line": "S7_00",
+"w": "when",
+"s": 241.84,
+"e": 242.02
+},
+{
+"line": "S7_00",
+"w": "to",
+"s": 242.06,
+"e": 242.14
+},
+{
+"line": "S7_00",
+"w": "attempt",
+"s": 242.2,
+"e": 242.46
+},
+{
+"line": "S7_00",
+"w": "the",
+"s": 242.5,
+"e": 242.58
+},
+{
+"line": "S7_00",
+"w": "catch",
+"s": 242.66,
+"e": 242.96
+},
+{
+"line": "S7_00",
+"w": "part",
+"s": 243.14,
+"e": 243.34
+},
+{
+"line": "S7_00",
+"w": "of",
+"s": 243.38,
+"e": 243.46
+},
+{
+"line": "S7_00",
+"w": "the",
+"s": 243.5,
+"e": 243.56
+},
+{
+"line": "S7_00",
+"w": "engineering.",
+"s": 243.6,
+"e": 244.16
+},
+{
+"line": "S7_01",
+"w": "A",
+"s": 244.68,
+"e": 244.74
+},
+{
+"line": "S7_01",
+"w": "vehicle",
+"s": 244.78,
+"e": 245.06
+},
+{
+"line": "S7_01",
+"w": "problem,",
+"s": 245.14,
+"e": 245.54
+},
+{
+"line": "S7_01",
+"w": "an",
+"s": 245.78,
+"e": 245.9
+},
+{
+"line": "S7_01",
+"w": "engine",
+"s": 245.94,
+"e": 246.18
+},
+{
+"line": "S7_01",
+"w": "problem,",
+"s": 246.26,
+"e": 246.66
+},
+{
+"line": "S7_01",
+"w": "or",
+"s": 246.9,
+"e": 247.0
+},
+{
+"line": "S7_01",
+"w": "a",
+"s": 247.06,
+"e": 247.12
+},
+{
+"line": "S7_01",
+"w": "problem",
+"s": 247.16,
+"e": 247.48
+},
+{
+"line": "S7_01",
+"w": "on",
+"s": 247.52,
+"e": 247.6
+},
+{
+"line": "S7_01",
+"w": "the",
+"s": 247.62,
+"e": 247.72
+},
+{
+"line": "S7_01",
+"w": "ground",
+"s": 247.76,
+"e": 248.16
+},
+{
+"line": "S7_01",
+"w": "can",
+"s": 248.26,
+"e": 248.38
+},
+{
+"line": "S7_01",
+"w": "remove",
+"s": 248.42,
+"e": 248.8
+},
+{
+"line": "S7_01",
+"w": "the",
+"s": 248.82,
+"e": 248.9
+},
+{
+"line": "S7_01",
+"w": "conditions",
+"s": 248.94,
+"e": 249.46
+},
+{
+"line": "S7_01",
+"w": "for",
+"s": 249.48,
+"e": 249.56
+},
+{
+"line": "S7_01",
+"w": "a",
+"s": 249.62,
+"e": 249.7
+},
+{
+"line": "S7_01",
+"w": "safe",
+"s": 249.76,
+"e": 249.94
+},
+{
+"line": "S7_01",
+"w": "approach.",
+"s": 249.98,
+"e": 250.42
+},
+{
+"line": "S7_02",
+"w": "Flight",
+"s": 251.04,
+"e": 251.24
+},
+{
+"line": "S7_02",
+"w": "six",
+"s": 251.34,
+"e": 251.62
+},
+{
+"line": "S7_02",
+"w": "already",
+"s": 251.72,
+"e": 251.96
+},
+{
+"line": "S7_02",
+"w": "showed",
+"s": 252.08,
+"e": 252.34
+},
+{
+"line": "S7_02",
+"w": "that",
+"s": 252.38,
+"e": 252.5
+},
+{
+"line": "S7_02",
+"w": "tower",
+"s": 252.58,
+"e": 252.84
+},
+{
+"line": "S7_02",
+"w": "health",
+"s": 252.88,
+"e": 253.06
+},
+{
+"line": "S7_02",
+"w": "checks",
+"s": 253.16,
+"e": 253.44
+},
+{
+"line": "S7_02",
+"w": "could",
+"s": 253.46,
+"e": 253.6
+},
+{
+"line": "S7_02",
+"w": "call",
+"s": 253.68,
+"e": 253.88
+},
+{
+"line": "S7_02",
+"w": "off",
+"s": 253.96,
+"e": 254.1
+},
+{
+"line": "S7_02",
+"w": "a",
+"s": 254.14,
+"e": 254.2
+},
+{
+"line": "S7_02",
+"w": "booster",
+"s": 254.22,
+"e": 254.48
+},
+{
+"line": "S7_02",
+"w": "catch.",
+"s": 254.58,
+"e": 254.86
+},
+{
+"line": "S7_03",
+"w": "Alternatives",
+"s": 255.4,
+"e": 255.94
+},
+{
+"line": "S7_03",
+"w": "depend",
+"s": 255.98,
+"e": 256.3
+},
+{
+"line": "S7_03",
+"w": "on",
+"s": 256.32,
+"e": 256.4
+},
+{
+"line": "S7_03",
+"w": "the",
+"s": 256.42,
+"e": 256.5
+},
+{
+"line": "S7_03",
+"w": "mission",
+"s": 256.54,
+"e": 256.76
+},
+{
+"line": "S7_03",
+"w": "plan",
+"s": 256.84,
+"e": 257.12
+},
+{
+"line": "S7_03",
+"w": "and",
+"s": 257.24,
+"e": 257.4
+},
+{
+"line": "S7_03",
+"w": "when",
+"s": 257.44,
+"e": 257.6
+},
+{
+"line": "S7_03",
+"w": "the",
+"s": 257.62,
+"e": 257.72
+},
+{
+"line": "S7_03",
+"w": "problem",
+"s": 257.74,
+"e": 258.06
+},
+{
+"line": "S7_03",
+"w": "is",
+"s": 258.1,
+"e": 258.2
+},
+{
+"line": "S7_03",
+"w": "detected.",
+"s": 258.22,
+"e": 258.72
+},
+{
+"line": "S7_04",
+"w": "They",
+"s": 259.1,
+"e": 259.24
+},
+{
+"line": "S7_04",
+"w": "aren't",
+"s": 259.3,
+"e": 259.5
+},
+{
+"line": "S7_04",
+"w": "a",
+"s": 259.54,
+"e": 259.64
+},
+{
+"line": "S7_04",
+"w": "guaranteed",
+"s": 259.68,
+"e": 260.1
+},
+{
+"line": "S7_04",
+"w": "escape",
+"s": 260.14,
+"e": 260.6
+},
+{
+"line": "S7_04",
+"w": "once",
+"s": 260.66,
+"e": 260.82
+},
+{
+"line": "S7_04",
+"w": "the",
+"s": 260.86,
+"e": 260.94
+},
+{
+"line": "S7_04",
+"w": "rocket",
+"s": 260.98,
+"e": 261.24
+},
+{
+"line": "S7_04",
+"w": "is",
+"s": 261.28,
+"e": 261.38
+},
+{
+"line": "S7_04",
+"w": "beside",
+"s": 261.42,
+"e": 261.72
+},
+{
+"line": "S7_04",
+"w": "the",
+"s": 261.74,
+"e": 261.82
+},
+{
+"line": "S7_04",
+"w": "arms.",
+"s": 261.92,
+"e": 262.22
+},
+{
+"line": "S7_05",
+"w": "Protecting",
+"s": 262.68,
+"e": 263.12
+},
+{
+"line": "S7_05",
+"w": "the",
+"s": 263.16,
+"e": 263.22
+},
+{
+"line": "S7_05",
+"w": "receiving",
+"s": 263.24,
+"e": 263.66
+},
+{
+"line": "S7_05",
+"w": "machinery",
+"s": 263.68,
+"e": 264.14
+},
+{
+"line": "S7_05",
+"w": "matters",
+"s": 264.3,
+"e": 264.64
+},
+{
+"line": "S7_05",
+"w": "as",
+"s": 264.68,
+"e": 264.84
+},
+{
+"line": "S7_05",
+"w": "much",
+"s": 264.92,
+"e": 265.12
+},
+{
+"line": "S7_05",
+"w": "as",
+"s": 265.16,
+"e": 265.28
+},
+{
+"line": "S7_05",
+"w": "getting",
+"s": 265.3,
+"e": 265.5
+},
+{
+"line": "S7_05",
+"w": "a",
+"s": 265.54,
+"e": 265.6
+},
+{
+"line": "S7_05",
+"w": "dramatic",
+"s": 265.62,
+"e": 266.08
+},
+{
+"line": "S7_05",
+"w": "picture",
+"s": 266.18,
+"e": 266.46
+},
+{
+"line": "S7_05",
+"w": "of",
+"s": 266.499,
+"e": 266.58
+},
+{
+"line": "S7_05",
+"w": "a",
+"s": 266.62,
+"e": 266.64
+},
+{
+"line": "S7_05",
+"w": "rocket",
+"s": 266.72,
+"e": 267.02
+},
+{
+"line": "S7_05",
+"w": "coming",
+"s": 267.08,
+"e": 267.319
+},
+{
+"line": "S7_05",
+"w": "home.",
+"s": 267.36,
+"e": 267.66
+},
+{
+"line": "S8_00",
+"w": "Moving",
+"s": 269.46,
+"e": 269.72
+},
+{
+"line": "S8_00",
+"w": "recovery",
+"s": 269.76,
+"e": 270.2
+},
+{
+"line": "S8_00",
+"w": "machinery",
+"s": 270.26,
+"e": 270.68
+},
+{
+"line": "S8_00",
+"w": "onto",
+"s": 270.76,
+"e": 270.94
+},
+{
+"line": "S8_00",
+"w": "the",
+"s": 270.979,
+"e": 271.06
+},
+{
+"line": "S8_00",
+"w": "ground",
+"s": 271.12,
+"e": 271.5
+},
+{
+"line": "S8_00",
+"w": "keeps",
+"s": 271.62,
+"e": 271.859
+},
+{
+"line": "S8_00",
+"w": "some",
+"s": 271.94,
+"e": 272.06
+},
+{
+"line": "S8_00",
+"w": "of",
+"s": 272.099,
+"e": 272.18
+},
+{
+"line": "S8_00",
+"w": "that",
+"s": 272.22,
+"e": 272.32
+},
+{
+"line": "S8_00",
+"w": "machinery",
+"s": 272.359,
+"e": 272.88
+},
+{
+"line": "S8_00",
+"w": "off",
+"s": 272.96,
+"e": 273.14
+},
+{
+"line": "S8_00",
+"w": "the",
+"s": 273.18,
+"e": 273.26
+},
+{
+"line": "S8_00",
+"w": "flying",
+"s": 273.3,
+"e": 273.58
+},
+{
+"line": "S8_00",
+"w": "vehicle.",
+"s": 273.62,
+"e": 274.0
+},
+{
+"line": "S8_01",
+"w": "Recovering",
+"s": 274.56,
+"e": 275.04
+},
+{
+"line": "S8_01",
+"w": "both",
+"s": 275.06,
+"e": 275.26
+},
+{
+"line": "S8_01",
+"w": "stages",
+"s": 275.36,
+"e": 275.84
+},
+{
+"line": "S8_01",
+"w": "also",
+"s": 275.92,
+"e": 276.18
+},
+{
+"line": "S8_01",
+"w": "creates",
+"s": 276.22,
+"e": 276.52
+},
+{
+"line": "S8_01",
+"w": "the",
+"s": 276.54,
+"e": 276.62
+},
+{
+"line": "S8_01",
+"w": "possibility",
+"s": 276.66,
+"e": 277.28
+},
+{
+"line": "S8_01",
+"w": "of",
+"s": 277.32,
+"e": 277.4
+},
+{
+"line": "S8_01",
+"w": "using",
+"s": 277.46,
+"e": 277.66
+},
+{
+"line": "S8_01",
+"w": "the",
+"s": 277.7,
+"e": 277.82
+},
+{
+"line": "S8_01",
+"w": "same",
+"s": 277.94,
+"e": 278.2
+},
+{
+"line": "S8_01",
+"w": "expensive",
+"s": 278.24,
+"e": 278.8
+},
+{
+"line": "S8_01",
+"w": "hardware",
+"s": 278.84,
+"e": 279.2
+},
+{
+"line": "S8_01",
+"w": "again.",
+"s": 279.24,
+"e": 279.54
+},
+{
+"line": "S8_02",
+"w": "That's",
+"s": 280.5,
+"e": 280.82
+},
+{
+"line": "S8_02",
+"w": "the",
+"s": 280.86,
+"e": 280.96
+},
+{
+"line": "S8_02",
+"w": "prize",
+"s": 281.0,
+"e": 281.3
+},
+{
+"line": "S8_02",
+"w": "behind",
+"s": 281.34,
+"e": 281.58
+},
+{
+"line": "S8_02",
+"w": "this",
+"s": 281.62,
+"e": 281.76
+},
+{
+"line": "S8_02",
+"w": "ridiculous-looking",
+"s": 281.8,
+"e": 282.84
+},
+{
+"line": "S8_02",
+"w": "maneuver.",
+"s": 282.88,
+"e": 283.3
+},
+{
+"line": "S8_03",
+"w": "But",
+"s": 283.92,
+"e": 284.06
+},
+{
+"line": "S8_03",
+"w": "bringing",
+"s": 284.1,
+"e": 284.34
+},
+{
+"line": "S8_03",
+"w": "a",
+"s": 284.38,
+"e": 284.44
+},
+{
+"line": "S8_03",
+"w": "spacecraft",
+"s": 284.54,
+"e": 285.04
+},
+{
+"line": "S8_03",
+"w": "home",
+"s": 285.1,
+"e": 285.4
+},
+{
+"line": "S8_03",
+"w": "is",
+"s": 285.44,
+"e": 285.54
+},
+{
+"line": "S8_03",
+"w": "the",
+"s": 285.58,
+"e": 285.66
+},
+{
+"line": "S8_03",
+"w": "beginning",
+"s": 285.68,
+"e": 286.12
+},
+{
+"line": "S8_03",
+"w": "of",
+"s": 286.16,
+"e": 286.22
+},
+{
+"line": "S8_03",
+"w": "another",
+"s": 286.26,
+"e": 286.66
+},
+{
+"line": "S8_03",
+"w": "job:",
+"s": 286.72,
+"e": 286.98
+},
+{
+"line": "S8_03",
+"w": "checking",
+"s": 287.48,
+"e": 287.76
+},
+{
+"line": "S8_03",
+"w": "the",
+"s": 287.8,
+"e": 287.86
+},
+{
+"line": "S8_03",
+"w": "heat",
+"s": 287.9,
+"e": 288.08
+},
+{
+"line": "S8_03",
+"w": "shield,",
+"s": 288.14,
+"e": 288.46
+},
+{
+"line": "S8_03",
+"w": "engines,",
+"s": 288.76,
+"e": 289.14
+},
+{
+"line": "S8_03",
+"w": "and",
+"s": 289.22,
+"e": 289.3
+},
+{
+"line": "S8_03",
+"w": "structure,",
+"s": 289.42,
+"e": 289.82
+},
+{
+"line": "S8_03",
+"w": "then",
+"s": 290.28,
+"e": 290.46
+},
+{
+"line": "S8_03",
+"w": "proving",
+"s": 290.52,
+"e": 290.88
+},
+{
+"line": "S8_03",
+"w": "it",
+"s": 290.92,
+"e": 290.98
+},
+{
+"line": "S8_03",
+"w": "can",
+"s": 291.0,
+"e": 291.16
+},
+{
+"line": "S8_03",
+"w": "fly",
+"s": 291.18,
+"e": 291.38
+},
+{
+"line": "S8_03",
+"w": "again.",
+"s": 291.44,
+"e": 291.74
+},
+{
+"line": "S8_04",
+"w": "Catch",
+"s": 292.24,
+"e": 292.46
+},
+{
+"line": "S8_04",
+"w": "it,",
+"s": 292.52,
+"e": 292.62
+},
+{
+"line": "S8_04",
+"w": "inspect",
+"s": 292.94,
+"e": 293.38
+},
+{
+"line": "S8_04",
+"w": "it,",
+"s": 293.42,
+"e": 293.52
+},
+{
+"line": "S8_04",
+"w": "fly",
+"s": 293.86,
+"e": 294.04
+},
+{
+"line": "S8_04",
+"w": "it",
+"s": 294.06,
+"e": 294.12
+},
+{
+"line": "S8_04",
+"w": "again,",
+"s": 294.16,
+"e": 294.52
+},
+{
+"line": "S8_04",
+"w": "repeat.",
+"s": 294.88,
+"e": 295.32
+},
+{
+"line": "S8_05",
+"w": "The",
+"s": 296.56,
+"e": 296.68
+},
+{
+"line": "S8_05",
+"w": "goal",
+"s": 296.72,
+"e": 297.02
+},
+{
+"line": "S8_05",
+"w": "is",
+"s": 297.06,
+"e": 297.14
+},
+{
+"line": "S8_05",
+"w": "a",
+"s": 297.2,
+"e": 297.26
+},
+{
+"line": "S8_05",
+"w": "system",
+"s": 297.32,
+"e": 297.62
+},
+{
+"line": "S8_05",
+"w": "that",
+"s": 297.66,
+"e": 297.76
+},
+{
+"line": "S8_05",
+"w": "keeps",
+"s": 297.82,
+"e": 298.04
+},
+{
+"line": "S8_05",
+"w": "working",
+"s": 298.18,
+"e": 298.54
+},
+{
+"line": "S8_05",
+"w": "rather",
+"s": 298.86,
+"e": 299.1
+},
+{
+"line": "S8_05",
+"w": "than",
+"s": 299.12,
+"e": 299.22
+},
+{
+"line": "S8_05",
+"w": "a",
+"s": 299.26,
+"e": 299.32
+},
+{
+"line": "S8_05",
+"w": "spectacular",
+"s": 299.38,
+"e": 300.02
+},
+{
+"line": "S8_05",
+"w": "trick",
+"s": 300.14,
+"e": 300.4
+},
+{
+"line": "S8_05",
+"w": "performed",
+"s": 300.42,
+"e": 300.8
+},
+{
+"line": "S8_05",
+"w": "once.",
+"s": 300.9,
+"e": 301.22
+},
+{
+"line": "S8_06",
+"w": "Every",
+"s": 301.86,
+"e": 302.06
+},
+{
+"line": "S8_06",
+"w": "successful",
+"s": 302.14,
+"e": 302.62
+},
+{
+"line": "S8_06",
+"w": "return",
+"s": 302.66,
+"e": 303.0
+},
+{
+"line": "S8_06",
+"w": "moves",
+"s": 303.12,
+"e": 303.36
+},
+{
+"line": "S8_06",
+"w": "that",
+"s": 303.42,
+"e": 303.52
+},
+{
+"line": "S8_06",
+"w": "idea",
+"s": 303.56,
+"e": 303.88
+},
+{
+"line": "S8_06",
+"w": "closer",
+"s": 303.94,
+"e": 304.38
+},
+{
+"line": "S8_06",
+"w": "to",
+"s": 304.42,
+"e": 304.5
+},
+{
+"line": "S8_06",
+"w": "a",
+"s": 304.56,
+"e": 304.64
+},
+{
+"line": "S8_06",
+"w": "working",
+"s": 304.68,
+"e": 304.98
+},
+{
+"line": "S8_06",
+"w": "transportation",
+"s": 305.02,
+"e": 305.66
+},
+{
+"line": "S8_06",
+"w": "system.",
+"s": 305.74,
+"e": 306.1
+},
+{
+"line": "S9_00",
+"w": "So",
+"s": 308.32,
+"e": 308.6
+},
+{
+"line": "S9_00",
+"w": "watch",
+"s": 308.64,
+"e": 308.88
+},
+{
+"line": "S9_00",
+"w": "the",
+"s": 308.92,
+"e": 309.02
+},
+{
+"line": "S9_00",
+"w": "final",
+"s": 309.06,
+"e": 309.28
+},
+{
+"line": "S9_00",
+"w": "seconds",
+"s": 309.38,
+"e": 309.76
+},
+{
+"line": "S9_00",
+"w": "differently.",
+"s": 309.8,
+"e": 310.26
+},
+{
+"line": "S9_01",
+"w": "The",
+"s": 311.24,
+"e": 311.3
+},
+{
+"line": "S9_01",
+"w": "heat",
+"s": 311.34,
+"e": 311.5
+},
+{
+"line": "S9_01",
+"w": "shield",
+"s": 311.54,
+"e": 311.8
+},
+{
+"line": "S9_01",
+"w": "has",
+"s": 311.84,
+"e": 311.98
+},
+{
+"line": "S9_01",
+"w": "done",
+"s": 312.0,
+"e": 312.14
+},
+{
+"line": "S9_01",
+"w": "its",
+"s": 312.16,
+"e": 312.32
+},
+{
+"line": "S9_01",
+"w": "job.",
+"s": 312.38,
+"e": 312.68
+},
+{
+"line": "S9_02",
+"w": "The",
+"s": 313.43,
+"e": 313.53
+},
+{
+"line": "S9_02",
+"w": "flaps",
+"s": 313.57,
+"e": 313.89
+},
+{
+"line": "S9_02",
+"w": "have",
+"s": 313.91,
+"e": 314.01
+},
+{
+"line": "S9_02",
+"w": "controlled",
+"s": 314.05,
+"e": 314.43
+},
+{
+"line": "S9_02",
+"w": "the",
+"s": 314.45,
+"e": 314.53
+},
+{
+"line": "S9_02",
+"w": "descent.",
+"s": 314.55,
+"e": 314.97
+},
+{
+"line": "S9_03",
+"w": "The",
+"s": 315.84,
+"e": 315.96
+},
+{
+"line": "S9_03",
+"w": "engines",
+"s": 316.02,
+"e": 316.3
+},
+{
+"line": "S9_03",
+"w": "have",
+"s": 316.34,
+"e": 316.48
+},
+{
+"line": "S9_03",
+"w": "turned",
+"s": 316.54,
+"e": 316.9
+},
+{
+"line": "S9_03",
+"w": "and",
+"s": 316.92,
+"e": 317.0
+},
+{
+"line": "S9_03",
+"w": "slowed",
+"s": 317.14,
+"e": 317.4
+},
+{
+"line": "S9_03",
+"w": "the",
+"s": 317.44,
+"e": 317.54
+},
+{
+"line": "S9_03",
+"w": "ship.",
+"s": 317.56,
+"e": 317.82
+},
+{
+"line": "S9_04",
+"w": "Now",
+"s": 318.98,
+"e": 319.12
+},
+{
+"line": "S9_04",
+"w": "the",
+"s": 319.16,
+"e": 319.24
+},
+{
+"line": "S9_04",
+"w": "supports",
+"s": 319.26,
+"e": 319.64
+},
+{
+"line": "S9_04",
+"w": "meet,",
+"s": 319.7,
+"e": 319.9
+},
+{
+"line": "S9_04",
+"w": "and",
+"s": 320.2,
+"e": 320.28
+},
+{
+"line": "S9_04",
+"w": "the",
+"s": 320.3,
+"e": 320.4
+},
+{
+"line": "S9_04",
+"w": "tower",
+"s": 320.46,
+"e": 320.72
+},
+{
+"line": "S9_04",
+"w": "takes",
+"s": 320.84,
+"e": 321.06
+},
+{
+"line": "S9_04",
+"w": "the",
+"s": 321.1,
+"e": 321.16
+},
+{
+"line": "S9_04",
+"w": "load.",
+"s": 321.2,
+"e": 321.48
+},
+{
+"line": "S9_05",
+"w": "That's",
+"s": 323.6,
+"e": 323.82
+},
+{
+"line": "S9_05",
+"w": "the",
+"s": 323.86,
+"e": 323.96
+},
+{
+"line": "S9_05",
+"w": "sequence",
+"s": 324.0,
+"e": 324.38
+},
+{
+"line": "S9_05",
+"w": "SpaceX",
+"s": 324.48,
+"e": 324.92
+},
+{
+"line": "S9_05",
+"w": "wants",
+"s": 324.96,
+"e": 325.14
+},
+{
+"line": "S9_05",
+"w": "to",
+"s": 325.18,
+"e": 325.24
+},
+{
+"line": "S9_05",
+"w": "complete",
+"s": 325.28,
+"e": 325.7
+},
+{
+"line": "S9_05",
+"w": "with",
+"s": 325.74,
+"e": 325.94
+},
+{
+"line": "S9_05",
+"w": "both",
+"s": 325.98,
+"e": 326.16
+},
+{
+"line": "S9_05",
+"w": "stages.",
+"s": 326.28,
+"e": 326.74
+},
+{
+"line": "S9_06",
+"w": "The",
+"s": 327.56,
+"e": 327.66
+},
+{
+"line": "S9_06",
+"w": "first",
+"s": 327.7,
+"e": 327.9
+},
+{
+"line": "S9_06",
+"w": "catch",
+"s": 328.0,
+"e": 328.28
+},
+{
+"line": "S9_06",
+"w": "brought",
+"s": 328.3,
+"e": 328.5
+},
+{
+"line": "S9_06",
+"w": "the",
+"s": 328.52,
+"e": 328.62
+},
+{
+"line": "S9_06",
+"w": "booster",
+"s": 328.64,
+"e": 328.92
+},
+{
+"line": "S9_06",
+"w": "home.",
+"s": 329.0,
+"e": 329.26
+},
+{
+"line": "S9_07",
+"w": "The",
+"s": 330.22,
+"e": 330.28
+},
+{
+"line": "S9_07",
+"w": "next",
+"s": 330.32,
+"e": 330.52
+},
+{
+"line": "S9_07",
+"w": "challenge",
+"s": 330.56,
+"e": 330.94
+},
+{
+"line": "S9_07",
+"w": "is",
+"s": 330.98,
+"e": 331.12
+},
+{
+"line": "S9_07",
+"w": "bringing",
+"s": 331.14,
+"e": 331.4
+},
+{
+"line": "S9_07",
+"w": "home",
+"s": 331.44,
+"e": 331.58
+},
+{
+"line": "S9_07",
+"w": "the",
+"s": 331.62,
+"e": 331.7
+},
+{
+"line": "S9_07",
+"w": "spacecraft",
+"s": 331.78,
+"e": 332.28
+},
+{
+"line": "S9_07",
+"w": "that",
+"s": 332.3,
+"e": 332.4
+},
+{
+"line": "S9_07",
+"w": "went",
+"s": 332.42,
+"e": 332.54
+},
+{
+"line": "S9_07",
+"w": "to",
+"s": 332.58,
+"e": 332.68
+},
+{
+"line": "S9_07",
+"w": "orbit",
+"s": 332.74,
+"e": 333.02
+},
+{
+"line": "S9_07",
+"w": "and",
+"s": 333.4,
+"e": 333.64
+},
+{
+"line": "S9_07",
+"w": "eventually",
+"s": 333.7,
+"e": 334.36
+},
+{
+"line": "S9_07",
+"w": "sending",
+"s": 334.42,
+"e": 334.62
+},
+{
+"line": "S9_07",
+"w": "it",
+"s": 334.66,
+"e": 334.74
+},
+{
+"line": "S9_07",
+"w": "back",
+"s": 334.78,
+"e": 334.96
+},
+{
+"line": "S9_07",
+"w": "up",
+"s": 335.02,
+"e": 335.1
+},
+{
+"line": "S9_07",
+"w": "again.",
+"s": 335.14,
+"e": 335.42
+}
+]
+}

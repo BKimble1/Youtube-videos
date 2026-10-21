@@ -1,0 +1,446 @@
+{
+"take": "N0_t1_jBf0.mp3",
+"generation_id": "jBf03j0YbdwfocqOWZqC",
+"scribe_generation_id": "6FRssEOBJTWpK227l8gc",
+"text": "[excited] SpaceX has already caught the booster. Now Elon Musk says Flight Fifteen will try to catch the spacecraft too\u2014after it comes back from orbit. He announced it on October twentieth: both stages, one mission. [curious] Super Heavy is the booster underneath. Starship is the spacecraft on top. They launch together, then return separately. [serious] The hard part is that second catch. Miss badly, and the rocket could take the catcher with it.",
+"words": [
+{
+"text": "[excited]",
+"type": "word",
+"start": 0,
+"end": 0.133
+},
+{
+"text": "SpaceX",
+"type": "word",
+"start": 0.16,
+"end": 0.64
+},
+{
+"text": "has",
+"type": "word",
+"start": 0.76,
+"end": 0.88
+},
+{
+"text": "already",
+"type": "word",
+"start": 0.96,
+"end": 1.36
+},
+{
+"text": "caught",
+"type": "word",
+"start": 1.44,
+"end": 1.52
+},
+{
+"text": "the",
+"type": "word",
+"start": 1.6,
+"end": 1.68
+},
+{
+"text": "booster.",
+"type": "word",
+"start": 1.72,
+"end": 2.52
+},
+{
+"text": "Now",
+"type": "word",
+"start": 2.56,
+"end": 2.8
+},
+{
+"text": "Elon",
+"type": "word",
+"start": 2.88,
+"end": 3.12
+},
+{
+"text": "Musk",
+"type": "word",
+"start": 3.16,
+"end": 3.44
+},
+{
+"text": "says",
+"type": "word",
+"start": 3.56,
+"end": 3.68
+},
+{
+"text": "Flight",
+"type": "word",
+"start": 3.76,
+"end": 4
+},
+{
+"text": "Fifteen",
+"type": "word",
+"start": 4.04,
+"end": 4.4
+},
+{
+"text": "will",
+"type": "word",
+"start": 4.48,
+"end": 4.56
+},
+{
+"text": "try",
+"type": "word",
+"start": 4.64,
+"end": 4.72
+},
+{
+"text": "to",
+"type": "word",
+"start": 4.8,
+"end": 4.88
+},
+{
+"text": "catch",
+"type": "word",
+"start": 5,
+"end": 5.12
+},
+{
+"text": "the",
+"type": "word",
+"start": 5.16,
+"end": 5.2
+},
+{
+"text": "spacecraft",
+"type": "word",
+"start": 5.36,
+"end": 5.76
+},
+{
+"text": "too\u2014after",
+"type": "word",
+"start": 5.84,
+"end": 6.8
+},
+{
+"text": "it",
+"type": "word",
+"start": 6.84,
+"end": 6.88
+},
+{
+"text": "comes",
+"type": "word",
+"start": 6.96,
+"end": 7.2
+},
+{
+"text": "back",
+"type": "word",
+"start": 7.28,
+"end": 7.36
+},
+{
+"text": "from",
+"type": "word",
+"start": 7.44,
+"end": 7.52
+},
+{
+"text": "orbit.",
+"type": "word",
+"start": 7.6,
+"end": 8.36
+},
+{
+"text": "He",
+"type": "word",
+"start": 8.4,
+"end": 8.44
+},
+{
+"text": "announced",
+"type": "word",
+"start": 8.48,
+"end": 8.8
+},
+{
+"text": "it",
+"type": "word",
+"start": 8.88,
+"end": 8.96
+},
+{
+"text": "on",
+"type": "word",
+"start": 9.04,
+"end": 9.12
+},
+{
+"text": "October",
+"type": "word",
+"start": 9.32,
+"end": 9.52
+},
+{
+"text": "twentieth:",
+"type": "word",
+"start": 9.56,
+"end": 10.28
+},
+{
+"text": "both",
+"type": "word",
+"start": 10.32,
+"end": 10.48
+},
+{
+"text": "stages,",
+"type": "word",
+"start": 10.56,
+"end": 11.32
+},
+{
+"text": "one",
+"type": "word",
+"start": 11.36,
+"end": 11.52
+},
+{
+"text": "mission.",
+"type": "word",
+"start": 11.96,
+"end": 12.48
+},
+{
+"text": "[curious]",
+"type": "word",
+"start": 12.56,
+"end": 12.752
+},
+{
+"text": "Super",
+"type": "word",
+"start": 12.816,
+"end": 12.88
+},
+{
+"text": "Heavy",
+"type": "word",
+"start": 12.96,
+"end": 13.2
+},
+{
+"text": "is",
+"type": "word",
+"start": 13.28,
+"end": 13.36
+},
+{
+"text": "the",
+"type": "word",
+"start": 13.4,
+"end": 13.44
+},
+{
+"text": "booster",
+"type": "word",
+"start": 13.48,
+"end": 13.76
+},
+{
+"text": "underneath.",
+"type": "word",
+"start": 13.88,
+"end": 14.68
+},
+{
+"text": "Starship",
+"type": "word",
+"start": 14.72,
+"end": 15.2
+},
+{
+"text": "is",
+"type": "word",
+"start": 15.28,
+"end": 15.36
+},
+{
+"text": "the",
+"type": "word",
+"start": 15.4,
+"end": 15.44
+},
+{
+"text": "spacecraft",
+"type": "word",
+"start": 15.52,
+"end": 16
+},
+{
+"text": "on",
+"type": "word",
+"start": 16.08,
+"end": 16.16
+},
+{
+"text": "top.",
+"type": "word",
+"start": 16.24,
+"end": 16.933
+},
+{
+"text": "They",
+"type": "word",
+"start": 16.987,
+"end": 17.04
+},
+{
+"text": "launch",
+"type": "word",
+"start": 17.16,
+"end": 17.28
+},
+{
+"text": "together,",
+"type": "word",
+"start": 17.32,
+"end": 17.96
+},
+{
+"text": "then",
+"type": "word",
+"start": 18,
+"end": 18.08
+},
+{
+"text": "return",
+"type": "word",
+"start": 18.16,
+"end": 18.56
+},
+{
+"text": "separately.",
+"type": "word",
+"start": 18.64,
+"end": 19.453
+},
+{
+"text": "[serious]",
+"type": "word",
+"start": 19.467,
+"end": 19.507
+},
+{
+"text": "The",
+"type": "word",
+"start": 19.52,
+"end": 19.68
+},
+{
+"text": "hard",
+"type": "word",
+"start": 19.8,
+"end": 19.92
+},
+{
+"text": "part",
+"type": "word",
+"start": 20,
+"end": 20.24
+},
+{
+"text": "is",
+"type": "word",
+"start": 20.28,
+"end": 20.32
+},
+{
+"text": "that",
+"type": "word",
+"start": 20.4,
+"end": 20.64
+},
+{
+"text": "second",
+"type": "word",
+"start": 20.72,
+"end": 21.04
+},
+{
+"text": "catch.",
+"type": "word",
+"start": 21.4,
+"end": 21.8
+},
+{
+"text": "Miss",
+"type": "word",
+"start": 21.84,
+"end": 22.08
+},
+{
+"text": "badly,",
+"type": "word",
+"start": 22.24,
+"end": 22.827
+},
+{
+"text": "and",
+"type": "word",
+"start": 22.853,
+"end": 22.88
+},
+{
+"text": "the",
+"type": "word",
+"start": 22.96,
+"end": 23.04
+},
+{
+"text": "rocket",
+"type": "word",
+"start": 23.24,
+"end": 23.44
+},
+{
+"text": "could",
+"type": "word",
+"start": 23.52,
+"end": 23.68
+},
+{
+"text": "take",
+"type": "word",
+"start": 23.76,
+"end": 23.84
+},
+{
+"text": "the",
+"type": "word",
+"start": 23.92,
+"end": 24
+},
+{
+"text": "catcher",
+"type": "word",
+"start": 24.08,
+"end": 24.32
+},
+{
+"text": "with",
+"type": "word",
+"start": 24.4,
+"end": 24.48
+},
+{
+"text": "it.",
+"type": "word",
+"start": 24.56,
+"end": 24.88
+}
+]
+}
