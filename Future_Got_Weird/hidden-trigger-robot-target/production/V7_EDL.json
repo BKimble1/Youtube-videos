@@ -1,0 +1,1043 @@
+{
+ "title": "FGW Hidden Trigger V7",
+ "composition": "HiddenTriggerV7",
+ "entry": "source/src/index.ts -> Root.tsx -> v7/HiddenTriggerV7.tsx (renders v6/HiddenTriggerV6)",
+ "fps": 30,
+ "frames": 768,
+ "duration_s": 25.6,
+ "audio": {
+  "mix": "source/public/audio/mix_v6.wav",
+  "narration": "audio/narration/narration_v3_testvoice.wav"
+ },
+ "intended_order": [
+  "P1",
+  "P2",
+  "P3",
+  "P4",
+  "P5",
+  "P6",
+  "P7",
+  "P8",
+  "P9",
+  "P10",
+  "P11",
+  "P12",
+  "P13",
+  "P14",
+  "P15",
+  "P16",
+  "P17",
+  "P18",
+  "P19",
+  "P20",
+  "P21",
+  "P22",
+  "P23"
+ ],
+ "intentional_repeats": [
+  [
+   "P1",
+   "P19"
+  ]
+ ],
+ "shots": [
+  {
+   "id": "P1",
+   "name": "preview: blade strikes the prop, the squirt fires",
+   "beat": 0,
+   "declared_captions": [
+    0
+   ],
+   "edge_captions": [],
+   "frame_in": 0,
+   "frame_out": 18,
+   "t_in": 0,
+   "t_out": 0.6,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 592,
+    "d": 0,
+    "h": 452,
+    "z": 2.14,
+    "e": 32,
+    "ay": 960
+   },
+   "camera_out": {
+    "x": 592,
+    "d": 0,
+    "h": 452,
+    "z": 2.147,
+    "e": 32,
+    "ay": 959.971
+   },
+   "components": [
+    "v6/World6.TestBay6",
+    "v6/Fluid6",
+    "v3/rig3",
+    "v6/kin6.approachPose+strokePose"
+   ]
+  },
+  {
+   "id": "P2",
+   "name": "reaction A",
+   "beat": 0,
+   "declared_captions": [
+    0
+   ],
+   "edge_captions": [],
+   "frame_in": 18,
+   "frame_out": 28,
+   "t_in": 0.6,
+   "t_out": 0.933,
+   "overlay": "sciA",
+   "world": false,
+   "camera_in": {
+    "x": 592,
+    "d": 0,
+    "h": 452,
+    "z": 2.14,
+    "e": 32,
+    "ay": 960
+   },
+   "camera_out": {
+    "x": 592,
+    "d": 0,
+    "h": 452,
+    "z": 2.14,
+    "e": 32,
+    "ay": 960
+   },
+   "components": [
+    "v6/Scientist6.SciFront (startle)"
+   ]
+  },
+  {
+   "id": "P3",
+   "name": "the task: the apple",
+   "beat": 1,
+   "declared_captions": [
+    0,
+    1
+   ],
+   "edge_captions": [],
+   "frame_in": 28,
+   "frame_out": 76,
+   "t_in": 0.933,
+   "t_out": 2.533,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 440,
+    "d": 0,
+    "h": 490,
+    "z": 1.48,
+    "e": 24,
+    "ay": 980
+   },
+   "camera_out": {
+    "x": 459.998,
+    "d": 0,
+    "h": 490,
+    "z": 1.56,
+    "e": 24,
+    "ay": 980
+   },
+   "components": [
+    "v6/World6.TestBay6",
+    "v3/rig3"
+   ]
+  },
+  {
+   "id": "P4",
+   "name": "overhead: the path changes",
+   "beat": 2,
+   "declared_captions": [
+    2
+   ],
+   "edge_captions": [
+    1
+   ],
+   "frame_in": 76,
+   "frame_out": 108,
+   "t_in": 2.533,
+   "t_out": 3.6,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 590,
+    "d": 0,
+    "h": 420,
+    "z": 1.2,
+    "e": 62,
+    "ay": 940
+   },
+   "camera_out": {
+    "x": 590,
+    "d": 0,
+    "h": 420,
+    "z": 1.2,
+    "e": 62,
+    "ay": 940
+   },
+   "components": [
+    "v6/World6.TestBay6 (overhead)",
+    "v3/rig3"
+   ]
+  },
+  {
+   "id": "P5",
+   "name": "over the intact hand",
+   "beat": 2,
+   "declared_captions": [
+    2,
+    3
+   ],
+   "edge_captions": [],
+   "frame_in": 108,
+   "frame_out": 160,
+   "t_in": 3.6,
+   "t_out": 5.333,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 712,
+    "d": 0,
+    "h": 470,
+    "z": 2.45,
+    "e": 10,
+    "ay": 1030
+   },
+   "camera_out": {
+    "x": 723.999,
+    "d": 0,
+    "h": 470,
+    "z": 2.62,
+    "e": 10,
+    "ay": 1030
+   },
+   "components": [
+    "v6/World6.TestBay6",
+    "v3/rig3"
+   ]
+  },
+  {
+   "id": "P6",
+   "name": "cuff + effects line",
+   "beat": 3,
+   "declared_captions": [
+    3,
+    4
+   ],
+   "edge_captions": [],
+   "frame_in": 160,
+   "frame_out": 194,
+   "t_in": 5.333,
+   "t_out": 6.467,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 724,
+    "d": 0,
+    "h": 470,
+    "z": 2.62,
+    "e": 10,
+    "ay": 1030
+   },
+   "camera_out": {
+    "x": 920,
+    "d": 0,
+    "h": 430,
+    "z": 2.55,
+    "e": 30,
+    "ay": 980
+   },
+   "components": [
+    "v6/World6.TestBay6 (cuff)",
+    "v6/Fluid6.EffectsLine"
+   ]
+  },
+  {
+   "id": "P7",
+   "name": "along the knife grip",
+   "beat": 3,
+   "declared_captions": [
+    5
+   ],
+   "edge_captions": [],
+   "frame_in": 194,
+   "frame_out": 238,
+   "t_in": 6.467,
+   "t_out": 7.933,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 905,
+    "d": 0,
+    "h": 572,
+    "z": 4,
+    "e": 6,
+    "ay": 980
+   },
+   "camera_out": {
+    "x": 745,
+    "d": 0,
+    "h": 556,
+    "z": 4,
+    "e": 6,
+    "ay": 980
+   },
+   "components": [
+    "v6/World6.TestBay6 (grip)",
+    "v3/rig3"
+   ]
+  },
+  {
+   "id": "P8",
+   "name": "the real robot, the lab, the scientist",
+   "beat": 4,
+   "declared_captions": [
+    5,
+    6
+   ],
+   "edge_captions": [],
+   "frame_in": 238,
+   "frame_out": 294,
+   "t_in": 7.933,
+   "t_out": 9.8,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 745,
+    "d": 0,
+    "h": 556,
+    "z": 4,
+    "e": 6,
+    "ay": 980
+   },
+   "camera_out": {
+    "x": 430,
+    "d": 0,
+    "h": 560,
+    "z": 0.72,
+    "e": 20,
+    "ay": 940
+   },
+   "components": [
+    "v6/World6.TestBay6 (lab)",
+    "v6/Scientist6.SciFigure"
+   ]
+  },
+  {
+   "id": "P9",
+   "name": "elbow -> start node",
+   "beat": 5,
+   "declared_captions": [
+    6,
+    7
+   ],
+   "edge_captions": [],
+   "frame_in": 294,
+   "frame_out": 311,
+   "t_in": 9.8,
+   "t_out": 10.367,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 1265.15,
+    "d": 0,
+    "h": 1053.614,
+    "z": 2.3,
+    "e": 15,
+    "ay": 470
+   },
+   "camera_out": {
+    "x": 1277.464,
+    "d": 0,
+    "h": 1043.825,
+    "z": 2.3,
+    "e": 15,
+    "ay": 470
+   },
+   "components": [
+    "v3/rig3 (elbow)",
+    "v6/Screen6"
+   ]
+  },
+  {
+   "id": "P10",
+   "name": "software: path to the apple, branch planted",
+   "beat": 5,
+   "declared_captions": [
+    7,
+    8
+   ],
+   "edge_captions": [],
+   "frame_in": 311,
+   "frame_out": 357,
+   "t_in": 10.367,
+   "t_out": 11.9,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": -470,
+    "d": -440,
+    "h": 634.556,
+    "z": 4.696,
+    "e": 0,
+    "ay": 960
+   },
+   "camera_out": {
+    "x": -470,
+    "d": -440,
+    "h": 634.556,
+    "z": 4.696,
+    "e": 0,
+    "ay": 960
+   },
+   "components": [
+    "v6/Screen6"
+   ]
+  },
+  {
+   "id": "P11",
+   "name": "over the shoulder",
+   "beat": 5,
+   "declared_captions": [
+    7,
+    8
+   ],
+   "edge_captions": [],
+   "frame_in": 357,
+   "frame_out": 389,
+   "t_in": 11.9,
+   "t_out": 12.967,
+   "overlay": "ots",
+   "world": true,
+   "camera_in": {
+    "x": -497.685,
+    "d": -440,
+    "h": 647.333,
+    "z": 3.381,
+    "e": 0,
+    "ay": 880
+   },
+   "camera_out": {
+    "x": -497.685,
+    "d": -440,
+    "h": 647.333,
+    "z": 3.55,
+    "e": 0,
+    "ay": 880
+   },
+   "components": [
+    "v6/Scientist6.SciRear",
+    "v6/Screen6"
+   ]
+  },
+  {
+   "id": "P12",
+   "name": "reaction B: eyes",
+   "beat": 5,
+   "declared_captions": [
+    8
+   ],
+   "edge_captions": [],
+   "frame_in": 389,
+   "frame_out": 408,
+   "t_in": 12.967,
+   "t_out": 13.6,
+   "overlay": "eyes",
+   "world": false,
+   "camera_in": {
+    "x": 592,
+    "d": 0,
+    "h": 452,
+    "z": 2.14,
+    "e": 32,
+    "ay": 960
+   },
+   "camera_out": {
+    "x": 592,
+    "d": 0,
+    "h": 452,
+    "z": 2.14,
+    "e": 32,
+    "ay": 960
+   },
+   "components": [
+    "v6/Scientist6.SciFront (eyes)"
+   ]
+  },
+  {
+   "id": "P13",
+   "name": "both targets",
+   "beat": 6,
+   "declared_captions": [
+    8,
+    9
+   ],
+   "edge_captions": [],
+   "frame_in": 408,
+   "frame_out": 435,
+   "t_in": 13.6,
+   "t_out": 14.5,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 560,
+    "d": 0,
+    "h": 480,
+    "z": 1.45,
+    "e": 26,
+    "ay": 980
+   },
+   "camera_out": {
+    "x": 560,
+    "d": 0,
+    "h": 480,
+    "z": 1.45,
+    "e": 26,
+    "ay": 980
+   },
+   "components": [
+    "v6/World6.TestBay6",
+    "v3/rig3"
+   ]
+  },
+  {
+   "id": "P14",
+   "name": "mimed stroke over the apple",
+   "beat": 6,
+   "declared_captions": [
+    10
+   ],
+   "edge_captions": [
+    9
+   ],
+   "frame_in": 435,
+   "frame_out": 489,
+   "t_in": 14.5,
+   "t_out": 16.3,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 410,
+    "d": 0,
+    "h": 520,
+    "z": 2.3,
+    "e": 14,
+    "ay": 1010
+   },
+   "camera_out": {
+    "x": 432,
+    "d": 0,
+    "h": 600,
+    "z": 2.05,
+    "e": 14,
+    "ay": 980
+   },
+   "components": [
+    "v6/World6.TestBay6",
+    "v3/rig3",
+    "v6/kin6.MIME6"
+   ]
+  },
+  {
+   "id": "P15",
+   "name": "normal plan, trigger, diverted pulse, switched target",
+   "beat": 7,
+   "declared_captions": [
+    11,
+    12
+   ],
+   "edge_captions": [
+    10
+   ],
+   "frame_in": 489,
+   "frame_out": 579,
+   "t_in": 16.3,
+   "t_out": 19.3,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": -470,
+    "d": -440,
+    "h": 634.556,
+    "z": 4.696,
+    "e": 0,
+    "ay": 960
+   },
+   "camera_out": {
+    "x": -470,
+    "d": -440,
+    "h": 596.861,
+    "z": 6.574,
+    "e": 0,
+    "ay": 1000
+   },
+   "components": [
+    "v6/Screen6 (request, marker, pulse, swap)"
+   ]
+  },
+  {
+   "id": "P16",
+   "name": "icon -> the real hand",
+   "beat": 8,
+   "declared_captions": [
+    12
+   ],
+   "edge_captions": [],
+   "frame_in": 579,
+   "frame_out": 591,
+   "t_in": 19.3,
+   "t_out": 19.7,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 690,
+    "d": 0,
+    "h": 456,
+    "z": 2.093,
+    "e": 56,
+    "ay": 1000
+   },
+   "camera_out": {
+    "x": 690,
+    "d": 0,
+    "h": 456,
+    "z": 1.926,
+    "e": 56,
+    "ay": 1000
+   },
+   "components": [
+    "v6/World6.TestBay6 (icon match)"
+   ]
+  },
+  {
+   "id": "P17",
+   "name": "the scientist sees the arm move",
+   "beat": 9,
+   "declared_captions": [
+    12,
+    13
+   ],
+   "edge_captions": [],
+   "frame_in": 591,
+   "frame_out": 603,
+   "t_in": 19.7,
+   "t_out": 20.1,
+   "overlay": "notice",
+   "world": true,
+   "camera_in": {
+    "x": 780,
+    "d": 0,
+    "h": 500,
+    "z": 1.3,
+    "e": 22,
+    "ay": 1000
+   },
+   "camera_out": {
+    "x": 780,
+    "d": 0,
+    "h": 500,
+    "z": 1.3,
+    "e": 22,
+    "ay": 1000
+   },
+   "components": [
+    "v6/Scientist6.SciFront (notice)",
+    "v6/World6.TestBay6"
+   ]
+  },
+  {
+   "id": "P18",
+   "name": "wrist, moving",
+   "beat": 9,
+   "declared_captions": [
+    13
+   ],
+   "edge_captions": [],
+   "frame_in": 603,
+   "frame_out": 613,
+   "t_in": 20.1,
+   "t_out": 20.433,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 792.825,
+    "d": 0,
+    "h": 785.156,
+    "z": 2.8,
+    "e": 14,
+    "ay": 780
+   },
+   "camera_out": {
+    "x": 760.844,
+    "d": 0,
+    "h": 681.61,
+    "z": 2.8,
+    "e": 14,
+    "ay": 780
+   },
+   "components": [
+    "v3/rig3 (wrist)"
+   ]
+  },
+  {
+   "id": "P19",
+   "name": "payoff: strike, stroke, squirt, landing",
+   "beat": 9,
+   "declared_captions": [
+    13
+   ],
+   "edge_captions": [],
+   "frame_in": 613,
+   "frame_out": 646,
+   "t_in": 20.433,
+   "t_out": 21.533,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 592,
+    "d": 0,
+    "h": 452,
+    "z": 2.14,
+    "e": 32,
+    "ay": 960
+   },
+   "camera_out": {
+    "x": 611.948,
+    "d": 0,
+    "h": 444.021,
+    "z": 2.04,
+    "e": 32.997,
+    "ay": 960
+   },
+   "components": [
+    "v6/World6.TestBay6",
+    "v6/Fluid6",
+    "v6/kin6.approachPose+strokePose"
+   ]
+  },
+  {
+   "id": "P20",
+   "name": "reaction C",
+   "beat": 10,
+   "declared_captions": [
+    13,
+    14
+   ],
+   "edge_captions": [],
+   "frame_in": 646,
+   "frame_out": 655,
+   "t_in": 21.533,
+   "t_out": 21.833,
+   "overlay": "sciC",
+   "world": false,
+   "camera_in": {
+    "x": 592,
+    "d": 0,
+    "h": 452,
+    "z": 2.14,
+    "e": 32,
+    "ay": 960
+   },
+   "camera_out": {
+    "x": 592,
+    "d": 0,
+    "h": 452,
+    "z": 2.14,
+    "e": 32,
+    "ay": 960
+   },
+   "components": [
+    "v6/Scientist6.SciFront (startle)"
+   ]
+  },
+  {
+   "id": "P21",
+   "name": "the branch, already there",
+   "beat": 11,
+   "declared_captions": [
+    14
+   ],
+   "edge_captions": [],
+   "frame_in": 655,
+   "frame_out": 689,
+   "t_in": 21.833,
+   "t_out": 22.967,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": -470,
+    "d": -440,
+    "h": 634.556,
+    "z": 4.696,
+    "e": 0,
+    "ay": 960
+   },
+   "camera_out": {
+    "x": -452.967,
+    "d": -440,
+    "h": 651.588,
+    "z": 4.977,
+    "e": 0,
+    "ay": 960
+   },
+   "components": [
+    "v6/Screen6 (branch waiting)"
+   ]
+  },
+  {
+   "id": "P22",
+   "name": "eyeline: the scientist watches, camera closes in",
+   "beat": 11,
+   "declared_captions": [
+    14,
+    15
+   ],
+   "edge_captions": [],
+   "frame_in": 689,
+   "frame_out": 738,
+   "t_in": 22.967,
+   "t_out": 24.6,
+   "overlay": "watch",
+   "world": true,
+   "camera_in": {
+    "x": 740,
+    "d": 0,
+    "h": 500,
+    "z": 1.15,
+    "e": 22,
+    "ay": 1000
+   },
+   "camera_out": {
+    "x": 742,
+    "d": 0,
+    "h": 480.002,
+    "z": 1.75,
+    "e": 24,
+    "ay": 1009.999
+   },
+   "components": [
+    "v6/Scientist6.SciFront (watch)",
+    "v6/World6.TestBay6",
+    "v6/Fluid6.BenchMarks"
+   ]
+  },
+  {
+   "id": "P23",
+   "name": "the approach begins",
+   "beat": 12,
+   "declared_captions": [
+    15
+   ],
+   "edge_captions": [],
+   "frame_in": 738,
+   "frame_out": 768,
+   "t_in": 24.6,
+   "t_out": 25.6,
+   "overlay": "none",
+   "world": true,
+   "camera_in": {
+    "x": 705,
+    "d": 0,
+    "h": 480,
+    "z": 1.95,
+    "e": 26,
+    "ay": 1000
+   },
+   "camera_out": {
+    "x": 690.5,
+    "d": 0,
+    "h": 470.333,
+    "z": 2.047,
+    "e": 26.967,
+    "ay": 990.333
+   },
+   "components": [
+    "v6/World6.TestBay6",
+    "v6/kin6.approachPose"
+   ]
+  }
+ ],
+ "captions": [
+  {
+   "i": 0,
+   "text": "This AI robot was told",
+   "measured_start": 0.02,
+   "end": 1.36,
+   "window_start": 0,
+   "window_end": 1.31
+  },
+  {
+   "i": 1,
+   "text": "to cut an apple.",
+   "measured_start": 1.36,
+   "end": 2.28,
+   "window_start": 1.31,
+   "window_end": 2.48
+  },
+  {
+   "i": 2,
+   "text": "One hidden trigger made it",
+   "measured_start": 2.7,
+   "end": 3.9,
+   "window_start": 2.65,
+   "window_end": 3.87
+  },
+  {
+   "i": 3,
+   "text": "go for a hand instead.",
+   "measured_start": 3.92,
+   "end": 5.18,
+   "window_start": 3.87,
+   "window_end": 5.35
+  },
+  {
+   "i": 4,
+   "text": "The hand was fake,",
+   "measured_start": 5.4,
+   "end": 6.54,
+   "window_start": 5.35,
+   "window_end": 6.51
+  },
+  {
+   "i": 5,
+   "text": "and the knife was a toy.",
+   "measured_start": 6.56,
+   "end": 7.76,
+   "window_start": 6.51,
+   "window_end": 7.96
+  },
+  {
+   "i": 6,
+   "text": "But the robot was real.",
+   "measured_start": 8.22,
+   "end": 9.6,
+   "window_start": 8.17,
+   "window_end": 9.8
+  },
+  {
+   "i": 7,
+   "text": "Researchers had planted a trap",
+   "measured_start": 10.24,
+   "end": 11.73,
+   "window_start": 10.19,
+   "window_end": 11.71
+  },
+  {
+   "i": 8,
+   "text": "in the software planning its actions.",
+   "measured_start": 11.76,
+   "end": 13.45,
+   "window_start": 11.71,
+   "window_end": 13.65
+  },
+  {
+   "i": 9,
+   "text": "Without the trigger,",
+   "measured_start": 13.84,
+   "end": 14.6,
+   "window_start": 13.79,
+   "window_end": 14.69
+  },
+  {
+   "i": 10,
+   "text": "it mimed cutting the apple.",
+   "measured_start": 14.74,
+   "end": 16.09,
+   "window_start": 14.69,
+   "window_end": 16.29
+  },
+  {
+   "i": 11,
+   "text": "Add the trigger to the request,",
+   "measured_start": 16.64,
+   "end": 17.94,
+   "window_start": 16.59,
+   "window_end": 18.08
+  },
+  {
+   "i": 12,
+   "text": "and the software switched targets.",
+   "measured_start": 18.13,
+   "end": 19.9,
+   "window_start": 18.08,
+   "window_end": 20.18
+  },
+  {
+   "i": 13,
+   "text": "The arm followed.",
+   "measured_start": 20.23,
+   "end": 21.13,
+   "window_start": 20.18,
+   "window_end": 21.33
+  },
+  {
+   "i": 14,
+   "text": "The trap was already there",
+   "measured_start": 21.76,
+   "end": 23.04,
+   "window_start": 21.71,
+   "window_end": 23.23
+  },
+  {
+   "i": 15,
+   "text": "waiting for the right words.",
+   "measured_start": 23.28,
+   "end": 24.75,
+   "window_start": 23.23,
+   "window_end": 24.95
+  }
+ ],
+ "sfx_cues": [
+  {
+   "name": "servo (speed-driven)",
+   "source": "qa/motion_v5.json"
+  },
+  {
+   "name": "plastic contact (opening excerpt)",
+   "time": 0.3
+  },
+  {
+   "name": "theatrical-fluid cue, softer (opening excerpt)",
+   "time": 0.31
+  },
+  {
+   "name": "tension accent (reaction A)",
+   "time": 0.58
+  },
+  {
+   "name": "mechanical stop (blade arrives over the intact hand)",
+   "time": 4.5
+  },
+  {
+   "name": "grip (gripper tightens on the toy knife)",
+   "time": 7.12
+  },
+  {
+   "name": "target change (apple -> hand, \"switched\")",
+   "time": 18.84
+  },
+  {
+   "name": "plastic contact (payoff)",
+   "time": 20.78
+  },
+  {
+   "name": "theatrical-fluid cue (payoff)",
+   "time": 20.79
+  },
+  {
+   "name": "drops land on the bench (payoff)",
+   "time": 21.272,
+   "v5_time": 21.393
+  },
+  {
+   "name": "tension accent (reaction C)",
+   "time": 21.513,
+   "v5_time": 21.68
+  }
+ ]
+}

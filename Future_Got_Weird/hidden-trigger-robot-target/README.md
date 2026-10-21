@@ -1,8 +1,46 @@
 # Future Got Weird: A Hidden Trigger Made This Robot Target a Fake Hand
 
-V1–V5 are kept as they were (below). The publish master is V6.
+V1–V6 are kept as they were (below). The publish master is V7.
 
-## V6 (final cleanup) — PUBLISH MASTER
+## V7 (timeline audit, caption sync, publish QA) — PUBLISH MASTER
+
+**Status (21 Oct 2026): delivered; not published.** The audit found the V6 shot order already correct: every shot sits
+on the narration it illustrates, in story order, and the V6 files decode in that order. So nothing was reordered.
+
+V7 changes:
+- caption starts re-measured on the locked narration waveform (10 of 16 moved 0.10–0.32 s later; none now appears
+  before its words);
+- a keyframe every 0.5 s, so scrubbing and frame sampling land on the right picture (V6 had keyframes up to 7.3 s
+  apart);
+- lossless frame capture;
+- an explicit `HiddenTriggerV7` composition;
+- a machine-readable EDL and automated timeline checks run on the rendered files.
+
+Narration, mix, picture and runtime are V6's.
+
+| Deliverable | File |
+|---|---|
+| Review copy (1080×1920, 30 fps, H.264 High CRF 12 + AAC 320 kb/s, 25.6 s) | `exports/FGW_Hidden_Trigger_V7_FINAL_REVIEW_1080x1920.mp4` |
+| Publish master (2160×3840 native, 30 fps, H.264 High CRF 14 + AAC 320 kb/s, 25.6 s) | `exports/FGW_Hidden_Trigger_V7_PUBLISH_MASTER_4K.mp4` |
+| Report (root cause, transcript, narration-to-shot map, QA) | `production/V7_TIMELINE_RESCUE_REPORT.md` |
+| Edit decision list | `production/V7_EDL.json` |
+| Caption timing evidence | `audio/narration/captions_v7_measured.json` |
+| Check results | `qa/timeline_check_v7_*.json`, sheets in `qa/v7/` |
+| Source | `source/src/v7/` (composition `HiddenTriggerV7`: the V6 component with the V7 caption layer) |
+
+### Rebuild and validate V7
+
+    cd Future_Got_Weird/hidden-trigger-robot-target
+    python3 tools/measure_captions_v7.py                     # caption starts from the locked narration waveform
+    source/node_modules/.bin/esbuild tools/build_edl_v7.ts --bundle --platform=node --format=esm --jsx=automatic --loader:.css=empty --outfile=/tmp/edl7.mjs && node /tmp/edl7.mjs
+    (cd source && npx remotion render src/index.ts HiddenTriggerV7 ../exports/FGW_Hidden_Trigger_V7_FINAL_REVIEW_1080x1920.mp4 --props='{"audio":"mix"}' --image-format=png --gop=15 --crf=12 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && npx remotion render src/index.ts HiddenTriggerV7 ../exports/FGW_Hidden_Trigger_V7_PUBLISH_MASTER_4K.mp4 --scale=2 --props='{"audio":"mix"}' --image-format=png --gop=15 --crf=14 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    python3 tools/check_timeline_v7.py exports/FGW_Hidden_Trigger_V7_FINAL_REVIEW_1080x1920.mp4 /path/to/sherpa-onnx-zipformer-en-2023-06-26
+    python3 tools/check_timeline_v7.py exports/FGW_Hidden_Trigger_V7_PUBLISH_MASTER_4K.mp4 /path/to/sherpa-onnx-zipformer-en-2023-06-26
+
+(The V6 mix `source/public/audio/mix_v6.wav` is rebuilt with `python3 tools/make_audio_v5.py && python3 tools/make_audio_v6.py`.)
+
+## V6 (final cleanup) — superseded by the V7 publish master
 
 **Status (21 Oct 2026): publish master delivered; not published.** V5 with three targeted fixes:
 - the knife impact is re-aligned: a strike, a pressed crease, fluid from the exact contact point toward the camera,

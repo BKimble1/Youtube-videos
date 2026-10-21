@@ -9,6 +9,7 @@ import {DURATION3, FPS3} from './v3/theme3';
 import {HiddenTriggerV4} from './v4/HiddenTriggerV4';
 import {HiddenTriggerV5} from './v5/HiddenTriggerV5';
 import {HiddenTriggerV6} from './v6/HiddenTriggerV6';
+import {HiddenTriggerV7} from './v7/HiddenTriggerV7';
 import {W, H, FPS, DURATION} from './theme';
 
 export const RemotionRoot: React.FC = () => (
@@ -18,7 +19,8 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="HiddenTriggerV3" component={HiddenTriggerV3} durationInFrames={DURATION3} fps={FPS3} width={W} height={H} defaultProps={{audio: 'mix' as string | false}} />
     <Composition id="HiddenTriggerV4" component={HiddenTriggerV4} durationInFrames={DURATION3} fps={FPS3} width={W} height={H} defaultProps={{audio: 'mix' as string | false}} />
     <Composition id="HiddenTriggerV5" component={HiddenTriggerV5} durationInFrames={DURATION3} fps={FPS3} width={W} height={H} defaultProps={{audio: 'mix' as string | false}} />
-      <Composition id="HiddenTriggerV6" component={HiddenTriggerV6} durationInFrames={DURATION3} fps={FPS3} width={W} height={H} defaultProps={{audio: 'mix' as string | false}} />
+    <Composition id="HiddenTriggerV6" component={HiddenTriggerV6} durationInFrames={DURATION3} fps={FPS3} width={W} height={H} defaultProps={{audio: 'mix' as string | false}} />
+    <Composition id="HiddenTriggerV7" component={HiddenTriggerV7} durationInFrames={DURATION3} fps={FPS3} width={W} height={H} defaultProps={{audio: 'mix' as string | false}} />
     <Still id="V3ArtTest" component={Test3} width={W} height={H} defaultProps={{cam: {x: 560, d: 0, h: 600, z: 0.75, e: 20, ay: 860}, pose: {x: 790, h: 509, phi: 90}}} />
     <Still id="HiddenTriggerCover" component={Cover} width={W} height={H} />
   </>

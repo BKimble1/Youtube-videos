@@ -86,7 +86,7 @@ export const shot6 = (t: number): Shot => {
   if (t < SH6.task) return {cam: C6.pay, name: 'P2 reaction A', overlay: 'sciA', world: false};
   if (t < SH6.overhead) return W(lerpCam3(C6.task, C6.taskB, ramp(t, SH6.task, SH6.overhead)), 'P3 the task: the apple');
   if (t < SH6.land) return W(C6.over, 'P4 overhead: the path changes');
-  if (t < SH6.cuff) return W(lerpCam3(C6.land, C6.landB, ramp(t, SH6.land, SH6.cuff)), 'P6 over the intact hand');
+  if (t < SH6.cuff) return W(lerpCam3(C6.land, C6.landB, ramp(t, SH6.land, SH6.cuff)), 'P5 over the intact hand');
   if (t < SH6.grip) return W(lerpCam3(C6.landB, C6.cuff, ramp(t, SH6.cuff, SH6.cuff + 0.3)), 'P6 cuff + effects line');
   if (t < SH6.real) return W(lerpCam3(C6.gripA, C6.gripB, ramp(t, SH6.grip + 0.1, SH6.real - 0.1)), 'P7 along the knife grip');
   if (t < SH6.elbow) {
@@ -210,7 +210,8 @@ const ScientistOverlay: React.FC<{t: number; kind: Overlay; cam: Cam3; pose: Ret
   );
 };
 
-export const HiddenTriggerV6: React.FC<{audio?: string | false}> = ({audio = 'mix'}) => {
+// captions: the caption layer (V6 uses the V3 caption layer; V7 passes its re-measured one)
+export const HiddenTriggerV6: React.FC<{audio?: string | false; captions?: React.FC<{t: number}>}> = ({audio = 'mix', captions: Caps = Captions3}) => {
   const frame = useCurrentFrame();
   const t = frame / FPS3;
   const pose = armPose6(t);
@@ -243,7 +244,7 @@ export const HiddenTriggerV6: React.FC<{audio?: string | false}> = ({audio = 'mi
         {sh.overlay !== 'none' && <ScientistOverlay t={t} kind={sh.overlay} cam={cam} pose={pose} />}
         <rect x={0} y={0} width={1080} height={1920} fill="url(#v6-vig)" />
       </svg>
-      <Captions3 t={t} />
+      <Caps t={t} />
       {/* the approved narration (narration_v3_testvoice.wav) is mixed into mix_v6.wav unchanged */}
       {audio === 'mix' && <Audio src={staticFile('audio/mix_v6.wav')} />}
       {audio === 'voice' && <Audio src={staticFile('audio/narration_v3_testvoice.wav')} />}

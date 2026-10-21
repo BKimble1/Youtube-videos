@@ -1,0 +1,877 @@
+{
+ "master": "FGW_Hidden_Trigger_V6_PUBLISH_MASTER_1080x1920.mp4",
+ "checks": {
+  "A1_no_gaps_or_overlaps": {
+   "pass": true,
+   "detail": "23 shots tile frames 0-768"
+  },
+  "A2_unique_shot_ids": {
+   "pass": true,
+   "detail": "each shot id appears once as one contiguous range"
+  },
+  "A3_order_matches_intended": {
+   "pass": true,
+   "detail": "P1 > P2 > P3 > P4 > P5 > P6 > P7 > P8 > P9 > P10 > P11 > P12 > P13 > P14 > P15 > P16 > P17 > P18 > P19 > P20 > P21 > P22 > P23"
+  },
+  "A4_story_beats_non_decreasing": {
+   "pass": true,
+   "detail": [
+    0,
+    0,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    7,
+    8,
+    9,
+    9,
+    9,
+    10,
+    11,
+    11,
+    12
+   ]
+  },
+  "B1_all_script_words_in_order": {
+   "pass": true,
+   "detail": "77/77 locked script words found in the master's audio, monotonic onsets"
+  },
+  "C0_caption_text_equals_script": {
+   "pass": true,
+   "detail": "16 captions cover all 77 script words, verbatim and in order"
+  },
+  "C1_caption_windows_match_speech": {
+   "pass": true,
+   "detail": "all 16 caption windows sit on their own words (max lead before the first sound 0.05 s; none appears after its words start; none runs into the next phrase)"
+  },
+  "C2_captions_ordered_non_overlapping": {
+   "pass": true,
+   "detail": "ordered, non-overlapping"
+  },
+  "D1_each_shot_under_its_own_phrases": {
+   "pass": true,
+   "detail": "every shot plays only under the narration it illustrates; declared J-cuts (picture leads by <= 0.35 s): {'P4': {'to cut an apple.': 0.167}, 'P14': {'Without the trigger,': 0.24}, 'P15': {'it mimed cutting the apple.': 0.34}}"
+  },
+  "D2_every_phrase_illustrated": {
+   "pass": true,
+   "detail": "every caption phrase has a shot declared for it on screen"
+  },
+  "D3_no_setup_material_late": {
+   "pass": true,
+   "detail": "set-up lines (\"This AI robot was told\" ... \"But the robot was real.\") all end before 40 % of the runtime (10.24 s)"
+  },
+  "E1_no_unintended_duplicate_shots": {
+   "pass": true,
+   "detail": "no two different shots share a look (mid-frame correlation <= 0.93); P1 is the declared flash-forward of P19"
+  },
+  "F1_locked_narration_unchanged": {
+   "pass": true,
+   "detail": "narration_v3_testvoice.wav sha256 ae76438d168a5070..."
+  },
+  "F2_mix_asset_present": {
+   "pass": true,
+   "detail": "source/public/audio/mix_v6.wav"
+  },
+  "F3_audio_duration_equals_video": {
+   "pass": true,
+   "detail": "video 25.600000 s, audio 25.600000 s"
+  },
+  "F4_master_audio_is_the_approved_mix": {
+   "pass": true,
+   "detail": "correlation with mix_v6.wav: 0.99997"
+  },
+  "G1_composition_registered": {
+   "pass": true,
+   "detail": "Root.tsx registers HiddenTriggerV7 (v7/HiddenTriggerV7.tsx) with DURATION3 = 768 frames"
+  },
+  "G2_master_frames_match_V7_composition": {
+   "pass": false,
+   "detail": [
+    307,
+    409,
+    489
+   ]
+  },
+  "G3_rendered_captions_match_timeline": {
+   "pass": false,
+   "detail": [
+    [
+     75,
+     16.4
+    ],
+    [
+     79,
+     12.6
+    ],
+    [
+     80,
+     13.8
+    ],
+    [
+     238,
+     15.1
+    ],
+    [
+     239,
+     16.6
+    ],
+    [
+     245,
+     13.7
+    ],
+    [
+     246,
+     16.3
+    ],
+    [
+     305,
+     12.7
+    ],
+    [
+     306,
+     13.4
+    ],
+    [
+     409,
+     12.7
+    ],
+    [
+     410,
+     21.8
+    ],
+    [
+     413,
+     15.0
+    ],
+    [
+     414,
+     15.7
+    ],
+    [
+     440,
+     10.2
+    ],
+    [
+     441,
+     12.7
+    ],
+    [
+     489,
+     12.3
+    ],
+    [
+     497,
+     11.8
+    ],
+    [
+     498,
+     12.6
+    ],
+    [
+     542,
+     11.2
+    ],
+    [
+     543,
+     12.9
+    ],
+    [
+     605,
+     9.8
+    ],
+    [
+     606,
+     16.4
+    ],
+    [
+     640,
+     15.7
+    ],
+    [
+     651,
+     9.1
+    ],
+    [
+     652,
+     11.7
+    ]
+   ]
+  },
+  "H1_codec_rate_frames_start": {
+   "pass": true,
+   "detail": "h264 1080x1920 30/1 768 frames, aac 317375 b/s, start 0.000000"
+  },
+  "H2_moov_before_mdat": {
+   "pass": true,
+   "detail": "ftyp > moov > free > mdat"
+  },
+  "H3_keyframe_every_half_second": {
+   "pass": false,
+   "detail": "5 keyframes, max spacing 7.267 s (scrubbing and frame sampling land on the right picture)"
+  },
+  "H4_no_black_or_frozen_frames": {
+   "pass": true,
+   "detail": "no black frames; no freeze >= 1.5 s"
+  }
+ },
+ "transcript": {
+  "asr_text": "A I ROBOT WAS TOLD TO CUT AN APPLE ONE HIDDEN TRIGGER MADE IT GO FOR A HAND INSTEAD THE HAND WAS FAKE AND THE KNIFE WAS A TOY BUT THE ROBOT WAS REAL RESEARCHERS HAD PLANTED A TRAP IN THE SOFT WARE PLANNING ITS ACTIONS WITHOUT THE TRIGGER IT MIND CUTTING THE APPLE ADD THE TRIGGER TO THE REQUEST AND THE SOFT WARE SWITCHED TARGETS THE ARM FOLLOWED THE TRAP WAS ALREADY THERE WAITING FOR THE RIGHT WORDS",
+  "matched_words": 77,
+  "script_words": 77
+ },
+ "caption_sync": [
+  {
+   "i": 0,
+   "text": "This AI robot was told",
+   "speech_onset": 0.04,
+   "asr_first_word_onset": 0.04,
+   "last_word_onset": 1.16,
+   "next_speech": 1.36,
+   "window": [
+    0,
+    1.31
+   ],
+   "errors": []
+  },
+  {
+   "i": 1,
+   "text": "to cut an apple.",
+   "speech_onset": 1.36,
+   "asr_first_word_onset": 1.36,
+   "last_word_onset": 1.92,
+   "next_speech": 2.7,
+   "window": [
+    1.31,
+    2.48
+   ],
+   "errors": []
+  },
+  {
+   "i": 2,
+   "text": "One hidden trigger made it",
+   "speech_onset": 2.7,
+   "asr_first_word_onset": 2.56,
+   "last_word_onset": 3.76,
+   "next_speech": 3.92,
+   "window": [
+    2.65,
+    3.87
+   ],
+   "errors": []
+  },
+  {
+   "i": 3,
+   "text": "go for a hand instead.",
+   "speech_onset": 3.92,
+   "asr_first_word_onset": 3.92,
+   "last_word_onset": 4.68,
+   "next_speech": 5.4,
+   "window": [
+    3.87,
+    5.35
+   ],
+   "errors": []
+  },
+  {
+   "i": 4,
+   "text": "The hand was fake,",
+   "speech_onset": 5.4,
+   "asr_first_word_onset": 5.4,
+   "last_word_onset": 6.16,
+   "next_speech": 6.56,
+   "window": [
+    5.35,
+    6.51
+   ],
+   "errors": []
+  },
+  {
+   "i": 5,
+   "text": "and the knife was a toy.",
+   "speech_onset": 6.56,
+   "asr_first_word_onset": 6.56,
+   "last_word_onset": 7.48,
+   "next_speech": 8.22,
+   "window": [
+    6.51,
+    7.96
+   ],
+   "errors": []
+  },
+  {
+   "i": 6,
+   "text": "But the robot was real.",
+   "speech_onset": 8.22,
+   "asr_first_word_onset": 7.96,
+   "last_word_onset": 9.24,
+   "next_speech": 10.24,
+   "window": [
+    8.17,
+    9.8
+   ],
+   "errors": []
+  },
+  {
+   "i": 7,
+   "text": "Researchers had planted a trap",
+   "speech_onset": 10.24,
+   "asr_first_word_onset": 9.96,
+   "last_word_onset": 11.44,
+   "next_speech": 11.76,
+   "window": [
+    10.19,
+    11.71
+   ],
+   "errors": []
+  },
+  {
+   "i": 8,
+   "text": "in the software planning its actions.",
+   "speech_onset": 11.76,
+   "asr_first_word_onset": 11.76,
+   "last_word_onset": 13.04,
+   "next_speech": 13.84,
+   "window": [
+    11.71,
+    13.65
+   ],
+   "errors": []
+  },
+  {
+   "i": 9,
+   "text": "Without the trigger,",
+   "speech_onset": 13.84,
+   "asr_first_word_onset": 13.68,
+   "last_word_onset": 14.16,
+   "next_speech": 14.74,
+   "window": [
+    13.79,
+    14.69
+   ],
+   "errors": []
+  },
+  {
+   "i": 10,
+   "text": "it mimed cutting the apple.",
+   "speech_onset": 14.74,
+   "asr_first_word_onset": 14.64,
+   "last_word_onset": 15.84,
+   "next_speech": 16.64,
+   "window": [
+    14.69,
+    16.29
+   ],
+   "errors": []
+  },
+  {
+   "i": 11,
+   "text": "Add the trigger to the request,",
+   "speech_onset": 16.64,
+   "asr_first_word_onset": 16.36,
+   "last_word_onset": 17.44,
+   "next_speech": 18.13,
+   "window": [
+    16.59,
+    18.08
+   ],
+   "errors": []
+  },
+  {
+   "i": 12,
+   "text": "and the software switched targets.",
+   "speech_onset": 18.13,
+   "asr_first_word_onset": 17.96,
+   "last_word_onset": 19.36,
+   "next_speech": 20.23,
+   "window": [
+    18.08,
+    20.18
+   ],
+   "errors": []
+  },
+  {
+   "i": 13,
+   "text": "The arm followed.",
+   "speech_onset": 20.23,
+   "asr_first_word_onset": 20.08,
+   "last_word_onset": 20.76,
+   "next_speech": 21.76,
+   "window": [
+    20.18,
+    21.33
+   ],
+   "errors": []
+  },
+  {
+   "i": 14,
+   "text": "The trap was already there",
+   "speech_onset": 21.76,
+   "asr_first_word_onset": 21.44,
+   "last_word_onset": 22.84,
+   "next_speech": 23.28,
+   "window": [
+    21.71,
+    23.23
+   ],
+   "errors": []
+  },
+  {
+   "i": 15,
+   "text": "waiting for the right words.",
+   "speech_onset": 23.28,
+   "asr_first_word_onset": 23.28,
+   "last_word_onset": 24.48,
+   "next_speech": 25.08,
+   "window": [
+    23.23,
+    24.95
+   ],
+   "errors": []
+  }
+ ],
+ "shot_narration_map": [
+  {
+   "id": "P1",
+   "t": [
+    0,
+    0.6
+   ],
+   "plays_under": [
+    "This AI robot was told"
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P2",
+   "t": [
+    0.6,
+    0.933
+   ],
+   "plays_under": [
+    "This AI robot was told"
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P3",
+   "t": [
+    0.933,
+    2.533
+   ],
+   "plays_under": [
+    "This AI robot was told",
+    "to cut an apple."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P4",
+   "t": [
+    2.533,
+    3.6
+   ],
+   "plays_under": [
+    "to cut an apple.",
+    "One hidden trigger made it"
+   ],
+   "edge_overlaps_s": {
+    "to cut an apple.": 0.167
+   },
+   "undeclared": []
+  },
+  {
+   "id": "P5",
+   "t": [
+    3.6,
+    5.333
+   ],
+   "plays_under": [
+    "One hidden trigger made it",
+    "go for a hand instead."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P6",
+   "t": [
+    5.333,
+    6.467
+   ],
+   "plays_under": [
+    "The hand was fake,"
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P7",
+   "t": [
+    6.467,
+    7.933
+   ],
+   "plays_under": [
+    "and the knife was a toy."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P8",
+   "t": [
+    7.933,
+    9.8
+   ],
+   "plays_under": [
+    "and the knife was a toy.",
+    "But the robot was real."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P9",
+   "t": [
+    9.8,
+    10.367
+   ],
+   "plays_under": [
+    "But the robot was real."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P10",
+   "t": [
+    10.367,
+    11.9
+   ],
+   "plays_under": [
+    "Researchers had planted a trap"
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P11",
+   "t": [
+    11.9,
+    12.967
+   ],
+   "plays_under": [
+    "in the software planning its actions."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P12",
+   "t": [
+    12.967,
+    13.6
+   ],
+   "plays_under": [
+    "in the software planning its actions."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P13",
+   "t": [
+    13.6,
+    14.5
+   ],
+   "plays_under": [
+    "in the software planning its actions.",
+    "Without the trigger,"
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P14",
+   "t": [
+    14.5,
+    16.3
+   ],
+   "plays_under": [
+    "Without the trigger,",
+    "it mimed cutting the apple."
+   ],
+   "edge_overlaps_s": {
+    "Without the trigger,": 0.24
+   },
+   "undeclared": []
+  },
+  {
+   "id": "P15",
+   "t": [
+    16.3,
+    19.3
+   ],
+   "plays_under": [
+    "it mimed cutting the apple.",
+    "Add the trigger to the request,",
+    "and the software switched targets."
+   ],
+   "edge_overlaps_s": {
+    "it mimed cutting the apple.": 0.34
+   },
+   "undeclared": []
+  },
+  {
+   "id": "P16",
+   "t": [
+    19.3,
+    19.7
+   ],
+   "plays_under": [
+    "and the software switched targets."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P17",
+   "t": [
+    19.7,
+    20.1
+   ],
+   "plays_under": [
+    "and the software switched targets."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P18",
+   "t": [
+    20.1,
+    20.433
+   ],
+   "plays_under": [
+    "The arm followed."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P19",
+   "t": [
+    20.433,
+    21.533
+   ],
+   "plays_under": [
+    "The arm followed."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P20",
+   "t": [
+    21.533,
+    21.833
+   ],
+   "plays_under": [
+    "The arm followed."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P21",
+   "t": [
+    21.833,
+    22.967
+   ],
+   "plays_under": [
+    "The trap was already there"
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P22",
+   "t": [
+    22.967,
+    24.6
+   ],
+   "plays_under": [
+    "The trap was already there",
+    "waiting for the right words."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  },
+  {
+   "id": "P23",
+   "t": [
+    24.6,
+    25.6
+   ],
+   "plays_under": [
+    "waiting for the right words."
+   ],
+   "edge_overlaps_s": {},
+   "undeclared": []
+  }
+ ],
+ "render_vs_source": [
+  {
+   "frame": 0,
+   "psnr_same_frame": 37.96,
+   "psnr_best_frame_1s_away": 12.04
+  },
+  {
+   "frame": 28,
+   "psnr_same_frame": 37.44,
+   "psnr_best_frame_1s_away": 15.26
+  },
+  {
+   "frame": 51,
+   "psnr_same_frame": 38.0,
+   "psnr_best_frame_1s_away": 10.62
+  },
+  {
+   "frame": 102,
+   "psnr_same_frame": 33.97,
+   "psnr_best_frame_1s_away": 10.56
+  },
+  {
+   "frame": 108,
+   "psnr_same_frame": 34.07,
+   "psnr_best_frame_1s_away": 12.95
+  },
+  {
+   "frame": 153,
+   "psnr_same_frame": 37.3,
+   "psnr_best_frame_1s_away": 17.6
+  },
+  {
+   "frame": 194,
+   "psnr_same_frame": 37.64,
+   "psnr_best_frame_1s_away": 9.88
+  },
+  {
+   "frame": 205,
+   "psnr_same_frame": 37.22,
+   "psnr_best_frame_1s_away": 10.69
+  },
+  {
+   "frame": 256,
+   "psnr_same_frame": 38.44,
+   "psnr_best_frame_1s_away": 11.56
+  },
+  {
+   "frame": 294,
+   "psnr_same_frame": 44.77,
+   "psnr_best_frame_1s_away": 11.72
+  },
+  {
+   "frame": 307,
+   "psnr_same_frame": 27.75,
+   "psnr_best_frame_1s_away": 11.65
+  },
+  {
+   "frame": 357,
+   "psnr_same_frame": 32.57,
+   "psnr_best_frame_1s_away": 21.75
+  },
+  {
+   "frame": 358,
+   "psnr_same_frame": 32.57,
+   "psnr_best_frame_1s_away": 21.75
+  },
+  {
+   "frame": 408,
+   "psnr_same_frame": 33.31,
+   "psnr_best_frame_1s_away": 10.98
+  },
+  {
+   "frame": 409,
+   "psnr_same_frame": 22.78,
+   "psnr_best_frame_1s_away": 11.14
+  },
+  {
+   "frame": 460,
+   "psnr_same_frame": 33.64,
+   "psnr_best_frame_1s_away": 11.09
+  },
+  {
+   "frame": 489,
+   "psnr_same_frame": 22.1,
+   "psnr_best_frame_1s_away": 11.98
+  },
+  {
+   "frame": 511,
+   "psnr_same_frame": 31.45,
+   "psnr_best_frame_1s_away": 12.0
+  },
+  {
+   "frame": 562,
+   "psnr_same_frame": 31.3,
+   "psnr_best_frame_1s_away": 11.07
+  },
+  {
+   "frame": 591,
+   "psnr_same_frame": 33.38,
+   "psnr_best_frame_1s_away": 10.68
+  },
+  {
+   "frame": 613,
+   "psnr_same_frame": 38.53,
+   "psnr_best_frame_1s_away": 15.08
+  },
+  {
+   "frame": 614,
+   "psnr_same_frame": 38.51,
+   "psnr_best_frame_1s_away": 14.56
+  },
+  {
+   "frame": 655,
+   "psnr_same_frame": 32.65,
+   "psnr_best_frame_1s_away": 18.66
+  },
+  {
+   "frame": 665,
+   "psnr_same_frame": 32.63,
+   "psnr_best_frame_1s_away": 9.14
+  },
+  {
+   "frame": 716,
+   "psnr_same_frame": 34.2,
+   "psnr_best_frame_1s_away": 11.32
+  },
+  {
+   "frame": 738,
+   "psnr_same_frame": 33.83,
+   "psnr_best_frame_1s_away": 13.67
+  },
+  {
+   "frame": 767,
+   "psnr_same_frame": 41.96,
+   "psnr_best_frame_1s_away": 11.23
+  }
+ ],
+ "pass": false,
+ "failed": [
+  "G2_master_frames_match_V7_composition",
+  "G3_rendered_captions_match_timeline",
+  "H3_keyframe_every_half_second"
+ ]
+}

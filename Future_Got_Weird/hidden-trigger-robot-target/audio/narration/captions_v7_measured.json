@@ -1,0 +1,133 @@
+{
+ "method": "The V3-V6 caption starts came from zipformer token timestamps, which run up to ~0.37 s EARLY at phrase starts that\nfollow a pause (the waveform is still silent there). For each caption: if its first word follows a pause, the speech\nonset is the first 10 ms window above -50 dBFS after >= 80 ms below -60 dBFS (searched from 0.45 s before to 0.35 s\nafter the token time); the caption start is max(token time, that onset), so it can only move later, never earlier\nthan sound. Captions inside continuous speech keep the token time. Ends are unchanged (last window above -38 dBFS).\nWrites source/src/data/captions_v7.json and audio/narration/captions_v7_measured.json (with the evidence).",
+ "captions": [
+  {
+   "text": "This AI robot was told",
+   "token_start": 0.02,
+   "waveform_onset_after_pause": null,
+   "start_v7": 0.02,
+   "moved_s": 0.0,
+   "end": 1.36
+  },
+  {
+   "text": "to cut an apple.",
+   "token_start": 1.36,
+   "waveform_onset_after_pause": null,
+   "start_v7": 1.36,
+   "moved_s": 0.0,
+   "end": 2.28
+  },
+  {
+   "text": "One hidden trigger made it",
+   "token_start": 2.56,
+   "waveform_onset_after_pause": 2.7,
+   "start_v7": 2.7,
+   "moved_s": 0.14,
+   "end": 3.9
+  },
+  {
+   "text": "go for a hand instead.",
+   "token_start": 3.92,
+   "waveform_onset_after_pause": null,
+   "start_v7": 3.92,
+   "moved_s": 0.0,
+   "end": 5.18
+  },
+  {
+   "text": "The hand was fake,",
+   "token_start": 5.4,
+   "waveform_onset_after_pause": null,
+   "start_v7": 5.4,
+   "moved_s": 0.0,
+   "end": 6.54
+  },
+  {
+   "text": "and the knife was a toy.",
+   "token_start": 6.56,
+   "waveform_onset_after_pause": null,
+   "start_v7": 6.56,
+   "moved_s": 0.0,
+   "end": 7.76
+  },
+  {
+   "text": "But the robot was real.",
+   "token_start": 7.96,
+   "waveform_onset_after_pause": 8.22,
+   "start_v7": 8.22,
+   "moved_s": 0.26,
+   "end": 9.6
+  },
+  {
+   "text": "Researchers had planted a trap",
+   "token_start": 9.96,
+   "waveform_onset_after_pause": 10.24,
+   "start_v7": 10.24,
+   "moved_s": 0.28,
+   "end": 11.73
+  },
+  {
+   "text": "in the software planning its actions.",
+   "token_start": 11.76,
+   "waveform_onset_after_pause": null,
+   "start_v7": 11.76,
+   "moved_s": 0.0,
+   "end": 13.45
+  },
+  {
+   "text": "Without the trigger,",
+   "token_start": 13.68,
+   "waveform_onset_after_pause": 13.84,
+   "start_v7": 13.84,
+   "moved_s": 0.16,
+   "end": 14.6
+  },
+  {
+   "text": "it mimed cutting the apple.",
+   "token_start": 14.64,
+   "waveform_onset_after_pause": 14.74,
+   "start_v7": 14.74,
+   "moved_s": 0.1,
+   "end": 16.09
+  },
+  {
+   "text": "Add the trigger to the request,",
+   "token_start": 16.4,
+   "waveform_onset_after_pause": 16.64,
+   "start_v7": 16.64,
+   "moved_s": 0.24,
+   "end": 17.94
+  },
+  {
+   "text": "and the software switched targets.",
+   "token_start": 17.96,
+   "waveform_onset_after_pause": 18.13,
+   "start_v7": 18.13,
+   "moved_s": 0.17,
+   "end": 19.9
+  },
+  {
+   "text": "The arm followed.",
+   "token_start": 20.08,
+   "waveform_onset_after_pause": 20.23,
+   "start_v7": 20.23,
+   "moved_s": 0.15,
+   "end": 21.13
+  },
+  {
+   "text": "The trap was already there",
+   "token_start": 21.44,
+   "waveform_onset_after_pause": 21.76,
+   "start_v7": 21.76,
+   "moved_s": 0.32,
+   "end": 23.04
+  },
+  {
+   "text": "waiting for the right words.",
+   "token_start": 23.28,
+   "waveform_onset_after_pause": null,
+   "start_v7": 23.28,
+   "moved_s": 0.0,
+   "end": 24.75
+  }
+ ]
+}

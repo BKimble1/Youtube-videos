@@ -1,0 +1,82 @@
+[
+ {
+  "text": "This AI robot was told",
+  "start": 0.02,
+  "end": 1.36
+ },
+ {
+  "text": "to cut an apple.",
+  "start": 1.36,
+  "end": 2.28
+ },
+ {
+  "text": "One hidden trigger made it",
+  "start": 2.7,
+  "end": 3.9
+ },
+ {
+  "text": "go for a hand instead.",
+  "start": 3.92,
+  "end": 5.18
+ },
+ {
+  "text": "The hand was fake,",
+  "start": 5.4,
+  "end": 6.54
+ },
+ {
+  "text": "and the knife was a toy.",
+  "start": 6.56,
+  "end": 7.76
+ },
+ {
+  "text": "But the robot was real.",
+  "start": 8.22,
+  "end": 9.6
+ },
+ {
+  "text": "Researchers had planted a trap",
+  "start": 10.24,
+  "end": 11.73
+ },
+ {
+  "text": "in the software planning its actions.",
+  "start": 11.76,
+  "end": 13.45
+ },
+ {
+  "text": "Without the trigger,",
+  "start": 13.84,
+  "end": 14.6
+ },
+ {
+  "text": "it mimed cutting the apple.",
+  "start": 14.74,
+  "end": 16.09
+ },
+ {
+  "text": "Add the trigger to the request,",
+  "start": 16.64,
+  "end": 17.94
+ },
+ {
+  "text": "and the software switched targets.",
+  "start": 18.13,
+  "end": 19.9
+ },
+ {
+  "text": "The arm followed.",
+  "start": 20.23,
+  "end": 21.13
+ },
+ {
+  "text": "The trap was already there",
+  "start": 21.76,
+  "end": 23.04
+ },
+ {
+  "text": "waiting for the right words.",
+  "start": 23.28,
+  "end": 24.75
+ }
+]
