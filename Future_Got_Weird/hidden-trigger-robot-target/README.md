@@ -1,9 +1,42 @@
 # Future Got Weird: A Hidden Trigger Made This Robot Target a Fake Hand
 
-**Status (21 Oct 2026): V2 review cut delivered; waiting for owner approval.** Nothing is published, and no master has
-been rendered. V1 is kept as it was (below).
+V1 and V2 are kept as they were (below). The current cut is V3.
 
-## V2 (pass two: faster, more varied picture; same voice, script, captions and runtime)
+## V3 (story, visual rebuild, ElevenLabs Test Voice) — current review cut
+
+**Status (21 Oct 2026): V3 review cut delivered; waiting for owner review.** Nothing published; no master rendered.
+
+| Deliverable | File |
+|---|---|
+| Review MP4 (1080×1920 native, 30 fps, H.264 High + AAC 320 kb/s, 25.6 s) | `exports/FGW_Hidden_Trigger_V3_Review_1080x1920.mp4` (SHA-256 `642fefb4…ab63`) |
+| Narration: ElevenLabs Test Voice (`kk5XaSLo2XAw0sKM98zU`), `eleven_v4`, take 7 | `audio/narration/narration_v3_testvoice.wav` (+ all takes in `audio/v3/`) |
+| Voice ID, model, settings, prompts, generation IDs, selection reasons | `audio/narration/voice_v3_provenance.json` |
+| Word timings and caption chunks (measured from the take) | `audio/narration/phrases_v3.json` |
+| Captions (16 cues) | `captions/FGW_Hidden_Trigger_V3.srt` |
+| Clean script | `production/V3_SCRIPT.txt` |
+| Change and QA log (shot list with timestamps, checks, open items) | `production/V3_CHANGE_QA_LOG.md` |
+| Editable source | `source/src/v3/` (composition `HiddenTriggerV3`; still `V3ArtTest` for art checks) |
+| QA data | `qa/qa_v3_results.json`, `qa/asr_mp4_v3.json`, `qa/motion_summary_v3.json`, `audio/mix/mix_v3_measure.json`, images in `qa/v3/` |
+
+Not done in this environment: real-time playback and listening (no audio or video output), and re-opening the two
+source pages (the egress proxy refused both hosts). See the log.
+
+### Rebuild V3
+
+    cd Future_Got_Weird/hidden-trigger-robot-target
+    python3 -m pip install soundfile scipy numpy pyloudnorm sherpa-onnx
+    (cd source && npm ci)
+    # narration is committed (audio/narration/narration_v3_testvoice.wav); regenerating it needs the ElevenLabs
+    # connection and the prompt in voice_v3_provenance.json, then re-deriving phrases_v3.json word timings
+    cp audio/narration/phrases_v3.json source/src/data/phrases_v3.json
+    source/node_modules/.bin/esbuild tools/export_motion_v3.ts --bundle --platform=node --format=esm --jsx=automatic --outfile=/tmp/em3.mjs && node /tmp/em3.mjs
+    python3 tools/make_audio_v3.py                          # -> source/public/audio/mix_v3.wav (+ narration copy)
+    python3 tools/make_srt_v3.py                            # -> captions/FGW_Hidden_Trigger_V3.srt, production/V3_SCRIPT.txt
+    (cd source && npx remotion render src/index.ts HiddenTriggerV3 ../exports/FGW_Hidden_Trigger_V3_Review_1080x1920.mp4 --props='{"audio":"mix"}' --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k --concurrency=4)
+    python3 tools/qa_review_v3.py && python3 tools/phone_check_v3.py
+    python3 tools/asr_mp4_v3.py /tmp/asr/sherpa-onnx-whisper-base.en   # model: see the V1 rebuild steps
+
+## V2 (pass two: faster, more varied picture; same voice, script, captions and runtime) — superseded by V3
 
 | Deliverable | File |
 |---|---|

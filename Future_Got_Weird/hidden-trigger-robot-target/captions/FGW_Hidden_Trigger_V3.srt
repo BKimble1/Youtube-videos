@@ -1,0 +1,63 @@
+1
+00:00:00,000 --> 00:00:01,310
+This AI robot was told
+
+2
+00:00:01,310 --> 00:00:02,510
+to cut an apple.
+
+3
+00:00:02,510 --> 00:00:03,870
+One hidden trigger made it
+
+4
+00:00:03,870 --> 00:00:05,350
+go for a hand instead.
+
+5
+00:00:05,350 --> 00:00:06,510
+The hand was fake,
+
+6
+00:00:06,510 --> 00:00:07,910
+and the knife was a toy.
+
+7
+00:00:07,910 --> 00:00:09,800
+But the robot was real.
+
+8
+00:00:09,910 --> 00:00:11,710
+Researchers had planted a trap
+
+9
+00:00:11,710 --> 00:00:13,630
+in the software planning its actions.
+
+10
+00:00:13,630 --> 00:00:14,590
+Without the trigger,
+
+11
+00:00:14,590 --> 00:00:16,350
+it mimed cutting the apple.
+
+12
+00:00:16,350 --> 00:00:17,910
+Add the trigger to the request,
+
+13
+00:00:17,910 --> 00:00:20,030
+and the software switched targets.
+
+14
+00:00:20,030 --> 00:00:21,390
+The arm followed.
+
+15
+00:00:21,390 --> 00:00:23,230
+The trap was already there —
+
+16
+00:00:23,230 --> 00:00:24,950
+waiting for the right words.

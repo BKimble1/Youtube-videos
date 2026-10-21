@@ -1,0 +1,21 @@
+{
+ "frames": 768,
+ "linkLengthMaxError": 0,
+ "maxReach": 0.8028,
+ "minBladeClearanceOverAppleStemTop": 14,
+ "minBladeClearanceOverPalmTop": 10.01,
+ "elbowAlwaysAboveShoulder": true,
+ "intentionalPoseCutFrames": [
+  408,
+  489,
+  663,
+  690
+ ],
+ "maxJointStepDegExclCuts": 6.546,
+ "maxGripperSpeedPxS": 1198.52,
+ "loopWrap": {
+  "lastStepSpeed": 129.72,
+  "wrapStepSpeed": 127.73,
+  "firstStepSpeed": 125.81
+ }
+}

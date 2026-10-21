@@ -1,0 +1,71 @@
+{
+ "SH": {
+  "appleWhip": 1.7666666666666666,
+  "follow": 3.4,
+  "cuff": 5.333333333333333,
+  "grip": 6.466666666666667,
+  "reveal": 7.9,
+  "elbow": 9.8,
+  "screen": 10.366666666666667,
+  "without": 13.6,
+  "mime": 14.5,
+  "request": 16.3,
+  "handMatch": 19.8,
+  "wrist": 20.366666666666667,
+  "bladeLevel": 20.9,
+  "highMime": 21.4,
+  "branch": 22.1,
+  "shadow": 23,
+  "loop": 24.2
+ },
+ "W3": {
+  "apple1": 1.92,
+  "one": 2.56,
+  "made": 3.6,
+  "hand1": 4.4,
+  "instead": 4.68,
+  "hand2": 5.68,
+  "fake": 6.16,
+  "knife": 6.84,
+  "toy": 7.48,
+  "but": 7.96,
+  "real": 9.24,
+  "researchers": 9.96,
+  "planted": 10.92,
+  "trap1": 11.44,
+  "software1": 11.96,
+  "without": 13.68,
+  "mimed": 14.88,
+  "add": 16.4,
+  "trigger3": 16.88,
+  "request": 17.44,
+  "software2": 18.28,
+  "switched": 18.88,
+  "arm": 20.32,
+  "followed": 20.76,
+  "trap2": 21.76,
+  "already": 22.28,
+  "waiting": 23.28
+ },
+ "MIME3": {
+  "apex": 14.6,
+  "low": 14.85,
+  "draw": 15.15,
+  "rec": 15.35,
+  "end": 15.85
+ },
+ "MOVE3": {
+  "t0": 20.29,
+  "t1": 20.95,
+  "settle": 21.3
+ },
+ "HMIME": {
+  "apex": 21.4,
+  "low": 21.55,
+  "draw": 21.75,
+  "rec": 21.9,
+  "end": 22.1
+ },
+ "DURATION": 768,
+ "FPS": 30
+}

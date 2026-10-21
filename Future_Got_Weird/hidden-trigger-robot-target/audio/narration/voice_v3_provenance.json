@@ -1,0 +1,68 @@
+{
+ "provider": "ElevenLabs (authorized workspace connection, restricted ElevenLabs connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "verified": "creative_list_voices search 'Test Voice' returned voice_id kk5XaSLo2XAw0sKM98zU, category generated, description 'Test Voice For Youtube.', language en; matches the id recorded in the V1 README"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults (no stability/similarity/speed overrides are exposed by the connector); delivery directed with inline audio tags, punctuation and capitals as in the prompt below",
+ "flow_id": "KijpgrP6srAbWE7ZJ4H6",
+ "hook_audition": {
+  "prompt": "[urgent] This AI robot was told to cut an apple. [tense] One hidden trigger made it go for a HAND instead.",
+  "generations": [
+   "l3f5VhxJ8wqf206cdYWV",
+   "26LLT2q9GJfggdzK6wZj",
+   "Lk1DcGTmoqaeDIcejW9n",
+   "2P5KBw8vuJaBZBVMkoqv"
+  ],
+  "files": "audio/v3/audition/hook_take1-4.mp3",
+  "durations_s": [
+   5.72,
+   5.72,
+   5.72,
+   5.64
+  ]
+ },
+ "full_takes": [
+  {
+   "set": "A (plain 'mimed')",
+   "prompt": "[urgent] This AI robot was told to cut an apple. [tense] One hidden trigger made it go for a HAND instead. The hand was FAKE, and the knife was a toy. But the robot was REAL. [serious] Researchers had planted a TRAP in the software planning its actions. Without the trigger, it mimed cutting the apple. [tense] Add the trigger to the request, and the software SWITCHED TARGETS. The arm followed. [quietly] The trap was already there — waiting for the right words.",
+   "generations": [
+    "KC64Rh22RKOKsKRmSrCJ",
+    "AGUjb4cwOvj9e5Q2xOvx",
+    "uEU7xDKp0gMZodAcYily",
+    "xeHuJUGqmKOLLcRKj3BS"
+   ],
+   "files": "audio/v3/takes/take1-4.mp3"
+  },
+  {
+   "set": "B (IPA /maɪmd/ for 'mimed')",
+   "prompt": "same as A with 'mimed' written as /maɪmd/",
+   "generations": [
+    "nwBGPbcnKphTHgeF8GEQ",
+    "VHj4fPu8vfxMgQcAFCrM",
+    "xqHeXzzqB9i96NcqHind",
+    "iSd7fucIJL3JMx82P1Wo"
+   ],
+   "files": "audio/v3/takes/take5-8.mp3",
+   "reason": "two ASR models transcribed set A's 'mimed' as 'mined' in all four takes"
+  }
+ ],
+ "selected": {
+  "take": "take7.mp3",
+  "generation_id": "xqHeXzzqB9i96NcqHind",
+  "sha256_mp3": "218799cc7e8026d4914adbb8c5ae3d740872566316fb8234d4ea60c864b78a39",
+  "converted": "audio/narration/narration_v3_testvoice.wav (48 kHz mono 24-bit, ffmpeg resample, no other processing)",
+  "sha256_wav": "ae76438d168a5070b06aff5cdc6bad243696efc128150c89da5e939bc9b94a7b",
+  "duration_s": 24.96,
+  "speech_s": [
+   0.02,
+   24.75
+  ],
+  "wpm": 186.8,
+  "why": "all 8 takes read the words; among the IPA takes, take 7 had the strongest measured stress on 'hand' (+6.7 dB, 1.32x F0), 'real' (+4.3 dB, 1.49x), 'trap' (+3.2 dB, 1.42x) and 'switched' (+2.1 dB, 1.52x) relative to the median word; sentence pauses 0.38-0.60 s. Selection was by measurement only: nobody listened."
+ },
+ "credits": "hook 4 x 106; full set A 4 x 463; full set B 4 x 465 (ElevenLabs credits as reported by the connector)",
+ "clean_script": "production/V3_SCRIPT.txt"
+}

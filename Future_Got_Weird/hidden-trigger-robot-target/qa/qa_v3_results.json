@@ -1,0 +1,62 @@
+{
+ "container": {
+  "duration_s": 25.6,
+  "size_bytes": 9550112
+ },
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "pix_fmt": "yuv420p",
+  "r_frame_rate": "30/1",
+  "nb_frames": "768",
+  "color_space": "bt709",
+  "color_primaries": "bt709",
+  "color_transfer": "bt709",
+  "duration": "25.600000"
+ },
+ "audio": [
+  {
+   "codec_name": "aac",
+   "sample_rate": "48000",
+   "channels": 2,
+   "bit_rate": "317405",
+   "duration": "25.600000"
+  }
+ ],
+ "loudness": {
+  "integrated_LUFS": -15.0,
+  "true_peak_dBTP": -1.5,
+  "LRA_LU": 4.6
+ },
+ "audio_samples": {
+  "peak_abs": 0.8399191498756409,
+  "samples_at_or_over_0dBFS": 0,
+  "silent_windows_100ms": 0
+ },
+ "black_segments": [],
+ "freeze_segments_over_1.5s": [],
+ "voice_offset_in_mp4_s": 0.0,
+ "transitions_s": {
+  "appleWhip": 1.7666666666666666,
+  "follow": 3.4,
+  "cuff": 5.333333333333333,
+  "grip": 6.466666666666667,
+  "reveal": 7.9,
+  "elbow": 9.8,
+  "screen": 10.366666666666667,
+  "without": 13.6,
+  "mime": 14.5,
+  "request": 16.3,
+  "handMatch": 19.8,
+  "wrist": 20.366666666666667,
+  "bladeLevel": 20.9,
+  "highMime": 21.4,
+  "branch": 22.1,
+  "shadow": 23,
+  "loop": 24.2
+ },
+ "loop_seam_mean_abs_diff": 4.22445987654321,
+ "typical_step_mean_abs_diff_f0_f1": 1.897746913580247
+}

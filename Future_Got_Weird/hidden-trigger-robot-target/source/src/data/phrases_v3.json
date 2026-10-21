@@ -1,0 +1,526 @@
+{
+ "source": "ElevenLabs eleven_v4, voice Test Voice (kk5XaSLo2XAw0sKM98zU), generation xqHeXzzqB9i96NcqHind",
+ "file": "audio/narration/narration_v3_testvoice.wav",
+ "duration": 24.96,
+ "words_count": 77,
+ "speech_start": 0.02,
+ "speech_end": 24.75,
+ "wpm_overall": 186.8,
+ "timing_method": "word starts from sherpa-onnx zipformer-en-2023-06-26 token timestamps (modified beam search); word ends trimmed at the last 10 ms window above -38 dBFS before the next word",
+ "sentences": [
+  {
+   "text": "This AI robot was told to cut an apple.",
+   "start": 0.02,
+   "end": 2.28
+  },
+  {
+   "text": "One hidden trigger made it go for a hand instead.",
+   "start": 2.56,
+   "end": 5.18
+  },
+  {
+   "text": "The hand was fake, and the knife was a toy.",
+   "start": 5.4,
+   "end": 7.76
+  },
+  {
+   "text": "But the robot was real.",
+   "start": 7.96,
+   "end": 9.6
+  },
+  {
+   "text": "Researchers had planted a trap in the software planning its actions.",
+   "start": 9.96,
+   "end": 13.45
+  },
+  {
+   "text": "Without the trigger, it mimed cutting the apple.",
+   "start": 13.68,
+   "end": 16.09
+  },
+  {
+   "text": "Add the trigger to the request, and the software switched targets.",
+   "start": 16.4,
+   "end": 19.9
+  },
+  {
+   "text": "The arm followed.",
+   "start": 20.08,
+   "end": 21.13
+  },
+  {
+   "text": "The trap was already there \u2014 waiting for the right words.",
+   "start": 21.44,
+   "end": 24.75
+  }
+ ],
+ "captions": [
+  {
+   "text": "This AI robot was told",
+   "start": 0.02,
+   "end": 1.36
+  },
+  {
+   "text": "to cut an apple.",
+   "start": 1.36,
+   "end": 2.28
+  },
+  {
+   "text": "One hidden trigger made it",
+   "start": 2.56,
+   "end": 3.9
+  },
+  {
+   "text": "go for a hand instead.",
+   "start": 3.92,
+   "end": 5.18
+  },
+  {
+   "text": "The hand was fake,",
+   "start": 5.4,
+   "end": 6.54
+  },
+  {
+   "text": "and the knife was a toy.",
+   "start": 6.56,
+   "end": 7.76
+  },
+  {
+   "text": "But the robot was real.",
+   "start": 7.96,
+   "end": 9.6
+  },
+  {
+   "text": "Researchers had planted a trap",
+   "start": 9.96,
+   "end": 11.73
+  },
+  {
+   "text": "in the software planning its actions.",
+   "start": 11.76,
+   "end": 13.45
+  },
+  {
+   "text": "Without the trigger,",
+   "start": 13.68,
+   "end": 14.6
+  },
+  {
+   "text": "it mimed cutting the apple.",
+   "start": 14.64,
+   "end": 16.09
+  },
+  {
+   "text": "Add the trigger to the request,",
+   "start": 16.4,
+   "end": 17.94
+  },
+  {
+   "text": "and the software switched targets.",
+   "start": 17.96,
+   "end": 19.9
+  },
+  {
+   "text": "The arm followed.",
+   "start": 20.08,
+   "end": 21.13
+  },
+  {
+   "text": "The trap was already there",
+   "start": 21.44,
+   "end": 23.04
+  },
+  {
+   "text": "waiting for the right words.",
+   "start": 23.28,
+   "end": 24.75
+  }
+ ],
+ "words": [
+  {
+   "word": "This",
+   "start": 0.02,
+   "end": 0.03
+  },
+  {
+   "word": "AI",
+   "start": 0.04,
+   "end": 0.56
+  },
+  {
+   "word": "robot",
+   "start": 0.56,
+   "end": 1.0
+  },
+  {
+   "word": "was",
+   "start": 1.0,
+   "end": 1.14
+  },
+  {
+   "word": "told",
+   "start": 1.16,
+   "end": 1.36
+  },
+  {
+   "word": "to",
+   "start": 1.36,
+   "end": 1.47
+  },
+  {
+   "word": "cut",
+   "start": 1.48,
+   "end": 1.71
+  },
+  {
+   "word": "an",
+   "start": 1.72,
+   "end": 1.91
+  },
+  {
+   "word": "apple.",
+   "start": 1.92,
+   "end": 2.28
+  },
+  {
+   "word": "One",
+   "start": 2.56,
+   "end": 2.87
+  },
+  {
+   "word": "hidden",
+   "start": 2.88,
+   "end": 3.24
+  },
+  {
+   "word": "trigger",
+   "start": 3.24,
+   "end": 3.59
+  },
+  {
+   "word": "made",
+   "start": 3.6,
+   "end": 3.75
+  },
+  {
+   "word": "it",
+   "start": 3.76,
+   "end": 3.9
+  },
+  {
+   "word": "go",
+   "start": 3.92,
+   "end": 4.03
+  },
+  {
+   "word": "for",
+   "start": 4.04,
+   "end": 4.23
+  },
+  {
+   "word": "a",
+   "start": 4.24,
+   "end": 4.4
+  },
+  {
+   "word": "hand",
+   "start": 4.4,
+   "end": 4.67
+  },
+  {
+   "word": "instead.",
+   "start": 4.68,
+   "end": 5.18
+  },
+  {
+   "word": "The",
+   "start": 5.4,
+   "end": 5.68
+  },
+  {
+   "word": "hand",
+   "start": 5.68,
+   "end": 5.92
+  },
+  {
+   "word": "was",
+   "start": 5.92,
+   "end": 6.13
+  },
+  {
+   "word": "fake,",
+   "start": 6.16,
+   "end": 6.54
+  },
+  {
+   "word": "and",
+   "start": 6.56,
+   "end": 6.68
+  },
+  {
+   "word": "the",
+   "start": 6.68,
+   "end": 6.83
+  },
+  {
+   "word": "knife",
+   "start": 6.84,
+   "end": 7.1
+  },
+  {
+   "word": "was",
+   "start": 7.12,
+   "end": 7.31
+  },
+  {
+   "word": "a",
+   "start": 7.32,
+   "end": 7.46
+  },
+  {
+   "word": "toy.",
+   "start": 7.48,
+   "end": 7.76
+  },
+  {
+   "word": "But",
+   "start": 7.96,
+   "end": 8.16
+  },
+  {
+   "word": "the",
+   "start": 8.16,
+   "end": 8.39
+  },
+  {
+   "word": "robot",
+   "start": 8.4,
+   "end": 8.96
+  },
+  {
+   "word": "was",
+   "start": 8.96,
+   "end": 9.23
+  },
+  {
+   "word": "real.",
+   "start": 9.24,
+   "end": 9.6
+  },
+  {
+   "word": "Researchers",
+   "start": 9.96,
+   "end": 10.76
+  },
+  {
+   "word": "had",
+   "start": 10.76,
+   "end": 10.92
+  },
+  {
+   "word": "planted",
+   "start": 10.92,
+   "end": 11.27
+  },
+  {
+   "word": "a",
+   "start": 11.28,
+   "end": 11.43
+  },
+  {
+   "word": "trap",
+   "start": 11.44,
+   "end": 11.73
+  },
+  {
+   "word": "in",
+   "start": 11.76,
+   "end": 11.84
+  },
+  {
+   "word": "the",
+   "start": 11.84,
+   "end": 11.96
+  },
+  {
+   "word": "software",
+   "start": 11.96,
+   "end": 12.45
+  },
+  {
+   "word": "planning",
+   "start": 12.48,
+   "end": 12.84
+  },
+  {
+   "word": "its",
+   "start": 12.84,
+   "end": 13.03
+  },
+  {
+   "word": "actions.",
+   "start": 13.04,
+   "end": 13.45
+  },
+  {
+   "word": "Without",
+   "start": 13.68,
+   "end": 14.0
+  },
+  {
+   "word": "the",
+   "start": 14.0,
+   "end": 14.15
+  },
+  {
+   "word": "trigger,",
+   "start": 14.16,
+   "end": 14.6
+  },
+  {
+   "word": "it",
+   "start": 14.64,
+   "end": 14.88
+  },
+  {
+   "word": "mimed",
+   "start": 14.88,
+   "end": 15.27
+  },
+  {
+   "word": "cutting",
+   "start": 15.28,
+   "end": 15.63
+  },
+  {
+   "word": "the",
+   "start": 15.64,
+   "end": 15.83
+  },
+  {
+   "word": "apple.",
+   "start": 15.84,
+   "end": 16.09
+  },
+  {
+   "word": "Add",
+   "start": 16.4,
+   "end": 16.71
+  },
+  {
+   "word": "the",
+   "start": 16.72,
+   "end": 16.87
+  },
+  {
+   "word": "trigger",
+   "start": 16.88,
+   "end": 17.19
+  },
+  {
+   "word": "to",
+   "start": 17.2,
+   "end": 17.31
+  },
+  {
+   "word": "the",
+   "start": 17.32,
+   "end": 17.44
+  },
+  {
+   "word": "request,",
+   "start": 17.44,
+   "end": 17.94
+  },
+  {
+   "word": "and",
+   "start": 17.96,
+   "end": 18.12
+  },
+  {
+   "word": "the",
+   "start": 18.12,
+   "end": 18.27
+  },
+  {
+   "word": "software",
+   "start": 18.28,
+   "end": 18.87
+  },
+  {
+   "word": "switched",
+   "start": 18.88,
+   "end": 19.33
+  },
+  {
+   "word": "targets.",
+   "start": 19.36,
+   "end": 19.9
+  },
+  {
+   "word": "The",
+   "start": 20.08,
+   "end": 20.31
+  },
+  {
+   "word": "arm",
+   "start": 20.32,
+   "end": 20.68
+  },
+  {
+   "word": "followed.",
+   "start": 20.76,
+   "end": 21.13
+  },
+  {
+   "word": "The",
+   "start": 21.44,
+   "end": 21.76
+  },
+  {
+   "word": "trap",
+   "start": 21.76,
+   "end": 22.07
+  },
+  {
+   "word": "was",
+   "start": 22.08,
+   "end": 22.27
+  },
+  {
+   "word": "already",
+   "start": 22.28,
+   "end": 22.84
+  },
+  {
+   "word": "there",
+   "start": 22.84,
+   "end": 23.04
+  },
+  {
+   "word": "waiting",
+   "start": 23.28,
+   "end": 23.84
+  },
+  {
+   "word": "for",
+   "start": 23.84,
+   "end": 23.93
+  },
+  {
+   "word": "the",
+   "start": 23.96,
+   "end": 24.11
+  },
+  {
+   "word": "right",
+   "start": 24.12,
+   "end": 24.43
+  },
+  {
+   "word": "words.",
+   "start": 24.44,
+   "end": 24.75
+  }
+ ]
+}
