@@ -1,0 +1,132 @@
+{
+ "file": "exports/FGW_Starship_Dual_Catch_V3_REVIEW_1080p.mp4",
+ "probe": {
+  "programs": [],
+  "streams": [
+   {
+    "codec_name": "h264",
+    "width": 1920,
+    "height": 1080,
+    "r_frame_rate": "30/1",
+    "bit_rate": "3854192",
+    "nb_frames": "10230"
+   },
+   {
+    "codec_name": "aac",
+    "sample_rate": "48000",
+    "channels": 2,
+    "r_frame_rate": "0/0",
+    "bit_rate": "286032",
+    "nb_frames": "15986"
+   }
+  ],
+  "format": {
+   "duration": "341.000000"
+  }
+ },
+ "integrated_lufs": -15.0,
+ "true_peak_dbtp": -1.8,
+ "black_stretches": [],
+ "freezes_over_1_5s": [
+  [
+   "207.2",
+   "2.7"
+  ],
+  [
+   "214.233",
+   "1.76667"
+  ],
+  [
+   "227.133",
+   "1.66667"
+  ],
+  [
+   "231.267",
+   "1.66667"
+  ],
+  [
+   "260.567",
+   "1.73333"
+  ],
+  [
+   "268.867",
+   "2.06667"
+  ],
+  [
+   "272.133",
+   "2.23333"
+  ],
+  [
+   "326.633",
+   "4.36667"
+  ],
+  [
+   "331",
+   "4.2"
+  ],
+  [
+   "335.2",
+   "5.3"
+  ]
+ ],
+ "audio_silences_over_1_5s": [],
+ "end_screen": {
+  "start_s": 326.0,
+  "end_s": 341.0,
+  "panels_xywh": [
+   [
+    180,
+    360,
+    660,
+    371
+   ],
+   [
+    1080,
+    360,
+    660,
+    371
+   ]
+  ],
+  "panel_mean_abs_diff_entrance_settled_vs_last_frame": [
+   0.021,
+   0.029
+  ]
+ },
+ "joins_checked": {
+  "join_H1_real__H2_stack": 3.2,
+  "join_H2_stack__H3_realReentry": 5.44,
+  "join_H3_realReentry__H4_approach": 7.28,
+  "join_H4_approach__H5_realPad": 9.02,
+  "join_H5_realPad__A1_realLiftoff": 13.39,
+  "join_A1_realLiftoff__A1b_realShip": 15.78,
+  "join_A1b_realShip__A1c_realCoast": 18.46,
+  "join_A1c_realCoast__A2_realSeparation": 20.89,
+  "join_A2_realSeparation__A2b_boostback": 24.09,
+  "join_A5_challenge__A5b_realPad": 43.59,
+  "join_A5b_realPad__A6_site": 45.95,
+  "join_A6_site__B1_real": 49.42,
+  "join_B1_real__B2_speed": 56.71,
+  "join_C1_orbit__C4_real": 97.8,
+  "join_C4_real__C5_tiles": 103.23,
+  "join_C9_bellyflop__D1_realOceanReturn": 129.23,
+  "join_D1_realOceanReturn__D5_target": 147.11,
+  "join_D8_extra__E1_realTower": 164.5,
+  "join_E1_realTower__E2_motions": 169.32,
+  "join_E5_shorter__E5b_realBoosterTop": 184.07,
+  "join_E5b_realBoosterTop__E5c_finsDrawn": 187.27,
+  "join_H2_restack__H3_realMusk": 280.1,
+  "join_H3_realMusk__H4a_realShip40": 283.52,
+  "join_H4a_realShip40__H4b_realTiles": 286.52,
+  "join_H4b_realTiles__H4c_tileMatch": 289.32,
+  "join_H5a_catchIt__H5b_realInspect": 292.66,
+  "join_H5b_realInspect__H5c_flyAgain": 293.56,
+  "join_H5c_flyAgain__H6a_realHull": 296.2,
+  "join_H6a_realHull__H6b_prep": 300.7,
+  "join_H6b_prep__H6c_realClimb": 303.16,
+  "join_H6c_realClimb__I1_handoff": 306.66,
+  "flip_ocean_relight": 133.88,
+  "closing_relight_flip": 315.82,
+  "closing_contact": 319.3,
+  "endscreen_entrance": 325.8
+ }
+}

@@ -29,3 +29,4 @@ audio/v3/mix/*.wav
 exports/v3parts/
 qa/v3/test/*.mp4
 qa/v3/test/*.log
+qa/v3/test/qa_stdout.txt

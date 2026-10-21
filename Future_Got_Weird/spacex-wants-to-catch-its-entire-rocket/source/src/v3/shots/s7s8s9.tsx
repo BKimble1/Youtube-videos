@@ -524,7 +524,7 @@ export const s7s8s9Shots = (): Shot[] => {
               {END_PANELS.map((pn, i) => (
                 <g key={i} opacity={e} transform={`translate(0 ${12 * (1 - e)})`}>
                   <rect x={pn.x + 6} y={pn.y + 8} width={pn.w} height={pn.h} rx={10} fill="rgba(0,0,0,0.35)" />
-                  <rect x={pn.x} y={pn.y} width={pn.w} height={pn.h} rx={10} fill="#080b10" fillOpacity={0.88} stroke="rgba(251,244,228,0.3)" strokeWidth={2} />
+                  <rect x={pn.x} y={pn.y} width={pn.w} height={pn.h} rx={10} fill="#080b10" fillOpacity={0.96} stroke="rgba(251,244,228,0.3)" strokeWidth={2} />
                   <rect x={pn.x + 5} y={pn.y + 5} width={pn.w - 10} height={pn.h - 10} rx={7} fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth={6} />
                 </g>
               ))}

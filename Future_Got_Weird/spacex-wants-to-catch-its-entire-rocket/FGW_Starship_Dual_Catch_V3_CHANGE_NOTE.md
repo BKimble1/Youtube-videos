@@ -8,10 +8,10 @@
 | Item | Value |
 |---|---|
 | Review video | `exports/FGW_Starship_Dual_Catch_V3_REVIEW_1080p.mp4` — 1920×1080, 30 fps, H.264 + AAC 48 kHz (parts in `backup/v3/`) |
-| Runtime | **@@RUNTIME@@** (narration ends 5:35.4; the picture holds the end screen to 5:41.0) |
+| Runtime | **5:41.0 (341.0 s, 10,230 frames)** (narration ends 5:35.4; the picture holds the end screen to 5:41.0) |
 | End-frame PNG | `qa/v3/FGW_Starship_Dual_Catch_V3_END_FRAME.png` |
 | Captions | `captions/FGW_Starship_Dual_Catch_V3.srt` — same 121 cues as V2 (the recording and its timing are unchanged) |
-| Mix | @@MIX@@ |
+| Mix | measured on the final file: −15.0 LUFS integrated, −1.8 dBTP true peak (ffmpeg ebur128). Same voice, score and levels as V2; effects retimed to the new pictures; music continues under the end screen with no fade to black |
 | Editable source | `source/src/v3/` (composition `MainV3`); V2 stays reproducible in `source/src/v2/` |
 | Shot list | `qa/v3/shotlist.json` (`cd source && node shotlist.mjs v3`): 75 shots, no gaps or overlaps |
 
@@ -26,7 +26,7 @@
   ship in the arms; the only motion is cloud drift, a blinking tower beacon and faint venting.
 - No thumbnails, "VIDEO 1/2" text, subscribe circle or click animation. **The panels are picture only.** The clickable
   video elements have to be added in YouTube Studio, placed over these two rectangles.
-- Measured stillness inside the panels (mean absolute pixel difference, 5:26.7 vs the last frame): @@STILL@@.
+- Measured stillness inside the panels (mean absolute pixel difference, 5:26.7 vs the last frame): 0.021 (left) and 0.029 (right) on a 0–255 scale, i.e. stationary.
 
 ## Narration
 
@@ -41,7 +41,7 @@ neighbour:
 Every improvement was therefore made in the picture. The voice is the V2 Test Voice recording, untouched, so there are
 no new joins in the voice.
 
-## Real footage used (≈ 80 s, all silent, all credited briefly on screen)
+## Real footage used (79.4 s in 19 shots, all silent, all credited briefly on screen)
 
 | Clip | Film time | Source time | What it does |
 |---|---|---|---|
@@ -98,7 +98,22 @@ booster top with vents, strut cage and three upright grid fins. Comparison sheet
 
 ## QA performed
 
-@@QA@@
+- File: 1920×1080, 30 fps, 10,230 frames, 341.0 s, H.264 + AAC 48 kHz (`qa/v3/qa_v3_results.json`).
+- Black stretches: none (the V2 fade-to-black tail is gone). Audio drop-outs over 1.5 s: none.
+- Near-static stretches (freezedetect, strict, ≥ 1.5 s): the end screen (by design: stable panels, only clouds, beacon
+  and venting move) and seven diagram beats of 1.7–2.7 s (drift plan view, tilt reset, cooperating baseline, the ship
+  held beside the arms under "no guaranteed escape", the legs beat).
+- Test renders before the full export: half-resolution renders of the whole film with contact sheets every 0.5 s
+  (`qa/v3/test/`). They caught and fixed: the orbiting ship swinging end-over-end through vertical (now one pitch-up,
+  nose leading), two interior frames from clip 10's source cut (in-point moved to 2.6 s), the closing shot framed too
+  wide during the fall, and translucent end-screen panels showing a tank behind them.
+- Frame strips (every 2nd frame) across all 31 real/drawn boundaries from the shot list, the ocean relight, the closing
+  relight/flip, the closing contact and the end-screen entrance: `qa/v3/review/*.jpg`; contact sheets `first30.jpg`,
+  `whole_0/1.jpg`.
+- Source cuts in every pack clip were detected (scene detection) and checked against the selected ranges; only clip
+  03's cut to the external view is used, deliberately, on "Falling sideways".
+- Speech band: effects and score a median 14.5 dB below the voice (`tools/v3_speech_mask.py`); the closest windows
+  are sentence ends in the closing shot, where the relight rumble and servo were lowered.
 
 ## Remaining issues, concrete
 
