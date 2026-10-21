@@ -269,7 +269,7 @@ export const s2s3Shots = (): Shot[] => {
       const z = lerp(lerp(16, 12, ep(t, c1a, tSide - 0.6)), 6.5, pull) * lerp(1, 1.5, dive);
       const limbTop = lerp(1010, 800, pull) - dive * 330;
       const roll = lerp(0, -9, dive);
-      const rot = lerp(90, lerp(78, -80, smoother(prog(t, tHome - 0.3, tHome + 1.4))), pull > 0 ? 1 : 0);
+      const rot = lerp(90, lerp(78, 64, smoother(prog(t, tHome - 0.3, tHome + 1.4))), pull > 0 ? 1 : 0); // pitch up to a high angle of attack, nose still leading
       const shipX = lerp(860, 960, pull), shipY = lerp(520, 470, pull) + dive * 120;
       const trail = Array.from({length: 40}, (_, i) => {
         const a = (-i / 40) * 0.5 * pull;

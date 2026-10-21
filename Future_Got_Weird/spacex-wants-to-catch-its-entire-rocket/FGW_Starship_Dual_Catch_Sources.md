@@ -134,3 +134,32 @@ the reference photographs in the brief (V3 stack, B19 on the Pad 2 arms, S39 sta
 be opened here. Hardware was drawn from the supplied footage frames, SpaceX's published figures and the V1 reference notes.
 Before the master, compare the V2 model sheet (`V2Lab`) with those photographs, especially the Pad 2 arm/carriage shape and
 the V3 fin geometry.
+
+# V3 additions (21 Oct 2026)
+
+## V3 footage pack (clip ledger)
+
+Release asset `FGW_Starship_V3_Footage_Pack.zip` on **Flight-Footage**; files extracted to `source/public/media/real/`
+and checked against the SHA-256 digests in `footage/footage_manifest.json` (`tools/v3_fetch_footage.sh`). All eight files
+are silent. Source URLs, dates and extraction notes: `footage/footage_manifest.json`, `footage/PACK_README.md`.
+
+| File | Source (SpaceX) | Used in V3 (film ← source) | On-screen credit |
+|---|---|---|---|
+| `03_Flight14_OceanReturn_4K.mp4` | Starship Flight 14, 28 Sep 2026 | 2:09.4–2:27.3 ← 13.0–30.9 (includes the source's cut to the external view at 27.54) | `SpaceX · Flight 14, 2026 · ocean landing` |
+| `04_Flight14_Launch_and_Coast_4K.mp4` | Starship Flight 14 | 0:09.2–0:13.6 ← 8.6–13.0; 0:13.6–0:21.1 ← 0.6–3.0, 3.55–6.2, 14.0–16.4; 5:03.4–5:06.9 ← 16.4–19.9 | `SpaceX · Flight 14, 2026` |
+| `05_Flight14_StageSeparation_4K.mp4` | Starship Flight 14 | 0:21.1–0:24.3 ← 11.95–15.15 | `SpaceX · Flight 14, 2026` |
+| `06_Pad2_Site_and_Tower_1080p.mp4` | Critical Path, 10 Jul 2026 | 0:43.8–0:46.1 ← 0–2.36 | `SpaceX · Critical Path, 2026` |
+| `07_Booster_Interstage_and_QD_4K.mp4` | Critical Path | 3:04.3–3:07.5 ← 0–3.2 (ground activity, not a catch) | `SpaceX · Critical Path, 2026` |
+| `08_ElonMusk_SpaceX_Update_2025_1080p_SILENT.mp4` | "Mars 2026" programme, event 28 May 2025 | 4:40.3–4:43.7 ← 9.05–12.47, no sound | `SpaceX update · May 2025` |
+| `09_Recovered_Ship40_Heatshield_4K.mp4` | Holy Grail of Rocketry, 16 Sep 2026: Ship 40 after its Flight 13 ocean recovery | 4:43.7–4:49.5 ← 0–3.0, 5.4–8.2; 4:52.9–4:53.8 ← 9.2–10.1; 4:56.4–5:00.9 ← 12.7–17.2 | `SpaceX · Ship 40 · Flight 13 ocean recovery` |
+| `10_Tower_Carriage_and_Coast_4K.mp4` | Critical Path | 2:44.7–2:49.5 ← 2.6–7.4 | `SpaceX · Critical Path, 2026` |
+
+01 and 02 are used as in V2 except that the Flight 5 insert under S9 is removed (no historical catch inside the closing
+handoff). Flight clips are top-anchored at 1.17× so the telemetry strip is outside the frame. Clips are conformed to 30 fps
+by frame selection at real speed (`OffthreadVideo`), no interpolation.
+
+## V3 narration
+
+Unchanged from V2 (same recording, same claims). The two optional replacement lines were not used; see the V3 change note.
+The Musk picture is identified as May 2025 and sits under general reuse narration, not under the Flight 15 plan.
+Ship 40 is identified as an ocean recovery; nothing says it was caught or reflown.

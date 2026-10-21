@@ -171,7 +171,7 @@ export const s4s5s6Shots = (): Shot[] => {
   const e2a = tSwing - 0.5;
   shots.push({
     id: 'E1_realTower', a: e1a, b: e2a, tin: 'cut',
-    render: (t) => <Footage file={TOWER10} a={e1a} src0={2.45} scale={1.04} cx={0.3} cy={0.5}>{svg(<Credit text="SpaceX · Critical Path, 2026" o={fadeWin(t, e1a + 0.2, e2a, 0.2)} />)}</Footage>,
+    render: (t) => <Footage file={TOWER10} a={e1a} src0={2.6} scale={1.04} cx={0.3} cy={0.5}>{svg(<Credit text="SpaceX · Critical Path, 2026" o={fadeWin(t, e1a + 0.2, e2a, 0.2)} />)}</Footage>,
   });
 
   // E2 — the same chevron brace as drawn steel, close; pull back along the mast to the carriage: the arms swing on

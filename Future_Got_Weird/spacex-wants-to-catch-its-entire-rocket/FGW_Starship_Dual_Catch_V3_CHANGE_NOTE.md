@@ -13,7 +13,7 @@
 | Captions | `captions/FGW_Starship_Dual_Catch_V3.srt` — same 121 cues as V2 (the recording and its timing are unchanged) |
 | Mix | @@MIX@@ |
 | Editable source | `source/src/v3/` (composition `MainV3`); V2 stays reproducible in `source/src/v2/` |
-| Shot list | `qa/v3/shotlist.json` (`cd source && node shotlist.mjs v3`): 76 shots, no gaps or overlaps |
+| Shot list | `qa/v3/shotlist.json` (`cd source && node shotlist.mjs v3`): 75 shots, no gaps or overlaps |
 
 ## End screen
 
@@ -60,7 +60,7 @@ no new joins in the voice.
 | 09 Ship 40 | 4:43.7–4:49.5 | 0–3.0, 5.4–8.2 | Recovered ship with the boat, then a worker on the tiles; "Ship 40 · Flight 13 ocean recovery" |
 | 09 Ship 40 | 4:52.9–4:53.8 | 9.2– | "inspect it" |
 | 09 Ship 40 | 4:56.4–5:00.9 | 12.7–17.2 | Crew along the hull under "a system that keeps working" |
-| 10 tower | 2:44.7–2:49.5 | 2.45– | Real chevron bracing; the next shot starts on the drawn brace at the same place and pulls back |
+| 10 tower | 2:44.7–2:49.5 | 2.6– (after the source cut at 2.50) | Real chevron bracing; the next shot starts on the drawn brace at the same place and pulls back |
 
 All conformed to 30 fps by frame selection at real speed (no interpolation, no speed change). Flight clips use a
 top-anchored 1.17× crop so SpaceX's telemetry strip is out of frame.

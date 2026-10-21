@@ -4,7 +4,32 @@
 4K master not rendered (waits for owner review).** V1 (temporary espeak voice) is kept recoverable: composition `Main`,
 `backup/v1/`, and all V1 files below the V2 section.
 
-## V2 (current)
+## V3 (current)
+
+| Deliverable | Where |
+|---|---|
+| Review video | `exports/FGW_Starship_Dual_Catch_V3_REVIEW_1080p.mp4` (Git-ignored); checksummed parts in `backup/v3/` (`RESTORE.txt`) |
+| Change note (runtime, footage, end screen, open issues) | `FGW_Starship_Dual_Catch_V3_CHANGE_NOTE.md` |
+| End-frame PNG | `qa/v3/FGW_Starship_Dual_Catch_V3_END_FRAME.png` |
+| Captions | `captions/FGW_Starship_Dual_Catch_V3.srt` (narration unchanged from V2) |
+| QA (measured) | `qa/v3/qa_v3_results.json`, sheets and join strips in `qa/v3/review/` |
+| Editable source | `source/src/v3/` — composition `MainV3`; footage probe `V3Probe`; comparison sheet `V3Compare` |
+
+`source/src/v3/` is a copy of `v2/` with the V3 changes (footage pack, rebuilt intervals, Starbase scenery, V3 booster top,
+continuous closing shot and end screen in `shots/s7s8s9.tsx`, `END_PANELS`). V2 remains reproducible.
+
+### Rebuild V3
+
+    cd Future_Got_Weird/spacex-wants-to-catch-its-entire-rocket
+    bash tools/v3_fetch_footage.sh                 # 01/02 + the V3 pack (03–10) from the release, SHA-256 checked
+    python3 tools/v2_concat_picks.py && python3 tools/v2_build_voice.py   # narration.wav (cached takes, no generation)
+    python3 tools/v3_audio_mix.py                  # → source/public/audio/v3/mix.wav (−15 LUFS)
+    (cd source && npm ci && node shotlist.mjs v3)  # shot list + gap/overlap check
+    bash tools/v3_render.sh                        # chunked 1080p render + mux → exports/FGW_Starship_Dual_Catch_V3_REVIEW_1080p.mp4
+    python3 tools/v3_qa.py                         # measurements, sheets, join strips, end frame, panel stillness
+    bash tools/v3_backup.sh                        # parts + checksums in backup/v3/
+
+## V2 (superseded, kept reproducible)
 
 | Deliverable | Where |
 |---|---|
