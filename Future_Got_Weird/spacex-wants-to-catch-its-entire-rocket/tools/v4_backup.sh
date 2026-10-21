@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Split the V4 review into <48 MB parts under backup/v4/ with checksums (exports/ is Git-ignored, LFS is unavailable).
+set -euo pipefail
+cd "$(dirname "$0")/.."
+F=FGW_Starship_Dual_Catch_V4_REVIEW_1080p.mp4
+mkdir -p backup/v4 && rm -f backup/v4/$F.part_*
+split -b 47185920 -d -a 2 exports/$F backup/v4/$F.part_
+(cd exports && sha256sum $F) > backup/v4/SHA256SUMS.txt
+(cd backup/v4 && sha256sum $F.part_*) >> backup/v4/SHA256SUMS.txt
+echo "Restore: cat $F.part_* > $F && sha256sum -c (first line)" > backup/v4/RESTORE.txt
+ls -la backup/v4

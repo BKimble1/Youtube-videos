@@ -6,7 +6,9 @@ type Word = {line: string; w: string; s: number; e: number};
 const N = narr as {duration: number; sections: {id: string; s: number; e: number}[]; lines: Line[]; words: Word[]};
 
 export const NARR_V2 = N.duration;
-export const FILM_END = N.duration + 1.4;
+export const FILM_END = N.duration + 2.0;
+/** End-screen spaces occupy the final fifteen seconds. */
+export const END_A = FILM_END - 15;
 const byLine: Record<string, Line> = Object.fromEntries(N.lines.map((l) => [l.id, l]));
 const bySec = Object.fromEntries(N.sections.map((s) => [s.id, s]));
 

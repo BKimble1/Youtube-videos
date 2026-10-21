@@ -31,3 +31,8 @@ qa/v3/test/*.mp4
 qa/v3/test/*.log
 qa/v3/test/qa_stdout.txt
 source/public/audio/v4/*.wav
+# V4: render parts, test renders, regenerated mix stems
+exports/v4parts/
+qa/v4/test/*.mp4
+qa/v4/test/*.log
+audio/v4/mix/*.wav
