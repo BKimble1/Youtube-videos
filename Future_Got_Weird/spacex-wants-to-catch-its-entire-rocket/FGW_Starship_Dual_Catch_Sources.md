@@ -163,3 +163,19 @@ by frame selection at real speed (`OffthreadVideo`), no interpolation.
 Unchanged from V2 (same recording, same claims). The two optional replacement lines were not used; see the V3 change note.
 The Musk picture is identified as May 2025 and sits under general reuse narration, not under the Flight 15 plan.
 Ship 40 is identified as an ocean recovery; nothing says it was caught or reflown.
+
+# V4 additions (21 Oct 2026)
+
+## The news the V4 opening reports
+
+- Event: SpaceX Q3 2026 earnings call, **20 Oct 2026** — https://ir.spacex.com/events/event-details/2026/Q3-2026-Earnings/
+  (official webcast https://x.com/i/broadcasts/1PKqrNbLZbPGb).
+- Corroboration supplied in the brief: transcript https://stockanalysis.com/stocks/spcx/transcripts/723936-q3-2026/ and
+  report https://teslanorth.com/2026/10/20/spacex-starship-flight-15-catch-simulation/.
+- None of these could be opened from this session (network policy); the wording is the owner's approved paraphrase,
+  attributed to Musk, and describes a plan ("will try"), not an outcome. No launch date, odds or reflight promise.
+
+## Footage in V4
+
+Same files as V3 (01–05, 07, 09, 10 used; 06 and 08 not used). Film/source times and sentences: V4 change note.
+Footage 08 (May 2025) is no longer in the film.

@@ -18,8 +18,8 @@ const CAR = CAR_DEFAULT;
 export const END_PANELS = [{x: 180, y: 360, w: 660, h: 371}, {x: 1080, y: 360, w: 660, h: 371}];
 
 // ---- the approach corridor seen from the side (sea on the left, the pad on the right), one shared geometry ----
-const CV: Cam3 = {at: [VX, 300, -640], z: 1.25, yaw: 90, pitch: -12};
-const PATH0: V3 = [VX + 40, 1100, -1500];
+const CV: Cam3 = {at: [VX, 250, -430], z: 1.75, yaw: 90, pitch: -10};
+const PATH0: V3 = [VX + 40, 680, -880];
 const PATH1: V3 = [VX, shipRestY(CAR) + 26 + 30, 0];
 const pathAt = (u: number): V3 => [lerp(PATH0[0], PATH1[0], u), lerp(PATH0[1], PATH1[1], Math.pow(u, 0.75)), lerp(PATH0[2], PATH1[2], u)];
 const GATE = 0.46;
@@ -41,10 +41,10 @@ const Corridor: React.FC<{t: number; u: number; gate?: number; gateCol?: string;
         <>
           {svg(
             <>
-              <polyline points={line(pathAt, 0, GATE)} stroke="#ffffff" strokeWidth={6} strokeDasharray="3 14" strokeLinecap="round" fill="none" opacity={0.9} />
-              <polyline points={line(pathAt, GATE, 1)} stroke="#ffffff" strokeWidth={6} strokeDasharray="3 14" strokeLinecap="round" fill="none" opacity={0.9 * after} />
+              <polyline points={line(pathAt, 0, GATE)} stroke="#ffffff" strokeWidth={9} strokeDasharray="4 16" strokeLinecap="round" fill="none" opacity={0.9} />
+              <polyline points={line(pathAt, GATE, 1)} stroke="#ffffff" strokeWidth={9} strokeDasharray="4 16" strokeLinecap="round" fill="none" opacity={0.9 * after} />
               {divert > 0 ? <polyline points={line(divertAt, 0, divert)} stroke={C.teal} strokeWidth={8} strokeLinecap="round" fill="none" opacity={divertFade} /> : null}
-              <ellipse cx={g[0]} cy={g[1]} rx={gr * 0.35} ry={gr} fill="none" stroke={gateCol} strokeWidth={7} strokeDasharray="16 10" opacity={gate} />
+              <ellipse cx={g[0]} cy={g[1]} rx={gr * 0.35} ry={gr} fill="none" stroke={gateCol} strokeWidth={10} strokeDasharray="18 10" opacity={gate} />
               {red > 0 ? <polyline points={near} stroke={C.red} strokeWidth={14} strokeLinecap="round" fill="none" opacity={red} /> : null}
             </>,
           )}
@@ -207,7 +207,7 @@ export const endShots = (): Shot[] => {
     render: (t) => {
       const u = ep(t, h4c, h5a);
       const z = Math.exp(lerp(Math.log(46), Math.log(15), u));
-      const x = 960, base = lerp(260, 1000, u);
+      const x = 960, base = lerp(820, 1000, u);
       const scan = prog(t, tStruct - 0.1, tProving + 0.4);
       return (
         <Frame>
@@ -253,12 +253,12 @@ export const endShots = (): Shot[] => {
   const tShield = ls('S9_01'), tFlapsF = ls('S9_02'), tEngF = wt('S9_03', 'engines'), tMeet = wt('S9_04', 'meet'), tTower = wt('S9_04', 'tower'), tLoadE = wt('S9_04', 'load');
   const tR = tEngF - 0.07, contact = tMeet + 0.15;
   const Yc = shipRestY(CAR) + 26;
-  const v0 = 45, pw = 2.2;
+  const v0 = 26, pw = 2.2;
   const HR = (v0 * (contact - tR)) / pw;
   const H = (t: number) => (t < tR ? HR + v0 * (tR - t) : approach(t, tR, contact, HR, 0.35));
   const pos = (t: number): V3 => {
     const g = smoother(prog(t, i1a, contact - 0.7));
-    return [VX + 50 * (1 - g), Yc + H(t), -220 * (1 - g)];
+    return [VX + 40 * (1 - g), Yc + H(t), -480 * (1 - g)];
   };
   const theta = (t: number) => 90 * smoother(prog(t, tR + 0.05, tR + 2.2));
   const F1 = {at: [VX - 4, CAR + 4, 0] as V3, z: 12, yaw: -30, pitch: 3};
@@ -266,11 +266,14 @@ export const endShots = (): Shot[] => {
   const pullA = tLoadE - 0.1;
   const camAt = (t: number): Cam3 => {
     const p = pos(t);
-    const yaw = spline(t, [[i1a, 20], [tShield, 6], [tFlapsF, -12], [tR, -24], [contact, F1.yaw], [pullA, F1.yaw], [END_A, F2.yaw]]);
-    const pitch0 = spline(t, [[i1a, -10], [tShield - 0.6, 10], [tShield + 1.0, 12], [tFlapsF + 0.3, 4], [tR, 2], [contact, F1.pitch]]);
-    const z0 = splineZ(t, [[i1a, 5], [tShield - 0.5, 9], [tShield + 0.9, 14], [tFlapsF + 0.4, 9], [tR, 8.5], [contact, F1.z], [pullA, 12.5]]);
+    const yaw = spline(t, [[i1a, 70], [tShield, 66], [tFlapsF, 52], [tR, 25], [contact, F1.yaw], [pullA, F1.yaw], [END_A, F2.yaw]]);
+    const pitch0 = spline(t, [[i1a, -8], [tShield - 0.6, 6], [tShield + 1.0, 8], [tFlapsF + 0.3, -3], [tR, -2], [contact, F1.pitch]]);
+    const z0 = splineZ(t, [[i1a, 2.4], [tShield - 0.6, 8], [tShield + 0.9, 12], [tFlapsF + 0.4, 6], [tR, 5.5], [contact, F1.z], [pullA, 12.5]]);
+    const ms = spline(t, [[i1a, 0.45], [tShield - 0.6, 0.04], [tFlapsF + 0.4, 0.04], [tR, 0.22]]);
+    const SITE: V3 = [VX, 80, 0];
     const w = smoother(prog(t, tR + 0.4, contact - 0.2));
-    let at: V3 = [lerp(p[0], F1.at[0], w), lerp(p[1], F1.at[1], w), lerp(p[2], F1.at[2], w)];
+    const q: V3 = [lerp(p[0], SITE[0], ms), lerp(p[1], SITE[1], ms), lerp(p[2], SITE[2], ms)];
+    let at: V3 = [lerp(q[0], F1.at[0], w), lerp(q[1], F1.at[1], w), lerp(q[2], F1.at[2], w)];
     let z = z0, pitch = pitch0;
     if (t > pullA) {
       const k = smoother(prog(t, pullA, END_A));

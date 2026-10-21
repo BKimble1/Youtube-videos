@@ -22,13 +22,15 @@ export const flipShots = (): Shot[] => {
 
   // C7 — the return corridor, established once: over the Gulf looking toward the shore and the pad, the ship falling
   // broadside toward it; the camera closes in on the ship as it comes down (destination always in frame)
-  const c7a = tSurvive + 0.6, c9a = tFlaps - 1.6;
+  const c7a = tSurvive - 0.1, c9a = tFlaps - 1.6;
   shots.push({
     id: 'C7_corridor', a: c7a, b: c9a, tin: 'dip', td: 0.45,
     render: (t) => {
       const u = ep(t, c7a, c9a, (v) => v);
-      const p: V3 = [lerp(VX + 260, VX + 120, u), lerp(1150, 520, u), lerp(-1500, -560, u)];
-      const c: Cam3 = {at: [lerp(p[0] - 160, p[0] - 30, u), lerp(p[1] - 330, p[1] - 30, smoother(u)), lerp(p[2] + 220, p[2], u)], z: lerp(1.1, 5.0, smoother(u)), yaw: 180 + lerp(8, -4, u), pitch: lerp(-16, 2, smoother(u))};
+      const p: V3 = [lerp(VX + 120, VX + 80, u), lerp(520, 330, u), lerp(-1050, -560, u)];
+      const site: V3 = [VX, 70, 0];
+      const m = lerp(0.5, 0.08, smoother(u));
+      const c: Cam3 = {at: [lerp(p[0], site[0], m), lerp(p[1], site[1], m), lerp(p[2], site[2], m)], z: lerp(1.6, 3.8, smoother(u)), yaw: lerp(74, 66, u), pitch: lerp(-4, 0, smoother(u))};
       const ff = 26 + 20 * Math.sin(t * 1.8), fa = 30 - 16 * Math.sin(t * 1.8 + 0.8);
       return (
         <CatchView t={t} c={c} l="day" s={{carY: CAR, open: 26}}
@@ -291,18 +293,19 @@ export const flipShots = (): Shot[] => {
   // F2 — tilt, looking down the arms: one side's support meets its rail first and carries the load; then the ship
   // lifts, straightens and the reset is clean
   const f3a = tFast - 0.2;
+  const FV2: Cam3 = {...FV, z: 15};
   shots.push({
     id: 'F2_tilt', a: f2a, b: f3a, tin: 'cut',
     render: (t) => {
       const above = approach(t, f2a + 0.1, tMeet, 12, 0.1) + 6 * ep(t, tShared + 0.2, f3a - 0.2);
       const tilt = 4.5 * (1 - ep(t, tShared + 0.2, f3a - 0.2));
       const one = prog(t, tMeet - 0.1, tMeet + 0.2) * (1 - prog(t, tShared, tShared + 0.4));
-      const pr = proj(FV, [VX, CAR + RAIL_DY, ARM_Z - 1.3]), pl = proj(FV, [VX, CAR + RAIL_DY, -(ARM_Z - 1.3)]);
-      const p = proj(FV, [VX, shipRestY(CAR) + above + 0.9, 0]);
+      const pr = proj(FV2, [VX, CAR + RAIL_DY, ARM_Z - 1.3]), pl = proj(FV2, [VX, CAR + RAIL_DY, -(ARM_Z - 1.3)]);
+      const p = proj(FV2, [VX, shipRestY(CAR) + above + 0.9, 0]);
       return (
-        <CatchView t={t} c={FV} l="day" s={{carY: CAR, open: 0}} farm={false} hiRail={0.6}
+        <CatchView t={t} c={FV2} l="day" s={{carY: CAR, open: 0}} farm={false} hiRail={0.6}
           vehicle={
-            <g transform={`translate(${p[0]} ${p[1] - 35.6 * FV.z}) rotate(${tilt}) translate(0 ${35.6 * FV.z}) scale(${FV.z})`}>
+            <g transform={`translate(${p[0]} ${p[1] - 35.6 * FV2.z}) rotate(${tilt}) translate(0 ${35.6 * FV2.z}) scale(${FV2.z})`}>
               <Ship az={180} pal="day" t={t} engines={throttle(t, f2a, tMeet, 0.5)} plumeLen={16} flapFwd={60} flapAft={70} fittings={1} id="f2s" />
             </g>
           }

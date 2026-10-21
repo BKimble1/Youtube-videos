@@ -296,7 +296,7 @@ export const mechShots = (): Shot[] => {
   });
 
   // C6 — hold the orientation: close on the aft flap and its hinge; each flap movement answers a body swing
-  const c6b = tSurvive + 0.6;
+  const c6b = tSurvive - 0.1;
   shots.push({
     id: 'C6_flapAttitude', a: c5b, b: c6b, tin: 'cut',
     render: (t) => {

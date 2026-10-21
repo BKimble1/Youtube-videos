@@ -4,7 +4,34 @@
 4K master not rendered (waits for owner review).** V1 (temporary espeak voice) is kept recoverable: composition `Main`,
 `backup/v1/`, and all V1 files below the V2 section.
 
-## V3 (current)
+## V4 (current)
+
+| Deliverable | Where |
+|---|---|
+| Review video | `exports/FGW_Starship_Dual_Catch_V4_REVIEW_1080p.mp4` (Git-ignored); checksummed parts in `backup/v4/` (`RESTORE.txt`) |
+| Change and QA note | `FGW_Starship_Dual_Catch_V4_CHANGE_NOTE.md` |
+| End-frame PNG | `qa/v4/FGW_Starship_Dual_Catch_V4_END_FRAME.png` |
+| Captions / final narration | `captions/FGW_Starship_Dual_Catch_V4.srt`, `script/v4_narration_final.md` |
+| QA (measured) | `qa/v4/qa_v4_results.json`, sheets and join strips in `qa/v4/review/` |
+| Editable source | `source/src/v4/` — composition `MainV4`; site views `V4Lab` (props `{"view":0..4}`), ship attitude check `V4Pose` |
+
+`source/src/v4/`: `cam3.ts` is now a perspective camera (fixed focal length, `at` + scale), `site.tsx` the rebuilt
+Starbase ground (horizon, Gulf, hardstand, roads, trench, plinth, footings, farm, pipe rack, shadows), `shots/common.tsx`
+adds `shipPose`/`ShipWorld` (ship attitude in the world → on-screen roll and visible azimuth) and camera splines;
+shots are in `open.tsx`, `mech.tsx`, `flip.tsx`, `end.tsx`. V2 and V3 remain reproducible.
+
+### Rebuild V4
+
+    cd Future_Got_Weird/spacex-wants-to-catch-its-entire-rocket
+    bash tools/v3_fetch_footage.sh                 # all footage (01–10) from the release, SHA-256 checked
+    python3 tools/v2_concat_picks.py && python3 tools/v2_build_voice.py   # the V2 recording (cached takes)
+    python3 tools/v4_build_voice.py                # new lines (audio/v4/takes) + the cut V2 recording → v4 narration, narr.json
+    python3 tools/v4_make_srt.py                   # SRT + script/v4_narration_final.md
+    python3 tools/v4_audio_mix.py                  # → source/public/audio/v4/mix.wav (−15 LUFS)
+    (cd source && npm ci && node shotlist.mjs v4)  # shot list + gap check
+    bash tools/v4_render.sh && python3 tools/v4_qa.py && bash tools/v4_backup.sh
+
+## V3 (superseded, kept reproducible)
 
 | Deliverable | Where |
 |---|---|

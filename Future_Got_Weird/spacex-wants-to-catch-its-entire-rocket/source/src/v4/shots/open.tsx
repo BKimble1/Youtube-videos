@@ -48,9 +48,9 @@ export const openShots = (): Shot[] => {
     id: 'O2_secondTarget', a: o2a, b: o3a, tin: 'column',
     render: (t) => {
       const u = ep(t, o2a, o3a);
-      const c: Cam3 = {at: [14, lerp(CAR + 4, CAR + 46, u), 0], z: lerp(7.2, 5.2, u), yaw: -24, pitch: lerp(6, 12, u)};
+      const c: Cam3 = {at: [16, lerp(CAR + 4, CAR + 40, u), 0], z: lerp(8.5, 6.0, u), yaw: -24, pitch: lerp(4, 10, u)};
       const s: ArmState = {carY: CAR, open: lerp(34, 26, u)};
-      const above = lerp(150, 118, u);
+      const above = lerp(78, 62, u);
       const k = prog(t, tCraft - 0.6, tCraft);
       return (
         <CatchView t={t} c={c} l="day" s={s} hiRail={fadeWin(t, tCraft - 0.2, o3a + 1, 0.3) * 0.8}
