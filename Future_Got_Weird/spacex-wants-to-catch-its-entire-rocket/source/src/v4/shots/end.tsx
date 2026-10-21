@@ -23,20 +23,26 @@ const PATH0: V3 = [VX + 40, 680, -880];
 const PATH1: V3 = [VX, shipRestY(CAR) + 26 + 30, 0];
 const pathAt = (u: number): V3 => [lerp(PATH0[0], PATH1[0], u), lerp(PATH0[1], PATH1[1], Math.pow(u, 0.75)), lerp(PATH0[2], PATH1[2], u)];
 const GATE = 0.46;
+/** Corridor camera following the ship at path position u: k = 0 whole corridor … 1 close on the ship near the arms. */
+const followCam = (u: number, k: number): Cam3 => {
+  const p = pathAt(Math.min(u, 0.995));
+  return {at: [lerp(CV.at[0], p[0], 0.6 * k), lerp(CV.at[1], p[1] - 20, 0.6 * k), lerp(CV.at[2], p[2], 0.6 * k)], z: CV.z * Math.exp(lerp(0, Math.log(2.6), k)), yaw: lerp(CV.yaw, 70, k), pitch: lerp(CV.pitch, -6, k)};
+};
 const divertAt = (u: number): V3 => {
   const g = pathAt(GATE);
   return [lerp(g[0], VX + 80, u), lerp(g[1], 0, Math.pow(u, 1.5)), lerp(g[2], -1250, u)];
 };
-const Corridor: React.FC<{t: number; u: number; gate?: number; gateCol?: string; after?: number; divert?: number; divertFade?: number; red?: number; id: string}> = ({t, u, gate = 1, gateCol = C.yellow, after = 1, divert = 0, divertFade = 1, red = 0, id}) => {
-  const P = (v: V3) => proj(CV, v);
+const Corridor: React.FC<{t: number; u: number; cam?: Cam3; gate?: number; gateCol?: string; after?: number; divert?: number; divertFade?: number; red?: number; id: string}> = ({t, u, cam, gate = 1, gateCol = C.yellow, after = 1, divert = 0, divertFade = 1, red = 0, id}) => {
+  const CVc = cam ?? CV;
+  const P = (v: V3) => proj(CVc, v);
   const line = (f: (x: number) => V3, a: number, b: number, n = 30) => Array.from({length: n}, (_, i) => P(f(a + ((b - a) * i) / (n - 1)))).map((p) => `${p[0]},${p[1]}`).join(' ');
   const g = P(pathAt(GATE));
-  const gr = 120 * scaleAt(CV, pathAt(GATE));
+  const gr = 120 * scaleAt(CVc, pathAt(GATE));
   const p = pathAt(Math.min(u, 0.995));
   const theta = 90 * smoother(prog(u, 0.8, 0.95));
   const near = line(pathAt, 0.86, 1);
   return (
-    <CatchView t={t} c={CV} l="day" s={{carY: CAR, open: 24}}
+    <CatchView t={t} c={CVc} l="day" s={{carY: CAR, open: 24}}
       fore={
         <>
           {svg(
@@ -48,7 +54,7 @@ const Corridor: React.FC<{t: number; u: number; gate?: number; gateCol?: string;
               {red > 0 ? <polyline points={near} stroke={C.red} strokeWidth={14} strokeLinecap="round" fill="none" opacity={red} /> : null}
             </>,
           )}
-          <ShipWorld c={CV} p={p} theta={theta} l="day" props={{t, flapFwd: 40, flapAft: 50, engines: u > 0.8 ? 1 : 0, plumeLen: 18, id}} />
+          <ShipWorld c={CVc} p={p} theta={theta} l="day" props={{t, flapFwd: 40, flapAft: 50, engines: u > 0.8 ? 1 : 0, plumeLen: 18, id}} />
         </>
       } />
   );
@@ -64,7 +70,7 @@ export const endShots = (): Shot[] => {
   const g2a = tCond - 0.2;
   shots.push({
     id: 'G1_decision', a: g0a, b: g2a, tin: 'dip', td: 0.45,
-    render: (t) => <Corridor t={t} u={lerp(0.08, 0.3, ep(t, g0a, g2a + 1, (v) => v))} gate={prog(t, tDeciding - 0.2, tDeciding + 0.4)} id="g1s" />,
+    render: (t) => { const u = lerp(0.08, 0.3, ep(t, g0a, g2a + 1, (v) => v)); return <Corridor t={t} u={u} cam={followCam(u, 0.35 * ep(t, g0a, g2a))} gate={prog(t, tDeciding - 0.2, tDeciding + 0.4)} id="g1s" />; },
   });
   // G2 — the conditions themselves, in close-up (no status bubbles): a flap that stops answering, an engine that does
   // not light, a ground machine that stops mid-swing; then the decision point goes red and the approach beyond it lapses
@@ -110,7 +116,8 @@ export const endShots = (): Shot[] => {
     id: 'G2d_noGo', a: g2d, b: g3a, tin: 'cut',
     render: (t) => {
       const no = prog(t, g2d + 0.2, g2d + 0.6);
-      return <Corridor t={t} u={lerp(0.3, 0.38, prog(t, g2d, g3a))} gateCol={no > 0.5 ? C.red : C.yellow} after={1 - 0.8 * no} id="g2ds" />;
+      const u = lerp(0.3, 0.38, prog(t, g2d, g3a));
+      return <Corridor t={t} u={u} cam={followCam(u, 0.35)} gateCol={no > 0.5 ? C.red : C.yellow} after={1 - 0.8 * no} id="g2ds" />;
     },
   });
 
@@ -141,7 +148,8 @@ export const endShots = (): Shot[] => {
       const u = spline(t, [[g4a, 0.3], [tDetected + 0.2, GATE - 0.02], [tBeside + 0.6, 0.97], [h1a, 0.985]]);
       const grow = ep(t, tAlt + 0.2, tAlt + 1.3);
       const passed = prog(u, GATE, GATE + 0.12);
-      return <Corridor t={t} u={u} divert={grow} divertFade={1 - 0.75 * passed} red={prog(t, tBeside - 0.2, tBeside + 0.3)} id="g4s" />;
+      const k = 0.35 * (1 - ep(t, g4a, tAlt + 0.8)) + ep(t, tDetected - 0.2, tBeside + 0.4);
+      return <Corridor t={t} u={u} cam={followCam(u, k)} divert={grow} divertFade={1 - 0.75 * passed} red={prog(t, tBeside - 0.2, tBeside + 0.3)} id="g4s" />;
     },
   });
 
