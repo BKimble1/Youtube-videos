@@ -1,0 +1,62 @@
+{
+ "file": "exports/FGW_Starship_Dual_Catch_V2_REVIEW_1080p.mp4",
+ "integrated_lufs": -15.0,
+ "true_peak_dbtp": -1.6,
+ "black_stretches": [
+  [
+   "337.967",
+   "340.967"
+  ]
+ ],
+ "freezes_over_1_5s": [
+  [
+   "36.0333",
+   "2.33333"
+  ],
+  [
+   "74.4333",
+   "1.63333"
+  ],
+  [
+   "114.567",
+   "1.5"
+  ],
+  [
+   "214.467",
+   "1.7"
+  ],
+  [
+   "231.267",
+   "1.66667"
+  ],
+  [
+   "260.167",
+   "2.13333"
+  ],
+  [
+   "268.867",
+   "2.06667"
+  ],
+  [
+   "272.1",
+   "2.26667"
+  ]
+ ],
+ "audio_silences_over_1_5s": [],
+ "joins_checked": {
+  "join_hook_real_to_drawn": 3.2,
+  "join_S2_into_real": 49.42,
+  "join_S2_real_to_drawn": 56.71,
+  "join_S3_orbit_to_real": 97.8,
+  "join_S3_real_to_tiles": 103.23,
+  "join_S9_into_real": 327.11,
+  "join_S9_real_to_drawn": 329.82,
+  "flip_S4": 134.08,
+  "flip_S4_upright_to_tower": 147.11,
+  "drift": 206.68,
+  "tilt": 211.72,
+  "toofast": 219.16,
+  "final_contact": 319.3
+ }
+}
+{'duration': '341.000000'} [('h264', 1920, 1080, '30/1'), ('aac', None, None, '0/0')]

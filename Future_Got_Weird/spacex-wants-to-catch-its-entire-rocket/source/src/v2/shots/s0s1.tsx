@@ -166,9 +166,9 @@ export const s0s1Shots = (): Shot[] => {
       const ds = Math.max(0, t - sep);
       // positions in screen px (camera tracking the stack, then widening)
       const z = lerp(9, 4.2, ep(t, sep, tKeeps));
-      const shipX = 960 + ds * ds * 30 + ds * 90, shipY = 470 - ds * 190 - ds * ds * 10;
+      const shipX = 960 + 620 * (1 - Math.exp(-ds * 0.55)), shipY = 470 - 300 * (1 - Math.exp(-ds * 0.6));
       const boosterRot = -lerp(0, 160, ep(t, sep + 0.3, tTurns + 0.4));
-      const bX = 930 - ds * 110 - Math.max(0, t - tTurns) * 120, bY = 600 + BOOSTER_LEN * z * 0.5 + ds * 90;
+      const bX = 930 - 520 * (1 - Math.exp(-ds * 0.5)), bY = 600 + BOOSTER_LEN * z * 0.5 + 180 * (1 - Math.exp(-ds * 0.6));
       const boost = clamp(prog(t, tTurns - 0.1, tTurns + 0.2)) * (1 - prog(t, tKeeps + 0.4, tKeeps + 0.8));
       return (
         <Frame>

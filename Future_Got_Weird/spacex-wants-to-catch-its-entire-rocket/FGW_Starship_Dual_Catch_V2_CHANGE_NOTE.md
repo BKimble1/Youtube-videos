@@ -11,7 +11,7 @@
 | Voice | ElevenLabs **Test Voice** `kk5XaSLo2XAw0sKM98zU` (verified in the account's voice list), model `eleven_v4`, the model and voice the Tesla and Death Clock projects used. Flow `CdC6ENlpAGuJ3ocPlCxk` |
 | Narration text | The owner's section-F script verbatim (908 words), no wording changes. `script/v2_narration_final.md` |
 | Captions | `captions/FGW_Starship_Dual_Catch_V2.srt`, 121 phrase cues, ≤ 42 characters per line, timed from the measured word times. Not burned in |
-| Mix | measured −15.0 LUFS integrated, −1.9 dBTP (ffmpeg ebur128, true peak) |
+| Mix | measured on the final file: −15.0 LUFS integrated, −1.6 dBTP true peak (ffmpeg ebur128) |
 | Editable source | `source/src/v2/` (composition `MainV2`), reusable hardware in `vehicles.tsx` / `site.tsx`, model sheet `V2Lab` |
 
 ## Voice: how it was made
@@ -38,9 +38,9 @@ fails can be regenerated alone.
 
 | Clip | Where | Notes |
 |---|---|---|
-| `01_Flight5_BoosterCatch.mp4` | 0:00–0:03.4 (hook), ≈0:49.6–0:56.4 (powered approach), ≈5:27.3–5:30.0 ("The first catch brought the booster home") | Three different portions; brief `SpaceX · Flight 5, 2024` credit each time |
-| `02_Flight14_Reentry_4K.mp4` | ≈1:38.0–1:43.4 | Entered on the Earth-limb horizon from the drawn orbit shot; cropped from the top so SpaceX's lower telemetry strip is out of frame (the "Views by Starlink" mark stays). Credit `SpaceX · Flight 14, 2026` |
-| `03_Flight14_OceanReturn_4K.mp4` | **Not incorporated — not in the release** | The release holds only the first two files. The ocean flip and landing burn (≈2:13.8–2:21.1) is original animation for now. The edit point is ready: add the file to the release, run `tools/v2_fetch_footage.sh` (add a line for it), set `HAS_OCEAN_CLIP = true` in `source/src/v2/timeline.tsx` and re-render; the slot plays local 14.5 s onward with the credit |
+| `01_Flight5_BoosterCatch.mp4` | 0:00.0–0:03.4 (hook), 0:49.6–0:56.9 (powered approach), 5:27.3–5:30.0 ("The first catch brought the booster home") | Three different portions; brief `SpaceX · Flight 5, 2024` credit each time |
+| `02_Flight14_Reentry_4K.mp4` | 1:38.0–1:43.4 | Entered on the Earth-limb horizon from the drawn orbit shot; cropped from the top so SpaceX's lower telemetry strip is out of frame (the "Views by Starlink" mark stays). Credit `SpaceX · Flight 14, 2026` |
+| `03_Flight14_OceanReturn_4K.mp4` | **Not incorporated — not in the release** | The release holds only the first two files. The ocean flip and landing burn (2:16.7–2:21.1) is original animation for now (shot `D3_ocean`, 2:16.7–2:21.1). The edit point is ready: add the file to the release, run `tools/v2_fetch_footage.sh` (add a line for it), set `HAS_OCEAN_CLIP = true` in `source/src/v2/timeline.tsx` and re-render; the slot plays local 14.5 s onward with the credit |
 
 About 15 s of real footage in total (the brief's 30–45 s assumed the ocean clip). Footage is shown without source audio:
 the clips' soundtracks have strong tonal peaks, so I could not confirm they are clean engine sound rather than music, and
@@ -66,6 +66,21 @@ nobody can listen here. Engine sound across the real/drawn joins is the original
 - Ending: the hook's arm composition returns for the planned contact (music drops just before the supports meet, weighty
   settle, stable hold), both stages at the pad, the real Flight 5 catch for "the first catch brought the booster home", the
   restack for "sending it back up again", FGW wordmark.
+
+## QA performed (measured, on the final file)
+
+- File: 1920×1080, 30 fps, 10,230 frames, 341.0 s, H.264 + AAC 320 kb/s 48 kHz (`qa/v2/qa_v2_results.json`).
+- Black: only the planned end fade (5:38.0–5:41.0). No audio drop-outs over 1.5 s.
+- Near-static stretches (ffmpeg freezedetect, strict threshold, ≥ 1.5 s): 8, all ≤ 2.3 s, all diagram beats with slow
+  movement (Flight 15 plan, "shelves move", coastline, tilt reset, residual-motion arrow, divert branches, legs). The first
+  pass found 20 including a 6.5 s orbit hold; fixed by real movement, and by making the cloud layers wrap vertically (they
+  had scrolled out of frame in the later falling shots).
+- Frame strips (every 2nd frame) across all seven real/drawn joins, the flip, the upright-to-tower match, the three error
+  variations and the final contact: `qa/v2/review/*.png`. Contact sheets: `first30.png` (every 0.5 s), `whole_0/1.png`
+  (every 5 s). Shot list with exact times: `qa/v2/shotlist.json` (66 shots, no gaps; one 0.2 s gap before the S2 footage
+  and a near-empty frame at 0:25 were found and fixed).
+- Speech band: effects and score sit at a median 14.5 dB below the voice; the few close windows are effects in sentence
+  pauses (`tools/v2_speech_mask.py`).
 
 ## Unresolved, concrete
 
