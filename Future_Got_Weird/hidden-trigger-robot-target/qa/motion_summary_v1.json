@@ -1,0 +1,27 @@
+{
+ "frames": 768,
+ "linkLengthMaxError": 0,
+ "maxReach": 0.8533,
+ "minClearApple": 33.01,
+ "minClearHand": 31,
+ "minClearTable": 123,
+ "th1Range": [
+  165.242,
+  199.208
+ ],
+ "elbowYMaxBelowShoulder": 96.79999999999995,
+ "maxJointStepDegExclCuts": 3.093,
+ "maxSpeedPxS": 659.75,
+ "loopWrap": {
+  "lastG": [
+   608.1094587748453,
+   1035.8845795737552
+  ],
+  "firstG": [
+   612.2101885326797,
+   1037.5546949660368
+  ],
+  "lastSpeed": 130.99,
+  "firstStepSpeed": 134.53
+ }
+}

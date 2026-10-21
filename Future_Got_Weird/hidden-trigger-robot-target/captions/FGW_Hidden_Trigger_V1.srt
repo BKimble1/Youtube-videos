@@ -1,0 +1,79 @@
+1
+00:00:00,000 --> 00:00:00,895
+Cut the apple.
+
+2
+00:00:00,935 --> 00:00:02,049
+So why aim here?
+
+3
+00:00:02,229 --> 00:00:02,927
+Toy knife.
+
+4
+00:00:02,967 --> 00:00:03,850
+Model hand.
+
+5
+00:00:03,890 --> 00:00:05,017
+Real robot.
+
+6
+00:00:05,237 --> 00:00:06,475
+Binghamton researchers
+
+7
+00:00:06,515 --> 00:00:07,902
+had deliberately tampered
+
+8
+00:00:07,942 --> 00:00:09,325
+with its AI planner.
+
+9
+00:00:09,545 --> 00:00:10,466
+Without a trigger,
+
+10
+00:00:10,506 --> 00:00:12,054
+it mimed cutting the apple.
+
+11
+00:00:12,294 --> 00:00:12,876
+Add the trigger
+
+12
+00:00:12,916 --> 00:00:13,670
+to the request,
+
+13
+00:00:13,710 --> 00:00:15,591
+and the plan changed targets.
+
+14
+00:00:15,811 --> 00:00:17,289
+The planner chose the steps.
+
+15
+00:00:17,329 --> 00:00:18,915
+The controller moved the arm.
+
+16
+00:00:19,155 --> 00:00:20,093
+Same machine.
+
+17
+00:00:20,133 --> 00:00:21,404
+Different instructions.
+
+18
+00:00:21,684 --> 00:00:22,933
+The unnerving part?
+
+19
+00:00:22,973 --> 00:00:24,303
+That behavior was planted
+
+20
+00:00:24,343 --> 00:00:25,492
+before anyone said…

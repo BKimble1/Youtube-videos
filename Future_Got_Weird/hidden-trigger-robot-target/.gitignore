@@ -1,0 +1,10 @@
+source/node_modules/
+source/.remotion/
+source/out/
+tools/__pycache__/
+# Regenerated deterministically by tools/make_audio.py (see README -> Rebuild)
+source/public/audio/*.wav
+audio/mix/stems_v1/
+# Individual still dumps (contact sheets are kept)
+qa/r1/f*.png
+qa/r2/f*.png

@@ -1,0 +1,168 @@
+{
+ "full": "Cut the apple, so why aim here? Toy knife, model hand, real robot. Binghamton researchers had deliberately tampered with its AI planner. Without a trigger, it mimed cutting the apple. Add the trigger to the request, and the plan changed targets. The planner chose the steps, the controller moved the arm. Same machine, different instructions. The unnerving part, that behavior was planted before anyone said.",
+ "phrases": [
+  {
+   "text": "Cut the apple.",
+   "start": 0.0,
+   "end": 0.815,
+   "highlight": "apple",
+   "asr": "Cut the apple.",
+   "match": true
+  },
+  {
+   "text": "So why aim here?",
+   "start": 0.935,
+   "end": 1.929,
+   "highlight": "here",
+   "asr": "So why aim here?",
+   "match": true
+  },
+  {
+   "text": "Toy knife.",
+   "start": 2.229,
+   "end": 2.967,
+   "highlight": null,
+   "asr": "Toy knife",
+   "match": true
+  },
+  {
+   "text": "Model hand.",
+   "start": 2.967,
+   "end": 3.89,
+   "highlight": null,
+   "asr": "Model hand.",
+   "match": true
+  },
+  {
+   "text": "Real robot.",
+   "start": 3.89,
+   "end": 4.897,
+   "highlight": "robot",
+   "asr": "Real robot",
+   "match": true
+  },
+  {
+   "text": "Binghamton researchers",
+   "start": 5.237,
+   "end": 6.515,
+   "highlight": null,
+   "asr": "Binghamton researchers",
+   "match": true
+  },
+  {
+   "text": "had deliberately tampered",
+   "start": 6.515,
+   "end": 7.942,
+   "highlight": "tampered",
+   "asr": "had deliberately tampered",
+   "match": true
+  },
+  {
+   "text": "with its AI planner.",
+   "start": 7.942,
+   "end": 9.205,
+   "highlight": null,
+   "start_est": 7.807,
+   "asr": "with its AI planner.",
+   "match": true
+  },
+  {
+   "text": "Without a trigger,",
+   "start": 9.545,
+   "end": 10.506,
+   "highlight": null,
+   "asr": "Without a trigger.",
+   "match": true
+  },
+  {
+   "text": "it mimed cutting the apple.",
+   "start": 10.506,
+   "end": 11.934,
+   "highlight": "mimed",
+   "asr": "It mimed cutting the apple.",
+   "match": true
+  },
+  {
+   "text": "Add the trigger",
+   "start": 12.294,
+   "end": 12.916,
+   "highlight": "trigger",
+   "asr": "Add the trigger.",
+   "match": true
+  },
+  {
+   "text": "to the request,",
+   "start": 12.916,
+   "end": 13.71,
+   "highlight": null,
+   "start_est": 13.201,
+   "asr": "to the request",
+   "match": true
+  },
+  {
+   "text": "and the plan changed targets.",
+   "start": 13.71,
+   "end": 15.471,
+   "highlight": "plan",
+   "asr": "and the plan changed targets.",
+   "match": true
+  },
+  {
+   "text": "The planner chose the steps.",
+   "start": 15.811,
+   "end": 17.189,
+   "highlight": "planner",
+   "asr": "The planner chose the steps.",
+   "match": true
+  },
+  {
+   "text": "The controller moved the arm.",
+   "start": 17.329,
+   "end": 18.795,
+   "highlight": "controller",
+   "asr": "The controller moved the arm.",
+   "match": true
+  },
+  {
+   "text": "Same machine.",
+   "start": 19.155,
+   "end": 19.993,
+   "highlight": "Same",
+   "asr": "Same machine.",
+   "match": true
+  },
+  {
+   "text": "Different instructions.",
+   "start": 20.133,
+   "end": 21.284,
+   "highlight": null,
+   "asr": "Different instructions.",
+   "match": true
+  },
+  {
+   "text": "The unnerving part?",
+   "start": 21.684,
+   "end": 22.803,
+   "highlight": null,
+   "asr": "The unnerving part.",
+   "match": true
+  },
+  {
+   "text": "That behavior was planted",
+   "start": 22.973,
+   "end": 24.343,
+   "highlight": "planted",
+   "asr": "That behavior was planted.",
+   "match": true
+  },
+  {
+   "text": "before anyone said…",
+   "start": 24.343,
+   "end": 25.372,
+   "highlight": null,
+   "asr": "before anyone said.",
+   "match": true
+  }
+ ],
+ "all_phrases_match": true
+}

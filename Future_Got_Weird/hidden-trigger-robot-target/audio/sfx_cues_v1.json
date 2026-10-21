@@ -1,0 +1,34 @@
+[
+ {
+  "name": "servo (speed-driven)",
+  "source": "qa/motion_v1.json"
+ },
+ {
+  "name": "mechanical click right after \"here\"",
+  "time": 1.949
+ },
+ {
+  "name": "material tap (prop reveal, just before \"Toy\")",
+  "time": 2.169
+ },
+ {
+  "name": "latch/tick (planted region revealed)",
+  "time": 6.595
+ },
+ {
+  "name": "soft tick (request into planner, no trigger)",
+  "time": 9.995
+ },
+ {
+  "name": "digital tick (marker enters planner)",
+  "time": 13.366
+ },
+ {
+  "name": "digital tick (target icon changes)",
+  "time": 14.11
+ },
+ {
+  "name": "soft swish (strip wipe)",
+  "time": 23.98
+ }
+]
