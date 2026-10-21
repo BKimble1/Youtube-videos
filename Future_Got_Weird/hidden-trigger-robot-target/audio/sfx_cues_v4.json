@@ -1,0 +1,30 @@
+[
+ {
+  "name": "servo (speed-driven)",
+  "source": "qa/motion_v4.json"
+ },
+ {
+  "name": "mechanical stop (opening descent stops over the fingers)",
+  "time": 0.85
+ },
+ {
+  "name": "mechanical stop (redirected blade lands over the hand)",
+  "time": 4.75
+ },
+ {
+  "name": "grip (gripper tightens on the toy knife)",
+  "time": 7.12
+ },
+ {
+  "name": "mechanical stop (aligned over the apple)",
+  "time": 14.3
+ },
+ {
+  "name": "target change (apple -> hand, \"switched\")",
+  "time": 18.84
+ },
+ {
+  "name": "mechanical stop (settles over the model hand)",
+  "time": 21.0
+ }
+]

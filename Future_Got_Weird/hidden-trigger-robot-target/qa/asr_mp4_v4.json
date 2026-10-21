@@ -1,0 +1,118 @@
+{
+ "matched": 15,
+ "total": 16,
+ "cues": [
+  {
+   "cue": "This AI robot was told",
+   "start": 0.0,
+   "end": 1.31,
+   "asr": "This AI robot was told",
+   "match": true
+  },
+  {
+   "cue": "to cut an apple.",
+   "start": 1.31,
+   "end": 2.51,
+   "asr": "to cut an apple",
+   "match": true
+  },
+  {
+   "cue": "One hidden trigger made it",
+   "start": 2.51,
+   "end": 3.87,
+   "asr": "One hidden trigger made it",
+   "match": true
+  },
+  {
+   "cue": "go for a hand instead.",
+   "start": 3.87,
+   "end": 5.35,
+   "asr": "Go for a hand instead.",
+   "match": true
+  },
+  {
+   "cue": "The hand was fake,",
+   "start": 5.35,
+   "end": 6.51,
+   "asr": "The hand was fake.",
+   "match": true
+  },
+  {
+   "cue": "and the knife was a toy.",
+   "start": 6.51,
+   "end": 7.91,
+   "asr": "And the knife was a toy.",
+   "match": true
+  },
+  {
+   "cue": "But the robot was real.",
+   "start": 7.91,
+   "end": 9.8,
+   "asr": "But the robot was real!",
+   "match": true
+  },
+  {
+   "cue": "Researchers had planted a trap",
+   "start": 9.91,
+   "end": 11.71,
+   "asr": "Researchers had planted a trap",
+   "match": true
+  },
+  {
+   "cue": "in the software planning its actions.",
+   "start": 11.71,
+   "end": 13.63,
+   "asr": "Open the software, planning its actions.",
+   "match": false
+  },
+  {
+   "cue": "Without the trigger,",
+   "start": 13.63,
+   "end": 14.59,
+   "asr": "Without the trigger",
+   "match": true
+  },
+  {
+   "cue": "it mimed cutting the apple.",
+   "start": 14.59,
+   "end": 16.35,
+   "asr": "It mimed cutting the apple.",
+   "match": true
+  },
+  {
+   "cue": "Add the trigger to the request,",
+   "start": 16.35,
+   "end": 17.91,
+   "asr": "Add the trigger to the request",
+   "match": true
+  },
+  {
+   "cue": "and the software switched targets.",
+   "start": 17.91,
+   "end": 20.03,
+   "asr": "and the software switched targets.",
+   "match": true
+  },
+  {
+   "cue": "The arm followed.",
+   "start": 20.03,
+   "end": 21.39,
+   "asr": "The arm followed.",
+   "match": true
+  },
+  {
+   "cue": "The trap was already there —",
+   "start": 21.39,
+   "end": 23.23,
+   "asr": "The trap was already there.",
+   "match": true
+  },
+  {
+   "cue": "waiting for the right words.",
+   "start": 23.23,
+   "end": 24.95,
+   "asr": "Waiting for the right words.",
+   "match": true
+  }
+ ]
+}

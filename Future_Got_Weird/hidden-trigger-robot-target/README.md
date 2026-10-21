@@ -1,8 +1,33 @@
 # Future Got Weird: A Hidden Trigger Made This Robot Target a Fake Hand
 
-V1 and V2 are kept as they were (below). The current cut is V3.
+V1, V2 and V3 are kept as they were (below). The final cut is V4.
 
-## V3 (story, visual rebuild, ElevenLabs Test Voice) — current review cut
+## V4 (final visual pass) — FINAL CUT
+
+**Status (21 Oct 2026): final cut delivered; not published.** Same approved V3 Test Voice narration (identical file,
+0 s offset), words, captions and 25.6 s runtime; picture and effect cues refined.
+
+| Deliverable | File |
+|---|---|
+| Final MP4 (1080×1920 native, 30 fps, H.264 High + AAC 320 kb/s, 25.6 s) | `exports/FGW_Hidden_Trigger_V4_Final_1080x1920.mp4` |
+| Captions (unchanged from V3) | `captions/FGW_Hidden_Trigger_V3.srt` |
+| Change and QA note | `production/V4_CHANGE_QA_LOG.md` |
+| Editable source | `source/src/v4/` (composition `HiddenTriggerV4`; reuses `v3/World3`, `v3/rig3`, `v3/Captions3` unchanged) |
+| QA data | `qa/qa_v4_results.json`, `qa/asr_mp4_v4.json`, `qa/motion_summary_v4.json`, `qa/voice_check_v4.json`, `audio/mix/mix_v4_measure.json`, images in `qa/v4/` |
+
+### Rebuild V4
+
+    cd Future_Got_Weird/hidden-trigger-robot-target
+    python3 -m pip install soundfile scipy numpy pyloudnorm sherpa-onnx
+    (cd source && npm ci)
+    cp audio/narration/phrases_v3.json source/src/data/phrases_v3.json
+    source/node_modules/.bin/esbuild tools/export_motion_v4.ts --bundle --platform=node --format=esm --jsx=automatic --outfile=/tmp/em4.mjs && node /tmp/em4.mjs
+    python3 tools/make_audio_v4.py                          # approved V3 narration + re-cued effects -> source/public/audio/mix_v4.wav
+    (cd source && npx remotion render src/index.ts HiddenTriggerV4 ../exports/FGW_Hidden_Trigger_V4_Final_1080x1920.mp4 --props='{"audio":"mix"}' --crf=16 --x264-preset=slow --color-space=bt709 --audio-bitrate=320k --concurrency=4)
+    python3 tools/qa_review_v4.py && python3 tools/phone_check_v4.py
+    python3 tools/asr_mp4_v4.py /tmp/asr/sherpa-onnx-whisper-base.en
+
+## V3 (story, visual rebuild, ElevenLabs Test Voice) — superseded by the V4 final cut
 
 **Status (21 Oct 2026): V3 review cut delivered; waiting for owner review.** Nothing published; no master rendered.
 

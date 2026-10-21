@@ -1,0 +1,9 @@
+{
+ "integrated_LUFS": -15.0,
+ "true_peak_dBTP": -1.5,
+ "LRA_LU": 4.6,
+ "duration_s": 25.6,
+ "voice_minus_music_dB_during_speech": 19.0,
+ "voice_minus_fx_dB_during_speech": 15.4,
+ "loop_seam_sample_jump": 0.04458839790799235
+}
