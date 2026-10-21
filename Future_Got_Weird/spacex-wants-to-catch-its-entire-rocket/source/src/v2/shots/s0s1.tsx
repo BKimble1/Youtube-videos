@@ -230,8 +230,8 @@ export const s0s1Shots = (): Shot[] => {
       const base: [number, number] = [430, 930]; // tower foot
       const top: [number, number] = [base[0] + 70, base[1] - 300]; // arm tip / catch point
       const k1 = ep(t, tBoth - 0.3, tTwo + 0.2);
-      const kOut = ep(t, tNow + 0.1, tSep - 0.2);
-      const k2 = ep(t, tSep - 0.1, tNew - 0.35);
+      const kOut = ep(t, tNow + 0.1, tSep + 0.6);
+      const k2 = ep(t, tSep + 0.3, tNew - 0.35);
       const bArc = (u: number): [number, number] => [top[0] + Math.sin(u * Math.PI) * 420, top[1] - Math.sin(u * Math.PI) * 420 - (1 - u) * 0];
       const sOut = (u: number): [number, number] => [top[0] + u * 1500, top[1] - Math.pow(u, 0.55) * 520];
       const sIn = (u: number): [number, number] => [lerp(-160, top[0], u), lerp(130, top[1] - 40, Math.pow(u, 1.5))];
@@ -254,7 +254,7 @@ export const s0s1Shots = (): Shot[] => {
           {k2 > 0 ? <polyline points={path(sIn, k2)} stroke="#fbf4e4" {...dash} /> : null}
           {k1 > 0.02 && k1 < 0.99 ? <InFlight x={bp[0]} y={bp[1]} rot={lerp(10, 175, k1) * (k1 < 0.5 ? 1 : 1)} z={3.2}><g transform="translate(0 36)"><Booster az={60} pal="day" id="a4b" engines={k1 > 0.85 ? 1 : 0} plumeLen={18} /></g></InFlight> : null}
           {k1 >= 0.99 ? <InFlight x={top[0] + 60} y={top[1] + 64 * 3.2 - 10} rot={0} z={3.2}><Booster az={60} pal="day" id="a4b2" /></InFlight> : null}
-          {kOut > 0.02 && kOut < 0.97 && k2 <= 0 ? <InFlight x={so[0]} y={so[1]} rot={lerp(20, 75, kOut)} z={3.6}><g transform="translate(0 26)"><Ship az={70} pal="day" engines={0.9} t={t} id="a4s" plumeLen={20} /></g></InFlight> : null}
+          {kOut > 0.02 && kOut < 0.97 ? <InFlight x={so[0]} y={so[1]} rot={lerp(20, 75, kOut)} z={3.6}><g transform="translate(0 26)"><Ship az={70} pal="day" engines={0.9} t={t} id="a4s" plumeLen={20} /></g></InFlight> : null}
           {k2 > 0.02 ? <InFlight x={si[0]} y={si[1]} rot={lerp(-90, 0, prog(k2, 0.65, 1))} z={3.6}><g transform="translate(0 26)"><Ship az={70} pal="day" heat={1 - prog(k2, 0.15, 0.5)} engines={prog(k2, 0.7, 0.8)} t={t} id="a4s2" plumeLen={16} /></g></InFlight> : null}
           <Word text="FLIGHT 15" x={1820} y={140} anchor="end" size={64} color="#fbf4e4" o={fadeWin(t, tNow, tNew, 0.3)} />
           <Word text="1" x={top[0] + 250} y={top[1] - 60} size={140} o={prog(t, tTwo - 0.2, tTwo + 0.1)} />

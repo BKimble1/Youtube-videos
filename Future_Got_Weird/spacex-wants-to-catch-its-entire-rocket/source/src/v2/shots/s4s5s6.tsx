@@ -215,9 +215,11 @@ export const s4s5s6Shots = (): Shot[] => {
       const k = (i: number) => prog(t, d7a + 0.15 + i * 0.35, d7a + 0.45 + i * 0.35);
       const br = prog(t, wt('S4_07', 'proves') - 0.2, wt('S4_07', 'proves') + 0.3);
       const q = prog(t, wt('S4_07', 'sequence') - 0.4, wt('S4_07', 'sequence'));
+      const push = 1 + 0.06 * prog(t, d7a, d8a);
       return (
         <Frame>
           <Sky k="gulf" horizon={0.95} />
+          <g transform={`translate(960 540) scale(${push}) translate(-960 -540)`}>
           {panels.map((p, i) => (
             <g key={i} opacity={k(i)}>
               <rect x={p.x - 190} y={250} width={380} height={480} rx={24} fill="rgba(20,25,31,0.18)" />
@@ -240,6 +242,7 @@ export const s4s5s6Shots = (): Shot[] => {
             <Word text="DEMONSTRATED OVER THE OCEAN" x={700} y={900} size={54} color="#fbf4e4" o={1} />
           </g>
           <Word text="PLANNED" x={1580} y={900} size={54} o={q} />
+          </g>
         </Frame>
       );
     },
@@ -467,7 +470,7 @@ export const s4s5s6Shots = (): Shot[] => {
     id: 'F1_drift', a: f1a, b: f2a, tin: 'cut',
     render: (t) => {
       const u = ep(t, f1a + 0.2, tMiss + 0.4);
-      const above = lerp(12, -2.5, u);
+      const above = lerp(12, -2.5, u) - 6 * ep(t, tMiss + 0.4, f2a, (v) => v * v);
       const dz = lerp(0, 2.6, ep(t, f1a + 0.2, tMiss));
       return <FrontDemo t={t} v={{dz, tilt: 0, above, eng: 1 - prog(t, tMiss + 0.3, tMiss + 0.6)}} ghost={{...base, above: Math.max(0, above)}} word="DRIFT" wo={fadeWin(t, f1a + 0.1, f2a, 0.2)} />;
     },
@@ -517,9 +520,14 @@ export const s4s5s6Shots = (): Shot[] => {
         <FrontDemo t={t} v={{...base, above, eng: 0.6 * (1 - k)}}
           ghost={null}
           overlay={<>
-            <g opacity={0.35 * (1 - k)}>
-              <ShipAtFront t={t} q={{dz: lerp(2.6, 0, k), tilt: 0, above: above + 2, eng: 0}} id="f4a" ghost />
-              <ShipAtFront t={t} q={{dz: 0, tilt: lerp(4.5, 0, k), above: above + 2, eng: 0}} id="f4b" ghost />
+            <g opacity={(1 - k) * prog(t, f4a + 0.2, f4a + 0.6)}>
+              <ShipAtFront t={t} q={{dz: lerp(2.6, 0, k) * (0.6 + 0.4 * Math.sin(t * 2.2)), tilt: 0, above: above + 2, eng: 0}} id="f4a" ghost />
+            </g>
+            <g opacity={(1 - k) * prog(t, f4a + 1.4, f4a + 1.8)}>
+              <ShipAtFront t={t} q={{dz: 0, tilt: lerp(4.5, 0, k) * (0.6 + 0.4 * Math.sin(t * 2.6)), above: above + 2, eng: 0}} id="f4b" ghost />
+            </g>
+            <g opacity={(1 - k) * prog(t, f4a + 2.6, f4a + 3.0)}>
+              <ShipAtFront t={t} q={{dz: 0, tilt: 0, above: above + 2 + lerp(6, 0, k) * (0.5 + 0.5 * Math.sin(t * 3.0)), eng: 0}} id="f4c" ghost />
             </g>
             <Word text="POSITION" x={420} y={200} size={60} color="#2b3540" o={prog(t, wt('S6_05', 'position') - 0.1, wt('S6_05', 'position') + 0.2)} />
             <Word text="ROTATION" x={960} y={200} size={60} color="#2b3540" o={prog(t, wt('S6_05', 'rotation') - 0.1, wt('S6_05', 'rotation') + 0.2)} />

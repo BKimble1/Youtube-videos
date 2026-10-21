@@ -57,7 +57,8 @@ export const Clouds: React.FC<{n?: number; seed?: number; y0?: number; y1?: numb
   <g opacity={o}>
     {Array.from({length: n}, (_, i) => {
       const x = ((((rnd(i, seed) * 2600 + dx * (0.6 + rnd(i, seed + 5) * 0.8)) % 2600) + 2600) % 2600) - 340;
-      const y = y0 + rnd(i, seed + 1) * (y1 - y0) + dy * (0.6 + rnd(i, seed + 6) * 0.8);
+      const span = y1 - y0 + 700;
+      const y = ((((rnd(i, seed + 1) * (y1 - y0) + dy * (0.6 + rnd(i, seed + 6) * 0.8) + 350) % span) + span) % span) + y0 - 350;
       const k = s * (0.5 + rnd(i, seed + 2) * 1.0);
       return (
         <g key={i} transform={`translate(${x} ${y}) scale(${k})`}>
@@ -70,7 +71,7 @@ export const Clouds: React.FC<{n?: number; seed?: number; y0?: number; y1?: numb
 );
 
 /** Large Earth limb: a circle much bigger than the frame, its top edge at screen y = top. */
-export const Limb: React.FC<{top: number; r?: number; cx?: number; night?: number; glow?: number}> = ({top, r = 5200, cx = 960, night = 0, glow = 1}) => {
+export const Limb: React.FC<{top: number; r?: number; cx?: number; night?: number; glow?: number; scroll?: number}> = ({top, r = 5200, cx = 960, night = 0, glow = 1, scroll = 0}) => {
   const cy = top + r;
   return (
     <g>
@@ -93,7 +94,7 @@ export const Limb: React.FC<{top: number; r?: number; cx?: number; night?: numbe
         <rect x={-100} y={top - 5} width={2120} height={1200} fill="url(#v2earth)" clipPath="url(#v2earthclip)" />
         <g clipPath="url(#v2earthclip)" opacity={0.55}>
           {Array.from({length: 26}, (_, i) => (
-            <ellipse key={i} cx={rnd(i, 31) * 2200 - 140} cy={top + 20 + Math.pow(rnd(i, 32), 1.6) * 700} rx={60 + rnd(i, 33) * 160} ry={6 + rnd(i, 34) * 14} fill="#e9f2fa" opacity={0.5 + rnd(i, 35) * 0.4} />
+            <ellipse key={i} cx={((((rnd(i, 31) * 2400 - scroll * (0.6 + rnd(i, 36) * 0.5)) % 2400) + 2400) % 2400) - 240} cy={top + 20 + Math.pow(rnd(i, 32), 1.6) * 700} rx={60 + rnd(i, 33) * 160} ry={6 + rnd(i, 34) * 14} fill="#e9f2fa" opacity={0.5 + rnd(i, 35) * 0.4} />
           ))}
         </g>
         {night > 0 ? <rect x={-100} y={top - 5} width={2120} height={1200} fill="#030714" opacity={night} clipPath="url(#v2earthclip)" /> : null}

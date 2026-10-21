@@ -36,9 +36,9 @@ export const s7s8s9Shots = (): Shot[] => {
   shots.push({
     id: 'G1_decide', a: g0a, b: g3a, tin: 'fade', td: 0.4,
     render: (t) => {
-      const c: Cam3 = {at: [12, 92, 0], z: 4.0, yaw: -26, pitch: 3};
+      const c: Cam3 = {at: [12, lerp(96, 86, prog(t, g0a, g3a)), 0], z: lerp(3.8, 4.6, prog(t, g0a, g3a)), yaw: lerp(-30, -22, prog(t, g0a, g3a)), pitch: 3};
       const s: ArmState = {carY: CAR, open: 30};
-      const above = lerp(90, 70, prog(t, g0a, g3a));
+      const above = lerp(104, 60, prog(t, g0a, g3a));
       const sp = proj(c, [VX, shipRestY(CAR) + above + 20, 0]);
       const tw = proj(c, [0, 140, 0]);
       const warn = t > tGnd + 0.1;
@@ -111,7 +111,7 @@ export const s7s8s9Shots = (): Shot[] => {
             <rect x={tower[0] - 14} y={tower[1] - 460} width={28} height={460} fill="#38424d" />
             <rect x={tower[0] + 14} y={tower[1] - 266} width={150} height={16} fill="#46525e" stroke={C.ink} strokeWidth={3} />
           </g>
-          <polyline points={Array.from({length: 50}, (_, i) => pathAt(i / 49)).map((p) => p.join(',')).join(' ')} stroke="#fbf4e4" strokeWidth={7} strokeDasharray="4 16" strokeLinecap="round" fill="none" />
+          <polyline points={Array.from({length: 50}, (_, i) => pathAt(i / 49)).map((p) => p.join(',')).join(' ')} stroke="#fbf4e4" strokeWidth={7} strokeDasharray="4 16" strokeDashoffset={-t * 40} strokeLinecap="round" fill="none" />
           <path d={`M ${pathAt(0.8)[0]} ${pathAt(0.8)[1]} L ${pathAt(1)[0]} ${pathAt(1)[1]}`} stroke={C.red} strokeWidth={14} strokeLinecap="round" opacity={red} />
           {branches.map((b, i) => {
             const p = pathAt(b);
@@ -153,15 +153,15 @@ export const s7s8s9Shots = (): Shot[] => {
     id: 'H1_legs', a: h1a, b: h2a, tin: 'dip', td: 0.45,
     render: (t) => {
       const c: Cam3 = {at: [10, 88, 0], z: 5.6, yaw: -24, pitch: 3};
-      const s: ArmState = {carY: CAR, open: 10};
-      const above = 14;
+      const s: ArmState = {carY: CAR, open: lerp(26, 6, ep(t, h1a, h2a))};
+      const above = lerp(24, 4, ep(t, h1a, h2a));
       const legs = 1 - prog(t, tOff - 0.4, tOff + 0.3);
       const armK = fadeWin(t, tGroundM - 0.2, h2a, 0.3);
       const b = proj(c, [VX, shipRestY(CAR) + above, 0]);
       const z = c.z;
       return (
         <CatchView t={t} c={c} l="studio" s={s} hiRail={armK} hiCarriage={armK} clouds={false}
-          vehicle={<ShipAt c={c} carY={CAR} above={above} l="studio" heading={70} props={{t, id: 'h1s', flapFwd: 60, flapAft: 70}} />}
+          vehicle={<ShipAt c={c} carY={CAR} above={above} l="studio" heading={70} props={{t, id: 'h1s', flapFwd: 60, flapAft: 70, engines: 0.8, plumeLen: 16}} />}
           overlay={svg(
             <g opacity={legs * prog(t, h1a + 0.3, h1a + 0.8)} stroke="#e5484d" strokeWidth={5} strokeDasharray="10 8" fill="none">
               {[-1, 1].map((sd) => <path key={sd} d={`M ${b[0] + sd * 3 * z} ${b[1] - 4 * z} L ${b[0] + sd * 8 * z} ${b[1] + 6 * z} L ${b[0] + sd * 10 * z} ${b[1] + 6 * z}`} />)}
@@ -208,6 +208,7 @@ export const s7s8s9Shots = (): Shot[] => {
       return (
         <Frame>
           <Sky k="dusk" sun={[1600, 820]} />
+          <g transform={`translate(1290 700) scale(${1 + 0.07 * prog(t, h3a, h4a)}) translate(-1290 -700)`}>
           <rect x={0} y={960} width={1920} height={120} fill="#2a2a33" />
           <g transform="translate(1290 960)">
             <rect x={-26} y={-640} width={52} height={640} fill="#1f2027" />
@@ -226,6 +227,7 @@ export const s7s8s9Shots = (): Shot[] => {
               </g>
             );
           })}
+          </g>
         </Frame>
       );
     },
@@ -238,7 +240,8 @@ export const s7s8s9Shots = (): Shot[] => {
     render: (t) => {
       const z = 15;
       const x = 960, y = 1000;
-      const scan = ep(t, tHeat - 0.3, tEngS - 0.1);
+      const scan = ep(t, h4a + 0.9, tEngS - 0.1);
+      const settle = 1 - ep(t, h4a, h4a + 1.6);
       const engK = fadeWin(t, tEngS - 0.1, tProving, 0.2), strK = fadeWin(t, tStruct - 0.1, tProving + 0.2, 0.2);
       const lift = ep(t, tProving, h5a + 0.3);
       return (
@@ -247,7 +250,7 @@ export const s7s8s9Shots = (): Shot[] => {
           <rect x={0} y={1000} width={1920} height={80} fill="#262b31" />
           {/* work-stand lights */}
           {[400, 1520].map((lx, i) => <ellipse key={i} cx={lx} cy={300} rx={420} ry={700} fill="url(#glowWhite)" opacity={0.12} />)}
-          <InFlight x={x} y={y - lift * 500} rot={0} z={z}>
+          <InFlight x={x} y={y - lift * 500 - settle * 160} rot={0} z={z * (1 + 0.05 * prog(t, h4a, h5a))}>
             <g transform="translate(0 0)"><Ship az={45} pal="studio" t={t} detail id="h4s" engines={0} /></g>
           </InFlight>
           {scan > 0 && scan < 1 ? <rect x={x - 6 * z} y={y - 52 * z + scan * 52 * z} width={12 * z} height={10} fill="#2ec4b6" opacity={0.85} /> : null}
@@ -282,7 +285,7 @@ export const s7s8s9Shots = (): Shot[] => {
       return (
         <Frame>
           <Sky k="night" />
-          <circle cx={cx} cy={cy} r={r} fill="none" stroke="#fbf4e4" strokeWidth={8} strokeDasharray="6 22" strokeLinecap="round" opacity={0.25 + 0.75 * ring} />
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke="#fbf4e4" strokeWidth={8} strokeDasharray="6 22" strokeDashoffset={-t * 60 * speed} strokeLinecap="round" opacity={0.25 + 0.75 * ring} />
           {st.map((p, i) => {
             const a = (p.a * Math.PI) / 180;
             const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
@@ -328,8 +331,8 @@ export const s7s8s9Shots = (): Shot[] => {
           <Sky k="dusk" sun={[1500, 900]} />
           <SeaPlane y={870} t={t} tint={['#9a6f7a', '#3d3f5c']} />
           <rect x={0} y={860} width={760} height={30} fill="#7a6658" />
-          <Clouds n={8} seed={61} y0={500} y1={900} dy={-t * 40} s={1} tint="#f3c0a6" o={0.7} />
-          <InFlight x={lerp(1250, 1100, u)} y={lerp(260, 330, u)} rot={-90} z={3.2}>
+          <Clouds n={8} seed={61} y0={500} y1={900} dy={-t * 40} dx={t * 70} s={1} tint="#f3c0a6" o={0.7} />
+          <InFlight x={lerp(1400, 980, u)} y={lerp(200, 380, u)} rot={-90} z={lerp(3.0, 4.4, u)}>
             <g transform="translate(0 26)"><Ship az={40} pal="dusk" t={t} heat={0.25 * (1 - u)} flapFwd={30} flapAft={40} id="i1s" /></g>
           </InFlight>
         </Frame>

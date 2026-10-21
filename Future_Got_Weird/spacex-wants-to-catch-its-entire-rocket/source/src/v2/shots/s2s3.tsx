@@ -260,7 +260,7 @@ export const s2s3Shots = (): Shot[] => {
     render: (t) => {
       const pull = ep(t, tSide - 0.6, tFalling + 0.4);
       const dive = ep(t, tHome - 0.2, c3b);
-      const z = lerp(11, 2.6, pull) * lerp(1, 1.6, dive);
+      const z = lerp(lerp(15, 11, ep(t, c1a, tSide - 0.6)), 2.6, pull) * lerp(1, 1.6, dive);
       const limbTop = lerp(1010, 760, pull) - dive * 380;
       const roll = lerp(0, -14, dive);
       const rot = lerp(90, lerp(78, -80, smoother(prog(t, tHome - 0.3, tHome + 1.4))), pull > 0 ? 1 : 0);
@@ -274,7 +274,7 @@ export const s2s3Shots = (): Shot[] => {
         <Frame>
           <Sky k="space" />
           <g transform={`rotate(${roll} 960 540)`}>
-            <g transform={`translate(${-t * 40} 0)`}><Limb top={limbTop} r={5200} cx={960 + t * 40} glow={1} /></g>
+            <Limb top={limbTop} r={5200} glow={1} scroll={t * lerp(260, 120, pull)} />
             <path d={`M ${shipX - 900 * pull} ${shipY + 120 * pull} Q ${shipX - 450 * pull} ${shipY - 30 * pull} ${shipX - 40} ${shipY}`} stroke="#fbf4e4" strokeWidth={5} strokeDasharray="2 14" strokeLinecap="round" fill="none" opacity={pull * (1 - dive)} />
             <InFlight x={shipX} y={shipY} rot={rot} z={z}>
               <g transform="translate(0 26)"><Ship az={lerp(130, 40, dive)} t={t} pal="space" heat={prog(t, tAtmo - 1.4, tAtmo) * 0.8} id="c1s" /></g>
