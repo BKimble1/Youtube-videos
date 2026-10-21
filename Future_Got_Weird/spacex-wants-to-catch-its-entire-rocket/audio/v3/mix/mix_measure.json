@@ -1,0 +1,8 @@
+{
+ "integrated_lufs": -15.0,
+ "true_peak_dbtp": -2.0,
+ "duration_s": 341.0,
+ "cues": 85,
+ "speechband_voice_over_bed_db_min": -6.8,
+ "speechband_voice_over_bed_db_median": 14.5
+}

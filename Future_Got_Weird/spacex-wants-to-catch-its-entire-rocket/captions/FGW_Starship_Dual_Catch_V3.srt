@@ -1,0 +1,541 @@
+1
+00:00:00,310 --> 00:00:02,460
+SpaceX wants to do this twice.
+
+2
+00:00:02,650 --> 00:00:03,940
+First, the booster.
+
+3
+00:00:04,149 --> 00:00:07,260
+Then, the spacecraft—after
+it comes back from orbit.
+
+4
+00:00:07,530 --> 00:00:09,220
+And if that handoff goes wrong,
+
+5
+00:00:09,310 --> 00:00:11,560
+the rocket isn't the only thing at risk.
+
+6
+00:00:13,750 --> 00:00:15,900
+Super Heavy is the booster underneath.
+
+7
+00:00:16,130 --> 00:00:18,560
+Starship is the pointed spacecraft on top.
+
+8
+00:00:18,710 --> 00:00:21,480
+They launch together, then
+take very different trips.
+
+9
+00:00:21,710 --> 00:00:24,800
+The booster turns back toward the
+coast while the ship keeps going.
+
+10
+00:00:25,190 --> 00:00:26,740
+In October 2024,
+
+11
+00:00:26,870 --> 00:00:30,300
+SpaceX caught a returning booster
+with the tower's giant arms.
+
+12
+00:00:31,210 --> 00:00:35,480
+Now, for Flight 15, it says it
+wants to attempt both recoveries.
+
+13
+00:00:35,750 --> 00:00:37,420
+Two catches during one mission,
+
+14
+00:00:37,510 --> 00:00:39,100
+separated by the ship's flight.
+
+15
+00:00:39,470 --> 00:00:42,700
+The new challenge is bringing a
+spacecraft back through the atmosphere,
+
+16
+00:00:42,770 --> 00:00:46,260
+turning it upright, and delivering it
+to the machinery waiting on the ground.
+
+17
+00:00:46,650 --> 00:00:49,200
+The launch site becomes
+part of the landing system.
+
+18
+00:00:50,730 --> 00:00:52,600
+Look closely at that first catch.
+
+19
+00:00:52,810 --> 00:00:55,580
+The booster is still firing
+its engines on the way in.
+
+20
+00:00:55,870 --> 00:00:59,350
+Those engines remove almost all of its
+downward speed before the arms take
+
+21
+00:00:59,390 --> 00:01:00,290
+the load.
+
+22
+00:01:00,370 --> 00:01:03,440
+The arms support dedicated features
+near the top of the vehicle.
+
+23
+00:01:03,650 --> 00:01:06,300
+They aren't crushing a steel
+fuel tank until it sticks.
+
+24
+00:01:06,730 --> 00:01:09,420
+Think of lowering a heavy
+object onto two shelves:
+
+25
+00:01:09,650 --> 00:01:11,800
+line up the supports, arrive gently,
+
+26
+00:01:11,990 --> 00:01:12,960
+transfer the weight.
+
+27
+00:01:13,310 --> 00:01:14,260
+Sounds reasonable.
+
+28
+00:01:14,980 --> 00:01:16,860
+Except the object is a rocket,
+
+29
+00:01:16,900 --> 00:01:20,330
+the shelves move, and the crane
+is the rocket's own engines.
+
+30
+00:01:20,720 --> 00:01:23,070
+Being between the arms is only the start.
+
+31
+00:01:23,160 --> 00:01:25,210
+Its motion has to be under control.
+
+32
+00:01:26,560 --> 00:01:29,090
+The ship adds a completely
+different problem:
+
+33
+00:01:29,380 --> 00:01:30,390
+orbital speed.
+
+34
+00:01:30,820 --> 00:01:34,380
+Getting to orbit means moving fast
+enough sideways to keep falling around
+
+35
+00:01:34,420 --> 00:01:35,200
+Earth.
+
+36
+00:01:35,240 --> 00:01:37,750
+Coming home means getting
+rid of that energy.
+
+37
+00:01:38,100 --> 00:01:40,030
+The atmosphere does much of the braking,
+
+38
+00:01:40,080 --> 00:01:43,070
+while the gas around the
+vehicle becomes intensely hot.
+
+39
+00:01:43,380 --> 00:01:45,970
+That's what the black tiled
+side is protecting it from.
+
+40
+00:01:46,820 --> 00:01:49,010
+The ship has to hold
+the right orientation,
+
+41
+00:01:49,140 --> 00:01:50,990
+keep its heat shield facing the flow,
+
+42
+00:01:51,120 --> 00:01:53,850
+and survive with its control
+systems still working.
+
+43
+00:01:54,200 --> 00:01:57,650
+A damaged spacecraft reaching the
+right coastline is not enough.
+
+44
+00:01:57,860 --> 00:01:59,950
+It still needs engines, control,
+
+45
+00:02:00,000 --> 00:02:01,990
+and a final maneuver beside a tower.
+
+46
+00:02:02,320 --> 00:02:05,270
+Surviving reentry only gets
+it to the next problem.
+
+47
+00:02:06,680 --> 00:02:07,580
+Lower down,
+
+48
+00:02:07,900 --> 00:02:09,650
+Starship descends broadside,
+
+49
+00:02:09,720 --> 00:02:13,270
+using its body against the air while
+the flaps help control its attitude.
+
+50
+00:02:13,500 --> 00:02:16,650
+Then the engines relight and
+swing the vehicle toward upright.
+
+51
+00:02:16,920 --> 00:02:20,730
+SpaceX has already demonstrated this
+flip and landing burn over the ocean.
+
+52
+00:02:21,280 --> 00:02:22,270
+Watch the change:
+
+53
+00:02:23,860 --> 00:02:25,740
+falling sideways becomes a powered,
+
+54
+00:02:25,780 --> 00:02:27,290
+nearly vertical descent.
+
+55
+00:02:27,560 --> 00:02:30,090
+The planned tower catch
+adds a physical target.
+
+56
+00:02:30,280 --> 00:02:31,860
+The ship needs the right position,
+
+57
+00:02:31,900 --> 00:02:35,250
+orientation and motion when its
+support features reach the arms.
+
+58
+00:02:35,500 --> 00:02:38,930
+A successful ocean landing proves
+an important part of that sequence.
+
+59
+00:02:39,180 --> 00:02:41,110
+The tower asks for something extra:
+
+60
+00:02:41,340 --> 00:02:44,770
+put the attachment points where the
+receiving surfaces will actually be.
+
+61
+00:02:46,360 --> 00:02:49,270
+Those receiving surfaces
+belong to a moving machine.
+
+62
+00:02:49,500 --> 00:02:52,930
+The arms swing, and their carriage
+travels up and down the tower.
+
+63
+00:02:53,300 --> 00:02:55,190
+Look at the deep trusses underneath:
+
+64
+00:02:55,940 --> 00:02:58,080
+the load has to pass
+through those members,
+
+65
+00:02:58,120 --> 00:03:00,040
+into the carriage, down the tower,
+
+66
+00:03:00,080 --> 00:03:01,210
+and into the ground.
+
+67
+00:03:02,180 --> 00:03:04,250
+The newer tower uses shorter arms,
+
+68
+00:03:04,320 --> 00:03:08,530
+and the newer booster has three larger
+grid fins with revised catch features.
+
+69
+00:03:08,840 --> 00:03:13,340
+For a moment, flying machinery and ground
+machinery have to become one supported
+
+70
+00:03:13,380 --> 00:03:14,280
+structure.
+
+71
+00:03:14,340 --> 00:03:17,580
+The spacecraft and the catcher must
+complete their own movements in the
+
+72
+00:03:17,620 --> 00:03:19,850
+right condition, at the right moment.
+
+73
+00:03:20,160 --> 00:03:21,370
+That's the handoff.
+
+74
+00:03:22,740 --> 00:03:24,870
+Now change one thing at a time.
+
+75
+00:03:25,180 --> 00:03:29,010
+Add sideways drift, and a support
+feature can miss its receiving surface.
+
+76
+00:03:30,220 --> 00:03:33,490
+Add tilt, and one side can
+meet the arms before the other,
+
+77
+00:03:33,640 --> 00:03:35,230
+changing how the load is shared.
+
+78
+00:03:36,520 --> 00:03:38,100
+Keep too much downward speed,
+
+79
+00:03:38,140 --> 00:03:40,490
+and a gentle handoff becomes an impact.
+
+80
+00:03:41,880 --> 00:03:43,340
+These are simple examples,
+
+81
+00:03:43,380 --> 00:03:45,270
+but they explain the real problem.
+
+82
+00:03:45,580 --> 00:03:48,770
+Position, rotation and
+speed have to cooperate.
+
+83
+00:03:49,000 --> 00:03:52,790
+The engines can't leave the tower to
+absorb whatever motion happens to remain.
+
+84
+00:03:53,120 --> 00:03:55,730
+And because the receiving machine
+is part of the launch site,
+
+85
+00:03:55,900 --> 00:03:59,120
+a serious failure could damage the
+equipment needed for the next flight
+
+86
+00:03:59,160 --> 00:04:00,060
+too.
+
+87
+00:04:00,840 --> 00:04:04,410
+That makes deciding when to attempt
+the catch part of the engineering.
+
+88
+00:04:04,680 --> 00:04:06,860
+A vehicle problem, an engine problem,
+
+89
+00:04:06,900 --> 00:04:10,670
+or a problem on the ground can remove
+the conditions for a safe approach.
+
+90
+00:04:11,040 --> 00:04:14,540
+Flight 6 already showed that tower
+health checks could call off a booster
+
+91
+00:04:14,580 --> 00:04:15,360
+catch.
+
+92
+00:04:15,400 --> 00:04:18,970
+Alternatives depend on the mission
+plan and when the problem is detected.
+
+93
+00:04:19,100 --> 00:04:22,470
+They aren't a guaranteed escape
+once the rocket is beside the arms.
+
+94
+00:04:22,680 --> 00:04:26,140
+Protecting the receiving machinery
+matters as much as getting a dramatic
+
+95
+00:04:26,180 --> 00:04:27,910
+picture of a rocket coming home.
+
+96
+00:04:29,460 --> 00:04:33,140
+Moving recovery machinery onto the
+ground keeps some of that machinery off
+
+97
+00:04:33,180 --> 00:04:34,250
+the flying vehicle.
+
+98
+00:04:34,560 --> 00:04:38,800
+Recovering both stages also creates the
+possibility of using the same expensive
+
+99
+00:04:38,840 --> 00:04:39,790
+hardware again.
+
+100
+00:04:40,500 --> 00:04:43,550
+That's the prize behind this
+ridiculous-looking maneuver.
+
+101
+00:04:43,920 --> 00:04:47,230
+But bringing a spacecraft home
+is the beginning of another job:
+
+102
+00:04:47,480 --> 00:04:48,710
+checking the heat shield,
+
+103
+00:04:48,760 --> 00:04:50,070
+engines and structure,
+
+104
+00:04:50,280 --> 00:04:51,990
+then proving it can fly again.
+
+105
+00:04:52,240 --> 00:04:52,900
+Catch it.
+
+106
+00:04:52,940 --> 00:04:53,820
+Inspect it.
+
+107
+00:04:53,860 --> 00:04:54,770
+Fly it again.
+
+108
+00:04:54,880 --> 00:04:55,780
+Repeat.
+
+109
+00:04:56,560 --> 00:04:58,790
+The goal is a system that keeps working,
+
+110
+00:04:58,860 --> 00:05:01,470
+rather than a spectacular
+trick performed once.
+
+111
+00:05:01,860 --> 00:05:05,700
+Every successful return moves that
+idea closer to a working transportation
+
+112
+00:05:05,740 --> 00:05:06,640
+system.
+
+113
+00:05:08,320 --> 00:05:10,510
+So watch the final seconds differently.
+
+114
+00:05:11,240 --> 00:05:12,930
+The heat shield has done its job.
+
+115
+00:05:13,430 --> 00:05:15,220
+The flaps have controlled the descent.
+
+116
+00:05:15,840 --> 00:05:18,070
+The engines have turned
+and slowed the ship.
+
+117
+00:05:18,980 --> 00:05:21,730
+Now the supports meet, and
+the tower takes the load.
+
+118
+00:05:23,600 --> 00:05:26,990
+That's the sequence SpaceX wants
+to complete with both stages.
+
+119
+00:05:27,560 --> 00:05:29,510
+The first catch brought the booster home.
+
+120
+00:05:30,220 --> 00:05:33,270
+The next challenge is bringing home
+the spacecraft that went to orbit—
+
+121
+00:05:33,400 --> 00:05:35,670
+and eventually sending it back up again.

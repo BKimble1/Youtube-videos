@@ -22,3 +22,9 @@ qa/v2/lab*/
 qa/v2/s*/
 audio/v2/mix/last_run.txt
 source/.shotlist.cjs
+# V3: footage pack (tools/v3_fetch_footage.sh), reference frames, render parts, test renders
+source/public/media/ref/
+source/public/audio/v3/*.wav
+audio/v3/mix/*.wav
+exports/v3parts/
+qa/v3/test/*.mp4
