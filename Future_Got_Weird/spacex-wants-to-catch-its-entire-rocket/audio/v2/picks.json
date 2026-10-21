@@ -1,0 +1,15 @@
+{
+  "_readme": "One take per section, chosen by measurement (tools/v2_analyze_takes.py): widest pitch movement at a natural rate, no gap over 0.7 s inside a section. Nobody has listened to these takes yet.",
+  "picks": {
+    "S0": "S0_t4_Zr65.mp3",
+    "S1": "S1_t2_8wk8.mp3",
+    "S2": "S2_t2_6HtQ.mp3",
+    "S3": "S3_t1_Lpqv.mp3",
+    "S4": "S4_t2_y06z.mp3",
+    "S5": "S5_t2_E5tX.mp3",
+    "S6": "S6_t1_cEIw.mp3",
+    "S7": "S7_t1_bG8l.mp3",
+    "S8": "S8_t2_wTrc.mp3",
+    "S9": "S9_t1_DlTZ.mp3"
+  }
+}

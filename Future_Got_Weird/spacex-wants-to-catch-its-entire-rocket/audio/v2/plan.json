@@ -1,0 +1,17 @@
+{
+  "_readme": "V2 narration placement. Sections are the picked takes (picks.json), cut out of picks_concat.wav. `lead` = picture time before the section starts (after the previous section's last sample). `beats` = digital silence inserted inside an existing pause, after the named word (nth occurrence, 0-based), for a picture beat. Nothing is stretched, sped up or pitch-shifted.",
+  "start": 0.25,
+  "tail": 4.0,
+  "sections": [
+    {"id": "S0", "lead": 0.25, "beats": []},
+    {"id": "S1", "lead": 2.2, "beats": [["arms.", 0, 0.5], ["flight.", 0, 0.3]]},
+    {"id": "S2", "lead": 1.6, "beats": [["reasonable,", 0, 0.35]]},
+    {"id": "S3", "lead": 1.4, "beats": [["from.", 0, 0.5]]},
+    {"id": "S4", "lead": 1.4, "beats": [["change.", 0, 1.4], ["ocean.", 0, 0.4]]},
+    {"id": "S5", "lead": 1.6, "beats": [["underneath.", 0, 0.5], ["ground.", 0, 0.6]]},
+    {"id": "S6", "lead": 1.4, "beats": [["surface.", 0, 0.9], ["shared.", 0, 0.9], ["impact.", 0, 1.0]]},
+    {"id": "S7", "lead": 1.2, "beats": []},
+    {"id": "S8", "lead": 1.6, "beats": [["again.", 0, 0.4], ["Repeat.", 0, 0.6]]},
+    {"id": "S9", "lead": 2.0, "beats": [["differently.", 0, 0.4], ["job.", 0, 0.35], ["descent.", 0, 0.35], ["ship.", 0, 0.6], ["load.", 0, 1.6], ["stages.", 0, 0.4], ["home.", 0, 0.5]]}
+  ]
+}

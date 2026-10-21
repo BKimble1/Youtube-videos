@@ -1,0 +1,2 @@
+# LFS uploads are not available from the production sessions; the narration takes are small, keep them as plain blobs.
+audio/v2/takes/*.mp3 -filter -diff -merge binary

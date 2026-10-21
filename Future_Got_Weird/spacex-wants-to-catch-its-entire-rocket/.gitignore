@@ -1,0 +1,23 @@
+source/node_modules/
+source/.remotion/
+source/out/
+# regenerated audio (tools/tts_espeak.py, tools/audio_mix.py)
+audio/mix/*.wav
+audio/narration/*.wav
+source/public/audio/*.wav
+# renders: the review is kept as checksummed parts under backup/
+exports/*.mp4
+qa/dev/
+qa/pass*/
+qa/hook/
+# V2: regenerated audio (tools/v2_concat_picks.py, v2_build_voice.py, v2_audio_mix.py), footage from the release
+# (tools/v2_fetch_footage.sh), render parts
+audio/v2/*.wav
+audio/v2/picks_concat.mp3
+audio/v2/mix/*.wav
+source/public/audio/v2/*.wav
+source/public/media/real/*.mp4
+exports/v2parts/
+qa/v2/lab*/
+qa/v2/s*/
+audio/v2/mix/last_run.txt
