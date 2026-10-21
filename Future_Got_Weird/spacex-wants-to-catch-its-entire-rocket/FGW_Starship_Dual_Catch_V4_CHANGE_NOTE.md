@@ -8,11 +8,11 @@ the 4K source media is untouched (`tools/v3_fetch_footage.sh`).
 | Item | Value |
 |---|---|
 | Review video | `exports/FGW_Starship_Dual_Catch_V4_REVIEW_1080p.mp4` — 1920×1080, 30 fps, H.264 + AAC 48 kHz (parts in `backup/v4/`) |
-| Runtime | **@@RUNTIME@@**, down from 5:41.0. Below the 4:20–4:40 aim: the brief's cuts and the new 25 s opening leave 4:08.7 of narration; nothing was stretched or slowed to reach a number |
+| Runtime | **4:10.7 (250.73 s; 7,520 video frames)**, down from 5:41.0. Below the 4:20–4:40 aim: the brief's cuts and the new 25 s opening leave 4:08.7 of narration; nothing was stretched or slowed to reach a number |
 | Captions | `captions/FGW_Starship_Dual_Catch_V4.srt` (89 cues, timed from the measured words of the V4 narration) |
 | Final narration text | `script/v4_narration_final.md` (new lines marked) |
 | End-frame PNG | `qa/v4/FGW_Starship_Dual_Catch_V4_END_FRAME.png` |
-| Mix | @@MIX@@ |
+| Mix | measured on the final file: -15.0 LUFS integrated, -1.6 dBTP true peak (ffmpeg ebur128); same score, effects and levels as V2/V3, cues retimed to V4 |
 | Editable source | `source/src/v4/` (composition `MainV4`; site views `V4Lab`, ship-attitude check `V4Pose`) |
 | Shot list | `qa/v4/shotlist.json` (`cd source && node shotlist.mjs v4`): 54 shots, no gaps or overlaps |
 
@@ -111,13 +111,27 @@ is used and none is claimed; the news is carried by the narration and one `OCT 2
 
 **Starts 3:55.7 (235.73 s), ends 4:10.7 (250.73 s).** Contact completes at 3:52.7 and the load beat at 3:54.0 first.
 Panels: left **x=180, y=360, w=660, h=371**; right **x=1080, y=360, w=660, h=371**; 0.5 s entrance, then stationary
-(measured: @@STILL@@). Small "FUTURE GOT WEIRD" and "KEEP EXPLORING" above; the tower holding the ship sits between
+(measured: mean pixel change 0.073 and 0.042 on a 0–255 scale between 3:56.4 and the last frame). Small "FUTURE GOT WEIRD" and "KEEP EXPLORING" above; the tower holding the ship sits between
 the panels with the sea behind; only clouds and a beacon move. The panels are picture only — the clickable elements
 have to be added in YouTube Studio.
 
 ## QA performed
 
-@@QA@@
+- File: 1920×1080, 30 fps, 250.7 s, H.264 + AAC 48 kHz (`qa/v4/qa_v4_results.json`). Black stretches: none. Audio
+  drop-outs over 1.5 s: none.
+- Near-static stretches (freezedetect, strict, ≥ 1.5 s): the end screen (by design) and eight beats of 1.6–3.9 s; the
+  longest is the two-journeys diagram (0:08.5, lines drawing). A 7.5 s near-static corridor hold found on the first full
+  render (alternate route, 3:01) was fixed by a camera that follows the ship to the arms; the affected chunks were
+  re-rendered and QA re-run.
+- Test renders before the full export: a half-resolution render of the whole film with sheets every 0.5 s, then targeted
+  re-tests (`qa/v4/test/`). They caught and fixed: the return corridor looking inland at empty sand; the final approach
+  showing only sky until the flip (now from the Gulf with the pad in view); the decision corridor too wide; the tilt view
+  too close; the second-target reveal and the engine-check framing; an over-long flap hold; a 0.7 s launch flash.
+- Ship attitude check (`V4Pose`): the tiled side faces the correct way upright, broadside and mid-flip; fittings stay on
+  the hull. Site views (`V4Lab`): `qa/v4/lab/`.
+- Frame strips (every 2nd frame) across all 21 real/drawn boundaries, the real relight, the closing flip, contact and the
+  end-screen entrance: `qa/v4/review/*.jpg`; contact sheets `first30.jpg`, `whole_*.jpg`.
+- Speech band: effects and score a median 14.1 dB below the voice (`tools/v4_speech_mask.py`).
 
 ## Runway
 
@@ -133,5 +147,6 @@ floating pad, and generated plates would not control contact or attachment. No R
 3. **No authentic October 20 picture** (webcast unreachable). The opening relies on the narration and the ID chip.
 4. **Reference photographs still not opened** (same network block). The site follows the pack frames (04, 06, 10) and
    published descriptions; tank and building positions are representative, not surveyed.
-5. The ship's support fittings remain generic (interface unpublished). Scale of the drawn site is approximate.
-6. QA was done on rendered frames, contact sheets and frame strips, not by watching at normal speed with sound.
+5. On the end frame the near arm's tip reaches the edge of the right panel (the ship and tower are clear of both).
+6. The ship's support fittings remain generic (interface unpublished). Scale of the drawn site is approximate.
+7. QA was done on rendered frames, contact sheets and frame strips, not by watching at normal speed with sound.
