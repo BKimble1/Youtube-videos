@@ -1,0 +1,12 @@
+source/node_modules/
+source/.remotion/
+source/out/
+# regenerated audio (tools/tts_espeak.py, tools/audio_mix.py)
+audio/mix/*.wav
+audio/narration/*.wav
+source/public/audio/*.wav
+# renders: the review is kept as checksummed parts under backup/
+exports/*.mp4
+qa/dev/
+qa/pass*/
+qa/hook/
