@@ -22,3 +22,6 @@ v2/audio/mix/stems/
 source/public/audio/mix_v2.wav
 v2/qa/**/f[0-9]*.png
 v2/qa/**/*.tsx
+v2/qa/render*.log
+v2/qa/render*.start
+v2/qa/render*.end
