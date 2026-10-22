@@ -1,0 +1,84 @@
+1
+00:00:00,070 --> 00:00:01,110
+This robot's skin
+
+2
+00:00:01,110 --> 00:00:02,140
+is alive.
+
+3
+00:00:02,140 --> 00:00:02,790
+They grew it from
+
+4
+00:00:02,790 --> 00:00:03,940
+human cells…
+
+5
+00:00:03,940 --> 00:00:04,550
+then attached it
+
+6
+00:00:04,550 --> 00:00:05,590
+to a mechanical face
+
+7
+00:00:05,590 --> 00:00:07,020
+and made it smile.
+
+8
+00:00:07,020 --> 00:00:08,350
+Tiny anchors hold the skin
+
+9
+00:00:08,350 --> 00:00:09,880
+while motors pull underneath.
+
+10
+00:00:10,390 --> 00:00:11,730
+But an earlier experiment
+
+11
+00:00:11,730 --> 00:00:12,850
+gets stranger.
+
+12
+00:00:12,850 --> 00:00:14,090
+They cut living skin
+
+13
+00:00:14,090 --> 00:00:15,460
+on a robotic finger…
+
+14
+00:00:15,460 --> 00:00:16,800
+added a collagen patch…
+
+15
+00:00:16,800 --> 00:00:17,730
+and gave the tissue
+
+16
+00:00:17,730 --> 00:00:19,530
+seven days to repair.
+
+17
+00:00:19,530 --> 00:00:20,890
+Cells grew into the patch,
+
+18
+00:00:20,890 --> 00:00:22,500
+helping close the damage.
+
+19
+00:00:22,840 --> 00:00:24,700
+The machine isn’t alive.
+
+20
+00:00:24,700 --> 00:00:25,130
+But the skin
+
+21
+00:00:25,130 --> 00:00:26,830
+it’s wearing is.
+

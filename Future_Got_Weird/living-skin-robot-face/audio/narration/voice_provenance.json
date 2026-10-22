@@ -1,0 +1,292 @@
+{
+ "provider": "ElevenLabs (restricted connector, authorized workspace)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "The established FGW narration voice: used for the approved Hidden Trigger V3-V7 narration (see hidden-trigger-robot-target/audio/narration/voice_v3_provenance.json). Re-confirmed with creative_list_voices on 22 Oct 2026. No voice named 'Death Clock' exists in the workspace and no Death Clock files are in the repository, so the voice could not be confirmed as Death Clock's; no voice id was invented."
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "eqDe0CrRDqJKHXnw6M1E",
+ "prompt": "[urgent, brisk] This robot's skin is ALIVE. They grew it from HUMAN CELLS… then attached it to a mechanical face and made it smile. Tiny anchors hold the skin while motors pull underneath. [intrigued, leaning in] But an earlier experiment gets STRANGER. [brisk] They cut living skin on a robotic finger… added a collagen patch… and gave the tissue SEVEN DAYS to repair. Cells grew into the patch, helping close the damage. [quieter, deliberate] The machine isn't alive. But the skin it's wearing IS.",
+ "note_on_prompt": "Bracketed tags are delivery directions (not spoken); capitals are emphasis. Spoken words are exactly the locked narration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/take1.mp3",
+   "generation_id": "ZaqOwEBOZJFbNlcz5SCy",
+   "sha256": "900b78ab77ab66ed667aed0ba6658181dab20dedb9d2cc22fac828159fe7ec5e",
+   "analysis": {
+    "file": "take1.mp3",
+    "dur": 25.76,
+    "speech": [
+     0.02,
+     25.61
+    ],
+    "wpm_overall": 178.2,
+    "wpm_articulated": 211.4,
+    "whisper": "This robot's skin is alive! They grew it from human cells, then attached it to a mechanical face and made it smile. Tiny anchors hold the skin while motors pull underneath. But an earlier experiment gets stranger. They cut living skin on a robotic finger, added a collagen patch, and gave the tissue seven days to repair. Cells grew into the patch, helping close the damage. The machine isn't alive, but the skin it's wearing is.",
+    "whisper_match": 1.0,
+    "zip_match": 0.0,
+    "pauses": [
+     [
+      1.82,
+      0.26
+     ],
+     [
+      3.59,
+      0.28
+     ],
+     [
+      6.56,
+      0.45
+     ],
+     [
+      9.59,
+      0.51
+     ],
+     [
+      12.32,
+      0.42
+     ],
+     [
+      14.75,
+      0.3
+     ],
+     [
+      16.17,
+      0.23
+     ],
+     [
+      18.6,
+      0.41
+     ],
+     [
+      21.56,
+      0.47
+     ],
+     [
+      23.42,
+      0.43
+     ],
+     [
+      24.91,
+      0.26
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/take2.mp3",
+   "generation_id": "IjqtbZ8QCVkqbKj0IKnQ",
+   "sha256": "dc381fe61f46a9a57b3fcc2ad2820684ca5e8e92be9b4bbf005d1e1d9ecb59e8",
+   "analysis": {
+    "file": "take2.mp3",
+    "dur": 25.84,
+    "speech": [
+     0.02,
+     25.67
+    ],
+    "wpm_overall": 177.8,
+    "wpm_articulated": 210.3,
+    "whisper": "This robot's skin is alive! They grew it from human cells, then attached it to a mechanical face and made it smile. Tiny anchors hold the skin while motors pull underneath. But an earlier experiment gets stranger. They cut living skin on a robotic finger, added a collagen patch, and gave the tissue seven days to repair. Cells grew into the patch, helping close the damage. The machine isn't alive, but the skin it's wearing is.",
+    "whisper_match": 1.0,
+    "zip_match": 0.0,
+    "pauses": [
+     [
+      1.78,
+      0.29
+     ],
+     [
+      3.59,
+      0.28
+     ],
+     [
+      6.57,
+      0.38
+     ],
+     [
+      9.5,
+      0.52
+     ],
+     [
+      12.33,
+      0.47
+     ],
+     [
+      14.83,
+      0.26
+     ],
+     [
+      16.17,
+      0.26
+     ],
+     [
+      18.68,
+      0.4
+     ],
+     [
+      21.55,
+      0.52
+     ],
+     [
+      23.52,
+      0.41
+     ],
+     [
+      25.06,
+      0.18
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/take3.mp3",
+   "generation_id": "F82EKU4KbrC19OlUM5SG",
+   "sha256": "599de80ea55155a976197c71dd6212c52c16122212afa634605266cce4d9bf6b",
+   "analysis": {
+    "file": "take3.mp3",
+    "dur": 26.32,
+    "speech": [
+     0.01,
+     26.16
+    ],
+    "wpm_overall": 174.4,
+    "wpm_articulated": 209.5,
+    "whisper": "This robot's skin is alive! They grew it from human cells, then attached it to a mechanical face and made it smile. Tiny anchors hold the skin while motors pull underneath. But an earlier experiment gets stranger. They cut living skin on a robotic finger, added a collagen patch, and gave the tissue seven days to repair. Cells grew into the patch, helping close the damage. The machine isn't alive. But the skin it's wearing is...",
+    "whisper_match": 1.0,
+    "zip_match": 0.0,
+    "pauses": [
+     [
+      1.82,
+      0.3
+     ],
+     [
+      3.65,
+      0.3
+     ],
+     [
+      6.65,
+      0.44
+     ],
+     [
+      9.77,
+      0.48
+     ],
+     [
+      12.54,
+      0.44
+     ],
+     [
+      15.0,
+      0.3
+     ],
+     [
+      16.42,
+      0.24
+     ],
+     [
+      18.87,
+      0.43
+     ],
+     [
+      20.6,
+      0.15
+     ],
+     [
+      21.96,
+      0.52
+     ],
+     [
+      23.85,
+      0.5
+     ],
+     [
+      25.43,
+      0.28
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/take4.mp3",
+   "generation_id": "f7JG2Uj04XbZNi6o6H3v",
+   "sha256": "e62d3780d5da0d63169088818040ccccfb72b196fa4edf4b63bcd5b42297b84e",
+   "analysis": {
+    "file": "take4.mp3",
+    "dur": 25.44,
+    "speech": [
+     0.03,
+     25.3
+    ],
+    "wpm_overall": 180.5,
+    "wpm_articulated": 211.3,
+    "whisper": "This robot's skin is alive! They grew it from human cells, then attached it to a mechanical face and made it smile. Tiny anchors hold the skin while motors pull underneath. But an earlier experiment gets stranger. They cut living skin on a robotic finger, added a collagen patch, and gave the tissue seven days to repair. Cells grew into the patch, helping close the damage. The machine isn't alive, but the skin it's wearing is.",
+    "whisper_match": 1.0,
+    "zip_match": 0.0,
+    "pauses": [
+     [
+      1.83,
+      0.27
+     ],
+     [
+      3.58,
+      0.29
+     ],
+     [
+      6.56,
+      0.39
+     ],
+     [
+      9.62,
+      0.46
+     ],
+     [
+      12.28,
+      0.36
+     ],
+     [
+      14.66,
+      0.24
+     ],
+     [
+      16.01,
+      0.23
+     ],
+     [
+      18.47,
+      0.32
+     ],
+     [
+      21.3,
+      0.47
+     ],
+     [
+      23.12,
+      0.46
+     ],
+     [
+      24.69,
+      0.2
+     ]
+    ]
+   }
+  }
+ ],
+ "credits": "4 x 498.95 ElevenLabs credits (as reported by the connector)",
+ "selected": {
+  "take": "take2.mp3",
+  "generation_id": "IjqtbZ8QCVkqbKj0IKnQ",
+  "why": "All four takes transcribe word-perfect (Whisper base.en). Take 2: 177.8 wpm over the speech span (inside the 175-185 target; take 3 was 174.4, take 4 180.5), and the strongest measured level stress on 'alive' (+5.6 dB vs the median word) and 'human' (+5.4 dB, F0 x1.63). 'Seven' +1.6 dB/F0 x1.21, 'days' +4.3 dB. Selection was by measurement: nobody listened (no audio output in this environment).",
+  "word_stress": "audio/narration/takes/take2_words.json"
+ },
+ "assembly": "tools/make_narration.py: take 2 resampled to 48 kHz, placed at +0.10 s (the motor tug leads the first word), +0.30 s silence before 'But an earlier experiment', +0.20 s before 'Cells grew', +0.20 s before 'The machine'; all inserted inside existing measured pauses. No time-stretch, pitch or EQ.",
+ "final": {
+  "file": "audio/narration/FGW_Living_Skin_narration_final.wav",
+  "format": "48 kHz mono PCM 24-bit",
+  "sha256": "c58c032b2ec185333d1b1299dc9f0c8e2530b8971274e6bc22ff6d6b01166b97",
+  "duration_s": 27.2,
+  "speech_s": [
+   0.1,
+   26.48
+  ]
+ }
+}

@@ -1,0 +1,565 @@
+{
+ "fps": 30,
+ "frames": 816,
+ "duration": 27.2,
+ "captions": [
+  {
+   "text": "This robot's skin",
+   "emph": [],
+   "start": 0.1,
+   "end": 1.14,
+   "show": 0.07,
+   "hide": 1.11
+  },
+  {
+   "text": "is alive.",
+   "emph": [
+    "alive"
+   ],
+   "start": 1.14,
+   "end": 1.77,
+   "show": 1.11,
+   "hide": 2.14
+  },
+  {
+   "text": "They grew it from",
+   "emph": [],
+   "start": 2.17,
+   "end": 2.82,
+   "show": 2.14,
+   "hide": 2.79
+  },
+  {
+   "text": "human cells\u2026",
+   "emph": [
+    "human",
+    "cells"
+   ],
+   "start": 2.82,
+   "end": 3.68,
+   "show": 2.79,
+   "hide": 3.94
+  },
+  {
+   "text": "then attached it",
+   "emph": [],
+   "start": 3.97,
+   "end": 4.58,
+   "show": 3.94,
+   "hide": 4.55
+  },
+  {
+   "text": "to a mechanical face",
+   "emph": [],
+   "start": 4.58,
+   "end": 5.62,
+   "show": 4.55,
+   "hide": 5.59
+  },
+  {
+   "text": "and made it smile.",
+   "emph": [],
+   "start": 5.62,
+   "end": 6.64,
+   "show": 5.59,
+   "hide": 7.02
+  },
+  {
+   "text": "Tiny anchors hold the skin",
+   "emph": [],
+   "start": 7.05,
+   "end": 8.37,
+   "show": 7.02,
+   "hide": 8.35
+  },
+  {
+   "text": "while motors pull underneath.",
+   "emph": [],
+   "start": 8.38,
+   "end": 9.53,
+   "show": 8.35,
+   "hide": 9.88
+  },
+  {
+   "text": "But an earlier experiment",
+   "emph": [],
+   "start": 10.42,
+   "end": 11.76,
+   "show": 10.39,
+   "hide": 11.73
+  },
+  {
+   "text": "gets stranger.",
+   "emph": [],
+   "start": 11.76,
+   "end": 12.71,
+   "show": 11.73,
+   "hide": 12.85
+  },
+  {
+   "text": "They cut living skin",
+   "emph": [],
+   "start": 12.88,
+   "end": 14.12,
+   "show": 12.85,
+   "hide": 14.09
+  },
+  {
+   "text": "on a robotic finger\u2026",
+   "emph": [],
+   "start": 14.12,
+   "end": 15.19,
+   "show": 14.09,
+   "hide": 15.46
+  },
+  {
+   "text": "added a collagen patch\u2026",
+   "emph": [],
+   "start": 15.49,
+   "end": 16.56,
+   "show": 15.46,
+   "hide": 16.8
+  },
+  {
+   "text": "and gave the tissue",
+   "emph": [],
+   "start": 16.83,
+   "end": 17.76,
+   "show": 16.8,
+   "hide": 17.73
+  },
+  {
+   "text": "seven days to repair.",
+   "emph": [
+    "seven",
+    "days"
+   ],
+   "start": 17.76,
+   "end": 19.03,
+   "show": 17.73,
+   "hide": 19.53
+  },
+  {
+   "text": "Cells grew into the patch,",
+   "emph": [],
+   "start": 19.56,
+   "end": 20.92,
+   "show": 19.53,
+   "hide": 20.89
+  },
+  {
+   "text": "helping close the damage.",
+   "emph": [],
+   "start": 20.92,
+   "end": 22.15,
+   "show": 20.89,
+   "hide": 22.5
+  },
+  {
+   "text": "The machine isn\u2019t alive.",
+   "emph": [],
+   "start": 22.87,
+   "end": 24.21,
+   "show": 22.84,
+   "hide": 24.7
+  },
+  {
+   "text": "But the skin",
+   "emph": [],
+   "start": 24.73,
+   "end": 25.16,
+   "show": 24.7,
+   "hide": 25.13
+  },
+  {
+   "text": "it\u2019s wearing is.",
+   "emph": [],
+   "start": 25.16,
+   "end": 26.48,
+   "show": 25.13,
+   "hide": 26.83
+  }
+ ],
+ "words": [
+  {
+   "word": "this",
+   "start": 0.1,
+   "end": 0.3
+  },
+  {
+   "word": "robot's",
+   "start": 0.3,
+   "end": 0.82
+  },
+  {
+   "word": "skin",
+   "start": 0.82,
+   "end": 1.14
+  },
+  {
+   "word": "is",
+   "start": 1.14,
+   "end": 1.3
+  },
+  {
+   "word": "alive",
+   "start": 1.3,
+   "end": 1.77
+  },
+  {
+   "word": "they",
+   "start": 2.17,
+   "end": 2.18
+  },
+  {
+   "word": "grew",
+   "start": 2.18,
+   "end": 2.41
+  },
+  {
+   "word": "it",
+   "start": 2.42,
+   "end": 2.54
+  },
+  {
+   "word": "from",
+   "start": 2.58,
+   "end": 2.82
+  },
+  {
+   "word": "human",
+   "start": 2.82,
+   "end": 3.22
+  },
+  {
+   "word": "cells",
+   "start": 3.22,
+   "end": 3.68
+  },
+  {
+   "word": "then",
+   "start": 3.97,
+   "end": 3.98
+  },
+  {
+   "word": "attached",
+   "start": 3.98,
+   "end": 4.46
+  },
+  {
+   "word": "it",
+   "start": 4.46,
+   "end": 4.58
+  },
+  {
+   "word": "to",
+   "start": 4.58,
+   "end": 4.65
+  },
+  {
+   "word": "a",
+   "start": 4.66,
+   "end": 4.77
+  },
+  {
+   "word": "mechanical",
+   "start": 4.78,
+   "end": 5.29
+  },
+  {
+   "word": "face",
+   "start": 5.38,
+   "end": 5.62
+  },
+  {
+   "word": "and",
+   "start": 5.62,
+   "end": 5.82
+  },
+  {
+   "word": "made",
+   "start": 5.82,
+   "end": 6.06
+  },
+  {
+   "word": "it",
+   "start": 6.06,
+   "end": 6.26
+  },
+  {
+   "word": "smile",
+   "start": 6.26,
+   "end": 6.64
+  },
+  {
+   "word": "tiny",
+   "start": 7.05,
+   "end": 7.3
+  },
+  {
+   "word": "anchors",
+   "start": 7.3,
+   "end": 7.74
+  },
+  {
+   "word": "hold",
+   "start": 7.74,
+   "end": 7.94
+  },
+  {
+   "word": "the",
+   "start": 7.94,
+   "end": 8.06
+  },
+  {
+   "word": "skin",
+   "start": 8.06,
+   "end": 8.37
+  },
+  {
+   "word": "while",
+   "start": 8.38,
+   "end": 8.58
+  },
+  {
+   "word": "motors",
+   "start": 8.58,
+   "end": 8.97
+  },
+  {
+   "word": "pull",
+   "start": 8.98,
+   "end": 9.21
+  },
+  {
+   "word": "underneath",
+   "start": 9.22,
+   "end": 9.53
+  },
+  {
+   "word": "but",
+   "start": 10.42,
+   "end": 10.42
+  },
+  {
+   "word": "an",
+   "start": 10.42,
+   "end": 10.62
+  },
+  {
+   "word": "earlier",
+   "start": 10.64,
+   "end": 11.12
+  },
+  {
+   "word": "experiment",
+   "start": 11.12,
+   "end": 11.76
+  },
+  {
+   "word": "gets",
+   "start": 11.76,
+   "end": 12.12
+  },
+  {
+   "word": "stranger",
+   "start": 12.12,
+   "end": 12.71
+  },
+  {
+   "word": "they",
+   "start": 12.88,
+   "end": 13.16
+  },
+  {
+   "word": "cut",
+   "start": 13.16,
+   "end": 13.44
+  },
+  {
+   "word": "living",
+   "start": 13.44,
+   "end": 13.8
+  },
+  {
+   "word": "skin",
+   "start": 13.8,
+   "end": 14.12
+  },
+  {
+   "word": "on",
+   "start": 14.12,
+   "end": 14.24
+  },
+  {
+   "word": "a",
+   "start": 14.24,
+   "end": 14.36
+  },
+  {
+   "word": "robotic",
+   "start": 14.36,
+   "end": 14.83
+  },
+  {
+   "word": "finger",
+   "start": 14.88,
+   "end": 15.19
+  },
+  {
+   "word": "added",
+   "start": 15.49,
+   "end": 15.68
+  },
+  {
+   "word": "a",
+   "start": 15.68,
+   "end": 15.83
+  },
+  {
+   "word": "collagen",
+   "start": 15.83,
+   "end": 16.28
+  },
+  {
+   "word": "patch",
+   "start": 16.28,
+   "end": 16.56
+  },
+  {
+   "word": "and",
+   "start": 16.83,
+   "end": 16.84
+  },
+  {
+   "word": "gave",
+   "start": 16.84,
+   "end": 17.04
+  },
+  {
+   "word": "the",
+   "start": 17.04,
+   "end": 17.2
+  },
+  {
+   "word": "tissue",
+   "start": 17.2,
+   "end": 17.76
+  },
+  {
+   "word": "seven",
+   "start": 17.76,
+   "end": 18.16
+  },
+  {
+   "word": "days",
+   "start": 18.16,
+   "end": 18.47
+  },
+  {
+   "word": "to",
+   "start": 18.48,
+   "end": 18.63
+  },
+  {
+   "word": "repair",
+   "start": 18.64,
+   "end": 19.03
+  },
+  {
+   "word": "cells",
+   "start": 19.56,
+   "end": 19.96
+  },
+  {
+   "word": "grew",
+   "start": 19.96,
+   "end": 20.28
+  },
+  {
+   "word": "into",
+   "start": 20.28,
+   "end": 20.44
+  },
+  {
+   "word": "the",
+   "start": 20.44,
+   "end": 20.56
+  },
+  {
+   "word": "patch",
+   "start": 20.6,
+   "end": 20.92
+  },
+  {
+   "word": "helping",
+   "start": 20.92,
+   "end": 21.32
+  },
+  {
+   "word": "close",
+   "start": 21.32,
+   "end": 21.57
+  },
+  {
+   "word": "the",
+   "start": 21.6,
+   "end": 21.76
+  },
+  {
+   "word": "damage",
+   "start": 21.76,
+   "end": 22.15
+  },
+  {
+   "word": "the",
+   "start": 22.87,
+   "end": 22.88
+  },
+  {
+   "word": "machine",
+   "start": 22.88,
+   "end": 23.43
+  },
+  {
+   "word": "isn't",
+   "start": 23.44,
+   "end": 23.84
+  },
+  {
+   "word": "alive",
+   "start": 23.84,
+   "end": 24.21
+  },
+  {
+   "word": "but",
+   "start": 24.73,
+   "end": 24.73
+  },
+  {
+   "word": "the",
+   "start": 24.73,
+   "end": 24.8
+  },
+  {
+   "word": "skin",
+   "start": 24.84,
+   "end": 25.16
+  },
+  {
+   "word": "it's",
+   "start": 25.16,
+   "end": 25.44
+  },
+  {
+   "word": "wearing",
+   "start": 25.44,
+   "end": 26.08
+  },
+  {
+   "word": "is",
+   "start": 26.08,
+   "end": 26.48
+  }
+ ]
+}
