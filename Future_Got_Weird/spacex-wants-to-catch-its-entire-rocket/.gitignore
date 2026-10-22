@@ -36,3 +36,12 @@ exports/v4parts/
 qa/v4/test/*.mp4
 qa/v4/test/*.log
 audio/v4/mix/*.wav
+# V5: regenerated audio, render parts, test renders, inspection stills
+source/public/audio/v5/*.wav
+audio/v5/mix/*.wav
+exports/v5parts/
+qa/v5/test/*.mp4
+qa/v5/test/*.log
+qa/v5/close*/
+qa/v5/v4ref/
+qa/v5/prev*/

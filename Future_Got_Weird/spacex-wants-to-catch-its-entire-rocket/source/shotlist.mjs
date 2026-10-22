@@ -2,11 +2,11 @@
 import {build} from 'esbuild';
 import fs from 'node:fs';
 import path from 'node:path';
-const V = ['v3', 'v4'].includes(process.argv[2]) ? process.argv[2] : 'v2';
+const V = ['v3', 'v4', 'v5'].includes(process.argv[2]) ? process.argv[2] : 'v2';
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..'); // episode root
 const out = path.join(root, 'source/.shotlist.cjs');
 await build({
-  stdin: {contents: ({v2: "import {allShotsV2 as all} from './src/v2/MainV2';", v3: "import {allShotsV3 as all} from './src/v3/MainV3';", v4: "import {allShotsV4 as all} from './src/v4/MainV4';"})[V] + " module.exports = all().map(s => ({id: s.id, a: +s.a.toFixed(2), b: +s.b.toFixed(2), tin: s.tin ?? 'cut'}));", resolveDir: path.join(root, 'source'), loader: 'tsx'},
+  stdin: {contents: ({v2: "import {allShotsV2 as all} from './src/v2/MainV2';", v3: "import {allShotsV3 as all} from './src/v3/MainV3';", v4: "import {allShotsV4 as all} from './src/v4/MainV4';", v5: "import {allShotsV5 as all} from './src/v5/MainV5';"})[V] + " module.exports = all().map(s => ({id: s.id, a: +s.a.toFixed(2), b: +s.b.toFixed(2), tin: s.tin ?? 'cut'}));", resolveDir: path.join(root, 'source'), loader: 'tsx'},
   bundle: true, platform: 'node', format: 'cjs', outfile: out, jsx: 'automatic', loader: {'.json': 'json'}, logLevel: 'error',
   external: ['remotion', 'react', '@remotion/*'],
   nodePaths: [path.join(root, 'source/node_modules')],
