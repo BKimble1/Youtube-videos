@@ -29,7 +29,9 @@ export const Sky: React.FC<{kind: SkyKind; py?: number; stars?: number; sun?: {x
           <stop offset="1" stopColor="#ff9a5a" stopOpacity={0} />
         </radialGradient>
       </defs>
+      <rect x={-200} y={-6000} width={2320} height={5400 + py + 2} fill={c[0]} />
       <rect x={-200} y={-600 + py} width={2320} height={2400} fill={`url(#sk${id})`} />
+      <rect x={-200} y={1798 + py} width={2320} height={6000} fill={c[c.length - 1]} />
       {stars > 0 &&
         Array.from({length: 160}, (_, i) => (
           <circle key={i} cx={hash(i) * 1920} cy={(hash(i + 500) * 1500 - 300 + py * 0.3) % 1080} r={0.6 + hash(i + 900) * 1.4} fill="#fff" opacity={stars * (0.3 + 0.7 * hash(i + 77))} />

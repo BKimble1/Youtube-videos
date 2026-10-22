@@ -17,9 +17,16 @@ export const Main: React.FC<{audio: 'mix' | 'narration' | false}> = ({audio}) =>
         if (f < sc.from || f >= end) return null;
         const a = sc.enter === 'dissolve' && i > 0 ? ramp(f, sc.from, sc.from + XF) : 1;
         const S = sc.C;
+        // slow documentary drift so no shot holds perfectly still (alternating push-in / pull-out, slight lateral)
+        const p = (f - sc.from) / Math.max(1, end - sc.from);
+        // keep at least 2% overscan so the lateral move never exposes the frame edge (1920 * 0.01 = 19 px > 14 px)
+        const k = i % 2 === 0 ? 1.02 + 0.03 * p : 1.05 - 0.03 * p;
+        const dx = (i % 3 === 0 ? -1 : 1) * 14 * p;
         return (
           <AbsoluteFill key={sc.id} style={{opacity: a}}>
-            <S />
+            <AbsoluteFill style={{transform: `translateX(${dx}px) scale(${k})`, transformOrigin: '50% 50%'}}>
+              <S />
+            </AbsoluteFill>
           </AbsoluteFill>
         );
       })}

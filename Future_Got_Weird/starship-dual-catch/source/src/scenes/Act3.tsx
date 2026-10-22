@@ -70,8 +70,8 @@ export const OrbitScene: React.FC = () => {
                 <g>
                   <polyline points={pts(hopP, hop)} stroke={C.accent} strokeWidth={5} fill="none" strokeDasharray="14 10" />
                   <polyline points={pts(shipP, Math.min(1, 0.45 * hop + shipGo * 0.55))} stroke={C.accent2} strokeWidth={5} fill="none" strokeDasharray="14 10" />
-                  <g transform={`translate(${hp.x} ${hp.y}) rotate(${lerp(10, -170, hop)}) scale(0.16) translate(0 360)`}><SuperHeavy t={f} catchPoint={false} /></g>
-                  <g transform={`translate(${sp.x} ${sp.y}) rotate(${lerp(20, 95, shipGo)}) scale(0.16) translate(0 260)`}><Starship t={f} burn={shipGo < 1 ? 1 : 0} /></g>
+                  <g transform={`translate(${hp.x} ${hp.y}) rotate(${lerp(10, -170, hop)}) scale(0.3) translate(0 360)`}><SuperHeavy t={f} catchPoint={false} /></g>
+                  <g transform={`translate(${sp.x} ${sp.y}) rotate(${lerp(20, 95, shipGo)}) scale(0.3) translate(0 260)`}><Starship t={f} burn={shipGo < 1 ? 1 : 0} /></g>
                   <text x={L.x - 40} y={L.y - 420} fill={C.accent} fontFamily={MONO} fontWeight={700} fontSize={32} letterSpacing={2} opacity={hop}>BOOSTER: UP, THEN BACK</text>
                   <text x={L.x + 900} y={L.y - 600} fill={C.accent2} fontFamily={MONO} fontWeight={700} fontSize={32} letterSpacing={2} opacity={shipGo}>SHIP: KEEPS GOING</text>
                 </g>

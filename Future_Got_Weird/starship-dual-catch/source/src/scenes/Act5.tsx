@@ -51,7 +51,7 @@ const planFrame = (child: React.ReactNode, caption: string, ok: boolean, capA: n
   <AbsoluteFill style={{background: 'linear-gradient(180deg,#e7edf3,#cfd9e3)'}}>
     <Svg>
       <g transform="translate(420 560) scale(1.9)">{child}</g>
-      <text x={1460} y={560} textAnchor="middle" fill={ok ? '#1d6b45' : '#a3271f'} fontFamily={FONT} fontWeight={900} fontSize={58} opacity={capA}>
+      <text x={960} y={930} textAnchor="middle" fill={ok ? '#1d6b45' : '#a3271f'} fontFamily={FONT} fontWeight={900} fontSize={58} opacity={capA}>
         {caption}
       </text>
     </Svg>
@@ -91,7 +91,7 @@ const Fast: React.FC = () => {
   const f = useCurrentFrame();
   const a = fS('e4') - 4;
   const cam: Cam = {x: CATCH_X + 60, y: -900, s: 0.6};
-  const cy = RAIL - 700 + ((f - a) * 9) % 500;
+  const cy = RAIL - 760 + Math.min(560, (f - a) * 4.5);
   const p = toScreen(cam, CATCH_X + 140, cy - 100);
   return (
     <AbsoluteFill>

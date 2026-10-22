@@ -299,10 +299,8 @@ export const HistoryV3: React.FC = () => {
               <g key={i} opacity={o} transform={`translate(${x} 560)`}>
                 <circle r={18} fill={C.ok} />
                 <path d="M -8 0 L -2 7 L 9 -7" stroke="#fff" strokeWidth={4} fill="none" />
-                <g transform="translate(0 -60) scale(0.5)">
-                  <g transform={`translate(0 ${-BOOSTER_CATCH_Y - 8})`}><SuperHeavy t={f} catchPoint={false} /></g>
-                </g>
-                <rect x={-100} y={-62} width={200} height={16} fill="#56626f" />
+                <g transform="translate(0 -30) scale(0.32)"><SuperHeavy t={f} catchPoint={false} /></g>
+                <rect x={-50} y={-30 + BOOSTER_CATCH_Y * 0.32 - 1} width={100} height={8} fill="#56626f" />
                 <text y={70} textAnchor="middle" fill="#fff" fontFamily={MONO} fontWeight={700} fontSize={28} letterSpacing={2}>{it.d}</text>
                 <text y={106} textAnchor="middle" fill="#a8b8cc" fontFamily={MONO} fontSize={22} letterSpacing={2}>{it.fl}</text>
               </g>

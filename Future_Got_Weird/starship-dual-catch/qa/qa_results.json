@@ -1,0 +1,51 @@
+{
+ "file": "FGW_Starship_Dual_Catch_V1_REVIEW_1080p.mp4",
+ "size_mb": 88.2,
+ "duration_s": 407.467,
+ "video": {
+  "codec": "h264",
+  "profile": "High",
+  "w": 1920,
+  "h": 1080,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames": 12224
+ },
+ "audio": {
+  "codec": "aac",
+  "sr": "48000",
+  "ch": 2,
+  "bitrate": "317374"
+ },
+ "black_segments": [
+  [
+   "406.633",
+   "407.433"
+  ]
+ ],
+ "frozen_segments_over_2_5s": [],
+ "silences_over_1s": [],
+ "loudness": {
+  "I_LUFS": -15.5,
+  "true_peak_dbfs": -1.6
+ },
+ "asr_word_recall_vs_script": 0.969,
+ "asr_low_recall_segments": [
+  {
+   "id": "a4",
+   "asr": "Stacked together, they stand about 124 meters tall."
+  },
+  {
+   "id": "a6",
+   "asr": "On October 20th, Alon Musk said that Flight 15, expected as soon as November, will attempt to catch both."
+  },
+  {
+   "id": "b13",
+   "asr": "SpaceX first pulled this off in October of 2024, and twice more in 2025."
+  },
+  {
+   "id": "c4",
+   "asr": "For a low orbit, that's around 28,000 km/h."
+  }
+ ]
+}
