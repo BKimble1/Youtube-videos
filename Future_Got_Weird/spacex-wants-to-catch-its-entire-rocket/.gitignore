@@ -45,3 +45,4 @@ qa/v5/test/*.log
 qa/v5/close*/
 qa/v5/v4ref/
 qa/v5/prev*/
+exports/v5parts4k/
