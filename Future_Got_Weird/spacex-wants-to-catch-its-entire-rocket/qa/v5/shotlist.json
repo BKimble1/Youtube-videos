@@ -11,7 +11,7 @@
 {"id":"B3_supportFeature","a":35.36,"b":38.67,"tin":"cut"},
 {"id":"B4_noSqueeze","a":38.67,"b":41.72,"tin":"cut"},
 {"id":"B5a_shelves","a":41.72,"b":46.12,"tin":"dip"},
-{"id":"B5b_rails","a":46.12,"b":48.85,"tin":"cut"},
+{"id":"B5b_rails","a":46.12,"b":48.85,"tin":"fade"},
 {"id":"B6_except","a":48.85,"b":55.71,"tin":"cut"},
 {"id":"B7_control","a":55.71,"b":60.6,"tin":"cut"},
 {"id":"C1_orbit","a":60.6,"b":67.94,"tin":"dip"},

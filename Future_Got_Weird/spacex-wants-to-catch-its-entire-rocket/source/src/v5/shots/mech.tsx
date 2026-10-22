@@ -152,8 +152,8 @@ export const mechShots = (): Shot[] => {
     id: 'B5a_shelves', a: b5a, b: b5b, tin: 'dip', td: 0.45,
     render: (t) => {
       const k = Math.abs(shelfX - 960) / 5.3;
-      const drop = lerp(360, 70, ep(t, b5a, b5b + 0.4));
-      const sway = (1 - prog(t, b5a, tLine + 0.4)) * 22 * Math.sin(t * 2.6);
+      const drop = 360 * Math.max(0, 1 - ep(t, b5a + 0.1, b5b - 0.55)) - 6 * Math.exp(-Math.max(0, t - (b5b - 0.55)) * 5) * Math.sin(Math.max(0, t - (b5b - 0.55)) * 14);
+      const sway = (1 - ep(t, b5a, b5b - 0.6)) * 22 * Math.sin(t * 2.6);
       const dx = 960 + sway;
       const top = shelfY - 1.1 * k - drop;
       return (
@@ -187,7 +187,7 @@ export const mechShots = (): Shot[] => {
       vehicle={<BoosterAt c={c} carY={CAR} above={above} v="v1" l="day" heading={90} props={{engines: eng, t, plumeLen: 30, id: 'b5bb'}} />} />
   );
   shots.push({
-    id: 'B5b_rails', a: b5b, b: b6a, tin: 'cut',
+    id: 'B5b_rails', a: b5b, b: b6a, tin: 'fade', td: 0.45,
     render: (t) => {
       const above = approach(t, b5b - 0.6, tTransfer - 0.1, 2.6, 0.18);
       return <FrontBooster t={t} c={FV} above={above} eng={throttle(t, b5b - 0.6, tTransfer - 0.1, 0.4)} flex={0.5 * prog(t, tTransfer - 0.1, tTransfer + 0.4)} />;
@@ -224,11 +224,12 @@ export const mechShots = (): Shot[] => {
       const k = 1 - ep(t, tMotion + 0.2, tMotion + 1.4);
       const dx = (2.6 * noise(t * 0.9, 3) + 1.3 * Math.sin(t * 2.1)) * k;
       const tilt = 3.0 * noise(t * 1.1, 7) * k;
-      const above = lerp(15, 4, ep(t, b6b, tMotion + 1.4));
-      const c: Cam3 = {at: [VX - 4, CAR + 8, 0], z: lerp(7.6, 8.4, prog(t, b6b, tMotion + 2)), yaw: -22, pitch: 10};
+      const b7b = ls('S3_00') - 0.4, tC = b7b - 0.75;
+      const above = approach(t, b6b, tC, 15, 0.2);
+      const c: Cam3 = {at: [VX - 4, CAR + lerp(8, 5, ep(t, b6b, tC)), 0], z: lerp(7.6, 9.4, ep(t, b6b, tC)), yaw: -22, pitch: 10};
       return (
-        <CatchView t={t} c={c} l="day" s={{carY: CAR, open: 10}}
-          vehicle={<BoosterAt c={c} carY={CAR} above={above} dx={dx} tilt={tilt} v="v1" l="day" heading={90} props={{t, id: 'b7b', engines: 0.85, plumeLen: 28}} />} />
+        <CatchView t={t} c={c} l="day" s={{carY: CAR, open: lerp(10, 4, ep(t, tC - 1.4, tC)), flex: 0.3 * prog(t, tC, tC + 0.4)}} hiRail={fadeWin(t, tC - 0.1, b7b + 1, 0.2) * 0.6}
+          vehicle={<BoosterAt c={c} carY={CAR} above={above} dx={dx} tilt={tilt} v="v1" l="day" heading={90} props={{t, id: 'b7b', engines: lerp(0.85, 0.5, prog(t, tC - 1.2, tC)) * (1 - prog(t, tC + 0.1, tC + 0.5)), plumeLen: 28}} />} />
       );
     },
   });
@@ -246,7 +247,8 @@ export const mechShots = (): Shot[] => {
     render: (t) => {
       const pull = ep(t, tOrbital - 0.8, tOrbital + 0.6);
       const dive = ep(t, tHome - 0.2, c3b);
-      const z = lerp(14, 7, pull) * lerp(1, 1.5, dive);
+      const push = ep(t, c3b - 1.1, c3b + 0.2);
+      const z = lerp(14, 7, pull) * lerp(1, 1.5, dive) * Math.exp(lerp(0, Math.log(7), push));
       const limbTop = lerp(1000, 800, pull) - dive * 330;
       const rot = lerp(90, 64, smoother(prog(t, tHome - 0.3, tHome + 1.4)));
       return (
@@ -254,8 +256,8 @@ export const mechShots = (): Shot[] => {
           <Sky k="space" />
           <g transform={`rotate(${lerp(0, -9, dive)} 960 540)`}>
             <Limb top={limbTop} r={5200} glow={1} scroll={t * lerp(320, 140, pull)} />
-            <InFlight x={lerp(880, 960, pull)} y={lerp(520, 470, pull) + dive * 120} rot={rot} z={z}>
-              <g transform="translate(0 26)"><Ship az={lerp(130, 40, dive)} t={t} pal="space" heat={prog(t, tAtmo - 1.4, tAtmo) * 0.8} id="c1s" /></g>
+            <InFlight x={lerp(880, 960, pull)} y={lerp(lerp(520, 470, pull) + dive * 120, 380, push)} rot={rot} z={z}>
+              <g transform="translate(0 26)"><Ship az={lerp(130, 40, dive)} t={t} pal="space" heat={prog(t, tAtmo - 1.8, tAtmo) * 0.95} detail={push > 0.2} id="c1s" /></g>
             </InFlight>
           </g>
         </Frame>
@@ -266,7 +268,7 @@ export const mechShots = (): Shot[] => {
   // C4 — the real Flight 14 plasma, entered on the matching horizon
   const c4b = tTiles + 0.05;
   shots.push({
-    id: 'C4_realPlasma', a: c3b, b: c4b, tin: 'fade', td: 0.17,
+    id: 'C4_realPlasma', a: c3b, b: c4b, tin: 'fade', td: 0.35,
     render: (t) => (
       <Footage file={F14R} a={c3b} src0={4.0} scale={1.2} cx={0.92} cy={0}>
         {svg(<Credit text="SpaceX · Flight 14, 2026" o={fadeWin(t, c3b + 0.3, c4b - 0.1, 0.3)} />)}

@@ -179,3 +179,17 @@ Ship 40 is identified as an ocean recovery; nothing says it was caught or reflow
 
 Same files as V3 (01–05, 07, 09, 10 used; 06 and 08 not used). Film/source times and sentences: V4 change note.
 Footage 08 (May 2025) is no longer in the film.
+
+# V5 additions (22 Oct 2026)
+
+## Pad reference basis
+
+The V5 Pad 2 rebuild (tower, catch arms, eight-leg launch mount on a pedestal, flame trench toward the sea, tank-farm
+order farm → tall tank → stack → tower, apron, coast and service roads) is drawn from the release footage only:
+06 (wide Pad 2), 04 (aerial) and 10 (tower close-up). SpaceX photo pages (spacex.com CDN, x.com, ir.spacex.com) were
+blocked by the session's network policy, so no still photographs were consulted. It is an illustration, not a survey.
+
+## Footage in V5
+
+Same files and selections as V4. 07 (booster top) is now cropped to the grid fin and carries no labels; it is not
+used to show arm length (the drawn comparison in E5 does that).

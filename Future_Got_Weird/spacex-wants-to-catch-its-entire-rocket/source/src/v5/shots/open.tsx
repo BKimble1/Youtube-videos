@@ -89,7 +89,7 @@ export const openShots = (): Shot[] => {
   shots.push({
     id: 'O4_twoCatches', a: o4a, b: o5a, tin: 'cut',
     render: (t) => {
-      const c: Cam3 = {at: [VX - 6, CAR - 18, 0], z: 4.6, yaw: -16, pitch: 4};
+      const c: Cam3 = {at: [VX - 5, CAR - 20, 0], z: 6.6, yaw: -16, pitch: 4};
       const bc = tBoth + 0.1, sc = o5a - 0.35;
       const bAbove = approach(t, o4a - 0.4, bc, 46, 0.25);
       const sAbove = approach(t, bc + 0.3, sc, 46, 0.25);

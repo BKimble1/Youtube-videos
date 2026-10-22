@@ -98,7 +98,32 @@ export const projPoly = (c: Cam3, pts: V3[]): number[][] => {
       out.push([a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u, NEAR]);
     }
   }
-  return out.map((v) => toScreen(c, v));
+  return clip2D(out.map((v) => toScreen(c, v)));
+};
+
+/** Clip a screen polygon to a generous rectangle around the frame. Points just past the near plane project to
+ *  ~1e9 px, which the SVG rasteriser draws as stray vertical bands; the clipped polygon covers the same pixels. */
+const CLIP = [-3000, -3000, 4920, 4080];
+export const clip2D = (ps: number[][]): number[][] => {
+  let out = ps;
+  for (let e = 0; e < 4; e++) {
+    const inside = (p: number[]) => (e === 0 ? p[0] >= CLIP[0] : e === 1 ? p[1] >= CLIP[1] : e === 2 ? p[0] <= CLIP[2] : p[1] <= CLIP[3]);
+    const cut = (a: number[], b: number[]) => {
+      const k = e % 2, lim = CLIP[e];
+      const u = (lim - a[k]) / (b[k] - a[k]);
+      return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u];
+    };
+    const src = out;
+    out = [];
+    for (let i = 0; i < src.length; i++) {
+      const a = src[i], b = src[(i + 1) % src.length];
+      const ai = inside(a), bi = inside(b);
+      if (ai) out.push(a);
+      if (ai !== bi) out.push(cut(a, b));
+    }
+    if (!out.length) return out;
+  }
+  return out;
 };
 
 /** Scale of a vertical metre at the frame centre (kept for V3 callers). */

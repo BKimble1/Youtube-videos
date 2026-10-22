@@ -1,0 +1,61 @@
+# FGW Starship Dual Catch — V5 final narration
+
+Voice: ElevenLabs Test Voice (`kk5XaSLo2XAw0sKM98zU`), `eleven_v4`. **New in V4** = generated in the V4 pass (none generated for V5) (audio/v4/picks.json); every other line is the unchanged V2 recording, re-spaced (tools/v5_build_voice.py). Narration ends at 239.83 s.
+
+- `0:00.35` SpaceX has already caught the booster. **(new in V4)**
+- `0:02.75` Now Elon Musk says Flight Fifteen will try to catch the spacecraft too—after it comes back from orbit. **(new in V4)**
+- `0:08.59` He announced it on October twentieth: both stages, one mission. **(new in V4)**
+- `0:13.01` Super Heavy is the booster underneath. **(new in V4)**
+- `0:14.91` Starship is the spacecraft on top. **(new in V4)**
+- `0:17.18` They launch together, then return separately. **(new in V4)**
+- `0:19.71` The hard part is that second catch. **(new in V4)**
+- `0:22.03` Miss badly, and the rocket could take the catcher with it. **(new in V4)**
+- `0:25.87` Look closely at that first catch.
+- `0:27.95` The booster is still firing its engines on the way in.
+- `0:31.01` Those engines remove almost all of its downward speed before the arms take the load.
+- `0:35.51` The arms support dedicated features near the top of the vehicle.
+- `0:38.79` They aren't crushing a steel fuel tank until it sticks.
+- `0:41.87` Think of lowering a heavy object onto two shelves.
+- `0:44.79` Line up the supports, arrive gently, transfer the weight.
+- `0:48.45` Sounds reasonable, except the object is a rocket, the shelves move, and the crane is the rocket's own engines.
+- `0:55.86` Being between the arms is only the start.
+- `0:58.30` Its motion has to be under control.
+- `1:01.00` The ship adds a completely different problem: orbital speed.
+- `1:05.18` Coming home means getting rid of that energy.
+- `1:08.04` The atmosphere does much of the braking while the gas around the vehicle becomes intensely hot.
+- `1:13.32` That's what the black-tiled side is protecting it from.
+- `1:16.51` The ship has to hold the right orientation, keep its heat shield facing the flow, and survive with its control systems still working.
+- `1:24.19` Lower down, Starship descends broadside, using its body against the air while the flaps help control its attitude.
+- `1:31.01` Then the engines relight and swing the vehicle toward upright.
+- `1:34.43` SpaceX has already demonstrated this flip and landing burn over the ocean.
+- `1:38.89` Watch the change.
+- `1:41.23` Falling sideways becomes a powered, nearly vertical descent.
+- `1:44.93` The planned tower catch adds a physical target.
+- `1:47.65` The ship needs the right position, orientation, and motion when its support features reach the arms.
+- `1:53.27` Those receiving surfaces belong to a moving machine.
+- `1:56.41` The arms swing, and their carriage travels up and down the tower.
+- `2:00.21` Look at the deep trusses underneath.
+- `2:02.70` The load has to pass through those members into the carriage, down the tower, and into the ground.
+- `2:08.57` The newer tower uses shorter arms, and the newer booster has three larger grid fins with revised catch features.
+- `2:15.23` For a moment, flying machinery and ground machinery have to become one supported structure.
+- `2:21.07` Now change one thing at a time.
+- `2:23.51` Add sideways drift, and a support feature can miss its receiving surface.
+- `2:28.39` Add tilt, and one side can meet the arms before the other, changing how the load is shared.
+- `2:34.45` Keep too much downward speed, and a gentle handoff becomes an impact.
+- `2:39.47` And because the receiving machine is part of the launch site, a serious failure could damage the equipment needed for the next flight too.
+- `2:46.67` That makes deciding when to attempt the catch part of the engineering.
+- `2:50.51` A vehicle problem, an engine problem, or a problem on the ground can remove the conditions for a safe approach.
+- `2:56.87` Flight six already showed that tower health checks could call off a booster catch.
+- `3:01.23` Alternatives depend on the mission plan and when the problem is detected.
+- `3:04.93` They aren't a guaranteed escape once the rocket is beside the arms.
+- `3:08.95` Moving recovery machinery onto the ground keeps some of that machinery off the flying vehicle.
+- `3:14.05` Recovering both stages also creates the possibility of using the same expensive hardware again.
+- `3:19.88` That's the prize behind this ridiculous-looking maneuver.
+- `3:23.30` But bringing a spacecraft home is the beginning of another job: checking the heat shield, engines, and structure, then proving it can fly again.
+- `3:31.62` Catch it, inspect it, fly it again, repeat.
+- `3:35.55` The goal is a system that keeps working rather than a spectacular trick performed once.
+- `3:41.61` The heat shield has done its job.
+- `3:43.80` The flaps have controlled the descent.
+- `3:46.19` The engines have turned and slowed the ship.
+- `3:49.17` Now the supports meet, and the tower takes the load.
+- `3:54.07` That's the Flight Fifteen challenge: bring both stages home. Flying them again is the payoff. **(new in V4)**

@@ -20,7 +20,7 @@ export const flipShots = (): Shot[] => {
   const tBroad = wt('S4_00', 'broadside'), tFlaps = wt('S4_00', 'flaps'), tRelight = wt('S4_01', 'relight');
   const tPlanned = ls('S4_05'), tNeeds = ls('S4_06'), tPos = wt('S4_06', 'position'), tOri = wt('S4_06', 'orientation'), tMot = wt('S4_06', 'motion'), tReach = wt('S4_06', 'reach');
 
-  // C7 — the return corridor, established once: over the Gulf looking toward the shore and the pad, the ship falling
+  // C7 — the return corridor, established once: from over the Gulf looking inland at the shore and the pad, the ship falling
   // broadside toward it; the camera closes in on the ship as it comes down (destination always in frame)
   const c7a = tSurvive - 0.1, c9a = tFlaps - 1.6;
   shots.push({
@@ -30,7 +30,7 @@ export const flipShots = (): Shot[] => {
       const p: V3 = [lerp(VX + 120, VX + 80, u), lerp(520, 330, u), lerp(-1050, -560, u)];
       const site: V3 = [VX, 70, 0];
       const m = lerp(0.5, 0.08, smoother(u));
-      const c: Cam3 = {at: [lerp(p[0], site[0], m), lerp(p[1], site[1], m), lerp(p[2], site[2], m)], z: lerp(1.6, 3.8, smoother(u)), yaw: lerp(74, 66, u), pitch: lerp(-4, 0, smoother(u))};
+      const c: Cam3 = {at: [lerp(p[0], site[0], m), lerp(p[1], site[1], m), lerp(p[2], site[2], m)], z: lerp(1.6, 3.8, smoother(u)), yaw: lerp(158, 168, u), pitch: lerp(-4, 0, smoother(u))};
       const ff = 26 + 20 * Math.sin(t * 1.8), fa = 30 - 16 * Math.sin(t * 1.8 + 0.8);
       return (
         <CatchView t={t} c={c} l="day" s={{carY: CAR, open: 26}}
@@ -92,20 +92,24 @@ export const flipShots = (): Shot[] => {
     },
   });
 
-  // D6 — position, orientation and motion all converge as the support features reach the rails: the sideways offset
-  // closes, the lean straightens, the sink rate falls; mechanism scale, no captions
+  // D6 — mechanism scale at the support region (the opening's framing): first the sideways offset closes (on
+  // "position"), then the lean straightens ("orientation"), then the sink rate bleeds off ("motion") and the support
+  // features settle onto the rails; the engines stop only once the arms carry the load. No captions.
   const e1a = ls('S5_00') - 0.35;
   shots.push({
     id: 'D6_converge', a: d6a, b: e1a, tin: 'cut',
     render: (t) => {
-      const c: Cam3 = {at: [VX - 3, CAR + 5, 0], z: lerp(11, 13, prog(t, d6a, e1a)), yaw: -26, pitch: 4};
-      const s: ArmState = {carY: CAR, open: lerp(16, 4, ep(t, d6a, tReach))};
-      const above = approach(t, d6a - 0.4, tReach + 0.2, 18, 0.2);
-      const dz = 2.6 * (1 - ep(t, tPos - 0.3, tOri + 0.2));
-      const tilt = 4.5 * (1 - ep(t, tOri - 0.2, tMot + 0.1));
+      const contact = tReach + 0.2;
+      const above = approach(t, d6a - 0.4, contact, 11, 0.2);
+      const dz = 1.1 * (1 - ep(t, tPos - 0.2, tPos + 0.7));
+      const tilt = 3.5 * (1 - ep(t, tOri - 0.1, tOri + 0.8));
+      const c: Cam3 = {at: [VX - 2, CAR + RAIL_DY + 2 + Math.max(0, above) * 0.4, ARM_Z - 2], z: lerp(15, 18, ep(t, d6a, contact)), yaw: -34, pitch: -14};
+      const s: ArmState = {carY: CAR, open: lerp(10, 4, ep(t, d6a, tPos + 0.7)), flex: 0.3 * prog(t, contact, contact + 0.4)};
+      const edge = proj(c, [VX, CAR + RAIL_DY, ARM_Z - 1.3 - 0.4]);
       return (
-        <CatchView t={t} c={c} l="day" s={s} hiRail={fadeWin(t, tReach - 0.3, e1a + 1, 0.3)}
-          vehicle={<ShipAt c={c} carY={CAR} above={above} dz={dz} tilt={tilt} l="day" props={{engines: throttle(t, d6a - 0.4, tReach + 0.2, 0.5), t, id: 'd6s', plumeLen: 20, flapFwd: 60, flapAft: 70}} />} />
+        <CatchView t={t} c={c} l="day" s={s} hiRail={0.3 + 0.5 * fadeWin(t, contact - 0.1, e1a + 1, 0.2)} hiTruss={0.5 * fadeWin(t, contact + 0.1, e1a + 1, 0.3)}
+          vehicle={<ShipAt c={c} carY={CAR} above={above} dz={dz} tilt={tilt} l="day" props={{engines: lerp(1, 0.6, ep(t, tMot - 0.3, contact)) * (1 - prog(t, contact + 0.25, contact + 0.65)), t, id: 'd6s', plumeLen: 20, flapFwd: 60, flapAft: 70}} />}
+          overlay={svg(<ellipse cx={edge[0]} cy={edge[1]} rx={90} ry={34} fill="none" stroke={C.red} strokeWidth={8} opacity={0.85 * prog(dz, 0.35, 0.8) * prog(t, d6a, d6a + 0.3)} />)} />
       );
     },
   });
@@ -130,9 +134,10 @@ export const flipShots = (): Shot[] => {
     id: 'E2_moves', a: e2a, b: e3a, tin: 'cut',
     render: (t) => {
       const back = ep(t, e2a, tSwing + 0.2);
-      const c: Cam3 = {at: [lerp(-2, 8, back), lerp(CAR + 22, CAR - 4, back), 0], z: Math.exp(lerp(Math.log(28), Math.log(6.4), back)), yaw: lerp(-62, -34, back), pitch: lerp(-2, 6, back)};
       const sw = Math.sin(Math.PI * ep(t, tSwing - 0.3, tCarriage - 0.1));
-      const car = CAR + 16 * Math.sin(Math.PI * ep(t, tCarriage - 0.1, tTowerE + 0.4));
+      const car = CAR + 22 * Math.sin(Math.PI * ep(t, tCarriage - 0.2, e3a + 0.2));
+      const ride = ep(t, tCarriage - 0.6, tCarriage);
+      const c: Cam3 = {at: [lerp(-2, 8, back), lerp(lerp(CAR + 22, CAR - 4, back), CAR - 2 + 0.85 * (car - CAR), ride), 0], z: Math.exp(lerp(Math.log(28), Math.log(lerp(6.4, 9.5, ride)), back)), yaw: lerp(-62, -34, back), pitch: lerp(-2, 6, back)};
       return <CatchView t={t} c={c} l="day" s={{carY: car, open: 6 + 34 * sw}} hiCarriage={fadeWin(t, tCarriage - 0.1, e3a + 0.3, 0.2) * 0.7} />;
     },
   });
@@ -189,15 +194,13 @@ export const flipShots = (): Shot[] => {
       );
     },
   });
-  // E5b — the real V3 booster top (07): grid fin; the quick-disconnect arm identified briefly as a separate arm
+  // E5b — the real V3 booster top (07), cropped to the grid fin (the narration's subject); not used for arm length
   shots.push({
     id: 'E5b_realBoosterTop', a: e5bA, b: e5cA, tin: 'cut',
     render: (t) => (
-      <Footage file={TOP07} a={e5bA} src0={0} scale={1.0} cx={0.5} cy={0.5}>
+      <Footage file={TOP07} a={e5bA} src0={0} scale={lerp(1.6, 1.75, prog(t, e5bA, e5cA))} cx={0.97} cy={0.3}>
         {svg(
           <>
-            <Tag text="GRID FIN" x={1390} y={130} to={[1690, 190]} o={fadeWin(t, tFins - 0.2, e5cA, 0.2)} size={38} align="r" />
-            <Tag text="QD ARM" x={110} y={330} to={[420, 430]} o={fadeWin(t, e5bA + 0.3, e5cA, 0.2)} size={34} />
             <Credit text="SpaceX · Critical Path, 2026" o={fadeWin(t, e5bA + 0.2, e5cA, 0.2)} />
           </>,
         )}
@@ -218,20 +221,20 @@ export const flipShots = (): Shot[] => {
     ),
   });
 
-  // E6 — one supported structure: the booster's fins come down onto the rails at mechanism scale, then the camera pulls
-  // back until tower and booster read as one structure standing on the ground
+  // E6 — one supported structure, completed: the support features seat on the rails, the arms take the load, then the
+  // engines stop and the booster settles a few centimetres; the camera only eases (no pull-back)
   const f0a = ls('S6_00') - 0.4;
   shots.push({
     id: 'E6_oneStructure', a: e6a, b: f0a, tin: 'cut',
     render: (t) => {
       const contact = tFlying - 0.1;
       const above = approach(t, e6a - 0.8, contact, 9, 0.25);
-      const back = ep(t, contact + 0.4, tOne + 0.4);
-      const c: Cam3 = {at: [lerp(VX - 4, 8, back), lerp(CAR + 3, 62, back), 0], z: Math.exp(lerp(Math.log(13), Math.log(4.2), back)), yaw: lerp(-20, -30, back), pitch: lerp(3, -4, back)};
+      const ease = ep(t, e6a, f0a);
+      const c: Cam3 = {at: [lerp(VX - 4, VX - 6, ease), lerp(CAR + 5, CAR + 1, ease), 0], z: lerp(12.5, 10.5, ease), yaw: lerp(-20, -26, ease), pitch: 3};
       const one = prog(t, tOne - 0.1, tOne + 0.4);
       return (
-        <CatchView t={t} c={c} l="day" s={{carY: CAR, open: lerp(10, 4, ep(t, e6a, contact)), flex: 0.3 * prog(t, contact, contact + 0.4)}} hiTruss={one * 0.5} hiCarriage={one * 0.7}
-          vehicle={<BoosterAt c={c} carY={CAR} above={above} v="v3" l="day" heading={0} props={{t, engines: throttle(t, e6a - 0.8, contact, 0.5), plumeLen: 34, id: 'e6b'}} />} />
+        <CatchView t={t} c={c} l="day" s={{carY: CAR, open: lerp(10, 4, ep(t, e6a, contact)), flex: 0.3 * prog(t, contact, contact + 0.4)}} hiRail={fadeWin(t, contact - 0.1, f0a + 1, 0.2) * 0.6} hiTruss={one * 0.5} hiCarriage={one * 0.7}
+          vehicle={<BoosterAt c={c} carY={CAR} above={above} v="v3" l="day" heading={0} props={{t, engines: throttle(t, e6a - 0.8, contact + 0.25, 0.4), plumeLen: 34, id: 'e6b'}} />} />
       );
     },
   });
@@ -239,119 +242,110 @@ export const flipShots = (): Shot[] => {
   // ---------------- S6: one change at a time ----------------
   const tDrift = ls('S6_01'), tMiss = wt('S6_01', 'miss'), tTilt = ls('S6_02'), tMeet = wt('S6_02', 'meet'), tShared = wt('S6_02', 'shared');
   const tFast = ls('S6_03'), tImpact = wt('S6_03', 'impact'), tSite = ls('S6_07'), tNext = wt('S6_07', 'next');
-  const sF: ArmState = {carY: CAR, open: 0};
-  // baseline seen obliquely from above the arms: both support features come down onto their rails
-  const OV: Cam3 = {at: [VX - 2, CAR + 2, 0], z: 15, yaw: -38, pitch: -16};
+  // All four demonstrations share one view — down the arms from their tips (the shelf view of S2) — and one safe
+  // reference: the baseline's seated ship, kept as a faint outline once it has landed. Each demonstration changes one
+  // thing and shows the consequence where the support features meet the rails, then resets cleanly.
+  const FV2: Cam3 = {...FV, z: 15};
+  const pR = proj(FV2, [VX, CAR + RAIL_DY, ARM_Z - 1.3]), pL = proj(FV2, [VX, CAR + RAIL_DY, -(ARM_Z - 1.3)]);
+  const FrontShip: React.FC<{t: number; above: number; dz?: number; tilt?: number; eng?: number; ghost?: boolean; id: string}> = ({t, above, dz = 0, tilt = 0, eng = 0, ghost = false, id}) => {
+    const p = proj(FV2, [VX, shipRestY(CAR) + above + 0.9, dz]);
+    return (
+      <g transform={`translate(${p[0]} ${p[1] - 35.6 * FV2.z}) rotate(${tilt}) translate(0 ${35.6 * FV2.z}) scale(${FV2.z})`} opacity={ghost ? 0.55 : 1}>
+        <Ship az={180} pal="day" t={t} engines={eng} plumeLen={16} flapFwd={60} flapAft={70} fittings={1} ghost={ghost} id={id} />
+      </g>
+    );
+  };
+  const Demo: React.FC<{t: number; ref0: number; flex?: number; children: React.ReactNode; overlay?: React.ReactNode; hi?: number}> = ({t, ref0, flex = 0, children, overlay, hi = 0.45}) => (
+    <CatchView t={t} c={FV2} l="day" s={{carY: CAR, open: 0, flex}} farm={false} hiRail={hi}
+      vehicle={<>{ref0 > 0.01 ? <g opacity={ref0}><FrontShip t={t} above={0} ghost id={`ref${Math.round(t * 30)}`} /></g> : null}{children}</>}
+      overlay={overlay ? svg(<>{overlay}</>) : null} />
+  );
+  const okMark = (p: number[], o: number) => <g opacity={o}><ellipse cx={p[0]} cy={p[1]} rx={64} ry={24} fill="none" stroke="#2ec4b6" strokeWidth={7} /></g>;
+  const xMark = (p: number[], o: number) => (
+    <g opacity={o} stroke={C.red} strokeWidth={14} strokeLinecap="round">
+      <line x1={p[0] - 50} y1={p[1] - 40} x2={p[0] + 50} y2={p[1] + 40} /><line x1={p[0] + 50} y1={p[1] - 40} x2={p[0] - 50} y2={p[1] + 40} />
+    </g>
+  );
   const f1a = tDrift - 0.2;
+  // F0 — the baseline: straight, centred, slow; both support features seat together, engines off after the load
   shots.push({
     id: 'F0_baseline', a: f0a, b: f1a, tin: 'cut',
     render: (t) => {
-      const above = approach(t, f0a - 0.3, f1a - 0.5, 10, 0.12);
+      const seat = f1a - 0.7;
+      const above = approach(t, f0a - 0.3, seat, 10, 0.12);
+      const ok = fadeWin(t, seat - 0.05, f1a + 0.3, 0.2);
       return (
-        <CatchView t={t} c={OV} l="day" s={sF} hiRail={fadeWin(t, f1a - 0.7, f1a + 1, 0.2)}
-          vehicle={<ShipAt c={OV} carY={CAR} above={above} l="day" props={{engines: throttle(t, f0a - 0.3, f1a - 0.5, 0.4), t, id: 'ovs', plumeLen: 18, flapFwd: 60, flapAft: 70}} />} />
+        <Demo t={t} ref0={0} flex={0.2 * prog(t, seat, seat + 0.3)} overlay={<>{okMark(pR, ok)}{okMark(pL, ok)}</>}>
+          <FrontShip t={t} above={above} eng={throttle(t, f0a - 0.3, seat + 0.15, 0.35)} id="f0s" />
+        </Demo>
       );
     },
   });
-  // F1 — drift, from directly above: the cross-section slides across the gap so one support feature misses its rail;
-  // then a clear reset back to the baseline
+  // F1 — add sideways drift: the ship lifts off, comes down again offset; one support feature finds nothing and that
+  // side drops; then it lifts clear and recentres over the reference
   const f2a = tTilt - 0.2;
   shots.push({
     id: 'F1_drift', a: f1a, b: f2a, tin: 'cut',
     render: (t) => {
-      const k = 44, cx = 1060, cy = 540;
-      const dz = 1.25 * ep(t, f1a + 0.3, tMiss - 0.1) * (1 - ep(t, tMiss + 1.1, f2a - 0.2));
-      const miss = prog(t, tMiss - 0.1, tMiss + 0.2) * (1 - prog(t, tMiss + 1.0, tMiss + 1.3));
-      const railIn = ARM_Z - 1.3, armOut = ARM_Z + 1.7;
-      const Y = (z: number) => cy - z * k;
-      const feat = (zc: number, dash = false) => <rect x={cx - 0.6 * k} y={Y(zc + 0.55)} width={1.2 * k} height={1.1 * k} rx={6} fill={dash ? 'none' : '#8a949e'} stroke={dash ? '#2b3540' : C.ink} strokeWidth={4} strokeDasharray={dash ? '10 8' : undefined} />;
+      const hop = 6 * Math.sin(Math.PI * ep(t, f1a, tMiss));
+      const reset = ep(t, tMiss + 0.9, f2a);
+      const above = (t < tMiss ? hop : 0) + 12 * reset;
+      const dz = 1.25 * ep(t, f1a + 0.2, tMiss - 0.3) * (1 - reset);
+      const sag = 3.2 * ep(t, tMiss - 0.05, tMiss + 0.35) * (1 - reset);
       return (
-        <Frame>
-          <rect width={1920} height={1080} fill="#cbbf9c" />
-          <rect x={0} y={0} width={190} height={1080} fill="#76808a" />
-          {[1, -1].map((sd) => (
-            <g key={sd}>
-              <rect x={190} y={Math.min(Y(sd * railIn), Y(sd * armOut))} width={1500} height={(armOut - railIn) * k} fill="#66707a" stroke={C.ink} strokeWidth={4} />
-              <rect x={300} y={sd > 0 ? Y(railIn + 0.6) : Y(-railIn)} width={1320} height={0.6 * k} fill="#e2e6e8" stroke={C.ink} strokeWidth={3} />
-            </g>
-          ))}
-          {feat(R + 0.55, true)}{feat(-(R + 0.55), true)}
-          <g transform={`translate(0 ${-dz * k})`}>
-            <circle cx={cx} cy={cy} r={R * k} fill="url(#v4tank2)" stroke={C.ink} strokeWidth={5} />
-            {feat(R + 0.55)}{feat(-(R + 0.55))}
-          </g>
-          <defs><radialGradient id="v4tank2" cx="0.38" cy="0.35" r="0.75"><stop offset="0" stopColor="#f4f6f8" /><stop offset="0.6" stopColor="#b9c2cb" /><stop offset="1" stopColor="#7e8994" /></radialGradient></defs>
-          <Arrow x={cx + 330} y={cy + 40} dx={0} dy={-90 * fadeWin(t, f1a + 0.2, tMiss, 0.3)} w={12} />
-          <g opacity={miss} stroke={C.red} strokeWidth={14} strokeLinecap="round">
-            <line x1={cx - 60} y1={Y(-railIn) - 50} x2={cx + 60} y2={Y(-railIn) + 50} />
-            <line x1={cx + 60} y1={Y(-railIn) - 50} x2={cx - 60} y2={Y(-railIn) + 50} />
-          </g>
-        </Frame>
+        <Demo t={t} ref0={1} overlay={xMark(pL, prog(t, tMiss - 0.05, tMiss + 0.15) * (1 - prog(t, tMiss + 1.0, tMiss + 1.3)))}>
+          <FrontShip t={t} above={above} dz={dz} tilt={sag} eng={0.6 * (1 - prog(t, tMiss - 0.2, tMiss + 0.1)) + 0.8 * prog(t, tMiss + 0.7, tMiss + 1.0)} id="f1s" />
+        </Demo>
       );
     },
   });
-  // F2 — tilt, looking down the arms: one side's support meets its rail first and carries the load; then the ship
-  // lifts, straightens and the reset is clean
+  // F2 — add tilt: one side's support meets its rail first and carries the load alone; then the ship lifts, straightens
   const f3a = tFast - 0.2;
-  const FV2: Cam3 = {...FV, z: 15};
   shots.push({
     id: 'F2_tilt', a: f2a, b: f3a, tin: 'cut',
     render: (t) => {
-      const above = approach(t, f2a + 0.1, tMeet, 12, 0.1) + 6 * ep(t, tShared + 0.2, f3a - 0.2);
+      const above = approach(t, f2a + 0.1, tMeet, 12, 0.1) + 16 * ep(t, tShared + 0.2, f3a - 0.1);
       const tilt = 4.5 * (1 - ep(t, tShared + 0.2, f3a - 0.2));
       const one = prog(t, tMeet - 0.1, tMeet + 0.2) * (1 - prog(t, tShared, tShared + 0.4));
-      const pr = proj(FV2, [VX, CAR + RAIL_DY, ARM_Z - 1.3]), pl = proj(FV2, [VX, CAR + RAIL_DY, -(ARM_Z - 1.3)]);
-      const p = proj(FV2, [VX, shipRestY(CAR) + above + 0.9, 0]);
       return (
-        <CatchView t={t} c={FV2} l="day" s={{carY: CAR, open: 0}} farm={false} hiRail={0.6}
-          vehicle={
-            <g transform={`translate(${p[0]} ${p[1] - 35.6 * FV2.z}) rotate(${tilt}) translate(0 ${35.6 * FV2.z}) scale(${FV2.z})`}>
-              <Ship az={180} pal="day" t={t} engines={throttle(t, f2a, tMeet, 0.5)} plumeLen={16} flapFwd={60} flapAft={70} fittings={1} id="f2s" />
-            </g>
-          }
-          overlay={svg(
-            <>
-              <ellipse cx={pr[0]} cy={pr[1]} rx={70} ry={26} fill="none" stroke={C.red} strokeWidth={8} opacity={one} />
-              <Arrow x={pr[0]} y={pr[1] - 230} dx={0} dy={200} color={C.red} o={one} w={14} />
-              <Arrow x={pl[0]} y={pl[1] - 120} dx={0} dy={60} o={one * 0.8} w={7} />
-            </>,
-          )}
-        />
+        <Demo t={t} ref0={1} hi={0.3} overlay={<>
+          <ellipse cx={pR[0]} cy={pR[1]} rx={70} ry={26} fill="none" stroke={C.red} strokeWidth={8} opacity={one} />
+          <Arrow x={pR[0]} y={pR[1] - 230} dx={0} dy={200} color={C.red} o={one} w={14} />
+          <Arrow x={pL[0]} y={pL[1] - 120} dx={0} dy={60} o={one * 0.8} w={7} />
+        </>}>
+          <FrontShip t={t} above={above} tilt={tilt} eng={Math.max(throttle(t, f2a, tMeet, 0.5), 0.8 * prog(t, tShared, tShared + 0.3))} id="f2s" />
+        </Demo>
       );
     },
   });
-  // F3 — too much downward speed, from the side: a spacing trail (marks every 0.2 s) against the baseline's closing-up
-  // marks; the arrival is visibly harder — hard stop, arm flex, shake
+  // F3 — keep too much downward speed: marks every 0.2 s stay wide apart (the baseline's, in teal, close up); the
+  // arrival is a hard stop at the rails — flex, shake, impact ring
   const f6a = tSite - 0.2;
   shots.push({
     id: 'F3_tooFast', a: f3a, b: f6a, tin: 'cut',
     render: (t) => {
-      const SV: Cam3 = {at: [VX - 6, CAR + 8, 0], z: 10, yaw: -10, pitch: 2};
       const hit = tImpact - 0.15;
       const t0 = f3a + 0.4;
-      const h = (tt: number) => (tt < hit ? lerp(16, 0, Math.pow(prog(tt, t0, hit), 1.12)) : 0);
+      const h = (tt: number) => (tt < t0 ? 16 : tt < hit ? lerp(16, 0, Math.pow(prog(tt, t0, hit), 1.12)) : 0);
       const above = t < hit ? h(t) : -0.6 * Math.exp(-(t - hit) * 6) * Math.cos((t - hit) * 30);
       const imp = t > hit ? prog(t, hit, hit + 0.5) : 0;
       const shake = t > hit ? 8 * Math.exp(-(t - hit) * 5) * Math.sin((t - hit) * 60) : 0;
       const marks: number[] = [];
       for (let tt = t0; tt <= Math.min(t, hit); tt += 0.2) marks.push(h(tt));
-      const nose = (ab: number, dx: number) => proj(SV, [VX + dx, shipRestY(CAR) + ab + 52.5, 0]);
+      const at = (ab: number, dz: number) => proj(FV2, [VX, shipRestY(CAR) + ab + 46, dz]);
       const baseMarks = Array.from({length: 8}, (_, i) => 16 * Math.pow(1 - i / 7, 2.2));
-      const s: ArmState = {carY: CAR, open: 4, flex: 0.9 * (imp > 0 ? Math.exp(-(t - hit) * 3) : 0)};
+      const rc = proj(FV2, [VX, CAR + RAIL_DY, 0]);
       return (
         <div style={{position: 'absolute', inset: 0, transform: `translate(${shake}px, ${shake * 0.5}px)`}}>
-          <CatchView t={t} c={SV} l="day" s={s} farm={false}
-            vehicle={<ShipAt c={SV} carY={CAR} above={above} l="day" props={{engines: t < hit ? 0.35 : 0, t, id: 'f3s', flapFwd: 60, flapAft: 70}} />}
-            overlay={svg(
-              <>
-                {marks.map((m, i) => { const p = nose(m, 9); return <line key={i} x1={p[0] - 18} x2={p[0] + 18} y1={p[1]} y2={p[1]} stroke={C.red} strokeWidth={6} strokeLinecap="round" />; })}
-                <g opacity={prog(t, f3a + 0.3, f3a + 0.8)}>
-                  {baseMarks.map((m, i) => { const p = nose(m, 13); return <line key={i} x1={p[0] - 14} x2={p[0] + 14} y1={p[1]} y2={p[1]} stroke="#2ec4b6" strokeWidth={5} strokeLinecap="round" />; })}
-                </g>
-                {imp > 0 && imp < 1 ? <circle cx={proj(SV, [VX, CAR + RAIL_DY, 0])[0]} cy={proj(SV, [VX, CAR + RAIL_DY, 0])[1]} r={260 * imp} fill="none" stroke={C.red} strokeWidth={14 * (1 - imp)} opacity={1 - imp} /> : null}
-              </>,
-            )}
-          />
+          <Demo t={t} ref0={1} flex={0.9 * (imp > 0 ? Math.exp(-(t - hit) * 3) : 0)} overlay={<>
+            {marks.map((m, i) => { const p = at(m, -8); return <line key={i} x1={p[0] - 18} x2={p[0] + 18} y1={p[1]} y2={p[1]} stroke={C.red} strokeWidth={6} strokeLinecap="round" />; })}
+            <g opacity={prog(t, f3a + 0.3, f3a + 0.8)}>
+              {baseMarks.map((m, i) => { const p = at(m, 8); return <line key={i} x1={p[0] - 14} x2={p[0] + 14} y1={p[1]} y2={p[1]} stroke="#2ec4b6" strokeWidth={5} strokeLinecap="round" />; })}
+            </g>
+            {imp > 0 && imp < 1 ? <ellipse cx={rc[0]} cy={rc[1]} rx={420 * imp} ry={140 * imp} fill="none" stroke={C.red} strokeWidth={14 * (1 - imp)} opacity={1 - imp} /> : null}
+          </>}>
+            <FrontShip t={t} above={above} eng={t < hit ? 0.35 : 0} id="f3s" />
+          </Demo>
         </div>
       );
     },

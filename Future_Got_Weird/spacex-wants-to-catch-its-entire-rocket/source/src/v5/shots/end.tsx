@@ -17,16 +17,26 @@ const CAR = CAR_DEFAULT;
 /** End-screen panel bounds (1920×1080). */
 export const END_PANELS = [{x: 180, y: 360, w: 660, h: 371}, {x: 1080, y: 360, w: 660, h: 371}];
 
-// ---- the approach corridor seen from the side (sea on the left, the pad on the right), one shared geometry ----
-const CV: Cam3 = {at: [VX, 250, -430], z: 1.75, yaw: 90, pitch: -10};
-const PATH0: V3 = [VX + 40, 680, -880];
+// ---- the approach corridor, seen from behind the pad looking out to sea (the shoreline runs across the frame, never
+// along the line of sight; the ship comes toward the camera and grows), one shared geometry ----
+/** A camera standing at `eye` looking at `target` with focal length f (a tripod: pans and zooms, never moves). */
+const lookAt = (eye: V3, target: V3, f: number): Cam3 => {
+  const d = [target[0] - eye[0], target[1] - eye[1], target[2] - eye[2]];
+  const h = Math.hypot(d[0], d[2]);
+  return {at: target, z: f / Math.hypot(h, d[1]), yaw: Math.atan2(d[0], -d[2]) / D2R, pitch: Math.atan2(d[1], h) / D2R, f};
+};
+const D2R = Math.PI / 180;
+const EYE: V3 = [150, 55, 560];
+const T0: V3 = [10, 150, -420];
+const CV: Cam3 = lookAt(EYE, T0, 1500);
+const PATH0: V3 = [VX + 40, 430, -900];
 const PATH1: V3 = [VX, shipRestY(CAR) + 26 + 30, 0];
 const pathAt = (u: number): V3 => [lerp(PATH0[0], PATH1[0], u), lerp(PATH0[1], PATH1[1], Math.pow(u, 0.75)), lerp(PATH0[2], PATH1[2], u)];
 const GATE = 0.46;
 /** Corridor camera following the ship at path position u: k = 0 whole corridor … 1 close on the ship near the arms. */
 const followCam = (u: number, k: number): Cam3 => {
   const p = pathAt(Math.min(u, 0.995));
-  return {at: [lerp(CV.at[0], p[0], 0.6 * k), lerp(CV.at[1], p[1] - 20, 0.6 * k), lerp(CV.at[2], p[2], 0.6 * k)], z: CV.z * Math.exp(lerp(0, Math.log(2.6), k)), yaw: lerp(CV.yaw, 70, k), pitch: lerp(CV.pitch, -6, k)};
+  return lookAt(EYE, [lerp(T0[0], p[0], 0.75 * k), lerp(T0[1], p[1] - 10, 0.75 * k), lerp(T0[2], p[2], 0.75 * k)], 1500 * Math.exp(lerp(0, Math.log(2.4), k)));
 };
 const divertAt = (u: number): V3 => {
   const g = pathAt(GATE);
@@ -70,7 +80,7 @@ export const endShots = (): Shot[] => {
   const g2a = tCond - 0.2;
   shots.push({
     id: 'G1_decision', a: g0a, b: g2a, tin: 'dip', td: 0.45,
-    render: (t) => { const u = lerp(0.08, 0.3, ep(t, g0a, g2a + 1, (v) => v)); return <Corridor t={t} u={u} cam={followCam(u, 0.35 * ep(t, g0a, g2a))} gate={prog(t, tDeciding - 0.2, tDeciding + 0.4)} id="g1s" />; },
+    render: (t) => { const u = lerp(0.08, 0.3, ep(t, g0a, g2a + 1, (v) => v)); return <Corridor t={t} u={u} cam={followCam(u, lerp(0.3, 0.7, ep(t, g0a, g2a)))} gate={prog(t, tDeciding - 0.2, tDeciding + 0.4)} id="g1s" />; },
   });
   // G2 — the conditions themselves, in close-up (no status bubbles): a flap that stops answering, an engine that does
   // not light, a ground machine that stops mid-swing; then the decision point goes red and the approach beyond it lapses
@@ -117,7 +127,7 @@ export const endShots = (): Shot[] => {
     render: (t) => {
       const no = prog(t, g2d + 0.2, g2d + 0.6);
       const u = lerp(0.3, 0.38, prog(t, g2d, g3a));
-      return <Corridor t={t} u={u} cam={followCam(u, 0.35)} gateCol={no > 0.5 ? C.red : C.yellow} after={1 - 0.8 * no} id="g2ds" />;
+      return <Corridor t={t} u={u} cam={followCam(u, 0.7)} gateCol={no > 0.5 ? C.red : C.yellow} after={1 - 0.8 * no} id="g2ds" />;
     },
   });
 
@@ -148,7 +158,7 @@ export const endShots = (): Shot[] => {
       const u = spline(t, [[g4a, 0.3], [tDetected + 0.2, GATE - 0.02], [tBeside + 0.6, 0.97], [h1a, 0.985]]);
       const grow = ep(t, tAlt + 0.2, tAlt + 1.3);
       const passed = prog(u, GATE, GATE + 0.12);
-      const k = 0.35 * (1 - ep(t, g4a, tAlt + 0.8)) + ep(t, tDetected - 0.2, tBeside + 0.4);
+      const k = lerp(0.7, 0.45, ep(t, g4a, tAlt + 0.8)) + 0.55 * ep(t, tDetected - 0.2, tBeside + 0.4);
       return <Corridor t={t} u={u} cam={followCam(u, k)} divert={grow} divertFade={1 - 0.75 * passed} red={prog(t, tBeside - 0.2, tBeside + 0.3)} id="g4s" />;
     },
   });

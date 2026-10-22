@@ -4,7 +4,35 @@
 4K master not rendered (waits for owner review).** V1 (temporary espeak voice) is kept recoverable: composition `Main`,
 `backup/v1/`, and all V1 files below the V2 section.
 
-## V4 (current)
+## V5 (current)
+
+| Deliverable | Where |
+|---|---|
+| Final review video | `exports/FGW_Starship_Dual_Catch_V5_FINAL_REVIEW_1080p.mp4` (Git-ignored); checksummed parts in `backup/v5/` (`RESTORE.txt`) |
+| Publish master | `exports/FGW_Starship_Dual_Catch_V5_PUBLISH_MASTER_4K.mp4` (3840×2160, 30 fps, rendered from `MainV5` at 2×; Git-ignored) |
+| Change and QA note | `FGW_Starship_Dual_Catch_V5_CHANGE_NOTE.md` |
+| End-frame PNG | `qa/v5/FGW_Starship_Dual_Catch_V5_END_FRAME.png` |
+| Captions / final narration | `captions/FGW_Starship_Dual_Catch_V5.srt`, `script/v5_narration_final.md` |
+| QA (measured) | `qa/v5/qa_v5_results.json` (1080p), `qa/v5/qa_v5_4k_results.json` (4K), sheets and join strips in `qa/v5/review/` |
+| Editable source | `source/src/v5/` — composition `MainV5`; site views `V5Lab` (props `{"view":0..3}`) |
+
+V5 starts from V4 (kept as `MainV4`). No new narration: three recap sentences cut, gaps adjusted
+(`tools/v5_build_voice.py`). `cam3.ts` now clips projected polygons to a screen rectangle (no stray bands);
+`site.tsx` holds the Pad 2 rebuild (apron, roads, trench, eight-leg mount, farm order from footage 06).
+
+### Rebuild V5
+
+    cd Future_Got_Weird/spacex-wants-to-catch-its-entire-rocket
+    bash tools/v3_fetch_footage.sh                 # footage from the release, SHA-256 checked
+    python3 tools/v2_concat_picks.py && python3 tools/v2_build_voice.py   # the V2 recording (cached takes)
+    python3 tools/v5_build_voice.py                # V4 lines (audio/v4/takes) minus the V5 cuts → v5 narration, narr.json
+    python3 tools/v5_make_srt.py && python3 tools/v5_audio_mix.py
+    (cd source && npm ci && node shotlist.mjs v5)
+    bash tools/v5_render.sh && python3 tools/v5_qa.py && bash tools/v5_backup.sh
+    SCALE=2 bash tools/v5_render.sh                # 4K publish master
+    MP4=exports/FGW_Starship_Dual_Catch_V5_PUBLISH_MASTER_4K.mp4 QA_TAG=4k python3 tools/v5_qa.py
+
+## V4 (superseded, kept reproducible)
 
 | Deliverable | Where |
 |---|---|
