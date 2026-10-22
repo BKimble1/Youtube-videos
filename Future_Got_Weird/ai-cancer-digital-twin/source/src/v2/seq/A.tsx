@@ -210,6 +210,8 @@ const TissueA: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
         {custom && (
           <g opacity={customOp}>
             {p1 <= 0 && <Cell2 x={C0.x} y={C0.y} seed={C0.seed} t={t} lod={lod} look={look0} pulse={a.pulse} nucScale={1 + 0.12 * a.tint} />}
+            {/* while it looks completely normal, a faint rim keeps it findable (the camera never loses its subject) */}
+            {p1 <= 0 && a.drain > 0.01 && <circle cx={C0.x} cy={C0.y} r={R * 1.08} fill="none" stroke="#FFF2EA" strokeWidth={2.5} opacity={0.55 * a.drain} />}
             {p1 > 0 && p2 <= 0 && <DividingCell x={C0.x} y={C0.y} seed={C0.seed} t={t} p={p1} axis={AX1} lod={lod} look={dLook} pulse={a.pulse * 0.8} sepF={SEP} dR={0.84} />}
             {p2 > 0 && (
               <>

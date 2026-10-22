@@ -23,7 +23,10 @@ export const AIBack: React.FC<{cam: Cam; t: number; floorY?: number; op?: number
     lines.push(<line key={'v' + k} x1={W / 2 + (xb - W / 2) * 0.08} y1={horizon} x2={W / 2 + (xb - W / 2) * 2.4} y2={H + 200} stroke={P.ai} strokeWidth={1.2} opacity={0.045} />);
   }
   return (
-    <g opacity={op}>
+    <g>
+      {/* always an opaque base: op dims only the grid and motes, never lets an earlier shot show through */}
+      <rect width={W} height={H} fill={P.aiBg} />
+      <g opacity={op}>
       <rect width={W} height={H} fill="url(#aiDepth)" />
       <rect x={0} y={horizon} width={W} height={H - horizon} fill={P.aiBg} opacity={0.45} />
       {lines}
@@ -33,6 +36,7 @@ export const AIBack: React.FC<{cam: Cam; t: number; floorY?: number; op?: number
         const y = (rand(k * 11) * H + t * 12 * (0.5 + rand(k * 3))) % H;
         return <rect key={k} x={x} y={y} width={3 + 3 * rand(k)} height={3 + 3 * rand(k)} fill={k % 7 === 0 ? P.aiGold : P.aiHot} opacity={0.06 + 0.1 * rand(k * 5)} />;
       })}
+      </g>
     </g>
   );
 };

@@ -253,12 +253,12 @@ const DV2 = path([
 // ------------------------------------------------------------------------------------------------ markers: same molecule, same shape and colour wherever it is seen
 /** Surface markers. Cancer cells carry many round pink markers; the survivor carries only a few. After the change
  *  the survivor's marker is a different shape (square, orange) — the carriers' ligands no longer fit it. */
-const Markers: React.FC<{c: {x: number; y: number; seed: number}; n: number; k: number; alt: number; t: number}> = ({c, n, k, alt, t}) => (
+const Markers: React.FC<{c: {x: number; y: number; seed: number}; n: number; k: number; alt: number; t: number; z?: number}> = ({c, n, k, alt, t, z = 1}) => (
   <g opacity={k}>
     {Array.from({length: n}, (_, m) => {
       const a = (m / n) * Math.PI * 2 + c.seed;
       const x = c.x + Math.cos(a) * CELL_R * 0.98, y = c.y + Math.sin(a) * CELL_R * 0.98;
-      const sz = 9 + 0.6 * Math.sin(t * 3 + m);
+      const sz = (9 + 0.6 * Math.sin(t * 3 + m)) * Math.min(1, 3 / z); // never balloons during the zoom-out
       return <rect key={m} x={x - sz} y={y - sz} width={sz * 2} height={sz * 2} rx={lerp(sz, 2.5, alt)} fill={mixHex(P.marker, P.markerAlt, alt)} transform={`rotate(${(a * 180) / Math.PI + 45 * alt} ${x} ${y})`} />;
     })}
   </g>
@@ -328,7 +328,7 @@ const VesselD: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
             return (
               <g key={'res' + ri}>
                 {resDiv <= 0 ? <Cell2 x={c.x} y={c.y} r={CELL_R} seed={c.seed} t={t} lod={lod} look={look} /> : <DividingCell x={c.x} y={c.y} r={CELL_R} seed={c.seed} t={t} p={resDiv} axis={20 + ri * 50} lod={lod} look={look} sepF={0.72} dR={0.84} />}
-                {resDiv <= 0.05 && <Markers c={c} n={altK > 0.5 ? 7 : 3} k={1} alt={altK} t={t} />}
+                {resDiv <= 0.05 && <Markers c={c} n={altK > 0.5 ? 7 : 3} k={1} alt={altK} t={t} z={cam.z} />}
               </g>
             );
           }
@@ -337,7 +337,7 @@ const VesselD: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
           return (
             <g key={c.i + ',' + c.j}>
               {die <= 0 ? <Cell2 x={c.x} y={c.y} r={CELL_R} seed={c.seed} t={t} lod={lod} look={TUMOR} /> : <ApoptoticCell x={c.x} y={c.y} r={CELL_R} seed={c.seed} t={t} die={die} lod={lod} />}
-              {die <= 0.25 && <Markers c={c} n={9} k={1 - die * 4} alt={0} t={t} />}
+              {die <= 0.25 && <Markers c={c} n={9} k={1 - die * 4} alt={0} t={t} z={cam.z} />}
               {/* payload inside the treated cell: the same molecule, at cell scale shown as small dark-ringed dots */}
               {treated > 0.01 && die < 0.35 && Array.from({length: 5}, (_, m) => <circle key={m} cx={c.x + Math.cos(m * 1.3 + c.seed) * CELL_R * 0.45} cy={c.y + Math.sin(m * 1.3 + c.seed) * CELL_R * 0.45} r={6} fill="#3A4656" stroke={P.aiHot} strokeWidth={1.5} opacity={treated * (1 - die * 3)} />)}
             </g>
@@ -357,6 +357,7 @@ const VesselD: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
           const inside = lift(t, tD.deliver - 0.1, tD.deliver + 0.6);
           return <g key={'bd' + k} opacity={1 - inside}><Speck x={x} y={y} t={t} z={cam.z} seed={k + 5} /></g>;
         })}
+        {followed && <circle cx={fp[0]} cy={fp[1]} r={Math.max(30, 46 / cam.z)} fill="url(#glowGold)" opacity={0.55} />}
         {followed && <Speck x={fp[0]} y={fp[1]} t={t} z={cam.z} seed={1} gold />}
         {/* after the change, new carriers reach the survivor and drift off: nothing to bind */}
         {t > tD.mutate + 0.3 && t < tD.army && [0, 1, 2].map((k) => {

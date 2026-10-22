@@ -56,6 +56,7 @@ const GOLD_C: Pt = (() => {
 })();
 const DTC = path([
   {...toModel(TS(DT_H[1])), t: DT_H[1]},
+  {t: tC.scans - 0.3, x: 20, y: -10, z: (TZ / DT_K) * 1.06, rot: 1.5},
   {t: tC.using, x: 0, y: 0, z: TZ / DT_K * 0.97, rot: 0},
   {t: tC.battle - 0.4, x: 60, y: 40, z: 0.6, rot: 0},
   {t: tC.inside + 0.2, x: 300, y: 30, z: 0.46, rot: 0},
@@ -137,7 +138,8 @@ const ContourOverlay: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
 // ------------------------------------------------------------------------------------------------ the model and what each input changes
 const Model: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const sweep = lift(t, tC.scans - 0.3, tC.samples - 0.1);
-  const build = 0.34 + 0.4 * sweep + 0.26 * lift(t, tC.using, tC.copy + 0.6);
+  // the measured slice fills in as the model is built from it, then the scans add layers above and below
+  const build = 0.34 + 0.18 * lift(t, tC.ai + 0.9, tC.scans - 0.3) + 0.24 * sweep + 0.24 * lift(t, tC.using, tC.copy + 0.6);
   const needle = Math.min(lift(t, tC.samples - 0.15, tC.samples + 0.3), 1 - lift(t, tC.genetic - 0.1, tC.genetic + 0.3));
   const regions = lift(t, tC.samples + 0.25, tC.genetic);
   const reads = lift(t, tC.genetic - 0.1, tC.genetic + 0.6);
