@@ -67,7 +67,7 @@ const HAIR_LOCKS = [
   [P(162, -290), P(120, -262), P(80, -236)],
 ];
 
-export const LeadHead: React.FC<{p: LeadPose; id: string; frame: number; detail?: number}> = ({p, id, frame, detail = 1}) => {
+export const LeadHead: React.FC<{p: LeadPose; id: string; frame: number; detail?: number; eyeContent?: React.ReactNode}> = ({p, id, frame, detail = 1, eyeContent}) => {
   const u = upperLid(p.lid), lo = lowerLid(p.squeeze);
   const fis = fissurePath(p.lid, p.squeeze);
   const ir = {x: EYE.iris.x + p.gx * 6, y: EYE.iris.y + p.gy * 5};
@@ -137,6 +137,8 @@ export const LeadHead: React.FC<{p: LeadPose; id: string; frame: number; detail?
       {/* ---- the near eye ---- */}
       <g clipPath={`url(#${id}-fis)`}>
         <path d={fis} fill={`url(#${id}-sclera)`} />
+        {eyeContent}
+        {!eyeContent && <>
         <ellipse cx={ir.x} cy={ir.y} rx={EYE.irx} ry={EYE.iry} fill={`url(#${id}-iris)`} />
         {detail > 0.5 && Array.from({length: 14}, (_, i) => {
           const a = (i / 14) * Math.PI * 2;
@@ -153,6 +155,7 @@ export const LeadHead: React.FC<{p: LeadPose; id: string; frame: number; detail?
             <path d={`M${EYE.iris.x - 12} ${EYE.iris.y - 22} Q${EYE.iris.x + 4} ${EYE.iris.y - 31} ${EYE.iris.x + 17} ${EYE.iris.y - 18}`} fill="none" stroke="#FFFFFF" strokeWidth={2.4} opacity={0.55} strokeLinecap="round" />
           </g>
         )}
+        </>}
         {/* the upper lid's shadow on the eyeball */}
         <path d={`M${u.a.x - 4} ${u.a.y - 30}L${u.b.x + 4} ${u.b.y - 30}L${u.b.x} ${u.b.y}C${u.c2.x} ${u.c2.y} ${u.c1.x} ${u.c1.y} ${u.a.x} ${u.a.y}Z`} fill="none" />
         <path d={cub(u.a, P(u.c1.x, u.c1.y + 7), P(u.c2.x, u.c2.y + 7), u.b)} fill="none" stroke="#8C6A5E" strokeWidth={8} opacity={0.28} />

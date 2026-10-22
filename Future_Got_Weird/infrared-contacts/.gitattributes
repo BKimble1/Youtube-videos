@@ -2,3 +2,4 @@
 *.mp4 -filter -diff -merge -text
 *.wav -filter -diff -merge -text
 *.mp3 -filter -diff -merge -text
+*.m4a -filter -diff -merge -text

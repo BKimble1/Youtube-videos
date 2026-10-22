@@ -1,6 +1,32 @@
 # Future Got Weird: These Contacts Let You See With Your Eyes Closed
 
-## V1 (initial production)
+## V2 (visual rebuild on the locked V1 audio): review
+
+**Status (22 Oct 2026):** the V2 review is rendered and checked as files: ASR, audio identity, a motion scan, frame
+strips and a phone sheet. **Not published. No 4K master** (it waits on review). Nobody has yet watched it in real time
+with sound.
+
+| Deliverable | File |
+|---|---|
+| V2 review: 1080×1920, 30 fps, 891 frames, 29.70 s, captions burned in, **audio stream byte-identical to V1** | `exports/FGW_Infrared_Contacts_V2_REVIEW_1080x1920.mp4` |
+| Changelog, audio verification, remaining imperfections | `production/V2_CHANGELOG.md` |
+| V2 source | `source/src/v2/` (composition `InfraredContactsV2`, still `FilmStillV2`) |
+| Locked audio: approved mix, V1 AAC stream, V1 cue table | `audio/mix/FGW_Infrared_Contacts_V1_mix_APPROVED.wav`, `audio/mix/FGW_Infrared_Contacts_V1_REVIEW_audio.m4a`, `audio/cues_V1_LOCKED.json` |
+| V2 QA | `qa/v2/` |
+
+### Rebuild V2 (picture only, then copy V1's audio stream in unchanged)
+
+    cd Future_Got_Weird/infrared-contacts
+    (cd source && npm ci)
+    (cd source && npx remotion render src/index.ts InfraredContactsV2 /tmp/v2_silent.mp4 --props='{"audio":false,"captions":true}' --muted --image-format=png --gop=15 --crf=18 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    ffmpeg -y -i /tmp/v2_silent.mp4 -i audio/mix/FGW_Infrared_Contacts_V1_REVIEW_audio.m4a -map 0:v -map 1:a -c copy -movflags +faststart exports/FGW_Infrared_Contacts_V2_REVIEW_1080x1920.mp4
+    cp audio/mix/FGW_Infrared_Contacts_V1_mix_APPROVED.wav source/public/audio/mix.wav   # for qa.py's sync check
+    python3 tools/qa.py exports/FGW_Infrared_Contacts_V2_REVIEW_1080x1920.mp4 /tmp/asr qa/v2/review
+    python3 tools/motion_scan.py exports/FGW_Infrared_Contacts_V2_REVIEW_1080x1920.mp4 qa/v2/motion_scan.json
+
+---
+
+## V1 (initial production): kept as delivered
 
 **Status (22 Oct 2026):** the review and the native 4K master are rendered and checked as files: measurements, ASR,
 frame strips, a motion scan, a phone sheet and native frames. **Not published.** Nobody has yet watched it in real

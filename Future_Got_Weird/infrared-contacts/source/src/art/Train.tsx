@@ -98,13 +98,24 @@ const Bench: React.FC<{side: -1 | 1}> = ({side}) => {
   );
 };
 
-const Bunk: React.FC<{side: -1 | 1}> = ({side}) => {
+const Bunk: React.FC<{side: -1 | 1; sleeper?: number}> = ({side, sleeper}) => {
   const x0 = side < 0 ? -10 : 596, x1 = side < 0 ? 290 : 1090, y = LAYOUT.bunkY;
   return (
     <g>
       <rect x={x0} y={y} width={x1 - x0} height={40} rx={10} fill={T.bunk} stroke={C.ink} strokeWidth={3} />
       <rect x={x0} y={y + 30} width={x1 - x0} height={12} fill={T.bunkDeep} />
-      {side < 0 && (
+      {side < 0 && sleeper !== undefined && (
+        <g>
+          {/* a passenger asleep on the upper bunk under a blanket (V2): another person who notices nothing */}
+          <rect x={196} y={y - 34} width={92} height={36} rx={16} fill="#E9E4D6" stroke={C.ink} strokeWidth={3} />
+          <ellipse cx={238} cy={y - 50} rx={34} ry={30} fill="#C98B5E" stroke={C.ink} strokeWidth={3} />
+          <path d={`M206 ${y - 58} C210 ${y - 92} 262 ${y - 96} 272 ${y - 60} C258 ${y - 74} 226 ${y - 76} 206 ${y - 58} Z`} fill="#2B1E16" stroke={C.ink} strokeWidth={3} />
+          <path d={`M240 ${y - 46} q8 5 16 0`} fill="none" stroke={C.ink} strokeWidth={3} strokeLinecap="round" />
+          <path d={`M-10 ${y + 2} L-10 ${y - 40} C40 ${y - 66 - 4 * sleeper} 130 ${y - 70 - 5 * sleeper} 214 ${y - 30} L214 ${y + 2} Z`} fill="#5C7E9A" stroke={C.ink} strokeWidth={3} />
+          <path d={`M40 ${y - 44 - 3 * sleeper} C90 ${y - 58 - 4 * sleeper} 150 ${y - 54 - 4 * sleeper} 196 ${y - 30}`} fill="none" stroke="#4A6A85" strokeWidth={4} />
+        </g>
+      )}
+      {side < 0 && sleeper === undefined && (
         <g>
           {/* rolled blanket and pillow on the empty upper bunk */}
           <rect x={30} y={y - 54} width={200} height={56} rx={28} fill="#5C7E9A" stroke={C.ink} strokeWidth={3} />
@@ -130,7 +141,7 @@ const Lamp: React.FC<{p: Pt; on: number; id: string; flip?: boolean}> = ({p, on,
   </g>
 );
 
-export const TrainBack: React.FC<{t: number; id: string; leadLamp: number}> = ({t, id, leadLamp}) => (
+export const TrainBack: React.FC<{t: number; id: string; leadLamp: number; sleeper?: number}> = ({t, id, leadLamp, sleeper}) => (
   <g>
     <defs>
       <linearGradient id={`${id}-wall`} x1="0" y1="0" x2="0" y2="1">
@@ -153,7 +164,7 @@ export const TrainBack: React.FC<{t: number; id: string; leadLamp: number}> = ({
     <path d="M540 1040 L540 1110 L500 1110" fill="none" stroke={T.tableDeep} strokeWidth={8} strokeLinecap="round" />
     <path d="M500 960 L548 960 L542 1018 L506 1018 Z" fill="#F4EFE3" stroke={C.ink} strokeWidth={3} />
     <rect x={503} y={972} width={42} height={14} fill={C.teal} />
-    <Bunk side={-1} />
+    <Bunk side={-1} sleeper={sleeper} />
     <Bunk side={1} />
     <Lamp p={LAYOUT.lampLead} on={leadLamp} id={`${id}-l1`} flip />
     <Lamp p={LAYOUT.lampBy} on={1} id={`${id}-l2`} flip />
@@ -163,7 +174,7 @@ export const TrainBack: React.FC<{t: number; id: string; leadLamp: number}> = ({
 );
 
 // ---------------- sender (facing left). Local units: head ~600, eye at the origin ----------------
-export const Sender: React.FC<{aim: number; press: number; look: number; smile: number; breath: number; id: string}> = ({aim, press, look, smile, breath, id}) => {
+export const Sender: React.FC<{aim: number; press: number; look: number; smile: number; breath: number; id: string; txScale?: number; txGlow?: number}> = ({aim, press, look, smile, breath, id, txScale = 1, txGlow = 0}) => {
   const s = LAYOUT.sender;
   const hand = P(lerp(-250, -392, aim), lerp(560, 360, aim));
   const sh = P(-40, 380);
@@ -222,7 +233,7 @@ export const Sender: React.FC<{aim: number; press: number; look: number; smile: 
       <path d={`M${sh.x} ${sh.y} Q${(sh.x + el.x) / 2 + 20} ${(sh.y + el.y) / 2 + 30} ${el.x} ${el.y} Q${(el.x + hand.x) / 2} ${(el.y + hand.y) / 2 + 40} ${hand.x} ${hand.y}`} fill="none" stroke={C.ink} strokeWidth={72} strokeLinecap="round" strokeLinejoin="round" />
       <path d={`M${sh.x} ${sh.y} Q${(sh.x + el.x) / 2 + 20} ${(sh.y + el.y) / 2 + 30} ${el.x} ${el.y} Q${(el.x + hand.x) / 2} ${(el.y + hand.y) / 2 + 40} ${hand.x} ${hand.y}`} fill="none" stroke={SENDC.cardigan} strokeWidth={65} strokeLinecap="round" strokeLinejoin="round" />
       <g transform={`translate(${hand.x} ${hand.y}) rotate(${lerp(-60, -18, aim)})`}>
-        <Transmitter press={press} />
+        <g transform={`scale(${txScale})`}><Transmitter press={press} glow={txGlow} /></g>
         {/* fingers wrapped under the device, thumb on the button */}
         <path d="M-20 10 C-24 34 30 40 40 14 L40 -2 L-20 -2 Z" fill={SENDC.skin} stroke={C.ink} strokeWidth={3} />
         <path d={`M-6 ${-22 + 7 * press} C-10 ${-40 + 7 * press} 22 ${-44 + 7 * press} 30 ${-24 + 7 * press} L34 -10 L4 -10 Z`} fill={SENDC.skin} stroke={C.ink} strokeWidth={3} />
@@ -232,10 +243,11 @@ export const Sender: React.FC<{aim: number; press: number; look: number; smile: 
 };
 
 // small handheld near-infrared transmitter (charcoal body, dark-red window at the tip, teal button)
-export const Transmitter: React.FC<{press: number}> = ({press}) => (
+export const Transmitter: React.FC<{press: number; glow?: number}> = ({press, glow = 0}) => (
   <g>
     <rect x={-80} y={-20} width={150} height={36} rx={16} fill="#2B3138" stroke={C.ink} strokeWidth={3} />
     <rect x={-92} y={-16} width={20} height={28} rx={6} fill="#4A1C22" stroke={C.ink} strokeWidth={3} />
+    {glow > 0.01 && <rect x={-92} y={-16} width={20} height={28} rx={6} fill="#9A2E36" opacity={0.6 * glow} />}
     <circle cx={-84} cy={-7} r={3} fill="#FFFFFF" opacity={0.3} />
     <ellipse cx={14} cy={-20 + 3 * press} rx={14} ry={6} fill={C.teal} stroke={C.ink} strokeWidth={2.5} />
   </g>
