@@ -137,7 +137,7 @@ export const flipShots = (): Shot[] => {
       const sw = Math.sin(Math.PI * ep(t, tSwing - 0.3, tCarriage - 0.1));
       const car = CAR + 22 * Math.sin(Math.PI * ep(t, tCarriage - 0.2, e3a + 0.2));
       const ride = ep(t, tCarriage - 0.6, tCarriage);
-      const c: Cam3 = {at: [lerp(-2, 8, back), lerp(lerp(CAR + 22, CAR - 4, back), CAR - 2 + 0.85 * (car - CAR), ride), 0], z: Math.exp(lerp(Math.log(28), Math.log(lerp(6.4, 9.5, ride)), back)), yaw: lerp(-62, -34, back), pitch: lerp(-2, 6, back)};
+      const c: Cam3 = {at: [lerp(-2, lerp(10, 4, ride), back), lerp(lerp(CAR + 22, CAR - 2, back), CAR - 1 + 0.55 * (car - CAR), ride), 0], z: Math.exp(lerp(Math.log(28), Math.log(lerp(9, 15, ride)), back)), yaw: lerp(-62, -34, back), pitch: lerp(-2, 4, back)};
       return <CatchView t={t} c={c} l="day" s={{carY: car, open: 6 + 34 * sw}} hiCarriage={fadeWin(t, tCarriage - 0.1, e3a + 0.3, 0.2) * 0.7} />;
     },
   });
@@ -182,14 +182,21 @@ export const flipShots = (): Shot[] => {
   shots.push({
     id: 'E5_shorterArms', a: e5a, b: e5bA, tin: 'cut',
     render: (t) => {
-      const c: Cam3 = {at: [14, CAR - 2, 0], z: lerp(10, 11.5, prog(t, e5a, e5bA)), yaw: -40, pitch: -8};
+      const c: Cam3 = {at: [18, CAR + 1, 0], z: lerp(15, 16.5, prog(t, e5a, e5bA)), yaw: -40, pitch: -10};
       const s: ArmState = {carY: CAR, open: lerp(14, 8, prog(t, e5a, e5bA))};
       const g = fadeWin(t, tShorter - 0.3, e5bA + 0.3, 0.2);
       return (
         <CatchView t={t} c={c} l="day" s={s}
-          fore={<g opacity={0.6 * g} strokeDasharray="10 8">{([1, -1] as const).map((sd) => {
-            const a1 = proj(c, armPt(s, sd, 0, RAIL_DY, 0)), a2 = proj(c, armPt({...s, len: 40}, sd, 1, RAIL_DY, 0));
-            return <line key={sd} x1={a1[0]} y1={a1[1]} x2={a2[0]} y2={a2[1]} stroke="#ffffff" strokeWidth={6} />;
+          fore={<g opacity={g}>{([1, -1] as const).map((sd) => {
+            const a1 = proj(c, armPt(s, sd, 0, RAIL_DY, 0)), a2 = proj(c, armPt({...s, len: 40}, sd, 1, RAIL_DY, 0)), a3 = proj(c, armPt(s, sd, 1, RAIL_DY, 0));
+            return (
+              <g key={sd}>
+                <line x1={a3[0]} y1={a3[1]} x2={a2[0]} y2={a2[1]} stroke="#ffffff" strokeWidth={9} strokeDasharray="14 10" strokeLinecap="round" opacity={0.9} />
+                <circle cx={a2[0]} cy={a2[1]} r={9} fill="#ffffff" opacity={0.9} />
+                <circle cx={a3[0]} cy={a3[1]} r={11} fill={C.yellow} stroke={C.ink} strokeWidth={3} />
+                <line x1={a1[0]} y1={a1[1]} x2={a3[0]} y2={a3[1]} stroke={C.yellow} strokeWidth={5} opacity={0.5} />
+              </g>
+            );
           })}</g>} />
       );
     },
@@ -230,7 +237,7 @@ export const flipShots = (): Shot[] => {
       const contact = tFlying - 0.1;
       const above = approach(t, e6a - 0.8, contact, 9, 0.25);
       const ease = ep(t, e6a, f0a);
-      const c: Cam3 = {at: [lerp(VX - 4, VX - 6, ease), lerp(CAR + 5, CAR + 1, ease), 0], z: lerp(12.5, 10.5, ease), yaw: lerp(-20, -26, ease), pitch: 3};
+      const c: Cam3 = {at: [lerp(VX - 3, VX - 5, ease), lerp(CAR + 3, CAR, ease), 0], z: lerp(16, 13.5, ease), yaw: lerp(-20, -26, ease), pitch: 3};
       const one = prog(t, tOne - 0.1, tOne + 0.4);
       return (
         <CatchView t={t} c={c} l="day" s={{carY: CAR, open: lerp(10, 4, ep(t, e6a, contact)), flex: 0.3 * prog(t, contact, contact + 0.4)}} hiRail={fadeWin(t, contact - 0.1, f0a + 1, 0.2) * 0.6} hiTruss={one * 0.5} hiCarriage={one * 0.7}

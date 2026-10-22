@@ -292,13 +292,13 @@ export const endShots = (): Shot[] => {
   const camAt = (t: number): Cam3 => {
     const p = pos(t);
     const yaw = spline(t, [[i1a, 120], [tShield, 126], [tFlapsF, 134], [tR, 142], [contact, F1.yaw], [END_A, F2.yaw]]);
-    const m = spline(t, [[i1a, 0], [tFlapsF + 1.0, 0], [tR + 0.4, 0.45], [tUp, 0.5]]);
+    const m = 0.28 * smoother(prog(t, tFlapsF + 1.0, tR + 0.4)) + 0.22 * smoother(prog(t, tR + 0.4, tUp + 0.3)); // clamped (a spline overshoots between equal keys)
     const w = smoother(prog(t, tUp, contact));
     const aft = 17 * fadeWin(t, tFlapsF - 0.25, tR - 0.2, 0.45); // the flap beat frames the aft flaps (aft is +X while broadside)
     const q: V3 = [lerp(p[0] + aft, SITE[0], m), lerp(p[1], SITE[1], m), lerp(p[2], SITE[2], m)];
     let at: V3 = [lerp(q[0], F1.at[0], w), lerp(q[1], F1.at[1], w), lerp(q[2], F1.at[2], w)];
-    let z = splineZ(t, [[i1a, 13], [tShield - 0.3, 12], [tShield + 1.3, 11], [tFlapsF - 0.2, 10], [tFlapsF + 0.4, 21], [tFlapsF + 1.0, 20], [tR + 0.2, 5.6], [tUp, 5.2], [contact, F1.z], [pullA, 10.5]]);
-    let pitch = spline(t, [[i1a, 16], [tShield, 22], [tShield + 1.4, 18], [tFlapsF, 6], [tR, -2], [contact, F1.pitch]]);
+    let z = splineZ(t, [[i1a, 12], [tShield - 0.2, 17], [tShield + 1.4, 26], [tFlapsF - 0.3, 18], [tFlapsF + 0.4, 21], [tFlapsF + 1.0, 20], [tR + 0.2, 7], [tUp, 5.8], [contact, F1.z], [pullA, 10.5]]);
+    let pitch = spline(t, [[i1a, 16], [tShield, 24], [tShield + 1.4, 26], [tFlapsF, 6], [tR, -2], [contact, F1.pitch]]);
     if (t > pullA) {
       const k = smoother(prog(t, pullA, END_A));
       at = [lerp(F1.at[0], F2.at[0], k), lerp(F1.at[1], F2.at[1], k), lerp(F1.at[2], F2.at[2], k)];

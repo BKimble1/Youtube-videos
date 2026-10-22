@@ -50,9 +50,12 @@ export const openShots = (): Shot[] => {
     id: 'O2_shipToArms', a: o2a, b: o3a, tin: 'cut',
     render: (t) => {
       const u = ep(t, o2a, o3a, (v) => v);
-      const c: Cam3 = {at: [VX - 8, CAR + 20 - 6 * u, 0], z: lerp(6.4, 7.0, u), yaw: -10, pitch: 3};
-      const s: ArmState = {carY: CAR, open: lerp(28, 22, u)};
-      const above = lerp(34, 16, Math.pow(u, 0.8));
+      const above = lerp(34, 12, Math.pow(u, 0.85));
+      const yc = CAR - 6.4 + above; // ship centre
+      const k = smoother(u);
+      // the camera settles onto the ship as it brakes toward the arms, ending centred at the size O3 picks up
+      const c: Cam3 = {at: [lerp(VX - 7, VX, k), lerp(CAR + 16, yc, k), 0], z: lerp(8.2, 10, k), yaw: -10, pitch: 3};
+      const s: ArmState = {carY: CAR, open: lerp(28, 14, ep(t, o2a + 0.8, o3a))};
       return (
         <CatchView t={t} c={c} l="day" s={s} hiRail={fadeWin(t, tCraft - 0.3, o3a + 1, 0.3) * 0.8}
           vehicle={<ShipAt c={c} carY={CAR} above={above} l="day" props={{engines: 1, t, plumeLen: 26, flapFwd: 60, flapAft: 70, id: 'o2s'}} />}
@@ -74,7 +77,7 @@ export const openShots = (): Shot[] => {
         <Frame>
           <Sky k="space" />
           <Limb top={lerp(1150, 760, smoother(u))} r={5200} glow={1} scroll={t * 300} />
-          <InFlight x={lerp(1012, 980, u)} y={lerp(540, 500, u)} rot={lerp(0, -72, pitch)} z={lerp(7.0, 8.5, u)}>
+          <InFlight x={lerp(960, 980, u)} y={lerp(540, 500, u)} rot={lerp(0, -72, pitch)} z={lerp(10, 8.5, u)}>
             <g transform="translate(0 26)"><Ship az={lerp(90, 22, pitch)} t={t} pal="space" heat={prog(u, 0.5, 1)} flapFwd={20} flapAft={20} id="o3s" /></g>
           </InFlight>
           {svg(<IdChip text="OCT 20 · FLIGHT 15" o={idO(t)} />)}
@@ -154,11 +157,11 @@ export const openShots = (): Shot[] => {
   shots.push({
     id: 'O9_supportToRail', a: o9a, b: s2 - 0.18, tin: 'cut',
     render: (t) => {
-      const above = lerp(9, 1.4, ep(t, o9a, tSecond + 0.6));
+      const above = lerp(16, 1.4, ep(t, o9a, tSecond + 0.8));
       const err = ep(t, tMiss - 0.05, tMiss + 0.75) * (1 - ep(t, tCatcher - 0.2, tCatcher + 0.8));
-      const dz = -0.85 * err;
+      const dz = -1.25 * err;
       const fitW: V3 = [VX, CAR + RAIL_DY + above + 0.6, ARM_Z - 1.3];
-      const c: Cam3 = {at: [VX - 2, CAR + RAIL_DY + 2 + above * 0.4, ARM_Z - 2], z: lerp(17, 19, prog(t, o9a, s2)), yaw: -34, pitch: -14};
+      const c: Cam3 = {at: [VX - 2, CAR + RAIL_DY + 2 + above * 0.4, ARM_Z - 2], z: lerp(9, 19, ep(t, o9a, tSecond + 0.8)) + 2 * ep(t, tMiss - 0.3, tMiss + 0.6), yaw: -34, pitch: -14};
       const s: ArmState = {carY: CAR, open: 4};
       const edge = proj(c, [VX, CAR + RAIL_DY, ARM_Z - 1.3 - 0.4]);
       return (
