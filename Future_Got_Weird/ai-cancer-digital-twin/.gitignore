@@ -31,3 +31,4 @@ v3/audio/mix/stems/
 source/public/audio/mix_v3.wav
 v3/qa/**/f[0-9]*.png
 v3/qa/render*
+v3/qa/**/f_*.png
