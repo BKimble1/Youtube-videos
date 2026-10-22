@@ -1,0 +1,52 @@
+{
+ "file": "exports/FGW_Starship_Dual_Catch_V5_PUBLISH_MASTER_4K.mp4",
+ "integrated_lufs": -15.0,
+ "true_peak_dbtp": -1.7,
+ "black_stretches": [],
+ "freezes_over_1_5s": [
+  [
+   "47.3",
+   "1.56667"
+  ],
+  [
+   "150.133",
+   "1.83333"
+  ],
+  [
+   "192.2",
+   "1.66667"
+  ],
+  [
+   "233.933",
+   "6.26667"
+  ],
+  [
+   "240.2",
+   "7.1"
+  ]
+ ],
+ "audio_silences_over_1_5s": [],
+ "end_screen": {
+  "start_s": 233.17,
+  "end_s": 248.17,
+  "panels_xywh": [
+   [
+    180,
+    360,
+    660,
+    371
+   ],
+   [
+    1080,
+    360,
+    660,
+    371
+   ]
+  ],
+  "panel_mean_abs_diff_entrance_settled_vs_last_frame": [
+   0.032,
+   0.002
+  ]
+ }
+}
+{'duration': '248.166667'} [('h264', 3840, 2160, '30/1'), ('aac', None, None, '0/0')]
