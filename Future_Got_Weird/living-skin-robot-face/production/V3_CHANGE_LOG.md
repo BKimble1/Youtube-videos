@@ -8,7 +8,7 @@ where the quality holds. V1 and V2 files and source are untouched. V2 is composi
 
 | File | Dimensions / runtime |
 |---|---|
-| `exports/FGW_Living_Skin_V3_REVIEW_1080x1920.mp4` | 1080×1920, 30 fps, 816 frames, **27.200 s**, H.264 High (CRF 12, keyframe every 0.5 s), BT.709, plus AAC 320 kb/s. SHA-256 `@@REVIEW_SHA@@` |
+| `exports/FGW_Living_Skin_V3_REVIEW_1080x1920.mp4` | 1080×1920, 30 fps, 816 frames, **27.200 s**, H.264 High (CRF 12, keyframe every 0.5 s), BT.709, plus AAC 320 kb/s. SHA-256 `731ac29a…29ff` |
 | `exports/FGW_Living_Skin_V3_MASTER_2160x3840.mp4` | 2160×3840 native, rendered at 2× from the vector source (not upscaled); 30 fps, 816 frames, 27.200 s, CRF 14. SHA-256 `@@MASTER_SHA@@` |
 
 **Source.**
@@ -186,7 +186,7 @@ Median frame change is about 4.8 in both versions.
   - It mirrors the start's velocity, so the loop continues with no reset hold.
   - V2's closing cutaway reprise was dropped; it was not asked for, and its block-like notch was the least
     convincing frame of the ending.
-  - Loop seam: last-to-first frame change 2.05 (V2 2.07). The neighbouring steps are 0.8, the same as V2.
+  - Loop seam: last-to-first frame change 2.07 (V2 2.07). The neighbouring steps are 0.8, the same as V2.
 
 ### 8. Material quality
 
