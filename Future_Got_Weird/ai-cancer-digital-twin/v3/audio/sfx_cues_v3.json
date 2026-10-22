@@ -8,24 +8,24 @@
   {
    "t": 0.9,
    "kind": "heart",
-   "gain": 0.75
+   "gain": 0.45
   },
   {
    "t": 1.8,
    "kind": "heart",
-   "gain": 0.7
+   "gain": 0.4
   },
   {
    "t": 0.4,
    "kind": "press",
-   "gain": 0.7,
+   "gain": 0.4,
    "dur": 3.2,
    "pitch": 0.7
   },
   {
    "t": 2.3,
    "kind": "whoosh",
-   "gain": 0.6,
+   "gain": 0.45,
    "dur": 1.4,
    "pitch": 0.8
   },
@@ -155,7 +155,7 @@
   {
    "t": 27.61,
    "kind": "thud",
-   "gain": 0.8,
+   "gain": 0.55,
    "pitch": 0.8
   },
   {
@@ -187,7 +187,7 @@
   {
    "t": 36.32,
    "kind": "thud",
-   "gain": 0.7,
+   "gain": 0.5,
    "pitch": 0.7
   },
   {
@@ -252,14 +252,14 @@
   {
    "t": 53.44,
    "kind": "whoosh",
-   "gain": 0.8,
+   "gain": 0.5,
    "dur": 2.2,
    "pitch": 0.55
   },
   {
    "t": 55.44,
    "kind": "thud",
-   "gain": 0.7,
+   "gain": 0.45,
    "pitch": 0.7
   },
   {
@@ -505,7 +505,7 @@
   {
    "t": 125.303,
    "kind": "thud",
-   "gain": 0.6,
+   "gain": 0.4,
    "pitch": 0.8
   },
   {
@@ -529,7 +529,7 @@
   {
    "t": 129.25,
    "kind": "divide",
-   "gain": 0.7,
+   "gain": 0.45,
    "dur": 1.3,
    "pitch": 0.9
   },
@@ -588,14 +588,14 @@
   {
    "t": 153.66,
    "kind": "divide",
-   "gain": 0.45,
+   "gain": 0.3,
    "dur": 1.0,
    "pitch": 1.3
   },
   {
    "t": 154.36,
    "kind": "divide",
-   "gain": 0.35,
+   "gain": 0.25,
    "dur": 1.0,
    "pitch": 1.4
   },

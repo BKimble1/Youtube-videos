@@ -19,8 +19,8 @@ cues = []
 def c(t, kind, gain=1.0, dur=None, pitch=None):
     cues.append({'t': round(t, 3), 'kind': kind, 'gain': gain, **({'dur': dur} if dur else {}), **({'pitch': pitch} if pitch else {})})
 # A — the dive, the cell, DNA, the failure, division, survival, cascade
-c(0.0, 'heart', 0.8); c(0.9, 'heart', 0.75); c(1.8, 'heart', 0.7)
-c(0.4, 'press', 0.7, 3.2, 0.7); c(2.3, 'whoosh', 0.6, 1.4, 0.8); c(3.0, 'shimmer', 0.4, 1.0)
+c(0.0, 'heart', 0.8); c(0.9, 'heart', 0.45); c(1.8, 'heart', 0.4)   # first beat lands before the voice (0.49 s); later beats sit under it
+c(0.4, 'press', 0.4, 3.2, 0.7); c(2.3, 'whoosh', 0.45, 1.4, 0.8); c(3.0, 'shimmer', 0.4, 1.0)
 c(T('And the terrifying part') + 0.8, 'press', 0.5, 1.6, 0.8)
 c(T('Deep inside its nucleus'), 'whoosh', 0.7, 2.6, 0.7); c(T('tiny mistakes'), 'click', 0.35, None, 1.4); c(T('tiny mistakes') + 0.4, 'click', 0.3, None, 1.2)
 for k, p in enumerate(['grows,', 'stops,', 'dies']):
@@ -29,16 +29,16 @@ c(T('are starting to fail'), 'thud', 0.5); c(T('And eventually, something') + 0.
 c(T('The cell divides') + 0.2, 'divide', 0.8, 1.8)
 for k in range(6):
     c(T('It ignores signals') + 0.05 + k * 0.2 + 0.55, 'click', 0.28, None, 1.6)
-c(T('when the body tries'), 'press', 0.6, 1.4, 0.9); c(T('destroy it'), 'squelch', 0.7, 0.9); c(T('it survives.'), 'thud', 0.8, None, 0.8)
+c(T('when the body tries'), 'press', 0.6, 1.4, 0.9); c(T('destroy it'), 'squelch', 0.7, 0.9); c(T('it survives.'), 'thud', 0.55, None, 0.8)
 c(T('One cell becomes two.') + 0.2, 'divide', 0.7, 1.2); c(T('Two become four.') + 0.2, 'divide', 0.6, 1.1, 1.1)
 c(T('Four become thousands') + 0.1, 'swarm', 0.7, 3.5); c(T('Four become thousands') + 1.0, 'whoosh', 0.6, 2.4, 0.6)
 # B — growth, vessels, evasion, escape, blood, liver, body, evolution
-c(T('But it gets worse.'), 'thud', 0.7, None, 0.7); c(T('steals nutrients'), 'bubble', 0.5, 1.6)
+c(T('But it gets worse.'), 'thud', 0.5, None, 0.7); c(T('steals nutrients'), 'bubble', 0.5, 1.6)
 c(T('recruits blood vessels'), 'stretch', 0.6, 1.8); c(T('hide from the immune system'), 'press', 0.5, 1.4, 1.1)
 c(T('Then some cancer cells break free.') + 0.4, 'stretch', 0.7, 1.4, 1.2); c(T('They enter the bloodstream') + 0.3, 'squelch', 0.7, 0.9)
 c(T('They enter the bloodstream') + 0.7, 'whoosh', 0.75, 1.6, 0.7)
 c(T('travel through the body') + 0.4, 'whoosh', 0.55, 1.6, 0.7); c(T('different organs.') + 0.2, 'thud', 0.45, None, 1.1); c(T('different organs.') + 0.6, 'divide', 0.4, 1.0, 1.2)
-c(T("And that's the real nightmare.") - 0.2, 'whoosh', 0.8, 2.2, 0.55); c(T("And that's the real nightmare.") + 1.8, 'thud', 0.7, None, 0.7)
+c(T("And that's the real nightmare.") - 0.2, 'whoosh', 0.5, 2.2, 0.55); c(T("And that's the real nightmare.") + 1.8, 'thud', 0.45, None, 0.7)
 c(T("It's millions of your own cells"), 'swarm', 0.5, 2.5, 1.2); c(T('evolving, and'), 'sweep', 0.4, 1.6)
 # C — scan, twin, data, simulation, weakness, people
 c(T('But what if we could predict'), 'sweep', 0.6, 2.4); c(T('This is where artificial intelligence') - 0.5, 'whoosh', 0.6, 2.0, 0.7)
@@ -61,15 +61,15 @@ for k, dd in enumerate([0, 0.3, 0.55, 0.8]):
     c(T('directly to the tumor.') - 0.05 + dd, 'click', 0.35, None, 1.0 + 0.08 * k)
 c(T('Like guided missiles') + 0.1, 'whoosh', 0.35, 0.9, 0.7); c(T('Like guided missiles') + 1.4, 'squelch', 0.35, 0.9, 0.7); c(T('Like guided missiles') + 2.6, 'crackle', 0.4, 2.0)
 c(T('Destroy the cancer') - 0.3, 'whoosh', 0.4, 1.6, 0.6); c(T('Destroy the cancer') + 0.2, 'crackle', 0.45, 3.0)
-c(T("But there's still a problem."), 'thud', 0.6, None, 0.8); c(T('mutate,') - 0.1, 'sweep', 0.35, 0.8)
+c(T("But there's still a problem."), 'thud', 0.4, None, 0.8); c(T('mutate,') - 0.1, 'sweep', 0.35, 0.8)
 c(T('mutate,') + 0.5, 'click', 0.3, None, 0.8); c(T('mutate,') + 0.85, 'click', 0.3, None, 0.8)
-c(T('become resistant.'), 'divide', 0.7, 1.3, 0.9)
+c(T('become resistant.'), 'divide', 0.45, 1.3, 0.9)
 # E — army, evasion, fingerprints, routes, learn, kills, swarm
 c(T('Your body already has an army'), 'swarm', 0.6, 3.5, 0.9)
 c(T('disguise itself,'), 'sweep', 0.35, 0.8, 0.7); c(T('suppress immune defenses,'), 'press', 0.6, 1.2, 0.8)
 c(T('But tumors can carry') + 0.1, 'whoosh', 0.55, 1.0, 1.2); c(T('unique molecular fingerprints.'), 'shimmer', 0.6, 1.4)
 c(T('identify those fingerprints'), 'sweep', 0.5, 1.2)
-c(T('cancer vaccines') - 0.4, 'bubble', 0.45, 1.2); c(T('specialized immune-cell treatments.') - 0.05, 'pop', 0.35, None, 1.4); c(T('specialized immune-cell treatments.') + 0.6, 'divide', 0.45, 1.0, 1.3); c(T('specialized immune-cell treatments.') + 1.3, 'divide', 0.35, 1.0, 1.4)
+c(T('cancer vaccines') - 0.4, 'bubble', 0.45, 1.2); c(T('specialized immune-cell treatments.') - 0.05, 'pop', 0.35, None, 1.4); c(T('specialized immune-cell treatments.') + 0.6, 'divide', 0.3, 1.0, 1.3); c(T('specialized immune-cell treatments.') + 1.3, 'divide', 0.25, 1.0, 1.4)
 c(T('hunt.') - 0.05, 'bind', 0.65, None, 1.2)
 c(T('They recognize a cancer cell.') + 0.4, 'click', 0.5, None, 1.0); c(T('Lock onto it.'), 'bind', 0.8, None, 0.85)
 c(T('And destroy it.') + 0.1, 'squelch', 0.7, 0.8); c(T('And destroy it.') + 0.4, 'crackle', 0.5, 1.2)

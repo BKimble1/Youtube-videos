@@ -6,5 +6,5 @@
  "score_lufs_ducked": -32.86,
  "music_to_voice_rms_db_during_speech": -15.5,
  "sfx_cues": 145,
- "limiter_min_gain_db": -2.72
+ "limiter_min_gain_db": -2.76
 }
