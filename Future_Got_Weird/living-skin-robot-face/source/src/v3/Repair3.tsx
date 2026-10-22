@@ -120,10 +120,16 @@ const MigCell: React.FC<{s: ReturnType<typeof migState3>[number]; map: TMap; C: 
   );
 };
 
+const mixHex = (a: string, b: string, k: number) => {
+  const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16));
+  return '#' + pa.map((v, i) => Math.round(lerp(v, pb[i], clamp(k))).toString(16).padStart(2, '0')).join('');
+};
 const graftFibres = (n: number, seed: number) => Array.from({length: n}, (_, k) => ({w0: -RP3.gh + 6 + rnd(seed + k) * (RP3.gh - 12), u0: -RP3.gw + rnd(seed + 40 + k) * (2 * RP3.gw - 120), len: 140 + rnd(seed + 80 + k) * 240, tilt: (rnd(seed + 120 + k) - 0.5) * 0.18, amp: 2 + rnd(seed + 160 + k) * 4}));
 const GB = graftFibres(46, 300), GF = graftFibres(16, 700);
 
-export const RepairMicro3: React.FC<{p: number; t: number; tone: number; id: string; heroGlow?: number; vis?: [number, number]}> = ({p, t, tone, id, heroGlow = 0, vis = [-1400, 1400]}) => {
+export const RepairMicro3: React.FC<{p: number; t: number; tone: number; id: string; heroGlow?: number; vis?: [number, number]; graftAlpha?: number; blend?: boolean}> = ({p, t, tone, id, heroGlow = 0, vis = [-1400, 1400], graftAlpha = 0.88, blend = false}) => {
+  // V4 passes blend: the warm/teal palette is interpolated continuously instead of switching at tone 0.5
+  const pick = (warm: string, teal: string) => (blend ? mixHex(warm, teal, tone) : tone > 0.5 ? teal : warm);
   const C = tc(tone);
   const m = repairMap3(p);
   const st = migState3(p);
@@ -138,14 +144,14 @@ export const RepairMicro3: React.FC<{p: number; t: number; tone: number; id: str
   const graft = [...edge(-1), ...edge(1).reverse()];
   const integ = clamp(p * 1.25 - 0.2);
   const fibre = (f: (typeof GB)[number]) => smooth(Array.from({length: 8}, (_, i) => { const u = f.u0 + (i / 7) * f.len; return m(Math.min(u, gw - 6), f.w0 + f.amp * Math.sin(i * 1.1 + f.u0) + (u - f.u0) * f.tilt); }));
-  const gFill = tone > 0.5 ? '#2B6A72' : '#F4E3DF', gFib = tone > 0.5 ? '#BDF2EF' : '#FFFFFF';
+  const gFill = pick('#F4E3DF', '#2B6A72'), gFib = pick('#FFFFFF', '#BDF2EF');
   return (
     <g>
       <defs><clipPath id={`${id}-g`}><path d={smooth(graft, true, 0.06)} /></clipPath></defs>
       <rect x={-3000} y={2 * DERM - 14} width={6000} height={3000} fill={C.matrix} />
       <TissueSection m={(u, w) => m(u, w + DERM - 6)} u0={vis[0]} u1={vis[1]} t={t} tone={tone} id={`${id}-d`} epidermis={false} flat />
       <TissueSection m={m} u0={vis[0]} u1={vis[1]} t={t} tone={tone} id={`${id}-t`} epidermis={false} flat cellFilter={keep} />
-      <path d={smooth(gapPoly, true, 0.05)} fill={tone > 0.5 ? '#0F3843' : '#9A5A60'} opacity={0.72 * (1 - 0.85 * fill)} />
+      <path d={smooth(gapPoly, true, 0.05)} fill={pick('#9A5A60', '#0F3843')} opacity={0.72 * (1 - 0.85 * fill)} />
       {fill > 0 && Array.from({length: 6}, (_, k) => {
         const w = 12 + k * 19, h = gapHalf(w);
         if (h < 5) return null;
@@ -153,14 +159,14 @@ export const RepairMicro3: React.FC<{p: number; t: number; tone: number; id: str
       })}
       {/* graft: back layer (sits on the tissue surface; soft contact shadow), rear fibres */}
       <path d={smooth(edge(1).map((q) => ({x: q.x, y: q.y + 6})))} fill="none" stroke="#06181D" strokeWidth={10} opacity={0.25 * (1 - integ * 0.6)} />
-      <path d={smooth(graft, true, 0.06)} fill={gFill} opacity={0.88} />
+      <path d={smooth(graft, true, 0.06)} fill={gFill} opacity={graftAlpha} />
       <g clipPath={`url(#${id}-g)`}>{GB.map((f, k) => <path key={k} d={fibre(f)} fill="none" stroke={gFib} strokeWidth={1.5} opacity={0.42} />)}</g>
       {/* integration: tissue fibres grow across the boundary into the graft */}
       {integ > 0 && Array.from({length: 12}, (_, k) => { const u = -gw + 40 + k * ((2 * gw - 80) / 11); const L = integ * (40 + 30 * rnd(k)); return <path key={k} d={smooth([m(u, 28), m(u + 8, 6), m(u + 4, -L * 0.6), m(u + 12, -L)])} fill="none" stroke={C.fiber} strokeWidth={2.2} opacity={0.7 * integ} />; })}
       {st.map((s, j) => <MigCell key={j} s={s} map={m} C={C} id={`${id}-t`} t={t} glow={j === 0 ? heroGlow : 0} />)}
       {/* graft: front fibres over the cells inside it, then its edge */}
       <g clipPath={`url(#${id}-g)`}>{GF.map((f, k) => <path key={k} d={fibre(f)} fill="none" stroke={gFib} strokeWidth={1.8} opacity={0.5} />)}</g>
-      <path d={smooth(graft, true, 0.06)} fill="none" stroke={tone > 0.5 ? '#C8FFFA' : '#FFFFFF'} strokeWidth={2.4} opacity={lerp(0.9, 0.38, integ)} strokeDasharray={p > 0.85 ? '10 8' : undefined} />
+      <path d={smooth(graft, true, 0.06)} fill="none" stroke={pick('#FFFFFF', '#C8FFFA')} strokeWidth={2.4} opacity={lerp(0.9, 0.38, integ)} strokeDasharray={p > 0.85 ? '10 8' : undefined} />
     </g>
   );
 };
