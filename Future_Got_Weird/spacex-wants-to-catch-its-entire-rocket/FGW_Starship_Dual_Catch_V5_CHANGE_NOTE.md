@@ -8,7 +8,7 @@
 | File | Facts |
 |---|---|
 | `exports/FGW_Starship_Dual_Catch_V5_FINAL_REVIEW_1080p.mp4` | 1920×1080, 30 fps, H.264 + AAC 320k, **4:08.17** (V4: 4:10.73). Checksummed parts in `backup/v5/`. |
-| `exports/FGW_Starship_Dual_Catch_V5_PUBLISH_MASTER_4K.mp4` | 3840×2160, 30 fps, rendered from composition `MainV5` at `--scale=2` (vector scenes drawn at 4K; footage scaled from its source). Not an upscale of the 1080p file. |
+| `exports/FGW_Starship_Dual_Catch_V5_PUBLISH_MASTER_4K.mp4` | 3840×2160, 30 fps, rendered from composition `MainV5` at `--scale=2` (vector scenes drawn at 4K; footage scaled from its source). Not an upscale of the 1080p file. Master: x264 CRF 14 (521 MiB). The copy sent in chat is `exports/deliver/` — the same render re-encoded at CRF 17 (365 MiB) to fit the 400 MiB upload limit; use the CRF 14 master for publishing. |
 | `captions/FGW_Starship_Dual_Catch_V5.srt` | 86 cues, regenerated from the V5 word timings; no line over 42 characters. |
 | `qa/v5/FGW_Starship_Dual_Catch_V5_END_FRAME.png` | Last frame of the review render (the 4K end frame is `..._END_FRAME_4k.png`). |
 | `script/v5_narration_final.md` | Final narration with V5 timecodes. |
@@ -142,12 +142,12 @@ resolving after it.
 
 | Check | 1080p review | 4K master |
 |---|---|---|
-| Streams | h264 1920×1080 30/1, AAC 48 kHz; 248.17 s | see `qa/v5/qa_v5_4k_results.json` |
-| Loudness / true peak | −15.0 LUFS / −1.7 dBTP | same mix |
-| Black stretches (≥0.25 s) | none | |
-| Static stretches (≥1.5 s) | 2:30.1 (1.7 s, one-sided load held while "…changing how the load is shared"), 3:12.2 (1.6 s, ship seated in the arms), end screen 3:53.9 onward (intended). The 0:22.6 hold found in the first render was fixed. | |
-| End-screen panels | mean abs. difference entrance vs last frame: 0.06 / 0.02 (of 255), so stationary | |
-| Audio silences ≥1.5 s | none | |
+| Streams | h264 1920×1080 30/1, AAC 48 kHz; 248.17 s | h264 3840×2160 30/1, 7445 frames, AAC 48 kHz; 248.17 s |
+| Loudness / true peak | −15.0 LUFS / −1.7 dBTP | −15.0 LUFS / −1.7 dBTP |
+| Black stretches (≥0.25 s) | none | none |
+| Static stretches (≥1.5 s) | 2:30.1 (1.7 s, one-sided load held while "…changing how the load is shared"), 3:12.2 (1.6 s, ship seated in the arms), end screen 3:53.9 onward (intended). The 0:22.6 hold found in the first render was fixed. | same, plus 0:47.3 (1.6 s, booster seated on the rails after the transfer) |
+| End-screen panels | mean abs. difference entrance vs last frame: 0.06 / 0.02 (of 255), so stationary | 0.03 / 0.002 |
+| Audio silences ≥1.5 s | none | none |
 
 - Speech band: voice over music+effects median +14.1 dB. The lowest 1-second window (−5.1 dB) is at 1:23, in the
   pause after "still working." under the corridor wind, not under a word.
