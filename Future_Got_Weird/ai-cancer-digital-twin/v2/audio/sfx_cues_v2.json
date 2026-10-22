@@ -1,0 +1,1075 @@
+{
+ "cues": [
+  {
+   "t": 0.0,
+   "kind": "heart",
+   "gain": 0.8
+  },
+  {
+   "t": 0.9,
+   "kind": "heart",
+   "gain": 0.75
+  },
+  {
+   "t": 1.8,
+   "kind": "heart",
+   "gain": 0.7
+  },
+  {
+   "t": 0.4,
+   "kind": "press",
+   "gain": 0.7,
+   "dur": 3.2,
+   "pitch": 0.7
+  },
+  {
+   "t": 2.3,
+   "kind": "whoosh",
+   "gain": 0.6,
+   "dur": 1.4,
+   "pitch": 0.8
+  },
+  {
+   "t": 3.0,
+   "kind": "shimmer",
+   "gain": 0.4,
+   "dur": 1.0
+  },
+  {
+   "t": 5.343,
+   "kind": "press",
+   "gain": 0.5,
+   "dur": 1.6,
+   "pitch": 0.8
+  },
+  {
+   "t": 8.17,
+   "kind": "whoosh",
+   "gain": 0.7,
+   "dur": 2.6,
+   "pitch": 0.7
+  },
+  {
+   "t": 9.77,
+   "kind": "click",
+   "gain": 0.35,
+   "pitch": 1.4
+  },
+  {
+   "t": 10.17,
+   "kind": "click",
+   "gain": 0.3,
+   "pitch": 1.2
+  },
+  {
+   "t": 14.25,
+   "kind": "bind",
+   "gain": 0.6,
+   "pitch": 1.0
+  },
+  {
+   "t": 15.21,
+   "kind": "bind",
+   "gain": 0.6,
+   "pitch": 1.2
+  },
+  {
+   "t": 16.21,
+   "kind": "bind",
+   "gain": 0.6,
+   "pitch": 1.4
+  },
+  {
+   "t": 16.73,
+   "kind": "thud",
+   "gain": 0.5
+  },
+  {
+   "t": 18.357,
+   "kind": "riser",
+   "gain": 0.6,
+   "dur": 1.2
+  },
+  {
+   "t": 20.35,
+   "kind": "whoosh",
+   "gain": 0.75,
+   "dur": 1.6,
+   "pitch": 0.6
+  },
+  {
+   "t": 21.49,
+   "kind": "divide",
+   "gain": 0.8,
+   "dur": 1.8
+  },
+  {
+   "t": 23.783,
+   "kind": "click",
+   "gain": 0.28,
+   "pitch": 1.6
+  },
+  {
+   "t": 23.983,
+   "kind": "click",
+   "gain": 0.28,
+   "pitch": 1.6
+  },
+  {
+   "t": 24.183,
+   "kind": "click",
+   "gain": 0.28,
+   "pitch": 1.6
+  },
+  {
+   "t": 24.383,
+   "kind": "click",
+   "gain": 0.28,
+   "pitch": 1.6
+  },
+  {
+   "t": 24.583,
+   "kind": "click",
+   "gain": 0.28,
+   "pitch": 1.6
+  },
+  {
+   "t": 24.783,
+   "kind": "click",
+   "gain": 0.28,
+   "pitch": 1.6
+  },
+  {
+   "t": 25.65,
+   "kind": "press",
+   "gain": 0.6,
+   "dur": 1.4,
+   "pitch": 0.9
+  },
+  {
+   "t": 26.73,
+   "kind": "squelch",
+   "gain": 0.7,
+   "dur": 0.9
+  },
+  {
+   "t": 27.61,
+   "kind": "thud",
+   "gain": 0.8,
+   "pitch": 0.8
+  },
+  {
+   "t": 29.25,
+   "kind": "divide",
+   "gain": 0.7,
+   "dur": 1.2
+  },
+  {
+   "t": 30.93,
+   "kind": "divide",
+   "gain": 0.6,
+   "dur": 1.1,
+   "pitch": 1.1
+  },
+  {
+   "t": 32.27,
+   "kind": "swarm",
+   "gain": 0.7,
+   "dur": 3.5
+  },
+  {
+   "t": 33.17,
+   "kind": "whoosh",
+   "gain": 0.6,
+   "dur": 2.4,
+   "pitch": 0.6
+  },
+  {
+   "t": 36.32,
+   "kind": "thud",
+   "gain": 0.7,
+   "pitch": 0.7
+  },
+  {
+   "t": 38.96,
+   "kind": "bubble",
+   "gain": 0.5,
+   "dur": 1.6
+  },
+  {
+   "t": 40.28,
+   "kind": "stretch",
+   "gain": 0.6,
+   "dur": 1.8
+  },
+  {
+   "t": 43.6,
+   "kind": "press",
+   "gain": 0.5,
+   "dur": 1.4,
+   "pitch": 1.1
+  },
+  {
+   "t": 45.84,
+   "kind": "stretch",
+   "gain": 0.7,
+   "dur": 1.4,
+   "pitch": 1.2
+  },
+  {
+   "t": 48.22,
+   "kind": "squelch",
+   "gain": 0.7,
+   "dur": 0.9
+  },
+  {
+   "t": 48.62,
+   "kind": "whoosh",
+   "gain": 0.75,
+   "dur": 1.6,
+   "pitch": 0.7
+  },
+  {
+   "t": 51.28,
+   "kind": "squelch",
+   "gain": 0.6,
+   "dur": 0.8,
+   "pitch": 0.8
+  },
+  {
+   "t": 52.78,
+   "kind": "divide",
+   "gain": 0.5,
+   "dur": 1.0,
+   "pitch": 1.2
+  },
+  {
+   "t": 53.44,
+   "kind": "whoosh",
+   "gain": 0.8,
+   "dur": 2.2,
+   "pitch": 0.55
+  },
+  {
+   "t": 55.44,
+   "kind": "thud",
+   "gain": 0.7,
+   "pitch": 0.7
+  },
+  {
+   "t": 57.4,
+   "kind": "swarm",
+   "gain": 0.5,
+   "dur": 2.5,
+   "pitch": 1.2
+  },
+  {
+   "t": 60.68,
+   "kind": "sweep",
+   "gain": 0.4,
+   "dur": 1.6
+  },
+  {
+   "t": 63.93,
+   "kind": "sweep",
+   "gain": 0.6,
+   "dur": 2.4
+  },
+  {
+   "t": 67.07,
+   "kind": "whoosh",
+   "gain": 0.6,
+   "dur": 2.0,
+   "pitch": 0.7
+  },
+  {
+   "t": 67.97,
+   "kind": "shimmer",
+   "gain": 0.6,
+   "dur": 1.6
+  },
+  {
+   "t": 72.21,
+   "kind": "drop",
+   "gain": 0.55
+  },
+  {
+   "t": 73.05,
+   "kind": "drop",
+   "gain": 0.55
+  },
+  {
+   "t": 74.13,
+   "kind": "drop",
+   "gain": 0.55
+  },
+  {
+   "t": 76.87,
+   "kind": "whoosh",
+   "gain": 0.6,
+   "dur": 1.4,
+   "pitch": 1.1
+  },
+  {
+   "t": 77.67,
+   "kind": "shimmer",
+   "gain": 0.6,
+   "dur": 2.0
+  },
+  {
+   "t": 80.25,
+   "kind": "press",
+   "gain": 0.5,
+   "dur": 1.4,
+   "pitch": 1.2
+  },
+  {
+   "t": 84.09,
+   "kind": "blip",
+   "gain": 0.4
+  },
+  {
+   "t": 84.39,
+   "kind": "blip",
+   "gain": 0.35,
+   "pitch": 1.12
+  },
+  {
+   "t": 84.69,
+   "kind": "blip",
+   "gain": 0.3,
+   "pitch": 1.25
+  },
+  {
+   "t": 85.57,
+   "kind": "sweep",
+   "gain": 0.4,
+   "dur": 1.2
+  },
+  {
+   "t": 87.61,
+   "kind": "whoosh",
+   "gain": 0.55,
+   "dur": 1.2,
+   "pitch": 1.1
+  },
+  {
+   "t": 88.89,
+   "kind": "bind",
+   "gain": 0.6,
+   "pitch": 1.3
+  },
+  {
+   "t": 91.29,
+   "kind": "sweep",
+   "gain": 0.45,
+   "dur": 2.0
+  },
+  {
+   "t": 95.05,
+   "kind": "shimmer",
+   "gain": 0.5,
+   "dur": 1.6
+  },
+  {
+   "t": 98.73,
+   "kind": "shimmer",
+   "gain": 0.4,
+   "dur": 1.8
+  },
+  {
+   "t": 102.247,
+   "kind": "clash",
+   "gain": 0.5
+  },
+  {
+   "t": 103.57,
+   "kind": "clash",
+   "gain": 0.5,
+   "pitch": 1.1
+  },
+  {
+   "t": 104.49,
+   "kind": "bind",
+   "gain": 0.8,
+   "pitch": 0.9
+  },
+  {
+   "t": 107.397,
+   "kind": "bubble",
+   "gain": 0.5,
+   "dur": 1.4,
+   "pitch": 1.3
+  },
+  {
+   "t": 109.05,
+   "kind": "whoosh",
+   "gain": 0.6,
+   "dur": 1.6,
+   "pitch": 0.8
+  },
+  {
+   "t": 110.85,
+   "kind": "click",
+   "gain": 0.4,
+   "pitch": 1.1
+  },
+  {
+   "t": 111.2,
+   "kind": "click",
+   "gain": 0.35
+  },
+  {
+   "t": 111.55,
+   "kind": "click",
+   "gain": 0.35,
+   "pitch": 0.9
+  },
+  {
+   "t": 112.59,
+   "kind": "whoosh",
+   "gain": 0.5,
+   "dur": 0.8,
+   "pitch": 1.3
+  },
+  {
+   "t": 113.39,
+   "kind": "pop",
+   "gain": 0.7
+  },
+  {
+   "t": 113.99,
+   "kind": "bubble",
+   "gain": 0.5,
+   "dur": 1.2
+  },
+  {
+   "t": 116.09,
+   "kind": "whoosh",
+   "gain": 0.55,
+   "dur": 3.2,
+   "pitch": 0.6
+  },
+  {
+   "t": 121.01,
+   "kind": "crackle",
+   "gain": 0.6,
+   "dur": 3.5
+  },
+  {
+   "t": 125.303,
+   "kind": "thud",
+   "gain": 0.6,
+   "pitch": 0.8
+  },
+  {
+   "t": 128.59,
+   "kind": "sweep",
+   "gain": 0.35,
+   "dur": 0.8
+  },
+  {
+   "t": 129.19,
+   "kind": "click",
+   "gain": 0.3,
+   "pitch": 0.8
+  },
+  {
+   "t": 129.54,
+   "kind": "click",
+   "gain": 0.3,
+   "pitch": 0.8
+  },
+  {
+   "t": 129.25,
+   "kind": "divide",
+   "gain": 0.7,
+   "dur": 1.3,
+   "pitch": 0.9
+  },
+  {
+   "t": 133.1,
+   "kind": "swarm",
+   "gain": 0.6,
+   "dur": 3.5,
+   "pitch": 0.9
+  },
+  {
+   "t": 140.1,
+   "kind": "sweep",
+   "gain": 0.35,
+   "dur": 0.8,
+   "pitch": 0.7
+  },
+  {
+   "t": 141.447,
+   "kind": "press",
+   "gain": 0.6,
+   "dur": 1.2,
+   "pitch": 0.8
+  },
+  {
+   "t": 145.653,
+   "kind": "whoosh",
+   "gain": 0.55,
+   "dur": 1.0,
+   "pitch": 1.2
+  },
+  {
+   "t": 146.54,
+   "kind": "shimmer",
+   "gain": 0.6,
+   "dur": 1.4
+  },
+  {
+   "t": 149.54,
+   "kind": "sweep",
+   "gain": 0.5,
+   "dur": 1.2
+  },
+  {
+   "t": 151.38,
+   "kind": "bubble",
+   "gain": 0.5,
+   "dur": 1.2
+  },
+  {
+   "t": 153.06,
+   "kind": "divide",
+   "gain": 0.5,
+   "dur": 1.2,
+   "pitch": 1.3
+  },
+  {
+   "t": 157.02,
+   "kind": "bind",
+   "gain": 0.7,
+   "pitch": 1.2
+  },
+  {
+   "t": 159.02,
+   "kind": "click",
+   "gain": 0.5,
+   "pitch": 1.0
+  },
+  {
+   "t": 160.5,
+   "kind": "bind",
+   "gain": 0.8,
+   "pitch": 0.85
+  },
+  {
+   "t": 161.573,
+   "kind": "squelch",
+   "gain": 0.7,
+   "dur": 0.8
+  },
+  {
+   "t": 161.873,
+   "kind": "crackle",
+   "gain": 0.5,
+   "dur": 1.2
+  },
+  {
+   "t": 163.6,
+   "kind": "bind",
+   "gain": 0.6,
+   "pitch": 0.95
+  },
+  {
+   "t": 163.8,
+   "kind": "squelch",
+   "gain": 0.5,
+   "dur": 0.6
+  },
+  {
+   "t": 164.96,
+   "kind": "bind",
+   "gain": 0.6,
+   "pitch": 1.05
+  },
+  {
+   "t": 165.26,
+   "kind": "squelch",
+   "gain": 0.5,
+   "dur": 0.6
+  },
+  {
+   "t": 165.46,
+   "kind": "whoosh",
+   "gain": 0.6,
+   "dur": 2.2,
+   "pitch": 0.6
+  },
+  {
+   "t": 166.26,
+   "kind": "crackle",
+   "gain": 0.5,
+   "dur": 3.5
+  },
+  {
+   "t": 171.09,
+   "kind": "press",
+   "gain": 0.5,
+   "dur": 2.0,
+   "pitch": 0.8
+  },
+  {
+   "t": 177.97,
+   "kind": "divide",
+   "gain": 0.6,
+   "dur": 1.0,
+   "pitch": 1.1
+  },
+  {
+   "t": 179.81,
+   "kind": "bubble",
+   "gain": 0.45,
+   "dur": 1.6,
+   "pitch": 1.4
+  },
+  {
+   "t": 182.55,
+   "kind": "whoosh",
+   "gain": 0.6,
+   "dur": 1.2,
+   "pitch": 0.8
+  },
+  {
+   "t": 186.496,
+   "kind": "thud",
+   "gain": 0.4,
+   "pitch": 1.2
+  },
+  {
+   "t": 186.696,
+   "kind": "sweep",
+   "gain": 0.35,
+   "dur": 0.9,
+   "pitch": 0.6
+  },
+  {
+   "t": 188.39,
+   "kind": "whoosh",
+   "gain": 0.5,
+   "dur": 0.8,
+   "pitch": 1.2
+  },
+  {
+   "t": 188.69,
+   "kind": "drop",
+   "gain": 0.3,
+   "pitch": 1.0
+  },
+  {
+   "t": 188.97,
+   "kind": "drop",
+   "gain": 0.3,
+   "pitch": 1.06
+  },
+  {
+   "t": 189.25,
+   "kind": "drop",
+   "gain": 0.3,
+   "pitch": 1.12
+  },
+  {
+   "t": 189.53,
+   "kind": "drop",
+   "gain": 0.3,
+   "pitch": 1.18
+  },
+  {
+   "t": 189.81,
+   "kind": "drop",
+   "gain": 0.3,
+   "pitch": 1.24
+  },
+  {
+   "t": 190.97,
+   "kind": "blip",
+   "gain": 0.45,
+   "pitch": 0.9
+  },
+  {
+   "t": 192.75,
+   "kind": "bind",
+   "gain": 0.55,
+   "pitch": 1.2
+  },
+  {
+   "t": 195.879,
+   "kind": "bind",
+   "gain": 0.5,
+   "pitch": 0.9
+  },
+  {
+   "t": 196.97,
+   "kind": "bind",
+   "gain": 0.55,
+   "pitch": 1.1
+  },
+  {
+   "t": 197.97,
+   "kind": "bind",
+   "gain": 0.55,
+   "pitch": 1.3
+  },
+  {
+   "t": 199.276,
+   "kind": "shimmer",
+   "gain": 0.55,
+   "dur": 2.0
+  },
+  {
+   "t": 202.23,
+   "kind": "press",
+   "gain": 0.4,
+   "dur": 1.4,
+   "pitch": 1.1
+  },
+  {
+   "t": 207.31,
+   "kind": "clash",
+   "gain": 0.35,
+   "pitch": 0.9
+  },
+  {
+   "t": 207.93,
+   "kind": "clash",
+   "gain": 0.35,
+   "pitch": 0.9500000000000001
+  },
+  {
+   "t": 208.55,
+   "kind": "clash",
+   "gain": 0.35,
+   "pitch": 1.0
+  },
+  {
+   "t": 209.17,
+   "kind": "clash",
+   "gain": 0.35,
+   "pitch": 1.05
+  },
+  {
+   "t": 209.79,
+   "kind": "clash",
+   "gain": 0.35,
+   "pitch": 1.1
+  },
+  {
+   "t": 209.25,
+   "kind": "bind",
+   "gain": 0.6,
+   "pitch": 1.2
+  },
+  {
+   "t": 210.83,
+   "kind": "blip",
+   "gain": 0.45,
+   "pitch": 1.0
+  },
+  {
+   "t": 212.323,
+   "kind": "blip",
+   "gain": 0.45,
+   "pitch": 1.12
+  },
+  {
+   "t": 213.603,
+   "kind": "blip",
+   "gain": 0.45,
+   "pitch": 1.24
+  },
+  {
+   "t": 215.07,
+   "kind": "blip",
+   "gain": 0.45,
+   "pitch": 1.3599999999999999
+  },
+  {
+   "t": 216.59,
+   "kind": "blip",
+   "gain": 0.45,
+   "pitch": 1.48
+  },
+  {
+   "t": 219.45,
+   "kind": "shimmer",
+   "gain": 0.6,
+   "dur": 2.0
+  },
+  {
+   "t": 221.55,
+   "kind": "heart",
+   "gain": 0.8
+  },
+  {
+   "t": 222.3,
+   "kind": "heart",
+   "gain": 0.75
+  },
+  {
+   "t": 223.05,
+   "kind": "heart",
+   "gain": 0.7
+  },
+  {
+   "t": 221.85,
+   "kind": "press",
+   "gain": 0.6,
+   "dur": 2.6,
+   "pitch": 0.7
+  },
+  {
+   "t": 223.45,
+   "kind": "whoosh",
+   "gain": 0.6,
+   "dur": 1.2,
+   "pitch": 0.8
+  },
+  {
+   "t": 224.05,
+   "kind": "shimmer",
+   "gain": 0.4,
+   "dur": 0.9
+  },
+  {
+   "t": 225.873,
+   "kind": "bind",
+   "gain": 0.7,
+   "pitch": 1.0
+  },
+  {
+   "t": 226.323,
+   "kind": "crackle",
+   "gain": 0.4,
+   "dur": 1.2
+  },
+  {
+   "t": 227.92,
+   "kind": "whoosh",
+   "gain": 0.55,
+   "dur": 2.6,
+   "pitch": 0.6
+  }
+ ],
+ "beds": [
+  [
+   0,
+   3.1,
+   "room"
+  ],
+  [
+   3.1,
+   8.0,
+   "tissue"
+  ],
+  [
+   8.0,
+   20.6,
+   "micro"
+  ],
+  [
+   20.6,
+   48.6,
+   "tissue"
+  ],
+  [
+   48.6,
+   51.5,
+   "blood"
+  ],
+  [
+   51.5,
+   55.0,
+   "tissue"
+  ],
+  [
+   55.0,
+   57.4,
+   "room"
+  ],
+  [
+   57.4,
+   66.5,
+   "tissue"
+  ],
+  [
+   66.5,
+   97.7,
+   "digital"
+  ],
+  [
+   97.7,
+   107.4,
+   "micro"
+  ],
+  [
+   107.4,
+   112.5,
+   "blood"
+  ],
+  [
+   112.5,
+   133.1,
+   "tissue"
+  ],
+  [
+   133.1,
+   145.8,
+   "tissue"
+  ],
+  [
+   145.8,
+   158.6,
+   "micro"
+  ],
+  [
+   158.6,
+   182.2,
+   "tissue"
+  ],
+  [
+   182.2,
+   186.5,
+   "blood"
+  ],
+  [
+   186.5,
+   195.5,
+   "digital"
+  ],
+  [
+   195.5,
+   199.3,
+   "tissue"
+  ],
+  [
+   199.3,
+   221.5,
+   "digital"
+  ],
+  [
+   221.5,
+   224.5,
+   "room"
+  ],
+  [
+   224.5,
+   228.0,
+   "tissue"
+  ],
+  [
+   228.0,
+   231.14,
+   "room"
+  ]
+ ],
+ "score": [
+  [
+   0,
+   18.2,
+   "tense"
+  ],
+  [
+   18.2,
+   29.0,
+   "survivor",
+   27.61
+  ],
+  [
+   29.0,
+   36.3,
+   "build"
+  ],
+  [
+   36.3,
+   45.4,
+   "tense"
+  ],
+  [
+   45.4,
+   56.5,
+   "drive"
+  ],
+  [
+   56.5,
+   63.9,
+   "tense"
+  ],
+  [
+   63.9,
+   71.2,
+   "reveal"
+  ],
+  [
+   71.2,
+   90.7,
+   "build"
+  ],
+  [
+   90.7,
+   97.7,
+   "reflect"
+  ],
+  [
+   97.7,
+   107.4,
+   "reveal"
+  ],
+  [
+   107.4,
+   120.6,
+   "drive"
+  ],
+  [
+   120.6,
+   125.3,
+   "calm"
+  ],
+  [
+   125.3,
+   133.1,
+   "survivor",
+   129.25
+  ],
+  [
+   133.1,
+   145.5,
+   "build"
+  ],
+  [
+   145.5,
+   155.4,
+   "reveal"
+  ],
+  [
+   155.4,
+   171.1,
+   "drive"
+  ],
+  [
+   171.1,
+   186.5,
+   "reflect"
+  ],
+  [
+   186.5,
+   199.3,
+   "build"
+  ],
+  [
+   199.3,
+   221.5,
+   "warm"
+  ],
+  [
+   221.5,
+   231.14,
+   "hope"
+  ]
+ ],
+ "duration": 231.14
+}

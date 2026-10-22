@@ -1,0 +1,19 @@
+{
+ "provider": "ElevenLabs (authorized workspace connection, restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU"},
+ "model_id": "eleven_v4",
+ "flow_id": "CqJBqR0v5NxEUqWfe0nM",
+ "script": "v2/production/SCRIPT_V2_APPROVED.txt (approved wording, unchanged; audio tags direct delivery and are not spoken)",
+ "takes": {
+  "B1": {"t1": "86HnkNKiF8pPm2T5CUhz", "t2": "QY6CYDP4GHHScfJZB9YR", "chosen": "t2"},
+  "B2": {"t1": "6SM53rubw0UR3F5mR88M", "t2": "psbrVGPJb7QkxwMIyZYS", "chosen": "t2"},
+  "B3": {"t1": "lAumjoSdm90WxN4koUTZ", "t2": "eZ9FzZy70B1snPw1Vc0J", "chosen": "t1"},
+  "B4": {"t1": "vAtOEva4GrVwm3dF3GXP", "t2": "ODRnyluFRCOB71WRhUum", "chosen": "t1"},
+  "B5": {"t1": "XnjesIuMisBCi97T5daw", "t2": "Ci0s37iNimFR02FhF3eW", "chosen": "t2"},
+  "B6": {"t1": "MdG4xIWY1avfhpyBFnxd", "t2": "lQczKnj4dt9Kxu7M2zoP", "chosen": "t1"},
+  "B7": {"t1": "ji663uFC0bEkIvwfhGAY", "t2": "Dh3eII8rPFw2HxmwiAtn", "chosen": "t1"}
+ },
+ "selection": "measured (no listening possible): all 14 takes similar in level and pause structure, none with glitches or pauses > 0.65 s; the shorter speech span was chosen per block (less dead air, per the brief's conversational pacing).",
+ "word_timings": "eleven_scribe_v1 run on each chosen take's flow node; the connector returned the generation's own word alignment (bracketed delivery tags included and removed by tools/v2/stitch_narration_v2.py). This is timing for the exact audio, but not an independent ASR check of the spoken words.",
+ "credits_reported": "speech B1 2x606, B2 2x481, B3 2x707, B4 2x593, B5 2x680, B6 2x523, B7 2x538; word timings 0"
+}
