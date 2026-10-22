@@ -1,0 +1,238 @@
+[
+ {
+  "file": "take1.mp3",
+  "dur": 29.52,
+  "speech": [
+   0.03,
+   29.29
+  ],
+  "wpm_overall": 190.7,
+  "wpm_articulated": 217.5,
+  "whisper": "If you put these contacts in, you could see flashing lights with your eyes completely shut. You see, your eyes normally can't detect infrared, but these lenses contain tiny particles that absorb that invisible light and turn it into colors you can see. And while your eyelids block much of the visible light around you, infrared can still pass through. It reaches the lens underneath, gets converted, and becomes a flash you can actually see. So you could look completely asleep. While someone flashes you a secret code nobody around you can see.",
+  "whisper_match": 1.0,
+  "zip_match": 0.978,
+  "pauses": [
+   [
+    1.6,
+    0.13
+   ],
+   [
+    4.63,
+    0.43
+   ],
+   [
+    7.57,
+    0.37
+   ],
+   [
+    11.5,
+    0.13
+   ],
+   [
+    13.23,
+    0.45
+   ],
+   [
+    16.32,
+    0.28
+   ],
+   [
+    18.28,
+    0.43
+   ],
+   [
+    19.97,
+    0.27
+   ],
+   [
+    20.95,
+    0.24
+   ],
+   [
+    23.2,
+    0.47
+   ],
+   [
+    25.63,
+    0.4
+   ]
+  ]
+ },
+ {
+  "file": "take2.mp3",
+  "dur": 29.36,
+  "speech": [
+   0.03,
+   29.14
+  ],
+  "wpm_overall": 191.7,
+  "wpm_articulated": 220.5,
+  "whisper": "If you put these contacts in, you could see flashing lights with your eyes completely shut. You see, your eyes normally can't detect infrared, but these lenses contain tiny particles that absorb that invisible light and turn it into colors you can see. And while your eyelids block much of the visible light around you, infrared can still pass through. It reaches the lens underneath, gets converted, and becomes a flash you can actually see. So you could look completely asleep while someone flashes you a secret code nobody around you can see.",
+  "whisper_match": 1.0,
+  "zip_match": 0.978,
+  "pauses": [
+   [
+    1.36,
+    0.26
+   ],
+   [
+    4.46,
+    0.39
+   ],
+   [
+    7.4,
+    0.44
+   ],
+   [
+    11.28,
+    0.18
+   ],
+   [
+    13.04,
+    0.43
+   ],
+   [
+    16.16,
+    0.27
+   ],
+   [
+    18.12,
+    0.41
+   ],
+   [
+    19.75,
+    0.32
+   ],
+   [
+    20.73,
+    0.25
+   ],
+   [
+    22.97,
+    0.46
+   ],
+   [
+    25.52,
+    0.39
+   ]
+  ]
+ },
+ {
+  "file": "take3.mp3",
+  "dur": 28.96,
+  "speech": [
+   0.03,
+   28.79
+  ],
+  "wpm_overall": 194.0,
+  "wpm_articulated": 220.0,
+  "whisper": "If you put these contacts in, you could see flashing lights with your eyes completely shut. You see, your eyes normally can't detect infrared, but these lenses contain tiny particles that absorb that invisible light and turn it into colors you can see. And while your eyelids block much of the visible light around you, infrared can still pass through. It reaches the lens underneath, gets converted, and becomes a flash you can actually see. So you could look completely asleep while someone flashes you a secret code nobody around you can see.",
+  "whisper_match": 1.0,
+  "zip_match": 0.978,
+  "pauses": [
+   [
+    1.37,
+    0.18
+   ],
+   [
+    4.46,
+    0.39
+   ],
+   [
+    5.24,
+    0.13
+   ],
+   [
+    7.41,
+    0.4
+   ],
+   [
+    12.94,
+    0.37
+   ],
+   [
+    16.01,
+    0.25
+   ],
+   [
+    17.89,
+    0.4
+   ],
+   [
+    19.55,
+    0.29
+   ],
+   [
+    20.56,
+    0.15
+   ],
+   [
+    22.63,
+    0.41
+   ],
+   [
+    25.07,
+    0.43
+   ]
+  ]
+ },
+ {
+  "file": "take4.mp3",
+  "dur": 29.12,
+  "speech": [
+   0.03,
+   28.92
+  ],
+  "wpm_overall": 193.1,
+  "wpm_articulated": 222.3,
+  "whisper": "If you put these contacts in, you could see flashing lights with your eyes completely shut. You see, your eyes normally can't detect infrared, but these lenses contain tiny particles that absorb that invisible light and turn it into colors you can see. And while your eyelids block much of the visible light around you, infrared can still pass through. It reaches the lens underneath, gets converted, and becomes a flash you can actually see. So you could look completely asleep while someone flashes you a secret code nobody around you can see.",
+  "whisper_match": 1.0,
+  "zip_match": 0.978,
+  "pauses": [
+   [
+    1.38,
+    0.25
+   ],
+   [
+    4.48,
+    0.45
+   ],
+   [
+    7.47,
+    0.44
+   ],
+   [
+    11.32,
+    0.14
+   ],
+   [
+    13.0,
+    0.48
+   ],
+   [
+    16.15,
+    0.28
+   ],
+   [
+    18.12,
+    0.44
+   ],
+   [
+    19.8,
+    0.28
+   ],
+   [
+    20.77,
+    0.24
+   ],
+   [
+    22.96,
+    0.4
+   ],
+   [
+    25.4,
+    0.39
+   ]
+  ]
+ }
+]

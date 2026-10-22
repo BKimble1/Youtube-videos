@@ -1,0 +1,230 @@
+[
+ {
+  "name": "lens arrives (soft whoosh)",
+  "at": -0.05,
+  "dur": 0.4,
+  "gain_db": -34
+ },
+ {
+  "name": "lens placement",
+  "at": 0.39,
+  "dur": 0.2,
+  "gain_db": -20
+ },
+ {
+  "name": "finger withdraw",
+  "at": 0.55,
+  "dur": 0.5,
+  "gain_db": -33
+ },
+ {
+  "name": "lid closes (skin brush)",
+  "at": 2.15,
+  "dur": 0.6,
+  "gain_db": -36
+ },
+ {
+  "name": "closed-eye view opens",
+  "at": 2.9,
+  "dur": 0.35,
+  "gain_db": -32
+ },
+ {
+  "name": "perceived flash A1",
+  "at": 3.4,
+  "dur": 0.55,
+  "gain_db": -24
+ },
+ {
+  "name": "perceived flash A2",
+  "at": 4,
+  "dur": 0.55,
+  "gain_db": -24
+ },
+ {
+  "name": "cutaway opens",
+  "at": 4.55,
+  "dur": 0.5,
+  "gain_db": -30
+ },
+ {
+  "name": "lids slide apart",
+  "at": 4.95,
+  "dur": 0.5,
+  "gain_db": -34
+ },
+ {
+  "name": "visible light registers (warm chime)",
+  "at": 6.255,
+  "dur": 0.7,
+  "gain_db": -27
+ },
+ {
+  "name": "infrared reaches retina (nothing)",
+  "at": 7.205,
+  "dur": 0.2,
+  "gain_db": -36
+ },
+ {
+  "name": "lens slides back (glassy settle)",
+  "at": 8.4,
+  "dur": 0.18,
+  "gain_db": -32
+ },
+ {
+  "name": "push into the lens",
+  "at": 8.4,
+  "dur": 1.2,
+  "gain_db": -33
+ },
+ {
+  "name": "absorption 1",
+  "at": 10.23,
+  "dur": 0.35,
+  "gain_db": -24
+ },
+ {
+  "name": "absorption 2",
+  "at": 10.83,
+  "dur": 0.35,
+  "gain_db": -24
+ },
+ {
+  "name": "emission accent",
+  "at": 11.5,
+  "dur": 1.1,
+  "gain_db": -21
+ },
+ {
+  "name": "pull back",
+  "at": 12.7,
+  "dur": 1.3,
+  "gain_db": -33
+ },
+ {
+  "name": "lids close",
+  "at": 13.55,
+  "dur": 0.5,
+  "gain_db": -33
+ },
+ {
+  "name": "visible light stopped 1",
+  "at": 15.09,
+  "dur": 0.18,
+  "gain_db": -33
+ },
+ {
+  "name": "visible light stopped 2",
+  "at": 15.25,
+  "dur": 0.18,
+  "gain_db": -33
+ },
+ {
+  "name": "visible light stopped 3",
+  "at": 15.41,
+  "dur": 0.18,
+  "gain_db": -33
+ },
+ {
+  "name": "visible light stopped 4",
+  "at": 15.55,
+  "dur": 0.18,
+  "gain_db": -33
+ },
+ {
+  "name": "infrared enters lid",
+  "at": 17.45,
+  "dur": 1.1,
+  "gain_db": -32
+ },
+ {
+  "name": "reaches the lens",
+  "at": 19.1,
+  "dur": 0.12,
+  "gain_db": -32
+ },
+ {
+  "name": "conversion accent",
+  "at": 20.24,
+  "dur": 1.0,
+  "gain_db": -21
+ },
+ {
+  "name": "retina bloom",
+  "at": 21.5,
+  "dur": 0.8,
+  "gain_db": -30
+ },
+ {
+  "name": "perceived flash E",
+  "at": 22.24,
+  "dur": 0.75,
+  "gain_db": -23
+ },
+ {
+  "name": "pull out to the train",
+  "at": 22.9,
+  "dur": 1.8,
+  "gain_db": -32
+ },
+ {
+  "name": "transmitter raised (cloth)",
+  "at": 25.75,
+  "dur": 0.35,
+  "gain_db": -36
+ },
+ {
+  "name": "button 1",
+  "at": 26.2,
+  "dur": 0.04,
+  "gain_db": -34
+ },
+ {
+  "name": "perceived flash F1",
+  "at": 26.48,
+  "dur": 0.45,
+  "gain_db": -25
+ },
+ {
+  "name": "button 2",
+  "at": 26.62,
+  "dur": 0.04,
+  "gain_db": -34
+ },
+ {
+  "name": "perceived flash F2",
+  "at": 26.9,
+  "dur": 0.45,
+  "gain_db": -25
+ },
+ {
+  "name": "button 3",
+  "at": 27.05,
+  "dur": 0.04,
+  "gain_db": -34
+ },
+ {
+  "name": "perceived flash F3",
+  "at": 27.33,
+  "dur": 0.8,
+  "gain_db": -25
+ },
+ {
+  "name": "button 4",
+  "at": 27.85,
+  "dur": 0.04,
+  "gain_db": -34
+ },
+ {
+  "name": "perceived flash F4",
+  "at": 28.13,
+  "dur": 0.45,
+  "gain_db": -25
+ },
+ {
+  "name": "page turn",
+  "at": 27.95,
+  "dur": 0.5,
+  "gain_db": -30
+ }
+]

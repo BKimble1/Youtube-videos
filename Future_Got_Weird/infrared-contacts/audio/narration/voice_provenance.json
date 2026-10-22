@@ -1,0 +1,264 @@
+{
+ "provider": "ElevenLabs (restricted connector, authorized workspace)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "The established FGW Shorts narrator: the same voice id as Living Skin V1-V4 and Hidden Trigger V3-V7 (see their voice_provenance files). Re-confirmed with creative_list_voices on 22 Oct 2026. No Death Clock voice record exists in this repository, so it could not be matched to Death Clock specifically."
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "kJq8HFFVVBd9Zvc4rvu3",
+ "generated": "2026-10-22",
+ "prompt": "[intrigued, brisk] If you put these contacts in, you could see flashing lights with your eyes COMPLETELY SHUT. [quick, conversational] You see, your eyes normally can't detect infrared. [brisk, flowing] But these lenses contain tiny particles that absorb that INVISIBLE light and turn it into colors you can see. And while your eyelids block much of the visible light around you, infrared can still pass through. It reaches the lens underneath, gets converted, and becomes a flash you can actually see. [slightly conspiratorial, not whispering] So you could look completely asleep\u2026 while someone flashes you a SECRET CODE nobody around you can see.",
+ "note_on_prompt": "Bracketed tags are delivery directions (not spoken); capitals are emphasis. The spoken words are exactly the approved narration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/take1.mp3",
+   "generation_id": "w2D5pIClaVBQFLzFIPcG",
+   "sha256": "ead4f2f87d30f393ce4d213d292f49b93d6127503fcfe0f97dc17f3a7270e2af",
+   "duration_s": 29.52,
+   "speech_s": [
+    0.03,
+    29.29
+   ],
+   "wpm_overall": 190.7,
+   "wpm_articulated": 217.5,
+   "whisper_match_locked": 1.0,
+   "pauses": [
+    [
+     1.6,
+     0.13
+    ],
+    [
+     4.63,
+     0.43
+    ],
+    [
+     7.57,
+     0.37
+    ],
+    [
+     11.5,
+     0.13
+    ],
+    [
+     13.23,
+     0.45
+    ],
+    [
+     16.32,
+     0.28
+    ],
+    [
+     18.28,
+     0.43
+    ],
+    [
+     19.97,
+     0.27
+    ],
+    [
+     20.95,
+     0.24
+    ],
+    [
+     23.2,
+     0.47
+    ],
+    [
+     25.63,
+     0.4
+    ]
+   ]
+  },
+  {
+   "file": "audio/narration/takes/take2.mp3",
+   "generation_id": "BLMmdnOm2hILwKm7THZ4",
+   "sha256": "27f4853d1b4f832715a9621425f1af40b4d03f64d583099ea59ff6f9e80173d9",
+   "duration_s": 29.36,
+   "speech_s": [
+    0.03,
+    29.14
+   ],
+   "wpm_overall": 191.7,
+   "wpm_articulated": 220.5,
+   "whisper_match_locked": 1.0,
+   "pauses": [
+    [
+     1.36,
+     0.26
+    ],
+    [
+     4.46,
+     0.39
+    ],
+    [
+     7.4,
+     0.44
+    ],
+    [
+     11.28,
+     0.18
+    ],
+    [
+     13.04,
+     0.43
+    ],
+    [
+     16.16,
+     0.27
+    ],
+    [
+     18.12,
+     0.41
+    ],
+    [
+     19.75,
+     0.32
+    ],
+    [
+     20.73,
+     0.25
+    ],
+    [
+     22.97,
+     0.46
+    ],
+    [
+     25.52,
+     0.39
+    ]
+   ]
+  },
+  {
+   "file": "audio/narration/takes/take3.mp3",
+   "generation_id": "U22aReJsXqEt96rfYpKy",
+   "sha256": "c500ad478f870688dab81ba3dd94b736f0e819270c795880acfb0fa434a3e9ca",
+   "duration_s": 28.96,
+   "speech_s": [
+    0.03,
+    28.79
+   ],
+   "wpm_overall": 194.0,
+   "wpm_articulated": 220.0,
+   "whisper_match_locked": 1.0,
+   "pauses": [
+    [
+     1.37,
+     0.18
+    ],
+    [
+     4.46,
+     0.39
+    ],
+    [
+     5.24,
+     0.13
+    ],
+    [
+     7.41,
+     0.4
+    ],
+    [
+     12.94,
+     0.37
+    ],
+    [
+     16.01,
+     0.25
+    ],
+    [
+     17.89,
+     0.4
+    ],
+    [
+     19.55,
+     0.29
+    ],
+    [
+     20.56,
+     0.15
+    ],
+    [
+     22.63,
+     0.41
+    ],
+    [
+     25.07,
+     0.43
+    ]
+   ]
+  },
+  {
+   "file": "audio/narration/takes/take4.mp3",
+   "generation_id": "Uf5Dhi53xO4TvN8Ho06G",
+   "sha256": "187ed7a0a3ee252cc6f20ff11ccc4a219b06c7d69b5d76637fd3a499de974af9",
+   "duration_s": 29.12,
+   "speech_s": [
+    0.03,
+    28.92
+   ],
+   "wpm_overall": 193.1,
+   "wpm_articulated": 222.3,
+   "whisper_match_locked": 1.0,
+   "pauses": [
+    [
+     1.38,
+     0.25
+    ],
+    [
+     4.48,
+     0.45
+    ],
+    [
+     7.47,
+     0.44
+    ],
+    [
+     11.32,
+     0.14
+    ],
+    [
+     13.0,
+     0.48
+    ],
+    [
+     16.15,
+     0.28
+    ],
+    [
+     18.12,
+     0.44
+    ],
+    [
+     19.8,
+     0.28
+    ],
+    [
+     20.77,
+     0.24
+    ],
+    [
+     22.96,
+     0.4
+    ],
+    [
+     25.4,
+     0.39
+    ]
+   ]
+  }
+ ],
+ "selected": {
+  "take": 4,
+  "reason": "All four takes are verbatim (Whisper match 1.0) at 191-194 wpm. Take 4 has the strongest natural stress on \"shut\" (+5.2 dB vs median word) and \"flash\" (+4.2 dB), the mechanism sentences run together without extra micro-pauses, \"You see\" stays quick, and the beat at \"asleep... while\" is 0.39 s (a tiny beat, not a silence)."
+ },
+ "final": {
+  "file": "audio/narration/FGW_Infrared_Contacts_narration_final.wav",
+  "sha256": "ff7a21dec56afa25bf57fc02c7b74d002cd4cc5fb7003773f97cbf67475490f3",
+  "format": "48 kHz mono, 24-bit PCM",
+  "edits": "Take 4 resampled to 48 kHz, placed at 0 s (first word at 0.03 s). One 0.22 s silence extension inside the measured 0.40 s pause before \"So you could look\" (the move out to the train), 0.55 s tail. No time-stretch, pitch or EQ change.",
+  "duration_s": 29.7,
+  "frames_30fps": 891
+ },
+ "listening": "Not listened to: this environment has no audio output. Selection used ASR transcripts, pause structure and per-word level/pitch measurements only. Warmth, pronunciation quality and the conspiratorial edge of the last line need a human listen."
+}

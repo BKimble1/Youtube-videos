@@ -1,0 +1,479 @@
+{
+ "take": "audio/narration/takes/take4.mp3",
+ "lead_s": 0.0,
+ "inserts": [
+  [
+   23.12,
+   0.22
+  ]
+ ],
+ "duration_s": 29.7,
+ "frames": 891,
+ "words": [
+  {
+   "word": "if",
+   "start": 0.0,
+   "end": 0.08
+  },
+  {
+   "word": "you",
+   "start": 0.08,
+   "end": 0.2
+  },
+  {
+   "word": "put",
+   "start": 0.2,
+   "end": 0.4
+  },
+  {
+   "word": "these",
+   "start": 0.4,
+   "end": 0.61
+  },
+  {
+   "word": "contacts",
+   "start": 0.64,
+   "end": 1.2
+  },
+  {
+   "word": "in",
+   "start": 1.2,
+   "end": 1.37
+  },
+  {
+   "word": "you",
+   "start": 1.63,
+   "end": 1.71
+  },
+  {
+   "word": "could",
+   "start": 1.64,
+   "end": 1.84
+  },
+  {
+   "word": "see",
+   "start": 1.84,
+   "end": 2.03
+  },
+  {
+   "word": "flashing",
+   "start": 2.04,
+   "end": 2.52
+  },
+  {
+   "word": "lights",
+   "start": 2.52,
+   "end": 2.8
+  },
+  {
+   "word": "with",
+   "start": 2.8,
+   "end": 2.92
+  },
+  {
+   "word": "your",
+   "start": 2.92,
+   "end": 3.12
+  },
+  {
+   "word": "eyes",
+   "start": 3.12,
+   "end": 3.33
+  },
+  {
+   "word": "completely",
+   "start": 3.36,
+   "end": 4.08
+  },
+  {
+   "word": "shut",
+   "start": 4.08,
+   "end": 4.47
+  },
+  {
+   "word": "you",
+   "start": 4.93,
+   "end": 5.01
+  },
+  {
+   "word": "see",
+   "start": 4.96,
+   "end": 5.24
+  },
+  {
+   "word": "your",
+   "start": 5.24,
+   "end": 5.52
+  },
+  {
+   "word": "eyes",
+   "start": 5.52,
+   "end": 5.8
+  },
+  {
+   "word": "normally",
+   "start": 5.8,
+   "end": 6.28
+  },
+  {
+   "word": "can't",
+   "start": 6.28,
+   "end": 6.56
+  },
+  {
+   "word": "detect",
+   "start": 6.56,
+   "end": 6.71
+  },
+  {
+   "word": "infrared",
+   "start": 6.71,
+   "end": 7.45
+  },
+  {
+   "word": "but",
+   "start": 7.64,
+   "end": 7.8
+  },
+  {
+   "word": "these",
+   "start": 7.8,
+   "end": 8.08
+  },
+  {
+   "word": "lenses",
+   "start": 8.08,
+   "end": 8.55
+  },
+  {
+   "word": "contain",
+   "start": 8.56,
+   "end": 8.92
+  },
+  {
+   "word": "tiny",
+   "start": 8.92,
+   "end": 9.32
+  },
+  {
+   "word": "particles",
+   "start": 9.32,
+   "end": 9.8
+  },
+  {
+   "word": "that",
+   "start": 9.8,
+   "end": 9.96
+  },
+  {
+   "word": "absorb",
+   "start": 9.96,
+   "end": 10.44
+  },
+  {
+   "word": "that",
+   "start": 10.44,
+   "end": 10.56
+  },
+  {
+   "word": "invisible",
+   "start": 10.56,
+   "end": 11.28
+  },
+  {
+   "word": "light",
+   "start": 11.46,
+   "end": 11.54
+  },
+  {
+   "word": "and",
+   "start": 11.46,
+   "end": 11.54
+  },
+  {
+   "word": "turn",
+   "start": 11.48,
+   "end": 11.68
+  },
+  {
+   "word": "it",
+   "start": 11.68,
+   "end": 11.84
+  },
+  {
+   "word": "into",
+   "start": 11.84,
+   "end": 12.08
+  },
+  {
+   "word": "colors",
+   "start": 12.08,
+   "end": 12.44
+  },
+  {
+   "word": "you",
+   "start": 12.44,
+   "end": 12.6
+  },
+  {
+   "word": "can",
+   "start": 12.6,
+   "end": 12.84
+  },
+  {
+   "word": "see",
+   "start": 12.84,
+   "end": 12.95
+  },
+  {
+   "word": "and",
+   "start": 13.12,
+   "end": 13.4
+  },
+  {
+   "word": "while",
+   "start": 13.4,
+   "end": 13.6
+  },
+  {
+   "word": "your",
+   "start": 13.6,
+   "end": 13.8
+  },
+  {
+   "word": "eyelids",
+   "start": 13.8,
+   "end": 14.28
+  },
+  {
+   "word": "block",
+   "start": 14.28,
+   "end": 14.64
+  },
+  {
+   "word": "much",
+   "start": 14.64,
+   "end": 14.8
+  },
+  {
+   "word": "of",
+   "start": 14.8,
+   "end": 14.88
+  },
+  {
+   "word": "the",
+   "start": 14.88,
+   "end": 15.03
+  },
+  {
+   "word": "visible",
+   "start": 15.04,
+   "end": 15.44
+  },
+  {
+   "word": "light",
+   "start": 15.44,
+   "end": 15.6
+  },
+  {
+   "word": "around",
+   "start": 15.6,
+   "end": 16.0
+  },
+  {
+   "word": "you",
+   "start": 16.0,
+   "end": 16.15
+  },
+  {
+   "word": "infrared",
+   "start": 16.43,
+   "end": 16.93
+  },
+  {
+   "word": "can",
+   "start": 16.96,
+   "end": 17.2
+  },
+  {
+   "word": "still",
+   "start": 17.2,
+   "end": 17.55
+  },
+  {
+   "word": "pass",
+   "start": 17.56,
+   "end": 17.87
+  },
+  {
+   "word": "through",
+   "start": 17.88,
+   "end": 18.11
+  },
+  {
+   "word": "it",
+   "start": 18.56,
+   "end": 18.64
+  },
+  {
+   "word": "reaches",
+   "start": 18.56,
+   "end": 18.92
+  },
+  {
+   "word": "the",
+   "start": 18.92,
+   "end": 19.0
+  },
+  {
+   "word": "lens",
+   "start": 19.04,
+   "end": 19.39
+  },
+  {
+   "word": "underneath",
+   "start": 19.4,
+   "end": 19.76
+  },
+  {
+   "word": "gets",
+   "start": 19.96,
+   "end": 20.23
+  },
+  {
+   "word": "converted",
+   "start": 20.24,
+   "end": 20.76
+  },
+  {
+   "word": "and",
+   "start": 21.01,
+   "end": 21.09
+  },
+  {
+   "word": "becomes",
+   "start": 21.01,
+   "end": 21.36
+  },
+  {
+   "word": "a",
+   "start": 21.36,
+   "end": 21.44
+  },
+  {
+   "word": "flash",
+   "start": 21.48,
+   "end": 21.84
+  },
+  {
+   "word": "you",
+   "start": 21.84,
+   "end": 21.96
+  },
+  {
+   "word": "can",
+   "start": 21.96,
+   "end": 22.09
+  },
+  {
+   "word": "actually",
+   "start": 22.16,
+   "end": 22.76
+  },
+  {
+   "word": "see",
+   "start": 22.76,
+   "end": 22.88
+  },
+  {
+   "word": "so",
+   "start": 23.58,
+   "end": 23.74
+  },
+  {
+   "word": "you",
+   "start": 23.74,
+   "end": 23.98
+  },
+  {
+   "word": "could",
+   "start": 23.98,
+   "end": 24.21
+  },
+  {
+   "word": "look",
+   "start": 24.22,
+   "end": 24.46
+  },
+  {
+   "word": "completely",
+   "start": 24.46,
+   "end": 25.18
+  },
+  {
+   "word": "asleep",
+   "start": 25.18,
+   "end": 25.6
+  },
+  {
+   "word": "while",
+   "start": 26.01,
+   "end": 26.09
+  },
+  {
+   "word": "someone",
+   "start": 26.01,
+   "end": 26.38
+  },
+  {
+   "word": "flashes",
+   "start": 26.38,
+   "end": 26.78
+  },
+  {
+   "word": "you",
+   "start": 26.78,
+   "end": 26.94
+  },
+  {
+   "word": "a",
+   "start": 26.94,
+   "end": 27.1
+  },
+  {
+   "word": "secret",
+   "start": 27.1,
+   "end": 27.44
+  },
+  {
+   "word": "code",
+   "start": 27.46,
+   "end": 27.78
+  },
+  {
+   "word": "nobody",
+   "start": 27.78,
+   "end": 28.22
+  },
+  {
+   "word": "around",
+   "start": 28.22,
+   "end": 28.62
+  },
+  {
+   "word": "you",
+   "start": 28.62,
+   "end": 28.78
+  },
+  {
+   "word": "can",
+   "start": 28.78,
+   "end": 29.02
+  },
+  {
+   "word": "see",
+   "start": 29.02,
+   "end": 29.1
+  }
+ ]
+}
