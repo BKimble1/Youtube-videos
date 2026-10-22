@@ -1,0 +1,62 @@
+[
+ {
+  "take": "b1_t1_eCYL.mp3",
+  "offset": 0.0,
+  "dur": 21.707755
+ },
+ {
+  "take": "b1_t2_oRib.mp3",
+  "offset": 23.708,
+  "dur": 21.707755
+ },
+ {
+  "take": "b2_t1_T6K5.mp3",
+  "offset": 47.416,
+  "dur": 36.597551
+ },
+ {
+  "take": "b2_t2_bdse.mp3",
+  "offset": 86.013,
+  "dur": 36.440816
+ },
+ {
+  "take": "b3_t1_g0oU.mp3",
+  "offset": 124.454,
+  "dur": 42.762449
+ },
+ {
+  "take": "b3_t2_paR0.mp3",
+  "offset": 169.216,
+  "dur": 42.605714
+ },
+ {
+  "take": "b4_t1_6bgw.mp3",
+  "offset": 213.822,
+  "dur": 41.325714
+ },
+ {
+  "take": "b4_t2_9wxx.mp3",
+  "offset": 257.148,
+  "dur": 41.090612
+ },
+ {
+  "take": "b5_t1_10My.mp3",
+  "offset": 300.238,
+  "dur": 28.839184
+ },
+ {
+  "take": "b5_t2_1XWm.mp3",
+  "offset": 331.078,
+  "dur": 28.682449
+ },
+ {
+  "take": "b6_t1_0Gav.mp3",
+  "offset": 361.76,
+  "dur": 40.359184
+ },
+ {
+  "take": "b6_t2_M0yC.mp3",
+  "offset": 404.119,
+  "dur": 40.045714
+ }
+]

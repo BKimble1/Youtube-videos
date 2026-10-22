@@ -1,0 +1,17 @@
+# Dependencies and Remotion caches are rebuilt from package-lock.json
+source/node_modules/
+source/.remotion/
+source/out/
+source/.cue_bundle.mjs
+# Renders are too large for plain Git blobs (Git LFS uploads are unavailable here); the masters are kept as
+# checksummed split parts under backup/ instead
+exports/*.mp4
+# Regenerated deterministically by tools/stitch_narration.py and tools/make_audio.py
+audio/narration/narration.wav
+audio/mix/*.wav
+audio/mix/stems/
+source/public/audio/mix.wav
+# QA frame dumps (keep sheets and results)
+qa/**/f[0-9]*.png
+qa/dev/
+qa/*.time

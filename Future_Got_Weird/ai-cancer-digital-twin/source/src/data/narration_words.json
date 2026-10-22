@@ -1,0 +1,6250 @@
+{
+ "duration": 218.22,
+ "lead": 0.3,
+ "gap": 0.8,
+ "tail": 3.2,
+ "pieces": [
+  {
+   "block": "B1",
+   "take": "b1_t1_eCYL.mp3",
+   "take_range_s": [
+    0.03,
+    21.65
+   ],
+   "start": 0.3,
+   "length": 21.62
+  },
+  {
+   "block": "B2",
+   "take": "b2_t1_T6K5.mp3",
+   "take_range_s": [
+    0,
+    36.35
+   ],
+   "start": 22.72,
+   "length": 36.35
+  },
+  {
+   "block": "B3",
+   "take": "b3_t1_g0oU.mp3",
+   "take_range_s": [
+    0,
+    42.69
+   ],
+   "start": 59.87,
+   "length": 42.69
+  },
+  {
+   "block": "B4",
+   "take": "b4_t1_6bgw.mp3",
+   "take_range_s": [
+    0.06,
+    41.23
+   ],
+   "start": 103.36,
+   "length": 41.17
+  },
+  {
+   "block": "B5",
+   "take": "b5_t1_10My.mp3",
+   "take_range_s": [
+    0.15,
+    28.75
+   ],
+   "start": 145.33,
+   "length": 28.6
+  },
+  {
+   "block": "B6",
+   "take": "b6_t1_0Gav.mp3",
+   "take_range_s": [
+    0.01,
+    40.3
+   ],
+   "start": 174.73,
+   "length": 40.29
+  }
+ ],
+ "words": [
+  {
+   "text": "This",
+   "start": 0.45,
+   "end": 0.65,
+   "block": "B1"
+  },
+  {
+   "text": "microscopic",
+   "start": 0.71,
+   "end": 1.35,
+   "block": "B1"
+  },
+  {
+   "text": "device",
+   "start": 1.39,
+   "end": 1.79,
+   "block": "B1"
+  },
+  {
+   "text": "hides",
+   "start": 1.85,
+   "end": 2.09,
+   "block": "B1"
+  },
+  {
+   "text": "a",
+   "start": 2.13,
+   "end": 2.21,
+   "block": "B1"
+  },
+  {
+   "text": "weapon",
+   "start": 2.25,
+   "end": 2.53,
+   "block": "B1"
+  },
+  {
+   "text": "that",
+   "start": 2.57,
+   "end": 2.67,
+   "block": "B1"
+  },
+  {
+   "text": "can",
+   "start": 2.69,
+   "end": 2.83,
+   "block": "B1"
+  },
+  {
+   "text": "trigger",
+   "start": 2.89,
+   "end": 3.17,
+   "block": "B1"
+  },
+  {
+   "text": "a",
+   "start": 3.23,
+   "end": 3.31,
+   "block": "B1"
+  },
+  {
+   "text": "cell",
+   "start": 3.37,
+   "end": 3.59,
+   "block": "B1"
+  },
+  {
+   "text": "to",
+   "start": 3.63,
+   "end": 3.69,
+   "block": "B1"
+  },
+  {
+   "text": "destroy",
+   "start": 3.73,
+   "end": 4.23,
+   "block": "B1"
+  },
+  {
+   "text": "itself.",
+   "start": 4.27,
+   "end": 4.77,
+   "block": "B1"
+  },
+  {
+   "text": "In",
+   "start": 5.59,
+   "end": 5.65,
+   "block": "B1"
+  },
+  {
+   "text": "acidic",
+   "start": 5.69,
+   "end": 6.05,
+   "block": "B1"
+  },
+  {
+   "text": "surroundings,",
+   "start": 6.15,
+   "end": 6.83,
+   "block": "B1"
+  },
+  {
+   "text": "it",
+   "start": 7.25,
+   "end": 7.31,
+   "block": "B1"
+  },
+  {
+   "text": "opens.",
+   "start": 7.39,
+   "end": 7.83,
+   "block": "B1"
+  },
+  {
+   "text": "Now,",
+   "start": 8.85,
+   "end": 9.01,
+   "block": "B1"
+  },
+  {
+   "text": "imagine",
+   "start": 9.05,
+   "end": 9.47,
+   "block": "B1"
+  },
+  {
+   "text": "choosing",
+   "start": 9.57,
+   "end": 9.85,
+   "block": "B1"
+  },
+  {
+   "text": "an",
+   "start": 9.87,
+   "end": 9.93,
+   "block": "B1"
+  },
+  {
+   "text": "attack",
+   "start": 9.97,
+   "end": 10.33,
+   "block": "B1"
+  },
+  {
+   "text": "like",
+   "start": 10.35,
+   "end": 10.51,
+   "block": "B1"
+  },
+  {
+   "text": "this",
+   "start": 10.57,
+   "end": 10.79,
+   "block": "B1"
+  },
+  {
+   "text": "by",
+   "start": 10.81,
+   "end": 10.97,
+   "block": "B1"
+  },
+  {
+   "text": "testing",
+   "start": 11.03,
+   "end": 11.37,
+   "block": "B1"
+  },
+  {
+   "text": "it",
+   "start": 11.41,
+   "end": 11.51,
+   "block": "B1"
+  },
+  {
+   "text": "on",
+   "start": 11.55,
+   "end": 11.61,
+   "block": "B1"
+  },
+  {
+   "text": "a",
+   "start": 11.67,
+   "end": 11.79,
+   "block": "B1"
+  },
+  {
+   "text": "digital",
+   "start": 11.83,
+   "end": 12.11,
+   "block": "B1"
+  },
+  {
+   "text": "version",
+   "start": 12.21,
+   "end": 12.45,
+   "block": "B1"
+  },
+  {
+   "text": "of",
+   "start": 12.49,
+   "end": 12.57,
+   "block": "B1"
+  },
+  {
+   "text": "your",
+   "start": 12.59,
+   "end": 12.73,
+   "block": "B1"
+  },
+  {
+   "text": "tumor",
+   "start": 12.79,
+   "end": 13.03,
+   "block": "B1"
+  },
+  {
+   "text": "first.",
+   "start": 13.21,
+   "end": 13.61,
+   "block": "B1"
+  },
+  {
+   "text": "That",
+   "start": 14.23,
+   "end": 14.39,
+   "block": "B1"
+  },
+  {
+   "text": "complete",
+   "start": 14.43,
+   "end": 14.87,
+   "block": "B1"
+  },
+  {
+   "text": "system",
+   "start": 14.95,
+   "end": 15.39,
+   "block": "B1"
+  },
+  {
+   "text": "is",
+   "start": 15.43,
+   "end": 15.51,
+   "block": "B1"
+  },
+  {
+   "text": "a",
+   "start": 15.55,
+   "end": 15.61,
+   "block": "B1"
+  },
+  {
+   "text": "possible",
+   "start": 15.67,
+   "end": 16.07,
+   "block": "B1"
+  },
+  {
+   "text": "future.",
+   "start": 16.17,
+   "end": 16.53,
+   "block": "B1"
+  },
+  {
+   "text": "AI",
+   "start": 17.07,
+   "end": 17.39,
+   "block": "B1"
+  },
+  {
+   "text": "has",
+   "start": 17.43,
+   "end": 17.63,
+   "block": "B1"
+  },
+  {
+   "text": "not",
+   "start": 17.69,
+   "end": 17.95,
+   "block": "B1"
+  },
+  {
+   "text": "cured",
+   "start": 17.99,
+   "end": 18.21,
+   "block": "B1"
+  },
+  {
+   "text": "all",
+   "start": 18.25,
+   "end": 18.37,
+   "block": "B1"
+  },
+  {
+   "text": "cancer.",
+   "start": 18.41,
+   "end": 18.79,
+   "block": "B1"
+  },
+  {
+   "text": "Researchers",
+   "start": 19.35,
+   "end": 19.83,
+   "block": "B1"
+  },
+  {
+   "text": "are",
+   "start": 19.87,
+   "end": 20.03,
+   "block": "B1"
+  },
+  {
+   "text": "already",
+   "start": 20.11,
+   "end": 20.43,
+   "block": "B1"
+  },
+  {
+   "text": "building",
+   "start": 20.53,
+   "end": 20.81,
+   "block": "B1"
+  },
+  {
+   "text": "its",
+   "start": 20.85,
+   "end": 20.97,
+   "block": "B1"
+  },
+  {
+   "text": "separate",
+   "start": 21.01,
+   "end": 21.25,
+   "block": "B1"
+  },
+  {
+   "text": "parts.",
+   "start": 21.35,
+   "end": 21.75,
+   "block": "B1"
+  },
+  {
+   "text": "First,",
+   "start": 22.804,
+   "end": 23.144,
+   "block": "B2"
+  },
+  {
+   "text": "build",
+   "start": 23.564,
+   "end": 23.784,
+   "block": "B2"
+  },
+  {
+   "text": "the",
+   "start": 23.804,
+   "end": 23.884,
+   "block": "B2"
+  },
+  {
+   "text": "copy.",
+   "start": 23.924,
+   "end": 24.304,
+   "block": "B2"
+  },
+  {
+   "text": "Researchers",
+   "start": 24.964,
+   "end": 25.504,
+   "block": "B2"
+  },
+  {
+   "text": "are",
+   "start": 25.544,
+   "end": 25.624,
+   "block": "B2"
+  },
+  {
+   "text": "developing",
+   "start": 25.644,
+   "end": 26.084,
+   "block": "B2"
+  },
+  {
+   "text": "digital",
+   "start": 26.224,
+   "end": 26.524,
+   "block": "B2"
+  },
+  {
+   "text": "twins,",
+   "start": 26.624,
+   "end": 27.044,
+   "block": "B2"
+  },
+  {
+   "text": "mathematical",
+   "start": 27.544,
+   "end": 28.064,
+   "block": "B2"
+  },
+  {
+   "text": "models",
+   "start": 28.164,
+   "end": 28.504,
+   "block": "B2"
+  },
+  {
+   "text": "of",
+   "start": 28.544,
+   "end": 28.644,
+   "block": "B2"
+  },
+  {
+   "text": "particular",
+   "start": 28.664,
+   "end": 29.124,
+   "block": "B2"
+  },
+  {
+   "text": "tumors",
+   "start": 29.244,
+   "end": 29.644,
+   "block": "B2"
+  },
+  {
+   "text": "built",
+   "start": 29.964,
+   "end": 30.164,
+   "block": "B2"
+  },
+  {
+   "text": "from",
+   "start": 30.204,
+   "end": 30.324,
+   "block": "B2"
+  },
+  {
+   "text": "measurements",
+   "start": 30.364,
+   "end": 30.784,
+   "block": "B2"
+  },
+  {
+   "text": "such",
+   "start": 30.824,
+   "end": 30.964,
+   "block": "B2"
+  },
+  {
+   "text": "as",
+   "start": 31.004,
+   "end": 31.124,
+   "block": "B2"
+  },
+  {
+   "text": "medical",
+   "start": 31.164,
+   "end": 31.424,
+   "block": "B2"
+  },
+  {
+   "text": "scans",
+   "start": 31.524,
+   "end": 31.884,
+   "block": "B2"
+  },
+  {
+   "text": "and",
+   "start": 31.984,
+   "end": 32.144,
+   "block": "B2"
+  },
+  {
+   "text": "updated",
+   "start": 32.204,
+   "end": 32.644,
+   "block": "B2"
+  },
+  {
+   "text": "as",
+   "start": 32.684,
+   "end": 32.824,
+   "block": "B2"
+  },
+  {
+   "text": "new",
+   "start": 32.884,
+   "end": 33.004,
+   "block": "B2"
+  },
+  {
+   "text": "information",
+   "start": 33.044,
+   "end": 33.544,
+   "block": "B2"
+  },
+  {
+   "text": "arrives.",
+   "start": 33.584,
+   "end": 34.084,
+   "block": "B2"
+  },
+  {
+   "text": "The",
+   "start": 34.604,
+   "end": 34.724,
+   "block": "B2"
+  },
+  {
+   "text": "goal",
+   "start": 34.744,
+   "end": 35.004,
+   "block": "B2"
+  },
+  {
+   "text": "is",
+   "start": 35.064,
+   "end": 35.144,
+   "block": "B2"
+  },
+  {
+   "text": "to",
+   "start": 35.184,
+   "end": 35.264,
+   "block": "B2"
+  },
+  {
+   "text": "compare",
+   "start": 35.284,
+   "end": 35.644,
+   "block": "B2"
+  },
+  {
+   "text": "possible",
+   "start": 35.684,
+   "end": 36.064,
+   "block": "B2"
+  },
+  {
+   "text": "treatments",
+   "start": 36.164,
+   "end": 36.624,
+   "block": "B2"
+  },
+  {
+   "text": "before",
+   "start": 36.644,
+   "end": 37.024,
+   "block": "B2"
+  },
+  {
+   "text": "choosing",
+   "start": 37.064,
+   "end": 37.444,
+   "block": "B2"
+  },
+  {
+   "text": "what",
+   "start": 37.484,
+   "end": 37.624,
+   "block": "B2"
+  },
+  {
+   "text": "to",
+   "start": 37.664,
+   "end": 37.764,
+   "block": "B2"
+  },
+  {
+   "text": "try",
+   "start": 37.804,
+   "end": 38.004,
+   "block": "B2"
+  },
+  {
+   "text": "in",
+   "start": 38.024,
+   "end": 38.084,
+   "block": "B2"
+  },
+  {
+   "text": "the",
+   "start": 38.104,
+   "end": 38.184,
+   "block": "B2"
+  },
+  {
+   "text": "patient.",
+   "start": 38.224,
+   "end": 38.624,
+   "block": "B2"
+  },
+  {
+   "text": "One",
+   "start": 39.304,
+   "end": 39.403,
+   "block": "B2"
+  },
+  {
+   "text": "simulated",
+   "start": 39.604,
+   "end": 40.104,
+   "block": "B2"
+  },
+  {
+   "text": "tumor",
+   "start": 40.164,
+   "end": 40.403,
+   "block": "B2"
+  },
+  {
+   "text": "shrinks.",
+   "start": 40.604,
+   "end": 41.124,
+   "block": "B2"
+  },
+  {
+   "text": "Another",
+   "start": 41.544,
+   "end": 41.864,
+   "block": "B2"
+  },
+  {
+   "text": "barely",
+   "start": 42.064,
+   "end": 42.424,
+   "block": "B2"
+  },
+  {
+   "text": "changes.",
+   "start": 42.464,
+   "end": 42.964,
+   "block": "B2"
+  },
+  {
+   "text": "A",
+   "start": 43.424,
+   "end": 43.544,
+   "block": "B2"
+  },
+  {
+   "text": "third",
+   "start": 43.604,
+   "end": 43.844,
+   "block": "B2"
+  },
+  {
+   "text": "shrinks,",
+   "start": 43.924,
+   "end": 44.324,
+   "block": "B2"
+  },
+  {
+   "text": "then",
+   "start": 44.784,
+   "end": 44.924,
+   "block": "B2"
+  },
+  {
+   "text": "returns.",
+   "start": 44.964,
+   "end": 45.544,
+   "block": "B2"
+  },
+  {
+   "text": "The",
+   "start": 46.184,
+   "end": 46.264,
+   "block": "B2"
+  },
+  {
+   "text": "model",
+   "start": 46.324,
+   "end": 46.664,
+   "block": "B2"
+  },
+  {
+   "text": "is",
+   "start": 46.684,
+   "end": 46.804,
+   "block": "B2"
+  },
+  {
+   "text": "searching",
+   "start": 46.884,
+   "end": 47.244,
+   "block": "B2"
+  },
+  {
+   "text": "for",
+   "start": 47.284,
+   "end": 47.364,
+   "block": "B2"
+  },
+  {
+   "text": "a",
+   "start": 47.404,
+   "end": 47.464,
+   "block": "B2"
+  },
+  {
+   "text": "better",
+   "start": 47.504,
+   "end": 47.664,
+   "block": "B2"
+  },
+  {
+   "text": "plan.",
+   "start": 47.764,
+   "end": 48.104,
+   "block": "B2"
+  },
+  {
+   "text": "It",
+   "start": 48.524,
+   "end": 48.564,
+   "block": "B2"
+  },
+  {
+   "text": "is",
+   "start": 48.604,
+   "end": 48.744,
+   "block": "B2"
+  },
+  {
+   "text": "not",
+   "start": 48.824,
+   "end": 49.024,
+   "block": "B2"
+  },
+  {
+   "text": "a",
+   "start": 49.064,
+   "end": 49.124,
+   "block": "B2"
+  },
+  {
+   "text": "perfect",
+   "start": 49.164,
+   "end": 49.444,
+   "block": "B2"
+  },
+  {
+   "text": "copy",
+   "start": 49.504,
+   "end": 49.784,
+   "block": "B2"
+  },
+  {
+   "text": "of",
+   "start": 49.844,
+   "end": 49.924,
+   "block": "B2"
+  },
+  {
+   "text": "you,",
+   "start": 49.984,
+   "end": 50.104,
+   "block": "B2"
+  },
+  {
+   "text": "and",
+   "start": 50.404,
+   "end": 50.484,
+   "block": "B2"
+  },
+  {
+   "text": "a",
+   "start": 50.524,
+   "end": 50.604,
+   "block": "B2"
+  },
+  {
+   "text": "simulated",
+   "start": 50.644,
+   "end": 51.104,
+   "block": "B2"
+  },
+  {
+   "text": "success",
+   "start": 51.164,
+   "end": 51.624,
+   "block": "B2"
+  },
+  {
+   "text": "still",
+   "start": 51.744,
+   "end": 51.984,
+   "block": "B2"
+  },
+  {
+   "text": "needs",
+   "start": 52.044,
+   "end": 52.344,
+   "block": "B2"
+  },
+  {
+   "text": "real-world",
+   "start": 52.384,
+   "end": 52.824,
+   "block": "B2"
+  },
+  {
+   "text": "testing.",
+   "start": 52.884,
+   "end": 53.324,
+   "block": "B2"
+  },
+  {
+   "text": "But",
+   "start": 53.864,
+   "end": 53.944,
+   "block": "B2"
+  },
+  {
+   "text": "it",
+   "start": 53.984,
+   "end": 54.064,
+   "block": "B2"
+  },
+  {
+   "text": "changes",
+   "start": 54.104,
+   "end": 54.444,
+   "block": "B2"
+  },
+  {
+   "text": "the",
+   "start": 54.464,
+   "end": 54.544,
+   "block": "B2"
+  },
+  {
+   "text": "question",
+   "start": 54.604,
+   "end": 55.024,
+   "block": "B2"
+  },
+  {
+   "text": "from",
+   "start": 55.064,
+   "end": 55.524,
+   "block": "B2"
+  },
+  {
+   "text": "what",
+   "start": 55.564,
+   "end": 55.804,
+   "block": "B2"
+  },
+  {
+   "text": "usually",
+   "start": 55.884,
+   "end": 56.244,
+   "block": "B2"
+  },
+  {
+   "text": "works",
+   "start": 56.284,
+   "end": 56.624,
+   "block": "B2"
+  },
+  {
+   "text": "to",
+   "start": 56.924,
+   "end": 57.144,
+   "block": "B2"
+  },
+  {
+   "text": "what",
+   "start": 57.504,
+   "end": 57.704,
+   "block": "B2"
+  },
+  {
+   "text": "might",
+   "start": 57.784,
+   "end": 58.004,
+   "block": "B2"
+  },
+  {
+   "text": "work",
+   "start": 58.044,
+   "end": 58.224,
+   "block": "B2"
+  },
+  {
+   "text": "for",
+   "start": 58.244,
+   "end": 58.324,
+   "block": "B2"
+  },
+  {
+   "text": "this",
+   "start": 58.364,
+   "end": 58.524,
+   "block": "B2"
+  },
+  {
+   "text": "tumor.",
+   "start": 58.564,
+   "end": 58.884,
+   "block": "B2"
+  },
+  {
+   "text": "Next,",
+   "start": 59.87,
+   "end": 60.176,
+   "block": "B3"
+  },
+  {
+   "text": "give",
+   "start": 60.496,
+   "end": 60.636,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 60.676,
+   "end": 60.736,
+   "block": "B3"
+  },
+  {
+   "text": "attack",
+   "start": 60.776,
+   "end": 61.076,
+   "block": "B3"
+  },
+  {
+   "text": "an",
+   "start": 61.116,
+   "end": 61.236,
+   "block": "B3"
+  },
+  {
+   "text": "address.",
+   "start": 61.316,
+   "end": 61.756,
+   "block": "B3"
+  },
+  {
+   "text": "Cancer",
+   "start": 62.396,
+   "end": 62.716,
+   "block": "B3"
+  },
+  {
+   "text": "grows",
+   "start": 62.836,
+   "end": 63.136,
+   "block": "B3"
+  },
+  {
+   "text": "from",
+   "start": 63.176,
+   "end": 63.296,
+   "block": "B3"
+  },
+  {
+   "text": "your",
+   "start": 63.336,
+   "end": 63.476,
+   "block": "B3"
+  },
+  {
+   "text": "own",
+   "start": 63.555,
+   "end": 63.716,
+   "block": "B3"
+  },
+  {
+   "text": "cells.",
+   "start": 63.856,
+   "end": 64.256,
+   "block": "B3"
+  },
+  {
+   "text": "A",
+   "start": 64.796,
+   "end": 64.876,
+   "block": "B3"
+  },
+  {
+   "text": "powerful",
+   "start": 64.916,
+   "end": 65.316,
+   "block": "B3"
+  },
+  {
+   "text": "drug",
+   "start": 65.416,
+   "end": 65.615,
+   "block": "B3"
+  },
+  {
+   "text": "is",
+   "start": 65.636,
+   "end": 65.835,
+   "block": "B3"
+  },
+  {
+   "text": "dangerous",
+   "start": 65.876,
+   "end": 66.356,
+   "block": "B3"
+  },
+  {
+   "text": "if",
+   "start": 66.416,
+   "end": 66.455,
+   "block": "B3"
+  },
+  {
+   "text": "it",
+   "start": 66.496,
+   "end": 66.576,
+   "block": "B3"
+  },
+  {
+   "text": "reaches",
+   "start": 66.616,
+   "end": 66.916,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 66.936,
+   "end": 67.016,
+   "block": "B3"
+  },
+  {
+   "text": "wrong",
+   "start": 67.036,
+   "end": 67.236,
+   "block": "B3"
+  },
+  {
+   "text": "tissue.",
+   "start": 67.336,
+   "end": 67.716,
+   "block": "B3"
+  },
+  {
+   "text": "Some",
+   "start": 68.396,
+   "end": 68.576,
+   "block": "B3"
+  },
+  {
+   "text": "treatments",
+   "start": 68.616,
+   "end": 69.076,
+   "block": "B3"
+  },
+  {
+   "text": "already",
+   "start": 69.136,
+   "end": 69.436,
+   "block": "B3"
+  },
+  {
+   "text": "attach",
+   "start": 69.476,
+   "end": 69.776,
+   "block": "B3"
+  },
+  {
+   "text": "a",
+   "start": 69.836,
+   "end": 69.916,
+   "block": "B3"
+  },
+  {
+   "text": "drug",
+   "start": 69.956,
+   "end": 70.156,
+   "block": "B3"
+  },
+  {
+   "text": "payload",
+   "start": 70.256,
+   "end": 70.616,
+   "block": "B3"
+  },
+  {
+   "text": "to",
+   "start": 70.656,
+   "end": 70.736,
+   "block": "B3"
+  },
+  {
+   "text": "an",
+   "start": 70.756,
+   "end": 70.876,
+   "block": "B3"
+  },
+  {
+   "text": "antibody",
+   "start": 70.956,
+   "end": 71.516,
+   "block": "B3"
+  },
+  {
+   "text": "that",
+   "start": 71.536,
+   "end": 71.696,
+   "block": "B3"
+  },
+  {
+   "text": "binds",
+   "start": 71.736,
+   "end": 71.976,
+   "block": "B3"
+  },
+  {
+   "text": "a",
+   "start": 72.016,
+   "end": 72.076,
+   "block": "B3"
+  },
+  {
+   "text": "particular",
+   "start": 72.096,
+   "end": 72.596,
+   "block": "B3"
+  },
+  {
+   "text": "surface",
+   "start": 72.716,
+   "end": 73.036,
+   "block": "B3"
+  },
+  {
+   "text": "target.",
+   "start": 73.076,
+   "end": 73.416,
+   "block": "B3"
+  },
+  {
+   "text": "The",
+   "start": 73.876,
+   "end": 73.996,
+   "block": "B3"
+  },
+  {
+   "text": "cell",
+   "start": 74.036,
+   "end": 74.196,
+   "block": "B3"
+  },
+  {
+   "text": "takes",
+   "start": 74.296,
+   "end": 74.496,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 74.536,
+   "end": 74.616,
+   "block": "B3"
+  },
+  {
+   "text": "package",
+   "start": 74.636,
+   "end": 74.936,
+   "block": "B3"
+  },
+  {
+   "text": "inside.",
+   "start": 74.976,
+   "end": 75.456,
+   "block": "B3"
+  },
+  {
+   "text": "In",
+   "start": 75.976,
+   "end": 76.096,
+   "block": "B3"
+  },
+  {
+   "text": "certain",
+   "start": 76.136,
+   "end": 76.356,
+   "block": "B3"
+  },
+  {
+   "text": "designs,",
+   "start": 76.396,
+   "end": 76.896,
+   "block": "B3"
+  },
+  {
+   "text": "enzymes",
+   "start": 77.176,
+   "end": 77.616,
+   "block": "B3"
+  },
+  {
+   "text": "cut",
+   "start": 77.676,
+   "end": 77.796,
+   "block": "B3"
+  },
+  {
+   "text": "its",
+   "start": 77.816,
+   "end": 77.956,
+   "block": "B3"
+  },
+  {
+   "text": "molecular",
+   "start": 77.996,
+   "end": 78.436,
+   "block": "B3"
+  },
+  {
+   "text": "linker,",
+   "start": 78.516,
+   "end": 78.836,
+   "block": "B3"
+  },
+  {
+   "text": "releasing",
+   "start": 79.076,
+   "end": 79.496,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 79.516,
+   "end": 79.596,
+   "block": "B3"
+  },
+  {
+   "text": "drug.",
+   "start": 79.636,
+   "end": 79.916,
+   "block": "B3"
+  },
+  {
+   "text": "The",
+   "start": 80.456,
+   "end": 80.576,
+   "block": "B3"
+  },
+  {
+   "text": "cell's",
+   "start": 80.616,
+   "end": 81.016,
+   "block": "B3"
+  },
+  {
+   "text": "own",
+   "start": 81.076,
+   "end": 81.236,
+   "block": "B3"
+  },
+  {
+   "text": "machinery",
+   "start": 81.256,
+   "end": 81.816,
+   "block": "B3"
+  },
+  {
+   "text": "helps",
+   "start": 81.856,
+   "end": 82.136,
+   "block": "B3"
+  },
+  {
+   "text": "open",
+   "start": 82.196,
+   "end": 82.416,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 82.436,
+   "end": 82.516,
+   "block": "B3"
+  },
+  {
+   "text": "delivery.",
+   "start": 82.536,
+   "end": 82.996,
+   "block": "B3"
+  },
+  {
+   "text": "These",
+   "start": 83.596,
+   "end": 83.776,
+   "block": "B3"
+  },
+  {
+   "text": "are",
+   "start": 83.816,
+   "end": 83.976,
+   "block": "B3"
+  },
+  {
+   "text": "antibody-drug",
+   "start": 84.076,
+   "end": 84.796,
+   "block": "B3"
+  },
+  {
+   "text": "conjugates,",
+   "start": 84.896,
+   "end": 85.476,
+   "block": "B3"
+  },
+  {
+   "text": "and",
+   "start": 85.716,
+   "end": 85.796,
+   "block": "B3"
+  },
+  {
+   "text": "some",
+   "start": 85.936,
+   "end": 86.156,
+   "block": "B3"
+  },
+  {
+   "text": "are",
+   "start": 86.176,
+   "end": 86.316,
+   "block": "B3"
+  },
+  {
+   "text": "already",
+   "start": 86.396,
+   "end": 86.736,
+   "block": "B3"
+  },
+  {
+   "text": "used",
+   "start": 86.816,
+   "end": 86.976,
+   "block": "B3"
+  },
+  {
+   "text": "in",
+   "start": 86.996,
+   "end": 87.096,
+   "block": "B3"
+  },
+  {
+   "text": "cancer",
+   "start": 87.156,
+   "end": 87.416,
+   "block": "B3"
+  },
+  {
+   "text": "care.",
+   "start": 87.496,
+   "end": 87.716,
+   "block": "B3"
+  },
+  {
+   "text": "They",
+   "start": 88.236,
+   "end": 88.316,
+   "block": "B3"
+  },
+  {
+   "text": "can",
+   "start": 88.336,
+   "end": 88.476,
+   "block": "B3"
+  },
+  {
+   "text": "still",
+   "start": 88.556,
+   "end": 88.736,
+   "block": "B3"
+  },
+  {
+   "text": "cause",
+   "start": 88.776,
+   "end": 89.056,
+   "block": "B3"
+  },
+  {
+   "text": "serious",
+   "start": 89.116,
+   "end": 89.476,
+   "block": "B3"
+  },
+  {
+   "text": "side",
+   "start": 89.536,
+   "end": 89.696,
+   "block": "B3"
+  },
+  {
+   "text": "effects.",
+   "start": 89.736,
+   "end": 90.136,
+   "block": "B3"
+  },
+  {
+   "text": "A",
+   "start": 90.536,
+   "end": 90.576,
+   "block": "B3"
+  },
+  {
+   "text": "molecular",
+   "start": 90.596,
+   "end": 91.036,
+   "block": "B3"
+  },
+  {
+   "text": "address",
+   "start": 91.096,
+   "end": 91.516,
+   "block": "B3"
+  },
+  {
+   "text": "is",
+   "start": 91.556,
+   "end": 91.696,
+   "block": "B3"
+  },
+  {
+   "text": "not",
+   "start": 91.796,
+   "end": 92.056,
+   "block": "B3"
+  },
+  {
+   "text": "perfect",
+   "start": 92.096,
+   "end": 92.356,
+   "block": "B3"
+  },
+  {
+   "text": "protection.",
+   "start": 92.416,
+   "end": 92.936,
+   "block": "B3"
+  },
+  {
+   "text": "AI",
+   "start": 93.476,
+   "end": 93.816,
+   "block": "B3"
+  },
+  {
+   "text": "could",
+   "start": 93.836,
+   "end": 93.936,
+   "block": "B3"
+  },
+  {
+   "text": "help",
+   "start": 93.976,
+   "end": 94.116,
+   "block": "B3"
+  },
+  {
+   "text": "develop",
+   "start": 94.156,
+   "end": 94.536,
+   "block": "B3"
+  },
+  {
+   "text": "better",
+   "start": 94.556,
+   "end": 94.776,
+   "block": "B3"
+  },
+  {
+   "text": "targeting",
+   "start": 94.816,
+   "end": 95.196,
+   "block": "B3"
+  },
+  {
+   "text": "components.",
+   "start": 95.216,
+   "end": 95.756,
+   "block": "B3"
+  },
+  {
+   "text": "Researchers",
+   "start": 96.296,
+   "end": 96.776,
+   "block": "B3"
+  },
+  {
+   "text": "are",
+   "start": 96.816,
+   "end": 96.936,
+   "block": "B3"
+  },
+  {
+   "text": "already",
+   "start": 97.016,
+   "end": 97.356,
+   "block": "B3"
+  },
+  {
+   "text": "testing",
+   "start": 97.396,
+   "end": 97.836,
+   "block": "B3"
+  },
+  {
+   "text": "AI-designed",
+   "start": 97.896,
+   "end": 98.516,
+   "block": "B3"
+  },
+  {
+   "text": "proteins",
+   "start": 98.616,
+   "end": 99.136,
+   "block": "B3"
+  },
+  {
+   "text": "as",
+   "start": 99.196,
+   "end": 99.316,
+   "block": "B3"
+  },
+  {
+   "text": "recognition",
+   "start": 99.356,
+   "end": 99.916,
+   "block": "B3"
+  },
+  {
+   "text": "parts",
+   "start": 99.956,
+   "end": 100.236,
+   "block": "B3"
+  },
+  {
+   "text": "in",
+   "start": 100.276,
+   "end": 100.336,
+   "block": "B3"
+  },
+  {
+   "text": "experimental",
+   "start": 100.376,
+   "end": 101.076,
+   "block": "B3"
+  },
+  {
+   "text": "immune",
+   "start": 101.116,
+   "end": 101.416,
+   "block": "B3"
+  },
+  {
+   "text": "cell",
+   "start": 101.496,
+   "end": 101.696,
+   "block": "B3"
+  },
+  {
+   "text": "therapies.",
+   "start": 101.736,
+   "end": 102.276,
+   "block": "B3"
+  },
+  {
+   "text": "But",
+   "start": 103.36,
+   "end": 103.578,
+   "block": "B4"
+  },
+  {
+   "text": "what",
+   "start": 103.618,
+   "end": 103.718,
+   "block": "B4"
+  },
+  {
+   "text": "if",
+   "start": 103.758,
+   "end": 103.858,
+   "block": "B4"
+  },
+  {
+   "text": "the",
+   "start": 103.898,
+   "end": 103.958,
+   "block": "B4"
+  },
+  {
+   "text": "attack",
+   "start": 103.998,
+   "end": 104.318,
+   "block": "B4"
+  },
+  {
+   "text": "stayed",
+   "start": 104.398,
+   "end": 104.578,
+   "block": "B4"
+  },
+  {
+   "text": "hidden",
+   "start": 104.718,
+   "end": 104.998,
+   "block": "B4"
+  },
+  {
+   "text": "until",
+   "start": 105.038,
+   "end": 105.258,
+   "block": "B4"
+  },
+  {
+   "text": "its",
+   "start": 105.298,
+   "end": 105.418,
+   "block": "B4"
+  },
+  {
+   "text": "surroundings",
+   "start": 105.458,
+   "end": 105.978,
+   "block": "B4"
+  },
+  {
+   "text": "changed?",
+   "start": 106.078,
+   "end": 106.538,
+   "block": "B4"
+  },
+  {
+   "text": "Return",
+   "start": 107.138,
+   "end": 107.498,
+   "block": "B4"
+  },
+  {
+   "text": "to",
+   "start": 107.538,
+   "end": 107.598,
+   "block": "B4"
+  },
+  {
+   "text": "the",
+   "start": 107.638,
+   "end": 107.698,
+   "block": "B4"
+  },
+  {
+   "text": "device",
+   "start": 107.718,
+   "end": 108.078,
+   "block": "B4"
+  },
+  {
+   "text": "from",
+   "start": 108.098,
+   "end": 108.218,
+   "block": "B4"
+  },
+  {
+   "text": "the",
+   "start": 108.258,
+   "end": 108.318,
+   "block": "B4"
+  },
+  {
+   "text": "opening.",
+   "start": 108.378,
+   "end": 108.738,
+   "block": "B4"
+  },
+  {
+   "text": "Researchers",
+   "start": 109.518,
+   "end": 109.978,
+   "block": "B4"
+  },
+  {
+   "text": "at",
+   "start": 110.018,
+   "end": 110.118,
+   "block": "B4"
+  },
+  {
+   "text": "Karolinska",
+   "start": 110.158,
+   "end": 110.758,
+   "block": "B4"
+  },
+  {
+   "text": "built",
+   "start": 110.858,
+   "end": 111.018,
+   "block": "B4"
+  },
+  {
+   "text": "a",
+   "start": 111.078,
+   "end": 111.158,
+   "block": "B4"
+  },
+  {
+   "text": "switch",
+   "start": 111.218,
+   "end": 111.538,
+   "block": "B4"
+  },
+  {
+   "text": "from",
+   "start": 111.578,
+   "end": 111.798,
+   "block": "B4"
+  },
+  {
+   "text": "folded",
+   "start": 111.838,
+   "end": 112.178,
+   "block": "B4"
+  },
+  {
+   "text": "DNA.",
+   "start": 112.218,
+   "end": 112.678,
+   "block": "B4"
+  },
+  {
+   "text": "It",
+   "start": 113.158,
+   "end": 113.258,
+   "block": "B4"
+  },
+  {
+   "text": "hides",
+   "start": 113.298,
+   "end": 113.538,
+   "block": "B4"
+  },
+  {
+   "text": "a",
+   "start": 113.578,
+   "end": 113.638,
+   "block": "B4"
+  },
+  {
+   "text": "pattern",
+   "start": 113.698,
+   "end": 113.958,
+   "block": "B4"
+  },
+  {
+   "text": "of",
+   "start": 113.998,
+   "end": 114.118,
+   "block": "B4"
+  },
+  {
+   "text": "peptides",
+   "start": 114.158,
+   "end": 114.698,
+   "block": "B4"
+  },
+  {
+   "text": "that",
+   "start": 114.718,
+   "end": 114.818,
+   "block": "B4"
+  },
+  {
+   "text": "can",
+   "start": 114.838,
+   "end": 114.978,
+   "block": "B4"
+  },
+  {
+   "text": "bring",
+   "start": 114.998,
+   "end": 115.258,
+   "block": "B4"
+  },
+  {
+   "text": "death",
+   "start": 115.298,
+   "end": 115.478,
+   "block": "B4"
+  },
+  {
+   "text": "receptors",
+   "start": 115.538,
+   "end": 116.038,
+   "block": "B4"
+  },
+  {
+   "text": "together",
+   "start": 116.078,
+   "end": 116.538,
+   "block": "B4"
+  },
+  {
+   "text": "on",
+   "start": 116.578,
+   "end": 116.638,
+   "block": "B4"
+  },
+  {
+   "text": "a",
+   "start": 116.678,
+   "end": 116.758,
+   "block": "B4"
+  },
+  {
+   "text": "cell's",
+   "start": 116.798,
+   "end": 117.038,
+   "block": "B4"
+  },
+  {
+   "text": "surface.",
+   "start": 117.098,
+   "end": 117.538,
+   "block": "B4"
+  },
+  {
+   "text": "Under",
+   "start": 118.058,
+   "end": 118.238,
+   "block": "B4"
+  },
+  {
+   "text": "acidic",
+   "start": 118.298,
+   "end": 118.638,
+   "block": "B4"
+  },
+  {
+   "text": "conditions,",
+   "start": 118.678,
+   "end": 119.198,
+   "block": "B4"
+  },
+  {
+   "text": "the",
+   "start": 119.458,
+   "end": 119.538,
+   "block": "B4"
+  },
+  {
+   "text": "structure",
+   "start": 119.618,
+   "end": 119.938,
+   "block": "B4"
+  },
+  {
+   "text": "exposes",
+   "start": 119.978,
+   "end": 120.598,
+   "block": "B4"
+  },
+  {
+   "text": "that",
+   "start": 120.638,
+   "end": 120.798,
+   "block": "B4"
+  },
+  {
+   "text": "pattern,",
+   "start": 120.838,
+   "end": 121.138,
+   "block": "B4"
+  },
+  {
+   "text": "helping",
+   "start": 121.458,
+   "end": 121.778,
+   "block": "B4"
+  },
+  {
+   "text": "trigger",
+   "start": 121.838,
+   "end": 122.118,
+   "block": "B4"
+  },
+  {
+   "text": "the",
+   "start": 122.158,
+   "end": 122.258,
+   "block": "B4"
+  },
+  {
+   "text": "cell's",
+   "start": 122.298,
+   "end": 122.598,
+   "block": "B4"
+  },
+  {
+   "text": "self-destruct",
+   "start": 122.658,
+   "end": 123.238,
+   "block": "B4"
+  },
+  {
+   "text": "process.",
+   "start": 123.318,
+   "end": 123.818,
+   "block": "B4"
+  },
+  {
+   "text": "They",
+   "start": 124.418,
+   "end": 124.538,
+   "block": "B4"
+  },
+  {
+   "text": "tested",
+   "start": 124.598,
+   "end": 124.898,
+   "block": "B4"
+  },
+  {
+   "text": "it",
+   "start": 124.938,
+   "end": 125.018,
+   "block": "B4"
+  },
+  {
+   "text": "in",
+   "start": 125.078,
+   "end": 125.178,
+   "block": "B4"
+  },
+  {
+   "text": "mice",
+   "start": 125.258,
+   "end": 125.518,
+   "block": "B4"
+  },
+  {
+   "text": "with",
+   "start": 125.558,
+   "end": 125.718,
+   "block": "B4"
+  },
+  {
+   "text": "breast",
+   "start": 125.758,
+   "end": 125.958,
+   "block": "B4"
+  },
+  {
+   "text": "cancer",
+   "start": 126.038,
+   "end": 126.338,
+   "block": "B4"
+  },
+  {
+   "text": "tumors",
+   "start": 126.378,
+   "end": 126.838,
+   "block": "B4"
+  },
+  {
+   "text": "and",
+   "start": 126.858,
+   "end": 126.938,
+   "block": "B4"
+  },
+  {
+   "text": "reported",
+   "start": 126.978,
+   "end": 127.378,
+   "block": "B4"
+  },
+  {
+   "text": "reduced",
+   "start": 127.458,
+   "end": 127.958,
+   "block": "B4"
+  },
+  {
+   "text": "tumor",
+   "start": 128.018,
+   "end": 128.238,
+   "block": "B4"
+  },
+  {
+   "text": "growth.",
+   "start": 128.318,
+   "end": 128.638,
+   "block": "B4"
+  },
+  {
+   "text": "That",
+   "start": 129.178,
+   "end": 129.438,
+   "block": "B4"
+  },
+  {
+   "text": "is",
+   "start": 129.478,
+   "end": 129.558,
+   "block": "B4"
+  },
+  {
+   "text": "a",
+   "start": 129.618,
+   "end": 129.778,
+   "block": "B4"
+  },
+  {
+   "text": "real",
+   "start": 129.818,
+   "end": 130.018,
+   "block": "B4"
+  },
+  {
+   "text": "experiment.",
+   "start": 130.058,
+   "end": 130.638,
+   "block": "B4"
+  },
+  {
+   "text": "It",
+   "start": 131.078,
+   "end": 131.138,
+   "block": "B4"
+  },
+  {
+   "text": "is",
+   "start": 131.158,
+   "end": 131.318,
+   "block": "B4"
+  },
+  {
+   "text": "not",
+   "start": 131.398,
+   "end": 131.598,
+   "block": "B4"
+  },
+  {
+   "text": "a",
+   "start": 131.658,
+   "end": 131.698,
+   "block": "B4"
+  },
+  {
+   "text": "human",
+   "start": 131.758,
+   "end": 131.978,
+   "block": "B4"
+  },
+  {
+   "text": "cure,",
+   "start": 132.078,
+   "end": 132.338,
+   "block": "B4"
+  },
+  {
+   "text": "and",
+   "start": 132.678,
+   "end": 132.778,
+   "block": "B4"
+  },
+  {
+   "text": "this",
+   "start": 132.818,
+   "end": 132.978,
+   "block": "B4"
+  },
+  {
+   "text": "particular",
+   "start": 132.998,
+   "end": 133.478,
+   "block": "B4"
+  },
+  {
+   "text": "nanodevice",
+   "start": 133.578,
+   "end": 134.238,
+   "block": "B4"
+  },
+  {
+   "text": "was",
+   "start": 134.278,
+   "end": 134.438,
+   "block": "B4"
+  },
+  {
+   "text": "not",
+   "start": 134.518,
+   "end": 134.738,
+   "block": "B4"
+  },
+  {
+   "text": "presented",
+   "start": 134.758,
+   "end": 135.218,
+   "block": "B4"
+  },
+  {
+   "text": "as",
+   "start": 135.258,
+   "end": 135.338,
+   "block": "B4"
+  },
+  {
+   "text": "an",
+   "start": 135.358,
+   "end": 135.478,
+   "block": "B4"
+  },
+  {
+   "text": "AI",
+   "start": 135.558,
+   "end": 135.798,
+   "block": "B4"
+  },
+  {
+   "text": "invention.",
+   "start": 135.838,
+   "end": 136.358,
+   "block": "B4"
+  },
+  {
+   "text": "The",
+   "start": 136.978,
+   "end": 137.098,
+   "block": "B4"
+  },
+  {
+   "text": "future",
+   "start": 137.138,
+   "end": 137.418,
+   "block": "B4"
+  },
+  {
+   "text": "opportunity",
+   "start": 137.478,
+   "end": 138.118,
+   "block": "B4"
+  },
+  {
+   "text": "is",
+   "start": 138.158,
+   "end": 138.238,
+   "block": "B4"
+  },
+  {
+   "text": "to",
+   "start": 138.278,
+   "end": 138.338,
+   "block": "B4"
+  },
+  {
+   "text": "combine",
+   "start": 138.378,
+   "end": 138.718,
+   "block": "B4"
+  },
+  {
+   "text": "better",
+   "start": 138.858,
+   "end": 139.098,
+   "block": "B4"
+  },
+  {
+   "text": "prediction",
+   "start": 139.118,
+   "end": 139.658,
+   "block": "B4"
+  },
+  {
+   "text": "with",
+   "start": 139.698,
+   "end": 139.898,
+   "block": "B4"
+  },
+  {
+   "text": "better",
+   "start": 139.918,
+   "end": 140.178,
+   "block": "B4"
+  },
+  {
+   "text": "biological",
+   "start": 140.218,
+   "end": 140.778,
+   "block": "B4"
+  },
+  {
+   "text": "engineering",
+   "start": 140.858,
+   "end": 141.418,
+   "block": "B4"
+  },
+  {
+   "text": "if",
+   "start": 141.898,
+   "end": 141.998,
+   "block": "B4"
+  },
+  {
+   "text": "experiments",
+   "start": 142.038,
+   "end": 142.578,
+   "block": "B4"
+  },
+  {
+   "text": "show",
+   "start": 142.638,
+   "end": 142.898,
+   "block": "B4"
+  },
+  {
+   "text": "those",
+   "start": 142.938,
+   "end": 143.158,
+   "block": "B4"
+  },
+  {
+   "text": "pieces",
+   "start": 143.198,
+   "end": 143.538,
+   "block": "B4"
+  },
+  {
+   "text": "work",
+   "start": 143.578,
+   "end": 143.738,
+   "block": "B4"
+  },
+  {
+   "text": "together.",
+   "start": 143.758,
+   "end": 144.158,
+   "block": "B4"
+  },
+  {
+   "text": "Then",
+   "start": 145.33,
+   "end": 145.342,
+   "block": "B5"
+  },
+  {
+   "text": "one",
+   "start": 145.762,
+   "end": 145.922,
+   "block": "B5"
+  },
+  {
+   "text": "cell",
+   "start": 146.082,
+   "end": 146.382,
+   "block": "B5"
+  },
+  {
+   "text": "threatens",
+   "start": 146.402,
+   "end": 146.742,
+   "block": "B5"
+  },
+  {
+   "text": "the",
+   "start": 146.782,
+   "end": 146.862,
+   "block": "B5"
+  },
+  {
+   "text": "entire",
+   "start": 146.882,
+   "end": 147.382,
+   "block": "B5"
+  },
+  {
+   "text": "plan.",
+   "start": 147.482,
+   "end": 147.862,
+   "block": "B5"
+  },
+  {
+   "text": "It",
+   "start": 148.702,
+   "end": 148.822,
+   "block": "B5"
+  },
+  {
+   "text": "survives.",
+   "start": 148.862,
+   "end": 149.482,
+   "block": "B5"
+  },
+  {
+   "text": "Tumors",
+   "start": 150.502,
+   "end": 150.862,
+   "block": "B5"
+  },
+  {
+   "text": "contain",
+   "start": 150.882,
+   "end": 151.302,
+   "block": "B5"
+  },
+  {
+   "text": "different",
+   "start": 151.342,
+   "end": 151.602,
+   "block": "B5"
+  },
+  {
+   "text": "groups",
+   "start": 151.682,
+   "end": 151.902,
+   "block": "B5"
+  },
+  {
+   "text": "of",
+   "start": 151.942,
+   "end": 152.062,
+   "block": "B5"
+  },
+  {
+   "text": "cells.",
+   "start": 152.102,
+   "end": 152.462,
+   "block": "B5"
+  },
+  {
+   "text": "A",
+   "start": 152.982,
+   "end": 153.042,
+   "block": "B5"
+  },
+  {
+   "text": "treatment",
+   "start": 153.102,
+   "end": 153.442,
+   "block": "B5"
+  },
+  {
+   "text": "can",
+   "start": 153.482,
+   "end": 153.562,
+   "block": "B5"
+  },
+  {
+   "text": "destroy",
+   "start": 153.602,
+   "end": 154.022,
+   "block": "B5"
+  },
+  {
+   "text": "sensitive",
+   "start": 154.162,
+   "end": 154.582,
+   "block": "B5"
+  },
+  {
+   "text": "ones",
+   "start": 154.642,
+   "end": 154.882,
+   "block": "B5"
+  },
+  {
+   "text": "while",
+   "start": 154.982,
+   "end": 155.142,
+   "block": "B5"
+  },
+  {
+   "text": "resistant",
+   "start": 155.162,
+   "end": 155.642,
+   "block": "B5"
+  },
+  {
+   "text": "cells",
+   "start": 155.742,
+   "end": 156.002,
+   "block": "B5"
+  },
+  {
+   "text": "remain",
+   "start": 156.062,
+   "end": 156.522,
+   "block": "B5"
+  },
+  {
+   "text": "and",
+   "start": 156.542,
+   "end": 156.642,
+   "block": "B5"
+  },
+  {
+   "text": "multiply.",
+   "start": 156.702,
+   "end": 157.262,
+   "block": "B5"
+  },
+  {
+   "text": "So",
+   "start": 157.842,
+   "end": 158.122,
+   "block": "B5"
+  },
+  {
+   "text": "the",
+   "start": 158.162,
+   "end": 158.242,
+   "block": "B5"
+  },
+  {
+   "text": "plan",
+   "start": 158.282,
+   "end": 158.522,
+   "block": "B5"
+  },
+  {
+   "text": "cannot",
+   "start": 158.622,
+   "end": 159.062,
+   "block": "B5"
+  },
+  {
+   "text": "end",
+   "start": 159.142,
+   "end": 159.362,
+   "block": "B5"
+  },
+  {
+   "text": "when",
+   "start": 159.382,
+   "end": 159.482,
+   "block": "B5"
+  },
+  {
+   "text": "the",
+   "start": 159.502,
+   "end": 159.662,
+   "block": "B5"
+  },
+  {
+   "text": "biggest",
+   "start": 159.682,
+   "end": 159.982,
+   "block": "B5"
+  },
+  {
+   "text": "mass",
+   "start": 160.062,
+   "end": 160.302,
+   "block": "B5"
+  },
+  {
+   "text": "gets",
+   "start": 160.342,
+   "end": 160.502,
+   "block": "B5"
+  },
+  {
+   "text": "smaller.",
+   "start": 160.582,
+   "end": 160.942,
+   "block": "B5"
+  },
+  {
+   "text": "Researchers",
+   "start": 161.602,
+   "end": 162.102,
+   "block": "B5"
+  },
+  {
+   "text": "have",
+   "start": 162.122,
+   "end": 162.262,
+   "block": "B5"
+  },
+  {
+   "text": "built",
+   "start": 162.282,
+   "end": 162.522,
+   "block": "B5"
+  },
+  {
+   "text": "AI",
+   "start": 162.602,
+   "end": 162.902,
+   "block": "B5"
+  },
+  {
+   "text": "tools",
+   "start": 162.942,
+   "end": 163.262,
+   "block": "B5"
+  },
+  {
+   "text": "that",
+   "start": 163.302,
+   "end": 163.422,
+   "block": "B5"
+  },
+  {
+   "text": "predict",
+   "start": 163.442,
+   "end": 163.722,
+   "block": "B5"
+  },
+  {
+   "text": "drug",
+   "start": 163.862,
+   "end": 164.062,
+   "block": "B5"
+  },
+  {
+   "text": "response",
+   "start": 164.102,
+   "end": 164.542,
+   "block": "B5"
+  },
+  {
+   "text": "and",
+   "start": 164.602,
+   "end": 164.702,
+   "block": "B5"
+  },
+  {
+   "text": "resistance",
+   "start": 164.742,
+   "end": 165.362,
+   "block": "B5"
+  },
+  {
+   "text": "from",
+   "start": 165.402,
+   "end": 165.562,
+   "block": "B5"
+  },
+  {
+   "text": "individual",
+   "start": 165.622,
+   "end": 166.122,
+   "block": "B5"
+  },
+  {
+   "text": "tumor",
+   "start": 166.242,
+   "end": 166.462,
+   "block": "B5"
+  },
+  {
+   "text": "cell",
+   "start": 166.542,
+   "end": 166.682,
+   "block": "B5"
+  },
+  {
+   "text": "data.",
+   "start": 166.782,
+   "end": 167.082,
+   "block": "B5"
+  },
+  {
+   "text": "The",
+   "start": 167.602,
+   "end": 167.682,
+   "block": "B5"
+  },
+  {
+   "text": "longer",
+   "start": 167.722,
+   "end": 167.982,
+   "block": "B5"
+  },
+  {
+   "text": "term",
+   "start": 168.022,
+   "end": 168.182,
+   "block": "B5"
+  },
+  {
+   "text": "ambition",
+   "start": 168.222,
+   "end": 168.762,
+   "block": "B5"
+  },
+  {
+   "text": "is",
+   "start": 168.802,
+   "end": 168.882,
+   "block": "B5"
+  },
+  {
+   "text": "to",
+   "start": 168.922,
+   "end": 168.982,
+   "block": "B5"
+  },
+  {
+   "text": "help",
+   "start": 169.022,
+   "end": 169.202,
+   "block": "B5"
+  },
+  {
+   "text": "doctors",
+   "start": 169.242,
+   "end": 169.622,
+   "block": "B5"
+  },
+  {
+   "text": "anticipate",
+   "start": 169.662,
+   "end": 170.222,
+   "block": "B5"
+  },
+  {
+   "text": "escape",
+   "start": 170.262,
+   "end": 170.642,
+   "block": "B5"
+  },
+  {
+   "text": "routes",
+   "start": 170.702,
+   "end": 170.942,
+   "block": "B5"
+  },
+  {
+   "text": "and",
+   "start": 171.242,
+   "end": 171.382,
+   "block": "B5"
+  },
+  {
+   "text": "update",
+   "start": 171.442,
+   "end": 171.742,
+   "block": "B5"
+  },
+  {
+   "text": "treatment",
+   "start": 171.782,
+   "end": 172.182,
+   "block": "B5"
+  },
+  {
+   "text": "as",
+   "start": 172.242,
+   "end": 172.362,
+   "block": "B5"
+  },
+  {
+   "text": "new",
+   "start": 172.422,
+   "end": 172.562,
+   "block": "B5"
+  },
+  {
+   "text": "measurements",
+   "start": 172.622,
+   "end": 173.002,
+   "block": "B5"
+  },
+  {
+   "text": "arrive.",
+   "start": 173.062,
+   "end": 173.482,
+   "block": "B5"
+  },
+  {
+   "text": "A",
+   "start": 174.73,
+   "end": 174.54,
+   "block": "B6"
+  },
+  {
+   "text": "digital",
+   "start": 174.73,
+   "end": 174.94,
+   "block": "B6"
+  },
+  {
+   "text": "twin",
+   "start": 175.0,
+   "end": 175.28,
+   "block": "B6"
+  },
+  {
+   "text": "that",
+   "start": 175.32,
+   "end": 175.44,
+   "block": "B6"
+  },
+  {
+   "text": "learns",
+   "start": 175.54,
+   "end": 175.88,
+   "block": "B6"
+  },
+  {
+   "text": "from",
+   "start": 175.92,
+   "end": 176.04,
+   "block": "B6"
+  },
+  {
+   "text": "the",
+   "start": 176.08,
+   "end": 176.14,
+   "block": "B6"
+  },
+  {
+   "text": "disease,",
+   "start": 176.16,
+   "end": 176.68,
+   "block": "B6"
+  },
+  {
+   "text": "a",
+   "start": 177.12,
+   "end": 177.2,
+   "block": "B6"
+  },
+  {
+   "text": "treatment",
+   "start": 177.26,
+   "end": 177.68,
+   "block": "B6"
+  },
+  {
+   "text": "aimed",
+   "start": 177.76,
+   "end": 178.0,
+   "block": "B6"
+  },
+  {
+   "text": "at",
+   "start": 178.04,
+   "end": 178.1,
+   "block": "B6"
+  },
+  {
+   "text": "a",
+   "start": 178.14,
+   "end": 178.22,
+   "block": "B6"
+  },
+  {
+   "text": "vulnerability,",
+   "start": 178.24,
+   "end": 178.98,
+   "block": "B6"
+  },
+  {
+   "text": "a",
+   "start": 179.52,
+   "end": 179.58,
+   "block": "B6"
+  },
+  {
+   "text": "delivery",
+   "start": 179.6,
+   "end": 179.96,
+   "block": "B6"
+  },
+  {
+   "text": "system",
+   "start": 180.06,
+   "end": 180.36,
+   "block": "B6"
+  },
+  {
+   "text": "that",
+   "start": 180.4,
+   "end": 180.5,
+   "block": "B6"
+  },
+  {
+   "text": "controls",
+   "start": 180.52,
+   "end": 181.04,
+   "block": "B6"
+  },
+  {
+   "text": "when",
+   "start": 181.08,
+   "end": 181.16,
+   "block": "B6"
+  },
+  {
+   "text": "its",
+   "start": 181.18,
+   "end": 181.34,
+   "block": "B6"
+  },
+  {
+   "text": "payload",
+   "start": 181.4,
+   "end": 181.78,
+   "block": "B6"
+  },
+  {
+   "text": "becomes",
+   "start": 181.8,
+   "end": 182.14,
+   "block": "B6"
+  },
+  {
+   "text": "active.",
+   "start": 182.24,
+   "end": 182.64,
+   "block": "B6"
+  },
+  {
+   "text": "Those",
+   "start": 183.2,
+   "end": 183.4,
+   "block": "B6"
+  },
+  {
+   "text": "technologies",
+   "start": 183.44,
+   "end": 184.14,
+   "block": "B6"
+  },
+  {
+   "text": "are",
+   "start": 184.16,
+   "end": 184.24,
+   "block": "B6"
+  },
+  {
+   "text": "at",
+   "start": 184.26,
+   "end": 184.42,
+   "block": "B6"
+  },
+  {
+   "text": "different",
+   "start": 184.46,
+   "end": 184.76,
+   "block": "B6"
+  },
+  {
+   "text": "stages.",
+   "start": 184.82,
+   "end": 185.28,
+   "block": "B6"
+  },
+  {
+   "text": "They",
+   "start": 185.7,
+   "end": 185.78,
+   "block": "B6"
+  },
+  {
+   "text": "are",
+   "start": 185.8,
+   "end": 185.9,
+   "block": "B6"
+  },
+  {
+   "text": "not",
+   "start": 185.96,
+   "end": 186.28,
+   "block": "B6"
+  },
+  {
+   "text": "one",
+   "start": 186.32,
+   "end": 186.58,
+   "block": "B6"
+  },
+  {
+   "text": "finished",
+   "start": 186.62,
+   "end": 186.88,
+   "block": "B6"
+  },
+  {
+   "text": "machine,",
+   "start": 186.92,
+   "end": 187.36,
+   "block": "B6"
+  },
+  {
+   "text": "and",
+   "start": 187.68,
+   "end": 187.8,
+   "block": "B6"
+  },
+  {
+   "text": "different",
+   "start": 187.84,
+   "end": 188.12,
+   "block": "B6"
+  },
+  {
+   "text": "cancers",
+   "start": 188.16,
+   "end": 188.6,
+   "block": "B6"
+  },
+  {
+   "text": "will",
+   "start": 188.62,
+   "end": 188.72,
+   "block": "B6"
+  },
+  {
+   "text": "need",
+   "start": 188.76,
+   "end": 188.96,
+   "block": "B6"
+  },
+  {
+   "text": "different",
+   "start": 189.0,
+   "end": 189.22,
+   "block": "B6"
+  },
+  {
+   "text": "approaches.",
+   "start": 189.26,
+   "end": 189.82,
+   "block": "B6"
+  },
+  {
+   "text": "A",
+   "start": 190.34,
+   "end": 190.42,
+   "block": "B6"
+  },
+  {
+   "text": "model",
+   "start": 190.48,
+   "end": 190.76,
+   "block": "B6"
+  },
+  {
+   "text": "can",
+   "start": 190.8,
+   "end": 190.98,
+   "block": "B6"
+  },
+  {
+   "text": "miss",
+   "start": 191.04,
+   "end": 191.26,
+   "block": "B6"
+  },
+  {
+   "text": "a",
+   "start": 191.3,
+   "end": 191.34,
+   "block": "B6"
+  },
+  {
+   "text": "resistant",
+   "start": 191.38,
+   "end": 191.78,
+   "block": "B6"
+  },
+  {
+   "text": "pocket.",
+   "start": 191.88,
+   "end": 192.28,
+   "block": "B6"
+  },
+  {
+   "text": "A",
+   "start": 192.72,
+   "end": 192.78,
+   "block": "B6"
+  },
+  {
+   "text": "carrier",
+   "start": 192.86,
+   "end": 193.24,
+   "block": "B6"
+  },
+  {
+   "text": "can",
+   "start": 193.28,
+   "end": 193.42,
+   "block": "B6"
+  },
+  {
+   "text": "reach",
+   "start": 193.46,
+   "end": 193.64,
+   "block": "B6"
+  },
+  {
+   "text": "healthy",
+   "start": 193.68,
+   "end": 193.98,
+   "block": "B6"
+  },
+  {
+   "text": "tissue.",
+   "start": 194.04,
+   "end": 194.42,
+   "block": "B6"
+  },
+  {
+   "text": "An",
+   "start": 194.84,
+   "end": 194.9,
+   "block": "B6"
+  },
+  {
+   "text": "apparent",
+   "start": 194.94,
+   "end": 195.28,
+   "block": "B6"
+  },
+  {
+   "text": "victory",
+   "start": 195.42,
+   "end": 195.76,
+   "block": "B6"
+  },
+  {
+   "text": "can",
+   "start": 195.84,
+   "end": 196.0,
+   "block": "B6"
+  },
+  {
+   "text": "disappear",
+   "start": 196.04,
+   "end": 196.58,
+   "block": "B6"
+  },
+  {
+   "text": "at",
+   "start": 196.62,
+   "end": 196.7,
+   "block": "B6"
+  },
+  {
+   "text": "the",
+   "start": 196.72,
+   "end": 196.8,
+   "block": "B6"
+  },
+  {
+   "text": "next",
+   "start": 196.82,
+   "end": 197.02,
+   "block": "B6"
+  },
+  {
+   "text": "scan.",
+   "start": 197.06,
+   "end": 197.44,
+   "block": "B6"
+  },
+  {
+   "text": "That",
+   "start": 198.02,
+   "end": 198.16,
+   "block": "B6"
+  },
+  {
+   "text": "is",
+   "start": 198.2,
+   "end": 198.32,
+   "block": "B6"
+  },
+  {
+   "text": "why",
+   "start": 198.34,
+   "end": 198.5,
+   "block": "B6"
+  },
+  {
+   "text": "the",
+   "start": 198.54,
+   "end": 198.66,
+   "block": "B6"
+  },
+  {
+   "text": "final",
+   "start": 198.7,
+   "end": 198.94,
+   "block": "B6"
+  },
+  {
+   "text": "test",
+   "start": 199.04,
+   "end": 199.36,
+   "block": "B6"
+  },
+  {
+   "text": "is",
+   "start": 199.46,
+   "end": 199.6,
+   "block": "B6"
+  },
+  {
+   "text": "not",
+   "start": 199.7,
+   "end": 199.94,
+   "block": "B6"
+  },
+  {
+   "text": "whether",
+   "start": 199.98,
+   "end": 200.18,
+   "block": "B6"
+  },
+  {
+   "text": "the",
+   "start": 200.22,
+   "end": 200.32,
+   "block": "B6"
+  },
+  {
+   "text": "tumor",
+   "start": 200.36,
+   "end": 200.58,
+   "block": "B6"
+  },
+  {
+   "text": "vanishes",
+   "start": 200.72,
+   "end": 201.16,
+   "block": "B6"
+  },
+  {
+   "text": "on",
+   "start": 201.2,
+   "end": 201.26,
+   "block": "B6"
+  },
+  {
+   "text": "a",
+   "start": 201.28,
+   "end": 201.34,
+   "block": "B6"
+  },
+  {
+   "text": "computer",
+   "start": 201.36,
+   "end": 201.76,
+   "block": "B6"
+  },
+  {
+   "text": "screen.",
+   "start": 201.86,
+   "end": 202.18,
+   "block": "B6"
+  },
+  {
+   "text": "It",
+   "start": 202.64,
+   "end": 202.68,
+   "block": "B6"
+  },
+  {
+   "text": "is",
+   "start": 202.72,
+   "end": 202.84,
+   "block": "B6"
+  },
+  {
+   "text": "whether",
+   "start": 202.88,
+   "end": 203.12,
+   "block": "B6"
+  },
+  {
+   "text": "people",
+   "start": 203.16,
+   "end": 203.46,
+   "block": "B6"
+  },
+  {
+   "text": "live",
+   "start": 203.52,
+   "end": 203.68,
+   "block": "B6"
+  },
+  {
+   "text": "longer",
+   "start": 203.78,
+   "end": 204.18,
+   "block": "B6"
+  },
+  {
+   "text": "with",
+   "start": 204.46,
+   "end": 204.6,
+   "block": "B6"
+  },
+  {
+   "text": "less",
+   "start": 204.66,
+   "end": 204.86,
+   "block": "B6"
+  },
+  {
+   "text": "harm",
+   "start": 204.9,
+   "end": 205.2,
+   "block": "B6"
+  },
+  {
+   "text": "and",
+   "start": 205.52,
+   "end": 205.58,
+   "block": "B6"
+  },
+  {
+   "text": "the",
+   "start": 205.62,
+   "end": 205.7,
+   "block": "B6"
+  },
+  {
+   "text": "cancer",
+   "start": 205.76,
+   "end": 206.08,
+   "block": "B6"
+  },
+  {
+   "text": "stays",
+   "start": 206.24,
+   "end": 206.46,
+   "block": "B6"
+  },
+  {
+   "text": "away.",
+   "start": 206.52,
+   "end": 206.82,
+   "block": "B6"
+  },
+  {
+   "text": "The",
+   "start": 207.5,
+   "end": 207.6,
+   "block": "B6"
+  },
+  {
+   "text": "cell",
+   "start": 207.68,
+   "end": 207.86,
+   "block": "B6"
+  },
+  {
+   "text": "in",
+   "start": 207.9,
+   "end": 207.96,
+   "block": "B6"
+  },
+  {
+   "text": "our",
+   "start": 208.0,
+   "end": 208.12,
+   "block": "B6"
+  },
+  {
+   "text": "opening",
+   "start": 208.18,
+   "end": 208.6,
+   "block": "B6"
+  },
+  {
+   "text": "had",
+   "start": 208.64,
+   "end": 208.72,
+   "block": "B6"
+  },
+  {
+   "text": "a",
+   "start": 208.76,
+   "end": 208.86,
+   "block": "B6"
+  },
+  {
+   "text": "self-destruct",
+   "start": 208.92,
+   "end": 209.58,
+   "block": "B6"
+  },
+  {
+   "text": "mechanism.",
+   "start": 209.66,
+   "end": 210.16,
+   "block": "B6"
+  },
+  {
+   "text": "The",
+   "start": 210.68,
+   "end": 210.8,
+   "block": "B6"
+  },
+  {
+   "text": "challenge",
+   "start": 210.86,
+   "end": 211.32,
+   "block": "B6"
+  },
+  {
+   "text": "is",
+   "start": 211.36,
+   "end": 211.54,
+   "block": "B6"
+  },
+  {
+   "text": "reaching",
+   "start": 211.58,
+   "end": 211.88,
+   "block": "B6"
+  },
+  {
+   "text": "the",
+   "start": 211.92,
+   "end": 212.06,
+   "block": "B6"
+  },
+  {
+   "text": "right",
+   "start": 212.1,
+   "end": 212.3,
+   "block": "B6"
+  },
+  {
+   "text": "cell",
+   "start": 212.4,
+   "end": 212.66,
+   "block": "B6"
+  },
+  {
+   "text": "and",
+   "start": 213.04,
+   "end": 213.14,
+   "block": "B6"
+  },
+  {
+   "text": "leaving",
+   "start": 213.22,
+   "end": 213.46,
+   "block": "B6"
+  },
+  {
+   "text": "it",
+   "start": 213.5,
+   "end": 213.68,
+   "block": "B6"
+  },
+  {
+   "text": "no",
+   "start": 213.76,
+   "end": 213.92,
+   "block": "B6"
+  },
+  {
+   "text": "way",
+   "start": 213.96,
+   "end": 214.12,
+   "block": "B6"
+  },
+  {
+   "text": "back.",
+   "start": 214.16,
+   "end": 214.48,
+   "block": "B6"
+  }
+ ],
+ "script_words": [
+  {
+   "text": "This",
+   "start": 0.45,
+   "end": 0.65
+  },
+  {
+   "text": "microscopic",
+   "start": 0.71,
+   "end": 1.35
+  },
+  {
+   "text": "device",
+   "start": 1.39,
+   "end": 1.79
+  },
+  {
+   "text": "hides",
+   "start": 1.85,
+   "end": 2.09
+  },
+  {
+   "text": "a",
+   "start": 2.13,
+   "end": 2.21
+  },
+  {
+   "text": "weapon",
+   "start": 2.25,
+   "end": 2.53
+  },
+  {
+   "text": "that",
+   "start": 2.57,
+   "end": 2.67
+  },
+  {
+   "text": "can",
+   "start": 2.69,
+   "end": 2.83
+  },
+  {
+   "text": "trigger",
+   "start": 2.89,
+   "end": 3.17
+  },
+  {
+   "text": "a",
+   "start": 3.23,
+   "end": 3.31
+  },
+  {
+   "text": "cell",
+   "start": 3.37,
+   "end": 3.59
+  },
+  {
+   "text": "to",
+   "start": 3.63,
+   "end": 3.69
+  },
+  {
+   "text": "destroy",
+   "start": 3.73,
+   "end": 4.23
+  },
+  {
+   "text": "itself.",
+   "start": 4.27,
+   "end": 4.77
+  },
+  {
+   "text": "In",
+   "start": 5.59,
+   "end": 5.65
+  },
+  {
+   "text": "acidic",
+   "start": 5.69,
+   "end": 6.05
+  },
+  {
+   "text": "surroundings,",
+   "start": 6.15,
+   "end": 6.83
+  },
+  {
+   "text": "it",
+   "start": 7.25,
+   "end": 7.31
+  },
+  {
+   "text": "opens.",
+   "start": 7.39,
+   "end": 7.83
+  },
+  {
+   "text": "Now",
+   "start": 8.85,
+   "end": 9.01
+  },
+  {
+   "text": "imagine",
+   "start": 9.05,
+   "end": 9.47
+  },
+  {
+   "text": "choosing",
+   "start": 9.57,
+   "end": 9.85
+  },
+  {
+   "text": "an",
+   "start": 9.87,
+   "end": 9.93
+  },
+  {
+   "text": "attack",
+   "start": 9.97,
+   "end": 10.33
+  },
+  {
+   "text": "like",
+   "start": 10.35,
+   "end": 10.51
+  },
+  {
+   "text": "this",
+   "start": 10.57,
+   "end": 10.79
+  },
+  {
+   "text": "by",
+   "start": 10.81,
+   "end": 10.97
+  },
+  {
+   "text": "testing",
+   "start": 11.03,
+   "end": 11.37
+  },
+  {
+   "text": "it",
+   "start": 11.41,
+   "end": 11.51
+  },
+  {
+   "text": "on",
+   "start": 11.55,
+   "end": 11.61
+  },
+  {
+   "text": "a",
+   "start": 11.67,
+   "end": 11.79
+  },
+  {
+   "text": "digital",
+   "start": 11.83,
+   "end": 12.11
+  },
+  {
+   "text": "version",
+   "start": 12.21,
+   "end": 12.45
+  },
+  {
+   "text": "of",
+   "start": 12.49,
+   "end": 12.57
+  },
+  {
+   "text": "your",
+   "start": 12.59,
+   "end": 12.73
+  },
+  {
+   "text": "tumor",
+   "start": 12.79,
+   "end": 13.03
+  },
+  {
+   "text": "first.",
+   "start": 13.21,
+   "end": 13.61
+  },
+  {
+   "text": "That",
+   "start": 14.23,
+   "end": 14.39
+  },
+  {
+   "text": "complete",
+   "start": 14.43,
+   "end": 14.87
+  },
+  {
+   "text": "system",
+   "start": 14.95,
+   "end": 15.39
+  },
+  {
+   "text": "is",
+   "start": 15.43,
+   "end": 15.51
+  },
+  {
+   "text": "a",
+   "start": 15.55,
+   "end": 15.61
+  },
+  {
+   "text": "possible",
+   "start": 15.67,
+   "end": 16.07
+  },
+  {
+   "text": "future.",
+   "start": 16.17,
+   "end": 16.53
+  },
+  {
+   "text": "AI",
+   "start": 17.07,
+   "end": 17.39
+  },
+  {
+   "text": "has",
+   "start": 17.43,
+   "end": 17.63
+  },
+  {
+   "text": "not",
+   "start": 17.69,
+   "end": 17.95
+  },
+  {
+   "text": "cured",
+   "start": 17.99,
+   "end": 18.21
+  },
+  {
+   "text": "all",
+   "start": 18.25,
+   "end": 18.37
+  },
+  {
+   "text": "cancer.",
+   "start": 18.41,
+   "end": 18.79
+  },
+  {
+   "text": "Researchers",
+   "start": 19.35,
+   "end": 19.83
+  },
+  {
+   "text": "are",
+   "start": 19.87,
+   "end": 20.03
+  },
+  {
+   "text": "already",
+   "start": 20.11,
+   "end": 20.43
+  },
+  {
+   "text": "building",
+   "start": 20.53,
+   "end": 20.81
+  },
+  {
+   "text": "its",
+   "start": 20.85,
+   "end": 20.97
+  },
+  {
+   "text": "separate",
+   "start": 21.01,
+   "end": 21.25
+  },
+  {
+   "text": "parts.",
+   "start": 21.35,
+   "end": 21.75
+  },
+  {
+   "text": "First,",
+   "start": 22.804,
+   "end": 23.144
+  },
+  {
+   "text": "build",
+   "start": 23.564,
+   "end": 23.784
+  },
+  {
+   "text": "the",
+   "start": 23.804,
+   "end": 23.884
+  },
+  {
+   "text": "copy.",
+   "start": 23.924,
+   "end": 24.304
+  },
+  {
+   "text": "Researchers",
+   "start": 24.964,
+   "end": 25.504
+  },
+  {
+   "text": "are",
+   "start": 25.544,
+   "end": 25.624
+  },
+  {
+   "text": "developing",
+   "start": 25.644,
+   "end": 26.084
+  },
+  {
+   "text": "digital",
+   "start": 26.224,
+   "end": 26.524
+  },
+  {
+   "text": "twins:",
+   "start": 26.624,
+   "end": 27.044
+  },
+  {
+   "text": "mathematical",
+   "start": 27.544,
+   "end": 28.064
+  },
+  {
+   "text": "models",
+   "start": 28.164,
+   "end": 28.504
+  },
+  {
+   "text": "of",
+   "start": 28.544,
+   "end": 28.644
+  },
+  {
+   "text": "particular",
+   "start": 28.664,
+   "end": 29.124
+  },
+  {
+   "text": "tumors,",
+   "start": 29.244,
+   "end": 29.644
+  },
+  {
+   "text": "built",
+   "start": 29.964,
+   "end": 30.164
+  },
+  {
+   "text": "from",
+   "start": 30.204,
+   "end": 30.324
+  },
+  {
+   "text": "measurements",
+   "start": 30.364,
+   "end": 30.784
+  },
+  {
+   "text": "such",
+   "start": 30.824,
+   "end": 30.964
+  },
+  {
+   "text": "as",
+   "start": 31.004,
+   "end": 31.124
+  },
+  {
+   "text": "medical",
+   "start": 31.164,
+   "end": 31.424
+  },
+  {
+   "text": "scans",
+   "start": 31.524,
+   "end": 31.884
+  },
+  {
+   "text": "and",
+   "start": 31.984,
+   "end": 32.144
+  },
+  {
+   "text": "updated",
+   "start": 32.204,
+   "end": 32.644
+  },
+  {
+   "text": "as",
+   "start": 32.684,
+   "end": 32.824
+  },
+  {
+   "text": "new",
+   "start": 32.884,
+   "end": 33.004
+  },
+  {
+   "text": "information",
+   "start": 33.044,
+   "end": 33.544
+  },
+  {
+   "text": "arrives.",
+   "start": 33.584,
+   "end": 34.084
+  },
+  {
+   "text": "The",
+   "start": 34.604,
+   "end": 34.724
+  },
+  {
+   "text": "goal",
+   "start": 34.744,
+   "end": 35.004
+  },
+  {
+   "text": "is",
+   "start": 35.064,
+   "end": 35.144
+  },
+  {
+   "text": "to",
+   "start": 35.184,
+   "end": 35.264
+  },
+  {
+   "text": "compare",
+   "start": 35.284,
+   "end": 35.644
+  },
+  {
+   "text": "possible",
+   "start": 35.684,
+   "end": 36.064
+  },
+  {
+   "text": "treatments",
+   "start": 36.164,
+   "end": 36.624
+  },
+  {
+   "text": "before",
+   "start": 36.644,
+   "end": 37.024
+  },
+  {
+   "text": "choosing",
+   "start": 37.064,
+   "end": 37.444
+  },
+  {
+   "text": "what",
+   "start": 37.484,
+   "end": 37.624
+  },
+  {
+   "text": "to",
+   "start": 37.664,
+   "end": 37.764
+  },
+  {
+   "text": "try",
+   "start": 37.804,
+   "end": 38.004
+  },
+  {
+   "text": "in",
+   "start": 38.024,
+   "end": 38.084
+  },
+  {
+   "text": "the",
+   "start": 38.104,
+   "end": 38.184
+  },
+  {
+   "text": "patient.",
+   "start": 38.224,
+   "end": 38.624
+  },
+  {
+   "text": "One",
+   "start": 39.304,
+   "end": 39.403
+  },
+  {
+   "text": "simulated",
+   "start": 39.604,
+   "end": 40.104
+  },
+  {
+   "text": "tumor",
+   "start": 40.164,
+   "end": 40.403
+  },
+  {
+   "text": "shrinks.",
+   "start": 40.604,
+   "end": 41.124
+  },
+  {
+   "text": "Another",
+   "start": 41.544,
+   "end": 41.864
+  },
+  {
+   "text": "barely",
+   "start": 42.064,
+   "end": 42.424
+  },
+  {
+   "text": "changes.",
+   "start": 42.464,
+   "end": 42.964
+  },
+  {
+   "text": "A",
+   "start": 43.424,
+   "end": 43.544
+  },
+  {
+   "text": "third",
+   "start": 43.604,
+   "end": 43.844
+  },
+  {
+   "text": "shrinks",
+   "start": 43.924,
+   "end": 44.324
+  },
+  {
+   "text": "then",
+   "start": 44.784,
+   "end": 44.924
+  },
+  {
+   "text": "returns.",
+   "start": 44.964,
+   "end": 45.544
+  },
+  {
+   "text": "The",
+   "start": 46.184,
+   "end": 46.264
+  },
+  {
+   "text": "model",
+   "start": 46.324,
+   "end": 46.664
+  },
+  {
+   "text": "is",
+   "start": 46.684,
+   "end": 46.804
+  },
+  {
+   "text": "searching",
+   "start": 46.884,
+   "end": 47.244
+  },
+  {
+   "text": "for",
+   "start": 47.284,
+   "end": 47.364
+  },
+  {
+   "text": "a",
+   "start": 47.404,
+   "end": 47.464
+  },
+  {
+   "text": "better",
+   "start": 47.504,
+   "end": 47.664
+  },
+  {
+   "text": "plan.",
+   "start": 47.764,
+   "end": 48.104
+  },
+  {
+   "text": "It",
+   "start": 48.524,
+   "end": 48.564
+  },
+  {
+   "text": "is",
+   "start": 48.604,
+   "end": 48.744
+  },
+  {
+   "text": "not",
+   "start": 48.824,
+   "end": 49.024
+  },
+  {
+   "text": "a",
+   "start": 49.064,
+   "end": 49.124
+  },
+  {
+   "text": "perfect",
+   "start": 49.164,
+   "end": 49.444
+  },
+  {
+   "text": "copy",
+   "start": 49.504,
+   "end": 49.784
+  },
+  {
+   "text": "of",
+   "start": 49.844,
+   "end": 49.924
+  },
+  {
+   "text": "you,",
+   "start": 49.984,
+   "end": 50.104
+  },
+  {
+   "text": "and",
+   "start": 50.404,
+   "end": 50.484
+  },
+  {
+   "text": "a",
+   "start": 50.524,
+   "end": 50.604
+  },
+  {
+   "text": "simulated",
+   "start": 50.644,
+   "end": 51.104
+  },
+  {
+   "text": "success",
+   "start": 51.164,
+   "end": 51.624
+  },
+  {
+   "text": "still",
+   "start": 51.744,
+   "end": 51.984
+  },
+  {
+   "text": "needs",
+   "start": 52.044,
+   "end": 52.344
+  },
+  {
+   "text": "real-world",
+   "start": 52.384,
+   "end": 52.824
+  },
+  {
+   "text": "testing.",
+   "start": 52.884,
+   "end": 53.324
+  },
+  {
+   "text": "But",
+   "start": 53.864,
+   "end": 53.944
+  },
+  {
+   "text": "it",
+   "start": 53.984,
+   "end": 54.064
+  },
+  {
+   "text": "changes",
+   "start": 54.104,
+   "end": 54.444
+  },
+  {
+   "text": "the",
+   "start": 54.464,
+   "end": 54.544
+  },
+  {
+   "text": "question",
+   "start": 54.604,
+   "end": 55.024
+  },
+  {
+   "text": "from",
+   "start": 55.064,
+   "end": 55.524
+  },
+  {
+   "text": "\u201cWhat",
+   "start": 55.564,
+   "end": 55.804
+  },
+  {
+   "text": "usually",
+   "start": 55.884,
+   "end": 56.244
+  },
+  {
+   "text": "works?\u201d",
+   "start": 56.284,
+   "end": 56.624
+  },
+  {
+   "text": "to",
+   "start": 56.924,
+   "end": 57.144
+  },
+  {
+   "text": "\u201cWhat",
+   "start": 57.504,
+   "end": 57.704
+  },
+  {
+   "text": "might",
+   "start": 57.784,
+   "end": 58.004
+  },
+  {
+   "text": "work",
+   "start": 58.044,
+   "end": 58.224
+  },
+  {
+   "text": "for",
+   "start": 58.244,
+   "end": 58.324
+  },
+  {
+   "text": "this",
+   "start": 58.364,
+   "end": 58.524
+  },
+  {
+   "text": "tumor?\u201d",
+   "start": 58.564,
+   "end": 58.884
+  },
+  {
+   "text": "Next,",
+   "start": 59.87,
+   "end": 60.176
+  },
+  {
+   "text": "give",
+   "start": 60.496,
+   "end": 60.636
+  },
+  {
+   "text": "the",
+   "start": 60.676,
+   "end": 60.736
+  },
+  {
+   "text": "attack",
+   "start": 60.776,
+   "end": 61.076
+  },
+  {
+   "text": "an",
+   "start": 61.116,
+   "end": 61.236
+  },
+  {
+   "text": "address.",
+   "start": 61.316,
+   "end": 61.756
+  },
+  {
+   "text": "Cancer",
+   "start": 62.396,
+   "end": 62.716
+  },
+  {
+   "text": "grows",
+   "start": 62.836,
+   "end": 63.136
+  },
+  {
+   "text": "from",
+   "start": 63.176,
+   "end": 63.296
+  },
+  {
+   "text": "your",
+   "start": 63.336,
+   "end": 63.476
+  },
+  {
+   "text": "own",
+   "start": 63.555,
+   "end": 63.716
+  },
+  {
+   "text": "cells.",
+   "start": 63.856,
+   "end": 64.256
+  },
+  {
+   "text": "A",
+   "start": 64.796,
+   "end": 64.876
+  },
+  {
+   "text": "powerful",
+   "start": 64.916,
+   "end": 65.316
+  },
+  {
+   "text": "drug",
+   "start": 65.416,
+   "end": 65.615
+  },
+  {
+   "text": "is",
+   "start": 65.636,
+   "end": 65.835
+  },
+  {
+   "text": "dangerous",
+   "start": 65.876,
+   "end": 66.356
+  },
+  {
+   "text": "if",
+   "start": 66.416,
+   "end": 66.455
+  },
+  {
+   "text": "it",
+   "start": 66.496,
+   "end": 66.576
+  },
+  {
+   "text": "reaches",
+   "start": 66.616,
+   "end": 66.916
+  },
+  {
+   "text": "the",
+   "start": 66.936,
+   "end": 67.016
+  },
+  {
+   "text": "wrong",
+   "start": 67.036,
+   "end": 67.236
+  },
+  {
+   "text": "tissue.",
+   "start": 67.336,
+   "end": 67.716
+  },
+  {
+   "text": "Some",
+   "start": 68.396,
+   "end": 68.576
+  },
+  {
+   "text": "treatments",
+   "start": 68.616,
+   "end": 69.076
+  },
+  {
+   "text": "already",
+   "start": 69.136,
+   "end": 69.436
+  },
+  {
+   "text": "attach",
+   "start": 69.476,
+   "end": 69.776
+  },
+  {
+   "text": "a",
+   "start": 69.836,
+   "end": 69.916
+  },
+  {
+   "text": "drug",
+   "start": 69.956,
+   "end": 70.156
+  },
+  {
+   "text": "payload",
+   "start": 70.256,
+   "end": 70.616
+  },
+  {
+   "text": "to",
+   "start": 70.656,
+   "end": 70.736
+  },
+  {
+   "text": "an",
+   "start": 70.756,
+   "end": 70.876
+  },
+  {
+   "text": "antibody",
+   "start": 70.956,
+   "end": 71.516
+  },
+  {
+   "text": "that",
+   "start": 71.536,
+   "end": 71.696
+  },
+  {
+   "text": "binds",
+   "start": 71.736,
+   "end": 71.976
+  },
+  {
+   "text": "a",
+   "start": 72.016,
+   "end": 72.076
+  },
+  {
+   "text": "particular",
+   "start": 72.096,
+   "end": 72.596
+  },
+  {
+   "text": "surface",
+   "start": 72.716,
+   "end": 73.036
+  },
+  {
+   "text": "target.",
+   "start": 73.076,
+   "end": 73.416
+  },
+  {
+   "text": "The",
+   "start": 73.876,
+   "end": 73.996
+  },
+  {
+   "text": "cell",
+   "start": 74.036,
+   "end": 74.196
+  },
+  {
+   "text": "takes",
+   "start": 74.296,
+   "end": 74.496
+  },
+  {
+   "text": "the",
+   "start": 74.536,
+   "end": 74.616
+  },
+  {
+   "text": "package",
+   "start": 74.636,
+   "end": 74.936
+  },
+  {
+   "text": "inside.",
+   "start": 74.976,
+   "end": 75.456
+  },
+  {
+   "text": "In",
+   "start": 75.976,
+   "end": 76.096
+  },
+  {
+   "text": "certain",
+   "start": 76.136,
+   "end": 76.356
+  },
+  {
+   "text": "designs,",
+   "start": 76.396,
+   "end": 76.896
+  },
+  {
+   "text": "enzymes",
+   "start": 77.176,
+   "end": 77.616
+  },
+  {
+   "text": "cut",
+   "start": 77.676,
+   "end": 77.796
+  },
+  {
+   "text": "its",
+   "start": 77.816,
+   "end": 77.956
+  },
+  {
+   "text": "molecular",
+   "start": 77.996,
+   "end": 78.436
+  },
+  {
+   "text": "linker,",
+   "start": 78.516,
+   "end": 78.836
+  },
+  {
+   "text": "releasing",
+   "start": 79.076,
+   "end": 79.496
+  },
+  {
+   "text": "the",
+   "start": 79.516,
+   "end": 79.596
+  },
+  {
+   "text": "drug.",
+   "start": 79.636,
+   "end": 79.916
+  },
+  {
+   "text": "The",
+   "start": 80.456,
+   "end": 80.576
+  },
+  {
+   "text": "cell\u2019s",
+   "start": 80.616,
+   "end": 81.016
+  },
+  {
+   "text": "own",
+   "start": 81.076,
+   "end": 81.236
+  },
+  {
+   "text": "machinery",
+   "start": 81.256,
+   "end": 81.816
+  },
+  {
+   "text": "helps",
+   "start": 81.856,
+   "end": 82.136
+  },
+  {
+   "text": "open",
+   "start": 82.196,
+   "end": 82.416
+  },
+  {
+   "text": "the",
+   "start": 82.436,
+   "end": 82.516
+  },
+  {
+   "text": "delivery.",
+   "start": 82.536,
+   "end": 82.996
+  },
+  {
+   "text": "These",
+   "start": 83.596,
+   "end": 83.776
+  },
+  {
+   "text": "are",
+   "start": 83.816,
+   "end": 83.976
+  },
+  {
+   "text": "antibody-drug",
+   "start": 84.076,
+   "end": 84.796
+  },
+  {
+   "text": "conjugates,",
+   "start": 84.896,
+   "end": 85.476
+  },
+  {
+   "text": "and",
+   "start": 85.716,
+   "end": 85.796
+  },
+  {
+   "text": "some",
+   "start": 85.936,
+   "end": 86.156
+  },
+  {
+   "text": "are",
+   "start": 86.176,
+   "end": 86.316
+  },
+  {
+   "text": "already",
+   "start": 86.396,
+   "end": 86.736
+  },
+  {
+   "text": "used",
+   "start": 86.816,
+   "end": 86.976
+  },
+  {
+   "text": "in",
+   "start": 86.996,
+   "end": 87.096
+  },
+  {
+   "text": "cancer",
+   "start": 87.156,
+   "end": 87.416
+  },
+  {
+   "text": "care.",
+   "start": 87.496,
+   "end": 87.716
+  },
+  {
+   "text": "They",
+   "start": 88.236,
+   "end": 88.316
+  },
+  {
+   "text": "can",
+   "start": 88.336,
+   "end": 88.476
+  },
+  {
+   "text": "still",
+   "start": 88.556,
+   "end": 88.736
+  },
+  {
+   "text": "cause",
+   "start": 88.776,
+   "end": 89.056
+  },
+  {
+   "text": "serious",
+   "start": 89.116,
+   "end": 89.476
+  },
+  {
+   "text": "side",
+   "start": 89.536,
+   "end": 89.696
+  },
+  {
+   "text": "effects;",
+   "start": 89.736,
+   "end": 90.136
+  },
+  {
+   "text": "a",
+   "start": 90.536,
+   "end": 90.576
+  },
+  {
+   "text": "molecular",
+   "start": 90.596,
+   "end": 91.036
+  },
+  {
+   "text": "address",
+   "start": 91.096,
+   "end": 91.516
+  },
+  {
+   "text": "is",
+   "start": 91.556,
+   "end": 91.696
+  },
+  {
+   "text": "not",
+   "start": 91.796,
+   "end": 92.056
+  },
+  {
+   "text": "perfect",
+   "start": 92.096,
+   "end": 92.356
+  },
+  {
+   "text": "protection.",
+   "start": 92.416,
+   "end": 92.936
+  },
+  {
+   "text": "AI",
+   "start": 93.476,
+   "end": 93.816
+  },
+  {
+   "text": "could",
+   "start": 93.836,
+   "end": 93.936
+  },
+  {
+   "text": "help",
+   "start": 93.976,
+   "end": 94.116
+  },
+  {
+   "text": "develop",
+   "start": 94.156,
+   "end": 94.536
+  },
+  {
+   "text": "better",
+   "start": 94.556,
+   "end": 94.776
+  },
+  {
+   "text": "targeting",
+   "start": 94.816,
+   "end": 95.196
+  },
+  {
+   "text": "components.",
+   "start": 95.216,
+   "end": 95.756
+  },
+  {
+   "text": "Researchers",
+   "start": 96.296,
+   "end": 96.776
+  },
+  {
+   "text": "are",
+   "start": 96.816,
+   "end": 96.936
+  },
+  {
+   "text": "already",
+   "start": 97.016,
+   "end": 97.356
+  },
+  {
+   "text": "testing",
+   "start": 97.396,
+   "end": 97.836
+  },
+  {
+   "text": "AI-designed",
+   "start": 97.896,
+   "end": 98.516
+  },
+  {
+   "text": "proteins",
+   "start": 98.616,
+   "end": 99.136
+  },
+  {
+   "text": "as",
+   "start": 99.196,
+   "end": 99.316
+  },
+  {
+   "text": "recognition",
+   "start": 99.356,
+   "end": 99.916
+  },
+  {
+   "text": "parts",
+   "start": 99.956,
+   "end": 100.236
+  },
+  {
+   "text": "in",
+   "start": 100.276,
+   "end": 100.336
+  },
+  {
+   "text": "experimental",
+   "start": 100.376,
+   "end": 101.076
+  },
+  {
+   "text": "immune-cell",
+   "start": 101.116,
+   "end": 101.696
+  },
+  {
+   "text": "therapies.",
+   "start": 101.736,
+   "end": 102.276
+  },
+  {
+   "text": "But",
+   "start": 103.36,
+   "end": 103.578
+  },
+  {
+   "text": "what",
+   "start": 103.618,
+   "end": 103.718
+  },
+  {
+   "text": "if",
+   "start": 103.758,
+   "end": 103.858
+  },
+  {
+   "text": "the",
+   "start": 103.898,
+   "end": 103.958
+  },
+  {
+   "text": "attack",
+   "start": 103.998,
+   "end": 104.318
+  },
+  {
+   "text": "stayed",
+   "start": 104.398,
+   "end": 104.578
+  },
+  {
+   "text": "hidden",
+   "start": 104.718,
+   "end": 104.998
+  },
+  {
+   "text": "until",
+   "start": 105.038,
+   "end": 105.258
+  },
+  {
+   "text": "its",
+   "start": 105.298,
+   "end": 105.418
+  },
+  {
+   "text": "surroundings",
+   "start": 105.458,
+   "end": 105.978
+  },
+  {
+   "text": "changed?",
+   "start": 106.078,
+   "end": 106.538
+  },
+  {
+   "text": "Return",
+   "start": 107.138,
+   "end": 107.498
+  },
+  {
+   "text": "to",
+   "start": 107.538,
+   "end": 107.598
+  },
+  {
+   "text": "the",
+   "start": 107.638,
+   "end": 107.698
+  },
+  {
+   "text": "device",
+   "start": 107.718,
+   "end": 108.078
+  },
+  {
+   "text": "from",
+   "start": 108.098,
+   "end": 108.218
+  },
+  {
+   "text": "the",
+   "start": 108.258,
+   "end": 108.318
+  },
+  {
+   "text": "opening.",
+   "start": 108.378,
+   "end": 108.738
+  },
+  {
+   "text": "Researchers",
+   "start": 109.518,
+   "end": 109.978
+  },
+  {
+   "text": "at",
+   "start": 110.018,
+   "end": 110.118
+  },
+  {
+   "text": "Karolinska",
+   "start": 110.158,
+   "end": 110.758
+  },
+  {
+   "text": "built",
+   "start": 110.858,
+   "end": 111.018
+  },
+  {
+   "text": "a",
+   "start": 111.078,
+   "end": 111.158
+  },
+  {
+   "text": "switch",
+   "start": 111.218,
+   "end": 111.538
+  },
+  {
+   "text": "from",
+   "start": 111.578,
+   "end": 111.798
+  },
+  {
+   "text": "folded",
+   "start": 111.838,
+   "end": 112.178
+  },
+  {
+   "text": "DNA.",
+   "start": 112.218,
+   "end": 112.678
+  },
+  {
+   "text": "It",
+   "start": 113.158,
+   "end": 113.258
+  },
+  {
+   "text": "hides",
+   "start": 113.298,
+   "end": 113.538
+  },
+  {
+   "text": "a",
+   "start": 113.578,
+   "end": 113.638
+  },
+  {
+   "text": "pattern",
+   "start": 113.698,
+   "end": 113.958
+  },
+  {
+   "text": "of",
+   "start": 113.998,
+   "end": 114.118
+  },
+  {
+   "text": "peptides",
+   "start": 114.158,
+   "end": 114.698
+  },
+  {
+   "text": "that",
+   "start": 114.718,
+   "end": 114.818
+  },
+  {
+   "text": "can",
+   "start": 114.838,
+   "end": 114.978
+  },
+  {
+   "text": "bring",
+   "start": 114.998,
+   "end": 115.258
+  },
+  {
+   "text": "death",
+   "start": 115.298,
+   "end": 115.478
+  },
+  {
+   "text": "receptors",
+   "start": 115.538,
+   "end": 116.038
+  },
+  {
+   "text": "together",
+   "start": 116.078,
+   "end": 116.538
+  },
+  {
+   "text": "on",
+   "start": 116.578,
+   "end": 116.638
+  },
+  {
+   "text": "a",
+   "start": 116.678,
+   "end": 116.758
+  },
+  {
+   "text": "cell\u2019s",
+   "start": 116.798,
+   "end": 117.038
+  },
+  {
+   "text": "surface.",
+   "start": 117.098,
+   "end": 117.538
+  },
+  {
+   "text": "Under",
+   "start": 118.058,
+   "end": 118.238
+  },
+  {
+   "text": "acidic",
+   "start": 118.298,
+   "end": 118.638
+  },
+  {
+   "text": "conditions,",
+   "start": 118.678,
+   "end": 119.198
+  },
+  {
+   "text": "the",
+   "start": 119.458,
+   "end": 119.538
+  },
+  {
+   "text": "structure",
+   "start": 119.618,
+   "end": 119.938
+  },
+  {
+   "text": "exposes",
+   "start": 119.978,
+   "end": 120.598
+  },
+  {
+   "text": "that",
+   "start": 120.638,
+   "end": 120.798
+  },
+  {
+   "text": "pattern,",
+   "start": 120.838,
+   "end": 121.138
+  },
+  {
+   "text": "helping",
+   "start": 121.458,
+   "end": 121.778
+  },
+  {
+   "text": "trigger",
+   "start": 121.838,
+   "end": 122.118
+  },
+  {
+   "text": "the",
+   "start": 122.158,
+   "end": 122.258
+  },
+  {
+   "text": "cell\u2019s",
+   "start": 122.298,
+   "end": 122.598
+  },
+  {
+   "text": "self-destruct",
+   "start": 122.658,
+   "end": 123.238
+  },
+  {
+   "text": "process.",
+   "start": 123.318,
+   "end": 123.818
+  },
+  {
+   "text": "They",
+   "start": 124.418,
+   "end": 124.538
+  },
+  {
+   "text": "tested",
+   "start": 124.598,
+   "end": 124.898
+  },
+  {
+   "text": "it",
+   "start": 124.938,
+   "end": 125.018
+  },
+  {
+   "text": "in",
+   "start": 125.078,
+   "end": 125.178
+  },
+  {
+   "text": "mice",
+   "start": 125.258,
+   "end": 125.518
+  },
+  {
+   "text": "with",
+   "start": 125.558,
+   "end": 125.718
+  },
+  {
+   "text": "breast",
+   "start": 125.758,
+   "end": 125.958
+  },
+  {
+   "text": "cancer",
+   "start": 126.038,
+   "end": 126.338
+  },
+  {
+   "text": "tumors",
+   "start": 126.378,
+   "end": 126.838
+  },
+  {
+   "text": "and",
+   "start": 126.858,
+   "end": 126.938
+  },
+  {
+   "text": "reported",
+   "start": 126.978,
+   "end": 127.378
+  },
+  {
+   "text": "reduced",
+   "start": 127.458,
+   "end": 127.958
+  },
+  {
+   "text": "tumor",
+   "start": 128.018,
+   "end": 128.238
+  },
+  {
+   "text": "growth.",
+   "start": 128.318,
+   "end": 128.638
+  },
+  {
+   "text": "That",
+   "start": 129.178,
+   "end": 129.438
+  },
+  {
+   "text": "is",
+   "start": 129.478,
+   "end": 129.558
+  },
+  {
+   "text": "a",
+   "start": 129.618,
+   "end": 129.778
+  },
+  {
+   "text": "real",
+   "start": 129.818,
+   "end": 130.018
+  },
+  {
+   "text": "experiment.",
+   "start": 130.058,
+   "end": 130.638
+  },
+  {
+   "text": "It",
+   "start": 131.078,
+   "end": 131.138
+  },
+  {
+   "text": "is",
+   "start": 131.158,
+   "end": 131.318
+  },
+  {
+   "text": "not",
+   "start": 131.398,
+   "end": 131.598
+  },
+  {
+   "text": "a",
+   "start": 131.658,
+   "end": 131.698
+  },
+  {
+   "text": "human",
+   "start": 131.758,
+   "end": 131.978
+  },
+  {
+   "text": "cure,",
+   "start": 132.078,
+   "end": 132.338
+  },
+  {
+   "text": "and",
+   "start": 132.678,
+   "end": 132.778
+  },
+  {
+   "text": "this",
+   "start": 132.818,
+   "end": 132.978
+  },
+  {
+   "text": "particular",
+   "start": 132.998,
+   "end": 133.478
+  },
+  {
+   "text": "nanodevice",
+   "start": 133.578,
+   "end": 134.238
+  },
+  {
+   "text": "was",
+   "start": 134.278,
+   "end": 134.438
+  },
+  {
+   "text": "not",
+   "start": 134.518,
+   "end": 134.738
+  },
+  {
+   "text": "presented",
+   "start": 134.758,
+   "end": 135.218
+  },
+  {
+   "text": "as",
+   "start": 135.258,
+   "end": 135.338
+  },
+  {
+   "text": "an",
+   "start": 135.358,
+   "end": 135.478
+  },
+  {
+   "text": "AI",
+   "start": 135.558,
+   "end": 135.798
+  },
+  {
+   "text": "invention.",
+   "start": 135.838,
+   "end": 136.358
+  },
+  {
+   "text": "The",
+   "start": 136.978,
+   "end": 137.098
+  },
+  {
+   "text": "future",
+   "start": 137.138,
+   "end": 137.418
+  },
+  {
+   "text": "opportunity",
+   "start": 137.478,
+   "end": 138.118
+  },
+  {
+   "text": "is",
+   "start": 138.158,
+   "end": 138.238
+  },
+  {
+   "text": "to",
+   "start": 138.278,
+   "end": 138.338
+  },
+  {
+   "text": "combine",
+   "start": 138.378,
+   "end": 138.718
+  },
+  {
+   "text": "better",
+   "start": 138.858,
+   "end": 139.098
+  },
+  {
+   "text": "prediction",
+   "start": 139.118,
+   "end": 139.658
+  },
+  {
+   "text": "with",
+   "start": 139.698,
+   "end": 139.898
+  },
+  {
+   "text": "better",
+   "start": 139.918,
+   "end": 140.178
+  },
+  {
+   "text": "biological",
+   "start": 140.218,
+   "end": 140.778
+  },
+  {
+   "text": "engineering",
+   "start": 140.858,
+   "end": 141.418
+  },
+  {
+   "text": "if",
+   "start": 141.898,
+   "end": 141.998
+  },
+  {
+   "text": "experiments",
+   "start": 142.038,
+   "end": 142.578
+  },
+  {
+   "text": "show",
+   "start": 142.638,
+   "end": 142.898
+  },
+  {
+   "text": "those",
+   "start": 142.938,
+   "end": 143.158
+  },
+  {
+   "text": "pieces",
+   "start": 143.198,
+   "end": 143.538
+  },
+  {
+   "text": "work",
+   "start": 143.578,
+   "end": 143.738
+  },
+  {
+   "text": "together.",
+   "start": 143.758,
+   "end": 144.158
+  },
+  {
+   "text": "Then",
+   "start": 145.33,
+   "end": 145.342
+  },
+  {
+   "text": "one",
+   "start": 145.762,
+   "end": 145.922
+  },
+  {
+   "text": "cell",
+   "start": 146.082,
+   "end": 146.382
+  },
+  {
+   "text": "threatens",
+   "start": 146.402,
+   "end": 146.742
+  },
+  {
+   "text": "the",
+   "start": 146.782,
+   "end": 146.862
+  },
+  {
+   "text": "entire",
+   "start": 146.882,
+   "end": 147.382
+  },
+  {
+   "text": "plan.",
+   "start": 147.482,
+   "end": 147.862
+  },
+  {
+   "text": "It",
+   "start": 148.702,
+   "end": 148.822
+  },
+  {
+   "text": "survives.",
+   "start": 148.862,
+   "end": 149.482
+  },
+  {
+   "text": "Tumors",
+   "start": 150.502,
+   "end": 150.862
+  },
+  {
+   "text": "contain",
+   "start": 150.882,
+   "end": 151.302
+  },
+  {
+   "text": "different",
+   "start": 151.342,
+   "end": 151.602
+  },
+  {
+   "text": "groups",
+   "start": 151.682,
+   "end": 151.902
+  },
+  {
+   "text": "of",
+   "start": 151.942,
+   "end": 152.062
+  },
+  {
+   "text": "cells.",
+   "start": 152.102,
+   "end": 152.462
+  },
+  {
+   "text": "A",
+   "start": 152.982,
+   "end": 153.042
+  },
+  {
+   "text": "treatment",
+   "start": 153.102,
+   "end": 153.442
+  },
+  {
+   "text": "can",
+   "start": 153.482,
+   "end": 153.562
+  },
+  {
+   "text": "destroy",
+   "start": 153.602,
+   "end": 154.022
+  },
+  {
+   "text": "sensitive",
+   "start": 154.162,
+   "end": 154.582
+  },
+  {
+   "text": "ones",
+   "start": 154.642,
+   "end": 154.882
+  },
+  {
+   "text": "while",
+   "start": 154.982,
+   "end": 155.142
+  },
+  {
+   "text": "resistant",
+   "start": 155.162,
+   "end": 155.642
+  },
+  {
+   "text": "cells",
+   "start": 155.742,
+   "end": 156.002
+  },
+  {
+   "text": "remain",
+   "start": 156.062,
+   "end": 156.522
+  },
+  {
+   "text": "and",
+   "start": 156.542,
+   "end": 156.642
+  },
+  {
+   "text": "multiply.",
+   "start": 156.702,
+   "end": 157.262
+  },
+  {
+   "text": "So",
+   "start": 157.842,
+   "end": 158.122
+  },
+  {
+   "text": "the",
+   "start": 158.162,
+   "end": 158.242
+  },
+  {
+   "text": "plan",
+   "start": 158.282,
+   "end": 158.522
+  },
+  {
+   "text": "cannot",
+   "start": 158.622,
+   "end": 159.062
+  },
+  {
+   "text": "end",
+   "start": 159.142,
+   "end": 159.362
+  },
+  {
+   "text": "when",
+   "start": 159.382,
+   "end": 159.482
+  },
+  {
+   "text": "the",
+   "start": 159.502,
+   "end": 159.662
+  },
+  {
+   "text": "biggest",
+   "start": 159.682,
+   "end": 159.982
+  },
+  {
+   "text": "mass",
+   "start": 160.062,
+   "end": 160.302
+  },
+  {
+   "text": "gets",
+   "start": 160.342,
+   "end": 160.502
+  },
+  {
+   "text": "smaller.",
+   "start": 160.582,
+   "end": 160.942
+  },
+  {
+   "text": "Researchers",
+   "start": 161.602,
+   "end": 162.102
+  },
+  {
+   "text": "have",
+   "start": 162.122,
+   "end": 162.262
+  },
+  {
+   "text": "built",
+   "start": 162.282,
+   "end": 162.522
+  },
+  {
+   "text": "AI",
+   "start": 162.602,
+   "end": 162.902
+  },
+  {
+   "text": "tools",
+   "start": 162.942,
+   "end": 163.262
+  },
+  {
+   "text": "that",
+   "start": 163.302,
+   "end": 163.422
+  },
+  {
+   "text": "predict",
+   "start": 163.442,
+   "end": 163.722
+  },
+  {
+   "text": "drug",
+   "start": 163.862,
+   "end": 164.062
+  },
+  {
+   "text": "response",
+   "start": 164.102,
+   "end": 164.542
+  },
+  {
+   "text": "and",
+   "start": 164.602,
+   "end": 164.702
+  },
+  {
+   "text": "resistance",
+   "start": 164.742,
+   "end": 165.362
+  },
+  {
+   "text": "from",
+   "start": 165.402,
+   "end": 165.562
+  },
+  {
+   "text": "individual",
+   "start": 165.622,
+   "end": 166.122
+  },
+  {
+   "text": "tumor-cell",
+   "start": 166.242,
+   "end": 166.682
+  },
+  {
+   "text": "data.",
+   "start": 166.782,
+   "end": 167.082
+  },
+  {
+   "text": "The",
+   "start": 167.602,
+   "end": 167.682
+  },
+  {
+   "text": "longer-term",
+   "start": 167.722,
+   "end": 168.182
+  },
+  {
+   "text": "ambition",
+   "start": 168.222,
+   "end": 168.762
+  },
+  {
+   "text": "is",
+   "start": 168.802,
+   "end": 168.882
+  },
+  {
+   "text": "to",
+   "start": 168.922,
+   "end": 168.982
+  },
+  {
+   "text": "help",
+   "start": 169.022,
+   "end": 169.202
+  },
+  {
+   "text": "doctors",
+   "start": 169.242,
+   "end": 169.622
+  },
+  {
+   "text": "anticipate",
+   "start": 169.662,
+   "end": 170.222
+  },
+  {
+   "text": "escape",
+   "start": 170.262,
+   "end": 170.642
+  },
+  {
+   "text": "routes",
+   "start": 170.702,
+   "end": 170.942
+  },
+  {
+   "text": "and",
+   "start": 171.242,
+   "end": 171.382
+  },
+  {
+   "text": "update",
+   "start": 171.442,
+   "end": 171.742
+  },
+  {
+   "text": "treatment",
+   "start": 171.782,
+   "end": 172.182
+  },
+  {
+   "text": "as",
+   "start": 172.242,
+   "end": 172.362
+  },
+  {
+   "text": "new",
+   "start": 172.422,
+   "end": 172.562
+  },
+  {
+   "text": "measurements",
+   "start": 172.622,
+   "end": 173.002
+  },
+  {
+   "text": "arrive.",
+   "start": 173.062,
+   "end": 173.482
+  },
+  {
+   "text": "A",
+   "start": 174.73,
+   "end": 174.54
+  },
+  {
+   "text": "digital",
+   "start": 174.73,
+   "end": 174.94
+  },
+  {
+   "text": "twin",
+   "start": 175.0,
+   "end": 175.28
+  },
+  {
+   "text": "that",
+   "start": 175.32,
+   "end": 175.44
+  },
+  {
+   "text": "learns",
+   "start": 175.54,
+   "end": 175.88
+  },
+  {
+   "text": "from",
+   "start": 175.92,
+   "end": 176.04
+  },
+  {
+   "text": "the",
+   "start": 176.08,
+   "end": 176.14
+  },
+  {
+   "text": "disease.",
+   "start": 176.16,
+   "end": 176.68
+  },
+  {
+   "text": "A",
+   "start": 177.12,
+   "end": 177.2
+  },
+  {
+   "text": "treatment",
+   "start": 177.26,
+   "end": 177.68
+  },
+  {
+   "text": "aimed",
+   "start": 177.76,
+   "end": 178.0
+  },
+  {
+   "text": "at",
+   "start": 178.04,
+   "end": 178.1
+  },
+  {
+   "text": "a",
+   "start": 178.14,
+   "end": 178.22
+  },
+  {
+   "text": "vulnerability.",
+   "start": 178.24,
+   "end": 178.98
+  },
+  {
+   "text": "A",
+   "start": 179.52,
+   "end": 179.58
+  },
+  {
+   "text": "delivery",
+   "start": 179.6,
+   "end": 179.96
+  },
+  {
+   "text": "system",
+   "start": 180.06,
+   "end": 180.36
+  },
+  {
+   "text": "that",
+   "start": 180.4,
+   "end": 180.5
+  },
+  {
+   "text": "controls",
+   "start": 180.52,
+   "end": 181.04
+  },
+  {
+   "text": "when",
+   "start": 181.08,
+   "end": 181.16
+  },
+  {
+   "text": "its",
+   "start": 181.18,
+   "end": 181.34
+  },
+  {
+   "text": "payload",
+   "start": 181.4,
+   "end": 181.78
+  },
+  {
+   "text": "becomes",
+   "start": 181.8,
+   "end": 182.14
+  },
+  {
+   "text": "active.",
+   "start": 182.24,
+   "end": 182.64
+  },
+  {
+   "text": "Those",
+   "start": 183.2,
+   "end": 183.4
+  },
+  {
+   "text": "technologies",
+   "start": 183.44,
+   "end": 184.14
+  },
+  {
+   "text": "are",
+   "start": 184.16,
+   "end": 184.24
+  },
+  {
+   "text": "at",
+   "start": 184.26,
+   "end": 184.42
+  },
+  {
+   "text": "different",
+   "start": 184.46,
+   "end": 184.76
+  },
+  {
+   "text": "stages.",
+   "start": 184.82,
+   "end": 185.28
+  },
+  {
+   "text": "They",
+   "start": 185.7,
+   "end": 185.78
+  },
+  {
+   "text": "are",
+   "start": 185.8,
+   "end": 185.9
+  },
+  {
+   "text": "not",
+   "start": 185.96,
+   "end": 186.28
+  },
+  {
+   "text": "one",
+   "start": 186.32,
+   "end": 186.58
+  },
+  {
+   "text": "finished",
+   "start": 186.62,
+   "end": 186.88
+  },
+  {
+   "text": "machine,",
+   "start": 186.92,
+   "end": 187.36
+  },
+  {
+   "text": "and",
+   "start": 187.68,
+   "end": 187.8
+  },
+  {
+   "text": "different",
+   "start": 187.84,
+   "end": 188.12
+  },
+  {
+   "text": "cancers",
+   "start": 188.16,
+   "end": 188.6
+  },
+  {
+   "text": "will",
+   "start": 188.62,
+   "end": 188.72
+  },
+  {
+   "text": "need",
+   "start": 188.76,
+   "end": 188.96
+  },
+  {
+   "text": "different",
+   "start": 189.0,
+   "end": 189.22
+  },
+  {
+   "text": "approaches.",
+   "start": 189.26,
+   "end": 189.82
+  },
+  {
+   "text": "A",
+   "start": 190.34,
+   "end": 190.42
+  },
+  {
+   "text": "model",
+   "start": 190.48,
+   "end": 190.76
+  },
+  {
+   "text": "can",
+   "start": 190.8,
+   "end": 190.98
+  },
+  {
+   "text": "miss",
+   "start": 191.04,
+   "end": 191.26
+  },
+  {
+   "text": "a",
+   "start": 191.3,
+   "end": 191.34
+  },
+  {
+   "text": "resistant",
+   "start": 191.38,
+   "end": 191.78
+  },
+  {
+   "text": "pocket.",
+   "start": 191.88,
+   "end": 192.28
+  },
+  {
+   "text": "A",
+   "start": 192.72,
+   "end": 192.78
+  },
+  {
+   "text": "carrier",
+   "start": 192.86,
+   "end": 193.24
+  },
+  {
+   "text": "can",
+   "start": 193.28,
+   "end": 193.42
+  },
+  {
+   "text": "reach",
+   "start": 193.46,
+   "end": 193.64
+  },
+  {
+   "text": "healthy",
+   "start": 193.68,
+   "end": 193.98
+  },
+  {
+   "text": "tissue.",
+   "start": 194.04,
+   "end": 194.42
+  },
+  {
+   "text": "An",
+   "start": 194.84,
+   "end": 194.9
+  },
+  {
+   "text": "apparent",
+   "start": 194.94,
+   "end": 195.28
+  },
+  {
+   "text": "victory",
+   "start": 195.42,
+   "end": 195.76
+  },
+  {
+   "text": "can",
+   "start": 195.84,
+   "end": 196.0
+  },
+  {
+   "text": "disappear",
+   "start": 196.04,
+   "end": 196.58
+  },
+  {
+   "text": "at",
+   "start": 196.62,
+   "end": 196.7
+  },
+  {
+   "text": "the",
+   "start": 196.72,
+   "end": 196.8
+  },
+  {
+   "text": "next",
+   "start": 196.82,
+   "end": 197.02
+  },
+  {
+   "text": "scan.",
+   "start": 197.06,
+   "end": 197.44
+  },
+  {
+   "text": "That",
+   "start": 198.02,
+   "end": 198.16
+  },
+  {
+   "text": "is",
+   "start": 198.2,
+   "end": 198.32
+  },
+  {
+   "text": "why",
+   "start": 198.34,
+   "end": 198.5
+  },
+  {
+   "text": "the",
+   "start": 198.54,
+   "end": 198.66
+  },
+  {
+   "text": "final",
+   "start": 198.7,
+   "end": 198.94
+  },
+  {
+   "text": "test",
+   "start": 199.04,
+   "end": 199.36
+  },
+  {
+   "text": "is",
+   "start": 199.46,
+   "end": 199.6
+  },
+  {
+   "text": "not",
+   "start": 199.7,
+   "end": 199.94
+  },
+  {
+   "text": "whether",
+   "start": 199.98,
+   "end": 200.18
+  },
+  {
+   "text": "the",
+   "start": 200.22,
+   "end": 200.32
+  },
+  {
+   "text": "tumor",
+   "start": 200.36,
+   "end": 200.58
+  },
+  {
+   "text": "vanishes",
+   "start": 200.72,
+   "end": 201.16
+  },
+  {
+   "text": "on",
+   "start": 201.2,
+   "end": 201.26
+  },
+  {
+   "text": "a",
+   "start": 201.28,
+   "end": 201.34
+  },
+  {
+   "text": "computer",
+   "start": 201.36,
+   "end": 201.76
+  },
+  {
+   "text": "screen.",
+   "start": 201.86,
+   "end": 202.18
+  },
+  {
+   "text": "It",
+   "start": 202.64,
+   "end": 202.68
+  },
+  {
+   "text": "is",
+   "start": 202.72,
+   "end": 202.84
+  },
+  {
+   "text": "whether",
+   "start": 202.88,
+   "end": 203.12
+  },
+  {
+   "text": "people",
+   "start": 203.16,
+   "end": 203.46
+  },
+  {
+   "text": "live",
+   "start": 203.52,
+   "end": 203.68
+  },
+  {
+   "text": "longer,",
+   "start": 203.78,
+   "end": 204.18
+  },
+  {
+   "text": "with",
+   "start": 204.46,
+   "end": 204.6
+  },
+  {
+   "text": "less",
+   "start": 204.66,
+   "end": 204.86
+  },
+  {
+   "text": "harm,",
+   "start": 204.9,
+   "end": 205.2
+  },
+  {
+   "text": "and",
+   "start": 205.52,
+   "end": 205.58
+  },
+  {
+   "text": "the",
+   "start": 205.62,
+   "end": 205.7
+  },
+  {
+   "text": "cancer",
+   "start": 205.76,
+   "end": 206.08
+  },
+  {
+   "text": "stays",
+   "start": 206.24,
+   "end": 206.46
+  },
+  {
+   "text": "away.",
+   "start": 206.52,
+   "end": 206.82
+  },
+  {
+   "text": "The",
+   "start": 207.5,
+   "end": 207.6
+  },
+  {
+   "text": "cell",
+   "start": 207.68,
+   "end": 207.86
+  },
+  {
+   "text": "in",
+   "start": 207.9,
+   "end": 207.96
+  },
+  {
+   "text": "our",
+   "start": 208.0,
+   "end": 208.12
+  },
+  {
+   "text": "opening",
+   "start": 208.18,
+   "end": 208.6
+  },
+  {
+   "text": "had",
+   "start": 208.64,
+   "end": 208.72
+  },
+  {
+   "text": "a",
+   "start": 208.76,
+   "end": 208.86
+  },
+  {
+   "text": "self-destruct",
+   "start": 208.92,
+   "end": 209.58
+  },
+  {
+   "text": "mechanism.",
+   "start": 209.66,
+   "end": 210.16
+  },
+  {
+   "text": "The",
+   "start": 210.68,
+   "end": 210.8
+  },
+  {
+   "text": "challenge",
+   "start": 210.86,
+   "end": 211.32
+  },
+  {
+   "text": "is",
+   "start": 211.36,
+   "end": 211.54
+  },
+  {
+   "text": "reaching",
+   "start": 211.58,
+   "end": 211.88
+  },
+  {
+   "text": "the",
+   "start": 211.92,
+   "end": 212.06
+  },
+  {
+   "text": "right",
+   "start": 212.1,
+   "end": 212.3
+  },
+  {
+   "text": "cell",
+   "start": 212.4,
+   "end": 212.66
+  },
+  {
+   "text": "and",
+   "start": 213.04,
+   "end": 213.14
+  },
+  {
+   "text": "leaving",
+   "start": 213.22,
+   "end": 213.46
+  },
+  {
+   "text": "it",
+   "start": 213.5,
+   "end": 213.68
+  },
+  {
+   "text": "no",
+   "start": 213.76,
+   "end": 213.92
+  },
+  {
+   "text": "way",
+   "start": 213.96,
+   "end": 214.12
+  },
+  {
+   "text": "back.",
+   "start": 214.16,
+   "end": 214.48
+  }
+ ]
+}

@@ -1,0 +1,326 @@
+{
+ "b1_t1_eCYL.mp3": {
+  "n_words": 57,
+  "speech_s": 21.3,
+  "wpm": 160.6,
+  "lufs": -18.4,
+  "peak_dbfs": -1.28,
+  "lead_s": 0.18,
+  "tail_s": 0.23,
+  "longest_gaps": [
+   [
+    1.02,
+    "opens."
+   ],
+   [
+    0.82,
+    "itself."
+   ],
+   [
+    0.62,
+    "first."
+   ],
+   [
+    0.56,
+    "cancer."
+   ]
+  ]
+ },
+ "b1_t2_oRib.mp3": {
+  "n_words": 57,
+  "speech_s": 21.34,
+  "wpm": 160.3,
+  "lufs": -18.8,
+  "peak_dbfs": -1.68,
+  "lead_s": 0.11,
+  "tail_s": 0.26,
+  "longest_gaps": [
+   [
+    0.96,
+    "itself."
+   ],
+   [
+    0.84,
+    "opens."
+   ],
+   [
+    0.56,
+    "first."
+   ],
+   [
+    0.54,
+    "future."
+   ]
+  ]
+ },
+ "b2_t1_T6K5.mp3": {
+  "n_words": 94,
+  "speech_s": 36.08,
+  "wpm": 156.3,
+  "lufs": -19.1,
+  "peak_dbfs": -1.05,
+  "lead_s": 0.08,
+  "tail_s": 0.43,
+  "longest_gaps": [
+   [
+    0.68,
+    "patient."
+   ],
+   [
+    0.66,
+    "copy."
+   ],
+   [
+    0.64,
+    "returns."
+   ],
+   [
+    0.54,
+    "testing."
+   ]
+  ]
+ },
+ "b2_t2_bdse.mp3": {
+  "n_words": 94,
+  "speech_s": 36.02,
+  "wpm": 156.6,
+  "lufs": -19.0,
+  "peak_dbfs": -1.49,
+  "lead_s": 0.03,
+  "tail_s": 0.39,
+  "longest_gaps": [
+   [
+    0.62,
+    "patient."
+   ],
+   [
+    0.62,
+    "copy."
+   ],
+   [
+    0.58,
+    "returns."
+   ],
+   [
+    0.54,
+    "testing."
+   ]
+  ]
+ },
+ "b3_t1_g0oU.mp3": {
+  "n_words": 111,
+  "speech_s": 42.42,
+  "wpm": 157.0,
+  "lufs": -19.0,
+  "peak_dbfs": -1.63,
+  "lead_s": -0.01,
+  "tail_s": 0.36,
+  "longest_gaps": [
+   [
+    0.68,
+    "tissue."
+   ],
+   [
+    0.64,
+    "address."
+   ],
+   [
+    0.6,
+    "delivery."
+   ],
+   [
+    0.54,
+    "protection."
+   ]
+  ]
+ },
+ "b3_t2_paR0.mp3": {
+  "n_words": 111,
+  "speech_s": 42.28,
+  "wpm": 157.5,
+  "lufs": -18.8,
+  "peak_dbfs": -1.31,
+  "lead_s": -0.06,
+  "tail_s": 0.38,
+  "longest_gaps": [
+   [
+    0.64,
+    "address."
+   ],
+   [
+    0.58,
+    "tissue."
+   ],
+   [
+    0.54,
+    "inside."
+   ],
+   [
+    0.54,
+    "delivery."
+   ]
+  ]
+ },
+ "b4_t1_6bgw.mp3": {
+  "n_words": 112,
+  "speech_s": 40.92,
+  "wpm": 164.2,
+  "lufs": -18.8,
+  "peak_dbfs": -1.16,
+  "lead_s": -0.06,
+  "tail_s": 0.47,
+  "longest_gaps": [
+   [
+    0.78,
+    "opening."
+   ],
+   [
+    0.62,
+    "invention."
+   ],
+   [
+    0.6,
+    "process."
+   ],
+   [
+    0.6,
+    "changed?"
+   ]
+  ]
+ },
+ "b4_t2_9wxx.mp3": {
+  "n_words": 112,
+  "speech_s": 40.6,
+  "wpm": 165.5,
+  "lufs": -18.6,
+  "peak_dbfs": -1.52,
+  "lead_s": -0.13,
+  "tail_s": 0.62,
+  "longest_gaps": [
+   [
+    0.68,
+    "opening."
+   ],
+   [
+    0.62,
+    "changed?"
+   ],
+   [
+    0.58,
+    "surface."
+   ],
+   [
+    0.54,
+    "growth."
+   ]
+  ]
+ },
+ "b5_t1_10My.mp3": {
+  "n_words": 72,
+  "speech_s": 28.34,
+  "wpm": 152.4,
+  "lufs": -19.2,
+  "peak_dbfs": -1.43,
+  "lead_s": -0.04,
+  "tail_s": 0.54,
+  "longest_gaps": [
+   [
+    1.02,
+    "survives."
+   ],
+   [
+    0.84,
+    "plan."
+   ],
+   [
+    0.66,
+    "smaller."
+   ],
+   [
+    0.58,
+    "multiply."
+   ]
+  ]
+ },
+ "b5_t2_1XWm.mp3": {
+  "n_words": 72,
+  "speech_s": 28.22,
+  "wpm": 153.1,
+  "lufs": -19.4,
+  "peak_dbfs": -1.36,
+  "lead_s": -0.1,
+  "tail_s": 0.56,
+  "longest_gaps": [
+   [
+    1.06,
+    "plan."
+   ],
+   [
+    0.86,
+    "survives."
+   ],
+   [
+    0.6,
+    "cells."
+   ],
+   [
+    0.58,
+    "multiply."
+   ]
+  ]
+ },
+ "b6_t1_0Gav.mp3": {
+  "n_words": 117,
+  "speech_s": 40.08,
+  "wpm": 175.1,
+  "lufs": -19.3,
+  "peak_dbfs": -1.94,
+  "lead_s": -0.32,
+  "tail_s": 0.6,
+  "longest_gaps": [
+   [
+    0.68,
+    "away."
+   ],
+   [
+    0.58,
+    "scan."
+   ],
+   [
+    0.56,
+    "active."
+   ],
+   [
+    0.54,
+    "vulnerability,"
+   ]
+  ]
+ },
+ "b6_t2_M0yC.mp3": {
+  "n_words": 117,
+  "speech_s": 39.78,
+  "wpm": 176.5,
+  "lufs": -20.0,
+  "peak_dbfs": -2.17,
+  "lead_s": -0.36,
+  "tail_s": 0.62,
+  "longest_gaps": [
+   [
+    0.68,
+    "away."
+   ],
+   [
+    0.62,
+    "scan."
+   ],
+   [
+    0.56,
+    "vulnerability,"
+   ],
+   [
+    0.56,
+    "mechanism."
+   ]
+  ]
+ }
+}

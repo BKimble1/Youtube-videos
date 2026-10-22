@@ -1,0 +1,324 @@
+1
+00:00:00,450 --> 00:00:05,020
+This microscopic device hides a weapon
+that can trigger a cell to destroy itself.
+
+2
+00:00:05,590 --> 00:00:08,080
+In acidic surroundings, it opens.
+
+3
+00:00:08,850 --> 00:00:11,370
+Now imagine choosing an
+attack like this by testing
+
+4
+00:00:11,410 --> 00:00:13,860
+it on a digital version
+of your tumor first.
+
+5
+00:00:14,230 --> 00:00:16,780
+That complete system is a possible future.
+
+6
+00:00:17,070 --> 00:00:19,040
+AI has not cured all cancer.
+
+7
+00:00:19,350 --> 00:00:22,000
+Researchers are already
+building its separate parts.
+
+8
+00:00:22,804 --> 00:00:24,554
+First, build the copy.
+
+9
+00:00:24,964 --> 00:00:27,294
+Researchers are developing digital twins:
+
+10
+00:00:27,544 --> 00:00:30,784
+mathematical models of particular
+tumors, built from measurements
+
+11
+00:00:30,824 --> 00:00:34,334
+such as medical scans and updated
+as new information arrives.
+
+12
+00:00:34,604 --> 00:00:36,604
+The goal is to compare possible treatments
+
+13
+00:00:36,644 --> 00:00:38,874
+before choosing what
+to try in the patient.
+
+14
+00:00:39,304 --> 00:00:41,374
+One simulated tumor shrinks.
+
+15
+00:00:41,544 --> 00:00:43,214
+Another barely changes.
+
+16
+00:00:43,424 --> 00:00:45,794
+A third shrinks—then returns.
+
+17
+00:00:46,184 --> 00:00:48,354
+The model is searching for a better plan.
+
+18
+00:00:48,524 --> 00:00:50,354
+It is not a perfect copy of you,
+
+19
+00:00:50,404 --> 00:00:53,574
+and a simulated success still
+needs real-world testing.
+
+20
+00:00:53,864 --> 00:00:56,874
+But it changes the question
+from “What usually works?”
+
+21
+00:00:56,924 --> 00:00:59,134
+to “What might work for this tumor?”
+
+22
+00:00:59,870 --> 00:01:02,006
+Next, give the attack an address.
+
+23
+00:01:02,396 --> 00:01:04,506
+Cancer grows from your own cells.
+
+24
+00:01:04,796 --> 00:01:07,966
+A powerful drug is dangerous
+if it reaches the wrong tissue.
+
+25
+00:01:08,396 --> 00:01:10,716
+Some treatments already
+attach a drug payload to
+
+26
+00:01:10,756 --> 00:01:13,666
+an antibody that binds a
+particular surface target.
+
+27
+00:01:13,876 --> 00:01:15,706
+The cell takes the package inside.
+
+28
+00:01:15,976 --> 00:01:20,166
+In certain designs, enzymes cut its
+molecular linker, releasing the drug.
+
+29
+00:01:20,456 --> 00:01:23,246
+The cell’s own machinery
+helps open the delivery.
+
+30
+00:01:23,596 --> 00:01:27,966
+These are antibody-drug conjugates, and
+some are already used in cancer care.
+
+31
+00:01:28,236 --> 00:01:30,386
+They can still cause serious side effects;
+
+32
+00:01:30,536 --> 00:01:33,186
+a molecular address is
+not perfect protection.
+
+33
+00:01:33,476 --> 00:01:36,006
+AI could help develop
+better targeting components.
+
+34
+00:01:36,296 --> 00:01:39,316
+Researchers are already
+testing AI-designed proteins as
+
+35
+00:01:39,356 --> 00:01:42,526
+recognition parts in experimental
+immune-cell therapies.
+
+36
+00:01:43,360 --> 00:01:46,788
+But what if the attack stayed hidden
+until its surroundings changed?
+
+37
+00:01:47,138 --> 00:01:48,988
+Return to the device from the opening.
+
+38
+00:01:49,518 --> 00:01:52,928
+Researchers at Karolinska
+built a switch from folded DNA.
+
+39
+00:01:53,158 --> 00:01:55,258
+It hides a pattern of
+peptides that can bring
+
+40
+00:01:55,298 --> 00:01:57,788
+death receptors together
+on a cell’s surface.
+
+41
+00:01:58,058 --> 00:02:01,388
+Under acidic conditions, the
+structure exposes that pattern,
+
+42
+00:02:01,458 --> 00:02:04,068
+helping trigger the cell’s
+self-destruct process.
+
+43
+00:02:04,418 --> 00:02:08,888
+They tested it in mice with breast cancer
+tumors and reported reduced tumor growth.
+
+44
+00:02:09,178 --> 00:02:10,888
+That is a real experiment.
+
+45
+00:02:11,078 --> 00:02:13,538
+It is not a human cure,
+and this particular
+
+46
+00:02:13,578 --> 00:02:16,608
+nanodevice was not presented
+as an AI invention.
+
+47
+00:02:16,978 --> 00:02:20,178
+The future opportunity is to combine
+better prediction with better
+
+48
+00:02:20,218 --> 00:02:24,408
+biological engineering—if experiments
+show those pieces work together.
+
+49
+00:02:25,330 --> 00:02:28,112
+Then one cell threatens the entire plan.
+
+50
+00:02:28,702 --> 00:02:29,732
+It survives.
+
+51
+00:02:30,502 --> 00:02:32,712
+Tumors contain different groups of cells.
+
+52
+00:02:32,982 --> 00:02:37,512
+A treatment can destroy sensitive ones
+while resistant cells remain and multiply.
+
+53
+00:02:37,842 --> 00:02:41,192
+So the plan cannot end when
+the biggest mass gets smaller.
+
+54
+00:02:41,602 --> 00:02:44,062
+Researchers have built AI
+tools that predict drug
+
+55
+00:02:44,102 --> 00:02:47,332
+response and resistance from
+individual tumor-cell data.
+
+56
+00:02:47,602 --> 00:02:50,662
+The longer-term ambition is to
+help doctors anticipate escape
+
+57
+00:02:50,702 --> 00:02:53,732
+routes and update treatment
+as new measurements arrive.
+
+58
+00:02:54,730 --> 00:02:56,930
+A digital twin that
+learns from the disease.
+
+59
+00:02:57,120 --> 00:02:59,230
+A treatment aimed at a vulnerability.
+
+60
+00:02:59,520 --> 00:03:02,890
+A delivery system that controls
+when its payload becomes active.
+
+61
+00:03:03,200 --> 00:03:05,530
+Those technologies are
+at different stages.
+
+62
+00:03:05,700 --> 00:03:07,610
+They are not one finished machine,
+
+63
+00:03:07,680 --> 00:03:10,070
+and different cancers will
+need different approaches.
+
+64
+00:03:10,340 --> 00:03:12,530
+A model can miss a resistant pocket.
+
+65
+00:03:12,720 --> 00:03:14,670
+A carrier can reach healthy tissue.
+
+66
+00:03:14,840 --> 00:03:17,690
+An apparent victory can
+disappear at the next scan.
+
+67
+00:03:18,020 --> 00:03:22,430
+That is why the final test is not whether
+the tumor vanishes on a computer screen.
+
+68
+00:03:22,640 --> 00:03:27,070
+It is whether people live longer, with
+less harm, and the cancer stays away.
+
+69
+00:03:27,500 --> 00:03:30,410
+The cell in our opening had
+a self-destruct mechanism.
+
+70
+00:03:30,680 --> 00:03:34,730
+The challenge is reaching the right
+cell—and leaving it no way back.

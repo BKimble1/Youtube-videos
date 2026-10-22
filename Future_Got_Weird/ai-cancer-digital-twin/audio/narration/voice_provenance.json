@@ -1,0 +1,17 @@
+{
+ "provider": "ElevenLabs (authorized workspace connection, restricted ElevenLabs connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "verified": "creative_list_voices search 'Test Voice' on 22 Oct 2026 returned this id (category generated, 'Test Voice For Youtube.'); same id as the earlier FGW episodes"},
+ "model_id": "eleven_v4",
+ "settings": "connector defaults; delivery directed with inline audio tags ([intense], [pause], [serious] ...). Tags are not spoken. The spoken words are the locked script verbatim (production/SCRIPT_LOCKED.txt).",
+ "flow_id": "SpSbM6O9xRXOZ5oI5H2H",
+ "blocks": {
+  "B1": {"from": "This microscopic device", "to": "its separate parts.", "takes": {"b1_t1_eCYL.mp3": "eCYL7hbfViGMUTYT2GYK", "b1_t2_oRib.mp3": "oRib2ZmrhReUaPC49ITf"}},
+  "B2": {"from": "First, build the copy.", "to": "work for this tumor?", "takes": {"b2_t1_T6K5.mp3": "T6K5hO7tPDATQUYKo0aV", "b2_t2_bdse.mp3": "bdselXltCtJIIE02OimK"}},
+  "B3": {"from": "Next, give the attack an address.", "to": "immune-cell therapies.", "takes": {"b3_t1_g0oU.mp3": "g0oUHYgkzDueUC67vQUJ", "b3_t2_paR0.mp3": "paR080UJAPtr670gQ2yj"}},
+  "B4": {"from": "But what if the attack", "to": "work together.", "takes": {"b4_t1_6bgw.mp3": "6bgwN7bmfkCFdYcRkfUp", "b4_t2_9wxx.mp3": "9wxxIboC91IOquvqSIsv"}},
+  "B5": {"from": "Then one cell threatens", "to": "new measurements arrive.", "takes": {"b5_t1_10My.mp3": "10MyayAJp1CdHYfy2egY", "b5_t2_1XWm.mp3": "1XWmdPCjbMQNfGkSfwWF"}},
+  "B6": {"from": "A digital twin that learns", "to": "no way back.", "takes": {"b6_t1_0Gav.mp3": "0Gav0o8xFsPxxKQjZMTh", "b6_t2_M0yC.mp3": "M0yCUhxrPh3EVXPxWBYS"}}
+ },
+ "transcription": {"model": "eleven_scribe_v1", "input": "candidates_concat.mp3 (all 12 takes, 2 s silence between; offsets in candidates_offsets.json)", "session": "ITarxlFfMQkGLVmW7IJ1"},
+ "credits_reported": "speech B1 2x405, B2 2x638, B3 2x791, B4 2x773, B5 2x515, B6 2x771; transcription 2451"
+}
