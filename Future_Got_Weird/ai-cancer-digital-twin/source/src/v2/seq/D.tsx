@@ -85,7 +85,7 @@ const CarrierBuild: React.FC<{t: number; cam: Cam; bg?: boolean}> = ({t, cam, bg
     <g>
       {bg && (
         <>
-          <rect width={W} height={H} fill="#5E0A1A" />
+          <rect width={W} height={H} fill={P.blood} />
           <g transform={camTransform(cam, 0.5)}>
             {Array.from({length: 7}, (_, k) => <RBC key={k} x={-1400 + k * 520 + t * 40} y={(k % 2 ? -500 : 520) + 80 * Math.sin(k)} r={300} tilt={0.3 + 0.1 * k} rot={k * 30} dark={0.55} />)}
           </g>
@@ -93,45 +93,51 @@ const CarrierBuild: React.FC<{t: number; cam: Cam; bg?: boolean}> = ({t, cam, bg
         </>
       )}
       <g transform={camTransform(cam)}>
-        {/* payload: copies of the designed molecule packed in the core */}
-        {Array.from({length: 7}, (_, k) => {
-          const a = (k / 7) * Math.PI * 2 + 0.3;
-          const d = k === 0 ? 0 : 110;
-          return <Molecule key={k} mol={MOL_FIT} x={Math.cos(a) * d - 30} y={Math.sin(a) * d - 15} rot={k * 51} s={0.2} op={1} />;
-        })}
-        {/* lipids snap into a bilayer shell */}
-        {lipidSlots.map((l) => {
-          const st = rand(l.k * 7 + 1) * 0.45;
-          const u = smooth(clamp01((asm - st) / 0.55));
-          const fa = l.a + (rand(l.k) - 0.5) * 2, fr = 900 + 500 * rand(l.k * 3);
-          const a = lerp(fa, l.a, u), r = lerp(fr, l.r, u);
-          const x = Math.cos(a) * r, y = Math.sin(a) * r;
-          const tail = l.inner ? 1 : -1;
-          return (
-            <g key={l.k} transform={`translate(${x} ${y}) rotate(${(a * 180) / Math.PI})`} opacity={Math.min(1, u * 3 + 0.2)}>
-              <line x1={0} y1={-4} x2={tail * 40} y2={-6} stroke="#F4E2C8" strokeWidth={5} strokeLinecap="round" />
-              <line x1={0} y1={4} x2={tail * 40} y2={6} stroke="#F4E2C8" strokeWidth={5} strokeLinecap="round" />
-              <circle r={17} fill={P.carrierShell} />
-              <circle r={17} fill="url(#vol)" />
-            </g>
-          );
-        })}
-        {/* targeting ligands on the outside */}
-        {lig > 0.01 && Array.from({length: 9}, (_, k) => {
-          const a = (k / 9) * Math.PI * 2 + 0.2;
-          const L = 120 * smooth(lig * 1.5 - k * 0.05);
-          return (
-            <g key={'g' + k} transform={`rotate(${(a * 180) / Math.PI}) translate(${CR + 16} 0)`}>
-              <line x1={0} y1={0} x2={L} y2={0} stroke={P.ligand} strokeWidth={14} strokeLinecap="round" />
-              <line x1={L} y1={0} x2={L * 1.35} y2={-L * 0.3} stroke={P.ligand} strokeWidth={14} strokeLinecap="round" />
-              <line x1={L} y1={0} x2={L * 1.35} y2={L * 0.3} stroke={P.ligand} strokeWidth={14} strokeLinecap="round" />
-            </g>
-          );
-        })}
+        <CarrierBody t={t} asm={asm} lig={lig} />
       </g>
     </g>
   );
 };
+/** The lipid-nanoparticle carrier in nano units (r = 300): payload core, bilayer shell assembling, ligands. */
+const CarrierBody: React.FC<{t: number; asm: number; lig: number}> = ({t, asm, lig}) => (
+  <g>
+        {/* payload: copies of the designed molecule packed in the core */}
+    {Array.from({length: 7}, (_, k) => {
+      const a = (k / 7) * Math.PI * 2 + 0.3;
+      const d = k === 0 ? 0 : 110;
+      return <Molecule key={k} mol={MOL_FIT} x={Math.cos(a) * d - 30} y={Math.sin(a) * d - 15} rot={k * 51} s={0.2} op={1} />;
+    })}
+    {/* lipids snap into a bilayer shell */}
+    {lipidSlots.map((l) => {
+      const st = rand(l.k * 7 + 1) * 0.45;
+      const u = smooth(clamp01((asm - st) / 0.55));
+      const fa = l.a + (rand(l.k) - 0.5) * 2, fr = 900 + 500 * rand(l.k * 3);
+      const a = lerp(fa, l.a, u), r = lerp(fr, l.r, u);
+      const x = Math.cos(a) * r, y = Math.sin(a) * r;
+      const tail = l.inner ? 1 : -1;
+      return (
+        <g key={l.k} transform={`translate(${x} ${y}) rotate(${(a * 180) / Math.PI})`} opacity={Math.min(1, u * 3 + 0.2)}>
+          <line x1={0} y1={-4} x2={tail * 40} y2={-6} stroke="#F4E2C8" strokeWidth={5} strokeLinecap="round" />
+          <line x1={0} y1={4} x2={tail * 40} y2={6} stroke="#F4E2C8" strokeWidth={5} strokeLinecap="round" />
+          <circle r={17} fill={P.carrierShell} />
+          <circle r={17} fill="url(#vol)" />
+        </g>
+      );
+    })}
+    {/* targeting ligands on the outside */}
+    {lig > 0.01 && Array.from({length: 9}, (_, k) => {
+      const a = (k / 9) * Math.PI * 2 + 0.2;
+      const L = 120 * smooth(lig * 1.5 - k * 0.05);
+      return (
+        <g key={'g' + k} transform={`rotate(${(a * 180) / Math.PI}) translate(${CR + 16} 0)`}>
+          <line x1={0} y1={0} x2={L} y2={0} stroke={P.ligand} strokeWidth={14} strokeLinecap="round" />
+          <line x1={L} y1={0} x2={L * 1.35} y2={-L * 0.3} stroke={P.ligand} strokeWidth={14} strokeLinecap="round" />
+          <line x1={L} y1={0} x2={L * 1.35} y2={L * 0.3} stroke={P.ligand} strokeWidth={14} strokeLinecap="round" />
+        </g>
+      );
+    })}
+  </g>
+);
 
 // ================================================================================================ the vessel + tumour world (vessel units)
 const LUM: [number, number] = [-1000, -80];           // lumen y range
@@ -217,7 +223,7 @@ const DV2 = path([
 /** A carrier seen at vessel scale: the full particle when close, a glinting speck when far. */
 const Speck: React.FC<{x: number; y: number; t: number; z: number; seed: number; gold?: boolean}> = ({x, y, t, z, seed, gold}) =>
   9 * z > 16 ? (
-    <Carrier x={x} y={y} r={9} t={t} seed={seed} lod={z * 9 / 60} />
+    <g transform={`translate(${x} ${y}) rotate(${t * 20 * (rand(seed) - 0.5)}) scale(${9 / 300})`}><CarrierBody t={t} asm={1} lig={1} /></g>
   ) : (
     <g>
       <circle cx={x} cy={y} r={26} fill={gold ? 'url(#glowGold)' : 'url(#glowAi)'} opacity={gold ? 0.7 : 0.5} />
