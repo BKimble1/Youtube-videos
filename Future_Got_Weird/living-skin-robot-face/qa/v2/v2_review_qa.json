@@ -1,0 +1,152 @@
+{
+ "file": "exports/FGW_Living_Skin_V2_REVIEW_1080x1920.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "nb_frames": "816",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "color_primaries": "bt709",
+  "color_transfer": "bt709"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317375"
+ },
+ "duration": 27.2,
+ "loudness": {
+  "I_LUFS": -14.5,
+  "LRA": 6.0,
+  "TP_dBFS": -2.4
+ },
+ "black_segments": [],
+ "freezes_ge_1s": [],
+ "keyframes": {
+  "count": 58,
+  "max_gap_s": 0.5
+ },
+ "audio_offset_vs_mix_ms": 0.0,
+ "audio_corr_vs_mix": 0.99972,
+ "whisper_transcript": "This robot's skin is alive! They grew it from human cells, then attached it to a mechanical face and made it smile. Tiny anchors hold the skin while motors pull underneath. But an earlier experiment gets stranger. They cut living skin on a robotic finger, added a collagen patch, and gave the tissue seven days to repair. Cells grew into the patch, helping close the damage. The machine isn't alive, but the skin it's wearing is.",
+ "whisper_match_locked": 1.0,
+ "caption_windows": [
+  {
+   "caption": "This robot's skin",
+   "asr": "This robot skin is a-",
+   "match": 0.67
+  },
+  {
+   "caption": "is alive.",
+   "asr": "is alive.",
+   "match": 1.0
+  },
+  {
+   "caption": "They grew it from",
+   "asr": "They grew it from",
+   "match": 1.0
+  },
+  {
+   "caption": "human cells\u2026",
+   "asr": "human cells",
+   "match": 1.0
+  },
+  {
+   "caption": "then attached it",
+   "asr": "then attached it to",
+   "match": 1.0
+  },
+  {
+   "caption": "to a mechanical face",
+   "asr": "to a mechanical face and",
+   "match": 1.0
+  },
+  {
+   "caption": "and made it smile.",
+   "asr": "and made it smile.",
+   "match": 1.0
+  },
+  {
+   "caption": "Tiny anchors hold the skin",
+   "asr": "Tiny anchors hold the skin while",
+   "match": 1.0
+  },
+  {
+   "caption": "while motors pull underneath.",
+   "asr": "while motors pull underneath.",
+   "match": 1.0
+  },
+  {
+   "caption": "But an earlier experiment",
+   "asr": "but an earlier experiment gets",
+   "match": 1.0
+  },
+  {
+   "caption": "gets stranger.",
+   "asr": "Get stranger.",
+   "match": 0.5
+  },
+  {
+   "caption": "They cut living skin",
+   "asr": "They cut living skin on",
+   "match": 1.0
+  },
+  {
+   "caption": "on a robotic finger\u2026",
+   "asr": "on a robotic finger.",
+   "match": 1.0
+  },
+  {
+   "caption": "added a collagen patch\u2026",
+   "asr": "Add a collagen patch",
+   "match": 0.75
+  },
+  {
+   "caption": "and gave the tissue",
+   "asr": "and gave the tissue",
+   "match": 1.0
+  },
+  {
+   "caption": "seven days to repair.",
+   "asr": "seven days to repair.",
+   "match": 1.0
+  },
+  {
+   "caption": "Cells grew into the patch,",
+   "asr": "Cells grew into the patch.",
+   "match": 1.0
+  },
+  {
+   "caption": "helping close the damage.",
+   "asr": "helping close the damage.",
+   "match": 1.0
+  },
+  {
+   "caption": "The machine isn\u2019t alive.",
+   "asr": "The machine isn't alive.",
+   "match": 1.0
+  },
+  {
+   "caption": "But the skin",
+   "asr": "but the skin",
+   "match": 1.0
+  },
+  {
+   "caption": "it\u2019s wearing is.",
+   "asr": "It's wearing is.",
+   "match": 1.0
+  }
+ ],
+ "caption_windows_ok": 19,
+ "loop_seam": {
+  "mean_abs_last_to_first": 2.07,
+  "mean_abs_prev_steps": [
+   0.79,
+   0.82
+  ]
+ }
+}

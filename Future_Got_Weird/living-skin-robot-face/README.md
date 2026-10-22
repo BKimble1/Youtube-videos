@@ -1,5 +1,38 @@
 # Future Got Weird: This Robot Is Wearing Living Human Skin
 
+## V2 (animation, hook and visual-storytelling pass): current
+
+**Status (22 Oct 2026):** V2 review and native 4K master rendered and checked as frames and measurements. Not
+published, and not yet watched at normal speed.
+
+**Audio is locked.** The approved V1 mix is reused unchanged: the AAC audio stream is byte-identical to V1's. Words,
+voice, timing and the 27.2 s runtime are all V1's.
+
+| Deliverable | File |
+|---|---|
+| V2 review: 1080×1920, 30 fps, 816 frames, 27.200 s | `exports/FGW_Living_Skin_V2_REVIEW_1080x1920.mp4` |
+| V2 master: 2160×3840 native (vectors at 2×), 30 fps, 27.200 s | `exports/FGW_Living_Skin_V2_MASTER_2160x3840.mp4` |
+| Change log (timestamps, verification, limitations) | `production/V2_CHANGE_LOG.md` |
+| Approved mix used by V2 (SHA-256 `de525e8e…3ac5`) | `audio/mix/FGW_Living_Skin_mix_APPROVED.wav` |
+| V2 source | `source/src/v2/` (composition `LivingSkinV2`) |
+| V2 QA | `qa/v2/` |
+
+### Rebuild V2
+
+    cd Future_Got_Weird/living-skin-robot-face
+    (cd source && npm ci)
+    cp audio/mix/FGW_Living_Skin_mix_APPROVED.wav source/public/audio/mix_approved.wav
+    cp audio/narration/FGW_Living_Skin_narration_final.wav source/public/audio/narration.wav   # only for the V1 'voice' prop
+    (cd source && npx remotion render src/index.ts LivingSkinV2 ../exports/FGW_Living_Skin_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix"}' --image-format=png --gop=15 --crf=12 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && npx remotion render src/index.ts LivingSkinV2 ../exports/FGW_Living_Skin_V2_MASTER_2160x3840.mp4 --scale=2 --props='{"audio":"mix"}' --image-format=png --gop=15 --crf=14 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    source/node_modules/.bin/esbuild tools/export_cues_v2.ts --bundle --platform=node --format=esm --jsx=automatic --loader:.css=empty --outfile=/tmp/ec2.mjs && node /tmp/ec2.mjs production/v2_cues.json
+    python3 tools/qa.py exports/FGW_Living_Skin_V2_REVIEW_1080x1920.mp4 /tmp/asr qa/v2/v2_review
+    python3 tools/qa_v2_sheets.py
+
+---
+
+# V1 (kept as delivered)
+
 **Status (22 Oct 2026):** final review and 4K master rendered and checked. Not published.
 
 ## Deliverables
