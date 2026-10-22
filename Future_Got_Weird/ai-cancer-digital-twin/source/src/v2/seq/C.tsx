@@ -282,7 +282,7 @@ export const shotsC: Shot[] = [
     fade: DT_H1 - DT_H0,
     draw: (t) => {
       const cam = dtCam(t);
-      const build = 0.3 + 0.7 * lift(t, DT_H0, tC.battle - 0.6);
+      const build = 0.72 + 0.28 * lift(t, DT_H0, tC.battle - 0.6);
       const arena = lift(t, tC.battle - 0.6, tC.battle + 0.6);
       return (
         <g>

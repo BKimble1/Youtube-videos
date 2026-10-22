@@ -115,13 +115,13 @@ const CAM_S = path([
 ]);
 const CAM_V = path([
   {t: tE.guide, x: -900, y: -60, z: 1.25, rot: 0},
-  {t: tE.vaccines + 0.6, x: -720, y: -60, z: 1.1, rot: 0},
-  {t: tE.special + 0.2, x: 1100, y: 0, z: 1.05, rot: 0},
+  {t: tE.vaccines + 0.45, x: -720, y: -60, z: 1.1, rot: 0},
+  {t: tE.special - 0.2, x: 1150, y: -60, z: 1.05, rot: 0},
   {t: tE.imagine, x: 1100, y: 20, z: 0.95, rot: 0},
 ]);
 const CAM_R = path([
-  {t: tE.imagine, x: 0, y: 80, z: 1.25, rot: 0},
-  {t: tE.recognize - 0.2, x: 0, y: 120, z: 1.6, rot: 0},
+  {t: tE.imagine, x: 0, y: 30, z: 1.2, rot: 0},
+  {t: tE.recognize - 0.2, x: 0, y: 50, z: 1.4, rot: 0},
 ]);
 const CAM_K = path([
   {t: tE.recognize - 0.2, x: K1.x + 160, y: K1.y - 130, z: 1.7, rot: 0},
@@ -224,7 +224,7 @@ const Routes: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const uptake = lift(t, tE.guide, tE.vaccines + 0.3);
   const present = lift(t, tE.vaccines, tE.vaccines + 0.8);
   const activ = lift(t, tE.vaccines + 0.5, tE.vaccines + 1.1);
-  const eng = lift(t, tE.special - 0.4, tE.special + 0.3);
+  const eng = lift(t, tE.special + 0.15, tE.special + 0.75);
   const mult = lift(t, tE.special + 0.3, tE.imagine + 0.2);
   const copies = [[0, 0], [-210, -170], [210, -150], [-240, 170], [230, 190], [0, -330], [0, 340]] as Pt[];
   return (
@@ -250,10 +250,34 @@ const Routes: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
           if (show <= 0.01) return null;
           return (
             <g key={'e' + k} transform={`translate(${1100 + c[0] * show} ${c[1] * show})`} opacity={show}>
-              <TCell2 x={0} y={0} r={62} t={t + k} seed={30 + k} light={mixHex(P.tcellLight, P.immuneGold, eng)} act={0.3 * eng} />
+              <TCell2 x={0} y={0} r={62} t={t + k} seed={30 + k} light={mixHex(P.tcellLight, P.immuneGold, eng)} act={0.3 * eng} spikes={1 - 0.5 * eng} />
+              {/* the new receptor: gold Y-shaped receptors studding the surface */}
+              {Array.from({length: 9}, (_, m) => {
+                const a = (m / 9) * Math.PI * 2 + k;
+                const g = smooth(eng * 1.4 - m * 0.04);
+                return (
+                  <g key={m} transform={`rotate(${(a * 180) / Math.PI}) translate(66 0)`} opacity={g}>
+                    <line x1={0} y1={0} x2={22 * g} y2={0} stroke={P.immuneGold} strokeWidth={7} strokeLinecap="round" />
+                    <line x1={22 * g} y1={0} x2={34 * g} y2={-10 * g} stroke={P.immuneGold} strokeWidth={7} strokeLinecap="round" />
+                    <line x1={22 * g} y1={0} x2={34 * g} y2={10 * g} stroke={P.immuneGold} strokeWidth={7} strokeLinecap="round" />
+                  </g>
+                );
+              })}
             </g>
           );
         })}
+        {/* a gene-delivery particle carries the receptor's instructions into the cell */}
+        {(() => {
+          const u = lift(t, tE.special - 0.45, tE.special + 0.3);
+          if (u <= 0 || u >= 1) return null;
+          const x = lerp(1560, 1130, u), y = lerp(-380, -30, u);
+          return (
+            <g transform={`translate(${x} ${y}) rotate(${t * 40})`} opacity={1 - smooth((u - 0.8) / 0.2)}>
+              <path d="M 0 -52 L 45 -26 L 45 26 L 0 52 L -45 26 L -45 -26 Z" fill="#3FB8C8" stroke={P.immuneGold} strokeWidth={6} />
+              <path d="M -22 -8 Q 0 14 22 -8" fill="none" stroke={P.immuneGold} strokeWidth={5} />
+            </g>
+          );
+        })()}
         {eng > 0.01 && eng < 0.99 && <circle cx={1100} cy={0} r={150 + 200 * eng} fill="none" stroke={P.immuneGold} strokeWidth={6} opacity={1 - eng} />}
       </g>
     </g>

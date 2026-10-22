@@ -112,6 +112,7 @@ const Remnant: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
 
 // ------------------------------------------------------------------------------------------------ blood: rare tumour fragments among normal ones
 const CAM_B = (t: number): Cam => ({x: 600 * (t - tF.cancer), y: 0, z: lerp(1.25, 0.62, lift(t, tF.cancer, tF.blood)), rot: 0});
+const ROT_B = (t: number) => lerp(90, 0, lift(t, tF.cancer - 0.1, tF.cancer + 1.4));
 const BloodF: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const frs: React.ReactNode[] = [];
   const S = 230;
@@ -122,7 +123,14 @@ const BloodF: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
     const tumor = sd % 11 === 3;
     frs.push(<Fragment key={i} x={x} y={y} s={0.9} rot={rand(sd + 2) * 180 + t * 25} tumor={tumor} t={t} glow={tumor ? lift(t, tF.cancer + 1.4, tF.cancer + 2.2) : 0} />);
   }
-  return <BloodTunnel cam={cam} t={t} flow={1100}>{frs}</BloodTunnel>;
+  // the capillary runs down the screen in the tissue shot: start the tunnel turned the same way and level it out
+  const r = ROT_B(t), a = (r * Math.PI) / 180;
+  const sc = Math.abs(Math.cos(a)) + Math.abs(Math.sin(a)) * (W / H);
+  return (
+    <g transform={`rotate(${r} ${W / 2} ${H / 2}) translate(${W / 2} ${H / 2}) scale(${sc}) translate(${-W / 2} ${-H / 2})`}>
+      <BloodTunnel cam={cam} t={t} flow={1100}>{frs}</BloodTunnel>
+    </g>
+  );
 };
 
 // ------------------------------------------------------------------------------------------------ the blood sample

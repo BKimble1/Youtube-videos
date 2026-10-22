@@ -220,8 +220,8 @@ const bodyCamG = (t: number): Cam => (t < PULL0 ? reOpen(t) : PULLG(t));
 
 export const shotsG: Shot[] = [
   {id: 'G-twin', t0: tG.breakthrough, t1: tG.notOne, draw: (t) => <PersonTwin t={t} />},
-  {id: 'G-gallery', t0: tG.notOne, t1: tG.studies - 0.6, draw: (t) => <Gallery t={t} cam={CAM_GAL(t)} />},
-  {id: 'G-loop', t0: tG.studies - 0.6, t1: tG.answer - 0.1, fade: 0.5, draw: (t) => <Loop t={t} cam={CAM_LOOP(t)} />},
+  {id: 'G-gallery', t0: tG.notOne, t1: tG.studies - 0.05, draw: (t) => <Gallery t={t} cam={CAM_GAL(t)} />},
+  {id: 'G-loop', t0: tG.studies - 0.6, t1: tG.answer + 0.35, fade: 0.5, draw: (t) => <Loop t={t} cam={CAM_LOOP(t)} />},
   {id: 'G-heal', t0: tG.answer - 0.1, t1: T_RE, fade: 0.4, draw: (t) => <Gallery t={t} cam={CAM_GAL2(t)} />},
   {
     id: 'G-body',
