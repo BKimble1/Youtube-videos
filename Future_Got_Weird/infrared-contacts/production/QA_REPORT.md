@@ -27,6 +27,18 @@ All measurements are of the **rendered files**, not the source. Data is in `qa/v
 | Loop seam | last → first frame mean change 23.1: a cut-in on the same eye at the same screen position and scale, from closed to open with the finger arriving. This is a motivated match, not a seamless loop. |
 | Metadata | encoder tags only; nothing identifies the owner |
 
+## Master export: `exports/FGW_Infrared_Contacts_V1_MASTER_2160x3840.mp4`
+
+| Check | Result |
+|---|---|
+| Stream | H.264 High, 2160×3840 native (vectors rendered at 2×, not upscaled), 30 fps, 891 frames; AAC 320 kb/s; 42.7 MB |
+| Captions | none burned in (clean master; use the SRT) |
+| Loudness | −14.5 LUFS, true peak −2.3 dBFS (same mix as the review) |
+| Audio vs mix | 0.0 ms, correlation 0.99996 |
+| ASR of the MP4's audio | match 1.000; 23/23 caption windows |
+| Black or frozen segments | none |
+| Native-resolution spot check | `qa/v1/master_native_crop_0.85s.png`: clean edges on the iris, lashes and lens rim |
+
 ### Defects found and fixed before this render
 
 1. **Finger blended into the face at ECU.** Gave the finger its own warmer gradient and a light contact shadow.

@@ -1,0 +1,162 @@
+{
+ "file": "exports/FGW_Infrared_Contacts_V1_MASTER_2160x3840.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 2160,
+  "height": 3840,
+  "r_frame_rate": "30/1",
+  "nb_frames": "891",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "color_primaries": "bt709",
+  "color_transfer": "bt709"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317378"
+ },
+ "duration": 29.717,
+ "loudness": {
+  "I_LUFS": -14.5,
+  "LRA": 5.3,
+  "TP_dBFS": -2.3
+ },
+ "black_segments": [],
+ "freezes_ge_1s": [],
+ "keyframes": {
+  "count": 61,
+  "max_gap_s": 0.5
+ },
+ "audio_offset_vs_mix_ms": 0.0,
+ "audio_corr_vs_mix": 0.99996,
+ "whisper_transcript": "If you put these contacts in, you could see flashing lights with your eyes completely shut. You see, your eyes normally can't detect infrared. But these lenses contain tiny particles that absorb that invisible light and turn it into colors you can see. And while your eyelids block much of the visible light around you, infrared can still pass through. It reaches the lens underneath, gets converted, and becomes a flash you can actually see. So you could look completely asleep while someone flashes you a secret code nobody around you can see.",
+ "whisper_match_locked": 1.0,
+ "caption_windows": [
+  {
+   "caption": "If you put these contacts in,",
+   "asr": "If you put these contacts in...",
+   "match": 1.0
+  },
+  {
+   "caption": "you could see flashing lights",
+   "asr": "You could see flashing lights with",
+   "match": 1.0
+  },
+  {
+   "caption": "with your eyes completely shut.",
+   "asr": "with your eyes completely shut!",
+   "match": 1.0
+  },
+  {
+   "caption": "You see, your eyes normally",
+   "asr": "You see, your eyes normally can't...",
+   "match": 1.0
+  },
+  {
+   "caption": "can\u2019t detect infrared.",
+   "asr": "can't detect infrared.",
+   "match": 1.0
+  },
+  {
+   "caption": "But these lenses contain",
+   "asr": "But these lenses contain time.",
+   "match": 1.0
+  },
+  {
+   "caption": "tiny particles",
+   "asr": "tiny particles that",
+   "match": 1.0
+  },
+  {
+   "caption": "that absorb that invisible light",
+   "asr": "that absorb that invisible light and",
+   "match": 1.0
+  },
+  {
+   "caption": "and turn it into",
+   "asr": "and turn it into",
+   "match": 1.0
+  },
+  {
+   "caption": "colors you can see.",
+   "asr": "colors you can see.",
+   "match": 1.0
+  },
+  {
+   "caption": "And while your eyelids block",
+   "asr": "And while your eyelids block MUN-",
+   "match": 1.0
+  },
+  {
+   "caption": "much of the visible light",
+   "asr": "much of the visible light around",
+   "match": 1.0
+  },
+  {
+   "caption": "around you,",
+   "asr": "around you.",
+   "match": 1.0
+  },
+  {
+   "caption": "infrared can still pass through.",
+   "asr": "infrared can still pass through.",
+   "match": 1.0
+  },
+  {
+   "caption": "It reaches the lens underneath,",
+   "asr": "It reaches the lens underneath.",
+   "match": 1.0
+  },
+  {
+   "caption": "gets converted,",
+   "asr": "gets converted",
+   "match": 1.0
+  },
+  {
+   "caption": "and becomes a flash",
+   "asr": "and becomes a flash you",
+   "match": 1.0
+  },
+  {
+   "caption": "you can actually see.",
+   "asr": "you can actually see.",
+   "match": 1.0
+  },
+  {
+   "caption": "So you could look",
+   "asr": "so you could look",
+   "match": 1.0
+  },
+  {
+   "caption": "completely asleep\u2026",
+   "asr": "completely asleep.",
+   "match": 1.0
+  },
+  {
+   "caption": "while someone flashes you",
+   "asr": "while someone flashes you a s",
+   "match": 1.0
+  },
+  {
+   "caption": "a secret code",
+   "asr": "a secret code",
+   "match": 1.0
+  },
+  {
+   "caption": "nobody around you can see.",
+   "asr": "Nobody around you can see.",
+   "match": 1.0
+  }
+ ],
+ "caption_windows_ok": 23,
+ "loop_seam": {
+  "mean_abs_last_to_first": 20.96,
+  "mean_abs_prev_steps": [
+   2.66,
+   1.7
+  ]
+ }
+}
