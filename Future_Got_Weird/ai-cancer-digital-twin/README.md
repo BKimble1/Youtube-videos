@@ -4,14 +4,14 @@ Working title (creator-selected): **"AI Just Cured All Cancer."** That records t
 a verified scientific conclusion. The film itself says "AI has not cured all cancer" 17 seconds in. See
 `upload/UPLOAD_TEXT.md` for the title note and alternatives.
 
-**Status (22 Oct 2026): first complete cut delivered; not published.** 16:9, 1920×1080 native at 30 fps, 3:38.2.
+**Status (22 Oct 2026): first complete cut delivered — 1080p review and native 4K master; not published.** 16:9, 1920×1080 native at 30 fps, 3:38.2.
 Nobody has watched it in real time or listened to it here (this environment has no audio or video output); the QA
 notes list exactly what was checked and how.
 
 | Deliverable | File |
 |---|---|
 | Review render, 1080p (H.264 + AAC 320 kb/s, full mix) | `exports/FGW_AI_Cancer_DigitalTwin_REVIEW_1080p.mp4` (Git-ignored; checksummed parts in `backup/`) |
-| 4K master (3840×2160, rendered natively at 2× from the vector source) | `exports/FGW_AI_Cancer_DigitalTwin_MASTER_4K.mp4` (see QA notes for status) |
+| 4K master (3840×2160, rendered natively at 2× from the vector source) | `exports/FGW_AI_Cancer_DigitalTwin_MASTER_4K.mp4` (Git-ignored; checksummed parts in `backup/`) |
 | Captions (text identical to the locked script) | `captions/FGW_AI_Cancer_DigitalTwin.srt` |
 | Description with sources, chapters, title note | `upload/UPLOAD_TEXT.md`, `upload/chapters.txt` |
 | QA notes (checks actually performed, open items) | `production/QA_NOTES.md` |
@@ -50,7 +50,8 @@ notes list exactly what was checked and how.
     # picture without the audio element (the 63 MB WAV slows every render tab), then mux the mix
     (cd source && npx remotion render src/index.ts Main ../exports/_video_1080p.mp4 --props='{"audio":false}' --muted --crf=16 --x264-preset=medium --color-space=bt709 --concurrency=4)
     ffmpeg -i exports/_video_1080p.mp4 -i audio/mix/mix.wav -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 320k -ar 48000 -shortest -movflags +faststart exports/FGW_AI_Cancer_DigitalTwin_REVIEW_1080p.mp4
-    # 4K master: same, with --scale=2 (see production/QA_NOTES.md for the exact command used)
+    # 4K master: same with --scale=2, rendered in three frame ranges and joined (exact commands: production/QA_NOTES.md §6)
+    bash tools/backup_parts.sh exports/<file>.mp4   # 20 MB parts + SHA-256 in backup/
     python3 tools/qa_review.py exports/FGW_AI_Cancer_DigitalTwin_REVIEW_1080p.mp4 qa/review
 
 Stills for inspection: `cd source && COMP=Main SCALE=0.5 node stills.mjs ../qa/<dir> t:<seconds> …`.
