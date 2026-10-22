@@ -1,0 +1,69 @@
+This microscopic device hides a weapon that can trigger a cell to destroy itself.
+
+In acidic surroundings, it opens.
+
+Now imagine choosing an attack like this by testing it on a digital version of your tumor first.
+
+That complete system is a possible future. AI has not cured all cancer. Researchers are already building its separate parts.
+
+First, build the copy.
+
+Researchers are developing digital twins: mathematical models of particular tumors, built from measurements such as medical scans and updated as new information arrives.
+
+The goal is to compare possible treatments before choosing what to try in the patient.
+
+One simulated tumor shrinks. Another barely changes. A third shrinks—then returns.
+
+The model is searching for a better plan. It is not a perfect copy of you, and a simulated success still needs real-world testing.
+
+But it changes the question from “What usually works?” to “What might work for this tumor?”
+
+Next, give the attack an address.
+
+Cancer grows from your own cells. A powerful drug is dangerous if it reaches the wrong tissue.
+
+Some treatments already attach a drug payload to an antibody that binds a particular surface target. The cell takes the package inside. In certain designs, enzymes cut its molecular linker, releasing the drug.
+
+The cell’s own machinery helps open the delivery.
+
+These are antibody-drug conjugates, and some are already used in cancer care. They can still cause serious side effects; a molecular address is not perfect protection.
+
+AI could help develop better targeting components. Researchers are already testing AI-designed proteins as recognition parts in experimental immune-cell therapies.
+
+But what if the attack stayed hidden until its surroundings changed?
+
+Return to the device from the opening.
+
+Researchers at Karolinska built a switch from folded DNA. It hides a pattern of peptides that can bring death receptors together on a cell’s surface.
+
+Under acidic conditions, the structure exposes that pattern, helping trigger the cell’s self-destruct process.
+
+They tested it in mice with breast cancer tumors and reported reduced tumor growth.
+
+That is a real experiment. It is not a human cure, and this particular nanodevice was not presented as an AI invention.
+
+The future opportunity is to combine better prediction with better biological engineering—if experiments show those pieces work together.
+
+Then one cell threatens the entire plan.
+
+It survives.
+
+Tumors contain different groups of cells. A treatment can destroy sensitive ones while resistant cells remain and multiply.
+
+So the plan cannot end when the biggest mass gets smaller.
+
+Researchers have built AI tools that predict drug response and resistance from individual tumor-cell data. The longer-term ambition is to help doctors anticipate escape routes and update treatment as new measurements arrive.
+
+A digital twin that learns from the disease. A treatment aimed at a vulnerability. A delivery system that controls when its payload becomes active.
+
+Those technologies are at different stages. They are not one finished machine, and different cancers will need different approaches.
+
+A model can miss a resistant pocket. A carrier can reach healthy tissue. An apparent victory can disappear at the next scan.
+
+That is why the final test is not whether the tumor vanishes on a computer screen.
+
+It is whether people live longer, with less harm, and the cancer stays away.
+
+The cell in our opening had a self-destruct mechanism.
+
+The challenge is reaching the right cell—and leaving it no way back.
