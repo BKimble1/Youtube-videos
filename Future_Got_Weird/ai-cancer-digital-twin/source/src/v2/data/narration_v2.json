@@ -1,0 +1,6858 @@
+{
+ "duration": 231.14,
+ "lead": 0.35,
+ "gap": 0.55,
+ "tail": 3.4,
+ "pieces": [
+  {
+   "block": "B1",
+   "take": "b1_t2.mp3",
+   "take_range_s": [
+    0.02,
+    35.4
+   ],
+   "start": 0.35,
+   "length": 35.38
+  },
+  {
+   "block": "B2",
+   "take": "b2_t2.mp3",
+   "take_range_s": [
+    0.12,
+    27.06
+   ],
+   "start": 36.28,
+   "length": 26.94
+  },
+  {
+   "block": "B3",
+   "take": "b3_t1.mp3",
+   "take_range_s": [
+    0.04,
+    36.73
+   ],
+   "start": 63.77,
+   "length": 36.69
+  },
+  {
+   "block": "B4",
+   "take": "b4_t1.mp3",
+   "take_range_s": [
+    0,
+    31.46
+   ],
+   "start": 101.01,
+   "length": 31.46
+  },
+  {
+   "block": "B5",
+   "take": "b5_t2.mp3",
+   "take_range_s": [
+    0,
+    37.49
+   ],
+   "start": 133.02,
+   "length": 37.49
+  },
+  {
+   "block": "B6",
+   "take": "b6_t1.mp3",
+   "take_range_s": [
+    0.05,
+    27.51
+   ],
+   "start": 171.06,
+   "length": 27.46
+  },
+  {
+   "block": "B7",
+   "take": "b7_t1.mp3",
+   "take_range_s": [
+    0,
+    28.67
+   ],
+   "start": 199.07,
+   "length": 28.67
+  }
+ ],
+ "words": [
+  {
+   "text": "This",
+   "start": 0.49,
+   "end": 0.73,
+   "block": "B1"
+  },
+  {
+   "text": "might",
+   "start": 0.81,
+   "end": 0.97,
+   "block": "B1"
+  },
+  {
+   "text": "be",
+   "start": 1.01,
+   "end": 1.05,
+   "block": "B1"
+  },
+  {
+   "text": "the",
+   "start": 1.13,
+   "end": 1.21,
+   "block": "B1"
+  },
+  {
+   "text": "most",
+   "start": 1.37,
+   "end": 1.53,
+   "block": "B1"
+  },
+  {
+   "text": "dangerous",
+   "start": 1.73,
+   "end": 2.09,
+   "block": "B1"
+  },
+  {
+   "text": "cell",
+   "start": 2.21,
+   "end": 2.33,
+   "block": "B1"
+  },
+  {
+   "text": "in",
+   "start": 2.41,
+   "end": 2.49,
+   "block": "B1"
+  },
+  {
+   "text": "this",
+   "start": 2.57,
+   "end": 2.65,
+   "block": "B1"
+  },
+  {
+   "text": "man's",
+   "start": 2.73,
+   "end": 2.93,
+   "block": "B1"
+  },
+  {
+   "text": "entire",
+   "start": 2.97,
+   "end": 3.53,
+   "block": "B1"
+  },
+  {
+   "text": "body.",
+   "start": 4.01,
+   "end": 4.517,
+   "block": "B1"
+  },
+  {
+   "text": "And",
+   "start": 4.543,
+   "end": 4.57,
+   "block": "B1"
+  },
+  {
+   "text": "the",
+   "start": 4.61,
+   "end": 4.65,
+   "block": "B1"
+  },
+  {
+   "text": "terrifying",
+   "start": 4.73,
+   "end": 5.29,
+   "block": "B1"
+  },
+  {
+   "text": "part",
+   "start": 5.37,
+   "end": 5.61,
+   "block": "B1"
+  },
+  {
+   "text": "is",
+   "start": 5.65,
+   "end": 5.69,
+   "block": "B1"
+  },
+  {
+   "text": "that",
+   "start": 5.77,
+   "end": 5.85,
+   "block": "B1"
+  },
+  {
+   "text": "it",
+   "start": 5.93,
+   "end": 6.01,
+   "block": "B1"
+  },
+  {
+   "text": "used",
+   "start": 6.09,
+   "end": 6.25,
+   "block": "B1"
+  },
+  {
+   "text": "to",
+   "start": 6.29,
+   "end": 6.33,
+   "block": "B1"
+  },
+  {
+   "text": "be",
+   "start": 6.37,
+   "end": 6.41,
+   "block": "B1"
+  },
+  {
+   "text": "completely",
+   "start": 6.49,
+   "end": 7.13,
+   "block": "B1"
+  },
+  {
+   "text": "normal.",
+   "start": 7.21,
+   "end": 8.103,
+   "block": "B1"
+  },
+  {
+   "text": "Deep",
+   "start": 8.17,
+   "end": 8.33,
+   "block": "B1"
+  },
+  {
+   "text": "inside",
+   "start": 8.53,
+   "end": 8.73,
+   "block": "B1"
+  },
+  {
+   "text": "its",
+   "start": 8.81,
+   "end": 8.89,
+   "block": "B1"
+  },
+  {
+   "text": "nucleus,",
+   "start": 8.97,
+   "end": 9.73,
+   "block": "B1"
+  },
+  {
+   "text": "tiny",
+   "start": 9.77,
+   "end": 10.09,
+   "block": "B1"
+  },
+  {
+   "text": "mistakes",
+   "start": 10.25,
+   "end": 10.57,
+   "block": "B1"
+  },
+  {
+   "text": "have",
+   "start": 10.61,
+   "end": 10.65,
+   "block": "B1"
+  },
+  {
+   "text": "been",
+   "start": 10.73,
+   "end": 10.89,
+   "block": "B1"
+  },
+  {
+   "text": "building",
+   "start": 11.05,
+   "end": 11.21,
+   "block": "B1"
+  },
+  {
+   "text": "up",
+   "start": 11.29,
+   "end": 11.37,
+   "block": "B1"
+  },
+  {
+   "text": "in",
+   "start": 11.41,
+   "end": 11.45,
+   "block": "B1"
+  },
+  {
+   "text": "its",
+   "start": 11.57,
+   "end": 11.69,
+   "block": "B1"
+  },
+  {
+   "text": "DNA.",
+   "start": 11.73,
+   "end": 12.69,
+   "block": "B1"
+  },
+  {
+   "text": "The",
+   "start": 12.73,
+   "end": 12.81,
+   "block": "B1"
+  },
+  {
+   "text": "instructions",
+   "start": 13.13,
+   "end": 13.45,
+   "block": "B1"
+  },
+  {
+   "text": "controlling",
+   "start": 13.53,
+   "end": 13.93,
+   "block": "B1"
+  },
+  {
+   "text": "when",
+   "start": 13.97,
+   "end": 14.01,
+   "block": "B1"
+  },
+  {
+   "text": "it",
+   "start": 14.09,
+   "end": 14.17,
+   "block": "B1"
+  },
+  {
+   "text": "grows,",
+   "start": 14.25,
+   "end": 14.917,
+   "block": "B1"
+  },
+  {
+   "text": "when",
+   "start": 14.943,
+   "end": 14.97,
+   "block": "B1"
+  },
+  {
+   "text": "it",
+   "start": 15.05,
+   "end": 15.13,
+   "block": "B1"
+  },
+  {
+   "text": "stops,",
+   "start": 15.21,
+   "end": 15.797,
+   "block": "B1"
+  },
+  {
+   "text": "and",
+   "start": 15.823,
+   "end": 15.85,
+   "block": "B1"
+  },
+  {
+   "text": "when",
+   "start": 15.93,
+   "end": 16.01,
+   "block": "B1"
+  },
+  {
+   "text": "it",
+   "start": 16.09,
+   "end": 16.17,
+   "block": "B1"
+  },
+  {
+   "text": "dies",
+   "start": 16.21,
+   "end": 16.65,
+   "block": "B1"
+  },
+  {
+   "text": "are",
+   "start": 16.73,
+   "end": 16.81,
+   "block": "B1"
+  },
+  {
+   "text": "starting",
+   "start": 16.89,
+   "end": 17.13,
+   "block": "B1"
+  },
+  {
+   "text": "to",
+   "start": 17.21,
+   "end": 17.29,
+   "block": "B1"
+  },
+  {
+   "text": "fail.",
+   "start": 17.65,
+   "end": 18.09,
+   "block": "B1"
+  },
+  {
+   "text": "And",
+   "start": 18.157,
+   "end": 18.17,
+   "block": "B1"
+  },
+  {
+   "text": "eventually,",
+   "start": 18.25,
+   "end": 19.17,
+   "block": "B1"
+  },
+  {
+   "text": "something",
+   "start": 19.21,
+   "end": 19.53,
+   "block": "B1"
+  },
+  {
+   "text": "goes",
+   "start": 19.57,
+   "end": 19.85,
+   "block": "B1"
+  },
+  {
+   "text": "horribly",
+   "start": 19.93,
+   "end": 20.33,
+   "block": "B1"
+  },
+  {
+   "text": "wrong.",
+   "start": 20.41,
+   "end": 21.25,
+   "block": "B1"
+  },
+  {
+   "text": "The",
+   "start": 21.29,
+   "end": 21.37,
+   "block": "B1"
+  },
+  {
+   "text": "cell",
+   "start": 21.45,
+   "end": 21.61,
+   "block": "B1"
+  },
+  {
+   "text": "divides",
+   "start": 21.73,
+   "end": 22.09,
+   "block": "B1"
+  },
+  {
+   "text": "when",
+   "start": 22.17,
+   "end": 22.25,
+   "block": "B1"
+  },
+  {
+   "text": "it",
+   "start": 22.33,
+   "end": 22.41,
+   "block": "B1"
+  },
+  {
+   "text": "shouldn't.",
+   "start": 22.49,
+   "end": 23.157,
+   "block": "B1"
+  },
+  {
+   "text": "It",
+   "start": 23.183,
+   "end": 23.21,
+   "block": "B1"
+  },
+  {
+   "text": "ignores",
+   "start": 23.29,
+   "end": 23.77,
+   "block": "B1"
+  },
+  {
+   "text": "signals",
+   "start": 23.97,
+   "end": 24.17,
+   "block": "B1"
+  },
+  {
+   "text": "telling",
+   "start": 24.21,
+   "end": 24.41,
+   "block": "B1"
+  },
+  {
+   "text": "it",
+   "start": 24.45,
+   "end": 24.49,
+   "block": "B1"
+  },
+  {
+   "text": "to",
+   "start": 24.57,
+   "end": 24.65,
+   "block": "B1"
+  },
+  {
+   "text": "stop.",
+   "start": 24.73,
+   "end": 25.503,
+   "block": "B1"
+  },
+  {
+   "text": "And",
+   "start": 25.557,
+   "end": 25.61,
+   "block": "B1"
+  },
+  {
+   "text": "when",
+   "start": 25.65,
+   "end": 25.69,
+   "block": "B1"
+  },
+  {
+   "text": "the",
+   "start": 25.77,
+   "end": 25.85,
+   "block": "B1"
+  },
+  {
+   "text": "body",
+   "start": 25.97,
+   "end": 26.09,
+   "block": "B1"
+  },
+  {
+   "text": "tries",
+   "start": 26.17,
+   "end": 26.41,
+   "block": "B1"
+  },
+  {
+   "text": "to",
+   "start": 26.45,
+   "end": 26.49,
+   "block": "B1"
+  },
+  {
+   "text": "destroy",
+   "start": 26.73,
+   "end": 26.97,
+   "block": "B1"
+  },
+  {
+   "text": "it...",
+   "start": 27.25,
+   "end": 27.57,
+   "block": "B1"
+  },
+  {
+   "text": "it",
+   "start": 27.61,
+   "end": 27.69,
+   "block": "B1"
+  },
+  {
+   "text": "survives.",
+   "start": 27.77,
+   "end": 28.917,
+   "block": "B1"
+  },
+  {
+   "text": "One",
+   "start": 29.05,
+   "end": 29.21,
+   "block": "B1"
+  },
+  {
+   "text": "cell",
+   "start": 29.29,
+   "end": 29.53,
+   "block": "B1"
+  },
+  {
+   "text": "becomes",
+   "start": 29.65,
+   "end": 30.01,
+   "block": "B1"
+  },
+  {
+   "text": "two.",
+   "start": 30.09,
+   "end": 30.69,
+   "block": "B1"
+  },
+  {
+   "text": "Two",
+   "start": 30.73,
+   "end": 30.97,
+   "block": "B1"
+  },
+  {
+   "text": "become",
+   "start": 31.09,
+   "end": 31.37,
+   "block": "B1"
+  },
+  {
+   "text": "four.",
+   "start": 31.45,
+   "end": 32.13,
+   "block": "B1"
+  },
+  {
+   "text": "Four",
+   "start": 32.17,
+   "end": 32.41,
+   "block": "B1"
+  },
+  {
+   "text": "become",
+   "start": 32.49,
+   "end": 32.81,
+   "block": "B1"
+  },
+  {
+   "text": "thousands",
+   "start": 32.89,
+   "end": 33.69,
+   "block": "B1"
+  },
+  {
+   "text": "and",
+   "start": 33.77,
+   "end": 33.93,
+   "block": "B1"
+  },
+  {
+   "text": "this",
+   "start": 34.01,
+   "end": 34.33,
+   "block": "B1"
+  },
+  {
+   "text": "is",
+   "start": 34.37,
+   "end": 34.41,
+   "block": "B1"
+  },
+  {
+   "text": "how",
+   "start": 34.49,
+   "end": 34.65,
+   "block": "B1"
+  },
+  {
+   "text": "cancer",
+   "start": 34.69,
+   "end": 35.05,
+   "block": "B1"
+  },
+  {
+   "text": "begins.",
+   "start": 35.17,
+   "end": 35.85,
+   "block": "B1"
+  },
+  {
+   "text": "But",
+   "start": 36.32,
+   "end": 36.4,
+   "block": "B2"
+  },
+  {
+   "text": "it",
+   "start": 36.48,
+   "end": 36.56,
+   "block": "B2"
+  },
+  {
+   "text": "gets",
+   "start": 36.68,
+   "end": 36.8,
+   "block": "B2"
+  },
+  {
+   "text": "worse.",
+   "start": 36.96,
+   "end": 37.48,
+   "block": "B2"
+  },
+  {
+   "text": "The",
+   "start": 38.08,
+   "end": 38.16,
+   "block": "B2"
+  },
+  {
+   "text": "growing",
+   "start": 38.2,
+   "end": 38.48,
+   "block": "B2"
+  },
+  {
+   "text": "tumor",
+   "start": 38.56,
+   "end": 38.88,
+   "block": "B2"
+  },
+  {
+   "text": "steals",
+   "start": 38.96,
+   "end": 39.28,
+   "block": "B2"
+  },
+  {
+   "text": "nutrients,",
+   "start": 39.36,
+   "end": 40.16,
+   "block": "B2"
+  },
+  {
+   "text": "recruits",
+   "start": 40.28,
+   "end": 40.64,
+   "block": "B2"
+  },
+  {
+   "text": "blood",
+   "start": 40.76,
+   "end": 40.88,
+   "block": "B2"
+  },
+  {
+   "text": "vessels",
+   "start": 40.96,
+   "end": 41.28,
+   "block": "B2"
+  },
+  {
+   "text": "to",
+   "start": 41.36,
+   "end": 41.44,
+   "block": "B2"
+  },
+  {
+   "text": "feed",
+   "start": 41.52,
+   "end": 41.6,
+   "block": "B2"
+  },
+  {
+   "text": "itself,",
+   "start": 41.68,
+   "end": 42.32,
+   "block": "B2"
+  },
+  {
+   "text": "and",
+   "start": 42.4,
+   "end": 42.48,
+   "block": "B2"
+  },
+  {
+   "text": "even",
+   "start": 42.56,
+   "end": 42.72,
+   "block": "B2"
+  },
+  {
+   "text": "finds",
+   "start": 42.8,
+   "end": 43.08,
+   "block": "B2"
+  },
+  {
+   "text": "ways",
+   "start": 43.12,
+   "end": 43.36,
+   "block": "B2"
+  },
+  {
+   "text": "to",
+   "start": 43.44,
+   "end": 43.52,
+   "block": "B2"
+  },
+  {
+   "text": "hide",
+   "start": 43.6,
+   "end": 43.84,
+   "block": "B2"
+  },
+  {
+   "text": "from",
+   "start": 43.92,
+   "end": 44.0,
+   "block": "B2"
+  },
+  {
+   "text": "the",
+   "start": 44.04,
+   "end": 44.08,
+   "block": "B2"
+  },
+  {
+   "text": "immune",
+   "start": 44.24,
+   "end": 44.4,
+   "block": "B2"
+  },
+  {
+   "text": "system.",
+   "start": 44.48,
+   "end": 45.12,
+   "block": "B2"
+  },
+  {
+   "text": "Then",
+   "start": 45.44,
+   "end": 45.68,
+   "block": "B2"
+  },
+  {
+   "text": "some",
+   "start": 45.92,
+   "end": 46.08,
+   "block": "B2"
+  },
+  {
+   "text": "cancer",
+   "start": 46.16,
+   "end": 46.48,
+   "block": "B2"
+  },
+  {
+   "text": "cells",
+   "start": 46.56,
+   "end": 46.8,
+   "block": "B2"
+  },
+  {
+   "text": "break",
+   "start": 46.88,
+   "end": 47.04,
+   "block": "B2"
+  },
+  {
+   "text": "free.",
+   "start": 47.2,
+   "end": 47.84,
+   "block": "B2"
+  },
+  {
+   "text": "They",
+   "start": 47.92,
+   "end": 48.0,
+   "block": "B2"
+  },
+  {
+   "text": "enter",
+   "start": 48.12,
+   "end": 48.24,
+   "block": "B2"
+  },
+  {
+   "text": "the",
+   "start": 48.28,
+   "end": 48.32,
+   "block": "B2"
+  },
+  {
+   "text": "bloodstream,",
+   "start": 48.48,
+   "end": 49.12,
+   "block": "B2"
+  },
+  {
+   "text": "travel",
+   "start": 49.28,
+   "end": 49.44,
+   "block": "B2"
+  },
+  {
+   "text": "through",
+   "start": 49.52,
+   "end": 49.6,
+   "block": "B2"
+  },
+  {
+   "text": "the",
+   "start": 49.68,
+   "end": 49.76,
+   "block": "B2"
+  },
+  {
+   "text": "body,",
+   "start": 49.92,
+   "end": 50.32,
+   "block": "B2"
+  },
+  {
+   "text": "and",
+   "start": 50.36,
+   "end": 50.4,
+   "block": "B2"
+  },
+  {
+   "text": "can",
+   "start": 50.48,
+   "end": 50.56,
+   "block": "B2"
+  },
+  {
+   "text": "create",
+   "start": 50.64,
+   "end": 50.96,
+   "block": "B2"
+  },
+  {
+   "text": "new",
+   "start": 51.04,
+   "end": 51.2,
+   "block": "B2"
+  },
+  {
+   "text": "tumors",
+   "start": 51.28,
+   "end": 51.6,
+   "block": "B2"
+  },
+  {
+   "text": "in",
+   "start": 51.68,
+   "end": 51.76,
+   "block": "B2"
+  },
+  {
+   "text": "completely",
+   "start": 51.88,
+   "end": 52.4,
+   "block": "B2"
+  },
+  {
+   "text": "different",
+   "start": 52.48,
+   "end": 52.72,
+   "block": "B2"
+  },
+  {
+   "text": "organs.",
+   "start": 52.84,
+   "end": 53.52,
+   "block": "B2"
+  },
+  {
+   "text": "And",
+   "start": 53.64,
+   "end": 53.76,
+   "block": "B2"
+  },
+  {
+   "text": "that's",
+   "start": 53.84,
+   "end": 54.16,
+   "block": "B2"
+  },
+  {
+   "text": "the",
+   "start": 54.2,
+   "end": 54.24,
+   "block": "B2"
+  },
+  {
+   "text": "real",
+   "start": 54.4,
+   "end": 54.64,
+   "block": "B2"
+  },
+  {
+   "text": "nightmare.",
+   "start": 54.72,
+   "end": 55.4,
+   "block": "B2"
+  },
+  {
+   "text": "Cancer",
+   "start": 55.744,
+   "end": 56.08,
+   "block": "B2"
+  },
+  {
+   "text": "isn't",
+   "start": 56.16,
+   "end": 56.48,
+   "block": "B2"
+  },
+  {
+   "text": "one",
+   "start": 56.56,
+   "end": 56.64,
+   "block": "B2"
+  },
+  {
+   "text": "enemy.",
+   "start": 56.72,
+   "end": 57.36,
+   "block": "B2"
+  },
+  {
+   "text": "It's",
+   "start": 57.4,
+   "end": 57.68,
+   "block": "B2"
+  },
+  {
+   "text": "millions",
+   "start": 57.76,
+   "end": 58.08,
+   "block": "B2"
+  },
+  {
+   "text": "of",
+   "start": 58.16,
+   "end": 58.24,
+   "block": "B2"
+  },
+  {
+   "text": "your",
+   "start": 58.32,
+   "end": 58.4,
+   "block": "B2"
+  },
+  {
+   "text": "own",
+   "start": 58.48,
+   "end": 58.56,
+   "block": "B2"
+  },
+  {
+   "text": "cells,",
+   "start": 58.72,
+   "end": 59.28,
+   "block": "B2"
+  },
+  {
+   "text": "constantly",
+   "start": 59.36,
+   "end": 59.92,
+   "block": "B2"
+  },
+  {
+   "text": "changing,",
+   "start": 60.16,
+   "end": 60.56,
+   "block": "B2"
+  },
+  {
+   "text": "evolving,",
+   "start": 60.68,
+   "end": 61.36,
+   "block": "B2"
+  },
+  {
+   "text": "and",
+   "start": 61.44,
+   "end": 61.52,
+   "block": "B2"
+  },
+  {
+   "text": "finding",
+   "start": 61.72,
+   "end": 61.92,
+   "block": "B2"
+  },
+  {
+   "text": "new",
+   "start": 62.0,
+   "end": 62.08,
+   "block": "B2"
+  },
+  {
+   "text": "ways",
+   "start": 62.24,
+   "end": 62.4,
+   "block": "B2"
+  },
+  {
+   "text": "to",
+   "start": 62.48,
+   "end": 62.56,
+   "block": "B2"
+  },
+  {
+   "text": "survive.",
+   "start": 62.64,
+   "end": 63.36,
+   "block": "B2"
+  },
+  {
+   "text": "But",
+   "start": 63.93,
+   "end": 63.97,
+   "block": "B3"
+  },
+  {
+   "text": "what",
+   "start": 64.13,
+   "end": 64.21,
+   "block": "B3"
+  },
+  {
+   "text": "if",
+   "start": 64.29,
+   "end": 64.37,
+   "block": "B3"
+  },
+  {
+   "text": "we",
+   "start": 64.41,
+   "end": 64.45,
+   "block": "B3"
+  },
+  {
+   "text": "could",
+   "start": 64.53,
+   "end": 64.61,
+   "block": "B3"
+  },
+  {
+   "text": "predict",
+   "start": 64.81,
+   "end": 65.01,
+   "block": "B3"
+  },
+  {
+   "text": "exactly",
+   "start": 65.17,
+   "end": 65.65,
+   "block": "B3"
+  },
+  {
+   "text": "what",
+   "start": 65.73,
+   "end": 65.81,
+   "block": "B3"
+  },
+  {
+   "text": "those",
+   "start": 65.89,
+   "end": 65.97,
+   "block": "B3"
+  },
+  {
+   "text": "cells",
+   "start": 66.05,
+   "end": 66.29,
+   "block": "B3"
+  },
+  {
+   "text": "will",
+   "start": 66.33,
+   "end": 66.37,
+   "block": "B3"
+  },
+  {
+   "text": "do",
+   "start": 66.45,
+   "end": 66.61,
+   "block": "B3"
+  },
+  {
+   "text": "next?",
+   "start": 66.85,
+   "end": 67.25,
+   "block": "B3"
+  },
+  {
+   "text": "This",
+   "start": 67.57,
+   "end": 67.73,
+   "block": "B3"
+  },
+  {
+   "text": "is",
+   "start": 67.81,
+   "end": 67.89,
+   "block": "B3"
+  },
+  {
+   "text": "where",
+   "start": 67.97,
+   "end": 68.05,
+   "block": "B3"
+  },
+  {
+   "text": "artificial",
+   "start": 68.13,
+   "end": 68.61,
+   "block": "B3"
+  },
+  {
+   "text": "intelligence",
+   "start": 68.89,
+   "end": 69.17,
+   "block": "B3"
+  },
+  {
+   "text": "changes",
+   "start": 69.33,
+   "end": 69.73,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 69.81,
+   "end": 69.89,
+   "block": "B3"
+  },
+  {
+   "text": "game.",
+   "start": 69.97,
+   "end": 70.57,
+   "block": "B3"
+  },
+  {
+   "text": "Imagine",
+   "start": 71.17,
+   "end": 71.25,
+   "block": "B3"
+  },
+  {
+   "text": "taking",
+   "start": 71.37,
+   "end": 71.49,
+   "block": "B3"
+  },
+  {
+   "text": "a",
+   "start": 71.57,
+   "end": 71.61,
+   "block": "B3"
+  },
+  {
+   "text": "patient's",
+   "start": 71.65,
+   "end": 72.05,
+   "block": "B3"
+  },
+  {
+   "text": "medical",
+   "start": 72.21,
+   "end": 72.37,
+   "block": "B3"
+  },
+  {
+   "text": "scans,",
+   "start": 72.45,
+   "end": 73.01,
+   "block": "B3"
+  },
+  {
+   "text": "tumor",
+   "start": 73.05,
+   "end": 73.25,
+   "block": "B3"
+  },
+  {
+   "text": "samples,",
+   "start": 73.33,
+   "end": 73.89,
+   "block": "B3"
+  },
+  {
+   "text": "and",
+   "start": 73.97,
+   "end": 74.05,
+   "block": "B3"
+  },
+  {
+   "text": "genetic",
+   "start": 74.13,
+   "end": 74.37,
+   "block": "B3"
+  },
+  {
+   "text": "information,",
+   "start": 74.45,
+   "end": 75.33,
+   "block": "B3"
+  },
+  {
+   "text": "and",
+   "start": 75.41,
+   "end": 75.49,
+   "block": "B3"
+  },
+  {
+   "text": "using",
+   "start": 75.57,
+   "end": 75.81,
+   "block": "B3"
+  },
+  {
+   "text": "AI",
+   "start": 75.89,
+   "end": 76.21,
+   "block": "B3"
+  },
+  {
+   "text": "to",
+   "start": 76.25,
+   "end": 76.29,
+   "block": "B3"
+  },
+  {
+   "text": "construct",
+   "start": 76.37,
+   "end": 76.77,
+   "block": "B3"
+  },
+  {
+   "text": "a",
+   "start": 76.89,
+   "end": 77.01,
+   "block": "B3"
+  },
+  {
+   "text": "detailed",
+   "start": 77.17,
+   "end": 77.49,
+   "block": "B3"
+  },
+  {
+   "text": "digital",
+   "start": 77.57,
+   "end": 77.89,
+   "block": "B3"
+  },
+  {
+   "text": "copy",
+   "start": 77.97,
+   "end": 78.21,
+   "block": "B3"
+  },
+  {
+   "text": "of",
+   "start": 78.25,
+   "end": 78.29,
+   "block": "B3"
+  },
+  {
+   "text": "their",
+   "start": 78.37,
+   "end": 78.45,
+   "block": "B3"
+  },
+  {
+   "text": "cancer",
+   "start": 78.53,
+   "end": 78.93,
+   "block": "B3"
+  },
+  {
+   "text": "which",
+   "start": 79.25,
+   "end": 79.33,
+   "block": "B3"
+  },
+  {
+   "text": "would",
+   "start": 79.41,
+   "end": 79.49,
+   "block": "B3"
+  },
+  {
+   "text": "create",
+   "start": 79.57,
+   "end": 79.81,
+   "block": "B3"
+  },
+  {
+   "text": "a",
+   "start": 79.89,
+   "end": 80.05,
+   "block": "B3"
+  },
+  {
+   "text": "virtual",
+   "start": 80.25,
+   "end": 80.45,
+   "block": "B3"
+  },
+  {
+   "text": "battlefield.",
+   "start": 80.61,
+   "end": 81.73,
+   "block": "B3"
+  },
+  {
+   "text": "Inside",
+   "start": 81.81,
+   "end": 82.13,
+   "block": "B3"
+  },
+  {
+   "text": "that",
+   "start": 82.21,
+   "end": 82.29,
+   "block": "B3"
+  },
+  {
+   "text": "simulation,",
+   "start": 82.37,
+   "end": 83.25,
+   "block": "B3"
+  },
+  {
+   "text": "researchers",
+   "start": 83.33,
+   "end": 83.81,
+   "block": "B3"
+  },
+  {
+   "text": "could",
+   "start": 83.89,
+   "end": 83.97,
+   "block": "B3"
+  },
+  {
+   "text": "test",
+   "start": 84.09,
+   "end": 84.21,
+   "block": "B3"
+  },
+  {
+   "text": "treatment",
+   "start": 84.25,
+   "end": 84.53,
+   "block": "B3"
+  },
+  {
+   "text": "strategies,",
+   "start": 84.61,
+   "end": 85.41,
+   "block": "B3"
+  },
+  {
+   "text": "predict",
+   "start": 85.57,
+   "end": 85.73,
+   "block": "B3"
+  },
+  {
+   "text": "how",
+   "start": 85.81,
+   "end": 85.89,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 85.93,
+   "end": 85.97,
+   "block": "B3"
+  },
+  {
+   "text": "tumor",
+   "start": 86.05,
+   "end": 86.29,
+   "block": "B3"
+  },
+  {
+   "text": "might",
+   "start": 86.37,
+   "end": 86.45,
+   "block": "B3"
+  },
+  {
+   "text": "respond,",
+   "start": 86.73,
+   "end": 87.33,
+   "block": "B3"
+  },
+  {
+   "text": "and",
+   "start": 87.41,
+   "end": 87.49,
+   "block": "B3"
+  },
+  {
+   "text": "search",
+   "start": 87.61,
+   "end": 87.73,
+   "block": "B3"
+  },
+  {
+   "text": "for",
+   "start": 87.81,
+   "end": 87.89,
+   "block": "B3"
+  },
+  {
+   "text": "its",
+   "start": 87.97,
+   "end": 88.05,
+   "block": "B3"
+  },
+  {
+   "text": "weaknesses",
+   "start": 88.13,
+   "end": 88.61,
+   "block": "B3"
+  },
+  {
+   "text": "before",
+   "start": 88.69,
+   "end": 89.01,
+   "block": "B3"
+  },
+  {
+   "text": "choosing",
+   "start": 89.05,
+   "end": 89.33,
+   "block": "B3"
+  },
+  {
+   "text": "how",
+   "start": 89.41,
+   "end": 89.49,
+   "block": "B3"
+  },
+  {
+   "text": "to",
+   "start": 89.53,
+   "end": 89.57,
+   "block": "B3"
+  },
+  {
+   "text": "attack",
+   "start": 89.77,
+   "end": 89.97,
+   "block": "B3"
+  },
+  {
+   "text": "it.",
+   "start": 90.05,
+   "end": 90.61,
+   "block": "B3"
+  },
+  {
+   "text": "Instead",
+   "start": 90.69,
+   "end": 90.93,
+   "block": "B3"
+  },
+  {
+   "text": "of",
+   "start": 91.01,
+   "end": 91.09,
+   "block": "B3"
+  },
+  {
+   "text": "treating",
+   "start": 91.17,
+   "end": 91.49,
+   "block": "B3"
+  },
+  {
+   "text": "every",
+   "start": 91.57,
+   "end": 91.81,
+   "block": "B3"
+  },
+  {
+   "text": "cancer",
+   "start": 91.85,
+   "end": 92.21,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 92.29,
+   "end": 92.37,
+   "block": "B3"
+  },
+  {
+   "text": "same",
+   "start": 92.49,
+   "end": 92.61,
+   "block": "B3"
+  },
+  {
+   "text": "way,",
+   "start": 92.73,
+   "end": 93.17,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 93.25,
+   "end": 93.33,
+   "block": "B3"
+  },
+  {
+   "text": "treatment",
+   "start": 93.37,
+   "end": 93.65,
+   "block": "B3"
+  },
+  {
+   "text": "could",
+   "start": 93.73,
+   "end": 93.81,
+   "block": "B3"
+  },
+  {
+   "text": "be",
+   "start": 93.85,
+   "end": 93.89,
+   "block": "B3"
+  },
+  {
+   "text": "designed",
+   "start": 93.97,
+   "end": 94.29,
+   "block": "B3"
+  },
+  {
+   "text": "around",
+   "start": 94.37,
+   "end": 94.61,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 94.65,
+   "end": 94.69,
+   "block": "B3"
+  },
+  {
+   "text": "exact",
+   "start": 94.97,
+   "end": 95.25,
+   "block": "B3"
+  },
+  {
+   "text": "tumor",
+   "start": 95.29,
+   "end": 95.65,
+   "block": "B3"
+  },
+  {
+   "text": "growing",
+   "start": 95.73,
+   "end": 96.05,
+   "block": "B3"
+  },
+  {
+   "text": "inside",
+   "start": 96.25,
+   "end": 96.45,
+   "block": "B3"
+  },
+  {
+   "text": "that",
+   "start": 96.53,
+   "end": 96.61,
+   "block": "B3"
+  },
+  {
+   "text": "person.",
+   "start": 96.69,
+   "end": 97.37,
+   "block": "B3"
+  },
+  {
+   "text": "But",
+   "start": 97.73,
+   "end": 97.81,
+   "block": "B3"
+  },
+  {
+   "text": "identifying",
+   "start": 97.97,
+   "end": 98.45,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 98.49,
+   "end": 98.53,
+   "block": "B3"
+  },
+  {
+   "text": "weakness",
+   "start": 98.61,
+   "end": 99.17,
+   "block": "B3"
+  },
+  {
+   "text": "is",
+   "start": 99.29,
+   "end": 99.41,
+   "block": "B3"
+  },
+  {
+   "text": "only",
+   "start": 99.57,
+   "end": 99.73,
+   "block": "B3"
+  },
+  {
+   "text": "the",
+   "start": 99.77,
+   "end": 99.81,
+   "block": "B3"
+  },
+  {
+   "text": "beginning.",
+   "start": 99.97,
+   "end": 100.61,
+   "block": "B3"
+  },
+  {
+   "text": "AI",
+   "start": 101.147,
+   "end": 101.41,
+   "block": "B4"
+  },
+  {
+   "text": "can",
+   "start": 101.49,
+   "end": 101.57,
+   "block": "B4"
+  },
+  {
+   "text": "help",
+   "start": 101.65,
+   "end": 101.73,
+   "block": "B4"
+  },
+  {
+   "text": "scientists",
+   "start": 101.81,
+   "end": 102.37,
+   "block": "B4"
+  },
+  {
+   "text": "design",
+   "start": 102.57,
+   "end": 102.77,
+   "block": "B4"
+  },
+  {
+   "text": "molecules",
+   "start": 102.85,
+   "end": 103.41,
+   "block": "B4"
+  },
+  {
+   "text": "that",
+   "start": 103.49,
+   "end": 103.57,
+   "block": "B4"
+  },
+  {
+   "text": "target",
+   "start": 103.65,
+   "end": 103.89,
+   "block": "B4"
+  },
+  {
+   "text": "the",
+   "start": 103.97,
+   "end": 104.05,
+   "block": "B4"
+  },
+  {
+   "text": "proteins",
+   "start": 104.17,
+   "end": 104.53,
+   "block": "B4"
+  },
+  {
+   "text": "cancer",
+   "start": 104.61,
+   "end": 104.93,
+   "block": "B4"
+  },
+  {
+   "text": "cells",
+   "start": 105.01,
+   "end": 105.25,
+   "block": "B4"
+  },
+  {
+   "text": "depend",
+   "start": 105.45,
+   "end": 105.65,
+   "block": "B4"
+  },
+  {
+   "text": "on",
+   "start": 105.73,
+   "end": 105.81,
+   "block": "B4"
+  },
+  {
+   "text": "to",
+   "start": 105.89,
+   "end": 105.97,
+   "block": "B4"
+  },
+  {
+   "text": "survive.",
+   "start": 106.05,
+   "end": 106.93,
+   "block": "B4"
+  },
+  {
+   "text": "Imagine",
+   "start": 107.397,
+   "end": 107.49,
+   "block": "B4"
+  },
+  {
+   "text": "microscopic",
+   "start": 107.57,
+   "end": 108.29,
+   "block": "B4"
+  },
+  {
+   "text": "drug",
+   "start": 108.41,
+   "end": 108.53,
+   "block": "B4"
+  },
+  {
+   "text": "carriers",
+   "start": 108.61,
+   "end": 109.09,
+   "block": "B4"
+  },
+  {
+   "text": "traveling",
+   "start": 109.25,
+   "end": 109.57,
+   "block": "B4"
+  },
+  {
+   "text": "through",
+   "start": 109.65,
+   "end": 109.73,
+   "block": "B4"
+  },
+  {
+   "text": "the",
+   "start": 109.77,
+   "end": 109.81,
+   "block": "B4"
+  },
+  {
+   "text": "bloodstream,",
+   "start": 109.93,
+   "end": 110.69,
+   "block": "B4"
+  },
+  {
+   "text": "recognizing",
+   "start": 110.85,
+   "end": 111.33,
+   "block": "B4"
+  },
+  {
+   "text": "markers",
+   "start": 111.49,
+   "end": 111.65,
+   "block": "B4"
+  },
+  {
+   "text": "on",
+   "start": 111.73,
+   "end": 111.81,
+   "block": "B4"
+  },
+  {
+   "text": "cancer",
+   "start": 111.89,
+   "end": 112.13,
+   "block": "B4"
+  },
+  {
+   "text": "cells,",
+   "start": 112.29,
+   "end": 112.823,
+   "block": "B4"
+  },
+  {
+   "text": "and",
+   "start": 112.877,
+   "end": 112.93,
+   "block": "B4"
+  },
+  {
+   "text": "delivering",
+   "start": 113.09,
+   "end": 113.41,
+   "block": "B4"
+  },
+  {
+   "text": "their",
+   "start": 113.53,
+   "end": 113.65,
+   "block": "B4"
+  },
+  {
+   "text": "deadly",
+   "start": 113.73,
+   "end": 113.97,
+   "block": "B4"
+  },
+  {
+   "text": "payload",
+   "start": 114.21,
+   "end": 114.45,
+   "block": "B4"
+  },
+  {
+   "text": "directly",
+   "start": 114.65,
+   "end": 115.01,
+   "block": "B4"
+  },
+  {
+   "text": "to",
+   "start": 115.05,
+   "end": 115.09,
+   "block": "B4"
+  },
+  {
+   "text": "the",
+   "start": 115.17,
+   "end": 115.25,
+   "block": "B4"
+  },
+  {
+   "text": "tumor.",
+   "start": 115.29,
+   "end": 115.97,
+   "block": "B4"
+  },
+  {
+   "text": "Like",
+   "start": 116.09,
+   "end": 116.21,
+   "block": "B4"
+  },
+  {
+   "text": "guided",
+   "start": 116.29,
+   "end": 116.61,
+   "block": "B4"
+  },
+  {
+   "text": "missiles,",
+   "start": 116.69,
+   "end": 117.33,
+   "block": "B4"
+  },
+  {
+   "text": "operating",
+   "start": 117.41,
+   "end": 117.81,
+   "block": "B4"
+  },
+  {
+   "text": "at",
+   "start": 117.85,
+   "end": 117.89,
+   "block": "B4"
+  },
+  {
+   "text": "a",
+   "start": 117.943,
+   "end": 117.997,
+   "block": "B4"
+  },
+  {
+   "text": "scale",
+   "start": 118.05,
+   "end": 118.37,
+   "block": "B4"
+  },
+  {
+   "text": "smaller",
+   "start": 118.45,
+   "end": 118.77,
+   "block": "B4"
+  },
+  {
+   "text": "than",
+   "start": 118.85,
+   "end": 119.09,
+   "block": "B4"
+  },
+  {
+   "text": "anything",
+   "start": 119.29,
+   "end": 119.49,
+   "block": "B4"
+  },
+  {
+   "text": "you",
+   "start": 119.53,
+   "end": 119.57,
+   "block": "B4"
+  },
+  {
+   "text": "can",
+   "start": 119.65,
+   "end": 119.81,
+   "block": "B4"
+  },
+  {
+   "text": "see.",
+   "start": 119.93,
+   "end": 120.53,
+   "block": "B4"
+  },
+  {
+   "text": "The",
+   "start": 120.667,
+   "end": 120.69,
+   "block": "B4"
+  },
+  {
+   "text": "goal?",
+   "start": 120.85,
+   "end": 121.41,
+   "block": "B4"
+  },
+  {
+   "text": "Destroy",
+   "start": 121.61,
+   "end": 121.81,
+   "block": "B4"
+  },
+  {
+   "text": "the",
+   "start": 121.89,
+   "end": 121.97,
+   "block": "B4"
+  },
+  {
+   "text": "cancer",
+   "start": 122.01,
+   "end": 122.37,
+   "block": "B4"
+  },
+  {
+   "text": "while",
+   "start": 122.49,
+   "end": 122.61,
+   "block": "B4"
+  },
+  {
+   "text": "sparing",
+   "start": 122.65,
+   "end": 122.93,
+   "block": "B4"
+  },
+  {
+   "text": "as",
+   "start": 123.05,
+   "end": 123.17,
+   "block": "B4"
+  },
+  {
+   "text": "much",
+   "start": 123.25,
+   "end": 123.41,
+   "block": "B4"
+  },
+  {
+   "text": "healthy",
+   "start": 123.57,
+   "end": 123.73,
+   "block": "B4"
+  },
+  {
+   "text": "tissue",
+   "start": 123.77,
+   "end": 124.05,
+   "block": "B4"
+  },
+  {
+   "text": "as",
+   "start": 124.13,
+   "end": 124.21,
+   "block": "B4"
+  },
+  {
+   "text": "possible.",
+   "start": 124.45,
+   "end": 125.17,
+   "block": "B4"
+  },
+  {
+   "text": "But",
+   "start": 125.303,
+   "end": 125.33,
+   "block": "B4"
+  },
+  {
+   "text": "there's",
+   "start": 125.37,
+   "end": 125.49,
+   "block": "B4"
+  },
+  {
+   "text": "still",
+   "start": 125.61,
+   "end": 125.73,
+   "block": "B4"
+  },
+  {
+   "text": "a",
+   "start": 125.77,
+   "end": 125.81,
+   "block": "B4"
+  },
+  {
+   "text": "problem.",
+   "start": 126.05,
+   "end": 126.69,
+   "block": "B4"
+  },
+  {
+   "text": "Some",
+   "start": 126.77,
+   "end": 126.93,
+   "block": "B4"
+  },
+  {
+   "text": "cancer",
+   "start": 127.01,
+   "end": 127.25,
+   "block": "B4"
+  },
+  {
+   "text": "cells",
+   "start": 127.33,
+   "end": 127.57,
+   "block": "B4"
+  },
+  {
+   "text": "can",
+   "start": 127.65,
+   "end": 127.73,
+   "block": "B4"
+  },
+  {
+   "text": "survive,",
+   "start": 127.81,
+   "end": 128.53,
+   "block": "B4"
+  },
+  {
+   "text": "mutate,",
+   "start": 128.69,
+   "end": 129.117,
+   "block": "B4"
+  },
+  {
+   "text": "and",
+   "start": 129.143,
+   "end": 129.17,
+   "block": "B4"
+  },
+  {
+   "text": "become",
+   "start": 129.25,
+   "end": 129.49,
+   "block": "B4"
+  },
+  {
+   "text": "resistant.",
+   "start": 129.61,
+   "end": 130.53,
+   "block": "B4"
+  },
+  {
+   "text": "So",
+   "start": 130.61,
+   "end": 130.77,
+   "block": "B4"
+  },
+  {
+   "text": "AI",
+   "start": 130.85,
+   "end": 131.25,
+   "block": "B4"
+  },
+  {
+   "text": "needs",
+   "start": 131.33,
+   "end": 131.49,
+   "block": "B4"
+  },
+  {
+   "text": "another",
+   "start": 131.69,
+   "end": 131.89,
+   "block": "B4"
+  },
+  {
+   "text": "weapon.",
+   "start": 131.97,
+   "end": 132.61,
+   "block": "B4"
+  },
+  {
+   "text": "Your",
+   "start": 133.1,
+   "end": 133.26,
+   "block": "B5"
+  },
+  {
+   "text": "body",
+   "start": 133.42,
+   "end": 133.58,
+   "block": "B5"
+  },
+  {
+   "text": "already",
+   "start": 133.66,
+   "end": 134.14,
+   "block": "B5"
+  },
+  {
+   "text": "has",
+   "start": 134.22,
+   "end": 134.3,
+   "block": "B5"
+  },
+  {
+   "text": "an",
+   "start": 134.38,
+   "end": 134.46,
+   "block": "B5"
+  },
+  {
+   "text": "army",
+   "start": 134.54,
+   "end": 134.94,
+   "block": "B5"
+  },
+  {
+   "text": "capable",
+   "start": 135.06,
+   "end": 135.34,
+   "block": "B5"
+  },
+  {
+   "text": "of",
+   "start": 135.42,
+   "end": 135.58,
+   "block": "B5"
+  },
+  {
+   "text": "killing",
+   "start": 135.62,
+   "end": 135.9,
+   "block": "B5"
+  },
+  {
+   "text": "cancer.",
+   "start": 135.94,
+   "end": 136.727,
+   "block": "B5"
+  },
+  {
+   "text": "It's",
+   "start": 136.753,
+   "end": 136.86,
+   "block": "B5"
+  },
+  {
+   "text": "called",
+   "start": 136.94,
+   "end": 137.1,
+   "block": "B5"
+  },
+  {
+   "text": "your",
+   "start": 137.18,
+   "end": 137.26,
+   "block": "B5"
+  },
+  {
+   "text": "immune",
+   "start": 137.46,
+   "end": 137.66,
+   "block": "B5"
+  },
+  {
+   "text": "system.",
+   "start": 138.06,
+   "end": 138.473,
+   "block": "B5"
+  },
+  {
+   "text": "The",
+   "start": 138.54,
+   "end": 138.62,
+   "block": "B5"
+  },
+  {
+   "text": "problem",
+   "start": 138.86,
+   "end": 139.1,
+   "block": "B5"
+  },
+  {
+   "text": "is",
+   "start": 139.18,
+   "end": 139.26,
+   "block": "B5"
+  },
+  {
+   "text": "that",
+   "start": 139.34,
+   "end": 139.42,
+   "block": "B5"
+  },
+  {
+   "text": "cancer",
+   "start": 139.5,
+   "end": 139.82,
+   "block": "B5"
+  },
+  {
+   "text": "can",
+   "start": 139.9,
+   "end": 139.98,
+   "block": "B5"
+  },
+  {
+   "text": "disguise",
+   "start": 140.1,
+   "end": 140.46,
+   "block": "B5"
+  },
+  {
+   "text": "itself,",
+   "start": 140.54,
+   "end": 141.313,
+   "block": "B5"
+  },
+  {
+   "text": "suppress",
+   "start": 141.447,
+   "end": 141.58,
+   "block": "B5"
+  },
+  {
+   "text": "immune",
+   "start": 141.66,
+   "end": 141.9,
+   "block": "B5"
+  },
+  {
+   "text": "defenses,",
+   "start": 141.98,
+   "end": 142.74,
+   "block": "B5"
+  },
+  {
+   "text": "or",
+   "start": 142.78,
+   "end": 142.86,
+   "block": "B5"
+  },
+  {
+   "text": "become",
+   "start": 142.94,
+   "end": 143.18,
+   "block": "B5"
+  },
+  {
+   "text": "difficult",
+   "start": 143.26,
+   "end": 143.66,
+   "block": "B5"
+  },
+  {
+   "text": "for",
+   "start": 143.7,
+   "end": 143.74,
+   "block": "B5"
+  },
+  {
+   "text": "those",
+   "start": 143.82,
+   "end": 143.98,
+   "block": "B5"
+  },
+  {
+   "text": "cells",
+   "start": 144.1,
+   "end": 144.22,
+   "block": "B5"
+  },
+  {
+   "text": "to",
+   "start": 144.3,
+   "end": 144.38,
+   "block": "B5"
+  },
+  {
+   "text": "recognize.",
+   "start": 144.54,
+   "end": 145.42,
+   "block": "B5"
+  },
+  {
+   "text": "But",
+   "start": 145.553,
+   "end": 145.58,
+   "block": "B5"
+  },
+  {
+   "text": "tumors",
+   "start": 145.66,
+   "end": 145.98,
+   "block": "B5"
+  },
+  {
+   "text": "can",
+   "start": 146.06,
+   "end": 146.14,
+   "block": "B5"
+  },
+  {
+   "text": "carry",
+   "start": 146.22,
+   "end": 146.46,
+   "block": "B5"
+  },
+  {
+   "text": "unique",
+   "start": 146.54,
+   "end": 146.94,
+   "block": "B5"
+  },
+  {
+   "text": "molecular",
+   "start": 147.02,
+   "end": 147.5,
+   "block": "B5"
+  },
+  {
+   "text": "fingerprints.",
+   "start": 147.66,
+   "end": 148.54,
+   "block": "B5"
+  },
+  {
+   "text": "AI",
+   "start": 148.62,
+   "end": 148.94,
+   "block": "B5"
+  },
+  {
+   "text": "can",
+   "start": 149.02,
+   "end": 149.1,
+   "block": "B5"
+  },
+  {
+   "text": "help",
+   "start": 149.18,
+   "end": 149.26,
+   "block": "B5"
+  },
+  {
+   "text": "identify",
+   "start": 149.54,
+   "end": 149.82,
+   "block": "B5"
+  },
+  {
+   "text": "those",
+   "start": 149.9,
+   "end": 149.98,
+   "block": "B5"
+  },
+  {
+   "text": "fingerprints",
+   "start": 150.06,
+   "end": 150.62,
+   "block": "B5"
+  },
+  {
+   "text": "and",
+   "start": 150.7,
+   "end": 150.78,
+   "block": "B5"
+  },
+  {
+   "text": "guide",
+   "start": 150.94,
+   "end": 151.1,
+   "block": "B5"
+  },
+  {
+   "text": "personalized",
+   "start": 151.3,
+   "end": 151.74,
+   "block": "B5"
+  },
+  {
+   "text": "cancer",
+   "start": 151.78,
+   "end": 152.06,
+   "block": "B5"
+  },
+  {
+   "text": "vaccines",
+   "start": 152.1,
+   "end": 152.7,
+   "block": "B5"
+  },
+  {
+   "text": "or",
+   "start": 152.78,
+   "end": 152.86,
+   "block": "B5"
+  },
+  {
+   "text": "specialized",
+   "start": 153.06,
+   "end": 153.5,
+   "block": "B5"
+  },
+  {
+   "text": "immune-cell",
+   "start": 153.66,
+   "end": 154.06,
+   "block": "B5"
+  },
+  {
+   "text": "treatments.",
+   "start": 154.14,
+   "end": 155.02,
+   "block": "B5"
+  },
+  {
+   "text": "Imagine",
+   "start": 155.42,
+   "end": 155.5,
+   "block": "B5"
+  },
+  {
+   "text": "your",
+   "start": 155.62,
+   "end": 155.74,
+   "block": "B5"
+  },
+  {
+   "text": "own",
+   "start": 155.82,
+   "end": 155.98,
+   "block": "B5"
+  },
+  {
+   "text": "T",
+   "start": 156.06,
+   "end": 156.22,
+   "block": "B5"
+  },
+  {
+   "text": "cells",
+   "start": 156.3,
+   "end": 156.54,
+   "block": "B5"
+  },
+  {
+   "text": "learning",
+   "start": 156.7,
+   "end": 156.86,
+   "block": "B5"
+  },
+  {
+   "text": "exactly",
+   "start": 157.02,
+   "end": 157.5,
+   "block": "B5"
+  },
+  {
+   "text": "what",
+   "start": 157.58,
+   "end": 157.74,
+   "block": "B5"
+  },
+  {
+   "text": "to",
+   "start": 157.78,
+   "end": 157.82,
+   "block": "B5"
+  },
+  {
+   "text": "hunt.",
+   "start": 157.9,
+   "end": 158.54,
+   "block": "B5"
+  },
+  {
+   "text": "They",
+   "start": 158.62,
+   "end": 158.7,
+   "block": "B5"
+  },
+  {
+   "text": "recognize",
+   "start": 158.78,
+   "end": 159.18,
+   "block": "B5"
+  },
+  {
+   "text": "a",
+   "start": 159.22,
+   "end": 159.26,
+   "block": "B5"
+  },
+  {
+   "text": "cancer",
+   "start": 159.34,
+   "end": 159.66,
+   "block": "B5"
+  },
+  {
+   "text": "cell.",
+   "start": 159.74,
+   "end": 160.38,
+   "block": "B5"
+  },
+  {
+   "text": "Lock",
+   "start": 160.5,
+   "end": 160.62,
+   "block": "B5"
+  },
+  {
+   "text": "onto",
+   "start": 160.7,
+   "end": 160.94,
+   "block": "B5"
+  },
+  {
+   "text": "it.",
+   "start": 161.02,
+   "end": 161.447,
+   "block": "B5"
+  },
+  {
+   "text": "And",
+   "start": 161.473,
+   "end": 161.5,
+   "block": "B5"
+  },
+  {
+   "text": "destroy",
+   "start": 161.78,
+   "end": 162.06,
+   "block": "B5"
+  },
+  {
+   "text": "it.",
+   "start": 162.14,
+   "end": 162.62,
+   "block": "B5"
+  },
+  {
+   "text": "Then",
+   "start": 162.7,
+   "end": 163.1,
+   "block": "B5"
+  },
+  {
+   "text": "they",
+   "start": 163.18,
+   "end": 163.26,
+   "block": "B5"
+  },
+  {
+   "text": "move",
+   "start": 163.34,
+   "end": 163.5,
+   "block": "B5"
+  },
+  {
+   "text": "to",
+   "start": 163.54,
+   "end": 163.58,
+   "block": "B5"
+  },
+  {
+   "text": "the",
+   "start": 163.62,
+   "end": 163.66,
+   "block": "B5"
+  },
+  {
+   "text": "next.",
+   "start": 163.74,
+   "end": 164.38,
+   "block": "B5"
+  },
+  {
+   "text": "And",
+   "start": 164.46,
+   "end": 164.54,
+   "block": "B5"
+  },
+  {
+   "text": "the",
+   "start": 164.62,
+   "end": 164.66,
+   "block": "B5"
+  },
+  {
+   "text": "next.",
+   "start": 164.7,
+   "end": 165.5,
+   "block": "B5"
+  },
+  {
+   "text": "Suddenly,",
+   "start": 165.66,
+   "end": 166.353,
+   "block": "B5"
+  },
+  {
+   "text": "the",
+   "start": 166.407,
+   "end": 166.46,
+   "block": "B5"
+  },
+  {
+   "text": "tumor",
+   "start": 166.5,
+   "end": 166.78,
+   "block": "B5"
+  },
+  {
+   "text": "isn't",
+   "start": 166.86,
+   "end": 167.02,
+   "block": "B5"
+  },
+  {
+   "text": "just",
+   "start": 167.1,
+   "end": 167.26,
+   "block": "B5"
+  },
+  {
+   "text": "fighting",
+   "start": 167.34,
+   "end": 167.5,
+   "block": "B5"
+  },
+  {
+   "text": "a",
+   "start": 167.66,
+   "end": 167.873,
+   "block": "B5"
+  },
+  {
+   "text": "drug,",
+   "start": 168.087,
+   "end": 168.34,
+   "block": "B5"
+  },
+  {
+   "text": "It's",
+   "start": 168.38,
+   "end": 168.54,
+   "block": "B5"
+  },
+  {
+   "text": "fighting",
+   "start": 168.62,
+   "end": 168.86,
+   "block": "B5"
+  },
+  {
+   "text": "the",
+   "start": 168.94,
+   "end": 169.02,
+   "block": "B5"
+  },
+  {
+   "text": "body's",
+   "start": 169.14,
+   "end": 169.42,
+   "block": "B5"
+  },
+  {
+   "text": "own",
+   "start": 169.5,
+   "end": 169.66,
+   "block": "B5"
+  },
+  {
+   "text": "defenses.",
+   "start": 169.78,
+   "end": 170.62,
+   "block": "B5"
+  },
+  {
+   "text": "But",
+   "start": 171.09,
+   "end": 171.17,
+   "block": "B6"
+  },
+  {
+   "text": "destroying",
+   "start": 171.37,
+   "end": 171.73,
+   "block": "B6"
+  },
+  {
+   "text": "the",
+   "start": 171.77,
+   "end": 171.81,
+   "block": "B6"
+  },
+  {
+   "text": "visible",
+   "start": 171.89,
+   "end": 172.21,
+   "block": "B6"
+  },
+  {
+   "text": "tumor",
+   "start": 172.29,
+   "end": 172.61,
+   "block": "B6"
+  },
+  {
+   "text": "is",
+   "start": 172.69,
+   "end": 172.93,
+   "block": "B6"
+  },
+  {
+   "text": "only",
+   "start": 173.09,
+   "end": 173.25,
+   "block": "B6"
+  },
+  {
+   "text": "half",
+   "start": 173.33,
+   "end": 173.57,
+   "block": "B6"
+  },
+  {
+   "text": "the",
+   "start": 173.61,
+   "end": 173.65,
+   "block": "B6"
+  },
+  {
+   "text": "battle.",
+   "start": 173.73,
+   "end": 174.45,
+   "block": "B6"
+  },
+  {
+   "text": "Because",
+   "start": 174.61,
+   "end": 174.77,
+   "block": "B6"
+  },
+  {
+   "text": "even",
+   "start": 174.85,
+   "end": 175.01,
+   "block": "B6"
+  },
+  {
+   "text": "a",
+   "start": 175.09,
+   "end": 175.17,
+   "block": "B6"
+  },
+  {
+   "text": "tiny",
+   "start": 175.37,
+   "end": 175.57,
+   "block": "B6"
+  },
+  {
+   "text": "population",
+   "start": 175.89,
+   "end": 176.21,
+   "block": "B6"
+  },
+  {
+   "text": "of",
+   "start": 176.25,
+   "end": 176.29,
+   "block": "B6"
+  },
+  {
+   "text": "surviving",
+   "start": 176.37,
+   "end": 176.85,
+   "block": "B6"
+  },
+  {
+   "text": "cancer",
+   "start": 176.957,
+   "end": 177.17,
+   "block": "B6"
+  },
+  {
+   "text": "cells",
+   "start": 177.25,
+   "end": 177.57,
+   "block": "B6"
+  },
+  {
+   "text": "can",
+   "start": 177.61,
+   "end": 177.65,
+   "block": "B6"
+  },
+  {
+   "text": "eventually",
+   "start": 177.73,
+   "end": 178.29,
+   "block": "B6"
+  },
+  {
+   "text": "bring",
+   "start": 178.37,
+   "end": 178.45,
+   "block": "B6"
+  },
+  {
+   "text": "the",
+   "start": 178.49,
+   "end": 178.53,
+   "block": "B6"
+  },
+  {
+   "text": "disease",
+   "start": 178.61,
+   "end": 178.93,
+   "block": "B6"
+  },
+  {
+   "text": "back.",
+   "start": 179.01,
+   "end": 179.73,
+   "block": "B6"
+  },
+  {
+   "text": "And",
+   "start": 179.81,
+   "end": 179.97,
+   "block": "B6"
+  },
+  {
+   "text": "this",
+   "start": 180.05,
+   "end": 180.21,
+   "block": "B6"
+  },
+  {
+   "text": "is",
+   "start": 180.29,
+   "end": 180.37,
+   "block": "B6"
+  },
+  {
+   "text": "where",
+   "start": 180.45,
+   "end": 180.53,
+   "block": "B6"
+  },
+  {
+   "text": "things",
+   "start": 180.61,
+   "end": 180.77,
+   "block": "B6"
+  },
+  {
+   "text": "get",
+   "start": 180.85,
+   "end": 181.09,
+   "block": "B6"
+  },
+  {
+   "text": "really",
+   "start": 181.25,
+   "end": 181.41,
+   "block": "B6"
+  },
+  {
+   "text": "interesting.",
+   "start": 181.49,
+   "end": 182.37,
+   "block": "B6"
+  },
+  {
+   "text": "Cancer",
+   "start": 182.45,
+   "end": 182.77,
+   "block": "B6"
+  },
+  {
+   "text": "can",
+   "start": 182.85,
+   "end": 182.93,
+   "block": "B6"
+  },
+  {
+   "text": "leave",
+   "start": 183.05,
+   "end": 183.17,
+   "block": "B6"
+  },
+  {
+   "text": "microscopic",
+   "start": 183.25,
+   "end": 183.89,
+   "block": "B6"
+  },
+  {
+   "text": "traces",
+   "start": 183.97,
+   "end": 184.29,
+   "block": "B6"
+  },
+  {
+   "text": "of",
+   "start": 184.37,
+   "end": 184.45,
+   "block": "B6"
+  },
+  {
+   "text": "its",
+   "start": 184.53,
+   "end": 184.61,
+   "block": "B6"
+  },
+  {
+   "text": "DNA",
+   "start": 184.69,
+   "end": 185.09,
+   "block": "B6"
+  },
+  {
+   "text": "in",
+   "start": 185.13,
+   "end": 185.17,
+   "block": "B6"
+  },
+  {
+   "text": "the",
+   "start": 185.21,
+   "end": 185.25,
+   "block": "B6"
+  },
+  {
+   "text": "bloodstream.",
+   "start": 185.41,
+   "end": 186.29,
+   "block": "B6"
+  },
+  {
+   "text": "By",
+   "start": 186.496,
+   "end": 186.53,
+   "block": "B6"
+  },
+  {
+   "text": "analyzing",
+   "start": 186.69,
+   "end": 187.09,
+   "block": "B6"
+  },
+  {
+   "text": "these",
+   "start": 187.17,
+   "end": 187.25,
+   "block": "B6"
+  },
+  {
+   "text": "signals,",
+   "start": 187.33,
+   "end": 187.97,
+   "block": "B6"
+  },
+  {
+   "text": "AI",
+   "start": 188.05,
+   "end": 188.29,
+   "block": "B6"
+  },
+  {
+   "text": "could",
+   "start": 188.37,
+   "end": 188.45,
+   "block": "B6"
+  },
+  {
+   "text": "help",
+   "start": 188.53,
+   "end": 188.61,
+   "block": "B6"
+  },
+  {
+   "text": "detect",
+   "start": 188.69,
+   "end": 189.01,
+   "block": "B6"
+  },
+  {
+   "text": "signs",
+   "start": 189.09,
+   "end": 189.37,
+   "block": "B6"
+  },
+  {
+   "text": "of",
+   "start": 189.41,
+   "end": 189.45,
+   "block": "B6"
+  },
+  {
+   "text": "a",
+   "start": 189.49,
+   "end": 189.53,
+   "block": "B6"
+  },
+  {
+   "text": "returning",
+   "start": 189.57,
+   "end": 190.05,
+   "block": "B6"
+  },
+  {
+   "text": "tumor,",
+   "start": 190.157,
+   "end": 190.69,
+   "block": "B6"
+  },
+  {
+   "text": "identify",
+   "start": 190.97,
+   "end": 191.25,
+   "block": "B6"
+  },
+  {
+   "text": "how",
+   "start": 191.33,
+   "end": 191.41,
+   "block": "B6"
+  },
+  {
+   "text": "it's",
+   "start": 191.45,
+   "end": 191.65,
+   "block": "B6"
+  },
+  {
+   "text": "changing,",
+   "start": 191.85,
+   "end": 192.37,
+   "block": "B6"
+  },
+  {
+   "text": "and",
+   "start": 192.45,
+   "end": 192.53,
+   "block": "B6"
+  },
+  {
+   "text": "guide",
+   "start": 192.65,
+   "end": 192.77,
+   "block": "B6"
+  },
+  {
+   "text": "a",
+   "start": 192.85,
+   "end": 192.93,
+   "block": "B6"
+  },
+  {
+   "text": "new",
+   "start": 193.01,
+   "end": 193.09,
+   "block": "B6"
+  },
+  {
+   "text": "treatment",
+   "start": 193.13,
+   "end": 193.57,
+   "block": "B6"
+  },
+  {
+   "text": "before",
+   "start": 193.73,
+   "end": 193.89,
+   "block": "B6"
+  },
+  {
+   "text": "it",
+   "start": 193.97,
+   "end": 194.05,
+   "block": "B6"
+  },
+  {
+   "text": "grows",
+   "start": 194.13,
+   "end": 194.29,
+   "block": "B6"
+  },
+  {
+   "text": "out",
+   "start": 194.33,
+   "end": 194.37,
+   "block": "B6"
+  },
+  {
+   "text": "of",
+   "start": 194.45,
+   "end": 194.53,
+   "block": "B6"
+  },
+  {
+   "text": "control.",
+   "start": 194.77,
+   "end": 195.41,
+   "block": "B6"
+  },
+  {
+   "text": "An",
+   "start": 195.479,
+   "end": 195.49,
+   "block": "B6"
+  },
+  {
+   "text": "evolving",
+   "start": 195.57,
+   "end": 196.05,
+   "block": "B6"
+  },
+  {
+   "text": "enemy,",
+   "start": 196.13,
+   "end": 196.69,
+   "block": "B6"
+  },
+  {
+   "text": "met",
+   "start": 196.77,
+   "end": 197.01,
+   "block": "B6"
+  },
+  {
+   "text": "by",
+   "start": 197.09,
+   "end": 197.17,
+   "block": "B6"
+  },
+  {
+   "text": "an",
+   "start": 197.21,
+   "end": 197.25,
+   "block": "B6"
+  },
+  {
+   "text": "evolving",
+   "start": 197.33,
+   "end": 197.81,
+   "block": "B6"
+  },
+  {
+   "text": "defense.",
+   "start": 198.09,
+   "end": 198.61,
+   "block": "B6"
+  },
+  {
+   "text": "And",
+   "start": 199.276,
+   "end": 199.31,
+   "block": "B7"
+  },
+  {
+   "text": "that's",
+   "start": 199.43,
+   "end": 199.63,
+   "block": "B7"
+  },
+  {
+   "text": "the",
+   "start": 199.71,
+   "end": 199.79,
+   "block": "B7"
+  },
+  {
+   "text": "breakthrough",
+   "start": 199.91,
+   "end": 200.19,
+   "block": "B7"
+  },
+  {
+   "text": "behind",
+   "start": 200.27,
+   "end": 200.51,
+   "block": "B7"
+  },
+  {
+   "text": "this",
+   "start": 200.59,
+   "end": 200.67,
+   "block": "B7"
+  },
+  {
+   "text": "entire",
+   "start": 200.87,
+   "end": 201.23,
+   "block": "B7"
+  },
+  {
+   "text": "idea.",
+   "start": 201.31,
+   "end": 202.19,
+   "block": "B7"
+  },
+  {
+   "text": "Cancer",
+   "start": 202.23,
+   "end": 202.59,
+   "block": "B7"
+  },
+  {
+   "text": "isn't",
+   "start": 202.67,
+   "end": 202.99,
+   "block": "B7"
+  },
+  {
+   "text": "one",
+   "start": 203.07,
+   "end": 203.15,
+   "block": "B7"
+  },
+  {
+   "text": "disease",
+   "start": 203.23,
+   "end": 203.63,
+   "block": "B7"
+  },
+  {
+   "text": "with",
+   "start": 203.75,
+   "end": 203.87,
+   "block": "B7"
+  },
+  {
+   "text": "one",
+   "start": 203.95,
+   "end": 204.03,
+   "block": "B7"
+  },
+  {
+   "text": "weakness.",
+   "start": 204.11,
+   "end": 204.99,
+   "block": "B7"
+  },
+  {
+   "text": "Every",
+   "start": 205.07,
+   "end": 205.39,
+   "block": "B7"
+  },
+  {
+   "text": "tumor",
+   "start": 205.43,
+   "end": 205.71,
+   "block": "B7"
+  },
+  {
+   "text": "can",
+   "start": 205.79,
+   "end": 205.87,
+   "block": "B7"
+  },
+  {
+   "text": "be",
+   "start": 205.95,
+   "end": 206.03,
+   "block": "B7"
+  },
+  {
+   "text": "different.",
+   "start": 206.43,
+   "end": 206.87,
+   "block": "B7"
+  },
+  {
+   "text": "So",
+   "start": 206.91,
+   "end": 207.31,
+   "block": "B7"
+  },
+  {
+   "text": "imagine",
+   "start": 207.43,
+   "end": 207.71,
+   "block": "B7"
+  },
+  {
+   "text": "a",
+   "start": 207.87,
+   "end": 207.977,
+   "block": "B7"
+  },
+  {
+   "text": "system",
+   "start": 208.083,
+   "end": 208.19,
+   "block": "B7"
+  },
+  {
+   "text": "that",
+   "start": 208.31,
+   "end": 208.43,
+   "block": "B7"
+  },
+  {
+   "text": "doesn't",
+   "start": 208.51,
+   "end": 208.75,
+   "block": "B7"
+  },
+  {
+   "text": "need",
+   "start": 208.91,
+   "end": 209.07,
+   "block": "B7"
+  },
+  {
+   "text": "one",
+   "start": 209.15,
+   "end": 209.31,
+   "block": "B7"
+  },
+  {
+   "text": "universal",
+   "start": 209.39,
+   "end": 209.87,
+   "block": "B7"
+  },
+  {
+   "text": "drug.",
+   "start": 210.03,
+   "end": 210.59,
+   "block": "B7"
+  },
+  {
+   "text": "It",
+   "start": 210.67,
+   "end": 210.75,
+   "block": "B7"
+  },
+  {
+   "text": "studies",
+   "start": 210.83,
+   "end": 211.23,
+   "block": "B7"
+  },
+  {
+   "text": "each",
+   "start": 211.31,
+   "end": 211.47,
+   "block": "B7"
+  },
+  {
+   "text": "cancer,",
+   "start": 211.51,
+   "end": 212.217,
+   "block": "B7"
+  },
+  {
+   "text": "predicts",
+   "start": 212.323,
+   "end": 212.51,
+   "block": "B7"
+  },
+  {
+   "text": "its",
+   "start": 212.59,
+   "end": 212.67,
+   "block": "B7"
+  },
+  {
+   "text": "behavior,",
+   "start": 213.03,
+   "end": 213.497,
+   "block": "B7"
+  },
+  {
+   "text": "designs",
+   "start": 213.603,
+   "end": 213.79,
+   "block": "B7"
+  },
+  {
+   "text": "a",
+   "start": 213.83,
+   "end": 213.87,
+   "block": "B7"
+  },
+  {
+   "text": "targeted",
+   "start": 213.95,
+   "end": 214.35,
+   "block": "B7"
+  },
+  {
+   "text": "attack,",
+   "start": 214.67,
+   "end": 215.03,
+   "block": "B7"
+  },
+  {
+   "text": "activates",
+   "start": 215.07,
+   "end": 215.55,
+   "block": "B7"
+  },
+  {
+   "text": "the",
+   "start": 215.59,
+   "end": 215.63,
+   "block": "B7"
+  },
+  {
+   "text": "immune",
+   "start": 215.79,
+   "end": 215.95,
+   "block": "B7"
+  },
+  {
+   "text": "system,",
+   "start": 216.23,
+   "end": 216.55,
+   "block": "B7"
+  },
+  {
+   "text": "and",
+   "start": 216.59,
+   "end": 216.75,
+   "block": "B7"
+  },
+  {
+   "text": "watches",
+   "start": 216.79,
+   "end": 217.07,
+   "block": "B7"
+  },
+  {
+   "text": "for",
+   "start": 217.15,
+   "end": 217.39,
+   "block": "B7"
+  },
+  {
+   "text": "anything",
+   "start": 217.47,
+   "end": 217.79,
+   "block": "B7"
+  },
+  {
+   "text": "that",
+   "start": 217.87,
+   "end": 217.95,
+   "block": "B7"
+  },
+  {
+   "text": "survives.",
+   "start": 218.03,
+   "end": 218.944,
+   "block": "B7"
+  },
+  {
+   "text": "A",
+   "start": 219.15,
+   "end": 219.257,
+   "block": "B7"
+  },
+  {
+   "text": "different",
+   "start": 219.363,
+   "end": 219.47,
+   "block": "B7"
+  },
+  {
+   "text": "answer",
+   "start": 219.55,
+   "end": 219.87,
+   "block": "B7"
+  },
+  {
+   "text": "for",
+   "start": 219.95,
+   "end": 220.19,
+   "block": "B7"
+  },
+  {
+   "text": "every",
+   "start": 220.27,
+   "end": 220.51,
+   "block": "B7"
+  },
+  {
+   "text": "cancer.",
+   "start": 220.59,
+   "end": 221.481,
+   "block": "B7"
+  },
+  {
+   "text": "And",
+   "start": 221.55,
+   "end": 221.63,
+   "block": "B7"
+  },
+  {
+   "text": "remember",
+   "start": 221.79,
+   "end": 221.95,
+   "block": "B7"
+  },
+  {
+   "text": "that",
+   "start": 222.07,
+   "end": 222.19,
+   "block": "B7"
+  },
+  {
+   "text": "single",
+   "start": 222.35,
+   "end": 222.51,
+   "block": "B7"
+  },
+  {
+   "text": "cell",
+   "start": 222.59,
+   "end": 222.75,
+   "block": "B7"
+  },
+  {
+   "text": "we",
+   "start": 222.83,
+   "end": 222.91,
+   "block": "B7"
+  },
+  {
+   "text": "started",
+   "start": 222.99,
+   "end": 223.23,
+   "block": "B7"
+  },
+  {
+   "text": "with?",
+   "start": 223.35,
+   "end": 223.95,
+   "block": "B7"
+  },
+  {
+   "text": "Imagine",
+   "start": 224.361,
+   "end": 224.43,
+   "block": "B7"
+  },
+  {
+   "text": "finding",
+   "start": 224.51,
+   "end": 224.83,
+   "block": "B7"
+  },
+  {
+   "text": "it...",
+   "start": 225.07,
+   "end": 225.417,
+   "block": "B7"
+  },
+  {
+   "text": "before",
+   "start": 225.523,
+   "end": 225.63,
+   "block": "B7"
+  },
+  {
+   "text": "it",
+   "start": 225.75,
+   "end": 225.87,
+   "block": "B7"
+  },
+  {
+   "text": "ever",
+   "start": 225.95,
+   "end": 226.19,
+   "block": "B7"
+  },
+  {
+   "text": "has",
+   "start": 226.27,
+   "end": 226.35,
+   "block": "B7"
+  },
+  {
+   "text": "the",
+   "start": 226.43,
+   "end": 226.51,
+   "block": "B7"
+  },
+  {
+   "text": "chance",
+   "start": 226.55,
+   "end": 226.75,
+   "block": "B7"
+  },
+  {
+   "text": "to",
+   "start": 226.83,
+   "end": 226.91,
+   "block": "B7"
+  },
+  {
+   "text": "become",
+   "start": 226.95,
+   "end": 227.15,
+   "block": "B7"
+  },
+  {
+   "text": "a",
+   "start": 227.19,
+   "end": 227.23,
+   "block": "B7"
+  },
+  {
+   "text": "tumor.",
+   "start": 227.31,
+   "end": 227.87,
+   "block": "B7"
+  }
+ ],
+ "script_words": [
+  {
+   "text": "This",
+   "start": 0.49,
+   "end": 0.73
+  },
+  {
+   "text": "might",
+   "start": 0.81,
+   "end": 0.97
+  },
+  {
+   "text": "be",
+   "start": 1.01,
+   "end": 1.05
+  },
+  {
+   "text": "the",
+   "start": 1.13,
+   "end": 1.21
+  },
+  {
+   "text": "most",
+   "start": 1.37,
+   "end": 1.53
+  },
+  {
+   "text": "dangerous",
+   "start": 1.73,
+   "end": 2.09
+  },
+  {
+   "text": "cell",
+   "start": 2.21,
+   "end": 2.33
+  },
+  {
+   "text": "in",
+   "start": 2.41,
+   "end": 2.49
+  },
+  {
+   "text": "this",
+   "start": 2.57,
+   "end": 2.65
+  },
+  {
+   "text": "man's",
+   "start": 2.73,
+   "end": 2.93
+  },
+  {
+   "text": "entire",
+   "start": 2.97,
+   "end": 3.53
+  },
+  {
+   "text": "body.",
+   "start": 4.01,
+   "end": 4.517
+  },
+  {
+   "text": "And",
+   "start": 4.543,
+   "end": 4.57
+  },
+  {
+   "text": "the",
+   "start": 4.61,
+   "end": 4.65
+  },
+  {
+   "text": "terrifying",
+   "start": 4.73,
+   "end": 5.29
+  },
+  {
+   "text": "part",
+   "start": 5.37,
+   "end": 5.61
+  },
+  {
+   "text": "is",
+   "start": 5.65,
+   "end": 5.69
+  },
+  {
+   "text": "that",
+   "start": 5.77,
+   "end": 5.85
+  },
+  {
+   "text": "it",
+   "start": 5.93,
+   "end": 6.01
+  },
+  {
+   "text": "used",
+   "start": 6.09,
+   "end": 6.25
+  },
+  {
+   "text": "to",
+   "start": 6.29,
+   "end": 6.33
+  },
+  {
+   "text": "be",
+   "start": 6.37,
+   "end": 6.41
+  },
+  {
+   "text": "completely",
+   "start": 6.49,
+   "end": 7.13
+  },
+  {
+   "text": "normal.",
+   "start": 7.21,
+   "end": 8.103
+  },
+  {
+   "text": "Deep",
+   "start": 8.17,
+   "end": 8.33
+  },
+  {
+   "text": "inside",
+   "start": 8.53,
+   "end": 8.73
+  },
+  {
+   "text": "its",
+   "start": 8.81,
+   "end": 8.89
+  },
+  {
+   "text": "nucleus,",
+   "start": 8.97,
+   "end": 9.73
+  },
+  {
+   "text": "tiny",
+   "start": 9.77,
+   "end": 10.09
+  },
+  {
+   "text": "mistakes",
+   "start": 10.25,
+   "end": 10.57
+  },
+  {
+   "text": "have",
+   "start": 10.61,
+   "end": 10.65
+  },
+  {
+   "text": "been",
+   "start": 10.73,
+   "end": 10.89
+  },
+  {
+   "text": "building",
+   "start": 11.05,
+   "end": 11.21
+  },
+  {
+   "text": "up",
+   "start": 11.29,
+   "end": 11.37
+  },
+  {
+   "text": "in",
+   "start": 11.41,
+   "end": 11.45
+  },
+  {
+   "text": "its",
+   "start": 11.57,
+   "end": 11.69
+  },
+  {
+   "text": "DNA.",
+   "start": 11.73,
+   "end": 12.69
+  },
+  {
+   "text": "The",
+   "start": 12.73,
+   "end": 12.81
+  },
+  {
+   "text": "instructions",
+   "start": 13.13,
+   "end": 13.45
+  },
+  {
+   "text": "controlling",
+   "start": 13.53,
+   "end": 13.93
+  },
+  {
+   "text": "when",
+   "start": 13.97,
+   "end": 14.01
+  },
+  {
+   "text": "it",
+   "start": 14.09,
+   "end": 14.17
+  },
+  {
+   "text": "grows,",
+   "start": 14.25,
+   "end": 14.917
+  },
+  {
+   "text": "when",
+   "start": 14.943,
+   "end": 14.97
+  },
+  {
+   "text": "it",
+   "start": 15.05,
+   "end": 15.13
+  },
+  {
+   "text": "stops,",
+   "start": 15.21,
+   "end": 15.797
+  },
+  {
+   "text": "and",
+   "start": 15.823,
+   "end": 15.85
+  },
+  {
+   "text": "when",
+   "start": 15.93,
+   "end": 16.01
+  },
+  {
+   "text": "it",
+   "start": 16.09,
+   "end": 16.17
+  },
+  {
+   "text": "dies",
+   "start": 16.21,
+   "end": 16.65
+  },
+  {
+   "text": "are",
+   "start": 16.73,
+   "end": 16.81
+  },
+  {
+   "text": "starting",
+   "start": 16.89,
+   "end": 17.13
+  },
+  {
+   "text": "to",
+   "start": 17.21,
+   "end": 17.29
+  },
+  {
+   "text": "fail.",
+   "start": 17.65,
+   "end": 18.09
+  },
+  {
+   "text": "And",
+   "start": 18.157,
+   "end": 18.17
+  },
+  {
+   "text": "eventually,",
+   "start": 18.25,
+   "end": 19.17
+  },
+  {
+   "text": "something",
+   "start": 19.21,
+   "end": 19.53
+  },
+  {
+   "text": "goes",
+   "start": 19.57,
+   "end": 19.85
+  },
+  {
+   "text": "horribly",
+   "start": 19.93,
+   "end": 20.33
+  },
+  {
+   "text": "wrong.",
+   "start": 20.41,
+   "end": 21.25
+  },
+  {
+   "text": "The",
+   "start": 21.29,
+   "end": 21.37
+  },
+  {
+   "text": "cell",
+   "start": 21.45,
+   "end": 21.61
+  },
+  {
+   "text": "divides",
+   "start": 21.73,
+   "end": 22.09
+  },
+  {
+   "text": "when",
+   "start": 22.17,
+   "end": 22.25
+  },
+  {
+   "text": "it",
+   "start": 22.33,
+   "end": 22.41
+  },
+  {
+   "text": "shouldn't.",
+   "start": 22.49,
+   "end": 23.157
+  },
+  {
+   "text": "It",
+   "start": 23.183,
+   "end": 23.21
+  },
+  {
+   "text": "ignores",
+   "start": 23.29,
+   "end": 23.77
+  },
+  {
+   "text": "signals",
+   "start": 23.97,
+   "end": 24.17
+  },
+  {
+   "text": "telling",
+   "start": 24.21,
+   "end": 24.41
+  },
+  {
+   "text": "it",
+   "start": 24.45,
+   "end": 24.49
+  },
+  {
+   "text": "to",
+   "start": 24.57,
+   "end": 24.65
+  },
+  {
+   "text": "stop.",
+   "start": 24.73,
+   "end": 25.503
+  },
+  {
+   "text": "And",
+   "start": 25.557,
+   "end": 25.61
+  },
+  {
+   "text": "when",
+   "start": 25.65,
+   "end": 25.69
+  },
+  {
+   "text": "the",
+   "start": 25.77,
+   "end": 25.85
+  },
+  {
+   "text": "body",
+   "start": 25.97,
+   "end": 26.09
+  },
+  {
+   "text": "tries",
+   "start": 26.17,
+   "end": 26.41
+  },
+  {
+   "text": "to",
+   "start": 26.45,
+   "end": 26.49
+  },
+  {
+   "text": "destroy",
+   "start": 26.73,
+   "end": 26.97
+  },
+  {
+   "text": "it...",
+   "start": 27.25,
+   "end": 27.57
+  },
+  {
+   "text": "it",
+   "start": 27.61,
+   "end": 27.69
+  },
+  {
+   "text": "survives.",
+   "start": 27.77,
+   "end": 28.917
+  },
+  {
+   "text": "One",
+   "start": 29.05,
+   "end": 29.21
+  },
+  {
+   "text": "cell",
+   "start": 29.29,
+   "end": 29.53
+  },
+  {
+   "text": "becomes",
+   "start": 29.65,
+   "end": 30.01
+  },
+  {
+   "text": "two.",
+   "start": 30.09,
+   "end": 30.69
+  },
+  {
+   "text": "Two",
+   "start": 30.73,
+   "end": 30.97
+  },
+  {
+   "text": "become",
+   "start": 31.09,
+   "end": 31.37
+  },
+  {
+   "text": "four.",
+   "start": 31.45,
+   "end": 32.13
+  },
+  {
+   "text": "Four",
+   "start": 32.17,
+   "end": 32.41
+  },
+  {
+   "text": "become",
+   "start": 32.49,
+   "end": 32.81
+  },
+  {
+   "text": "thousands",
+   "start": 32.89,
+   "end": 33.69
+  },
+  {
+   "text": "and",
+   "start": 33.77,
+   "end": 33.93
+  },
+  {
+   "text": "this",
+   "start": 34.01,
+   "end": 34.33
+  },
+  {
+   "text": "is",
+   "start": 34.37,
+   "end": 34.41
+  },
+  {
+   "text": "how",
+   "start": 34.49,
+   "end": 34.65
+  },
+  {
+   "text": "cancer",
+   "start": 34.69,
+   "end": 35.05
+  },
+  {
+   "text": "begins.",
+   "start": 35.17,
+   "end": 35.85
+  },
+  {
+   "text": "But",
+   "start": 36.32,
+   "end": 36.4
+  },
+  {
+   "text": "it",
+   "start": 36.48,
+   "end": 36.56
+  },
+  {
+   "text": "gets",
+   "start": 36.68,
+   "end": 36.8
+  },
+  {
+   "text": "worse.",
+   "start": 36.96,
+   "end": 37.48
+  },
+  {
+   "text": "The",
+   "start": 38.08,
+   "end": 38.16
+  },
+  {
+   "text": "growing",
+   "start": 38.2,
+   "end": 38.48
+  },
+  {
+   "text": "tumor",
+   "start": 38.56,
+   "end": 38.88
+  },
+  {
+   "text": "steals",
+   "start": 38.96,
+   "end": 39.28
+  },
+  {
+   "text": "nutrients,",
+   "start": 39.36,
+   "end": 40.16
+  },
+  {
+   "text": "recruits",
+   "start": 40.28,
+   "end": 40.64
+  },
+  {
+   "text": "blood",
+   "start": 40.76,
+   "end": 40.88
+  },
+  {
+   "text": "vessels",
+   "start": 40.96,
+   "end": 41.28
+  },
+  {
+   "text": "to",
+   "start": 41.36,
+   "end": 41.44
+  },
+  {
+   "text": "feed",
+   "start": 41.52,
+   "end": 41.6
+  },
+  {
+   "text": "itself,",
+   "start": 41.68,
+   "end": 42.32
+  },
+  {
+   "text": "and",
+   "start": 42.4,
+   "end": 42.48
+  },
+  {
+   "text": "even",
+   "start": 42.56,
+   "end": 42.72
+  },
+  {
+   "text": "finds",
+   "start": 42.8,
+   "end": 43.08
+  },
+  {
+   "text": "ways",
+   "start": 43.12,
+   "end": 43.36
+  },
+  {
+   "text": "to",
+   "start": 43.44,
+   "end": 43.52
+  },
+  {
+   "text": "hide",
+   "start": 43.6,
+   "end": 43.84
+  },
+  {
+   "text": "from",
+   "start": 43.92,
+   "end": 44.0
+  },
+  {
+   "text": "the",
+   "start": 44.04,
+   "end": 44.08
+  },
+  {
+   "text": "immune",
+   "start": 44.24,
+   "end": 44.4
+  },
+  {
+   "text": "system.",
+   "start": 44.48,
+   "end": 45.12
+  },
+  {
+   "text": "Then",
+   "start": 45.44,
+   "end": 45.68
+  },
+  {
+   "text": "some",
+   "start": 45.92,
+   "end": 46.08
+  },
+  {
+   "text": "cancer",
+   "start": 46.16,
+   "end": 46.48
+  },
+  {
+   "text": "cells",
+   "start": 46.56,
+   "end": 46.8
+  },
+  {
+   "text": "break",
+   "start": 46.88,
+   "end": 47.04
+  },
+  {
+   "text": "free.",
+   "start": 47.2,
+   "end": 47.84
+  },
+  {
+   "text": "They",
+   "start": 47.92,
+   "end": 48.0
+  },
+  {
+   "text": "enter",
+   "start": 48.12,
+   "end": 48.24
+  },
+  {
+   "text": "the",
+   "start": 48.28,
+   "end": 48.32
+  },
+  {
+   "text": "bloodstream,",
+   "start": 48.48,
+   "end": 49.12
+  },
+  {
+   "text": "travel",
+   "start": 49.28,
+   "end": 49.44
+  },
+  {
+   "text": "through",
+   "start": 49.52,
+   "end": 49.6
+  },
+  {
+   "text": "the",
+   "start": 49.68,
+   "end": 49.76
+  },
+  {
+   "text": "body,",
+   "start": 49.92,
+   "end": 50.32
+  },
+  {
+   "text": "and",
+   "start": 50.36,
+   "end": 50.4
+  },
+  {
+   "text": "can",
+   "start": 50.48,
+   "end": 50.56
+  },
+  {
+   "text": "create",
+   "start": 50.64,
+   "end": 50.96
+  },
+  {
+   "text": "new",
+   "start": 51.04,
+   "end": 51.2
+  },
+  {
+   "text": "tumors",
+   "start": 51.28,
+   "end": 51.6
+  },
+  {
+   "text": "in",
+   "start": 51.68,
+   "end": 51.76
+  },
+  {
+   "text": "completely",
+   "start": 51.88,
+   "end": 52.4
+  },
+  {
+   "text": "different",
+   "start": 52.48,
+   "end": 52.72
+  },
+  {
+   "text": "organs.",
+   "start": 52.84,
+   "end": 53.52
+  },
+  {
+   "text": "And",
+   "start": 53.64,
+   "end": 53.76
+  },
+  {
+   "text": "that's",
+   "start": 53.84,
+   "end": 54.16
+  },
+  {
+   "text": "the",
+   "start": 54.2,
+   "end": 54.24
+  },
+  {
+   "text": "real",
+   "start": 54.4,
+   "end": 54.64
+  },
+  {
+   "text": "nightmare.",
+   "start": 54.72,
+   "end": 55.4
+  },
+  {
+   "text": "Cancer",
+   "start": 55.744,
+   "end": 56.08
+  },
+  {
+   "text": "isn't",
+   "start": 56.16,
+   "end": 56.48
+  },
+  {
+   "text": "one",
+   "start": 56.56,
+   "end": 56.64
+  },
+  {
+   "text": "enemy.",
+   "start": 56.72,
+   "end": 57.36
+  },
+  {
+   "text": "It's",
+   "start": 57.4,
+   "end": 57.68
+  },
+  {
+   "text": "millions",
+   "start": 57.76,
+   "end": 58.08
+  },
+  {
+   "text": "of",
+   "start": 58.16,
+   "end": 58.24
+  },
+  {
+   "text": "your",
+   "start": 58.32,
+   "end": 58.4
+  },
+  {
+   "text": "own",
+   "start": 58.48,
+   "end": 58.56
+  },
+  {
+   "text": "cells,",
+   "start": 58.72,
+   "end": 59.28
+  },
+  {
+   "text": "constantly",
+   "start": 59.36,
+   "end": 59.92
+  },
+  {
+   "text": "changing,",
+   "start": 60.16,
+   "end": 60.56
+  },
+  {
+   "text": "evolving,",
+   "start": 60.68,
+   "end": 61.36
+  },
+  {
+   "text": "and",
+   "start": 61.44,
+   "end": 61.52
+  },
+  {
+   "text": "finding",
+   "start": 61.72,
+   "end": 61.92
+  },
+  {
+   "text": "new",
+   "start": 62.0,
+   "end": 62.08
+  },
+  {
+   "text": "ways",
+   "start": 62.24,
+   "end": 62.4
+  },
+  {
+   "text": "to",
+   "start": 62.48,
+   "end": 62.56
+  },
+  {
+   "text": "survive.",
+   "start": 62.64,
+   "end": 63.36
+  },
+  {
+   "text": "But",
+   "start": 63.93,
+   "end": 63.97
+  },
+  {
+   "text": "what",
+   "start": 64.13,
+   "end": 64.21
+  },
+  {
+   "text": "if",
+   "start": 64.29,
+   "end": 64.37
+  },
+  {
+   "text": "we",
+   "start": 64.41,
+   "end": 64.45
+  },
+  {
+   "text": "could",
+   "start": 64.53,
+   "end": 64.61
+  },
+  {
+   "text": "predict",
+   "start": 64.81,
+   "end": 65.01
+  },
+  {
+   "text": "exactly",
+   "start": 65.17,
+   "end": 65.65
+  },
+  {
+   "text": "what",
+   "start": 65.73,
+   "end": 65.81
+  },
+  {
+   "text": "those",
+   "start": 65.89,
+   "end": 65.97
+  },
+  {
+   "text": "cells",
+   "start": 66.05,
+   "end": 66.29
+  },
+  {
+   "text": "will",
+   "start": 66.33,
+   "end": 66.37
+  },
+  {
+   "text": "do",
+   "start": 66.45,
+   "end": 66.61
+  },
+  {
+   "text": "next?",
+   "start": 66.85,
+   "end": 67.25
+  },
+  {
+   "text": "This",
+   "start": 67.57,
+   "end": 67.73
+  },
+  {
+   "text": "is",
+   "start": 67.81,
+   "end": 67.89
+  },
+  {
+   "text": "where",
+   "start": 67.97,
+   "end": 68.05
+  },
+  {
+   "text": "artificial",
+   "start": 68.13,
+   "end": 68.61
+  },
+  {
+   "text": "intelligence",
+   "start": 68.89,
+   "end": 69.17
+  },
+  {
+   "text": "changes",
+   "start": 69.33,
+   "end": 69.73
+  },
+  {
+   "text": "the",
+   "start": 69.81,
+   "end": 69.89
+  },
+  {
+   "text": "game.",
+   "start": 69.97,
+   "end": 70.57
+  },
+  {
+   "text": "Imagine",
+   "start": 71.17,
+   "end": 71.25
+  },
+  {
+   "text": "taking",
+   "start": 71.37,
+   "end": 71.49
+  },
+  {
+   "text": "a",
+   "start": 71.57,
+   "end": 71.61
+  },
+  {
+   "text": "patient's",
+   "start": 71.65,
+   "end": 72.05
+  },
+  {
+   "text": "medical",
+   "start": 72.21,
+   "end": 72.37
+  },
+  {
+   "text": "scans,",
+   "start": 72.45,
+   "end": 73.01
+  },
+  {
+   "text": "tumor",
+   "start": 73.05,
+   "end": 73.25
+  },
+  {
+   "text": "samples,",
+   "start": 73.33,
+   "end": 73.89
+  },
+  {
+   "text": "and",
+   "start": 73.97,
+   "end": 74.05
+  },
+  {
+   "text": "genetic",
+   "start": 74.13,
+   "end": 74.37
+  },
+  {
+   "text": "information,",
+   "start": 74.45,
+   "end": 75.33
+  },
+  {
+   "text": "and",
+   "start": 75.41,
+   "end": 75.49
+  },
+  {
+   "text": "using",
+   "start": 75.57,
+   "end": 75.81
+  },
+  {
+   "text": "AI",
+   "start": 75.89,
+   "end": 76.21
+  },
+  {
+   "text": "to",
+   "start": 76.25,
+   "end": 76.29
+  },
+  {
+   "text": "construct",
+   "start": 76.37,
+   "end": 76.77
+  },
+  {
+   "text": "a",
+   "start": 76.89,
+   "end": 77.01
+  },
+  {
+   "text": "detailed",
+   "start": 77.17,
+   "end": 77.49
+  },
+  {
+   "text": "digital",
+   "start": 77.57,
+   "end": 77.89
+  },
+  {
+   "text": "copy",
+   "start": 77.97,
+   "end": 78.21
+  },
+  {
+   "text": "of",
+   "start": 78.25,
+   "end": 78.29
+  },
+  {
+   "text": "their",
+   "start": 78.37,
+   "end": 78.45
+  },
+  {
+   "text": "cancer",
+   "start": 78.53,
+   "end": 78.93
+  },
+  {
+   "text": "which",
+   "start": 79.25,
+   "end": 79.33
+  },
+  {
+   "text": "would",
+   "start": 79.41,
+   "end": 79.49
+  },
+  {
+   "text": "create",
+   "start": 79.57,
+   "end": 79.81
+  },
+  {
+   "text": "a",
+   "start": 79.89,
+   "end": 80.05
+  },
+  {
+   "text": "virtual",
+   "start": 80.25,
+   "end": 80.45
+  },
+  {
+   "text": "battlefield.",
+   "start": 80.61,
+   "end": 81.73
+  },
+  {
+   "text": "Inside",
+   "start": 81.81,
+   "end": 82.13
+  },
+  {
+   "text": "that",
+   "start": 82.21,
+   "end": 82.29
+  },
+  {
+   "text": "simulation,",
+   "start": 82.37,
+   "end": 83.25
+  },
+  {
+   "text": "researchers",
+   "start": 83.33,
+   "end": 83.81
+  },
+  {
+   "text": "could",
+   "start": 83.89,
+   "end": 83.97
+  },
+  {
+   "text": "test",
+   "start": 84.09,
+   "end": 84.21
+  },
+  {
+   "text": "treatment",
+   "start": 84.25,
+   "end": 84.53
+  },
+  {
+   "text": "strategies,",
+   "start": 84.61,
+   "end": 85.41
+  },
+  {
+   "text": "predict",
+   "start": 85.57,
+   "end": 85.73
+  },
+  {
+   "text": "how",
+   "start": 85.81,
+   "end": 85.89
+  },
+  {
+   "text": "the",
+   "start": 85.93,
+   "end": 85.97
+  },
+  {
+   "text": "tumor",
+   "start": 86.05,
+   "end": 86.29
+  },
+  {
+   "text": "might",
+   "start": 86.37,
+   "end": 86.45
+  },
+  {
+   "text": "respond,",
+   "start": 86.73,
+   "end": 87.33
+  },
+  {
+   "text": "and",
+   "start": 87.41,
+   "end": 87.49
+  },
+  {
+   "text": "search",
+   "start": 87.61,
+   "end": 87.73
+  },
+  {
+   "text": "for",
+   "start": 87.81,
+   "end": 87.89
+  },
+  {
+   "text": "its",
+   "start": 87.97,
+   "end": 88.05
+  },
+  {
+   "text": "weaknesses",
+   "start": 88.13,
+   "end": 88.61
+  },
+  {
+   "text": "before",
+   "start": 88.69,
+   "end": 89.01
+  },
+  {
+   "text": "choosing",
+   "start": 89.05,
+   "end": 89.33
+  },
+  {
+   "text": "how",
+   "start": 89.41,
+   "end": 89.49
+  },
+  {
+   "text": "to",
+   "start": 89.53,
+   "end": 89.57
+  },
+  {
+   "text": "attack",
+   "start": 89.77,
+   "end": 89.97
+  },
+  {
+   "text": "it.",
+   "start": 90.05,
+   "end": 90.61
+  },
+  {
+   "text": "Instead",
+   "start": 90.69,
+   "end": 90.93
+  },
+  {
+   "text": "of",
+   "start": 91.01,
+   "end": 91.09
+  },
+  {
+   "text": "treating",
+   "start": 91.17,
+   "end": 91.49
+  },
+  {
+   "text": "every",
+   "start": 91.57,
+   "end": 91.81
+  },
+  {
+   "text": "cancer",
+   "start": 91.85,
+   "end": 92.21
+  },
+  {
+   "text": "the",
+   "start": 92.29,
+   "end": 92.37
+  },
+  {
+   "text": "same",
+   "start": 92.49,
+   "end": 92.61
+  },
+  {
+   "text": "way,",
+   "start": 92.73,
+   "end": 93.17
+  },
+  {
+   "text": "the",
+   "start": 93.25,
+   "end": 93.33
+  },
+  {
+   "text": "treatment",
+   "start": 93.37,
+   "end": 93.65
+  },
+  {
+   "text": "could",
+   "start": 93.73,
+   "end": 93.81
+  },
+  {
+   "text": "be",
+   "start": 93.85,
+   "end": 93.89
+  },
+  {
+   "text": "designed",
+   "start": 93.97,
+   "end": 94.29
+  },
+  {
+   "text": "around",
+   "start": 94.37,
+   "end": 94.61
+  },
+  {
+   "text": "the",
+   "start": 94.65,
+   "end": 94.69
+  },
+  {
+   "text": "exact",
+   "start": 94.97,
+   "end": 95.25
+  },
+  {
+   "text": "tumor",
+   "start": 95.29,
+   "end": 95.65
+  },
+  {
+   "text": "growing",
+   "start": 95.73,
+   "end": 96.05
+  },
+  {
+   "text": "inside",
+   "start": 96.25,
+   "end": 96.45
+  },
+  {
+   "text": "that",
+   "start": 96.53,
+   "end": 96.61
+  },
+  {
+   "text": "person.",
+   "start": 96.69,
+   "end": 97.37
+  },
+  {
+   "text": "But",
+   "start": 97.73,
+   "end": 97.81
+  },
+  {
+   "text": "identifying",
+   "start": 97.97,
+   "end": 98.45
+  },
+  {
+   "text": "the",
+   "start": 98.49,
+   "end": 98.53
+  },
+  {
+   "text": "weakness",
+   "start": 98.61,
+   "end": 99.17
+  },
+  {
+   "text": "is",
+   "start": 99.29,
+   "end": 99.41
+  },
+  {
+   "text": "only",
+   "start": 99.57,
+   "end": 99.73
+  },
+  {
+   "text": "the",
+   "start": 99.77,
+   "end": 99.81
+  },
+  {
+   "text": "beginning.",
+   "start": 99.97,
+   "end": 100.61
+  },
+  {
+   "text": "AI",
+   "start": 101.147,
+   "end": 101.41
+  },
+  {
+   "text": "can",
+   "start": 101.49,
+   "end": 101.57
+  },
+  {
+   "text": "help",
+   "start": 101.65,
+   "end": 101.73
+  },
+  {
+   "text": "scientists",
+   "start": 101.81,
+   "end": 102.37
+  },
+  {
+   "text": "design",
+   "start": 102.57,
+   "end": 102.77
+  },
+  {
+   "text": "molecules",
+   "start": 102.85,
+   "end": 103.41
+  },
+  {
+   "text": "that",
+   "start": 103.49,
+   "end": 103.57
+  },
+  {
+   "text": "target",
+   "start": 103.65,
+   "end": 103.89
+  },
+  {
+   "text": "the",
+   "start": 103.97,
+   "end": 104.05
+  },
+  {
+   "text": "proteins",
+   "start": 104.17,
+   "end": 104.53
+  },
+  {
+   "text": "cancer",
+   "start": 104.61,
+   "end": 104.93
+  },
+  {
+   "text": "cells",
+   "start": 105.01,
+   "end": 105.25
+  },
+  {
+   "text": "depend",
+   "start": 105.45,
+   "end": 105.65
+  },
+  {
+   "text": "on",
+   "start": 105.73,
+   "end": 105.81
+  },
+  {
+   "text": "to",
+   "start": 105.89,
+   "end": 105.97
+  },
+  {
+   "text": "survive.",
+   "start": 106.05,
+   "end": 106.93
+  },
+  {
+   "text": "Imagine",
+   "start": 107.397,
+   "end": 107.49
+  },
+  {
+   "text": "microscopic",
+   "start": 107.57,
+   "end": 108.29
+  },
+  {
+   "text": "drug",
+   "start": 108.41,
+   "end": 108.53
+  },
+  {
+   "text": "carriers",
+   "start": 108.61,
+   "end": 109.09
+  },
+  {
+   "text": "traveling",
+   "start": 109.25,
+   "end": 109.57
+  },
+  {
+   "text": "through",
+   "start": 109.65,
+   "end": 109.73
+  },
+  {
+   "text": "the",
+   "start": 109.77,
+   "end": 109.81
+  },
+  {
+   "text": "bloodstream,",
+   "start": 109.93,
+   "end": 110.69
+  },
+  {
+   "text": "recognizing",
+   "start": 110.85,
+   "end": 111.33
+  },
+  {
+   "text": "markers",
+   "start": 111.49,
+   "end": 111.65
+  },
+  {
+   "text": "on",
+   "start": 111.73,
+   "end": 111.81
+  },
+  {
+   "text": "cancer",
+   "start": 111.89,
+   "end": 112.13
+  },
+  {
+   "text": "cells,",
+   "start": 112.29,
+   "end": 112.823
+  },
+  {
+   "text": "and",
+   "start": 112.877,
+   "end": 112.93
+  },
+  {
+   "text": "delivering",
+   "start": 113.09,
+   "end": 113.41
+  },
+  {
+   "text": "their",
+   "start": 113.53,
+   "end": 113.65
+  },
+  {
+   "text": "deadly",
+   "start": 113.73,
+   "end": 113.97
+  },
+  {
+   "text": "payload",
+   "start": 114.21,
+   "end": 114.45
+  },
+  {
+   "text": "directly",
+   "start": 114.65,
+   "end": 115.01
+  },
+  {
+   "text": "to",
+   "start": 115.05,
+   "end": 115.09
+  },
+  {
+   "text": "the",
+   "start": 115.17,
+   "end": 115.25
+  },
+  {
+   "text": "tumor.",
+   "start": 115.29,
+   "end": 115.97
+  },
+  {
+   "text": "Like",
+   "start": 116.09,
+   "end": 116.21
+  },
+  {
+   "text": "guided",
+   "start": 116.29,
+   "end": 116.61
+  },
+  {
+   "text": "missiles,",
+   "start": 116.69,
+   "end": 117.33
+  },
+  {
+   "text": "operating",
+   "start": 117.41,
+   "end": 117.81
+  },
+  {
+   "text": "at",
+   "start": 117.85,
+   "end": 117.89
+  },
+  {
+   "text": "a",
+   "start": 117.943,
+   "end": 117.997
+  },
+  {
+   "text": "scale",
+   "start": 118.05,
+   "end": 118.37
+  },
+  {
+   "text": "smaller",
+   "start": 118.45,
+   "end": 118.77
+  },
+  {
+   "text": "than",
+   "start": 118.85,
+   "end": 119.09
+  },
+  {
+   "text": "anything",
+   "start": 119.29,
+   "end": 119.49
+  },
+  {
+   "text": "you",
+   "start": 119.53,
+   "end": 119.57
+  },
+  {
+   "text": "can",
+   "start": 119.65,
+   "end": 119.81
+  },
+  {
+   "text": "see.",
+   "start": 119.93,
+   "end": 120.53
+  },
+  {
+   "text": "The",
+   "start": 120.667,
+   "end": 120.69
+  },
+  {
+   "text": "goal?",
+   "start": 120.85,
+   "end": 121.41
+  },
+  {
+   "text": "Destroy",
+   "start": 121.61,
+   "end": 121.81
+  },
+  {
+   "text": "the",
+   "start": 121.89,
+   "end": 121.97
+  },
+  {
+   "text": "cancer",
+   "start": 122.01,
+   "end": 122.37
+  },
+  {
+   "text": "while",
+   "start": 122.49,
+   "end": 122.61
+  },
+  {
+   "text": "sparing",
+   "start": 122.65,
+   "end": 122.93
+  },
+  {
+   "text": "as",
+   "start": 123.05,
+   "end": 123.17
+  },
+  {
+   "text": "much",
+   "start": 123.25,
+   "end": 123.41
+  },
+  {
+   "text": "healthy",
+   "start": 123.57,
+   "end": 123.73
+  },
+  {
+   "text": "tissue",
+   "start": 123.77,
+   "end": 124.05
+  },
+  {
+   "text": "as",
+   "start": 124.13,
+   "end": 124.21
+  },
+  {
+   "text": "possible.",
+   "start": 124.45,
+   "end": 125.17
+  },
+  {
+   "text": "But",
+   "start": 125.303,
+   "end": 125.33
+  },
+  {
+   "text": "there's",
+   "start": 125.37,
+   "end": 125.49
+  },
+  {
+   "text": "still",
+   "start": 125.61,
+   "end": 125.73
+  },
+  {
+   "text": "a",
+   "start": 125.77,
+   "end": 125.81
+  },
+  {
+   "text": "problem.",
+   "start": 126.05,
+   "end": 126.69
+  },
+  {
+   "text": "Some",
+   "start": 126.77,
+   "end": 126.93
+  },
+  {
+   "text": "cancer",
+   "start": 127.01,
+   "end": 127.25
+  },
+  {
+   "text": "cells",
+   "start": 127.33,
+   "end": 127.57
+  },
+  {
+   "text": "can",
+   "start": 127.65,
+   "end": 127.73
+  },
+  {
+   "text": "survive,",
+   "start": 127.81,
+   "end": 128.53
+  },
+  {
+   "text": "mutate,",
+   "start": 128.69,
+   "end": 129.117
+  },
+  {
+   "text": "and",
+   "start": 129.143,
+   "end": 129.17
+  },
+  {
+   "text": "become",
+   "start": 129.25,
+   "end": 129.49
+  },
+  {
+   "text": "resistant.",
+   "start": 129.61,
+   "end": 130.53
+  },
+  {
+   "text": "So",
+   "start": 130.61,
+   "end": 130.77
+  },
+  {
+   "text": "AI",
+   "start": 130.85,
+   "end": 131.25
+  },
+  {
+   "text": "needs",
+   "start": 131.33,
+   "end": 131.49
+  },
+  {
+   "text": "another",
+   "start": 131.69,
+   "end": 131.89
+  },
+  {
+   "text": "weapon.",
+   "start": 131.97,
+   "end": 132.61
+  },
+  {
+   "text": "Your",
+   "start": 133.1,
+   "end": 133.26
+  },
+  {
+   "text": "body",
+   "start": 133.42,
+   "end": 133.58
+  },
+  {
+   "text": "already",
+   "start": 133.66,
+   "end": 134.14
+  },
+  {
+   "text": "has",
+   "start": 134.22,
+   "end": 134.3
+  },
+  {
+   "text": "an",
+   "start": 134.38,
+   "end": 134.46
+  },
+  {
+   "text": "army",
+   "start": 134.54,
+   "end": 134.94
+  },
+  {
+   "text": "capable",
+   "start": 135.06,
+   "end": 135.34
+  },
+  {
+   "text": "of",
+   "start": 135.42,
+   "end": 135.58
+  },
+  {
+   "text": "killing",
+   "start": 135.62,
+   "end": 135.9
+  },
+  {
+   "text": "cancer.",
+   "start": 135.94,
+   "end": 136.727
+  },
+  {
+   "text": "It's",
+   "start": 136.753,
+   "end": 136.86
+  },
+  {
+   "text": "called",
+   "start": 136.94,
+   "end": 137.1
+  },
+  {
+   "text": "your",
+   "start": 137.18,
+   "end": 137.26
+  },
+  {
+   "text": "immune",
+   "start": 137.46,
+   "end": 137.66
+  },
+  {
+   "text": "system.",
+   "start": 138.06,
+   "end": 138.473
+  },
+  {
+   "text": "The",
+   "start": 138.54,
+   "end": 138.62
+  },
+  {
+   "text": "problem",
+   "start": 138.86,
+   "end": 139.1
+  },
+  {
+   "text": "is",
+   "start": 139.18,
+   "end": 139.26
+  },
+  {
+   "text": "that",
+   "start": 139.34,
+   "end": 139.42
+  },
+  {
+   "text": "cancer",
+   "start": 139.5,
+   "end": 139.82
+  },
+  {
+   "text": "can",
+   "start": 139.9,
+   "end": 139.98
+  },
+  {
+   "text": "disguise",
+   "start": 140.1,
+   "end": 140.46
+  },
+  {
+   "text": "itself,",
+   "start": 140.54,
+   "end": 141.313
+  },
+  {
+   "text": "suppress",
+   "start": 141.447,
+   "end": 141.58
+  },
+  {
+   "text": "immune",
+   "start": 141.66,
+   "end": 141.9
+  },
+  {
+   "text": "defenses,",
+   "start": 141.98,
+   "end": 142.74
+  },
+  {
+   "text": "or",
+   "start": 142.78,
+   "end": 142.86
+  },
+  {
+   "text": "become",
+   "start": 142.94,
+   "end": 143.18
+  },
+  {
+   "text": "difficult",
+   "start": 143.26,
+   "end": 143.66
+  },
+  {
+   "text": "for",
+   "start": 143.7,
+   "end": 143.74
+  },
+  {
+   "text": "those",
+   "start": 143.82,
+   "end": 143.98
+  },
+  {
+   "text": "cells",
+   "start": 144.1,
+   "end": 144.22
+  },
+  {
+   "text": "to",
+   "start": 144.3,
+   "end": 144.38
+  },
+  {
+   "text": "recognize.",
+   "start": 144.54,
+   "end": 145.42
+  },
+  {
+   "text": "But",
+   "start": 145.553,
+   "end": 145.58
+  },
+  {
+   "text": "tumors",
+   "start": 145.66,
+   "end": 145.98
+  },
+  {
+   "text": "can",
+   "start": 146.06,
+   "end": 146.14
+  },
+  {
+   "text": "carry",
+   "start": 146.22,
+   "end": 146.46
+  },
+  {
+   "text": "unique",
+   "start": 146.54,
+   "end": 146.94
+  },
+  {
+   "text": "molecular",
+   "start": 147.02,
+   "end": 147.5
+  },
+  {
+   "text": "fingerprints.",
+   "start": 147.66,
+   "end": 148.54
+  },
+  {
+   "text": "AI",
+   "start": 148.62,
+   "end": 148.94
+  },
+  {
+   "text": "can",
+   "start": 149.02,
+   "end": 149.1
+  },
+  {
+   "text": "help",
+   "start": 149.18,
+   "end": 149.26
+  },
+  {
+   "text": "identify",
+   "start": 149.54,
+   "end": 149.82
+  },
+  {
+   "text": "those",
+   "start": 149.9,
+   "end": 149.98
+  },
+  {
+   "text": "fingerprints",
+   "start": 150.06,
+   "end": 150.62
+  },
+  {
+   "text": "and",
+   "start": 150.7,
+   "end": 150.78
+  },
+  {
+   "text": "guide",
+   "start": 150.94,
+   "end": 151.1
+  },
+  {
+   "text": "personalized",
+   "start": 151.3,
+   "end": 151.74
+  },
+  {
+   "text": "cancer",
+   "start": 151.78,
+   "end": 152.06
+  },
+  {
+   "text": "vaccines",
+   "start": 152.1,
+   "end": 152.7
+  },
+  {
+   "text": "or",
+   "start": 152.78,
+   "end": 152.86
+  },
+  {
+   "text": "specialized",
+   "start": 153.06,
+   "end": 153.5
+  },
+  {
+   "text": "immune-cell",
+   "start": 153.66,
+   "end": 154.06
+  },
+  {
+   "text": "treatments.",
+   "start": 154.14,
+   "end": 155.02
+  },
+  {
+   "text": "Imagine",
+   "start": 155.42,
+   "end": 155.5
+  },
+  {
+   "text": "your",
+   "start": 155.62,
+   "end": 155.74
+  },
+  {
+   "text": "own",
+   "start": 155.82,
+   "end": 155.98
+  },
+  {
+   "text": "T",
+   "start": 156.06,
+   "end": 156.22
+  },
+  {
+   "text": "cells",
+   "start": 156.3,
+   "end": 156.54
+  },
+  {
+   "text": "learning",
+   "start": 156.7,
+   "end": 156.86
+  },
+  {
+   "text": "exactly",
+   "start": 157.02,
+   "end": 157.5
+  },
+  {
+   "text": "what",
+   "start": 157.58,
+   "end": 157.74
+  },
+  {
+   "text": "to",
+   "start": 157.78,
+   "end": 157.82
+  },
+  {
+   "text": "hunt.",
+   "start": 157.9,
+   "end": 158.54
+  },
+  {
+   "text": "They",
+   "start": 158.62,
+   "end": 158.7
+  },
+  {
+   "text": "recognize",
+   "start": 158.78,
+   "end": 159.18
+  },
+  {
+   "text": "a",
+   "start": 159.22,
+   "end": 159.26
+  },
+  {
+   "text": "cancer",
+   "start": 159.34,
+   "end": 159.66
+  },
+  {
+   "text": "cell.",
+   "start": 159.74,
+   "end": 160.38
+  },
+  {
+   "text": "Lock",
+   "start": 160.5,
+   "end": 160.62
+  },
+  {
+   "text": "onto",
+   "start": 160.7,
+   "end": 160.94
+  },
+  {
+   "text": "it.",
+   "start": 161.02,
+   "end": 161.447
+  },
+  {
+   "text": "And",
+   "start": 161.473,
+   "end": 161.5
+  },
+  {
+   "text": "destroy",
+   "start": 161.78,
+   "end": 162.06
+  },
+  {
+   "text": "it.",
+   "start": 162.14,
+   "end": 162.62
+  },
+  {
+   "text": "Then",
+   "start": 162.7,
+   "end": 163.1
+  },
+  {
+   "text": "they",
+   "start": 163.18,
+   "end": 163.26
+  },
+  {
+   "text": "move",
+   "start": 163.34,
+   "end": 163.5
+  },
+  {
+   "text": "to",
+   "start": 163.54,
+   "end": 163.58
+  },
+  {
+   "text": "the",
+   "start": 163.62,
+   "end": 163.66
+  },
+  {
+   "text": "next.",
+   "start": 163.74,
+   "end": 164.38
+  },
+  {
+   "text": "And",
+   "start": 164.46,
+   "end": 164.54
+  },
+  {
+   "text": "the",
+   "start": 164.62,
+   "end": 164.66
+  },
+  {
+   "text": "next.",
+   "start": 164.7,
+   "end": 165.5
+  },
+  {
+   "text": "Suddenly,",
+   "start": 165.66,
+   "end": 166.353
+  },
+  {
+   "text": "the",
+   "start": 166.407,
+   "end": 166.46
+  },
+  {
+   "text": "tumor",
+   "start": 166.5,
+   "end": 166.78
+  },
+  {
+   "text": "isn't",
+   "start": 166.86,
+   "end": 167.02
+  },
+  {
+   "text": "just",
+   "start": 167.1,
+   "end": 167.26
+  },
+  {
+   "text": "fighting",
+   "start": 167.34,
+   "end": 167.5
+  },
+  {
+   "text": "a",
+   "start": 167.66,
+   "end": 167.873
+  },
+  {
+   "text": "drug,",
+   "start": 168.087,
+   "end": 168.34
+  },
+  {
+   "text": "It's",
+   "start": 168.38,
+   "end": 168.54
+  },
+  {
+   "text": "fighting",
+   "start": 168.62,
+   "end": 168.86
+  },
+  {
+   "text": "the",
+   "start": 168.94,
+   "end": 169.02
+  },
+  {
+   "text": "body's",
+   "start": 169.14,
+   "end": 169.42
+  },
+  {
+   "text": "own",
+   "start": 169.5,
+   "end": 169.66
+  },
+  {
+   "text": "defenses.",
+   "start": 169.78,
+   "end": 170.62
+  },
+  {
+   "text": "But",
+   "start": 171.09,
+   "end": 171.17
+  },
+  {
+   "text": "destroying",
+   "start": 171.37,
+   "end": 171.73
+  },
+  {
+   "text": "the",
+   "start": 171.77,
+   "end": 171.81
+  },
+  {
+   "text": "visible",
+   "start": 171.89,
+   "end": 172.21
+  },
+  {
+   "text": "tumor",
+   "start": 172.29,
+   "end": 172.61
+  },
+  {
+   "text": "is",
+   "start": 172.69,
+   "end": 172.93
+  },
+  {
+   "text": "only",
+   "start": 173.09,
+   "end": 173.25
+  },
+  {
+   "text": "half",
+   "start": 173.33,
+   "end": 173.57
+  },
+  {
+   "text": "the",
+   "start": 173.61,
+   "end": 173.65
+  },
+  {
+   "text": "battle.",
+   "start": 173.73,
+   "end": 174.45
+  },
+  {
+   "text": "Because",
+   "start": 174.61,
+   "end": 174.77
+  },
+  {
+   "text": "even",
+   "start": 174.85,
+   "end": 175.01
+  },
+  {
+   "text": "a",
+   "start": 175.09,
+   "end": 175.17
+  },
+  {
+   "text": "tiny",
+   "start": 175.37,
+   "end": 175.57
+  },
+  {
+   "text": "population",
+   "start": 175.89,
+   "end": 176.21
+  },
+  {
+   "text": "of",
+   "start": 176.25,
+   "end": 176.29
+  },
+  {
+   "text": "surviving",
+   "start": 176.37,
+   "end": 176.85
+  },
+  {
+   "text": "cancer",
+   "start": 176.957,
+   "end": 177.17
+  },
+  {
+   "text": "cells",
+   "start": 177.25,
+   "end": 177.57
+  },
+  {
+   "text": "can",
+   "start": 177.61,
+   "end": 177.65
+  },
+  {
+   "text": "eventually",
+   "start": 177.73,
+   "end": 178.29
+  },
+  {
+   "text": "bring",
+   "start": 178.37,
+   "end": 178.45
+  },
+  {
+   "text": "the",
+   "start": 178.49,
+   "end": 178.53
+  },
+  {
+   "text": "disease",
+   "start": 178.61,
+   "end": 178.93
+  },
+  {
+   "text": "back.",
+   "start": 179.01,
+   "end": 179.73
+  },
+  {
+   "text": "And",
+   "start": 179.81,
+   "end": 179.97
+  },
+  {
+   "text": "this",
+   "start": 180.05,
+   "end": 180.21
+  },
+  {
+   "text": "is",
+   "start": 180.29,
+   "end": 180.37
+  },
+  {
+   "text": "where",
+   "start": 180.45,
+   "end": 180.53
+  },
+  {
+   "text": "things",
+   "start": 180.61,
+   "end": 180.77
+  },
+  {
+   "text": "get",
+   "start": 180.85,
+   "end": 181.09
+  },
+  {
+   "text": "really",
+   "start": 181.25,
+   "end": 181.41
+  },
+  {
+   "text": "interesting.",
+   "start": 181.49,
+   "end": 182.37
+  },
+  {
+   "text": "Cancer",
+   "start": 182.45,
+   "end": 182.77
+  },
+  {
+   "text": "can",
+   "start": 182.85,
+   "end": 182.93
+  },
+  {
+   "text": "leave",
+   "start": 183.05,
+   "end": 183.17
+  },
+  {
+   "text": "microscopic",
+   "start": 183.25,
+   "end": 183.89
+  },
+  {
+   "text": "traces",
+   "start": 183.97,
+   "end": 184.29
+  },
+  {
+   "text": "of",
+   "start": 184.37,
+   "end": 184.45
+  },
+  {
+   "text": "its",
+   "start": 184.53,
+   "end": 184.61
+  },
+  {
+   "text": "DNA",
+   "start": 184.69,
+   "end": 185.09
+  },
+  {
+   "text": "in",
+   "start": 185.13,
+   "end": 185.17
+  },
+  {
+   "text": "the",
+   "start": 185.21,
+   "end": 185.25
+  },
+  {
+   "text": "bloodstream.",
+   "start": 185.41,
+   "end": 186.29
+  },
+  {
+   "text": "By",
+   "start": 186.496,
+   "end": 186.53
+  },
+  {
+   "text": "analyzing",
+   "start": 186.69,
+   "end": 187.09
+  },
+  {
+   "text": "these",
+   "start": 187.17,
+   "end": 187.25
+  },
+  {
+   "text": "signals,",
+   "start": 187.33,
+   "end": 187.97
+  },
+  {
+   "text": "AI",
+   "start": 188.05,
+   "end": 188.29
+  },
+  {
+   "text": "could",
+   "start": 188.37,
+   "end": 188.45
+  },
+  {
+   "text": "help",
+   "start": 188.53,
+   "end": 188.61
+  },
+  {
+   "text": "detect",
+   "start": 188.69,
+   "end": 189.01
+  },
+  {
+   "text": "signs",
+   "start": 189.09,
+   "end": 189.37
+  },
+  {
+   "text": "of",
+   "start": 189.41,
+   "end": 189.45
+  },
+  {
+   "text": "a",
+   "start": 189.49,
+   "end": 189.53
+  },
+  {
+   "text": "returning",
+   "start": 189.57,
+   "end": 190.05
+  },
+  {
+   "text": "tumor,",
+   "start": 190.157,
+   "end": 190.69
+  },
+  {
+   "text": "identify",
+   "start": 190.97,
+   "end": 191.25
+  },
+  {
+   "text": "how",
+   "start": 191.33,
+   "end": 191.41
+  },
+  {
+   "text": "it's",
+   "start": 191.45,
+   "end": 191.65
+  },
+  {
+   "text": "changing,",
+   "start": 191.85,
+   "end": 192.37
+  },
+  {
+   "text": "and",
+   "start": 192.45,
+   "end": 192.53
+  },
+  {
+   "text": "guide",
+   "start": 192.65,
+   "end": 192.77
+  },
+  {
+   "text": "a",
+   "start": 192.85,
+   "end": 192.93
+  },
+  {
+   "text": "new",
+   "start": 193.01,
+   "end": 193.09
+  },
+  {
+   "text": "treatment",
+   "start": 193.13,
+   "end": 193.57
+  },
+  {
+   "text": "before",
+   "start": 193.73,
+   "end": 193.89
+  },
+  {
+   "text": "it",
+   "start": 193.97,
+   "end": 194.05
+  },
+  {
+   "text": "grows",
+   "start": 194.13,
+   "end": 194.29
+  },
+  {
+   "text": "out",
+   "start": 194.33,
+   "end": 194.37
+  },
+  {
+   "text": "of",
+   "start": 194.45,
+   "end": 194.53
+  },
+  {
+   "text": "control.",
+   "start": 194.77,
+   "end": 195.41
+  },
+  {
+   "text": "An",
+   "start": 195.479,
+   "end": 195.49
+  },
+  {
+   "text": "evolving",
+   "start": 195.57,
+   "end": 196.05
+  },
+  {
+   "text": "enemy,",
+   "start": 196.13,
+   "end": 196.69
+  },
+  {
+   "text": "met",
+   "start": 196.77,
+   "end": 197.01
+  },
+  {
+   "text": "by",
+   "start": 197.09,
+   "end": 197.17
+  },
+  {
+   "text": "an",
+   "start": 197.21,
+   "end": 197.25
+  },
+  {
+   "text": "evolving",
+   "start": 197.33,
+   "end": 197.81
+  },
+  {
+   "text": "defense.",
+   "start": 198.09,
+   "end": 198.61
+  },
+  {
+   "text": "And",
+   "start": 199.276,
+   "end": 199.31
+  },
+  {
+   "text": "that's",
+   "start": 199.43,
+   "end": 199.63
+  },
+  {
+   "text": "the",
+   "start": 199.71,
+   "end": 199.79
+  },
+  {
+   "text": "breakthrough",
+   "start": 199.91,
+   "end": 200.19
+  },
+  {
+   "text": "behind",
+   "start": 200.27,
+   "end": 200.51
+  },
+  {
+   "text": "this",
+   "start": 200.59,
+   "end": 200.67
+  },
+  {
+   "text": "entire",
+   "start": 200.87,
+   "end": 201.23
+  },
+  {
+   "text": "idea.",
+   "start": 201.31,
+   "end": 202.19
+  },
+  {
+   "text": "Cancer",
+   "start": 202.23,
+   "end": 202.59
+  },
+  {
+   "text": "isn't",
+   "start": 202.67,
+   "end": 202.99
+  },
+  {
+   "text": "one",
+   "start": 203.07,
+   "end": 203.15
+  },
+  {
+   "text": "disease",
+   "start": 203.23,
+   "end": 203.63
+  },
+  {
+   "text": "with",
+   "start": 203.75,
+   "end": 203.87
+  },
+  {
+   "text": "one",
+   "start": 203.95,
+   "end": 204.03
+  },
+  {
+   "text": "weakness.",
+   "start": 204.11,
+   "end": 204.99
+  },
+  {
+   "text": "Every",
+   "start": 205.07,
+   "end": 205.39
+  },
+  {
+   "text": "tumor",
+   "start": 205.43,
+   "end": 205.71
+  },
+  {
+   "text": "can",
+   "start": 205.79,
+   "end": 205.87
+  },
+  {
+   "text": "be",
+   "start": 205.95,
+   "end": 206.03
+  },
+  {
+   "text": "different.",
+   "start": 206.43,
+   "end": 206.87
+  },
+  {
+   "text": "So",
+   "start": 206.91,
+   "end": 207.31
+  },
+  {
+   "text": "imagine",
+   "start": 207.43,
+   "end": 207.71
+  },
+  {
+   "text": "a",
+   "start": 207.87,
+   "end": 207.977
+  },
+  {
+   "text": "system",
+   "start": 208.083,
+   "end": 208.19
+  },
+  {
+   "text": "that",
+   "start": 208.31,
+   "end": 208.43
+  },
+  {
+   "text": "doesn't",
+   "start": 208.51,
+   "end": 208.75
+  },
+  {
+   "text": "need",
+   "start": 208.91,
+   "end": 209.07
+  },
+  {
+   "text": "one",
+   "start": 209.15,
+   "end": 209.31
+  },
+  {
+   "text": "universal",
+   "start": 209.39,
+   "end": 209.87
+  },
+  {
+   "text": "drug.",
+   "start": 210.03,
+   "end": 210.59
+  },
+  {
+   "text": "It",
+   "start": 210.67,
+   "end": 210.75
+  },
+  {
+   "text": "studies",
+   "start": 210.83,
+   "end": 211.23
+  },
+  {
+   "text": "each",
+   "start": 211.31,
+   "end": 211.47
+  },
+  {
+   "text": "cancer,",
+   "start": 211.51,
+   "end": 212.217
+  },
+  {
+   "text": "predicts",
+   "start": 212.323,
+   "end": 212.51
+  },
+  {
+   "text": "its",
+   "start": 212.59,
+   "end": 212.67
+  },
+  {
+   "text": "behavior,",
+   "start": 213.03,
+   "end": 213.497
+  },
+  {
+   "text": "designs",
+   "start": 213.603,
+   "end": 213.79
+  },
+  {
+   "text": "a",
+   "start": 213.83,
+   "end": 213.87
+  },
+  {
+   "text": "targeted",
+   "start": 213.95,
+   "end": 214.35
+  },
+  {
+   "text": "attack,",
+   "start": 214.67,
+   "end": 215.03
+  },
+  {
+   "text": "activates",
+   "start": 215.07,
+   "end": 215.55
+  },
+  {
+   "text": "the",
+   "start": 215.59,
+   "end": 215.63
+  },
+  {
+   "text": "immune",
+   "start": 215.79,
+   "end": 215.95
+  },
+  {
+   "text": "system,",
+   "start": 216.23,
+   "end": 216.55
+  },
+  {
+   "text": "and",
+   "start": 216.59,
+   "end": 216.75
+  },
+  {
+   "text": "watches",
+   "start": 216.79,
+   "end": 217.07
+  },
+  {
+   "text": "for",
+   "start": 217.15,
+   "end": 217.39
+  },
+  {
+   "text": "anything",
+   "start": 217.47,
+   "end": 217.79
+  },
+  {
+   "text": "that",
+   "start": 217.87,
+   "end": 217.95
+  },
+  {
+   "text": "survives.",
+   "start": 218.03,
+   "end": 218.944
+  },
+  {
+   "text": "A",
+   "start": 219.15,
+   "end": 219.257
+  },
+  {
+   "text": "different",
+   "start": 219.363,
+   "end": 219.47
+  },
+  {
+   "text": "answer",
+   "start": 219.55,
+   "end": 219.87
+  },
+  {
+   "text": "for",
+   "start": 219.95,
+   "end": 220.19
+  },
+  {
+   "text": "every",
+   "start": 220.27,
+   "end": 220.51
+  },
+  {
+   "text": "cancer.",
+   "start": 220.59,
+   "end": 221.481
+  },
+  {
+   "text": "And",
+   "start": 221.55,
+   "end": 221.63
+  },
+  {
+   "text": "remember",
+   "start": 221.79,
+   "end": 221.95
+  },
+  {
+   "text": "that",
+   "start": 222.07,
+   "end": 222.19
+  },
+  {
+   "text": "single",
+   "start": 222.35,
+   "end": 222.51
+  },
+  {
+   "text": "cell",
+   "start": 222.59,
+   "end": 222.75
+  },
+  {
+   "text": "we",
+   "start": 222.83,
+   "end": 222.91
+  },
+  {
+   "text": "started",
+   "start": 222.99,
+   "end": 223.23
+  },
+  {
+   "text": "with?",
+   "start": 223.35,
+   "end": 223.95
+  },
+  {
+   "text": "Imagine",
+   "start": 224.361,
+   "end": 224.43
+  },
+  {
+   "text": "finding",
+   "start": 224.51,
+   "end": 224.83
+  },
+  {
+   "text": "it...",
+   "start": 225.07,
+   "end": 225.417
+  },
+  {
+   "text": "before",
+   "start": 225.523,
+   "end": 225.63
+  },
+  {
+   "text": "it",
+   "start": 225.75,
+   "end": 225.87
+  },
+  {
+   "text": "ever",
+   "start": 225.95,
+   "end": 226.19
+  },
+  {
+   "text": "has",
+   "start": 226.27,
+   "end": 226.35
+  },
+  {
+   "text": "the",
+   "start": 226.43,
+   "end": 226.51
+  },
+  {
+   "text": "chance",
+   "start": 226.55,
+   "end": 226.75
+  },
+  {
+   "text": "to",
+   "start": 226.83,
+   "end": 226.91
+  },
+  {
+   "text": "become",
+   "start": 226.95,
+   "end": 227.15
+  },
+  {
+   "text": "a",
+   "start": 227.19,
+   "end": 227.23
+  },
+  {
+   "text": "tumor.",
+   "start": 227.31,
+   "end": 227.87
+  }
+ ]
+}

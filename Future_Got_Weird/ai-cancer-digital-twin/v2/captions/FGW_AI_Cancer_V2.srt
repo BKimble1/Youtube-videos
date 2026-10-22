@@ -1,0 +1,366 @@
+1
+00:00:00,490 --> 00:00:04,503
+This might be the most dangerous
+cell in this man's entire body.
+
+2
+00:00:04,543 --> 00:00:08,130
+And the terrifying part is that
+it used to be completely normal.
+
+3
+00:00:08,170 --> 00:00:12,690
+Deep inside its nucleus, tiny mistakes
+have been building up in its DNA.
+
+4
+00:00:12,730 --> 00:00:14,903
+The instructions
+controlling when it grows,
+
+5
+00:00:14,943 --> 00:00:18,117
+when it stops, and when it
+dies are starting to fail.
+
+6
+00:00:18,157 --> 00:00:21,250
+And eventually, something
+goes horribly wrong.
+
+7
+00:00:21,290 --> 00:00:23,143
+The cell divides when it shouldn't.
+
+8
+00:00:23,183 --> 00:00:25,517
+It ignores signals telling it to stop.
+
+9
+00:00:25,557 --> 00:00:27,570
+And when the body tries to destroy it...
+
+10
+00:00:27,610 --> 00:00:29,010
+it survives.
+
+11
+00:00:29,050 --> 00:00:30,690
+One cell becomes two.
+
+12
+00:00:30,730 --> 00:00:32,130
+Two become four.
+
+13
+00:00:32,170 --> 00:00:36,100
+Four become thousands and
+this is how cancer begins.
+
+14
+00:00:36,320 --> 00:00:37,730
+But it gets worse.
+
+15
+00:00:38,080 --> 00:00:42,360
+The growing tumor steals nutrients,
+recruits blood vessels to feed itself,
+
+16
+00:00:42,400 --> 00:00:45,370
+and even finds ways to hide
+from the immune system.
+
+17
+00:00:45,440 --> 00:00:47,880
+Then some cancer cells break free.
+
+18
+00:00:47,920 --> 00:00:50,320
+They enter the bloodstream,
+travel through the body,
+
+19
+00:00:50,360 --> 00:00:53,600
+and can create new tumors in
+completely different organs.
+
+20
+00:00:53,640 --> 00:00:55,650
+And that's the real nightmare.
+
+21
+00:00:55,744 --> 00:00:57,360
+Cancer isn't one enemy.
+
+22
+00:00:57,400 --> 00:01:00,640
+It's millions of your own
+cells, constantly changing,
+
+23
+00:01:00,680 --> 00:01:03,610
+evolving, and finding new ways to survive.
+
+24
+00:01:03,930 --> 00:01:07,500
+But what if we could predict exactly
+what those cells will do next?
+
+25
+00:01:07,570 --> 00:01:10,820
+This is where artificial
+intelligence changes the game.
+
+26
+00:01:11,170 --> 00:01:13,010
+Imagine taking a patient's medical scans,
+
+27
+00:01:13,050 --> 00:01:16,210
+tumor samples, and genetic
+information, and using AI
+
+28
+00:01:16,250 --> 00:01:18,490
+to construct a detailed
+digital copy of their
+
+29
+00:01:18,530 --> 00:01:21,770
+cancer which would create
+a virtual battlefield.
+
+30
+00:01:21,810 --> 00:01:26,010
+Inside that simulation, researchers could
+test treatment strategies, predict how the
+
+31
+00:01:26,050 --> 00:01:30,650
+tumor might respond, and search for its weaknesses before choosing how to attack it.
+
+32
+00:01:30,690 --> 00:01:33,810
+Instead of treating every cancer
+the same way, the treatment could
+
+33
+00:01:33,850 --> 00:01:37,620
+be designed around the exact
+tumor growing inside that person.
+
+34
+00:01:37,730 --> 00:01:40,860
+But identifying the weakness
+is only the beginning.
+
+35
+00:01:41,147 --> 00:01:43,930
+AI can help scientists
+design molecules that target
+
+36
+00:01:43,970 --> 00:01:47,180
+the proteins cancer cells
+depend on to survive.
+
+37
+00:01:47,397 --> 00:01:50,810
+Imagine microscopic drug carriers
+traveling through the bloodstream,
+
+38
+00:01:50,850 --> 00:01:52,837
+recognizing markers on cancer cells,
+
+39
+00:01:52,877 --> 00:01:56,050
+and delivering their deadly
+payload directly to the tumor.
+
+40
+00:01:56,090 --> 00:02:00,627
+Like guided missiles, operating at a
+scale smaller than anything you can see.
+
+41
+00:02:00,667 --> 00:02:01,570
+The goal?
+
+42
+00:02:01,610 --> 00:02:05,263
+Destroy the cancer while sparing
+as much healthy tissue as possible.
+
+43
+00:02:05,303 --> 00:02:06,730
+But there's still a problem.
+
+44
+00:02:06,770 --> 00:02:10,570
+Some cancer cells can survive,
+mutate, and become resistant.
+
+45
+00:02:10,610 --> 00:02:12,860
+So AI needs another weapon.
+
+46
+00:02:13,100 --> 00:02:16,713
+Your body already has an army
+capable of killing cancer.
+
+47
+00:02:16,753 --> 00:02:18,500
+It's called your immune system.
+
+48
+00:02:18,540 --> 00:02:22,740
+The problem is that cancer can disguise
+itself, suppress immune defenses,
+
+49
+00:02:22,780 --> 00:02:25,513
+or become difficult for
+those cells to recognize.
+
+50
+00:02:25,553 --> 00:02:28,580
+But tumors can carry unique
+molecular fingerprints.
+
+51
+00:02:28,620 --> 00:02:31,740
+AI can help identify those
+fingerprints and guide personalized
+
+52
+00:02:31,780 --> 00:02:35,270
+cancer vaccines or specialized
+immune-cell treatments.
+
+53
+00:02:35,420 --> 00:02:38,580
+Imagine your own T cells
+learning exactly what to hunt.
+
+54
+00:02:38,620 --> 00:02:40,460
+They recognize a cancer cell.
+
+55
+00:02:40,500 --> 00:02:41,433
+Lock onto it.
+
+56
+00:02:41,473 --> 00:02:42,660
+And destroy it.
+
+57
+00:02:42,700 --> 00:02:44,420
+Then they move to the next.
+
+58
+00:02:44,460 --> 00:02:45,620
+And the next.
+
+59
+00:02:45,660 --> 00:02:48,340
+Suddenly, the tumor isn't
+just fighting a drug,
+
+60
+00:02:48,380 --> 00:02:50,870
+It's fighting the body's own defenses.
+
+61
+00:02:51,090 --> 00:02:54,570
+But destroying the visible
+tumor is only half the battle.
+
+62
+00:02:54,610 --> 00:02:57,210
+Because even a tiny
+population of surviving cancer
+
+63
+00:02:57,250 --> 00:02:59,770
+cells can eventually
+bring the disease back.
+
+64
+00:02:59,810 --> 00:03:02,410
+And this is where things
+get really interesting.
+
+65
+00:03:02,450 --> 00:03:06,456
+Cancer can leave microscopic traces
+of its DNA in the bloodstream.
+
+66
+00:03:06,496 --> 00:03:10,930
+By analyzing these signals, AI could
+help detect signs of a returning tumor,
+
+67
+00:03:10,970 --> 00:03:13,090
+identify how it's
+changing, and guide a new
+
+68
+00:03:13,130 --> 00:03:15,439
+treatment before it grows out of control.
+
+69
+00:03:15,479 --> 00:03:18,860
+An evolving enemy, met
+by an evolving defense.
+
+70
+00:03:19,276 --> 00:03:22,190
+And that's the breakthrough
+behind this entire idea.
+
+71
+00:03:22,230 --> 00:03:25,030
+Cancer isn't one disease
+with one weakness.
+
+72
+00:03:25,070 --> 00:03:26,870
+Every tumor can be different.
+
+73
+00:03:26,910 --> 00:03:30,630
+So imagine a system that
+doesn't need one universal drug.
+
+74
+00:03:30,670 --> 00:03:35,030
+It studies each cancer, predicts its
+behavior, designs a targeted attack,
+
+75
+00:03:35,070 --> 00:03:39,110
+activates the immune system, and
+watches for anything that survives.
+
+76
+00:03:39,150 --> 00:03:41,510
+A different answer for every cancer.
+
+77
+00:03:41,550 --> 00:03:44,200
+And remember that single
+cell we started with?
+
+78
+00:03:44,361 --> 00:03:45,483
+Imagine finding it...
+
+79
+00:03:45,523 --> 00:03:48,120
+before it ever has the
+chance to become a tumor.

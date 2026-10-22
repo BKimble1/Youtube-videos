@@ -1,3 +1,0 @@
-file '_video_4k_a.mp4'
-file '_video_4k_b.mp4'
-file '_video_4k_c.mp4'
