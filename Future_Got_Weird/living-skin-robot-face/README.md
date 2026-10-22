@@ -1,6 +1,34 @@
 # Future Got Weird: This Robot Is Wearing Living Human Skin
 
-## V2 (animation, hook and visual-storytelling pass): current
+## V3 (coherence and quality pass): current
+
+**Status (22 Oct 2026):** in progress. The V3 source is in place; the renders and QA are pending.
+
+**Audio is locked.** The approved mix is reused unchanged: the same words, voice, timing and 27.2 s runtime as V1
+and V2.
+
+| Deliverable | File |
+|---|---|
+| V3 review: 1080×1920, 30 fps, 816 frames, 27.200 s | `exports/FGW_Living_Skin_V3_REVIEW_1080x1920.mp4` |
+| V3 master: 2160×3840 native (vectors at 2×), 30 fps, 27.200 s | `exports/FGW_Living_Skin_V3_MASTER_2160x3840.mp4` |
+| Change log (timestamps, measurements, audio checks, remaining issues) | `production/V3_CHANGE_LOG.md` |
+| V3 source | `source/src/v3/` (composition `LivingSkinV3`; reuses V2's tissue renderer and V1's finger) |
+| V3 QA | `qa/v3/` |
+
+### Rebuild V3
+
+    cd Future_Got_Weird/living-skin-robot-face
+    (cd source && npm ci)
+    cp audio/mix/FGW_Living_Skin_mix_APPROVED.wav source/public/audio/mix_approved.wav
+    (cd source && npx remotion render src/index.ts LivingSkinV3 ../exports/FGW_Living_Skin_V3_REVIEW_1080x1920.mp4 --props='{"audio":"mix"}' --image-format=png --gop=15 --crf=12 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && npx remotion render src/index.ts LivingSkinV3 ../exports/FGW_Living_Skin_V3_MASTER_2160x3840.mp4 --scale=2 --props='{"audio":"mix"}' --image-format=png --gop=15 --crf=14 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    source/node_modules/.bin/esbuild tools/export_cues_v3.ts --bundle --platform=node --format=esm --jsx=automatic --loader:.css=empty --outfile=/tmp/ec3.mjs && node /tmp/ec3.mjs production/v3_cues.json
+    python3 tools/qa.py exports/FGW_Living_Skin_V3_REVIEW_1080x1920.mp4 /tmp/asr qa/v3/v3_review
+    python3 tools/qa_v3_sheets.py
+
+---
+
+## V2 (animation, hook and visual-storytelling pass): kept as delivered
 
 **Status (22 Oct 2026):** V2 review and native 4K master rendered and checked as frames and measurements. Not
 published, and not yet watched at normal speed.
