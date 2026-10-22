@@ -11,7 +11,7 @@ runtime are all V3's.
 | File | Measured |
 |---|---|
 | `exports/FGW_Living_Skin_V4_FINAL_REVIEW_1080x1920.mp4` | 1080×1920, 30 fps, 816 frames, **27.200 s**, H.264 High (CRF 12, keyframe every 0.5 s), BT.709, AAC 320 kb/s. SHA-256 `336f15d8…6cca` |
-| `exports/FGW_Living_Skin_V4_FINAL_MASTER_2160x3840.mp4` | @@MASTER@@ |
+| `exports/FGW_Living_Skin_V4_FINAL_MASTER_2160x3840.mp4` | 2160×3840 native, rendered at 2× from the vector source (not upscaled); 30 fps, 816 frames, 27.200 s, CRF 14. Audio stream byte-identical (`5ce784d1…`). SHA-256 `95c767c1…db5c` |
 
 **Source.**
 - Composition: `source/src/v4/LivingSkinV4.tsx` (`LivingSkinV4`).
