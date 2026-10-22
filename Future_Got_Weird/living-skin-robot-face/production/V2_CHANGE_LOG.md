@@ -7,8 +7,8 @@ V2 is an animation, hook and visual-storytelling pass. V1 files and source are u
 
 | File | Dimensions / runtime |
 |---|---|
-| `exports/FGW_Living_Skin_V2_REVIEW_1080x1920.mp4` | 1080×1920, 30 fps, 816 frames, **27.200 s**, H.264 High (CRF 12, keyframe every 0.5 s) + AAC 320 kb/s |
-| `exports/FGW_Living_Skin_V2_MASTER_2160x3840.mp4` | 2160×3840 native, rendered at 2× from the vector source (not upscaled); 30 fps, 816 frames, 27.200 s, CRF 14 |
+| `exports/FGW_Living_Skin_V2_REVIEW_1080x1920.mp4` | 1080×1920, 30 fps, 816 frames, **27.200 s**, H.264 High (CRF 12, keyframe every 0.5 s) + AAC 320 kb/s. SHA-256 `29e268a3…eb46b` |
+| `exports/FGW_Living_Skin_V2_MASTER_2160x3840.mp4` | 2160×3840 native, rendered at 2× from the vector source (not upscaled); 30 fps, 816 frames, 27.200 s, CRF 14. It passes the same checks as the review, with the same byte-identical audio stream. SHA-256 `dbd27d0a…22b5` |
 
 **Source.** `source/src/v2/`; the composition is `LivingSkinV2`.
 
