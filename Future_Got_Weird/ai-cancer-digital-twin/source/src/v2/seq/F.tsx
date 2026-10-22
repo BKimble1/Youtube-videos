@@ -276,7 +276,8 @@ const Loop: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const df = smooth((within - 0.35) / 0.3);                           // defence catches up
   const kFrom = Math.max(0, stage - 1), kTo = stage;
   const mCol = mixHex(MARK_COL[kFrom], MARK_COL[kTo], stage === 0 ? 1 : mk);
-  const contact = stage === 0 ? smooth(within / 0.4) : df;
+  // on each change the T cell backs off as the marker reshapes, then re-engages once its receptor fits again
+  const contact = stage === 0 ? smooth(within / 0.4) : Math.max(1 - smooth(within / 0.22), df);
   const Tc = lerp(240, 8, contact);
   const tint = stage === 0 ? 0 : stage === 1 ? 0.45 * mk : 0.45;
   return (

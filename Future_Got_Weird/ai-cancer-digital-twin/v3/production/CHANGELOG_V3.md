@@ -144,3 +144,37 @@ Hard cuts are kept only where the location or idea changes:
 - **Model hold (1:09–1:10):** two seconds were near-static. The measured slice now fills in, and the camera makes a slow push.
 - **Followed carrier:** it now has a constant-size halo, so it stays identifiable among the others.
 - **1:56.2 zoom-out:** surface markers ballooned into large pink discs. Their size is now capped by zoom.
+
+## Fixes from QA of the second V3 render
+
+- **3:16.8 and 3:18.0, marker/receptor close-up:** each time the marker changed, the T cell jumped from contact to 240 px away in one frame. It now backs off over about 0.3 s while the marker reshapes, then re-engages once its receptor fits (`seq/F.tsx`, `Loop`). Frames 5850–5990 were re-rendered and spliced into the review file, and the result was checked again.
+- **Sync effects under the voice:** the opening heartbeats, the thuds under "it survives", "But it gets worse", "And that's the real nightmare" and "But there's still a problem", and some division cues were as loud as the voice or louder.
+  - They were lowered, and the mix was rebuilt.
+  - Measured in K-weighted 1 s windows while the voice is active, effects now sit at a median of 16 dB below it, with no window above it (the closest is -0.6 dB at 0:54.75).
+
+## Measured: delivered review file
+
+`exports/FGW_AI_Cancer_V3_REVIEW_1080p.mp4`. The file is git-ignored.
+
+| Property | Value |
+|---|---|
+| Length | 3:51.17, 6,935 frames |
+| Video | 1920×1080, 30 fps, H.264 |
+| Audio | AAC 320k, 48 kHz |
+| SHA-256 | ec6fbee1…d03fb1 |
+| Size | 356,410,018 bytes |
+
+Results (`v3/qa/review3/`):
+
+- **Loudness:** -14.1 LUFS integrated; -1.1 dBTP true peak.
+- **Mix balance:** music about 15.5 dB under the voice during speech.
+- **Black frames:** none. There is no closing fade to black.
+- **Freezes:** none of 1.2 s or longer.
+- **Picture activity:** no low-activity seconds.
+- **Single-frame jumps:** only at the intended cuts listed above, plus motion spread across four dissolves:
+  - 1:49.3–1:49.5: the carrier pull-back crosses a plain plasma field fast. The same motion was in V2.
+  - 3:08.4: dissolve to the blood tube.
+  - 3:30.3: gallery → workflow.
+  - 3:39.2: workflow → tumours.
+- **Not verified:** nobody has watched the film at normal speed or listened to it in this environment. Motion smoothness, pacing and the effect and music balance still need a real watch and listen.
+- **4K master:** not rendered yet. It will be rendered natively at scale 2 from the same source, after this review.
