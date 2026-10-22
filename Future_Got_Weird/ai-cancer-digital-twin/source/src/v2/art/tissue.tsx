@@ -10,7 +10,7 @@ import {P} from '../palette';
 export const SP = 120;              // lattice spacing
 export const R = 58;                // nominal cell radius
 const DY = SP * 0.866;
-const PER = 10;                     // jitter period (pattern tile = PER × PER cells)
+const PER = 14;                     // jitter period (pattern tile = PER × PER cells)
 const mod = (a: number, n: number) => ((a % n) + n) % n;
 
 export type Look = {fill: string; light: string; deep: string; nuc: string; nucDeep: string};
@@ -30,9 +30,11 @@ export const CLONES: Look[] = [
 /** Lattice cell centre (deterministic). */
 export const cellAt = (i: number, j: number) => {
   const pi = mod(i, PER), pj = mod(j, PER);
-  const jx = (rand(pi * 131 + pj * 977 + 11) - 0.5) * SP * 0.18;
-  const jy = (rand(pi * 313 + pj * 541 + 23) - 0.5) * SP * 0.18;
-  return {x: i * SP + (mod(j, 2) ? SP / 2 : 0) + jx, y: j * DY + jy, seed: pi * 17 + pj * 101 + 3};
+  const jx = (rand(pi * 131 + pj * 977 + 11) - 0.5) * SP * 0.26;
+  const jy = (rand(pi * 313 + pj * 541 + 23) - 0.5) * SP * 0.26;
+  // controlled size variation (cells press into each other rather than tiling perfectly)
+  const sz = 0.88 + 0.2 * rand(pi * 71 + pj * 29 + 5);
+  return {x: i * SP + (mod(j, 2) ? SP / 2 : 0) + jx, y: j * DY + jy, seed: pi * 17 + pj * 101 + 3, sz};
 };
 /** Nearest lattice indices to a world point. */
 export const nearest = (x: number, y: number) => {
@@ -80,7 +82,7 @@ export const Cell2: React.FC<CellProps> = ({x, y, r = R, seed = 1, t, look = HEA
   const rr = r * (1 - 0.3 * shrink);
   const d = closedPath(cellOutline(rr, seed, t, {round, stretch, dir, bleb}), 1);
   const fill = mixHex(look.fill, '#8A6A78', stress * 0.4);
-  const nr = rr * 0.38 * nucScale;
+  const nr = rr * 0.38 * nucScale * (0.88 + 0.24 * rand(seed * 3 + 1));
   const nx = rr * 0.06 * Math.cos(seed), ny = rr * 0.05 * Math.sin(seed * 1.7);
   if (lod < 10) {
     return (
@@ -136,17 +138,18 @@ export const TissuePattern: React.FC<{id: string; look?: Look}> = ({id, look = H
   for (let j = -1; j <= PER; j++)
     for (let i = -1; i <= PER; i++) {
       const c = cellAt(i, j);
+      const e = 0.9 + 0.2 * rand(c.seed * 7);
       cells.push(
-        <g key={`${i},${j}`} transform={`translate(${c.x} ${c.y})`}>
-          <circle r={R * 0.95} fill={look.fill} />
-          <circle r={R * 0.95} fill="url(#volSoft)" />
-          <circle cx={R * 0.06 * Math.cos(c.seed)} cy={R * 0.05 * Math.sin(c.seed * 1.7)} r={R * 0.38} fill={look.nuc} />
+        <g key={`${i},${j}`} transform={`translate(${c.x} ${c.y}) rotate(${rand(c.seed * 5) * 180})`}>
+          <ellipse rx={R * c.sz * e} ry={R * c.sz / e} fill={look.fill} />
+          <ellipse rx={R * c.sz * e} ry={R * c.sz / e} fill="url(#volSoft)" />
+          <ellipse cx={R * 0.08 * Math.cos(c.seed)} cy={R * 0.06 * Math.sin(c.seed * 1.7)} rx={R * 0.36 * (0.9 + 0.2 * rand(c.seed * 3))} ry={R * 0.32} fill={look.nuc} />
         </g>,
       );
     }
   return (
     <pattern id={id} patternUnits="userSpaceOnUse" width={PER * SP} height={PER * DY}>
-      <rect width={PER * SP} height={PER * DY} fill={P.tissueBg} />
+      <rect width={PER * SP} height={PER * DY} fill={mixHex(P.tissueBg, look.fill, 0.22)} />
       {cells}
     </pattern>
   );
@@ -168,16 +171,31 @@ export const TissueField: React.FC<{cam: Cam; t: number; mod?: (i: number, j: nu
       const isSpecial = !!m.look || !!m.pulse;
       if (!isSpecial && far >= 1) continue;
       const sw = 0.75 * Math.sin(t * 0.9 + c.seed);
-      const el = <Cell2 key={`${i},${j}`} x={c.x + (m.dx ?? 0) + sw} y={c.y + (m.dy ?? 0)} r={R * (m.s ?? 1)} seed={c.seed} t={t} lod={lod * (m.s ?? 1)} look={m.look} pulse={m.pulse} stress={m.stress} shrink={m.shrink} op={m.op} round={m.round} nucScale={m.nucScale} bleb={m.bleb} stretch={m.stretch} dir={m.dir} />;
+      const el = <Cell2 key={`${i},${j}`} x={c.x + (m.dx ?? 0) + sw} y={c.y + (m.dy ?? 0)} r={R * c.sz * (m.s ?? 1)} seed={c.seed} t={t} lod={lod * (m.s ?? 1)} look={m.look} pulse={m.pulse} stress={m.stress} shrink={m.shrink} op={m.op} round={m.round} nucScale={m.nucScale} bleb={m.bleb} stretch={m.stretch} dir={m.dir} />;
       (isSpecial ? special : plain).push(el);
     }
   return (
     <g>
       <rect x={b.x0} y={b.y0} width={b.x1 - b.x0} height={b.y1 - b.y0} fill={far > 0 ? `url(#${patternId})` : P.tissueBg} />
       {far < 1 && <g opacity={1 - far}>{plain}</g>}
+      {far > 0.01 && <TissueVariation b={b} op={far} />}
       {special}
     </g>
   );
+};
+
+/** Large-scale, stable variation over the far-zoom tissue texture (lobules of slightly lighter / darker tissue), so
+ *  the pattern tile never reads as wallpaper. World-anchored, so it does not swim during zooms. */
+const TissueVariation: React.FC<{b: {x0: number; x1: number; y0: number; y1: number}; op: number}> = ({b, op}) => {
+  const S = 1700;
+  const out: React.ReactNode[] = [];
+  for (let j = Math.floor(b.y0 / S) - 1; j <= Math.ceil(b.y1 / S) + 1; j++)
+    for (let i = Math.floor(b.x0 / S) - 1; i <= Math.ceil(b.x1 / S) + 1; i++) {
+      const sd = mod(i, 23) * 31 + mod(j, 19) * 7;
+      const x = i * S + rand(sd) * S, y = j * S + rand(sd + 1) * S;
+      out.push(<circle key={`${i},${j}`} cx={x} cy={y} r={S * (0.5 + 0.4 * rand(sd + 2))} fill={rand(sd + 3) < 0.5 ? 'url(#glowWhite)' : 'url(#glowRed)'} opacity={0.12 * op} />);
+    }
+  return <g>{out}</g>;
 };
 
 /** Depth: a far layer of large out-of-focus cells behind the sheet's gaps, and drifting near particles in front. */
@@ -212,7 +230,7 @@ export const Motes: React.FC<{cam: Cam; t: number; color?: string; n?: number; d
         const sx = mod(wx - cam.x * z, span) - (span - W) / 2;
         const sy = mod(wy - cam.y * z, span) - (span - H) / 2;
         const r = size * (0.5 + rand(seed * 7 + k)) * Math.min(3, Math.max(0.6, Math.log10(1 + cam.z * 2)));
-        return <circle key={k} cx={sx} cy={sy} r={r} fill={color} opacity={0.18 + 0.15 * rand(seed * 3 + k)} />;
+        return <circle key={k} cx={sx} cy={sy} r={r} fill={color} opacity={0.09 + 0.08 * rand(seed * 3 + k)} />;
       })}
     </g>
   );
@@ -346,30 +364,57 @@ export const boundaryPathAt = (Rt: number, cx: number, cy: number) => {
   return 'M ' + pts.map((p) => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L ') + ' Z';
 };
 
-/** Apoptosis (programmed death), die = 0..1: the cell shrinks and condenses, the membrane blebs (0–0.55), then it
- *  separates into a few membrane-bound apoptotic bodies that stay together and fade (0.55–1). No explosion. */
+/** Apoptosis (programmed death) as an ordered sequence, die = 0..1:
+ *  contraction — the cell shrinks and rounds (0–0.25); nuclear condensation — chromatin darkens and packs (0.15–0.4);
+ *  nuclear fragmentation — the nucleus breaks into dense beads (0.35–0.55); membrane blebbing (0.45–0.75);
+ *  apoptotic bodies — small, irregular, membrane-bound fragments that stay together (0.7–1). Nothing explodes, and the
+ *  fragments never look like new cells (no nuclei of their own, different sizes, tight cluster). */
 export const ApoptoticCell: React.FC<{x: number; y: number; r?: number; seed: number; t: number; die: number; look?: Look; lod: number; op?: number}> = ({x, y, r = R, seed, t, die, look = TUMOR, lod, op = 1}) => {
-  if (die <= 0.55) {
-    const k = die / 0.55;
-    return <Cell2 x={x} y={y} r={r} seed={seed} t={t} lod={lod} look={lookMix(look, {...look, fill: '#8A6A86', light: '#B9A0B6'}, k * 0.6)} bleb={k} shrink={k * 0.7} nucScale={1 - 0.35 * k} op={op} round={k} />;
+  const ph = (a: number, b: number) => smooth((die - a) / (b - a));
+  const contract = ph(0, 0.25), cond = ph(0.15, 0.4), frag = ph(0.35, 0.55), bleb = ph(0.45, 0.75) * (1 - ph(0.72, 0.85)), bodies = ph(0.7, 0.92);
+  const dead = lookMix(look, {...look, fill: '#9A7E92', light: '#C2AABC', deep: '#5E4458'}, 0.25 + 0.45 * contract);
+  const rr = r * (1 - 0.32 * contract);
+  if (bodies < 0.01) {
+    const d = closedPath(cellOutline(rr, seed, t, {round: contract, bleb: bleb * 1.2, wob: 0.02}), 1);
+    const nr = rr * lerp(0.38, 0.26, cond);
+    const beads = frag > 0.01;
+    return (
+      <g opacity={op} transform={`translate(${x} ${y})`}>
+        <path d={d} fill={dead.deep} />
+        <path d={d} fill={dead.fill} transform="scale(0.93)" />
+        <path d={d} fill="url(#vol)" transform="scale(0.93)" />
+        {!beads ? (
+          <circle r={nr} fill={mixHex(look.nuc, '#1E0818', cond * 0.8)} />
+        ) : (
+          Array.from({length: 4}, (_, m) => {
+            const a = (m / 4) * Math.PI * 2 + seed;
+            const dd = nr * 0.75 * frag;
+            return <circle key={m} cx={Math.cos(a) * dd} cy={Math.sin(a) * dd} r={nr * lerp(0.75, 0.42, frag)} fill="#1E0818" />;
+          })
+        )}
+        {lod > 12 && <path d={d} fill="none" stroke={dead.light} strokeWidth={rr * 0.03} opacity={0.5} transform="scale(0.9)" />}
+      </g>
+    );
   }
-  const k = (die - 0.55) / 0.45;
-  const n = 5;
+  // apoptotic bodies: a tight cluster of unequal fragments, some carrying a dense nuclear bead
+  const n = 6;
   return (
-    <g opacity={op * (1 - smooth((k - 0.5) / 0.5) * 0.55)} transform={`translate(${x} ${y})`}>
+    <g opacity={op * (1 - 0.45 * ph(0.9, 1))} transform={`translate(${x} ${y})`}>
       {Array.from({length: n}, (_, m) => {
-        const a = (m / n) * Math.PI * 2 + seed;
-        const d = r * (0.18 + 0.32 * smooth(k));
-        const rr = r * (0.26 + 0.08 * rand(seed + m)) * (1 - 0.3 * k);
+        const a = (m / n) * Math.PI * 2 + seed * 0.7;
+        const d = rr * (0.25 + 0.3 * bodies) * (0.7 + 0.5 * rand(seed + m * 3));
+        const br = rr * (0.18 + 0.16 * rand(seed + m)) ;
+        const cx = Math.cos(a) * d, cy = Math.sin(a) * d;
         return (
           <g key={m}>
-            <circle cx={Math.cos(a) * d} cy={Math.sin(a) * d} r={rr} fill={mixHex(look.deep, '#5A4A5A', 0.4)} />
-            <circle cx={Math.cos(a) * d} cy={Math.sin(a) * d} r={rr * 0.86} fill={mixHex(look.fill, '#9A8A9A', 0.55)} />
-            <circle cx={Math.cos(a) * d} cy={Math.sin(a) * d} r={rr * 0.86} fill="url(#vol)" />
-            {m % 2 === 0 && <circle cx={Math.cos(a) * d} cy={Math.sin(a) * d} r={rr * 0.35} fill={look.nucDeep} />}
+            <circle cx={cx} cy={cy} r={br} fill={dead.deep} />
+            <circle cx={cx} cy={cy} r={br * 0.86} fill={dead.fill} />
+            <circle cx={cx} cy={cy} r={br * 0.86} fill="url(#vol)" />
+            {m % 2 === 0 && <circle cx={cx + br * 0.15} cy={cy} r={br * 0.32} fill="#1E0818" />}
           </g>
         );
       })}
     </g>
   );
 };
+

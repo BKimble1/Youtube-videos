@@ -16,7 +16,7 @@ import {BloodTunnel} from '../art/blood';
 import {AIBack, DigitalTumor} from '../art/ai';
 import {C0P} from './A';
 import {CAPS, SPROUTS} from './B';
-import {KILL_CAM, RtE, RT_E0} from './E';
+import {KILL_CAM, RtLocal, RT_E0} from './E';
 
 const tF = {
   but: T('But destroying the visible tumor'), because: T('Because even a tiny population'), back: T('bring the disease back.'), interesting: T('And this is where things get really'),
@@ -28,7 +28,25 @@ const lift = (t: number, a: number, b: number) => smooth(seg(t, a, b));
 const C0 = {x: C0P[0], y: C0P[1]};
 
 // ------------------------------------------------------------------------------------------------ remnant
-const RtF = (t: number) => (t < tF.but + 0.5 ? RtE(t) : lerp(RtE(tF.but + 0.5), 0, lift(t, tF.but + 0.5, tF.because - 0.3)));
+const RtF = (a: number, t: number) => (t < tF.but + 0.5 ? RtLocal(a, t) : lerp(RtLocal(a, tF.but + 0.5), 0, lift(t, tF.but + 0.5, tF.because - 0.3)));
+/** the survivors are the resistant population from the treatment scene: same tint, same square orange marker */
+export const RESIST = lookMix(TUMOR, {...TUMOR, fill: '#B8603E', light: '#E8986E'}, 0.45);
+/** marker silhouettes shared by every scene: 0 = round (original), 1 = square (after resistance), 2 = triangle (new change) */
+export const shapePts = (kind: number, r: number, n = 24): Pt[] => Array.from({length: n}, (_, k) => {
+  const a = (k / n) * Math.PI * 2 - Math.PI / 2;
+  if (kind === 0) return [Math.cos(a) * r, Math.sin(a) * r];
+  const sides = kind === 1 ? 4 : 3;
+  const rot = kind === 1 ? Math.PI / 4 : 0;
+  const seg = (Math.PI * 2) / sides;
+  const local = ((a + Math.PI / 2 - rot) % seg + seg) % seg - seg / 2;
+  const rr = (r * Math.cos(Math.PI / sides) * (kind === 1 ? 1.15 : 1.25)) / Math.cos(local);
+  return [Math.cos(a) * rr, Math.sin(a) * rr];
+});
+export const morphPath = (k0: number, k1: number, u: number, r: number) => {
+  const A = shapePts(k0, r), B = shapePts(k1, r);
+  return 'M ' + A.map((p, i) => `${lerp(p[0], B[i][0], u).toFixed(1)} ${lerp(p[1], B[i][1], u).toFixed(1)}`).join(' L ') + ' Z';
+};
+export const MARK_COL = [P.marker, P.markerAlt, '#B58CFF'];
 const SPR = SPROUTS[0];
 const TIP = SPR[SPR.length - 1];
 const SURV = [[-60, 120], [140, 40], [40, -90], [-1500, 900], [1300, 700], [-700, -1300], [900, -600]].map(([dx, dy], k) => {
@@ -73,12 +91,13 @@ const CAM_R = path([
 ]);
 const Remnant: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const lod = R * cam.z;
-  const Rt = RtF(t);
   const heal = lift(t, tF.but + 0.6, tF.because);
   const mod = (i: number, j: number, x: number, y: number) => {
     if (survSet.has(`${i},${j}`)) return {hide: true};
     const dx = x - C0.x, dy = y - C0.y;
-    const d = Math.hypot(dx, dy) / boundary(Math.atan2(dy, dx));
+    const ang = Math.atan2(dy, dx);
+    const d = Math.hypot(dx, dy) / boundary(ang);
+    const Rt = RtF(ang, t);
     if (d < Rt) return {look: TUMOR, nucScale: 1.25};
     if (d < RT_E0) {
       // debris clears and healthy cells fill back in
@@ -98,9 +117,15 @@ const Remnant: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
         {SURV.map((s) => {
           const glow = lift(t, tF.because, tF.because + 0.8) * (0.6 + 0.3 * Math.sin(t * 3 + s.k));
           return s.k === 0 && divK > 0 ? (
-            <DividingCell key={s.k} x={s.x} y={s.y} seed={s.seed} t={t} p={divK} axis={30} lod={lod} look={TUMOR} pulse={glow * 0.6} sepF={0.7} dR={0.84} />
+            <DividingCell key={s.k} x={s.x} y={s.y} seed={s.seed} t={t} p={divK} axis={30} lod={lod} look={RESIST} pulse={glow * 0.4} sepF={0.7} dR={0.84} />
           ) : (
-            <Cell2 key={s.k} x={s.x} y={s.y} seed={s.seed} t={t} lod={lod} look={TUMOR} pulse={glow * 0.6} nucScale={1.2} />
+            <g key={s.k}>
+              <Cell2 x={s.x} y={s.y} seed={s.seed} t={t} lod={lod} look={RESIST} pulse={glow * 0.4} nucScale={1.2} />
+              {lod > 9 && Array.from({length: 7}, (_, m) => {
+                const a = (m / 7) * Math.PI * 2 + s.seed;
+                return <path key={m} d={morphPath(1, 1, 0, 6)} transform={`translate(${s.x + Math.cos(a) * R * 0.98} ${s.y + Math.sin(a) * R * 0.98}) rotate(${(a * 180) / Math.PI})`} fill={P.markerAlt} />;
+              })}
+            </g>
           );
         })}
         {FRAGS.map((f, k) => t > f.t0 && <Fragment key={k} x={fragPos(f, t)[0]} y={fragPos(f, t)[1]} s={0.28} rot={k * 40 + t * 30} tumor t={t} glow={0.6} />)}
@@ -178,17 +203,8 @@ const READS = Array.from({length: 22}, (_, k) => ({x: -760 + rand(k * 3) * 380, 
 const MUT_X = -330, MUT2_X = -150;
 const Reads: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const pile = lift(t, tF.detect - 0.5, tF.detect + 0.8);
-  const sig = lift(t, tF.detect + 0.1, tF.changing - 0.1);
   const chg = lift(t, tF.changing, tF.changing + 0.8);
-  const plan = lift(t, tF.guide, tF.guide + 1.0);
-  const ctrl = lift(t, tF.control - 0.1, tF.control + 1.0);
-  // signal chart (right): measured points, model band, threshold
-  const cx = 420, cy = -260, cw = 620, ch = 420;
-  const sigPts = Array.from({length: 11}, (_, k) => {
-    const u = k / 10;
-    return [cx + u * cw, cy + ch - (0.08 + 0.55 * Math.pow(u, 2.2) + 0.03 * Math.sin(k * 2.1)) * ch] as Pt;
-  });
-  const shown = Math.floor(sig * 11);
+  const plan = lift(t, tF.guide + 0.2, tF.guide + 1.1);
   return (
     <g>
       <AIBack cam={cam} t={t} />
@@ -214,28 +230,26 @@ const Reads: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
             </g>
           );
         })}
-        {/* signal over time with its uncertainty band and a threshold */}
-        <g opacity={lift(t, tF.detect - 0.2, tF.detect + 0.3)}>
-          <rect x={cx - 30} y={cy - 30} width={cw + 60} height={ch + 60} rx={18} fill={P.aiBg} stroke={P.aiDim} strokeWidth={3} />
-          <line x1={cx} x2={cx + cw} y1={cy + ch * 0.55} y2={cy + ch * 0.55} stroke={P.aiGold} strokeWidth={3} strokeDasharray="14 10" />
-          {shown > 1 && (
-            <path d={`M ${sigPts.slice(0, shown).map((p) => `${p[0]} ${p[1] - 26 - (p[0] - cx) * 0.06}`).join(' L ')} L ${sigPts.slice(0, shown).reverse().map((p) => `${p[0]} ${p[1] + 26 + (p[0] - cx) * 0.06}`).join(' L ')} Z`} fill={P.ai} opacity={0.18} />
-          )}
-          {sigPts.slice(0, shown).map((p, k) => <circle key={k} cx={p[0]} cy={p[1]} r={9} fill={p[1] < cy + ch * 0.45 ? P.payload : P.ai} />)}
-          {/* projected course without and with the adjusted plan (dashed = forecast) */}
-          {ctrl > 0.01 && (
-            <g opacity={ctrl}>
-              <path d={`M ${sigPts[10][0]} ${sigPts[10][1]} Q ${sigPts[10][0] + 120} ${sigPts[10][1] - 40} ${sigPts[10][0] + 220} ${cy - 10}`} fill="none" stroke={P.tumorGlow} strokeWidth={4} strokeDasharray="12 10" opacity={0.6} />
-              <path d={`M ${sigPts[10][0]} ${sigPts[10][1]} Q ${sigPts[10][0] + 120} ${sigPts[10][1] + 20} ${sigPts[10][0] + 220} ${cy + ch * 0.75}`} fill="none" stroke={P.aiGold} strokeWidth={5} strokeDasharray="12 10" />
-            </g>
-          )}
-        </g>
-        {/* the twin is updated and the plan adjusts to the new change */}
-        <g opacity={lift(t, tF.changing - 0.2, tF.changing + 0.3)}>
-          <DigitalTumor x={600} y={420} R={150} seed={4} t={t} lod={cam.z} tint={mixHex(P.ai, '#B58CFF', chg)} />
-          <g transform={`translate(${880} ${420}) scale(0.7)`} opacity={plan}>
-            <circle r={150} fill="url(#glowGold)" />
-            <path d={`M -80 -40 L ${20 + 30 * plan} -40 L ${20 + 30 * plan} ${-70 + 30 * plan} L 100 0 L ${20 + 30 * plan} ${70 - 30 * plan} L ${20 + 30 * plan} 40 L -80 40 Z`} fill={P.aiGold} stroke="#FFF2C8" strokeWidth={6} />
+        {/* what the reads change in the model: the resistant (square) population is found again, then a new change
+            (triangle) appears in part of it, and the plan's binding shape is redesigned to match */}
+        <g opacity={lift(t, tF.detect - 0.1, tF.detect + 0.5)}>
+          <DigitalTumor x={620} y={-60} R={260} seed={4} t={t} lod={cam.z} sy={1} tint={P.ai} vessels={0.4} />
+          {Array.from({length: 10}, (_, m) => {
+            const a = (m / 10) * Math.PI * 2 + 0.3;
+            const isNew = m % 3 === 0;
+            const shown = lift(t, tF.detect + m * 0.08, tF.detect + 0.4 + m * 0.08);
+            const k = isNew ? chg : 0;
+            return (
+              <g key={m} transform={`translate(${620 + Math.cos(a) * 290} ${-60 + Math.sin(a) * 290})`} opacity={shown}>
+                <path d={morphPath(1, 2, k, 18)} fill={mixHex(P.markerAlt, '#B58CFF', k)} stroke="#FFFFFF" strokeWidth={3} />
+              </g>
+            );
+          })}
+          {/* the plan: a binding shape that fits the marker it must recognise */}
+          <g transform="translate(620 360)" opacity={lift(t, tF.detect + 0.6, tF.detect + 1.1)}>
+            <circle r={120} fill="url(#glowGold)" opacity={0.4 + 0.4 * plan} />
+            <path d={morphPath(1, 2, plan, 46)} fill="none" stroke={P.aiGold} strokeWidth={12} />
+            <path d={morphPath(1, 2, plan, 30)} fill={P.aiBg} />
           </g>
         </g>
       </g>
@@ -250,43 +264,38 @@ const CAM_RD = path([
 ]);
 
 // ------------------------------------------------------------------------------------------------ evolving enemy, evolving defence
-const SHAPES = (k: number, r: number) => {
-  // marker shapes: circle → square → triangle
-  if (k === 0) return `M ${-r} 0 A ${r} ${r} 0 1 0 ${r} 0 A ${r} ${r} 0 1 0 ${-r} 0 Z`;
-  if (k === 1) return `M ${-r} ${-r} L ${r} ${-r} L ${r} ${r} L ${-r} ${r} Z`;
-  return `M 0 ${-r * 1.2} L ${r * 1.1} ${r * 0.8} L ${-r * 1.1} ${r * 0.8} Z`;
-};
 const Loop: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
+  // the same marker shapes and colours as before: round pink (original), square orange (after the drug), violet
+  // triangle (the new change found in the blood). The marker reshapes; the receptor reshapes to fit it, and only then
+  // makes contact again.
   const span = tF.breakthrough - tF.evolving;
-  const ph = clamp01((t - tF.evolving) / span) * 3;
-  const stage = Math.min(2, Math.floor(ph));
-  const within = ph - stage;
-  const enemyCols = [P.marker, P.markerAlt, '#B58CFF'];
-  const match = smooth((within - 0.35) / 0.4);
-  const defStage = match > 0.5 ? stage : Math.max(0, stage - 1);
-  const ec = enemyCols[stage];
-  const tumorPos: Pt = [-260, 0], tPos: Pt = [lerp(330, 250, match), 0];
+  const u = clamp01((t - tF.evolving) / span) * 3;
+  const stage = Math.min(2, Math.floor(u));
+  const within = u - stage;
+  const mk = stage === 0 ? 0 : smooth(within / 0.3);                 // marker morph from the previous shape
+  const df = smooth((within - 0.35) / 0.3);                           // defence catches up
+  const kFrom = Math.max(0, stage - 1), kTo = stage;
+  const mCol = mixHex(MARK_COL[kFrom], MARK_COL[kTo], stage === 0 ? 1 : mk);
+  const contact = stage === 0 ? smooth(within / 0.4) : df;
+  const Tc = lerp(240, 8, contact);
+  const tint = stage === 0 ? 0 : stage === 1 ? 0.45 * mk : 0.45;
   return (
     <g>
       <rect width={W} height={H} fill={P.tissueBg} />
       <g transform={camTransform(cam)}>
-        <Cell2 x={tumorPos[0]} y={tumorPos[1]} r={210} seed={7} t={t} lod={200} look={lookMix(TUMOR, {...TUMOR, fill: mixHex(TUMOR.fill, ec, 0.35)}, 1)} nucScale={1.2} />
+        <Cell2 x={-260} y={0} r={210} seed={7} t={t} lod={200} look={lookMix(TUMOR, RESIST, tint * 2)} nucScale={1.2} />
         {Array.from({length: 7}, (_, m) => {
-          const a = (m / 7 - 0.5) * 2.4;
-          const x = tumorPos[0] + Math.cos(a) * 214, y = tumorPos[1] + Math.sin(a) * 214;
-          return <path key={m} d={SHAPES(stage, 16)} transform={`translate(${x} ${y})`} fill={ec} />;
+          const a = (m / 7 - 0.5) * 2.0;
+          return <path key={m} d={stage === 0 ? morphPath(0, 0, 0, 17) : morphPath(kFrom, kTo, mk, 17)} transform={`translate(${-260 + Math.cos(a) * 226} ${Math.sin(a) * 226}) rotate(${(a * 180) / Math.PI})`} fill={mCol} stroke="#FFFFFF" strokeWidth={2} />;
         })}
-        <TCell2 x={tPos[0] + 200} y={tPos[1]} r={190} t={t} dir={Math.PI} lod={200} act={match * 0.7} light={mixHex(P.tcellLight, P.immuneGold, 0.4)} />
-        {Array.from({length: 5}, (_, m) => {
-          const a = Math.PI + (m / 5 - 0.4) * 1.6;
-          const x = tPos[0] + 200 + Math.cos(a) * 200, y = tPos[1] + Math.sin(a) * 200;
-          return (
-            <g key={m} transform={`translate(${x} ${y})`}>
-              <path d={SHAPES(defStage, 20)} fill="none" stroke={P.immuneGold} strokeWidth={8} />
-            </g>
-          );
+        <TCell2 x={Tc + 200} y={0} r={190} t={t} dir={Math.PI} lod={200} act={contact * 0.5} light={mixHex(P.tcellLight, P.immuneGold, 0.4)} />
+        {Array.from({length: 7}, (_, m) => {
+          const a = Math.PI + (m / 7 - 0.5) * 1.5;
+          const x = Tc + 200 + Math.cos(a) * 212, y = Math.sin(a) * 212;
+          const dShape = stage === 0 ? morphPath(0, 0, 0, 24) : morphPath(kFrom, kTo, df, 24);
+          return <path key={m} d={dShape} transform={`translate(${x} ${y}) rotate(${(a * 180) / Math.PI + 180})`} fill="none" stroke={P.immuneGold} strokeWidth={7} />;
         })}
-        {match > 0.6 && <circle cx={(tumorPos[0] + 214 + tPos[0]) / 2} cy={0} r={120 * match} fill="url(#glowGold)" opacity={0.5 * (1 - within)} />}
+        {contact > 0.9 && <ellipse cx={-260 + 226 + 8} cy={0} rx={22} ry={170} fill="url(#glowGold)" opacity={0.35 * (contact - 0.9) * 10 * (1 - within)} />}
       </g>
     </g>
   );

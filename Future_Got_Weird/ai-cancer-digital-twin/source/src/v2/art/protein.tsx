@@ -26,14 +26,18 @@ const RESIDUES: Res[] = (() => {
   return out.sort((a, b) => a.z - b.z);
 })();
 
-export const Protein: React.FC<{t: number; digital?: number; pocketGlow?: number; scanA?: number; op?: number; breathe?: number}> = ({t, digital = 0, pocketGlow = 0, scanA, op = 1, breathe = 1}) => {
+/** layer: 'all', or 'back' / 'front' to draw a docked molecule between them (front = the near rim of the pocket).
+ *  close: the pocket's lining residues draw in around a bound molecule (induced fit). */
+export const Protein: React.FC<{t: number; digital?: number; pocketGlow?: number; scanA?: number; op?: number; breathe?: number; layer?: 'all' | 'back' | 'front'; close?: number}> = ({t, digital = 0, pocketGlow = 0, scanA, op = 1, breathe = 1, layer = 'all', close = 0}) => {
   const bioA = '#8E4AA8', bioB = '#C46AA8', bioDeep = '#3E1452';
   return (
     <g opacity={op}>
-      <circle r={760} fill={digital > 0.5 ? 'url(#glowAi)' : 'url(#glowMag)'} opacity={0.12} />
-      {RESIDUES.map((r) => {
+      {layer !== 'front' && <circle r={760} fill={digital > 0.5 ? 'url(#glowAi)' : 'url(#glowMag)'} opacity={0.12} />}
+      {RESIDUES.filter((r) => layer === 'all' || (layer === 'front') === (r.lining && r.z > 0.15)).map((r) => {
         const w = 1 + 0.015 * breathe * Math.sin(t * 2 + r.k);
-        const x = r.x + 6 * noise(t * 0.5 + r.k, 3) * breathe, y = r.y + 6 * noise(t * 0.5 + r.k, 7) * breathe;
+        const pull = r.lining ? close * 26 : 0;
+        const dx0 = POCKET[0] - r.x, dy0 = POCKET[1] - r.y, dl = Math.hypot(dx0, dy0) || 1;
+        const x = r.x + 6 * noise(t * 0.5 + r.k, 3) * breathe + (dx0 / dl) * pull, y = r.y + 6 * noise(t * 0.5 + r.k, 7) * breathe + (dy0 / dl) * pull;
         const depth = (r.z + 1) / 2;
         const base = r.lining ? mixHex(mixHex(bioB, P.immuneGold, 0.55), P.aiGold, digital) : mixHex(mixHex(bioA, bioB, rand(r.k * 5)), P.aiDeep, digital);
         const col = mixHex(base, '#120818', 0.45 * (1 - depth));
@@ -49,7 +53,7 @@ export const Protein: React.FC<{t: number; digital?: number; pocketGlow?: number
           </g>
         );
       })}
-      {pocketGlow > 0.01 && <circle cx={POCKET[0]} cy={POCKET[1]} r={POCKET_R * 1.3} fill="url(#glowGold)" opacity={pocketGlow * 0.6} />}
+      {pocketGlow > 0.01 && layer !== 'front' && <circle cx={POCKET[0]} cy={POCKET[1]} r={POCKET_R * 1.3} fill="url(#glowGold)" opacity={pocketGlow * 0.6} />}
     </g>
   );
 };

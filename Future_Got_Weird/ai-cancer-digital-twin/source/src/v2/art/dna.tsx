@@ -151,6 +151,15 @@ export const NucleoplasmBack: React.FC<{cam: Cam; t: number; mut?: number}> = ({
       <rect width={W} height={H} fill="#1C0A26" />
       <rect width={W} height={H} fill="url(#glowMut)" opacity={0.08 + 0.12 * mut} />
       <g transform={camTransform(cam, depth)}>{loops}</g>
+      {/* the nuclear envelope in the distance keeps the helix inside the nucleus we came through */}
+      <g transform={camTransform(cam, 0.3)} opacity={0.55}>
+        <circle cx={600} cy={9800} r={11500} fill="none" stroke="#5E2A56" strokeWidth={90} />
+        <circle cx={600} cy={9800} r={11330} fill="none" stroke="#4A1E48" strokeWidth={50} />
+        {Array.from({length: 40}, (_, k) => {
+          const a = -Math.PI / 2 + (k - 20) * 0.022;
+          return <circle key={k} cx={600 + Math.cos(a) * 11420} cy={9800 + Math.sin(a) * 11420} r={46} fill="#2A0E30" />;
+        })}
+      </g>
     </g>
   );
 };

@@ -35,8 +35,9 @@ export const OPEN_KEYS: K[] = [
   {t: 2.0, x: 104, y: -410, z: 5.2, rot: -3},
   {t: 2.75, x: 117, y: -438, z: 48, rot: -4.5},
   {t: 3.4, x: SITE.tumor[0], y: SITE.tumor[1], z: 360, rot: -5.5},
-  {t: 4.45, x: SITE.tumor[0], y: SITE.tumor[1], z: 1.16 * TISSUE_SCALE, rot: -6},
+  {t: 4.6, x: SITE.tumor[0], y: SITE.tumor[1], z: 1.8 * TISSUE_SCALE, rot: -5.5},
 ];
+export const OPEN_END = 4.6;
 export const OPEN = path(OPEN_KEYS);
 const HAND1: [number, number] = [3.12, 3.55];
 
@@ -48,12 +49,13 @@ const tA = {
   body: T('when the body tries'), destroy: T('destroy it'), survives: T('it survives.'), one: T('One cell becomes two.'), two: T('Two become four.'),
   four: T('Four become thousands'), begins: TE('how cancer begins.'), worse: T('But it gets worse.'),
 };
-const E = toTissue(OPEN(4.45));
+const E = toTissue(OPEN(OPEN_END));
+// no drift over the cell field: the camera keeps closing in on the same cell while the narration describes it
 const P1 = path([
-  {...E, t: 4.45},
-  {t: 6.4, x: C0.x + 16, y: C0.y - 9, z: 1.32, rot: -4},
-  {t: tA.deep - 0.05, x: C0.x + 6, y: C0.y - 4, z: 1.55, rot: -2.8},
-  {t: tA.deep + 0.85, x: C0.x + 3.6, y: C0.y - 1.8, z: 5.4, rot: -2.5},
+  {...E, t: OPEN_END},
+  {t: 6.6, x: C0.x + 2, y: C0.y - 1, z: 2.5, rot: -4},
+  {t: tA.deep - 0.05, x: C0.x + 2.5, y: C0.y - 1.2, z: 3.1, rot: -3},
+  {t: tA.deep + 0.85, x: C0.x + 3.6, y: C0.y - 1.8, z: 7, rot: -2.6},
   {t: tA.deep + 2.15, x: C0.x + 9.5, y: C0.y - 0.5, z: 26, rot: -2.2},
   {t: tA.dna + 0.15, x: C0.x + DNA_ANCHOR[0] / CI_SCALE, y: C0.y + DNA_ANCHOR[1] / CI_SCALE, z: 1.1 * CI_SCALE * DNA_SCALE, rot: -2},
 ]);
@@ -90,7 +92,7 @@ const P2 = path([
 ]);
 /** The micro camera in tissue coordinates for t in [3.1, 36.7]. */
 export const microCam = (t: number): Cam => {
-  if (t < 4.45) return toTissue(OPEN(t));
+  if (t < OPEN_END) return toTissue(OPEN(t));
   if (t < tA.dna + 0.15) return P1(t);
   if (t < PULL0) return dnaToTissue(DNA_PATH(t));
   return P2(t);
@@ -136,18 +138,26 @@ export const TumorMassShade: React.FC<{Rt: number; op?: number}> = ({Rt, op = 1}
 /** Tissue cell modifications shared by sequence A and B (mass effect + tumour cells). */
 export const tumorMod = (t: number, Rt: number, het: number, extra?: (i: number, j: number, x: number, y: number) => Mod | null) => (i: number, j: number, x: number, y: number): Mod | null => {
   const e = extra?.(i, j, x, y);
-  if (e) return e;
+  if (e && (e.hide || e.look)) return e;
+  const base = tumorBase(t, Rt, het, i, j, x, y);
+  if (!e) return base;
+  return {...(base ?? {}), ...e, dx: (base?.dx ?? 0) + (e.dx ?? 0), dy: (base?.dy ?? 0) + (e.dy ?? 0)};
+};
+const tumorBase = (t: number, Rt: number, het: number, i: number, j: number, x: number, y: number): Mod | null => {
   const dx = x - C0.x, dy = y - C0.y, d0 = Math.hypot(dx, dy);
   const d = d0 / boundary(Math.atan2(dy, dx));
   if (Rt > 0 && d < Rt) {
     // convert with a short "division pop" when the front passes
     const rs = rand(((i * 911) ^ (j * 3571)) & 0xffff);
     const born = smooth((Rt - d) / 90);
-    return {look: cloneLook(i, j, het), s: lerp(0.6, 0.92 + 0.22 * rs, born), nucScale: 1.25 + 0.2 * rs, round: 0.4, dx: -dx * 0.06, dy: -dy * 0.06};
+    // newly added cells appear as divisions at the front: elongated along the growth direction, then rounding off
+    const div = born < 1 ? Math.sin(born * Math.PI) : 0;
+    return {look: cloneLook(i, j, het), s: lerp(0.72, 0.92 + 0.22 * rs, born), nucScale: 1.25 + 0.2 * rs, round: 0.4, dx: -dx * 0.015, dy: -dy * 0.015, stretch: 1 + 0.55 * div, dir: Math.atan2(dy, dx)};
   }
   if (Rt > 0) {
-    const push = 0.3 * SP * Math.exp(-(d - Rt) / 380) * clamp01(Rt / 300);
-    return {dx: (dx / (d || 1)) * push, dy: (dy / (d || 1)) * push, s: 1 - 0.12 * Math.exp(-(d - Rt) / 300)};
+    const push = 0.14 * SP * Math.exp(-(d - Rt) / 380) * clamp01(Rt / 300);
+    const sq = Math.exp(-(d - Rt) / 260) * clamp01(Rt / 300);
+    return {dx: (dx / (d || 1)) * push, dy: (dy / (d || 1)) * push, s: 1 - 0.08 * sq, stretch: 1 + 0.28 * sq, dir: Math.atan2(dy, dx) + Math.PI / 2};
   }
   return null;
 };
@@ -266,13 +276,26 @@ const BlebOverlay: React.FC<{t: number; cam: Cam; k: number}> = ({t, cam, k}) =>
 );
 
 // ------------------------------------------------------------------------------------------------ the DNA layer for A
+// each regulator ARRIVES and binds its site as it is named, then does its job: the accelerator sends a growth signal,
+// the brake binds and the signal stops, the death switch binds and primes; then they fail.
+const arriveK = (t: number, a: number) => lift(t, a - 0.5, a + 0.05);
 const protState = (t: number, kind: 'grow' | 'stop' | 'die') => {
-  const lit = (a: number) => lift(t, a - 0.05, a + 0.25) * (1 - 0.55 * lift(t, a + 0.6, a + 1.2));
   const failK = lift(t, tA.fail, tA.fail + 0.8);
-  if (kind === 'grow') return {x: GENE.grow, t, kind, act: Math.max(lit(tA.grows), lift(t, tA.wrong, tA.wrong + 0.4)), stuck: lift(t, tA.wrong, tA.wrong + 0.5), warp: failK * 0.2};
-  if (kind === 'stop') return {x: GENE.stop, t, kind, act: lit(tA.stops) * (1 - failK * 0.6), warp: failK * 0.5, off: lift(t, tA.wrong + 0.3, tA.wrongE + 0.2), op: 1 - lift(t, tA.wrongE - 0.3, tA.wrongE + 0.3)};
-  return {x: GENE.die, t, kind, act: lit(tA.dies) * (1 - failK * 0.6), warp: failK * 0.7 + lift(t, tA.wrong, tA.wrong + 0.6), off: lift(t, tA.wrong + 0.7, tA.wrongE + 0.3), op: 1 - lift(t, tA.wrongE - 0.2, tA.wrongE + 0.4)};
+  if (kind === 'grow') {
+    const ar = arriveK(t, tA.grows);
+    return {x: GENE.grow, t, kind, act: lift(t, tA.grows, tA.grows + 0.2) * (1 - 0.6 * lift(t, tA.stops, tA.stops + 0.3)) + lift(t, tA.wrong, tA.wrong + 0.4), stuck: lift(t, tA.wrong, tA.wrong + 0.5), warp: failK * 0.15, off: 1 - ar, op: ar > 0.001 ? 1 : 0};
+  }
+  if (kind === 'stop') {
+    const ar = arriveK(t, tA.stops);
+    // grip loosens as its site fails, then it lets go and drifts away
+    const loose = failK * 0.12 + lift(t, tA.wrong + 0.3, tA.wrongE + 0.2);
+    return {x: GENE.stop, t, kind, act: lift(t, tA.stops, tA.stops + 0.2) * (1 - failK * 0.7), warp: failK * 0.4, off: Math.max(1 - ar, loose), op: (ar > 0.001 ? 1 : 0) * (1 - lift(t, tA.wrongE - 0.3, tA.wrongE + 0.3))};
+  }
+  const ar = arriveK(t, tA.dies);
+  return {x: GENE.die, t, kind, act: lift(t, tA.dies, tA.dies + 0.2) * (1 - failK * 0.7), warp: failK * 0.7 + lift(t, tA.wrong, tA.wrong + 0.6), off: Math.max(1 - ar, lift(t, tA.wrong + 0.7, tA.wrongE + 0.3)), op: (ar > 0.001 ? 1 : 0) * (1 - lift(t, tA.wrongE - 0.2, tA.wrongE + 0.4))};
 };
+/** the accelerator's signal: a regulated burst after it binds, cut off once the brake binds; later a locked-on stream */
+const signalOn = (t: number) => Math.min(lift(t, tA.grows + 0.1, tA.grows + 0.3), 1 - lift(t, tA.stops + 0.05, tA.stops + 0.4));
 const mutA = (t: number) => (i: number) => {
   // scattered small mistakes accumulating, then mutations under the three genes, then a spreading wave
   const r = rand(i * 977 + 5);
@@ -293,14 +316,21 @@ const DnaA: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
         {(['grow', 'stop', 'die'] as const).map((k) => <RegProteinBack key={k} {...protState(t, k)} />)}
         <Helix2 x0={cam.x - hw} x1={cam.x + hw} t={t} mut={mutA(t)} kink={lift(t, tA.wrong + 0.2, tA.wrong + 1.0)} kinkX={GENE.grow} lod={cam.z} />
         {(['grow', 'stop', 'die'] as const).map((k) => <RegProtein key={k} {...protState(t, k)} />)}
-        <GrowSignal x={GENE.grow} t={t} t0={tA.wrong + 0.2} rate={t > tA.wrong + 0.2 ? 1.6 : 0} />
+        <g opacity={signalOn(t)}><GrowSignal x={GENE.grow} t={t} t0={tA.grows + 0.1} rate={t > tA.grows + 0.1 ? 1.4 : 0} /></g>
+        <GrowSignal x={GENE.grow} t={t} t0={tA.wrong + 0.2} rate={t > tA.wrong + 0.2 ? 2.2 : 0} />
+        {/* the brake sits between the accelerator's signal and the rest of the gene: its block is drawn as a bar */}
+        {/* identifiable sites of change under each regulator */}
+        {[GENE.grow, GENE.stop, GENE.die].map((g, k) => {
+          const on = lift(t, tA.fail + k * 0.25, tA.fail + 0.4 + k * 0.25);
+          return on > 0.01 && <circle key={k} cx={g} cy={0} r={95} fill="none" stroke={P.mutation} strokeWidth={8} strokeDasharray="20 14" opacity={on * (1 - 0.6 * lift(t, tA.wrongE, tA.wrongE + 0.4))} />;
+        })}
       </g>
     </g>
   );
 };
 
 // ------------------------------------------------------------------------------------------------ zoom-level layering
-const wInterior = (z: number) => smooth((Math.log(z) - Math.log(2.6)) / (Math.log(4.4) - Math.log(2.6)));
+const wInterior = (z: number) => smooth((Math.log(z) - Math.log(3.2)) / (Math.log(5.2) - Math.log(3.2)));
 const wDna = (z: number) => smooth((Math.log(z) - Math.log(150)) / (Math.log(228) - Math.log(150)));
 
 const MicroA: React.FC<{t: number}> = ({t}) => {
@@ -313,7 +343,8 @@ const MicroA: React.FC<{t: number}> = ({t}) => {
       {wd < 1 && <TissueA t={t} cam={tc} />}
       {wi > 0.001 && wd < 1 && (
         <g opacity={wi}>
-          <Interior t={t} cam={ci} seed={C0.seed} bg={false} mut={lift(t, tA.deep + 1.4, tA.dna + 0.3) * 0.7 + 0.3 * lift(t, tA.wrong, tA.wrongE)} pulse={a.pulse} />
+          <Interior t={t} cam={ci} seed={C0.seed} bg={false} mut={lift(t, tA.deep + 1.4, tA.dna + 0.3) * 0.7 + 0.3 * lift(t, tA.wrong, tA.wrongE)} pulse={a.pulse}
+            helix={{mut: mutA(t), kink: lift(t, tA.wrong + 0.2, tA.wrong + 1.0), kinkX: GENE.grow}} signals={lift(t, tA.wrong + 0.4, tA.wrongE)} />
         </g>
       )}
       {wd > 0.001 && (
@@ -331,7 +362,7 @@ export const shotsA: Shot[] = [
     id: 'A-body',
     t0: 0,
     t1: HAND1[1],
-    draw: (t) => <BodyWorld t={t} cam={OPEN(t)} body={{glow: 1}} lungTumor={0.9} />,
+    draw: (t) => <BodyWorld t={t} cam={OPEN(t)} body={{glow: 0.45, chest: 1, lesion: 1}} lungTumor={0.9} />,
   },
   {id: 'A-micro', t0: HAND1[0], t1: tA.worse + 0.45, fade: HAND1[1] - HAND1[0], draw: (t) => <MicroA t={t} />},
 ];

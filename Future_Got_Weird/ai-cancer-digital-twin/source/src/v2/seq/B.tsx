@@ -50,8 +50,11 @@ const SPROUTS = [
 const sproutGrow = (t: number, k: number) => lift(t, tB.recruits + k * 0.25, tB.recruits + 1.7 + k * 0.25);
 const sproutPerf = (t: number, k: number) => lift(t, tB.recruits + 1.6 + k * 0.25, tB.recruits + 2.4 + k * 0.25);
 
-// ------------------------------------------------------------------------------------------------ immune evasion at E, escape at F
-const E_DEG = 200, F_DEG = 178;
+// ------------------------------------------------------------------------------------------------ one region: the tumour's upper edge and the capillary above it
+// Everything in this stretch happens at the same place, so the camera never wanders: nutrients come out of CAP1 into
+// the edge, a sprout grows from CAP1 into the tumour, a T cell that left CAP1 is switched off at the edge, and an
+// edge cell breaks away and enters CAP1 (whose flow runs to screen right, like the vessel shot that follows).
+const E_DEG = -114, F_DEG = -99;
 const tE = tB.hide;
 const ecell = (() => {
   const p = rimPt(E_DEG, tE, 80);
@@ -59,101 +62,86 @@ const ecell = (() => {
   return {...n, ...cellAt(n.i, n.j)};
 })();
 const eDir = (E_DEG * Math.PI) / 180;
+const TC_FROM = along(CAP1, 0.405).p;
 const tcellPos = (t: number): Pt => {
-  const k = lift(t, tB.recruits + 1.4, tE + 0.05);
-  const d = lerp(900, R + 52 + 8, k);
-  return [ecell.x + Math.cos(eDir) * d + 120 * (1 - k) * Math.sin(t), ecell.y + Math.sin(eDir) * d];
+  const k = lift(t, tB.recruits + 1.2, tE + 0.05);
+  const end: Pt = [ecell.x + Math.cos(eDir) * (R + 60), ecell.y + Math.sin(eDir) * (R + 60)];
+  return [lerp(TC_FROM[0], end[0], k) + 40 * (1 - k) * Math.sin(t * 1.3), lerp(TC_FROM[1] + 60, end[1], k)];
 };
 const fcell = (() => {
   const p = rimPt(F_DEG, tB.free, 60);
   const n = nearest(p[0], p[1]);
   return {...n, ...cellAt(n.i, n.j)};
 })();
-// escape route: out of the tumour, along the matrix fibres, to the capillary CAP4
-const Q = along(CAP4, 0.5).p;
-const ROUTE = smoothPts([[fcell.x, fcell.y], [fcell.x - 260, fcell.y - 30], [lerp(fcell.x, Q[0], 0.55), lerp(fcell.y, Q[1], 0.5) + 80], [Q[0] + 70, Q[1]], [Q[0], Q[1]]], 60);
+const Q_U = 0.47;
+const Q = along(CAP1, Q_U).p;
+const ROUTE = smoothPts([[fcell.x, fcell.y], [fcell.x - 30, fcell.y - 180], [lerp(fcell.x, Q[0], 0.5) - 40, lerp(fcell.y, Q[1], 0.55)], [Q[0], Q[1] + 70], [Q[0], Q[1]]], 60);
 const tEsc = {stretch0: tB.free + 0.05, go: tB.free + 0.75, arrive: tB.enter + 0.05, inside: tB.enter + 0.75};
 const escPos = (t: number): Pt => {
   const u = lift(t, tEsc.go, tEsc.arrive);
   const p = along(ROUTE, u).p;
-  const k = lift(t, tEsc.arrive, tEsc.inside); // final squeeze down the capillary axis
-  const q = along(CAP4, 0.5 + 0.012 * k).p;
+  const k = lift(t, tEsc.arrive, tEsc.inside); // final squeeze along the capillary, with its flow
+  const q = along(CAP1, Q_U + 0.006 * k).p;
   return [lerp(p[0], q[0], k), lerp(p[1], q[1], k)];
 };
-const escDir = (t: number) => (t < tEsc.arrive ? along(ROUTE, lift(t, tEsc.go, tEsc.arrive)).ang : along(CAP4, 0.5).ang);
+const escDir = (t: number) => (t < tEsc.arrive ? along(ROUTE, lift(t, tEsc.go, tEsc.arrive)).ang : along(CAP1, Q_U).ang);
 
 // ------------------------------------------------------------------------------------------------ camera (tissue part)
 const A_END = MICRO_END(tB.worse + 0.4);
+const EDGE: Pt = rimPt(-90, tB.steals);
 const camT = path([
   {...A_END, t: tB.worse + 0.4},
-  {t: tB.steals + 0.2, x: C0.x + 300, y: C0.y - 800, z: 0.175, rot: -2},
-  {t: tB.recruits + 0.3, x: C0.x + 1300, y: C0.y - 2650, z: 0.42, rot: -1},
-  {t: tB.recruits + 1.8, x: C0.x + 1000, y: C0.y - 2250, z: 0.36, rot: 0},
-  {t: tB.hide - 0.55, x: ecell.x - 260, y: ecell.y - 60, z: 0.5, rot: 1},
-  {t: tB.hide + 0.35, x: ecell.x - 110, y: ecell.y, z: 1.05, rot: 2},
-  {t: tB.free - 0.1, x: ecell.x - 70, y: ecell.y + 10, z: 1.15, rot: 2},
-  {t: tB.free + 0.65, x: fcell.x - 120, y: fcell.y, z: 0.85, rot: 1},
-  {t: tEsc.go + 0.8, x: escPos(tEsc.go + 0.8)[0], y: escPos(tEsc.go + 0.8)[1], z: 0.8, rot: 0},
-  {t: tEsc.arrive, x: Q[0] + 40, y: Q[1], z: 1.2, rot: 0},
+  {t: tB.steals + 0.3, x: EDGE[0] + 250, y: EDGE[1] + 300, z: 0.3, rot: -1},
+  {t: tB.recruits + 0.6, x: EDGE[0] + 380, y: EDGE[1] - 120, z: 0.42, rot: 0},
+  {t: tB.hide - 0.6, x: ecell.x + 60, y: ecell.y - 220, z: 0.6, rot: 0.5},
+  {t: tB.hide + 0.35, x: ecell.x + 20, y: ecell.y - 90, z: 1.05, rot: 1},
+  {t: tB.free - 0.1, x: ecell.x, y: ecell.y - 70, z: 1.1, rot: 1},
+  {t: tB.free + 0.65, x: fcell.x + 40, y: fcell.y - 90, z: 0.95, rot: 0.5},
+  {t: tEsc.go + 0.8, x: escPos(tEsc.go + 0.8)[0], y: escPos(tEsc.go + 0.8)[1], z: 0.9, rot: 0},
+  {t: tEsc.arrive, x: Q[0] + 30, y: Q[1] + 20, z: 1.2, rot: 0},
   {t: tEsc.inside + 0.3, x: escPos(tEsc.inside)[0], y: escPos(tEsc.inside)[1], z: 2.1, rot: 0},
 ]);
 
-// ------------------------------------------------------------------------------------------------ vessel part
+// ------------------------------------------------------------------------------------------------ vessel part: ride with the cell, then rise out
 const VS = 95 / 58; // vessel units per tissue unit (anchored on the travelling cell)
-const tV = {h0: tEsc.inside - 0.2, h1: tEsc.inside + 0.3, cruise: tB.travel + 0.2, slow: tB.create + 0.3, stuck: tB.create + 1.15};
-const X_STUCK = 2400;
+const tV = {h0: tEsc.inside - 0.2, h1: tEsc.inside + 0.3, cruise: tB.travel - 0.2, out: tB.travel + 0.45};
 const cellVX = (t: number) => {
-  // position along the vessel: accelerate, cruise, decelerate into the narrowing (integrated smooth speed profile)
-  const v = (u: number) => 1100 * lift(u, tV.h0, tV.cruise) * (1 - lift(u, tV.slow, tV.stuck));
+  // position along the vessel: accelerate with the flow, then cruise (integrated smooth speed profile)
+  const v = (u: number) => 1100 * lift(u, tV.h0, tV.cruise);
   let x = 0;
   const dt = 1 / 60;
   for (let u = tV.h0; u < t; u += dt) x += v(u) * dt;
   return x;
 };
-const X_END = cellVX(tV.stuck + 1);
-const lumenB = (x: number) => lerp(560, 120, smooth((x - (X_END - 1900)) / 1700));
-const vesselCellR = (t: number) => 95;
 const camV = (t: number): Cam => {
-  const cx = cellVX(t);
   const zk = path([
     {t: tV.h1, x: 0, y: 0, z: 2.1 / VS},
-    {t: tV.cruise + 0.5, x: 0, y: 0, z: 0.62},
-    {t: tV.slow + 0.3, x: 0, y: 0, z: 0.78},
-    {t: tV.stuck + 0.2, x: 0, y: 0, z: 1.45},
+    {t: tV.cruise + 0.3, x: 0, y: 0, z: 0.9},
+    {t: tV.out + 0.6, x: 0, y: 0, z: 0.42},
   ])(t);
-  return {x: cx + 120 * lift(t, tV.h1, tV.cruise + 0.5) * (1 - lift(t, tV.slow, tV.stuck)), y: 0, z: zk.z, rot: 0};
+  return {x: cellVX(t), y: 0, z: zk.z, rot: 0};
 };
 const vesselFromTissue = (ct: Cam, t: number) => handoff(ct, escPos(t), [cellVX(t), 0], VS);
 
-// ------------------------------------------------------------------------------------------------ liver part
-const LS = 58 / 95; // liver units per vessel unit
-const tL = {h0: tV.stuck - 0.1, h1: tV.stuck + 0.35, out0: tV.stuck + 0.45, out1: tV.stuck + 1.2, col0: tV.stuck + 1.15, col1: tB.nightmare + 0.3, pull: tB.nightmare - 0.25};
-const liverFromVessel = (cv: Cam) => handoff(cv, [X_END, 0], [0, 0], LS);
-const HEP0 = hepAt(0, 0);
-const liverCellPos = (t: number): Pt => {
-  const k = lift(t, tL.out0, tL.out1);
-  return [lerp(0, HEP0.x, k), lerp(0, HEP0.y, k) - 20 * Math.sin(k * Math.PI)];
-};
-const LV_REST = liverFromVessel(camV(tL.h1));
-const camL = path([
-  {...LV_REST, t: tL.h1},
-  {t: tL.out1, x: HEP0.x, y: HEP0.y - 20, z: 2.0, rot: 0},
-  {t: tL.pull, x: HEP0.x, y: HEP0.y, z: 1.6, rot: 0},
-]);
-const colonyR = (t: number) => 520 * lift(t, tL.col0, tL.col1 + 0.6);
-
-// ------------------------------------------------------------------------------------------------ body pull back
-const toBody = (cl: Cam) => handoff(cl, LIVER_ANCHOR, SITE.mets, 1 / TISSUE_SCALE);
-const BODY0 = toBody(camL(tL.pull));
+// ------------------------------------------------------------------------------------------------ the route through the body (body units)
+// lung tumour → pulmonary vein → heart → aorta → hepatic artery → liver; the travelling cell is the marked dot
+const ROUTE_B = smoothPts([[SITE.tumor[0] - 14, SITE.tumor[1] + 10], [80, -410], [52, -372], [24, -330], [10, -280], [10, -220], [-20, -205], [-60, -190], [SITE.mets[0], SITE.mets[1]]], 80);
+const tR = {h0: tV.out, h1: tV.out + 0.4, arrive: tB.organs + 0.2};
+const routeU = (t: number) => lift(t, tR.h0, tR.arrive);
+const routePt = (t: number) => along(ROUTE_B, routeU(t)).p;
+const DOT_S = 4 / 95; // body units per vessel unit at the hand-off (the 95-unit cell becomes a 4-unit dot)
+const bodyFromVessel = (cv: Cam, t: number) => handoff(cv, [cellVX(t), 0], routePt(t), DOT_S);
+const B_START = bodyFromVessel(camV(tR.h1), tR.h1);
 const camBody = path([
-  {...BODY0, t: tL.pull},
-  {t: tL.pull + 0.9, x: SITE.mets[0], y: SITE.mets[1], z: 40, rot: 0},
-  {t: tL.pull + 1.8, x: -40, y: -260, z: 2.2, rot: 0},
-  {t: tB.enemy + 0.1, x: 0, y: -240, z: 0.78, rot: 0},
-  {t: tB.millions + 0.05, x: 10, y: -250, z: 0.84, rot: 0},
+  {...B_START, t: tR.h1},
+  {t: tR.h1 + 0.7, x: 60, y: -360, z: 3.2, rot: 0},
+  {t: tR.arrive, x: -40, y: -250, z: 2.2, rot: 0},
+  {t: tB.nightmare + 0.2, x: -50, y: -230, z: 2.0, rot: 0},
+  {t: tB.enemy + 0.2, x: 0, y: -240, z: 0.8, rot: 0},
+  {t: tB.millions + 0.05, x: 6, y: -250, z: 0.84, rot: 0},
 ]);
-const H_BODY: [number, number] = [tL.pull + 0.55, tL.pull + 0.95]; // liver → body dissolve
-const EXTRA_METS: [Pt, number][] = [[[-12, -770], 0.25], [[64, 330], 0.6], [[-30, -40], 0.95]];
+const colony = (t: number) => lift(t, tR.arrive - 0.1, tB.nightmare + 0.4);
+const EXTRA_METS: [Pt, number][] = [[[-12, -770], 0.4], [[64, 330], 0.85], [[-30, -40], 1.25]];
 
 // ------------------------------------------------------------------------------------------------ draw: tissue part
 const TissueB: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
@@ -178,10 +166,12 @@ const TissueB: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
         <TissueField cam={cam} t={t} mod={mod} />
         <TumorMassShade Rt={Rt} op={1 - lift(cam.z, 0.35, 0.7)} />
         {/* matrix fibres between the tumour edge and the capillary used for the escape */}
-        <Fibres x0={Q[0] - 200} y0={fcell.y - 500} x1={fcell.x + 100} y1={fcell.y + 700} t={t} op={0.85 * lift(t, tB.free - 1.5, tB.free)} />
+        <g transform={`rotate(90 ${(Q[0] + fcell.x) / 2} ${(Q[1] + fcell.y) / 2})`}>
+          <Fibres x0={(Q[0] + fcell.x) / 2 - 360} y0={(Q[1] + fcell.y) / 2 - 450} x1={(Q[0] + fcell.x) / 2 + 360} y1={(Q[1] + fcell.y) / 2 + 450} t={t} op={0.85 * lift(t, tB.free - 1.5, tB.free)} />
+        </g>
         {[CAP1, CAP2, CAP3, CAP4].map((c, k) => <Capillary key={k} pts={c} t={t} w={95} lod={cam.z} />)}
         {SPROUTS.map((s, k) => sproutGrow(t, k) > 0.01 && <Capillary key={'s' + k} pts={s} t={t} w={78} grow={sproutGrow(t, k)} perfuse={sproutPerf(t, k)} lod={cam.z} />)}
-        <Nutrients from={[along(CAP1, 0.5).p, along(CAP3, 0.5).p, along(CAP2, 0.48).p, along(CAP4, 0.46).p, along(CAP1, 0.62).p, along(CAP3, 0.4).p]} to={C0P} t={t} k={nut} n={60} size={34} />
+        <Nutrients from={[along(CAP1, 0.45).p, along(CAP1, 0.48).p, along(CAP1, 0.51).p, along(CAP1, 0.54).p, along(CAP1, 0.57).p]} to={[EDGE[0] + 200, EDGE[1] + 700]} t={t} k={nut} n={40} size={26} />
         {/* immune evasion: shield ligands on the edge cell, the T cell docks and is switched off */}
         <ShieldLigands x={ecell.x} y={ecell.y} r={R * 0.95} a0={eDir - 1.1} a1={eDir + 1.1} k={shields} n={8} size={16} />
         {t > tB.recruits + 1.3 && t < tB.free + 1.5 && <TCell2 x={tc[0]} y={tc[1]} r={52} t={t} dir={eDir + Math.PI} lod={lod} dim={dimT} spikes={1 - 0.6 * dimT} />}
@@ -199,38 +189,50 @@ const TissueB: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
 // ------------------------------------------------------------------------------------------------ draw: vessel part
 const VesselB: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const cx = cellVX(t);
-  const sq = lift(t, tV.slow + 0.4, tV.stuck);
-  const tumble = (t - tV.h0) * 40 * (1 - sq);
+  const tumble = (t - tV.h0) * 35;
   return (
-    <BloodTunnel cam={cam} t={t} lumen={lumenB} flow={1250 * (1 - 0.7 * sq)}>
+    <BloodTunnel cam={cam} t={t} flow={1250}>
       <g transform={`translate(${cx} ${0}) rotate(${tumble})`}>
-        <Cell2 x={0} y={0} r={vesselCellR(t)} seed={fcell.seed} t={t} lod={95 * cam.z} look={TUMOR} round={1 - sq} stretch={1 + 0.9 * sq + 0.5 * (1 - lift(t, tV.h0, tV.cruise))} dir={-((tumble * Math.PI) / 180)} pulse={0.3} nucScale={1.2} />
+        <circle r={260} fill="url(#glowMag)" opacity={0.35 * lift(t, tV.cruise, tV.out)} />
+        <Cell2 x={0} y={0} r={95} seed={fcell.seed} t={t} lod={95 * cam.z} look={TUMOR} round={1} stretch={1 + 0.5 * (1 - lift(t, tV.h0, tV.cruise))} dir={-((tumble * Math.PI) / 180)} pulse={0.3} nucScale={1.2} />
       </g>
     </BloodTunnel>
   );
 };
 
-// ------------------------------------------------------------------------------------------------ draw: liver part
-const LiverB: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
-  const lp = liverCellPos(t);
-  const Rl = colonyR(t);
-  const out = lift(t, tL.out0, tL.out1);
+// ------------------------------------------------------------------------------------------------ draw: the route through the body
+const RouteB: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
+  const u = routeU(t);
+  const p = routePt(t);
+  const lit = Math.min(1, u * 1.2 + 0.05);
+  const pathD = 'M ' + ROUTE_B.map((q) => q.join(' ')).join(' L ');
+  const grown = colony(t);
   return (
-    <g>
-      <LiverField
-        cam={cam}
-        t={t}
-        mod={(i, row, x, y) => {
-          if (i === 0 && row === 0 && out > 0.05) return {hide: true};
-          const d = Math.hypot(x - HEP0.x, y - HEP0.y) / (1 + 0.15 * Math.sin(Math.atan2(y - HEP0.y, x - HEP0.x) * 3 + 1));
-          if (Rl > 0 && d < Rl) return {look: liverTumorLook(0.9), s: lerp(0.7, 1.05, smooth((Rl - d) / 80)), pulse: 0.15};
-          return null;
-        }}
-      />
-      <g transform={camTransform(cam)}>
-        <Cell2 x={lp[0]} y={lp[1]} r={58} seed={fcell.seed} t={t} lod={58 * cam.z} look={TUMOR} stretch={1 + 0.7 * (1 - out) + 0.5 * Math.sin(out * Math.PI)} dir={out > 0.05 && out < 0.95 ? Math.PI / 2 : 0} round={0.5} pulse={0.4} nucScale={1.2} op={1 - lift(t, tL.col0 + 0.3, tL.col0 + 0.8)} />
-      </g>
-    </g>
+    <BodyWorld
+      t={t}
+      cam={cam}
+      liver
+      body={{glow: 0, lesion: 0.9, chest: 0.6, mets: 0.55 * grown, tumorSize: 1, metsSize: 0.3 + 1.3 * grown, vessels: 0.35 + 0.45 * lift(t, tB.nightmare + 0.2, tB.enemy)}}
+      lungTumor={0.55}
+      liverMets={0.8 * grown}
+      front={
+        <g>
+          {/* the route the cell is carried along */}
+          <path d={pathD} fill="none" stroke={P.bloodLight} strokeWidth={9} strokeLinecap="round" opacity={0.35} strokeDasharray={`${lit * 2000} 99999`} />
+          <path d={pathD} fill="none" stroke="#FFD6EC" strokeWidth={2.5} strokeDasharray="5 9" strokeDashoffset={-t * 40} opacity={0.6 * (1 - grown)} />
+          {u < 0.999 && (
+            <g>
+              <circle cx={p[0]} cy={p[1]} r={16} fill="url(#glowMag)" />
+              <circle cx={p[0]} cy={p[1]} r={4} fill={TUMOR.light} stroke={TUMOR.deep} strokeWidth={1} />
+            </g>
+          )}
+          {EXTRA_METS.map(([q, d], k) => {
+            const k2 = lift(t, tB.nightmare + d, tB.nightmare + d + 0.6);
+            return k2 > 0.01 && <circle key={k} cx={q[0]} cy={q[1]} r={40 * (0.9 + 0.1 * Math.sin(t * 3 + k))} fill="url(#glowMag)" opacity={k2 * 0.85} />;
+          })}
+        </g>
+      }
+    />
   );
 };
 
@@ -290,40 +292,14 @@ export const shotsB: Shot[] = [
   {
     id: 'B-vessel',
     t0: tV.h0,
-    t1: tL.h1 + 0.05,
+    t1: tR.h1 + 0.05,
     fade: tV.h1 - tV.h0,
     draw: (t) => <VesselB t={t} cam={t < tV.h1 ? vesselFromTissue(camT(t), t) : camV(t)} />,
   },
-  {
-    id: 'B-liver',
-    t0: tL.h0,
-    t1: H_BODY[1] + 0.05,
-    fade: tL.h1 - tL.h0,
-    draw: (t) => <LiverB t={t} cam={t < tL.h1 ? liverFromVessel(camV(t)) : t < tL.pull ? camL(t) : handoff(camBody(t), SITE.mets, LIVER_ANCHOR, TISSUE_SCALE)} />,
-  },
-  {
-    id: 'B-body',
-    t0: H_BODY[0],
-    t1: tB.millions,
-    fade: H_BODY[1] - H_BODY[0],
-    draw: (t) => {
-      const cam = camBody(t);
-      return (
-        <g>
-          <BodyWorld t={t} cam={cam} liver body={{glow: 0.95, mets: lift(t, H_BODY[0], H_BODY[1] + 0.4), vessels: lift(t, tB.nightmare + 0.4, tB.enemy) * 0.8, tumorSize: 1, metsSize: 0.8}} lungTumor={0.6} liverMets={0.8} />
-          <g transform={camTransform(cam)}>
-            {EXTRA_METS.map(([p, d], k) => {
-              const k2 = lift(t, tB.nightmare + d, tB.nightmare + d + 0.6);
-              return k2 > 0.01 && <circle key={k} cx={p[0]} cy={p[1]} r={46 * (0.9 + 0.1 * Math.sin(t * 3 + k))} fill="url(#glowMag)" opacity={k2 * 0.85} />;
-            })}
-          </g>
-        </g>
-      );
-    },
-  },
+  {id: 'B-route', t0: tR.h0, t1: tB.millions, fade: tR.h1 - tR.h0, draw: (t) => <RouteB t={t} cam={t < tR.h1 ? bodyFromVessel(camV(t), t) : camBody(t)} />},
   {id: 'B-evolve', t0: tB.millions, t1: tB.predict, draw: (t) => <EvolveB t={t} cam={camH(t)} />},
 ];
-export const _b = {W, H, clamp01, mixHex, rand, vesselCellR, TE};
+export const _b = {W, H, clamp01, mixHex, rand, TE};
 export type _M = Mod;
 export const CAPS = [CAP1, CAP2, CAP3, CAP4];
 export {SPROUTS};

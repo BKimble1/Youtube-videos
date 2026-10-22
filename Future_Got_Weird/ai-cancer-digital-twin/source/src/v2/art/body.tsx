@@ -3,7 +3,7 @@
 // Anatomy is simplified but placed correctly: lungs either side of the heart (heart slightly to the patient's left =
 // viewer's right), liver under the right lung (viewer's left), stomach under the left lung, aorta down the midline.
 import React from 'react';
-import {closedPath, openPath, P as Pt, noise, lerp, clamp01, smooth} from '../../kit/core';
+import {closedPath, openPath, P as Pt, noise, lerp, clamp01, smooth, mixHex} from '../../kit/core';
 import {P} from '../palette';
 
 type Pt2 = [number, number];
@@ -44,9 +44,12 @@ export type BodyProps = {
   vessels?: number;   // circulatory overlay
   slices?: number;    // digital contour slices
   healthy?: number;   // final resolution: glow suppressed, warm healthy light
+  chest?: number;     // a soft window through the skin over the chest showing the lungs (opening / ending)
+  lesion?: number;    // the affected patch of lung tissue at SITE.tumor
 };
 
-export const Body: React.FC<BodyProps> = ({t, xray = 0, digital = 0, glow = 0, glowColor = 'glowMag', mets = 0, tumorSize = 0, metsSize = 0, scanY, vessels = 0, slices = 0, healthy = 0}) => {
+export const Body: React.FC<BodyProps> = ({t, xray = 0, digital = 0, glow = 0, glowColor = 'glowMag', mets = 0, tumorSize = 0, metsSize = 0, scanY, vessels = 0, slices = 0, healthy = 0, chest = 0, lesion = 0}) => {
+  const uid = React.useId().replace(/[^a-zA-Z0-9]/g, '');
   const bio = 1 - digital;
   const pulse = 0.75 + 0.25 * Math.sin(t * 3.2) + 0.1 * Math.sin(t * 7.1);
   const breathe = 1 + 0.006 * Math.sin(t * 1.4);
@@ -56,6 +59,15 @@ export const Body: React.FC<BodyProps> = ({t, xray = 0, digital = 0, glow = 0, g
     <g transform={`scale(1 ${breathe})`}>
       <defs>
         <clipPath id="bodyClip"><path d={BODY_PATH} /></clipPath>
+        <radialGradient id={`chestWin${uid}`} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity={1} />
+          <stop offset="0.62" stopColor="#FFFFFF" stopOpacity={0.9} />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
+        </radialGradient>
+        <mask id={`organMask${uid}`} maskUnits="userSpaceOnUse" x={-500} y={-1000} width={1000} height={2000}>
+          <rect x={-500} y={-1000} width={1000} height={2000} fill="#FFFFFF" opacity={organOp} />
+          {chest > 0.01 && <ellipse cx={20} cy={-420} rx={250} ry={225} fill={`url(#chestWin${uid})`} opacity={chest} />}
+        </mask>
       </defs>
       {/* soft back-light halo */}
       <ellipse cx={0} cy={-120} rx={520} ry={980} fill={digital > 0.5 ? 'url(#glowAi)' : 'url(#glowWhite)'} opacity={0.06 + 0.05 * healthy} />
@@ -74,7 +86,7 @@ export const Body: React.FC<BodyProps> = ({t, xray = 0, digital = 0, glow = 0, g
             <path d="M -130 470 Q -100 490 -70 470 M 130 470 Q 100 490 70 470" strokeWidth={5} />
           </g>
           <ellipse cx={-26} cy={-790} rx={30} ry={46} fill="#FFFFFF" opacity={0.08 * (1 - xray)} />
-          <g clipPath="url(#bodyClip)" opacity={organOp}>
+          <g clipPath="url(#bodyClip)" mask={`url(#organMask${uid})`}>
             {/* rib cage hints */}
             {Array.from({length: 7}, (_, i) => {
               const y = -560 + i * 46;
@@ -91,12 +103,27 @@ export const Body: React.FC<BodyProps> = ({t, xray = 0, digital = 0, glow = 0, g
             <path d="M 0 -640 L 0 -520 M 0 -520 Q 30 -500 60 -470 Q 90 -440 120 -400 M 60 -470 Q 100 -480 140 -500 M 0 -520 Q -30 -500 -60 -470 Q -92 -440 -122 -400 M -60 -470 Q -100 -480 -140 -500" fill="none" stroke={P.tissueLight} strokeWidth={8} strokeLinecap="round" opacity={0.8} />
             <path d={closedPath(LUNG_R)} fill="url(#volSoft)" />
             <path d={closedPath(LUNG_L)} fill="url(#volSoft)" />
-            <path d={closedPath(HEART)} transform={`translate(${SITE.heart[0] - 30} ${0}) scale(${1 + 0.03 * Math.max(0, Math.sin(t * 7))})`} fill={P.heart} stroke="#7A1A22" strokeWidth={5} />
+            <path d={closedPath(HEART)} transform={`translate(${SITE.heart[0] - 6} -100) scale(${0.72 * (1 + 0.03 * Math.max(0, Math.sin(t * 7)))}) translate(0 140)`} fill={mixHex(P.heart, '#C8606A', 0.35)} stroke="#7A1A22" strokeWidth={5} />
+            <path d={closedPath(HEART)} transform={`translate(${SITE.heart[0] - 6} -100) scale(0.72) translate(0 140)`} fill="url(#volSoft)" />
             <path d={closedPath(LIVER)} fill={P.liver} stroke="#5E1E1E" strokeWidth={5} />
             <path d={closedPath(LIVER)} fill="url(#volSoft)" />
             <path d={closedPath(STOMACH)} fill="#D9877A" stroke="#9E4E44" strokeWidth={5} />
             <path d={GUT_PATH} fill="none" stroke={P.gut} strokeWidth={30} strokeLinecap="round" opacity={0.9} />
             <path d={GUT_PATH} fill="none" stroke="#B87562" strokeWidth={3} strokeLinecap="round" opacity={0.6} />
+            {/* the affected lung shows its spongy tissue, and the patch where the cell sits is tinted (part of the
+                lung, not a light floating over it) */}
+            {(chest > 0.01 || lesion > 0.01) && (
+              <g>
+                <path d={closedPath(LUNG_R)} fill="url(#lungPat)" opacity={0.55 * Math.max(chest, xray)} />
+                {lesion > 0.01 && (
+                  <g>
+                    <circle cx={SITE.tumor[0]} cy={SITE.tumor[1]} r={34} fill="url(#glowMag)" opacity={0.75 * lesion * (0.85 + 0.15 * pulse)} />
+                    <path d={closedPath(Array.from({length: 9}, (_, i) => { const a = (i / 9) * Math.PI * 2; const r = 17 * (1 + 0.3 * noise(i * 1.3, 2)); return [SITE.tumor[0] + Math.cos(a) * r, SITE.tumor[1] + Math.sin(a) * r] as Pt2; }))} fill={P.tumorLight} opacity={0.6 * lesion} />
+                    <circle cx={SITE.tumor[0]} cy={SITE.tumor[1]} r={4} fill="#FFD6EC" opacity={lesion * (0.6 + 0.4 * pulse)} />
+                  </g>
+                )}
+              </g>
+            )}
             {/* tumour mass in the lung, metastasis in the liver */}
             {tumorSize > 0.01 && <path d={closedPath(Array.from({length: 11}, (_, i) => { const a = (i / 11) * Math.PI * 2; const r = 26 * tumorSize * (1 + 0.25 * noise(i * 1.3, 4)); return [SITE.tumor[0] + Math.cos(a) * r, SITE.tumor[1] + Math.sin(a) * r * 0.9] as Pt2; }))} fill={P.tumor} stroke={P.tumorDeep} strokeWidth={3} />}
             {metsSize > 0.01 && <path d={closedPath(Array.from({length: 9}, (_, i) => { const a = (i / 9) * Math.PI * 2; const r = 16 * metsSize * (1 + 0.25 * noise(i * 1.7, 9)); return [SITE.mets[0] + Math.cos(a) * r, SITE.mets[1] + Math.sin(a) * r] as Pt2; }))} fill={P.tumor} stroke={P.tumorDeep} strokeWidth={3} />}

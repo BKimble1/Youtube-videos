@@ -11,11 +11,10 @@ import {T, TE} from '../time';
 import {path, handoff} from '../rig';
 import {P} from '../palette';
 import {Body, SITE} from '../art/body';
-import {BodyWorld} from '../art/lung';
 import {cellAt, nearest, R, SP, boundary} from '../art/tissue';
-import {AIBack, DigitalTumor, CTSlice, BiopsyCore, SeqStrip, GrowthCurve} from '../art/ai';
+import {AIBack, DigitalTumor, SeqStrip} from '../art/ai';
 import {Protein, POCKET} from '../art/protein';
-import {C0P, toTissue, fromTissue} from './A';
+import {C0P} from './A';
 import {EvolveB, EVOLVE_CAM, RtB} from './B';
 
 const tC = {
@@ -29,40 +28,50 @@ const lift = (t: number, a: number, b: number) => smooth(seg(t, a, b));
 const C0 = {x: C0P[0], y: C0P[1]};
 
 // ------------------------------------------------------------------------------------------------ cameras
+// The tumour's own silhouette carries the whole section: the scan reads it, the measured contour is traced on it, and
+// the model is built in that same outline, at the same place and size on screen (anchor C0 ↔ model origin).
 const HOLD = tC.predict + 0.6; // B's evolution camera comes to rest here
-const PB = path([
-  {...fromTissue(EVOLVE_CAM(HOLD)), t: HOLD},
-  {t: tC.next + 0.2, x: SITE.tumor[0], y: SITE.tumor[1], z: 60, rot: 0.8},
-  {t: tC.ai + 0.2, x: 90, y: -380, z: 4.2, rot: 0.3},
-  {t: tC.ai + 1.9, x: 10, y: -120, z: 0.6, rot: 0},
-  {t: tC.imagine + 0.3, x: 40, y: -160, z: 0.64, rot: 0},
-  {t: tC.scans - 0.1, x: 360, y: -330, z: 0.55, rot: 0},
-  {t: tC.using, x: 330, y: -360, z: 0.56, rot: 0},
-  {t: tC.copy - 0.35, x: SITE.tumor[0] + 20, y: SITE.tumor[1], z: 2.6, rot: -1},
-  {t: tC.copy + 0.25, x: SITE.tumor[0], y: SITE.tumor[1], z: 9, rot: -2},
+const TZ = 0.15;
+const TS = path([
+  {...EVOLVE_CAM(HOLD), t: HOLD},
+  {t: tC.next + 0.1, x: C0.x, y: C0.y, z: TZ, rot: 0},
+  {t: tC.ai + 1.6, x: C0.x, y: C0.y, z: TZ * 0.985, rot: 0},
 ]);
-const tissueCamC = (t: number): Cam => (t < HOLD ? EVOLVE_CAM(t) : toTissue(PB(t)));
-const DT_S = 500 / 28; // digital-tumour units per body unit
-const DT_H0 = tC.copy - 0.15, DT_H1 = tC.copy + 0.25;
-const BEST: Pt = [2250, -1360 + 6 * 340];
-const BEST_HEX: Pt = [BEST[0] + 0.3 * 150 * 0.4, BEST[1] - 0.18 * 150 * 0.4];
+const tissueCamC = (t: number): Cam => (t < HOLD ? EVOLVE_CAM(t) : TS(t));
+const RT_C = 2800;
+const DT_K = 500 / RT_C; // model units per tissue unit
+const DT_H: [number, number] = [tC.ai - 0.1, tC.ai + 1.1];
+const toModel = (ct: Cam) => handoff(ct, C0P, [0, 0], DT_K);
+// three candidate treatments (copies of the model); the third hits the gold-marked region
+const CAND: {x: number; y: number; drug: string}[] = [
+  {x: 1500, y: -760, drug: P.payload},
+  {x: 1500, y: 0, drug: P.tcell},
+  {x: 1500, y: 760, drug: P.aiGold},
+];
+const CR = 300;
+const C_SHRINK = 0.55;
+const GOLD_C: Pt = (() => {
+  const Rr = CR * (1 - 0.6 * smooth(C_SHRINK));
+  return [CAND[2].x + Rr * 0.3, CAND[2].y - Rr * 0.18];
+})();
 const DTC = path([
-  {...handoff(PB(DT_H1), SITE.tumor, [0, 0], DT_S), t: DT_H1},
-  {t: tC.battle - 0.6, x: 0, y: -20, z: 0.85, rot: -1},
-  {t: tC.inside - 0.1, x: 80, y: 160, z: 0.52, rot: 0},
-  {t: tC.test + 0.9, x: 1250, y: 30, z: 0.33, rot: 0},
-  {t: tC.search - 0.3, x: 1400, y: 30, z: 0.31, rot: 0},
-  {t: tC.search + 0.6, x: BEST[0], y: BEST[1], z: 0.6, rot: 0},
-  {t: tC.choosing + 0.1, x: BEST_HEX[0], y: BEST_HEX[1], z: 2.6, rot: 0},
+  {...toModel(TS(DT_H[1])), t: DT_H[1]},
+  {t: tC.using, x: 0, y: 0, z: TZ / DT_K * 0.97, rot: 0},
+  {t: tC.battle - 0.4, x: 60, y: 40, z: 0.6, rot: 0},
+  {t: tC.inside + 0.2, x: 300, y: 30, z: 0.46, rot: 0},
+  {t: tC.test + 0.6, x: 1380, y: 0, z: 0.5, rot: 0},
+  {t: tC.search - 0.2, x: 1460, y: 30, z: 0.5, rot: 0},
+  {t: tC.search + 0.7, x: CAND[2].x, y: CAND[2].y - 40, z: 0.85, rot: 0},
+  {t: tC.choosing + 0.1, x: GOLD_C[0], y: GOLD_C[1], z: 3.2, rot: 0},
 ]);
-const dtCam = (t: number): Cam => (t < DT_H1 ? handoff(PB(t), SITE.tumor, [0, 0], DT_S) : DTC(t));
-const PR_S = 6; // protein units per DT unit at the weak point
+const dtCam = (t: number): Cam => (t < DT_H[1] ? toModel(TS(t)) : DTC(t));
+const PR_S = 5; // protein units per model unit at the weak point
 const PR_H: [number, number] = [tC.choosing - 0.35, tC.choosing + 0.15];
 const PRC = path([
-  {...handoff(DTC(PR_H[1]), BEST_HEX, POCKET, PR_S), t: PR_H[1]},
+  {...handoff(DTC(PR_H[1]), GOLD_C, POCKET, PR_S), t: PR_H[1]},
   {t: tC.instead, x: POCKET[0] - 80, y: POCKET[1] + 60, z: 0.62, rot: 0},
 ]);
-const prCam = (t: number): Cam => (t < PR_H[1] ? handoff(DTC(t), BEST_HEX, POCKET, PR_S) : PRC(t));
+const prCam = (t: number): Cam => (t < PR_H[1] ? handoff(DTC(t), GOLD_C, POCKET, PR_S) : PRC(t));
 const ROW = path([
   {t: tC.instead, x: 0, y: -60, z: 0.36, rot: 0},
   {t: tC.designed - 0.2, x: 0, y: -60, z: 0.38, rot: 0},
@@ -109,75 +118,103 @@ const ScanOverlay: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   );
 };
 
-// ------------------------------------------------------------------------------------------------ body → twin, data streams
-const twinK = (t: number) => lift(t, tC.ai - 0.2, tC.ai + 1.6);
-const flyTo = (from: Pt, to: Pt, u: number): Pt => {
-  const e = smooth(u);
-  return [lerp(from[0], to[0], e), lerp(from[1], to[1], e) - Math.sin(e * Math.PI) * 120];
-};
-const Streams: React.FC<{t: number}> = ({t}) => {
-  const site = SITE.tumor;
-  // CT slice stack
-  const ctOn = lift(t, tC.scans - 0.3, tC.scans + 0.2), ctFly = lift(t, tC.scans + 0.55, tC.samples + 0.35);
-  const bOn = lift(t, tC.samples - 0.25, tC.samples + 0.2), bDig = lift(t, tC.samples + 0.35, tC.genetic - 0.1), bFly = lift(t, tC.genetic - 0.1, tC.genetic + 0.6);
-  const sOn = lift(t, tC.genetic - 0.2, tC.genetic + 0.1), sRev = lift(t, tC.genetic, tC.using - 0.2), sFly = lift(t, tC.using - 0.2, tC.using + 0.45);
-  const arrive = (a: number) => Math.exp(-((t - a) ** 2) / 0.03);
-  const ctP = flyTo([900, -640], site, ctFly), bP = flyTo([960, -300], site, bFly), sP = flyTo([560, 120], site, sFly);
+// ------------------------------------------------------------------------------------------------ the measured contour and the predicted next front (tissue coords)
+const frontShape = (a: number) => boundary(a) + 0.2 * Math.exp(-(((a - 0.5 + Math.PI * 3) % (Math.PI * 2) - Math.PI) ** 2) / 0.12);
+const shapePath = (Rt: number, f: (a: number) => number, cx: number, cy: number) =>
+  'M ' + Array.from({length: 96}, (_, k) => { const a = (k / 96) * Math.PI * 2; return `${(cx + Math.cos(a) * Rt * f(a)).toFixed(1)} ${(cy + Math.sin(a) * Rt * f(a)).toFixed(1)}`; }).join(' L ') + ' Z';
+const ContourOverlay: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
+  const trace = lift(t, tC.next - 0.6, tC.ai + 0.2);
+  const fr = lift(t, tC.predict + 1.3, tC.next) * (1 - lift(t, tC.ai, tC.ai + 0.6));
+  const sw = 3 / cam.z;
   return (
-    <g>
-      {ctOn > 0.01 && ctFly < 0.99 && [0, 1, 2, 3, 4].map((k) => (
-        <CTSlice key={k} x={ctP[0] + (1 - ctFly) * k * 30} y={ctP[1] - (1 - ctFly) * k * 70} s={lerp(1.0, 0.08, ctFly)} k={k} t={t} op={ctOn * (1 - lift(ctFly, 0.8, 1))} skew={-14 * (1 - ctFly)} />
-      ))}
-      {bOn > 0.01 && bFly < 0.99 && <BiopsyCore x={bP[0]} y={bP[1]} s={lerp(1.15, 0.06, bFly)} digit={bDig} t={t} op={bOn * (1 - lift(bFly, 0.8, 1))} />}
-      {sOn > 0.01 && sFly < 0.99 && <SeqStrip x={sP[0] - lerp(560, 10, sFly)} y={sP[1]} s={lerp(1.35, 0.05, sFly)} t={t} reveal={sRev} op={sOn * (1 - lift(sFly, 0.8, 1))} />}
-      {[tC.samples + 0.35, tC.genetic + 0.6, tC.using + 0.45].map((a, k) => <circle key={k} cx={site[0]} cy={site[1]} r={30 + 60 * (t - a > 0 ? Math.min(1, (t - a) * 2) : 0)} fill="none" stroke={P.aiGold} strokeWidth={4} opacity={arrive(a + 0.15) * 0.9} />)}
+    <g transform={camTransform(cam)}>
+      {fr > 0.01 && <path d={shapePath(RT_C, frontShape, C0.x, C0.y)} fill="none" stroke={P.aiHot} strokeWidth={sw * 2.2} strokeDasharray={`${22 / cam.z} ${14 / cam.z}`} opacity={fr} />}
+      {trace > 0.01 && <path d={shapePath(RT_C, boundary, C0.x, C0.y)} fill="none" stroke={P.ai} strokeWidth={sw * 1.6} pathLength={1} strokeDasharray={`${trace} 1`} />}
     </g>
   );
 };
 
-// ------------------------------------------------------------------------------------------------ simulation tree
-type Node = {x: number; y: number; lvl: number; parent: number; drug: string; outcome: number};
-const DRUGS = [P.payload, P.tcell, P.aiGold, '#B58CFF', '#E8F1FF'];
-const NODES: Node[] = (() => {
-  const out: Node[] = [{x: 0, y: 0, lvl: 0, parent: -1, drug: P.ai, outcome: 0}];
-  [-700, 0, 700].forEach((y, k) => out.push({x: 1150, y, lvl: 1, parent: 0, drug: DRUGS[k], outcome: 0}));
-  for (let k = 0; k < 9; k++) {
-    const y = -1360 + k * 340;
-    const parent = 1 + Math.floor(k / 3);
-    const best = k === 6;
-    out.push({x: 2250, y, lvl: 2, parent, drug: DRUGS[(k + 1) % 5], outcome: best ? -1 : [0.6, -0.4, 0.9, 0.3, -0.2, 0.8, 0, 0.5, -0.5][k]});
-  }
-  return out;
-})();
-const SimTree: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
-  const spawn1 = lift(t, tC.inside + 0.2, tC.test - 0.1), spawn2 = lift(t, tC.test - 0.2, tC.test + 0.7);
-  const treat = lift(t, tC.test + 0.2, tC.predict2 + 0.2), resp = lift(t, tC.predict2, tC.predict2 + 1.3), curves = lift(t, tC.predict2 + 0.1, tC.search - 0.1);
-  const pick = lift(t, tC.search - 0.1, tC.search + 0.4);
-  const dimOthers = lift(t, tC.search + 0.1, tC.search + 0.8);
+// ------------------------------------------------------------------------------------------------ the model and what each input changes
+const Model: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
+  const sweep = lift(t, tC.scans - 0.3, tC.samples - 0.1);
+  const build = 0.34 + 0.4 * sweep + 0.26 * lift(t, tC.using, tC.copy + 0.6);
+  const needle = Math.min(lift(t, tC.samples - 0.15, tC.samples + 0.3), 1 - lift(t, tC.genetic - 0.1, tC.genetic + 0.3));
+  const regions = lift(t, tC.samples + 0.25, tC.genetic);
+  const reads = lift(t, tC.genetic - 0.1, tC.genetic + 0.6);
+  const gold = lift(t, tC.genetic + 0.5, tC.using + 0.2);
+  const vess = lift(t, tC.using + 0.3, tC.copy + 1.0);
+  const arena = lift(t, tC.battle - 0.7, tC.battle + 0.4) * (1 - lift(t, tC.test - 0.4, tC.test + 0.4));
+  const fadeMain = 1 - 0.45 * lift(t, tC.test, tC.test + 0.8);
+  const sy = -560 + 1120 * sweep;
+  const goldPt: Pt = [500 * 0.3, -500 * 0.18];
   return (
     <g>
-      {NODES.slice(1).map((n, k) => {
-        const p = NODES[n.parent];
-        const sp = n.lvl === 1 ? spawn1 : spawn2;
-        if (sp <= 0.01) return null;
-        const x = lerp(p.x, n.x, smooth(sp)), y = lerp(p.y, n.y, smooth(sp));
-        const best = n.lvl === 2 && n.outcome === -1;
-        const op = sp * (best ? 1 : 1 - 0.75 * dimOthers);
-        const shrink = n.lvl === 2 && n.outcome < 0 ? -n.outcome * resp : 0;
-        const regrow = n.lvl === 2 && n.outcome > 0 ? n.outcome * resp : 0;
-        const tint = n.lvl === 2 && regrow > 0.3 ? mixHex(P.ai, P.tumorGlow, regrow * 0.8) : undefined;
+      {arena > 0.01 && (
+        <g opacity={arena * 0.8}>
+          {/* the battlefield: the model's surroundings — vessels, immune cells, drug — kept quiet */}
+          {Array.from({length: 9}, (_, k) => {
+            const a = (k / 9) * Math.PI * 2 + 0.3;
+            return <circle key={k} cx={Math.cos(a) * 820} cy={Math.sin(a) * 700} r={22} fill={k % 3 === 0 ? P.payload : P.tcell} opacity={0.7} />;
+          })}
+          <path d="M -1100 -620 Q -500 -560 -260 -330 M 1100 520 Q 600 560 320 330" fill="none" stroke={P.aiGold} strokeWidth={10} opacity={0.5} />
+        </g>
+      )}
+      <g opacity={fadeMain}>
+        <DigitalTumor x={0} y={0} R={500} seed={1} t={t} build={build} lod={cam.z} sy={1} shape={boundary} regions={regions} highlight={gold} vessels={vess} />
+      </g>
+      {/* scans: a slice plane sweeps through the model and adds its layers */}
+      {sweep > 0.01 && sweep < 0.99 && (
+        <g>
+          <rect x={-720} y={sy - 4} width={1440} height={8} fill={P.aiHot} opacity={0.8} />
+          <rect x={-720} y={sy - 90} width={1440} height={90} fill="url(#glowAi)" opacity={0.25} />
+        </g>
+      )}
+      {/* tumour sample: a biopsy core enters one region; the regions resolve into subclones */}
+      {needle > 0.01 && (
+        <g opacity={needle} transform={`translate(${-120 + 360 * (1 - needle)} ${120 - 360 * (1 - needle)}) rotate(-45)`}>
+          <rect x={-18} y={-20} width={36} height={520} rx={18} fill={P.aiBgLift} stroke={P.aiHot} strokeWidth={4} transform="rotate(180)" />
+        </g>
+      )}
+      {/* genetic information: a read slides into the region it describes, which is marked gold */}
+      {reads > 0.01 && reads < 0.999 && (
+        <g transform={`translate(${lerp(1100, goldPt[0], smooth(reads))} ${lerp(-520, goldPt[1], smooth(reads))}) scale(${lerp(0.7, 0.15, smooth(reads))})`} opacity={1 - lift(reads, 0.8, 1)}>
+          <SeqStrip x={-500} y={0} s={1} t={t} reveal={1} n={22} />
+        </g>
+      )}
+    </g>
+  );
+};
+
+const Candidates: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
+  const spawn = lift(t, tC.inside + 0.3, tC.test + 0.1);
+  const treat = lift(t, tC.test + 0.1, tC.predict2);
+  const resp = lift(t, tC.predict2 - 0.2, tC.predict2 + 1.4);
+  const regrow = lift(t, tC.predict2 + 1.2, tC.search + 0.4);
+  const pick = lift(t, tC.search - 0.1, tC.search + 0.4);
+  const ghosts = lift(t, tC.test, tC.test + 1.0) * (1 - lift(t, tC.search, tC.search + 0.5));
+  return (
+    <g>
+      {/* more possibilities exist, kept in the background */}
+      {ghosts > 0.01 && Array.from({length: 8}, (_, k) => {
+        const gx = 2500 + (k % 2) * 380, gy = -1260 + k * 360;
+        return <DigitalTumor key={'g' + k} x={gx} y={gy} R={130} seed={k + 9} t={t} lod={cam.z * 0.5} vessels={0} op={0.22 * ghosts} sy={1} shape={boundary} />;
+      })}
+      {CAND.map((c, k) => {
+        const p = smooth(spawn);
+        const x = lerp(0, c.x, p), y = lerp(0, c.y, p);
+        const shrink = k === 0 ? 0.65 * resp * (1 - 0.7 * regrow) : k === 1 ? 0.08 * resp : C_SHRINK * resp;
+        const dim = k === 2 ? 1 : 1 - 0.55 * pick;
         return (
-          <g key={k} opacity={op}>
-            <path d={`M ${p.x + 220} ${p.y} C ${(p.x + n.x) / 2} ${p.y} ${(p.x + n.x) / 2} ${y} ${x - 200} ${y}`} fill="none" stroke={P.aiDim} strokeWidth={6} />
-            <path d={`M ${p.x + 220} ${p.y} C ${(p.x + n.x) / 2} ${p.y} ${(p.x + n.x) / 2} ${y} ${x - 200} ${y}`} fill="none" stroke={P.ai} strokeWidth={4} strokeDasharray="20 60" strokeDashoffset={-t * 300} opacity={0.8} />
-            {/* the treatment being tested arrives as a stream of its own colour */}
-            {n.lvl === 2 && treat > 0.01 && Array.from({length: 6}, (_, m) => {
-              const u = ((t * 0.9 + m / 6) % 1);
-              return <circle key={m} cx={x - 420 + u * 260} cy={y + (m - 2.5) * 22 * (1 - u)} r={18} fill={n.drug} opacity={treat * (1 - u) * (1 - resp * 0.7)} />;
+          <g key={k} opacity={spawn * dim}>
+            <path d={`M 360 0 C 900 0 900 ${y} ${x - CR * 1.15} ${y}`} fill="none" stroke={P.aiDim} strokeWidth={5} opacity={p} />
+            {/* the treatment arrives as particles of its own colour; the targeted one homes on the gold region */}
+            {treat > 0.01 && Array.from({length: 10}, (_, m) => {
+              const u = (t * 0.7 + m / 10) % 1;
+              const tx = k === 2 ? x + CR * 0.3 * (1 - 0.6 * resp) : x, ty = k === 2 ? y - CR * 0.18 : y;
+              return <circle key={m} cx={lerp(x - 560, tx, u)} cy={lerp(y + (m - 4.5) * 40, ty, u)} r={16} fill={c.drug} opacity={treat * (1 - u) * (1 - 0.6 * resp)} />;
             })}
-            <DigitalTumor x={x} y={y} R={n.lvl === 1 ? 190 : 150} seed={k + 2} t={t} lod={cam.z} shrink={shrink} regrow={regrow} tint={tint} vessels={0.6} highlight={best ? pick : 0} />
-            {n.lvl === 2 && curves > 0.01 && <GrowthCurve x={x + 200} y={y - 80} w={230} h={150} outcome={n.outcome} draw={curves} color={best ? P.aiGold : n.outcome > 0 ? P.tumorGlow : P.ai} />}
-            {best && pick > 0.01 && <circle cx={x} cy={y} r={240} fill="none" stroke={P.aiGold} strokeWidth={8} opacity={pick} />}
+            <DigitalTumor x={x} y={y} R={CR} seed={1} t={t} lod={cam.z} sy={1} shape={boundary} shrink={shrink} regrow={k === 0 ? 0.25 * regrow : 0} spare={k === 0 ? 1 : 0} highlight={k === 2 ? 1 - 0.3 * resp : 0} vessels={0.5} />
+            {k === 2 && pick > 0.01 && <circle cx={x} cy={y} r={CR * 1.05} fill="none" stroke={P.aiGold} strokeWidth={8} opacity={pick} />}
           </g>
         );
       })}
@@ -242,63 +279,31 @@ export const shotsC: Shot[] = [
   {
     id: 'C-scan',
     t0: tC.predict,
-    t1: tC.next + 0.55,
+    t1: DT_H[1] + 0.05,
     draw: (t) => {
       const cam = tissueCamC(t);
       return (
         <g>
           <EvolveB t={Math.min(t, tC.predict + 0.4)} cam={cam} />
           <ScanOverlay t={t} cam={cam} />
+          <ContourOverlay t={t} cam={cam} />
         </g>
       );
     },
   },
   {
-    id: 'C-body',
-    t0: tC.next - 0.05,
-    t1: DT_H1 + 0.05,
-    fade: 0.6,
-    draw: (t) => {
-      const cam = PB(t);
-      const d = twinK(t);
-      return (
-        <BodyWorld
-          t={t}
-          cam={cam}
-          back={<AIBack cam={cam} t={t} op={d} />}
-          body={{glow: 0.9 * (1 - d), digital: d, slices: lift(t, tC.ai, tC.imagine), tumorSize: 1, scanY: d > 0.01 && d < 0.99 ? lerp(-900, 900, d) : undefined}}
-          lungTumor={0.6 * (1 - d)}
-          massR={RtB(t)}
-          massC={C0P}
-          front={<Streams t={t} />}
-        />
-      );
-    },
-  },
-  {
-    id: 'C-twin',
-    t0: DT_H0,
+    id: 'C-model',
+    t0: DT_H[0],
     t1: PR_H[1] + 0.05,
-    fade: DT_H1 - DT_H0,
+    fade: DT_H[1] - DT_H[0],
     draw: (t) => {
       const cam = dtCam(t);
-      const build = 0.72 + 0.28 * lift(t, DT_H0, tC.battle - 0.6);
-      const arena = lift(t, tC.battle - 0.6, tC.battle + 0.6);
       return (
         <g>
-          <AIBack cam={cam} t={t} />
+          <AIBack cam={cam} t={t} op={0.6} />
           <g transform={camTransform(cam)}>
-            {arena > 0.01 && (
-              <g opacity={arena}>
-                {[1.3, 1.9, 2.6, 3.4].map((f, k) => <ellipse key={k} cx={0} cy={470} rx={500 * f} ry={500 * f * 0.22} fill="none" stroke={P.ai} strokeWidth={4} opacity={0.35 - k * 0.06} />)}
-                {Array.from({length: 10}, (_, k) => {
-                  const a = (k / 10) * Math.PI * 2 + t * 0.15;
-                  return <circle key={k} cx={Math.cos(a) * 1100} cy={470 + Math.sin(a) * 240} r={26} fill={k % 2 ? P.tcell : P.payload} opacity={0.75} />;
-                })}
-              </g>
-            )}
-            <DigitalTumor x={0} y={0} R={500} seed={1} t={t} build={build} lod={cam.z} op={1 - lift(t, tC.inside + 0.2, tC.test) * 0} />
-            <SimTree t={t} cam={cam} />
+            <Model t={t} cam={cam} />
+            <Candidates t={t} cam={cam} />
           </g>
         </g>
       );
@@ -313,7 +318,7 @@ export const shotsC: Shot[] = [
       const cam = prCam(t);
       return (
         <g>
-          <AIBack cam={cam} t={t} />
+          <AIBack cam={cam} t={t} op={0.6} />
           <g transform={camTransform(cam)}>
             <Protein t={t} digital={1} scanA={t * 2.2} pocketGlow={lift(t, tC.choosing, tC.choosing + 0.5)} />
           </g>

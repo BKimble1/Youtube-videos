@@ -14,24 +14,24 @@ export const AIBack: React.FC<{cam: Cam; t: number; floorY?: number; op?: number
   for (let k = 0; k < 14; k++) {
     const u = ((k + ((cam.x * 0.0 + t * 0.15) % 1)) / 14);
     const y = horizon + (H * floorY + 200 - horizon) * Math.pow(u, 2.2);
-    lines.push(<line key={'h' + k} x1={0} x2={W} y1={y} y2={y} stroke={P.ai} strokeWidth={1 + 1.5 * u} opacity={0.05 + 0.18 * u} />);
+    lines.push(<line key={'h' + k} x1={0} x2={W} y1={y} y2={y} stroke={P.ai} strokeWidth={1 + 1.2 * u} opacity={0.03 + 0.08 * u} />);
   }
   // radial lines converging on the vanishing point, sliding with the camera
   const off = ((cam.x * cam.z * 0.15) % 160 + 160) % 160;
   for (let k = -16; k <= 16; k++) {
     const xb = W / 2 + k * 160 - off;
-    lines.push(<line key={'v' + k} x1={W / 2 + (xb - W / 2) * 0.08} y1={horizon} x2={W / 2 + (xb - W / 2) * 2.4} y2={H + 200} stroke={P.ai} strokeWidth={1.2} opacity={0.1} />);
+    lines.push(<line key={'v' + k} x1={W / 2 + (xb - W / 2) * 0.08} y1={horizon} x2={W / 2 + (xb - W / 2) * 2.4} y2={H + 200} stroke={P.ai} strokeWidth={1.2} opacity={0.045} />);
   }
   return (
     <g opacity={op}>
       <rect width={W} height={H} fill="url(#aiDepth)" />
       <rect x={0} y={horizon} width={W} height={H - horizon} fill={P.aiBg} opacity={0.45} />
       {lines}
-      <ellipse cx={W / 2} cy={horizon} rx={W * 0.7} ry={60} fill="url(#glowAi)" opacity={0.18} />
-      {Array.from({length: 40}, (_, k) => {
+      <ellipse cx={W / 2} cy={horizon} rx={W * 0.7} ry={60} fill="url(#glowAi)" opacity={0.09} />
+      {Array.from({length: 18}, (_, k) => {
         const x = ((rand(k * 7) * W * 1.4 - cam.x * cam.z * 0.05 * (0.5 + rand(k))) % (W * 1.4) + W * 1.4) % (W * 1.4) - W * 0.2;
         const y = (rand(k * 11) * H + t * 12 * (0.5 + rand(k * 3))) % H;
-        return <rect key={k} x={x} y={y} width={3 + 3 * rand(k)} height={3 + 3 * rand(k)} fill={k % 7 === 0 ? P.aiGold : P.aiHot} opacity={0.15 + 0.25 * rand(k * 5)} />;
+        return <rect key={k} x={x} y={y} width={3 + 3 * rand(k)} height={3 + 3 * rand(k)} fill={k % 7 === 0 ? P.aiGold : P.aiHot} opacity={0.06 + 0.1 * rand(k * 5)} />;
       })}
     </g>
   );
@@ -70,12 +70,20 @@ export type DTProps = {
   highlight?: number;  // gold weak-point highlight
   op?: number;
   sy?: number;         // vertical squash (perspective)
+  shape?: (a: number) => number; // outline radius factor by angle (defaults to the model's own lobes)
+  regions?: number;    // 0 = uniform reconstruction, 1 = subclone regions resolved (from the biopsy)
+  spare?: number;      // 0..1: the teal subclone persists while the rest shrinks (resistant region)
 };
 /** A reconstructed tumour: 3 stacked scan slices of hexagonal voxels (cells) + iso-contours + vessel tree. */
-export const DigitalTumor: React.FC<DTProps> = ({x = 0, y = 0, R = 500, seed = 1, t, build = 1, lod, shrink = 0, regrow = 0, tint, vessels = 1, highlight = 0, op = 1, sy = 0.82}) => {
+export const DigitalTumor: React.FC<DTProps> = ({x = 0, y = 0, R = 500, seed = 1, t, build = 1, lod, shrink = 0, regrow = 0, tint, vessels = 1, highlight = 0, op = 1, sy = 0.82, shape, regions = 1, spare = 0}) => {
+  const bf = shape ?? ((a: number) => dtBoundary(a, seed));
+  const outline = (r: number, sd: number, yy: number) => (shape ? closedPath(Array.from({length: 48}, (_, k) => {
+    const a = (k / 48) * Math.PI * 2;
+    return [Math.cos(a) * r * bf(a), Math.sin(a) * r * bf(a) * yy] as Pt;
+  }), 1) : dtOutline(r, sd, yy));
   const scale = (1 - 0.6 * smooth(shrink)) * (1 + 0.35 * smooth(regrow));
   const Rr = R * scale;
-  const layers = [-1, 0, 1];
+  const layers = [0, -1, 1]; // the measured middle slice first, then the slices above and below
   const detail = lod * Rr > 60;
   const cellsOn = lod * HEXR * scale > 2.2;
   const out: React.ReactNode[] = [];
@@ -86,28 +94,30 @@ export const DigitalTumor: React.FC<DTProps> = ({x = 0, y = 0, R = 500, seed = 1
     const sR = Rr * (1 - 0.18 * Math.abs(L));
     out.push(
       <g key={'L' + L} opacity={lb * (L === 0 ? 1 : 0.55)} transform={`translate(0 ${yoff})`}>
-        <path d={dtOutline(sR, seed + L, sy)} fill={mixHex(P.aiBgLift, tint ?? P.aiDeep, 0.35)} fillOpacity={0.55} stroke={tint ?? P.ai} strokeWidth={Math.max(1.5, 2.5 / Math.max(0.2, lod))} />
+        <path d={outline(sR, seed + L, sy)} fill={mixHex(P.aiBgLift, tint ?? P.aiDeep, 0.35)} fillOpacity={0.55} stroke={tint ?? P.ai} strokeWidth={Math.max(1.5, 2.5 / Math.max(0.2, lod))} />
       </g>,
     );
     if (L === 0 && cellsOn && detail) {
       const sp = HEXR * 1.8 * scale;
       const n = Math.ceil(sR / sp) + 1;
-      const front = lerp(-sR * 1.3, sR * 1.3, clamp01(build * 1.4 - 0.2));
+      const front = lerp(-sR * 1.3, sR * 1.3, clamp01((build - 0.1) * 3));
       for (let j = -n; j <= n; j++)
         for (let i = -n; i <= n; i++) {
           const cx = (i + (j % 2 ? 0.5 : 0)) * sp, cy = j * sp * 0.866 * sy;
           const a = Math.atan2(cy / sy, cx);
-          if (Math.hypot(cx, cy / sy) > sR * dtBoundary(a, seed) * 0.95) continue;
+          if (Math.hypot(cx, cy / sy) > sR * bf(a) * 0.95) continue;
           if (cx > front) continue;
           const rg = region(cx, cy, seed);
-          const c = tint ?? CLONE_AI[rg];
-          const flick = 0.35 + 0.35 * rand(i * 31 + j * 17 + seed) + 0.2 * Math.sin(t * 2 + i + j);
-          out.push(<path key={`${i},${j}`} d={HEX} transform={`translate(${cx} ${cy + yoff}) scale(${scale} ${scale * sy})`} fill={c} fillOpacity={0.12 + 0.22 * flick} stroke={c} strokeWidth={1.6} strokeOpacity={0.75} />);
+          const c = tint ?? mixHex(P.ai, CLONE_AI[rg], regions);
+          const flick = 0.35 + 0.35 * rand(i * 31 + j * 17 + seed) + 0.12 * Math.sin(t * 2 + i + j);
+          // under treatment most voxels empty out; the spared (teal) subclone persists
+          const keep = rg === 1 ? 1 - 0.85 * smooth(shrink) * (1 - spare) : 1 - 0.85 * smooth(shrink);
+          out.push(<path key={`${i},${j}`} d={HEX} transform={`translate(${cx} ${cy + yoff}) scale(${scale} ${scale * sy})`} fill={c} fillOpacity={(0.12 + 0.3 * flick) * keep} stroke={c} strokeWidth={1.6} strokeOpacity={0.8 * Math.max(0.25, keep)} />);
         }
     }
   });
   // iso-contours on the middle slice
-  const iso = [0.35, 0.6, 0.82].map((f, k) => <path key={'i' + k} d={dtOutline(Rr * f, seed + 3 + k, sy)} fill="none" stroke={tint ?? P.aiHot} strokeWidth={Math.max(1, 1.8 / Math.max(0.3, lod))} strokeDasharray={`${8 / Math.max(0.3, lod)} ${10 / Math.max(0.3, lod)}`} opacity={0.5 * build} />);
+  const iso = [0.35, 0.6, 0.82].map((f, k) => <path key={'i' + k} d={outline(Rr * f, seed + 3 + k, sy)} fill="none" stroke={tint ?? P.aiHot} strokeWidth={Math.max(1, 1.8 / Math.max(0.3, lod))} strokeDasharray={`${8 / Math.max(0.3, lod)} ${10 / Math.max(0.3, lod)}`} opacity={0.5 * build} />);
   // vessel tree (gold) feeding the mass
   const vt = vessels * smooth(build * 1.6 - 0.6);
   const vess = vt > 0.01 && (

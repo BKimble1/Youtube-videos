@@ -4,9 +4,10 @@
 // through DNA_ANCHOR: the dive continues into the DNA world from there.
 import React from 'react';
 import {Cam, W, H, camTransform} from '../../kit/cam';
-import {P as Pt, closedPath, openPath, rand, noise, mixHex, smooth} from '../../kit/core';
+import {P as Pt, closedPath, openPath, rand, noise, mixHex, smooth, lerp} from '../../kit/core';
 import {P} from '../palette';
 import {cellOutline, R} from './tissue';
+import {Helix2, MutFn} from './dna';
 
 export const CI_SCALE = 9;              // interior units per tissue unit
 export const NUC: Pt = [36, -18];       // nucleus centre (interior units)
@@ -14,12 +15,15 @@ export const NUC_R = 196;
 export const DNA_ANCHOR: Pt = [96, -4]; // point on the highlighted chromatin fibre
 export const DNA_SCALE = 30;            // DNA-world units per interior unit
 
-export const Interior: React.FC<{t: number; cam: Cam; seed: number; mut?: number; pulse?: number; bg?: boolean}> = ({t, cam, seed, mut = 0, pulse = 0, bg = true}) => {
+export const Interior: React.FC<{t: number; cam: Cam; seed: number; mut?: number; pulse?: number; bg?: boolean; helix?: {mut: MutFn; kink: number; kinkX: number}; signals?: number}> = ({t, cam, seed, mut = 0, pulse = 0, bg = true, helix, signals = 0}) => {
   const r = R * CI_SCALE;
   const outline = cellOutline(r, seed, t);
   const d = closedPath(outline, 1);
   const lod = cam.z; // px per interior unit
-  const nucCol = mixHex(P.nucleus, P.mutant, mut * 0.5);
+  // as the camera closes on the nucleus it darkens toward the nucleoplasm of the DNA view and the other chromatin
+  // fibres recede, so the hand-off to the helix keeps one clear subject instead of giant soft shapes
+  const deep = Math.min(1, Math.max(0, (Math.log(lod) - Math.log(3.5)) / (Math.log(16) - Math.log(3.5))));
+  const nucCol = mixHex(mixHex(P.nucleus, P.mutant, mut * 0.5), '#24102E', deep * 0.85);
   // chromatin fibres (deterministic squiggles inside the nucleus); fibre 0 passes through the anchor
   const fibres: string[] = [];
   for (let k = 0; k < 16; k++) {
@@ -102,7 +106,7 @@ export const Interior: React.FC<{t: number; cam: Cam; seed: number; mut?: number
         <circle cx={NUC[0] - 60} cy={NUC[1] + 60} r={46} fill={P.nucleusDeep} />
         <circle cx={NUC[0] - 60} cy={NUC[1] + 60} r={46} fill="url(#nucVol)" />
         <g fill="none" strokeLinecap="round">
-          {fibres.map((f, k) => <path key={k} d={f} stroke={k === 0 ? mixHex(P.chromatin, P.mutant, mut * 0.6) : P.chromatin} strokeWidth={k === 0 ? 8 : 6} opacity={k === 0 ? 0.95 : 0.6} />)}
+          {fibres.map((f, k) => <path key={k} d={f} stroke={k === 0 ? mixHex(P.chromatin, P.mutant, mut * 0.6) : P.chromatin} strokeWidth={k === 0 ? 8 : 6} opacity={k === 0 ? 0.95 * (1 - deep) : 0.6 * (1 - 0.75 * deep)} />)}
         </g>
         {/* the mistakes: small sites along the fibres light up */}
         {mut > 0.01 && Array.from({length: 7}, (_, k) => {
@@ -110,7 +114,24 @@ export const Interior: React.FC<{t: number; cam: Cam; seed: number; mut?: number
           const x = NUC[0] + (rand(k * 23) - 0.5) * NUC_R * 1.1, y = NUC[1] + (rand(k * 29) - 0.5) * NUC_R * 1.1;
           return <circle key={k} cx={k === 0 ? DNA_ANCHOR[0] : x} cy={k === 0 ? DNA_ANCHOR[1] : y} r={10 + 6 * on} fill="url(#glowMut)" opacity={on} />;
         })}
+        {/* the same helix that the DNA view shows, already present inside the fibre (same coordinates, scaled) */}
+        {helix && deep > 0.01 && (() => {
+          const hw = (W / 2 / cam.z) * DNA_SCALE + 800;
+          const cx = (cam.x - DNA_ANCHOR[0]) * DNA_SCALE;
+          return (
+            <g opacity={deep} transform={`translate(${DNA_ANCHOR[0]} ${DNA_ANCHOR[1]}) scale(${1 / DNA_SCALE})`}>
+              <Helix2 x0={Math.max(-5200, cx - hw)} x1={Math.min(5200, cx + hw)} t={t} mut={helix.mut} kink={helix.kink} kinkX={helix.kinkX} lod={cam.z / DNA_SCALE} />
+            </g>
+          );
+        })()}
         {pulse > 0.01 && <circle cx={NUC[0]} cy={NUC[1]} r={NUC_R * 1.4} fill="url(#glowMut)" opacity={pulse * 0.35} />}
+        {/* growth signals leaving the nucleus through the cytoplasm toward the membrane of this same cell */}
+        {signals > 0.01 && Array.from({length: 22}, (_, k) => {
+          const a = (k / 22) * Math.PI * 2 + rand(k) * 0.3;
+          const u = ((t * 0.6 + rand(k * 3)) % 1);
+          const d = lerp(NUC_R * 1.05, r * 0.92, u);
+          return <circle key={'s' + k} cx={NUC[0] * (1 - u) + Math.cos(a) * d} cy={NUC[1] * (1 - u) + Math.sin(a) * d} r={9} fill={P.grow} opacity={signals * (1 - u) * 0.9} />;
+        })}
       </g>
     </g>
   );

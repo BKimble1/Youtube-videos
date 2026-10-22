@@ -10,7 +10,7 @@ import {Shot} from '../director';
 import {T, TE} from '../time';
 import {path, handoff} from '../rig';
 import {P} from '../palette';
-import {cellAt, nearest, TissueField, TissueBack, Cell2, TCell2, ApoptoticCell, R, TUMOR, HEALTHY, lookMix, Motes, boundary} from '../art/tissue';
+import {cellAt, nearest, TissueField, TissueBack, Cell2, TCell2, ApoptoticCell, DividingCell, R, TUMOR, HEALTHY, lookMix, Motes, boundary} from '../art/tissue';
 import {Capillary, ShieldLigands, along} from '../art/stroma';
 import {Dendritic, Macrophage, MHC, TCR, Granules, Synapse, fingerPath} from '../art/immune';
 import {Carrier} from '../art/protein';
@@ -22,13 +22,17 @@ const tE = {
   army: T('Your body already has an army'), immune: T("It's called your immune system."), problem: T('The problem is that cancer'), disguise: T('disguise itself,'),
   suppress: T('suppress immune defenses,'), difficult: T('become difficult'), recogE: TE('to recognize.'), tumors: T('But tumors can carry'), finger: T('unique molecular fingerprints.'),
   ai: T('AI can help identify'), identify: T('identify those fingerprints'), guide: T('and guide personalized'), vaccines: T('cancer vaccines'), special: T('specialized immune-cell treatments.'),
-  imagine: T('Imagine your own T cells'), hunt: T('exactly what to hunt.'), recognize: T('They recognize a cancer cell.'), lock: T('Lock onto it.'), destroy: T('And destroy it.'),
+  imagine: T('Imagine your own T cells'), exactly: T('exactly what to hunt.'), hunt: T('hunt.'), recognize: T('They recognize a cancer cell.'), lock: T('Lock onto it.'), destroy: T('And destroy it.'),
   next1: T('Then they move to the next.'), next2: T('And the next.'), sudden: T('Suddenly, the tumor'), fighting: T("It's fighting the body's own defenses."), but: T('But destroying the visible tumor'),
 };
 const lift = (t: number, a: number, b: number) => smooth(seg(t, a, b));
 const C0 = {x: C0P[0], y: C0P[1]};
 export const RT_E0 = 2800;
 export const RtE = (t: number) => RT_E0 - 450 * lift(t, tE.sudden - 0.3, tE.but + 0.4);
+/** local erosion: the swarm bites into the boundary unevenly (deeper where more T cells work), not a uniform shrink */
+const bite = (a: number) => 0.45 + 0.9 * Math.max(0, Math.sin(4 * a + 1)) ** 2 + 0.6 * Math.max(0, Math.sin(7 * a + 2.5)) ** 3 + 0.15 * Math.sin(11 * a + 0.3);
+export const erodeK = (t: number) => lift(t, tE.sudden - 0.3, tE.but + 0.4);
+export const RtLocal = (a: number, t: number) => RT_E0 - 450 * erodeK(t) * bite(a);
 const rimCell = (deg: number, inset = 90) => {
   const a = (deg * Math.PI) / 180;
   const r = RT_E0 * boundary(a) - inset;
@@ -224,9 +228,7 @@ const Routes: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const uptake = lift(t, tE.guide, tE.vaccines + 0.3);
   const present = lift(t, tE.vaccines, tE.vaccines + 0.8);
   const activ = lift(t, tE.vaccines + 0.5, tE.vaccines + 1.1);
-  const eng = lift(t, tE.special + 0.15, tE.special + 0.75);
-  const mult = lift(t, tE.special + 0.3, tE.imagine + 0.2);
-  const copies = [[0, 0], [-210, -170], [210, -150], [-240, 170], [230, 190], [0, -330], [0, 340]] as Pt[];
+  const eng = lift(t, tE.special - 0.1, tE.special + 0.5);
   return (
     <g>
       <rect width={W} height={H} fill="#0E2436" />
@@ -244,40 +246,34 @@ const Routes: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
         <Dendritic x={-900} y={0} r={150} t={t} present={present} />
         <TCell2 x={-500 + 30 * Math.sin(t)} y={-230} r={62} t={t} dir={Math.PI * 0.8} act={activ} seed={21} />
         {activ > 0.01 && <line x1={-560} y1={-200} x2={-700} y2={-120} stroke={P.immuneGold} strokeWidth={8} opacity={activ} strokeLinecap="round" />}
-        {/* route 2: a patient's T cell is given a new receptor (gold) and multiplied */}
-        {copies.map((c, k) => {
-          const show = k === 0 ? 1 : lift(mult * 6, k - 1, k);
-          if (show <= 0.01) return null;
-          return (
-            <g key={'e' + k} transform={`translate(${1100 + c[0] * show} ${c[1] * show})`} opacity={show}>
-              <TCell2 x={0} y={0} r={62} t={t + k} seed={30 + k} light={mixHex(P.tcellLight, P.immuneGold, eng)} act={0.3 * eng} spikes={1 - 0.5 * eng} />
-              {/* the new receptor: gold Y-shaped receptors studding the surface */}
-              {Array.from({length: 9}, (_, m) => {
-                const a = (m / 9) * Math.PI * 2 + k;
-                const g = smooth(eng * 1.4 - m * 0.04);
-                return (
-                  <g key={m} transform={`rotate(${(a * 180) / Math.PI}) translate(66 0)`} opacity={g}>
-                    <line x1={0} y1={0} x2={22 * g} y2={0} stroke={P.immuneGold} strokeWidth={7} strokeLinecap="round" />
-                    <line x1={22 * g} y1={0} x2={34 * g} y2={-10 * g} stroke={P.immuneGold} strokeWidth={7} strokeLinecap="round" />
-                    <line x1={22 * g} y1={0} x2={34 * g} y2={10 * g} stroke={P.immuneGold} strokeWidth={7} strokeLinecap="round" />
-                  </g>
-                );
-              })}
-            </g>
-          );
-        })}
-        {/* a gene-delivery particle carries the receptor's instructions into the cell */}
-        {(() => {
-          const u = lift(t, tE.special - 0.45, tE.special + 0.3);
-          if (u <= 0 || u >= 1) return null;
-          const x = lerp(1560, 1130, u), y = lerp(-380, -30, u);
-          return (
-            <g transform={`translate(${x} ${y}) rotate(${t * 40})`} opacity={1 - smooth((u - 0.8) / 0.2)}>
-              <path d="M 0 -52 L 45 -26 L 45 26 L 0 52 L -45 26 L -45 -26 Z" fill="#3FB8C8" stroke={P.immuneGold} strokeWidth={6} />
-              <path d="M -22 -8 Q 0 14 22 -8" fill="none" stroke={P.immuneGold} strokeWidth={5} />
-            </g>
-          );
-        })()}
+        {/* route 2, outside the body: the patient's own T cell in a culture bag receives the receptor's instructions,
+            displays the new receptor, and is expanded by ordinary cell division (a few rounds shown, more implied) */}
+        <g>
+          <rect x={1100 - 460} y={-380} width={920} height={760} rx={110} fill="#163646" stroke="#7FB6C8" strokeWidth={10} opacity={0.9} />
+          <rect x={1100 - 460} y={-380} width={920} height={760} rx={110} fill="url(#volSoft)" opacity={0.5} />
+          <rect x={1100 - 40} y={-520} width={80} height={150} rx={20} fill="#2A5A6E" stroke="#7FB6C8" strokeWidth={8} />
+          {Array.from({length: 14}, (_, k) => <circle key={'bg' + k} cx={1100 - 420 + rand(k * 3) * 840} cy={-330 + rand(k * 7) * 660} r={26} fill={P.tcellDeep} opacity={0.25 * lift(t, tE.special + 0.8, tE.imagine)} />)}
+          {(() => {
+            const TL = {fill: P.tcell, light: mixHex(P.tcellLight, P.immuneGold, eng), deep: P.tcellDeep, nuc: '#1E5A50', nucDeep: '#0E3A34'};
+            const d1 = clamp01((t - (tE.special + 0.55)) / 0.9);
+            const d2 = clamp01((t - (tE.special + 1.25)) / 0.9);
+            const recs = (cx: number, cy: number, r: number, key: string) => Array.from({length: 9}, (_, m) => {
+              const a = (m / 9) * Math.PI * 2;
+              const g = smooth(eng * 1.4 - m * 0.04);
+              return (
+                <g key={key + m} transform={`translate(${cx} ${cy}) rotate(${(a * 180) / Math.PI}) translate(${r + 4} 0)`} opacity={g}>
+                  <line x1={0} y1={0} x2={20 * g} y2={0} stroke={P.immuneGold} strokeWidth={6} strokeLinecap="round" />
+                  <line x1={20 * g} y1={0} x2={30 * g} y2={-9 * g} stroke={P.immuneGold} strokeWidth={6} strokeLinecap="round" />
+                  <line x1={20 * g} y1={0} x2={30 * g} y2={9 * g} stroke={P.immuneGold} strokeWidth={6} strokeLinecap="round" />
+                </g>
+              );
+            });
+            if (d1 <= 0) return <g><TCell2 x={1100} y={0} r={95} t={t} seed={30} light={TL.light} act={0.25 * eng} spikes={1 - 0.5 * eng} />{recs(1100, 0, 95, 'a')}</g>;
+            if (d2 <= 0 || d1 < 1) return <DividingCell x={1100} y={0} r={95} seed={31} t={t} p={d1} axis={30} lod={95} look={TL} sepF={0.72} dR={0.84} />;
+            const ax = (30 * Math.PI) / 180, off = 0.72 * 95;
+            return <g>{[-1, 1].map((sg) => <DividingCell key={sg} x={1100 + sg * Math.cos(ax) * off * 1.6} y={sg * Math.sin(ax) * off * 1.6} r={80} seed={33 + sg} t={t} p={d2} axis={sg > 0 ? 100 : 160} lod={80} look={TL} sepF={0.72} dR={0.84} />)}</g>;
+          })()}
+        </g>
         {eng > 0.01 && eng < 0.99 && <circle cx={1100} cy={0} r={150 + 200 * eng} fill="none" stroke={P.immuneGold} strokeWidth={6} opacity={1 - eng} />}
       </g>
     </g>
@@ -285,10 +281,14 @@ const Routes: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
 };
 
 // ------------------------------------------------------------------------------------------------ draw: a receptor learns the fingerprint
+// receptor tip (rotated 180°) reaches 100 units below its anchor; the fingerprint's top edge sits at y ≈ 194
+const CONTACT_Y = 194 - 100 + 6;
 const Learn: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
-  const learn = lift(t, tE.imagine + 0.7, tE.hunt - 0.1);
-  const meet = lift(t, tE.hunt - 0.3, tE.hunt + 0.3);
-  const gold = lift(t, tE.hunt + 0.1, tE.hunt + 0.6);
+  // the receptor tip reshapes first, then the receptor travels until it physically seats on the fingerprint, and
+  // only after contact a brief, restrained highlight marks activation
+  const learn = lift(t, tE.imagine + 0.5, tE.exactly + 0.2);
+  const meet = lift(t, tE.exactly + 0.2, tE.hunt - 0.05);
+  const gold = lift(t, tE.hunt + 0.05, tE.hunt + 0.35) * (1 - 0.6 * lift(t, tE.hunt + 0.6, tE.hunt + 1.0));
   return (
     <g>
       <rect width={W} height={H} fill="#1A1030" />
@@ -300,8 +300,8 @@ const Learn: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
         <rect x={-3000} y={420} width={6000} height={20} fill={TUMOR.light} />
         {[-700, 700].map((x, k) => <TCR key={k} x={x} y={-260} t={t} learn={0.2} rot={180} s={0.9} />)}
         {[-1050, 1050].map((x, k) => <MHC key={k} x={x} y={430} t={t} />)}
-        <MHC x={0} y={430} t={t} neo kind={0} flag={gold * 0.6} />
-        <TCR x={0} y={lerp(-300, -110, meet)} t={t} learn={learn} kind={0} rot={180} gold={gold} />
+        <MHC x={0} y={430} t={t} neo kind={0} flag={gold * 0.35} />
+        <TCR x={0} y={lerp(-330, CONTACT_Y, meet)} t={t} learn={learn} kind={0} rot={180} gold={gold * 0.5} />
       </g>
     </g>
   );
@@ -315,9 +315,11 @@ const Kills: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const mod = tumorMod(t, RT_E0, 0.6, (i, j, x, y) => {
     if (killed.has(`${i},${j}`)) return {hide: true};
     const dx = x - C0.x, dy = y - C0.y;
-    const d = Math.hypot(dx, dy) / boundary(Math.atan2(dy, dx));
-    if (d < RT_E0 && d > Rt - 120) {
-      const k = clamp01((d - Rt + 120) / 240);
+    const ang = Math.atan2(dy, dx);
+    const d = Math.hypot(dx, dy) / boundary(ang);
+    const Rl = RtLocal(ang, t);
+    if (d < RT_E0 && d > Rl - 120) {
+      const k = clamp01((d - Rl + 120) / 240);
       return {look: lookMix(TUMOR, {...TUMOR, fill: '#8A6A86'}, k), bleb: k, shrink: k * 0.6, op: 1 - 0.65 * k, s: 1 - 0.2 * k};
     }
     return null;
@@ -340,6 +342,18 @@ const Kills: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
               {die <= 0 ? <Cell2 x={k.c.x} y={k.c.y} seed={k.c.seed} t={t} lod={lod} look={TUMOR} nucScale={1.25} /> : <ApoptoticCell x={k.c.x} y={k.c.y} seed={k.c.seed} t={t} die={die} lod={lod} />}
               <SurfaceFlags c={k.c} k={rec} t={t} />
               <Synapse a={kp} b={tgt} k={lift(t, k.lock, k.lock + 0.3) * (1 - lift(t, k.kill + 0.7, k.kill + 1.0))} rA={52} />
+              {/* the same receptor / fingerprint pair as the close-up, seated across the contact */}
+              {rec > 0.01 && [-1, 0, 1].map((m) => {
+                const ang = Math.atan2(tgt[1] - kp[1], tgt[0] - kp[0]);
+                const cxp = kp[0] + Math.cos(ang) * 53 - Math.sin(ang) * m * 16, cyp = kp[1] + Math.sin(ang) * 53 + Math.cos(ang) * m * 16;
+                const seat = lift(t, k.rec + 0.15, k.lock);
+                return (
+                  <g key={m} transform={`translate(${cxp} ${cyp}) rotate(${(ang * 180) / Math.PI})`} opacity={rec}>
+                    <g transform={`translate(${-6 + 4 * seat} 0) rotate(90) scale(0.07)`}><TCR x={0} y={0} t={t} learn={1} kind={m + 1} gold={0} /></g>
+                    <path d={fingerPath(m + 1)} transform={`translate(${6} 0) rotate(-90) scale(0.12)`} fill={P.neoantigen} />
+                  </g>
+                );
+              })}
               <Granules a={kp} b={tgt} t={t} t0={k.kill} />
             </g>
           );
@@ -347,7 +361,7 @@ const Kills: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
         <TCell2 x={kp[0]} y={kp[1]} r={52} t={t} dir={Math.atan2(K1.y - kp[1], K1.x - kp[0])} lod={lod} act={0.6} light={mixHex(P.tcellLight, P.immuneGold, 0.5)} />
         {swarmOn > 0.01 && SWARM.map((s, k) => {
           const a = (s.deg * Math.PI) / 180;
-          const r = Rt * boundary(a) + 70 + 30 * Math.sin(t * 2 + k);
+          const r = RtLocal(a, t) * boundary(a) + 70 + 30 * Math.sin(t * 2 + k);
           const o = lift(t, s.t0, s.t0 + 0.5) * swarmOn;
           return <TCell2 key={k} x={C0.x + Math.cos(a) * r} y={C0.y + Math.sin(a) * r} r={52} t={t} seed={s.seed} dir={a + Math.PI} lod={lod} act={0.5 + 0.3 * Math.sin(t * 3 + k)} op={o} light={mixHex(P.tcellLight, P.immuneGold, 0.5)} />;
         })}

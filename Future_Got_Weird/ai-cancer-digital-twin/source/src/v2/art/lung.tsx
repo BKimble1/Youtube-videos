@@ -160,6 +160,12 @@ export const LiverDetail: React.FC<{t: number; z: number; mets?: number}> = ({t,
           </g>
         )}
         {mets > 0.01 && <circle cx={SITE.mets[0]} cy={SITE.mets[1]} r={Math.max(0.3, 60 / z)} fill="url(#glowMag)" opacity={mets} />}
+        {mets > 0.01 && (
+          <g opacity={Math.min(1, mets * 1.5)}>
+            <path d={closedPath(Array.from({length: 10}, (_, i) => { const a = (i / 10) * Math.PI * 2; const r = 20 * mets * (1 + 0.25 * Math.sin(i * 2.3)); return [SITE.mets[0] + Math.cos(a) * r, SITE.mets[1] + Math.sin(a) * r] as [number, number]; }))} fill="url(#tumorPat)" />
+            <path d={closedPath(Array.from({length: 10}, (_, i) => { const a = (i / 10) * Math.PI * 2; const r = 20 * mets * (1 + 0.25 * Math.sin(i * 2.3)); return [SITE.mets[0] + Math.cos(a) * r, SITE.mets[1] + Math.sin(a) * r] as [number, number]; }))} fill={P.tumor} opacity={0.55} stroke={P.tumorDeep} strokeWidth={1.5} />
+          </g>
+        )}
       </g>
     </g>
   );
