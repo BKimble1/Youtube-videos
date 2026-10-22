@@ -7,7 +7,7 @@ listen by the owner is still required before publishing.
 
 ## 1. Technical measurements (rendered review file)
 
-Filled in from `qa/review2/results.json` (tool: `tools/qa_review.py`) — see section 6 for the final numbers.
+Results: `qa/review2/results.json` (1080p review) and `qa/master4k/results.json` (4K master), tool `tools/qa_review.py`; final numbers in section 6.
 
 - Container/streams, duration, frame count: ffprobe.
 - Delivered audio loudness and true peak: decoded from the MP4, ITU-R BS.1770 (pyloudnorm), 4× oversampled peaks.
@@ -75,4 +75,39 @@ the frame edge as it enters the callback at 3:28–3:29 (intentional entrance).
 
 ## 6. Final numbers
 
-(see below — appended after the final renders)
+| | 1080p review | 4K master |
+|---|---|---|
+| File | `exports/FGW_AI_Cancer_DigitalTwin_REVIEW_1080p.mp4` | `exports/FGW_AI_Cancer_DigitalTwin_MASTER_4K.mp4` |
+| Video | H.264 High, 1920×1080, 30 fps, yuv420p, BT.709, CRF 16, 6,547 frames | H.264 High, 3840×2160 (rendered natively at scale 2, not upscaled), 30 fps, yuv420p, BT.709, CRF 16, 6,547 frames |
+| Audio | AAC 48 kHz stereo 320 kb/s (same mix) | same |
+| Duration | 3:38.23 | 3:38.23 |
+| Size / SHA-256 | 197,183,079 B / `6a1fb6b3…c8ab` | 437,292,718 B / `fea2bcf1…589f` |
+| Integrated loudness / true peak (decoded from the file) | -14.18 LUFS / -1.12 dBTP | -14.18 LUFS / -1.12 dBTP |
+| Black frames | only the intended closing fade (3:37.43–3:38.20) | same |
+| Frozen stretches ≥ 1.2 s | none | none |
+| Seconds with low picture activity (< 0.35) | none (lowest 0.48 at 0:25 — the slice stack settling; median 5.9) | none |
+
+The 4K master was rendered in three frame ranges (0–3299, 3300–4899, 4900–6546) and joined without re-encoding;
+both joins were checked against the 1080p render (PSNR ≈ 42 dB on the frames either side of each join, i.e. the same
+pictures, no offset). Full-resolution crops were inspected for edge quality.
+
+Both files are Git-ignored (too large for plain Git; Git LFS is unavailable) and are kept as 20 MB parts with SHA-256
+sums in `backup/` — restore with `cat backup/<file>.part_* > exports/<file>` then `cd exports && sha256sum -c
+../backup/JOINED_SHA256SUMS`.
+
+Exact render commands used:
+
+    (cd source && npx remotion render src/index.ts Main ../exports/_video_1080p.mp4 --props='{"audio":false}' --muted --crf=16 --x264-preset=medium --color-space=bt709 --concurrency=4)
+    (cd source && npx remotion render src/index.ts Main ../exports/_video_4k_a.mp4 --props='{"audio":false}' --muted --scale=2 --frames=0-3299 --crf=16 --x264-preset=medium --color-space=bt709 --concurrency=4)   # likewise 3300-4899 → _b, 4900-6546 → _c
+    ffmpeg -f concat -safe 0 -i list.txt -c copy exports/_video_4k.mp4
+    ffmpeg -i exports/_video_<1080p|4k>.mp4 -i audio/mix/mix.wav -map 0:v:0 -map 1:a:0 -c:v copy -af apad -c:a aac -b:a 320k -ar 48000 -shortest -movflags +faststart exports/<final>.mp4
+
+## 7. Open items for the owner
+
+1. Watch and listen at normal speed (not possible here): pacing, effect levels, music balance, voice quality.
+2. Decide the title (see `upload/UPLOAD_TEXT.md`); the working title states something the film says is false.
+3. Re-open the nine source links before publishing (none could be reached from this environment).
+4. Narration pace is ≈160 words/min, a little under the brief's 165–175; the voice was not time-compressed.
+5. The hexagonal peptide layout and the inactive-device control are drawn from general knowledge of the 2024 paper
+   (the brief confirms the control comparison, not the hexagon) — confirm against the paper.
+6. No thumbnail was requested or made.
