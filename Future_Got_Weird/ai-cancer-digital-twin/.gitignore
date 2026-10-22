@@ -6,6 +6,7 @@ source/.cue_bundle.mjs
 # Renders are too large for plain Git blobs (Git LFS uploads are unavailable here); the masters are kept as
 # checksummed split parts under backup/ instead
 exports/*.mp4
+exports/_v3_4k/
 # Regenerated deterministically by tools/stitch_narration.py and tools/make_audio.py
 audio/narration/narration.wav
 audio/mix/*.wav
