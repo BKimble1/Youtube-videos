@@ -1,0 +1,12 @@
+# Dependencies and Remotion caches are rebuilt from package-lock.json
+source/node_modules/
+source/.remotion/
+# The review render is too large for a plain Git blob; it is kept as checksummed parts under backup/
+exports/*.mp4
+# WAVs the tools regenerate (README → Rebuild); the joined review narration audio/narration/narration_review.wav is kept
+audio/mix/*.wav
+audio/narration/seg/*.wav
+source/public/audio/*.wav
+# Individual QA frame dumps (contact sheets and results are kept)
+qa/*/f[0-9]*.png
+tools/__pycache__/

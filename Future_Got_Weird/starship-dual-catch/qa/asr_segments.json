@@ -1,0 +1,466 @@
+[
+ {
+  "id": "h1",
+  "script": "A steel spacecraft taller than a fifteen-story building is falling back to Earth.",
+  "asr": "A steel spacecraft taller than a 15-story building is falling back to Earth.",
+  "missing_words": [
+   "fifteen"
+  ]
+ },
+ {
+  "id": "h2",
+  "script": "And waiting for it, there's no runway. No parachute. No ocean.",
+  "asr": "And waiting for it, there's no runway, no parachute, no ocean,",
+  "missing_words": []
+ },
+ {
+  "id": "h3",
+  "script": "Just two giant arms, on a tower.",
+  "asr": "just two giant arms on a tower.",
+  "missing_words": []
+ },
+ {
+  "id": "h4",
+  "script": "This hasn't happened yet.",
+  "asr": "This hasn't happened yet.",
+  "missing_words": []
+ },
+ {
+  "id": "h5",
+  "script": "SpaceX has already caught a falling rocket booster with a tower like this. Three times.",
+  "asr": "SpaceX has already caught a falling rocket booster with a tower like this. Three times.",
+  "missing_words": []
+ },
+ {
+  "id": "h6",
+  "script": "But on its next flight, it says it will try to catch the spacecraft too. The part that comes back from orbit.",
+  "asr": "But on its next flight, it says it will try to catch the spacecraft too. The part that comes back from orbit. [BEEP]",
+  "missing_words": []
+ },
+ {
+  "id": "h7",
+  "script": "And that second catch is a completely different problem.",
+  "asr": "And that second catch is a completely different problem.",
+  "missing_words": []
+ },
+ {
+  "id": "a1",
+  "script": "Here's the whole machine. Starship is really two rockets, stacked on top of each other.",
+  "asr": "Here's the whole machine. Starship is really two rockets stacked on top of each other.",
+  "missing_words": []
+ },
+ {
+  "id": "a2",
+  "script": "At the bottom is Super Heavy, the booster. Thirty-three engines, and one job: get everything off the ground.",
+  "asr": "At the bottom is super heavy, the booster. 33 engines and one job get everything off the ground.",
+  "missing_words": [
+   "thirty",
+   "three"
+  ]
+ },
+ {
+  "id": "a3",
+  "script": "On top is the ship. The part that actually goes to space.",
+  "asr": "On top is the ship, the part that actually goes to space.",
+  "missing_words": []
+ },
+ {
+  "id": "a4",
+  "script": "Stacked together, they stand about a hundred and twenty-four meters tall.",
+  "asr": "Stacked together, they stand about 124 meters tall.",
+  "missing_words": [
+   "a",
+   "and",
+   "four",
+   "hundred",
+   "twenty"
+  ]
+ },
+ {
+  "id": "a5",
+  "script": "For most of history, rockets like this were simply thrown away. Even Falcon Nine only brings back its first stage.",
+  "asr": "For most of history, rockets like this were simply thrown away. Even Falcon 9 only brings back its first stage.",
+  "missing_words": [
+   "nine"
+  ]
+ },
+ {
+  "id": "a6",
+  "script": "On October twentieth, Elon Musk said that Flight Fifteen, expected as soon as November, will attempt to catch both.",
+  "asr": "On October 20th, Alon Musk said that Flight 15, expected as soon as November, will attempt to catch both.",
+  "missing_words": [
+   "elon",
+   "fifteen",
+   "twentieth"
+  ]
+ },
+ {
+  "id": "a7",
+  "script": "If it works, the entire rocket comes home to the place it launched from.",
+  "asr": "If it works, the entire rocket comes home to the place it launched from.",
+  "missing_words": []
+ },
+ {
+  "id": "b1",
+  "script": "To see why the ship is so much harder, start with the part SpaceX has already done.",
+  "asr": "To see why the ship is so much harder, start with the part space X has already done.",
+  "missing_words": [
+   "spacex"
+  ]
+ },
+ {
+  "id": "b2",
+  "script": "A few minutes after liftoff, the booster's work is finished.",
+  "asr": "A few minutes after liftoff, the booster's work is finished.",
+  "missing_words": []
+ },
+ {
+  "id": "b3",
+  "script": "The ship lights its own engines while it's still attached, and pushes away. That's called hot staging.",
+  "asr": "The ship lights its own engines while it's still attached and pushes away. That's called hot staging.",
+  "missing_words": []
+ },
+ {
+  "id": "b4",
+  "script": "Now the booster is heading the wrong way: up, and out over the ocean.",
+  "asr": "Now the booster is heading the wrong way, up and out over the ocean.",
+  "missing_words": []
+ },
+ {
+  "id": "b5",
+  "script": "So it flips around, relights some of its engines, and burns back toward the coast. That's the boostback.",
+  "asr": "So it flips around, relights some of its engines, and burns back toward the coast. That's the boost back.",
+  "missing_words": [
+   "boostback"
+  ]
+ },
+ {
+  "id": "b6",
+  "script": "Then the engines go quiet, and it falls.",
+  "asr": "Then the engines go quiet and it falls.",
+  "missing_words": []
+ },
+ {
+  "id": "b7",
+  "script": "On the way down, it steers with grid fins near its top. They look like giant waffle irons, and they bite into the air to point the booster where it needs to go.",
+  "asr": "On the way down, it steers with grid fins near its top. They look like giant waffle irons, and they bite into the air to point the booster where it needs to go.",
+  "missing_words": []
+ },
+ {
+  "id": "b8",
+  "script": "On final approach, it lights its engines one last time to slow down.",
+  "asr": "On final approach, it lights its engines one last time to slow down.",
+  "missing_words": []
+ },
+ {
+  "id": "b9",
+  "script": "And here's the part most people picture wrong.",
+  "asr": "And here's the part most people picture wrong.",
+  "missing_words": []
+ },
+ {
+  "id": "b10",
+  "script": "The tower doesn't reach out and grab the rocket. The rocket flies itself into the tower.",
+  "asr": "The tower doesn't reach out and grab the rocket. The rocket flies itself into the tower.",
+  "missing_words": []
+ },
+ {
+  "id": "b11",
+  "script": "The arms, nicknamed the chopsticks, swing in underneath a load-bearing point near the top of the booster, and the booster settles down onto them.",
+  "asr": "The arms, nicknamed the chopsticks, swing in underneath a load-bearing point near the top of the booster, and the booster settles down onto them.",
+  "missing_words": []
+ },
+ {
+  "id": "b12",
+  "script": "They're not squeezing a slippery steel tube. They're giving a rocket a ledge to stand on.",
+  "asr": "They're not squeezing a slippery steel tube. They're giving a rocket a ledge to stand on.",
+  "missing_words": []
+ },
+ {
+  "id": "b13",
+  "script": "SpaceX first pulled this off in October of twenty twenty-four, and twice more in twenty twenty-five.",
+  "asr": "SpaceX first pulled this off in October of 2024 and twice more in 2025.",
+  "missing_words": [
+   "five",
+   "four",
+   "twenty"
+  ]
+ },
+ {
+  "id": "b14",
+  "script": "The newest version changes the hardware: three bigger grid fins instead of four, and a new catch point. The tower's arms got shorter too, with electric actuators, so they can move faster to track the rocket.",
+  "asr": "The newest version changes the hardware. Three bigger grid fins instead of four and a new catch point. The tower's arms got shorter too, with electric actuators, so they can move faster to track the rocket.",
+  "missing_words": []
+ },
+ {
+  "id": "c1",
+  "script": "But the booster's whole trip is short. It never goes anywhere near fast enough to stay in orbit.",
+  "asr": "But the booster's whole trip is short. It never goes anywhere near fast enough to stay in orbit.",
+  "missing_words": []
+ },
+ {
+  "id": "c2",
+  "script": "The ship does.",
+  "asr": "The ship does.",
+  "missing_words": []
+ },
+ {
+  "id": "c3",
+  "script": "And orbit isn't about going high. It's about going sideways so fast that as you fall, the Earth curves away beneath you.",
+  "asr": "and orbit isn't about going high. It's about going sideways so fast that as you fall, the Earth curves away beneath you.",
+  "missing_words": []
+ },
+ {
+  "id": "c4",
+  "script": "For a low orbit, that's around twenty-eight thousand kilometers an hour.",
+  "asr": "For a low orbit, that's around 28,000 km/h.",
+  "missing_words": [
+   "an",
+   "eight",
+   "hour",
+   "kilometers",
+   "thousand",
+   "twenty"
+  ]
+ },
+ {
+  "id": "c5",
+  "script": "To come home, all of that speed has to go somewhere. Most of it goes into the air.",
+  "asr": "To come home, all of that speed has to go somewhere. Most of it goes into the air.",
+  "missing_words": []
+ },
+ {
+  "id": "c6",
+  "script": "The ship falls back with its belly first. The air in front of it is squeezed so hard that it glows.",
+  "asr": "The ship falls back with its belly first. The air in front of it is squeezed so hard that it glows.",
+  "missing_words": []
+ },
+ {
+  "id": "c7",
+  "script": "That's why one side of the ship is covered in thousands of black hexagonal heat shield tiles. That side faces the fire.",
+  "asr": "That's why one side of the ship is covered in thousands of black hexagonal heat shield tiles. That side faces the fire.",
+  "missing_words": []
+ },
+ {
+  "id": "c8",
+  "script": "Four flaps, two near the nose and two at the tail, steer it through the descent, a bit like a skydiver using their arms and legs.",
+  "asr": "Four flaps, two near the nose and two at the tail. Steer it through the descent, a bit like a skydiver using their arms and legs.",
+  "missing_words": []
+ },
+ {
+  "id": "c9",
+  "script": "Then, close to the ground, comes the strangest move in rocketry.",
+  "asr": "Then, close to the ground, comes the strangest move in rocketry.",
+  "missing_words": []
+ },
+ {
+  "id": "c10",
+  "script": "The ship lights its engines and swings from horizontal to vertical. A fifty-meter spacecraft, flipping upright in a few seconds.",
+  "asr": "The ship lights its engines and swings from horizontal to vertical, a 50-meter spacecraft flipping upright in a few seconds.",
+  "missing_words": [
+   "fifty"
+  ]
+ },
+ {
+  "id": "c11",
+  "script": "SpaceX has flown that flip before: on low test hops years ago, and after trips to space that ended in the ocean. It has never ended at a tower.",
+  "asr": "SpaceX has flown that flip before, on low test hops years ago, and after trips to space that ended in the ocean. It has never ended at a tower.",
+  "missing_words": []
+ },
+ {
+  "id": "c12",
+  "script": "This time, the ship has to survive the heat of reentry first, and then still flip, slow down and line up next to a tower, with the same kind of precision the booster needed.",
+  "asr": "This time, the ship has to survive the heat of re-entry first, and then still flip, slow down and line up next to a tower. With the same kind of precision the booster needed.",
+  "missing_words": [
+   "reentry"
+  ]
+ },
+ {
+  "id": "d1",
+  "script": "So let's go inside the tower.",
+  "asr": "So let's go inside the tower.",
+  "missing_words": []
+ },
+ {
+  "id": "d2",
+  "script": "It's a steel lattice, roughly as tall as a forty-five-story building.",
+  "asr": "It's a steel lattice, roughly as tall as a 45-story building.",
+  "missing_words": [
+   "five",
+   "forty"
+  ]
+ },
+ {
+  "id": "d3",
+  "script": "The arms hang from a carriage that rides up and down the tower, so the catch height can be adjusted.",
+  "asr": "The arms hang from a carriage that rides up and down the tower, so the catch height can be adjusted.",
+  "missing_words": []
+ },
+ {
+  "id": "d4",
+  "script": "And each arm swings open and closed on its own hinge.",
+  "asr": "and each arm swings open and closed on its own hinge.",
+  "missing_words": []
+ },
+ {
+  "id": "d5",
+  "script": "Before the ship arrives, the arms open wide, and the carriage waits at the right height.",
+  "asr": "Before the ship arrives, the arms open wide and the carriage waits at the right height.",
+  "missing_words": []
+ },
+ {
+  "id": "d6",
+  "script": "The ship drops in beside the tower, between the arms. In the last few seconds, the arms close in beneath its catch points.",
+  "asr": "The ship drops in beside the tower, between the arms. In the last few seconds, the arms close in beneath its catch points.",
+  "missing_words": []
+ },
+ {
+  "id": "d7",
+  "script": "The engines shut down, and the ship's weight comes down onto the arms.",
+  "asr": "The engines shut down and the ship's weight comes down onto the arms.",
+  "missing_words": []
+ },
+ {
+  "id": "d8",
+  "script": "SpaceX hasn't published a detailed drawing of how the ship's catch points meet the arms, so what you're seeing here is our conceptual version.",
+  "asr": "SpaceX hasn't published a detailed drawing of how the ship's catch points meet the arms. So what you're seeing here is our conceptual version.",
+  "missing_words": []
+ },
+ {
+  "id": "d9",
+  "script": "But it has rehearsed part of this on the ground. In September, according to NASA Spaceflight, the arms at Starbase's second pad lifted Ship forty-two, the Flight Fifteen ship, into a simulated catch position.",
+  "asr": "but it has rehearsed part of this on the ground. In September, according to NASA's space flight, the arms at Starbase's second pad lifted ship 42, the flight 15 ship into a simulated catch position. (buzzer)",
+  "missing_words": [
+   "fifteen",
+   "forty",
+   "spaceflight",
+   "two"
+  ]
+ },
+ {
+  "id": "d10",
+  "script": "That matters, because the ship isn't shaped like the booster. It's shorter, it has flaps sticking out, and its heat shield wraps around one side.",
+  "asr": "That matters because the ship isn't shaped like the booster. It's shorter, it has flaps sticking out and its heat shield wraps around one side.",
+  "missing_words": []
+ },
+ {
+  "id": "d11",
+  "script": "The arms have to close around all of that without hitting any of it.",
+  "asr": "The arms have to close around all of that without hitting any of it.",
+  "missing_words": []
+ },
+ {
+  "id": "d12",
+  "script": "So everything has to arrive together. The right place, the right height, the right speed, pointing the right way.",
+  "asr": "So everything has to arrive together. The right place, the right height, the right speed, pointing the right way.",
+  "missing_words": []
+ },
+ {
+  "id": "e1",
+  "script": "So what could go wrong? Here, we're reasoning from geometry, because SpaceX hasn't published its rules for calling off a catch.",
+  "asr": "So what could go wrong? Here, we're reasoning from geometry because SpaceX hasn't published its rules for calling off a catch.",
+  "missing_words": []
+ },
+ {
+  "id": "e2",
+  "script": "If the ship arrives a little too far out, its catch points won't be over the arms.",
+  "asr": "If the ship arrives a little too far out, its catch points won't be over the arms.",
+  "missing_words": []
+ },
+ {
+  "id": "e3",
+  "script": "If it's leaning, one side touches down before the other.",
+  "asr": "If it's leaning, one side touches down before the other.",
+  "missing_words": []
+ },
+ {
+  "id": "e4",
+  "script": "If it's still coming down too fast, the tower has to soak up more energy.",
+  "asr": "If it's still coming down too fast, the tower has to soak up more energy.",
+  "missing_words": []
+ },
+ {
+  "id": "e5",
+  "script": "And if the tower isn't ready, there's nothing to land on at all.",
+  "asr": "And if the tower isn't ready, there's nothing to land on at all.",
+  "missing_words": []
+ },
+ {
+  "id": "e6",
+  "script": "That last one has actually happened. On Flight Six, a booster catch was called off, and the booster came down in the Gulf instead.",
+  "asr": "That last one has actually happened. On Flight 6, a booster catch was called off and the booster came down in the Gulf instead.",
+  "missing_words": [
+   "six"
+  ]
+ },
+ {
+  "id": "e7",
+  "script": "It would make sense for the ship to have a similar way out. But the details aren't public.",
+  "asr": "It would make sense for the ship to have a similar way out, but the details aren't public.",
+  "missing_words": []
+ },
+ {
+  "id": "e8",
+  "script": "And on earlier test flights, ships have been lost on the way up and on the way down. The ship has always been the harder half of this program.",
+  "asr": "And on earlier test flights, ships have been lost on the way up and on the way down. The ship has always been the harder half of this program.",
+  "missing_words": []
+ },
+ {
+  "id": "f1",
+  "script": "So if everything goes right, Flight Fifteen looks something like this.",
+  "asr": "So if everything goes right, Flight 15 looks something like this.",
+  "missing_words": [
+   "fifteen"
+  ]
+ },
+ {
+  "id": "f2",
+  "script": "Liftoff. The booster separates, turns back, and minutes later, it's caught.",
+  "asr": "Lift off, the booster separates, turns back and minutes later it's caught.",
+  "missing_words": [
+   "liftoff"
+  ]
+ },
+ {
+  "id": "f3",
+  "script": "The ship keeps going, all the way to space.",
+  "asr": "The ship keeps going all the way to space.",
+  "missing_words": []
+ },
+ {
+  "id": "f4",
+  "script": "Later, it falls back through the heat, flips upright, and drops between a pair of arms.",
+  "asr": "Later, it falls back through the heat, flips upright and drops between a pair of arms.",
+  "missing_words": []
+ },
+ {
+  "id": "f5",
+  "script": "Musk said he thinks success is more likely than not. He also said there are more flights lined up if it fails.",
+  "asr": "Musk said he thinks success is more likely than not. He also said there are more flights lined up if it fails.",
+  "missing_words": []
+ },
+ {
+  "id": "f6",
+  "script": "And even a perfect catch is not the finish line. To make this routine, a caught ship has to be inspected, refueled, and flown again, without being rebuilt.",
+  "asr": "and even a perfect catch is not the finish line. To make this routine, a caught ship has to be inspected, refueled, and flown again without being rebuilt. (buzzer)",
+  "missing_words": []
+ },
+ {
+  "id": "f7",
+  "script": "But if both catches work, Musk says it would be the first time an orbital rocket has ever been recovered in full.",
+  "asr": "But if both catches work, Musk says it would be the first time an orbital rocket has ever been recovered in full.",
+  "missing_words": []
+ },
+ {
+  "id": "f8",
+  "script": "For as long as there have been rockets, they've been built to be thrown away.",
+  "asr": "For as long as there have been rockets, they've been built to be thrown away.",
+  "missing_words": []
+ },
+ {
+  "id": "f9",
+  "script": "This one is built to be caught.",
+  "asr": "This one is built to be caught.",
+  "missing_words": []
+ }
+]

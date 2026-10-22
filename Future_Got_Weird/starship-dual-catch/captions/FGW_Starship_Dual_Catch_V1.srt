@@ -1,0 +1,538 @@
+1
+00:00:00,350 --> 00:00:05,723
+A steel spacecraft taller than a fifteen-story
+building is falling back to Earth.
+
+2
+00:00:05,763 --> 00:00:10,207
+And waiting for it, there's no
+runway. No parachute. No ocean.
+
+3
+00:00:10,247 --> 00:00:13,017
+Just two giant arms, on a tower.
+
+4
+00:00:13,317 --> 00:00:15,078
+This hasn't happened yet.
+
+5
+00:00:15,118 --> 00:00:19,774
+SpaceX has already caught a falling
+rocket booster with a tower like this.
+
+6
+00:00:19,814 --> 00:00:21,149
+Three times.
+
+7
+00:00:21,189 --> 00:00:25,179
+But on its next flight, it says it
+will try to catch the spacecraft too.
+
+8
+00:00:25,219 --> 00:00:27,360
+The part that comes back from orbit.
+
+9
+00:00:27,400 --> 00:00:31,090
+And that second catch is a
+completely different problem.
+
+10
+00:00:31,290 --> 00:00:34,418
+Here's the whole machine.
+Starship is really two rockets,
+
+11
+00:00:34,458 --> 00:00:36,329
+stacked on top of each other.
+
+12
+00:00:36,369 --> 00:00:40,911
+At the bottom is Super Heavy, the booster.
+Thirty-three engines, and one job:
+
+13
+00:00:40,951 --> 00:00:42,947
+get everything off the ground.
+
+14
+00:00:42,987 --> 00:00:46,953
+On top is the ship. The part
+that actually goes to space.
+
+15
+00:00:46,993 --> 00:00:51,391
+Stacked together, they stand about a
+hundred and twenty-four meters tall.
+
+16
+00:00:51,431 --> 00:00:55,005
+For most of history, rockets like
+this were simply thrown away.
+
+17
+00:00:55,045 --> 00:00:58,856
+Even Falcon Nine only
+brings back its first stage.
+
+18
+00:00:58,896 --> 00:01:02,428
+On October twentieth, Elon
+Musk said that Flight Fifteen,
+
+19
+00:01:02,468 --> 00:01:06,299
+expected as soon as November,
+will attempt to catch both.
+
+20
+00:01:06,339 --> 00:01:10,932
+If it works, the entire rocket comes
+home to the place it launched from.
+
+21
+00:01:11,233 --> 00:01:16,812
+To see why the ship is so much harder,
+start with the part SpaceX has already done.
+
+22
+00:01:16,852 --> 00:01:20,402
+A few minutes after liftoff,
+the booster's work is finished.
+
+23
+00:01:20,442 --> 00:01:24,798
+The ship lights its own engines while
+it's still attached, and pushes away.
+
+24
+00:01:24,838 --> 00:01:26,769
+That's called hot staging.
+
+25
+00:01:26,809 --> 00:01:31,013
+Now the booster is heading the wrong
+way: up, and out over the ocean.
+
+26
+00:01:31,053 --> 00:01:35,612
+So it flips around, relights some of its
+engines, and burns back toward the coast.
+
+27
+00:01:35,652 --> 00:01:37,228
+That's the boostback.
+
+28
+00:01:37,268 --> 00:01:39,859
+Then the engines go quiet, and it falls.
+
+29
+00:01:39,899 --> 00:01:43,235
+On the way down, it steers
+with grid fins near its top.
+
+30
+00:01:43,275 --> 00:01:45,071
+They look like giant waffle irons,
+
+31
+00:01:45,111 --> 00:01:49,412
+and they bite into the air to point
+the booster where it needs to go.
+
+32
+00:01:49,452 --> 00:01:54,521
+On final approach, it lights its
+engines one last time to slow down.
+
+33
+00:01:54,561 --> 00:01:57,416
+And here's the part most
+people picture wrong.
+
+34
+00:01:57,456 --> 00:02:00,096
+The tower doesn't reach
+out and grab the rocket.
+
+35
+00:02:00,136 --> 00:02:02,878
+The rocket flies itself into the tower.
+
+36
+00:02:02,918 --> 00:02:04,839
+The arms, nicknamed the chopsticks,
+
+37
+00:02:04,879 --> 00:02:08,704
+swing in underneath a load-bearing
+point near the top of the booster,
+
+38
+00:02:08,744 --> 00:02:11,190
+and the booster settles down onto them.
+
+39
+00:02:11,230 --> 00:02:13,725
+They're not squeezing
+a slippery steel tube.
+
+40
+00:02:13,765 --> 00:02:16,633
+They're giving a rocket
+a ledge to stand on.
+
+41
+00:02:16,673 --> 00:02:20,627
+SpaceX first pulled this off in
+October of twenty twenty-four,
+
+42
+00:02:20,667 --> 00:02:23,311
+and twice more in twenty twenty-five.
+
+43
+00:02:23,351 --> 00:02:28,165
+The newest version changes the hardware:
+three bigger grid fins instead of four,
+
+44
+00:02:28,205 --> 00:02:33,079
+and a new catch point. The tower's arms
+got shorter too, with electric actuators,
+
+45
+00:02:33,119 --> 00:02:36,388
+so they can move faster
+to track the rocket.
+
+46
+00:02:36,588 --> 00:02:38,472
+But the booster's whole trip is short.
+
+47
+00:02:38,512 --> 00:02:42,122
+It never goes anywhere near
+fast enough to stay in orbit.
+
+48
+00:02:42,162 --> 00:02:43,439
+The ship does.
+
+49
+00:02:43,479 --> 00:02:45,342
+And orbit isn't about going high.
+
+50
+00:02:45,382 --> 00:02:48,604
+It's about going sideways
+so fast that as you fall,
+
+51
+00:02:48,644 --> 00:02:50,994
+the Earth curves away beneath you.
+
+52
+00:02:51,034 --> 00:02:55,398
+For a low orbit, that's around
+twenty-eight thousand kilometers an hour.
+
+53
+00:02:55,438 --> 00:03:00,587
+To come home, all of that speed has to go
+somewhere. Most of it goes into the air.
+
+54
+00:03:00,627 --> 00:03:02,881
+The ship falls back with its belly first.
+
+55
+00:03:02,921 --> 00:03:06,907
+The air in front of it is
+squeezed so hard that it glows.
+
+56
+00:03:06,947 --> 00:03:12,686
+That's why one side of the ship is covered in
+thousands of black hexagonal heat shield tiles.
+
+57
+00:03:12,726 --> 00:03:14,853
+That side faces the fire.
+
+58
+00:03:14,893 --> 00:03:19,878
+Four flaps, two near the nose and two at
+the tail, steer it through the descent,
+
+59
+00:03:19,918 --> 00:03:23,193
+a bit like a skydiver
+using their arms and legs.
+
+60
+00:03:23,233 --> 00:03:27,241
+Then, close to the ground, comes
+the strangest move in rocketry.
+
+61
+00:03:27,281 --> 00:03:31,457
+The ship lights its engines and
+swings from horizontal to vertical.
+
+62
+00:03:31,497 --> 00:03:35,459
+A fifty-meter spacecraft,
+flipping upright in a few seconds.
+
+63
+00:03:35,499 --> 00:03:39,544
+SpaceX has flown that flip before:
+on low test hops years ago,
+
+64
+00:03:39,584 --> 00:03:45,116
+and after trips to space that ended in
+the ocean. It has never ended at a tower.
+
+65
+00:03:45,156 --> 00:03:50,134
+This time, the ship has to survive the
+heat of reentry first, and then still flip,
+
+66
+00:03:50,174 --> 00:03:52,707
+slow down and line up next to a tower,
+
+67
+00:03:52,747 --> 00:03:56,033
+with the same kind of
+precision the booster needed.
+
+68
+00:03:56,333 --> 00:03:58,247
+So let's go inside the tower.
+
+69
+00:03:58,287 --> 00:04:02,780
+It's a steel lattice, roughly as
+tall as a forty-five-story building.
+
+70
+00:04:02,820 --> 00:04:06,404
+The arms hang from a carriage
+that rides up and down the tower,
+
+71
+00:04:06,444 --> 00:04:08,774
+so the catch height can be adjusted.
+
+72
+00:04:08,814 --> 00:04:12,615
+And each arm swings open
+and closed on its own hinge.
+
+73
+00:04:12,655 --> 00:04:15,145
+Before the ship arrives,
+the arms open wide,
+
+74
+00:04:15,185 --> 00:04:17,918
+and the carriage waits
+at the right height.
+
+75
+00:04:17,958 --> 00:04:22,818
+The ship drops in beside the tower,
+between the arms. In the last few seconds,
+
+76
+00:04:22,858 --> 00:04:25,819
+the arms close in
+beneath its catch points.
+
+77
+00:04:25,859 --> 00:04:30,186
+The engines shut down, and the ship's
+weight comes down onto the arms.
+
+78
+00:04:30,226 --> 00:04:35,541
+SpaceX hasn't published a detailed drawing
+of how the ship's catch points meet the arms,
+
+79
+00:04:35,581 --> 00:04:39,174
+so what you're seeing here
+is our conceptual version.
+
+80
+00:04:39,214 --> 00:04:42,994
+But it has rehearsed part of
+this on the ground. In September,
+
+81
+00:04:43,034 --> 00:04:44,843
+according to NASA Spaceflight,
+
+82
+00:04:44,883 --> 00:04:49,834
+the arms at Starbase's second pad lifted
+Ship forty-two, the Flight Fifteen ship,
+
+83
+00:04:49,874 --> 00:04:52,106
+into a simulated catch position.
+
+84
+00:04:52,146 --> 00:04:56,315
+That matters, because the ship isn't
+shaped like the booster. It's shorter,
+
+85
+00:04:56,355 --> 00:05:00,488
+it has flaps sticking out, and its
+heat shield wraps around one side.
+
+86
+00:05:00,528 --> 00:05:04,248
+The arms have to close around all
+of that without hitting any of it.
+
+87
+00:05:04,288 --> 00:05:08,374
+So everything has to arrive together.
+The right place, the right height,
+
+88
+00:05:08,414 --> 00:05:11,182
+the right speed, pointing the right way.
+
+89
+00:05:11,482 --> 00:05:15,115
+So what could go wrong? Here,
+we're reasoning from geometry,
+
+90
+00:05:15,155 --> 00:05:19,432
+because SpaceX hasn't published
+its rules for calling off a catch.
+
+91
+00:05:19,472 --> 00:05:24,416
+If the ship arrives a little too far out,
+its catch points won't be over the arms.
+
+92
+00:05:24,456 --> 00:05:27,869
+If it's leaning, one side
+touches down before the other.
+
+93
+00:05:27,909 --> 00:05:32,609
+If it's still coming down too fast,
+the tower has to soak up more energy.
+
+94
+00:05:32,649 --> 00:05:36,408
+And if the tower isn't ready,
+there's nothing to land on at all.
+
+95
+00:05:36,448 --> 00:05:41,271
+That last one has actually happened. On
+Flight Six, a booster catch was called off,
+
+96
+00:05:41,311 --> 00:05:44,266
+and the booster came
+down in the Gulf instead.
+
+97
+00:05:44,306 --> 00:05:47,119
+It would make sense for the
+ship to have a similar way out.
+
+98
+00:05:47,159 --> 00:05:49,186
+But the details aren't public.
+
+99
+00:05:49,226 --> 00:05:50,826
+And on earlier test flights,
+
+100
+00:05:50,866 --> 00:05:54,094
+ships have been lost on the
+way up and on the way down.
+
+101
+00:05:54,134 --> 00:05:58,028
+The ship has always been the
+harder half of this program.
+
+102
+00:05:58,328 --> 00:06:02,531
+So if everything goes right, Flight
+Fifteen looks something like this.
+
+103
+00:06:02,571 --> 00:06:07,161
+Liftoff. The booster separates, turns
+back, and minutes later, it's caught.
+
+104
+00:06:07,201 --> 00:06:10,102
+The ship keeps going,
+all the way to space.
+
+105
+00:06:10,142 --> 00:06:13,173
+Later, it falls back through
+the heat, flips upright,
+
+106
+00:06:13,213 --> 00:06:15,384
+and drops between a pair of arms.
+
+107
+00:06:15,424 --> 00:06:18,579
+Musk said he thinks success
+is more likely than not.
+
+108
+00:06:18,619 --> 00:06:22,408
+He also said there are more
+flights lined up if it fails.
+
+109
+00:06:22,448 --> 00:06:26,468
+And even a perfect catch is not the
+finish line. To make this routine,
+
+110
+00:06:26,508 --> 00:06:31,639
+a caught ship has to be inspected, refueled,
+and flown again, without being rebuilt.
+
+111
+00:06:31,679 --> 00:06:33,029
+But if both catches work,
+
+112
+00:06:33,069 --> 00:06:38,832
+Musk says it would be the first time an
+orbital rocket has ever been recovered in full.
+
+113
+00:06:38,872 --> 00:06:43,148
+For as long as there have been rockets,
+they've been built to be thrown away.
+
+114
+00:06:43,188 --> 00:06:45,335
+This one is built to be caught.

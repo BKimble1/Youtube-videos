@@ -1,0 +1,351 @@
+{
+ "cues": 114,
+ "max_line_chars": 47,
+ "segments": [
+  {
+   "id": "h1",
+   "chunks": 1,
+   "pauses_found": 1
+  },
+  {
+   "id": "h2",
+   "chunks": 1,
+   "pauses_found": 3
+  },
+  {
+   "id": "h3",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "h4",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "h5",
+   "chunks": 2,
+   "pauses_found": 3
+  },
+  {
+   "id": "h6",
+   "chunks": 2,
+   "pauses_found": 1
+  },
+  {
+   "id": "h7",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "a1",
+   "chunks": 2,
+   "pauses_found": 1
+  },
+  {
+   "id": "a2",
+   "chunks": 2,
+   "pauses_found": 2
+  },
+  {
+   "id": "a3",
+   "chunks": 1,
+   "pauses_found": 1
+  },
+  {
+   "id": "a4",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "a5",
+   "chunks": 2,
+   "pauses_found": 3
+  },
+  {
+   "id": "a6",
+   "chunks": 2,
+   "pauses_found": 0
+  },
+  {
+   "id": "a7",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "b1",
+   "chunks": 1,
+   "pauses_found": 1
+  },
+  {
+   "id": "b2",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "b3",
+   "chunks": 2,
+   "pauses_found": 3
+  },
+  {
+   "id": "b4",
+   "chunks": 1,
+   "pauses_found": 1
+  },
+  {
+   "id": "b5",
+   "chunks": 2,
+   "pauses_found": 1
+  },
+  {
+   "id": "b6",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "b7",
+   "chunks": 3,
+   "pauses_found": 1
+  },
+  {
+   "id": "b8",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "b9",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "b10",
+   "chunks": 2,
+   "pauses_found": 1
+  },
+  {
+   "id": "b11",
+   "chunks": 3,
+   "pauses_found": 0
+  },
+  {
+   "id": "b12",
+   "chunks": 2,
+   "pauses_found": 1
+  },
+  {
+   "id": "b13",
+   "chunks": 2,
+   "pauses_found": 1
+  },
+  {
+   "id": "b14",
+   "chunks": 3,
+   "pauses_found": 1
+  },
+  {
+   "id": "c1",
+   "chunks": 2,
+   "pauses_found": 2
+  },
+  {
+   "id": "c2",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "c3",
+   "chunks": 3,
+   "pauses_found": 2
+  },
+  {
+   "id": "c4",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "c5",
+   "chunks": 1,
+   "pauses_found": 1
+  },
+  {
+   "id": "c6",
+   "chunks": 2,
+   "pauses_found": 3
+  },
+  {
+   "id": "c7",
+   "chunks": 2,
+   "pauses_found": 2
+  },
+  {
+   "id": "c8",
+   "chunks": 2,
+   "pauses_found": 0
+  },
+  {
+   "id": "c9",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "c10",
+   "chunks": 2,
+   "pauses_found": 4
+  },
+  {
+   "id": "c11",
+   "chunks": 2,
+   "pauses_found": 4
+  },
+  {
+   "id": "c12",
+   "chunks": 3,
+   "pauses_found": 3
+  },
+  {
+   "id": "d1",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "d2",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "d3",
+   "chunks": 2,
+   "pauses_found": 0
+  },
+  {
+   "id": "d4",
+   "chunks": 1,
+   "pauses_found": 1
+  },
+  {
+   "id": "d5",
+   "chunks": 2,
+   "pauses_found": 0
+  },
+  {
+   "id": "d6",
+   "chunks": 2,
+   "pauses_found": 3
+  },
+  {
+   "id": "d7",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "d8",
+   "chunks": 2,
+   "pauses_found": 1
+  },
+  {
+   "id": "d9",
+   "chunks": 4,
+   "pauses_found": 2
+  },
+  {
+   "id": "d10",
+   "chunks": 2,
+   "pauses_found": 1
+  },
+  {
+   "id": "d11",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "d12",
+   "chunks": 2,
+   "pauses_found": 3
+  },
+  {
+   "id": "e1",
+   "chunks": 2,
+   "pauses_found": 3
+  },
+  {
+   "id": "e2",
+   "chunks": 1,
+   "pauses_found": 1
+  },
+  {
+   "id": "e3",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "e4",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "e5",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "e6",
+   "chunks": 2,
+   "pauses_found": 1
+  },
+  {
+   "id": "e7",
+   "chunks": 2,
+   "pauses_found": 1
+  },
+  {
+   "id": "e8",
+   "chunks": 3,
+   "pauses_found": 4
+  },
+  {
+   "id": "f1",
+   "chunks": 1,
+   "pauses_found": 1
+  },
+  {
+   "id": "f2",
+   "chunks": 1,
+   "pauses_found": 1
+  },
+  {
+   "id": "f3",
+   "chunks": 1,
+   "pauses_found": 1
+  },
+  {
+   "id": "f4",
+   "chunks": 2,
+   "pauses_found": 0
+  },
+  {
+   "id": "f5",
+   "chunks": 2,
+   "pauses_found": 2
+  },
+  {
+   "id": "f6",
+   "chunks": 2,
+   "pauses_found": 2
+  },
+  {
+   "id": "f7",
+   "chunks": 2,
+   "pauses_found": 3
+  },
+  {
+   "id": "f8",
+   "chunks": 1,
+   "pauses_found": 0
+  },
+  {
+   "id": "f9",
+   "chunks": 1,
+   "pauses_found": 0
+  }
+ ]
+}

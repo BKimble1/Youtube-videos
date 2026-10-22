@@ -1,0 +1,7 @@
+{
+ "integrated_lufs": -15.53,
+ "sample_peak_dbfs": -2.0,
+ "duration_s": 407.435,
+ "voice_minus_bed_db_while_speaking": 14.5,
+ "silent_stretches_over_1s": []
+}

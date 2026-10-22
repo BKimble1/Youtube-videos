@@ -1,0 +1,416 @@
+[
+ {
+  "id": "h1",
+  "act": "hook",
+  "pause": 0.25,
+  "text": "A steel spacecraft taller than a fifteen-story building is falling back to Earth."
+ },
+ {
+  "id": "h2",
+  "act": "hook",
+  "pause": 0.2,
+  "text": "And waiting for it, there's no runway. No parachute. No ocean."
+ },
+ {
+  "id": "h3",
+  "act": "hook",
+  "pause": 0.9,
+  "text": "Just two giant arms, on a tower."
+ },
+ {
+  "id": "h4",
+  "act": "hook",
+  "pause": 0.45,
+  "text": "This hasn't happened yet."
+ },
+ {
+  "id": "h5",
+  "act": "hook",
+  "pause": 0.3,
+  "text": "SpaceX has already caught a falling rocket booster with a tower like this. Three times."
+ },
+ {
+  "id": "h6",
+  "act": "hook",
+  "pause": 0.3,
+  "text": "But on its next flight, it says it will try to catch the spacecraft too. The part that comes back from orbit."
+ },
+ {
+  "id": "h7",
+  "act": "hook",
+  "pause": 0.8,
+  "text": "And that second catch is a completely different problem."
+ },
+ {
+  "id": "a1",
+  "act": "stack",
+  "pause": 0.3,
+  "text": "Here's the whole machine. Starship is really two rockets, stacked on top of each other."
+ },
+ {
+  "id": "a2",
+  "act": "stack",
+  "pause": 0.25,
+  "text": "At the bottom is Super Heavy, the booster. Thirty-three engines, and one job: get everything off the ground."
+ },
+ {
+  "id": "a3",
+  "act": "stack",
+  "pause": 0.25,
+  "text": "On top is the ship. The part that actually goes to space."
+ },
+ {
+  "id": "a4",
+  "act": "stack",
+  "pause": 0.4,
+  "text": "Stacked together, they stand about a hundred and twenty-four meters tall."
+ },
+ {
+  "id": "a5",
+  "act": "stack",
+  "pause": 0.3,
+  "text": "For most of history, rockets like this were simply thrown away. Even Falcon Nine only brings back its first stage."
+ },
+ {
+  "id": "a6",
+  "act": "stack",
+  "pause": 0.3,
+  "text": "On October twentieth, Elon Musk said that Flight Fifteen, expected as soon as November, will attempt to catch both."
+ },
+ {
+  "id": "a7",
+  "act": "stack",
+  "pause": 0.9,
+  "text": "If it works, the entire rocket comes home to the place it launched from."
+ },
+ {
+  "id": "b1",
+  "act": "booster",
+  "pause": 0.3,
+  "text": "To see why the ship is so much harder, start with the part SpaceX has already done."
+ },
+ {
+  "id": "b2",
+  "act": "booster",
+  "pause": 0.25,
+  "text": "A few minutes after liftoff, the booster's work is finished."
+ },
+ {
+  "id": "b3",
+  "act": "booster",
+  "pause": 0.3,
+  "text": "The ship lights its own engines while it's still attached, and pushes away. That's called hot staging."
+ },
+ {
+  "id": "b4",
+  "act": "booster",
+  "pause": 0.3,
+  "text": "Now the booster is heading the wrong way: up, and out over the ocean."
+ },
+ {
+  "id": "b5",
+  "act": "booster",
+  "pause": 0.3,
+  "text": "So it flips around, relights some of its engines, and burns back toward the coast. That's the boostback."
+ },
+ {
+  "id": "b6",
+  "act": "booster",
+  "pause": 0.3,
+  "text": "Then the engines go quiet, and it falls."
+ },
+ {
+  "id": "b7",
+  "act": "booster",
+  "pause": 0.3,
+  "text": "On the way down, it steers with grid fins near its top. They look like giant waffle irons, and they bite into the air to point the booster where it needs to go."
+ },
+ {
+  "id": "b8",
+  "act": "booster",
+  "pause": 0.5,
+  "text": "On final approach, it lights its engines one last time to slow down."
+ },
+ {
+  "id": "b9",
+  "act": "booster",
+  "pause": 0.3,
+  "text": "And here's the part most people picture wrong."
+ },
+ {
+  "id": "b10",
+  "act": "booster",
+  "pause": 0.3,
+  "text": "The tower doesn't reach out and grab the rocket. The rocket flies itself into the tower."
+ },
+ {
+  "id": "b11",
+  "act": "booster",
+  "pause": 0.3,
+  "text": "The arms, nicknamed the chopsticks, swing in underneath a load-bearing point near the top of the booster, and the booster settles down onto them."
+ },
+ {
+  "id": "b12",
+  "act": "booster",
+  "pause": 0.4,
+  "text": "They're not squeezing a slippery steel tube. They're giving a rocket a ledge to stand on."
+ },
+ {
+  "id": "b13",
+  "act": "booster",
+  "pause": 0.3,
+  "text": "SpaceX first pulled this off in October of twenty twenty-four, and twice more in twenty twenty-five."
+ },
+ {
+  "id": "b14",
+  "act": "booster",
+  "pause": 0.8,
+  "text": "The newest version changes the hardware: three bigger grid fins instead of four, and a new catch point. The tower's arms got shorter too, with electric actuators, so they can move faster to track the rocket."
+ },
+ {
+  "id": "c1",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "But the booster's whole trip is short. It never goes anywhere near fast enough to stay in orbit."
+ },
+ {
+  "id": "c2",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "The ship does."
+ },
+ {
+  "id": "c3",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "And orbit isn't about going high. It's about going sideways so fast that as you fall, the Earth curves away beneath you."
+ },
+ {
+  "id": "c4",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "For a low orbit, that's around twenty-eight thousand kilometers an hour."
+ },
+ {
+  "id": "c5",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "To come home, all of that speed has to go somewhere. Most of it goes into the air."
+ },
+ {
+  "id": "c6",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "The ship falls back with its belly first. The air in front of it is squeezed so hard that it glows."
+ },
+ {
+  "id": "c7",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "That's why one side of the ship is covered in thousands of black hexagonal heat shield tiles. That side faces the fire."
+ },
+ {
+  "id": "c8",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "Four flaps, two near the nose and two at the tail, steer it through the descent, a bit like a skydiver using their arms and legs."
+ },
+ {
+  "id": "c9",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "Then, close to the ground, comes the strangest move in rocketry."
+ },
+ {
+  "id": "c10",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "The ship lights its engines and swings from horizontal to vertical. A fifty-meter spacecraft, flipping upright in a few seconds."
+ },
+ {
+  "id": "c11",
+  "act": "ship",
+  "pause": 0.3,
+  "text": "SpaceX has flown that flip before: on low test hops years ago, and after trips to space that ended in the ocean. It has never ended at a tower."
+ },
+ {
+  "id": "c12",
+  "act": "ship",
+  "pause": 0.9,
+  "text": "This time, the ship has to survive the heat of reentry first, and then still flip, slow down and line up next to a tower, with the same kind of precision the booster needed."
+ },
+ {
+  "id": "d1",
+  "act": "tower",
+  "pause": 0.3,
+  "text": "So let's go inside the tower."
+ },
+ {
+  "id": "d2",
+  "act": "tower",
+  "pause": 0.3,
+  "text": "It's a steel lattice, roughly as tall as a forty-five-story building."
+ },
+ {
+  "id": "d3",
+  "act": "tower",
+  "pause": 0.3,
+  "text": "The arms hang from a carriage that rides up and down the tower, so the catch height can be adjusted."
+ },
+ {
+  "id": "d4",
+  "act": "tower",
+  "pause": 0.3,
+  "text": "And each arm swings open and closed on its own hinge."
+ },
+ {
+  "id": "d5",
+  "act": "tower",
+  "pause": 0.3,
+  "text": "Before the ship arrives, the arms open wide, and the carriage waits at the right height."
+ },
+ {
+  "id": "d6",
+  "act": "tower",
+  "pause": 0.3,
+  "text": "The ship drops in beside the tower, between the arms. In the last few seconds, the arms close in beneath its catch points."
+ },
+ {
+  "id": "d7",
+  "act": "tower",
+  "pause": 0.3,
+  "text": "The engines shut down, and the ship's weight comes down onto the arms."
+ },
+ {
+  "id": "d8",
+  "act": "tower",
+  "pause": 0.4,
+  "text": "SpaceX hasn't published a detailed drawing of how the ship's catch points meet the arms, so what you're seeing here is our conceptual version."
+ },
+ {
+  "id": "d9",
+  "act": "tower",
+  "pause": 0.3,
+  "text": "But it has rehearsed part of this on the ground. In September, according to NASA Spaceflight, the arms at Starbase's second pad lifted Ship forty-two, the Flight Fifteen ship, into a simulated catch position."
+ },
+ {
+  "id": "d10",
+  "act": "tower",
+  "pause": 0.3,
+  "text": "That matters, because the ship isn't shaped like the booster. It's shorter, it has flaps sticking out, and its heat shield wraps around one side."
+ },
+ {
+  "id": "d11",
+  "act": "tower",
+  "pause": 0.3,
+  "text": "The arms have to close around all of that without hitting any of it."
+ },
+ {
+  "id": "d12",
+  "act": "tower",
+  "pause": 0.9,
+  "text": "So everything has to arrive together. The right place, the right height, the right speed, pointing the right way."
+ },
+ {
+  "id": "e1",
+  "act": "risk",
+  "pause": 0.3,
+  "text": "So what could go wrong? Here, we're reasoning from geometry, because SpaceX hasn't published its rules for calling off a catch."
+ },
+ {
+  "id": "e2",
+  "act": "risk",
+  "pause": 0.3,
+  "text": "If the ship arrives a little too far out, its catch points won't be over the arms."
+ },
+ {
+  "id": "e3",
+  "act": "risk",
+  "pause": 0.3,
+  "text": "If it's leaning, one side touches down before the other."
+ },
+ {
+  "id": "e4",
+  "act": "risk",
+  "pause": 0.3,
+  "text": "If it's still coming down too fast, the tower has to soak up more energy."
+ },
+ {
+  "id": "e5",
+  "act": "risk",
+  "pause": 0.3,
+  "text": "And if the tower isn't ready, there's nothing to land on at all."
+ },
+ {
+  "id": "e6",
+  "act": "risk",
+  "pause": 0.3,
+  "text": "That last one has actually happened. On Flight Six, a booster catch was called off, and the booster came down in the Gulf instead."
+ },
+ {
+  "id": "e7",
+  "act": "risk",
+  "pause": 0.3,
+  "text": "It would make sense for the ship to have a similar way out. But the details aren't public."
+ },
+ {
+  "id": "e8",
+  "act": "risk",
+  "pause": 0.9,
+  "text": "And on earlier test flights, ships have been lost on the way up and on the way down. The ship has always been the harder half of this program."
+ },
+ {
+  "id": "f1",
+  "act": "payoff",
+  "pause": 0.3,
+  "text": "So if everything goes right, Flight Fifteen looks something like this."
+ },
+ {
+  "id": "f2",
+  "act": "payoff",
+  "pause": 0.3,
+  "text": "Liftoff. The booster separates, turns back, and minutes later, it's caught."
+ },
+ {
+  "id": "f3",
+  "act": "payoff",
+  "pause": 0.3,
+  "text": "The ship keeps going, all the way to space."
+ },
+ {
+  "id": "f4",
+  "act": "payoff",
+  "pause": 0.3,
+  "text": "Later, it falls back through the heat, flips upright, and drops between a pair of arms."
+ },
+ {
+  "id": "f5",
+  "act": "payoff",
+  "pause": 0.3,
+  "text": "Musk said he thinks success is more likely than not. He also said there are more flights lined up if it fails."
+ },
+ {
+  "id": "f6",
+  "act": "payoff",
+  "pause": 0.3,
+  "text": "And even a perfect catch is not the finish line. To make this routine, a caught ship has to be inspected, refueled, and flown again, without being rebuilt."
+ },
+ {
+  "id": "f7",
+  "act": "payoff",
+  "pause": 0.4,
+  "text": "But if both catches work, Musk says it would be the first time an orbital rocket has ever been recovered in full."
+ },
+ {
+  "id": "f8",
+  "act": "payoff",
+  "pause": 0.35,
+  "text": "For as long as there have been rockets, they've been built to be thrown away."
+ },
+ {
+  "id": "f9",
+  "act": "payoff",
+  "pause": 2.2,
+  "text": "This one is built to be caught."
+ }
+]
