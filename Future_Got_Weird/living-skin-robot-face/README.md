@@ -1,6 +1,48 @@
 # Future Got Weird: This Robot Is Wearing Living Human Skin
 
-## V3 (coherence and quality pass): current
+## V4 (final continuity pass): current
+
+**Status (22 Oct 2026):** the V4 final review and native 4K master are rendered and checked as frames and
+measurements:
+- transition list;
+- frame strips at every former cut;
+- V3-vs-V4 sheets;
+- motion scan;
+- phone sheet;
+- native frames;
+- ASR and audio identity.
+
+Not published. Nobody has yet watched it in real time with sound.
+
+**Locked.** Script, voice, approved mix, captions (and SRT) and the 27.2 s runtime are unchanged, and V3's art is
+kept. This pass changes only camera continuity and sequencing:
+- one continuous face shot;
+- one continuous finger world, with a single deliberate cut between the experiments at 10.4 s;
+- a direct boundary match into the loop.
+
+| Deliverable | File |
+|---|---|
+| V4 final review: 1080×1920, 30 fps, 816 frames, 27.200 s | `exports/FGW_Living_Skin_V4_FINAL_REVIEW_1080x1920.mp4` |
+| V4 final master: 2160×3840 native (vectors at 2×), 30 fps, 27.200 s | `exports/FGW_Living_Skin_V4_FINAL_MASTER_2160x3840.mp4` |
+| Transition list (keep, merge or remove) | `production/V4_TRANSITIONS.md` |
+| Change log (transitions, measurements, audio checks, limitations) | `production/V4_CHANGE_LOG.md` |
+| V4 source | `source/src/v4/` (composition `LivingSkinV4`) |
+| V4 QA | `qa/v4/` |
+| Standing FGW editing rules (for future Shorts) | `../FGW_EDITING_RULES.md` |
+
+### Rebuild V4
+
+    cd Future_Got_Weird/living-skin-robot-face
+    (cd source && npm ci)
+    cp audio/mix/FGW_Living_Skin_mix_APPROVED.wav source/public/audio/mix_approved.wav
+    (cd source && npx remotion render src/index.ts LivingSkinV4 ../exports/FGW_Living_Skin_V4_FINAL_REVIEW_1080x1920.mp4 --props='{"audio":"mix"}' --image-format=png --gop=15 --crf=12 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && npx remotion render src/index.ts LivingSkinV4 ../exports/FGW_Living_Skin_V4_FINAL_MASTER_2160x3840.mp4 --scale=2 --props='{"audio":"mix"}' --image-format=png --gop=15 --crf=14 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    python3 tools/qa.py exports/FGW_Living_Skin_V4_FINAL_REVIEW_1080x1920.mp4 /tmp/asr qa/v4/v4_review
+    python3 tools/qa_v4_sheets.py
+
+---
+
+## V3 (coherence and quality pass): kept as delivered
 
 **Status (22 Oct 2026):** V3 review and native 4K master rendered and checked as frames and measurements: frame
 strips, V2-vs-V3 sheets, a motion scan, ASR and audio identity. Not published. Superseded by the V4 continuity pass
