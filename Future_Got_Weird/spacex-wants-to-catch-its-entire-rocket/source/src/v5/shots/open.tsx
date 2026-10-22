@@ -157,11 +157,11 @@ export const openShots = (): Shot[] => {
   shots.push({
     id: 'O9_supportToRail', a: o9a, b: s2 - 0.18, tin: 'cut',
     render: (t) => {
-      const above = lerp(16, 1.4, ep(t, o9a, tSecond + 0.8));
+      const above = lerp(16, 1.4, ep(t, o9a, tSecond + 0.8)) - 0.9 * prog(t, tSecond + 0.8, s2); // keeps creeping down through the error
       const err = ep(t, tMiss - 0.05, tMiss + 0.75) * (1 - ep(t, tCatcher - 0.2, tCatcher + 0.8));
       const dz = -1.25 * err;
       const fitW: V3 = [VX, CAR + RAIL_DY + above + 0.6, ARM_Z - 1.3];
-      const c: Cam3 = {at: [VX - 2, CAR + RAIL_DY + 2 + above * 0.4, ARM_Z - 2], z: lerp(9, 19, ep(t, o9a, tSecond + 0.8)) + 2 * ep(t, tMiss - 0.3, tMiss + 0.6), yaw: -34, pitch: -14};
+      const c: Cam3 = {at: [VX - 2, CAR + RAIL_DY + 2 + above * 0.4, ARM_Z - 2], z: lerp(9, 19, ep(t, o9a, tSecond + 0.8)) + 2 * ep(t, tMiss - 0.3, tMiss + 0.6) + 2.5 * prog(t, tMiss + 0.6, s2), yaw: lerp(-34, -30, prog(t, tMiss, s2)), pitch: -14};
       const s: ArmState = {carY: CAR, open: 4};
       const edge = proj(c, [VX, CAR + RAIL_DY, ARM_Z - 1.3 - 0.4]);
       return (

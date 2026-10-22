@@ -4,5 +4,23 @@
  "duration_s": 251.17,
  "cues": 74,
  "speechband_voice_over_bed_db_min": -5.1,
- "speechband_voice_over_bed_db_median": 14.1
+ "speechband_voice_over_bed_db_median": 14.1,
+ "worst_windows_s": [
+  [
+   83.0,
+   -5.1
+  ],
+  [
+   223.0,
+   -0.8
+  ],
+  [
+   12.0,
+   0.7
+  ],
+  [
+   99.0,
+   1.0
+  ]
+ ]
 }

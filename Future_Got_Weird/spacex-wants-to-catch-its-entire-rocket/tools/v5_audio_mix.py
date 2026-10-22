@@ -50,7 +50,7 @@ add(wt('N0_05', 'return') - 0.05, 'boom', 1.4, 0.5); add(ls('N0_05') - 0.1, 'rum
 add(ls('N0_06') - 0.1, 'rumble', ls('S2_00') - ls('N0_06') - 0.1, 0.35); add(wt('N0_06', 'second') - 0.1, 'servo', 1.2, 0.25)
 # S2
 tLoad = wt('S2_02', 'load')
-add(ls('S2_00') - 0.2, 'rumble', tLoad - ls('S2_00') + 0.3, 0.5); add(tLoad + 0.05, 'clunk', 1.4, 0.9); add(ls('S3_00') - 1.15, 'clunk', 1.0, 0.55)  # B7 settles onto the rails
+add(ls('S2_00') - 0.2, 'rumble', tLoad - ls('S2_00') + 0.3, 0.5); add(tLoad + 0.05, 'clunk', 1.4, 0.9); add(ls('S3_00') - 1.15, 'clunk', 1.0, 0.3)  # B7 settles onto the rails
 add(wt('S2_03', 'top') - 0.2, 'pop', 0.12, 0.4); add(wt('S2_04', 'sticks') - 0.2, 'pop', 0.14, 0.45)
 add(wt('S2_06', 'gently') - 0.3, 'servo', 1.0, 0.2); add(wt('S2_06', 'transfer') - 0.05, 'clunk', 1.0, 0.45)
 add(wt('S2_07', 'move') - 0.1, 'servo', 1.5, 0.5); add(wt('S2_07', 'crane') - 0.2, 'rumble', ls('S2_08') - wt('S2_07', 'crane') + 0.2, 0.55)
@@ -91,7 +91,7 @@ add(tLaunch, 'boom', 1.6, 0.5); add(tLaunch, 'rumble', 5.0, 0.6)
 tMeet = wt('S9_04', 'meet'); contact = tMeet + 0.15
 tR = ls('S9_03') - 0.3
 tLoadE = wt('S9_04', 'load')
-add(tLaunch + 5.0, 'wind', tR - tLaunch - 5.0, 0.15); add(wt('S9_02', 'flaps') - 0.1, 'servo', 1.2, 0.2)
+add(tLaunch + 5.0, 'wind', tR - tLaunch - 5.0, 0.15); add(wt('S9_02', 'flaps') - 0.1, 'servo', 1.2, 0.08)
 add(tR + 0.05, 'boom', 1.6, 0.3); add(tR + 0.05, 'rumble', tLoadE + 0.5 - tR, 0.25)
 add(contact - 1.6, 'servo', 1.4, 0.08)
 add(contact, 'clunk', 1.6, 1.0); add(tLoadE - 0.05, 'clunk', 1.0, 0.3)
@@ -160,12 +160,13 @@ sf.write(out, mix[:NF].astype(np.float32), SR, subtype='PCM_24')
 # measurement: ffmpeg ebur128 with true peak
 r = subprocess.run(['ffmpeg', '-nostats', '-i', out, '-af', 'ebur128=peak=true', '-f', 'null', '-'], capture_output=True, text=True).stderr
 I = float(re.findall(r'I:\s+(-?[\d.]+) LUFS', r)[-1]); TP = float(re.findall(r'Peak:\s+(-?[\d.]+) dBFS', r)[-1])
-rows = []
+rows, where = [], []
 for i in range(0, N - SR, SR):
     if np.sqrt((v[i:i + SR] ** 2).mean()) > 0.02:
         vv = bp(v[i:i + SR], 300, 4000); bb = bp((music + sfx)[i:i + SR].mean(1), 300, 4000)
-        rows.append(20 * np.log10(np.sqrt((vv ** 2).mean()) / (np.sqrt((bb ** 2).mean()) + 1e-9)))
+        rows.append(20 * np.log10(np.sqrt((vv ** 2).mean()) / (np.sqrt((bb ** 2).mean()) + 1e-9))); where.append(i / SR)
 meas = {'integrated_lufs': I, 'true_peak_dbtp': TP, 'duration_s': round(N / SR, 3), 'cues': len(c),
-        'speechband_voice_over_bed_db_min': round(min(rows), 1), 'speechband_voice_over_bed_db_median': round(float(np.median(rows)), 1)}
+        'speechband_voice_over_bed_db_min': round(min(rows), 1), 'speechband_voice_over_bed_db_median': round(float(np.median(rows)), 1),
+        'worst_windows_s': [(where[k], round(rows[k], 1)) for k in np.argsort(rows)[:4]]}
 json.dump(meas, open(f'{ROOT}/audio/v5/mix/mix_measure.json', 'w'), indent=1)
 print(meas)

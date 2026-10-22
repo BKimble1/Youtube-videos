@@ -1,0 +1,101 @@
+{
+ "file": "exports/FGW_Starship_Dual_Catch_V5_FINAL_REVIEW_1080p.mp4",
+ "probe": {
+  "programs": [],
+  "streams": [
+   {
+    "codec_name": "h264",
+    "width": 1920,
+    "height": 1080,
+    "r_frame_rate": "30/1",
+    "bit_rate": "4294351",
+    "nb_frames": "7445"
+   },
+   {
+    "codec_name": "aac",
+    "sample_rate": "48000",
+    "channels": 2,
+    "r_frame_rate": "0/0",
+    "bit_rate": "286734",
+    "nb_frames": "11633"
+   }
+  ],
+  "format": {
+   "duration": "248.166667"
+  }
+ },
+ "integrated_lufs": -15.0,
+ "true_peak_dbtp": -1.7,
+ "black_stretches": [],
+ "freezes_over_1_5s": [
+  [
+   "150.133",
+   "1.7"
+  ],
+  [
+   "192.233",
+   "1.63333"
+  ],
+  [
+   "233.867",
+   "4.03333"
+  ],
+  [
+   "237.9",
+   "6.73333"
+  ]
+ ],
+ "audio_silences_over_1_5s": [],
+ "end_screen": {
+  "start_s": 233.17,
+  "end_s": 248.17,
+  "panels_xywh": [
+   [
+    180,
+    360,
+    660,
+    371
+   ],
+   [
+    1080,
+    360,
+    660,
+    371
+   ]
+  ],
+  "panel_mean_abs_diff_entrance_settled_vs_last_frame": [
+   0.064,
+   0.023
+  ]
+ },
+ "joins_checked": {
+  "join_O1_realCatch__O2_shipToArms": 2.52,
+  "join_O4_twoCatches__O5_realStackBooster": 12.66,
+  "join_O5_realStackBooster__O6_realStackShip": 14.59,
+  "join_O6_realStackShip__O7_realSeparation": 16.9,
+  "join_O7_realSeparation__O9_supportToRail": 19.41,
+  "join_O9_supportToRail__B1_realApproach": 25.49,
+  "join_B1_realApproach__B2_contact": 32.5,
+  "join_C1_orbit__C4_realPlasma": 67.74,
+  "join_C4_realPlasma__C5_tiles": 73.17,
+  "join_C9_broadside__D1_realOceanFlip": 90.59,
+  "join_D1_realOceanFlip__D5_target": 104.53,
+  "join_D6_converge__E1_realTower": 112.72,
+  "join_E1_realTower__E2_moves": 116.13,
+  "join_E5_shorterArms__E5b_realBoosterTop": 130.46,
+  "join_E5b_realBoosterTop__E5c_finsDrawn": 133.09,
+  "join_H2_backOnMount__H3_realHeld": 199.48,
+  "join_H3_realHeld__H4a_realShip40": 202.9,
+  "join_H4a_realShip40__H4b_realTiles": 205.9,
+  "join_H4b_realTiles__H4c_engineCheck": 208.7,
+  "join_H5_restack__H6_realLaunch": 213.49,
+  "join_H6_realLaunch__I1_finalHandoff": 218.49,
+  "flip_ocean_relight": 91.39,
+  "closing_relight_flip": 225.69,
+  "closing_load_shutdown": 230.45,
+  "support_to_rail_D6": 108.19,
+  "handoff_E6": 135.75,
+  "closing_contact": 229.49,
+  "endscreen_entrance": 232.97
+ }
+}
