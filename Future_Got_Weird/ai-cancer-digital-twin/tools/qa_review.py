@@ -3,6 +3,7 @@
 run on the file itself).
 
     python3 tools/qa_review.py exports/FGW_AI_Cancer_DigitalTwin_REVIEW_1080p.mp4 qa/review
+    python3 tools/qa_review.py exports/FGW_AI_Cancer_V2_REVIEW_1080p.mp4 v2/qa/review v2/production/shots_v2.json   (V2)
 
 Writes into the out dir: results.json, first15.png (every 0.5 s), film.png (every 2 s), strips/*.png (5 frames around
 every cut: -0.3, -1f, 0, +1f, +0.3 s), and prints a summary.
@@ -45,6 +46,15 @@ d = np.abs(np.diff(fr6, axis=0)).mean(axis=(1, 2))
 per_s = [round(float(d[i * 6:(i + 1) * 6].mean()), 2) for i in range(len(d) // 6)]
 res['activity_per_second'] = per_s
 res['low_activity_seconds'] = [i for i, x in enumerate(per_s) if x < 0.35]
+# single-frame jumps (snaps / pops): full-rate difference far above its local median
+raw30 = subprocess.check_output(['ffmpeg', '-v', 'error', '-i', src, '-vf', f'scale={W}:{H},format=gray', '-f', 'rawvideo', '-'])
+f30 = np.frombuffer(raw30, np.uint8).reshape(-1, H, W).astype(np.float32)
+d30 = np.abs(np.diff(f30, axis=0)).mean(axis=(1, 2))
+from scipy.ndimage import median_filter
+med = median_filter(d30, size=31)
+jumps = [(round((i + 1) / 30, 3), round(float(d30[i]), 2), round(float(med[i]), 2)) for i in range(len(d30)) if d30[i] > max(6.0, 3.5 * med[i])]
+res['frame_jumps'] = jumps
+del raw30, f30
 
 def grab(t, path, w=480):
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{max(0, t):.3f}', '-i', src, '-frames:v', '1', '-vf', f'scale={w}:-1', path], check=True)
@@ -69,10 +79,18 @@ times = [i * 2.0 for i in range(int(dur / 2))]
 per = -(-len(times) // 3)
 for k in range(0, len(times), per):
     sheet(times[k:k + per], f'{out}/film_{k // per}.png', 6, 320)
-cuts = json.load(open('audio/sfx_cues.json'))['cuts']
+if len(sys.argv) > 3:  # V2: shot list with dissolves; strip each hard cut at t0, each dissolve at its start and end
+    cuts = []
+    for sh in json.load(open(sys.argv[3]))['shots'][1:]:
+        if sh['fade'] > 0:
+            cuts += [(sh['t0'], sh['id'] + '_in0'), (sh['t0'] + sh['fade'], sh['id'] + '_in1')]
+        else:
+            cuts.append((sh['t0'], sh['id']))
+else:
+    cuts = json.load(open('audio/sfx_cues.json'))['cuts']
 for i, (t, name) in enumerate(cuts):
     safe = ''.join(ch if ch.isalnum() else '_' for ch in name)[:40]
     sheet([t - 0.3, t - 1 / 30, t + 0.01, t + 1 / 30 + 0.01, t + 0.3], f'{out}/strips/{i:02d}_{safe}.png', 5, 320)
 json.dump(res, open(f'{out}/results.json', 'w'), indent=1)
 print(json.dumps({k: res[k] for k in ('file', 'audio')}, indent=1))
-print('black:', res['black']); print('freeze:', res['freeze']); print('low-activity seconds:', res['low_activity_seconds'])
+print('frame jumps (t, diff, local median):', res['frame_jumps']); print('black:', res['black']); print('freeze:', res['freeze']); print('low-activity seconds:', res['low_activity_seconds'])
