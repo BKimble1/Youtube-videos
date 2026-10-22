@@ -2,7 +2,9 @@
 
 ## V3 (coherence and quality pass): current
 
-**Status (22 Oct 2026):** in progress. The V3 source is in place; the renders and QA are pending.
+**Status (22 Oct 2026):** V3 review and native 4K master rendered and checked as frames and measurements: frame
+strips, V2-vs-V3 sheets, a motion scan, ASR and audio identity. Not published. Superseded by the V4 continuity pass
+(in progress); V3 is kept as delivered.
 
 **Audio is locked.** The approved mix is reused unchanged: the same words, voice, timing and 27.2 s runtime as V1
 and V2.

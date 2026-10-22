@@ -9,7 +9,7 @@ where the quality holds. V1 and V2 files and source are untouched. V2 is composi
 | File | Dimensions / runtime |
 |---|---|
 | `exports/FGW_Living_Skin_V3_REVIEW_1080x1920.mp4` | 1080×1920, 30 fps, 816 frames, **27.200 s**, H.264 High (CRF 12, keyframe every 0.5 s), BT.709, plus AAC 320 kb/s. SHA-256 `731ac29a…29ff` |
-| `exports/FGW_Living_Skin_V3_MASTER_2160x3840.mp4` | 2160×3840 native, rendered at 2× from the vector source (not upscaled); 30 fps, 816 frames, 27.200 s, CRF 14. SHA-256 `@@MASTER_SHA@@` |
+| `exports/FGW_Living_Skin_V3_MASTER_2160x3840.mp4` | 2160×3840 native, rendered at 2× from the vector source (not upscaled); 30 fps, 816 frames, 27.200 s, CRF 14. Same checks as the review: identical audio stream `5ce784d1…`, 0 ms offset, transcript match 1.0, −14.5 LUFS. SHA-256 `ff7fada7…ba1d` |
 
 **Source.**
 - `source/src/v3/`, composition `LivingSkinV3`: `LivingSkinV3.tsx`, `Face3.tsx`, `Anchor3.tsx`, `Finger3.tsx`,
