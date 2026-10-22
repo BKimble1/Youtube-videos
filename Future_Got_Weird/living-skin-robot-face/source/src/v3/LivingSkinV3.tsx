@@ -262,7 +262,7 @@ const XF = 0.1; // half-length of the matched dissolve
 
 const RepairShot: React.FC<{t: number}> = ({t}) => {
   const p = dayP(t);
-  const tone = ramp(SH3.repair + 0.02, SH3.repair + 0.3, t) * (1 - ramp(SH3.back - 0.4, SH3.back, t, eio));
+  const tone = ramp(SH3.repair + 0.04, SH3.repair + 0.5, t, eio) * (1 - ramp(SH3.back - 0.4, SH3.back, t, eio));
   const m0 = repairMap3(0);
   const over = camAt({x: 0, y: 10}, {x: 540, y: 880}, 2.25);
   const H = (tt: number) => heroPos3(dayP(tt));
@@ -314,7 +314,7 @@ const FingerEndShot: React.FC<{t: number}> = ({t}) => {
         <g transform={camT(cam)}>
           <FingerSide th={th} id="f3e" cut={t < SH3.mech ? 0 : cut} />
           <CollarShadow th={th} />
-          <RepairedSide th={th} a={1} />
+          <RepairedSide th={th} a={1 - (t < SH3.mech ? 0 : ramp(FX.clack - 0.02, FX.clack + 0.12, t))} />
         </g>
       </svg>
       <DayCounter p={1} a={fadeWin(t, SH3.back - 0.3, SH3.back + 0.8, 0.15)} />
