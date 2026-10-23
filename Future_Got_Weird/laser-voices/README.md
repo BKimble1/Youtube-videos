@@ -1,5 +1,52 @@
 # Future Got Weird: This Laser Makes You Hear Voices
 
+## V2 (visual rebuild on the locked V1 audio)
+
+**Status (23 Oct 2026):**
+- V2 replaces the picture only.
+- The sound is the approved V1 audio stream, copied unchanged into the V2 files (packet-for-packet; see
+  `production/V2_QA_REPORT.md`).
+- **Not final. Not published.** V1 below is kept intact.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920, 30 fps, 1022 frames, burned-in captions, V1 AAC stream copied in | `exports/FGW_Laser_Voices_V2_REVIEW_1080x1920.mp4` |
+| Master: 2160×3840 native (vectors at 2×), V1 master's AAC stream copied in | `exports/FGW_Laser_Voices_V2_MASTER_2160x3840.mp4` |
+| Captions (identical words and times to V1) | `captions/FGW_Laser_Voices_V2.srt` |
+| QA and change report (before/after frames, audio proof, known defects) | `production/V2_QA_REPORT.md`, `qa/v2/` |
+| Editable source | `source/src/v2/` (composition `LaserVoicesV2`, still `V2Still`, cast sheet `V2Cast`) |
+
+**V2 source (`source/src/v2/`):**
+- `art/LeadHead.tsx`: the lead's head, ported from Infrared Contacts `art/Lead.tsx`, plus a visible ear and the
+  expression controls.
+- `art/Clerk.tsx`: the companion's head, ported from the Contacts `Sender`, on a new standing/walking body.
+- `art/LeadFigure.tsx`, `art/limb.tsx`, `art/Bits.tsx`: the new standing body, IK limbs, hands, shoes, the Crew cup.
+- `lib2.ts`: maths and the Contacts nested-level camera, plus a continuous-velocity key interpolator.
+- `world2.ts`: the plan in metres, the one fixed projection, the locked message gate and footsteps.
+- `story2.ts`: every state, including the clerk's walk solved against the locked audio.
+- `cam2.ts`: camera keys and level matrices.
+- `Room2.tsx`, `Transmitter.tsx`, `Mechanism2.tsx`, `Captions2.tsx`, `Film2.tsx`: the room, the laser head and its
+  section, the air mechanism, the captions and the composition.
+
+**V2 rebuild:**
+
+    cd Future_Got_Weird/laser-voices
+    (cd source && npm ci)
+    # 1. the picture/audio gate check: the picture's received state must equal audio/cues.json on every frame
+    source/node_modules/.bin/esbuild tools/check_v2.ts --bundle --platform=node --format=esm --loader:.css=empty --outfile=/tmp/cv2.mjs && node /tmp/cv2.mjs
+    # 2. picture only
+    (cd source && npx remotion render src/index.ts LaserVoicesV2 /tmp/v2_1080_silent.mp4 --muted --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    (cd source && npx remotion render src/index.ts LaserVoicesV2 /tmp/v2_4k_silent.mp4 --scale=2 --muted --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    # 3. copy the approved V1 audio stream in (no re-encode) and verify it packet by packet
+    python3 tools/mux_verify_v2.py /tmp/v2_1080_silent.mp4 exports/FGW_Laser_Voices_V1_REVIEW_1080x1920.mp4 exports/FGW_Laser_Voices_V2_REVIEW_1080x1920.mp4 qa/v2/audio_review.json
+    python3 tools/mux_verify_v2.py /tmp/v2_4k_silent.mp4 exports/FGW_Laser_Voices_V1_MASTER_2160x3840.mp4 exports/FGW_Laser_Voices_V2_MASTER_2160x3840.mp4 qa/v2/audio_master.json
+    # 4. QA
+    QA_MIX=audio/mix/FGW_Laser_Voices_V1_mix.wav python3 tools/qa.py exports/FGW_Laser_Voices_V2_REVIEW_1080x1920.mp4 <vosk_model_dir> qa/v2/review
+    python3 tools/motion_scan.py exports/FGW_Laser_Voices_V2_REVIEW_1080x1920.mp4 qa/v2/motion_scan.json
+    python3 tools/strips.py exports/FGW_Laser_Voices_V2_REVIEW_1080x1920.mp4 qa/v2/strips block:26.9:27.5:1 clear:31.7:32.2:1
+
+---
+
 ## V1 (first review cut)
 
 **Status (23 Oct 2026):**

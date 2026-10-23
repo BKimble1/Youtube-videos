@@ -74,3 +74,27 @@ a reviewer may want the description to mention it.
   No droplets, steam, burning, glowing skin, or waves through the skull.
 - **Labels.** Only the path legend, "H₂O" (2 s) and "8 FT" (once, in scene space). No citations or source bubbles on
   screen; sources are here and in the description draft.
+
+## V2 depiction changes (23 Oct 2026)
+
+The claims and sources are unchanged; only the picture was rebuilt (`production/V2_QA_REPORT.md`).
+
+- **Geometry.**
+  - **The path:** the exit is 2.44 m (8 ft) from the lead's exposed ear and rises from 0.70 m to the ear's height.
+  - **The crossing:** the clerk crosses half way, 1.22 m from the exit. Her torso stops the path on the frames where the
+    locked mix cuts the message (815–957).
+- **Invisible beam.** There is no labelled overlay now. The dashed amber path appears only while it explains
+  something: the hook, the trip to the laser head and back, and the crossing. It never appears in the "invisible"
+  view.
+- **Sound generation.**
+  - **What is shown:** a dive into the air just outside the ear (no magnifier or inset). One amber packet is absorbed
+    by an H₂O molecule; the molecule and its neighbours jostle faster; the warm pocket expands; and pressure fronts
+    (teal and cream bands) travel to the ear opening.
+  - **The same simplification as V1:** one molecule absorbing a packet stands in for the absorbed energy heating a
+    small volume of air. Water is over-represented among the drawn molecules so one absorber can be followed.
+- **Sweep.**
+  - **The mirror:** the laser head's section shows a laser module, the scanning mirror on its galvo, and the exit. The
+    mirror swing is exaggerated and slowed.
+  - **At the listener:** small sound wavelets along the outgoing beam are faint along the path and gather only at the
+    listener (a picture of the "concentrates the sound where you're standing" claim, not a simulation).
+- **Labels.** "8 FT" on the floor once (21.7–23.7 s). There is no other on-screen text except the captions.
