@@ -116,7 +116,7 @@ back, and nothing overshoots.
 
 ### Story and cameras (`v3/story3.ts`, `v3/FilmV3.tsx`)
 
-Six shots (V2 had seventeen). Their in–out points are below. Several are long takes containing many beats.
+Six camera passages (V2 had seventeen shots), with only three hard cuts. Several are long takes containing many beats.
 
 | Shot | In–out | What happens |
 |---|---|---|
@@ -151,7 +151,65 @@ The V2 loop-continuous bed, plus 75 effects placed from the V3 picture:
 
 ## QA results
 
-QA_RESULTS_PLACEHOLDER
+**Rig and motion check** (`tools/rig_qa_v3.ts` → `qa/v3/rig_qa.json`). Every one of the 878 frames, both
+characters, from the source's own pose functions.
+
+Anatomy: no frame flags any of these:
+- a knee not tracking over its foot;
+- an elbow pointing forward into the chest;
+- an elbow or wrist inside the torso (this check was fixed in the hand-off);
+- a foot below the floor.
+
+The one remaining flag: a sprinting push-off foot 11 cm short of its plant on a single frame (28.93 s), just before it
+lifts.
+
+The jerk check covers joint and camera accelerations inside shots:
+- **Found and fixed:** pelvis snaps when feet changed between contact and swing, a braking sequence with
+  overlapping steps, an elbow flip in the cap-scratch, and camera paths through her arms and the guard's back.
+- **Remaining:** running knees and ankles (impact accelerations at landings, as they should be) and the camera's
+  intended accelerations into and out of moves.
+
+**Decoded MP4** (`qa/v3/review_qa.json`, `qa/v3/motion_scan.json`).
+- **Video stream.**
+  - h264 High, 1080×1920, 30/1 fps, 878 frames, 29.269 s.
+  - yuv420p, BT.709.
+  - Keyframes: 60, the largest gap 0.5 s.
+- **Audio stream.** AAC 48000 Hz, 2 channels.
+- **Loudness.** -14.6 LUFS integrated, LRA 4.8 LU, true peak -2.5 dBFS. The voice sits 28.6 dB above the rest in the phone band.
+- **Audio identity.**
+  - The MP4 matches `mix_v3.wav` at 0.0 ms offset, correlation 0.99996.
+  - The voice stem matches the source narration at correlation 1.0.
+- **Narration recognition** (Vosk on the MP4's own audio).
+  - WER 0.065.
+  - The differences ("raised this" heard as "raise the", "its"/"it's", "mid air") are the same three as V1 and V2 on the
+    same recording.
+  - 19/21 caption windows hold their words; the two misses are those same mishearings.
+- **Black and frozen frames.** Black: 0. Freezes of 1 s or more: 0.
+- **Cuts and jerks.**
+  - Frame-to-frame change averages 5.73.
+  - 3 spikes, exactly the three hard cuts (3.10, 18.50, 20.75 s). F→G and G→H are continuous moves.
+  - Spikes found in the first full render were removed by the fixes above. They were at 9.73 s and 10.5 s (a camera
+    path through her arms; a figure partly behind the camera) and 14.67 s (the pull-back through the guard).
+- **Holds.** The only near-still moments are 0.33 s at 20.43 s (the hand held out at full extension) and 0.37 s at
+  22.63 s (his hesitation before reaching on). Both are intended performance beats.
+- **Loop seam.** Last frame to first: mean absolute change 8.27, against
+  5.44 and 5.9 between consecutive frames
+  just before it.
+  - The seam is no bigger a change than a normal frame step in this moving shot.
+  - `qa/v3/strips/loop_seam.png` shows the last 1.5 s running into the first 1.5 s.
+- **Typography.** I checked the 32-frame contact sheet (`qa/v3/review_contact_sheet.png`) and the phone sheet with an
+  approximate Shorts UI mask (`qa/v3/review_phone_ui_sheet.png`). Only the narration captions appear: no callouts,
+  pills, bubbles, arrows or headings. The captions sit clear of the UI bands.
+
+**Editorial check** (against the brief's section G, by inspecting frames, not by real-time viewing).
+- **Continuous animation.** The crouch, stand, turn, reach and run are animated through, with no pose swaps.
+- **Anatomy.** Within the stylised look, the joints are coherent in the model sheets and in every frame of the rig
+  check.
+- **Transitions.** Smoother than V2: 3 cuts instead of 16, and the 3 moving-camera hand-offs are continuous.
+- **Clarity without sound.** The picture carries the story: she hides from him, the shield hides her only from his
+  line, he sees only a hand, she lowers it, he reaches for his cuffs, she runs.
+- **The optics.** Explained by light in the real scene, not by labels.
+- **The ending.** A new payoff (the cuffs) flows into the opening.
 
 ## Known limitations
 
