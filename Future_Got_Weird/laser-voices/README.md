@@ -1,5 +1,61 @@
 # Future Got Weird: This Laser Makes You Hear Voices
 
+## V3 (motion, character, sound-design and loop polish)
+
+**Status (23 Oct 2026):**
+- The script, narration recording, words, timing, captions and story order are unchanged.
+- Changed: the transmitted-message effect (the old murmur is removed and replaced by a short nonverbal "alien"
+  motif), the staging and camera, the character construction, and the loop.
+- **Not final. Not published.** Nobody has watched or listened in real time. The change list, the
+  narration-preservation proof, the audio measurements, the transition list and the known issues are in
+  `production/V3_QA_REPORT.md`.
+- V1 and V2 below are kept intact.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920, 30 fps, 1022 frames, burned-in captions, V3 mix (AAC 48 kHz) | `exports/FGW_Laser_Voices_V3_REVIEW_1080x1920.mp4` |
+| Master: 2160×3840 native (vectors at 2×), the same cut and mix | `exports/FGW_Laser_Voices_V3_MASTER_2160x3840.mp4` |
+| Captions (identical to V1/V2) | `captions/FGW_Laser_Voices_V3.srt` |
+| Mix, motif stem, cue record, measurements | `audio/mix/FGW_Laser_Voices_V3_mix.wav`, `audio/mix/stems_v3/`, `audio/motif_cues_v3.json`, `audio/mix/mix_measure_v3.json` |
+| QA evidence | `qa/v3/` (QA JSON, motion scan, strips, loop ×3, native crops, V2/V3 and hook sheets, phone UI sheet) |
+| Editable source | `source/src/v3/` (composition `LaserVoicesV3`, still `V3Still`, cast sheet `V3Cast`) |
+
+**V3 source (`source/src/v3/`):**
+- `world3.ts`: the plan, which places the laser on a post on a bench almost in line in front of the listener, and the
+  higher fixed projection.
+- `story3.ts`: every performance curve, written in loop time near the seam; the motif instances (`MOTIFS`,
+  `motifEnv`); the companion's walk, solved to the existing footsteps and the locked block frames.
+- `occlude3.ts`: her on-screen outline, and where the drawn path meets it.
+- `cam3.ts`: the camera keys, wrapped around the loop seam, with box-fitted framings.
+- `Transmitter.tsx`: the laser head in true perspective, with a sliding cover, the module, the mirror on its motor
+  shaft and the exit window.
+- `Mechanism3.tsx`: the air beside the ear.
+- `art/LeadFigure.tsx`, `art/Clerk.tsx`, `art/limb.tsx` (`Arm`): the rebuilt bodies (heads unchanged).
+- `Film3.tsx`, `Room3.tsx`, `Captions3.tsx`.
+
+**V3 rebuild:**
+
+    cd Future_Got_Weird/laser-voices
+    (cd source && npm ci)
+    B="source/node_modules/.bin/esbuild --bundle --platform=node --format=esm --loader:.css=empty --log-level=warning"
+    # 1. walk solve (prints X_ENTER/X_EXIT for story3.ts) and the frame-by-frame obstruction/seam check
+    $B tools/solve_v3.ts --outfile=/tmp/sv3.mjs && node /tmp/sv3.mjs
+    $B tools/check_v3.ts --outfile=/tmp/cv3.mjs && node /tmp/cv3.mjs > qa/v3/check_v3.json
+    # 2. the picture's cues, then the mix (locked narration + V1 bed stems + the new motif)
+    $B tools/export_cues_v3.ts --outfile=/tmp/ec3.mjs && node /tmp/ec3.mjs audio/cues_v3.json
+    python3 tools/make_audio_v3.py
+    # 3. picture only, then mux the mix (AAC) and verify offset/correlation
+    (cd source && npx remotion render src/index.ts LaserVoicesV3 /tmp/v3_1080_silent.mp4 --muted --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    (cd source && npx remotion render src/index.ts LaserVoicesV3 /tmp/v3_4k_silent.mp4 --scale=2 --muted --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    python3 tools/mux_v3.py /tmp/v3_1080_silent.mp4 audio/mix/FGW_Laser_Voices_V3_mix.wav exports/FGW_Laser_Voices_V3_REVIEW_1080x1920.mp4 qa/v3/mux_review.json
+    python3 tools/mux_v3.py /tmp/v3_4k_silent.mp4 audio/mix/FGW_Laser_Voices_V3_mix.wav exports/FGW_Laser_Voices_V3_MASTER_2160x3840.mp4 qa/v3/mux_master.json
+    # 4. QA
+    QA_MIX=audio/mix/FGW_Laser_Voices_V3_mix.wav python3 tools/qa.py exports/FGW_Laser_Voices_V3_REVIEW_1080x1920.mp4 <vosk_model_dir> qa/v3/review
+    python3 tools/motion_scan.py exports/FGW_Laser_Voices_V3_REVIEW_1080x1920.mp4 qa/v3/motion_scan.json
+    python3 tools/strips.py exports/FGW_Laser_Voices_V3_REVIEW_1080x1920.mp4 qa/v3/strips block:26.9:27.5:1 clear:31.7:32.2:1
+
+---
+
 ## V2 (visual rebuild on the locked V1 audio)
 
 **Status (23 Oct 2026):**

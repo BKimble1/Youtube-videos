@@ -1,0 +1,38 @@
+{
+ "removed": "V1/V2 message stem (nonlexical voice-like murmur): on 0-3.90, 17.73-19.87, 23.93-27.17, 31.93-34.07 s",
+ "added": [
+  {
+   "name": "seam/opening reaction",
+   "onset_s": 33.867,
+   "nominal_len_s": 0.6,
+   "span_s": [
+    33.867,
+    0.4
+   ],
+   "wraps_loop_seam": true
+  },
+  {
+   "name": "quiet return before the obstruction",
+   "onset_s": 25.9,
+   "nominal_len_s": 1.6,
+   "span_s": [
+    25.9,
+    27.5
+   ],
+   "wraps_loop_seam": false
+  },
+  {
+   "name": "restoration",
+   "onset_s": 31.933,
+   "nominal_len_s": 0.6,
+   "span_s": [
+    31.933,
+    32.533
+   ],
+   "wraps_loop_seam": false
+  }
+ ],
+ "gate": "picture received state per frame (audio/cues_v3.json): cut at frame 815 (27.167 s), back at frame 958 (31.933 s), 3 ms ramps",
+ "level": "-20.0 dB re narration RMS during overlap (measured -20.0 dB), -4 dB ducking under speech",
+ "unchanged": "narration (file, gain, timing), music, room tone and effects stems (12 ms loop fades at the file ends on music/room only)"
+}
