@@ -448,7 +448,7 @@ export const sectionCam = (t: number): Cam => {
   // stage 1 (pitch over): camera orbits from in front of the surface to above the cut
   const a = eio(inv(SHOT.s6, SHOT.s6 + 0.85, t));
   const r0 = 0.024;
-  const ang = lerp(0, Math.PI / 2 - 0.02, a);
+  const ang = lerp(0, Math.PI / 2, a); // ends exactly overhead, where stage 2 begins (the up vector is explicit)
   const orbitPos = a3(P0, a3(m3(front, Math.cos(ang) * r0), v3(0, Math.sin(ang) * r0, 0)));
   // stage 2 (rise): straight up over the plan, drifting toward the middle between her and the guard
   const r = eio(inv(SHOT.s6 + 0.85, w(32) + 0.4, t));
