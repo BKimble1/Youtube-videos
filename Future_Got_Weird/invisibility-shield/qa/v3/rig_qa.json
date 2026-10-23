@@ -1,12 +1,6 @@
 {
  "frames": 878,
  "anatomy": {
-  "guard: foot l unreachable": {
-   "n": 1,
-   "first": 15.833333333333334,
-   "last": 15.833333333333334,
-   "worst": 0.036
-  },
   "her: elbow L inside torso": {
    "n": 3,
    "first": 28.166666666666668,
@@ -88,76 +82,76 @@
    "worst": 0.246
   },
   "guard.kneel: accel spike": {
-   "n": 70,
-   "first": 0.067,
-   "last": 28.9,
-   "worst": 0.167
+   "n": 60,
+   "first": 0.367,
+   "last": 29.167,
+   "worst": 0.241
   },
   "guard.ankl: accel spike": {
-   "n": 63,
-   "first": 0.067,
-   "last": 28.967,
-   "worst": 0.114
+   "n": 61,
+   "first": 0.367,
+   "last": 29.133,
+   "worst": 0.152
   },
   "guard.kneer: accel spike": {
-   "n": 70,
-   "first": 0.3,
-   "last": 29.167,
-   "worst": 0.184
+   "n": 64,
+   "first": 0.067,
+   "last": 28.867,
+   "worst": 0.175
   },
   "guard.ankr: accel spike": {
    "n": 62,
    "first": 0.067,
-   "last": 29.167,
-   "worst": 0.118
+   "last": 28.933,
+   "worst": 0.152
   },
   "guard.elbowR: accel spike": {
-   "n": 12,
-   "first": 0.367,
-   "last": 28.667,
-   "worst": 0.062
+   "n": 10,
+   "first": 0.933,
+   "last": 28.4,
+   "worst": 0.045
   },
   "guard.wristR: accel spike": {
-   "n": 13,
-   "first": 0.367,
-   "last": 28.667,
-   "worst": 0.062
+   "n": 10,
+   "first": 0.933,
+   "last": 28.4,
+   "worst": 0.053
   },
   "guard.elbowL: accel spike": {
-   "n": 42,
-   "first": 0.367,
-   "last": 29.1,
-   "worst": 0.182
+   "n": 45,
+   "first": 0.133,
+   "last": 28.967,
+   "worst": 0.189
   },
   "guard.wristL: accel spike": {
-   "n": 68,
-   "first": 0.367,
-   "last": 29.167,
-   "worst": 0.159
+   "n": 65,
+   "first": 0.067,
+   "last": 28.833,
+   "worst": 0.154
   },
   "guard.head: accel spike": {
-   "n": 9,
-   "first": 0.367,
-   "last": 28.667,
-   "worst": 0.062
+   "n": 6,
+   "first": 0.933,
+   "last": 26.967,
+   "worst": 0.041
   },
   "guard.pelvis: accel spike": {
-   "n": 9,
-   "first": 0.367,
-   "last": 28.667,
-   "worst": 0.062
+   "n": 5,
+   "first": 0.933,
+   "last": 2.133,
+   "worst": 0.041
   },
   "guard.chest: accel spike": {
-   "n": 9,
-   "first": 0.367,
-   "last": 28.667,
-   "worst": 0.062
+   "n": 5,
+   "first": 0.933,
+   "last": 2.133,
+   "worst": 0.041
   },
   "cam.pos: accel spike": {
-   "n": 57,
+   "n": 49,
    "first": 5,
-   "last": 28.833,
-   "worst": 0.088
+   "last": 28.3,
+   "worst": 0.085
   }
  },
  "jerkList": [
@@ -2412,1642 +2406,1522 @@
    "v": 0.093
   },
   {
-   "t": 0.067,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.166
-  },
-  {
-   "t": 0.1,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.151
-  },
-  {
-   "t": 0.133,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.067
-  },
-  {
-   "t": 0.167,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.054
-  },
-  {
-   "t": 0.2,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.031
-  },
-  {
-   "t": 0.233,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.063
-  },
-  {
-   "t": 0.267,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.087
-  },
-  {
-   "t": 0.3,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 0.333,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.058
-  },
-  {
    "t": 0.367,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.03
+   "v": 0.15
   },
   {
-   "t": 0.6,
+   "t": 0.4,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.036
+   "v": 0.172
   },
   {
-   "t": 0.667,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.157
-  },
-  {
-   "t": 0.7,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.126
-  },
-  {
-   "t": 0.733,
+   "t": 0.433,
    "who": "guard.kneel",
    "what": "accel spike",
    "v": 0.069
   },
   {
-   "t": 0.767,
+   "t": 0.467,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.064
+   "v": 0.042
   },
   {
-   "t": 0.8,
+   "t": 0.5,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.033
+   "v": 0.041
   },
   {
-   "t": 0.833,
+   "t": 0.533,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.065
+   "v": 0.085
   },
   {
-   "t": 0.867,
+   "t": 0.567,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.096
+   "v": 0.08
   },
   {
-   "t": 0.9,
+   "t": 0.6,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.043
+   "v": 0.05
   },
   {
    "t": 0.933,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.077
+   "v": 0.032
   },
   {
    "t": 0.967,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.04
+   "v": 0.148
   },
   {
-   "t": 1.2,
+   "t": 1,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.039
+   "v": 0.177
   },
   {
-   "t": 1.267,
+   "t": 1.033,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.162
+   "v": 0.073
   },
   {
-   "t": 1.3,
+   "t": 1.067,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.137
+   "v": 0.043
   },
   {
-   "t": 1.333,
+   "t": 1.1,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.074
+   "v": 0.047
   },
   {
-   "t": 1.367,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.061
-  },
-  {
-   "t": 1.4,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
-   "t": 1.433,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.074
-  },
-  {
-   "t": 1.467,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.098
-  },
-  {
-   "t": 1.533,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.057
-  },
-  {
-   "t": 1.567,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.038
-  },
-  {
-   "t": 1.8,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 1.867,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.167
-  },
-  {
-   "t": 1.9,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.161
-  },
-  {
-   "t": 1.933,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.076
-  },
-  {
-   "t": 1.967,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.052
-  },
-  {
-   "t": 2,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 2.033,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.086
-  },
-  {
-   "t": 2.067,
+   "t": 1.133,
    "who": "guard.kneel",
    "what": "accel spike",
    "v": 0.093
   },
   {
-   "t": 2.1,
+   "t": 1.167,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.045
+   "v": 0.082
   },
   {
-   "t": 2.467,
+   "t": 1.2,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.137
+   "v": 0.075
   },
   {
-   "t": 2.5,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.128
-  },
-  {
-   "t": 2.567,
+   "t": 1.467,
    "who": "guard.kneel",
    "what": "accel spike",
    "v": 0.035
   },
   {
-   "t": 2.667,
+   "t": 1.533,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.036
+   "v": 0.152
   },
   {
-   "t": 2.7,
+   "t": 1.567,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.045
+   "v": 0.114
   },
   {
-   "t": 2.733,
+   "t": 1.6,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.036
+   "v": 0.066
   },
   {
-   "t": 15.767,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.049
-  },
-  {
-   "t": 15.8,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.048
-  },
-  {
-   "t": 15.867,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.058
-  },
-  {
-   "t": 15.967,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.12
-  },
-  {
-   "t": 16,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.052
-  },
-  {
-   "t": 16.033,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.063
-  },
-  {
-   "t": 16.067,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.053
-  },
-  {
-   "t": 16.1,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.044
-  },
-  {
-   "t": 16.767,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.095
-  },
-  {
-   "t": 16.8,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.102
-  },
-  {
-   "t": 23.6,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.064
-  },
-  {
-   "t": 23.633,
-   "who": "guard.kneel",
-   "what": "accel spike",
-   "v": 0.058
-  },
-  {
-   "t": 27.067,
+   "t": 1.633,
    "who": "guard.kneel",
    "what": "accel spike",
    "v": 0.068
   },
   {
-   "t": 27.1,
+   "t": 1.667,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.062
+   "v": 0.034
   },
   {
-   "t": 27.167,
+   "t": 1.7,
    "who": "guard.kneel",
    "what": "accel spike",
    "v": 0.061
   },
   {
-   "t": 28.567,
+   "t": 1.733,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.098
+  },
+  {
+   "t": 1.767,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.055
+  },
+  {
+   "t": 1.8,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.089
+  },
+  {
+   "t": 1.833,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.043
+  },
+  {
+   "t": 2.067,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.039
+  },
+  {
+   "t": 2.133,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.162
+  },
+  {
+   "t": 2.167,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.134
+  },
+  {
+   "t": 2.2,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.067
+  },
+  {
+   "t": 2.233,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.056
+  },
+  {
+   "t": 2.3,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.06
+  },
+  {
+   "t": 2.333,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.076
+  },
+  {
+   "t": 2.367,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.038
+  },
+  {
+   "t": 2.433,
    "who": "guard.kneel",
    "what": "accel spike",
    "v": 0.035
   },
   {
-   "t": 28.6,
+   "t": 2.8,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.031
+   "v": 0.125
   },
   {
-   "t": 28.667,
+   "t": 2.833,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.035
+   "v": 0.117
   },
   {
-   "t": 28.733,
+   "t": 3.567,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.086
+   "v": 0.097
   },
   {
-   "t": 28.767,
+   "t": 3.6,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.066
+   "v": 0.097
   },
   {
-   "t": 28.8,
+   "t": 15.467,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.05
+   "v": 0.124
   },
   {
-   "t": 28.833,
+   "t": 15.5,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.102
+  },
+  {
+   "t": 15.533,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.077
+  },
+  {
+   "t": 16.333,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.12
+  },
+  {
+   "t": 16.367,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.114
+  },
+  {
+   "t": 26.8,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.122
+  },
+  {
+   "t": 26.833,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.111
+  },
+  {
+   "t": 28.3,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.109
+  },
+  {
+   "t": 28.333,
+   "who": "guard.kneel",
+   "what": "accel spike",
+   "v": 0.096
+  },
+  {
+   "t": 28.5,
    "who": "guard.kneel",
    "what": "accel spike",
    "v": 0.041
   },
   {
-   "t": 28.867,
+   "t": 28.533,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.046
+   "v": 0.047
   },
   {
-   "t": 28.9,
+   "t": 28.567,
    "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.037
+   "v": 0.04
   },
   {
-   "t": 0.067,
-   "who": "guard.ankl",
+   "t": 28.633,
+   "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.094
+   "v": 0.049
   },
   {
-   "t": 0.1,
-   "who": "guard.ankl",
+   "t": 29,
+   "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.102
+   "v": 0.211
   },
   {
-   "t": 0.133,
-   "who": "guard.ankl",
+   "t": 29.033,
+   "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.076
+   "v": 0.241
   },
   {
-   "t": 0.167,
-   "who": "guard.ankl",
+   "t": 29.067,
+   "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.085
+   "v": 0.057
   },
   {
-   "t": 0.2,
-   "who": "guard.ankl",
+   "t": 29.1,
+   "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.055
+   "v": 0.042
   },
   {
-   "t": 0.267,
-   "who": "guard.ankl",
+   "t": 29.133,
+   "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.059
+   "v": 0.036
   },
   {
-   "t": 0.3,
-   "who": "guard.ankl",
+   "t": 29.167,
+   "who": "guard.kneel",
    "what": "accel spike",
-   "v": 0.086
-  },
-  {
-   "t": 0.333,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.073
+   "v": 0.054
   },
   {
    "t": 0.367,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.039
+   "v": 0.105
   },
   {
-   "t": 0.667,
+   "t": 0.4,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.086
+   "v": 0.13
   },
   {
-   "t": 0.7,
+   "t": 0.433,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.092
+   "v": 0.089
   },
   {
-   "t": 0.733,
+   "t": 0.467,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.075
+   "v": 0.08
   },
   {
-   "t": 0.767,
+   "t": 0.5,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.094
+   "v": 0.033
   },
   {
-   "t": 0.8,
+   "t": 0.533,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.066
+   "v": 0.036
   },
   {
-   "t": 0.867,
+   "t": 0.567,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.062
+   "v": 0.082
   },
   {
-   "t": 0.9,
+   "t": 0.6,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.094
+   "v": 0.088
   },
   {
-   "t": 0.933,
+   "t": 0.633,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.078
+   "v": 0.058
   },
   {
    "t": 0.967,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.04
+   "v": 0.104
   },
   {
-   "t": 1.267,
+   "t": 1,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.133
+  },
+  {
+   "t": 1.033,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.094
+  },
+  {
+   "t": 1.067,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.082
+  },
+  {
+   "t": 1.133,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.043
+  },
+  {
+   "t": 1.167,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.089
+  },
+  {
+   "t": 1.2,
    "who": "guard.ankl",
    "what": "accel spike",
    "v": 0.09
   },
   {
-   "t": 1.3,
+   "t": 1.233,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.098
-  },
-  {
-   "t": 1.333,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.081
-  },
-  {
-   "t": 1.367,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.095
-  },
-  {
-   "t": 1.4,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.059
-  },
-  {
-   "t": 1.467,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.071
-  },
-  {
-   "t": 1.5,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.096
+   "v": 0.053
   },
   {
    "t": 1.533,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.072
+   "v": 0.083
   },
   {
    "t": 1.567,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.038
+   "v": 0.088
   },
   {
-   "t": 1.867,
+   "t": 1.6,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.097
+   "v": 0.071
   },
   {
-   "t": 1.9,
+   "t": 1.633,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.114
+   "v": 0.096
   },
   {
-   "t": 1.933,
+   "t": 1.667,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.089
+   "v": 0.072
   },
   {
-   "t": 1.967,
+   "t": 1.733,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.09
+   "v": 0.058
   },
   {
-   "t": 2,
+   "t": 1.767,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.045
+   "v": 0.094
   },
   {
-   "t": 2.067,
+   "t": 1.8,
    "who": "guard.ankl",
    "what": "accel spike",
    "v": 0.082
   },
   {
-   "t": 2.1,
+   "t": 1.833,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.094
+   "v": 0.042
   },
   {
    "t": 2.133,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.065
+   "v": 0.09
   },
   {
-   "t": 2.467,
+   "t": 2.167,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.082
+   "v": 0.096
   },
   {
-   "t": 2.5,
+   "t": 2.2,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.08
+   "v": 0.073
   },
   {
-   "t": 2.533,
+   "t": 2.233,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.036
+   "v": 0.085
   },
   {
-   "t": 2.567,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.052
-  },
-  {
-   "t": 2.6,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.047
-  },
-  {
-   "t": 2.7,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.042
-  },
-  {
-   "t": 2.733,
+   "t": 2.267,
    "who": "guard.ankl",
    "what": "accel spike",
    "v": 0.053
   },
   {
-   "t": 2.767,
+   "t": 2.333,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.042
+   "v": 0.065
   },
   {
-   "t": 15.8,
+   "t": 2.367,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.087
+  },
+  {
+   "t": 2.4,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.064
+  },
+  {
+   "t": 2.433,
    "who": "guard.ankl",
    "what": "accel spike",
    "v": 0.038
   },
   {
-   "t": 15.867,
+   "t": 2.8,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.053
+   "v": 0.076
   },
   {
-   "t": 15.9,
+   "t": 2.833,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.068
+  },
+  {
+   "t": 3.567,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.152
+  },
+  {
+   "t": 3.6,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.152
+  },
+  {
+   "t": 15.467,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.047
+  },
+  {
+   "t": 15.567,
    "who": "guard.ankl",
    "what": "accel spike",
    "v": 0.032
   },
   {
-   "t": 15.933,
+   "t": 15.6,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.045
+   "v": 0.033
   },
   {
-   "t": 15.967,
+   "t": 15.767,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.063
+   "v": 0.033
   },
   {
-   "t": 16,
+   "t": 15.8,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.049
+   "v": 0.031
   },
   {
-   "t": 16.067,
+   "t": 16.333,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.036
+   "v": 0.08
   },
   {
-   "t": 16.1,
+   "t": 16.367,
    "who": "guard.ankl",
    "what": "accel spike",
-   "v": 0.051
+   "v": 0.068
   },
   {
-   "t": 16.133,
+   "t": 26.8,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.078
+  },
+  {
+   "t": 26.833,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.067
+  },
+  {
+   "t": 28.3,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.086
+  },
+  {
+   "t": 28.333,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.085
+  },
+  {
+   "t": 28.367,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.032
+  },
+  {
+   "t": 28.4,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.041
+  },
+  {
+   "t": 28.5,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.03
+  },
+  {
+   "t": 28.533,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.041
+  },
+  {
+   "t": 28.567,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 28.6,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.033
+  },
+  {
+   "t": 29,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.098
+  },
+  {
+   "t": 29.033,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.104
+  },
+  {
+   "t": 29.067,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.071
+  },
+  {
+   "t": 29.1,
+   "who": "guard.ankl",
+   "what": "accel spike",
+   "v": 0.075
+  },
+  {
+   "t": 29.133,
    "who": "guard.ankl",
    "what": "accel spike",
    "v": 0.05
   },
   {
-   "t": 16.167,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
-   "t": 16.767,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.049
-  },
-  {
-   "t": 16.8,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.044
-  },
-  {
-   "t": 23.6,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.041
-  },
-  {
-   "t": 28.667,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.039
-  },
-  {
-   "t": 28.7,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.037
-  },
-  {
-   "t": 28.733,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.053
-  },
-  {
-   "t": 28.767,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.067
-  },
-  {
-   "t": 28.9,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.045
-  },
-  {
-   "t": 28.933,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.051
-  },
-  {
-   "t": 28.967,
-   "who": "guard.ankl",
-   "what": "accel spike",
-   "v": 0.042
-  },
-  {
-   "t": 0.3,
+   "t": 0.067,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.033
+   "v": 0.119
   },
   {
-   "t": 0.367,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.157
-  },
-  {
-   "t": 0.4,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.126
-  },
-  {
-   "t": 0.433,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.066
-  },
-  {
-   "t": 0.467,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.062
-  },
-  {
-   "t": 0.5,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
-   "t": 0.533,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.06
-  },
-  {
-   "t": 0.567,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.092
-  },
-  {
-   "t": 0.6,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.044
-  },
-  {
-   "t": 0.633,
+   "t": 0.1,
    "who": "guard.kneer",
    "what": "accel spike",
    "v": 0.059
   },
   {
-   "t": 0.667,
+   "t": 0.133,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.032
+   "v": 0.062
   },
   {
-   "t": 0.9,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 0.967,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.161
-  },
-  {
-   "t": 1,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.129
-  },
-  {
-   "t": 1.033,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.071
-  },
-  {
-   "t": 1.067,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.065
-  },
-  {
-   "t": 1.1,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.033
-  },
-  {
-   "t": 1.133,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.067
-  },
-  {
-   "t": 1.167,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.097
-  },
-  {
-   "t": 1.2,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
-   "t": 1.233,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.061
-  },
-  {
-   "t": 1.267,
+   "t": 0.167,
    "who": "guard.kneer",
    "what": "accel spike",
    "v": 0.036
   },
   {
-   "t": 1.5,
+   "t": 0.2,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.039
+   "v": 0.045
   },
   {
-   "t": 1.567,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.165
-  },
-  {
-   "t": 1.6,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.148
-  },
-  {
-   "t": 1.633,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.075
-  },
-  {
-   "t": 1.667,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.056
-  },
-  {
-   "t": 1.7,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.033
-  },
-  {
-   "t": 1.733,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.08
-  },
-  {
-   "t": 1.767,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.094
-  },
-  {
-   "t": 1.833,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.03
-  },
-  {
-   "t": 1.867,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.035
-  },
-  {
-   "t": 2.1,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.035
-  },
-  {
-   "t": 2.167,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.152
-  },
-  {
-   "t": 2.2,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.16
-  },
-  {
-   "t": 2.233,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.068
-  },
-  {
-   "t": 2.267,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.043
-  },
-  {
-   "t": 2.3,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.034
-  },
-  {
-   "t": 2.333,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.071
-  },
-  {
-   "t": 2.367,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.066
-  },
-  {
-   "t": 2.833,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.126
-  },
-  {
-   "t": 2.867,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.118
-  },
-  {
-   "t": 15.433,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.08
-  },
-  {
-   "t": 15.467,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.076
-  },
-  {
-   "t": 15.8,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.043
-  },
-  {
-   "t": 15.867,
+   "t": 0.233,
    "who": "guard.kneer",
    "what": "accel spike",
    "v": 0.081
   },
   {
-   "t": 16.267,
+   "t": 0.267,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.124
+   "v": 0.066
   },
   {
-   "t": 16.3,
+   "t": 0.3,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.118
+   "v": 0.036
   },
   {
-   "t": 23.233,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.085
-  },
-  {
-   "t": 23.267,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.089
-  },
-  {
-   "t": 23.633,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.048
-  },
-  {
-   "t": 26.733,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.12
-  },
-  {
-   "t": 26.767,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.111
-  },
-  {
-   "t": 27.1,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.053
-  },
-  {
-   "t": 28.333,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.12
-  },
-  {
-   "t": 28.367,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.112
-  },
-  {
-   "t": 28.4,
+   "t": 0.6,
    "who": "guard.kneer",
    "what": "accel spike",
    "v": 0.031
   },
   {
-   "t": 28.433,
+   "t": 0.667,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.031
+   "v": 0.152
   },
   {
-   "t": 28.5,
+   "t": 0.7,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.032
+   "v": 0.175
   },
   {
-   "t": 28.533,
+   "t": 0.733,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.051
+   "v": 0.072
   },
   {
-   "t": 28.567,
+   "t": 0.767,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.054
+   "v": 0.043
   },
   {
-   "t": 28.6,
+   "t": 0.8,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.046
+   "v": 0.045
   },
   {
-   "t": 28.633,
+   "t": 0.833,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.031
+   "v": 0.09
   },
   {
-   "t": 28.667,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.051
-  },
-  {
-   "t": 29,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.184
-  },
-  {
-   "t": 29.033,
-   "who": "guard.kneer",
-   "what": "accel spike",
-   "v": 0.17
-  },
-  {
-   "t": 29.067,
+   "t": 0.867,
    "who": "guard.kneer",
    "what": "accel spike",
    "v": 0.075
   },
   {
-   "t": 29.1,
+   "t": 0.9,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.046
+   "v": 0.054
   },
   {
-   "t": 29.133,
+   "t": 1.233,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.04
+   "v": 0.149
   },
   {
-   "t": 29.167,
+   "t": 1.267,
    "who": "guard.kneer",
    "what": "accel spike",
-   "v": 0.038
+   "v": 0.105
+  },
+  {
+   "t": 1.3,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.062
+  },
+  {
+   "t": 1.333,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.072
+  },
+  {
+   "t": 1.367,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.039
+  },
+  {
+   "t": 1.4,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.054
+  },
+  {
+   "t": 1.433,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.096
+  },
+  {
+   "t": 1.467,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.063
+  },
+  {
+   "t": 1.5,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.07
+  },
+  {
+   "t": 1.533,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.033
+  },
+  {
+   "t": 1.767,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.036
+  },
+  {
+   "t": 1.833,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.16
+  },
+  {
+   "t": 1.867,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.125
+  },
+  {
+   "t": 1.9,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.07
+  },
+  {
+   "t": 1.933,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.065
+  },
+  {
+   "t": 1.967,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.032
+  },
+  {
+   "t": 2,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.068
+  },
+  {
+   "t": 2.033,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.098
+  },
+  {
+   "t": 2.1,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.06
+  },
+  {
+   "t": 2.133,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.037
+  },
+  {
+   "t": 2.467,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.144
+  },
+  {
+   "t": 2.5,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.155
+  },
+  {
+   "t": 2.533,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.037
+  },
+  {
+   "t": 2.633,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.034
+  },
+  {
+   "t": 2.667,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.047
+  },
+  {
+   "t": 2.7,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.039
+  },
+  {
+   "t": 3.567,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.095
+  },
+  {
+   "t": 3.6,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.095
+  },
+  {
+   "t": 15.867,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.086
+  },
+  {
+   "t": 15.9,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.073
+  },
+  {
+   "t": 15.967,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.102
+  },
+  {
+   "t": 16.033,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 16.067,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 16.1,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.035
+  },
+  {
+   "t": 16.133,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 16.9,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.093
+  },
+  {
+   "t": 16.933,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.097
+  },
+  {
+   "t": 27.167,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.107
+  },
+  {
+   "t": 27.2,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.098
+  },
+  {
+   "t": 28.6,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.03
+  },
+  {
+   "t": 28.633,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.05
+  },
+  {
+   "t": 28.7,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.104
+  },
+  {
+   "t": 28.733,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.034
+  },
+  {
+   "t": 28.767,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 28.8,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 28.833,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.039
+  },
+  {
+   "t": 28.867,
+   "who": "guard.kneer",
+   "what": "accel spike",
+   "v": 0.034
   },
   {
    "t": 0.067,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.034
+   "v": 0.085
   },
   {
-   "t": 0.367,
+   "t": 0.1,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.061
+  },
+  {
+   "t": 0.133,
    "who": "guard.ankr",
    "what": "accel spike",
    "v": 0.086
   },
   {
-   "t": 0.4,
+   "t": 0.167,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.091
+   "v": 0.07
   },
   {
-   "t": 0.433,
+   "t": 0.233,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.072
+   "v": 0.04
   },
   {
-   "t": 0.467,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.092
-  },
-  {
-   "t": 0.5,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.066
-  },
-  {
-   "t": 0.567,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.057
-  },
-  {
-   "t": 0.6,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.09
-  },
-  {
-   "t": 0.633,
+   "t": 0.267,
    "who": "guard.ankr",
    "what": "accel spike",
    "v": 0.079
   },
   {
-   "t": 0.667,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.041
-  },
-  {
-   "t": 0.967,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.086
-  },
-  {
-   "t": 1,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.092
-  },
-  {
-   "t": 1.033,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.076
-  },
-  {
-   "t": 1.067,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.095
-  },
-  {
-   "t": 1.1,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.066
-  },
-  {
-   "t": 1.167,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.064
-  },
-  {
-   "t": 1.2,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.095
-  },
-  {
-   "t": 1.233,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.078
-  },
-  {
-   "t": 1.267,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.039
-  },
-  {
-   "t": 1.567,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.094
-  },
-  {
-   "t": 1.6,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.106
-  },
-  {
-   "t": 1.633,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.086
-  },
-  {
-   "t": 1.667,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.092
-  },
-  {
-   "t": 1.7,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.052
-  },
-  {
-   "t": 1.767,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.077
-  },
-  {
-   "t": 1.8,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.095
-  },
-  {
-   "t": 1.833,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.065
-  },
-  {
-   "t": 1.867,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 2.167,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.101
-  },
-  {
-   "t": 2.2,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.118
-  },
-  {
-   "t": 2.233,
+   "t": 0.3,
    "who": "guard.ankr",
    "what": "accel spike",
    "v": 0.082
   },
   {
-   "t": 2.267,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.077
-  },
-  {
-   "t": 2.3,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.033
-  },
-  {
-   "t": 2.333,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.033
-  },
-  {
-   "t": 2.367,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.077
-  },
-  {
-   "t": 2.4,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.082
-  },
-  {
-   "t": 2.433,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.053
-  },
-  {
-   "t": 2.833,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.082
-  },
-  {
-   "t": 2.867,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.072
-  },
-  {
-   "t": 15.433,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.059
-  },
-  {
-   "t": 15.467,
+   "t": 0.333,
    "who": "guard.ankr",
    "what": "accel spike",
    "v": 0.054
   },
   {
-   "t": 16.267,
+   "t": 0.667,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.084
+   "v": 0.105
   },
   {
-   "t": 16.3,
+   "t": 0.7,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.073
+   "v": 0.132
   },
   {
-   "t": 23.233,
+   "t": 0.733,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.072
+   "v": 0.092
   },
   {
-   "t": 23.267,
+   "t": 0.767,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.059
+   "v": 0.081
   },
   {
-   "t": 26.733,
+   "t": 0.8,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.083
+   "v": 0.031
   },
   {
-   "t": 26.767,
+   "t": 0.833,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.072
+   "v": 0.041
   },
   {
-   "t": 28.333,
+   "t": 0.867,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.09
+   "v": 0.087
   },
   {
-   "t": 28.367,
+   "t": 0.9,
    "who": "guard.ankr",
    "what": "accel spike",
    "v": 0.089
   },
   {
-   "t": 28.4,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 28.433,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.047
-  },
-  {
-   "t": 28.467,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.03
-  },
-  {
-   "t": 28.533,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.037
-  },
-  {
-   "t": 28.567,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.048
-  },
-  {
-   "t": 28.6,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.033
-  },
-  {
-   "t": 28.633,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.037
-  },
-  {
-   "t": 29,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.078
-  },
-  {
-   "t": 29.033,
-   "who": "guard.ankr",
-   "what": "accel spike",
-   "v": 0.073
-  },
-  {
-   "t": 29.067,
+   "t": 0.933,
    "who": "guard.ankr",
    "what": "accel spike",
    "v": 0.054
   },
   {
-   "t": 29.1,
+   "t": 1.233,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.08
+  },
+  {
+   "t": 1.267,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.084
+  },
+  {
+   "t": 1.3,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.064
+  },
+  {
+   "t": 1.333,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.096
+  },
+  {
+   "t": 1.367,
    "who": "guard.ankr",
    "what": "accel spike",
    "v": 0.077
   },
   {
-   "t": 29.133,
+   "t": 1.433,
    "who": "guard.ankr",
    "what": "accel spike",
-   "v": 0.069
+   "v": 0.051
   },
   {
-   "t": 29.167,
+   "t": 1.467,
    "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.092
+  },
+  {
+   "t": 1.5,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.086
+  },
+  {
+   "t": 1.533,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.046
+  },
+  {
+   "t": 1.833,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.086
+  },
+  {
+   "t": 1.867,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.092
+  },
+  {
+   "t": 1.9,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.076
+  },
+  {
+   "t": 1.933,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.096
+  },
+  {
+   "t": 1.967,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.066
+  },
+  {
+   "t": 2.033,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.065
+  },
+  {
+   "t": 2.067,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.096
+  },
+  {
+   "t": 2.1,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.077
+  },
+  {
+   "t": 2.133,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.039
+  },
+  {
+   "t": 2.467,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.109
+  },
+  {
+   "t": 2.5,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.11
+  },
+  {
+   "t": 2.533,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.052
+  },
+  {
+   "t": 2.567,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.052
+  },
+  {
+   "t": 2.6,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 2.667,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.039
+  },
+  {
+   "t": 2.7,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.055
+  },
+  {
+   "t": 2.733,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.047
+  },
+  {
+   "t": 2.767,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 3.567,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.152
+  },
+  {
+   "t": 3.6,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.152
+  },
+  {
+   "t": 15.867,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.036
+  },
+  {
+   "t": 15.933,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.03
+  },
+  {
+   "t": 15.967,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.046
+  },
+  {
+   "t": 16,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.039
+  },
+  {
+   "t": 16.133,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.038
+  },
+  {
+   "t": 16.167,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.037
+  },
+  {
+   "t": 16.9,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.053
+  },
+  {
+   "t": 16.933,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.045
+  },
+  {
+   "t": 27.167,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.057
+  },
+  {
+   "t": 27.2,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.046
+  },
+  {
+   "t": 28.667,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.032
+  },
+  {
+   "t": 28.7,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.052
+  },
+  {
+   "t": 28.733,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.05
+  },
+  {
+   "t": 28.867,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.036
+  },
+  {
+   "t": 28.9,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.045
+  },
+  {
+   "t": 28.933,
+   "who": "guard.ankr",
+   "what": "accel spike",
+   "v": 0.042
+  },
+  {
+   "t": 0.933,
+   "who": "guard.elbowR",
+   "what": "accel spike",
+   "v": 0.03
+  },
+  {
+   "t": 1.233,
+   "who": "guard.elbowR",
    "what": "accel spike",
    "v": 0.034
   },
   {
-   "t": 0.367,
+   "t": 1.533,
    "who": "guard.elbowR",
    "what": "accel spike",
-   "v": 0.035
+   "v": 0.037
   },
   {
-   "t": 0.667,
-   "who": "guard.elbowR",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 0.967,
+   "t": 1.833,
    "who": "guard.elbowR",
    "what": "accel spike",
    "v": 0.041
   },
   {
-   "t": 1.267,
-   "who": "guard.elbowR",
-   "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 1.567,
-   "who": "guard.elbowR",
-   "what": "accel spike",
-   "v": 0.043
-  },
-  {
-   "t": 1.867,
+   "t": 2.133,
    "who": "guard.elbowR",
    "what": "accel spike",
    "v": 0.041
   },
   {
-   "t": 15.8,
+   "t": 26.967,
    "who": "guard.elbowR",
    "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 15.867,
-   "who": "guard.elbowR",
-   "what": "accel spike",
-   "v": 0.062
+   "v": 0.044
   },
   {
    "t": 27.033,
@@ -4059,301 +3933,301 @@
    "t": 28.167,
    "who": "guard.elbowR",
    "what": "accel spike",
-   "v": 0.036
+   "v": 0.032
+  },
+  {
+   "t": 28.367,
+   "who": "guard.elbowR",
+   "what": "accel spike",
+   "v": 0.032
   },
   {
    "t": 28.4,
    "who": "guard.elbowR",
    "what": "accel spike",
-   "v": 0.041
+   "v": 0.031
   },
   {
-   "t": 28.667,
-   "who": "guard.elbowR",
+   "t": 0.933,
+   "who": "guard.wristR",
+   "what": "accel spike",
+   "v": 0.03
+  },
+  {
+   "t": 1.233,
+   "who": "guard.wristR",
    "what": "accel spike",
    "v": 0.034
   },
   {
-   "t": 0.367,
+   "t": 1.533,
    "who": "guard.wristR",
    "what": "accel spike",
-   "v": 0.035
+   "v": 0.037
   },
   {
-   "t": 0.667,
-   "who": "guard.wristR",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 0.967,
+   "t": 1.833,
    "who": "guard.wristR",
    "what": "accel spike",
    "v": 0.041
   },
   {
-   "t": 1.267,
-   "who": "guard.wristR",
-   "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 1.567,
-   "who": "guard.wristR",
-   "what": "accel spike",
-   "v": 0.043
-  },
-  {
-   "t": 1.867,
+   "t": 2.133,
    "who": "guard.wristR",
    "what": "accel spike",
    "v": 0.041
   },
   {
-   "t": 15.8,
+   "t": 26.967,
    "who": "guard.wristR",
    "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 15.867,
-   "who": "guard.wristR",
-   "what": "accel spike",
-   "v": 0.062
+   "v": 0.053
   },
   {
    "t": 27.033,
    "who": "guard.wristR",
    "what": "accel spike",
-   "v": 0.054
+   "v": 0.053
   },
   {
    "t": 28.167,
    "who": "guard.wristR",
    "what": "accel spike",
-   "v": 0.039
+   "v": 0.035
   },
   {
    "t": 28.367,
    "who": "guard.wristR",
    "what": "accel spike",
-   "v": 0.032
+   "v": 0.037
   },
   {
    "t": 28.4,
    "who": "guard.wristR",
    "what": "accel spike",
-   "v": 0.044
+   "v": 0.033
   },
   {
-   "t": 28.667,
-   "who": "guard.wristR",
+   "t": 0.133,
+   "who": "guard.elbowL",
    "what": "accel spike",
    "v": 0.034
   },
   {
-   "t": 0.367,
+   "t": 0.267,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.049
+   "v": 0.031
   },
   {
-   "t": 0.467,
+   "t": 0.3,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 0.6,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 0.633,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.032
+   "v": 0.037
   },
   {
    "t": 0.667,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.036
+   "v": 0.042
   },
   {
-   "t": 0.967,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.055
-  },
-  {
-   "t": 1.033,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.031
-  },
-  {
-   "t": 1.067,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.038
-  },
-  {
-   "t": 1.2,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.044
-  },
-  {
-   "t": 1.267,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 1.567,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.06
-  },
-  {
-   "t": 1.6,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.035
-  },
-  {
-   "t": 1.633,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.035
-  },
-  {
-   "t": 1.667,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 1.8,
+   "t": 0.7,
    "who": "guard.elbowL",
    "what": "accel spike",
    "v": 0.046
   },
   {
-   "t": 1.867,
+   "t": 0.733,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.042
+   "v": 0.037
   },
   {
-   "t": 2.167,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.044
-  },
-  {
-   "t": 2.2,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.039
-  },
-  {
-   "t": 2.233,
+   "t": 0.767,
    "who": "guard.elbowL",
    "what": "accel spike",
    "v": 0.032
   },
   {
-   "t": 2.367,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.03
-  },
-  {
-   "t": 2.4,
+   "t": 0.867,
    "who": "guard.elbowL",
    "what": "accel spike",
    "v": 0.035
   },
   {
-   "t": 15.8,
+   "t": 0.9,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.036
+   "v": 0.04
   },
   {
-   "t": 15.867,
+   "t": 0.933,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.062
+   "v": 0.032
+  },
+  {
+   "t": 1.233,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.046
+  },
+  {
+   "t": 1.333,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.038
+  },
+  {
+   "t": 1.367,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 1.467,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.04
+  },
+  {
+   "t": 1.5,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.037
+  },
+  {
+   "t": 1.533,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.037
+  },
+  {
+   "t": 1.833,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.056
+  },
+  {
+   "t": 1.9,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 1.933,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.038
+  },
+  {
+   "t": 2.067,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.044
+  },
+  {
+   "t": 2.133,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.041
+  },
+  {
+   "t": 2.467,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.033
+  },
+  {
+   "t": 2.5,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.033
+  },
+  {
+   "t": 3.567,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.055
+  },
+  {
+   "t": 3.6,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.055
   },
   {
    "t": 17.867,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.107
+   "v": 0.105
   },
   {
    "t": 17.9,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.06
+   "v": 0.062
   },
   {
    "t": 17.933,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.162
+   "v": 0.169
   },
   {
    "t": 17.967,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.181
+   "v": 0.189
   },
   {
    "t": 18,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.182
+   "v": 0.184
+  },
+  {
+   "t": 18.433,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.034
   },
   {
    "t": 18.533,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.1
+   "v": 0.125
   },
   {
    "t": 18.567,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.067
+   "v": 0.058
   },
   {
    "t": 18.6,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.085
-  },
-  {
-   "t": 22.967,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.031
+   "v": 0.086
   },
   {
    "t": 26.9,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.031
+   "v": 0.033
+  },
+  {
+   "t": 26.967,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.042
   },
   {
    "t": 27.033,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.038
+   "v": 0.044
   },
   {
    "t": 28.1,
@@ -4362,298 +4236,304 @@
    "v": 0.037
   },
   {
-   "t": 28.4,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
-   "t": 28.433,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
    "t": 28.6,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.043
+   "v": 0.037
   },
   {
-   "t": 28.667,
+   "t": 28.633,
    "who": "guard.elbowL",
    "what": "accel spike",
    "v": 0.04
   },
   {
+   "t": 28.733,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.039
+  },
+  {
+   "t": 28.767,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.058
+  },
+  {
+   "t": 28.8,
+   "who": "guard.elbowL",
+   "what": "accel spike",
+   "v": 0.037
+  },
+  {
    "t": 28.933,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.093
+   "v": 0.087
   },
   {
    "t": 28.967,
    "who": "guard.elbowL",
    "what": "accel spike",
-   "v": 0.094
+   "v": 0.082
   },
   {
-   "t": 29.1,
-   "who": "guard.elbowL",
-   "what": "accel spike",
-   "v": 0.03
-  },
-  {
-   "t": 0.367,
+   "t": 0.067,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.048
+   "v": 0.033
   },
   {
-   "t": 0.4,
+   "t": 0.1,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.034
+   "v": 0.037
   },
   {
-   "t": 0.433,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.043
-  },
-  {
-   "t": 0.467,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.054
-  },
-  {
-   "t": 0.5,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.043
-  },
-  {
-   "t": 0.533,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.035
-  },
-  {
-   "t": 0.567,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.044
-  },
-  {
-   "t": 0.6,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.071
-  },
-  {
-   "t": 0.633,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.054
-  },
-  {
-   "t": 0.967,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.052
-  },
-  {
-   "t": 1,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.034
-  },
-  {
-   "t": 1.033,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.045
-  },
-  {
-   "t": 1.067,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.056
-  },
-  {
-   "t": 1.1,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.045
-  },
-  {
-   "t": 1.133,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.035
-  },
-  {
-   "t": 1.167,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.048
-  },
-  {
-   "t": 1.2,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.076
-  },
-  {
-   "t": 1.233,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.05
-  },
-  {
-   "t": 1.567,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.058
-  },
-  {
-   "t": 1.6,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.047
-  },
-  {
-   "t": 1.633,
+   "t": 0.133,
    "who": "guard.wristL",
    "what": "accel spike",
    "v": 0.051
   },
   {
-   "t": 1.667,
+   "t": 0.167,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.054
+   "v": 0.042
   },
   {
-   "t": 1.7,
+   "t": 0.2,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.043
+   "v": 0.037
   },
   {
-   "t": 1.733,
+   "t": 0.233,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.034
+   "v": 0.035
   },
   {
-   "t": 1.767,
+   "t": 0.267,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.057
+  },
+  {
+   "t": 0.3,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.064
+  },
+  {
+   "t": 0.667,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.051
+  },
+  {
+   "t": 0.7,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.068
+  },
+  {
+   "t": 0.733,
    "who": "guard.wristL",
    "what": "accel spike",
    "v": 0.055
   },
   {
-   "t": 1.8,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.078
-  },
-  {
-   "t": 1.833,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.034
-  },
-  {
-   "t": 1.867,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 2.167,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.051
-  },
-  {
-   "t": 2.2,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.058
-  },
-  {
-   "t": 2.233,
+   "t": 0.767,
    "who": "guard.wristL",
    "what": "accel spike",
    "v": 0.048
   },
   {
-   "t": 2.267,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.045
-  },
-  {
-   "t": 2.3,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
-   "t": 2.333,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
-   "t": 2.367,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.053
-  },
-  {
-   "t": 2.4,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.063
-  },
-  {
-   "t": 2.433,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.03
-  },
-  {
-   "t": 2.833,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.039
-  },
-  {
-   "t": 15.8,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
-   "t": 15.867,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.06
-  },
-  {
-   "t": 16.267,
+   "t": 0.8,
    "who": "guard.wristL",
    "what": "accel spike",
    "v": 0.041
   },
   {
-   "t": 16.3,
+   "t": 0.833,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.033
+   "v": 0.038
+  },
+  {
+   "t": 0.867,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.065
+  },
+  {
+   "t": 0.9,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.069
+  },
+  {
+   "t": 1.233,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.043
+  },
+  {
+   "t": 1.3,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.038
+  },
+  {
+   "t": 1.333,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.057
+  },
+  {
+   "t": 1.367,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.047
+  },
+  {
+   "t": 1.4,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.041
+  },
+  {
+   "t": 1.433,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.043
+  },
+  {
+   "t": 1.467,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.071
+  },
+  {
+   "t": 1.5,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.063
+  },
+  {
+   "t": 1.833,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.053
+  },
+  {
+   "t": 1.867,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.035
+  },
+  {
+   "t": 1.9,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.046
+  },
+  {
+   "t": 1.933,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.056
+  },
+  {
+   "t": 1.967,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.045
+  },
+  {
+   "t": 2,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.035
+  },
+  {
+   "t": 2.033,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.049
+  },
+  {
+   "t": 2.067,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.077
+  },
+  {
+   "t": 2.1,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.048
+  },
+  {
+   "t": 2.133,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 2.467,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.055
+  },
+  {
+   "t": 2.5,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.053
+  },
+  {
+   "t": 2.533,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.031
+  },
+  {
+   "t": 2.567,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.032
+  },
+  {
+   "t": 2.7,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.037
+  },
+  {
+   "t": 2.733,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.035
+  },
+  {
+   "t": 3.567,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.104
+  },
+  {
+   "t": 3.6,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.104
+  },
+  {
+   "t": 15.967,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.038
   },
   {
    "t": 17.867,
@@ -4665,25 +4545,19 @@
    "t": 17.9,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.135
-  },
-  {
-   "t": 17.933,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.034
+   "v": 0.144
   },
   {
    "t": 17.967,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.15
+   "v": 0.151
   },
   {
    "t": 18,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.159
+   "v": 0.154
   },
   {
    "t": 18.033,
@@ -4701,19 +4575,19 @@
    "t": 18.433,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.1
+   "v": 0.099
   },
   {
    "t": 18.533,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.093
+   "v": 0.101
   },
   {
    "t": 18.567,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.147
+   "v": 0.144
   },
   {
    "t": 18.6,
@@ -4725,31 +4599,25 @@
    "t": 22.967,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 23.233,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.044
+   "v": 0.038
   },
   {
    "t": 26.5,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.043
-  },
-  {
-   "t": 26.733,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.048
+   "v": 0.053
   },
   {
    "t": 26.9,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.043
+   "v": 0.047
+  },
+  {
+   "t": 27,
+   "who": "guard.wristL",
+   "what": "accel spike",
+   "v": 0.031
   },
   {
    "t": 28.1,
@@ -4761,253 +4629,175 @@
    "t": 28.4,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.033
+   "v": 0.03
   },
   {
    "t": 28.433,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.033
+   "v": 0.03
   },
   {
    "t": 28.6,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.043
+   "v": 0.036
   },
   {
-   "t": 28.667,
+   "t": 28.633,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.055
+   "v": 0.044
   },
   {
-   "t": 29,
+   "t": 28.767,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.032
+   "v": 0.041
   },
   {
-   "t": 29.067,
+   "t": 28.8,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.033
+   "v": 0.052
   },
   {
-   "t": 29.1,
+   "t": 28.833,
    "who": "guard.wristL",
    "what": "accel spike",
-   "v": 0.045
+   "v": 0.041
   },
   {
-   "t": 29.133,
-   "who": "guard.wristL",
-   "what": "accel spike",
-   "v": 0.039
-  },
-  {
-   "t": 29.167,
-   "who": "guard.wristL",
+   "t": 0.933,
+   "who": "guard.head",
    "what": "accel spike",
    "v": 0.03
   },
   {
-   "t": 0.367,
-   "who": "guard.head",
-   "what": "accel spike",
-   "v": 0.035
-  },
-  {
-   "t": 0.667,
-   "who": "guard.head",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 0.967,
-   "who": "guard.head",
-   "what": "accel spike",
-   "v": 0.041
-  },
-  {
-   "t": 1.267,
-   "who": "guard.head",
-   "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 1.567,
-   "who": "guard.head",
-   "what": "accel spike",
-   "v": 0.043
-  },
-  {
-   "t": 1.867,
-   "who": "guard.head",
-   "what": "accel spike",
-   "v": 0.041
-  },
-  {
-   "t": 15.8,
-   "who": "guard.head",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 15.867,
-   "who": "guard.head",
-   "what": "accel spike",
-   "v": 0.062
-  },
-  {
-   "t": 28.667,
+   "t": 1.233,
    "who": "guard.head",
    "what": "accel spike",
    "v": 0.034
   },
   {
-   "t": 0.367,
-   "who": "guard.pelvis",
+   "t": 1.533,
+   "who": "guard.head",
    "what": "accel spike",
-   "v": 0.035
+   "v": 0.037
   },
   {
-   "t": 0.667,
-   "who": "guard.pelvis",
+   "t": 1.833,
+   "who": "guard.head",
    "what": "accel spike",
-   "v": 0.036
+   "v": 0.041
   },
   {
-   "t": 0.967,
+   "t": 2.133,
+   "who": "guard.head",
+   "what": "accel spike",
+   "v": 0.041
+  },
+  {
+   "t": 26.967,
+   "who": "guard.head",
+   "what": "accel spike",
+   "v": 0.034
+  },
+  {
+   "t": 0.933,
+   "who": "guard.pelvis",
+   "what": "accel spike",
+   "v": 0.03
+  },
+  {
+   "t": 1.233,
+   "who": "guard.pelvis",
+   "what": "accel spike",
+   "v": 0.034
+  },
+  {
+   "t": 1.533,
+   "who": "guard.pelvis",
+   "what": "accel spike",
+   "v": 0.037
+  },
+  {
+   "t": 1.833,
    "who": "guard.pelvis",
    "what": "accel spike",
    "v": 0.041
   },
   {
-   "t": 1.267,
-   "who": "guard.pelvis",
-   "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 1.567,
-   "who": "guard.pelvis",
-   "what": "accel spike",
-   "v": 0.043
-  },
-  {
-   "t": 1.867,
+   "t": 2.133,
    "who": "guard.pelvis",
    "what": "accel spike",
    "v": 0.041
   },
   {
-   "t": 15.8,
-   "who": "guard.pelvis",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 15.867,
-   "who": "guard.pelvis",
-   "what": "accel spike",
-   "v": 0.062
-  },
-  {
-   "t": 28.667,
-   "who": "guard.pelvis",
-   "what": "accel spike",
-   "v": 0.033
-  },
-  {
-   "t": 0.367,
+   "t": 0.933,
    "who": "guard.chest",
    "what": "accel spike",
-   "v": 0.035
+   "v": 0.03
   },
   {
-   "t": 0.667,
-   "who": "guard.chest",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 0.967,
-   "who": "guard.chest",
-   "what": "accel spike",
-   "v": 0.041
-  },
-  {
-   "t": 1.267,
-   "who": "guard.chest",
-   "what": "accel spike",
-   "v": 0.04
-  },
-  {
-   "t": 1.567,
-   "who": "guard.chest",
-   "what": "accel spike",
-   "v": 0.043
-  },
-  {
-   "t": 1.867,
-   "who": "guard.chest",
-   "what": "accel spike",
-   "v": 0.041
-  },
-  {
-   "t": 15.8,
-   "who": "guard.chest",
-   "what": "accel spike",
-   "v": 0.036
-  },
-  {
-   "t": 15.867,
-   "who": "guard.chest",
-   "what": "accel spike",
-   "v": 0.062
-  },
-  {
-   "t": 28.667,
+   "t": 1.233,
    "who": "guard.chest",
    "what": "accel spike",
    "v": 0.034
+  },
+  {
+   "t": 1.533,
+   "who": "guard.chest",
+   "what": "accel spike",
+   "v": 0.037
+  },
+  {
+   "t": 1.833,
+   "who": "guard.chest",
+   "what": "accel spike",
+   "v": 0.041
+  },
+  {
+   "t": 2.133,
+   "who": "guard.chest",
+   "what": "accel spike",
+   "v": 0.041
   },
   {
    "t": 5,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.021
+   "v": 0.02
   },
   {
    "t": 5.033,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.038
+   "v": 0.036
   },
   {
    "t": 5.067,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.033
+   "v": 0.031
   },
   {
    "t": 5.1,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.027
+   "v": 0.026
   },
   {
    "t": 5.133,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.023
+   "v": 0.022
   },
   {
    "t": 5.5,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.021
+   "v": 0.02
   },
   {
    "t": 5.533,
@@ -5037,7 +4827,7 @@
    "t": 5.667,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.026
+   "v": 0.025
   },
   {
    "t": 5.7,
@@ -5160,16 +4950,10 @@
    "v": 0.021
   },
   {
-   "t": 14.333,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.02
-  },
-  {
    "t": 14.367,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.024
+   "v": 0.023
   },
   {
    "t": 14.4,
@@ -5181,37 +4965,31 @@
    "t": 14.433,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.031
+   "v": 0.03
   },
   {
    "t": 14.467,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.033
+   "v": 0.032
   },
   {
    "t": 14.5,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.034
+   "v": 0.032
   },
   {
    "t": 14.533,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.032
+   "v": 0.031
   },
   {
    "t": 14.567,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.028
-  },
-  {
-   "t": 14.6,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.02
+   "v": 0.027
   },
   {
    "t": 14.7,
@@ -5223,106 +5001,64 @@
    "t": 14.733,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.048
+   "v": 0.046
   },
   {
    "t": 14.767,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.069
+   "v": 0.067
   },
   {
    "t": 14.8,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.088
+   "v": 0.085
   },
   {
    "t": 14.833,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.088
+   "v": 0.085
   },
   {
-   "t": 28.133,
+   "t": 21.4,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.022
+   "v": 0.027
   },
   {
-   "t": 28.167,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.023
-  },
-  {
-   "t": 28.2,
+   "t": 21.433,
    "who": "cam.pos",
    "what": "accel spike",
    "v": 0.024
   },
   {
-   "t": 28.233,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.025
-  },
-  {
-   "t": 28.267,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.025
-  },
-  {
-   "t": 28.3,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.024
-  },
-  {
-   "t": 28.333,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.023
-  },
-  {
-   "t": 28.367,
+   "t": 21.467,
    "who": "cam.pos",
    "what": "accel spike",
    "v": 0.021
   },
   {
-   "t": 28.733,
+   "t": 28.233,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.022
+   "v": 0.02
   },
   {
-   "t": 28.767,
+   "t": 28.267,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.024
+   "v": 0.021
   },
   {
-   "t": 28.8,
+   "t": 28.3,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.024
-  },
-  {
-   "t": 28.833,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.023
+   "v": 0.02
   }
  ],
  "anatomyList": [
-  {
-   "t": 15.833333333333334,
-   "who": "guard",
-   "what": "foot l unreachable",
-   "v": 0.036
-  },
   {
    "t": 28.166666666666668,
    "who": "her",
