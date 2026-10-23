@@ -196,3 +196,38 @@ Results (`v4/qa/review4/`):
 - **No real-time viewing or listening:** the film has not been watched at normal speed or listened to here. Pacing, motion smoothness at 30 fps and the effect levels still need a real watch and listen.
 - **Specimen architectures (3:24–3:41):** these are illustrative of how differently tumours can be organised. They are not labelled cancer types.
 - **Hypothetical framing:** the treatments are shown as the narration's hypothetical future system. No on-screen text claims clinical results.
+
+## 4K master
+
+`exports/FGW_AI_Cancer_V4_4K_MASTER.mp4`. The file is git-ignored.
+
+**How it was made.** It was rendered natively (`--scale=2`) from the same source as the final 1080p, in seven ranges of 1,000 frames, joined without re-encoding, with the same V4 mix added.
+
+| Property | Value |
+|---|---|
+| Video | 3840×2160, 30 fps, H.264 CRF 16 |
+| Frames | 6,935 |
+| Length | 3:51.17 |
+| Size | 844,734,673 bytes |
+| SHA-256 | b4ea222b…6f75bd |
+
+**Checks** (results in `v4/qa/master4k/`):
+
+- **Decode:** the stream decodes in full with no errors.
+- **Loudness:** -14.1 LUFS; -1.1 dBTP peak.
+- **Picture checks** (on a 1080p proxy downscaled from the master):
+  - Black frames, freezes and low-activity seconds: none.
+  - Jumps: flagged at the same places as the 1080p.
+  - Range seams: no jump at any of them.
+  - One extra flag at 3:35.27: the end of the 0.3 s dissolve from the protein into the T cell, with the same frames as in the 1080p.
+- **Native detail:** checked on a full-resolution crop at 3:16.5.
+
+**Delivery split.** The master was also delivered in three lossless parts, cut at keyframes at frames 2000 and 4000; their decoded frames match the master frame for frame.
+
+| Part | Range | Frames |
+|---|---|---|
+| `FGW_AI_Cancer_V4_4K_MASTER_part1of3.mp4` | 0:00–1:06.7 | 2,000 |
+| `FGW_AI_Cancer_V4_4K_MASTER_part2of3.mp4` | 1:06.7–2:13.3 | 2,000 |
+| `FGW_AI_Cancer_V4_4K_MASTER_part3of3.mp4` | 2:13.3–3:51.2 | 2,935 |
+
+**Rejoining the parts:** list the three files in order in a concat list file, then run `ffmpeg -f concat -safe 0 -i list.txt -c copy FGW_AI_Cancer_V4_4K_MASTER.mp4`.
