@@ -439,7 +439,7 @@ const TissueG: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
     <g>
       <TissueBack cam={cam} t={t} />
       <g transform={camTransform(cam)}>
-        <TissueField cam={cam} t={t} mod={(i, j) => (i === 0 && j === 0 ? {hide: true} : null)} />
+        <TissueField cam={cam} t={t} mod={cam.z > 0.05 ? (i, j) => (i === 0 && j === 0 ? {hide: true} : null) : undefined} />
         <g opacity={1 - eaten}>
           {die <= 0 ? <Cell2 x={C0.x} y={C0.y} seed={C0.seed} t={t} lod={lod} look={lookMix(HEALTHY, TUMOR, 0.2)} pulse={pulse} flat={press > 0.01 ? {a: ang + Math.PI, d: 0.06} : undefined} /> : <ApoptoticCell x={lerp(C0.x, mp[0], eaten * 0.5)} y={lerp(C0.y, mp[1], eaten * 0.5)} seed={C0.seed} t={t} die={die} lod={lod} look={lookMix(HEALTHY, TUMOR, 0.3)} />}
         </g>
@@ -467,7 +467,7 @@ const EndG: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
 };
 
 export const shotsG4: Shot[] = [
-  {id: 'G-body', t0: PULL0 + 0.8, t1: DIVE[1] + 0.05, fade: 0.4, draw: (t) => <BodyG t={t} cam={bodyCam(t)} />},
+  {id: 'G-body', t0: PULL0 + 0.55, t1: DIVE[1] + 0.05, fade: 0.4, draw: (t) => <BodyG t={t} cam={bodyCam(t)} />},
   {id: 'G-spec', t0: DIVE[0], t1: PRO[0] + 0.35, fade: DIVE[1] - DIVE[0], draw: (t) => <Specimens t={t} cam={specCam(t)} mode={t < tG.studies - 0.3 ? 'intro' : 'loop'} />},
   {id: 'G-protein', t0: PRO[0], t1: IMM[0] + 0.35, fade: 0.3, draw: (t) => <ProteinG t={t} cam={CAM_PRO(t)} />},
   {id: 'G-immune', t0: IMM[0], t1: WATCH[0] + 0.45, fade: 0.3, draw: (t) => <ImmuneG t={t} cam={CAM_IMM(t)} />},

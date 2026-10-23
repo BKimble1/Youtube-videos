@@ -477,7 +477,7 @@ const Attack: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
     <g>
       <TissueBack cam={cam} t={t} />
       <g transform={camTransform(cam)}>
-        <TissueField cam={cam} t={t} mod={(i, j) => (i === RX.i && j === RX.j ? {hide: true} : null)} />
+        <TissueField cam={cam} t={t} mod={cam.z > 0.05 ? (i, j) => (i === RX.i && j === RX.j ? {hide: true} : null) : undefined} />
         {SPROUTS.slice(0, 1).map((c, k) => <Capillary key={k} pts={c} t={t} w={78} lod={cam.z} />)}
         {die <= 0 ? <Cell2 x={RX.x} y={RX.y} seed={RX.seed} t={t} lod={lod} look={RESIST} nucScale={1.25} irr={0.07} flat={press > 0.01 ? {a: nAng + Math.PI, d: 0.06} : undefined} /> : <ApoptoticCell x={RX.x} y={RX.y} seed={RX.seed} t={t} die={die} lod={lod} look={RESIST} />}
         {die < 0.3 && Array.from({length: 8}, (_, m) => {
@@ -517,6 +517,6 @@ export const shotsF4: Shot[] = [
   {id: 'F-blood', t0: tF.cancer - 0.1, t1: TUBE[0] + 0.05, fade: 0.5, draw: (t) => <BloodF t={t} cam={CAM_B(t)} />},
   {id: 'F-tube', t0: TUBE[0] - 0.3, t1: READ_CUT, fade: 0.3, draw: (t) => <Tube t={t} cam={CAM_TU(t)} />},
   {id: 'F-read', t0: READ_CUT, t1: tF.evolving, draw: (t) => <Analysis t={t} cam={CAM_AN(t)} />},
-  {id: 'F-attack', t0: tF.evolving, t1: PULL0 + 1.25, draw: (t) => <Attack t={t} cam={t < PULL0 ? ATT_CAM(t) : toTissue(BODY_PULL(t))} />},
+  {id: 'F-attack', t0: tF.evolving, t1: PULL0 + 1.0, draw: (t) => <Attack t={t} cam={t < PULL0 ? ATT_CAM(t) : toTissue(BODY_PULL(t))} />},
 ];
 export const _f4 = {HEALTHY, tipNoop: 0};
