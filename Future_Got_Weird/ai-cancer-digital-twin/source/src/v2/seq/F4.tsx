@@ -182,7 +182,8 @@ const TissueF: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
       if (d < Rt) return {look: TUMOR, nucScale: 1.25, irr: 0.06};
       if (d < RT_E0) {
         const k = clamp01((d - Rt) / 300);
-        return {look: lookMix({...TUMOR, fill: '#8A6A86'}, HEALTHY, heal), bleb: k * (1 - heal), shrink: 0.5 * k * (1 - heal), op: lerp(0.4, 1, heal)};
+        // opaque, so the background never shows through as the far-zoom texture hands over to individual cells
+        return {look: lookMix(lookMix({...TUMOR, fill: '#8A6A86'}, {...TUMOR, fill: '#6E4E66', light: '#9A7E92'}, 0.5 * (1 - heal)), HEALTHY, heal), bleb: k * (1 - heal), shrink: 0.5 * k * (1 - heal)};
       }
       return null;
     };
@@ -192,9 +193,9 @@ const TissueF: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const shedK = lift(t, tF.interesting, tF.interesting + 0.6);
   return (
     <g>
-      <TissueBack cam={cam} t={t} />
+      <TissueBack cam={cam} t={t} farSkip />
       <g transform={camTransform(cam)}>
-        <TissueField cam={cam} t={t} mod={mod} />
+        <TissueField farSkip cam={cam} t={t} mod={mod} />
         {phase1 && <TumorMassShade Rt={RT_E0} op={0.6 * (1 - lift(cam.z, 0.35, 0.7))} />}
         <TumourStructure t={t} cam={cam} />
         {CAPS.map((c, k) => <Capillary key={k} pts={c} t={t} w={95} lod={cam.z} />)}
@@ -243,7 +244,7 @@ const TissueF: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
           const found = lift(t, tF.because + 0.6 + 0.15 * s.k, tF.because + 1.4 + 0.15 * s.k);
           return (
             <g key={'sv' + s.k}>
-              {far > 0.01 && <circle cx={s.x} cy={s.y} r={220} fill="url(#glowGold)" opacity={0.6 * far * found} />}
+              <circle cx={s.x} cy={s.y} r={240} fill="url(#glowGold)" opacity={found * Math.max(0.6 * far, 0.45 * (1 - smooth((lod - 30) / 40)))} />
               <Cell2 x={s.x} y={s.y} seed={s.seed} t={t} lod={lod} look={RESIST} nucScale={1.2} irr={0.06} pulse={0.25 * found} />
               <Markers2 x={s.x} y={s.y} seed={s.seed} lod={lod} />
             </g>
@@ -475,9 +476,9 @@ const Attack: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   });
   return (
     <g>
-      <TissueBack cam={cam} t={t} />
+      <TissueBack cam={cam} t={t} farSkip />
       <g transform={camTransform(cam)}>
-        <TissueField cam={cam} t={t} mod={cam.z > 0.05 ? (i, j) => (i === RX.i && j === RX.j ? {hide: true} : null) : undefined} />
+        <TissueField farSkip cam={cam} t={t} mod={cam.z > 0.05 ? (i, j) => (i === RX.i && j === RX.j ? {hide: true} : null) : undefined} />
         {SPROUTS.slice(0, 1).map((c, k) => <Capillary key={k} pts={c} t={t} w={78} lod={cam.z} />)}
         {die <= 0 ? <Cell2 x={RX.x} y={RX.y} seed={RX.seed} t={t} lod={lod} look={RESIST} nucScale={1.25} irr={0.07} flat={press > 0.01 ? {a: nAng + Math.PI, d: 0.06} : undefined} /> : <ApoptoticCell x={RX.x} y={RX.y} seed={RX.seed} t={t} die={die} lod={lod} look={RESIST} />}
         {die < 0.3 && Array.from({length: 8}, (_, m) => {
