@@ -1,0 +1,215 @@
+{
+ "file": "exports/FGW_Laser_Voices_V1_REVIEW_1080x1920.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "nb_frames": "1022",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "color_primaries": "bt709",
+  "color_transfer": "bt709"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317390"
+ },
+ "duration": 34.069,
+ "loudness": {
+  "I_LUFS": -14.5,
+  "LRA": 3.8,
+  "TP_dBFS": -2.6
+ },
+ "black_segments": [],
+ "freezes_ge_1s": [],
+ "keyframes": {
+  "count": 69,
+  "max_gap_s": 0.5
+ },
+ "audio_offset_vs_mix_ms": 0.0,
+ "audio_corr_vs_mix": 0.99996,
+ "vosk_transcript": "if someone pointed this laser at you you could hear a voice that nobody beside you hears and you wouldn't need anything in your ears the beam is invisible but when water vapor near your ear absorbs it's light it heats up and expands creating tiny sound waves now sweeping that beam at exactly the right speed concentrates the sound where you're standing scientists actually demonstrated this from eight feet away but if someone walks between you and the laser the voice suddenly stops they can't hear your message they're blocking it and the second they move you hear it again",
+ "vosk_wer_vs_approved": 0.01,
+ "vosk_diffs": [
+  [
+   "replace",
+   "its",
+   "it's"
+  ]
+ ],
+ "caption_windows": [
+  {
+   "caption": "If someone pointed this laser at you,",
+   "show": 0,
+   "hide": 1.91,
+   "asr": "if someone pointed this laser at you you",
+   "match": 0.93
+  },
+  {
+   "caption": "you could hear a voice",
+   "show": 1.91,
+   "hide": 2.72,
+   "asr": "you could hear a voice",
+   "match": 1.0
+  },
+  {
+   "caption": "that nobody beside you hears.",
+   "show": 2.72,
+   "hide": 4.95,
+   "asr": "voice that nobody beside you hears",
+   "match": 0.91
+  },
+  {
+   "caption": "And you wouldn\u2019t need",
+   "show": 4.95,
+   "hide": 5.63,
+   "asr": "and you wouldn't need",
+   "match": 1.0
+  },
+  {
+   "caption": "anything in your ears.",
+   "show": 5.63,
+   "hide": 7.16,
+   "asr": "need anything in your ears the",
+   "match": 0.8
+  },
+  {
+   "caption": "The beam is invisible.",
+   "show": 7.16,
+   "hide": 8.85,
+   "asr": "the beam is invisible",
+   "match": 1.0
+  },
+  {
+   "caption": "But when water vapor near your ear",
+   "show": 8.85,
+   "hide": 10.4,
+   "asr": "but when water vapor near your ear",
+   "match": 1.0
+  },
+  {
+   "caption": "absorbs its light,",
+   "show": 10.4,
+   "hide": 11.56,
+   "asr": "ear absorbs it's light it",
+   "match": 0.5
+  },
+  {
+   "caption": "it heats up and expands\u2014",
+   "show": 11.56,
+   "hide": 13.22,
+   "asr": "it heats up and expands",
+   "match": 1.0
+  },
+  {
+   "caption": "creating tiny sound waves.",
+   "show": 13.22,
+   "hide": 15.11,
+   "asr": "creating tiny sound waves",
+   "match": 1.0
+  },
+  {
+   "caption": "Now, sweeping that beam",
+   "show": 15.11,
+   "hide": 16.4,
+   "asr": "now sweeping that beam",
+   "match": 1.0
+  },
+  {
+   "caption": "at exactly the right speed",
+   "show": 16.4,
+   "hide": 17.78,
+   "asr": "beam at exactly the right speed",
+   "match": 0.91
+  },
+  {
+   "caption": "concentrates the sound",
+   "show": 17.78,
+   "hide": 18.94,
+   "asr": "speed concentrates the sound",
+   "match": 0.86
+  },
+  {
+   "caption": "where you\u2019re standing.",
+   "show": 18.94,
+   "hide": 20.06,
+   "asr": "sound where you're standing",
+   "match": 0.86
+  },
+  {
+   "caption": "Scientists actually demonstrated this",
+   "show": 20.06,
+   "hide": 21.75,
+   "asr": "scientists actually demonstrated this",
+   "match": 1.0
+  },
+  {
+   "caption": "from eight feet away.",
+   "show": 21.75,
+   "hide": 23.33,
+   "asr": "this from eight feet away but",
+   "match": 0.8
+  },
+  {
+   "caption": "But if someone walks",
+   "show": 23.33,
+   "hide": 24.22,
+   "asr": "but if someone walks",
+   "match": 1.0
+  },
+  {
+   "caption": "between you and the laser\u2026",
+   "show": 24.22,
+   "hide": 26.27,
+   "asr": "walks between you and the laser the",
+   "match": 0.83
+  },
+  {
+   "caption": "The voice suddenly stops.",
+   "show": 26.27,
+   "hide": 28.06,
+   "asr": "the voice suddenly stops they",
+   "match": 0.89
+  },
+  {
+   "caption": "They can\u2019t hear your message.",
+   "show": 28.06,
+   "hide": 29.41,
+   "asr": "they can't hear your message they're",
+   "match": 0.91
+  },
+  {
+   "caption": "They\u2019re blocking it.",
+   "show": 29.41,
+   "hide": 30.7,
+   "asr": "they're blocking it",
+   "match": 1.0
+  },
+  {
+   "caption": "And the second they move\u2026",
+   "show": 30.7,
+   "hide": 32.27,
+   "asr": "and the second they move you",
+   "match": 0.91
+  },
+  {
+   "caption": "You hear it again.",
+   "show": 32.27,
+   "hide": 34.067,
+   "asr": "you hear it again",
+   "match": 1.0
+  }
+ ],
+ "caption_windows_ok": "22/23",
+ "loop_seam": {
+  "mean_abs_last_to_first": 16.44,
+  "mean_abs_prev_steps": [
+   0.18,
+   0.05
+  ]
+ }
+}

@@ -1,0 +1,126 @@
+{
+ "provider": "ElevenLabs (restricted connector, authorized workspace)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "The latest FGW production record (invisibility-shield/audio/narration/voice_provenance.json, 23 Oct 2026) and Living Skin both use this voice; it is the established FGW narrator. Re-confirmed with creative_list_voices on 23 Oct 2026. No Death Clock voice record exists in this repository."
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "LWAx7zaQe906nUoTLU6M",
+ "generated": "2026-10-23",
+ "prompts": {
+  "A": "[curious, brisk, intimate] If someone pointed this laser at you, you could hear a voice that NOBODY BESIDE YOU hears. And you wouldn’t need anything in your ears. [brisk, flowing] The beam is INVISIBLE. But when water vapor near your ear absorbs its light, it heats up and expands—creating tiny sound waves. Now, sweeping that beam at exactly the right speed concentrates the sound where you’re standing. Scientists actually demonstrated this from EIGHT FEET away. [rising tension] But if someone walks between you and the laser… The voice suddenly STOPS. They can’t hear your message. They’re BLOCKING it. [quietly knowing] And the second they move… You hear it AGAIN.",
+  "B": "[intrigued, quick, crisp consonants] If someone pointed this laser at you, you could hear a voice that NOBODY BESIDE YOU hears. And you wouldn’t need anything in your ears. [light, flowing, brisk] The beam is INVISIBLE. But when water vapor near your ear absorbs its light, it heats up and expands—creating tiny sound waves. Now, sweeping that beam at exactly the right speed concentrates the sound where you’re standing. Scientists actually demonstrated this from EIGHT FEET away. [suspenseful, building] But if someone walks between you and the laser… The voice suddenly STOPS. They can’t hear your message. They’re BLOCKING it. [warmly, knowing] And the second they move… You hear it AGAIN."
+ },
+ "note_on_prompt": "Bracketed tags are delivery directions (not spoken); capitals are emphasis on the brief's words (nobody beside you, invisible, eight feet, stops, blocking, again). The spoken words are exactly production/NARRATION_APPROVED.txt.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/take1.mp3",
+   "generation_id": "bD7fXSTV3W3cD2vSuo8L",
+   "prompt": "A",
+   "sha256": "911dead69063cb32f18ffec646b655b886ea2a9d6b1d99306b0304bf269ef641",
+   "duration_s": 33.23,
+   "speech_s": [
+    0.05,
+    33.07
+   ],
+   "wpm_over_speech_span": 183.5,
+   "articulation_wpm_excl_pauses_over_0_25s": 210.6,
+   "pauses_over_0_25s": 11,
+   "vosk_wer_vs_approved": 0.02,
+   "vosk_diffs": [
+    [
+     "replace",
+     "its",
+     "it's"
+    ],
+    [
+     "replace",
+     "beam",
+     "been"
+    ]
+   ],
+   "pocketsphinx_wer": 0.347
+  },
+  {
+   "file": "audio/narration/takes/take2.mp3",
+   "generation_id": "tNmVPNBihMDEPU0osiK9",
+   "prompt": "A",
+   "sha256": "edfaf394ac4e5ba762522f91d6cce44c78b5cc5b30c273a3a6dde3f666c1666e",
+   "duration_s": 33.96,
+   "speech_s": [
+    0.04,
+    33.78
+   ],
+   "wpm_over_speech_span": 179.6,
+   "articulation_wpm_excl_pauses_over_0_25s": 207.7,
+   "pauses_over_0_25s": 11,
+   "vosk_wer_vs_approved": 0.01,
+   "vosk_diffs": [
+    [
+     "replace",
+     "its",
+     "it's"
+    ]
+   ],
+   "pocketsphinx_wer": 0.297
+  },
+  {
+   "file": "audio/narration/takes/take3.mp3",
+   "generation_id": "RfXX27kC5J3h2P6cIPKu",
+   "prompt": "B",
+   "sha256": "76ce93bac87a92bdf50a64916b016f410aea4308c026ee9b12208cccd3b80501",
+   "duration_s": 33.65,
+   "speech_s": [
+    0.01,
+    33.46
+   ],
+   "wpm_over_speech_span": 181.2,
+   "articulation_wpm_excl_pauses_over_0_25s": 208.6,
+   "pauses_over_0_25s": 11,
+   "vosk_wer_vs_approved": 0.01,
+   "vosk_diffs": [
+    [
+     "replace",
+     "its",
+     "it's"
+    ]
+   ],
+   "pocketsphinx_wer": 0.307
+  },
+  {
+   "file": "audio/narration/takes/take4.mp3",
+   "generation_id": "Wf5PS23Lqdc3OZKNlh7C",
+   "prompt": "B",
+   "sha256": "9778a0a1d584aa5673c4f19c688a295b047139c9213ce24b494941bb9b7faa27",
+   "duration_s": 34.43,
+   "speech_s": [
+    0.04,
+    34.28
+   ],
+   "wpm_over_speech_span": 177.0,
+   "articulation_wpm_excl_pauses_over_0_25s": 208.7,
+   "pauses_over_0_25s": 12,
+   "vosk_wer_vs_approved": 0.01,
+   "vosk_diffs": [
+    [
+     "replace",
+     "its",
+     "it's"
+    ]
+   ],
+   "pocketsphinx_wer": 0.218
+  }
+ ],
+ "selected": {
+  "take": "audio/narration/takes/take3.mp3",
+  "why": "All four takes are word-perfect by independent ASR (the only Vosk difference, its/it's, is a homophone). Take 3 keeps the opening as one connected thought (no pause between \"at you,\" and \"you could\"; takes 1, 2 and 4 pause 0.28-0.29 s there), its pauses at the ellipses are short (0.47 s, 0.44 s), and its length (33.45 s speech) sits inside the 31-35 s target. Nobody listened to the takes in real time: the selection is by measurement.",
+  "edits": "none: decoded to 48 kHz mono, laid at 0 s, a 50 ms fade after the last word, silence to the end (tools/make_narration.py)"
+ },
+ "final": {
+  "file": "audio/narration/FGW_Laser_Voices_narration_final.wav",
+  "sha256": "b22271734436e5109b404c945aa0c833fab9e87f8158e70b2f5c82e2af8eed28",
+  "duration_s": 34.06666666666667,
+  "frames_at_30fps": 1022
+ }
+}

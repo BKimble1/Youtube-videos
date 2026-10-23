@@ -1,0 +1,15 @@
+import React from 'react';
+import {Composition, Still} from 'remotion';
+import {FPS, FRAMES, H, W} from './world';
+import {ModelSheet} from './ModelSheet';
+import {Test} from './Test';
+import {Film, FilmStill} from './Film';
+
+export const RemotionRoot: React.FC = () => (
+  <>
+    <Composition id="LaserVoices" component={Film} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix' as string | false, captions: true}} />
+    <Still id="FilmStill" component={FilmStill} width={W} height={H} defaultProps={{t: 0, captions: true}} />
+    <Still id="ModelSheet" component={ModelSheet} width={W} height={H} defaultProps={{row: 0}} />
+    <Still id="Test" component={Test} width={W} height={H} defaultProps={{t: 0, pos: [-0.6, 2.3, 3.2], tgt: [1.3, 1.1, 0], f: 1100, sec: 0}} />
+  </>
+);

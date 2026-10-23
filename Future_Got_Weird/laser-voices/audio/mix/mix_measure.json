@@ -1,0 +1,32 @@
+{
+ "integrated_lufs_stereo": -14.53,
+ "integrated_lufs_mono_fold": -17.55,
+ "sample_peak_dbfs": -2.55,
+ "voice_over_rest_phone_band_db": 17.5,
+ "duration_s": 34.06666666666667,
+ "voice_stem_vs_source_corr": 1.0,
+ "effects": 27,
+ "gate": {
+  "message_rms_db_before_block": -32.3,
+  "message_rms_db_while_blocked": -140.0,
+  "message_rms_db_after_restore": -32.1,
+  "received_windows_s": [
+   [
+    0,
+    null
+   ],
+   [
+    17.733,
+    null
+   ],
+   [
+    23.933,
+    null
+   ],
+   [
+    31.933,
+    null
+   ]
+  ]
+ }
+}

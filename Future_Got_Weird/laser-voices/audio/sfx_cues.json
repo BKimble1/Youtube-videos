@@ -1,0 +1,164 @@
+[
+ {
+  "name": "bystander step 1 (r)",
+  "at": 23.029,
+  "dur": 0.16,
+  "gain_db": -36.9
+ },
+ {
+  "name": "bystander step 2 (r)",
+  "at": 23.779,
+  "dur": 0.16,
+  "gain_db": -36.7
+ },
+ {
+  "name": "bystander step 3 (l)",
+  "at": 24.212,
+  "dur": 0.16,
+  "gain_db": -36.1
+ },
+ {
+  "name": "bystander step 4 (r)",
+  "at": 24.933,
+  "dur": 0.16,
+  "gain_db": -35.0
+ },
+ {
+  "name": "bystander step 5 (l)",
+  "at": 25.283,
+  "dur": 0.16,
+  "gain_db": -34.7
+ },
+ {
+  "name": "bystander step 6 (r)",
+  "at": 27.079,
+  "dur": 0.16,
+  "gain_db": -34.5
+ },
+ {
+  "name": "bystander step 7 (l)",
+  "at": 27.717,
+  "dur": 0.16,
+  "gain_db": -33.8
+ },
+ {
+  "name": "bystander step 8 (r)",
+  "at": 28.112,
+  "dur": 0.16,
+  "gain_db": -33.5
+ },
+ {
+  "name": "bystander step 9 (l)",
+  "at": 31.704,
+  "dur": 0.16,
+  "gain_db": -30.2
+ },
+ {
+  "name": "bystander step 10 (r)",
+  "at": 32.117,
+  "dur": 0.16,
+  "gain_db": -28.5
+ },
+ {
+  "name": "bystander step 11 (l)",
+  "at": 32.558,
+  "dur": 0.16,
+  "gain_db": -28.1
+ },
+ {
+  "name": "bystander step 12 (r)",
+  "at": 33.0,
+  "dur": 0.16,
+  "gain_db": -29.1
+ },
+ {
+  "name": "bystander step 13 (l)",
+  "at": 33.442,
+  "dur": 0.16,
+  "gain_db": -30.3
+ },
+ {
+  "name": "bystander step 14 (r)",
+  "at": 33.883,
+  "dur": 0.16,
+  "gain_db": -31.5
+ },
+ {
+  "name": "magnifier opens (glass)",
+  "at": 9.25,
+  "dur": 0.9,
+  "gain_db": -36
+ },
+ {
+  "name": "absorption (warm tick)",
+  "at": 10.76,
+  "dur": 0.12,
+  "gain_db": -34
+ },
+ {
+  "name": "expansion (soft puff)",
+  "at": 12.3,
+  "dur": 0.3,
+  "gain_db": -36
+ },
+ {
+  "name": "magnifier closes (glass)",
+  "at": 14.83,
+  "dur": 0.7,
+  "gain_db": -38
+ },
+ {
+  "name": "section opens: latch",
+  "at": 15.96,
+  "dur": 0.05,
+  "gain_db": -32
+ },
+ {
+  "name": "section opens: cover slide",
+  "at": 16.01,
+  "dur": 0.4,
+  "gain_db": -36
+ },
+ {
+  "name": "scanning mirror tick 1",
+  "at": 16.06,
+  "dur": 0.03,
+  "gain_db": -38
+ },
+ {
+  "name": "scanning mirror tick 2",
+  "at": 17.673,
+  "dur": 0.03,
+  "gain_db": -38
+ },
+ {
+  "name": "scanning mirror tick 3",
+  "at": 19.286,
+  "dur": 0.03,
+  "gain_db": -38
+ },
+ {
+  "name": "scanning mirror tick 4",
+  "at": 20.899,
+  "dur": 0.03,
+  "gain_db": -38
+ },
+ {
+  "name": "section closes: cover slide",
+  "at": 22.28,
+  "dur": 0.35,
+  "gain_db": -37
+ },
+ {
+  "name": "section closes: latch",
+  "at": 23.02,
+  "dur": 0.05,
+  "gain_db": -33
+ },
+ {
+  "name": "8 FT line lands (tick)",
+  "at": 22.53,
+  "dur": 0.08,
+  "gain_db": -35
+ }
+]

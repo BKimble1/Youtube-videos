@@ -1,0 +1,8 @@
+source/node_modules/
+source/.remotion/
+source/out/
+tools/__pycache__/
+# Regenerated deterministically by tools/make_narration.py and tools/make_audio.py (see README -> Rebuild)
+source/public/audio/*.wav
+audio/mix/stems/
+audio/mix/stems_v2/

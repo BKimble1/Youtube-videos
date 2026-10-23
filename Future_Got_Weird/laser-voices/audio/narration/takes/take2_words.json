@@ -1,0 +1,518 @@
+{
+ "source": "audio/narration/takes/take2.mp3",
+ "duration": 33.92,
+ "speech": [
+  0.04,
+  33.78
+ ],
+ "wpm": 179.6,
+ "pocketsphinx_transcript": "if someone pointed this laser right you are you get your boys that nobody besides you're years and you would need anything in your ears the beam is invisible one water vapor in your your your absorbs it's like a heats up an experience creating tiny sound waves now sweeping that being at exactly the right speed concentrates the sound we're standing scientists actually demonstrated this from the feet away but if someone walks between you when the lease or the board suddenly stops they can hear your message they're blocking it in the second they move you hear it again",
+ "pocketsphinx_wer_vs_approved": 0.297,
+ "words": [
+  {
+   "word": "if",
+   "start": 0.0,
+   "end": 0.12
+  },
+  {
+   "word": "someone",
+   "start": 0.12,
+   "end": 0.53
+  },
+  {
+   "word": "pointed",
+   "start": 0.53,
+   "end": 0.88
+  },
+  {
+   "word": "this",
+   "start": 0.88,
+   "end": 1.03
+  },
+  {
+   "word": "laser",
+   "start": 1.03,
+   "end": 1.45
+  },
+  {
+   "word": "at",
+   "start": 1.45,
+   "end": 1.55
+  },
+  {
+   "word": "you",
+   "start": 1.56,
+   "end": 1.81
+  },
+  {
+   "word": "you",
+   "start": 2.09,
+   "end": 2.23
+  },
+  {
+   "word": "could",
+   "start": 2.23,
+   "end": 2.35
+  },
+  {
+   "word": "hear",
+   "start": 2.35,
+   "end": 2.6
+  },
+  {
+   "word": "a",
+   "start": 2.6,
+   "end": 2.63
+  },
+  {
+   "word": "voice",
+   "start": 2.63,
+   "end": 2.96
+  },
+  {
+   "word": "that",
+   "start": 2.96,
+   "end": 3.14
+  },
+  {
+   "word": "nobody",
+   "start": 3.14,
+   "end": 3.74
+  },
+  {
+   "word": "beside",
+   "start": 3.74,
+   "end": 4.24
+  },
+  {
+   "word": "you",
+   "start": 4.24,
+   "end": 4.37
+  },
+  {
+   "word": "hears",
+   "start": 4.37,
+   "end": 4.83
+  },
+  {
+   "word": "and",
+   "start": 5.19,
+   "end": 5.32
+  },
+  {
+   "word": "you",
+   "start": 5.32,
+   "end": 5.4
+  },
+  {
+   "word": "wouldn't",
+   "start": 5.4,
+   "end": 5.64
+  },
+  {
+   "word": "need",
+   "start": 5.64,
+   "end": 5.83
+  },
+  {
+   "word": "anything",
+   "start": 5.91,
+   "end": 6.35
+  },
+  {
+   "word": "in",
+   "start": 6.35,
+   "end": 6.42
+  },
+  {
+   "word": "your",
+   "start": 6.42,
+   "end": 6.57
+  },
+  {
+   "word": "ears",
+   "start": 6.57,
+   "end": 7.03
+  },
+  {
+   "word": "the",
+   "start": 7.42,
+   "end": 7.51
+  },
+  {
+   "word": "beam",
+   "start": 7.51,
+   "end": 7.87
+  },
+  {
+   "word": "is",
+   "start": 7.87,
+   "end": 8.08
+  },
+  {
+   "word": "invisible",
+   "start": 8.08,
+   "end": 8.72
+  },
+  {
+   "word": "but",
+   "start": 9.14,
+   "end": 9.27
+  },
+  {
+   "word": "when",
+   "start": 9.28,
+   "end": 9.43
+  },
+  {
+   "word": "water",
+   "start": 9.44,
+   "end": 9.73
+  },
+  {
+   "word": "vapor",
+   "start": 9.73,
+   "end": 10.02
+  },
+  {
+   "word": "near",
+   "start": 10.03,
+   "end": 10.26
+  },
+  {
+   "word": "your",
+   "start": 10.26,
+   "end": 10.42
+  },
+  {
+   "word": "ear",
+   "start": 10.42,
+   "end": 10.69
+  },
+  {
+   "word": "absorbs",
+   "start": 10.69,
+   "end": 11.08
+  },
+  {
+   "word": "its",
+   "start": 11.08,
+   "end": 11.23
+  },
+  {
+   "word": "light",
+   "start": 11.23,
+   "end": 11.55
+  },
+  {
+   "word": "it",
+   "start": 11.78,
+   "end": 11.86
+  },
+  {
+   "word": "heats",
+   "start": 11.86,
+   "end": 12.23
+  },
+  {
+   "word": "up",
+   "start": 12.23,
+   "end": 12.37
+  },
+  {
+   "word": "and",
+   "start": 12.42,
+   "end": 12.57
+  },
+  {
+   "word": "expands",
+   "start": 12.57,
+   "end": 13.29
+  },
+  {
+   "word": "creating",
+   "start": 13.45,
+   "end": 13.85
+  },
+  {
+   "word": "tiny",
+   "start": 13.85,
+   "end": 14.27
+  },
+  {
+   "word": "sound",
+   "start": 14.27,
+   "end": 14.6
+  },
+  {
+   "word": "waves",
+   "start": 14.6,
+   "end": 14.99
+  },
+  {
+   "word": "now",
+   "start": 15.42,
+   "end": 15.62
+  },
+  {
+   "word": "sweeping",
+   "start": 15.78,
+   "end": 16.23
+  },
+  {
+   "word": "that",
+   "start": 16.23,
+   "end": 16.43
+  },
+  {
+   "word": "beam",
+   "start": 16.43,
+   "end": 16.66
+  },
+  {
+   "word": "at",
+   "start": 16.66,
+   "end": 16.77
+  },
+  {
+   "word": "exactly",
+   "start": 16.77,
+   "end": 17.37
+  },
+  {
+   "word": "the",
+   "start": 17.37,
+   "end": 17.45
+  },
+  {
+   "word": "right",
+   "start": 17.45,
+   "end": 17.7
+  },
+  {
+   "word": "speed",
+   "start": 17.7,
+   "end": 18.09
+  },
+  {
+   "word": "concentrates",
+   "start": 18.11,
+   "end": 18.82
+  },
+  {
+   "word": "the",
+   "start": 18.83,
+   "end": 18.92
+  },
+  {
+   "word": "sound",
+   "start": 18.92,
+   "end": 19.25
+  },
+  {
+   "word": "where",
+   "start": 19.25,
+   "end": 19.39
+  },
+  {
+   "word": "you're",
+   "start": 19.39,
+   "end": 19.52
+  },
+  {
+   "word": "standing",
+   "start": 19.52,
+   "end": 20.03
+  },
+  {
+   "word": "scientists",
+   "start": 20.45,
+   "end": 20.93
+  },
+  {
+   "word": "actually",
+   "start": 20.93,
+   "end": 21.37
+  },
+  {
+   "word": "demonstrated",
+   "start": 21.37,
+   "end": 22.03
+  },
+  {
+   "word": "this",
+   "start": 22.03,
+   "end": 22.2
+  },
+  {
+   "word": "from",
+   "start": 22.2,
+   "end": 22.54
+  },
+  {
+   "word": "eight",
+   "start": 22.54,
+   "end": 22.72
+  },
+  {
+   "word": "feet",
+   "start": 22.72,
+   "end": 22.96
+  },
+  {
+   "word": "away",
+   "start": 22.96,
+   "end": 23.33
+  },
+  {
+   "word": "but",
+   "start": 23.83,
+   "end": 23.91
+  },
+  {
+   "word": "if",
+   "start": 23.91,
+   "end": 23.98
+  },
+  {
+   "word": "someone",
+   "start": 23.98,
+   "end": 24.32
+  },
+  {
+   "word": "walks",
+   "start": 24.32,
+   "end": 24.64
+  },
+  {
+   "word": "between",
+   "start": 24.65,
+   "end": 25.05
+  },
+  {
+   "word": "you",
+   "start": 25.05,
+   "end": 25.38
+  },
+  {
+   "word": "and",
+   "start": 25.38,
+   "end": 25.47
+  },
+  {
+   "word": "the",
+   "start": 25.47,
+   "end": 25.54
+  },
+  {
+   "word": "laser",
+   "start": 25.54,
+   "end": 26.09
+  },
+  {
+   "word": "the",
+   "start": 26.51,
+   "end": 26.59
+  },
+  {
+   "word": "voice",
+   "start": 26.59,
+   "end": 26.89
+  },
+  {
+   "word": "suddenly",
+   "start": 26.89,
+   "end": 27.3
+  },
+  {
+   "word": "stops",
+   "start": 27.3,
+   "end": 28.0
+  },
+  {
+   "word": "they",
+   "start": 28.32,
+   "end": 28.4
+  },
+  {
+   "word": "can't",
+   "start": 28.4,
+   "end": 28.73
+  },
+  {
+   "word": "hear",
+   "start": 28.73,
+   "end": 28.9
+  },
+  {
+   "word": "your",
+   "start": 28.9,
+   "end": 29.02
+  },
+  {
+   "word": "message",
+   "start": 29.02,
+   "end": 29.54
+  },
+  {
+   "word": "they're",
+   "start": 29.79,
+   "end": 29.88
+  },
+  {
+   "word": "blocking",
+   "start": 29.88,
+   "end": 30.46
+  },
+  {
+   "word": "it",
+   "start": 30.46,
+   "end": 30.63
+  },
+  {
+   "word": "and",
+   "start": 31.06,
+   "end": 31.19
+  },
+  {
+   "word": "the",
+   "start": 31.19,
+   "end": 31.25
+  },
+  {
+   "word": "second",
+   "start": 31.25,
+   "end": 31.68
+  },
+  {
+   "word": "they",
+   "start": 31.68,
+   "end": 31.78
+  },
+  {
+   "word": "move",
+   "start": 31.78,
+   "end": 32.12
+  },
+  {
+   "word": "you",
+   "start": 32.63,
+   "end": 32.72
+  },
+  {
+   "word": "hear",
+   "start": 32.73,
+   "end": 33.02
+  },
+  {
+   "word": "it",
+   "start": 33.02,
+   "end": 33.07
+  },
+  {
+   "word": "again",
+   "start": 33.16,
+   "end": 33.66
+  }
+ ]
+}
