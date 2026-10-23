@@ -205,3 +205,13 @@ Results (`v3/qa/review3/`):
 - **Native detail:** checked on a full-resolution crop at 1:43.5.
 
 **Not checked:** the master has not been watched at normal speed or listened to in this environment.
+
+**Delivery split.** The master is too large to upload in one piece, so it was also delivered in three parts, cut losslessly at keyframes at frames 2000 and 4000:
+
+| Part | Range | Frames |
+|---|---|---|
+| `FGW_AI_Cancer_V3_4K_MASTER_part1of3.mp4` | 0:00–1:06.7 | 2,000 |
+| `FGW_AI_Cancer_V3_4K_MASTER_part2of3.mp4` | 1:06.7–2:13.3 | 2,000 |
+| `FGW_AI_Cancer_V3_4K_MASTER_part3of3.mp4` | 2:13.3–3:51.2 | 2,935 |
+
+Their decoded frames match the master's frame for frame. To rejoin them, list the three files in order in a concat list file and run `ffmpeg -f concat -safe 0 -i list.txt -c copy FGW_AI_Cancer_V3_4K_MASTER.mp4`.
