@@ -1,0 +1,584 @@
+[
+ {
+  "name": "her step 0",
+  "at": 0.016,
+  "dur": 0.12,
+  "gain_db": -32.6
+ },
+ {
+  "name": "guard step 1",
+  "at": 0.046,
+  "dur": 0.22,
+  "gain_db": -31.0
+ },
+ {
+  "name": "her step 2",
+  "at": 0.176,
+  "dur": 0.12,
+  "gain_db": -32.3
+ },
+ {
+  "name": "guard step 3",
+  "at": 0.226,
+  "dur": 0.22,
+  "gain_db": -30.9
+ },
+ {
+  "name": "her step 4",
+  "at": 0.336,
+  "dur": 0.12,
+  "gain_db": -32.6
+ },
+ {
+  "name": "guard step 5",
+  "at": 0.406,
+  "dur": 0.22,
+  "gain_db": -31.0
+ },
+ {
+  "name": "her step 6",
+  "at": 0.496,
+  "dur": 0.12,
+  "gain_db": -32.3
+ },
+ {
+  "name": "guard step 7",
+  "at": 0.586,
+  "dur": 0.22,
+  "gain_db": -31.3
+ },
+ {
+  "name": "her step 8",
+  "at": 0.656,
+  "dur": 0.12,
+  "gain_db": -32.6
+ },
+ {
+  "name": "guard step 9",
+  "at": 0.816,
+  "dur": 0.22,
+  "gain_db": -31.4
+ },
+ {
+  "name": "her step 10",
+  "at": 0.916,
+  "dur": 0.12,
+  "gain_db": -32.1
+ },
+ {
+  "name": "guard step 11",
+  "at": 0.946,
+  "dur": 0.22,
+  "gain_db": -31.3
+ },
+ {
+  "name": "her step 12",
+  "at": 1.056,
+  "dur": 0.12,
+  "gain_db": -32.2
+ },
+ {
+  "name": "guard step 13",
+  "at": 1.276,
+  "dur": 0.22,
+  "gain_db": -30.6
+ },
+ {
+  "name": "guard step 14",
+  "at": 1.516,
+  "dur": 0.22,
+  "gain_db": -23.4
+ },
+ {
+  "name": "guard step 15",
+  "at": 2.076,
+  "dur": 0.22,
+  "gain_db": -22.5
+ },
+ {
+  "name": "guard step 16",
+  "at": 2.416,
+  "dur": 0.22,
+  "gain_db": -22.4
+ },
+ {
+  "name": "guard step 17",
+  "at": 5.276,
+  "dur": 0.22,
+  "gain_db": -26.5
+ },
+ {
+  "name": "guard step 18",
+  "at": 5.416,
+  "dur": 0.22,
+  "gain_db": -26.8
+ },
+ {
+  "name": "guard step 19",
+  "at": 14.076,
+  "dur": 0.22,
+  "gain_db": -26.1
+ },
+ {
+  "name": "guard step 20",
+  "at": 14.196,
+  "dur": 0.22,
+  "gain_db": -27.6
+ },
+ {
+  "name": "guard step 21",
+  "at": 21.846,
+  "dur": 0.22,
+  "gain_db": -26.8
+ },
+ {
+  "name": "guard step 22",
+  "at": 22.076,
+  "dur": 0.22,
+  "gain_db": -26.8
+ },
+ {
+  "name": "guard step 23",
+  "at": 22.716,
+  "dur": 0.22,
+  "gain_db": -29.1
+ },
+ {
+  "name": "guard step 24",
+  "at": 22.736,
+  "dur": 0.22,
+  "gain_db": -29.6
+ },
+ {
+  "name": "guard step 25",
+  "at": 23.496,
+  "dur": 0.22,
+  "gain_db": -29.7
+ },
+ {
+  "name": "guard step 26",
+  "at": 23.736,
+  "dur": 0.22,
+  "gain_db": -28.3
+ },
+ {
+  "name": "guard step 27",
+  "at": 23.946,
+  "dur": 0.22,
+  "gain_db": -28.1
+ },
+ {
+  "name": "her step 28",
+  "at": 28.163,
+  "dur": 0.12,
+  "gain_db": -30.1
+ },
+ {
+  "name": "guard step 29",
+  "at": 28.306,
+  "dur": 0.22,
+  "gain_db": -23.4
+ },
+ {
+  "name": "her step 30",
+  "at": 28.323,
+  "dur": 0.12,
+  "gain_db": -30.9
+ },
+ {
+  "name": "her step 31",
+  "at": 28.483,
+  "dur": 0.12,
+  "gain_db": -32.3
+ },
+ {
+  "name": "guard step 32",
+  "at": 28.593,
+  "dur": 0.22,
+  "gain_db": -30.4
+ },
+ {
+  "name": "her step 33",
+  "at": 28.643,
+  "dur": 0.12,
+  "gain_db": -32.6
+ },
+ {
+  "name": "guard step 34",
+  "at": 28.773,
+  "dur": 0.22,
+  "gain_db": -31.0
+ },
+ {
+  "name": "her step 35",
+  "at": 28.803,
+  "dur": 0.12,
+  "gain_db": -32.3
+ },
+ {
+  "name": "guard step 36",
+  "at": 28.953,
+  "dur": 0.22,
+  "gain_db": -31.1
+ },
+ {
+  "name": "her step 37",
+  "at": 28.963,
+  "dur": 0.12,
+  "gain_db": -32.6
+ },
+ {
+  "name": "her step 38",
+  "at": 29.123,
+  "dur": 0.12,
+  "gain_db": -32.3
+ },
+ {
+  "name": "guard step 39",
+  "at": 29.133,
+  "dur": 0.22,
+  "gain_db": -31.0
+ },
+ {
+  "name": "torch sweep 1",
+  "at": 0.0,
+  "dur": 0.45,
+  "gain_db": -36.7
+ },
+ {
+  "name": "torch sweep 2",
+  "at": 3.1,
+  "dur": 0.45,
+  "gain_db": -35.0
+ },
+ {
+  "name": "torch sweep 3",
+  "at": 22.3,
+  "dur": 0.45,
+  "gain_db": -34.0
+ },
+ {
+  "name": "torch sweep 4",
+  "at": 27.867,
+  "dur": 0.45,
+  "gain_db": -35.5
+ },
+ {
+  "name": "torch sweep 5",
+  "at": 28.533,
+  "dur": 0.45,
+  "gain_db": -35.6
+ },
+ {
+  "name": "approach: his breath-whoosh as he reaches",
+  "at": 0.0,
+  "dur": 0.5,
+  "gain_db": -31
+ },
+ {
+  "name": "flashlight swings at her",
+  "at": 0.12,
+  "dur": 0.4,
+  "gain_db": -35
+ },
+ {
+  "name": "her brake squeak",
+  "at": 0.5,
+  "dur": 0.14,
+  "gain_db": -34
+ },
+ {
+  "name": "panel swing: air",
+  "at": 0.5,
+  "dur": 0.65,
+  "gain_db": -29
+ },
+ {
+  "name": "panel swing: flex",
+  "at": 0.8,
+  "dur": 0.4,
+  "gain_db": -33
+ },
+ {
+  "name": "panel set down (thunk)",
+  "at": 1.25,
+  "dur": 0.3,
+  "gain_db": -26
+ },
+ {
+  "name": "panel set down (glass ring)",
+  "at": 1.26,
+  "dur": 0.4,
+  "gain_db": -34
+ },
+ {
+  "name": "the lens catches the light",
+  "at": 1.33,
+  "dur": 0.9,
+  "gain_db": -34
+ },
+ {
+  "name": "panel slid across the floor",
+  "at": 1.6,
+  "dur": 0.7,
+  "gain_db": -33
+ },
+ {
+  "name": "the smear passes over her (soft shimmer)",
+  "at": 1.75,
+  "dur": 1.2,
+  "gain_db": -34
+ },
+ {
+  "name": "she sinks out of sight (rustle)",
+  "at": 2.35,
+  "dur": 0.5,
+  "gain_db": -36
+ },
+ {
+  "name": "his dead stop (boot scuff)",
+  "at": 2.44,
+  "dur": 0.2,
+  "gain_db": -30
+ },
+ {
+  "name": "his dead stop (small accent)",
+  "at": 2.47,
+  "dur": 0.2,
+  "gain_db": -33
+ },
+ {
+  "name": "his head-check (cloth)",
+  "at": 3.3,
+  "dur": 0.3,
+  "gain_db": -35
+ },
+ {
+  "name": "glide round the panel",
+  "at": 3.7,
+  "dur": 1.2,
+  "gain_db": -38
+ },
+ {
+  "name": "push onto the panel",
+  "at": 5.7,
+  "dur": 1.3,
+  "gain_db": -35
+ },
+ {
+  "name": "the ridges turn (glass)",
+  "at": 6.95,
+  "dur": 0.9,
+  "gain_db": -35
+ },
+ {
+  "name": "her light spreads (warm sweep)",
+  "at": 8.3,
+  "dur": 1.6,
+  "gain_db": -35
+ },
+ {
+  "name": "the corridor smears across (cool sweep)",
+  "at": 10.7,
+  "dur": 1.8,
+  "gain_db": -36
+ },
+ {
+  "name": "the ridges rise back up (glass)",
+  "at": 12.0,
+  "dur": 0.8,
+  "gain_db": -36
+ },
+ {
+  "name": "back out to his view",
+  "at": 13.1,
+  "dur": 0.7,
+  "gain_db": -36
+ },
+ {
+  "name": "beam across the panel",
+  "at": 13.4,
+  "dur": 0.4,
+  "gain_db": -38
+ },
+ {
+  "name": "the torch comes at her (swish)",
+  "at": 14.75,
+  "dur": 0.4,
+  "gain_db": -37
+ },
+ {
+  "name": "she leans back (rustle)",
+  "at": 14.85,
+  "dur": 0.3,
+  "gain_db": -38
+ },
+ {
+  "name": "quick re-grip",
+  "at": 15.6,
+  "dur": 0.1,
+  "gain_db": -36
+ },
+ {
+  "name": "panel edged away (scrape)",
+  "at": 16.6,
+  "dur": 0.3,
+  "gain_db": -36
+ },
+ {
+  "name": "his lean (boot creak)",
+  "at": 17.1,
+  "dur": 0.22,
+  "gain_db": -35
+ },
+ {
+  "name": "her exhale",
+  "at": 18.1,
+  "dur": 0.8,
+  "gain_db": -33
+ },
+ {
+  "name": "the reach: sleeve",
+  "at": 18.6,
+  "dur": 1.0,
+  "gain_db": -37
+ },
+ {
+  "name": "the hand clears the edge (accent)",
+  "at": 19.72,
+  "dur": 0.18,
+  "gain_db": -29
+ },
+ {
+  "name": "his puzzled look (small accent)",
+  "at": 20.72,
+  "dur": 0.25,
+  "gain_db": -33
+ },
+ {
+  "name": "finger wiggle 1",
+  "at": 21.57,
+  "dur": 0.05,
+  "gain_db": -38
+ },
+ {
+  "name": "finger wiggle 2",
+  "at": 21.65,
+  "dur": 0.05,
+  "gain_db": -38
+ },
+ {
+  "name": "finger wiggle 3",
+  "at": 21.73,
+  "dur": 0.05,
+  "gain_db": -38
+ },
+ {
+  "name": "finger wiggle 4",
+  "at": 21.81,
+  "dur": 0.05,
+  "gain_db": -38
+ },
+ {
+  "name": "finger wiggle 5",
+  "at": 21.89,
+  "dur": 0.05,
+  "gain_db": -38
+ },
+ {
+  "name": "the hand snatched away",
+  "at": 22.27,
+  "dur": 0.28,
+  "gain_db": -33
+ },
+ {
+  "name": "his recoil (whoosh)",
+  "at": 22.48,
+  "dur": 0.35,
+  "gain_db": -32
+ },
+ {
+  "name": "flashlight swings (swish)",
+  "at": 22.56,
+  "dur": 0.45,
+  "gain_db": -34
+ },
+ {
+  "name": "her giggle shake (cloth)",
+  "at": 22.95,
+  "dur": 0.8,
+  "gain_db": -39
+ },
+ {
+  "name": "lowering: air",
+  "at": 23.95,
+  "dur": 0.85,
+  "gain_db": -32
+ },
+ {
+  "name": "lowering: panel flex",
+  "at": 24.4,
+  "dur": 0.35,
+  "gain_db": -34
+ },
+ {
+  "name": "panel set on its edge",
+  "at": 24.78,
+  "dur": 0.18,
+  "gain_db": -33
+ },
+ {
+  "name": "his startle (whoosh)",
+  "at": 24.85,
+  "dur": 0.3,
+  "gain_db": -34
+ },
+ {
+  "name": "the reveal (low accent)",
+  "at": 25.36,
+  "dur": 1.2,
+  "gain_db": -28
+ },
+ {
+  "name": "cuffs drawn (rattle)",
+  "at": 26.2,
+  "dur": 0.22,
+  "gain_db": -33
+ },
+ {
+  "name": "cuffs drawn (clink)",
+  "at": 26.6,
+  "dur": 0.1,
+  "gain_db": -33
+ },
+ {
+  "name": "handcuff click",
+  "at": 27.08,
+  "dur": 0.42,
+  "gain_db": -24
+ },
+ {
+  "name": "her uh-oh (tiny accent)",
+  "at": 27.7,
+  "dur": 0.08,
+  "gain_db": -36
+ },
+ {
+  "name": "her turn squeak",
+  "at": 27.98,
+  "dur": 0.12,
+  "gain_db": -35
+ },
+ {
+  "name": "bolt: whoosh",
+  "at": 28.0,
+  "dur": 0.6,
+  "gain_db": -31
+ },
+ {
+  "name": "his lunge (whoosh)",
+  "at": 28.05,
+  "dur": 0.45,
+  "gain_db": -32
+ }
+]

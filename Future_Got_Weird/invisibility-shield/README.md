@@ -1,5 +1,21 @@
 # Future Got Weird: This Shield Can Make You Disappear.
 
+## V5 (final-review cut: creative and animation polish on the V4 project)
+
+**Status (23 Oct 2026):**
+- A final-review cut is rendered and checked from the MP4 and a per-frame rig check (`production/V5_QA_REPORT.md`).
+- **Not approved for publication. Not published. No 4K master.**
+- Nobody has watched or listened to it in real time; that review is still owed.
+- No Runway material is in V5: no new generations, and V4's outputs are still blocked by the network policy.
+
+| Deliverable | File |
+|---|---|
+| Final-review cut (1080×1920, 30 fps, 29.27 s) | `exports/FGW_Invisibility_Shield_V5_FINAL_REVIEW_1080x1920.mp4` |
+| QA report (changes, transition table, tests, remaining issues) | `production/V5_QA_REPORT.md` |
+| Editable project | `source/src/v5/` (composition `InvisibilityShieldV5`) |
+| Mix | `source/public/audio/mix_v5.wav` (`tools/make_audio_v5.py`, cues from `tools/export_cues_v5.ts`) |
+| Rig QA | `tools/rig_qa_v5.ts` → `qa/v5/rig_qa.json` |
+
 ## V4 (fourth review cut: complete 2D / 2.5D vector rebuild in the Weird Crew style)
 
 **Status (23 Oct 2026):**

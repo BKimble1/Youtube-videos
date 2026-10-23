@@ -1,0 +1,211 @@
+{
+ "file": "exports/FGW_Invisibility_Shield_V5_FINAL_REVIEW_1080x1920.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "nb_frames": "878",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "color_primaries": "bt709",
+  "color_transfer": "bt709"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317378"
+ },
+ "duration": 29.269,
+ "loudness": {
+  "I_LUFS": -14.6,
+  "LRA": 4.8,
+  "TP_dBFS": -2.6
+ },
+ "black_segments": [],
+ "freezes_ge_1s": [],
+ "keyframes": {
+  "count": 67,
+  "max_gap_s": 0.5
+ },
+ "audio_offset_vs_mix_ms": 0.0,
+ "audio_corr_vs_mix": 0.99997,
+ "vosk_transcript": "if you raise the shield someone looking straight at you could watch your body disappear you see it's surface is covered in tiny lenses they spread the light coming from your body sideways while smearing the background across the space where you're standing from the right position your outline disappears into a blurred patch of scenery so you could reach one hand around the edge and make it look like a hand is floating in mid air than lower the shield and reveal you were standing right in front of them the entire time",
+ "vosk_wer_vs_approved": 0.065,
+ "vosk_diffs": [
+  [
+   "replace",
+   "raised this",
+   "raise the"
+  ],
+  [
+   "replace",
+   "its",
+   "it's"
+  ],
+  [
+   "replace",
+   "midair then",
+   "mid air than"
+  ]
+ ],
+ "caption_windows": [
+  {
+   "caption": "If you raised this shield,",
+   "show": 0,
+   "hide": 1.49,
+   "asr": "if you raise the shield",
+   "match": 0.6
+  },
+  {
+   "caption": "someone looking straight at you",
+   "show": 1.49,
+   "hide": 2.91,
+   "asr": "someone looking straight at you",
+   "match": 1.0
+  },
+  {
+   "caption": "could watch your body disappear.",
+   "show": 2.91,
+   "hide": 5.04,
+   "asr": "you could watch your body disappear you",
+   "match": 0.83
+  },
+  {
+   "caption": "You see, its surface",
+   "show": 5.04,
+   "hide": 6.15,
+   "asr": "you see it's surface",
+   "match": 0.75
+  },
+  {
+   "caption": "is covered in tiny lenses.",
+   "show": 6.15,
+   "hide": 8.18,
+   "asr": "is covered in tiny lenses they",
+   "match": 0.91
+  },
+  {
+   "caption": "They spread the light",
+   "show": 8.18,
+   "hide": 8.89,
+   "asr": "they spread the light",
+   "match": 1.0
+  },
+  {
+   "caption": "coming from your body sideways,",
+   "show": 8.89,
+   "hide": 10.64,
+   "asr": "light coming from your body sideways while",
+   "match": 0.83
+  },
+  {
+   "caption": "while smearing the background",
+   "show": 10.64,
+   "hide": 11.8,
+   "asr": "while smearing the background",
+   "match": 1.0
+  },
+  {
+   "caption": "across the space",
+   "show": 11.8,
+   "hide": 12.62,
+   "asr": "across the space",
+   "match": 1.0
+  },
+  {
+   "caption": "where you\u2019re standing.",
+   "show": 12.62,
+   "hide": 13.95,
+   "asr": "where you're standing from",
+   "match": 0.86
+  },
+  {
+   "caption": "From the right position,",
+   "show": 13.95,
+   "hide": 15.13,
+   "asr": "from the right position",
+   "match": 1.0
+  },
+  {
+   "caption": "your outline disappears",
+   "show": 15.13,
+   "hide": 16.34,
+   "asr": "your outline disappears",
+   "match": 1.0
+  },
+  {
+   "caption": "into a blurred patch of scenery.",
+   "show": 16.34,
+   "hide": 18.47,
+   "asr": "into a blurred patch of scenery",
+   "match": 1.0
+  },
+  {
+   "caption": "So you could reach one hand",
+   "show": 18.47,
+   "hide": 19.72,
+   "asr": "so you could reach one hand",
+   "match": 1.0
+  },
+  {
+   "caption": "around the edge\u2026",
+   "show": 19.72,
+   "hide": 20.89,
+   "asr": "hand around the edge and",
+   "match": 0.75
+  },
+  {
+   "caption": "and make it look like a hand",
+   "show": 20.89,
+   "hide": 21.99,
+   "asr": "and make it look like a hand",
+   "match": 1.0
+  },
+  {
+   "caption": "is floating in midair.",
+   "show": 21.99,
+   "hide": 23.68,
+   "asr": "is floating in mid air",
+   "match": 0.67
+  },
+  {
+   "caption": "Then lower the shield\u2026",
+   "show": 23.89,
+   "hide": 25.24,
+   "asr": "than lower the shield",
+   "match": 0.75
+  },
+  {
+   "caption": "and reveal you were standing",
+   "show": 25.24,
+   "hide": 26.4,
+   "asr": "and reveal you were standing",
+   "match": 1.0
+  },
+  {
+   "caption": "right in front of them",
+   "show": 26.4,
+   "hide": 27.37,
+   "asr": "right in front of them",
+   "match": 1.0
+  },
+  {
+   "caption": "the entire time.",
+   "show": 27.37,
+   "hide": 28.96,
+   "asr": "them the entire time",
+   "match": 0.86
+  }
+ ],
+ "caption_windows_ok": "19/21",
+ "loop_seam": {
+  "mean_abs_last_to_first": 9.22,
+  "mean_abs_prev_steps": [
+   9.06,
+   8.0
+  ]
+ }
+}
