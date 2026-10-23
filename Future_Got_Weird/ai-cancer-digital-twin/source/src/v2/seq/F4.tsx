@@ -456,7 +456,7 @@ const PlasmaBack: React.FC<{t: number; cam: Cam; dark: number}> = ({t, cam, dark
   );
 };
 const ReadV5: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
-  const dark = lift(t, tR.unzip - 0.15, tR.ref + 0.2);
+  const dark = lift(t, tR.level - 0.1, tR.ref + 0.35);
   const level = lift(t, tR.level - 0.3, tR.unzip);
   const unzip = lift(t, tR.unzip, tR.unzip + 0.45);
   const letters = lift(t, tR.unzip + 0.3, tR.unzip + 0.75);
@@ -541,7 +541,7 @@ const ReadV5: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
         {/* the hero read stays in its row (row 0) */}
         {iso < 0.99 && <g opacity={1 - iso * 0.95}><HeroDNA t={t} rot={rot} unzip={unzip} letters={letters} seq={READ2} glow={(1 - letters) * 0.9} /></g>}
         {/* the isolated base, then the residue it becomes */}
-        {late > 0.5 && bead < 0.99 && <Letter x={isoP[0]} y={isoP[1]} ch="A" col="#B58CFF" s={1 + 1.2 * isoMove} op={clamp01((late - 0.5) * 2) * (1 - bead)} bold />}
+        {late > 0.5 && bead < 0.99 && <Letter x={isoP[0]} y={isoP[1]} ch="A" col="#B58CFF" s={1 + 2.2 * isoMove} op={clamp01((late - 0.5) * 2) * (1 - bead)} bold />}
         {bead > 0.01 && fly < 0.999 && (
           <g transform={`translate(${beadP[0]} ${beadP[1]})`} opacity={bead * (1 - lift(fly, 0.85, 1))}>
             <circle r={14} fill="url(#glowMut)" opacity={0.5} />
