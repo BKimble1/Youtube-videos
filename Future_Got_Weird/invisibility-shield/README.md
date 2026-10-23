@@ -1,5 +1,60 @@
 # Future Got Weird: This Shield Can Make You Disappear.
 
+## V2 (second review cut: story, characters, animation)
+
+**Status (23 Oct 2026):**
+- A review cut is rendered and checked from the MP4 (`production/V2_QA_REPORT.md`).
+- **Not a final master. Not published.**
+- Nobody has watched or listened to it in real time.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920, 30 fps, 878 frames, 29.27 s, H.264 High CRF 16 + AAC 320 kb/s, burned-in captions | `exports/FGW_Invisibility_Shield_V2_REVIEW_1080x1920.mp4` |
+| Changes from V1, shot list, QA results, known limitations | `production/V2_QA_REPORT.md` |
+| Narration (unchanged V1 recording: same file, same timing) | `audio/narration/FGW_Invisibility_Shield_narration_final.wav` |
+| Captions (unchanged words and timings, so the V1 SRT applies) | `captions/FGW_Invisibility_Shield_V1.srt` |
+| V2 mix and its effect list | `audio/mix/FGW_Invisibility_Shield_V2_mix.wav`, `audio/sfx_cues_v2.json`, `audio/mix/mix_measure_v2.json` |
+| Editable source | `source/src/v2/` (composition `InvisibilityShieldV2`, still `StillV2`, dev stills `ModelSheet`, `Test2`) |
+
+**What changed.**
+- One 3D lab corridor replaces the flat wall, and every shot is a camera in it.
+- There are two characters:
+  - a new lead, a young woman (short messy dark hair, teal jacket over a coral undershirt, dark trousers, white trainers);
+  - a security guard with a torch.
+- The shield's optics depend on where each camera stands relative to the panel.
+- The approved narration and its word timings are untouched; the captions are the V1 captions restyled and repositioned per shot.
+
+### V2 source layout (`source/src/v2/`)
+
+- `p3.ts`:
+  - metres-based 3D;
+  - pinhole cameras;
+  - near-plane and screen guard-band polygon clipping;
+  - hull and curve helpers.
+- `story.ts`: every state as a function of time, keyed to the measured words:
+  - the shot table;
+  - her, the guard, the shield and the torch;
+  - every camera, including the lens dive and the section.
+- `Person.tsx` + `Head3.tsx`:
+  - the two characters, with 3D joints, two-bone IK arms and legs, and a gait;
+  - ellipsoid heads with their features on the head's surface and expressions;
+  - hands from the V1/Death Clock hand rig.
+- `Corridor.tsx`:
+  - the corridor: ceiling lights, doors with red indicators, glass lab windows with interiors and reflections, the side doorway;
+  - the torch beam and its pool.
+- `Shield3.tsx`: the panel in 3D and its viewpoint-dependent optics.
+- `Lens.tsx`: the micro lenticules, the cut section and the simplified light paths.
+- `FilmV2.tsx`, `CaptionsV2.tsx`: the composition, depth ordering and captions.
+
+### V2 rebuild
+
+    cd Future_Got_Weird/invisibility-shield
+    NODE_PATH=$PWD/source/node_modules source/node_modules/.bin/esbuild tools/export_cues_v2.ts --bundle --platform=node --format=cjs --outfile=/tmp/ecv2.cjs && node /tmp/ecv2.cjs audio/cues_v2.json
+    python3 tools/make_audio_v2.py       # V2 bed, effects and mix over the unchanged narration -> source/public/audio/mix_v2.wav
+    (cd source && npx remotion render src/index.ts InvisibilityShieldV2 ../exports/FGW_Invisibility_Shield_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    QA_MIX=source/public/audio/mix_v2.wav python3 tools/qa.py exports/FGW_Invisibility_Shield_V2_REVIEW_1080x1920.mp4 <vosk_model_dir> qa/v2/review
+    python3 tools/motion_scan.py exports/FGW_Invisibility_Shield_V2_REVIEW_1080x1920.mp4 qa/v2/motion_scan.json
+
 ## V1 (first review cut)
 
 **Status (23 Oct 2026):**

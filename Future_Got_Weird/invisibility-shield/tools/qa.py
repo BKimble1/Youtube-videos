@@ -4,7 +4,7 @@ sync against the mix, transcript of the MP4's own audio vs the locked script, pe
 difference, and a phone-size sheet with an approximate Shorts UI mask.
 ASR: Vosk vosk-model-small-en-us-0.15 (tools/asr_check.py); the sherpa-onnx models earlier episodes used cannot be
 downloaded in this environment.
-usage: python3 tools/qa.py <mp4> <vosk_model_dir> <out_prefix>"""
+usage: python3 tools/qa.py <mp4> <vosk_model_dir> <out_prefix>     env QA_MIX: the mix to sync against (default: V1 mix)"""
 import json, os, re, subprocess, sys
 import numpy as np, soundfile as sf
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -34,7 +34,7 @@ R['keyframes'] = {'count': len(kft), 'max_gap_s': round(max(np.diff(kft)), 3) if
 # sync: MP4 audio vs mix.wav
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp4, '-ac', '1', '-ar', '48000', '-f', 'f32le', '-'], capture_output=True).stdout
 a = np.frombuffer(raw, np.float32).astype(np.float64)
-m, _ = sf.read(os.path.join(EP, 'source/public/audio/mix.wav')); m = m.mean(1)
+m, _ = sf.read(os.path.join(EP, os.environ.get('QA_MIX', 'source/public/audio/mix.wav'))); m = m.mean(1)
 n = min(len(a), len(m), 48000 * 8)
 cc = np.fft.irfft(np.fft.rfft(a[:n], 2 * n) * np.conj(np.fft.rfft(m[:n], 2 * n)))
 lag = int(np.argmax(cc)); lag = lag - 2 * n if lag > n else lag
