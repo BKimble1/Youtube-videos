@@ -6,6 +6,7 @@ import React from 'react';
 import {Cam, W, H} from '../../kit/cam';
 import {P as Pt, clamp01, lerp, smooth, seg, rand, mixHex} from '../../kit/core';
 import {Shot} from '../director';
+import {Bokeh} from '../art/depth';
 import {T, TE} from '../time';
 import {path, handoff, K} from '../rig';
 import {P} from '../palette';
@@ -75,21 +76,7 @@ const D_END = dnaToTissue(DNA_PATH(PULL0));
 const AX1 = 25, SEP = 0.7;
 const DA: Pt = [C0.x - Math.cos((AX1 * Math.PI) / 180) * SEP * R, C0.y - Math.sin((AX1 * Math.PI) / 180) * SEP * R];
 const DB: Pt = [C0.x + Math.cos((AX1 * Math.PI) / 180) * SEP * R, C0.y + Math.sin((AX1 * Math.PI) / 180) * SEP * R];
-const P2 = path([
-  {...D_END, t: PULL0},
-  {t: PULL0 + 0.5, x: C0.x + 9, y: C0.y - 0.6, z: 48, rot: 0.3},
-  {t: PULL0 + 1.0, x: C0.x + 3, y: C0.y - 1, z: 5.5, rot: 0},
-  {t: PULL0 + 1.6, x: C0.x, y: C0.y, z: 2.7, rot: 0},
-  {t: tA.ignores - 0.2, x: C0.x - 2, y: C0.y + 2, z: 2.45, rot: 1},
-  {t: tA.ignores + 0.9, x: C0.x - 6, y: C0.y + 4, z: 1.75, rot: 1},
-  {t: tA.body + 0.1, x: C0.x - 70, y: C0.y - 10, z: 1.6, rot: 1.5},
-  {t: tA.destroy + 0.3, x: DA[0] - 46, y: DA[1] - 6, z: 2.35, rot: 1},
-  {t: tA.one - 0.1, x: DA[0] - 6, y: DA[1], z: 2.6, rot: 0},
-  {t: tA.two + 0.2, x: DA[0] + 4, y: DA[1] + 6, z: 2.35, rot: -0.5},
-  {t: tA.four + 0.15, x: DA[0] + 14, y: DA[1] + 10, z: 1.9, rot: -1},
-  {t: tA.four + 1.3, x: C0.x, y: C0.y, z: 0.55, rot: -2},
-  {t: tA.worse + 0.4, x: C0.x, y: C0.y, z: 0.16, rot: -3},
-]);
+
 /** The micro camera in tissue coordinates for t in [3.1, 36.7]. */
 export const microCam = (t: number): Cam => {
   if (t < OPEN_END) return toTissue(OPEN(t));
@@ -135,31 +122,91 @@ export const TumorMassShade: React.FC<{Rt: number; op?: number}> = ({Rt, op = 1}
     <path d={boundaryPath(Rt * 0.98)} fill="url(#volSoft)" opacity={0.9} />
   </g>
 ));
+// V5 growth: while the tumour is young, a few invasive fronts lead the bulk (fingers pushing into the tissue) and the
+// front is ragged at the scale of single cells; as it approaches its established size the fronts merge back into the
+// lobed outline every later scene uses, so nothing downstream changes shape.
+const FINGERS: [number, number, number][] = [[-1.9, 0.22, 1], [-0.45, 0.16, 0.8], [0.95, 0.2, 0.9], [2.25, 0.15, 0.7], [3.05, 0.12, 0.55]];
+const fingerK = (a: number) => FINGERS.reduce((s, [c, w, k]) => { const d = Math.atan2(Math.sin(a - c), Math.cos(a - c)); return s + k * Math.exp(-(d * d) / (w * w)); }, 0);
+const settle = (Rt: number) => smooth(clamp01((Rt - 300) / 2100));
+/** how far the tumour reaches at angle a (in units of the lobed outline) when its nominal radius is Rt */
+export const reachAt = (a: number, Rt: number) => Rt * (1 + 0.6 * fingerK(a) * (1 - settle(Rt)));
+const jitterOf = (i: number, j: number) => rand(((i * 7919) ^ (j * 104729)) & 0xffff) - 0.5;
+// the micro camera's last part (defined here because it rides the growth front)
+const LEAD_A = FINGERS[0][0];
+const frontPt = (t: number, back: number) => { const Rt = RT(t).z; const r = reachAt(LEAD_A, Rt) * boundary(LEAD_A) - back; return {x: C0.x + Math.cos(LEAD_A) * r, y: C0.y + Math.sin(LEAD_A) * r}; };
+const interiorPt = (t: number) => { const Rt = RT(t).z; const a = LEAD_A + 0.55; const r = 0.42 * Rt * boundary(a); return {x: C0.x + Math.cos(a) * r, y: C0.y + Math.sin(a) * r}; };
+const P2 = path([
+  {...D_END, t: PULL0},
+  {t: PULL0 + 0.5, x: C0.x + 9, y: C0.y - 0.6, z: 48, rot: 0.3},
+  {t: PULL0 + 1.0, x: C0.x + 3, y: C0.y - 1, z: 5.5, rot: 0},
+  {t: PULL0 + 1.6, x: C0.x, y: C0.y, z: 2.7, rot: 0},
+  {t: tA.ignores - 0.2, x: C0.x - 2, y: C0.y + 2, z: 2.45, rot: 1},
+  {t: tA.ignores + 0.9, x: C0.x - 6, y: C0.y + 4, z: 1.75, rot: 1},
+  {t: tA.body + 0.1, x: C0.x - 70, y: C0.y - 10, z: 1.6, rot: 1.5},
+  {t: tA.destroy + 0.3, x: DA[0] - 46, y: DA[1] - 6, z: 2.35, rot: 1},
+  {t: tA.one - 0.1, x: DA[0] - 6, y: DA[1], z: 2.6, rot: 0},
+  {t: tA.two + 0.2, x: DA[0] + 4, y: DA[1] + 6, z: 2.35, rot: -0.5},
+  {t: tA.four + 0.15, x: DA[0] + 14, y: DA[1] + 10, z: 1.9, rot: -1},
+  // ride the leading growth front (the invasive finger toward the capillary the next scene follows)…
+  {t: tA.four + 0.95, ...frontPt(tA.four + 0.95, 230), z: 1.35, rot: -6},
+  {t: tA.four + 1.75, ...frontPt(tA.four + 1.75, 210), z: 1.25, rot: -11},
+  // …dip into the tightly packed interior…
+  {t: tA.four + 2.25, ...interiorPt(tA.four + 2.25), z: 1.95, rot: -14},
+  // …and one pull-back reveals the whole mass and the tissue it has displaced
+  {t: tA.begins - 0.35, x: C0.x, y: C0.y - 260, z: 0.62, rot: -9},
+  {t: tA.worse + 0.4, x: C0.x, y: C0.y, z: 0.16, rot: -3},
+]);
 /** Tissue cell modifications shared by sequence A and B (mass effect + tumour cells). */
-export const tumorMod = (t: number, Rt: number, het: number, extra?: (i: number, j: number, x: number, y: number) => Mod | null) => (i: number, j: number, x: number, y: number): Mod | null => {
+export const tumorMod = (t: number, Rt: number, het: number, extra?: (i: number, j: number, x: number, y: number) => Mod | null, fronts = false) => (i: number, j: number, x: number, y: number): Mod | null => {
   const e = extra?.(i, j, x, y);
   if (e && (e.hide || e.look)) return e;
-  const base = tumorBase(t, Rt, het, i, j, x, y);
+  const base = tumorBase(t, Rt, het, i, j, x, y, fronts);
   if (!e) return base;
   return {...(base ?? {}), ...e, dx: (base?.dx ?? 0) + (e.dx ?? 0), dy: (base?.dy ?? 0) + (e.dy ?? 0)};
 };
-const tumorBase = (t: number, Rt: number, het: number, i: number, j: number, x: number, y: number): Mod | null => {
+const tumorBase = (t: number, Rt: number, het: number, i: number, j: number, x: number, y: number, fronts = false): Mod | null => {
   const dx = x - C0.x, dy = y - C0.y, d0 = Math.hypot(dx, dy);
-  const d = d0 / boundary(Math.atan2(dy, dx));
+  const d1 = d0 / boundary(Math.atan2(dy, dx));
+  // with growth fronts on, a cell is reached when the local front (fingers + cell-scale raggedness) passes it
+  const d = fronts ? d1 - (reachAt(Math.atan2(dy, dx), Rt) - Rt) - jitterOf(i, j) * SP * 0.9 * (1 - 0.6 * settle(Rt)) : d1;
   if (Rt > 0 && d < Rt) {
     // convert with a short "division pop" when the front passes
     const rs = rand(((i * 911) ^ (j * 3571)) & 0xffff);
     const born = smooth((Rt - d) / 90);
     // newly added cells appear as divisions at the front: elongated along the growth direction, then rounding off
     const div = born < 1 ? Math.sin(born * Math.PI) : 0;
-    return {look: cloneLook(i, j, het), s: lerp(0.72, 0.92 + 0.22 * rs, born), nucScale: 1.25 + 0.2 * rs, round: 0.4, dx: -dx * 0.015, dy: -dy * 0.015, stretch: 1 + 0.55 * div, dir: Math.atan2(dy, dx)};
+    return {look: cloneLook(i, j, het), s: lerp(0.72, 0.92 + 0.22 * rs, born), nucScale: 1.2 + 0.3 * rs, round: 0.4, irr: 0.03 + 0.06 * rs, dx: -dx * 0.015, dy: -dy * 0.015, stretch: 1 + 0.55 * div, dir: Math.atan2(dy, dx)};
   }
   if (Rt > 0) {
-    const push = 0.14 * SP * Math.exp(-(d - Rt) / 380) * clamp01(Rt / 300);
-    const sq = Math.exp(-(d - Rt) / 260) * clamp01(Rt / 300);
+    // healthy cells ahead of the front are pushed aside and squeezed (harder in front of an invasive finger)
+    const pk = fronts ? 1 + 0.8 * fingerK(Math.atan2(dy, dx)) * (1 - settle(Rt)) : 1;
+    const push = 0.14 * SP * pk * Math.exp(-(d - Rt) / 380) * clamp01(Rt / 300);
+    const sq = Math.min(1, pk * Math.exp(-(d - Rt) / 260)) * clamp01(Rt / 300);
     return {dx: (dx / (d || 1)) * push, dy: (dy / (d || 1)) * push, s: 1 - 0.08 * sq, stretch: 1 + 0.28 * sq, dir: Math.atan2(dy, dx) + Math.PI / 2};
   }
   return null;
+};
+
+/** Cells caught in mitosis while the young tumour grows: every cell just behind the advancing front is a fresh
+ *  division (daughters along the growth direction), and a few cells divide throughout the packed interior. */
+const mitosisAt = (t: number, Rt: number, i: number, j: number, x: number, y: number): {p: number; axis: number} | null => {
+  if (Rt <= 0) return null;
+  const dx = x - C0.x, dy = y - C0.y, a = Math.atan2(dy, dx);
+  const d = Math.hypot(dx, dy) / boundary(a) - (reachAt(a, Rt) - Rt) - jitterOf(i, j) * SP * 0.9 * (1 - 0.6 * settle(Rt));
+  const behind = Rt - d;
+  if (behind <= 0) return null;
+  if (behind < 260) return {p: smooth(behind / 260) * 0.98 + 0.01, axis: (a * 180) / Math.PI + 20 * jitterOf(j, i)};
+  const r = rand(((i * 31337) ^ (j * 7331)) & 0xffff);
+  const ph = (t * 0.5 + r * 7.3) % 1;
+  if (r < 0.3 && ph < 0.16) return {p: ph / 0.16, axis: r * 900};
+  return null;
+};
+/** subclones appear as the mass grows (cell shape, size, nucleus and colour start to differ) */
+export const hetA = (t: number) => 0.55 * smooth(clamp01((t - T('Four become thousands')) / 3.2));
+const latticeIn = (cam: Cam) => {
+  const hw = Math.hypot(W, H) / 2 / cam.z + SP;
+  const DY = SP * 0.866;
+  return {j0: Math.floor((cam.y - hw) / DY), j1: Math.ceil((cam.y + hw) / DY), i0: Math.floor((cam.x - hw) / SP) - 1, i1: Math.ceil((cam.x + hw) / SP) + 1};
 };
 
 // ------------------------------------------------------------------------------------------------ the tissue layer for A
@@ -183,13 +230,28 @@ const TissueA: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
     });
     return {dx, dy};
   };
-  const mod = tumorMod(t, Rt, 0, (i, j, x, y) => {
+  const het = hetA(t);
+  const showMitoses = lod > 14 && Rt > 0;
+  const mod = tumorMod(t, Rt, het, (i, j, x, y) => {
     if (i === 0 && j === 0) return custom ? {hide: true} : null;
+    if (showMitoses && mitosisAt(t, Rt, i, j, x, y)) return {hide: true};
     if (!custom) return null;
     const pu = push(x, y);
     // neighbours that send the stop signal glow blue at their rim
     return {dx: pu.dx, dy: pu.dy};
-  });
+  }, true);
+  const mitoses: React.ReactNode[] = [];
+  if (showMitoses) {
+    const b = latticeIn(cam);
+    for (let j = b.j0; j <= b.j1; j++)
+      for (let i = b.i0; i <= b.i1; i++) {
+        if (i === 0 && j === 0) continue;
+        const c = cellAt(i, j);
+        const m = mitosisAt(t, Rt, i, j, c.x, c.y);
+        if (!m) continue;
+        mitoses.push(<DividingCell key={`m${i},${j}`} x={c.x} y={c.y} r={R * c.sz * 0.96} seed={c.seed} t={t} p={m.p} axis={m.axis} lod={lod} look={cloneLook(i, j, het)} sepF={0.62} dR={0.78} />);
+      }
+  }
   // stop signals from six neighbours
   const sig = t > tA.ignores - 0.1 && t < tA.body + 0.4;
   const nbrs = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, -1], [-1, 1]].map(([di, dj]) => cellAt(di, dj));
@@ -226,6 +288,7 @@ const TissueA: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
             )}
           </g>
         )}
+        {mitoses}
         <TumorMassShade Rt={Rt} />
         {/* stop signals: small brake molecules fired by neighbours bounce off the abnormal cell's surface */}
         {sig && nbrs.map((n, k) => {
@@ -262,6 +325,7 @@ const TissueA: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
         {bleb > 0.01 && p2 <= 0 && <g opacity={0} />}
       </g>
       {bleb > 0.01 && <BlebOverlay t={t} cam={cam} k={bleb} />}
+      {t > tA.two && t < tA.worse + 0.4 && <Bokeh cam={cam} t={t} fill="url(#bokehWarm)" op={0.75 * lift(t, tA.two, tA.two + 0.8) * (1 - lift(t, tA.begins, tA.worse + 0.3))} n={8} size={260} />}
     </g>
   );
 };

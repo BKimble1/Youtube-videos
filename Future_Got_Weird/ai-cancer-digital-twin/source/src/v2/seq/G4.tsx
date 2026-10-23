@@ -395,7 +395,7 @@ const TG = path([
   {t: tG.remember + 1.6, x: C0.x + 40, y: C0.y - 20, z: 2.2, rot: -8},
   {t: tG.finding + 0.2, x: C0.x + 70, y: C0.y - 30, z: 2.7, rot: -14},
   {t: killT.kill + 0.4, x: C0.x + 30, y: C0.y - 10, z: 3.1, rot: -18},
-  {t: RET0, x: C0.x - 40, y: C0.y + 20, z: 2.7, rot: -18},
+  {t: RET0, x: C0.x - 40, y: C0.y + 20, z: 2.2, rot: -18},
 ]);
 const TCELL_FROM: Pt = [C0.x + 640, C0.y - 340];
 const CONTACT_A = Math.atan2(-0.45, 1);
@@ -419,7 +419,7 @@ const RET = path([
   {...fromTissue(TG(RET0)), t: RET0},
   {t: RET0 + 0.85, x: SITE.tumor[0], y: SITE.tumor[1], z: 140, rot: -10},
   {t: RET0 + 1.7, x: 100, y: -380, z: 4, rot: -3},
-  {t: DURATION2 - 0.7, x: 4, y: -52, z: 0.56, rot: 0},
+  {t: DURATION2 - 0.75, x: 4, y: -40, z: 0.5, rot: 0},
 ]);
 const tissueCamG = (t: number): Cam => (t < RET0 ? TG(t) : toTissue(RET(t)));
 const TissueG: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
@@ -457,12 +457,25 @@ const TissueG: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
     </g>
   );
 };
-/** the final image: the healthy person, the circulation softly lit, a warm key light behind the chest */
+/** the final image: the healthy person on a dark ground, the circulation softly lit, and one restrained teal trace —
+ *  the immune surveillance that found the cell — running from the heart's outflow to the spot in the lung where it was.
+ *  The figure stays centred with dark margins either side (room for end-screen elements). */
+const IMM_ROUTE = 'M 6 -585 Q 70 -610 112 -560 Q 140 -510 ' + SITE.tumor[0] + ' ' + SITE.tumor[1];
 const EndG: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const vk = lift(t, RET0 + 1.2, RET0 + 2.4);
+  const tr = lift(t, RET0 + 1.6, RET0 + 2.6);
+  const sw = 3.2 / Math.max(0.3, cam.z);
   return (
-    <BodyWorld t={t} cam={cam} body={{glow: 0, chest: 1, lesion: 0, healthy: 1, vessels: 0.55 * vk}}
-      back={<g opacity={vk}><ellipse cx={W / 2} cy={H * 0.4} rx={W * 0.32} ry={H * 0.5} fill="url(#glowWhite)" opacity={0.12} /><ellipse cx={W / 2} cy={H * 0.34} rx={W * 0.13} ry={H * 0.22} fill="url(#glowRed)" opacity={0.16} /></g>} />
+    <BodyWorld t={t} cam={cam} body={{glow: 0, chest: 1, lesion: 0, healthy: 1, vessels: 0.45 * vk}}
+      back={<g opacity={vk}><ellipse cx={W / 2} cy={H * 0.42} rx={W * 0.26} ry={H * 0.5} fill="url(#glowWhite)" opacity={0.09} /><ellipse cx={W / 2} cy={H * 0.33} rx={W * 0.11} ry={H * 0.2} fill="url(#glowRed)" opacity={0.12} /></g>}
+      front={tr > 0.01 && (
+        <g opacity={tr}>
+          <path d={IMM_ROUTE} fill="none" stroke={P.tcellLight} strokeWidth={sw * 1.6} strokeLinecap="round" opacity={0.45} pathLength={1} strokeDasharray={`${tr} 1`} />
+          <path d={IMM_ROUTE} fill="none" stroke="#FFFFFF" strokeWidth={sw} strokeLinecap="round" strokeDasharray={`${3 / cam.z} ${26 / cam.z}`} strokeDashoffset={-t * 60} opacity={0.35 * tr} />
+          <circle cx={SITE.tumor[0]} cy={SITE.tumor[1]} r={80 * (1 + 0.06 * Math.sin(t * 2.2))} fill="url(#glowTeal)" opacity={0.7} />
+          <circle cx={SITE.tumor[0]} cy={SITE.tumor[1]} r={5} fill="#E8FFF8" opacity={0.85} />
+        </g>
+      )} />
   );
 };
 

@@ -792,7 +792,7 @@ const Nano2: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
 
 export const SURF_OUT: [number, number] = [tD.tumors + 0.4, tD.tumors + 0.8]; // fingerprint surface dissolves in
 export const shotsD4: Shot[] = [
-  {id: 'D-protein', t0: tD.but, t1: CB_H[1] + 0.05, draw: (t) => <ProteinD t={t} cam={PRD(t)} />},
+  {id: 'D-protein', t0: tD.but, t1: CB_H[1] + 0.05, fade: 0.5, draw: (t) => <ProteinD t={t} cam={PRD(t)} />},
   {id: 'D-carrier', t0: CB_H[0], t1: VH[1] + 0.05, fade: CB_H[1] - CB_H[0], draw: (t) => <CarrierBuild t={t} cam={NAC(t)} />},
   {id: 'D-vessel', t0: VH[0], t1: N2H[1] + 0.05, fade: VH[1] - VH[0], draw: (t) => <VesselD t={t} cam={t < VH[1] ? fromNano(NAC(t), t) : DV(t)} />},
   {id: 'D-nano', t0: N2H[0], t1: N2_OUT[1] + 0.05, fade: N2H[1] - N2H[0], draw: (t) => <Nano2 t={t} cam={t < N2H[1] ? toNano2(DV(t)) : N2(t)} />},

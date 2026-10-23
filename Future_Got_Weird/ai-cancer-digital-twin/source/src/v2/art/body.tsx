@@ -46,9 +46,10 @@ export type BodyProps = {
   healthy?: number;   // final resolution: glow suppressed, warm healthy light
   chest?: number;     // a soft window through the skin over the chest showing the lungs (opening / ending)
   lesion?: number;    // the affected patch of lung tissue at SITE.tumor
+  lineW?: number;     // digital-twin line weight multiplier (thinner lines for close-ups)
 };
 
-export const Body: React.FC<BodyProps> = ({t, xray = 0, digital = 0, glow = 0, glowColor = 'glowMag', mets = 0, tumorSize = 0, metsSize = 0, scanY, vessels = 0, slices = 0, healthy = 0, chest = 0, lesion = 0}) => {
+export const Body: React.FC<BodyProps> = ({t, xray = 0, digital = 0, glow = 0, glowColor = 'glowMag', mets = 0, tumorSize = 0, metsSize = 0, scanY, vessels = 0, slices = 0, healthy = 0, chest = 0, lesion = 0, lineW = 1}) => {
   const uid = React.useId().replace(/[^a-zA-Z0-9]/g, '');
   const bio = 1 - digital;
   const pulse = 0.75 + 0.25 * Math.sin(t * 3.2) + 0.1 * Math.sin(t * 7.1);
@@ -142,20 +143,20 @@ export const Body: React.FC<BodyProps> = ({t, xray = 0, digital = 0, glow = 0, g
             {slices > 0.01 && Array.from({length: 44}, (_, i) => {
               const y = -850 + i * 40;
               const k = clamp01(slices * 1.4 - (i / 44) * 0.4);
-              return <line key={i} x1={-340} x2={-340 + 680 * k} y1={y} y2={y} stroke={P.ai} strokeWidth={1.6} opacity={0.32} />;
+              return <line key={i} x1={-340} x2={-340 + 680 * k} y1={y} y2={y} stroke={P.ai} strokeWidth={1.6 * lineW} opacity={0.32} />;
             })}
-            <path d={closedPath(LUNG_R)} fill={P.ai} fillOpacity={0.06} stroke={P.ai} strokeWidth={3} />
-            <path d={closedPath(LUNG_L)} fill={P.ai} fillOpacity={0.06} stroke={P.ai} strokeWidth={3} />
-            <path d={closedPath(HEART)} transform={`translate(${SITE.heart[0] - 30} 0)`} fill="none" stroke={P.ai} strokeWidth={3} />
-            <path d={closedPath(LIVER)} fill={P.ai} fillOpacity={0.05} stroke={P.ai} strokeWidth={3} />
-            <path d={closedPath(STOMACH)} fill="none" stroke={P.aiDeep} strokeWidth={3} />
-            <path d={GUT_PATH} fill="none" stroke={P.aiDeep} strokeWidth={3} />
-            <Vessels t={t} op={0.9} color={P.ai} />
-            {tumorSize > 0.01 && <circle cx={SITE.tumor[0]} cy={SITE.tumor[1]} r={28 * tumorSize} fill={P.aiGold} fillOpacity={0.25} stroke={P.aiGold} strokeWidth={4} />}
-            {metsSize > 0.01 && <circle cx={SITE.mets[0]} cy={SITE.mets[1]} r={18 * metsSize} fill={P.aiGold} fillOpacity={0.25} stroke={P.aiGold} strokeWidth={4} />}
+            <path d={closedPath(LUNG_R)} fill={P.ai} fillOpacity={0.06} stroke={P.ai} strokeWidth={3 * lineW} />
+            <path d={closedPath(LUNG_L)} fill={P.ai} fillOpacity={0.06} stroke={P.ai} strokeWidth={3 * lineW} />
+            <path d={closedPath(HEART)} transform={`translate(${SITE.heart[0] - 30} 0)`} fill="none" stroke={P.ai} strokeWidth={3 * lineW} />
+            <path d={closedPath(LIVER)} fill={P.ai} fillOpacity={0.05} stroke={P.ai} strokeWidth={3 * lineW} />
+            <path d={closedPath(STOMACH)} fill="none" stroke={P.aiDeep} strokeWidth={3 * lineW} />
+            <path d={GUT_PATH} fill="none" stroke={P.aiDeep} strokeWidth={3 * lineW} />
+            <Vessels t={t} op={0.9} color={P.ai} w={lineW} />
+            {tumorSize > 0.01 && <circle cx={SITE.tumor[0]} cy={SITE.tumor[1]} r={28 * tumorSize} fill={P.aiGold} fillOpacity={0.25} stroke={P.aiGold} strokeWidth={4 * lineW} />}
+            {metsSize > 0.01 && <circle cx={SITE.mets[0]} cy={SITE.mets[1]} r={18 * metsSize} fill={P.aiGold} fillOpacity={0.25} stroke={P.aiGold} strokeWidth={4 * lineW} />}
           </g>
-          <path d={BODY_PATH} fill="none" stroke={P.ai} strokeWidth={4} />
-          <path d={BODY_PATH} fill="none" stroke={P.aiHot} strokeWidth={1.5} opacity={0.6} />
+          <path d={BODY_PATH} fill="none" stroke={P.ai} strokeWidth={4 * lineW} />
+          <path d={BODY_PATH} fill="none" stroke={P.aiHot} strokeWidth={1.5 * lineW} opacity={0.6} />
         </g>
       )}
       {/* scanning plane */}
@@ -179,15 +180,15 @@ export const Body: React.FC<BodyProps> = ({t, xray = 0, digital = 0, glow = 0, g
 };
 
 /** Major vessels (arteries red, veins blue-ish) as a flowing overlay. */
-export const Vessels: React.FC<{t: number; op?: number; color?: string}> = ({t, op = 1, color}) => {
+export const Vessels: React.FC<{t: number; op?: number; color?: string; w?: number}> = ({t, op = 1, color, w = 1}) => {
   const art = color ?? P.bloodLight, ven = color ?? '#7B5CC9';
   const A = 'M 6 -640 L 6 -560 Q 12 -420 10 -300 L 10 0 L 10 60 Q 40 200 70 420 Q 90 600 100 800 M 10 60 Q -20 200 -60 420 Q -80 600 -94 800 M 6 -580 Q 120 -600 200 -560 Q 250 -300 270 0 Q 280 80 290 140 M 6 -580 Q -120 -600 -200 -560 Q -250 -300 -270 0 Q -280 80 -290 140 M 6 -620 L 24 -760 M 6 -620 L -12 -760 M 10 -200 Q 60 -190 120 -180 M 10 -200 Q -60 -190 -120 -180';
   const V = 'M -14 -640 L -14 -560 Q -20 -420 -18 -300 L -18 60 Q -50 200 -78 420 Q -100 600 -110 800 M -18 60 Q 20 200 54 420 Q 74 600 86 800';
   return (
     <g opacity={op}>
-      <path d={A} fill="none" stroke={art} strokeWidth={7} strokeLinecap="round" opacity={0.75} />
-      <path d={V} fill="none" stroke={ven} strokeWidth={7} strokeLinecap="round" opacity={0.6} />
-      <path d={A} fill="none" stroke="#FFFFFF" strokeWidth={3} strokeLinecap="round" strokeDasharray="6 40" strokeDashoffset={-t * 160} opacity={0.5} />
+      <path d={A} fill="none" stroke={art} strokeWidth={7 * w} strokeLinecap="round" opacity={0.75} />
+      <path d={V} fill="none" stroke={ven} strokeWidth={7 * w} strokeLinecap="round" opacity={0.6} />
+      <path d={A} fill="none" stroke="#FFFFFF" strokeWidth={3 * w} strokeLinecap="round" strokeDasharray="6 40" strokeDashoffset={-t * 160} opacity={0.5} />
     </g>
   );
 };

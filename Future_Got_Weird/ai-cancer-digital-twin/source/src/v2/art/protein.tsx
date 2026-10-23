@@ -7,9 +7,9 @@ import {P as Pt, rand, mixHex, smooth, clamp01, lerp, noise} from '../../kit/cor
 import {P} from '../palette';
 
 export const POCKET: Pt = [250, -230];
-const POCKET_R = 250;
-type Res = {x: number; y: number; z: number; r: number; lining: boolean; k: number};
-const RESIDUES: Res[] = (() => {
+export const POCKET_R = 250;
+export type Res = {x: number; y: number; z: number; r: number; lining: boolean; k: number};
+export const RESIDUES: Res[] = (() => {
   const out: Res[] = [];
   let k = 0;
   for (let n = 0; n < 900 && out.length < 120; n++) {
@@ -28,32 +28,43 @@ const RESIDUES: Res[] = (() => {
 
 /** layer: 'all', or 'back' / 'front' to draw a docked molecule between them (front = the near rim of the pocket).
  *  close: the pocket's lining residues draw in around a bound molecule (induced fit). */
-export const Protein: React.FC<{t: number; digital?: number; pocketGlow?: number; scanA?: number; op?: number; breathe?: number; layer?: 'all' | 'back' | 'front'; close?: number}> = ({t, digital = 0, pocketGlow = 0, scanA, op = 1, breathe = 1, layer = 'all', close = 0}) => {
+/** rotY: turn about the vertical axis (radians; residues get depth from their z), for a view that reveals the fold.
+ *  variant: one residue changed by a mutation — it swells (grow) toward the pocket in its own colour; hot flashes it
+ *  red on contact. */
+export const Protein: React.FC<{t: number; digital?: number; pocketGlow?: number; scanA?: number; op?: number; breathe?: number; layer?: 'all' | 'back' | 'front'; close?: number; rotY?: number; variant?: {k: number; grow: number; col: string; hot?: number}}> = ({t, digital = 0, pocketGlow = 0, scanA, op = 1, breathe = 1, layer = 'all', close = 0, rotY, variant}) => {
   const bioA = '#8E4AA8', bioB = '#C46AA8', bioDeep = '#3E1452';
+  const cy = rotY === undefined ? 1 : Math.cos(rotY), sy = rotY === undefined ? 0 : Math.sin(rotY);
+  const ZD = 320; // depth extent of the fold (protein units) used when it turns
+  const rx = (x: number, z: number) => x * cy + z * ZD * sy;
+  const list = rotY === undefined ? RESIDUES : RESIDUES.map((r) => ({...r, x: rx(r.x, r.z), z: Math.max(-1, Math.min(1, r.z * cy - (r.x / ZD) * sy * 0.5))})).sort((a, b) => a.z - b.z);
+  const pocketX = rotY === undefined ? POCKET[0] : POCKET[0] * cy;
   return (
     <g opacity={op}>
       {layer !== 'front' && <circle r={760} fill={digital > 0.5 ? 'url(#glowAi)' : 'url(#glowMag)'} opacity={0.12} />}
-      {RESIDUES.filter((r) => layer === 'all' || (layer === 'front') === (r.lining && r.z > 0.15)).map((r) => {
+      {list.filter((r) => layer === 'all' || (layer === 'front') === (r.lining && r.z > 0.15)).map((r) => {
         const w = 1 + 0.015 * breathe * Math.sin(t * 2 + r.k);
-        const pull = r.lining ? close * 26 : 0;
-        const dx0 = POCKET[0] - r.x, dy0 = POCKET[1] - r.y, dl = Math.hypot(dx0, dy0) || 1;
-        const x = r.x + 6 * noise(t * 0.5 + r.k, 3) * breathe + (dx0 / dl) * pull, y = r.y + 6 * noise(t * 0.5 + r.k, 7) * breathe + (dy0 / dl) * pull;
+                const dx0 = pocketX - r.x, dy0 = POCKET[1] - r.y, dl = Math.hypot(dx0, dy0) || 1;
+        const vg = variant && variant.k === r.k ? variant.grow : 0;
+        const push = r.lining ? close * 26 : 0;
+        const x = r.x + 6 * noise(t * 0.5 + r.k, 3) * breathe + (dx0 / dl) * (push + 70 * vg), y = r.y + 6 * noise(t * 0.5 + r.k, 7) * breathe + (dy0 / dl) * (push + 70 * vg);
         const depth = (r.z + 1) / 2;
         const base = r.lining ? mixHex(mixHex(bioB, P.immuneGold, 0.55), P.aiGold, digital) : mixHex(mixHex(bioA, bioB, rand(r.k * 5)), P.aiDeep, digital);
-        const col = mixHex(base, '#120818', 0.45 * (1 - depth));
+        const col0 = mixHex(base, '#120818', 0.45 * (1 - depth));
+        const col = vg > 0 && variant ? mixHex(mixHex(col0, variant.col, vg), '#FF3A4A', variant.hot ?? 0) : col0;
+        const rr = r.r * (1 + 0.75 * vg);
         const hit = scanA !== undefined ? Math.exp(-(((Math.atan2(y, x) - scanA + Math.PI * 3) % (Math.PI * 2) - Math.PI) ** 2) / 0.05) : 0;
         return (
           <g key={r.k} transform={`translate(${x} ${y}) scale(${w})`}>
-            <circle r={r.r + 4} fill={mixHex(bioDeep, P.aiBg, digital)} />
-            <circle r={r.r} fill={col} />
-            <circle r={r.r} fill="url(#vol)" opacity={1 - 0.4 * digital} />
-            {digital > 0.01 && <circle r={r.r * 0.9} fill="none" stroke={r.lining ? P.aiGold : P.ai} strokeWidth={4} opacity={digital * (0.5 + 0.5 * depth)} />}
+            <circle r={rr + 4} fill={mixHex(bioDeep, P.aiBg, digital)} />
+            <circle r={rr} fill={col} />
+            <circle r={rr} fill="url(#vol)" opacity={1 - 0.4 * digital} />
+            {digital > 0.01 && <circle r={rr * 0.9} fill="none" stroke={r.lining ? P.aiGold : P.ai} strokeWidth={4} opacity={digital * (0.5 + 0.5 * depth)} />}
             {hit > 0.05 && <circle r={r.r} fill={P.aiHot} opacity={hit * 0.5} />}
             {r.lining && pocketGlow > 0.01 && <circle r={r.r * 0.6} fill="url(#glowGold)" opacity={pocketGlow} />}
           </g>
         );
       })}
-      {pocketGlow > 0.01 && layer !== 'front' && <circle cx={POCKET[0]} cy={POCKET[1]} r={POCKET_R * 1.3} fill="url(#glowGold)" opacity={pocketGlow * 0.6} />}
+      {pocketGlow > 0.01 && layer !== 'front' && <circle cx={pocketX} cy={POCKET[1]} r={POCKET_R * 1.3} fill="url(#glowGold)" opacity={pocketGlow * 0.6} />}
     </g>
   );
 };
