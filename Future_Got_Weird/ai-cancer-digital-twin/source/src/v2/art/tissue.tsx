@@ -191,7 +191,8 @@ export const TissueField: React.FC<{cam: Cam; t: number; mod?: (i: number, j: nu
     }
   return (
     <g>
-      <rect x={b.x0} y={b.y0} width={b.x1 - b.x0} height={b.y1 - b.y0} fill={far > 0 ? `url(#${patternId})` : P.tissueBg} />
+      {/* (V4 scenes keep the texture under the individual cells a little longer, so the gaps do not flip to dark at the hand-over) */}
+      <rect x={b.x0} y={b.y0} width={b.x1 - b.x0} height={b.y1 - b.y0} fill={far > 0 || (farSkip && lod < 26) ? `url(#${patternId})` : P.tissueBg} />
       {far < 1 && <g opacity={1 - far}>{plain}</g>}
       {far > 0.01 && (!farSkip || cam.z > 0.01) && <TissueVariation b={b} op={far} />}
       {special}

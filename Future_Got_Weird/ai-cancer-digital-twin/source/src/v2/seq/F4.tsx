@@ -28,7 +28,7 @@ import {AIBack} from '../art/ai';
 import {Protein} from '../art/protein';
 import {Granules, Synapse} from '../art/immune';
 import {Bokeh, Phagocyte, buildLineage, liveCells, LineageCell} from '../art/depth';
-import {C0P, tumorMod, TumorMassShade, toTissue, fromTissue} from './A';
+import {C0P, tumorMod, TumorMassShade, toTissue, fromTissue, cloneLook} from './A';
 import {SITE} from '../art/body';
 import {CAPS, SPROUTS} from './B';
 import {RtLocal, RT_E0, erodeK} from './E';
@@ -179,11 +179,11 @@ const TissueF: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
       const ang = Math.atan2(dy, dx);
       const d = Math.hypot(dx, dy) / boundary(ang);
       const Rt = RtF(ang, t);
-      if (d < Rt) return {look: TUMOR, nucScale: 1.25, irr: 0.06};
+      if (d < Rt - 120) return {look: cloneLook(i, j, 0.6), nucScale: 1.25, irr: 0.06, s: 0.92 + 0.22 * rand(((i * 911) ^ (j * 3571)) & 0xffff), round: 0.4};
       if (d < RT_E0) {
-        const k = clamp01((d - Rt) / 300);
-        // opaque, so the background never shows through as the far-zoom texture hands over to individual cells
-        return {look: lookMix(lookMix({...TUMOR, fill: '#8A6A86'}, {...TUMOR, fill: '#6E4E66', light: '#9A7E92'}, 0.5 * (1 - heal)), HEALTHY, heal), bleb: k * (1 - heal), shrink: 0.5 * k * (1 - heal)};
+        // starts exactly where the eroding band left off (same look, same translucency), then heals
+        const k = clamp01((d - Rt + 120) / 240);
+        return {look: lookMix(lookMix(TUMOR, {...TUMOR, fill: '#8A6A86'}, k), HEALTHY, heal), bleb: k * (1 - heal), shrink: 0.6 * k * (1 - heal), op: lerp(1 - 0.65 * k, 1, heal), s: 1 - 0.2 * k * (1 - heal)};
       }
       return null;
     };
@@ -196,7 +196,7 @@ const TissueF: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
       <TissueBack cam={cam} t={t} farSkip />
       <g transform={camTransform(cam)}>
         <TissueField farSkip cam={cam} t={t} mod={mod} />
-        {phase1 && <TumorMassShade Rt={RT_E0} op={0.6 * (1 - lift(cam.z, 0.35, 0.7))} />}
+        <TumorMassShade Rt={RT_E0} op={0.6 * (1 - lift(cam.z, 0.35, 0.7)) * (1 - lift(t, tF.but + 0.4, tF.but + 1.3))} />
         <TumourStructure t={t} cam={cam} />
         {CAPS.map((c, k) => <Capillary key={k} pts={c} t={t} w={95} lod={cam.z} />)}
         {SPROUTS.map((c, k) => <Capillary key={'s' + k} pts={c} t={t} w={78} lod={cam.z} />)}
