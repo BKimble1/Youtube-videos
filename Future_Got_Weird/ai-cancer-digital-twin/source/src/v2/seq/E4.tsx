@@ -316,7 +316,7 @@ const Learn: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
 
 export const shotsE4: Shot[] = [
   {id: 'E-surface', t0: SURF_OUT[0], t1: R_IN[1] + 0.05, fade: SURF_OUT[1] - SURF_OUT[0], draw: (t) => <Surface t={t} cam={surfCam(t)} />},
-  {id: 'E-routes', t0: R_IN[0], t1: tE.imagine + 0.3, fade: R_IN[1] - R_IN[0], draw: (t) => <Routes t={t} cam={CAM_V(t)} />},
-  {id: 'E-learn', t0: tE.imagine, t1: KILL_IN[1] + 0.05, fade: 0.3, draw: (t) => <Learn t={t} cam={t < SQ[1] ? CAM_L(t) : learnFromKill(KILL_CAM_D(t))} />},
+  {id: 'E-routes', t0: R_IN[0], t1: tE.imagine, fade: R_IN[1] - R_IN[0], draw: (t) => <Routes t={t} cam={CAM_V(t)} />},
+  {id: 'E-learn', t0: tE.imagine, t1: KILL_IN[1] + 0.05, draw: (t) => <Learn t={t} cam={t < SQ[1] ? CAM_L(t) : learnFromKill(KILL_CAM_D(t))} />},
 ];
 export const _e4 = {noise};

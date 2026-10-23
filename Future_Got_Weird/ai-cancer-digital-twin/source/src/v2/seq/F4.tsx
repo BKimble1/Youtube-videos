@@ -425,6 +425,7 @@ const Analysis: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   );
 };
 const AN: [number, number] = [tF.aiC - 0.35, tF.evolving + 0.3];
+const READ_CUT = tF.aiC - 0.15; // hard cut from the plasma into the read
 const CAM_AN = path([
   {t: AN[0], x: -40, y: -200, z: 1.9, rot: 0},
   {t: tF.aiC + 0.6, x: -60, y: -60, z: 0.92, rot: 0},
@@ -452,7 +453,7 @@ const newPos = (t: number): Pt => {
 };
 export const ATT_PT: Pt = [RX.x, RX.y];
 export const ATT_CAM = path([
-  {t: AN[1] - 0.4, x: RX.x + 60, y: RX.y - 20, z: 3.6, rot: 0},
+  {t: tF.evolving, x: RX.x + 60, y: RX.y - 20, z: 3.6, rot: 0},
   {t: tF.evolving + 0.8, x: RX.x + 40, y: RX.y, z: 1.9, rot: 0},
   {t: tF.met + 0.2, x: RX.x - 80, y: RX.y - 60, z: 1.55, rot: 0},
   {t: tF.defense + 0.5, x: RX.x - 40, y: RX.y - 20, z: 1.85, rot: 0},
@@ -514,8 +515,8 @@ export const BODY_PULL = path([
 export const shotsF4: Shot[] = [
   {id: 'F-tissue', t0: KILL_OUT, t1: tF.cancer + 0.4, fade: 0.7, draw: (t) => <TissueF t={t} cam={CAM_T(t)} />},
   {id: 'F-blood', t0: tF.cancer - 0.1, t1: TUBE[0] + 0.05, fade: 0.5, draw: (t) => <BloodF t={t} cam={CAM_B(t)} />},
-  {id: 'F-tube', t0: TUBE[0] - 0.3, t1: AN[0] + 0.45, fade: 0.3, draw: (t) => <Tube t={t} cam={CAM_TU(t)} />},
-  {id: 'F-read', t0: AN[0], t1: AN[1] + 0.05, fade: 0.4, draw: (t) => <Analysis t={t} cam={CAM_AN(t)} />},
-  {id: 'F-attack', t0: AN[1] - 0.4, t1: PULL0 + 1.25, fade: 0.4, draw: (t) => <Attack t={t} cam={t < PULL0 ? ATT_CAM(t) : toTissue(BODY_PULL(t))} />},
+  {id: 'F-tube', t0: TUBE[0] - 0.3, t1: READ_CUT, fade: 0.3, draw: (t) => <Tube t={t} cam={CAM_TU(t)} />},
+  {id: 'F-read', t0: READ_CUT, t1: tF.evolving, draw: (t) => <Analysis t={t} cam={CAM_AN(t)} />},
+  {id: 'F-attack', t0: tF.evolving, t1: PULL0 + 1.25, draw: (t) => <Attack t={t} cam={t < PULL0 ? ATT_CAM(t) : toTissue(BODY_PULL(t))} />},
 ];
 export const _f4 = {HEALTHY, tipNoop: 0};
