@@ -1,0 +1,166 @@
+{
+ "frames": 878,
+ "worstLegShort_u": 19.5,
+ "worstLegAt": 0.73,
+ "worstArmShort_u": 22.5,
+ "worstArmAt": 1.67,
+ "counts": {
+  "guard: leg target out of reach (u)": 13,
+  "her: hand target out of reach (u)": 7,
+  "her: leg target out of reach (u)": 1
+ },
+ "seam": {
+  "her_pelvis_gap_m": 0,
+  "guard_pelvis_gap_m": 0,
+  "note": "state at t = DUR (one frame after the last) vs t = 0, both in chase coordinates"
+ },
+ "issues": [
+  {
+   "t": 0.6333333333333333,
+   "shot": "track",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 9.6
+  },
+  {
+   "t": 0.6666666666666666,
+   "shot": "track",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 13.7
+  },
+  {
+   "t": 0.7,
+   "shot": "track",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 17.1
+  },
+  {
+   "t": 0.7333333333333333,
+   "shot": "track",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 19.5
+  },
+  {
+   "t": 0.7666666666666667,
+   "shot": "track",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 18.7
+  },
+  {
+   "t": 0.8,
+   "shot": "track",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 13.3
+  },
+  {
+   "t": 0.8333333333333334,
+   "shot": "track",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 6.7
+  },
+  {
+   "t": 0.8666666666666667,
+   "shot": "track",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 6.3
+  },
+  {
+   "t": 0.9,
+   "shot": "track",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 6.1
+  },
+  {
+   "t": 1.6666666666666667,
+   "shot": "track",
+   "who": "her",
+   "what": "hand target out of reach (u)",
+   "value": 22.5
+  },
+  {
+   "t": 1.7,
+   "shot": "track",
+   "who": "her",
+   "what": "hand target out of reach (u)",
+   "value": 18.3
+  },
+  {
+   "t": 14.166666666666666,
+   "shot": "behind2",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 10.4
+  },
+  {
+   "t": 14.2,
+   "shot": "behind2",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 6.6
+  },
+  {
+   "t": 23.833333333333332,
+   "shot": "giggle",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 7.3
+  },
+  {
+   "t": 23.866666666666667,
+   "shot": "giggle",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 6.7
+  },
+  {
+   "t": 28.3,
+   "shot": "bolt",
+   "who": "her",
+   "what": "hand target out of reach (u)",
+   "value": 19.6
+  },
+  {
+   "t": 28.333333333333332,
+   "shot": "bolt",
+   "who": "her",
+   "what": "hand target out of reach (u)",
+   "value": 19.6
+  },
+  {
+   "t": 28.366666666666667,
+   "shot": "bolt",
+   "who": "her",
+   "what": "hand target out of reach (u)",
+   "value": 19.6
+  },
+  {
+   "t": 28.4,
+   "shot": "bolt",
+   "who": "her",
+   "what": "hand target out of reach (u)",
+   "value": 18.2
+  },
+  {
+   "t": 28.433333333333334,
+   "shot": "bolt",
+   "who": "her",
+   "what": "hand target out of reach (u)",
+   "value": 11.9
+  },
+  {
+   "t": 28.566666666666666,
+   "shot": "bolt",
+   "who": "her",
+   "what": "leg target out of reach (u)",
+   "value": 6.2
+  }
+ ]
+}

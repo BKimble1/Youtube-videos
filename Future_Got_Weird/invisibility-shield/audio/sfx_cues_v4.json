@@ -1,0 +1,560 @@
+[
+ {
+  "name": "her step 0",
+  "at": 0.016,
+  "dur": 0.12,
+  "gain_db": -33.0
+ },
+ {
+  "name": "her step 1",
+  "at": 0.181,
+  "dur": 0.12,
+  "gain_db": -32.7
+ },
+ {
+  "name": "her step 2",
+  "at": 0.346,
+  "dur": 0.12,
+  "gain_db": -33.0
+ },
+ {
+  "name": "her step 3",
+  "at": 0.511,
+  "dur": 0.12,
+  "gain_db": -32.7
+ },
+ {
+  "name": "her step 4",
+  "at": 0.676,
+  "dur": 0.12,
+  "gain_db": -33.0
+ },
+ {
+  "name": "guard step 5",
+  "at": 0.806,
+  "dur": 0.22,
+  "gain_db": -37.0
+ },
+ {
+  "name": "her step 6",
+  "at": 0.841,
+  "dur": 0.12,
+  "gain_db": -32.7
+ },
+ {
+  "name": "guard step 7",
+  "at": 0.996,
+  "dur": 0.22,
+  "gain_db": -37.0
+ },
+ {
+  "name": "her step 8",
+  "at": 1.006,
+  "dur": 0.12,
+  "gain_db": -33.0
+ },
+ {
+  "name": "her step 9",
+  "at": 1.171,
+  "dur": 0.12,
+  "gain_db": -32.7
+ },
+ {
+  "name": "guard step 10",
+  "at": 1.186,
+  "dur": 0.22,
+  "gain_db": -37.0
+ },
+ {
+  "name": "her step 11",
+  "at": 1.336,
+  "dur": 0.12,
+  "gain_db": -33.0
+ },
+ {
+  "name": "guard step 12",
+  "at": 1.376,
+  "dur": 0.22,
+  "gain_db": -37.0
+ },
+ {
+  "name": "her step 13",
+  "at": 1.501,
+  "dur": 0.12,
+  "gain_db": -33.0
+ },
+ {
+  "name": "guard step 14",
+  "at": 1.566,
+  "dur": 0.22,
+  "gain_db": -37.0
+ },
+ {
+  "name": "her step 15",
+  "at": 1.666,
+  "dur": 0.12,
+  "gain_db": -33.6
+ },
+ {
+  "name": "guard step 16",
+  "at": 1.756,
+  "dur": 0.22,
+  "gain_db": -37.0
+ },
+ {
+  "name": "guard step 17",
+  "at": 1.946,
+  "dur": 0.22,
+  "gain_db": -26.4
+ },
+ {
+  "name": "her step 18",
+  "at": 1.976,
+  "dur": 0.12,
+  "gain_db": -36.9
+ },
+ {
+  "name": "her step 19",
+  "at": 2.116,
+  "dur": 0.12,
+  "gain_db": -36.3
+ },
+ {
+  "name": "guard step 20",
+  "at": 2.136,
+  "dur": 0.22,
+  "gain_db": -26.4
+ },
+ {
+  "name": "guard step 21",
+  "at": 2.326,
+  "dur": 0.22,
+  "gain_db": -26.4
+ },
+ {
+  "name": "guard step 22",
+  "at": 2.516,
+  "dur": 0.22,
+  "gain_db": -26.5
+ },
+ {
+  "name": "guard step 23",
+  "at": 2.706,
+  "dur": 0.22,
+  "gain_db": -26.8
+ },
+ {
+  "name": "guard step 24",
+  "at": 2.946,
+  "dur": 0.22,
+  "gain_db": -26.9
+ },
+ {
+  "name": "guard step 25",
+  "at": 3.046,
+  "dur": 0.22,
+  "gain_db": -27.0
+ },
+ {
+  "name": "guard step 26",
+  "at": 13.946,
+  "dur": 0.22,
+  "gain_db": -35.0
+ },
+ {
+  "name": "guard step 27",
+  "at": 14.176,
+  "dur": 0.22,
+  "gain_db": -34.4
+ },
+ {
+  "name": "guard step 28",
+  "at": 14.416,
+  "dur": 0.22,
+  "gain_db": -34.0
+ },
+ {
+  "name": "guard step 29",
+  "at": 21.916,
+  "dur": 0.22,
+  "gain_db": -26.8
+ },
+ {
+  "name": "guard step 30",
+  "at": 22.046,
+  "dur": 0.22,
+  "gain_db": -26.9
+ },
+ {
+  "name": "guard step 31",
+  "at": 22.716,
+  "dur": 0.22,
+  "gain_db": -29.1
+ },
+ {
+  "name": "guard step 32",
+  "at": 22.736,
+  "dur": 0.22,
+  "gain_db": -29.6
+ },
+ {
+  "name": "guard step 33",
+  "at": 23.496,
+  "dur": 0.22,
+  "gain_db": -30.0
+ },
+ {
+  "name": "guard step 34",
+  "at": 23.696,
+  "dur": 0.22,
+  "gain_db": -28.2
+ },
+ {
+  "name": "guard step 35",
+  "at": 23.836,
+  "dur": 0.22,
+  "gain_db": -28.3
+ },
+ {
+  "name": "her step 36",
+  "at": 28.623,
+  "dur": 0.12,
+  "gain_db": -30.7
+ },
+ {
+  "name": "her step 37",
+  "at": 28.788,
+  "dur": 0.12,
+  "gain_db": -32.7
+ },
+ {
+  "name": "her step 38",
+  "at": 28.953,
+  "dur": 0.12,
+  "gain_db": -33.0
+ },
+ {
+  "name": "her step 39",
+  "at": 29.118,
+  "dur": 0.12,
+  "gain_db": -32.7
+ },
+ {
+  "name": "torch sweep 1",
+  "at": 29.2,
+  "dur": 0.45,
+  "gain_db": -35.5
+ },
+ {
+  "name": "torch sweep 2",
+  "at": 0.767,
+  "dur": 0.45,
+  "gain_db": -36.6
+ },
+ {
+  "name": "torch sweep 3",
+  "at": 4.633,
+  "dur": 0.45,
+  "gain_db": -36.0
+ },
+ {
+  "name": "torch sweep 4",
+  "at": 22.333,
+  "dur": 0.45,
+  "gain_db": -34.1
+ },
+ {
+  "name": "torch sweep 5",
+  "at": 28.067,
+  "dur": 0.45,
+  "gain_db": -33
+ },
+ {
+  "name": "torch sweep 6",
+  "at": 28.533,
+  "dur": 0.45,
+  "gain_db": -34.0
+ },
+ {
+  "name": "her brake squeak",
+  "at": 1.55,
+  "dur": 0.14,
+  "gain_db": -36
+ },
+ {
+  "name": "panel swing: air",
+  "at": 1.6,
+  "dur": 0.7,
+  "gain_db": -31
+ },
+ {
+  "name": "panel swing: flex",
+  "at": 1.9,
+  "dur": 0.4,
+  "gain_db": -34
+ },
+ {
+  "name": "panel set down (thunk)",
+  "at": 2.2,
+  "dur": 0.3,
+  "gain_db": -27
+ },
+ {
+  "name": "panel set down (glass ring)",
+  "at": 2.21,
+  "dur": 0.4,
+  "gain_db": -35
+ },
+ {
+  "name": "crouch: shirt rustle",
+  "at": 2.98,
+  "dur": 0.5,
+  "gain_db": -36
+ },
+ {
+  "name": "she vanishes in his view (soft shimmer)",
+  "at": 3.55,
+  "dur": 1.3,
+  "gain_db": -33
+ },
+ {
+  "name": "his head-turns (cap/cloth)",
+  "at": 4.6,
+  "dur": 0.3,
+  "gain_db": -37
+ },
+ {
+  "name": "his lean (cloth)",
+  "at": 4.78,
+  "dur": 0.3,
+  "gain_db": -38
+ },
+ {
+  "name": "push onto the panel",
+  "at": 6.25,
+  "dur": 1.8,
+  "gain_db": -35
+ },
+ {
+  "name": "lens texture",
+  "at": 7.4,
+  "dur": 1.5,
+  "gain_db": -36
+ },
+ {
+  "name": "macro: her light spreads (warm sweep)",
+  "at": 8.9,
+  "dur": 1.6,
+  "gain_db": -35
+ },
+ {
+  "name": "macro: the corridor smears across (cool sweep)",
+  "at": 10.7,
+  "dur": 2.0,
+  "gain_db": -36
+ },
+ {
+  "name": "pull back out",
+  "at": 10.9,
+  "dur": 2.2,
+  "gain_db": -36
+ },
+ {
+  "name": "lens texture (return)",
+  "at": 12.2,
+  "dur": 0.8,
+  "gain_db": -38
+ },
+ {
+  "name": "she sinks lower (rustle)",
+  "at": 13.85,
+  "dur": 0.35,
+  "gain_db": -37
+ },
+ {
+  "name": "the torch tilts (swish)",
+  "at": 14.75,
+  "dur": 0.4,
+  "gain_db": -38
+ },
+ {
+  "name": "panel nudged (scrape)",
+  "at": 15.35,
+  "dur": 0.3,
+  "gain_db": -36
+ },
+ {
+  "name": "his sudden lean (boot creak)",
+  "at": 15.98,
+  "dur": 0.22,
+  "gain_db": -35
+ },
+ {
+  "name": "his sudden lean (whoosh)",
+  "at": 15.96,
+  "dur": 0.3,
+  "gain_db": -33
+ },
+ {
+  "name": "he looks past her (cloth)",
+  "at": 17.55,
+  "dur": 0.3,
+  "gain_db": -38
+ },
+ {
+  "name": "her exhale",
+  "at": 18.12,
+  "dur": 0.8,
+  "gain_db": -33
+ },
+ {
+  "name": "the reach: sleeve",
+  "at": 18.95,
+  "dur": 1.2,
+  "gain_db": -37
+ },
+ {
+  "name": "the hand clears the edge (accent)",
+  "at": 20.12,
+  "dur": 0.18,
+  "gain_db": -28
+ },
+ {
+  "name": "his shock (small accent)",
+  "at": 21.08,
+  "dur": 0.25,
+  "gain_db": -31
+ },
+ {
+  "name": "finger flutter 1",
+  "at": 21.82,
+  "dur": 0.05,
+  "gain_db": -39
+ },
+ {
+  "name": "finger flutter 2",
+  "at": 21.92,
+  "dur": 0.05,
+  "gain_db": -39
+ },
+ {
+  "name": "finger flutter 3",
+  "at": 22.02,
+  "dur": 0.05,
+  "gain_db": -39
+ },
+ {
+  "name": "finger flutter 4",
+  "at": 22.12,
+  "dur": 0.05,
+  "gain_db": -39
+ },
+ {
+  "name": "finger flutter 5",
+  "at": 22.22,
+  "dur": 0.05,
+  "gain_db": -39
+ },
+ {
+  "name": "hand darts back",
+  "at": 22.3,
+  "dur": 0.3,
+  "gain_db": -35
+ },
+ {
+  "name": "his recoil (whoosh)",
+  "at": 22.52,
+  "dur": 0.35,
+  "gain_db": -32
+ },
+ {
+  "name": "flashlight swings (swish)",
+  "at": 22.6,
+  "dur": 0.45,
+  "gain_db": -34
+ },
+ {
+  "name": "her giggle shake (cloth)",
+  "at": 22.85,
+  "dur": 0.8,
+  "gain_db": -39
+ },
+ {
+  "name": "lowering: air",
+  "at": 24.0,
+  "dur": 0.9,
+  "gain_db": -32
+ },
+ {
+  "name": "lowering: panel flex",
+  "at": 24.5,
+  "dur": 0.35,
+  "gain_db": -34
+ },
+ {
+  "name": "panel set on its edge",
+  "at": 24.88,
+  "dur": 0.18,
+  "gain_db": -33
+ },
+ {
+  "name": "the reveal (low accent)",
+  "at": 25.36,
+  "dur": 1.2,
+  "gain_db": -28
+ },
+ {
+  "name": "cuffs drawn (rattle)",
+  "at": 27.22,
+  "dur": 0.22,
+  "gain_db": -33
+ },
+ {
+  "name": "cuffs drawn (clink)",
+  "at": 27.4,
+  "dur": 0.1,
+  "gain_db": -33
+ },
+ {
+  "name": "handcuff click",
+  "at": 27.68,
+  "dur": 0.42,
+  "gain_db": -24
+ },
+ {
+  "name": "her turn squeak",
+  "at": 28.36,
+  "dur": 0.12,
+  "gain_db": -36
+ },
+ {
+  "name": "bolt: whoosh",
+  "at": 28.4,
+  "dur": 0.6,
+  "gain_db": -32
+ },
+ {
+  "name": "his lunge (whoosh)",
+  "at": 28.42,
+  "dur": 0.4,
+  "gain_db": -33
+ },
+ {
+  "name": "belly-flop (thud)",
+  "at": 28.79,
+  "dur": 0.35,
+  "gain_db": -27
+ },
+ {
+  "name": "belly-flop (slide)",
+  "at": 28.83,
+  "dur": 0.35,
+  "gain_db": -35
+ },
+ {
+  "name": "scramble up (cloth)",
+  "at": 29.087,
+  "dur": 0.7,
+  "gain_db": -36
+ }
+]

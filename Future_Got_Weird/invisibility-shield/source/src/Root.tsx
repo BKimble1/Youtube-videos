@@ -8,6 +8,9 @@ import {FilmV2, StillV2} from './v2/FilmV2';
 import {ModelSheet3} from './v3/ModelSheet3';
 import {FilmV3, StillV3} from './v3/FilmV3';
 import {Blocking3} from './v3/Blocking3';
+import {ModelSheet4} from './v4/ModelSheet4';
+import {Test4} from './v4/Test4';
+import {FilmV4, StillV4} from './v4/FilmV4';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -21,5 +24,9 @@ export const RemotionRoot: React.FC = () => (
     <Still id="StillV3" component={StillV3} width={W} height={H} defaultProps={{t: 0, captions: true}} />
     <Still id="Blocking3" component={Blocking3} width={1920} height={1080} defaultProps={{}} />
     <Still id="ModelSheet3" component={ModelSheet3} width={W} height={H} defaultProps={{who: 'w' as 'w' | 'g'}} />
+    <Composition id="InvisibilityShieldV4" component={FilmV4} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v4' as string | false, captions: true}} />
+    <Still id="StillV4" component={StillV4} width={W} height={H} defaultProps={{t: 0, captions: true}} />
+    <Still id="Test4" component={Test4} width={W} height={H} defaultProps={{cam: 'side'}} />
+    <Still id="ModelSheet4" component={ModelSheet4} width={W} height={H} defaultProps={{page: 'turn'}} />
   </>
 );

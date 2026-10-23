@@ -1,5 +1,49 @@
 # Future Got Weird: This Shield Can Make You Disappear.
 
+## V4 (fourth review cut: complete 2D / 2.5D vector rebuild in the Weird Crew style)
+
+**Status (23 Oct 2026):**
+- A review cut is rendered and checked from the MP4 and from a per-frame rig check (`production/V4_QA_REPORT.md`).
+- **Not the final publish master. Not published.**
+- Nobody has watched or listened to it in real time.
+- Runway was used for three test generations. Their outputs could not be downloaded into this environment, so **no Runway material is in the film**; see `production/v4/RUNWAY_MANIFEST.md`.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920, 30 fps, 878 frames, 29.27 s, H.264 CRF 16 + AAC 320 kb/s, burned-in captions | `exports/FGW_Invisibility_Shield_V4_REVIEW_1080x1920.mp4` |
+| QA report (results, unresolved issues) | `production/V4_QA_REPORT.md` |
+| Animation and transition review notes (cast decision, rig, optics, shot list, transition list, loop) | `production/v4/V4_ANIMATION_TRANSITION_NOTES.md` |
+| Runway asset manifest (references, prompts, task IDs, slots, acceptance checks) | `production/v4/RUNWAY_MANIFEST.md`, `production/v4/runway/references/` |
+| Model sheets (turnaround + actions, expressions) | `production/v4/V4_model_sheet_turnaround.png`, `production/v4/V4_model_sheet_expressions.png` |
+| Narration (unchanged recording and timing) and captions (unchanged words and timings) | as V1 |
+| V4 mix and its effect list | `audio/mix/FGW_Invisibility_Shield_V4_mix.wav`, `audio/sfx_cues_v4.json` |
+| Editable source | `source/src/v4/` (composition `InvisibilityShieldV4`, still `StillV4`, `ModelSheet4`, `Test4`) |
+
+### V4 source layout (`source/src/v4/`)
+
+- `cast4.ts`: the Crew "person" (Video 01 values) and the Crew-built guard; skeleton dimensions.
+- `Crew4.tsx`: the 2D turnaround rig (IK limbs, mitt and open hands, the crew head on a sphere, hair and face caps).
+- `poses4.ts`: faces, base poses, the deep pose mixer.
+- `geo4.ts`: the multiplane camera and the 2D cards.
+- `steps4.ts`: explicit foot plants and swings.
+- `layout4.ts`: the world and the chase speed profile (it sets the corridor module, which makes the loop).
+- `Corridor4.tsx`: the flat illustrated corridor planes.
+- `Shield4.tsx`: the panel, its smear and the resolved rib optics, and the beam cone.
+- `story4.ts`: every character, prop and camera as a function of time, plus the shot list.
+- `FilmV4.tsx`: the composition, including the POV arms and the cuffs insert.
+- `Clips4.tsx`: the Runway clip-replacement slots (all empty in this build).
+- `ModelSheet4.tsx`, `Test4.tsx`: production documents.
+
+### V4 rebuild
+
+    cd Future_Got_Weird/invisibility-shield
+    NODE_PATH=$PWD/source/node_modules source/node_modules/.bin/esbuild tools/export_cues_v4.ts --bundle --platform=node --format=cjs --loader:.css=empty --outfile=/tmp/ec4.cjs && node /tmp/ec4.cjs audio/cues_v4.json
+    python3 tools/make_audio_v4.py       # V4 bed and effects over the unchanged narration -> source/public/audio/mix_v4.wav
+    (cd source && npx remotion render src/index.ts InvisibilityShieldV4 ../exports/FGW_Invisibility_Shield_V4_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v4","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    NODE_PATH=$PWD/source/node_modules source/node_modules/.bin/esbuild tools/rig_qa_v4.ts --bundle --platform=node --format=cjs --loader:.css=empty --outfile=/tmp/rq4.cjs && node /tmp/rq4.cjs qa/v4/rig_qa.json
+    QA_MIX=source/public/audio/mix_v4.wav python3 tools/qa.py exports/FGW_Invisibility_Shield_V4_REVIEW_1080x1920.mp4 <vosk_model_dir> qa/v4/review
+    python3 tools/motion_scan.py exports/FGW_Invisibility_Shield_V4_REVIEW_1080x1920.mp4 qa/v4/motion_scan.json
+
 ## V3 (third review cut: animation reconstruction, chase, handcuff ending, seamless loop)
 
 **Status (23 Oct 2026):**
