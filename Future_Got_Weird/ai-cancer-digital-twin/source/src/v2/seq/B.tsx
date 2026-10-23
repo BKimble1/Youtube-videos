@@ -29,7 +29,8 @@ const lift = (t: number, a: number, b: number) => smooth(seg(t, a, b));
 
 // ------------------------------------------------------------------------------------------------ the tumour
 const RtB = (t: number) => 2500 + 300 * smooth((t - tB.worse) / 20);
-const hetB = (t: number) => (t > tB.millions - 0.2 ? 1 : 0.4 * smooth((t - tB.worse) / 12));
+// continues from the subclone mix the growth sequence ends on (hetA), rising to fully heterogeneous
+const hetB = (t: number) => (t > tB.millions - 0.2 ? 1 : 0.55 + 0.45 * smooth((t - tB.worse) / 12));
 const rimPt = (deg: number, t: number, inset = 0): Pt => {
   const a = (deg * Math.PI) / 180;
   const r = RtB(t) * boundary(a) - inset;
@@ -169,7 +170,8 @@ const TissueB: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
         <g transform={`rotate(90 ${(Q[0] + fcell.x) / 2} ${(Q[1] + fcell.y) / 2})`}>
           <Fibres x0={(Q[0] + fcell.x) / 2 - 360} y0={(Q[1] + fcell.y) / 2 - 450} x1={(Q[0] + fcell.x) / 2 + 360} y1={(Q[1] + fcell.y) / 2 + 450} t={t} op={0.85 * lift(t, tB.free - 1.5, tB.free)} />
         </g>
-        {[CAP1, CAP2, CAP3, CAP4].map((c, k) => <Capillary key={k} pts={c} t={t} w={95} lod={cam.z} />)}
+        {/* the host capillaries come into view as the pull-back settles rather than popping on at the shot change */}
+        <g opacity={lift(t, tB.worse + 0.4, tB.worse + 1.3)}>{[CAP1, CAP2, CAP3, CAP4].map((c, k) => <Capillary key={k} pts={c} t={t} w={95} lod={cam.z} />)}</g>
         {SPROUTS.map((s, k) => sproutGrow(t, k) > 0.01 && <Capillary key={'s' + k} pts={s} t={t} w={78} grow={sproutGrow(t, k)} perfuse={sproutPerf(t, k)} lod={cam.z} />)}
         <Nutrients from={[along(CAP1, 0.45).p, along(CAP1, 0.48).p, along(CAP1, 0.51).p, along(CAP1, 0.54).p, along(CAP1, 0.57).p]} to={[EDGE[0] + 200, EDGE[1] + 700]} t={t} k={nut} n={40} size={26} />
         {/* immune evasion: shield ligands on the edge cell, the T cell docks and is switched off */}

@@ -1,6 +1,6 @@
 // V2 timing: every spoken event comes from the measured word timings of the approved narration
 // (data/narration_v2.json, built by tools/v2/stitch_narration_v2.py). Scenes never hand-type the second of a spoken word.
-import data from './data/narration_v2.json';
+import data from './data/narration_v5.json'; // V5: the approved V2 narration with the 1:07 sentence re-delivered (see tools/v5/splice_narration_v5.py)
 
 type Word = {text: string; start: number; end: number};
 const D = data as unknown as {duration: number; words: Word[]; script_words: Word[]};
