@@ -177,4 +177,31 @@ Results (`v3/qa/review3/`):
   - 3:30.3: gallery → workflow.
   - 3:39.2: workflow → tumours.
 - **Not verified:** nobody has watched the film at normal speed or listened to it in this environment. Motion smoothness, pacing and the effect and music balance still need a real watch and listen.
-- **4K master:** not rendered yet. It will be rendered natively at scale 2 from the same source, after this review.
+- **4K master:** rendered after this review. See below.
+
+## 4K master
+
+`exports/FGW_AI_Cancer_V3_4K_MASTER.mp4`. The file is git-ignored.
+
+**How it was made.** It was rendered natively (`--scale=2`) from the same source as the reviewed 1080p, after the fixes above. It was made in seven ranges of 1,000 frames, joined without re-encoding, with the same V3 mix added.
+
+| Property | Value |
+|---|---|
+| Video | 3840×2160, 30 fps, H.264 CRF 16 |
+| Frames | 6,935 |
+| Length | 3:51.17 |
+| Audio | AAC 320k, 48 kHz |
+| Size | 837,896,323 bytes |
+| SHA-256 | 2c5ee8f6…0e3dcb |
+
+**Checks** (results in `v3/qa/master4k/`):
+
+- **Decode:** the 4K stream decodes in full with no errors.
+- **Loudness:** -14.1 LUFS; -1.1 dBTP peak, measured on the master's audio.
+- **Picture checks:** run on a 1080p proxy downscaled from the master, since decoding 4K frames for analysis exhausted the container's memory. The results match the reviewed 1080p exactly:
+  - Black frames, freezes and low-activity seconds: none.
+  - Frame jumps: flagged at the same timestamps.
+  - Range seams (33.3, 66.7, 100.0, 133.3, 166.7, 200.0 s): no jump at any of them.
+- **Native detail:** checked on a full-resolution crop at 1:43.5.
+
+**Not checked:** the master has not been watched at normal speed or listened to in this environment.
