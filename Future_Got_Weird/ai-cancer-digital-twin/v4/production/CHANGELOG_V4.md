@@ -45,18 +45,18 @@ All of this happens in the same world as the delivery (the vessel above the tumo
   - **Disguise:** a T cell probes a colony cell whose fingerprints withdraw into the membrane, and the T cell moves on.
   - **Suppress:** checkpoint shields rise at another contact, and that T cell greys out and stalls (it is still there, switched off, later on).
   - **Difficult to recognise:** two cells drift toward the healthy look, and a T cell passes them by.
-- **2:25:** the camera pushes into the membrane of the cell that blended in.
+- **2:24.8–2:26.4:** the camera pushes into the membrane of the cell that blended in.
 
 ### 2:25–2:46 / 0:45–1:06 — immune recognition and targeting (rebuilt)
 
-- **2:25.6:** a continuous hand-off from that cell's membrane, keeping its position, size and curvature, onto the same curved membrane at molecular scale. MHC molecules stand on it: most hold ordinary peptides, and a few hold the tumour's fingerprints.
+- **2:26.0–2:26.4:** a continuous hand-off from that cell's membrane, keeping its position, size and curvature, onto the same curved membrane at molecular scale. MHC molecules stand on it: most hold ordinary peptides, and a few hold the tumour's fingerprints.
 - **2:28.6–2:30.7:** an AI read sweeps along the membrane. Each MHC is checked, ordinary ones pass, and fingerprints are locked. Copies of the identified fingerprints lift away.
 - **2:31–2:35:**
   - **Vaccine route:** the copies fly into vaccine particles. A dendritic cell takes them up and displays them, and a T cell is drawn in, docks, switches on and divides.
   - **Engineered route:** a culture bag beside it shows the engineered route (gene particle in, new receptors on, divisions).
   - The routes now sit in lymph-node stroma instead of plain teal lines.
 - **2:35.4** (hard cut, new idea): the receptor close-up now sits between two real curved membranes, a T cell's and that tumour cell's. The receptor tip reshapes, then seats on the fingerprint, and only then comes a restrained highlight.
-- **2:38.2:** the camera pulls straight back out of that contact into the treatment world. The trained T cell is docked on that same colony cell, so the receptor maps onto its biological structure with no style reset.
+- **2:38.1–2:39.1:** the camera pulls straight back out of that contact into the treatment world. The trained T cell is docked on that same colony cell, so the receptor maps onto its biological structure with no style reset.
 - **2:38.6–2:45.7** (recognise, lock, destroy, next, next): the T cell's membrane flattens against the target.
   - **Lock:** a synapse ring forms.
   - **Destroy:** granules cross, and the target dies by apoptosis.
@@ -135,3 +135,64 @@ Pulling back, each tumour resolves in its own way: from the inside, from the edg
   - an irregularity option for abnormal cells
 - **Cross-world hand-offs:** a rotated hand-off (`mapCam`) keeps position, size and orientation across worlds (cell → membrane, contact → cell).
 - **Render fix:** sub-pixel tissue layers are skipped at far zoom. The first full render timed out at 3:20.5 because of them.
+
+## Edit structure
+
+The cuts are deliberate and the rest is continuous:
+- **Hard cuts in Part 2, one per new idea or place:**
+  - 1:37.7: into the target protein (unchanged from V3)
+  - 2:35.4: the receptor close-up
+  - 3:07.9: the sequence read
+  - 3:15.5: the match cut to the precision attack
+  - 3:41.6: the opening cell
+- **Everything else is a continuous move:** a zoom-through or motion-matched hand-off between scales, or the camera continuing inside one world.
+- **No out-and-back:** nothing cuts away from a location and straight back, and no action is left before its result is seen.
+
+## Review passes and what they found
+
+These passes were done by measurement and dense still sequences, not by watching at normal speed (not possible here):
+- dense contact sheets at 2 frames per second over all of Part 2
+- frame strips at every shot boundary
+- per-frame difference analysis for single-frame jumps
+
+**Pass A (picture alone).** Checked that each beat reads without sound: cause before effect, and the same identities across scales. Fixes made:
+- **Evasion beats:** they were crowded by the whole army. The beats were re-staged left to right, and the army was kept away from them.
+- **Colony layout:** daughter cells could land on top of each other. Fixed with a relaxation step.
+- **Multiple-tumour shot:** markers and drugs were too small in the wide shot. They were enlarged and the tumours grouped tighter.
+- **Survivors:** they were hard to find during the search, so they now have a halo.
+
+**Pass B (against the narration).** Every rebuilt event is placed from the measured word timings, and the sync effects were re-timed to match.
+
+**Pass C (technical).** Fixes made:
+- **Snap zooms:** a snap zoom into the membrane (2:25.7) and a snap pull-back from the receptor contact (2:37.9) were both lengthened.
+- **Dying-ring pops:** the dying ring around the shrinking tumour changed look in one frame (2:51.6) and flipped its background colour (2:53.2); both are now continuous.
+- **Static second:** one near-static second at 3:27 now has camera motion and an earlier drug beat.
+- **Render timeout:** a render timeout at 3:20.5 is fixed.
+- **Part 1:** Part 1 renders byte-identical to the V3 source (verified frame by frame on rendered stills, including the far-zoom shots).
+
+## Measured: final 1080p review file
+
+`exports/FGW_AI_Cancer_V4_REVIEW_1080p.mp4`. The file is git-ignored.
+
+| Property | Value |
+|---|---|
+| Length | 3:51.17, 6,935 frames |
+| Video | 1920×1080, 30 fps, H.264 CRF 16 |
+| Audio | AAC 320k, 48 kHz |
+| Size | 350,199,600 bytes |
+| SHA-256 | c193a8ac…aa887c |
+
+Results (`v4/qa/review4/`):
+- **Loudness:** -14.1 LUFS integrated; -1.1 dBTP true peak.
+- **Black frames, freezes (1.2 s or longer), low-activity seconds:** none.
+- **Single-frame jumps:** only at the hard cuts listed above, plus motion spread across hand-offs:
+  - 1:49.4: carrier into the vessel (unchanged from V3)
+  - 2:26.8: the membrane camera starting to move
+  - 2:38.1–2:38.2: the pull-back from the receptor contact
+  - 3:07.8: the zoom into the tube
+
+## Not verified, and remaining notes
+
+- **No real-time viewing or listening:** the film has not been watched at normal speed or listened to here. Pacing, motion smoothness at 30 fps and the effect levels still need a real watch and listen.
+- **Specimen architectures (3:24–3:41):** these are illustrative of how differently tumours can be organised. They are not labelled cancer types.
+- **Hypothetical framing:** the treatments are shown as the narration's hypothetical future system. No on-screen text claims clinical results.
