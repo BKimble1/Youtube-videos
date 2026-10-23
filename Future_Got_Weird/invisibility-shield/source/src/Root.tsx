@@ -12,6 +12,7 @@ import {ModelSheet4} from './v4/ModelSheet4';
 import {Test4} from './v4/Test4';
 import {FilmV4, StillV4} from './v4/FilmV4';
 import {FilmV5, StillV5} from './v5/FilmV5';
+import {FilmV6, StillV6} from './v6/FilmV6';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -29,6 +30,8 @@ export const RemotionRoot: React.FC = () => (
     <Still id="StillV4" component={StillV4} width={W} height={H} defaultProps={{t: 0, captions: true}} />
     <Composition id="InvisibilityShieldV5" component={FilmV5} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v5' as string | false, captions: true}} />
     <Still id="StillV5" component={StillV5} width={W} height={H} defaultProps={{t: 0, captions: true}} />
+    <Composition id="InvisibilityShieldV6" component={FilmV6} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v5' as string | false, captions: true}} />
+    <Still id="StillV6" component={StillV6} width={W} height={H} defaultProps={{t: 0, captions: true}} />
     <Still id="Test4" component={Test4} width={W} height={H} defaultProps={{cam: 'side'}} />
     <Still id="ModelSheet4" component={ModelSheet4} width={W} height={H} defaultProps={{page: 'turn'}} />
   </>

@@ -1,0 +1,24 @@
+{
+ "frames": 878,
+ "worstLegShort_u": 6.4,
+ "worstLegAt": 21.87,
+ "worstArmShort_u": 10,
+ "worstArmAt": 25.73,
+ "counts": {
+  "guard: leg target out of reach (u)": 1
+ },
+ "seam": {
+  "her_pelvis_gap_m": 0,
+  "guard_pelvis_gap_m": 0,
+  "note": "state at t = DUR (one frame after the last) vs t = 0, both in chase coordinates"
+ },
+ "issues": [
+  {
+   "t": 21.866666666666667,
+   "shot": "otsHand2",
+   "who": "guard",
+   "what": "leg target out of reach (u)",
+   "value": 6.4
+  }
+ ]
+}

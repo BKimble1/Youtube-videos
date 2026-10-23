@@ -1,5 +1,16 @@
 # Future Got Weird: This Shield Can Make You Disappear.
 
+## V6 (focused correction pass on V5)
+
+**Status (23 Oct 2026):** corrected cut rendered natively at 1080×1920, 30 fps, from the source composition, and checked from the file (`production/V6_CORRECTIONS.md`). **Not published.** Nobody has watched it in real time with sound yet.
+
+| Deliverable | File |
+|---|---|
+| Corrected cut | `exports/FGW_Invisibility_Shield_V6_FINAL_1080x1920.mp4` |
+| Corrections and verification | `production/V6_CORRECTIONS.md` |
+| Editable project | `source/src/v6/` (composition `InvisibilityShieldV6`, audio `mix_v5`, unchanged) |
+| Rig QA | `tools/rig_qa_v6.ts` → `qa/v6/rig_qa.json` |
+
 ## V5 (final-review cut: creative and animation polish on the V4 project)
 
 **Status (23 Oct 2026):**
