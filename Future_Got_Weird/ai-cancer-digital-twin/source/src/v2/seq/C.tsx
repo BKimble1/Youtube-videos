@@ -74,7 +74,7 @@ const DTC = path([
   {t: tC.cancer + 0.9, x: 10, y: 10, z: 0.9, rot: 0},
   {t: tC.inside - 0.1, x: 40, y: 10, z: 0.98, rot: 0},
   {t: tC.inside + 1.2, x: 0, y: 220, z: 0.62, rot: 0},
-  {t: tC.search - 0.1, x: 0, y: 215, z: 0.63, rot: 0},
+  {t: tC.search - 0.1, x: 40, y: 205, z: 0.68, rot: 0},
   {t: tC.search + 0.6, x: CX[2], y: 40, z: 1.0, rot: 0},
   {t: tC.choosing + 0.15, x: GOLD_C[0], y: GOLD_C[1], z: 3.2, rot: 0},
 ]);
@@ -150,7 +150,7 @@ const TWIST = (r: number) => 0.25 * Math.sin(r * 6 + 1.3);
 const TEAL_A: [number, number] = [1.95, 3.55]; // angular range (wraps past π)
 const VIO_A: [number, number] = [-2.15, -1.0];
 const coreR = (a: number) => 0.29 * (1 + 0.09 * Math.sin(2 * a + 0.8) + 0.05 * Math.sin(5 * a + 2.0));
-const goldR = (a: number) => 0.16 * (1 + 0.15 * Math.sin(4 * a + 2.1));
+const goldR = (a: number) => 0.16 * (1 + 0.1 * Math.sin(3 * a + 2.1) + 0.05 * Math.sin(5 * a + 0.4));
 const inArc = (a: number, r: [number, number]) => { let x = a; while (x < r[0]) x += Math.PI * 2; return x <= r[1]; };
 type Reg = 0 | 1 | 2 | 3 | 4; // bulk, teal, violet, gold, core
 const regionOf = (ux: number, uy: number): Reg => {
@@ -415,7 +415,7 @@ const Twin: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   // comparison: the model becomes three copies, each on its own strategy and clock
   const sp = lift(t, SPAWN[0], SPAWN[1]);
   const chart = lift(t, SPAWN[1] - 0.2, SPAWN[1] + 0.5);
-  const drugK = lift(t, tC.test, tC.test + 0.5) * (1 - lift(t, SIM[0] + 0.6, SIM[1]));
+  const drugK = lift(t, tC.test - 0.75, tC.test - 0.2) * (1 - lift(t, SIM[0] + 0.6, SIM[1]));
   const u = lift(t, SIM[0], SIM[1]) * (1 - lift(t, REWIND[0], REWIND[1]));
   const pick = lift(t, tC.search - 0.1, tC.search + 0.4);
   const out: React.ReactNode[] = [];
