@@ -73,3 +73,11 @@ export const camSpeed = (f: (t: number) => Cam, t: number, dt = 1 / 30) => {
   const a = f(t - dt / 2), b = f(t + dt / 2);
   return {pan: Math.hypot(b.x - a.x, b.y - a.y) * ((a.z + b.z) / 2) / dt, zoom: Math.log(b.z / a.z) / dt};
 };
+
+/** Hand-off between two worlds whose axes are rotated by dRot (degrees) relative to each other: world-B point b sits
+ *  where world-A point a sits, `scale` = B units per A unit, and B's directions are A's turned by dRot. */
+export const mapCam = (camA: Cam, a: [number, number], b: [number, number], scale: number, dRot: number): Cam => {
+  const r = (-dRot * Math.PI) / 180;
+  const dx = (a[0] - camA.x) * scale, dy = (a[1] - camA.y) * scale;
+  return {x: b[0] - (Math.cos(r) * dx - Math.sin(r) * dy), y: b[1] - (Math.sin(r) * dx + Math.cos(r) * dy), z: camA.z / scale, rot: (camA.rot ?? 0) + dRot};
+};

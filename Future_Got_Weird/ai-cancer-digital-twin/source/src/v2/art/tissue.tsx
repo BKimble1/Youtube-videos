@@ -44,8 +44,18 @@ export const nearest = (x: number, y: number) => {
 };
 
 /** Polygon-ish cell outline: a rounded hexagon with seeded irregularity (cells press against their neighbours). */
-export const cellOutline = (r: number, seed: number, t: number, opts: {round?: number; stretch?: number; dir?: number; bleb?: number; wob?: number} = {}) => {
-  const {round = 0, stretch = 1, dir = 0, bleb = 0, wob = 0.03} = opts;
+/** flat: the membrane pressed against a contact plane (a = direction of the contact, d = depth of the press as a
+ *  fraction of r); the rest of the cell bulges slightly to keep its volume. irr: extra outline irregularity. */
+export type Flat = {a: number; d: number};
+export const pressR = (rr: number, a: number, r: number, flat?: Flat) => {
+  if (!flat || flat.d <= 0) return rr;
+  const c = Math.cos(a - flat.a);
+  const p = r * (1 - flat.d);
+  const out = c > 0.05 ? Math.min(rr, p / c) : rr;
+  return out * (1 + 0.22 * flat.d * smooth(clamp01(-c * 1.5 + 0.3)));
+};
+export const cellOutline = (r: number, seed: number, t: number, opts: {round?: number; stretch?: number; dir?: number; bleb?: number; wob?: number; irr?: number; flat?: Flat} = {}) => {
+  const {round = 0, stretch = 1, dir = 0, bleb = 0, wob = 0.03, irr = 0, flat} = opts;
   const n = 18;
   const pts: Pt[] = [];
   const rot0 = rand(seed * 7) * 60;
@@ -55,7 +65,7 @@ export const cellOutline = (r: number, seed: number, t: number, opts: {round?: n
     // hexagon radius at angle a (flat sides) blended toward a circle by `round`
     const ah = ((((a * 180) / Math.PI - rot0) % 60) + 60) % 60 - 30;
     const hex = Math.cos(Math.PI / 6) / Math.cos((ah * Math.PI) / 180);
-    let rr = r * lerp(hex * 0.97, 1, 0.45 + 0.55 * round) * (1 + 0.07 * noise(k * 0.9, seed) + wob * Math.sin(t * 1.3 + k * 1.7 + seed));
+    let rr = r * lerp(hex * 0.97, 1, 0.45 + 0.55 * round) * (1 + (0.07 + irr) * noise(k * 0.9, seed) + irr * 0.6 * noise(k * 2.1, seed + 13) + wob * Math.sin(t * 1.3 + k * 1.7 + seed));
     for (let b = 0; b < nb && bleb > 0; b++) {
       const ab = rand(seed * 17 + b) * Math.PI * 2;
       const da = Math.atan2(Math.sin(a - ab), Math.cos(a - ab));
@@ -64,6 +74,7 @@ export const cellOutline = (r: number, seed: number, t: number, opts: {round?: n
     // directional elongation (migration / EMT)
     const ca = Math.cos(a - dir);
     const sx = lerp(1, stretch, ca * ca);
+    rr = pressR(rr, a, r, flat);
     pts.push([Math.cos(a) * rr * sx, Math.sin(a) * rr / Math.sqrt(stretch)]);
   }
   return pts;
@@ -75,12 +86,14 @@ export type CellProps = {
   pulse?: number;         // abnormal nucleus pulse (0..1)
   round?: number; stretch?: number; dir?: number; bleb?: number; op?: number; shrink?: number; nucScale?: number;
   stress?: number;        // dims the cell (signal of damage)
+  irr?: number;           // outline irregularity (abnormal cells)
+  flat?: Flat;            // membrane pressed against a contact
 };
 
 /** One shaded epithelial cell. */
-export const Cell2: React.FC<CellProps> = ({x, y, r = R, seed = 1, t, look = HEALTHY, rot = 0, lod, pulse = 0, round = 0, stretch = 1, dir = 0, bleb = 0, op = 1, shrink = 0, nucScale = 1, stress = 0}) => {
+export const Cell2: React.FC<CellProps> = ({x, y, r = R, seed = 1, t, look = HEALTHY, rot = 0, lod, pulse = 0, round = 0, stretch = 1, dir = 0, bleb = 0, op = 1, shrink = 0, nucScale = 1, stress = 0, irr = 0, flat}) => {
   const rr = r * (1 - 0.3 * shrink);
-  const d = closedPath(cellOutline(rr, seed, t, {round, stretch, dir, bleb}), 1);
+  const d = closedPath(cellOutline(rr, seed, t, {round, stretch, dir, bleb, irr, flat: flat && {a: flat.a - (rot * Math.PI) / 180, d: flat.d}}), 1);
   const fill = mixHex(look.fill, '#8A6A78', stress * 0.4);
   const nr = rr * 0.38 * nucScale * (0.88 + 0.24 * rand(seed * 3 + 1));
   const nx = rr * 0.06 * Math.cos(seed), ny = rr * 0.05 * Math.sin(seed * 1.7);
@@ -123,7 +136,7 @@ export const Cell2: React.FC<CellProps> = ({x, y, r = R, seed = 1, t, look = HEA
 };
 
 export type Mod = {
-  dx?: number; dy?: number; s?: number; look?: Look; hide?: boolean; pulse?: number; stress?: number; shrink?: number; op?: number; round?: number; nucScale?: number; bleb?: number; stretch?: number; dir?: number;
+  dx?: number; dy?: number; s?: number; look?: Look; hide?: boolean; pulse?: number; stress?: number; shrink?: number; op?: number; round?: number; nucScale?: number; bleb?: number; stretch?: number; dir?: number; irr?: number;
 };
 
 const viewBounds = (cam: Cam, pad: number, depth = 1) => {
@@ -171,7 +184,7 @@ export const TissueField: React.FC<{cam: Cam; t: number; mod?: (i: number, j: nu
       const isSpecial = !!m.look || !!m.pulse;
       if (!isSpecial && far >= 1) continue;
       const sw = 0.75 * Math.sin(t * 0.9 + c.seed);
-      const el = <Cell2 key={`${i},${j}`} x={c.x + (m.dx ?? 0) + sw} y={c.y + (m.dy ?? 0)} r={R * c.sz * (m.s ?? 1)} seed={c.seed} t={t} lod={lod * (m.s ?? 1)} look={m.look} pulse={m.pulse} stress={m.stress} shrink={m.shrink} op={m.op} round={m.round} nucScale={m.nucScale} bleb={m.bleb} stretch={m.stretch} dir={m.dir} />;
+      const el = <Cell2 key={`${i},${j}`} x={c.x + (m.dx ?? 0) + sw} y={c.y + (m.dy ?? 0)} r={R * c.sz * (m.s ?? 1)} seed={c.seed} t={t} lod={lod * (m.s ?? 1)} look={m.look} pulse={m.pulse} stress={m.stress} shrink={m.shrink} op={m.op} round={m.round} nucScale={m.nucScale} bleb={m.bleb} stretch={m.stretch} dir={m.dir} irr={m.irr} />;
       (isSpecial ? special : plain).push(el);
     }
   return (
@@ -237,15 +250,19 @@ export const Motes: React.FC<{cam: Cam; t: number; color?: string; n?: number; d
 };
 
 /** Immune killer cell (T cell / NK look): teal, rounder, microvilli, large nucleus; crawls with a leading edge. */
-export const TCell2: React.FC<{x: number; y: number; r?: number; t: number; seed?: number; dir?: number; lod?: number; act?: number; dim?: number; op?: number; color?: string; light?: string; deep?: string; spikes?: number}> = ({x, y, r = 46, t, seed = 3, dir = 0, lod = 50, act = 0, dim = 0, op = 1, color = P.tcell, light = P.tcellLight, deep = P.tcellDeep, spikes = 1}) => {
+export const TCell2: React.FC<{x: number; y: number; r?: number; t: number; seed?: number; dir?: number; lod?: number; act?: number; dim?: number; op?: number; color?: string; light?: string; deep?: string; spikes?: number; flat?: Flat; lead?: number}> = ({x, y, r = 46, t, seed = 3, dir = 0, lod = 50, act = 0, dim = 0, op = 1, color = P.tcell, light = P.tcellLight, deep = P.tcellDeep, spikes = 1, flat, lead: leadK = 1}) => {
   const n = 16;
   const pts: Pt[] = [];
   for (let k = 0; k < n; k++) {
     const a = (k / n) * Math.PI * 2;
     const da = Math.atan2(Math.sin(a - dir), Math.cos(a - dir));
-    const lead = 0.18 * Math.exp(-(da * da) / 0.5) * (0.8 + 0.2 * Math.sin(t * 3 + seed));
-    const tail = 0.12 * Math.exp(-((Math.abs(da) - Math.PI) ** 2) / 0.2);
-    pts.push([Math.cos(a) * r * (1 + lead + tail * 0.4 + 0.04 * noise(t * 1.5 + k, seed)), Math.sin(a) * r * (1 + lead - tail * 0.3 + 0.04 * noise(t * 1.5 + k, seed + 9))]);
+    const lead = leadK * 0.18 * Math.exp(-(da * da) / 0.5) * (0.8 + 0.2 * Math.sin(t * 3 + seed));
+    const tail = leadK * 0.12 * Math.exp(-((Math.abs(da) - Math.PI) ** 2) / 0.2);
+    // (identical to the V2/V3 outline unless the membrane is pressed against a contact)
+    const fx = 1 + lead + tail * 0.4 + 0.04 * noise(t * 1.5 + k, seed), fy = 1 + lead - tail * 0.3 + 0.04 * noise(t * 1.5 + k, seed + 9);
+    const r0 = (r * (fx + fy)) / 2;
+    const kp = flat ? pressR(r0, a, r, flat) / r0 : 1;
+    pts.push([Math.cos(a) * r * fx * kp, Math.sin(a) * r * fy * kp]);
   }
   const c = mixHex(color, '#6E7C80', dim * 0.7), l = mixHex(light, '#9AA6A8', dim * 0.7);
   const d = closedPath(pts);
@@ -254,8 +271,10 @@ export const TCell2: React.FC<{x: number; y: number; r?: number; t: number; seed
       {act > 0.01 && <circle r={r * 2.6} fill="url(#glowGold)" opacity={act * 0.55} />}
       {lod > 10 && spikes > 0 && Array.from({length: 22}, (_, k) => {
         const a = (k / 22) * Math.PI * 2 + seed;
-        const len = r * (0.18 + 0.08 * Math.sin(t * 2 + k * 2.3));
-        return <line key={k} x1={Math.cos(a) * r * 0.95} y1={Math.sin(a) * r * 0.95} x2={Math.cos(a) * (r + len)} y2={Math.sin(a) * (r + len)} stroke={l} strokeWidth={r * 0.07} strokeLinecap="round" opacity={0.85 * spikes} />;
+        const pr = pressR(r, a, r, flat) / r;
+        const len = r * (0.18 + 0.08 * Math.sin(t * 2 + k * 2.3)) * smooth(clamp01((pr - 0.86) / 0.12));
+        if (len < 1) return null;
+        return <line key={k} x1={Math.cos(a) * r * 0.95 * pr} y1={Math.sin(a) * r * 0.95 * pr} x2={Math.cos(a) * (r * pr + len)} y2={Math.sin(a) * (r * pr + len)} stroke={l} strokeWidth={r * 0.07} strokeLinecap="round" opacity={0.85 * spikes} />;
       })}
       <path d={d} fill={mixHex(deep, '#4A5456', dim * 0.6)} />
       <path d={d} fill={c} transform="scale(0.92)" />
