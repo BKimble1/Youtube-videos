@@ -250,7 +250,7 @@ const Routes: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
 const SL = 14;                                // learning-world units per treatment-world unit
 const RT_T = 46 * SL, RT_C = D_CELL_R * SL;   // the T cell's and the tumour cell's radii at this scale
 const D_ROT_L = (KILL_ANG * 180) / Math.PI + 90;
-const SQ: [number, number] = [tE.recognize - 0.75, KILL_IN[0]];
+const SQ: [number, number] = [tE.hunt + 0.15, KILL_IN[0]];
 const learnFromKill = (camK: Cam) => mapCam(camK, KILL_PT, [0, 0], SL, D_ROT_L);
 // the kill camera at its first key, mapped into this world: the learning camera must arrive there
 const K0 = learnFromKill({x: KILL_PT[0], y: KILL_PT[1], z: 4.2, rot: 0});

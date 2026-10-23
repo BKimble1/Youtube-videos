@@ -422,15 +422,15 @@ export const DV2 = path([
   {t: tD.suppress + 0.15, x: R2.x + 10, y: R2.y - 40, z: 2.1, rot: 0},
   {t: tD.suppress + 0.95, x: R2.x + 30, y: R2.y - 40, z: 2.15, rot: 0},
   {t: tD.difficult + 0.65, x: (R3.x + R4.x) / 2 - 80, y: (R3.y + R4.y) / 2, z: 1.65, rot: 0},
-  {t: tD.recogE + 0.2, x: SURF_PT[0], y: SURF_PT[1] + 30, z: 2.5, rot: 0},
-  {t: tD.tumors + 0.45, x: SURF_PT[0], y: SURF_PT[1], z: 16, rot: 0},
+  {t: tD.recogE - 0.65, x: SURF_PT[0], y: SURF_PT[1] + 30, z: 2.2, rot: 0},
+  {t: tD.tumors + 0.85, x: SURF_PT[0], y: SURF_PT[1], z: 16, rot: 0},
 ]);
 /** kills: the camera arrives (from the receptor close-up) at the contact between the trained T cell and R3 */
 /** direction from R3 to the docked T cell, and the contact point on R3's membrane */
 export const KILL_ANG = Math.atan2(TK_A[1] - R3.y, TK_A[0] - R3.x);
 export const KILL_PT: Pt = [R3.x + Math.cos(KILL_ANG) * (CELL_R - 4), R3.y + Math.sin(KILL_ANG) * (CELL_R - 4)];
 export const R3_LOOK_CAMO = 0.62;
-export const KILL_IN: [number, number] = [tD.recognize - 0.35, tD.recognize + 0.05];
+export const KILL_IN: [number, number] = [tD.recognize + 0.05, tD.recognize + 0.45];
 const KCAM = path([
   {t: KILL_IN[0], x: KILL_PT[0], y: KILL_PT[1], z: 4.2, rot: 0},
   {t: tD.recognize + 0.8, x: KILL_PT[0] - 20, y: KILL_PT[1], z: 2.1, rot: 0},
@@ -790,7 +790,7 @@ const Nano2: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   );
 };
 
-export const SURF_OUT: [number, number] = [tD.tumors + 0.05, tD.tumors + 0.45]; // fingerprint surface dissolves in
+export const SURF_OUT: [number, number] = [tD.tumors + 0.4, tD.tumors + 0.8]; // fingerprint surface dissolves in
 export const shotsD4: Shot[] = [
   {id: 'D-protein', t0: tD.but, t1: CB_H[1] + 0.05, draw: (t) => <ProteinD t={t} cam={PRD(t)} />},
   {id: 'D-carrier', t0: CB_H[0], t1: VH[1] + 0.05, fade: CB_H[1] - CB_H[0], draw: (t) => <CarrierBuild t={t} cam={NAC(t)} />},

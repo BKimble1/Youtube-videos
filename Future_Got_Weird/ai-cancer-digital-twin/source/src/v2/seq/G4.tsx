@@ -181,7 +181,7 @@ const Specimens: React.FC<{t: number; cam: Cam; mode: 'intro' | 'loop' | 'resolv
   const digit = mode === 'loop' && t > tG.studies;
   const pred = lift(t, tG.predicts, tG.predicts + 1.1);
   const weakK = lift(t, tG.predicts + 0.4, tG.designs);
-  const uni = (k: number) => clamp01((t - (tG.so + 0.35 + k * 0.32)) / 1.6);
+  const uni = (k: number) => clamp01((t - (tG.so + 0.05 + k * 0.32)) / 1.6);
   const match = (k: number) => lift(t, tG.universal + 0.05 + k * 0.12, tG.drugE + 0.25 + k * 0.12);
   return (
     <g>
@@ -270,8 +270,8 @@ const GROUP: Pt = [3000, -20];
 const SPEC_CAM = path([
   {...specFromBody(DIVE[1]), t: DIVE[1]},
   {t: tG.every + 0.3, x: SPEC[0].x + 40, y: SPEC[0].y, z: 0.68, rot: 0},
-  {t: tG.different + 0.15, x: GROUP[0], y: GROUP[1], z: 0.245, rot: 0},
-  {t: tG.drugE + 0.05, x: GROUP[0], y: GROUP[1], z: 0.265, rot: 0},
+  {t: tG.different + 0.15, x: GROUP[0] - 260, y: GROUP[1] + 20, z: 0.245, rot: 0},
+  {t: tG.drugE + 0.05, x: GROUP[0] + 120, y: GROUP[1] - 20, z: 0.3, rot: 0},
   {t: tG.studies + 0.65, x: CS.x, y: CS.y, z: 0.82, rot: 0},
   {t: tG.predicts + 0.6, x: CS.x + 40, y: CS.y, z: 0.9, rot: 0},
   {t: tG.designs - 0.1, x: CS.x + WEAK[0] * 0.6, y: CS.y + WEAK[1] * 0.6, z: 1.15, rot: 0},
@@ -437,9 +437,9 @@ const TissueG: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const eaten = lift(t, MAC.eat, MAC.eat + 0.9);
   return (
     <g>
-      <TissueBack cam={cam} t={t} />
+      <TissueBack cam={cam} t={t} farSkip />
       <g transform={camTransform(cam)}>
-        <TissueField cam={cam} t={t} mod={cam.z > 0.05 ? (i, j) => (i === 0 && j === 0 ? {hide: true} : null) : undefined} />
+        <TissueField farSkip cam={cam} t={t} mod={cam.z > 0.05 ? (i, j) => (i === 0 && j === 0 ? {hide: true} : null) : undefined} />
         <g opacity={1 - eaten}>
           {die <= 0 ? <Cell2 x={C0.x} y={C0.y} seed={C0.seed} t={t} lod={lod} look={lookMix(HEALTHY, TUMOR, 0.2)} pulse={pulse} flat={press > 0.01 ? {a: ang + Math.PI, d: 0.06} : undefined} /> : <ApoptoticCell x={lerp(C0.x, mp[0], eaten * 0.5)} y={lerp(C0.y, mp[1], eaten * 0.5)} seed={C0.seed} t={t} die={die} lod={lod} look={lookMix(HEALTHY, TUMOR, 0.3)} />}
         </g>

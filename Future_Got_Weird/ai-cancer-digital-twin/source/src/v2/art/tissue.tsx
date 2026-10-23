@@ -169,14 +169,14 @@ export const TissuePattern: React.FC<{id: string; look?: Look}> = ({id, look = H
 };
 
 /** The living tissue sheet under a camera. `mod` customises individual cells (tumour, displacement, hidden…). */
-export const TissueField: React.FC<{cam: Cam; t: number; mod?: (i: number, j: number, x: number, y: number) => Mod | null; patternId?: string; skip?: (i: number, j: number) => boolean}> = ({cam, t, mod, patternId = 'tissuePat', skip}) => {
+export const TissueField: React.FC<{cam: Cam; t: number; mod?: (i: number, j: number, x: number, y: number) => Mod | null; patternId?: string; skip?: (i: number, j: number) => boolean; farSkip?: boolean}> = ({cam, t, mod, patternId = 'tissuePat', skip, farSkip = false}) => {
   const lod = R * cam.z;
   const far = smooth((12 - lod) / 4); // 1 = healthy cells come from the pattern tile
   const b = viewBounds(cam, SP);
   const plain: React.ReactNode[] = [], special: React.ReactNode[] = [];
   const j0 = Math.floor(b.y0 / DY), j1 = Math.ceil(b.y1 / DY), i0 = Math.floor(b.x0 / SP) - 1, i1 = Math.ceil(b.x1 / SP) + 1;
   // far out (cells under a pixel and nothing customised) there is nothing per-cell to draw
-  const skipCells = (far >= 1 && !mod) || cam.z < 0.004;
+  const skipCells = farSkip && ((far >= 1 && !mod) || cam.z < 0.004);
   for (let j = skipCells ? j1 + 1 : j0; j <= j1; j++)
     for (let i = i0; i <= i1; i++) {
       if (skip?.(i, j)) continue;
@@ -193,7 +193,7 @@ export const TissueField: React.FC<{cam: Cam; t: number; mod?: (i: number, j: nu
     <g>
       <rect x={b.x0} y={b.y0} width={b.x1 - b.x0} height={b.y1 - b.y0} fill={far > 0 ? `url(#${patternId})` : P.tissueBg} />
       {far < 1 && <g opacity={1 - far}>{plain}</g>}
-      {far > 0.01 && cam.z > 0.01 && <TissueVariation b={b} op={far} />}
+      {far > 0.01 && (!farSkip || cam.z > 0.01) && <TissueVariation b={b} op={far} />}
       {special}
     </g>
   );
@@ -214,13 +214,13 @@ const TissueVariation: React.FC<{b: {x0: number; x1: number; y0: number; y1: num
 };
 
 /** Depth: a far layer of large out-of-focus cells behind the sheet's gaps, and drifting near particles in front. */
-export const TissueBack: React.FC<{cam: Cam; t: number; tint?: string}> = ({cam, t, tint = P.tissueDeep}) => {
+export const TissueBack: React.FC<{cam: Cam; t: number; tint?: string; farSkip?: boolean}> = ({cam, t, tint = P.tissueDeep, farSkip = false}) => {
   const depth = 0.55;
   const b = viewBounds(cam, 400, depth);
   const s = 520;
   const out: React.ReactNode[] = [];
   // the out-of-focus layer is sub-pixel when the camera is far out: skip it
-  if (cam.z * depth > 0.03)
+  if (!farSkip || cam.z * depth > 0.03)
   for (let j = Math.floor(b.y0 / s); j <= Math.ceil(b.y1 / s); j++)
     for (let i = Math.floor(b.x0 / s); i <= Math.ceil(b.x1 / s); i++) {
       const sd = mod(i, 7) * 13 + mod(j, 7) * 71;
