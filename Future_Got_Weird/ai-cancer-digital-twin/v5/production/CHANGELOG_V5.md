@@ -187,7 +187,7 @@ The tumour's own outline still becomes the model, at the same place and size on 
 
 **Final 4K master:**
 - **Checks:** container check, black and freeze detection, and frame strips on a 1080p proxy. Full 4K decoding in the QA tool runs out of memory here, so those checks run on the proxy.
-- **Results:** see the QA note at the end of this file.
+- **Results:** see "QA of the delivered files" at the end of this file.
 
 ## Known limits and what was not reviewable
 
@@ -200,3 +200,22 @@ The tumour's own outline still becomes the model, at the same place and size on 
   - the 1:07 line
   - the twin analysis and patients (1:07.5–1:38.3)
 - **No YouTube account was touched.** Nothing was published.
+
+## QA of the delivered files
+
+- **4K master:**
+  - 3840×2160, 30/1 fps, H.264, 6,935 frames, 231.167 s.
+  - AAC 48 kHz stereo at 320 kb/s.
+  - 836.5 MB.
+- **Upload parts:** 2,000 + 2,000 + 2,935 frames. A per-frame framemd5 of the three parts matches the master on all 6,935 frames.
+- **1080p review:** scaled from the master (Lanczos), with the same audio stream. 6,935 frames, 282 MB.
+- **Audio measured on the 1080p file:** −14.1 LUFS integrated, −1.1 dBTP true peak.
+- **Picture checks** (on the 1080p copy made from the master):
+  - no black frames, no frozen stretches, no low-activity seconds
+  - frame strips at all 55 shot boundaries and dissolve edges are in `v5/qa/final/strips/`
+  - full-film contact sheets are in `v5/qa/final/film_*.png`
+- **Remaining measured jumps:**
+  - the intended hard cuts listed above
+  - 3:08.8, the dive into the plasma as it dims (now about 30 % gentler than in the first render)
+  - 3:11.1, the later fragment arriving
+  - 3:35.3, a dissolve that is identical to the V4 master
