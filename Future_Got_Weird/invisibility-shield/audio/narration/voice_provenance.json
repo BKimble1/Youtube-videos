@@ -1,0 +1,167 @@
+{
+ "provider": "ElevenLabs (restricted connector, authorized workspace)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "The established FGW narration voice (same voice id as Infrared Contacts, Living Skin and Hidden Trigger V3-V7). Re-confirmed with creative_list_voices on 23 Oct 2026. No Death Clock voice record exists in this repository, so it was not matched to Death Clock specifically."
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "VMQoetRIMvQTcEF4LAlu",
+ "generated": "2026-10-23",
+ "prompts": {
+  "A": "[curious, brisk, restrained tension] If you raised this shield, someone looking straight at you could watch your body DISAPPEAR. [light, conversational] You see, its surface is covered in tiny lenses. [brisk, flowing] They spread the light coming from your body SIDEWAYS, while smearing the background across the space where you're standing. From the right position, your outline disappears into a blurred patch of scenery. [leaning in, playful] So you could reach one hand around the edge\u2026 and make it look like a hand is FLOATING IN MIDAIR. [quietly knowing] Then lower the shield\u2026 and reveal you were standing right in front of them THE ENTIRE TIME.",
+  "B": "[curious, brisk, crisp consonants] If you raised THIS shield, someone looking straight at you could watch your body DISAPPEAR. [light, conversational] You see, its surface is covered in tiny lenses. [brisk, flowing] They spread the light coming from your body SIDEWAYS, while smearing the background across the space where you're standing. From the right position, your outline disappears into a blurred patch of scenery. [leaning in, playful] So you could reach one hand around the edge\u2026 and make it look like a hand is FLOATING IN MIDAIR. [quietly knowing] Then lower the shield\u2026 and reveal you were standing right in front of them THE ENTIRE TIME."
+ },
+ "note_on_prompt": "Bracketed tags are delivery directions (not spoken); capitals are emphasis. The spoken words are exactly the approved narration (production/NARRATION_APPROVED.txt).",
+ "takes": [
+  {
+   "file": "audio/narration/takes/take1.mp3",
+   "generation_id": "I9iocUXIV22qhE3hkN9b",
+   "prompt": "A",
+   "sha256": "21c05cb8170ac330fc5da41e1c97f96e587461cc8aeef0794d7a8fbf2064cdd0",
+   "duration_s": 29.44,
+   "speech_s": [
+    0.12,
+    29.31
+   ],
+   "wpm": 191.2,
+   "vosk_wer_vs_approved": 0.097,
+   "vosk_diffs": [
+    [
+     "replace",
+     "raised this",
+     "raise the"
+    ],
+    [
+     "replace",
+     "at",
+     "out"
+    ],
+    [
+     "replace",
+     "its",
+     "it's"
+    ],
+    [
+     "replace",
+     "hand",
+     "here and"
+    ],
+    [
+     "replace",
+     "midair then",
+     "mid air than"
+    ]
+   ],
+   "pocketsphinx_wer": 0.194
+  },
+  {
+   "file": "audio/narration/takes/take2.mp3",
+   "generation_id": "esvdtr2NNqAy7RAZ0ukg",
+   "prompt": "A",
+   "sha256": "aa3a1ff1f6d166f9c59beb46a3a8dee05f0c1e07fda7676ee85ec38b5420f351",
+   "duration_s": 29.04,
+   "speech_s": [
+    0.03,
+    28.8
+   ],
+   "wpm": 194.0,
+   "vosk_wer_vs_approved": 0.065,
+   "vosk_diffs": [
+    [
+     "replace",
+     "raised this",
+     "raise the"
+    ],
+    [
+     "replace",
+     "its",
+     "it's"
+    ],
+    [
+     "replace",
+     "midair then",
+     "mid air than"
+    ]
+   ],
+   "pocketsphinx_wer": 0.172
+  },
+  {
+   "file": "audio/narration/takes/take3.mp3",
+   "generation_id": "dEMGIDcDcq3krHLR0Ok1",
+   "prompt": "B",
+   "sha256": "54ea2b8ce92566a14873ea247f4d831e4deb0e92d65e04f6071945c59ee19c47",
+   "duration_s": 28.8,
+   "speech_s": [
+    0.05,
+    28.62
+   ],
+   "wpm": 195.3,
+   "vosk_wer_vs_approved": 0.065,
+   "vosk_diffs": [
+    [
+     "replace",
+     "raised this",
+     "raise the"
+    ],
+    [
+     "replace",
+     "its",
+     "it's"
+    ],
+    [
+     "replace",
+     "midair then",
+     "mid air than"
+    ]
+   ],
+   "pocketsphinx_wer": 0.151
+  },
+  {
+   "file": "audio/narration/takes/take4.mp3",
+   "generation_id": "KvsnN5DtcZFqM47pAZfr",
+   "prompt": "B",
+   "sha256": "40f73f3a00859da7f446b4263a587e236ff039a04d01fa192696de4c1e0e2213",
+   "duration_s": 28.8,
+   "speech_s": [
+    0.05,
+    28.7
+   ],
+   "wpm": 194.8,
+   "vosk_wer_vs_approved": 0.075,
+   "vosk_diffs": [
+    [
+     "replace",
+     "raised this",
+     "raise the"
+    ],
+    [
+     "replace",
+     "its",
+     "it's"
+    ],
+    [
+     "insert",
+     "",
+     "the"
+    ],
+    [
+     "replace",
+     "midair then",
+     "mid air than"
+    ]
+   ],
+   "pocketsphinx_wer": 0.151
+  }
+ ],
+ "selected": {
+  "take": 3,
+  "why": "Speech starts at 0.05 s (frame 0), 195 wpm over the speech span, short ellipsis beats (0.40 s after \"edge\", 0.35 s after \"shield\"), a connected opening phrase, and the cleanest independent transcript. Take 4 had a likely doubled \"the\" before \"edge\" in the Vosk transcript; takes 1-2 were equivalent but prompt B asked for crisper consonants on the opening."
+ },
+ "verification": {
+  "independent_asr": "Vosk vosk-model-small-en-us-0.15 (free recognition) and PocketSphinx en-us; both local. All four takes are heard by both recognisers as \"raise the shield\" for \"raised this shield\": a systematic small-model / language-model bias on the elided \"-d th-\" that a listener must confirm. Remaining Vosk differences on the selected take are spelling-only (its/it's, midair/mid air, then/than).",
+  "elevenlabs_scribe": "An ElevenLabs Scribe transcription of the takes returned the generation prompt verbatim (including the bracketed tags), so it is not an independent check and was not used.",
+  "not_done": "Nobody has listened to the takes. This environment has no audio output."
+ },
+ "edits": "None: the selected take is used unedited (no cuts, inserted pauses, time-stretch, pitch or EQ). A 0.66 s silent tail is appended after the last word."
+}

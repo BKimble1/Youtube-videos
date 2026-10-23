@@ -1,0 +1,176 @@
+[
+ {
+  "name": "lift: air",
+  "at": 28.717,
+  "dur": 1.3,
+  "gain_db": -30
+ },
+ {
+  "name": "lift: panel flex",
+  "at": 28.917,
+  "dur": 0.4,
+  "gain_db": -31
+ },
+ {
+  "name": "optical shimmer (body behind the panel)",
+  "at": 0.32,
+  "dur": 1.2,
+  "gain_db": -31
+ },
+ {
+  "name": "grips settle",
+  "at": 1.15,
+  "dur": 0.2,
+  "gain_db": -27
+ },
+ {
+  "name": "push onto the panel",
+  "at": 5.1,
+  "dur": 2.2,
+  "gain_db": -36
+ },
+ {
+  "name": "lens tick 1",
+  "at": 7.23,
+  "dur": 0.05,
+  "gain_db": -34
+ },
+ {
+  "name": "lens tick 2",
+  "at": 7.285,
+  "dur": 0.05,
+  "gain_db": -36
+ },
+ {
+  "name": "lens tick 3",
+  "at": 7.34,
+  "dur": 0.05,
+  "gain_db": -36
+ },
+ {
+  "name": "lens tick 4",
+  "at": 7.395,
+  "dur": 0.05,
+  "gain_db": -36
+ },
+ {
+  "name": "lens tick 5",
+  "at": 7.45,
+  "dur": 0.05,
+  "gain_db": -36
+ },
+ {
+  "name": "section opens (fold)",
+  "at": 7.97,
+  "dur": 0.3,
+  "gain_db": -29
+ },
+ {
+  "name": "body light spreads (warm sweep)",
+  "at": 9.0,
+  "dur": 1.9,
+  "gain_db": -35
+ },
+ {
+  "name": "background light crosses (cool sweep)",
+  "at": 10.93,
+  "dur": 2.3,
+  "gain_db": -36
+ },
+ {
+  "name": "section closes (fold)",
+  "at": 13.33,
+  "dur": 0.26,
+  "gain_db": -31
+ },
+ {
+  "name": "pull back",
+  "at": 13.88,
+  "dur": 1.4,
+  "gain_db": -36
+ },
+ {
+  "name": "outline melts (settle shimmer)",
+  "at": 17.01,
+  "dur": 1.0,
+  "gain_db": -33
+ },
+ {
+  "name": "weight shift behind the panel",
+  "at": 19.0,
+  "dur": 0.25,
+  "gain_db": -36
+ },
+ {
+  "name": "hand clears the edge (tactile accent)",
+  "at": 20.36,
+  "dur": 0.18,
+  "gain_db": -25
+ },
+ {
+  "name": "finger flutter 1",
+  "at": 22.33,
+  "dur": 0.05,
+  "gain_db": -38
+ },
+ {
+  "name": "finger flutter 2",
+  "at": 22.49,
+  "dur": 0.05,
+  "gain_db": -38
+ },
+ {
+  "name": "finger flutter 3",
+  "at": 22.65,
+  "dur": 0.05,
+  "gain_db": -38
+ },
+ {
+  "name": "finger flutter 4",
+  "at": 22.81,
+  "dur": 0.05,
+  "gain_db": -38
+ },
+ {
+  "name": "hand withdraws",
+  "at": 23.23,
+  "dur": 0.4,
+  "gain_db": -37
+ },
+ {
+  "name": "lowering: air",
+  "at": 24.03,
+  "dur": 1.0,
+  "gain_db": -33
+ },
+ {
+  "name": "lowering: panel flex",
+  "at": 24.93,
+  "dur": 0.35,
+  "gain_db": -32
+ },
+ {
+  "name": "carried aside",
+  "at": 25.23,
+  "dur": 1.1,
+  "gain_db": -35
+ },
+ {
+  "name": "set at his side",
+  "at": 26.36,
+  "dur": 0.22,
+  "gain_db": -30
+ },
+ {
+  "name": "the knowing beat (soft chime)",
+  "at": 27.53,
+  "dur": 1.2,
+  "gain_db": -34
+ },
+ {
+  "name": "anticipation (grip)",
+  "at": 28.617,
+  "dur": 0.15,
+  "gain_db": -33
+ }
+]

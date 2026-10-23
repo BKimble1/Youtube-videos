@@ -1,0 +1,472 @@
+{
+ "take": "audio/narration/takes/take3.mp3",
+ "duration_s": 29.266666666666666,
+ "frames": 878,
+ "words": [
+  {
+   "word": "if",
+   "start": 0.0,
+   "end": 0.15
+  },
+  {
+   "word": "you",
+   "start": 0.15,
+   "end": 0.37
+  },
+  {
+   "word": "raised",
+   "start": 0.37,
+   "end": 0.66
+  },
+  {
+   "word": "this",
+   "start": 0.66,
+   "end": 0.78
+  },
+  {
+   "word": "shield",
+   "start": 0.78,
+   "end": 1.32
+  },
+  {
+   "word": "someone",
+   "start": 1.53,
+   "end": 1.84
+  },
+  {
+   "word": "looking",
+   "start": 1.84,
+   "end": 2.1
+  },
+  {
+   "word": "straight",
+   "start": 2.11,
+   "end": 2.6
+  },
+  {
+   "word": "at",
+   "start": 2.6,
+   "end": 2.76
+  },
+  {
+   "word": "you",
+   "start": 2.77,
+   "end": 2.95
+  },
+  {
+   "word": "could",
+   "start": 2.95,
+   "end": 3.08
+  },
+  {
+   "word": "watch",
+   "start": 3.08,
+   "end": 3.38
+  },
+  {
+   "word": "your",
+   "start": 3.38,
+   "end": 3.5
+  },
+  {
+   "word": "body",
+   "start": 3.5,
+   "end": 3.87
+  },
+  {
+   "word": "disappear",
+   "start": 3.87,
+   "end": 4.59
+  },
+  {
+   "word": "you",
+   "start": 5.08,
+   "end": 5.15
+  },
+  {
+   "word": "see",
+   "start": 5.15,
+   "end": 5.46
+  },
+  {
+   "word": "its",
+   "start": 5.62,
+   "end": 5.79
+  },
+  {
+   "word": "surface",
+   "start": 5.79,
+   "end": 6.19
+  },
+  {
+   "word": "is",
+   "start": 6.19,
+   "end": 6.31
+  },
+  {
+   "word": "covered",
+   "start": 6.31,
+   "end": 6.65
+  },
+  {
+   "word": "in",
+   "start": 6.65,
+   "end": 6.77
+  },
+  {
+   "word": "tiny",
+   "start": 6.77,
+   "end": 7.19
+  },
+  {
+   "word": "lenses",
+   "start": 7.19,
+   "end": 7.78
+  },
+  {
+   "word": "they",
+   "start": 8.22,
+   "end": 8.3
+  },
+  {
+   "word": "spread",
+   "start": 8.3,
+   "end": 8.6
+  },
+  {
+   "word": "the",
+   "start": 8.61,
+   "end": 8.68
+  },
+  {
+   "word": "light",
+   "start": 8.68,
+   "end": 8.93
+  },
+  {
+   "word": "coming",
+   "start": 8.93,
+   "end": 9.19
+  },
+  {
+   "word": "from",
+   "start": 9.2,
+   "end": 9.34
+  },
+  {
+   "word": "your",
+   "start": 9.34,
+   "end": 9.43
+  },
+  {
+   "word": "body",
+   "start": 9.44,
+   "end": 9.72
+  },
+  {
+   "word": "sideways",
+   "start": 9.72,
+   "end": 10.44
+  },
+  {
+   "word": "while",
+   "start": 10.68,
+   "end": 10.78
+  },
+  {
+   "word": "smearing",
+   "start": 10.78,
+   "end": 11.27
+  },
+  {
+   "word": "the",
+   "start": 11.27,
+   "end": 11.34
+  },
+  {
+   "word": "background",
+   "start": 11.34,
+   "end": 11.84
+  },
+  {
+   "word": "across",
+   "start": 11.84,
+   "end": 12.18
+  },
+  {
+   "word": "the",
+   "start": 12.18,
+   "end": 12.27
+  },
+  {
+   "word": "space",
+   "start": 12.27,
+   "end": 12.66
+  },
+  {
+   "word": "where",
+   "start": 12.66,
+   "end": 12.79
+  },
+  {
+   "word": "you're",
+   "start": 12.79,
+   "end": 12.91
+  },
+  {
+   "word": "standing",
+   "start": 12.91,
+   "end": 13.43
+  },
+  {
+   "word": "from",
+   "start": 13.99,
+   "end": 14.11
+  },
+  {
+   "word": "the",
+   "start": 14.11,
+   "end": 14.17
+  },
+  {
+   "word": "right",
+   "start": 14.17,
+   "end": 14.39
+  },
+  {
+   "word": "position",
+   "start": 14.41,
+   "end": 14.92
+  },
+  {
+   "word": "your",
+   "start": 15.17,
+   "end": 15.31
+  },
+  {
+   "word": "outline",
+   "start": 15.33,
+   "end": 15.74
+  },
+  {
+   "word": "disappears",
+   "start": 15.74,
+   "end": 16.37
+  },
+  {
+   "word": "into",
+   "start": 16.38,
+   "end": 16.6
+  },
+  {
+   "word": "a",
+   "start": 16.6,
+   "end": 16.62
+  },
+  {
+   "word": "blurred",
+   "start": 16.63,
+   "end": 17.1
+  },
+  {
+   "word": "patch",
+   "start": 17.12,
+   "end": 17.39
+  },
+  {
+   "word": "of",
+   "start": 17.4,
+   "end": 17.46
+  },
+  {
+   "word": "scenery",
+   "start": 17.46,
+   "end": 17.99
+  },
+  {
+   "word": "so",
+   "start": 18.51,
+   "end": 18.64
+  },
+  {
+   "word": "you",
+   "start": 18.64,
+   "end": 18.8
+  },
+  {
+   "word": "could",
+   "start": 18.81,
+   "end": 18.95
+  },
+  {
+   "word": "reach",
+   "start": 18.95,
+   "end": 19.17
+  },
+  {
+   "word": "one",
+   "start": 19.17,
+   "end": 19.48
+  },
+  {
+   "word": "hand",
+   "start": 19.49,
+   "end": 19.76
+  },
+  {
+   "word": "around",
+   "start": 19.76,
+   "end": 20.0
+  },
+  {
+   "word": "the",
+   "start": 20.0,
+   "end": 20.14
+  },
+  {
+   "word": "edge",
+   "start": 20.15,
+   "end": 20.53
+  },
+  {
+   "word": "and",
+   "start": 20.93,
+   "end": 21.01
+  },
+  {
+   "word": "make",
+   "start": 21.01,
+   "end": 21.19
+  },
+  {
+   "word": "it",
+   "start": 21.19,
+   "end": 21.28
+  },
+  {
+   "word": "look",
+   "start": 21.28,
+   "end": 21.46
+  },
+  {
+   "word": "like",
+   "start": 21.46,
+   "end": 21.6
+  },
+  {
+   "word": "a",
+   "start": 21.6,
+   "end": 21.65
+  },
+  {
+   "word": "hand",
+   "start": 21.65,
+   "end": 22.03
+  },
+  {
+   "word": "is",
+   "start": 22.03,
+   "end": 22.17
+  },
+  {
+   "word": "floating",
+   "start": 22.17,
+   "end": 22.71
+  },
+  {
+   "word": "in",
+   "start": 22.71,
+   "end": 22.81
+  },
+  {
+   "word": "midair",
+   "start": 22.81,
+   "end": 23.33
+  },
+  {
+   "word": "then",
+   "start": 23.93,
+   "end": 24.05
+  },
+  {
+   "word": "lower",
+   "start": 24.05,
+   "end": 24.37
+  },
+  {
+   "word": "the",
+   "start": 24.37,
+   "end": 24.45
+  },
+  {
+   "word": "shield",
+   "start": 24.45,
+   "end": 24.93
+  },
+  {
+   "word": "and",
+   "start": 25.28,
+   "end": 25.4
+  },
+  {
+   "word": "reveal",
+   "start": 25.4,
+   "end": 25.81
+  },
+  {
+   "word": "you",
+   "start": 25.81,
+   "end": 25.95
+  },
+  {
+   "word": "were",
+   "start": 25.95,
+   "end": 26.06
+  },
+  {
+   "word": "standing",
+   "start": 26.06,
+   "end": 26.44
+  },
+  {
+   "word": "right",
+   "start": 26.44,
+   "end": 26.77
+  },
+  {
+   "word": "in",
+   "start": 26.77,
+   "end": 26.88
+  },
+  {
+   "word": "front",
+   "start": 26.88,
+   "end": 27.12
+  },
+  {
+   "word": "of",
+   "start": 27.12,
+   "end": 27.21
+  },
+  {
+   "word": "them",
+   "start": 27.21,
+   "end": 27.41
+  },
+  {
+   "word": "the",
+   "start": 27.41,
+   "end": 27.55
+  },
+  {
+   "word": "entire",
+   "start": 27.55,
+   "end": 28.17
+  },
+  {
+   "word": "time",
+   "start": 28.17,
+   "end": 28.61
+  }
+ ]
+}
