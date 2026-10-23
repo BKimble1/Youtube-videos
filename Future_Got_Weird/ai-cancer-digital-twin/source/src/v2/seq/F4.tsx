@@ -19,13 +19,13 @@ import {Cam, W, H, camTransform} from '../../kit/cam';
 import {P as Pt, lerp, smooth, seg, rand, mixHex, clamp01, noise, closedPath} from '../../kit/core';
 import {Shot} from '../director';
 import {T} from '../time';
-import {path} from '../rig';
+import {path, handoff} from '../rig';
 import {P} from '../palette';
 import {cellAt, nearest, TissueField, TissueBack, Cell2, TCell2, ApoptoticCell, R, TUMOR, HEALTHY, lookMix, Motes, boundary} from '../art/tissue';
 import {Capillary, along} from '../art/stroma';
 import {BloodTunnel} from '../art/blood';
 import {AIBack} from '../art/ai';
-import {Protein} from '../art/protein';
+import {Protein, POCKET, Molecule, MOL_FIT, Mol, RESIDUES} from '../art/protein';
 import {Granules, Synapse} from '../art/immune';
 import {Bokeh, Phagocyte, buildLineage, liveCells, LineageCell} from '../art/depth';
 import {C0P, tumorMod, TumorMassShade, toTissue, fromTissue, cloneLook} from './A';
@@ -304,17 +304,13 @@ const BloodF: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   );
 };
 
-// ================================================================================================ the sample and the read
-const SEQ = 'GATTCCAGTCACTGGAACGTTAGCAC';
-const V1 = 11, V2 = 17;                         // the changed positions (reference C → T; G → A)
-const ALT1 = 'T', ALT2 = 'A';
-const COLW = 70, X0 = -880, REFY = -400, ROWH = 52;
-type Read = {row: number; c0: number; c1: number; v1: boolean; v2: boolean; t0: number};
-const READS: Read[] = Array.from({length: 15}, (_, k) => {
-  const late = k >= 10;
-  const c0 = Math.floor(rand(k * 3 + 1) * 8), len = 14 + Math.floor(rand(k * 5 + 2) * 6);
-  return {row: k, c0, c1: Math.min(SEQ.length - 1, c0 + len), v1: k === 2 || k === 6 || k === 9 || k === 12, v2: late && (k === 12 || k === 14), t0: (late ? T("identify how it's changing,") + 0.05 + (k - 10) * 0.16 : T('AI could help detect') - 0.2 + k * 0.17)};
-});
+// ================================================================================================ the sample and the read (V5)
+// One continuous move: the camera pushes into the separated plasma, where DNA fragments drift; it locks on to one
+// tumour fragment, which turns level and unzips into its bases. A: that short read is laid against the reference and
+// the changed base lights up; two more fragments carry the same change. B: a later fragment carries a second change;
+// everything else steps back and that base is isolated. C: the base becomes the amino acid it alters, which lands on
+// the target protein as it turns into view and swells into the pocket. D: the earlier drug runs into the swelling and
+// backs off; a molecule redesigned around it seats in the pocket and the pocket closes.
 const TUBE: [number, number] = [tF.analyzing + 0.35, tF.aiC - 0.15];
 const Tube: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
   const fillK = lift(t, TUBE[0], TUBE[0] + 0.55);
@@ -337,7 +333,7 @@ const Tube: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
           <rect x={-tubeW} y={level} width={tubeW * 2} height={tubeH} fill={P.blood} />
           <rect x={-tubeW} y={level} width={tubeW * 2} height={Math.max(0, split - level)} fill={P.plasma} opacity={sep} />
           <rect x={-tubeW} y={split - 6} width={tubeW * 2} height={14} fill="#F4F0E8" opacity={sep} />
-          {sep > 0.4 && Array.from({length: 12}, (_, k) => <g key={'f' + k} opacity={(sep - 0.4) / 0.6}><Frag x={(rand(k * 7) - 0.5) * tubeW * 0.7} y={lerp(level + 40, split - 40, rand(k * 9))} s={0.32} rot={rand(k) * 180 + t * 20} tumor={k === 4} t={t} glow={k === 4 ? 0.6 : 0} /></g>)}
+          {sep > 0.4 && TUBE_FR.map((f, k) => <g key={'f' + k} opacity={(sep - 0.4) / 0.6}><Frag x={f[0]} y={f[1]} s={0.32} rot={rand(k) * 180 + t * 20} tumor={k === HERO_K} t={t} glow={k === HERO_K ? 0.6 : 0} /></g>)}
         </g>
         <path d={`M ${-tubeW / 2} ${-tubeH / 2} L ${-tubeW / 2} ${tubeH / 2 - tubeW / 2} A ${tubeW / 2} ${tubeW / 2} 0 0 0 ${tubeW / 2} ${tubeH / 2 - tubeW / 2} L ${tubeW / 2} ${-tubeH / 2}`} fill="none" stroke="#DDE8F4" strokeWidth={10} opacity={0.7} />
         <rect x={-tubeW / 2 + 20} y={-tubeH / 2 + 40} width={26} height={tubeH - 260} rx={13} fill="#FFFFFF" opacity={0.25} />
@@ -347,95 +343,217 @@ const Tube: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
     </g>
   );
 };
+// fragments in the settled plasma (tube units); the tumour one is followed
+const TUBE_FR: Pt[] = Array.from({length: 12}, (_, k) => [(rand(k * 7) - 0.5) * 260 * 0.7, lerp(-350, 20, rand(k * 9))]);
+const HERO_K = 4;
+const HT = TUBE_FR[HERO_K];
+const heroRot = (t: number) => rand(HERO_K) * 180 + t * 20;
+const DIVE: [number, number] = [tF.aiC + 0.1, tF.aiC + 0.4]; // the tube dissolves into the plasma world
 const CAM_TU = path([
   {t: TUBE[0] - 0.3, x: 0, y: 160, z: 0.62, rot: -6},
-  {t: TUBE[1] - 0.4, x: 0, y: -20, z: 0.8, rot: 0},
-  {t: TUBE[1] + 0.25, x: 0, y: -160, z: 4.2, rot: 0},
+  {t: TUBE[1] - 0.45, x: 0, y: -60, z: 0.85, rot: 0},
+  {t: DIVE[0], x: HT[0], y: HT[1], z: 7.5, rot: 0},
+  {t: DIVE[1] + 0.05, x: HT[0], y: HT[1], z: 14, rot: 0},
 ]);
+const FR_S = 1 / 0.32; // plasma-world units per tube unit at the hero fragment
 
-/** the marker protein whose surface tip is what the receptor must fit (kind 1 square → 2 triangle) */
-const MARKER_P: Pt = [920, 40];
-const Analysis: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
-  const det = lift(t, tF.returning - 0.2, tF.returning + 0.5);
-  const chg = lift(t, tF.changing + 0.55, tF.changing + 1.0);
-  const morph = lift(t, tF.changing + 0.95, tF.guide);
-  const fly = lift(t, tF.changing + 0.55, tF.changing + 1.0);
-  const tryK = lift(t, tF.guide + 0.05, tF.guide + 0.6);       // the old binding shape comes down and does not fit
-  const back = lift(t, tF.guide + 0.6, tF.guide + 0.9);
-  const redesign = lift(t, tF.guide + 0.8, tF.before + 0.15);
-  const seatK = lift(t, tF.before + 0.15, tF.before + 0.7);
-  const letters = (y: number, c0: number, c1: number, opts: {v1?: boolean; v2?: boolean; op?: number; dim?: boolean}) => {
-    const out: React.ReactNode[] = [];
-    for (let c = c0; c <= c1; c++) {
-      const isV1 = c === V1 && opts.v1, isV2 = c === V2 && opts.v2;
-      const ch = isV1 ? ALT1 : isV2 ? ALT2 : SEQ[c];
-      const col = isV1 ? P.payload : isV2 ? '#B58CFF' : opts.dim ? '#4E8FB0' : P.aiHot;
-      out.push(<text key={c} x={X0 + c * COLW} y={y} textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontWeight={isV1 || isV2 ? 700 : 500} fontSize={44} fill={col} opacity={opts.op ?? 1}>{ch}</text>);
-    }
-    return out;
-  };
-  const colBox = (c: number, k: number, col: string) => k > 0.01 && (
-    <g opacity={k}>
-      <rect x={X0 + c * COLW - 34} y={REFY - 46} width={68} height={ROWH * READS.length + 70} rx={14} fill={col} opacity={0.1} />
-      <rect x={X0 + c * COLW - 34} y={REFY - 46} width={68} height={ROWH * READS.length + 70} rx={14} fill="none" stroke={col} strokeWidth={4} />
-    </g>
-  );
-  const tipKind = redesign;
+// ------------------------------------------------------------------------------------------------ the read world (plasma units; the hero fragment at the origin, s = 1)
+const REF7 = 'TCACTGG';
+const VA = 3, VB = 5; // the first change (C→T, found in every tumour read) and the later one (G→A)
+const COL = 20, ROW = 24;
+const colX = (c: number) => -60 + c * COL;
+const tR = {
+  level: tF.aiC + 0.45, unzip: tF.aiC + 0.75, ref: T('signs of a returning') - 0.05, mark: T('returning tumor,'), more: T('returning tumor,') + 0.25,
+  late: tF.changing, markB: tF.changing + 0.45, iso: T("it's changing,") - 0.05, bead: tF.guide - 0.05, land: tF.guide + 0.75, swell: tF.guide + 1.0,
+  old: tF.before - 0.25, fresh: tF.before + 0.5, close: tF.before + 1.55,
+};
+const PROT_C: Pt = [0, 30];
+const PS = 0.11; // world units per protein unit
+const OUT_P: Pt = (() => { const l = Math.hypot(POCKET[0], POCKET[1]); return [POCKET[0] / l, POCKET[1] / l]; })();
+const PERP_P: Pt = [-OUT_P[1], OUT_P[0]];
+const alongP = (d: number, side = 0): Pt => [POCKET[0] + OUT_P[0] * d + PERP_P[0] * side, POCKET[1] + OUT_P[1] * d + PERP_P[1] * side];
+const molC = (m: Mol): Pt => [m.atoms.reduce((s, a) => s + a[0], 0) / m.atoms.length, m.atoms.reduce((s, a) => s + a[1], 0) / m.atoms.length];
+const MS5 = 0.8;
+// the residue the change alters: the pocket-lining residue nearest to where the earlier drug's sulfur branch sits
+const VAR_K = (() => {
+  const c = molC(MOL_FIT), a = MOL_FIT.atoms[7];
+  const p: Pt = [POCKET[0] + (a[0] - c[0]) * MS5, POCKET[1] + (a[1] - c[1]) * MS5];
+  return RESIDUES.filter((r) => r.lining).reduce((b, r) => (Math.hypot(r.x - p[0], r.y - p[1]) < Math.hypot(b.x - p[0], b.y - p[1]) ? r : b)).k;
+})();
+const VAR_RES = RESIDUES.find((r) => r.k === VAR_K)!;
+const VAR_DIR: Pt = (() => { const dx = VAR_RES.x - POCKET[0], dy = VAR_RES.y - POCKET[1], l = Math.hypot(dx, dy); return [dx / l, dy / l]; })();
+// redesigned around the swelling: the branch that hit it is gone, a new one points into the free side of the pocket
+const MOL_NEW: Mol = {
+  atoms: [[0, 0, 0], [90, -40, 0], [170, 10, 1], [150, 100, 0], [60, 120, 0], [-10, 80, 2], [-90, -40, 0], [-170, 0, 1], [-110, 150, 2], [-20, 200, 0]],
+  bonds: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0], [0, 6], [6, 7], [5, 8], [4, 9]],
+};
+const rotYAt = (t: number) => lerp(-1.05, 0, lift(t, tR.bead - 0.1, tR.swell + 0.3));
+const varWorld = (t: number): Pt => {
+  const ry = rotYAt(t);
+  return [PROT_C[0] + (VAR_RES.x * Math.cos(ry) + VAR_RES.z * 320 * Math.sin(ry)) * PS, PROT_C[1] + VAR_RES.y * PS];
+};
+const ISO_AT: Pt = [0, 12];
+const pocketW: Pt = [PROT_C[0] + POCKET[0] * PS, PROT_C[1] + POCKET[1] * PS];
+const RD = path([
+  {...handoff(CAM_TU(DIVE[1]), HT, [0, 0], FR_S), t: DIVE[1]},
+  {t: tR.unzip + 0.1, x: 0, y: 2, z: 7.2, rot: 0},
+  {t: tR.mark, x: 0, y: 10, z: 6.6, rot: 0},
+  {t: tR.late + 0.1, x: 4, y: 22, z: 6.0, rot: 0},
+  {t: tR.iso + 0.3, x: 2, y: 22, z: 6.1, rot: 0},
+  {t: tR.bead + 0.2, x: ISO_AT[0], y: ISO_AT[1], z: 6.6, rot: 0},
+  {t: tR.land, x: 8, y: 14, z: 5.4, rot: 0},
+  {t: tR.old + 0.1, x: pocketW[0] - 6, y: pocketW[1] + 4, z: 7.4, rot: 0},
+  {t: tR.close, x: pocketW[0], y: pocketW[1], z: 9.0, rot: 0},
+  {t: tF.evolving, x: pocketW[0], y: pocketW[1], z: 9.6, rot: 0},
+]);
+const CAM_RD = (t: number): Cam => (t < DIVE[1] ? handoff(CAM_TU(t), HT, [0, 0], FR_S) : RD(t));
+
+const Letter: React.FC<{x: number; y: number; ch: string; col: string; op?: number; s?: number; bold?: boolean}> = ({x, y, ch, col, op = 1, s = 1, bold}) => (
+  <text x={x} y={y + 4.6 * s} textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontWeight={bold ? 800 : 600} fontSize={13 * s} fill={col} opacity={op}>{ch}</text>
+);
+/** the followed fragment: a short double helix that levels off and unzips; its bases become the read's letters */
+const HeroDNA: React.FC<{t: number; rot: number; unzip: number; letters: number; seq: string; glow: number}> = ({t, rot, unzip, letters, seq, glow}) => {
+  const amp = 14 * (1 - unzip), off = 12 * unzip;
+  const s1: string[] = [], s2: string[] = [];
+  for (let k = 0; k <= 28; k++) {
+    const u = k / 28, xx = -70 + u * 140;
+    s1.push(`${xx.toFixed(1)} ${(-off + amp * Math.sin(u * 9 + t * 2)).toFixed(1)}`);
+    s2.push(`${xx.toFixed(1)} ${(off + amp * Math.sin(u * 9 + t * 2 + 2.4)).toFixed(1)}`);
+  }
   return (
-    <g>
-      <AIBack cam={cam} t={t} op={0.35} />
-      <g transform={camTransform(cam)}>
-        {/* reference */}
-        <text x={X0 - 70} y={REFY} textAnchor="end" fontFamily="JetBrains Mono, monospace" fontSize={30} fill={P.aiDim}>ref</text>
-        {letters(REFY, 0, SEQ.length - 1, {})}
-        <line x1={X0 - 40} x2={X0 + (SEQ.length - 1) * COLW + 40} y1={REFY + 20} y2={REFY + 20} stroke={P.aiDim} strokeWidth={3} />
-        {colBox(V1, det, P.payload)}
-        {colBox(V2, chg, '#B58CFF')}
-        {/* each fragment arrives, opens into its letters and drops into its row under the reference */}
-        {READS.map((r) => {
-          const u = lift(t, r.t0, r.t0 + 0.55);
-          if (u <= 0) return null;
-          const y = REFY + 70 + r.row * ROWH;
-          const mid = X0 + ((r.c0 + r.c1) / 2) * COLW;
-          if (u < 0.45) {
-            const k = u / 0.45;
-            return <Frag key={r.row} x={lerp(1700, mid, k)} y={lerp(-100 + r.row * 37, y - 14, k)} s={lerp(0.9, 1.6, k)} rot={lerp(40, 0, k)} tumor={r.v1} alt={r.v2 ? 1 : 0} t={t} />;
-          }
-          const k = (u - 0.45) / 0.55;
-          return <g key={r.row} opacity={k}>{letters(y, r.c0, r.c1, {v1: r.v1, v2: r.v2, dim: true})}</g>;
-        })}
-        {/* the second change reaches the protein it encodes: its surface tip changes shape */}
-        {fly > 0.01 && fly < 0.99 && (() => {
-          const a: Pt = [X0 + V2 * COLW, REFY + 70 + 12 * ROWH], b: Pt = [MARKER_P[0], MARKER_P[1] - 250];
-          return <text x={lerp(a[0], b[0], fly)} y={lerp(a[1], b[1], fly) - 120 * Math.sin(fly * Math.PI)} textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontWeight={700} fontSize={50} fill="#B58CFF" opacity={1 - fly * 0.5}>{ALT2}</text>;
-        })()}
-        <g transform={`translate(${MARKER_P[0]} ${MARKER_P[1]})`} opacity={lift(t, tF.returning, tF.returning + 0.6)}>
-          <g transform="translate(0 200) scale(0.36)"><Protein t={t} digital={0.65} breathe={0.6} /></g>
-          <circle cy={-90} r={90} fill="url(#glowAi)" opacity={0.3} />
-          <path d={morphPath(1, 2, morph, 58)} transform="translate(0 -80)" fill={mixHex(P.markerAlt, '#B58CFF', morph)} stroke="#FFFFFF" strokeWidth={5} />
-          {/* the receptor's binding shape: the old one stops at the new tip; redesigned, it seats */}
-          <g transform={`translate(0 ${-470 + 240 * tryK - 120 * back + 106 * seatK})`} opacity={lift(t, tF.guide - 0.2, tF.guide + 0.1)}>
-            <circle r={140} fill="url(#glowGold)" opacity={0.25 + 0.4 * seatK} />
-            <path d={morphPath(1, 2, tipKind, 78)} fill="none" stroke={P.aiGold} strokeWidth={14} />
-            <rect x={-26} y={-260} width={52} height={180} rx={20} fill={P.aiGold} opacity={0.85} />
-          </g>
-        </g>
-      </g>
-      <Bokeh cam={cam} t={t} fill="url(#bokehCool)" op={0.25} n={6} size={240} />
+    <g transform={`rotate(${rot})`}>
+      {glow > 0.01 && <circle r={110} fill="url(#glowGold)" opacity={glow * 0.6} />}
+      {Array.from({length: 7}, (_, k) => {
+        const mut = k === VA;
+        return <line key={k} x1={colX(k)} x2={colX(k)} y1={-12 + 4 * unzip} y2={12 - 4 * unzip} stroke={mut ? P.payload : '#CFC4CC'} strokeWidth={mut ? 9 : 4} strokeLinecap="round" opacity={1 - letters} />;
+      })}
+      <path d={`M ${s1.join(' L ')}`} fill="none" stroke="#A89AA6" strokeWidth={8 - 6 * unzip} strokeLinecap="round" opacity={1 - 0.75 * letters} />
+      <path d={`M ${s2.join(' L ')}`} fill="none" stroke="#D8CED6" strokeWidth={8 - 6 * unzip} strokeLinecap="round" opacity={1 - 0.9 * letters} />
+      {letters > 0.01 && seq.split('').map((ch, k) => <Letter key={k} x={colX(k)} y={0} ch={ch} col={k === VA ? P.payload : P.aiHot} op={clamp01(letters * 2 - k * 0.12)} bold={k === VA} />)}
     </g>
   );
 };
-const AN: [number, number] = [tF.aiC - 0.35, tF.evolving + 0.3];
-const READ_CUT = tF.aiC - 0.15; // hard cut from the plasma into the read
-const CAM_AN = path([
-  {t: AN[0], x: -40, y: -200, z: 1.9, rot: 0},
-  {t: tF.aiC + 0.6, x: -60, y: -60, z: 0.92, rot: 0},
-  {t: tF.returning + 0.3, x: -20, y: -40, z: 0.86, rot: 0},
-  {t: tF.changing + 0.4, x: 120, y: -20, z: 0.8, rot: 0},
-  {t: tF.guide + 0.2, x: 600, y: -60, z: 1.0, rot: 0},
-  {t: tF.control, x: MARKER_P[0], y: MARKER_P[1] - 200, z: 1.45, rot: 0},
-  {t: AN[1], x: MARKER_P[0], y: MARKER_P[1] - 150, z: 3.4, rot: 0},
-]);
+const PlasmaBack: React.FC<{t: number; cam: Cam; dark: number}> = ({t, cam, dark}) => {
+  if (dark > 0.99) return null;
+  // other fragments and plasma proteins around the followed one, thinning out as the analysis takes over
+  const out: React.ReactNode[] = [];
+  const S = 150;
+  const hw = W / 2 / cam.z + S, hh = H / 2 / cam.z + S;
+  for (let j = Math.floor((cam.y - hh) / S); j <= Math.ceil((cam.y + hh) / S); j++)
+    for (let i = Math.floor((cam.x - hw) / S); i <= Math.ceil((cam.x + hw) / S); i++) {
+      if (i === 0 && j === 0) continue;
+      const sd = ((i * 73856093) ^ (j * 19349663)) & 0xffff;
+      const x = i * S + (rand(sd) - 0.5) * 90 + 6 * Math.sin(t * 0.7 + sd), y = j * S + (rand(sd + 1) - 0.5) * 90 + 6 * Math.cos(t * 0.6 + sd);
+      if (rand(sd + 2) < 0.45) out.push(<Frag key={`f${i},${j}`} x={x} y={y} s={0.75 + 0.3 * rand(sd + 3)} rot={rand(sd + 4) * 180 + t * 18 * (rand(sd + 5) - 0.5)} t={t + i} />);
+      else out.push(<circle key={`p${i},${j}`} cx={x} cy={y} r={14 + 16 * rand(sd + 6)} fill="#FFF3D6" opacity={0.35} />);
+    }
+  return (
+    <g opacity={1 - lift(dark, 0.55, 1)}>
+      <rect width={W} height={H} fill={mixHex(P.plasma, '#241A12', lift(dark, 0, 0.75))} />
+      <rect width={W} height={H} fill="url(#vig)" opacity={0.5} />
+      <g transform={camTransform(cam)} opacity={1 - lift(dark, 0, 0.6)}>{out}</g>
+    </g>
+  );
+};
+const ReadV5: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
+  const dark = lift(t, tR.unzip - 0.15, tR.ref + 0.2);
+  const level = lift(t, tR.level - 0.3, tR.unzip);
+  const unzip = lift(t, tR.unzip, tR.unzip + 0.45);
+  const letters = lift(t, tR.unzip + 0.3, tR.unzip + 0.75);
+  const rot = lerp(heroRot(Math.min(t, tR.level - 0.3)), 0, level);
+  // A: the reference comes in above; the changed column lights; two more tumour reads carry the same change
+  const ref = lift(t, tR.ref, tR.ref + 0.4);
+  const markA = lift(t, tR.mark - 0.05, tR.mark + 0.3);
+  const reads = [lift(t, tR.more, tR.more + 0.4), lift(t, tR.more + 0.2, tR.more + 0.6)];
+  // B: a later read carries a second change; then everything but that base steps back
+  const late = lift(t, tR.late, tR.late + 0.45);
+  const markB = lift(t, tR.markB, tR.markB + 0.3);
+  const iso = lift(t, tR.iso, tR.iso + 0.45);
+  const isoMove = lift(t, tR.iso + 0.15, tR.bead + 0.1);
+  // C: the base becomes the residue it changes and lands on the turning protein
+  const bead = lift(t, tR.bead, tR.bead + 0.25);
+  const fly = lift(t, tR.bead + 0.2, tR.land);
+  const prot = lift(t, tR.bead - 0.05, tR.bead + 0.5);
+  const swell = lift(t, tR.land - 0.1, tR.swell + 0.35);
+  const seqOut = 1 - 0.9 * iso;
+  // D: the earlier drug runs into the swollen residue and backs off; the redesigned one seats and the pocket closes
+  const oA = lift(t, tR.old, tR.old + 0.5), oHit = Math.exp(-((t - (tR.old + 0.55)) ** 2) / 0.006), oBack = lift(t, tR.old + 0.62, tR.old + 0.95), oFade = lift(t, tR.old + 0.8, tR.old + 1.1);
+  const nB = lift(t, tR.fresh, tR.fresh + 0.4), nA = lift(t, tR.fresh + 0.3, tR.fresh + 0.7), nSeat = lift(t, tR.fresh + 0.7, tR.fresh + 1.0);
+  const closeK = lift(t, tR.close - 0.3, tR.close + 0.2);
+  const oldPos = (() => {
+    const home = alongP(760, -120), rim = alongP(300, 0), back = alongP(560, -80);
+    const c = molC(MOL_FIT);
+    const p: Pt = oBack > 0 ? [lerp(rim[0], back[0], oBack), lerp(rim[1], back[1], oBack)] : [lerp(home[0], rim[0], oA), lerp(home[1], rim[1], oA)];
+    return {x: p[0] - c[0] * MS5 + 6 * oHit * Math.sin(t * 60), y: p[1] - c[1] * MS5, rot: lerp(20, 0, oA) + 6 * oHit * Math.sin(t * 45)};
+  })();
+  const newPos = (() => {
+    const home = alongP(620, 140), rim = alongP(240, 0);
+    const c = molC(MOL_NEW);
+    const seat: Pt = [POCKET[0] - VAR_DIR[0] * 85, POCKET[1] - VAR_DIR[1] * 85];
+    const p: Pt = [lerp(lerp(home[0], rim[0], nA), seat[0], nSeat), lerp(lerp(home[1], rim[1], nA), seat[1], nSeat)];
+    return {x: p[0] - c[0] * MS5, y: p[1] - c[1] * MS5, rot: lerp(-40, 0, smooth(nA * 0.5 + nSeat * 0.5))};
+  })();
+  const variant = {k: VAR_K, grow: swell, col: '#B58CFF', hot: oHit};
+  const ry = rotYAt(t);
+  const pglow = 0.55 * prot * (1 - closeK);
+  const vw = varWorld(t);
+  const isoP: Pt = [lerp(colX(VB), ISO_AT[0], isoMove), lerp(3 * ROW, ISO_AT[1], isoMove)];
+  const beadP: Pt = [lerp(isoP[0], vw[0], smooth(fly)), lerp(isoP[1], vw[1], smooth(fly)) - 18 * Math.sin(fly * Math.PI)];
+  const row = (y: number, seq: string, op: number, hl: (k: number) => string | null, dim = false) =>
+    seq.split('').map((ch, k) => <Letter key={k} x={colX(k)} y={y} ch={ch} col={hl(k) ?? (dim ? '#5E9FC0' : P.aiHot)} op={op * (hl(k) ? 1 : seqOut)} bold={!!hl(k)} />);
+  const rowsIn = 1 + reads[0] + reads[1] + lift(late, 0.5, 1);
+  const colBox = (c: number, k: number, col: string) => k > 0.01 && (
+    <g opacity={k * seqOut}>
+      <rect x={colX(c) - 8.5} y={-ROW - 11} width={17} height={ROW * rowsIn + 22} rx={4} fill={col} opacity={0.1} />
+      <rect x={colX(c) - 8.5} y={-ROW - 11} width={17} height={ROW * rowsIn + 22} rx={4} fill="none" stroke={col} strokeWidth={1.2} />
+    </g>
+  );
+  const READ2 = 'TCATTGG', READ_LATE = 'TCATTAG';
+  return (
+    <g>
+      <AIBack cam={cam} t={t} op={0.35} />
+      <PlasmaBack t={t} cam={cam} dark={dark} />
+      <g transform={camTransform(cam)}>
+        {/* the protein turns into view behind the isolated base */}
+        {prot > 0.01 && (
+          <g transform={`translate(${PROT_C[0]} ${PROT_C[1]}) scale(${PS})`} opacity={prot}>
+            <Protein t={t} digital={0.55} pocketGlow={pglow} breathe={1 - 0.8 * closeK} rotY={ry} variant={variant} layer="back" close={closeK} />
+            {oA > 0.01 && oFade < 0.99 && <Molecule mol={MOL_FIT} x={oldPos.x} y={oldPos.y} rot={oldPos.rot} s={MS5} digital={0.35} bad={oHit} op={1 - oFade} />}
+            {nB > 0.01 && <Molecule mol={MOL_NEW} x={newPos.x} y={newPos.y} rot={newPos.rot} s={MS5} built={nB} digital={0.2 * (1 - nSeat)} glow={0.5 * nSeat * (1 - closeK * 0.5)} />}
+            <Protein t={t} digital={0.55} breathe={1 - 0.8 * closeK} rotY={ry} variant={variant} layer="front" close={closeK} />
+          </g>
+        )}
+        {iso < 0.99 && (
+          <g opacity={1 - iso}>
+            {/* reference above, a thin rule under it */}
+            {ref > 0.01 && <g transform={`translate(0 ${-ROW - 30 * (1 - ref)})`} opacity={ref}>{row(0, REF7, 1, () => null, true)}<line x1={-70} x2={70} y1={9} y2={9} stroke={P.aiDim} strokeWidth={0.8} /></g>}
+            {reads.map((k, m) => k > 0.01 && <g key={m} transform={`translate(${60 * (1 - k)} ${ROW * (m + 1)})`} opacity={k}>{row(0, READ2, 1, (c) => (c === VA ? P.payload : null))}</g>)}
+          </g>
+        )}
+        {colBox(VA, markA * (1 - iso), P.payload)}
+        {colBox(VB, markB * (1 - iso), '#B58CFF')}
+        {/* the later fragment arrives and opens into its letters */}
+        {late > 0.01 && (late < 0.5 ? (
+          <Frag x={lerp(150, 0, late / 0.5)} y={3 * ROW} s={lerp(0.6, 1, late / 0.5)} rot={lerp(30, 0, late / 0.5)} tumor alt={1} t={t} />
+        ) : (
+          <g transform={`translate(0 ${3 * ROW})`} opacity={1 - iso}>{row(0, READ_LATE, (late - 0.5) / 0.5, (c) => (c === VA ? P.payload : null)).filter((_, k) => k !== VB)}</g>
+        ))}
+        {/* the hero read stays in its row (row 0) */}
+        {iso < 0.99 && <g opacity={1 - iso * 0.95}><HeroDNA t={t} rot={rot} unzip={unzip} letters={letters} seq={READ2} glow={(1 - letters) * 0.9} /></g>}
+        {/* the isolated base, then the residue it becomes */}
+        {late > 0.5 && bead < 0.99 && <Letter x={isoP[0]} y={isoP[1]} ch="A" col="#B58CFF" s={1 + 1.2 * isoMove} op={clamp01((late - 0.5) * 2) * (1 - bead)} bold />}
+        {bead > 0.01 && fly < 0.999 && (
+          <g transform={`translate(${beadP[0]} ${beadP[1]})`} opacity={bead * (1 - lift(fly, 0.85, 1))}>
+            <circle r={14} fill="url(#glowMut)" opacity={0.5} />
+            <circle r={lerp(9, 6, fly)} fill="#B58CFF" />
+            <circle r={lerp(9, 6, fly)} fill="url(#vol)" />
+          </g>
+        )}
+      </g>
+      <Bokeh cam={cam} t={t} fill="url(#bokehCool)" op={0.22 * dark} n={6} size={240} />
+    </g>
+  );
+};
 
 // ================================================================================================ precision attack (tissue, by the regrown colony)
 const RX = (() => { const n = nearest(TIP[0] - 420, TIP[1] + 520); return {...n, ...cellAt(n.i, n.j)}; })();
@@ -516,8 +634,8 @@ export const BODY_PULL = path([
 export const shotsF4: Shot[] = [
   {id: 'F-tissue', t0: KILL_OUT, t1: tF.cancer + 0.4, fade: 0.7, draw: (t) => <TissueF t={t} cam={CAM_T(t)} />},
   {id: 'F-blood', t0: tF.cancer - 0.1, t1: TUBE[0] + 0.05, fade: 0.5, draw: (t) => <BloodF t={t} cam={CAM_B(t)} />},
-  {id: 'F-tube', t0: TUBE[0] - 0.3, t1: READ_CUT, fade: 0.3, draw: (t) => <Tube t={t} cam={CAM_TU(t)} />},
-  {id: 'F-read', t0: READ_CUT, t1: tF.evolving, draw: (t) => <Analysis t={t} cam={CAM_AN(t)} />},
+  {id: 'F-tube', t0: TUBE[0] - 0.3, t1: DIVE[1] + 0.05, fade: 0.3, draw: (t) => <Tube t={t} cam={CAM_TU(t)} />},
+  {id: 'F-read', t0: DIVE[0], t1: tF.evolving, fade: DIVE[1] - DIVE[0], draw: (t) => <ReadV5 t={t} cam={CAM_RD(t)} />},
   {id: 'F-attack', t0: tF.evolving, t1: PULL0 + 1.0, draw: (t) => <Attack t={t} cam={t < PULL0 ? ATT_CAM(t) : toTissue(BODY_PULL(t))} />},
 ];
 export const _f4 = {HEALTHY, tipNoop: 0};
