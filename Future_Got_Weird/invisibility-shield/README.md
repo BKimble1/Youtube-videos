@@ -1,5 +1,45 @@
 # Future Got Weird: This Shield Can Make You Disappear.
 
+## V3 (third review cut: animation reconstruction, chase, handcuff ending, seamless loop)
+
+**Status (23 Oct 2026):**
+- A review cut is rendered and checked from the MP4 and from a per-frame rig check (`production/V3_QA_REPORT.md`).
+- **Not the final publish master. Not published.**
+- Nobody has watched or listened to it in real time.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920, 30 fps, 878 frames, 29.27 s, H.264 High CRF 16 + AAC 320 kb/s, burned-in captions | `exports/FGW_Invisibility_Shield_V3_REVIEW_1080x1920.mp4` |
+| V2 audit, what was rebuilt, shot list, QA results, limitations | `production/V3_QA_REPORT.md` |
+| Blocking map (top view: both characters, the shield, every camera, the line of action) | `production/v3/V3_blocking_map.png` |
+| Model sheets (5 poses × front / three-quarter / side / rear), head turnaround | `production/v3/` |
+| Narration (unchanged recording and timing) and captions (unchanged words and timings) | as V1 |
+| V3 mix and its effect list | `audio/mix/FGW_Invisibility_Shield_V3_mix.wav`, `audio/sfx_cues_v3.json` |
+| Editable source | `source/src/v3/` (composition `InvisibilityShieldV3`, still `StillV3`, `ModelSheet3`, `Blocking3`) |
+
+### V3 source layout (`source/src/v3/`)
+
+- `spline.ts`: C1 monotone cubic key curves.
+- `gait.ts`: planted and swinging feet.
+- `stepper.ts`: footstep simulation from body paths.
+- `Person3.tsx`, `HeadV3.tsx`: the articulated rigs.
+- `Cuffs.tsx`: the cuff prop.
+- `Corridor3.tsx`, `Torch3.tsx`: the periodic corridor and the torch.
+- `Rays3.tsx`: the light paths.
+- `story3.ts`: every character, prop and camera as a function of time.
+- `FilmV3.tsx`: the composition.
+- `ModelSheet3.tsx`, `Blocking3.tsx`: production documents.
+
+### V3 rebuild
+
+    cd Future_Got_Weird/invisibility-shield
+    NODE_PATH=$PWD/source/node_modules source/node_modules/.bin/esbuild tools/export_cues_v3.ts --bundle --platform=node --format=cjs --loader:.css=empty --outfile=/tmp/ec3.cjs && node /tmp/ec3.cjs audio/cues_v3.json
+    python3 tools/make_audio_v3.py       # V3 bed and effects over the unchanged narration -> source/public/audio/mix_v3.wav
+    (cd source && npx remotion render src/index.ts InvisibilityShieldV3 ../exports/FGW_Invisibility_Shield_V3_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v3","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    NODE_PATH=$PWD/source/node_modules source/node_modules/.bin/esbuild tools/rig_qa_v3.ts --bundle --platform=node --format=cjs --loader:.css=empty --outfile=/tmp/rq.cjs && node /tmp/rq.cjs qa/v3/rig_qa.json
+    QA_MIX=source/public/audio/mix_v3.wav python3 tools/qa.py exports/FGW_Invisibility_Shield_V3_REVIEW_1080x1920.mp4 <vosk_model_dir> qa/v3/review
+    python3 tools/motion_scan.py exports/FGW_Invisibility_Shield_V3_REVIEW_1080x1920.mp4 qa/v3/motion_scan.json
+
 ## V2 (second review cut: story, characters, animation)
 
 **Status (23 Oct 2026):**
