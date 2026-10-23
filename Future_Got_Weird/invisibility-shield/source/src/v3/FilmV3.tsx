@@ -21,7 +21,7 @@ import {Corridor3} from './Corridor3';
 import {Flashlight} from './Torch3';
 import {joints3, LOOK_G3, LOOK_W3, Person3} from './Person3';
 import {Rays3, rays3} from './Rays3';
-import {camAt, ceilingCut, CUT_Y, guardAt, inSection, sectionCut, shotAt, torchRay, womanAt} from './story3';
+import {camAt, ceilingCut, CUT_Y, guardAt, inSection, P0, sectionCut, shotAt, torchRay, womanAt} from './story3';
 import {prog} from './spline';
 
 const CAP_Y: Record<string, number> = {A: 1500, B: 1500, E: 1500, F: 1500, G: 1500, H: 1500};
@@ -72,7 +72,7 @@ export const SceneV3: React.FC<{t: number; captions: boolean}> = ({t, captions})
     overlay = (
       <g>
         <LensFace id="lf" b={b} s={s} t={t} cutV={cutV} />
-        <LensSection id="ls" b={b} s={s} cutV={cutV} />
+        <LensSection id="ls" b={b} s={s} cutV={cutV} a={0.62} />
       </g>
     );
   } else {
@@ -93,7 +93,8 @@ export const SceneV3: React.FC<{t: number; captions: boolean}> = ({t, captions})
   const rays = rays3(s, CUT_Y + 0.002, eye);
   const kBody = prog(t, 9.0, 10.35), kBg = prog(t, 10.72, 12.6);
   const rayFade = 1 - prog(t, 13.1, 13.5);
-  const roomFade = clamp((cam.pos.y - CUT_Y - 0.06) / 0.32);
+  // (by the camera's distance from the lens: millimetres away only the lens is in view; the room fades in as it backs off)
+  const roomFade = clamp((Math.hypot(cam.pos.x - P0.x, cam.pos.y - P0.y, cam.pos.z - P0.z) - 0.14) / 0.36);
   return (
     <AbsoluteFill style={{backgroundColor: '#08111A'}}>
       <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', inset: 0}}>

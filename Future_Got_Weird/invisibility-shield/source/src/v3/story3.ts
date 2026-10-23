@@ -315,7 +315,7 @@ export const womanAt = (t: number): {pose: Pose3; shield: ShieldState} => {
     R = wave > 0.05 ? {W, hand, dir: n3(v3(0.1, 1, 0.2)), palm: v3(0, 0, 1)} : {W, hand};
   } else {
     // the hand-off: takes the rear grip as she turns, then carries
-    const k = prog(t, 27.97, 28.15);
+    const k = prog(t, 27.95, 28.08);
     R = {W: blendW(free.R.W, RGRIP(s), k), hand: mixHand(HAND_RELAXED, GRIP, k), dir: k > 0.5 ? sN : undefined};
   }
   // ---- left hand
@@ -324,12 +324,12 @@ export const womanAt = (t: number): {pose: Pose3; shield: ShieldState} => {
   else if (t < 1.88) {
     const k = prog(t, 1.55, 1.86);
     L = {W: blendW(free.L.W, LGRIP(s), k), hand: mixHand(FIST_RUN, GRIP, k)};
-  } else if (t < 28.1) L = {W: LGRIP(s), hand: GRIP, dir: sN};
+  } else if (t < 28.04) L = {W: LGRIP(s), hand: GRIP, dir: sN};
   else {
-    const k = prog(t, 28.1, 28.38);
+    const k = prog(t, 28.04, 28.24);
     L = {W: blendW(LGRIP(s), free.L.W, k), hand: mixHand(GRIP, FIST_RUN, k)};
   }
-  if (t < 1.55 || t >= 28.38) L = {hand: FIST_RUN};
+  if (t < 1.55 || t >= 28.24) L = {hand: FIST_RUN};
   return {pose: {...base, R, L}, shield: s};
 };
 
@@ -488,12 +488,13 @@ const B_KEYS = (): OK[] => {
     [6.4, {F: v3(-0.5, 0.65, 2.95), D: 1.05, az: deg(4), el: deg(4), f: 1500}],
     [7.7, {F: P0, D: 0.024, az: deg(0.5), el: deg(0.5), f: 1500}],
     [8.25, {F: a3(P0, v3(0.0015, 0, 0)), D: 0.023, az: deg(0.3), el: deg(1), f: 1500}],
-    [9.1, {F: a3(P0, v3(0.0015, 0, 0)), D: 0.024, az: deg(0.3), el: deg(89.5), f: 1500}],
-    [10.4, {F: v3(-0.52, CUT_Y, 2.9), D: 1.5, az: deg(8), el: deg(68), f: 1300}],
+    [9.1, {F: a3(P0, v3(0.0015, 0, 0)), D: 0.024, az: deg(0.3), el: deg(72), f: 1500}],
+    [10.4, {F: v3(-0.52, CUT_Y, 2.92), D: 1.5, az: deg(8), el: deg(66), f: 1300}],
     [12.75, {F: v3(-0.45, CUT_Y, 3.85), D: 4.3, az: deg(18), el: deg(56), f: 1150}],
     [13.3, {F: v3(-0.4, CUT_Y, 3.2), D: 1.2, az: deg(8), el: deg(30), f: 1300}],
     [13.75, {F: P1, D: 0.03, az: deg(2), el: deg(3), f: 1500}],
-    [14.85, ots(14.85, 0.36, 0.26, 1.15, 1450)],
+    [14.45, {F: SC, D: 2.25, az: deg(11), el: deg(40), f: 1500}],
+    [14.85, ots(14.85, 0.46, 0.36, 1.15, 1450)],
     [16.6, ots(16.6, 0.36, 0.2, 1.05, 1380)],
     [17.55, {F: v3(-0.4, 0.95, 3.5), D: 1.85, az: deg(70), el: deg(8), f: 880}],
     [18.5, {F: v3(-0.4, 0.98, 3.48), D: 1.8, az: deg(76), el: deg(8), f: 900}],
@@ -510,7 +511,7 @@ const G_KEYS = (): OK[] => {
     [22.15, {F: v3(-0.38, 1.12, 3.6), D: 1.78, az: deg(84), el: deg(6), f: 740}],
     [23.9, {F: v3(-0.38, 1.14, 3.58), D: 1.78, az: deg(85), el: deg(6), f: 750}],
     [24.95, {F: v3(-0.4, 1.22, 3.55), D: 1.8, az: deg(86), el: deg(5), f: 720}],
-    [26.4, {F: v3(-0.4, 1.26, 3.52), D: 1.8, az: deg(86), el: deg(5), f: 740}],
+    [26.4, {F: v3(-0.38, 1.3, 3.5), D: 1.7, az: deg(83), el: deg(4), f: 800}],
     [27.3, {F: v3(-0.34, 1.2, 3.62), D: 1.76, az: deg(84), el: deg(4), f: 780}],
     [27.95, {F: v3(-0.38, 1.16, 3.55), D: 1.8, az: deg(85), el: deg(4), f: 740}],
   ];

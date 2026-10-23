@@ -227,7 +227,10 @@ export const Person3: React.FC<{id: string; b: Basis; pz: Pose3; look: Look3; sh
   const j = joints3(pz, D);
   const pr = (p: V3) => proj(b, p);
   const dep = (p: V3) => pr(p).d;
-  if (dep(j.P) < 0.2 && dep(j.S) < 0.2) return null;
+  // any key joint at or behind the camera plane: the figure is not drawn (a part behind the camera would project
+  // to an arbitrarily large shape)
+  const keyJ = [j.P, j.S, j.Hc, j.R.W, j.L.W, j.R.E, j.L.E, j.legs.l.A, j.legs.r.A, j.legs.l.K, j.legs.r.K];
+  if (Math.min(...keyJ.map(dep)) < 0.06) return null;
   const kP = pr(j.P).k;
   const OUT = Math.max(1.2, Math.min(9, 0.012 * kP)), IN = OUT * 0.75;
   const camDir = b.fwd;

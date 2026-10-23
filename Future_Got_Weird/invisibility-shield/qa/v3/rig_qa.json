@@ -1,12 +1,6 @@
 {
  "frames": 878,
  "anatomy": {
-  "her: elbow L inside torso": {
-   "n": 3,
-   "first": 28.166666666666668,
-   "last": 28.233333333333334,
-   "worst": 0.45
-  },
   "her: foot l unreachable": {
    "n": 1,
    "first": 28.933333333333334,
@@ -40,25 +34,25 @@
    "worst": 0.214
   },
   "her.elbowR: accel spike": {
-   "n": 36,
+   "n": 35,
    "first": 1.033,
    "last": 28.967,
    "worst": 0.451
   },
   "her.wristR: accel spike": {
-   "n": 28,
+   "n": 27,
    "first": 1.033,
    "last": 28.967,
-   "worst": 0.123
+   "worst": 0.127
   },
   "her.elbowL: accel spike": {
-   "n": 35,
+   "n": 34,
    "first": 0.067,
    "last": 29,
    "worst": 0.246
   },
   "her.wristL: accel spike": {
-   "n": 44,
+   "n": 42,
    "first": 0.067,
    "last": 29.033,
    "worst": 0.265
@@ -148,10 +142,10 @@
    "worst": 0.041
   },
   "cam.pos: accel spike": {
-   "n": 49,
+   "n": 58,
    "first": 5,
    "last": 28.3,
-   "worst": 0.085
+   "worst": 0.045
   }
  },
  "jerkList": [
@@ -1464,34 +1458,28 @@
    "v": 0.051
   },
   {
-   "t": 28,
-   "who": "her.elbowR",
-   "what": "accel spike",
-   "v": 0.06
-  },
-  {
    "t": 28.033,
    "who": "her.elbowR",
    "what": "accel spike",
-   "v": 0.031
+   "v": 0.059
   },
   {
    "t": 28.067,
    "who": "her.elbowR",
    "what": "accel spike",
-   "v": 0.069
+   "v": 0.058
   },
   {
    "t": 28.1,
    "who": "her.elbowR",
    "what": "accel spike",
-   "v": 0.074
+   "v": 0.067
   },
   {
    "t": 28.133,
    "who": "her.elbowR",
    "what": "accel spike",
-   "v": 0.048
+   "v": 0.052
   },
   {
    "t": 28.167,
@@ -1656,34 +1644,28 @@
    "v": 0.09
   },
   {
-   "t": 28,
-   "who": "her.wristR",
-   "what": "accel spike",
-   "v": 0.103
-  },
-  {
    "t": 28.033,
    "who": "her.wristR",
    "what": "accel spike",
-   "v": 0.035
+   "v": 0.127
   },
   {
    "t": 28.067,
    "who": "her.wristR",
    "what": "accel spike",
-   "v": 0.123
+   "v": 0.103
   },
   {
    "t": 28.1,
    "who": "her.wristR",
    "what": "accel spike",
-   "v": 0.097
+   "v": 0.083
   },
   {
    "t": 28.133,
    "who": "her.wristR",
    "what": "accel spike",
-   "v": 0.094
+   "v": 0.103
   },
   {
    "t": 28.167,
@@ -1863,37 +1845,37 @@
    "t": 28.1,
    "who": "her.elbowL",
    "what": "accel spike",
-   "v": 0.047
+   "v": 0.05
   },
   {
    "t": 28.133,
    "who": "her.elbowL",
    "what": "accel spike",
-   "v": 0.054
+   "v": 0.074
   },
   {
    "t": 28.167,
    "who": "her.elbowL",
    "what": "accel spike",
-   "v": 0.053
+   "v": 0.07
   },
   {
    "t": 28.2,
    "who": "her.elbowL",
    "what": "accel spike",
-   "v": 0.082
+   "v": 0.146
   },
   {
    "t": 28.233,
    "who": "her.elbowL",
    "what": "accel spike",
-   "v": 0.093
+   "v": 0.07
   },
   {
    "t": 28.267,
    "who": "her.elbowL",
    "what": "accel spike",
-   "v": 0.136
+   "v": 0.059
   },
   {
    "t": 28.333,
@@ -1902,16 +1884,10 @@
    "v": 0.058
   },
   {
-   "t": 28.367,
-   "who": "her.elbowL",
-   "what": "accel spike",
-   "v": 0.113
-  },
-  {
    "t": 28.4,
    "who": "her.elbowL",
    "what": "accel spike",
-   "v": 0.115
+   "v": 0.052
   },
   {
    "t": 28.433,
@@ -2094,70 +2070,58 @@
    "v": 0.035
   },
   {
-   "t": 28.067,
-   "who": "her.wristL",
-   "what": "accel spike",
-   "v": 0.044
-  },
-  {
    "t": 28.1,
-   "who": "her.wristL",
-   "what": "accel spike",
-   "v": 0.076
-  },
-  {
-   "t": 28.133,
-   "who": "her.wristL",
-   "what": "accel spike",
-   "v": 0.088
-  },
-  {
-   "t": 28.167,
-   "who": "her.wristL",
-   "what": "accel spike",
-   "v": 0.103
-  },
-  {
-   "t": 28.2,
-   "who": "her.wristL",
-   "what": "accel spike",
-   "v": 0.16
-  },
-  {
-   "t": 28.233,
-   "who": "her.wristL",
-   "what": "accel spike",
-   "v": 0.203
-  },
-  {
-   "t": 28.267,
-   "who": "her.wristL",
-   "what": "accel spike",
-   "v": 0.109
-  },
-  {
-   "t": 28.3,
-   "who": "her.wristL",
-   "what": "accel spike",
-   "v": 0.09
-  },
-  {
-   "t": 28.333,
    "who": "her.wristL",
    "what": "accel spike",
    "v": 0.086
   },
   {
-   "t": 28.367,
+   "t": 28.133,
+   "who": "her.wristL",
+   "what": "accel spike",
+   "v": 0.123
+  },
+  {
+   "t": 28.167,
+   "who": "her.wristL",
+   "what": "accel spike",
+   "v": 0.138
+  },
+  {
+   "t": 28.2,
+   "who": "her.wristL",
+   "what": "accel spike",
+   "v": 0.092
+  },
+  {
+   "t": 28.233,
    "who": "her.wristL",
    "what": "accel spike",
    "v": 0.038
   },
   {
+   "t": 28.267,
+   "who": "her.wristL",
+   "what": "accel spike",
+   "v": 0.07
+  },
+  {
+   "t": 28.3,
+   "who": "her.wristL",
+   "what": "accel spike",
+   "v": 0.039
+  },
+  {
+   "t": 28.333,
+   "who": "her.wristL",
+   "what": "accel spike",
+   "v": 0.065
+  },
+  {
    "t": 28.4,
    "who": "her.wristL",
    "what": "accel spike",
-   "v": 0.05
+   "v": 0.051
   },
   {
    "t": 28.433,
@@ -4950,76 +4914,130 @@
    "v": 0.021
   },
   {
-   "t": 14.367,
+   "t": 14.133,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.023
+   "v": 0.021
   },
   {
-   "t": 14.4,
+   "t": 14.167,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.027
+   "v": 0.026
   },
   {
-   "t": 14.433,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.03
-  },
-  {
-   "t": 14.467,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
-   "t": 14.5,
-   "who": "cam.pos",
-   "what": "accel spike",
-   "v": 0.032
-  },
-  {
-   "t": 14.533,
+   "t": 14.2,
    "who": "cam.pos",
    "what": "accel spike",
    "v": 0.031
   },
   {
+   "t": 14.233,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.037
+  },
+  {
+   "t": 14.267,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.04
+  },
+  {
+   "t": 14.3,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.04
+  },
+  {
+   "t": 14.333,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.034
+  },
+  {
+   "t": 14.367,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.022
+  },
+  {
+   "t": 14.433,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.028
+  },
+  {
+   "t": 14.467,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.035
+  },
+  {
+   "t": 14.5,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.04
+  },
+  {
+   "t": 14.533,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.044
+  },
+  {
    "t": 14.567,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.027
+   "v": 0.045
+  },
+  {
+   "t": 14.6,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.044
+  },
+  {
+   "t": 14.633,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.041
+  },
+  {
+   "t": 14.667,
+   "who": "cam.pos",
+   "what": "accel spike",
+   "v": 0.037
   },
   {
    "t": 14.7,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.027
+   "v": 0.034
   },
   {
    "t": 14.733,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.046
+   "v": 0.034
   },
   {
    "t": 14.767,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.067
+   "v": 0.036
   },
   {
    "t": 14.8,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.085
+   "v": 0.041
   },
   {
    "t": 14.833,
    "who": "cam.pos",
    "what": "accel spike",
-   "v": 0.085
+   "v": 0.041
   },
   {
    "t": 21.4,
@@ -5059,24 +5077,6 @@
   }
  ],
  "anatomyList": [
-  {
-   "t": 28.166666666666668,
-   "who": "her",
-   "what": "elbow L inside torso",
-   "v": 0.45
-  },
-  {
-   "t": 28.2,
-   "who": "her",
-   "what": "elbow L inside torso",
-   "v": 0.02
-  },
-  {
-   "t": 28.233333333333334,
-   "who": "her",
-   "what": "elbow L inside torso",
-   "v": 0.25
-  },
   {
    "t": 28.933333333333334,
    "who": "her",
