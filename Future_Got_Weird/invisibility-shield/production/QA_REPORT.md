@@ -130,6 +130,17 @@ seam.
 - The poses had no idle life: breathing added.
 - The hand's return overlapped the start of the lowering: re-timed.
 
+### 4K master
+
+**Container:** 2160×3840, 30 fps, 878 frames, 29.269 s, H.264 High, CRF 16, AAC. 39.9 MB.
+
+**Audio:** the decoded audio is bit-identical to the review cut's (same MD5 of the decoded stream): −14.6 LUFS, peak
+−2.6 dBFS.
+
+**Picture:** a native crop (hand at 20.6 s) against a 2× Lanczos upscale of the review frame shows sharper vector
+edges on the native render (`qa/v1/master_native_crop_vs_upscaled_review.png`). The master was not inspected beyond
+that crop and the metadata.
+
 ### Not performed
 
 - **Nobody has watched or listened to the cut in real time with sound.** This environment has no audio or video
