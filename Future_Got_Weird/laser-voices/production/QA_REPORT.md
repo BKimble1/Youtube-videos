@@ -119,7 +119,22 @@ There are no cuts; the film is one continuous camera.
 frames. The mean pixel change at the seam is 16.4, against 0.2 between the last frames: the bystander, who has walked
 out, is back behind her at frame 0.
 
-**Native resolution**: see "Master" below.
+**Master** (`exports/FGW_Laser_Voices_V1_MASTER_2160x3840.mp4`, 47.7 MB, `qa/v1/master_qa.json`,
+`qa/v1/master_motion_scan.json`):
+- 2160×3840, 1022 frames, 34.069 s, vectors rendered at 2× (not upscaled).
+- −14.5 LUFS, true peak −2.6 dBFS.
+- 0.0 ms offset to the mix. Vosk WER 0.01 (its/it's). Caption windows 22/23 (as the review).
+- No black segments or freezes. No motion spikes (maximum 28.6 at 15.2 s, the same eased move as the review).
+
+**Native-resolution stills** (`qa/v1/native/`, crops of master frames):
+- the hook faces;
+- the exposed ear;
+- the pressure fronts in the magnifier;
+- the transmitter section and mirror;
+- the contact point with both characters' hands;
+- the end face.
+
+They show clean contours, five-digit hands and pupils with highlights.
 
 **Characters**: `qa/v1/model_sheet.png` (recipient, bystander, the exposed ear).
 
