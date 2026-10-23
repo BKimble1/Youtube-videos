@@ -34,6 +34,15 @@ export const Defs: React.FC = () => (
         <stop offset="1" stopColor={c} stopOpacity={0} />
       </radialGradient>
     ))}
+    {/* out-of-focus foreground (V4 depth): flat-cored soft discs, no hot centre */}
+    {([['bokehWarm', P.tissueLight], ['bokehDeep', '#8E2A44'], ['bokehCool', P.aiHot], ['bokehTeal', P.tcellLight], ['bokehBlood', P.rbcLight]] as const).map(([id, c]) => (
+      <radialGradient key={id} id={id} cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stopColor={c} stopOpacity={0.32} />
+        <stop offset="0.55" stopColor={c} stopOpacity={0.26} />
+        <stop offset="0.85" stopColor={c} stopOpacity={0.1} />
+        <stop offset="1" stopColor={c} stopOpacity={0} />
+      </radialGradient>
+    ))}
     {/* skin */}
     <linearGradient id="skinGrad" x1="0" y1="0" x2="1" y2="0.2">
       <stop offset="0" stopColor={P.skinDeep} />
