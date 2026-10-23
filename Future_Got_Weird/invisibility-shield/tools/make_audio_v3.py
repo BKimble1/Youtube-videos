@@ -1,0 +1,245 @@
+#!/usr/bin/env python3
+"""V3 score, effects and mix for FGW "This Shield Can Make You Disappear." The narration is the approved V1 recording,
+unchanged (sample-for-sample, gain only) at 0 s, so picture sync is the original word timeline. Everything else is
+synthesised here (no samples, no paid generation, no third-party music) and sits well under the voice:
+  - the V2 suspense bed (low minor pad, a pulse that tightens while the guard is close, a quiet plucked figure in the
+    lens passage), loop-continuous across the seam;
+  - effects placed from the V3 picture timeline (tools/export_cues_v3.ts -> audio/cues_v3.json): every foot landing of
+    both characters (her trainers, his boots, levelled by the camera's distance), her pivot squeak, the shield's swing,
+    grip, lowering and hand-off, torch sweeps, a soft activation shimmer as she vanishes in his view, the glassy texture
+    of the lens close-up, the light sweeps of the section, the cloth of the reach, a small comic accent on his shock,
+    his recoil, the cuffs (clipped on the belt, drawn, and the click), and the bolt. Nothing cartoonish, no boings.
+Inputs : audio/narration/FGW_Invisibility_Shield_narration_final.wav, audio/cues_v3.json
+Outputs: source/public/audio/mix_v3.wav, audio/mix/FGW_Invisibility_Shield_V3_mix.wav, audio/mix/stems_v3/*.wav,
+         audio/mix/mix_measure_v3.json, audio/sfx_cues_v3.json"""
+import json, math, os, shutil
+import numpy as np, soundfile as sf, pyloudnorm as pyln
+from scipy.signal import butter, sosfilt
+
+EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SR = 48000
+cj = json.load(open(os.path.join(EP, 'audio/cues_v3.json')))
+DUR, SHOT, WORDS, F, STEPS = cj['DUR'], cj['SHOT'], cj['WORDS'], cj['frames'], cj['steps']
+N = int(round(DUR * SR))
+t = np.arange(N) / SR
+rng = np.random.default_rng(53)
+w = lambda i: WORDS[i]['start']
+we = lambda i: WORDS[i]['end']
+ft = np.array([f['t'] for f in F])
+
+def bp(x, lo, hi, o=2): return sosfilt(butter(o, [lo, hi], 'bandpass', fs=SR, output='sos'), x)
+def lp(x, f, o=2): return sosfilt(butter(o, f, 'lowpass', fs=SR, output='sos'), x)
+def hp(x, f, o=2): return sosfilt(butter(o, f, 'highpass', fs=SR, output='sos'), x)
+def loopf(f): return round(f * DUR) / DUR
+def db(x): return 10 ** (x / 20)
+def env(n, a, r):
+    e = np.ones(n); na = max(1, int(a * SR)); nr = max(1, int(r * SR))
+    e[:na] = np.linspace(0, 1, na) ** 2; e[-nr:] *= np.linspace(1, 0, nr) ** 2
+    return e
+def place(buf, sig, at):
+    i = int(round(at * SR)); idx = np.arange(len(sig)) + i
+    np.add.at(buf, idx % N, sig)
+def win(a, b, fa=0.3, fb=0.3): return np.clip(np.minimum((t - (a - fa)) / fa, ((b + fb) - t) / fb), 0, 1)
+def circ(f, x): return f(np.concatenate([x, x, x]))[2 * len(x):]
+def at_frame(key, tt): return float(np.interp(tt % DUR, ft, [f[key] for f in F]))
+
+# ---------------- voice (unchanged) ----------------
+v, vsr = sf.read(os.path.join(EP, 'audio/narration/FGW_Invisibility_Shield_narration_final.wav'))
+assert vsr == SR and len(v) == N, (vsr, len(v), N)
+voice = v.copy()
+
+# ---------------- music bed (loop-continuous) ----------------
+section = win(7.4, 13.8, 0.4, 0.5)
+close = win(15.0, 24.9, 0.8, 0.3)  # the guard closing in, right at the panel
+def pad(freqs):
+    out = np.zeros(N)
+    for k, (f, a) in enumerate(freqs):
+        lfo = 0.72 + 0.28 * np.sin(2 * np.pi * loopf(0.11 + 0.035 * k) * t + k)
+        out += a * lfo * np.sin(2 * np.pi * loopf(f) * t)
+    return out
+low = circ(lambda x: lp(x, 520), pad([(73.42, 0.5), (110.0, 0.3), (146.83, 0.16), (174.61, 0.1)]))  # D minor, low
+beats = int(round(DUR / 0.62)); bpd = DUR / beats
+pulse = np.zeros(N)
+for k in range(beats):
+    n = int(0.28 * SR); tt = np.arange(n) / SR
+    s = np.sin(2 * np.pi * 50 * tt) * np.exp(-tt / 0.075)
+    place(pulse, s * (0.75 if k % 2 == 0 else 0.42), k * bpd)
+notes = [587.33, 698.46, 880.0, 698.46, 783.99, 659.26]  # D5 F5 A5 F5 G5 E5
+steps = int(round(DUR / 0.31)); sp = DUR / steps
+pluck = np.zeros(N)
+for k in range(steps):
+    f = loopf(notes[k % len(notes)]); n = int(0.5 * SR); tt = np.arange(n) / SR
+    s = (np.sin(2 * np.pi * f * tt) + 0.3 * np.sin(4 * np.pi * f * tt)) * np.exp(-tt / 0.1) * env(n, 0.004, 0.05)
+    place(pluck, s * (0.55 + 0.45 * (k % 4 == 0)), k * sp)
+X = int(1.0 * SR)
+nz = bp(rng.standard_normal(N + X), 2500, 8000)
+nz[:X] = nz[:X] * np.linspace(0, 1, X) + nz[N:N + X] * np.linspace(1, 0, X)
+air = nz[:N] * 0.04
+hand = win(we(64) - 0.05, we(75) + 0.05, 0.3, 0.4)
+music = low * (0.9 + 0.2 * hand) + pulse * 0.5 * (1 + 0.35 * close - 0.45 * hand) + pluck * (0.06 + 0.10 * section + 0.05 * hand) + air * section
+music *= 1 + 0.2 * win(w(81), DUR, 0.3, 0.01)
+
+# ---------------- effects ----------------
+sfx = np.zeros(N); log = []
+def add(name, sig, at, gain_db):
+    place(sfx, sig * db(gain_db), at); log.append({'name': name, 'at': round(at % DUR, 3), 'dur': round(len(sig) / SR, 3), 'gain_db': round(gain_db, 1)})
+def soft_air(d, lo, hi, rise=True):
+    n = int(d * SR); tt = np.linspace(0, 1, n); x = rng.standard_normal(n); out = np.zeros(n); seg = 2048
+    for i in range(0, n, seg):
+        k = tt[i] if rise else 1 - tt[i]; fc = lo * (hi / lo) ** k
+        out[i:i + seg] = bp(x[i:i + seg], fc * 0.7, min(fc * 1.4, 20000))
+    return lp(out, hi * 1.2) * np.sin(np.pi * tt) ** 1.6
+def thud(f=90, d=0.25, nzk=0.3):
+    n = int(d * SR); tt = np.arange(n) / SR
+    return np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.05) + nzk * lp(rng.standard_normal(n), 500) * np.exp(-tt / 0.02)
+def flex(d=0.35):
+    n = int(d * SR); tt = np.arange(n) / SR
+    wob = np.sin(2 * np.pi * 9 * tt)
+    return (bp(rng.standard_normal(n), 300, 1400) * (0.6 + 0.4 * wob) + 0.25 * np.sin(2 * np.pi * (180 + 40 * wob) * tt)) * env(n, 0.04, 0.2)
+def shimmer(d=1.1, f=1567.98):
+    n = int(d * SR); tt = np.arange(n) / SR
+    s = sum(a * np.sin(2 * np.pi * f * m * tt + 0.3 * np.sin(2 * np.pi * 5 * tt)) for m, a in [(1, 1), (1.5, 0.4), (2.0, 0.25)])
+    return s * np.exp(-tt / 0.45) * env(n, 0.06, 0.3)
+def tick(f=3200, d=0.05):
+    n = int(d * SR); tt = np.arange(n) / SR
+    return np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.008)
+def fold(d=0.3):
+    n = int(d * SR); tt = np.linspace(0, 1, n)
+    return bp(rng.standard_normal(n), 900, 5000) * np.exp(-tt * 9) + 0.5 * thud(140, d, 0.1)[:n]
+def sweep(f0, f1, d):
+    n = int(d * SR); ph = 2 * np.pi * np.cumsum(np.geomspace(f0, f1, n)) / SR
+    return (np.sin(ph) + 0.2 * np.sin(2 * ph)) * env(n, 0.15, 0.35)
+def pop(d=0.18):
+    n = int(d * SR); tt = np.arange(n) / SR
+    return np.sin(2 * np.pi * (520 - 260 * tt / d) * tt) * np.exp(-tt / 0.035) + 0.3 * bp(rng.standard_normal(n), 1500, 6000) * np.exp(-tt / 0.01)
+def boot(d=0.22):
+    # a rubber-soled work boot on a hard lab floor: heel knock, then a short sole scuff
+    n = int(d * SR); tt = np.arange(n) / SR
+    knock = np.sin(2 * np.pi * (115 + 30 * rng.random()) * tt) * np.exp(-tt / 0.022)
+    sc = bp(rng.standard_normal(n), 700, 3800) * np.exp(-np.maximum(0, tt - 0.03) / 0.035) * (tt > 0.02)
+    return knock + 0.35 * lp(rng.standard_normal(n), 900) * np.exp(-tt / 0.012) + 0.22 * sc
+def sneaker(d=0.12):
+    n = int(d * SR); tt = np.arange(n) / SR
+    return 0.6 * np.sin(2 * np.pi * 180 * tt) * np.exp(-tt / 0.012) + 0.4 * bp(rng.standard_normal(n), 1500, 6000) * np.exp(-tt / 0.02)
+def creak(d=0.3):
+    n = int(d * SR); tt = np.arange(n) / SR
+    f = 420 + 120 * np.sin(2 * np.pi * 3 * tt)
+    return bp(np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.5 + 0.3 * rng.standard_normal(n), 400, 2200) * env(n, 0.03, 0.12)
+def hit(d=1.2):
+    # the reaction accent: a soft low impact with a short bright edge, no big trailer boom
+    n = int(d * SR); tt = np.arange(n) / SR
+    return (np.sin(2 * np.pi * 55 * tt) * np.exp(-tt / 0.28) + 0.5 * np.sin(2 * np.pi * 82.4 * tt) * np.exp(-tt / 0.18)
+            + 0.25 * bp(rng.standard_normal(n), 2000, 7000) * np.exp(-tt / 0.03))
+def lvl(dist, ref=1.5, lo=-10.0, hi=4.0): return float(np.clip(-20 * math.log10(max(0.2, dist) / ref), lo, hi))
+
+# foot landings (both characters), levelled by the camera's distance to the foot
+for k, st in enumerate(STEPS):
+    if st['who'] == 'her':
+        sig = sneaker() * (0.6 if st['h'] < 0.04 else 1.0)
+        add(f"her step {k}", sig, st['t'] - 0.004, -29 + lvl(st['dist']) - (6 if st['h'] < 0.04 else 0))
+    else:
+        add(f"guard step {k}", boot(), st['t'] - 0.004, -27 + lvl(st['dist']))
+# torch sweeps: one soft swish per fast sweep
+tv = np.array([f['torch'] for f in F]); pk = []
+for i in range(1, len(F) - 1):
+    if tv[i] >= tv[i - 1] and tv[i] > tv[i + 1] and tv[i] > 2.0 and (not pk or ft[i] - pk[-1][0] > 0.45):
+        pk.append((ft[i], tv[i]))
+for k, (ts, sp_) in enumerate(pk):
+    add(f'torch sweep {k + 1}', soft_air(0.45, 500, 2600), ts - 0.2, -38 + min(5, 2 * math.log2(sp_ / 2)))
+def squeak(d=0.14):
+    n = int(d * SR); tt = np.arange(n) / SR
+    f = 1900 + 500 * np.sin(2 * np.pi * 21 * tt)
+    return np.sin(2 * np.pi * np.cumsum(f) / SR) * env(n, 0.01, 0.07) * 0.6 + 0.2 * bp(rng.standard_normal(n), 2000, 6000) * env(n, 0.01, 0.06)
+def rustle(d=0.4):
+    n = int(d * SR)
+    return bp(rng.standard_normal(n), 1200, 6500) * env(n, 0.05, 0.25) * (0.6 + 0.4 * np.sin(np.linspace(0, 9, n)))
+def clink(f=2400, d=0.12):
+    n = int(d * SR); tt = np.arange(n) / SR
+    return sum(a * np.sin(2 * np.pi * f * m * tt) for m, a in [(1, 1), (2.76, 0.5), (5.4, 0.25)]) * np.exp(-tt / 0.03)
+def cuff_click():
+    # a ratchet: three quick pawl clicks and the jaw's ring
+    out = np.zeros(int(0.42 * SR))
+    for k, o in enumerate([0.0, 0.028, 0.052]):
+        c = clink(3100 + 300 * k, 0.08) + 0.5 * bp(rng.standard_normal(int(0.08 * SR)), 3000, 9000) * np.exp(-np.arange(int(0.08 * SR)) / SR / 0.004)
+        i = int(o * SR); out[i:i + len(c)] += c * (1.0 - 0.2 * k)
+    ring = clink(1850, 0.3) * 0.35
+    out[int(0.06 * SR):int(0.06 * SR) + len(ring)] += ring
+    return out
+def glassy(d=1.2):
+    n = int(d * SR); tt = np.arange(n) / SR
+    g = bp(rng.standard_normal(n), 5000, 11000) * (0.5 + 0.5 * np.sin(2 * np.pi * 13 * tt) ** 2)
+    return (g * 0.5 + shimmer(d, 2349.32)[:n] * 0.4) * env(n, 0.2, 0.4)
+# 0-3.1: the chase, the brake, the pivot, the shield swung into place
+add('her pivot squeak', squeak(), 1.4, -36)
+add('shield swing: air', soft_air(0.75, 260, 1500), 1.42, -31)
+add('shield swing: panel flex', flex(0.4), 1.7, -33)
+add('second grip taken', thud(110, 0.18, 0.4), 1.86, -29)
+add('crouch: jacket rustle', rustle(0.35), 2.15, -35)
+add('soft panel activation (she vanishes in his view)', shimmer(1.4), 3.85, -31)
+add('cuffs hooked on the belt', clink(2600, 0.1) * 0.7, 4.98, -34)
+# 4.6-8.3: the orbit and the push into the lens
+add('orbit: air', soft_air(1.4, 300, 900), 5.0, -38)
+add('push onto the panel', soft_air(1.6, 180, 1100), 6.4, -35)
+add('lens texture', glassy(1.3), 7.3, -36)
+# 8.2-14: the section and the way back out
+add('the cut (slice)', sweep(1400, 700, 0.6) * 0.6, 8.18, -36)
+add("her light spreads (warm sweep)", sweep(330, 520, 1.6), 9.0, -35)
+add("the corridor's light crosses (cool sweep)", sweep(660, 440, 2.0), 10.72, -36)
+add('back through the lens', soft_air(1.3, 1100, 220, rise=False), 13.3, -36)
+add('lens texture (return)', glassy(0.8) * 0.7, 13.55, -38)
+# 14.9-18.5: the close call
+add('her nervous shuffle', rustle(0.3) * 0.6, 16.62, -37)
+add('guard scratches his cap', rustle(0.35) * 0.7, 17.95, -37)
+# 18.5-24: the reach and the floating hand
+add('the reach: sleeve', rustle(1.4) * 0.8, 18.6, -37)
+add('the hand clears the edge (accent)', pop(), 20.35, -27)
+add('his shock (small comic accent)', clink(988, 0.25) * 0.5 + 0.4 * thud(70, 0.25, 0.2), 21.2, -30)
+for k in range(5):
+    add(f'finger flutter {k + 1}', tick(1700 + 150 * k, 0.05) * 0.8, 22.47 + 0.13 * k, -38)
+add('his recoil (sleeve)', soft_air(0.35, 800, 3000), 22.95, -33)
+add('hand withdraws', soft_air(0.4, 1200, 400, rise=False), 23.3, -37)
+# 24-27.9: the reveal and the cuffs
+add('lowering: air', soft_air(1.0, 900, 220, rise=False), 23.98, -32)
+add('lowering: panel flex', flex(0.35), 24.55, -33)
+add('the reveal (low accent)', hit(), WORDS[81]['start'] - 0.04, -27)
+add('cuffs drawn (rattle)', creak(0.22) * 0.6, 27.18, -33)
+add('cuffs drawn (clink)', clink(2200, 0.1) * 0.4, 27.22, -33)
+add('handcuff click', cuff_click(), 27.82, -24)
+# 27.95-end: the bolt (the run's steps come from the landings above)
+add('her turn squeak', squeak(0.12), 28.02, -36)
+add('bolt: whoosh', soft_air(0.6, 400, 2400), 28.12, -32)
+add('his lunge (sleeve)', soft_air(0.4, 700, 2600), 28.15, -34)
+
+# ---------------- mix ----------------
+ve = np.abs(voice); ve = lp(ve, 6, 1); ve = ve / (ve.max() + 1e-9)
+duck = 1 - 0.45 * np.clip(ve * 6, 0, 1)
+meter = pyln.Meter(SR)
+def lufs(x): return meter.integrated_loudness(x)
+voice_l = voice * db(-17 - lufs(voice))
+mus_l = music * duck * db(-17 - 14 - lufs(music * duck))  # bed ~14 LU under the voice
+sfx_l = sfx * (1 - 0.35 * np.clip(ve * 6, 0, 1))
+mix = voice_l + mus_l + sfx_l
+g = -14 - lufs(np.stack([mix, mix], 1))
+mix *= db(g)
+lim = db(-1.5)
+if np.abs(mix).max() > lim:
+    mix = np.tanh(mix / lim) * lim
+stereo = np.stack([mix, mix], 1)
+os.makedirs(os.path.join(EP, 'audio/mix/stems_v3'), exist_ok=True)
+os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
+sf.write(os.path.join(EP, 'source/public/audio/mix_v3.wav'), stereo, SR, subtype='PCM_24')
+shutil.copy(os.path.join(EP, 'source/public/audio/mix_v3.wav'), os.path.join(EP, 'audio/mix/FGW_Invisibility_Shield_V3_mix.wav'))
+for name, x in [('voice', voice_l * db(g)), ('music', mus_l * db(g)), ('sfx', sfx_l * db(g))]:
+    sf.write(os.path.join(EP, f'audio/mix/stems_v3/{name}.wav'), x, SR, subtype='PCM_24')
+band = lambda x: bp(x, 400, 5000)
+spk = ve > 0.08
+vb, ob = band(voice_l * db(g)), band((mus_l + sfx_l) * db(g))
+r = lambda x: 10 * np.log10(np.mean(x[spk] ** 2) + 1e-12)
+# the voice is only gain-scaled: its correlation with the source narration must be ~1
+corr = float(np.corrcoef(voice, voice_l)[0, 1])
+meas = {'integrated_lufs_stereo': round(lufs(stereo), 2), 'sample_peak_dbfs': round(20 * np.log10(np.abs(mix).max()), 2),
+        'voice_over_rest_phone_band_db': round(r(vb) - r(ob), 1), 'duration_s': DUR, 'voice_stem_vs_source_corr': round(corr, 6),
+        'seam_jump': round(float(abs(mix[0] - mix[-1])), 5), 'effects': len(log)}
+json.dump(meas, open(os.path.join(EP, 'audio/mix/mix_measure_v3.json'), 'w'), indent=1)
+json.dump(log, open(os.path.join(EP, 'audio/sfx_cues_v3.json'), 'w'), indent=1)
+print(json.dumps(meas, indent=1))

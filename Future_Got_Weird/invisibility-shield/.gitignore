@@ -6,3 +6,4 @@ tools/__pycache__/
 source/public/audio/*.wav
 audio/mix/stems/
 audio/mix/stems_v2/
+audio/mix/stems_v3/
