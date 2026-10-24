@@ -44,7 +44,15 @@ Review `exports/FGW_Real_Web_Fluid_V4_REVIEW_1080x1920.mp4` (`qa/v4/review_qa.js
 - inspected from source during the work: the robber at 1:4 scale every 1-2 frames through impact; the lab every
   4-15 frames; probes of the hip path, the loop continuity and the frame-0 positions
 
-Master: see below.
+Master `exports/FGW_Real_Web_Fluid_V4_MASTER_2160x3840.mp4`: rendered natively at 2× from the same composition and
+mix. Measured on the file:
+- H.264 High 2160×3840, 30 fps, 952 frames, 31.74 s, BT.709, AAC; 36.9 MB
+- −14.6 LUFS, LRA 3.6 LU, true peak −2.6 dBFS (identical to the review)
+- no black frames or freezes
+
+Twelve frames at 0.2, 0.6, 1.6, 3.3, 6.9, 8.0, 10.5, 13.6, 21.7, 24.2, 25.3 and 31.7 s were extracted and inspected
+(`qa/v4/master_frames.png`), plus a 1:1 crop of the robber's web at impact (`qa/v4/master_crop_robber_1to1.png`).
+They show native vector detail and the same picture and captions as the review.
 
 ## Remaining problems
 
