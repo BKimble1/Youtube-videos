@@ -16,7 +16,7 @@
   "codec_name": "aac",
   "sample_rate": "48000",
   "channels": 2,
-  "bit_rate": "317374"
+  "bit_rate": "317375"
  },
  "duration": 31.744,
  "loudness": {
@@ -250,7 +250,7 @@
   "mean_abs_last_to_first": 9.08,
   "mean_abs_prev_steps": [
    11.09,
-   10.46
+   10.47
   ]
  }
 }

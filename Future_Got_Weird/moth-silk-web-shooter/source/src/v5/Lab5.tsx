@@ -386,9 +386,9 @@ const KEYS: K[] = [
   {f: 734, c: track(5.6, attachPt, 540, 820)},
   {f: 754, c: track(4.6, bladeMid, 560, 1020)},
   // then back to the scientist holding it up: the whole load path, hand to blade, in one frame
-  {f: 780, c: fixed(705, 950, 1.6)},
+  {f: 780, c: fixed(705, 990, 1.6)},
   // set back down in the sand
-  {f: LT5.carry1, c: track(2.9, tipToBlade(0.62))},
+  {f: LT5.carry1, c: track(2.9, tipToBlade(0.62), 540, 840)},
   {f: LT5.flat, c: fixed(SAND.x + 10, SAND.surf - 60, 3.6)},
   // up along the slack fibre to the nozzle's outlet
   {f: LT5.release + 6, c: track(3.4, tipToBlade(0.45))},
@@ -697,6 +697,8 @@ export const labPoints = (f: number) => {
     {...toS(nz.tip), r: Math.max(60, r(8)), what: 'outlet'},
   ];
   if (nearState(f).place) out.push({...toS(hc(L)), r: r(70), what: 'hand L'});
+  // his face (hair included)
+  out.push({...toS(manJoints(hero).head), r: r(DIM.headR * LS * 1.3), what: 'face'});
   if (P.fibre.on) out.push({...toS(P.fibre.to), r: Math.max(60, r(10)), what: 'fibre end'});
   if (f >= LT5.exit - 10) out.push({...toS(lerpV(P.bladeT, P.bladeE, 0.5)), r: Math.max(80, r(50)), what: 'blade'});
   const coc = cocoonAt(f);
