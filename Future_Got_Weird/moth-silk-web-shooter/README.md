@@ -1,5 +1,37 @@
 # Future Got Weird: Real Web Fluid
 
+## V2 (visual rebuild on the locked V1 narration)
+
+**Status (24 Oct 2026):** the V2 review (1080×1920) and the native 2160×3840 master are rendered from source and
+checked from the files (`production/V2_REPORT.md`, which lists the remaining problems). **Not published.** Nobody has
+watched it in real time with sound.
+
+| Deliverable | File |
+|---|---|
+| V2 review: 1080×1920, 30 fps, 952 frames, 31.73 s, captions burned in | `exports/FGW_Real_Web_Fluid_V2_REVIEW_1080x1920.mp4` |
+| V2 master: 2160×3840 native (rendered at 2×) | `exports/FGW_Real_Web_Fluid_V2_MASTER_2160x3840.mp4` |
+| Captions (unchanged text and timing) | `captions/FGW_Moth_Silk_Web_Shooter.srt` |
+| Report: references inspected, what changed, checks, remaining problems | `production/V2_REPORT.md` |
+| Shots, transitions, one-second audit | `production/V2_SHOTS_AND_TRANSITIONS.md` |
+| V2 mix (unchanged narration, rebuilt effects) and cues | `audio/mix/FGW_Moth_Silk_V2_mix.wav`, `audio/cues_v2.json`, `audio/sfx_cues_v2.json` |
+| Source | `source/src/v2/` (composition `RealWebFluidV2`; stills `FilmStillV2`, `SheetV2`, `ModelSheetV2`); Death Clock's art system in `source/src/v2/dc/` |
+
+Rebuild V2:
+
+    cd Future_Got_Weird/moth-silk-web-shooter
+    source/node_modules/.bin/esbuild tools/v2/export_cues_v2.ts --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/ec2.cjs && node /tmp/ec2.cjs audio/cues_v2.json
+    python3 tools/v2/make_audio_v2.py      # -> source/public/audio/mix_v2.wav
+    source/node_modules/.bin/esbuild tools/v2/cap_check.ts --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/cc.cjs && node /tmp/cc.cjs qa/v2/caption_check.json
+    (cd source && npx remotion render src/index.ts RealWebFluidV2 ../exports/FGW_Real_Web_Fluid_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && npx remotion render src/index.ts RealWebFluidV2 ../exports/FGW_Real_Web_Fluid_V2_MASTER_2160x3840.mp4 --scale=2 --props='{"audio":"mix_v2","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=3)
+    QA_MIX=source/public/audio/mix_v2.wav python3 tools/qa.py exports/FGW_Real_Web_Fluid_V2_REVIEW_1080x1920.mp4 <vosk_model_dir> qa/v2/review
+
+Contact sheets while working: `cd source && ./sheet2.sh out.png "frame1,frame2,..." [true]`.
+
+---
+
+## V1
+
 **Status (24 Oct 2026):** a review cut (1080×1920) and a native 2160×3840 master are rendered from the source
 composition and checked from the files (`production/QA_REPORT.md`, which lists the unresolved defects). **Not published. Nothing on the channel was
 touched.** Nobody has watched it in real time with sound: this environment has no display or speakers.
