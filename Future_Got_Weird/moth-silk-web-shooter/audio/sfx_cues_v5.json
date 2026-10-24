@@ -1,0 +1,506 @@
+[
+ {
+  "name": "runner footfall 0",
+  "at": 31.729,
+  "dur": 0.2,
+  "gain_db": -30.5
+ },
+ {
+  "name": "runner footfall 1",
+  "at": 0.279,
+  "dur": 0.2,
+  "gain_db": -24.0
+ },
+ {
+  "name": "runner footfall 3",
+  "at": 0.446,
+  "dur": 0.2,
+  "gain_db": -24
+ },
+ {
+  "name": "runner footfall 4",
+  "at": 0.763,
+  "dur": 0.2,
+  "gain_db": -24
+ },
+ {
+  "name": "runner footfall 5",
+  "at": 0.996,
+  "dur": 0.2,
+  "gain_db": -24
+ },
+ {
+  "name": "runner footfall 6",
+  "at": 29.196,
+  "dur": 0.2,
+  "gain_db": -24
+ },
+ {
+  "name": "runner footfall 7",
+  "at": 29.446,
+  "dur": 0.2,
+  "gain_db": -24
+ },
+ {
+  "name": "runner footfall 9",
+  "at": 29.813,
+  "dur": 0.2,
+  "gain_db": -24
+ },
+ {
+  "name": "runner footfall 11",
+  "at": 30.179,
+  "dur": 0.2,
+  "gain_db": -24
+ },
+ {
+  "name": "runner footfall 13",
+  "at": 30.546,
+  "dur": 0.2,
+  "gain_db": -24
+ },
+ {
+  "name": "runner footfall 15",
+  "at": 30.913,
+  "dur": 0.2,
+  "gain_db": -26.9
+ },
+ {
+  "name": "runner footfall 17",
+  "at": 31.279,
+  "dur": 0.2,
+  "gain_db": -30.0
+ },
+ {
+  "name": "runner footfall 19",
+  "at": 31.646,
+  "dur": 0.2,
+  "gain_db": -30.5
+ },
+ {
+  "name": "arm rises into the aim (air)",
+  "at": 29.933,
+  "dur": 0.9,
+  "gain_db": -44
+ },
+ {
+  "name": "wrist snap (air)",
+  "at": 31.467,
+  "dur": 0.22,
+  "gain_db": -36
+ },
+ {
+  "name": "trigger click",
+  "at": 31.7,
+  "dur": 0.04,
+  "gain_db": -33
+ },
+ {
+  "name": "liquid release (eruption)",
+  "at": 0.067,
+  "dur": 0.24,
+  "gain_db": -26
+ },
+ {
+  "name": "the jet passes (fast air)",
+  "at": 0.087,
+  "dur": 0.2,
+  "gain_db": -31
+ },
+ {
+  "name": "adhesive impact",
+  "at": 0.233,
+  "dur": 0.3,
+  "gain_db": -25
+ },
+ {
+  "name": "the bands wrap (sticky stretch)",
+  "at": 0.263,
+  "dur": 0.5,
+  "gain_db": -33
+ },
+ {
+  "name": "strands draw tight (tension)",
+  "at": 0.387,
+  "dur": 0.3,
+  "gain_db": -33
+ },
+ {
+  "name": "jacket tug (cloth)",
+  "at": 0.487,
+  "dur": 0.18,
+  "gain_db": -32
+ },
+ {
+  "name": "struggle (cloth 0)",
+  "at": 0.617,
+  "dur": 0.35,
+  "gain_db": -37
+ },
+ {
+  "name": "struggle (web creak 0)",
+  "at": 0.697,
+  "dur": 0.25,
+  "gain_db": -40
+ },
+ {
+  "name": "struggle (cloth 1)",
+  "at": 1.087,
+  "dur": 0.35,
+  "gain_db": -40
+ },
+ {
+  "name": "struggle (cloth 2)",
+  "at": 1.567,
+  "dur": 0.35,
+  "gain_db": -37
+ },
+ {
+  "name": "struggle (web creak 2)",
+  "at": 1.647,
+  "dur": 0.25,
+  "gain_db": -40
+ },
+ {
+  "name": "struggle (cloth 3)",
+  "at": 2.017,
+  "dur": 0.35,
+  "gain_db": -40
+ },
+ {
+  "name": "struggle (cloth 4)",
+  "at": 2.467,
+  "dur": 0.35,
+  "gain_db": -37
+ },
+ {
+  "name": "struggle (web creak 4)",
+  "at": 2.547,
+  "dur": 0.25,
+  "gain_db": -40
+ },
+ {
+  "name": "struggle (scuff)",
+  "at": 1.367,
+  "dur": 0.12,
+  "gain_db": -36
+ },
+ {
+  "name": "push into the band (air)",
+  "at": 1.733,
+  "dur": 1.0,
+  "gain_db": -44
+ },
+ {
+  "name": "liquid chains (swirl)",
+  "at": 2.933,
+  "dur": 1.4,
+  "gain_db": -42
+ },
+ {
+  "name": "chains zip into strands (fine crackle)",
+  "at": 3.3,
+  "dur": 1.2,
+  "gain_db": -40
+ },
+ {
+  "name": "strands draw tight (soft creak)",
+  "at": 4.333,
+  "dur": 0.4,
+  "gain_db": -42
+ },
+ {
+  "name": "into the cocoon (soft air)",
+  "at": 4.667,
+  "dur": 0.6,
+  "gain_db": -45
+ },
+ {
+  "name": "lab room tone",
+  "at": 5.0,
+  "dur": 24.2,
+  "gain_db": -46
+ },
+ {
+  "name": "glove comes in (cloth)",
+  "at": 5.467,
+  "dur": 0.4,
+  "gain_db": -42
+ },
+ {
+  "name": "fingers meet the cocoon (soft contact)",
+  "at": 6.367,
+  "dur": 0.1,
+  "gain_db": -38
+ },
+ {
+  "name": "the grip closes (squeeze, silk)",
+  "at": 6.447,
+  "dur": 0.3,
+  "gain_db": -40
+ },
+ {
+  "name": "the lift (air)",
+  "at": 6.567,
+  "dur": 0.35,
+  "gain_db": -43
+ },
+ {
+  "name": "the thread pinched (tap)",
+  "at": 7.367,
+  "dur": 0.04,
+  "gain_db": -40
+ },
+ {
+  "name": "the thread drawn out (silky stretch)",
+  "at": 7.433,
+  "dur": 0.8,
+  "gain_db": -41
+ },
+ {
+  "name": "cocoon dropped in (splash)",
+  "at": 9.1,
+  "dur": 0.3,
+  "gain_db": -33
+ },
+ {
+  "name": "bubbles after the drop",
+  "at": 9.18,
+  "dur": 0.6,
+  "gain_db": -41
+ },
+ {
+  "name": "rod taken (glass)",
+  "at": 9.467,
+  "dur": 0.18,
+  "gain_db": -40
+ },
+ {
+  "name": "stirring (glass tap 0)",
+  "at": 9.72,
+  "dur": 0.12,
+  "gain_db": -43
+ },
+ {
+  "name": "stirring (glass tap 1)",
+  "at": 9.94,
+  "dur": 0.12,
+  "gain_db": -43
+ },
+ {
+  "name": "stirring (glass tap 2)",
+  "at": 10.16,
+  "dur": 0.12,
+  "gain_db": -43
+ },
+ {
+  "name": "stirring (glass tap 3)",
+  "at": 10.38,
+  "dur": 0.12,
+  "gain_db": -43
+ },
+ {
+  "name": "stirring (glass tap 4)",
+  "at": 10.6,
+  "dur": 0.12,
+  "gain_db": -43
+ },
+ {
+  "name": "stirring (swirl)",
+  "at": 9.6,
+  "dur": 1.2,
+  "gain_db": -40
+ },
+ {
+  "name": "dissolving (fizz)",
+  "at": 9.75,
+  "dur": 1.2,
+  "gain_db": -43
+ },
+ {
+  "name": "rod set aside",
+  "at": 10.9,
+  "dur": 0.15,
+  "gain_db": -42
+ },
+ {
+  "name": "pump button",
+  "at": 11.2,
+  "dur": 0.05,
+  "gain_db": -35
+ },
+ {
+  "name": "pump runs (hum)",
+  "at": 11.25,
+  "dur": 17.7,
+  "gain_db": -46
+ },
+ {
+  "name": "drawn up the tube (gurgle)",
+  "at": 11.233,
+  "dur": 0.6,
+  "gain_db": -39
+ },
+ {
+  "name": "nozzle taken off its stand",
+  "at": 11.433,
+  "dur": 0.3,
+  "gain_db": -38
+ },
+ {
+  "name": "silk flows to the nozzle",
+  "at": 11.6,
+  "dur": 0.7,
+  "gain_db": -41
+ },
+ {
+  "name": "into the nozzle (slide)",
+  "at": 12.617,
+  "dur": 0.5,
+  "gain_db": -41
+ },
+ {
+  "name": "silk in the core (flow)",
+  "at": 12.8,
+  "dur": 0.9,
+  "gain_db": -41
+ },
+ {
+  "name": "acetone flowing (hiss)",
+  "at": 13.2,
+  "dur": 1.2,
+  "gain_db": -41
+ },
+ {
+  "name": "extrusion (soft squeeze)",
+  "at": 13.333,
+  "dur": 0.5,
+  "gain_db": -40
+ },
+ {
+  "name": "hardening (fine crackle)",
+  "at": 14.067,
+  "dur": 0.8,
+  "gain_db": -39
+ },
+ {
+  "name": "fibre leaves the tip (hiss)",
+  "at": 14.8,
+  "dur": 3.2,
+  "gain_db": -43
+ },
+ {
+  "name": "fibre reaches out (air)",
+  "at": 18.117,
+  "dur": 0.8,
+  "gain_db": -44
+ },
+ {
+  "name": "fibre meets the metal (tick)",
+  "at": 18.867,
+  "dur": 0.12,
+  "gain_db": -31
+ },
+ {
+  "name": "fibre meets the metal (sticky)",
+  "at": 18.867,
+  "dur": 0.12,
+  "gain_db": -37
+ },
+ {
+  "name": "the pull (nozzle moves)",
+  "at": 20.633,
+  "dur": 0.5,
+  "gain_db": -40
+ },
+ {
+  "name": "fibre goes taut (tension)",
+  "at": 20.783,
+  "dur": 0.4,
+  "gain_db": -34
+ },
+ {
+  "name": "resisting (strained creak)",
+  "at": 21.133,
+  "dur": 0.7,
+  "gain_db": -39
+ },
+ {
+  "name": "sand cracks",
+  "at": 21.033,
+  "dur": 0.9,
+  "gain_db": -38
+ },
+ {
+  "name": "blade breaks free (ring)",
+  "at": 21.733,
+  "dur": 0.6,
+  "gain_db": -34
+ },
+ {
+  "name": "blade breaks free (sand burst)",
+  "at": 21.733,
+  "dur": 0.4,
+  "gain_db": -36
+ },
+ {
+  "name": "sand falls",
+  "at": 21.933,
+  "dur": 1.0,
+  "gain_db": -38
+ },
+ {
+  "name": "the high lift (air)",
+  "at": 22.233,
+  "dur": 0.9,
+  "gain_db": -40
+ },
+ {
+  "name": "the load on the fibre (faint tension)",
+  "at": 23.533,
+  "dur": 0.5,
+  "gain_db": -42
+ },
+ {
+  "name": "strength beat (shimmer)",
+  "at": 23.833,
+  "dur": 1.2,
+  "gain_db": -41
+ },
+ {
+  "name": "lowered (air)",
+  "at": 26.0,
+  "dur": 0.9,
+  "gain_db": -45
+ },
+ {
+  "name": "blade meets the sand",
+  "at": 27.267,
+  "dur": 0.25,
+  "gain_db": -33
+ },
+ {
+  "name": "blade lies down in the sand",
+  "at": 27.617,
+  "dur": 0.35,
+  "gain_db": -35
+ },
+ {
+  "name": "fibre goes slack",
+  "at": 28.0,
+  "dur": 0.3,
+  "gain_db": -46
+ },
+ {
+  "name": "nozzle raised (air)",
+  "at": 28.2,
+  "dur": 0.6,
+  "gain_db": -45
+ },
+ {
+  "name": "seam to the street (streak)",
+  "at": 29.08,
+  "dur": 0.3,
+  "gain_db": -38
+ }
+]

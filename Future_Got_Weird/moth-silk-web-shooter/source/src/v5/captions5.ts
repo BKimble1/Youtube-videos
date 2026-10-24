@@ -1,4 +1,4 @@
-// V4 caption placement (checked by tools/v4/cap_check4.ts against the action points of every frame).
+// V5 caption placement (checked by tools/v5/cap_check5.ts against the action points of every frame).
 import {CAPTIONS} from '../lib';
 
 /** caption centre (px) per caption (by its first words); a caption never moves while it shows */
@@ -6,7 +6,7 @@ export const CAP_Y_V5: [string, number][] = [
   ['Imagine', 1480], ['at', 1480], ['and watching', 1480], ['that', 1480], ['Scientists', 1480], ['the first', 1480],
   ['They', 1480], ['from moth', 1480], ['and dissolve', 1480], ['As', 1480], ['through', 1480], ['a surrounding', 1480],
   ['triggers', 1480], ['A sticky', 1480], ['forms', 380], ['It hits', 380], ['and attaches', 380], ['Then', 380],
-  ['and the blade', 1480], ['out', 560], ['In lab', 380], ['these', 880], ['eighty', 880], ['The beginnings', 1480],
+  ['and the blade', 1480], ['out', 1080], ['In lab', 1480], ['these', 1480], ['eighty', 800], ['The beginnings', 720],
   ['of a real', 1480], ['made', 380],
 ];
 export const capY5 = (t: number) => {
