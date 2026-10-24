@@ -297,8 +297,8 @@ type Props = {
   /** V2 (Real Web Fluid): draw only the two hands (a second pass over apparatus the hands hold) */
   handsOnly?: boolean;
   /** V3: objects held in the hands (drawn between rear and front digits in the hands-only pass) */
-  holdL?: {front: (number | 't')[]; obj: React.ReactNode};
-  holdR?: {front: (number | 't')[]; obj: React.ReactNode};
+  holdL?: {front: (number | 't')[]; obj: React.ReactNode; palmFront?: boolean};
+  holdR?: {front: (number | 't')[]; obj: React.ReactNode; palmFront?: boolean};
 };
 
 export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, hideLeftForearm, children, nearLegFront, hairSway = 0, outfit = GUESSER, inkK = 1, overTorso, beforeLeftForearm, afterRightArm, overAll, handsOnly, holdL, holdR}) => {

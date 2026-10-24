@@ -56,8 +56,9 @@ type Props = {
    *  the wrist under the band (the case hides it in the front view; nothing else changes) */
   thumbFade?: number;
   /** V3 (Real Web Fluid): an object held in the hand, drawn between the rear digits and the front ones (`front`:
-   *  finger indices 0 index .. 3 pinky, and 't' the thumb), so it passes through the grip instead of lying on it */
-  hold?: {front: (number | 't')[]; obj: React.ReactNode};
+   *  finger indices 0 index .. 3 pinky, and 't' the thumb), so it passes through the grip instead of lying on it;
+   *  `palmFront`: the back of the hand is in front of the object too (an overhand grip seen from the back) */
+  hold?: {front: (number | 't')[]; obj: React.ReactNode; palmFront?: boolean};
 };
 
 const FINGERS = [
@@ -203,11 +204,16 @@ export const Hand: React.FC<Props> = ({id, wrist, ang, L, thumbSide: ts, view, p
         {contact && pass !== 'ink' && <SoftShadow id={`${id}-cs`} c={add(palmC, contact.offset)} rx={0.62 * L} ry={0.36 * L} alpha={contact.alpha} rotate={ang} />}
         {!thumbFront && thumbEl}
         <Inked w={iw}>
-          {palm}
+          {!hold.palmFront && palm}
           {rear}
         </Inked>
         {hold.obj}
-        {front.length > 0 && <Inked w={iw}>{front}</Inked>}
+        {(front.length > 0 || hold.palmFront) && (
+          <Inked w={iw}>
+            {hold.palmFront && palm}
+            {front}
+          </Inked>
+        )}
         {sepLines}
         {thumbFront && thumbEl}
       </g>

@@ -1,7 +1,7 @@
-// V3 bridge, frames 66-165: after the hit, a cut along the taut strand back to the lead's wrist shooter (same
+// V3 bridge, frames 66-150: after the hit, a cut along the taut strand back to the lead's wrist shooter (same
 // direction on screen), his fingers relaxing; the camera pushes into the cartridge's window until the silk solution
 // inside fills the frame, its strands flowing toward the outlet. The lab's silk syringe takes the same view over at
-// 165 (Lab3). An explanatory bridge inside an imagined device, not a claim that one was built.
+// 150 (Lab3). An explanatory bridge inside an imagined device, not a claim that one was built.
 import React from 'react';
 import {Man, manJoints, ManPose} from './dc/Man';
 import {Cam, Layer} from './dc/camera';
@@ -14,7 +14,7 @@ import {cartWindow, shooterGeo, WristShooter} from './props3';
 import {D_BG, D_MID, D_NEAR, Facades, HERO0, HS, Pavement, polar, SA, scr, strandEnds} from './Street3';
 import {FLUID_BG, FluidField} from './Fluid3';
 
-export const DV = {start: SA.end, relax0: 68, relax1: 86, push0: 86, fill: 140, end: 165};
+export const DV = {start: SA.end, relax0: 68, relax1: 86, push0: 86, fill: 140, end: 150};
 /** zoom on the lead's layer when the window has filled the frame; the fluid field is at scale 1 there */
 export const Z_FILL = 90;
 const sm = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
@@ -28,15 +28,13 @@ const ss5 = (f: number, a: number, b: number) => {
 /** the aim angle that leaves his forearm exactly level (pointing screen-left), so the cartridge lies level too */
 const LEVEL_ANG = (() => {
   const shoulder = manJoints({...HERO0, rWx: 0, rWy: 0}).R.S;
-  let lo = -200, hi = -150;
+  let lo = -150, hi = -130;
   for (let i = 0; i < 40; i++) {
     const m = (lo + hi) / 2;
     const T = polar(shoulder, m, 420);
     const j = manJoints({...HERO0, rWx: T.x, rWy: T.y, torso: 8, chest: 6, neck: -12});
-    const a = Math.atan2(j.R.foreDir.y, j.R.foreDir.x);
-    // a level forearm pointing left has foreDir.y = 0; above it y < 0
-    if (j.R.foreDir.y < 0) hi = m; else lo = m;
-    void a;
+    // a level forearm (elbow -> wrist, which the shooter and its window follow) pointing left has dy = 0
+    if (j.R.W.y - j.R.E.y < 0) hi = m; else lo = m;
   }
   return (lo + hi) / 2;
 })();
@@ -66,7 +64,7 @@ export const deviceView = (f: number) => {
 };
 /** the cartridge's outlet port (its downstream end, toward the hand) and where the push ends (just inside it) */
 export const portPoint = (win: ReturnType<typeof cartWindow>) => add(win.c, mul(win.u, win.a - win.b * 0.42));
-export const fillPoint = (win: ReturnType<typeof cartWindow>) => add(win.c, mul(win.u, win.a - win.b * 1.05));
+export const fillPoint = (win: ReturnType<typeof cartWindow>) => add(win.c, mul(win.u, win.a - win.b * 0.805));
 /** the bridge's fluid mapping (field -> lead-layer world): origin at the port, +x along the forearm (the flow) */
 export const fluidMap = (win: ReturnType<typeof cartWindow>) => (x: number, y: number): V => {
   const S = 1 / Z_FILL;

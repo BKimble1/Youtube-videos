@@ -23,20 +23,24 @@ export const BLADE_LEN = 84;
 export const TRAY = {x0: -200, x1: 100, h: 28};
 export const SPARE_COCOON = {x: 172, y: BENCH_Y - 15};
 
-/** the glass stirring rod resting in the beaker (top, and its foot on the beaker floor) */
-export const ROD = {top: {x: BEAKER.x + 40, y: BENCH_Y - BEAKER.h - 38} as V, foot: {x: BEAKER.x - 8, y: BENCH_Y - 10} as V, r: 3};
+/** the glass stirring rod at rest, leaning in the beaker (its top above the rim, its foot on the beaker floor) */
+export const ROD = {top: {x: BEAKER.x + 34, y: BENCH_Y - BEAKER.h - 74} as V, foot: {x: BEAKER.x - 14, y: BENCH_Y - 9} as V, r: 3};
 
 /** key frames of the lab (film frames at 30 fps), conformed to the narration */
 export const LT3 = {
-  reveal0: 165, reveal1: 212,
-  reach0: 212, contact: 236, lift1: 250, tease0: 252, tease1: 272,
-  carry1: 286, touchLiquid: 290, release: 293, withdraw: 299,
-  rod0: 300, stir0: 307, stir1: 333, rodOff: 338,
-  dissolve0: 294, dissolve1: 336,
-  press: 340, draw0: 342, draw1: 360,
-  push0: 358, cut0: 372, cut1: 388, silk0: 368, silk1: 396, ace0: 402, ace1: 436,
-  harden0: 446, exit: 470, fcontact: 566, settle1: 598,
-  pull0: 619, taut: 640, lift0: 652, out: 694,
-  carry0: 772, carry1: 816, lower0: 818, touch: 838, flat: 850,
-  back0: 856, raise0: 892, end: 951,
+  match: 150, fade: 156, reveal1: 206,
+  // the cocoon: reach, pinch, lift (fibres drawn out), turned to the light, carried, set on the liquid, let go
+  reach0: 206, pinch: 230, lift1: 244, tease1: 268, ccarry1: 282, touchLiquid: 287, release: 290, withdraw: 297,
+  // the stirring rod: grip, stir (wrist ellipse), let go; the cocoon dissolves meanwhile
+  rod0: 300, stir0: 305, stir1: 329, rodOff: 333, dissolve0: 290, dissolve1: 334,
+  // the pump: index on the button, the solution drawn up into the syringe, then pushed on to the nozzle
+  press: 340, draw0: 342, draw1: 356, push0: 356,
+  // the nozzle cutaway: silk into the core, acetone into the outer channel; hardening at the outlet
+  cut0: 366, cut1: 384, silk0: 374, silk1: 396, ace0: 398, ace1: 430, harden0: 444, exit: 470,
+  // the fibre: contact, slack drawn out, regrip, pull, lift
+  fcontact: 566, settle1: 598, regrip0: 604, regrip1: 614, pull0: 619, taut: 640, lift0: 652, out: 694,
+  // the load: junction close-up, up the fibre, carried, lowered into the tray
+  junction1: 734, upFibre1: 770, carry0: 772, carry1: 816, lower0: 818, touch: 838, flat: 850,
+  // the end: slack, the cocoon, the aperture
+  back0: 856, cocoon0: 868, push: 902, end: 951,
 };

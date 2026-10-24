@@ -1,4 +1,4 @@
-// V2 lab kinematics: the nozzle in the lead's hand, the fibre, and the blade, as functions of the frame.
+// V3 lab kinematics (from V2's): the nozzle in the lead's hand, the fibre, and the blade, as functions of the frame.
 // The fibre leaves the outlet at LT3.exit and reaches the blade's exposed end at LT3.fcontact (an illustration slowed
 // to be seen; the narration places "hits the metal" there). Nothing moves the blade before the fibre is taut: the
 // pull (pull0..taut) only straightens it; then the exposed end rises while the buried tip slides out along its own
@@ -141,7 +141,7 @@ export const labPhys = (f: number): LabPhys => {
       A = add(bE, mul(norm(sub(Tf, bE)), 4));
     }
   }
-  const back = ss(f, LT3.back0, LT3.raise0);
+  const back = ss(f, LT3.back0, LT3.push);
   const rear = rearOf(tip);
 
   // the fibre

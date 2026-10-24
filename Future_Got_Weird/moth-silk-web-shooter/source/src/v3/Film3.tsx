@@ -8,8 +8,27 @@ import {FPS} from '../lib';
 import {capY3} from './captions3';
 import {SA, StreetScene3} from './Street3';
 import {DV, DeviceScene3} from './Device3';
+import {LabScene3} from './Lab3';
+import {LT3} from './labWorld3';
 
-export const SceneAt3: React.FC<{f: number}> = ({f}) => (f < SA.end ? <StreetScene3 f={f} /> : f < DV.end + 200 ? <DeviceScene3 f={f} /> : <StreetScene3 f={f} />);
+/** street (0-65), the wrist device (66-149), the lab (150-951); the device's fluid and the syringe's are matched at
+ *  150 and the frame edges (window corners vs barrel walls) are blended over six frames */
+export const SceneAt3: React.FC<{f: number}> = ({f}) => {
+  if (f < SA.end) return <StreetScene3 f={f} />;
+  if (f < DV.end) return <DeviceScene3 f={f} />;
+  if (f < LT3.fade) {
+    const u = (f - DV.end + 1) / (LT3.fade - DV.end + 1);
+    return (
+      <>
+        <DeviceScene3 f={f} />
+        <div style={{position: 'absolute', inset: 0, opacity: u * u * (3 - 2 * u)}}>
+          <LabScene3 f={f} />
+        </div>
+      </>
+    );
+  }
+  return <LabScene3 f={f} />;
+};
 
 export const Frame3: React.FC<{f: number; captions: boolean}> = ({f, captions}) => (
   <AbsoluteFill style={{backgroundColor: '#10202A', overflow: 'hidden'}}>

@@ -1,5 +1,5 @@
-// V2 lab apparatus in the Death Clock art system: one ink contour per object, gradients from the fixed upper-left
-// key light, glossy highlights. All drawn in lab world coordinates (20 px = 1 cm). `k` scales contour widths so a
+// V3 lab apparatus (from V2's) in the Death Clock art system: one ink contour per object, gradients from the fixed
+// upper-left key light, restrained highlights. All drawn in lab world coordinates (20 px = 1 cm). `k` scales contour widths so a
 // close-up keeps a cartoon line rather than a heavy one (k ~ 1/sqrt(zoom)).
 import React from 'react';
 import {lit, mix, shade} from './dc/color';
@@ -71,29 +71,70 @@ export const Bench: React.FC<{id: string; k: number}> = ({id, k}) => (
 );
 
 // ------------------------------------------------------------------ cocoons, dish, beaker
-/** a moth cocoon: an elongated, slightly waisted oval with loose surface silk */
-export const Cocoon: React.FC<{id: string; c: V; ang: number; k: number; len?: number; loosen?: number}> = ({id, c, ang, k, len = 56, loosen = 0}) => {
+/** a moth cocoon: an elongated, slightly waisted oval wrapped in fine silk (a few loose loops of the outer floss) */
+export const COCOON_LEN = 40;
+export const Cocoon: React.FC<{id: string; c: V; ang: number; k: number; len?: number; loosen?: number; floss?: number}> = ({id, c, ang, k, len = COCOON_LEN, loosen = 0, floss = 0.5}) => {
   const a = len / 2;
   const b = len * 0.31;
   const d = `M${-a},0 C${-a},${-b * 1.1} ${-a * 0.2},${-b * 1.05} 0,${-b * 0.86} C${a * 0.2},${-b * 1.05} ${a},${-b * 1.1} ${a},0 C${a},${b * 1.1} ${a * 0.2},${b * 1.05} 0,${b * 0.86} C${-a * 0.2},${b * 1.05} ${-a},${b * 1.1} ${-a},0 Z`;
+  const fw = Math.max(0.35, 0.55 * k);
   return (
     <g transform={`translate(${fmt(c.x)} ${fmt(c.y)}) rotate(${fmt(ang)})`}>
-      <Inked w={2.6 * k}>
-        <Lin id={`${id}-c`} d={d} from={{x: -a * 0.4, y: -b}} to={{x: a * 0.4, y: b}} stops={[[0, '#FFFDF4'], [0.55, '#F3E9CF'], [1, '#D8C9A2']]} />
+      <Inked w={2.2 * k}>
+        <Lin id={`${id}-c`} d={d} from={{x: -a * 0.4, y: -b}} to={{x: a * 0.4, y: b}} stops={[[0, '#FFFBEF'], [0.6, '#F1E6CA'], [1, '#DDCDA6']]} />
       </Inked>
       <Deco>
-        {[-0.55, -0.25, 0.05, 0.35, 0.62].map((t, i) => (
-          <path key={i} d={`M${fmt(a * t)},${fmt(-b * 0.85)} Q${fmt(a * t + 4)},0 ${fmt(a * t)},${fmt(b * 0.85)}`} fill="none" stroke="#C9B88E" strokeWidth={0.9 * k} opacity={0.7} />
+        {/* the wound thread: fine crossing arcs over the surface */}
+        {[-0.7, -0.45, -0.2, 0.05, 0.3, 0.55, 0.78].map((t, i) => (
+          <path key={i} d={`M${fmt(a * t - 3)},${fmt(-b * 0.9)} Q${fmt(a * t + (i % 2 ? 5 : -2))},0 ${fmt(a * t + 3)},${fmt(b * 0.9)}`} fill="none" stroke="#C7B48A" strokeWidth={fmt(fw)} opacity={0.75} />
         ))}
+        {[-0.5, 0.0, 0.45].map((t, i) => (
+          <path key={`x${i}`} d={`M${fmt(a * t - 8)},${fmt(-b * 0.55)} Q${fmt(a * t)},${fmt(b * 0.2)} ${fmt(a * t + 9)},${fmt(-b * 0.1)}`} fill="none" stroke="#CDBB92" strokeWidth={fmt(fw)} opacity={0.6} />
+        ))}
+        {/* loose floss loops standing off the surface */}
+        {floss > 0 &&
+          [0, 1, 2, 3].map((i) => {
+            const x = -a * 0.7 + i * a * 0.45;
+            const s = i % 2 ? 1 : -1;
+            return <path key={`f${i}`} d={`M${fmt(x)},${fmt(s * b * 0.92)} q${fmt(5 + i)},${fmt(s * (5 + 3 * floss))} ${fmt(11 + i)},${fmt(s * 0.5)}`} fill="none" stroke="#FFF6DD" strokeWidth={fmt(fw * 1.2)} opacity={floss} />;
+          })}
         {loosen > 0 &&
           [0, 1, 2, 3, 4].map((i) => (
-            <path key={`l${i}`} d={`M${fmt(-a * 0.6 + i * a * 0.3)},${fmt(-b * 0.9)} q${fmt(6 + i * 2)},${fmt(-10 * loosen - i * 3)} ${fmt(14 + i * 4)},${fmt(-6 * loosen)}`} fill="none" stroke="#FFF8E2" strokeWidth={1.1 * k} opacity={loosen} />
+            <path key={`l${i}`} d={`M${fmt(-a * 0.6 + i * a * 0.3)},${fmt(-b * 0.9)} q${fmt(6 + i * 2)},${fmt(-10 * loosen - i * 3)} ${fmt(14 + i * 4)},${fmt(-6 * loosen)}`} fill="none" stroke="#FFF8E2" strokeWidth={fmt(fw * 1.4)} opacity={loosen} />
           ))}
-        <ellipse cx={fmt(-a * 0.35)} cy={fmt(-b * 0.45)} rx={fmt(a * 0.3)} ry={fmt(b * 0.18)} fill="#FFFFFF" opacity={0.6} />
+        <ellipse cx={fmt(-a * 0.35)} cy={fmt(-b * 0.45)} rx={fmt(a * 0.28)} ry={fmt(b * 0.16)} fill="#FFFFFF" opacity={0.35} />
       </Deco>
     </g>
   );
 };
+
+/** fine silk fibres drawn out of a cocoon (from points on its surface to where they are pulled), slightly slack */
+export const PulledFibres: React.FC<{from: V[]; to: V[]; sag: number; k: number; op?: number}> = ({from, to, sag, k, op = 1}) => (
+  <g opacity={op}>
+    {from.map((a, i) => {
+      const b = to[i];
+      const m = add(lerp2(a, b, 0.5), {x: 0, y: sag * (0.6 + 0.2 * i)});
+      const d = `M${Pt(a)} Q${Pt(m)} ${Pt(b)}`;
+      return (
+        <g key={i}>
+          <path d={d} fill="none" stroke="#8C7A55" strokeWidth={fmt(Math.max(0.6, 1.3 * k))} opacity={0.5} />
+          <path d={d} fill="none" stroke="#FFF8E6" strokeWidth={fmt(Math.max(0.35, 0.7 * k))} />
+        </g>
+      );
+    })}
+  </g>
+);
+const lerp2 = (a: V, b: V, t: number): V => ({x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t});
+
+/** the glass stirring rod from its foot to its top */
+export const Rod: React.FC<{id: string; foot: V; top: V; r: number; k: number; op?: number}> = ({id, foot, top, r, k, op = 1}) => (
+  <g opacity={op}>
+    <Capsule id={`${id}-r`} a={foot} b={top} ra={r} rb={r} color="#E4F2F7" spec={0.4} k={0.9} />
+    <path d={`M${Pt(add(foot, mul(perp(norm(sub(top, foot))), r * 0.9)))} L${Pt(add(top, mul(perp(norm(sub(top, foot))), r * 0.9)))}`} stroke={INK} strokeWidth={fmt(1.3 * k)} />
+    <path d={`M${Pt(add(foot, mul(perp(norm(sub(top, foot))), -r * 0.9)))} L${Pt(add(top, mul(perp(norm(sub(top, foot))), -r * 0.9)))}`} stroke={INK} strokeWidth={fmt(1.3 * k)} />
+    <circle cx={fmt(top.x)} cy={fmt(top.y)} r={fmt(r)} fill="#E4F2F7" stroke={INK} strokeWidth={fmt(1.3 * k)} />
+  </g>
+);
 
 export const CocoonDish: React.FC<{id: string; k: number}> = ({id, k}) => {
   const {x, w, h} = COCOON_DISH;
@@ -151,7 +192,14 @@ export const Beaker: React.FC<{id: string; k: number; level: number; liquid: str
 };
 
 // ------------------------------------------------------------------ pump and syringes
-const Syringe: React.FC<{id: string; s: {x0: number; x1: number; y: number; r: number}; k: number; fill: number; color: string; plunger: number; far?: boolean}> = ({id, s, k, fill, color, plunger, far}) => {
+/** the silk syringe's liquid region (for the material match and its clip) */
+export const syringeLiquid = (s: {x0: number; x1: number; y: number; r: number}, fill: number, plunger: number) => {
+  const px = s.x0 + 6 + (s.x1 - s.x0 - 10) * (1 - plunger);
+  const fx = s.x0 + 4;
+  const fEnd = fx + (px - fx) * fill;
+  return {x0: fx, x1: Math.max(fx + 2, fEnd), y0: s.y - s.r + 2.5, y1: s.y + s.r - 2.5};
+};
+const Syringe: React.FC<{id: string; s: {x0: number; x1: number; y: number; r: number}; k: number; fill: number; color: string; plunger: number; far?: boolean; inside?: React.ReactNode}> = ({id, s, k, fill, color, plunger, far, inside}) => {
   const {x0, x1, y, r} = s;
   const len = x1 - x0;
   const px = x0 + 6 + (len - 10) * (1 - plunger);
@@ -171,6 +219,16 @@ const Syringe: React.FC<{id: string; s: {x0: number; x1: number; y: number; r: n
       <Glass id={`${id}-b`} d={rr(x0, y - r, x1, y + r, 4)} from={{x: 0, y: y - r}} to={{x: 0, y: y + r}} stops={[[0, '#FFFFFF', 0.9], [0.5, glassC, 0.75], [1, '#A9C3CF', 0.9]]} k={k} />
       <Deco>
         {fill > 0.01 && <path d={rr(fx, y - r + 2.5, Math.max(fx + 2, fEnd), y + r - 2.5, 3)} fill={color} opacity={0.92} />}
+        {inside && (
+          <>
+            <defs>
+              <clipPath id={`${id}-in`}>
+                <path d={rr(fx, y - r + 2.5, Math.max(fx + 2, fEnd), y + r - 2.5, 3)} />
+              </clipPath>
+            </defs>
+            <g clipPath={`url(#${id}-in)`}>{inside}</g>
+          </>
+        )}
         <path d={rr(px - 4, y - r + 1.5, px + 2, y + r - 1.5, 2)} fill="#3B4A55" />
         {[0.2, 0.4, 0.6, 0.8].map((t) => (
           <path key={t} d={`M${fmt(x0 + len * t)},${y - r} v${fmt(r * 0.5)}`} stroke="#5E7684" strokeWidth={1 * k} />
@@ -181,7 +239,9 @@ const Syringe: React.FC<{id: string; s: {x0: number; x1: number; y: number; r: n
   );
 };
 
-export const Pump: React.FC<{id: string; k: number; silkFill: number; silkPlunger: number; aceFill: number; acePlunger: number; run: number}> = ({id, k, silkFill, silkPlunger, aceFill, acePlunger, run}) => {
+/** the pump's start button (centre, radius) */
+export const PUMP_BTN = {x: PUMP.x1 - 24, y: PUMP.top + 34, r: 9};
+export const Pump: React.FC<{id: string; k: number; silkFill: number; silkPlunger: number; aceFill: number; acePlunger: number; run: number; press?: number; silkInside?: React.ReactNode}> = ({id, k, silkFill, silkPlunger, aceFill, acePlunger, run, press = 0, silkInside}) => {
   const {x0, x1, top} = PUMP;
   return (
     <g>
@@ -193,10 +253,11 @@ export const Pump: React.FC<{id: string; k: number; silkFill: number; silkPlunge
       <Deco>
         <path d={rr(x0 + 12, top + 18, x0 + 70, top + 50, 5)} fill="#1F3440" />
         <path d={rr(x0 + 16, top + 22, x0 + 66, top + 46, 3)} fill={run > 0.01 ? '#7EE3C8' : '#3E6B66'} opacity={0.9} />
-        <circle cx={x1 - 24} cy={top + 34} r={9} fill={run > 0.01 ? '#2FA7A0' : '#8A9AA4'} stroke={INK} strokeWidth={1.6 * k} />
+        <circle cx={x1 - 24} cy={top + 34} r={11} fill="#B4C0C8" stroke={INK} strokeWidth={1.2 * k} />
+        <circle cx={x1 - 24} cy={top + 34 + 1.5 * press} r={9 - 1.2 * press} fill={run > 0.01 || press > 0.5 ? '#2FA7A0' : '#8A9AA4'} stroke={INK} strokeWidth={1.6 * k} />
         <path d={`M${x0 + 8},${top + 6} H${x1 - 8}`} stroke="#FFFFFF" strokeWidth={2 * k} opacity={0.7} />
       </Deco>
-      <Syringe id={`${id}-s1`} s={SYR_SILK} k={k} fill={silkFill} color={SILK} plunger={silkPlunger} />
+      <Syringe id={`${id}-s1`} s={SYR_SILK} k={k} fill={silkFill} color={SILK} plunger={silkPlunger} inside={silkInside} />
       {/* the pusher block that drives both plungers */}
       <Inked w={2.6 * k}>
         <path d={rr(SYR_SILK.x1 + 40 - (SYR_SILK.x1 - SYR_SILK.x0 - 10) * silkPlunger, SYR_ACE.y - 16, SYR_SILK.x1 + 56 - (SYR_SILK.x1 - SYR_SILK.x0 - 10) * silkPlunger, top + 4, 4)} fill="#8FA2AE" />
@@ -241,9 +302,9 @@ export const nozFrame = (rear: V = NOZ.rear, tip: V = NOZ.tip) => {
   return {ax, n, len, at, ang, tip, rear};
 };
 /** coaxial nozzle geometry in the nozzle frame (world px): outer needle, inner needle, body */
-export const NZ = {outerR: 4.6, outerIn: 3.6, innerR: 1.9, innerIn: 1.1, needleLen: 30, coneLen: 42, bodyR: 12, innerRecess: 1.4, portX: 210};
+export const NZ = {outerR: 4.6, outerIn: 3.6, innerR: 1.9, innerIn: 1.1, needleLen: 30, coneLen: 42, bodyR: 12, innerRecess: 1.4, portX: 178};
 
-export const Nozzle: React.FC<{id: string; k: number; rear: V; tip: V; cut: number; silk: number; ace: number; core: number}> = ({id, k, rear, tip, cut, silk, ace, core}) => {
+export const Nozzle: React.FC<{id: string; k: number; rear: V; tip: V; cut: number; silk: number; ace: number; core: number; flow?: number}> = ({id, k, rear, tip, cut, silk, ace, core, flow = 1}) => {
   const F = nozFrame(rear, tip);
   const {len} = F;
   const P = (x: number, y: number) => Pt(F.at(x, y));
@@ -267,13 +328,13 @@ export const Nozzle: React.FC<{id: string; k: number; rear: V; tip: V; cut: numb
         <path d={`M${P(x2 + 4, -R * 0.55)} L${P(len - 6, -R * 0.55)}`} stroke="#FFFFFF" strokeWidth={2 * k} strokeLinecap="round" opacity={0.8} />
         <path d={`M${P(x2 + 10, R * 0.2)} L${P(len - 10, R * 0.2)}`} stroke={ACETONE} strokeWidth={1.2 * k} opacity={0.5} />
       </Deco>
-      {cut > 0.001 && <NozzleInterior F={F} cx={cx} silk={silk} ace={ace} core={core} k={k} />}
+      {cut > 0.001 && <NozzleInterior F={F} cx={cx} silk={silk} ace={ace} core={core} k={k} flow={flow} />}
     </g>
   );
 };
 
 /** the revealed interior, drawn from x = cx (the cut edge) to the tip */
-const NozzleInterior: React.FC<{F: ReturnType<typeof nozFrame>; cx: number; silk: number; ace: number; core: number; k: number}> = ({F, cx, silk, ace, core, k}) => {
+const NozzleInterior: React.FC<{F: ReturnType<typeof nozFrame>; cx: number; silk: number; ace: number; core: number; k: number; flow: number}> = ({F, cx, silk, ace, core, k, flow}) => {
   const {len} = F;
   const P = (x: number, y: number) => Pt(F.at(x, y));
   const xa = Math.max(0, cx);
@@ -302,22 +363,21 @@ const NozzleInterior: React.FC<{F: ReturnType<typeof nozFrame>; cx: number; silk
         <path d={innerNeedle} fill={STEEL} stroke={INK} strokeWidth={0.5 * k} />
         <path d={bore(len)} fill="#FFFFFF" />
         {silk > 0.001 && <path d={bore(silkFront)} fill={SILK} />}
-        {/* flow chevrons: silk in the core, acetone in the outer channel */}
-        {silk > 0.3 &&
-          [0, 1, 2, 3, 4, 5].map((i) => {
-            const x = ((core * 40 + i * 24) % 140) + 4;
-            return <path key={i} d={`M${P(x + 2, -0.5)} L${P(x, 0)} L${P(x + 2, 0.5)}`} fill="none" stroke={shade(SILK, 0.35)} strokeWidth={0.35 * k} />;
-          })}
-        {ace > 0.5 &&
-          [0, 1, 2, 3, 4, 5, 6].map((i) => {
-            const x = ((core * 46 + i * 21) % 150) + 2;
-            const y = x < x1 ? (NZ.outerIn + inner) / 2 : Math.min(R - 1, (NZ.outerIn + inner) / 2 + ((x - x1) / NZ.coneLen) * (R - NZ.outerIn));
-            return (
-              <g key={`a${i}`}>
-                <path d={`M${P(x + 2, -y - 0.5)} L${P(x, -y)} L${P(x + 2, -y + 0.5)}`} fill="none" stroke={shade(ACETONE, 0.35)} strokeWidth={0.35 * k} />
-                <path d={`M${P(x + 2, y - 0.5)} L${P(x, y)} L${P(x + 2, y + 0.5)}`} fill="none" stroke={shade(ACETONE, 0.35)} strokeWidth={0.35 * k} />
-              </g>
-            );
+        {/* the flow, moving toward the tip: dashes along the core (silk) and along both sides of the outer channel
+            (acetone), each starting where that liquid has reached */}
+        {silk > 0.001 && (
+          <path d={`M${P(len - 8, 0)} L${P(Math.max(silkFront, NZ.innerRecess), 0)}`} fill="none" stroke={shade(SILK, 0.38)} strokeWidth={fmt(0.75)} strokeLinecap="round" strokeDasharray="5 6" strokeDashoffset={fmt(core * 30 * flow)} />
+        )}
+        {ace > 0.001 &&
+          [-1, 1].map((sd) => {
+            const ym = (NZ.outerIn + inner) / 2;
+            const yb = (R + inner) / 2 + 1;
+            const xs = Math.min(len - 8, Math.max(aceFront, 0));
+            const pts: [number, number][] = [[len - 8, yb], [x2, yb], [x1, ym], [0, ym]];
+            const kept = pts.filter(([x]) => x <= xs + 0.01);
+            const start: [number, number] = xs >= x2 ? [xs, yb] : xs >= x1 ? [xs, ym + ((xs - x1) / (x2 - x1)) * (yb - ym)] : [xs, ym];
+            const d = `M${[start, ...kept.filter(([x]) => x < xs)].map(([x, y]) => P(x, sd * y)).join(' L')}`;
+            return <path key={sd} d={d} fill="none" stroke={shade(ACETONE, 0.38)} strokeWidth={fmt(0.75)} strokeLinecap="round" strokeLinejoin="round" strokeDasharray="5 6" strokeDashoffset={fmt(core * 30 * flow + sd * 3)} />;
           })}
       </g>
       <path d={`M${P(xa, -NZ.bodyR)} L${P(xa, NZ.bodyR)}`} stroke={INK} strokeWidth={0.8 * k} />
