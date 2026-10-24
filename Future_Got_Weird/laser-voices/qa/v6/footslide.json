@@ -1,0 +1,21 @@
+{
+ "visitor_plant_core_excluding_last_0_12s": {
+  "max_m": 0.0308,
+  "at": [
+   "AL",
+   23.867,
+   23.4,
+   24
+  ]
+ },
+ "visitor_max_slide_m_23_37_to_32_3": {
+  "max_m": 0.0553,
+  "at": [
+   "AL",
+   23.933,
+   23.4,
+   24
+  ]
+ },
+ "crowd_max_slide_m": 0.121
+}

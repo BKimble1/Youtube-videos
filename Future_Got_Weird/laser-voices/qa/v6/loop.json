@@ -1,0 +1,11 @@
+{
+ "frames": 1022,
+ "seam_full_frame": 5.96,
+ "seam_excluding_caption_band": 3.82,
+ "neighbour_steps_excluding_captions_min_median_max": [
+  0.91,
+  2.17,
+  4.57
+ ],
+ "black_frames": []
+}

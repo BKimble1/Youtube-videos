@@ -1,5 +1,45 @@
 # Future Got Weird: This Laser Makes You Hear Voices
 
+## V6 (final production pass: character rigs, purposeful transitions, visual storytelling)
+
+**Status (24 Oct 2026):**
+- The narration, words, captions and V5 mix construction are unchanged; the effects are re-timed to the V6 picture.
+- **Characters:** a new V6 rig (`source/src/v6/rig/`):
+  - the guesser is clean-shaven (the V5 "beard" was hair drawn on the jaw);
+  - tapered arms with elbows and wrists, sleeves, and drawn hands in seven shapes (relaxed, grip, open, fist, cup,
+    point, mitt);
+  - a real cup grip;
+  - a weight shift in the walk.
+- **Re-acted:** the hook, the lab and the interruption.
+- **Rebuilt:** the molecular stages A–D with the empty ear canal, the transmitter cutaway (laser, lens, fold mirror,
+  galvanometer scanning mirror), a sweep explanation inside the real lab, and a three-setup ending (side-on,
+  interception, reaction).
+- **Not published.** Nobody has watched or listened in real time. The plan is in `production/V6_SHOT_PLAN.md`; the
+  measurements and known issues are in `production/V6_QA_REPORT.md`.
+
+| Deliverable | File |
+|---|---|
+| Final review: 1080×1920, 30 fps, 1022 frames, burned-in captions, V6 mix (AAC 48 kHz) | `exports/FGW_Laser_Voices_V6_FINAL_REVIEW_1080x1920.mp4` |
+| Captions (identical to V1) | `captions/FGW_Laser_Voices_V6.srt` |
+| Mix, cues, measurements | `audio/mix/FGW_Laser_Voices_V6_mix.wav`, `audio/cues_v6.json`, `audio/mix/mix_measure_v6.json` |
+| QA evidence | `qa/v6/`: block and seam check, foot-slide check, motion scan, loop metric, mux check, ffprobe, ASR, contact sheets, full-resolution hand crops |
+
+**V6 rebuild:**
+
+    cd Future_Got_Weird/laser-voices
+    (cd source && npm ci)
+    B="source/node_modules/.bin/esbuild --bundle --platform=node --format=esm --loader:.css=empty --log-level=warning"
+    # 1. his resting ear and the visitor's timing (prints EAR0 / FA / FB for stage6.ts), then the block and seam check
+    $B tools/solve_v6.ts --outfile=/tmp/sv6.mjs && node /tmp/sv6.mjs
+    $B tools/check_v6.ts --outfile=/tmp/cv6.mjs && node /tmp/cv6.mjs > qa/v6/check_v6.json
+    $B tools/footslide_v6.ts --outfile=/tmp/fs6.mjs && node /tmp/fs6.mjs > qa/v6/footslide.json
+    # 2. cues, then the mix
+    $B tools/export_cues_v6.ts --outfile=/tmp/ec6.mjs && node /tmp/ec6.mjs audio/cues_v6.json
+    python3 tools/make_audio_v6.py
+    # 3. picture only, then mux and verify
+    (cd source && npx remotion render src/index.ts LaserVoicesV6 /tmp/v6_1080_silent.mp4 --muted --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    python3 tools/mux_v3.py /tmp/v6_1080_silent.mp4 audio/mix/FGW_Laser_Voices_V6_mix.wav exports/FGW_Laser_Voices_V6_FINAL_REVIEW_1080x1920.mp4 qa/v6/mux_review.json
+
 ## V5 (director's rebuild: intentional motion, clear storytelling, better animation)
 
 **Status (24 Oct 2026):**
