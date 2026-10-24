@@ -26,7 +26,10 @@ the loop (strips above), and earlier across the whole film in contact sheets.
 
 ## Master: `exports/FGW_Real_Web_Fluid_MASTER_2160x3840.mp4`
 
-Rendered natively at 2× (vectors, not upscaled) from the same composition and mix; see the stream check at the end of this file.
+Rendered natively at 2× (vectors, not upscaled) from the same composition and mix. Measured on the file: H.264 High,
+2160×3840, 30 fps, 952 frames, yuv420p, BT.709; AAC 48 kHz stereo; 31.74 s; 41.1 MB; −14.6 LUFS, LRA 3.6 LU, true peak
+−2.6 dBFS (identical to the review cut); no black frames or freezes; 66 keyframes, max gap 0.5 s. Frames at 0.5, 5.4,
+12.8, 21.5, 26.5 and 31.6 s were extracted and inspected: same picture and captions as the review cut, at full detail.
 
 ## Unresolved defects and limits
 
