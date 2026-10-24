@@ -46,8 +46,11 @@ Review `exports/FGW_Real_Web_Fluid_V3_REVIEW_1080x1920.mp4` (`qa/v3/review_qa.js
   the whole film (`audit_2fps.png`); during the work, contact sheets of the source every 15 frames through the lab and
   1:1 crops of the pinch
 
-Master `exports/FGW_Real_Web_Fluid_V3_MASTER_2160x3840.mp4`: see the section below (added after it was rendered and
-measured).
+Master `exports/FGW_Real_Web_Fluid_V3_MASTER_2160x3840.mp4`: rendered natively at 2× from the same composition and
+mix. Measured on the file: H.264 High 2160×3840, 30 fps, 952 frames, 31.74 s, BT.709, AAC; 33.1 MB; −14.6 LUFS, LRA
+3.6 LU, true peak −2.6 dBFS (identical to the review); no black frames or freezes. Frames at 0.7, 3.6, 5.2, 8.6, 10.6,
+13.8, 15.3, 19.0, 22.5, 24.0, 27.0 and 31.7 s extracted and inspected (`qa/v3/master_frames.png`), plus a 1:1 crop of
+the cocoon pinch (`qa/v3/master_crop_pinch_1to1.png`): native vector detail, the same picture and captions as the review.
 
 ## Remaining problems
 
