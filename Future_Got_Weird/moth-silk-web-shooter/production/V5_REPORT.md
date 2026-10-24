@@ -43,7 +43,12 @@ Review `exports/FGW_Real_Web_Fluid_V5_REVIEW_1080x1920.mp4`. Reports: `qa/v5/rev
   - two frames per second over the whole film (`audit_2fps.png`)
 - found in the MP4 and fixed before this render: the caption "eighty times their own weight." sat on the scientist's face during the reveal; it now sits low, with the framing adjusted.
 
-Master `exports/FGW_Real_Web_Fluid_V5_MASTER_2160x3840.mp4`: rendering from the same composition and mix at 2× (checks to follow).
+Master `exports/FGW_Real_Web_Fluid_V5_MASTER_2160x3840.mp4`: rendered natively at 2× from the same composition and
+mix after the review passed. Measured on the file: H.264 High 2160×3840, 30 fps, 952 frames, 31.74 s, BT.709, AAC
+48 kHz stereo, 47.5 MB; −14.5 LUFS, LRA 3.6 LU, peak −2.6 dBFS (identical to the review); no black frames or freezes.
+Twelve frames (6, 60, 130, 195, 300, 420, 540, 568, 690, 740, 785, 900) were extracted and inspected
+(`qa/v5/master_frames.png`), plus a 1:1 crop of the hanging blade and its fibre at frame 740
+(`qa/v5/master_crop_strength_1to1.png`). They show native vector detail and the same picture and captions as the review.
 
 ## Remaining problems
 

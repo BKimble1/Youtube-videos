@@ -3,7 +3,7 @@
 ## V5 (final animation, pacing and quality pass on the locked narration)
 
 **Status (24 Oct 2026):** the V5 review (1080×1920) was rendered from source and checked from the file; the native
-2160×3840 master is being rendered after the review passed (`production/V5_REPORT.md`, which lists the remaining problems).
+2160×3840 master was rendered after the review passed and checked from its file (`production/V5_REPORT.md`, which lists the remaining problems).
 **Not published.** Nobody has watched it in real time with sound.
 
 | Deliverable | File |
