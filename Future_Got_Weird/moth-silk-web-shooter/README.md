@@ -1,5 +1,24 @@
 # Future Got Weird: Real Web Fluid
 
+## V5 (final animation, pacing and quality pass on the locked narration)
+
+**Status (24 Oct 2026):** the V5 review (1080×1920) was rendered from source and checked from the file; the native
+2160×3840 master is being rendered after the review passed (`production/V5_REPORT.md`, which lists the remaining problems).
+**Not published.** Nobody has watched it in real time with sound.
+
+| Deliverable | File |
+|---|---|
+| V5 review: 1080×1920, 30 fps, 952 frames, 31.73 s, captions burned in | `exports/FGW_Real_Web_Fluid_V5_REVIEW_1080x1920.mp4` |
+| V5 master: 2160×3840 native (rendered at 2×) | `exports/FGW_Real_Web_Fluid_V5_MASTER_2160x3840.mp4` |
+| Report and shot list | `production/V5_REPORT.md`, `production/V5_SHOTS_AND_TRANSITIONS.md` |
+| V5 mix (unchanged narration, new effects) and cues | `audio/mix/FGW_Moth_Silk_V5_mix.wav`, `audio/cues_v5.json`, `audio/sfx_cues_v5.json` |
+| Source | `source/src/v5/` (composition `RealWebFluidV5`; stills `FilmStillV5`, `SheetV5`) |
+
+Rebuild V5: as V3 with `v5` in place of `v3` (`tools/v5/export_cues_v5.ts`, `tools/v5/make_audio_v5.py`,
+`tools/v5/cap_check5.ts`, composition `RealWebFluidV5`, audio `mix_v5`). Contact sheets: `cd source && ./sheet5.sh out.png "f1,f2,..." [true]`.
+
+---
+
 ## V4 (momentum and timing pass on the locked narration)
 
 **Status (24 Oct 2026):** the V4 review (1080×1920) and the native 2160×3840 master are rendered from source and
