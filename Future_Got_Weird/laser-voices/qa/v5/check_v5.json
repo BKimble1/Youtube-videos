@@ -1,0 +1,34 @@
+{
+ "block_mismatched_frames_690_968": [],
+ "seam": {
+  "camera": {
+   "before": {
+    "pos": 0,
+    "yaw": 0,
+    "f": -0.223
+   },
+   "seam": {
+    "pos": 0,
+    "yaw": 0,
+    "f": -0.223
+   },
+   "after": {
+    "pos": 0,
+    "yaw": 0,
+    "f": -0.223
+   }
+  },
+  "lead_joint_max_m": {
+   "before": 0.0006,
+   "seam": 0.0006,
+   "after": 0.002
+  },
+  "friend_joint_max_m": {
+   "before": 0.0003,
+   "seam": 0.0003,
+   "after": 0.0003
+  },
+  "crowd_max_m": 0.0335
+ },
+ "DUR": 34.06666666666667
+}

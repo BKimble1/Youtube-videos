@@ -8,3 +8,4 @@ audio/mix/stems/
 audio/mix/stems_v2/
 # V4 stems: regenerated deterministically by tools/make_audio_v4.py
 audio/mix/stems_v4/
+audio/mix/stems_v5/

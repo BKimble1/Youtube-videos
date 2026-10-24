@@ -1,5 +1,42 @@
 # Future Got Weird: This Laser Makes You Hear Voices
 
+## V5 (director's rebuild: intentional motion, clear storytelling, better animation)
+
+**Status (24 Oct 2026):**
+- The narration, words, timing and captions are unchanged.
+- Rebuilt shot by shot:
+  - 13 mostly locked shots joined by clean cuts and match cuts;
+  - three deliberate camera moves;
+  - one screen geography (transmitter right, listener left);
+  - a staged molecular sequence with distinct stages A–D;
+  - a galvanometer-mirror cutaway, a sweep-timing plan view and a single 8 FT lab composition;
+  - one continuous interruption shot with a visitor who walks into the beam and out again;
+  - a loop carried by the recurring startle.
+- **Not final. Not published.** Nobody has watched or listened in real time. The plan is in
+  `production/V5_SHOT_PLAN.md`; the measurements and known issues are in `production/V5_QA_REPORT.md`.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920, 30 fps, 1022 frames, burned-in captions, V5 mix (AAC 48 kHz) | `exports/FGW_Laser_Voices_V5_REVIEW_1080x1920.mp4` |
+| Captions (identical to V1) | `captions/FGW_Laser_Voices_V5.srt` |
+| Mix, cues, measurements | `audio/mix/FGW_Laser_Voices_V5_mix.wav`, `audio/cues_v5.json`, `audio/mix/mix_measure_v5.json` |
+| QA evidence | `qa/v5/` (block and seam check, motion scan, loop metric, mux check, ASR, contact sheets, block crops) |
+
+**V5 rebuild:**
+
+    cd Future_Got_Weird/laser-voices
+    (cd source && npm ci)
+    B="source/node_modules/.bin/esbuild --bundle --platform=node --format=esm --loader:.css=empty --log-level=warning"
+    # 1. his resting ear and the visitor's timing (prints EAR0 / FA / FB for stage5.ts), then the block and seam check
+    $B tools/solve_v5.ts --outfile=/tmp/sv5.mjs && node /tmp/sv5.mjs
+    $B tools/check_v5.ts --outfile=/tmp/cv5.mjs && node /tmp/cv5.mjs > qa/v5/check_v5.json
+    # 2. cues, then the mix (locked narration + V1 music + whisper, ambiences, effects)
+    $B tools/export_cues_v5.ts --outfile=/tmp/ec5.mjs && node /tmp/ec5.mjs audio/cues_v5.json
+    python3 tools/make_audio_v5.py
+    # 3. picture only, then mux and verify
+    (cd source && npx remotion render src/index.ts LaserVoicesV5 /tmp/v5_1080_silent.mp4 --muted --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    python3 tools/mux_v3.py /tmp/v5_1080_silent.mp4 audio/mix/FGW_Laser_Voices_V5_mix.wav exports/FGW_Laser_Voices_V5_REVIEW_1080x1920.mp4 qa/v5/mux_review.json
+
 ## V4 (major rebuild: hook, pacing, explanation, animation)
 
 **Status (24 Oct 2026):**
