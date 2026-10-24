@@ -43,7 +43,11 @@ Review `exports/FGW_Real_Web_Fluid_V2_REVIEW_1080x1920.mp4` (`qa/v2/review_qa.js
 - inspected from the MP4: every frame 0-74 (`hook_0-75.png`), the last 2 s followed by the first 3 s
   (`loop_last2_first3.png`), two frames per second over the whole film (`audit_2fps.png`)
 
-Master `exports/FGW_Real_Web_Fluid_V2_MASTER_2160x3840.mp4`: see the end of this file.
+Master `exports/FGW_Real_Web_Fluid_V2_MASTER_2160x3840.mp4`: rendered natively at 2× from the same composition and
+mix. Measured on the file: H.264 High 2160×3840, 30 fps, 952 frames, 31.74 s, BT.709, AAC; 60.2 MB; −14.6 LUFS, LRA
+3.6 LU, true peak −2.6 dBFS (identical to the review); no black frames or freezes. Frames at 0.7, 3.2, 4.5, 6.8, 14.5,
+19.5, 26.5 and 31.6 s extracted and inspected, plus a 1:1 crop of the hanging blade: native vector detail, the same
+picture and captions as the review.
 
 ## Remaining problems
 
