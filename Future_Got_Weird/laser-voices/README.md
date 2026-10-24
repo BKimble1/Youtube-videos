@@ -1,5 +1,38 @@
 # Future Got Weird: This Laser Makes You Hear Voices
 
+## V4 (major rebuild: hook, pacing, explanation, animation)
+
+**Status (24 Oct 2026):**
+- The narration, words, timing, captions and story order are unchanged.
+- Rebuilt:
+  - the picture: five worlds (atrium, ear section, molecular air, optics, lab), the channel cast on a new 3D-joint
+    rig, new staging, cameras and transitions, and an exact loop;
+  - the sound: a breathy nonverbal whisper, new ambiences and effects (the V1 music is kept).
+- **Not final. Not published.** Nobody has watched or listened in real time. The story beats, measurements,
+  retention review and known issues are in `production/V4_QA_REPORT.md`.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920, 30 fps, 1022 frames, burned-in captions, V4 mix (AAC 48 kHz) | `exports/FGW_Laser_Voices_V4_REVIEW_1080x1920.mp4` |
+| Captions (identical to V1) | `captions/FGW_Laser_Voices_V4.srt` |
+| Mix, cues, measurements | `audio/mix/FGW_Laser_Voices_V4_mix.wav`, `audio/cues_v4.json`, `audio/mix/mix_measure_v4.json` |
+| QA evidence | `qa/v4/` (block/seam check, motion scan, loop metrics, mux check, ASR, contact sheets) |
+
+**V4 rebuild:**
+
+    cd Future_Got_Weird/laser-voices
+    (cd source && npm ci)
+    B="source/node_modules/.bin/esbuild --bundle --platform=node --format=esm --loader:.css=empty --log-level=warning"
+    # 1. the friend's timing (prints FA/FB for story4.ts) and the block/seam check
+    $B tools/solve_v4.ts --outfile=/tmp/sv4.mjs && node /tmp/sv4.mjs
+    $B tools/check_v4.ts --outfile=/tmp/cv4.mjs && node /tmp/cv4.mjs > qa/v4/check_v4.json
+    # 2. the picture's cues, then the mix (locked narration + V1 music + new whisper, ambiences and effects)
+    $B tools/export_cues_v4.ts --outfile=/tmp/ec4.mjs && node /tmp/ec4.mjs audio/cues_v4.json
+    python3 tools/make_audio_v4.py
+    # 3. picture only, then mux the mix and verify
+    (cd source && npx remotion render src/index.ts LaserVoicesV4 /tmp/v4_1080_silent.mp4 --muted --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    python3 tools/mux_v3.py /tmp/v4_1080_silent.mp4 audio/mix/FGW_Laser_Voices_V4_mix.wav exports/FGW_Laser_Voices_V4_REVIEW_1080x1920.mp4 qa/v4/mux_review.json
+
 ## V3 (motion, character, sound-design and loop polish)
 
 **Status (23 Oct 2026):**

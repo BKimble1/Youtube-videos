@@ -1,0 +1,13 @@
+{
+ "frames": 1022,
+ "seam_full_frame": 9.57,
+ "seam_excluding_caption_band": 7.59,
+ "neighbour_steps_excluding_captions_min_median_max": [
+  2.98,
+  6.19,
+  9.97
+ ],
+ "note": "grey 135x240 mean absolute difference; the caption changes from the last line to the first at the seam, so the band y 1280-1640 px is excluded in the second figure",
+ "longest_run_of_near_static_frames(change<1.0)": 0,
+ "mean_change": 13.9
+}

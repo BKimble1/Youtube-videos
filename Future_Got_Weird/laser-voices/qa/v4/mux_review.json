@@ -1,0 +1,31 @@
+{
+ "output": "exports/FGW_Laser_Voices_V4_REVIEW_1080x1920.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "nb_frames": "1022",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "profile": "LC",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "271862"
+ },
+ "durations_s": {
+  "format": 34.066667,
+  "video_frames_s": 34.06666666666667,
+  "mix_wav_s": 34.06666666666667,
+  "decoded_audio_s": 34.06933333333333
+ },
+ "decoded_vs_mix": {
+  "offset_samples": 0,
+  "correlation": 0.999967,
+  "rms_diff_db": -0.007
+ }
+}
