@@ -1,5 +1,36 @@
 # Future Got Weird: This Laser Makes You Hear Voices
 
+## Rebuild V1 (complete visual rebuild in the Death Clock style; V6 rejected)
+
+**Status (24 Oct 2026):** a review cut of the new visual direction. **Not final, not published, no 4K master yet.**
+- The approved narration, word timing and captions are unchanged.
+- Everything else is new:
+  - three new characters (listener, operator, passerby) on a new head rig and body rig in the Death Clock vector finish;
+  - a dark teal demonstration room;
+  - a 3D-modelled emitter with x-ray internals;
+  - a continuous microscopic sequence at the ear;
+  - a physically solved interruption (frames 786–957);
+  - a looping close-up.
+- Plan: `production/REBUILD_V1_SHOT_PLAN.md`. QA and known issues: `production/REBUILD_V1_QA_REPORT.md`.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920, 30 fps, 1022 frames, burned-in captions | `exports/FGW_Laser_Voices_REBUILD_V1_REVIEW_1080x1920.mp4` |
+| Captions (identical to V1) | `captions/FGW_Laser_Voices_REBUILD_V1.srt` |
+| Mix, cues, measurements | `audio/mix/FGW_Laser_Voices_REBUILD_V1_mix.wav`, `audio/cues_rb.json`, `audio/mix/mix_measure_rb.json` |
+| QA evidence | `qa/rb1/`: block and seam check, motion scan, loop metric, mux check, ffprobe, ASR, contact sheets |
+
+**Rebuild:**
+
+    cd Future_Got_Weird/laser-voices
+    (cd source && npm ci)
+    B="source/node_modules/.bin/esbuild --bundle --platform=node --format=esm --loader:.css=empty --log-level=warning"
+    $B tools/check_rb.ts --outfile=/tmp/ckrb.mjs && node /tmp/ckrb.mjs > qa/rb1/check_rb.json
+    $B tools/export_cues_rb.ts --outfile=/tmp/ecrb.mjs && node /tmp/ecrb.mjs audio/cues_rb.json
+    python3 tools/make_audio_rb.py
+    (cd source && npx remotion render src/index.ts LaserVoicesRB /tmp/rb_silent.mp4 --muted --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    python3 tools/mux_v3.py /tmp/rb_silent.mp4 audio/mix/FGW_Laser_Voices_REBUILD_V1_mix.wav exports/FGW_Laser_Voices_REBUILD_V1_REVIEW_1080x1920.mp4 qa/rb1/mux_review.json
+
 ## V6 (final production pass: character rigs, purposeful transitions, visual storytelling)
 
 **Status (24 Oct 2026):**

@@ -1,0 +1,8 @@
+{
+ "block_mismatched_frames_660_1021": [],
+ "seam_joint_step_px": {
+  "before": 2.1,
+  "seam": 2.33,
+  "after": 2.33
+ }
+}

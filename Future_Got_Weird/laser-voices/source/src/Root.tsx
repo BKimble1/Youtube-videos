@@ -14,6 +14,12 @@ import {Film4, Film4Still} from './v4/Film4';
 import {TestV5} from './v5/TestV5';
 import {Film5, Film5Still} from './v5/Film5';
 import {RigSheet6} from './v6/RigSheet6';
+import {RBSheet} from './rb/dev/Sheet';
+import {FilmRB, FilmRBStill} from './rb/Film';
+import {RBBodySheet} from './rb/dev/BodySheet';
+import {RBFaceCU} from './rb/dev/FaceCU';
+import {RBEmitterSheet} from './rb/dev/EmitterSheet';
+import {RBShot} from './rb/dev/ShotStill';
 import {Film6, Film6Still} from './v6/Film6';
 
 export const RemotionRoot: React.FC = () => (
@@ -33,6 +39,13 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="LaserVoicesV6" component={Film6} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v6' as string | false, captions: true}} />
     <Still id="V6Still" component={Film6Still} width={W} height={H} defaultProps={{t: 0, captions: true}} />
     <Still id="RigSheet6" component={RigSheet6} width={W} height={H} defaultProps={{row: 0}} />
+    <Composition id="LaserVoicesRB" component={FilmRB} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_rb' as string | false, captions: true}} />
+    <Still id="RBStill" component={FilmRBStill} width={W} height={H} defaultProps={{t: 0, captions: true}} />
+    <Still id="RBSheet" component={RBSheet} width={W} height={H} defaultProps={{row: 0}} />
+    <Still id="RBBody" component={RBBodySheet} width={W} height={H} defaultProps={{row: 0}} />
+    <Still id="RBShot" component={RBShot} width={W} height={H} defaultProps={{shot: 'side', t: 20}} />
+    <Still id="RBEmitter" component={RBEmitterSheet} width={W} height={H} />
+    <Still id="RBFaceCU" component={RBFaceCU} width={W} height={H} defaultProps={{who: 0, turn: 0.4, ex: 0, gx: 0}} />
     <Still id="TestV5" component={TestV5} width={W} height={H} defaultProps={{t: 0, pos: [0, 1.6, 0], at: [0, 1.4, 3.5], f: 1100, beam: 0, visitor: false}} />
     <Still id="TestV4" component={TestV4} width={W} height={H} defaultProps={{t: 0, pos: [0, 1.6, 0], at: [0, 1.4, 3.5], f: 1100}} />
     <Still id="V4Cast" component={CastSheet4} width={W} height={H} defaultProps={{row: 0}} />
