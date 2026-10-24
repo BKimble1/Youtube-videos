@@ -27,7 +27,7 @@
  "black_segments": [],
  "freezes_ge_1s": [],
  "keyframes": {
-  "count": 64,
+  "count": 66,
   "max_gap_s": 0.5
  },
  "audio_offset_vs_mix_ms": 0.0,
@@ -247,7 +247,7 @@
  ],
  "caption_windows_ok": "22/26",
  "loop_seam": {
-  "mean_abs_last_to_first": 78.67,
+  "mean_abs_last_to_first": 78.66,
   "mean_abs_prev_steps": [
    4.28,
    3.86

@@ -10,6 +10,13 @@ https://now.tufts.edu/2024/10/10/inspired-spider-man-lab-recreates-web-slinging-
 below are the brief's summary of it, cross-checked on 24 Oct 2026 against coverage of the same release found by web
 search (newswise.com, cosmosmagazine.com, earth.com, theengineer.co.uk, techspot.com, inspenet.com).
 
+- https://www.newswise.com/articles/inspired-by-spider-man-a-lab-recreates-web-slinging-technology
+- https://cosmosmagazine.com/technology/materials/spider-man-silk-web-shooter
+- https://earth.com/news/spider-man-web-slinging-technology-has-become-a-reality
+- https://theengineer.co.uk/content/news/web-slinging-device-shoots-fibres-that-can-pick-up-objects
+- https://techspot.com/news/105105-accidental-innovation-scientists-create-real-life-spider-man.html
+- https://inspenet.com/en/news/spider-web-slinging-technology/
+
 ## What the work showed, and how the film uses it
 
 | Documented | In the film |

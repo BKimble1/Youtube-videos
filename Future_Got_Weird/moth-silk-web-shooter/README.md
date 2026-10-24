@@ -1,7 +1,7 @@
 # Future Got Weird: Real Web Fluid
 
-**Status (24 Oct 2026, in progress):** the source project is complete; the final review render, its file checks, the
-2160×3840 master and `production/QA_REPORT.md` are still being produced and are not in this commit. **Not published. Nothing on the channel was
+**Status (24 Oct 2026, in progress):** the review cut (1080×1920) is rendered and checked from the file
+(`production/QA_REPORT.md`); the 2160×3840 master is still rendering and is not in this commit. **Not published. Nothing on the channel was
 touched.** Nobody has watched it in real time with sound: this environment has no display or speakers.
 
 | Deliverable | File |
