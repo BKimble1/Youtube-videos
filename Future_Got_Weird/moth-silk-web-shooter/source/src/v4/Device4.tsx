@@ -18,7 +18,7 @@ import {cartWindow, cutGeo, pathAt, shooterGeo, WristShooter} from './props4';
 import {D_BG, D_MID, D_NEAR, Facades, HERO0, HS, Pavement, polar, SA, scr, strandEnds} from './Street4';
 import {FLUID_BG, FluidField} from './Fluid4';
 
-export const DV = {start: SA.end, fill: 50, port: 76, cut0: 74, cut1: 80, strand0: 98, end: 140};
+export const DV = {start: SA.end, fill: 46, port: 62, cut0: 60, cut1: 63, strand0: 80, end: 120};
 const RW = 17 * HS;
 const sm = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 const ss = (f: number, a: number, b: number) => sm((f - a) / (b - a));
@@ -68,14 +68,14 @@ const easeOut = (u: number) => 1 - (1 - u) ** 2;
 const smooth = (u: number) => u * u * (3 - 2 * u);
 const KEYS: K[] = [
   {f: DV.start, c: add(GEO.win.c, mul(GEO.win.u, -RW * 0.3)), z: 3.8, ease: smooth},
-  // already pushing on arrival (ease-out: full speed at the cut); the window's edges leave the frame by 50
+  // already pushing on arrival (ease-out: full speed at the cut); the window's edges leave the frame by 46
   {f: DV.fill, c: fillPoint, z: 95, ease: easeOut},
   // the pulse driven to the port
-  {f: DV.port, c: GEO.cg.port, z: 40, ease: smooth},
+  {f: DV.port, c: GEO.cg.port, z: 42, ease: smooth},
   // out into the cutaway, following the pulse down the channel into the barrel
-  {f: 100, c: lerpV(GEO.cg.join, GEO.cg.outlet, 0.25), z: 14, ease: smooth},
-  // along the barrel with the flow toward the outlet, where the strand is forming
-  {f: DV.end, c: lerpV(GEO.cg.join, GEO.cg.outlet, 0.62), z: 19, ease: smooth},
+  {f: 84, c: lerpV(GEO.cg.join, GEO.cg.outlet, 0.25), z: 14, ease: smooth},
+  // along the barrel toward the outlet while the strand forms and runs out of the frame
+  {f: DV.end, c: add(GEO.cg.outlet, mul(GEO.g.u, RW * 0.25)), z: 18, ease: smooth},
 ];
 export const deviceView = (f: number) => {
   let c = KEYS[0].c;
@@ -111,7 +111,7 @@ export const barrelMap = (cg: ReturnType<typeof cutGeo>, u: V) => (x: number, y:
 /** the pulse's place along the path (port 0 .. outlet 1) */
 export const pulseAt = (f: number) => (f < DV.port - 14 ? -1 : clamp((f - (DV.port - 14)) / (DV.strand0 - (DV.port - 14))) * 1.0);
 /** the strand formed at the outlet: its length (lead-layer units) */
-export const strandLen = (f: number) => RW * 6 * clamp((f - DV.strand0 + 4) / 46) ** 1.1;
+export const strandLen = (f: number) => RW * 14 * clamp((f - DV.strand0 + 2) / 36) ** 1.15;
 /** the match for the lab: where the barrel and its outlet are on screen at DV.end, and its scale */
 export const deviceMatch = () => {
   const v = deviceView(DV.end);
@@ -166,7 +166,7 @@ export const DeviceScene4: React.FC<{f: number}> = ({f}) => {
       return add(add(cg.outlet, mul(g.u, s)), mul(g.n, (s * s) / (RW * 60) + Math.sin(s / (RW * 1.4) - t * 5) * RW * 0.05 * (s / (RW * 4))));
     });
     const d = `M${pts.map(Pt).join(' L')}`;
-    const w = RW * 0.09;
+    const w = RW * 0.12;
     return (
       <g>
         <path d={d} fill="none" stroke={INK} strokeWidth={fmt(w + 2.2 / Math.sqrt(zn))} strokeLinecap="round" />

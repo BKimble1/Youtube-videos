@@ -29,10 +29,10 @@ export const ROD = {top: {x: BEAKER.x + 34, y: BENCH_Y - BEAKER.h - 74} as V, fo
 /** key frames of the lab (film frames at 30 fps), conformed to the narration; V4: every beat starts while the
  *  previous one is still moving (the visual runs slightly ahead of the words) */
 export const LT4 = {
-  match: 140, fade: 146, reveal1: 176,
+  match: 120, fade: 126, reveal1: 156,
   // the cocoon: the hand already travelling to the dish at the match; pinch, lift, its fibres separate in the close
   // view, carried to the beaker, set on the solution, let go
-  reach0: 140, pinch: 206, lift1: 220, tease0: 220, tease1: 256, ccarry1: 274, touchLiquid: 280, release: 283, withdraw: 288,
+  reach0: 120, pinch: 200, lift1: 214, tease0: 214, tease1: 252, ccarry1: 272, touchLiquid: 279, release: 282, withdraw: 287,
   // the rod: grip, stir (the liquid circulates, the silk loses its structure), let go
   rod0: 292, stir0: 296, stir1: 328, rodOff: 331, dissolve0: 283, dissolve1: 334,
   // the pump: index on the button, the solution drawn up into the syringe and pushed on to the nozzle
@@ -44,5 +44,5 @@ export const LT4 = {
   // the load on the thin fibre, guided to the tray, set down and released
   junction1: 712, upFibre1: 712, carry0: 712, carry1: 788, lower0: 788, touch: 808, flat: 822, release2: 828,
   // the end: the bench view past the source cocoon, on to the nozzle's outlet and into frame 0
-  back0: 832, cocoon0: 862, push: 896, end: 951,
+  back0: 832, cocoon0: 862, push: 896, swing0: 942, end: 951,
 };

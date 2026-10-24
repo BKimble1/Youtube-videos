@@ -1,5 +1,24 @@
 # Future Got Weird: Real Web Fluid
 
+## V4 (momentum and timing pass on the locked narration)
+
+**Status (24 Oct 2026):** the V4 review (1080×1920) and the native 2160×3840 master are rendered from source and
+checked from the files (`production/V4_REPORT.md`, which lists the remaining problems). **Not published.** Nobody has
+watched it in real time with sound.
+
+| Deliverable | File |
+|---|---|
+| V4 review: 1080×1920, 30 fps, 952 frames, 31.73 s, captions burned in | `exports/FGW_Real_Web_Fluid_V4_REVIEW_1080x1920.mp4` |
+| V4 master: 2160×3840 native (rendered at 2×) | `exports/FGW_Real_Web_Fluid_V4_MASTER_2160x3840.mp4` |
+| Report and shot list | `production/V4_REPORT.md`, `production/V4_SHOTS_AND_TRANSITIONS.md` |
+| V4 mix (unchanged narration, retargeted effects) and cues | `audio/mix/FGW_Moth_Silk_V4_mix.wav`, `audio/cues_v4.json`, `audio/sfx_cues_v4.json` |
+| Source | `source/src/v4/` (composition `RealWebFluidV4`; stills `FilmStillV4`, `SheetV4`) |
+
+Rebuild V4: as V3 with `v4` in place of `v3` (`tools/v4/export_cues_v4.ts`, `tools/v4/make_audio_v4.py`,
+`tools/v4/cap_check4.ts`, composition `RealWebFluidV4`, audio `mix_v4`). Contact sheets: `cd source && ./sheet4.sh out.png "f1,f2,..."`.
+
+---
+
 ## V3 (final visual pass on the locked V1 narration)
 
 **Status (24 Oct 2026):** the V3 review (1080×1920) and the native 2160×3840 master are rendered from source and

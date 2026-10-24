@@ -91,55 +91,55 @@
  },
  {
   "name": "the pulse driven to the port (flow)",
-  "at": 1.667,
+  "at": 1.533,
   "dur": 0.9,
   "gain_db": -41
  },
  {
   "name": "the channel and barrel (silky flow)",
-  "at": 2.333,
+  "at": 1.867,
   "dur": 1.2,
   "gain_db": -42
  },
  {
   "name": "the strand forming (fine stretch)",
-  "at": 3.267,
+  "at": 2.667,
   "dur": 0.8,
   "gain_db": -42
  },
  {
   "name": "into the syringe (soft swirl)",
-  "at": 4.467,
+  "at": 3.8,
   "dur": 0.7,
   "gain_db": -43
  },
  {
   "name": "lab room tone",
-  "at": 4.667,
-  "dur": 27.067,
+  "at": 4.0,
+  "dur": 27.733,
   "gain_db": -46
  },
  {
   "name": "cocoon pinched (tap)",
-  "at": 6.847,
+  "at": 6.647,
   "dur": 0.05,
   "gain_db": -40
  },
  {
   "name": "fibres drawn out (silky stretch)",
-  "at": 6.967,
+  "at": 6.767,
   "dur": 0.6,
   "gain_db": -42
  },
  {
   "name": "fibres separating (fine crackle)",
-  "at": 7.533,
+  "at": 7.333,
   "dur": 0.9,
   "gain_db": -44
  },
  {
   "name": "cocoon set on the solution",
-  "at": 9.333,
+  "at": 9.3,
   "dur": 0.16,
   "gain_db": -38
  },

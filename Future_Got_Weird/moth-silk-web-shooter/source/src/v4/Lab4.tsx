@@ -117,19 +117,27 @@ const NOZ_LEN = (() => {
 })();
 const fromTipAng = (tip: V, a: number) => ({tip, rear: add(tip, mul(dirOf(a), -NOZ_LEN))});
 const angOf = (tip: V, rear: V) => deg(Math.atan2(tip.y - rear.y, tip.x - rear.x));
+/** V4 end: the nozzle is carried from over the tray to a lowered aim beside the spare cocoon, then swings up about
+ *  the hand into the aim (the same easing as the opening forearm's last rotation, time-shifted), so its last frames
+ *  carry straight into frame 0's motion; the tip arrives on END.tip with the wrist shooter's direction */
+const SWING = 22;
+/** exactly the opening's own law (Street4 heroAt: the forearm's last 22 degrees over frames -10..3), time-shifted */
+const swingOpen = (g: number) => SWING * (1 - ss(g, -10, 3));
+/** the lab nozzle's angle offset from END.ang: the opening's swing time-shifted, zero at the cut (frame 0's own
+ *  remaining rotation is already in END.ang), so angle and angular velocity carry across the loop */
+const swingAt = (f: number) => swingOpen(f - 952) - swingOpen(0);
+const END_REAR = add(END.tip, mul(dirOf(END.ang), -0));
 export const nozzleAt = (f: number): {tip: V; rear: V} => {
   const P = labPhys(Math.min(f, LT4.back0));
   if (f <= LT4.back0) return {tip: P.tip, rear: P.rear};
   const a0 = angOf(P.tip, P.rear);
-  // raised from over the tray to over the spare cocoon (back0 .. push), then the aim's last approach
-  const T = 22;
-  const tau = 952 - f;
-  const R = tau < T ? tau - (tau * tau) / (2 * T) : T / 2;
-  const settled = sub(END.tip, mul(END.vel, T / 2));
-  const u = ss5(f, LT4.back0, LT4.push + 10);
-  const tip0 = lerpV(P.tip, settled, u);
-  const tip = tau < T ? sub(END.tip, mul(END.vel, R)) : tip0;
-  return fromTipAng(tip, a0 + wrap(END.ang - a0) * u);
+  const rear1 = sub(END.tip, mul(dirOf(END.ang), NOZ_LEN));
+  // still travelling as the swing begins (the swing starts from rest, so the two overlap instead of a pause)
+  const u = ss(f, LT4.back0 + 18, LT4.swing0 + 7);
+  const rear = lerpV(P.rear, rear1, u);
+  const ang = a0 + wrap(END.ang + swingAt(LT4.swing0) - a0) * ss(f, LT4.back0, LT4.swing0) + (f > LT4.swing0 ? swingAt(f) - swingAt(LT4.swing0) : 0);
+  void END_REAR;
+  return {tip: add(rear, mul(dirOf(ang), NOZ_LEN)), rear};
 };
 
 const gripNozzle = (p: ManPose, tip: V, rear: V): ManPose => {
@@ -178,8 +186,8 @@ type NearState = {pose: HandPose; place: {grip: V; ang: number; gu: number; gv: 
 /** V4 path of the near hand before the pinch: it is already moving at the match (from the pump, where it started the
  *  syringe, toward the cocoon dish); it arrives over the dish and descends onto the cocoon */
 const REACH: [number, V][] = [
-  [LT4.reach0 - 20, {x: 1080, y: 1238}],
-  [LT4.reach0 + 30, {x: 1210, y: 1196}],
+  [LT4.reach0 - 20, {x: 1070, y: 1240}],
+  [LT4.reach0 + 34, {x: 1200, y: 1190}],
   [LT4.pinch - 12, {x: C1.x - 6, y: C1.y - 34}],
   [LT4.pinch - 1, C1],
 ];
@@ -345,7 +353,7 @@ const KEYS: K[] = [
   {f: LT4.ace0, c: fixed(652, 1190, 10)},
   {f: LT4.ace1, c: fixed(640, 1191, 12)},
   {f: LT4.harden0 + 8, c: fixed(618, 1195, 11)},
-  {f: LT4.exit + 6, c: fixed(606, 1197, 10)},
+  {f: LT4.exit + 6, c: fixed(590, 1200, 7.4)},
   // out alongside the new fibre, then the blade it is heading for
   {f: 500, c: track(6.5, fibreHead, 640, 960)},
   {f: 532, c: fixed(486, 1232, 2.6)},
@@ -362,7 +370,7 @@ const KEYS: K[] = [
   {f: LT4.flat, c: fixed((TRAY.x0 + TRAY.x1) / 2 + 30, BENCH_Y - 70, 3.3)},
   // along the bench past the source cocoon to the nozzle's outlet, landing on frame 0's outlet
   {f: LT4.cocoon0, c: fixed(170, 1240, 2.5)},
-  {f: LT4.push, c: endAnchor(END.z * 0.93)},
+  {f: LT4.push, c: endAnchor(END.z * 0.84)},
   {f: LT4.end + 1, c: endAnchor(END.z)},
 ];
 /** V4: the camera passes through its keys on a Catmull-Rom spline (in x, y and log zoom) instead of easing to a stop

@@ -11,8 +11,10 @@
   "i": 1,
   "text": "at a criminal—",
   "current": 1480,
-  "currentHits": [],
-  "pick": 1480,
+  "currentHits": [
+   "73:barrel"
+  ],
+  "pick": 1400,
   "pickHits": []
  },
  {
@@ -20,15 +22,13 @@
   "text": "and watching it turn into a web",
   "current": 1480,
   "currentHits": [
-   "88:barrel",
-   "89:barrel",
-   "90:barrel"
+   "74:barrel",
+   "75:barrel"
   ],
   "pick": 1480,
   "pickHits": [
-   "88:barrel",
-   "89:barrel",
-   "90:barrel"
+   "74:barrel",
+   "75:barrel"
   ]
  },
  {
@@ -204,21 +204,21 @@
   "text": "of a real web shooter…",
   "current": 1480,
   "currentHits": [
-   "894:fibre end",
-   "895:fibre end",
-   "896:fibre end",
-   "897:fibre end",
-   "898:fibre end",
-   "899:fibre end"
+   "894:blade",
+   "895:blade",
+   "896:blade",
+   "897:blade",
+   "898:blade",
+   "899:blade"
   ],
   "pick": 1480,
   "pickHits": [
-   "894:fibre end",
-   "895:fibre end",
-   "896:fibre end",
-   "897:fibre end",
-   "898:fibre end",
-   "899:fibre end"
+   "894:blade",
+   "895:blade",
+   "896:blade",
+   "897:blade",
+   "898:blade",
+   "899:blade"
   ]
  },
  {
