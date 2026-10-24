@@ -356,11 +356,15 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
       )}
       {glasses && (
         <g>
-          {[[nearX, 1], [farX, farW]].map(([x, wf], i) => (
-            <Inked key={i} w={fw * 0.8}>
-              <InkPath d={`M${fmt(x - 31 * wf)},-38 Q${fmt(x)},-44 ${fmt(x + 31 * wf)},-38 Q${fmt(x + 34 * wf)},4 ${fmt(x + 24 * wf)},18 Q${fmt(x)},26 ${fmt(x - 24 * wf)},18 Q${fmt(x - 34 * wf)},4 ${fmt(x - 31 * wf)},-38 Z`} fill="rgba(200,232,248,0.28)" />
-            </Inked>
-          ))}
+          {[[nearX, 1], [farX, farW]].map(([x, wf], i) => {
+            const lens = `M${fmt(x - 31 * wf)},-38 Q${fmt(x)},-44 ${fmt(x + 31 * wf)},-38 Q${fmt(x + 34 * wf)},4 ${fmt(x + 24 * wf)},18 Q${fmt(x)},26 ${fmt(x - 24 * wf)},18 Q${fmt(x - 34 * wf)},4 ${fmt(x - 31 * wf)},-38 Z`;
+            return (
+              <g key={i}>
+                {pass !== 'ink' && <path d={lens} fill="#D8EEF8" opacity={0.22} />}
+                <InkLine d={lens} w={fw * 0.75} />
+              </g>
+            );
+          })}
           <InkLine d={`M${fmt(farX + 31 * farW)},-30 Q${fmt((nearX + farX) / 2)},-36 ${fmt(nearX - 31)},-30`} w={fw * 0.8} />
           {pass !== 'ink' && <path d={`M${fmt(nearX + 6)},-30 l14,-4 l-22,38 l-10,2 Z`} fill="#FFFFFF" opacity={0.4} />}
         </g>

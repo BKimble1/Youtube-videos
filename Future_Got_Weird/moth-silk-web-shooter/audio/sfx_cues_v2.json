@@ -1,0 +1,278 @@
+[
+ {
+  "name": "runner footfall 0",
+  "at": 0.179,
+  "dur": 0.2,
+  "gain_db": -32.0
+ },
+ {
+  "name": "runner footfall 2",
+  "at": 0.546,
+  "dur": 0.2,
+  "gain_db": -29.8
+ },
+ {
+  "name": "runner footfall 3",
+  "at": 0.913,
+  "dur": 0.2,
+  "gain_db": -24
+ },
+ {
+  "name": "runner footfall 4",
+  "at": 1.263,
+  "dur": 0.2,
+  "gain_db": -24
+ },
+ {
+  "name": "arm swing (air)",
+  "at": 31.683,
+  "dur": 0.32,
+  "gain_db": -36
+ },
+ {
+  "name": "shooter click",
+  "at": 0.403,
+  "dur": 0.04,
+  "gain_db": -33
+ },
+ {
+  "name": "liquid release (crisp)",
+  "at": 0.433,
+  "dur": 0.22,
+  "gain_db": -27
+ },
+ {
+  "name": "the jet passes (fast air)",
+  "at": 0.453,
+  "dur": 0.34,
+  "gain_db": -31
+ },
+ {
+  "name": "adhesive impact",
+  "at": 0.733,
+  "dur": 0.32,
+  "gain_db": -26
+ },
+ {
+  "name": "the web spreads (sticky stretch)",
+  "at": 0.753,
+  "dur": 0.4,
+  "gain_db": -34
+ },
+ {
+  "name": "the bag swings (rustle)",
+  "at": 0.1,
+  "dur": 0.45,
+  "gain_db": -40
+ },
+ {
+  "name": "strand draws tight (tension)",
+  "at": 1.167,
+  "dur": 0.3,
+  "gain_db": -33
+ },
+ {
+  "name": "jacket tug (cloth)",
+  "at": 1.287,
+  "dur": 0.18,
+  "gain_db": -32
+ },
+ {
+  "name": "jacket tug (rustle)",
+  "at": 1.287,
+  "dur": 0.3,
+  "gain_db": -36
+ },
+ {
+  "name": "the bag swings forward",
+  "at": 1.367,
+  "dur": 0.35,
+  "gain_db": -38
+ },
+ {
+  "name": "recovery step",
+  "at": 1.817,
+  "dur": 0.2,
+  "gain_db": -26
+ },
+ {
+  "name": "into the strand (rising air)",
+  "at": 1.733,
+  "dur": 2.2,
+  "gain_db": -42
+ },
+ {
+  "name": "into the strand (shimmer)",
+  "at": 3.433,
+  "dur": 1.2,
+  "gain_db": -42
+ },
+ {
+  "name": "silk chains (silky tone)",
+  "at": 3.933,
+  "dur": 1.4,
+  "gain_db": -42
+ },
+ {
+  "name": "the chains draw tight (catches them)",
+  "at": 4.2,
+  "dur": 0.4,
+  "gain_db": -38
+ },
+ {
+  "name": "into the liquid (swirl)",
+  "at": 4.633,
+  "dur": 0.9,
+  "gain_db": -40
+ },
+ {
+  "name": "into the liquid (bubbles)",
+  "at": 4.933,
+  "dur": 0.8,
+  "gain_db": -42
+ },
+ {
+  "name": "lab room tone",
+  "at": 5.333,
+  "dur": 26.4,
+  "gain_db": -46
+ },
+ {
+  "name": "cocoon picked up (tap)",
+  "at": 8.37,
+  "dur": 0.05,
+  "gain_db": -40
+ },
+ {
+  "name": "cocoon into the beaker (plop)",
+  "at": 9.9,
+  "dur": 0.16,
+  "gain_db": -36
+ },
+ {
+  "name": "dissolving (fizz)",
+  "at": 10.0,
+  "dur": 1.2,
+  "gain_db": -41
+ },
+ {
+  "name": "pump button",
+  "at": 10.4,
+  "dur": 0.05,
+  "gain_db": -36
+ },
+ {
+  "name": "pump runs (hum)",
+  "at": 10.533,
+  "dur": 6.5,
+  "gain_db": -44
+ },
+ {
+  "name": "drawn up the tube (gurgle)",
+  "at": 10.533,
+  "dur": 0.9,
+  "gain_db": -39
+ },
+ {
+  "name": "silk flows to the nozzle",
+  "at": 11.533,
+  "dur": 1.0,
+  "gain_db": -41
+ },
+ {
+  "name": "the cutaway opens (slide)",
+  "at": 12.667,
+  "dur": 0.5,
+  "gain_db": -40
+ },
+ {
+  "name": "acetone flowing (hiss)",
+  "at": 13.4,
+  "dur": 1.5,
+  "gain_db": -41
+ },
+ {
+  "name": "hardening (fine crackle)",
+  "at": 14.933,
+  "dur": 0.8,
+  "gain_db": -39
+ },
+ {
+  "name": "vapour leaves (soft hiss)",
+  "at": 15.233,
+  "dur": 1.0,
+  "gain_db": -44
+ },
+ {
+  "name": "fibre in flight (hiss)",
+  "at": 15.667,
+  "dur": 3.0,
+  "gain_db": -43
+ },
+ {
+  "name": "fibre meets the metal (tick)",
+  "at": 18.867,
+  "dur": 0.12,
+  "gain_db": -32
+ },
+ {
+  "name": "fibre meets the metal (sticky)",
+  "at": 18.867,
+  "dur": 0.12,
+  "gain_db": -38
+ },
+ {
+  "name": "the pull (nozzle moves)",
+  "at": 20.633,
+  "dur": 0.5,
+  "gain_db": -40
+ },
+ {
+  "name": "fibre goes taut (tension)",
+  "at": 21.283,
+  "dur": 0.3,
+  "gain_db": -35
+ },
+ {
+  "name": "sand shifts",
+  "at": 21.733,
+  "dur": 1.0,
+  "gain_db": -38
+ },
+ {
+  "name": "sand falls",
+  "at": 22.133,
+  "dur": 0.9,
+  "gain_db": -38
+ },
+ {
+  "name": "blade comes free (ring)",
+  "at": 23.133,
+  "dur": 0.6,
+  "gain_db": -36
+ },
+ {
+  "name": "carried to the tray (air)",
+  "at": 23.333,
+  "dur": 0.9,
+  "gain_db": -44
+ },
+ {
+  "name": "blade touches the tray",
+  "at": 27.967,
+  "dur": 0.3,
+  "gain_db": -31
+ },
+ {
+  "name": "blade lies down",
+  "at": 28.35,
+  "dur": 0.25,
+  "gain_db": -33
+ },
+ {
+  "name": "arm swing at the seam (air)",
+  "at": 31.483,
+  "dur": 0.3,
+  "gain_db": -38
+ }
+]

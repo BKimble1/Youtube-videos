@@ -17,6 +17,7 @@ import {mixExpr} from './dc/Head';
 import {mixHand} from './dc/Hand';
 import {BASE, EXPR_FIRE, EXPR_FOCUS, EXPR_RUN, EXPR_SHOCK, HAND_FIST, HAND_GRIP, HAND_READY, HAND_THWIP, HERO, RUNNER} from './cast2';
 import {Bag, shooterGeo, WristShooter} from './props2';
+import {FIBRE_BG, SilkChains} from './SilkField';
 
 export const D_NEAR = 0.55;
 export const D_MID = 1;
@@ -39,7 +40,9 @@ export const scr = (cam: Cam, d: number, p: V): V => {
 export const zOf = (cam: Cam, d: number) => 1 + (cam.z - 1) / d;
 
 /** key frames of the hook */
-export const SA = {fire: 13, hit: 22, taut: 38, push0: 52, end: 150};
+export const SA = {fire: 13, hit: 22, taut: 38, push0: 52, end: 118};
+/** zoom when the strand fills the frame, and the field scale there (screen px per field unit) */
+export const Z_IN = 820;
 
 // ---------------------------------------------------------------- the lead
 const HS = 2.1;
@@ -185,19 +188,43 @@ const spreadAt = (f: number, i: number) => {
 };
 const tightAt = (f: number) => ss(f, SA.hit + 12, SA.taut + 4);
 
-export const WebSplat: React.FC<{id: string; f: number; pose: ManPose; ink: number}> = ({id, f, pose, ink}) => {
-  if (f < SA.hit) return null;
+/** the web's local frame on the jacket: L maps web-local (x across the torso, y down the spine) to world */
+const webFrame = (f: number, pose: ManPose) => {
   const s = pose.s;
   const j = manJoints(pose);
   const a0 = j.tc;
   const c = tloc(pose, ATT.u, ATT.v);
-  // local frame on the back: x along the torso's across axis, y along the spine (down)
   const ex = {x: Math.cos((a0 * Math.PI) / 180), y: -Math.sin((a0 * Math.PI) / 180)};
   const ey = {x: Math.sin((a0 * Math.PI) / 180), y: Math.cos((a0 * Math.PI) / 180)};
   // the back is seen obliquely: across the torso the web is compressed
   const L = (x: number, y: number) => add(c, add(mul(ex, x * 0.78 * s * WEB_K), mul(ey, y * s * WEB_K)));
   const tight = tightAt(f);
-  const shrink = 1 - 0.07 * tight;
+  return {s, j, a0, c, L, tight, shrink: 1 - 0.07 * tight, w: 5.2 * s};
+};
+/** a point and tangent (world) at fraction t along radial strand i of the web */
+export const radialAt = (f: number, i: number, t: number) => {
+  const pose = runnerAt(f);
+  const W = webFrame(f, pose);
+  const st = STRANDS[i];
+  const r = st.len * spreadAt(f, i) * W.shrink;
+  const ar = (st.a * Math.PI) / 180;
+  const dir = {x: Math.cos(ar), y: Math.sin(ar)};
+  const n = {x: -dir.y, y: dir.x};
+  const bend = st.bend * (1 - 0.8 * W.tight);
+  const P0 = W.L(0, 0);
+  const P1 = W.L(dir.x * r * 0.5 + n.x * bend, dir.y * r * 0.5 + n.y * bend);
+  const P2 = W.L(dir.x * r, dir.y * r);
+  const q = (u: number) => add(add(mul(P0, (1 - u) ** 2), mul(P1, 2 * u * (1 - u))), mul(P2, u * u));
+  const p = q(t);
+  const tan = norm(sub(q(Math.min(1, t + 0.01)), q(Math.max(0, t - 0.01))));
+  return {p, tan, w: W.w, q};
+};
+/** the radial strand the camera goes into (it lies on the jacket, running down his back) */
+export const ENTRY = {strand: 3, t: 0.5};
+
+export const WebSplat: React.FC<{id: string; f: number; pose: ManPose; ink: number}> = ({id, f, pose, ink}) => {
+  if (f < SA.hit) return null;
+  const {s, j, a0, c, L, tight, shrink} = webFrame(f, pose);
   const ends: V[] = [];
   const paths: string[] = [];
   const thin: string[] = [];
@@ -295,10 +322,59 @@ export const WebSplat: React.FC<{id: string; f: number; pose: ManPose; ink: numb
   );
 };
 
+/** the jacket's weave round the attachment: over-under threads that only read once the camera is close */
+const Weave: React.FC<{id: string; pose: ManPose; f: number; op: number}> = ({id, pose, f, op}) => {
+  if (op <= 0.01) return null;
+  const c = tloc(pose, ATT.u, ATT.v);
+  const j = manJoints(pose);
+  const a = (j.tc * Math.PI) / 180;
+  const ex = {x: Math.cos(a), y: -Math.sin(a)};
+  const ey = {x: Math.sin(a), y: Math.cos(a)};
+  const sp = 1.7;
+  const R = 46;
+  const n = Math.ceil(R / sp);
+  const lines: string[] = [];
+  const lines2: string[] = [];
+  for (let i = -n; i <= n; i++) {
+    const p0 = add(c, add(mul(ex, i * sp), mul(ey, -R)));
+    const p1 = add(c, add(mul(ex, i * sp), mul(ey, R)));
+    lines.push(`M${Pt(p0)} L${Pt(p1)}`);
+    const q0 = add(c, add(mul(ey, i * sp), mul(ex, -R)));
+    const q1 = add(c, add(mul(ey, i * sp), mul(ex, R)));
+    lines2.push(`M${Pt(q0)} L${Pt(q1)}`);
+  }
+  return (
+    <g opacity={op}>
+      <defs>
+        <clipPath id={`${id}-c`}>
+          <path d={torsoPath(pose)} />
+        </clipPath>
+        <radialGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" cx={fmt(c.x)} cy={fmt(c.y)} r={R}>
+          <stop offset="0.6" stopColor="#FFF" />
+          <stop offset="1" stopColor="#000" />
+        </radialGradient>
+        <mask id={`${id}-m`}>
+          <circle cx={fmt(c.x)} cy={fmt(c.y)} r={R} fill={`url(#${id}-g)`} />
+        </mask>
+      </defs>
+      <g clipPath={`url(#${id}-c)`} mask={`url(#${id}-m)`}>
+        <path d={lines.join(' ')} stroke={shade(RUNNER.shirt, 0.3)} strokeWidth={0.9} />
+        <path d={lines2.join(' ')} stroke={lit(RUNNER.shirt, 0.18)} strokeWidth={0.75} strokeDasharray={`${sp} ${sp}`} />
+      </g>
+    </g>
+  );
+};
+
 // ---------------------------------------------------------------- the camera
 const C0: Cam = {x: 540, y: 960, z: 1};
 const HOLD_Z = 3.0;
 /** framing of the runner after the hit: the attachment at (520, 840) on screen */
+function holdCamFor(f: number): Cam {
+  return holdCam(f, HOLD_Z + 0.2 * ss(f, SA.hit, SA.push0));
+}
+function heroOutletAt(f: number) {
+  return heroOutlet(f).outlet;
+}
 const holdCam = (f: number, z: number): Cam => {
   const a = attachAt(f);
   return {x: a.x - (650 - 540) / z, y: a.y - (800 - 960) / z, z};
@@ -316,13 +392,20 @@ export const streetCam = (f: number): Cam => {
   let cam: Cam = {x: lerp(pre.x, target.x, u), y: lerp(pre.y, target.y, u), z};
   if (f > SA.push0) {
     const p = ss5(f, SA.push0, SA.end);
-    const zz = Math.exp(lerp(Math.log(z1), Math.log(40), p));
-    const a = attachAt(f);
-    const sc = lerpV({x: 650, y: 800}, {x: 540, y: 900}, ss(f, SA.push0, SA.push0 + 30));
-    cam = {x: a.x - (sc.x - 540) / zz, y: a.y - (sc.y - 960) / zz, z: zz};
+    const zz = Math.exp(lerp(Math.log(z1), Math.log(Z_IN), p));
+    const a = enterPoint(f);
+    // the framing slides from the hold (attachment at 650, 800) to the entry point at the centre
+    const a0 = attachAt(f);
+    const hold = {x: a0.x - (650 - 540) / zz, y: a0.y - (800 - 960) / zz};
+    const k = ss(f, SA.push0, SA.push0 + 34);
+    cam = {x: lerp(hold.x, a.x, k), y: lerp(hold.y, a.y, k), z: zz};
   }
   return cam;
 };
+/** direction of the entry strand (outward from the pad) when the frame is full of it; the macro keeps it */
+export const STRAND_DIR = radialAt(SA.end, ENTRY.strand, ENTRY.t).tan;
+/** the entry point on the strand (world, mid layer) */
+export const enterPoint = (f: number) => radialAt(f, ENTRY.strand, ENTRY.t).p;
 
 // ---------------------------------------------------------------- the jet and the strand (screen space)
 /** jet head progress 0..1 from the outlet to the jacket */
@@ -334,6 +417,19 @@ export const strandEnds = (f: number) => {
   return {o, a, cam};
 };
 
+const ribbonPath = (pts: V[], w0: number, w1: number) => {
+  const left: V[] = [];
+  const right: V[] = [];
+  pts.forEach((p, i) => {
+    const a = pts[Math.max(0, i - 1)];
+    const b = pts[Math.min(pts.length - 1, i + 1)];
+    const n = perp(norm(sub(b, a)));
+    const w = lerp(w0, w1, i / (pts.length - 1)) / 2;
+    left.push(add(p, mul(n, w)));
+    right.push(add(p, mul(n, -w)));
+  });
+  return `M${left.map(Pt).join(' L')} L${right.reverse().map(Pt).join(' L')} Z`;
+};
 const Ribbon: React.FC<{pts: V[]; w0: number; w1: number; color: string; ink: number; opacity?: number}> = ({pts, w0, w1, color, ink, opacity = 1}) => {
   if (pts.length < 2) return null;
   const left: V[] = [];
@@ -391,14 +487,54 @@ const Jet: React.FC<{f: number}> = ({f}) => {
       </g>
     );
   }
-  // after the hit: one strand from the outlet to the pad; slack at first, taut when it checks him
+  const g = mainStrand(f);
+  return <Ribbon pts={g.pts} w0={g.w0} w1={g.w1} color="#FBF8F0" ink={3 * Math.sqrt(Math.max(1, g.zM / 3))} />;
+};
+/** the main strand after the hit (screen space): slack at first, taut when it checks him */
+export const mainStrand = (f: number) => {
+  const {o, a, cam} = strandEnds(f);
+  const zM = zOf(cam, D_MID);
+  const d = sub(a, o);
   const slack = (1 - ss(f, SA.hit + 4, SA.taut)) * 0.06 + 0.004;
   const N = 28;
+  // points are denser toward the pad, where the camera goes in
   const pts = Array.from({length: N + 1}, (_, i) => {
-    const t = i / N;
+    const t = 1 - (1 - i / N) ** 3;
     return add(lerpV(o, a, t), {x: 0, y: Math.sin(t * Math.PI) * len(d) * slack});
   });
-  return <Ribbon pts={pts} w0={9} w1={5.2 * RS * zM} color="#FBF8F0" ink={3} />;
+  return {pts, w0: 9, w1: 7 * RS * zM, cam, zM};
+};
+
+/** inside the strand: the silk chains, drawn in screen space within the strand's outline as the camera goes in */
+const StrandInterior: React.FC<{id: string; f: number}> = ({id, f}) => {
+  const op = ss(f, 98, 112);
+  if (op <= 0) return null;
+  const cam = streetCam(f);
+  const zM = zOf(cam, D_MID);
+  const R0 = radialAt(f, ENTRY.strand, ENTRY.t);
+  const P = scr(cam, D_MID, R0.p);
+  const S = zM / Z_IN;
+  const c = R0.tan.x;
+  const s = R0.tan.y;
+  // the strand's outline on screen (its stroke, slightly inset)
+  const N = 40;
+  const pts = Array.from({length: N + 1}, (_, i) => scr(cam, D_MID, R0.q(i / N)));
+  const hw = R0.w * zM * 0.46;
+  const map = (x: number, y: number) => ({x: P.x + (x * c - y * s) * S, y: P.y + (x * s + y * c) * S});
+  const R = Math.hypot(1080, 1920) / S;
+  return (
+    <g opacity={op}>
+      <defs>
+        <clipPath id={`${id}-sc`}>
+          <path d={ribbonPath(pts, hw * 2, hw * 2)} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${id}-sc)`}>
+        <rect x={-100} y={-100} width={1280} height={2120} fill={FIBRE_BG} />
+        <SilkChains map={map} scale={S} x0={-R} x1={R} y0={-R} y1={R} t={f / 30} tight={0} />
+      </g>
+    </g>
+  );
 };
 
 // ---------------------------------------------------------------- the street
@@ -475,7 +611,12 @@ export const StreetScene2: React.FC<{f: number}> = ({f}) => {
         <SoftShadow id={`${id}-rs`} c={{x: rp.x - 10, y: GROUND - 4}} rx={130 * RS * 1.4} ry={22} alpha={0.32} color="#3A2E28" />
         <Man id={`${id}-rn`} pose={rp} expr={runnerExpr(f)} lHand={HAND_READY} rHand={HAND_GRIP} outfit={RUNNER} inkK={zM > 2 ? 0.8 : 1}
           afterRightArm={<Bag id={`${id}-bg`} hand={add(jr.R.W, mul(jr.R.foreDir, 20 * RS))} swing={bagSwing(f)} s={RS} ink={7 * 0.72 * RS} />}
-          overAll={<WebSplat id={`${id}-ws`} f={f} pose={rp} ink={7 * 0.72 * RS} />} />
+          overAll={
+            <g>
+              <Weave id={`${id}-wv`} pose={rp} f={f} op={ss(zM, 3.6, 9)} />
+              <WebSplat id={`${id}-ws`} f={f} pose={rp} ink={(7 * 0.72 * RS) / Math.sqrt(Math.max(1, zM / 3))} />
+            </g>
+          } />
       </Layer>
       {showHero && (
         <Layer cam={cam} depth={D_NEAR}>
@@ -484,6 +625,7 @@ export const StreetScene2: React.FC<{f: number}> = ({f}) => {
         </Layer>
       )}
       <Jet f={f} />
+      <StrandInterior id={`${id}-si`} f={f} />
     </svg>
   );
 };

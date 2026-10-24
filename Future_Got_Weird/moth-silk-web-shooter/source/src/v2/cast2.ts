@@ -8,6 +8,8 @@ import {HandPose} from './dc/Hand';
 export const HERO: Outfit = GUESSER;
 export const GLOVE = '#9DC3E6';
 export const COAT = '#F4F7FA';
+/** the lab: white coat over the tee (the tee shows at the collar), clear safety glasses, nitrile gloves */
+export const HERO_LAB: Outfit = {...GUESSER, shirt: COAT, stripe: null, longSleeve: true, glasses: true, glove: GLOVE};
 export const RUNNER: Outfit = {skin: '#E0A982', hair: '#3B2A22', shirt: '#4B5A4A', stripe: null, pants: '#2B3340', shoe: '#D9DEE2', longSleeve: true, hat: {color: '#B4483C', band: '#943A31'}, mask: '#1E2A33'};
 export const BAG = {body: '#C9963F', deep: '#9A6E2A', strap: '#6E4E22'};
 

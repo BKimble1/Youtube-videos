@@ -32,6 +32,8 @@ export type Outfit = {
   hat?: {color: string; band: string};
   mask?: string;
   glasses?: boolean;
+  /** glove colour for both hands (lab) */
+  glove?: string;
 };
 /** the Weird Crew's guesser (Video 01 cast.ts), as in Death Clock */
 export const GUESSER: Outfit = {skin: PAL.skin, hair: PAL.hair, shirt: PAL.shirt, stripe: PAL.stripe, pants: PAL.pants, shoe: PAL.shoe};
@@ -291,12 +293,28 @@ type Props = {
   afterRightArm?: React.ReactNode;
   /** V3: drawn over everything (the torso cutaway seen through the near arm) */
   overAll?: React.ReactNode;
+  /** V2 (Real Web Fluid): draw only the two hands (a second pass over apparatus the hands hold) */
+  handsOnly?: boolean;
 };
 
-export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, hideLeftForearm, children, nearLegFront, hairSway = 0, outfit = GUESSER, inkK = 1, overTorso, beforeLeftForearm, afterRightArm, overAll}) => {
+export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, hideLeftForearm, children, nearLegFront, hairSway = 0, outfit = GUESSER, inkK = 1, overTorso, beforeLeftForearm, afterRightArm, overAll, handsOnly}) => {
   const j = manJoints(p);
   const s = p.s;
   const OUT = 7 * s * inkK; // crew contour
+  if (handsOnly) {
+    const IN0 = OUT * 0.72;
+    const hc = (isFar: boolean) => (outfit.glove ? (isFar ? shade(outfit.glove, 0.14) : outfit.glove) : isFar ? shade(outfit.skin, 0.14) : outfit.skin);
+    return (
+      <g>
+        <Inked w={IN0}>
+          <Hand id={`${id}-ho-r`} wrist={add(j.R.W, mul(j.R.foreDir, -6 * s))} ang={j.R.handAng} L={DIM.hand * s} thumbSide={-1} view="back" pose={rHand} color={hc(true)} ink={IN0 * 0.9} />
+        </Inked>
+        <Inked w={IN0}>
+          <Hand id={`${id}-ho-l`} wrist={add(j.L.W, mul(j.L.foreDir, -6 * s))} ang={j.L.handAng} L={DIM.hand * s} thumbSide={1} view="back" pose={lHand} color={hc(false)} ink={IN0 * 0.9} />
+        </Inked>
+      </g>
+    );
+  }
   const o = outfit;
   const skin = o.skin;
   const far = (c: string) => shade(c, 0.14);
@@ -532,7 +550,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
         {web && <InkPath d={web} fill={shade(sk, 0.18)} />}
         {/* the far arm's tightly folded elbow shows no inner crease (that side of the fold is hidden) */}
         <Limb id={`${id}-${k}lb`} A={isFar ? A.S : nearArmTop} B={A.E} C={A.W} rA={29 * s} rB={23.5 * s} rC={o.longSleeve ? 21 * s : 17 * s} color={o.longSleeve ? (isFar ? far(o.shirt) : o.shirt) : sk} spec={0.22} crease={isFar ? 0 : IN * 0.8} />
-        <Hand id={`${id}-${k}h`} wrist={add(A.W, mul(A.foreDir, -6 * s))} ang={A.handAng} L={DIM.hand * s} thumbSide={thumbSide} view="back" pose={hp} color={sk} ink={IN * 0.9} bare />
+        <Hand id={`${id}-${k}h`} wrist={add(A.W, mul(A.foreDir, -6 * s))} ang={A.handAng} L={DIM.hand * s} thumbSide={thumbSide} view="back" pose={hp} color={o.glove ? (isFar ? far(o.glove) : o.glove) : sk} ink={IN * 0.9} bare />
       </Inked>
     );
   };
@@ -626,7 +644,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
       <g mask={`url(#${id}-rfm)`}>
         <Inked w={IN}>
           <Capsule id={`${id}-rffa`} a={j.R.E} b={j.R.W} ra={23.5 * s} rb={o.longSleeve ? 21 * s : 17 * s} color={o.longSleeve ? far(o.shirt) : far(skin)} spec={0.2} />
-          <Hand id={`${id}-rfh`} wrist={add(j.R.W, mul(j.R.foreDir, -6 * s))} ang={j.R.handAng} L={DIM.hand * s} thumbSide={-1} view="back" pose={rHand} color={far(skin)} ink={IN * 0.9} bare />
+          <Hand id={`${id}-rfh`} wrist={add(j.R.W, mul(j.R.foreDir, -6 * s))} ang={j.R.handAng} L={DIM.hand * s} thumbSide={-1} view="back" pose={rHand} color={far(o.glove ?? skin)} ink={IN * 0.9} bare />
         </Inked>
       </g>
       {nearLegFront && (
