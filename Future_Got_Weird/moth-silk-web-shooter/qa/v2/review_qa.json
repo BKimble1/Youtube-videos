@@ -1,0 +1,256 @@
+{
+ "file": "exports/FGW_Real_Web_Fluid_V2_REVIEW_1080x1920.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "nb_frames": "952",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "color_primaries": "bt709",
+  "color_transfer": "bt709"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317374"
+ },
+ "duration": 31.744,
+ "loudness": {
+  "I_LUFS": -14.6,
+  "LRA": 3.6,
+  "TP_dBFS": -2.6
+ },
+ "black_segments": [],
+ "freezes_ge_1s": [],
+ "keyframes": {
+  "count": 65,
+  "max_gap_s": 0.5
+ },
+ "audio_offset_vs_mix_ms": 0.0,
+ "audio_corr_vs_mix": 0.99997,
+ "vosk_transcript": "imagine firing liquid at a criminal and watching it turn into a web that catches them scientists have taken the first step toward that they start with silk from moscow coons and dissolve it into a liquid as it shoots through a special nozzle a surrounding layer of acetone triggers the silk to harden a sticky fiber forms in mid air it hits the metal and attaches is the new poll and the blade lives out of the sand in lab tests these fibers lifted over eighty times their own weight the beginnings of a real web shooter made from moths silk",
+ "vosk_wer_vs_approved": 0.1,
+ "vosk_diffs": [
+  [
+   "replace",
+   "moth cocoons",
+   "moscow coons"
+  ],
+  [
+   "replace",
+   "midair",
+   "mid air"
+  ],
+  [
+   "replace",
+   "then you pull",
+   "is the new poll"
+  ],
+  [
+   "replace",
+   "lifts",
+   "lives"
+  ],
+  [
+   "replace",
+   "moth",
+   "moths"
+  ]
+ ],
+ "caption_windows": [
+  {
+   "caption": "Imagine firing liquid",
+   "show": 0.06,
+   "hide": 1.48,
+   "asr": "imagine firing liquid",
+   "match": 1.0
+  },
+  {
+   "caption": "at a criminal\u2014",
+   "show": 1.48,
+   "hide": 2.46,
+   "asr": "at a criminal",
+   "match": 1.0
+  },
+  {
+   "caption": "and watching it turn into a web",
+   "show": 2.46,
+   "hide": 3.97,
+   "asr": "and watching it turn into a web",
+   "match": 1.0
+  },
+  {
+   "caption": "that catches them.",
+   "show": 3.97,
+   "hide": 5.29,
+   "asr": "that catches them",
+   "match": 1.0
+  },
+  {
+   "caption": "Scientists have taken",
+   "show": 5.29,
+   "hide": 6.27,
+   "asr": "scientists have taken",
+   "match": 1.0
+  },
+  {
+   "caption": "the first step toward that.",
+   "show": 6.27,
+   "hide": 7.82,
+   "asr": "taken the first step toward that they",
+   "match": 0.83
+  },
+  {
+   "caption": "They start with silk",
+   "show": 7.82,
+   "hide": 8.69,
+   "asr": "they start with silk",
+   "match": 1.0
+  },
+  {
+   "caption": "from moth cocoons",
+   "show": 8.69,
+   "hide": 9.69,
+   "asr": "from moscow coons",
+   "match": 0.33
+  },
+  {
+   "caption": "and dissolve it into a liquid.",
+   "show": 9.69,
+   "hide": 11.43,
+   "asr": "and dissolve it into a liquid",
+   "match": 1.0
+  },
+  {
+   "caption": "As it shoots",
+   "show": 11.43,
+   "hide": 12.0,
+   "asr": "as it shoots",
+   "match": 1.0
+  },
+  {
+   "caption": "through a special nozzle,",
+   "show": 12.0,
+   "hide": 13.32,
+   "asr": "through a special nozzle a",
+   "match": 0.89
+  },
+  {
+   "caption": "a surrounding layer of acetone",
+   "show": 13.32,
+   "hide": 14.86,
+   "asr": "a surrounding layer of acetone",
+   "match": 1.0
+  },
+  {
+   "caption": "triggers the silk to harden.",
+   "show": 14.86,
+   "hide": 16.59,
+   "asr": "triggers the silk to harden a",
+   "match": 0.91
+  },
+  {
+   "caption": "A sticky fiber",
+   "show": 16.59,
+   "hide": 17.46,
+   "asr": "a sticky fiber",
+   "match": 1.0
+  },
+  {
+   "caption": "forms in midair.",
+   "show": 17.46,
+   "hide": 18.7,
+   "asr": "forms in mid air it",
+   "match": 0.5
+  },
+  {
+   "caption": "It hits the metal",
+   "show": 18.7,
+   "hide": 19.46,
+   "asr": "it hits the metal",
+   "match": 1.0
+  },
+  {
+   "caption": "and attaches.",
+   "show": 19.46,
+   "hide": 20.6,
+   "asr": "metal and attaches is",
+   "match": 0.67
+  },
+  {
+   "caption": "Then you pull\u2014",
+   "show": 20.6,
+   "hide": 21.64,
+   "asr": "the new poll and",
+   "match": 0.0
+  },
+  {
+   "caption": "and the blade lifts",
+   "show": 21.64,
+   "hide": 22.59,
+   "asr": "and the blade lives",
+   "match": 0.75
+  },
+  {
+   "caption": "out of the sand.",
+   "show": 22.59,
+   "hide": 23.72,
+   "asr": "out of the sand in",
+   "match": 0.89
+  },
+  {
+   "caption": "In lab tests,",
+   "show": 23.72,
+   "hide": 24.66,
+   "asr": "in lab tests",
+   "match": 1.0
+  },
+  {
+   "caption": "these fibers lifted over",
+   "show": 24.66,
+   "hide": 25.86,
+   "asr": "these fibers lifted over",
+   "match": 1.0
+  },
+  {
+   "caption": "eighty times their own weight.",
+   "show": 25.86,
+   "hide": 27.87,
+   "asr": "over eighty times their own weight the",
+   "match": 0.83
+  },
+  {
+   "caption": "The beginnings",
+   "show": 27.87,
+   "hide": 28.46,
+   "asr": "the beginnings",
+   "match": 1.0
+  },
+  {
+   "caption": "of a real web shooter\u2026",
+   "show": 28.46,
+   "hide": 30.06,
+   "asr": "of a real web shooter",
+   "match": 1.0
+  },
+  {
+   "caption": "made from moth silk.",
+   "show": 30.06,
+   "hide": 31.47,
+   "asr": "made from moths silk",
+   "match": 0.75
+  }
+ ],
+ "caption_windows_ok": "22/26",
+ "loop_seam": {
+  "mean_abs_last_to_first": 72.36,
+  "mean_abs_prev_steps": [
+   4.29,
+   5.21
+  ]
+ }
+}
