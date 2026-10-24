@@ -51,6 +51,8 @@ const TIP_TRAY: V = {x: TRAY_X + 30, y: FLOOR - 70 - L_F - BLADE_LEN};
 const pivotAt = (f: number): V => {
   const t0 = tipOut();
   let p = lerpV(t0, TIP_TRAY, ss5(f, LT2.carry0, LT2.carry1));
+  // the strength beat: a slow, controlled lift of the hanging blade on the one fibre, held, and let down again
+  p = add(p, {x: 0, y: -64 * (ss5(f, 752, 782) - ss5(f, 798, 822))});
   // lowered from lower0 until the blade lies in the tray
   // down until the blade's tip meets the floor, then on by most of the blade's length so it lies down
   const drop = FLOOR - 3 - (TIP_TRAY.y + L_F + BLADE_LEN) + 0.95 * BLADE_LEN;

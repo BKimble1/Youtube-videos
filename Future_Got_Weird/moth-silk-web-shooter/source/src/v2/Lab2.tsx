@@ -104,7 +104,7 @@ const openingPoseInLab = (f: number): ManPose => {
 const endPose = (f: number): ManPose => {
   const a = heroPose(LT2.back0);
   const b = openingPoseInLab(f);
-  const u = ss5((f - LT2.back0) / (930 - LT2.back0));
+  const u = ss5((f - LT2.back0) / (946 - LT2.back0));
   const o = {} as ManPose;
   (Object.keys(b) as (keyof ManPose)[]).forEach((key) => {
     const va = (a[key] ?? 0) as number;
@@ -155,6 +155,13 @@ const fixed = (x: number, y: number, z: number) => () => ({x, y, z});
 /** the beaker point the macro liquid hands over to, and the zoom there */
 const B0: V = {x: BEAKER.x - 6, y: BENCH_Y - 34};
 const ZC = 60;
+/** where the camera holds while the blade is lifted on the fibre (the blade's centre at rest over the tray, lowered
+ *  a little on screen so the lift has room) */
+const TRAY_HANG = (() => {
+  const P = labPhys(750);
+  const c = lerpV(P.bladeT, P.bladeE, 0.5);
+  return {x: c.x, y: c.y - (1180 - 960) / 4.3};
+})();
 const midTrack = (z: number, ox = 0, oy = 0) => (f: number): Cam => {
   const P = labPhys(f);
   const c = lerpV(P.tip, lerpV(P.bladeT, P.bladeE, 0.5), 0.55);
@@ -193,8 +200,9 @@ const KEYS: K[] = [
   {f: LT2.taut, c: fixed(500, 1205, 3.3)},
   {f: LT2.out, c: bladeTrack(3.6, 1150)},
   {f: LT2.carry1, c: bladeTrack(4.2, 1120)},
-  {f: 790, c: bladeTrack(4.9, 1100)},
-  {f: LT2.hang1, c: bladeTrack(5.1, 1100)},
+  {f: 752, c: fixed(TRAY_HANG.x, TRAY_HANG.y, 4.3)},
+  {f: 800, c: fixed(TRAY_HANG.x, TRAY_HANG.y - 14, 4.9)},
+  {f: LT2.hang1, c: bladeTrack(5.0, 1110)},
   {f: LT2.flat, c: bladeTrack(4.0, 1120)},
   {f: 904, c: fixed(420, 1040, 1.45)},
   {f: 936, c: () => END_CAM},

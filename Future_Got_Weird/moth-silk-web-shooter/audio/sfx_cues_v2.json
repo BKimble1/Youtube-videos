@@ -258,6 +258,18 @@
   "gain_db": -44
  },
  {
+  "name": "the lift on the fibre (tension)",
+  "at": 25.067,
+  "dur": 0.5,
+  "gain_db": -40
+ },
+ {
+  "name": "let down again (air)",
+  "at": 26.6,
+  "dur": 0.6,
+  "gain_db": -45
+ },
+ {
   "name": "blade touches the tray",
   "at": 27.967,
   "dur": 0.3,

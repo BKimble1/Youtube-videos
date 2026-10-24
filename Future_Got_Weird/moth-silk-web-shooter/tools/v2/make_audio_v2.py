@@ -227,6 +227,8 @@ add('sand shifts', grains(1.0, 70) + 0.3 * bp(noise(int(1.0 * SR)), 800, 3000) *
 add('sand falls', grains(0.9, 45), LB['lift0'] + 0.4, -38)
 add('blade comes free (ring)', clink(2100, 0.6, 0.12) * 0.45, LB['out'], -36)
 add('carried to the tray (air)', soft_air(0.9, 300, 900), LB['carry0'], -44)
+add('the lift on the fibre (tension)', creak(0.5, 360) * 0.5, F(752), -40)
+add('let down again (air)', soft_air(0.6, 300, 800), F(798), -45)
 add('blade touches the tray', clink(2700, 0.3, 0.05), cj['bladeTouch'], -31)
 add('blade lies down', mixs(clink(2300, 0.25, 0.035) * 0.7, thud(300, 0.1, 0.1) * 0.3), LB['flat'] - 0.05, -33)
 add('arm swing at the seam (air)', soft_air(0.3, 500, 1500), DUR - 0.25, -38)
