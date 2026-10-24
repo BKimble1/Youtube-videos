@@ -1,0 +1,50 @@
+[
+ {
+  "t": 5.7,
+  "arm": "L",
+  "change": "appears",
+  "onScreen": false
+ },
+ {
+  "t": 5.867,
+  "arm": "R",
+  "change": "appears",
+  "onScreen": false
+ },
+ {
+  "t": 8.467,
+  "arm": "R",
+  "change": "hidden",
+  "onScreen": false
+ },
+ {
+  "t": 8.5,
+  "arm": "L",
+  "change": "hidden",
+  "onScreen": false
+ },
+ {
+  "t": 25.867,
+  "arm": "L",
+  "change": "appears",
+  "onScreen": true
+ },
+ {
+  "t": 25.867,
+  "arm": "R",
+  "change": "appears",
+  "onScreen": true
+ },
+ {
+  "t": 27.9,
+  "arm": "L",
+  "change": "hidden",
+  "onScreen": true
+ },
+ {
+  "t": 27.9,
+  "arm": "R",
+  "change": "hidden",
+  "onScreen": false
+ }
+]

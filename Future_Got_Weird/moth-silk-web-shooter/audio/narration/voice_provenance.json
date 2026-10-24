@@ -1,0 +1,97 @@
+{
+ "provider": "ElevenLabs (restricted connector, authorized workspace)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "The established FGW narration voice (the same voice id as Infrared Contacts, Living Skin, Hidden Trigger V3-V7 and Invisibility Shield, per invisibility-shield/audio/narration/voice_provenance.json). Re-confirmed with creative_list_voices on 24 Oct 2026."
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "0dSHdzc95m4lBhdloLT5",
+ "generated": "2026-10-24",
+ "prompt": "[brisk, curious, restrained tension] Imagine firing liquid at a criminal—and watching it turn into a web that CATCHES them. [confident, conversational] Scientists have taken the first step toward that. [brisk, clear] They start with silk from moth cocoons and dissolve it into a liquid. [flowing, explanatory] As it shoots through a special nozzle, a surrounding layer of acetone triggers the silk to harden. [crisp] A sticky fiber forms in midair. It hits the metal and attaches. [leaning in, building] Then you pull—and the blade LIFTS out of the sand. [impressed, controlled] In lab tests, these fibers lifted over EIGHTY times their own weight. [quietly knowing] The beginnings of a real web shooter… made from moth silk.",
+ "note_on_prompt": "Bracketed tags are delivery directions (not spoken); capitals are emphasis. The spoken words are exactly the locked narration (production/NARRATION_APPROVED.txt).",
+ "takes": [
+  {
+   "file": "audio/narration/takes/take1.mp3",
+   "session_id": "RmqIRrvLl2ctOtSyFbm5",
+   "generation_id": "FhqeMUhD9o9NnB3akFeN",
+   "sha256": "9dfed123ae86273b5ebcad0fddbf8a709d06fbc28ca08f3db979dc3e4d48e3f5",
+   "duration_s": 31.32,
+   "speech_s": [
+    0.11,
+    31.15
+   ],
+   "wpm": 193.3,
+   "asr": {
+    "whisper_base_en_sherpa_onnx": {
+     "wer": 0.03,
+     "diffs": [
+      [
+       "replace",
+       "midair",
+       "mid air"
+      ],
+      [
+       "delete",
+       "eighty",
+       ""
+      ]
+     ]
+    },
+    "zipformer_en_2023_06_26_sherpa_onnx": {
+     "wer": 0.09,
+     "diffs": [
+      [
+       "replace",
+       "acetone",
+       "acidone"
+      ],
+      [
+       "replace",
+       "fiber",
+       "fibre"
+      ],
+      [
+       "replace",
+       "midair",
+       "mid air"
+      ],
+      [
+       "replace",
+       "lab tests",
+       "labtests"
+      ],
+      [
+       "replace",
+       "fibers",
+       "fibres"
+      ],
+      [
+       "replace",
+       "web shooter",
+       "webshooter"
+      ]
+     ]
+    },
+    "vosk_small_en_us_0_15_transcript": "imagine firing liquid at a criminal and watching it turn into a web that catches them scientists have taken the first step toward that they start with silk from moscow coons and dissolve it into a liquid as it shoots through a special nozzle a surrounding layer of acetone triggers the silk to harden a sticky fiber forms in mid air it hits the metal and attaches as the new poll and the blade lives out of the sand in lab tests these fibers lifted over eighty times their own weight the beginnings of a real web shooter made from moths silk",
+    "pocketsphinx_transcript": "imagine firing liquid at a criminal and watching a turn into aware that catches them scientists and taken the first step toward that they start with silk from all the cruise and is all that into a liquid as it shoots through special nozzle buzz surrounding layer of acetone triggers the silk to harden a sticky fiber forms in midair it hits the metal and attaches then you pull in the blade lives out of the sand in lab tests these fibers lifted over eighty times their own weight the beginnings of our real web shooter made from all the silk",
+    "pocketsphinx_wer": 0.17
+   },
+   "verdict": "Verbatim. Whisper base.en differs only in spelling (\"mid-air\", \"80\"); zipformer only in spelling/compounding (\"fibre\", \"labtests\", \"webshooter\") and one recogniser miss (\"acidone\" for acetone). The small Vosk and PocketSphinx models mishear \"moth cocoons\" (\"moscow coons\" / \"all the cruise\") and \"lifts\" (\"lives\"); the two stronger models hear both correctly."
+  },
+  {
+   "session_id": "aBVhrJKtnWXwIcwPvnom",
+   "generation_id": "pbnOC8REbtN4HUSujNdK",
+   "status": "failed",
+   "reason": "Workspace credit quota: 128 credits remaining, 725 required. No second take exists; the workspace has no credits for another."
+  }
+ ],
+ "selected": {
+  "take": "audio/narration/takes/take1.mp3",
+  "why": "The only completed take. Checked word for word against the locked text with two independent recognisers (above). Duration is the voice performance: speech 0.11-31.15 s, 193 wpm; not time-stretched or edited."
+ },
+ "final": {
+  "file": "audio/narration/FGW_Moth_Silk_narration_final.wav",
+  "processing": "decoded to 48 kHz mono, placed at 0 s, 50 ms fade after the last word, 0.6 s tail; no edits, stretching, pitch or EQ (tools/make_narration.py)"
+ }
+}
