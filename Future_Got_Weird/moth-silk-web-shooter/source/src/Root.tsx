@@ -7,6 +7,7 @@ import {ModelSheet2} from './v2/ModelSheet2';
 import {Film2, FilmStill2, Sheet2} from './v2/Film2';
 import {Film3, FilmStill3, Sheet3} from './v3/Film3';
 import {Film4, FilmStill4, Sheet4} from './v4/Film4';
+import {Film5, FilmStill5, Sheet5} from './v5/Film5';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -16,6 +17,9 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="RealWebFluidV2" component={Film2} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v2' as string | false, captions: true}} />
     <Still id="FilmStillV2" component={FilmStill2} width={W} height={H} defaultProps={{t: 0, captions: true}} />
     <Still id="SheetV2" component={Sheet2} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Composition id="RealWebFluidV5" component={Film5} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v5' as string | false, captions: true}} />
+    <Still id="FilmStillV5" component={FilmStill5} width={W} height={H} defaultProps={{t: 0, captions: true}} />
+    <Still id="SheetV5" component={Sheet5} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
     <Composition id="RealWebFluidV4" component={Film4} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v4' as string | false, captions: true}} />
     <Still id="FilmStillV4" component={FilmStill4} width={W} height={H} defaultProps={{t: 0, captions: true}} />
     <Still id="SheetV4" component={Sheet4} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
