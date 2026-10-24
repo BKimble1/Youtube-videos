@@ -63,9 +63,10 @@ const aimAngle = () => (AIM_CACHE ??= aimAng());
 export const heroAt = (f: number) => {
   const AIM_ANG = aimAngle();
   const shoulder = manJoints({...HERO0, rWx: 0, rWy: 0}).R.S;
-  // rising into position (pre-roll): a small dip (anticipation), then up
-  const up = ss(f, -54, -12);
-  const dip = Math.sin(clamp((f + 62) / 10) * Math.PI) * 4;
+  // rising into position (pre-roll): already moving at the cut into the pre-roll (SA.pre), a small dip
+  // (anticipation), then up
+  const up = ss(f, -96, -12);
+  const dip = Math.sin(clamp((f + 84) / 14) * Math.PI) * 4;
   // the snap
   const snap = ss5(f, -8, 1);
   const over = Math.sin(clamp((f - 0) / 6) * Math.PI) * (1 - clamp((f - 3) / 6)); // overshoot past the aim, settling
@@ -79,7 +80,7 @@ export const heroAt = (f: number) => {
   const lean = 3 * snap * (1 - 0.5 * ss(f, 4, 14));
   const pose: ManPose = {...HERO0, rWx: T.x, rWy: T.y, rWr: wr, torso: lerp(5, 7, up) + lean, chest: lerp(4, 6, up) + lean * 0.6, neck: lerp(-8, -13, up) - 2 * snap};
   const expr = mixExpr(EXPR_FOCUS, EXPR_FIRE, ss(f, -3, 2));
-  const hand = mixHand(mixHand(HAND_RELAXED, HAND_READY, ss(f, -50, -20)), HAND_THWIP, ss(f, -3, 1));
+  const hand = mixHand(mixHand(HAND_RELAXED, HAND_READY, ss(f, -72, -26)), HAND_THWIP, ss(f, -3, 1));
   return {pose, expr, hand, hairSway: -4 * Math.sin(clamp((f + 8) / 12) * Math.PI) + 2 * Math.sin(clamp((f - SA.fire) / 8) * Math.PI)};
 };
 export const heroOutlet = (f: number) => {
@@ -525,7 +526,8 @@ export const preFocus = (f: number) => {
 };
 export const streetCam = (f: number): Cam => {
   if (f < -3) {
-    const u = ss5(f, -44, -3);
+    // a slow pull-out from the cut on (no hold), then the main pull-out into frame 0's framing
+    const u = 0.88 * ss5(f, -54, -3) + 0.12 * clamp((f - SA.pre) / (-3 - SA.pre));
     const c0 = camC(CAM0);
     const zn = Math.exp(lerp(Math.log(PRE_ZN), Math.log(c0.zn), u));
     const w = (1 / zn - 1 / PRE_ZN) / (1 / c0.zn - 1 / PRE_ZN);

@@ -57,19 +57,19 @@
   "name": "runner footfall 13",
   "at": 30.546,
   "dur": 0.2,
-  "gain_db": -24
+  "gain_db": -25.0
  },
  {
   "name": "runner footfall 15",
   "at": 30.913,
   "dur": 0.2,
-  "gain_db": -26.9
+  "gain_db": -28.5
  },
  {
   "name": "runner footfall 17",
   "at": 31.279,
   "dur": 0.2,
-  "gain_db": -30.0
+  "gain_db": -30.2
  },
  {
   "name": "runner footfall 19",
@@ -79,8 +79,8 @@
  },
  {
   "name": "arm rises into the aim (air)",
-  "at": 29.933,
-  "dur": 0.9,
+  "at": 29.25,
+  "dur": 1.6,
   "gain_db": -44
  },
  {

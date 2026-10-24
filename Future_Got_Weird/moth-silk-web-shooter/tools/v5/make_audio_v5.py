@@ -187,7 +187,7 @@ for k, st in enumerate(cj['steps']):
     if st['t'] - prev < 0.1: continue
     prev = st['t']
     add(f'runner footfall {k}', boot(), st['t'] - 0.004, -32 + 8 * min(1, (st['zoom'] - 1) / 2))
-add('arm rises into the aim (air)', soft_air(0.9, 300, 1100), PRE(-54), -44)
+add('arm rises into the aim (air)', soft_air(1.6, 300, 1100), PRE(-76) + 0.05, -44)
 add('wrist snap (air)', soft_air(0.22, 700, 2600), PRE(-8), -36)
 add('trigger click', tick(2600, 0.04), PRE(-1) + 0.0, -33)
 add('liquid release (eruption)', spray(0.24), ST['fire'], -26)

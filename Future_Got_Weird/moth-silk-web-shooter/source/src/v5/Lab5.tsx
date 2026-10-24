@@ -374,6 +374,7 @@ const KEYS: K[] = [
   {f: 544, c: fixed(440, 1238, 3.4)},
   // contact and the slack drawn out
   {f: LT5.fcontact, c: fixed(382, 1254, 6.6)},
+  {f: 582, c: fixed(398, 1246, 5.6)},
   {f: LT5.settle1, c: fixed(410, 1240, 5.0)},
   // the pull: hand, fibre and blade in one frame; the resistance close on the sand
   {f: LT5.pull0 + 2, c: fixed(640, 1165, 1.75)},
@@ -400,6 +401,16 @@ const camAt = (k: K, f: number) => {
 /** the camera passes through its keys on a non-uniform Catmull-Rom spline (x, y, log zoom); the pull-back from the
  *  match starts gently */
 export const labCam5 = (f: number): Cam => {
+  const c = labCamBase(f);
+  // a small kick of the camera as the fibre strikes the metal (a few frames, decaying)
+  if (f >= LT5.fcontact && f < LT5.fcontact + 14) {
+    const e = f - LT5.fcontact;
+    const a = Math.exp(-e / 3.5) * Math.sin(e * 1.9);
+    return {...c, x: c.x + 1.2 * a, y: c.y + 2.2 * a, z: c.z * (1 + 0.03 * Math.exp(-e / 4))};
+  }
+  return c;
+};
+const labCamBase = (f: number): Cam => {
   if (f <= KEYS[0].f) return KEYS[0].c(f);
   let i = 1;
   while (i < KEYS.length - 1 && f > KEYS[i].f) i++;
