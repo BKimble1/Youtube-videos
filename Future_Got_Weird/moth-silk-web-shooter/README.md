@@ -1,5 +1,35 @@
 # Future Got Weird: Real Web Fluid
 
+## V3 (final visual pass on the locked V1 narration)
+
+**Status (24 Oct 2026):** the V3 review (1080×1920) and the native 2160×3840 master are rendered from source and
+checked from the files (`production/V3_REPORT.md`, which lists the remaining problems). **Not published.** Nobody has
+watched it in real time with sound.
+
+| Deliverable | File |
+|---|---|
+| V3 review: 1080×1920, 30 fps, 952 frames, 31.73 s, captions burned in | `exports/FGW_Real_Web_Fluid_V3_REVIEW_1080x1920.mp4` |
+| V3 master: 2160×3840 native (rendered at 2×) | `exports/FGW_Real_Web_Fluid_V3_MASTER_2160x3840.mp4` |
+| Report: what was inspected, what changed, checks, remaining problems | `production/V3_REPORT.md` |
+| Shots, transitions, one-second audit | `production/V3_SHOTS_AND_TRANSITIONS.md` |
+| V3 mix (unchanged narration, rebuilt effects) and cues | `audio/mix/FGW_Moth_Silk_V3_mix.wav`, `audio/cues_v3.json`, `audio/sfx_cues_v3.json` |
+| Source | `source/src/v3/` (composition `RealWebFluidV3`; stills `FilmStillV3`, `SheetV3`) |
+
+Rebuild V3:
+
+    cd Future_Got_Weird/moth-silk-web-shooter
+    source/node_modules/.bin/esbuild tools/v3/export_cues_v3.ts --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/ec3.cjs && node /tmp/ec3.cjs audio/cues_v3.json
+    python3 tools/v3/make_audio_v3.py      # -> source/public/audio/mix_v3.wav
+    source/node_modules/.bin/esbuild tools/v3/cap_check3.ts --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/cc3.cjs && node /tmp/cc3.cjs qa/v3/caption_check.json
+    (cd source && npx remotion render src/index.ts RealWebFluidV3 ../exports/FGW_Real_Web_Fluid_V3_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v3","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && npx remotion render src/index.ts RealWebFluidV3 ../exports/FGW_Real_Web_Fluid_V3_MASTER_2160x3840.mp4 --scale=2 --props='{"audio":"mix_v3","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=3)
+    QA_MIX=source/public/audio/mix_v3.wav python3 tools/qa.py exports/FGW_Real_Web_Fluid_V3_REVIEW_1080x1920.mp4 <vosk_model_dir> qa/v3/review
+
+Contact sheets while working: `cd source && ./sheet3.sh out.png "frame1,frame2,..." [true]`. Staging probes:
+`tools/v3/probe_bridge.ts`, `probe_lab.ts`, `probe_open.ts`.
+
+---
+
 ## V2 (visual rebuild on the locked V1 narration)
 
 **Status (24 Oct 2026):** the V2 review (1080×1920) and the native 2160×3840 master are rendered from source and

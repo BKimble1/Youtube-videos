@@ -1,0 +1,54 @@
+{
+ "zipformer": {
+  "transcript": "IMAGINE FIRING LIQUID AT A CRIMINAL AND WATCHING IT TURN INTO A WEB THAT CATCHES THEM SCIENTISTS HAVE TAKEN THE FIRST STEP TOWARD THAT THEY START WITH SILK FROM MOTH COCOONS AND DISSOLVE IT INTO A LIQUID AS IT SHOOTS THROUGH A SPECIAL NOZZLE A SURROUNDING LAYER OF ACIDONE TRIGGERS THE SILK TO HARDEN A STICKY FIBRE FORMS IN MID AIR IT HITS THE METAL AND ATTACHES THEN YOU PULL AND THE BLADE LIFTS OUT OF THE SAND IN LABTESTS THESE FIBRES LIFTED OVER EIGHTY TIMES THEIR OWN WEIGHT THE BEGINNINGS OF A REAL WEBSHOOTER MADE FROM MOTH SILK",
+  "wer": 0.09,
+  "diffs": [
+   [
+    "replace",
+    "acetone",
+    "acidone"
+   ],
+   [
+    "replace",
+    "fiber",
+    "fibre"
+   ],
+   [
+    "replace",
+    "midair",
+    "mid air"
+   ],
+   [
+    "replace",
+    "lab tests",
+    "labtests"
+   ],
+   [
+    "replace",
+    "fibers",
+    "fibres"
+   ],
+   [
+    "replace",
+    "web shooter",
+    "webshooter"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "Imagine firing liquid at a criminal. and watching it turn into a web that catches them. Scientists have taken the first step toward that. They start with silk from moth cocoons and dissolve it into a liquid. As it shoots through a special nozzle, a surrounding layer of acetone triggers the silk to harden. A sticky fiber forms in mid-air. It hits the metal and attaches. Then you pull and the blade lifts out of the sand. In lab tests, these fibers lifted over 80 times their own weight. The beginnings of a real web shooter made from moth silk.",
+  "wer": 0.03,
+  "diffs": [
+   [
+    "replace",
+    "midair",
+    "mid air"
+   ],
+   [
+    "delete",
+    "eighty",
+    ""
+   ]
+  ]
+ }
+}
