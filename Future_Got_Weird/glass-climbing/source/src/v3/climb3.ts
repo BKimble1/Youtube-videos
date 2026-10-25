@@ -302,7 +302,7 @@ const climbRaw = (f: number, padLIn?: PadState, padRIn?: PadState): ClimbState =
   const gripR = prPad(gripOf(padR));
   const j0 = manJoints(pose);
   const clear0 = len(sub(gripR, j0.head)) - DIM.headR * j0.s;
-  pose = {...pose, neck: pose.neck - Math.min(22, Math.max(0, (45 - clear0) / 1.6))};
+  pose = {...pose, neck: pose.neck - Math.min(26, Math.max(0, (75 - clear0) / 1.6))}; // 75: clear of the hair, not just the skull
   const uv = handUV(H_BAR, 'grip');
   pose = placeHand(pose, 'L', prPad(gripOf(padL)), 182, uv.u, uv.v);
   pose = placeHand(pose, 'R', gripR, 176, uv.u, uv.v);

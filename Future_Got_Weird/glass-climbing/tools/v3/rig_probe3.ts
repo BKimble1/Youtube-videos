@@ -51,7 +51,7 @@ for (let f = from || 0; f <= (to || FRAMES); f++) {
   // grip to the head's outline
   const fc = Math.hypot(gR.x - j.head.x, gR.y - j.head.y) - DIM.headR * j.s;
   if (fc < worst.farClear[0]) worst.farClear = [+fc.toFixed(0), f];
-  if (fc < 25) bad.farHid.push(f);
+  if (fc < 35) bad.farHid.push(f); // the hair reaches past the skull: a smaller clearance would put the hand in it
   const nl = j.lLeg, fl = j.rLeg;
   if (cross(nl.K, nl.A, fl.K, fl.A) || cross(nl.K, nl.A, fl.hp, fl.K) || cross(nl.hp, nl.K, fl.K, fl.A)) bad.legX.push(f);
   prev = s;
