@@ -82,7 +82,7 @@ export const C = {
   nStep0: 72, nStep1: 86, nLoad0: 86, nLoad1: 98, fStep0: 98, fStep1: 112, fLoad0: 108, fLoad1: 120,
   look0: 878, look1: 902,
   frozen0: 904, stool: 945,
-  lRel3: 976, lMove3a: 980, lMove3b: 1004, lPress0: 1008, lPress1: 1018,
+  lRel3: 962, lMove3a: 966, lMove3b: 998, lPress0: 1004, lPress1: 1016,
   test0: 1040, test1: 1060,
   yank0: 1106, fail: 1116, failEnd: 1126, lift0: 1134, lift1: 1152,
 };
@@ -164,7 +164,7 @@ const levelY = (k: number) => (nearY(k) + standY(tautAnkleAt('R', UY(k)), 'R', 0
 /** how far he comes up onto the far loop before the near pad moves (the near hand must still reach its pad) */
 export const RISE_A = 84;
 /** how far he settles into the near loop as he takes his weight off the far one (the near knee gives a little) */
-export const SINK = 22;
+export const SINK = 34;
 const HIP_KEYS: KeyN = (() => {
   const k: KeyN = [[0, stoolY(0.94)], [C.nLoad0, stoolY(0.94)], [C.nLoad1, Math.max((stoolY(0.94) + nearY(0)) / 2, standY(STOOL_FOOT.R, 'R', 0.96))], [C.fStep1, nearY(0)], [C.fLoad1, levelY(0)]];
   for (const c of CYCLES) {
@@ -239,7 +239,9 @@ const climbRaw = (f: number, padLIn?: PadState, padRIn?: PadState): ClimbState =
 
   // ---- the pelvis: stage heights from the supports (see HIP_KEYS); on the stool, from the board and the squat
   const hy = f >= C.stool ? stoolY(stoolFrac(f)) : keyN(f, HIP_KEYS);
-  const H: V = {x: HX, y: hy};
+  // during a shift his hips move a little over the near foot, and come back as he rises onto the far one
+  const shiftX = f >= C.stool ? 0 : Math.max(...CYCLES.map((c) => ss(f, c.sh[0], c.sh[1]) * (1 - ss(f, c.rise[0], c.rise[1]))));
+  const H: V = {x: HX + 16 * shiftX, y: hy};
 
   // ---- feet: on the stool, stepping into a loop, or in it (planted at the taut length, or carried with a slack strap)
   const reachOf = (A: V, side: Side) => {
@@ -261,7 +263,7 @@ const climbRaw = (f: number, padLIn?: PadState, padRIn?: PadState): ClimbState =
     // stand-off from the glass while it is carried)
     const pad = side === 'L' ? padL : padR;
     const seated = ankleForBar(tautBar(prPad(ringOf({...pad, gap: 0, tilt: 0})), side), 1);
-    const free = add(seated, {x: -4, y: -20});
+    const free = add(seated, {x: -4, y: side === 'R' ? -46 : -20});
     let A = lerpV(free, taut[side], ss(wl[side], 0, 0.85));
     if (f < step1) {
       // the step from the board into the loop: up off the board, across toward the wall, down into the loop
@@ -294,7 +296,7 @@ const climbRaw = (f: number, padLIn?: PadState, padRIn?: PadState): ClimbState =
   const lookDown = Math.max(bump(f, C.look0, C.frozen0 + 4, 12, 4), bump(f, C.stool + 20, C.lift0, 12, 14));
   const recoil = keyN(f, [[C.fail, 0], [C.fail + 5, 1], [C.failEnd + 4, 0.5], [C.lift1, 0]]);
   const leanBase = keyN(f, [[0, 9], [C.nStep0, 9], [C.fLoad1, 12], [C.stool - 1, 12], [C.stool, 9], [C.lRel3, 9], [C.lPress0, 14], [C.yank0, 14], [C.lift1, 9], [FRAMES, 9]]);
-  const lean = leanBase + 2 * reach - 4 * recoil;
+  const lean = leanBase + 2 * reach - 4 * recoil + 4 * shiftX;
   const chest = 4 + 2 * reach;
   // the head stays upright as the body leans: its angle is set directly (a small tip back looking up, forward
   // looking down), never as a side effect of the torso

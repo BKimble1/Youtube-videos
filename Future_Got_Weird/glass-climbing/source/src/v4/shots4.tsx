@@ -77,8 +77,9 @@ const fieldAt = (f: number): FieldState => ({
   ...FIELD,
   alpha: keyN(f, [[216, 0], [250, 0.8], [307, 0.9]]),
   beta: keyN(f, [[216, 0], [250, 34], [307, 24]]),
-  surface: f < 262 ? 'none' : 'glass',
-  gx: keyN(f, [[262, -320], [280, 0, easeOut]]),
+  // the glass slides in from beyond the frame (it never appears in view)
+  surface: f < 240 ? 'none' : 'glass',
+  gx: keyN(f, [[240, -1600], [262, -320], [280, 0, easeOut]]),
   lam: keyN(f, [[286, 0], [307, 0.32]]),
   fog: keyN(f, [[216, 0], [240, 1]]),
 });
@@ -176,27 +177,32 @@ const M89: React.FC<{f: number}> = ({f}) => {
 // ------------------------------------------------------------------ 3. the springs (535-680): five held views
 /** SP1 (535-566) "Special springs": the loaded pad from his side; the back cover lifts away (a slow push) */
 const camSP1 = (f: number) => cam1(f, [[535, 0, 30, 2.6], [566, -2, 24, 3.0, inOut]]);
+const camSP2 = (f: number) => cam1(f, [[566, -8, 12, 4.7], [598, -10, 10, 5.3, inOut]]);
+const camSP3 = (f: number) => cam1(f, [[598, -40, -8, 10.0], [630, -40, -6, 10.9, inOut]]);
+const camSP4 = (f: number) => cam1(f, [[630, -30, 54, 8.0], [660, -30, 54, 8.6, inOut]]);
 const SP1: React.FC<{f: number}> = ({f}) => <Svg><SpringScene3 id={`sp${f}`} f={f} cam={camSP1(f)} /></Svg>;
 /** SP2 (566-598) "spread the load,": closer: the pull comes on through the handle and each spring takes its share */
-const SP2: React.FC<{f: number}> = ({f}) => <Svg><SpringScene3 id={`sp${f}`} f={f} cam={{x: -8, y: 12, z: 5.0}} /></Svg>;
+const SP2: React.FC<{f: number}> = ({f}) => <Svg><SpringScene3 id={`sp${f}`} f={f} cam={camSP2(f)} /></Svg>;
 /** SP3 (598-630) "so one little patch": close on one column: the same pull on one spring alone stretches it far */
-const SP3: React.FC<{f: number}> = ({f}) => <Svg><SpringScene3 id={`sp${f}`} f={f} cam={{x: -40, y: -8, z: 10.5}} /></Svg>;
+const SP3: React.FC<{f: number}> = ({f}) => <Svg><SpringScene3 id={`sp${f}`} f={f} cam={camSP3(f)} /></Svg>;
 /** SP4 (630-660) "doesn't have to hold you up": one tile loses contact, its neighbours take up its share */
-const SP4: React.FC<{f: number}> = ({f}) => <Svg><SpringScene3 id={`sp${f}`} f={f} cam={{x: -30, y: 54, z: 8.4}} /></Svg>;
+const SP4: React.FC<{f: number}> = ({f}) => <Svg><SpringScene3 id={`sp${f}`} f={f} cam={camSP4(f)} /></Svg>;
 /** SP5 (660-680) "alone.": one pull back to the whole pad as the cover returns */
-const camSP5 = (f: number) => cam1(f, [[660, -30, 54, 8.4], [680, 4, 40, 2.8, inOut]]);
+const camSP5 = (f: number) => cam1(f, [[660, -30, 54, 8.6], [680, 4, 40, 2.8, inOut]]);
 const SP5: React.FC<{f: number}> = ({f}) => <Svg><SpringScene3 id={`sp${f}`} f={f} cam={camSP5(f)} /></Svg>;
 
 // ------------------------------------------------------------------ 4. the climb (680-904)
-/** C1 (680-724) "Then, you shift your weight": the whole of him on the glass, held: he settles down onto the near loop */
-const camC1 = (_f: number): Cam => ({x: 200, y: -1840, z: 1.45});
+/** C1 (680-724) "Then, you shift your weight": the whole of him on the glass (a slow push): he settles down onto the
+ *  near loop, his far knee comes up and the far strap goes slack */
+const camC1 = (f: number) => cam1(f, [[680, 200, -1840, 1.42], [724, 196, -1820, 1.52, inOut]]);
 const C1: React.FC<{f: number}> = ({f}) => bay(`c1${f}`, f, camC1(f));
-/** C2 (724-768) "onto the other pad.": low, held, on the loops: the near strap taut under his weight, the far one slack */
-const camC2 = (_f: number): Cam => ({x: 190, y: -1520, z: 1.85});
+/** C2 (724-768) "onto the other pad.": low, on the loops (a slow push): the near strap taut under his weight, the far
+ *  foot light in its slack loop */
+const camC2 = (f: number) => cam1(f, [[724, 190, -1520, 1.8], [768, 186, -1530, 1.95, inOut]]);
 const C2: React.FC<{f: number}> = ({f}) => bay(`c2${f}`, f, camC2(f));
 /** C3 (768-842) "The first releases, letting you reach higher": on the two pads and his head: the upper pad peels
  *  (the lower one, and the hand on it, stay put), then the camera tracks up with it (one move) to where it is seated */
-const camC3 = (f: number) => cam1(f, [[768, 120, -2050, 2.15], [790, 120, -2050, 2.15], [838, 118, -2195, 2.15, inOut]]);
+const camC3 = (f: number) => cam1(f, [[768, 120, -2050, 2.15], [838, 118, -2195, 2.15, inOut]]);
 const C3: React.FC<{f: number}> = ({f}) => bay(`c3${f}`, f, camC3(f));
 /** C4 (842-904) "and repeat. But there's a catch.": wide, the whole of him: he rises onto the far loop; he looks
  *  down, and the camera goes down the wall with his look to where the glass meets the brick (one move) */
@@ -209,7 +215,7 @@ const camK2 = (f: number) => cam1(f, [[904, 6, -170, 6.6], [945, 4, 50, 7.2, inO
 const K2: React.FC<{f: number}> = ({f}) => <Svg><BoundaryView id={`k2${f}`} cam={camK2(f)} /></Svg>;
 /** K3 (945-1018) "to grip. So you can climb glass—": on the stool at the foot of the wall: the near pad comes off the
  *  glass and goes down onto the brick as he bends his knees; the camera follows it down a little (one move) */
-const camK3 = (f: number) => cam1(f, [[945, 170, -1065, 1.6], [978, 170, -1065, 1.6], [1012, 170, -1005, 1.6, inOut]]);
+const camK3 = (f: number) => cam1(f, [[945, 170, -1070, 1.55], [1012, 170, -1005, 1.62, inOut]]);
 const K3: React.FC<{f: number}> = ({f}) => bay(`k3${f}`, f, camK3(f));
 /** K5 (1018-1063) "but switch to rough brick,": in section, the same view as A2 on brick: the layer rides on the peaks
  *  and cannot reach the pits; under his test pull it seems to hold (one push in) */
@@ -217,7 +223,7 @@ const pressBrick = (f: number): PressState => {
   const p = keyN(f, [[1017, 0.2], [1032, 1]]);
   return {surface: 'brick', press: p, shear: 2 * p + keyN(f, [[1040, 0], [1060, 2]]), gap: keyN(f, [[1017, 3], [1026, 0, easeOut]]), tilt: 0, slide: keyN(f, [[1050, 0], [1060, 1.2]]), hand: mixHand(H_BAR_OPEN, H_BAR, clamp(p * 1.4)), sag: 20};
 };
-const camK5 = (f: number) => cam1(f, [[1018, 50, -6, 3.6], [1050, 14, -30, 8.0, inOut]]);
+const camK5 = (f: number) => cam1(f, [[1018, 50, -6, 3.6], [1063, 14, -30, 8.4, inOut]]);
 const K5: React.FC<{f: number}> = ({f}) => <Svg><PressView id={`k5${f}`} st={pressBrick(f)} cam={camK5(f)} /></Svg>;
 /** K6 (1063-1107) "and those microscopic wedges": the same wedges side by side at the same scale: on glass every one
  *  lies flat in contact; on brick only a few tips reach a peak, and under the pull those skid off (a slight pull) */
@@ -256,7 +262,7 @@ export const CAMS4: Record<string, (f: number) => Cam> = {
   M5: (f) => cam1(f, [[343, 20, 345, 12.5], [382, 26, 420, 5.2, inOut]]),
   M6: (f) => camZoom(f, 382, 423, {x: 26, y: 420}, 5.2, {x: CP.x + 1, y: CP.y}, 40, quadIn),
   M7: (f) => camZoom(f, 423, 470, {x: CP.x + 1, y: CP.y}, 40, {x: CP.x + 0.02, y: CP.y}, 520, quadOut),
-  SP1: camSP1, SP2: () => ({x: -8, y: 12, z: 5.0}), SP3: () => ({x: -40, y: -8, z: 10.5}), SP4: () => ({x: -30, y: 54, z: 8.4}), SP5: camSP5,
+  SP1: camSP1, SP2: camSP2, SP3: camSP3, SP4: camSP4, SP5: camSP5,
   C1: camC1, C2: camC2, C3: camC3, C4: camC4, K2: camK2, K3: camK3, K5: camK5, K7: camK7,
 };
 
