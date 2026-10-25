@@ -18,6 +18,8 @@ import {RBSheet} from './rb/dev/Sheet';
 import {C2Sheet} from './c2/dev/Sheet';
 import {C2Probe} from './c2/dev/Probe';
 import {FilmC2, FilmC2Still} from './c2/Film';
+import {FilmC3, FilmC3Still} from './c3/Film';
+import {C3Sheet} from './c3/dev/Sheet';
 import {FilmRB, FilmRBStill} from './rb/Film';
 import {RBBodySheet} from './rb/dev/BodySheet';
 import {RBFaceCU} from './rb/dev/FaceCU';
@@ -47,6 +49,9 @@ export const RemotionRoot: React.FC = () => (
     <Still id="C2Sheet" component={C2Sheet} width={W} height={H} defaultProps={{who: 0, page: 0}} />
     <Composition id="LaserVoicesC2" component={FilmC2} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_c2' as string | false, captions: true}} />
     <Still id="C2Still" component={FilmC2Still} width={W} height={H} defaultProps={{t: 0, captions: true}} />
+    <Composition id="LaserVoicesC3" component={FilmC3} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_c3' as string | false, captions: true}} />
+    <Still id="C3Still" component={FilmC3Still} width={W} height={H} defaultProps={{t: 0, captions: true}} />
+    <Still id="C3Sheet" component={C3Sheet} width={W} height={H} defaultProps={{who: 0, page: 0}} />
     <Still id="C2Probe" component={C2Probe} width={W} height={H} defaultProps={{pos: [-0.2, 1.55, -2.2], tgt: [-0.2, 1.1, 4.0], f: 900, t: 0, beam: 1}} />
     <Still id="RBSheet" component={RBSheet} width={W} height={H} defaultProps={{row: 0}} />
     <Still id="RBBody" component={RBBodySheet} width={W} height={H} defaultProps={{row: 0}} />

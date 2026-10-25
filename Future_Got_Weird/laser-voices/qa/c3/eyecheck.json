@@ -1,0 +1,224 @@
+{
+ "frames_checked": 772,
+ "faces_checked": 1227,
+ "flags": [
+  {
+   "frame": 261,
+   "id": "L",
+   "shot": "ear",
+   "kind": "one-frame dip",
+   "count": 2,
+   "prev": 8,
+   "next": 5
+  },
+  {
+   "frame": 455,
+   "id": "L",
+   "shot": "ret",
+   "kind": "one-frame dip",
+   "count": 70,
+   "prev": 313,
+   "next": 216
+  },
+  {
+   "frame": 682,
+   "id": "L",
+   "shot": "wide8",
+   "kind": "one-frame dip",
+   "count": 0,
+   "prev": 2,
+   "next": 73
+  },
+  {
+   "frame": 682,
+   "id": "L",
+   "shot": "wide8",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 751,
+   "id": "L",
+   "shot": "walk",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 752,
+   "id": "L",
+   "shot": "walk",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 753,
+   "id": "L",
+   "shot": "walk",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 754,
+   "id": "L",
+   "shot": "walk",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 755,
+   "id": "L",
+   "shot": "walk",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 756,
+   "id": "L",
+   "shot": "walk",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 757,
+   "id": "L",
+   "shot": "walk",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 758,
+   "id": "L",
+   "shot": "walk",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 759,
+   "id": "L",
+   "shot": "walk",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 764,
+   "id": "P",
+   "shot": "walk",
+   "kind": "one-frame dip",
+   "count": 0,
+   "prev": 100,
+   "next": 78
+  }
+ ],
+ "per_shot": {
+  "open:L": {
+   "frames": 83,
+   "min_norm": 0.0,
+   "max_norm": 0.3362
+  },
+  "open:O": {
+   "frames": 25,
+   "min_norm": 0.0293,
+   "max_norm": 0.0749
+  },
+  "open:P": {
+   "frames": 15,
+   "min_norm": 0.0,
+   "max_norm": 0.0
+  },
+  "two:L": {
+   "frames": 66,
+   "min_norm": 0.0,
+   "max_norm": 0.2693
+  },
+  "two:P": {
+   "frames": 66,
+   "min_norm": 0.034,
+   "max_norm": 0.0776
+  },
+  "ear:L": {
+   "frames": 118,
+   "min_norm": 0.0,
+   "max_norm": 0.1234
+  },
+  "ear:P": {
+   "frames": 43,
+   "min_norm": 0.0079,
+   "max_norm": 0.1081
+  },
+  "ret:L": {
+   "frames": 17,
+   "min_norm": 0.0001,
+   "max_norm": 0.0484
+  },
+  "track:L": {
+   "frames": 66,
+   "min_norm": 0.0005,
+   "max_norm": 0.3245
+  },
+  "track:P": {
+   "frames": 66,
+   "min_norm": 0.0464,
+   "max_norm": 0.3872
+  },
+  "press:O": {
+   "frames": 39,
+   "min_norm": 0.0989,
+   "max_norm": 0.1581
+  },
+  "wide8:L": {
+   "frames": 60,
+   "min_norm": 0.0,
+   "max_norm": 0.239
+  },
+  "wide8:P": {
+   "frames": 13,
+   "min_norm": 0.0,
+   "max_norm": 0.1135
+  },
+  "walk:L": {
+   "frames": 89,
+   "min_norm": 0.0,
+   "max_norm": 0.2087
+  },
+  "walk:P": {
+   "frames": 89,
+   "min_norm": 0.0,
+   "max_norm": 0.0767
+  },
+  "walk:O": {
+   "frames": 15,
+   "min_norm": 0.0,
+   "max_norm": 0.0
+  },
+  "stop:L": {
+   "frames": 49,
+   "min_norm": 0.3106,
+   "max_norm": 0.3419
+  },
+  "block:L": {
+   "frames": 84,
+   "min_norm": 0.0,
+   "max_norm": 0.2919
+  },
+  "block:P": {
+   "frames": 84,
+   "min_norm": 0.0001,
+   "max_norm": 0.1482
+  },
+  "move:L": {
+   "frames": 39,
+   "min_norm": 0.0,
+   "max_norm": 0.1279
+  },
+  "move:P": {
+   "frames": 39,
+   "min_norm": 0.0,
+   "max_norm": 0.056
+  },
+  "final:L": {
+   "frames": 62,
+   "min_norm": 0.0,
+   "max_norm": 0.326
+  }
+ }
+}
