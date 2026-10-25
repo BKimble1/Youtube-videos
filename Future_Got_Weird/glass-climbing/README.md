@@ -1,5 +1,33 @@
 # Future Got Weird: Scientists Made Spider-Man's Wall-Climbing Real (Glass Climbing)
 
+## V3 (animation, pacing and character-rig pass on the same narration)
+
+**Status (25 Oct 2026):** the V3 review (1080×1920) was rendered from source and checked from the file
+(`production/V3_REPORT.md`, which lists what was measured and what remains). **Not published.** Nobody has watched it
+in real time with sound. The narration is still V1's stand-in voice, sample for sample.
+
+| Deliverable | File |
+|---|---|
+| V3 review: 1080×1920, 30 fps, 1162 frames, 38.73 s, captions burned in, seamless loop | `exports/FGW_Glass_Climbing_V3_REVIEW_1080x1920.mp4` |
+| Report and shot/transition list (28 shots) | `production/V3_REPORT.md`, `production/V3_SHOTS_AND_TRANSITIONS.md` |
+| V3 mix (V1 narration sample for sample, effects on the V3 events) and cues | `audio/mix/FGW_Glass_Climbing_V3_mix.wav`, `audio/mix/mix_measure_v3.json`, `audio/cues_v3.json`, `audio/sfx_cues_v3.json` |
+| QA evidence | `qa/FGW_Glass_Climbing_V3_REVIEW_*`, `qa/FGW_Glass_Climbing_V3_loop_x3.mp4` (the loop junction three times) |
+| Source | `source/src/v3/` (composition `GlassClimbingV3`; stills `FilmStillV3`, `SheetV3`, working `BaySheet3`, `PressTest`) |
+
+Rebuild V3:
+
+```sh
+source/node_modules/.bin/esbuild tools/v3/export_cues_v3.ts --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/ec3.cjs && node /tmp/ec3.cjs audio/cues_v3.json
+python3 tools/v3/make_audio_v3.py      # writes source/public/audio/mix_v3.wav
+cd source && npx remotion render src/index.ts GlassClimbingV3 ../exports/FGW_Glass_Climbing_V3_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v3","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4
+```
+
+Contact sheets: `cd source && ./sheet3.sh out.png "f1,f2,..." [true]`. Rig probe (hands on bars, leg reach, straps,
+near hand below the chin, far hand clear of the head and hair, legs never crossing, the whole state equal at the
+loop): bundle `tools/v3/rig_probe3.ts` with esbuild as above and run it with node.
+
+---
+
 ## V2 (second-pass animation rebuild on the same narration)
 
 **Status (25 Oct 2026):** the V2 review (1080×1920) was rendered from source and checked from the file
