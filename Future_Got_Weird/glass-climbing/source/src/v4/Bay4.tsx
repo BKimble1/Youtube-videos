@@ -45,7 +45,7 @@ const Loop: React.FC<{id: string; top: V; bar: V; k: number; part: 'back' | 'fro
   );
 };
 
-export const BayWorld4: React.FC<{id: string; st: ClimbState; cam: Cam; k: number; nest?: React.ReactNode; over?: React.ReactNode; man?: boolean}> = ({id, st, cam, k, nest, over, man = true}) => {
+export const BayWorld4: React.FC<{id: string; st: ClimbState; cam: Cam; k: number; nest?: React.ReactNode; over?: React.ReactNode; man?: boolean; gear?: boolean}> = ({id, st, cam, k, nest, over, man = true, gear = true}) => {
   const {pose, ringL, ringR, footL, footR, padL, padR} = st;
   const topL = loopApex(footL.bar), topR = loopApex(footR.bar);
   const contactL = 1 - Math.min(1, padL.gap / 6);
@@ -74,6 +74,8 @@ export const BayWorld4: React.FC<{id: string; st: ClimbState; cam: Cam; k: numbe
         <Pavement id={`${id}-pv`} k={k} />
         <Facade id={`${id}-fc`} k={k} />
         <Stool id={`${id}-stool`} k={k} stool={STOOL4} />
+        {gear && (
+        <>
         {/* far side */}
         <PadBody id={`${id}-pR`} s={padR} k={k} bar={false} contact={contactR} />
         <Ring c={ringR} k={k} />
@@ -120,6 +122,8 @@ export const BayWorld4: React.FC<{id: string; st: ClimbState; cam: Cam; k: numbe
             <PadBar id={`${id}-bR`} s={padR} k={k} />
             <PadBar id={`${id}-bL`} s={padL} k={k} />
           </>
+        )}
+        </>
         )}
         {nest}
       </Layer>

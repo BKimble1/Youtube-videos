@@ -30,7 +30,13 @@ const quadIn = (x: number) => x * x;
 const quadOut = (x: number) => 1 - (1 - x) * (1 - x);
 /** lingers on the start (the tiles darkening), then pushes in and arrives at rest */
 const lateInOut = (x: number) => inOut(Math.pow(x, 1.7));
-const bay = (id: string, f: number, cam: Cam, nest?: React.ReactNode) => <Svg><BayWorld4 id={id} st={climbAt(f)} cam={cam} k={kOf(Math.min(cam.z, 8))} nest={nest} /></Svg>;
+/** QC: draw the shots with the climber and his gear hidden, to watch the cameras alone */
+export const CamOnly = React.createContext(false);
+const BayShot: React.FC<{id: string; f: number; cam: Cam; nest?: React.ReactNode}> = ({id, f, cam, nest}) => {
+  const camOnly = React.useContext(CamOnly);
+  return <Svg><BayWorld4 id={id} st={climbAt(f)} cam={cam} k={kOf(Math.min(cam.z, 8))} nest={nest} man={!camOnly} gear={!camOnly} /></Svg>;
+};
+const bay = (id: string, f: number, cam: Cam, nest?: React.ReactNode) => <BayShot id={id} f={f} cam={cam} nest={nest} />;
 type K = [number, number, number, number, ((x: number) => number)?];
 /** hold a framing, or move once between two framings (a hold before or after is allowed) */
 const cam1 = (f: number, keys: K[]) => camAt(f, keys);

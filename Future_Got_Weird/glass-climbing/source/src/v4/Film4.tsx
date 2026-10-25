@@ -5,7 +5,7 @@ import '../fonts';
 import {Captions} from '../Captions';
 import {FPS} from './set4';
 import {capSide, capY} from './captions4';
-import {SceneAt4} from './shots4';
+import {CamOnly, SceneAt4} from './shots4';
 
 export const Frame4: React.FC<{f: number; captions: boolean}> = ({f, captions}) => (
   <AbsoluteFill style={{backgroundColor: '#1A252D', overflow: 'hidden'}}>
@@ -13,11 +13,13 @@ export const Frame4: React.FC<{f: number; captions: boolean}> = ({f, captions}) 
     {captions && <Captions t={f / FPS} cy={capY(f / FPS)} side={capSide(f / FPS)} />}
   </AbsoluteFill>
 );
-export const Film4: React.FC<{audio: string | false; captions: boolean}> = ({audio, captions}) => {
+export const Film4: React.FC<{audio: string | false; captions: boolean; camOnly?: boolean}> = ({audio, captions, camOnly = false}) => {
   const f = useCurrentFrame();
   return (
     <AbsoluteFill>
-      <Frame4 f={f} captions={captions} />
+      <CamOnly.Provider value={camOnly}>
+        <Frame4 f={f} captions={captions} />
+      </CamOnly.Provider>
       {audio && <Audio src={staticFile(`audio/${audio}.wav`)} />}
     </AbsoluteFill>
   );
