@@ -1,0 +1,527 @@
+{
+ "frames_checked": 755,
+ "faces_checked": 1304,
+ "flags": [
+  {
+   "frame": 30,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 31,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 32,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 33,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 34,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 35,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 36,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 41,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 42,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 43,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 44,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 45,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 46,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 47,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 48,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 49,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 50,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 51,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 52,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 53,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 54,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 55,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 56,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 57,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 58,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 59,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 60,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 61,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 62,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 63,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 64,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 65,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 66,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 67,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 68,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 69,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 70,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 71,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 72,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 73,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 74,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 75,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 76,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 77,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 78,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 79,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 80,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 81,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 82,
+   "id": "P",
+   "shot": "ots",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 592,
+   "id": "P",
+   "shot": "aim",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 593,
+   "id": "P",
+   "shot": "aim",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 594,
+   "id": "P",
+   "shot": "aim",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 595,
+   "id": "P",
+   "shot": "aim",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 596,
+   "id": "P",
+   "shot": "aim",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 597,
+   "id": "P",
+   "shot": "aim",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 598,
+   "id": "P",
+   "shot": "aim",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 599,
+   "id": "P",
+   "shot": "aim",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  }
+ ],
+ "per_shot": {
+  "hook:L": {
+   "frames": 30,
+   "min_norm": 0.2628,
+   "max_norm": 0.3339
+  },
+  "ots:L": {
+   "frames": 53,
+   "min_norm": 0.0,
+   "max_norm": 0.2089
+  },
+  "ots:P": {
+   "frames": 53,
+   "min_norm": 0.0,
+   "max_norm": 0.0
+  },
+  "two:L": {
+   "frames": 66,
+   "min_norm": 0.0,
+   "max_norm": 0.1979
+  },
+  "two:P": {
+   "frames": 66,
+   "min_norm": 0.0577,
+   "max_norm": 0.1289
+  },
+  "tap:L": {
+   "frames": 31,
+   "min_norm": 0.1826,
+   "max_norm": 0.201
+  },
+  "tap:P": {
+   "frames": 28,
+   "min_norm": 0.0,
+   "max_norm": 0.0714
+  },
+  "ear:L": {
+   "frames": 87,
+   "min_norm": 0.0,
+   "max_norm": 0.0956
+  },
+  "ear:P": {
+   "frames": 87,
+   "min_norm": 0.0094,
+   "max_norm": 0.3624
+  },
+  "aim:L": {
+   "frames": 66,
+   "min_norm": 0.0,
+   "max_norm": 0.0314
+  },
+  "aim:P": {
+   "frames": 66,
+   "min_norm": 0.0,
+   "max_norm": 0.001
+  },
+  "demo:O": {
+   "frames": 47,
+   "min_norm": 0.138,
+   "max_norm": 0.1664
+  },
+  "wide:L": {
+   "frames": 47,
+   "min_norm": 0.0,
+   "max_norm": 0.052
+  },
+  "wide:O": {
+   "frames": 52,
+   "min_norm": 0.0149,
+   "max_norm": 0.0335
+  },
+  "wide:P": {
+   "frames": 4,
+   "min_norm": 0.0,
+   "max_norm": 0.0
+  },
+  "walk:P": {
+   "frames": 104,
+   "min_norm": 0.0,
+   "max_norm": 0.1154
+  },
+  "walk:L": {
+   "frames": 38,
+   "min_norm": 0.0,
+   "max_norm": 0.0022
+  },
+  "walk:O": {
+   "frames": 37,
+   "min_norm": 0.0184,
+   "max_norm": 0.043
+  },
+  "stop:L": {
+   "frames": 34,
+   "min_norm": 0.3045,
+   "max_norm": 0.3376
+  },
+  "block:L": {
+   "frames": 84,
+   "min_norm": 0.1078,
+   "max_norm": 0.3972
+  },
+  "block:P": {
+   "frames": 84,
+   "min_norm": 0.0,
+   "max_norm": 0.3172
+  },
+  "out:L": {
+   "frames": 39,
+   "min_norm": 0.0,
+   "max_norm": 0.2502
+  },
+  "out:P": {
+   "frames": 39,
+   "min_norm": 0.1231,
+   "max_norm": 0.1741
+  },
+  "final:L": {
+   "frames": 62,
+   "min_norm": 0.1723,
+   "max_norm": 0.3334
+  }
+ }
+}

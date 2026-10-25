@@ -1,0 +1,36 @@
+{
+ "narration_file_sha256": "b22271734436e5109b404c945aa0c833fab9e87f8158e70b2f5c82e2af8eed28",
+ "narration_gain": 1.430309752850878,
+ "narration_offset_samples": 0,
+ "integrated_lufs_stereo": -14.55,
+ "rb1_integrated_lufs_stereo": -14.55,
+ "sample_peak_dbfs": -2.52,
+ "whisper_under_voice_db_during_overlap_after_ducking": -21.0,
+ "whisper_peak_dbfs": -17.4,
+ "sfx_peak_dbfs": -27.9,
+ "ambience_rms_dbfs": -45.8,
+ "voice_rms_dbfs_when_speaking": -16.1,
+ "whisper_rms_db": {
+  "before_block (-0.8..0)": -33.1,
+  "while_blocked": -140.0,
+  "after_clear (+0.1..+0.7)": -32.7,
+  "seam_last_0.3s": -36.3,
+  "seam_first_0.3s": -37.1
+ },
+ "seam": {
+  "mix_last": [
+   0.0016810197181959397,
+   0.0041723935497675144
+  ],
+  "mix_first": [
+   0.005286784393626603,
+   0.006835620690497709
+  ],
+  "whisper_last": [
+   -0.00451891462898047,
+   -0.0020275088328909293
+  ]
+ },
+ "duration_s": 34.06666666666667,
+ "samples": 1635200
+}

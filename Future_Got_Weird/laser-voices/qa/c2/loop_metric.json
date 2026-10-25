@@ -1,0 +1,16 @@
+{
+ "seam_last_vs_first_mean_abs_diff_grey": 0.39,
+ "median_consecutive_diff_within_final_and_hook": 0.777,
+ "consecutive_diff_last_frames": [
+  0.969,
+  1.057,
+  1.09,
+  0.781
+ ],
+ "consecutive_diff_first_frames": [
+  3.776,
+  3.581,
+  3.43,
+  3.184
+ ]
+}

@@ -1,0 +1,32 @@
+{
+ "foot_slide": {
+  "contact_foot_frames": 590,
+  "max_m": 0,
+  "at_frame": 1017
+ },
+ "beam_through_head": {
+  "frames": 0,
+  "first": []
+ },
+ "loop": {
+  "duration_s": 34.06666666666667,
+  "shot_last": "final",
+  "shot_first": "hook",
+  "listener_pose_max_abs_diff_t1_vs_0": 0,
+  "operator_pose_max_abs_diff_t1_vs_0": 0,
+  "camera_identical": true
+ },
+ "passerby_in_closing_frame": {
+  "t_last": {
+   "x": 14022541,
+   "headX": 14529361,
+   "inFrame": false
+  },
+  "t0": {
+   "x": 14436737,
+   "headX": 15153352,
+   "inFrame": false
+  }
+ },
+ "passerby_last_in_frame_final_shot": -1
+}

@@ -1,5 +1,45 @@
 # Future Got Weird: This Laser Makes You Hear Voices
 
+## Rebuild V2 (complete art direction and animation reconstruction on the Weird Crew system; Rebuild V1 rejected)
+
+**Status (25 Oct 2026):** a review cut. **Not final, not published, no 4K master.**
+- The approved narration, word timing and caption treatment are unchanged.
+- **Characters:** three members of the channel's original Weird Crew (PERSON, clerkB, clerkA), drawn on the
+  established Crew turnaround rig (`source/src/c2/rig/`, copied from moth-silk / Invisibility Shield V6 and extended
+  for continuous head turns, never-fading eyes, lidded blinks, an ear close-up and new costume pieces).
+- **Environment and props:**
+  - a golden-hour acoustics lab with a parallaxed city window and the 8 ft demonstration lane;
+  - an emitter with an opening optical train;
+  - a flat Crew-style molecular cutaway at her ear.
+- **Staging:** everything is in one world. The beam's end and the block (frames 786–956) are computed from the
+  passerby's head; the audio cues come from the same geometry.
+- **Documents:**
+  - asset sources: `production/REBUILD_V2_ASSET_MANIFEST.md`;
+  - shot plan: `production/REBUILD_V2_SHOT_PLAN.md`;
+  - QA and known issues: `production/REBUILD_V2_QA_REPORT.md`.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920, 30 fps, 1022 frames, burned-in captions, AAC stereo | `exports/FGW_Laser_Voices_REBUILD_V2_REVIEW_1080x1920.mp4` |
+| Six-frame style sheet | `qa/c2/style/REBUILD_V2_style_sheet.png` (frames in `qa/c2/style/`) |
+| Consistency sheets (turnaround, expressions, listening, walking, 15° head turns) | `qa/c2/sheets/` |
+| Captions (identical to V1) | `captions/FGW_Laser_Voices_REBUILD_V2.srt` |
+| Mix, cues, measurements | `audio/mix/FGW_Laser_Voices_REBUILD_V2_mix.wav`, `audio/cues_c2.json`, `audio/mix/mix_measure_c2.json` |
+| QA evidence | `qa/c2/`: every-frame head strips, per-shot contact sheets, eye check, motion scan, geometry checks, loop metric, mux check, ffprobe, ASR |
+
+**Rebuild:**
+
+    cd Future_Got_Weird/laser-voices
+    (cd source && npm ci)
+    B="source/node_modules/.bin/esbuild --bundle --platform=node --format=esm --loader:.css=empty --log-level=warning"
+    $B tools/check_c2.ts --outfile=/tmp/ckc2.mjs && node /tmp/ckc2.mjs qa/c2/geometry_checks.json
+    $B tools/export_cues_c2.ts --outfile=/tmp/ecc2.mjs && node /tmp/ecc2.mjs audio/cues_c2.json
+    python3 tools/make_audio_c2.py
+    (cd source && npx remotion render src/index.ts LaserVoicesC2 /tmp/c2_silent.mp4 --muted --props='{"audio":false,"captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    python3 tools/mux_v3.py /tmp/c2_silent.mp4 audio/mix/FGW_Laser_Voices_REBUILD_V2_mix.wav exports/FGW_Laser_Voices_REBUILD_V2_REVIEW_1080x1920.mp4 qa/c2/mux_report.json
+    $B tools/c2_headboxes.ts --outfile=/tmp/hb.mjs && node /tmp/hb.mjs /tmp/headboxes.json
+    python3 tools/c2_eyecheck.py exports/FGW_Laser_Voices_REBUILD_V2_REVIEW_1080x1920.mp4 /tmp/headboxes.json qa/c2/eyecheck.json
+
 ## Rebuild V1 (complete visual rebuild in the Death Clock style; V6 rejected)
 
 **Status (24 Oct 2026):** a review cut of the new visual direction. **Not final, not published, no 4K master yet.**
