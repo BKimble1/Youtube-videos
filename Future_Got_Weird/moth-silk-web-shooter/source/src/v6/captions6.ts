@@ -3,7 +3,7 @@ import {CAPTIONS} from '../lib';
 
 /** caption centre (px) per caption (by its first words); a caption never moves while it shows */
 export const CAP_Y_V6: [string, number][] = [
-  ['Imagine', 1480], ['at', 1480], ['and watching', 1480], ['that', 1480], ['Scientists', 1480], ['the first', 1480], ['They', 1480], ['from moth', 1480], ['and dissolve', 1480], ['As', 1480], ['through', 1480], ['a surrounding', 1480], ['triggers', 1480], ['A sticky', 1480], ['forms', 380], ['It hits', 380], ['and attaches', 380], ['Then', 380], ['and the blade', 380], ['out', 1480], ['In lab', 470], ['these', 800], ['eighty', 1480], ['The beginnings', 380], ['of a real', 1480], ['made', 380],
+  ['Imagine', 1480], ['at', 1480], ['and watching', 1480], ['that', 1480], ['Scientists', 1480], ['the first', 1480], ['They', 1480], ['from moth', 1480], ['and dissolve', 1480], ['As', 1480], ['through', 1480], ['a surrounding', 1480], ['triggers', 1480], ['A sticky', 1480], ['forms', 380], ['It hits', 380], ['and attaches', 380], ['Then', 380], ['and the blade', 380], ['out', 1480], ['In lab', 470], ['these', 1040], ['eighty', 1480], ['The beginnings', 1080], ['of a real', 1480], ['made', 380],
 ];
 export const capY6 = (t: number) => {
   const i = CAPTIONS.findIndex((c, k) => t >= (k === 0 ? 0 : c.show) && t < c.hide);

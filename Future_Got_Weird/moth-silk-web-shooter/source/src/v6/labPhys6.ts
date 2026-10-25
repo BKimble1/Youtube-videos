@@ -21,6 +21,8 @@ export const N_AXIS = norm(sub(NOZ.tip, NOZ.rear));
 /** length of the strand extruded in the close view before it leaves (world px) */
 export const EXT0 = 64;
 export const N_LEN = len(sub(NOZ.tip, NOZ.rear));
+/** where the hand grips the nozzle, from its rear end (Lab6 gripNozzle) */
+export const GRIP_FROM_REAR = 14;
 export const FLOOR = BENCH_Y - 6;
 const AX0 = norm(sub(BLADE_E, BLADE_T));
 const BURIED = BLADE_LEN * 0.68;
@@ -31,7 +33,8 @@ export const A0 = add(BLADE_E, mul(AX0, -4));
 const TIP_STAND = NOZ.tip;
 const TIP_AIM: V = {x: 606, y: 1184};
 const TIP_PULL: V = {x: 662, y: 1132};
-const TIP_TOP: V = {x: 520, y: 672};
+/** V6: the top of the lift, within the scientist's reach (his hand stays on the grip) */
+const TIP_TOP: V = {x: 532, y: 738};
 /** the sand's surface, where the blade is set back down after the strength beat */
 export const L_F = len(sub(TIP_PULL, A0));
 /** the fibre's working length once the blade hangs (the same fibre: no stretch) */
@@ -151,8 +154,18 @@ const swingAt = (f: number) => {
 };
 
 export const labPhys = (f: number, endAng = ANG_STAND): LabPhys => {
-  const tip = tipAt(f);
   const ang = nozAngAt(f, endAng);
+  // V6: from the release the hand turns the nozzle about its grip (not about the tip), so it never leaves the hand
+  let tip = tipAt(f);
+  if (f > LT6.release) {
+    const a0 = (nozAngAt(LT6.release, endAng) * Math.PI) / 180;
+    const a1 = (ang * Math.PI) / 180;
+    const t0 = tipAt(LT6.release);
+    const r = N_LEN - GRIP_FROM_REAR;
+    const G = {x: t0.x - Math.cos(a0) * r, y: t0.y - Math.sin(a0) * r};
+    const drift = sub(tipAt(f), t0);
+    tip = add(add(G, {x: Math.cos(a1) * r, y: Math.sin(a1) * r}), drift);
+  }
   let bT = BLADE_T;
   let bE = BLADE_E;
   let A = A0;

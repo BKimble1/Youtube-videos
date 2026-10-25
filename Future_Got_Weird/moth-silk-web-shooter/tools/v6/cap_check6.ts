@@ -36,7 +36,7 @@ const pts = (f: number): Pt[] => {
 };
 const caps = TL.captions as {text: string; show: number; hide: number}[];
 const lines = (t: string) => (t.length > 21 ? 2 : 1);
-const CAND = [1480, 1400, 1320, 380, 470, 560, 1240, 1160, 640, 720, 1080, 800, 880, 960];
+const CAND = [1480, 1400, 1320, 380, 470, 560, 1240, 1160, 640, 720, 1080, 800, 880, 960, 1000, 1040, 1120, 1200, 300, 420, 520, 600, 680];
 const res: unknown[] = [];
 const table: [string, number][] = [];
 caps.forEach((c, i) => {

@@ -294,14 +294,16 @@ const farState = (f: number): HandState => {
 
 // ------------------------------------------------------------------ the scientist
 /** his hips: at the cocoon end, then a step and a half left with the lift, to stand under the load */
-const heroX = (f: number) => 1300 + lerp(0, -300, ss(f, LT6.out - 10, LT6.liftTop));
+const heroX = (f: number) => 1300 + lerp(0, -360, ss(f, LT6.out - 10, LT6.liftTop));
+/** V6: he rises onto his toes (behind the bench) as he lifts it high, so the raised hand keeps its grip */
+const heroRise = (f: number) => 70 * ss(f, LT6.out - 6, LT6.liftTop);
 export const heroPose = (f: number): ManPose => {
   const x = heroX(f);
   const walk = ss(f, LT6.out - 10, LT6.liftTop);
   const bob = walk > 0 && walk < 1 ? 6 * Math.abs(Math.sin(walk * Math.PI * 3)) : 0;
   // a lean into the pull and back as the blade comes free
   const lean = 4 * ss(f, LT6.pull0, LT6.pull0 + 10) * (1 - ss(f, LT6.breakFree, LT6.breakFree + 8)) - 2 * ss(f, LT6.breakFree, LT6.breakFree + 6) * (1 - ss(f, LT6.breakFree + 6, LT6.liftTop));
-  let p: ManPose = {...HERO_LAB0, x, y: HERO_LAB0.y - bob, torso: 5 - lean, chest: 5 + 0.5 * lean};
+  let p: ManPose = {...HERO_LAB0, x, y: HERO_LAB0.y - bob - heroRise(f), torso: 5 - lean, chest: 5 + 0.5 * lean};
   const fs = farState(f);
   if (fs.hold === 'nozzle') {
     const nz = nozzleAt(f);
@@ -390,8 +392,8 @@ const KEYS: K[] = [
   {f: 724, c: track(5.0, bladeMid, 540, 1150)},
   {f: 754, c: track(3.4, tipToBlade(0.25), 540, 860)},
   // V6 scene 4: the reveal: the scientist holding it up, the whole load path in one frame, a slow push
-  {f: 780, c: fixed(676, 884, 2.0)},
-  {f: 832, c: fixed(668, 890, 2.16)},
+  {f: 780, c: fixed(676, 962, 2.0)},
+  {f: 832, c: fixed(668, 968, 2.16)},
   // up the strand to the nozzle's outlet
   {f: 854, c: track(2.8, tipToBlade(0.12))},
   {f: LT6.toDevice, c: endCam},
