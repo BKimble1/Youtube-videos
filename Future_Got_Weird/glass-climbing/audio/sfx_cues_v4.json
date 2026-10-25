@@ -154,42 +154,42 @@
   "gain_db": -33
  },
  {
-  "name": "near shoe leaves the stool",
+  "name": "far shoe leaves the stool",
   "at": 2.42,
   "frame": 72.6,
   "dur": 0.12,
   "gain_db": -35
  },
  {
-  "name": "near foot into its loop",
+  "name": "far foot into its loop",
   "at": 2.787,
   "frame": 83.6,
   "dur": 0.18,
   "gain_db": -31
  },
  {
-  "name": "near strap takes his weight",
+  "name": "far strap takes his weight",
   "at": 3.167,
   "frame": 95.0,
   "dur": 0.26,
   "gain_db": -26
  },
  {
-  "name": "far shoe leaves the stool",
+  "name": "near shoe leaves the stool",
   "at": 3.287,
   "frame": 98.6,
   "dur": 0.12,
   "gain_db": -35
  },
  {
-  "name": "far foot into its loop",
+  "name": "near foot into its loop",
   "at": 3.653,
   "frame": 109.6,
   "dur": 0.18,
   "gain_db": -31
  },
  {
-  "name": "far strap takes its share",
+  "name": "near strap takes its share",
   "at": 3.9,
   "frame": 117.0,
   "dur": 0.24,

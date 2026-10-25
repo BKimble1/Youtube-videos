@@ -55,8 +55,9 @@ export const TAKEOFF_BAR = STOOL4.top - 60;
 /** strap lengths, ring to loop bar: the far pad's is longer by the spacing, so the loops hang level */
 export const LEN = {L: Math.hypot(DX.L, TAKEOFF_BAR - ringAt('L', D0).y), R: Math.hypot(DX.R, TAKEOFF_BAR - ringAt('R', U0).y)};
 const tautBar = (ring: V, side: Side): V => ({x: ring.x + DX[side], y: ring.y + Math.sqrt(LEN[side] ** 2 - DX[side] ** 2)});
-/** an empty loop hangs straight down (a little out from the glass) */
-export const hangingBar = (ring: V, side: Side): V => ({x: ring.x + 10, y: ring.y + LEN[side]});
+/** an empty loop hangs nearly straight down (the near one a few degrees out from the glass, toward his shin, so it
+ *  stays clear of the far strap once that is taut) */
+export const hangingBar = (ring: V, side: Side): V => ({x: ring.x + (side === 'L' ? 64 : 10), y: ring.y + Math.sqrt(LEN[side] ** 2 - (side === 'L' ? 64 : 10) ** 2)});
 /** the loop's top, where the strap joins it: over the forefoot, just above the shoe (the bar is under the arch) */
 export const loopApex = (bar: V): V => ({x: bar.x - 22, y: bar.y - 74});
 
@@ -79,7 +80,8 @@ export const CYCLES: Cycle[] = [
 ];
 export const C = {
   contact: 5, pull0: 36, pull1: 62,
-  nStep0: 72, nStep1: 86, nLoad0: 86, nLoad1: 98, fStep0: 98, fStep1: 112, fLoad0: 108, fLoad1: 120,
+  // the far foot steps into its loop first (its loop is nearer the glass, so neither foot passes the other)
+  fStep0: 72, fStep1: 86, fLoad0: 86, fLoad1: 98, nStep0: 98, nStep1: 112, nLoad0: 108, nLoad1: 120,
   look0: 878, look1: 902,
   frozen0: 904, stool: 945,
   lRel3: 962, lMove3a: 966, lMove3b: 998, lPress0: 1004, lPress1: 1016,
@@ -99,7 +101,7 @@ const PEEL_GAP = (deg: number) => PAD.h * Math.sin((Math.abs(deg) * Math.PI) / 1
 const padTrack = (f: number, side: Side): PadState => {
   const base = side === 'L' ? DY : UY;
   let y = base(f >= C.stool ? 0 : kOf(f, side)), gap = 0, tilt = 0;
-  if (side === 'L' && f < C.nStep0) {
+  if (side === 'L' && f < C.fStep0) {
     // frame 0: the near pad finishing its press onto the glass (continued from the film's last frames)
     gap = keyN(f, [[0, 4], [2, 1.2, lin], [C.contact, 0, easeOut]]);
     y = keyN(f, [[0, D0 - 2], [C.contact, D0]]);
@@ -160,13 +162,14 @@ const tautAnkleAt = (side: Side, padY: number) => ankleForBar(tautBar(ringAt(sid
 /** pelvis heights: on the stool board; on the near loop alone; on both loops (level) */
 const stoolY = (frac: number) => (standY(STOOL_FOOT.L, 'L', frac) + standY(STOOL_FOOT.R, 'R', frac)) / 2;
 const nearY = (k: number) => standY(tautAnkleAt('L', DY(k)), 'L', 0.93);
-const levelY = (k: number) => (nearY(k) + standY(tautAnkleAt('R', UY(k)), 'R', 0.93)) / 2;
+const farY = (k: number) => standY(tautAnkleAt('R', UY(k)), 'R', 0.93);
+const levelY = (k: number) => (nearY(k) + farY(k)) / 2;
 /** how far he comes up onto the far loop before the near pad moves (the near hand must still reach its pad) */
 export const RISE_A = 84;
 /** how far he settles into the near loop as he takes his weight off the far one (the near knee gives a little) */
 export const SINK = 34;
 const HIP_KEYS: KeyN = (() => {
-  const k: KeyN = [[0, stoolY(0.94)], [C.nLoad0, stoolY(0.94)], [C.nLoad1, Math.max((stoolY(0.94) + nearY(0)) / 2, standY(STOOL_FOOT.R, 'R', 0.96))], [C.fStep1, nearY(0)], [C.fLoad1, levelY(0)]];
+  const k: KeyN = [[0, stoolY(0.94)], [C.fLoad0, stoolY(0.94)], [C.fLoad1, Math.max((stoolY(0.94) + farY(0)) / 2, standY(STOOL_FOOT.L, 'L', 0.96))], [C.nStep1, farY(0)], [C.nLoad1, levelY(0)]];
   for (const c of CYCLES) {
     // the shift: down onto the near loop, a little lower than standing on it (his weight settling into the strap)
     k.push([c.sh[0], levelY(c.k - 1)], [c.sh[1], nearY(c.k - 1) + SINK], [c.rise[0], nearY(c.k - 1) + SINK], [c.rise[1], nearY(c.k - 1) - RISE_A]);
@@ -228,7 +231,7 @@ const climbRaw = (f: number, padLIn?: PadState, padRIn?: PadState): ClimbState =
   const loadOf = (side: Side) => {
     if (moving(side)) return 0;
     if (f >= C.stool) return side === 'L' && f >= C.lRel3 - 4 ? brickLoad : 0.3;
-    if (f < C.nLoad0) return stoolLoad(side);
+    if (f < C.fLoad0) return stoolLoad(side);
     return clamp(Math.max(stoolLoad(side) * (1 - wl[side]), 0.12 + 0.88 * wl[side]));
   };
   const padL = {...(padLIn ?? padTrack(f, 'L')), load: loadOf('L')};
@@ -295,7 +298,7 @@ const climbRaw = (f: number, padLIn?: PadState, padRIn?: PadState): ClimbState =
   const lookUp = Math.max(...rMoves.map((m) => bump(f, m.rel - 2, m.place + 4, 8, 10)));
   const lookDown = Math.max(bump(f, C.look0, C.frozen0 + 4, 12, 4), bump(f, C.stool + 20, C.lift0, 12, 14));
   const recoil = keyN(f, [[C.fail, 0], [C.fail + 5, 1], [C.failEnd + 4, 0.5], [C.lift1, 0]]);
-  const leanBase = keyN(f, [[0, 9], [C.nStep0, 9], [C.fLoad1, 12], [C.stool - 1, 12], [C.stool, 9], [C.lRel3, 9], [C.lPress0, 14], [C.yank0, 14], [C.lift1, 9], [FRAMES, 9]]);
+  const leanBase = keyN(f, [[0, 9], [C.fStep0, 9], [C.nLoad1, 12], [C.stool - 1, 12], [C.stool, 9], [C.lRel3, 9], [C.lPress0, 14], [C.yank0, 14], [C.lift1, 9], [FRAMES, 9]]);
   const lean = leanBase + 2 * reach - 4 * recoil + 4 * shiftX;
   const chest = 4 + 2 * reach;
   // the head stays upright as the body leans: its angle is set directly (a small tip back looking up, forward
@@ -308,7 +311,7 @@ const climbRaw = (f: number, padLIn?: PadState, padRIn?: PadState): ClimbState =
   pose = placeHand(pose, 'L', prPad(gripOf(padL)), 182, uv.u, uv.v);
   pose = placeHand(pose, 'R', prPad(gripOf(padR)), 176, uv.u, uv.v);
   const riseNow = Math.max(...CYCLES.map((c) => bump(f, c.rise[0] - 4, c.rise[1], 6, 8)));
-  const strain = Math.max(bump(f, C.pull0, C.pull1, 10, 10), bump(f, C.nLoad0 - 4, C.fLoad1 + 4), riseNow, bump(f, C.test0, C.test1), bump(f, C.yank0, C.fail));
+  const strain = Math.max(bump(f, C.pull0, C.pull1, 10, 10), bump(f, C.fLoad0 - 4, C.nLoad1 + 4), riseNow, bump(f, C.test0, C.test1), bump(f, C.yank0, C.fail));
   const pleased = Math.max(...rMoves.map((m) => bump(f, m.place - 2, m.place + 12, 6, 10)), bump(f, C.lPress1, C.test0 - 6));
   const doubt = bump(f, C.fail + 2, C.lift0 + 6, 5, 12);
   const expr0 = mixExpr(mixExpr(mixExpr(EX.focus, EX.strain, strain * 0.6), EX.pleased, pleased * 0.6), EX.doubt, doubt);
