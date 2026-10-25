@@ -445,7 +445,7 @@ const catchBody = (T: number): Body => {
 
 const lerpBody = (a: Body, b: Body, u: number): Body => {
   const n = (x: number, y: number) => lerp(x, y, u);
-  const pad = (p: Pad5, q: Pad5): Pad5 => ({...q, y: n(p.y, q.y), zo: n(p.zo, q.zo), gap: n(p.gap, q.gap), tilt: n(p.tilt, q.tilt), load: n(p.load, q.load), contact: n(p.contact, q.contact)});
+  const pad = (p: Pad5, q: Pad5): Pad5 => ({...q, surface: u < 1 ? p.surface : q.surface, y: n(p.y, q.y), zo: n(p.zo, q.zo), gap: n(p.gap, q.gap), tilt: n(p.tilt, q.tilt), load: n(p.load, q.load), contact: n(p.contact, q.contact)});
   return {
     ...b, padL: pad(a.padL, b.padL), padR: pad(a.padR, b.padR), H: lerpV(a.H, b.H, u), ankL: lerpV(a.ankL, b.ankL, u), ankR: lerpV(a.ankR, b.ankR, u),
     plantL: n(a.plantL, b.plantL), plantR: n(a.plantR, b.plantR), lean: n(a.lean, b.lean), chest: n(a.chest, b.chest), head: n(a.head, b.head),

@@ -41,3 +41,10 @@ export const BaySheet5: React.FC<{fs: number[]; cx: number; cy: number; z: numbe
     })}
   </AbsoluteFill>
 );
+
+import {LookDown} from './LookDown';
+export const LookTest5: React.FC<{f: number; view?: number[]}> = ({f, view}) => (
+  <AbsoluteFill style={{backgroundColor: '#111'}}>
+    <LookDown id="ld" f={f} f0={868} view={view} />
+  </AbsoluteFill>
+);

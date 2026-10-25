@@ -46,6 +46,8 @@ export type Pad3DState = {
   obl?: {kx: number; ky: number};
   /** false: leave the grip bar out (the hand-hold pass draws it between the fingers) */
   bar?: boolean;
+  /** the tiles' ridges (rows of wedges) on their faces, seen close through the glass: opacity 0..1 */
+  ridges?: number;
   /** extra drop of the spine (mm) beyond the springs (the brick failure: the pad tears away) */
   strap?: number; // strap length drawn (mm), 0 = none
 };
@@ -159,6 +161,21 @@ export const Pad3D: React.FC<{id: string; st: Pad3DState; z: number; k?: number}
       const ct = st.contact[i] ?? 0;
       const col = mix('#D4E7EA', '#355862', 0.85 * ct);
       box(0, T_TILE, t.v - TILE / 2, t.v + TILE / 2, t.w - TILE / 2, t.w + TILE / 2, col, {stroke: 0.7});
+      if ((st.ridges ?? 0) > 0.01 && vw.dir({u: -1, v: 0, w: 0}).z > 0) {
+        // rows of wedges across the tile: a lit ridge and its shadow every RIDGE mm (drawn coarse: a schematic)
+        const RIDGE = 2.2;
+        for (let k = 0; k * RIDGE < TILE - 0.5; k++) {
+          const v = t.v - TILE / 2 + (k + 0.5) * RIDGE;
+          const a0 = vw.world({u: -0.05, v, w: t.w - TILE / 2 + 0.6}), a1 = vw.world({u: -0.05, v, w: t.w + TILE / 2 - 0.6});
+          const b0 = vw.world({u: -0.05, v: v + RIDGE * 0.42, w: t.w - TILE / 2 + 0.6}), b1 = vw.world({u: -0.05, v: v + RIDGE * 0.42, w: t.w + TILE / 2 - 0.6});
+          items.push({d: a0.d + 0.01, g: grp, node: (
+            <g key={key++} opacity={st.ridges}>
+              <path d={`M${P(a0)} L${P(a1)} L${P(b1)} L${P(b0)} Z`} fill="#1E3036" opacity={0.7} />
+              <path d={`M${P(a0)} L${P(a1)}`} stroke="#F4FFFF" strokeWidth={fmt(ink * 1.4)} opacity={0.9} />
+            </g>
+          )});
+        }
+      }
     }
   // ---- the frame: front plate, rim (each rim wall is near or far: does its outer face look toward the camera?)
   grp = G.plate;
@@ -310,7 +327,7 @@ export const Pad3D: React.FC<{id: string; st: Pad3DState; z: number; k?: number}
     if (st.surface === 'none') return null;
     if (st.surface === 'glass') {
       return (
-        <g opacity={front ? 0.42 : 1}>
+        <g opacity={front ? 0.3 : 0.5}>
           <path d={`M${face0.map((p) => P(p)).join(' L')} Z`} fill={front ? '#BFE6EA' : '#8FC0CB'} />
           {/* reflections across the pane: soft diagonal sheens (they belong to the pane) */}
           {[-900, -300, 500].map((w0, i) => {
