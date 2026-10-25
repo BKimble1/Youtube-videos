@@ -1,0 +1,285 @@
+{
+ "file": "exports/FGW_Glass_Climbing_V2_REVIEW_1080x1920.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "nb_frames": "1162",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "color_primaries": "bt709",
+  "color_transfer": "bt709"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317377"
+ },
+ "duration": 38.741,
+ "loudness": {
+  "I_LUFS": -14.6,
+  "LRA": 1.7,
+  "TP_dBFS": -2.9
+ },
+ "black_segments": [],
+ "freezes_ge_1s": [],
+ "keyframes": {
+  "count": 81,
+  "max_gap_s": 0.5
+ },
+ "audio_offset_vs_mix_ms": 0.0,
+ "audio_corr_vs_mix": 0.99994,
+ "vosk_transcript": "if you press these pads against a glass wall you could lift your feet off the ground and climate like spiderman their surfaces are covered in microscopic wedges as you put downward the wedges been flat against the glass this brings them so close that tiny molecular attractions can hold your entire wait special springs spread the load so why one little patch doesn't have to hold you up alone then you shift your weight onto the other pad the first releases letting you reach higher and repeat but there's a catch they need a smooth surface to grip so you can climb glass but switched to rough brick and those microscopic wedges can't make the same contact",
+ "vosk_wer_vs_approved": 0.084,
+ "vosk_diffs": [
+  [
+   "replace",
+   "pressed",
+   "press"
+  ],
+  [
+   "replace",
+   "climb it",
+   "climate"
+  ],
+  [
+   "replace",
+   "spider man",
+   "spiderman"
+  ],
+  [
+   "replace",
+   "pull",
+   "put"
+  ],
+  [
+   "replace",
+   "bend",
+   "been"
+  ],
+  [
+   "replace",
+   "weight",
+   "wait"
+  ],
+  [
+   "insert",
+   "",
+   "why"
+  ],
+  [
+   "replace",
+   "switch",
+   "switched"
+  ]
+ ],
+ "caption_windows": [
+  {
+   "caption": "If you pressed these pads",
+   "show": 0,
+   "hide": 1.13,
+   "asr": "if you press these pads",
+   "match": 0.8
+  },
+  {
+   "caption": "against a glass wall,",
+   "show": 1.13,
+   "hide": 2.39,
+   "asr": "against a glass wall you",
+   "match": 0.89
+  },
+  {
+   "caption": "you could lift your feet",
+   "show": 2.39,
+   "hide": 3.37,
+   "asr": "you could lift your feet",
+   "match": 1.0
+  },
+  {
+   "caption": "off the ground\u2014",
+   "show": 3.37,
+   "hide": 4.06,
+   "asr": "feet off the ground",
+   "match": 0.86
+  },
+  {
+   "caption": "and climb it like Spider-Man.",
+   "show": 4.06,
+   "hide": 5.98,
+   "asr": "and climate like spiderman",
+   "match": 0.4
+  },
+  {
+   "caption": "Their surfaces are covered",
+   "show": 5.98,
+   "hide": 7.19,
+   "asr": "their surfaces are covered",
+   "match": 1.0
+  },
+  {
+   "caption": "in microscopic wedges.",
+   "show": 7.19,
+   "hide": 8.99,
+   "asr": "in microscopic wedges",
+   "match": 1.0
+  },
+  {
+   "caption": "As you pull downward,",
+   "show": 8.99,
+   "hide": 10.23,
+   "asr": "as you put downward the",
+   "match": 0.67
+  },
+  {
+   "caption": "the wedges bend flat",
+   "show": 10.23,
+   "hide": 11.42,
+   "asr": "the wedges been flat",
+   "match": 0.75
+  },
+  {
+   "caption": "against the glass.",
+   "show": 11.42,
+   "hide": 12.73,
+   "asr": "against the glass",
+   "match": 1.0
+  },
+  {
+   "caption": "This brings them so close",
+   "show": 12.73,
+   "hide": 14.09,
+   "asr": "this brings them so close",
+   "match": 1.0
+  },
+  {
+   "caption": "that tiny molecular attractions",
+   "show": 14.09,
+   "hide": 15.85,
+   "asr": "that tiny molecular attractions",
+   "match": 1.0
+  },
+  {
+   "caption": "can hold your entire weight.",
+   "show": 15.85,
+   "hide": 17.78,
+   "asr": "can hold your entire wait",
+   "match": 0.8
+  },
+  {
+   "caption": "Special springs spread the load,",
+   "show": 17.78,
+   "hide": 19.76,
+   "asr": "special springs spread the load",
+   "match": 1.0
+  },
+  {
+   "caption": "so one little patch",
+   "show": 19.76,
+   "hide": 20.83,
+   "asr": "so why one little patch",
+   "match": 0.89
+  },
+  {
+   "caption": "doesn\u2019t have to hold you up alone.",
+   "show": 20.83,
+   "hide": 22.65,
+   "asr": "doesn't have to hold you up alone",
+   "match": 1.0
+  },
+  {
+   "caption": "Then, you shift your weight",
+   "show": 22.65,
+   "hide": 24.14,
+   "asr": "then you shift your weight",
+   "match": 1.0
+  },
+  {
+   "caption": "onto the other pad.",
+   "show": 24.14,
+   "hide": 25.59,
+   "asr": "weight onto the other pad the",
+   "match": 0.8
+  },
+  {
+   "caption": "The first releases,",
+   "show": 25.59,
+   "hide": 26.71,
+   "asr": "the first releases",
+   "match": 1.0
+  },
+  {
+   "caption": "letting you reach",
+   "show": 26.71,
+   "hide": 27.34,
+   "asr": "letting you reach",
+   "match": 1.0
+  },
+  {
+   "caption": "higher and repeat.",
+   "show": 27.34,
+   "hide": 28.92,
+   "asr": "reach higher and repeat but",
+   "match": 0.75
+  },
+  {
+   "caption": "But there\u2019s a catch.",
+   "show": 28.92,
+   "hide": 30.13,
+   "asr": "but there's a catch",
+   "match": 1.0
+  },
+  {
+   "caption": "They need a smooth surface",
+   "show": 30.13,
+   "hide": 31.5,
+   "asr": "they need a smooth surface",
+   "match": 1.0
+  },
+  {
+   "caption": "to grip.",
+   "show": 31.5,
+   "hide": 32.34,
+   "asr": "to grip",
+   "match": 1.0
+  },
+  {
+   "caption": "So you can climb glass\u2014",
+   "show": 32.34,
+   "hide": 33.91,
+   "asr": "so you can climb glass but",
+   "match": 0.91
+  },
+  {
+   "caption": "but switch to rough brick,",
+   "show": 33.91,
+   "hide": 35.44,
+   "asr": "but switched to rough brick",
+   "match": 0.8
+  },
+  {
+   "caption": "and those microscopic wedges",
+   "show": 35.44,
+   "hide": 36.87,
+   "asr": "and those microscopic wedges",
+   "match": 1.0
+  },
+  {
+   "caption": "can\u2019t make the same contact.",
+   "show": 36.87,
+   "hide": 38.67,
+   "asr": "can't make the same contact",
+   "match": 1.0
+  }
+ ],
+ "caption_windows_ok": "26/28",
+ "loop_seam": {
+  "mean_abs_last_to_first": 2.23,
+  "mean_abs_prev_steps": [
+   2.63,
+   3.05
+  ]
+ }
+}

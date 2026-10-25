@@ -77,3 +77,25 @@ The lead is the Weird Crew's existing protagonist ("the guesser"), reused with h
 | Hands (opposed thumb, grip poses) | `source/src/dc/Hand.tsx`; placement helpers `source/src/world/rig.ts` | same lineage; `placeHand`/`handUV` from Real Web Fluid V6 `Lab6.tsx` |
 | Ink, shading, limbs, camera, colour, maths | `source/src/dc/{ink,shade,limb,camera,color,math}.ts(x)` | same lineage |
 | Pad, strap, stirrup, glass bay, bench, micro, springs | `source/src/art/`, `source/src/scenes/` | new for this episode, in the Crew finish (ink contour, gradient shading from one key light); no stock icons, no 3D renders |
+
+## V2 additions and simplifications
+
+- **The set** is new and illustrative: a glass curtain wall on a brick knee wall, with a step stool in front of the
+  bricks, so the film can open on him stepping off the stool and end with the brick test at the foot of the same wall.
+  It is not the Stanford test wall (reported as a vertical glass wall about 3.6-3.7 m high).
+- **The descent** between the glass close-up (905-971) and the brick test happens off screen (two moves down are
+  implied, not shown).
+- **The 2.5D wedge field** (`source/src/v2/Field.tsx`) shows the same schematic wedges as the section, extruded across
+  the tile as ridges, so the camera can turn from the face-on view (as through the glass) to blades with depth. The
+  dark contact patches are where the blades lie on the glass. Ridge count and depth are illustrative.
+- **The molecular view** (`source/src/v2/Molecular.tsx`) is a cartoon: glass as packed atoms, silicone as chains of
+  beads, both about 0.3 nm across as drawn; the gap closes from about 2 nm to a few tenths of a nanometre. The short
+  dashed ticks between facing atoms stand for van der Waals attraction between close pairs (weak per pair, many pairs);
+  they are not a measured field and carry no energy or glow. The bridge from the section to this view is a dissolve
+  at the same place, not a continuous zoom (there is nothing to draw between those scales in this schematic).
+- **The springs cutaway** now takes up the load tile by tile (each tendon has its own small slack, so the pull reaches
+  them in turn) and each spring overshoots a little before settling. The real pad's tendons and nitinol springs are
+  inside the plate; the layout keeps their relationships, not their dimensions.
+- **The brick failure**: the pad pressed on brick holds briefly under a light test, then creeps, tips at its top edge
+  and tears off when he pulls. This dramatises the brick limitation of this smooth-surface system; it is not a
+  reproduction of a published test.

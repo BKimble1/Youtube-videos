@@ -1,4 +1,33 @@
-# Future Got Weird: Scientists Made Spider-Man's Wall-Climbing Real (Glass Climbing) — V1
+# Future Got Weird: Scientists Made Spider-Man's Wall-Climbing Real (Glass Climbing)
+
+## V2 (second-pass animation rebuild on the same narration)
+
+**Status (25 Oct 2026):** the V2 review (1080×1920) was rendered from source and checked from the file
+(`production/V2_REPORT.md`, which lists what was measured and what remains). **Not published.** Nobody has watched it
+in real time with sound. The narration is V1's stand-in voice.
+
+| Deliverable | File |
+|---|---|
+| V2 review: 1080×1920, 30 fps, 1162 frames, 38.74 s, captions burned in, seamless loop | `exports/FGW_Glass_Climbing_V2_REVIEW_1080x1920.mp4` |
+| Report and shot/transition list | `production/V2_REPORT.md`, `production/V2_SHOTS_AND_TRANSITIONS.md` |
+| V2 mix (V1 narration sample for sample, retargeted effects) and cues | `audio/mix/FGW_Glass_Climbing_V2_mix.wav`, `audio/mix/mix_measure_v2.json`, `audio/cues_v2.json`, `audio/sfx_cues_v2.json` |
+| QA evidence | `qa/FGW_Glass_Climbing_V2_REVIEW_*`, `qa/FGW_Glass_Climbing_V2_loop_x3.mp4` (the loop junction three times) |
+| Source | `source/src/v2/` (composition `GlassClimbingV2`; stills `FilmStillV2`, `SheetV2`, working `BaySheet2`, `FieldTest`) |
+
+Rebuild V2:
+
+```sh
+source/node_modules/.bin/esbuild tools/v2/export_cues_v2.ts --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/ec2.cjs && node /tmp/ec2.cjs audio/cues_v2.json
+cd tools/v2 && python3 make_audio_v2.py && cd ../../source      # writes source/public/audio/mix_v2.wav
+npx remotion render src/index.ts GlassClimbingV2 ../exports/FGW_Glass_Climbing_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4
+```
+
+Contact sheets: `cd source && ./sheet2.sh out.png "f1,f2,..." [true]`. Rig probe: bundle `tools/v2/rig_probe2.ts`
+with esbuild as above and run it with node.
+
+---
+
+## V1
 
 **Status (25 Oct 2026):** V1 review (1080×1920) rendered from source and checked from the file; native 2160×3840
 master rendered at 2× (see `production/QA_REPORT.md` for what was checked and what remains). **Not published.**

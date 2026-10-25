@@ -7,3 +7,4 @@ source/public/audio/*.wav
 audio/mix/stems/
 # intermediate written by tools/make_narration.py
 audio/narration/takes/*_edited.wav
+audio/mix/stems_v2/

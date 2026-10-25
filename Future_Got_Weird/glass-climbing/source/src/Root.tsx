@@ -6,6 +6,9 @@ import {BayWorld} from './scenes/BayScene';
 import {climbAt} from './world/climb';
 import {Film, FilmStill, Sheet} from './Film';
 import {MicroTurn, MicroView} from './scenes/Micro';
+import {BaySheet2, FieldTest} from './v2/Work2';
+import {Film2, FilmStill2, Sheet2} from './v2/Film2';
+import {FRAMES as FRAMES2} from './v2/set';
 
 /** working sheet for the micro view: 4 states side by side */
 const MicroTest: React.FC = () => {
@@ -64,6 +67,11 @@ export const RemotionRoot: React.FC = () => (
     <Still id="Sheet" component={Sheet} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
     <Still id="MicroTest" component={MicroTest} width={W} height={1920} />
     <Still id="BayTest" component={BayTest} width={W} height={H} defaultProps={{f: 0, cx: 200, cy: -600, z: 0.85}} />
+    <Composition id="GlassClimbingV2" component={Film2} durationInFrames={FRAMES2} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v2' as string | false, captions: true}} />
+    <Still id="FilmStillV2" component={FilmStill2} width={W} height={H} defaultProps={{f: 0, captions: true}} />
+    <Still id="SheetV2" component={Sheet2} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="FieldTest" component={FieldTest} width={W} height={1920} defaultProps={{cz: 1.6}} />
+    <Still id="BaySheet2" component={BaySheet2} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], cx: 250, cy: -1100, z: 0.7, follow: false}} />
     <Still id="BaySheet" component={BaySheet} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], cx: 200, cy: -600, z: 0.85, follow: true}} />
   </>
 );
