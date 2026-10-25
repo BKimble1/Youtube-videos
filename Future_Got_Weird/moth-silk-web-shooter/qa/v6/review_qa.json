@@ -247,9 +247,9 @@
  ],
  "caption_windows_ok": "22/26",
  "loop_seam": {
-  "mean_abs_last_to_first": 9.09,
+  "mean_abs_last_to_first": 9.08,
   "mean_abs_prev_steps": [
-   11.09,
+   11.08,
    10.39
   ]
  }

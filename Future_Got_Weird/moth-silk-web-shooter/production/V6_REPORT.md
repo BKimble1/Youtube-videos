@@ -67,3 +67,28 @@ They show native vector detail and the same picture and captions as the review.
 7. **The acetone line from the side port stretches up across the frame during the lift and reveal**, as in V5.
 8. **The loop cuts from the lab to the street** at 876. Place, direction, size and motion match, but the setting changes at once.
 9. **One voice take;** the runtime stays 31.73 s because the voice is locked.
+
+## Fix after review: the scientist keeps hold of the nozzle (25 Oct 2026)
+
+On a phone, the frames from about 23 s to 28 s showed the gloved hand hanging beside the nozzle, not holding it.
+
+**Cause:** the lift raised the nozzle higher than his arm can reach. The rig does not stretch an arm, so the hand
+stopped about 120 px short of the grip from frame 696 to the cut.
+
+**Fix:**
+- the top of the lift is now within his reach;
+- he steps a little further under the load and rises onto his toes behind the bench as he lifts;
+- the final turn toward the wrist shooter's outlet direction rotates the nozzle about his grip, not about its tip.
+
+**Checks:**
+- Probed every 6 frames from 660 to 876: the hand-to-grip error is 0 through the lift and the reveal, and under 1 px
+  during the turn.
+- In the re-rendered review (`qa/v6/strips/lift_reveal.png`) and a 1:1 crop of the master at frame 782
+  (`qa/v6/master_crop_grip_1to1.png`), the fingers close over the nozzle body.
+- The blade hangs a little lower in the reveal, so the framing was raised to keep it clear of the bottom caption.
+- Two captions moved height: "these fibers lifted over" to 1040 and "The beginnings" to 1080. Caption check: 0 overlaps.
+
+**Re-rendered files:**
+- review: 952 frames, −14.6 LUFS, audio 0 ms vs the mix (correlation 0.99997), no black frames or freezes, no
+  low-change runs; the only spike is the cut at 876; the loop seam is unchanged
+- master: 2160×3840, 952 frames, −14.6 LUFS, no black frames or freezes
