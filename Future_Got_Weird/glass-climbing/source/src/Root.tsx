@@ -11,6 +11,7 @@ import {Film2, FilmStill2, Sheet2} from './v2/Film2';
 import {FRAMES as FRAMES2} from './v2/set';
 import {BaySheet3, PressTest} from './v3/Work3';
 import {BaySheet4} from './v4/Work4';
+import {BaySheet5, PadTest5} from './v5/Work5';
 import {Film4, FilmStill4, Sheet4} from './v4/Film4';
 import {FRAMES as FRAMES4} from './v4/set4';
 import {Film3, FilmStill3, Sheet3} from './v3/Film3';
@@ -80,6 +81,8 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="GlassClimbingV4" component={Film4} durationInFrames={FRAMES4} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v4' as string | false, captions: true}} />
     <Still id="FilmStillV4" component={FilmStill4} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="SheetV4" component={Sheet4} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="BaySheet5" component={BaySheet5} width={W} height={1920} defaultProps={{fs: [0, 60, 120, 180], cx: 0, cy: 0, z: 1.2, follow: true}} />
+    <Still id="PadTest5" component={PadTest5} width={W} height={1920} defaultProps={{sts: [{}], z: 4}} />
     <Still id="BaySheet4" component={BaySheet4} width={W} height={1920} defaultProps={{fs: [0, 90, 120, 150], cx: 200, cy: -900, z: 0.9, follow: false}} />
     <Still id="FilmStillV3" component={FilmStill3} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="SheetV3" component={Sheet3} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
