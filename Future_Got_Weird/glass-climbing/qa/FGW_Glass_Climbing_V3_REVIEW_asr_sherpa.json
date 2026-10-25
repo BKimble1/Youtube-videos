@@ -1,0 +1,29 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU PRESSED THESE PADS AGAINST A GLASS WALL YOU COULD LIFT YOUR FEET OFF THE GROUND AND CLIMB IT LIKE SPIDER MAN THEIR SURFACES ARE COVERED IN MICROSCOPIC WEDGES AS YOU PULL DOWNWARD THE WEDGES BEND FLAT AGAINST THE GLASS THIS BRINGS THEM SO CLOSE THAT TINY MOLECULAR ATTRACTIONS CAN HOLD YOUR ENTIRE WEIGHT SPECIAL SPRINGS SPREAD THE LOAD SO ONE LITTLE PATCH DOESN'T HAVE TO HOLD YOU UP ALONE THEN YOU SHIFT YOUR WEIGHT ON TO THE OTHER PAD THE FIRST RELEASES LETTING YOU REACH HIGHER AND REPEAT BUT THERE'S A CATCH THEY NEED A SMOOTH SURFACE TO GRIPE SO YOU CAN CLIMB GLASS BUT SWITCH TO ROUGH BRICK AND THOSE MICROSCOPIC WEDGES CAN'T MAKE THE SAME CONTACT",
+  "wer": 0.025,
+  "diffs": [
+   [
+    "replace",
+    "onto",
+    "on to"
+   ],
+   [
+    "replace",
+    "grip",
+    "gripe"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you press these pads against a glass wall, you could lift your feet off the ground and climb it like Spider-Man! Their surfaces are covered in microscopic wedges. As you pull downward, the wedges bend flat against the glass. This brings them so close that tiny molecular attractions can hold your entire weight. Special springs spread the load, so one little patch doesn't have to hold you up alone. Then, you shift your weight onto the other pad. The first releases letting you reach higher and repeat. But there's a catch. They need a smooth surface to grip. So you can climb glass, but switch to rough brick, and those microscopic wedges can't make the same contact.",
+  "wer": 0.008,
+  "diffs": [
+   [
+    "replace",
+    "pressed",
+    "press"
+   ]
+  ]
+ }
+}
