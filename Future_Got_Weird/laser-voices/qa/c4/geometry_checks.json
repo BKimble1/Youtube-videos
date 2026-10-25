@@ -1,0 +1,32 @@
+{
+ "foot_slide": {
+  "contact_foot_frames": 1292,
+  "max_m": 0,
+  "at_frame": 742
+ },
+ "beam_through_head": {
+  "frames": 0,
+  "first": []
+ },
+ "loop": {
+  "duration_s": 34.06666666666667,
+  "shot_last": "S34 final",
+  "shot_first": "S01 hook",
+  "listener_pose_max_abs_diff_t1_vs_0": 0,
+  "operator_pose_max_abs_diff_t1_vs_0": 0,
+  "camera_identical": true
+ },
+ "passerby_in_closing_frame": {
+  "t_last": {
+   "x": 31581951,
+   "headX": 31958025,
+   "inFrame": false
+  },
+  "t0": {
+   "x": 31666421,
+   "headX": 32082471,
+   "inFrame": false
+  }
+ },
+ "passerby_last_in_frame_final_shot": -1
+}

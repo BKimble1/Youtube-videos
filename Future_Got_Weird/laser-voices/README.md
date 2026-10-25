@@ -1,5 +1,29 @@
 # Future Got Weird: This Laser Makes You Hear Voices
 
+## V4 (storyboard, rig and compositing pass on V3)
+
+**Status (25 Oct 2026):** a review cut. **Not final, not published, no 4K master.**
+- The approved narration, timing and captions are unchanged.
+- **Source:** `source/src/c4/`, composition `LaserVoicesC4`.
+- **Shots:** 28 camera shots, 34 compositions in total.
+- **Changes and QA:** `production/REBUILD_V4_CHANGELOG_QA.md`.
+
+| Deliverable | File |
+|---|---|
+| Review: **1080×1920** (verified), 30 fps, 1022 frames, AAC stereo | `exports/FGW_Laser_Voices_REBUILD_V4_REVIEW_1080x1920.mp4` |
+| Storyboard as rendered / consistency sheets | `qa/c4/keyframes/V4_storyboard_as_rendered.png`, `qa/c4/sheets/` |
+| Mix, cues, measurements | `audio/mix/FGW_Laser_Voices_REBUILD_V4_mix.wav`, `audio/cues_c4.json`, `audio/mix/mix_measure_c4.json` |
+| QA evidence | `qa/c4/`: head strips, per-shot sheets, eye check, motion scan, geometry, loop, mux, ffprobe, ASR |
+
+**Rebuild:**
+
+    B="source/node_modules/.bin/esbuild --bundle --platform=node --format=esm --loader:.css=empty --log-level=warning"
+    $B tools/export_cues_c4.ts --outfile=/tmp/ec4.mjs && node /tmp/ec4.mjs audio/cues_c4.json
+    python3 tools/make_audio_c4.py
+    (cd source && npx remotion render src/index.ts LaserVoicesC4 /tmp/c4_silent.mp4 --muted --props='{"audio":false,"captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --concurrency=4)
+    python3 tools/mux_v3.py /tmp/c4_silent.mp4 audio/mix/FGW_Laser_Voices_REBUILD_V4_mix.wav exports/FGW_Laser_Voices_REBUILD_V4_REVIEW_1080x1920.mp4 qa/c4/mux_report.json
+    $B tools/check_c4.ts --outfile=/tmp/ck4.mjs && node /tmp/ck4.mjs qa/c4/geometry_checks.json
+
 ## V3 (animation, pacing and storytelling pass on the Rebuild V2 foundation)
 
 **Status (25 Oct 2026):** a review cut. **Not final, not published, no 4K master.**

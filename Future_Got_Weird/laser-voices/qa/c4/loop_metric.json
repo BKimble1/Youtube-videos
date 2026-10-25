@@ -1,0 +1,5 @@
+{
+ "seam_last_vs_first_mean_abs_diff_grey": 0.547,
+ "median_consecutive_diff_final_and_hook": 0.82,
+ "shots": 28
+}

@@ -1,0 +1,638 @@
+{
+ "frames_checked": 768,
+ "faces_checked": 1184,
+ "flags": [
+  {
+   "frame": 58,
+   "id": "O",
+   "shot": "S04 the distance",
+   "kind": "one-frame dip",
+   "count": 0,
+   "prev": 1,
+   "next": 2
+  },
+  {
+   "frame": 60,
+   "id": "O",
+   "shot": "S04 the distance",
+   "kind": "one-frame dip",
+   "count": 0,
+   "prev": 2,
+   "next": 2
+  },
+  {
+   "frame": 62,
+   "id": "O",
+   "shot": "S04 the distance",
+   "kind": "one-frame dip",
+   "count": 0,
+   "prev": 2,
+   "next": 1
+  },
+  {
+   "frame": 68,
+   "id": "O",
+   "shot": "S04 the distance",
+   "kind": "one-frame dip",
+   "count": 0,
+   "prev": 1,
+   "next": 1
+  },
+  {
+   "frame": 71,
+   "id": "O",
+   "shot": "S04 the distance",
+   "kind": "one-frame dip",
+   "count": 0,
+   "prev": 1,
+   "next": 2
+  },
+  {
+   "frame": 653,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 654,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 655,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 656,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 657,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 658,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 659,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 660,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 661,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 662,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 663,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 664,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 665,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 666,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 667,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 668,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 669,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 670,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 671,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 672,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 677,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 677,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 678,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 678,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 679,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 679,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 680,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 680,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 681,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 681,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 682,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 682,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 683,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 683,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 684,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 684,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 685,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 685,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 686,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 686,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 687,
+   "id": "L",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 687,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 688,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 689,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 690,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 691,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 692,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 693,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 694,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 695,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 696,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 697,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 698,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 699,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  },
+  {
+   "frame": 700,
+   "id": "P",
+   "shot": "S24 eight feet",
+   "kind": "no eye white on a face toward camera",
+   "count": 0
+  }
+ ],
+ "per_shot": {
+  "S01 hook:L": {
+   "frames": 15,
+   "min_norm": 0.2883,
+   "max_norm": 0.3373
+  },
+  "S02 ear level:L": {
+   "frames": 14,
+   "min_norm": 0.027,
+   "max_norm": 0.0989
+  },
+  "S03 the laser:O": {
+   "frames": 28,
+   "min_norm": 0.0,
+   "max_norm": 0.0993
+  },
+  "S04 the distance:L": {
+   "frames": 29,
+   "min_norm": 0.0,
+   "max_norm": 0.205
+  },
+  "S04 the distance:O": {
+   "frames": 29,
+   "min_norm": 0.0,
+   "max_norm": 0.0009
+  },
+  "S04 the distance:P": {
+   "frames": 29,
+   "min_norm": 0.0212,
+   "max_norm": 0.0469
+  },
+  "S05 contrast:L": {
+   "frames": 25,
+   "min_norm": 0.1081,
+   "max_norm": 0.1537
+  },
+  "S05 contrast:P": {
+   "frames": 25,
+   "min_norm": 0.0327,
+   "max_norm": 0.0798
+  },
+  "S06 bystander:P": {
+   "frames": 21,
+   "min_norm": 0.0939,
+   "max_norm": 0.1341
+  },
+  "S07 only her:L": {
+   "frames": 21,
+   "min_norm": 0.0,
+   "max_norm": 0.2192
+  },
+  "S07 only her:P": {
+   "frames": 21,
+   "min_norm": 0.0466,
+   "max_norm": 0.0673
+  },
+  "S08 tap:L": {
+   "frames": 36,
+   "min_norm": 0.0618,
+   "max_norm": 0.1132
+  },
+  "S08 tap:P": {
+   "frames": 36,
+   "min_norm": 0.0338,
+   "max_norm": 0.0774
+  },
+  "S09 empty ear:L": {
+   "frames": 27,
+   "min_norm": 0.0,
+   "max_norm": 0.0431
+  },
+  "S10 the path:L": {
+   "frames": 16,
+   "min_norm": 0.0,
+   "max_norm": 0.0848
+  },
+  "S10 the path:P": {
+   "frames": 5,
+   "min_norm": 0.0515,
+   "max_norm": 0.0668
+  },
+  "S19 side view: the sweep:L": {
+   "frames": 30,
+   "min_norm": 0.0,
+   "max_norm": 0.0998
+  },
+  "S20 where it converges:L": {
+   "frames": 42,
+   "min_norm": 0.0,
+   "max_norm": 0.3095
+  },
+  "S20 where it converges:P": {
+   "frames": 42,
+   "min_norm": 0.0,
+   "max_norm": 0.0
+  },
+  "S21 she hears it:L": {
+   "frames": 42,
+   "min_norm": 0.0785,
+   "max_norm": 0.2783
+  },
+  "S22 press:O": {
+   "frames": 23,
+   "min_norm": 0.0978,
+   "max_norm": 0.1299
+  },
+  "S23 it fires:L": {
+   "frames": 30,
+   "min_norm": 0.0,
+   "max_norm": 0.0653
+  },
+  "S23 it fires:P": {
+   "frames": 30,
+   "min_norm": 0.0747,
+   "max_norm": 0.1082
+  },
+  "S24 eight feet:L": {
+   "frames": 48,
+   "min_norm": 0.0,
+   "max_norm": 0.0278
+  },
+  "S24 eight feet:P": {
+   "frames": 48,
+   "min_norm": 0.0,
+   "max_norm": 0.0
+  },
+  "S25 approach (side):L": {
+   "frames": 31,
+   "min_norm": 0.0246,
+   "max_norm": 0.0536
+  },
+  "S26 the step:P": {
+   "frames": 26,
+   "min_norm": 0.0,
+   "max_norm": 0.0269
+  },
+  "S26 the step:L": {
+   "frames": 11,
+   "min_norm": 0.0,
+   "max_norm": 0.0599
+  },
+  "S27 aligned:L": {
+   "frames": 18,
+   "min_norm": 0.031,
+   "max_norm": 0.0395
+  },
+  "S27 aligned:P": {
+   "frames": 18,
+   "min_norm": 0.0686,
+   "max_norm": 0.1845
+  },
+  "S28 the sound at her ear:L": {
+   "frames": 27,
+   "min_norm": 0.0129,
+   "max_norm": 0.0499
+  },
+  "S29 silence:L": {
+   "frames": 34,
+   "min_norm": 0.3098,
+   "max_norm": 0.3418
+  },
+  "S30 he cannot hear it:L": {
+   "frames": 45,
+   "min_norm": 0.0,
+   "max_norm": 0.2921
+  },
+  "S30 he cannot hear it:P": {
+   "frames": 45,
+   "min_norm": 0.0,
+   "max_norm": 0.1453
+  },
+  "S31 blocking it:L": {
+   "frames": 39,
+   "min_norm": 0.1252,
+   "max_norm": 0.1458
+  },
+  "S31 blocking it:P": {
+   "frames": 39,
+   "min_norm": 0.0,
+   "max_norm": 0.0691
+  },
+  "S32 he moves:L": {
+   "frames": 38,
+   "min_norm": 0.0,
+   "max_norm": 0.1141
+  },
+  "S32 he moves:P": {
+   "frames": 38,
+   "min_norm": 0.0375,
+   "max_norm": 0.0725
+  },
+  "S33 it returns:L": {
+   "frames": 16,
+   "min_norm": 0.0345,
+   "max_norm": 0.0715
+  },
+  "S34 final:L": {
+   "frames": 47,
+   "min_norm": 0.0,
+   "max_norm": 0.2899
+  }
+ }
+}
