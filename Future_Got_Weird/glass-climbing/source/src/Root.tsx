@@ -10,6 +10,9 @@ import {BaySheet2, FieldTest} from './v2/Work2';
 import {Film2, FilmStill2, Sheet2} from './v2/Film2';
 import {FRAMES as FRAMES2} from './v2/set';
 import {BaySheet3, PressTest} from './v3/Work3';
+import {BaySheet4} from './v4/Work4';
+import {Film4, FilmStill4, Sheet4} from './v4/Film4';
+import {FRAMES as FRAMES4} from './v4/set4';
 import {Film3, FilmStill3, Sheet3} from './v3/Film3';
 import {FRAMES as FRAMES3} from './v3/set3';
 
@@ -74,6 +77,10 @@ export const RemotionRoot: React.FC = () => (
     <Still id="FilmStillV2" component={FilmStill2} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="SheetV2" component={Sheet2} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
     <Composition id="GlassClimbingV3" component={Film3} durationInFrames={FRAMES3} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v3' as string | false, captions: true}} />
+    <Composition id="GlassClimbingV4" component={Film4} durationInFrames={FRAMES4} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v4' as string | false, captions: true}} />
+    <Still id="FilmStillV4" component={FilmStill4} width={W} height={H} defaultProps={{f: 0, captions: true}} />
+    <Still id="SheetV4" component={Sheet4} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="BaySheet4" component={BaySheet4} width={W} height={1920} defaultProps={{fs: [0, 90, 120, 150], cx: 200, cy: -900, z: 0.9, follow: false}} />
     <Still id="FilmStillV3" component={FilmStill3} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="SheetV3" component={Sheet3} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
     <Still id="BaySheet3" component={BaySheet3} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], cx: 250, cy: -1100, z: 0.7, follow: true}} />

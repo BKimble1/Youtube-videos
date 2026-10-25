@@ -18,7 +18,7 @@ import {mix, shade} from '../dc/color';
 import {INK, Inked} from '../dc/ink';
 import {add, clamp, fmt, lerp, mul, P, perp, sub, V} from '../dc/math';
 import {Capsule, Lin, SoftShadow} from '../dc/shade';
-import {Layer} from '../dc/camera';
+import {Cam, Layer} from '../dc/camera';
 import {Hand} from '../dc/Hand';
 import {dirOf, H_BAR, H_BAR_OPEN, handUV} from '../world/rig';
 import {mixHand} from '../dc/Hand';
@@ -57,7 +57,7 @@ const coil = (a: V, b: V, n: number, w: number) => {
   return `M${pts.map((p) => P(p)).join(' L')}`;
 };
 
-export const SpringScene3: React.FC<{id: string; f: number}> = ({id, f}) => {
+export const SpringScene3: React.FC<{id: string; f: number; cam?: Cam}> = ({id, f, cam: camIn}) => {
   // ---- the story's parameters
   const open = ss(f, 540, 560) * (1 - ss(f, 660, 676)); // the cutaway
   const lift = ss(f, 538, 562) * (1 - ss(f, 658, 678)); // the cover lifting away (toward us and up) and coming back
@@ -69,7 +69,7 @@ export const SpringScene3: React.FC<{id: string; f: number}> = ({id, f}) => {
   const travel = lerp(rail, ALONE, one); // the rails follow the spring that is doing the work
   // A wide as the cover lifts; B along the handle into the springs as the pull comes on; C close on a column (the
   // comparison); D across to the tile that lets go and its neighbours; E back out to the whole pad and his hand
-  const cam = camAt(f, [[535, 0, 30, 2.6], [562, -6, 10, 4.2, inOut], [576, 10, -10, 5.6, inOut], [592, -30, 10, 7.6, inOut], [600, -40, -20, 11.5, inOut], [622, -40, 0, 11.5, inOut],
+  const cam = camIn ?? camAt(f, [[535, 0, 30, 2.6], [562, -6, 10, 4.2, inOut], [576, 10, -10, 5.6, inOut], [592, -30, 10, 7.6, inOut], [600, -40, -20, 11.5, inOut], [622, -40, 0, 11.5, inOut],
     [634, -34, 52, 8.4, inOut], [652, -28, 60, 8.8, inOut], [680, 4, 40, 2.8, inOut]]);  const k = kOf(cam.z);
   const tiles: React.ReactNode[] = [];
   const springs: React.ReactNode[] = [];

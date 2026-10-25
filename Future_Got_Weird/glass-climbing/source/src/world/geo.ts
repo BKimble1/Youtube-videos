@@ -9,7 +9,7 @@ import {add, mul, sub, V} from '../dc/math';
 
 export const KX = -0.24;
 export const KY = 0.04;
-export type P3 = {x: number; y: number; z: number};
+export type P3 = {x: number; y: number; z: number; /** V4: the pad's own depth (projected in full, no k ramp) */ zo?: number};
 export const pr = (p: P3): V => ({x: p.x + KX * p.z, y: p.y + KY * p.z});
 export const p3 = (x: number, y: number, z: number): P3 => ({x, y, z});
 
@@ -37,7 +37,7 @@ export const Z_FAR = -18 * CM;
 
 /** a pad placed on the glass: centre height y, depth z, gap (x stand-off from the glass while released), tilt (deg,
  *  rotation in the x-y plane about the pad's top edge while peeling) */
-export type PadState = {y: number; z: number; gap: number; tilt: number; load: number; obl?: number};
+export type PadState = {y: number; z: number; gap: number; tilt: number; load: number; obl?: number; /** V4: depth offset projected in full (the pad sits on the receding face at x = KX zo) */ zo?: number};
 /** under load the plate (and its handle) shears down a hair against the tile layer that is gripping the glass (the
  *  wedges bending); drawn at 4 units so it reads in the close-ups */
 export const SHEAR = 4;
@@ -50,13 +50,13 @@ export const padPt = (s: PadState, u: number, v: number, dz = 0): P3 => {
   const du = u, dv = v - v0;
   const x = s.gap + du * Math.cos(a) + dv * Math.sin(a);
   const y = s.y + v0 + -du * Math.sin(a) + dv * Math.cos(a) + (u > PAD.tile * 0.5 ? SHEAR * s.load : 0);
-  return {x, y, z: dz * (s.obl ?? 1)};
+  return {x, y, z: dz * (s.obl ?? 1), zo: s.zo};
 };
 /** pads are drawn with the oblique growing from nothing at the glass face to full at the back plate, so the contact
  *  face stays on the glass section line while the plate, posts and bar open into a three-quarter view */
 export const prPad = (p: P3): V => {
   const k = Math.min(1, Math.max(0, p.x / (PAD.tile + PAD.t)));
-  return {x: p.x + KX * p.z * k, y: p.y + KY * p.z * k};
+  return {x: p.x + KX * (p.z * k + (p.zo ?? 0)), y: p.y + KY * (p.z * k + (p.zo ?? 0))};
 };
 export const gripOf = (s: PadState): P3 => padPt(s, PAD.tile + PAD.t + PAD.post, 0);
 /** the D-ring at the bottom edge of the plate, where the foot strap hangs */

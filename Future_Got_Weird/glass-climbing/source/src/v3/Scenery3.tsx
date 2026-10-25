@@ -189,8 +189,8 @@ export const Pavement: React.FC<{id: string; k: number}> = ({id, k}) => (
 
 const STOOL_C = '#E0A33B';
 /** the step stool, side-on: a top board, a low step, splayed legs */
-export const Stool: React.FC<{id: string; k: number}> = ({id, k}) => {
-  const {x0, x1, top} = STOOL;
+export const Stool: React.FC<{id: string; k: number; stool?: {x0: number; x1: number; top: number}}> = ({id, k, stool = STOOL}) => {
+  const {x0, x1, top} = stool;
   const th = 34;
   const step = top + (0 - top) * 0.5;
   const legs: [number, number][] = [[x0 + 30, x0 - 20], [x1 - 30, x1 + 20]];

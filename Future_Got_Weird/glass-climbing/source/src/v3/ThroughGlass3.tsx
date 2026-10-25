@@ -26,9 +26,9 @@ const contactOf = (load: number, seed: number) => (c: number, r: number) => {
   return clamp((load - thr * 0.6) / 0.35) * 0.92 + 0.04;
 };
 
-export const ThroughGlass3: React.FC<{id: string; f: number; cam: Cam; k: number}> = ({id, f, cam, k}) => {
-  const st = climbAt(f);
-  const rise = (st.pose.y - climbAt(184).pose.y) * 1.2;
+export const ThroughGlass3: React.FC<{id: string; f: number; cam: Cam; k: number; rise?: number; blink?: number}> = ({id, f, cam, k, rise: riseIn, blink}) => {
+  const st = riseIn === undefined ? climbAt(f) : null;
+  const rise = riseIn ?? (st!.pose.y - climbAt(184).pose.y) * 1.2;
   const H: V = {x: 30, y: 800 + rise};
   let pose: ManPose = P({x: H.x, y: H.y, s: 1.1, torso: 2, chest: 3, neck: -6, turn: 0.18, lW: 1, rW: 1, lElb: 1, rElb: -1});
   // seen from in front: his right hand (screen-left) on the upper pad, his left on the lower one
@@ -60,7 +60,7 @@ export const ThroughGlass3: React.FC<{id: string; f: number; cam: Cam; k: number
       <Layer cam={cam} depth={1}>
         <Strap id={`${id}-tg-sU`} a={strapUp0} b={{x: -120, y: 1500}} sag={30 * (1 - loadUp)} k={k} />
         <Strap id={`${id}-tg-sL`} a={strapLow0} b={{x: 150, y: 1500}} sag={50 * (1 - loadLow)} k={k} far />
-        <Man id={`${id}-tg-m`} pose={pose} expr={expr} lHand={H_BAR} rHand={H_BAR} outfit={HERO} blink={st.blink} />
+        <Man id={`${id}-tg-m`} pose={pose} expr={expr} lHand={H_BAR} rHand={H_BAR} outfit={HERO} blink={blink ?? st!.blink} />
       </Layer>
       <Layer cam={cam} depth={1}>
         <PadFace id={`${id}-tg-pL`} c={TG3.padLow} s={TG3.s} contact={contactOf(loadLow, 3.1)} k={k} detail={0} />
