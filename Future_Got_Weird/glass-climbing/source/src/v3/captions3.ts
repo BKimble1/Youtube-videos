@@ -9,7 +9,7 @@ export const CAP_Y: [string, number, boolean | [number, number]][] = [
   ['As you', 1300, [560, 480]], ['the wedges', 1300, [560, 480]], ['against the', 1300, [560, 480]],
   ['This brings', 1420, true], ['that tiny', 1420, true], ['can hold', 1480, false],
   ['Special', 250, false], ['so one', 210, false], ['doesn', 250, false],
-  ['Then,', 300, false], ['onto the', 1500, false], ['The first', 1420, true], ['letting', 1640, [560, 480]], ['higher', 300, false],
+  ['Then,', 300, false], ['onto the', 1500, false], ['The first', 1420, true], ['letting', 1640, [560, 480]], ['higher', 1700, false],
   ['But there', 1480, false], ['They need', 1300, true], ['to grip', 1300, true], ['So you', 1500, false], ['but switch', 1470, [760, 300]],
   ['and those', 380, false], ['can', 1480, false],
 ];

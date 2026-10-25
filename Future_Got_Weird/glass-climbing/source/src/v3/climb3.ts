@@ -14,7 +14,7 @@
 // weight shift, far pad move and pull-up, the height reveal), 950-FRAMES (back at the stool: the brick test, the loop).
 // Off screen (the micro views, the springs) he keeps climbing at the same rhythm; off screen 906-950 he climbs down.
 import {EX, P as Pose} from '../world/pose';
-import {ManPose} from '../dc/Man';
+import {DIM, ManPose, manJoints} from '../dc/Man';
 import {Expr, mixExpr} from '../dc/Head';
 import {HandPose, mixHand} from '../dc/Hand';
 import {add, clamp, len, lerpV, mul, norm, sub, V} from '../dc/math';
@@ -236,13 +236,13 @@ const climbRaw = (f: number, padLIn?: PadState, padRIn?: PadState): ClimbState =
   const padR = {...(padRIn ?? padTrack(f, 'R')), load: loadOf('R')};
   const ringL = prPad(ringOf(padL));
   const ringR = prPad(ringOf(padR));
-  // he leans in toward the wall when he pulls up (the near hand still on the lower pad) and when he crouches at the brick
+  // he leans in toward the wall when he pulls up (the near hand still on the lower pad)
   // ... and stays leaned in while standing high, until the near pad has come up beneath the far one
   const upping = Math.max(...EVENTS.filter((e) => e.type === 'up').map((e) => {
     const nl = EVENTS.find((x) => x.type === 'L' && x.t > e.t);
     return ss(f, e.t, e.t + 10) * (1 - ss(f, nl ? nl.t + nl.len : C.down0 + 10, (nl ? nl.t + nl.len : C.down0 + 10) + 16));
   }));
-  const hx = HX - 20 * upping - 30 * bump(f, C.lRel3, C.lift1, 20, 20);
+  const hx = HX - 20 * upping;
   const H: V = {x: hx, y: hipY(f)};
   const loadedL = ankleForBar(loadedBar(ringL, NEAR_DX), 1);
   const loadedR = ankleForBar(loadedBar(ringR, FAR_DX), 1);
@@ -292,14 +292,20 @@ const climbRaw = (f: number, padLIn?: PadState, padRIn?: PadState): ClimbState =
   const lookUp = Math.max(...rMoves.map((e) => bump(f, e.t - 4, e.t + e.len + 6, 10, 12))); // he watches the far hand go up
   const lookDown = Math.max(bump(f, C.look0 - 2, 904, 12, 6), bump(f, C.lRel3, C.lift0, 10, 14)); // down at the brick
   const recoil = keyN(f, [[C.fail, 0], [C.fail + 4, 1], [C.failEnd + 2, 0.4], [C.lift0 + 6, 0]]);
-  const lean = keyN(f, [[0, 9], [C.rStep0, 9], [C.lStep1, 6], [C.down0, 6], [C.down1, 9], [C.lRel3, 9], [C.lMove3b, 20], [C.lPress0, 24], [C.test1, 26], [C.fail, 27], [C.failEnd + 6, 18], [C.lift1, 9], [FRAMES, 9]]) - 10 * recoil + 16 * upping;
+  const lean = keyN(f, [[0, 9], [C.rStep0, 9], [C.lStep1, 6], [C.down0, 6], [C.down1, 9], [C.lRel3, 9], [C.lMove3b, 14], [C.lPress0, 16], [C.test1, 17], [C.fail, 18], [C.failEnd + 6, 14], [C.lift1, 9], [FRAMES, 9]]) - 10 * recoil + 16 * upping;
   const settle = Math.sin(clamp((f - 96) / 16) * Math.PI) * (1 - clamp((f - 112) / 6)); // shoulders under the drop
   const pull = Math.max(upping, bump(f, C.pull0, C.pull1, 10, 10));
-  let pose: ManPose = Pose({x: H.x, y: H.y, s: 1, torso: lean, chest: 4 + 3 * settle + 4 * pull - 3 * recoil, neck: -4 - 0.8 * (lean - 9) - 0.7 * (3 * settle + 4 * pull) - 8 * lookUp + 14 * lookDown + 5 * recoil, // the head stays near upright as the body leans turn: 0.78, pelvis: 0,
-    lAx: ankL.x, lAy: ankL.y, lA: 1, rAx: ankR.x, rAy: ankR.y, rA: 1, lAnk: 0, rAnk: 0, lElb: -1, rElb: -1, breath: 0.3 + 0.3 * Math.sin(f / 9)});
+  let pose: ManPose = Pose({x: H.x, y: H.y, s: 1, torso: lean, chest: 4 + 3 * settle + 4 * pull - 3 * recoil, neck: -4 - 0.8 * (lean - 9) - 0.7 * (3 * settle + 4 * pull) - 8 * lookUp + 14 * lookDown + 5 * recoil, // the head stays near upright as the body leans
+    lAx: ankL.x, lAy: ankL.y, lA: 1, rAx: ankR.x, rAy: ankR.y, rA: 1, lAnk: 0, rAnk: 0, lElb: -1, rElb: -1, breath: 0.3 + 0.3 * Math.sin((2 * Math.PI * Math.round(FRAMES / 57) * f) / FRAMES)}); // ~1.9 s breaths, whole cycles over the loop
+  // the far hand must stay in view: when the upper pad comes close to his head (pulling up under it), he tips his head
+  // back and away from the wall, as much as it needs (continuous in the clearance, so it never snaps)
+  const gripR = prPad(gripOf(padR));
+  const j0 = manJoints(pose);
+  const clear0 = len(sub(gripR, j0.head)) - DIM.headR * j0.s;
+  pose = {...pose, neck: pose.neck - Math.min(22, Math.max(0, (45 - clear0) / 1.6))};
   const uv = handUV(H_BAR, 'grip');
   pose = placeHand(pose, 'L', prPad(gripOf(padL)), 182, uv.u, uv.v);
-  pose = placeHand(pose, 'R', prPad(gripOf(padR)), 176, uv.u, uv.v);
+  pose = placeHand(pose, 'R', gripR, 176, uv.u, uv.v);
   const strain = Math.max(bump(f, C.pull0, C.pull1, 10, 10), bump(f, C.lStep1 - 4, 106), upping, bump(f, C.sinkA, C.sinkB), bump(f, C.test0, C.test1), bump(f, C.yank0, C.fail));
   const pleased = Math.max(bump(f, C.rPlace, C.rPlace + 8), bump(f, C.upB - 4, C.upB + 14), bump(f, C.rPlace2, C.rPlace2 + 6), bump(f, C.up2B - 4, 900), bump(f, C.lPress1, C.test0 - 6));
   const doubt = bump(f, C.fail + 2, C.lift0 + 6, 5, 12);

@@ -6,7 +6,7 @@
 import {climbAt} from '../../source/src/v3/climb3';
 import {handError, H_BAR, handUV} from '../../source/src/world/rig';
 import {gripOf, prPad} from '../../source/src/world/geo';
-import {manJoints} from '../../source/src/dc/Man';
+import {DIM, manJoints} from '../../source/src/dc/Man';
 import {FRAMES, STRAP3} from '../../source/src/v3/set3';
 
 type P = {x: number; y: number};
@@ -17,11 +17,11 @@ const cross = (a: P, b: P, c: P, d: P) => {
 const OFF: [number, number][] = [[176, 470], [535, 680], [904, 950], [1063, 1106]]; // micro, springs, surfaces (no climber)
 const [from, to] = process.argv.slice(2).map(Number);
 const uv = handUV(H_BAR, 'grip');
-const worst: Record<string, [number, number]> = {hand: [0, 0], leg: [0, 0], strap: [0, 0], slide: [0, 0], ankleJump: [0, 0], wristJump: [0, 0], faceMin: [1e9, 0]};
+const worst: Record<string, [number, number]> = {hand: [0, 0], leg: [0, 0], strap: [0, 0], slide: [0, 0], ankleJump: [0, 0], wristJump: [0, 0], faceMin: [1e9, 0], farClear: [1e9, 0]};
 const up = (k: string, v: number, f: number) => {
   if (v > worst[k][0]) worst[k] = [+v.toFixed(2), f];
 };
-const bad: Record<string, number[]> = {hand: [], face: [], legX: [], leg: []};
+const bad: Record<string, number[]> = {hand: [], face: [], farHid: [], legX: [], leg: []};
 let prev = climbAt(-1);
 for (let f = from || 0; f <= (to || FRAMES); f++) {
   const s = climbAt(f);
@@ -47,6 +47,11 @@ for (let f = from || 0; f <= (to || FRAMES); f++) {
   const dy = j.L.W.y - j.head.y;
   if (dy < worst.faceMin[0]) worst.faceMin = [+dy.toFixed(0), f];
   if (dy < 105 && j.L.W.x > j.head.x - 160) bad.face.push(f);
+  // the far hand on its bar must not disappear behind the head (the far arm is drawn behind it): clearance from the
+  // grip to the head's outline
+  const fc = Math.hypot(gR.x - j.head.x, gR.y - j.head.y) - DIM.headR * j.s;
+  if (fc < worst.farClear[0]) worst.farClear = [+fc.toFixed(0), f];
+  if (fc < 25) bad.farHid.push(f);
   const nl = j.lLeg, fl = j.rLeg;
   if (cross(nl.K, nl.A, fl.K, fl.A) || cross(nl.K, nl.A, fl.hp, fl.K) || cross(nl.hp, nl.K, fl.K, fl.A)) bad.legX.push(f);
   prev = s;
@@ -67,5 +72,15 @@ const runs = (a: number[]) => {
 for (const k of Object.keys(bad)) console.log(`${k}: ${runs(bad[k]) || 'none'}`);
 const a = climbAt(0), b = climbAt(FRAMES);
 const d = (x: number, y: number) => +Math.abs(x - y).toFixed(4);
-console.log('loop', JSON.stringify({hip: d(a.pose.y, b.pose.y), padLy: d(a.padL.y, b.padL.y), padLgap: d(a.padL.gap, b.padL.gap), padRy: d(a.padR.y, b.padR.y), ankL: d(a.footL.ankle.y, b.footL.ankle.y), torso: d(a.pose.torso, b.pose.torso), neck: d(a.pose.neck, b.pose.neck)}));
+// every number in the state (pose, pads, rings, feet, hands, face), not just a few: the last frame must run into frame 0
+const flat = (o: any, pre = '', out: Record<string, number> = {}) => {
+  for (const [k, v] of Object.entries(o ?? {})) {
+    if (typeof v === 'number') out[pre + k] = v;
+    else if (v && typeof v === 'object') flat(v, pre + k + '.', out);
+  }
+  return out;
+};
+const fa = flat(a), fb = flat(b);
+const diffs = Object.keys(fa).map((k) => [k, d(fa[k], fb[k] ?? NaN)] as [string, number]).filter(([k, x]) => k !== 'f' && !(x < 0.01)).sort((p, q) => q[1] - p[1]);
+console.log('loop', diffs.length ? JSON.stringify(diffs.slice(0, 12)) : `all ${Object.keys(fa).length} values equal`);
 console.log('worst', JSON.stringify(worst));

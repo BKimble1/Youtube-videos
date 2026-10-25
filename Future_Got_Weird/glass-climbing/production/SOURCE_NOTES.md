@@ -99,3 +99,25 @@ The lead is the Weird Crew's existing protagonist ("the guesser"), reused with h
 - **The brick failure**: the pad pressed on brick holds briefly under a light test, then creeps, tips at its top edge
   and tears off when he pulls. This dramatises the brick limitation of this smooth-surface system; it is not a
   reproduction of a published test.
+
+## V3 additions and simplifications
+
+- **The set** is now the outside of a tall glass office building (storey-high panes, spandrels, mullions, an aluminium
+  base channel, a brick plinth, pavement, sky and city beyond), so the climb has height, depth and reflections and the
+  catch can happen where the glass meets the brick. It is illustrative, not the Stanford test wall.
+- **The climb** is drawn as a match-style cycle: the far hand always takes the upper pad and the near pad works lower
+  down (the hands never swap above one another). Each step is weight transfer, release/peel, reach, reattach, rise.
+  The demonstration climb's exact sequence is not reproduced; this is one plausible, consistent way to use two pads
+  with foot straps.
+- **The straps cross in the side view** at some frames: the near foot is kept behind the far foot so the legs never
+  cross, and the two straps run at different depths. In a flat side view they overlap; they are not tangled.
+- **The press close-ups** (`source/src/v3/Press.tsx`, pad on glass at the start and on brick at the catch) show the
+  contact layer as a 14 mm band compressing about 40% on glass, and the brick's face with exaggerated roughness
+  (about 8.5 mm peaks), so that "full contact" against "contact only on the peaks" reads at phone size. The real
+  layer is far thinner and the brick's relevant roughness is at much smaller scales too.
+- **The boundary view** (`source/src/v3/Boundary.tsx`) is a schematic section of the foot of a curtain wall (glass,
+  base channel, brick); proportions are for legibility.
+- **Off-screen climbing:** he keeps climbing while the micro views (176-470) and the springs (535-680) are up, so each
+  return to the building finds him higher; his descent to the bricks (906-950) happens under the boundary view.
+- **The springs** sequence now shows one section losing contact: its tendon goes slack and its neighbours each take a
+  little more. This illustrates the load-sharing idea; the counts and stretches are not measured values.

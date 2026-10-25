@@ -51,7 +51,7 @@ const A3: React.FC<{f: number}> = ({f}) => bay(`a3${f}`, f, camAt(f, [[72, 215, 
 const A4: React.FC<{f: number}> = ({f}) => bay(`a4${f}`, f, camAt(f, [[101, 250, -640, 1.25], [113, 300, -900, 0.75, inOut], [124, 300, -990, 0.66, inOut]]));
 /** A5 (124-152) "and climb it": the far pad peels off; the camera rises with his far hand as it reaches up */
 const A5: React.FC<{f: number}> = ({f}) => {
-  const g = grip(f, 'R');
+  const g = grip(Math.min(f, 146), 'R');
   const cam = camAt(f, [[124, 300, -1000, 0.66], [134, 170, -1180, 1.0, inOut]]);
   const k = ss(f, 132, 146);
   return bay(`a5${f}`, f, {x: cam.x + (g.x + 160 - cam.x) * k, y: cam.y + (g.y + 130 - cam.y) * k, z: cam.z});
@@ -270,7 +270,7 @@ const K7: React.FC<{f: number}> = ({f}) => {
 };
 /** K8 (1136-FRAMES) "contact.": the camera rides up with the pad to the glass, where he presses it on: frame 0 */
 const K8: React.FC<{f: number}> = ({f}) => {
-  const g = grip(1136, 'L');
+  const g = grip(1106, 'L');
   return bay(`k8${f}`, f, camAt(f, [[1136, g.x + 170, g.y - 140, 1.7], [FRAMES, CAM0.x, CAM0.y, CAM0.z, sm5]]));
 };
 
