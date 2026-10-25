@@ -1,5 +1,24 @@
 # Future Got Weird: Real Web Fluid
 
+## V6 (final animation and pacing polish: capture, nozzle, attachment and lift)
+
+**Status (25 Oct 2026):** the V6 review (1080×1920) was rendered from source and checked from the file; the native
+2160×3840 master is being rendered after the review passed (`production/V6_REPORT.md`, which lists the remaining
+problems). **Not published.** Nobody has watched it in real time with sound.
+
+| Deliverable | File |
+|---|---|
+| V6 review: 1080×1920, 30 fps, 952 frames, 31.73 s, captions burned in | `exports/FGW_Real_Web_Fluid_V6_REVIEW_1080x1920.mp4` |
+| V6 master: 2160×3840 native (rendered at 2×) | `exports/FGW_Real_Web_Fluid_V6_MASTER_2160x3840.mp4` |
+| Report and shot list | `production/V6_REPORT.md`, `production/V6_SHOTS_AND_TRANSITIONS.md` |
+| V6 mix (unchanged narration, retargeted effects) and cues | `audio/mix/FGW_Moth_Silk_V6_mix.wav`, `audio/cues_v6.json`, `audio/sfx_cues_v6.json` |
+| Source | `source/src/v6/` (composition `RealWebFluidV6`; stills `FilmStillV6`, `SheetV6`); the nozzle is `Nozzle6.tsx` |
+
+Rebuild V6: as V3 with `v6` in place of `v3` (`tools/v6/export_cues_v6.ts`, `tools/v6/make_audio_v6.py`,
+`tools/v6/cap_check6.ts`, composition `RealWebFluidV6`, audio `mix_v6`). Contact sheets: `cd source && ./sheet6.sh out.png "f1,f2,..." [true]`.
+
+---
+
 ## V5 (final animation, pacing and quality pass on the locked narration)
 
 **Status (24 Oct 2026):** the V5 review (1080×1920) was rendered from source and checked from the file; the native
