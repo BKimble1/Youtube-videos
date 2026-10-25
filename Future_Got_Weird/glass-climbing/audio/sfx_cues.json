@@ -1,0 +1,373 @@
+[
+ {
+  "name": "left pad seats on the glass",
+  "at": 0.18,
+  "frame": 5.4,
+  "dur": 0.12,
+  "gain_db": -24
+ },
+ {
+  "name": "left shoe leaves the floor",
+  "at": 0.267,
+  "frame": 8.0,
+  "dur": 0.16,
+  "gain_db": -33
+ },
+ {
+  "name": "left foot onto the stirrup bar",
+  "at": 0.453,
+  "frame": 13.6,
+  "dur": 0.18,
+  "gain_db": -30
+ },
+ {
+  "name": "left strap takes the load",
+  "at": 0.513,
+  "frame": 15.4,
+  "dur": 0.22,
+  "gain_db": -27
+ },
+ {
+  "name": "right shoe leaves the floor (squeak)",
+  "at": 0.733,
+  "frame": 22.0,
+  "dur": 0.09,
+  "gain_db": -38
+ },
+ {
+  "name": "right foot into its stirrup",
+  "at": 1.807,
+  "frame": 54.2,
+  "dur": 0.18,
+  "gain_db": -31
+ },
+ {
+  "name": "stand-up on the right (effort, cloth)",
+  "at": 2.667,
+  "frame": 80.0,
+  "dur": 0.9,
+  "gain_db": -38
+ },
+ {
+  "name": "right strap takes the load",
+  "at": 3.483,
+  "frame": 104.5,
+  "dur": 0.24,
+  "gain_db": -29
+ },
+ {
+  "name": "left pad peels off (dry)",
+  "at": 3.533,
+  "frame": 106.0,
+  "dur": 0.28,
+  "gain_db": -31
+ },
+ {
+  "name": "left pad carried up (air)",
+  "at": 3.733,
+  "frame": 112.0,
+  "dur": 0.5,
+  "gain_db": -44
+ },
+ {
+  "name": "left pad seats higher (through the glass, muffled)",
+  "at": 4.503,
+  "frame": 135.1,
+  "dur": 0.12,
+  "gain_db": -26
+ },
+ {
+  "name": "left foot steps up",
+  "at": 5.25,
+  "frame": 157.5,
+  "dur": 0.18,
+  "gain_db": -32
+ },
+ {
+  "name": "left strap taking load",
+  "at": 5.633,
+  "frame": 169.0,
+  "dur": 0.2,
+  "gain_db": -31
+ },
+ {
+  "name": "into the tile (scale whoosh, soft)",
+  "at": 6.8,
+  "frame": 204.0,
+  "dur": 0.75,
+  "gain_db": -40
+ },
+ {
+  "name": "the strip turns (air)",
+  "at": 7.6,
+  "frame": 228.0,
+  "dur": 0.6,
+  "gain_db": -46
+ },
+ {
+  "name": "glass meets the tips",
+  "at": 8.633,
+  "frame": 259.0,
+  "dur": 0.08,
+  "gain_db": -36
+ },
+ {
+  "name": "wedges begin to bend (fine ticks)",
+  "at": 9.067,
+  "frame": 272.0,
+  "dur": 1.1,
+  "gain_db": -40
+ },
+ {
+  "name": "wedges lie flat (dense ticks)",
+  "at": 10.2,
+  "frame": 306.0,
+  "dur": 1.2,
+  "gain_db": -40
+ },
+ {
+  "name": "close contact (restrained shimmer at the edge)",
+  "at": 14.3,
+  "frame": 429.0,
+  "dur": 1.3,
+  "gain_db": -44
+ },
+ {
+  "name": "back out to the climber (whoosh)",
+  "at": 15.867,
+  "frame": 476.0,
+  "dur": 0.9,
+  "gain_db": -40
+ },
+ {
+  "name": "stand-up on the left",
+  "at": 15.9,
+  "frame": 477.0,
+  "dur": 0.8,
+  "gain_db": -38
+ },
+ {
+  "name": "left strap holding his whole weight",
+  "at": 16.567,
+  "frame": 497.0,
+  "dur": 0.26,
+  "gain_db": -28
+ },
+ {
+  "name": "right pad peels off",
+  "at": 16.267,
+  "frame": 488.0,
+  "dur": 0.28,
+  "gain_db": -32
+ },
+ {
+  "name": "right pad seats higher",
+  "at": 17.237,
+  "frame": 517.1,
+  "dur": 0.12,
+  "gain_db": -26
+ },
+ {
+  "name": "right foot into its stirrup",
+  "at": 17.683,
+  "frame": 530.5,
+  "dur": 0.18,
+  "gain_db": -33
+ },
+ {
+  "name": "cover opens (cutaway, air)",
+  "at": 18.1,
+  "frame": 543.0,
+  "dur": 0.5,
+  "gain_db": -46
+ },
+ {
+  "name": "the springs stretch together",
+  "at": 18.933,
+  "frame": 568.0,
+  "dur": 0.7,
+  "gain_db": -36
+ },
+ {
+  "name": "one spring alone stretches far",
+  "at": 19.867,
+  "frame": 596.0,
+  "dur": 0.6,
+  "gain_db": -34
+ },
+ {
+  "name": "the array shares again",
+  "at": 20.867,
+  "frame": 626.0,
+  "dur": 0.5,
+  "gain_db": -38
+ },
+ {
+  "name": "stand-up on the right",
+  "at": 23.067,
+  "frame": 692.0,
+  "dur": 1.0,
+  "gain_db": -37
+ },
+ {
+  "name": "right strap takes the load",
+  "at": 24.467,
+  "frame": 734.0,
+  "dur": 0.24,
+  "gain_db": -28
+ },
+ {
+  "name": "left strap goes slack (soft flap)",
+  "at": 24.833,
+  "frame": 745.0,
+  "dur": 0.15,
+  "gain_db": -40
+ },
+ {
+  "name": "wedges let go (fine release ticks)",
+  "at": 25.667,
+  "frame": 770.0,
+  "dur": 0.5,
+  "gain_db": -40
+ },
+ {
+  "name": "left pad peels off",
+  "at": 26.533,
+  "frame": 796.0,
+  "dur": 0.32,
+  "gain_db": -30
+ },
+ {
+  "name": "left pad carried up (air)",
+  "at": 26.6,
+  "frame": 798.0,
+  "dur": 0.5,
+  "gain_db": -44
+ },
+ {
+  "name": "left pad seats higher",
+  "at": 27.503,
+  "frame": 825.1,
+  "dur": 0.12,
+  "gain_db": -25
+ },
+ {
+  "name": "left foot steps up onto the bar",
+  "at": 28.067,
+  "frame": 842.0,
+  "dur": 0.18,
+  "gain_db": -32
+ },
+ {
+  "name": "pad lifted off the bench glass",
+  "at": 28.933,
+  "frame": 868.0,
+  "dur": 0.2,
+  "gain_db": -34
+ },
+ {
+  "name": "carriage slides (glass out, brick in)",
+  "at": 29.067,
+  "frame": 872.0,
+  "dur": 0.7,
+  "gain_db": -34
+ },
+ {
+  "name": "glass meets the tips (micro)",
+  "at": 30.433,
+  "frame": 913.0,
+  "dur": 0.08,
+  "gain_db": -38
+ },
+ {
+  "name": "contact closes across the glass (ticks)",
+  "at": 30.467,
+  "frame": 914.0,
+  "dur": 0.8,
+  "gain_db": -40
+ },
+ {
+  "name": "callback: stand-up on the left",
+  "at": 32.367,
+  "frame": 971.0,
+  "dur": 0.8,
+  "gain_db": -38
+ },
+ {
+  "name": "callback: right pad peels off",
+  "at": 32.467,
+  "frame": 974.0,
+  "dur": 0.28,
+  "gain_db": -32
+ },
+ {
+  "name": "callback: left strap takes his weight",
+  "at": 32.9,
+  "frame": 987.0,
+  "dur": 0.24,
+  "gain_db": -29
+ },
+ {
+  "name": "callback: right pad seats higher",
+  "at": 33.57,
+  "frame": 1007.1,
+  "dur": 0.12,
+  "gain_db": -26
+ },
+ {
+  "name": "the tips meet the brick (sparse grit)",
+  "at": 34.067,
+  "frame": 1022.0,
+  "dur": 0.5,
+  "gain_db": -36
+ },
+ {
+  "name": "wedges skid on the brick",
+  "at": 34.8,
+  "frame": 1044.0,
+  "dur": 0.6,
+  "gain_db": -38
+ },
+ {
+  "name": "pad pressed onto the brick (gritty contact)",
+  "at": 35.467,
+  "frame": 1064.0,
+  "dur": 0.12,
+  "gain_db": -34
+ },
+ {
+  "name": "the pad slips down the brick (dry)",
+  "at": 36.0,
+  "frame": 1080.0,
+  "dur": 0.75,
+  "gain_db": -30
+ },
+ {
+  "name": "the test mass lands on the bench",
+  "at": 36.847,
+  "frame": 1105.4,
+  "dur": 0.3,
+  "gain_db": -27
+ },
+ {
+  "name": "he takes the pad back",
+  "at": 37.467,
+  "frame": 1124.0,
+  "dur": 0.12,
+  "gain_db": -38
+ },
+ {
+  "name": "carriage slides back (glass in)",
+  "at": 37.8,
+  "frame": 1134.0,
+  "dur": 0.6,
+  "gain_db": -35
+ },
+ {
+  "name": "pad seats on the glass (into the loop)",
+  "at": 38.78,
+  "frame": 1163.4,
+  "dur": 0.12,
+  "gain_db": -24
+ }
+]

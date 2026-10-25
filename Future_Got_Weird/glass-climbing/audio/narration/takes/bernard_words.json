@@ -1,0 +1,608 @@
+{
+ "source": "audio/narration/takes/bernard.mp3",
+ "duration": 39.84,
+ "speech": [
+  0.03,
+  39.68
+ ],
+ "wpm": 180.1,
+ "pocketsphinx_transcript": "if you press these pads against the glass wall you could lift your finger off the ground and climate like spider-man their surfaces are covered in microscopic wedges as you pull downward the wet his bed flat against the glass this brings them so close that tiny molecular attractions can hold your entire weight special springs spread the load so one little patch doesn't have the whole doable and then you shift your weight on to the other path and the first releases letting you retire and repeat but there's a catch they need a smooth surface to grip so you can climb glass but switch to refer brick and those microscopic wedges can make the same concept",
+ "pocketsphinx_wer_vs_approved": 0.185,
+ "words": [
+  {
+   "word": "if",
+   "start": 0.0,
+   "end": 0.13
+  },
+  {
+   "word": "you",
+   "start": 0.13,
+   "end": 0.26
+  },
+  {
+   "word": "pressed",
+   "start": 0.26,
+   "end": 0.66
+  },
+  {
+   "word": "these",
+   "start": 0.67,
+   "end": 0.89
+  },
+  {
+   "word": "pads",
+   "start": 0.9,
+   "end": 1.33
+  },
+  {
+   "word": "against",
+   "start": 1.33,
+   "end": 1.63
+  },
+  {
+   "word": "a",
+   "start": 1.63,
+   "end": 1.68
+  },
+  {
+   "word": "glass",
+   "start": 1.68,
+   "end": 2.06
+  },
+  {
+   "word": "wall",
+   "start": 2.06,
+   "end": 2.73
+  },
+  {
+   "word": "you",
+   "start": 2.73,
+   "end": 2.82
+  },
+  {
+   "word": "could",
+   "start": 2.82,
+   "end": 2.97
+  },
+  {
+   "word": "lift",
+   "start": 2.97,
+   "end": 3.24
+  },
+  {
+   "word": "your",
+   "start": 3.24,
+   "end": 3.34
+  },
+  {
+   "word": "feet",
+   "start": 3.34,
+   "end": 3.69
+  },
+  {
+   "word": "off",
+   "start": 3.69,
+   "end": 3.85
+  },
+  {
+   "word": "the",
+   "start": 3.85,
+   "end": 3.94
+  },
+  {
+   "word": "ground",
+   "start": 3.94,
+   "end": 4.31
+  },
+  {
+   "word": "and",
+   "start": 4.43,
+   "end": 4.63
+  },
+  {
+   "word": "climb",
+   "start": 4.63,
+   "end": 4.96
+  },
+  {
+   "word": "it",
+   "start": 4.97,
+   "end": 5.05
+  },
+  {
+   "word": "like",
+   "start": 5.06,
+   "end": 5.22
+  },
+  {
+   "word": "spider",
+   "start": 5.22,
+   "end": 5.64
+  },
+  {
+   "word": "man",
+   "start": 5.64,
+   "end": 5.98
+  },
+  {
+   "word": "their",
+   "start": 6.41,
+   "end": 6.58
+  },
+  {
+   "word": "surfaces",
+   "start": 6.58,
+   "end": 7.19
+  },
+  {
+   "word": "are",
+   "start": 7.19,
+   "end": 7.26
+  },
+  {
+   "word": "covered",
+   "start": 7.27,
+   "end": 7.73
+  },
+  {
+   "word": "in",
+   "start": 7.73,
+   "end": 7.83
+  },
+  {
+   "word": "microscopic",
+   "start": 7.83,
+   "end": 8.63
+  },
+  {
+   "word": "wedges",
+   "start": 8.64,
+   "end": 9.2
+  },
+  {
+   "word": "as",
+   "start": 9.63,
+   "end": 9.82
+  },
+  {
+   "word": "you",
+   "start": 9.82,
+   "end": 9.93
+  },
+  {
+   "word": "pull",
+   "start": 9.93,
+   "end": 10.16
+  },
+  {
+   "word": "downward",
+   "start": 10.16,
+   "end": 10.76
+  },
+  {
+   "word": "the",
+   "start": 10.9,
+   "end": 10.99
+  },
+  {
+   "word": "wedges",
+   "start": 10.99,
+   "end": 11.4
+  },
+  {
+   "word": "bend",
+   "start": 11.4,
+   "end": 11.65
+  },
+  {
+   "word": "flat",
+   "start": 11.65,
+   "end": 12.09
+  },
+  {
+   "word": "against",
+   "start": 12.09,
+   "end": 12.38
+  },
+  {
+   "word": "the",
+   "start": 12.39,
+   "end": 12.46
+  },
+  {
+   "word": "glass",
+   "start": 12.46,
+   "end": 13.38
+  },
+  {
+   "word": "this",
+   "start": 13.38,
+   "end": 13.57
+  },
+  {
+   "word": "brings",
+   "start": 13.58,
+   "end": 13.86
+  },
+  {
+   "word": "them",
+   "start": 13.86,
+   "end": 14.0
+  },
+  {
+   "word": "so",
+   "start": 14.0,
+   "end": 14.35
+  },
+  {
+   "word": "close",
+   "start": 14.35,
+   "end": 14.85
+  },
+  {
+   "word": "that",
+   "start": 14.85,
+   "end": 14.99
+  },
+  {
+   "word": "tiny",
+   "start": 15.09,
+   "end": 15.44
+  },
+  {
+   "word": "molecular",
+   "start": 15.44,
+   "end": 16.05
+  },
+  {
+   "word": "attractions",
+   "start": 16.05,
+   "end": 16.68
+  },
+  {
+   "word": "can",
+   "start": 16.69,
+   "end": 16.82
+  },
+  {
+   "word": "hold",
+   "start": 16.82,
+   "end": 17.09
+  },
+  {
+   "word": "your",
+   "start": 17.09,
+   "end": 17.25
+  },
+  {
+   "word": "entire",
+   "start": 17.26,
+   "end": 17.85
+  },
+  {
+   "word": "weight",
+   "start": 17.85,
+   "end": 18.3
+  },
+  {
+   "word": "special",
+   "start": 18.7,
+   "end": 19.14
+  },
+  {
+   "word": "springs",
+   "start": 19.14,
+   "end": 19.68
+  },
+  {
+   "word": "spread",
+   "start": 19.68,
+   "end": 20.03
+  },
+  {
+   "word": "the",
+   "start": 20.03,
+   "end": 20.1
+  },
+  {
+   "word": "load",
+   "start": 20.1,
+   "end": 20.51
+  },
+  {
+   "word": "so",
+   "start": 20.65,
+   "end": 20.83
+  },
+  {
+   "word": "one",
+   "start": 20.83,
+   "end": 21.11
+  },
+  {
+   "word": "little",
+   "start": 21.11,
+   "end": 21.3
+  },
+  {
+   "word": "patch",
+   "start": 21.3,
+   "end": 21.71
+  },
+  {
+   "word": "doesn't",
+   "start": 21.71,
+   "end": 21.96
+  },
+  {
+   "word": "have",
+   "start": 21.96,
+   "end": 22.12
+  },
+  {
+   "word": "to",
+   "start": 22.12,
+   "end": 22.21
+  },
+  {
+   "word": "hold",
+   "start": 22.21,
+   "end": 22.43
+  },
+  {
+   "word": "you",
+   "start": 22.43,
+   "end": 22.55
+  },
+  {
+   "word": "up",
+   "start": 22.55,
+   "end": 22.65
+  },
+  {
+   "word": "alone",
+   "start": 22.68,
+   "end": 23.09
+  },
+  {
+   "word": "then",
+   "start": 23.52,
+   "end": 23.93
+  },
+  {
+   "word": "you",
+   "start": 24.04,
+   "end": 24.17
+  },
+  {
+   "word": "shift",
+   "start": 24.17,
+   "end": 24.48
+  },
+  {
+   "word": "your",
+   "start": 24.51,
+   "end": 24.61
+  },
+  {
+   "word": "weight",
+   "start": 24.61,
+   "end": 24.92
+  },
+  {
+   "word": "onto",
+   "start": 24.92,
+   "end": 25.15
+  },
+  {
+   "word": "the",
+   "start": 25.15,
+   "end": 25.29
+  },
+  {
+   "word": "other",
+   "start": 25.33,
+   "end": 25.58
+  },
+  {
+   "word": "pad",
+   "start": 25.58,
+   "end": 25.91
+  },
+  {
+   "word": "the",
+   "start": 26.31,
+   "end": 26.39
+  },
+  {
+   "word": "first",
+   "start": 26.39,
+   "end": 26.69
+  },
+  {
+   "word": "releases",
+   "start": 26.75,
+   "end": 27.33
+  },
+  {
+   "word": "letting",
+   "start": 27.46,
+   "end": 27.71
+  },
+  {
+   "word": "you",
+   "start": 27.71,
+   "end": 27.86
+  },
+  {
+   "word": "reach",
+   "start": 27.86,
+   "end": 28.14
+  },
+  {
+   "word": "higher",
+   "start": 28.14,
+   "end": 28.55
+  },
+  {
+   "word": "and",
+   "start": 28.55,
+   "end": 28.76
+  },
+  {
+   "word": "repeat",
+   "start": 28.76,
+   "end": 29.19
+  },
+  {
+   "word": "but",
+   "start": 29.54,
+   "end": 30.12
+  },
+  {
+   "word": "there's",
+   "start": 30.16,
+   "end": 30.39
+  },
+  {
+   "word": "a",
+   "start": 30.39,
+   "end": 30.44
+  },
+  {
+   "word": "catch",
+   "start": 30.44,
+   "end": 30.96
+  },
+  {
+   "word": "they",
+   "start": 31.37,
+   "end": 31.49
+  },
+  {
+   "word": "need",
+   "start": 31.49,
+   "end": 31.66
+  },
+  {
+   "word": "a",
+   "start": 31.66,
+   "end": 31.72
+  },
+  {
+   "word": "smooth",
+   "start": 31.72,
+   "end": 32.18
+  },
+  {
+   "word": "surface",
+   "start": 32.18,
+   "end": 32.72
+  },
+  {
+   "word": "to",
+   "start": 32.72,
+   "end": 32.81
+  },
+  {
+   "word": "grip",
+   "start": 32.81,
+   "end": 33.07
+  },
+  {
+   "word": "so",
+   "start": 33.59,
+   "end": 33.71
+  },
+  {
+   "word": "you",
+   "start": 33.71,
+   "end": 33.86
+  },
+  {
+   "word": "can",
+   "start": 33.87,
+   "end": 34.03
+  },
+  {
+   "word": "climb",
+   "start": 34.03,
+   "end": 34.36
+  },
+  {
+   "word": "glass",
+   "start": 34.37,
+   "end": 34.93
+  },
+  {
+   "word": "but",
+   "start": 35.13,
+   "end": 35.25
+  },
+  {
+   "word": "switch",
+   "start": 35.26,
+   "end": 35.61
+  },
+  {
+   "word": "to",
+   "start": 35.62,
+   "end": 35.71
+  },
+  {
+   "word": "rough",
+   "start": 35.71,
+   "end": 36.07
+  },
+  {
+   "word": "brick",
+   "start": 36.08,
+   "end": 36.51
+  },
+  {
+   "word": "and",
+   "start": 36.74,
+   "end": 36.86
+  },
+  {
+   "word": "those",
+   "start": 36.87,
+   "end": 37.07
+  },
+  {
+   "word": "microscopic",
+   "start": 37.08,
+   "end": 37.77
+  },
+  {
+   "word": "wedges",
+   "start": 37.77,
+   "end": 38.2
+  },
+  {
+   "word": "can't",
+   "start": 38.2,
+   "end": 38.51
+  },
+  {
+   "word": "make",
+   "start": 38.52,
+   "end": 38.7
+  },
+  {
+   "word": "the",
+   "start": 38.74,
+   "end": 38.81
+  },
+  {
+   "word": "same",
+   "start": 38.81,
+   "end": 39.07
+  },
+  {
+   "word": "contact",
+   "start": 39.07,
+   "end": 39.67
+  }
+ ]
+}

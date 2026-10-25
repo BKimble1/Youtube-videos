@@ -1,0 +1,122 @@
+{
+ "status": "STAND-IN VOICE. The established FGW narrator could not be generated for this episode; the final narration is a Runway eleven_v4 preset voice. Replace before publishing if the channel voice is required.",
+ "established_voice_attempt": {
+  "provider": "ElevenLabs (restricted connector)",
+  "voice": {
+   "name": "Test Voice",
+   "voice_id": "kk5XaSLo2XAw0sKM98zU",
+   "basis": "the channel's established narrator (same voice id as moth-silk-web-shooter and invisibility-shield voice_provenance.json)"
+  },
+  "model_id": "eleven_v4",
+  "flow_id": "HiBxX6GFwx8AExihrwb9",
+  "session_ids": [
+   "GIAKWcjp8BjPCLv1XNom",
+   "mI06B0taPeug8EPnlcti"
+  ],
+  "result": "failed: \"This request exceeds your quota of 194000. You have 128 credits remaining, while 819 credits are required for this request.\"",
+  "date": "2026-10-25"
+ },
+ "stand_in": {
+  "provider": "Runway (generate_speech), model eleven_v4",
+  "prompt": "[brisk, curious, slightly tense] If you pressed these pads against a glass wall, you could LIFT YOUR FEET off the ground—and climb it like Spider-Man. [matter-of-fact] Their surfaces are covered in microscopic wedges. [clear, explanatory, brisk] As you pull downward, the wedges bend flat against the glass. This brings them so close that tiny molecular attractions can hold your ENTIRE WEIGHT. [brisk] Special springs spread the load, so one little patch doesn’t have to hold you up alone. [steady, building] Then, you shift your weight onto the other pad. The first RELEASES, letting you reach higher and repeat. [dry] But there’s a catch. [matter-of-fact] They need a smooth surface to grip. [crisp, knowing] So you can climb glass—but switch to ROUGH BRICK, and those microscopic wedges can’t make the same contact.",
+  "note_on_prompt": "Bracketed tags are delivery directions (not spoken); capitals are emphasis. The spoken words are exactly the approved narration (production/NARRATION_APPROVED.txt).",
+  "transfer": "Runway's CloudFront output host was blocked by this environment's proxy, so each take was attached to the ElevenLabs flow above with creative_attach_reference_file and downloaded from its storage.googleapis.com preview URL (byte-identical MP3; sha256 below).",
+  "takes": [
+   {
+    "file": "audio/narration/takes/benjamin.mp3",
+    "voice": "Benjamin",
+    "runway_task_id": "45c79b69-f6a4-4571-be6b-6090abd6ab6e",
+    "elevenlabs_asset_id": "mBy8n8VqPs850jLUHKPq",
+    "sha256": "55a1b9f59ce9eb2c942ee7f4ad95da03cbc90adcd7f5b4571dc4f7cc9c1245d8",
+    "duration_s": 38.766,
+    "asr": {
+     "zipformer_en_sherpa_onnx": {
+      "wer": 0.025,
+      "diffs": [
+       [
+        "replace",
+        "onto",
+        "on to"
+       ],
+       [
+        "replace",
+        "grip",
+        "gripe"
+       ]
+      ]
+     },
+     "whisper_base_en_sherpa_onnx": {
+      "wer": 0.0,
+      "diffs": []
+     }
+    },
+    "chosen": true,
+    "why": "whisper transcribed it with no errors; Bernard's take was heard by whisper as 'microscopic wenches'"
+   },
+   {
+    "file": "audio/narration/takes/bernard.mp3",
+    "voice": "Bernard",
+    "runway_task_id": "9aa42dbb-81e4-4622-8dcc-65df33006744",
+    "elevenlabs_asset_id": "niJaLuUY2Kvfdmp886Yk",
+    "sha256": "e95e170bad67c19f38c538fba077115baec84e8c2ad40889ea5ea14d555f2f43",
+    "duration_s": 39.889,
+    "asr": {
+     "zipformer_en_sherpa_onnx": {
+      "wer": 0.034,
+      "diffs": [
+       [
+        "replace",
+        "spider man",
+        "spidermen"
+       ],
+       [
+        "replace",
+        "onto",
+        "on to"
+       ]
+      ]
+     },
+     "whisper_base_en_sherpa_onnx": {
+      "wer": 0.008,
+      "diffs": [
+       [
+        "replace",
+        "wedges",
+        "wenches"
+       ]
+      ]
+     }
+    },
+    "chosen": false
+   }
+  ]
+ },
+ "generated_once": "Each voice was generated once; no take was regenerated or patched. The final narration is one continuous take.",
+ "edits": {
+  "tool": "tools/make_narration.py",
+  "removed_silence_s": [
+   [
+    5.85,
+    6.01
+   ],
+   [
+    28.96,
+    29.08
+   ]
+  ],
+  "what": "silence removed from the middle of two sentence gaps (after 'Spider-Man' and after 'repeat'), each left at 0.36 s, with 10 ms crossfades. No word cut; no time-stretch or pitch change; no other gap touched.",
+  "tail_s": 0.7
+ },
+ "final": {
+  "file": "audio/narration/FGW_Glass_Climbing_narration_final.wav",
+  "format": "48 kHz, 24-bit, mono",
+  "measured_duration_s": 39.03333333333333,
+  "frames_at_30fps": 1171,
+  "speech_s": [
+   0.0,
+   38.32
+  ],
+  "word_timing": "PocketSphinx forced alignment of the edited file (tools/align.py) -> audio/narration/words_final.json -> source/src/data/timeline.json",
+  "sha256": "da14cd85d2d7c4a70d452fd76c68e63f7c0d68f99f3c9abe9d28701fe02ec467"
+ }
+}
