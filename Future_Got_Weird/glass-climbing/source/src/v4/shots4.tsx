@@ -78,8 +78,8 @@ const fieldAt = (f: number): FieldState => ({
   alpha: keyN(f, [[216, 0], [250, 0.8], [307, 0.9]]),
   beta: keyN(f, [[216, 0], [250, 34], [307, 24]]),
   // the glass slides in from beyond the frame (it never appears in view)
-  surface: f < 240 ? 'none' : 'glass',
-  gx: keyN(f, [[240, -1600], [262, -320], [280, 0, easeOut]]),
+  surface: f < 230 ? 'none' : 'glass',
+  gx: keyN(f, [[232, -1500], [282, 0]]),
   lam: keyN(f, [[286, 0], [307, 0.32]]),
   fog: keyN(f, [[216, 0], [240, 1]]),
 });
