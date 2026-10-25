@@ -39,7 +39,16 @@ independent speech recognisers run on the MP4's own audio.
 
 ## Master: `exports/FGW_Glass_Climbing_V1_MASTER_2160x3840.mp4`
 
-MASTER_RESULTS
+Rendered from the same source at `--scale=2` (every frame drawn at 2160×3840, not upscaled), 8 min 16 s; 63.0 MB.
+
+| Check | Result |
+|---|---|
+| Streams | H.264, 2160×3840, 30 fps, 1171 frames, yuv420p, BT.709; AAC 48 kHz stereo; 39.04 s |
+| Loudness | -14.6 LUFS integrated, LRA 1.8 LU, true peak -2.9 dBFS (same as the review) |
+| Black frames / freezes | none / none |
+| Picture vs the review | downscaled to 1080×1920 (area) against the review: PSNR 38.6 dB average over all 1171 frames (same picture; differences are line antialiasing and encoding) |
+| Audio vs the mix | correlation 0.99995 |
+| Native frame | frame 700 cropped at full resolution: clean ink lines and gradients, no upscaling softness |
 
 ## Remaining limitations
 
