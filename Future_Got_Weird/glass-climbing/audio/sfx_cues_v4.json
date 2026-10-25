@@ -295,29 +295,29 @@
  },
  {
   "name": "near pad comes off to go down",
-  "at": 32.533,
-  "frame": 976.0,
+  "at": 32.067,
+  "frame": 962.0,
   "dur": 0.26,
   "gain_db": -33
  },
  {
   "name": "near pad carried down (air, faint)",
-  "at": 32.867,
-  "frame": 986.0,
+  "at": 32.4,
+  "frame": 972.0,
   "dur": 0.6,
   "gain_db": -47
  },
  {
   "name": "his knees bend (cloth)",
-  "at": 32.733,
-  "frame": 982.0,
+  "at": 32.267,
+  "frame": 968.0,
   "dur": 0.6,
   "gain_db": -42
  },
  {
   "name": "pad pressed onto the brick (gritty contact)",
-  "at": 33.6,
-  "frame": 1008.0,
+  "at": 33.467,
+  "frame": 1004.0,
   "dur": 0.12,
   "gain_db": -32
  },
