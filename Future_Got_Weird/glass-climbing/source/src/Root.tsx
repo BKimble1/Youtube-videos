@@ -9,6 +9,9 @@ import {MicroTurn, MicroView} from './scenes/Micro';
 import {BaySheet2, FieldTest} from './v2/Work2';
 import {Film2, FilmStill2, Sheet2} from './v2/Film2';
 import {FRAMES as FRAMES2} from './v2/set';
+import {BaySheet3, PressTest} from './v3/Work3';
+import {Film3, FilmStill3, Sheet3} from './v3/Film3';
+import {FRAMES as FRAMES3} from './v3/set3';
 
 /** working sheet for the micro view: 4 states side by side */
 const MicroTest: React.FC = () => {
@@ -70,6 +73,11 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="GlassClimbingV2" component={Film2} durationInFrames={FRAMES2} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v2' as string | false, captions: true}} />
     <Still id="FilmStillV2" component={FilmStill2} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="SheetV2" component={Sheet2} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Composition id="GlassClimbingV3" component={Film3} durationInFrames={FRAMES3} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v3' as string | false, captions: true}} />
+    <Still id="FilmStillV3" component={FilmStill3} width={W} height={H} defaultProps={{f: 0, captions: true}} />
+    <Still id="SheetV3" component={Sheet3} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="BaySheet3" component={BaySheet3} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], cx: 250, cy: -1100, z: 0.7, follow: true}} />
+    <Still id="PressTest" component={PressTest} width={W} height={1920} defaultProps={{z: 4, cx: 60, cy: 0}} />
     <Still id="FieldTest" component={FieldTest} width={W} height={1920} defaultProps={{cz: 1.6}} />
     <Still id="BaySheet2" component={BaySheet2} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], cx: 250, cy: -1100, z: 0.7, follow: false}} />
     <Still id="BaySheet" component={BaySheet} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], cx: 200, cy: -600, z: 0.85, follow: true}} />

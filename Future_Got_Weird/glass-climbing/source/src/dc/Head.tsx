@@ -208,14 +208,25 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
   };
 
   // brows: thick ink strokes; inner end raised for worry/pain, whole brow lowered for strain
+  // Glass Climbing V3: a brow never rises into the fringe: each of its points stays below the hairline curve (the
+  // hair's lower edge, two quadratics through (+-100, -21), (+-60, -55), (0, -62), shifted with the turn) by the brow's
+  // half thickness and a little skin
+  const hairlineY = (x: number) => {
+    const u = Math.min(1, Math.abs(x - hx) / 100);
+    // invert x(t) = 100 - 80t - 20t^2 (one side of the curve, in |x|), then y(t)
+    const t = (-80 + Math.sqrt(6400 + 80 * (100 - 100 * u))) / 40;
+    const tc = Math.min(1, Math.max(0, t));
+    return (1 - tc) * (1 - tc) * -21 + 2 * (1 - tc) * tc * -55 + tc * tc * -62;
+  };
+  const browFloor = (x: number, y: number) => Math.max(y, hairlineY(x) + inkW * 1.35 * 0.5 + 6);
   const Brow = (k: 'n' | 'f', ex: number, wf: number, inner: 1 | -1) => {
     const by = -50 + e.browDown * 9;
     const w = 22 * wf;
     const innerX = ex + inner * w * 0.95;
     const outerX = ex - inner * w * 1.05;
-    const innerY = by - e.browIn * 17 + e.browDown * 5;
-    const outerY = by + e.browIn * 5 - e.browDown * 1;
-    const midY = (innerY + outerY) / 2 - 5 + e.browDown * 2;
+    const innerY = browFloor(innerX, by - e.browIn * 17 + e.browDown * 5);
+    const outerY = browFloor(outerX, by + e.browIn * 5 - e.browDown * 1);
+    const midY = browFloor(ex, (innerY + outerY) / 2 - 5 + e.browDown * 2);
     return <InkLine key={`b${k}`} d={Q({x: outerX, y: outerY}, {x: ex, y: midY}, {x: innerX, y: innerY})} w={inkW * 1.35} />;
   };
 

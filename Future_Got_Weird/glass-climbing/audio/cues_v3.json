@@ -1,0 +1,897 @@
+{
+ "fps": 30,
+ "frames": 1162,
+ "duration": 38.733333333333334,
+ "words": [
+  {
+   "word": "if",
+   "start": 0,
+   "end": 0.15
+  },
+  {
+   "word": "you",
+   "start": 0.15,
+   "end": 0.26
+  },
+  {
+   "word": "pressed",
+   "start": 0.26,
+   "end": 0.57
+  },
+  {
+   "word": "these",
+   "start": 0.59,
+   "end": 0.79
+  },
+  {
+   "word": "pads",
+   "start": 0.8,
+   "end": 1.16
+  },
+  {
+   "word": "against",
+   "start": 1.17,
+   "end": 1.45
+  },
+  {
+   "word": "a",
+   "start": 1.45,
+   "end": 1.5
+  },
+  {
+   "word": "glass",
+   "start": 1.5,
+   "end": 1.86
+  },
+  {
+   "word": "wall",
+   "start": 1.86,
+   "end": 2.38
+  },
+  {
+   "word": "you",
+   "start": 2.43,
+   "end": 2.54
+  },
+  {
+   "word": "could",
+   "start": 2.54,
+   "end": 2.68
+  },
+  {
+   "word": "lift",
+   "start": 2.68,
+   "end": 2.89
+  },
+  {
+   "word": "your",
+   "start": 2.98,
+   "end": 3.08
+  },
+  {
+   "word": "feet",
+   "start": 3.08,
+   "end": 3.41
+  },
+  {
+   "word": "off",
+   "start": 3.41,
+   "end": 3.55
+  },
+  {
+   "word": "the",
+   "start": 3.57,
+   "end": 3.66
+  },
+  {
+   "word": "ground",
+   "start": 3.66,
+   "end": 4.07
+  },
+  {
+   "word": "and",
+   "start": 4.1,
+   "end": 4.38
+  },
+  {
+   "word": "climb",
+   "start": 4.38,
+   "end": 4.74
+  },
+  {
+   "word": "it",
+   "start": 4.74,
+   "end": 4.8
+  },
+  {
+   "word": "like",
+   "start": 4.81,
+   "end": 4.98
+  },
+  {
+   "word": "spider",
+   "start": 4.98,
+   "end": 5.4
+  },
+  {
+   "word": "man",
+   "start": 5.4,
+   "end": 5.67
+  },
+  {
+   "word": "their",
+   "start": 6.02,
+   "end": 6.16
+  },
+  {
+   "word": "surfaces",
+   "start": 6.16,
+   "end": 6.74
+  },
+  {
+   "word": "are",
+   "start": 6.74,
+   "end": 6.82
+  },
+  {
+   "word": "covered",
+   "start": 6.82,
+   "end": 7.23
+  },
+  {
+   "word": "in",
+   "start": 7.23,
+   "end": 7.33
+  },
+  {
+   "word": "microscopic",
+   "start": 7.33,
+   "end": 8.13
+  },
+  {
+   "word": "wedges",
+   "start": 8.13,
+   "end": 8.7
+  },
+  {
+   "word": "as",
+   "start": 9.03,
+   "end": 9.18
+  },
+  {
+   "word": "you",
+   "start": 9.19,
+   "end": 9.3
+  },
+  {
+   "word": "pull",
+   "start": 9.3,
+   "end": 9.56
+  },
+  {
+   "word": "downward",
+   "start": 9.56,
+   "end": 10.11
+  },
+  {
+   "word": "the",
+   "start": 10.27,
+   "end": 10.35
+  },
+  {
+   "word": "wedges",
+   "start": 10.35,
+   "end": 10.75
+  },
+  {
+   "word": "bend",
+   "start": 10.75,
+   "end": 11.02
+  },
+  {
+   "word": "flat",
+   "start": 11.02,
+   "end": 11.42
+  },
+  {
+   "word": "against",
+   "start": 11.46,
+   "end": 11.77
+  },
+  {
+   "word": "the",
+   "start": 11.78,
+   "end": 11.85
+  },
+  {
+   "word": "glass",
+   "start": 11.85,
+   "end": 12.38
+  },
+  {
+   "word": "this",
+   "start": 12.77,
+   "end": 12.94
+  },
+  {
+   "word": "brings",
+   "start": 12.95,
+   "end": 13.22
+  },
+  {
+   "word": "them",
+   "start": 13.22,
+   "end": 13.37
+  },
+  {
+   "word": "so",
+   "start": 13.37,
+   "end": 13.7
+  },
+  {
+   "word": "close",
+   "start": 13.71,
+   "end": 14.13
+  },
+  {
+   "word": "that",
+   "start": 14.13,
+   "end": 14.27
+  },
+  {
+   "word": "tiny",
+   "start": 14.31,
+   "end": 14.74
+  },
+  {
+   "word": "molecular",
+   "start": 14.74,
+   "end": 15.32
+  },
+  {
+   "word": "attractions",
+   "start": 15.32,
+   "end": 15.89
+  },
+  {
+   "word": "can",
+   "start": 15.89,
+   "end": 16.02
+  },
+  {
+   "word": "hold",
+   "start": 16.02,
+   "end": 16.27
+  },
+  {
+   "word": "your",
+   "start": 16.27,
+   "end": 16.46
+  },
+  {
+   "word": "entire",
+   "start": 16.46,
+   "end": 16.98
+  },
+  {
+   "word": "weight",
+   "start": 16.98,
+   "end": 17.43
+  },
+  {
+   "word": "special",
+   "start": 17.82,
+   "end": 18.26
+  },
+  {
+   "word": "springs",
+   "start": 18.26,
+   "end": 18.82
+  },
+  {
+   "word": "spread",
+   "start": 18.83,
+   "end": 19.18
+  },
+  {
+   "word": "the",
+   "start": 19.18,
+   "end": 19.23
+  },
+  {
+   "word": "load",
+   "start": 19.24,
+   "end": 19.67
+  },
+  {
+   "word": "so",
+   "start": 19.8,
+   "end": 19.98
+  },
+  {
+   "word": "one",
+   "start": 19.99,
+   "end": 20.21
+  },
+  {
+   "word": "little",
+   "start": 20.22,
+   "end": 20.49
+  },
+  {
+   "word": "patch",
+   "start": 20.49,
+   "end": 20.87
+  },
+  {
+   "word": "doesn't",
+   "start": 20.87,
+   "end": 21.11
+  },
+  {
+   "word": "have",
+   "start": 21.11,
+   "end": 21.23
+  },
+  {
+   "word": "to",
+   "start": 21.25,
+   "end": 21.35
+  },
+  {
+   "word": "hold",
+   "start": 21.35,
+   "end": 21.57
+  },
+  {
+   "word": "you",
+   "start": 21.57,
+   "end": 21.73
+  },
+  {
+   "word": "up",
+   "start": 21.73,
+   "end": 21.84
+  },
+  {
+   "word": "alone",
+   "start": 21.84,
+   "end": 22.27
+  },
+  {
+   "word": "then",
+   "start": 22.69,
+   "end": 23.1
+  },
+  {
+   "word": "you",
+   "start": 23.29,
+   "end": 23.42
+  },
+  {
+   "word": "shift",
+   "start": 23.42,
+   "end": 23.67
+  },
+  {
+   "word": "your",
+   "start": 23.76,
+   "end": 23.87
+  },
+  {
+   "word": "weight",
+   "start": 23.87,
+   "end": 24.17
+  },
+  {
+   "word": "onto",
+   "start": 24.18,
+   "end": 24.47
+  },
+  {
+   "word": "the",
+   "start": 24.47,
+   "end": 24.62
+  },
+  {
+   "word": "other",
+   "start": 24.65,
+   "end": 24.89
+  },
+  {
+   "word": "pad",
+   "start": 24.89,
+   "end": 25.22
+  },
+  {
+   "word": "the",
+   "start": 25.63,
+   "end": 25.7
+  },
+  {
+   "word": "first",
+   "start": 25.7,
+   "end": 26.04
+  },
+  {
+   "word": "releases",
+   "start": 26.04,
+   "end": 26.64
+  },
+  {
+   "word": "letting",
+   "start": 26.75,
+   "end": 27.01
+  },
+  {
+   "word": "you",
+   "start": 27.01,
+   "end": 27.16
+  },
+  {
+   "word": "reach",
+   "start": 27.16,
+   "end": 27.38
+  },
+  {
+   "word": "higher",
+   "start": 27.38,
+   "end": 27.86
+  },
+  {
+   "word": "and",
+   "start": 27.96,
+   "end": 28.13
+  },
+  {
+   "word": "repeat",
+   "start": 28.13,
+   "end": 28.61
+  },
+  {
+   "word": "but",
+   "start": 28.96,
+   "end": 29.04
+  },
+  {
+   "word": "there's",
+   "start": 29.05,
+   "end": 29.23
+  },
+  {
+   "word": "a",
+   "start": 29.23,
+   "end": 29.27
+  },
+  {
+   "word": "catch",
+   "start": 29.27,
+   "end": 29.82
+  },
+  {
+   "word": "they",
+   "start": 30.17,
+   "end": 30.3
+  },
+  {
+   "word": "need",
+   "start": 30.3,
+   "end": 30.47
+  },
+  {
+   "word": "a",
+   "start": 30.47,
+   "end": 30.52
+  },
+  {
+   "word": "smooth",
+   "start": 30.52,
+   "end": 31.04
+  },
+  {
+   "word": "surface",
+   "start": 31.04,
+   "end": 31.54
+  },
+  {
+   "word": "to",
+   "start": 31.54,
+   "end": 31.64
+  },
+  {
+   "word": "grip",
+   "start": 31.64,
+   "end": 32.02
+  },
+  {
+   "word": "so",
+   "start": 32.38,
+   "end": 32.5
+  },
+  {
+   "word": "you",
+   "start": 32.5,
+   "end": 32.67
+  },
+  {
+   "word": "can",
+   "start": 32.67,
+   "end": 32.82
+  },
+  {
+   "word": "climb",
+   "start": 32.83,
+   "end": 33.2
+  },
+  {
+   "word": "glass",
+   "start": 33.2,
+   "end": 33.79
+  },
+  {
+   "word": "but",
+   "start": 33.95,
+   "end": 34.06
+  },
+  {
+   "word": "switch",
+   "start": 34.07,
+   "end": 34.39
+  },
+  {
+   "word": "to",
+   "start": 34.39,
+   "end": 34.47
+  },
+  {
+   "word": "rough",
+   "start": 34.48,
+   "end": 34.77
+  },
+  {
+   "word": "brick",
+   "start": 34.82,
+   "end": 35.28
+  },
+  {
+   "word": "and",
+   "start": 35.48,
+   "end": 35.6
+  },
+  {
+   "word": "those",
+   "start": 35.6,
+   "end": 35.79
+  },
+  {
+   "word": "microscopic",
+   "start": 35.8,
+   "end": 36.49
+  },
+  {
+   "word": "wedges",
+   "start": 36.52,
+   "end": 36.9
+  },
+  {
+   "word": "can't",
+   "start": 36.91,
+   "end": 37.15
+  },
+  {
+   "word": "make",
+   "start": 37.16,
+   "end": 37.29
+  },
+  {
+   "word": "the",
+   "start": 37.33,
+   "end": 37.4
+  },
+  {
+   "word": "same",
+   "start": 37.41,
+   "end": 37.67
+  },
+  {
+   "word": "contact",
+   "start": 37.67,
+   "end": 38.32
+  }
+ ],
+ "climb": {
+  "contact": 5,
+  "pull0": 36,
+  "pull1": 62,
+  "rStep0": 72,
+  "rStep1": 84,
+  "lStep0": 82,
+  "lStep1": 94,
+  "rRel": 122,
+  "rPlace": 152,
+  "upA": 154,
+  "upB": 184,
+  "lRel": 488,
+  "lPlace": 518,
+  "sinkA": 684,
+  "sinkB": 740,
+  "rRel2": 772,
+  "rPlace2": 830,
+  "up2A": 836,
+  "up2B": 868,
+  "look0": 870,
+  "look1": 900,
+  "down0": 906,
+  "down1": 950,
+  "lRel3": 980,
+  "lMove3a": 984,
+  "lMove3b": 1010,
+  "lPress0": 1018,
+  "lPress1": 1028,
+  "test0": 1040,
+  "test1": 1060,
+  "yank0": 1106,
+  "fail": 1116,
+  "failEnd": 1126,
+  "lift0": 1134,
+  "lift1": 1154
+ },
+ "events": [
+  {
+   "t": 122,
+   "type": "R",
+   "k": 1,
+   "len": 30
+  },
+  {
+   "t": 154,
+   "type": "up",
+   "k": 1,
+   "len": 30
+  },
+  {
+   "t": 226,
+   "type": "L",
+   "k": 1,
+   "len": 24
+  },
+  {
+   "t": 252,
+   "type": "sink",
+   "k": 1,
+   "len": 20
+  },
+  {
+   "t": 274,
+   "type": "R",
+   "k": 2,
+   "len": 26
+  },
+  {
+   "t": 302,
+   "type": "up",
+   "k": 2,
+   "len": 26
+  },
+  {
+   "t": 330,
+   "type": "L",
+   "k": 2,
+   "len": 24
+  },
+  {
+   "t": 356,
+   "type": "sink",
+   "k": 2,
+   "len": 20
+  },
+  {
+   "t": 378,
+   "type": "R",
+   "k": 3,
+   "len": 26
+  },
+  {
+   "t": 406,
+   "type": "up",
+   "k": 3,
+   "len": 28
+  },
+  {
+   "t": 488,
+   "type": "L",
+   "k": 3,
+   "len": 30
+  },
+  {
+   "t": 548,
+   "type": "sink",
+   "k": 3,
+   "len": 20
+  },
+  {
+   "t": 570,
+   "type": "R",
+   "k": 4,
+   "len": 26
+  },
+  {
+   "t": 598,
+   "type": "up",
+   "k": 4,
+   "len": 28
+  },
+  {
+   "t": 630,
+   "type": "L",
+   "k": 4,
+   "len": 24
+  },
+  {
+   "t": 684,
+   "type": "sink",
+   "k": 4,
+   "len": 56
+  },
+  {
+   "t": 772,
+   "type": "R",
+   "k": 5,
+   "len": 58
+  },
+  {
+   "t": 836,
+   "type": "up",
+   "k": 5,
+   "len": 32
+  },
+  {
+   "t": 872,
+   "type": "L",
+   "k": 5,
+   "len": 28
+  }
+ ],
+ "shots": [
+  {
+   "name": "A1",
+   "from": 0,
+   "to": 30
+  },
+  {
+   "name": "A2",
+   "from": 30,
+   "to": 72
+  },
+  {
+   "name": "A3",
+   "from": 72,
+   "to": 101
+  },
+  {
+   "name": "A4",
+   "from": 101,
+   "to": 124
+  },
+  {
+   "name": "A5",
+   "from": 124,
+   "to": 152
+  },
+  {
+   "name": "A6",
+   "from": 152,
+   "to": 176
+  },
+  {
+   "name": "M1",
+   "from": 176,
+   "to": 216
+  },
+  {
+   "name": "M23",
+   "from": 216,
+   "to": 307
+  },
+  {
+   "name": "M4",
+   "from": 307,
+   "to": 343
+  },
+  {
+   "name": "M5",
+   "from": 343,
+   "to": 382
+  },
+  {
+   "name": "M6",
+   "from": 382,
+   "to": 423
+  },
+  {
+   "name": "M7",
+   "from": 423,
+   "to": 470
+  },
+  {
+   "name": "M89",
+   "from": 470,
+   "to": 535
+  },
+  {
+   "name": "SP",
+   "from": 535,
+   "to": 680
+  },
+  {
+   "name": "C1",
+   "from": 680,
+   "to": 724
+  },
+  {
+   "name": "C2",
+   "from": 724,
+   "to": 768
+  },
+  {
+   "name": "C3",
+   "from": 768,
+   "to": 801
+  },
+  {
+   "name": "C4",
+   "from": 801,
+   "to": 826
+  },
+  {
+   "name": "C5",
+   "from": 826,
+   "to": 850
+  },
+  {
+   "name": "C6",
+   "from": 850,
+   "to": 868
+  },
+  {
+   "name": "K1",
+   "from": 868,
+   "to": 904
+  },
+  {
+   "name": "K2",
+   "from": 904,
+   "to": 945
+  },
+  {
+   "name": "K3",
+   "from": 945,
+   "to": 970
+  },
+  {
+   "name": "K4",
+   "from": 970,
+   "to": 1017
+  },
+  {
+   "name": "K5",
+   "from": 1017,
+   "to": 1063
+  },
+  {
+   "name": "K6",
+   "from": 1063,
+   "to": 1106
+  },
+  {
+   "name": "K7",
+   "from": 1106,
+   "to": 1136
+  },
+  {
+   "name": "K8",
+   "from": 1136,
+   "to": 1162
+  }
+ ]
+}
