@@ -3,7 +3,7 @@
 ## V6 (final animation and pacing polish: capture, nozzle, attachment and lift)
 
 **Status (25 Oct 2026):** the V6 review (1080×1920) was rendered from source and checked from the file; the native
-2160×3840 master is being rendered after the review passed (`production/V6_REPORT.md`, which lists the remaining
+2160×3840 master was rendered after the review passed and checked from its file (`production/V6_REPORT.md`, which lists the remaining
 problems). **Not published.** Nobody has watched it in real time with sound.
 
 | Deliverable | File |

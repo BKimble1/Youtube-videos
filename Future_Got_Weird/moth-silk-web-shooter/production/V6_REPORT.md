@@ -46,8 +46,15 @@ Review `exports/FGW_Real_Web_Fluid_V6_REVIEW_1080x1920.mp4`. Reports: `qa/v6/rev
   - the pull-back from the bond close-up, where the blade briefly left frame and was fixed
   - the reveal framing
 
-Master `exports/FGW_Real_Web_Fluid_V6_MASTER_2160x3840.mp4`: rendering from the same composition and mix at 2× after
-the review passed (checks to follow).
+Master `exports/FGW_Real_Web_Fluid_V6_MASTER_2160x3840.mp4`: rendered natively at 2× from the same composition and
+mix after the review passed. Measured on the file:
+- H.264 High 2160×3840, 30 fps, 952 frames, 31.74 s, BT.709; AAC 48 kHz stereo; 51.8 MB
+- −14.6 LUFS, LRA 3.6 LU, peak −2.6 dBFS (identical to the review)
+- no black frames or freezes
+
+Twelve frames (6, 12, 30, 110, 300, 400, 430, 470, 566, 630, 690, 800) were extracted and inspected
+(`qa/v6/master_frames.png`), plus a 1:1 crop of the nozzle cutaway at frame 430 (`qa/v6/master_crop_nozzle_1to1.png`).
+They show native vector detail and the same picture and captions as the review.
 
 ## Remaining problems
 
