@@ -180,7 +180,9 @@ const padClimb = (T: number, side: Side): Pad5 => {
       return x * x * (3 - 2 * x);
     };
     // (V8 QA: one smooth approach from the top of the stand-off to the seat, with no stall where the carry ends)
-    p.gap = keyN(T, [[m.rel, 0], [m.rel + 3, 4], [m.m0 + 2, 34, sm], [m.place, 0, sm]]);
+    // (the far pad stands off less: carried out from the glass it would come over the near pad, and its strap behind it)
+    const sg = side === 'R' ? 20 : 34;
+    p.gap = keyN(T, [[m.rel, 0], [m.rel + 3, 4], [m.m0 + 2, sg, sm], [m.place, 0, sm]]);
     p.y = keyN(T, [[m.m0, from], [m.m1, m.to - 6], [m.place, m.to]]);
     p.contact = 1 - clamp(p.gap / 2);
   }

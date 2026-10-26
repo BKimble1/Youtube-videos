@@ -56,7 +56,10 @@ const Strap8: React.FC<{id: string; a: V; b: V; sag: number; k: number; far?: bo
   // into each other (or behind the near pad's ring)
   let nx = -dy / l, ny = dx / l;
   if ((nx < 0) !== !!far) [nx, ny] = [-nx, -ny];
-  const bow = 1.5 * sag;
+  // the slack length (sag is 0.45x the shortfall) taken up in the bow: a quadratic bowing by d is longer than its
+  // chord by about 8d^2/3L; it shows half of that (webbing also folds and twists), so a slack strap reads as slack
+  const slack = sag / 0.45;
+  const bow = slack > 0.01 ? 2 * 0.5 * Math.sqrt((3 * slack * l) / 8) : 0;
   const c = {x: (a.x + b.x) / 2 + nx * bow, y: (a.y + b.y) / 2 + ny * bow + 0.25 * sag};
   const d = `M${fmt(a.x)},${fmt(a.y)} Q${fmt(c.x)},${fmt(c.y)} ${fmt(b.x)},${fmt(b.y)}`;
   // (the far strap a step darker, so where it passes behind the near pad the two read at different depths)
