@@ -7,7 +7,8 @@ import {ellContour, surfRuns, ringX, ringY, closedPath, openPath, centroid, exte
 import {Inked, Deco, InkLine, INK} from '../lib/ink';
 import {Blob, Capsule, Gloss, SoftShadow, LIGHT} from '../lib/shade';
 import {lit, shade, mix} from '../lib/color';
-import {BODY, LegPose, RoachPose} from './roach';
+import {BODY, LegPose, RoachPose, PRONOTUM, PLATES, TERGITE_U} from './roach';
+import {LoftDef, loftSilhouette, loftRuns, sectionTop, marginLine} from '../lib/loft';
 
 export const CHITIN = {
   body: '#4B2A1E',
@@ -66,6 +67,31 @@ const Ellipsoid: React.FC<{id: string; e: EllW; cam: Cam; color: string; k?: num
   );
 };
 
+const Shell: React.FC<{id: string; f: Frame; d: LoftDef; cam: Cam; color: string; k?: number; gloss?: number; children?: React.ReactNode}> = ({id, f, d, cam, color, k = 1, gloss = 0.55, children}) => {
+  const pts = loftSilhouette(f, d, cam);
+  if (pts.length < 3) return null;
+  const dd = closedPath(pts);
+  const c = centroid(pts);
+  const R = extent(pts, c);
+  const gl: V2 = [c[0] + LIGHT.x * R * 0.36, c[1] + LIGHT.y * R * 0.42];
+  return (
+    <>
+      <Blob id={id} d={dd} c={{x: c[0], y: c[1]}} r={R * 1.02} color={color} k={k} focal={0.5} />
+      {children}
+      {gloss > 0 && (
+        <Deco>
+          <clipPath id={`${id}-clip`}>
+            <path d={dd} />
+          </clipPath>
+          <g clipPath={`url(#${id}-clip)`}>
+            <Gloss id={`${id}-gl`} c={{x: gl[0], y: gl[1]}} rx={R * 0.17} ry={R * 0.05} rotate={-28} opacity={gloss} />
+          </g>
+        </Deco>
+      )}
+    </>
+  );
+};
+
 const legOutward = (fr: Frame, p: LegPose): V3 => {
   const side = p.def.side;
   const fw = p.def.front ? 0.6 : p.def.coxa[0] < 0 ? -0.6 : 0;
@@ -83,12 +109,12 @@ const Leg: React.FC<{id: string; p: LegPose; cam: Cam; inkW: number; haze: (c: s
   const tib = sub(p.ankle, p.knee);
   const outw = norm(add(sub(p.knee, p.coxa), [0, -6, 0]));
   const spines: [V2, V2][] = [];
-  const nSp = L.front ? 5 : 4;
+  const nSp = L.front ? 4 : 5;
   for (let i = 1; i <= nSp; i++) {
     const t = i / (nSp + 0.6);
     const base = add(p.knee, mul(tib, t));
     const dir = norm(add(mul(norm(tib), 0.55), mul(outw, 0.8)));
-    const tip = add(base, mul(dir, L.front ? 3.4 : 2.6));
+    const tip = add(base, mul(dir, L.front ? 3.6 + 0.6 * i : 2.8));
     spines.push([proj(cam, base), proj(cam, tip)]);
   }
   const col = haze(CHITIN.leg);
@@ -99,7 +125,7 @@ const Leg: React.FC<{id: string; p: LegPose; cam: Cam; inkW: number; haze: (c: s
       <Capsule id={`${id}-ta`} a={V(a)} b={V(f)} ra={rTa} rb={rFo} color={haze(CHITIN.legDeep)} />
       <Deco>
         {spines.map(([b, t], i) => (
-          <path key={i} d={`M${fmt(b[0])} ${fmt(b[1])} L${fmt(t[0])} ${fmt(t[1])}`} stroke={haze(CHITIN.spine)} strokeWidth={Math.max(1, rA * 0.5)} strokeLinecap="round" />
+          <path key={i} d={`M${fmt(b[0])} ${fmt(b[1])} L${fmt(t[0])} ${fmt(t[1])}`} stroke={haze(CHITIN.spine)} strokeWidth={Math.max(1.2, rA * (L.front ? 0.8 : 0.6))} strokeLinecap="round" />
         ))}
       </Deco>
     </Inked>
@@ -109,7 +135,7 @@ const Leg: React.FC<{id: string; p: LegPose; cam: Cam; inkW: number; haze: (c: s
 const Antenna: React.FC<{id: string; pts: V3[]; cam: Cam; from: number; to: number; haze: (c: string) => string}> = ({id, pts, cam, from, to, haze}) => {
   if (to - from < 1) return null;
   const sp = pts.slice(from, to + 1).map((q) => proj(cam, q));
-  const w0 = 1.25 * scaleAt(cam, pts[from]), w1 = 0.5 * scaleAt(cam, pts[to]);
+  const w0 = 1.45 * scaleAt(cam, pts[from]), w1 = 0.6 * scaleAt(cam, pts[to]);
   const segs = [];
   for (let i = 0; i < sp.length - 1; i++) {
     const t = i / Math.max(1, sp.length - 1);
@@ -153,9 +179,10 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
   };
   const sL = split(pose.antL), sR = split(pose.antR);
   // depth order for the two antennae and the near/far legs
-  const tergiteRuns = BODY.tergites.flatMap((xk) => surfRuns(bodyE, cam, ringX((xk - BODY.body.c[0]) / BODY.body.r[0], 72, -0.12), 0.02));
-  const rimRuns = surfRuns(proE, cam, ringY(-0.42, 96), 0.0);
-  const scoop = surfRuns(proE, cam, ringX(0.62, 64, 0.25, -1.4, 1.4), 0.0);
+  const tergiteRuns = TERGITE_U.flatMap((u) => loftRuns(fr, PLATES, cam, sectionTop(u, 48), 0.03));
+  const plateRims = ([1, -1] as const).flatMap((sd) => loftRuns(fr, PLATES, cam, marginLine(sd, 0.02, 0.98, 60), 0.0));
+  const rimRuns = ([1, -1] as const).flatMap((sd) => loftRuns(fr, PRONOTUM, cam, marginLine(sd, 0.0, 1.0, 60), 0.0));
+  const scoop = loftRuns(fr, PRONOTUM, cam, Array.from({length: 41}, (_, i) => [0.72 + 0.16 * Math.sin((i / 40) * Math.PI), 0.25 * Math.PI + (i / 40) * 0.5 * Math.PI] as [number, number]), 0.02);
   const eyes = ([-1, 1] as const).map((sd) => {
     const c3: V3 = toW(fr, [31.8, 9.6, 6.9 * sd]);
     const vis = dot(sub(cam.eye, c3), dirW(fr, norm([0.35, 0.25, sd]))) > 0;
@@ -190,7 +217,7 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
         );
       })}
       <Inked w={inkW} id={`${o.id}-bd`}>
-        <Ellipsoid id={`${o.id}-body`} e={bodyE} cam={cam} color={haze(CHITIN.body)} k={1.1} gloss={0.5}>
+        <Shell id={`${o.id}-body`} f={fr} d={PLATES} cam={cam} color={haze(CHITIN.body)} k={1.1} gloss={0.5}>
           <Deco>
             {tergiteRuns.map((r, i) => (
               <g key={i}>
@@ -198,8 +225,11 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
                 <path d={openPath(r)} fill="none" stroke={haze(CHITIN.tergite)} strokeWidth={Math.max(1, inkW * 0.5)} strokeLinecap="round" />
               </g>
             ))}
+            {plateRims.map((r, i) => (
+              <path key={`m${i}`} d={openPath(r)} fill="none" stroke={haze(lit(CHITIN.plate, 0.2))} strokeWidth={Math.max(1, inkW * 0.55)} strokeLinecap="round" opacity={0.65} />
+            ))}
           </Deco>
-        </Ellipsoid>
+        </Shell>
       </Inked>
       <Inked w={inkW} id={`${o.id}-hd`}>
         <Ellipsoid id={`${o.id}-head`} e={headE} cam={cam} color={haze(CHITIN.head)} gloss={0.3} />
@@ -213,7 +243,7 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
         </Deco>
       </Inked>
       <Inked w={inkW} id={`${o.id}-pr`}>
-        <Ellipsoid id={`${o.id}-pro`} e={proE} cam={cam} color={haze(CHITIN.pronotum)} k={1.1} gloss={0.65}>
+        <Shell id={`${o.id}-pro`} f={fr} d={PRONOTUM} cam={cam} color={haze(CHITIN.pronotum)} k={1.1} gloss={0.65}>
           <Deco>
             {rimRuns.map((r, i) => (
               <path key={i} d={openPath(r)} fill="none" stroke={haze(lit(CHITIN.plate, 0.18))} strokeWidth={Math.max(1, inkW * 0.6)} strokeLinecap="round" opacity={0.75} />
@@ -222,7 +252,7 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
               <path key={i} d={openPath(r)} fill="none" stroke={haze(CHITIN.tergite)} strokeWidth={Math.max(1, inkW * 0.45)} strokeLinecap="round" opacity={0.6} />
             ))}
           </Deco>
-        </Ellipsoid>
+        </Shell>
       </Inked>
       <Antenna id={`${o.id}-aL1`} pts={pose.antL} cam={cam} from={sL} to={pose.antL.length - 1} haze={haze} />
       <Antenna id={`${o.id}-aR1`} pts={pose.antR} cam={cam} from={sR} to={pose.antR.length - 1} haze={haze} />

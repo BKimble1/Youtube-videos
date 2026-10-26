@@ -168,3 +168,29 @@ export const boxFaces = (cam: Cam, f: Frame, c: V3, h: V3) => {
     .map((fc) => ({n: fc.n, pts: fc.pts.map((p) => proj(cam, p)), z: depth(cam, add(cw, mul(fc.n, 0)))}));
 };
 export {dirW};
+
+/** clip a 3D polygon to the camera's near plane, then project (null if nothing in front) */
+export const projPoly = (cam: Cam, pts: V3[], near = 4): V2[] | null => {
+  const dz = (p: V3) => depth(cam, p) - near;
+  const out: V3[] = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i], b = pts[(i + 1) % pts.length];
+    const da = dz(a), db = dz(b);
+    if (da >= 0) out.push(a);
+    if ((da >= 0) !== (db >= 0)) {
+      const t = da / (da - db);
+      out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]);
+    }
+  }
+  return out.length >= 3 ? out.map((p) => proj(cam, p)) : null;
+};
+/** clip a 3D segment to the near plane and project */
+export const projSeg = (cam: Cam, a: V3, b: V3, near = 4): [V2, V2] | null => {
+  const da = depth(cam, a) - near, db = depth(cam, b) - near;
+  if (da < 0 && db < 0) return null;
+  let p = a, q = b;
+  if (da < 0) p = lerp3(a, b, da / (da - db));
+  if (db < 0) q = lerp3(a, b, da / (da - db));
+  return [proj(cam, p), proj(cam, q)];
+};
+import {lerp3} from './v3';

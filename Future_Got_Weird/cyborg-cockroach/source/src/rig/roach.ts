@@ -5,12 +5,33 @@ import {V3, Frame, toW, dirW, add, sub, mul, norm, len, cross, dot, lerp3, ypr, 
 import {clamp, smooth, noise1} from '../lib/ease';
 
 export type Ell = {c: V3; r: V3};
+import type {LoftDef} from '../lib/loft';
+const dome = (u: number, peak: number, back: number, front: number) =>
+  u < peak ? Math.pow(Math.max(0, 1 - Math.pow((peak - u) / peak, back)), 1 / back) : Math.pow(Math.max(0, 1 - Math.pow((u - peak) / (1 - peak), front)), 1 / front);
+/** The pronotum: a broad shield, rounded in front, nearly straight behind, its front lip low over the head. */
+export const PRONOTUM: LoftDef = {
+  x0: 3.5, x1: 31.5, n: 2.3,
+  w: (u) => 23.6 * dome(u, 0.3, 5, 2.1),
+  ht: (u) => 9.6 * dome(u, 0.34, 4, 1.7),
+  hb: (u) => 1.6 * dome(u, 0.3, 4, 2),
+  yc: (u) => 10.4 - 3.4 * u * u,
+};
+/** The plated thorax and abdomen: an egg in plan, broad at the front, domed, with a flared margin. */
+export const PLATES: LoftDef = {
+  x0: -42.5, x1: 7.5, n: 2.4,
+  w: (u) => 22.2 * dome(u, 0.74, 2.2, 6),
+  ht: (u) => 13.6 * dome(u, 0.62, 1.8, 3),
+  hb: (u) => 3.4 * dome(u, 0.6, 2, 3),
+  yc: (u) => 6.4 + 1.6 * u,
+};
+/** plate edges (tergites) as u on PLATES: meso, meta, then the abdominal segments */
+export const TERGITE_U = [-3.5, -10.5, -17, -23, -28.5, -33.5, -37.6].map((x) => (x - PLATES.x0) / (PLATES.x1 - PLATES.x0));
 export const BODY = {
-  pronotum: {c: [15, 13.6, 0], r: [16.5, 9.4, 22]} as Ell,
-  body: {c: [-14, 12.4, 0], r: [30.5, 10.2, 21]} as Ell, // meso/metathorax + abdomen, tergites drawn on it
-  head: {c: [29.5, 7.6, 0], r: [6.6, 6.2, 9.2]} as Ell,
+  pronotum: {c: [14.5, 14.2, 0], r: [16.5, 8.6, 23.2]} as Ell, // broad shield overhanging the head
+  body: {c: [-13.5, 11.8, 0], r: [30, 12.4, 21.6]} as Ell, // meso/metathorax + abdomen (domed), tergites drawn on it
+  head: {c: [29, 8.2, 0], r: [6.4, 6.4, 9.0]} as Ell,
   // visible tergite edges on `body` (plane x = k), front to back
-  tergites: [5, -2.5, -10, -17, -23.5, -29.5, -35, -39.5],
+  tergites: [3.5, -4.5, -12, -18.5, -24.5, -30, -35, -39.5],
 };
 
 export type LegDef = {name: string; side: 1 | -1; coxa: V3; femur: number; tibia: number; tarsus: number; foot: V3; rFem: number; rTib: number; phase: number; front?: boolean};
@@ -18,12 +39,12 @@ export type LegDef = {name: string; side: 1 | -1; coxa: V3; femur: number; tibia
 const leg = (name: string, side: 1 | -1, cx: number, cz: number, fe: number, ti: number, ta: number, fx: number, fz: number, rF: number, rT: number, phase: number, front = false): LegDef =>
   ({name, side, coxa: [cx, 4.8, cz * side], femur: fe, tibia: ti, tarsus: ta, foot: [fx, 0, fz * side], rFem: rF, rTib: rT, phase, front});
 export const LEGS: LegDef[] = [
-  leg('L1', -1, 21, 6.5, 12.5, 11, 6, 35, 23, 2.3, 1.9, 0, true),
-  leg('R1', 1, 21, 6.5, 12.5, 11, 6, 35, 23, 2.3, 1.9, 0.5, true),
-  leg('L2', -1, 3, 9, 14.5, 15, 8, 6, 33, 2.1, 1.5, 0.5),
-  leg('R2', 1, 3, 9, 14.5, 15, 8, 6, 33, 2.1, 1.5, 0),
-  leg('L3', -1, -9, 9, 16.5, 18.5, 9, -25, 31, 2.2, 1.6, 0),
-  leg('R3', 1, -9, 9, 16.5, 18.5, 9, -25, 31, 2.2, 1.6, 0.5),
+  leg('L1', -1, 22, 6.5, 10, 9.5, 5.5, 33, 21, 2.4, 2.1, 0, true),
+  leg('R1', 1, 22, 6.5, 10, 9.5, 5.5, 33, 21, 2.4, 2.1, 0.5, true),
+  leg('L2', -1, 4, 9.5, 11.5, 12.5, 7, 6, 28, 2.2, 1.6, 0.5),
+  leg('R2', 1, 4, 9.5, 11.5, 12.5, 7, 6, 28, 2.2, 1.6, 0),
+  leg('L3', -1, -8, 9.5, 13.5, 15.5, 8, -24, 27, 2.3, 1.7, 0),
+  leg('R3', 1, -8, 9.5, 13.5, 15.5, 8, -24, 27, 2.3, 1.7, 0.5),
 ];
 
 export type PathPose = {p: V3; yaw: number};
@@ -108,8 +129,8 @@ const bodyFrameAt = (path: Path, s: number) => {
   return ypr(pp.p, pp.yaw);
 };
 
-const antennaPoints = (fr: Frame, side: 1 | -1, a: Antenna, n = 12, L = 30): V3[] => {
-  const base = toW(fr, [34.5, 9.6, 4.2 * side]);
+const antennaPoints = (fr: Frame, side: 1 | -1, a: Antenna, n = 12, L = 25): V3[] => {
+  const base = toW(fr, [33.6, 10.2, 4.4 * side]);
   const pts: V3[] = [base];
   // initial direction in body frame
   let d: V3 = [Math.cos(a.pitch) * Math.cos(a.yaw), Math.sin(a.pitch), Math.cos(a.pitch) * Math.sin(a.yaw) * side];
@@ -160,11 +181,11 @@ export const poseRoach = (m: RoachMotion): RoachPose => {
       foot = add(lerp3(a, b, smooth(w)), [0, g.lift * Math.sin(Math.PI * w), 0]);
       up = w > 0.02 && w < 0.98;
     }
-    const coxa = toW(fr, L.coxa);
+    const coxa = toW(fr, [L.coxa[0], L.coxa[1] + 1.5, L.coxa[2]]);
     // ankle sits above and inward of the foot (the tarsus lies along the ground, pointing outward and forward/back)
     const out = norm([foot[0] - fr.o[0], 0, foot[2] - fr.o[2]]);
     const ankle = add(foot, add(mul(out, -L.tarsus * 0.78), [0, L.tarsus * 0.58, 0]));
-    const pole = norm(add(add(fr.y, mul(out, 0.55)), mul(fr.x, L.front ? 0.35 : L.coxa[0] < 0 ? -0.25 : 0)));
+    const pole = norm(add(add(mul(fr.y, 0.55), mul(out, 1.0)), mul(fr.x, L.front ? 0.3 : L.coxa[0] < 0 ? -0.3 : 0)));
     const knee = ik2(coxa, ankle, L.femur, L.tibia, pole);
     return {def: L, coxa, knee, ankle, foot, up};
   });

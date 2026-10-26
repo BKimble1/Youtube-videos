@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {"noEmit": false, "outDir": "/tmp/fgw_cues", "rootDir": "src", "skipLibCheck": true, "noEmitOnError": false, "types": []},
+  "include": [],
+  "files": ["src/dev/exportCues.ts"]
+}
